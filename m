@@ -1,141 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E6234DB74;
-	Mon, 13 Jul 2026 20:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF0ACA52;
+	Mon, 13 Jul 2026 20:47:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783974809; cv=none; b=QiSOUZUtkKOSGwcas9w10xvyvHLW/z3Jd5PyAi97nzVhZnPoBV+2YNBWN7nMjkScu1EoteecjAOcy/TbP/HpQDgHM3j4TRZHuyU7d6oZ0f8rULTOGbM+eWYzwfRr6JcVixart1TDVR40wCO+QuIF4RVK2dRrd8hGNxsxPDRdmc4=
+	t=1783975629; cv=none; b=e51eT1WAdZ2kVBxxqT1Lmy88pzg1Hujn8NDVgr5+B4iGPNebaI8aqP7ilszJ43/PgAs+tY3LOfkc7eph5eerBJwsKrJxzheCuQp4QR5fUkfN4ZOpYZd3+tREnbpizKitKpjYIdDIANbR6eUuBjyTEwuTG8ymyTHm3eA9Ck1JNDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783974809; c=relaxed/simple;
-	bh=BzXnWYycZtrsC4eYp80TBiwS/8l9vkPcVQHMfEwIaHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YrVF1NO5lRK9+8mhfU1d3GmGNhE1uwkmDl/0d9sn0UUQ9HWdlfbx3uk8pNM/NXSH9qIl2xGvKh7f7fVx3im6KxGW+m3lzKy1CqcBwwCDJU5pDJcII/hlGdq0s3bwHvjdo91a63cObXOJJl5mkXbCJvqo3lP0WugN1LHK7nI9i10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+njEd0h; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783975629; c=relaxed/simple;
+	bh=twXJtWWH5oaghquo53bbOQw63dtMySpSvj6QkbbR8Hg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cetk7QGlOxmrkqC+F392ejgKHF76KLzar+tDpld3ak2N89Krt0mMOtwdoeZIXTpal7gtdxj2bWLZQ/E0hu/UqHZ3nHq552BTm/yvLM5giVvusLxNUPUSIa+F+PsavqjGw4CcVsbf7bK/FKxMRZrM3IvOL+tD3M1D1AU6Z5OOFNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0bcMNBD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J+njEd0h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBBFA1F00A3A;
-	Mon, 13 Jul 2026 20:33:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0bcMNBD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 825481F000E9;
+	Mon, 13 Jul 2026 20:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783974807;
-	bh=cRkPSO91bFeK9182PS7Iusjus+5qu8ApU8Ds9AgNKO4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=J+njEd0hPiFuXkUjQ/5/i4upvCIBDFBxs5vg2NHF4FYvEtDBeJ2cQFRJ6WMOdltt3
-	 bhGNcW0smNWjC0n74L8kCC2kRofEcyhYc2Kr8xwHYfivqAtpQfQDLdjjVDjxBbkKGR
-	 Jpg/eoQXMiuhQnn60IG1UvMB6h3h+qAADqWo9xTtEkZX5mQRMm1HdgrgPNRkjaLxgm
-	 e3yK6LKKTrHFnHzComDtHn57rf6bbj2AE7FoF4OuARZ/Ax3TeR5K8+u8JIr34Em2Al
-	 A6HZOHiqshYEF5LoGvbAxzzufWMf4qVkrQgFkoXWPA60x+zKUrO9GEuhdLxe8QWoqA
-	 DIzyfOj+yZhGQ==
-Date: Mon, 13 Jul 2026 13:33:26 -0700
+	s=k20260515; t=1783975627;
+	bh=TDeuzjI90FLjEMS0jJqqnnMlB8u+tFcLwlJfq4wBKK8=;
+	h=From:To:Cc:Subject:Date;
+	b=W0bcMNBDpwU80+IzFbqdiw88bWHGzopR32rWHE2+UeqvMvfhgpdOsgIWkD+awgem/
+	 FGkNHwlB/YTE2fNlJrWFF5Xr6xMRIOtCJqh5nbK7FkpMrFrI3fdJ2ONJTFZKsRZKdr
+	 pdjep1e5maDcFQP62eHBlKw4mQoUArSoZVF9Pd1iQ67DwxSfdBOoKWUhND2+FWh5Zn
+	 XQOsnTAPeoDGf6rZ+JWv6OaA71NO7i0Q84K1VNMh/ibrfiXjh2H2Hv5Bq+Toxn60u3
+	 efimrqDnmAjiQMyDf010Xax1/bl9eRU5wkxraptnj4iHzGiZhk9CFA6Oy7UNYuri3t
+	 CVO0GuzBXHaPw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: Trevor Allison <tallison@redhat.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 3/3] perf x86: Add .note.gnu.property to assembly linked
- into perf
-Message-ID: <alVLlpmtps__MBCl@google.com>
-References: <20260708045606.43649-1-tallison@redhat.com>
- <20260708045606.43649-4-tallison@redhat.com>
- <20260708050839.BD9491F000E9@smtp.kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v1 0/3] perf sched stats: Fix memory leaks
+Date: Mon, 13 Jul 2026 13:47:04 -0700
+Message-ID: <20260713204707.2181098-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260708050839.BD9491F000E9@smtp.kernel.org>
 
 Hello,
 
-On Wed, Jul 08, 2026 at 05:08:39AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [Medium] Adding .note.gnu.property asserts IBT support without providing ENDBR64 instructions, causing a #CP crash in perf memory benchmarks.
-> - [Medium] The .note.gnu.property section hardcodes 8-byte alignment, violating the 32-bit x86 ELF specification.
-> --
-
-Can you please take a look and address the both comments?
+This is a small series to fix memory leaks in the perf sched stats.
+I've tested the changes with the address sanitizer.
 
 Thanks,
 Namhyung
 
-> 
-> --- Patch [3]: [PATCH 3/3] perf x86: Add .note.gnu.property to assembly linked into perf ---
-> commit b48d7edb7fb18bc3dace2af272de108eb561d69b
-> Author: Trevor Allison <tallison@redhat.com>
-> 
-> perf x86: Add .note.gnu.property to assembly linked into perf
-> 
-> This commit adds `.note.gnu.property` to x86 assembly files linked into
-> perf to indicate CET properties support. This is intended to prevent static
-> linking from dropping CET from the final binary.
-> 
-> > diff --git a/tools/perf/arch/x86/tests/regs_load.S b/tools/perf/arch/x86/tests/regs_load.S
-> > index 80f14f52e3f60..1947f95cceda5 100644
-> > --- a/tools/perf/arch/x86/tests/regs_load.S
-> > +++ b/tools/perf/arch/x86/tests/regs_load.S
-> [ ... ]
-> > @@ -97,3 +97,27 @@ SYM_FUNC_END(perf_regs_load)
-> >   * the ELF stack should not be restricted at all and set it RWX.
-> >   */
-> >  .section .note.GNU-stack,"",@progbits
-> > +
-> > +/*
-> > + * We need to provide .note.gnu.property section with IBT and SHSTK,
-> > + * saying that this object supports the same CET properties as C code
-> > + * built with -fcf-protection. Otherwise static linking drops CET from
-> > + * the final perf binary when other objects are CET-enabled.
-> > + */
-> > +	.pushsection .note.gnu.property, "a"
-> > +	.p2align 3
-> 
-> [Severity: Medium]
-> Does this unconditionally hardcode 8-byte alignment for 32-bit x86 builds?
-> 
-> The assembly file `regs_load.S` can be compiled for 32-bit x86, which requires
-> 4-byte alignment (`.p2align 2`) for ELF notes. When the linker merges these,
-> the forced 8-byte alignment can create zero-byte padding gaps between notes,
-> corrupting the contiguous ELF note structure.
-> 
-> Could this cause the dynamic loader or tools like `readelf` to fail to parse
-> the ELF notes properly?
-> 
-> [ ... ]
-> > diff --git a/tools/perf/bench/mem-memcpy-x86-64-asm.S b/tools/perf/bench/mem-memcpy-x86-64-asm.S
-> > index 1b9fef7efcdcc..e7b84aa43ab44 100644
-> > --- a/tools/perf/bench/mem-memcpy-x86-64-asm.S
-> > +++ b/tools/perf/bench/mem-memcpy-x86-64-asm.S
-> [ ... ]
-> > @@ -18,3 +18,27 @@
-> >   * the ELF stack should not be restricted at all and set it RWX.
-> >   */
-> >  .section .note.GNU-stack,"",@progbits
-> > +
-> > +/*
-> > + * We need to provide .note.gnu.property section with IBT and SHSTK,
-> > + * saying that this object supports the same CET properties as C code
-> > + * built with -fcf-protection. Otherwise static linking drops CET from
-> > + * the final perf binary when other objects are CET-enabled.
-> > + */
-> > +	.pushsection .note.gnu.property, "a"
-> > +	.p2align 3
-> 
-> [Severity: Medium]
-> Will this cause a Control Protection Exception (#CP) crash on IBT-capable
-> hardware when running `perf bench mem memcpy`?
-> 
-> Adding this section artificially claims IBT support and forces the linker to
-> enable CET on the final `perf` binary. However, `perf`'s local linkage headers
-> do not automatically emit `endbr64` instructions for `SYM_FUNC_START`.
-> 
-> When `do_memcpy()` in `tools/perf/bench/mem-functions.c` indirectly calls
-> these assembly entry points like `memcpy_orig`:
-> 
-> 	fn(dst, src, size);
-> 
-> the hardware may detect the missing `endbr64` on the indirect branch target
-> and throw a #CP fault.
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260708045606.43649-1-tallison@redhat.com?part=3
+
+Namhyung Kim (3):
+  perf sched: Add missing perf_session__delete()
+  perf sched: Fix memory leaks in perf sched stats report
+  perf sched: Free subcommand string after perf sched stats
+
+ tools/perf/builtin-sched.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+-- 
+2.55.0.795.g602f6c329a-goog
