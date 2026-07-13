@@ -1,57 +1,58 @@
-Received: from purple.birch.relay.mailchannels.net (purple.birch.relay.mailchannels.net [23.83.209.150])
+Received: from dog.birch.relay.mailchannels.net (dog.birch.relay.mailchannels.net [23.83.209.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE8B835F61A;
-	Mon, 13 Jul 2026 06:11:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.209.150
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E5BB86334;
+	Mon, 13 Jul 2026 06:11:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.209.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783923086; cv=none; b=lH7MtCZx3fyitVPM4+kwX/caL4agSJvsTn5Lc2vHlYprsp8QjaGY2nA4E4IbsP0gTcY8LPt3+8b5H+h1rK47Nkv/miuRaylKuUeuGWx+TEqg7g12TsOSs0U1nrPc788GniMz0PiAbI89aizwFZcMAKxVJ/6CVtaNckACEhb37Tg=
+	t=1783923086; cv=none; b=TU3fK9TnwyP0nQoKU/FL/S/MQACXCKhT9EJ/7n/LZfvr9ztCf2SbXuHqBZYPNptg/FJZE9r8jzSHxNW9TjDPIeVjueYsbdpJNMpiO383IKuMSVUqJQMU7D8amf7WEXhNFErYjCpvgEOSBYVnP0P1XUdBprfbyJ+a3d1XN90wb+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1783923086; c=relaxed/simple;
-	bh=WjLXYPtZ48PUmAptVGCleZa4XxDp+q9fii1WWV3WbmE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pEonLRD6we53DQ/+6Xs3RVj7CQKBy4hx8LXoX7m/Wnhs7tNlL+Ixlf2jmSTiR95xIcD9p3SWbULBfYfg7Wrn6DSiz+Q69uLXsrOXg1qsDY1aToYoUU/30uf+kZnxGPEHirs5c9XcK5m08YUMt2n6ZlY3lmGdhcNw1OrVUKdXkrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=lGDKnY+v; arc=none smtp.client-ip=23.83.209.150
+	bh=kgQWWXMPI4aQ6tvIA16dVo8sJ8V0hAyTtpcVoqRqri4=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cHWFdMznZYV7eNZLmtJ3qf2OWelFLcevoaVAWB70JWEUoTv8ybxpPttJH88FD4EhW4wb4JxHT1FLaIGDcA5JA+KkZ+QxXfXaW9Z2t52x2yrySzATmbd7SPA3aphuDw91y87q6qgvPspDr3bxOP8pYpcfjetd3+ZcU7PJz/caAcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=B8cZ0d6m; arc=none smtp.client-ip=23.83.209.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="lGDKnY+v"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="B8cZ0d6m"
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id D2C687A1D10;
-	Mon, 13 Jul 2026 06:11:18 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTP id 8426980269F;
+	Mon, 13 Jul 2026 06:11:19 +0000 (UTC)
 Received: from pdx1-sub0-mail-a229.dreamhost.com (100-98-253-75.trex-nlb.outbound.svc.cluster.local [100.98.253.75])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 64C117A276B;
+	by relay.mailchannels.net (Postfix) with ESMTPA id F2B1E802517;
 	Mon, 13 Jul 2026 06:11:18 +0000 (UTC)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Quick-Trade: 5edf72aa348f58c2_1783923078673_544100311
-X-MC-Loop-Signature: 1783923078673:3515348654
-X-MC-Ingress-Time: 1783923078673
+X-Little-Supply: 51a7010d12a37275_1783923079407_3000629816
+X-MC-Loop-Signature: 1783923079406:2023346899
+X-MC-Ingress-Time: 1783923079406
 Received: from pdx1-sub0-mail-a229.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
 	by 100.98.253.75 (trex/8.0.2);
-	Mon, 13 Jul 2026 06:11:18 +0000
+	Mon, 13 Jul 2026 06:11:19 +0000
 Received: from offworld.lan (unknown [76.167.199.67])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a229.dreamhost.com (Postfix) with ESMTPSA id 4gzBs15mZvz77;
-	Sun, 12 Jul 2026 23:11:17 -0700 (PDT)
+	by pdx1-sub0-mail-a229.dreamhost.com (Postfix) with ESMTPSA id 4gzBs22yx7zTR;
+	Sun, 12 Jul 2026 23:11:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
 	s=dreamhost; t=1783923078;
-	bh=0gV9rAaaoqv9ur6PUIs7Vw8/UB99KTwcTpWSwyiBi3Y=;
+	bh=cW/jso7Gtty1jbyT6UohhE0vX+8xQd1CbLQmaQoIFOc=;
 	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=lGDKnY+vE+f/GrbCatHDjfWP1Sv3LxX6/TwS65HPjoj3wJVwQhyLIetlX5roRyPz3
-	 4la2F7LBNvkPK6a8H+PSTQZmOUH88Ib4eB4UDANP7PDILVzLzxccmtKXBnPTrvPXfW
-	 AzEgPU8PmFw7ui32NKLODsyZUE8WDDdyLm4yrcStKS1M3EHb17KiQVKbl1/8PWNjbP
-	 8ffpftVK1TVc1JvbdQIyRgZsWzEDwaXCqp2bgOntOWv9UlxWmW/YBIRyij7rCp83IC
-	 CPCT4Bx5zz3BSBJUC4akZS+yXcYMCmLzP63c+RRqFoWA7PUmzzIXNcgvxoGPkgf4yy
-	 ZqFz03wTOkrxA==
+	b=B8cZ0d6m+EM1yjEeaM5oxaxurCaOoUzwddoVZVXiRuEdJs2C8lBGqYYIu6IcM/P7W
+	 YSSkRd3P3P3ek5kDva/mK617Qn49BQErlxYGPs3QXJW5nkCqimk/3v7eLEaOEtvkoQ
+	 p5nwFpqFFmzc07Sd4hZpUX0iKsgT1ZMfk4Eibu4wYXdz7CXaw++MCMFjvoY86NbwTX
+	 w4reNgku0Wav3mADH2BmnyXA+qmqbXOKvIfTadHG/BpJM4IQTbtGnKOzJr4nJIv0E2
+	 B+RSg+stB4sgPUlpKKZ1mrfTw2VzYVCdwpwzpxCP7MTl81f+8ykkex7fce/VR9NOCb
+	 UwuWofxpX+FiQ==
 From: Davidlohr Bueso <dave@stgolabs.net>
 To: jic23@kernel.org,
 	will@kernel.org,
@@ -61,10 +62,12 @@ Cc: harshal.t@samsung.com,
 	linux-cxl@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCH v3 0/3] perf/cxlpmu: Misc updates
-Date: Sun, 12 Jul 2026 23:11:09 -0700
-Message-Id: <20260713061112.105419-1-dave@stgolabs.net>
+Subject: [PATCH v3 1/3] perf/cxlpmu: Fix 64-bit write to 32-bit HDM filter register
+Date: Sun, 12 Jul 2026 23:11:10 -0700
+Message-Id: <20260713061112.105419-2-dave@stgolabs.net>
 X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20260713061112.105419-1-dave@stgolabs.net>
+References: <20260713061112.105419-1-dave@stgolabs.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -73,46 +76,30 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+The HDM decoder filter configuration register is 32 bits wide, but the
+driver programs it with a 64-bit writeq(). The upper half of the write
+is always zero and lands in the adjacent Filter ID 1 (Channel/Rank/Bank)
+configuration register at offset+4.
 
-Changes from v2 (https://lore.kernel.org/all/20260630235002.253297-1-dave@stgolabs.net/):
- - Split the 64-bit HDM filter write fix into its own patch 1. (Richard).
- - Allow CRB filtering for the Queue Occupancy, Queue Residency and
-   Retry event groups, not just DDR Interface in patch 3 (Richard).
- - Reject CRB filtering when counting multiple events (multiple
-   mask bits set), undefined behavior in patch 3.
- - Reordered the series so the events patch comes first, providing
-   the event group ID definitions the filter validation needs.
- - Add the RD/WR merged queue occupancy and power down events,
-   and the Throttle Events group in patch 2.
+Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+---
+ drivers/perf/cxl_pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Three patches for the CXL PMU driver.
-
-Patch 1 is a standalone fix.
-
-Patch 2 adds the CXL 4.0 events that hardware exposes but the
-driver did not. It now precedes the filter work as the latter
-refers to the new event group IDs.
-
-Patch 3 implements Channel/Rank/Bank (CRB) filtering, now permitted
-for all event groups that CXL 4.0 Table 13-5 allows Filter ID 1 on.
-
-v2 was tested on real hardware. The v3 changes have additionally
-been exercised under qemu CPMU emulation (jic23 tree) + changes for
-the new events/Filter=1.
-
-Thanks!
-
-Davidlohr Bueso (1):
-  perf/cxlpmu: Fix 64-bit write to 32-bit HDM filter register
-
-Harshal Thakkar (2):
-  perf/cxlpmu: Add missing CXL 4.0 events
-  perf/cxlpmu: Support Channel/Rank/Bank filter
-
- drivers/perf/cxl_pmu.c | 115 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 112 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+index 68a54d97d2a8..39b46550a510 100644
+--- a/drivers/perf/cxl_pmu.c
++++ b/drivers/perf/cxl_pmu.c
+@@ -635,7 +635,7 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
+ 			cfg = cxl_pmu_config2_get_hdm_decoder(event);
+ 		else
+ 			cfg = GENMASK(31, 0); /* No filtering if 0xFFFF_FFFF */
+-		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
++		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
+ 	}
+ 
+ 	cfg = readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
 -- 
 2.39.5
 
