@@ -1,419 +1,172 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11022126.outbound.protection.outlook.com [40.107.209.126])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88A2D30568B
-	for <linux-perf-users@vger.kernel.org>; Sun, 12 Jul 2026 08:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8987825C804;
+	Mon, 13 Jul 2026 05:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.126
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783844355; cv=pass; b=eichYvel3qmgzQGaXsAcxxbnEL37BAI8Zg2pXfYrUAlj5HB2uU5kvAJXE7AQGGF0hEfcAeHpUwd7oPy/L+3/ml0kitPscE8PjjsFiQzfk09LS0MhXqRD6ep5zLldi/A9wfQ5G/N5GbfOk7GpGZ6suf8FZX8QO6glsviOD8NdANU=
+	t=1783921597; cv=fail; b=LRs6ENuhIZkz6lGe61+iUniwlj1reV1BPLAeEfQyqskPKWUGnEyB29JYpgmPd1p+amofqwPiDKPPbWmBj09BBgGUtKDqJdFoSsV3BuNosDSaawf+I9pJKb8oqJIcbLAbBs5zXWDQeJl0oRX2oP81GI12epG3XvZz/dJ3jNEx2uM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783844355; c=relaxed/simple;
-	bh=UHGF0CrkcIHO06sp/4kNQatZxXFkPj2avz5THKyd2vk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=L0JEpllLy8Tg8U88F27X19jlRKasrukVCDflUKpm4rbWN8P0xY9v7+3Sq+H3PBk/gbVExHWXnwPmaHX08kOokz3xE/lBHI/ciS1ek8uhmj8QELKfBcc0f0W2k67c1SDYMTiMmTLUmQgvBYVER1nWfPl5pXFUzIys4zyYX2COuAs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=theori.io; spf=pass smtp.mailfrom=theori.io; dkim=pass (1024-bit key) header.d=theori.io header.i=@theori.io header.b=KJJtkMzc; arc=pass smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=theori.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=theori.io
+	s=arc-20240116; t=1783921597; c=relaxed/simple;
+	bh=onf7g+vW6IYMRkDo0qq8lDEolaoiDFTxvtHU3z8pGms=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 Content-Type:MIME-Version; b=UY0nC+/Z5333/ueqp77dnnZz7gy+9WayQPOdvG6Cl1AY9Z0KwrVgcj+aTokSQi7SmtxWGBdFaLLClKkoomUiAwcJNqULUbxPkvboUJWOznlyBnMU+0JQlxCA3DWcxRgqYs/62KB5pK/gBx7bxlIS42+UbrZXT2MOhMZSP8PbrOE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=V7ybBbYe; arc=fail smtp.client-ip=40.107.209.126
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=theori.io header.i=@theori.io header.b="KJJtkMzc"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-471eeac43bfso2192353f8f.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 12 Jul 2026 01:19:13 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1783844352; cv=none;
-        d=google.com; s=arc-20260327;
-        b=QU6BL//z3gq51oYPbZmOJf+Oq5seMEXOBveIC37otjXbpjja0x8EynydTeNkSwUPcH
-         wFdYln3lEDn4/FZ9o+i6T2r34NvD7z/imX6UhoJzlaXN77rwulPGafhh+7gaR4HpwaUC
-         RNuGlqzGCfpD95ImDRYa0qupYKvCBOmC8y0PHaX8CA7ALhbVgBvvM1M2Nj8QFAy2NTFT
-         6FZvEzGW0ls0Ylyg5eOLm1Un3snE8zGJS/u2V93bwRkqxnj5RW/JxRWl2UhEqVSv5Qsb
-         HhBJPEIiFaCU4U7IiVGBQraQQ55rXubgnDDt0wwPwax5Hjo16LP39qrzXMnSs9TZQJDg
-         ju3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=qBv7Hzc/dZ4vhh805+d6rzCMGOGEUHJn0T0uC+unQno=;
-        fh=C1MdBf9ry+pSBYndxjeXPGicnwQRPMwHsLvQSIp9kaQ=;
-        b=GxET89kSXl3a926nW0lJmpC5GijvlVTH31R9MHNY8WBgBm1Y6uWxSum1HsPtlG/Or8
-         LFUloIrMEZXVrO7AQP5PZOU3uBvRLGGem9zmkMcDggWH+fR9fW/xmfgeWagSdXv7uf1N
-         zUrJYBCerVlKNjjERXIuepdVkruQ2H01uOQeylpa2M/gH6s6Ay670NDtU6A8FsJdvnOA
-         bMZcOcKAyUCAJgTwZGNY797Bdx4JeMNcu7K8jhhayxzBU3Hg2+NqhKKYQXPqD27l73C2
-         MM6ONtzQmn7vFGs/0I0bJAwYd8hc7/WgPXkzwP1/BAUyLMePdTAKXyXIAO38Xkb93/lM
-         PC7A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="V7ybBbYe"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fB2EQ6PCCr1zMPzUzs3afCpeBEewJaVglBVUrvfzkIVzvPgHrtAw/qTAVxZ5qUkmVXR8vT4pS8nNr24UVockDaoAl5QRWqRjObOLJhIMbwW/kJKenS9w2Zl9WsZSY+QT/ax31SbbB3cvKc11gybdHKvSPQFI5xAQXs9UKGeH9XkpFVHgyHXJYcbNNaS6WwHZtOpq4vGINmYOCLucnn9IP1kVK+mus5bfyO1VRgTkiOVw2twSsU9S5g1JDtN9LJefEdD15y1iNch1RtGGMHmfusar6IBGi+YnYXyRl4M+IdbvrnkGzDvnDJXLjf4ZEqw4JoZGTaH+aFKyNvRhQgrKBw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=esD73XR6mDBiRZFpcl42HCqPB1Ekd/L66eyzC1w66ck=;
+ b=QjvU1t0aEz6089IvZMJ9DWf9hX1hPf2jrnUZs4IEQ3vFPqqteaV7pQdNx8PA+JoSmGjbxOW8nKDZzGEomFq6rYbUf0eP7eLgwsLehqljuDjB9IZ/haGl5oaCfizDGoIyWc1xxLxYZ4LcTL7oPzuHoffOUHk+43MHA8r4om9ewcFhnhrqGYzSh+JcKQ3JKO8kgdpS77gwaW0Aayxyxkxqyl5yEXG8sAqZInHIcBFgXsChdstWfc2cde5xH8egwNiSDg+MlTSE1Z9p+kdCdM+QCYjt5gAgER4F3hKtpIXj4NaSrTuXukhPbOgf0iTn+eW5GxOuEQZ05MDkfzleLOBTnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=theori.io; s=google; t=1783844352; x=1784449152; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=qBv7Hzc/dZ4vhh805+d6rzCMGOGEUHJn0T0uC+unQno=;
-        b=KJJtkMzctmzlFVHZKt9IZfHpZYVUeseEBSrt9pI9hzaF38xguzF1aytKIAJtMGUNKi
-         LJz92gCDvS+zCYfm9GUXSLO4vHJ9Ssm2rWNIiL+3dJhlpQSnbdOdBPLqlUzxtPS3wT4W
-         CUyHgPMTc7hprpbawAtgwZowKJ+3cBbpVLQng=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783844352; x=1784449152;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=qBv7Hzc/dZ4vhh805+d6rzCMGOGEUHJn0T0uC+unQno=;
-        b=IjbtD5xaq41fa2+CI05lrjPBY6AM+cLj1blRxEcOZEKaSoL4cG69Ne4sx96NHCj4Yl
-         W0RmJJx2FUV65O0da4RJJmIN/mDQYV48lTBZ4RbwBwgXufQ1w5Ex/imXIQrScxiQFl8o
-         iAhDRYC87kfti6MocicH9/cgflxyuNbr9+71Z1xqJLuVL2u7DBdr/BnlfT8d+/7ZQzme
-         h6zrjWpJp6RiDCb084fn58oTrIWgaaUZax088mozQWmdD+65V6jKG8kYK+WsP6VuqRvf
-         YjWygAnTMHgAkTCWbrM23Th+9DvXyyMVpfTCX2Q4c8lyq8yIAOtbusm/Ntaf4RcT6h4S
-         531A==
-X-Forwarded-Encrypted: i=1; AHgh+RriwNJzjm9dgB6jcfNiyDFR9i5UCsPXBtSvxHs5h1pLbPuLbJaH/Yd0I/+qWprHQH5ASwP98sqCYGfEGrO93y7Q@vger.kernel.org
-X-Gm-Message-State: AOJu0YyymGgpSoMqYJpzFCiZcsDoNTXqRn66p/DGe6vr/uaCbdUpAzbU
-	P7dfDHcYFCLbE+0suSZRjOhGYKVlx3gBSuQzqJ84ZO9UvytBcj5Rfy94vZxkAXNauJ5UFeyZrjK
-	QJIdP7qskKiVIs26NNTpI+UeMRvtECj2gP/ktdPUsUA==
-X-Gm-Gg: AfdE7ck7WOZMtjj9u+HZ3ogrEK4iqKarAnIZChWk6GWwSa1kgLXTgAcmONpw/hEsB0a
-	sSkJ8maCqRCBWQ9SkDck2sl2Ot1bu1u1pIlpPuJNKVHyF23qWszz1Zi6gOOjJnCNZFTWV6OST1+
-	NHU6+zZsRSJbPXzJdSGR8g4ZjVaFeCdXl02JgILOWGjFhsS/pCbsrzk92B93ztrHEEdttpxSIqP
-	Jr/oQ0Wnqc6DLtcKmQepfpcDz6qrgkw+bWtUw6LuXZKi6f0ECuNZlalirsxDzxm+6DpWEzmsXdB
-	jUA/U432vDbyKkKx70KWX8uaRA==
-X-Received: by 2002:a05:6000:22c5:b0:46d:d6e0:9cc8 with SMTP id
- ffacd0b85a97d-47f2dcfcd4amr5338205f8f.46.1783844351632; Sun, 12 Jul 2026
- 01:19:11 -0700 (PDT)
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=esD73XR6mDBiRZFpcl42HCqPB1Ekd/L66eyzC1w66ck=;
+ b=V7ybBbYeRIiUElEUmHz9lwz4GeFOSiTCfB3bk5OmygeTtHyeO1VetsD5k3UmOM6RdtDM5ZfnL5mXvuttUe1MoR+Gm/KBbxoooQna/m4sRyz0Tiwcm3bbx1CL7usVJz25eMTRV/4X2EmHcJHezbRGuYOr7wdt4pWkmIbL2ceDeUI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from MN2PR01MB5615.prod.exchangelabs.com (2603:10b6:208:11c::29) by
+ PH0PR01MB994865.prod.exchangelabs.com (2603:10b6:510:3b8::16) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.181.8; Mon, 13 Jul 2026 05:46:33 +0000
+Received: from MN2PR01MB5615.prod.exchangelabs.com
+ ([fe80::996f:e4f2:dbd8:120e]) by MN2PR01MB5615.prod.exchangelabs.com
+ ([fe80::996f:e4f2:dbd8:120e%4]) with mapi id 15.21.0202.018; Mon, 13 Jul 2026
+ 05:46:33 +0000
+Date: Sun, 12 Jul 2026 22:46:27 -0700 (PDT)
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: Robin Murphy <robin.murphy@arm.com>
+cc: will@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, 
+    ilkka@os.amperecomputing.com, bwicaksono@nvidia.com, 
+    linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+    linux-perf-users@vger.kernel.org, 
+    Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+    Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@kernel.org>
+Subject: Re: [PATCH 1/4] ACPI/APMT: Use stable device ID
+In-Reply-To: <2a1ed630-3f88-400e-85cc-596b4dd5f5a8@arm.com>
+Message-ID: <b79dad48-0a70-5e27-d074-38df81367485@os.amperecomputing.com>
+References: <cover.1783605641.git.robin.murphy@arm.com> <c113eff51124250fc5798589ce905052046b43b3.1783605641.git.robin.murphy@arm.com> <2a1ed630-3f88-400e-85cc-596b4dd5f5a8@arm.com>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-ClientProxiedBy: MW4PR02CA0027.namprd02.prod.outlook.com
+ (2603:10b6:303:16d::32) To MN2PR01MB5615.prod.exchangelabs.com
+ (2603:10b6:208:11c::29)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ai65GgZcC0LAlWLG@Taeyangs-MacBook-Pro.local> <178307254759.3843924.2571598962077552395.tip-bot2@tip-bot2>
- <CAP-5=fVq=2D6XjVEbAvJz54hG6PcwZZjn-za0hAfK8YV-J+MtQ@mail.gmail.com>
-In-Reply-To: <CAP-5=fVq=2D6XjVEbAvJz54hG6PcwZZjn-za0hAfK8YV-J+MtQ@mail.gmail.com>
-From: Taeyang Lee <0wn@theori.io>
-Date: Sun, 12 Jul 2026 17:18:33 +0900
-X-Gm-Features: AUfX_myH6eOczxIdmAD6LZCfXk_SL4V87DHggVEtPdfgryU-SxH-LP9EyDsXaAk
-Message-ID: <CAH-2Xv+Y7SOs9Lt2j3PacxefO8EewMurBJ3SdhnJdOf7Eqegmg@mail.gmail.com>
-Subject: Re: [tip: perf/urgent] perf/core: Detach event groups during remove_on_exec
-To: Ian Rogers <irogers@google.com>
-Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>, Marco Elver <elver@google.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Ian,
-
-I agree that the prctl enable/disable path has a real lock inversion:
-perf_event_task_enable()/disable() takes owner->perf_event_mutex before
-event->ctx->mutex, while perf_event_remove_on_exec() takes ctx->mutex
-before perf_remove_from_owner(), which then takes owner->perf_event_mutex.
-
-This appears pre-existing from the remove_on_exec path rather than being
-introduced by 037a3c43edfb; the recent patch changes the detach flags after
-perf_remove_from_owner() and does not change this lock ordering. I agree
-this should be investigated/fixed separately.
-
-I don't think close(fd) has the same ordering issue, since
-perf_event_release_kernel() drops owner->perf_event_mutex before taking
-ctx->mutex, but the prctl path is enough for the AB-BA.
-
-Thanks,
-
-On Fri, Jul 10, 2026 at 2:51=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Fri, Jul 3, 2026 at 3:02=E2=80=AFAM tip-bot2 for Taeyang Lee
-> <tip-bot2@linutronix.de> wrote:
-> >
-> > The following commit has been merged into the perf/urgent branch of tip=
-:
-> >
-> > Commit-ID:     037a3c43edfb597665dd34457cd22b14692f2ba3
-> > Gitweb:        https://git.kernel.org/tip/037a3c43edfb597665dd34457cd22=
-b14692f2ba3
-> > Author:        Taeyang Lee <0wn@theori.io>
-> > AuthorDate:    Sun, 14 Jun 2026 23:22:18 +09:00
-> > Committer:     Peter Zijlstra <peterz@infradead.org>
-> > CommitterDate: Thu, 02 Jul 2026 13:21:48 +02:00
-> >
-> > perf/core: Detach event groups during remove_on_exec
-> >
-> > perf_event_remove_on_exec() removes events by calling
-> > perf_event_exit_event(). For top-level events, this removes the event f=
-rom
-> > the context with DETACH_EXIT only.
-> >
-> > This can leave inconsistent group state when a removed event is a group
-> > leader and the group contains siblings without remove_on_exec. If the g=
-roup
-> > was active, the surviving siblings can remain active and attached to th=
-e
-> > removed leader's sibling list, but are no longer represented by a valid
-> > group leader on the PMU context active lists.
-> >
-> > A later close of the removed leader uses DETACH_GROUP and can promote t=
-he
-> > still-active siblings from this stale group state. The next schedule-in=
- can
-> > then add an already-linked active_list entry again, corrupting the PMU
-> > context active list.
-> >
-> > With DEBUG_LIST enabled, this is caught as a list_add double-add in
-> > merge_sched_in().
-> >
-> > Fix this by detaching group relationships when remove_on_exec removes a=
-n
-> > event. This preserves the existing task-exit and revoke behavior, while
-> > ensuring surviving siblings are ungrouped before the removed event leav=
-es
-> > the context.
-> >
-> > Fixes: 2e498d0a74e5 ("perf: Add support for event removal on exec")
-> > Signed-off-by: Taeyang Lee <0wn@theori.io>
-> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> > Link: https://patch.msgid.link/ai65GgZcC0LAlWLG@Taeyangs-MacBook-Pro.lo=
-cal
->
-> Hi Peter, Taeyang and Marco,
->
-> AI code review has flagged this code as introducing, or at least being
-> adjacent, to an existing deadlock. An example of the problem is with
-> an event being enabled at the same time as perf_event_remove_on_exec
-> is running due to the user code doing an exec. It seems possible for 1
-> CPU to hold the perf_event_mutex and be trying to get the
-> perf_event_context->mutex while the other CPU has the
-> perf_event_context->mutex and is trying to get the perf_event_mutex. A
-> fuller AI-generated analysis is below, and it seems correct but I may
-> be missing something. The fixes for this look somewhat large so I
-> thought I'd flag the issue before trying anything.
->
-> Thanks,
-> Ian
->
-> ## Executive Summary
->
-> The reported potential AB-BA deadlock between
-> `owner->perf_event_mutex` (class `&task_struct->perf_event_mutex`) and
-> `ctx->mutex` (class `&perf_event_context->mutex`) is **PRESENT** in
-> the current tip-of-tree code in `torvalds/master`.
->
-> The lock inversion was introduced in 2021 by commit `2e498d0a74e5`
-> ("perf: Add support for event removal on exec") and remains in the
-> code after the recent fix in commit `037a3c43edfb` ("perf/core: Detach
-> event groups during remove_on_exec").
->
-> The use of `SINGLE_DEPTH_NESTING` in `perf_remove_from_owner()`
-> suppresses the Lockdep warning for this specific inversion but **fails
-> to prevent the actual CPU deadlock at runtime**.
->
-> ## Lock Inversion Paths
->
-> The deadlock can be triggered by Process A (Owner) and Process B
-> (Monitored Task) executing concurrent system calls.
->
-> ### Process A Paths (Normal Lock Order: `owner->perf_event_mutex` ->
-> `ctx->mutex`)
->
-> #### Path A1: `prctl(PR_TASK_PERF_EVENTS_ENABLE / DISABLE)`
-> Process A invokes `prctl` to enable or disable events it owns.
-> 1. **`perf_event_task_enable()`** (or `disable`):
->    - Acquires `current->perf_event_mutex` (which is **`A->perf_event_mute=
-x`**).
->    - Iterates over `A->perf_event_list`.
->    - For an event monitoring Process B, calls **`perf_event_ctx_lock(even=
-t)`**.
-> 2. **`perf_event_ctx_lock_nested()`**:
->    - Acquires **`event->ctx->mutex`** (which is **`CtxB->mutex`**).
->
-> **Result:** `A->perf_event_mutex` =E2=86=92 `CtxB->mutex`.
->
-> #### Path A2: `close(event_fd)`
-> Process A (or any task holding a reference to the event fd) closes the
-> event file descriptor.
-> 1. **`perf_release()`** -> **`perf_event_release_kernel()`**:
->    - Calls **`perf_remove_from_owner(event)`**.
-> 2. **`perf_remove_from_owner()`**:
->    - Reads `event->owner` (which is Process A).
->    - Acquires **`owner->perf_event_mutex`** (which is
-> **`A->perf_event_mutex`**).
-> 3. **`perf_event_release_kernel()`** continues:
->    - Calls **`perf_event_ctx_lock(event)`**.
-> 4. **`perf_event_ctx_lock_nested()`**:
->    - Acquires **`event->ctx->mutex`** (which is **`CtxB->mutex`**).
->
-> **Result:** `A->perf_event_mutex` =E2=86=92 `CtxB->mutex`.
->
-> ### Process B Path (Inverted Lock Order: `ctx->mutex` ->
-> `owner->perf_event_mutex`)
->
-> #### Path B1: `execve()`
-> Process B invokes `execve` to execute a new program image. The events
-> monitoring Process B that have the `attr.remove_on_exec =3D 1` bit set
-> are removed.
-> 1. **`begin_new_exec()`** -> **`perf_event_exec()`** ->
-> **`perf_event_remove_on_exec()`**:
->    - Acquires **`ctx->mutex`** (which is **`CtxB->mutex`**).
->    - Iterates over `CtxB->event_list`.
->    - Finds an event with `attr.remove_on_exec =3D 1` (owned by Process A)=
-.
->    - Calls **`perf_remove_from_owner(event)`**.
-> 2. **`perf_remove_from_owner()`**:
->    - Reads `event->owner` (which is Process A).
->    - Acquires **`owner->perf_event_mutex`** (which is
-> **`A->perf_event_mutex`**) via
-> `mutex_lock_nested(&owner->perf_event_mutex, SINGLE_DEPTH_NESTING)`.
->
-> **Result:** `CtxB->mutex` =E2=86=92 `A->perf_event_mutex`.
->
-> ## Concrete Deadlock Interleaving
->
-> If Process A and Process B execute Path A1 (or A2) and Path B1
-> concurrently on different CPUs, the following interleaving causes a
-> CPU deadlock:
->
-> | CPU 0 (Process A) | CPU 1 (Process B) |
-> | :--- | :--- |
-> | Enters `perf_event_task_enable()` | Enters `perf_event_remove_on_exec()=
-` |
-> | Acquires **`A->perf_event_mutex`** | Acquires **`CtxB->mutex`** |
-> | Calls `perf_event_ctx_lock(event)` | Calls `perf_remove_from_owner(even=
-t)` |
-> | Tries to acquire **`CtxB->mutex`**<br>**(BLOCKS on CPU 1)** | Tries
-> to acquire **`A->perf_event_mutex`**<br>**(BLOCKS on CPU 0)** |
->
-> Both processes are now blocked waiting for each other, resulting in a
-> permanent system hang (or soft lockup) on the affected cores.
->
-> ## Analysis of `SINGLE_DEPTH_NESTING`
->
-> In `perf_remove_from_owner()`, the lock is acquired as:
-> ```c
-> mutex_lock_nested(&owner->perf_event_mutex, SINGLE_DEPTH_NESTING);
-> ```
-> Where `SINGLE_DEPTH_NESTING` is defined as `1`.
->
-> This annotation instructs Lockdep to treat this acquisition as being
-> at subclass 1. Since Path A acquires `A->perf_event_mutex` at the
-> default subclass 0, Lockdep's dependency graph observes the sequence
-> as:
-> - Path A: `Class X (Subclass 0)` =E2=86=92 `Class Y (Subclass 0)`
-> - Path B: `Class Y (Subclass 0)` =E2=86=92 `Class X (Subclass 1)`
->
-> Because `X_0` and `X_1` are treated as distinct nodes for cycle
-> detection in Lockdep to permit parent-child hierarchical locking, this
-> annotation **suppresses the Lockdep "possible circular locking
-> dependency detected" warning**.
->
-> However, the hardware and the actual runtime mutex implementation
-> (`kernel/locking/mutex.c`) strip the subclass argument in non-Lockdep
-> builds, and even in Lockdep builds, mutual exclusion is enforced
-> purely based on the physical memory address of the `struct mutex`.
-> Since both paths target the EXACT SAME memory address for
-> `A->perf_event_mutex` and `CtxB->mutex`, the CPU-level deadlock
-> remains unaffected by the annotation.
->
-> The accompanying comment in `perf_remove_from_owner()`:
-> ```c
-> /*
->  * If we're here through perf_event_exit_task() we're already
->  * holding ctx->mutex which would be an inversion wrt. the
->  * normal lock order.
->  *
->  * However we can safely take this lock because its the child
->  * ctx->mutex.
->  */
-> ```
-> is a historical artifact (dating back to commit `f63a8daa5812` in
-> 2015) and does not hold true for the `remove_on_exec` path introduced
-> in 2021 by commit `2e498d0a74e5`, as Process B is the target profilee
-> and not necessarily a child process of the owner Task A, and no
-> hierarchical relationship protects these specific lock instances.
->
-> ## Conclusion
->
-> The AB-BA deadlock between `owner->perf_event_mutex` and `ctx->mutex`
-> is **VERIFIED** to be present in the current tip-of-tree kernel.
->
-> > ---
-> >  kernel/events/core.c | 17 +++++++++--------
-> >  1 file changed, 9 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 954c36e..d7f3e2c 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -4729,7 +4729,7 @@ static void perf_remove_from_owner(struct perf_ev=
-ent *event);
-> >  static void perf_event_exit_event(struct perf_event *event,
-> >                                   struct perf_event_context *ctx,
-> >                                   struct task_struct *task,
-> > -                                 bool revoke);
-> > +                                 unsigned long detach_flags);
-> >
-> >  /*
-> >   * Removes all events from the current task that have been marked
-> > @@ -4756,7 +4756,7 @@ static void perf_event_remove_on_exec(struct perf=
-_event_context *ctx)
-> >
-> >                 modified =3D true;
-> >
-> > -               perf_event_exit_event(event, ctx, ctx->task, false);
-> > +               perf_event_exit_event(event, ctx, ctx->task, DETACH_GRO=
-UP);
-> >         }
-> >
-> >         raw_spin_lock_irqsave(&ctx->lock, flags);
-> > @@ -12937,7 +12937,7 @@ static void __pmu_detach_event(struct pmu *pmu,=
- struct perf_event *event,
-> >         /*
-> >          * De-schedule the event and mark it REVOKED.
-> >          */
-> > -       perf_event_exit_event(event, ctx, ctx->task, true);
-> > +       perf_event_exit_event(event, ctx, ctx->task, DETACH_REVOKE);
-> >
-> >         /*
-> >          * All _free_event() bits that rely on event->pmu:
-> > @@ -14525,12 +14525,13 @@ static void
-> >  perf_event_exit_event(struct perf_event *event,
-> >                       struct perf_event_context *ctx,
-> >                       struct task_struct *task,
-> > -                     bool revoke)
-> > +                     unsigned long detach_flags)
-> >  {
-> >         struct perf_event *parent_event =3D event->parent;
-> > -       unsigned long detach_flags =3D DETACH_EXIT;
-> >         unsigned int attach_state;
-> >
-> > +       detach_flags |=3D DETACH_EXIT;
-> > +
-> >         if (parent_event) {
-> >                 /*
-> >                  * Do not destroy the 'original' grouping; because of t=
-he
-> > @@ -14553,8 +14554,8 @@ perf_event_exit_event(struct perf_event *event,
-> >                         sync_child_event(event, task);
-> >         }
-> >
-> > -       if (revoke)
-> > -               detach_flags |=3D DETACH_GROUP | DETACH_REVOKE;
-> > +       if (detach_flags & DETACH_REVOKE)
-> > +               detach_flags |=3D DETACH_GROUP;
-> >
-> >         perf_remove_from_context(event, detach_flags);
-> >         /*
-> > @@ -14642,7 +14643,7 @@ static void perf_event_exit_task_context(struct=
- task_struct *task, bool exit)
-> >                 perf_event_task(task, ctx, 0);
-> >
-> >         list_for_each_entry_safe(child_event, next, &ctx->event_list, e=
-vent_entry)
-> > -               perf_event_exit_event(child_event, ctx, exit ? task : N=
-ULL, false);
-> > +               perf_event_exit_event(child_event, ctx, exit ? task : N=
-ULL, 0);
-> >
-> >         mutex_unlock(&ctx->mutex);
-> >
-> >
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR01MB5615:EE_|PH0PR01MB994865:EE_
+X-MS-Office365-Filtering-Correlation-Id: cefdc82b-6ac0-45c2-96f0-08dee0a2179d
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|23010399003|7416014|1800799024|366016|22082099003|55112099003|56012099006|4143699003|11063799006|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	CkO5iYuw4n/EmD8B8q8ygCpCFHzVnZFICeBltLW/zLtn9ZP2UTsB9LxVEDeeYTstsJqT01Zr+KqTjA5AnELmoTC3EcNwe/rTtFEoBvvCexcuE1Orv2dlYKE5QlvoUkBx2P/e7YpyJut8CMeRDG4tEV8BGwjJMUMcpVN5uisq5ZRT/irf9mwW87+OoYMJdRZtdGVmMOK0+ac5/7FQ5aIfDgGvAK6ub4P4/5OrVpQOgxL6shq08Id9mEw6oRGBdH3atR3DBqt1FthUWmG/ViQctp/CL5IZRE5e4Io9nWvUw/WUuoX6oQKiWLYufiovVwSXUHse1S1WDUs9NYUIU8sOrY6v5MgzdPpR+PD9loUkumnZ9N49LzsrF/Ho50Ozgp+A2o5O66n1b9x/x8xKJmxSUcZBW4IWHiRIZVJ8VcQwY9HTSfENxedrxjzAq1371w26zgFMbNOSmzqxCMoBKI6+CoSkG5cj0VwF2TgjriA8oAuoMFCWFK3GsXhiAakLXMPrs1wkcJsnWe2cI/79sGMO5P7xcaYLg2egk79HhmfRAB1OPdbSvWIBlIsq5Q5gkx5BbEAO7UtJTpzdmJPQlcIybAs5O8UTeKlgAEVVblDKtYwofsYP75LBdLV+A/f5JS6Z8HKUJ3PdsGGz7rgeXW+pM+WpbF+2mPPwM9Aias7itpg=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR01MB5615.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(7416014)(1800799024)(366016)(22082099003)(55112099003)(56012099006)(4143699003)(11063799006)(18002099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?2FVFtt1xPG1iTtusYOsMHLnKTghWy3LHeHcMs99Ok+buCR51Q2zwuhlEMOCZ?=
+ =?us-ascii?Q?UjMHtQ2FwC/IEBTtBefoXzI6kl/8tpqcQgeHBCfBuFzqEmrEqQiUF6cAgDW7?=
+ =?us-ascii?Q?R3Jb4lqy4RmBvw7lYsvThQFPEOB+LEUFSNvyDl9RIAKmOrtYDVNjPaP4OuNr?=
+ =?us-ascii?Q?3ymKI17Tq0CDylgMJMAG8tcyi4qH7kvE+0/NWFhoeHH6z91qfMCWKCy7lLXR?=
+ =?us-ascii?Q?GLisqV8cd7A8BrsA/T9EGlmmtK1rgBSwe0UrQp935PKT7/cqPHZdq13ZdWoD?=
+ =?us-ascii?Q?Var1zPyuHy9uJePxxmxaZacyXcXo1AYSP6tPlQ7arjqS4BLIl60+FSpxqnuz?=
+ =?us-ascii?Q?6mn1LPoajzRFIvx1ur3Pq6kQbRpKzzgvGGofc1c9TtJj0kVetNwGnMlvJuOU?=
+ =?us-ascii?Q?JJENjI37tkE8mGDwecpLTeZIRfAXpXdkDhxn5Ah0d0abrIYF8Uyx4BwOB1YF?=
+ =?us-ascii?Q?wPwId7i80rRGRvh/X1DZwqlenqeuPlqNEeuxJcBWLAadPAqHTGvIm+27ixrK?=
+ =?us-ascii?Q?dHD7nRGkQecNCIpRy4i+gG5HmD3auwzfFxEa2Q24mOWLk5PlusBVZls3B1Lt?=
+ =?us-ascii?Q?1rjxlWFkp9SeYZygOpCcGa44sLhYE+Cqts6iDz8SdWEOIxwpHrizYYxxaLiZ?=
+ =?us-ascii?Q?++/jOS9B32pKAa2azOHYSum0A36K2cf3W+1UztkYvYKC2g2O8+bGyKgQa7wo?=
+ =?us-ascii?Q?XLL3h+CWADVQlzPc//8nEZ8ln6ETVHAqVY0VBddclqDI5nOMmO1qIQ/uE3Hf?=
+ =?us-ascii?Q?c+hOb++FCmfApjwC67zjS23mZgIlwtNx4xQydIA32S8Ct3JC4PYddiDLw/bC?=
+ =?us-ascii?Q?RVnQkikG/UUcwlaBrRzDJy4/k5V5kUzDq2kTjcpwCfY8NBFZQ1lR7lBNO+lg?=
+ =?us-ascii?Q?iWUJvSJXwS93CidBrhBW5h8vz83QlsyfkU+odiQG3cm144NdmXVtaazobbV/?=
+ =?us-ascii?Q?FrHnRtUKKHyEU4BQDz283oJpALrIzj0WwKSlkvzrLgdNvYu5FGhdYN/BQqrZ?=
+ =?us-ascii?Q?VCt30pZRx4JcnApJ7DueKhWn+jpqFF9F2XW7RQ6PWdLv3Uuj1jBREoFPTtXq?=
+ =?us-ascii?Q?wozCHvqWrc5inTeS1zfn0MGXcxohcswDztKTQpgQ23tfeMDC0nuyeZ/6kWJD?=
+ =?us-ascii?Q?drQjPUJFjsLNxqDoLxFDzG18zTZXmuEnxEtAFM86Tj/5uECLY7aPLVZ5RyvG?=
+ =?us-ascii?Q?lZxEp5YyxSZ8sr6PadBME3GevTv3TMRL8rtKX83dg0zcp+RE0gcF29vLuzmR?=
+ =?us-ascii?Q?2hUpm0j5K7CV1CzZ22evOP4flG11LL/PnQn2zb+jz9zB4whaxnybtN38hn/O?=
+ =?us-ascii?Q?iLs2r0s2wp2vsXt4cWodcK245W4+i7RSQoGauZpF1fHsaXMyo6NlWGBoXgct?=
+ =?us-ascii?Q?QthpZ9LVEYQe+mRyrZ6UZV3hkF9vx0nPwIGEHRm0OsDKmZgwQRPY3ezgljAq?=
+ =?us-ascii?Q?427hcXpwhSFhGc5iXmnLN5xrakczdRBfaZ2I+XQrKy9Id7TTRhyErRJNhpln?=
+ =?us-ascii?Q?MG2i1inQBRIqWYblv+qqVDGOggiWkU1mswXHdRA6885BEKgtmuw2CacxoEMq?=
+ =?us-ascii?Q?vGtVsJfcKJM7P765w9f1qTw5XXcuows/hze8BPuAWLUbueys4NjqFHFD0Mfe?=
+ =?us-ascii?Q?L+woU7ZH84RHIi6ud88llupH+s3tcZMHIAiJlqAUl9mLobY+qui0iB2zhGx1?=
+ =?us-ascii?Q?MDUsVSYNxqcZ4fUz9wo8JBzBtOZWYmC+w+Cur9w8s2juyLTzdO5oCGhw9Kgl?=
+ =?us-ascii?Q?/nvEfXVKoj731tqwO6zQ0HuVn1fLyME=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cefdc82b-6ac0-45c2-96f0-08dee0a2179d
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR01MB5615.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Jul 2026 05:46:33.2336
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Q29H4GAmBzEZqWd8Ojga3ZN22u0BbF4Jf7+txB8QRCuBDVjLsR265Py55UoXq7/h+N8wlxnhWfR6rBQHWRalWIY6yjzLhpMKWPV6RONxqcmjhVXU4F4U6ZtdJA1FzPEE
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR01MB994865
 
 
+On Thu, 9 Jul 2026, Robin Murphy wrote:
+> On 09/07/2026 3:39 pm, Robin Murphy wrote:
+>> The APMT node format includes a unique identifier, so we can use this as
+>> the platform device ID to give userspace stable and identifiable device
+>> names, rather than auto numbering dependent on how the table is parsed.
 
---=20
-___
+That's a good idea.
 
-Taeyang Lee Researcher
-Theori, Inc. / Xint Code
-Website. www.theori.io
-Email. 0wn@theori.io
+>> 
+>> Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+>> Cc: Hanjun Guo <guohanjun@huawei.com>
+>> Cc: Sudeep Holla <sudeep.holla@kernel.org>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+>>   drivers/acpi/arm64/apmt.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/drivers/acpi/arm64/apmt.c b/drivers/acpi/arm64/apmt.c
+>> index bb010f6164e5..ba48fcb26d52 100644
+>> --- a/drivers/acpi/arm64/apmt.c
+>> +++ b/drivers/acpi/arm64/apmt.c
+>> @@ -79,7 +79,7 @@ static int __init apmt_add_platform_device(struct 
+>> acpi_apmt_node *node,
+>>   	int ret, count;
+>>   	struct resource res[DEV_MAX_RESOURCE_COUNT];
+>>   -	pdev = platform_device_alloc(DEV_NAME, PLATFORM_DEVID_AUTO);
+>> +	pdev = platform_device_alloc(DEV_NAME, node->id);
+>
+> Per the Sashiko comment, while I really wouldn't expect it to be an issue in 
+> practice, I guess we could explicitly check and truncate node->id to INT_MAX 
+> (probably with some degree of warning) here just in case.
+
+Yeah, it probably and hopefully won't happen but it makes sense to have a 
+warning message regardless. With it
+
+Reviewed-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+
+Cheers, Ilkka
+
+>
+> Cheers,
+> Robin.
+>
+>>   	if (!pdev)
+>>   		return -ENOMEM;
+>> 
+>
+>
