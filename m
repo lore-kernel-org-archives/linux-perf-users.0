@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B8235E1D9;
-	Mon, 13 Jul 2026 20:47:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF0935E943;
+	Mon, 13 Jul 2026 20:47:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783975631; cv=none; b=Cz8z//SdqDtVm4D8QIXR5eEPg0GNoKH2wkAkbG3RNQ1KwomJNrvH6sKtOgg0TPqGqZjAnXNudUE8KPZ2+++lQhaAv6qfBnmMxD+rnD5JfKyX+SnJb9DTRacyjManKWc3xQlho+vnPFwcK+Fv84d7DmbuoiDOVbGsN8QRG/LGg7A=
+	t=1783975632; cv=none; b=btSAzf5jOiq+ha6kjw/BT6LC6W6a53lj73ahURjdVz3bG3AZ3J5/BfAKSWqbWuCy3x3Yle73Bk6BFICEvM653QF3GVXLBjBd0NS1Db2cv+uQ+g7CDQOeepx9vrwnmTOXcwICvhEW1f8E6NpECLG4u2CTWnccxopU5V5EGyDUIhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783975631; c=relaxed/simple;
-	bh=YJJiqRf9h6bFaDLrUNyd6Pn3veU4WyvmxepRl4BLlis=;
+	s=arc-20240116; t=1783975632; c=relaxed/simple;
+	bh=iX10xCXvTVYSvAK4fNXKPtNHYDpcy2C9JDe/msMRak8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J4cJMt9nJtlnsM5Fidcy7meFYf42+yGBY0UAPZFj0S0g/pA92HuCzGf4O7X0Jt26s7bkQtGTB3++0BqTO2sFXCnE/+dEiLAfqtptW88V22TrIEUj2aK2v3Uq/oy/f9lnq9Cf8sId4Sx+Avw5pQDQhIwptS4RhDtVp8BhdQjlOO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N5RwjXyq; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=ZYSrWIbRO5862zME/WfM9ZEnzifoDp5JZcI823wAMBOxDU7ytvdJL4XbQ2NR5nJm+tC1NsZekslYnvN9/XHRR6lJT/b4L4RYgybD7CIiroEe1IPTb4hJXfBb5t8vqe7pX9TLgwAHAj1RhQVm69I4osNecMAFIQpMHYSD8TPdQg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TFYStltq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N5RwjXyq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C48C1F00A3F;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TFYStltq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E04AB1F00A3A;
 	Mon, 13 Jul 2026 20:47:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783975630;
-	bh=nDrDfafXYGDy6ulQwYd+nOjs9BVAD1MZGdRlgu1eJFc=;
+	s=k20260515; t=1783975631;
+	bh=9A2GYX4cI5AM9Ioug65j3qaUtdj7Sv4dWjf78qKuINg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=N5RwjXyqRzuOEchURWJKFq9aV+3c8CodP7IG3EkTKAH//uTBa7HsLJE+Ym6GTO397
-	 9VKmoLZKl5ULml2ZjVHp1QJ00gsU12Vl9eHX3ofI//kKOVGJpeqiUhY7yN3fSjSuEr
-	 4BsFQBdtTUqUJUrLLR04/Qh1kcmTEiu1ZGc7EcLzCHlUOeo0+OPnZp2ewaEVbtZIkF
-	 QH7hW0KbzDlnaYwmD6NCiWqc3SbqXcskS8SIJKkUOVyS/8galrZ34uSquK3lT+g2e5
-	 kJM+kUk5yn/VGuIyFKUR8WB/9e5U2QXdYrxI4dZdgrrgLpcCtNCWdw+Sry7EPZwIsZ
-	 V0YA9q/YB8+jg==
+	b=TFYStltqazKXWdDENoM8vCsvJ8OJF4pQTH1kw4BwiOtqfL4QW9x8rR2k7gU232xzz
+	 srIXOPHG+6AjcNMPjjUiUIppHaq5nauyIphbjjKDNjVB+oD3qdJ70u/iuDDlJwalrp
+	 bhYFl3a2qf+0nwNFH90LREYz89hMg13w5F+YjCeW5tNvn1FmdVd+DnctRKQ4v8VMZP
+	 23/6TSH5L/Il8K20SM2xhgApNHyIV07TY1021wpofbRMtQQpEH04dFowkFytPC7+Jd
+	 j1LVypH88XYEErmEQs/Hyl26GKT4+2E6lVyaKjk7DjVpgIPU2ymVBw7knGOqvv82tA
+	 neJVdSGPmqkKg==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -37,9 +37,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Swapnil Sapkal <swapnil.sapkal@amd.com>
-Subject: [PATCH v1 2/3] perf sched: Fix memory leaks in perf sched stats report
-Date: Mon, 13 Jul 2026 13:47:06 -0700
-Message-ID: <20260713204707.2181098-3-namhyung@kernel.org>
+Subject: [PATCH v1 3/3] perf sched: Free subcommand string after perf sched stats
+Date: Mon, 13 Jul 2026 13:47:07 -0700
+Message-ID: <20260713204707.2181098-4-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
 In-Reply-To: <20260713204707.2181098-1-namhyung@kernel.org>
 References: <20260713204707.2181098-1-namhyung@kernel.org>
@@ -51,38 +51,46 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The second pass data is not saved in the list and only used to calculate
-delta from the first pass.  Let's free the data after use.
+The first entry of the sched_usage is dynamically allocated in
+parse_options_subcommand() so it should be released at the end.
+Do not return from a subcommand directly.
 
-Fixes: 5a357ae6ad63 ("perf sched stats: Add support for report subcommand")
+Fixes: 064790a3d4a8 ("perf sched stats: Add support for diff subcommand")
 Cc: Swapnil Sapkal <swapnil.sapkal@amd.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-sched.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/builtin-sched.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 68147a0be5c710ed..439e50d9a936f6c1 100644
+index 439e50d9a936f6c1..cc5b61cb9291fa02 100644
 --- a/tools/perf/builtin-sched.c
 +++ b/tools/perf/builtin-sched.c
-@@ -4632,6 +4632,8 @@ static int perf_sched__process_schedstat(const struct perf_tool *tool __maybe_un
- 			domain_second_pass = list_first_entry(&cpu_second_pass->domain_head,
- 							      struct schedstat_domain, domain_list);
- 			store_schedstat_cpu_diff(temp);
-+			free(temp->cpu_data);
-+			free(temp);
+@@ -5260,19 +5260,20 @@ int cmd_sched(int argc, const char **argv)
+ 			if (argc)
+ 				argc = parse_options(argc, argv, stats_options,
+ 						     stats_usage, 0);
+-			return perf_sched__schedstat_record(&sched, argc, argv);
++			ret = perf_sched__schedstat_record(&sched, argc, argv);
+ 		} else if (argv[0] && !strcmp(argv[0], "report")) {
+ 			if (argc)
+ 				argc = parse_options(argc, argv, stats_options,
+ 						     stats_usage, 0);
+-			return perf_sched__schedstat_report(&sched);
++			ret = perf_sched__schedstat_report(&sched);
+ 		} else if (argv[0] && !strcmp(argv[0], "diff")) {
+ 			if (argc)
+ 				argc = parse_options(argc, argv, stats_options,
+ 						     stats_usage, 0);
+-			return perf_sched__schedstat_diff(&sched, argc, argv);
++			ret = perf_sched__schedstat_diff(&sched, argc, argv);
++		} else {
++			ret = perf_sched__schedstat_live(&sched, argc, argv);
  		}
- 	} else if (event->header.type == PERF_RECORD_SCHEDSTAT_DOMAIN) {
- 		struct schedstat_cpu *cpu_tail;
-@@ -4652,6 +4654,8 @@ static int perf_sched__process_schedstat(const struct perf_tool *tool __maybe_un
- 		} else {
- 			store_schedstat_domain_diff(temp);
- 			domain_second_pass = list_next_entry(domain_second_pass, domain_list);
-+			free(temp->domain_data);
-+			free(temp);
- 		}
+-		return perf_sched__schedstat_live(&sched, argc, argv);
+ 	} else {
+ 		usage_with_options(sched_usage, sched_options);
  	}
- 
 -- 
 2.55.0.795.g602f6c329a-goog
 
