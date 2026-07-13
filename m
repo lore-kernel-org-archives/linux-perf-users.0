@@ -1,96 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FD9B3B777F;
-	Mon, 13 Jul 2026 23:45:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BD437A839
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jul 2026 23:54:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783986340; cv=none; b=O0UuOavPl19BhfOQOMwpdDuu2PrRSbtUKhf4w+qeIWVTDOBh6ThruicvZCzg9R15QV9mPnjKpQW1HnvYJ75wp5FrzCenMWFNjuMRfKcKweaC19ErA2x3cW3MYiSIYfU2DXiFeRl9nzFcp7FaQTzBOsIEAVp9jt65FNIUAdTX0mY=
+	t=1783986894; cv=none; b=mfaaDGqFrK20ju2yVGjoHs72GvBUVPA3j3ql0rbF+zKuXiTyRMXVQdhOmZCBVE/eBh+tgxwft2TCLw/S8mvsFd+1c9fsOH1Oh1/vhEVKAe3dR0+7gatAOEVgM0aNv9GOpCJ7n5Zf7i4UuqOM0iErqnfHwQhMrj9UAHvVzHJFOCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783986340; c=relaxed/simple;
-	bh=YyuVHjU+ZbX4pENj1g+R8y/nX/Ac9Y+0iLI74ws35dk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZvOuE7vnVrTx/j16JuifYcwOh35+LzwMtm52apAL3cD8auEjIqE8AzMGapB/KB3xdiq0cwQmDi5+rWFqPnPv454xn1KriV7oCOb3MDhjhzKE1wh+42sKl61SJAbLGLuEqA+049so5SOgWSt6oWSpfn6g/4EDxHlTdjO0DIkBPyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WeQx/zf1; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783986894; c=relaxed/simple;
+	bh=zEVVH3vwJ5FlQpmzaw7rFtcWQT2M2zoO7cQ6F+xuHPU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=JpTHpQqJd3gGfx1LEIjTDWydpFzMHDyjVaThRxDdbLJdRbTzvlJ+g9HjLAT+LqO0oeb+72XcWAr62gbV2C+L2JAzTLAIqeV932ynf6BLZv+cjC8k52+E31qi/CHJlR/wvnhF+A91qBB/6xLX7/pVUz8TjRLbkIGGlz/eh8u/tYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eY7GpQs6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WeQx/zf1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2283B1F00AC4;
-	Mon, 13 Jul 2026 23:45:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eY7GpQs6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 912481F000E9;
+	Mon, 13 Jul 2026 23:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783986339;
-	bh=wOkavhZ3KX+8cIlmdeCXNUzWYbrnkJ4x9IfdA9Wxy0M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=WeQx/zf1vzlXOzD4OHiMbv62UD9XLzU/00k7fhPK81JEZYJdxnqCe/F1cYBWqW5aA
-	 NheJccsilevhi/otfq24dEcjeVyf8sH1aAsYo7IZqI8sxNpiCcIDRFfTy77Gpqnnr3
-	 NtUNLQgOCXX3WXC1tX5/FYz4XCxy7ViQnQ980akuERwpsX3LDy0EVJJetamjiFO5GS
-	 /H+PHNa76P/LtGWt4BNeziz8L7L58AEtE685RDYAGuVezs/3uhGEbTeivv1Rj1m7ts
-	 ll59UwH5wDw1xMslUyFXeWV+d1SQkRrEqPZ1kcOcVW6H4jthG1asLJ6e/793nOYEjM
-	 F9OWxdpfgRjVQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>
-Subject: [PATCH v2 3/3] perf sched: Free subcommand string after perf sched stats
-Date: Mon, 13 Jul 2026 16:45:36 -0700
-Message-ID: <20260713234536.2280374-4-namhyung@kernel.org>
-X-Mailer: git-send-email 2.55.0.795.g602f6c329a-goog
-In-Reply-To: <20260713234536.2280374-1-namhyung@kernel.org>
+	s=k20260515; t=1783986892;
+	bh=R35dSG2QLVyCaFiIuY6Trj+uMfPkLV+uVZbRKBdVZeM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=eY7GpQs6ulFkGqhKgww+BrvCh6SiAGaKxGQkqoZ8gNS7LPFIVoHwwiUHVhY15SVd2
+	 vYcbhNUxzbmuebhbFHpVgehCDQ2kd35LdVpukDASdH927ffGTzsXMjxl2VwnFnl6Ij
+	 fTfGyaqXQiHJt/dJoMfBfLbGkGE8OEGKH4JfAN/tVJOwG3C2IZyxcmG9qg7Ew//yyj
+	 DLZsmivkaGWtH0A1UymVjmVz9c1pLqo66Ib5FXj2M3Jz95XrWSeQ0fCrucALdvvDmb
+	 I7mu4iXYggwPNlAKTPf2LR+rWp9HQ0/seQxR4pMlh7bjOekL7Si75pjNGpimN1HFJo
+	 2dDTZA07nUpdw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 2/3] perf sched: Fix memory leaks in perf sched stats
+ report
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Namhyung Kim" <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260713234536.2280374-3-namhyung@kernel.org>
 References: <20260713234536.2280374-1-namhyung@kernel.org>
+ <20260713234536.2280374-3-namhyung@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 13 Jul 2026 23:54:52 +0000
+Message-Id: <20260713235452.912481F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The first entry of the sched_usage is dynamically allocated in
-parse_options_subcommand() so it should be released at the end.
-Do not return from a subcommand directly.
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Fixes: 064790a3d4a8 ("perf sched stats: Add support for diff subcommand")
-Cc: Swapnil Sapkal <swapnil.sapkal@amd.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/builtin-sched.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Pre-existing issues:
+- [High] Memory corruption and NULL pointer dereference when processing an =
+early PERF_RECORD_SCHEDSTAT_DOMAIN event.
+- [High] Out-of-bounds memory access and crash during second-pass list iter=
+ation due to missing bounds checks.
+--
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index ab9590c4d838eff3..acc8d81a20d3b9d1 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -5259,19 +5259,20 @@ int cmd_sched(int argc, const char **argv)
- 			if (argc)
- 				argc = parse_options(argc, argv, stats_options,
- 						     stats_usage, 0);
--			return perf_sched__schedstat_record(&sched, argc, argv);
-+			ret = perf_sched__schedstat_record(&sched, argc, argv);
- 		} else if (argv[0] && !strcmp(argv[0], "report")) {
- 			if (argc)
- 				argc = parse_options(argc, argv, stats_options,
- 						     stats_usage, 0);
--			return perf_sched__schedstat_report(&sched);
-+			ret = perf_sched__schedstat_report(&sched);
- 		} else if (argv[0] && !strcmp(argv[0], "diff")) {
- 			if (argc)
- 				argc = parse_options(argc, argv, stats_options,
- 						     stats_usage, 0);
--			return perf_sched__schedstat_diff(&sched, argc, argv);
-+			ret = perf_sched__schedstat_diff(&sched, argc, argv);
-+		} else {
-+			ret = perf_sched__schedstat_live(&sched, argc, argv);
- 		}
--		return perf_sched__schedstat_live(&sched, argc, argv);
- 	} else {
- 		usage_with_options(sched_usage, sched_options);
- 	}
--- 
-2.55.0.795.g602f6c329a-goog
+--- Patch [2]: [PATCH v2 2/3] perf sched: Fix memory leaks in perf sched st=
+ats report ---
+commit e4c15a9e591e133dd7ddf5965e12d5b6792f096e
+Author: Namhyung Kim <namhyung@kernel.org>
 
+perf sched: Fix memory leaks in perf sched stats report
+
+The second pass data is not saved in the list and only used to calculate
+delta from the first pass. This frees the data after use to prevent leaks.
+
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -4626,11 +4626,13 @@ static int perf_sched__process_schedstat(const st=
+ruct perf_tool *tool __maybe_un
+>  			} else {
+>  				cpu_second_pass =3D list_next_entry(cpu_second_pass, cpu_list);
+>  			}
+
+[Severity: High]
+This is a pre-existing issue, but can this out-of-bounds iteration cause a
+crash if a malformed perf.data file has more CPU events in the second pass
+than the first pass?
+
+If the iterator advances past the end of the list, it will point back to the
+list head itself. The subsequent code would treat the list head as a valid
+struct, read misaligned bytes as a pointer, and dereference it inside
+store_schedstat_cpu_diff().
+
+>  			domain_second_pass =3D list_first_entry(&cpu_second_pass->domain_head,
+>  							      struct schedstat_domain, domain_list);
+>  			store_schedstat_cpu_diff(temp);
+> +			free(temp->cpu_data);
+> +			free(temp);
+>  		}
+>  	} else if (event->header.type =3D=3D PERF_RECORD_SCHEDSTAT_DOMAIN) {
+>  		struct schedstat_cpu *cpu_tail;
+[ ... ]
+> @@ -4647,10 +4649,12 @@ static int perf_sched__process_schedstat(const st=
+ruct perf_tool *tool __maybe_un
+>  		if (!after_workload_flag) {
+>  			cpu_tail =3D list_last_entry(&cpu_head, struct schedstat_cpu, cpu_lis=
+t);
+>  			list_add_tail(&temp->domain_list, &cpu_tail->domain_head);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but is it possible for a
+PERF_RECORD_SCHEDSTAT_DOMAIN event to arrive before any
+PERF_RECORD_SCHEDSTAT_CPU event?
+
+If the cpu_head list is empty, list_last_entry() evaluates to an invalid
+pointer based off the list head offset. The subsequent list_add_tail() would
+then access invalid memory when trying to link the elements.
+
+>  		} else {
+>  			store_schedstat_domain_diff(temp);
+>  			domain_second_pass =3D list_next_entry(domain_second_pass, domain_lis=
+t);
+
+[Severity: High]
+This is also a pre-existing issue, but similarly to the CPU list, does this
+code risk an out-of-bounds access if the second pass has more DOMAIN events
+than the first pass?
+
+> +			free(temp->domain_data);
+> +			free(temp);
+>  		}
+>  	}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260713234536.2280=
+374-1-namhyung@kernel.org?part=3D2
