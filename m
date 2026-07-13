@@ -1,93 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDECEAC7
-	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jul 2026 18:31:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E6234DB74;
+	Mon, 13 Jul 2026 20:33:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783967481; cv=none; b=P08zY2izN2isKc9JUnTyV1O68YpbhtcycBS+ilamitztBiARht5adTW+YLp1DK0hhLke/q8/jxwGtZTQ94N0JeSbFWBJv8GHVb0mgt1+zOTZpOG4mzfp6Dl/og+gX3RlooekxxNkQE0vlm5x1H6guoPsdzllJpBunlqlbXNIB7I=
+	t=1783974809; cv=none; b=QiSOUZUtkKOSGwcas9w10xvyvHLW/z3Jd5PyAi97nzVhZnPoBV+2YNBWN7nMjkScu1EoteecjAOcy/TbP/HpQDgHM3j4TRZHuyU7d6oZ0f8rULTOGbM+eWYzwfRr6JcVixart1TDVR40wCO+QuIF4RVK2dRrd8hGNxsxPDRdmc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783967481; c=relaxed/simple;
-	bh=KI0In3ySDf9mRnX8Es+cnA9ymhX0W8Ck++dZ4+izsFA=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lQ2ucl+cpepizx2oKKaXxBcUbZksgr6oRI7PJpraV9gA5eIQn3FiKmplpcJ0K/KX7L8Vn023VjLsbiidPjEI4X4Fs++9rHV2b/OPxI64x8ZoizXtz5rA79VhJS5Nwce+ynGAcjr98KYPdLZ6c993RzsGcLNfnaQ3zj0z+SwR2jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CKnakGvu; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1783974809; c=relaxed/simple;
+	bh=BzXnWYycZtrsC4eYp80TBiwS/8l9vkPcVQHMfEwIaHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YrVF1NO5lRK9+8mhfU1d3GmGNhE1uwkmDl/0d9sn0UUQ9HWdlfbx3uk8pNM/NXSH9qIl2xGvKh7f7fVx3im6KxGW+m3lzKy1CqcBwwCDJU5pDJcII/hlGdq0s3bwHvjdo91a63cObXOJJl5mkXbCJvqo3lP0WugN1LHK7nI9i10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J+njEd0h; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CKnakGvu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3A2B1F00A3A;
-	Mon, 13 Jul 2026 18:31:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J+njEd0h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBBFA1F00A3A;
+	Mon, 13 Jul 2026 20:33:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783967479;
-	bh=8SsbfisCNHQ19bt2n0aWC8Xth97Roz5jsmCgKO8oDvw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CKnakGvuygq+NgOUKnAn6VspziN3DReC6DCMuSnG9fD8Kku4asC5jFpBMR8CBip84
-	 rLFbtrl+AW5rZkLbWCtfvNRHeWjSoyu2AEVqU5KEGsU1t3DHVbZVneGJ0vEOlPs1uj
-	 bhRgPu/Gz7gaywLM5grOj8r3rzEShzpBxBWYQ9zCWhYQ3snan0UqZ7rzrpjEXOJgjS
-	 iIC18gVDEUJxfzC5srmco4KtPLVVl+qCHAlmIJ10Fw+NI6AMilZdoNmTZM1rFb34mq
-	 NVZQF/EJBxyI6ySUHj7WDqIdcbKHqr0DEzQCaVBZz3pbyUD6snTQcHY/w5mH64Hbs3
-	 z8+FfM1ZTekqA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 09/12] perf vendor events intel: Add novalake v1.00
- events
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Chun-Tse Shao" <ctshao@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260713181757.481164-10-ctshao@google.com>
-References: <20260713181757.481164-1-ctshao@google.com>
- <20260713181757.481164-10-ctshao@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 13 Jul 2026 18:31:19 +0000
-Message-Id: <20260713183119.C3A2B1F00A3A@smtp.kernel.org>
+	s=k20260515; t=1783974807;
+	bh=cRkPSO91bFeK9182PS7Iusjus+5qu8ApU8Ds9AgNKO4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=J+njEd0hPiFuXkUjQ/5/i4upvCIBDFBxs5vg2NHF4FYvEtDBeJ2cQFRJ6WMOdltt3
+	 bhGNcW0smNWjC0n74L8kCC2kRofEcyhYc2Kr8xwHYfivqAtpQfQDLdjjVDjxBbkKGR
+	 Jpg/eoQXMiuhQnn60IG1UvMB6h3h+qAADqWo9xTtEkZX5mQRMm1HdgrgPNRkjaLxgm
+	 e3yK6LKKTrHFnHzComDtHn57rf6bbj2AE7FoF4OuARZ/Ax3TeR5K8+u8JIr34Em2Al
+	 A6HZOHiqshYEF5LoGvbAxzzufWMf4qVkrQgFkoXWPA60x+zKUrO9GEuhdLxe8QWoqA
+	 DIzyfOj+yZhGQ==
+Date: Mon, 13 Jul 2026 13:33:26 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: Trevor Allison <tallison@redhat.com>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 3/3] perf x86: Add .note.gnu.property to assembly linked
+ into perf
+Message-ID: <alVLlpmtps__MBCl@google.com>
+References: <20260708045606.43649-1-tallison@redhat.com>
+ <20260708045606.43649-4-tallison@redhat.com>
+ <20260708050839.BD9491F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260708050839.BD9491F000E9@smtp.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The CPUID matching regex for novalake expects a zero-padded mode=
-l ('0[13]'), but perf generates the CPUID string using '%X' without zero-pa=
-dding, meaning the events will fail to load.
---
+Hello,
 
---- Patch [9]: [PATCH v1 09/12] perf vendor events intel: Add novalake v1.0=
-0 events ---
-commit 5f5b010b3f6aa216e7d15989744fc8646fec9af1
-Author: Chun-Tse Shao <ctshao@google.com>
+On Wed, Jul 08, 2026 at 05:08:39AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [Medium] Adding .note.gnu.property asserts IBT support without providing ENDBR64 instructions, causing a #CP crash in perf memory benchmarks.
+> - [Medium] The .note.gnu.property section hardcodes 8-byte alignment, violating the 32-bit x86 ELF specification.
+> --
 
-perf vendor events intel: Add novalake v1.00 events
+Can you please take a look and address the both comments?
 
-This commit adds performance monitoring events for the Intel Novalake
-architecture. It introduces new JSON event definition files and updates the
-x86 mapfile to associate the new models with these events.
+Thanks,
+Namhyung
 
-> diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-=
-events/arch/x86/mapfile.csv
-> index a15cd32809937..d88a22d9de72b 100644
-> --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-> +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> @@ -39,6 +39,7 @@ GenuineIntel-6-8[CD],v1.19,tigerlake,core
->  GenuineIntel-6-2C,v5,westmereep-dp,core
->  GenuineIntel-6-25,v4,westmereep-sp,core
->  GenuineIntel-6-2F,v4,westmereex,core
-> +GenuineIntel-18-0[13],v1.00,novalake,core
-
-[Severity: Medium]
-Will this regex fail to match the actual CPUID string generated by perf?
-
-When perf runs on a Novalake processor, get_cpuid_str() formats the CPUID
-using %s-%u-%X-%X$. For Novalake models 0x01 and 0x03, the %X format
-specifier does not zero-pad the output. This results in a CPUID string
-like GenuineIntel-18-1 or GenuineIntel-18-3.
-
-Since this regex explicitly expects a leading zero (0[13]), it looks like
-it won't match the unpadded string, causing the new events to be
-unavailable. Should this be GenuineIntel-18-[13] instead?
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260713181757.4811=
-64-1-ctshao@google.com?part=3D9
+> 
+> --- Patch [3]: [PATCH 3/3] perf x86: Add .note.gnu.property to assembly linked into perf ---
+> commit b48d7edb7fb18bc3dace2af272de108eb561d69b
+> Author: Trevor Allison <tallison@redhat.com>
+> 
+> perf x86: Add .note.gnu.property to assembly linked into perf
+> 
+> This commit adds `.note.gnu.property` to x86 assembly files linked into
+> perf to indicate CET properties support. This is intended to prevent static
+> linking from dropping CET from the final binary.
+> 
+> > diff --git a/tools/perf/arch/x86/tests/regs_load.S b/tools/perf/arch/x86/tests/regs_load.S
+> > index 80f14f52e3f60..1947f95cceda5 100644
+> > --- a/tools/perf/arch/x86/tests/regs_load.S
+> > +++ b/tools/perf/arch/x86/tests/regs_load.S
+> [ ... ]
+> > @@ -97,3 +97,27 @@ SYM_FUNC_END(perf_regs_load)
+> >   * the ELF stack should not be restricted at all and set it RWX.
+> >   */
+> >  .section .note.GNU-stack,"",@progbits
+> > +
+> > +/*
+> > + * We need to provide .note.gnu.property section with IBT and SHSTK,
+> > + * saying that this object supports the same CET properties as C code
+> > + * built with -fcf-protection. Otherwise static linking drops CET from
+> > + * the final perf binary when other objects are CET-enabled.
+> > + */
+> > +	.pushsection .note.gnu.property, "a"
+> > +	.p2align 3
+> 
+> [Severity: Medium]
+> Does this unconditionally hardcode 8-byte alignment for 32-bit x86 builds?
+> 
+> The assembly file `regs_load.S` can be compiled for 32-bit x86, which requires
+> 4-byte alignment (`.p2align 2`) for ELF notes. When the linker merges these,
+> the forced 8-byte alignment can create zero-byte padding gaps between notes,
+> corrupting the contiguous ELF note structure.
+> 
+> Could this cause the dynamic loader or tools like `readelf` to fail to parse
+> the ELF notes properly?
+> 
+> [ ... ]
+> > diff --git a/tools/perf/bench/mem-memcpy-x86-64-asm.S b/tools/perf/bench/mem-memcpy-x86-64-asm.S
+> > index 1b9fef7efcdcc..e7b84aa43ab44 100644
+> > --- a/tools/perf/bench/mem-memcpy-x86-64-asm.S
+> > +++ b/tools/perf/bench/mem-memcpy-x86-64-asm.S
+> [ ... ]
+> > @@ -18,3 +18,27 @@
+> >   * the ELF stack should not be restricted at all and set it RWX.
+> >   */
+> >  .section .note.GNU-stack,"",@progbits
+> > +
+> > +/*
+> > + * We need to provide .note.gnu.property section with IBT and SHSTK,
+> > + * saying that this object supports the same CET properties as C code
+> > + * built with -fcf-protection. Otherwise static linking drops CET from
+> > + * the final perf binary when other objects are CET-enabled.
+> > + */
+> > +	.pushsection .note.gnu.property, "a"
+> > +	.p2align 3
+> 
+> [Severity: Medium]
+> Will this cause a Control Protection Exception (#CP) crash on IBT-capable
+> hardware when running `perf bench mem memcpy`?
+> 
+> Adding this section artificially claims IBT support and forces the linker to
+> enable CET on the final `perf` binary. However, `perf`'s local linkage headers
+> do not automatically emit `endbr64` instructions for `SYM_FUNC_START`.
+> 
+> When `do_memcpy()` in `tools/perf/bench/mem-functions.c` indirectly calls
+> these assembly entry points like `memcpy_orig`:
+> 
+> 	fn(dst, src, size);
+> 
+> the hardware may detect the missing `endbr64` on the indirect branch target
+> and throw a #CP fault.
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260708045606.43649-1-tallison@redhat.com?part=3
