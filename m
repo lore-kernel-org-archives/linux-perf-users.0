@@ -1,100 +1,139 @@
-Received: from canpmsgout05.his.huawei.com (canpmsgout05.his.huawei.com [113.46.200.220])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAB03D0929;
-	Mon, 13 Jul 2026 08:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0BD23B47D7
+	for <linux-perf-users@vger.kernel.org>; Mon, 13 Jul 2026 08:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783932579; cv=none; b=QjVNnqKfUfr8OwJVClOQfsnqowB91uPbWYYRR9K3zsF1gwgoYRE9qDny6et2aaVSDwj1LnB6RonJ+UESaJZ6v5h9LAth5gfk28lmmaPbXjmw1O/nk8DtUTGMhWmRfzsdPmuzOXzeynotAV7T0De8EAhjOGXU3WqLq0qNNJcp8/M=
+	t=1783933169; cv=none; b=INU1s4g49txF4e5JtvwnLssAvp7pCW11q/mFT90LPsusJHWmSe4zcp6/nCZkLnIm+hgrOJRymoG8ADQxa/AZVwDftBRNpLwd50rKNcsjuewcm5rto0/DTnr7VhDT6NlU9QEQGR8w3QinVoLV+bTOTS+k6TYwyoZzFCHPQoQIej8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783932579; c=relaxed/simple;
-	bh=sxfQflYPeFYevVQ6mFcMjDr1xqwFE6A3HME7QH4zMog=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hqZNf8xWY5lMljwBR/kBNQvTdkRpZWr8GMOJ16ptNq7EjZhF9W2f1Q00QFLjPgtOjW5FFd3TzdfG2oPXp8Tpx4PH6Lca0J2lalFrlrEFWbPMSKCP4rK6HTxUUoGhSiz+7dz2GcdO8A1IG1FGT6kIeYD3puRVuMMsOvT26uH5LjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=KSh4RwCd; arc=none smtp.client-ip=113.46.200.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+	s=arc-20240116; t=1783933169; c=relaxed/simple;
+	bh=oDFqAToPuaVTrPc0sct/nwWQy1wI69YCevy4I1pNqGM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Kf0u0ZS90JjqSrtfCbbLKsxsscFkMkb5GrGSPxDib3XMgbIot1621qSxXYvCuqewbtluM8EcPqThX3O8jaQCu8f1MVXlkx7Xi4ZFWNDsfeTKmSU2I2ImAYdUKHCkvMzTageRyGYOL2GGB6ewye17D0qkik6YXTeFH42wzDFxUh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FL14bv49; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="KSh4RwCd"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=SKHdSP5nQMb3Q5XWdhIYg9uoiKMFPcMO13oydIAbY+o=;
-	b=KSh4RwCd+h82LOgcgRmZXF7gdYP9e08nV6f71vL3l33c84A+9euuNH4rLmjDm/PhH8NDRt9si
-	/dQZ9KWfpNU798pmW5gwYWXPV7JafoIpQt0zBR9W5gHw1qQvG6IShKd7YPVvXghJ3Ujy1gzecbk
-	Aje445tgq5oqm9psoX5+zjo=
-Received: from mail.maildlp.com (unknown [172.19.163.0])
-	by canpmsgout05.his.huawei.com (SkyGuard) with ESMTPS id 4gzG8S6N0bz12LDx;
-	Mon, 13 Jul 2026 16:39:52 +0800 (CST)
-Received: from whupemo200004.china.huawei.com (unknown [7.152.184.18])
-	by mail.maildlp.com (Postfix) with ESMTPS id C97E940561;
-	Mon, 13 Jul 2026 16:49:31 +0800 (CST)
-Received: from [10.67.120.233] (10.67.120.233) by
- whupemo200004.china.huawei.com (7.152.184.18) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 13 Jul 2026 16:49:31 +0800
-Message-ID: <9b944a92-c83d-4388-bdda-b633948f27e5@huawei.com>
-Date: Mon, 13 Jul 2026 16:49:30 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FL14bv49"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48C281F000E9;
+	Mon, 13 Jul 2026 08:59:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783933167;
+	bh=/9CJMg0uYY6Exg4pLjDgAfw9Q24yJa21Hh54zqPBCXk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=FL14bv49+ntumsB8ZvPKJd8kHduaZPhn/oWZUaDhgmxubA+2jMGFo4L4WmCc4ibPi
+	 YkJDedIgyLRBiTsbsx+ez8ywRLn0wz0ny1kUDK5LE5/m1pQz2hn5T1lAbEcgo191/Z
+	 uh1Ghi9FdQXOHb9yhCerbx4FkoZGGyEF3CNvJpvREuQCugiMvN5/fEa6ULzkunIYCC
+	 1XgKOGXDicdMaLbijF6itBoW1G07QORvozNRQiit0MVtfCGktQIN7OTjSe9fCLy9di
+	 01PfA6FjIcLNr6BtTFWFTWuri0L6Xv/3HshPBpJGGna6KZ9YE6kWp9tWK13/k84pmq
+	 LavUayzGo+4FQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [Patch v2 3/7] perf/x86: Guard intel_pmu_cpu_dead() against
+ invalid hybrid PMU casts
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260713082734.3162099-4-dapeng1.mi@linux.intel.com>
+References: <20260713082734.3162099-1-dapeng1.mi@linux.intel.com>
+ <20260713082734.3162099-4-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 13 Jul 2026 08:59:26 +0000
+Message-Id: <20260713085927.48C281F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/10] perf hisi-ptt: Add decoder version compatibility
-To: <sashiko-reviews@lists.linux.dev>
-CC: <linux-perf-users@vger.kernel.org>, <linux-pci@vger.kernel.org>
-References: <20260604075005.2219785-11-liusizhe5@huawei.com>
- <20260604080356.9F8761F00893@smtp.kernel.org>
-From: Sizhe Liu <liusizhe5@huawei.com>
-In-Reply-To: <20260604080356.9F8761F00893@smtp.kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- whupemo200004.china.huawei.com (7.152.184.18)
 
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-On 2026/6/4 16:03, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] The code silently accepts unknown future decoder versions without warning the user, contradicting the commit message.
-> --
->
-> commit 81956f61abf20a5e88b7e9d82765dace1fbc899f
-> Author: Sizhe Liu <liusizhe5@huawei.com>
->
-> perf hisi-ptt: Add decoder version compatibility
->
-> This commit introduces a version field to the hisi_ptt auxtrace info record
-> to distinguish between legacy and detailed packet parsing formats. It updates
-> the recording and decoding logic to process the data accurately based on the
-> detected version.
->
->> diff --git a/tools/perf/util/hisi-ptt.c b/tools/perf/util/hisi-ptt.c
->> index e321f393601b8..4f52cfb4e1903 100644
->> --- a/tools/perf/util/hisi-ptt.c
->> +++ b/tools/perf/util/hisi-ptt.c
-> [ ... ]
->> @@ -159,10 +166,13 @@ int hisi_ptt_process_auxtrace_info(union perf_event *event,
->>   {
-> [ ... ]
->>   	ptt->machine = &session->machines.host; /* No kvm support */
->>   	ptt->auxtrace_type = auxtrace_info->type;
->>   	ptt->pmu_type = auxtrace_info->priv[0];
->> -
->> +	ptt->version = priv_size >= HISI_PTT_AUXTRACE_PRIV_SIZE_V2 ?
->> +		       (u32)auxtrace_info->priv[1] : HISI_PTT_DECODER_V1;
-> [Severity: Medium]
-> The commit message explicitly states: "If version is unknown (future), warn
-> and decode auxtrace as v2."
->
-> Does hisi_ptt_process_auxtrace_info() implement this promised warning?
->
-> It appears to silently assign the future version directly from
-> auxtrace_info->priv[1] without bounds checking or notifying the user. Could a
-> warning be added here to match the stated design intent and prevent potential
-> compatibility issues from being masked?
-Yes, a warning should be added here.
->
->>   	ptt->auxtrace.process_event = hisi_ptt_process_event;
->>   	ptt->auxtrace.process_auxtrace_event = hisi_ptt_process_auxtrace_event;
+Pre-existing issues:
+- [High] Race condition in NMI handler causing out-of-bounds access during =
+hybrid CPU bring-up.
+- [High] Unhandled #GP exceptions (kernel panic) in NMI and hotplug paths i=
+f hybrid PMU initialization fails.
+--
+
+--- Patch [3]: [Patch v2 3/7] perf/x86: Guard intel_pmu_cpu_dead() against =
+invalid hybrid PMU casts ---
+commit 419f89d32dfc7abe942483376114f8e4845bc1a8
+Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+
+perf/x86: Guard intel_pmu_cpu_dead() against invalid hybrid PMU casts
+
+In failure paths, cpuc->pmu can point to the global static pmu instead of
+an embedded x86_hybrid_pmu::pmu. This commit clears cpuc->pmu to NULL when
+check_hw_exists() fails and validates cpuc->pmu before hybrid container
+conversion during CPU rollback paths.
+
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index b39c6ce0efb5c..a991fc4f1575f 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+[ ... ]
+> @@ -6329,8 +6329,10 @@ static bool init_hybrid_pmu(int cpu)
+> =20
+>  	intel_pmu_check_hybrid_pmus(pmu);
+> =20
+> -	if (!check_hw_exists(&pmu->pmu, pmu->cntr_mask, pmu->fixed_cntr_mask))
+> +	if (!check_hw_exists(&pmu->pmu, pmu->cntr_mask, pmu->fixed_cntr_mask)) {
+> +		cpuc->pmu =3D NULL;
+>  		return false;
+> +	}
+
+[Severity: High]
+This is a pre-existing issue, but is it possible for an NMI to fire before
+this initialization completes during hybrid CPU bring-up?
+
+If a secondary CPU unmasks NMIs early and an NMI fires before the
+CPUHP_AP_PERF_X86_STARTING callback executes init_hybrid_pmu(),
+perf_event_nmi_handler() will run.
+
+If active_events is greater than zero globally, intel_pmu_handle_irq()
+executes:
+
+arch/x86/events/intel/core.c:intel_pmu_handle_irq() {
+    ...
+    bool late_ack =3D hybrid_bit(cpuc->pmu, late_ack);
+    ...
+}
+
+Since cpuc->pmu is statically initialized to the global &pmu at this stage,
+could this cause hybrid_pmu() to perform an invalid container_of cast and
+lead to an out-of-bounds access?
+
+[Severity: High]
+This is a pre-existing issue, but if check_hw_exists() fails and we return
+false here, leaving the CPU online without a functioning PMU, could this le=
+ad
+to unhandled #GP exceptions?
+
+If an NMI fires while active_events is greater than zero globally,
+intel_pmu_handle_irq() unconditionally reads PMU MSRs:
+
+arch/x86/events/intel/core.c:intel_pmu_handle_irq() {
+    ...
+    status =3D intel_pmu_get_status();
+    ...
+}
+
+Since check_hw_exists() failed, the MSRs are likely inaccessible. Would
+executing rdmsrl() trigger a #GP exception and a kernel panic?
+
+Similarly, during CPU teardown, does intel_pmu_cpu_dying() blindly write to
+MSRs without checking if the PMU was successfully initialized?
+
+arch/x86/events/intel/ds.c:fini_arch_pebs_on_cpu() {
+    ...
+    wrmsrq_on_cpu(cpu, MSR_IA32_PEBS_BASE, 0);
+    ...
+}
+
+Could this wrmsrq_on_cpu() without fault protection also cause a #GP panic =
+if
+PMU initialization had failed?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260713082734.3162=
+099-1-dapeng1.mi@linux.intel.com?part=3D3
