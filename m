@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBFB31E5714;
-	Mon, 13 Jul 2026 17:38:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EAD233927;
+	Mon, 13 Jul 2026 17:39:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783964324; cv=none; b=HpcxnCHAq9V+Q5Z1HZSguoseXoiee0EbD5/sbH6FqbEWc453aGFUYkaQvLp2dvCYAxZ66wj3mlXwLo3EFszrZInQ9ui/FamqYf7HUDmcqX2Jl3rupwEdgZgDEaxOww9zJuNgBuyj1/1eUlQx00+m0eHFR2Ujfax/gkFlmd7hkm8=
+	t=1783964401; cv=none; b=LYscwyU0FbefHieclSnCvJDkv7nCnPY8ImpKUKMO77uqUfJzWR8O/skHU8qjQIVcEfvIC0bJz8+hrAF5/LyPS3UHKUAhkQfjS1aRQnjbbD13i3tMFTHBqFJnbBn7u8iAyFmnpDgbc7PbwvUMqjr4LPLUBYMQgEIxROepG5qnYuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783964324; c=relaxed/simple;
-	bh=jN15X1VjOWv27GtSopfPrCngXVvHaI5TcJ97KK2lk5I=;
+	s=arc-20240116; t=1783964401; c=relaxed/simple;
+	bh=7QL8mvF0GFn1iCKAg0bzOV8QSfUtROJoJDF27eSMD3w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rAOB7XZTXaKH1vufs1N1OJxWqSuSwyV0nF6ItysA2Khc2dSrrAsCq0KGXneTqO4v/CrKrgF2bwIYzmpm3BCDitSPv8+JtIhNzmOUeBnUnO5dwlErXlhPRBKm26Eo+3lFTstI0gCdnuvSCOYCC/6LHmR/V8k9l+Z6iWBSNqZK8c0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fKkJ4Y2d; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qr45+mRLzVgZIzUkaOM5j06SqjtM+grs109noKwrSbNPBQB27LLDI9mKnuq7r/JlnVf55vsjF07sj6tKNApR8GRZi61RdPlgOuV79GHrAGeaStYOOhxVoubOv9VwvQ65xURJ2ESUIQluLN0mm3hlRyNnHalNvbEpoDg/33uDj1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ETssTygu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fKkJ4Y2d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 273C71F000E9;
-	Mon, 13 Jul 2026 17:38:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ETssTygu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B3961F000E9;
+	Mon, 13 Jul 2026 17:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783964323;
-	bh=h3baWQBOm3fA8LbrKIbT9coknGq4LcfII7APNFf/aZc=;
+	s=k20260515; t=1783964399;
+	bh=sG1shVW6C6K0eEqLZ77e5rk+mnLdAd9GF/c9D4JWkdA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fKkJ4Y2dJvsug6grul1a0OaCiASLL+Bf3ilRvVXvPOqNSgkP8fUonXn4WckOvrM5/
-	 4UEBYOn4jA0KVpwUd64b4V9TV4eMTfBdYNImPiWS/u5X0pIfLqzrkvO3tXaiLpbuEE
-	 lDogbEHBBX80nOrtzr6bEnp0D8k/VTdKTDS7DdiSZjeJr8sIxgdzKXed7sZ77ixlli
-	 XRDDRdymCUcBL+KMNu19rVFTHe5YiFLweYmN4aHrQKGr3nqccxgSdCZyNvbqpeWegD
-	 1vyxud5zQHL24XVwzSHJgvy230o8674BIC0V6OC9Ho1uWUVPcm/JeVJyWbRqem5+Zz
-	 GvrLjsLcONeYw==
-Date: Mon, 13 Jul 2026 10:38:41 -0700
+	b=ETssTyguX3MviR6B3aDc0t36MFOMdgBqQFCWGekxqXVl+dHoUEBZ3Gk5UZa4Mr4YP
+	 5FWGgRdfcIA9j2iZ3dANGq2xTepdSikkXsAquFaLi58vUAtzOhfuOK6EWlHj+muAkw
+	 Mh91TXMEXVG9VVKDZRKRuUdygsuHZwxvCr32mAKDfktLcW2/61kfrwwSUXWPiI8fxu
+	 iEqTWCs3LumWPVaUu0Chm7JXMNMDi76oqi4F7XxHxISDkC6ksQXslZTykyW9m08Xq4
+	 pnAN0kEpgEQKG9IozQhBcb1KAs/RBfucz4b5t21GLV/7DZjJnKHvfliLcoCEWS7QOL
+	 5ZOYx1iBUr0/w==
+Date: Mon, 13 Jul 2026 10:39:57 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Leo Yan <leo.yan@arm.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Trevor Allison <tallison@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf build: Fix static build of dlfilters
-Message-ID: <alUioShYpMSzbmf2@google.com>
-References: <20260713-perf_fix_static_build-v1-1-460be1f9e4d6@arm.com>
+Subject: Re: [PATCH] perf capstone: Fix build with Capstone versions before 6
+Message-ID: <alUi7RgZkINlZOKP@google.com>
+References: <20260713-perf_fix_capstone_build-v1-1-796ea08c04db@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,51 +46,56 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260713-perf_fix_static_build-v1-1-460be1f9e4d6@arm.com>
+In-Reply-To: <20260713-perf_fix_capstone_build-v1-1-796ea08c04db@arm.com>
 
-Hi Leo,
-
-On Mon, Jul 13, 2026 at 11:23:01AM +0100, Leo Yan wrote:
-> Commit e1065ed188cf ("perf build: Add LDFLAGS to dlfilters .so link")
-> passes LDFLAGS when linking dlfilter shared objects. That breaks static
-> builds because LDFLAGS can contain -static, leading to an invalid link
-> command.
+On Mon, Jul 13, 2026 at 12:08:35PM +0100, Leo Yan wrote:
+> The commit 12c4737f55f2 ("perf capstone: Determine architecture from
+> e_machine") added a RISC-V mapping for Capstone disassembly.
 > 
-> dlfilters are always built as shared objects, even for a static perf
-> binary. Filter out -static for the dlfilter .so link while preserving
-> the rest of LDFLAGS.
+> However, the RISC-V arch and mode definitions are only available from
+> Capstone 6.0.0. Older Capstone headers do not define CS_ARCH_RISCV,
+> CS_MODE_RISCV64 or CS_MODE_RISCV32, so perf fails to build.
 > 
-> Fixes: e1065ed188cf ("perf build: Add LDFLAGS to dlfilters .so link")
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> Guard the RISC-V mapping with a Capstone major version check. Also use
+> CS_MODE_RISCV_C instead of CS_MODE_RISCVC, which is the mode name used
+> by Capstone 6.
 
-Actually I posted the same patch.  Can I get your Tested-by?
+Please see
 
-https://lore.kernel.org/r/20260707000357.823509-1-namhyung@kernel.org
+https://lore.kernel.org/r/20260706234836.815254-1-namhyung@kernel.org
 
 Thanks,
 Namhyung
 
-> ---
->  tools/perf/Makefile.perf | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 2b53d9e0c73b3382724b1f776880aaa8fa505f59..0031112c036e830e50711d5cb0b3867cba36e374 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -680,7 +680,7 @@ $(OUTPUT)dlfilters/%.o: dlfilters/%.c include/perf/perf_dlfilter.h
->  .SECONDARY: $(DLFILTERS:.so=.o)
->  
->  $(OUTPUT)dlfilters/%.so: $(OUTPUT)dlfilters/%.o
-> -	$(QUIET_LINK)$(CC) $(LDFLAGS) $(EXTRA_CFLAGS) -shared -o $@ $<
-> +	$(QUIET_LINK)$(CC) $(filter-out -static,$(LDFLAGS)) $(EXTRA_CFLAGS) -shared -o $@ $<
->  
->  ifndef NO_JVMTI
->  LIBJVMTI_IN := $(OUTPUT)jvmti/jvmti-in.o
+> Fixes: 12c4737f55f2 ("perf capstone: Determine architecture from e_machine")
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  tools/perf/util/capstone.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
+> index 9bba78ee0c5a2e6c86a97ffe69ca4db966bafd9b..99efeb40ed03621e781ef9b888321e28d237a0ca 100644
+> --- a/tools/perf/util/capstone.c
+> +++ b/tools/perf/util/capstone.c
+> @@ -182,10 +182,12 @@ static bool e_machine_to_capstone(uint16_t e_machine, bool is64, bool is_big_end
+>  		*arch = CS_ARCH_SPARC;
+>  		*mode |= CS_MODE_V9;
+>  		return true;
+> +#if defined(CS_VERSION_MAJOR) && CS_VERSION_MAJOR >= 6
+>  	case EM_RISCV:
+>  		*arch = CS_ARCH_RISCV;
+> -		*mode |= (is64 ? CS_MODE_RISCV64 : CS_MODE_RISCV32) | CS_MODE_RISCVC;
+> +		*mode |= (is64 ? CS_MODE_RISCV64 : CS_MODE_RISCV32) | CS_MODE_RISCV_C;
+>  		return true;
+> +#endif
+>  	default:
+>  		return false;
+>  	}
 > 
 > ---
 > base-commit: ef3af1df4f3372bd8ad47619452a283048b3bc8d
-> change-id: 20260713-perf_fix_static_build-6db03942fee1
+> change-id: 20260713-perf_fix_capstone_build-510dc3bfecfb
 > 
 > Best regards,
 > -- 
