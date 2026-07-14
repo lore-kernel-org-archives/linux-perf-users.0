@@ -1,134 +1,134 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E538B480961
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 16:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.173
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784047167; cv=pass; b=apUtZYzEQ2177P7zaN6ri+V7EvunGBmDsLbV5dX1g/i7TMdAzvjQfsogMQW3i3FBfTI2Qc12nw7C7nUmdXGuXoKb2zMC4fTkYfQY40jWchX0PY+wRIIWlgIZmTSqo/VC/aXufBPZebPeamQwOtMtytevfGf6kCJ9LwSb3c1nOv0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784047167; c=relaxed/simple;
-	bh=K1AQGDcWC/4GgVV01r8j1JfDHR23FXKaCinGQS5aAX8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KWLeH9SSR124WG4BqJrAZ6J4KIQkx13lYS5nAn7ywHypTXYOR43C5E2yaQnESKctQEEaAeas39i3G+EqUjIto0TEsSTulUA39BGA0EnxX0M1Eothzd1Z7sFxpJ7XLvv0jfGwJHf5SeodZfj5gWFvRkQLtcilQ6gVZT//t9Bhv7M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EPjK9h0B; arc=pass smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27DD4C77D6
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 16:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784047179; cv=none; b=YGUP/QYcvd8LRN82h4rpNLBWrn4od9I1aOqmuD7Ed4m57UqoXC0yYRX5j8dhvuujc0nnaPpYI9UG/zhbgSCcyrUKg2bJNwuFH24Rw3u8kuNUCWd0Q8payTlRXiVnQXHDXaas0VVuTPGkoEx8jxnseck6UzpFOYXDc7JWrSGao+M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784047179; c=relaxed/simple;
+	bh=BsFAI0vG4dzpXheb2SIx5xQInHitbcPaJpwKkelFepA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=iF5C9t6ExIHqVyCSJwOeYsAb8OnHaS19FsPmo+k5whK5WzCssnAH3j8gqLk0L5f2wmzdhw8GD8d3PjQdgYP9d/+HliJU7ssQYEn8LoTmmx/oxmrcj308ddVM9BsVY9/+Ww/23t1waLdoxtZ5F2MnxV177hllyc5rCbkuhrSVvDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gqXQbwS0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EPjK9h0B"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2cacef7d299so157735ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 09:39:25 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1784047165; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Y2Pnv8W9wZf4ObFr8OM/TTQHGgcaTikUqmDLjoK46UwoeW7ct49cMxkgf3kW4U2xr/
-         yahvsmt+YSV6o98eKaLQpYlbeLYMR5XFNOhyYO4nOBAdMBFTZEudTRBVSVJHSeDcCOBT
-         uXXGtKelIkU/p32GjOxsCrDjKd6w2n483ofJTFnjLoLPlnc9l9BeoASNq6fES0rZ4eyb
-         heHofWh35E5/QXWC1uHU9RO6m8GXZ0n3iXcOz7/GGbvSv9mTFoQaztu7xilOOV2klHwF
-         UCpuKr3c7DSF5xJmeTL53b2abaS8SROPhokIdKCpRhTb9+GFC2zJP4fbTrOiikXpQWQ+
-         nhZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=t0F/NHhcKFnHJCtvxiz4DGJcsT0f79av2OZqgWRJWgg=;
-        fh=yqOEi7zMQ+lXgqQNhORK0VSUodX77YgTv3Ow5iX0X/s=;
-        b=N/HsGT2lD7PElIaNDm79dtZkzbmY8dTGk2PDBTgoa/9LiO/TJ5PUhw6O8gwi/CLzKE
-         IAKRVubOM0G4f1WFKTJ13hZA2yyJrFRNYA8NZTZt+BX4tf3Wa5jIpkHtUPFADPu4qgrB
-         nUzvC3TIIkJbqQfVWkyMG/ghfS2iAXBYoxAW1tNZ1OKX+QOVPxVa93WK3Ya26M4o5OdU
-         Fg8tFPe1WhA+5BizXn9020xrHjylYzE+uKdNumyVUaGZveKL/7hD3zU1r6kVHKXiv7s7
-         /fTaRn5TRB5HSraXuICO5UQWeRDgcjgjKWludOqiMzJ7NV40WHo0E19UZNYRsZuDyLOs
-         +RZQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784047165; x=1784651965; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=t0F/NHhcKFnHJCtvxiz4DGJcsT0f79av2OZqgWRJWgg=;
-        b=EPjK9h0BvNsILcHtblILqZ/QGm9deAM+55VqPiMcox45wGOuRowjlg3O2BstmyzRVB
-         0WiV2ToDEw4UyLrNLPikP7FQ0nON5IzIuU5mligXeXZlkedNsDjh6wASdwKilgQGFQW3
-         J9aBRAlTZ4vmHsQTeHkJC0cC8PPHsKIVMZyK/elNif8IkUn7NXMkEIgRbsPe73NJC4Ii
-         jIwJA6ux9JpPLYU/TFwpcrAke5Lr4kyD8BhpWGDCVJg555jS/b4Pz6qOInLgwC3SEFbf
-         V9QbAW0Dd78fVl649sZ4BFRH1ckOOi4l38gUHsU2sDWn+h1nWj7TPdm25fmk++n5n1ML
-         ngLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784047165; x=1784651965;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=t0F/NHhcKFnHJCtvxiz4DGJcsT0f79av2OZqgWRJWgg=;
-        b=QdWYxsYUJdiFakbGZZlHf6VlcDgQjwQgHfHk/KsYnTRBloMv0ujdYzKT7IzerbMxXL
-         Dt3j5RRLvqsTQyTOW7JPc20Pi3ZfVMTJQHKbB+Y0EHN7CZat0Q5THbrAjCOpOEI+y9yl
-         uYjYUC7Um8T7WWvwDFLjTlOTxHmI/OXkNPAFVmZ42xOrnzcJx7ENZ6g2BKnPSCwa1Oqk
-         0rJ4MEAhJrS050lklR/XnnRQewX3n8OzWbNMzZUYuCFK4KWCyK+C4+Q6g0G+aGnRJqy3
-         YE4cawefgGQSraNvELSsYMQEJWVFNuS+81+R/fXxtS8in7CJg/p6bP4ObG4KSVDJTjW7
-         70ug==
-X-Forwarded-Encrypted: i=1; AHgh+Roa++OL7lJlqKbllBFsJNxDlHxDI68n+FJffAWfVU1uHfnSYGlM/x2jSpD3+t8MGY9NJyh63zM6HOdOVpyot+7+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1/SSKyyHWSd1VCdaKp6soF5NfNUvu/gvIySYXocAiQv1zyquK
-	33zNStuANnpmRdT5bweyVCoNjk6apMs22u8aNbq2oSc0nIplzx+ORVDlpxUW231zMZ4HQsZrMEs
-	3DZ7maotBDqBlpbZYGcqB4MgRdokYm0tMQ6Rw2+cm
-X-Gm-Gg: AfdE7cnpuFTad48mMVOi6/HeOB7yHI79b2CklYm73o52qAgIXPBeVhykL1j37yrR2gj
-	CDgx6bMPtxboJ6klH49iIh1ogyHX7dRoH9AMO9n5ZuWgnY/jHwMzA7fxorMFpVvSYSoMeF2agaH
-	oYZhKqoY52DmakL50jQd6m2/yglmz7jFMlOfb1Fkp857u0gNyDDC7nM4JWJruvfdv0jeriKjfa2
-	lPpH4wOFM7oR1si9TLhh8N+xC3MTED0KkF/uMSIyOUiqj8BB0olBRsojpciT8aG+kt8MgCSk2YV
-	xZOxWo1r54vs/QReZFJKHimuM6w=
-X-Received: by 2002:a17:903:1ac6:b0:2ca:cbe5:c3af with SMTP id
- d9443c01a7336-2cee169252cmr6840345ad.7.1784047164981; Tue, 14 Jul 2026
- 09:39:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gqXQbwS0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7109C1F000E9;
+	Tue, 14 Jul 2026 16:39:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784047177;
+	bh=VniDhwTam7KNDcwa7WCnCTRkeVFuzH9O5qOKtVpg9To=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=gqXQbwS06RopsdcbQU2Plzo21+T0SIZEoYbo+NfGJtnUx5E/kGj6NqQ5pGioASHbe
+	 /bdX2rQ91wKiw293cUuiX1HwhXa27VfOmjoSB6Aifh1ppfWzlKUKV8qgQYifHXL3PL
+	 tXhYbXux1dEt20QPkukOL5lOsJrEtukk+j4uv/Zb6aNeLM9Ms9JrrwmEDT0AetdVQu
+	 nWKUgCjt2e45smFMwXt1xexuLsTkHCk7gYaFu2o+xS+8oPuxxEttTbFOTlyudXTly+
+	 d6beG+3PwKfYJY46Wx13Wq9vvL5ANlnH2qSSKCGhRES8eT6+UV4bFsg4h0M07EDxTv
+	 fKIy7Ckrlc9yw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf trace: Add --bitmask-list option and correct
+ cpumask formatting
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Aaron Tomlin" <atomlin@atomlin.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260714162947.214270-1-atomlin@atomlin.com>
+References: <20260714162947.214270-1-atomlin@atomlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 14 Jul 2026 16:39:36 +0000
+Message-Id: <20260714163937.7109C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260707034019.241762-1-irogers@google.com>
-In-Reply-To: <20260707034019.241762-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 14 Jul 2026 09:39:13 -0700
-X-Gm-Features: AUfX_mwsovP05k79U93RtnVIkEHFoZ9-uJl1mYMf19KT9pk1Ohjo33KExtXs3nA
-Message-ID: <CAP-5=fUgh+wZVnPU4ZjvYmhHRpNChx4ScWN=pkBGDKwUdCgv6w@mail.gmail.com>
-Subject: Re: [PATCH v1 0/3] perf jevents: Deterministic build fix and mypy cleanliness
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Nazar Kazakov <nazar.kazakov@codethink.co.uk>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, John Garry <john.g.garry@oracle.com>, 
-	James Clark <james.clark@linaro.org>, Sandipan Das <sandipan.das@amd.com>, 
-	Chun-Tse Shao <ctshao@google.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 6, 2026 at 8:40=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> Nazar Kazakov reported non-deterministic builds due to the metrics
-> being reordered in the jevents.py output. Fix by sorting metrics on
-> more than just their name.
->
-> Checking the code with mypy showed a large range of type warnings. Fix
-> by largely adding asserts that values aren't None and by adding type
-> annotations.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The cpumask byte parsing and bitmask rendering ignores the endia=
+nness and word size of the trace payload, breaking cross-platform analysis.
+--
 
-Ping. There's Sashiko feedback on patch 1:
-https://sashiko.dev/#/patchset/20260707034019.241762-1-irogers%40google.com
-but it basically says that having a metric name with no metric
-expression will cause a crash, which is expected behavior.
+--- Patch [1]: [PATCH] perf trace: Add --bitmask-list option and correct cp=
+umask formatting ---
+commit 3ae8add0cf042fd56dee83eecdf3dd3e5eeef32c
+Author: Aaron Tomlin <atomlin@atomlin.com>
 
-Nazar, it would be great if you could provide a Tested-by tag :-)
+perf trace: Add --bitmask-list option and correct cpumask formatting
 
-Thanks,
-Ian
+This commit corrects the parsing of dynamic non-array fields like cpumask_t
+in perf trace to resolve raw pointers properly. It also updates the display
+formatting for cpumasks to show zero-suppressed hex strings by default and
+adds a --bitmask-list option for human-readable bitmask formatting.
 
-> Ian Rogers (3):
->   perf jevents: Add more components to the metric sorting order
->   perf jevents: Add python type annotations
->   perf jevents metric: Add python type annotations
->
->  tools/perf/pmu-events/jevents.py | 82 +++++++++++++++++++-------------
->  tools/perf/pmu-events/metric.py  | 23 +++++----
->  2 files changed, 62 insertions(+), 43 deletions(-)
->
-> --
-> 2.55.0.795.g602f6c329a-goog
->
+Fixes: c5e006cdbd27 ("perf trace: Support tracepoint dynamic char arrays")
+
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index ba0f8749fc7d7..cd75ac4e51693 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -3238,17 +3239,65 @@ static size_t trace__fprintf_tp_fields(struct tra=
+ce *trace, struct perf_sample *
+
+[ ... ]
+
+> +			if (trace->bitmask_list) {
+> +				if (syscall_arg.len > 0) {
+> +					unsigned long *mask =3D zalloc(BITS_TO_LONGS(syscall_arg.len * 8) *=
+ sizeof(unsigned long));
+> +					if (!mask) {
+> +						pr_err("Problem processing %s field, skipping...\n", field->name);
+> +						printed =3D saved_printed;
+> +						continue;
+> +					}
+> +					memcpy(mask, (void *)val, syscall_arg.len);
+> +					printed +=3D bitmap_scnprintf(mask, syscall_arg.len * 8,
+> +								    bf + printed, size - printed);
+
+[Severity: Medium]
+Will this memcpy() and bitmask formatting break cross-platform analysis if =
+the
+perf.data file was recorded on an architecture with a different endianness =
+or
+word size than the host?
+
+It appears we are doing a direct copy of the target payload bytes into a
+host-native unsigned long array without utilizing evsel->needs_swap.
+
+Could this result in garbled or reversed cpumask values when viewing trace
+data from a machine with different architectural characteristics?
+
+> +					free(mask);
+> +				}
+> +			} else {
+> +				unsigned char *b =3D (unsigned char *)val;
+> +				int i;
+> +				bool skip_zero =3D true;
+> +
+> +				printed +=3D scnprintf(bf + printed, size - printed, "0x");
+> +				/* Print in little-endian order */
+> +				for (i =3D syscall_arg.len - 1; i >=3D 0; i--) {
+
+[Severity: Medium]
+Does this backward loop assume the trace data is unconditionally little-end=
+ian?
+
+If the trace data comes from a big-endian architecture, will this hardcoded
+assumption fail to print the values correctly?
+
+> +					if (skip_zero && b[i] =3D=3D 0 && i > 0)
+> +						continue;
+> +					if (skip_zero) {
+> +						printed +=3D scnprintf(bf + printed, size - printed, "%x", b[i]);
+> +						skip_zero =3D false;
+> +					} else {
+> +						printed +=3D scnprintf(bf + printed, size - printed, "%02x", b[i]);
+> +					}
+> +				}
+> +			}
+> +			continue;
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260714162947.2142=
+70-1-atomlin@atomlin.com?part=3D1
