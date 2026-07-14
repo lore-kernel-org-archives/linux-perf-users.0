@@ -1,155 +1,241 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFCA3F1ABB;
-	Tue, 14 Jul 2026 17:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FC6C412C0E
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 17:41:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784050649; cv=none; b=aENYAxx/22RXoEi25FqZXzHqMMd7ZkH8RuKBuF0EC87Ds+WhV92sPHoU9mIjz9184K5G048LyqakVJqdZmP383AoM/XqbrqozL4UoIY7fwqNncpaIcsfWewuGUbT9qCvNa2oLxZHi2ITL5Q55TzypVN4t4B1LFS6mStrKLRdMuc=
+	t=1784050870; cv=none; b=R6k1jZ0QMaIqIOlecYVLjX2JAfRl4uUI0MGptKF6eZElCcsPsmkL4nHSNgEAxTafPEyfBplmG0n4+y3SLi4ONcqsag6nQtFLIe6oxbM2/ErdTusbND6jurNo50niWfvqK9KLkPi6QdQ4SoNl1Y30E+G9GtpVOCc1BXJoZjAD/ns=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784050649; c=relaxed/simple;
-	bh=d75fpgkbo8DGQsySMMRX7CfKHKkIk/JZZtDpcqjTmPk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j3zYFF4KNokDe4Zg8os1t3Sk+6FpOgWBpAFpPn7ItrkQ8zECmWgbHv/4JDQfLlf0N8ODpb5zEBltxAkZ0RxRNsMLVokcgz6tIajs1tKXcenGRZx+It02FoBeGsDXy3zi6WFpBJ3paa7S6GiK4HMO3w0vTkXB5Ya6bQIl5dA2OZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e9OZ83Os; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784050870; c=relaxed/simple;
+	bh=qmrtKiGF0ZVk8eUpawKEpUhSUqva96lDh69er5MYvQA=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ZH8wXA0+ofwdRjSjbQYtvroAQGNjjl2EpbAq/JADqshxeFIizVw0iHXfrXONA10dD8tJax/gnuDZR3wcTqWM+7Mb/4NmCSOOLWQ+1RE2xJPIRctjN7pO+Ld1UUALS++/zoi9Q5LEoH3Qoekg0S1skDUV7XZYzLCa1nMudIZjLFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dLJHi+r2; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e9OZ83Os"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23F321F000E9;
-	Tue, 14 Jul 2026 17:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784050645;
-	bh=QgkyV9iZP62zNU1CeYPWCDHEi9IJe4PTmY+fNk7ne+0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=e9OZ83OsfZmfCxyNmNW7vCbBkCk5vq5cDktT2ADgm3VcXAkHBM6OkWkZYACo8f0Eb
-	 mhaf7RaF5sXtSSCS4mxrHuM+TTpd5pbuvG39jKduQTY8vpkzQGyFulO1Isyz0J+mSF
-	 h4cJs3ZOfBsblRDa4l+xmMrccuwjsCKBQTI1fV4TOLa7WpYgJNUxTZl5qm8c0vHnAz
-	 gErNiabwEVW+qG26JebZKRo4R8RSusBwusGSX4v1BqUbsKZeCo089K8Z+m1o5s/bcl
-	 G48NDQ60WjScB5AR2czfZyhD9vgA/BHfT5PrHOnCOgMKVDFDNgDxlCbfEb6F7X50n6
-	 aZsCbw3XU6I+g==
-Date: Tue, 14 Jul 2026 10:37:23 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, james.clark@linaro.org, afaerber@suse.de,
-	mani@kernel.org, thomas.falcon@intel.com, irogers@google.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	perry.taylor@intel.com
-Subject: Re: [PATCH v1 0/12] perf vendor events intel: update
-Message-ID: <alZz0xH7h98uzLo1@google.com>
-References: <20260713181757.481164-1-ctshao@google.com>
- <2e182845-6771-473c-a82a-bf96953b458e@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dLJHi+r2"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-845317fa7e6so8329874b3a.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 10:41:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784050866; x=1784655666; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=7rvBy7DlOMve5rkrpKhLf6NBngXNk1okw769cOawHiY=;
+        b=dLJHi+r2dIhITXBh04Dj02nx0NXK7wO7afgzRrdLFBpkJOCpwgkaU95N5WHoTp3UJu
+         C7OxbOSDFQxVGpSNVVzaX874lZwlfBGUCJ8aRqMReW+kO5t+DljEBdogeKA6FfltSzzb
+         QcaLoQixTV5mKm9a+16pMPpAwzydgu6s34VMrtI/5MS+umQQoACFVtlCmKSRHPCVs0Ej
+         EFvFE6tLtMW2kmoCfQbft+B3Ow44yd1AyOnPXoDBvRWPxI1Dq37SXrbQOkg5tjiHKhws
+         aQJHVBXtynhUEdZQX6tBeAEinN7Jetv5U8yMe9lyRHzXImgRHtlOwvVzyl6r4MD70P6s
+         x3CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784050866; x=1784655666;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7rvBy7DlOMve5rkrpKhLf6NBngXNk1okw769cOawHiY=;
+        b=swDK1ecCABE58pP/JlZqpSGrrgPWPpQsKo0gd4tdz64uRRJbGEN+ulNnWEVEsUp7aO
+         7Zw85DKowUj13MuoXcGdGpPNpSOZfToMCtvIzYrmbDYJBeETjaDEXRSGQiNDG0c53iWJ
+         chNduAL16fD5nkJuLRfJH5OWZDcJrQ5X4wY+LMBeRBeVUGOIiZEH67wWIgxr42Bm1J44
+         slDxlEtGqG4Qwzc0C+FCLnMftdGGblVdOY8ueV4/BjP2H4qRgpGDg8xKxDap4IeXjI/B
+         hFeWZJ5Q4YDS6rYNESeSgWPE9vaJvzO+WZgNALtQFNyS6qEliXqA0xAXVoinh269Eujf
+         95CA==
+X-Forwarded-Encrypted: i=1; AHgh+Rqcu6dHdofVa5TfFQfe3mmweYqQcd9IgdkNEXCafZQZczaToKXf/Ji9c/vx0ByIFMyziJO+pppz42Vs5aFLrp/U@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9squQVwbt8uhx9HccTKY/XETdX8rxfMWgWhGzwxLj17HRv7Ik
+	Fmna53+rHWsJzQL0hSMg63zp2obdZiVfQsp9Yu0Ed9zdZilPScMgFaRGlmIWpNUwz0q60gqUssh
+	eWcKLsw==
+X-Received: from pfblh15.prod.google.com ([2002:a05:6a00:710f:b0:845:eada:32d2])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:3cd4:b0:847:8b1d:230d
+ with SMTP id d2e1a72fcca58-84889611e43mr14054895b3a.3.1784050865536; Tue, 14
+ Jul 2026 10:41:05 -0700 (PDT)
+Date: Tue, 14 Jul 2026 10:40:52 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <2e182845-6771-473c-a82a-bf96953b458e@linux.intel.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.141.g00534a21ce-goog
+Message-ID: <20260714174052.1826692-1-ctshao@google.com>
+Subject: [PATCH] perf stat: Include PMU name and split uncore events per PMU
+ in metric-only JSON output
+From: Chun-Tse Shao <ctshao@google.com>
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org
+Cc: alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	adrian.hunter@intel.com, james.clark@linaro.org, afaerber@suse.de, 
+	mani@kernel.org, dapeng1.mi@linux.intel.com, thomas.falcon@intel.com, 
+	irogers@google.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Chun-Tse Shao <ctshao@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+When running `perf stat` with `-A` (--no-aggr) and `--metric-only` in
+JSON output mode (`-j`), `perf stat` evaluates metric expressions
+across all matching PMUs (including uncore PMUs like `uncore_iio_0`,
+`uncore_iio_1`, etc.).
 
-On Tue, Jul 14, 2026 at 01:21:46PM +0800, Mi, Dapeng wrote:
-> The patchset looks good to me. But It depends on this patch
-> https://lore.kernel.org/all/20260708053226.3776183-1-dapeng1.mi@linux.intel.com/.
-> Without this patch, the building on NVL would fail. Thanks.
+However, `perf stat` previously formatted JSON output by printing only
+"cpu" : "<id>" and grouping all metric values on a single line per CPU
+without identifying which PMU instance evaluated each metric. As a
+result, when an uncore event spans multiple PMU boxes, `perf stat`
+printed repeated, ambiguous metric keys without PMU names.
 
-I'll pick that up too.
+Fix this by:
+1. Including "pmu" : "<pmu_name>" in print_aggr_id_json when evsel->pmu
+   is a non-core or hybrid PMU in AGGR_NONE mode (-A).
+2. Starting a new JSON metric line in AGGR_NONE mode (-A) whenever the
+   underlying PMU instance changes across PMU events.
+3. Updating perf_json_output_lint.py to recognize the new "pmu" key in
+   the JSON test suite.
 
-> 
-> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Example output:
+  $ perf stat -M iio_bandwidth_read -a -A --metric-only -j -I 1000
+  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_0", "MB/s  iio_bandwidth_read" : "0.0"}
+  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_1", "MB/s  iio_bandwidth_read" : "0.1"}
+  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_11", "MB/s  iio_bandwidth_read" : "0.0"}
+  ...
+  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_0", "MB/s  iio_bandwidth_read" : "0.0"}
+  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_1", "MB/s  iio_bandwidth_read" : "0.0"}
+  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_11", "MB/s  iio_bandwidth_read" : "0.0"}
 
-Thanks for the review!
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+Assisted-by: Gemini:gemini-3.1-pro-preview
+---
+ .../tests/shell/lib/perf_json_output_lint.py  |  1 +
+ tools/perf/util/stat-display.c                | 41 +++++++++++++------
+ 2 files changed, 30 insertions(+), 12 deletions(-)
 
-Namhyung
+diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+index dafbde56cc76..36767905fcdb 100644
+--- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
++++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+@@ -64,6 +64,7 @@ def check_json_output(expected_items):
+       'metric-threshold': lambda x: x in ['unknown', 'good', 'less good', 'nearly bad', 'bad'],
+       'metricgroup': lambda x: True,
+       'node': lambda x: True,
++      'pmu': lambda x: True,
+       'pcnt-running': lambda x: isfloat(x),
+       'socket': lambda x: True,
+       'thread': lambda x: True,
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index f94f1324d24a..d7f1feb63878 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -397,6 +397,8 @@ static void print_aggr_id_json(struct perf_stat_config *config, struct outstate
+ 			json_out(os, "\"cpu\" : \"%d\"",
+ 				id.cpu.cpu);
+ 		}
++		if (evsel && evsel->pmu && (!evsel->pmu->is_core || evsel__is_hybrid(evsel)))
++			json_out(os, "\"pmu\" : \"%s\"", evsel->pmu->name);
+ 		break;
+ 	case AGGR_THREAD:
+ 		json_out(os, "\"thread\" : \"%s-%d\"",
+@@ -1009,11 +1011,12 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+ 
+ static void print_metric_begin(struct perf_stat_config *config,
+ 			       struct evlist *evlist,
+-			       struct outstate *os, int aggr_idx)
++			       struct outstate *os, int aggr_idx,
++			       struct evsel *counter)
+ {
+ 	struct perf_stat_aggr *aggr;
+ 	struct aggr_cpu_id id;
+-	struct evsel *evsel;
++	struct evsel *evsel = counter ?: evlist__first(evlist);
+ 
+ 	os->first = true;
+ 	if (!config->metric_only)
+@@ -1028,7 +1031,6 @@ static void print_metric_begin(struct perf_stat_config *config,
+ 		else
+ 			fprintf(config->output, "%s", os->timestamp);
+ 	}
+-	evsel = evlist__first(evlist);
+ 	id = config->aggr_map->map[aggr_idx];
+ 	aggr = &evsel->stats->aggr[aggr_idx];
+ 	aggr_printout(config, os, evsel, id, aggr->nr);
+@@ -1066,7 +1068,7 @@ static void print_aggr(struct perf_stat_config *config,
+ 	 * Without each counter has its own line.
+ 	 */
+ 	cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
+-		print_metric_begin(config, evlist, os, aggr_idx);
++		print_metric_begin(config, evlist, os, aggr_idx, NULL);
+ 
+ 		evlist__for_each_entry(evlist, counter) {
+ 			print_counter_aggrdata(config, counter, aggr_idx, os);
+@@ -1092,7 +1094,7 @@ static void print_aggr_cgroup(struct perf_stat_config *config,
+ 		os->cgrp = evsel->cgrp;
+ 
+ 		cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
+-			print_metric_begin(config, evlist, os, aggr_idx);
++			print_metric_begin(config, evlist, os, aggr_idx, NULL);
+ 
+ 			evlist__for_each_entry(evlist, counter) {
+ 				if (counter->cgrp != os->cgrp)
+@@ -1128,7 +1130,8 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+ 
+ 	perf_cpu_map__for_each_cpu(cpu, all_idx, evlist__core(evlist)->user_requested_cpus) {
+ 		struct evsel *counter;
+-		bool first = true;
++		struct perf_pmu *last_pmu = NULL;
++		bool line_open = false;
+ 
+ 		evlist__for_each_entry(evlist, counter) {
+ 			u64 ena, run, val;
+@@ -1146,10 +1149,24 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+ 
+ 			os->evsel = counter;
+ 			os->id = aggr_cpu_id__cpu(cpu, /*data=*/NULL);
+-			if (first) {
+-				print_metric_begin(config, evlist, os, aggr_idx);
+-				first = false;
++
++			if (config->metric_only) {
++				struct perf_pmu *pmu = counter->pmu;
++
++				if (!evsel__is_tool(counter)) {
++					if (config->json_output && line_open && pmu != last_pmu) {
++						print_metric_end(config, os);
++						line_open = false;
++					}
++					if (!line_open) {
++						print_metric_begin(config, evlist, os,
++								   aggr_idx, counter);
++						line_open = true;
++						last_pmu = pmu;
++					}
++				}
+ 			}
++
+ 			val = ps->aggr[aggr_idx].counts.val;
+ 			ena = ps->aggr[aggr_idx].counts.ena;
+ 			run = ps->aggr[aggr_idx].counts.run;
+@@ -1157,7 +1174,7 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+ 			uval = val * counter->scale;
+ 			printout(config, os, uval, run, ena, 1.0, aggr_idx);
+ 		}
+-		if (!first)
++		if (line_open)
+ 			print_metric_end(config, os);
+ 	}
+ }
+@@ -1520,7 +1537,7 @@ static void print_cgroup_counter(struct perf_stat_config *config, struct evlist
+ 				print_metric_end(config, os);
+ 
+ 			os->cgrp = counter->cgrp;
+-			print_metric_begin(config, evlist, os, /*aggr_idx=*/0);
++			print_metric_begin(config, evlist, os, /*aggr_idx=*/0, NULL);
+ 		}
+ 
+ 		print_counter(config, counter, os);
+@@ -1570,7 +1587,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+ 		} else if (config->cgroup_list) {
+ 			print_cgroup_counter(config, evlist, &os);
+ 		} else {
+-			print_metric_begin(config, evlist, &os, /*aggr_idx=*/0);
++			print_metric_begin(config, evlist, &os, /*aggr_idx=*/0, NULL);
+ 			evlist__for_each_entry(evlist, counter) {
+ 				print_counter(config, counter, &os);
+ 			}
+-- 
+2.55.0.141.g00534a21ce-goog
 
-> 
-> On 7/14/2026 2:17 AM, Chun-Tse Shao wrote:
-> > Sync the Linux kernel perf PMU events with the latest upstream Intel
-> > perfmon repository.
-> >
-> > This patchset includes event and metric updates for Alder Lake, Alder
-> > Lake N, Arrow Lake, Clearwater Forest, Emerald Rapids (including IIO
-> > bandwidth metrics), Grand Ridge, Granite Rapids, Lunar Lake, Meteor
-> > Lake, Panther Lake, and Sierra Forest, as well as adding initial event
-> > support for Nova Lake v1.00.
-> >
-> > Chun-Tse Shao (12):
-> >   perf vendor events intel: Update alderlake events from 1.39 to 1.40
-> >   perf vendor events intel: Update alderlaken events from 1.39 to 1.40
-> >   perf vendor events intel: Update arrowlake events from 1.19 to 1.20
-> >   perf vendor events intel: Update clearwaterforest events from 1.02 to
-> >     1.04
-> >   perf vendor events intel: Update grandridge events from 1.12 to 1.13
-> >   perf vendor events intel: Update graniterapids events from 1.19 to
-> >     1.20
-> >   perf vendor events intel: Update lunarlake events from 1.25 to 1.26
-> >   perf vendor events intel: Update meteorlake events from 1.21 to 1.22
-> >   perf vendor events intel: Add novalake v1.00 events
-> >   perf vendor events intel: Update pantherlake events from 1.06 to 1.07
-> >   perf vendor events intel: Update sierraforest events from 1.17 to 1.18
-> >   perf vendor events intel: Update emeraldrapids metrics
-> >
-> >  .../arch/x86/alderlake/adl-metrics.json       |   80 +-
-> >  .../pmu-events/arch/x86/alderlake/cache.json  |   36 +
-> >  .../arch/x86/alderlake/metricgroups.json      |    2 +-
-> >  .../arch/x86/alderlake/pipeline.json          |    6 +-
-> >  .../pmu-events/arch/x86/alderlaken/cache.json |   32 +
-> >  .../arch/x86/arrowlake/arl-metrics.json       |  152 +-
-> >  .../arch/x86/arrowlake/metricgroups.json      |    2 +-
-> >  .../arch/x86/arrowlake/pipeline.json          |    2 +-
-> >  .../arch/x86/arrowlake/uncore-memory.json     |   84 +-
-> >  .../arch/x86/clearwaterforest/memory.json     |   33 +
-> >  .../arch/x86/clearwaterforest/pipeline.json   |   19 +
-> >  .../clearwaterforest/uncore-interconnect.json |   10 +
-> >  .../x86/clearwaterforest/uncore-memory.json   |    2 +-
-> >  .../arch/x86/emeraldrapids/emr-metrics.json   |  135 +-
-> >  .../arch/x86/emeraldrapids/metricgroups.json  |    2 +-
-> >  .../pmu-events/arch/x86/grandridge/cache.json |   25 +
-> >  .../arch/x86/grandridge/counter.json          |   42 -
-> >  .../arch/x86/grandridge/floating-point.json   |   56 +
-> >  .../arch/x86/grandridge/memory.json           |   57 +
-> >  .../arch/x86/grandridge/pipeline.json         |  140 ++
-> >  .../arch/x86/grandridge/uncore-memory.json    |    2 +-
-> >  .../arch/x86/grandridge/virtual-memory.json   |    8 +
-> >  .../arch/x86/graniterapids/gnr-metrics.json   |  102 +-
-> >  .../arch/x86/graniterapids/metricgroups.json  |    2 +-
-> >  .../arch/x86/graniterapids/pipeline.json      |    2 +-
-> >  .../arch/x86/lunarlake/lnl-metrics.json       |  142 +-
-> >  .../arch/x86/lunarlake/metricgroups.json      |    2 +-
-> >  .../arch/x86/lunarlake/pipeline.json          |    2 +-
-> >  tools/perf/pmu-events/arch/x86/mapfile.csv    |   21 +-
-> >  .../pmu-events/arch/x86/meteorlake/cache.json |   11 +-
-> >  .../arch/x86/meteorlake/metricgroups.json     |    2 +-
-> >  .../arch/x86/meteorlake/mtl-metrics.json      |   88 +-
-> >  .../arch/x86/meteorlake/pipeline.json         |    4 +-
-> >  .../arch/x86/meteorlake/uncore-memory.json    |   84 +-
-> >  .../pmu-events/arch/x86/novalake/cache.json   |  749 +++++++
-> >  .../pmu-events/arch/x86/novalake/counter.json |   17 +
-> >  .../arch/x86/novalake/floating-point.json     |  452 ++++
-> >  .../arch/x86/novalake/frontend.json           |  600 +++++
-> >  .../pmu-events/arch/x86/novalake/memory.json  |  299 +++
-> >  .../pmu-events/arch/x86/novalake/other.json   |  144 ++
-> >  .../arch/x86/novalake/pipeline.json           | 1976 +++++++++++++++++
-> >  .../arch/x86/novalake/uncore-memory.json      |   42 +
-> >  .../arch/x86/novalake/virtual-memory.json     |  338 +++
-> >  .../arch/x86/pantherlake/pipeline.json        |    2 +-
-> >  .../arch/x86/sierraforest/counter.json        |   77 -
-> >  .../x86/sierraforest/uncore-interconnect.json |   10 +
-> >  .../arch/x86/sierraforest/uncore-memory.json  |    2 +-
-> >  47 files changed, 5615 insertions(+), 482 deletions(-)
-> >  delete mode 100644 tools/perf/pmu-events/arch/x86/grandridge/counter.json
-> >  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/cache.json
-> >  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/counter.json
-> >  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/floating-point.json
-> >  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/frontend.json
-> >  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/memory.json
-> >  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/other.json
-> >  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/pipeline.json
-> >  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/uncore-memory.json
-> >  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/virtual-memory.json
-> >  delete mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/counter.json
-> >
