@@ -1,96 +1,95 @@
 Received: from mx0b-0002e601.pphosted.com (mx0b-0002e601.pphosted.com [148.163.154.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 486693B42E9
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 12:57:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75F78448CFF
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 12:57:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.154.28
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784033841; cv=fail; b=d3YGo0gu/d0LljiAl+3/bz/6lDvpFg6UTwQWTApFN1vKZGCNXlvjJhApLphxTcSV+7n+rKY0MiagDcAE+8dNf3t9XbQDuNcGkjLZpz7dWnYwA6JbDUuRNppwGd9EG8+evO1hJsWkX0BCeGZiTO/7KWQ6RRHxPhj3wjx11HydE38=
+	t=1784033875; cv=fail; b=ICxsxyNFuymb26cZXrgv352y1PZNTi5oyYUI4MpW2q7y2gjPEeqyDZ/9rL1+C34DkveUx+Qo9BUYqlpK5wyg+pAJOs6iRV9wEe28xAWsWelT6uerc8z9AMesS8pQc4CSh309Xm6GeyiOlgTbqOr5Tq2cI9cykMIEAPv56x2tmd8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784033841; c=relaxed/simple;
-	bh=zTpy0AeaiEYauOLyNfYaGzwmKC66+i+dPOZZ0CrZuDU=;
+	s=arc-20240116; t=1784033875; c=relaxed/simple;
+	bh=aK9Zg7f52Qxa8wABC7Vf2PtMqq/lZyDXTjtFdxMpw/k=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G560r49HpUaUS3JAzXoarJN7MCSZ1EKF58LMVlG7/YkfQSf55lk3IoS69SQLf6iUGi9BTHjYcBw7BDTwZFq050L/fo94FGuXGV1imPNxYunqavgfYGtWrdmMOyAAAwzsyd28+E5sMQhlKeJZgh/IiTwaKs+Z0yGeltdvWLCEe1s=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (2048-bit key) header.d=ti.com header.i=@ti.com header.b=UQ0LKR8x; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=bjidKPAn; arc=fail smtp.client-ip=148.163.154.28
+	 MIME-Version:Content-Type; b=NC6+7HPXe9rnMnBq8PWsMFkkFJ47zDGaeqoGJlgyiH5xntJvNyyqQmj3FH5qoQs0/LEewekZ4xaxwwTGv6StIT+mXdwBLCJ7fC73ZceyIQYhVvZ5Y4r+d0OACUtCgzlp9zyKKO6J72FfbOyWGdjJCBpRrgFccqF/7t7UybYnbGo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (2048-bit key) header.d=ti.com header.i=@ti.com header.b=XAgxetPh; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=ufCIA9hh; arc=fail smtp.client-ip=148.163.154.28
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ti.com header.i=@ti.com header.b="UQ0LKR8x";
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="bjidKPAn"
+	dkim=pass (2048-bit key) header.d=ti.com header.i=@ti.com header.b="XAgxetPh";
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ufCIA9hh"
 Received: from pps.filterd (m0374955.ppops.net [127.0.0.1])
-	by mx0b-0002e601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66EBhLKL2126925;
-	Tue, 14 Jul 2026 07:57:07 -0500
+	by mx0b-0002e601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66EBhCoG2126478;
+	Tue, 14 Jul 2026 07:57:44 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	proofpoint-05-2026; bh=jC7dzMY90ZRNW6ApqMEPaDoXhLzi5Py23oK0h8D6A
-	DI=; b=UQ0LKR8xwKhE9bHR5rvOGT6Nhcoy8zhDOLPgtEa4w3hKnLBcoUGbXg6Je
-	IIGdRCoX1fVh9BcjBNJQj0O3fE/jqLXm5/syaPRHcKAMXogbEmHekTnN6CKFg1D8
-	Q8trDZqokGvF9w1BkIxHbh2aeL4PDCvPbkSF3IcviOj3VENJmPUDa+sE2n2LOwjI
-	03vIAckhvU4k8P4qEWyzVZ96kjpCHomW/LFxnM9wyLKFUZFJNZKGIRGTryRGALyr
-	XWUEpxa2rbAZy5vsyv+n7c4uUOsgj430YRp1HVsZ/7153ihgxNu/uEmHvpLSU678
-	TxII2OTp8uRnt/1n+ESbJyvGL0Xxw==
-Received: from sj2pr03cu001.outbound.protection.outlook.com (mail-westusazon11012047.outbound.protection.outlook.com [52.101.43.47])
-	by mx0b-0002e601.pphosted.com (PPS) with ESMTPS id 4fdmg30bvx-1
+	proofpoint-05-2026; bh=6Zlk7X7ZyZ92yAzSb9OusfhwBMfUGFKHJIrH9yrPJ
+	n4=; b=XAgxetPhCfI3HYyfmTpAWCl3+w5F4mRiHS2GBfiYBDsEGeSdgvMNEaIpl
+	rDuOXHp4hFy9dhuaET9B4LM5igB6bkY3Bz3LiRWkRrhnDNaDtT+cSqUW6dp4nI+/
+	ESf9TsG8AIaiNM6M2xjF+i6ZoRFYn2iHMCMkYOmY4S1/MgMG+2xS48vi6jQA6mzV
+	eZxvKb3Mbpzkpev2ay4GeZNjGTMFgnWJvvqsSF40dK/9c0mA/UhkamigqH89whgv
+	J/1wtXmGnssGrA5+K0dflp6FZX5DBa0MPFwpnjISY7T7gCE/viK3SWeDYMOgSY0Z
+	+iKE6Ejn4kJ5vGV2TrmdIAUWFX7Iw==
+Received: from ph0pr06cu001.outbound.protection.outlook.com (mail-westus3azon11011030.outbound.protection.outlook.com [40.107.208.30])
+	by mx0b-0002e601.pphosted.com (PPS) with ESMTPS id 4fdmg30byg-1
 	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Tue, 14 Jul 2026 07:57:07 -0500 (CDT)
+	Tue, 14 Jul 2026 07:57:44 -0500 (CDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rPEQeTzmZG2UtbctJRj4BVqrw8Rl4tvUxU5IfgBWenfrWAGj+2XdAn0WHmXRzc4kocsqYDGHUVWd4n+cyADDTpKH13kpRc+i4ynrcM5Y1MPVAKMOur+aMguiG5kzJY8wmqdfivT7tkdsb+fFCbNQjil01igGGwx0te4fkG39IYZu3vmvXdoMmyD5wzG7yDv8bV7Guv2SuuuYwuMm5PXGGP8rTbzjXb5ipN/Pp10O1iE01BNQmisxZRF2AFMHLnjmOesUd1tux88lfIgnbvEb7mm+UhliNhsxxyNi4VSrtCf71it1e4P8Y6XjWWHGSAmsXXb8LwF2yVYWKwoGEK4g6Q==
+ b=OFvlDX5VtpFyVPrQ3oNIDCLBV/vimFObwNmDAwUXxGhoQhcbVVwigRhy8qQb37HqdCo/5Ef3UhkhPmtLL5lC0ooVjB9F0ffQiWkYKBSQF0//egJQ2ZZ+jJofpWtjTWSLybpkHh0goqc6IrZuQYU6dQplm3IsTccpmUb5jyj6tAYuw+Mj3uAtAsAdBJSzRsN/QT9x75hj61v2Wi29e2VjJzoW/NEvpcYmpmyuEfWT22jHA+HwXz49d2Ls/4hHoZRSntXFuFb6GIPdQ0eow4xPOqZlCYbrgaRX/MZdeFi2p+BXxgMBTpycZAILA174bP1UEx8+T1Vlmig/vZCGk0EyZQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jC7dzMY90ZRNW6ApqMEPaDoXhLzi5Py23oK0h8D6ADI=;
- b=Bga7IP5jWrB/2S2HeSz1tejw6h9Nr7DnFGImKyYTFutZjEIDRZep+lemwD4CPX3q8/Fc89Lyd/7tk1mRnaCLWoJc8LeEZIMtL8MRGhWOOpSv/2pbRVWoCJqdMnPtGmgiDH+XR7gH6WKdCgDaFIVALql0KK2cc6R/0GiaClqnpBrahOpx47pgaoNx2OJSjqBqtQw/IA8AVl+xeIM6ET/6SArnLUwIKbU+IBslOXLHKiwul7owhIUe7jbvihcm+/JOIL1eeU+agvdk7mCczRz8ulDwlOUAL1VaaAcM+FMMtBvn0MtfbdaIGADeb89e8lVM7qmIyuHqeTUAEhn2UhoQug==
+ bh=6Zlk7X7ZyZ92yAzSb9OusfhwBMfUGFKHJIrH9yrPJn4=;
+ b=arxHD5F5wT6hOidIDCYhcndGWlWvWc/x2Wy3oIvLq93YO1qATAlZ/JdoBMg/xfjRyTgFOOJBvfovoLE0BQ0l+HaqVbFZ26A5dZdESp8/AlUaCPVCzOVjQC6YjEwnmOdAVRFw3f76p6u3Vk4A4HLya5Thh+SrCU/rMNw5l3wcF7p1N6jJZeICUfPChl1TvN3cN8bAMGePvnWbQxapeyVU6p2X23yNX4ESPvU49cvvy/XLUuyfN9h9VPkSAxKTZDPBNwWPDL6pU8ZnxIJSesfGwnEbVYCmZGNjzBQRnEU3TRrIcKPi8heKEFiy3c4fJrX6aEdA0DO2Z1LrOqL9rXAaOA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.23.195) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=ti.com;
+ 198.47.21.194) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=ti.com;
  dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jC7dzMY90ZRNW6ApqMEPaDoXhLzi5Py23oK0h8D6ADI=;
- b=bjidKPAnOToXwF2+8x4B0OJcSZHUavnY48zuuqCuvlfQVvAKelthRIkD+eOloXVyZSRsk4tlItG+ofxBUz+KTUK8g5Ig33C1UM7VKdZK24wr2n3xvYFhQPUtyuP9jihfI17pJwmQPrkcznwftnha79xWlSVMWSC9uQa+le0xswo=
-Received: from PH7PR03CA0027.namprd03.prod.outlook.com (2603:10b6:510:339::14)
- by DM3PPF45F123D65.namprd10.prod.outlook.com (2603:10b6:f:fc00::c24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.14; Tue, 14 Jul
- 2026 12:57:02 +0000
+ bh=6Zlk7X7ZyZ92yAzSb9OusfhwBMfUGFKHJIrH9yrPJn4=;
+ b=ufCIA9hhD4MBNkCf1KWiBskGcnWQRgOx/s4x/EhgjJ6yUKlydh74/Y7UpMJqse3yCjfNSGC3/3gq6myBSmJjOzCVtX8Vq89bEvXRkOqbV195PlPCkEABhH3qlTcnacht1keM8AVOjDuykPYfWP2qbKvb0ir4rQMqheZHbjlpNLo=
+Received: from PH7PR03CA0001.namprd03.prod.outlook.com (2603:10b6:510:339::26)
+ by DS7PR10MB7278.namprd10.prod.outlook.com (2603:10b6:8:d8::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.202.18; Tue, 14 Jul 2026 12:57:39 +0000
 Received: from CY4PEPF0000EE38.namprd03.prod.outlook.com
- (2603:10b6:510:339:cafe::48) by PH7PR03CA0027.outlook.office365.com
- (2603:10b6:510:339::14) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10b6:510:339::4) by PH7PR03CA0001.outlook.office365.com
+ (2603:10b6:510:339::26) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.223.10 via Frontend Transport; Tue,
- 14 Jul 2026 12:56:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.195)
+ 14 Jul 2026 12:57:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.194)
  smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
  action=none header.from=ti.com;
 Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.23.195 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.23.195; helo=lewvzet201.ext.ti.com; pr=C
-Received: from lewvzet201.ext.ti.com (198.47.23.195) by
+ 198.47.21.194 as permitted sender) receiver=protection.outlook.com;
+ client-ip=198.47.21.194; helo=flwvzet200.ext.ti.com; pr=C
+Received: from flwvzet200.ext.ti.com (198.47.21.194) by
  CY4PEPF0000EE38.mail.protection.outlook.com (10.167.242.10) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.223.9 via Frontend Transport; Tue, 14 Jul 2026 12:56:57 +0000
-Received: from DLEE203.ent.ti.com (157.170.170.78) by lewvzet201.ext.ti.com
- (10.4.14.104) with Microsoft SMTP Server (version=TLS1_2,
+ 15.21.223.9 via Frontend Transport; Tue, 14 Jul 2026 12:57:37 +0000
+Received: from DFLE213.ent.ti.com (10.64.6.71) by flwvzet200.ext.ti.com
+ (10.248.192.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Tue, 14 Jul
- 2026 07:56:54 -0500
-Received: from DLEE208.ent.ti.com (157.170.170.97) by DLEE203.ent.ti.com
- (157.170.170.78) with Microsoft SMTP Server (version=TLS1_2,
+ 2026 07:56:51 -0500
+Received: from DFLE211.ent.ti.com (10.64.6.69) by DFLE213.ent.ti.com
+ (10.64.6.71) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Tue, 14 Jul
- 2026 07:56:54 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE208.ent.ti.com
- (157.170.170.97) with Microsoft SMTP Server (version=TLS1_2,
+ 2026 07:56:51 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE211.ent.ti.com
+ (10.64.6.69) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37 via Frontend
- Transport; Tue, 14 Jul 2026 07:56:54 -0500
+ Transport; Tue, 14 Jul 2026 07:56:51 -0500
 Received: from venkey.dhcp.ti.com (venkey.dhcp.ti.com [10.24.53.161])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 66ECuaH44165566;
-	Tue, 14 Jul 2026 07:56:52 -0500
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 66ECuaH34165566;
+	Tue, 14 Jul 2026 07:56:49 -0500
 From: MANNURU VENKATESWARLU <v-mannuru@ti.com>
 To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>
 CC: <linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
         <n-francis@ti.com>, <s-k6@ti.com>, <bb@ti.com>, <v-mannuru@ti.com>
-Subject: [RFC PATCH 22/22] tools/perf: jevents: Add k3_ddr to JSON unit table
-Date: Tue, 14 Jul 2026 18:26:35 +0530
-Message-ID: <20260714125635.3304437-6-v-mannuru@ti.com>
+Subject: [RFC PATCH 21/22] perf/events: arm64: ti: Add AM64 DDR performance events
+Date: Tue, 14 Jul 2026 18:26:34 +0530
+Message-ID: <20260714125635.3304437-5-v-mannuru@ti.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260714125635.3304437-1-v-mannuru@ti.com>
 References: <20260714125635.3304437-1-v-mannuru@ti.com>
@@ -105,50 +104,50 @@ Content-Type: text/plain
 X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE38:EE_|DM3PPF45F123D65:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8aac8f90-4859-42ff-7d31-08dee1a763a4
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE38:EE_|DS7PR10MB7278:EE_
+X-MS-Office365-Filtering-Correlation-Id: 40ba50d5-3dd8-48c6-2e2d-08dee1a77b54
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|36860700016|376014|23010399003|22082099003|6133799003|56012099006|18002099003;
+	BCL:0;ARA:13230040|82310400026|36860700016|1800799024|376014|23010399003|6133799003|18002099003|22082099003|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	BKszTPlcCKROThW5zdOYqtoWwdT+FED6se7FRFXksWeeR8HiZvFYm1KbV/sM/Evawy+mct0SfGBQNuyLfcV21y98YXOYo0NfdN0SnGd9dlPCOy8T0DDFO67efHABgwQDbzHu2K1wGA/TIxmNAEKkcdHiPPB4VGmNFnEp0Vub7QH220x2EjItvKCfgqcfKSOnfzbCwASh7MOFi5MikB93/ElCrEcpvINnLkbM4Ds4hKXEBvQizU99/9pyLZz8F1PFRIiykdu2+AgRukgn9jv2DIsK0wzyK770SzDw8MKHS+wDwW8eLEDbTqhGtDEvDNj9xFSXfARVTaPshxSfQeYtRqfUeEcaZ1fBqCD+o2y6frgG9P7VD60SQy4TILfFZUpkR8THCQDVC4CaVUEgoIyx+kwXpn/KoqsvuQExEaNViW7dkQozOdKksPOMEBdpBGFXzz8C5n9S8dIFaRTPK7UeexDm4b1n5wPgIUso0DMVya5DiOTs4e2a9W0TqKtje48azu0ddIZhmCt9+CckqufX5v6dJYiYKNvdC5654tNRwr3km6vmg4NaTuIu/fAfLui8LBEZN7G1AgGDHGUOc0/tsJBWDmWQv0JhhiwbW96Sw7JfUu0gl9YuG2eR7abAbBF+OKR+/obaWt29xK4vm9Fo2+nXPTwKoh8mFBAnXglICDFjTiwscGCVypLgvx9jJPV3pBfi/PRO80NP2rU3xJGyWA==
+	jq3w5Ck0oQRsipPneor6a8JeWPtKXGtHSFYcDUUQeUrG7BTtHArtSXRNYfMpYeU+uqtjWsmUcOmLwz7ICB32l/DvjyrNVXpNjKITsYJ1Ozkg19gMUs75hjj162ms6WlHMHw0+n4epVkNvfmslh4huXz1FqVcNnHgxhR6pEUnD8F1YdlLJrbLC91ogmV+yorurEbJW9mIWiP4CopvXR1nmnANGNFqoUabojU6ADPyAWuodNzKVncYLWbFt8WwvTTxmTCNnWzY6uQ1DJnF2e2qHrL9z+ln9qUFq02xzXiss2b486CD74lSdaEczWQvuJLw9pVp9maXXFoew8DNhgSZKi8hg9bwDfmGsPcCQQFHsPC6slBjyToGjEgL7ZKPZpjyTKGd6tTz88awafcnxPVpcb1fMalYPX8jAlYaiBeEetuIuuqFEP5bIO9lbvDYhVNC0sHgCslG8SoWt9Qr7vfcoojUjEqMIKSeRihYKWVieXM+dFiWiUf9WEwRmwQCd5bIicWly0Z8hKTM/pIbgZ02yDzSzl7eChgiZ4ixqP1+NXq5RJBMTqZcY/7WtqcGJ3YtCqlP46u5yGOP9jFoaOGeuYR2Bx82vuo4avmbw+dep2OWw9KQsI10BbUE9etK5o2ptqMxvuLnMpFoza+TcCdUqIKZ20uy+1ybiTGL7oWEK6JdS1eaHdGCyJd3V38Bx0uJucLqTzryKxxLKH7DxA303g==
 X-Forefront-Antispam-Report:
-	CIP:198.47.23.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet201.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(36860700016)(376014)(23010399003)(22082099003)(6133799003)(56012099006)(18002099003);DIR:OUT;SFP:1101;
+	CIP:198.47.21.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet200.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(82310400026)(36860700016)(1800799024)(376014)(23010399003)(6133799003)(18002099003)(22082099003)(56012099006);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	Z9Cwc/jUpS/aN23agjUkc0W1O5Cjgw0h/075Rv8kz7oXwFwIugjenLwAVarortUh1/oFx5gJy6UfjAuyPpKTNKyEd2sZxEa6XnShBxXbdJs3dxP1aJmJum64ydwI54A4hA9LVE5VQIsm9QGKkJ1+PaZpkUUpWp9Jb79KdlatFYzVWHqMtmJDNU8Xknunh2TaBA+XyVBpBLpmfnSk95WG2JrFwaPBwgWpY0KK3/GCO/iIZ29uc+aAwv43l8aJ1g8HfMfOp/zTTecy/hwVSr1epQFk8y5uzjkoJfMIIO4bZxmlEtAu0z3KBrP5r+m+CYsJcuRTokj9yrJPVmnuDDwWy7G6lCOhCwEWfDeE1DAvNIq+I3vCf3XKfE5EwZ9In2At2rqaNsJr89Xpen3KI4yKXvXFwnlc0g290NejEVIsOb1+XAcZWRuP0FNzWLy5IS6T
+	+TnygfcC9Tr5742KP3KKHkQu1RSzuN1WEUlQJBT7Y2RbyThoIUINuyb1wsXeIFaDXKrtjLMaYxSp93ugiHSFF0YZWqe1RtHRHmskNBR++3hpFpiprwzwB5Bl6IQFRsy602wS/1Ho0BJslkirJoWGHEaCK4z0GIvIgWJsMKNlARbZND7NLo/AuV0p6Gz7n7+qTs4iQ2mMuQYEbh5rQikkB6hjWDKXeW0JzibpFrhlYTZ5LdM7EST/qcVZFnl43Spke3iip73yaTFoxBvVAB9Maqgb6S3p4cGOgdvYoN8C5EukCf8JCJnOs7IY6oEZ9RgXirICe5VqlnwzTGiX8SxDOWMCtDocKhKrYcP9JZWUu06ylfKLOc4RMA00hFxsNCx0L0E4Qh1rCXl6fUJt6/cTPygTP64El72rjJrqB1uUhth+hY/ObvZWLKZlWpkAgcNx
 X-Exchange-RoutingPolicyChecked:
-	E2GetggHfrM2mUuBHA+BRIEyiIcmepLBBzyRO16SBITMT09u14E7oHLij9eCRlMWD4HjgMD6MPj3SWP5vUl7NDixLWQwtELGuThppCHfLexMvQcN20LxQKK8+DCTK6Z6sYBnhe2X86oR/wZfp2xLGXjZZyj8dDejOxCD6HfuPYXz4Batq0ZzMByObUpuOl9e/X6nZ+pRGoYrT/sD7Iu6yanYmfj1PkPB538Zuw+/aKHVwSJngN/H/V7iewYxciYno5kU4EC9jMta/tQY2chbOnd26UzVtUoneyn38PwONvxXmMjxH6J/1FDyoqErMu5+jCYHkD9XGQYMEp+0AWgCkQ==
+	kxidELFyO9rdycbt/y0nldYkVBLx+S2EdXT+xbE2X9qiF3QPwzjJz/LZvPJ7YwBVbTqE/4Y7hn7JwrpGK/OxUGYKeBkMS1X8CwS5RULJtCVZ3jKXrwoXG1xj36ierQAwO2g9scIP2z4w3HOqdT9KXzCnYPTAdurFLrw7s0UvwhhcKJsnEQx8t3KwC7D3r4vQvZu2+adEhAVDvaqBhPdJ5lGJsNLuTPMyC/+jKYhLgVKpYucSaaBWF51HkHWvLFRx76IXrE3fk9sRaRK79Ipu8xzOKMG0OpMXe9LE/iSTXvPNXZ28N9yMPQW/9B+FdEmJ2sUc+afkxiE1PputcQiLcw==
 X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2026 12:56:57.9813
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Jul 2026 12:57:37.7245
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8aac8f90-4859-42ff-7d31-08dee1a763a4
+X-MS-Exchange-CrossTenant-Network-Message-Id: 40ba50d5-3dd8-48c6-2e2d-08dee1a77b54
 X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.195];Helo=[lewvzet201.ext.ti.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.194];Helo=[flwvzet200.ext.ti.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	CY4PEPF0000EE38.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF45F123D65
-X-Proofpoint-GUID: R8N7WhvSmEvBQegLgUyRq_1SyQH0BhfU
-X-Proofpoint-ORIG-GUID: R8N7WhvSmEvBQegLgUyRq_1SyQH0BhfU
-X-Authority-Analysis: v=2.4 cv=EMg2FVZC c=1 sm=1 tr=0 ts=6a563223 cx=c_pps
- a=P3qATxxxYOxA1bnNUqDMzg==:117 a=f+v6EHfkeJbVwR46tk4DMg==:17
- a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=RAioF0-LDSMA:10 a=s63m1ICgrNkA:10
- a=V5UXEbMT0ywA:10 a=VkNPw1HP01LnGYTKEx00:22 a=Z8NIEmU8O1QQgoT56wFK:22
- a=fPAWb5peG099m5CrUpKH:22 a=sozttTNsAAAA:8 a=orehhayMgpoFKCzscBIA:9
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE0MDEzNSBTYWx0ZWRfX4OaIbxBIY39Z
- 7y9KplPSI1lxKLZyurTQiLpYQv5fjgkMyOPapI7pKDi525n+wzxRhvUcBuRiZ9GJ9+q3xK7sUHp
- hrkfL3kK9xQfN8BEatWE8oAjDqEYwbQ=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE0MDEzNSBTYWx0ZWRfXwNosiov8dRDk
- HFVuF6rLr4jHb7R2eLUiiguf2ys8umiUmB8rL4IQdm2PuBRSXDZCVoN6U21WrWa9N3Z490/1ZSj
- 0jK1x6n4LiaafzKTao09Mzs9XF3nTBW6lV93XogArvSscd4cHRvuPYWu2875MKO/eW87bgXzGXD
- 21NEdPQUSzhNWZIlXLhoIvmd30QntCd3Uc4rfx5hnJsLI/iXATzmIkmnVY92JRysfAvfYu5ngmS
- pKOMawoJMOaa2ZVXSO/Cznl2WSCHxepOToMlP6G9FZj8YOLJmz8CQ2CMMTL0tSS9WNr6f7lXF5p
- ezTQmgBQEqMBIR5TXOYbhab6ptNwia7HFEK49aQjZarrJ6j5xEqeiUk/vBoL+RRN+uUm8OJOugp
- UBcfs87iDg8ROx0ms+xwWdeUy36OpOL/NQKfmQXelbolhX+TRrH9hFhhkBdQShADmQpYYnN9UMu
- tbM/tBzgVw3CfB4HzkA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB7278
+X-Proofpoint-GUID: LXiA7tN6vaQRkxpYwlhN_TtlKVJ1YHZb
+X-Proofpoint-ORIG-GUID: LXiA7tN6vaQRkxpYwlhN_TtlKVJ1YHZb
+X-Authority-Analysis: v=2.4 cv=EMg2FVZC c=1 sm=1 tr=0 ts=6a563248 cx=c_pps
+ a=ysgzExocFkmHQmNOaQPFvQ==:117 a=iwqwCZQqcuTv3JOpYdM7/Q==:17
+ a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=RAioF0-LDSMA:10 a=V5UXEbMT0ywA:10
+ a=VkNPw1HP01LnGYTKEx00:22 a=Z8NIEmU8O1QQgoT56wFK:22 a=fPAWb5peG099m5CrUpKH:22
+ a=sozttTNsAAAA:8 a=v80JpUPI8rrDPgMNanQA:9
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzE0MDEzNSBTYWx0ZWRfX/4N3NSA1ik05
+ Z3n0CcvwfX/RL8/Nyy3iPp+U9SVAKj1bfCYf8WdBky1WM//fx84JsxHRX85MCyvewZ7G5+OTv7w
+ fTVmEf8xzRMl8Eajw1du18KjkSYqqSs=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzE0MDEzNSBTYWx0ZWRfX/heFdQ96Zm6h
+ 595ZONck5d8z7cuI09JoYJPLzHMSwmCaMHxIFG6WE7eG0A3QJ2x7/ROUiL7Y7csMjq6ySUy7XgR
+ +2CX0U/SN5UUZR0kPRt2n4Y+KI7e0pF6+d7AV0BYRr9g1StNTVKByzo/fGcJj02zsGcHOXSwYkH
+ XKhWhKLdwQ9Zv5tFIe6Ndn0i/QQgRSVMB/3ogDO/dXEkqaw/wafSX1CY3gKBhd/0QihiyHgRD7X
+ 8nACGVkx3UTtTFSPgTmF4Z22Zm1EvUcttytkw/GSbleAEo0OEppKMTGtQ+vbRO79ey0yXKGHIG/
+ iCalCGd4v2ZI96W5K593zrjPyiv01dDcm+Ze7AmfqS/p3YWi51UeTYy3NKPdy0fUzdX3n3ZQQ9O
+ xdhxEe00sOhPCKQJPa//gI5qaajAcA/+sZqiyKGKe21lIkwRcWdABvzRL3KTVmsvj/P4rzv/0/a
+ wLp6VfOie9mVdADbIqA==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-14_03,2026-07-10_01,2025-10-01_01
@@ -161,28 +160,304 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
 
 From: Aarya Chaumal <a-chaumal@ti.com>
 
-Register k3_ddr as a known PMU unit in the jevents tool so
-that the JSON event tables for TI K3 DDR controllers are picked
-up correctly during the perf build.
+Add perf JSON event and metric definitions for the AM64
+DDR controller PMU.
 
 Signed-off-by: MANNURU VENKATESWARLU <v-mannuru@ti.com>
 Signed-off-by: Aarya Chaumal <a-chaumal@ti.com>
 ---
- tools/perf/pmu-events/jevents.py | 1 +
- 1 file changed, 1 insertion(+)
+ .../arch/arm64/ti/am64/sys/ddrc.json          | 240 ++++++++++++++++++
+ .../arch/arm64/ti/am64/sys/metrics.json       |  34 +++
+ 2 files changed, 274 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/ti/am64/sys/ddrc.json
+ create mode 100644 tools/perf/pmu-events/arch/arm64/ti/am64/sys/metrics.json
 
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 376dc2d241621..274461e55c757 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -291,6 +291,7 @@ class JsonEvent:
-           'hisi_sccl,l3c': 'hisi_sccl,l3c',
-           'imx8_ddr': 'imx8_ddr',
-           'imx9_ddr': 'imx9_ddr',
-+          'k3_ddr': 'k3_ddr',
-           'L3PMC': 'amd_l3',
-           'DFPMC': 'amd_df',
-           'UMCPMC': 'amd_umc',
+diff --git a/tools/perf/pmu-events/arch/arm64/ti/am64/sys/ddrc.json b/tools/perf/pmu-events/arch/arm64/ti/am64/sys/ddrc.json
+new file mode 100644
+index 0000000000000..c3498dfa7feeb
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/ti/am64/sys/ddrc.json
+@@ -0,0 +1,240 @@
++[
++   {
++       "BriefDescription": "Counts every Write command",
++       "EventCode": "0x00",
++       "EventName": "k3_ddr.write",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every Read command",
++       "EventCode": "0x01",
++       "EventName": "k3_ddr.read",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every read as a result of a RMW command",
++       "EventCode": "0x02",
++       "EventName": "k3_ddr.read_rmw",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every Activate command",
++       "EventCode": "0x03",
++       "EventName": "k3_ddr.activate",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every Precharge command",
++       "EventCode": "0x04",
++       "EventName": "k3_ddr.precharge",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every Precharge All command",
++       "EventCode": "0x05",
++       "EventName": "k3_ddr.precharge_all",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every Mode Register Read command",
++       "EventCode": "0x06",
++       "EventName": "k3_ddr.mode_reg_read",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every Mode Register Write command",
++       "EventCode": "0x07",
++       "EventName": "k3_ddr.mode_reg_write",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every Per Bank Refresh command",
++       "EventCode": "0x08",
++       "EventName": "k3_ddr.per_bank_refresh",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every Auto Refresh command",
++       "EventCode": "0x09",
++       "EventName": "k3_ddr.auto_refresh",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every ZQ Calib Long command",
++       "EventCode": "0x0a",
++       "EventName": "k3_ddr.zq_calib_long",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every ZQ Calib Short command",
++       "EventCode": "0x0b",
++       "EventName": "k3_ddr.zq_calib_short",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every Write-to-Read and Read-to-Write bus-turn-around",
++       "EventCode": "0x0c",
++       "EventName": "k3_ddr.bus_turn_around",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every Write-to-Write address collision",
++       "EventCode": "0x0d",
++       "EventName": "k3_ddr.write_write_collision",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every Write-to-Read address collision",
++       "EventCode": "0x0e",
++       "EventName": "k3_ddr.write_read_collision",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every Read-to-Write address collision",
++       "EventCode": "0x0f",
++       "EventName": "k3_ddr.read_write_collision",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every Read-to-Read address collision",
++       "EventCode": "0x10",
++       "EventName": "k3_ddr.read_read_collision",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every exit from Power-Down Self-Refresh mode",
++       "EventCode": "0x11",
++       "EventName": "k3_ddr.exit_power_down_self_refresh",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every entry into Power-Down Self-Refresh mode",
++       "EventCode": "0x12",
++       "EventName": "k3_ddr.entry_power_down_self_refresh",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every cycle for which the DDR Controller stays in Power-Down Self-Refresh mode",
++       "EventCode": "0x13",
++       "EventName": "k3_ddr.power_down_self_refresh_cycles",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every exit from Power-Down mode",
++       "EventCode": "0x14",
++       "EventName": "k3_ddr.exit_power_down",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every entry into Power-Down mode",
++       "EventCode": "0x15",
++       "EventName": "k3_ddr.entry_power_down",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every cycle for which the DDR Controller stays in Power-Down mode",
++       "EventCode": "0x16",
++       "EventName": "k3_ddr.power_down_cycles",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every exit from Self-Refresh mode",
++       "EventCode": "0x17",
++       "EventName": "k3_ddr.exit_self_refresh",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every entry into Self-Refresh mode",
++       "EventCode": "0x18",
++       "EventName": "k3_ddr.entry_self_refresh",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every cycle for which the DDR Controller stays in Self-Refresh mode",
++       "EventCode": "0x19",
++       "EventName": "k3_ddr.self_refresh_cycles",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every cycle for which the DDR Controller command queue is full",
++       "EventCode": "0x1c",
++       "EventName": "k3_ddr.command_queue_full_cycles",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every cycle for which the DDR Controller info FIFO is full",
++       "EventCode": "0x1d",
++       "EventName": "k3_ddr.info_fifo_full_cycles",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every cycle for which the DDR Controller write latency FIFO is full",
++       "EventCode": "0x1e",
++       "EventName": "k3_ddr.write_latency_fifo_full_cycles",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every cycle for which the DDR Controller port command FIFO is full",
++       "EventCode": "0x1f",
++       "EventName": "k3_ddr.port_command_fifo_full_cycles",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every cycle for which the DDR Controller write response FIFO is full",
++       "EventCode": "0x20",
++       "EventName": "k3_ddr.write_response_fifo_full_cycles",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every cycle for which the DDR Controller port write FIFO is full",
++       "EventCode": "0x21",
++       "EventName": "k3_ddr.port_write_fifo_full_cycles",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every cycle for which the DDR Controller core read FIFO is full",
++       "EventCode": "0x22",
++       "EventName": "k3_ddr.core_read_fifo_full_cycles",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   },
++   {
++       "BriefDescription": "Counts every cycle for which the DDR Controller port read FIFO is full",
++       "EventCode": "0x23",
++       "EventName": "k3_ddr.port_read_fifo_full_cycles",
++       "Unit": "k3_ddr",
++       "Compat": "AM64"
++   }
++]
+diff --git a/tools/perf/pmu-events/arch/arm64/ti/am64/sys/metrics.json b/tools/perf/pmu-events/arch/arm64/ti/am64/sys/metrics.json
+new file mode 100644
+index 0000000000000..1d8982c8f5bba
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/ti/am64/sys/metrics.json
+@@ -0,0 +1,34 @@
++[
++    {
++        "BriefDescription": "DDR memory read bandwidth in MB/s (16-bit bus, BL16)",
++        "MetricExpr": "(k3_ddr.read * 32) / (duration_time * 1e6)",
++        "MetricGroup": "ddr",
++        "MetricName": "k3_ddr_am64.read_bandwidth_mbytes_sec",
++        "ScaleUnit": "1MB/s",
++        "Compat": "AM64"
++    },
++    {
++        "BriefDescription": "DDR memory write bandwidth in MB/s (16-bit bus, BL16)",
++        "MetricExpr": "(k3_ddr.write * 32) / (duration_time * 1e6)",
++        "MetricGroup": "ddr",
++        "MetricName": "k3_ddr_am64.write_bandwidth_mbytes_sec",
++        "ScaleUnit": "1MB/s",
++        "Compat": "AM64"
++    },
++    {
++        "BriefDescription": "Average DDR read requests per second",
++        "MetricExpr": "k3_ddr.read / duration_time",
++        "MetricGroup": "ddr",
++        "MetricName": "k3_ddr_am64.read_requests_per_sec",
++        "ScaleUnit": "1reads/sec",
++        "Compat": "AM64"
++    },
++    {
++        "BriefDescription": "Average DDR write requests per second",
++        "MetricExpr": "k3_ddr.write / duration_time",
++        "MetricGroup": "ddr",
++        "MetricName": "k3_ddr_am64.write_requests_per_sec",
++        "ScaleUnit": "1writes/sec",
++        "Compat": "AM64"
++    }
++]
 -- 
 2.34.1
 
