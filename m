@@ -1,229 +1,63 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ED03480961
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 16:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85DCB285CA2;
+	Tue, 14 Jul 2026 16:50:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784047309; cv=none; b=PDMD16hVHhLPtK/33x8VGlzybB8Q9aC5JbrNU1tg62xa4HKecn4C9J8QrnCy9UTwnN4pRh85W0SDw2fmPD1/pn+RmSPLy6E5RXwzv2cOUkXEpQCPHPadkzrIG8FfKQHzGWISHqxGMA3FpmFLCO5/wryu0gBUuEiR4j7d7QWaLhk=
+	t=1784047847; cv=none; b=X/HT1S9bNBg/5EGfaqRFmYMTlIabeuRYvqesT4xu4ApdKM8kTC0fUUXIIvNsvNY368kXNjUmWWuBZCyitHZ+FdDmEvAAz2iDjmJFAxieO/fRZpIAhal/VBG5yVwuosa+yThJXTTx+Yat/TKD7ABM1j5XRwq2xDt0Heu2SMUlrfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784047309; c=relaxed/simple;
-	bh=+UZ2C/SIqj6Dtle1yIQ62BUp8tDwxi+DEhc0LgCFf7E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HJ+1alNnddpU61J3n/LL8b8gSmN7IDsIoqNXHmwaI0S9vi28tPAYltX69lNWMRaJZTLSIdD4CoD09pOxFR9H08RBDV29BLs1TFCUcbAKxH8M0nAh8DvLTDX/sJuhzuVuxn9uRI/aDwrWe3oMCOoKAl7/byLXPjqO6I4szLygw9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jfk2OvY6; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1784047847; c=relaxed/simple;
+	bh=3ifxnirdEMSVUJEXYtvjlXc/CWOz0HqRMKFe0WAHQzs=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=Q3LWwG4BnYF2CUzhoNqqTG1i0gmLEySn4agw3grZEel5ialpJJ9iao7lWgzDT0OumcE2cH4T0g8aW15J9Yy7XYFj7cIcP/sctkV6U8zRswTVkVhdylODzYRMywQ2IT1tpE2SduHSK2kGSgg2Nwqw2qUGK+QXeO3CAZYFr4pXcF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lJjYpPrL; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jfk2OvY6"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-47de008b020so661512f8f.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 09:41:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1784047305; x=1784652105; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=dAGdTmKiRz8gSXgEL0AxMvGfkn4LlPlutVrGbCWXhWI=;
-        b=jfk2OvY6itIAXcb2MHEYmlCw1DRTYcd5IMg8HjTKyj7b8d+cf2jF9cRdMzUdo+X+FL
-         HIBxDTQVyHNx3nq5zHhphZpi+9/XqYmFMqA/vrLSPT+np3UW1VUlyDMGEsEsSfBHeLxK
-         yCzm6VHhSpnlcBW/HW+3Z+k1QiDBEodhkGDKEFFjg/dcZItkzuuFiHL7JOQ1tCioUc+p
-         7qyaw9HlV6+a9mXXh9WmW81Hwtg0BGvQ94ZMN9+DhVHoqd1JL+VvPZhp+3ROPp1w+H8W
-         nCXTM4614VmuS8QGXBWzdCcnETsfH1Uk305vkm0WclSp522qa8SkDT8LtIqJhGS0Pl2S
-         IuHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784047305; x=1784652105;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=dAGdTmKiRz8gSXgEL0AxMvGfkn4LlPlutVrGbCWXhWI=;
-        b=c3hUrKKciWzOKp3yNa4yhReHxV2ymItP3U6FItJmRHqFUu+HNtfWe5ndik5ZgKNzHa
-         TENcgsC8eQkMIb0B4M0pTav7u6eB+II3jYgeJ7iLnqoB2AmTMZj1VOxzjedych2vwtk5
-         DkMWQlwZuLeGf5Qz7vniieQP1aNccwRTJQuxSTkzwYZb4PKDhjhaggnxJDxBWjq+pLDG
-         sKWhwx3lIcWclnUUsLekKnsgpyeSmYpjrcBu3N0BsEVKfGWriy2V5NIvi5qTjmu6NBT1
-         f1z2KAgxjkpsqlnHJCJucMi2GFEexMSWQv+IjTGPf/Mhjw8BsAYcIzL7+u8tc5ykfnVX
-         NEIA==
-X-Forwarded-Encrypted: i=1; AHgh+Ro6zXS8fME9yb9ljikHO5fuUSTyKNiXx2SDbEwCczgp2sT7Su/VDxnwF6RRCGzzmSxuoHQESzkEsA8GslwMhVDK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxGDezmPvsaN3tT5/fiizgJNfIEOub/HlN2HDVovci8EXTj7AB
-	nqy5my1Q+wADTxfDtRu2tMd82C6UOX4LCaUjK+0oqSwiJ410KMgxtk/WAoDe7rX5UtY=
-X-Gm-Gg: AfdE7cmN3dSyb9BCF+ZJ4JxAwEuqxuyxaJzsErjDh+yIJrIpb6a6zPC9bdyZjrQfF+G
-	XVXwGWoB99+kPvHEos7xu49KOnCu7Gw2tbIc1odSSdYknAZ603LVtFC5ZJs2RyI17aXaXmhNIy4
-	OmL6o+HaCFVJG1LF7M3Ngt8e7LPEs9GVgJgszatcyVeSjGYI9n/HUh6n7syTWK8l/vCtRsvAmTa
-	Xtq2zlub+FyZGeyt0ZW63kJt839wQhBpSRAMvBTgbIKsH8smFyKQD6ANGpv0Hy7AUNGu1V64Jka
-	3GPmP/CHroXcYR8jRe1t6kuc2Dr4lxbMA5E3anGPa+lsUyH6GrUTN/Mk47p82E5yg2ikTpHiVtm
-	rA6U9Q8tmLvWmQnoG7ere0GSULAM+LOrFXo9oUL2G/f0O8968/jhYJ/TnEz0GnkT/bCxq/qnHaq
-	7Jwh2OFCyjb++oMgLkNXC+KA==
-X-Received: by 2002:a05:6000:184d:b0:474:3708:c8 with SMTP id ffacd0b85a97d-47f2dcc0d79mr17004061f8f.15.1784047305565;
-        Tue, 14 Jul 2026 09:41:45 -0700 (PDT)
-Received: from [172.27.236.80] ([212.187.182.161])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47f4635aa34sm8766325f8f.15.2026.07.14.09.41.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Jul 2026 09:41:45 -0700 (PDT)
-Message-ID: <a8d4ab9b-b2e3-407c-9898-1b9f7339f448@linaro.org>
-Date: Tue, 14 Jul 2026 17:41:43 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lJjYpPrL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5A801F00A3A;
+	Tue, 14 Jul 2026 16:50:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784047846;
+	bh=UZ+ssVjkRDV4y/CRybDbntm8unIymoRlFFOExyAPo8c=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=lJjYpPrLco8C5pFSrSvz9yApEUy0ACKjGhX45HdU+T1BCn5H2P4UdIN5fBDNiMJw8
+	 XYtmkx8GO3XAjIZ7b0gWL/LVAu4EVTHCVrAlk8eLwnaMH8EULFPaXCkoNznw7lJ4Gg
+	 A8Q8lKJ17tFJRalKOb6ULUCvbNvTdRY2X3coyaQJcXeS2xxYiFZGHPEiWRJTdx9ER/
+	 QVmKz7qPksQ9O9ivbXWwtv9wrXw8snfRvmoifvaprGNJuYI1iV/HugNvalNxvVZl+L
+	 qfPtj+ZewC7tEAGW/DEiCFZeOdBvH0OqZzN2nugvqARfsQAJrZWtPvcMQT42clfQxC
+	 4OPGSehbVZPrw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+ linux-perf-users@vger.kernel.org, Trevor Allison <tallison@redhat.com>
+In-Reply-To: <20260707000357.823509-1-namhyung@kernel.org>
+References: <20260707000357.823509-1-namhyung@kernel.org>
+Subject: Re: [PATCH] perf build: Do not pass -static to dlfilters
+Message-Id: <178404784583.1340197.1181201146380580405.b4-ty@kernel.org>
+Date: Tue, 14 Jul 2026 09:50:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/6] tools/build: Allow versioning LLVM readelf
-To: Ihor Solodrai <ihor.solodrai@linux.dev>
-Cc: linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
- linux-input@vger.kernel.org, linux-kselftest@vger.kernel.org,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>,
- Shuah Khan <shuah@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Andrii Nakryiko
- <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Martin KaFai Lau <martin.lau@linux.dev>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>
-References: <20260518-james-perf-llvm-version-v2-0-f12cc4f031d8@linaro.org>
- <20260518-james-perf-llvm-version-v2-4-f12cc4f031d8@linaro.org>
- <c366293c-7bcd-4e28-b3c4-575203403489@linux.dev>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <c366293c-7bcd-4e28-b3c4-575203403489@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-
-
-On 10/07/2026 23:29, Ihor Solodrai wrote:
-> On 5/18/26 2:03 AM, James Clark wrote:
->> Documentation/kbuild/llvm.rst mentions that readelf is included in the
->> LLVM toolchain, but it's not currently included in this block.
->>
->> Add it so that LLVM=... options also apply to readelf. Users in tools/
->> were Perf which was hardcoding it, and another was the BPF makefile.
->> Both already include Makefile.include so convert them to use the new
->> variable.
->>
->> It also didn't have the cross compile prefix, so either readelf didn't
->> mind opening cross binaries, or it wasn't working for cross builds.
-> 
-> I'm pretty sure it's the former. readelf/llvm-readelf are only used
-> libbpf makefile to read ELF symbol tables, which should be arch-independent.
-> 
-> We've been cross-compiling the kernel (and libbpf) on BPF CI for a
-> long time. So the unprefixed readelf is already working, and adding
-
-I think "working" isn't technically correct when you take into account 
-the documented behavior of the versioned LLVM= option [1]. You would get 
-one version of the toolchain used for some of the build and a different 
-version used here. That's what caused the build failure in Perf that 
-resulted in the tidyup, because they're not always compatible.
-
-[1]: Documentation/kbuild/llvm.rst
-
-> the $(CROSS_COMPILE) prefix only adds a new requirement.
-> 
-> I don't think this change in tools/lib/bpf/Makefile is a good idea,
-> we could potentially break some environments. Even though hardcoded
-> readelf doesn't look nice.
+On Mon, 06 Jul 2026 17:03:57 -0700, Namhyung Kim wrote:
+> The recent commit caused a failure in make build-test for static builds.
+> Let's not pass -static the option to dlfilters which is dynamically
+> loaded as it's hard-coded with -shared even for static builds.
 > 
 > 
+Applied to perf-tools-next, thanks!
 
-IMO it's worth the risk for the cleanup, it also helps to stop 
-propagating it with future copy pastes.
+Best regards,
+Namhyung
 
-Do you think it's likely that someone has CROSS_COMPILE set but doesn't 
-have that readelf installed? Installing gcc-aarch64-linux-gnu on 
-Debian/Ubuntu gives you aarch64-linux-gnu-readelf, so it would have to 
-be a unique setup to not have it.
-
-It sounds like maybe you want this bpf makefile to explicitly use 
-'HOSTREADELF', if you're really sure it never requires arch specific 
-stuff? If we added that it would fit better with the rest of the 
-cleanup. But I think 'READELF' is less confusing and take the risk of 
-some build breakages.
-
->>
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->>   tools/lib/bpf/Makefile         | 8 ++++----
->>   tools/perf/Makefile.perf       | 1 -
->>   tools/scripts/Makefile.include | 2 ++
->>   3 files changed, 6 insertions(+), 5 deletions(-)
->>
->> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
->> index 168140f8e646..180dca9c57c8 100644
->> --- a/tools/lib/bpf/Makefile
->> +++ b/tools/lib/bpf/Makefile
->> @@ -114,12 +114,12 @@ PC_FILE		:= $(addprefix $(OUTPUT),$(PC_FILE))
->>   
->>   TAGS_PROG := $(if $(shell which etags 2>/dev/null),etags,ctags)
->>   
->> -GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN_SHARED) | \
->> +GLOBAL_SYM_COUNT = $(shell $(READELF) -s --wide $(BPF_IN_SHARED) | \
->>   			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
->>   			   sed 's/\[.*\]//' | \
->>   			   awk '/GLOBAL/ && /DEFAULT/ && !/UND|ABS/ {print $$NF}' | \
->>   			   sort -u | wc -l)
->> -VERSIONED_SYM_COUNT = $(shell readelf --dyn-syms --wide $(OUTPUT)libbpf.so | \
->> +VERSIONED_SYM_COUNT = $(shell $(READELF) --dyn-syms --wide $(OUTPUT)libbpf.so | \
->>   			      sed 's/\[.*\]//' | \
->>   			      awk '/GLOBAL/ && /DEFAULT/ && !/UND|ABS/ {print $$NF}' | \
->>   			      grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 | sort -u | wc -l)
->> @@ -182,12 +182,12 @@ check_abi: $(OUTPUT)libbpf.so $(VERSION_SCRIPT)
->>   		     "versioned symbols in $^ ($(VERSIONED_SYM_COUNT))." \
->>   		     "Please make sure all LIBBPF_API symbols are"	 \
->>   		     "versioned in $(VERSION_SCRIPT)." >&2;		 \
->> -		readelf -s --wide $(BPF_IN_SHARED) |			 \
->> +		$(READELF) -s --wide $(BPF_IN_SHARED) |			 \
->>   		    cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |	 \
->>   		    sed 's/\[.*\]//' |					 \
->>   		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}'|  \
->>   		    sort -u > $(OUTPUT)libbpf_global_syms.tmp;		 \
->> -		readelf --dyn-syms --wide $(OUTPUT)libbpf.so |		 \
->> +		$(READELF) --dyn-syms --wide $(OUTPUT)libbpf.so |		 \
-> 
->>   		    sed 's/\[.*\]//' |					 \
->>   		    awk '/GLOBAL/ && /DEFAULT/ && !/UND|ABS/ {print $$NF}'|  \
->>   		    grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 |		 \
->> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
->> index 0aba14f22a06..63276bf55856 100644
->> --- a/tools/perf/Makefile.perf
->> +++ b/tools/perf/Makefile.perf
->> @@ -215,7 +215,6 @@ FLEX    ?= flex
->>   BISON   ?= bison
->>   STRIP   = strip
->>   AWK     = awk
->> -READELF ?= readelf
->>   
->>   # include Makefile.config by default and rule out
->>   # non-config cases
->> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
->> index e81e5b479c56..380ad84ac51e 100644
->> --- a/tools/scripts/Makefile.include
->> +++ b/tools/scripts/Makefile.include
->> @@ -73,6 +73,7 @@ ifneq ($(LLVM),)
->>     $(call allow-override,LLC,$(LLVM_PREFIX)llc$(LLVM_SUFFIX))
->>     $(call allow-override,LLVM_CONFIG,$(LLVM_PREFIX)llvm-config$(LLVM_SUFFIX))
->>     $(call allow-override,LLVM_OBJCOPY,$(LLVM_PREFIX)llvm-objcopy$(LLVM_SUFFIX))
->> +  $(call allow-override,READELF,$(LLVM_PREFIX)llvm-readelf$(LLVM_SUFFIX))
->>   else
->>     # Allow setting various cross-compile vars or setting CROSS_COMPILE as a prefix.
->>     $(call allow-override,CC,$(CROSS_COMPILE)gcc)
->> @@ -80,6 +81,7 @@ else
->>     $(call allow-override,LD,$(CROSS_COMPILE)ld)
->>     $(call allow-override,CXX,$(CROSS_COMPILE)g++)
->>     $(call allow-override,STRIP,$(CROSS_COMPILE)strip)
->> +  $(call allow-override,READELF,$(CROSS_COMPILE)readelf)
->>   
->>     # Host versions aren't prefixed
->>     $(call allow-override,HOSTAR,ar)
->>
-> 
 
