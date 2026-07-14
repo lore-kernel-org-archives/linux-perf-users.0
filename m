@@ -1,118 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from relay.hostedemail.com (smtprelay0013.hostedemail.com [216.40.44.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9960C41B8F3
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 20:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D53EB40D587;
+	Tue, 14 Jul 2026 21:14:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784062617; cv=none; b=gJtIDJCTXyhFzWw+rehT9/MO/k+KRyMjdtO5bANth2ljrshF584+u7TBvfbWuKIS39/+cEgCoMdX6rlAOrp8+qXFsx6qeRAg/L2Q6igtgQNdQ6050mVYe1GCQ1gpB6tGyL+gd4KLAj1OtOjyBjM0C1eNNnbSpdjWBbBESFIsB8c=
+	t=1784063693; cv=none; b=AKJG34vgbXjGTz+Dz1oBXd5ETYpxegnOnIYRzRMaF/miAmp+zG0ueK6lzfVBRWY5dSrF8TJ/Vr0TNJwFYJnqbV+Ul47PDXCV/GWFo26f/iXC03qh4d5xb3ufLGe3HKO5QhBopYuqpZZIoMxrAnKBjxaYabM9SYKSGKh0vvrtEhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784062617; c=relaxed/simple;
-	bh=YcBOY7Q07m5kkv9eb2+hKpaLmAg0Sej+ZgFMP+XiLl8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Zh3WycC6Fd8uSf3XSfll6iCPssmsNaUojFZottkWhsNhdLlKqA5CPtVgEGuUl6j7t/QIjqmyvNzhd+fB42/pHB3urm9tjXdWz/nyneNECGcar0FTrFMz6gy9jERP7V9iHZmVFe7RBmaUM40uU4eTcxvEZZkztHRpypsEMhOJI7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MHCbgDCj; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MHCbgDCj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 079F21F000E9;
-	Tue, 14 Jul 2026 20:56:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784062616;
-	bh=p/11jZKg4M18uZA231QXNVg+LgOOn5rvb+fIX678100=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MHCbgDCj/3kcBftmbfuT/PGgLiGaAQQ+A6fhH5TMLpKh86pM3T5Phz3huPrL9l0kf
-	 2n/NKXL4LBxu/awWgtGV3A+yAnszlWADs8oyo35kvHM0QxKQAXqIRY2To/R2Wf0SqR
-	 TetaLgtHSDTBudU1NEPQ3F2V4Wtg9LkPGhORITazo0YcmsYCe9TfOyLQODGJVaGaE1
-	 Pe4nLsxrLHl/QD1o53ci5hM754ZS1Pvw6++MG1I2OaaKo5VlbWPQPf4gJ1meIbDb26
-	 4MbQYSKKfnzLvd4t4djfkJUk7HHeI653PuCXrpr0V1AMGltpi4zSsMosLYkZd46yaV
-	 sIVxLmguW7Z5w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 08/12] perf vendor events intel: Update meteorlake
- events from 1.21 to 1.22
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Chun-Tse Shao" <ctshao@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260714204044.1952031-9-ctshao@google.com>
-References: <20260714204044.1952031-1-ctshao@google.com>
- <20260714204044.1952031-9-ctshao@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 14 Jul 2026 20:56:55 +0000
-Message-Id: <20260714205656.079F21F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1784063693; c=relaxed/simple;
+	bh=YpFOvdHNbooxq1qa2KJjA9MM8vmvHHa1fIOhAJ9X2D4=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KDEniRvONO5jKyOIoPAC1xhegMSqpUG/plTLVI8W5hNkLvAeXiQuABvcwWORSKbz7vilTtPYq1mJFC7spTs+dV91oPOcH4ArYRiDXsuwU4OhBPnFhQ65QXJu61+EyoWlMddVSMgslycjkrFslulVNH3ZSew7Jjb32CVEaumKM7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf03.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 5AA0440522;
+	Tue, 14 Jul 2026 21:14:39 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 15C226000D;
+	Tue, 14 Jul 2026 21:14:35 +0000 (UTC)
+Date: Tue, 14 Jul 2026 17:14:38 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra
+ <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter
+ Anvin" <hpa@zytor.com>, x86@kernel.org, Arnaldo Carvalho de Melo
+ <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ David Hildenbrand <david@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [RFC PATCH 08/13] mm/kwatch: add hardware breakpoint backend
+Message-ID: <20260714171438.226faf7b@gandalf.local.home>
+In-Reply-To: <20260714183206.12688-1-wangjinchao600@gmail.com>
+References: <20260714182243.10687-1-wangjinchao600@gmail.com>
+	<20260714183206.12688-1-wangjinchao600@gmail.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 15C226000D
+X-Stat-Signature: ofukrydpoaufx6f8q8s6anx3wj8ecikd
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/+jUG/wma6bXPaXNDDF4uPI966CzmydeA=
+X-HE-Tag: 1784063675-113700
+X-HE-Meta: U2FsdGVkX1+BwHjks+RcUuzIPHfbSeUChRislj0v1kLLaY98NAKF6cdZylAtqcI59w4fbE1UaMDFXzng8xvt0r2W54B6xPwD9aR33+AJde3xxYHmB3Xqy97uhwKNAjrEFHbwMYr8N+8lsjMIeaRezBQgyf4EPvq0NQyxCRRifw46VeA3PQuB85l2wH4sIawolc51TlXnBbIf/t6zg2PpDxpQ0xONaCpVs5SuoR/zHifYoqD66Sr0/ekUURTsxJf3+xmOBWatOhJM00GlJgkk1ANhdqTl8Jgjzp1LQGeDovN3/JPet+YhwAnTHMWlMR4NDTHuDFZrVnyepQjaQfBPmFF0Dc8n1a0i
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] The metric `tma_uc_bound` is referenced as a related metric in mult=
-iple `PublicDescription` fields, but it is not defined for the Meteor Lake =
-architecture.
---
+On Wed, 15 Jul 2026 02:32:06 +0800
+Jinchao Wang <wangjinchao600@gmail.com> wrote:
 
---- Patch [8]: [PATCH v2 08/12] perf vendor events intel: Update meteorlake=
- events from 1.21 to 1.22 ---
-commit cb395fd3e26bd66c71e3cfa53c9dba3acded6104
-Author: Chun-Tse Shao <ctshao@google.com>
+> --- /dev/null
+> +++ b/include/trace/events/kwatch.h
+> @@ -0,0 +1,57 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM kwatch
+> +
+> +#if !defined(_TRACE_KWATCH_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_KWATCH_H
+> +
+> +#include <linux/tracepoint.h>
+> +#include <linux/ptrace.h>
+> +
+> +#define KWATCH_STACK_DEPTH 8
+> +
+> +struct trace_seq;
+> +const char *kwatch_trace_print_stack(struct trace_seq *p,
+> +				     const unsigned long *stack,
+> +				     unsigned int nr);
+> +
+> +TRACE_EVENT(kwatch_hit,
+> +	TP_PROTO(unsigned long ip, unsigned long sp, unsigned long addr,
+> +		 u64 time_ns,
+> +		 unsigned long *stack_entries, unsigned int stack_nr),
+> +	TP_ARGS(ip, sp, addr, time_ns, stack_entries, stack_nr),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(unsigned long, ip)
+> +		__field(unsigned long, sp)
+> +		__field(unsigned long, addr)
+> +		__field(u64, time_ns)
 
-perf vendor events intel: Update meteorlake events from 1.21 to 1.22
-   =20
-The updated events were published in:
-https://github.com/intel/perfmon/commit/704ef43e4c0738065a0575622cf7d31867b=
-8d48b
+Move the time_ns to the first field, as unsigned long on 32 bit
+architectures is 4 bytes, and this will make 4 byte "hole" in the event.
 
-> diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/mtl-metrics.json b=
-/tools/perf/pmu-events/arch/x86/meteorlake/mtl-metrics.json
-> index 948c16a1f95ba..a23691052237e 100644
-> --- a/tools/perf/pmu-events/arch/x86/meteorlake/mtl-metrics.json
-> +++ b/tools/perf/pmu-events/arch/x86/meteorlake/mtl-metrics.json
-> @@ -797,16 +797,16 @@
->      },
->      {
->          "BriefDescription": "Total pipeline cost of external Memory- or =
-Cache-Bandwidth related bottlenecks",
-> -        "MetricExpr": "100 * (tma_memory_bound * (tma_dram_bound / (tma_=
-dram_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_store_bound))=
- * (tma_mem_bandwidth / (tma_mem_bandwidth + tma_mem_latency)) + tma_memory=
-_bound * (tma_l3_bound / (tma_dram_bound + tma_l1_bound + tma_l2_bound + tm=
-a_l3_bound + tma_store_bound)) * (tma_sq_full / (tma_contested_accesses + t=
-ma_data_sharing + tma_l3_hit_latency + tma_sq_full)) + tma_memory_bound * (=
-tma_l1_bound / (tma_dram_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound=
- + tma_store_bound)) * (tma_fb_full / (tma_dtlb_load + tma_fb_full + tma_l1=
-_latency_dependency + tma_lock_latency + tma_split_loads + tma_store_fwd_bl=
-k)))",
-> +        "MetricExpr": "100 * (tma_memory_bound * (tma_l3_miss_bound / (t=
-ma_l1_bound + tma_l2_bound + tma_l3_bound + tma_l3_miss_bound + tma_store_b=
-ound)) * (tma_mem_bandwidth / (tma_mem_bandwidth + tma_mem_latency)) + tma_=
-memory_bound * (tma_l3_bound / (tma_l1_bound + tma_l2_bound + tma_l3_bound =
-+ tma_l3_miss_bound + tma_store_bound)) * (tma_sq_full / (tma_contested_acc=
-esses + tma_data_sharing + tma_l3_hit_latency + tma_sq_full)) + tma_memory_=
-bound * (tma_l1_bound / (tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_l=
-3_miss_bound + tma_store_bound)) * (tma_fb_full / (tma_dtlb_load + tma_fb_f=
-ull + tma_l1_latency_dependency + tma_lock_latency + tma_split_loads + tma_=
-store_fwd_blk)))",
->          "MetricGroup": "BvMB;Mem;MemoryBW;Offcore;tma_issueBW",
->          "MetricName": "tma_bottleneck_data_cache_memory_bandwidth",
->          "MetricThreshold": "tma_bottleneck_data_cache_memory_bandwidth >=
- 20",
-> -        "PublicDescription": "Total pipeline cost of external Memory- or=
- Cache-Bandwidth related bottlenecks. Related metrics: tma_fb_full, tma_inf=
-o_system_dram_bw_use, tma_mem_bandwidth, tma_sq_full",
-> +        "PublicDescription": "Total pipeline cost of external Memory- or=
- Cache-Bandwidth related bottlenecks. Related metrics: tma_fb_full, tma_inf=
-o_system_dram_bw_use, tma_mem_bandwidth, tma_sq_full, tma_uc_bound",
 
-[Severity: Low]
-This isn't a bug, but this adds a reference to tma_uc_bound which doesn't
-appear to be defined in the Meteor Lake JSON files. Will this cause a
-dangling documentation reference for users looking up the related metrics?
+> +		__field(unsigned int, stack_nr)
 
-(Note: This same tma_uc_bound reference is also added to the
-PublicDescription fields for tma_fb_full, tma_info_system_dram_bw_use,
-tma_mem_bandwidth, and tma_sq_full below).
+Make stack_nr the last element for the same reason.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260714204044.1952=
-031-1-ctshao@google.com?part=3D8
+> +		__array(unsigned long, stack, KWATCH_STACK_DEPTH)
+
+Make the above a dynamic array based on stack entries.
+
+		__dynamic_array(unsigned long, stack, min_t(unsigned int, stack_nr,
+			  KWATCH_STACK_DEPTH);
+
+
+> +	),
+> +
+> +	TP_fast_assign(
+> +		unsigned int i;
+		unsigned long *stack = __get_dynamic_array(stack);
+> +
+> +		__entry->ip = ip;
+> +		__entry->sp = sp;
+> +		__entry->addr = addr;
+> +		__entry->time_ns = time_ns;
+> +		__entry->stack_nr = min_t(unsigned int, stack_nr,
+> +					  KWATCH_STACK_DEPTH);
+> +		for (i = 0; i < __entry->stack_nr; i++)
+> +			__entry->stack[i] = stack_entries[i];
+
+			stack[i] = stack_entries[i];
+
+> +	),
+> +
+> +	TP_printk("KWatch HIT: time=%llu.%06lu ip=%pS addr=0x%lx%s",
+> +		  __entry->time_ns / 1000000000ULL,
+> +		  (unsigned long)((__entry->time_ns / 1000ULL) % 1000000ULL),
+> +		  (void *)__entry->ip, __entry->addr,
+> +		  kwatch_trace_print_stack(p, __entry->stack,
+
+		  kwatch_trace_print_stack(p, __get_dynamic_array(stack),
+
+> +					   __entry->stack_nr))
+> +);
+> +
+
+-- Steve
