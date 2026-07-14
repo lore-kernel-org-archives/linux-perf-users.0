@@ -1,207 +1,403 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACE443FD28
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 18:32:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4145E43CECA
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 18:32:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784053964; cv=none; b=cY+ojmQFhTY1L92+VSktludeexkK4n1fbuGulkyFxLm3wUAqhxFqTwotbE9ynYdHz6n3RZseTTKaEzBYCkwQacyi7QJ9FzzFOblZGPz7T4409yKo4iRGuxy+FDUXr7aAGwtoSOv5PngrJuPK7TpfbGb9I6EMJL2SwYMF7vTbHdw=
+	t=1784053967; cv=none; b=OE4worwl3AfZCRLA1sXFVOV2ebVgjzRmHxR5l+sBKYN8R/Ex3BcY+rId1QAn2ESmjRClNAWFpMNr7PlryVzhfNErzcHOHtJeb0GbbXx+iqVId8f02ZZWJocCtVxmUeujK9U1ooVO+ahnGPenHXvbasKlwFVGyv1e7sKF2jey+Ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784053964; c=relaxed/simple;
-	bh=5ZugrS/XkaD0h/4ZRtq6FyU9FkKZDK9GPMwpyXNA5Rw=;
+	s=arc-20240116; t=1784053967; c=relaxed/simple;
+	bh=U8Z0nvRnaFFrw3lPHvPCl/wITya9sSFlUIbcZxe00bU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jN0ilAAVaE+TzkS432pRarcIR0eRsVn3UZSkD1SpWpRuz/X5NK/ef/TdYpyMlmgWcxjCFoMZ5jOiGtaDdDvDyhAOT6vCnJjkO2qywm7zLKP1mhSp59JuNUeLqjval4T4PTmdvk9B6xdTqdYsswggFWUgm7dNuyPQxOXhXmXS3f4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CdzGAjo3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 MIME-Version; b=j/oEgSah6EdKtFTBHI6BPWiIYgJKoTtAV8sPeLK+NHHfelIJon5LNLlBO3XSx70rSOU9lukN6K2LTNDM6SmIn0/olU/amP3MqLVNxfdo9+zXn5WsegIyaBXfIUcWCND4BKNzowTpxzNR8Hw6yPFpSHCj3p0UqdUtI9e/JB57KpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l6FYtvg9; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CdzGAjo3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784053962;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LvmLOXpC1CRK/A3/t0yO20cykVDTPKJzzMQZeRym+Ns=;
-	b=CdzGAjo3TPrDDyGmLvrPHiA74KBiu7tBgcjUjKHUvGCpjIj7uqLkvpwGGy+vmHi/lcTwR0
-	m0JmgqkQQY9IghAtza28f3eQLGf39IVeGbobzoqSXjTXS8t7eclTwBUrenQjmkIueioS+Z
-	JrqhTH00QPPoUS5a5fzxGuHZXyJAzFM=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-133-6dlNJ6PENuKfMJivkx68-Q-1; Tue,
- 14 Jul 2026 14:32:39 -0400
-X-MC-Unique: 6dlNJ6PENuKfMJivkx68-Q-1
-X-Mimecast-MFC-AGG-ID: 6dlNJ6PENuKfMJivkx68-Q_1784053957
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8E510195604E;
-	Tue, 14 Jul 2026 18:32:36 +0000 (UTC)
-Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.65.227])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 713BD1800593;
-	Tue, 14 Jul 2026 18:32:33 +0000 (UTC)
-From: Anubhav Shelat <ashelat@redhat.com>
-To: mpetlan@redhat.com,
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l6FYtvg9"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-920f33347f5so317191585a.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 11:32:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784053965; x=1784658765; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=JG+YXpLaf6eTeKDHjsfPWQsS8e418Ifa944UVLgQD7U=;
+        b=l6FYtvg9K7qTr9PRUV9BLwvHtUGDx48DgF7q5vOQqGr0YH7Q14H5Kodm8HCyVugJl3
+         4e+LaK37kdjGNqYiLjxI8ECiu+ZUIFV0y0OP+KCadlKsdUD40QRV1F6EeGK71rxxB5HE
+         BUizXm9wvsLq+Wa50677s7e+fg3UlcEWyk8iJndeZjadc296WmkqBbR67JvWsrZXiGbb
+         gmzwKwE3hFBVJkXwLD1XCai9/+ias7Ge1D/ANkcEDMOqA5uF8Z1gDpqwcFrRU9E8HVnc
+         hRWSXYsBdAxnn0YTl1OxnKe7zoWHg5nc/piaWsjXS0dROWE2pruHRC+VwUdqGRfxA9gs
+         qokA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784053965; x=1784658765;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=JG+YXpLaf6eTeKDHjsfPWQsS8e418Ifa944UVLgQD7U=;
+        b=Cr5S4Nli+iN6fGnmePMumBM8aXA6YCsdHlUQ6m1GihnLhBn53T6ZSU9Zd+/O61gHL6
+         kR5ylVleLWEVIr3DZJUnCxLvrnXpgUnWmnNrojKBoTindBPGv6VfwbOrk6PJ5hjBqrTN
+         XV2Z+UBxB+O0rksS1SRaeNCmQf/4zkB8tODThyYWPDIUqloQ1Kv09OBls08DrUmpYjPu
+         jo6H+zA2t7eb96XtSeYc2+vYaps0Ib06YZxfCHEf3BsYKEOJjsfuRsr+NkpUMe0br6TG
+         l9xLjc/jCP+REhfIL7F0pLQNz0dAoz9DMFETuboaSLbu0tiCId+VuxvfbFtLUSZ5Yrs6
+         NeoA==
+X-Forwarded-Encrypted: i=1; AHgh+Rpu73yhqm/+q1c2hN/hJZjxnyO2K89yo59Z6G82D79Dk5z5Oxq4+RefwDin/z5L51WRgo1rPxrquiKzOvzOynAH@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMyjrK8Slh53sNzn2W14Z0tN8nkND+WUKEktZDBQTkfkMZXBoz
+	oWFYlYSX4NQ0Zw9H4SG4S/CF86QLg1P+hgMfgyMGH5p7tfH2VUq3BCMd
+X-Gm-Gg: AfdE7cnVJFyUkL1otIef87v2SWgGjgqFjdRp0unnGJP9zDEkIV9Wvtw0Jo8OEfegexn
+	mihvNnxCAeWmYHO2nQuU3nuD2Mrz2X7ctwSoVSmeHVMQr38C+Y+8KGhRIt8lcbUBRyvq0rBY+4S
+	pUfWUVdShGATEN67Fey4Wo8p29v8TdSMWC6GgCEANA0CfMmzSXOFeNJFfHdpNgihudh6jivwptO
+	uvGRidGYDtJHB67s+Yzhm5PC6+xa7A0ZNISstNNHZM5xQbUR7yg/HM8x/ReneUOTBbtAV7RGLNn
+	GNL0Rw2woHK0gkdpuOH6U6Fmsq/AVLBeReJbJvs0mvPGDfcVYxbRucEhsSltgxutxww8rUket9g
+	4aD/nejQulkSXOpydPwkCjxg7GFEcmci3KJrI6f6a54+K4SSsdCfOqJnGvKAAEG+k1MhxmHDzJ3
+	UB4+qC/HtJ97upvr3Ih11Urav92i4VZxYjsK3i+us7Ohxr1NG5HCM=
+X-Received: by 2002:a05:620a:4012:b0:92e:d63b:455b with SMTP id af79cd13be357-92ef2b12452mr1436818585a.6.1784053964792;
+        Tue, 14 Jul 2026 11:32:44 -0700 (PDT)
+Received: from localhost ([48.45.163.146])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-92ee5b88a38sm1484900685a.12.2026.07.14.11.32.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2026 11:32:44 -0700 (PDT)
+From: Jinchao Wang <wangjinchao600@gmail.com>
+To: Andrew Morton <akpm@linux-foundation.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	x86@kernel.org,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
 	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	linux-perf-users@vger.kernel.org,
+	David Hildenbrand <david@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Matthew Wilcox <willy@infradead.org>,
 	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Cc: Anubhav Shelat <ashelat@redhat.com>
-Subject: [PATCH v5 5/5] perf: enable unprivileged syscall tracing with perf trace
-Date: Tue, 14 Jul 2026 14:31:45 -0400
-Message-ID: <20260714183150.292861-7-ashelat@redhat.com>
-In-Reply-To: <20260714183150.292861-2-ashelat@redhat.com>
-References: <20260714183150.292861-2-ashelat@redhat.com>
+	linux-mm@kvack.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Jinchao Wang <wangjinchao600@gmail.com>
+Subject: [RFC PATCH 09/13] mm/kwatch: add probe lifecycle runtime
+Date: Wed, 15 Jul 2026 02:32:26 +0800
+Message-ID: <20260714183226.12756-1-wangjinchao600@gmail.com>
+X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260714182243.10687-1-wangjinchao600@gmail.com>
+References: <20260714182243.10687-1-wangjinchao600@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Allow unprivileged users to trace their own processes' syscalls using
-perf trace, similar to strace without the overhead of ptrace().
+Open and close the watch window with a kretprobe on the target
+function: the entry handler tracks per-task nesting depth and, when
+the configured depth is reached, resolves the watch expression and
+arms a watchpoint; the exit handler disarms it. An optional kprobe
+at func_offset arms mid-function instead of at entry.
 
-Currently, perf trace requires CAP_PERFMON or paranoid level ≤ 1 even
-though the kernel has existing infrastructure (TRACE_EVENT_FL_CAP_ANY)
-designed to mark syscall tracepoints as safe for unprivileged access.
-To fix this:
+Functions running in a real NMI(-like) context are rejected once, at
+function entry, by comparing the NMI nesting count against the one
+NMI-like layer that int3-based kprobe delivery itself adds; a
+companion kprobe with a post_handler pins the probe point so jump
+optimization cannot change the delivery mechanism after it is
+sampled. Rejections are counted and exposed to the control plane.
 
-1. Loosen the condition in perf_event_open() which requires privileges
-   for all events with exclude_kernel=0. This allows perf_event_open() to
-   bypass the paranoid check for task-attached tracepoint events. Ensure
-   that sample types which can expose kernel addresses to unprivileged
-   users are blocked. Ensure the PERF_SECURITY_KERNEL LSM hook is
-   preserved.
+A global epoch versioning scheme invalidates stale per-task state
+across reconfigurations, and a per-CPU mute flag keeps window
+management quiet while a CPU rewrites its own debug registers.
 
-2. Add a check to perf_trace_event_perm() to block PERF_SAMPLE_IP on
-   kernel tracepoints for unprivileged users to prevent KASLR bypass. We do
-   this here rather than in kaddr_leak because perf_trace_event_perm() can
-   distinguish between kernel tracepoints and uprobe tracepoints, where the
-   IP is a safe user space address and is necessary for uprobe
-   functionality.
-
-3. Restrict pure counting events (no PERF_SAMPLE_RAW) to
-   TRACE_EVENT_FL_CAP_ANY tracepoints preventing unprivileged users from
-   counting internal kernel tracepoints while preserving current
-   behavior for exclude_kernel=1 events.
-
-Example usage after this change:
-  $ perf trace ls          # works as unprivileged user
-  $ perf trace             # system-wide, still requires privileges
-  $ perf trace -p 1234     # requires ptrace permission on pid 1234
-
-Assisted-by: CLAUDE:claude-opus-4 Apogee
-Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
+Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- kernel/events/core.c            | 28 +++++++++++++++++++++++++---
- kernel/trace/trace_event_perf.c | 28 +++++++++++++++++++++++++++-
- 2 files changed, 52 insertions(+), 4 deletions(-)
+ mm/kwatch/Makefile |   2 +-
+ mm/kwatch/probe.c  | 263 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 264 insertions(+), 1 deletion(-)
+ create mode 100644 mm/kwatch/probe.c
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 954c36e28101..48bfff07ae02 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -13910,9 +13910,31 @@ SYSCALL_DEFINE5(perf_event_open,
- 		return err;
+diff --git a/mm/kwatch/Makefile b/mm/kwatch/Makefile
+index b2bc3003c89b..f04673cc5b1c 100644
+--- a/mm/kwatch/Makefile
++++ b/mm/kwatch/Makefile
+@@ -1,3 +1,3 @@
+ obj-$(CONFIG_KWATCH) += kwatch.o
  
- 	if (!attr.exclude_kernel) {
--		err = perf_allow_kernel();
--		if (err)
--			return err;
-+		bool tp_bypass = false;
+-kwatch-y := deref.o task_ctx.o hwbp.o
++kwatch-y := deref.o task_ctx.o hwbp.o probe.o
+diff --git a/mm/kwatch/probe.c b/mm/kwatch/probe.c
+new file mode 100644
+index 000000000000..af6e0af45c10
+--- /dev/null
++++ b/mm/kwatch/probe.c
+@@ -0,0 +1,263 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/atomic.h>
++#include <linux/kprobes.h>
++#include <linux/kallsyms.h>
++#include <linux/percpu.h>
++#include <linux/preempt.h>
++#include <linux/sched.h>
 +
-+		/* Check unprivileged tracepoints */
-+		if (attr.type == PERF_TYPE_TRACEPOINT && pid != -1) {
-+			/*
-+			 * Block sample types that expose kernel addresses to
-+			 * prevent KASLR bypass
-+			 */
-+			u64 kaddr_leak = PERF_SAMPLE_CALLCHAIN |
-+					 PERF_SAMPLE_BRANCH_STACK |
-+					 PERF_SAMPLE_ADDR |
-+					 PERF_SAMPLE_REGS_INTR;
++#include "kwatch.h"
++#define TRAMPOLINE_CHECK_DEPTH 16
++static DEFINE_PER_CPU(bool, kwatch_probe_cpu_muted);
 +
-+			tp_bypass = !(attr.sample_type & kaddr_leak);
-+		}
++struct kwatch_probe_ctx {
++	struct kprobe kp;
++	struct kretprobe rp;
++	struct kprobe pin_kp;
++	const struct kwatch_config *cfg;
++	bool rp_via_int3;
 +
-+		if (!tp_bypass) {
-+			err = perf_allow_kernel();
-+			if (err)
-+				return err;
-+		} else {
-+			err = security_perf_event_open(PERF_SECURITY_KERNEL);
-+			if (err)
-+				return err;
-+		}
- 	}
- 
- 	if (attr.namespaces) {
-diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
-index 5b272856e5ab..a264154b460e 100644
---- a/kernel/trace/trace_event_perf.c
-+++ b/kernel/trace/trace_event_perf.c
-@@ -24,6 +24,16 @@ typedef typeof(unsigned long [PERF_MAX_TRACE_SIZE / sizeof(unsigned long)])
- /* Count the events in use (per event id, not per instance) */
- static int	total_ref_count;
- 
-+/* Check if perf tracepoint is restricted for unprivileged users */
-+static bool perf_tp_is_restricted(struct perf_event *p_event)
++	u32 epoch;
++};
++
++static struct kwatch_probe_ctx kwatch_probe_ctx;
++static atomic_long_t kwatch_nmi_rejected;
++
++unsigned long kwatch_probe_nmi_rejected(void)
 +{
-+	if (p_event->attr.exclude_kernel)
-+		return false;
-+	if (sysctl_perf_event_paranoid <= 1 || perfmon_capable())
-+		return false;
-+	return true;
++	return atomic_long_read(&kwatch_nmi_rejected);
 +}
 +
- static int perf_trace_event_perm(struct trace_event_call *tp_event,
- 				 struct perf_event *p_event)
- {
-@@ -72,9 +82,25 @@ static int perf_trace_event_perm(struct trace_event_call *tp_event,
- 			return -EINVAL;
- 	}
- 
-+	/*
-+	 * PERF_SAMPLE_IP on kernel tracepoints exposes a kernel text
-+	 * address, weakening KASLR. Block for unprivileged users unless
-+	 * the tracepoint is a uprobe (userspace IP, safe to expose).
-+	 */
-+	if ((p_event->attr.sample_type & PERF_SAMPLE_IP) &&
-+	    !(tp_event->flags & TRACE_EVENT_FL_UPROBE) &&
-+	    perf_tp_is_restricted(p_event))
-+		return -EACCES;
++/*
++ * True if the probed function itself runs in an NMI-like context.
++ * int3-based kprobe delivery adds one NMI-like layer of its own;
++ * delivery is pinned at registration so the subtraction stays exact.
++ */
++static bool kwatch_probed_ctx_in_nmi(bool via_int3)
++{
++	return (preempt_count() & NMI_MASK) > (via_int3 ? NMI_OFFSET : 0);
++}
 +
- 	/* No tracing, just counting, so no obvious leak */
--	if (!(p_event->attr.sample_type & PERF_SAMPLE_RAW))
-+	if (!(p_event->attr.sample_type & PERF_SAMPLE_RAW)) {
-+		/* Prevent unprivileged users from counting kernel tracepoints */
-+		if (perf_tp_is_restricted(p_event) &&
-+		    !(p_event->attach_state == PERF_ATTACH_TASK &&
-+		      (tp_event->flags & TRACE_EVENT_FL_CAP_ANY)))
-+			return -EACCES;
- 		return 0;
++static void kwatch_pin_post_handler(struct kprobe *p, struct pt_regs *regs,
++				    unsigned long flags)
++{
++	/* a post_handler pins the probepoint: no jump optimization */
++}
++
++bool kwatch_probe_validate_hit(struct pt_regs *regs,
++			       struct task_struct *arm_tsk)
++{
++	struct kwatch_tsk_ctx *ctx = kwatch_tsk_ctx_get(false);
++
++	if (unlikely(!ctx))
++		return true;
++
++	if (arm_tsk != current ||
++	    ctx->depth != kwatch_probe_ctx.cfg->depth + 1)
++		return true;
++
++	return false;
++}
++
++void kwatch_probe_mute(bool mute)
++{
++	__this_cpu_write(kwatch_probe_cpu_muted, mute);
++}
++
++static inline bool kwatch_probe_is_muted(void)
++{
++	return __this_cpu_read(kwatch_probe_cpu_muted);
++}
++
++enum kwatch_probe_position {
++	KWATCH_PROBE_POSITION_ENTRY,
++	KWATCH_PROBE_POSITION_ACTIVE,
++	KWATCH_PROBE_POSITION_EXIT
++};
++
++static bool kwatch_tsk_ctx_check(enum kwatch_probe_position pos)
++{
++	struct kwatch_tsk_ctx *ctx = kwatch_tsk_ctx_get(true);
++	u32 epoch;
++
++	if (unlikely(!ctx))
++		return false;
++
++	/* Pairs with smp_store_release() in kwatch_probe_start/stop() */
++	epoch = smp_load_acquire(&kwatch_probe_ctx.epoch);
++
++	if (unlikely(ctx->epoch != epoch))
++		kwatch_tsk_ctx_reset(ctx, epoch);
++
++	if (unlikely(!epoch))
++		return false;
++
++	switch (pos) {
++	case KWATCH_PROBE_POSITION_ENTRY:
++		ctx->depth++;
++		return true;
++	case KWATCH_PROBE_POSITION_ACTIVE:
++		return true;
++	case KWATCH_PROBE_POSITION_EXIT:
++		if (unlikely(ctx->depth == 0)) {
++			kwatch_tsk_ctx_put();
++			return false;
++		}
++
++		ctx->depth--;
++		if (ctx->depth == 0) {
++			kwatch_tsk_ctx_put();
++			return false;
++		}
++		return true;
 +	}
- 
- 	/* Some events are ok to be traced by non-root users... */
- 	if (p_event->attach_state == PERF_ATTACH_TASK) {
++	return false;
++}
++
++static int kwatch_activate_handler(struct kprobe *p, struct pt_regs *regs)
++{
++	struct kwatch_tsk_ctx *ctx = kwatch_tsk_ctx_get(false);
++	unsigned long watch_addr;
++	u16 watch_len;
++
++	if (unlikely(!ctx))
++		return 0;
++
++	if (unlikely(kwatch_probe_is_muted()))
++		return 0;
++
++	if (unlikely(!kwatch_tsk_ctx_check(KWATCH_PROBE_POSITION_ACTIVE)))
++		return 0;
++
++	if (ctx->depth != kwatch_probe_ctx.cfg->depth + 1 || ctx->wp)
++		return 0;
++
++	if (kwatch_deref_resolve(kwatch_probe_ctx.cfg, regs, &watch_addr,
++				 &watch_len))
++		return 0;
++
++	if (kwatch_hwbp_get(&ctx->wp))
++		return 0;
++
++	kwatch_hwbp_arm(ctx->wp, watch_addr, watch_len);
++	return 0;
++}
++
++static int kwatch_lifecycle_entry(struct kretprobe_instance *ri,
++				  struct pt_regs *regs)
++{
++	/*
++	 * Single policy point: the target function's context is judged once
++	 * here. A rejected invocation never increments depth, so the offset
++	 * kprobe path inherits the verdict through the depth check.
++	 */
++	if (unlikely(kwatch_probed_ctx_in_nmi(kwatch_probe_ctx.rp_via_int3))) {
++		atomic_long_inc(&kwatch_nmi_rejected);
++		return 1; /* NMI context is unsupported: no window, no return hook */
++	}
++
++	if (!kwatch_tsk_ctx_check(KWATCH_PROBE_POSITION_ENTRY))
++		return 0;
++
++	if (kwatch_probe_ctx.cfg->func_offset == 0)
++		kwatch_activate_handler(NULL, regs);
++
++	return 0;
++}
++
++static int kwatch_lifecycle_exit(struct kretprobe_instance *ri,
++				 struct pt_regs *regs)
++{
++	struct kwatch_tsk_ctx *ctx = kwatch_tsk_ctx_get(false);
++
++	if (unlikely(!ctx))
++		return 0;
++
++	if (!kwatch_tsk_ctx_check(KWATCH_PROBE_POSITION_EXIT))
++		return 0;
++
++	if (ctx->depth == kwatch_probe_ctx.cfg->depth) {
++		struct kwatch_watchpoint *wp = xchg(&ctx->wp, NULL);
++
++		if (wp)
++			kwatch_hwbp_put(wp);
++	}
++
++	return 0;
++}
++
++int kwatch_probe_start(struct kwatch_config *cfg)
++{
++	static u32 next_epoch;
++	u32 current_epoch;
++	int ret;
++
++	/*
++	 * Lockless check to prevent concurrent starts. Strictly serialized
++	 * by the control plane mutex, but serves as a sanity check.
++	 */
++	if (smp_load_acquire(&kwatch_probe_ctx.epoch) != 0)
++		return -EBUSY;
++
++	memset(&kwatch_probe_ctx, 0, sizeof(kwatch_probe_ctx));
++	kwatch_probe_ctx.cfg = cfg;
++
++	/*
++	 * Pin the entry probepoint before the kretprobe registers, so its
++	 * delivery (int3 vs ftrace) can never change under jump optimization.
++	 * register_kretprobe() clears kp.post_handler, hence the companion.
++	 */
++	kwatch_probe_ctx.pin_kp.symbol_name = cfg->func_name;
++	kwatch_probe_ctx.pin_kp.post_handler = kwatch_pin_post_handler;
++	ret = register_kprobe(&kwatch_probe_ctx.pin_kp);
++	if (ret < 0)
++		return ret;
++
++	kwatch_probe_ctx.rp.entry_handler = kwatch_lifecycle_entry;
++	kwatch_probe_ctx.rp.handler = kwatch_lifecycle_exit;
++	kwatch_probe_ctx.rp.kp.symbol_name = cfg->func_name;
++
++	ret = register_kretprobe(&kwatch_probe_ctx.rp);
++	if (ret < 0) {
++		unregister_kprobe(&kwatch_probe_ctx.pin_kp);
++		return ret;
++	}
++	kwatch_probe_ctx.rp_via_int3 = !kprobe_ftrace(&kwatch_probe_ctx.rp.kp);
++
++	if (cfg->func_offset) {
++		kwatch_probe_ctx.kp.symbol_name = cfg->func_name;
++		kwatch_probe_ctx.kp.offset = cfg->func_offset;
++		kwatch_probe_ctx.kp.pre_handler = kwatch_activate_handler;
++
++		ret = register_kprobe(&kwatch_probe_ctx.kp);
++		if (ret) {
++			unregister_kretprobe(&kwatch_probe_ctx.rp);
++			unregister_kprobe(&kwatch_probe_ctx.pin_kp);
++			return ret;
++		}
++	}
++
++	current_epoch = ++next_epoch;
++	if (unlikely(!current_epoch))
++		current_epoch = ++next_epoch;
++
++	/* Pairs with smp_load_acquire() in kwatch_tsk_ctx_check() */
++	smp_store_release(&kwatch_probe_ctx.epoch, current_epoch);
++
++	return 0;
++}
++
++void kwatch_probe_stop(void)
++{
++	if (!kwatch_probe_ctx.epoch)
++		return;
++
++	/* Pairs with smp_load_acquire() in kwatch_tsk_ctx_check() */
++	smp_store_release(&kwatch_probe_ctx.epoch, 0);
++
++	if (kwatch_probe_ctx.cfg->func_offset > 0)
++		unregister_kprobe(&kwatch_probe_ctx.kp);
++
++	unregister_kretprobe(&kwatch_probe_ctx.rp);
++	unregister_kprobe(&kwatch_probe_ctx.pin_kp);
++}
 -- 
-2.54.0
+2.53.0
 
