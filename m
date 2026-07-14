@@ -1,186 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97FE830C158
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 00:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217E931E821;
+	Tue, 14 Jul 2026 05:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783990800; cv=none; b=FSFQa78+DmW4Kr9QT/VEy2bRzurg17rvrIXCdBAEySUtJs5GMY7JTvewTJnVlx7/pJvPzqhtIl/xRsTQa8T1zUkO7SSERYN7yu3rHQbc8Gnxu01ZLJU0dYQ2OQgM3ZlT8V8QGo4PVTYFGgxWAVYdM9RufrwlwL9fKM03fMm9cws=
+	t=1784006517; cv=none; b=MGQe+in1GeW6B5mWrpKAvBmoAlGLc1XPBhQERWtBx7j31m5ZQRZf6/f+MdX3oYlxzkkOveWeByBBR4iO/YUM37aUvUAiL7QdSoxFlMTg3q8bFWy5f8pf1S111GiNC/uGAXGeDKkor/Jf432+YNsXVyrDfaOXprpUHf1G1z2mF4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783990800; c=relaxed/simple;
-	bh=RfRyAKz2HigDj4pqpHPNQGanKRFBk/6qFzBf9Wwq2Yo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=irfqvF2sshUE/j+83vVAaVUKAxkqBf7wM4rlZ3nnQP0kGOQlJEVZQsOKIHiuEyXpEm5KYAIIwc9OOVoWB7A25HsXZpbuNx+O+QsCsy7jxbB6ZzZmxNIsaIfTKnw3tpxoxiCIDRIYjYRBzMHo9KRJY3MhpGLhsD+n02pxP8WWDB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M8WL+6IR; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784006517; c=relaxed/simple;
+	bh=oSy2sg6v20EERFKR3PARIs03kRqLNw1yX5EWGHalRjw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C0V8kq4hpxoaOlDODQP34Fem1tF9631L/7Z6Vo6XTck0B4MLk3oYUc1liSB9YqaK4a+OYbe/uDAe5c4Nj/uz8b3JfBVTUom4xm7jO2J2029HEN7ZhshETNLrNuvtQ38Ac4HfhtQHO3yxsDkCoOl2WTZjAnDHoyh2iZu3R5I3lHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AWSYrABr; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M8WL+6IR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1EE01F000E9;
-	Tue, 14 Jul 2026 00:59:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1783990796;
-	bh=o2Zyhb9s0fIuyJitwET+uujjcgP//RlHxDQdlG3s/5A=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=M8WL+6IRjTDCWmN5HmKx9L7eqWIS3bhSo3WBXDckXA4AsFmqPYPep9gyC0EF3vWN6
-	 3Wm+Wm5Dx01q+ObCnsgowDXmX8mGbJEEUbg+PUtAGYE+aqNLbdtoA2+rB4g6/RravF
-	 iaIQLS3bm8A0eDEo2B53fiYrIkUVm/qseNgtfFsu0vyzMMqK25dAPq3VUuzV8QU0a5
-	 nUqNpVgeM0ZcgLCw0o0ejhJLjCE9DG1pNZJ0mYXIvAV08SD7anc5Ig3CnyZjkpMANq
-	 /MMpCzvyJcgn0SLDO3ik0Bq7uy+3tMk61LPX7jyoUfFOjHGZmYY3eUuKnai7bUraeW
-	 PTPIFraBr0pSA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 4/6] perf tools: Show memory region in perf-script
- subcommand
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Thomas Falcon" <thomas.falcon@intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260714004359.179451-5-thomas.falcon@intel.com>
-References: <20260714004359.179451-1-thomas.falcon@intel.com>
- <20260714004359.179451-5-thomas.falcon@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 14 Jul 2026 00:59:56 +0000
-Message-Id: <20260714005956.A1EE01F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AWSYrABr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784006513; x=1815542513;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=oSy2sg6v20EERFKR3PARIs03kRqLNw1yX5EWGHalRjw=;
+  b=AWSYrABr0SydXpt1DWdALENZKLK7t6Cg2NUvWukcLaOnr7p4NQq3Aty2
+   dxXNSuFJ0fsAE6QhT8hnuzL/SqGb8Q5/cV0kNaW9wECEdlilYH06MMp/N
+   eguDQ4vMYeqZnlHToj+tDBPnrwfwLBJnPX6fRfIQeTSq6juXn/HycJfSN
+   C5+c3A7Eyzwsa5yZZj351PbJkuKCD3y+9/pl7zZdtHyjYn/Mmd+NMQa77
+   mrO73PD2ueGrD9m+bjIlywlzYP8x8UOIrlRvMnc9xgUhDLOyV4tsEhh8w
+   BhyoCLArUsFIF/vY6U/wN3GTgW6G+3FHj+RYas5pz5cEc0zwLK9uEWKEm
+   Q==;
+X-CSE-ConnectionGUID: oazEitcFQgeg0m4gQRc5dQ==
+X-CSE-MsgGUID: CAj/lwJ3STmhgkZyV1Grng==
+X-IronPort-AV: E=McAfee;i="6800,10657,11846"; a="72144488"
+X-IronPort-AV: E=Sophos;i="6.25,163,1779174000"; 
+   d="scan'208";a="72144488"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 22:21:52 -0700
+X-CSE-ConnectionGUID: Vdmyl5RuTbaQ0MH4m6vSlQ==
+X-CSE-MsgGUID: SPNIMPsESt2lse5NHd7Tzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,163,1779174000"; 
+   d="scan'208";a="252365155"
+Received: from unknown (HELO [10.238.3.181]) ([10.238.3.181])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 22:21:48 -0700
+Message-ID: <2e182845-6771-473c-a82a-bf96953b458e@linux.intel.com>
+Date: Tue, 14 Jul 2026 13:21:46 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 0/12] perf vendor events intel: update
+To: Chun-Tse Shao <ctshao@google.com>, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org
+Cc: alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ adrian.hunter@intel.com, james.clark@linaro.org, afaerber@suse.de,
+ mani@kernel.org, thomas.falcon@intel.com, irogers@google.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ perry.taylor@intel.com
+References: <20260713181757.481164-1-ctshao@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260713181757.481164-1-ctshao@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+The patchset looks good to me. But It depends on this patch
+https://lore.kernel.org/all/20260708053226.3776183-1-dapeng1.mi@linux.intel.com/.
+Without this patch, the building on NVL would fail. Thanks.
 
-New issues:
-- [Medium] Silent truncation in `data_src__fprintf` due to inadequately siz=
-ed destination buffer.
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Pre-existing issues:
-- [High] Stack buffer overflow in `perf_script__meminfo_scnprintf` and its =
-helpers due to unsafe string operations and integer underflow.
-- [High] Out-of-bounds array read in `perf_mem__lvl_scnprintf` when accessi=
-ng `mem_hops` without bounds checking.
---
-
---- Patch [4]: [PATCH v2 4/6] perf tools: Show memory region in perf-script=
- subcommand ---
-commit 032c0a587669b230205736e968c969992f006ba6
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
-
-perf tools: Show memory region in perf-script subcommand
-
-This commit adds the memory region to the output of the perf-script
-subcommand. The memory region is extracted from the mem_region field
-of the memory information data source.
-
-Link: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.=
-intel.com/
-
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index 9ac29bdc3cd54..58aaf1dbf6eda 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -2081,8 +2081,8 @@ static int evlist__max_name_len(struct evlist *evli=
-st)
->  static int data_src__fprintf(u64 data_src, FILE *fp)
->  {
->  	struct mem_info *mi =3D mem_info__new();
-> -	char decode[100];
-> -	char out[100];
-> +	char decode[200];
-> +	char out[200];
->  	static int maxlen;
->  	int len;
-> =20
-> @@ -2090,10 +2090,10 @@ static int data_src__fprintf(u64 data_src, FILE *=
-fp)
->  		return -ENOMEM;
-> =20
->  	mem_info__data_src(mi)->val =3D data_src;
-> -	perf_script__meminfo_scnprintf(decode, 100, mi);
-> +	perf_script__meminfo_scnprintf(decode, 200, mi);
->  	mem_info__put(mi);
-> =20
-> -	len =3D scnprintf(out, 100, "%16" PRIx64 " %s", data_src, decode);
-> +	len =3D scnprintf(out, 200, "%16" PRIx64 " %s", data_src, decode);
-
-[Severity: Medium]
-Is the out buffer sized correctly to prevent truncation?
-
-The commit message mentions increasing the buffers to avoid silent
-truncation, but the out buffer is exactly the same size as the decode
-buffer. Since scnprintf() adds a 17-character prefix before appending the
-decode string, won't the output still be truncated if the decode string
-utilizes its full capacity?
-
->  	if (maxlen < len)
->  		maxlen =3D len;
-
-[ ... ]
-
-> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> index 4fd48fd200552..ff08f1fee0e33 100644
-> --- a/tools/perf/util/mem-events.c
-> +++ b/tools/perf/util/mem-events.c
-> @@ -604,6 +604,72 @@ int perf_mem__blk_scnprintf(char *out, size_t sz, co=
-nst struct mem_info *mem_inf
->  	return l;
->  }
-> =20
-> +static int perf_mem__region_scnprintf(char *out, size_t sz, const struct=
- mem_info *mem_info)
-> +{
-> +	size_t l =3D 0;
-> +	u64 mem =3D PERF_MEM_REGION_NA;
-> +
-> +	sz -=3D 1; /* -1 for null termination */
-> +	out[0] =3D '\0';
-
-[Severity: High]
-This isn't a bug introduced by this patch, but could this write out of
-bounds if sz is 0?
-
-In perf_script__meminfo_scnprintf(), earlier calls like
-perf_mem__lvl_scnprintf() can write past the sz limit because they use
-strcat(out, " or ") without checking the boundary, and they return lengths
-larger than the remaining size.
-
-This allows the accumulated index i to exceed sz. When
-perf_mem__region_scnprintf() is eventually called, sz - i can underflow
-or evaluate to 0.
-
-If sz is 0, sz -=3D 1 will underflow, and out[0] =3D '\0' will write a null
-byte out of bounds relative to the 200-byte stack buffer. Can a crafted
-perf.data file trigger a stack overflow this way?
-
-> +
-> +	if (mem_info)
-> +		mem =3D mem_info__const_data_src(mem_info)->mem_region;
-> +
-> +	switch (mem) {
-
-[ ... ]
-
-> @@ -620,6 +686,8 @@ int perf_script__meminfo_scnprintf(char *out, size_t =
-sz, const struct mem_info *
->  	i +=3D perf_mem__lck_scnprintf(out + i, sz - i, mem_info);
->  	i +=3D scnprintf(out + i, sz - i, "|BLK ");
->  	i +=3D perf_mem__blk_scnprintf(out + i, sz - i, mem_info);
-> +	i +=3D scnprintf(out + i, sz - i, "|Region ");
-> +	i +=3D perf_mem__region_scnprintf(out + i, sz - i, mem_info);
-> =20
->  	return i;
->  }
-
-[Severity: High]
-This is a pre-existing issue, but I noticed a potential out-of-bounds read
-in perf_mem__lvl_scnprintf() which is called earlier in this function.
-
-The mem_hops string array is defined with 5 elements. However,
-data_src.mem_hops is a 3-bit bitfield, meaning it can take integer values
-from 0 to 7.
-
-If a crafted perf.data file sets data_src.mem_hops to 5, 6, or 7, does this
-cause an out-of-bounds pointer read when accessing
-mem_hops[data_src.mem_hops]?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260714004359.1794=
-51-1-thomas.falcon@intel.com?part=3D4
+On 7/14/2026 2:17 AM, Chun-Tse Shao wrote:
+> Sync the Linux kernel perf PMU events with the latest upstream Intel
+> perfmon repository.
+>
+> This patchset includes event and metric updates for Alder Lake, Alder
+> Lake N, Arrow Lake, Clearwater Forest, Emerald Rapids (including IIO
+> bandwidth metrics), Grand Ridge, Granite Rapids, Lunar Lake, Meteor
+> Lake, Panther Lake, and Sierra Forest, as well as adding initial event
+> support for Nova Lake v1.00.
+>
+> Chun-Tse Shao (12):
+>   perf vendor events intel: Update alderlake events from 1.39 to 1.40
+>   perf vendor events intel: Update alderlaken events from 1.39 to 1.40
+>   perf vendor events intel: Update arrowlake events from 1.19 to 1.20
+>   perf vendor events intel: Update clearwaterforest events from 1.02 to
+>     1.04
+>   perf vendor events intel: Update grandridge events from 1.12 to 1.13
+>   perf vendor events intel: Update graniterapids events from 1.19 to
+>     1.20
+>   perf vendor events intel: Update lunarlake events from 1.25 to 1.26
+>   perf vendor events intel: Update meteorlake events from 1.21 to 1.22
+>   perf vendor events intel: Add novalake v1.00 events
+>   perf vendor events intel: Update pantherlake events from 1.06 to 1.07
+>   perf vendor events intel: Update sierraforest events from 1.17 to 1.18
+>   perf vendor events intel: Update emeraldrapids metrics
+>
+>  .../arch/x86/alderlake/adl-metrics.json       |   80 +-
+>  .../pmu-events/arch/x86/alderlake/cache.json  |   36 +
+>  .../arch/x86/alderlake/metricgroups.json      |    2 +-
+>  .../arch/x86/alderlake/pipeline.json          |    6 +-
+>  .../pmu-events/arch/x86/alderlaken/cache.json |   32 +
+>  .../arch/x86/arrowlake/arl-metrics.json       |  152 +-
+>  .../arch/x86/arrowlake/metricgroups.json      |    2 +-
+>  .../arch/x86/arrowlake/pipeline.json          |    2 +-
+>  .../arch/x86/arrowlake/uncore-memory.json     |   84 +-
+>  .../arch/x86/clearwaterforest/memory.json     |   33 +
+>  .../arch/x86/clearwaterforest/pipeline.json   |   19 +
+>  .../clearwaterforest/uncore-interconnect.json |   10 +
+>  .../x86/clearwaterforest/uncore-memory.json   |    2 +-
+>  .../arch/x86/emeraldrapids/emr-metrics.json   |  135 +-
+>  .../arch/x86/emeraldrapids/metricgroups.json  |    2 +-
+>  .../pmu-events/arch/x86/grandridge/cache.json |   25 +
+>  .../arch/x86/grandridge/counter.json          |   42 -
+>  .../arch/x86/grandridge/floating-point.json   |   56 +
+>  .../arch/x86/grandridge/memory.json           |   57 +
+>  .../arch/x86/grandridge/pipeline.json         |  140 ++
+>  .../arch/x86/grandridge/uncore-memory.json    |    2 +-
+>  .../arch/x86/grandridge/virtual-memory.json   |    8 +
+>  .../arch/x86/graniterapids/gnr-metrics.json   |  102 +-
+>  .../arch/x86/graniterapids/metricgroups.json  |    2 +-
+>  .../arch/x86/graniterapids/pipeline.json      |    2 +-
+>  .../arch/x86/lunarlake/lnl-metrics.json       |  142 +-
+>  .../arch/x86/lunarlake/metricgroups.json      |    2 +-
+>  .../arch/x86/lunarlake/pipeline.json          |    2 +-
+>  tools/perf/pmu-events/arch/x86/mapfile.csv    |   21 +-
+>  .../pmu-events/arch/x86/meteorlake/cache.json |   11 +-
+>  .../arch/x86/meteorlake/metricgroups.json     |    2 +-
+>  .../arch/x86/meteorlake/mtl-metrics.json      |   88 +-
+>  .../arch/x86/meteorlake/pipeline.json         |    4 +-
+>  .../arch/x86/meteorlake/uncore-memory.json    |   84 +-
+>  .../pmu-events/arch/x86/novalake/cache.json   |  749 +++++++
+>  .../pmu-events/arch/x86/novalake/counter.json |   17 +
+>  .../arch/x86/novalake/floating-point.json     |  452 ++++
+>  .../arch/x86/novalake/frontend.json           |  600 +++++
+>  .../pmu-events/arch/x86/novalake/memory.json  |  299 +++
+>  .../pmu-events/arch/x86/novalake/other.json   |  144 ++
+>  .../arch/x86/novalake/pipeline.json           | 1976 +++++++++++++++++
+>  .../arch/x86/novalake/uncore-memory.json      |   42 +
+>  .../arch/x86/novalake/virtual-memory.json     |  338 +++
+>  .../arch/x86/pantherlake/pipeline.json        |    2 +-
+>  .../arch/x86/sierraforest/counter.json        |   77 -
+>  .../x86/sierraforest/uncore-interconnect.json |   10 +
+>  .../arch/x86/sierraforest/uncore-memory.json  |    2 +-
+>  47 files changed, 5615 insertions(+), 482 deletions(-)
+>  delete mode 100644 tools/perf/pmu-events/arch/x86/grandridge/counter.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/counter.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/floating-point.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/frontend.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/memory.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/other.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/pipeline.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/uncore-memory.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/novalake/virtual-memory.json
+>  delete mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/counter.json
+>
