@@ -1,47 +1,47 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B903264FB
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 18:32:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACE443FD28
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 18:32:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784053960; cv=none; b=iM8bEo3mmhGGAgtC7W7it/2MnIYBt/MOu7xotO4uywO+8hIkLfKWAxARoSOn9n1aO+JU6cDs3fAJ0IM8+Vg3LKVQxOrazgjZIB51ygG4H8y2i6P6QmZqaB8qpdBjYEEx4XpG0C6z9H0Bir0FOq83FStXItBiq7ZndsDUQOmjyZk=
+	t=1784053964; cv=none; b=cY+ojmQFhTY1L92+VSktludeexkK4n1fbuGulkyFxLm3wUAqhxFqTwotbE9ynYdHz6n3RZseTTKaEzBYCkwQacyi7QJ9FzzFOblZGPz7T4409yKo4iRGuxy+FDUXr7aAGwtoSOv5PngrJuPK7TpfbGb9I6EMJL2SwYMF7vTbHdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784053960; c=relaxed/simple;
-	bh=O3ivOgmDRBqcXIeMODoLr5igdL7mEEZYikJ+jhp/gfU=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WcJse8+Y2u1B3vXQOkCNbZV67/tKj8YuvJXrXKfX2ZHZmRZR4VAoMI1mJ9qcVd3C+LbI8wiHtuGhJvHddXrUc+SlgBgciQm+glgmuHTqcnFhfJ5G6Lb6zAbJ2n3cEB5QabsJhsgVv459Ocrv4KeCZPbbfBQNqYtY0naj4mJeOJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UMhFmq5f; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1784053964; c=relaxed/simple;
+	bh=5ZugrS/XkaD0h/4ZRtq6FyU9FkKZDK9GPMwpyXNA5Rw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jN0ilAAVaE+TzkS432pRarcIR0eRsVn3UZSkD1SpWpRuz/X5NK/ef/TdYpyMlmgWcxjCFoMZ5jOiGtaDdDvDyhAOT6vCnJjkO2qywm7zLKP1mhSp59JuNUeLqjval4T4PTmdvk9B6xdTqdYsswggFWUgm7dNuyPQxOXhXmXS3f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CdzGAjo3; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UMhFmq5f"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CdzGAjo3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784053958;
+	s=mimecast20190719; t=1784053962;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=rBXa+CtLSxnyksrkUXGGy3/jtRSwHraEoQaUzzqjDvk=;
-	b=UMhFmq5fOaQnneLDIRxiI5c76F1clWMxCzZOZNnKMf+O0LEmQBsm05LWI3zbnp9Lup16YJ
-	kJ2ipx3ThP9wCQp7UYE0+HsT5Ut/uiFz/5NpRjsJ+TORojJgzmQghlYyaJTcb7PS7jXLbs
-	G02iAA56bz+pcFi3Xv0OFjYWt0tR7mE=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	bh=LvmLOXpC1CRK/A3/t0yO20cykVDTPKJzzMQZeRym+Ns=;
+	b=CdzGAjo3TPrDDyGmLvrPHiA74KBiu7tBgcjUjKHUvGCpjIj7uqLkvpwGGy+vmHi/lcTwR0
+	m0JmgqkQQY9IghAtza28f3eQLGf39IVeGbobzoqSXjTXS8t7eclTwBUrenQjmkIueioS+Z
+	JrqhTH00QPPoUS5a5fzxGuHZXyJAzFM=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-631-z859YEHqOZ2afAkMePcQLg-1; Tue,
- 14 Jul 2026 14:32:31 -0400
-X-MC-Unique: z859YEHqOZ2afAkMePcQLg-1
-X-Mimecast-MFC-AGG-ID: z859YEHqOZ2afAkMePcQLg_1784053949
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-133-6dlNJ6PENuKfMJivkx68-Q-1; Tue,
+ 14 Jul 2026 14:32:39 -0400
+X-MC-Unique: 6dlNJ6PENuKfMJivkx68-Q-1
+X-Mimecast-MFC-AGG-ID: 6dlNJ6PENuKfMJivkx68-Q_1784053957
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6D4DE180025F;
-	Tue, 14 Jul 2026 18:32:29 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8E510195604E;
+	Tue, 14 Jul 2026 18:32:36 +0000 (UTC)
 Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.65.227])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EAE1F180029C;
-	Tue, 14 Jul 2026 18:32:26 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 713BD1800593;
+	Tue, 14 Jul 2026 18:32:33 +0000 (UTC)
 From: Anubhav Shelat <ashelat@redhat.com>
 To: mpetlan@redhat.com,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -54,12 +54,16 @@ To: mpetlan@redhat.com,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Anubhav Shelat <ashelat@redhat.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v5 3/5] perf tools: fall back to eventfs for unprivileged event discovery
-Date: Tue, 14 Jul 2026 14:31:43 -0400
-Message-ID: <20260714183150.292861-5-ashelat@redhat.com>
+	linux-trace-kernel@vger.kernel.org
+Cc: Anubhav Shelat <ashelat@redhat.com>
+Subject: [PATCH v5 5/5] perf: enable unprivileged syscall tracing with perf trace
+Date: Tue, 14 Jul 2026 14:31:45 -0400
+Message-ID: <20260714183150.292861-7-ashelat@redhat.com>
 In-Reply-To: <20260714183150.292861-2-ashelat@redhat.com>
 References: <20260714183150.292861-2-ashelat@redhat.com>
 Precedence: bulk
@@ -68,296 +72,136 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-When tracefs events are not readable by unprivileged users, fall back
-to /sys/kernel/events (the read-only eventfs mount) for tracepoint
-format and id file discovery. This allows perf trace to work for
-unprivileged users on kernels that expose the eventfs filesystem.
+Allow unprivileged users to trace their own processes' syscalls using
+perf trace, similar to strace without the overhead of ptrace().
 
-The fallback is transparent: get_events_file() tries the tracefs path
-first and only switches to eventfs when access() fails. On kernels
-without eventfs, the existing error path is preserved.
+Currently, perf trace requires CAP_PERFMON or paranoid level ≤ 1 even
+though the kernel has existing infrastructure (TRACE_EVENT_FL_CAP_ANY)
+designed to mark syscall tracepoints as safe for unprivileged access.
+To fix this:
+
+1. Loosen the condition in perf_event_open() which requires privileges
+   for all events with exclude_kernel=0. This allows perf_event_open() to
+   bypass the paranoid check for task-attached tracepoint events. Ensure
+   that sample types which can expose kernel addresses to unprivileged
+   users are blocked. Ensure the PERF_SECURITY_KERNEL LSM hook is
+   preserved.
+
+2. Add a check to perf_trace_event_perm() to block PERF_SAMPLE_IP on
+   kernel tracepoints for unprivileged users to prevent KASLR bypass. We do
+   this here rather than in kaddr_leak because perf_trace_event_perm() can
+   distinguish between kernel tracepoints and uprobe tracepoints, where the
+   IP is a safe user space address and is necessary for uprobe
+   functionality.
+
+3. Restrict pure counting events (no PERF_SAMPLE_RAW) to
+   TRACE_EVENT_FL_CAP_ANY tracepoints preventing unprivileged users from
+   counting internal kernel tracepoints while preserving current
+   behavior for exclude_kernel=1 events.
+
+Example usage after this change:
+  $ perf trace ls          # works as unprivileged user
+  $ perf trace             # system-wide, still requires privileges
+  $ perf trace -p 1234     # requires ptrace permission on pid 1234
 
 Assisted-by: CLAUDE:claude-opus-4 Apogee
 Signed-off-by: Anubhav Shelat <ashelat@redhat.com>
 ---
- tools/lib/api/fs/fs.c              | 10 ++++++
- tools/lib/api/fs/fs.h              |  1 +
- tools/lib/api/fs/tracing_path.c    | 52 ++++++++++++++++++++++++++----
- tools/lib/api/fs/tracing_path.h    |  1 +
- tools/perf/util/tp_pmu.c           |  5 +--
- tools/perf/util/trace-event-info.c | 19 ++++++-----
- 6 files changed, 71 insertions(+), 17 deletions(-)
+ kernel/events/core.c            | 28 +++++++++++++++++++++++++---
+ kernel/trace/trace_event_perf.c | 28 +++++++++++++++++++++++++++-
+ 2 files changed, 52 insertions(+), 4 deletions(-)
 
-diff --git a/tools/lib/api/fs/fs.c b/tools/lib/api/fs/fs.c
-index cbd8eab0d1df..abc3581a9703 100644
---- a/tools/lib/api/fs/fs.c
-+++ b/tools/lib/api/fs/fs.c
-@@ -46,6 +46,10 @@
- #define BPF_FS_MAGIC           0xcafe4a11
- #endif
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 954c36e28101..48bfff07ae02 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -13910,9 +13910,31 @@ SYSCALL_DEFINE5(perf_event_open,
+ 		return err;
  
-+#ifndef EVENTFS_SUPER_MAGIC
-+#define EVENTFS_SUPER_MAGIC    0x65766673
-+#endif
+ 	if (!attr.exclude_kernel) {
+-		err = perf_allow_kernel();
+-		if (err)
+-			return err;
++		bool tp_bypass = false;
 +
- static const char * const sysfs__known_mountpoints[] = {
- 	"/sys",
- 	0,
-@@ -88,6 +92,11 @@ static const char * const bpf_fs__known_mountpoints[] = {
- 	0,
- };
- 
-+static const char * const eventfs__known_mountpoints[] = {
-+	"/sys/kernel/events",
-+	0,
-+};
++		/* Check unprivileged tracepoints */
++		if (attr.type == PERF_TYPE_TRACEPOINT && pid != -1) {
++			/*
++			 * Block sample types that expose kernel addresses to
++			 * prevent KASLR bypass
++			 */
++			u64 kaddr_leak = PERF_SAMPLE_CALLCHAIN |
++					 PERF_SAMPLE_BRANCH_STACK |
++					 PERF_SAMPLE_ADDR |
++					 PERF_SAMPLE_REGS_INTR;
 +
- struct fs {
- 	const char *		 const name;
- 	const char * const *	 const mounts;
-@@ -150,6 +159,7 @@ FS(debugfs, debugfs, DEBUGFS);
- FS(tracefs, tracefs, TRACEFS);
- FS(hugetlbfs, hugetlbfs, HUGETLBFS);
- FS(bpf_fs, bpf, BPF_FS);
-+FS(eventfs, eventfs, EVENTFS_SUPER);
++			tp_bypass = !(attr.sample_type & kaddr_leak);
++		}
++
++		if (!tp_bypass) {
++			err = perf_allow_kernel();
++			if (err)
++				return err;
++		} else {
++			err = security_perf_event_open(PERF_SECURITY_KERNEL);
++			if (err)
++				return err;
++		}
+ 	}
  
- static bool fs__read_mounts(struct fs *fs)
- {
-diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
-index aa222ca30311..57790c93f80e 100644
---- a/tools/lib/api/fs/fs.h
-+++ b/tools/lib/api/fs/fs.h
-@@ -36,6 +36,7 @@ FS(debugfs)
- FS(tracefs)
- FS(hugetlbfs)
- FS(bpf_fs)
-+FS(eventfs)
+ 	if (attr.namespaces) {
+diff --git a/kernel/trace/trace_event_perf.c b/kernel/trace/trace_event_perf.c
+index 5b272856e5ab..a264154b460e 100644
+--- a/kernel/trace/trace_event_perf.c
++++ b/kernel/trace/trace_event_perf.c
+@@ -24,6 +24,16 @@ typedef typeof(unsigned long [PERF_MAX_TRACE_SIZE / sizeof(unsigned long)])
+ /* Count the events in use (per event id, not per instance) */
+ static int	total_ref_count;
  
- #undef FS
- 
-diff --git a/tools/lib/api/fs/tracing_path.c b/tools/lib/api/fs/tracing_path.c
-index 834fd64c7130..de4ed7c61415 100644
---- a/tools/lib/api/fs/tracing_path.c
-+++ b/tools/lib/api/fs/tracing_path.c
-@@ -3,6 +3,8 @@
- # define _GNU_SOURCE
- #endif
- 
-+#include <dirent.h>
-+#include <fcntl.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
-@@ -80,13 +82,46 @@ void put_tracing_file(char *file)
- 	free(file);
- }
- 
-+char *get_events_dir(void)
++/* Check if perf tracepoint is restricted for unprivileged users */
++static bool perf_tp_is_restricted(struct perf_event *p_event)
 +{
-+	const char *eventfs;
-+	char *path;
-+	int saved_errno;
-+
-+	path = get_tracing_file("events");
-+	if (path && faccessat(AT_FDCWD, path, R_OK, AT_EACCESS) == 0)
-+		return path;
-+
-+	saved_errno = errno;
-+	put_tracing_file(path);
-+
-+	eventfs = eventfs__mount();
-+	if (eventfs && faccessat(AT_FDCWD, eventfs, R_OK, AT_EACCESS) == 0 &&
-+	    eventfs__configured())
-+		return strdup(eventfs);
-+
-+	/*
-+	 * Prefer EACCES over other errors: it tells the user that events
-+	 * exist but are not accessible, which is more actionable than
-+	 * ENOENT from a missing filesystem.
-+	 */
-+	if (errno != EACCES)
-+		errno = saved_errno;
-+	return NULL;
++	if (p_event->attr.exclude_kernel)
++		return false;
++	if (sysctl_perf_event_paranoid <= 1 || perfmon_capable())
++		return false;
++	return true;
 +}
 +
- char *get_events_file(const char *name)
+ static int perf_trace_event_perm(struct trace_event_call *tp_event,
+ 				 struct perf_event *p_event)
  {
--	char *file;
-+	char *dir, *file;
+@@ -72,9 +82,25 @@ static int perf_trace_event_perm(struct trace_event_call *tp_event,
+ 			return -EINVAL;
+ 	}
  
--	if (asprintf(&file, "%s/events/%s", tracing_path_mount(), name) < 0)
-+	dir = get_events_dir();
-+	if (!dir)
- 		return NULL;
- 
-+	if (asprintf(&file, "%s/%s", dir, name) < 0)
-+		file = NULL;
++	/*
++	 * PERF_SAMPLE_IP on kernel tracepoints exposes a kernel text
++	 * address, weakening KASLR. Block for unprivileged users unless
++	 * the tracepoint is a uprobe (userspace IP, safe to expose).
++	 */
++	if ((p_event->attr.sample_type & PERF_SAMPLE_IP) &&
++	    !(tp_event->flags & TRACE_EVENT_FL_UPROBE) &&
++	    perf_tp_is_restricted(p_event))
++		return -EACCES;
 +
-+	free(dir);
- 	return file;
- }
+ 	/* No tracing, just counting, so no obvious leak */
+-	if (!(p_event->attr.sample_type & PERF_SAMPLE_RAW))
++	if (!(p_event->attr.sample_type & PERF_SAMPLE_RAW)) {
++		/* Prevent unprivileged users from counting kernel tracepoints */
++		if (perf_tp_is_restricted(p_event) &&
++		    !(p_event->attach_state == PERF_ATTACH_TASK &&
++		      (tp_event->flags & TRACE_EVENT_FL_CAP_ANY)))
++			return -EACCES;
+ 		return 0;
++	}
  
-@@ -97,8 +132,8 @@ void put_events_file(char *file)
- 
- DIR *tracing_events__opendir(void)
- {
-+	char *path = get_events_dir();
- 	DIR *dir = NULL;
--	char *path = get_tracing_file("events");
- 
- 	if (path) {
- 		dir = opendir(path);
-@@ -110,7 +145,7 @@ DIR *tracing_events__opendir(void)
- 
- int tracing_events__scandir_alphasort(struct dirent ***namelist)
- {
--	char *path = get_tracing_file("events");
-+	char *path = get_events_dir();
- 	int ret;
- 
- 	if (!path) {
-@@ -121,6 +156,9 @@ int tracing_events__scandir_alphasort(struct dirent ***namelist)
- 	ret = scandir(path, namelist, NULL, alphasort);
- 	put_events_file(path);
- 
-+	if (ret < 0)
-+		*namelist = NULL;
-+
- 	return ret;
- }
- 
-@@ -162,12 +200,12 @@ int tracing_path__strerror_open_tp(int err, char *buf, size_t size,
- 			 "Hint:\tIs the debugfs/tracefs filesystem mounted?\n"
- 			 "Hint:\tTry 'sudo mount -t debugfs nodev /sys/kernel/debug'");
- 		break;
--	case EACCES: {
-+	case EACCES:
- 		snprintf(buf, size,
- 			 "Error:\tNo permissions to read %s/events/%s\n"
--			 "Hint:\tTry 'sudo mount -o remount,mode=755 %s'\n",
-+			 "Hint:\tTry 'sudo mount -o remount,mode=755 %s'\n"
-+			 "Hint:\tOr check if /sys/kernel/events is available\n",
- 			 tracing_path, filename, tracing_path_mount());
--	}
- 		break;
- 	default:
- 		snprintf(buf, size, "%s", str_error_r(err, sbuf, sizeof(sbuf)));
-diff --git a/tools/lib/api/fs/tracing_path.h b/tools/lib/api/fs/tracing_path.h
-index fc6347c11deb..a93befb38f80 100644
---- a/tools/lib/api/fs/tracing_path.h
-+++ b/tools/lib/api/fs/tracing_path.h
-@@ -14,6 +14,7 @@ const char *tracing_path_mount(void);
- char *get_tracing_file(const char *name);
- void put_tracing_file(char *file);
- 
-+char *get_events_dir(void);
- char *get_events_file(const char *name);
- void put_events_file(char *file);
- 
-diff --git a/tools/perf/util/tp_pmu.c b/tools/perf/util/tp_pmu.c
-index c2be8c9f9084..4f45bd816945 100644
---- a/tools/perf/util/tp_pmu.c
-+++ b/tools/perf/util/tp_pmu.c
-@@ -6,6 +6,7 @@
- #include <api/io_dir.h>
- #include <linux/kernel.h>
- #include <errno.h>
-+#include <stdlib.h>
- #include <string.h>
- 
- int tp_pmu__id(const char *sys, const char *name)
-@@ -15,7 +16,7 @@ int tp_pmu__id(const char *sys, const char *name)
- 	int id, err;
- 
- 	if (!tp_dir)
--		return -1;
-+		return -errno;
- 
- 	scnprintf(path, PATH_MAX, "%s/%s/id", tp_dir, name);
- 	put_events_file(tp_dir);
-@@ -66,7 +67,7 @@ int tp_pmu__for_each_tp_sys(void *state, tp_sys_callback cb)
- 	struct io_dirent64 *events_ent;
- 	struct io_dir events_dir;
- 	int ret = 0;
--	char *events_dir_path = get_tracing_file("events");
-+	char *events_dir_path = get_events_dir();
- 
- 	if (!events_dir_path)
- 		return -errno;
-diff --git a/tools/perf/util/trace-event-info.c b/tools/perf/util/trace-event-info.c
-index 45774722f249..643451d2c08d 100644
---- a/tools/perf/util/trace-event-info.c
-+++ b/tools/perf/util/trace-event-info.c
-@@ -92,8 +92,9 @@ static int record_header_files(void)
- 	int err = -EIO;
- 
- 	if (!path) {
-+		err = -errno;
- 		pr_debug("can't get tracing/events/header_page");
--		return -ENOMEM;
-+		return err;
- 	}
- 
- 	if (stat(path, &st) < 0) {
-@@ -115,8 +116,8 @@ static int record_header_files(void)
- 
- 	path = get_events_file("header_event");
- 	if (!path) {
-+		err = -errno;
- 		pr_debug("can't get tracing/events/header_event");
--		err = -ENOMEM;
- 		goto out;
- 	}
- 
-@@ -228,13 +229,14 @@ static int record_ftrace_files(struct tracepoint_path *tps)
- 
- 	path = get_events_file("ftrace");
- 	if (!path) {
-+		ret = -errno;
- 		pr_debug("can't get tracing/events/ftrace");
--		return -ENOMEM;
-+		return ret;
- 	}
- 
- 	ret = copy_event_system(path, tps);
- 
--	put_tracing_file(path);
-+	put_events_file(path);
- 
- 	return ret;
- }
-@@ -256,15 +258,16 @@ static int record_event_files(struct tracepoint_path *tps)
- 	struct stat st;
- 	char *path;
- 	char *sys;
--	DIR *dir;
-+	DIR *dir = NULL;
- 	int count = 0;
- 	int ret;
- 	int err;
- 
--	path = get_tracing_file("events");
-+	path = get_events_dir();
- 	if (!path) {
-+		err = -errno;
- 		pr_debug("can't get tracing/events");
--		return -ENOMEM;
-+		goto out;
- 	}
- 
- 	dir = opendir(path);
-@@ -315,7 +318,7 @@ static int record_event_files(struct tracepoint_path *tps)
- out:
- 	if (dir)
- 		closedir(dir);
--	put_tracing_file(path);
-+	put_events_file(path);
- 
- 	return err;
- }
+ 	/* Some events are ok to be traced by non-root users... */
+ 	if (p_event->attach_state == PERF_ATTACH_TASK) {
 -- 
 2.54.0
 
