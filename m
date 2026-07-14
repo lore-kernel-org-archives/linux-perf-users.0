@@ -1,63 +1,63 @@
 Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68F053264FB
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 18:31:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C863264FB
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 18:31:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784053861; cv=none; b=BRFN7w75J9HX/ghRQ6KDGaHkhZq1ImeR29t86GQ2PbxKga2LXpNEBelvU5KZs1LDNwbssCvVR0mEXC97kQIE8Nw055acJ0DnjRlKO+fXtvECQMWiQHKV/6yjqtseuCXdeccH7sQXNPJ9amiWd7ZoQZr4Xbt0EQIAjj9PNUT6J1k=
+	t=1784053884; cv=none; b=J6nDtCqdN90jA4D7n6DhfMnzWDbivTqS7TBjk/g2qrjkwkjsQsjYFPNInu75cZUwE07oNBQYeJRLY+UXq9SjO0PF94qsUMNXiQN1YQSndEwIT8/84zQV97d7YSGCIHuyTvRgCCqDRnYMEX1w7gg/FHvMlZn8dQ9nHZBCHQFGkwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784053861; c=relaxed/simple;
-	bh=FHK60SJXTYT3avGIezwouMxmlq7uogDooasnOh5j77M=;
+	s=arc-20240116; t=1784053884; c=relaxed/simple;
+	bh=fDbK7c6+B4xWjTfmF+IPyJhunYFzAjMQ8Y6rqVfMvII=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XtB6Cv2nnf1MNu5AzbZhkibB9upeBVtGCy6taLU0FmxCdOYsZW+3r0GigADS48Ncq/uif6UhI7LyVSna/Ri3eL/+K1AsEumSwBHXGLZhHlrhd4ZUpl0aoZoBRgfhY5tsFYW65x3k1oPsZ8igwHApLS4qPIdDJJUdwO1ehHZ5X6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WUXD74rY; arc=none smtp.client-ip=209.85.160.173
+	 MIME-Version; b=ZY8ONC12hY+/gF7PgB/xullCnHxk5ofQlB0Hp8PwTeJQiZl0Lv7vJoCwj7YD0rNGavhOtD5h5KDP24MIzmGyDApCGrnBjttA9/9zwCJiBeg+yFFad/F5nMpWsgGqt9xcdw7hctQKHZKehiFMD/rZuFY+jOFgkSgIY6tDcMx9lCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dg5MGjBl; arc=none smtp.client-ip=209.85.160.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUXD74rY"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-51c4436d02cso7290511cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 11:31:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dg5MGjBl"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-51c0cea8883so11717381cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 11:31:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784053859; x=1784658659; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1784053881; x=1784658681; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=XbJ+trxR7t2GCSYkV+uASOu7DEK0LHp1KcDwbXdFB5Y=;
-        b=WUXD74rYONhqHtUftV7/r2zoWXVS/VCNwvFGavyIQWkBSP7RukQbuxV6ld49DYR+Td
-         qCfOh4kw/TJtDJ9LKrjeYkrF4FgDESk0vFyQrOjAdsdjdBH+9iigzB0Fxg0VWjI/pi73
-         oYGEKQbLZ+g1+k+d0uL7jcV9yaAJrj851jKQk+kkGTGVYzFfOB5h29H/zQVnLcl5ikIK
-         5RMvRp4/WE9VVgYf95q7tBkLBNq6t0G2L2s1OkNHDFniTjQ7zOzx2BTcvtYZBMPw1Bic
-         w58LuiJHIfORrSHlPXCUcpWFj5QNiWq7uG1WYYlNUetZKO7bbt0NQwR0XL2AvtOi5Gza
-         15Nw==
+        bh=0sIaGf5EzkbjI19/agb6agMi3UfIlX+gCu5QJjKxqwU=;
+        b=Dg5MGjBl2B7ggqi+x72dw/x92mZHUvAd33U8llzS12W3vblEwMVN0ER95oXPaaN2nP
+         LO/lGOyJLj43ohBYRLYt4EskZ8szGdO4Eui56ZxlV6+WE72mvuW939aLk4mi7vX+HaPz
+         5fTp5c4FJSG9LmlikMSRStEEWDykJkF7l38/36Pdc4gwiRMpPjaHL1YwJ7fWTRsIPOIp
+         S51RhZimapd/ESUDDU949OUIGBIqsiUrMYkExp/A8FWm0IPicEAtRqMrHsVW5wSiLP72
+         L31tOFwz8+8SnIrSBOKlbx/n/99bJwgieFOfO7dqV/jAyvf1++MFLeqd14dGK1XdRyKC
+         5w2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784053859; x=1784658659;
+        d=1e100.net; s=20251104; t=1784053881; x=1784658681;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=XbJ+trxR7t2GCSYkV+uASOu7DEK0LHp1KcDwbXdFB5Y=;
-        b=mxGCEwFKpJKUFIGgwIOn+nwHTCmIsomMdivcmzkG9KTRw+vUOzfCLzrP6L8hvIgMKq
-         X+AU/4QUn0PPqGjaUGHAFhP2AwfIbamgulCqBsqT4yJi3t96afcEiVp9OU1p6/o2cEnD
-         pKDDhy1dnPvZd0/PRqdr2qxnP4BsuKNb6qUQYpOQjYCnhAK/G/aDbvdtPq/+9Vo4B0K0
-         Rol/4eiRK4yEzhbWUFeQvUPhUHIOkMLo4eghibgM8Opv5gFPO/GQk8+yc0eLGJPjkqbk
-         yHpE1TSMgAuy6DXO3NUsUYdT4UyL90a6UqLqN1UZDVJGV5ydrlv9Xl+m7G7ifoOOSGN/
-         nFjg==
-X-Forwarded-Encrypted: i=1; AHgh+Roi4xWCdG9yUfpdm2SPL9gdCjNuqF9GYnwiBQsKumz8hm+xHTeh+dbF71njyTTmkU3UCL2zritXpxMn93OPh1oC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWU8nNYxumnT7paHlr4+AvrIJnz3WTbzKWfieJjgyDwVetB4jL
-	dPoVfKHBK4cIbqGkiASoviJYVPLyYg7TvsbmFX6JBaXnQl/AVIUTcqoq
-X-Gm-Gg: AfdE7clCLI47azkRPrFQIo2flS2qdyvaooJdDUt70c6IfL0nASykdC97w2y04VvHrn1
-	qrBj3R44aogX9Tm50kkyhK9aD4uVBuzAFMkJ/9NgT29ntxhPg8Pho1kxyfKo8ljKWCgXUvdY8b4
-	oDJsLkxNmopJzGLV3b+2GiKJ+AWrX+9221AWZ9PZiCHn3FwEQLe/9dwqZJWd5QKBGUD/Nz4a/aN
-	Ke5T7kfWU6xR1byciVyIGC9XsogXGKrZnL7WKBC4zuaHiIo8hVbooX8aGOMBGFCHC4h36YoGcwX
-	ONuv8SwbATIxuixD2yFmCDZ8nAIrOw1+zQ0C8uOLN2pV/TN85CJS/sFTS8DfwbMgSy8xQmvvkN6
-	AaMhH3dfEwq0Je3EHGnqXgPfyYeKgDCb26duBBR4MnL1hrRJiGpIOcq3kppjwK+FVMV371EvqX3
-	+Npe3luaYXbMMoY2IT+itdNgFmAQBT07tHQsclxsblp8/obNZ694o=
-X-Received: by 2002:a05:622a:1f98:b0:51c:84cb:b9b0 with SMTP id d75a77b69052e-51cbf301566mr148948911cf.81.1784053859166;
-        Tue, 14 Jul 2026 11:30:59 -0700 (PDT)
+        bh=0sIaGf5EzkbjI19/agb6agMi3UfIlX+gCu5QJjKxqwU=;
+        b=ln6KwbuJykyQELTth9lnJ6tfrBWh0hIqZEfGNxxNGTqMIeQp9esImBDZeMlBCoSubE
+         EYVfUY20+HF45BPEcpMFBsDgLmkedP3ECp1Ls6vjXOP6bFFKKlz3iatHSR/AoQYXKeG8
+         ZaLPCmtSGQeJLQK4AGbQ05OibLLGw3mhr38dJ5xALp+vto5GMVmjbOGrph4+pgorKJPI
+         8z5kpbqGkv7YHvzVsyjw9OyMuxYEl7u8moMrcCnsFo6WcYyB1Js4n1YjNNXZ8CQ2Ei7f
+         mYDas2A1B+hoBmfucaV8BpZ8bgITVJzzUq2qvT0WLQ3JitPXtAXCLYnAc2GtIGUzJVx5
+         fM4w==
+X-Forwarded-Encrypted: i=1; AHgh+Rrpqh+iyGtMq+ihSclG9FZTrX4ElJzm7GR9SAVHTa1ec9a8KWxRsvKf83AcL3hq5Of517N2PFbn1oC16NWn6zUd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt10XaFhAE2s4xE14K9PxRJ7XIV9swhA/HAaGiMAkNOcQVdnUG
+	Mv2S5uXYPVSBb2iSqYXUABfXx0NJ+s8MImv6Ul9MPj5PPnGVZrlkhDIk
+X-Gm-Gg: AfdE7cn68DO4Qtbve2zhQ7QEE5wmROK5cdQjHT/kLgNKai6/WoPoLX7cmWNx45q+cvs
+	Eudlsn9/yI+8+jLryqS8knYXGmi+DUBe2fLKlTqxVOWqtkjN2hkoUOYdO4p3IPZK+b+jp6O+8LM
+	hrcRjg/dfNlK1K8HwUHgrTZB0KjSEwx++sKnOYNCc++fNkn2R3MG8bO8319KLCRowHEEgfYVIcR
+	tw3VeKshBNLroVXM2qdnA4XcwnM6o1JHfeNtZVgDuDThETuDSeR7ZLtCcZi46Fd0Biuy/Bep68N
+	WNaV72VUfctSq5GPXh4sErpdDxRnqSXNKbkEaY1THWPDlRu3kQWCyGIrrmfyXWVVhMmmRpUaVZq
+	1dEGwsl9i1uY6W/6pMBrMWWrdYnCxsmpGuPw94J2D358Qic0DnDqY+78zOU2+rOsvy2gPMjMuv8
+	a4DOE72hROmUyGANQGeGpzb5lsJLV77kazUrW9loeGuj6TBcupOKY=
+X-Received: by 2002:a05:622a:306:b0:51c:f64:bc39 with SMTP id d75a77b69052e-51cbf741118mr134331951cf.3.1784053880463;
+        Tue, 14 Jul 2026 11:31:20 -0700 (PDT)
 Received: from localhost ([48.45.163.146])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51caae24d04sm117191211cf.18.2026.07.14.11.30.58
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-51caae24d04sm117196081cf.18.2026.07.14.11.31.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2026 11:30:58 -0700 (PDT)
+        Tue, 14 Jul 2026 11:31:19 -0700 (PDT)
 From: Jinchao Wang <wangjinchao600@gmail.com>
 To: Andrew Morton <akpm@linux-foundation.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -82,9 +82,9 @@ Cc: Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	Jinchao Wang <wangjinchao600@gmail.com>
-Subject: [RFC PATCH 04/13] HWBP: Add modify_wide_hw_breakpoint_local() API
-Date: Wed, 15 Jul 2026 02:30:49 +0800
-Message-ID: <20260714183049.12383-1-wangjinchao600@gmail.com>
+Subject: [RFC PATCH 05/13] mm/kwatch: add watch expression parser and dereference engine
+Date: Wed, 15 Jul 2026 02:31:07 +0800
+Message-ID: <20260714183107.12463-1-wangjinchao600@gmail.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260714182243.10687-1-wangjinchao600@gmail.com>
 References: <20260714182243.10687-1-wangjinchao600@gmail.com>
@@ -96,94 +96,335 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+KWatch watches a memory address that is only known once the target
+function runs, e.g. "argument 1, plus 8, dereferenced once". Add the
+two halves of that mechanism:
 
-Add modify_wide_hw_breakpoint_local() arch-wide interface which allows
-hwbp users to update watch address on-line. This is available if the
-arch supports CONFIG_HAVE_REINSTALL_HW_BREAKPOINT.
-Note that this allows to change the type only for compatible types,
-because it does not release and reserve the hwbp slot based on type.
-For instance, you can not change HW_BREAKPOINT_W to HW_BREAKPOINT_X.
+- kwatch_deref_parse() turns a textual watch expression
+  {base}[+-off][->[+-]off]... into a kwatch_config: a base anchor
+  (arg1..arg6, stack, an absolute address or - for built-in KWatch -
+  a symbol name) plus a static offset chain.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+- kwatch_deref_resolve() replays the chain at probe time against
+  pt_regs. Every pointer load goes through get_kernel_nofault() and
+  the final address must be a kernel address.
+
+Also add the internal kwatch.h header shared by the rest of the
+series. Nothing is built yet; the Kconfig entry comes with the
+control plane.
+
 Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
- include/linux/hw_breakpoint.h |  6 ++++++
- kernel/events/hw_breakpoint.c | 37 +++++++++++++++++++++++++++++++++++
- 2 files changed, 43 insertions(+)
+ mm/kwatch/Makefile |   3 +
+ mm/kwatch/deref.c  | 174 +++++++++++++++++++++++++++++++++++++++++++++
+ mm/kwatch/kwatch.h | 107 ++++++++++++++++++++++++++++
+ 3 files changed, 284 insertions(+)
+ create mode 100644 mm/kwatch/Makefile
+ create mode 100644 mm/kwatch/deref.c
+ create mode 100644 mm/kwatch/kwatch.h
 
-diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
-index db199d653dd1..ea373f2587f8 100644
---- a/include/linux/hw_breakpoint.h
-+++ b/include/linux/hw_breakpoint.h
-@@ -81,6 +81,9 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
- 			    perf_overflow_handler_t triggered,
- 			    void *context);
- 
-+extern int modify_wide_hw_breakpoint_local(struct perf_event *bp,
-+					   struct perf_event_attr *attr);
+diff --git a/mm/kwatch/Makefile b/mm/kwatch/Makefile
+new file mode 100644
+index 000000000000..69c21ae62123
+--- /dev/null
++++ b/mm/kwatch/Makefile
+@@ -0,0 +1,3 @@
++obj-$(CONFIG_KWATCH) += kwatch.o
 +
- extern int register_perf_hw_breakpoint(struct perf_event *bp);
- extern void unregister_hw_breakpoint(struct perf_event *bp);
- extern void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cpu_events);
-@@ -124,6 +127,9 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
- 			    perf_overflow_handler_t triggered,
- 			    void *context)		{ return NULL; }
- static inline int
-+modify_wide_hw_breakpoint_local(struct perf_event *bp,
-+				struct perf_event_attr *attr) { return -ENOSYS; }
-+static inline int
- register_perf_hw_breakpoint(struct perf_event *bp)	{ return -ENOSYS; }
- static inline void unregister_hw_breakpoint(struct perf_event *bp)	{ }
- static inline void
-diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
-index 789add0c185a..20ca64f30508 100644
---- a/kernel/events/hw_breakpoint.c
-+++ b/kernel/events/hw_breakpoint.c
-@@ -888,6 +888,43 @@ void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cpu_events)
- }
- EXPORT_SYMBOL_GPL(unregister_wide_hw_breakpoint);
- 
-+/**
-+ * modify_wide_hw_breakpoint_local - update breakpoint config for local CPU
-+ * @bp: the hwbp perf event for this CPU
-+ * @attr: the new attribute for @bp
-+ *
-+ * This does not release and reserve the slot of a HWBP; it just reuses the
-+ * current slot on local CPU. So the users must update the other CPUs by
-+ * themselves.
-+ * Also, since this does not release/reserve the slot, this can not change the
-+ * type to incompatible type of the HWBP.
-+ * Return err if attr is invalid or the CPU fails to update debug register
-+ * for new @attr.
-+ */
-+#ifdef CONFIG_HAVE_REINSTALL_HW_BREAKPOINT
-+int modify_wide_hw_breakpoint_local(struct perf_event *bp,
-+				    struct perf_event_attr *attr)
++kwatch-y := deref.o
+diff --git a/mm/kwatch/deref.c b/mm/kwatch/deref.c
+new file mode 100644
+index 000000000000..a93c76139e7c
+--- /dev/null
++++ b/mm/kwatch/deref.c
+@@ -0,0 +1,174 @@
++// SPDX-License-Identifier: GPL-2.0
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/ptrace.h>
++#include <linux/sched.h>
++#include <linux/uaccess.h>
++#include <linux/kallsyms.h>
++#include <linux/string.h>
++#include <linux/slab.h>
++
++#include "kwatch.h"
++
++int kwatch_deref_resolve(const struct kwatch_config *cfg, struct pt_regs *regs,
++			 unsigned long *out_addr, u16 *out_len)
 +{
-+	int ret;
++	unsigned long addr = 0;
++	int i;
 +
-+	if (find_slot_idx(bp->attr.bp_type) != find_slot_idx(attr->bp_type))
++	/* 1. Resolve the Base Anchor */
++	if (cfg->base == KWATCH_BASE_STACK) {
++		addr = kernel_stack_pointer(regs);
++		if (unlikely(!addr))
++			return -EINVAL;
++	} else if (cfg->base >= KWATCH_BASE_ARG1 &&
++		   cfg->base <= KWATCH_BASE_ARG6) {
++		int arg_idx = cfg->base - KWATCH_BASE_ARG1;
++
++		addr = regs_get_kernel_argument(regs, arg_idx);
++	} else if (cfg->base == KWATCH_BASE_ABS_ADDR ||
++		   cfg->base == KWATCH_BASE_GLOBAL_SYM) {
++		/* Zero-latency load of the static symbol location */
++		addr = cfg->sym_addr;
++	} else {
++		return -EINVAL;
++	}
++
++	/* 2. The Pointer-Chasing FSM */
++	for (i = 0; i < cfg->offset_count; i++) {
++		addr += cfg->offsets[i];
++
++		if (i < cfg->offset_count - 1) {
++			unsigned long next_addr;
++
++			/* Dynamically read the pointer contents at runtime */
++			if (get_kernel_nofault(next_addr, (unsigned long *)addr))
++				return -EFAULT;
++
++			addr = next_addr;
++		}
++	}
++
++	/* Enforce strict Kernel-Space boundary */
++	if (unlikely(addr < TASK_SIZE_MAX))
 +		return -EINVAL;
 +
-+	ret = hw_breakpoint_arch_parse(bp, attr, counter_arch_bp(bp));
-+	if (ret)
-+		return ret;
-+
-+	return arch_reinstall_hw_breakpoint(bp);
++	*out_addr = addr;
++	*out_len = cfg->watch_len;
++	return 0;
 +}
-+#else
-+int modify_wide_hw_breakpoint_local(struct perf_event *bp,
-+				    struct perf_event_attr *attr)
++
++int kwatch_deref_parse(struct kwatch_config *cfg, const char *watch_expr)
 +{
-+	return -EOPNOTSUPP;
-+}
-+#endif
-+EXPORT_SYMBOL_GPL(modify_wide_hw_breakpoint_local);
++	char *p, *sep, *dup_expr;
++	char type = '\0';
++	bool is_deref = false;
++	int ret = 0;
 +
- /**
-  * hw_breakpoint_is_used - check if breakpoints are currently used
-  *
++	dup_expr = kstrdup(watch_expr, GFP_KERNEL);
++	if (!dup_expr)
++		return -ENOMEM;
++
++	cfg->offset_count = 1;
++	cfg->offsets[0] = 0;
++
++	/* 1. Isolate and Resolve Base Anchor */
++	p = dup_expr;
++	sep = NULL;
++	while (*p) {
++		if (*p == '+') {
++			sep = p;
++			type = '+';
++			break;
++		}
++		if (*p == '-') {
++			sep = p;
++			type = '-';
++			if (p[1] == '>')
++				is_deref = true;
++			break;
++		}
++		p++;
++	}
++
++	if (type)
++		*sep = '\0';
++
++	if (!strcmp(dup_expr, "stack")) {
++		cfg->base = KWATCH_BASE_STACK;
++	} else if (!strncmp(dup_expr, "arg", 3) && strlen(dup_expr) == 4) {
++		int arg_num;
++
++		if (kstrtoint(dup_expr + 3, 10, &arg_num) || arg_num < 1 ||
++		    arg_num > 6) {
++			ret = -EINVAL;
++			goto out;
++		}
++		cfg->base = KWATCH_BASE_ARG1 + (arg_num - 1);
++	} else if (kstrtoul(dup_expr, 0, &cfg->sym_addr) == 0) {
++		cfg->base = KWATCH_BASE_ABS_ADDR;
++	} else {
++#if IS_BUILTIN(CONFIG_KWATCH)
++		cfg->sym_addr = kallsyms_lookup_name(dup_expr);
++		if (!cfg->sym_addr) {
++			pr_err("Failed to resolve symbol name: %s\n", dup_expr);
++			ret = -EINVAL;
++			goto out;
++		}
++		cfg->base = KWATCH_BASE_GLOBAL_SYM;
++#else
++		pr_err("cannot resolve symbol %s when built as a module, use a hex address\n",
++		       dup_expr);
++		ret = -EINVAL;
++		goto out;
++#endif
++	}
++
++	if (!type)
++		goto out;
++
++	/* 2. Resolve Base Offset (if + or - exists) */
++	if (!is_deref) {
++		char *next;
++
++		*sep = type; /* Restore the '+' or '-' for kstrtol */
++		next = strstr(sep, "->");
++		if (next)
++			*next = '\0';
++
++		if (kstrtol(sep, 0, &cfg->offsets[0])) {
++			ret = -EINVAL;
++			goto out;
++		}
++
++		p = next ? next + 2 : NULL;
++	} else {
++		/* Jump directly to the first dereference after '->' */
++		p = sep + 2;
++	}
++
++	/* 3. Resolve Dereference Chain */
++	while (p) {
++		char *next;
++
++		if (cfg->offset_count >= MAX_DEREF_CHAIN) {
++			ret = -E2BIG;
++			goto out;
++		}
++
++		next = strstr(p, "->");
++		if (next)
++			*next = '\0';
++
++		if (kstrtol(p, 0, &cfg->offsets[cfg->offset_count++])) {
++			ret = -EINVAL;
++			goto out;
++		}
++
++		p = next ? next + 2 : NULL;
++	}
++
++out:
++	kfree(dup_expr);
++	return ret;
++}
+diff --git a/mm/kwatch/kwatch.h b/mm/kwatch/kwatch.h
+new file mode 100644
+index 000000000000..e1ac8ae312f6
+--- /dev/null
++++ b/mm/kwatch/kwatch.h
+@@ -0,0 +1,107 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _MM_KWATCH_H
++#define _MM_KWATCH_H
++
++#include <linux/fprobe.h>
++#include <linux/kprobes.h>
++#include <linux/perf_event.h>
++#include <linux/sched.h>
++#include <linux/types.h>
++#include <linux/compiler.h>
++#include <linux/atomic.h>
++
++#define MAX_CONFIG_STR_LEN 512
++#define MAX_DEREF_CHAIN 4
++
++struct kwatch_watchpoint;
++
++struct kwatch_tsk_ctx {
++	struct task_struct *task;
++	struct kwatch_watchpoint *wp;
++	u16 depth;
++	u32 epoch;
++};
++
++struct kwatch_watchpoint {
++	struct perf_event *__percpu *event;
++	call_single_data_t __percpu *csd_arm;
++	call_single_data_t __percpu *csd_disarm;
++	struct perf_event_attr attr;
++	atomic_t in_use; // multi-consumer safe get/put
++	struct list_head list; // for cpu online and offline
++
++	struct task_struct *arm_tsk;
++	atomic_t pending_ipis;
++	atomic_t refcount;
++	bool teardown;
++};
++
++enum kwatch_access_type {
++	KWATCH_ACCESS_W,
++	KWATCH_ACCESS_R,
++	KWATCH_ACCESS_RW,
++	KWATCH_ACCESS_X,
++};
++
++enum kwatch_base_type {
++	KWATCH_BASE_STACK,
++	KWATCH_BASE_ABS_ADDR,
++	KWATCH_BASE_GLOBAL_SYM,
++	KWATCH_BASE_ARG1,
++	KWATCH_BASE_ARG2,
++	KWATCH_BASE_ARG3,
++	KWATCH_BASE_ARG4,
++	KWATCH_BASE_ARG5,
++	KWATCH_BASE_ARG6,
++};
++
++struct kwatch_config {
++	u16 max_watch;
++	char func_name[KSYM_NAME_LEN];
++	u16 func_offset;
++	u16 depth;
++	u16 duration;
++	enum kwatch_access_type access_type;
++	u16 watch_len;
++
++	/* Unified Deref Engine State */
++	enum kwatch_base_type base;
++	char watch_expr[MAX_CONFIG_STR_LEN];
++	unsigned long sym_addr;
++	long offsets[MAX_DEREF_CHAIN];
++	u8 offset_count;
++	u16 max_concurrency;
++};
++
++int kwatch_hwbp_prealloc(u16 max_watch, enum kwatch_access_type access_type);
++void kwatch_hwbp_free(void);
++int kwatch_hwbp_get(struct kwatch_watchpoint **out_wp);
++void kwatch_hwbp_arm(struct kwatch_watchpoint *wp, unsigned long addr, u16 len);
++int kwatch_hwbp_put(struct kwatch_watchpoint *wp);
++
++int kwatch_probe_start(struct kwatch_config *cfg);
++void kwatch_probe_stop(void);
++void kwatch_probe_mute(bool mute);
++bool kwatch_probe_validate_hit(struct pt_regs *regs, struct task_struct *arm_tsk);
++unsigned long kwatch_probe_nmi_rejected(void);
++
++int kwatch_tsk_ctx_prealloc(u16 max_concurrency);
++struct kwatch_tsk_ctx *kwatch_tsk_ctx_get(bool can_alloc);
++void kwatch_tsk_ctx_put(void);
++void kwatch_tsk_ctx_reset(struct kwatch_tsk_ctx *ctx, u32 new_epoch);
++void kwatch_tsk_ctx_release_wps(void);
++void kwatch_tsk_ctx_free(void);
++
++void kwatch_global_anchor(unsigned long duration_sec);
++int kwatch_anchor_start(u16 duration);
++void kwatch_anchor_stop(void);
++void kwatch_anchor_cancel_work(void);
++bool kwatch_anchor_has_expired(void);
++void kwatch_anchor_clear_expired(void);
++void kwatch_auto_stop(void);
++
++int kwatch_deref_resolve(const struct kwatch_config *cfg, struct pt_regs *regs,
++			 unsigned long *out_addr, u16 *out_len);
++int kwatch_deref_parse(struct kwatch_config *cfg, const char *watch_expr);
++
++#endif /* _MM_KWATCH_H */
 -- 
 2.53.0
 
