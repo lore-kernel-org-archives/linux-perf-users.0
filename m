@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB62EAC7;
-	Tue, 14 Jul 2026 00:44:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 722CA1F0995;
+	Tue, 14 Jul 2026 00:44:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783989851; cv=none; b=ogUn4mi8XFTO/xqIIeg9Subhx4QloyS8u2JqNdwZ5aUPhasy9dEBMfxZUT+i6O0MxXuovsZxRYKJ961/mOyhxMhrZGQorQ5pIiFJOWBxrGurR7iSpS04W05PxBJZ71Skt4flGCkTlkUY9pyLbVo2NuZkbVfvufiSeP7WO4HDDUQ=
+	t=1783989852; cv=none; b=aFH0hyTtR//NyKYssNExLraUBU6gIRHJ8pJwuXlSWGzEWx1iaE5fqx+4SHnMuMkrQbtNZB73Je4vZy3TqUpdcIAksXpuU6rSu17feZOUxtW5eHlDK78JnB90qT+drfUMS3GhUPBZTOExpHj+me2K7cvAvuHYGZtLyrBvTv9F9gY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783989851; c=relaxed/simple;
-	bh=d/qGCwMDDm+Vxfq0u4vcJ7IqB65HGM5iIxR+0vd+IH0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SineFnb6jU3i7J64E4DwOz5W3xMnO6sD6JTRVkiqXgZkHEvhWpS7MzKnv56aSK3UmByIH1HAjH62T4+DcJbhbmQ5hHECkyOxSFVD5SjvugiuWeOkQnm0Ka3yDibSs0odrDRM/X3/V5L/9YHH4sIMZXby6AJJfAPxJg1sJ55MeYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f+07eVKx; arc=none smtp.client-ip=192.198.163.16
+	s=arc-20240116; t=1783989852; c=relaxed/simple;
+	bh=7K+mVOAfd7O7mBrvuCC+ocZBM74EZhw605+3UoxF3Sg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IfWpiblyXqLW0y+mbSBUFa9oLrhMzhDtJdtEF2mlf1Hsd/kLhYGrXggfZpHolemcWPMdC2ebloJfzHdsbBY+3m04O+p/jv/M/rIGsWKaNPidk9GbF3XdZOX+rZ5UwYHe1kZ8Dpe9oSlRvap5b4Rnmf7+rNgBP95O+KfKs58Pbv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Eb+JFn7g; arc=none smtp.client-ip=192.198.163.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f+07eVKx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Eb+JFn7g"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1783989849; x=1815525849;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=d/qGCwMDDm+Vxfq0u4vcJ7IqB65HGM5iIxR+0vd+IH0=;
-  b=f+07eVKxN9mZ3aaTjZMC5/Qh3zQNGCsln7gX0sCPMefgqjQu/Zeh2dWJ
-   W9bicPHN2V9Pb+LRkaaNy5zi3XCDiQi2/HcNvcQLIuBquMLDdWAo2iplQ
-   MiIzjZBtZcqyBGCtwsfKwDCF172TbZ6xGMtf42Ej0lphbZ5VOz605okrL
-   FMxKT/Yf3LhmtPzpn1iDemejZ28UVJqnzGTNI8GR935k7iLY9XyLFQOiP
-   Sthwa3gYJhlguv5fdz9r8Mqkf0V/1tA73lMyf/9fUJbFqrOQRkNoPFKh/
-   JkWDfPM4NBwvemwSN6VEzPi2Kl1gYRsEQqWU9gQnhnz/OJdWtTnkvslnV
+  t=1783989850; x=1815525850;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=7K+mVOAfd7O7mBrvuCC+ocZBM74EZhw605+3UoxF3Sg=;
+  b=Eb+JFn7g/I3URuOTvI8fQEIqpPxmtk+g4UEhcfhYMVjTsValX7h7+B9m
+   T2IFWT59ZX7QATchiGi1/ghG046z4LBcEr4kuBbk2aI7XYoJ2l6RC4aC8
+   Ocp/1/SZQUBlBpGP4gVC4Ao45NIgyv3Z06f3Ns4XBSyWcuQXAjOFQiacv
+   V7ma9gcqegPwPN73mdDpIKRGMXbXGz/EvWbXABYn8lfiX6kb7XkMIB1GQ
+   hIG3O3XTrpG958XFr3zbHU9y9cnbCbYZTJU1UV6uTDVv9af1B8jdaV9Ie
+   eldaIgdJREVo5835yNvFcoaXP1EJmdM5BWvGeCsFPkmKJZT3/iVUAY8VT
    Q==;
-X-CSE-ConnectionGUID: 6AIH7sVqSVScD4o2BcyPQA==
-X-CSE-MsgGUID: Q6ErNtPNS+aMBraDnz9pmg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="72130627"
+X-CSE-ConnectionGUID: I65hdH9MR7SjXbqW14Khfw==
+X-CSE-MsgGUID: BFsOsyUiRI2o498vUSI8Mw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11841"; a="72130633"
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="72130627"
+   d="scan'208";a="72130633"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 17:44:09 -0700
-X-CSE-ConnectionGUID: ZC13QJBjQ/yJQCzGEIatow==
-X-CSE-MsgGUID: KwJ6CK3/SLWwT0PrrxLv1A==
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 17:44:10 -0700
+X-CSE-ConnectionGUID: 6phinN0KSYSqEIXX3odJcg==
+X-CSE-MsgGUID: 4ZyhoFBHTneRZsWvhqCSZA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,154,1779174000"; 
-   d="scan'208";a="260582103"
+   d="scan'208";a="260582114"
 Received: from rodrigoa-mobl1.amr.corp.intel.com (HELO tfalcon-desk.attlocal.net) ([10.124.220.48])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 17:44:07 -0700
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jul 2026 17:44:09 -0700
 From: Thomas Falcon <thomas.falcon@intel.com>
 To: linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -56,10 +57,12 @@ Cc: linux-kernel@vger.kernel.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH v2 0/6] perf: Add support for memory region/range reporting
-Date: Mon, 13 Jul 2026 19:43:53 -0500
-Message-ID: <20260714004359.179451-1-thomas.falcon@intel.com>
+Subject: [PATCH v2 1/6] perf mem: Fix size tracking for mem_lvl's in perf_script__meminfo_scnprintf()
+Date: Mon, 13 Jul 2026 19:43:54 -0500
+Message-ID: <20260714004359.179451-2-thomas.falcon@intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260714004359.179451-1-thomas.falcon@intel.com>
+References: <20260714004359.179451-1-thomas.falcon@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,70 +71,32 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for two memory-related reporting features in the perf tool:
+When printing memory info in perf script, the entire size of the
+buffer is passed to perf_mem__lvl_scnprintf() instead of the remaining
+size. Pass the remaining buffer size instead.
 
-1. Memory region reporting in perf-c2c and perf-script subcommands.
-2. Memory range data in perf.data file header and perf-c2c subcommand.
+This issue was detected by sashiko during an internal code review.
 
-Memory region reporting was introduced as part of support for the
-Off-module Response facility (OMR) [1], which provides a new data
-source encoding supporting "up to 8 fine-grained memory regions in
-addition to the cache region, offering more detailed insights into
-memory access regions."
+Assisted-by: Sashiko:gemini-3.1-pro-preview
+Fixes: fdefc3750e847 ("perf mem: Print memory operation type")
+Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+---
+ tools/perf/util/mem-events.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Memory Range support was introduced with the addition of the ACPI Memory
-Range and Region Mapping (MRRM) [2] table. It provides a base address plus
-a length value for each memory range, as well as NUMA node and local and 
-remote "region ID's" so that "platform firmware can indicate the type of
-memory for each range."[3]
-
-Include a change allowing PERF_MEM_LVLNUM_L0 to be printed in
-perf-mem output as well.
-
-[1]: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
-[2]: https://lore.kernel.org/lkml/20250505173819.419271-1-tony.luck@intel.com/
-[3]: MRRM definition allow for future expansion for the OS to assign
-these region IDs.
-
-Changes in v2: 
--- Added missing newline in WARN_ONCE message in c2c_he__set_mem_region()
--- increased buffers passed to perf_script__meminfo_scnprintf() from 150
-   to 200 bytes to avoid silent truncation
--- Added check for NULL return of sysfs__mountpoint() when parsing
-   memory ranges in sysfs
--- increased MAX_MEMORY_RANGES sanity check from 64 to 256 based on 
-   ACPI MRRM table implementation in Linux kernel
--- added comment for MAX_MEMORY_RANGES to clarify that it is a sanity check
-   for malformed perf.data files
--- removed a line of code was removed from util/env.h but was added back in
-   v1 due to bad rebase
-
-Dapeng Mi (3):
-  perf mem: Add support for printing PERF_MEM_LVLNUM_L0
-  perf tools: Show memory region in perf-c2c subcommand
-  perf tools: Show memory region in perf-script subcommand
-
-Thomas Falcon (3):
-  perf mem: Fix size tracking for mem_lvl's in
-    perf_script__meminfo_scnprintf()
-  perf header: Support memory ranges
-  perf c2c: print memory region data with stdio output
-
- tools/perf/Documentation/perf-record.txt      |   2 +-
- .../Documentation/perf.data-file-format.txt   |  13 ++
- tools/perf/builtin-c2c.c                      |  86 +++++++-
- tools/perf/builtin-inject.c                   |   1 +
- tools/perf/builtin-script.c                   |   8 +-
- tools/perf/util/bpf-filter.l                  |   1 +
- tools/perf/util/env.c                         |   1 +
- tools/perf/util/env.h                         |  10 +
- tools/perf/util/header.c                      | 195 ++++++++++++++++++
- tools/perf/util/header.h                      |   1 +
- tools/perf/util/mem-events.c                  |  75 ++++++-
- tools/perf/util/mem-events.h                  |   1 +
- .../scripting-engines/trace-event-python.c    |   4 +-
- 13 files changed, 388 insertions(+), 10 deletions(-)
-
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index 0b49fce251fc..4e490f9cd348 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -610,7 +610,7 @@ int perf_script__meminfo_scnprintf(char *out, size_t sz, const struct mem_info *
+ 	i += scnprintf(out, sz, "|OP ");
+ 	i += perf_mem__op_scnprintf(out + i, sz - i, mem_info);
+ 	i += scnprintf(out + i, sz - i, "|LVL ");
+-	i += perf_mem__lvl_scnprintf(out + i, sz, mem_info);
++	i += perf_mem__lvl_scnprintf(out + i, sz - i, mem_info);
+ 	i += scnprintf(out + i, sz - i, "|SNP ");
+ 	i += perf_mem__snp_scnprintf(out + i, sz - i, mem_info);
+ 	i += scnprintf(out + i, sz - i, "|TLB ");
 -- 
 2.43.0
 
