@@ -1,132 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39148377AB4
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 18:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEC8341A904
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 18:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784054377; cv=none; b=cAj+nM1u73Kc8qUkj3uiCszolUSV143vgGLgMT1oUq0ZdmoEUlzqj6HdiNaYOeWpydvJ0kvTNr8AKBzE5cVdIfns8JK3TIC3+XraQAoFPiVKgwHmhoHBZ2xktn5f9vRkBzUZrPgCVfQxL5ni6abxm9m6DRrJXe5XuOWqz4iRjIU=
+	t=1784054566; cv=none; b=erjC/cAno1J0EVuXYUQblr2lEtxwAX2Nsrwbu/eZtPfZ8KLX4VMn7zLSWr3C2VquR38Nw1vXOcN0601rAojuKO4MhbrFCMLy0y+CnRddPTmXSCxtt8yxyIne7y1hReyi8EIW6QZadD+nc53GofI8cW4beQ68ditZSfVOKGJ/sik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784054377; c=relaxed/simple;
-	bh=mzjzkCyBfGXtZWM05+2fSad95AM6/alt7iaTw9EnZmg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gSo0ssoRZFR/aWf5CQtgnn6HIlm+0e+dtidrJc/j3x5hPPjUxnCBA55ld2adjpoJpJOjkJJ9oIByXu1oVKNviJ0rRXfuccdjhCuJ68R4BOzrNSiSp8k6694e11L4cGxaRUG+uvKSUTDLGUkYD2lylHjoCl6+SJdJai2dNaXn9PY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fm0cZkLS; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1784054566; c=relaxed/simple;
+	bh=Fxn3HrEtDwi0U8yiJkADvuXzJHcykw6fqir65QNlIjs=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=L5+0+Jzv2DYwdIIJUxAyxF1YltiIRcPD3SMKN7QvTADr0XjiVfIuVDOddwxRwArWwbA/fN+t31paRzZXo6En3mIGeEKelRC1P4iLTaxflTCnfTeM9zPsTm4ghJeRGvvwHPXgsziFbFsZi5FzOvKHact24mM8qdLfVQUyHxhxMhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fh/BaQ6J; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fm0cZkLS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1784054365;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=B9v88XYbtqchrXAjMzOyW9d575sKuY0HNs6VKDi/j5E=;
-	b=fm0cZkLSRnCYFmemPRB1nHuPuKKosK6GZvBVYKFz+LY8YbIQZ+GY8CFAQdvhSYF76SbeYM
-	oxZc5G0R+dPgYwUylrtDyHe33h94iI06lumajwa3M1k5wXacNQ35ZVPV2UDG41y2Rwt4Dv
-	qKhF1ZSqfPN/lLKlgmgkUSeWWzJZAdo=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-130-ddLhVtOlNs2Q7GILTxkq7g-1; Tue,
- 14 Jul 2026 14:39:20 -0400
-X-MC-Unique: ddLhVtOlNs2Q7GILTxkq7g-1
-X-Mimecast-MFC-AGG-ID: ddLhVtOlNs2Q7GILTxkq7g_1784054358
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BB90E1955F75;
-	Tue, 14 Jul 2026 18:39:17 +0000 (UTC)
-Received: from ashelat-thinkpadp1gen5.boston.csb (unknown [10.22.65.227])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9707019560A3;
-	Tue, 14 Jul 2026 18:39:15 +0000 (UTC)
-From: Anubhav Shelat <ashelat@redhat.com>
-To: rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com
-Cc: linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Anubhav Shelat <ashelat@redhat.com>
-Subject: [PATCH v5 0/5] Enable perf tracing for unprivileged users
-Date: Tue, 14 Jul 2026 14:39:04 -0400
-Message-ID: <20260714183903.295381-2-ashelat@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fh/BaQ6J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA611F000E9;
+	Tue, 14 Jul 2026 18:42:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784054561;
+	bh=ocUw58B0JK4Hk5cQaEQAx7/ewB08NJoUIeYQScidj+U=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Fh/BaQ6JqPEE5ijWVtEdLxyrZE4xn78o0pTaF5m2u5Cvmy83mehvW5JMMjW13Ds/2
+	 WWsX8lVyfU5t/OdX3eiVbdAHyb4D/QPlmSYXRyshRJ2kTIgPea2UG8HlgF6+XqSknI
+	 MeO4c+xnZ4vvT5/O6qlXmb8t4k+pzPEoV+gPHTylc2U6wvb2SUZwFr+7RTqdn36D/R
+	 jn8nQFwS1kuyM4sLhFJ0n+timD7fKLupAjrat15A14Y/w0TPM9oJDJI3C4NZcftKeG
+	 ANs05GcY+73jy5naO9xUT6AAB7SAKfuyKoh3fHPUC7ISJ0/pl1Ts3bI8oI3PXp12eB
+	 0R1v/dm74ZhXg==
+From: sashiko-bot@kernel.org
+Subject: Re: [RFC PATCH 07/13] stacktrace: export stack_trace_save_regs()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Jinchao Wang" <wangjinchao600@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260714183146.12598-1-wangjinchao600@gmail.com>
+References: <20260714182243.10687-1-wangjinchao600@gmail.com>
+ <20260714183146.12598-1-wangjinchao600@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 14 Jul 2026 18:42:40 +0000
+Message-Id: <20260714184240.CBA611F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-Enable users to use perf-trace to trace their own processes, like strace
-but without the overhead of ptrace(). Ensure that users cannot access
-other users' or systemwide tracing data.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The patch exports `stack_trace_save_regs` so it can be used by m=
+odules, but fails to update the in-tree kprobes sanity test which contains =
+a workaround specifically because the symbol was previously unexported. Lea=
+ving the workaround artificially reduces test coverage for module builds.
+--
 
-Changes in v5:
-- Move event_define_fields() before directory creation. If
-  event_define_fields() fails then we don't need to cleanup whatever
-  dirs were created. 
-- New read-only eventfs file system with the same structure as
-  /sys/kernel/tracing/events/ to handle files read by unprivileged
-  users.
-- Allow unprivileged users to fall back to /sys/kernel/events/ when they
-  cannot access /sys/kernel/tracing/events/.
-- Factor out reused code into helper function that checks if a
-  tracepoint should be restricted in commit 5.
+--- Patch [7]: [RFC PATCH 07/13] stacktrace: export stack_trace_save_regs()=
+ ---
+commit 594dee655bf56c8a9f1858d2d50ddbf441315c12
+Author: Jinchao Wang <wangjinchao600@gmail.com>
 
-Changes in v4:
-- Preserve security_perf_event_open(PERF_SECURITY_KERNEL) LSM hook in
-  the tp_bypass path.
-- Lift the PERF_SAMPLE_IP check out of the tp_bypass path above the
-  PERF_SAMPLE_RAW branch so it applies to counting and sampling. This
-  also allows us to ensure PERF_SAMPLE_IP is set for uprobes.
-- Block counting path for TRACE_EVENT_FL_CAP_ANY for unprivileged users
-  with sysctl_perf_event_paranoid > 1.
+stacktrace: export stack_trace_save_regs()
 
-Changes in v3:
-- Don't set PERF_SAMPLE_IP for unprivileged tracepoints. This allows us
-  to exclude PERF_SAMPLE_IP from kaddr_leak without weakening KASLR.
-- Mount tracefs as world-traversable so users can access eventfs
-  directories.
+The other stack_trace_save_*() flavours are exported, but the regs
+variant is not, so no module can capture a stack trace for a given
+pt_regs. KWatch, which may be built as a module, uses it. Export it like
+its siblings.
 
-Anubhav Shelat (5):
-  eventfs: define event fields before directory creation
-  tracefs: add read-only eventfs filesystem at /sys/kernel/events
-  perf tools: fall back to eventfs for unprivileged event discovery
-  perf evsel: don't set PERF_SAMPLE_IP for unprivileged tracepoints
-  perf: enable unprivileged syscall tracing with perf trace
+> diff --git a/kernel/stacktrace.c b/kernel/stacktrace.c
+> index afb3c116da91a..d853c40f916b2 100644
+> --- a/kernel/stacktrace.c
+> +++ b/kernel/stacktrace.c
+> @@ -175,6 +175,7 @@ unsigned int stack_trace_save_regs(struct pt_regs *re=
+gs, unsigned long *store,
+>  	arch_stack_walk(consume_entry, &c, current, regs);
+>  	return c.len;
+>  }
+> +EXPORT_SYMBOL_GPL(stack_trace_save_regs);
 
- fs/tracefs/event_inode.c           |  61 ++++++++++++++++++
- fs/tracefs/inode.c                 |  95 ++++++++++++++++++++++++++-
- fs/tracefs/internal.h              |   3 +
- include/linux/trace_events.h       |   1 +
- include/linux/tracefs.h            |   4 ++
- include/uapi/linux/magic.h         |   1 +
- kernel/events/core.c               |  28 +++++++-
- kernel/trace/trace.h               |   2 +
- kernel/trace/trace_event_perf.c    |  28 +++++++-
- kernel/trace/trace_events.c        | 100 +++++++++++++++++++++++++++--
- tools/lib/api/fs/fs.c              |  10 +++
- tools/lib/api/fs/fs.h              |   1 +
- tools/lib/api/fs/tracing_path.c    |  52 +++++++++++++--
- tools/lib/api/fs/tracing_path.h    |   1 +
- tools/perf/util/evsel.c            |  14 +++-
- tools/perf/util/tp_pmu.c           |   5 +-
- tools/perf/util/trace-event-info.c |  19 +++---
- 17 files changed, 395 insertions(+), 30 deletions(-)
+[Severity: Medium]
+Since stack_trace_save_regs() is now exported for modules, should we also
+update the kprobes sanity test to remove the workarounds that skip testing
+this function when built as a module?
 
--- 
-2.54.0
+In lib/tests/test_kprobes.c:stacktrace_return_handler():
 
+#if !IS_MODULE(CONFIG_KPROBES_SANITY_TEST)
+	/*
+	 * Test stacktrace from pt_regs at the return address. Thus the stack
+	 * trace must start from the target return address.
+	 */
+	ret =3D stack_trace_save_regs(regs, stack_buf, STACK_BUF_SIZE, 0);
+
+And similarly in lib/tests/test_kprobes.c:stacktrace_internal_return_handle=
+r():
+
+#if !IS_MODULE(CONFIG_KPROBES_SANITY_TEST)
+	/* Ditto for the regs version. */
+	ret =3D stack_trace_save_regs(regs, stack_buf, STACK_BUF_SIZE, 0);
+
+Removing these checks would restore test coverage for module builds now that
+the symbol is available.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260714182243.1068=
+7-1-wangjinchao600@gmail.com?part=3D7
