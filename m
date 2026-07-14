@@ -1,190 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5865351C1F
-	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 08:53:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FBA426ED3
+	for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 09:04:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784019200; cv=none; b=k7KdWsJQFdb4rmEp3rS6QiKqoTnB1+JlPqeHhd6GdC6O2HyS+lMS60FUesaHp8wwakfrnZI0vDtc5oudXap3CyImJDy3U6NWiofkdZacZRnaIRGl9+ecO5/RdiYHj+/IBzdf7eAf91oABomYy0WecWoaMpiYAUUvhvVf5IndHi0=
+	t=1784019841; cv=none; b=rdU+fJrKlW89g21v/K8eelA7ksWIvzhfwphdqRDkKAR0wVeaKQHW7ou2mvQRlcP1Q+Rb88ynyo4ueo2TtWhmJAcoRZvl8H9ih8ghHaw0lwO9oJm5BsHjICzgjnBBHxY4zE+I3bA2H1SuSTs4b7B5a1F63u/+UyHbLQtsUgeP4zs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784019200; c=relaxed/simple;
-	bh=lBXAGlrsbjTU+g8uNsoAuc1n3HKX288sGIs5thhGvIE=;
+	s=arc-20240116; t=1784019841; c=relaxed/simple;
+	bh=DGk8dvkkQ5ogMFuduNLrnjVSSOdLmz4IXeHGmcK0YJ8=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Qbyh2KkwtPZb7/Kxsv00M/TZ6Jo91MNg+Z974+RXUDzKmiiffFJNAUjC/rx+QnAmjjCnT7nHCqF/OBLAvt8HLFir9hlLCQjBDvm/aCOEr5gXB2IvrJF6hbqMpWcSxu08DvK3/ET2iO4flcT5lw31n0eeMzjoxAfanwfoEqgwCT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eWogJMS6; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=gi53DDzY0/kbasAhP8vnXi6xTL9NcZWGJhgDG9qhWKe+oiKQg9fxEwAnXgdBXeEtWAGLnbNw44VbhmXQDL3qXRP9hOijLw+/ROuD5/q4WZIbkycGR9lyoqUuf9DERZ55Eyadz0wZMc/xjSewK/R8nbg6wuAqNQhipp7E2y9+PNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQB//8pY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eWogJMS6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 698291F000E9;
-	Tue, 14 Jul 2026 08:53:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQB//8pY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D87F81F000E9;
+	Tue, 14 Jul 2026 09:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784019198;
-	bh=lBXAGlrsbjTU+g8uNsoAuc1n3HKX288sGIs5thhGvIE=;
+	s=k20260515; t=1784019840;
+	bh=7GFuEB4GmeSFevNn6hzPw7t9apH6UxZRJvNM/rkn2Qw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=eWogJMS6MRxczieFTrTqIvz2Qh4WzNzCxciLvY2/cJ+q99xQZXiTGHIlotnTqFI1b
-	 MsucErsbY5VO0SvVyHu6rgOl8h2mHPIhq6AIZXJf5zSl/oQxpGnyGrww1/B+eLQS2d
-	 Y9VstDV714/Dz3KRD5eosps0Jlf+eLx1hao1Yv8nGX/fjCu0zk+Uhafm8cv4iKv9BX
-	 rVNMH3iJN2FM0cQ4LitBp7XulVwIVzoyDzoW6rHpxhjM83ofBRaraNlUHM/8HmfTRb
-	 to7kr4YlgMBDprn4NhwgB+b4PGRLFJYHnFS1ePMd4JWFKnfZ0LHB1pW5oQRFLioCqz
-	 awreIntKdrZ/A==
+	b=XQB//8pYhZbNPdb5qByKMxhZ5tdUinKinao+CHD3EroSPdTPUcNOz6NDooQcfjtW5
+	 1OcwuBp1Ng0NnFMHqkhBuO8RzGZPHVhM6nxqE0zRGFboT516O//8G1TC2pgdwvGSnr
+	 jNwiLyRnd1NzMJglkKP1tFMdq96DWDkyC8hRoJNsGiVfsikfoPuG+SRib/s2RjDFHs
+	 CgMqD+mHpTU5sLO3MB7NA4P8bauvdMvWwpJrcXb7YzSc+br2quQtDprd1Mzn6HLapu
+	 ypFDnoWUKjF9ND+Nt2y/ACc8gA/5uGxR9N7X7rOjCj4VsattT6yLDqSN9pJNXxysfY
+	 n3+aD8wpvQthA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 1/2] drivers/perf: riscv-iommu: add risc-v iommu pmu
- driver
+Subject: Re: [PATCH v4 2/2] iommu/riscv: create a auxiliary device for HPM
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Zong Li" <zong.li@sifive.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260714083625.1083606-2-zong.li@sifive.com>
+In-Reply-To: <20260714083625.1083606-3-zong.li@sifive.com>
 References: <20260714083625.1083606-1-zong.li@sifive.com>
- <20260714083625.1083606-2-zong.li@sifive.com>
+ <20260714083625.1083606-3-zong.li@sifive.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 14 Jul 2026 08:53:17 +0000
-Message-Id: <20260714085318.698291F000E9@smtp.kernel.org>
+Date: Tue, 14 Jul 2026 09:03:59 +0000
+Message-Id: <20260714090359.D87F81F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 8 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] Missing `.remove` callback in the auxiliary driver and incorrect `=
-devm` usage tie resources to the wrong lifecycles, causing Use-After-Free o=
-n device unbind.
-- [High] The PMU IRQ handler fails to properly clear the interrupt source i=
-n multiple edge cases, leading to a permanent PMU lockup or an infinite int=
-errupt storm.
-- [High] The stateful counter read optimization in `riscv_iommu_pmu_get_cou=
-nter` overwrites its state, causing subsequent hardware wraparounds to be c=
-ompletely missed.
-- [High] The interrupt handler blindly restarts all allocated counters, inc=
-orrectly unpausing events that were explicitly stopped by the perf core.
-- [High] Stack buffer overflow on 32-bit systems due to writing a 64-bit va=
-lue into a 32-bit bitmap array.
-- [Medium] Group validation logic in `riscv_iommu_pmu_event_init` fails to =
-enforce hardware constraints and allows invalid cross-PMU combinations.
-- [Medium] Wrapping expected `irq_set_affinity` failures in `WARN_ON` cause=
-s unnecessary kernel stack traces.
-- [Medium] Incorrect determination of `num_counters` using `hweight32` make=
-s the highest counter inaccessible if lower counters are omitted.
+- [High] Data truncation, negative sysfs ID, and information leak when pass=
+ing physical address to auxiliary device ID.
+- [High] Teardown asymmetry causing Use-After-Disable and guaranteed Use-Af=
+ter-Free of PMU structure.
+- [Medium] Overly generic auxiliary device namespace risking collisions.
 --
 
---- Patch [1]: [PATCH v4 1/2] drivers/perf: riscv-iommu: add risc-v iommu p=
-mu driver ---
-Note: The format of this report has been altered to provide a free-form sum=
-mary
-due to system recitation restrictions. No original patch code is quoted.
-
-commit f8f3c1f0f8ae563726a542519ac8eef772529601
+--- Patch [2]: [PATCH v4 2/2] iommu/riscv: create a auxiliary device for HP=
+M ---
+commit b51f5eeba53f86d299b4eda15a076df1b60764b8
 Author: Zong Li <zong.li@sifive.com>
-Subject: drivers/perf: riscv-iommu: add risc-v iommu pmu driver
 
-This commit adds a new auxiliary device driver to support the risc-v iommu =
-pmu.
-It implements the performance monitoring counters, including hardware detec=
-tion,
-filtering support, and event configuration.
+iommu/riscv: create a auxiliary device for HPM
 
-Link: https://lore.kernel.org/linux-riscv/20260618143634.7f3dd6c5@pumpkin/
+This commit creates an auxiliary device for the hardware performance monitor
+when supported by the IOMMU. It uses the physical address of the device
+directory table as the unique ID for the auxiliary device.
+
+> diff --git a/drivers/iommu/riscv/iommu.c b/drivers/iommu/riscv/iommu.c
+> --- a/drivers/iommu/riscv/iommu.c
+> +++ b/drivers/iommu/riscv/iommu.c
+
+[ ... ]
+
+> @@ -565,6 +566,21 @@ static irqreturn_t riscv_iommu_fltq_process(int irq,=
+ void *data)
+>  	return IRQ_HANDLED;
+>  }
+> =20
+> +/*
+> + * IOMMU Hardware performance monitor
+> + */
+> +static int riscv_iommu_hpm_enable(struct riscv_iommu_device *iommu)
+> +{
+> +	struct auxiliary_device *auxdev;
+> +
+> +	auxdev =3D __devm_auxiliary_device_create(iommu->dev, KBUILD_MODNAME,
+> +						"pmu", iommu, iommu->ddt_phys);
 
 [Severity: High]
-Does the iommu_pmu_driver auxiliary driver leak resources or cause a
-use-after-free on unbind?
+Will this cause truncation and potentially negative sysfs IDs?
 
-The driver definition is missing a remove callback to unregister the pmu and
-remove the cpu hotplug instance. Furthermore, riscv_iommu_pmu_request_irq()
-binds the interrupt using devm_request_irq() against the parent iommu device
-rather than the auxiliary device. If a user unbinds the pmu driver via sysf=
-s,
-the struct will be freed, but the interrupt and hotplug callbacks will rema=
-in
-active with dangling pointers.
+The fifth argument to __devm_auxiliary_device_create() is an int id, but we
+are passing iommu->ddt_phys which is a 64-bit dma_addr_t.
 
-[Severity: High]
-Will the pmu interrupt handler cause an interrupt storm or permanent lockup=
- on
-edge cases?
+If bit 31 of the physical address is set (which is common for RAM on RISC-V=
+),
+the truncated integer becomes negative, resulting in malformed sysfs
+directories.
 
-In riscv_iommu_pmu_irq_handler(), if the overflow register reads as zero, t=
-he
-function returns early without clearing the interrupt pending bit in the st=
-atus
-register and without restarting the counters. Similarly, if an event is mis=
-sing
-from the array, the loop uses continue and skips clearing the hardware over=
-flow
-bit. Both cases leave the interrupt pending indefinitely.
+Could this also cause sysfs naming collisions if two IOMMUs share the same
+lower 32-bits of their physical address?
 
 [Severity: Medium]
-Does the event initialization logic properly validate groups?
+Could KBUILD_MODNAME result in an overly generic namespace for the auxiliary
+bus?
 
-In riscv_iommu_pmu_event_init(), when iterating over siblings in a group, t=
-he
-code explicitly skips checking if the sibling's pmu matches the event's pmu
-when the sibling is a cycle event. Additionally, the loop counts the siblin=
-gs
-but seems to miss accounting for the new event itself when checking against
-total_event_counters, which could allow exceeding hardware limits or creati=
-ng
-invalid cross-pmu groups.
+Since this source file is compiled as iommu.o, KBUILD_MODNAME evaluates to
+"iommu", creating an auxiliary device named "iommu.pmu.<id>".
 
-[Severity: Medium]
-Is it intentional to trigger a kernel warning for expected affinity failure=
-s?
-
-In both riscv_iommu_pmu_probe() and riscv_iommu_pmu_offline_cpu(), the calls
-to irq_set_affinity() are wrapped in a warning macro. On systems without
-multiprocessor support or with interrupt controllers that do not support
-affinity routing, this function safely returns an error. Wrapping this in a
-warning causes unnecessary stack traces for valid hardware configurations.
+If another IOMMU driver also registers a "pmu" auxiliary device using
+KBUILD_MODNAME, would they collide on the bus, or could the riscv_iommu_pmu
+driver incorrectly bind to the wrong device in a multi-arch build?
 
 [Severity: High]
-Can the counter read optimization miss hardware wraparounds?
+Does using a devm-managed allocation here create a teardown asymmetry with
+the manual hardware shutdown in the remove path?
 
-In riscv_iommu_pmu_get_counter(), when a wraparound is detected, the code s=
-ets
-the previous low value to a sentinel of all ones to force the slow path on =
-the
-next read. However, this sentinel value is immediately overwritten
-unconditionally by the actual low value read, which is zero. If another wrap
-occurs before the next read, the check for whether the new low value is less
-than or equal to the previous low value will fail, and the wraparound will =
-be
-missed.
+Because devm cleanup executes after the driver's remove callback returns,
+the auxiliary device will remain active while the IOMMU hardware is disable=
+d:
 
-[Severity: Medium]
-Does using hweight32() to determine the number of counters cause issues with
-sparse counter implementations?
+riscv_iommu_remove()
+    ...
+    riscv_iommu_iodir_set_mode(iommu, RISCV_IOMMU_DDTP_IOMMU_MODE_OFF);
+    ...
+<driver remove returns>
+<devm cleanup destroys the auxiliary device>
 
-In riscv_iommu_pmu_probe(), the number of counters is derived by counting t=
-he
-set bits in the inhibit register using hweight32(). If the hardware omits
-some lower counters but implements higher ones, hweight32() returns a count
-that is strictly less than the highest implemented index. This means the bi=
-tmap
-operations will use a bound that cuts off the highest available counters,
-leaving them inaccessible. Should this use fls() on the bitmask instead?
+Does this leave a window where an active devm-managed PMU interrupt could f=
+ire
+and attempt to access disabled hardware?
 
-[Severity: High]
-Does the interrupt handler accidentally unpause stopped events?
-
-In riscv_iommu_pmu_start_all(), the code clears the inhibit bits for every
-counter that is marked in used_counters. However, used_counters only tracks
-whether a counter has been allocated to an event, not whether that event is
-currently active or explicitly stopped by the perf core. If an event was
-stopped for throttling or a context switch, an interrupt from another event
-will cause the stopped event to unconditionally resume counting.
-
-[Severity: High]
-Can the overflow bitmap trigger a stack buffer overflow on 32-bit architect=
-ures?
-
-In riscv_iommu_pmu_irq_handler(), ovf_bitmap is declared with a size of 32
-bits. On 32-bit systems, this allocates exactly 4 bytes on the stack. The
-function then calls bitmap_from_u64() to copy the overflow register into it,
-which unconditionally writes 64 bits (8 bytes), overwriting 4 bytes of adja=
-cent
-stack memory.
+> +	if (!auxdev)
+> +		return -ENODEV;
+> +
+> +	return 0;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260714083625.1083=
-606-1-zong.li@sifive.com?part=3D1
+606-1-zong.li@sifive.com?part=3D2
