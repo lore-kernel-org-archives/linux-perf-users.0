@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FA33346774;
-	Wed, 15 Jul 2026 07:12:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1130030C366;
+	Wed, 15 Jul 2026 07:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784099527; cv=none; b=SDpIwbTQzQ7A+0oKJOgZ/eEFWifK0/9PK7NzBppq3EWJtQsE+KXHpllLBFRmSOt6Wzi1JkApyFi5LWiWxtWJQcrInBn/IJ1xEs3sAS+gqcn+dn5AfDpRMzrzlpDaTEh1zUvsz4oR8x1PvdTXLQNKSS+DYFFiSoYmwSyvNd6jIz8=
+	t=1784100436; cv=none; b=KhdbE/qzTJnn1T8/cWvHrp4Wk1aJ0aBICJEncQloYb2zDNeOhwS9zAXpD1FFC0XQ/k8Ykxwa4+pEiqteJrP9BGvUt9qmGrDEvbOFuKAor3P4GEMYIfVViyizMVdlnSEn36fYb0q+FSr18qhMnsjminZKoEMgzK2h3lDfS82wJ2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784099527; c=relaxed/simple;
-	bh=+YAntzbV6lwJTuYG0LSr+44Db2YVOYDdpm7a79dlP/A=;
+	s=arc-20240116; t=1784100436; c=relaxed/simple;
+	bh=GMiPxQhSMy8OY3/2b/6v2R33Zqdua6jnfdrz6S6J/rw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aZ78R5DGOMvQHOCfwq+zFUwxEV1Yzd98p+6BOe+le5xEcRzC2GTM5w/g5MC2Q1rNg5ppCe0i2qJHwL7JxmSpSGt+wdbWADZ+fGau63ZF4QSfHVbfr5Et0zrBl7ZAtKzpHB8vyamDiNoHhZHKC4upKUEdu24J80N1URfxiBFdRjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PMtIiTRa; arc=none smtp.client-ip=192.198.163.15
+	 In-Reply-To:Content-Type; b=rY4zumOhzwLAcU1MwrQYmoVUXfE1ExrHR0RbTRkZUMDlE7sceBIuCJb2aoOZmep4QcJ6+xcMMQHcjMo9VTEO9VIXCo7U9/Tf570OtZLfv7JaQPqh3fRfFc1pNdI4ivZPqmVMo/H+7Si1tCKZ603UMsXh3Ti2sFQpmSnUGWFzS2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IFpKEI8N; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PMtIiTRa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IFpKEI8N"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784099525; x=1815635525;
+  t=1784100433; x=1815636433;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=+YAntzbV6lwJTuYG0LSr+44Db2YVOYDdpm7a79dlP/A=;
-  b=PMtIiTRa0KUHY30j6s+A6YKfepTxET6Ot1pjQ/7D/Rw584FSqh3Nyu6K
-   4Rwt4cCO8ONw8uN3upxT5Xl+3cr9wNlRzVK70FkaqMN9icdDClV5qh0Cw
-   rE4oNnhnLG6WphvBVWEfEecwkV55FclkkktXlPmaZSRD4PWMun8NVMn4u
-   yEEpfzknJsonUAI0DaI52pc1Kl3T+HUOzwsKQa4GnQYEEYccAmBggVcbs
-   PVTjITej8onzg6Mnf6Yz6Ey2QjVIQMjaHsF0qRC4i4egYGDhmlTAxc8J8
-   29VANwqvTUoLymJhN2lKNCDJS2DtXs4sp/FdTpBsngcZKfe9hCAbEyNu7
-   A==;
-X-CSE-ConnectionGUID: NGWBx9f/TdukmBT17rmfCA==
-X-CSE-MsgGUID: S99+3iCVSBWahBMqKjvV+A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="84845004"
+  bh=GMiPxQhSMy8OY3/2b/6v2R33Zqdua6jnfdrz6S6J/rw=;
+  b=IFpKEI8NfB7VED1klaRkZuDzGBACEEBRJYpfJXF0dVA35tUiPySs5gAX
+   Ui/0ESazGmntfMZRIblL0Le4QQu8i7msylkxUFTW3RGOi9PKqGjmIwGrk
+   luSZCftJIz8obvtJQhy7Dhpqm1QYOZAqbSfw78nmIYZWglaYXoDnGNICZ
+   zJ7TgiQGUMXAJ/0G+BRGQpETHWwX8i5f0josddXW1VE5kAP0qNhpHe+xl
+   lzRPO6vJF73cMDWzZYnxytq6Xk8qx+BkVQvYG8E0m2kN5rhmYpNjl8Wqt
+   Yq0Pyvg8bZyNImTosD5o2VIgzqXyY8YrkpIGwHTZAiB8aFGBfnMfbULwK
+   g==;
+X-CSE-ConnectionGUID: aHFzVgPnT3emfKrLPmtAMA==
+X-CSE-MsgGUID: Zm1oAgYBS4GVNtF5JWFvXg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="96095623"
 X-IronPort-AV: E=Sophos;i="6.25,165,1779174000"; 
-   d="scan'208";a="84845004"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2026 00:12:04 -0700
-X-CSE-ConnectionGUID: 2NKQvjIUSpGyR4L5VyNpyQ==
-X-CSE-MsgGUID: KeiqZPByRxO37zEspmHhpA==
+   d="scan'208";a="96095623"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2026 00:27:11 -0700
+X-CSE-ConnectionGUID: 4BPwMo5eRsCY5fAcXqZ6cQ==
+X-CSE-MsgGUID: 9392uglRQwipTL9T3PZSRA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,165,1779174000"; 
-   d="scan'208";a="252696093"
+   d="scan'208";a="253476222"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.65]) ([10.124.232.65])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2026 00:12:01 -0700
-Message-ID: <b11641d2-904b-412d-b4fd-9648799ee23e@linux.intel.com>
-Date: Wed, 15 Jul 2026 15:11:59 +0800
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2026 00:27:09 -0700
+Message-ID: <8fc9e992-ae58-4354-9b21-6c5ac02824ee@linux.intel.com>
+Date: Wed, 15 Jul 2026 15:27:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,105 +52,69 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/6] perf mem: Add support for printing
- PERF_MEM_LVLNUM_L0
-To: Thomas Falcon <thomas.falcon@intel.com>, linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
-References: <20260714004359.179451-1-thomas.falcon@intel.com>
- <20260714004359.179451-3-thomas.falcon@intel.com>
+Subject: Re: [Patch v2 0/7] perf/x86: Miscellaneous PMU bug fixes and
+ optimizations
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
+ Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>
+References: <20260713082734.3162099-1-dapeng1.mi@linux.intel.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260714004359.179451-3-thomas.falcon@intel.com>
+In-Reply-To: <20260713082734.3162099-1-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-LGTM. Thanks.
-Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Hi Peter,
 
-On 7/14/2026 8:43 AM, Thomas Falcon wrote:
-> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Not sure if you have bandwidth to review the patch-set? This patchset fixes
+some recently found issues by Sashiko. Most of issues are error handling
+related. Thanks.
+
+
+On 7/13/2026 4:27 PM, Dapeng Mi wrote:
+> Changes since v1:
+> - Patch 3/7: Ensure cpuc->pmu is not the static pmu before calling
+>   hybrid_pmu(cpuc->pmu) in intel_pmu_cpu_dead() (Sashiko).
 >
-> Add support for printing PERF_MEM_LVLNUM_L0 in perf mem report.
+> This series fixes recently found x86 core PMU bugs. Most of bugs are
+> found by Sashiko in reviewing the "Support SIMD/eGPRs/SSP registers 
+> sampling for perf" patch-set, e.g.,
+> https://lore.kernel.org/all/20260706022123.480411F000E9@smtp.kernel.org/
+> https://lore.kernel.org/all/20260706021852.DE2ED1F000E9@smtp.kernel.org/
 >
-> Assisted-by: Sashiko:gemini-3.1-pro-preview
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> ---
->  tools/perf/Documentation/perf-record.txt | 2 +-
->  tools/perf/util/bpf-filter.l             | 1 +
->  tools/perf/util/mem-events.c             | 5 +++++
->  tools/perf/util/mem-events.h             | 1 +
->  4 files changed, 8 insertions(+), 1 deletion(-)
+> The last patch 7/7 optimizes ACR handling in match_prev_assignment() and
+> mitigate the performance overhead.
 >
-> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-> index 178f483140ed..b54032efe41c 100644
-> --- a/tools/perf/Documentation/perf-record.txt
-> +++ b/tools/perf/Documentation/perf-record.txt
-> @@ -212,7 +212,7 @@ OPTIONS
->  	The <value> can be one of:
->  	  <number> (for any term)
->  	  na, load, store, pfetch, exec (for mem_op)
-> -	  l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem (for mem_lvl)
-> +	  l0, l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem (for mem_lvl)
->  	  na, none, hit, miss, hitm, fwd, peer (for mem_snoop)
->  	  remote (for mem_remote)
->  	  na, locked (for mem_locked)
-> diff --git a/tools/perf/util/bpf-filter.l b/tools/perf/util/bpf-filter.l
-> index 6aa65ade3385..1be9df6550fc 100644
-> --- a/tools/perf/util/bpf-filter.l
-> +++ b/tools/perf/util/bpf-filter.l
-> @@ -131,6 +131,7 @@ store		{ return constant(PERF_MEM_OP_STORE); }
->  pfetch		{ return constant(PERF_MEM_OP_PFETCH); }
->  exec		{ return constant(PERF_MEM_OP_EXEC); }
->  
-> +l0		{ return constant(PERF_MEM_LVLNUM_L0); }
->  l1		{ return constant(PERF_MEM_LVLNUM_L1); }
->  l2		{ return constant(PERF_MEM_LVLNUM_L2); }
->  l3		{ return constant(PERF_MEM_LVLNUM_L3); }
-> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> index 4e490f9cd348..4fd48fd20055 100644
-> --- a/tools/perf/util/mem-events.c
-> +++ b/tools/perf/util/mem-events.c
-> @@ -391,6 +391,7 @@ static const char * const mem_lvlnum[] = {
->  	[PERF_MEM_LVLNUM_L4] = "L4",
->  	[PERF_MEM_LVLNUM_L2_MHB] = "L2 MHB",
->  	[PERF_MEM_LVLNUM_MSC] = "Memory-side Cache",
-> +	[PERF_MEM_LVLNUM_L0] = "L0",
->  	[PERF_MEM_LVLNUM_UNC] = "Uncached",
->  	[PERF_MEM_LVLNUM_CXL] = "CXL",
->  	[PERF_MEM_LVLNUM_IO] = "I/O",
-> @@ -831,6 +832,8 @@ int mem_stat_index(const enum mem_stat_type mst, const u64 val)
->  		}
->  	case PERF_MEM_STAT_CACHE:
->  		switch (src.mem_lvl_num) {
-> +		case PERF_MEM_LVLNUM_L0:
-> +			return MEM_STAT_CACHE_L0;
->  		case PERF_MEM_LVLNUM_L1:
->  			return MEM_STAT_CACHE_L1;
->  		case PERF_MEM_LVLNUM_L2:
-> @@ -915,6 +918,8 @@ const char *mem_stat_name(const enum mem_stat_type mst, const int idx)
->  		}
->  	case PERF_MEM_STAT_CACHE:
->  		switch (idx) {
-> +		case MEM_STAT_CACHE_L0:
-> +			return "L0";
->  		case MEM_STAT_CACHE_L1:
->  			return "L1";
->  		case MEM_STAT_CACHE_L2:
-> diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-> index 5b98076904b0..daa22748f9fe 100644
-> --- a/tools/perf/util/mem-events.h
-> +++ b/tools/perf/util/mem-events.h
-> @@ -109,6 +109,7 @@ enum mem_stat_op {
->  };
->  
->  enum mem_stat_cache {
-> +	MEM_STAT_CACHE_L0,
->  	MEM_STAT_CACHE_L1,
->  	MEM_STAT_CACHE_L2,
->  	MEM_STAT_CACHE_L3,
+> Tests:
+> Below test cases are run on Diamonds and Novalake. No issues are found.
+> - Perf stat test
+>   $ perf test 119
+> - Perf record tests 
+>   $ perf test 155
+> - Perf record LBR tests
+>   $ perf test 156
+>
+> History:
+> v1: https://lore.kernel.org/all/20260710065128.1799838-1-dapeng1.mi@linux.intel.com/
+>
+> Dapeng Mi (7):
+>   perf/x86: Unregister PMI handler on PMU init failure
+>   perf/x86: Free hybrid state on PMU init failure
+>   perf/x86: Guard intel_pmu_cpu_dead() against invalid hybrid PMU casts
+>   perf/x86/intel: Unwind cpuc state if PEBS buffer setup fails
+>   perf/x86: Remove stale fixed counter helper and fix hybrid PMU access
+>   perf/x86/intel: Fix intel_cap handling on hybrid PMUs
+>   perf/x86: Optimize ACR handling in match_prev_assignment()
+>
+>  arch/x86/events/core.c       | 45 +++++++++++++++++++-------
+>  arch/x86/events/intel/core.c | 61 ++++++++++++++++++++++++++----------
+>  arch/x86/events/perf_event.h | 12 ++-----
+>  3 files changed, 81 insertions(+), 37 deletions(-)
+>
+>
+> base-commit: edda9051e267b7390c7ce24b1b71434414ad156e
