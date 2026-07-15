@@ -1,120 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1130030C366;
-	Wed, 15 Jul 2026 07:27:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876414483B1;
+	Wed, 15 Jul 2026 11:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.40.148.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784100436; cv=none; b=KhdbE/qzTJnn1T8/cWvHrp4Wk1aJ0aBICJEncQloYb2zDNeOhwS9zAXpD1FFC0XQ/k8Ykxwa4+pEiqteJrP9BGvUt9qmGrDEvbOFuKAor3P4GEMYIfVViyizMVdlnSEn36fYb0q+FSr18qhMnsjminZKoEMgzK2h3lDfS82wJ2E=
+	t=1784114558; cv=none; b=pX03idJlzFw41MEM/bJERDlT7Y66SWZh7+8RrIBMHf45LUvFkMO3OqcZGptznQc7xKYejDeDUfKfLilj7LThrfJdX/8x4/Fc4S8CMDPdJuLc2+88rJB4JBgYQkIxHcjg8gyfinsaXMb/Rrm0y06ypWNAbdKUDvxRNoNmaZG/mIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784100436; c=relaxed/simple;
-	bh=GMiPxQhSMy8OY3/2b/6v2R33Zqdua6jnfdrz6S6J/rw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rY4zumOhzwLAcU1MwrQYmoVUXfE1ExrHR0RbTRkZUMDlE7sceBIuCJb2aoOZmep4QcJ6+xcMMQHcjMo9VTEO9VIXCo7U9/Tf570OtZLfv7JaQPqh3fRfFc1pNdI4ivZPqmVMo/H+7Si1tCKZ603UMsXh3Ti2sFQpmSnUGWFzS2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IFpKEI8N; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1784114558; c=relaxed/simple;
+	bh=paLY60KRj29oVMlzBB9uHqNmdYHfjVOCagkv9WxblgA=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=mM30+Vv1uSDxo2wIFhzh3ipMglktEM2TDYrGw8mh+CulpzfG3PhpkpYPbUAxA3KMWSFEKh+Vuc0msajYBGM1vVftRi5YQkHSh9l6oHnMqWpfwBnbz/v5PFaHYU6Vr88HcSC9q57/QIlfosBeBmLAzH67gf1JhfOdeQpYvNWvHtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=RU6ehpTF; arc=none smtp.client-ip=78.40.148.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IFpKEI8N"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784100433; x=1815636433;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GMiPxQhSMy8OY3/2b/6v2R33Zqdua6jnfdrz6S6J/rw=;
-  b=IFpKEI8NfB7VED1klaRkZuDzGBACEEBRJYpfJXF0dVA35tUiPySs5gAX
-   Ui/0ESazGmntfMZRIblL0Le4QQu8i7msylkxUFTW3RGOi9PKqGjmIwGrk
-   luSZCftJIz8obvtJQhy7Dhpqm1QYOZAqbSfw78nmIYZWglaYXoDnGNICZ
-   zJ7TgiQGUMXAJ/0G+BRGQpETHWwX8i5f0josddXW1VE5kAP0qNhpHe+xl
-   lzRPO6vJF73cMDWzZYnxytq6Xk8qx+BkVQvYG8E0m2kN5rhmYpNjl8Wqt
-   Yq0Pyvg8bZyNImTosD5o2VIgzqXyY8YrkpIGwHTZAiB8aFGBfnMfbULwK
-   g==;
-X-CSE-ConnectionGUID: aHFzVgPnT3emfKrLPmtAMA==
-X-CSE-MsgGUID: Zm1oAgYBS4GVNtF5JWFvXg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="96095623"
-X-IronPort-AV: E=Sophos;i="6.25,165,1779174000"; 
-   d="scan'208";a="96095623"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2026 00:27:11 -0700
-X-CSE-ConnectionGUID: 4BPwMo5eRsCY5fAcXqZ6cQ==
-X-CSE-MsgGUID: 9392uglRQwipTL9T3PZSRA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,165,1779174000"; 
-   d="scan'208";a="253476222"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.65]) ([10.124.232.65])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2026 00:27:09 -0700
-Message-ID: <8fc9e992-ae58-4354-9b21-6c5ac02824ee@linux.intel.com>
-Date: Wed, 15 Jul 2026 15:27:06 +0800
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="RU6ehpTF"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap5-20230908; h=Sender:Content-Transfer-Encoding:
+	Message-ID:References:In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:
+	Reply-To; bh=tLsRGD6ZEG0vyyRicAU5S0BQ59Bdz0F2XXwKAZKUVBw=; b=RU6ehpTF8h21qaH7
+	mOO0Ga9fPlFPAjb9BMI/eKBHpt8yEWJRHIl0eW8W99/Bp8CmySv2NH2dgvdMCR7vfViLIcJIf9twd
+	D7uGsN2JEIwbJpX1eZzkfcwY9QZ7krPI62IZhAyDYO8S3YY0Nk5oRaJQewVd+IjPpzLFeG4vbsTRI
+	YvfFTfI4RkAXuc4xaEoOfwc/cKOkEskEDgl5tmw6REi4cRK3ji259gNcwqXpqhaLQpnrptmwTUiHE
+	AjLzXv5BJFB93gl3J3CwZXwb/TR8LChGB17MohsqEi36VAXLr7/g/HV4PhFzHazhCfXMzi70rMfFW
+	E3IRSe60aRpNanwRYw==;
+Received: from ipa12.colo.codethink.co.uk ([78.40.148.178] helo=webmail.codethink.co.uk)
+	by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1wjxgg-00DbpV-1r; Wed, 15 Jul 2026 12:22:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 0/7] perf/x86: Miscellaneous PMU bug fixes and
- optimizations
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
- Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>
-References: <20260713082734.3162099-1-dapeng1.mi@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260713082734.3162099-1-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Date: Wed, 15 Jul 2026 12:22:03 +0100
+From: Nazar Kazakov <nazar.kazakov@codethink.co.uk>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter
+ <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Sandipan
+ Das <sandipan.das@amd.com>, Chun-Tse Shao <ctshao@google.com>, John Garry
+ <john.g.garry@oracle.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/3] perf jevents: Add more components to the metric
+ sorting order
+In-Reply-To: <20260707034019.241762-2-irogers@google.com>
+References: <20260707034019.241762-1-irogers@google.com>
+ <20260707034019.241762-2-irogers@google.com>
+Message-ID: <0cb89290ad307e4c1d020997a24a9662@codethink.co.uk>
+X-Sender: nazar.kazakov@codethink.co.uk
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Sender: nazar.kazakov@codethink.co.uk
 
-Hi Peter,
+On 2026-07-07 04:40, Ian Rogers wrote:
+> Nazar Kazakov reported non-deterministic builds due to the metrics
+> being reordered in the jevents.py output. The metrics were largely
+> only being sorted by name, add in the expressions and descriptions.
+> 
+> Reported-by: Nazar Kazakov <nazar.kazakov@codethink.co.uk>
+> Closes: 
+> https://lore.kernel.org/linux-perf-users/20260706175624.692736-1-nazar.kazakov@codethink.co.uk/
+> Fixes: 40769665b63d ("perf jevents: Parse metrics during conversion")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/pmu-events/jevents.py | 5 +++--
+>  tools/perf/pmu-events/metric.py  | 6 +++++-
+>  2 files changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/pmu-events/jevents.py 
+> b/tools/perf/pmu-events/jevents.py
+> index 376dc2d24162..3c6cfeefbd5d 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -570,13 +570,14 @@ static const struct pmu_table_entry 
+> {_pending_events_tblname}[] = {{
+>  def print_pending_metrics() -> None:
+>    """Optionally close metrics table."""
+> 
+> -  def metric_cmp_key(j: JsonEvent) -> Tuple[bool, str, str]:
+> +  def metric_cmp_key(j: JsonEvent) -> Tuple[str, str, str, str]:
+>      def fix_none(s: Optional[str]) -> str:
+>        if s is None:
+>          return ''
+>        return s
+> 
+> -    return (j.desc is not None, fix_none(j.pmu), 
+> fix_none(j.metric_name))
+> +    return (fix_none(j.pmu), fix_none(j.metric_name), 
+> j.metric_expr.ToPerfJson(),
+> +            fix_none(j.desc))
+> 
+>    global _pending_metrics
+>    if not _pending_metrics:
+> diff --git a/tools/perf/pmu-events/metric.py 
+> b/tools/perf/pmu-events/metric.py
+> index a91ccb5977f0..11c7162825f4 100644
+> --- a/tools/perf/pmu-events/metric.py
+> +++ b/tools/perf/pmu-events/metric.py
+> @@ -623,7 +623,11 @@ class Metric:
+> 
+>    def __lt__(self, other):
+>      """Sort order."""
+> -    return self.name < other.name
+> +    if self.name != other.name:
+> +      return self.name < other.name
+> +    if not self.expr.Equals(other.expr):
+> +      return self.expr.ToPerfJson() < other.expr.ToPerfJson()
+> +    return self.description < other.description
+> 
+>    def AddToMetricGroup(self, group):
+>      """Callback used when being added to a MetricGroup."""
 
-Not sure if you have bandwidth to review the patch-set? This patchset fixes
-some recently found issues by Sashiko. Most of issues are error handling
-related. Thanks.
+Tested-by: Nazar Kazakov <nazar.kazakov@codethink.co.uk>
 
+This fixes the non-reproducibility indeed, thank you!
+I haven't tested mypy patches as I've just cherry-picked this one.
 
-On 7/13/2026 4:27 PM, Dapeng Mi wrote:
-> Changes since v1:
-> - Patch 3/7: Ensure cpuc->pmu is not the static pmu before calling
->   hybrid_pmu(cpuc->pmu) in intel_pmu_cpu_dead() (Sashiko).
->
-> This series fixes recently found x86 core PMU bugs. Most of bugs are
-> found by Sashiko in reviewing the "Support SIMD/eGPRs/SSP registers 
-> sampling for perf" patch-set, e.g.,
-> https://lore.kernel.org/all/20260706022123.480411F000E9@smtp.kernel.org/
-> https://lore.kernel.org/all/20260706021852.DE2ED1F000E9@smtp.kernel.org/
->
-> The last patch 7/7 optimizes ACR handling in match_prev_assignment() and
-> mitigate the performance overhead.
->
-> Tests:
-> Below test cases are run on Diamonds and Novalake. No issues are found.
-> - Perf stat test
->   $ perf test 119
-> - Perf record tests 
->   $ perf test 155
-> - Perf record LBR tests
->   $ perf test 156
->
-> History:
-> v1: https://lore.kernel.org/all/20260710065128.1799838-1-dapeng1.mi@linux.intel.com/
->
-> Dapeng Mi (7):
->   perf/x86: Unregister PMI handler on PMU init failure
->   perf/x86: Free hybrid state on PMU init failure
->   perf/x86: Guard intel_pmu_cpu_dead() against invalid hybrid PMU casts
->   perf/x86/intel: Unwind cpuc state if PEBS buffer setup fails
->   perf/x86: Remove stale fixed counter helper and fix hybrid PMU access
->   perf/x86/intel: Fix intel_cap handling on hybrid PMUs
->   perf/x86: Optimize ACR handling in match_prev_assignment()
->
->  arch/x86/events/core.c       | 45 +++++++++++++++++++-------
->  arch/x86/events/intel/core.c | 61 ++++++++++++++++++++++++++----------
->  arch/x86/events/perf_event.h | 12 ++-----
->  3 files changed, 81 insertions(+), 37 deletions(-)
->
->
-> base-commit: edda9051e267b7390c7ce24b1b71434414ad156e
+Thanks,
+Nazar Kazakov
