@@ -1,160 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A6D01FBE90
-	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jul 2026 02:16:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 764D63093CF
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jul 2026 06:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784081803; cv=none; b=XQ1V74mY35fg6pk9lGRn6JrH+jYhSXgi0LbI98j+K51TjTOAAL0vvWqzh9fhbQiP+WGWXyDfJaQhXUhkOUnQ6C8VhkMbb4UibE8Mw4iSdDLek/3LozXltJYgaaB509i1s/a/7dniTaAzpaKkN+mk41N3w+O9u0W75PU6a6BxK3U=
+	t=1784095796; cv=none; b=K7n7fdDcA2X8HWt8G+vYCBmNheNdnROzXa0UMxLeamtztA5wInK1eN7x7KPWEKdLRFjK4vJuw/K2luMuzkabFCKD9K+O6P9xUOuspk5sBQWxXzTbldnNcXp4gK7B4RR4qWrEVdzz02LG0LLJsGex6Gm2qnK/i/jlHTRPt6Ae+30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784081803; c=relaxed/simple;
-	bh=MXybX/E8/hq+V6D9xCYy/4RrD5UaZ4rlzG7JuhApWug=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=WEo1Ovxx+6AmMGzqnMA/k2Ghy+lTEvHZk/put1xemsO7sUH2iR0h0G8/KvVaMIKF7vWjyoCS7Q/ulnyOxgAqLoYvJ5z9qd3FIPXQDSUnFa5mpw2AJn0sld7pcbuRKnCoN4o4TXps70fmdLZsh/za88FWrpKkS48Xj6dNCC1O5eE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUtBqLHg; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784095796; c=relaxed/simple;
+	bh=7OxzrEp3Uph1BCupSIr8N9UDD4zAcSCrSYHlYWLoJOU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VDQw7t6V8xIw++30HUR0LijJNhNouQDQ3GkX0BcjmPmmJUa+4dQoJaC1/aE6wagpyQ6J+50ZB8JIlNd4b4O2s42BUgX8ADSu5Hbacatl93yalczyv/pv5nH6TjGlwj7ITUSPu/wUHeDOJGm+II8LQkobAkTyuFkZxjKweUNr23w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=otMDBys/; arc=none smtp.client-ip=209.85.222.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUtBqLHg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3D691F000E9;
-	Wed, 15 Jul 2026 02:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784081801;
-	bh=ZpDUebz3hW3/h3yMUGbxOvVIpJX+bjBzth32z/Uo9sI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VUtBqLHgypWO2gDUMpN/uFjbq4pZeIzaTYEsIqnvLZDZUhe5Zyg8Tz3/eWB+rgNRC
-	 i3rH+8ObomJgf+GLwB+GjAVaaAPFVcYcyd6M7mksi9LLmmNnatV36Qy8Oy5AFw7YtV
-	 tvv6pbeE40KzlkLHPG/Qyh2LSeym086+nlF6tnPZPcmaS6pIf+M1rhiOadQWLjiMpY
-	 afkzuV4X83VevQdNS4XV57Jx76fFTfkABQkd+SD2WY8UUA5qu931ve02nxbbYxVx/w
-	 Rl1go8OFVy2KXzHnAtVLV2UAzsKTJCkV4/u7WUsiTyVrqQ8CBzYCLq7CQnhsoAubBi
-	 UxwS7Jv0kkHAQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 10/10] selftests: ftrace: Add wprobe trigger testcase
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <178407995495.95826.11582585035165074036.stgit@devnote2>
-References: <178407983818.95826.12714571928538799781.stgit@devnote2>
- <178407995495.95826.11582585035165074036.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 15 Jul 2026 02:16:41 +0000
-Message-Id: <20260715021641.B3D691F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="otMDBys/"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-9217d13c276so335855485a.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 14 Jul 2026 23:09:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784095792; x=1784700592; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ap/ZWoF+KZdLbcGYr44YI42fQGqxWw5khi4hfnBFVEw=;
+        b=otMDBys/Bks0jEHGsAvXZpXaFz7hbccWpIXkNDKbiNDxe5suMy8ygPnUWjY0YHAFjC
+         t86drEEk9lclnKWtwEzvcuM9lWattRFJgT9NpBH/JlFs6Nn0/OPcp8jDMFpU7RvL5Yv2
+         hRVluy+Y+FTr7vqRFWpPX6v6/zJsx7zYOnJVxViqsEVeHyDyNEcc0Ao9MB1TSTC0dYVT
+         k+P+7PZdiFfWOslzE+ckIIZCBdRKkz/zRFn3NOHUPTAAqBraFsuptJeQ5Nd52P87rGj6
+         co3gnTekgAUrZkLrctvt0db1J+pbbaP0trsfj2fJWKlW4eGM1ZwFf03SYivu+23J45sa
+         1Gww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784095792; x=1784700592;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ap/ZWoF+KZdLbcGYr44YI42fQGqxWw5khi4hfnBFVEw=;
+        b=iXF44WX7iUxTUOhUDySZd5t9fGbygVn4YGU3MnxA6HIv2+/I8IVPbJInLk5L7OaRhD
+         QsPtBCkuAwkqAboesU0KIWN4Gkvv0IdwtFea1t0ceKTzWYxaHxk7rVpaoZDWQdLhAf/Y
+         h5dlcAxVGqys+CQXrwk5meQDcGJPOQleKB6mPjTWP0wxqho6+tmPnXBzOfNf4rE2Lc17
+         a3+HKttwuvDXt9ZTte+le7dcsAAhynM57NkO7AH+BwO6XoGIh3xdRA/E1yubWte71vTp
+         +89/0hXqZGiQHowYb9KVvLiFC0nfIAQNHNUpt+RGW+AJ4udZPWAdp1453zw8zyJmSEGw
+         P2NA==
+X-Forwarded-Encrypted: i=1; AHgh+RphPuOPmeiM6ZvfiZbTWYWqdY8EwVbW/qws3tw+ZYKc92WT5S0Sa+uEFLB9N1nhrnTT1BXzJ+mSnyoMhPMk0Bwp@vger.kernel.org
+X-Gm-Message-State: AOJu0YzxHI4FIY9bDfw9kZmBLLB+Y34kav9rgQaJYnvDkBRYmi+e3Mia
+	cTpzJiOViqargaDWMNJDnP3Dc5LdR6DjMsFA4/38kFMPVX3sWOAYTBXj
+X-Gm-Gg: AfdE7cnnQOtBfF2+oBhe0JJq3XXfIwjbbhc25tzWmg7HyO07KOCBIpvlROrGzZtb7Iw
+	fX5M/4NlRBXOSJoW3eyx+V21BzYtO/ePltXGyp3lKGZDmRGCYoIS2IPwl2IJxTtpsAIkYSFNKQ7
+	AeqwaWSUH32Cjdt2RxxozV7iE20EXuGMiKD/cpur9MVbRjWWvjE2+UmPjfnAS035hk+tEf9dBKo
+	dGjYnNqNhPltMtruWFfTsg8ZmlpIn8n1MKisGIkCZX15C0fMPRKQZcDS3WBgiYatWqZ0PhA5Cpt
+	+ypy0zVBMdBwIqXGhrF+ju1876sOVqg60cJPZF7o74xlb9kMQzWAuNmw4VuHelx/KUT/8GR075o
+	kUz0w09TrKKA/A3tBpnhRrJ9EFtQP2lKxRmOAzPl4ZXtivaOOZJerY6Q7zfnKS5CliyxX84Y8td
+	2ln0pLLvI+1IO8amOUe6xJeuWe4Cp8WMqMTggubJSwUNz2XrxTP9yyXrT1vfnfozBiDQ==
+X-Received: by 2002:a05:620a:7083:b0:914:b9a2:f29d with SMTP id af79cd13be357-93083c95a80mr670626385a.37.1784095792251;
+        Tue, 14 Jul 2026 23:09:52 -0700 (PDT)
+Received: from [198.18.0.1] ([48.45.163.146])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-930759c63fbsm589045485a.22.2026.07.14.23.09.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Jul 2026 23:09:51 -0700 (PDT)
+Message-ID: <bc580a14-bd65-4ec4-a27c-fb81d800dccd@gmail.com>
+Date: Wed, 15 Jul 2026 02:09:39 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 08/13] mm/kwatch: add hardware breakpoint backend
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ David Hildenbrand <david@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Matthew Wilcox <willy@infradead.org>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20260714182243.10687-1-wangjinchao600@gmail.com>
+ <20260714183206.12688-1-wangjinchao600@gmail.com>
+ <20260714171438.226faf7b@gandalf.local.home>
+Content-Language: en-US
+From: Jinchao Wang <wangjinchao600@gmail.com>
+In-Reply-To: <20260714171438.226faf7b@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-- [High] Permanent leak of trigger_data and wprobe_data when unregistering =
-a wprobe trigger.
-- [Medium] The selftest fails to declare its dependency on fprobe in the `#=
- requires` directive, causing test failures on unsupported kernels.
-- [Low] The test uses a hardcoded path `/tmp/hoge` for triggering file oper=
-ations, leading to test brittleness.
-- [Low] The test hooks a static function `dentry_kill` without checking its=
- presence in `available_filter_functions`.
---
+On 7/14/2026 5:14 PM, Steven Rostedt wrote:
+> On Wed, 15 Jul 2026 02:32:06 +0800
+> Jinchao Wang <wangjinchao600@gmail.com> wrote:
+> 
+>> --- /dev/null
+>> +++ b/include/trace/events/kwatch.h
+>> @@ -0,0 +1,57 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#undef TRACE_SYSTEM
+>> +#define TRACE_SYSTEM kwatch
+>> +
+>> +#if !defined(_TRACE_KWATCH_H) || defined(TRACE_HEADER_MULTI_READ)
+>> +#define _TRACE_KWATCH_H
+>> +
+>> +#include <linux/tracepoint.h>
+>> +#include <linux/ptrace.h>
+>> +
+>> +#define KWATCH_STACK_DEPTH 8
+>> +
+>> +struct trace_seq;
+>> +const char *kwatch_trace_print_stack(struct trace_seq *p,
+>> +				     const unsigned long *stack,
+>> +				     unsigned int nr);
+>> +
+>> +TRACE_EVENT(kwatch_hit,
+>> +	TP_PROTO(unsigned long ip, unsigned long sp, unsigned long addr,
+>> +		 u64 time_ns,
+>> +		 unsigned long *stack_entries, unsigned int stack_nr),
+>> +	TP_ARGS(ip, sp, addr, time_ns, stack_entries, stack_nr),
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__field(unsigned long, ip)
+>> +		__field(unsigned long, sp)
+>> +		__field(unsigned long, addr)
+>> +		__field(u64, time_ns)
+> 
+> Move the time_ns to the first field, as unsigned long on 32 bit
+> architectures is 4 bytes, and this will make 4 byte "hole" in the event.
+Will fix in v2.> 
+> 
+>> +		__field(unsigned int, stack_nr)
+> 
+> Make stack_nr the last element for the same reason.
 
---- Patch [10]: [PATCH v7 10/10] selftests: ftrace: Add wprobe trigger test=
-case ---
-commit 3a609968e71e94ce3399d95a2f00d2d3b0974ab0
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Will fix in v2.
 
-selftests: ftrace: Add wprobe trigger testcase
+> 
+>> +		__array(unsigned long, stack, KWATCH_STACK_DEPTH)
+> 
+> Make the above a dynamic array based on stack entries.
+> 
+> 		__dynamic_array(unsigned long, stack, min_t(unsigned int, stack_nr,
+> 			  KWATCH_STACK_DEPTH);
 
-This commit adds a testcase to check the wprobe trigger functionality.
-It sets set_wprobe and clear_wprobe triggers on fprobe events to watch
-dentry access, validating features that depend on both wprobe and fprobe.
+Much better than always paying for the full depth - will convert to
+__dynamic_array (and use __get_dynamic_array() in TP_fast_assign and
+TP_printk as you showed) in v2.
 
-[Severity: High]
-While not part of this commit's diff, there appears to be a regression
-associated with the wprobe trigger registration tested here.
+Thank you for the review!
 
-In kernel/trace/trace_wprobe.c:wprobe_trigger_cmd_parse():
+Thanks,
+Jinchao
 
-	ret =3D event_trigger_register(cmd_ops, file, glob, trigger_data);
-	if (ret) {
-		event_trigger_reset_filter(cmd_ops, trigger_data);
-		trace_event_enable_disable(wprobe_file, 0, 1);
-		return ret;
-	}
-	/* Make it NULL to avoid freeing trigger_data and wprobe_data by __free() =
-*/
-	trigger_data =3D NULL;
-	wprobe_data =3D NULL;
+> 
+> 
+>> +	),
+>> +
+>> +	TP_fast_assign(
+>> +		unsigned int i;
+> 		unsigned long *stack = __get_dynamic_array(stack);
+>> +
+>> +		__entry->ip = ip;
+>> +		__entry->sp = sp;
+>> +		__entry->addr = addr;
+>> +		__entry->time_ns = time_ns;
+>> +		__entry->stack_nr = min_t(unsigned int, stack_nr,
+>> +					  KWATCH_STACK_DEPTH);
+>> +		for (i = 0; i < __entry->stack_nr; i++)
+>> +			__entry->stack[i] = stack_entries[i];
+> 
+> 			stack[i] = stack_entries[i];
+> 
+>> +	),
+>> +
+>> +	TP_printk("KWatch HIT: time=%llu.%06lu ip=%pS addr=0x%lx%s",
+>> +		  __entry->time_ns / 1000000000ULL,
+>> +		  (unsigned long)((__entry->time_ns / 1000ULL) % 1000000ULL),
+>> +		  (void *)__entry->ip, __entry->addr,
+>> +		  kwatch_trace_print_stack(p, __entry->stack,
+> 
+> 		  kwatch_trace_print_stack(p, __get_dynamic_array(stack),
+> 
+>> +					   __entry->stack_nr))
+>> +);
+>> +
+> 
+> -- Steve
 
-	return 0;
-
-Does this code permanently leak the trigger_data and wprobe_data structures
-when unregistering a wprobe trigger?
-
-The successful path returns without calling event_trigger_free(trigger_data=
-),
-stranding the reference count at 2.
-
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe=
-.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
-> new file mode 100644
-> index 0000000000000..cc7a0532d7ff8
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
-> @@ -0,0 +1,48 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# description: event trigger - test wprobe trigger
-> +# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<le=
-n>]":README events/sched/sched_process_fork/trigger
-
-[Severity: Medium]
-Will this script fail with an error exit code on environments without
-fprobe support, rather than gracefully skipping the test?
-
-The test relies on fprobe (f:), but does not declare this dependency in the
-# requires directive.
-
-Without this requirement, the ftracetest runner will try to write f:truncate
-to dynamic_events on kernels configured with CONFIG_WPROBE_EVENTS=3Dy but
-without CONFIG_FPROBE_EVENTS, causing the test to fail.
-
-> +
-> +echo 0 > tracing_on
-> +
-> +:;: "Add a wprobe event used by trigger" ;:
-> +echo 'w:watch rw@0:8 address=3D$addr value=3D+0($addr)' > dynamic_events
-> +
-> +:;: "Add events for triggering wprobe" ;:
-> +echo 'f:truncate do_truncate dentry=3D$arg2' >> dynamic_events
-> +echo 'f:dentry_kill dentry_kill dentry=3D$arg1' >> dynamic_events
-
-[Severity: Low]
-Is it safe to assume the static function dentry_kill is always available
-for tracing?
-
-The script attaches an fprobe to dentry_kill without checking if it exists =
-in
-available_filter_functions.
-
-If the compiler aggressively inlines or eliminates dentry_kill, the fprobe
-creation will fail and abort the test.
-
-[ ... ]
-
-> +:;: "Start test workload" ;:
-> +echo 1 >> tracing_on
-> +
-> +echo aaa > /tmp/hoge
-> +echo bbb > /tmp/hoge
-> +echo ccc > /tmp/hoge
-> +rm /tmp/hoge
-
-[Severity: Low]
-Could this hardcoded path cause unexpected failures if /tmp/hoge already
-exists, is owned by another user, or if tests run in parallel?
-
-The test writes to a fixed global path instead of relying on the isolated
-$TMPDIR standard within ftracetest.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178407983818.95826.=
-12714571928538799781.stgit@devnote2?part=3D10
