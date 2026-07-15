@@ -1,167 +1,262 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E1C395AF5;
-	Wed, 15 Jul 2026 20:07:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9744A0C
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jul 2026 20:30:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784146060; cv=none; b=NyhqIRyaB5jUCV/DelkQbmolj8in795CYjUU4pwKZWVE1THbVulRZgSE3rqAg/aNi/O3s6unSM8AlIE6qm9wnTCInjYNLB/xqAphiCqPW+znhMhXbxgjx7cm2HY5IlO/Nn3MR5qOld1EKn3wIRvLfkFl1wcQa0hP/kmVZRyv2gs=
+	t=1784147460; cv=none; b=gV2jn4D9bBP/+fTgY4RqKbUaO3lnxoqadJ6csZFd513L67bseizzZR5BtZeopwRxNEVwZxQs6QZVxbVv01M+pcSWr8dBsVgOLtJ/wkfK8PNlwFbj5Wh2cnLJtDW0IDSgZhVrMNLGOf/geks3P4PAPHM1PbnAZlOJcmBvdbHVejI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784146060; c=relaxed/simple;
-	bh=F3SFr5brgqcEl/ySD/OLX1l0nukwaoO7RUJUyX0CsYQ=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=XQJyvyLheT2D1HsaZLiEiW8DqnUEAsHt1TmBIRkfbtijVy7MVKr9khj2mDr6Q6WMB3pJxQ5LBjTu38psQdG+1Oese86noKcyFWRX0m1hwppP63HquXuvXsQeXV0Bg8b9SKSlO0wrLdIqpLZfxl8LwdpuF+plHDiQKCLbYN0UfS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lEib2G7g; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784147460; c=relaxed/simple;
+	bh=Cc7q1aV6D9RJp9nnMDZNoSJiisXV5MrqNJpCytO0yb0=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=QeNPtoiIQBLZwWVe/Z55Fnod2kFzOkLxV7BiLf2yPjJjBB5MUwP1NEIWqLPogATIP8DdCuS1Zd7lu+PbRoscdmZ2CjsVc9Wo8pxr0OIa3VRwM2NPlfuFoag7UHY3yny4S79qfC+0nHoFCkZDQ1NNh1Mlj+ZKl7BIi29rgRcIEDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vFwUjq9x; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lEib2G7g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 752801F000E9;
-	Wed, 15 Jul 2026 20:07:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784146058;
-	bh=4O9RsrXMZkTT74INtHWJeLGYsnB7XL033aH/Eg1rVE0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lEib2G7gOcLGEfiNd3lwYAI2TbidPxTURPSJT78+hB4YOkYu6NML6QUlQAvQEISKP
-	 ndNUpEX/97iHwuefzEhlVcstNpFvUg81Wn/r7buNWE131RHelw/85/FBr2uuQlpljC
-	 2gYMREhLzlkWC/F3FYaNTJKv4GxM+ddsqHdgx+0QuiuUKI9bA8hLvC0m/ZVuwomX2Y
-	 /Vd+oH1zoxZYGy7Jy7VBx0AspjNdz9xTQNGSIqeJyx8K4y2+5zPZQB1Ytw0Smx+fft
-	 5y1DCf1jAcALNvYDh00x7OP5/95YfA2MqCGIS9EOKYiRAZVxLT70PeGXNxDnGrJAE/
-	 bjBDZvz4lSEpQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 1/3] perf/cxlpmu: Fix 64-bit write to 32-bit HDM
- filter register
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Davidlohr Bueso" <dave@stgolabs.net>
-Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260715191454.459673-2-dave@stgolabs.net>
-References: <20260715191454.459673-1-dave@stgolabs.net>
- <20260715191454.459673-2-dave@stgolabs.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 15 Jul 2026 20:07:37 +0000
-Message-Id: <20260715200738.752801F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vFwUjq9x"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-ca124bf0189so865417a12.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jul 2026 13:30:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784147458; x=1784752258; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=vZVHf6eclqEMpYBsawja8gmROgN0BYtvnwqT7xM1FQw=;
+        b=vFwUjq9xGJ24B4dt0ZjMP/0OsecQNIxnUTOsDLVCiRMgbDoV+5eOu85T0kkh5B0aBi
+         91UlSgXkmKfNFaQnPgvQQXdlI3nFLfNdC6KCxRU58ForeTPTEp0lv9khuD2AuB5qw4EQ
+         ZoL3S3JDj/mM9uFZxaNpzYDSmdVlZpCcraNE4VuRqsiI8TECWaaFzIB+Sb6VigegOiZ9
+         zX0hU1RNnHN47o/8/rZKxUkq6wHE0S8D6v5wm5Ul9nACLDpi3ZfyJPySUdZ/jbJoGwdS
+         6Rt7QlIpz5ucwIQwJEydxXQ6EohybMmXLV9XjFCfnAFdis2ojNFft+jTr/Zr6MiWV2zs
+         VvRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784147458; x=1784752258;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=vZVHf6eclqEMpYBsawja8gmROgN0BYtvnwqT7xM1FQw=;
+        b=C31+CAUkejVNNgIFQbqcLpw7NArEjvidfCgqUO8PZfQlWPDD/yOReyoi71b3ABydnK
+         bSg3eEuZXQOirabY9W4SZJMB7l265u8+71FqbNUX0MmcBDJIuYyO+Lojg20AAlGQd1eg
+         Re39SYYG6XO8U72Q0fWXFPVsNaxWtsWy82uHnfHzrhkRAEwvzaNSt2EhaCuwDT1f8X8F
+         Ks0L06yrVKUSqambqT2e7eN4E5ce63TPZ9wVB/hgoh3hyNi4LTwRCzU/FQbZkYP86bjn
+         czRRe50ia8G9Y+Mf/+EGyBa8UsZi4vE5GvLqyB3Yqmi3r9flxKt0mYwV5TTnhpPvX/vt
+         LWwQ==
+X-Forwarded-Encrypted: i=1; AHgh+RotYOcBwixv5MlJc4hIjZzDqKATo7plVPHymbAfaCqTXyzy1M6L5d1VJKL6DTrw5R+ZoAQDEdaW54nJuh3OSv6T@vger.kernel.org
+X-Gm-Message-State: AOJu0YwwwMKi2lrq59mieao2doABhFA+f0xcV7GqA7cwS7tGFfvcGf6S
+	7p69usjMjakRMxXL0w044uxvQIrkmcufyc4ajGEQ34NQEoMavC94Oov+XGaEV/9xU5LVhcY8xc5
+	JmJ+RJg==
+X-Received: from pgcv15.prod.google.com ([2002:a05:6a02:530f:b0:c91:7774:1541])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:d502:b0:3c3:6d49:9c29
+ with SMTP id adf61e73a8af0-3c384c0f335mr794022637.27.1784147457942; Wed, 15
+ Jul 2026 13:30:57 -0700 (PDT)
+Date: Wed, 15 Jul 2026 13:30:55 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.141.g00534a21ce-goog
+Message-ID: <20260715203055.2981363-1-ctshao@google.com>
+Subject: [PATCH v2] perf stat: Include PMU name and split uncore events per
+ PMU in metric-only JSON output
+From: Chun-Tse Shao <ctshao@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Chun-Tse Shao <ctshao@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+When running `perf stat` with `-A` (--no-aggr) and `--metric-only` in
+JSON output mode (`-j`), `perf stat` evaluates metric expressions
+across all matching PMUs (including uncore PMUs like `uncore_iio_0`,
+`uncore_iio_1`, etc.).
 
-Pre-existing issues:
-- [High] The driver updates the counter configuration register using bitwis=
-e OR without first clearing the relevant fields, causing stale bits to accu=
-mulate from previous events.
-- [High] The CPU hotplug instance is removed after the PMU is unregistered =
-during driver teardown, causing a Use-After-Free if a CPU goes offline conc=
-urrently.
-- [High] The `cxl_pmu_get_event_idx` function fails to set the `event_idx` =
-output parameter for configurable counters, resulting in silently measuring=
- the wrong events.
+However, `perf stat` previously formatted JSON output by printing only
+"cpu" : "<id>" and grouping all metric values on a single line per CPU
+without identifying which PMU instance evaluated each metric. As a
+result, when an uncore event spans multiple PMU boxes, `perf stat`
+printed repeated, ambiguous metric keys without PMU names.
+
+Fix this by:
+1. Including "pmu" : "<pmu_name>" in print_aggr_id_json when evsel->pmu
+   is a non-core or hybrid PMU in AGGR_NONE mode (-A).
+2. Starting a new JSON metric line in AGGR_NONE mode (-A) whenever the
+   underlying PMU instance changes across PMU events.
+3. Updating perf_json_output_lint.py to recognize the new "pmu" key in
+   the JSON test suite.
+
+Example output:
+  $ perf stat -M iio_bandwidth_read -a -A --metric-only -j -I 1000
+  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_0", "MB/s  iio_bandwidth_read" : "0.0"}
+  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_1", "MB/s  iio_bandwidth_read" : "0.1"}
+  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_11", "MB/s  iio_bandwidth_read" : "0.0"}
+  ...
+  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_0", "MB/s  iio_bandwidth_read" : "0.0"}
+  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_1", "MB/s  iio_bandwidth_read" : "0.0"}
+  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_11", "MB/s  iio_bandwidth_read" : "0.0"}
+
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+Assisted-by: Gemini:gemini-3.1-pro-preview
+---
+
+v2:
+  - Fix print_metric_begin() initialization in print_no_aggr_metric()
+    to ensure tool events always open lines cleanly.
+  - Simplify and fix PMU line-split transition tracking when switching
+    between different PMU instances or transitioning from tool events.
+  - Add bounds check on aggr_map index in print_no_aggr_metric() to
+    prevent out-of-bounds array reads if sysfs CPU topology is incomplete.
+
+v1: lore.kernel.org/20260714174052.1826692-1-ctshao@google.com
+
+ .../tests/shell/lib/perf_json_output_lint.py  |  1 +
+ tools/perf/util/stat-display.c                | 48 ++++++++++++++-----
+ 2 files changed, 37 insertions(+), 12 deletions(-)
+
+diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+index dafbde56cc76..36767905fcdb 100644
+--- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
++++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+@@ -64,6 +64,7 @@ def check_json_output(expected_items):
+       'metric-threshold': lambda x: x in ['unknown', 'good', 'less good', 'nearly bad', 'bad'],
+       'metricgroup': lambda x: True,
+       'node': lambda x: True,
++      'pmu': lambda x: True,
+       'pcnt-running': lambda x: isfloat(x),
+       'socket': lambda x: True,
+       'thread': lambda x: True,
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index f94f1324d24a..61d634f8be2e 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -397,6 +397,8 @@ static void print_aggr_id_json(struct perf_stat_config *config, struct outstate
+ 			json_out(os, "\"cpu\" : \"%d\"",
+ 				id.cpu.cpu);
+ 		}
++		if (evsel && evsel->pmu && (!evsel->pmu->is_core || evsel__is_hybrid(evsel)))
++			json_out(os, "\"pmu\" : \"%s\"", evsel->pmu->name);
+ 		break;
+ 	case AGGR_THREAD:
+ 		json_out(os, "\"thread\" : \"%s-%d\"",
+@@ -1009,11 +1011,12 @@ static void print_counter_aggrdata(struct perf_stat_config *config,
+
+ static void print_metric_begin(struct perf_stat_config *config,
+ 			       struct evlist *evlist,
+-			       struct outstate *os, int aggr_idx)
++			       struct outstate *os, int aggr_idx,
++			       struct evsel *counter)
+ {
+ 	struct perf_stat_aggr *aggr;
+ 	struct aggr_cpu_id id;
+-	struct evsel *evsel;
++	struct evsel *evsel = counter ?: evlist__first(evlist);
+
+ 	os->first = true;
+ 	if (!config->metric_only)
+@@ -1028,7 +1031,6 @@ static void print_metric_begin(struct perf_stat_config *config,
+ 		else
+ 			fprintf(config->output, "%s", os->timestamp);
+ 	}
+-	evsel = evlist__first(evlist);
+ 	id = config->aggr_map->map[aggr_idx];
+ 	aggr = &evsel->stats->aggr[aggr_idx];
+ 	aggr_printout(config, os, evsel, id, aggr->nr);
+@@ -1066,7 +1068,7 @@ static void print_aggr(struct perf_stat_config *config,
+ 	 * Without each counter has its own line.
+ 	 */
+ 	cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
+-		print_metric_begin(config, evlist, os, aggr_idx);
++		print_metric_begin(config, evlist, os, aggr_idx, NULL);
+
+ 		evlist__for_each_entry(evlist, counter) {
+ 			print_counter_aggrdata(config, counter, aggr_idx, os);
+@@ -1092,7 +1094,7 @@ static void print_aggr_cgroup(struct perf_stat_config *config,
+ 		os->cgrp = evsel->cgrp;
+
+ 		cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
+-			print_metric_begin(config, evlist, os, aggr_idx);
++			print_metric_begin(config, evlist, os, aggr_idx, NULL);
+
+ 			evlist__for_each_entry(evlist, counter) {
+ 				if (counter->cgrp != os->cgrp)
+@@ -1128,7 +1130,8 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+
+ 	perf_cpu_map__for_each_cpu(cpu, all_idx, evlist__core(evlist)->user_requested_cpus) {
+ 		struct evsel *counter;
+-		bool first = true;
++		struct perf_pmu *last_pmu = NULL;
++		bool line_open = false;
+
+ 		evlist__for_each_entry(evlist, counter) {
+ 			u64 ena, run, val;
+@@ -1143,13 +1146,34 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+ 				if (config->aggr_map->map[aggr_idx].cpu.cpu == cpu.cpu)
+ 					break;
+ 			}
++			if (aggr_idx >= config->aggr_map->nr)
++				continue;
+
+ 			os->evsel = counter;
+ 			os->id = aggr_cpu_id__cpu(cpu, /*data=*/NULL);
+-			if (first) {
+-				print_metric_begin(config, evlist, os, aggr_idx);
+-				first = false;
++
++			if (config->metric_only) {
++				struct perf_pmu *pmu = counter->pmu;
++
++				if (!evsel__is_tool(counter)) {
++					if (config->json_output && line_open &&
++					    (!last_pmu || pmu != last_pmu)) {
++						print_metric_end(config, os);
++						line_open = false;
++					}
++					if (!line_open) {
++						print_metric_begin(config, evlist, os,
++								   aggr_idx, counter);
++						line_open = true;
++					}
++					last_pmu = pmu;
++				} else if (!line_open) {
++					print_metric_begin(config, evlist, os,
++							   aggr_idx, counter);
++					line_open = true;
++				}
+ 			}
++
+ 			val = ps->aggr[aggr_idx].counts.val;
+ 			ena = ps->aggr[aggr_idx].counts.ena;
+ 			run = ps->aggr[aggr_idx].counts.run;
+@@ -1157,7 +1181,7 @@ static void print_no_aggr_metric(struct perf_stat_config *config,
+ 			uval = val * counter->scale;
+ 			printout(config, os, uval, run, ena, 1.0, aggr_idx);
+ 		}
+-		if (!first)
++		if (line_open)
+ 			print_metric_end(config, os);
+ 	}
+ }
+@@ -1520,7 +1544,7 @@ static void print_cgroup_counter(struct perf_stat_config *config, struct evlist
+ 				print_metric_end(config, os);
+
+ 			os->cgrp = counter->cgrp;
+-			print_metric_begin(config, evlist, os, /*aggr_idx=*/0);
++			print_metric_begin(config, evlist, os, /*aggr_idx=*/0, NULL);
+ 		}
+
+ 		print_counter(config, counter, os);
+@@ -1570,7 +1594,7 @@ void evlist__print_counters(struct evlist *evlist, struct perf_stat_config *conf
+ 		} else if (config->cgroup_list) {
+ 			print_cgroup_counter(config, evlist, &os);
+ 		} else {
+-			print_metric_begin(config, evlist, &os, /*aggr_idx=*/0);
++			print_metric_begin(config, evlist, &os, /*aggr_idx=*/0, NULL);
+ 			evlist__for_each_entry(evlist, counter) {
+ 				print_counter(config, counter, &os);
+ 			}
 --
+2.55.0.141.g00534a21ce-goog
 
---- Patch [1]: [PATCH v4 1/3] perf/cxlpmu: Fix 64-bit write to 32-bit HDM f=
-ilter register ---
-commit 1a1b5ade4d63271a0649378648434d5656079fd5
-Author: Davidlohr Bueso <dave@stgolabs.net>
-
-perf/cxlpmu: Fix 64-bit write to 32-bit HDM filter register
-
-The HDM decoder filter configuration register is 32 bits wide, but the
-driver programs it with a 64-bit writeq(). The filter value never
-exceeds 32 bits, so the upper half of the write is always zero and
-lands in the adjacent Filter ID 1 (Channel/Rank/Bank) configuration
-register at offset+4.
-
-> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index 68a54d97d2a8a..39b46550a5109 100644
-> --- a/drivers/perf/cxl_pmu.c
-> +++ b/drivers/perf/cxl_pmu.c
-> @@ -635,7 +635,7 @@ static void cxl_pmu_event_start(struct perf_event *ev=
-ent, int flags)
->  			cfg =3D cxl_pmu_config2_get_hdm_decoder(event);
->  		else
->  			cfg =3D GENMASK(31, 0); /* No filtering if 0xFFFF_FFFF */
-> -		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
-> +		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
->  	}
-> =20
->  	cfg =3D readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
->  	cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK,
->  			  hwc->event_base);
->  	cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENTS_MSK,
->  			  cxl_pmu_config_get_mask(event));
-
-[Severity: High]
-This is a pre-existing issue, but does this bitwise OR accumulate stale bits
-from previous events?
-
-When setting CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK and
-CXL_PMU_COUNTER_CFG_EVENTS_MSK, the fields are not cleared first. If a new
-event is allocated to a previously used counter, it seems it will inherit
-the old event's bits, resulting in a bitwise OR of both events.
-
-Should the relevant masks be cleared before applying the new fields to prev=
-ent
-incorrect statistics?
-
-
-While reviewing this, I also noticed a few other pre-existing issues in
-this file that might need addressing:
-
-> drivers/perf/cxl_pmu.c:cxl_pmu_get_event_idx() {
-> [ ... ]
-> 		if (test_bit(i, info->conf_counter_bm) &&
-> 		    test_bit(i, info->used_counter_bm)) {
-> 			*counter_idx =3D i;
-> 			return 0;
-> 		}
-> [ ... ]
-> }
-
-[Severity: High]
-This isn't a bug introduced by this patch, but are we missing an assignment
-to the event_idx output parameter here?
-
-When a configurable counter is matched, *counter_idx is set, but it
-appears *event_idx is omitted.
-
-Since the caller initializes event_idx to 0, does this mean the counter
-will always be programmed to count the event group at index 0, silently
-ignoring the requested event group?
-
-
-> drivers/perf/cxl_pmu.c:cxl_pmu_probe() {
-> [ ... ]
-> 	rc =3D cpuhp_state_add_instance(cxl_pmu_cpuhp_state_num, &info->node);
-> 	if (rc)
-> 		return rc;
->=20
-> 	rc =3D devm_add_action_or_reset(dev, cxl_pmu_cpuhp_remove, info);
-> 	if (rc)
-> 		return rc;
->=20
-> 	rc =3D perf_pmu_register(&info->pmu, info->pmu.name, -1);
-> [ ... ]
-> }
-
-[Severity: High]
-This is a pre-existing issue, but does the registration order here create a
-use-after-free race during teardown?
-
-The devm framework executes teardown actions in last-in first-out order.
-Because the CPU hotplug instance is registered before the PMU, the PMU is
-unregistered first during teardown.
-
-When perf_pmu_unregister() frees the PMU's per-CPU context, if a CPU
-hotplug offline event occurs concurrently:
-
-cxl_pmu_offline_cpu()
-   perf_pmu_migrate_context()
-
-Could this access the freed per-CPU context since the hotplug instance
-has not been removed yet?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260715191454.4596=
-73-1-dave@stgolabs.net?part=3D1
