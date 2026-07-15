@@ -1,58 +1,58 @@
-Received: from panther.cherry.relay.mailchannels.net (panther.cherry.relay.mailchannels.net [23.83.223.141])
+Received: from toucan.tulip.relay.mailchannels.net (toucan.tulip.relay.mailchannels.net [23.83.218.254])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20EE41F5E9;
-	Wed, 15 Jul 2026 19:15:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.223.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E1E431A5D;
+	Wed, 15 Jul 2026 19:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.218.254
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784142925; cv=none; b=JarIGhe+pc0jKVxDpAJtz4c26Tcg5kjPJTLWgcM+I+5a2DpIQ+FuOta0d/ScihlcFJgOqFivtHweP9QB0AcH58n+nVZRaOP0YtaSg8RaxMsYKi71D8pCaS3OkYnYgRZEN4Azmwcs7Xp5GWoWmolGe9jmsjyICGY6bNUzgt0zjE0=
+	t=1784142933; cv=none; b=ZARBJykFKNiy+EsyRxoT1PX0eoUEAkxHR8PbAJnQVc+cwVeYjiIJdMQ9L98oyCUbPio1hYZcGLVzenCEwVnH4fII3bubcB8GyevLoFF6KnVB3lyQhclCiBZkblAEpWxcKVYvHEosPlI9fjeS1runYQAOf1AWrWAKERUJQnswc/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784142925; c=relaxed/simple;
-	bh=g83ky1zgvgplv3ssIDH2ql4iG7rAs7m1+JbvtBgqpPI=;
+	s=arc-20240116; t=1784142933; c=relaxed/simple;
+	bh=eOdhL6TmPJhmTpfU/Br5jP/nQd8pN/eXQvmazMPhhlg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nBtAsyjo9I4vyUK9Xb0qZn3vcZmTeoYqpLxqStZUPGUhWYPhHzLAI0fUqts0QfLZwNLKEckddwsJBJVYYM5o41GkRA0TqzGH/qNgewcCNxPzeZfC9N/apMEtAQWZ38oObKyd2QHIHSauVmdXFvn5gUcVVyriG9tSJRZ5P9aUdcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=p/Is63+/; arc=none smtp.client-ip=23.83.223.141
+	 MIME-Version; b=MTPSgx+dAQfVOwGmQz15SX4vvUsRxcpSAegTp+CslN+ZcUQ0rul0YA5nLJbmRJc87jX0pC+N4ZyrZ9TOKiCDcKiPUb/p2Sm4KsbI/pLNYZxkNPw0dALJRzX76LTucxv1l/14i+q+7LEqFHEvMiuGkMy/3mWdMKVt64X+35d3LbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=QoW9xdsS; arc=none smtp.client-ip=23.83.218.254
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="p/Is63+/"
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="QoW9xdsS"
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 343B74023F2;
-	Wed, 15 Jul 2026 19:15:17 +0000 (UTC)
-Received: from pdx1-sub0-mail-a240.dreamhost.com (trex-green-7.trex.outbound.svc.cluster.local [100.103.92.160])
+	by relay.mailchannels.net (Postfix) with ESMTP id 747CB400AF0;
+	Wed, 15 Jul 2026 19:15:18 +0000 (UTC)
+Received: from pdx1-sub0-mail-a240.dreamhost.com (100-103-105-183.trex-nlb.outbound.svc.cluster.local [100.103.105.183])
 	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id BA071402E46;
-	Wed, 15 Jul 2026 19:15:16 +0000 (UTC)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 179384029E7;
+	Wed, 15 Jul 2026 19:15:18 +0000 (UTC)
 X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
 X-MC-Relay: Neutral
 X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
 X-MailChannels-Auth-Id: dreamhost
-X-Unite-Cooing: 7d4f45052c1a235b_1784142917032_1146611786
-X-MC-Loop-Signature: 1784142917032:4129896670
-X-MC-Ingress-Time: 1784142917032
+X-Absorbed-Arithmetic: 3f71d3800eda3303_1784142918373_2123819091
+X-MC-Loop-Signature: 1784142918373:913687811
+X-MC-Ingress-Time: 1784142918373
 Received: from pdx1-sub0-mail-a240.dreamhost.com (pop.dreamhost.com
  [64.90.62.162])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.103.92.160 (trex/8.0.2);
-	Wed, 15 Jul 2026 19:15:17 +0000
+	by 100.103.105.183 (trex/8.0.2);
+	Wed, 15 Jul 2026 19:15:18 +0000
 Received: from offworld.lan (unknown [76.167.199.67])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a240.dreamhost.com (Postfix) with ESMTPSA id 4h0m8h0wKmz1049;
-	Wed, 15 Jul 2026 12:15:16 -0700 (PDT)
+	by pdx1-sub0-mail-a240.dreamhost.com (Postfix) with ESMTPSA id 4h0m8j2pH6z1049;
+	Wed, 15 Jul 2026 12:15:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1784142916;
-	bh=fUvUljDXiQTCHD5XN3TgNffnD76cOrXUbGkEXFw2yOQ=;
+	s=dreamhost; t=1784142917;
+	bh=20yHA+bh+U9aX8fhOKP6HWtGG0Ae1y3Dvz1IKwgxd6w=;
 	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=p/Is63+/l1pASaF4m4Z1c/OfvmyIkCMMu6/lZNj8c95QAlG4i3D1GbJ/HVQvX69zv
-	 QUj3FdKWOLEULulVbV3Yu2L/v4nSyW08BeXTwfGVZhz4gXKJAUxlpj0GXAMxdtnt7U
-	 Xu/ykbZO//E3K10vd1+Vb+dRaEci3yxp3ILr93W5e8gb0ZO3cS4FQ0nvF1NYcPDWbD
-	 4DdJ8Zs6hn/25FXogQrq9ZSv9WHgCP7aderLOGxMe00k/DUxyoj+j5+rrsnaB66p82
-	 7bTTQdhvFHhyN2T3LklrbXIWzFU81X2pOAifVg+z6det75vkxlkzKmOMChUe9DSbau
-	 rykoISZjJ8jNg==
+	b=QoW9xdsSHGsyS0EVJG4hHOA25UklBm35Y9NPRPzFerOfYfO39z//3cbIuuzuKvTjR
+	 qq3ft2HRoNdMT8mFlviZqmxKIv/uckmzQjYbVXDJVRpyUxuGgiHvUq2S9LmcXxKooc
+	 t3BnNVey6Ao5kqgYbuhaCSHaxkmEelxWcgaOMSQ+J1G/6msV6CPvKRFlCL5Y5EQnQf
+	 Sec63sFkahcmaAh/fzrfv1SFGaxr223zIUaIhMCsxWSjpxccKE83Xc1ayPoS2IIvYU
+	 Bykpn0gL4nG8G9PQI4mEjevwNIwqrxCaJsHLPD9Pr65QqAim/6Q+SOlOnWhgnLKDqj
+	 kK+C6fPJ4pRhg==
 From: Davidlohr Bueso <dave@stgolabs.net>
 To: jic23@kernel.org,
 	will@kernel.org,
@@ -62,9 +62,9 @@ Cc: harshal.t@samsung.com,
 	linux-cxl@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCH v4 1/3] perf/cxlpmu: Fix 64-bit write to 32-bit HDM filter register
-Date: Wed, 15 Jul 2026 12:14:52 -0700
-Message-Id: <20260715191454.459673-2-dave@stgolabs.net>
+Subject: [PATCH v4 3/3] perf/cxlpmu: Support Channel/Rank/Bank filter
+Date: Wed, 15 Jul 2026 12:14:54 -0700
+Message-Id: <20260715191454.459673-4-dave@stgolabs.net>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20260715191454.459673-1-dave@stgolabs.net>
 References: <20260715191454.459673-1-dave@stgolabs.net>
@@ -76,32 +76,171 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The HDM decoder filter configuration register is 32 bits wide, but the
-driver programs it with a 64-bit writeq(). The filter value never
-exceeds 32 bits, so the upper half of the write is always zero and
-lands in the adjacent Filter ID 1 (Channel/Rank/Bank) configuration
-register at offset+4.
+From: Harshal Thakkar <harshal.t@samsung.com>
 
-Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+Implement CRB filtering per CXL 4.0 8.2.7.2.2, and extend the
+current filtering support beyond HDM. CRB filtering is only
+permitted for the DDR Interface, Queue Occupancy, Queue Residency
+and Retry event groups (CXL 4.0 Table 13-5), and only when counting
+a single event (a single mask bit). Because these group IDs are
+scoped by the CXL vendor ID, events from other vendors are also
+rejected. For example, to count DDR activates on channel 2 only:
+
+  perf stat -a -e cxl_pmu_mem0.0/ddr_act,crb_filter_en=1,crb=0x02FFFFFF/
+
+Placing the 32-bit CRB value at config2:32-63 leaves the
+existing HDM value at config2:0-15 untouched and avoids needing
+a new config3.
+
+Signed-off-by: Harshal Thakkar <harshal.t@samsung.com>
+[davidlohr: multiple fixes]
 Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
-Reviewed-by: Richard Cheng <icheng@nvidia.com>
 ---
- drivers/perf/cxl_pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/perf/cxl_pmu.c | 67 ++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 65 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 68a54d97d2a8..39b46550a510 100644
+index 1fc83858f653..bb32cd1084e9 100644
 --- a/drivers/perf/cxl_pmu.c
 +++ b/drivers/perf/cxl_pmu.c
-@@ -635,7 +635,7 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
- 			cfg = cxl_pmu_config2_get_hdm_decoder(event);
- 		else
- 			cfg = GENMASK(31, 0); /* No filtering if 0xFFFF_FFFF */
--		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
-+		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
+@@ -110,6 +110,7 @@ struct cxl_pmu_info {
+ 	int on_cpu;
+ 	struct hlist_node node;
+ 	bool filter_hdm;
++	bool filter_crb;
+ 	int irq;
+ };
+ 
+@@ -146,6 +147,8 @@ static int cxl_pmu_parse_caps(struct device *dev, struct cxl_pmu_info *info)
+ 	info->num_event_capabilities = FIELD_GET(CXL_PMU_CAP_NUM_EVN_CAP_REG_SUP_MSK, val) + 1;
+ 
+ 	info->filter_hdm = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) & CXL_PMU_FILTER_HDM;
++	info->filter_crb = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) &
++		CXL_PMU_FILTER_CHAN_RANK_BANK;
+ 	if (FIELD_GET(CXL_PMU_CAP_INT, val))
+ 		info->irq = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
+ 	else
+@@ -229,6 +232,8 @@ enum {
+ 	cxl_pmu_edge_attr,
+ 	cxl_pmu_hdm_filter_en_attr,
+ 	cxl_pmu_hdm_attr,
++	cxl_pmu_crb_filter_en_attr,
++	cxl_pmu_crb_attr,
+ };
+ 
+ static struct attribute *cxl_pmu_format_attr[] = {
+@@ -240,6 +245,8 @@ static struct attribute *cxl_pmu_format_attr[] = {
+ 	[cxl_pmu_edge_attr] = CXL_PMU_FORMAT_ATTR(edge, "config1:17"),
+ 	[cxl_pmu_hdm_filter_en_attr] = CXL_PMU_FORMAT_ATTR(hdm_filter_en, "config1:18"),
+ 	[cxl_pmu_hdm_attr] = CXL_PMU_FORMAT_ATTR(hdm, "config2:0-15"),
++	[cxl_pmu_crb_filter_en_attr] = CXL_PMU_FORMAT_ATTR(crb_filter_en, "config1:19"),
++	[cxl_pmu_crb_attr] = CXL_PMU_FORMAT_ATTR(crb, "config2:32-63"),
+ 	NULL
+ };
+ 
+@@ -250,7 +257,9 @@ static struct attribute *cxl_pmu_format_attr[] = {
+ #define CXL_PMU_ATTR_CONFIG1_INVERT_MSK		BIT(16)
+ #define CXL_PMU_ATTR_CONFIG1_EDGE_MSK		BIT(17)
+ #define CXL_PMU_ATTR_CONFIG1_FILTER_EN_MSK	BIT(18)
++#define CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK	BIT(19)
+ #define CXL_PMU_ATTR_CONFIG2_HDM_MSK		GENMASK(15, 0)
++#define CXL_PMU_ATTR_CONFIG2_CRB_MSK		GENMASK_ULL(63, 32)
+ 
+ static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
+ 					 struct attribute *attr, int a)
+@@ -267,6 +276,11 @@ static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
+ 	     attr == cxl_pmu_format_attr[cxl_pmu_hdm_attr]))
+ 		return 0;
+ 
++	if (!info->filter_crb &&
++	    (attr == cxl_pmu_format_attr[cxl_pmu_crb_filter_en_attr] ||
++	     attr == cxl_pmu_format_attr[cxl_pmu_crb_attr]))
++		return 0;
++
+ 	return attr->mode;
+ }
+ 
+@@ -323,6 +337,17 @@ static u16 cxl_pmu_config2_get_hdm_decoder(struct perf_event *event)
+ 	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_HDM_MSK, event->attr.config2);
+ }
+ 
++static u16 cxl_pmu_config1_crb_filter_en(struct perf_event *event)
++{
++	return FIELD_GET(CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK,
++			 event->attr.config1);
++}
++
++static u32 cxl_pmu_config2_get_crb(struct perf_event *event)
++{
++	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
++}
++
+ static ssize_t cxl_pmu_event_sysfs_show(struct device *dev,
+ 					struct device_attribute *attr, char *buf)
+ {
+@@ -621,6 +646,36 @@ static int cxl_pmu_event_init(struct perf_event *event)
+ 		return -EOPNOTSUPP;
+ 	/* TODO: Validation of any filter */
+ 
++	if (cxl_pmu_config1_crb_filter_en(event)) {
++		if (!info->filter_crb)
++			return -EINVAL;
++		/* event group IDs are scoped by the CXL vendor ID */
++		if (cxl_pmu_config_get_vid(event) != PCI_VENDOR_ID_CXL)
++			return -EINVAL;
++
++		/*
++		 * CRB filtering (Filter ID 1) is only valid for the DDR
++		 * Interface, Queue Occupancy, Queue Residency and Retry
++		 * event groups (CXL 4.0 Table 13-5).
++		 */
++		switch (cxl_pmu_config_get_gid(event)) {
++		case CXL_PMU_GID_DDR:
++		case CXL_PMU_GID_QUEUE_OCC:
++		case CXL_PMU_GID_QUEUE_RESID:
++		case CXL_PMU_GID_RETRY_EVENTS:
++			break;
++		default:
++			return -EINVAL;
++		}
++
++		/*
++		 * Filtering while counting multiple events is
++		 * undefined behavior.
++		 */
++		if (hweight32(cxl_pmu_config_get_mask(event)) > 1)
++			return -EINVAL;
++	}
++
+ 	/*
+ 	 * Verify that it is possible to count what was requested. Either must
+ 	 * be a fixed counter that is a precise match or a configurable counter
+@@ -677,8 +732,8 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
+ 	hwc->state = 0;
+ 
+ 	/*
+-	 * Currently only hdm filter control is implemented, this code will
+-	 * want generalizing when more filters are added.
++	 * Filter ID=0: HDM decoder filter
++	 * Filter ID=1: Channel/Rank/Bank (CRB) filter
+ 	 */
+ 	if (info->filter_hdm) {
+ 		if (cxl_pmu_config1_hdm_filter_en(event))
+@@ -688,6 +743,14 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
+ 		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
  	}
  
++	if (info->filter_crb) {
++		if (cxl_pmu_config1_crb_filter_en(event))
++			cfg = cxl_pmu_config2_get_crb(event);
++		else
++			cfg = GENMASK(31, 0); /* no filtering if 0xFFFF_FFFF */
++		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 1));
++	}
++
  	cfg = readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
+ 	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
+ 	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_FREEZE_ON_OVRFLW, 1);
 -- 
 2.39.5
 
