@@ -1,301 +1,165 @@
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F28312D1F1;
-	Wed, 15 Jul 2026 19:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1265A41F5CC
+	for <linux-perf-users@vger.kernel.org>; Wed, 15 Jul 2026 20:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784145251; cv=none; b=dq7WBbljD4YhYejPinc9jCWAATXaU3F9v2iEIbTaSSqDxcC38wuqSEO5L/hLSlXJ+t2301YMVvmEUM0jal1z+b5vuKK/8UKJv5a86i8+WiJWFkaw8R6PVjeT3BTFOaAjkrfxIX42yO5wVkpcbQw+U98vORC6nx4cD9JkurxQamE=
+	t=1784145687; cv=none; b=GCecu6FtN8v6MGDwL8oO5XdTwPmX0ksOcQOEXIToeR5hyT/EWTm/yvqYxcfmuE1YmUawFLG17OcHDaGpBS8b+KbLO7TxhWNdaPsTrUmQhGuLZJ6tuuu6G8S0ENxEacE2i7IMPlO1x6RvRwJOOyeAQD01bgYCs4CiAXGNeiAlr0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784145251; c=relaxed/simple;
-	bh=8IBeSTH79zEd/85B3I13OSGp6abiS7I1hygz8VGy0EY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZSyvtdMvIJQNuKE/gj8uRA66TZ5EUWsQ/VlRqqZi2EmHGchtmBshFwUnRAsm1OORLRFW10OxbLZB1+yz37fcixp3InqXPOB7AEAGFKoewgPT4Wz0E2RvqVS34zwGLT+livD9cCVjnYOthsf/CroCENLt1P3a8/3JQRtmoMcpUNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=G9Ads1/5; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1784145687; c=relaxed/simple;
+	bh=uwxmuyKFx6g5q5HJXgqVNf9gdV44Jter6qaifngoZlM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e00umLY2rvvZZT1BavJz59JGYJykExkFbDYMK+SwOvyZyOZhkfKCshg3JplNk2xl7zmIQfH0PRJco1j+TrCp6U+ceJM5QruML7ypPDB99yNAdFlwvrPtEhXSGRkarCJ8lVNVnZ1dDmX65hIonZyusfptbR4Ye7a8Yew/e50yFFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OIsyIa1T; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G9Ads1/5"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
-	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=u1xTcKNYwdOUdwgNpbyIzAcPowaOLgUaHPOaAeLqzfg=; b=G9Ads1/50L6jZQcaHXYJq/Psc7
-	AryEJZcuGxV76jnQvR75aByyQN2+s4KISlfDdk2TV92ezj8Mb4OV3LQF0ZVYbq4Bwq7lXV48A3koM
-	4dW7xh0EelhZHZsLKX5Terjo3G/wY4H4bI5wxUs6ArdrtWB1DCY3d3mbi6Xxwegu+cmC0ufKyHXMu
-	AqLncMI+gSugHyCRPWyTnaJ8K+c0jt3rkv99sJlwJf7PJ+dQ563sPdXLBXOHRlyBfZi2YB6bdEe6v
-	/P14vLsGTAZrR7gY0vy5J00O3llg1vnu5Lm0yJTpk8XtVFADXa9x0/iPQC2akptOn3wrnWTNwWmxS
-	CaBTrBPw==;
-Received: from [38.23.173.23] (helo=localhost)
-	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wk5fh-0000000FpH0-1NIX;
-	Wed, 15 Jul 2026 19:53:33 +0000
-Date: Wed, 15 Jul 2026 15:53:23 -0400
-From: "Liam R. Howlett" <liam@infradead.org>
-To: Lorenzo Stoakes <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	David Hildenbrand <david@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
-	Pedro Falcato <pfalcato@suse.de>, Russell King <linux@armlinux.org.uk>, 
-	Dinh Nguyen <dinguyen@kernel.org>, Simon Schuster <schuster.simon@siemens-energy.com>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Dan Williams <djbw@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, 
-	Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
-	SJ Park <sj@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Hugh Dickins <hughd@google.com>, Peter Xu <peterx@redhat.com>, 
-	Kees Cook <kees@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Robin Murphy <robin.murphy@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
-	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>, 
-	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
-	Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Rob Clark <robin.clark@oss.qualcomm.com>, 
-	Dmitry Baryshkov <lumag@kernel.org>, Abhinav Kumar <abhinav.kumar@linux.dev>, 
-	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>, 
-	Marijn Suijten <marijn.suijten@somainline.org>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
-	Thierry Reding <thierry.reding@kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Christian Koenig <christian.koenig@amd.com>, 
-	Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, Yishai Hadas <yishaih@nvidia.com>, 
-	Shameer Kolothum <skolothumtho@nvidia.com>, Kevin Tian <kevin.tian@intel.com>, 
-	Ankit Agrawal <ankita@nvidia.com>, Alex Williamson <alex@shazbot.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
-	Usama Arif <usama.arif@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	nvdimm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev, iommu@lists.linux.dev, 
-	kasan-dev@googlegroups.com, linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
-	linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
-	Russell King <linux+etnaviv@armlinux.org.uk>
-Subject: Re: [PATCH v2 03/33] tools/testing/vma: use vma_start_pgoff() in
- merge tests
-Message-ID: <p6bhkbzvrdz6bb4a6cdmd6bmlwuwxfjd3lx5opq334o7nwjhwa@ctqdd3i2daon>
-References: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
- <20260710-b4-pre-scalable-cow-v2-3-2a5aa403d977@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OIsyIa1T"
+Message-ID: <1a3378d8-2148-488f-a385-a20335553a9c@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1784145677;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=8V5CX44D4jZQ0nRMWUdMxp0ZQiAGX/gtKoCLQP9d5Jo=;
+	b=OIsyIa1TcYFh3nvcfnHzc4LyZ91jfE5QUxWO/MMKVE3Wxpcf0mmZL1JYd/77NeCKRCbSR2
+	VegVVMGxr4y8jPoCtVz2xy3fyzPYcF4WvDd6BSH+PjJXO1wPriA1oSkb8QUDiG6Osvd2Od
+	UoraCX3qu4QOEuDgU8Ad7bUsnGKSwnI=
+Date: Wed, 15 Jul 2026 13:00:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260710-b4-pre-scalable-cow-v2-3-2a5aa403d977@kernel.org>
+Subject: Re: [PATCH v4 3/4] tools/build: Allow versioning LLVM readelf
+To: James Clark <james.clark@linaro.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ Emil Tsalapatis <emil@etsalapatis.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+ Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20260715-james-perf-llvm-version-v4-0-6dfdf984b435@linaro.org>
+ <20260715-james-perf-llvm-version-v4-3-6dfdf984b435@linaro.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Ihor Solodrai <ihor.solodrai@linux.dev>
+In-Reply-To: <20260715-james-perf-llvm-version-v4-3-6dfdf984b435@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 26/07/10 09:16PM, Lorenzo Stoakes wrote:
-> Now we have the vma_start_pgoff() helper, update the merge tests to make
-> use of it for consistency.
+On 7/15/26 7:53 AM, James Clark wrote:
+> Documentation/kbuild/llvm.rst mentions that readelf is included in the
+> LLVM toolchain, but it's not currently included in this block.
 > 
-> No functional change intended.
+> Add it so that LLVM=... options also apply to readelf. Users in tools/
+> were Perf which was hardcoding it, and another was the BPF makefile.
+> Both already include Makefile.include so convert them to use the new
+> variables.
 > 
-> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
-> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
-
-Reviewed-by: Liam R. Howlett (Oracle) <liam@infradead.org>
-
+> Where readelf wasn't doing anything arch specific, use HOSTREADELF
+> because it's more likely to be installed.
+> 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> Signed-off-by: James Clark <james.clark@linaro.org>
 > ---
->  tools/testing/vma/tests/merge.c | 38 +++++++++++++++++++-------------------
->  1 file changed, 19 insertions(+), 19 deletions(-)
+>  tools/lib/bpf/Makefile         | 8 ++++----
+>  tools/perf/Makefile.perf       | 1 -
+>  tools/scripts/Makefile.include | 4 ++++
+>  3 files changed, 8 insertions(+), 5 deletions(-)
 > 
-> diff --git a/tools/testing/vma/tests/merge.c b/tools/testing/vma/tests/merge.c
-> index 03b6f9820e0a..f8666a755749 100644
-> --- a/tools/testing/vma/tests/merge.c
-> +++ b/tools/testing/vma/tests/merge.c
-> @@ -118,7 +118,7 @@ static bool test_simple_merge(void)
+> diff --git a/tools/lib/bpf/Makefile b/tools/lib/bpf/Makefile
+> index eca584fb061e16013e76827e4203f6be0477a73e..269fe21fc8da73083367b3c122bdd2b718e12bc5 100644
+> --- a/tools/lib/bpf/Makefile
+> +++ b/tools/lib/bpf/Makefile
+> @@ -115,12 +115,12 @@ PC_FILE		:= $(addprefix $(OUTPUT),$(PC_FILE))
 >  
->  	ASSERT_EQ(vma->vm_start, 0);
->  	ASSERT_EQ(vma->vm_end, 0x3000);
-> -	ASSERT_EQ(vma->vm_pgoff, 0);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
->  	ASSERT_FLAGS_SAME_MASK(&vma->flags, vma_flags);
+>  TAGS_PROG := $(if $(shell which etags 2>/dev/null),etags,ctags)
 >  
->  	detach_free_vma(vma);
-> @@ -150,7 +150,7 @@ static bool test_simple_modify(void)
+> -GLOBAL_SYM_COUNT = $(shell readelf -s --wide $(BPF_IN_SHARED) | \
+> +GLOBAL_SYM_COUNT = $(shell $(HOSTREADELF) -s --wide $(BPF_IN_SHARED) | \
+>  			   cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' | \
+>  			   sed 's/\[.*\]//' | \
+>  			   awk '/GLOBAL/ && /DEFAULT/ && !/UND|ABS/ {print $$NF}' | \
+>  			   sort -u | wc -l)
+> -VERSIONED_SYM_COUNT = $(shell readelf --dyn-syms --wide $(OUTPUT)libbpf.so | \
+> +VERSIONED_SYM_COUNT = $(shell $(HOSTREADELF) --dyn-syms --wide $(OUTPUT)libbpf.so | \
+>  			      sed 's/\[.*\]//' | \
+>  			      awk '/GLOBAL/ && /DEFAULT/ && !/UND|ABS/ {print $$NF}' | \
+>  			      grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 | sort -u | wc -l)
+> @@ -183,12 +183,12 @@ check_abi: $(OUTPUT)libbpf.so $(VERSION_SCRIPT)
+>  		     "versioned symbols in $^ ($(VERSIONED_SYM_COUNT))." \
+>  		     "Please make sure all LIBBPF_API symbols are"	 \
+>  		     "versioned in $(VERSION_SCRIPT)." >&2;		 \
+> -		readelf -s --wide $(BPF_IN_SHARED) |			 \
+> +		$(HOSTREADELF) -s --wide $(BPF_IN_SHARED) |		 \
+>  		    cut -d "@" -f1 | sed 's/_v[0-9]_[0-9]_[0-9].*//' |	 \
+>  		    sed 's/\[.*\]//' |					 \
+>  		    awk '/GLOBAL/ && /DEFAULT/ && !/UND/ {print $$NF}'|  \
+>  		    sort -u > $(OUTPUT)libbpf_global_syms.tmp;		 \
+> -		readelf --dyn-syms --wide $(OUTPUT)libbpf.so |		 \
+> +		$(HOSTREADELF) --dyn-syms --wide $(OUTPUT)libbpf.so |	 \
+
+Acked-by: Ihor Solodrai <ihor.solodrai@linux.dev>
+
+Thanks!
+
+>  		    sed 's/\[.*\]//' |					 \
+>  		    awk '/GLOBAL/ && /DEFAULT/ && !/UND|ABS/ {print $$NF}'|  \
+>  		    grep -Eo '[^ ]+@LIBBPF_' | cut -d@ -f1 |		 \
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf> index 476b8dcaef58cb1f3fa75f46a647c2cfe2352767..4d0d7ae02e06b117487a17691c4e62a138428ac5 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -215,7 +215,6 @@ FLEX    ?= flex
+>  BISON   ?= bison
+>  STRIP   = strip
+>  AWK     = awk
+> -READELF ?= readelf
 >  
->  	ASSERT_EQ(vma->vm_start, 0x1000);
->  	ASSERT_EQ(vma->vm_end, 0x2000);
-> -	ASSERT_EQ(vma->vm_pgoff, 1);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 1);
+>  # include Makefile.config by default and rule out
+>  # non-config cases
+> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
+> index e81e5b479c563321e458b2a7ad8fca2b4607a254..46a3872b87624a7bf475d9b42a3e471f36789dfd 100644
+> --- a/tools/scripts/Makefile.include
+> +++ b/tools/scripts/Makefile.include
+> @@ -73,6 +73,8 @@ ifneq ($(LLVM),)
+>    $(call allow-override,LLC,$(LLVM_PREFIX)llc$(LLVM_SUFFIX))
+>    $(call allow-override,LLVM_CONFIG,$(LLVM_PREFIX)llvm-config$(LLVM_SUFFIX))
+>    $(call allow-override,LLVM_OBJCOPY,$(LLVM_PREFIX)llvm-objcopy$(LLVM_SUFFIX))
+> +  $(call allow-override,READELF,$(LLVM_PREFIX)llvm-readelf$(LLVM_SUFFIX))
+> +  $(call allow-override,HOSTREADELF,$(LLVM_PREFIX)llvm-readelf$(LLVM_SUFFIX))
+>  else
+>    # Allow setting various cross-compile vars or setting CROSS_COMPILE as a prefix.
+>    $(call allow-override,CC,$(CROSS_COMPILE)gcc)
+> @@ -80,11 +82,13 @@ else
+>    $(call allow-override,LD,$(CROSS_COMPILE)ld)
+>    $(call allow-override,CXX,$(CROSS_COMPILE)g++)
+>    $(call allow-override,STRIP,$(CROSS_COMPILE)strip)
+> +  $(call allow-override,READELF,$(CROSS_COMPILE)readelf)
 >  
->  	/*
->  	 * Now walk through the three split VMAs and make sure they are as
-> @@ -162,7 +162,7 @@ static bool test_simple_modify(void)
+>    # Host versions aren't prefixed
+>    $(call allow-override,HOSTAR,ar)
+>    $(call allow-override,HOSTCC,gcc)
+>    $(call allow-override,HOSTLD,ld)
+> +  $(call allow-override,HOSTREADELF,readelf)
 >  
->  	ASSERT_EQ(vma->vm_start, 0);
->  	ASSERT_EQ(vma->vm_end, 0x1000);
-> -	ASSERT_EQ(vma->vm_pgoff, 0);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
->  
->  	detach_free_vma(vma);
->  	vma_iter_clear(&vmi);
-> @@ -171,7 +171,7 @@ static bool test_simple_modify(void)
->  
->  	ASSERT_EQ(vma->vm_start, 0x1000);
->  	ASSERT_EQ(vma->vm_end, 0x2000);
-> -	ASSERT_EQ(vma->vm_pgoff, 1);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 1);
->  
->  	detach_free_vma(vma);
->  	vma_iter_clear(&vmi);
-> @@ -180,7 +180,7 @@ static bool test_simple_modify(void)
->  
->  	ASSERT_EQ(vma->vm_start, 0x2000);
->  	ASSERT_EQ(vma->vm_end, 0x3000);
-> -	ASSERT_EQ(vma->vm_pgoff, 2);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 2);
->  
->  	detach_free_vma(vma);
->  	mtree_destroy(&mm.mm_mt);
-> @@ -209,7 +209,7 @@ static bool test_simple_expand(void)
->  
->  	ASSERT_EQ(vma->vm_start, 0);
->  	ASSERT_EQ(vma->vm_end, 0x3000);
-> -	ASSERT_EQ(vma->vm_pgoff, 0);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
->  
->  	detach_free_vma(vma);
->  	mtree_destroy(&mm.mm_mt);
-> @@ -231,7 +231,7 @@ static bool test_simple_shrink(void)
->  
->  	ASSERT_EQ(vma->vm_start, 0);
->  	ASSERT_EQ(vma->vm_end, 0x1000);
-> -	ASSERT_EQ(vma->vm_pgoff, 0);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
->  
->  	detach_free_vma(vma);
->  	mtree_destroy(&mm.mm_mt);
-> @@ -324,7 +324,7 @@ static bool __test_merge_new(bool is_sticky, bool a_is_sticky, bool b_is_sticky,
->  	ASSERT_TRUE(merged);
->  	ASSERT_EQ(vma->vm_start, 0);
->  	ASSERT_EQ(vma->vm_end, 0x4000);
-> -	ASSERT_EQ(vma->vm_pgoff, 0);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
->  	ASSERT_EQ(vma->anon_vma, &dummy_anon_vma);
->  	ASSERT_TRUE(vma_write_started(vma));
->  	ASSERT_EQ(mm.map_count, 3);
-> @@ -343,7 +343,7 @@ static bool __test_merge_new(bool is_sticky, bool a_is_sticky, bool b_is_sticky,
->  	ASSERT_TRUE(merged);
->  	ASSERT_EQ(vma->vm_start, 0);
->  	ASSERT_EQ(vma->vm_end, 0x5000);
-> -	ASSERT_EQ(vma->vm_pgoff, 0);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
->  	ASSERT_EQ(vma->anon_vma, &dummy_anon_vma);
->  	ASSERT_TRUE(vma_write_started(vma));
->  	ASSERT_EQ(mm.map_count, 3);
-> @@ -364,7 +364,7 @@ static bool __test_merge_new(bool is_sticky, bool a_is_sticky, bool b_is_sticky,
->  	ASSERT_TRUE(merged);
->  	ASSERT_EQ(vma->vm_start, 0x6000);
->  	ASSERT_EQ(vma->vm_end, 0x9000);
-> -	ASSERT_EQ(vma->vm_pgoff, 6);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 6);
->  	ASSERT_EQ(vma->anon_vma, &dummy_anon_vma);
->  	ASSERT_TRUE(vma_write_started(vma));
->  	ASSERT_EQ(mm.map_count, 3);
-> @@ -384,7 +384,7 @@ static bool __test_merge_new(bool is_sticky, bool a_is_sticky, bool b_is_sticky,
->  	ASSERT_TRUE(merged);
->  	ASSERT_EQ(vma->vm_start, 0);
->  	ASSERT_EQ(vma->vm_end, 0x9000);
-> -	ASSERT_EQ(vma->vm_pgoff, 0);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
->  	ASSERT_EQ(vma->anon_vma, &dummy_anon_vma);
->  	ASSERT_TRUE(vma_write_started(vma));
->  	ASSERT_EQ(mm.map_count, 2);
-> @@ -404,7 +404,7 @@ static bool __test_merge_new(bool is_sticky, bool a_is_sticky, bool b_is_sticky,
->  	ASSERT_TRUE(merged);
->  	ASSERT_EQ(vma->vm_start, 0xa000);
->  	ASSERT_EQ(vma->vm_end, 0xc000);
-> -	ASSERT_EQ(vma->vm_pgoff, 0xa);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 0xa);
->  	ASSERT_EQ(vma->anon_vma, &dummy_anon_vma);
->  	ASSERT_TRUE(vma_write_started(vma));
->  	ASSERT_EQ(mm.map_count, 2);
-> @@ -423,7 +423,7 @@ static bool __test_merge_new(bool is_sticky, bool a_is_sticky, bool b_is_sticky,
->  	ASSERT_TRUE(merged);
->  	ASSERT_EQ(vma->vm_start, 0);
->  	ASSERT_EQ(vma->vm_end, 0xc000);
-> -	ASSERT_EQ(vma->vm_pgoff, 0);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
->  	ASSERT_EQ(vma->anon_vma, &dummy_anon_vma);
->  	ASSERT_TRUE(vma_write_started(vma));
->  	ASSERT_EQ(mm.map_count, 1);
-> @@ -443,7 +443,7 @@ static bool __test_merge_new(bool is_sticky, bool a_is_sticky, bool b_is_sticky,
->  		ASSERT_NE(vma, NULL);
->  		ASSERT_EQ(vma->vm_start, 0);
->  		ASSERT_EQ(vma->vm_end, 0xc000);
-> -		ASSERT_EQ(vma->vm_pgoff, 0);
-> +		ASSERT_EQ(vma_start_pgoff(vma), 0);
->  		ASSERT_EQ(vma->anon_vma, &dummy_anon_vma);
->  
->  		detach_free_vma(vma);
-> @@ -805,7 +805,7 @@ static bool test_vma_merge_new_with_close(void)
->  	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
->  	ASSERT_EQ(vma->vm_start, 0);
->  	ASSERT_EQ(vma->vm_end, 0x5000);
-> -	ASSERT_EQ(vma->vm_pgoff, 0);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
->  	ASSERT_EQ(vma->vm_ops, &vm_ops);
->  	ASSERT_TRUE(vma_write_started(vma));
->  	ASSERT_EQ(mm.map_count, 2);
-> @@ -865,7 +865,7 @@ static bool __test_merge_existing(bool prev_is_sticky, bool middle_is_sticky, bo
->  	ASSERT_EQ(vma_next->anon_vma, &dummy_anon_vma);
->  	ASSERT_EQ(vma->vm_start, 0x2000);
->  	ASSERT_EQ(vma->vm_end, 0x3000);
-> -	ASSERT_EQ(vma->vm_pgoff, 2);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 2);
->  	ASSERT_TRUE(vma_write_started(vma));
->  	ASSERT_TRUE(vma_write_started(vma_next));
->  	ASSERT_EQ(mm.map_count, 2);
-> @@ -931,7 +931,7 @@ static bool __test_merge_existing(bool prev_is_sticky, bool middle_is_sticky, bo
->  	ASSERT_EQ(vma_prev->anon_vma, &dummy_anon_vma);
->  	ASSERT_EQ(vma->vm_start, 0x6000);
->  	ASSERT_EQ(vma->vm_end, 0x7000);
-> -	ASSERT_EQ(vma->vm_pgoff, 6);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 6);
->  	ASSERT_TRUE(vma_write_started(vma_prev));
->  	ASSERT_TRUE(vma_write_started(vma));
->  	ASSERT_EQ(mm.map_count, 2);
-> @@ -1416,7 +1416,7 @@ static bool test_merge_extend(void)
->  	ASSERT_EQ(vma_merge_extend(&vmi, vma, 0x2000), vma);
->  	ASSERT_EQ(vma->vm_start, 0);
->  	ASSERT_EQ(vma->vm_end, 0x4000);
-> -	ASSERT_EQ(vma->vm_pgoff, 0);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
->  	ASSERT_TRUE(vma_write_started(vma));
->  	ASSERT_EQ(mm.map_count, 1);
->  
-> @@ -1456,7 +1456,7 @@ static bool test_expand_only_mode(void)
->  	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
->  	ASSERT_EQ(vma->vm_start, 0x3000);
->  	ASSERT_EQ(vma->vm_end, 0x9000);
-> -	ASSERT_EQ(vma->vm_pgoff, 3);
-> +	ASSERT_EQ(vma_start_pgoff(vma), 3);
->  	ASSERT_TRUE(vma_write_started(vma));
->  	ASSERT_EQ(vma_iter_addr(&vmi), 0x3000);
->  	vma_assert_attached(vma);
+>    # Some tools still require Clang, LLC and/or LLVM utils
+>    $(call allow-override,CLANG,clang)
 > 
-> -- 
-> 2.55.0
-> 
+
