@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3636837F8C4;
-	Wed, 15 Jul 2026 01:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFF437FF67;
+	Wed, 15 Jul 2026 01:45:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784079893; cv=none; b=r1f4DuYXGhcBGgFbnwJUx8b3awgJQXSpJrnFMlKFUyCf8uxkNn7jwjx1ipiDxUeD5hiySpzzzEKcqzfBhefBF4XzsDnuWqao1jsDUzzBxz4EoqpjqdbjOgzLfhZ63BXM0Sn3lDYsuW8BirjSxA4mQG3NIRUxQZvK4Sw1c2pT+Q4=
+	t=1784079904; cv=none; b=OFVzIGEw8SH7jTzNKxlFmGUaK8KVIk31Qlnyra8oXCvg9C6rMt/WAREKjY/0s97c2X1ce+7HWGAE0Q/isZP1Wr+0lgSLUs1IXN3IWiRE3F2dx8m06RlsICjyjdLKN0wSe61B7ip+2ynJ+zXSxB2X/G51nAq5PdSu6Izcy6wSByU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784079893; c=relaxed/simple;
-	bh=RnKOHNBPmj3Cu03w5U04I8JGBqtXnIak2+AQjeku/RI=;
+	s=arc-20240116; t=1784079904; c=relaxed/simple;
+	bh=gE5E61SHGyfS34EqmtoCN5wjt/tCHOvKVE5y6Wg2Hp4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lpeTJ/haO6PYTl0qoV1Ttf8sv47mlailUTFQ2wjA5VVT+xBtX8Pb3RjM1lxcdk3aSFCizC0ZpldgNmHOsZDXLgq9fao751prwBLO82vuj32Sn8dgtKRR8hKoBO9J2a2L07RTLdnYDXEhKITGvjm64xcbRJgTZ/6eUPj7OVPoU04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fE2qLOSq; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=X3990OhpFq8BNnPlf7BMxRvf2h89TO1jjQbgjyxDSRnHApWihLqEB8VkpuvP+O7GR1DEn/ECT4dT2kcSyNTheg+MN0Q95ZCcKsRNjaGtfu8ysYCbh05UJ/HcFk7LpPay4e7KKXf7dd/nfTifuDlz3U4R5xKUsCctF3ytRMNL1OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jh2tX1Nt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fE2qLOSq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E79741F000E9;
-	Wed, 15 Jul 2026 01:44:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jh2tX1Nt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F9081F000E9;
+	Wed, 15 Jul 2026 01:44:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784079891;
-	bh=bVuoFZz9XzNae8H4PardShx2MzQLtMk5zbZKcfpef8o=;
+	s=k20260515; t=1784079903;
+	bh=rKR3a2cqrM6Ydesu7cGmeplW+brpFmLVctCH3lJIWws=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fE2qLOSqOU57v0pb+utlxItCp8SlK8kX1XoZzwlHoM6cYsQ0ck1IIfqUmLMuB8B+l
-	 lZSLy5f3Hg4r+ulpu8Ok9y2IB3yu3vbXVKFIxwuypHsKyoHewSfDmbpjlTHB6lWy1G
-	 ibEzqeStBenOnAtMMdM59Ru8MO1MTi66qrBMTgMs1Fjg/idjeww0eLXU7mmlypCjD3
-	 1bWqgVbX0gos8RVhStD5q0UKNPep00BDDGvr055R3F08Q8atgQ06neN9HE/9tU1BGw
-	 lov2i8DAzBbPt6wlbLYVG7b7KSsgfSQEacqBVOxJ7P34vu2CAxB7bBdzHFZKUA1ZTT
-	 Qrr49iINpcMLw==
+	b=Jh2tX1Nt2GdpvDaJThIV9PmLuPTzpdCBpVI7WjH0Qi5AkKxqizv5FJkQ8QMFd6Wd2
+	 swLyxyhB0EY43+L9NZmVlv60+Wq2Dk4MpO6f4Z9mPHBjeMKZzK9Lqfk9UrsvyN6xCu
+	 LtZTF2i1vtA7DouHdp1JLpCJ9hY74MLwdjF4V5UZkYxDQkN/mkVTn9OeH0he4MERTa
+	 k61qEcngSQZWiMhcpmCw8BeovSEMya9ReYsE4A0JVmXCI5JMKhaZRoBp23psDSK/Zy
+	 jGnBKg9mIy2pdll3boGb41ceLMRGtqIYynmWXYffrHhXqNff0Mlx8DcA4Vbu2uCckh
+	 SRDpVB/hfahPg==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -44,9 +44,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v7 04/10] selftests: tracing: Add syntax testcase for wprobe
-Date: Wed, 15 Jul 2026 10:44:45 +0900
-Message-ID: <178407988551.95826.11515149189701096855.stgit@devnote2>
+Subject: [PATCH v7 05/10] tracing: wprobe: Use a new seq_print_ip_sym_offset() wrapper
+Date: Wed, 15 Jul 2026 10:44:57 +0900
+Message-ID: <178407989708.95826.17630423823637072384.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178407983818.95826.12714571928538799781.stgit@devnote2>
 References: <178407983818.95826.12714571928538799781.stgit@devnote2>
@@ -62,41 +62,26 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add "wprobe_syntax_errors.tc" testcase for testing syntax errors
-of the watch probe events.
+Use a new seq_print_ip_sym_offset() wrapper function instead of
+using TRACE_ITER(SYM_OFFSET) mask directly.
 
-Link: https://lore.kernel.org/all/175859027842.374439.6402700780945714048.stgit@devnote2/
+Link: https://lore.kernel.org/all/176226550596.59499.18020648957674458755.stgit@devnote2/
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- .../test.d/dynevent/wprobes_syntax_errors.tc       |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+ kernel/trace/trace_wprobe.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
-new file mode 100644
-index 000000000000..56ac579d60ae
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
-@@ -0,0 +1,20 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Watch probe event parser error log check
-+# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README
-+
-+check_error() { # command-with-error-pos-by-^
-+    ftrace_errlog_check 'wprobe' "$1" 'dynamic_events'
-+}
-+
-+check_error 'w ^symbol'			# BAD_ACCESS_FMT
-+check_error 'w ^a@symbol'		# BAD_ACCESS_TYPE
-+check_error 'w w@^symbol'		# BAD_ACCESS_ADDR
-+check_error 'w w@jiffies^+offset'	# BAD_ACCESS_ADDR
-+check_error 'w w@jiffies:^100'		# BAD_ACCESS_LEN
-+check_error 'w w@jiffies ^$arg1'	# BAD_VAR
-+check_error 'w w@jiffies ^$retval'	# BAD_VAR
-+check_error 'w w@jiffies ^$stack'	# BAD_VAR
-+check_error 'w w@jiffies ^%ax'		# BAD_VAR
-+
-+exit 0
+diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+index b52f3eac719f..dd310a87b333 100644
+--- a/kernel/trace/trace_wprobe.c
++++ b/kernel/trace/trace_wprobe.c
+@@ -20,6 +20,7 @@
+ #include <asm/ptrace.h>
+ 
+ #include "trace_dynevent.h"
++#include "trace_output.h"
+ #include "trace_probe.h"
+ #include "trace_probe_kernel.h"
+ #include "trace_probe_tmpl.h"
 
