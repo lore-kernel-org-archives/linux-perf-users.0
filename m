@@ -1,246 +1,176 @@
-Received: from toucan.tulip.relay.mailchannels.net (toucan.tulip.relay.mailchannels.net [23.83.218.254])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E1E431A5D;
-	Wed, 15 Jul 2026 19:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.218.254
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5935512D1F1;
+	Wed, 15 Jul 2026 19:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784142933; cv=none; b=ZARBJykFKNiy+EsyRxoT1PX0eoUEAkxHR8PbAJnQVc+cwVeYjiIJdMQ9L98oyCUbPio1hYZcGLVzenCEwVnH4fII3bubcB8GyevLoFF6KnVB3lyQhclCiBZkblAEpWxcKVYvHEosPlI9fjeS1runYQAOf1AWrWAKERUJQnswc/g=
+	t=1784145119; cv=none; b=gliM8ZRWgsDRTyeU4eOWG35l6qmG64tP01eLvdMpdSjr1c4z+5/LtNfw/G7JyFM+AgvuH0cg+4EbAYlBsyZlgztJlFcq1QnOjxS/1fdeHr811Bg4pQB1SXaQ2TxnEgPcm0F6zTfqTy0AFCAW3aXOoM9eWHZ0wet3J/vR+I6Jl78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784142933; c=relaxed/simple;
-	bh=eOdhL6TmPJhmTpfU/Br5jP/nQd8pN/eXQvmazMPhhlg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MTPSgx+dAQfVOwGmQz15SX4vvUsRxcpSAegTp+CslN+ZcUQ0rul0YA5nLJbmRJc87jX0pC+N4ZyrZ9TOKiCDcKiPUb/p2Sm4KsbI/pLNYZxkNPw0dALJRzX76LTucxv1l/14i+q+7LEqFHEvMiuGkMy/3mWdMKVt64X+35d3LbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=QoW9xdsS; arc=none smtp.client-ip=23.83.218.254
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1784145119; c=relaxed/simple;
+	bh=3uP8bgU1we/Dtxq3O0dFdAVY4cBPySZLkiqm4nKQMWA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j3S/vuozI5wi3UaLPPcGT6kxPi1/EYGPaOjSL5Lwf+0LDRoN/e6VbE90pCvXmhYFQR0w4vixUMQv3qQDDivlPprQT0Z51i/aTwm0ScCeFmdR3U4cA7oiDt6DkB2qA2XjVKAk/+SU0FiuD3LFV0Dr68N9Fn2pkkzuXBR+Ef5Ri1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=lJgKKfhl; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="QoW9xdsS"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 747CB400AF0;
-	Wed, 15 Jul 2026 19:15:18 +0000 (UTC)
-Received: from pdx1-sub0-mail-a240.dreamhost.com (100-103-105-183.trex-nlb.outbound.svc.cluster.local [100.103.105.183])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 179384029E7;
-	Wed, 15 Jul 2026 19:15:18 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Absorbed-Arithmetic: 3f71d3800eda3303_1784142918373_2123819091
-X-MC-Loop-Signature: 1784142918373:913687811
-X-MC-Ingress-Time: 1784142918373
-Received: from pdx1-sub0-mail-a240.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.103.105.183 (trex/8.0.2);
-	Wed, 15 Jul 2026 19:15:18 +0000
-Received: from offworld.lan (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a240.dreamhost.com (Postfix) with ESMTPSA id 4h0m8j2pH6z1049;
-	Wed, 15 Jul 2026 12:15:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1784142917;
-	bh=20yHA+bh+U9aX8fhOKP6HWtGG0Ae1y3Dvz1IKwgxd6w=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=QoW9xdsSHGsyS0EVJG4hHOA25UklBm35Y9NPRPzFerOfYfO39z//3cbIuuzuKvTjR
-	 qq3ft2HRoNdMT8mFlviZqmxKIv/uckmzQjYbVXDJVRpyUxuGgiHvUq2S9LmcXxKooc
-	 t3BnNVey6Ao5kqgYbuhaCSHaxkmEelxWcgaOMSQ+J1G/6msV6CPvKRFlCL5Y5EQnQf
-	 Sec63sFkahcmaAh/fzrfv1SFGaxr223zIUaIhMCsxWSjpxccKE83Xc1ayPoS2IIvYU
-	 Bykpn0gL4nG8G9PQI4mEjevwNIwqrxCaJsHLPD9Pr65QqAim/6Q+SOlOnWhgnLKDqj
-	 kK+C6fPJ4pRhg==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: jic23@kernel.org,
-	will@kernel.org,
-	mark.rutland@arm.com
-Cc: harshal.t@samsung.com,
-	icheng@nvidia.com,
-	linux-cxl@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCH v4 3/3] perf/cxlpmu: Support Channel/Rank/Bank filter
-Date: Wed, 15 Jul 2026 12:14:54 -0700
-Message-Id: <20260715191454.459673-4-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260715191454.459673-1-dave@stgolabs.net>
-References: <20260715191454.459673-1-dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lJgKKfhl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=qECPUV5KWvny4esgaF2Vf7PlyZR+bR1BGzMVUFeolqU=; b=lJgKKfhlIrhdAC1jyT5Hf3uPxE
+	l7vnGovceMuPLVWPqgV9wNKl/gQuYIaCna2P59iOxwIjz8TgnSZxKIXp5GeAqkWZQaTeT3+cubzjK
+	HGiNQpMygZIeOjVTO50mffhkjlNpKQVqpAAM1eEVW8Hs3fCuJZ+uAhYmyDBNCwh9jTJS9/Q5Y3LVu
+	ywLG36QvrGrHdJQUhM57vSlVQ7DI/PmUKWzLTbToYJXiR4beiet5xPyeJKLkIRtK7Wmpn2r5twtYX
+	SVWE+upv4jajftjr+NcrbxoQcLUUOncC03VumZY0PwcxCLxWxWB2Ce3O/uWL9GgzwaAmWuf5JkTOn
+	i46gZwWQ==;
+Received: from [38.23.173.23] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wk5dP-0000000Fp73-3ueX;
+	Wed, 15 Jul 2026 19:51:12 +0000
+Date: Wed, 15 Jul 2026 15:51:01 -0400
+From: "Liam R. Howlett" <liam@infradead.org>
+To: Lorenzo Stoakes <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
+	Pedro Falcato <pfalcato@suse.de>, Russell King <linux@armlinux.org.uk>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Simon Schuster <schuster.simon@siemens-energy.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Dan Williams <djbw@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, 
+	Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	SJ Park <sj@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Hugh Dickins <hughd@google.com>, Peter Xu <peterx@redhat.com>, 
+	Kees Cook <kees@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Clark <robin.clark@oss.qualcomm.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Abhinav Kumar <abhinav.kumar@linux.dev>, 
+	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Thierry Reding <thierry.reding@kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Christian Koenig <christian.koenig@amd.com>, 
+	Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yishai Hadas <yishaih@nvidia.com>, 
+	Shameer Kolothum <skolothumtho@nvidia.com>, Kevin Tian <kevin.tian@intel.com>, 
+	Ankit Agrawal <ankita@nvidia.com>, Alex Williamson <alex@shazbot.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Usama Arif <usama.arif@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev, iommu@lists.linux.dev, 
+	kasan-dev@googlegroups.com, linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
+	Russell King <linux+etnaviv@armlinux.org.uk>
+Subject: Re: [PATCH v2 02/33] mm: add kdoc comments for vma_start/last_pgoff()
+Message-ID: <jwtocg3yekest4xrda4fhzck5tcrcib2mmzjztvi3jk6i4oin7@xcvem5gdkwa7>
+References: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
+ <20260710-b4-pre-scalable-cow-v2-2-2a5aa403d977@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260710-b4-pre-scalable-cow-v2-2-2a5aa403d977@kernel.org>
 
-From: Harshal Thakkar <harshal.t@samsung.com>
+On 26/07/10 09:16PM, Lorenzo Stoakes wrote:
+> Describe what vma_start_pgoff() and vma_last_pgoff() actually provide in
+> detail.
+> 
+> This is in order that we can differentiate this between functions that will
+> be added in a subsequent patch which provide a different page offset.
+> 
+> We go to lengths to describe the edge cases that can be run into here.
+> 
+> No functional change intended.
+> 
+> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
 
-Implement CRB filtering per CXL 4.0 8.2.7.2.2, and extend the
-current filtering support beyond HDM. CRB filtering is only
-permitted for the DDR Interface, Queue Occupancy, Queue Residency
-and Retry event groups (CXL 4.0 Table 13-5), and only when counting
-a single event (a single mask bit). Because these group IDs are
-scoped by the CXL vendor ID, events from other vendors are also
-rejected. For example, to count DDR activates on channel 2 only:
+Reviewed-by: Liam R. Howlett (Oracle) <liam@infradead.org>
 
-  perf stat -a -e cxl_pmu_mem0.0/ddr_act,crb_filter_en=1,crb=0x02FFFFFF/
-
-Placing the 32-bit CRB value at config2:32-63 leaves the
-existing HDM value at config2:0-15 untouched and avoids needing
-a new config3.
-
-Signed-off-by: Harshal Thakkar <harshal.t@samsung.com>
-[davidlohr: multiple fixes]
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
- drivers/perf/cxl_pmu.c | 67 ++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 65 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 1fc83858f653..bb32cd1084e9 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -110,6 +110,7 @@ struct cxl_pmu_info {
- 	int on_cpu;
- 	struct hlist_node node;
- 	bool filter_hdm;
-+	bool filter_crb;
- 	int irq;
- };
- 
-@@ -146,6 +147,8 @@ static int cxl_pmu_parse_caps(struct device *dev, struct cxl_pmu_info *info)
- 	info->num_event_capabilities = FIELD_GET(CXL_PMU_CAP_NUM_EVN_CAP_REG_SUP_MSK, val) + 1;
- 
- 	info->filter_hdm = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) & CXL_PMU_FILTER_HDM;
-+	info->filter_crb = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) &
-+		CXL_PMU_FILTER_CHAN_RANK_BANK;
- 	if (FIELD_GET(CXL_PMU_CAP_INT, val))
- 		info->irq = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
- 	else
-@@ -229,6 +232,8 @@ enum {
- 	cxl_pmu_edge_attr,
- 	cxl_pmu_hdm_filter_en_attr,
- 	cxl_pmu_hdm_attr,
-+	cxl_pmu_crb_filter_en_attr,
-+	cxl_pmu_crb_attr,
- };
- 
- static struct attribute *cxl_pmu_format_attr[] = {
-@@ -240,6 +245,8 @@ static struct attribute *cxl_pmu_format_attr[] = {
- 	[cxl_pmu_edge_attr] = CXL_PMU_FORMAT_ATTR(edge, "config1:17"),
- 	[cxl_pmu_hdm_filter_en_attr] = CXL_PMU_FORMAT_ATTR(hdm_filter_en, "config1:18"),
- 	[cxl_pmu_hdm_attr] = CXL_PMU_FORMAT_ATTR(hdm, "config2:0-15"),
-+	[cxl_pmu_crb_filter_en_attr] = CXL_PMU_FORMAT_ATTR(crb_filter_en, "config1:19"),
-+	[cxl_pmu_crb_attr] = CXL_PMU_FORMAT_ATTR(crb, "config2:32-63"),
- 	NULL
- };
- 
-@@ -250,7 +257,9 @@ static struct attribute *cxl_pmu_format_attr[] = {
- #define CXL_PMU_ATTR_CONFIG1_INVERT_MSK		BIT(16)
- #define CXL_PMU_ATTR_CONFIG1_EDGE_MSK		BIT(17)
- #define CXL_PMU_ATTR_CONFIG1_FILTER_EN_MSK	BIT(18)
-+#define CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK	BIT(19)
- #define CXL_PMU_ATTR_CONFIG2_HDM_MSK		GENMASK(15, 0)
-+#define CXL_PMU_ATTR_CONFIG2_CRB_MSK		GENMASK_ULL(63, 32)
- 
- static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
- 					 struct attribute *attr, int a)
-@@ -267,6 +276,11 @@ static umode_t cxl_pmu_format_is_visible(struct kobject *kobj,
- 	     attr == cxl_pmu_format_attr[cxl_pmu_hdm_attr]))
- 		return 0;
- 
-+	if (!info->filter_crb &&
-+	    (attr == cxl_pmu_format_attr[cxl_pmu_crb_filter_en_attr] ||
-+	     attr == cxl_pmu_format_attr[cxl_pmu_crb_attr]))
-+		return 0;
-+
- 	return attr->mode;
- }
- 
-@@ -323,6 +337,17 @@ static u16 cxl_pmu_config2_get_hdm_decoder(struct perf_event *event)
- 	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_HDM_MSK, event->attr.config2);
- }
- 
-+static u16 cxl_pmu_config1_crb_filter_en(struct perf_event *event)
-+{
-+	return FIELD_GET(CXL_PMU_ATTR_CONFIG1_CRB_FILTER_EN_MSK,
-+			 event->attr.config1);
-+}
-+
-+static u32 cxl_pmu_config2_get_crb(struct perf_event *event)
-+{
-+	return FIELD_GET(CXL_PMU_ATTR_CONFIG2_CRB_MSK, event->attr.config2);
-+}
-+
- static ssize_t cxl_pmu_event_sysfs_show(struct device *dev,
- 					struct device_attribute *attr, char *buf)
- {
-@@ -621,6 +646,36 @@ static int cxl_pmu_event_init(struct perf_event *event)
- 		return -EOPNOTSUPP;
- 	/* TODO: Validation of any filter */
- 
-+	if (cxl_pmu_config1_crb_filter_en(event)) {
-+		if (!info->filter_crb)
-+			return -EINVAL;
-+		/* event group IDs are scoped by the CXL vendor ID */
-+		if (cxl_pmu_config_get_vid(event) != PCI_VENDOR_ID_CXL)
-+			return -EINVAL;
-+
-+		/*
-+		 * CRB filtering (Filter ID 1) is only valid for the DDR
-+		 * Interface, Queue Occupancy, Queue Residency and Retry
-+		 * event groups (CXL 4.0 Table 13-5).
-+		 */
-+		switch (cxl_pmu_config_get_gid(event)) {
-+		case CXL_PMU_GID_DDR:
-+		case CXL_PMU_GID_QUEUE_OCC:
-+		case CXL_PMU_GID_QUEUE_RESID:
-+		case CXL_PMU_GID_RETRY_EVENTS:
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		/*
-+		 * Filtering while counting multiple events is
-+		 * undefined behavior.
-+		 */
-+		if (hweight32(cxl_pmu_config_get_mask(event)) > 1)
-+			return -EINVAL;
-+	}
-+
- 	/*
- 	 * Verify that it is possible to count what was requested. Either must
- 	 * be a fixed counter that is a precise match or a configurable counter
-@@ -677,8 +732,8 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
- 	hwc->state = 0;
- 
- 	/*
--	 * Currently only hdm filter control is implemented, this code will
--	 * want generalizing when more filters are added.
-+	 * Filter ID=0: HDM decoder filter
-+	 * Filter ID=1: Channel/Rank/Bank (CRB) filter
- 	 */
- 	if (info->filter_hdm) {
- 		if (cxl_pmu_config1_hdm_filter_en(event))
-@@ -688,6 +743,14 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
- 		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
- 	}
- 
-+	if (info->filter_crb) {
-+		if (cxl_pmu_config1_crb_filter_en(event))
-+			cfg = cxl_pmu_config2_get_crb(event);
-+		else
-+			cfg = GENMASK(31, 0); /* no filtering if 0xFFFF_FFFF */
-+		writel(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 1));
-+	}
-+
- 	cfg = readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
- 	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
- 	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_FREEZE_ON_OVRFLW, 1);
--- 
-2.39.5
-
+> ---
+>  include/linux/mm.h | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> index 09b06d8fea74..abac72785277 100644
+> --- a/include/linux/mm.h
+> +++ b/include/linux/mm.h
+> @@ -4307,11 +4307,41 @@ static inline unsigned long vma_pages(const struct vm_area_struct *vma)
+>  	return (vma->vm_end - vma->vm_start) >> PAGE_SHIFT;
+>  }
+>  
+> +/**
+> + * vma_start_pgoff() - Get the page offset of the start of @vma
+> + * @vma: The VMA whose page offset is required.
+> + *
+> + * If the VMA is file-backed, this is the page offset into the file.
+> + *
+> + * If @vma is anonymous, this is the virtual page offset of the start of the
+> + * VMA - if unfaulted, then vma->vm_start >> PAGE_SHIFT, if faulted then the
+> + * virtual page offset at the time of first fault.
+> + *
+> + * If @vma is a MAP_PRIVATE file-backed mapping, then this returns the
+> + * page offset within the file.
+> + *
+> + * Edge cases: nommu does not abide by these, MAP_PRIVATE-/dev/zero satisfies
+> + * vma_is_anonymous() but has file-backed page offset, and MAP_PRIVATE-pfnmap
+> + * regions have their page offset set to the first PFN in the range.
+> + *
+> + * Returns: The page offset of the start of @vma.
+> + */
+>  static inline pgoff_t vma_start_pgoff(const struct vm_area_struct *vma)
+>  {
+>  	return vma->vm_pgoff;
+>  }
+>  
+> +/**
+> + * vma_last_pgoff() - Get the page offset of the last page in @vma
+> + * @vma: The VMA whose last page offset is required.
+> + *
+> + * This returns the last page offset contained within @vma.
+> + *
+> + * See the description of vma_start_pgoff() for a description of VMA page
+> + * offsets.
+> + *
+> + * Returns: The last page offset of @vma.
+> + */
+>  static inline pgoff_t vma_last_pgoff(const struct vm_area_struct *vma)
+>  {
+>  	return vma_start_pgoff(vma) + vma_pages(vma) - 1;
+> 
+> -- 
+> 2.55.0
+> 
