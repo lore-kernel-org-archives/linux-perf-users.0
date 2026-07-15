@@ -1,69 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2C893EC6A4;
-	Wed, 15 Jul 2026 18:21:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CFEC4949EC;
+	Wed, 15 Jul 2026 18:40:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784139716; cv=none; b=Xb5gVqp9I/kG2/S+RmgzVK05xPtaIkQ/q263sJlu1c6/RyaEPfw/WkTpbx9jKg0ougIDKILSaL3xXGjtWDd/cm1TayPIGDp44ygEceVhl5XcFGlvrlA31Rykf2pEgCyW29gTa3v+40SxU1GcVZWvqG8zgJT8LJlBt/nkv2rESxE=
+	t=1784140810; cv=none; b=iiF0VnRlCUeiWdP7TB4G4mMyL2+Eahlnhw7dA2MqHKe05K2uFxdmcGDPCQj/Ng326vyZCjj6+x2n3r11Ca9NrD8ZIoU22M1CvSo6RqKIar5/PHjX21cJyqiGp/CPXGcoHAHKH4M0PAgGKgcm3F//CRAKIPWX8gL7scvc4sirThU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784139716; c=relaxed/simple;
-	bh=jvyqiEGDlDPAY39VjzAaLBkUb5V1W4nAReWxGSXGIGg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qheF1/lvOd2DGm7kHEx9/3zK0tQXqv+VeE0tbbX/q1Iy7IkgNphd+tboO+qFR6ohljjPxbTMu+21JNftBzhbZZBrP49n/T7qTy8NOBNc2T9mmvzTPtPOJRs1hijIYR52xtBnha7e4U3y8SRVVwwH6jH7LVTciwMKq7fqLP0rtLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h6VnUXlb; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784140810; c=relaxed/simple;
+	bh=OEhdMGRrWrAZX6zXEyVuFKcovyYbS7wBk3Et2JM2g1I=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=liZrD3fQX1/uLDQVtQ/Av6z2De/I/jdGIMcaKMtpYgkYNoQ4VhYqtmZW40tfNBg8ORG7pPhZzsuq9iKvmHer0PzW240lytdWwsoKpojvsZZBgBKCKkynuRTjYcs4NliLg3ZUqOIJk6NLfXAQfjx8S8C3Nkk7NDMt9/RZ/NQTqOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=St8n03ee; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6VnUXlb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE2BB1F000E9;
-	Wed, 15 Jul 2026 18:21:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="St8n03ee"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAAE21F00A3E;
+	Wed, 15 Jul 2026 18:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784139707;
-	bh=q7FyobgUfnhunJ5F9IhBarq6sejEcHzB3Iga4iGTXx8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=h6VnUXlbAjI0XFCn8Lerj6YF79lE9Z02OThY3lrzUQXDWY30YzQYpSyqaY5SIJXoO
-	 r6xyqqvVVVauAGXy/61Gi2Sw/n/A3Zyh1PYDidG8cWoMTycwSXxpw95s1jjW/d9AWl
-	 /5DfWm12I0mrmhunNkRM6gdJrgHnPsU9dr4fwctvsekjTndHiIrJ97zNeaqubxuFOA
-	 PNGpsBsDfsH12QQ3HkRi3H/QelgV+x67ADLOUOQaREHiCa9g28LTwiOyNqx84jWFzo
-	 SgDP7IfUGWgbnw7zJ7nHUhm6VF3Fw+/QaR3QkZPDyXAtdD/+E4NVbHOleyroieetsv
-	 t8omshhansuHw==
-Date: Wed, 15 Jul 2026 11:21:44 -0700
+	s=k20260515; t=1784140798;
+	bh=mtttv+/LVF2WmnUJQxtrUPh/1eD27s/pfFZBpOenwgg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=St8n03eedWLKmHBD06eGbeBR6FHnuwMzy3HoQlps6NnEECPFEHc+BrycEK0bJUTCM
+	 B096Xl3q8wFR3asg8jSij3AsSY1iR1fGvWxaacMUhbaLPUnIW+Fca8o0CWDPUTfQmg
+	 9vnIg3KhUxvND7X9XYTT9j5ZJVF9Tcwui/YUD+U1V++gwp4XtkXrORSlB8RieKr1FU
+	 oCsDm6qiluqQ/8VFKG5Lhq98jZGKePXVFdJ7gfIeVuyqAbXJk7EfIG/epEcI8zq/J6
+	 ARnqvDsF1S6vNYNza4tQiU5XAo4VR9Vj652VBi3cW/9zZkoYmm7vgnj7CaY3vGNY79
+	 LKlWmBcDCe5pg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, james.clark@linaro.org, afaerber@suse.de,
-	mani@kernel.org, dapeng1.mi@linux.intel.com,
-	thomas.falcon@intel.com, irogers@google.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/12] perf vendor events intel: update
-Message-ID: <alfPuIxX95FTv5Jt@google.com>
-References: <20260714204044.1952031-1-ctshao@google.com>
- <CAJpZYjUa4HpbUvPhcjG3-ezKkig8bd1mbdQmb7xo_c9S_uyvfg@mail.gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>, 
+ Dapeng Mi <dapeng1.mi@intel.com>, Xudong Hao <xudong.hao@intel.com>
+In-Reply-To: <20260708053226.3776183-1-dapeng1.mi@linux.intel.com>
+References: <20260708053226.3776183-1-dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH] perf jevents: Add Intel OMR MSR mappings
+Message-Id: <178414079786.2318976.1720252632382617060.b4-ty@kernel.org>
+Date: Wed, 15 Jul 2026 11:39:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJpZYjUa4HpbUvPhcjG3-ezKkig8bd1mbdQmb7xo_c9S_uyvfg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-Hi CT,
-
-On Wed, Jul 15, 2026 at 10:35:35AM -0700, Chun-Tse Shao wrote:
-> (Please disregard my previous message due to a formatting error, I
-> apologize for the spam)
+On Wed, 08 Jul 2026 13:32:26 +0800, Dapeng Mi wrote:
+> New OMR MSRs are introduced for OMR events on DMR and NVL. Perf continues
+> to reuse the existing offcore_rsp attribute to encode the MSR value,
+> similar to existing OCR event handling.
 > 
-> Following feedback from Ian
-> (https://lore.kernel.org/all/CAP-5=fVc6tw3hfnvB7n_UZ3B5JF7vBpm7cnE8516t5HVUWwFNQ@mail.gmail.com/),
-> we have decided to address this by fixing get_cpuid_str rather than
-> modifying mapfile.csv. I will send a separate patch for that.
+> Add the corresponding OMR MSR mappings in lookup_msr() so jevents can
+> translate these events and generate the correct offcore_rsp attribute.
 > 
-> Please disregard this v2 series and use the v1 series instead:
-> https://lore.kernel.org/all/20260713181757.481164-1-ctshao@google.com/
+> [...]
+Applied to perf-tools-next, thanks!
 
-Thanks for the clarification, I will apply v1 then.
-
+Best regards,
 Namhyung
+
 
