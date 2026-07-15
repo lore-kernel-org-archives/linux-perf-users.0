@@ -1,177 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from gerbil.ash.relay.mailchannels.net (gerbil.ash.relay.mailchannels.net [23.83.222.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD5A22848A7;
-	Wed, 15 Jul 2026 16:45:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D5348A2DD;
+	Wed, 15 Jul 2026 17:10:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.222.67
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784133919; cv=none; b=lTk9pSxYvDoKCBUH9FOs28OGFlcqbm1gAwRNrDl8JL8z7f31KYbliAqv7/vAb4c7LcE/Kc2LHqrIL2VTcs6Zjr0C0p3S8sLlUOb66wxV/G5oYnXIu0rrhiHx7dnCYXm7zoSBYFN2aNdX6Cq9jivQciH40UGc3XRRRBanl/hsznw=
+	t=1784135447; cv=none; b=eb5o8/Jiy+e2faUwj9lspm1tmIIA0NXx3mkolGkaDKEz177fdsv0A25W69NurVREg5vPmw8bzJ6nEsFDE5wpXjJAnYc7OxJDLuGqp3fuE1krz1jJ0UHNpKji/A8UE0aDc61MuqNZCLhyD8pknF+lomXKbFco9q5ERkWBwtLdDTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784133919; c=relaxed/simple;
-	bh=lQj6MZcyZZytj/yie0erSueVdQw7h/KUjazktgLdxmY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u7Hsgwd+SKqbAuVEgRUb/TicnAEK42LLfzjkYTtvtWS3TCE0E//YYw8yvkVVlq+voMCZ/C5BDoyv7p11/vVqyJzDV/uO5Q9qwKAV/BDl5Eon3PvifvWbjxBnasLC0Ysu/5Wgf0O+DvUskXGvRx7U7/gjmMZSim3mkKbZ/2XAKsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fF51j381; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784135447; c=relaxed/simple;
+	bh=OyN+TpyC1zFoEMeg11i4LEuEu7Wsl0F3PeEAV9ONKik=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZG219/9vTJKPFxEQJCLFpFPvMYxnhVYldUjyKukLTfnaenzw6rePDsfYxLY0rMZTPk5KHiwUM4WFQ/GGECao8KjDYH6OtU+i5UGqgIagbFWdpxpfqXEdU8PvlOVN3l7tOBPu739vqFgi0DW6xM4LCRO9IPTXGlyvnrme4cDtZ50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Vnc06Xrp; arc=none smtp.client-ip=23.83.222.67
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fF51j381"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F23D91F000E9;
-	Wed, 15 Jul 2026 16:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784133917;
-	bh=RV6t17XzcXK7hDius+P4ap3Hxy2iOJYEZB5njvjZ5fs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=fF51j3812qhu7tXk8sO7p0qRFeZnT0zcm+NTY+3Ll6Ses01BSCXc2/m183XQU73O0
-	 gWNlFD6kXTJCsr1gt+EXL5TZow7GMfu0uw6vX5wVNSbBnS0aHCNkALtfD+CAKAVpP9
-	 7QKeRkV5f63I3azlBivhFbZliFsBiX0dQUZoxwiyHwnyRi+MhaAnFote5zPICBo03y
-	 JnKokaCoLx8QGcPcy8xAObNy0I08PMEl0Zb7lYpiUZFwDJj5zi0xigkOH8W5foTbcM
-	 3xQ/NFTiylIGvv0yuMkDKSp5tMU3PvVtkGS8nNdhJ30p0ilbfdPs43/NbvFb9WUOQm
-	 UNK0weh72BD2A==
-Message-ID: <c455808b-0891-45c6-a716-41b19ca103d9@kernel.org>
-Date: Wed, 15 Jul 2026 18:44:49 +0200
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Vnc06Xrp"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id BBBC28C1F49;
+	Wed, 15 Jul 2026 16:53:13 +0000 (UTC)
+Received: from pdx1-sub0-mail-a258.dreamhost.com (trex-green-4.trex.outbound.svc.cluster.local [100.103.95.92])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 4E3F48C216F;
+	Wed, 15 Jul 2026 16:53:13 +0000 (UTC)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Print-Absorbed: 73b5ca342942a998_1784134393594_2323542538
+X-MC-Loop-Signature: 1784134393594:3517504603
+X-MC-Ingress-Time: 1784134393594
+Received: from pdx1-sub0-mail-a258.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.103.95.92 (trex/8.0.2);
+	Wed, 15 Jul 2026 16:53:13 +0000
+Received: from offworld (unknown [76.167.199.67])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a258.dreamhost.com (Postfix) with ESMTPSA id 4h0j0m5b6Bz1056;
+	Wed, 15 Jul 2026 09:53:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1784134393;
+	bh=MV6CcYh33O7bNjia9/HsbtXHSbp9YRTPK7nDci7aeHQ=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=Vnc06XrpDmCtgmZ+CZR5sQHIeiKAR3lpljAg53WXdapceP6rUnj6YLMK99nh93i1F
+	 KgRFacVblS1BgUci+0DL22dbExllRW4+uOhBiffGXrenm7T/+kwrSIL/qT3uEifTSM
+	 2kU2upNW/8tNX+tKbhYcX1BJO0xaKVtaxB1VesXRpu3QUI7ymtn6fKwMgbC2z9Kfvz
+	 eqnCqwWbplyhXt78rwV0N+Lm1A3SfRNooOPgsYknQrlk7bKXCyeODoQ5cdPI74He9d
+	 aK49PkzM4C2m7Hex8SET9UvvlC9UZ1vGI4LWsx424I4hNvgtcac1PszRqGO4Kxho6V
+	 Xw6HhhBy3yUnQ==
+Date: Wed, 15 Jul 2026 09:53:09 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Richard Cheng <icheng@nvidia.com>
+Cc: jic23@kernel.org, will@kernel.org, mark.rutland@arm.com,
+	harshal.t@samsung.com, linux-cxl@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] perf/cxlpmu: Support Channel/Rank/Bank filter
+Message-ID: <20260715165309.qvduacwyliu4pyoa@offworld>
+References: <20260713061112.105419-1-dave@stgolabs.net>
+ <20260713061112.105419-4-dave@stgolabs.net>
+ <alXWrWdv-5xxHh4P@MWDK4CY14F>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 19/33] mm: prefer vma_[start,end]_pgoff() to
- vma->vm_pgoff in kernel/
-Content-Language: en-US
-To: Lorenzo Stoakes <ljs@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- David Hildenbrand <david@kernel.org>, "Liam R. Howlett"
- <liam@infradead.org>, Mike Rapoport <rppt@kernel.org>,
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
- Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
- Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>,
- Pedro Falcato <pfalcato@suse.de>, Russell King <linux@armlinux.org.uk>,
- Dinh Nguyen <dinguyen@kernel.org>,
- Simon Schuster <schuster.simon@siemens-energy.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- Helge Deller <deller@gmx.de>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Dan Williams <djbw@kernel.org>, Matthew Wilcox <willy@infradead.org>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Barry Song <baohua@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
- Naoya Horiguchi <nao.horiguchi@gmail.com>, Xu Xin <xu.xin16@zte.com.cn>,
- Chengming Zhou <chengming.zhou@linux.dev>, SJ Park <sj@kernel.org>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>,
- Ying Huang <ying.huang@linux.alibaba.com>,
- Alistair Popple <apopple@nvidia.com>, Hugh Dickins <hughd@google.com>,
- Peter Xu <peterx@redhat.com>, Kees Cook <kees@kernel.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Robin Murphy <robin.murphy@arm.com>, Andrey Konovalov
- <andreyknvl@gmail.com>, Alexander Potapenko <glider@google.com>,
- Dmitry Vyukov <dvyukov@google.com>, Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jarkko Sakkinen <jarkko@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, Thomas Gleixner
- <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, x86@kernel.org,
- "H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>,
- H Hartley Sweeten <hsweeten@visionengravers.com>,
- Lucas Stach <l.stach@pengutronix.de>,
- Christian Gmeiner <christian.gmeiner@gmail.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Clark <robin.clark@oss.qualcomm.com>, Dmitry Baryshkov
- <lumag@kernel.org>, Abhinav Kumar <abhinav.kumar@linux.dev>,
- Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
- Thierry Reding <thierry.reding@kernel.org>,
- Mikko Perttunen <mperttunen@nvidia.com>,
- Jonathan Hunter <jonathanh@nvidia.com>,
- Christian Koenig <christian.koenig@amd.com>, Huang Rui <ray.huang@amd.com>,
- Matthew Auld <matthew.auld@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Yishai Hadas <yishaih@nvidia.com>, Shameer Kolothum
- <skolothumtho@nvidia.com>, Kevin Tian <kevin.tian@intel.com>,
- Ankit Agrawal <ankita@nvidia.com>, Alex Williamson <alex@shazbot.org>,
- Paolo Bonzini <pbonzini@redhat.com>, Shakeel Butt <shakeel.butt@linux.dev>,
- Usama Arif <usama.arif@linux.dev>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, nvdimm@lists.linux.dev,
- linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- damon@lists.linux.dev, iommu@lists.linux.dev, kasan-dev@googlegroups.com,
- linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
- freedreno@lists.freedesktop.org, linux-tegra@vger.kernel.org,
- kvm@vger.kernel.org, Russell King <linux+etnaviv@armlinux.org.uk>
-References: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
- <20260710-b4-pre-scalable-cow-v2-19-2a5aa403d977@kernel.org>
-From: "Vlastimil Babka (SUSE)" <vbabka@kernel.org>
-Autocrypt: addr=vbabka@kernel.org; keydata=
- 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
-In-Reply-To: <20260710-b4-pre-scalable-cow-v2-19-2a5aa403d977@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <alXWrWdv-5xxHh4P@MWDK4CY14F>
+User-Agent: NeoMutt/20220429
 
-On 7/10/26 22:17, Lorenzo Stoakes wrote:
-> Be consistent in using vma_start_pgoff() and vma_end_pgoff(), which clearly
-> indicates which part of the VMA the page offset refers to and aids
-> greppability.
-> 
-> This is part of a broader series laying the ground to provide a virtual
-> page offset for MAP_PRIVATE-file backed anon folios.
-> 
-> No functional change intended.
-> 
-> Acked-by: Marek Szyprowski <m.szyprowski@samsung.com> # for kernel/dma
-> Reviewed-by: Gregory Price <gourry@gourry.net>
-> Acked-by: Pedro Falcato <pfalcato@suse.de>
-> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
+On Tue, 14 Jul 2026, Richard Cheng wrote:
 
-Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+>On Sun, Jul 12, 2026 at 11:11:12PM +0800, Davidlohr Bueso wrote:
+>> @@ -621,6 +646,32 @@ static int cxl_pmu_event_init(struct perf_event *event)
+>>		return -EOPNOTSUPP;
+>>	/* TODO: Validation of any filter */
+>>
+>> +	if (cxl_pmu_config1_crb_filter_en(event)) {
+>> +		if (!info->filter_crb)
+>> +			return -EINVAL;
+>> +		/*
+>> +		 * CRB filtering (Filter ID 1) is only valid for the DDR
+>> +		 * Interface, Queue Occupancy, Queue Residency and Retry
+>> +		 * event groups (CXL 4.0 Table 13-5).
+>> +		 */
+>> +		switch (cxl_pmu_config_get_gid(event)) {
+>> +		case CXL_PMU_GID_DDR:
+>> +		case CXL_PMU_GID_QUEUE_OCC:
+>
+>Should we also validate the Event Vendor ID?
+>
+>GID namespace is scoped by the Vendor ID, while the groups listed
+>in CXL 4.0 Table 13-5 are under CXL vendor ID.
+>A vendor-specific event could reuse one of these numeric GID and pass
+>this switch even though the CXL CRB rules don't apply to it.
+>
+>I would suggest to reject non-CXL events before the switch
+>"""
+>if (cxl_pmu_config_get_vid(event) != PCI_VENDOR_ID_CXL)
+>    return -EINVAL;
+>"""
+>
+>Do you think this make sense to you?
 
+Good catch, yes this makes sense.
+
+Thanks,
+Davidlohr
