@@ -1,192 +1,301 @@
-Received: from cornsilk.maple.relay.mailchannels.net (cornsilk.maple.relay.mailchannels.net [23.83.214.40])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3933D31960B;
-	Wed, 15 Jul 2026 19:53:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=23.83.214.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F28312D1F1;
+	Wed, 15 Jul 2026 19:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784145223; cv=none; b=X/KdXJww5P0tYVBbA4u6Lj58M5TtJ+7Z6u6Fto9CQpPu3TR9m713p22odWXPnjF97a1sY82tFymAieE3+Rn0Nr89UTqfZjkyM1vFNS8JCv/UjJ3Umj1ItLjxifDr2XBHmvAYS8mcwzqqKnS/wsaF5D4+OVbqTGNYTrJgnqgyKMY=
+	t=1784145251; cv=none; b=dq7WBbljD4YhYejPinc9jCWAATXaU3F9v2iEIbTaSSqDxcC38wuqSEO5L/hLSlXJ+t2301YMVvmEUM0jal1z+b5vuKK/8UKJv5a86i8+WiJWFkaw8R6PVjeT3BTFOaAjkrfxIX42yO5wVkpcbQw+U98vORC6nx4cD9JkurxQamE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784145223; c=relaxed/simple;
-	bh=OxMxLFHBhEdu3uMyPJ43SN3Z0J/FiifBUvc0DiPXFIM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lTgB36YaAuwapCWrG5Krcpn1ugfHLfcbcxMx2YieySomTbuICJ+YF7PaaRsVCFmq2PXiuQnnDjQ2FF7hpkDKB331AbD2yKLAZozohZBTOnUkMmOJbABBHevKwBp/ayGDVpKrzaPf1eJY1+qio3gfEQESwOlJDv8KZ61gZ4eCW/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=fail smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=WI1EGT45; arc=none smtp.client-ip=23.83.214.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1784145251; c=relaxed/simple;
+	bh=8IBeSTH79zEd/85B3I13OSGp6abiS7I1hygz8VGy0EY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZSyvtdMvIJQNuKE/gj8uRA66TZ5EUWsQ/VlRqqZi2EmHGchtmBshFwUnRAsm1OORLRFW10OxbLZB1+yz37fcixp3InqXPOB7AEAGFKoewgPT4Wz0E2RvqVS34zwGLT+livD9cCVjnYOthsf/CroCENLt1P3a8/3JQRtmoMcpUNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=G9Ads1/5; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="WI1EGT45"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id E00277E2924;
-	Wed, 15 Jul 2026 19:15:17 +0000 (UTC)
-Received: from pdx1-sub0-mail-a240.dreamhost.com (100-103-88-67.trex-nlb.outbound.svc.cluster.local [100.103.88.67])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 67A737E2E94;
-	Wed, 15 Jul 2026 19:15:17 +0000 (UTC)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Cure-Average: 02feaebe7b802e26_1784142917814_3294138721
-X-MC-Loop-Signature: 1784142917814:3699843371
-X-MC-Ingress-Time: 1784142917813
-Received: from pdx1-sub0-mail-a240.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.103.88.67 (trex/8.0.2);
-	Wed, 15 Jul 2026 19:15:17 +0000
-Received: from offworld.lan (unknown [76.167.199.67])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a240.dreamhost.com (Postfix) with ESMTPSA id 4h0m8h5QDhzymb;
-	Wed, 15 Jul 2026 12:15:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1784142917;
-	bh=X3viXdzlmBwAY52OK6zwsX7RuN1+PXNKsPekwhrlHIE=;
-	h=From:To:Cc:Subject:Date:Content-Transfer-Encoding;
-	b=WI1EGT4584LQOu/OXxg4UKOLvO9DK5lZA5u/ZZoOdhQwaPqVrjJkpDvayORsStHy8
-	 PBAxZ8mDja6GhuT4JFbGOSm3XGNEStr/lKnqZ7QgEyYyhyEr4SpWrpWAdhrj2yks3z
-	 aB2/FA6H3/NGfYrDOX3SgAqBjDH1J4sJnL4J0QBpjTUqeriRmsuTUNzXl8RqJgZgLQ
-	 JvsEiPB0rAAX480rcsdhptt84VCzI66tjFbG0Y+cw9QlW3SwFnImn831G/qWXLPTBz
-	 qJLJWLDSWIhstm8KUiMdD6LhgsDYhsQvK2TJXadQpkoyUhQ4nAsX5nWDBUYbw6rVFA
-	 HD8PdApPbHeXQ==
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: jic23@kernel.org,
-	will@kernel.org,
-	mark.rutland@arm.com
-Cc: harshal.t@samsung.com,
-	icheng@nvidia.com,
-	linux-cxl@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Davidlohr Bueso <dave@stgolabs.net>
-Subject: [PATCH v4 2/3] perf/cxlpmu: Add missing CXL 4.0 events
-Date: Wed, 15 Jul 2026 12:14:53 -0700
-Message-Id: <20260715191454.459673-3-dave@stgolabs.net>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20260715191454.459673-1-dave@stgolabs.net>
-References: <20260715191454.459673-1-dave@stgolabs.net>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G9Ads1/5"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=u1xTcKNYwdOUdwgNpbyIzAcPowaOLgUaHPOaAeLqzfg=; b=G9Ads1/50L6jZQcaHXYJq/Psc7
+	AryEJZcuGxV76jnQvR75aByyQN2+s4KISlfDdk2TV92ezj8Mb4OV3LQF0ZVYbq4Bwq7lXV48A3koM
+	4dW7xh0EelhZHZsLKX5Terjo3G/wY4H4bI5wxUs6ArdrtWB1DCY3d3mbi6Xxwegu+cmC0ufKyHXMu
+	AqLncMI+gSugHyCRPWyTnaJ8K+c0jt3rkv99sJlwJf7PJ+dQ563sPdXLBXOHRlyBfZi2YB6bdEe6v
+	/P14vLsGTAZrR7gY0vy5J00O3llg1vnu5Lm0yJTpk8XtVFADXa9x0/iPQC2akptOn3wrnWTNwWmxS
+	CaBTrBPw==;
+Received: from [38.23.173.23] (helo=localhost)
+	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wk5fh-0000000FpH0-1NIX;
+	Wed, 15 Jul 2026 19:53:33 +0000
+Date: Wed, 15 Jul 2026 15:53:23 -0400
+From: "Liam R. Howlett" <liam@infradead.org>
+To: Lorenzo Stoakes <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
+	Pedro Falcato <pfalcato@suse.de>, Russell King <linux@armlinux.org.uk>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Simon Schuster <schuster.simon@siemens-energy.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Dan Williams <djbw@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, 
+	Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	SJ Park <sj@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Hugh Dickins <hughd@google.com>, Peter Xu <peterx@redhat.com>, 
+	Kees Cook <kees@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Clark <robin.clark@oss.qualcomm.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Abhinav Kumar <abhinav.kumar@linux.dev>, 
+	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Thierry Reding <thierry.reding@kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Christian Koenig <christian.koenig@amd.com>, 
+	Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yishai Hadas <yishaih@nvidia.com>, 
+	Shameer Kolothum <skolothumtho@nvidia.com>, Kevin Tian <kevin.tian@intel.com>, 
+	Ankit Agrawal <ankita@nvidia.com>, Alex Williamson <alex@shazbot.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Usama Arif <usama.arif@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev, iommu@lists.linux.dev, 
+	kasan-dev@googlegroups.com, linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
+	Russell King <linux+etnaviv@armlinux.org.uk>
+Subject: Re: [PATCH v2 03/33] tools/testing/vma: use vma_start_pgoff() in
+ merge tests
+Message-ID: <p6bhkbzvrdz6bb4a6cdmd6bmlwuwxfjd3lx5opq334o7nwjhwa@ctqdd3i2daon>
+References: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
+ <20260710-b4-pre-scalable-cow-v2-3-2a5aa403d977@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260710-b4-pre-scalable-cow-v2-3-2a5aa403d977@kernel.org>
 
-From: Harshal Thakkar <harshal.t@samsung.com>
+On 26/07/10 09:16PM, Lorenzo Stoakes wrote:
+> Now we have the vma_start_pgoff() helper, update the merge tests to make
+> use of it for consistency.
+> 
+> No functional change intended.
+> 
+> Reviewed-by: Pedro Falcato <pfalcato@suse.de>
+> Reviewed-by: Gregory Price <gourry@gourry.net>
+> Reviewed-by: Vlastimil Babka (SUSE) <vbabka@kernel.org>
+> Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
 
-Add support for CXL 4.0 events that are exposed by the CPMU hardware
-but not present in the driver. Such events are defined in Table 13-5
-of the spec.
+Reviewed-by: Liam R. Howlett (Oracle) <liam@infradead.org>
 
-Signed-off-by: Harshal Thakkar <harshal.t@samsung.com>
-[davidlohr: add missing throttle and queue occupancy events]
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
----
- drivers/perf/cxl_pmu.c | 50 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
-
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 39b46550a510..1fc83858f653 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -77,6 +77,10 @@
- #define CXL_PMU_GID_S2M_NDR		0x0024
- #define CXL_PMU_GID_S2M_DRS		0x0025
- #define CXL_PMU_GID_DDR			0x8000
-+#define CXL_PMU_GID_QUEUE_OCC           0x8001
-+#define CXL_PMU_GID_QUEUE_RESID         0x8002
-+#define CXL_PMU_GID_RETRY_EVENTS        0x8003
-+#define CXL_PMU_GID_THROTTLE            0x8004
- 
- static int cxl_pmu_cpuhp_state_num;
- 
-@@ -385,13 +389,23 @@ static struct attribute *cxl_pmu_event_attrs[] = {
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memwrfwd,		CXL_PMU_GID_M2S_REQ, BIT(4)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrdtee,		CXL_PMU_GID_M2S_REQ, BIT(5)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memrddatatee,		CXL_PMU_GID_M2S_REQ, BIT(6)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminvtee,               CXL_PMU_GID_M2S_REQ, BIT(7)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memspecrd,		CXL_PMU_GID_M2S_REQ, BIT(8)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminvnt,		CXL_PMU_GID_M2S_REQ, BIT(9)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memcleanevict,		CXL_PMU_GID_M2S_REQ, BIT(10)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_meminvptee,		CXL_PMU_GID_M2S_REQ, BIT(11)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memspecrdtee,		CXL_PMU_GID_M2S_REQ, BIT(12)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_teupdate,		CXL_PMU_GID_M2S_REQ, BIT(13)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memclnevcttee,		CXL_PMU_GID_M2S_REQ, BIT(14)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_req_memclnevctu,		CXL_PMU_GID_M2S_REQ, BIT(15)),
- 	/* CXL rev 3.0 Table 3-35 M2S RwD Memory Opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memwr,			CXL_PMU_GID_M2S_RWD, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memwrptl,		CXL_PMU_GID_M2S_RWD, BIT(2)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_biconflict,		CXL_PMU_GID_M2S_RWD, BIT(4)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memrdfill,		CXL_PMU_GID_M2S_RWD, BIT(5)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memwrtee,		CXL_PMU_GID_M2S_RWD, BIT(9)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memwrptltee,		CXL_PMU_GID_M2S_RWD, BIT(10)),
-+	CXL_PMU_EVENT_CXL_ATTR(m2s_rwd_memrdfilltee,		CXL_PMU_GID_M2S_RWD, BIT(13)),
- 	/* CXL rev 3.0 Table 3-38 M2S BIRsp Memory Opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_birsp_i,			CXL_PMU_GID_M2S_BIRSP, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(m2s_birsp_s,			CXL_PMU_GID_M2S_BIRSP, BIT(1)),
-@@ -406,15 +420,25 @@ static struct attribute *cxl_pmu_event_attrs[] = {
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblk,		CXL_PMU_GID_S2M_BISNP, BIT(4)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datblk,		CXL_PMU_GID_S2M_BISNP, BIT(5)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblk,		CXL_PMU_GID_S2M_BISNP, BIT(6)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curtee,		CXL_PMU_GID_S2M_BISNP, BIT(8)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datatee,		CXL_PMU_GID_S2M_BISNP, BIT(9)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invtee,		CXL_PMU_GID_S2M_BISNP, BIT(10)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblktee,		CXL_PMU_GID_S2M_BISNP, BIT(12)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datablktee,		CXL_PMU_GID_S2M_BISNP, BIT(13)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblktee,		CXL_PMU_GID_S2M_BISNP, BIT(14)),
- 	/* CXL rev 3.1 Table 3-50 S2M NDR Opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmp,			CXL_PMU_GID_S2M_NDR, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmps,			CXL_PMU_GID_S2M_NDR, BIT(1)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpe,			CXL_PMU_GID_S2M_NDR, BIT(2)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpm,			CXL_PMU_GID_S2M_NDR, BIT(3)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_biconflictack,		CXL_PMU_GID_S2M_NDR, BIT(4)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmptee,			CXL_PMU_GID_S2M_NDR, BIT(5)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmptee_s,		CXL_PMU_GID_S2M_NDR, BIT(6)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmptee_e,		CXL_PMU_GID_S2M_NDR, BIT(7)),
- 	/* CXL rev 3.0 Table 3-46 S2M DRS opcodes */
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdata,			CXL_PMU_GID_S2M_DRS, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdatanxm,		CXL_PMU_GID_S2M_DRS, BIT(1)),
-+	CXL_PMU_EVENT_CXL_ATTR(s2m_drs_memdatatee,		CXL_PMU_GID_S2M_DRS, BIT(2)),
- 	/* CXL rev 3.0 Table 13-5 directly lists these */
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_act,				CXL_PMU_GID_DDR, BIT(0)),
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_pre,				CXL_PMU_GID_DDR, BIT(1)),
-@@ -423,6 +447,32 @@ static struct attribute *cxl_pmu_event_attrs[] = {
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_refresh,			CXL_PMU_GID_DDR, BIT(4)),
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_selfrefreshent,		CXL_PMU_GID_DDR, BIT(5)),
- 	CXL_PMU_EVENT_CXL_ATTR(ddr_rfm,				CXL_PMU_GID_DDR, BIT(6)),
-+	/* CXL 4.0 Table 13-5 DDR add-on events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_cas_rd_ap,			CXL_PMU_GID_DDR, BIT(7)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_cas_wr_ap,			CXL_PMU_GID_DDR, BIT(8)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_refresh_all_banks,		CXL_PMU_GID_DDR, BIT(9)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_refresh_same_bank,		CXL_PMU_GID_DDR, BIT(10)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_pwrdn_entry,			CXL_PMU_GID_DDR, BIT(11)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_pwrdn_exit,			CXL_PMU_GID_DDR, BIT(12)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_rd_wr_ddr_bus_switching,	CXL_PMU_GID_DDR, BIT(13)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_incoming_rd_req,		CXL_PMU_GID_DDR, BIT(14)),
-+	CXL_PMU_EVENT_CXL_ATTR(ddr_incoming_wr_req,		CXL_PMU_GID_DDR, BIT(15)),
-+	/* CXL 4.0 Table 13-5 QUEUE OCCUPANCY events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(rd_queue_occ,			CXL_PMU_GID_QUEUE_OCC, BIT(0)),
-+	CXL_PMU_EVENT_CXL_ATTR(wr_queue_occ,			CXL_PMU_GID_QUEUE_OCC, BIT(1)),
-+	CXL_PMU_EVENT_CXL_ATTR(rd_wr_merged_queue_occ,		CXL_PMU_GID_QUEUE_OCC, BIT(2)),
-+	CXL_PMU_EVENT_CXL_ATTR(pwrdn_event,			CXL_PMU_GID_QUEUE_OCC, BIT(3)),
-+	/* CXL 4.0 Table 13-5 QUEUE RESIDENCY events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(mc_rd_resid_cnt,			CXL_PMU_GID_QUEUE_RESID, BIT(0)),
-+	CXL_PMU_EVENT_CXL_ATTR(mc_wr_resid_cnt,			CXL_PMU_GID_QUEUE_RESID, BIT(1)),
-+	/* CXL 4.0 Table 13-5 RETRY events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(retry_event_trig_by_rd_crc,      CXL_PMU_GID_RETRY_EVENTS, BIT(0)),
-+	CXL_PMU_EVENT_CXL_ATTR(retry_event_trig_by_wr_crc,      CXL_PMU_GID_RETRY_EVENTS, BIT(1)),
-+	CXL_PMU_EVENT_CXL_ATTR(retry_event_trig_by_ca_parity,   CXL_PMU_GID_RETRY_EVENTS, BIT(2)),
-+	CXL_PMU_EVENT_CXL_ATTR(retry_event_trig_by_ecc,         CXL_PMU_GID_RETRY_EVENTS, BIT(3)),
-+	/* CXL 4.0 Table 13-5 THROTTLE events opcodes */
-+	CXL_PMU_EVENT_CXL_ATTR(thermal_throttle_event,		CXL_PMU_GID_THROTTLE, BIT(0)),
-+	CXL_PMU_EVENT_CXL_ATTR(power_throttle_event,		CXL_PMU_GID_THROTTLE, BIT(1)),
- 	NULL
- };
- 
--- 
-2.39.5
-
+> ---
+>  tools/testing/vma/tests/merge.c | 38 +++++++++++++++++++-------------------
+>  1 file changed, 19 insertions(+), 19 deletions(-)
+> 
+> diff --git a/tools/testing/vma/tests/merge.c b/tools/testing/vma/tests/merge.c
+> index 03b6f9820e0a..f8666a755749 100644
+> --- a/tools/testing/vma/tests/merge.c
+> +++ b/tools/testing/vma/tests/merge.c
+> @@ -118,7 +118,7 @@ static bool test_simple_merge(void)
+>  
+>  	ASSERT_EQ(vma->vm_start, 0);
+>  	ASSERT_EQ(vma->vm_end, 0x3000);
+> -	ASSERT_EQ(vma->vm_pgoff, 0);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
+>  	ASSERT_FLAGS_SAME_MASK(&vma->flags, vma_flags);
+>  
+>  	detach_free_vma(vma);
+> @@ -150,7 +150,7 @@ static bool test_simple_modify(void)
+>  
+>  	ASSERT_EQ(vma->vm_start, 0x1000);
+>  	ASSERT_EQ(vma->vm_end, 0x2000);
+> -	ASSERT_EQ(vma->vm_pgoff, 1);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 1);
+>  
+>  	/*
+>  	 * Now walk through the three split VMAs and make sure they are as
+> @@ -162,7 +162,7 @@ static bool test_simple_modify(void)
+>  
+>  	ASSERT_EQ(vma->vm_start, 0);
+>  	ASSERT_EQ(vma->vm_end, 0x1000);
+> -	ASSERT_EQ(vma->vm_pgoff, 0);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
+>  
+>  	detach_free_vma(vma);
+>  	vma_iter_clear(&vmi);
+> @@ -171,7 +171,7 @@ static bool test_simple_modify(void)
+>  
+>  	ASSERT_EQ(vma->vm_start, 0x1000);
+>  	ASSERT_EQ(vma->vm_end, 0x2000);
+> -	ASSERT_EQ(vma->vm_pgoff, 1);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 1);
+>  
+>  	detach_free_vma(vma);
+>  	vma_iter_clear(&vmi);
+> @@ -180,7 +180,7 @@ static bool test_simple_modify(void)
+>  
+>  	ASSERT_EQ(vma->vm_start, 0x2000);
+>  	ASSERT_EQ(vma->vm_end, 0x3000);
+> -	ASSERT_EQ(vma->vm_pgoff, 2);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 2);
+>  
+>  	detach_free_vma(vma);
+>  	mtree_destroy(&mm.mm_mt);
+> @@ -209,7 +209,7 @@ static bool test_simple_expand(void)
+>  
+>  	ASSERT_EQ(vma->vm_start, 0);
+>  	ASSERT_EQ(vma->vm_end, 0x3000);
+> -	ASSERT_EQ(vma->vm_pgoff, 0);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
+>  
+>  	detach_free_vma(vma);
+>  	mtree_destroy(&mm.mm_mt);
+> @@ -231,7 +231,7 @@ static bool test_simple_shrink(void)
+>  
+>  	ASSERT_EQ(vma->vm_start, 0);
+>  	ASSERT_EQ(vma->vm_end, 0x1000);
+> -	ASSERT_EQ(vma->vm_pgoff, 0);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
+>  
+>  	detach_free_vma(vma);
+>  	mtree_destroy(&mm.mm_mt);
+> @@ -324,7 +324,7 @@ static bool __test_merge_new(bool is_sticky, bool a_is_sticky, bool b_is_sticky,
+>  	ASSERT_TRUE(merged);
+>  	ASSERT_EQ(vma->vm_start, 0);
+>  	ASSERT_EQ(vma->vm_end, 0x4000);
+> -	ASSERT_EQ(vma->vm_pgoff, 0);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
+>  	ASSERT_EQ(vma->anon_vma, &dummy_anon_vma);
+>  	ASSERT_TRUE(vma_write_started(vma));
+>  	ASSERT_EQ(mm.map_count, 3);
+> @@ -343,7 +343,7 @@ static bool __test_merge_new(bool is_sticky, bool a_is_sticky, bool b_is_sticky,
+>  	ASSERT_TRUE(merged);
+>  	ASSERT_EQ(vma->vm_start, 0);
+>  	ASSERT_EQ(vma->vm_end, 0x5000);
+> -	ASSERT_EQ(vma->vm_pgoff, 0);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
+>  	ASSERT_EQ(vma->anon_vma, &dummy_anon_vma);
+>  	ASSERT_TRUE(vma_write_started(vma));
+>  	ASSERT_EQ(mm.map_count, 3);
+> @@ -364,7 +364,7 @@ static bool __test_merge_new(bool is_sticky, bool a_is_sticky, bool b_is_sticky,
+>  	ASSERT_TRUE(merged);
+>  	ASSERT_EQ(vma->vm_start, 0x6000);
+>  	ASSERT_EQ(vma->vm_end, 0x9000);
+> -	ASSERT_EQ(vma->vm_pgoff, 6);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 6);
+>  	ASSERT_EQ(vma->anon_vma, &dummy_anon_vma);
+>  	ASSERT_TRUE(vma_write_started(vma));
+>  	ASSERT_EQ(mm.map_count, 3);
+> @@ -384,7 +384,7 @@ static bool __test_merge_new(bool is_sticky, bool a_is_sticky, bool b_is_sticky,
+>  	ASSERT_TRUE(merged);
+>  	ASSERT_EQ(vma->vm_start, 0);
+>  	ASSERT_EQ(vma->vm_end, 0x9000);
+> -	ASSERT_EQ(vma->vm_pgoff, 0);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
+>  	ASSERT_EQ(vma->anon_vma, &dummy_anon_vma);
+>  	ASSERT_TRUE(vma_write_started(vma));
+>  	ASSERT_EQ(mm.map_count, 2);
+> @@ -404,7 +404,7 @@ static bool __test_merge_new(bool is_sticky, bool a_is_sticky, bool b_is_sticky,
+>  	ASSERT_TRUE(merged);
+>  	ASSERT_EQ(vma->vm_start, 0xa000);
+>  	ASSERT_EQ(vma->vm_end, 0xc000);
+> -	ASSERT_EQ(vma->vm_pgoff, 0xa);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 0xa);
+>  	ASSERT_EQ(vma->anon_vma, &dummy_anon_vma);
+>  	ASSERT_TRUE(vma_write_started(vma));
+>  	ASSERT_EQ(mm.map_count, 2);
+> @@ -423,7 +423,7 @@ static bool __test_merge_new(bool is_sticky, bool a_is_sticky, bool b_is_sticky,
+>  	ASSERT_TRUE(merged);
+>  	ASSERT_EQ(vma->vm_start, 0);
+>  	ASSERT_EQ(vma->vm_end, 0xc000);
+> -	ASSERT_EQ(vma->vm_pgoff, 0);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
+>  	ASSERT_EQ(vma->anon_vma, &dummy_anon_vma);
+>  	ASSERT_TRUE(vma_write_started(vma));
+>  	ASSERT_EQ(mm.map_count, 1);
+> @@ -443,7 +443,7 @@ static bool __test_merge_new(bool is_sticky, bool a_is_sticky, bool b_is_sticky,
+>  		ASSERT_NE(vma, NULL);
+>  		ASSERT_EQ(vma->vm_start, 0);
+>  		ASSERT_EQ(vma->vm_end, 0xc000);
+> -		ASSERT_EQ(vma->vm_pgoff, 0);
+> +		ASSERT_EQ(vma_start_pgoff(vma), 0);
+>  		ASSERT_EQ(vma->anon_vma, &dummy_anon_vma);
+>  
+>  		detach_free_vma(vma);
+> @@ -805,7 +805,7 @@ static bool test_vma_merge_new_with_close(void)
+>  	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
+>  	ASSERT_EQ(vma->vm_start, 0);
+>  	ASSERT_EQ(vma->vm_end, 0x5000);
+> -	ASSERT_EQ(vma->vm_pgoff, 0);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
+>  	ASSERT_EQ(vma->vm_ops, &vm_ops);
+>  	ASSERT_TRUE(vma_write_started(vma));
+>  	ASSERT_EQ(mm.map_count, 2);
+> @@ -865,7 +865,7 @@ static bool __test_merge_existing(bool prev_is_sticky, bool middle_is_sticky, bo
+>  	ASSERT_EQ(vma_next->anon_vma, &dummy_anon_vma);
+>  	ASSERT_EQ(vma->vm_start, 0x2000);
+>  	ASSERT_EQ(vma->vm_end, 0x3000);
+> -	ASSERT_EQ(vma->vm_pgoff, 2);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 2);
+>  	ASSERT_TRUE(vma_write_started(vma));
+>  	ASSERT_TRUE(vma_write_started(vma_next));
+>  	ASSERT_EQ(mm.map_count, 2);
+> @@ -931,7 +931,7 @@ static bool __test_merge_existing(bool prev_is_sticky, bool middle_is_sticky, bo
+>  	ASSERT_EQ(vma_prev->anon_vma, &dummy_anon_vma);
+>  	ASSERT_EQ(vma->vm_start, 0x6000);
+>  	ASSERT_EQ(vma->vm_end, 0x7000);
+> -	ASSERT_EQ(vma->vm_pgoff, 6);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 6);
+>  	ASSERT_TRUE(vma_write_started(vma_prev));
+>  	ASSERT_TRUE(vma_write_started(vma));
+>  	ASSERT_EQ(mm.map_count, 2);
+> @@ -1416,7 +1416,7 @@ static bool test_merge_extend(void)
+>  	ASSERT_EQ(vma_merge_extend(&vmi, vma, 0x2000), vma);
+>  	ASSERT_EQ(vma->vm_start, 0);
+>  	ASSERT_EQ(vma->vm_end, 0x4000);
+> -	ASSERT_EQ(vma->vm_pgoff, 0);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 0);
+>  	ASSERT_TRUE(vma_write_started(vma));
+>  	ASSERT_EQ(mm.map_count, 1);
+>  
+> @@ -1456,7 +1456,7 @@ static bool test_expand_only_mode(void)
+>  	ASSERT_EQ(vmg.state, VMA_MERGE_SUCCESS);
+>  	ASSERT_EQ(vma->vm_start, 0x3000);
+>  	ASSERT_EQ(vma->vm_end, 0x9000);
+> -	ASSERT_EQ(vma->vm_pgoff, 3);
+> +	ASSERT_EQ(vma_start_pgoff(vma), 3);
+>  	ASSERT_TRUE(vma_write_started(vma));
+>  	ASSERT_EQ(vma_iter_addr(&vmi), 0x3000);
+>  	vma_assert_attached(vma);
+> 
+> -- 
+> 2.55.0
+> 
