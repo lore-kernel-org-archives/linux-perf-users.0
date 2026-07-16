@@ -1,158 +1,183 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE34388873
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 06:10:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784182261; cv=pass; b=OvmoKN07mh3/o9EnROMbqoWJ+1OOOUq3144JBeOl4ukG/3CUpLsApTWGLsu4y/e3QRveUn2viDODliuVWDI/PIlaMXqxtdE8YJGvADgpeiCMYS9/oJIRUWSMNtTf/03MKxhQhC0u63y49FCnsNoVTVAOeW7BA5MlAEqMbtkm624=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784182261; c=relaxed/simple;
-	bh=YKV26By4+GumxrdgSneMkN8VbG9jPFscys0G5tcpC+I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WzkpCzXkG6h+kJ1nJBX8YSyQPyYkW6iRYHq+wa+EVHcxLZMV4G8M+tKQyztiP30FwS+Og5Nac+EVHJhkSHke4R64SAUqzCgbgKfBmQ2Wj0y9q8lA47wxYdWc5x21z6tSuW4jfFivB2urgcTJqy2fneXlGgGmcWIKZinEAbx18jM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DZY9h7C/; arc=pass smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97EC27B32C;
+	Thu, 16 Jul 2026 06:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784183397; cv=none; b=AxcyXr+x/FvhVFjtxadsYPd12fNzLY7X3mSYPAOsJD3QKjHldINFRGp3PLQPlnLqLwt5HUsvZV/Cb8u4vXV4eysV4mhSmK6meN+VO591YA0GTl9q5z6fXG2qAZCi6BKfWzvSJItqEuIZclyHSprz2y8l1oY4wRNnXuCgBQwPHi4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784183397; c=relaxed/simple;
+	bh=Ppg24Av3CVkqljIMwWSrDncgZ+24ul6xWu7dLksDBaE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Yemj696aCaSwcGt4rRKf4IFTv09P1o7e8Gcn/mYGNje7LnfWsFRg1qjBMbD8OAksETa4aSFoUXLD+gQ7Y64VU6kLHi7HHXWs/70qOt6ZzWGxo0ljc46/d8hz4KLOX9g0a0qxpHDOyYY09ZpTm1y9auOfDQ6mLF9xrJBImxScpBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NHmy7hus; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DZY9h7C/"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2cacef7d299so51685ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jul 2026 23:10:58 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1784182258; cv=none;
-        d=google.com; s=arc-20260327;
-        b=dAhropYelwVBSz01Jud6QTrvUbhjesJWuZp45E2CPVZGyZLd4ycDbn55c7Hp+kwch0
-         I29GFLaIa40NclblhW+rV6o1YQ40fl/ZuaxIv2ohR7F2rWEHbvWl4jdh3yYPxkEpcqmX
-         HzS/Wdn0/jivfe189Fhq8SjLlu6WhTSDGXPs7wWTRFinmDZMwOvSfOyYzUo2G5+/kd1U
-         c4chogxrdNmsd/LjQMyz1L7FmU/7CMBKwiIKTZM5IWhFmtGQ3mHkHafZ6JnLdVIka6Se
-         tY8o9yQ8H7e/zwnT2V84JnakhpeX0RfVB5vF2rfqbznevLOyscMN5Jqat4eK9TKwE2bp
-         blkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=i2qRYKTpiPRd2XV9f+Toku+inGxjOxT6jXxo3Qi38v8=;
-        fh=OIZIrLKuMf7AN/k1BApDl+ike46pEvv3wWmsqUag3YQ=;
-        b=PrV4IOoPq1BXUIAtK6AOPgB+6hSZ4yU9paHBJjAzBuXrFFl7yoxAjS/LP9zCSBksle
-         jgbexIE7S5EL7EjLDRc6HnrhYJgG+LF1gs/6Jc92yb+ef/x2pb0SIFaI3ejdZ8Y6j4oG
-         FRUBRounHe0Dlxg897vlBIhlR6oek1DbqMxOt9T7J+Vpy1z1+Nrs+IMgMc2bl785yAHy
-         9gdU09lCLZ/9Dnvza1SID8jmBjoPYmW//7xQzSaxGOgYRiIcsbDqewPK3iz87y6xM+KB
-         gfrznodeNcyzHTLzafASn0q1ESTclpPdrD8hvw7EpCxZtVE5YCQW8E0MkQbUqd9KyxHd
-         OZGA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784182258; x=1784787058; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=i2qRYKTpiPRd2XV9f+Toku+inGxjOxT6jXxo3Qi38v8=;
-        b=DZY9h7C//KpywYM2wEnnPj/53BtQlladWecPpVyLGAnQPdrfwJc8P4y4NZ7TRsQuZW
-         PPOGbRLCG0bRCoB+LeqbJZl8s1hvvWDTJ1IHLB0OspuXlTnGWPmOOS+82bre9i6sqK7e
-         oEEnTaJoRrZFaD1kPD8ByV1K3DrlC9gCAlAEunBM5Lz5fMipbIdxHePgtZiMFck+hos4
-         NbsKIcCPMMCeALJEZTjGWUOwK1eQ5X3JTz8iMEMoIJkXTV2B8LiC+Y1AcAKPTnnib2Zr
-         OrBG0/twDCwOY8kerhp4C1SdHaMe/wdrMszSX9xo2zkOQvupHpawdyHFP/I7zaUUtfdX
-         P5ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784182258; x=1784787058;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=i2qRYKTpiPRd2XV9f+Toku+inGxjOxT6jXxo3Qi38v8=;
-        b=hH56ViT0nS7MjsF/kfghjUsg+Q3rjUshIUgzL4XO4rJ6iW67HuuToQqv6znQpQxD4y
-         zqratluSqQ0RPol2oFwlNjdGs+3b2Q84vUi0lxDflqLAXj3B5IQAw/AmA+XCtF1kfOgQ
-         v2AG52e0ZUGAZG4Hy+AXYau7DFjNrwURxJvRKMxT1IYonmox3h20bOO1MW6xnrlxdbtu
-         Un6458ybVWgc0Jj0y5fMWVrW6ej6OAbw6UmF9cx0loCkx6oNPXfDJLrNCUzVqX9Nj9WT
-         zIbE3FSqvekegrZOSjyS0Mu8TueGz6W96CepGdhLeibhlvIKjV48Z2qKhdRPjZJrP5pv
-         KYwA==
-X-Forwarded-Encrypted: i=1; AHgh+Rr5kcy9WqRIQOwwxZ8DBqGsepqbKOPyZ2EYXzXZTSjeA+Yi3B478/NdOnLsCE/IhlQCY63jT6P+wvZRZCaDwaN2@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVZfMQbw4X8k8AVAOBf7iXY/YzlTTokD/4ZRk0QQBHajCcq0pr
-	ilkhe8JtiZ2X2KklqyjqO+7ve2vYzzZIfGNtnnLqx8mQBW+pD5q8qzMBBjV6L7Z63Y7TxoR1+Or
-	qPnvoCFjIGVnjma4QV/ygwYFCeQuhBNhfHrDPj2hC
-X-Gm-Gg: AfdE7ck4FS3yqbNGns/BASagTwGvl4qElO1peHlUbrPjRj3yf1Fzz6CdZiEFh+izYS0
-	L4blfQVRypzrtfzQXEEeEQ60dBy20Eyih3MITZs3iVPbmZEC+sVy4VsYkK9DlWoGYZcwSQmZBIJ
-	4tz1r5+CsjkHH6XQ+gaFC4ROzR2lmKXgH4mk1myDRn+S10QFb/4/4oKvYJu2TYB6soB1B0lYXi7
-	Sk9NmwnLZw/DVkxYVzEo7qev6dC8U9dwCekPx3E7eOE2cYC+pBXPTrK1a8ViKhoQGcqVfZxpA==
-X-Received: by 2002:a17:902:da89:b0:2cc:80b9:3a1 with SMTP id
- d9443c01a7336-2cf1dab007bmr1449415ad.13.1784182257647; Wed, 15 Jul 2026
- 23:10:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NHmy7hus"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784183396; x=1815719396;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Ppg24Av3CVkqljIMwWSrDncgZ+24ul6xWu7dLksDBaE=;
+  b=NHmy7husy4RlVb1kT/0SOm96RhufAA1bLGc1C2J+SPzKA4nr0k+IpIRN
+   AC010abqWTB+Yo7nzgHLNZoefY4PUZFRPZYj9uwLB6goAY6akViE1g7at
+   qoyyzAiCIB2DfUueZPLz3ESaw6vDMjPhwnXjYy61Z04CJGtIewSOGtL7i
+   kcSOLAim+M3KWt8elYm320RuLYNIuHDjMIH/jbwPD+/ADYR7WUadNEOuU
+   Dh07mpm2n7HMJKl11NEA7nrA62wamhy/ISTS2zE27W1VPCdPn6KMfDuNL
+   tcKPC4HUDLyHlHsBI2ih4CAk2cEGpPvnQYQm+/MBJ6fnxk7VdEj3og8Uj
+   w==;
+X-CSE-ConnectionGUID: E88pDKTTQLOOmpT2pvR/bQ==
+X-CSE-MsgGUID: 1k59ZzvDS6eU9KcOrCP1Ug==
+X-IronPort-AV: E=McAfee;i="6800,10657,11847"; a="110381481"
+X-IronPort-AV: E=Sophos;i="6.25,167,1779174000"; 
+   d="scan'208";a="110381481"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2026 23:29:55 -0700
+X-CSE-ConnectionGUID: lWiLUVFdQYmCHOtDxyr9OA==
+X-CSE-MsgGUID: 2INgkqReTiu+mgY7g+HXDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,167,1779174000"; 
+   d="scan'208";a="251984828"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.147]) ([10.124.241.147])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2026 23:29:53 -0700
+Message-ID: <803bfea9-b16c-44d5-8004-096a92e90017@linux.intel.com>
+Date: Thu, 16 Jul 2026 14:29:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260711003235.1963043-1-namhyung@kernel.org>
-In-Reply-To: <20260711003235.1963043-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 15 Jul 2026 23:10:46 -0700
-X-Gm-Features: AUfX_mzdBtIjzaaFAvbO8SHAeaB7c_aTJz295WGVx2PZGbhQqU0uFCC7F2iycuY
-Message-ID: <CAP-5=fUUxtNWwy-3cPaEexG2h4xF-N+VdqoutoZjUU14ei+aAg@mail.gmail.com>
-Subject: Re: [PATCH v2] tools/lib/api: Fix potential double-free from fdarray__grow()
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Sashiko Review <sashiko-bot@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [tip:perf/core] [perf/core] 166f10836a:
+ perf-sanity-tests.Object_code_reading.fail
+To: Oliver Sang <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-kernel@vger.kernel.org,
+ x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+ linux-perf-users@vger.kernel.org
+References: <202607091054.7c96d6c6-lkp@intel.com>
+ <56069e78-7006-4569-add0-6ccdf88c746b@linux.intel.com>
+ <alCwJew7UgGb+EQV@xsang-OptiPlex-9020>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <alCwJew7UgGb+EQV@xsang-OptiPlex-9020>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jul 10, 2026 at 5:32=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> If the realloc for fda->entries succeeds but the realloc for fda->priv
-> fails, the error path frees the newly allocated entries.
->
-> However, fda->entries is neither updated to point to the new entries bloc=
-k
-> nor cleared to NULL. If realloc moved the allocation to a new block, the
-> old fda->entries pointer is now freed memory.
->
-> When fdarray__exit() is later called to clean up, it executes
-> free(fda->entries), which would trigger a double-free on that old pointer=
-.
->
-> Reported-by: Sashiko Review <sashiko-bot@kernel.org>
-> Closes: https://lore.kernel.org/linux-perf-users/20260710200150.11FE71F00=
-A3A@smtp.kernel.org
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+On 7/10/2026 4:41 PM, Oliver Sang wrote:
+> hi, Dapeng,
+>
+> On Thu, Jul 09, 2026 at 05:04:11PM +0800, Mi, Dapeng wrote:
+>> Hi Oliver,
+>>
+>> It looks the direct reason causing the test case failure is the "0" sampled
+>> IP. This is expected. The commit 166f10836a653dfa280d4335603b52f685b8b1ef
+>> ("perf/core: Fix kernel register info leak via hardware skid") mitigates a
+>> security hole and may lead to the sampled IP could be 0. 
+>>
+>> What user right is used to run this command, root or normal user? If it's a
+> root user. as 'sudo' in attached:
+>
+> "2026-07-10 15:38:50 sudo ASAN_OPTIONS=fast_unwind_on_malloc=0 /usr/src/linux-perf-x86_64-rhel-9.4-bpf-166f10836a653dfa280d4335603b52f685b8b1ef/tools/perf/perf test 23 -vvv"
+>
+>> root user, suppose it should not generate such kind of error. Could you
+>> please add "-vvv" option and rerun this test? The "-vvv" option would print
+>> more  verbose log.
+> as attached, thanks
 
-Thanks,
-Ian
+"
 
-> ---
-> v2 changes)
->  * update the patch subject
+  disabled                         1
+  inherit                          1
+  *exclude_kernel                   1*
+  exclude_hv                       1
+  mmap                             1
+
+"
+
+The event "exclude_kernel" attribute is set in the test case,  so it's
+possible that perf overwrites the kernel IP to 0 to prevent kernel IP
+leakage if PMI hits into kernel space. 
+
+In general, the "exclude_kernel" attribute should not be set for root user,
+I have no idea why "exclude_kernel" is set in this case.
+
+Anyway, we could have to improve this test case and skip these "0" sample IPs.
+
+Thanks.
+
+
 >
->  tools/lib/api/fd/array.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
 >
-> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-> index ffe8272af59b2da0..23b476a35de477fe 100644
-> --- a/tools/lib/api/fd/array.c
-> +++ b/tools/lib/api/fd/array.c
-> @@ -31,7 +31,8 @@ int fdarray__grow(struct fdarray *fda, int nr)
->
->         priv =3D realloc(fda->priv, psize);
->         if (priv =3D=3D NULL) {
-> -               free(entries);
-> +               /* this will be freed by fdarray__exit() */
-> +               fda->entries =3D entries;
->                 return -ENOMEM;
->         }
->
-> @@ -50,7 +51,7 @@ struct fdarray *fdarray__new(int nr_alloc, int nr_autog=
-row)
->
->         if (fda !=3D NULL) {
->                 if (fdarray__grow(fda, nr_alloc)) {
-> -                       free(fda);
-> +                       fdarray__delete(fda);
->                         fda =3D NULL;
->                 } else {
->                         fda->nr_autogrow =3D nr_autogrow;
-> --
-> 2.55.0.795.g602f6c329a-goog
->
+>> Thanks!
+>>
+>> -Dapeng
+>>
+>>
+>> On 7/9/2026 12:36 PM, kernel test robot wrote:
+>>> Hello,
+>>>
+>>> kernel test robot noticed "perf-sanity-tests.Object_code_reading.fail" on:
+>>>
+>>> commit: 166f10836a653dfa280d4335603b52f685b8b1ef ("perf/core: Fix kernel register info leak via hardware skid")
+>>> https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git perf/core
+>>>
+>>>
+>>> in testcase: perf-sanity-tests
+>>> version: 
+>>> with following parameters:
+>>>
+>>> 	perf_compiler: clang
+>>> 	group: group-00
+>>>
+>>>
+>>>
+>>> config: x86_64-rhel-9.4-bpf
+>>> compiler: gcc-14
+>>> test machine: 224 threads 4 sockets Intel(R) Xeon(R) Platinum 8380H CPU @ 2.90GHz (Cooper Lake) with 192G memory
+>>>
+>>> (please refer to attached dmesg/kmsg for entire log/backtrace)
+>>>
+>>>
+>>>
+>>>
+>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>>> the same patch/commit), kindly add following tags
+>>> | Reported-by: kernel test robot <oliver.sang@intel.com>
+>>> | Closes: https://lore.kernel.org/oe-lkp/202607091054.7c96d6c6-lkp@intel.com
+>>>
+>>>
+>>> 2026-07-07 00:10:32 sudo ASAN_OPTIONS=fast_unwind_on_malloc=0 /usr/src/linux-perf-x86_64-rhel-9.4-bpf-166f10836a653dfa280d4335603b52f685b8b1ef/tools/perf/perf test 23 -v
+>>>  23: Object code reading                                 : Running (1 active)
+>>> ---- start ----
+>>> ...
+>>> Bytes read match those read by objdump
+>>> Reading object code for memory address: 0x7feb8f2134fa
+>>> File is: /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+>>> On file address is: 0x204fa
+>>> Objdump command is: objdump -z -d --start-address=0x204fa --stop-address=0x2057a /usr/lib/x86_64-linux-gnu/libgcc_s.so.1
+>>> Bytes read match those read by objdump
+>>> Reading object code for memory address: 0
+>>> thread__find_map failed
+>>> ---- end(-1) ----
+>>>  23: Object code reading                                 : FAILED!
+>>>
+>>> === Test Summary ===
+>>> Passed main tests : 0
+>>> Passed subtests   : 0
+>>> Skipped tests     : 0
+>>> Failed tests      : 1
+>>> List of failed tests:
+>>>    23: Object code reading
+>>>
+>>>
+>>>
+>>> The kernel config and materials to reproduce are available at:
+>>> https://download.01.org/0day-ci/archive/20260709/202607091054.7c96d6c6-lkp@intel.com
+>>>
+>>>
+>>>
