@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67AFA37D126;
-	Thu, 16 Jul 2026 17:51:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9D27082D;
+	Thu, 16 Jul 2026 18:06:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784224264; cv=none; b=eYkFBaPrlb9vkWjXTiKGYanXeXOOP+Y+/+Uwfmj28ZO5e8aaERRhdBPRB3/QPGiV1rjFPCrNsCEhE45OLxdKxR9ip1TEfe/a1HsBhn99w7M66BSqb7Ff6Wuc9UdriNuCMzdCQMOGFneHj+d0B3jKnphcw2FUJPqleznjHgyKoOU=
+	t=1784225163; cv=none; b=gV5WLDlz3a9PzYjIQVtRd6MUTJIl7HsUs0KZ9x4H5f2oIKwUCRYHfnpFjhmM70KIUPSd6+9sBg6250UdQ0tbJ7b5/erF6MMgpASrluYVVtqk6xE3YZGewFfZP7uxlJPMcwpHmMWt9CTkIkWfj7yG90Pmti6qWGIW3F/04URJ9Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784224264; c=relaxed/simple;
-	bh=iuUPekhpWBaFUZOmhD29WAgOEjhYFzj2YNHWp9ytApk=;
+	s=arc-20240116; t=1784225163; c=relaxed/simple;
+	bh=0pjRRP4C/ojlNIexBSr0VFlH3669Sl50LdXBO+/RkU0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EpK3eKai1BOlO9kxmkM9HRN1j1vFDXZrcmCn1d4u/y1Miy5hMCFKE/v3Igpe5FrfFd5HTTXWpqpVzdOBCG9NqlXxE1mSfJCGmTWk5m8wpCh5k7haNOpZZzojGFsrA5TvYJTRBF6BTPBR1DNPxWLt4fL5oMcygzgAexljbTqcxTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hNGkpGzu; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=IpKysGDU5RbFG0XT8Qz3BoNAuaf8/nGG9lG3QItzt0+sYAZCgP/bczm0NJb7QWySfFCZKIJf/kCj6Aplmj5V4Kx9MSUUzn+fGGuFQAkyLvT6JMVaCb6r6i5WsgN94cEp7VhL0I3NEULUuR4ZO7P+75msv3GpvL3/vUeXSpDWPng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9cL9jtC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hNGkpGzu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA5151F000E9;
-	Thu, 16 Jul 2026 17:51:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9cL9jtC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A2D61F000E9;
+	Thu, 16 Jul 2026 18:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784224263;
-	bh=QcK/JYry3m35VGCmdDebre4dR9p7gR0RjysYC5Wev1U=;
+	s=k20260515; t=1784225162;
+	bh=JZEa5MRVEPs2NwI4zDomWcp4kCn2jn6jXK9LPrP9oNI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=hNGkpGzukKisoYf1fG0xcfij/ctSdoKY2CRFtRkG7u+0RiERuRUdvwYVc/KBrLhe9
-	 hbOPs013ZMWpCsoQgGmgI+yOblNMG69ehBd7c0gXMIIBWrSOVtzphC5fbV70IBbx5c
-	 ch/io2iJ0Z85XuLeLLLRm4HYIogN1K/2OdB6W9h6WMNVZ9j/DdFQtJN4BE9a+lSggQ
-	 TnLZrlPQzJErrhikCZ0I4aDis08CVB68kTlz5AEiwQHUbkSBdD9HzUzHkIcfqqoQMD
-	 UQi7WMjXkHUa6Jn3MxyukzF+GVF8tfAngeKCX6NhISjK3fKyDAg/BDHic1YxQ1KBRT
-	 Ol9z2ZusfacEg==
-Date: Thu, 16 Jul 2026 10:51:01 -0700
+	b=a9cL9jtCWLKdDYjqvzchh6Iw1B7lE/6AHPlwpb7MU8CJMINjZg5JL963YnX2t5/ZS
+	 39kOw2haBpj2tPqOWyrGW1h9luiC/0YojJaK6SnaXtjEnvqeuPNsQt97YuwSypP54s
+	 tI+3DHog0WrKJw3RXPZZB51QyrCSqkV6FbaBvFB1VMEPtaP8wwNuWvJCgxRRAh+9fr
+	 Khp7FB7miSEIam2scCrXBPk6c943840uHjHSgncJY69TnyViazei6NHKh58XTlibNE
+	 4F2cRxMewQhNXyW+s8brbHrxx/Rl9Y9GTP3QdUHt5AyWx9od78WO43pnfBeT8l2UQZ
+	 0XIxAJZzipFGA==
+Date: Thu, 16 Jul 2026 11:06:00 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: Jiebin Sun <jiebin.sun@intel.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 01/14] perf c2c: extract shared data structures into c2c.h
-Message-ID: <alkaBTSMVXPWMJW6@google.com>
-References: <20260626070355.1556721-1-jiebin.sun@intel.com>
- <20260626070355.1556721-2-jiebin.sun@intel.com>
- <20260626071353.3931C1F000E9@smtp.kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf build: Fix a compiler error in util/libbfd.c
+Message-ID: <alkdiIHB8yiSf8e5@google.com>
+References: <20260716004336.2731086-1-namhyung@kernel.org>
+ <CAP-5=fU00=N5h5h-SJVhbK6858agvO=Yf_6GgAd99FZTKOtOmg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,110 +49,43 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260626071353.3931C1F000E9@smtp.kernel.org>
+In-Reply-To: <CAP-5=fU00=N5h5h-SJVhbK6858agvO=Yf_6GgAd99FZTKOtOmg@mail.gmail.com>
 
-Hello,
+Hi Ian,
 
-On Fri, Jun 26, 2026 at 07:13:52AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
-> - [Medium] Missing feature fallback inline stubs for SLANG-dependent functions in header.
-> - [Medium] Asymmetric memory management API leading to potential resource leaks.
-> - [Medium] Global namespace pollution with generic function names.
-> --
+On Wed, Jul 15, 2026 at 07:44:53PM -0700, Ian Rogers wrote:
+> On Wed, Jul 15, 2026 at 5:43 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > The bfd_boolean type was gone and converted to the standard bool type
+> > but we have some old code that uses the type.  It caused a failure in
+> > the build test.
+> >
+> >   util/libbfd.c: In function 'slurp_symtab':
+> >   util/libbfd.c:94:9: error: unknown type name 'bfd_boolean'
+> >      94 |         bfd_boolean dynamic = FALSE;
+> >         |         ^~~~~~~~~~~
+> >   util/libbfd.c:94:31: error: 'FALSE' undeclared (first use in this function)
+> >      94 |         bfd_boolean dynamic = FALSE;
+> >         |                               ^~~~~
+> >   util/libbfd.c:94:31: note: each undeclared identifier is reported only once for each function it appears in
+> >   util/libbfd.c:102:27: error: 'TRUE' undeclared (first use in this function)
+> >     102 |                 dynamic = TRUE;
+> >         |                           ^~~~
+> >
+> > Fix it with standard bool type and constants.
+> >
+> > Link: https://sourceware.org/pipermail/binutils-cvs/2021-March/056231.html
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > 
-> commit e451cf21befaafcbe2925718151023dd5ccba2cc
-> Author: Jiebin Sun <jiebin.sun@intel.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
 > 
-> perf c2c: extract shared data structures into c2c.h
-> 
-> This patch moves c2c_hists, compute_stats, c2c_hist_entry, and perf_c2c
-> structure definitions from builtin-c2c.c into a new shared header c2c.h.
-> This allows the upcoming function view browser to reuse these types.
-> 
-> > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> > index c9584dbedf77a..33271554e354b 100644
-> > --- a/tools/perf/builtin-c2c.c
-> > +++ b/tools/perf/builtin-c2c.c
-> [ ... ]
-> > @@ -141,9 +76,9 @@ static const struct option c2c_options[] = {
-> >  	OPT_END()
-> >  };
-> >  
-> > -static struct perf_c2c c2c;
-> > +struct perf_c2c c2c;
-> >  
-> > -static void *c2c_he_zalloc(size_t size)
-> > +void *c2c_he_zalloc(size_t size)
-> >  {
-> >  	struct c2c_hist_entry *c2c_he;
-> 
-> [Severity: Medium]
-> By exporting c2c_he_zalloc(), is there a risk of memory leaks since a
-> corresponding free function is not exported?
-> 
-> Looking at the rest of c2c_he_zalloc() in builtin-c2c.c, it allocates several
-> sub-structures:
-> 
->     c2c_he->cpuset = bitmap_zalloc(c2c.cpus_cnt);
->     ...
->     c2c_he->nodeset = bitmap_zalloc(c2c.nodes_cnt);
->     ...
->     c2c_he->node_stats = calloc(c2c.nodes_cnt, sizeof(*c2c_he->node_stats));
-> 
-> Any external module (like the new function view) that uses this allocator
-> won't have an encapsulated way to clean these up, forcing manual duplication
-> of the teardown logic to avoid leaks.
-> 
-> [ ... ]
-> > @@ -1928,7 +1816,7 @@ static struct c2c_dimension *dimensions[] = {
-> >  	NULL,
-> >  };
-> >  
-> > -static void fmt_free(struct perf_hpp_fmt *fmt)
-> > +void fmt_free(struct perf_hpp_fmt *fmt)
-> >  {
-> >  	struct c2c_fmt *c2c_fmt;
-> >  
-> > @@ -1936,7 +1824,7 @@ static void fmt_free(struct perf_hpp_fmt *fmt)
-> >  	free(c2c_fmt);
-> >  }
-> >  
-> > -static bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
-> > +bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
-> 
-> [Severity: Medium]
-> Could the removal of the static keyword here lead to symbol collisions?
-> 
-> Since fmt_free() and fmt_equal() lack a subsystem prefix (like c2c_ or
-> perf_c2c_), exporting these generic names to the global namespace increases
-> the risk of collisions during static linking or Link-Time Optimization with
-> other perf tool objects.
+> Should we add a fixes tag for backports? It's not clear we can provide
+> a sensible SHA.
 
-I think this is a meaningful.  Even without collisions, it'd be better
-to have a prefix for global functions.
+Thanks for your review.  Yep, the file was moved and it had the bug
+before.  I was thinking about adding SHA of the move but not sure if
+it's really worth it.
 
 Thanks,
 Namhyung
 
-> 
-> > diff --git a/tools/perf/c2c.h b/tools/perf/c2c.h
-> > new file mode 100644
-> > index 0000000000000..3e974dd1d7ee6
-> > --- /dev/null
-> > +++ b/tools/perf/c2c.h
-> [ ... ]
-> > +#ifdef HAVE_SLANG_SUPPORT
-> > +int perf_c2c__browse_cacheline(struct hist_entry *he);
-> > +#endif
-> 
-> [Severity: Medium]
-> Should this header provide a fallback stub for perf_c2c__browse_cacheline()
-> when HAVE_SLANG_SUPPORT is not defined?
-> 
-> The perf subsystem build guidelines require header files to provide
-> compatible dummy inline stubs (e.g., returning -ENOTSUPP) when feature
-> defines are absent. Omitting the #else block here might lead to missing
-> functionality or build breakages on systems lacking SLANG.
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260626070355.1556721-1-jiebin.sun@intel.com?part=1
