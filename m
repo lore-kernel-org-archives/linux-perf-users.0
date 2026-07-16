@@ -1,212 +1,243 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43C641E6CB;
-	Thu, 16 Jul 2026 12:57:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B0D41B8E4;
+	Thu, 16 Jul 2026 12:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784206670; cv=none; b=GeybwgqXhnZiYYn7ZM4nFLJVtVaFKe+cGDGjix0GZoW4N8u54fsUaSWm/fIyZUsFTUwRlHa7mwQ/D/HigNf0XnFcAFtfkTui+2M6xvKx5XkGjH0OeTGRe4L2vwUnlkqI+U1tfV5tgYaZFPQKr7NzNGd9bWUw1oeqHFolitleTqQ=
+	t=1784206774; cv=none; b=uSKGJDJzVRxvaVLUYfEdUIRz+UbwGO5NUGxpfzrh6685f3FPqvSbguP9fdRJTXYtfz9h6jfk9WFxrQFhf6z5DAZ/+v1cgfoACmMmKKcDIOz6CFqe/jG+/1TNKpKMsEMbV7xQu6kZ9dxehSDkhf8lG/xOWWsDadyo5FA+DHtMojE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784206670; c=relaxed/simple;
-	bh=5tEna8nwF9D4kqBmOX7zciSJS5c+LLEuZqAruUjqfpQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ZcvyZecFXEA+S0slkDiR7iHYxo6yuTeR4Eg24IQcuyJ5ajSHGUj8HlT31RWEyAQLiZF/Xa4KQMCfpPY/EhZitE4Ws7+O7ZXi+w0yiu0kSwxLXRAfYt/fh7KI+pGC1ckxbyvj3q4JXF9N5G+rjtxscgrMqLXv0aU6QOjFxQs7hzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4h1Ck92XjKzYQtLc;
-	Thu, 16 Jul 2026 20:57:21 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id E8DCF4057A;
-	Thu, 16 Jul 2026 20:46:03 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP4 (Coremail) with UTF8SMTPA id gCh0CgD3KVuK0lhqbmDJBQ--.61146S2;
-	Thu, 16 Jul 2026 20:46:03 +0800 (CST)
-Message-ID: <cd081966-36e3-42a6-a06b-27b56b3dd663@huaweicloud.com>
-Date: Thu, 16 Jul 2026 20:46:01 +0800
+	s=arc-20240116; t=1784206774; c=relaxed/simple;
+	bh=Z8d2Y93UNJnvjgmzxqFvJb1ohgg70kbo8kj+FdYkAvk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=VLs0A0KXXcyeiWL6j+lwZ3cpif/3FYiTOL7z7NGJBYQULRwKf2eBrHDOvQvsP2yyoLB/dPYfxonVlGBNHXosTxLCkogih8bsjIdqlyiG3VkpEGyPjcMQRUyJpw7jK5mA+M17q2nQg9oXXMCVVARjKTHryNxsgxxmKkqIoSa0vrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D36d53Dr; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D36d53Dr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 078981F00A3A;
+	Thu, 16 Jul 2026 12:59:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784206773;
+	bh=ElAdf+OaR1FAE8nRi++tcdAgvUoyFAxBx5hwmbFrMKs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=D36d53DrjBp15Mj+tEVOofDCMBgBTqWnjViVKybzGXDucQ8ZA/yLMAFmzqDCKZPH/
+	 J4vzcGp2OWzM+z2B3BeJz7tWZpI7ks514Sku5aFsI+SVjV7GBleSdtbPKeGKxnRBux
+	 Pxmmcq8oho0Iash+ieaXSGn5XpksaAyIBPCn8WrgxyX/u9JSoDo5ICzQVx7mg4E17x
+	 L+pt2O6ZP+dt6tBqPiCu082HWlVWUw39nutlkZ+Os4QLmpwcXxPTuMHRFiMontuywG
+	 1kqjcEbe77XqGJLbkKqNWvcl8EVPaw17TjEoFAMFTaGd5CZVwmwO+eS+YXkdDDVJTK
+	 048kVdN+IGvUA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 03/15] riscv/mm: implement Svnapot contpte read-side
+ helpers
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Yunhui Cui" <cuiyunhui@bytedance.com>
+Cc: linux-perf-users@vger.kernel.org, kvm@vger.kernel.org
+In-Reply-To: <0c93b57b5315147c6ae6586371d795fb629dcc7a.1784201104.git.cuiyunhui@bytedance.com>
+References: <cover.1784201104.git.cuiyunhui@bytedance.com>
+ <0c93b57b5315147c6ae6586371d795fb629dcc7a.1784201104.git.cuiyunhui@bytedance.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 16 Jul 2026 12:59:32 +0000
+Message-Id: <20260716125933.078981F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 03/21] perf llvm: Fix arm64 adrp instruction
- disassembly mismatch with objdump
-From: Tengda Wu <wutengda@huaweicloud.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: james.clark@linaro.org, xueshuai@linux.alibaba.com,
- Li Huafei <lihuafei1@huawei.com>, Peter Zijlstra <peterz@infradead.org>,
- leo.yan@linux.dev, Ian Rogers <irogers@google.com>,
- Kim Phillips <kim.phillips@arm.com>, Mark Rutland <mark.rutland@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Bill Wendling <morbo@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20260701035355.752944-1-wutengda@huaweicloud.com>
- <20260701035355.752944-4-wutengda@huaweicloud.com> <ak89Hg1SWnn0DHCk@z2>
- <8812e4e2-3a3b-4f32-bdb8-b963bc21b301@huaweicloud.com>
-Content-Language: en-US
-In-Reply-To: <8812e4e2-3a3b-4f32-bdb8-b963bc21b301@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgD3KVuK0lhqbmDJBQ--.61146S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAw1DuFyUCry5Jw1kXw15CFg_yoWrKr13pr
-	WDKFW3JF4UJr1fursI9F1UuFyYkrWvqr4agr43Jw4IkrnIya43CryxGr4293WUZrWqvw4U
-	Zr4j9FW3WFn8JrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	s2-5UUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
+- [Critical] Missing single-PTE modifier overrides for NAPOT blocks break c=
+ontiguous encoding, causing Use-After-Free and lockups.
+- [High] Unbounded retry loop in `napotpte_ptep_get_lockless()` causes same=
+-CPU deadlock if interrupted by NMI/IRQ.
+- [High] `page_table_check` refcount corruption during Svnapot block conver=
+sion/clearing.
+- [Medium] `ptep_get` and `ptep_get_lockless` strip the `_PAGE_NAPOT` bit, =
+breaking `pte_leaf_size()` for generic MM.
+--
 
+--- Patch [3]: [PATCH v2 03/15] riscv/mm: implement Svnapot contpte read-si=
+de helpers ---
+commit 5e07f7373fe29103de43866f47711b800fb7a33e
+Author: Yunhui Cui <cuiyunhui@bytedance.com>
 
-On 2026/7/9 15:49, Tengda Wu wrote:
-> 
-> 
-> On 2026/7/9 14:18, Namhyung Kim wrote:
->> On Wed, Jul 01, 2026 at 03:53:37AM +0000, Tengda Wu wrote:
->>> The operands of 'adrp' instructions parsed by libllvm are currently
->>> represented as raw immediates rather than the "address <symbol+offset>"
->>> format used by objdump. This inconsistency causes arm64_mov__parse()
->>> to fail when parsing these instructions during post-processing.
->>>
->>> Example of the mismatch:
->>>   Current: adrp x18, 8014
->>>   Fix:     adrp x18, ffff800081f5f000 <this_cpu_vector>
->>>
->>> Fix this by manually extracting the target address from the raw adrp
->>> instruction via symbol_lookup_callback(). The address is then converted
->>> to a specific symbol during symbol__disassemble_llvm() and formatted
->>> to match objdump's output, ensuring compatibility with existing
->>> parsers.
->>>
->>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
->>> ---
->>>  tools/perf/util/llvm.c | 50 ++++++++++++++++++++++++++++++++++++++++++
->>>  1 file changed, 50 insertions(+)
->>>
->>> diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
->>> index a0deb742a733..533d47e8084d 100644
->>> --- a/tools/perf/util/llvm.c
->>> +++ b/tools/perf/util/llvm.c
->>> @@ -94,6 +94,7 @@ static void init_llvm(void)
->>>  struct symbol_lookup_storage {
->>>  	u64 branch_addr;
->>>  	u64 pcrel_load_addr;
->>> +	u64 pcrel_adrp_addr;
->>>  };
->>>  
->>>  static const char *
->>> @@ -108,6 +109,18 @@ symbol_lookup_callback(void *disinfo, uint64_t value,
->>>  		storage->branch_addr = value;
->>>  	else if (*ref_type == LLVMDisassembler_ReferenceType_In_PCrel_Load)
->>>  		storage->pcrel_load_addr = value;
->>
->> Is this used by arm64?  If not, would be possible to reuse
->> pcrel_load_addr unless it'd complicate the code significantly?
->>
->> I think it's the common concept of PC-relative addressing while it
->> requires two instructions to set up the final address on arm64.
->>
->> Thanks,
->> Namhyung
->>
+riscv/mm: implement Svnapot contpte read-side helpers
 
-I checked the LLVM internal implementation and conducted further experiments.
-You are correct, arm64 does not trigger LLVMDisassembler_ReferenceType_In_PCrel_Load
-at all. Instead, it utilizes its own architecture-specific reference types
-like LLVMDisassembler_ReferenceType_In_ARM64_ADRP, _LDRXl, etc.
-Therefore, 'pcrel_load_addr' is completely safe to reuse here.
+This patch introduces read-side helpers for Svnapot contiguous mappings to
+allow generic MM code to operate on the logical sub-PTEs. The public PTE
+getters are routed through these helpers.
 
-I will reuse 'pcrel_load_addr' to avoid adding unnecessary fields and
-optimize this patch in the next version.
+> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pg=
+table.h
+> index a0f64e980e981..fce6d04ea65db 100644
+> --- a/arch/riscv/include/asm/pgtable.h
+> +++ b/arch/riscv/include/asm/pgtable.h
+> @@ -706,37 +706,37 @@ static inline pte_t __ptep_get_lockless(pte_t *ptep)
+>  	return __ptep_get(ptep);
+>  }
+> =20
+> +#ifdef CONFIG_RISCV_ISA_SVNAPOT
+> +
+> +#define ptep_get ptep_get
+> +static inline pte_t ptep_get(pte_t *ptep)
+> +{
+> +	pte_t pte =3D __ptep_get(ptep);
+> +
+> +	if (likely(!pte_present_napot(pte)))
+> +		return pte;
+> +
+> +	return napotpte_ptep_get(ptep, pte);
+> +}
+> +
+> +#define ptep_get_lockless ptep_get_lockless
+> +static inline pte_t ptep_get_lockless(pte_t *ptep)
+> +{
+> +	pte_t pte =3D __ptep_get_lockless(ptep);
+> +
+> +	if (likely(!pte_present_napot(pte)))
+> +		return pte;
+> +
+> +	return napotpte_ptep_get_lockless(ptep);
+> +}
+> +
 
-Thanks,
-Tengda
+[Severity: Critical]
+Does this implementation miss overriding ptep_get_and_clear and=20
+ptep_modify_prot_start for NAPOT blocks?
 
-> 
->>> +	else if (*ref_type == LLVMDisassembler_ReferenceType_In_ARM64_ADRP) {
->>> +		uint64_t adrp_imm;
->>> +
->>> +		/* immhi (bits 23:5) and immlo (bits 30:29) */
->>> +		adrp_imm = ((value & 0x00ffffe0) >> 3) | ((value >> 29) & 0x3);
->>> +		/* Sign-extend the 21-bit immediate to 64-bit */
->>> +		if (adrp_imm & (1ULL << 20))
->>> +			adrp_imm |= ~((1ULL << 21) - 1);
->>> +
->>> +		/* Calculate the target page address */
->>> +		storage->pcrel_adrp_addr = (address & ~0xFFFLL) + (adrp_imm << 12);
->>> +	}
->>>  	*ref_type = LLVMDisassembler_ReferenceType_InOut_None;
->>>  	return NULL;
->>>  }
->>> @@ -204,6 +217,7 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
->>>  
->>>  		storage.branch_addr = 0;
->>>  		storage.pcrel_load_addr = 0;
->>> +		storage.pcrel_adrp_addr = 0;
->>>  
->>>  		/*
->>>  		 * LLVM's API has the code be disassembled as non-const, cast
->>> @@ -227,6 +241,42 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
->>>  				free(name);
->>>  			}
->>>  		}
->>> +		if (storage.pcrel_adrp_addr != 0) {
->>> +			/*
->>> +			 * ADRP (Address Page) instructions encode a 21-bit signed
->>> +			 * immediate offset relative to the current PC's page.
->>> +			 *
->>> +			 * To maintain consistency with standard objdump output,
->>> +			 * we truncate the raw encoded immediate at the comma
->>> +			 * and replace it with the resolved absolute page address.
->>> +			 *
->>> +			 * Example conversion:
->>> +			 * From: adrp x18, 8014
->>> +			 * To:   adrp x18, ffff800081f5f000 <this_cpu_vector>
->>> +			 */
->>> +			char *name;
->>> +			char *s = strchr(disasm_buf, ',');
->>> +
->>> +			if (s == NULL)
->>> +				goto err;
->>> +
->>> +			s++;
->>> +			*s = '\0';
->>> +			disasm_len = strlen(disasm_buf);
->>> +			disasm_len += scnprintf(disasm_buf + disasm_len,
->>> +						sizeof(disasm_buf) - disasm_len,
->>> +						" %"PRIx64,
->>> +						storage.pcrel_adrp_addr);
->>> +			name = llvm_name_for_data(dso, filename,
->>> +						  storage.pcrel_adrp_addr);
->>> +			if (name) {
->>> +				disasm_len += scnprintf(disasm_buf + disasm_len,
->>> +							sizeof(disasm_buf) -
->>> +							disasm_len,
->>> +							" <%s>", name);
->>> +				free(name);
->>> +			}
->>> +		}
->>>  		if (storage.pcrel_load_addr != 0) {
->>>  			char *name = llvm_name_for_data(dso, filename,
->>>  							storage.pcrel_load_addr);
->>> -- 
->>> 2.34.1
->>>
+If a NAPOT block is partially unmapped or modified via madvise() or
+mprotect(), the generic MM code will call ptep_get_and_clear() on a single
+PTE. Because these functions are not overridden, they fall back to the raw
+__ptep_get_and_clear().
 
+This clears only one PTE, leaving the other 15 with _PAGE_NAPOT still set,
+which breaks hardware rules. Additionally, it returns the raw NAPOT PTE whe=
+re
+pte_pfn() evaluates to the base PFN, causing the core MM to drop the
+mapcount and refcount on the base sub-page instead of the actual targeted
+sub-page. Could this lead to data corruption or a use-after-free?
+
+[ ... ]
+
+> diff --git a/arch/riscv/mm/contpte.c b/arch/riscv/mm/contpte.c
+> new file mode 100644
+> index 0000000000000..43ea76e424492
+> --- /dev/null
+> +++ b/arch/riscv/mm/contpte.c
+> @@ -0,0 +1,273 @@
+
+[ ... ]
+
+> +static inline pte_t napotpte_subpte(pte_t *ptep, pte_t pte)
+> +{
+> +	unsigned long pfn;
+> +	pgprot_t prot;
+> +
+> +	if (!pte_present_napot(pte))
+> +		return pte;
+> +
+> +	pfn =3D pte_pfn(pte) + (ptep - napot_align_ptep(ptep));
+> +	prot =3D __pgprot(pte_protval_no_pfn_no_napot(pte));
+> +
+> +	return pfn_pte(pfn, prot);
+> +}
+
+[Severity: Medium]
+Since this helper strips the _PAGE_NAPOT bit by using=20
+pte_protval_no_pfn_no_napot(pte), does it break pte_leaf_size() for generic=
+ MM?
+
+If pte_leaf_size() expects the Svnapot bit to be present to return the
+contiguous block size, returning a subpte without it will cause callers like
+perf_get_page_size() to falsely evaluate the mapping as PAGE_SIZE.
+
+> +
+> +static inline pte_t __napot_ptep_get_and_clear(struct mm_struct *mm,
+> +					       unsigned long addr, pte_t *ptep)
+> +{
+> +	pte_t pte;
+> +
+> +	pte =3D __pte(atomic_long_xchg((atomic_long_t *)ptep, 0));
+> +	page_table_check_pte_clear(mm, addr, pte_mknonnapot(pte, addr));
+> +
+> +	return pte;
+> +}
+
+[Severity: High]
+Can this cause page_table_check refcount corruption during Svnapot block
+conversion?
+
+pte_mknonnapot() returns the raw PTE unmodified. Because the raw Svnapot PFN
+encoded in all 16 PTEs is identically base_pfn | 0x8, pte_pfn() inside
+page_table_check_pte_clear() evaluates to the exact same base_pfn for all
+16 iterations.=20
+
+Will this cause the refcount for the base PFN to be decremented 16 times
+while leaking the remaining 15 mapped sub-PFNs?
+
+> +
+> +static void napotpte_convert(struct mm_struct *mm, unsigned long addr,
+> +			     pte_t *ptep, pte_t target)
+> +{
+> +	unsigned long start_addr, end, ptent_addr;
+> +	pte_t *start_ptep;
+> +	pte_t ptent, pte;
+> +	unsigned int i, nr;
+> +
+> +	start_addr =3D napot_align_addr(addr);
+> +	start_ptep =3D napot_align_ptep(ptep);
+> +	nr =3D napotpte_pte_num();
+> +	end =3D start_addr + napotpte_size();
+> +
+> +	for (i =3D 0; i < nr; i++) {
+> +		ptent_addr =3D start_addr + i * PAGE_SIZE;
+> +		ptent =3D __napot_ptep_get_and_clear(mm, ptent_addr,
+> +						   start_ptep + i);
+
+[Severity: High]
+Does this create a preemption window that can lead to a CPU deadlock?
+
+napotpte_convert() modifies NAPOT blocks by clearing their 16 PTEs sequenti=
+ally
+while holding the PTL, but it does not disable local interrupts.
+
+[ ... ]
+
+> +pte_t napotpte_ptep_get_lockless(pte_t *orig_ptep)
+> +{
+> +	pte_t orig_pte, pte;
+> +	pte_t *ptep;
+> +	unsigned int i, nr;
+> +
+> +	if (!napot_hw_supported())
+> +		return READ_ONCE(*orig_ptep);
+> +
+> +	nr =3D napotpte_pte_num();
+> +
+> +retry:
+> +	orig_pte =3D READ_ONCE(*orig_ptep);
+> +	if (!pte_present_napot(orig_pte))
+> +		return orig_pte;
+> +
+> +	ptep =3D napot_align_ptep(orig_ptep);
+> +
+> +	for (i =3D 0; i < nr; i++, ptep++) {
+> +		pte =3D READ_ONCE(*ptep);
+> +
+> +		if (!napotpte_is_consistent(pte, orig_pte))
+> +			goto retry;
+
+[Severity: High]
+If a perf NMI interrupts napotpte_convert() on the same CPU while the block=
+ is
+partially cleared and attempts a lockless page table walk, won't this loop
+spin indefinitely?
+
+The getter detects the intermediate inconsistency, jumps to retry, and spins
+forever because the writer is interrupted on the exact same CPU and cannot
+resume to restore consistency.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1784201104.gi=
+t.cuiyunhui@bytedance.com?part=3D3
