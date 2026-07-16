@@ -1,195 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB3C2E739A;
-	Thu, 16 Jul 2026 02:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784169442; cv=none; b=aTWU5psAaCRb3rm4TIgl8CQm97kj4WczG48lqAMkf+DjP0S+DYfcpdKtLpdN7n7MbIPkrsRFODrFGoF34agqObHF1z9FthJqk/Y4cOa7K7L6DixDiQrnz/NCtdTlwxmCUCH/XSdWo73CV7L4sXXXwwktTeyIKqN8nHCA6RHucQ4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784169442; c=relaxed/simple;
-	bh=qh3MXJ4zX+PzAH+IjADYpiOM1VCNO89t+VDqgXX5oQ8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=GzDgPW/09PJe800bQIW0FUur3PJOhiotAF5uJF8TOauZ18RzdgzyXW/dqAJ4Y4nbRxVyxGtDKM3Hqplx2uD79n6aX3vVrWbmpjPj43bKbCeUI3/Lq2MTNBEXtnhqU3Y9tNPUEzK1WzCqtPgFV4K3su04Y7YqiF+97wecrEhp8WM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bd/IIAU5; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F817303C97
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 02:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784169907; cv=pass; b=aS4WB430YbhMxlAz8rrmIGYTFdMi+joj2Jn1XgSbFQ28cCmdGdoTTYd6JLFpLCJigh160vU3dRWArsFfZucwqzfHLbuskNvVXU7W0jYhv7b6KXcqYuJRm3EsXrkmlJQ0dWLXeJWqt5YaBmimRLtVnb0L1p3PoTMfGx66I4rCJX8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784169907; c=relaxed/simple;
+	bh=FjX6PU2BP+ECnJIc7+9RJ4ml17iGk5ZNrnS3+lm95u0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=brcB+U33/y0OgFqf8opV0lQpb/IbmLRU8oPIIg0TUZM2Qi/HheZjbPxbi2shiLk86dqhlOCUv95MKe6I5s9Iy8xrUR43q2Us/8BTCX6TGcF00KeUbhptbB6BEhO9/7K1wjsa8fRaRvy4g5utq3nEdBbKLSWMrxjI20oPhuKfCac=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GkFoQeIb; arc=pass smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bd/IIAU5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E3ED1F000E9;
-	Thu, 16 Jul 2026 02:37:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784169440;
-	bh=WmoFwcuL/Sj1/kJRhDt+nVyg5ufKUIzE4A2ZN4dKudc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=Bd/IIAU5oAGXnSiWQvC68ALSpH2NxX2ZbSJsLmeecD2Awu+WOvrffJCc4nwq1v9sv
-	 znclPfoAkgvq9HNjZ+Lg4/Ev1u2FbFx/FG0Hrjw730YO9VF1TXVXLhyJ7znxytd/zi
-	 UlwtOkdztHtR7QzBVamsAqpjx0VJj7qah1EUGfD/CSmnSt2h63kpy5C2zIX1c8GAKp
-	 LkOgplTcim5e4xAZWymLNfNlmvazIWZ/s5Zy6RNfxbi2mG3vJdxfoO0eH4egsig27M
-	 b0ViEHYmUu5Pdk6fKALqxxjVg9uf75SQvqIuPQG35W9SSa0C1rVfbd7jsxJybRXFBD
-	 O28hzGgrg/OPQ==
-Date: Thu, 16 Jul 2026 11:37:16 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: sashiko-reviews@lists.linux.dev, sashiko-bot@kernel.org,
- linux-perf-users@vger.kernel.org, Linux Trace Kernel
- <linux-trace-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v7 10/10] selftests: ftrace: Add wprobe trigger testcase
-Message-Id: <20260716113716.55cfcd374d78f94620209ae5@kernel.org>
-In-Reply-To: <20260716105913.e04dd8dfa271a263f959d847@kernel.org>
-References: <178407983818.95826.12714571928538799781.stgit@devnote2>
-	<178407995495.95826.11582585035165074036.stgit@devnote2>
-	<20260715021641.B3D691F000E9@smtp.kernel.org>
-	<20260716105913.e04dd8dfa271a263f959d847@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GkFoQeIb"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2cede6375caso52525ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jul 2026 19:45:06 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784169905; cv=none;
+        d=google.com; s=arc-20260327;
+        b=FbWT3beVGX2ollY9Vw7rWfx+GA4O9z3UM2vvND1rWObCW48bnCbEqBX4YryVEAer2w
+         ECsS7idv2meT4BdSk/sIsHNgyXEvwtcmppkgDPQ1cJ/ncDl/uoiMnz7bJ1Uyqku3jIb0
+         6WLijJhXJSAEXCwDCQMeULmEsLJ8thFg83hy1NFEt3fc1xWUp5qrdu7it521EF/hRRCU
+         0UzfkOHBFNm8IaLUAliSLd+jtFKYRqItFl2GXLXtkzbxkXxaLlp4JU91k/bO30qZCF8g
+         jxwBoCWqZThUb04kVhCRxq7V8WJR28cBwIpAPLBzD/HQ/Gd6I2P3VfdZRWyzyFGfwctl
+         e0SA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=w9M4uT3MAj/sBxvep8cpJ1JC82mQWUFhrOmRXPihQxs=;
+        fh=A21dyV5An9IQxxY0PiM/VzzDxJYyCCVyg35rvwHRdyg=;
+        b=lVbcBzVysXa2QojrZUt0C1/tgASpQMQ0ep6kDPdC37MuysGUzN07fGo0cLRpowvNFY
+         TRtPpxcyFo1uTsp2hRlCKNfSKeWqNjgymHdUijQRCRwO2aIPiYf75vwwTpCzoyJoqBnj
+         yh5DK9EQfdG2k1A0cHwb0tFrkunv2NY7YN02p4gcPHzIgiUSnJpbLiSJl3IVTPRbxXKP
+         PVq7UYMBTgtqg4jTdROcb9Wfiu2+Iw+ZRvV4wpUOBxw11w0qOx3QPs71Lx2tdCJnd5Y5
+         WPBhs2pibwRAJ/e5+dxQSYGj1hXrb5olicNzOcbBqKZn/oJ4mDZw3VK+kaYgAi2uYWmi
+         54uQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784169905; x=1784774705; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=w9M4uT3MAj/sBxvep8cpJ1JC82mQWUFhrOmRXPihQxs=;
+        b=GkFoQeIb8dFAIySxKfT045ud5wKNaeHUIpYcixDyyL0kTz1AfNqAOBs1JoZz8vthAl
+         bIQzKcSg5xbUMubuz9v5eewysztTk/8rkR8D4n6BerfpuwiiJ/lXEH5fYy4IJa4fvX+D
+         tkuvNJ1HFeMP8POogI0tp+SBa+DIFMtX7cUw0s+ijb+gUct+eEC/pVO5j5kKzRvNFrGi
+         JnViWNIaHWrHb78VDQ0ClabBOpADP2FyZWAIyodwtAZZ9U9s22sAeHRWUy22Aj6Y/cpz
+         UPRzJRxnckFhHsnsqmC2/pmfb0xwtazLmuLMjjZ9P5bndT7lAtPncIrEtzPaf3ZMsn/I
+         ccTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784169905; x=1784774705;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=w9M4uT3MAj/sBxvep8cpJ1JC82mQWUFhrOmRXPihQxs=;
+        b=je88bi7fV1gtBChQ/ds0MHsPnFOs+ZjcODYmz6jQTLTytRdpT46dkhV+GPFNu5L76+
+         A5AzFdApHeL58n6rdC+ztzPTGckrhFjLTJ97zhn5bxUCVxWwl1V5AsHMS6VCHnmUSp5X
+         oTG/5l1My62nSerb8oRlNtK7Z0UZSWLtEd6Xd4UiyWgjzw35qC1Laq59bnKz//Ii82wc
+         Xc7et0OZBPr8v0mdeskUGItND3FwMgStTiTJ0G4i6ThAOWo4vur07ta7zJzrZiqNP384
+         hDlHtGkqooBN57D/LR3TjjeWsUyb4qQ98IsKJWpmRk84Z0Gq6Vd+mhT3IRW7G4MsF6ta
+         FYVg==
+X-Forwarded-Encrypted: i=1; AHgh+RpCsMM9Q0C5sm6sfmBdN9MDgTv2HKDTYRAkxMrmK8mdXUppUa4GdWgang3NJ1ZIJrFcPHh93Vl0FaUWBYfYF0/d@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy5L30dwQcQPp5fWbcdLYlJQTsAyzOKrHsSjsnb2CDAHhsT4c8Y
+	VW8lvQ2zzV+wv9Fs2RpI8scU+64vetYq8ewZOKYhwz+yrhVSB01h1JkQePeyVfIfIsH8QcpF32Z
+	htcZYW8kfdkXH5aJu6U4tx1vCdoOcERjSD31v0pxp
+X-Gm-Gg: AfdE7ckSff52odV6JR55ZL3CELTsI6oW6nEa4Oa0s8ryC2plfVPa4WrxtYMo2/kufYh
+	Ym0qGuYzxA6HQ3z0daPRnWc6RQM2JPKmcGDPEp2zKg95yhj1Kw5UcXuQ0HvAcD3ubosk0TYy+r9
+	BtQ7HUQnkSK2UDkNJG2tjr7fbbdxtE+B0nqHWN47gfxnlIACT0ND93lrOWtKBKNNk98wUNl+Y6e
+	9rcs90Jbo3NKkwmPdVmrhStdt0KUZm8yN4e1CDHfiCXFqgyXqIM0BTtDNYFRr0=
+X-Received: by 2002:a17:902:ec8f:b0:2c0:defb:557e with SMTP id
+ d9443c01a7336-2cf1d9d9ae6mr997675ad.1.1784169905101; Wed, 15 Jul 2026
+ 19:45:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+References: <20260716004336.2731086-1-namhyung@kernel.org>
+In-Reply-To: <20260716004336.2731086-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 15 Jul 2026 19:44:53 -0700
+X-Gm-Features: AUfX_mx5ra8fLJGpPa-h2CMVw_HCcIOVxVNEgQ-Fp8nDEFTK8bVr0JeUuTqsYzo
+Message-ID: <CAP-5=fU00=N5h5h-SJVhbK6858agvO=Yf_6GgAd99FZTKOtOmg@mail.gmail.com>
+Subject: Re: [PATCH] perf build: Fix a compiler error in util/libbfd.c
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Oops, sorry for confusion, this is for [9/10].
+On Wed, Jul 15, 2026 at 5:43=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> The bfd_boolean type was gone and converted to the standard bool type
+> but we have some old code that uses the type.  It caused a failure in
+> the build test.
+>
+>   util/libbfd.c: In function 'slurp_symtab':
+>   util/libbfd.c:94:9: error: unknown type name 'bfd_boolean'
+>      94 |         bfd_boolean dynamic =3D FALSE;
+>         |         ^~~~~~~~~~~
+>   util/libbfd.c:94:31: error: 'FALSE' undeclared (first use in this funct=
+ion)
+>      94 |         bfd_boolean dynamic =3D FALSE;
+>         |                               ^~~~~
+>   util/libbfd.c:94:31: note: each undeclared identifier is reported only =
+once for each function it appears in
+>   util/libbfd.c:102:27: error: 'TRUE' undeclared (first use in this funct=
+ion)
+>     102 |                 dynamic =3D TRUE;
+>         |                           ^~~~
+>
+> Fix it with standard bool type and constants.
+>
+> Link: https://sourceware.org/pipermail/binutils-cvs/2021-March/056231.htm=
+l
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Should we add a fixes tag for backports? It's not clear we can provide
+a sensible SHA.
 
 Thanks,
+Ian
 
-On Thu, 16 Jul 2026 10:59:13 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-
-> On Wed, 15 Jul 2026 02:05:55 +0000
-> sashiko-bot@kernel.org wrote:
-> 
-> > Thank you for your contribution! Sashiko AI review found 8 potential issue(s) to consider:
-> > - [Critical] Deadlocks due to NMI-unsafe operations (schedule_work and raw_spin_lock_irqsave) in tracepoint context.
-> > - [High] Missing cancel_work_sync() causes a Use-After-Free of wprobe_trigger_data via the workqueue.
-> > - [High] Synchronous free of wprobe_data violates RCU removal ordering, risking concurrent use-after-free.
-> > - [High] Missing trace_event_try_get_ref() and imbalanced trace_event_put_ref() cause module refcount underflow.
-> > - [High] on_each_cpu is called with wait=false for an IPI that references wprobe_data.
-> > - [High] Immediate kfree() of RCU-protected trigger_data and wprobe_data on the error path.
-> > - [Medium] Permanent memory leak of wprobe trigger objects on successful registration.
-> > - [Medium] tw->addr is read and written concurrently by different triggers without a shared lock.
-> > --
-> > 
-> 
-> Thanks for the review comments.
-> BTW, why this only to linux-perf-users? (Maybe I need to modify Sashiko setting)
-> 
-> > --- Patch [9]: [PATCH v7 09/10] tracing: wprobe: Add wprobe event trigger ---
-> > The format of this report is altered due to recitation restrictions.
-> > I am providing a free-form summary of the findings rather than inline
-> > quoting the patch.
-> > 
-> > Commit: 4087513c82b11b98d27cfc4452df9a1a8e41ddd5
-> > Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > Subject: tracing: wprobe: Add wprobe event trigger
-> > 
-> > This patch adds a wprobe event trigger to set and clear watch events
-> > dynamically, allowing watchpoints on local variables and slab objects.
-> > 
-> > [Severity: Critical]
-> > Is it safe to call raw_spin_lock_irqsave() and schedule_work() directly
-> > from wprobe_trigger()? Tracepoints can execute in arbitrary contexts,
-> > including NMI or with scheduler locks held. Calling schedule_work() is
-> > unsafe in these contexts. Additionally, acquiring wprobe_data->lock here
-> > can cause a hard deadlock if the tracepoint interrupts wprobe_smp_update_func()
-> > while it is holding the exact same lock in IPI context.
-> 
-> Hmm, good catch!
-> OK, use a pair of irq_work and work to call on_each_cpu() for some
-> interrupt context.
-> For NMI context, I think wprobe_trigger should check the original state
-> is in_nmi(). This can work for normal trace events or fprobe, but not
-> for kprobes, because kprobe handler itself is working inside NMI context.
-> Hmm, let me check how can I fix this. Until solving this problem, this
-> wprobe trigger may not work with kprobes.
-> Also, I found the lock should protect the wprobe itself, not data.
-> Let me move the irq_work and lock to trace_wprobe.
-> 
-> Hmm, we may need to pass to original context (calculated by preempt_count)
-> to trigger event so that it can evaluate the original context.
-> (BTW, )
-> 
-> > [Severity: High]
-> > Does free_wprobe_trigger_data() safely handle the embedded work struct?
-> > When a trigger is unregistered, this function frees wprobe_data via kfree().
-> > If wprobe_trigger() recently scheduled wprobe_data->work, the workqueue
-> > could execute wprobe_work_func() on the freed memory since there is no
-> > cancel_work_sync() before freeing.
-> 
-> OK, so move the worker to wprobe because anyway the worker will update
-> the wprobe itself.
-> 
-> > 
-> > [Severity: High]
-> > Is an RCU grace period needed in wprobe_trigger_free()?
-> > wprobe_unregister_trigger() unlinks the trigger and calls
-> > wprobe_trigger_free(), which synchronously frees wprobe_data. Since
-> > tracepoints execute under RCU, could a concurrent tracepoint execution
-> > still be accessing wprobe_data when it gets freed?
-> 
-> Indeed, let's use call_rcu().
-> 
-> > 
-> > [Severity: High]
-> > Can the error path in wprobe_trigger_cmd_parse() cause a use-after-free?
-> > If event_trigger_register() successfully exposes the trigger to RCU
-> > readers but a subsequent step fails, returning an error causes the
-> > __free(kfree) cleanup to immediately free trigger_data and wprobe_data.
-> > This bypasses any RCU grace period for objects that were just briefly
-> > exposed to concurrent tracepoint readers.
-> 
-> Ah, good catch. OK, let me call synchronize_rcu() before returning.
-> 
-> > 
-> > [Severity: High]
-> > Is it intentional that on_each_cpu() is called with wait=false in
-> > wprobe_work_func()? Because it doesn't wait, the work function completes
-> > immediately while IPIs are still pending on other CPUs. If the trigger
-> > is unregistered and freed right after, wprobe_smp_update_func() will
-> > access freed wprobe_data.
-> 
-> Ah, indeed. I will use a combination of irq_worker and worker and use
-> on_each_cpu() with wait=true for safety.
-> 
-> > 
-> > [Severity: High]
-> > Does wprobe_trigger_cmd_parse() acquire the target event's module
-> > reference? The code calls trace_event_enable_disable() directly without
-> > first calling trace_event_try_get_ref(). However, wprobe_trigger_free()
-> > unconditionally calls trace_event_put_ref(), which could lead to a module
-> > refcount underflow.
-> 
-> OK, let me fix it.
-> 
-> > 
-> > [Severity: Medium]
-> > Is there a memory leak on the success path of wprobe_trigger_cmd_parse()?
-> > The function increments the refcount via event_trigger_init(), and then
-> > event_trigger_register() increments it again. On success, trigger_data
-> > is set to NULL to bypass the cleanup macro, but the initial refcount is
-> > never dropped. When the trigger is later unregistered, the refcount only
-> > drops to 1, permanently leaking the objects.
-> 
-> OK, call trace_event_put_ref directly in wprobe_trigger_cmd_parse().
-> 
-> 
-> > 
-> > [Severity: Medium]
-> > How is concurrent access to tw->addr synchronized between different
-> > triggers? If a user attaches multiple triggers (e.g., set_wprobe and
-> > clear_wprobe) targeting the same wprobe event, they allocate separate
-> > wprobe_data instances with independent locks. When wprobe_trigger()
-> > executes, they will read and write the shared tw->addr simultaneously
-> > without a common lock, potentially corrupting the hardware breakpoint state.
-> 
-> I decided to use a lock in trace_wprobe side and use READ_ONCE/WRITE_ONCE()
-> which may be enough.
-> 
-> Thank you,
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  tools/perf/util/libbfd.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
+> index c1c12308cc12ffea..d8241c7caac50836 100644
+> --- a/tools/perf/util/libbfd.c
+> +++ b/tools/perf/util/libbfd.c
+> @@ -91,7 +91,7 @@ static int slurp_symtab(bfd *abfd, struct a2l_data *a2l=
+)
+>         long storage;
+>         long symcount;
+>         asymbol **syms;
+> -       bfd_boolean dynamic =3D FALSE;
+> +       bool dynamic =3D false;
+>
+>         if ((bfd_get_file_flags(abfd) & HAS_SYMS) =3D=3D 0)
+>                 return bfd_error(bfd_get_filename(abfd));
+> @@ -99,7 +99,7 @@ static int slurp_symtab(bfd *abfd, struct a2l_data *a2l=
+)
+>         storage =3D bfd_get_symtab_upper_bound(abfd);
+>         if (storage =3D=3D 0L) {
+>                 storage =3D bfd_get_dynamic_symtab_upper_bound(abfd);
+> -               dynamic =3D TRUE;
+> +               dynamic =3D true;
+>         }
+>         if (storage < 0L)
+>                 return bfd_error(bfd_get_filename(abfd));
+> --
+> 2.55.0.141.g00534a21ce-goog
+>
