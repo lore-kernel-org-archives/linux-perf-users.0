@@ -1,56 +1,56 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5531238C402
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 07:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46E3638D69D
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 07:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784185413; cv=none; b=faIKPW4vIpd9pZ2YqMyXcdenz9bTLJxltAspvZjWDQR3+cVU9EGnTyZavj1uaDTHbeEWVW85hphLSGPIfrVKBiCfqA8axFwCG/lOnhIf93RuSJST10M5z4LDhhFFqpKbzZrOu3VUKphEVa7VvdTp166yFikBH5m8AQszm3pVmCU=
+	t=1784185415; cv=none; b=kpK5OfmuupF6fFnzxOU9SllLpOdFlW5wPjcKKcd5xi101SpdNjZTTUWzqU6goqI8dPxtLmuibWH45lUlEYuipykO5qGfpdhU19Z4PtLkna1bW+gMJS8bEl4+RFJSAVMYo5uffu/xbmwZPKiftxGLocD2HITMGZtX/LltbIb9/gw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784185413; c=relaxed/simple;
-	bh=PhANDbGWND/DrXbk580KY77RKwTd4rvJ06CKfQYVGoQ=;
+	s=arc-20240116; t=1784185415; c=relaxed/simple;
+	bh=FGW7ZR9yoomli7lZ8GOfioH5oDYhOp4P4xkrcpJjkpE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=R/vfw+lva9pyBXf1MwPUDb8BMRLjLo5bLXR7eGvUUffvvAe+vdujMgqCwnMohZ21bpQmmZ+voMVQbDEjND6R+PMPsIo0yGm8WU7QByIReD1f9O7pUXqcUquRlXBslNtf/Ijpj6TnYZtH87eKM6HE1JhHUhIoNbTRuzK2qxS7p7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IWVTYYsS; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=QS3U0GF7tCy1WhCO79tw3lvgxKysL1OeULpJoO8P0LHIqF1jSLZIOmAkQWTMcWzuLhjRp++yWHIzYlv8W41CQEqywf/sHWvxbmujBVahRjQvOXyYiHp90sJ+eYfL4R+HHAZAD3AeLGxq4pDgi03SAnTED4jQrxr42EnfY/yCAmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gm43uGVA; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IWVTYYsS"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-c88aab7c1fcso15055661a12.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 00:03:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gm43uGVA"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c916d17dd43so10388216a12.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 00:03:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784185412; x=1784790212; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1784185413; x=1784790213; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=HwO/sP+rhydtkKNqO7NSv33UrBaqJY5nVaNGEQvI3j0=;
-        b=IWVTYYsSG6cdX+KL7BI3RgSeUbBfsUGdEYGHuaDimKInKHrlL+0uNEg87h75n/BuPW
-         oy05stTHceyJ+cSHvkyr/hGV2ycxy43Qd1xRPN9PSU56SaPSrnTqpcYQou+B6mvO/14a
-         68qGi8hyHkyUr/dwrLi6RJ4Lqihlh6wCgIRkbKlXUyF+VLUcLKmjoLxwDCYC1wh2wQjy
-         ahQU0GFNW6jSIsP89+Nqw6W8dYq7+Cm5Ybn+y3/K+V8ILqyVaWEyXb+VBG2JKUNbRcKi
-         liTSsoPfwIcFpUc6OLbms8XSxlZOGX08ebnCORTDiznvzTnCTJIRQZn3TU1Xz2bxQInJ
-         Ofaw==
+        bh=c2WNQJI5LKocnmbHS2DrLyD6ql7IEqENaBv126GRlho=;
+        b=gm43uGVAreCVHisYr2cNCN89u0O4C5jQn1QkdhXKAeF5HKru9IXElEi4qYzDm1AlDV
+         eQVkJeXnMNrEd7Bo/eCIYiSGyaVnUCsfrs6LfByofiQkt9SM35HCSuHtQI3oSsgbfn/w
+         pzKokPV+ivvfYiNcT9zwtEsvX9LWC9S9XHKONbZPvq9y8xq8eXioY6rnMChjzvD2sFv2
+         GWgO8Z5JNaCgySLuLYG4VK+GXGZYz1p+gwsAK7cdACUWa+vd2D+n8cFhCOjA7ITkpR8i
+         DyEQfnlEjLUFWM9Tfpl6XyaDPY96tE1Yk/Xuz9hz5UXYFmYAey43L40q7nditiKdoO8e
+         bC2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784185412; x=1784790212;
+        d=1e100.net; s=20251104; t=1784185413; x=1784790213;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=HwO/sP+rhydtkKNqO7NSv33UrBaqJY5nVaNGEQvI3j0=;
-        b=ICo9tm5CqtWU2iK+ZsfuVi1gIpAzFY20oZU3ETJkRg/R9GBy/rdhGHSqV45uI7yyQK
-         CYl3B8/op08tAVQSn7qzv6sTRSG+5QFs2PZ3PDjyQuFx1YISwf4ukhrMGZMIpZE4whPd
-         O2i3mF6TVA+rM8TxZN/AivCMs+6hVyfH2qJatEY38858h4cA0LowhL433NzL1S/mFSgB
-         j5JuP4hCBBRpNO0T3jQ++5tdJFpKpJxeS/Qkm9bhs4mOqmhwuDd21cdLE5jL7LcrLesd
-         eW1qluNis/VZEYDJsG/OxvdWFIq2MQX7ultRq5Z7sdXEzPi/EqLHli8vh665sZsftaMm
-         j8cA==
-X-Forwarded-Encrypted: i=1; AHgh+RrR1T6/6mB7esCwCdwPw4dFUvaktv/uBpp9FQiOFxj6W2CAv7egJ78GBIMx/y51ROO6Eg4U7//KmpY8gavCQkbv@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRrarFEHnZl3J4HpOumXSlRXTfS0aHSVusaiDf7FIzanGboeQP
-	HHo49lT3uJ9bRgffu5Bn02mg3geWhRQScH4+sSMyx10H3yxJFuc+/gP2UXs4e7UqRhzJp/9Gx8S
-	ZC7THpoP1uw==
-X-Received: from dlbut12.prod.google.com ([2002:a05:7022:7e0c:b0:13b:9d65:a542])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6300:6705:b0:3c3:8ce8:1fd
- with SMTP id adf61e73a8af0-3c38ce8075amr1824909637.73.1784185411403; Thu, 16
- Jul 2026 00:03:31 -0700 (PDT)
-Date: Thu, 16 Jul 2026 00:02:59 -0700
+        bh=c2WNQJI5LKocnmbHS2DrLyD6ql7IEqENaBv126GRlho=;
+        b=N/AoIQsVnX7gqRtStD3fBKPCd4HvaE5XIHk8fwI+5jysxf99awVMLgKKQ+wUyxwkt+
+         raqutXBjdyGMtHFofghmEOPUyHBsapnTGuYkkBSucMPP6Y5ngAV5sPfqJUWjBAaEgytw
+         RzBTcyFOfBRoCpXojAAZCMYcUB2Tao6x26MJ4RiaZ1zVm0VLceYnPnLUglotRPeUlAG9
+         qB3n3+Vx1nK+QD26W4FHNh9T+kKqV8/MRshV1ZPi1XAtFs5BUMTXDRDjCJt266ebA5eP
+         AXn4+Uw22ISdfZ/iuoiuSozkGpXqY2gsoe84EZgGJY8ntv26+oEdmpfcm+Je2N+K2fnX
+         0oqQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqgznCDnvbcR6G8HYREQECCu6g4Ir30C/zB+KI7oyjxUykPjuodTiPwMYUFA9/E95JrEtrDxvbpLgXTsYn9C4c3@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVme8+4HBULNxnUgbTXOnnAWQgueMIhC5xHH1w8nQD0Wcq63zt
+	Rels6GgQt31LuaN1uYkYhQH/DbyD0txtrtm/0oYZ+pffiV/cwJcnkDGUQL/2GHgKwxWvtpwE+aT
+	0hkOOmrQi8w==
+X-Received: from dybmi5.prod.google.com ([2002:a05:7301:f85:b0:30f:2f43:117b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3d22:b0:3c0:9c19:65b7
+ with SMTP id adf61e73a8af0-3c36c433382mr6914165637.63.1784185413200; Thu, 16
+ Jul 2026 00:03:33 -0700 (PDT)
+Date: Thu, 16 Jul 2026 00:03:00 -0700
 In-Reply-To: <20260716070303.507066-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260716043223.388233-1-irogers@google.com> <20260716070303.507066-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.141.g00534a21ce-goog
-Message-ID: <20260716070303.507066-11-irogers@google.com>
-Subject: [PATCH v4 10/14] perf stat: Implement streaming JSON formatting callbacks
+Message-ID: <20260716070303.507066-12-irogers@google.com>
+Subject: [PATCH v4 11/14] perf stat: Extend JSON output linter to test core
+ aggregation checks
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, ctshao@google.com, 
 	namhyung@kernel.org
@@ -70,377 +71,255 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-This patch implements streaming JSON formatting callbacks inside
-util/stat-print-json.c, replacing the empty stubs introduced in Commit
-1.
+This patch extends tools/perf/tests/shell/stat+json_output.sh to run all
+basic and standard CPU/thread aggregation checks under the --new JSON
+print flag:
 
-Delivers a highly optimized, zero-allocation, and 100% streaming print
-engine for JSON normal and metric-only modes. It bypasses dynamic queue
-events and metric lists entirely, formatting and streaming JSON objects
-directly onto the output file descriptor.
+  - check_no_args
+  - check_system_wide
+  - check_interval
+  - check_event
+  - check_per_thread
+  - check_per_node
+  - check_system_wide_no_aggr
+  - check_per_core
+  - check_per_socket
+  - check_per_die
 
-Utilizes the newly centralized unified aggregation helpers to format CPU
-and thread keys inside the JSON objects, and incorporates full
-interval-mode timestamp printing support.
+This guarantees that JSON outputs produced by the decoupled,
+zero-allocation, and streaming print callbacks are formally validated
+across standard and interval modes.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Assisted-by: Antigravity:gemini-3.5-flash
 Acked-by: Chun-Tse Shao <ctshao@google.com>
 ---
- tools/perf/util/stat-print-json.c | 340 +++++++++++++++++++++++++++++-
- 1 file changed, 333 insertions(+), 7 deletions(-)
+ tools/perf/tests/shell/stat+json_output.sh | 71 ++++++++++++++--------
+ 1 file changed, 45 insertions(+), 26 deletions(-)
 
-diff --git a/tools/perf/util/stat-print-json.c b/tools/perf/util/stat-print-json.c
-index 4690c4286fd2..7ed00aae89f4 100644
---- a/tools/perf/util/stat-print-json.c
-+++ b/tools/perf/util/stat-print-json.c
-@@ -1,13 +1,339 @@
- // SPDX-License-Identifier: GPL-2.0
--#include "stat-print.h"
-+#include <errno.h>
-+#include <inttypes.h>
-+#include <math.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+
-+#include <time.h>
-+#include <stdbool.h>
- #include <linux/compiler.h>
-+#include <linux/kernel.h>
-+
-+#include "cpumap.h"
-+#include "evlist.h"
-+#include "evsel.h"
-+#include "stat-print.h"
-+#include "stat.h"
-+#include "thread_map.h"
-+
-+static const char *metric_threshold_classify__str(enum metric_threshold_classify thresh)
-+{
-+	const char *const strs[] = {
-+		"unknown", "bad", "nearly bad", "less good", "good",
-+	};
-+	_Static_assert(ARRAY_SIZE(strs) - 1 == METRIC_THRESHOLD_GOOD, "missing enum value");
-+	return strs[thresh];
-+}
-+
-+/**
-+ * struct json_print_state - Print state context for JSON output.
-+ * @fp: File descriptor to output to.
-+ * @timestamp: Formatted interval timestamp (optional).
-+ */
-+struct json_print_state {
-+	FILE *fp;
-+	char timestamp[64];
-+};
-+
-+/**
-+ * struct json_metric_only_print_state - Metric-only print state context for JSON output.
-+ * @fp: File descriptor to output to.
-+ * @timestamp: Formatted interval timestamp (optional).
-+ * @evlist: Evlist to query entries from.
-+ * @last_aggr_idx: The aggregation index of the last printed metric.
-+ * @first_in_group: Whether the current metric is the first in its group.
-+ */
-+struct json_metric_only_print_state {
-+	FILE *fp;
-+	char timestamp[64];
-+	struct evlist *evlist;
-+	int last_aggr_idx;
-+	bool first_in_group;
-+};
-+
-+/**
-+ * print_aggr_id_json - Print the aggregation prefix for JSON format.
-+ *
-+ * Copied and adapted from stat-display.c.
-+ */
-+static void print_aggr_id_json(const struct perf_stat_config *config, FILE *output,
-+			       struct evsel *evsel, struct aggr_cpu_id id, int aggr_nr)
-+{
-+	switch (config->aggr_mode) {
-+	case AGGR_CORE:
-+		fprintf(output, "\"core\" : \"S%d-D%d-C%d\", \"counters\" : %d, ", id.socket,
-+			id.die, id.core, aggr_nr);
-+		break;
-+	case AGGR_CACHE:
-+		fprintf(output, "\"cache\" : \"S%d-D%d-L%d-ID%d\", \"counters\" : %d, ", id.socket,
-+			id.die, id.cache_lvl, id.cache, aggr_nr);
-+		break;
-+	case AGGR_CLUSTER:
-+		fprintf(output, "\"cluster\" : \"S%d-D%d-CLS%d\", \"counters\" : %d, ", id.socket,
-+			id.die, id.cluster, aggr_nr);
-+		break;
-+	case AGGR_DIE:
-+		fprintf(output, "\"die\" : \"S%d-D%d\", \"counters\" : %d, ", id.socket, id.die,
-+			aggr_nr);
-+		break;
-+	case AGGR_SOCKET:
-+		fprintf(output, "\"socket\" : \"S%d\", \"counters\" : %d, ", id.socket, aggr_nr);
-+		break;
-+	case AGGR_NODE:
-+		fprintf(output, "\"node\" : \"N%d\", \"counters\" : %d, ", id.node, aggr_nr);
-+		break;
-+	case AGGR_NONE:
-+		if (evsel->percore && !config->percore_show_thread)
-+			fprintf(output, "\"core\" : \"S%d-D%d-C%d\", ", id.socket, id.die, id.core);
-+		else if (id.cpu.cpu > -1)
-+			fprintf(output, "\"cpu\" : \"%d\", ", id.cpu.cpu);
-+		break;
-+	case AGGR_THREAD:
-+		fprintf(output, "\"thread\" : \"%s-%d\", ",
-+			perf_thread_map__comm(evsel->core.threads, id.thread_idx),
-+			perf_thread_map__pid(evsel->core.threads, id.thread_idx));
-+		break;
-+	case AGGR_GLOBAL:
-+	case AGGR_UNSET:
-+	case AGGR_MAX:
-+	default:
-+		break;
-+	}
-+}
-+
-+/*
-+ * JSON Output Callbacks - Normal Mode (100% Streaming & Zero-Allocation)
-+ */
-+
-+static int json_print_start(void *ctx __maybe_unused,
-+			    struct perf_stat_config *config __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static int json_print_event(void *ctx, struct perf_stat_config *config,
-+			    struct evsel *evsel, int aggr_idx, u64 val,
-+			    u64 ena, u64 run, double stdev_pct __maybe_unused,
-+			    const char *cgrp __maybe_unused)
-+{
-+	struct json_print_state *ps = ctx;
-+	FILE *output = config->output;
-+	bool ok = (run != 0 && ena != 0);
-+	double enabled_percent = 100.0;
-+
-+	fprintf(output, "{");
-+
-+	/* Print interval timestamp first if configured */
-+	if (config->interval && ps && ps->timestamp[0])
-+		fprintf(output, "%s", ps->timestamp);
-+
-+	/* Print aggregation JSON fields if configured */
-+	if (config->aggr_map && aggr_idx >= 0) {
-+		struct aggr_cpu_id id = config->aggr_map->map[aggr_idx];
-+		int aggr_nr = 0;
-+
-+		if (evsel->stats && evsel->stats->aggr)
-+			aggr_nr = evsel->stats->aggr[aggr_idx].nr;
-+
-+		print_aggr_id_json(config, output, evsel, id, aggr_nr);
-+	}
-+
-+	if (ok) {
-+		double sc = evsel->scale;
-+		double avg = val * sc;
-+
-+		fprintf(output, "\"counter-value\" : \"%f\"", avg);
-+	} else {
-+		const char *bad_count = evsel->supported ? CNTR_NOT_COUNTED : CNTR_NOT_SUPPORTED;
-+
-+		fprintf(output, "\"counter-value\" : \"%s\"", bad_count);
-+	}
-+
-+	fprintf(output, ", \"unit\" : \"%s\"", evsel->unit ?: "");
-+	/* Cast away const for legacy evsel__name */
-+	fprintf(output, ", \"event\" : \"%s\"", evsel__name((struct evsel *)evsel));
-+
-+	if (run != ena)
-+		enabled_percent = 100.0 * run / ena;
-+	fprintf(output, ", \"event-runtime\" : %" PRIu64 ", \"pcnt-running\" : %.2f", run,
-+		enabled_percent);
-+	fprintf(output, "}\n");
-+
-+	return 0;
-+}
-+
-+static int json_print_metric(void *ctx, struct perf_stat_config *config,
-+			     struct evsel *evsel, int aggr_idx,
-+			     const char *name, const char *unit, double val,
-+			     enum metric_threshold_classify thresh)
-+{
-+	struct json_print_state *ps = ctx;
-+	FILE *output = config->output;
-+	u64 run = 0, ena = 0;
-+	double enabled_percent = 100.0;
-+	struct perf_stat_evsel *ps_evsel = evsel->stats;
-+
-+	if (ps_evsel && ps_evsel->aggr && aggr_idx >= 0 &&
-+	    aggr_idx < ps_evsel->nr_aggr) {
-+		run = ps_evsel->aggr[aggr_idx].counts.run;
-+		ena = ps_evsel->aggr[aggr_idx].counts.ena;
-+	}
+diff --git a/tools/perf/tests/shell/stat+json_output.sh b/tools/perf/tests/shell/stat+json_output.sh
+index 85d1ad7186c6..8168b861ade7 100755
+--- a/tools/perf/tests/shell/stat+json_output.sh
++++ b/tools/perf/tests/shell/stat+json_output.sh
+@@ -13,6 +13,7 @@ shelldir=$(dirname "$0")
+ . "${shelldir}"/lib/setup_python.sh
+ pythonchecker=$(dirname $0)/lib/perf_json_output_lint.py
  
--int perf_stat__print_json(struct evlist *evlist __maybe_unused,
--			  const struct perf_stat_config *config __maybe_unused,
--			  const struct target *target __maybe_unused,
--			  const struct timespec *ts __maybe_unused,
--			  int argc __maybe_unused,
--			  const char **argv __maybe_unused)
-+	fprintf(output, "{");
-+
-+	/* Print interval timestamp first if configured */
-+	if (config->interval && ps && ps->timestamp[0])
-+		fprintf(output, "%s", ps->timestamp);
-+
-+	/* Print aggregation JSON fields if configured */
-+	if (config->aggr_map && aggr_idx >= 0) {
-+		struct aggr_cpu_id id = config->aggr_map->map[aggr_idx];
-+		int aggr_nr = 0;
-+
-+		if (evsel->stats && evsel->stats->aggr)
-+			aggr_nr = evsel->stats->aggr[aggr_idx].nr;
-+
-+		print_aggr_id_json(config, output, evsel, id, aggr_nr);
-+	}
-+
-+	if (run != ena)
-+		enabled_percent = 100.0 * run / ena;
-+	fprintf(output, "\"event-runtime\" : %" PRIu64 ", \"pcnt-running\" : %.2f", run,
-+		enabled_percent);
-+	fprintf(output, ", \"metric-value\" : \"%f\"", val);
-+	if (unit && unit[0] && name && name[0])
-+		fprintf(output, ", \"metric-unit\" : \"%s  %s\"", unit, name);
-+	else if (name && name[0])
-+		fprintf(output, ", \"metric-unit\" : \"%s\"", name);
-+	else if (unit && unit[0])
-+		fprintf(output, ", \"metric-unit\" : \"%s\"", unit);
-+	if (thresh != METRIC_THRESHOLD_UNKNOWN) {
-+		fprintf(output, ", \"metric-threshold\" : \"%s\"",
-+			metric_threshold_classify__str(thresh));
-+	}
-+	fprintf(output, "}\n");
-+
-+	return 0;
-+}
-+
-+static int json_print_end(void *ctx __maybe_unused,
-+			  struct perf_stat_config *config __maybe_unused)
++perf_new_opt=""
+ stat_output=$(mktemp /tmp/__perf_test.stat_output.json.XXXXX)
+ 
+ cleanup() {
+@@ -35,42 +36,42 @@ function ParanoidAndNotRoot()
+ 
+ check_no_args()
  {
- 	return 0;
+-	echo -n "Checking json output: no args "
+-	perf stat -j -o "${stat_output}" true
++	echo -n "Checking $api_label: no args "
++	perf stat -j $perf_new_opt -o "${stat_output}" true
+ 	$PYTHON $pythonchecker --no-args --file "${stat_output}"
+ 	echo "[Success]"
  }
+ 
+ check_system_wide()
+ {
+-	echo -n "Checking json output: system wide "
++	echo -n "Checking $api_label: system wide "
+ 	if ParanoidAndNotRoot 0
+ 	then
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j -a -o "${stat_output}" true
++	perf stat -j $perf_new_opt -a -o "${stat_output}" true
+ 	$PYTHON $pythonchecker --system-wide --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+ check_system_wide_no_aggr()
+ {
+-	echo -n "Checking json output: system wide no aggregation "
++	echo -n "Checking $api_label: system wide no aggregation "
+ 	if ParanoidAndNotRoot 0
+ 	then
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j -A -a --no-merge -o "${stat_output}" true
++	perf stat -j $perf_new_opt -A -a --no-merge -o "${stat_output}" true
+ 	$PYTHON $pythonchecker --system-wide-no-aggr --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+ check_interval()
+ {
+-	echo -n "Checking json output: interval "
+-	perf stat -j -I 1000 -o "${stat_output}" true
++	echo -n "Checking $api_label: interval "
++	perf stat -j $perf_new_opt -I 1000 -o "${stat_output}" true
+ 	$PYTHON $pythonchecker --interval --file "${stat_output}"
+ 	echo "[Success]"
+ }
+@@ -78,110 +79,110 @@ check_interval()
+ 
+ check_event()
+ {
+-	echo -n "Checking json output: event "
+-	perf stat -j -e cpu-clock -o "${stat_output}" true
++	echo -n "Checking $api_label: event "
++	perf stat -j $perf_new_opt -e cpu-clock -o "${stat_output}" true
+ 	$PYTHON $pythonchecker --event --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+ check_per_core()
+ {
+-	echo -n "Checking json output: per core "
++	echo -n "Checking $api_label: per core "
+ 	if ParanoidAndNotRoot 0
+ 	then
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j --per-core -a -o "${stat_output}" true
++	perf stat -j $perf_new_opt --per-core -a -o "${stat_output}" true
+ 	$PYTHON $pythonchecker --per-core --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+ check_per_thread()
+ {
+-	echo -n "Checking json output: per thread "
++	echo -n "Checking $api_label: per thread "
+ 	if ParanoidAndNotRoot 0
+ 	then
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j --per-thread -p $$ -o "${stat_output}" true
++	perf stat -j $perf_new_opt --per-thread -p $$ -o "${stat_output}" true
+ 	$PYTHON $pythonchecker --per-thread --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+ check_per_cache_instance()
+ {
+-	echo -n "Checking json output: per cache_instance "
++	echo -n "Checking $api_label: per cache_instance "
+ 	if ParanoidAndNotRoot 0
+ 	then
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j --per-cache -a true 2>&1 | $PYTHON $pythonchecker --per-cache
++	perf stat -j $perf_new_opt --per-cache -a true 2>&1 | $PYTHON $pythonchecker --per-cache
+ 	echo "[Success]"
+ }
+ 
+ check_per_cluster()
+ {
+-	echo -n "Checking json output: per cluster "
++	echo -n "Checking $api_label: per cluster "
+ 	if ParanoidAndNotRoot 0
+ 	then
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j --per-cluster -a true 2>&1 | $PYTHON $pythonchecker --per-cluster
++	perf stat -j $perf_new_opt --per-cluster -a true 2>&1 | $PYTHON $pythonchecker --per-cluster
+ 	echo "[Success]"
+ }
+ 
+ check_per_die()
+ {
+-	echo -n "Checking json output: per die "
++	echo -n "Checking $api_label: per die "
+ 	if ParanoidAndNotRoot 0
+ 	then
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j --per-die -a -o "${stat_output}" true
++	perf stat -j $perf_new_opt --per-die -a -o "${stat_output}" true
+ 	$PYTHON $pythonchecker --per-die --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+ check_per_node()
+ {
+-	echo -n "Checking json output: per node "
++	echo -n "Checking $api_label: per node "
+ 	if ParanoidAndNotRoot 0
+ 	then
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j --per-node -a -o "${stat_output}" true
++	perf stat -j $perf_new_opt --per-node -a -o "${stat_output}" true
+ 	$PYTHON $pythonchecker --per-node --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+ check_per_socket()
+ {
+-	echo -n "Checking json output: per socket "
++	echo -n "Checking $api_label: per socket "
+ 	if ParanoidAndNotRoot 0
+ 	then
+ 		echo "[Skip] paranoia and not root"
+ 		return
+ 	fi
+-	perf stat -j --per-socket -a -o "${stat_output}" true
++	perf stat -j $perf_new_opt --per-socket -a -o "${stat_output}" true
+ 	$PYTHON $pythonchecker --per-socket --file "${stat_output}"
+ 	echo "[Success]"
+ }
+ 
+ check_metric_only()
+ {
+-	echo -n "Checking json output: metric only "
++	echo -n "Checking $api_label: metric only "
+ 	if [ "$(uname -m)" = "s390x" ] && ! grep '^facilities' /proc/cpuinfo  | grep -qw 67
+ 	then
+ 		echo "[Skip] CPU-measurement counter facility not installed"
+ 		return
+ 	fi
+-	perf stat -j --metric-only -M page_faults_per_second -o "${stat_output}" true
++	perf stat -j $perf_new_opt --metric-only -M page_faults_per_second -o "${stat_output}" true
+ 	$PYTHON $pythonchecker --metric-only --file "${stat_output}"
+ 	echo "[Success]"
+ }
+@@ -214,6 +215,7 @@ check_for_topology()
+ }
+ 
+ check_for_topology
++api_label="json output"
+ check_no_args
+ check_system_wide
+ check_interval
+@@ -232,5 +234,22 @@ then
+ else
+ 	echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, per_die and per_socket since socket id exposed via topology is invalid"
+ fi
++# Run New API JSON basic and standard aggregation checks
++perf_new_opt="--new"
++api_label="json (New API)"
++check_no_args
++check_system_wide
++check_interval
++check_event
++check_per_thread
++check_per_node
++if [ $skip_test -ne 1 ]
++then
++	check_system_wide_no_aggr
++	check_per_core
++	check_per_die
++	check_per_socket
++fi
 +
-+static const struct perf_stat_print_callbacks json_print_callbacks = {
-+	.print_start = json_print_start,
-+	.print_end = json_print_end,
-+	.print_event = json_print_event,
-+	.print_metric = json_print_metric,
-+};
-+
-+/*
-+ * JSON Output Callbacks - Metric-Only Mode (100% Streaming & Zero-Allocation)
-+ */
-+
-+static int json_metric_only_print_start(void *ctx,
-+					struct perf_stat_config *config __maybe_unused)
-+{
-+	struct json_metric_only_print_state *ps = ctx;
-+
-+	/* Initialize to -2 to distinguish from -1 (a valid index in AGGR_GLOBAL mode) */
-+	ps->last_aggr_idx = -2;
-+	ps->first_in_group = true;
-+	return 0;
-+}
-+
-+static int json_metric_only_print_metric(void *ctx,
-+					 struct perf_stat_config *config __maybe_unused,
-+					 struct evsel *evsel, int aggr_idx,
-+					 const char *name, const char *unit, double val,
-+					 enum metric_threshold_classify thresh __maybe_unused)
-+{
-+	struct json_metric_only_print_state *ps = ctx;
-+	FILE *output = ps->fp;
-+
-+
-+	if (aggr_idx != ps->last_aggr_idx) {
-+		if (ps->last_aggr_idx != -2)
-+			fprintf(output, "}\n");
-+		fprintf(output, "{");
-+		if (config->interval && ps->timestamp[0])
-+			fprintf(output, "%s", ps->timestamp);
-+		if (config->aggr_map && aggr_idx >= 0 &&
-+		    aggr_idx < config->aggr_map->nr) {
-+			struct aggr_cpu_id id = config->aggr_map->map[aggr_idx];
-+			int aggr_nr = 0;
-+
-+			if (evsel && evsel->stats && evsel->stats->aggr &&
-+			    aggr_idx < evsel->stats->nr_aggr)
-+				aggr_nr = evsel->stats->aggr[aggr_idx].nr;
-+
-+			print_aggr_id_json(config, output, evsel, id, aggr_nr);
-+		}
-+		ps->last_aggr_idx = aggr_idx;
-+		ps->first_in_group = true;
-+	}
-+
-+	if (!ps->first_in_group)
-+		fprintf(output, ", ");
-+	ps->first_in_group = false;
-+
-+	if (unit && unit[0])
-+		fprintf(output, "\"%s  %s\" : \"%.1f\"", unit, name, val);
-+	else
-+		fprintf(output, "\"%s\" : \"%.1f\"", name, val);
-+	return 0;
-+}
-+
-+static int json_metric_only_print_end(void *ctx,
-+				      struct perf_stat_config *config __maybe_unused)
-+{
-+	struct json_metric_only_print_state *ps = ctx;
-+	FILE *output = ps->fp;
-+
-+	if (ps->last_aggr_idx != -2)
-+		fprintf(output, "}\n");
-+	return 0;
-+}
-+
-+static const struct perf_stat_print_callbacks json_metric_only_print_callbacks = {
-+	.print_start = json_metric_only_print_start,
-+	.print_end = json_metric_only_print_end,
-+	.print_event = NULL,
-+	.print_metric = json_metric_only_print_metric,
-+};
-+
-+int perf_stat__print_json(struct evlist *evlist, struct perf_stat_config *config,
-+			  const struct target *target, const struct timespec *ts,
-+			  int argc, const char **argv)
-+{
-+	if (config->metric_only) {
-+		struct json_metric_only_print_state ps = {
-+			.fp = config->output,
-+			.evlist = evlist,
-+		};
-+		if (config->interval && ts) {
-+			scnprintf(ps.timestamp, sizeof(ps.timestamp), "\"interval\" : %lu.%09lu, ",
-+				  (unsigned long)ts->tv_sec, ts->tv_nsec);
-+		} else {
-+			ps.timestamp[0] = '\0';
-+		}
-+		return perf_stat__print_cb(evlist, config, target, ts, argc, argv,
-+					   &json_metric_only_print_callbacks, &ps);
-+	} else {
-+		struct json_print_state ps = {
-+			.fp = config->output,
-+		};
-+		if (config->interval && ts) {
-+			scnprintf(ps.timestamp, sizeof(ps.timestamp), "\"interval\" : %lu.%09lu, ",
-+				  (unsigned long)ts->tv_sec, ts->tv_nsec);
-+		} else {
-+			ps.timestamp[0] = '\0';
-+		}
-+		return perf_stat__print_cb(evlist, config, target, ts, argc, argv,
-+					   &json_print_callbacks, &ps);
-+	}
-+}
+ cleanup
+ exit 0
 -- 
 2.55.0.141.g00534a21ce-goog
 
