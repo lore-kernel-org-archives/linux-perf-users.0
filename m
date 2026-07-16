@@ -1,168 +1,214 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4470E31E859
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 15:17:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D27D33AD88;
+	Thu, 16 Jul 2026 15:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784215028; cv=none; b=deZoxsRkJz9SDKpEHz2+5qdLYKGYWNl/ZQfg2FZN+4js8ymuv8+PiA8NKCZ3eDAT1+7EpR7Uh5Fkjt1BxanqL602ALUcart/8JDp655GMocovpM1POhkQspihXfUaBcZ516ptd4MygwcRAY7O4+QubYbsSvswbLjBGJMg2csZlI=
+	t=1784215477; cv=none; b=IL9JuZPT+OvZ2UCqREht6MfisK5dNiBuOs0ICPz+I0DWO9OlP43VhG7yWBil2SuRjudNGNKQvDyEVBYv6D/cAaUv34vH2yRSHc7R+QAF7nPE2r79PwNjjT1fnVogcaE3TWfnv5D/BiBfzAJiqry+FXcm+FX2yjM0nh2odm4WXnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784215028; c=relaxed/simple;
-	bh=Hh9HO++01WuYDWaPnMoxpIsBe3GHyFogA+KyJpSmy5o=;
+	s=arc-20240116; t=1784215477; c=relaxed/simple;
+	bh=nBFmUWIHjdP2Tnyx3fFEh2gQw7gLomwe5mh1rfUoP4c=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=iKq5LW7/QLB5OqTcg8xzcK1xNqWim6Jb0XMBOwR6bs+In4UUcZjm6RjcyM2gAWWIZxVMqKwXwzK5jkNr6dXGMXpSdrzwbQMl2E9L64yQx1n4UVx710oAT23pRFm9b/yMnKhQjgBB0z6qcvuxWgR52IGnflr7RD+gndWvABfVQRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mjHT1/yN; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=R82KEQHPpFbq1PPCHKk7cTmxc+X+q01y/CyZgD1ZkvgmUqhs7z8UWBKeg3YPRdKyL2GAMzV8yUDFsg8xzyM7UY06x5Nf6J3+LZd6JlI7fdn1S79OMOzGMI68vIvnivX4l0eAN2p6DQnHSMraDv96r9ohsunFCZ7c7jOXmP/4AB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TOSbqa9M; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mjHT1/yN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B13061F000E9;
-	Thu, 16 Jul 2026 15:17:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TOSbqa9M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1499D1F000E9;
+	Thu, 16 Jul 2026 15:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784215026;
-	bh=eioP5YHFdpdEUHZi/v/vAVedxv4Qq+wuMPbcXIOf8u8=;
+	s=k20260515; t=1784215476;
+	bh=bN8gHacLd72I4vbGCmCrU9QFeSGwhJ/k9I6GaGCIYSU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mjHT1/yNxC2+ExiHSSvm7DkfSOvvF1VcY6tY45CsyqlDu4DZdyiWf513LsiG9DsXQ
-	 cSRJklIEz0YceLMr3qqOz7Xc16mavqIKaU9N4j1vdoBCTIPU5tF8hJatX5tumsDbFK
-	 p455brruPw/RUQHSK3raNLwA/tLe7h0cZ33e65iYNarKe4dFGECVOTfX/fJX2KpcWW
-	 ThmJBmYEp0UrhqmFZGqAe+eKZItUkV5/5Iz3eLsRDJFaR9sFNDai3aRtaa/q0OPCJA
-	 Ug/SyTSRSECbTk55znLpRhHKmpCFlA9eWHP9p4ubjacEjLj3MasbR8dl6hkK/30I7d
-	 /+kbPUjVpWs/w==
+	b=TOSbqa9M6whG0OHHd6fKWf1txlQK3MJbgyBc/3BDIhS2clG8MXLUj2Uu36DoY71F2
+	 0D23cVqIEy8q9ss/yqjm8+Vop87u9Mwlpze0t5wHvwm6ZHkGM4WZRjvOKzjRVwrfgj
+	 53ir2033IhQwfGPqUryixW4RD2A69I5BSHuUo0S0sO6GmvV6Ik3zfBGYlJPnfN1B6D
+	 d6TF9gNaHVQRl9EMKrv2ebMQI1HjzkWT5tmnJBc3Am29cb1ZJQlXmhVqwVCAy00fQB
+	 WXy65iIAaWFadiq418v+LoKlLQmAHRe60CK4upwJmskNAIVuEM3agZYrxg6nnUTJSk
+	 YkGi7DJkt/3Dg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/4] ACPI/APMT: Use stable device ID
+Subject: Re: [PATCH v2 2/3] dt-bindings: perf: Add Arm Bus Monitor Unit
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Robin Murphy" <robin.murphy@arm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <f7eb9a4cfea4cd6f8d87f3c2501438d484807d27.1784213435.git.robin.murphy@arm.com>
-References: <cover.1784213435.git.robin.murphy@arm.com>
- <f7eb9a4cfea4cd6f8d87f3c2501438d484807d27.1784213435.git.robin.murphy@arm.com>
+Cc: devicetree@vger.kernel.org, linux-perf-users@vger.kernel.org, robh@kernel.org, conor+dt@kernel.org
+In-Reply-To: <1cc6acae06fb4910e27cc89e2270a52e80e310ef.1784214112.git.robin.murphy@arm.com>
+References: <cover.1784214112.git.robin.murphy@arm.com>
+ <1cc6acae06fb4910e27cc89e2270a52e80e310ef.1784214112.git.robin.murphy@arm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 16 Jul 2026 15:17:06 +0000
-Message-Id: <20260716151706.B13061F000E9@smtp.kernel.org>
+Date: Thu, 16 Jul 2026 15:24:35 +0000
+Message-Id: <20260716152436.1499D1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-
-New issues:
-- [High] Platform device ID collision causing APMT parsing abort and subseq=
-uent UAF.
-
-Pre-existing issues:
-- [High] Missing rollback on failure leaves previously registered platform =
-devices holding dangling pointers to an unmapped ACPI table.
-- [High] Missing bounds check on `apmt_node->length` allows out-of-bounds m=
-emory read.
-- [Medium] GSI IRQ mapping is leaked on platform device registration error =
-paths.
+- [High] The driver calculates an offset from hardware configuration regist=
+ers and accesses memory within an ioremapped region without bounds checking=
+, which can lead to out-of-bounds MMIO accesses.
+- [High] The CPU hotplug instance is added before PMU registration complete=
+s, exposing a race condition where a CPU hotplug event will cause a NULL po=
+inter dereference.
+- [Medium] A pending overflow interrupt will trigger a spurious `WARN_ON` w=
+hen an event is deleted because the hardware interrupt flag is not cleared.
 --
 
---- Patch [1]: [PATCH v2 1/4] ACPI/APMT: Use stable device ID ---
-commit 895c0eb864a4218fbb99620f4fa9efb2dc4e091c
+--- Patch [2]: [PATCH v2 2/3] dt-bindings: perf: Add Arm Bus Monitor Unit -=
+--
+commit 46bae7b04d539138ea677d6d9ef5697dcb457c20
 Author: Robin Murphy <robin.murphy@arm.com>
 
-ACPI/APMT: Use stable device ID
+perf: Add Arm Bus Monitor Unit driver
 
-The APMT node format includes a unique identifier, so we can use this as
-the platform device ID to give userspace stable and identifiable device
-names.
+This commit introduces the Arm Bus Monitor Unit (BMU) driver, which provides
+a low-level performance analysis tool for matching and counting transactions
+at interconnect interfaces. It supports multiple Interface Monitoring Units
+(IMUs) by exposing them as perf PMU instances.
 
-> diff --git a/drivers/acpi/arm64/apmt.c b/drivers/acpi/arm64/apmt.c
-> index bb010f6164e52..91fcdd289e637 100644
-> --- a/drivers/acpi/arm64/apmt.c
-> +++ b/drivers/acpi/arm64/apmt.c
-> @@ -76,10 +76,12 @@ static int __init apmt_add_platform_device(struct acp=
-i_apmt_node *node,
->  					   struct fwnode_handle *fwnode)
->  {
->  	struct platform_device *pdev;
-> -	int ret, count;
-> +	int ret, count, uid =3D node->id & INT_MAX;
->  	struct resource res[DEV_MAX_RESOURCE_COUNT];
-> =20
-> -	pdev =3D platform_device_alloc(DEV_NAME, PLATFORM_DEVID_AUTO);
-> +	if (uid !=3D node->id)
-> +		pr_warn("Unexpectedly large UID 0x%x, truncated to 0x%x\n", node->id, =
-uid);
-> +	pdev =3D platform_device_alloc(DEV_NAME, uid);
+> diff --git a/drivers/perf/arm_cspmu/arm-bmu.c b/drivers/perf/arm_cspmu/ar=
+m-bmu.c
+> new file mode 100644
+> index 0000000000000..c829a0728e9b2
+> --- /dev/null
+> +++ b/drivers/perf/arm_cspmu/arm-bmu.c
 
-[Severity: High]
-Does this newly introduced truncation create a risk of ID collisions if two
-unique 32-bit APMT node IDs differ only in the sign bit?
+[ ... ]
 
-If a collision occurs, platform_device_add() will fail with -EEXIST. This
-halts the initialization of all remaining PMU nodes and triggers another is=
-sue.
-
-[Severity: High]
-This is a pre-existing issue, but when apmt_init_platform_devices() fails
-(which is now more likely due to potential ID collisions), the caller unmaps
-the ACPI table without a cleanup loop:
-
-drivers/acpi/arm64/apmt.c:acpi_apmt_init() {
-    ...
-	ret =3D apmt_init_platform_devices();
-	if (ret) {
-		pr_err("Failed to initialize APMT platform devices, ret: %d\n", ret);
-		acpi_put_table(apmt_table);
-	}
-}
-
-Will this leave any previously successfully registered platform devices hol=
-ding
-dangling pointers in their platform_data referencing the now unmapped table
-memory, leading to a use-after-free when a driver later binds?
+> +static void arm_bmu_event_del(struct perf_event *event, int flags)
+> +{
+> +	struct arm_bmu_pmu *pmu =3D to_bmu_pmu(event);
+> +
+> +	arm_bmu_event_stop(event, PERF_EF_UPDATE);
+> +	pmu->evcnt[event->hw.idx] =3D NULL;
+> +}
 
 [Severity: Medium]
-This is a pre-existing issue, but if a device addition fails, does the
-cleanup path leak the GSI IRQ mapping?
+Will an unhandled pending overflow interrupt trigger a spurious warning her=
+e?
 
-drivers/acpi/arm64/apmt.c:apmt_init_resources() {
-    ...
-		irq =3D acpi_register_gsi(NULL, node->ovflw_irq, trigger,
-						ACPI_ACTIVE_HIGH);
-    ...
-}
+If a performance counter overflows right before or during arm_bmu_event_del=
+(),
+local interrupts are disabled by the perf core, leaving the interrupt pendi=
+ng.
+Since arm_bmu_event_del() stops the counter and sets the evcnt pointer to
+NULL but doesn't clear the pending overflow interrupt from the PMOVSCLR
+register, this pending interrupt will be processed when interrupts are
+re-enabled.
 
-When apmt_add_platform_device() takes the error path:
+This leads to arm_bmu_handle_irq() executing and reading the uncleared bit
+from PMOVSCLR, which evaluates to true in the following WARN_ON():
 
-drivers/acpi/arm64/apmt.c:apmt_add_platform_device() {
-    ...
-dev_put:
-	platform_device_put(pdev);
+[ ... ]
 
-	return ret;
-}
+> +static void arm_bmu_pmu_irq(struct arm_bmu_pmu *pmu)
+> +{
+> +	u32 reg =3D readl_relaxed(pmu->base + PMOVSCLR);
+> +	u64 __iomem *pmevcnt =3D pmu->base + PMEVCNTR_LO;
+> +
+> +	for (int i =3D 0; i < PMU_MAX_COUNTERS; i++) {
+> +		if (!(reg & (1U << i)))
+> +			continue;
+> +		if (WARN_ON(!pmu->evcnt[i]))
+> +			continue;
 
-Should there be an acpi_unregister_gsi() call to reverse the mapping created
-during apmt_init_resources()?
+[ ... ]
+
+> +static int arm_bmu_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	const struct resource *res;
+> +	struct arm_bmu *bmu;
+
+[ ... ]
+
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	/* PMUs and MPAM monitors are intermingled so we can't claim the whole =
+resource */
+> +	base =3D devm_ioremap(dev, res->start, resource_size(res));
+> +	if (!base)
+> +		return -ENOMEM;
+
+[ ... ]
+
+> +	cfg =3D lo_hi_readq_relaxed(base + MCU_CONFIG);
+> +	num =3D 1 + FIELD_GET(MCUCFG_NUM_IMU_MONITORS, cfg);
+> +	/* We don't expect to have dual-page complications to worry about */
+> +	sz =3D FIELD_GET(MCUCFG_PMU_ELEMENT_SIZE, cfg);
+> +	if (sz !=3D 1)
+> +		return dev_err_probe(dev, -EINVAL, "PMU_ELEMENT_SIZE 0x%x not supporte=
+d\n", sz);
+> +
+> +	/* The PMU pages *are* exclusively ours */
+> +	off =3D SZ_4K * FIELD_GET(MCUCFG_PMU_ELEMENT_START, cfg);
+> +	if (!devm_request_mem_region(dev, res->start + off, num * SZ_4K, dev_na=
+me(dev)))
+> +		return dev_err_probe(dev, -EADDRINUSE, "Unable to request PMU region\n=
+");
 
 [Severity: High]
-This is a pre-existing issue, but does the table parsing loop in
-apmt_init_platform_devices() need a bounds check on apmt_node->length?
+Does this calculation permit an out-of-bounds MMIO access if the offset from
+the hardware configuration register is unexpectedly large?
 
-drivers/acpi/arm64/apmt.c:apmt_init_platform_devices() {
-    ...
-	while (offset < end) {
-		apmt_node =3D ACPI_ADD_PTR(struct acpi_apmt_node, apmt,
-				 offset);
-        ...
-		offset +=3D apmt_node->length;
-	}
-    ...
-}
+The off and num values are read from the MCU_CONFIG hardware register and
+used to calculate an offset into an ioremapped memory region that was mapped
+to resource_size(res). There does not appear to be a check verifying that
+off + num * SZ_4K does not exceed resource_size(res).=20
 
-If a malformed ACPI table provides a maliciously small or truncated length,
-could this lead to ACPI_ADD_PTR yielding a misaligned pointer and reading
-memory outside the mapped ACPI bounds?
+If the hardware registers provide an unexpectedly large offset, accessing
+memory outside the ioremapped bounds will trigger a synchronous external
+abort when the driver attempts to read the PMCFGR register below:
 
->  	if (!pdev)
->  		return -ENOMEM;
->
+> +
+> +	bmu =3D devm_kzalloc(dev, struct_size(bmu, imus, num), GFP_KERNEL);
+> +	if (!bmu)
+> +		return -ENOMEM;
+> +
+> +	bmu->dev =3D dev;
+> +	bmu->base =3D base;
+> +	bmu->num_imus =3D num;
+> +	platform_set_drvdata(pdev, bmu);
+> +
+> +	base +=3D off;
+> +	for (int i =3D 0; i < bmu->num_imus; i++, base +=3D SZ_4K) {
+> +		/* At least PMCFGR.SIZE should always be nonzero if visible */
+> +		reg =3D readl_relaxed(base + PMCFGR);
+
+[ ... ]
+
+> +	err =3D cpuhp_state_add_instance_nocalls(arm_bmu_cpuhp_state, &bmu->cpu=
+hp_node);
+> +	if (err)
+> +		return err;
+> +
+> +	err =3D perf_pmu_register(&bmu->pmu, name, -1);
+
+[Severity: High]
+Could a CPU hotplug event during this narrow window cause a NULL pointer
+dereference?
+
+The cpuhp_state_add_instance_nocalls() function is invoked before
+perf_pmu_register(). If the assigned CPU goes offline during this exact
+window, the hotplug state machine invokes arm_bmu_offline_cpu() which in
+turn calls arm_bmu_migrate().=20
+
+This leads to perf_pmu_migrate_context() being called. Because
+perf_pmu_register() has not yet executed, the core context pointer is still
+NULL, resulting in a dereference of an invalid pointer at the start of the
+percpu offset region.
+
+> +	if (err)
+> +		cpuhp_state_remove_instance_nocalls(arm_bmu_cpuhp_state, &bmu->cpuhp_n=
+ode);
+> +
+> +	return err;
+> +}
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1784213435.gi=
-t.robin.murphy@arm.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1784214112.gi=
+t.robin.murphy@arm.com?part=3D2
