@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32233361650;
-	Thu, 16 Jul 2026 22:43:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D8A1DED42;
+	Thu, 16 Jul 2026 22:48:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784241813; cv=none; b=H7X0s2SgiqgCHjXKN49UxE24SFjshNb6Mg56yQRbRavXnbnk1ZSZcxCeaR+VGgAHg/LmMLthHy66siKOWGnEzfD8AwObssJgqCv4BZBrR9TyiUdNYHtmJ70UYVUIDp/Tj/+djowJO7B8Y8pLzxyuvJeKCAMJoSmA65lCgwGuvJU=
+	t=1784242141; cv=none; b=Z1nG6o8a4HAPJ+Qy1J+S9zw7uiuUxRb4dlcQUiZoMd8OBh9uuSTIICBEXweSPHsig4DBhJcDsu98EtPMc5RBH4j2EnwbSdQZ0z72foVWOxzc3EpM0uYffmVpH/0q9q6ofDPSL46gSjaQCuFV+dlNm8n/81Zmb030vmXIEwbxtb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784241813; c=relaxed/simple;
-	bh=uvOYz+BShLVm3lnkyR1WzNjGDUH+GpG5cIx2fJ8OsWM=;
+	s=arc-20240116; t=1784242141; c=relaxed/simple;
+	bh=tR2jF5Jk1sVc9VnnP0q6NNOOFA1GFoBwoiae4dLgtEU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tV4exF2PjNDOhlwKxvdNP0KNQOu6ylvVSQx39r8SaYE7MuyVjcqhFxvWqT203DSwbLNeB8/eipoDk9hv+omBz0gAgGpqU1W1E1HwNo+gga5NljT4AU9dDAtY+hfDtg1scf5djbIn5PP39PlLdiOHdHkZR9FCL0rTmLlYScQM1/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RZSxeymA; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=eRxN53hbSn8d/zsXJtKCORHTtiUkQbKck5VOAQas2B3dgMW1tyMHhftaaGbeQXO+WXpTAJ4mF5S3oXt0BdHRx1vLwPC6eizVIGz3frfH49tH8MT8nId/vidh6c8Wvzalv23w+3l4tMjwraWGKgqtNUwPsZiMfZmI+bTlYZ13NmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QktEfQRH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RZSxeymA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CD171F000E9;
-	Thu, 16 Jul 2026 22:43:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QktEfQRH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 586A61F000E9;
+	Thu, 16 Jul 2026 22:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784241811;
-	bh=sbl6yLxlk8c3ZhpEp6QaPA8umuHA5hyUrNnF460SpwE=;
+	s=k20260515; t=1784242139;
+	bh=Ufnfn5E95S8aHyHHGlfMlRAIvMOsYoHF0r/K+1SVKmg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=RZSxeymAalBqu5wVaZjYICSW/syXdBPqKRYvhZYi2poIyq+TVVUtWt+e8sFTTL5lY
-	 sXTOfuwUofVBGuMpCFhrsE4YNUPbZZ0vkMCEEODo0mg1jwyN5+GuY/guGjYwuTSqAC
-	 /+uRWAAwzV0EvJkEQE90MyDa54d+8oITR8mtO6cxY1obRNkTTL7oKbNwnDcXRs1m8Q
-	 Vl6X8voHj4nhKZ58CBkYEA7g8OsUUpZ9zhEO+bdZNpt2UMUig9MmHLd51YCf5uTje7
-	 GFORV6356UzZobFidLXsU1YNSh18twfHAD/iMOCDV4ZxYyxgdPhwH2NWMh0dNNPXxr
-	 wlJqIf9SCcEFw==
-Date: Thu, 16 Jul 2026 15:43:30 -0700
+	b=QktEfQRHn0ccHUw3rmflIROXm8DKoum60iNyJKn0qq//ZTkG/c59Unn7VjQW8S+Fq
+	 ecjYI6IPKy/n/j5+5sBJEXBEaSL/MAruFr3V3cOO3f9V1n2aYuObFQJmlzwnYHBbkS
+	 5sxz2DFIIMFS2W5ABlSlOBP7mITuNgShUXIQgUaFjhXEj2NkIBH2v/xURaR9FevaNP
+	 ETBQwqMuMPtDkUfUGL+eTM2+P+0+mViHEaAaf7YeLDeB0o2EP7o1ymXpvKD8JokWJi
+	 Zf0J69vKDMzgWAV+2hlScsjnJbMCRKfKpFOSj44M3a08vZPbo98uWY6kbpFWCn2tqb
+	 XXf/tBOIypxGA==
+Date: Thu, 16 Jul 2026 15:48:58 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Ian Rogers <irogers@google.com>
 Cc: acme@kernel.org, ctshao@google.com, adrian.hunter@intel.com,
 	james.clark@linaro.org, jolsa@kernel.org,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
 	mingo@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH v4 10/14] perf stat: Implement streaming JSON formatting
- callbacks
-Message-ID: <allekmOL6CIjYrEt@google.com>
+Subject: Re: [PATCH v4 00/14] perf stat: Decouple and modularize display
+ formatting
+Message-ID: <allf2kCJcc72HTRo@google.com>
 References: <20260716043223.388233-1-irogers@google.com>
  <20260716070303.507066-1-irogers@google.com>
- <20260716070303.507066-11-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,151 +46,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260716070303.507066-11-irogers@google.com>
+In-Reply-To: <20260716070303.507066-1-irogers@google.com>
 
-On Thu, Jul 16, 2026 at 12:02:59AM -0700, Ian Rogers wrote:
-> This patch implements streaming JSON formatting callbacks inside
-> util/stat-print-json.c, replacing the empty stubs introduced in Commit
-> 1.
-> 
-> Delivers a highly optimized, zero-allocation, and 100% streaming print
-> engine for JSON normal and metric-only modes. It bypasses dynamic queue
-> events and metric lists entirely, formatting and streaming JSON objects
-> directly onto the output file descriptor.
-> 
-> Utilizes the newly centralized unified aggregation helpers to format CPU
-> and thread keys inside the JSON objects, and incorporates full
-> interval-mode timestamp printing support.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Assisted-by: Antigravity:gemini-3.5-flash
-> Acked-by: Chun-Tse Shao <ctshao@google.com>
-> ---
-[SNIP]
-> +/**
-> + * print_aggr_id_json - Print the aggregation prefix for JSON format.
-> + *
-> + * Copied and adapted from stat-display.c.
-> + */
-> +static void print_aggr_id_json(const struct perf_stat_config *config, FILE *output,
-> +			       struct evsel *evsel, struct aggr_cpu_id id, int aggr_nr)
-> +{
-> +	switch (config->aggr_mode) {
-> +	case AGGR_CORE:
-> +		fprintf(output, "\"core\" : \"S%d-D%d-C%d\", \"counters\" : %d, ", id.socket,
-> +			id.die, id.core, aggr_nr);
-> +		break;
-> +	case AGGR_CACHE:
-> +		fprintf(output, "\"cache\" : \"S%d-D%d-L%d-ID%d\", \"counters\" : %d, ", id.socket,
-> +			id.die, id.cache_lvl, id.cache, aggr_nr);
-> +		break;
-> +	case AGGR_CLUSTER:
-> +		fprintf(output, "\"cluster\" : \"S%d-D%d-CLS%d\", \"counters\" : %d, ", id.socket,
-> +			id.die, id.cluster, aggr_nr);
-> +		break;
-> +	case AGGR_DIE:
-> +		fprintf(output, "\"die\" : \"S%d-D%d\", \"counters\" : %d, ", id.socket, id.die,
-> +			aggr_nr);
-> +		break;
-> +	case AGGR_SOCKET:
-> +		fprintf(output, "\"socket\" : \"S%d\", \"counters\" : %d, ", id.socket, aggr_nr);
-> +		break;
-> +	case AGGR_NODE:
-> +		fprintf(output, "\"node\" : \"N%d\", \"counters\" : %d, ", id.node, aggr_nr);
-> +		break;
-> +	case AGGR_NONE:
-> +		if (evsel->percore && !config->percore_show_thread)
-> +			fprintf(output, "\"core\" : \"S%d-D%d-C%d\", ", id.socket, id.die, id.core);
-> +		else if (id.cpu.cpu > -1)
-> +			fprintf(output, "\"cpu\" : \"%d\", ", id.cpu.cpu);
-> +		break;
-> +	case AGGR_THREAD:
-> +		fprintf(output, "\"thread\" : \"%s-%d\", ",
-> +			perf_thread_map__comm(evsel->core.threads, id.thread_idx),
-> +			perf_thread_map__pid(evsel->core.threads, id.thread_idx));
-> +		break;
-> +	case AGGR_GLOBAL:
-> +	case AGGR_UNSET:
-> +	case AGGR_MAX:
-> +	default:
-> +		break;
-> +	}
+On Thu, Jul 16, 2026 at 12:02:49AM -0700, Ian Rogers wrote:
+> This patch set decouples and modularizes `perf stat` metric and event
+> counter display processing into a unified traversal engine supporting
+> pluggable, format-specific callbacks for standard (STD), CSV, and JSON
+> outputs via the new `--new` flag.
 
-It'd be great if you can use the format-agnostic helpers.
+Thanks for working on this!
 
+I'm not sure the goal is to produce the exactly same output or not.
+If so, we need to verify that by comparing outputs before and after.
+Probably you can use perf stat record and report.
 
-> +}
-> +
-> +/*
-> + * JSON Output Callbacks - Normal Mode (100% Streaming & Zero-Allocation)
-> + */
-> +
-> +static int json_print_start(void *ctx __maybe_unused,
-> +			    struct perf_stat_config *config __maybe_unused)
-> +{
-> +	return 0;
-> +}
-> +
-> +static int json_print_event(void *ctx, struct perf_stat_config *config,
-> +			    struct evsel *evsel, int aggr_idx, u64 val,
-> +			    u64 ena, u64 run, double stdev_pct __maybe_unused,
-> +			    const char *cgrp __maybe_unused)
-> +{
-> +	struct json_print_state *ps = ctx;
-> +	FILE *output = config->output;
-> +	bool ok = (run != 0 && ena != 0);
-> +	double enabled_percent = 100.0;
-> +
-> +	fprintf(output, "{");
-> +
-> +	/* Print interval timestamp first if configured */
-> +	if (config->interval && ps && ps->timestamp[0])
-> +		fprintf(output, "%s", ps->timestamp);
+If not, please show the output here.
 
-"Interval" : ?
-
-
-> +
-> +	/* Print aggregation JSON fields if configured */
-> +	if (config->aggr_map && aggr_idx >= 0) {
-> +		struct aggr_cpu_id id = config->aggr_map->map[aggr_idx];
-> +		int aggr_nr = 0;
-> +
-> +		if (evsel->stats && evsel->stats->aggr)
-> +			aggr_nr = evsel->stats->aggr[aggr_idx].nr;
-> +
-> +		print_aggr_id_json(config, output, evsel, id, aggr_nr);
-> +	}
-> +
-> +	if (ok) {
-> +		double sc = evsel->scale;
-> +		double avg = val * sc;
-> +
-> +		fprintf(output, "\"counter-value\" : \"%f\"", avg);
-> +	} else {
-> +		const char *bad_count = evsel->supported ? CNTR_NOT_COUNTED : CNTR_NOT_SUPPORTED;
-> +
-> +		fprintf(output, "\"counter-value\" : \"%s\"", bad_count);
-> +	}
-> +
-> +	fprintf(output, ", \"unit\" : \"%s\"", evsel->unit ?: "");
-> +	/* Cast away const for legacy evsel__name */
-> +	fprintf(output, ", \"event\" : \"%s\"", evsel__name((struct evsel *)evsel));
-
-Cgroups?
-
-> +
-> +	if (run != ena)
-> +		enabled_percent = 100.0 * run / ena;
-> +	fprintf(output, ", \"event-runtime\" : %" PRIu64 ", \"pcnt-running\" : %.2f", run,
-> +		enabled_percent);
-> +	fprintf(output, "}\n");
-
-Now metrics are printed in a separate object/line?
+Actually I cannot say I like the name of the flag, but it's ok if we
+want to keep it for a short period time and eventually get rid of it.
 
 Thanks,
 Namhyung
 
-> +
-> +	return 0;
-> +}
+> 
+> Changes in v4:
+> - Squash all multi-metric column padding, zero-skip logic, and formatting
+>   fixes directly into their introducing commits for a perfectly bisectable,
+>   pristine Git history.
+> - Avoid newlines before signed-off-by, assisted-by, and acked-by tags,
+>   organizing all contributor tags into a single, contiguous block for strict
+>   checkpatch and LKML compliance.
+> - Introduce strict, grid-based column padding to perfectly align multi-metric
+>   events (e.g. TopdownL1) across both standard and metric-only CSV rows, guaranteeing
+>   perfect 6-comma and 7-comma parsing compliance by external DataFrame engines.
+> - Refactor the PMU and hybrid metric event printer to propagate identical zero-counter
+>   skipping semantics in alignment with the legacy abs_printout path.
+> - Re-run all STD, JSON, and CSV linter test suites to achieve 100% passing status.
+> 
+> Ian Rogers (14):
+>   perf stat: Introduce core generic print traversal engine and header
+>     stubs
+>   perf stat: Implement standard console (STD) formatting callbacks
+>   perf stat: Extend STD output linter to test basic New API checks
+>   perf stat: Extend STD output linter to test core aggregation checks
+>   perf stat: Extend STD output linter to test advanced PMU checks
+>   perf stat: Extend STD output linter to test metric-only checks
+>   perf stat: Implement CSV formatting callbacks
+>   perf stat: Extend CSV output linter to test core aggregation checks
+>   perf stat: Extend CSV output linter to test advanced PMU and
+>     metric-only checks
+>   perf stat: Implement streaming JSON formatting callbacks
+>   perf stat: Extend JSON output linter to test core aggregation checks
+>   perf stat: Extend JSON output linter to test advanced PMU and
+>     metric-only checks
+>   perf stat: Add --new support to PMU metrics Python validator
+>   perf stat: Extend PMU metrics value linter to validate --new outputs
+> 
+>  tools/perf/builtin-stat.c                     |  96 +-
+>  .../tests/shell/lib/perf_metric_validation.py |  12 +-
+>  tools/perf/tests/shell/stat+csv_output.sh     |  19 +
+>  tools/perf/tests/shell/stat+json_output.sh    |  74 +-
+>  tools/perf/tests/shell/stat+std_output.sh     |  18 +
+>  tools/perf/tests/shell/stat_metrics_values.sh |  22 +-
+>  tools/perf/util/Build                         |   4 +
+>  tools/perf/util/stat-display.c                |  12 +-
+>  tools/perf/util/stat-print-csv.c              | 677 ++++++++++++++
+>  tools/perf/util/stat-print-json.c             | 339 +++++++
+>  tools/perf/util/stat-print-std.c              | 854 ++++++++++++++++++
+>  tools/perf/util/stat-print.c                  | 500 ++++++++++
+>  tools/perf/util/stat-print.h                  | 137 +++
+>  tools/perf/util/stat.h                        |   6 +
+>  14 files changed, 2688 insertions(+), 82 deletions(-)
+>  create mode 100644 tools/perf/util/stat-print-csv.c
+>  create mode 100644 tools/perf/util/stat-print-json.c
+>  create mode 100644 tools/perf/util/stat-print-std.c
+>  create mode 100644 tools/perf/util/stat-print.c
+>  create mode 100644 tools/perf/util/stat-print.h
+> 
+> -- 
+> 2.55.0.141.g00534a21ce-goog
+> 
