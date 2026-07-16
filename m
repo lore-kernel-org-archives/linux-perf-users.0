@@ -1,50 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD0873A1684;
-	Thu, 16 Jul 2026 18:23:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6542A168BD;
+	Thu, 16 Jul 2026 21:07:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784226231; cv=none; b=aBhN4RNBnX5ogyF9lET7TpEQPW1huqhvbxuV5eHKW+DUybXaVWlotrA1J2yMlESIhTrPs/fO2TO0A+Z6JxeYcG8TanNsLKovlQBR39wOt3n9ZbZ+bKDuYtF/tZFYnWwcxXDJNdIJp6lna9wF5qKXXK0EVhlDkckxz3v5m3Z1hNE=
+	t=1784236051; cv=none; b=a5CLFCxINJV02U1slj1dxHoS9NnO2T7x09pKXB4VnqoU5Pdrtwu2bm8Ufg4uWYvrXMaw/bW1rkGyeDtvQUFgvQL3wk7hlKP1EB9O6yg6l9AvfWvfAxEdAwP6vtfjv08cT1iiK6uLgNjwX74LmfrmpAeJxe2Tz508AVtyusJJrCg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784226231; c=relaxed/simple;
-	bh=j9RIaWusXbRWNI/hJakKC/QYlEWKLv3vXRTrgK4Qq+A=;
+	s=arc-20240116; t=1784236051; c=relaxed/simple;
+	bh=PdJQ7QCnbyYypMFD5wBHuTeCUviOvFsyxMgFD04mtXM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s36j955eBfPEZD3UwBPPP+26jwHXjGn4gKhzRIq5CbU7CIABfs/8tbOzbSwfQZCXMk7CpDCvRvFi+zI5mZMOdl/zlC1+oQmwThhWcHLrumZ+nOfN1kPlCQI/z/LI9z/7+qXGEAfVnqIfIqsl8aHGyFKiNqB55SMVTEesJgf62Kc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OE8D4IRn; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=AfiumTmNh8UtwKIf2SO3YD6ckhOfJk0iQ3214oQFVgy8rh22UrnH6IGggYvwhVZvUvJ6Zbcn2DCcQcU9dXWrx7mPaVrSmGfBAnafyBVGmlbr4X9Irg/m6z33iqWtMNbHfdX5TJNeXBNXxmYKnKH0tVj24jto/u/dxGU1V0lW43o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gxtE1lfb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OE8D4IRn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DED421F000E9;
-	Thu, 16 Jul 2026 18:23:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gxtE1lfb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 545201F000E9;
+	Thu, 16 Jul 2026 21:07:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784226221;
-	bh=BOdaHHSBDsbwxjJ8ErNLUZHz42KesEBc8WxD+Cc8MJU=;
+	s=k20260515; t=1784236050;
+	bh=Rr9PGHaybNU4pS2FeD8PYIkRaXvOBImrNRg2+G1FnuY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=OE8D4IRncgTrz2/kzpYkt4K4dsJKucHuQCGeUm9043tk6wube2W7lhYZz5BP1CXoH
-	 qg3IosOh7jD9G1mPKpKyfS3im2lBeBxkzX7PSYkGgH/QqLsl5N/KlIn8BlI1Zazoyx
-	 eCfxZ1MPy/kYWZcWjkVMMcC0dGnzV3PTbsvbBxMOVFVxe+WKmJ0kS8GHRwhmrWHMfF
-	 G3uj6eLK83xk1gjqQreI33UGHhW+K20SgCDI5NIcwpX2Umry5HCE6mTrJ0883WUea/
-	 E51m2rV519l9ljbX+eXJfWkUlO7yDUSXq/zHrWM38sa8Qjzy70bz2d1Jtn7UPwC8VJ
-	 OBE0aZCBsYsVA==
-Date: Thu, 16 Jul 2026 11:23:39 -0700
+	b=gxtE1lfb10hBqZ+8Drq8ZJ09PN9D1LXUpqyNZIqDUHrA+LCfpSKyNbcA6v0zLAqTE
+	 1BKOyAO87BOxfYZYKU6ObZkAqpRxnNCQuUcdTNcnv2H/9/iNiKcPgqRKtWJgktFBGF
+	 EKzJus4sUICmHVDDAucsGO35KekX0yWYSje7CabnOwrMNVK9NoyH6WaoswXmdi1uyr
+	 w7hZqhB22x31/NerX2UQrZf0RdEJNYJ5GzoimaEXnNJvvX/sZEBhRBW+VgLajCAgZw
+	 4X1v+NmZtk6aXKyEun04ptXBUkTyCn6l4xSk5f2IfH7pRkIubL/BPvbf3TMrJ87Wvv
+	 wJ+CL2x0aHJEQ==
+Date: Thu, 16 Jul 2026 14:07:26 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: james.clark@linaro.org, xueshuai@linux.alibaba.com,
+	Li Huafei <lihuafei1@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
+	Ian Rogers <irogers@google.com>,
+	Kim Phillips <kim.phillips@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>, Bill Wendling <morbo@google.com>,
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Chun-Tse Shao <ctshao@google.com>,
-	John Garry <john.g.garry@oracle.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Nazar Kazakov <nazar.kazakov@codethink.co.uk>
-Subject: Re: [PATCH v1 2/3] perf jevents: Add python type annotations
-Message-ID: <alkhqxR2VXfGOY4m@google.com>
-References: <20260707034019.241762-1-irogers@google.com>
- <20260707034019.241762-3-irogers@google.com>
- <alkNOWGqi5aD8HlE@google.com>
- <CAP-5=fW4Lze=nPvD0ycd4uJtTL0H=HjeXidZDya-FOt6jpD71Q@mail.gmail.com>
+	Zecheng Li <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v3 03/21] perf llvm: Fix arm64 adrp instruction
+ disassembly mismatch with objdump
+Message-ID: <allIDpCmKRcqEjgd@google.com>
+References: <20260701035355.752944-1-wutengda@huaweicloud.com>
+ <20260701035355.752944-4-wutengda@huaweicloud.com>
+ <ak89Hg1SWnn0DHCk@z2>
+ <8812e4e2-3a3b-4f32-bdb8-b963bc21b301@huaweicloud.com>
+ <cd081966-36e3-42a6-a06b-27b56b3dd663@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -53,51 +58,73 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fW4Lze=nPvD0ycd4uJtTL0H=HjeXidZDya-FOt6jpD71Q@mail.gmail.com>
+In-Reply-To: <cd081966-36e3-42a6-a06b-27b56b3dd663@huaweicloud.com>
 
-On Thu, Jul 16, 2026 at 10:25:01AM -0700, Ian Rogers wrote:
-> On Thu, Jul 16, 2026 at 9:56 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Mon, Jul 06, 2026 at 08:40:18PM -0700, Ian Rogers wrote:
-> > > Make mypy clean.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/pmu-events/jevents.py | 77 +++++++++++++++++++-------------
-> > >  1 file changed, 45 insertions(+), 32 deletions(-)
-> > >
-> > > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> > > index 3c6cfeefbd5d..83a239dd69f5 100755
-> > > --- a/tools/perf/pmu-events/jevents.py
-> > > +++ b/tools/perf/pmu-events/jevents.py
-> > > @@ -14,27 +14,27 @@ import collections
-> > >  # Global command line arguments.
-> > >  _args = None
-> > >  # List of regular event tables.
-> > > -_event_tables = []
-> > > +_event_tables: list[str] = []
-> >
-> > I got this from one of my test setup.
-> >
-> >     GEN     /build/pmu-events/test-empty-pmu-events.c
-> >   Traceback (most recent call last):
-> >     File "pmu-events/jevents.py", line 17, in <module>
-> >       _event_tables: list[str] = []
-> >   TypeError: 'type' object is not subscriptable
-> >   make[3]: *** [pmu-events/Build:176: /build/pmu-events/test-empty-pmu-events.c] Error 1
-> >   make[2]: *** [Makefile.perf:550: /build/pmu-events/pmu-events-in.o] Error 2
-> >   make[2]: *** Waiting for unfinished jobs....
-> >   make[1]: *** [Makefile.perf:288: sub-make] Error 2
-> >   make: *** [Makefile:76: all] Error 2
-> >
-> > Python version was 3.6.15.
+On Thu, Jul 16, 2026 at 08:46:01PM +0800, Tengda Wu wrote:
 > 
-> I believe the minimum Python version should be 3.9.x:
-> https://docs.kernel.org/process/changes.html
-> That version will resolve this issue.
+> 
+> On 2026/7/9 15:49, Tengda Wu wrote:
+> > 
+> > 
+> > On 2026/7/9 14:18, Namhyung Kim wrote:
+> >> On Wed, Jul 01, 2026 at 03:53:37AM +0000, Tengda Wu wrote:
+> >>> The operands of 'adrp' instructions parsed by libllvm are currently
+> >>> represented as raw immediates rather than the "address <symbol+offset>"
+> >>> format used by objdump. This inconsistency causes arm64_mov__parse()
+> >>> to fail when parsing these instructions during post-processing.
+> >>>
+> >>> Example of the mismatch:
+> >>>   Current: adrp x18, 8014
+> >>>   Fix:     adrp x18, ffff800081f5f000 <this_cpu_vector>
+> >>>
+> >>> Fix this by manually extracting the target address from the raw adrp
+> >>> instruction via symbol_lookup_callback(). The address is then converted
+> >>> to a specific symbol during symbol__disassemble_llvm() and formatted
+> >>> to match objdump's output, ensuring compatibility with existing
+> >>> parsers.
+> >>>
+> >>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> >>> ---
+> >>>  tools/perf/util/llvm.c | 50 ++++++++++++++++++++++++++++++++++++++++++
+> >>>  1 file changed, 50 insertions(+)
+> >>>
+> >>> diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
+> >>> index a0deb742a733..533d47e8084d 100644
+> >>> --- a/tools/perf/util/llvm.c
+> >>> +++ b/tools/perf/util/llvm.c
+> >>> @@ -94,6 +94,7 @@ static void init_llvm(void)
+> >>>  struct symbol_lookup_storage {
+> >>>  	u64 branch_addr;
+> >>>  	u64 pcrel_load_addr;
+> >>> +	u64 pcrel_adrp_addr;
+> >>>  };
+> >>>  
+> >>>  static const char *
+> >>> @@ -108,6 +109,18 @@ symbol_lookup_callback(void *disinfo, uint64_t value,
+> >>>  		storage->branch_addr = value;
+> >>>  	else if (*ref_type == LLVMDisassembler_ReferenceType_In_PCrel_Load)
+> >>>  		storage->pcrel_load_addr = value;
+> >>
+> >> Is this used by arm64?  If not, would be possible to reuse
+> >> pcrel_load_addr unless it'd complicate the code significantly?
+> >>
+> >> I think it's the common concept of PC-relative addressing while it
+> >> requires two instructions to set up the final address on arm64.
+> >>
+> >> Thanks,
+> >> Namhyung
+> >>
+> 
+> I checked the LLVM internal implementation and conducted further experiments.
+> You are correct, arm64 does not trigger LLVMDisassembler_ReferenceType_In_PCrel_Load
+> at all. Instead, it utilizes its own architecture-specific reference types
+> like LLVMDisassembler_ReferenceType_In_ARM64_ADRP, _LDRXl, etc.
+> Therefore, 'pcrel_load_addr' is completely safe to reuse here.
+> 
+> I will reuse 'pcrel_load_addr' to avoid adding unnecessary fields and
+> optimize this patch in the next version.
 
-Hmm.. ok.  I'll re-add them then.
+Great, thanks for looking into it.
 
 Thanks,
 Namhyung
