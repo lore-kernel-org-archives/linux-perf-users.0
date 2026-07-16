@@ -1,132 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739173CF204;
-	Wed, 15 Jul 2026 23:46:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12A5B279907;
+	Thu, 16 Jul 2026 00:24:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784159177; cv=none; b=vBIlxWskg1S9U/rStYYfia6I0tBKT69Tj9gp3VsJjH5niYHD58118MKa3xghrgD/xNI1KamLifXBxvv67Ngq2UHaJVKd+6b+Bjr6zC3ei/hXeRr1QekGJfnaZ2hol0wmft92KAqcml8DNxoPrAepWD22uDPw+jLc10KCmJCjwdc=
+	t=1784161500; cv=none; b=YhvhfBqS4UkDOxRdf/7bhMMqNPb+JCQpdOBGsgnQMbWeI1mfVrf6prMrs0ukOgY5XqfxD21HUZC/7WJiRtGFCY/vYPaXbEKumorFU1Yw4OqxfHNW/q3nZ3XOkkoTSoojxXAy+ca1Btie/yNcUm8pbE4mo4m3YaQ8ALU66Jc552E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784159177; c=relaxed/simple;
-	bh=dMoHufLvD7MkkNMJXcpSScmSapAuttAYNZQQtpNnMMM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SAn1VBGgpTmEC08NOiOIyGb3KSbTV6T4wvS3UjZqU4S2e7wcXr1DB3Y2Y+L5WUVNhoqVfdmzn5BSufW4MNdO8jei5hnm+Yc3eWY5IlJcCBOp1WuGUtk8V13Tv5lLeZ4XA9ISXldorFDVvZ3LDX/uH0Mg/00W02pAh+/QxpLLhoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hqFN18X4; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784161500; c=relaxed/simple;
+	bh=vFhzWOa8IwJMFMWct1x4naiw61ngcZA5BK6SlAuLKio=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=UY9MUpczS3GXzYj27ZeOJnX5sL7IBz0EUr8DM3aqqjF2pT6QHfDE690R/OxufMm0Hf+dq0bW9mA//o04g7l8zWVEzm7UZBzTKbGMNaYCFSp2MCiIoFxyCO7B/UHeHRHhDUyJTlbO3QH3ff9N+XxawqxfDBHO6h4mki5lZv5UvVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WwXt+3kH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hqFN18X4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13E8F1F000E9;
-	Wed, 15 Jul 2026 23:46:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WwXt+3kH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE9161F000E9;
+	Thu, 16 Jul 2026 00:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784159176;
-	bh=9M8j7I7VdmUl3g1TXrlGhuKxddx/mKZm9ejkTrkF5to=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=hqFN18X4ZmdicG79qc7kKagp6mZYoLt9/bXSXKUt86xuENBjF1IE4rrrZqZYb+Beg
-	 izV9nOPHPoUoovny0IkOGpEnrFlvhMcrJotPZfxh7tysJX1gEgsGopimk3o15mNXae
-	 Y0qxLPw4ndrWM+i3UGahJ80d+cL4K4ST4S9e3bh2yiNOT9g3Afmf3tPPZoGsGoU6Mq
-	 IpVmnlmhZRVpJIFrCslfNoku8YEqM2YOCPLEvy+otidtPPdxAm9GKCdte6bzdMS0qj
-	 tdOyZJ7cgmYJCH9sjr1Nq0bNtX46ovrG7y4+pl1vpigKGizAEWbuBNpdoOrikbWgo9
-	 Be3aLVhUGZbSA==
-Date: Wed, 15 Jul 2026 16:46:13 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: James Clark <james.clark@linaro.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ihor Solodrai <ihor.solodrai@linux.dev>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Emil Tsalapatis <emil@etsalapatis.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, bpf@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v4 0/4] tools/build: Allow versioning of all LLVM tools
-Message-ID: <algbxQAAmurxms8X@google.com>
-References: <20260715-james-perf-llvm-version-v4-0-6dfdf984b435@linaro.org>
+	s=k20260515; t=1784161498;
+	bh=OJu0HhHU10rHHooJBRLXkyxM4deBEcJfoZDMqS4tCi0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=WwXt+3kHqgUO8MMxSPTEibi1OYrssxLNgUMSPdsl/pWIsESaIydWxT0k6LHratWaf
+	 HNzGSlNNFV/8nHfopXJLODXPAFFcFYBc4ONZxOceitE/UbhXScrDMY+HInPsM+cQ8S
+	 oKWKFxUE3PefSWT+nNEPS6dYf9v/4EyUDtvF//0TDoEhS1VrTIByRhcIcrAWdflLVC
+	 4NwaMS636hlHBcELSq13OG1gZhx6G/f3CsIFU2/CYhYTUlc6V5OsTjb6oGYyQOWTEe
+	 F+MadzwHymlV+/ycbd+Gyo5tNpOCnPkIaHfDElxuPS/IVbG4MftJtvj5WrWZxQrvbA
+	 vv7bsC+f5GoLQ==
+Date: Thu, 16 Jul 2026 09:24:52 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+ Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v7 05/10] tracing: wprobe: Use a new
+ seq_print_ip_sym_offset() wrapper
+Message-Id: <20260716092452.e46ebf990962138e3b4c58f7@kernel.org>
+In-Reply-To: <178407989708.95826.17630423823637072384.stgit@devnote2>
+References: <178407983818.95826.12714571928538799781.stgit@devnote2>
+	<178407989708.95826.17630423823637072384.stgit@devnote2>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260715-james-perf-llvm-version-v4-0-6dfdf984b435@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello BPF folks,
-
-On Wed, Jul 15, 2026 at 03:53:47PM +0100, James Clark wrote:
-> I ran into the build issue mentioned in the first commit, because using
-> an option like LLVM=-15 is a documented way to build [1], but only
-> some of the LLVM tools defined in tools/ support this.
-> 
-> After fixing that, a lot of other tidyups fell out. I didn't go too far,
-> for example some selftests include tools/testing/selftests/lib.mk which
-> reimplements some of the LLVM_SUFFIX stuff, but other selftests include
-> tools/scripts/Makefile.include and I stopped before touching the former.
-> Some other non build scripts hard code toolchains and I didn't touch
-> those either, this change is only focused on things that already
-> include Makefile.include.
-> 
-> [1]: Documentation/kbuild/llvm.rst
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
-> Changes in v4:
-> - Drop "tools/build: selftests: Allow versioning LLVM lld", clang
->   already picks the correct sibling lld version. (Sashiko)
-> - Link to v3: https://lore.kernel.org/r/20260715-james-perf-llvm-version-v3-0-8854bfe5af7e@linaro.org
-> 
-> Changes in v3:
-> - Add warning for empty $USE_LD
-> - Use $HOSTREADELF in bpf Makefile
-> - Rebase on v7.2-rc3
-> - Link to v2: https://lore.kernel.org/r/20260518-james-perf-llvm-version-v2-0-f12cc4f031d8@linaro.org
-> 
-> Changes in v2:
-> - Fix selftests/bpf build. LLD needs to take the full path to be used
->   with -fuse-ld=
-> - Link to v1: https://lore.kernel.org/r/20260514-james-perf-llvm-version-v1-0-6cac1a9a4c8d@linaro.org
-> 
-> ---
-> James Clark (4):
->       tools/build: Allow versioning of all LLVM tools defined in Makefile.include
->       tools/build: Indent if else blocks
->       tools/build: Allow versioning LLVM readelf
->       tools/build: selftests: Remove some duplicate toolchain definitions
-> 
->  tools/bpf/resolve_btfids/Makefile    |  3 --
->  tools/lib/api/Makefile               |  4 --
->  tools/lib/bpf/Makefile               |  8 ++--
->  tools/lib/subcmd/Makefile            |  4 --
->  tools/lib/symbol/Makefile            |  4 --
->  tools/perf/Makefile.perf             |  7 ----
->  tools/scripts/Makefile.include       | 77 ++++++++++++++++++++----------------
->  tools/testing/selftests/bpf/Makefile |  1 -
->  8 files changed, 46 insertions(+), 62 deletions(-)
-
-Are you ok with this change and going through perf tree?
+Oops, I missed to fold this in the 1st patch...
+(the seq_print_ip_sym_offset() part is already folded)
 
 Thanks,
-Namhyung
 
+On Wed, 15 Jul 2026 10:44:57 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Use a new seq_print_ip_sym_offset() wrapper function instead of
+> using TRACE_ITER(SYM_OFFSET) mask directly.
+> 
+> Link: https://lore.kernel.org/all/176226550596.59499.18020648957674458755.stgit@devnote2/
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > ---
-> base-commit: a13c140cc289c0b7b3770bce5b3ad42ab35074aa
-> change-id: 20260511-james-perf-llvm-version-43ab1cb5bc7d
+>  kernel/trace/trace_wprobe.c |    1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Best regards,
-> -- 
-> James Clark <james.clark@linaro.org>
+> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+> index b52f3eac719f..dd310a87b333 100644
+> --- a/kernel/trace/trace_wprobe.c
+> +++ b/kernel/trace/trace_wprobe.c
+> @@ -20,6 +20,7 @@
+>  #include <asm/ptrace.h>
+>  
+>  #include "trace_dynevent.h"
+> +#include "trace_output.h"
+>  #include "trace_probe.h"
+>  #include "trace_probe_kernel.h"
+>  #include "trace_probe_tmpl.h"
 > 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
