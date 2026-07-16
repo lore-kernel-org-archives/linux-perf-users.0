@@ -1,56 +1,56 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09528386C0D
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 07:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50FD388873
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 07:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784185408; cv=none; b=FTJyoGwwbUZTLIB+UeIPu+Up8XcJHWQmaFRhFSr/YByYl25zTn/2Iq+WxqGnDI9xvuKz8MJSeNcf0F6EIZD6EDFYeKIAcD41m+eL/R4CprUST1G+K87Qsx8L+GTT3Tj0UO5WNB1tEA7BXNMAawadmeo6l0rBqCRyEO79oqNAXTg=
+	t=1784185410; cv=none; b=LClj4aQje5bPCBuACc4P9MeQ+YnTH7vhjR9ajuWztlUyvM9rMPuw/rNKrJt1d3Y24R5nDcnalUij1GFXRrv6DspDTGrB4kIFBdlKYTDv32yRm2PvpZPIIKpSnM2lFxeELqiYTj+u+JOe98jB99QAPPug6j38iN8tO8tpNZxSWKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784185408; c=relaxed/simple;
-	bh=UftcpZmurSmWOkHRhAfumQiBO9fPZRiBECvBmt0QEjY=;
+	s=arc-20240116; t=1784185410; c=relaxed/simple;
+	bh=lIByhbsGDdTBHg6SoB2Lw1YUVdW86WkDZiUTwZ3OgmM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=g+x6s1ky4ZM8MpBj4ZZaioaobrnbDZ5A5CLW7OwQTxxtFv/XeL3gYv7i15UYB8rSrRsfaJMywZaAzLBL5fMTUckEA/+U6bIBTBQ1ZD8vBE68o9eacZJ6H3fjVImE78L1xxp0T1v7uWSrBDqWbgvfoATc6Umy6v1GwMmd0Nfhqsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dk/qk7Q/; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=ll4mj+Jta9zZTawpginYFL+1hnEKWHmOaaUGAvccjGiMP7qam4GYibezAtyzGMYWHM+Dd/S6zEVOQ69P2BnWA/wSKbJn4yCgfUV/OrdbDTYrFhS1//Jf19Ux20i0RQYTWcwoU6HIjKK5hJWyWkPT7SNR+ZBtJ7IRO5t9dZGpXmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=obbXuh52; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dk/qk7Q/"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2ccb687f82eso95515025ad.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 00:03:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="obbXuh52"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-ca7c1e22995so8663357a12.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 00:03:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784185404; x=1784790204; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1784185408; x=1784790208; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=NAPh6UvpkD4fk5vrJ+FvIGuSjW09efU2gKSB4rCskWA=;
-        b=dk/qk7Q/WhX9TAH8zn9FnF2vLNpt22mW+mwPa+MbgpYii9wjFNzzHC0nksggioUG0K
-         5FUjIe9OJElPN+vM6fz2skX9qHvp6jjr7Xos+n08GGP755j8iCEYXo78u+w3Mj8pjv/I
-         5lzg/8CsxptDXRCpD4SaTHMSkk8UFpp1DRyKkmTZ54AamsomZXzj5gua3dBtib0BiSqB
-         zaKlR9+c0IIj2ArJukVG1t1v6Utz++jhAt/5uX2NhY+n0n3Lvk3sqNTrUqP49lsN1XPu
-         +1FdUepLs0I7m3J7ZMgAmajSJzpufYgdf7M7mnpgrGwa/3DdyOkevS9hNpvK8la7Fm5O
-         WEZA==
+        bh=c66jClBPGZu3ebFTqfTvjA1RhAEN8+/bEpFQ2FJgp9g=;
+        b=obbXuh52qRi5MBDjz28P7OQcIbeYMWkEapA3f6PBohi0XUajmPPZPYnPpleBlpHshZ
+         8DA+XzNqbRCWBMyBKwq3tdTHMymWYekiPzVprFjOoa/vmMNA6099vthoaBotWOAYRCLn
+         3RbjBvavk0NoddIGm7DPagS4j52iWPi6YEFfCxXRqdw0xGvdiPJby0gRPvg8P3pZSAJK
+         +sbff3d2YHXj3wLM9JlKS1ZdDAAPc6hSUrZVzhS25uH07Pz+D3Bl2N1kto7XX3YWF/nk
+         ioWIPo5n4MxlbOezg/bOFlszvw5PnFPAWb5YKPh9QAGkyJaZPSkQMa77ZrYiY70ZFh0y
+         cutw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784185404; x=1784790204;
+        d=1e100.net; s=20251104; t=1784185408; x=1784790208;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=NAPh6UvpkD4fk5vrJ+FvIGuSjW09efU2gKSB4rCskWA=;
-        b=kDz5hHONssTvqM/aecKag5VA7mVc/kFtjVGA4URCfGMMMxmgsbfbZQRlRf2bAr/2x/
-         YAAolwSW/KE4/kTjWR2QoK36w3BwqI2AwTNeuu0q1lbWOWsOIynKtKV8xmSER4DSNcmu
-         ayk2fNlt1dgO773B3if+aiUgkiMWD0oqgQ+9A4QgMutFe3fIPW08i2hf6+Uz746nOYau
-         ESkybvKfBVAUA+GAmg37opaMwA6Mv6SqMwmGmZlkGbzxc1/uHbDUm9FG4DWwRlcmrFtO
-         zzEi+Rzjzhc/LwSGUs/qz+Ul/AxLyUlkH9lcbUghxgO2127bWQ6KJKzYW+qGrp/swWe/
-         GHww==
-X-Forwarded-Encrypted: i=1; AHgh+RpudhIZ+a/3SOZbYFLnQsfhnjCLXOSXO6pJDHYdm/tDomKV+NJl6xqcBm91PTNxCzgYJcPCnT1q0TrHONIUupKr@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYFjXW018zGWmtEzh0VUGn5wBMN6Yk9rYOthc74wiFpLwigQ1N
-	sYA24EikFG+b/TreSXAl8I3CgzFoxhnWykHzzP9I6QD8HrohjdytIPfhcikr5XJXvMroj3AsbG9
-	+RCESCTQlZw==
-X-Received: from dlbcm27.prod.google.com ([2002:a05:7022:689b:b0:13b:a023:b237])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:c948:b0:2cc:d192:50b8
- with SMTP id d9443c01a7336-2cf03e1f1fcmr57048515ad.47.1784185404037; Thu, 16
- Jul 2026 00:03:24 -0700 (PDT)
-Date: Thu, 16 Jul 2026 00:02:55 -0700
+        bh=c66jClBPGZu3ebFTqfTvjA1RhAEN8+/bEpFQ2FJgp9g=;
+        b=sDUyHK1iY012WyGdz8djWBVfo9VMMG8Dx4BS5ueBv7HFKm3alj5MDoWg5RpKxzNn7Y
+         tSmSBhlcqejbYt6IPgZFa79h97WZ3jeA0mxXspORkqYVs5f6XHSJwFGGtcvMnG3ZZtaq
+         UEoFum3dfRXV46aR2kneZuNPVy4yPxBPvhvBphZ+2HGfL6qT/ELmqv7hf4llALv10cv/
+         XVNoAU9+CHJi4vyc+1UmMvp9ybuctk5QXc8OgnGAtXU5UV1TH604FLbGb/VvSo3zOHdA
+         lTLupha/KQpPBno6XiaP4zd+pAF7EglwgIDrCypJ/wu6/EholUEzYh0D7QB1qKuqnQg4
+         010g==
+X-Forwarded-Encrypted: i=1; AHgh+RoHWZvHlLh5Nts9TPH+Z/ForkG4J4Y3+H4nrMj/JalbIMq6XCJRkZhsWQFIxBZdmtzB40gVvKOA2B/KtYfiqv/5@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZHDwyADuTVwl31ZZmLaBfL42EEelwHgrbfN3V3DP4nKHuCFrm
+	RdmdFx71dw/xCylu/tE905cENhRqSClrFPWgfW8IXxZooZY6CkaOJ0VathhCcJ6YA6UrTvKDth1
+	g76WtZLZXwA==
+X-Received: from dlnn30.prod.google.com ([2002:a05:7022:619e:b0:13b:a0a0:3b98])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:4cc5:b0:3c0:9c19:65a7
+ with SMTP id adf61e73a8af0-3c36c4447camr6657730637.63.1784185407979; Thu, 16
+ Jul 2026 00:03:27 -0700 (PDT)
+Date: Thu, 16 Jul 2026 00:02:57 -0700
 In-Reply-To: <20260716070303.507066-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260716043223.388233-1-irogers@google.com> <20260716070303.507066-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.141.g00534a21ce-goog
-Message-ID: <20260716070303.507066-7-irogers@google.com>
-Subject: [PATCH v4 06/14] perf stat: Extend STD output linter to test
- metric-only checks
+Message-ID: <20260716070303.507066-9-irogers@google.com>
+Subject: [PATCH v4 08/14] perf stat: Extend CSV output linter to test core
+ aggregation checks
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, ctshao@google.com, 
 	namhyung@kernel.org
@@ -71,32 +71,56 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-This patch extends tools/perf/tests/shell/stat+std_output.sh to run the
-metric-only check under the --new print flag:
+This patch extends tools/perf/tests/shell/stat+csv_output.sh to run all
+basic and core aggregation linter checks a second time under the --new
+CSV print flag:
 
-  - check_metric_only
+  - check_no_args
+  - check_system_wide
+  - check_interval
+  - check_event
+  - check_per_thread
+  - check_per_node
+  - check_system_wide_no_aggr
+  - check_per_core
+  - check_per_socket
+  - check_per_die
 
-This guarantees that standard console metric-only outputs produced by
-the decoupled printing callbacks are formally validated by the test
-linter.
+This guarantees that CSV outputs produced by the decoupled printing
+engine are formally verified and column-valid across standard and
+interval modes.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Assisted-by: Antigravity:gemini-3.5-flash
 Acked-by: Chun-Tse Shao <ctshao@google.com>
 ---
- tools/perf/tests/shell/stat+std_output.sh | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/tests/shell/stat+csv_output.sh | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/tools/perf/tests/shell/stat+std_output.sh b/tools/perf/tests/shell/stat+std_output.sh
-index 0d38a1283967..69720b19b908 100755
---- a/tools/perf/tests/shell/stat+std_output.sh
-+++ b/tools/perf/tests/shell/stat+std_output.sh
-@@ -134,6 +134,7 @@ then
- 	check_per_cache_instance "STD (New API)" "$perf_cmd"
- 	check_per_cluster "STD (New API)" "$perf_cmd"
+diff --git a/tools/perf/tests/shell/stat+csv_output.sh b/tools/perf/tests/shell/stat+csv_output.sh
+index cd6fff597091..e4153a03d716 100755
+--- a/tools/perf/tests/shell/stat+csv_output.sh
++++ b/tools/perf/tests/shell/stat+csv_output.sh
+@@ -88,5 +88,21 @@ then
+ else
+ 	echo "[Skip] Skipping tests for system_wide_no_aggr, per_core, per_die and per_socket since socket id exposed via topology is invalid"
  fi
-+check_metric_only "STD (New API)" "$perf_cmd"
- 
++# New API CSV checks
++perf_cmd="--new -x$csv_sep -o ${stat_output}"
++check_no_args "CSV (New API)" "$perf_cmd"
++check_system_wide "CSV (New API)" "$perf_cmd"
++check_interval "CSV (New API)" "$perf_cmd"
++check_event "CSV (New API)" "$perf_cmd"
++check_per_thread "CSV (New API)" "$perf_cmd"
++check_per_node "CSV (New API)" "$perf_cmd"
++if [ $skip_test -ne 1 ]
++then
++	check_system_wide_no_aggr "CSV (New API)" "$perf_cmd"
++	check_per_core "CSV (New API)" "$perf_cmd"
++	check_per_die "CSV (New API)" "$perf_cmd"
++	check_per_socket "CSV (New API)" "$perf_cmd"
++fi
++
  cleanup
  exit 0
 -- 
