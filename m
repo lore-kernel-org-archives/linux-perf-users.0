@@ -1,154 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BBB388369
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 04:52:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784177532; cv=none; b=WaCi9Mh0wVMSTOkdqr3WpDvsyJdgBdGR/1M2SLZ/RyBOaQXE5e3hR/lPpmULVYbjhQi9koj0Lz8QvD1wCJNwWp0tpqT1aSgu7dTnc3afdfPlTN4/6eJ37Ht2TzXpLSHHp7gEYpT9nImJmm/0IxjbTrxnXEGpyfnXymr8xHF/kr4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784177532; c=relaxed/simple;
-	bh=X6mI6+JPHx+Z5+Mn5QE+T0HfhvRBViQH8hdh2DIAnk0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=KkjlZI7/uck9v8oxDUpMNVRxU9h6qyrmxsOU66fnB57cfQ1s6K/tBi+lJkr99GM5zgBRwcNlv4vhiW6pj1dSf7sFjueLVV9P3YkNztIMALCnhNYMxkpKxHVQQ2YIiHTwfbUq068qk4ZHZyX8mrOtRaUEF8aedVhDiCKsQagZB3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMYvCS4F; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE34388873
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 06:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784182261; cv=pass; b=OvmoKN07mh3/o9EnROMbqoWJ+1OOOUq3144JBeOl4ukG/3CUpLsApTWGLsu4y/e3QRveUn2viDODliuVWDI/PIlaMXqxtdE8YJGvADgpeiCMYS9/oJIRUWSMNtTf/03MKxhQhC0u63y49FCnsNoVTVAOeW7BA5MlAEqMbtkm624=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784182261; c=relaxed/simple;
+	bh=YKV26By4+GumxrdgSneMkN8VbG9jPFscys0G5tcpC+I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WzkpCzXkG6h+kJ1nJBX8YSyQPyYkW6iRYHq+wa+EVHcxLZMV4G8M+tKQyztiP30FwS+Og5Nac+EVHJhkSHke4R64SAUqzCgbgKfBmQ2Wj0y9q8lA47wxYdWc5x21z6tSuW4jfFivB2urgcTJqy2fneXlGgGmcWIKZinEAbx18jM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DZY9h7C/; arc=pass smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMYvCS4F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194A51F000E9;
-	Thu, 16 Jul 2026 04:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784177531;
-	bh=8lKqYATcuYrT++avt54egGwmRHw/beOu1ZZbZZ1V4Dg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bMYvCS4Fx35JuRwq/AnmcpKI0Eh1L8jqIH9jCcmGXWOMqkMujDVLG2LBYsn+zW+Eg
-	 Xiodk5FTMyR03oAIaTBHp6nkz0NyhMGykIFQ+aJFdqmF5+fy43L62ht7kMKSXJ6JKT
-	 8LTkIABDi5CCgc0rpP3zGsvktGfj68/4+U9ORQFYw6QNIKxCoe7WXzPoZA8cyGiJlk
-	 pnjI1uuXNqJGxePGh9yIGCzeUjoCNVz+Ti6FiIrvb993Hx0+55i+GUHdh+f8XgZ+vZ
-	 I5LOr562BNg0DYkTJxdVTaIwTu6On7FQlEOLPIt9HI9hlaxmaxhwyHwqN8KU4IwSWJ
-	 zHvwhoxDR7HGg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 13/14] perf stat: Add --new support to PMU metrics
- Python validator
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260716043223.388233-14-irogers@google.com>
-References: <20260525231900.3527228-1-irogers@google.com>
- <20260716043223.388233-1-irogers@google.com>
- <20260716043223.388233-14-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 16 Jul 2026 04:52:10 +0000
-Message-Id: <20260716045211.194A51F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DZY9h7C/"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2cacef7d299so51685ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jul 2026 23:10:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784182258; cv=none;
+        d=google.com; s=arc-20260327;
+        b=dAhropYelwVBSz01Jud6QTrvUbhjesJWuZp45E2CPVZGyZLd4ycDbn55c7Hp+kwch0
+         I29GFLaIa40NclblhW+rV6o1YQ40fl/ZuaxIv2ohR7F2rWEHbvWl4jdh3yYPxkEpcqmX
+         HzS/Wdn0/jivfe189Fhq8SjLlu6WhTSDGXPs7wWTRFinmDZMwOvSfOyYzUo2G5+/kd1U
+         c4chogxrdNmsd/LjQMyz1L7FmU/7CMBKwiIKTZM5IWhFmtGQ3mHkHafZ6JnLdVIka6Se
+         tY8o9yQ8H7e/zwnT2V84JnakhpeX0RfVB5vF2rfqbznevLOyscMN5Jqat4eK9TKwE2bp
+         blkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=i2qRYKTpiPRd2XV9f+Toku+inGxjOxT6jXxo3Qi38v8=;
+        fh=OIZIrLKuMf7AN/k1BApDl+ike46pEvv3wWmsqUag3YQ=;
+        b=PrV4IOoPq1BXUIAtK6AOPgB+6hSZ4yU9paHBJjAzBuXrFFl7yoxAjS/LP9zCSBksle
+         jgbexIE7S5EL7EjLDRc6HnrhYJgG+LF1gs/6Jc92yb+ef/x2pb0SIFaI3ejdZ8Y6j4oG
+         FRUBRounHe0Dlxg897vlBIhlR6oek1DbqMxOt9T7J+Vpy1z1+Nrs+IMgMc2bl785yAHy
+         9gdU09lCLZ/9Dnvza1SID8jmBjoPYmW//7xQzSaxGOgYRiIcsbDqewPK3iz87y6xM+KB
+         gfrznodeNcyzHTLzafASn0q1ESTclpPdrD8hvw7EpCxZtVE5YCQW8E0MkQbUqd9KyxHd
+         OZGA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784182258; x=1784787058; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=i2qRYKTpiPRd2XV9f+Toku+inGxjOxT6jXxo3Qi38v8=;
+        b=DZY9h7C//KpywYM2wEnnPj/53BtQlladWecPpVyLGAnQPdrfwJc8P4y4NZ7TRsQuZW
+         PPOGbRLCG0bRCoB+LeqbJZl8s1hvvWDTJ1IHLB0OspuXlTnGWPmOOS+82bre9i6sqK7e
+         oEEnTaJoRrZFaD1kPD8ByV1K3DrlC9gCAlAEunBM5Lz5fMipbIdxHePgtZiMFck+hos4
+         NbsKIcCPMMCeALJEZTjGWUOwK1eQ5X3JTz8iMEMoIJkXTV2B8LiC+Y1AcAKPTnnib2Zr
+         OrBG0/twDCwOY8kerhp4C1SdHaMe/wdrMszSX9xo2zkOQvupHpawdyHFP/I7zaUUtfdX
+         P5ag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784182258; x=1784787058;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=i2qRYKTpiPRd2XV9f+Toku+inGxjOxT6jXxo3Qi38v8=;
+        b=hH56ViT0nS7MjsF/kfghjUsg+Q3rjUshIUgzL4XO4rJ6iW67HuuToQqv6znQpQxD4y
+         zqratluSqQ0RPol2oFwlNjdGs+3b2Q84vUi0lxDflqLAXj3B5IQAw/AmA+XCtF1kfOgQ
+         v2AG52e0ZUGAZG4Hy+AXYau7DFjNrwURxJvRKMxT1IYonmox3h20bOO1MW6xnrlxdbtu
+         Un6458ybVWgc0Jj0y5fMWVrW6ej6OAbw6UmF9cx0loCkx6oNPXfDJLrNCUzVqX9Nj9WT
+         zIbE3FSqvekegrZOSjyS0Mu8TueGz6W96CepGdhLeibhlvIKjV48Z2qKhdRPjZJrP5pv
+         KYwA==
+X-Forwarded-Encrypted: i=1; AHgh+Rr5kcy9WqRIQOwwxZ8DBqGsepqbKOPyZ2EYXzXZTSjeA+Yi3B478/NdOnLsCE/IhlQCY63jT6P+wvZRZCaDwaN2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVZfMQbw4X8k8AVAOBf7iXY/YzlTTokD/4ZRk0QQBHajCcq0pr
+	ilkhe8JtiZ2X2KklqyjqO+7ve2vYzzZIfGNtnnLqx8mQBW+pD5q8qzMBBjV6L7Z63Y7TxoR1+Or
+	qPnvoCFjIGVnjma4QV/ygwYFCeQuhBNhfHrDPj2hC
+X-Gm-Gg: AfdE7ck4FS3yqbNGns/BASagTwGvl4qElO1peHlUbrPjRj3yf1Fzz6CdZiEFh+izYS0
+	L4blfQVRypzrtfzQXEEeEQ60dBy20Eyih3MITZs3iVPbmZEC+sVy4VsYkK9DlWoGYZcwSQmZBIJ
+	4tz1r5+CsjkHH6XQ+gaFC4ROzR2lmKXgH4mk1myDRn+S10QFb/4/4oKvYJu2TYB6soB1B0lYXi7
+	Sk9NmwnLZw/DVkxYVzEo7qev6dC8U9dwCekPx3E7eOE2cYC+pBXPTrK1a8ViKhoQGcqVfZxpA==
+X-Received: by 2002:a17:902:da89:b0:2cc:80b9:3a1 with SMTP id
+ d9443c01a7336-2cf1dab007bmr1449415ad.13.1784182257647; Wed, 15 Jul 2026
+ 23:10:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260711003235.1963043-1-namhyung@kernel.org>
+In-Reply-To: <20260711003235.1963043-1-namhyung@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 15 Jul 2026 23:10:46 -0700
+X-Gm-Features: AUfX_mzdBtIjzaaFAvbO8SHAeaB7c_aTJz295WGVx2PZGbhQqU0uFCC7F2iycuY
+Message-ID: <CAP-5=fUUxtNWwy-3cPaEexG2h4xF-N+VdqoutoZjUU14ei+aAg@mail.gmail.com>
+Subject: Re: [PATCH v2] tools/lib/api: Fix potential double-free from fdarray__grow()
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Sashiko Review <sashiko-bot@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] is_basic_shadow_metric() performs an unchecked strcmp() on a pot=
-entially NULL mexp->metric_name.
-- [Medium] Cgroup layout formatting is completely stripped from CSV, JSON, =
-and STD output modes.
-- [Medium] Zero-counter skipping logic was mistakenly scoped only to STD ou=
-tput, breaking CSV and JSON modes with output spam.
---
+On Fri, Jul 10, 2026 at 5:32=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> If the realloc for fda->entries succeeds but the realloc for fda->priv
+> fails, the error path frees the newly allocated entries.
+>
+> However, fda->entries is neither updated to point to the new entries bloc=
+k
+> nor cleared to NULL. If realloc moved the allocation to a new block, the
+> old fda->entries pointer is now freed memory.
+>
+> When fdarray__exit() is later called to clean up, it executes
+> free(fda->entries), which would trigger a double-free on that old pointer=
+.
+>
+> Reported-by: Sashiko Review <sashiko-bot@kernel.org>
+> Closes: https://lore.kernel.org/linux-perf-users/20260710200150.11FE71F00=
+A3A@smtp.kernel.org
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 
---- Patch [13]: [PATCH v3 13/14] perf stat: Add --new support to PMU metric=
-s Python validator ---
-commit ac2ffcbd7ec0fccf19ec9629f7f74d37b92d6545
-Author: Ian Rogers <irogers@google.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-perf stat: Add --new support to PMU metrics Python validator
+Thanks,
+Ian
 
-This patch extends the performance metrics value Python validation script
-tools/perf/tests/shell/lib/perf_metric_validation.py to support a new
-command-line argument -new. When set, the Validator class appends the --new
-option flag to its internally spawned perf stat commands. This enables
-validating Intel PMU metric mathematical values generated specifically by t=
-he
-decoupled, streaming JSON printing callbacks.
-
-> diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools=
-/perf/tests/shell/lib/perf_metric_validation.py
-> --- a/tools/perf/tests/shell/lib/perf_metric_validation.py
-> +++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
-[ ... ]
-> @@ -379,7 +380,10 @@ class Validator:
-> =20
->      def _run_perf(self, metric, workload: str):
->          tool =3D 'perf'
-> -        command =3D [tool, 'stat', '--cputype', self.cputype, '-j', '-M'=
-, f"{metric}", "-a"]
-> +        command =3D [tool, 'stat']
-> +        if self.new_print:
-> +            command.append('--new')
-
-[Severity: Medium]
-While enabling this test for the new API, does the underlying --new
-implementation safely handle metric evaluation?
-
-In tools/perf/util/stat-print.c, is_basic_shadow_metric() performs an
-unchecked string comparison:
-
-tools/perf/util/stat-print.c:is_basic_shadow_metric() {
-    ...
-    for (i =3D 0; i < ARRAY_SIZE(basic_metrics); i++) {
-        if (!strcmp(basic_metrics[i], name))
-            return true;
-    ...
-}
-
-If perf_stat_print_metricgroup() iterates through metric expressions and
-passes a NULL mexp->metric_name (which can happen with unnamed or dynamic
-metric expressions), will this strcmp trigger a segmentation fault?
-
-[Severity: Medium]
-Additionally, does the new printing API preserve cgroup aggregation
-information?
-
-When perf_stat__print_cb() traverses events in tools/perf/util/stat-print.c,
-the generic callback signature omits cgroup parameters entirely:
-
-tools/perf/util/stat-print.c:perf_stat__print_cb() {
-    ...
-    ret =3D cb->print_event(ctx, config, counter, 0, val, ena,
-                          run, stdev_pct);
-    ...
-}
-
-Will this cause a complete loss of cgroup layout formatting for CSV, JSON,
-and STD output modes since the callbacks never receive the cgroup
-identifiers?
-
-[Severity: Medium]
-Finally, how does the new API handle zero-counter skipping for CSV and JSON
-modes? The core traversal engine perf_stat__print_cb() passes events to
-callbacks without checking should_skip_zero_counter().
-
-While the STD format callback might implement this filter locally, the CSV
-and JSON callbacks do not appear to check it:
-
-tools/perf/util/stat-print-csv.c:csv_print_event() {
-    ...
-    ev->val =3D val;
-    ev->ena =3D ena;
-    ev->run =3D run;
-    ...
-}
-
-Could this result in CSV and JSON outputs being flooded with zero-valued
-ghost events, such as uncore PMU events on non-leader CPUs, causing
-incorrect statistical exports and output spam?
-
-> +        command.extend(['--cputype', self.cputype, '-j', '-M', f"{metric=
-}", "-a"])
->          wl =3D workload.split()
->          command.extend(wl)
->          print(" ".join(command))
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260716043223.3882=
-33-1-irogers@google.com?part=3D13
+> ---
+> v2 changes)
+>  * update the patch subject
+>
+>  tools/lib/api/fd/array.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
+> index ffe8272af59b2da0..23b476a35de477fe 100644
+> --- a/tools/lib/api/fd/array.c
+> +++ b/tools/lib/api/fd/array.c
+> @@ -31,7 +31,8 @@ int fdarray__grow(struct fdarray *fda, int nr)
+>
+>         priv =3D realloc(fda->priv, psize);
+>         if (priv =3D=3D NULL) {
+> -               free(entries);
+> +               /* this will be freed by fdarray__exit() */
+> +               fda->entries =3D entries;
+>                 return -ENOMEM;
+>         }
+>
+> @@ -50,7 +51,7 @@ struct fdarray *fdarray__new(int nr_alloc, int nr_autog=
+row)
+>
+>         if (fda !=3D NULL) {
+>                 if (fdarray__grow(fda, nr_alloc)) {
+> -                       free(fda);
+> +                       fdarray__delete(fda);
+>                         fda =3D NULL;
+>                 } else {
+>                         fda->nr_autogrow =3D nr_autogrow;
+> --
+> 2.55.0.795.g602f6c329a-goog
+>
