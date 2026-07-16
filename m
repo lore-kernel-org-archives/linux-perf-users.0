@@ -1,56 +1,56 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DD2345CA3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F134F3AE715
 	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 07:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784186648; cv=none; b=P53NBiqQNn1tgImdvXq5VR4q2wzsspW+rZNij33QcindYTiYRainMYBcR1Y0J4XalT9bcM1HXyT4by1fsTK8jKbP69EHVbw88f9Y3b/+3uBuH+MVrwaYoGiIg/WcRSoB+COSfwWliMJ3LYE6r5PF75O7WCzUN+eFmGDvcjeuvlo=
+	t=1784186649; cv=none; b=JUb1ASU5TOOGLv8IZBK3FLA6h4AU7eUCi78Cw475MJrgIJUBP4yhifyIzFyiZlS/XFmDvhbjYv3Jg4w+0fhhXwj+z8jAOUT9MkWMIFRzoV1OaJuZJCEk2QDDNQe4Fj0MNzOULPUN6KA6Y4kdBbAY2+2QKbbfWAavY4K/svuZn3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784186648; c=relaxed/simple;
-	bh=V3CKY655jvssuX5wbgLMKNRXpIhsZ/RQAR7Ea+aV3dc=;
+	s=arc-20240116; t=1784186649; c=relaxed/simple;
+	bh=0eJAYdw9Cb4OU+p6pnVXg2HzO28eqI+JpOyOCFvpGXc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LyxJUugud1sGDGYIIQC2zaVf87mEeH7Gpsa3/4rb6YUKY/lMZFk9z362kKCRQDmKe4fle3Rbic99nMylcGzRCS2n7sPIdsFE8bbV1wO3fsd56gtpP+vEZebL+q+MDdBmDBcEK7wLbwo+HWTXM9occYMWW+bXnPKM25cL8qMTXdk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dluSy+Qj; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=KL7GQnfniMFyU+ie4jioK1LHt7jLXRikhUs1+j0HK7jQ3nAJdUjds4iIIedHRQfxsztbJIGrKP75AIQn8GLxwFMHapzOdJJb3zrSdkE8H0OP2iKxQTkaqhaCZVVnTGFMfOlu3HnR/7q3rQMkHdjAZMQ3CTppjf92UZpbDdqhbiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TCFMz0dt; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dluSy+Qj"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c88da04b719so2801342a12.2
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TCFMz0dt"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-c96b4f58ddcso2975298a12.3
         for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 00:24:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784186641; x=1784791441; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1784186639; x=1784791439; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Dpkr39l7sOTtT3gomIyyA2FswdcfqqwWFusHQlL4atk=;
-        b=dluSy+Qjk9+CI0oar3CN6VKSZnXh0OzKo4sTiQJEoBpd1IIgARAkEnQDDWm8UYKDah
-         RjL1ZS0aDZMPKqTQvd/QUB84AWo+PwJkYZJiKEhnjLTrK5hu9n9/g1X3RJ/BjC4kanWS
-         c1XGlGpdwEU3Fm36X9C93ACbTBei8cdXB7B+GfjQwRfeKTHQHngLVgdiVgMkFwIoq7nb
-         Zw1X55k9XGhUct6Webe9oPDMnNB1/zWXLApgTtbK/WwAgaEPOegXNudM/P8T869Lk6FE
-         oiBC0aUXFhk96A6b1RYbYHOekDpZeRs6QyEZWf/YSGya8nVPju30gPx4Y2JP1KDKLfcG
-         athQ==
+        bh=PtRZXcrzOWsu7xZaY2RqcnEzqz+fuwmLedpDlpa9fBI=;
+        b=TCFMz0dtU53e/K1HTkuLTAkos5TEUDjE8c7GXjNx8oeEDnD0ecM2yUp032M2ADZ3yz
+         AWR8DUOLCAUjyQO0i3h0+WP0jEsxNxgq6kCEejZe+5KVBqHx2ySdDWVE4SDeQr28YyXQ
+         rvcNAEEOMx/iIQiobpPiTpW0s3X4cv7TzrxpWW25SwnPza48UD3nFrnBnlmVnaofJ9a+
+         uZ42Nyg9yMj2F/Uzy8HF0ZHSudO1XkdrLl0VMu1GRQiERzhKLNamIwf0Q9zL4MfMbC+U
+         WeMlFJKcknzMe9alFV/h6W7yyI8Oc1dzwVmuhiJgnI9jRv7QZzYpMwilpnpGMLNu0G3+
+         kpiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784186641; x=1784791441;
+        d=1e100.net; s=20251104; t=1784186639; x=1784791439;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Dpkr39l7sOTtT3gomIyyA2FswdcfqqwWFusHQlL4atk=;
-        b=B21a/QPDrePzk97DDBRGsYG8QfCCas3JO6fblSsy7KqFVlwML+sDbAw958Lt6F8zs0
-         62H7YYNoi9scW0Mf7JPokkvD5e29j1QenK61CtPe1V+r1I7B+e4N3q8v/H0UW5pVkkDr
-         psKpI/GkEtSJ3lnLm0JrbZCyTeD94l8mqPmzEjPDu1zIfaR/fZR8/2wmBXOBPeVoPQI5
-         ze+YCMyhARTgMJ9onmezZ59iPkt4Ez8lYKunGFMG0psTpZtT0+h+WHsLAQ3zTyVsliwy
-         adWd+Taf9EOhW1pqF212kl/6QroCUwGs9crH0jax9uHYcPG90xY7mrATlCA8bg+Lczv5
-         sKAg==
-X-Forwarded-Encrypted: i=1; AHgh+RoUBZGQmlg3gHv8NkslzgY5qqtt6DyVt1cinUBXaUCPZ3DtABeSShYMwjIVHw70m1BKIgLb+F8yxXuMvPa6RBc0@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywx6QPTi2JU4v+cmi/h3aDrj5PNVGwb08HadkF6FrPxki0u6EpM
-	tdBE+T45Gu3mipam0uUBF0XoYhA3OCtDqGdoBi40XrF5MAA+kWxyrLAvZ5+ApY5ippsQEk7d2e7
-	NYlBbERlcDg==
-X-Received: from dlbsw11.prod.google.com ([2002:a05:7022:3a8b:b0:13b:9f1a:204])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6300:6bdc:b0:3c3:731d:546a
- with SMTP id adf61e73a8af0-3c3733bda0cmr4978220637.43.1784186640883; Thu, 16
- Jul 2026 00:24:00 -0700 (PDT)
-Date: Thu, 16 Jul 2026 00:23:45 -0700
+        bh=PtRZXcrzOWsu7xZaY2RqcnEzqz+fuwmLedpDlpa9fBI=;
+        b=cpCdzBupWuUmJPWSqytYuIMkRqt3ew0SpoQN4VUtNPYZNLM7MYjobQbTRbhz5qkB78
+         Z58rgKfNv8nHjZHsepUfgrMDB2rYfzSiG3ep7J/DgYVbGZXFfDmeBU3yjjDdf+amnMad
+         BwVg+r4iuPBwKHmVCT3zryEvrghk6EFA8HiP4cEyOt86QqGnXOKdxo7l+eB/uvh4EMHz
+         mHHRZbL3Obrd49ySsOPzNL/6f5oFCiEl49v9tSDhU5k3okP4bnvOGpZY2izhAfzfogUY
+         y6UKBRfMw72nulfOeZB+3k539ZiA0GL1+cyVfbRq+L5ZHyrCE7/1duHXkzvQjJWH2vmz
+         XXOg==
+X-Forwarded-Encrypted: i=1; AHgh+RrwWspxQBLhi/VeNCMUkOjbJGxqhywabQhYANpnC0KbT0JNPz3YR4y9LKl3/oZXtVi0dzYOnfqCEhbF+UPyuAEt@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGtrSjz9HvTdBi0+XXW6F/RlahoOAHhQR2GajeTwkH6IQ9FYXj
+	jC5wkZseIgt8qs0cZZoq4mQczgWbBpfAQ4FFjA/FLOl4Yar3ZJrNhpPfp+vJpjBnSJ1w4jkxKAO
+	s5pXSR6d79g==
+X-Received: from dyvj11-n2.prod.google.com ([2002:a05:693c:87cb:20b0:311:52b8:e12])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:734a:b0:3be:b0b3:3962
+ with SMTP id adf61e73a8af0-3c1102d7cb5mr20551721637.9.1784186639283; Thu, 16
+ Jul 2026 00:23:59 -0700 (PDT)
+Date: Thu, 16 Jul 2026 00:23:44 -0700
 In-Reply-To: <20260716072351.560311-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260710053628.1861645-1-irogers@google.com> <20260716072351.560311-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.141.g00534a21ce-goog
-Message-ID: <20260716072351.560311-4-irogers@google.com>
-Subject: [PATCH v6 04/10] perf ui hists: Fix stack use-after-return in symbol_filter_str
+Message-ID: <20260716072351.560311-3-irogers@google.com>
+Subject: [PATCH v6 03/10] perf ui hists: Include limits.h for PATH_MAX definition
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, 
@@ -70,47 +70,30 @@ Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
 	mingo@redhat.com, peterz@infradead.org, tianyou.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-In evsel__hists_browse(), the local stack array 'buf' is assigned
-directly to the persistent 'hists->symbol_filter_str' pointer. When the
-browser returns or is exited, this dangling pointer remains active in
-the 'hists' struct and is read asynchronously by the perf top background
-timer, triggering a stack use-after-return.
-
-Fix it by properly duplicating the input string using strdup(), safely
-invoking zfree() to prevent memory leaks when overwriting, and cleanly
-resetting and freeing the symbol filter string upon exiting the browser.
+Looking at switch_data_file(), it uses the POSIX constant PATH_MAX.
+Omitting the explicit inclusion of limits.h can cause build failures on
+musl libc systems, which do not implicitly include headers in the same way
+glibc does. Fix this by explicitly including <limits.h> at the top of
+tools/perf/ui/browsers/hists.c.
 
 Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/ui/browsers/hists.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/perf/ui/browsers/hists.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 9a3844dc3246..675910893644 100644
+index 319c3d6c0375..9a3844dc3246 100644
 --- a/tools/perf/ui/browsers/hists.c
 +++ b/tools/perf/ui/browsers/hists.c
-@@ -3213,7 +3213,10 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
- 					"To remove the filter later, press / + ENTER.",
- 					buf, "ENTER: OK, ESC: Cancel",
- 					delay_secs * 2) == K_ENTER) {
--				hists->symbol_filter_str = *buf ? buf : NULL;
-+				char *new_filter = *buf ? strdup(buf) : NULL;
-+
-+				zfree(&hists->symbol_filter_str);
-+				hists->symbol_filter_str = new_filter;
- 				hists__filter_by_symbol(hists);
- 				hist_browser__reset(browser);
- 			}
-@@ -3447,6 +3450,8 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
- 	}
- out_free_stack:
- 	pstack__delete(browser->pstack);
-+	zfree(&hists->symbol_filter_str);
-+	hists__filter_by_symbol(hists);
- out:
- 	hist_browser__delete(browser);
- 	free_popup_options(options, MAX_OPTIONS);
+@@ -2,6 +2,7 @@
+ #include <dirent.h>
+ #include <errno.h>
+ #include <inttypes.h>
++#include <limits.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
 -- 
 2.55.0.141.g00534a21ce-goog
 
