@@ -1,168 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3576C28727D;
-	Thu, 16 Jul 2026 02:54:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C0026738C
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 03:05:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784170447; cv=none; b=Wh+50lLYZlQQsJ3TC27qRXBq85PiA5jRFEUQGNl8mfhrPJpY4caY6y8RsdJhBuIyxIb/Yy41S6lkymZu5g9JoZkyfxcC7tprfLIfEV4SX8vnqkv31GC1Qh6Lc+flWdEmh7l9fZaEavT7ikCa9I+c0dKJB3jDQ/RvPjlWQRtcMr4=
+	t=1784171156; cv=none; b=NSYcka7PHfQjgnCc+RfCvYBlz4MqXJ4DhzbkG3InDEy6Ni+W/8GuxyjqmaOwGYYUrfJ7rsWAinqK+uAmQ6JgxyxK4/Rz/iYkQaLa3vsuKYU5MmBq2DosAUZy/Hq1MbJVRFXowVxIVp2VU5HwLQgYPidczZtwGF0mGqMMIvbXByU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784170447; c=relaxed/simple;
-	bh=UPAaiefjT3KtnUDQJsFJF6iMoSkAJIeCr0Pkmlf2r2E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=bRz0yHcS9kfaP5ZqYboolpDjWocYIwXk66v+ZuitFwDUaBwArKQWEzYvWg/zzen0xe/h6pfu+d8JLysFOBJ+u1xXdbt3HFisnnwWIJfdrA2JCsKdNSiaYmcA5MPjPQqVsMtSF+5A6/UaNyLVm6nngUhkD7JRcYYJ1uY47h/jQBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cO+OITzO; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784171156; c=relaxed/simple;
+	bh=DmNCRk/l/+4aG9cTcyAfhEPxz1h9que/8j/naxfC5jk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=lbanbrRZ9rGCOAFXtTe8LTLjehkFmGk/NgDQ2JBEfjb7AxBxpRLTm+zXHZmBs+SPO+6yRGoSfVfvaN3L/u5Bp/Wf5dTR/wy4miR0dMVWhXZSsvc4EAVM9sbU7gQac1+I3x9mDPJsJ/FtFNhN1bX5nvdmXkQ/V6N+mmYDyhQsRfE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SxjGLZYI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cO+OITzO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 837B71F000E9;
-	Thu, 16 Jul 2026 02:54:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SxjGLZYI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7E401F000E9;
+	Thu, 16 Jul 2026 03:05:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784170446;
-	bh=QXWRckHLceC0QLqmkamOM2vfTOTie+qpP+WLZjdh/CM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cO+OITzOHnkljGrnAggwbLMwFtkS6Yrha/qdH3utFpWSwC/m3SJNWl9pXWMsYYVsH
-	 rjIwENVbMzzF0RsgZnCx3U9uuEbq0PkNcdGuGcTLz8ru+ULhND7c5zm8d7MsrYseZO
-	 z9o6RmLMB+hsgF2HTdJ44YAlEhwNpgrzHk1QYPs+RXLzQE40jvg2iUefiaVLmpn25l
-	 QH7wqlY5EHpa8D3Wcap/wkvdvA3ZLZDYMKv4+Ky2ClBjhmZRijJHmVH/3LE5WVIHu2
-	 3+dY6g72Ojmk894yUcPQy4X0GVnvqizUkMAyQ39w6tPX6riwyrXu8d3Utq5iin3Pie
-	 zNrJa2Cj/fn8Q==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	x86@kernel.org
-Cc: Jinchao Wang <wangjinchao600@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v8 9/9] selftests: ftrace: Add wprobe trigger testcase
-Date: Thu, 16 Jul 2026 11:53:59 +0900
-Message-ID: <178417043960.209165.373192587945789724.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <178417033089.209165.16717079876036408877.stgit@devnote2>
+	s=k20260515; t=1784171155;
+	bh=ElYxNrxxVQh3wkQUYHs3vQUH/XQYzQc3WOuTHHCjCo8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=SxjGLZYIf4mkfDAFmXIGV4xdPukkA8STs3298BRA6b+ayLbUSypm/rjdzkzD/uc3O
+	 utzkXmfNOsWbVEZkpnR3GNHhgF6Yt5KTu0xeAxV9Aah/e2nF5Reg+eSDsD6EGdjdcQ
+	 hXaKu+hjyO2CSUuWhhP+KN2Rr682NeElJk4ASL/aK9ObFKGG6KFpXzZHffuNUuWPK9
+	 mX/hz510CFECGsdLrZ3ANm9NexFnnDHHxsndgkPDUWsmBCoNIOsAJRIxNBf6ME37zD
+	 bi25Zo2HpTJ21cPlRS1+MdohmG2NCZZheepJ6ieTBPFG3JIXXAy1xV6eMp8UPwNSQW
+	 2IdcOZT5BBYAg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v8 3/9] selftests: tracing: Add a basic testcase for
+ wprobe
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <178417036552.209165.10709545532621528052.stgit@devnote2>
 References: <178417033089.209165.16717079876036408877.stgit@devnote2>
-User-Agent: StGit/0.19
+ <178417036552.209165.10709545532621528052.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 16 Jul 2026 03:05:54 +0000
+Message-Id: <20260716030554.D7E401F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] Error handling blocks checking `$?` are dead code because the test =
+script runs under `set -e`.
+--
 
-Add a testcase for checking wprobe trigger. This sets set_wprobe and
-clear_wprobe triggers on fprobe events to watch dentry access.
-So this depends on both wprobe and fprobe.
+--- Patch [3]: [PATCH v8 3/9] selftests: tracing: Add a basic testcase for =
+wprobe ---
+commit 0ee1282cbf519c56b378956b7875111e8d6bc222
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v8:
-  - Use TMPDIR for making a test file.
-  - Ensure the fprobe and target functions exists, if not, exit
-    with UNRESOLVED (== skip).
- Changes in v7:
-  - Add a newline at the end of file.(style fix)
-  - Use dentry_kill instead of __dentry_kill.
- Changes in v5:
-  - Enable CONFIG_WPROBE_TRIGGERS in the config for ftrace test.
- Changes in v3:
-  - Newly added.
----
- tools/testing/selftests/ftrace/config              |    1 
- .../ftrace/test.d/trigger/trigger-wprobe.tc        |   65 ++++++++++++++++++++
- 2 files changed, 66 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+selftests: tracing: Add a basic testcase for wprobe
 
-diff --git a/tools/testing/selftests/ftrace/config b/tools/testing/selftests/ftrace/config
-index d2f503722020..ecdee77f360f 100644
---- a/tools/testing/selftests/ftrace/config
-+++ b/tools/testing/selftests/ftrace/config
-@@ -28,3 +28,4 @@ CONFIG_TRACER_SNAPSHOT=y
- CONFIG_UPROBES=y
- CONFIG_UPROBE_EVENTS=y
- CONFIG_WPROBE_EVENTS=y
-+CONFIG_WPROBE_TRIGGERS=y
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
-new file mode 100644
-index 000000000000..5ffe43f886d1
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
-@@ -0,0 +1,65 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: event trigger - test wprobe trigger
-+# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README events/sched/sched_process_fork/trigger
-+
-+echo 0 > tracing_on
-+rm -f $TMPDIR/hoge
-+
-+:;: "Add a wprobe event used by trigger" ;:
-+echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
-+
-+# we will skip this test if fprobe is not supported.
-+if ! grep -Fq "f[:[<group>/][<event>]] <func-name>[%return] [<args>]" README; then
-+    echo "UNRESOLVED: fprobe is not supported"
-+    exit_unresolved
-+fi
-+
-+# we will skip this test if the target function does not exist.
-+if ! grep -wq "do_truncate" /proc/kallsyms; then
-+    echo "UNRESOLVED: do_truncate not found"
-+    exit_unresolved
-+fi
-+if ! grep -wq "dentry_kill" /proc/kallsyms; then
-+    echo "UNRESOLVED: dentry_kill not found"
-+    exit_unresolved
-+fi
-+
-+:;: "Add events for triggering wprobe" ;:
-+echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
-+echo 'f:dentry_kill dentry_kill dentry=$arg1' >> dynamic_events
-+
-+:;: "Add wprobe triggers" ;:
-+echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
-+echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
-+cat events/fprobes/truncate/trigger | grep ^set_wprobe
-+cat events/fprobes/dentry_kill/trigger | grep ^clear_wprobe
-+
-+:;: "Ensure wprobe is still disabled" ;:
-+cat events/wprobes/watch/enable | grep 0
-+
-+:;: "Enable events for triggers" ;:
-+echo 1 >> events/fprobes/truncate/enable
-+echo 1 >> events/fprobes/dentry_kill/enable
-+
-+:;: "Start test workload" ;:
-+echo 1 >> tracing_on
-+
-+echo aaa > $TMPDIR/hoge
-+echo bbb > $TMPDIR/hoge
-+echo ccc > $TMPDIR/hoge
-+rm $TMPDIR/hoge
-+
-+:;: "Check trace results" ;:
-+cat trace | grep watch
-+
-+:;: "Ensure wprobe becomes disabled again" ;:
-+cat events/wprobes/watch/enable | grep 0
-+
-+:;: "Remove wprobe triggers" ;:
-+echo '!set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
-+echo '!clear_wprobe:watch' >> events/fprobes/dentry_kill/trigger
-+! grep ^set_wprobe events/fprobes/truncate/trigger
-+! grep ^clear_wprobe events/fprobes/dentry_kill/trigger
-+
-+exit 0
+This commit adds a basic testcase 'add_remove_wprobe.tc' to verify the addi=
+ng
+and removing operations for wprobe events.
 
+> diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wp=
+robe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.=
+tc
+> new file mode 100644
+> index 0000000000000..5ddf28ddd2c4b
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+> @@ -0,0 +1,69 @@
+> +#!/bin/sh
+
+[ ... ]
+
+> +echo "w:my_wprobe w@$TARGET" >> dynamic_events
+> +
+> +grep -q my_wprobe dynamic_events
+> +if [ $? -ne 0 ]; then
+
+[Severity: Low]
+Since ftracetest executes these scripts with errexit (set -e) enabled, will
+the script exit immediately if the grep command fails?
+
+If the script aborts on the failed command, this if block and the others li=
+ke
+it throughout the script become dead code, preventing the custom diagnostic
+messages from being printed in the failure logs.
+
+> +    echo "Failed to create wprobe event"
+> +    exit_fail
+> +fi
+> +
+> +test -d events/wprobes/my_wprobe
+> +if [ $? -ne 0 ]; then
+
+[Severity: Low]
+Similarly here, does the test command cause an immediate exit before $? can=
+ be
+evaluated?
+
+> +    echo "Failed to create wprobe event directory"
+> +    exit_fail
+> +fi
+
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178417033089.209165=
+.16717079876036408877.stgit@devnote2?part=3D3
