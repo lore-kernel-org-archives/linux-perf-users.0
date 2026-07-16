@@ -1,243 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93B0D41B8E4;
-	Thu, 16 Jul 2026 12:59:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74FE041F37C;
+	Thu, 16 Jul 2026 12:59:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784206774; cv=none; b=uSKGJDJzVRxvaVLUYfEdUIRz+UbwGO5NUGxpfzrh6685f3FPqvSbguP9fdRJTXYtfz9h6jfk9WFxrQFhf6z5DAZ/+v1cgfoACmMmKKcDIOz6CFqe/jG+/1TNKpKMsEMbV7xQu6kZ9dxehSDkhf8lG/xOWWsDadyo5FA+DHtMojE=
+	t=1784206780; cv=none; b=AWBFDVT13tTLQLsdNRMyYRtUqgWBUNA+h7fXFoKIurkdZZ853XNTp9XHqqchLS7pFpdA/VJXuMRqyimlo4GRUK/lpDQi8otH/rnH7AON677RYI/Pwq6Aj1Sf3VAj/ZpukEWJ8aLOXEXkrITWYNB6XSrWLPohUT1U6eD5tT/QX7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784206774; c=relaxed/simple;
-	bh=Z8d2Y93UNJnvjgmzxqFvJb1ohgg70kbo8kj+FdYkAvk=;
+	s=arc-20240116; t=1784206780; c=relaxed/simple;
+	bh=t7fhUZzJT4qZZAXrfEXIsIZIhLUygCk1BaCIuFXx3wI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=VLs0A0KXXcyeiWL6j+lwZ3cpif/3FYiTOL7z7NGJBYQULRwKf2eBrHDOvQvsP2yyoLB/dPYfxonVlGBNHXosTxLCkogih8bsjIdqlyiG3VkpEGyPjcMQRUyJpw7jK5mA+M17q2nQg9oXXMCVVARjKTHryNxsgxxmKkqIoSa0vrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D36d53Dr; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=tff5c+/y9S8zHDyXBXq2dLJBAj5a0HimeOCbFbyCwszOyn6i5Luod5walqFSoKylpJnqwRmn2Cy3bMKhnKdOsNKBG8S7T0w0UkzEV/R5fPHkYEE1ImNdfMhA9Y/CzvGnIv8XQtiJnzeUIs+bNaf/tfRHiYidIFvNDYowuowhPYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jgDpmqQ/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D36d53Dr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 078981F00A3A;
-	Thu, 16 Jul 2026 12:59:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jgDpmqQ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6BF91F00A3A;
+	Thu, 16 Jul 2026 12:59:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784206773;
-	bh=ElAdf+OaR1FAE8nRi++tcdAgvUoyFAxBx5hwmbFrMKs=;
+	s=k20260515; t=1784206779;
+	bh=hS66ZXYYGoAh87Bknj8kTIMTIVapmK3qYDvLb8h9VBI=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=D36d53DrjBp15Mj+tEVOofDCMBgBTqWnjViVKybzGXDucQ8ZA/yLMAFmzqDCKZPH/
-	 J4vzcGp2OWzM+z2B3BeJz7tWZpI7ks514Sku5aFsI+SVjV7GBleSdtbPKeGKxnRBux
-	 Pxmmcq8oho0Iash+ieaXSGn5XpksaAyIBPCn8WrgxyX/u9JSoDo5ICzQVx7mg4E17x
-	 L+pt2O6ZP+dt6tBqPiCu082HWlVWUw39nutlkZ+Os4QLmpwcXxPTuMHRFiMontuywG
-	 1kqjcEbe77XqGJLbkKqNWvcl8EVPaw17TjEoFAMFTaGd5CZVwmwO+eS+YXkdDDVJTK
-	 048kVdN+IGvUA==
+	b=jgDpmqQ/JxHIYGtiWU5RlOCxVgPUrggND37NCyFcMK1cJzAvkCjC/T14+kOZK43jC
+	 9dPRe/W9UmWh6sXwPq+ViqwW5GMcSvHxPGOW8qo6VXa2xw/loqonDcka0goneaYj6V
+	 Iysv+/aMuI37t04xshA5KKdhwG/ZOhUrF4ewDSavCuEeywna3Y/lxqK04pNCq2ub/8
+	 s2PMsrTULAWZY9ZS1khXyVmy+/lnX3vf6XhhyRhDfHfn8zJVo0wOmsjq5mzcJagQy0
+	 +YnKIE5LW7zhDd7aU6aK/JefadMZbsNMqzb73JfMsCCUA/fTrpDQ8RCyWNYjyHMmqX
+	 hNCefTiD7te0Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 03/15] riscv/mm: implement Svnapot contpte read-side
- helpers
+Subject: Re: [PATCH v2 01/15] riscv: introduce raw PTE helpers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Yunhui Cui" <cuiyunhui@bytedance.com>
 Cc: linux-perf-users@vger.kernel.org, kvm@vger.kernel.org
-In-Reply-To: <0c93b57b5315147c6ae6586371d795fb629dcc7a.1784201104.git.cuiyunhui@bytedance.com>
+In-Reply-To: <2bde82cde4c262d35663d386e8a16455c76ec3e6.1784201104.git.cuiyunhui@bytedance.com>
 References: <cover.1784201104.git.cuiyunhui@bytedance.com>
- <0c93b57b5315147c6ae6586371d795fb629dcc7a.1784201104.git.cuiyunhui@bytedance.com>
+ <2bde82cde4c262d35663d386e8a16455c76ec3e6.1784201104.git.cuiyunhui@bytedance.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 16 Jul 2026 12:59:32 +0000
-Message-Id: <20260716125933.078981F00A3A@smtp.kernel.org>
+Date: Thu, 16 Jul 2026 12:59:38 +0000
+Message-Id: <20260716125938.E6BF91F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Critical] Missing single-PTE modifier overrides for NAPOT blocks break c=
-ontiguous encoding, causing Use-After-Free and lockups.
-- [High] Unbounded retry loop in `napotpte_ptep_get_lockless()` causes same=
--CPU deadlock if interrupted by NMI/IRQ.
-- [High] `page_table_check` refcount corruption during Svnapot block conver=
-sion/clearing.
-- [Medium] `ptep_get` and `ptep_get_lockless` strip the `_PAGE_NAPOT` bit, =
-breaking `pte_leaf_size()` for generic MM.
+
+New issues:
+- [Low] The patch declares raw PTE helpers `__ptep_test_and_clear_young` an=
+d `__ptep_set_access_flags` but never defines them, causing a linker error.
+
+Pre-existing issues:
+- [High] Non-atomic read-modify-write in `__ptep_set_wrprotect` can overwri=
+te concurrent hardware A/D bit updates, causing silent data corruption.
 --
 
---- Patch [3]: [PATCH v2 03/15] riscv/mm: implement Svnapot contpte read-si=
-de helpers ---
-commit 5e07f7373fe29103de43866f47711b800fb7a33e
+--- Patch [1]: [PATCH v2 01/15] riscv: introduce raw PTE helpers ---
+commit 3ca72eca5363bad7487aaf256a6d44b7c83506ca
 Author: Yunhui Cui <cuiyunhui@bytedance.com>
 
-riscv/mm: implement Svnapot contpte read-side helpers
+riscv: introduce raw PTE helpers
 
-This patch introduces read-side helpers for Svnapot contiguous mappings to
-allow generic MM code to operate on the logical sub-PTEs. The public PTE
-getters are routed through these helpers.
+Svnapot needs RISC-V to distinguish between two PTE views: the raw encoded
+entries used by architecture code, and the logical per-page PTE view that
+will later be exposed to generic MM paths. Split the low-level RISC-V PTE
+operations from the public helpers so the raw helpers can keep operating on
+the hardware encoding.
 
 > diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pg=
 table.h
-> index a0f64e980e981..fce6d04ea65db 100644
+> index a810655ce8f9b..8ca5da9534967 100644
 > --- a/arch/riscv/include/asm/pgtable.h
 > +++ b/arch/riscv/include/asm/pgtable.h
-> @@ -706,37 +706,37 @@ static inline pte_t __ptep_get_lockless(pte_t *ptep)
->  	return __ptep_get(ptep);
->  }
+[ ... ]
+>  #define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS	/* defined in mm/pgtable.c */
+>  extern int ptep_set_access_flags(struct vm_area_struct *vma, unsigned lo=
+ng address,
+>  				 pte_t *ptep, pte_t entry, int dirty);
+> +int __ptep_set_access_flags(struct vm_area_struct *vma,
+> +			    unsigned long address, pte_t *ptep,
+> +			    pte_t entry, int dirty);
+>  #define __HAVE_ARCH_PTEP_TEST_AND_CLEAR_YOUNG	/* defined in mm/pgtable.c=
+ */
+>  bool ptep_test_and_clear_young(struct vm_area_struct *vma,
+> -		unsigned long address, pte_t *ptep);
+> +			       unsigned long address, pte_t *ptep);
+> +bool __ptep_test_and_clear_young(struct vm_area_struct *vma,
+> +				 unsigned long address, pte_t *ptep);
 > =20
-> +#ifdef CONFIG_RISCV_ISA_SVNAPOT
-> +
-> +#define ptep_get ptep_get
-> +static inline pte_t ptep_get(pte_t *ptep)
-> +{
-> +	pte_t pte =3D __ptep_get(ptep);
-> +
-> +	if (likely(!pte_present_napot(pte)))
-> +		return pte;
-> +
-> +	return napotpte_ptep_get(ptep, pte);
-> +}
-> +
-> +#define ptep_get_lockless ptep_get_lockless
-> +static inline pte_t ptep_get_lockless(pte_t *ptep)
-> +{
-> +	pte_t pte =3D __ptep_get_lockless(ptep);
-> +
-> +	if (likely(!pte_present_napot(pte)))
-> +		return pte;
-> +
-> +	return napotpte_ptep_get_lockless(ptep);
-> +}
-> +
 
-[Severity: Critical]
-Does this implementation miss overriding ptep_get_and_clear and=20
-ptep_modify_prot_start for NAPOT blocks?
+[Severity: Low]
+Are the newly declared __ptep_test_and_clear_young() and
+__ptep_set_access_flags() functions implemented anywhere in this patch?
 
-If a NAPOT block is partially unmapped or modified via madvise() or
-mprotect(), the generic MM code will call ptep_get_and_clear() on a single
-PTE. Because these functions are not overridden, they fall back to the raw
-__ptep_get_and_clear().
-
-This clears only one PTE, leaving the other 15 with _PAGE_NAPOT still set,
-which breaks hardware rules. Additionally, it returns the raw NAPOT PTE whe=
-re
-pte_pfn() evaluates to the base PFN, causing the core MM to drop the
-mapcount and refcount on the base sub-page instead of the actual targeted
-sub-page. Could this lead to data corruption or a use-after-free?
+They appear to be declared here but missing definitions, which could cause a
+linker error when __ptep_clear_flush_young() calls them below.
 
 [ ... ]
+>  #define __HAVE_ARCH_PTEP_SET_WRPROTECT
+> -static inline void ptep_set_wrprotect(struct mm_struct *mm,
+> -				      unsigned long address, pte_t *ptep)
+> +static inline void __ptep_set_wrprotect(struct mm_struct *mm,
+> +					unsigned long address, pte_t *ptep)
+>  {
+>  	pte_t read_pte =3D READ_ONCE(*ptep);
+>  	/*
+> @@ -705,9 +784,11 @@ static inline void ptep_set_wrprotect(struct mm_stru=
+ct *mm,
+>  			((pte_val(read_pte) & ~(unsigned long)_PAGE_WRITE) | _PAGE_READ));
+>  }
 
-> diff --git a/arch/riscv/mm/contpte.c b/arch/riscv/mm/contpte.c
-> new file mode 100644
-> index 0000000000000..43ea76e424492
-> --- /dev/null
-> +++ b/arch/riscv/mm/contpte.c
-> @@ -0,0 +1,273 @@
+[Severity: High]
+This is a pre-existing issue, but does this non-atomic read-modify-write
+sequence overwrite concurrent hardware A/D bit updates?
 
+If a concurrent hardware A/D bit update (e.g. via the RISC-V Svadu hardware
+page table walker) occurs between the READ_ONCE(*ptep) and the
+atomic_long_set(), it seems any bit set by the hardware during this window
+would be permanently lost. Could this lead to silent data corruption if a
+dirty bit is lost on a writable page during writeback?
+
+This would also propagate to huge pages since pmdp_set_wrprotect()
+delegates to this helper.
+
+> +#define __ptep_set_wrprotect __ptep_set_wrprotect
+> +
+>  #define __HAVE_ARCH_PTEP_CLEAR_YOUNG_FLUSH
+> -static inline bool ptep_clear_flush_young(struct vm_area_struct *vma,
+> -		unsigned long address, pte_t *ptep)
+> +static inline bool __ptep_clear_flush_young(struct vm_area_struct *vma,
+> +					    unsigned long address, pte_t *ptep)
+>  {
+>  	/*
 [ ... ]
-
-> +static inline pte_t napotpte_subpte(pte_t *ptep, pte_t pte)
-> +{
-> +	unsigned long pfn;
-> +	pgprot_t prot;
-> +
-> +	if (!pte_present_napot(pte))
-> +		return pte;
-> +
-> +	pfn =3D pte_pfn(pte) + (ptep - napot_align_ptep(ptep));
-> +	prot =3D __pgprot(pte_protval_no_pfn_no_napot(pte));
-> +
-> +	return pfn_pte(pfn, prot);
-> +}
-
-[Severity: Medium]
-Since this helper strips the _PAGE_NAPOT bit by using=20
-pte_protval_no_pfn_no_napot(pte), does it break pte_leaf_size() for generic=
- MM?
-
-If pte_leaf_size() expects the Svnapot bit to be present to return the
-contiguous block size, returning a subpte without it will cause callers like
-perf_get_page_size() to falsely evaluate the mapping as PAGE_SIZE.
-
-> +
-> +static inline pte_t __napot_ptep_get_and_clear(struct mm_struct *mm,
-> +					       unsigned long addr, pte_t *ptep)
-> +{
-> +	pte_t pte;
-> +
-> +	pte =3D __pte(atomic_long_xchg((atomic_long_t *)ptep, 0));
-> +	page_table_check_pte_clear(mm, addr, pte_mknonnapot(pte, addr));
-> +
-> +	return pte;
-> +}
-
-[Severity: High]
-Can this cause page_table_check refcount corruption during Svnapot block
-conversion?
-
-pte_mknonnapot() returns the raw PTE unmodified. Because the raw Svnapot PFN
-encoded in all 16 PTEs is identically base_pfn | 0x8, pte_pfn() inside
-page_table_check_pte_clear() evaluates to the exact same base_pfn for all
-16 iterations.=20
-
-Will this cause the refcount for the base PFN to be decremented 16 times
-while leaking the remaining 15 mapped sub-PFNs?
-
-> +
-> +static void napotpte_convert(struct mm_struct *mm, unsigned long addr,
-> +			     pte_t *ptep, pte_t target)
-> +{
-> +	unsigned long start_addr, end, ptent_addr;
-> +	pte_t *start_ptep;
-> +	pte_t ptent, pte;
-> +	unsigned int i, nr;
-> +
-> +	start_addr =3D napot_align_addr(addr);
-> +	start_ptep =3D napot_align_ptep(ptep);
-> +	nr =3D napotpte_pte_num();
-> +	end =3D start_addr + napotpte_size();
-> +
-> +	for (i =3D 0; i < nr; i++) {
-> +		ptent_addr =3D start_addr + i * PAGE_SIZE;
-> +		ptent =3D __napot_ptep_get_and_clear(mm, ptent_addr,
-> +						   start_ptep + i);
-
-[Severity: High]
-Does this create a preemption window that can lead to a CPU deadlock?
-
-napotpte_convert() modifies NAPOT blocks by clearing their 16 PTEs sequenti=
-ally
-while holding the PTL, but it does not disable local interrupts.
-
-[ ... ]
-
-> +pte_t napotpte_ptep_get_lockless(pte_t *orig_ptep)
-> +{
-> +	pte_t orig_pte, pte;
-> +	pte_t *ptep;
-> +	unsigned int i, nr;
-> +
-> +	if (!napot_hw_supported())
-> +		return READ_ONCE(*orig_ptep);
-> +
-> +	nr =3D napotpte_pte_num();
-> +
-> +retry:
-> +	orig_pte =3D READ_ONCE(*orig_ptep);
-> +	if (!pte_present_napot(orig_pte))
-> +		return orig_pte;
-> +
-> +	ptep =3D napot_align_ptep(orig_ptep);
-> +
-> +	for (i =3D 0; i < nr; i++, ptep++) {
-> +		pte =3D READ_ONCE(*ptep);
-> +
-> +		if (!napotpte_is_consistent(pte, orig_pte))
-> +			goto retry;
-
-[Severity: High]
-If a perf NMI interrupts napotpte_convert() on the same CPU while the block=
- is
-partially cleared and attempts a lockless page table walk, won't this loop
-spin indefinitely?
-
-The getter detects the intermediate inconsistency, jumps to retry, and spins
-forever because the writer is interrupted on the exact same CPU and cannot
-resume to restore consistency.
+> -	return ptep_test_and_clear_young(vma, address, ptep);
+> +	return __ptep_test_and_clear_young(vma, address, ptep);
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1784201104.gi=
-t.cuiyunhui@bytedance.com?part=3D3
+t.cuiyunhui@bytedance.com?part=3D1
