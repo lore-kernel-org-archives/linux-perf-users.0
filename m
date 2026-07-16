@@ -1,124 +1,139 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA80941F37C
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 12:44:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0236141F35F;
+	Thu, 16 Jul 2026 12:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784205900; cv=none; b=UVUUeej3v1WBZB2vgct/ZbsEhfKtvzDkQJmy9COODwQPY3YOoB7YSrMg6eE8n9yd355l6SVhGfztxFifRVrvdTjgWSB5xhEz4EgmkubKb/kQBJM81qUYSc0dgucWwA7g5Po5Pgh6VNySPTAPUM9DjeUKyZF9yeH455QeKDvf0DE=
+	t=1784206658; cv=none; b=ftd6MzYmm+81IQux6PY1NVBe3H0lNCCX8rXFGueN39B3AewqSAWh7vV+jV01XpmvrPsDRTQe0fccYe3+K74gWVjEfq7qfW39gsy9hbHYFFIFlc9OyoDO+pzsH5QDgYz4mtV7T/Xf+6RWLjb0fIrlRWYr4G0NrpT8Ub7pwmalQPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784205900; c=relaxed/simple;
-	bh=ybAp/Hmnc3TAueG66xnodqF9+Bp3yZdy6u6JbQGTD4E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=i967Y7jEv4q4ZJBLhV5I3PeQd4u2hX04WOpvZgaY3pe1CsVc0ZhWN41x+z0coK00m2q208Oy9Ids7Tolmh4RTapYWIxHd075bWP7e8sGF1euap2MR5JARl/+365x8F4G2xy2ydF24O161AMsVK7npBYktcbPkAULa1VcsJ50iPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=MUbSTRUR; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1784206658; c=relaxed/simple;
+	bh=ObICsRG/XlaCC3aSq2n0utSllkXYt4iwg+idnUDFj3s=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=BLwDJEwfrKjtmhrNttmVoAGhRhisTKC7lW8Df4e209Nes1ZJmJ56WU4yhrPP3yxykm78k4YxVKXbo2gXrEBEPn1dLi6YPfXxXfBzVqQwQbs9XPTvp4p4Hip7xmFiVvcRCQFbdonFolsZ9CgsXYWu97NV0VjC+AdBk51wKyFgdIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3c/Mxee; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="MUbSTRUR"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2caed617615so74436495ad.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 05:44:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1784205898; x=1784810698; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=igNuDXnwdUCT2dm/vIcI/M9kQJ6fMwWaxma7wgKaCpI=;
-        b=MUbSTRURVANI8QAKE7ELCYR0rI7ExejRVAjeV9XMDIhl5okUOjsWO4JBdblNUhYmtH
-         ppZCrNRxUk/330nLIPhHo+fI5J7cJCukbhaGP807E9LqxMy/bkaVJlicpb5Hjf8yXYl+
-         PTpc2IF71XhO4uJ5QPFicMgiSMYwV3BPjtsF6IntBi05yOsDRQJq8vh0d2fD+NxHLidh
-         wqbdlz3QrVgO2dw/WO7ATLh3cBaJ5YUZHLaM0eGXOPLxS3VCeRW3IVMv/kiull43rv0F
-         UqXNjc7ykwlt10+k986cuFuk1GZ6hnGni/37BVT4BjOQxTvkEWmsyFXXWca6MZ4ce/v3
-         Cc7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784205898; x=1784810698;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=igNuDXnwdUCT2dm/vIcI/M9kQJ6fMwWaxma7wgKaCpI=;
-        b=GkMFjfv8OqLLf8XzAv5+xLUJYEDUmgQs9OJsn7NgF+FHfTR3hxbJ7soafhblygV/Hw
-         uZJctWbdTKeOll40DtEqkjRdNBJaGaJbc1/BsCBhKkv10a6agYh677cXfY3nECbDQXgp
-         yzUtTy88rs1ahcvG1U+xJGjOscz/JyeLNe6I79nsfN5PdOg1QVwBDUghtwM1LWobPLS5
-         zJ+qGpioIz1zfBzOne1IJia0NA7Y/Obr5MErFQxclsDBIigzl1UxgVpPxs8mGLrp8aAo
-         gVK9DYEQNNrdV9x/dW5s2SIa8sSyuo1y9+Dq/E8NJDc0tjlWk9a4+5db2UDB0+zAizKs
-         MdFQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqnJ1awcY/dXp6t698L2i4ZPtbjph/cB2S7O5/o5Jo0Xr4xZ2XfSI0+iENgPOAxuTQbXtDO/W9ZNdogvBKJIB0I@vger.kernel.org
-X-Gm-Message-State: AOJu0YwAzDdJPnNVVibfuJVqzubNlhVVQpstSg+Co2GQ6lmSuxsen/BW
-	1ImGeqSO+MURzTJtuFLWWV9YFtBMrSTJAHexPrTgjIFJbWUocSjNs2KaMm+8tY3TuLc=
-X-Gm-Gg: AfdE7cneFDNgtJCdovdsrzF/6WE8hm/62Wuqe3/kTU+zNW/6VVQProkmcvCWECzz7Zx
-	pk7U+uB5vJ2JqRtJd34EnudwplFKJL33fEXxuZQRYLoXRvC20ILZSlz5s3r7dLRNthdOcIF+0vY
-	nqNaOB/m6ALL6RXjWIfYsnjB28sI0rhCYEPvtW3FGMmcaMhxaXILgKSO/+EU4JcZzkX34QgdfxW
-	LQIZcM/TxaJw6F40CSP5c/kNAxJ5dh/Jrm6ENTsjF6WyCUCx1b0uVAIGComyqrXjAyeb90YsKNR
-	KCVnFu06qfMh8487TQqzKU6O+EAtb3otVMyScFzP9iOPT53CJ6mHbMzjp3E/08fQISMyuvDwyRr
-	+RzraZg/W9AEzarXJryB5gRdHdIrA8+Cbs+r72Cd+QzdCJckE1Q2T0ArJTDsrj3SNQszs1KLf63
-	pN0FmhXd8JU9ZQZDGCvm1RBgs=
-X-Received: by 2002:a05:6a21:7318:b0:3bf:a881:4094 with SMTP id adf61e73a8af0-3c36c35d245mr7182183637.50.1784205898111;
-        Thu, 16 Jul 2026 05:44:58 -0700 (PDT)
-Received: from L6YN4KR4K9.bytedance.net ([2408:8606:1800:501::2:f])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cb258eeaba2sm1730793a12.12.2026.07.16.05.44.49
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Thu, 16 Jul 2026 05:44:57 -0700 (PDT)
-From: Yunhui Cui <cuiyunhui@bytedance.com>
-To: linux-riscv@lists.infradead.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Cc: linux-arch@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	kvm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-efi@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	kasan-dev@googlegroups.com,
-	Yunhui Cui <cuiyunhui@bytedance.com>
-Subject: [PATCH v2 15/15] riscv: mm: Request large exec folios for Svnapot
-Date: Thu, 16 Jul 2026 20:41:50 +0800
-Message-Id: <88438f09b79ceab1548aff17384814b7f699a43d.1784201104.git.cuiyunhui@bytedance.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
-In-Reply-To: <cover.1784201104.git.cuiyunhui@bytedance.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3c/Mxee"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CDD91F000E9;
+	Thu, 16 Jul 2026 12:57:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784206655;
+	bh=XM1G03t5o5IzfuWa037gvOBoG5H4m9xks97J1DYquvU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=d3c/MxeefhMRsOQ/zaw4Jni5xAXnGYujiwnrn5AxzDWahjd2NuEJV+qBu5K8MwKps
+	 MPDCNKiWyktijR5tKx9d1cXF+QWz/uIQocQzFLZOz2z4h0ZljX2godvHFAT8AlHnle
+	 +aD/ecYG9PFRK+uY98rO2wIV3RIsilgnf8jV//SJZkJ8i2Q9HSyAuSUnMsTeabl1Et
+	 FoIH4olt9gJW6mZQZtPo7nNx9wA0v7dwdC5XCIfsad3JkT58UGHdIOUYAqX+3yfMaF
+	 UOwBa39/BjKfHSzkia94R5FPXwprMSAs8i0Hf6B3NDuHDH+nW00u7/oGLwTwDsAuiT
+	 56qIdj/RXuTsw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 07/15] riscv/mm: preserve Svnapot leaf-size semantics
+ for page-table consumers
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Yunhui Cui" <cuiyunhui@bytedance.com>
+Cc: linux-perf-users@vger.kernel.org, kvm@vger.kernel.org
+In-Reply-To: <180084b20de76f7ad61641e9b7abe6d103caf5f3.1784201104.git.cuiyunhui@bytedance.com>
 References: <cover.1784201104.git.cuiyunhui@bytedance.com>
+ <180084b20de76f7ad61641e9b7abe6d103caf5f3.1784201104.git.cuiyunhui@bytedance.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 16 Jul 2026 12:57:34 +0000
+Message-Id: <20260716125735.8CDD91F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The Svnapot MM support in this series allows generic MM paths to operate
-on folded 64KB executable mappings while preserving a per-page public PTE
-view. To benefit from that more often, executable file-backed mappings
-should be faulted in with a folio size that can be folded into a Svnapot
-range.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] Single-CPU deadlock in `napotpte_ptep_get_lockless` when called fr=
+om NMI/IRQ context during a partial Svnapot block update.
+--
 
-Request 64KB executable folios when Svnapot is available, so executable
-text mappings are more likely to be installed as folded Svnapot blocks
-and benefit from lower iTLB pressure. Keep the default order-0 behavior
-when Svnapot is unavailable.
+--- Patch [7]: [PATCH v2 07/15] riscv/mm: preserve Svnapot leaf-size semant=
+ics for page-table consumers ---
+commit 0488a9106519eab47850cf758ecce3d0c6bdf46e
+Author: Yunhui Cui <cuiyunhui@bytedance.com>
 
-Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
----
- arch/riscv/include/asm/pgtable.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+riscv/mm: preserve Svnapot leaf-size semantics for page-table consumers
 
-diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
-index b546e6614c558..6801ba135c483 100644
---- a/arch/riscv/include/asm/pgtable.h
-+++ b/arch/riscv/include/asm/pgtable.h
-@@ -296,6 +296,14 @@ static __always_inline bool has_svnapot(void)
- 	return riscv_has_extension_likely(RISCV_ISA_EXT_SVNAPOT);
- }
- 
-+/*
-+ * Request executable file-backed mappings to be read into 64KB folios when
-+ * Svnapot is available. A naturally aligned 64KB folio can be folded into a
-+ * Svnapot PTE range, reducing iTLB pressure for executable text.
-+ */
-+#define exec_folio_order() \
-+	(has_svnapot() ? NAPOT_CONT64KB_ORDER : 0)
-+
- static inline unsigned long pte_napot(pte_t pte)
- {
- 	return pte_val(pte) & _PAGE_NAPOT;
--- 
-2.39.5
+Svnapot keeps a folded 64KB mapping encoded in the page table, while the
+public PTE helpers may expose a logical per-page sub-PTE view. This patch
+uses the original page-table entry for leaf-size queries so consumers
+continue to observe the Svnapot leaf size instead of treating a folded
+mapping as PAGE_SIZE entries.
 
+> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pg=
+table.h
+> index da7ffea0dcd98..e4b9c05014c00 100644
+> --- a/arch/riscv/include/asm/pgtable.h
+> +++ b/arch/riscv/include/asm/pgtable.h
+[ ... ]
+> @@ -580,6 +580,17 @@ static inline pte_t pte_swp_clear_soft_dirty(pte_t p=
+te)
+>  					napot_cont_size(napot_cont_order(pte)) :\
+>  					PAGE_SIZE)
+> =20
+> +#define __ptep_leaf_size __ptep_leaf_size
+> +static inline unsigned long __ptep_leaf_size(pmd_t pmd, pte_t *ptep, pte=
+_t pte)
+> +{
+> +	pte_t raw_pte =3D READ_ONCE(*ptep);
+> +
+> +	if (pte_present_napot(raw_pte))
+> +		return pte_leaf_size(raw_pte);
+> +
+> +	return PAGE_SIZE;
+> +}
+
+[Severity: High]
+Can this lead to a single-CPU deadlock in NMI/IRQ context during a partial
+Svnapot block update?
+
+If a thread executing napotpte_convert() holds the page table lock (which
+disables preemption but leaves NMIs and hardware IRQs enabled) and
+sequentially clears PTEs in a 64KB Svnapot block:
+
+arch/riscv/mm/contpte.c:napotpte_convert() {
+...
+	for (i =3D 0; i < nr; i++) {
+		ptent_addr =3D start_addr + i * PAGE_SIZE;
+		ptent =3D __ptep_get_and_clear_noptc(start_ptep + i);
+...
+}
+
+And a Performance Monitoring Interrupt (PMI) interrupts this CPU after some
+but not all PTEs are cleared, the PMI handler may invoke
+perf_get_pgtable_size(), which eventually invokes the lockless PTE reader.
+
+This would lead to napotpte_ptep_get_lockless() entering a retry loop:
+
+arch/riscv/mm/contpte.c:napotpte_ptep_get_lockless() {
+...
+retry:
+	orig_pte =3D READ_ONCE(*orig_ptep);
+	if (!pte_present_napot(orig_pte))
+		return orig_pte;
+
+	ptep =3D napot_align_ptep(orig_ptep);
+
+	for (i =3D 0; i < nr; i++, ptep++) {
+		pte =3D READ_ONCE(*ptep);
+
+		if (!napotpte_is_consistent(pte, orig_pte))
+			goto retry;
+...
+}
+
+Because the NMI/IRQ handler prevents the interrupted thread on the same CPU
+from finishing the update, the block remains partially cleared. Does this
+cause the consistency check to fail repeatedly, resulting in an infinite
+loop and hard lockup?
+
+Userspace could potentially trigger this via perf_event_open by sampling
+memory accesses during Svnapot page migrations or unmapping.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1784201104.gi=
+t.cuiyunhui@bytedance.com?part=3D7
