@@ -1,139 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0236141F35F;
-	Thu, 16 Jul 2026 12:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43C641E6CB;
+	Thu, 16 Jul 2026 12:57:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784206658; cv=none; b=ftd6MzYmm+81IQux6PY1NVBe3H0lNCCX8rXFGueN39B3AewqSAWh7vV+jV01XpmvrPsDRTQe0fccYe3+K74gWVjEfq7qfW39gsy9hbHYFFIFlc9OyoDO+pzsH5QDgYz4mtV7T/Xf+6RWLjb0fIrlRWYr4G0NrpT8Ub7pwmalQPQ=
+	t=1784206670; cv=none; b=GeybwgqXhnZiYYn7ZM4nFLJVtVaFKe+cGDGjix0GZoW4N8u54fsUaSWm/fIyZUsFTUwRlHa7mwQ/D/HigNf0XnFcAFtfkTui+2M6xvKx5XkGjH0OeTGRe4L2vwUnlkqI+U1tfV5tgYaZFPQKr7NzNGd9bWUw1oeqHFolitleTqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784206658; c=relaxed/simple;
-	bh=ObICsRG/XlaCC3aSq2n0utSllkXYt4iwg+idnUDFj3s=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=BLwDJEwfrKjtmhrNttmVoAGhRhisTKC7lW8Df4e209Nes1ZJmJ56WU4yhrPP3yxykm78k4YxVKXbo2gXrEBEPn1dLi6YPfXxXfBzVqQwQbs9XPTvp4p4Hip7xmFiVvcRCQFbdonFolsZ9CgsXYWu97NV0VjC+AdBk51wKyFgdIg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d3c/Mxee; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d3c/Mxee"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CDD91F000E9;
-	Thu, 16 Jul 2026 12:57:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784206655;
-	bh=XM1G03t5o5IzfuWa037gvOBoG5H4m9xks97J1DYquvU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=d3c/MxeefhMRsOQ/zaw4Jni5xAXnGYujiwnrn5AxzDWahjd2NuEJV+qBu5K8MwKps
-	 MPDCNKiWyktijR5tKx9d1cXF+QWz/uIQocQzFLZOz2z4h0ZljX2godvHFAT8AlHnle
-	 +aD/ecYG9PFRK+uY98rO2wIV3RIsilgnf8jV//SJZkJ8i2Q9HSyAuSUnMsTeabl1Et
-	 FoIH4olt9gJW6mZQZtPo7nNx9wA0v7dwdC5XCIfsad3JkT58UGHdIOUYAqX+3yfMaF
-	 UOwBa39/BjKfHSzkia94R5FPXwprMSAs8i0Hf6B3NDuHDH+nW00u7/oGLwTwDsAuiT
-	 56qIdj/RXuTsw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 07/15] riscv/mm: preserve Svnapot leaf-size semantics
- for page-table consumers
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Yunhui Cui" <cuiyunhui@bytedance.com>
-Cc: linux-perf-users@vger.kernel.org, kvm@vger.kernel.org
-In-Reply-To: <180084b20de76f7ad61641e9b7abe6d103caf5f3.1784201104.git.cuiyunhui@bytedance.com>
-References: <cover.1784201104.git.cuiyunhui@bytedance.com>
- <180084b20de76f7ad61641e9b7abe6d103caf5f3.1784201104.git.cuiyunhui@bytedance.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 16 Jul 2026 12:57:34 +0000
-Message-Id: <20260716125735.8CDD91F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1784206670; c=relaxed/simple;
+	bh=5tEna8nwF9D4kqBmOX7zciSJS5c+LLEuZqAruUjqfpQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ZcvyZecFXEA+S0slkDiR7iHYxo6yuTeR4Eg24IQcuyJ5ajSHGUj8HlT31RWEyAQLiZF/Xa4KQMCfpPY/EhZitE4Ws7+O7ZXi+w0yiu0kSwxLXRAfYt/fh7KI+pGC1ckxbyvj3q4JXF9N5G+rjtxscgrMqLXv0aU6QOjFxQs7hzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4h1Ck92XjKzYQtLc;
+	Thu, 16 Jul 2026 20:57:21 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id E8DCF4057A;
+	Thu, 16 Jul 2026 20:46:03 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgD3KVuK0lhqbmDJBQ--.61146S2;
+	Thu, 16 Jul 2026 20:46:03 +0800 (CST)
+Message-ID: <cd081966-36e3-42a6-a06b-27b56b3dd663@huaweicloud.com>
+Date: Thu, 16 Jul 2026 20:46:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 03/21] perf llvm: Fix arm64 adrp instruction
+ disassembly mismatch with objdump
+From: Tengda Wu <wutengda@huaweicloud.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: james.clark@linaro.org, xueshuai@linux.alibaba.com,
+ Li Huafei <lihuafei1@huawei.com>, Peter Zijlstra <peterz@infradead.org>,
+ leo.yan@linux.dev, Ian Rogers <irogers@google.com>,
+ Kim Phillips <kim.phillips@arm.com>, Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Bill Wendling <morbo@google.com>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20260701035355.752944-1-wutengda@huaweicloud.com>
+ <20260701035355.752944-4-wutengda@huaweicloud.com> <ak89Hg1SWnn0DHCk@z2>
+ <8812e4e2-3a3b-4f32-bdb8-b963bc21b301@huaweicloud.com>
+Content-Language: en-US
+In-Reply-To: <8812e4e2-3a3b-4f32-bdb8-b963bc21b301@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:gCh0CgD3KVuK0lhqbmDJBQ--.61146S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxAw1DuFyUCry5Jw1kXw15CFg_yoWrKr13pr
+	WDKFW3JF4UJr1fursI9F1UuFyYkrWvqr4agr43Jw4IkrnIya43CryxGr4293WUZrWqvw4U
+	Zr4j9FW3WFn8JrDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] Single-CPU deadlock in `napotpte_ptep_get_lockless` when called fr=
-om NMI/IRQ context during a partial Svnapot block update.
---
 
---- Patch [7]: [PATCH v2 07/15] riscv/mm: preserve Svnapot leaf-size semant=
-ics for page-table consumers ---
-commit 0488a9106519eab47850cf758ecce3d0c6bdf46e
-Author: Yunhui Cui <cuiyunhui@bytedance.com>
 
-riscv/mm: preserve Svnapot leaf-size semantics for page-table consumers
+On 2026/7/9 15:49, Tengda Wu wrote:
+> 
+> 
+> On 2026/7/9 14:18, Namhyung Kim wrote:
+>> On Wed, Jul 01, 2026 at 03:53:37AM +0000, Tengda Wu wrote:
+>>> The operands of 'adrp' instructions parsed by libllvm are currently
+>>> represented as raw immediates rather than the "address <symbol+offset>"
+>>> format used by objdump. This inconsistency causes arm64_mov__parse()
+>>> to fail when parsing these instructions during post-processing.
+>>>
+>>> Example of the mismatch:
+>>>   Current: adrp x18, 8014
+>>>   Fix:     adrp x18, ffff800081f5f000 <this_cpu_vector>
+>>>
+>>> Fix this by manually extracting the target address from the raw adrp
+>>> instruction via symbol_lookup_callback(). The address is then converted
+>>> to a specific symbol during symbol__disassemble_llvm() and formatted
+>>> to match objdump's output, ensuring compatibility with existing
+>>> parsers.
+>>>
+>>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+>>> ---
+>>>  tools/perf/util/llvm.c | 50 ++++++++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 50 insertions(+)
+>>>
+>>> diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
+>>> index a0deb742a733..533d47e8084d 100644
+>>> --- a/tools/perf/util/llvm.c
+>>> +++ b/tools/perf/util/llvm.c
+>>> @@ -94,6 +94,7 @@ static void init_llvm(void)
+>>>  struct symbol_lookup_storage {
+>>>  	u64 branch_addr;
+>>>  	u64 pcrel_load_addr;
+>>> +	u64 pcrel_adrp_addr;
+>>>  };
+>>>  
+>>>  static const char *
+>>> @@ -108,6 +109,18 @@ symbol_lookup_callback(void *disinfo, uint64_t value,
+>>>  		storage->branch_addr = value;
+>>>  	else if (*ref_type == LLVMDisassembler_ReferenceType_In_PCrel_Load)
+>>>  		storage->pcrel_load_addr = value;
+>>
+>> Is this used by arm64?  If not, would be possible to reuse
+>> pcrel_load_addr unless it'd complicate the code significantly?
+>>
+>> I think it's the common concept of PC-relative addressing while it
+>> requires two instructions to set up the final address on arm64.
+>>
+>> Thanks,
+>> Namhyung
+>>
 
-Svnapot keeps a folded 64KB mapping encoded in the page table, while the
-public PTE helpers may expose a logical per-page sub-PTE view. This patch
-uses the original page-table entry for leaf-size queries so consumers
-continue to observe the Svnapot leaf size instead of treating a folded
-mapping as PAGE_SIZE entries.
+I checked the LLVM internal implementation and conducted further experiments.
+You are correct, arm64 does not trigger LLVMDisassembler_ReferenceType_In_PCrel_Load
+at all. Instead, it utilizes its own architecture-specific reference types
+like LLVMDisassembler_ReferenceType_In_ARM64_ADRP, _LDRXl, etc.
+Therefore, 'pcrel_load_addr' is completely safe to reuse here.
 
-> diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pg=
-table.h
-> index da7ffea0dcd98..e4b9c05014c00 100644
-> --- a/arch/riscv/include/asm/pgtable.h
-> +++ b/arch/riscv/include/asm/pgtable.h
-[ ... ]
-> @@ -580,6 +580,17 @@ static inline pte_t pte_swp_clear_soft_dirty(pte_t p=
-te)
->  					napot_cont_size(napot_cont_order(pte)) :\
->  					PAGE_SIZE)
-> =20
-> +#define __ptep_leaf_size __ptep_leaf_size
-> +static inline unsigned long __ptep_leaf_size(pmd_t pmd, pte_t *ptep, pte=
-_t pte)
-> +{
-> +	pte_t raw_pte =3D READ_ONCE(*ptep);
-> +
-> +	if (pte_present_napot(raw_pte))
-> +		return pte_leaf_size(raw_pte);
-> +
-> +	return PAGE_SIZE;
-> +}
+I will reuse 'pcrel_load_addr' to avoid adding unnecessary fields and
+optimize this patch in the next version.
 
-[Severity: High]
-Can this lead to a single-CPU deadlock in NMI/IRQ context during a partial
-Svnapot block update?
+Thanks,
+Tengda
 
-If a thread executing napotpte_convert() holds the page table lock (which
-disables preemption but leaves NMIs and hardware IRQs enabled) and
-sequentially clears PTEs in a 64KB Svnapot block:
+> 
+>>> +	else if (*ref_type == LLVMDisassembler_ReferenceType_In_ARM64_ADRP) {
+>>> +		uint64_t adrp_imm;
+>>> +
+>>> +		/* immhi (bits 23:5) and immlo (bits 30:29) */
+>>> +		adrp_imm = ((value & 0x00ffffe0) >> 3) | ((value >> 29) & 0x3);
+>>> +		/* Sign-extend the 21-bit immediate to 64-bit */
+>>> +		if (adrp_imm & (1ULL << 20))
+>>> +			adrp_imm |= ~((1ULL << 21) - 1);
+>>> +
+>>> +		/* Calculate the target page address */
+>>> +		storage->pcrel_adrp_addr = (address & ~0xFFFLL) + (adrp_imm << 12);
+>>> +	}
+>>>  	*ref_type = LLVMDisassembler_ReferenceType_InOut_None;
+>>>  	return NULL;
+>>>  }
+>>> @@ -204,6 +217,7 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
+>>>  
+>>>  		storage.branch_addr = 0;
+>>>  		storage.pcrel_load_addr = 0;
+>>> +		storage.pcrel_adrp_addr = 0;
+>>>  
+>>>  		/*
+>>>  		 * LLVM's API has the code be disassembled as non-const, cast
+>>> @@ -227,6 +241,42 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
+>>>  				free(name);
+>>>  			}
+>>>  		}
+>>> +		if (storage.pcrel_adrp_addr != 0) {
+>>> +			/*
+>>> +			 * ADRP (Address Page) instructions encode a 21-bit signed
+>>> +			 * immediate offset relative to the current PC's page.
+>>> +			 *
+>>> +			 * To maintain consistency with standard objdump output,
+>>> +			 * we truncate the raw encoded immediate at the comma
+>>> +			 * and replace it with the resolved absolute page address.
+>>> +			 *
+>>> +			 * Example conversion:
+>>> +			 * From: adrp x18, 8014
+>>> +			 * To:   adrp x18, ffff800081f5f000 <this_cpu_vector>
+>>> +			 */
+>>> +			char *name;
+>>> +			char *s = strchr(disasm_buf, ',');
+>>> +
+>>> +			if (s == NULL)
+>>> +				goto err;
+>>> +
+>>> +			s++;
+>>> +			*s = '\0';
+>>> +			disasm_len = strlen(disasm_buf);
+>>> +			disasm_len += scnprintf(disasm_buf + disasm_len,
+>>> +						sizeof(disasm_buf) - disasm_len,
+>>> +						" %"PRIx64,
+>>> +						storage.pcrel_adrp_addr);
+>>> +			name = llvm_name_for_data(dso, filename,
+>>> +						  storage.pcrel_adrp_addr);
+>>> +			if (name) {
+>>> +				disasm_len += scnprintf(disasm_buf + disasm_len,
+>>> +							sizeof(disasm_buf) -
+>>> +							disasm_len,
+>>> +							" <%s>", name);
+>>> +				free(name);
+>>> +			}
+>>> +		}
+>>>  		if (storage.pcrel_load_addr != 0) {
+>>>  			char *name = llvm_name_for_data(dso, filename,
+>>>  							storage.pcrel_load_addr);
+>>> -- 
+>>> 2.34.1
+>>>
 
-arch/riscv/mm/contpte.c:napotpte_convert() {
-...
-	for (i =3D 0; i < nr; i++) {
-		ptent_addr =3D start_addr + i * PAGE_SIZE;
-		ptent =3D __ptep_get_and_clear_noptc(start_ptep + i);
-...
-}
-
-And a Performance Monitoring Interrupt (PMI) interrupts this CPU after some
-but not all PTEs are cleared, the PMI handler may invoke
-perf_get_pgtable_size(), which eventually invokes the lockless PTE reader.
-
-This would lead to napotpte_ptep_get_lockless() entering a retry loop:
-
-arch/riscv/mm/contpte.c:napotpte_ptep_get_lockless() {
-...
-retry:
-	orig_pte =3D READ_ONCE(*orig_ptep);
-	if (!pte_present_napot(orig_pte))
-		return orig_pte;
-
-	ptep =3D napot_align_ptep(orig_ptep);
-
-	for (i =3D 0; i < nr; i++, ptep++) {
-		pte =3D READ_ONCE(*ptep);
-
-		if (!napotpte_is_consistent(pte, orig_pte))
-			goto retry;
-...
-}
-
-Because the NMI/IRQ handler prevents the interrupted thread on the same CPU
-from finishing the update, the block remains partially cleared. Does this
-cause the consistency check to fail repeatedly, resulting in an infinite
-loop and hard lockup?
-
-Userspace could potentially trigger this via perf_event_open by sampling
-memory accesses during Svnapot page migrations or unmapping.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1784201104.gi=
-t.cuiyunhui@bytedance.com?part=3D7
