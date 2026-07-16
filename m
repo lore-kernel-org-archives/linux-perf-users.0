@@ -1,153 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B71397350
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 07:19:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32CE3ACA5F
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 07:24:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784186399; cv=none; b=XWE2ad6xgpEFLdYTyYPlymk/Iur499roIEc+WixeV4sXuepbV3JV4TLDE78VMkw/FhLGheyguY/YnQHXcOGkYz608fuJ7ha9jr74kpcdcohkJoynOKON8gwUgc7EZkKfOgGjhHRt9oSvvJ0h/371Sdmyl5DP/LpHT5GJFlcK95U=
+	t=1784186645; cv=none; b=m/fYW0nBlZtEczH50oSfGIUzUbO4yNEUU4WjR7p7ukGLdmCnVdT9pPPvVG306yafTtmAuHotQekEebIWY3GC+N8WGx5VRBYcZThuBLyRZCenSN3ZDXwTR4MppwPmI8alrxJvrgX1kOq9dilBfWQm+LfPQ8ue1tAVGtCz1cX/SEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784186399; c=relaxed/simple;
-	bh=3GxIepgl/cieXFVnbYJ40loST1UaqH4hEnmM0xym++E=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lTx5c06m9eQ5K6GcxgjpMiq3QFT0Dl/JHgL0Fwy5Lvi/BQx9pusBA4Sb/FZMmY06uUZQwhkhpKOR0pAaG8HtXsFGsrUXl58oVBfRM5PQ0AGCsAiXvJOyeaAw9bSoSx1NB6LmwTopE+++cLnGy5AEuqodtr33Nlcqd835DxHOe/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FfKLyuXY; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784186645; c=relaxed/simple;
+	bh=grjfyAzhj01LugUdX4Xx8qAky4s5ZlYXmPvi5hL2lYw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=J4/EyPUhuZonNSt6wimjO9q6vwWpBC+XW81Qq48CUvu5fZQ2CfWIKQoJdSs/uHAarjxpy0hIOuk923hAge4g4DxsATmV6HnvkHVQOkVNDzqKJ/dQIEwSMhVTTVbHmsfYscYTGWEZMECBJ41T/FJq+eimjOdW2EWWze+obhCbDJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CsXgaU4W; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FfKLyuXY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B99491F000E9;
-	Thu, 16 Jul 2026 07:19:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784186377;
-	bh=EJD57WiKiyu3T3gEGMwewEHiYF/SyeEY+5X5UERbOmM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FfKLyuXYQz1G0mhTWcSLvqMPp44x0qa09oG0TMqKMqhzrn+hDuHAs7ybSVRWuqevg
-	 4h7voNIcAZ+wfVJlTkMQ+cEtsW9tTjT+RkMpXkvwu4sBLU/eUPjMzqJ/ZKpPPCDSo7
-	 u2xz3QgtuXPw1NjW0i4kDJ7OcQ8uHH2utPKdO7p4fTryiDCvaTULOlBLBIHpZTO8/u
-	 VvcoyLQGaCWJirn08Bmi8uX/AVXPfDoBPZViJcwVPYKRPw0uDW2PXG+iHUoCfCBas6
-	 92qTR8m862E7mJaxJneHM5RVzHsMdRu4olqPpnamPuYplrMnZ8T8pfGISwr33s1ZJH
-	 4Bgwn9D6aHn7w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 10/14] perf stat: Implement streaming JSON formatting
- callbacks
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260716070303.507066-11-irogers@google.com>
-References: <20260716043223.388233-1-irogers@google.com>
- <20260716070303.507066-1-irogers@google.com>
- <20260716070303.507066-11-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 16 Jul 2026 07:19:37 +0000
-Message-Id: <20260716071937.B99491F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CsXgaU4W"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-c894c1c4aa9so9261852a12.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 00:24:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784186636; x=1784791436; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7wA93UUp+mbcOvaVYThkNJ7ykXQl4HGxM7Jc6T2lcZo=;
+        b=CsXgaU4WXHBUBAOzivsYMpWeAJ4EgOSdeYvlgLjU947stFhM7mYYBVqBqgj3Zqtmze
+         xeb/g5IJoyd1jpk4g+Y5EQhghc95mlcrvbbaLTRuzNqT0rIio7KGJTXGy3ULrZI7JRAq
+         jPzJ8V8gzd39kn23t5BIPUb5GC/Tt2FiShZgqWdlfkcVQgHNXuf578+8R+5tUojiemjs
+         FQ+Eszcb2gLSCGYvDdoJt5/0hudNi3cpaJaqdw8AiY2jjUuR1hlF1gDG5JPERfUxDsIE
+         tDVEKE0+6SiuM9Z+AS+if4tiPzt9sq82eItHDifta7Uq+oAKvDeESqjZUkl5SxHKqsaT
+         gYpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784186636; x=1784791436;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=7wA93UUp+mbcOvaVYThkNJ7ykXQl4HGxM7Jc6T2lcZo=;
+        b=WdE9yFdDeqz/bJe6Vp1V5mkPrRIWV3xnlVD+YLgTEMsi9EnFaPMdcCTzkwm75EjFLI
+         HX/mEM86fTkH1vHZ6qJ9DssdYMrQAiNvFqdvBfDcKIt0DAtfOAVko5P2uCX32DM9Rkjs
+         zxRGaOIwHfPPt8HN3uu8vYIERBm1yt8ScXtAZqkHr/XK88emRycdJhkhz+oCal8QXXiJ
+         KJkhXxK5oPclZShjnHQWxWpDh+HfY9sgxezTAtjVmPhGYCHOaK+l4KCB0uFiHH5M+54Z
+         rZNCd4evHOXI+2NEMBpieSP2JkShCFF7Hae1tcgHrjgw9XuFPDSYfVKoomfK+IWkbdiF
+         yqsQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rqs2sSEgZ6n39XDlsmCdCtDr7Xn+kllqb0PVQV749zwudybpZO92XsU31UJK/4kMiPip4DqbpbMOr5E0GWZczOP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7GBdUDKffF3b6DZwMFTN0IEMI/Z0Vk4Put5KKbn7Z2B0+GrTm
+	UHzk++NSPDD9RZLMB0uQ1pDu+LkD2mITFxGWbsC8o1m90pThDczK1hiLwcdqD0Ne3Pog59J+4bb
+	6iIG3qwNN5g==
+X-Received: from dycai12.prod.google.com ([2002:a05:7300:fb0c:b0:311:afe7:27])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:7352:b0:3b4:8880:2089
+ with SMTP id adf61e73a8af0-3c356fec016mr10532237637.16.1784186636080; Thu, 16
+ Jul 2026 00:23:56 -0700 (PDT)
+Date: Thu, 16 Jul 2026 00:23:42 -0700
+In-Reply-To: <20260710053628.1861645-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260710053628.1861645-1-irogers@google.com>
+X-Mailer: git-send-email 2.55.0.141.g00534a21ce-goog
+Message-ID: <20260716072351.560311-1-irogers@google.com>
+Subject: [PATCH v6 01/10] perf hists browser: Increase MAX_OPTIONS to prevent
+ stack buffer overflow
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, 
+	james.clark@linaro.org, jistone@redhat.com, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, tianyou.li@intel.com
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
+In evsel__hists_browse(), the 'options' and 'actions' arrays are
+statically allocated on the stack with a size of MAX_OPTIONS (16).
+Further down, the function sequentially calls several add_*_opt()
+functions, which increment nr_options without bounds checking.
 
-New issues:
-- [High] The JSON output completely ignores cgroup identification and stati=
-stical variance data for events.
-- [Low] The state structs contain fields that are initialized but never use=
-d by any print callbacks.
+Depending on the context (e.g., branch mode, scripting, annotations),
+the sum of added options can theoretically exceed 16 (potentially
+reaching up to ~19). This could lead to a stack buffer overflow.
 
-Pre-existing issues:
-- [High] Missing bounds and NULL check on `evsel->core.threads` in `print_a=
-ggr_id_json` when formatting `AGGR_THREAD` JSON output.
-- [High] Passing a potentially NULL string from `perf_thread_map__comm()` t=
-o the `%s` format specifier causes undefined behavior and leads to a crash =
-on musl libc systems.
---
+Increase MAX_OPTIONS to 32 to safely accommodate the maximum possible
+number of options without risking an overflow.
 
---- Patch [10]: [PATCH v4 10/14] perf stat: Implement streaming JSON format=
-ting callbacks ---
-commit 77f0723329ce102d572ddc7616c0e8a06c6c64f1
-Author: Ian Rogers <irogers@google.com>
-
-perf stat: Implement streaming JSON formatting callbacks
-
-This patch implements streaming JSON formatting callbacks inside
-util/stat-print-json.c, replacing the empty stubs introduced in Commit 1. It
-delivers a highly optimized, zero-allocation, and streaming print engine for
-JSON normal and metric-only modes.
-
+Closes: https://lore.kernel.org/linux-perf-users/20260708235834.3FB771F00A3A@smtp.kernel.org/
 Assisted-by: Antigravity:gemini-3.5-flash
-Acked-by: Chun-Tse Shao <ctshao@google.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/ui/browsers/hists.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> diff --git a/tools/perf/util/stat-print-json.c b/tools/perf/util/stat-pri=
-nt-json.c
-> index 4690c4286fd2a..7ed00aae89f4b 100644
-> --- a/tools/perf/util/stat-print-json.c
-> +++ b/tools/perf/util/stat-print-json.c
-[ ... ]
-> +struct json_print_state {
-> +	FILE *fp;
-> +	char timestamp[64];
-> +};
-> +
-> +/**
-> + * struct json_metric_only_print_state - Metric-only print state context=
- for JSON output.
-> + * @fp: File descriptor to output to.
-> + * @timestamp: Formatted interval timestamp (optional).
-> + * @evlist: Evlist to query entries from.
-> + * @last_aggr_idx: The aggregation index of the last printed metric.
-> + * @first_in_group: Whether the current metric is the first in its group.
-> + */
-> +struct json_metric_only_print_state {
-> +	FILE *fp;
-> +	char timestamp[64];
-> +	struct evlist *evlist;
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index da7cc195b9f4..6163cc3ace27 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -3003,7 +3003,7 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
+ 	struct hists *hists = evsel__hists(evsel);
+ 	struct hist_browser *browser = perf_evsel_browser__new(evsel, hbt, env);
+ 	struct branch_info *bi = NULL;
+-#define MAX_OPTIONS  16
++#define MAX_OPTIONS  32
+ 	char *options[MAX_OPTIONS];
+ 	struct popup_action actions[MAX_OPTIONS];
+ 	int nr_options = 0;
+-- 
+2.55.0.141.g00534a21ce-goog
 
-[Severity: Low]
-Are the fp field in json_print_state and the evlist field in
-json_metric_only_print_state needed? It appears they are initialized in
-perf_stat__print_json but never actually read or used by any print callback=
-s,
-which introduces unnecessary dead state.
-
-> +	int last_aggr_idx;
-> +	bool first_in_group;
-> +};
-[ ... ]
-> +	case AGGR_THREAD:
-> +		fprintf(output, "\"thread\" : \"%s-%d\", ",
-> +			perf_thread_map__comm(evsel->core.threads, id.thread_idx),
-> +			perf_thread_map__pid(evsel->core.threads, id.thread_idx));
-
-[Severity: High]
-This is a pre-existing issue, but is it possible for evsel->core.threads to
-be NULL or id.thread_idx to be out of bounds here? Calling
-perf_thread_map__comm without validating the index can lead to a determinis=
-tic
-segmentation fault.
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does perf_thread_map__comm
-safely return a non-NULL string in all cases? If the comm string pointer
-is NULL, passing it to the %s format specifier in fprintf causes a
-segmentation fault on systems using musl libc.
-
-> +		break;
-[ ... ]
-> +static int json_print_event(void *ctx, struct perf_stat_config *config,
-> +			    struct evsel *evsel, int aggr_idx, u64 val,
-> +			    u64 ena, u64 run, double stdev_pct __maybe_unused,
-> +			    const char *cgrp __maybe_unused)
-
-[Severity: High]
-Does ignoring the stdev_pct and cgrp parameters result in a regression of t=
-he
-JSON output parity? The baseline code formatted cgroup and variance into the
-JSON output, so marking these as unused here seems to silently drop standard
-deviation and cgroup data, which could break automated profiling pipelines.
-
-> +{
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260716070303.5070=
-66-1-irogers@google.com?part=3D10
