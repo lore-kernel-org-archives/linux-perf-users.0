@@ -1,177 +1,345 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACFA23D283
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 03:13:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784171640; cv=none; b=J4ks7OD/FXSYnpB9DlHdqK6F00HFJ/U2eY+tKutPrQt0XeaJ2PyE1hQd35Wjv97tJr0ePyNa3jRcGLPo6Ihw1bDGF9wCSbZcPZavi10LGonqa4ma7N72mxsOSu+cwU9DuacjLyy78MVMmPv8BJoXZdgCBVdOgCvsbTJAi4EX1Vo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784171640; c=relaxed/simple;
-	bh=QTza/p4FwGYJEfSkIqYcbkM53qia9XHbc7xdBB5cF4A=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=AAvlD1P2iK2ycHqq6RL1zgjiglEs3+8j5yIjmOghG0g/f5tTP5p7AVOpduqGQtetd8D8LMz6JgfkNPmi75nLe3ZdiG8FX8TOg445yIoW3rhftf9HsLVaYT2BqWNa/phCDrBAnwKPFeZMQgvHLZa/y4w8HT0nF5YDBnHqur3B3FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BNrtojFo; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DA3E15A864
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 03:15:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.179
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784171761; cv=pass; b=TDIPTjElZLiL9nbc/ViDB1u6lYA5qxpVq5CM+In2j19DLEzXGhpFDeeoYZVeQNhs6VXXJaerguXBVE4YyUEf35vaKl0y8fv5WL3gMKMmuih/Lqyu/Ckq7bW4Q7ZLgelmQ7M5jxY83V/M8nkO97V8i7BzPpPnwaHv4EiZSLFo/oY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784171761; c=relaxed/simple;
+	bh=KlfdTkVZR+yWmKlWm5EgI2tj2WONiX0ecXlBu6SiaAE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NtLqK5eKTF6ZfS7KUKGgiygBZMuimf8+bnlIvrosA+2dOYtGb1NnpBMnBffHKf6jsbSyE+B2eSZYQ1l7aP4d1wTkrgoasYE2TcxBCpL42KgHBnMd2ctjAm9LQgDBGxELZq7lT+uh+ZEmfvWr5FQa/ydRcmWCGKH7suqg2sNsjo0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uVWH12RV; arc=pass smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BNrtojFo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90F821F000E9;
-	Thu, 16 Jul 2026 03:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784171638;
-	bh=q1Olq+3sJhJcUnmlaY5ijojNUBH0X5deKaprGBmax4I=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=BNrtojFo02HzLNe+1aQINJORHtVeHF0qIr8Lcjem/Hx5UuxsQjXtDl0oDx6yiebx7
-	 IQhte68EdpQ5gUmuEVR6avJkYqLLn8w6YkL2g6+a3fABujT4o/9ATM9zjHwgjviRn+
-	 TW7CB+c4vMaw2pwIHobH4WktA+WUkr6RR227Oj3y+V5nn/XfCdGMRUlSuX3VAIVfpt
-	 /P02wWrzQFqtIne1MaW+a1FEamyX0HXS8mL9p6JOufCysY/5z7/mxc26xqyOYDY5MF
-	 jdPo+kdkj8L41oZlv89XNAOvmP0UbdB+k8+22AswKO929poLWZPDHiQInS+uUIVXeU
-	 HdyBLgaReiw0A==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 1/9] tracing: wprobe: Add watchpoint probe event
- based on hardware breakpoint
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <178417034282.209165.5714719704203351616.stgit@devnote2>
-References: <178417033089.209165.16717079876036408877.stgit@devnote2>
- <178417034282.209165.5714719704203351616.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 16 Jul 2026 03:13:58 +0000
-Message-Id: <20260716031358.90F821F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uVWH12RV"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2cacef7d299so40465ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 15 Jul 2026 20:15:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784171759; cv=none;
+        d=google.com; s=arc-20260327;
+        b=G0dJeOYlTvWklCeFIaIbtmz8o3NEV7RRhiB9gFvSpNy0k/YntHY4G+VnNhgx6eGsKl
+         wQ27LP/7KPv+nwqQhBp1EI3MU6qI8rus93FFe8IDnbPUH9ZJF7W0DZulHnP89XxnhAHl
+         AKkNx/veFYz1wPcPZfZ84xixEsZPV/W//1xBGDOICJoGG1lVMOy6PkaK+XBTHmjt8ptc
+         h9+3FhS8izwmHYgo4GDN0f0wwA3dvO6Rjk3crTtIic663lZCMaM1698roBB42VBwU2dV
+         lWb/AbvkykGxi/hJN50SiH9uo3HbfUVU1kYzXB+PYZVTZ1FYgmfWlbcz1enI83ZI5J19
+         cvWg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=SPvoGXB1qk7uNOdy9A8bM8LHf/Lhh9Szpco8G55HbaI=;
+        fh=8lVcCIZ8g6+Xd8VnIgQuqPK2hZjGjqeqe9jxemiuUI0=;
+        b=fsz4PTTgY3ED/AwpF88Ao7kP5zu9sjvw+WlkulEh5WGzpioRhY2N+1j+u8daF9luQt
+         Z8a2p8VyVlK6Nal095PBKSof/AKZ7j4flO8Z9aptC05RlW2mqPbZF9j5+sqjQ7juW9sz
+         XY0lYWrOAdx+nbIiTNM2dF77rDYMte/qBYKCycK7XSt83g0hfHvHVMzdMHDJiOrAgMiV
+         K1+NRHttSkov+KfKmJoMPxVnAD/pELF4yrzcIZEwq/Tzcr7yJsjdbLYOr9oAb+rO9x2k
+         QTVOqEqMB3mNQS13lqBVp3Mt0SZdeYsXjokD2Svq88ZLzS32rYbtB3hteVVd3RAUgdwT
+         Sgwg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784171759; x=1784776559; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=SPvoGXB1qk7uNOdy9A8bM8LHf/Lhh9Szpco8G55HbaI=;
+        b=uVWH12RVDPdN6746JlexZaetFhSjp08tGDXJb6cRLqs0F4oiy9p2lfHRDj+npfmhX+
+         F6d7c2S5Ny07aunEdm27mc0hLvhdOMml28B7qGUHFMCW+pMcdR+729JW3ReSJ9AwzI7G
+         N2OyuVaNKHA0UuZpYYx2KV0O3/P25uNCPqdE1a4PmpfxQX69eKKI5NwOZTXqgjwHvkq2
+         R/3FONlpjpfxtM+FloQ86XjlOrPI8UsYW41upTdRHkq7QPdWpanpTClcRTwWojFq6Mil
+         gLhmTKBoJFNV9BDsOG1rbxpPOf/IfMDOPeaUrf+iBsrl3n+ZPqlHrk9/Gpsl9368j0Nw
+         CdBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784171759; x=1784776559;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=SPvoGXB1qk7uNOdy9A8bM8LHf/Lhh9Szpco8G55HbaI=;
+        b=EB/IC+k4QVCP3L3V3T48inqJIg4ZACw0swyQFp/4tYVPPuyfNlZ+rEW0igYyE3uHDW
+         u43e/FWGalEPK0SCr1l2IzFj1rL/eIMwmTo21Q5lIHninU1BPs89gXvIKEJaCS+Blbyl
+         lbWqbz9HFOSmZLRCdpKNVmLwRwXRELaFAj3A9rWKlPhm8hpaksnXe1JjZX843blPD2eb
+         sW3+MhNMHLL5izXi5NRh91wb/NelzTGDxvu/MC3+OKkTwO2mQNCiMmTBfFbdQCtd6nVH
+         R+0kef1nvuDxOUXXiFlxJWwNfBq87CTbPn0OjJ+6GCEZ1YF/lV1bTpYDH3svgrkT58wd
+         iqlA==
+X-Forwarded-Encrypted: i=1; AHgh+RqldMfxoAAlXD2htw1Hxo5R/e/Vq8WlhzY7Ve4JmPR4AB2ogGgvG5qb9f5crwVHDkIPk1ofzwSlCTlo0v8VCYcY@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPJ6MJ7FcRB3e0BsmUW6kdDKCv2Vm3NJgFRoR2W+rzrRBnRexh
+	1LHg0fdCNsv+mekb105i4OUMAqI0llIrCnA0MZtUEMWW85RbkDLiAiNyEWkMN2h3aPLOucR1rkv
+	5kg/7ne+Gd7G4BZXS9vJ2rarw9S8CrAdLy7Htm46M
+X-Gm-Gg: AfdE7cm7W8oPsORrmTjqxtZ9/SxSOnGslKDPQLu1NbiChMYgTepH7+k07RzS/HhdFPW
+	xjZFE0/RQ3WalQsrvQIv1/5Ef+suLs4nS3MJrsA5UZPSonoiV7cjXmXRNMQuBrWFvg0UKKGylw8
+	brp3+dszStsamDHI4sdq6Yw0EYhMq8XMrjwaj96T8/OZNlhh/WMjdj7ck88PiLmHOopQzv5LR2M
+	7zwvGHKRhSJ6zJEToIjwTagMzByHacE7+EmEqGYLxO76X/kYjajd2jLQRA1+kU=
+X-Received: by 2002:a17:902:e78f:b0:2b7:b03d:9dce with SMTP id
+ d9443c01a7336-2cf1a6c3ba5mr1887855ad.18.1784171758316; Wed, 15 Jul 2026
+ 20:15:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260715203055.2981363-1-ctshao@google.com>
+In-Reply-To: <20260715203055.2981363-1-ctshao@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 15 Jul 2026 20:15:46 -0700
+X-Gm-Features: AUfX_mzrTa1de065kr3pqOvUlRkhELzkXZE1qAcSxT33ZZyJrcxQvdNQZSIobkQ
+Message-ID: <CAP-5=fWByxhcT0RY_NgXeFADEg4zUiWBbBrEHXMLV3pjqAQ97Q@mail.gmail.com>
+Subject: Re: [PATCH v2] perf stat: Include PMU name and split uncore events
+ per PMU in metric-only JSON output
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-- [High] Missing traceprobe_update_arg() call leaves @SYM fetch arguments u=
-nresolved, causing reads from address 0.
-- [Medium] Sibling probe support is broken by a hardcoded uniqueness check,=
- rendering the new rollback logic as dead code and limiting functionality.
-- [Medium] The implementation fails to dynamically generate a unique event =
-name for anonymous address-based watchpoints, contradicting the documentati=
-on.
-- [Medium] Missing group and event name parsing allows invalid characters a=
-nd breaks tracefs directory creation.
---
+On Wed, Jul 15, 2026 at 1:30=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> w=
+rote:
+>
+> When running `perf stat` with `-A` (--no-aggr) and `--metric-only` in
+> JSON output mode (`-j`), `perf stat` evaluates metric expressions
+> across all matching PMUs (including uncore PMUs like `uncore_iio_0`,
+> `uncore_iio_1`, etc.).
+>
+> However, `perf stat` previously formatted JSON output by printing only
+> "cpu" : "<id>" and grouping all metric values on a single line per CPU
+> without identifying which PMU instance evaluated each metric. As a
+> result, when an uncore event spans multiple PMU boxes, `perf stat`
+> printed repeated, ambiguous metric keys without PMU names.
+>
+> Fix this by:
+> 1. Including "pmu" : "<pmu_name>" in print_aggr_id_json when evsel->pmu
+>    is a non-core or hybrid PMU in AGGR_NONE mode (-A).
+> 2. Starting a new JSON metric line in AGGR_NONE mode (-A) whenever the
+>    underlying PMU instance changes across PMU events.
+> 3. Updating perf_json_output_lint.py to recognize the new "pmu" key in
+>    the JSON test suite.
+>
+> Example output:
+>   $ perf stat -M iio_bandwidth_read -a -A --metric-only -j -I 1000
+>   {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_0", "MB/s  =
+iio_bandwidth_read" : "0.0"}
+>   {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_1", "MB/s  =
+iio_bandwidth_read" : "0.1"}
+>   {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_11", "MB/s =
+ iio_bandwidth_read" : "0.0"}
+>   ...
+>   {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_0", "MB/s =
+ iio_bandwidth_read" : "0.0"}
+>   {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_1", "MB/s =
+ iio_bandwidth_read" : "0.0"}
+>   {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_11", "MB/s=
+  iio_bandwidth_read" : "0.0"}
+>
+> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> Assisted-by: Gemini:gemini-3.1-pro-preview
 
---- Patch [1]: [PATCH v8 1/9] tracing: wprobe: Add watchpoint probe event b=
-ased on hardware breakpoint ---
-commit c7cef5689391cf83a545269b44666666b82afb31
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
+Nit: It may be nice to include the before output (i.e., without the
+PMU showing that differentiation isn't possible) in the commit
+message.
 
-This commit adds a new wprobe-event for hardware breakpoints, allowing
-users to trace memory accesses at specific addresses. It supports fetching
-the accessed address and value, and can be configured via the dynamic_events
-interface.
+Thanks,
+Ian
 
-diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-new file mode 100644
---- /dev/null
-+++ b/kernel/trace/trace_wprobe.c
-[ ... ]
-> static int register_trace_wprobe_event(struct trace_wprobe *tw)
-> {
-> 	struct trace_wprobe *old_tb;
-> 	int ret;
->=20
-> 	guard(mutex)(&event_mutex);
->=20
-> 	old_tb =3D find_trace_wprobe(trace_probe_name(&tw->tp),
-> 				   trace_probe_group_name(&tw->tp));
-> 	if (old_tb)
-> 		return -EBUSY;
-
-[Severity: Medium]
-Does this uniqueness check inadvertently break sibling probe support?
-
-The commit message mentions rollback logic for already-enabled sibling
-probes, but returning -EBUSY here unconditionally rejects adding a wprobe
-to an existing event name.=20
-
-Shouldn't this call trace_probe_append() for existing events similar to how
-kprobes and fprobes handle them, instead of returning -EBUSY?
-
-[ ... ]
-> static int __trace_wprobe_create(int argc, const char *argv[])
-> {
-[ ... ]
-> 	if (argv[0][1] !=3D '\0') {
-> 		if (argv[0][1] !=3D ':') {
-> 			trace_probe_log_set_index(0);
-> 			trace_probe_log_err(1, BAD_MAXACT_TYPE);
-> 			/* Invalid format */
-> 			return -EINVAL;
-> 		}
-> 		event =3D &argv[0][2];
-> 	}
-
-[Severity: Medium]
-Is this missing a call to traceprobe_parse_event_name()?
-
-By assigning the remainder of the command directly to the event name, it
-bypasses separating the group from the event and checking against
-is_good_name().
-
-If a user provides a group like w:mygroup/myevent, could this cause tracefs
-directory creation to fail or create a malformed structure?
-
->=20
-> 	trace_probe_log_set_index(1);
-> 	ret =3D parse_address_spec(argv[1], &addr, &type, &len, &symbol);
-> 	if (ret < 0)
-> 		return ret;
->=20
-> 	if (!event)
-> 		event =3D symbol ? symbol : "wprobe";
-
-[Severity: Medium]
-If multiple anonymous address-based watchpoints are created without a symbol
-(for example, w@0x12345678 and w@0xcafebabe), won't they all be assigned
-the hardcoded wprobe name?
-
-Does this need to dynamically generate a unique name based on the address
-(perhaps similar to what kprobes does with snprintf) to avoid naming
-collisions?
-
->=20
-> 	argc -=3D 2; argv +=3D 2;
-> 	tw =3D alloc_trace_wprobe(group, event, symbol, addr, len, type, argc);
-> 	if (IS_ERR(tw))
-> 		return PTR_ERR(tw);
->=20
-> 	ctx =3D kzalloc_obj(*ctx);
-> 	if (!ctx)
-> 		return -ENOMEM;
->=20
-> 	ctx->flags =3D TPARG_FL_KERNEL | TPARG_FL_WPROBE;
->=20
-> 	/* parse arguments */
-> 	for (i =3D 0; i < argc; i++) {
-> 		trace_probe_log_set_index(i + 2);
-> 		ctx->offset =3D 0;
-> 		ret =3D traceprobe_parse_probe_arg(&tw->tp, i, argv[i], ctx);
-> 		if (ret)
-> 			return ret;	/* This can be -ENOMEM */
-> 	}
-
-[Severity: High]
-Does this argument parsing loop need to call traceprobe_update_arg() to
-resolve symbol references?
-
-If a user registers a wprobe event with a symbol fetch argument like
-@my_symbol, the parser generates a FETCH_NOP_SYMBOL instruction. Without
-calling traceprobe_update_arg(&tw->tp.args[i]), the fetch instruction's
-immediate address remains 0.
-
-Won't this cause the probe to silently fail by attempting to read from
-address 0 at runtime?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178417033089.209165=
-.16717079876036408877.stgit@devnote2?part=3D1
+> ---
+>
+> v2:
+>   - Fix print_metric_begin() initialization in print_no_aggr_metric()
+>     to ensure tool events always open lines cleanly.
+>   - Simplify and fix PMU line-split transition tracking when switching
+>     between different PMU instances or transitioning from tool events.
+>   - Add bounds check on aggr_map index in print_no_aggr_metric() to
+>     prevent out-of-bounds array reads if sysfs CPU topology is incomplete=
+.
+>
+> v1: lore.kernel.org/20260714174052.1826692-1-ctshao@google.com
+>
+>  .../tests/shell/lib/perf_json_output_lint.py  |  1 +
+>  tools/perf/util/stat-display.c                | 48 ++++++++++++++-----
+>  2 files changed, 37 insertions(+), 12 deletions(-)
+>
+> diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/=
+perf/tests/shell/lib/perf_json_output_lint.py
+> index dafbde56cc76..36767905fcdb 100644
+> --- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
+> +++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+> @@ -64,6 +64,7 @@ def check_json_output(expected_items):
+>        'metric-threshold': lambda x: x in ['unknown', 'good', 'less good'=
+, 'nearly bad', 'bad'],
+>        'metricgroup': lambda x: True,
+>        'node': lambda x: True,
+> +      'pmu': lambda x: True,
+>        'pcnt-running': lambda x: isfloat(x),
+>        'socket': lambda x: True,
+>        'thread': lambda x: True,
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
+y.c
+> index f94f1324d24a..61d634f8be2e 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -397,6 +397,8 @@ static void print_aggr_id_json(struct perf_stat_confi=
+g *config, struct outstate
+>                         json_out(os, "\"cpu\" : \"%d\"",
+>                                 id.cpu.cpu);
+>                 }
+> +               if (evsel && evsel->pmu && (!evsel->pmu->is_core || evsel=
+__is_hybrid(evsel)))
+> +                       json_out(os, "\"pmu\" : \"%s\"", evsel->pmu->name=
+);
+>                 break;
+>         case AGGR_THREAD:
+>                 json_out(os, "\"thread\" : \"%s-%d\"",
+> @@ -1009,11 +1011,12 @@ static void print_counter_aggrdata(struct perf_st=
+at_config *config,
+>
+>  static void print_metric_begin(struct perf_stat_config *config,
+>                                struct evlist *evlist,
+> -                              struct outstate *os, int aggr_idx)
+> +                              struct outstate *os, int aggr_idx,
+> +                              struct evsel *counter)
+>  {
+>         struct perf_stat_aggr *aggr;
+>         struct aggr_cpu_id id;
+> -       struct evsel *evsel;
+> +       struct evsel *evsel =3D counter ?: evlist__first(evlist);
+>
+>         os->first =3D true;
+>         if (!config->metric_only)
+> @@ -1028,7 +1031,6 @@ static void print_metric_begin(struct perf_stat_con=
+fig *config,
+>                 else
+>                         fprintf(config->output, "%s", os->timestamp);
+>         }
+> -       evsel =3D evlist__first(evlist);
+>         id =3D config->aggr_map->map[aggr_idx];
+>         aggr =3D &evsel->stats->aggr[aggr_idx];
+>         aggr_printout(config, os, evsel, id, aggr->nr);
+> @@ -1066,7 +1068,7 @@ static void print_aggr(struct perf_stat_config *con=
+fig,
+>          * Without each counter has its own line.
+>          */
+>         cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
+> -               print_metric_begin(config, evlist, os, aggr_idx);
+> +               print_metric_begin(config, evlist, os, aggr_idx, NULL);
+>
+>                 evlist__for_each_entry(evlist, counter) {
+>                         print_counter_aggrdata(config, counter, aggr_idx,=
+ os);
+> @@ -1092,7 +1094,7 @@ static void print_aggr_cgroup(struct perf_stat_conf=
+ig *config,
+>                 os->cgrp =3D evsel->cgrp;
+>
+>                 cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
+> -                       print_metric_begin(config, evlist, os, aggr_idx);
+> +                       print_metric_begin(config, evlist, os, aggr_idx, =
+NULL);
+>
+>                         evlist__for_each_entry(evlist, counter) {
+>                                 if (counter->cgrp !=3D os->cgrp)
+> @@ -1128,7 +1130,8 @@ static void print_no_aggr_metric(struct perf_stat_c=
+onfig *config,
+>
+>         perf_cpu_map__for_each_cpu(cpu, all_idx, evlist__core(evlist)->us=
+er_requested_cpus) {
+>                 struct evsel *counter;
+> -               bool first =3D true;
+> +               struct perf_pmu *last_pmu =3D NULL;
+> +               bool line_open =3D false;
+>
+>                 evlist__for_each_entry(evlist, counter) {
+>                         u64 ena, run, val;
+> @@ -1143,13 +1146,34 @@ static void print_no_aggr_metric(struct perf_stat=
+_config *config,
+>                                 if (config->aggr_map->map[aggr_idx].cpu.c=
+pu =3D=3D cpu.cpu)
+>                                         break;
+>                         }
+> +                       if (aggr_idx >=3D config->aggr_map->nr)
+> +                               continue;
+>
+>                         os->evsel =3D counter;
+>                         os->id =3D aggr_cpu_id__cpu(cpu, /*data=3D*/NULL)=
+;
+> -                       if (first) {
+> -                               print_metric_begin(config, evlist, os, ag=
+gr_idx);
+> -                               first =3D false;
+> +
+> +                       if (config->metric_only) {
+> +                               struct perf_pmu *pmu =3D counter->pmu;
+> +
+> +                               if (!evsel__is_tool(counter)) {
+> +                                       if (config->json_output && line_o=
+pen &&
+> +                                           (!last_pmu || pmu !=3D last_p=
+mu)) {
+> +                                               print_metric_end(config, =
+os);
+> +                                               line_open =3D false;
+> +                                       }
+> +                                       if (!line_open) {
+> +                                               print_metric_begin(config=
+, evlist, os,
+> +                                                                  aggr_i=
+dx, counter);
+> +                                               line_open =3D true;
+> +                                       }
+> +                                       last_pmu =3D pmu;
+> +                               } else if (!line_open) {
+> +                                       print_metric_begin(config, evlist=
+, os,
+> +                                                          aggr_idx, coun=
+ter);
+> +                                       line_open =3D true;
+> +                               }
+>                         }
+> +
+>                         val =3D ps->aggr[aggr_idx].counts.val;
+>                         ena =3D ps->aggr[aggr_idx].counts.ena;
+>                         run =3D ps->aggr[aggr_idx].counts.run;
+> @@ -1157,7 +1181,7 @@ static void print_no_aggr_metric(struct perf_stat_c=
+onfig *config,
+>                         uval =3D val * counter->scale;
+>                         printout(config, os, uval, run, ena, 1.0, aggr_id=
+x);
+>                 }
+> -               if (!first)
+> +               if (line_open)
+>                         print_metric_end(config, os);
+>         }
+>  }
+> @@ -1520,7 +1544,7 @@ static void print_cgroup_counter(struct perf_stat_c=
+onfig *config, struct evlist
+>                                 print_metric_end(config, os);
+>
+>                         os->cgrp =3D counter->cgrp;
+> -                       print_metric_begin(config, evlist, os, /*aggr_idx=
+=3D*/0);
+> +                       print_metric_begin(config, evlist, os, /*aggr_idx=
+=3D*/0, NULL);
+>                 }
+>
+>                 print_counter(config, counter, os);
+> @@ -1570,7 +1594,7 @@ void evlist__print_counters(struct evlist *evlist, =
+struct perf_stat_config *conf
+>                 } else if (config->cgroup_list) {
+>                         print_cgroup_counter(config, evlist, &os);
+>                 } else {
+> -                       print_metric_begin(config, evlist, &os, /*aggr_id=
+x=3D*/0);
+> +                       print_metric_begin(config, evlist, &os, /*aggr_id=
+x=3D*/0, NULL);
+>                         evlist__for_each_entry(evlist, counter) {
+>                                 print_counter(config, counter, &os);
+>                         }
+> --
+> 2.55.0.141.g00534a21ce-goog
+>
