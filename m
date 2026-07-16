@@ -1,140 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC083093DB
-	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 04:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BBB388369
+	for <linux-perf-users@vger.kernel.org>; Thu, 16 Jul 2026 04:52:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784177363; cv=none; b=u5hivZgF2FD8j/5eoEUM2p0ngm12xnnfIG1TS4fG4+7K+I8ifwKCsIKwFombmzZjbvutY+uZiSv1sn0tr72vGLwcgcrdThMkxLIQvj7OQ297+Kfe33I6aruc1fYqxK7CYTukdOvnYQx1LVp2YXdnKOkA0INlEmeUb/KJAhbQfAM=
+	t=1784177532; cv=none; b=WaCi9Mh0wVMSTOkdqr3WpDvsyJdgBdGR/1M2SLZ/RyBOaQXE5e3hR/lPpmULVYbjhQi9koj0Lz8QvD1wCJNwWp0tpqT1aSgu7dTnc3afdfPlTN4/6eJ37Ht2TzXpLSHHp7gEYpT9nImJmm/0IxjbTrxnXEGpyfnXymr8xHF/kr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784177363; c=relaxed/simple;
-	bh=qiqzmuaIR8FKDVx+z8ed59ea4DtRfKNcPI0RamKDNrU=;
+	s=arc-20240116; t=1784177532; c=relaxed/simple;
+	bh=X6mI6+JPHx+Z5+Mn5QE+T0HfhvRBViQH8hdh2DIAnk0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=fzkAXhScG5wFf3C6IQAQo4RAFp7HHR7ILW5glG8AwdYjr5mQuAel4AC4Y1WnPkJThHywRMvlQ55xOseyU8FX/yjF74plTTNYmiDpGCBKbmNgLrLT6RkgwJZZMUec6uZIVtsTgb9n6OmB/KUe1Z4cPMMTseMYdgWSDjQ7lV3xXpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C+cLb26e; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=KkjlZI7/uck9v8oxDUpMNVRxU9h6qyrmxsOU66fnB57cfQ1s6K/tBi+lJkr99GM5zgBRwcNlv4vhiW6pj1dSf7sFjueLVV9P3YkNztIMALCnhNYMxkpKxHVQQ2YIiHTwfbUq068qk4ZHZyX8mrOtRaUEF8aedVhDiCKsQagZB3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bMYvCS4F; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C+cLb26e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C6521F000E9;
-	Thu, 16 Jul 2026 04:49:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bMYvCS4F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194A51F000E9;
+	Thu, 16 Jul 2026 04:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784177361;
-	bh=TQyjhkJMevx67hVpjNQVMGHrtktbmjZXwMyoPijPqzg=;
+	s=k20260515; t=1784177531;
+	bh=8lKqYATcuYrT++avt54egGwmRHw/beOu1ZZbZZ1V4Dg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=C+cLb26eK+rCeppOAvrtylNP4A0jimTdMXHlTFnlnYzIE2sr6O1U7yt9GUQZH5V7G
-	 8ExlCq2k2H0KAky3lDB0bRruug0TWE/hS79j/lw1b0qWt+8aCQKpXOBihKWr5E4rwi
-	 TzN7i7zfBRVXqMzQJJLdcJJY5wGZG3hzSR8EY+enhb4KZROyo5mtbGEzunGj4BdBIi
-	 ra8fWeFSmR3L4W2HK72hFs61gvvgdpzD6Ea1jExhqstQ5LWPiPEn5eJHGlMS7GjomI
-	 4TtCEBLRaXAIP7eJVJYwZdaW/klWDaoqkSa8FeRK98gS9eETvb+zhmurf3+JraL5vg
-	 a9Pid/XMgHzaw==
+	b=bMYvCS4Fx35JuRwq/AnmcpKI0Eh1L8jqIH9jCcmGXWOMqkMujDVLG2LBYsn+zW+Eg
+	 Xiodk5FTMyR03oAIaTBHp6nkz0NyhMGykIFQ+aJFdqmF5+fy43L62ht7kMKSXJ6JKT
+	 8LTkIABDi5CCgc0rpP3zGsvktGfj68/4+U9ORQFYw6QNIKxCoe7WXzPoZA8cyGiJlk
+	 pnjI1uuXNqJGxePGh9yIGCzeUjoCNVz+Ti6FiIrvb993Hx0+55i+GUHdh+f8XgZ+vZ
+	 I5LOr562BNg0DYkTJxdVTaIwTu6On7FQlEOLPIt9HI9hlaxmaxhwyHwqN8KU4IwSWJ
+	 zHvwhoxDR7HGg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 14/14] perf stat: Extend PMU metrics value linter to
- validate --new outputs
+Subject: Re: [PATCH v3 13/14] perf stat: Add --new support to PMU metrics
+ Python validator
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260716043223.388233-15-irogers@google.com>
+In-Reply-To: <20260716043223.388233-14-irogers@google.com>
 References: <20260525231900.3527228-1-irogers@google.com>
  <20260716043223.388233-1-irogers@google.com>
- <20260716043223.388233-15-irogers@google.com>
+ <20260716043223.388233-14-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 16 Jul 2026 04:49:21 +0000
-Message-Id: <20260716044921.9C6521F000E9@smtp.kernel.org>
+Date: Thu, 16 Jul 2026 04:52:10 +0000
+Message-Id: <20260716045211.194A51F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] The test script directs users to an empty debug directory and le=
-aks temporary files on failure.
+- [Medium] is_basic_shadow_metric() performs an unchecked strcmp() on a pot=
+entially NULL mexp->metric_name.
+- [Medium] Cgroup layout formatting is completely stripped from CSV, JSON, =
+and STD output modes.
+- [Medium] Zero-counter skipping logic was mistakenly scoped only to STD ou=
+tput, breaking CSV and JSON modes with output spam.
 --
 
---- Patch [14]: [PATCH v3 14/14] perf stat: Extend PMU metrics value linter=
- to validate --new outputs ---
-commit 04fc0ceb56132c274f7a0d6caa07c7fa1e8373fa
+--- Patch [13]: [PATCH v3 13/14] perf stat: Add --new support to PMU metric=
+s Python validator ---
+commit ac2ffcbd7ec0fccf19ec9629f7f74d37b92d6545
 Author: Ian Rogers <irogers@google.com>
 
-perf stat: Extend PMU metrics value linter to validate --new outputs
+perf stat: Add --new support to PMU metrics Python validator
 
-This commit updates the stat_metrics_values.sh test to run the python metri=
-cs
-value validation linter twice. It tests both the legacy path and the new API
-path using the -new argument to mathematically guarantee valid metric
-calculations.
+This patch extends the performance metrics value Python validation script
+tools/perf/tests/shell/lib/perf_metric_validation.py to support a new
+command-line argument -new. When set, the Validator class appends the --new
+option flag to its internally spawned perf stat commands. This enables
+validating Intel PMU metric mathematical values generated specifically by t=
+he
+decoupled, streaming JSON printing callbacks.
 
-> diff --git a/tools/perf/tests/shell/stat_metrics_values.sh b/tools/perf/t=
-ests/shell/stat_metrics_values.sh
-> index 30566f0b54279..9823b09589574 100755
-> --- a/tools/perf/tests/shell/stat_metrics_values.sh
-> +++ b/tools/perf/tests/shell/stat_metrics_values.sh
+> diff --git a/tools/perf/tests/shell/lib/perf_metric_validation.py b/tools=
+/perf/tests/shell/lib/perf_metric_validation.py
+> --- a/tools/perf/tests/shell/lib/perf_metric_validation.py
+> +++ b/tools/perf/tests/shell/lib/perf_metric_validation.py
 [ ... ]
-> @@ -19,13 +19,29 @@ echo "Output will be stored in: $tmpdir"
->  for cputype in /sys/bus/event_source/devices/cpu_*; do
->  	cputype=3D$(basename "$cputype")
->  	echo "Testing metrics for: $cputype"
-> -	$PYTHON $pythonvalidator -rule $rulefile -output_dir $tmpdir -wl "${wor=
-kload}" \
-> +	mkdir -p "$tmpdir/legacy"
-> +	$PYTHON $pythonvalidator -rule $rulefile -output_dir "$tmpdir/legacy" -=
-wl "${workload}" \
->  		-cputype "${cputype}"
->  	ret=3D$?
-> -	rm -rf $tmpdir
->  	if [ $ret -ne 0 ]; then
-> -		echo "Metric validation return with errors. Please check metrics repor=
-ted with errors."
-> +		echo "Metric validation return with errors. " \
-> +			"Please check metrics reported with errors in: " \
-> +			"$tmpdir/legacy"
-> +		exit $ret
+> @@ -379,7 +380,10 @@ class Validator:
+> =20
+>      def _run_perf(self, metric, workload: str):
+>          tool =3D 'perf'
+> -        command =3D [tool, 'stat', '--cputype', self.cputype, '-j', '-M'=
+, f"{metric}", "-a"]
+> +        command =3D [tool, 'stat']
+> +        if self.new_print:
+> +            command.append('--new')
 
 [Severity: Medium]
-Does this error path leak the temporary directory?
+While enabling this test for the new API, does the underlying --new
+implementation safely handle metric evaluation?
 
-Since the cleanup is now at the end of the script instead of inside the loo=
-p,
-calling exit here will bypass the removal and leave the temporary directory
-behind.
+In tools/perf/util/stat-print.c, is_basic_shadow_metric() performs an
+unchecked string comparison:
 
-Additionally, will this output directory actually contain any error reports?
+tools/perf/util/stat-print.c:is_basic_shadow_metric() {
+    ...
+    for (i =3D 0; i < ARRAY_SIZE(basic_metrics); i++) {
+        if (!strcmp(basic_metrics[i], name))
+            return true;
+    ...
+}
 
-The error message directs users to check the legacy directory for details, =
-but
-because the python validator is run without the -debug flag, it appears this
-directory will remain completely empty upon failure.
-
-> +	fi
-> +
-> +	echo "Testing metrics for: $cputype (New API)"
-> +	mkdir -p "$tmpdir/new"
-> +	$PYTHON $pythonvalidator -rule $rulefile -output_dir "$tmpdir/new" -wl =
-"${workload}" \
-> +		-cputype "${cputype}" -new
-> +	ret=3D$?
-> +	if [ $ret -ne 0 ]; then
-> +		echo "Metric validation return with errors (New API). " \
-> +			"Please check metrics reported with errors in: " \
-> +			"$tmpdir/new"
-> +		exit $ret
+If perf_stat_print_metricgroup() iterates through metric expressions and
+passes a NULL mexp->metric_name (which can happen with unnamed or dynamic
+metric expressions), will this strcmp trigger a segmentation fault?
 
 [Severity: Medium]
-Similarly, does this exit path also bypass the temporary directory cleanup
-at the bottom of the script?
+Additionally, does the new printing API preserve cgroup aggregation
+information?
 
-Also like the legacy path above, without passing the -debug flag to the pyt=
-hon
-validator, it looks like this directory will also be empty when a user atte=
-mpts
-to inspect it for errors.
+When perf_stat__print_cb() traverses events in tools/perf/util/stat-print.c,
+the generic callback signature omits cgroup parameters entirely:
 
->  	fi
->  done
-> +rm -rf "$tmpdir"
->  exit $ret
+tools/perf/util/stat-print.c:perf_stat__print_cb() {
+    ...
+    ret =3D cb->print_event(ctx, config, counter, 0, val, ena,
+                          run, stdev_pct);
+    ...
+}
+
+Will this cause a complete loss of cgroup layout formatting for CSV, JSON,
+and STD output modes since the callbacks never receive the cgroup
+identifiers?
+
+[Severity: Medium]
+Finally, how does the new API handle zero-counter skipping for CSV and JSON
+modes? The core traversal engine perf_stat__print_cb() passes events to
+callbacks without checking should_skip_zero_counter().
+
+While the STD format callback might implement this filter locally, the CSV
+and JSON callbacks do not appear to check it:
+
+tools/perf/util/stat-print-csv.c:csv_print_event() {
+    ...
+    ev->val =3D val;
+    ev->ena =3D ena;
+    ev->run =3D run;
+    ...
+}
+
+Could this result in CSV and JSON outputs being flooded with zero-valued
+ghost events, such as uncore PMU events on non-leader CPUs, causing
+incorrect statistical exports and output spam?
+
+> +        command.extend(['--cputype', self.cputype, '-j', '-M', f"{metric=
+}", "-a"])
+>          wl =3D workload.split()
+>          command.extend(wl)
+>          print(" ".join(command))
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260716043223.3882=
-33-1-irogers@google.com?part=3D14
+33-1-irogers@google.com?part=3D13
