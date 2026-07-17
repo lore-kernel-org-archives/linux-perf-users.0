@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF4F28640B
-	for <linux-perf-users@vger.kernel.org>; Fri, 17 Jul 2026 02:21:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA5528640B
+	for <linux-perf-users@vger.kernel.org>; Fri, 17 Jul 2026 02:22:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784254886; cv=none; b=IDjqF2wZT3lnmrNxY7BkOCmWtJ+v2BtHRwepWaiuc2mCS9Cq1mDYISbB6c97dQdailijHtKCZcvwsUIUnw4fvmRQMEW7VuGDsaQc7/dC6FcwWuAhxR3V8Or8YAWNBU7Igjkq/MVQu7z5NJ/gjxh6lqD3eSuysZPa+mvTZOP1l0k=
+	t=1784254924; cv=none; b=o2YQ4qZ/dwJ6vOCyVRKGkRwsk+zBWJF+dHuAgQQZmufxIHHIW0s/wpMBN/vnyvUxZLpnsqyWnXD3VWKJd6k9IFgqRUleG1buZ9GJbP7wbO0eZ4tdvyvBDB53QPBTCUTf772V4RAsYxriidMJQ6w6iS4/HLUbVdsJfqeSAhxRdAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784254886; c=relaxed/simple;
-	bh=BTqWa9RtU/sO7tS7fjCAg/Dcwq5On708u8ezTjDU7kI=;
+	s=arc-20240116; t=1784254924; c=relaxed/simple;
+	bh=+wWqJZ+gahxEnFb30aAvjOJHpzF8BHMA4JsuiB1b/tc=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=qExqQYzJnTD39QMVWzBNOgteNR4KaknND8y6eeHq+wdt6NECq5IToXTY/HPZ1hryS+WprDgXYO+/UadkXcVvmoBhKCdSS8z7FnLqvLrJOcwwreT996cbyRFUIhxFPUM+ZDL6YVLGZJ3ClqsScHukTdbPRrAd00u1TDz66+n34cM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLoBvbQW; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=r1j7tInztofCnXOsGITUxBsbS9GJGjPq4W7TU6IxFK13UMddNawDWN06Yh4T7c8LLk7cM5nI1/4GjZvM29ZSkAb9XL7GitAR1G5xQgx5closMToYSCMKxCz5a6lqf+fF9h0J30y0V2GMNKn/S11c+Rb1ZLof0Okl9c3Oz0wjHGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PM3Nqjrc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLoBvbQW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6D8F1F000E9;
-	Fri, 17 Jul 2026 02:21:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PM3Nqjrc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 659971F000E9;
+	Fri, 17 Jul 2026 02:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784254885;
-	bh=Jwcgc73TH5T5lKjrhOej0Nfm8NODQpwgxcopTdMgI2c=;
+	s=k20260515; t=1784254922;
+	bh=tbO5kU7ojV4IOUxkTOMsQhwh7/4FA//2ZYTX912loGk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nLoBvbQWel1KFjdslFXhC5kvbxJRoS6ixmqluYf2vkuVBNcr7ynHHDMeQtIFa4PVm
-	 RnSARb5NNNqOM2Maabz787XHhM3dsMSUE3yMxKhnDK3/iwH/tVrfWG9NAU9Q3Zwrt7
-	 6JGOyotcwCtGPCXrXZ9zutynhkOKNlmpv/nb0fGoOf3UcqF9shSv+YZUh+QKcuPFcJ
-	 YhjI7JpaGLW6h9b+FMBb7D9ssoF+XqdGHarRNVxThlOZ9u2/Ar4dfNolV+bk+vMh9n
-	 aQ6Eabx74CA0AD1bPM/NhxkPgyD7l9TmiMQT16UO9QfzHu9JuLc+2Np4C0rVEqjNqL
-	 0PnASfT+SM9+Q==
+	b=PM3NqjrczcwK+x1mkR0U3rakYO28iofI+dR+PNDqv9vltli/hfZ0jANlqX5NuWqKS
+	 QiPQOKovUm+KGoC4dCyYYCIBgWCsRjXNXmNt+SwIOvUBLnm+LklSUN+DZGDdT1VT+e
+	 RQjWXgpj7jyhgmBAQBajfh9MLcyAlZuWVO2rMkAKvdTjiDKUvBs8p4FrNvZDJt/o2z
+	 cMYkchIHDsv+oeXacyCdur7aqvMfR56TBKg2G66GSNoFpvgRyKa7wCdwegs+0h7qox
+	 SSuX2MLmhLjGh2LTyPTZWyqes0i9RMtM+3n/G/Phch1jA6oQm7uC0CxN8uycQwmULi
+	 KAqw1EbPR9Zxg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 04/14] perf c2c: add column format infrastructure for
- function view
+Subject: Re: [PATCH v3 08/14] perf c2c: add HPP list parsing for function
+ view histograms
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Jiebin Sun" <jiebin.sun@intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260717020530.1645123-5-jiebin.sun@intel.com>
+In-Reply-To: <20260717020530.1645123-9-jiebin.sun@intel.com>
 References: <20260710084247.3576706-1-jiebin.sun@intel.com>
  <20260717020530.1645123-1-jiebin.sun@intel.com>
- <20260717020530.1645123-5-jiebin.sun@intel.com>
+ <20260717020530.1645123-9-jiebin.sun@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 17 Jul 2026 02:21:24 +0000
-Message-Id: <20260717022124.E6D8F1F000E9@smtp.kernel.org>
+Date: Fri, 17 Jul 2026 02:22:01 +0000
+Message-Id: <20260717022202.659971F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,66 +48,93 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] c2c_hist_entry__cycles() incorrectly calculates cycle counts by =
-omitting peer snoop latencies and misattributing peer load counts to the la=
-tency of regular loads.
+
+Pre-existing issues:
+- [High] Calling `perf_hpp__setup_output_field()` with a local list inadver=
+tently pollutes the global `perf_hpp_list` and fails to populate the local =
+list's output fields with the missing sort keys. This causes a type confusi=
+on/out-of-bounds read and completely breaks the newly added function view.
 --
 
---- Patch [4]: [PATCH v3 04/14] perf c2c: add column format infrastructure =
-for function view ---
-commit 989667f800a57839109dc11e25255b1d88273729
+--- Patch [8]: [PATCH v3 08/14] perf c2c: add HPP list parsing for function=
+ view histograms ---
+commit f3ca20deabb9c494811fc6797c416d4130121e41
 Author: Jiebin Sun <jiebin.sun@intel.com>
 
-perf c2c: add column format infrastructure for function view
+perf c2c: add HPP list parsing for function view histograms
 
-This commit adds the column format plumbing functions used by all function
-view dimensions. It introduces helper functions for calculating symbol widt=
-hs,
-dispatching column widths, and rendering multi-line column headers.
+This adds the histogram initialization and column parsing infrastructure
+for the function view in perf c2c. It provides functions to parse column
+strings and initialize histograms with custom dimensions.
 
 > diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browse=
 rs/c2c-function.c
-> index 1ef5d08e81c39..ace7e3f27b55c 100644
+> index d79d131b1f18c..487f9a68d4a43 100644
 > --- a/tools/perf/ui/browsers/c2c-function.c
 > +++ b/tools/perf/ui/browsers/c2c-function.c
 
 [ ... ]
 
-> +/*
-> + * Return the estimated total cycles for a c2c_hist_entry
-> + * (rmt_hitm + lcl_hitm + rmt_peer + lcl_peer + other loads).
-> + */
-> +static __maybe_unused u64 c2c_hist_entry__cycles(struct c2c_hist_entry *=
-c2c_he)
+> +static int
+> +function_hpp_list__parse(struct perf_hpp_list *hpp_list,
+> +			 const char *output_str,
+> +			 const char *sort_str,
+> +			 struct perf_env *env)
 > +{
-> +	double cycles_rmt, cycles_lcl, cycles_load;
-> +	u64 other_load, total_hitm;
+
+[ ... ]
+
+> +	ret =3D function_hpp_list__add_tokens(hpp_list, sort, env,
+> +					    c2c_function_hists__init_sort);
+> +	if (ret)
+> +		goto out;
 > +
-> +	cycles_rmt =3D avg_stats(&c2c_he->cstats.rmt_hitm) * c2c_he->stats.rmt_=
-hitm;
-> +	cycles_lcl =3D avg_stats(&c2c_he->cstats.lcl_hitm) * c2c_he->stats.lcl_=
-hitm;
-> +	total_hitm =3D c2c_he->stats.tot_hitm;
-> +	other_load =3D (c2c_he->stats.load >=3D total_hitm) ? c2c_he->stats.loa=
-d - total_hitm : 0;
-> +	cycles_load =3D avg_stats(&c2c_he->cstats.load) * other_load;
-> +
-> +	return (u64)(cycles_rmt + cycles_lcl + cycles_load);
+> +	perf_hpp__setup_output_field(hpp_list);
+
+[Severity: High]
+This is a pre-existing issue in the core formatting infrastructure, but
+will calling perf_hpp__setup_output_field() here fail to populate the local
+list's output fields?
+
+The underlying function in tools/perf/ui/hist.c hardcodes registration to
+the global perf_hpp_list. This causes the local list to remain empty, while
+polluting the global list with local dynamic formats.
+
+This also triggers a type confusion and out-of-bounds read. When a standard
+format is compared to a c2c_fmt in perf_hpp__setup_output_field(),
+c2c_fmt_equal() casts the standard format to c2c_fmt and reads the
+out-of-bounds dim pointer.
+
+> +out:
+> +	if (ret)
+> +		perf_hpp__reset_output_field(hpp_list);
+> +	free(output);
+> +	free(sort);
+> +	return ret;
 > +}
+> +
+> +static __maybe_unused int
+> +c2c_function_hists__init(struct c2c_hists *hists,
+> +			 const char *sort,
+> +			 int nr_header_lines,
+> +			 struct perf_env *env)
+> +{
+> +	__hists__init(&hists->hists, &hists->list);
+> +
+> +	perf_hpp_list__init(&hists->list);
+> +
+> +	hists->list.nr_header_lines =3D nr_header_lines;
+> +
+> +	return function_hpp_list__parse(&hists->list, /*output=3D*/NULL, sort, =
+env);
 
-[Severity: Medium]
-Does this calculation correctly account for peer snoop latencies?
+[Severity: High]
+Because this passes NULL for the output format string and relies entirely on
+perf_hpp__setup_output_field() to populate the missing sort keys, won't the
+new function view fail to render any columns?
 
-The function comment explicitly mentions including rmt_peer and lcl_peer,
-but the implementation appears to omit cycles_rmt_peer and cycles_lcl_peer
-entirely from the cycles aggregation.
-
-Additionally, by only subtracting tot_hitm from stats.load, does this
-inadvertently group peer load counts into the other_load bucket? This
-would cause peer load events to be multiplied by the generic load latency
-instead of their actual peer latencies, potentially skewing the performance
-metrics shown in the function view.
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260717020530.1645=
-123-1-jiebin.sun@intel.com?part=3D4
+123-1-jiebin.sun@intel.com?part=3D8
