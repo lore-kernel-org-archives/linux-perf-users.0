@@ -1,89 +1,68 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5056F245012;
-	Fri, 17 Jul 2026 16:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 832142DF6EA;
+	Fri, 17 Jul 2026 17:46:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784305786; cv=none; b=mvHbsISkFigfQeviGEscDbpfzazT2C9xejh6jQ8YUlOb3raZQx/gGolCLq+g5nvwB2fWPz015sqHYZdIM1mJH7Hg6W7nVbOiZ7tVVRb7dyRWwnpEmmEv/BW7mtKuhqjLUCXX93tg/TksfJFxMsHa9ZgU2HVJgTHK6NLfhRwg5qE=
+	t=1784310397; cv=none; b=h4SSad0ItPdGhsYV8DG/pQn67S+hPg4SYgkhK3PymIUSagKPBMjVcy/akOOrlgLIJIb4QSXZqlNP4EkMspYrS5dUJpfvcakFgjeDWOl8/pJ1l3NylU8/2Wo2yTeJaVKUl+G28FjaJfbbQKkqpa7i7GVLv1l7109WohQWytD8uzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784305786; c=relaxed/simple;
-	bh=+lHYXOMpYR2CjVPrlOEYR9B2IEXORBCms1hig+6Q1ug=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dK4zruNbqCDocJwftAu4dd5ghZOdo2LQypoaXhH9DcGMBcv+UzplpBZyFk/qM8/pSZhiNCG9N7vJU9mY/412lZT3rIdH7Ymyzo/bVE4Kvxi4YcYW+pL53uJj4JlodaZKRmebGkyL4GBv4jVYBdRa0KdXrq4DQQQ5JWknqm6TonY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=g3y2dkvY; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1784310397; c=relaxed/simple;
+	bh=uyLHfCpBfdQ0pWb2s9sC4brFdQq+hy2HhajhDDgD6Ng=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=ic5NFTjUq3crTugG4JLU9XSc8OrnHORqD7oJCwxlcF+s2DyLTRjVqE1vy5n3c6GudCLgMXi+HUVEwis0d/CqFe7W0eNWgVZBH9DhBRGTB8GD1UD5NfaOkHc4sE0BwXS4+ZBvVHnQtGFLp9IGlhvrGQ05ZccARhaF8qINfagqT4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QmKLARf4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="g3y2dkvY"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B2E7B40E02B1;
-	Fri, 17 Jul 2026 16:29:33 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 1Y60ZtmddiTi; Fri, 17 Jul 2026 16:29:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1784305763; bh=Nz7TtCuvujd6DyFmLHCmqcD86HKnSIHjpAW+JTeQYUI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g3y2dkvY6g+abAmwgItNF01PKbGFYkIATv791xbmF8hejFEWf8jNeNJSMOBQUQ8xb
-	 D1UFMXpzd4FODiPCzb/bN3LQYNZlCsfk+gcXn0a5yaG9G5SxBc4ryvLVQA5oF0tAdI
-	 vQrkveKZvczYYZjez4tb3X+fSDXHa2XyuJFH6peeV1vt1i9UK49vLTk2ZlRfZxO0/v
-	 AcFuwQcoAxVwk1s9egwvABIGhIf0HtNPoo9NrVNtRYMGa1PY2sUJoOmijf7uxTp5Go
-	 Qmg7VgJKNwDMZgyu1vFmLvdNm7m4+fUW6tbF+4OO0wNyBp109k9wKuXPpQM4Jkga1Y
-	 7KIq4w7hV/aSTfXedaAhqK4ZHCY37Bzq3nlqLBkTdvHJtCbDww9vWgb2ADix3B/LlP
-	 mzY8ZFl4d2EbeMbo0dsQe4T2seltZcnrrC7uvqYV03lKoigX8zifuEvV5cmIx2OTX4
-	 zhIaQV5YAtRuAGtju14hM8lI3iVs6Bfe/YT0KygzBFT+slLnTSGxBL9C2ZXjEE2gbw
-	 Id8EAxO2wJEKJnPgY0rROLnp1paMQIfFf5S65qqQTWjlb9aD2jPrTNgMvdTnFj2Kba
-	 WP9Criiut2XIajQoQWAvYLvhLI7y7l/CeYsFsifiOC/rRqnMxjkcTKexHL0GCNuE9z
-	 wFpnNeAJxxBMuSuaPldO+U9c=
-Received: from stx.tnic (unknown [165.204.77.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3247F40E02B0;
-	Fri, 17 Jul 2026 16:29:07 +0000 (UTC)
-Date: Fri, 17 Jul 2026 09:28:57 -0700
-From: Borislav Petkov <bp@alien8.de>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
-	Jinchao Wang <wangjinchao600@gmail.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v9 00/10] tracing: wprobe: x86: Add wprobe for watchpoint
-Message-ID: <20260717162857.GAalpYSaZ_emTMUEEW@fat_crate.local>
-References: <178429796992.157981.3393977217853767915.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QmKLARf4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA9991F000E9;
+	Fri, 17 Jul 2026 17:46:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784310396;
+	bh=wOb/I7XieCpghaMgzH3BFHZw/1NcOXxlMoh0ZElAiCQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=QmKLARf43f3EHDCuVJ7IAFxqUx0195rIzLWVUPOCM/SxAxSlFQKbfkv6clPOVAh1X
+	 GZeTSsxsq8AHqljpoY3iJnz178Ij/G3cxCMxvLXhK0IrkfxWsjKIkz3x4tmPHQ4gUT
+	 TdjBvs4Ar2k9D+RYGDbKtIKAeDt3DLYWHchnE7QgEj/EpEVEQCODTap6Zwa/kvN8C1
+	 gnw9C4v6xWhbBBjxOE+9vkoeycHI6E5OnHwmYFcPhoaJ0IQKVg2/z8I9fsLQJnM+nX
+	 crdj4N+dpGoogocHNxvDHRXqIgmuKlw0PEbCYFHDLvfWj9ZlHLQo0dnYHkDa0TubOF
+	 hDwAqTwIB7aIA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
+ linux-perf-users@vger.kernel.org
+In-Reply-To: <20260711000419.1949161-1-namhyung@kernel.org>
+References: <20260711000419.1949161-1-namhyung@kernel.org>
+Subject: Re: [PATCH v3 1/4] perf stat: Fix duplicate output with
+ --for-each-cgroup
+Message-Id: <178431039584.131573.14862617725213302410.b4-ty@kernel.org>
+Date: Fri, 17 Jul 2026 10:46:35 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <178429796992.157981.3393977217853767915.stgit@devnote2>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-Hi,
+On Fri, 10 Jul 2026 17:04:16 -0700, Namhyung Kim wrote:
+> Currently it produces following output with duplicate events when
+>  --for-each-cgroup option is used.  It seems perf stat adds them when
+> it handles default events but didn't copy some fields in evsel__clone().
+> 
+>   $ sudo perf stat -a --for-each-cgroup / true
+> 
+>    Performance counter stats for 'system wide':
+> 
+> [...]
+Applied to perf-tools-next, thanks!
 
-On Fri, Jul 17, 2026 at 11:19:30PM +0900, Masami Hiramatsu (Google) wrote:
-> Here is the 9th version of the series for adding new wprobe (watch probe)
+Best regards,
+Namhyung
 
-any chance you won't blast out your patchset every day?
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
