@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CEA33AD9A;
-	Fri, 17 Jul 2026 02:06:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673D4331202;
+	Fri, 17 Jul 2026 02:06:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784253978; cv=none; b=CpuFsObtL6ZCe/EPFd8FCjdtcTynK5SQj+oPM4q/vtjVDlCkeWLxgA8YIwmcZI8q6mnTENc5rQlNKdNaa1wLxx4t+s/9rFTAmR5LWyQ2GGc+EF2uErri9ObWKvDbDtU4+I+GMaZ5hmeWcOniID5oQJMvsMBtjHuDoZnqPKnvoEY=
+	t=1784253982; cv=none; b=OpxCy2e8Ssn5WVh3GuQf4NkOxxKZcBMwiEjx6E8BM/g3QluwzAUftFNJsBjfZe481hTrMD7wzDNpu3C8mRa+4iUJdnRMrqiOkb1temD4PnxoccCDmOjZrtrSny1B5YsETB84hqZYUe0lSvIihgNO5guMrAKud00ENj7XlNAGUAA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784253978; c=relaxed/simple;
-	bh=yh6XazmLhFMw3Cs/tgHrBl3t7OrSgwaIiTGyi9e5QMQ=;
+	s=arc-20240116; t=1784253982; c=relaxed/simple;
+	bh=VxumeM2X7wfXjXb2RbnqOV4BcLwA9OBmfvijtV5OWDE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KZrFCyDaaNDviq2RaPjR1KhMsLb1WtPEWqrRyCcoBYeUyVi4fESrapJe+gQmhPJjjt+BbBYpy93e0D8wm95YTAK5A4tSx3xB1+Az8Bsi56I6Y6bMuCxw9LMx3ifTe5ijHRMohOSGeghTqi4SxlSngZ5//ioeZJuFikKk+qKpy4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZO9ZqN3V; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version; b=FOBTL1vBxZOFVA59HCwhSAWj57K/mhhnNboCQBxoHBE35sOtN/v50KM1kVesUbKG6459pudblUK72VGD96wxYxJ78+mp8owkI0Uh3SdWVeuCFD+8HFwnOc2SObXuxMJXKovTDD5NpRTMhX+EVpzplRr+I2RMxHAjbYIOFq7lysw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F0jctI0V; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZO9ZqN3V"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F0jctI0V"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784253977; x=1815789977;
+  t=1784253981; x=1815789981;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=yh6XazmLhFMw3Cs/tgHrBl3t7OrSgwaIiTGyi9e5QMQ=;
-  b=ZO9ZqN3VEmsDKJuCZfWCoyJCTAaY0jGA0HxsQFWbrCErkREn5SLGlnky
-   B8QHBxxvcEPX4q+Kq1FhdXTEGldEHedXSduFVNxeOndwkPzB9zKrhu2Zj
-   4lXgYO/U3kgD886ilTIhYDweiEQdcXu5qabpx+fGOnAT+fjJaSsY2+3yw
-   zvpaT8bUTaxBHK/KaC6wmW6QiwTKPym5kXzjiEeTNzdWFLpz7lXuE0vOH
-   W4FirVzD9pBEzkzKJbFZ3swDtAw4uYERI0vBbCt4bRCGGGj95Fnj6Ga+W
-   xGKgOjNiELoY42bA/tgDmcRf8M+66NOy2OPVrwpQGh1oheJjxGGcGLPPF
-   A==;
-X-CSE-ConnectionGUID: ejjUusBaQgSa5tr+ZjST5A==
-X-CSE-MsgGUID: 5QCOx7dcSjqSFrVJqzGhow==
-X-IronPort-AV: E=McAfee;i="6800,10657,11848"; a="107720084"
+  bh=VxumeM2X7wfXjXb2RbnqOV4BcLwA9OBmfvijtV5OWDE=;
+  b=F0jctI0Vta6UhdY9AL4r2m+PjcHTbc9CZKBZTx8MdaiTlhqzMpgyc4uk
+   zCJYTH3j5LX+3KWjbXsHNKudGYB/K9Wq+PHxtgwdOhfhugIpAeLQEdRFJ
+   Mp/r2JFV+eDOqs1S3NR1A66XPM22L4WYiEhFa0iQRzVq/xHc/4XebGbLu
+   pKeNd1bYD2WR5ZHA7oO8ASy8l8f+/uy/6hftmzbFZClFSqLpD9XXHS2V6
+   Ag8Z9I3rZndaE0gqACsuzCxh9zM3B0MyF2o1S54U60EXDwE8bF65T8XMA
+   BWihHeacLJe6hK2E8Zt4EzJDMIe+B/ySY6mFuCCKShZ7mhreb13sbWDYP
+   g==;
+X-CSE-ConnectionGUID: kHhTLARhQh2Hl56c9Bj9oA==
+X-CSE-MsgGUID: IstgLpx5T/ir3gpis2Wd0Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11848"; a="107720103"
 X-IronPort-AV: E=Sophos;i="6.25,168,1779174000"; 
-   d="scan'208";a="107720084"
+   d="scan'208";a="107720103"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2026 19:06:17 -0700
-X-CSE-ConnectionGUID: jaGeZ4XeTsy+1g9GHiB1Ug==
-X-CSE-MsgGUID: zQNoNbLnQAyjAU7Iq5yjLQ==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2026 19:06:21 -0700
+X-CSE-ConnectionGUID: c53pXVr3QKiPBKTgu8lCzg==
+X-CSE-MsgGUID: zfcB7oceTZ2Zuzqo6nKQYg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,168,1779174000"; 
-   d="scan'208";a="279952885"
+   d="scan'208";a="279952890"
 Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by fmviesa002.fm.intel.com with ESMTP; 16 Jul 2026 19:06:12 -0700
+  by fmviesa002.fm.intel.com with ESMTP; 16 Jul 2026 19:06:16 -0700
 From: Jiebin Sun <jiebin.sun@intel.com>
 To: namhyung@kernel.org,
 	acme@kernel.org,
@@ -61,9 +61,9 @@ Cc: mark.rutland@arm.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Jiebin Sun <jiebin.sun@intel.com>
-Subject: [PATCH v3 12/14] perf c2c: add function view browser UI
-Date: Fri, 17 Jul 2026 10:05:28 +0800
-Message-ID: <20260717020530.1645123-13-jiebin.sun@intel.com>
+Subject: [PATCH v3 13/14] perf c2c: add TAB key to switch to function view
+Date: Fri, 17 Jul 2026 10:05:29 +0800
+Message-ID: <20260717020530.1645123-14-jiebin.sun@intel.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260717020530.1645123-1-jiebin.sun@intel.com>
 References: <20260710084247.3576706-1-jiebin.sun@intel.com>
@@ -76,23 +76,11 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace the stub perf_c2c__browse_function_view() with the full
-interactive browser implementation:
+Wire up the TAB key in the cacheline browser to launch the function
+view browser via perf_c2c__browse_function_view(). This allows users
+to switch between the traditional cacheline view and the new
+function-level sharing analysis view.
 
-- c2c_function_browser__new(): create browser with hierarchy support,
-  disabling callchains for clean function-level display
-- c2c_function_browser__browse_cacheline_detail(): drill into
-  cacheline detail view via 'd' key
-- c2c_function_browser__title(): display entry count in title bar
-- c2c_function_browser__delete(): cleanup on exit
-
-The browser saves/restores symbol_conf.use_callchain to avoid
-corrupting the callchain display in the cacheline view after
-returning from the function view.
-
-The browser entry point perf_c2c__browse_function_view() is wired up by
-the next patch, which adds the TAB key in the cacheline view to switch
-into the function view.
 Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -109,198 +97,31 @@ Cc: Thomas Falcon <thomas.falcon@intel.com>
 Reviewed-by: Tianyou Li <tianyou.li@intel.com>
 Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
 ---
- tools/perf/ui/browsers/c2c-function.c | 157 +++++++++++++++++++++++++-
- 1 file changed, 152 insertions(+), 5 deletions(-)
+ tools/perf/builtin-c2c.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browsers/c2c-function.c
-index 31f1626559cd..fb6673ab410e 100644
---- a/tools/perf/ui/browsers/c2c-function.c
-+++ b/tools/perf/ui/browsers/c2c-function.c
-@@ -2,7 +2,7 @@
- /*
-  * C2C Function Browser - function-level cacheline sharing analysis
-  *
-- * Planned UI: 3-level hierarchy showing which functions share cachelines (not implemented yet):
-+ * Displays a 3-level hierarchy showing which functions share cachelines:
-  *   Level 1: Primary functions sorted by Cycles % (estimated load cycles)
-  *   Level 2: Other functions sharing cachelines with the level-1 function
-  *   Level 3: Specific shared cachelines between each pair of functions
-@@ -44,7 +44,7 @@ struct perf_c2c_ext {
- 	u64			total_cycles;
- };
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index f1dd9d8699cb..23c58eba415a 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -2693,6 +2693,7 @@ static int perf_c2c__hists_browse(struct hists *hists)
+ 	static const char help[] =
+ 	" d             Display cacheline details \n"
+ 	" ENTER         Toggle callchains (if present) \n"
++	" TAB           Switch to function view\n"
+ 	" q             Quit \n";
  
--static struct perf_c2c_ext c2c_ext __maybe_unused;
-+static struct perf_c2c_ext c2c_ext;
- 
- struct c2c_function_browser {
- 	struct hist_browser	hb;
-@@ -1334,7 +1334,7 @@ static void c2c_function__finalize(void)
-  *   L2: sharing functions referenced from each L1 function
-  *   L3: cachelines that pair L1 with L2
-  */
--static __maybe_unused int build_function_view_hierarchy(void)
-+static int build_function_view_hierarchy(void)
- {
- 	static const char output_fields[] =
- 		"cycles_percent,total_stores,iaddr_symbol,symbol_view,cacheline_symbol";
-@@ -1408,8 +1408,155 @@ static __maybe_unused int build_function_view_hierarchy(void)
- 	return ret;
- }
- 
--int perf_c2c__browse_function_view(struct hists *hists __maybe_unused)
-+static int c2c_function_browser__title(struct hist_browser *browser,
-+				       char *bf, size_t size)
- {
--	ui__warning("C2C function view is not implemented yet.\n");
-+	scnprintf(bf, size,
-+		  "Shared Data Functions Table     (%" PRIu64 " entries, sorted on Cycles %%)",
-+		  browser->nr_non_filtered_entries);
- 	return 0;
- }
-+
-+static struct c2c_function_browser *c2c_function_browser__new(struct hists *hists)
-+{
-+	struct c2c_function_browser *browser;
-+
-+	if (!hists)
-+		return NULL;
-+
-+	browser = zalloc(sizeof(*browser));
-+	if (!browser)
-+		return NULL;
-+
-+	hist_browser__init(&browser->hb, hists);
-+
-+	browser->hb.title = c2c_function_browser__title;
-+	browser->hb.c2c_filter = true;
-+	browser->hb.show_headers = true;
-+	/* Keep title line count consistent with forcing headers on. */
-+	browser->hb.b.extra_title_lines = hists->hpp_list->nr_header_lines;
-+	browser->hb.min_pcnt = 0.0;
-+
-+	/*
-+	 * Note: symbol_conf.report_hierarchy is deliberately left unset.
-+	 * The generic browser still descends into hroot_out children via
-+	 * rb_hierarchy_next()/can_goto_child(), which key off he->unfolded,
-+	 * so 'e'/'+' expands L1 -> L2 -> L3 correctly. Setting the flag would
-+	 * additionally make hist_entry__delete() recurse hroot_out and free
-+	 * each child, but our children borrow thread/ms (see
-+	 * c2c_child_entry__alloc()), so that would underflow their refcounts.
-+	 * Teardown is handled by c2c_he__free_hierarchy() instead.
-+	 */
-+	return browser;
-+}
-+
-+/*
-+ * c2c_function_browser__delete - Free function browser
-+ */
-+static void c2c_function_browser__delete(struct c2c_function_browser *browser)
-+{
-+	free(browser);
-+}
-+
-+static int c2c_function_browser__browse_cacheline_detail(struct hist_entry *he_selection,
-+							 struct hists *hists)
-+{
-+	struct rb_node *nd;
-+	u64 cl_addr;
-+
-+	if (!he_selection || !he_selection->parent_he ||
-+	    !he_selection->parent_he->parent_he || !he_selection->mem_info)
-+		return -1;
-+
-+	cl_addr = cl_address(mem_info__daddr(he_selection->mem_info)->addr, chk_double_cl);
-+
-+	for (nd = rb_first_cached(&hists->entries); nd; nd = rb_next(nd)) {
-+		struct hist_entry *he_cl = rb_entry(nd, struct hist_entry, rb_node);
-+		u64 this_cl;
-+
-+		if (!he_cl->mem_info)
-+			continue;
-+
-+		this_cl = cl_address(mem_info__daddr(he_cl->mem_info)->addr, chk_double_cl);
-+		if (this_cl == cl_addr)
-+			return perf_c2c__browse_cacheline(he_cl);
-+	}
-+
-+	return -1;
-+}
-+
-+/*
-+ * perf_c2c__browse_function_view - Browse function view with TAB key support
-+ * @hists: Main cacheline histograms
-+ *
-+ * Returns: 0 on success, negative error code on failure
-+ */
-+int perf_c2c__browse_function_view(struct hists *hists)
-+{
-+	struct c2c_function_browser *sym_browser;
-+	bool saved_use_callchain = symbol_conf.use_callchain;
-+	int key, ret;
-+	static const char help[] =
-+	" d             Display cacheline details for the selected entry\n"
-+	" e/+           Expand/collapse the selected entry\n"
-+	" TAB/ESC/q     Return to the cacheline view\n";
-+
-+	if (!hists)
-+		return -EINVAL;
-+
-+	/* Disable callchain before building so no callchain structs are allocated. */
-+	symbol_conf.use_callchain = false;
-+
-+	ret = build_function_view_hierarchy();
-+	if (ret) {
-+		ui__error("Failed to build function view hierarchy (ret=%d)\n", ret);
-+		goto out;
-+	}
-+
-+	sym_browser = c2c_function_browser__new(&c2c_ext.function_hists.hists);
-+	if (!sym_browser) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
-+	/* Reset abort key so we can receive Ctrl-C as a key. */
-+	SLang_reset_tty();
-+	SLang_init_tty(0, 0, 0);
-+	SLtty_set_suspend_state(true);
-+
-+	sym_browser->hb.nr_non_filtered_entries =
-+		c2c_ext.function_hists.hists.nr_non_filtered_entries;
-+
-+	while (1) {
-+		key = hist_browser__run(&sym_browser->hb, "? - help", true, 0);
-+
-+		switch (key) {
-+		case 'q':
-+		case K_TAB:
-+		case K_ESC:
-+			goto browser_done;
-+		case 'd':
-+			/* Cacheline detail honors the user's callchain setting. */
-+			symbol_conf.use_callchain = saved_use_callchain;
-+			c2c_function_browser__browse_cacheline_detail(sym_browser->hb.he_selection,
-+								      hists);
-+			/* Preserve any toggle made in the detail view, then
-+			 * re-disable callchain for the function view.
-+			 */
-+			saved_use_callchain = symbol_conf.use_callchain;
-+			symbol_conf.use_callchain = false;
+ 	browser = perf_c2c_browser__new(hists);
+@@ -2714,6 +2715,9 @@ static int perf_c2c__hists_browse(struct hists *hists)
+ 		case 'd':
+ 			perf_c2c__browse_cacheline(browser->he_selection);
+ 			break;
++		case '\t':
++			perf_c2c__browse_function_view(hists);
 +			break;
-+		case '?':
-+			ui_browser__help_window(&sym_browser->hb.b, help);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+browser_done:
-+	c2c_function_browser__delete(sym_browser);
-+out:
-+	symbol_conf.use_callchain = saved_use_callchain;
-+	return ret;
-+}
+ 		case '?':
+ 			ui_browser__help_window(&browser->b, help);
+ 			break;
 -- 
 2.52.0
 
