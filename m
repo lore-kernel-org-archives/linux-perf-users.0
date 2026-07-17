@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8081937A4B8
-	for <linux-perf-users@vger.kernel.org>; Fri, 17 Jul 2026 10:38:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179CE39CCF9
+	for <linux-perf-users@vger.kernel.org>; Fri, 17 Jul 2026 10:40:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784284694; cv=none; b=lVvUMv1vTBt7gQ7yL2zE+StiQXqHQakLuzq4PW4rXaphleYHxBPRIU0dVbyCWjlFjRQczPbWyMf3DOfeAyZsbSRHx2iGwg5lGsYAuoYpaIcWQqvapyA03RXE19i8+deehdQ29rpFmlVypBxrJPdSyREBRFEYO3YmoeCXcUkZr3E=
+	t=1784284859; cv=none; b=HDsP3WIjS+Nd3hetE5y+OYQwJerKG8LlCoAL1ajjd8DBpUXCmPGHpL+1FY80X+l7h5L93lgSX12rv7LP1ka8OR4pbG2JCDWEya7SbwEewOXwZTSSNHvqrqSXvSfZgL7AODfJbA5Lb88lTwg2xVjPG0L9nfAgb5ZQLhFKa5lP/7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784284694; c=relaxed/simple;
-	bh=7M8b6H4/Suea7A1U3B9aTdSILJWPe9/EnH5isXKtTBE=;
+	s=arc-20240116; t=1784284859; c=relaxed/simple;
+	bh=m5OJ2yFx8XSdVISryowgZmGlv98eyyHSVVqMSgLXZ3M=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=rxFFT6A0WQFez99A1sVjKzsY4te+2Fy0p4H7JC0DbSamDtiGaPiua0G9Vq6Prll1c55gmSxzckZNlThzBkH9r6IQkR1OPiMtteJg8FzOM8Pp96atobIMmrifQiONCqng+BN1OKUjVdA2mX2JFpW55Xq1rA6ihND8r57vueg7i6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hgUqWv2p; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=H8fmIB3pAGrgzTzQpLeJr1uKIZDX0juP8D04BsS/sBwLwAH/jPVO3OxHMDsghBOcyd9pzIAEJLwU52v+5AsO4U+qsMhY7NNgXp0ANYXefc6QfeFLsfp+huxXyBkqgdwlweYQRCHryxm2sGim/38UmyIMPwBa1IE8TZLRSbdYySY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JswF4DS7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgUqWv2p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 075C11F000E9;
-	Fri, 17 Jul 2026 10:38:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JswF4DS7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8A5C1F000E9;
+	Fri, 17 Jul 2026 10:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784284693;
-	bh=GQbasscoe2V6UXYHSsgodfB527guSwU3X0f9MHopVzk=;
+	s=k20260515; t=1784284858;
+	bh=5XPTYC6qSaDIvDwrcOEPBZOVbVZO2z2G4/CQakJOgJY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hgUqWv2pK9Wv9TNzGpvvnw0I2wbYjm1Q1sdejpzFvSfW9rbrwZxorjKqgmAhrhqvP
-	 HwJDOWNd3/F8UKmUooHp6l58uLDM4c9qRb4ubDSM2jUhE6RMAezOWuf2Dln06RxM60
-	 qXSA+fNfZA6R8uPhFVX+gT79XUjLft4eavMOHvVRZtuUlmT5mtS+K10WwgiWJjSodj
-	 mFzncWht3draBh/qv62fJnj+WCYL6y7U5lM9Yz5eMBNO5swnf5yVQBT866ChGFUZnr
-	 lwP5DPK77trm8gta0QPwjCikIU34cF11/EoAxAxYzsDQBTNc9lcrq3YXCWm0yA+Zca
-	 fmEZEzuR581Ag==
+	b=JswF4DS7J7U+3BVfeHmA/L24ym/3wTzSAUXAr87TLXLbOzXRLG/PMq8ufBl7Eh/+M
+	 F9DiTCe68yORyD2VnWCFavDw1qg8xL1V1FEvTsywhugxqiME112Wx0TrTnB1B5+EZM
+	 kPsLiK6KN3EK4ZULLGK17FAcYEqdK/DJWXVfneCiks5mfAXJqir1CcHtEGRS/uPPLS
+	 3Po1VwyQLxWUTKicbRhFydi0504ikvXSLd0yLn//4+aA1w9H3nS50mZNW0YdQr1JgU
+	 Uizcz5FXEnPgPek3G7kTOdaxqV/8c7hS8VlCf/aQN5PdJbcB4U8ha5kcwL44GEqyqq
+	 JMhVv6lIRp0FQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [Patch v3 8/8] perf/x86/intel: Prevent drain_pebs() reentry
+Subject: Re: [PATCH 3/3] drivers/perf: hisi: Remove redundant
+ dev_err()/dev_err_probe()
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
+To: "Pan Chuang" <panchuang@vivo.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260717080342.1879573-9-dapeng1.mi@linux.intel.com>
-References: <20260717080342.1879573-1-dapeng1.mi@linux.intel.com>
- <20260717080342.1879573-9-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260717103123.34887-4-panchuang@vivo.com>
+References: <20260717103123.34887-1-panchuang@vivo.com>
+ <20260717103123.34887-4-panchuang@vivo.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 17 Jul 2026 10:38:12 +0000
-Message-Id: <20260717103813.075C11F000E9@smtp.kernel.org>
+Date: Fri, 17 Jul 2026 10:40:57 +0000
+Message-Id: <20260717104057.C8A5C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,71 +49,60 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] TOCTOU race in intel_pmu_drain_bts_buffer leading to duplicate BTS=
- records.
+- [High] Out-of-bounds array access / buffer overflow in hisi_l3c_pmu_init_=
+ext() due to missing upper bound check on device tree IRQ count.
 --
 
---- Patch [8]: [Patch v3 8/8] perf/x86/intel: Prevent drain_pebs() reentry =
----
-commit 77ebceadaa828dfb1bed75e560551cf29b1ae9f5
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+--- Patch [3]: [PATCH 3/3] drivers/perf: hisi: Remove redundant dev_err()/d=
+ev_err_probe() ---
+commit 439e35f073703c68b0687dec637faec43876da5e
+Author: Pan Chuang <panchuang@vivo.com>
 
-perf/x86/intel: Prevent drain_pebs() reentry
+drivers/perf: hisi: Remove redundant dev_err()/dev_err_probe()
 
-The PEBS buffer is shared by all events on a CPU, so drain_pebs() must
-not run concurrently. This commit introduces __intel_pmu_quiesce() and
-__intel_pmu_resume() helpers to disable the full PMU around the
-drain_pebs() call, preventing reentry.
+This commit removes redundant driver-specific error logs when calling
+devm_request_irq(). The core framework automatically handles the error
+reporting on failure.
 
-> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-> index e86e4ba91e1b3..7f8b98d1837dc 100644
-> --- a/arch/x86/events/intel/ds.c
-> +++ b/arch/x86/events/intel/ds.c
-> @@ -1240,13 +1240,6 @@ int intel_pmu_drain_bts_buffer(void)
->  	return 1;
->  }
+> diff --git a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c b/drivers/perf/=
+hisilicon/hisi_uncore_l3c_pmu.c
+> index f963e4f9e5527..56a88fb0d3c2c 100644
+> --- a/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
+> +++ b/drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
+> @@ -604,8 +604,7 @@ static int hisi_l3c_pmu_init_ext(struct hisi_pmu *l3c=
+_pmu, struct platform_devic
+>  				       IRQF_NOBALANCING | IRQF_NO_THREAD,
+>  				       irqname, l3c_pmu);
+>  		if (ret < 0)
+> -			return dev_err_probe(&pdev->dev, ret,
+> -				"Fail to request EXT IRQ: %d.\n", irq);
+> +			return ret;
+> =20
+>  		hisi_l3c_pmu->ext_irq[i] =3D irq;
 
 [Severity: High]
-This is a pre-existing issue, but since you are fixing the drain reentry=20
-race for PEBS, does intel_pmu_drain_bts_buffer() need similar protection?
+This is a pre-existing issue, but does this loop risk writing out of bounds
+if the device tree specifies more IRQs than expected?
 
-If a user configures a BTS event alongside another active counter and=20
-disables the BTS event, the stop IPI can call this sequence without=20
-globally disabling the PMU:
+In hisi_l3c_pmu_init_ext(), the total number of IRQs is fetched with
+platform_irq_count(pdev). The code enforces a lower bound but misses an
+upper bound check:
 
-__perf_event_stop()
-  x86_pmu_stop()
-    intel_pmu_disable_event()
-      intel_pmu_drain_bts_buffer()
+    ext_num =3D platform_irq_count(pdev);
+    if (ext_num < L3C_MAX_EXT)
+        return -ENODEV;
+    hisi_l3c_pmu->ext_num =3D ext_num - 1;
 
-If a PMI interrupts execution precisely between reading the top pointer and=
-=20
-resetting the index:
+If a misconfigured device tree provides more IRQs than expected,
+hisi_l3c_pmu->ext_num can exceed the fixed size of the ext_base and ext_irq
+arrays, which are bound by L3C_MAX_EXT.
 
-arch/x86/events/intel/ds.c:intel_pmu_drain_bts_buffer() {
-    ...
-    base =3D (struct bts_record *)(unsigned long)ds->bts_buffer_base;
-    top  =3D (struct bts_record *)(unsigned long)ds->bts_index;
+The loop iterating up to hisi_l3c_pmu->ext_num would then write out of
+bounds into the ext_irq array at the end of this block.
 
-    if (top <=3D base)
-        return 0;
-
-    memset(&regs, 0, sizeof(regs));
-
-    <-- PMI FIRES HERE -->
-
-    ds->bts_index =3D ds->bts_buffer_base;
-    ...
-}
-
-Could the NMI handler unconditionally call intel_pmu_drain_bts_buffer(),=20
-draining the records and resetting the index, only for the interrupted=20
-context to resume and push the exact same records again using its stale=20
-top pointer?
-
-Would it make sense to wrap the BTS draining logic with the newly=20
-introduced __intel_pmu_quiesce() and __intel_pmu_resume() helpers as well?
+Could we add an upper bound check for ext_num to prevent memory corruption
+if too many IRQs are present?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260717080342.1879=
-573-1-dapeng1.mi@linux.intel.com?part=3D8
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260717103123.3488=
+7-1-panchuang@vivo.com?part=3D3
