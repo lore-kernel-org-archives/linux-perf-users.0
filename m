@@ -1,107 +1,237 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A44E23EFD37
-	for <linux-perf-users@vger.kernel.org>; Fri, 17 Jul 2026 13:15:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A7D3AD53D
+	for <linux-perf-users@vger.kernel.org>; Fri, 17 Jul 2026 13:19:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784294139; cv=none; b=rE8ane+qZlRRt4MrYLaEck0gdHs6B9ncYeYNTiNnTakXwiQa9QW/yiko5We/LQtXhLNiVCKWZGbnHJrn1AwJT97rcZNCRENnTsTr1yhQgCcr3posoKp5I25f37nUG1+ozOreZN+hv5MJtkYUB+qjGaKaLjJar0d1uzo+ni1EShc=
+	t=1784294346; cv=none; b=TukcrANQPhtLlAHAomUNqUtHEyJTBn7qh3Sy4zApB7gTS8qXpkxWCyCrtDjGHeWJAVi+SUtbszPVhbgh+6l38IGpWvmH15CH4aTWWWtD02CdgkIU89eEX0erjAIWGVhDGJFLDYg0KTuxHxs4LKoRjBlrGztSfQgtz44T2HW0FIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784294139; c=relaxed/simple;
-	bh=fdIVj6ByjVe43ekwuljfWtdmWzwFVVKgwIQ8KRczb8o=;
+	s=arc-20240116; t=1784294346; c=relaxed/simple;
+	bh=+sVczpF0mXJOtMM0VZBHTZyj1dG5TwJpMti+IcVJSIM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=stJ2/CTB3sjTDHYQFcVVLtKL/GEfWvQae4XD6dFWM1NCAfU6FM/bWRusoLy61WsHEX4gZNGahCmlT90+3cxIhE4TDR5C/QdlJzqa6WEPpIwCufDIA+xn2ZE9fOhkckpnoz0m2NfIjJDy7lpa5EtE7r0deBKz7Iy1VrIgW4I/8tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L7sEQXnV; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=eRES6URplhfxiOlnKZn6QtfGuezsmD45Fq25eEb2Mh8A4i+diz2W45vVPaM7isyfTaaTMUMQZ2MEY5Et1z6DrNuYA3/OnsloVRFIGHSqLMmEf9VYFRY2O8WR+yCJX7qa3SpHdpTddVHZci6K8y7PQ0TVxmCNv23HtX8leGtJ+/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NlmdaUhv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L7sEQXnV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55BF61F00A3A;
-	Fri, 17 Jul 2026 13:15:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NlmdaUhv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 864991F000E9;
+	Fri, 17 Jul 2026 13:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784294138;
-	bh=qBoFW5wboq4Hela750z5bZacSA6KNjq/LsUrClBIIOU=;
+	s=k20260515; t=1784294344;
+	bh=fFK8HpCSo6lFAiHK9bNyH+Ld0d0yKGx2h4wxQ/YkRrY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=L7sEQXnV6okq9qgWHKUmhdEjbyRGjEmrrj6VAccRFHlLkKVn61GBbew3Kvoe1M/iD
-	 gJsyhikCFcaUPZNkjj3ec6WeSZTDpjUube+eiYP9kJ5NIj0SW3zNekWs/LGuZC6XkA
-	 +bp4e6f+H0/SLfeAMF1mos1qEQlQVvB6bs+LrFUAjmOw2mlt3InaQxCBsxQvWUjGYW
-	 d5parbkiHBMUdhWQcywfr85F4aAhWIL4EVwVC3PbEqcdblQtbBMzRktynwl1QtoS80
-	 unKfnDp1HeAnfGlraYx4hnVCmYM0+NdtzWsMyEW9kqeVIbfIMLAeZ8sff/7/vBJsve
-	 yiP1ZBqarzIag==
+	b=NlmdaUhvX2zY6VqONuudVCaMh5TulfBZDCL4lJlt2OV9vXwU0Wf5nAXvmIrwnzsaB
+	 BhkRmDBOAxWuXRGg8tDHQBdX/uTExnFS2c9I7IjO5fkHD5ak5WsQocdQ53Z21t/rXE
+	 iIWM7YmrNLtL3P2Sr8WAz0+2vAnrzjHktcDpVlZPF5BSoogau8UCE55N3e/LPLuBW9
+	 vUGG1mZmRKe5sostK7lY7ssgXqU8HDk3NQ4KELMz6ueFisf0U/+Yj5cnA6amyLanA4
+	 lSILagC9PMXaAcP9mZwm6oXe/ETj1t7XOmKpUhUPu77vpdvOqxSm56nAcs7vVXGfyc
+	 Xzg0BbhRJ2Few==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v2 02/13] x86/hw_breakpoint: Unify breakpoint
- install/uninstall
+Subject: Re: [RFC PATCH v2 06/13] mm/kwatch: add lockless per-task context
+ pool
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Jinchao Wang" <wangjinchao600@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260717130251.1901695-1-wangjinchao600@gmail.com>
+In-Reply-To: <20260717130430.1902527-1-wangjinchao600@gmail.com>
 References: <20260717125023.1895892-1-wangjinchao600@gmail.com>
- <20260717130251.1901695-1-wangjinchao600@gmail.com>
+ <20260717130430.1902527-1-wangjinchao600@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 17 Jul 2026 13:15:37 +0000
-Message-Id: <20260717131538.55BF61F00A3A@smtp.kernel.org>
+Date: Fri, 17 Jul 2026 13:19:04 +0000
+Message-Id: <20260717131904.864991F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 6 potential issue(=
 s) to consider:
-- [Medium] Unnecessary write to debug address registers (DR0-DR3) during br=
-eakpoint uninstall causes a performance regression.
+- [Critical] Concurrent lockless accesses to the global `kwatch_ctx_pool` l=
+ack RCU or READ_ONCE protection, leading to Use-After-Free or NULL pointer =
+dereferences.
+- [High] NMI reentrancy between slot claim and release causes premature rel=
+ease, double free, and cross-task data corruption.
+- [High] Hash table lookup degenerates to an unconditional O(N) full array =
+scan on negative lookups, causing massive NMI latency.
+- [High] Context slots permanently leak if a task exits abruptly, causing s=
+tate corruption and ABA problems when the task_struct is reallocated.
+- [High] Missing release/acquire memory barriers when dynamically publishin=
+g `kwatch_ctx_pool` expose lockless readers to uninitialized state and UB.
+- [Medium] Large contiguous memory allocation with kcalloc() risks frequent=
+ failure on fragmented systems.
 --
 
---- Patch [2]: [RFC PATCH v2 02/13] x86/hw_breakpoint: Unify breakpoint ins=
-tall/uninstall ---
-commit 5b286a3cc2eb7cc8f15c628fb198117f5bc1729d
+--- Patch [6]: [RFC PATCH v2 06/13] mm/kwatch: add lockless per-task contex=
+t pool ---
+commit 48d8ef7e220842e6317681d38fcc2886436cae7d
 Author: Jinchao Wang <wangjinchao600@gmail.com>
 
-x86/hw_breakpoint: Unify breakpoint install/uninstall
+mm/kwatch: add lockless per-task context pool
 
-This commit consolidates breakpoint management to reduce code duplication
-by unifying the install and uninstall paths into common management function=
-s.
-It also includes linux/types.h to fix a missing build dependency.
+A task that enters the watched function needs somewhere to keep its
+window state (nesting depth, owned watchpoint, config epoch). The
+lookup runs in kprobe and NMI-like contexts, so it must not allocate
+or take locks.
 
-> --- a/arch/x86/kernel/hw_breakpoint.c
-> +++ b/arch/x86/kernel/hw_breakpoint.c
+> diff --git a/mm/kwatch/task_ctx.c b/mm/kwatch/task_ctx.c
+> new file mode 100644
+> index 0000000000000..64383a4429e7c
+> --- /dev/null
+> +++ b/mm/kwatch/task_ctx.c
 
 [ ... ]
 
-> +static void setup_hwbp(struct arch_hw_breakpoint *info, int slot, bool e=
-nable)
+> @@ -0,0 +1,125 @@
+> +int kwatch_tsk_ctx_prealloc(u16 max_concurrency)
 > +{
-> +	unsigned long dr7;
+> +	if (max_concurrency < KWATCH_CTX_POOL_MIN)
+> +		max_concurrency =3D KWATCH_CTX_POOL_MIN;
+> +	else if (max_concurrency > KWATCH_CTX_POOL_MAX)
+> +		max_concurrency =3D KWATCH_CTX_POOL_MAX;
 > +
-> +	set_debugreg(info->address, slot);
-> +	__this_cpu_write(cpu_debugreg[slot], info->address);
+> +	/*
+> +	 * Set the size/mask only when actually allocating, so they can never
+> +	 * drift out of sync with the live pool if prealloc is ever called
+> +	 * again without a matching free.
+> +	 */
+> +	if (unlikely(!kwatch_ctx_pool)) {
+> +		kwatch_ctx_pool_size =3D roundup_pow_of_two(max_concurrency);
+> +		kwatch_ctx_pool_mask =3D kwatch_ctx_pool_size - 1;
+> +
+> +		kwatch_ctx_pool =3D kcalloc(kwatch_ctx_pool_size,
+> +					  sizeof(struct kwatch_tsk_ctx),
+> +					  GFP_KERNEL);
 
 [Severity: Medium]
-Does this code introduce a performance regression by unconditionally writin=
-g to
-the hardware debug address registers (DR0-DR3) during uninstallation?
+Does this allocation risk frequent failure on fragmented systems?
 
-Writing to hardware debug registers is an expensive operation that forces
-pipeline flushes on bare metal and causes VM-exits in virtualized environme=
-nts.
-Looking at the old arch_uninstall_hw_breakpoint(), the uninstall path used =
-to
-only update DR7 and skipped writing the address register.
+In kwatch_tsk_ctx_prealloc(), this uses kcalloc with GFP_KERNEL to allocate=
+ up
+to 32768 elements of struct kwatch_tsk_ctx. Such large physically contiguous
+allocations are highly prone to failure when memory is fragmented.
 
-Now, when a task with a hardware breakpoint is scheduled out, the perf_event
-subsystem uninstalls the breakpoint which calls into setup_hwbp() with
-enable=3Dfalse. This forces an unconditional set_debugreg() on the address
-register anyway. Could this write be restricted to only happen when the ena=
-ble
-flag is true?
+Would using kvcalloc be more appropriate here to allow fallback to
+non-contiguous virtual memory mappings?
 
+[Severity: High]
+Are there missing memory barriers here when publishing kwatch_ctx_pool?
+
+In kwatch_tsk_ctx_prealloc(), kwatch_ctx_pool_size is initialized before
+dynamically assigning kwatch_ctx_pool. Without smp_store_release, the CPU
+could reorder these stores.
+
+If a concurrent reader in kwatch_tsk_ctx_get() evaluates !kwatch_ctx_pool
+without smp_load_acquire, could it observe kwatch_ctx_pool !=3D NULL but re=
+ad a
+stale value of 0 for kwatch_ctx_pool_size? This would result in ilog2(0),
+which returns -1, and cause a bitshift overflow when passed to hash_ptr().
+
+> +		if (!kwatch_ctx_pool)
+> +			return -ENOMEM;
+> +	}
+> +	return 0;
+> +}
 > +
-> +	dr7 =3D this_cpu_read(cpu_dr7);
-> +	if (enable)
-> +		dr7 |=3D encode_dr7(slot, info->len, info->type);
-> +	else
-> +		dr7 &=3D ~__encode_dr7(slot, info->len, info->type);
+> +struct kwatch_tsk_ctx *kwatch_tsk_ctx_get(bool can_alloc)
+> +{
+> +	int start_idx, i, idx;
+> +	struct task_struct *t;
+> +
+> +	if (unlikely(!kwatch_ctx_pool))
+> +		return NULL;
+> +
+> +	start_idx =3D hash_ptr(current, ilog2(kwatch_ctx_pool_size));
+> +
+> +	for (i =3D 0; i < kwatch_ctx_pool_size; i++) {
+> +		idx =3D (start_idx + i) & kwatch_ctx_pool_mask;
+
+[Severity: High]
+Does this loop cause significant NMI latency?
+
+In kwatch_tsk_ctx_get(), because the open-addressing hash table nullifies t=
+he
+task pointer instead of using tombstones for deletions, it cannot stop prob=
+ing
+when encountering an empty slot.
+
+On every cache miss, such as when a task first triggers a watchpoint, this
+loop unconditionally iterates kwatch_ctx_pool_size times to ensure the task
+is not already present. Is it safe to perform an O(N) scan in NMI context?
+
+> +		t =3D READ_ONCE(kwatch_ctx_pool[idx].task);
+> +		if (t =3D=3D current)
+> +			return &kwatch_ctx_pool[idx];
+
+[Severity: High]
+Could this falsely match a new task to a dead task's leaked slot?
+
+In kwatch_tsk_ctx_get(), if a task exits abruptly due to a fatal signal and
+bypasses the return probe, it will fail to call kwatch_tsk_ctx_put(), leavi=
+ng
+the slot assigned to the dead task_struct pointer.
+
+When the slab allocator reuses the freed memory for a new task, the new tas=
+k's
+current pointer would match this leaked slot. Will the new task erroneously
+inherit stale state and potentially trigger a use-after-free on the dangling
+watchpoint?
+
+> +	}
+> +
+> +	if (!can_alloc)
+> +		return NULL;
+> +
+> +	for (i =3D 0; i < kwatch_ctx_pool_size; i++) {
+> +		idx =3D (start_idx + i) & kwatch_ctx_pool_mask;
+> +		t =3D READ_ONCE(kwatch_ctx_pool[idx].task);
+> +		if (!t) {
+> +			if (!cmpxchg(&kwatch_ctx_pool[idx].task, NULL, current))
+> +				return &kwatch_ctx_pool[idx];
+
+[Severity: High]
+Can an NMI interrupting this path cause a premature release or double free?
+
+In kwatch_tsk_ctx_get(), this lockless claim publishes ownership before the
+caller can establish safe nesting state. If an NMI interrupts the task
+immediately after this claim, enters a watch window, and reclaims the same
+slot because t =3D=3D current, it will unconditionally call kwatch_tsk_ctx_=
+put()
+when exiting the watch window.
+
+This releases the slot by writing NULL to ctx->task. When the interrupted t=
+ask
+resumes, it will incorrectly assume ownership of a now-freed slot that might
+be claimed by another CPU. Is there a way to prevent this reentrancy issue?
+
+> +		}
+> +	}
+> +
+> +	return NULL;
+> +}
+
+[ ... ]
+
+> +void kwatch_tsk_ctx_free(void)
+> +{
+> +	kfree(kwatch_ctx_pool);
+> +	kwatch_ctx_pool =3D NULL;
+
+[Severity: High]
+Does this create a use-after-free regression?
+
+In kwatch_tsk_ctx_free(), kfree is called directly on kwatch_ctx_pool follo=
+wed
+by assigning it to NULL, without any RCU synchronization.
+
+If an NMI or task concurrently executes kwatch_tsk_ctx_get(), won't it
+dereference the freed memory? Additionally, since kwatch_tsk_ctx_get()
+evaluates kwatch_ctx_pool in loops without READ_ONCE, could the compiler
+reload the global pointer after it is set to NULL, causing a NULL pointer
+dereference?
+
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260717125023.1895=
-892-1-wangjinchao600@gmail.com?part=3D2
+892-1-wangjinchao600@gmail.com?part=3D6
