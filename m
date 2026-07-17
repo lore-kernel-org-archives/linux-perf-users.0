@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4473FB7DE;
-	Fri, 17 Jul 2026 14:20:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62BA642A15F;
+	Fri, 17 Jul 2026 14:20:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784298037; cv=none; b=mfOqOPAmaZLn61t3xJ6CXfbfMFrJG7nfM1FlWbxq+BpvwqoTHBOhf/ZwzC15IemwxlUMVOSuJv2HDbSySSQz625eOED0YeWjHA5Qm2OTbG0iPOQiTds3mTcNPysj8L3neVp4DWfhWS7QHHrXotMn3PQF3y4aeBdly0tG0DytANQ=
+	t=1784298048; cv=none; b=ug9h/hvscuT3lI9SzB0pQiheKMWVHw0YbeMLgXrzDkXV7fYvVZb9uGS4xhRHkH7iYl+YCmuUHYiDizMesOjfiZtDjMIhk0QJWhV5Aj2pTMOmlHTFlrBznEXJo337a1sEfpv6Wd8tK7pmw1o2JRWwdWlHwDONTecGzZwscQzNICE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784298037; c=relaxed/simple;
-	bh=7Lui3c5VHc1beQVFUe6rLhhjmRvSzPZNoHLyDBa33xM=;
+	s=arc-20240116; t=1784298048; c=relaxed/simple;
+	bh=/T5lEK8DJeQPkBZw1CJanRPUc6l9C5N4tGXaiQE6buc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ox+iOum81PiXiIaUe96eSdpY68YqRWc/9PJjGK8UlTuqccZkl6YXSPtwkvMWS0EaTLGToneNcUzCbVNcJD3il7J0v0ojNwiJwjlLD2SU3nC5KJxN/xk5I8TqE0BtXralrhPUmpwAqSMtHsx14600e8/apucWrWL4ByLOvKxlvqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJTIXdlJ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=Pq+/RHPNioaCMV7fTkTS7RhqvHlKvAUrypyYjZwSyxoIZEzoXAr9Fd7b8bj71np25kud5Q1eaJ9x8gNYyOBS/kpi9ayB52uSYOfnLYvuG3xvYZJ8Ghp4/Hpkg5Kdk70ldtPlIAcqOHYzIKb+Jg4g8wyTNMWtsuzYSnWroJBbfOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WN4XQA21; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJTIXdlJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A90A21F00A3D;
-	Fri, 17 Jul 2026 14:20:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WN4XQA21"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4050C1F000E9;
+	Fri, 17 Jul 2026 14:20:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784298035;
-	bh=dY7pLs1Bo/vMQ6i+d/kMZaytc+61ZrDx/sPx/QUmJCc=;
+	s=k20260515; t=1784298047;
+	bh=rk2umw+DZv1nSqIyLtphMjlVQouL5ewpaGHrx+pr8O4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=EJTIXdlJtxC3ufd/o+7MKEZsfZOKK26ZKUe960Oz6rHtalvQBxy5x6pZWuNEknSQH
-	 TAADRcSsEBqGMtET37HP5SGJ3iu9NUDgAG8PNjr5M1hx4vA2y6JPC5LHqpGTkG4EmG
-	 oxFoALnqkp6k2Oea4EFi2/bnmMYbceNTevxMTmfnFOVHiCfNvO3OnijqxLUlbU/EJR
-	 KWgzUK4RE/zF+cAcB+/MQYJKK6zETH96X6H9ydyHjwJeTcookk8cI86+Tb2fkQ5a+U
-	 eArZe501yqisKHUO61Vv0Y+/ZT5HiqkZnHnhlazFe8Ld2i2KFpYHZTL4/TD9rJcrC/
-	 +cQDsFw4QCs4w==
+	b=WN4XQA21Xc+dwUSbx7L/9wvHiSlSrZJ1R6gmeC7IWtxGskFqF9zMCExDQmJpWDWHb
+	 y6w8JksGXdYv1lIiWv0iYvTAX6GTRrwpXoxd7qxzXa+EruaSzHy5acjMU5wDSFI84H
+	 oQHNU1ACtUPkoY2GetnNIqooh0XqUZaag8Clll+LM4An555VL0w1NPVJEM8I05AmOF
+	 Aw5Sv9ToYMKsRzErtMxdEuWoesdN5DCh6y+Mj50lYPBci3tCrKbjCR+I+8cqMDNAnJ
+	 X6nZ5LV9kcvbDjmaBbqNpMQkqGjK0TSf3kVe8GiCCGEUPlhtdznXFXyHfYw+aRCXhw
+	 5YqsN0P7ZdFUw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -44,9 +44,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v9 05/10] x86/hw_breakpoint: Unify breakpoint install/uninstall
-Date: Fri, 17 Jul 2026 23:20:28 +0900
-Message-ID: <178429802863.157981.3196768096022969985.stgit@devnote2>
+Subject: [PATCH v9 06/10] x86/hw_breakpoint: Add arch_reinstall_hw_breakpoint
+Date: Fri, 17 Jul 2026 23:20:41 +0900
+Message-ID: <178429804092.157981.15678603723493216503.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178429796992.157981.3393977217853767915.stgit@devnote2>
 References: <178429796992.157981.3393977217853767915.stgit@devnote2>
@@ -62,242 +62,110 @@ Content-Transfer-Encoding: 8bit
 
 From: Jinchao Wang <wangjinchao600@gmail.com>
 
-Consolidate breakpoint management to reduce code duplication.
-The diffstat was misleading, so the stripped code size is compared instead.
-After refactoring, it is reduced from 11976 bytes to 11448 bytes on my
-x86_64 system built with clang.
+The new arch_reinstall_hw_breakpoint() function can be used in an
+atomic context, unlike the more expensive free and re-allocation path.
+This allows callers to efficiently re-establish an existing breakpoint.
 
-This also makes it easier to introduce arch_reinstall_hw_breakpoint().
-
-In addition, including linux/types.h to fix a missing build dependency.
-
-Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-Changes in v8:
-  - Add missing barrier() on the disable path of setup_hwbp() to prevent
-    the compiler from reordering this_cpu_write(cpu_dr7, ...) before
-    set_debugreg(dr7, 7).
-  - Clear existing slot control and enable bits in cpu_dr7 inside
-    setup_hwbp() using __encode_dr7() before setting new ones to prevent
-    register state corruption on update/reinstall.
+ Changes in v9:
+  - Update commit message.
+  - Temporarily disable the active slot in setup_hwbp() before updating
+    the address register to avoid spurious debug exceptions.
 ---
- arch/x86/include/asm/hw_breakpoint.h |    6 +
- arch/x86/kernel/hw_breakpoint.c      |  144 +++++++++++++++++++---------------
- 2 files changed, 86 insertions(+), 64 deletions(-)
+ arch/x86/include/asm/hw_breakpoint.h |    2 ++
+ arch/x86/kernel/hw_breakpoint.c      |   34 ++++++++++++++++++++++++++++------
+ 2 files changed, 30 insertions(+), 6 deletions(-)
 
 diff --git a/arch/x86/include/asm/hw_breakpoint.h b/arch/x86/include/asm/hw_breakpoint.h
-index 0bc931cd0698..aa6adac6c3a2 100644
+index aa6adac6c3a2..c22cc4e87fc5 100644
 --- a/arch/x86/include/asm/hw_breakpoint.h
 +++ b/arch/x86/include/asm/hw_breakpoint.h
-@@ -5,6 +5,7 @@
- #include <uapi/asm/hw_breakpoint.h>
+@@ -21,6 +21,7 @@ struct arch_hw_breakpoint {
  
- #define	__ARCH_HW_BREAKPOINT_H
-+#include <linux/types.h>
- 
- /*
-  * The name should probably be something dealt in
-@@ -18,6 +19,11 @@ struct arch_hw_breakpoint {
- 	u8		type;
+ enum bp_slot_action {
+ 	BP_SLOT_ACTION_INSTALL,
++	BP_SLOT_ACTION_REINSTALL,
+ 	BP_SLOT_ACTION_UNINSTALL,
  };
  
-+enum bp_slot_action {
-+	BP_SLOT_ACTION_INSTALL,
-+	BP_SLOT_ACTION_UNINSTALL,
-+};
-+
- #include <linux/kdebug.h>
- #include <linux/percpu.h>
- #include <linux/list.h>
+@@ -65,6 +66,7 @@ extern int hw_breakpoint_exceptions_notify(struct notifier_block *unused,
+ 
+ 
+ int arch_install_hw_breakpoint(struct perf_event *bp);
++int arch_reinstall_hw_breakpoint(struct perf_event *bp);
+ void arch_uninstall_hw_breakpoint(struct perf_event *bp);
+ void hw_breakpoint_pmu_read(struct perf_event *bp);
+ void hw_breakpoint_pmu_unthrottle(struct perf_event *bp);
 diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-index f846c15f21ca..c323c2aab2af 100644
+index c323c2aab2af..0df3ff556f47 100644
 --- a/arch/x86/kernel/hw_breakpoint.c
 +++ b/arch/x86/kernel/hw_breakpoint.c
-@@ -49,7 +49,6 @@ static DEFINE_PER_CPU(unsigned long, cpu_debugreg[HBP_NUM]);
-  */
- static DEFINE_PER_CPU(struct perf_event *, bp_per_reg[HBP_NUM]);
- 
--
- static inline unsigned long
- __encode_dr7(int drnum, unsigned int len, unsigned int type)
- {
-@@ -86,96 +85,113 @@ int decode_dr7(unsigned long dr7, int bpnum, unsigned *len, unsigned *type)
- }
- 
- /*
-- * Install a perf counter breakpoint.
-- *
-- * We seek a free debug address register and use it for this
-- * breakpoint. Eventually we enable it in the debug control register.
-- *
-- * Atomic: we hold the counter->ctx->lock and we only handle variables
-- * and registers local to this cpu.
-+ * We seek a slot and change it or keep it based on the action.
-+ * Returns slot number on success, negative error on failure.
-+ * Must be called with IRQs disabled.
-  */
--int arch_install_hw_breakpoint(struct perf_event *bp)
-+static int manage_bp_slot(struct perf_event *bp, enum bp_slot_action action)
- {
--	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
--	unsigned long *dr7;
--	int i;
--
--	lockdep_assert_irqs_disabled();
-+	struct perf_event *old_bp;
-+	struct perf_event *new_bp;
-+	int slot;
-+
-+	switch (action) {
-+	case BP_SLOT_ACTION_INSTALL:
-+		old_bp = NULL;
+@@ -100,6 +100,10 @@ static int manage_bp_slot(struct perf_event *bp, enum bp_slot_action action)
+ 		old_bp = NULL;
+ 		new_bp = bp;
+ 		break;
++	case BP_SLOT_ACTION_REINSTALL:
++		old_bp = bp;
 +		new_bp = bp;
 +		break;
-+	case BP_SLOT_ACTION_UNINSTALL:
-+		old_bp = bp;
-+		new_bp = NULL;
-+		break;
-+	default:
-+		return -EINVAL;
+ 	case BP_SLOT_ACTION_UNINSTALL:
+ 		old_bp = bp;
+ 		new_bp = NULL;
+@@ -129,23 +133,36 @@ static int manage_bp_slot(struct perf_event *bp, enum bp_slot_action action)
+ static void setup_hwbp(struct arch_hw_breakpoint *info, int slot, bool enable)
+ {
+ 	unsigned long dr7;
+-
+-	set_debugreg(info->address, slot);
+-	__this_cpu_write(cpu_debugreg[slot], info->address);
++	bool enabled;
+ 
+ 	dr7 = this_cpu_read(cpu_dr7);
++	enabled = dr7 & ((DR_LOCAL_ENABLE | DR_GLOBAL_ENABLE) << (slot * DR_ENABLE_SIZE));
+ 	dr7 &= ~(__encode_dr7(slot, 0xc, 0x3) |
+ 		 (DR_LOCAL_ENABLE << (slot * DR_ENABLE_SIZE)));
+-	if (enable)
+-		dr7 |= encode_dr7(slot, info->len, info->type);
++
++	/*
++	 * If the slot is currently enabled, disable it first before updating
++	 * the address register to prevent spurious debug exceptions.
++	 */
++	if (enable && enabled) {
++		barrier();
++		set_debugreg(dr7, 7);
++		barrier();
++		this_cpu_write(cpu_dr7, dr7);
 +	}
- 
--	for (i = 0; i < HBP_NUM; i++) {
--		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
-+	for (slot = 0; slot < HBP_NUM; slot++) {
-+		struct perf_event **curr = this_cpu_ptr(&bp_per_reg[slot]);
- 
--		if (!*slot) {
--			*slot = bp;
--			break;
-+		if (*curr == old_bp) {
-+			*curr = new_bp;
-+			return slot;
- 		}
- 	}
- 
--	if (WARN_ONCE(i == HBP_NUM, "Can't find any breakpoint slot"))
--		return -EBUSY;
-+	if (old_bp) {
-+		WARN_ONCE(1, "Can't find matching breakpoint slot");
-+		return -EINVAL;
-+	}
- 
--	set_debugreg(info->address, i);
--	__this_cpu_write(cpu_debugreg[i], info->address);
-+	WARN_ONCE(1, "No free breakpoint slots");
-+	return -EBUSY;
-+}
- 
--	dr7 = this_cpu_ptr(&cpu_dr7);
--	*dr7 |= encode_dr7(i, info->len, info->type);
-+static void setup_hwbp(struct arch_hw_breakpoint *info, int slot, bool enable)
-+{
-+	unsigned long dr7;
 +
 +	set_debugreg(info->address, slot);
 +	__this_cpu_write(cpu_debugreg[slot], info->address);
-+
-+	dr7 = this_cpu_read(cpu_dr7);
-+	dr7 &= ~(__encode_dr7(slot, 0xc, 0x3) |
-+		 (DR_LOCAL_ENABLE << (slot * DR_ENABLE_SIZE)));
-+	if (enable)
-+		dr7 |= encode_dr7(slot, info->len, info->type);
  
  	/*
--	 * Ensure we first write cpu_dr7 before we set the DR7 register.
--	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
-+	 * Enabling:
-+	 *   Ensure we first write cpu_dr7 before we set the DR7 register.
-+	 *   This ensures an NMI never see cpu_dr7 0 when DR7 is not.
+ 	 * Enabling:
+ 	 *   Ensure we first write cpu_dr7 before we set the DR7 register.
+ 	 *   This ensures an NMI never see cpu_dr7 0 when DR7 is not.
  	 */
-+	if (enable)
-+		this_cpu_write(cpu_dr7, dr7);
-+
+-	if (enable)
++	if (enable) {
++		dr7 |= encode_dr7(slot, info->len, info->type);
+ 		this_cpu_write(cpu_dr7, dr7);
++	}
+ 
  	barrier();
  
--	set_debugreg(*dr7, 7);
--	if (info->mask)
--		amd_set_dr_addr_mask(info->mask, i);
-+	set_debugreg(dr7, 7);
-+
-+	amd_set_dr_addr_mask(enable ? info->mask : 0, slot);
- 
--	return 0;
-+	barrier();
-+
-+	/*
-+	 * Disabling:
-+	 *   Ensure the write to cpu_dr7 is after we've set the DR7 register.
-+	 *   This ensures an NMI never see cpu_dr7 0 when DR7 is not.
-+	 */
-+	if (!enable)
-+		this_cpu_write(cpu_dr7, dr7);
+@@ -189,6 +206,11 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
+ 	return arch_manage_bp(bp, BP_SLOT_ACTION_INSTALL);
  }
  
- /*
-- * Uninstall the breakpoint contained in the given counter.
-- *
-- * First we search the debug address register it uses and then we disable
-- * it.
-- *
-- * Atomic: we hold the counter->ctx->lock and we only handle variables
-- * and registers local to this cpu.
-+ * find suitable breakpoint slot and set it up based on the action
-  */
--void arch_uninstall_hw_breakpoint(struct perf_event *bp)
-+static int arch_manage_bp(struct perf_event *bp, enum bp_slot_action action)
++int arch_reinstall_hw_breakpoint(struct perf_event *bp)
++{
++	return arch_manage_bp(bp, BP_SLOT_ACTION_REINSTALL);
++}
++
+ void arch_uninstall_hw_breakpoint(struct perf_event *bp)
  {
--	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
--	unsigned long dr7;
--	int i;
-+	struct arch_hw_breakpoint *info;
-+	int slot;
- 
- 	lockdep_assert_irqs_disabled();
- 
--	for (i = 0; i < HBP_NUM; i++) {
--		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
--
--		if (*slot == bp) {
--			*slot = NULL;
--			break;
--		}
--	}
-+	slot = manage_bp_slot(bp, action);
-+	if (slot < 0)
-+		return slot;
- 
--	if (WARN_ONCE(i == HBP_NUM, "Can't find any breakpoint slot"))
--		return;
-+	info = counter_arch_bp(bp);
-+	setup_hwbp(info, slot, action != BP_SLOT_ACTION_UNINSTALL);
- 
--	dr7 = this_cpu_read(cpu_dr7);
--	dr7 &= ~__encode_dr7(i, info->len, info->type);
--
--	set_debugreg(dr7, 7);
--	if (info->mask)
--		amd_set_dr_addr_mask(0, i);
-+	return 0;
-+}
- 
--	/*
--	 * Ensure the write to cpu_dr7 is after we've set the DR7 register.
--	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
--	 */
--	barrier();
-+int arch_install_hw_breakpoint(struct perf_event *bp)
-+{
-+	return arch_manage_bp(bp, BP_SLOT_ACTION_INSTALL);
-+}
- 
--	this_cpu_write(cpu_dr7, dr7);
-+void arch_uninstall_hw_breakpoint(struct perf_event *bp)
-+{
-+	arch_manage_bp(bp, BP_SLOT_ACTION_UNINSTALL);
- }
- 
- static int arch_bp_generic_len(int x86_len)
+ 	arch_manage_bp(bp, BP_SLOT_ACTION_UNINSTALL);
 
