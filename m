@@ -1,148 +1,101 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C1832B10B;
-	Fri, 17 Jul 2026 02:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D1E535959
+	for <linux-perf-users@vger.kernel.org>; Fri, 17 Jul 2026 02:14:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784253985; cv=none; b=pojqDdIXC0vDB2wI2qwWG0gWcTgG4gY7tVJy0w6xsjR9T5+CmGg72P4grIw+85bo0AWiLWyXjOEt5zMvM7glfBbAflhJZsFI5TZiGeo3NujzIccSLNpyPQ/VPRjo1ZcpgOChnXzLciqq3ukwsCdC9sMBUepWd7LDDpVuGlK/Dh4=
+	t=1784254448; cv=none; b=YX1gJkJsbUuRF4zPooKeZJ0DRjgoDfNHXu2j3D29IlWchP8+zbeC4iBQ/dinivtZDpdIjcqyYDiAUhddr/NFmx16UMsIbwqyrMAIzdEhrkkvCUsAA8xjqWfWYm0kMQ4PEKZBDnk/FfLBd+1Gn79PME+N9FTZhF4FgNXV0ase+fA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784253985; c=relaxed/simple;
-	bh=Mm/vrSGZHFmbT5s4VKo2mi6DurGi7q5CM4ASEQyOr9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dvK6ZXDbqO2MUw/dGLybsTazfGkouMOYiC65wxtioZl0BqdDfhRN4W9CZsEDQhb1yNLY8hqYXn9zEmAsvym64aMoPlO74K/jTmIa/ZGpi6AzOzKEH7MVv+RR1TFinD925I1hzvhd3oQNHxzUrNZfTfsG7ClXjaDbyp/dF8mpX6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OeaUhLrm; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1784254448; c=relaxed/simple;
+	bh=AE7Cj+eM90kGqk7D92YzHbUbLYPRoB0XZI2dYD/q0gQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=LJC+LcIo3gaiGWzmOlaCH3uqbuYeDh7o6qIBMjSmcqd2fnoMPtEfxkpLNG8ELGgKe2DmcadLJJs522hBsLNZunDhrEuwa/LE1NbmbvpSaf0P13Z2cn9qkMvMXmU5ocvVN4VhtAImAS68navVFLNmNkmO9vQvtwdbWZPAthJg33E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eW0qbHEX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OeaUhLrm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784253985; x=1815789985;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Mm/vrSGZHFmbT5s4VKo2mi6DurGi7q5CM4ASEQyOr9c=;
-  b=OeaUhLrmBjPN6Ikrd/fpWq2hqbhCal913Jg3C505oRfm80SeAT0xcPZh
-   hTeKOWmiGcxAJ3XhSv1x2H8bIA+lV7YHImKkdhYvtzDYXepMksZvTu8yc
-   Ct505y22ugZ9ZRE6XuGOI3OhKwaA9YbR1l+6dd3gfnGSk3GngdTJgijyG
-   ELBNm6qVuukIffaDxG9NytbIWsIqHDGy7ci7/4FQfEssY8M4596LA9PcU
-   1jZmSxT1jegv6IMrZ2/iczkXLg9ve5k9yde0frU8vqYlu5NROO8+QGLtf
-   AkQLKeZ6X4fzcZVaWQMpapzK7PDAhSg8VgVhts6gDbJ9tcM7w5siTAeIK
-   Q==;
-X-CSE-ConnectionGUID: SR2rQ5r/RQu3PBWWMPr9rQ==
-X-CSE-MsgGUID: yssBE7DSQLGPnMwAY1bttw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11848"; a="107720112"
-X-IronPort-AV: E=Sophos;i="6.25,168,1779174000"; 
-   d="scan'208";a="107720112"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2026 19:06:25 -0700
-X-CSE-ConnectionGUID: FwVKMJqUS0i2tUOs5CVMQA==
-X-CSE-MsgGUID: UrPZgMYCSs2ylDsg1ydbQw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,168,1779174000"; 
-   d="scan'208";a="279952893"
-Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by fmviesa002.fm.intel.com with ESMTP; 16 Jul 2026 19:06:20 -0700
-From: Jiebin Sun <jiebin.sun@intel.com>
-To: namhyung@kernel.org,
-	acme@kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	tianyou.li@intel.com,
-	wangyang.guo@intel.com,
-	dapeng1.mi@linux.intel.com,
-	thomas.falcon@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiebin Sun <jiebin.sun@intel.com>
-Subject: [PATCH v3 14/14] perf c2c: document function view in perf-c2c man page
-Date: Fri, 17 Jul 2026 10:05:30 +0800
-Message-ID: <20260717020530.1645123-15-jiebin.sun@intel.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260717020530.1645123-1-jiebin.sun@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eW0qbHEX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E702B1F000E9;
+	Fri, 17 Jul 2026 02:14:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784254447;
+	bh=AE7Cj+eM90kGqk7D92YzHbUbLYPRoB0XZI2dYD/q0gQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=eW0qbHEX010rV42yO293tS8A+vBlX5xQQdE9e0zZBN+B+agJ2Gq4mpKJet1P4RGAs
+	 wCV83Sc5VF31x+GqPAcnYUJ/N2uBqFgMb4lwplmACx/4VJ936NpesAfSq0YNsDbYx+
+	 crHccf2yFFtDc0dweCMq8gYxH/BNgQNR+sOMqyrU7yd31t06POPoYhIaq5MMizTafY
+	 slZ3G/XJWQyVDhFTyY7zvgx7gYHJhuLqYpadnfwEXJiUJtNpANV5jMAvebW49zsnDU
+	 ZskK02P1pHBQ3OHeLko0eiWA0jUjon40vbOTV7XbvILLcp+BzbsZc6MoA4QkYrFK9z
+	 sUz0RnZrJ84DA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 01/14] perf c2c: extract shared data structures into
+ c2c.h
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Jiebin Sun" <jiebin.sun@intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260717020530.1645123-2-jiebin.sun@intel.com>
 References: <20260710084247.3576706-1-jiebin.sun@intel.com>
  <20260717020530.1645123-1-jiebin.sun@intel.com>
+ <20260717020530.1645123-2-jiebin.sun@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 17 Jul 2026 02:14:06 +0000
+Message-Id: <20260717021406.E702B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Describe the three-level function-view hierarchy (primary function,
-sharing functions, shared cachelines) and the TAB/ESC/d/e key
-bindings that drive it.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The header file `c2c.h` conditionally declares `perf_c2c__browse=
+_cacheline` under `#ifdef HAVE_SLANG_SUPPORT` but fails to provide a dummy =
+fallback stub in an `#else` block.
+--
 
-Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Falcon <thomas.falcon@intel.com>
-Reviewed-by: Tianyou Li <tianyou.li@intel.com>
-Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
----
- tools/perf/Documentation/perf-c2c.txt | 33 +++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+--- Patch [1]: [PATCH v3 01/14] perf c2c: extract shared data structures in=
+to c2c.h ---
+commit 80edfe9d884de7c391eedef4197115fd44418382
+Author: Jiebin Sun <jiebin.sun@intel.com>
 
-diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-index e57a122b8719..43a3f195048a 100644
---- a/tools/perf/Documentation/perf-c2c.txt
-+++ b/tools/perf/Documentation/perf-c2c.txt
-@@ -365,6 +365,39 @@ TUI OUTPUT
- The TUI output provides interactive interface to navigate
- through cachelines list and to display offset details.
- 
-+Pressing the 'TAB' key in the cacheline view switches to the function
-+view.  The function view shows a three-level hierarchy of the same data,
-+organized around functions rather than cachelines:
-+
-+  Level 1: primary functions, sorted by Cycles % (estimated load cycles:
-+           HITM, peer-snoop and other-load cycles -- on systems whose
-+           default display mode is peer, such as Arm64, the peer-snoop
-+           component dominates)
-+  Level 2: other functions that share cachelines with the level-1 function
-+  Level 3: the specific shared cachelines for each function pair
-+
-+In the function view the 'd' key opens the detail view of the selected
-+cacheline, 'e'/'+' expands or collapses the current entry, and 'TAB',
-+'ESC' or 'q' returns to the cacheline view.
-+
-+For example, expanding a level-1 function reveals the functions it shares
-+cachelines with, and expanding one of those reveals the specific shared
-+cachelines:
-+
-+  Shared Data Functions Table   (27 entries, sorted on Cycles %)
-+   Cycles  Store
-+        %  count  Code address        Symbol           Cacheline
-+  ----------------------------------------------------------------------
-+  - 39.03%   541  - 0xffffffffa2fc5b08  - [k] cpupri_set
-+             450  - 0xffffffffa2fa28a5  - [k] pull_rt_task
-+             450                                      0xff2d0082809da080
-+
-+Here cpupri_set is the most contended function (39.03% of the estimated
-+load cycles); it shares data with pull_rt_task (450 stores into the shared
-+data); and the contention is on the single cacheline 0xff2d0082809da080.
-+This is the false-sharing chain that the cacheline view otherwise leaves
-+to be reconstructed by hand.
-+
- For details please refer to the help window by pressing '?' key.
- 
- CREDITS
--- 
-2.52.0
+perf c2c: extract shared data structures into c2c.h
 
+This commit moves c2c data structures from builtin-c2c.c into a new shared=
+=20
+header c2c.h to allow reuse by the upcoming function view browser. It also=
+=20
+makes the global perf_c2c instance non-static and exports=20
+perf_c2c__browse_cacheline().
+
+> diff --git a/tools/perf/c2c.h b/tools/perf/c2c.h
+> new file mode 100644
+> index 0000000000000..79dbd35184eda
+> --- /dev/null
+> +++ b/tools/perf/c2c.h
+
+[ ... ]
+
+> +void *c2c_he_zalloc(size_t size);
+> +void c2c_fmt_free(struct perf_hpp_fmt *fmt);
+> +bool c2c_fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b);
+> +
+> +#ifdef HAVE_SLANG_SUPPORT
+> +int perf_c2c__browse_cacheline(struct hist_entry *he);
+
+[Severity: Medium]
+Since perf_c2c__browse_cacheline() is conditionally declared under=20
+HAVE_SLANG_SUPPORT, should there be a dummy inline fallback stub provided=20
+in an #else block?
+
+Without a fallback stub, any C code calling this function would either fail=
+=20
+to compile when slang support is absent, or require redundant #ifdef=20
+HAVE_SLANG_SUPPORT guards at every call site.
+
+> +#endif
+> +
+> +#endif /* _PERF_C2C_H_ */
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260717020530.1645=
+123-1-jiebin.sun@intel.com?part=3D1
