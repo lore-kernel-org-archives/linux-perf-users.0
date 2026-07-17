@@ -1,176 +1,133 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFF3538D6AD
-	for <linux-perf-users@vger.kernel.org>; Fri, 17 Jul 2026 13:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C2E3BFAE8;
+	Fri, 17 Jul 2026 13:41:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784295017; cv=none; b=D0WsaGzFR5Oli7sRXdg/qzN3o0wGAi2th0KUpvWkQHHyO2nXNT4buZ1qViT/MbYDWhyw6yhWCq/hUT8CLeOBLl+94QuQ21cm4oe3dYFkXHRRa/9oro2stHs676FSvH5ppZw+CyG3LAR0P2ueronlKcyGce2exDtp/etfA9k0NjY=
+	t=1784295715; cv=none; b=Dn9YdjZouRDkc7tw4LyOFhiz+EqU8I+LrLvsbxerYMIzYHurqi7eb4lAY29psI5amRDqmw1bz2lE5VICLPC8nrrgktGeKzN3PQhCPJKtdR3YHDBLUx/DgAR8r2z9KXSn3rvBtvvqg5geMMxdGjsybgHicqo6EOtOV13vfE1Y9VI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784295017; c=relaxed/simple;
-	bh=8myaVgi8X9mDVZPr34d7IZWvtwAwdKzQZ3diZtPUYGg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=gcu0gnqP8MD/nJACl2tadmjZj6A+CRM99++MBflPDHaLxBO1Q7L8jez+sqQhYHqKphkibI+t2AeeQLOHIuElSl5XaG8uzsqJbjy+VjGR7fd5WiP7cXFEg6SKewpvkcM9c2l1soBPHob7VOKftxyslxWSSpH6yAwjznaR2rg3LIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=js3tTJga; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784295715; c=relaxed/simple;
+	bh=fvevDhSjCFC8kOKsqBUeK57DQVf+jkuNY18oFfhjsC0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fjcyDJAfrOMaoA848Fpep70yE7soQVUNLhP+93WL5gl3mIlsEV1YOAgSsHqK9EEmCCpnSZYty3DliB/597VfC+qB9qCe35+9yj6g1oA/u6kMzgejWfG+qKVq/4bxyciYO7cAzyBjKiRrRpyfU9/bBOhkKzo44Vssh8Fymnopa80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H3aKC7Ag; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="js3tTJga"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506F81F00A3A;
-	Fri, 17 Jul 2026 13:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784295016;
-	bh=eJas3laRZKDRFOAWryayhD8OBH3Z5urLejFD4MOnPVg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=js3tTJgaqwPmYWQeV08R3KqoEzsLr13+Mst3P3595RIyZr2A4DQ1btbZofU4KlrCU
-	 z+rGMByb97tSWJcjPbq0X/uaBEljh58H/YIowEIkKhuESHoyBOebBaLU8J3m6fQrdG
-	 nF+4dqZSpz6lM9J2hs5Pw8dEdmwrjW9C8RBgLX/2HCIB5KNDin8a+Ah4UbKSTdPyRp
-	 tqMkTqNfsZNpCiQ1RggExJjlNfCgW34YR1EY0RBaT9qrYeo++k3L6fWhAvWXvQ0zLA
-	 CM9HuYxjeydYlm4flBT6ueYz49AhW4lgPFBQAw8W00xf526dUy1wDEjfeHrQ9NZ40S
-	 YzpuAMV7cyG9w==
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v2 13/13] Documentation/dev-tools: document KWatch
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Jinchao Wang" <wangjinchao600@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260717130726.1904101-1-wangjinchao600@gmail.com>
-References: <20260717125023.1895892-1-wangjinchao600@gmail.com>
- <20260717130726.1904101-1-wangjinchao600@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 17 Jul 2026 13:30:15 +0000
-Message-Id: <20260717133016.506F81F00A3A@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H3aKC7Ag"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784295713; x=1815831713;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=fvevDhSjCFC8kOKsqBUeK57DQVf+jkuNY18oFfhjsC0=;
+  b=H3aKC7AgxeKX8aZMcSKUGe/9/ojmKywxPTQBFnI8wblqDf94gfDHtlWN
+   qtC6mrRX93DwNZ/54TXKEiGGARJpE1pIUYDeW7VGN22I+ZcvxR/fjuOZR
+   ZkFgbNjyZmaKxfaSmkgjbNNfLbuf4ji2TBtgVFCD8eGl4ZppSFitYTj1Z
+   IfjGzSLkLdHkcd+oP98tuuYe3fgwI50ylyqCkITG1YXHyp7U8j7EHcErN
+   Oa3Dzt2HYaDTBD16yTDrQgnFWMlISTpcpIYnLO7JvPPsodQmKZ843j/vH
+   X+0DBe36aSD2YvRbGpbyCKxUnaRe3WovqXEw/BKI/RYj+7Gz8lJjqIefZ
+   w==;
+X-CSE-ConnectionGUID: vw49ux4DRia7JiT/CRDqgw==
+X-CSE-MsgGUID: amg/arRuR4q7s+KRdA1CIA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11848"; a="96331102"
+X-IronPort-AV: E=Sophos;i="6.25,169,1779174000"; 
+   d="scan'208";a="96331102"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 06:41:51 -0700
+X-CSE-ConnectionGUID: zmsr/XXlSMiHB3gpsQltYA==
+X-CSE-MsgGUID: uZivZiVFRHejmuDfy07QKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,169,1779174000"; 
+   d="scan'208";a="260602622"
+Received: from gabaabhi-mobl2.amr.corp.intel.com (HELO [10.125.109.66]) ([10.125.109.66])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2026 06:41:51 -0700
+Message-ID: <91f3486b-3b85-4b43-b099-0a5325643352@intel.com>
+Date: Fri, 17 Jul 2026 06:41:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 00/13] mm/kwatch: dynamic hardware watchpoints for
+ hunting memory corruption
+To: Jinchao Wang <wangjinchao600@gmail.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
+ <hpa@zytor.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ David Hildenbrand <david@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Matthew Wilcox <willy@infradead.org>, Alan Stern
+ <stern@rowland.harvard.edu>, Randy Dunlap <rdunlap@infradead.org>,
+ Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
+ Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20260717125023.1895892-1-wangjinchao600@gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20260717125023.1895892-1-wangjinchao600@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] Race condition during CPU offline leads to spurious WARN_ONCE and =
-potential Use-After-Free.
-- [High] KWatch blindly filters out hits from the armed task's callees and =
-local interrupts.
-- [Medium] Missing Kconfig dependency on TRACING/TRACEPOINTS.
---
+On 7/17/26 05:50, Jinchao Wang wrote:
+>  24 files changed, 2115 insertions(+), 63 deletions(-)
+Reading this, I wonder how many kernel debugging features we need. I
+don't even think we have a centralized list of them. They all just live
+in their own silos.
 
---- Patch [13]: [RFC PATCH v2 13/13] Documentation/dev-tools: document KWat=
-ch ---
-commit 2276ea12010818a130be33709ca8b2c8928c26a9
-Author: Jinchao Wang <wangjinchao600@gmail.com>
+This one really seems like a super specialized tool. It has to be
+enabled at compile time and specifically aimed at a specific function.
 
-Documentation/dev-tools: document KWatch
-
-Describe what KWatch is for, how it compares with KASAN and KFENCE,
-the debugfs configuration interface, the watch expression syntax,
-how to read hits from the trace buffer (including after a crash),
-and the current limitations.
-
-> diff --git a/mm/kwatch/Kconfig b/mm/kwatch/Kconfig
-> new file mode 100644
-> index 0000000000000..6ec9aa448ecec
-> --- /dev/null
-> +++ b/mm/kwatch/Kconfig
-> @@ -0,0 +1,28 @@
-> +config KWATCH
-> +	tristate "Kernel Watch Framework"
-> +	depends on PERF_EVENTS && HAVE_HW_BREAKPOINT && DEBUG_FS
-> +	depends on HAVE_REINSTALL_HW_BREAKPOINT
-> +	depends on KPROBES && KRETPROBES
-> +	depends on STACKTRACE
-
-[Severity: Medium]
-Should this configuration depend on or select TRACING or TRACEPOINTS?
-
-Since KWatch outputs successful memory access hits exclusively through the
-kwatch_hit tracepoint, building without tracepoint support results in KWatch
-compiling and consuming hardware debug registers, but silently failing to
-report any hits when memory corruption occurs.
-
-> +	help
-> +	  A generalized hardware-assisted memory monitor utility.
-
-[ ... ]
-
-> diff --git a/mm/kwatch/hwbp.c b/mm/kwatch/hwbp.c
-> new file mode 100644
-> index 0000000000000..d1e93754cce82
-> --- /dev/null
-> +++ b/mm/kwatch/hwbp.c
-
-[ ... ]
-
-> +static int kwatch_hwbp_cpu_offline(unsigned int cpu)
-> +{
-> +	struct kwatch_watchpoint *wp;
-> +	struct perf_event *bp;
-> +
-> +	mutex_lock(&kwatch_all_wp_mutex);
-> +	list_for_each_entry(wp, &kwatch_all_wp_list, list) {
-> +		bp =3D per_cpu(*wp->event, cpu);
-> +		if (bp) {
-> +			unregister_hw_breakpoint(bp);
-> +			per_cpu(*wp->event, cpu) =3D NULL;
-
-[Severity: High]
-Does this sequence open a race condition during CPU offline?
-
-If an asynchronous IPI from kwatch_hwbp_arm() interrupts the offlining CPU
-exactly between the unregistration and the pointer being cleared:
-
-	unregister_hw_breakpoint(bp);
-	/* IPI arrives here */
-	per_cpu(*wp->event, cpu) =3D NULL;
-
-The IPI handler in kwatch_hwbp_arm_local() will read the non-NULL,
-unregistered breakpoint and pass it to modify_wide_hw_breakpoint_local().
-
-Could this access unlinked and potentially freed memory (if the RCU grace
-period elapses), corrupting debug registers or triggering a spurious
-WARN_ONCE?
-
-> +		}
-> +	}
-> +	mutex_unlock(&kwatch_all_wp_mutex);
-> +	return 0;
-> +}
-
-[ ... ]
-
-> diff --git a/mm/kwatch/probe.c b/mm/kwatch/probe.c
-> new file mode 100644
-> index 0000000000000..249aa50c9f782
-> --- /dev/null
-> +++ b/mm/kwatch/probe.c
-
-[ ... ]
-
-> +bool kwatch_probe_validate_hit(struct pt_regs *regs,
-> +			       struct task_struct *arm_tsk)
-> +{
-> +	struct kwatch_tsk_ctx *ctx =3D kwatch_tsk_ctx_get(false);
-> +	const struct kwatch_config *cfg =3D kwatch_probe_ctx.cfg;
-> +
-> +	if (unlikely(!ctx || !cfg))
-> +		return true;
-> +
-> +	if (arm_tsk !=3D current || ctx->depth !=3D cfg->depth + 1)
-> +		return true;
-> +
-> +	return false;
-
-[Severity: High]
-Does this logic inadvertently filter out genuine corruptions?
-
-Returning false when arm_tsk =3D=3D current and ctx->depth =3D=3D cfg->dept=
-h + 1
-prevents hits from being logged for the current function. However, since
-depth is only incremented when recursively entering the watched function,
-does this also silently ignore memory corruptions caused by the watched
-function's callees, or by any interrupt handler that preempts the watched
-task on the same CPU?
-
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260717125023.1895=
-892-1-wangjinchao600@gmail.com?part=3D13
+Maybe this should live off on the side for a while. If folks end up
+actually needing it, they can point their friendly LLM over to its tree.
