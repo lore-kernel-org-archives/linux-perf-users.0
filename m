@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739643271FD;
-	Fri, 17 Jul 2026 02:05:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC5C331EDA;
+	Fri, 17 Jul 2026 02:05:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784253944; cv=none; b=Xmk9sKx6Px/VgUAp+QLLHEvFvqQ/sXv5gQJ1jbzLIvuL/+To9RBdAqGi/T2zSSbff9q1OKNqBaY2YJhWTRnGLdtzgBxU02+IyZp9xc0YPz+JWJNHkQUQW7BVjXnJetm+0Guw2mViDZBd4KB/pZiL0YjVLzeIh6uM5e482A22NLs=
+	t=1784253945; cv=none; b=hLnpqiOipIZoExnPB/lCkVXPfUrOB0+YB6xjDvTy4Y12UKN8TgVWV+Ey/iLLcXuhr52LktxMSedPPq6zfQTTkO1Fs2xmMpCW1uCd2YQq1mZY2Grl7yMZkN1W+/odQ3aeivtpBteChDOeJvB+WVomAPj1ZrU1yDNXZZgRcGBUEz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784253944; c=relaxed/simple;
-	bh=SVTH4lvkuQDkOiwt+MperC8LbMMI/0PCO+ivJQcBkyc=;
+	s=arc-20240116; t=1784253945; c=relaxed/simple;
+	bh=qjvtMCb2GkiOYLLPFMLPERHeA7OneW9Ey6hkcxCafnk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=X3rTymTVs3DXwOJvrBDMVlkE7HgZg3ul3lde6YiRpBfGOWXAGT7Yjqs0cQixCuHAy7895r5HTV9TPWBfN+iFmEGUATPDD0ky69ytb6VTXHW14iAWJowye/GkB/Dnm28RNtlmrAwdJ9Al00N3k227pv/KDIDVney0X0+JOL8XsUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OWuBXZVH; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version; b=R/iiOPxlQG4DGbFSjBRnXLouDkK9P8mU2jqwd64VYDWBAsenJR8IsOWh33xx/z+2F3merTyI70RyQiaDyCoQYXnoiFD5Rbm2Pr+Vr9BRqHARlo30A6xn0uPrlwl/UVX9M6jinoYj768r7PjkMrL8OGmdbmb+WEUU5qJDizhfOvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bq+xuqBB; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OWuBXZVH"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bq+xuqBB"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784253939; x=1815789939;
+  t=1784253943; x=1815789943;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=SVTH4lvkuQDkOiwt+MperC8LbMMI/0PCO+ivJQcBkyc=;
-  b=OWuBXZVHFqoNKCdofEoFMn0o4fMYKpT6+h0pm3Z/WOUhNVRxAzFORkxq
-   LtyPSHqm2uWpPq/Lqg5Q3iqJgIGOOYgO8+2C8W42ubOWF76bNVFxlMdvy
-   C8EdbXMqIl0B3jjxiPyGyFRhGCU6SS57Pjz6t5YHLDmSYrepcbBZxVjJl
-   g9Fd2XvGxMkXj6uinBVGViEq1iTh8llTnoEDSj+dBIdHzI0hzdSwOWo9U
-   snmIBmMhX4mUgnfV0RxdD0jJ4qM44iSY+H386vz0i9s6GFHwXOcDqTLMT
-   KgdU/BvfGfOFq3pBqOcDhsyMhNkjZNiBY3isPf9ISPYSc2w6mmmY6rOp2
+  bh=qjvtMCb2GkiOYLLPFMLPERHeA7OneW9Ey6hkcxCafnk=;
+  b=Bq+xuqBBFrkc0H3ObzvNGFT3vhWhB302TL8/HA4qXRzJxyyCcKABecQS
+   vEgwHPMQ/55Mc/Cqrqle6ku8/GXBPUJ9hAPsOsNf1A1UQzqx6vv0o7FZC
+   2a/7ASbPDLksjqTPbX5a2aSCiO3agtfntUGbLvjka87o3xtDYLGSQv9Hx
+   rhv13H4gUPRLRAA0gPWzVyAiPsQ6EFOYZqWZnj0wMBoeQYa7vHQcsVtYg
+   kRfGmP8Ni+4V02smayqjBFSeo/sK7n8gJG9dcfF3z7jVkRgePC7dc8BUb
+   vT0bZbxbyEreImPbZJNO2HWM2qNlqO4+VtZF2mTT5UH5u+CADT/OTBKMO
    A==;
-X-CSE-ConnectionGUID: PawUhYSYTr6+4PcX7OSFzw==
-X-CSE-MsgGUID: 8jb70teUQlqrD4SGNLEejw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11848"; a="107719993"
+X-CSE-ConnectionGUID: xEZri94CTTSE/JVfJY0sAw==
+X-CSE-MsgGUID: UeGmLLJOR4qSdnrQtbZBaw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11848"; a="107720004"
 X-IronPort-AV: E=Sophos;i="6.25,168,1779174000"; 
-   d="scan'208";a="107719993"
+   d="scan'208";a="107720004"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2026 19:05:36 -0700
-X-CSE-ConnectionGUID: 0/AWS3IkTn2ynMna5QJAJQ==
-X-CSE-MsgGUID: QiXC+gkTQ0ixKX8XvpkUlw==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2026 19:05:41 -0700
+X-CSE-ConnectionGUID: jJqBcsiiTL+0IHAEmFiuFg==
+X-CSE-MsgGUID: E1ydT2RxSWmExfyHvugHbQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,168,1779174000"; 
-   d="scan'208";a="279952747"
+   d="scan'208";a="279952770"
 Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by fmviesa002.fm.intel.com with ESMTP; 16 Jul 2026 19:05:32 -0700
+  by fmviesa002.fm.intel.com with ESMTP; 16 Jul 2026 19:05:36 -0700
 From: Jiebin Sun <jiebin.sun@intel.com>
 To: namhyung@kernel.org,
 	acme@kernel.org,
@@ -61,9 +61,9 @@ Cc: mark.rutland@arm.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Jiebin Sun <jiebin.sun@intel.com>
-Subject: [PATCH v3 02/14] perf c2c: add function view browser skeleton
-Date: Fri, 17 Jul 2026 10:05:18 +0800
-Message-ID: <20260717020530.1645123-3-jiebin.sun@intel.com>
+Subject: [PATCH v3 03/14] perf c2c: add function view type definitions and helpers
+Date: Fri, 17 Jul 2026 10:05:19 +0800
+Message-ID: <20260717020530.1645123-4-jiebin.sun@intel.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260717020530.1645123-1-jiebin.sun@intel.com>
 References: <20260710084247.3576706-1-jiebin.sun@intel.com>
@@ -76,12 +76,14 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add c2c-function.c with a stub perf_c2c__browse_function_view() entry
-point and register it in the build system. Declare the function
-prototype in c2c.h.
+Add the foundational type definitions and helper functions for the
+function view browser:
 
-This lays the groundwork for the function-level cacheline sharing
-analysis browser that will be implemented in subsequent patches.
+- perf_c2c_ext: extended context holding function-grouped histograms
+- c2c_function_browser: browser state wrapping hist_browser
+- symbol_name_equal(): symbol comparison by name
+- hist_entry__iaddr(): instruction address extraction helper
+- c2c_hitm_count(): inline accessor for a c2c_stats HITM total
 
 Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -99,83 +101,49 @@ Cc: Thomas Falcon <thomas.falcon@intel.com>
 Reviewed-by: Tianyou Li <tianyou.li@intel.com>
 Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
 ---
- tools/perf/c2c.h                      |  1 +
- tools/perf/ui/browsers/Build          |  1 +
- tools/perf/ui/browsers/c2c-function.c | 44 +++++++++++++++++++++++++++
- 3 files changed, 46 insertions(+)
- create mode 100644 tools/perf/ui/browsers/c2c-function.c
+ tools/perf/ui/browsers/c2c-function.c | 29 +++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/tools/perf/c2c.h b/tools/perf/c2c.h
-index 79dbd35184ed..6fc3fda40fb6 100644
---- a/tools/perf/c2c.h
-+++ b/tools/perf/c2c.h
-@@ -142,6 +142,7 @@ bool c2c_fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b);
- 
- #ifdef HAVE_SLANG_SUPPORT
- int perf_c2c__browse_cacheline(struct hist_entry *he);
-+int perf_c2c__browse_function_view(struct hists *hists);
- #endif
- 
- #endif /* _PERF_C2C_H_ */
-diff --git a/tools/perf/ui/browsers/Build b/tools/perf/ui/browsers/Build
-index a07489e44765..ae67a2161f7d 100644
---- a/tools/perf/ui/browsers/Build
-+++ b/tools/perf/ui/browsers/Build
-@@ -5,3 +5,4 @@ perf-ui-y += map.o
- perf-ui-y += scripts.o
- perf-ui-y += header.o
- perf-ui-y += res_sample.o
-+perf-ui-y += c2c-function.o
 diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browsers/c2c-function.c
-new file mode 100644
-index 000000000000..c50c8ca825c1
---- /dev/null
+index c50c8ca825c1..1ef5d08e81c3 100644
+--- a/tools/perf/ui/browsers/c2c-function.c
 +++ b/tools/perf/ui/browsers/c2c-function.c
-@@ -0,0 +1,44 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * C2C Function Browser - function-level cacheline sharing analysis
-+ *
-+ * Planned UI: 3-level hierarchy showing which functions share cachelines (not implemented yet):
-+ *   Level 1: Primary functions sorted by Cycles % (estimated load cycles)
-+ *   Level 2: Other functions sharing cachelines with the level-1 function
-+ *   Level 3: Specific shared cachelines between each pair of functions
-+ *
-+ * Uses c2c_hist_entry->hists to build the hierarchy without adding any
-+ * per-entry state to the existing c2c data structures.
-+ */
+@@ -37,6 +37,35 @@
+ #include "../../c2c.h"
+ #include "hists.h"
+ 
++struct perf_c2c_ext {
++	struct c2c_hists	function_hists;
++	/* Cached across all level-1 entries; 0 means "not yet computed". */
++	u64			total_cycles;
++};
 +
-+#include <errno.h>
-+#include <inttypes.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <linux/list.h>
-+#include <linux/rbtree.h>
-+#include <linux/zalloc.h>
++static struct perf_c2c_ext c2c_ext __maybe_unused;
 +
-+#include "../browser.h"
-+#include "../helpline.h"
-+#include "../keysyms.h"
-+#include "../libslang.h"
-+#include "../ui.h"
-+#include "../../util/addr_location.h"
-+#include "../../util/cacheline.h"
-+#include "../../util/debug.h"
-+#include "../../util/hist.h"
-+#include "../../util/map.h"
-+#include "../../util/mem-events.h"
-+#include "../../util/mem-info.h"
-+#include "../../util/sort.h"
-+#include "../../util/symbol.h"
-+#include "../../util/thread.h"
-+#include "../../c2c.h"
-+#include "hists.h"
++struct c2c_function_browser {
++	struct hist_browser	hb;
++};
 +
-+int perf_c2c__browse_function_view(struct hists *hists __maybe_unused)
++static __maybe_unused inline u64 c2c_hitm_count(const struct c2c_stats *stats)
 +{
-+	ui__warning("C2C function view is not implemented yet.\n");
-+	return 0;
++	return stats->tot_hitm;
 +}
++
++static __maybe_unused inline bool symbol_name_equal(struct symbol *a, struct symbol *b)
++{
++	return a && b && arch__compare_symbol_names(a->name, b->name) == 0;
++}
++
++static __maybe_unused inline u64 hist_entry__iaddr(struct hist_entry *he)
++{
++	if (he->mem_info)
++		return mem_info__iaddr(he->mem_info)->addr;
++	return he->ip;
++}
++
+ int perf_c2c__browse_function_view(struct hists *hists __maybe_unused)
+ {
+ 	ui__warning("C2C function view is not implemented yet.\n");
 -- 
 2.52.0
 
