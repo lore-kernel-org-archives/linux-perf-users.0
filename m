@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42F04429CD2;
-	Fri, 17 Jul 2026 14:21:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A407542A14B;
+	Fri, 17 Jul 2026 14:21:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784298083; cv=none; b=AiQnDw51W6GftQQ9G0DuDZDH+x3EKASb/Fk3a49oBx7xhC0wqwcCUBPKIJCd+j+bdpTjd6V+5HPuDDc6z+5FN3XTCUTCwrB9Uwl+j/l3dc8RPAf6Ww7wXXDePH1bhV3Yj/KvhtLQDbbsy1GEQp15IRkiZ3xQV1vGa5l2HQfCqOU=
+	t=1784298094; cv=none; b=jbMFF87CRLPstXJPbypLvs+4CJR8pv22fwfKwD372ScRUyxuUBnTnSVDZFnxQzflhKNerYaumtUWlun+oZDSBzeD7+LEL9H2D91ki8fwh71awK0rZU+yY0L00Zb9H/Bpz9o4c7OMBL8nLOY5LSkMk/iMPL6b/hQFQzORNyml/FI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784298083; c=relaxed/simple;
-	bh=czg/9d+D847aI9xV8AclvcAnNwtePW+A4Kp7ItsErfw=;
+	s=arc-20240116; t=1784298094; c=relaxed/simple;
+	bh=sR2y9qIC1RKJLRmHotwZZfScgtc+4IEyNJ36P0S8fQY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NgqZaoQJT9oMihrMOg4NVP7qdRZg9LKtOtJwF+641AqmlUsx3T9mVqnDM1vYuEgw51l6TCCoiSR+bupqI0A+V4sUruqr/8+ZfMKDyhC9B2QnrLwN8hzE/0Gu/MWPUYX5RtMIiVvn7Xr8o+9bOaJW43ZLuqunh4om+JIW4TeSp6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LJjEDuTg; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=KxEpV04dvpjuyZAM4JxiQiqjGH7qFuhyC4POgRHovdMsBv4C0mMKn8lHRpS6H1MS7iav5rfwAS8gm58JGbpjYtAljxBa1wUvccKGlGJ5gA+KmeDnCL/rgIMOOilyvMf7XRwrAOVqWlpSHqYqYe+SPxOytNtrWvTa1UYLA3sHsks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iLX/JxBh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LJjEDuTg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1305D1F000E9;
-	Fri, 17 Jul 2026 14:21:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iLX/JxBh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F4371F000E9;
+	Fri, 17 Jul 2026 14:21:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784298081;
-	bh=IXNNT+2caPXqZF2SGll0FRjuXEGwWvzO8xCQh5lGDKU=;
+	s=k20260515; t=1784298093;
+	bh=m52Fw9GeEPA0ZBlojXrp/w4D3jkG1Tgk7/BsPis+h84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=LJjEDuTgTS8yNZ6Y47UMFTzTABrOsRwF+6wYf0CbHx4gVnoXdfp6oqWoG8FtTY/XX
-	 Tnp8lKksykBqW6qyuAvzw8c0bghNtAfe+DaFZdmj76aOpjLCImTN6f/DiMmCO2L9IJ
-	 TwmT82U0K//44momW+Sn/XNrh9DMEdkWA1bt8Z9qbcLEHOUeQ7CQ32nCmqh8p5kCwR
-	 2vrpwj9fham58s2bSQDVF9TO3SkrWIVwoZ54pHjMUhWragZzo9U3U+vIZtvUpfhJKX
-	 IZ/S8rX9h1TVdNvHXFIzjCEjCoUAubJi3oYgX1GPpDkYCyAfyp493vABr97Bf6jodu
-	 xAUk8AyE8Mh5w==
+	b=iLX/JxBhSqdn4g16JjHzsZ6tQGUuRS8Jvey1KmxqwabpvdrejjAJ8+o72bnScX3qI
+	 fo+2AaSfwB4A8GjwN/DYmScvGeNNzIPKRTwW3BTpr0RyGaoYT0AiqUBoUMTHwd8NM9
+	 kJbUwxk3HkKPlGekgw+7d0HxpbdRS3uPcv+E88w+nylJ2oncLZJv7ONkk0nIbkjHQL
+	 vG7w7cfiwxv424Ls5HqMn8IGuII0urUJk1AvKAb7p1nO1OqUTBuHnFfsShduJSluss
+	 n4EXWsdJPz8l92cT0jLQa95/ZLhxaXzUH3iQvX2vMT+Dyrq6HEpgtKZnDbKDYc50ud
+	 PDdNdDaOrFQoA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -44,9 +44,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v9 09/10] selftests: ftrace: Add wprobe trigger testcase
-Date: Fri, 17 Jul 2026 23:21:15 +0900
-Message-ID: <178429807574.157981.9731373698058020773.stgit@devnote2>
+Subject: [PATCH v9 10/10] tracing/wprobe: Support BTF typecast in fetchargs
+Date: Fri, 17 Jul 2026 23:21:27 +0900
+Message-ID: <178429808731.157981.9671478928789148148.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178429796992.157981.3393977217853767915.stgit@devnote2>
 References: <178429796992.157981.3393977217853767915.stgit@devnote2>
@@ -62,57 +62,79 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add a testcase for checking wprobe trigger. This sets set_wprobe and
-clear_wprobe triggers on fprobe events to watch dentry access.
-So this depends on both wprobe and fprobe.
+Allow BTF typecast syntax (STRUCT)FETCHARG->MEMBER in wprobe event
+fetchargs. Previously, handle_typecast() rejected any probe context
+that was not a function entry/return or tracepoint event probe.
 
+Wprobe events use  (the accessed address) and  (the value
+at that address). By enabling BTF typecast, users can now cast these
+to a concrete struct type and access its fields directly. For example:
+
+  echo 'w:watch rw@0:8 dflag=(struct dentry)$addr->d_flags' >> dynamic_events
+
+With a set_wprobe trigger pointing the watchpoint at a dentry address,
+the resulting trace shows d_flags being accessed at that location.
+
+Note that  and  are restricted to kernel-space memory,
+which is consistent with the existing TPARG_FL_KERNEL flag used when
+parsing wprobe fetchargs.
+
+Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
  Changes in v9:
-  - Drop dentry cache after removing tempfile for on-disk
-    filesystem.
- Changes in v8:
-  - Use TMPDIR for making a test file.
-  - Ensure the fprobe and target functions exists, if not, exit
-    with UNRESOLVED (== skip).
- Changes in v7:
-  - Add a newline at the end of file.(style fix)
-  - Use dentry_kill instead of __dentry_kill.
- Changes in v5:
-  - Enable CONFIG_WPROBE_TRIGGERS in the config for ftrace test.
- Changes in v3:
   - Newly added.
 ---
- tools/testing/selftests/ftrace/config              |    1 
- .../ftrace/test.d/trigger/trigger-wprobe.tc        |   70 ++++++++++++++++++++
- 2 files changed, 71 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+ kernel/trace/trace_probe.c                         |    3 +
+ kernel/trace/trace_probe.h                         |    5 +
+ .../test.d/trigger/trigger-wprobe-btf-typecast.tc  |   80 ++++++++++++++++++++
+ 3 files changed, 87 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
 
-diff --git a/tools/testing/selftests/ftrace/config b/tools/testing/selftests/ftrace/config
-index d2f503722020..ecdee77f360f 100644
---- a/tools/testing/selftests/ftrace/config
-+++ b/tools/testing/selftests/ftrace/config
-@@ -28,3 +28,4 @@ CONFIG_TRACER_SNAPSHOT=y
- CONFIG_UPROBES=y
- CONFIG_UPROBE_EVENTS=y
- CONFIG_WPROBE_EVENTS=y
-+CONFIG_WPROBE_TRIGGERS=y
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 5d5e9b477b86..8332ff1bb4ff 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -967,7 +967,8 @@ static int handle_typecast(char *arg, struct traceprobe_parse_context *ctx)
+ 
+ 	if (!(tparg_is_event_probe(ctx->flags) ||
+ 	      tparg_is_function_entry(ctx->flags) ||
+-	      tparg_is_function_return(ctx->flags))) {
++	      tparg_is_function_return(ctx->flags) ||
++	      tparg_is_wprobe(ctx->flags))) {
+ 		trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
+ 		return -EOPNOTSUPP;
+ 	}
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index 7380502a85af..0a83b3fb6128 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -439,6 +439,11 @@ static inline bool tparg_is_event_probe(unsigned int flags)
+ 	return !!(flags & TPARG_FL_TEVENT);
+ }
+ 
++static inline bool tparg_is_wprobe(unsigned int flags)
++{
++	return !!(flags & TPARG_FL_WPROBE);
++}
++
+ /* Each typecast consumes nested level. So the max number of typecast is 8. */
+ #define TRACEPROBE_MAX_NESTED_LEVEL 8
+ 
+diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
 new file mode 100644
-index 000000000000..0634259e2c65
+index 000000000000..8962c91d8428
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
-@@ -0,0 +1,70 @@
++++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
+@@ -0,0 +1,80 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
-+# description: event trigger - test wprobe trigger
-+# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README events/sched/sched_process_fork/trigger
++# description: event trigger - test wprobe trigger with BTF typecast fetchargs
++# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README events/sched/sched_process_fork/trigger "[(structname[,field])]<argname>[->field[->field|.field...]]":README
 +
-+echo 0 > tracing_on
++echo 0 >> tracing_on
++
 +rm -f $TMPDIR/hoge
-+
-+:;: "Add a wprobe event used by trigger" ;:
-+echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
 +
 +# we will skip this test if fprobe is not supported.
 +if ! grep -Fq "f[:[<group>/][<event>]] <func-name>[%return] [<args>]" README; then
@@ -129,6 +151,16 @@ index 000000000000..0634259e2c65
 +    echo "UNRESOLVED: dentry_kill not found"
 +    exit_unresolved
 +fi
++
++:;: "Add a wprobe event with BTF typecast fetchargs" ;:
++# $addr is the address being accessed (= dentry pointer when watching dentry)
++# (dentry)$addr->d_flags reads d_flags from the dentry struct via BTF typecast
++# Note: BTF typecast uses (STRUCT) without the 'struct' keyword, matching
++# the fetcharg syntax used in fprobe/tprobe events.
++echo 'w:watch rw@0:8 address=$addr dflag=(dentry)$addr->d_flags' >> dynamic_events
++
++:;: "Check the wprobe event is registered with dflag field" ;:
++grep -q "dflag" dynamic_events
 +
 +:;: "Add events for triggering wprobe" ;:
 +echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
@@ -151,17 +183,19 @@ index 000000000000..0634259e2c65
 +echo 1 >> tracing_on
 +
 +echo aaa > $TMPDIR/hoge
++sleep 1
 +echo bbb > $TMPDIR/hoge
++sleep 1
 +echo ccc > $TMPDIR/hoge
++sleep 1
 +rm $TMPDIR/hoge
 +
 +:;: "Drop dentry caches (for dentry_kill)" ;:
-+# Use append (>>) to avoid calling do_truncate again.
 +sync && echo 2 >> /proc/sys/vm/drop_caches
 +
-+:;: "Check trace results" ;:
-+cat trace | grep watch
-+
++:;: "Check trace results include BTF typecast field dflag" ;:
++cat trace > /tmp/test-trace-typecast.log
++cat trace | grep "watch.*dflag="
 +
 +:;: "Ensure wprobe becomes disabled again" ;:
 +cat events/wprobes/watch/enable | grep 0
