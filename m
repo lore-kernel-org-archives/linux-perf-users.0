@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAFD19AD5C;
-	Sat, 18 Jul 2026 05:38:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01B3305E32;
+	Sat, 18 Jul 2026 05:38:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784353096; cv=none; b=HtftH5U7Ayln2AOwOsyG7vMwOI6GSu1YvH6rpsiba+i50dzTO7neKNbwuzFQAR2bh/2SV0NZTVG8YoeVYL1buOgFr0W9/Ud6K+4NESZY0JSPLYJykpdGngwn2yWgXMvC9lNV89aSI6X7+w8YSTWGCD0K1SdC7U+CvSMkXfEC0UY=
+	t=1784353138; cv=none; b=rrxNYnhfxcz6O6Gr2LAoor9X0N5yNoajVs39+RcLujSy+yNwSK/zCX7uegIHf/hUbd+/2xafdtqtwl1YZ3hsZWSb5rktqLQDlwXGALe7MQMOkmpvOs3CHxPbjxOTAzfSBGGmsfmu4w5k658X5++yeARVP5DYq5UUEA/U4UNrDig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784353096; c=relaxed/simple;
-	bh=s4+toEIpGHTIC7SWW/zBkFyg/3CA9TZmqUGwwkMMMfk=;
+	s=arc-20240116; t=1784353138; c=relaxed/simple;
+	bh=f/auU1sLUSmjRcM56684IB6M/B565j4C9rHnEmJV8QE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UiJFTyuRZu+Jpgd0X3v6xhrkyg50TojbdFcvKKR2qAzIpLHF+8RdX1BE+3PGDCU9JG/Dy6eR3gJqVc6sKRm2+uu49wTqGI7IZV240yzACXvFOqwzbM2y+6BZtnOSbew+gEwxvJy0pyrVC9WcswQvo7myKwGdAzQtyDkE9j4cY/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YwnKxOGz; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=r7AMAgmUvUbOcIzqVBtQTTfqo6aE1w6b3z6zLPKwEdSTFtp9CJgFRmK8ulByhla44PPoX/+7XVx5dsF9cyBAG4XgLNP4OAwU/9vNeQs8hxdWuYZnsbQWBG2Y4pe9fBzUseF16xBDWXRomOABOe54yc23ECRUfFZfXdRG4SOY+Tk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y25DGUgS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YwnKxOGz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C4A21F000E9;
-	Sat, 18 Jul 2026 05:38:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y25DGUgS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D0841F000E9;
+	Sat, 18 Jul 2026 05:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784353095;
-	bh=T9qgBCMTMjO6d1pm3sGtBY7xMfkGzbpgBhsDT5fAd88=;
+	s=k20260515; t=1784353136;
+	bh=ciuMwKRA9gRoRCTgj/gmZ+7142E2Ydcj+uCYfNC/kIo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YwnKxOGzCM3FA5HGXmqLxnXCvU4ZWPiZcHnRbJtEkd6gkEbsYMMICb9T2c33PACUR
-	 uc2+tduaDd71oEf7viaYTqXUXCk3uM09LBwXvdYtCqIUkiRCT9Ox4Dg4QtMnY/BjWI
-	 BCCEwastm/spxRl2fiGx5mKHashf7Mk5fzOBPGT5M7qTsY7tAI1tGI91QGjEfNwBvT
-	 +418mqqBK9AyqZxPFarVgeVGA6NjXNCQESKpWwtA9mfiTpM4E5Ier+fRYHMkintvfy
-	 iBCceT/Cwe5tSQPkELVhy7cjsZ8UPu3O5+PRTdWysj43vX1ltRi8BKitnvOYLZBDUi
-	 AhiZcKPwv6yCg==
-Date: Fri, 17 Jul 2026 22:38:13 -0700
+	b=Y25DGUgSwP9/+v6c/XMiEh/AskKW0wiVc6HYlDWlEBiDgL7pxG8LhDjYr0g8KH27W
+	 5XkCiqX1utv0djTs2ZANGTd687U6uDpYuwf9njIaVmK6bVI9msl6WqTwdkZ/iHy/Xr
+	 Cx85cgmEgTlYlyqoJbN6Yi+iHoapYN4S3gfRIJ+YacG2XmUGAC37ckXfG04k+efgw0
+	 JAKMXEVSuQnS4+MbA/DxlmUBusCWkbACNyFO+/DNpXkAzy6WFSMFEd40mqzXVTMLBZ
+	 cpOYWf6y+3PQpF/UfLtfiTuEXKO8iUMSxDXSMUDoPTIHiYvw8dbcfUty6OjR+xyvu5
+	 UKzFKcH5j6VMA==
+Date: Fri, 17 Jul 2026 22:38:54 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: sashiko-reviews@lists.linux.dev
 Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v6 04/10] perf ui hists: Fix stack use-after-return in
- symbol_filter_str
-Message-ID: <alsRRWa6_Ju8I2x2@google.com>
+Subject: Re: [PATCH v6 08/10] perf ui hists: Remove duplicated thread in
+ popup_action
+Message-ID: <alsRbqrQagNFdflR@google.com>
 References: <20260710053628.1861645-1-irogers@google.com>
  <20260716072351.560311-1-irogers@google.com>
- <20260716072351.560311-4-irogers@google.com>
- <20260716074848.01BC71F000E9@smtp.kernel.org>
+ <20260716072351.560311-8-irogers@google.com>
+ <20260716073751.40C301F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,79 +46,100 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260716074848.01BC71F000E9@smtp.kernel.org>
+In-Reply-To: <20260716073751.40C301F000E9@smtp.kernel.org>
 
-On Thu, Jul 16, 2026 at 07:48:47AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] Unconditional free of a non-heap `argv` pointer leading to a crash, and unintended destruction of the CLI symbol filter state.
+On Thu, Jul 16, 2026 at 07:37:50AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [Medium] Assigning a raw pointer to `actions->ms.map` without taking a reference, followed by `free_popup_actions()` dropping the reference, causes a refcount underflow.
+> - [Low] The commit removes the `thread` member from `struct popup_action` but leaves multiple read and write accesses to it intact, breaking the build.
 > --
 > 
-> --- Patch [4]: [PATCH v6 04/10] perf ui hists: Fix stack use-after-return in symbol_filter_str ---
-> commit 7f822e6fd8f11b66dda82bea74a7a54f3a875831
+> --- Patch [8]: [PATCH v6 08/10] perf ui hists: Remove duplicated thread in popup_action ---
+> commit 1a6678f7f83293dd5e22da61354ad80c36378c0a
 > Author: Ian Rogers <irogers@google.com>
 > 
-> perf ui hists: Fix stack use-after-return in symbol_filter_str
+> perf ui hists: Remove duplicated thread in popup_action
 > 
-> In evsel__hists_browse(), the local stack array 'buf' is assigned directly
-> to the persistent 'hists->symbol_filter_str' pointer. This commit fixes the
-> dangling pointer by duplicating the string and cleanly freeing it on exit.
+> This commit removes the thread member from struct popup_action since it is
+> duplicated in the map_symbol structure. It aims to ensure there is only ever
+> one thread associated with a popup_action.
 > 
 > > diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-> > index 793959574a9ad..4282ef1b81f75 100644
+> > index 6145c7878c648..89c3d3dc69a27 100644
 > > --- a/tools/perf/ui/browsers/hists.c
 > > +++ b/tools/perf/ui/browsers/hists.c
-> > @@ -3213,7 +3213,10 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
-> >  					"To remove the filter later, press / + ENTER.",
-> >  					buf, "ENTER: OK, ESC: Cancel",
-> >  					delay_secs * 2) == K_ENTER) {
-> > -				hists->symbol_filter_str = *buf ? buf : NULL;
-> > +				char *new_filter = *buf ? strdup(buf) : NULL;
-> > +
-> > +				zfree(&hists->symbol_filter_str);
+> > @@ -2359,7 +2359,6 @@ static int hists_browser__scnprintf_title(struct hist_browser *browser, char *bf
+> >  
+> >  struct popup_action {
+> >  	unsigned long		time;
+> > -	struct thread		*thread;
 > 
-> [Severity: High]
-> If the user invoked perf report with a command line option like
-> --symbol-filter=my_func, hists->symbol_filter_str will have been assigned
-> directly to the argv pointer in tools/perf/builtin-report.c:
-> 
-> report__collapse_hists() {
->     ...
->     hists->symbol_filter_str = rep->symbol_filter_str;
-> 
-> Will calling zfree() here cause a glibc invalid pointer crash when the
-> user interactively applies a new filter?
+> [Severity: Low]
+> Does this removal cause a build regression?
 
-Right, please update there to copy the command line string.  It seems
-there's a test code to set it too.
+Right, this should be the last patch in the series.
 
 Thanks,
 Namhyung
 
 > 
-> > +				hists->symbol_filter_str = new_filter;
-> >  				hists__filter_by_symbol(hists);
-> >  				hist_browser__reset(browser);
-> >  			}
+> There are still accesses to act->thread and actions->thread in several places
+> that will no longer compile:
 > 
-> [ ... ]
+> tools/perf/ui/browsers/hists.c:do_zoom_thread() {
+>     struct thread *thread = act->thread;
+> ...
+> }
 > 
-> > @@ -3447,6 +3450,8 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
-> >  	}
-> >  out_free_stack:
-> >  	pstack__delete(browser->pstack);
-> > +	zfree(&hists->symbol_filter_str);
-> > +	hists__filter_by_symbol(hists);
+> tools/perf/ui/browsers/hists.c:do_run_script() {
+> ...
+>     if (act->thread)
+>         len += strlen(thread__comm_str(act->thread));
+> ...
+> }
 > 
-> [Severity: High]
-> Similarly, does this unconditional free on exit crash if the filter was
-> initialized from the CLI?
+> tools/perf/ui/browsers/hists.c:evsel__hists_browse() {
+> ...
+>         } else if (top == &browser->hists->thread_filter) {
+>             actions->thread = thread;
+>             do_zoom_thread(browser, actions);
+>         }
+> ...
+> }
 > 
-> Additionally, does unconditionally clearing this pointer permanently destroy
-> the --symbol-filter state for subsequent views of the same event?
+> [Severity: Medium]
+> Can this code cause a refcount underflow regression?
 > 
-> >  out:
-> >  	hist_browser__delete(browser);
-> >  	free_popup_options(options, MAX_OPTIONS);
+> In evsel__hists_browse(), when handling K_ESC or K_LEFT, actions->ms.map is
+> assigned directly without taking a reference:
+> 
+> tools/perf/ui/browsers/hists.c:evsel__hists_browse() {
+> ...
+>         case K_ESC:
+>         case K_LEFT: {
+>             ...
+>             actions->ms.map = map;
+>             ...
+>             continue;
+>         }
+> ...
+> }
+> 
+> The loop then hits continue, and at the do_hotkey label, free_popup_actions()
+> drops the reference, which can cause an underflow when map_symbol__exit()
+> calls map__zput():
+> 
+> tools/perf/ui/browsers/hists.c:evsel__hists_browse() {
+> ...
+> do_hotkey:
+>         free_popup_options(options, MAX_OPTIONS);
+>         free_popup_actions(actions, MAX_OPTIONS);
+> ...
+> }
+> 
+> >  	int (*fn)(struct hist_browser *browser, struct popup_action *act);
+> >  	struct map_symbol	ms;
+> >  	int			socket;
 > 
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260716072351.560311-1-irogers@google.com?part=4
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260716072351.560311-1-irogers@google.com?part=8
