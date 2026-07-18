@@ -1,96 +1,244 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA3725A354;
-	Sat, 18 Jul 2026 03:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510A2231C91;
+	Sat, 18 Jul 2026 04:58:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784344791; cv=none; b=cO+CF9mG5WvGVbaiVmWjkiQBZQ1M7WrRyG2XrAGefLhbH88vYI8BNKOcncol+RW4Ndq7JvnFO3gGPaBeukMTFtcUOxD0V0AVpI/7wpBByamxkcRj1zP6ZQbGg9uxUP1x99kC53ie+M974UtmY3+giix0xpdwax3wagJznhywxxA=
+	t=1784350711; cv=none; b=YC/BzYciOuGRubqjmgves22W6vVnV3x8A79jJle5H0hCvntmlD3U1dLHphJgJfbdXOz8K6Z+/qKOv2Xwz/lO3Pe1MEDAURZZBqwJ9/rby9xGy9g7DQM28eSOKYujmGwo+nJOMKvfE2SwnVl/Txfp1SlRGCCtAVcu5/lK14SrZQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784344791; c=relaxed/simple;
-	bh=fMT/LjMCvJayK4qO3ZazMFCTeIoDQLQz+2dxdinStNc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=M4K2v7MzS1qdyJ3YadFEP9did5mYmqpVBmNQtvRWeZ29b52j8z51vPjQtOl8n4ee7uwZyraMfuTOfoYRJpafNpMLEwApcRNP4bGqRw4pMn7CUMEUxB1PN4RmlLnlhdOROllWk/v/+D143yGIGsgAr0QBF0I0Jy08v0zvsrOh2Gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=dKQGOsHw; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1784350711; c=relaxed/simple;
+	bh=NsyfsI8jqYmyYFduLaMlSdkDYbvzpsIObOSiUvfL/Xk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SJps0Py461RIjDuKIz25jszvhhgnIeABOyW+ghL8mw3UckCnv0Mm3vNadP7lNJJHhfiKaJXx3b+jQKEN+Z6K4S5CU2Aa3CHoW8EvCYT+gvT736MFTL2rAzb2T1pvbaLDx0GHlywtp/t53TTdsP5kYJh3Q5c3MRiDDy2RbmH140g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3jqMdoK; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="dKQGOsHw"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 05A9240E02B0;
-	Sat, 18 Jul 2026 03:19:45 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id WgF-xEK_hTFV; Sat, 18 Jul 2026 03:19:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1784344774; bh=fMT/LjMCvJayK4qO3ZazMFCTeIoDQLQz+2dxdinStNc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=dKQGOsHwPy4QXE1v3glznCWHJx6ke1lQiw0EfBGSgD6zbzQdW8Lsqr2tRsIj82oC3
-	 oKWyqSmQl8nuOFFdHZ4FfJhc5tvx8bC4Limt7LXG4mmA3ZNCnlVeNF8hNrGQrSfGIZ
-	 k0U3tfltTDEGaA1W509xu7RSdoVtqm7q8axg1ABpxTZbnCOi+dvy5T/eeQsO9JsytT
-	 fZJqRv0q/R7mJ+j4dwpHTsWEJV4HLsStEXdL83WPDyUUCpjhhGEigFD54Hsw9g+MYb
-	 Gea6GgiODKDSjPaJqBONifqQT7r06OatQVseJYSf0SfoGIFpeIRCtOflNjqiXWNHS+
-	 wHBtQopBol/0xGIqUyMZSkHndwZgTx6halScg5Kt2tVXTch0VsT1Lyk3e6zy9sYd/A
-	 7kJq6DfnjxNTLynZzYtAJObB0KT2/FqXO10X+QtOjk4CEBfB2MeYB//SZluGzDncqt
-	 WHKTKL2mngtfxrUvSQDWEsW2OxdETt7qDQnTl+W9f9/2rgpZ8jhSlTaqNdWQpUxfpB
-	 oj53ATtddu9z4yc0kTUsD8IWA24cqhksaP1Y6j5GmJ7Cbuj2xIAfbakVxfV2KMxc6F
-	 GLk3waBdGdgEdUTb3E0wGqeLJJvCL84Z0HyDhWlNCJU7rlgRPCjj9sTquiwGHlZNiA
-	 prMN44APIBlsxti+A9Ak86S8=
-Received: from ehlo.thunderbird.net (unknown [12.110.208.163])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5CE7540E0031;
-	Sat, 18 Jul 2026 03:19:17 +0000 (UTC)
-Date: Sat, 18 Jul 2026 02:51:46 +0000
-From: Borislav Petkov <bp@alien8.de>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-CC: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
- Jinchao Wang <wangjinchao600@gmail.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v9 00/10] tracing: wprobe: x86: Add wprobe for watchpoint
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20260718084741.c2ae6e41f2a1510ffa06d12e@kernel.org>
-References: <178429796992.157981.3393977217853767915.stgit@devnote2> <20260717162857.GAalpYSaZ_emTMUEEW@fat_crate.local> <20260718084741.c2ae6e41f2a1510ffa06d12e@kernel.org>
-Message-ID: <644AE756-0203-44F0-ABF1-9C35B9707492@alien8.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3jqMdoK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0FCE1F000E9;
+	Sat, 18 Jul 2026 04:58:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784350710;
+	bh=ET2+fc947Tu+uL6cfp+TEnoUMgo7QJOB5FbVepwLTXE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=L3jqMdoKj4O0hJXqtnvex4ghMJqlIeGEC7isl7/8Xxp1zqftiRFYgAEXkdRIS6ptz
+	 VlF0sRg5fg/lYp20EX3S1n7Qnux+HeuwA6LgrbWEpnSq1V3KuRFZ8irYD7jb4dy9up
+	 GYQQ3fhefE4wrT7+Yw0ydED2B1jD1gMcXyZZmJTMyUUs8J9kz+eEmgLUYnSGIAcJ7k
+	 gYtysnoyDux3QvAfMxzgxxR+L5mfblLIboQuKnYa8kZYLnLlK5p0FiVHXgtn29AN2D
+	 soAsN9VZx6DOruaNzf8lyeBRqwoqAxoqqphZl0VAvIYtlA7CWqtMSWHIb6A+wBVa/e
+	 NJLvJ3ZJJbKPA==
+Date: Fri, 17 Jul 2026 21:58:28 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Jiebin Sun <jiebin.sun@intel.com>
+Cc: acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	james.clark@linaro.org, tianyou.li@intel.com,
+	wangyang.guo@intel.com, dapeng1.mi@linux.intel.com,
+	thomas.falcon@intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 00/14] perf c2c: add a function view
+Message-ID: <alsH9PFMljK5eUEJ@z2>
+References: <20260710084247.3576706-1-jiebin.sun@intel.com>
+ <20260717020530.1645123-1-jiebin.sun@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260717020530.1645123-1-jiebin.sun@intel.com>
 
-On July 17, 2026 11:47:41 PM UTC, Masami Hiramatsu <mhiramat@kernel=2Eorg> =
-wrote:
->On Fri, 17 Jul 2026 09:28:57 -0700
->Borislav Petkov <bp@alien8=2Ede> wrote:
->
->> Hi,
->>=20
->> On Fri, Jul 17, 2026 at 11:19:30PM +0900, Masami Hiramatsu (Google) wro=
-te:
->> > Here is the 9th version of the series for adding new wprobe (watch pr=
-obe)
->>=20
->> any chance you won't blast out your patchset every day?
->
->Ah, sorry about that=2E I'll rate limit myself this weekend on this serie=
-s=2E
+On Fri, Jul 17, 2026 at 10:05:16AM +0800, Jiebin Sun wrote:
+> This series adds a new "function view" to perf c2c report, on top of the
+> existing cacheline view. It does not change the cacheline view; it adds a
+> second, complementary way to look at the same cache-to-cache (C2C) data.
+> 
+> v1: https://lore.kernel.org/linux-perf-users/20260626070355.1556721-1-jiebin.sun@intel.com/
+> v2: https://lore.kernel.org/linux-perf-users/20260710084247.3576706-1-jiebin.sun@intel.com/
+> 
+> Changes since v2
+> ================
+> 
+>   - perf c2c: add a c2c_ prefix to the functions exported from
+>     builtin-c2c.c for the function view, so the shared symbols do not
+>     pollute the global namespace: fmt_free() -> c2c_fmt_free() and
+>     fmt_equal() -> c2c_fmt_equal(). Suggested by Namhyung.
+> 
+>   - perf c2c: free the two top-level function-view hists with
+>     hists__delete_all_entries() as well, so entries left in the
+>     input/collapsed trees are not leaked.
+> 
+>   - perf c2c: drop a redundant reset_dimensions() call, free the
+>     registered formats on a mid-parse failure in the function-view HPP
+>     list parser, and add a missing newline to a pr_err() message.
+> 
+>   - Rebased onto the latest perf-tools-next.
+> 
+> Changes since v1
+> ================
+> 
+>   - Add the worked example (the cpupri_set/pull_rt_task walk-through) to
+>     the perf-c2c man page, as suggested by Namhyung.
+> 
+>   - Rebased onto the latest perf-tools-next.
+> 
+>   - perf c2c: cache the level-1 total-stores sum (new child_stores field)
+>     instead of walking the children on every comparison. total_stores_cmp()
+>     is called during collapse/sort, so the previous O(children) walk was an
+>     O(N*M log N) bottleneck on large profiles.
+> 
+>   - perf c2c: free the function-view sub-hists with
+>     hists__delete_all_entries() instead of hists__delete_entries(), so
+>     entries still in the input/collapsed trees are not leaked, matching the
+>     cleanup in builtin-c2c.c.
+> 
+>   - perf c2c: distinguish -ENOMEM from "unknown dimension" in
+>     get_function_format(), so an allocation failure is no longer
+>     misreported as an "Invalid c2c function-view field".
+> 
+>   - perf c2c: reword the iaddr_symbol_cmp() sort-order comment to drop the
+>     ambiguous ascending/descending wording.
+> 
+> What it does
+> ============
+> 
+> In the perf c2c TUI, press TAB in the cacheline view to switch to the
+> function view. It presents a 3-level hierarchy:
+> 
+>   Level 1: primary functions, sorted by Cycles % (estimated load cycles:
+>            HITM, peer-snoop and other-load cycles -- on systems whose
+>            default display mode is peer, such as Arm64, the peer-snoop
+>            component dominates)
+>   Level 2: other functions that share cachelines with the level-1 function
+>   Level 3: the specific shared cachelines for each function pair
+> 
+> Keys in the function view:
+>   TAB/ESC/q   return to the cacheline view
+>   d           show cacheline details for the selected entry
+>   e / +       expand / collapse the selected entry
+>   ?           help
+> 
+> The cacheline view and the --stdio output are unchanged.
+> 
+> Example
+> =======
+> 
+> A level-1 function is expanded (press 'e') to reveal the functions it
+> shares cachelines with, and one of those is expanded again to reveal the
+> specific shared cachelines:
+> 
+>   Shared Data Functions Table   (27 entries, sorted on Cycles %)
+>    Cycles  Store
+>         %  count  Code address        Symbol           Cacheline
+>   ----------------------------------------------------------------------
+>   - 39.03%   541  - 0xffffffffa2fc5b08  - [k] cpupri_set
+>              450  - 0xffffffffa2fa28a5  - [k] pull_rt_task
+>              450                                      0xff2d0082809da080
 
-Once a week is perfectly fine=2E=20
+I think it's more like "code-address" view rather than "function" view.
+How about organizing the output something like below?
 
---=20
-Small device=2E Typos and formatting crap
+  L1:  function
+  L2:  cache line
+  L3:  shared functions
+
+or
+
+  L1:  function
+  L2:  code address
+  L3:  cache line
+  L4:  shared functions
+
+A function can have multiple entries with different code addresses and
+cache lines.  They can be grouped together for better analysis.
+
+Also, I think you'd better to indent output for lower level entries to
+clearly separate entries from others like in the normal perf report
+hierarchy view.  Something like this.
+
+  Shared Data Functions Table   (27 entries, sorted on Cycles %)
+   Cycles  Store
+        %  count  Code address        Symbol           Cacheline
+  ----------------------------------------------------------------------
+  - 39.03%   541  - 0xffffffffa2fc5b08  - [k] cpupri_set
+             450  - 0xffffffffa2fa28a5    - [k] pull_rt_task            <<<-- here
+             450                                      0xff2d0082809da080
+	     ...                        + [k] other_func
+
+Thanks,
+Namhyung
+
+> 
+> Reading the three levels:
+> 
+>   - Level 1: cpupri_set is the top contended function, accounting for
+>     39.03% of the estimated load cycles. The table is sorted by this
+>     Cycles % column.
+>   - Level 2: expanding cpupri_set (press 'e') lists the functions it
+>     shares cachelines with, sorted by store count. Here pull_rt_task is
+>     the contending function, with 450 stores into the shared data.
+>   - Level 3: expanding pull_rt_task lists the specific cachelines the two
+>     functions contend over -- in this case the single cacheline at
+>     0xff2d0082809da080.
+> 
+> The view reads top-down as "cpupri_set is hottest; it shares data with
+> pull_rt_task; the contention is on cacheline ...da080" -- the false-
+> sharing chain that the cacheline view otherwise makes you reconstruct by
+> hand.
+> 
+> Implementation
+> ==============
+> 
+> The function view is built as a separate hist_browser in
+> tools/perf/ui/browsers/c2c-function.c. Shared types and helpers used by
+> both views are factored out of builtin-c2c.c into a new c2c.h. The
+> hierarchy is constructed from the existing cacheline histograms into a
+> dedicated set of hists, keyed by (symbol, instruction address), and
+> rendered with custom column formatters.
+> 
+> The series is split into 14 small, self-contained patches so each step
+> can be reviewed and builds on its own.
+> 
+> Testing
+> =======
+> 
+>   - Each of the 14 commits builds individually and as a full series.
+>   - perf c2c report --stdio (cacheline view) output is unchanged versus
+>     the baseline: identical trace-event totals, shared-cacheline counts,
+>     and HITM tallies.
+>   - The function view was exercised on c2c recordings; the level-1
+>     ordering and the level-2/3 sharing breakdown match the underlying
+>     cacheline data.
+> 
+> Jiebin Sun (14):
+>   perf c2c: extract shared data structures into c2c.h
+>   perf c2c: add function view browser skeleton
+>   perf c2c: add function view type definitions and helpers
+>   perf c2c: add column format infrastructure for function view
+>   perf c2c: add column entry functions for function view
+>   perf c2c: add comparison functions for function view sorting
+>   perf c2c: add dimension definitions and format creation
+>   perf c2c: add HPP list parsing for function view histograms
+>   perf c2c: add stats merging and memory management helpers
+>   perf c2c: add hierarchy entry creation and lookup functions
+>   perf c2c: add function view hierarchy builder
+>   perf c2c: add function view browser UI
+>   perf c2c: add TAB key to switch to function view
+>   perf c2c: document function view in perf-c2c man page
+> 
+>  tools/perf/Documentation/perf-c2c.txt |   33 +
+>  tools/perf/builtin-c2c.c              |  132 +--
+>  tools/perf/c2c.h                      |  148 +++
+>  tools/perf/ui/browsers/Build          |    1 +
+>  tools/perf/ui/browsers/c2c-function.c | 1562 +++++++++++++++++++++++++
+>  5 files changed, 1756 insertions(+), 120 deletions(-)
+>  create mode 100644 tools/perf/c2c.h
+>  create mode 100644 tools/perf/ui/browsers/c2c-function.c
+> 
+> 
+> base-commit: 3f7909fa921e38b7aba8566b03ca5e0754a8fa8b
+> -- 
+> 2.52.0
+> 
