@@ -1,346 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from CWXP265CU010.outbound.protection.outlook.com (mail-ukwestazon11022088.outbound.protection.outlook.com [52.101.101.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38C91DF25C;
-	Sat, 18 Jul 2026 05:02:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784350956; cv=none; b=lP/OcJTMCfGj5mn+M+2koSGfLnPCpxSqltEnUBgsVmPDhA5h1Ufx/Wm7Lr7hCpVcUt2nV3CfFTab7BwtrTMjrRO42JRmuVc92FluHhiN9QylOFYI5Oazj6Co7lOINfbAYRUffS7sM2jF17lcFuFmeutT+SRe9aGtubOcX6rDCJI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784350956; c=relaxed/simple;
-	bh=fO/d7JdehJiUDLTKhhF7kCpoKiPPEHmGRl5xX5xpT9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dm7CPqdRuB2hP7LAYo1BbeIAm644r+0/qcVQMeYqXU1F7j7R3SBMBHEcxb0oaZjXOy6L5ums4qNZmkGXA6H7AcjmJ8yY6Ks2x0ckMMdH7qEpn/YZiaq1qGPMPCriWLGMX0RNi1zvHJNEtO4kC+qn9iBIHjED6JMrAZ8glQDZ4tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ltd7CDyZ; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ltd7CDyZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E41181F000E9;
-	Sat, 18 Jul 2026 05:02:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784350954;
-	bh=hQMpI/Y8sJK36ILIgDByZccdBDPWEvurE42yZ47Y/us=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Ltd7CDyZ1nN8+S/+zFJ8JgSwsaRY/n9cK0RyEbAoQT1mSUt2rLKgnRPFXpl/3xac9
-	 6bdp4tYoflLeIF1hFqtlSAFzF9z4B/7RUO5aiyI7vkEQiS8PtiOLWsa1YndKseG4U8
-	 7/LIaZGV4ejddhRt5Q9mGTcTwy8Reml/KgkmO4verhwdpyidAKLLphBNvKB9115AoV
-	 aSQeqQ//h8O9BM00NjBqFvtMBAbXAi4wDhSCz+TS/JN7hOt2pEglQqvpwoDKEEnLty
-	 XzV7EJ8IIMiREtWOWiU4zwCBTPpOmvJLOm0KnMaSSwEcuERgeZWgxCtqonMUL7s36w
-	 KlQt1aoEuJdiQ==
-Date: Fri, 17 Jul 2026 22:02:32 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Aaron Tomlin <atomlin@atomlin.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, howardchu95@gmail.com, neelx@suse.com,
-	chjohnst@mail.com, sean@ashe.io, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8862530566E;
+	Sat, 18 Jul 2026 05:21:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.101.88
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784352118; cv=fail; b=OvbBoHPYezyNfgsxnQT4ZHvHCp6WZ8Er5SnXexmS5metfJc7ZSZJrhhzExFkctzo8iUStyFFhK2m4AJfEre8vUUZn3NhUhd9+EOugrpbYIRue/PLYvNirbrGDN6c1DmpODa9FP0K6F3K1fRLEs1uGjK3wKLJazalwBUn3yXcvsg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784352118; c=relaxed/simple;
+	bh=EZ1JgiKwWjoxuq01JtMd9HFzPBRHjkNYxyd01fVGrU8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=TM/Xzravs0o1ahLpJ0ok5Py4dpPqpDFEJvw1XPkbYpUmkQ6V0tQtjbWez+3gYY3xS/a8KjGQ5oXtvpWzqO1fm8GmdZcRjraSowzBWMHGIDSwDIFNl0wUix2VYfJkCAdkCG1Ex0baAzH8mc2IxjPyBkBaxonylT8rHsYkFaRp/Ss=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.101.88
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Va8E/Hy9ueqMzUC/arJu22Z4gqglTUr/Qr7Qb+Q357mM7QouK+EmIt94xhFwSuFf4WEXTIVYtIzO9GQkNudJsGFACUwFuUxQOaco8FECFQrJgM9apPhHgJpCVL4PpHsWblWvy1PwxEAZLpKD+nMa1WTZtU+b//UYo1t7XSGDpBVPSm++My3Pjfzh3WsdMJM4K4Wp6W3Z83w17SRZMPxvE8GoyeRmAbgnPs5bJqdq3XqFLLLfBdaqCzjXRSBI+Lyo2fBO04gP8VPOLdU77p/g95SghkJp9ojDlFs+jZ4RaUZWmuYQ0yizdSPAkIabRNXmGnbCHPwKuedTycrx69SgKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=aVvzyrcRcsOJYrdddXKOI6+D0IbHxqbSMePmOmqDYJk=;
+ b=m3cXUtM6nVZ3K9FKsvXjp6yaq/A9cQH0QlZ45p5nYCsS9K7cEEnRYvffYQ2gTu3p/0U3AoNc25nxfiU63BZUzMI/HOpsAAyYEUoWFnrJ9k2pWeISPmPvyKp4wc9ML3KUAepUEbii0NLTZP5Kbt8od1COy+CFEC9aVBgwhWdAtCmiTyVJ5sDxDh6fX8RoqIxCYGwXxlz/1HE8zr990M5/VuVrEMEOjJfQ7mKuJgg3PDSKISl0y+6L9nTRFSTEDd83Q9Ir6GetlY1ps4l/S2wsOCeCbVl0O/Gw7DdXtSS+0U3Vh1H6w3DiioZSCgZqlChgXEQ+qyhht3DgPT0aKoncpQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
+ by LO9P123MB7500.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:3b8::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.13; Sat, 18 Jul
+ 2026 05:21:54 +0000
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0223.013; Sat, 18 Jul 2026
+ 05:21:54 +0000
+Date: Sat, 18 Jul 2026 01:21:50 -0400
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, 
+	howardchu95@gmail.com, neelx@suse.com, chjohnst@mail.com, sean@ashe.io, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v2] perf trace: Add --bitmask-list option and correct
  cpumask formatting
-Message-ID: <alsI6DoHlx4NniDJ@z2>
+Message-ID: <4bdchumfthzjult4jysgzkq7bntqhtkieo4qygglymfk3d3q3n@i5uw2oowygho>
 References: <20260717013544.257768-1-atomlin@atomlin.com>
+ <alsI6DoHlx4NniDJ@z2>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <alsI6DoHlx4NniDJ@z2>
+X-ClientProxiedBy: BN0PR04CA0191.namprd04.prod.outlook.com
+ (2603:10b6:408:e9::16) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260717013544.257768-1-atomlin@atomlin.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO9P123MB7500:EE_
+X-MS-Office365-Filtering-Correlation-Id: 24eb3289-174d-4094-344c-08dee48c7ac6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|366016|1800799024|376014|23010399003|22082099003|18002099003|4143699003|3023799007|56012099006|10067099003;
+X-Microsoft-Antispam-Message-Info:
+	xken4e7omkcCWG4sBfFMziieFSDSKMZ37qmLWrs1c6GaS4NP2qqBz09nSDp+NKogCYK/Byq5e8nzYil+XuzMcY6GogQY8q6VscBcVqJcn9r9YLzrZHUgGDJmC3xfLzr/pOYeUDxTA+RzVvpA39SpIE8YO8KR1bwdmlGFLQ4qwMG91hykBf2tVdfNdLeC2ltQRF+46pPOt2uf0U456yKY8em/16JxMwbiA+JwlxgKhs2S+mmap9GMs5lWdwnIEo/bNdFZ7CHDmE38yL3JHCwLTACbrI176RDwz02p76r3Sm7L6GGxQ4g2SD9iEGnzflg0vx79h/WsVPK4QfIvOvdLSJwYPaGr4/q+IIranAjkuNvbqTn6mNHgg0KjErr/64RqlE1K0i/BhU2r36qDqmS9lAjFNUK0/3sp7Pe6vaRTw4Iy1LCBT/5+ylD4BgriNYFN6UZ7Bn5ahHMN+PZyaruU4GloiKc3TWdA5rbqR+VqPvGfr2fAigsHsZ3RnRO2etM300cH+POuNZarhPDMXnrD//Tn9ZtnnMIwD3ZDrwL6xhmOsz0TYyvw/v3s07mKOTWmB3N+0BhjODjKtx+bs/E+///A4/LHKOTyuZc1MAAovuQiaijb/FogkVG8T9fxHjTO8V8bXpTiBmZHWiE8arq/oY5ALO+aBcijIK6npxFV4tw=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014)(23010399003)(22082099003)(18002099003)(4143699003)(3023799007)(56012099006)(10067099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cXVWaWkyODN3MitzTFBLaGhDN2dHdHdBTjdHeTM3NnBjb01wUDdGeXlhN0M3?=
+ =?utf-8?B?UlFONVlaWStESjF6bWMwNHJsTWhQcGFBM1dsbWlWUUQwN2pFZGlqcy9SUmtR?=
+ =?utf-8?B?dTNNeGlwYStjT3VJMHV4czdOV0xIdVdES1BaWE9HcFFLMjM4TTZrbjQvcXkx?=
+ =?utf-8?B?ZTFjUEpDZTJRSzNOb3B4V0hmMUxaTXBhc01LUFU4RFljSVdTejV3MWdsQjVQ?=
+ =?utf-8?B?YmNDUjc4WHg5K3NFdDZya0JCQ29ON2ZuWk1tS09VMWhtaW1USUdRUlNuRUt6?=
+ =?utf-8?B?Y1FtakFkL1k1c2k2cElCRnphVkFxbjIzeTlRK1ltMXMweFQrN2Z6eTlEUysr?=
+ =?utf-8?B?MnA5OXkvbDI0UGdxZEtnVDQ5eFhuTUpUcmVERldXajByWjl3WjgvSGJNTENT?=
+ =?utf-8?B?WTdKWCsvWGdvU0FWdmRkNWg4VUFnTmNSeGhMK2JTNlIyby9jYXBrVllxajBn?=
+ =?utf-8?B?TXVWS25hYVpLSWxtdGRqMVh0dmh4aDZLYU5CejZuWldXUjdLdktvYnkvcTdr?=
+ =?utf-8?B?bEg5RnFVNjF1aSs3TFRWbDZxaWhhdTJvVjk1c2craE1KSlEyUjJzM2w3Qmhw?=
+ =?utf-8?B?RHNxOEZLcHZrTHhXbzQwWUF6QmN3ZTBycjFFcXFUQmlIaWhqbVZYbTNOZ05U?=
+ =?utf-8?B?aS9KcVhrMnNwNjZReXJtL0VwM29zRUZOd0s1RFpNUG5UbGwzTVlCUFFXbWpP?=
+ =?utf-8?B?UVhPc3I2VkloNVdCOGhLekxqbXhsdE1MNjluZ3ZGZk1ONCtySjVDWkdpeEV0?=
+ =?utf-8?B?cTBFaGRqTnN2ZUg0YVdldFlaZkxvRFRsd3VWN1RKb1VTSjR5cllhNmNtaGxW?=
+ =?utf-8?B?THd3cTFsU3RKQzBhNEt5QzZYOGllQXdSWDNUZDRDRHFjbklKTHhvc2dvZzly?=
+ =?utf-8?B?YTkxY0piQzRBOUt3VzUwNjNNOWx3K0dCNVZ1bWU2dVBCRmZjZW16WERFOG9N?=
+ =?utf-8?B?N1MrVVA4VFdBaG9EVG9tTGtSSXlXMXl4b3lWdTBBMjRvNUZkWTlGT2tZTlM0?=
+ =?utf-8?B?alhWVU9pYlNJZS9kWkRKdk9RSnBWUFQ3ajFOcmw1YXpSb1g0eG1VVXlWaXZo?=
+ =?utf-8?B?a3F5YVN1bjk1RVM4MXhnS3c1TWp0T29uLzg1QWZiZUVaMkJFQzVLQUFjajRJ?=
+ =?utf-8?B?LzVSVEMvemxrWU5WazhWeXcwZSt6V0drYjd2QzhnWFV5c2FWNmQ1R0ZRa0xB?=
+ =?utf-8?B?MlZ5MUk1clRRbUlRYm45WGFaakN6OE91UFpDYWNwWi91cWVOZFBtSzdQMTFB?=
+ =?utf-8?B?MDYrbWh3Mk00Z051cTZ3RE91MWxsaHdQN2drR3pXVmY1NjVvdHZsOVVaSnVi?=
+ =?utf-8?B?TFhCd3RudmFFeU9wMHFvSDl1MlVRaFlrOXUvdUFsck1ObjZqQnczeGNGcmFQ?=
+ =?utf-8?B?aFJzeTM2QkFBNk1XNTZkY0Jhb1VNSkhKWmtuSEVUY2Vjc3QySWo2QllEdldR?=
+ =?utf-8?B?bjB2OHFKL2FLMEd5SHRVT3pCTS8yV2FJb2FQd21xZ3pUVHJRLzliR3Exc0xC?=
+ =?utf-8?B?T1RQWGhlRSt3by8wTkJEYTBaT0QrcU5Ua3YvV2xJZ05RemdnTlRSdmtETmRD?=
+ =?utf-8?B?WTNWSnY4aVkzWlBvK3gyMFUza2J4NjJWWWcxOUJpenpiSU9aLzkyOG9nekdI?=
+ =?utf-8?B?YndOL1NuMnVHRUpkSUFMVjFFTGJNcE9vbkpNOHd0WDZEYzc3NXA2QUs2M1FJ?=
+ =?utf-8?B?cXpRMngraytVL3lURmgrVVh2V1ZsczdETUttWUtWcGZ0V0pObDFGUHg5Z2NZ?=
+ =?utf-8?B?NWtWU3d4YjJhRGVuQ09SZWcxRzhCZ3d6UFJQZTlNam1MbmRJYzVORGIreDhJ?=
+ =?utf-8?B?NC9OeHl1YUUxS01wanhUenVhZG9iOHNiWjJJSlRscWtqdlNYbWE1SENoWkE0?=
+ =?utf-8?B?bkVLbzJvRyswWHBTaWsyT1lzM2c5WElXZ3IrckJISmJjQkFxazU1YnNnOXc5?=
+ =?utf-8?B?WmNheFpyVEpTUXRqR1lSQTdHSWdjSHFzVW5NejBXbEErbDF1d0hWdFFUNjd4?=
+ =?utf-8?B?TXNxdnM3c3Y3UHYveTN0akFWRlNIZHJDTUJNQmwyS3A3dHRnbGxLY3JBK2Ux?=
+ =?utf-8?B?WEJOdGQzaXFSR1dOWnB3SkN0UjdxT3E0TFNoUXF1cGRpc2NwUHYybjBBS0lG?=
+ =?utf-8?B?M2ZxL2JtUnAxa041MU5jaHJ1VThBQU5qWTVxdUErd3pLV29jbHJ4cDNkZHJT?=
+ =?utf-8?B?c2w5a1JtdjlxMzRUdnhucTFWQ1ByOEJUVHkyYjBOMEZsTkFicjJSR29aR2lV?=
+ =?utf-8?B?alhiQmFiMjNuVzBaQSszTHkvcWVaRkJwQW04dDJpWTdsY2F3d1JPdFdEejlz?=
+ =?utf-8?B?Z2FiSnExQm5PVGpjWm1LZTJyS0hVU1RYeUlRSy9icHMyd08vTGJpdz09?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24eb3289-174d-4094-344c-08dee48c7ac6
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2026 05:21:54.0959
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: rwgGXFkN7WrTNCAl8IRb7xaYrSwG4/ugXJOTM9SkZS3WANdoVbBvbyOtCh/8QOLwSDiesUYw+rnwzsECOLl0OA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO9P123MB7500
 
-On Thu, Jul 16, 2026 at 09:35:44PM -0400, Aaron Tomlin wrote:
-> Currently, dynamic non-array fields such as 'cpumask_t' are mishandled
-> in 'perf trace', causing the raw length and offset descriptors to be
-> interpreted and displayed as a literal integer (e.g., 'cpumask: 524320'
-> instead of the actual mask data).
+On Fri, Jul 17, 2026 at 10:02:32PM -0700, Namhyung Kim wrote:
+> On Thu, Jul 16, 2026 at 09:35:44PM -0400, Aaron Tomlin wrote:
+> > Currently, dynamic non-array fields such as 'cpumask_t' are mishandled
+> > in 'perf trace', causing the raw length and offset descriptors to be
+> > interpreted and displayed as a literal integer (e.g., 'cpumask: 524320'
+> > instead of the actual mask data).
+> > 
+> > This patch corrects the parsing of dynamic fields that do not have the
+> > TEP_FIELD_IS_ARRAY flag set. By doing so, it ensures the pointer to the
+> > raw bits is properly resolved within the payload.
+> > 
+> > Furthermore, it improves the display formatting for 'cpumask' types:
+> >     - By default, the cpumask is now correctly output as a zero-suppressed
+> >       hexadecimal string, resolving the aforementioned integer display
+> >       anomaly
+> > 
+> >     - A new '--bitmask-list' command-line option has been introduced.
+> >       When specified, this delegates formatting to 'bitmap_scnprintf()',
+> >       enabling the cpumask to be rendered as a condensed, human-readable
+> >       list (e.g., '0,2-5,7')
 > 
-> This patch corrects the parsing of dynamic fields that do not have the
-> TEP_FIELD_IS_ARRAY flag set. By doing so, it ensures the pointer to the
-> raw bits is properly resolved within the payload.
-> 
-> Furthermore, it improves the display formatting for 'cpumask' types:
->     - By default, the cpumask is now correctly output as a zero-suppressed
->       hexadecimal string, resolving the aforementioned integer display
->       anomaly
-> 
->     - A new '--bitmask-list' command-line option has been introduced.
->       When specified, this delegates formatting to 'bitmap_scnprintf()',
->       enabling the cpumask to be rendered as a condensed, human-readable
->       list (e.g., '0,2-5,7')
+> Looks like you are doing two things in a patch.  Can you please split?
 
-Looks like you are doing two things in a patch.  Can you please split?
+Hi Namhyung,
 
-And for any user visible changes, I encourage you to add an example
-output in the commit message.  Also please update the documentation for
-the new option.
+Thank you for your feedback.
 
-Thanks,
-Namhyung
+Sure.
 
-> 
-> Fixes: c5e006cdbd27 ("perf trace: Support tracepoint dynamic char arrays")
-> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
-> ---
-> Changes since v1:
-> 
->  - Refactored cpumask parsing by moving the dynamic bitmask
->    reconstruction logic into a new helper function,
->    format_field__get_cpumask()
-> 
->  - Made bitmask parsing cross-platform, word-size, and endianness-safe
-> 
->  - Added a new helper function, bitmap_byte() to extract bytes from the
->    host-native bitmask in a host-endianness-independent manner,
->    simplifying hexadecimal cpumask formatting
-> 
->  - Cleaned up trace__fprintf_tp_fields() to remove complex inline
->    parsing logic
-> 
->  - Linked to v1: https://lore.kernel.org/lkml/20260714162947.214270-1-atomlin@atomlin.com/
-> ---
->  tools/perf/builtin-trace.c | 75 +++++++++++++++++++++++++++----
->  tools/perf/util/evsel.c    | 90 ++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/evsel.h    |  6 +++
->  3 files changed, 162 insertions(+), 9 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index ba0f8749fc7d..0142a16830de 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -226,6 +226,7 @@ struct trace {
->  	bool			force;
->  	bool			vfs_getname;
->  	bool			force_btf;
-> +	bool			bitmask_list;
->  	bool			summary_bpf;
->  	int			trace_pgfaults;
->  	char			*perfconfig_events;
-> @@ -3207,6 +3208,21 @@ static void bpf_output__fprintf(struct trace *trace,
->  	++trace->nr_events_printed;
->  }
->  
-> +static unsigned char bitmap_byte(const unsigned long *mask, int byte_idx)
-> +{
-> +	unsigned char b_val = 0;
-> +	int bit_in_byte;
-> +
-> +	for (bit_in_byte = 0; bit_in_byte < 8; bit_in_byte++) {
-> +		int b_idx = byte_idx * 8 + bit_in_byte;
-> +		int host_w_idx = b_idx / BITS_PER_LONG;
-> +		int host_bit_in_word = b_idx % BITS_PER_LONG;
-> +		if (mask[host_w_idx] & (1UL << host_bit_in_word))
-> +			b_val |= (1 << bit_in_byte);
-> +	}
-> +	return b_val;
-> +}
-> +
->  static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *sample,
->  				       struct thread *thread, void *augmented_args, int augmented_args_size)
->  {
-> @@ -3238,17 +3254,57 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *
->  		syscall_arg.len = 0;
->  		syscall_arg.fmt = arg;
->  		if (field->flags & TEP_FIELD_IS_ARRAY) {
-> -			int offset = field->offset;
-> -
-> -			if (field->flags & TEP_FIELD_IS_DYNAMIC) {
-> -				offset = format_field__intval(field, sample, evsel->needs_swap);
-> -				syscall_arg.len = offset >> 16;
-> -				offset &= 0xffff;
-> -				if (tep_field_is_relative(field->flags))
-> -					offset += field->offset + field->size;
-> +			void *ptr = format_field__get_raw_data(field, sample,
-> +							       evsel->needs_swap,
-> +							       &syscall_arg.len);
-> +
-> +			if (!ptr) {
-> +				pr_err("Problem processing %s field, skipping...\n", field->name);
-> +				continue;
-> +			}
-> +			val = (uintptr_t)ptr;
-> +		} else if ((field->flags & TEP_FIELD_IS_DYNAMIC) &&
-> +			   strstr(field->type, "cpumask")) {
-> +			unsigned long *mask = format_field__get_cpumask(field, sample,
-> +									evsel->needs_swap,
-> +									&syscall_arg.len);
-> +
-> +			if (!mask) {
-> +				pr_err("Problem processing %s field, skipping...\n", field->name);
-> +				continue;
->  			}
->  
-> -			val = (uintptr_t)(sample->raw_data + offset);
-> +			printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
-> +			if (trace->show_arg_names)
-> +				printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
-> +
-> +			if (syscall_arg.len == 0) {
-> +				printed += scnprintf(bf + printed, size - printed, "0");
-> +			} else if (trace->bitmask_list) {
-> +				printed += bitmap_scnprintf(mask, syscall_arg.len * 8,
-> +							    bf + printed, size - printed);
-> +			} else {
-> +				int i;
-> +				bool skip_zero = true;
-> +
-> +				printed += scnprintf(bf + printed, size - printed, "0x");
-> +				/* Print bytes from most significant to least significant */
-> +				for (i = syscall_arg.len - 1; i >= 0; i--) {
-> +					unsigned char b_val = bitmap_byte(mask, i);
-> +
-> +					if (skip_zero && b_val == 0 && i > 0)
-> +						continue;
-> +
-> +					if (skip_zero) {
-> +						printed += scnprintf(bf + printed, size - printed, "%x", b_val);
-> +						skip_zero = false;
-> +					} else {
-> +						printed += scnprintf(bf + printed, size - printed, "%02x", b_val);
-> +					}
-> +				}
-> +			}
-> +			free(mask);
-> +			continue;
->  		} else
->  			val = format_field__intval(field, sample, evsel->needs_swap);
->  		/*
-> @@ -5537,6 +5593,7 @@ int cmd_trace(int argc, const char **argv)
->  		     "start"),
->  	OPT_BOOLEAN(0, "force-btf", &trace.force_btf, "Prefer btf_dump general pretty printer"
->  		       "to customized ones"),
-> +	OPT_BOOLEAN(0, "bitmask-list", &trace.bitmask_list, "Show bitmask as a human-readable list"),
->  	OPT_BOOLEAN(0, "bpf-summary", &trace.summary_bpf, "Summary syscall stats in BPF"),
->  	OPT_INTEGER(0, "max-summary", &trace.max_summary,
->  		     "Max number of entries in the summary."),
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index ea9fa04429f0..912d77044141 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -16,9 +16,11 @@
->  #include <errno.h>
->  #include <inttypes.h>
->  #include <stdlib.h>
-> +#include <string.h>
->  
->  #include <dirent.h>
->  #include <linux/bitops.h>
-> +#include <linux/bitmap.h>
->  #include <linux/compiler.h>
->  #include <linux/ctype.h>
->  #include <linux/err.h>
-> @@ -3933,6 +3935,94 @@ void *perf_sample__rawptr(struct perf_sample *sample, const char *name)
->  	return sample->raw_data + offset;
->  }
->  
-> +void *format_field__get_raw_data(struct tep_format_field *field, struct
-> +				 perf_sample *sample, bool needs_swap,
-> +				 u16 *len_out)
-> +{
-> +	int offset = field->offset;
-> +	int size = field->size;
-> +
-> +	if (field->flags & TEP_FIELD_IS_DYNAMIC) {
-> +		unsigned int dynamic_data;
-> +
-> +		if (out_of_bounds(field, field->offset, field->size, sample->raw_size))
-> +			return NULL;
-> +
-> +		dynamic_data = format_field__intval(field, sample, needs_swap);
-> +
-> +		offset = dynamic_data & 0xffff;
-> +		size = (dynamic_data >> 16) & 0xffff;
-> +
-> +		if (tep_field_is_relative(field->flags))
-> +			offset += field->offset + field->size;
-> +	}
-> +
-> +	if (out_of_bounds(field, offset, size, sample->raw_size))
-> +		return NULL;
-> +
-> +	*len_out = size;
-> +	return sample->raw_data + offset;
-> +}
-> +
-> +unsigned long *format_field__get_cpumask(struct tep_format_field *field,
-> +					 struct perf_sample *sample,
-> +					 bool needs_swap, u16 *len_out)
-> +{
-> +	u16 len;
-> +	void *ptr = format_field__get_raw_data(field, sample, needs_swap, &len);
-> +	unsigned long *mask;
-> +	struct perf_env *env;
-> +	bool target_is_64;
-> +	int target_word_size;
-> +	int nr_words;
-> +	int bit_idx;
-> +	int nbits;
-> +
-> +	if (!ptr)
-> +		return NULL;
-> +
-> +	nbits = len * 8;
-> +	mask = bitmap_zalloc(nbits ?: 1);
-> +	if (!mask)
-> +		return NULL;
-> +
-> +	env = evsel__env(sample->evsel);
-> +	target_is_64 = env ? perf_env__kernel_is_64_bit(env) : (sizeof(void *) == 8);
-> +	target_word_size = target_is_64 ? 8 : 4;
-> +	nr_words = len / target_word_size;
-> +
-> +	for (bit_idx = 0; bit_idx < nbits; bit_idx++) {
-> +		int w_idx = bit_idx / (target_word_size * 8);
-> +		int bit_in_word = bit_idx % (target_word_size * 8);
-> +		bool set = false;
-> +
-> +		if (w_idx < nr_words) {
-> +			if (target_is_64) {
-> +				u64 word;
-> +				memcpy(&word, (unsigned char *)ptr + w_idx * 8, 8);
-> +				if (needs_swap)
-> +					word = bswap_64(word);
-> +				set = (word & (1ULL << bit_in_word)) != 0;
-> +			} else {
-> +				u32 word32;
-> +				memcpy(&word32, (unsigned char *)ptr + w_idx * 4, 4);
-> +				if (needs_swap)
-> +					word32 = bswap_32(word32);
-> +				set = (word32 & (1U << bit_in_word)) != 0;
-> +			}
-> +		}
-> +
-> +		if (set) {
-> +			int host_w_idx = bit_idx / BITS_PER_LONG;
-> +			int host_bit_in_word = bit_idx % BITS_PER_LONG;
-> +			mask[host_w_idx] |= (1UL << host_bit_in_word);
-> +		}
-> +	}
-> +
-> +	*len_out = len;
-> +	return mask;
-> +}
-> +
->  u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sample,
->  			 bool needs_swap)
->  {
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 163fc2b6a7ea..02129a022ea3 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -400,6 +400,12 @@ static inline char *perf_sample__strval(struct perf_sample *sample, const char *
->  
->  struct tep_format_field;
->  
-> +void *format_field__get_raw_data(struct tep_format_field *field,
-> +				 struct perf_sample *sample,
-> +				 bool needs_swap, u16 *len_out);
-> +unsigned long *format_field__get_cpumask(struct tep_format_field *field,
-> +					 struct perf_sample *sample,
-> +					 bool needs_swap, u16 *len_out);
->  u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sample, bool needs_swap);
->  
->  #ifdef HAVE_LIBTRACEEVENT
-> -- 
-> 2.54.0
-> 
+> And for any user visible changes, I encourage you to add an example
+> output in the commit message.  Also please update the documentation for
+> the new option.
+
+Understood—I will address the above in the next iteration.
+
+
+Kind regards,
+-- 
+Aaron Tomlin
