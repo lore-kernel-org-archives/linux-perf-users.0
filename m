@@ -1,45 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 510A2231C91;
-	Sat, 18 Jul 2026 04:58:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38C91DF25C;
+	Sat, 18 Jul 2026 05:02:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784350711; cv=none; b=YC/BzYciOuGRubqjmgves22W6vVnV3x8A79jJle5H0hCvntmlD3U1dLHphJgJfbdXOz8K6Z+/qKOv2Xwz/lO3Pe1MEDAURZZBqwJ9/rby9xGy9g7DQM28eSOKYujmGwo+nJOMKvfE2SwnVl/Txfp1SlRGCCtAVcu5/lK14SrZQE=
+	t=1784350956; cv=none; b=lP/OcJTMCfGj5mn+M+2koSGfLnPCpxSqltEnUBgsVmPDhA5h1Ufx/Wm7Lr7hCpVcUt2nV3CfFTab7BwtrTMjrRO42JRmuVc92FluHhiN9QylOFYI5Oazj6Co7lOINfbAYRUffS7sM2jF17lcFuFmeutT+SRe9aGtubOcX6rDCJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784350711; c=relaxed/simple;
-	bh=NsyfsI8jqYmyYFduLaMlSdkDYbvzpsIObOSiUvfL/Xk=;
+	s=arc-20240116; t=1784350956; c=relaxed/simple;
+	bh=fO/d7JdehJiUDLTKhhF7kCpoKiPPEHmGRl5xX5xpT9I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SJps0Py461RIjDuKIz25jszvhhgnIeABOyW+ghL8mw3UckCnv0Mm3vNadP7lNJJHhfiKaJXx3b+jQKEN+Z6K4S5CU2Aa3CHoW8EvCYT+gvT736MFTL2rAzb2T1pvbaLDx0GHlywtp/t53TTdsP5kYJh3Q5c3MRiDDy2RbmH140g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L3jqMdoK; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=dm7CPqdRuB2hP7LAYo1BbeIAm644r+0/qcVQMeYqXU1F7j7R3SBMBHEcxb0oaZjXOy6L5ums4qNZmkGXA6H7AcjmJ8yY6Ks2x0ckMMdH7qEpn/YZiaq1qGPMPCriWLGMX0RNi1zvHJNEtO4kC+qn9iBIHjED6JMrAZ8glQDZ4tM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ltd7CDyZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L3jqMdoK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0FCE1F000E9;
-	Sat, 18 Jul 2026 04:58:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ltd7CDyZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E41181F000E9;
+	Sat, 18 Jul 2026 05:02:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784350710;
-	bh=ET2+fc947Tu+uL6cfp+TEnoUMgo7QJOB5FbVepwLTXE=;
+	s=k20260515; t=1784350954;
+	bh=hQMpI/Y8sJK36ILIgDByZccdBDPWEvurE42yZ47Y/us=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=L3jqMdoKj4O0hJXqtnvex4ghMJqlIeGEC7isl7/8Xxp1zqftiRFYgAEXkdRIS6ptz
-	 VlF0sRg5fg/lYp20EX3S1n7Qnux+HeuwA6LgrbWEpnSq1V3KuRFZ8irYD7jb4dy9up
-	 GYQQ3fhefE4wrT7+Yw0ydED2B1jD1gMcXyZZmJTMyUUs8J9kz+eEmgLUYnSGIAcJ7k
-	 gYtysnoyDux3QvAfMxzgxxR+L5mfblLIboQuKnYa8kZYLnLlK5p0FiVHXgtn29AN2D
-	 soAsN9VZx6DOruaNzf8lyeBRqwoqAxoqqphZl0VAvIYtlA7CWqtMSWHIb6A+wBVa/e
-	 NJLvJ3ZJJbKPA==
-Date: Fri, 17 Jul 2026 21:58:28 -0700
+	b=Ltd7CDyZ1nN8+S/+zFJ8JgSwsaRY/n9cK0RyEbAoQT1mSUt2rLKgnRPFXpl/3xac9
+	 6bdp4tYoflLeIF1hFqtlSAFzF9z4B/7RUO5aiyI7vkEQiS8PtiOLWsa1YndKseG4U8
+	 7/LIaZGV4ejddhRt5Q9mGTcTwy8Reml/KgkmO4verhwdpyidAKLLphBNvKB9115AoV
+	 aSQeqQ//h8O9BM00NjBqFvtMBAbXAi4wDhSCz+TS/JN7hOt2pEglQqvpwoDKEEnLty
+	 XzV7EJ8IIMiREtWOWiU4zwCBTPpOmvJLOm0KnMaSSwEcuERgeZWgxCtqonMUL7s36w
+	 KlQt1aoEuJdiQ==
+Date: Fri, 17 Jul 2026 22:02:32 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Jiebin Sun <jiebin.sun@intel.com>
-Cc: acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+To: Aaron Tomlin <atomlin@atomlin.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
 	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
 	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, tianyou.li@intel.com,
-	wangyang.guo@intel.com, dapeng1.mi@linux.intel.com,
-	thomas.falcon@intel.com, linux-perf-users@vger.kernel.org,
+	james.clark@linaro.org, howardchu95@gmail.com, neelx@suse.com,
+	chjohnst@mail.com, sean@ashe.io, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 00/14] perf c2c: add a function view
-Message-ID: <alsH9PFMljK5eUEJ@z2>
-References: <20260710084247.3576706-1-jiebin.sun@intel.com>
- <20260717020530.1645123-1-jiebin.sun@intel.com>
+Subject: Re: [PATCH v2] perf trace: Add --bitmask-list option and correct
+ cpumask formatting
+Message-ID: <alsI6DoHlx4NniDJ@z2>
+References: <20260717013544.257768-1-atomlin@atomlin.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,197 +47,300 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260717020530.1645123-1-jiebin.sun@intel.com>
+In-Reply-To: <20260717013544.257768-1-atomlin@atomlin.com>
 
-On Fri, Jul 17, 2026 at 10:05:16AM +0800, Jiebin Sun wrote:
-> This series adds a new "function view" to perf c2c report, on top of the
-> existing cacheline view. It does not change the cacheline view; it adds a
-> second, complementary way to look at the same cache-to-cache (C2C) data.
+On Thu, Jul 16, 2026 at 09:35:44PM -0400, Aaron Tomlin wrote:
+> Currently, dynamic non-array fields such as 'cpumask_t' are mishandled
+> in 'perf trace', causing the raw length and offset descriptors to be
+> interpreted and displayed as a literal integer (e.g., 'cpumask: 524320'
+> instead of the actual mask data).
 > 
-> v1: https://lore.kernel.org/linux-perf-users/20260626070355.1556721-1-jiebin.sun@intel.com/
-> v2: https://lore.kernel.org/linux-perf-users/20260710084247.3576706-1-jiebin.sun@intel.com/
+> This patch corrects the parsing of dynamic fields that do not have the
+> TEP_FIELD_IS_ARRAY flag set. By doing so, it ensures the pointer to the
+> raw bits is properly resolved within the payload.
 > 
-> Changes since v2
-> ================
+> Furthermore, it improves the display formatting for 'cpumask' types:
+>     - By default, the cpumask is now correctly output as a zero-suppressed
+>       hexadecimal string, resolving the aforementioned integer display
+>       anomaly
 > 
->   - perf c2c: add a c2c_ prefix to the functions exported from
->     builtin-c2c.c for the function view, so the shared symbols do not
->     pollute the global namespace: fmt_free() -> c2c_fmt_free() and
->     fmt_equal() -> c2c_fmt_equal(). Suggested by Namhyung.
-> 
->   - perf c2c: free the two top-level function-view hists with
->     hists__delete_all_entries() as well, so entries left in the
->     input/collapsed trees are not leaked.
-> 
->   - perf c2c: drop a redundant reset_dimensions() call, free the
->     registered formats on a mid-parse failure in the function-view HPP
->     list parser, and add a missing newline to a pr_err() message.
-> 
->   - Rebased onto the latest perf-tools-next.
-> 
-> Changes since v1
-> ================
-> 
->   - Add the worked example (the cpupri_set/pull_rt_task walk-through) to
->     the perf-c2c man page, as suggested by Namhyung.
-> 
->   - Rebased onto the latest perf-tools-next.
-> 
->   - perf c2c: cache the level-1 total-stores sum (new child_stores field)
->     instead of walking the children on every comparison. total_stores_cmp()
->     is called during collapse/sort, so the previous O(children) walk was an
->     O(N*M log N) bottleneck on large profiles.
-> 
->   - perf c2c: free the function-view sub-hists with
->     hists__delete_all_entries() instead of hists__delete_entries(), so
->     entries still in the input/collapsed trees are not leaked, matching the
->     cleanup in builtin-c2c.c.
-> 
->   - perf c2c: distinguish -ENOMEM from "unknown dimension" in
->     get_function_format(), so an allocation failure is no longer
->     misreported as an "Invalid c2c function-view field".
-> 
->   - perf c2c: reword the iaddr_symbol_cmp() sort-order comment to drop the
->     ambiguous ascending/descending wording.
-> 
-> What it does
-> ============
-> 
-> In the perf c2c TUI, press TAB in the cacheline view to switch to the
-> function view. It presents a 3-level hierarchy:
-> 
->   Level 1: primary functions, sorted by Cycles % (estimated load cycles:
->            HITM, peer-snoop and other-load cycles -- on systems whose
->            default display mode is peer, such as Arm64, the peer-snoop
->            component dominates)
->   Level 2: other functions that share cachelines with the level-1 function
->   Level 3: the specific shared cachelines for each function pair
-> 
-> Keys in the function view:
->   TAB/ESC/q   return to the cacheline view
->   d           show cacheline details for the selected entry
->   e / +       expand / collapse the selected entry
->   ?           help
-> 
-> The cacheline view and the --stdio output are unchanged.
-> 
-> Example
-> =======
-> 
-> A level-1 function is expanded (press 'e') to reveal the functions it
-> shares cachelines with, and one of those is expanded again to reveal the
-> specific shared cachelines:
-> 
->   Shared Data Functions Table   (27 entries, sorted on Cycles %)
->    Cycles  Store
->         %  count  Code address        Symbol           Cacheline
->   ----------------------------------------------------------------------
->   - 39.03%   541  - 0xffffffffa2fc5b08  - [k] cpupri_set
->              450  - 0xffffffffa2fa28a5  - [k] pull_rt_task
->              450                                      0xff2d0082809da080
+>     - A new '--bitmask-list' command-line option has been introduced.
+>       When specified, this delegates formatting to 'bitmap_scnprintf()',
+>       enabling the cpumask to be rendered as a condensed, human-readable
+>       list (e.g., '0,2-5,7')
 
-I think it's more like "code-address" view rather than "function" view.
-How about organizing the output something like below?
+Looks like you are doing two things in a patch.  Can you please split?
 
-  L1:  function
-  L2:  cache line
-  L3:  shared functions
-
-or
-
-  L1:  function
-  L2:  code address
-  L3:  cache line
-  L4:  shared functions
-
-A function can have multiple entries with different code addresses and
-cache lines.  They can be grouped together for better analysis.
-
-Also, I think you'd better to indent output for lower level entries to
-clearly separate entries from others like in the normal perf report
-hierarchy view.  Something like this.
-
-  Shared Data Functions Table   (27 entries, sorted on Cycles %)
-   Cycles  Store
-        %  count  Code address        Symbol           Cacheline
-  ----------------------------------------------------------------------
-  - 39.03%   541  - 0xffffffffa2fc5b08  - [k] cpupri_set
-             450  - 0xffffffffa2fa28a5    - [k] pull_rt_task            <<<-- here
-             450                                      0xff2d0082809da080
-	     ...                        + [k] other_func
+And for any user visible changes, I encourage you to add an example
+output in the commit message.  Also please update the documentation for
+the new option.
 
 Thanks,
 Namhyung
 
 > 
-> Reading the three levels:
+> Fixes: c5e006cdbd27 ("perf trace: Support tracepoint dynamic char arrays")
+> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+> ---
+> Changes since v1:
 > 
->   - Level 1: cpupri_set is the top contended function, accounting for
->     39.03% of the estimated load cycles. The table is sorted by this
->     Cycles % column.
->   - Level 2: expanding cpupri_set (press 'e') lists the functions it
->     shares cachelines with, sorted by store count. Here pull_rt_task is
->     the contending function, with 450 stores into the shared data.
->   - Level 3: expanding pull_rt_task lists the specific cachelines the two
->     functions contend over -- in this case the single cacheline at
->     0xff2d0082809da080.
+>  - Refactored cpumask parsing by moving the dynamic bitmask
+>    reconstruction logic into a new helper function,
+>    format_field__get_cpumask()
 > 
-> The view reads top-down as "cpupri_set is hottest; it shares data with
-> pull_rt_task; the contention is on cacheline ...da080" -- the false-
-> sharing chain that the cacheline view otherwise makes you reconstruct by
-> hand.
+>  - Made bitmask parsing cross-platform, word-size, and endianness-safe
 > 
-> Implementation
-> ==============
+>  - Added a new helper function, bitmap_byte() to extract bytes from the
+>    host-native bitmask in a host-endianness-independent manner,
+>    simplifying hexadecimal cpumask formatting
 > 
-> The function view is built as a separate hist_browser in
-> tools/perf/ui/browsers/c2c-function.c. Shared types and helpers used by
-> both views are factored out of builtin-c2c.c into a new c2c.h. The
-> hierarchy is constructed from the existing cacheline histograms into a
-> dedicated set of hists, keyed by (symbol, instruction address), and
-> rendered with custom column formatters.
+>  - Cleaned up trace__fprintf_tp_fields() to remove complex inline
+>    parsing logic
 > 
-> The series is split into 14 small, self-contained patches so each step
-> can be reviewed and builds on its own.
+>  - Linked to v1: https://lore.kernel.org/lkml/20260714162947.214270-1-atomlin@atomlin.com/
+> ---
+>  tools/perf/builtin-trace.c | 75 +++++++++++++++++++++++++++----
+>  tools/perf/util/evsel.c    | 90 ++++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/evsel.h    |  6 +++
+>  3 files changed, 162 insertions(+), 9 deletions(-)
 > 
-> Testing
-> =======
-> 
->   - Each of the 14 commits builds individually and as a full series.
->   - perf c2c report --stdio (cacheline view) output is unchanged versus
->     the baseline: identical trace-event totals, shared-cacheline counts,
->     and HITM tallies.
->   - The function view was exercised on c2c recordings; the level-1
->     ordering and the level-2/3 sharing breakdown match the underlying
->     cacheline data.
-> 
-> Jiebin Sun (14):
->   perf c2c: extract shared data structures into c2c.h
->   perf c2c: add function view browser skeleton
->   perf c2c: add function view type definitions and helpers
->   perf c2c: add column format infrastructure for function view
->   perf c2c: add column entry functions for function view
->   perf c2c: add comparison functions for function view sorting
->   perf c2c: add dimension definitions and format creation
->   perf c2c: add HPP list parsing for function view histograms
->   perf c2c: add stats merging and memory management helpers
->   perf c2c: add hierarchy entry creation and lookup functions
->   perf c2c: add function view hierarchy builder
->   perf c2c: add function view browser UI
->   perf c2c: add TAB key to switch to function view
->   perf c2c: document function view in perf-c2c man page
-> 
->  tools/perf/Documentation/perf-c2c.txt |   33 +
->  tools/perf/builtin-c2c.c              |  132 +--
->  tools/perf/c2c.h                      |  148 +++
->  tools/perf/ui/browsers/Build          |    1 +
->  tools/perf/ui/browsers/c2c-function.c | 1562 +++++++++++++++++++++++++
->  5 files changed, 1756 insertions(+), 120 deletions(-)
->  create mode 100644 tools/perf/c2c.h
->  create mode 100644 tools/perf/ui/browsers/c2c-function.c
-> 
-> 
-> base-commit: 3f7909fa921e38b7aba8566b03ca5e0754a8fa8b
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index ba0f8749fc7d..0142a16830de 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -226,6 +226,7 @@ struct trace {
+>  	bool			force;
+>  	bool			vfs_getname;
+>  	bool			force_btf;
+> +	bool			bitmask_list;
+>  	bool			summary_bpf;
+>  	int			trace_pgfaults;
+>  	char			*perfconfig_events;
+> @@ -3207,6 +3208,21 @@ static void bpf_output__fprintf(struct trace *trace,
+>  	++trace->nr_events_printed;
+>  }
+>  
+> +static unsigned char bitmap_byte(const unsigned long *mask, int byte_idx)
+> +{
+> +	unsigned char b_val = 0;
+> +	int bit_in_byte;
+> +
+> +	for (bit_in_byte = 0; bit_in_byte < 8; bit_in_byte++) {
+> +		int b_idx = byte_idx * 8 + bit_in_byte;
+> +		int host_w_idx = b_idx / BITS_PER_LONG;
+> +		int host_bit_in_word = b_idx % BITS_PER_LONG;
+> +		if (mask[host_w_idx] & (1UL << host_bit_in_word))
+> +			b_val |= (1 << bit_in_byte);
+> +	}
+> +	return b_val;
+> +}
+> +
+>  static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *sample,
+>  				       struct thread *thread, void *augmented_args, int augmented_args_size)
+>  {
+> @@ -3238,17 +3254,57 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *
+>  		syscall_arg.len = 0;
+>  		syscall_arg.fmt = arg;
+>  		if (field->flags & TEP_FIELD_IS_ARRAY) {
+> -			int offset = field->offset;
+> -
+> -			if (field->flags & TEP_FIELD_IS_DYNAMIC) {
+> -				offset = format_field__intval(field, sample, evsel->needs_swap);
+> -				syscall_arg.len = offset >> 16;
+> -				offset &= 0xffff;
+> -				if (tep_field_is_relative(field->flags))
+> -					offset += field->offset + field->size;
+> +			void *ptr = format_field__get_raw_data(field, sample,
+> +							       evsel->needs_swap,
+> +							       &syscall_arg.len);
+> +
+> +			if (!ptr) {
+> +				pr_err("Problem processing %s field, skipping...\n", field->name);
+> +				continue;
+> +			}
+> +			val = (uintptr_t)ptr;
+> +		} else if ((field->flags & TEP_FIELD_IS_DYNAMIC) &&
+> +			   strstr(field->type, "cpumask")) {
+> +			unsigned long *mask = format_field__get_cpumask(field, sample,
+> +									evsel->needs_swap,
+> +									&syscall_arg.len);
+> +
+> +			if (!mask) {
+> +				pr_err("Problem processing %s field, skipping...\n", field->name);
+> +				continue;
+>  			}
+>  
+> -			val = (uintptr_t)(sample->raw_data + offset);
+> +			printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
+> +			if (trace->show_arg_names)
+> +				printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
+> +
+> +			if (syscall_arg.len == 0) {
+> +				printed += scnprintf(bf + printed, size - printed, "0");
+> +			} else if (trace->bitmask_list) {
+> +				printed += bitmap_scnprintf(mask, syscall_arg.len * 8,
+> +							    bf + printed, size - printed);
+> +			} else {
+> +				int i;
+> +				bool skip_zero = true;
+> +
+> +				printed += scnprintf(bf + printed, size - printed, "0x");
+> +				/* Print bytes from most significant to least significant */
+> +				for (i = syscall_arg.len - 1; i >= 0; i--) {
+> +					unsigned char b_val = bitmap_byte(mask, i);
+> +
+> +					if (skip_zero && b_val == 0 && i > 0)
+> +						continue;
+> +
+> +					if (skip_zero) {
+> +						printed += scnprintf(bf + printed, size - printed, "%x", b_val);
+> +						skip_zero = false;
+> +					} else {
+> +						printed += scnprintf(bf + printed, size - printed, "%02x", b_val);
+> +					}
+> +				}
+> +			}
+> +			free(mask);
+> +			continue;
+>  		} else
+>  			val = format_field__intval(field, sample, evsel->needs_swap);
+>  		/*
+> @@ -5537,6 +5593,7 @@ int cmd_trace(int argc, const char **argv)
+>  		     "start"),
+>  	OPT_BOOLEAN(0, "force-btf", &trace.force_btf, "Prefer btf_dump general pretty printer"
+>  		       "to customized ones"),
+> +	OPT_BOOLEAN(0, "bitmask-list", &trace.bitmask_list, "Show bitmask as a human-readable list"),
+>  	OPT_BOOLEAN(0, "bpf-summary", &trace.summary_bpf, "Summary syscall stats in BPF"),
+>  	OPT_INTEGER(0, "max-summary", &trace.max_summary,
+>  		     "Max number of entries in the summary."),
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index ea9fa04429f0..912d77044141 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -16,9 +16,11 @@
+>  #include <errno.h>
+>  #include <inttypes.h>
+>  #include <stdlib.h>
+> +#include <string.h>
+>  
+>  #include <dirent.h>
+>  #include <linux/bitops.h>
+> +#include <linux/bitmap.h>
+>  #include <linux/compiler.h>
+>  #include <linux/ctype.h>
+>  #include <linux/err.h>
+> @@ -3933,6 +3935,94 @@ void *perf_sample__rawptr(struct perf_sample *sample, const char *name)
+>  	return sample->raw_data + offset;
+>  }
+>  
+> +void *format_field__get_raw_data(struct tep_format_field *field, struct
+> +				 perf_sample *sample, bool needs_swap,
+> +				 u16 *len_out)
+> +{
+> +	int offset = field->offset;
+> +	int size = field->size;
+> +
+> +	if (field->flags & TEP_FIELD_IS_DYNAMIC) {
+> +		unsigned int dynamic_data;
+> +
+> +		if (out_of_bounds(field, field->offset, field->size, sample->raw_size))
+> +			return NULL;
+> +
+> +		dynamic_data = format_field__intval(field, sample, needs_swap);
+> +
+> +		offset = dynamic_data & 0xffff;
+> +		size = (dynamic_data >> 16) & 0xffff;
+> +
+> +		if (tep_field_is_relative(field->flags))
+> +			offset += field->offset + field->size;
+> +	}
+> +
+> +	if (out_of_bounds(field, offset, size, sample->raw_size))
+> +		return NULL;
+> +
+> +	*len_out = size;
+> +	return sample->raw_data + offset;
+> +}
+> +
+> +unsigned long *format_field__get_cpumask(struct tep_format_field *field,
+> +					 struct perf_sample *sample,
+> +					 bool needs_swap, u16 *len_out)
+> +{
+> +	u16 len;
+> +	void *ptr = format_field__get_raw_data(field, sample, needs_swap, &len);
+> +	unsigned long *mask;
+> +	struct perf_env *env;
+> +	bool target_is_64;
+> +	int target_word_size;
+> +	int nr_words;
+> +	int bit_idx;
+> +	int nbits;
+> +
+> +	if (!ptr)
+> +		return NULL;
+> +
+> +	nbits = len * 8;
+> +	mask = bitmap_zalloc(nbits ?: 1);
+> +	if (!mask)
+> +		return NULL;
+> +
+> +	env = evsel__env(sample->evsel);
+> +	target_is_64 = env ? perf_env__kernel_is_64_bit(env) : (sizeof(void *) == 8);
+> +	target_word_size = target_is_64 ? 8 : 4;
+> +	nr_words = len / target_word_size;
+> +
+> +	for (bit_idx = 0; bit_idx < nbits; bit_idx++) {
+> +		int w_idx = bit_idx / (target_word_size * 8);
+> +		int bit_in_word = bit_idx % (target_word_size * 8);
+> +		bool set = false;
+> +
+> +		if (w_idx < nr_words) {
+> +			if (target_is_64) {
+> +				u64 word;
+> +				memcpy(&word, (unsigned char *)ptr + w_idx * 8, 8);
+> +				if (needs_swap)
+> +					word = bswap_64(word);
+> +				set = (word & (1ULL << bit_in_word)) != 0;
+> +			} else {
+> +				u32 word32;
+> +				memcpy(&word32, (unsigned char *)ptr + w_idx * 4, 4);
+> +				if (needs_swap)
+> +					word32 = bswap_32(word32);
+> +				set = (word32 & (1U << bit_in_word)) != 0;
+> +			}
+> +		}
+> +
+> +		if (set) {
+> +			int host_w_idx = bit_idx / BITS_PER_LONG;
+> +			int host_bit_in_word = bit_idx % BITS_PER_LONG;
+> +			mask[host_w_idx] |= (1UL << host_bit_in_word);
+> +		}
+> +	}
+> +
+> +	*len_out = len;
+> +	return mask;
+> +}
+> +
+>  u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sample,
+>  			 bool needs_swap)
+>  {
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index 163fc2b6a7ea..02129a022ea3 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -400,6 +400,12 @@ static inline char *perf_sample__strval(struct perf_sample *sample, const char *
+>  
+>  struct tep_format_field;
+>  
+> +void *format_field__get_raw_data(struct tep_format_field *field,
+> +				 struct perf_sample *sample,
+> +				 bool needs_swap, u16 *len_out);
+> +unsigned long *format_field__get_cpumask(struct tep_format_field *field,
+> +					 struct perf_sample *sample,
+> +					 bool needs_swap, u16 *len_out);
+>  u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sample, bool needs_swap);
+>  
+>  #ifdef HAVE_LIBTRACEEVENT
 > -- 
-> 2.52.0
+> 2.54.0
 > 
