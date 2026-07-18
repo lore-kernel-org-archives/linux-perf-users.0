@@ -1,165 +1,216 @@
-Received: from CWXP265CU010.outbound.protection.outlook.com (mail-ukwestazon11022088.outbound.protection.outlook.com [52.101.101.88])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8862530566E;
-	Sat, 18 Jul 2026 05:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.101.88
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784352118; cv=fail; b=OvbBoHPYezyNfgsxnQT4ZHvHCp6WZ8Er5SnXexmS5metfJc7ZSZJrhhzExFkctzo8iUStyFFhK2m4AJfEre8vUUZn3NhUhd9+EOugrpbYIRue/PLYvNirbrGDN6c1DmpODa9FP0K6F3K1fRLEs1uGjK3wKLJazalwBUn3yXcvsg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784352118; c=relaxed/simple;
-	bh=EZ1JgiKwWjoxuq01JtMd9HFzPBRHjkNYxyd01fVGrU8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=TM/Xzravs0o1ahLpJ0ok5Py4dpPqpDFEJvw1XPkbYpUmkQ6V0tQtjbWez+3gYY3xS/a8KjGQ5oXtvpWzqO1fm8GmdZcRjraSowzBWMHGIDSwDIFNl0wUix2VYfJkCAdkCG1Ex0baAzH8mc2IxjPyBkBaxonylT8rHsYkFaRp/Ss=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.101.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Va8E/Hy9ueqMzUC/arJu22Z4gqglTUr/Qr7Qb+Q357mM7QouK+EmIt94xhFwSuFf4WEXTIVYtIzO9GQkNudJsGFACUwFuUxQOaco8FECFQrJgM9apPhHgJpCVL4PpHsWblWvy1PwxEAZLpKD+nMa1WTZtU+b//UYo1t7XSGDpBVPSm++My3Pjfzh3WsdMJM4K4Wp6W3Z83w17SRZMPxvE8GoyeRmAbgnPs5bJqdq3XqFLLLfBdaqCzjXRSBI+Lyo2fBO04gP8VPOLdU77p/g95SghkJp9ojDlFs+jZ4RaUZWmuYQ0yizdSPAkIabRNXmGnbCHPwKuedTycrx69SgKg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=aVvzyrcRcsOJYrdddXKOI6+D0IbHxqbSMePmOmqDYJk=;
- b=m3cXUtM6nVZ3K9FKsvXjp6yaq/A9cQH0QlZ45p5nYCsS9K7cEEnRYvffYQ2gTu3p/0U3AoNc25nxfiU63BZUzMI/HOpsAAyYEUoWFnrJ9k2pWeISPmPvyKp4wc9ML3KUAepUEbii0NLTZP5Kbt8od1COy+CFEC9aVBgwhWdAtCmiTyVJ5sDxDh6fX8RoqIxCYGwXxlz/1HE8zr990M5/VuVrEMEOjJfQ7mKuJgg3PDSKISl0y+6L9nTRFSTEDd83Q9Ir6GetlY1ps4l/S2wsOCeCbVl0O/Gw7DdXtSS+0U3Vh1H6w3DiioZSCgZqlChgXEQ+qyhht3DgPT0aKoncpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by LO9P123MB7500.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:3b8::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.13; Sat, 18 Jul
- 2026 05:21:54 +0000
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0223.013; Sat, 18 Jul 2026
- 05:21:54 +0000
-Date: Sat, 18 Jul 2026 01:21:50 -0400
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, 
-	howardchu95@gmail.com, neelx@suse.com, chjohnst@mail.com, sean@ashe.io, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf trace: Add --bitmask-list option and correct
- cpumask formatting
-Message-ID: <4bdchumfthzjult4jysgzkq7bntqhtkieo4qygglymfk3d3q3n@i5uw2oowygho>
-References: <20260717013544.257768-1-atomlin@atomlin.com>
- <alsI6DoHlx4NniDJ@z2>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <alsI6DoHlx4NniDJ@z2>
-X-ClientProxiedBy: BN0PR04CA0191.namprd04.prod.outlook.com
- (2603:10b6:408:e9::16) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:183::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BCB19AD5C;
+	Sat, 18 Jul 2026 05:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784352794; cv=none; b=uf6taypEwJOGFPNl6WTSz3V0DsKHw+hK01pqpDPhq78tJ8hmqg4EvA5dN62QyhFITj+8ql3Mo+h2sG9iPQOZ1L4U4/CuftPE8bqtxTq7wEJ5xCZE0+HQRW59Gm91T3Cj5Pj2MA00EgCdD48nMm1/4dKrZQPygzvYZyLIFWujGV0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784352794; c=relaxed/simple;
+	bh=aUuTKjkxHSXGN2i2cBRo1c5Xla8t40XKXJi/Ezt+nGU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LfwkA8uCZvrsk62tqpP78B+eZ1RNipbC7n3+SO1AmMHbzA/CyWS5xivseCxEtowkgiwdaODUmbHWkQ1l7DRcaLe6s+w+km5wM4VcRdlEh30p5lFy08O8wWtGDUusWntW9zflgg2zDoYXg4DtAeY/XgbxFlZDMhHofCX+XuLpuCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NYwz79E2; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NYwz79E2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01F3D1F00A3D;
+	Sat, 18 Jul 2026 05:33:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784352792;
+	bh=gkY/b4sVyFzEvjdgLG/EueliL67b0soROY+VNJK6s8c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=NYwz79E2KrbqtmSo2tSXcNrdEz3YAULr6q7A1rn7Vhd2L/cVvazWgfblxVT8RpWMH
+	 qvtnC9lcDTnEIsnhx7GC9aAvKSmc+8YGjJNmfkXyWoRwRgeJgxnV3mmrNivq3eiT58
+	 azytsL/Dx+z01zPE919A4kMor2UbPWdhgmKLycnFjmZ7/jUW2MYCJxw/KAA/SdzJax
+	 O5mt4KN12aCAQMY2LiuTUFIi7Tqqw3e5s36cqkZ1QfjkKkygbMfg2PK5yuHs1MFMmi
+	 +Vt80NtTSxM9TC7wJBVe4qXzQzZKBfE8UhfyQ7JuywVELY1K18/bTUlwfY+iYkn38j
+	 A4JS7S7YQLM9w==
+Date: Fri, 17 Jul 2026 22:33:10 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Aaron Tomlin <atomlin@atomlin.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	james.clark@linaro.org, howardchu95@gmail.com, neelx@suse.com,
+	chjohnst@mail.com, sean@ashe.io, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf stat: Add --hide-zero-events option to suppress
+ zero-count events
+Message-ID: <alsQFlmM9tl8ySH4@google.com>
+References: <20260718011039.278310-1-atomlin@atomlin.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO9P123MB7500:EE_
-X-MS-Office365-Filtering-Correlation-Id: 24eb3289-174d-4094-344c-08dee48c7ac6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|366016|1800799024|376014|23010399003|22082099003|18002099003|4143699003|3023799007|56012099006|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	xken4e7omkcCWG4sBfFMziieFSDSKMZ37qmLWrs1c6GaS4NP2qqBz09nSDp+NKogCYK/Byq5e8nzYil+XuzMcY6GogQY8q6VscBcVqJcn9r9YLzrZHUgGDJmC3xfLzr/pOYeUDxTA+RzVvpA39SpIE8YO8KR1bwdmlGFLQ4qwMG91hykBf2tVdfNdLeC2ltQRF+46pPOt2uf0U456yKY8em/16JxMwbiA+JwlxgKhs2S+mmap9GMs5lWdwnIEo/bNdFZ7CHDmE38yL3JHCwLTACbrI176RDwz02p76r3Sm7L6GGxQ4g2SD9iEGnzflg0vx79h/WsVPK4QfIvOvdLSJwYPaGr4/q+IIranAjkuNvbqTn6mNHgg0KjErr/64RqlE1K0i/BhU2r36qDqmS9lAjFNUK0/3sp7Pe6vaRTw4Iy1LCBT/5+ylD4BgriNYFN6UZ7Bn5ahHMN+PZyaruU4GloiKc3TWdA5rbqR+VqPvGfr2fAigsHsZ3RnRO2etM300cH+POuNZarhPDMXnrD//Tn9ZtnnMIwD3ZDrwL6xhmOsz0TYyvw/v3s07mKOTWmB3N+0BhjODjKtx+bs/E+///A4/LHKOTyuZc1MAAovuQiaijb/FogkVG8T9fxHjTO8V8bXpTiBmZHWiE8arq/oY5ALO+aBcijIK6npxFV4tw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(1800799024)(376014)(23010399003)(22082099003)(18002099003)(4143699003)(3023799007)(56012099006)(10067099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cXVWaWkyODN3MitzTFBLaGhDN2dHdHdBTjdHeTM3NnBjb01wUDdGeXlhN0M3?=
- =?utf-8?B?UlFONVlaWStESjF6bWMwNHJsTWhQcGFBM1dsbWlWUUQwN2pFZGlqcy9SUmtR?=
- =?utf-8?B?dTNNeGlwYStjT3VJMHV4czdOV0xIdVdES1BaWE9HcFFLMjM4TTZrbjQvcXkx?=
- =?utf-8?B?ZTFjUEpDZTJRSzNOb3B4V0hmMUxaTXBhc01LUFU4RFljSVdTejV3MWdsQjVQ?=
- =?utf-8?B?YmNDUjc4WHg5K3NFdDZya0JCQ29ON2ZuWk1tS09VMWhtaW1USUdRUlNuRUt6?=
- =?utf-8?B?Y1FtakFkL1k1c2k2cElCRnphVkFxbjIzeTlRK1ltMXMweFQrN2Z6eTlEUysr?=
- =?utf-8?B?MnA5OXkvbDI0UGdxZEtnVDQ5eFhuTUpUcmVERldXajByWjl3WjgvSGJNTENT?=
- =?utf-8?B?WTdKWCsvWGdvU0FWdmRkNWg4VUFnTmNSeGhMK2JTNlIyby9jYXBrVllxajBn?=
- =?utf-8?B?TXVWS25hYVpLSWxtdGRqMVh0dmh4aDZLYU5CejZuWldXUjdLdktvYnkvcTdr?=
- =?utf-8?B?bEg5RnFVNjF1aSs3TFRWbDZxaWhhdTJvVjk1c2craE1KSlEyUjJzM2w3Qmhw?=
- =?utf-8?B?RHNxOEZLcHZrTHhXbzQwWUF6QmN3ZTBycjFFcXFUQmlIaWhqbVZYbTNOZ05U?=
- =?utf-8?B?aS9KcVhrMnNwNjZReXJtL0VwM29zRUZOd0s1RFpNUG5UbGwzTVlCUFFXbWpP?=
- =?utf-8?B?UVhPc3I2VkloNVdCOGhLekxqbXhsdE1MNjluZ3ZGZk1ONCtySjVDWkdpeEV0?=
- =?utf-8?B?cTBFaGRqTnN2ZUg0YVdldFlaZkxvRFRsd3VWN1RKb1VTSjR5cllhNmNtaGxW?=
- =?utf-8?B?THd3cTFsU3RKQzBhNEt5QzZYOGllQXdSWDNUZDRDRHFjbklKTHhvc2dvZzly?=
- =?utf-8?B?YTkxY0piQzRBOUt3VzUwNjNNOWx3K0dCNVZ1bWU2dVBCRmZjZW16WERFOG9N?=
- =?utf-8?B?N1MrVVA4VFdBaG9EVG9tTGtSSXlXMXl4b3lWdTBBMjRvNUZkWTlGT2tZTlM0?=
- =?utf-8?B?alhWVU9pYlNJZS9kWkRKdk9RSnBWUFQ3ajFOcmw1YXpSb1g0eG1VVXlWaXZo?=
- =?utf-8?B?a3F5YVN1bjk1RVM4MXhnS3c1TWp0T29uLzg1QWZiZUVaMkJFQzVLQUFjajRJ?=
- =?utf-8?B?LzVSVEMvemxrWU5WazhWeXcwZSt6V0drYjd2QzhnWFV5c2FWNmQ1R0ZRa0xB?=
- =?utf-8?B?MlZ5MUk1clRRbUlRYm45WGFaakN6OE91UFpDYWNwWi91cWVOZFBtSzdQMTFB?=
- =?utf-8?B?MDYrbWh3Mk00Z051cTZ3RE91MWxsaHdQN2drR3pXVmY1NjVvdHZsOVVaSnVi?=
- =?utf-8?B?TFhCd3RudmFFeU9wMHFvSDl1MlVRaFlrOXUvdUFsck1ObjZqQnczeGNGcmFQ?=
- =?utf-8?B?aFJzeTM2QkFBNk1XNTZkY0Jhb1VNSkhKWmtuSEVUY2Vjc3QySWo2QllEdldR?=
- =?utf-8?B?bjB2OHFKL2FLMEd5SHRVT3pCTS8yV2FJb2FQd21xZ3pUVHJRLzliR3Exc0xC?=
- =?utf-8?B?T1RQWGhlRSt3by8wTkJEYTBaT0QrcU5Ua3YvV2xJZ05RemdnTlRSdmtETmRD?=
- =?utf-8?B?WTNWSnY4aVkzWlBvK3gyMFUza2J4NjJWWWcxOUJpenpiSU9aLzkyOG9nekdI?=
- =?utf-8?B?YndOL1NuMnVHRUpkSUFMVjFFTGJNcE9vbkpNOHd0WDZEYzc3NXA2QUs2M1FJ?=
- =?utf-8?B?cXpRMngraytVL3lURmgrVVh2V1ZsczdETUttWUtWcGZ0V0pObDFGUHg5Z2NZ?=
- =?utf-8?B?NWtWU3d4YjJhRGVuQ09SZWcxRzhCZ3d6UFJQZTlNam1MbmRJYzVORGIreDhJ?=
- =?utf-8?B?NC9OeHl1YUUxS01wanhUenVhZG9iOHNiWjJJSlRscWtqdlNYbWE1SENoWkE0?=
- =?utf-8?B?bkVLbzJvRyswWHBTaWsyT1lzM2c5WElXZ3IrckJISmJjQkFxazU1YnNnOXc5?=
- =?utf-8?B?WmNheFpyVEpTUXRqR1lSQTdHSWdjSHFzVW5NejBXbEErbDF1d0hWdFFUNjd4?=
- =?utf-8?B?TXNxdnM3c3Y3UHYveTN0akFWRlNIZHJDTUJNQmwyS3A3dHRnbGxLY3JBK2Ux?=
- =?utf-8?B?WEJOdGQzaXFSR1dOWnB3SkN0UjdxT3E0TFNoUXF1cGRpc2NwUHYybjBBS0lG?=
- =?utf-8?B?M2ZxL2JtUnAxa041MU5jaHJ1VThBQU5qWTVxdUErd3pLV29jbHJ4cDNkZHJT?=
- =?utf-8?B?c2w5a1JtdjlxMzRUdnhucTFWQ1ByOEJUVHkyYjBOMEZsTkFicjJSR29aR2lV?=
- =?utf-8?B?alhiQmFiMjNuVzBaQSszTHkvcWVaRkJwQW04dDJpWTdsY2F3d1JPdFdEejlz?=
- =?utf-8?B?Z2FiSnExQm5PVGpjWm1LZTJyS0hVU1RYeUlRSy9icHMyd08vTGJpdz09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24eb3289-174d-4094-344c-08dee48c7ac6
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jul 2026 05:21:54.0959
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rwgGXFkN7WrTNCAl8IRb7xaYrSwG4/ugXJOTM9SkZS3WANdoVbBvbyOtCh/8QOLwSDiesUYw+rnwzsECOLl0OA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO9P123MB7500
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260718011039.278310-1-atomlin@atomlin.com>
 
-On Fri, Jul 17, 2026 at 10:02:32PM -0700, Namhyung Kim wrote:
-> On Thu, Jul 16, 2026 at 09:35:44PM -0400, Aaron Tomlin wrote:
-> > Currently, dynamic non-array fields such as 'cpumask_t' are mishandled
-> > in 'perf trace', causing the raw length and offset descriptors to be
-> > interpreted and displayed as a literal integer (e.g., 'cpumask: 524320'
-> > instead of the actual mask data).
-> > 
-> > This patch corrects the parsing of dynamic fields that do not have the
-> > TEP_FIELD_IS_ARRAY flag set. By doing so, it ensures the pointer to the
-> > raw bits is properly resolved within the payload.
-> > 
-> > Furthermore, it improves the display formatting for 'cpumask' types:
-> >     - By default, the cpumask is now correctly output as a zero-suppressed
-> >       hexadecimal string, resolving the aforementioned integer display
-> >       anomaly
-> > 
-> >     - A new '--bitmask-list' command-line option has been introduced.
-> >       When specified, this delegates formatting to 'bitmap_scnprintf()',
-> >       enabling the cpumask to be rendered as a condensed, human-readable
-> >       list (e.g., '0,2-5,7')
+On Fri, Jul 17, 2026 at 09:10:39PM -0400, Aaron Tomlin wrote:
+> When monitoring a large number of events (e.g., with wildcards such as
+> --event 'syscalls:sys_enter_*'), many matched events will return a count
+> of zero. This clutters the output, making it difficult to spot the
+> active events.
 > 
-> Looks like you are doing two things in a patch.  Can you please split?
+> Add a new option --hide-zero-events to suppress printing events that
+> have a count of zero.
+> 
+> To prevent formatting and diagnostic issues, the zero-skipping logic
+> implements the following rules:
+> 
+>     1. In metric-only mode (i.e., --metric-only), columns must remain
+>        aligned in the output grid. We evaluate config->metric_only first
+>        to avoid skipping zero-valued columns, preventing values from
+>        shifting left and aligning under incorrect headers
+> 
+>     2. For explicitly requested events, we ensure they are not silently
+>        hidden if they are unsupported. We only hide a zero-count event
+>        if counter->supported is true, ensuring that unsupported explicit
+>        events still report "<not supported>"
+> 
+> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> ---
+> Changes since v1:
+> 
+>  - Add shell test coverage for --hide-zero-events and --metric-only
+>    in stat.sh
 
-Hi Namhyung,
+Unfortunately the test was updated recently.  Can you please rebase?
 
-Thank you for your feedback.
+Thanks,
+Namhyung
 
-Sure.
-
-> And for any user visible changes, I encourage you to add an example
-> output in the commit message.  Also please update the documentation for
-> the new option.
-
-Understood—I will address the above in the next iteration.
-
-
-Kind regards,
--- 
-Aaron Tomlin
+> 
+>  - Linked to v1: https://lore.kernel.org/lkml/20260717023134.272578-1-atomlin@atomlin.com/
+> ---
+>  tools/perf/Documentation/perf-stat.txt |  3 ++
+>  tools/perf/builtin-stat.c              |  2 ++
+>  tools/perf/tests/shell/stat.sh         | 46 ++++++++++++++++++++++++++
+>  tools/perf/util/stat-display.c         |  3 ++
+>  tools/perf/util/stat.h                 |  1 +
+>  5 files changed, 55 insertions(+)
+> 
+> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+> index b72a29c9223c..f334aabdc809 100644
+> --- a/tools/perf/Documentation/perf-stat.txt
+> +++ b/tools/perf/Documentation/perf-stat.txt
+> @@ -162,6 +162,9 @@ null run - Don't start any counters.
+>  This can be useful to measure just elapsed wall-clock time - or to assess the
+>  raw overhead of perf stat itself, without running any counters.
+>  
+> +--hide-zero-events::
+> +Do not show events with a zero count.
+> +
+>  -v::
+>  --verbose::
+>          be more verbose (show counter open errors, etc)
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index a04466ea3b0a..8d340c2ae76c 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -2493,6 +2493,8 @@ int cmd_stat(int argc, const char **argv)
+>  			"display details about each run (only with -r option)"),
+>  		OPT_BOOLEAN('n', "null", &stat_config.null_run,
+>  			"null run - dont start any counters"),
+> +		OPT_BOOLEAN(0, "hide-zero-events", &stat_config.hide_zero,
+> +			"Do not show events with a zero count"),
+>  		OPT_INCR('d', "detailed", &detailed_run,
+>  			"detailed run - start a lot of events"),
+>  		OPT_BOOLEAN('S', "sync", &sync_run,
+> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+> index 1e17bee026bd..cf7a35fac871 100755
+> --- a/tools/perf/tests/shell/stat.sh
+> +++ b/tools/perf/tests/shell/stat.sh
+> @@ -535,6 +535,51 @@ test_stat_delay() {
+>    echo "stat -D test [Success]"
+>  }
+>  
+> +test_hide_zero_events_stat() {
+> +  echo "Hide zero events stat test"
+> +  if ! perf stat -e context-switches,cpu-migrations true > "${stat_output}" 2>&1
+> +  then
+> +    echo "Hide zero events stat test [Skipped event parsing failed]"
+> +    return
+> +  fi
+> +
+> +  zero_event=""
+> +  if grep -q -E "[[:space:]]+0[[:space:]]+context-switches" "${stat_output}"; then
+> +    zero_event="context-switches"
+> +  elif grep -q -E "[[:space:]]+0[[:space:]]+cpu-migrations" "${stat_output}"; then
+> +    zero_event="cpu-migrations"
+> +  fi
+> +
+> +  if [ -z "$zero_event" ]; then
+> +    echo "Hide zero events stat test [Skipped - no zero count event found]"
+> +    return
+> +  fi
+> +
+> +  if ! perf stat --hide-zero-events -e context-switches,cpu-migrations true > "${stat_output}" 2>&1
+> +  then
+> +    echo "Hide zero events stat test [Failed - command failed]"
+> +    err=1
+> +    return
+> +  fi
+> +
+> +  if grep -q -E "$zero_event" "${stat_output}"
+> +  then
+> +    echo "Hide zero events stat test [Failed - zero event $zero_event was not hidden]"
+> +    err=1
+> +    return
+> +  fi
+> +
+> +  # Check that --metric-only works with --hide-zero-events
+> +  if ! perf stat --hide-zero-events --metric-only -e instructions,cycles true > "${stat_output}" 2>&1
+> +  then
+> +    echo "Hide zero events stat test [Failed - metric-only command failed]"
+> +    err=1
+> +    return
+> +  fi
+> +
+> +  echo "Hide zero events stat test [Success]"
+> +}
+> +
+>  test_default_stat
+>  test_null_stat
+>  test_offline_cpu_stat
+> @@ -551,6 +596,7 @@ test_stat_detailed
+>  test_stat_repeat
+>  test_stat_pid
+>  test_stat_delay
+> +test_hide_zero_events_stat
+>  
+>  cleanup
+>  exit $err
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index 0a5750bb59fa..1579e3e2c445 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -907,6 +907,9 @@ static bool should_skip_zero_counter(struct perf_stat_config *config,
+>  	/* Metric only counts won't be displayed but the metric wants to be computed. */
+>  	if (config->metric_only)
+>  		return false;
+> +
+> +	if (config->hide_zero && counter->supported)
+> +		return true;
+>  	/*
+>  	 * Skip value 0 when enabling --per-thread globally,
+>  	 * otherwise it will have too many 0 output.
+> diff --git a/tools/perf/util/stat.h b/tools/perf/util/stat.h
+> index 4bced233d2fc..e3598037a6aa 100644
+> --- a/tools/perf/util/stat.h
+> +++ b/tools/perf/util/stat.h
+> @@ -69,6 +69,7 @@ struct perf_stat_config {
+>  	bool			 interval_clear;
+>  	bool			 metric_only;
+>  	bool			 null_run;
+> +	bool			 hide_zero;
+>  	bool			 ru_display;
+>  	bool			 big_num;
+>  	bool			 hybrid_merge;
+> -- 
+> 2.54.0
+> 
