@@ -1,270 +1,563 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46275353EE0;
-	Mon, 20 Jul 2026 10:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37B7239021C
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 10:45:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784543153; cv=none; b=V8OnlJAyP1HtBVuH55EEG6bXsYSliu2hA3kehww0MJsqUCZKBU8NhQ0qSLSr7lvA29Iiygr41WlLKbZER73BniSERJG3WRCV2lT8jqqYrfgT2WFdI1bj+tOnwZK+tgjNYh4vizLIYWGqm10AYW73wt0fozLPv9RTMmDS4rdmh/A=
+	t=1784544336; cv=none; b=h//lAaQ2CgpCMvFmNbUK+0LXlT5R7Xj4C5vCNlLS9QYsnVEQ+INIbpCXX+gYhkEO5YullGe/kk8p+xrF66KkhoXjAjQhjqZASipv615O/b4dnSUN7PLKMEt69C+UEEI9rrR5DPYWklXUFb/CvR4iPBS9aT13QRbpWd2QGGLBwYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784543153; c=relaxed/simple;
-	bh=fOadGIdJY6gAikTGWr+Xo9f9UQc8S6PY+BodjZcYW2g=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=t4bcpUPxmrWEe0g0EJkgEqc5S3oHfEk/kY4n3w4ecDOUQGnw2sdzdhkgKGnMgtBhvHRuBrUMleUYPoYm+cudl6tlS1gG3/XEP2IArlkWMUcfRo4/AvNVl+gQoScICicitGA6G4IQrSqzdgWXCA40kzfxFBtrljhxRw9EChX3d4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JVsXmFJy; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1784544336; c=relaxed/simple;
+	bh=WsluoVYEXY6xTqhtkB5xVd61hzCoNra7TAXw2Gr+vVI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ZMX2MHfQttZh27Y7GtfdHCUsEDYpPPPqpiwg0f+1ZdX/wFbNVWV+K7nZbhQPdwF+wFJx/WshrOX69wXOpVHADZwN4IQG1Mf5weG0cKSnkIR2EkiPM2QsrjJrlGi0iqQ1pt0zJ/xIRKNTfneP8dHH0MPpxBJHGeWAVsvxyegyxQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=rbVYanp8; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JVsXmFJy"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66KABjGP1811444;
-	Mon, 20 Jul 2026 10:25:51 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="rbVYanp8"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66KABmsD1913539;
+	Mon, 20 Jul 2026 10:45:20 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=NPU/7x
-	oYGRRr4FWZxFSN67gmJpDUDSyGkxZ2+Mp8v9Y=; b=JVsXmFJyMfpUKwY4c5HOqv
-	ki/fi/hSS9fRHtOVv0vkJsld6BD4HlJzuA3Wh3ijMjB7HfyvavIVHWaL416tW507
-	kViA2Ch5+4oRLVHqlQWQUqAmrsdkmvkDOe6pZc8aI6Gc2pnyAD8aC+5LzPZeG52H
-	Mwy1FtPvbNp8G8Kgau5jOH9ADxy0lNWgXnbJ6T+xK6fZ0XjZAvoGXx1Ug0hzi++0
-	mUnX9nQaPv6KTC/NBBYioUSBulOuzLoHoGkrvWRxM9FqeC9jlQ0BeeaBKchV5ZCe
-	uzgLt4jhxS+5IwBr5Jb3Ifm2wv/4sxeTsueDon6IEpiEE4oJRi/YHhu5EWidNsjg
-	==
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=X7B+rO0uk5VvDP+Wy
+	NkFsP4wMufza7Yvi+ZLjGWz1WU=; b=rbVYanp83TzjJFuLpvhgQTyW4Usmg1YIE
+	g5l2JdUrVY7we9HlfYpMmVnWMg7l8o6o4U4k5R4IdWnBM8jQYLZ6Or1TVeNS5Wh9
+	Hrz+Lj31d3sqU1HQpdtX9LHjXbGHQN7QNe3iNV1+yBhR3YxX1dlNiK76Ut6pT41U
+	jU5zfrSQd30CZD4yWOgXIYo9N7BIB/yLOvG4pBY3Z4CpEId9+yODj9/lgDtoj+VH
+	eOlUftVeHsmVqwvp2RKxXF+wsXES75M4R9LV3+fbbsITXAFLwCxegHhoBNsYnog4
+	mtiGg8nS6EpNie0BY3mdTErb3PBANBpOAZxdQnV6pDG+gbPtB0afQ==
 Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fg78fxpgp-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fg790q0w2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jul 2026 10:25:50 +0000 (GMT)
+	Mon, 20 Jul 2026 10:45:19 +0000 (GMT)
 Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66KAJd1r029884;
-	Mon, 20 Jul 2026 10:25:49 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fgp1g4y2k-1
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66KAYdu0012984;
+	Mon, 20 Jul 2026 10:45:18 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fgp1g50yt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jul 2026 10:25:49 +0000 (GMT)
+	Mon, 20 Jul 2026 10:45:18 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66KAPltt61604170
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66KAjDdA39977340
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 20 Jul 2026 10:25:47 GMT
+	Mon, 20 Jul 2026 10:45:13 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 890CA2006A;
-	Mon, 20 Jul 2026 10:25:47 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 0C4AE2004E;
+	Mon, 20 Jul 2026 10:45:13 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E140520063;
-	Mon, 20 Jul 2026 10:25:46 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.39.16.54])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 20 Jul 2026 10:25:46 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	by IMSVA (Postfix) with ESMTP id AFB5B2004B;
+	Mon, 20 Jul 2026 10:45:10 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.39.16.54])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 20 Jul 2026 10:45:10 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com
+Cc: linux-perf-users@vger.kernel.org, atrajeev@linux.ibm.com,
+        hbathini@linux.vnet.ibm.com, tejas05@linux.ibm.com,
+        venkat88@linux.ibm.com, tshah@linux.ibm.com, usha.r2@ibm.com
+Subject: [PATCH V2 1/6] powerpc/perf: Add HTM PMU driver to expose Hardware Trace Macro data
+Date: Mon, 20 Jul 2026 16:14:42 +0530
+Message-Id: <20260720104447.11843-2-atrajeev@linux.ibm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20260720104447.11843-1-atrajeev@linux.ibm.com>
+References: <20260720104447.11843-1-atrajeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCH 4/9] tools/perf: Add powerpc callback support for
- arch_record__collect_final_data
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-In-Reply-To: <20260701085512.E9C3A1F000E9@smtp.kernel.org>
-Date: Mon, 20 Jul 2026 15:55:34 +0530
-Cc: linux-perf-users@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8B450DA7-95C9-47D6-A795-4D90AD0C1B2A@linux.ibm.com>
-References: <20260701084115.80383-1-atrajeev@linux.ibm.com>
- <20260701084115.80383-5-atrajeev@linux.ibm.com>
- <20260701085512.E9C3A1F000E9@smtp.kernel.org>
-To: sashiko-reviews@lists.linux.dev
-X-Mailer: Apple Mail (2.3864.300.41.1.7)
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzIwMDExNCBTYWx0ZWRfX7O3KcKB//DGe
- Ud1uucWPWheQ3q/LK2TiLo83nO7Z7xpsfxl1PpUroOUrn5dV7USTd0JK8gFitHIDRlIIn01DWi2
- E1kIJTmtM0layW0ik21S6QXXsp4S2pnCESi3gcoZClJNGdW4Gv/7NveBqxW8n/vXI8hp2nheTBe
- Kxx4iey77NdiMRJvO09Kc2VgXicAuWaRFUTcTheaqnWpczyqJ4GfqSspZKSPhGiCEzzomWINw7J
- VWuuPsC34C4pj26EV2K+97VQ/9B4gwDsYXqdC5HQNROz2qHBCBdE6EGcnuVWIvHFE+hdIIgaze7
- U6lbP5Q0NcLtDXEx6JPo78nKhGjrkKTf6dacFPoh9Ut/XStA2O4FxOj+d06ETUU7bQ7bRj0XERn
- t8+QLD7JE4UVh8+waU+o1hYY3iCCaK6znZiTjJk2ubi74J6ZMMAjLlB248Z2fuqhrRlGUGfdjV7
- 7Xzvujyow59DaJf++fg==
-X-Proofpoint-GUID: LfWYJ4KbILrz0nrtVjczsJotbhqmYXS6
-X-Authority-Analysis: v=2.4 cv=MelcfZ/f c=1 sm=1 tr=0 ts=6a5df7ae cx=c_pps
+X-Proofpoint-ORIG-GUID: vwaks7bePSmHPECytW27Ps734HuDcWsv
+X-Authority-Analysis: v=2.4 cv=V6RNF+ni c=1 sm=1 tr=0 ts=6a5dfc3f cx=c_pps
  a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=c92rfblmAAAA:8
- a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=pU_tUekmDu7BBBPSybIA:9 a=QEXdDO2ut3YA:10
- a=GvGzcOZaWPEFPQC_NcjD:22
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzIwMDExNCBTYWx0ZWRfX8SXI9q/GaSS+
- Wygn0xzN52YIIFWcIzr/2n8Ycu5HVQuwo0h7020o8ECY8xB0FB/rYZUq5RlZSC5F351A+qwuB+4
- q+fSLXe5JOxCiUfcc5oXpbwvY544Y4g=
-X-Proofpoint-ORIG-GUID: LfWYJ4KbILrz0nrtVjczsJotbhqmYXS6
+ a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=BrJbKb1y8XBlBzz4AjEA:9
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzIwMDExOSBTYWx0ZWRfX0kSqAlLCcwiG
+ 3XGQP9F1wOO3sMYWf0SOFkIPw8sHX+np5GjNQRnsdNDymtWqxJK4zAiDlcLQc6EThN8ds6moLg1
+ EkvyzOJtn9UU1sJBEXyIUu4HTCQpLCQ=
+X-Proofpoint-GUID: vwaks7bePSmHPECytW27Ps734HuDcWsv
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzIwMDExOSBTYWx0ZWRfX+yR/tHFqLcuw
+ neJyfneXryqdkrRo5WusGsdbdbX1n35wAZtTc0JWfmz5UH30lc6BQ2xTpjj5IfWtyxLg8tennGf
+ NPu/Hwd5el7IqYjrP/cNTwTPfu9spXUecQiopvGEV/bQsr2vii2X0hO8bjZ1LVLkIRZI9z2VqHb
+ e/+Kd414j54Ozgr90jKF6LkyhpeleTZ0fyFQI5ZPIFv9RbgnlXVxW0X8+IIP+ufO0JmYTYhj1kj
+ FKpz/p+3tYeUHXtRvj59/hBQh8Y42YcRxA0U2x6FQuP1KnTsDU2oFrsI1lVUErTB8TFIsTmTkNs
+ m5jOhOOLQ7ekgHcfOnZxqaqL6g6fZ06fiulF4P1tXkHCfO0OBB5SPNLT2krmtV5YzoynFFVFJTi
+ 8yyaSwyIAyE3z0c1Z8K0FfuGBNuIBNkbmVM2V3tXLMv09wvBa+B95zK2H20DT913Jt2YLaPOgyn
+ bIX1Yh03oj0gOsNoX0g==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-20_02,2026-07-17_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 lowpriorityscore=0 priorityscore=1501 bulkscore=0 spamscore=0
- clxscore=1015 malwarescore=0 phishscore=0 adultscore=0 suspectscore=0
+ malwarescore=0 adultscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015
+ spamscore=0 impostorscore=0 phishscore=0 priorityscore=1501 suspectscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607200114
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607200119
 
+The H_HTM hypervisor call (hcall) provides an interface to the Hardware
+Trace Macro (HTM) function on POWER systems.  HTM captures hardware-level
+trace data for a specific node/chip/core target within a logical partition.
 
+Add a new "htm" Performance Monitoring Unit (PMU) that exposes HTM control
+via the standard perf interface.  The event configuration is a 28-bit value
+packed into the perf config field:
 
-> On 1 Jul 2026, at 2:25=E2=80=AFPM, sashiko-bot@kernel.org wrote:
->=20
-> Thank you for your contribution! Sashiko AI review found 6 potential =
-issue(s) to consider:
-> - [High] Direct access to `evsel->name` without NULL checks causes a =
-segmentation fault.
-> - [High] Premature loop termination in `arch_perf_record__need_read` =
-due to artificial overwriting of loop variables.
-> - [High] Unconditional compilation of PowerPC-specific execution logic =
-globally overrides a cross-platform weak symbol.
-> - [High] The negative error return value from `perf_evsel__read()` is =
-ignored, leading to premature termination of trace data collection.
-> - [Medium] The functions and callbacks described in the commit message =
-are completely missing from the implemented code.
-> - [Low] Malformed include path directive `../../../util/record.h` =
-causes a build failure.
-Thanks for the review and mentioning these issues
-V2 will add these checks:
-- Check for evsel before accessing name
-- Move the arch specific function to arch/powerpc/util
-- Fix the function name in commit message
-- Proper path for record.h
+  bits  0-3:  htm_type         (HTM_CORE=2, HTM_NEST=1)
+  bits  4-11: nodeindex
+  bits 12-19: nodalchipindex
+  bits 20-27: coreindexonchip
 
-Thanks
-Athira
+PMU lifecycle:
 
-> --
->=20
-> commit dee0b2f32508f51e2b57675240fda0c4192160d5
-> Author: Athira Rajeev <atrajeev@linux.ibm.com>
->=20
-> tools/perf: Add powerpc callback support for =
-arch_record__collect_final_data
->=20
-> This patch adds an architecture-specific hook to collect additional =
-HTM trace
-> data before closing events. It reads the HTM event counts to determine =
-if
-> more data is available to be written to the perf data file.
->=20
->>    Add arch_record__collect_final_data to collect additional
->>    data before closing the event. Define the callback in
->>    util/powerpc-htm.c
-> [ ... ]
->>    the event using evlist__enable after reading event using
->>    htm_read_data function. The perf_evsel__read returns zero, when
->=20
-> [Severity: Medium]
-> The commit message mentions adding arch_record__collect_final_data and
-> reading events using the htm_read_data function. However, the =
-implemented
-> code defines arch_perf_record__need_read and uses perf_evsel__read =
-instead.
-> Could the commit message be updated to match the actual =
-implementation?
->=20
->> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
->> index 5e2265018826f..4d79662e88266 100644
->> --- a/tools/perf/util/Build
->> +++ b/tools/perf/util/Build
->> @@ -142,6 +142,7 @@ perf-util-y +=3D hisi-ptt.o
->> perf-util-y +=3D hisi-ptt-decoder/
->> perf-util-y +=3D s390-cpumsf.o
->> perf-util-y +=3D powerpc-vpadtl.o
->> +perf-util-y +=3D powerpc-htm.o
->=20
-> [Severity: High]
-> Does unconditionally adding powerpc-htm.o here cause it to be compiled =
-for
-> all architectures? Since it defines arch_perf_record__need_read =
-globally,
-> this could override the weak symbol in builtin-record.c and =
-incorrectly
-> execute PowerPC-specific logic on other architectures like x86 or ARM.
->=20
->> diff --git a/tools/perf/util/powerpc-htm.c =
-b/tools/perf/util/powerpc-htm.c
->> new file mode 100644
->> index 0000000000000..5043ff41a609e
->> --- /dev/null
->> +++ b/tools/perf/util/powerpc-htm.c
->> @@ -0,0 +1,74 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * HTM support
->> + */
->> +
->> +#include "../../../util/record.h"
->=20
-> [Severity: Low]
-> Will this include path resolve correctly during the build? It appears =
-to
-> point outside the normal include directories for the perf tool, which =
-might
-> result in a compile-time failure.
->=20
-> [ ... ]
->> +int arch_perf_record__need_read(struct evlist *evlist)
->> +{
->> + struct evsel *evsel;
->> + int found_htm =3D 0;
->> +
->> + /* there was an error during record__open */
->> + if (!evlist)
->> + return 0;
->> +
->> + /* First, check if any HTM events exist */
->> + evlist__for_each_entry(evlist, evsel) {
->> + if (strstr(evsel->name, "htm") !=3D NULL)
->=20
-> [Severity: High]
-> Can evsel->name be NULL here? For raw hardware events or events before
-> parsing has dynamically assigned a name, passing a NULL pointer to =
-strstr
-> or strcmp will cause a segmentation fault.
->=20
-> [ ... ]
->> + for (int x =3D 0; x < xyarray__max_x(xy); x++) {
->> + for (int y =3D 0; y < xyarray__max_y(xy); y++) {
->> + struct perf_counts_values count;
->> +
->> + if (!strcmp(evsel->name, "dummy:u"))
->> + continue;
->> +
->> + if (strstr(evsel->name, "htm")) {
->> + perf_evsel__read(&evsel->core, x, y, &count);
->=20
-> [Severity: High]
-> Does this properly handle failures from perf_evsel__read()? It returns =
-a
-> negative error code on failure and leaves the count struct =
-uninitialized or
-> zeroed. If ignored, count.val could evaluate to 0 below, causing the =
-trace
-> data collection to terminate prematurely.
->=20
->> + y =3D xyarray__max_y(xy);
->> + x =3D xyarray__max_x(xy);
->=20
-> [Severity: High]
-> Are these assignments intentionally overwriting the loop iteration =
-variables?
-> This forcefully terminates both the inner and outer loops after =
-checking
-> only the very first CPU and thread index (0, 0), preventing the =
-iteration
-> from checking any of the remaining CPUs.
->=20
->> + }
->> + if (!count.val)
->> + return 0;
->> + }
->> + }
->> + }
->> +
->> + return 1;
->> +}
->=20
-> --=20
-> Sashiko AI review =C2=B7 =
-https://sashiko.dev/#/patchset/20260701084115.80383-1-atrajeev@linux.ibm.c=
-om?part=3D4
+  add/del:    Issue H_HTM_OP_CONFIGURE / H_HTM_OP_DECONFIGURE to reserve
+              and release the hardware trace resource.
+
+  start/stop: Issue H_HTM_OP_START / H_HTM_OP_STOP to control tracing.
+              HTM traces at node/chip/core scope continuously for the
+              duration of the event.  Context-switch-triggered start/stop
+              callbacks (PERF_EF_RELOAD / PERF_EF_UPDATE) are ignored to
+              keep tracing uninterrupted.  Explicit ioctl(ENABLE/DISABLE)
+              and event deletion do control the hardware.
+
+State tracking uses event->pmu_private (HTM_TRACING_ACTIVE/INACTIVE) as
+the source of information, with event->hw.state kept in sync as
+a hint for the perf core.  This avoids conflicts with infrastructure
+writes to event->hw.state.
+
+The H_HTM hcall may return H_BUSY (transient, retried up to MAX_RETRIES)
+or H_LONG_BUSY_* (long delay required, not retried to avoid deadlocks in
+atomic contexts).
+
+After this patch the PMU is visible under sysfs:
+
+ # ls /sys/bus/event_source/devices/ |grep htm
+ htm
+
+ # ls /sys/bus/event_source/devices/htm/
+ events  format  perf_event_mux_interval_ms  power  subsystem  type  uevent
+
+Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+---
+Changes in V2:
+- Replaced direct H_HTM_OP_CONFIGURE/DECONFIGURE calls in htm_event_add()
+  and htm_event_del() with separate htm_event_init() and destroy paths.
+  State tracking is now via event->pmu_private (HTM_TRACING_ACTIVE /
+  HTM_TRACING_INACTIVE) as the authoritative source, with event->hw.state
+  kept in sync as a hint for the perf core, avoiding conflicts with
+  infrastructure writes to event->hw.state.
+- Context-switch callbacks (PERF_EF_RELOAD / PERF_EF_UPDATE) are now
+  explicitly ignored in htm_event_start()/stop() to keep tracing
+  uninterrupted across task switches; previously these paths were absent.
+- H_BUSY retry loop is capped at MAX_RETRIES; H_LONG_BUSY_* is not
+  retried in atomic context to avoid deadlocks (was unconditionally
+  retried in V1).
+
+ arch/powerpc/perf/Makefile   |   2 +-
+ arch/powerpc/perf/htm-perf.c | 379 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 380 insertions(+), 1 deletion(-)
+ create mode 100644 arch/powerpc/perf/htm-perf.c
+
+diff --git a/arch/powerpc/perf/Makefile b/arch/powerpc/perf/Makefile
+index 78dd7e25219e..26ef30c0693c 100644
+--- a/arch/powerpc/perf/Makefile
++++ b/arch/powerpc/perf/Makefile
+@@ -14,7 +14,7 @@ obj-$(CONFIG_PPC_POWERNV)	+= imc-pmu.o
+ obj-$(CONFIG_FSL_EMB_PERF_EVENT) += core-fsl-emb.o
+ obj-$(CONFIG_FSL_EMB_PERF_EVENT_E500) += e500-pmu.o e6500-pmu.o
+ 
+-obj-$(CONFIG_HV_PERF_CTRS) += hv-24x7.o hv-gpci.o hv-common.o vpa-dtl.o
++obj-$(CONFIG_HV_PERF_CTRS) += hv-24x7.o hv-gpci.o hv-common.o vpa-dtl.o htm-perf.o
+ 
+ obj-$(CONFIG_VPA_PMU) += vpa-pmu.o
+ 
+diff --git a/arch/powerpc/perf/htm-perf.c b/arch/powerpc/perf/htm-perf.c
+new file mode 100644
+index 000000000000..abecc9bb58dc
+--- /dev/null
++++ b/arch/powerpc/perf/htm-perf.c
+@@ -0,0 +1,379 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Perf interface to expose HTM Trace data.
++ *
++ * Copyright (C) 2026 Athira Rajeev, IBM Corporation
++ */
++
++#define pr_fmt(fmt) "htm: " fmt
++
++#include <asm/dtl.h>
++#include <linux/perf_event.h>
++#include <asm/plpar_wrappers.h>
++#include <asm/firmware.h>
++
++#define EVENT(_name, _code)	enum{_name = _code}
++#define	MAX_RETRIES	100
++
++EVENT(HTM_CORE,		0x2);
++EVENT(HTM_NEST,		0x1);
++
++GENERIC_EVENT_ATTR(htm_core, HTM_CORE);
++GENERIC_EVENT_ATTR(htm_nest, HTM_NEST);
++
++PMU_FORMAT_ATTR(event, "config:0-27");
++PMU_FORMAT_ATTR(htm_type, "config:0-3");
++PMU_FORMAT_ATTR(nodeindex, "config:4-11");
++PMU_FORMAT_ATTR(nodalchipindex, "config:12-19");
++PMU_FORMAT_ATTR(coreindexonchip, "config:20-27");
++
++static struct attribute *events_attr[] = {
++	GENERIC_EVENT_PTR(HTM_NEST),
++	GENERIC_EVENT_PTR(HTM_CORE),
++	NULL
++};
++
++static struct attribute_group event_group = {
++	.name = "events",
++	.attrs = events_attr,
++};
++
++static struct attribute *format_attrs[] = {
++	&format_attr_event.attr,
++	&format_attr_htm_type.attr,
++	&format_attr_nodeindex.attr,
++	&format_attr_nodalchipindex.attr,
++	&format_attr_coreindexonchip.attr,
++	NULL,
++};
++
++static const struct attribute_group format_group = {
++	.name = "format",
++	.attrs = format_attrs,
++};
++
++static const struct attribute_group *attr_groups[] = {
++	&format_group,
++	&event_group,
++	NULL,
++};
++
++static u64 htmflags = H_HTM_FLAGS_NOWRAP;
++
++struct htm_config {
++	u32 htmtype;
++	u32 nodeindex;
++	u32 nodalchipindex;
++	u32 coreindexonchip;
++};
++
++/*
++ * Per-event private state.  Allocated in htm_event_init(), freed via the
++ * event->destroy callback (reset_htm_active()).
++ *
++ * cfg stores the HTM target identity parsed from event->attr.config.
++ * tracing_active tracks whether H_HTM_OP_START has been successfully issued
++ * for this event. It is the source of information used by
++ * htm_event_start() and htm_event_stop() to make hcall decisions.
++ * event->hw.state is kept in sync for the perf core only.
++ */
++struct htm_target_id {
++	struct htm_config cfg;
++	int tracing_active;		/* HTM_TRACING_ACTIVE / HTM_TRACING_INACTIVE */
++};
++
++/* Helper to parse the 28-bit event config into distinct fields */
++static inline void parse_htm_config(u64 config, struct htm_config *cfg)
++{
++	cfg->htmtype = config & 0xf;
++	cfg->nodeindex = (config >> 4) & 0xff;
++	cfg->nodalchipindex = (config >> 12) & 0xff;
++	cfg->coreindexonchip = (config >> 20) & 0xff;
++}
++
++/*
++ * Check the return code for H_HTM hcall.
++ * Return 1 if either H_PARTIAL or H_SUCCESS is returned.
++ * Return 0 if H_NOT_AVAILABLE.
++ * Return exact negative error codes for expected issues.
++ */
++static ssize_t htm_return_check(int rc)
++{
++	switch (rc) {
++	case H_SUCCESS:
++	case H_PARTIAL:
++		return 1;
++	case H_NOT_AVAILABLE:
++		return 0;
++	case H_BUSY:
++		/* Transient busy: retry loop will spin up to MAX_RETRIES */
++		return -EBUSY;
++	case H_LONG_BUSY_ORDER_1_MSEC:
++	case H_LONG_BUSY_ORDER_10_MSEC:
++	case H_LONG_BUSY_ORDER_100_MSEC:
++	case H_LONG_BUSY_ORDER_1_SEC:
++	case H_LONG_BUSY_ORDER_10_SEC:
++	case H_LONG_BUSY_ORDER_100_SEC:
++		/*
++		 * Hypervisor requests a long delay before retry (1ms-100s).
++		 * Spinning in a kernel retry loop for this duration risks
++		 * deadlocks in atomic contexts.  Return -EAGAIN so callers
++		 * exit immediately; the operation will fail and userspace
++		 * can retry the perf_event_open() call.
++		 * Note: all retry loops check ret == -EBUSY only, so
++		 * -EAGAIN exits without retrying, this is intentional.
++		 */
++		return -EAGAIN;
++	case H_PARAMETER:
++	case H_P2:
++	case H_P3:
++	case H_P4:
++	case H_P5:
++	case H_P6:
++		return -EINVAL;
++	case H_STATE:
++		return -EIO;
++	case H_AUTHORITY:
++		return -EPERM;
++	default:
++		/* Prevent silent fallthrough mapping of unhandled errors to 1 */
++		return -EIO;
++	}
++}
++
++/*
++ * HTM_TRACING_ACTIVE/INACTIVE: values for htm_target_id.tracing_active.
++ * Tracks whether H_HTM_OP_START has been successfully issued.
++ * HTM traces at node/chip/core scope, not per-task. Once started,
++ * context-switch-triggered stop/start (PERF_EF_UPDATE / PERF_EF_RELOAD)
++ * must not stop/restart the hardware. Only explicit API calls
++ * (ioctl DISABLE/ENABLE) and event_del should control the hcall.
++ */
++#define HTM_TRACING_ACTIVE	1
++#define HTM_TRACING_INACTIVE	0
++
++static void reset_htm_active(struct perf_event *event)
++{
++	kfree(event->pmu_private);
++	event->pmu_private = NULL;
++}
++
++static int htm_event_init(struct perf_event *event)
++{
++	u64 config = event->attr.config;
++	struct htm_config cfg;
++
++	if (event->attr.inherit)
++		return -EOPNOTSUPP;
++
++	if (event->attr.type != event->pmu->type)
++		return -ENOENT;
++
++	if (!perfmon_capable())
++		return -EACCES;
++
++	if (!is_sampling_event(event))
++		return -EOPNOTSUPP;
++
++	if (has_branch_stack(event))
++		return -EOPNOTSUPP;
++
++	parse_htm_config(config, &cfg);
++	switch (cfg.htmtype) {
++	case HTM_CORE:
++	case HTM_NEST:
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	/* Allocate per-event private state; freed via event->destroy */
++	event->pmu_private = kzalloc(sizeof(struct htm_target_id), GFP_KERNEL);
++	if (!event->pmu_private)
++		return -ENOMEM;
++
++	((struct htm_target_id *)event->pmu_private)->cfg = cfg;
++	event->destroy = reset_htm_active;
++	return 0;
++}
++
++static void htm_event_start(struct perf_event *event, int flags)
++{
++	int rc, ret, retries = 0;
++	struct htm_config cfg;
++	struct htm_target_id *target = event->pmu_private;
++
++	/*
++	 * Ignore context-switch re-enables. The perf core passes
++	 * PERF_EF_RELOAD on context-switch-in. HTM tracing is
++	 * continuous at hardware level, no hcall needed.
++	 */
++	if (flags & PERF_EF_RELOAD)
++		return;
++
++	/* Already tracing, don't issue a second start hcall */
++	if (target->tracing_active == HTM_TRACING_ACTIVE)
++		return;
++
++	cfg = target->cfg;
++
++	/* Only retry on transient H_BUSY; H_LONG_BUSY_* (-EAGAIN) exits immediately */
++	do {
++		rc = htm_hcall_wrapper(htmflags, cfg.nodeindex, cfg.nodalchipindex,
++				       cfg.coreindexonchip, cfg.htmtype,
++				       H_HTM_OP_START, 0, 0, 0);
++		ret = htm_return_check(rc);
++	} while (ret == -EBUSY && ++retries < MAX_RETRIES);
++
++	if (ret > 0) {
++		target->tracing_active = HTM_TRACING_ACTIVE;
++		event->hw.state &= ~PERF_HES_STOPPED;
++	}
++}
++
++static void htm_event_stop(struct perf_event *event, int flags)
++{
++	int rc, ret, retries = 0;
++	struct htm_config cfg;
++	struct htm_target_id *target = event->pmu_private;
++
++	/*
++	 * Ignore context-switch-out stops. The perf core passes
++	 * PERF_EF_UPDATE on context-switch-out. Do not stop the hcall.
++	 */
++	if (flags & PERF_EF_UPDATE)
++		return;
++
++	/* Not tracing, nothing to stop */
++	if (target->tracing_active == HTM_TRACING_INACTIVE)
++		return;
++
++	cfg = target->cfg;
++
++	/* Only retry on transient H_BUSY; H_LONG_BUSY_* (-EAGAIN) exits immediately */
++	do {
++		rc = htm_hcall_wrapper(htmflags, cfg.nodeindex, cfg.nodalchipindex,
++				       cfg.coreindexonchip, cfg.htmtype,
++				       H_HTM_OP_STOP, 0, 0, 0);
++		ret = htm_return_check(rc);
++	} while (ret == -EBUSY && ++retries < MAX_RETRIES);
++
++	/*
++	 * Only mark stopped if the hcall succeeded.  If the stop failed
++	 * (e.g. -EAGAIN on long-busy), leave tracing_active as ACTIVE so
++	 * that htm_event_del will retry the stop hcall rather than
++	 * skipping it and leaving the hypervisor permanently configured.
++	 */
++	if (ret > 0) {
++		target->tracing_active = HTM_TRACING_INACTIVE;
++		event->hw.state |= PERF_HES_STOPPED;
++	}
++}
++
++static int htm_event_add(struct perf_event *event, int flags)
++{
++	int rc, ret, retries = 0;
++	unsigned long param1 = -1, param2 = -1;
++	struct htm_target_id *target = event->pmu_private;
++	struct htm_config cfg = target->cfg;
++
++	/* Configure the hardware, only retry on transient H_BUSY */
++	do {
++		rc = htm_hcall_wrapper(htmflags, cfg.nodeindex, cfg.nodalchipindex,
++				       cfg.coreindexonchip, cfg.htmtype,
++				       H_HTM_OP_CONFIGURE, param1, param2, 0);
++		ret = htm_return_check(rc);
++	} while (ret == -EBUSY && ++retries < MAX_RETRIES);
++
++	if (ret <= 0)
++		return (ret == 0) ? -ENODEV : ret;
++
++	/*
++	 * htm_event_init() allocated event->pmu_private (struct htm_target_id)
++	 * and set event->destroy = reset_htm_active to free it on teardown.
++	 * Initialise the tracing state and hw.state before calling start.
++	 */
++	target->tracing_active = HTM_TRACING_INACTIVE;
++	event->hw.state = PERF_HES_STOPPED;
++
++	/*
++	 * Start tracing via the .start callback so the standard
++	 * PERF_EF_START / ioctl(ENABLE) path is honoured.
++	 */
++	if (flags & PERF_EF_START) {
++		htm_event_start(event, 0);	/* flags=0: not a context switch */
++		if (target->tracing_active == HTM_TRACING_INACTIVE) {
++			/* Start failed, deconfigure to avoid resource leak */
++			retries = 0;
++			do {
++				rc = htm_hcall_wrapper(htmflags, cfg.nodeindex,
++						       cfg.nodalchipindex, cfg.coreindexonchip,
++						       cfg.htmtype, H_HTM_OP_DECONFIGURE, 0, 0, 0);
++				ret = htm_return_check(rc);
++			} while (ret == -EBUSY && ++retries < MAX_RETRIES);
++			return -EIO;
++		}
++	}
++
++	return 0;
++}
++
++static void htm_event_del(struct perf_event *event, int flags)
++{
++	int rc, ret, retries = 0;
++	struct htm_target_id *target = event->pmu_private;
++	struct htm_config cfg = target->cfg;
++
++	/* Stop tracing, flags=0 so htm_event_stop issues the hcall */
++	htm_event_stop(event, 0);
++
++	/* Deconfigure */
++	do {
++		rc = htm_hcall_wrapper(htmflags, cfg.nodeindex, cfg.nodalchipindex,
++				       cfg.coreindexonchip, cfg.htmtype,
++				       H_HTM_OP_DECONFIGURE, 0, 0, 0);
++		ret = htm_return_check(rc);
++	} while (ret == -EBUSY && ++retries < MAX_RETRIES);
++
++	/* pmu_private freed by event->destroy = reset_htm_active */
++}
++
++static void htm_event_read(struct perf_event *event)
++{
++}
++
++static struct pmu htm_pmu = {
++	.task_ctx_nr  = perf_invalid_context,
++	.name         = "htm",
++	.attr_groups  = attr_groups,
++	.event_init   = htm_event_init,
++	.add          = htm_event_add,
++	.del          = htm_event_del,
++	.read         = htm_event_read,
++	.start        = htm_event_start,
++	.stop         = htm_event_stop,
++	.capabilities = PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_EXCLUSIVE,
++};
++
++static int htm_init(void)
++{
++	int r;
++
++	if (!firmware_has_feature(FW_FEATURE_LPAR)) {
++		pr_debug("Only supported on LPAR platforms running under a Hypervisor\n");
++		return -ENODEV;
++	}
++
++	if (is_kvm_guest()) {
++		pr_debug("Only supported for L1 host system\n");
++		return -ENODEV;
++	}
++
++	r = perf_pmu_register(&htm_pmu, htm_pmu.name, -1);
++	if (r)
++		return r;
++
++	return 0;
++}
++
++device_initcall(htm_init);
+-- 
+2.43.0
 
