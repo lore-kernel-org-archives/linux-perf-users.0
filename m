@@ -1,252 +1,370 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934183E0224
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 11:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24FB63EFFA8
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 11:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784545247; cv=none; b=SHBZLL0kytPI61NjIFS1BaZmsGeJQf8BelvkkHSDlPJiEx+eF23z3UWZnNsGOcS43APBPtl5qOz2m2+/fFT0+OYKZzoJGqR4OVblU+9eLIUMkBxPmqUut5I6C/nc8YiwoY4euzVJGeCpRPDtvjhX3LBm1M948ep7kqRdGY4cZp4=
+	t=1784545461; cv=none; b=pVf3YF2cA9yV/vlcVqj52j++R3qs4kgoPj91pjNLSe2LxMQqPmOWPtoZ5Nzsmv/yOO6yfpy0x4l2SiTplZzu98YEkeuSAEddVlTaqNNedP5njok+0MXVfHa2rYNTOyVJj5vO1PyaXGdlOFClKFx8YylHd4cE3tCp3O1FF1u2iDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784545247; c=relaxed/simple;
-	bh=OtR/2hUBZbXomJUMxHI98+r7a83d9k9Wux/swi6yDQg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=B2ngNQQIAEhUnQ/F5BHPhvksXmi3Rbg5R3+yc2bMFBeSsOuvsMftA0hgFg5eR13uDtO0XcCTG/h4+fU3kMGjIXUNzbSam2yVg0IFmFiAMxNCv4Sgt4OL+bA9+34G2hmwrwqsCGUZjtxLeNGdqWQk/wdcpNsc+GiKr/BtGIftIMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jt+MPp4h; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784545461; c=relaxed/simple;
+	bh=cGDrBOAWPqgASLW2VAXdNpHjd4TIMccsb1gLeIMZsCU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CAA0ZcKH9K/Pco+S5D+t6wqUXxB5/WWPazLEUBwSKL0kSJ+qrExFrKxe/akw2uV1r3enGOE+L6bl5jC50V/MlBF+RljfnVWbCp3JY+Wv8RHiPGssa9fXKm1/qKCWjXdrAnxMWBj6ZI/ZUSTL9sgPi9UDG+0pKoA2y6fUjIrez5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Wp9Nozcz; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jt+MPp4h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 137431F00A3A;
-	Mon, 20 Jul 2026 11:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784545246;
-	bh=B6ueg4PzMcFj7pD9ihKEiUcr3heAjIeTLwPoqnX1/Fc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jt+MPp4hBLsa3vgd0wZa+8CZHV9siVTPXCtHZgSB/sUceKHZZMTeQCYafSFpUC3I7
-	 LziUhA7wMVKqis6Xd5UuD4FN8Hv+ND2Acp2yLFftzr1vUd+fjbaPbl9oGmuK+SrH4l
-	 HVIFsD2kgL2wGS/9MZzetcbffsVu2cyFeTZJOsFMNbRbgQjgjjU5jbxey150ngTKnj
-	 tLnfB33nKDMfxkyxqKeYN3UEjWC/P7GA+Yz1RucgMD4UYMA1XEEsUZGGFg2PR1fQ+2
-	 e8ISAy2sDIQ3PvS9A7YOkivI5vcpk6rYMeOBlkyy0hQhjRUKW4+A4jSkGU4tD6eh4P
-	 2jD0yHfkQv9Kw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V2 1/6] powerpc/perf: Add HTM PMU driver to expose
- Hardware Trace Macro data
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Athira Rajeev" <atrajeev@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260720104447.11843-2-atrajeev@linux.ibm.com>
-References: <20260720104447.11843-1-atrajeev@linux.ibm.com>
- <20260720104447.11843-2-atrajeev@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Jul 2026 11:00:45 +0000
-Message-Id: <20260720110046.137431F00A3A@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Wp9Nozcz"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66KABZYt026423;
+	Mon, 20 Jul 2026 11:04:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=wjHXq326BZVZ7WsGp
+	Nt4gCegdC28/0h9RwFjJtnp7A0=; b=Wp9NozczEcRHqWwbOF9OIqDQ5OeAdGIY9
+	9iz1JUN+JBVCPlYihUgl0ZYDm4zRHuRjg3C6+f55mAiHDAVo1Jg9khCYeK5ImP0e
+	UM9BSArSZHJzPNla7ds59vfxepR+SGvrWl6srLc8FdKIlDwOeH/zVt+6NU9tDSvd
+	xmzKX74TTRO37W4+scDiKIcGdZLAGuImfINZy4kU+oVK49Ya3z8IvlMt4viKjs56
+	Ea126WlST+AiYoR2uq8HDeN9hUy3WuqqbkMx/wv8nX8lueJZubIuWPnZvHXXAdsO
+	ojADCiDLIEo6DAZSLiYJ0+tYa3lThM9sPr0mwlrdC2Pm7OECydAuQ==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fg77a731p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Jul 2026 11:04:09 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66KAnmwh009668;
+	Mon, 20 Jul 2026 11:04:08 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fgpgy4yr6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Jul 2026 11:04:08 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66KB44Ts41025914
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 20 Jul 2026 11:04:04 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 786DA20040;
+	Mon, 20 Jul 2026 11:04:04 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2705820043;
+	Mon, 20 Jul 2026 11:04:01 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.39.16.54])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 20 Jul 2026 11:04:00 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
+        tejas05@linux.ibm.com, tshah@linux.ibm.com, venkat88@linux.ibm.com,
+        usha.r2@ibm.com
+Subject: [PATCH V2 1/6] tools/perf: Move powerpc VPA-DTL auxtrace init into a separate file
+Date: Mon, 20 Jul 2026 16:22:13 +0530
+Message-Id: <20260720105218.14277-2-atrajeev@linux.ibm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20260720105218.14277-1-atrajeev@linux.ibm.com>
+References: <20260720105218.14277-1-atrajeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: hOH7O4QIXNN69SO5GUKjCvklRhcQ90SK
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzIwMDExOSBTYWx0ZWRfXwtEFEceJYzj+
+ pVR2UFgfa9hAEPSn9N1Jchzy4JpEmToOKwyhpthkqVsbTmHfGmJ/P+mxbNijuUQBQLqTBWeIn8P
+ UmQ3E6/VY0ep/ZhAuvRgifSF4nfrmJ0=
+X-Proofpoint-GUID: HodnxdbkklGz034dZZboGJgZFLCvTLLJ
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzIwMDExOSBTYWx0ZWRfX1HqQCUbmPPip
+ dz0l6rAj6YgeBhLxm9mHU9FFkOkmDgO1jwnPeaNDJC2AIOCUkGwIDKmfihKU7j/GX7v2kmDtzWJ
+ Ig4l9RvY7pdrh08nJd3LHZal6rqwsZ3HR1gUoDmybFBTXBGp/j5AKIqlew8BgUk323YWieDKzPM
+ rQSX8jlbXobgdGE8bqsgrMAja8yI/1D6NmPS/O7octoJ8/xe2bIVrSMEfOHh3SEfKnaBx8lTcQ0
+ dqmOMg1qrPxCshOlamjfy66+ypJ2s2nfirYvR0IeqxqEqzEmOm6hads4iX8fmiVUp7yuG1Yc19W
+ Kq6B430B0rDhVh0mttUysMZkBYxohu4+iFl7IdCgUoa6F0zxbmV3T+Y5Vgygw1RYSfSOJtoT1Z2
+ IwDXoDU5g7O96R/th1RDtOZcHtSrOQYT4VIchWfzcIMo/TqnYq7lKe+FUtVNVErpQg64TjrEj+n
+ s+BP5w77n6DeaAa2HMg==
+X-Authority-Analysis: v=2.4 cv=K7AS2SWI c=1 sm=1 tr=0 ts=6a5e00a9 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=MVjHk6Situ9G2c-KtHgA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-20_02,2026-07-17_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 suspectscore=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 spamscore=0 phishscore=0 malwarescore=0 adultscore=0
+ impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2607200119
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] Hardware Resource Leak on H_LONG_BUSY_* in Teardown Paths
-- [High] Missing Global Target Collision Detection
-- [High] Hypervisor HCALL Flooding via Misunderstood pmu->add Semantics
---
+The powerpc auxtrace dispatch lives entirely in
+arch/powerpc/util/auxtrace.c.  As new PMUs such as HTM are added, this
+file would grow to contain the recording logic for all of them.
 
---- Patch [1]: [PATCH V2 1/6] powerpc/perf: Add HTM PMU driver to expose Ha=
-rdware Trace Macro data ---
-commit 5f73062ed0507987b187b59e32b4100e6330618a
-Author: Athira Rajeev <atrajeev@linux.ibm.com>
+Factor out the VPA-DTL recording initializer into its own file,
+arch/powerpc/util/vpa-dtl.c, and reduce auxtrace.c to a thin dispatch
+layer.  auxtrace_record__init() now detects the PMU by name and calls
+the appropriate per-PMU init function:
 
-powerpc/perf: Add HTM PMU driver to expose Hardware Trace Macro data
+  - vpa_dtl_recording_init() for VPA-DTL events (unchanged behaviour)
+  - Further PMU entries will follow in subsequent patches
 
-The H_HTM hypervisor call (hcall) provides an interface to the Hardware
-Trace Macro (HTM) function on POWER systems.  HTM captures hardware-level
-trace data for a specific node/chip/core target within a logical partition.
+This makes room in auxtrace_record__init() for the HTM recording path
+added in the next patch without growing a single monolithic file.
 
-> diff --git a/arch/powerpc/perf/htm-perf.c b/arch/powerpc/perf/htm-perf.c
-> new file mode 100644
-> index 0000000000000..5d3aa9c7fd8d1
-> --- /dev/null
-> +++ b/arch/powerpc/perf/htm-perf.c
+Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+---
+Changes in V2:
+- Renamed the destination file from arch/powerpc/util/vpa-dtl.c (same
+  name, unchanged) but the subject and commit message are reworded to
+  clearly state that the goal is to make auxtrace_record__init() a thin
+  per-PMU dispatcher, not merely to "allow multiple PMUs to use auxtrace".
+- Handle failure from memory allocation
+- Included stdlib and limits.h
+- No functional change to the VPA-DTL path itself.
+- Patch is now 1/6 instead of 1/9.
 
-[ ... ]
+ tools/perf/arch/powerpc/util/Build      |  1 +
+ tools/perf/arch/powerpc/util/auxtrace.c | 84 +++-------------------
+ tools/perf/arch/powerpc/util/vpa-dtl.c  | 95 +++++++++++++++++++++++++
+ tools/perf/util/powerpc-vpadtl.h        |  1 +
+ 4 files changed, 105 insertions(+), 76 deletions(-)
+ create mode 100644 tools/perf/arch/powerpc/util/vpa-dtl.c
 
-> +static ssize_t htm_return_check(int rc)
-> +{
-> +	switch (rc) {
-> +	case H_SUCCESS:
-> +	case H_PARTIAL:
-> +		return 1;
-> +	case H_NOT_AVAILABLE:
-> +		return 0;
-> +	case H_BUSY:
-> +		/* Transient busy: retry loop will spin up to MAX_RETRIES */
-> +		return -EBUSY;
-> +	case H_LONG_BUSY_ORDER_1_MSEC:
-> +	case H_LONG_BUSY_ORDER_10_MSEC:
-> +	case H_LONG_BUSY_ORDER_100_MSEC:
-> +	case H_LONG_BUSY_ORDER_1_SEC:
-> +	case H_LONG_BUSY_ORDER_10_SEC:
-> +	case H_LONG_BUSY_ORDER_100_SEC:
-> +		/*
-> +		 * Hypervisor requests a long delay before retry (1ms-100s).
-> +		 * Spinning in a kernel retry loop for this duration risks
-> +		 * deadlocks in atomic contexts.  Return -EAGAIN so callers
-> +		 * exit immediately; the operation will fail and userspace
-> +		 * can retry the perf_event_open() call.
-> +		 * Note: all retry loops check ret =3D=3D -EBUSY only, so
-> +		 * -EAGAIN exits without retrying, this is intentional.
-> +		 */
-> +		return -EAGAIN;
+diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
+index ae928050e07a..7819c8f5af2d 100644
+--- a/tools/perf/arch/powerpc/util/Build
++++ b/tools/perf/arch/powerpc/util/Build
+@@ -7,3 +7,4 @@ perf-util-y += evsel.o
+ perf-util-$(CONFIG_LIBDW) += skip-callchain-idx.o
+ 
+ perf-util-y += auxtrace.o
++perf-util-y += vpa-dtl.o
+diff --git a/tools/perf/arch/powerpc/util/auxtrace.c b/tools/perf/arch/powerpc/util/auxtrace.c
+index 4600a1661b4f..e04a0bd61755 100644
+--- a/tools/perf/arch/powerpc/util/auxtrace.c
++++ b/tools/perf/arch/powerpc/util/auxtrace.c
+@@ -13,63 +13,12 @@
+ #include "../../util/auxtrace.h"
+ #include "../../util/powerpc-vpadtl.h"
+ #include "../../util/record.h"
+-#include <internal/lib.h> // page_size
+-
+-#define KiB(x) ((x) * 1024)
+-
+-static int
+-powerpc_vpadtl_recording_options(struct auxtrace_record *ar __maybe_unused,
+-			struct evlist *evlist __maybe_unused,
+-			struct record_opts *opts)
+-{
+-	opts->full_auxtrace = true;
+-
+-	/*
+-	 * Set auxtrace_mmap_pages to minimum
+-	 * two pages
+-	 */
+-	if (!opts->auxtrace_mmap_pages) {
+-		opts->auxtrace_mmap_pages = KiB(128) / page_size;
+-		if (opts->mmap_pages == UINT_MAX)
+-			opts->mmap_pages = KiB(256) / page_size;
+-	}
+-
+-	return 0;
+-}
+-
+-static size_t powerpc_vpadtl_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+-					struct evlist *evlist __maybe_unused)
+-{
+-	return VPADTL_AUXTRACE_PRIV_SIZE;
+-}
+-
+-static int
+-powerpc_vpadtl_info_fill(struct auxtrace_record *itr __maybe_unused,
+-		struct perf_session *session __maybe_unused,
+-		struct perf_record_auxtrace_info *auxtrace_info,
+-		size_t priv_size __maybe_unused)
+-{
+-	auxtrace_info->type = PERF_AUXTRACE_VPA_DTL;
+-
+-	return 0;
+-}
+-
+-static void powerpc_vpadtl_free(struct auxtrace_record *itr)
+-{
+-	free(itr);
+-}
+-
+-static u64 powerpc_vpadtl_reference(struct auxtrace_record *itr __maybe_unused)
+-{
+-	return 0;
+-}
+ 
+ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
+ 						int *err)
+ {
+-	struct auxtrace_record *aux;
+ 	struct evsel *pos;
+-	int found = 0;
++	struct evsel *vpa_dtl_evsel = NULL;
+ 
+ 	/*
+ 	 * Set err value to zero here. Any fail later
+@@ -78,33 +27,16 @@ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
+ 	*err = 0;
+ 
+ 	evlist__for_each_entry(evlist, pos) {
+-		if (strstarts(pos->name, "vpa_dtl")) {
+-			found = 1;
++		if (pos->name && strstarts(pos->name, "vpa_dtl")) {
+ 			pos->needs_auxtrace_mmap = true;
+-			break;
++			/* Remember the first matching VPA DTL event */
++			if (!vpa_dtl_evsel)
++				vpa_dtl_evsel = pos;
+ 		}
+ 	}
+ 
+-	if (!found)
+-		return NULL;
+-
+-	/*
+-	 * To obtain the auxtrace buffer file descriptor, the auxtrace event
+-	 * must come first.
+-	 */
+-	evlist__to_front(pos->evlist, pos);
+-
+-	aux = zalloc(sizeof(*aux));
+-	if (aux == NULL) {
+-		pr_debug("aux record is NULL\n");
+-		*err = -ENOMEM;
+-		return NULL;
+-	}
++	if (vpa_dtl_evsel)
++		return vpa_dtl_recording_init(vpa_dtl_evsel, err);
+ 
+-	aux->recording_options = powerpc_vpadtl_recording_options;
+-	aux->info_priv_size = powerpc_vpadtl_info_priv_size;
+-	aux->info_fill = powerpc_vpadtl_info_fill;
+-	aux->free = powerpc_vpadtl_free;
+-	aux->reference = powerpc_vpadtl_reference;
+-	return aux;
++	return NULL;
+ }
+diff --git a/tools/perf/arch/powerpc/util/vpa-dtl.c b/tools/perf/arch/powerpc/util/vpa-dtl.c
+new file mode 100644
+index 000000000000..fde388d87477
+--- /dev/null
++++ b/tools/perf/arch/powerpc/util/vpa-dtl.c
+@@ -0,0 +1,95 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * VPA DTL AUX tracing support
++ */
++
++#include <linux/kernel.h>
++#include <linux/types.h>
++#include <linux/string.h>
++#include <errno.h>
++#include <stdlib.h>
++#include <limits.h>
++#include "../../util/cpumap.h"
++#include "../../util/evsel.h"
++#include "../../util/evlist.h"
++#include "../../util/session.h"
++#include "../../util/util.h"
++#include "../../util/debug.h"
++#include "../../util/auxtrace.h"
++#include "../../util/powerpc-vpadtl.h"
++#include "../../util/record.h"
++#include <internal/lib.h> // page_size
++
++#define KiB(x) ((x) * 1024)
++
++static int
++powerpc_vpadtl_recording_options(struct auxtrace_record *ar __maybe_unused,
++			struct evlist *evlist __maybe_unused,
++			struct record_opts *opts)
++{
++	opts->full_auxtrace = true;
++
++	/*
++	 * Set auxtrace_mmap_pages to minimum
++	 * two pages
++	 */
++	if (!opts->auxtrace_mmap_pages) {
++		opts->auxtrace_mmap_pages = KiB(128) / page_size;
++		if (opts->mmap_pages == UINT_MAX)
++			opts->mmap_pages = KiB(256) / page_size;
++	}
++
++	return 0;
++}
++
++static size_t powerpc_vpadtl_info_priv_size(struct auxtrace_record *itr __maybe_unused,
++					struct evlist *evlist __maybe_unused)
++{
++	return VPADTL_AUXTRACE_PRIV_SIZE;
++}
++
++static int
++powerpc_vpadtl_info_fill(struct auxtrace_record *itr __maybe_unused,
++		struct perf_session *session __maybe_unused,
++		struct perf_record_auxtrace_info *auxtrace_info,
++		size_t priv_size __maybe_unused)
++{
++	auxtrace_info->type = PERF_AUXTRACE_VPA_DTL;
++
++	return 0;
++}
++
++static void powerpc_vpadtl_free(struct auxtrace_record *itr)
++{
++	free(itr);
++}
++
++static u64 powerpc_vpadtl_reference(struct auxtrace_record *itr __maybe_unused)
++{
++	return 0;
++}
++
++struct auxtrace_record *vpa_dtl_recording_init(struct evsel *pos, int *err)
++{
++	struct auxtrace_record *aux;
++
++	/*
++	 * To obtain the auxtrace buffer file descriptor, the auxtrace event
++	 * must come first.
++	 */
++	evlist__to_front(pos->evlist, pos);
++
++	aux = zalloc(sizeof(*aux));
++	if (aux == NULL) {
++		pr_debug("aux record allocation failed (-ENOMEM)\n");
++		*err = -ENOMEM;
++		return NULL;
++	}
++
++	aux->recording_options = powerpc_vpadtl_recording_options;
++	aux->info_priv_size = powerpc_vpadtl_info_priv_size;
++	aux->info_fill = powerpc_vpadtl_info_fill;
++	aux->free = powerpc_vpadtl_free;
++	aux->reference = powerpc_vpadtl_reference;
++	return aux;
++}
+diff --git a/tools/perf/util/powerpc-vpadtl.h b/tools/perf/util/powerpc-vpadtl.h
+index ca809660b9bb..41e09b17a353 100644
+--- a/tools/perf/util/powerpc-vpadtl.h
++++ b/tools/perf/util/powerpc-vpadtl.h
+@@ -20,4 +20,5 @@ struct perf_pmu;
+ int powerpc_vpadtl_process_auxtrace_info(union perf_event *event,
+ 				  struct perf_session *session);
+ 
++struct auxtrace_record *vpa_dtl_recording_init(struct evsel *pos, int *err);
+ #endif
+-- 
+2.43.0
 
-[Severity: High]
-The comment mentions that returning -EAGAIN will cause the perf_event_open()
-call to fail so userspace can retry. Is this accurate for paths called
-during event scheduling?
-
-When htm_return_check() is called from htm_event_add(), -EAGAIN is returned
-to the perf core's pmu->add() caller (event_sched_in). The perf core treats
--EAGAIN from pmu->add as a transient scheduling failure and will repeatedly
-attempt to schedule the event on subsequent timer ticks or context switches.
-
-Will this flood the hypervisor with H_HTM_OP_CONFIGURE hcalls exactly when
-it is requesting a long backoff delay?
-
-[ ... ]
-
-> +static int htm_event_init(struct perf_event *event)
-> +{
-> +	u64 config =3D event->attr.config;
-> +	struct htm_config cfg;
-> +
-> +	if (event->attr.inherit)
-> +		return -EOPNOTSUPP;
-
-[ ... ]
-
-> +	parse_htm_config(config, &cfg);
-> +	switch (cfg.htmtype) {
-> +	case HTM_CORE:
-> +	case HTM_NEST:
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Allocate per-event private state; freed via event->destroy */
-> +	event->pmu_private =3D kzalloc(sizeof(struct htm_target_id), GFP_KERNEL=
-);
-> +	if (!event->pmu_private)
-> +		return -ENOMEM;
-
-[Severity: High]
-Does this missing global target collision detection allow hardware state
-corruption?
-
-The driver sets PERF_PMU_CAP_EXCLUSIVE, but the perf core only enforces this
-within the same per-CPU context. If two users concurrently create events for
-the exact same HTM hardware resource (identical node/chip/core) on different
-CPUs, they would bypass that check.
-
-Without a global registry of active targets here in htm_event_init(), could
-conflicting hcalls be issued to the identical hardware resource, clobbering
-the hypervisor configuration?
-
-[ ... ]
-
-> +static void htm_event_stop(struct perf_event *event, int flags)
-> +{
-> +	int rc, ret, retries =3D 0;
-> +	struct htm_config cfg;
-> +	struct htm_target_id *target =3D event->pmu_private;
-> +
-> +	/*
-> +	 * Ignore context-switch-out stops. The perf core passes
-> +	 * PERF_EF_UPDATE on context-switch-out. Do not stop the hcall.
-> +	 */
-> +	if (flags & PERF_EF_UPDATE)
-> +		return;
-> +
-> +	/* Not tracing, nothing to stop */
-> +	if (target->tracing_active =3D=3D HTM_TRACING_INACTIVE)
-> +		return;
-> +
-> +	cfg =3D target->cfg;
-> +
-> +	/* Only retry on transient H_BUSY; H_LONG_BUSY_* (-EAGAIN) exits immedi=
-ately */
-> +	do {
-> +		rc =3D htm_hcall_wrapper(htmflags, cfg.nodeindex, cfg.nodalchipindex,
-> +				       cfg.coreindexonchip, cfg.htmtype,
-> +				       H_HTM_OP_STOP, 0, 0, 0);
-> +		ret =3D htm_return_check(rc);
-> +	} while (ret =3D=3D -EBUSY && ++retries < MAX_RETRIES);
-
-[Severity: High]
-If the hypervisor returns H_LONG_BUSY_* (which maps to -EAGAIN), the loop
-exits immediately. Since htm_event_stop() returns void, it cannot defer
-the cleanup or notify the perf core. Does this permanently leave the trace
-started in the hypervisor?
-
-[ ... ]
-
-> +static int htm_event_add(struct perf_event *event, int flags)
-> +{
-
-[ ... ]
-
-> +	/*
-> +	 * Start tracing via the .start callback so the standard
-> +	 * PERF_EF_START / ioctl(ENABLE) path is honoured.
-> +	 */
-> +	if (flags & PERF_EF_START) {
-> +		htm_event_start(event, 0);	/* flags=3D0: not a context switch */
-> +		if (target->tracing_active =3D=3D HTM_TRACING_INACTIVE) {
-> +			/* Start failed, deconfigure to avoid resource leak */
-> +			retries =3D 0;
-> +			do {
-> +				rc =3D htm_hcall_wrapper(htmflags, cfg.nodeindex,
-> +						       cfg.nodalchipindex, cfg.coreindexonchip,
-> +						       cfg.htmtype, H_HTM_OP_DECONFIGURE, 0, 0, 0);
-> +				ret =3D htm_return_check(rc);
-> +			} while (ret =3D=3D -EBUSY && ++retries < MAX_RETRIES);
-> +			return -EIO;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
-[Severity: High]
-Similar to htm_event_stop(), if H_HTM_OP_DECONFIGURE returns a long busy
-status here in the error rollback path, the retry loop exits immediately
-and returns -EIO. Does this leak the configured hypervisor resource?
-
-> +
-> +static void htm_event_del(struct perf_event *event, int flags)
-> +{
-> +	int rc, ret, retries =3D 0;
-> +	struct htm_target_id *target =3D event->pmu_private;
-> +	struct htm_config cfg =3D target->cfg;
-> +
-> +	/* Stop tracing, flags=3D0 so htm_event_stop issues the hcall */
-> +	htm_event_stop(event, 0);
-> +
-> +	/* Deconfigure */
-> +	do {
-> +		rc =3D htm_hcall_wrapper(htmflags, cfg.nodeindex, cfg.nodalchipindex,
-> +				       cfg.coreindexonchip, cfg.htmtype,
-> +				       H_HTM_OP_DECONFIGURE, 0, 0, 0);
-> +		ret =3D htm_return_check(rc);
-> +	} while (ret =3D=3D -EBUSY && ++retries < MAX_RETRIES);
-
-[Severity: High]
-If this loop exits on -EAGAIN, the resource is silently abandoned without
-deferring cleanup. The kernel will then free event->pmu_private during
-event->destroy. Could this result in a permanent leak of shared hypervisor
-HTM resources, potentially leading to a denial of service for hardware
-tracing?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260720104447.1184=
-3-1-atrajeev@linux.ibm.com?part=3D1
