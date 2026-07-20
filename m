@@ -1,136 +1,105 @@
-Received: from mail-pf1-f200.google.com (mail-pf1-f200.google.com [209.85.210.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE1444685F
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 22:52:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D4D725A357
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 23:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784587949; cv=none; b=oZBGuS5kQFK4Hh8/00TFk5oFzV03cZGFr7hZgVjiofOeVpfczkMmciRzoAJCeiwYvnsbmtmAhGgu+0rD9pN3p8AxIOlCm+/UXVyvrSRjSl+9CfjC/gSHXFedrnOi2IVsydSnFURTV1hUZ8HoCVwdZ+pd/SWwc8SCixem1ZwKgRY=
+	t=1784588606; cv=none; b=aMLM4F9E4DRUIJOKfvqxOeHEN+i5+0yCspmzR6/5AZVU/R6bA6YI6sjBTBRWcsXRgsF6N3Ah4+u5+R81V44stD85cmkiPcIwvcQiiUf52P7/aRYAB5g9RgyRvQ2HSAIY+eSTPh0l1KgFuUuyCkG25NuTzcJFCz7Ii+Y5n+d0Goo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784587949; c=relaxed/simple;
-	bh=3yay0veMsFj7vwcaAhqZB7S78e5bwAhi4kSuw/rHn+k=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Zf1ng47qsfDAduh9/2anfOD+w9FtfNFPwbEgBbjD3o1XarBOZtZLClH8tHdYcbhy/ERicCvm0W8xDJQgRh2Q1ZJGqcEmLNlCRgiK3Uu3OOYchrLr8KaYxQaJhakih4MbLEIApTg4Lscz+IrKo89qZmZIgPWRp5WM8+ycf/YYy7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RkrCzEkG; arc=none smtp.client-ip=209.85.210.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1784588606; c=relaxed/simple;
+	bh=WqdVtPIeFcFdj8QNXmHd0pNMaGErMUVh+ATmdreB1RY=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Iey5x2syhO+HygHDS9bZZydxb0jhCbW9i8KQQpSD2mS/VYCF8Zkcf+JuPbxccsLyj800KDTKwqKHLByFYkHYBjoVtuqz4JTniPsWjbf2fXsg3kmKxEW90UTfeWn/C1iRIXG7h6lr6PFWKcr4Nd1X2LBjeNuFY+wNfdct93h6m6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mfilp6Sg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RkrCzEkG"
-Received: by mail-pf1-f200.google.com with SMTP id d2e1a72fcca58-84e0234967aso280789b3a.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 15:52:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784587947; x=1785192747; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=CHcmZ3r9l7ED3Ld93xhYMri0AgqcafHtnu+fH+/O4JA=;
-        b=RkrCzEkGCtfhd3zZwOXDYzhL3llNiS3j1q/O9p90vf/FJMJ0kH577Tzlnu+fGcpisZ
-         q0LiLhSZ3AHa3pJKug2Wxj6pw4hzBaeil6J0CNkX21AfVBfn2ihs59Ek5/SWRuE9yx6Y
-         RRT12d0e3tR0q8T+TiYzxBB+GiU7kw94HqCLFT1TCG/eKi5PLg+WOn+gvOLB8fygyEcA
-         p6JjNMRoJkolv0vqAu76cTxRgLg84noTcvyl5YWHuGvnd8usafe/Lh0/tqj5KhhQ7blY
-         bel8s8JCG3iGlMOI0vtgXM3tCt1hbHwP1SbIju8ZqQkzAQeV8XhkmDuNSLTnzBsxZeZC
-         aTIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784587947; x=1785192747;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=CHcmZ3r9l7ED3Ld93xhYMri0AgqcafHtnu+fH+/O4JA=;
-        b=YIdyk54iJWPl1WzjjP8rHeLlqFfe3cbo9ohO5/+1dMHOMuH7YOXfQfkDSCXCz6rMCl
-         5XBR214S7zthHDiK/uoUtSwPCiyViEx+Du9ndS8G8rpA+VYHGJs499eMEXEnYBIy/A3Y
-         KrHP7tE5WVJsTpaQOmPinx9PgVfIiycVQxYXdchYljfh32NPgt4yCYCuTILYNIBQWWwO
-         hSC8Rww4khtmjVftn0HVMzCNtLmv0yPdpRdJTzOy3HkgGkeFb1lU771naobyW0BD/Bl0
-         PD2W6o1eDqNeoxiRs3enjqSeIdl5aM0dQ/bJcCVcHN75FPS16RPhtPI4Xz+qz8+sldnn
-         34jA==
-X-Forwarded-Encrypted: i=1; AHgh+RqqU+b6snxCFSt7p/3x31Pthm+d6uIzBTyZ81n1Qtl3iC7+4gMbS6UPMGZZ6vmGsLlotrlCYEz1qXj3mJQwDf8O@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtP7y1airJ9dIfvmvQqRr8LkrT6CeFYgwFAj5yU10Zr+Lls4YU
-	sQLdnwVTTPFxFh1miUpzXAI8OPc8rOmrbTx1yhMuu3i3MudBRUhFsLPvyvFEi7hKO/8UFNN9oO0
-	d/bhtnIR8EA==
-X-Received: from pfblx1.prod.google.com ([2002:a05:6a00:7541:b0:848:2a35:eb83])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:179c:b0:848:425a:4e31
- with SMTP id d2e1a72fcca58-84c29274827mr16439225b3a.24.1784587946538; Mon, 20
- Jul 2026 15:52:26 -0700 (PDT)
-Date: Mon, 20 Jul 2026 15:52:00 -0700
-In-Reply-To: <20260720225200.3810501-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mfilp6Sg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B2BD1F000E9;
+	Mon, 20 Jul 2026 23:03:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784588604;
+	bh=XMmfCBXc7BNF6iMTVM43MhVXydJhQf5XhAcYFfS14Ic=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=mfilp6SgdPz6vAD73+tAFRWmz/kIrBrZKrRK8R1PFa29w4u/im0qbjfLjQVR2dobq
+	 /IwqdQgxtzphsN9I0n+wpdvgITvYZOiQJeRO5lA3uav8v+l5dSQPGqEhFzDrr3gtfm
+	 ylqJMK1ZgNFK+v6GNBPSaq5HtXRZeiMRgRDNmKOGznDoCFHknWNUIWlSFrcm6tf96s
+	 RPvpg8gQrJOJ8Zv7BY86uq45rsFzuEa48I9hpF2D5L4SYiIMZXFciBhf55K2i8kWvA
+	 pSoVVlSOjkG+z9SJ0c07+Er/BJUUTx1/WiPxIB8T1fkLuDYXdbzuQt5KWyfzCYzWYw
+	 l0n3uzw2nO6Qg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 2/4] perf synthetic-events: Fix line synchronization,
+ bounds, and truncation bugs in proc maps reader
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260720225200.3810501-3-irogers@google.com>
+References: <20260720175455.3645946-1-irogers@google.com>
+ <20260720225200.3810501-1-irogers@google.com>
+ <20260720225200.3810501-3-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 20 Jul 2026 23:03:23 +0000
+Message-Id: <20260720230324.2B2BD1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260720175455.3645946-1-irogers@google.com> <20260720225200.3810501-1-irogers@google.com>
-X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
-Message-ID: <20260720225200.3810501-5-irogers@google.com>
-Subject: [PATCH v2 4/4] perf synthetic-events: Fix bounds and union member
- access in mmap2 build_id synthesis
-From: Ian Rogers <irogers@google.com>
-To: acme@kernel.org, namhyung@kernel.org
-Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	mingo@redhat.com, peterz@infradead.org, ravi.bangoria@amd.com, 
-	swapnil.sapkal@amd.com, Ian Rogers <irogers@google.com>
-Content-Type: text/plain; charset="UTF-8"
 
-Fix a critical logic bug in perf_event__synthesize_mmap2_build_id() where
-the wrong union member structure size and offset boundaries were utilized.
-Safely calculate the exact maximum allowed filename length to guarantee
-absolute stack and alignment boundaries for ID sample trailers, preventing
--E2BIG overruns on very long filenames while meeting strict standard C
-compliance.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] `io__drain_line()` fails to drain the remainder of the line when=
+ `ch =3D=3D -2` is passed, causing parsing synchronization failure.
+--
 
-Assisted-by: Antigravity:gemini-3.5-flash
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/synthetic-events.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+--- Patch [2]: [PATCH v2 2/4] perf synthetic-events: Fix line synchronizati=
+on, bounds, and truncation bugs in proc maps reader ---
+commit f1400c3fd8b406d3bc0aa09991216359f2f3eb18
+Author: Ian Rogers <irogers@google.com>
+Subject: perf synthetic-events: Fix line synchronization, bounds, and trunc=
+ation bugs in proc maps reader
 
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 068323b9510d..fb4f736f64c0 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -2447,13 +2447,18 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
- 	size_t filename_len = strlen(filename);
- 	size_t ev_len;
- 	u64 sample_type = sample->evsel ? sample->evsel->core.attr.sample_type : 0;
--	void *array;
-+	void *array = &ev;
- 	int ret;
-+	size_t max_filename_len;
- 
--	if (filename_len >= sizeof(ev.mmap2.filename))
--		return -EINVAL;
-+	max_filename_len = sizeof(ev) -
-+			   (MAX_ID_HDR_ENTRIES * sizeof(__u64)) -
-+			   offsetof(struct perf_record_mmap2, filename) - 1;
- 
--	ev_len = sizeof(ev.mmap2) - sizeof(ev.mmap2.filename) + filename_len + 1;
-+	if (filename_len > max_filename_len)
-+		filename_len = max_filename_len;
-+
-+	ev_len = offsetof(struct perf_record_mmap2, filename) + filename_len + 1;
- 	ev_len = PERF_ALIGN(ev_len, sizeof(u64));
- 
- 	if (ev_len + MAX_ID_HDR_ENTRIES * sizeof(__u64) > sizeof(ev))
-@@ -2473,16 +2478,15 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
- 
- 	ev.mmap2.build_id_size = bid->size;
- 	if (ev.mmap2.build_id_size > sizeof(ev.mmap2.build_id))
--		ev.build_id.size = sizeof(ev.mmap2.build_id);
-+		ev.mmap2.build_id_size = sizeof(ev.mmap2.build_id);
- 	memcpy(ev.mmap2.build_id, bid->data, ev.mmap2.build_id_size);
- 
- 	ev.mmap2.prot = prot;
- 	ev.mmap2.flags = flags;
- 
--	memcpy(ev.mmap2.filename, filename, min(strlen(filename), sizeof(ev.mmap.filename)));
-+	strlcpy(ev.mmap2.filename, filename, filename_len + 1);
- 
--	array = &ev;
--	array += ev.header.size;
-+	array = (void *)((char *)&ev + ev.header.size);
- 	ret = perf_event__synthesize_id_sample(array, sample_type, sample);
- 	if (ret < 0)
- 		return ret;
--- 
-2.55.0.229.g6434b31f56-goog
+This commit addresses logic and boundary issues in the proc maps reader. It
+adds explicit line drainage to handle mid-line parsing failures and introdu=
+ces
+timeout handling for truncated map entries.
 
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
+ic-events.c
+> index 5307d707711d8..059dd558a564c 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+[ ... ]
+> @@ -291,6 +291,17 @@ static int perf_event__synthesize_fork(const struct =
+perf_tool *tool,
+[ ... ]
+> +static void io__drain_line(struct io *io, int ch)
+> +{
+> +	if (ch =3D=3D '\n')
+> +		return;
+> +	if (ch =3D=3D -2 && io->data > io->buf && io->data[-1] =3D=3D '\n')
+> +		return;
+> +
+> +	while (ch >=3D 0 && ch !=3D '\n')
+> +		ch =3D io__get_char(io);
+
+[Severity: Medium]
+Will this loop properly drain the line if ch is initially passed as -2?
+
+When read_proc_maps_line() encounters a malformed line where io__get_hex()
+or io__get_dec() fails immediately, they return the error code -2. This
+value is passed into io__drain_line() as the ch argument.
+
+Because the loop condition requires ch >=3D 0, passing -2 causes the loop to
+be skipped entirely without reading any characters from io__get_char(io).
+This appears to leave the stream positioned mid-line, potentially causing
+the parser to repeatedly fail character-by-character on the exact same
+line, defeating the line synchronization mechanism.
+
+> +}
+> +
+>  static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260720225200.3810=
+501-1-irogers@google.com?part=3D2
