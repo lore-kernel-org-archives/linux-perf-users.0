@@ -1,309 +1,170 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7291C7261A;
-	Mon, 20 Jul 2026 05:02:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECC738C2DE;
+	Mon, 20 Jul 2026 07:20:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784523776; cv=none; b=C6rGZMFei1i8jVybJ6sOTKXzri5XVAr2OtcGVFJO/HXJaYohyIG4dIbMZ7jnPTOw35XpuzQC/i5SOpDaaJkZ8pyXTHFK3Q04uiZ56Vd03+b5lRKlnVdUvqekSVVSBgfNOtsM24F5GW3BuONxDXlKme7HTkxHtFEPzJn3YSisRQc=
+	t=1784532046; cv=none; b=NzLa9kO86PAE12Elqmpd2SqXz8QSQerOqRyqDhugtlLopyuiP+lbAzgg6MwwEhZzy8oJCTkhSw9kCfXieTs0d4U/Nrz5qasZKdrNu0Yr+t0W54y8TVcLfUF1VjYkU8YAElqUaBuAchDrgjNOjYEFNCaqRdQsnb77/2yfqs+M1uA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784523776; c=relaxed/simple;
-	bh=t94naa01ZXjvBT6Ama3296bKFaiF5usttDLkrSd2xIs=;
+	s=arc-20240116; t=1784532046; c=relaxed/simple;
+	bh=wS3iOjal19hc48fA51Gyg+UKNxQ+naTpbmOlu9ZaCrs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eGuypXvyinfqwt9lo01VXcznKrdn9YfNNMwEJE3T8RMghEAowmnWuLHtC/XX92Kcl8b6A0Bq0eIB0Oa1sIZobAirC5CP06wlpqSlNPLXFnnxQNFnQCdS3qi1zYjzrkqiCJZDHvbE44bS0gN3BpyGM7K0r7MNE93cW5Kq9keb8dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJDn+nln; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=HHDxSuwRopir4v3JHnTJLCxaZabmUPw6ZEu5/42/FWk7Ew97ur1fM5ioIJGEep+anuaSJcRBh/lEJ6ncgYVCVt5Aw3x3XaiZH74usYLOCJQs4CepesJWdz1QJmQ+uBn8fTgeEpasJ3Dd/0UqQkP/9/o4DGdReP7GepcOTP+/K48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q4SQ5H7p; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJDn+nln"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCFB91F000E9;
-	Mon, 20 Jul 2026 05:02:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q4SQ5H7p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F055C1F00A3A;
+	Mon, 20 Jul 2026 07:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784523775;
-	bh=uvtBQBgSQqy1IN0xAXHYXnTrVVXGljr5+dDHQq2fcZw=;
+	s=k20260515; t=1784532040;
+	bh=gANMU5sOivOjZzaedPM5r16YKmZ48cwI33ZQeohFkKI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=EJDn+nln18G/EOpjW5Oyuczh0aV5+PTrxDVuQOoyxLXDKE2aqpGdHtO8sAksvN2C7
-	 lkAgIjR0biPEAt9WDo3cfKCv8bv+eCkOqurFW+sTq/ZgDLyn9sZKmntqQMngUUL912
-	 vCkxjKo1HSP+GWKF18+e7nhPWDk/PDQ7SxyCLX2dc/TgpIwjiO8rrLKVmBKiU1X9zQ
-	 Ro9SCWeVdXpDN9/f4BMJfM8pvPRUX6S1h/OPLEgZh8cj7cKTfGiS/2hGIX5h0t0ENT
-	 QWMjxaP/yWdvdkTqvbfCBtgPecVdvrnOODtiZpZ+oHtUJIHAH7sGBZoUW+h73q9KaY
-	 fnS81wgKCV7Ug==
-Date: Sun, 19 Jul 2026 22:02:52 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Aaron Tomlin <atomlin@atomlin.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, howardchu95@gmail.com, neelx@suse.com,
-	chjohnst@mail.com, sean@ashe.io, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] perf trace: Correct default cpumask formatting to
- hexadecimal
-Message-ID: <al2r_MoSrBkbLAmA@google.com>
-References: <20260719001510.398616-1-atomlin@atomlin.com>
- <20260719001510.398616-2-atomlin@atomlin.com>
+	b=Q4SQ5H7pfr3jaDU2ZnnO+1hHIoXl1iFH5WSqv7jLKEoKzb1W8Q48EBE20IuNZFTUn
+	 ixKm0DVIy5OI2nLk58vf2Hjrg7we7B+X4V1GJxyPkSv0+C69K1TUoySPfe3BcFYtS/
+	 t7GufXN3+op+50lWLzds22S7AYYtVpeOlcrG/0bZfPer/n9WDDe8GhqIXCV0fWPGUD
+	 XmaJPMeyIJugU5z50bBvNZ+bv5B8MYe6yecmFyVa9TEs0150ohb7J9prH1nL+rHsFg
+	 Tpa/uQSSoq+PE+oR7BoJwZF5ntDZOzikcQrAbuelm4gJqA+MbVuFWtO9kyaJQf1xJj
+	 5Tno9QcBWPfNw==
+Date: Mon, 20 Jul 2026 08:20:01 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Zi Yan <ziy@nvidia.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	David Hildenbrand <david@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, 
+	Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, 
+	Harry Yoo <harry@kernel.org>, Jann Horn <jannh@google.com>, Lance Yang <lance.yang@linux.dev>, 
+	Pedro Falcato <pfalcato@suse.de>, Russell King <linux@armlinux.org.uk>, 
+	Dinh Nguyen <dinguyen@kernel.org>, Simon Schuster <schuster.simon@siemens-energy.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	Dan Williams <djbw@kernel.org>, Matthew Wilcox <willy@infradead.org>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi <nao.horiguchi@gmail.com>, 
+	Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	SJ Park <sj@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Hugh Dickins <hughd@google.com>, Peter Xu <peterx@redhat.com>, 
+	Kees Cook <kees@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	Robin Murphy <robin.murphy@arm.com>, Andrey Konovalov <andreyknvl@gmail.com>, 
+	Alexander Potapenko <glider@google.com>, Dmitry Vyukov <dvyukov@google.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Ian Abbott <abbotti@mev.co.uk>, 
+	H Hartley Sweeten <hsweeten@visionengravers.com>, Lucas Stach <l.stach@pengutronix.de>, 
+	Christian Gmeiner <christian.gmeiner@gmail.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Patrik Jakobsson <patrik.r.jakobsson@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Rob Clark <robin.clark@oss.qualcomm.com>, 
+	Dmitry Baryshkov <lumag@kernel.org>, Abhinav Kumar <abhinav.kumar@linux.dev>, 
+	Jessica Zhang <jesszhan0024@gmail.com>, Sean Paul <sean@poorly.run>, 
+	Marijn Suijten <marijn.suijten@somainline.org>, Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, 
+	Thierry Reding <thierry.reding@kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Christian Koenig <christian.koenig@amd.com>, 
+	Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Yishai Hadas <yishaih@nvidia.com>, 
+	Shameer Kolothum <skolothumtho@nvidia.com>, Kevin Tian <kevin.tian@intel.com>, 
+	Ankit Agrawal <ankita@nvidia.com>, Alex Williamson <alex@shazbot.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Usama Arif <usama.arif@linux.dev>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, damon@lists.linux.dev, iommu@lists.linux.dev, 
+	kasan-dev@googlegroups.com, linux-sgx@vger.kernel.org, etnaviv@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, 
+	linux-tegra@vger.kernel.org, kvm@vger.kernel.org, 
+	Russell King <linux+etnaviv@armlinux.org.uk>
+Subject: Re: [PATCH v2 08/33] mm/rmap: rename vma_interval_tree_*() to
+ mapping_rmap_tree_*()
+Message-ID: <al3LpROyiWEBL1wh@lucifer>
+References: <20260710-b4-pre-scalable-cow-v2-0-2a5aa403d977@kernel.org>
+ <20260710-b4-pre-scalable-cow-v2-8-2a5aa403d977@kernel.org>
+ <DK1CWBDK5J60.3VPRP45IS7L7E@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260719001510.398616-2-atomlin@atomlin.com>
+In-Reply-To: <DK1CWBDK5J60.3VPRP45IS7L7E@nvidia.com>
 
-Hello,
+On Fri, Jul 17, 2026 at 10:54:24PM -0400, Zi Yan wrote:
+> On Fri Jul 10, 2026 at 4:16 PM EDT, Lorenzo Stoakes wrote:
+> > The family of vma_interval_tree_() functions manipulate the
+> > address_space (which, of course, is generally referred to as 'mapping')
+> > reverse mapping, but are named the 'VMA' interval tree.
+> >
+> > VMAs may be mapped by an anon_vma, an address_space, or both. Therefore
+> > calling the mapping interval tree a 'VMA' interval tree is rather
+> > confusing.
+> >
+> > This is also inconsistent with the anon_vma_interval_tree_*() functions
+> > which explicitly reference the rmap object to which they pertain.
+> >
+> > Rename the vma_interval_tree_*() functions to mapping_rmap_tree_*() to
+> > correct this.
+> >
+> > We will rename the anon rmap functions similarly in a subsequent patch.
+> >
+> > No functional change intended.
+> >
+> > Reviewed-by: Gregory Price <gourry@gourry.net>
+> > Signed-off-by: Lorenzo Stoakes <ljs@kernel.org>
+> > ---
+> >  arch/arm/mm/fault-armv.c          |  2 +-
+> >  arch/arm/mm/flush.c               |  2 +-
+> >  arch/nios2/mm/cacheflush.c        |  2 +-
+> >  arch/parisc/kernel/cache.c        |  2 +-
+> >  fs/dax.c                          |  2 +-
+> >  fs/hugetlbfs/inode.c              |  4 ++--
+> >  include/linux/mm.h                | 16 ++++++++--------
+> >  kernel/events/uprobes.c           |  2 +-
+> >  mm/hugetlb.c                      |  4 ++--
+> >  mm/interval_tree.c                | 22 +++++++++++-----------
+> >  mm/khugepaged.c                   |  4 ++--
+> >  mm/memory-failure.c               |  6 +++---
+> >  mm/memory.c                       |  2 +-
+> >  mm/mmap.c                         |  2 +-
+> >  mm/nommu.c                        |  8 ++++----
+> >  mm/pagewalk.c                     |  2 +-
+> >  mm/rmap.c                         |  2 +-
+> >  mm/vma.c                          | 12 ++++++------
+> >  tools/testing/vma/include/stubs.h |  4 ++--
+> >  19 files changed, 50 insertions(+), 50 deletions(-)
+> >
+>
+> Just curious, why not file_rmap_tree_*()?
 
-On Sat, Jul 18, 2026 at 08:15:09PM -0400, Aaron Tomlin wrote:
-> Currently, dynamic non-array fields such as 'cpumask_t' are mishandled in
-> 'perf trace', causing the raw length and offset descriptors to be interpreted
-> and displayed as a literal integer (e.g., "cpumask: 524320" instead of the
-> actual mask data).
-> 
-> Correct the parsing of dynamic fields that do not have the
-> TEP_FIELD_IS_ARRAY flag set by introducing helper functions
-> format_field__get_raw_data() and format_field__get_cpumask().
-> Using these helpers, resolve the pointer to the raw bits within the
-> payload and format the cpumask as a zero-padded hexadecimal string by default.
-> 
-> Fixes: c5e006cdbd27 ("perf trace: Support tracepoint dynamic char arrays")
-> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
-> ---
->  tools/perf/builtin-trace.c | 70 +++++++++++++++++++++++++----
->  tools/perf/util/evsel.c    | 90 ++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/evsel.h    |  6 +++
->  3 files changed, 157 insertions(+), 9 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index ba0f8749fc7d..f8b8431f9543 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -3207,6 +3207,21 @@ static void bpf_output__fprintf(struct trace *trace,
->  	++trace->nr_events_printed;
->  }
->  
-> +static unsigned char bitmap_byte(const unsigned long *mask, int byte_idx)
-> +{
-> +	unsigned char b_val = 0;
-> +	int bit_in_byte;
-> +
-> +	for (bit_in_byte = 0; bit_in_byte < 8; bit_in_byte++) {
-> +		int b_idx = byte_idx * 8 + bit_in_byte;
-> +		int host_w_idx = b_idx / BITS_PER_LONG;
-> +		int host_bit_in_word = b_idx % BITS_PER_LONG;
+Just to avoid any confusion around address_space objects that are ostensibly
+'not files' like devices or whatnot, but moreso for consistency with the rest of
+the kernel in referring to this stuff as 'mapping'.
 
-Better to add a blank line.
+Naming is hard IOW :)
 
+>
+> One nice part of this renaming is that the length of each function does
+> not chagne. That makes the patch easy to review.
+>
+> Reviewed-by: Zi Yan <ziy@nvidia.com>
 
-> +		if (mask[host_w_idx] & (1UL << host_bit_in_word))
-> +			b_val |= (1 << bit_in_byte);
-> +	}
-> +	return b_val;
-> +}
-> +
->  static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *sample,
->  				       struct thread *thread, void *augmented_args, int augmented_args_size)
->  {
-> @@ -3238,17 +3253,54 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *
->  		syscall_arg.len = 0;
->  		syscall_arg.fmt = arg;
->  		if (field->flags & TEP_FIELD_IS_ARRAY) {
-> -			int offset = field->offset;
-> -
-> -			if (field->flags & TEP_FIELD_IS_DYNAMIC) {
-> -				offset = format_field__intval(field, sample, evsel->needs_swap);
-> -				syscall_arg.len = offset >> 16;
-> -				offset &= 0xffff;
-> -				if (tep_field_is_relative(field->flags))
-> -					offset += field->offset + field->size;
-> +			void *ptr = format_field__get_raw_data(field, sample,
-> +							       evsel->needs_swap,
-> +							       &syscall_arg.len);
-> +
-> +			if (!ptr) {
-> +				pr_err("Problem processing %s field, skipping...\n", field->name);
-> +				continue;
-> +			}
-> +			val = (uintptr_t)ptr;
-> +		} else if ((field->flags & TEP_FIELD_IS_DYNAMIC) &&
-> +			   strstr(field->type, "cpumask")) {
-> +			unsigned long *mask = format_field__get_cpumask(field, sample,
-> +									evsel->needs_swap,
-> +									&syscall_arg.len);
-> +
-> +			if (!mask) {
-> +				pr_err("Problem processing %s field, skipping...\n", field->name);
-> +				continue;
->  			}
->  
-> -			val = (uintptr_t)(sample->raw_data + offset);
-> +			printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
-> +			if (trace->show_arg_names)
-> +				printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
-> +
-> +			if (syscall_arg.len == 0) {
-> +				printed += scnprintf(bf + printed, size - printed, "0");
-> +			} else {
-> +				int i;
-> +				bool skip_zero = true;
-> +
-> +				printed += scnprintf(bf + printed, size - printed, "0x");
-> +				/* Print bytes from most significant to least significant */
-> +				for (i = syscall_arg.len - 1; i >= 0; i--) {
-> +					unsigned char b_val = bitmap_byte(mask, i);
-> +
-> +					if (skip_zero && b_val == 0 && i > 0)
-> +						continue;
-> +
-> +					if (skip_zero) {
-> +						printed += scnprintf(bf + printed, size - printed, "%x", b_val);
-> +						skip_zero = false;
-> +					} else {
-> +						printed += scnprintf(bf + printed, size - printed, "%02x", b_val);
-> +					}
-> +				}
-> +			}
-> +			free(mask);
-> +			continue;
->  		} else
->  			val = format_field__intval(field, sample, evsel->needs_swap);
->  		/*
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index ea9fa04429f0..912d77044141 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -16,9 +16,11 @@
->  #include <errno.h>
->  #include <inttypes.h>
->  #include <stdlib.h>
-> +#include <string.h>
->  
->  #include <dirent.h>
->  #include <linux/bitops.h>
-> +#include <linux/bitmap.h>
->  #include <linux/compiler.h>
->  #include <linux/ctype.h>
->  #include <linux/err.h>
-> @@ -3933,6 +3935,94 @@ void *perf_sample__rawptr(struct perf_sample *sample, const char *name)
->  	return sample->raw_data + offset;
->  }
->  
-> +void *format_field__get_raw_data(struct tep_format_field *field, struct
-> +				 perf_sample *sample, bool needs_swap,
-> +				 u16 *len_out)
-> +{
-> +	int offset = field->offset;
-> +	int size = field->size;
-> +
-> +	if (field->flags & TEP_FIELD_IS_DYNAMIC) {
-> +		unsigned int dynamic_data;
-> +
-> +		if (out_of_bounds(field, field->offset, field->size, sample->raw_size))
-> +			return NULL;
-> +
-> +		dynamic_data = format_field__intval(field, sample, needs_swap);
-> +
-> +		offset = dynamic_data & 0xffff;
-> +		size = (dynamic_data >> 16) & 0xffff;
-> +
-> +		if (tep_field_is_relative(field->flags))
-> +			offset += field->offset + field->size;
-> +	}
-> +
-> +	if (out_of_bounds(field, offset, size, sample->raw_size))
-> +		return NULL;
-> +
-> +	*len_out = size;
-> +	return sample->raw_data + offset;
-> +}
-> +
-> +unsigned long *format_field__get_cpumask(struct tep_format_field *field,
-> +					 struct perf_sample *sample,
-> +					 bool needs_swap, u16 *len_out)
-> +{
-> +	u16 len;
-> +	void *ptr = format_field__get_raw_data(field, sample, needs_swap, &len);
-> +	unsigned long *mask;
-> +	struct perf_env *env;
-> +	bool target_is_64;
-> +	int target_word_size;
-> +	int nr_words;
-> +	int bit_idx;
-> +	int nbits;
-> +
-> +	if (!ptr)
-> +		return NULL;
-> +
-> +	nbits = len * 8;
-> +	mask = bitmap_zalloc(nbits ?: 1);
-> +	if (!mask)
-> +		return NULL;
-> +
-> +	env = evsel__env(sample->evsel);
-> +	target_is_64 = env ? perf_env__kernel_is_64_bit(env) : (sizeof(void *) == 8);
-> +	target_word_size = target_is_64 ? 8 : 4;
-> +	nr_words = len / target_word_size;
-> +
-> +	for (bit_idx = 0; bit_idx < nbits; bit_idx++) {
-> +		int w_idx = bit_idx / (target_word_size * 8);
-> +		int bit_in_word = bit_idx % (target_word_size * 8);
-> +		bool set = false;
-> +
-> +		if (w_idx < nr_words) {
+Thanks!
 
-Nit: Can you change it to something like below to reduce indentation?
+>
+> --
+> Best Regards,
+> Yan, Zi
+>
 
-		if (w_idx >= nr_words)
-			break;
-
-Thanks,
-Namhyung
-
-
-> +			if (target_is_64) {
-> +				u64 word;
-> +				memcpy(&word, (unsigned char *)ptr + w_idx * 8, 8);
-> +				if (needs_swap)
-> +					word = bswap_64(word);
-> +				set = (word & (1ULL << bit_in_word)) != 0;
-> +			} else {
-> +				u32 word32;
-> +				memcpy(&word32, (unsigned char *)ptr + w_idx * 4, 4);
-> +				if (needs_swap)
-> +					word32 = bswap_32(word32);
-> +				set = (word32 & (1U << bit_in_word)) != 0;
-> +			}
-> +		}
-> +
-> +		if (set) {
-> +			int host_w_idx = bit_idx / BITS_PER_LONG;
-> +			int host_bit_in_word = bit_idx % BITS_PER_LONG;
-> +			mask[host_w_idx] |= (1UL << host_bit_in_word);
-> +		}
-> +	}
-> +
-> +	*len_out = len;
-> +	return mask;
-> +}
-> +
->  u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sample,
->  			 bool needs_swap)
->  {
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 163fc2b6a7ea..02129a022ea3 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -400,6 +400,12 @@ static inline char *perf_sample__strval(struct perf_sample *sample, const char *
->  
->  struct tep_format_field;
->  
-> +void *format_field__get_raw_data(struct tep_format_field *field,
-> +				 struct perf_sample *sample,
-> +				 bool needs_swap, u16 *len_out);
-> +unsigned long *format_field__get_cpumask(struct tep_format_field *field,
-> +					 struct perf_sample *sample,
-> +					 bool needs_swap, u16 *len_out);
->  u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sample, bool needs_swap);
->  
->  #ifdef HAVE_LIBTRACEEVENT
-> -- 
-> 2.54.0
-> 
+Cheers, Lorenzo
