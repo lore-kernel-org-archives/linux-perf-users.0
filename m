@@ -1,68 +1,67 @@
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E942B3EA949
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 22:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA8EF439325
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 22:52:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784587937; cv=none; b=ZX3E+HLK4fJFgRWiDkMcRCtieBUjTjRPUAC9sDuylE6uC1LcCkiDNPNarpQIcCYE5ab3s/DkePTa92+cYhU/deQbPXhTOgIYmswTwVWusjJdSLrgAzpwkOJQQO8/LUts0JHFiu1yU96TBjHrVudEVOzRzEBy3GGklWwvUNomaDM=
+	t=1784587939; cv=none; b=gumoKrYdV+Y2QG0qhBrUbiCJC4LTQR1fSCtt5W1sBv8uP0QpgCSz9ITmS9Y6Bf4QYRuim0/VXwtJ1t6ohnYseJC/J9hyZNYTevRpV9oFX9ThKMGpaPla2eYCj9atbDytj8TEz1S8J7oCGP5rMKXRsUVAnRuSjTbL+lERzJRooGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784587937; c=relaxed/simple;
-	bh=5A9pTIsEX6Ff5p29dhvibLGD9qKe6ff+wRIK2yncZd4=;
+	s=arc-20240116; t=1784587939; c=relaxed/simple;
+	bh=pj0KjjICAGQcYFvJa34O/R6iaQNWxgcdqHf3gBWUcgM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=auwIsjwiyqihQWb+eLeue+F8GG7iB8neOB5mbEJGOE5Q+jEE2jYj00UD3CLOF3nF8wOs2nwxmHKWfyXETy0SVlkckfeLQt/S312qTTX7X2C5IS7QoM+1WplUaoO0/vWr+5BypZvAQ6KNJcFGHw5KpjRxFtrKWLECBa3qL72QyI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dNZrV6WD; arc=none smtp.client-ip=209.85.216.70
+	 To:Cc:Content-Type; b=OEohAtrujtHGH86GVCTNHvuDIwP6zEhYlkoacUcMgMsPs/vlAev6Uj95zfo6N9M8566e2MclZwQ5OOfe/94oCakmURMmbgcn/kOl9Gg8bGDZfPvLbP7zIU2A7aVi2i7x5GLbhZOetIKm2AKuvCKiYTP9Sx6R5Vqe7vDX9CyYLso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wW+HIkn3; arc=none smtp.client-ip=209.85.216.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dNZrV6WD"
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-38dc085b0a7so16197614a91.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 15:52:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wW+HIkn3"
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-38e6f71683bso3338170a91.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 15:52:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784587935; x=1785192735; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1784587937; x=1785192737; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=T3DGekGfKUgaGePiSjsnwXJaoc2HZPooCo5X69eH3hs=;
-        b=dNZrV6WDSe3JlE4CHzfrTvGT+V9TvguM6aJX0ePGkkM8HQPAmEi0jTasZQiQY1sXSf
-         MAu6g+5gCL8Q1SLy3SQTtvsOYfkJ1OXeofFpVBKbW1MgM8hXVCvPuQh+DA/NKQJux3Zv
-         FpEcMe6255X9d+U1IUAh73UxOLuUSPFzDXJvlohtR24esVpygJrSDalwQwYEK/0FrYR9
-         8PasfalMn6pPPBaM5LDy4iEPvtAkfRQXCmZvCHRmo6EMzw0/WwHYFzVMPSFcDIkY7g0o
-         cd6ArNEWuQNe4Pu0aeybxDvWbY2nylj+UnyvkLVOF2Wuj7KNMtIBOp1QDG1D9eBtKzzO
-         on7A==
+        bh=d5jG9NVpjcGT0OyijdNnlD4kEtCaHdlCbuAaGu1kfKk=;
+        b=wW+HIkn32DjVUwEmvV1hVvTjyEQvNTzL2SYbK26opS99JabGE4UiIQcrp2/nkbsXNI
+         DIbcPSVBl2CFj6/Mbi08uKw/w1DRz2SUPud4+VXt2C41V2AYrSwqXz55K4AAH3KPWKKA
+         IjqUTeuIF4UUDCxweT0miYvXThBfPiMiyHWRQhTbRXLkJNaOc3/54wrViWxhCR2lnpRd
+         Tl4pnMtX9s+cxWGOYpQk6aZQkpaw+Pz8nmx2U+GWwk4b2qmXrBYN9IHCGVzD6DXaJIok
+         zMYTnEevCCN+c7z71xG8hh2TBh+U0doHwcrYShp1EC57w0rJcqgPRYlcLau7ZD75Tim4
+         Gr6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784587935; x=1785192735;
+        d=1e100.net; s=20251104; t=1784587937; x=1785192737;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=T3DGekGfKUgaGePiSjsnwXJaoc2HZPooCo5X69eH3hs=;
-        b=rYPLjwLog9Dm/tpnJn+cWMzT8EFBSeIvQSjV+HGHSOiCwBItYodiFY4YKa1pjFrwXw
-         Bk8oHKUtT9kTIjIzg5AKKTcmeUsJNBJu3Sr4xFR6cAazFT5K+ldzyZ5vFR0Q8XkWNjsg
-         GdxL9lytOotK55rYHCF6qhVJJV3xj79M0jX54eX+QuCACvC7o2mLDEta0ODGsb6Tn3M+
-         Y/t+fMI4S3Zy+YmHzx34MZoXaD+bvFlgGjjCtuOmQA4mLvfVPsMXhoA4jaLeijSMmWCA
-         xYfJPVaWUNrLRGmVyMtffT3UkfLu4hEuMQyc4XDLGKN2BJWgtnGjrziM7tAplmLEiSg1
-         31QA==
-X-Forwarded-Encrypted: i=1; AHgh+Rrf133vCsD3vqQUPxaFz9330byU4UedWA9W9IQLo9OIgJuCsqpylwPd4buTarApx4aE/2FzMzqGuvIJ/70TIjNH@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCiYJIcMxB/Gv/D+ayfVbjDaKl+fS7SPrfGloAwDcbMz73fySi
-	n0Zxiy7ekv+dUPsh9nNa2Ugn9d4wKc9suMAERItAXe8Zh+aw3shuyEIyjOmnvnuIMTrOtIKtK2u
-	agTX7TTT39Q==
-X-Received: from dlbdz2.prod.google.com ([2002:a05:7022:ec2:b0:13c:dc4a:cba9])
+        bh=d5jG9NVpjcGT0OyijdNnlD4kEtCaHdlCbuAaGu1kfKk=;
+        b=UInwzi1uiDqMjvCSWcOs3PdVRsBWWzV6sJc4hzr2EfMlezqFeyr3RY4eEvi1gevrW4
+         p/IcDqVAHo2GAiuOu2kykk9D+RIGEvAlEeXL8VjwrYjfTD/MDZOLeFaKWQ4hvceZ01vz
+         tie8MCmxmdKgyKqnSXlvFotrSUTxJysJ8bKdXgBZ/Hh7gWXswxHtJevXN0SgV4EtwZgC
+         BmCU8MxgfdSdGvsX8cYXiXAFQX7ENUdAuziuuhqvPzmYOjAqltgw+cp3/ccR3gUN4Thf
+         KEb4JfDQIc1uSoQU3KUUv85sy6HGemvD5liFF3DcPb2nCTWwEXUXHXA2Az4BHc4kfV3Q
+         oIUA==
+X-Forwarded-Encrypted: i=1; AHgh+RqSnVrCwNxeTqyQg6bw/zrZ9Ktd+5pKnXCXVgu9MAvTEyjfZSz+zmKmxd1qPuD4mk0z9ydxz9lv0gjaLYwhYJa5@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0Cmf4nOe3v6J+WpKqKtpmjI6v7Oyr0cZG6Gp+L78+n0QdqC04
+	owIE70F5GsxPI31cYNz8eylBHp6xpq07KJFMi77oq7/ZWyRXF8+YsvV/Ls+tfEYZjxI1i7nRoPT
+	APxVt7Dc2QA==
+X-Received: from dlbbs9.prod.google.com ([2002:a05:7022:909:b0:13b:2b79:dd1d])
  (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:558d:b0:38d:dc13:6f94
- with SMTP id 98e67ed59e1d1-38e4b586170mr17190091a91.37.1784587934920; Mon, 20
- Jul 2026 15:52:14 -0700 (PDT)
-Date: Mon, 20 Jul 2026 15:51:56 -0700
-In-Reply-To: <20260720175455.3645946-1-irogers@google.com>
+ with SMTP id 98e67ed59e1d1-38e4b586170mr17190141a91.37.1784587936937; Mon, 20
+ Jul 2026 15:52:16 -0700 (PDT)
+Date: Mon, 20 Jul 2026 15:51:57 -0700
+In-Reply-To: <20260720225200.3810501-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260720175455.3645946-1-irogers@google.com>
+References: <20260720175455.3645946-1-irogers@google.com> <20260720225200.3810501-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
-Message-ID: <20260720225200.3810501-1-irogers@google.com>
-Subject: [PATCH v2 0/4] perf: Fix and optimize maps parsing, boundaries, and
- bounds safety
+Message-ID: <20260720225200.3810501-2-irogers@google.com>
+Subject: [PATCH v2 1/4] perf find-map: Remove PATH_MAX 128-byte stack array restriction
 From: Ian Rogers <irogers@google.com>
 To: acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -71,35 +70,52 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	swapnil.sapkal@amd.com, Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-It turns out that PATH_MAX is respected by system calls but isn't
-respected by file paths in /proc/pid/maps and /proc/pid/smaps. In the
-kernel "//toolong" is placed in the filename of mmap/mmap2 events
-where the filename is longer than PATH_MAX, do the same in the
-mmap/mmap2 synthesis code to avoid overrunning the event buffer. With
-Gemini's help try to address other correctness and overrun issues.
+Use getline() to dynamically allocate the required line buffer for maps
+parsing, guaranteeing bounds safety and avoiding compiler warnings
+by evaluating the return value in the loop condition directly.
 
-V2 addresses the following Sashiko review feedback:
-- Corrects read_proc_maps_line() and io__drain_line() to safely handle
-  already consumed newlines, preventing valid map data from being skipped.
-- Restores the early exit block for timeouts so the TIMEOUT flag is
-  always emitted to tools.
-- Removes an unused assignment to avoid promoting warnings to build errors.
-- Clarifies and dynamically computes the maximum filename length boundaries
-  using offsetof() to prevent E2BIG errors regardless of struct layout.
+Assisted-by: Antigravity:gemini-3.5-flash
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/find-map.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Ian Rogers (4):
-  perf find-map: Remove PATH_MAX 128-byte stack array restriction
-  perf synthetic-events: Fix line synchronization, bounds, and
-    truncation bugs in proc maps reader
-  perf synthetic-events: Fix bounds, stale state, and misc flags in
-    kernel module synthesis
-  perf synthetic-events: Fix bounds and union member access in mmap2
-    build_id synthesis
-
- tools/perf/util/find-map.c         |  10 +-
- tools/perf/util/synthetic-events.c | 287 ++++++++++++++++++++---------
- 2 files changed, 207 insertions(+), 90 deletions(-)
-
+diff --git a/tools/perf/util/find-map.c b/tools/perf/util/find-map.c
+index 7b2300588ece..bba511795a69 100644
+--- a/tools/perf/util/find-map.c
++++ b/tools/perf/util/find-map.c
+@@ -1,8 +1,13 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++
+ static int find_map(void **start, void **end, const char *name)
+ {
+ 	FILE *maps;
+-	char line[128];
++	char *line = NULL;
++	size_t len = 0;
+ 	int found = 0;
+ 
+ 	maps = fopen("/proc/self/maps", "r");
+@@ -11,7 +16,7 @@ static int find_map(void **start, void **end, const char *name)
+ 		return -1;
+ 	}
+ 
+-	while (!found && fgets(line, sizeof(line), maps)) {
++	while (!found && getline(&line, &len, maps) != -1) {
+ 		int m = -1;
+ 
+ 		/* We care only about private r-x mappings. */
+@@ -25,6 +30,7 @@ static int find_map(void **start, void **end, const char *name)
+ 			found = 1;
+ 	}
+ 
++	free(line);
+ 	fclose(maps);
+ 	return !found;
+ }
 -- 
 2.55.0.229.g6434b31f56-goog
 
