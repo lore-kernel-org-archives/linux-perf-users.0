@@ -1,64 +1,64 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E693B7B6E
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 07:22:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846BB3B7747
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 07:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784532138; cv=none; b=qd26lXA1oBnRTYBZfuxfmL8M2H+5Wp7Vke0r7qLZcH7l8xI184nJgiCpO5YUfVoNWzAJ9/+zJ7zx5fyAmd42jDwexAsnuh3VvNnd8XkW8tv7R6cL7ta55mDEhKX+sw8xZ5WOjn4EqvI6uv+bUjpr2s662bAxq66OHVLxvZl2bCA=
+	t=1784532140; cv=none; b=Bl3krR/FSr/6bPwmZGNISNjCzIUntRCd2EpDw+A0IpvXXhRnBDWTycfVX5JKlrlTN+BcWJWIQMf8p1UFOKDNvnfuPJEffl+Z4O9+Bn6wNA42rF37yUteWhNnCMmnGDObjH2AokfLhY+6D0hquPb56/p8wOopvwLjJKGB9IcpRKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784532138; c=relaxed/simple;
-	bh=WLNuylhDoT/T1nhVqbXxx0oK9SVpgxKx6NkmkPvsdCI=;
+	s=arc-20240116; t=1784532140; c=relaxed/simple;
+	bh=qBhu2iKzjNZfNhl5iANbL2aUfkBruPYxRqMle5qLLTc=;
 	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
-	 References:Date:Message-Id; b=ls4yGZ2Hwm6lcjnrQe1yMfIjJnIBaw19CBvsVMYKmGPa/V+f+SI3HbcUG7iBxC7n6R6UcagogWUD/3HdorZ1YxgPEiFc0cKqIqMT6ZzU5o9wPgQSqLY243swmFE6Hg4re2YwkrVRW6s/vm3jZEAUZyQ+sW7PMoYG6u66aUBn3PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M0VTaK3p; arc=none smtp.client-ip=209.85.216.47
+	 References:Date:Message-Id; b=SUREOHkBnaMVsuJiSWAHDA6lBmXiw8CHxJP3a9LBFW+Use8n84E2GIWQ3lalEx4dcmMTgWA406JHkjKRV7Q+XxaInjZKSWynwIUT8yGc1ypwmEP4C7u4mH8T3HkdK8HstC8y7+En/HxobjgNPn4Q4HVfT61oZirD2Byl6iGlbOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CZ7Ua9zI; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M0VTaK3p"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-381b831d535so7487721a91.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 00:22:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZ7Ua9zI"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-38175907a56so2524997a91.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 00:22:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784532132; x=1785136932; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1784532135; x=1785136935; darn=vger.kernel.org;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:from:to:cc
          :subject:date:message-id:reply-to:content-type;
-        bh=VOacMlllEAiItNG+TLG1ZIDGtvtY1fzk11Q/F1WHU44=;
-        b=M0VTaK3pc953NSA527OcsiY8dPWjJjGBfobxDGht4SucD1iVha9gRX9z6Rv+uvjB7Q
-         SVuTd/vINkjIiGpYjYPWpw0TFAVWSGjewgxSumRFnImfFZZMc6R660DHWa79DDhcFaOj
-         xGGZBaO/ND6VSgbH1L3tQ5NEVr8AodKeJ63ua1x8UBDQuOVVxJwiWayP/bcJqs2wQhGp
-         ku/q7LwMLpPyrFF5KQcwTdh/1Svi893tgsATmC6OGHIto4iFHtjmuL3Ux87/gBdiTqAj
-         N2TiyGx/P1b/ojgS4LWV3SINCKMxSETCpGQVO3LRkwjKzYi6QSVvSGHRruomzMuujBhc
-         OIWg==
+        bh=7rDy2YQnZjC9nWpz521LfOBEMpKeq+JKB5BWp/OjrPo=;
+        b=CZ7Ua9zISHWjqNHbddze5qMCs8cIsQZ7tpiefEABYWxBPVGSQc4yJVUXWBKqLeKeE8
+         ZdmP3RURoE5Afm8LtqsXC9whAPZB7JdFOanPbIWd8WT4ijBY7th7FKTplCDmt1joKFuX
+         vqgot+h62FRbICY0o/ZY6893ykht1RBNLVC8wP++mLbxalznIfUhBC/dxoCaMOl6FGTC
+         Ad9TtyaqFUfGTxLsFTpbxTThq1qX5CwoiNtog84LdhjA/J0KyDDeqFCi8vH5q5yYBCp5
+         AFsJz734YT7nXPUaUZy2WXdVzVYCxfwAB516iDrFeUp3cclwKJk8bo8+prtA+g4W9d2o
+         k0tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784532132; x=1785136932;
+        d=1e100.net; s=20251104; t=1784532135; x=1785136935;
         h=message-id:date:references:in-reply-to:cc:to:from:subject
          :content-transfer-encoding:content-type:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=VOacMlllEAiItNG+TLG1ZIDGtvtY1fzk11Q/F1WHU44=;
-        b=A/lc1dK6LXTUPAkqRSJSa7jxOVCrwGDdT+WS/XyXqPK5mcV8MsfgxfDG/R1oTddQAb
-         3aqet/VcVtzj1EjqfLaHcNIVYROoidrolsgL/mxF00sVlITa9ErhEjE8OQBLh9f4+Rll
-         hgsMpC1g8w0AhFJtY94ox4HqMn1+97XIAqmlJSJBkM2Hrr35eVuFBaR/DTlqFYl+Eyx9
-         DPtmWstvqpNLXGtK4UIQ0+fvDQq+bfFdZDk++kI6zZ2tw4Bm7bMdeYx+PX8wRr9PJ9wu
-         Ofj/HYas4vEFhpKtRIsnHasBfxIh139FvTz672I/lpGsY3JrBDuXPruNfTas2zRrdTol
-         sTDw==
-X-Forwarded-Encrypted: i=1; AHgh+RpL3aw5WAZkMQT5ufPy0WdAGpi/vNSiUtWUxsaqixWd4jLBEf8K66c4bsipT+tL0WCWJY0Qy5gGCidoLOgzYKjS@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvZphMTQY/uyf16pWpKYgVeQ/hNv/uvHM9vAKui1Rd2QM019Di
-	OYK7sjauD6QVqUi78eIsLkLe+PNB+0ztTrtpHrmDCftcggSG2nEkRyU5
-X-Gm-Gg: AfdE7clfSuKgj8PgLh+pqxgxrXpfmZYTzrrskNHDzbZYL0Uuz6q/jWkMlu6+ta0oT5j
-	jvG81+N6JLtMLOgSkbXW5VNRLUxETwU2czVaVhffPlRwTyx7gcOhkr7bKlNPpAIDOXSfhNlaS8u
-	iWuAvEpR6KrW6s5fvb2Gn4CBXYKgC62VkqZLeHUzHuQUC2RWFr3jW5WxWrepNtSjBLXgbEPHi4/
-	bx//7GVgcM4v5W9DAhq7QhuQJh9HmHnw3/tbH+VmEzYpt0BsAaIUXhf2Og/T2Z4319W+Yc0h18/
-	C5BdNMKnWfo0LvMXeEbQBHj48J26BoJuLW65Edgz5T7e1WLzY1zJ7zuP2o42uC9vFOOlfTtcC5m
-	Wrzgas8FQo4FSTDvjCzHCBEzDqV+AQc9i+vZYUJrcYHHDfIRfg3nqMXkT6X05X2TGrGxWxXirVf
-	7CYP0gX/kDBRBO/8QMRvn1VyPdOJxa
-X-Received: by 2002:a17:90b:2f0c:b0:38e:49c0:75a7 with SMTP id 98e67ed59e1d1-38e4b431074mr14088269a91.8.1784532132492;
-        Mon, 20 Jul 2026 00:22:12 -0700 (PDT)
+        bh=7rDy2YQnZjC9nWpz521LfOBEMpKeq+JKB5BWp/OjrPo=;
+        b=lkKmXLImvpj7w4CXe3BAI9d4Wjjct66fmgr5KMhQVvUERmUzMvNlsOwJfHnKZuAhbU
+         tW81HEOdQKfxo56dNE8GHfUFAd7sYBNLNqfzDMGkQI7o//Zi22g5eH+14qykNOq5EFXO
+         ZSsv37GLvp2DQ7QBFndMRHRk8UMet56rZXUYdDQ40/m91jutMllFs4E3mDkDXD/dy/FM
+         PKHwRV96vownpGVsMivojYx7D0h9rNPVjTW3LGc+W34ynXiesBQCub1mLaCLfEgPgFtQ
+         cZ8EC7f/kt8BwsBU6RBTOeBaSxPJchE99TkugMQPSpuyF2h8qj8qkT1GUQFCqQD1xS2T
+         CnyQ==
+X-Forwarded-Encrypted: i=1; AHgh+RonQYVtiM8HAu3BHCWfB6/KR2iHuL5QtpRldIbqY18iXic3haJFvVNxQ9N4IDaNdx2kBdVm0hVWcdMIiIqqAkVT@vger.kernel.org
+X-Gm-Message-State: AOJu0YweI2y2dh14T7c3WYQqV1CTgSnA0JyEPorFoCkUDXzBN910mmXX
+	3LQH3fUUoR1w4EnDUmPdDthAsELMPt2sgC5bSkpVhNf2XtnPhnvXsuJY
+X-Gm-Gg: AfdE7cntH+g4Eh14IcIaEcl3J5j+dCrqN39D9cayOmIrdmMPg/RJQngHPksM4Hlg40H
+	BSbqBIkfWC6Jx0XUQmnCQUYY9WMVCr0L7+YMGg/erh4evpCZx5/ld/kN5HCvk3NLYc4/78SPqgW
+	R1oGFbjfxfGujYAIei0+9OXnHEWt40RFKWNfmo+jrz5rmtNS0wGjWL9je8pYqZVRQ5zyYI89g7g
+	YteCCIUMGEofK8loRuThHPTzgIBIPVI3gpmwer9ZIOM5/9rKKbqR6asWlq79BN3ZvA+4KFoITwN
+	Bmt6HBb8liIk5gWfGwSumx3en0b9uk5nfSw+Zqh5QhWdwoSwjdpUSjTx2N95ntz6ftimTkcyM24
+	r2lBNR1lgwKTk0puWQbecc4lfxRJWjO1MWdQElD0jBCsr2kFcITOvvop/WWIerfQbznNbt7G+Na
+	pSm01dCZ+yaYTrkvE6BQKh7jEswfjYK8qrI4g2fDc=
+X-Received: by 2002:a17:90a:c887:b0:381:10a3:8b10 with SMTP id 98e67ed59e1d1-38e3d26a744mr19412579a91.14.1784532134670;
+        Mon, 20 Jul 2026 00:22:14 -0700 (PDT)
 Received: from [10.0.0.29] ([2601:647:4000:5070::51d7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-38e4afcc067sm5153318a91.1.2026.07.20.00.22.10
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-38e4afcc067sm5153318a91.1.2026.07.20.00.22.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2026 00:22:11 -0700 (PDT)
+        Mon, 20 Jul 2026 00:22:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,7 +67,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH v8 05/22] RISC-V: Define indirect CSR access helpers
+Subject: Re: [PATCH v8 06/22] RISC-V: Add Smcntrpmf extension parsing
 From: Charlie Jenkins <thecharlesjenkins@gmail.com>
 To: Atish Patra <atish.patra@linux.dev>
 Cc: Jiri Olsa <jolsa@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
@@ -79,23 +79,29 @@ Cc: Jiri Olsa <jolsa@kernel.org>, Paul Walmsley <pjw@kernel.org>,
  linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
  linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
  linux-perf-users@vger.kernel.org, Conor Dooley <conor@kernel.org>
-In-Reply-To: <20260701-counter_delegation-v8-5-7909f863a645@meta.com>
+In-Reply-To: <20260701-counter_delegation-v8-6-7909f863a645@meta.com>
 References: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
- <20260701-counter_delegation-v8-5-7909f863a645@meta.com>
+ <20260701-counter_delegation-v8-6-7909f863a645@meta.com>
 Date: Mon, 20 Jul 2026 00:21:59 -0700
-Message-Id: <178453211935.543975.13003104709969920617.b4-review@b4>
+Message-Id: <178453211935.543975.2748934407130948318.b4-review@b4>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1784532124; l=337;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1784532124; l=570;
  i=thecharlesjenkins@gmail.com; s=20260605; h=from:subject:message-id;
- bh=WLNuylhDoT/T1nhVqbXxx0oK9SVpgxKx6NkmkPvsdCI=;
- b=2xcWmRRAqDjGQXqwGbJnB+31tbqeAGCjzKohhI1vIvF8YponJ3EW8uJz4jNw+WI3VgGyavSGl
- gtdiuG9MO6vCHj8LYZ52PlJfVOl0LaepzbRROI9Qgxlnq4ieSx45ld+
+ bh=qBhu2iKzjNZfNhl5iANbL2aUfkBruPYxRqMle5qLLTc=;
+ b=uKypJmhCBRm/kvczWTSaeADe6ZnWZKogPAT9RNWB2cU/VzqTs+HjCiYkmIUntLvKjnWbFfrXo
+ mWWz+WSV1MiBTMwThyOj4KDk1SApmC68RTUbDpPAJQUlRKKfVIsL4JI
 X-Developer-Key: i=thecharlesjenkins@gmail.com; a=ed25519;
  pk=ajnnRQ98PIdwKp4HeMkq9U32okYbnh6Zb4G3o5XXvkg=
 
-On Wed, 01 Jul 2026 01:46:53 -0700, Atish Patra <atish.patra@linux.dev> wrote:
-> The indirect CSR requires multiple instructions to read/write CSR.
-> Add a few helper functions for ease of usage.
+On Wed, 01 Jul 2026 01:46:54 -0700, Atish Patra <atish.patra@linux.dev> wrote:
+> Smcntrpmf extension allows M-mode to enable privilege mode filtering
+> for cycle/instret counters. However, the cyclecfg/instretcfg CSRs are
+> available in Ssccfg only if Smcntrpmf is present.
+> 
+> That's why, kernel needs to detect presence of Smcntrpmf extension and
+> enable privilege mode filtering for cycle/instret counters.
+> 
+> [...]
 
 Reviewed-by: Charlie Jenkins <thecharlesjenkins@gmail.com>
 Tested-by: Charlie Jenkins <thecharlesjenkins@gmail.com>
