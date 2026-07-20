@@ -1,188 +1,250 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0316B2F12AC
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 11:16:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6EA62F7EF4
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 11:17:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784546163; cv=none; b=n4Ilkqx60qYfilkIf1Z+MIzb7h7EsFX7idzkejyYWgPsCEYwstfMBIxH5HudSy3zGR9zGJRbpeZVncwwGldsOCp28DwVwz8RG3Drxhh5/3ecRJY9TxtaxtaQFDvcIKXIFiWf7FNYretplH6DcbJaO/Iy0eo1x+W3qYandIFcA8o=
+	t=1784546270; cv=none; b=b9BnZDcoI2Kpv3vr9qu2Va3lcSpbIn4Wpqkfkz/EIPg7Ilnr/nq0s/Qy5PCC9PwCNdsp8sz+NukIjJzzsu3curR6CjUTmGMvbNcf8ViNPFf5eGgyQK3Q1coKen1stkcIVkLrL6ShAI8vzaWdrqvLz0ihDiwHZtA47wJX2o7hQho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784546163; c=relaxed/simple;
-	bh=iovoVHjujZqOc6AcRTwI8lu6HHBqYaqGHLVnoc2xxwI=;
+	s=arc-20240116; t=1784546270; c=relaxed/simple;
+	bh=hrTthkQlZKyPmvGVXJh+uqOSpT5H9PMRLty/rKa330o=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=iOoD0WwsNTMvN8YZH8jw+XjKUhMUHlj3sQyTwi/eUtyhLwObKRw3oMmIaETb9y7+Qvj+wD0+2NH88Unlp20+dFgaR9l+jmH/8nVyk1dNDabJdSthJuRvbc4ISlk4kI5GzJ/mMhDunvm7BNQiikm/cytNLx1PjKxTyPf6YGhZXA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UpIoE9KH; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=aecmH1v08KF57UELBcAK/x58stOGKhKynjOySpKLYcRhn2lDUe8K1M7xPmRJAng8SxES+CmHVUjDw1Z8Tl1Sn7k0XwTpUKSaCBLo+Bs7VcsLuwDbhp6C0TSoV5IoHGSDeY8T1Ml19qb1Kt/6fK1xlsSEtU69Iytn1IYdjh+HZAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hRKwzGMs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UpIoE9KH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD9411F00A3A;
-	Mon, 20 Jul 2026 11:16:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hRKwzGMs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D4A1F00A3D;
+	Mon, 20 Jul 2026 11:17:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784546161;
-	bh=FIXzcITnOmkkcCXuly7j7dXAD3xs1LgeQN12vEjlvpk=;
+	s=k20260515; t=1784546268;
+	bh=UH/xXqseWCKCltw8swEjeFIhmSrrhA4QkffCy8TkXCY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UpIoE9KH9axbkpiHd8/Y++Rctwwgv0PAhM+JJJe880E01VlH/U9igAddSHpf3DUZz
-	 IaiM8wCjbkJiNcirA425QlPMAcBM0cmuHFrx0/zENUVT1AoCH2YvtQ7i+fgjdMDCGP
-	 AVmvGIZ7bv0+r3bAgl6yOzI+tLkHEqxh0PTq1bZxPRiRM0zvOTw77Eu8xEMQdGu+H+
-	 GCLCSGxFuFG5k2GEJCOcc8OCeg01OGCmjf7VKg7qO2rQ1tvD4PWFEQS9Yxb5LyHVGi
-	 FUxhArdM8wPK5MrF5ZbkvFqHU/CDguQfZDMUFMPaISTybSi4W1kngh8Pq4cCNrn/YI
-	 rQH4G4zzOrIHw==
+	b=hRKwzGMslKyDnx7cRYAP8ORMhNHlSP5ctNvz1beYpft3emgpbzI4kq8CcOhP6oEv3
+	 av4Tx5BepDmKVWVyr3may3DWN8GIbGJQttLGKlhShIVQomRCqbHDbK9yYc/lKxvmcP
+	 ZF+5mSk7ry3WvHIt1ZwXvf+PmnWjvplIQkxVzrlHGxi3TSLmuy7JwduQjAPjbLLieq
+	 /9fViL+q+QtmLT7Phstk4RTDVFwRn0G5K2EV0rM1a0RtGqbd8hXM8dEL7vcehdXor5
+	 wlSzlkC6GYAjFmRiH1XWsFeKa5MuQ5RT2rRfN1s6e9UKYt9nAlMtqvX+F5Qnnbbt5S
+	 z/kzximqsADiA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V2 3/6] tools/perf: Add arch hook to drain remaining
- data before event close
+Subject: Re: [PATCH V2 6/6] powerpc/perf/htm: Add documentation for Hardware
+ Trace Macro PMU
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Athira Rajeev" <atrajeev@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260720105218.14277-4-atrajeev@linux.ibm.com>
-References: <20260720105218.14277-1-atrajeev@linux.ibm.com>
- <20260720105218.14277-4-atrajeev@linux.ibm.com>
+In-Reply-To: <20260720104447.11843-7-atrajeev@linux.ibm.com>
+References: <20260720104447.11843-1-atrajeev@linux.ibm.com>
+ <20260720104447.11843-7-atrajeev@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Jul 2026 11:16:01 +0000
-Message-Id: <20260720111601.BD9411F00A3A@smtp.kernel.org>
+Date: Mon, 20 Jul 2026 11:17:48 +0000
+Message-Id: <20260720111748.95D4A1F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] `record__final_data()` fails to drain architecture-specific data=
- and falsely aborts in parallel trace streaming mode due to incorrect byte =
-tracking and thread-local mmap limitations.
-- [Medium] The final data drain hook is completely bypassed on normal exit =
-if the normal event ring buffer is empty when the termination signal is eva=
-luated.
-- [Medium] The final data drain loop aborts on the first empty read pass, f=
-ailing to wait for asynchronous PMU data to arrive.
-- [Medium] The force-abort mechanism `if (done > 1)` inside `record__final_=
-data()` is mathematically impossible and will never successfully abort a st=
-uck drain loop.
+- [Medium] The documentation states that `perf record` or `perf report -D` =
+generates specific binary output files (`htm.bin.*` and `translation.*`), b=
+ut this functionality does not exist in the upstream `tools/perf` codebase.
+- [Medium] The commit message claims to document `htmdecode` usage and note=
+s on PMU restrictions, but these sections are entirely missing from the doc=
+umentation text.
+- [Low] There are several grammatical errors, typos, and inconsistencies in=
+ the newly added documentation text.
 --
 
---- Patch [3]: [PATCH V2 3/6] tools/perf: Add arch hook to drain remaining =
-data before event close ---
-commit 912498764cf4d44940ef92ba0d9b5b3fa62c31b4
+--- Patch [6]: [PATCH V2 6/6] powerpc/perf/htm: Add documentation for Hardw=
+are Trace Macro PMU ---
+commit 630c94afa3c07b9d61db47792f5a5e0b40edd107
 Author: Athira Rajeev <atrajeev@linux.ibm.com>
 
-tools/perf: Add arch hook to drain remaining data before event close
+powerpc/perf/htm: Add documentation for Hardware Trace Macro PMU
 
-This patch adds a weak architecture hook to allow collecting remaining
-PMU-specific data before events are disabled and closed. It introduces
-a loop in the record command to perform additional read passes when the
-architecture reports pending data.
+This commit extends the HTM documentation with a new section covering the
+perf PMU interface. It describes event configuration, syntax, basic usage
+examples, and expected output files.
 
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
+>     The added documentation covers:
+>    =20
+>       - How to open HTM events using perf record, including the event
+>         syntax (nodalchipindex, nodeindex, htm_type, cpu=3DN) and the
+>         required AUX buffer size (-m,256).
+>    =20
+>       - The two output files produced by perf report:
+>           htm.bin.nX.pX.cX     raw bus-trace AUX data
+>           translation.nX.pX.cX memory-configuration records
+>    =20
+>       - How to pass the output files to htmdecode for trace decoding.
+>    =20
+>       - Notes on system-wide collection (-a) vs CPU-pinned collection
+>         (-C N) and the one-event-per-target PMU restriction.
+
+[Severity: Medium]
+The commit message claims to document htmdecode usage, as well as notes on
+system-wide vs CPU-pinned collection and PMU restrictions, but these sectio=
+ns
+appear to be missing entirely from the added documentation text. Did these =
+get
+dropped during patch iteration?
+
+> diff --git a/Documentation/arch/powerpc/htm.rst b/Documentation/arch/powe=
+rpc/htm.rst
+> index fcb4eb6306b16..d574fd2225ea5 100644
+> --- a/Documentation/arch/powerpc/htm.rst
+> +++ b/Documentation/arch/powerpc/htm.rst
 [ ... ]
-> @@ -2425,6 +2425,45 @@ static unsigned long record__waking(struct record =
-*rec)
->  	return waking;
->  }
+> @@ -94,7 +95,137 @@ This trace file will contain the relevant instruction=
+ traces
+>  collected during the workload execution. And can be used as
+>  input file for trace decoders to understand data.
 > =20
-> +/*
-> + * Weak symbol - architecture can override to indicate if more
-> + * data needs to be collected before finishing output.
-> + *
-> + * Returns: 1 if more data exists, 0 if collection is complete
-> + */
-> +__weak int arch_perf_record__need_read(struct evlist *evlist __maybe_unu=
-sed)
-> +{
-> +	return 0;  /* Default: no arch-specific data to collect */
-> +}
+> -Benefits of using HTM debugfs interface
+> +HTM perf interface usage
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+[ ... ]
+> +- event: "config:0-27"
+> +- htm_type: "config:0-3"
+> +- nodeindex: "config:4-11"
+> +- nodalchipindex: "config:12-19"
+> +- coreindexonchip: "config:20-27"
 > +
-> +static void record__final_data(struct record *rec)
-> +{
-> +	u64 last_bytes_written =3D 0;
-> +	/*
-> +	 * Collect any remaining architecture-specific data.
-> +	 * The arch code checks if more data exists, and we do the actual
-> +	 * reading here since we have access to record__mmap_read_all().
-> +	 * This code performs the additional read pass while events are
-> +	 * still live.
-> +	 */
-> +	while (arch_perf_record__need_read(rec->evlist)) {
-> +		/* If user presses Ctrl+C again during draining, abort cleanly */
-> +		if (done > 1)
-> +			break;
+> +1) nodeindex, nodalchipindex, coreindexonchip: this specifies
+> +   which partition to configure the HTM for.
+> +2) htmtype: specifies the type of HTM.
+
+[Severity: Low]
+This isn't a bug, but should this say htm_type instead of htmtype to match
+the parameter list above?
+
+> +
+> +Event Syntax
+> +------------
+> +
+> +The event configuration uses named parameters::
+> +
+> +   htm/nodeindex=3DN,nodalchipindex=3DC,coreindexonchip=3DR,htm_type=3DT/
+> +
+> +To open the event on a specific cpu can be specified using::
+
+[Severity: Low]
+This isn't a bug, but there is a grammatical error here. Could this be upda=
+ted
+to something like "Opening the event on a specific CPU can be specified
+using::"?
+
+> +
+> +   htm/nodeindex=3DN,nodalchipindex=3DC,coreindexonchip=3DR,htm_type=3DT=
+,cpu=3Dx/
+> +
+> +Where:
+> +
+> +- N =3D node index
+> +- C =3D chip index within the node
+> +- R =3D core index on the chip
+> +- T =3D HTM type
+> +- x =3D CPU number
+> +
+> +Basic Usage Example
+> +-------------------
+> +
+> +To collect HTM trace data for a specific chip:
+> +
+> +.. code-block:: sh
+> +
+> +   # perf record -C 1 -e htm/nodalchipindex=3D2,nodeindex=3D0,htm_type=
+=3D1/ <workload>
+> +
+> +In this example:
+> +
+> +- ``-C 1``: Collect on CPU 1
+> +- ``nodeindex=3D0``: Target node 0
+> +- ``nodalchipindex=3D2``: Target chip 2 within node 0
+> +- ``htm_type=3D1``: HTM trace type 1
+> +
+> +.. code-block:: sh
+> +
+> +   # perf record -m,256 -e htm/coreindexonchip=3D6,nodalchipindex=3D0,no=
+deindex=3D0,htm_type=3D2,cpu=3D16/ -a sleep 1
+> +
+> +In this example:
+> +
+> +- ``cpu=3D16``: Collect on CPU 16
+> +- ``nodeindex=3D0``: Target node 0
+> +- ``nodalchipindex=3D0``: Target chip 0 within node 0
+> +- ``coreindexonchip=3D6``: Target code 6
+
+[Severity: Low]
+This isn't a bug, but there's a typo here. Should "Target code" be
+"Target core"?
+
+> +- ``htm_type=3D2``: HTM trace type 2
+> +- ``-m,256``: specifies number of mmap pages
+> +
+> +Running trace collection for multiple targets:
+> +
+> +.. code-block:: sh
+> +
+> +   # perf record -m,256 -e htm/nodalchipindex=3D2,nodeindex=3D0,htm_type=
+=3D1,cpu=3D8/ -e htm/nodalchipindex=3D1,nodeindex=3D0,htm_type=3D1,cpu=3D9/=
+ -a sleep 1
+> +
+> +
+> +In this example, trace is collected for two events on different target c=
+hips
+> +
+> +Output Files
+> +------------
+> +
+> +After running ``perf record``, the following files are generated:
+> +
+> +.. code-block:: sh
+> +
+> +   # ls htm.bin.*
+> +   htm.bin.n0.p2.c0 htm.bin.n1.p3.c0  # Binary trace files
+> +
+> +   # ls translation.*
+> +   translation.n0.p2.c0  translation.n1.p3.c0  # Memory configuration fi=
+les
+> +
+> +These files contain:
+> +
+> +- **htm.bin.*** - Raw HTM trace data in binary format
+> +- **translation.*** - Memory address translation information for decoding
+> +
+> +Complete Workflow Example
+> +--------------------------
+> +
+> +Here's a complete example of collecting and analyzing HTM traces:
+> +
+> +.. code-block:: sh
+> +
+> +   # Step 1: Collect trace data
+> +   perf record -C 1 -e htm/nodalchipindex=3D2,nodeindex=3D0,htm_type=3D1=
+/ sleep 5
+> +
+> +   # Step 2: Verify output files
+> +   perf report -D
+> +
+> +   ls htm.bin.*        # Binary trace files
+> +   ls translation.*    # Memory configuration files
 
 [Severity: Medium]
-Is it possible for this abort condition to trigger? Looking at sig_handler()
-for SIGINT, the variable done is set to 1 directly:
+Does perf report -D natively generate these specific binary output files
+(htm.bin.* and translation.*) in the upstream tools/perf codebase?
 
-sig_handler() {
-    ...
-    done =3D 1;
-    ...
-}
-
-Since done is never incremented, could this block of code fail to force-abo=
-rt
-if the PMU gets stuck during the drain?
-
-> +
-> +		last_bytes_written =3D rec->bytes_written;
-> +
-> +		if (record__mmap_read_all(rec, true) < 0)
-> +			break;
-> +
-> +		if (rec->bytes_written =3D=3D last_bytes_written) {
-> +			pr_warning("Final data drain made no forward progress.\n");
-> +			break;
-> +		}
-
-[Severity: Medium]
-Does this check properly account for multithreaded mode? In parallel trace
-streaming mode, worker threads maintain their own mmaps, write to their own
-files, and increment rec->thread_bytes_written instead of rec->bytes_writte=
-n.
-Additionally, when record__mmap_read_all() is invoked from the main thread,
-it only drains mmaps assigned to the main thread. Will this cause the loop
-to abort prematurely with a false warning when running with multiple thread=
+This documentation seems to describe a non-existent feature in upstream
+tools/perf and might rely on out-of-tree tooling that was not included in
+this patch series. Should this be updated to reflect only supported feature=
 s?
 
-Also, if the first non-blocking read pass yields no data because the hardwa=
-re
-needs a moment to flush asynchronous data, the loop breaks immediately here.
-Does this bypass the usleep(100) and defeat the purpose of waiting for the
-pending data?
-
-> +		usleep(100);
-> +	}
-> +}
+> +   ls perf.data        # Perf data file
 > +
-[ ... ]
-> @@ -2845,6 +2885,11 @@ static int __cmd_record(struct record *rec, int ar=
-gc, const char **argv)
->  			done =3D 1;
->  		}
-> =20
-> +		if (done && !disabled && !final_data_drained) {
-> +			record__final_data(rec);
-> +			final_data_drained =3D true;
-> +		}
-> +
->  		/*
->  		 * When perf is starting the traced process, at the end events
->  		 * die with the process and we wait for that. Thus no need to
-
-[Severity: Medium]
-If done is set to 1 by a termination signal (like SIGINT) and the subsequent
-read pass yields no normal events, will we ever reach this newly added code?
-
-Looking earlier in the polling loop of __cmd_record():
-
-    if (hits =3D=3D thread->samples) {
-        if (done || draining)
-            break;
-        ...
-
-The break statement exits the loop completely. Does this mean that for
-low-frequency workloads, if the ring buffer happens to be empty when the
-signal is evaluated, the final data drain hook is completely bypassed?
+> +Benefits of using HTM interface
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260720105218.1427=
-7-1-atrajeev@linux.ibm.com?part=3D3
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260720104447.1184=
+3-1-atrajeev@linux.ibm.com?part=3D6
