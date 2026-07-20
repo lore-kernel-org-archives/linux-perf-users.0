@@ -1,120 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3262C4499BA
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 18:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E942B3EA949
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 22:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784572109; cv=none; b=myw5dmhyG8fFas/2vc4eS4o3H+fXtaApgJqyRogSJb+xXNaSe0jbov9yl5D0MWhKvydtSOrSOPFkG0CusD9R43hIXdEgcnn5aj7naPVLef/MdWx4BKBgM4cawJCnqcj341Y42KalY+6hKCrUV0n7IXMDhXHdM/fyVkYXMJa/32E=
+	t=1784587937; cv=none; b=ZX3E+HLK4fJFgRWiDkMcRCtieBUjTjRPUAC9sDuylE6uC1LcCkiDNPNarpQIcCYE5ab3s/DkePTa92+cYhU/deQbPXhTOgIYmswTwVWusjJdSLrgAzpwkOJQQO8/LUts0JHFiu1yU96TBjHrVudEVOzRzEBy3GGklWwvUNomaDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784572109; c=relaxed/simple;
-	bh=4GA6xHhaBSEuqTNCYsltBzYkMzl3r/ECPno+oI3/huM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=uGgYN97aYU6VhHdoK6yT+S6QZIJUD78+TFh6mhAD5t4seV/8LjYkEofbe9RPH8bBhFEKCbf/G+O17mYHa0VC1dPf6AiMKv4apzcm/np2KvGTVmxdV39WiWBss2Sk7zvmo0tFHJ/nxCpTLa+wJAuJ2nWna4yF8AZMljYIxSSXa0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cNjCkbM2; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784587937; c=relaxed/simple;
+	bh=5A9pTIsEX6Ff5p29dhvibLGD9qKe6ff+wRIK2yncZd4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=auwIsjwiyqihQWb+eLeue+F8GG7iB8neOB5mbEJGOE5Q+jEE2jYj00UD3CLOF3nF8wOs2nwxmHKWfyXETy0SVlkckfeLQt/S312qTTX7X2C5IS7QoM+1WplUaoO0/vWr+5BypZvAQ6KNJcFGHw5KpjRxFtrKWLECBa3qL72QyI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dNZrV6WD; arc=none smtp.client-ip=209.85.216.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cNjCkbM2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E9011F00A3D;
-	Mon, 20 Jul 2026 18:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784572105;
-	bh=7/aq5Ntx7zkx9+3ZwWLoDwo+5vJwPoISOGKZCZxsxEE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cNjCkbM2+Kk9WBqOkUlZLRZRIvz5qctaufV1cn/ZbX3owij5YJiI/bhoG8jmw5UAA
-	 uI1DaCB80yzA1X16vcB138QgA8eLnAykuQPxnoo9dsvapb25G5B5NM00ai17C+6rd8
-	 Krp5/ilR9RwNCW4xlUnH0ao7GzfYMVYjThaU3fXHfk3AIxmyDZUGoltkKf8sqzG5Kf
-	 WFIQAN1NNgTQ1cb7M1q64tKBnugRYpLvbIqscbicqDK88l75ytJw0wC1bjmbDI8LbS
-	 /0p1P5dYB7gq7/7iLIS+VrVrmE1Pzos88AYchNB6WM3zhR6Q3HPwbrEoM+LBFwVrp8
-	 aZ/NIx/+XOCnA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 4/4] perf synthetic-events: Fix bounds and union
- member access in mmap2 build_id synthesis
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260720175455.3645946-5-irogers@google.com>
-References: <20260720175455.3645946-1-irogers@google.com>
- <20260720175455.3645946-5-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Jul 2026 18:28:24 +0000
-Message-Id: <20260720182825.6E9011F00A3D@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dNZrV6WD"
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-38dc085b0a7so16197614a91.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 15:52:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784587935; x=1785192735; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=T3DGekGfKUgaGePiSjsnwXJaoc2HZPooCo5X69eH3hs=;
+        b=dNZrV6WDSe3JlE4CHzfrTvGT+V9TvguM6aJX0ePGkkM8HQPAmEi0jTasZQiQY1sXSf
+         MAu6g+5gCL8Q1SLy3SQTtvsOYfkJ1OXeofFpVBKbW1MgM8hXVCvPuQh+DA/NKQJux3Zv
+         FpEcMe6255X9d+U1IUAh73UxOLuUSPFzDXJvlohtR24esVpygJrSDalwQwYEK/0FrYR9
+         8PasfalMn6pPPBaM5LDy4iEPvtAkfRQXCmZvCHRmo6EMzw0/WwHYFzVMPSFcDIkY7g0o
+         cd6ArNEWuQNe4Pu0aeybxDvWbY2nylj+UnyvkLVOF2Wuj7KNMtIBOp1QDG1D9eBtKzzO
+         on7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784587935; x=1785192735;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=T3DGekGfKUgaGePiSjsnwXJaoc2HZPooCo5X69eH3hs=;
+        b=rYPLjwLog9Dm/tpnJn+cWMzT8EFBSeIvQSjV+HGHSOiCwBItYodiFY4YKa1pjFrwXw
+         Bk8oHKUtT9kTIjIzg5AKKTcmeUsJNBJu3Sr4xFR6cAazFT5K+ldzyZ5vFR0Q8XkWNjsg
+         GdxL9lytOotK55rYHCF6qhVJJV3xj79M0jX54eX+QuCACvC7o2mLDEta0ODGsb6Tn3M+
+         Y/t+fMI4S3Zy+YmHzx34MZoXaD+bvFlgGjjCtuOmQA4mLvfVPsMXhoA4jaLeijSMmWCA
+         xYfJPVaWUNrLRGmVyMtffT3UkfLu4hEuMQyc4XDLGKN2BJWgtnGjrziM7tAplmLEiSg1
+         31QA==
+X-Forwarded-Encrypted: i=1; AHgh+Rrf133vCsD3vqQUPxaFz9330byU4UedWA9W9IQLo9OIgJuCsqpylwPd4buTarApx4aE/2FzMzqGuvIJ/70TIjNH@vger.kernel.org
+X-Gm-Message-State: AOJu0YyCiYJIcMxB/Gv/D+ayfVbjDaKl+fS7SPrfGloAwDcbMz73fySi
+	n0Zxiy7ekv+dUPsh9nNa2Ugn9d4wKc9suMAERItAXe8Zh+aw3shuyEIyjOmnvnuIMTrOtIKtK2u
+	agTX7TTT39Q==
+X-Received: from dlbdz2.prod.google.com ([2002:a05:7022:ec2:b0:13c:dc4a:cba9])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:558d:b0:38d:dc13:6f94
+ with SMTP id 98e67ed59e1d1-38e4b586170mr17190091a91.37.1784587934920; Mon, 20
+ Jul 2026 15:52:14 -0700 (PDT)
+Date: Mon, 20 Jul 2026 15:51:56 -0700
+In-Reply-To: <20260720175455.3645946-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260720175455.3645946-1-irogers@google.com>
+X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
+Message-ID: <20260720225200.3810501-1-irogers@google.com>
+Subject: [PATCH v2 0/4] perf: Fix and optimize maps parsing, boundaries, and
+ bounds safety
+From: Ian Rogers <irogers@google.com>
+To: acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, ravi.bangoria@amd.com, 
+	swapnil.sapkal@amd.com, Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The newly introduced `max_filename_len` clamping mechanism fails=
- to prevent `-E2BIG` errors for long filenames because it does not account =
-for alignment padding and the NUL byte.
---
+It turns out that PATH_MAX is respected by system calls but isn't
+respected by file paths in /proc/pid/maps and /proc/pid/smaps. In the
+kernel "//toolong" is placed in the filename of mmap/mmap2 events
+where the filename is longer than PATH_MAX, do the same in the
+mmap/mmap2 synthesis code to avoid overrunning the event buffer. With
+Gemini's help try to address other correctness and overrun issues.
 
---- Patch [4]: [PATCH v1 4/4] perf synthetic-events: Fix bounds and union m=
-ember access in mmap2 build_id synthesis ---
-commit 2f96e2c59cef660df31770f938440d336831e6e7
-Author: Ian Rogers <irogers@google.com>
+V2 addresses the following Sashiko review feedback:
+- Corrects read_proc_maps_line() and io__drain_line() to safely handle
+  already consumed newlines, preventing valid map data from being skipped.
+- Restores the early exit block for timeouts so the TIMEOUT flag is
+  always emitted to tools.
+- Removes an unused assignment to avoid promoting warnings to build errors.
+- Clarifies and dynamically computes the maximum filename length boundaries
+  using offsetof() to prevent E2BIG errors regardless of struct layout.
 
-perf synthetic-events: Fix bounds and union member access in mmap2 build_id=
- synthesis
+Ian Rogers (4):
+  perf find-map: Remove PATH_MAX 128-byte stack array restriction
+  perf synthetic-events: Fix line synchronization, bounds, and
+    truncation bugs in proc maps reader
+  perf synthetic-events: Fix bounds, stale state, and misc flags in
+    kernel module synthesis
+  perf synthetic-events: Fix bounds and union member access in mmap2
+    build_id synthesis
 
-Fix a critical logic bug in perf_event__synthesize_mmap2_build_id() where
-the wrong union member structure size and offset boundaries were utilized.
+ tools/perf/util/find-map.c         |  10 +-
+ tools/perf/util/synthetic-events.c | 287 ++++++++++++++++++++---------
+ 2 files changed, 207 insertions(+), 90 deletions(-)
 
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
-ic-events.c
-> index 043f902f1bd2e..3a4030835a320 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -2441,13 +2441,16 @@ int perf_event__synthesize_mmap2_build_id(const s=
-truct perf_tool *tool,
->  	size_t filename_len =3D strlen(filename);
->  	size_t ev_len;
->  	u64 sample_type =3D sample->evsel ? sample->evsel->core.attr.sample_typ=
-e : 0;
-> -	void *array;
-> +	void *array =3D &ev;
->  	int ret;
-> +	size_t max_filename_len;
-> =20
-> -	if (filename_len >=3D sizeof(ev.mmap2.filename))
-> -		return -EINVAL;
-> +	max_filename_len =3D sizeof(ev.mmap2.filename) - (MAX_ID_HDR_ENTRIES * =
-sizeof(__u64));
-> =20
-> -	ev_len =3D sizeof(ev.mmap2) - sizeof(ev.mmap2.filename) + filename_len =
-+ 1;
-> +	if (filename_len > max_filename_len)
-> +		filename_len =3D max_filename_len;
-> +
-> +	ev_len =3D offsetof(struct perf_record_mmap2, filename) + filename_len =
-+ 1;
->  	ev_len =3D PERF_ALIGN(ev_len, sizeof(u64));
-> =20
->  	if (ev_len + MAX_ID_HDR_ENTRIES * sizeof(__u64) > sizeof(ev))
->  		return -E2BIG;
+-- 
+2.55.0.229.g6434b31f56-goog
 
-[Severity: Medium]
-Does this clamping logic fail to prevent -E2BIG errors for very long
-filenames?
-
-If filename_len is clamped to max_filename_len (4048 bytes), ev_len is
-subsequently calculated as offsetof(struct perf_record_mmap2, filename) +
-4048 + 1 (for the NUL byte), which equals 4129.
-
-PERF_ALIGN(4129, sizeof(u64)) aligns this up to 4136.
-
-When checking if the padded length plus the ID header trailer exceeds the
-maximum event size:
-4136 + 48 =3D 4184, which exceeds sizeof(ev) (4176).
-
-This causes the function to return -E2BIG instead of successfully truncating
-and processing the event. Should max_filename_len account for the NUL byte
-and the 8-byte alignment padding to ensure the clamped size fits within
-the boundaries?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260720175455.3645=
-946-1-irogers@google.com?part=3D4
