@@ -1,57 +1,57 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDBC3F0A9A
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 11:04:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62E33EFFAE
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 11:04:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784545472; cv=none; b=gRLomr2j/2jSXu86hHXMSX6fDL2hHXQLtlzj8xw8QwNc5f3VSa3wlXApDgRoLLOFrTHlMKAcwLNS0QgBiulQjLtioLGCKExcImECJslfejPDMkck3tH17Vv3LIhNpnAJ672seQ6qk3ULgSlxztU6OdL2g7kNxptf2a+prpJ9wVo=
+	t=1784545475; cv=none; b=HYWTbp1d1cjLJbocKxtFs0wiOV4IaxSG1uoySnJ9fcFlSj7JmBWwWbyf0FRvDV4D7vYkN7cg2YaaoY4fNSkT1ojon1zJmE7eBDrdpv61KgA6F6E0mvO5AOPe8NOaRsJydSK6SWKM14KbmkFXJ6HP5FCN07kEmvgPdP4Uqcs7ggE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784545472; c=relaxed/simple;
-	bh=hdyIpP0qZ6H398mLu2UIlglGTlIbmd+Rf3WJXZZDFAQ=;
+	s=arc-20240116; t=1784545475; c=relaxed/simple;
+	bh=T33dsbQaDniobYK9mKPQnT7AD/77FEqJvCLS9zerC40=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uIk86KXdyWO/F53PHDdFX8SvgAVirqeKcnodo3S3z8Bdstmn/g0QFcOdNzc9ah6Piv/hfLlFgVNk+USuUxpTrKvaVvs1+3Tk4adJqe6Sqb3y6LeINAkZ/bHnP/h/EoENINaRvK7i9lgSthfdI6suAtp6pcfR44JJqEQDBdoaw2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=N4P6dnk1; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=SL/0zkgP009/2I1H4s4lTIJQXMUZyJ55bWiPyXO9usQ0/uGYzdDh12JF6540EYzpN0QyebLstZJ09og0ayuprhfLI6wD8lVS5YcW9h7vsVkw0bshqqfQUxkvkfsCHXuZWuYuv0Ndt5nbhxA3vblepr0LwKfeTjTeW20zdVE8TJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fwx+Yf0J; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="N4P6dnk1"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fwx+Yf0J"
 Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66KABqhc026970;
-	Mon, 20 Jul 2026 11:04:20 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66KAC1xn027325;
+	Mon, 20 Jul 2026 11:04:25 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=5XYA6lCnilZj3nb9C
-	HRg5XzJ9Trph6eYytLLNjm0yIk=; b=N4P6dnk1Gbf7w6Nok8VDGbj3tS9TVxR1b
-	HPeTJMsv88JuI93ZiOL84Co2oT+NnT6YOGp1aJWy141B3iWN5U9q9Hip5HidL7JP
-	n+C3psysl5PUgrAUEJe46b49VNOSO2YHB4kTC3Jwt7D5RfQgJQzLeT6ee6E2JvgZ
-	5cMtAACoNs9N5bOswOjoQoNVoEEGb4P0eXG5Wg85Hb0H88nPbhPTOw+Gf77AruPi
-	Ntj1ErtRwO1ScZnzQUVxAJlLkeQPp+hSjU8RkdfeBEzncnuC8L3sKcEngV5XRnMR
-	SbnqvIBAMIezLxmW22XE26Yr/wOqJ7yt7U3E2wr3xEadmEncAYo7Q==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fg77a732e-1
+	:mime-version:references:subject:to; s=pp1; bh=J1tjrhSKc99+8OfD6
+	8LKRzdGaz1UZOgDjSTgmPi9O2g=; b=fwx+Yf0JWcL842P3qU86kNt1340OBexSb
+	T7CYW3ZLUgbT8XTDrrjMDXS4wF27BVkAWqBQwgTiJ4/WlIC0QoDb34MhbwVsLF40
+	S8aOW2q37W3PmbAqqsgfBC5kbQbr96YrFVugUy3fkQVlQaCeeUeRfgWkh59OAnSO
+	Xel672Y30QX+cMC2pZIwsUAceUbWDSO9+VXtgcY2ErnKONe2qvql5/jsqeYvtRuY
+	RQ/QkOaddXELDLShGYdhYQ8JdBEsf1zNTrPudEb58OUvWJV83lS/kKusuvGKXaHH
+	rp9hauSrYSsPnixo4X6zh8RxEf4ucpQquYTWfrQiV1/UZb9+srBpg==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fg77a732v-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jul 2026 11:04:20 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66KAniYa028105;
-	Mon, 20 Jul 2026 11:04:19 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fgp1g530j-1
+	Mon, 20 Jul 2026 11:04:24 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66KB0oqk007479;
+	Mon, 20 Jul 2026 11:04:23 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fgm6vwch0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jul 2026 11:04:19 +0000 (GMT)
+	Mon, 20 Jul 2026 11:04:23 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66KB4FBK50331960
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66KB4JvZ30146920
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 20 Jul 2026 11:04:15 GMT
+	Mon, 20 Jul 2026 11:04:19 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ADB1D2004E;
-	Mon, 20 Jul 2026 11:04:15 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 67E3120043;
+	Mon, 20 Jul 2026 11:04:19 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6D50B20040;
-	Mon, 20 Jul 2026 11:04:12 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 1CFC22004E;
+	Mon, 20 Jul 2026 11:04:16 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.39.16.54])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 20 Jul 2026 11:04:12 +0000 (GMT)
+	Mon, 20 Jul 2026 11:04:15 +0000 (GMT)
 From: Athira Rajeev <atrajeev@linux.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
         maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
@@ -59,9 +59,9 @@ Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
         tejas05@linux.ibm.com, tshah@linux.ibm.com, venkat88@linux.ibm.com,
         usha.r2@ibm.com
-Subject: [PATCH V2 4/6] tools/perf: Add powerpc callback support for arch_perf_record__need_read
-Date: Mon, 20 Jul 2026 16:22:16 +0530
-Message-Id: <20260720105218.14277-5-atrajeev@linux.ibm.com>
+Subject: [PATCH V2 5/6] tools/perf: Add powerpc HTM auxtrace event processing support
+Date: Mon, 20 Jul 2026 16:22:17 +0530
+Message-Id: <20260720105218.14277-6-atrajeev@linux.ibm.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20260720105218.14277-1-atrajeev@linux.ibm.com>
 References: <20260720105218.14277-1-atrajeev@linux.ibm.com>
@@ -74,23 +74,23 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: 4HKZwJF8FT1vs3MfdBrTqFq4fn92qQMf
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzIwMDExOSBTYWx0ZWRfX+4AuqeiWcG3e
- atb0nd2H/GVtsHwEUFThJb8E6fYQIwlUHze3add0MihAJ255almxpTmd+ZR9trCsWhaoocvhaCY
- ueWzMtFLfXVWSnCKs+D+Y1A3+zD7iiI=
-X-Proofpoint-GUID: L0wgDz86u2YFHurcdQfZXlxNAhsLFjBF
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzIwMDExOSBTYWx0ZWRfX2KTb8TfpLJpT
- V8Ex57yzEB61HTk9dyhodXc1ydzzdlWUMG70hptG1GlXrr9mbiHdm6x8tYRr4LRj60ulbu/ZvUB
- w7yc/4dflZCptdsJiBPwAoRrnsBzs41DbYKvv+qpJDstyl4a0BziduqoFCk+tMz5Hg2w61U/JWL
- JAEkjPfoAMgn/m2jVfXgrt0bXULqFA41QtB2HNMHrkFRIaDXrTo5k/tR/KYdeLt1uoIJjUUwXaL
- v3WEivFVJvuv/KDWA+iwsdm/jdxGbd0Fqo6gaPd0YB+c8ml5Pi2yA2/8yo3hYWFFSqVhRYSTs87
- +Db/3DvqzRg6SE1FrUS0D5xWwdnBkOGs4whlH5x9flTf9I7RP6cufBBLReZDPCM/nCumJWju3Lt
- ovMrLQCLjnvai5gIrJvTdyw/jZtQ2/ii3pSmNUlbBuFT3awFyn+ZIL6UBx+3BJMOK203/+1okMT
- XmCLlVL6BUKwraWaF5w==
-X-Authority-Analysis: v=2.4 cv=K7AS2SWI c=1 sm=1 tr=0 ts=6a5e00b4 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+X-Proofpoint-ORIG-GUID: jnvNk4_SIOGcBP2lne5cB3zE4KHDKQQ1
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzIwMDExOSBTYWx0ZWRfX0Jmx5SSBuK3H
+ 9vL0LOI8qcQAxOZI7mECj7Vn8LaOHfw5YOml84xL2n+tmEAvTRJf1aljIE0MJ12uOygg4DXdQd4
+ 4oJE8PnPT4kfEmyY/o9OF+pRbz/O5lk=
+X-Proofpoint-GUID: JLgSEY9JjIJrPuAN6bRhTRu_YESKNwqA
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzIwMDExOSBTYWx0ZWRfX5UIifspsVdSr
+ lmCqmViideY52wPHhSLtwv5xALEONH+Rtdopax1f6PuyDsH8pBBBFFlw2V4ihZHf3OYLloDzzhY
+ ZbbcFT6sm4ToEqqShBOa+h0Jb7749afQ102ckKmKyXcyJanww7yDiA9VPWMn/aL2r7YgcpxZpyN
+ eWBr/uCMaK5dJGmlcZ+DxbcfPf46ohxbCOnEPzEzVYWwwvgJuocEzH8J9CWZ1ztsmYlPS+YcNkW
+ KvXT024fc3Kg2EcUvjQ2L5TEQbbJGM2NPKQMsOKF5WUxcBJOFF8aEgz7i4FebTAm0I9GwcUpS1s
+ bcXbZRmv1/Y/1nzCQiN/FZeZRtw0z06+dYgkdyNB7kVoq28LAYAoZSgBPKQ+ryX0DBufHuxQhaW
+ JvDL9qW8dX7YGfigtVq1hl4F1+rKyZdReGuPeYJKu5zNEcQIqErLV7dKAnsHNiq+vCqz4FZFE5Q
+ 5KQjq6MFAgTlfugAzwA==
+X-Authority-Analysis: v=2.4 cv=K7AS2SWI c=1 sm=1 tr=0 ts=6a5e00b9 cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=cmUufiQGUpTYaFsbEW4A:9
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=ofXt-N-APMp9VAbjTHMA:9
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-20_02,2026-07-17_01,2025-10-01_01
@@ -101,119 +101,213 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
  definitions=main-2607200119
 
-Implement the arch_perf_record__need_read() architecture-specific hook
-for powerpc in arch/powerpc/util/evsel.c.
+Add the PERF_AUXTRACE_POWERPC_HTM enum value to auxtrace.h and wire
+the dispatch in perf_event__process_auxtrace_info() to call
+powerpc_htm_process_auxtrace_info().
 
-The HTM kernel driver sets event->count to 1 while data is staged in
-its internal buffers and to 0 once the stream is exhausted.  This hook
-reads that count for every open htm evsel via perf_evsel__read() and
-accumulates the values.  A non-zero total means at least one HTM target
-still has data pending; the recording loop added in the previous patch
-will perform another mmap-read pass.
-
-The implementation scans the evlist for htm events, iterates the fd/
-sample-id xyarray, and skips any evsel whose fd and sample-id arrays are
-mismatched to avoid reading stale state.  When the accumulated count
-reaches zero the hook returns 0 and the recording loop proceeds to
-disable and close the events.
+This patch sets auxtrace_info->type = PERF_AUXTRACE_POWERPC_HTM in
+htm_info_fill() (introduced in the previous patch) now that the
+constant is defined, completing the record-side setup.
 
 Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
 ---
 Changes in V2:
-- Implements the renamed arch_perf_record__need_read() hook (V1
-  implemented arch_record__collect_final_data()).
-- Skips evsels whose fd and sample-id xyarrays are mismatched, avoiding
-  stale-state reads.  V1 had no such guard.
-- evlist__enable cycling is removed; that responsibility now belongs to
-  the drain loop in builtin-record.c added in patch 3.
-- File location changed to arch/powerpc/util/evsel.c (V1 used
-  arch/powerpc/util/powerpc-htm.c).
-- Patch is now 4/6 instead of 4/9.
+- Scope narrowed: this patch now only adds the PERF_AUXTRACE_POWERPC_HTM
+  enum constant to auxtrace.h and wires the dispatch in
+  perf_event__process_auxtrace_info() to call
+  powerpc_htm_process_auxtrace_info().  It also amends htm_info_fill()
+  (from patch 2) to set auxtrace_info->type now that the constant is
+  defined.
+- All file-writing and decoding logic is moved to patch 6.
+- Patch is now 5/6 instead of 5/9.
 
- tools/perf/arch/powerpc/util/evsel.c | 69 ++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+ tools/perf/arch/powerpc/util/htm.c |   2 +-
+ tools/perf/util/Build              |   1 +
+ tools/perf/util/auxtrace.c         |   4 +
+ tools/perf/util/auxtrace.h         |   1 +
+ tools/perf/util/powerpc-htm.c      | 115 +++++++++++++++++++++++++++++
+ 5 files changed, 122 insertions(+), 1 deletion(-)
+ create mode 100644 tools/perf/util/powerpc-htm.c
 
-diff --git a/tools/perf/arch/powerpc/util/evsel.c b/tools/perf/arch/powerpc/util/evsel.c
-index 2f733cdc8dbb..8f2805a68026 100644
---- a/tools/perf/arch/powerpc/util/evsel.c
-+++ b/tools/perf/arch/powerpc/util/evsel.c
-@@ -1,8 +1,77 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <stdio.h>
-+#include <linux/string.h>
- #include "util/evsel.h"
-+#include "util/record.h"
-+#include "util/evlist.h"
-+#include "util/debug.h"
-+#include <internal/xyarray.h>
+diff --git a/tools/perf/arch/powerpc/util/htm.c b/tools/perf/arch/powerpc/util/htm.c
+index 07b496e4be2f..9555cf356617 100644
+--- a/tools/perf/arch/powerpc/util/htm.c
++++ b/tools/perf/arch/powerpc/util/htm.c
+@@ -99,7 +99,7 @@ htm_info_fill(struct auxtrace_record *itr,
+ 	if (priv_size != HTM_AUXTRACE_PRIV_SIZE(expected_n))
+ 		return -EINVAL;
  
- void arch_evsel__set_sample_weight(struct evsel *evsel)
- {
- 	evsel__set_sample_bit(evsel, WEIGHT_STRUCT);
- }
+-	// To set: auxtrace_info->type
++	auxtrace_info->type = PERF_AUXTRACE_POWERPC_HTM;
+ 	auxtrace_info->priv[POWERPC_HTM_PMU_TYPE] = htm_r->evsel->core.attr.type;
+ 	auxtrace_info->priv[POWERPC_HTM_NUM_EVENTS] = expected_n;
+ 
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 330311cac550..7fa354853d2a 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -141,6 +141,7 @@ perf-util-y += hisi-ptt.o
+ perf-util-y += hisi-ptt-decoder/
+ perf-util-y += s390-cpumsf.o
+ perf-util-y += powerpc-vpadtl.o
++perf-util-y += powerpc-htm.o
+ 
+ ifdef CONFIG_LIBOPENCSD
+ perf-util-y += cs-etm.o
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index 0b851f32e98c..9f32f54fad43 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -56,6 +56,7 @@
+ #include "s390-cpumsf.h"
+ #include "util/mmap.h"
+ #include "powerpc-vpadtl.h"
++#include "powerpc-htm.h"
+ 
+ #include <linux/ctype.h>
+ #include "symbol/kallsyms.h"
+@@ -1427,6 +1428,9 @@ int perf_event__process_auxtrace_info(const struct perf_tool *tool __maybe_unuse
+ 	case PERF_AUXTRACE_VPA_DTL:
+ 		err = powerpc_vpadtl_process_auxtrace_info(event, session);
+ 		break;
++	case PERF_AUXTRACE_POWERPC_HTM:
++		err = powerpc_htm_process_auxtrace_info(event, session);
++		break;
+ 	case PERF_AUXTRACE_UNKNOWN:
+ 	default:
+ 		return -EINVAL;
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index 6947f3f284c0..68b17802a419 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -46,6 +46,7 @@ enum auxtrace_type {
+ 	PERF_AUXTRACE_S390_CPUMSF,
+ 	PERF_AUXTRACE_HISI_PTT,
+ 	PERF_AUXTRACE_VPA_DTL,
++	PERF_AUXTRACE_POWERPC_HTM,
+ };
+ 
+ enum itrace_period_type {
+diff --git a/tools/perf/util/powerpc-htm.c b/tools/perf/util/powerpc-htm.c
+new file mode 100644
+index 000000000000..8d28d02031d6
+--- /dev/null
++++ b/tools/perf/util/powerpc-htm.c
+@@ -0,0 +1,115 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <stdio.h>
++#include <stdlib.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <string.h>
++#include <errno.h>
++#include <endian.h>
++#include "util/evsel.h"
++#include "util/evlist.h"
++#include "util/session.h"
++#include "color.h"
++#include "powerpc-htm.h"
++#include "debug.h"
++#include "sample.h"
 +
-+/*
-+ * Check if HTM events have more data to collect.
-+ *
-+ * This function reads the HTM event counts. When the kernel driver
-+ * has more data available, it returns a non-zero count. When all
-+ * data has been collected, it returns zero.
-+ *
-+ * Returns: 1 if more data exists, 0 if collection is complete
-+ */
-+int arch_perf_record__need_read(struct evlist *evlist)
++struct powerpc_htm {
++	struct auxtrace		auxtrace;
++	struct auxtrace_queues	queues;
++	struct auxtrace_heap	heap;
++	u32			auxtrace_type;
++	struct perf_session	*session;
++	struct machine		*machine;
++};
++
++static void powerpc_htm_dump_event(size_t len)
 +{
-+	struct evsel *evsel;
-+	bool found_htm = false;
-+	u64 total_pending_bytes = 0;
-+	int x, y;
++	const char *color = PERF_COLOR_BLUE;
 +
-+	/* there was an error during record__open */
-+	if (!evlist)
-+		return 0;
++	if (dump_trace) {
++		color_fprintf(stdout, color,
++			". ... HTM PMU data: size %zu bytes\n", len);
++	}
++}
 +
-+	/* First, check if any HTM events exist */
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (evsel->name && strstarts(evsel->name, "htm")) {
-+			found_htm = true;
-+			break;
-+		}
++static int powerpc_htm_process_event(struct perf_session *session __maybe_unused,
++				     union perf_event *event __maybe_unused,
++				     struct perf_sample *sample __maybe_unused,
++				     const struct perf_tool *tool __maybe_unused)
++{
++	return 0;
++}
++
++static int powerpc_htm_process_auxtrace_event(struct perf_session *session __maybe_unused,
++					      union perf_event *event,
++					      const struct perf_tool *tool __maybe_unused)
++{
++	if (dump_trace)
++		powerpc_htm_dump_event(event->auxtrace.size);
++
++	return 0;
++}
++
++static int powerpc_htm_flush(struct perf_session *session __maybe_unused,
++			     const struct perf_tool *tool __maybe_unused)
++{
++	return 0;
++}
++
++static void powerpc_htm_free_events(struct perf_session *session)
++{
++	struct powerpc_htm *htm;
++
++	if (!session || !session->auxtrace)
++		return;
++
++	htm = container_of(session->auxtrace, struct powerpc_htm, auxtrace);
++	auxtrace_queues__free(&htm->queues);
++}
++
++static void powerpc_htm_free(struct perf_session *session)
++{
++	struct powerpc_htm *htm;
++
++	if (!session || !session->auxtrace)
++		return;
++
++	htm = container_of(session->auxtrace, struct powerpc_htm, auxtrace);
++	powerpc_htm_free_events(session);
++	session->auxtrace = NULL;
++	free(htm);
++}
++
++int powerpc_htm_process_auxtrace_info(union perf_event *event,
++				      struct perf_session *session)
++{
++	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
++	struct powerpc_htm *htm;
++	int err;
++
++	if (auxtrace_info->header.size < sizeof(struct perf_record_auxtrace_info) +
++					 HTM_AUXTRACE_PRIV_FIXED)
++		return -EINVAL;
++
++	htm = zalloc(sizeof(struct powerpc_htm));
++	if (!htm)
++		return -ENOMEM;
++
++	err = auxtrace_queues__init(&htm->queues);
++	if (err) {
++		free(htm);
++		return err;
 +	}
 +
-+	if (!found_htm)
-+		return 0;
++	htm->session = session;
++	htm->machine = &session->machines.host;
++	htm->auxtrace.process_event = powerpc_htm_process_event;
++	htm->auxtrace.process_auxtrace_event = powerpc_htm_process_auxtrace_event;
++	htm->auxtrace.flush_events = powerpc_htm_flush;
++	htm->auxtrace.free_events = powerpc_htm_free_events;
++	htm->auxtrace.free = powerpc_htm_free;
++	session->auxtrace = &htm->auxtrace;
 +
-+	/* Read HTM event counts to check if more data is available */
-+	evlist__for_each_entry(evlist, evsel) {
-+		struct xyarray *xy = evsel->core.sample_id;
-+
-+		if (!evsel->name || !strstarts(evsel->name, "htm"))
-+			continue;
-+
-+		if (!strcmp(evsel->name, "dummy:u"))
-+			continue;
-+
-+		if (xy == NULL || evsel->core.fd == NULL)
-+			continue;
-+
-+		if (xyarray__max_x(evsel->core.fd) != xyarray__max_x(xy) ||
-+		    xyarray__max_y(evsel->core.fd) != xyarray__max_y(xy)) {
-+			pr_debug("Unmatched FD vs sample ID array for HTM event\n");
-+			continue;
-+		}
-+
-+		for (x = 0; x < xyarray__max_x(xy); x++) {
-+			for (y = 0; y < xyarray__max_y(xy); y++) {
-+				struct perf_counts_values count = { .val = 0 };
-+
-+				if (perf_evsel__read(&evsel->core, x, y, &count) == 0)
-+					total_pending_bytes += count.val;
-+			}
-+		}
-+	}
-+
-+	/* Collection is complete only when ALL hardware queues match 0 */
-+	return (total_pending_bytes > 0) ? 1 : 0;
++	return 0;
 +}
 -- 
 2.43.0
