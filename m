@@ -1,65 +1,65 @@
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0CF3E2AD2
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 10:45:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06893DDAEF
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 10:45:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784544343; cv=none; b=VQGg3FFSgqtEYP679pEQN2Ve1OO+jZqaAuRT6po59xBZRjQoO8qcLqhylwWCl55kpG+Q88Xqy14JmlTJz/RY1hgSzmkyB8P06NgIiOZviBomG9naWcpaLl26oDVVPB5g8oKgy+gy6Ns7HL5RbNDNBLQDYN7/K1G2fH/N1XcibtI=
+	t=1784544345; cv=none; b=kM9ZdCiHxOEVw8jLY5x4ZjW/4XgcX7SGFQdmLvcNKb+BMnGmEezM4J1LkKLXINYvp4EkNkL8YrzUtOOff8sK2MwUcHeDZw/V1bIOHhHnwYpuruJh/dp9JgM0biQM2wWzptMrnrZ68p7vdh28nz+kSR3O5jURPSW3l/P8gR6H8l4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784544343; c=relaxed/simple;
-	bh=gQf6ob/TSrQHMfJ0ffAh6Ix327VLxig9bC9M0jCFYCE=;
+	s=arc-20240116; t=1784544345; c=relaxed/simple;
+	bh=sY32Q0QQWHpTOuNhWcoKJ8bYPquc6gMxgHnujWWduB0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CwGrRQwxjPST6i9hpiewpkcBz2yj/Il/hk7p1ji3UyMmV+RyeRIJN0guLCrDpY7MqUFTeHebc2LJTLeSeRJma5s8qscyOERaSsTtG20xzaNUcoaMwgFGRgyAlissA5tNNI0502nN1l1tkSXob6inXBT3jOr7dkzebF8DMjsH2MY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JsxV/u6q; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=t9u4JdfwhuVhuThmLKUBHyultPlhWCoT5q87cE5+6j69IJgBxWDvlRnqo/DoWYXJSJJyfGYfN8dDYufKFZoAnrDtdtZLXSTHYn/hiJpTFaoNlkI6vMKEBNSLnIIToaJ8wM4p/afI24tL8wjVXAo5inue73yRqPslY2wI1/6hBFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MgdnY40P; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JsxV/u6q"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MgdnY40P"
 Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66KADHMe1815064;
-	Mon, 20 Jul 2026 10:45:27 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66KACGYJ1812463;
+	Mon, 20 Jul 2026 10:45:30 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=nPcODKq99gWQbliMM
-	+FmWm/K14s3WEtk8c992vW07d4=; b=JsxV/u6qcVfUXsbFY5dbEW5y3QAqHeNut
-	E/roHGQrpJQaJ14hhrw2t+0rp9+3ppmQQlOgIdRKjFqEa7uEG1CtyddBLHmnvh/N
-	bi/4B4HkcYlYcpmuDJuNqyV73yf84nU3CfkhkodwR+sywv1OscL6d+8L2M2vduwQ
-	RJ+aQIUG0XggNsWN4Cb+JTue+GBT15mryGbpoRZl5bDMcXfxFhKd5OTFPfpnaiii
-	ypjXENVKDfhT4UVtMf8X3B7b1AMLDOvuzE7kishKMYnsvqvEFmsOFgyAfsybAZPo
-	4DqBcm26mz1jY47P7vA1810YG4AhTSo3ekyi2ySw58VVC+lWueiPw==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fg78fxrev-1
+	:mime-version:references:subject:to; s=pp1; bh=IEcaCKcFMrD2OQtcd
+	qkAruYPhYiRxtg8Yh3ToBhu0so=; b=MgdnY40PPNFZae5Ys5Fq/q1WL1PafkXVU
+	Nz4rePwwS0+lqmb7VeELKuoqOlmzr+XcLeq8lGVemH2S9juyVW13VpUkDTPtMrvW
+	7qwxZeSmfEZJwMMnxp69htPayZdWa7Nf+GV27LkXI6F1KkoP3UMvQzmTt+Z67Gt+
+	jYHQunFZa8sRMuk/SS1GqGFNhkFVK+ZwRx+hD5quUUr9KTXMhtAreL6PSSXCqOeG
+	0n0OvHo7GaLVuKUrmZwQcOyEe8vR7VP3ir0pNUH9ij7I6QZS6vh0p/gacHHqbFyA
+	6nTT4lLnDcBKCvNSK+zlcBJTXQ27j+CZVWH91nKVwCCaieXrxUTDg==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fg78fxrf4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jul 2026 10:45:27 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66KAYeWq026309;
-	Mon, 20 Jul 2026 10:45:26 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fgpgy4wsb-1
+	Mon, 20 Jul 2026 10:45:30 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66KAYcuL026250;
+	Mon, 20 Jul 2026 10:45:29 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fgktpwchk-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jul 2026 10:45:26 +0000 (GMT)
+	Mon, 20 Jul 2026 10:45:29 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66KAjLs057016720
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66KAjOCq48824654
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 20 Jul 2026 10:45:21 GMT
+	Mon, 20 Jul 2026 10:45:24 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4953E20040;
+	by IMSVA (Postfix) with ESMTP id 19FFE2004B;
+	Mon, 20 Jul 2026 10:45:24 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ADC5020040;
 	Mon, 20 Jul 2026 10:45:21 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id DE9662004B;
-	Mon, 20 Jul 2026 10:45:18 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.39.16.54])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 20 Jul 2026 10:45:18 +0000 (GMT)
+	Mon, 20 Jul 2026 10:45:21 +0000 (GMT)
 From: Athira Rajeev <atrajeev@linux.ibm.com>
 To: linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com
 Cc: linux-perf-users@vger.kernel.org, atrajeev@linux.ibm.com,
         hbathini@linux.vnet.ibm.com, tejas05@linux.ibm.com,
         venkat88@linux.ibm.com, tshah@linux.ibm.com, usha.r2@ibm.com
-Subject: [PATCH V2 4/6] powerpc/perf: Capture the HTM memory configuration as part of perf data
-Date: Mon, 20 Jul 2026 16:14:45 +0530
-Message-Id: <20260720104447.11843-5-atrajeev@linux.ibm.com>
+Subject: [PATCH V2 5/6] docs: ABI: sysfs-bus-event_source-devices-htm: Document sysfs event format entries for htm pmu
+Date: Mon, 20 Jul 2026 16:14:46 +0530
+Message-Id: <20260720104447.11843-6-atrajeev@linux.ibm.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20260720104447.11843-1-atrajeev@linux.ibm.com>
 References: <20260720104447.11843-1-atrajeev@linux.ibm.com>
@@ -71,23 +71,24 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzIwMDExOSBTYWx0ZWRfXwkhD097CDwn6
- dtmYufX4o23VSHeKIzskthuUBrGM9+Vy3yL1xa94Pa5O++aYSgtfQsCa6TIakmCsU+nH7/r0QDR
- fHUYgC5gcRJlZfksS4MFUEWOalurJ6EtPHDce9W/jBpqNBi3FdGnCd+0idJmW4Vk5fsG1CPEjhC
- 612MaSBqIaw4IkSudQMaoci8awqlePFuK/wGMM81WbpkO7a5HBU06QfVRGwF/o8FtwRNy8YyKEA
- /G1wix+DO6Qsq8IUW+WJvK1BTg02AN+6Eiv8Qj/1ILIeLujcWVePRt0ZgqbWIOg6oLFSEJahner
- pgLDTW1AKeAr6wOq5rcAb8y7RRui10kzi1HWXRiAUslfG6tV6/jGslX8oh4MkWLT6soRf3jxZEn
- 2nS/jwasIlzBKONYdXGvu5YHEYeGu9CmU2Rwxyz/aqWA0JO7VMSHql/sUnG6KBxAUKcuMxKCGkt
- Y17boCIOLUqpmOcghcg==
-X-Proofpoint-GUID: 31mbTliFCgHjtoqaHFaaNBhVgZAKrzNs
-X-Authority-Analysis: v=2.4 cv=MelcfZ/f c=1 sm=1 tr=0 ts=6a5dfc47 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzIwMDExOSBTYWx0ZWRfX6Clwu6t1B1A5
+ XYwY3kvNzvmTPbo1zTgedgGCt168s5wQ6V+C9Yg4M4ii+R7ltJWg/3/PU61QH+91/2uaIU3iGCP
+ sw5cwTNDk/lNBP8T3xbRWKANV/l2ZZUcAZKq1YBTCtqjWjN0FHZ0PvNIq8q2m8VrSQMzC5mM0rZ
+ gknDenaP7LS0O/8tRuEq6+VU1JdT7naMAuSPBRzDJfgeL5qUbyLLvK3lp07MB/j9FAUUARdpx04
+ zJgp8lw+LHxEvlWhzeIhG2qnAIyeKPfU3o1e1cKid0/s9XmUCkyF4y3QPViBoJE1DmQyoTNaYwZ
+ io2NIN9QVUr0KIdHGZnn8KTV6rXYSkZPWvSGgt1SRkBbh50aV5LT/xuAt2kVO6Cd7lEzvIpZkdR
+ U0nSzRWVQlxNd9FqHOzi4EI45dDCD/hiwsqPtKI4zI84GAIyYt/WLVyHgZvp+YeI2CcWzcguq8u
+ tjLw215qgJW4fDfhTYQ==
+X-Proofpoint-GUID: 4B6Gkl9caS4E-oJJsSU41s5dFAVCH2oE
+X-Authority-Analysis: v=2.4 cv=MelcfZ/f c=1 sm=1 tr=0 ts=6a5dfc4a cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
  a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=De5M_SF8sF-WxBbd-0IA:9
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzIwMDExOSBTYWx0ZWRfX8qV/FTxTKgcI
- dSEubPBsCEfDuHP68kbGW2ow6P9kVcLoSSvwZvgADAmGrumfNzYdy3+loztNlx2B37T07Jc8MrC
- eP87gt0zDyZ2AVzKJyPXmc993Jl3m2o=
-X-Proofpoint-ORIG-GUID: 31mbTliFCgHjtoqaHFaaNBhVgZAKrzNs
+ a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=voM4FWlXAAAA:8
+ a=MAjSfxlMfwhW9nvQlMAA:9 a=IC2XNlieTeVoXbcui8wp:22
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzIwMDExOSBTYWx0ZWRfXyCZ75aKdu8W6
+ bCqo/7tTgOvkeECjE8DLUyjjExm0labN5YEYCHS0vQOQ1d79GP4xJ3uAl+ZlNltOvaH2FV0oGo+
+ xAASqQR26FhXmlVQdYuAUGAyhEG9ORQ=
+X-Proofpoint-ORIG-GUID: 4B6Gkl9caS4E-oJJsSU41s5dFAVCH2oE
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-20_02,2026-07-17_01,2025-10-01_01
@@ -97,227 +98,66 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607200119
 
-The H_HTM hypervisor call can also return the system memory
-configuration, which describes the physical to logical real address
-mapping for logical partitions.
+Add ABI documentation for the sysfs entries exposed by the "htm" PMU
+under /sys/bus/event_source/devices/htm/.
 
-After dumping HTM trace data into the AUX buffer, capture the
-corresponding HTM system memory configuration records and emit them as
-raw perf sample data for userspace parsing.
+Document the format attribute group, which describes the bit layout of
+perf_event_attr.config accepted by the htm PMU:
 
-Add AUX-private tracking for a hypervisor memory-configuration dump
-buffer, a stable emit buffer, and iterator state. Once AUX trace dumping
-completes, htm_event_read() switches to H_HTM_OP_DUMP_SYSMEM_CONF and
-iterates over the returned records until the configuration stream is
-exhausted.
+  htm_type         config bits  0-3   (HTM_CORE=2, HTM_NEST=1)
+  nodeindex        config bits  4-11
+  nodalchipindex   config bits 12-19
+  coreindexonchip  config bits 20-27
 
-Trace payload continues to be written to the AUX buffer, while memory
-configuration records are emitted as raw perf samples. This keeps the
-AUX stream focused on trace data and allows the configuration records to
-be decoded separately in userspace.
+Document the events attribute group, which lists the named events
+available on the PMU.  Users can pass these names directly to perf:
 
-Keep HTM tracing state in event->pmu_private via htm_target_id. AUX
-private state is used only for dump progress and staging buffers.
+  # perf record -e htm/nodalchipindex=2,nodeindex=0,htm_type=1/ ...
 
 Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
 ---
 Changes in V2:
-- Memory configuration records are now emitted as PERF_SAMPLE_RAW
-  samples directly by htm_event_read() after the AUX trace dump
-  completes, using H_HTM_OP_DUMP_SYSMEM_CONF.  V1 embedded the
-  configuration data inside the AUX buffer itself and used two
-  PERF_SAMPLE_RAW boundary markers (start/end) to delimit it.
-- The two-marker boundary scheme is removed.  There is no longer any
-  interleaving of memory configuration data inside the AUX stream;
-  the AUX buffer carries only bus-trace data.
-- Separate AUX-private fields for a hypervisor dump buffer, a stable
-  emit buffer, and iterator state are introduced to manage the
-  multi-call SYSMEM_CONF dump loop.
-- Tracing state remains in event->pmu_private (htm_target_id); AUX
-  private state is used only for dump progress and staging buffers,
-  consistent with the restructuring in patches 1 and 3.
+- Updated the bit-range descriptions to match the V2 config layout:
+  htm_type is bits 0-3 (was listed inconsistently in V1), nodeindex
+  is bits 4-11, nodalchipindex is bits 12-19, coreindexonchip is
+  bits 20-27.
+- Added documentation for the events/ sysfs group which lists named
+  events users can pass directly to perf (e.g.
+  htm/nodalchipindex=2,nodeindex=0,htm_type=1/).  This group was not
+  documented in V1.
+- Patch is now 5/6 instead of 4/5.
 
- arch/powerpc/perf/htm-perf.c | 124 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 123 insertions(+), 1 deletion(-)
+ .../sysfs-bus-event_source-devices-htm        | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-htm
 
-diff --git a/arch/powerpc/perf/htm-perf.c b/arch/powerpc/perf/htm-perf.c
-index edfca63e1e9b..7e6a67485800 100644
---- a/arch/powerpc/perf/htm-perf.c
-+++ b/arch/powerpc/perf/htm-perf.c
-@@ -104,6 +104,10 @@ struct htm_pmu_buf {
- 	u64     size;
- 	int     collect_htm_trace;
- 	u64	trace_records;
-+	void    *htm_mem_buf;	/* Staging bounce area allocated node-locally */
-+	void	*emit_buf;	/* Stable buffer for perf raw sample emission */
-+	u64     mem_start;	/* Hypervisor offset state iterator tracker */
-+	int     collect_htm_mem;	/* State flag tracking whether memory logging is ongoing */
- };
- 
- struct htm_pmu_ctx {
-@@ -173,6 +177,99 @@ static ssize_t htm_return_check(int rc)
- #define HTM_TRACING_ACTIVE	1
- #define HTM_TRACING_INACTIVE	0
- 
-+#define HTM_MEM_MAX_ENTRIES	2013U
-+#define HTM_MEM_BUF_SIZE	(32 + HTM_MEM_MAX_ENTRIES * 32)
+diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-htm b/Documentation/ABI/testing/sysfs-bus-event_source-devices-htm
+new file mode 100644
+index 000000000000..784ba7c31b89
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-htm
+@@ -0,0 +1,21 @@
++What:           /sys/bus/event_source/devices/htm/format
++Date:           June 2026
++Contact:        Linux on PowerPC Developer List <linuxppc-dev at lists.ozlabs.org>
++Description:    Read-only. Attribute group to describe the magic bits
++                that go into perf_event_attr.config for a particular pmu.
++                (See ABI/testing/sysfs-bus-event_source-devices-format).
 +
-+static int htm_collect_memory_config(struct perf_event *event,
-+				      struct htm_pmu_buf *aux_buf)
-+{
-+	struct perf_sample_data data;
-+	struct perf_raw_record raw;
-+	struct pt_regs regs;
-+	u8 *htm_mem_buf = aux_buf->htm_mem_buf;
-+	__be64 *num_entries;
-+	u64 next_start;
-+	u64 to_copy;
-+	void *emit_buf = aux_buf->emit_buf;
-+	long rc;
-+	int ret = 0;
-+	int retries;
-+	int emitted = 0;
++                Each attribute under this group defines a bit range of the
++                perf_event_attr.config. Supported attribute are listed
++                below::
 +
-+	/*
-+	 * htm_mem_buf is the hcall memory buffer target reused each iteration.
-+	 * emit_buf is a preallocated stable buffer used for perf raw
-+	 * sample emission, so raw.frag.data remains valid during
-+	 * perf_event_overflow().
-+	 * Size: 32-byte header + HTM_MEM_MAX_ENTRIES * 32-byte entries.
-+	 */
-+	while (true) {
-+		retries = 0;
-+		do {
-+			rc = htm_hcall_wrapper(htmflags, 0, 0, 0,
-+					       0, H_HTM_OP_DUMP_SYSMEM_CONF,
-+					       virt_to_phys(aux_buf->htm_mem_buf),
-+					       HTM_MEM_BUF_SIZE, aux_buf->mem_start);
-+			ret = htm_return_check(rc);
-+		} while (ret == -EBUSY && ++retries < MAX_RETRIES);
++				event  = "config:0-27"  - event ID
 +
-+		/* H_NOT_AVAILABLE or error: no more data */
-+		if (ret <= 0) {
-+			aux_buf->collect_htm_mem = 0;
-+			break;
-+		}
-+
-+		/*
-+		 * Read next iterator value from the hcall response BEFORE
-+		 * emitting, but only commit it to mem_start after a
-+		 * successful writing of raw data/
-+		 */
-+		next_start = be64_to_cpu(*((__be64 *)(htm_mem_buf + 0x8)));
-+
-+		/*
-+		 * The hcall was given HTM_MEM_BUF_SIZE bytes of buffer space,
-+		 * so num_entries is already bounded to HTM_MEM_MAX_ENTRIES.
-+		 * The response is a complete hcall data:
-+		 *   [32-byte header][num_entries * 32-byte entries]
-+		 * Userspace can validate and parse it directly.
-+		 */
-+		num_entries = (__be64 *)(htm_mem_buf + 0x10);
-+		to_copy = 32 + (be64_to_cpu(*num_entries) * 32);
-+		if (WARN_ON_ONCE(to_copy > HTM_MEM_BUF_SIZE)) {
-+			ret = -EIO;
-+			aux_buf->collect_htm_mem = 0;
-+			break;
-+		}
-+
-+		memcpy(emit_buf, aux_buf->htm_mem_buf, to_copy);
-+
-+		perf_sample_data_init(&data, 0, event->hw.last_period);
-+		memset(&raw, 0, sizeof(raw));
-+		raw.frag.data = emit_buf;
-+		raw.frag.size = to_copy;
-+		perf_sample_save_raw_data(&data, event, &raw);
-+
-+		if (perf_event_overflow(event, &data, &regs)) {
-+			ret = 0;
-+			break;
-+		}
-+
-+		/* Record written: advance next read iterator */
-+		aux_buf->mem_start = next_start;
-+		emitted = 1;
-+
-+		if (!next_start) {
-+			aux_buf->collect_htm_mem = 0;
-+			break;
-+		}
-+	}
-+
-+	if (emitted)
-+		return 1;
-+
-+	return ret;
-+}
-+
- static void reset_htm_active(struct perf_event *event)
- {
- 	struct htm_target_id *target = event->pmu_private;
-@@ -407,7 +504,7 @@ static int htm_dump_sample_data(struct perf_event *event)
- 	if (!aux_buf)
- 		return 0;
- 
--	if (!aux_buf->collect_htm_trace) {
-+	if (!aux_buf->collect_htm_trace && !aux_buf->collect_htm_mem) {
- 		perf_aux_output_end(&htm_ctx->handle, 0);
- 		return 0;
- 	}
-@@ -420,6 +517,11 @@ static int htm_dump_sample_data(struct perf_event *event)
- 		}
- 	}
- 
-+	if (!aux_buf->collect_htm_trace) {
-+		ret = htm_collect_memory_config(event, aux_buf);
-+		goto out;
-+	}
-+
- 	/* Derive the exact target destination point directly out of active ring pointers */
- 	dump_offset = htm_ctx->handle.head & (aux_buf->size - 1);
- 	page_index = dump_offset >> PAGE_SHIFT;
-@@ -506,6 +608,8 @@ static int htm_dump_sample_data(struct perf_event *event)
- 	}
- 
- 	aux_buf->collect_htm_trace = 0;
-+	ret = htm_collect_memory_config(event, aux_buf);
-+out:
- 	perf_aux_output_end(&htm_ctx->handle, 0);
- 	return ret;
- }
-@@ -568,7 +672,23 @@ static void *htm_setup_aux(struct perf_event *event, void **pages,
- 		return NULL;
- 	}
- 
-+	buf->htm_mem_buf = kmalloc_node(PAGE_SIZE, GFP_KERNEL, cpu_to_node(cpu));
-+	if (!buf->htm_mem_buf) {
-+		kfree(buf);
-+		return NULL;
-+	}
-+
-+	buf->emit_buf = kmalloc_node(HTM_MEM_BUF_SIZE, GFP_KERNEL,
-+			cpu_to_node(cpu));
-+	if (!buf->emit_buf) {
-+		kfree(buf->htm_mem_buf);
-+		kfree(buf);
-+		return NULL;
-+	}
-+
- 	buf->collect_htm_trace = 1;
-+	buf->collect_htm_mem = 1;
-+	buf->mem_start = 0;
- 	buf->trace_records = 0;
- 	buf->head = 0;
- 	return buf;
-@@ -584,6 +704,8 @@ static void htm_free_aux(void *aux)
- 	if (!buf)
- 		return;
- 
-+	kfree(buf->emit_buf);
-+	kfree(buf->htm_mem_buf);
- 	kfree(buf);
- }
- 
++What:           /sys/bus/event_source/devices/htm/events
++Date:           June 2026
++Contact:        Linux on PowerPC Developer List <linuxppc-dev at lists.ozlabs.org>
++Description:	(RO) Attribute group to describe performance monitoring events
++                for the Hardware Trace Macro (HTM) trace. Each attribute in
++		this group describes a single performance monitoring event
++		supported by htm pmu.  The name of the file is the name of
++		the event (See ABI/testing/sysfs-bus-event_source-devices-events).
 -- 
 2.43.0
 
