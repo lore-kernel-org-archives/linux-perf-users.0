@@ -1,186 +1,194 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4A23F39D3
-	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 11:09:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8B63D091B
+	for <linux-perf-users@vger.kernel.org>; Mon, 20 Jul 2026 11:10:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784545799; cv=none; b=uCaQM1M9MMrWk/zvedgIEUXqxmjmyqn6Q0QmsK68h36dcDGDC6TUeWhopgWvluvltvMHMSIGW2KxPaPDyC4HdYLWr3c1pFT++nVEug1lDMNNdwTshVYOXsi5NemFLFWkpZGurOf+GBMXoroJ7rCepJ1Kzfwiov6Cmby9RTK4dCk=
+	t=1784545804; cv=none; b=Wzm8nZvafnjyy1FGwUH54u1rNWG2ioEADOskwdEAIjZUr8deSV5N2vq5lw7JnC0H0DgF0t+Q8S1Hh9pXWVzWk03OBoVIwKXldxJsnX7/czpAyZlQMQdEP/C+Om4G3vaGOP4gUm5CTc9kjLL29u/dVQvLoJniC0LPAdFD1RDnf94=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784545799; c=relaxed/simple;
-	bh=SP9pU2GtbAQh3VBmP5WOOtAuqCGkMNI8BS2F0AzKaLE=;
+	s=arc-20240116; t=1784545804; c=relaxed/simple;
+	bh=vBbV4Eo7m+UHc7VsPRBFlZwv5IDAEvhU+BskRKEyRME=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=kEr3LpAoYhnCEz1pOucuusbGMzJHoDtVD2DbItaj4mdce4CtyrjJi0TnFd8j7LPX6zdfwszjakD1m4hST7bq90jZAar9o+9LYvK3bFWQ67RKdfA0hhT8Wq/5WmhIjfRZw6Wwl5/U9t+39BBniEOjxVNmq9NFr7F52qwZigp9KL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPwgKdmD; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=lSX/jbtq2wZVZBxyZ1vlKnQGPRXcz1KkjLXlnkiNMyomI2m8udAzSNYL4nFNLQ+vV3nidwjs/+71O9s6leLNpAb9CqEzxTI5D+Uagym0MeL43lf+gQxqKYQV6G16LVNnhibLdSOZr51/BIji6B9yg0Vz77F54gqkQkDzMC50R6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mL7GJCd1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPwgKdmD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5D761F00A3D;
-	Mon, 20 Jul 2026 11:09:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mL7GJCd1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D80D1F00A3A;
+	Mon, 20 Jul 2026 11:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784545797;
-	bh=eRJ8gk4jQYByI3H/FwfMxWeBL5byHptSwxiy4DKwU/U=;
+	s=k20260515; t=1784545803;
+	bh=T/sB4t6BgbjCca+pfJZqYTXKUU6mQmWHXcvGtEpufxc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CPwgKdmDHGS+LT9UL0H+RTQuWitqz1SzdUYaeO1gIzsX+W6KsPB4Qr7x0ZuoFGUQU
-	 T3qP7uZns6Y3xLDiCbS/Ix+L4YN5GSgLjlZ+a7Gu0wtmo+vJYOdACoBZkeotDcUhD4
-	 ZbTglqkDaBHQquECsAqMun1BbqG+7NHBFkwXOooJdPmZooshiNIQZa5pQQx3rxJWiC
-	 89+TAnn5vRUWC89JHUvTUKqQFgpXjWkTjQTe+NU3/gFlXqWJZdZ2pBY1vxChBRb/jd
-	 ZEfCNc4bu9BvSWvPJKCB59fhp2jKVHIcb4w7Ev5C+oztRkIyEQ+TEY8vpLcOsDpUnG
-	 rsd6OfbHeIk1A==
+	b=mL7GJCd1+QLfEkpf0xY8U/WsWZI6ZR11Z8HvvJnBr2l/3OajDg7dwja3ZKQXmGYNU
+	 Miif3oeLq+QrJ5VDgoL78dzgP+Svf8IBlsaZJiyKnDTFHrNs9khzi+f0z5Xd9BVaVr
+	 efHF4dYO7KCjWGH6CnUt2uEPC8qty2GbZMxflayvo/wh6oXDYLybbfE6suaaNwdYRa
+	 EwhHCQGNNIZGXkYE2A3kPJU4fa2A4eAa+Pr1R667zAtQl4ZAQg82RaLuDW6MmSKzQv
+	 x/VbTbrJuiDBXHzltUmqerAgGM4ODxv6CSwl2sz9bCMBj2G+alV+Y4dQYr/z93oL+7
+	 lVJVCRVdGUSDQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V2 4/6] powerpc/perf: Capture the HTM memory
- configuration as part of perf data
+Subject: Re: [PATCH V2 3/6] powerpc/perf: Add AUX buffer management to
+ capture HTM trace data
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Athira Rajeev" <atrajeev@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260720104447.11843-5-atrajeev@linux.ibm.com>
+In-Reply-To: <20260720104447.11843-4-atrajeev@linux.ibm.com>
 References: <20260720104447.11843-1-atrajeev@linux.ibm.com>
- <20260720104447.11843-5-atrajeev@linux.ibm.com>
+ <20260720104447.11843-4-atrajeev@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Jul 2026 11:09:57 +0000
-Message-Id: <20260720110957.C5D761F00A3D@smtp.kernel.org>
+Date: Mon, 20 Jul 2026 11:10:03 +0000
+Message-Id: <20260720111003.6D80D1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Critical] The staging buffer `htm_mem_buf` is allocated as `PAGE_SIZE` b=
-ut the hypervisor is instructed to write up to `HTM_MEM_BUF_SIZE` (64448 by=
-tes) into it, causing a physical memory overflow on 4K page configurations.
-- [High] Uninitialized `struct pt_regs regs` allocated on the stack is pass=
-ed directly to `perf_event_overflow()`, leading to a kernel stack memory le=
-ak.
-- [Medium] The memory configuration iterator `mem_start` is not advanced wh=
-en `perf_event_overflow` returns a non-zero (throttled) value, causing data=
- duplication.
+- [High] Reentrancy corruption of the per-CPU perf_output_handle leads to U=
+se-After-Free.
+- [High] Transient conditions permanently disable trace collection and fals=
+ely signal EOF.
 --
 
---- Patch [4]: [PATCH V2 4/6] powerpc/perf: Capture the HTM memory configur=
-ation as part of perf data ---
-commit 5929e601ef9335650c92ad97d9999f8482e8f648
+--- Patch [3]: [PATCH V2 3/6] powerpc/perf: Add AUX buffer management to ca=
+pture HTM trace data ---
+commit edd04ff363591ec700b1e3d07e1003b1787ccb4a
 Author: Athira Rajeev <atrajeev@linux.ibm.com>
 
-powerpc/perf: Capture the HTM memory configuration as part of perf data
+powerpc/perf: Add AUX buffer management to capture HTM trace data
    =20
-This commit captures HTM system memory configuration during tracing by
-retrieving it via a hypercall. The records are emitted as raw perf sample
-data after the AUX trace dump completes.
+This commit adds support for auxiliary (AUX) ring buffers in the HTM PMU
+driver. It implements the core lifecycle hooks and dynamically checks for
+physical continuity before dumping data to prevent memory corruption.
 
 > diff --git a/arch/powerpc/perf/htm-perf.c b/arch/powerpc/perf/htm-perf.c
-> index b4020a6e8f30b..0fda0f552b4e1 100644
+> index a188a40287044..b4020a6e8f30b 100644
 > --- a/arch/powerpc/perf/htm-perf.c
 > +++ b/arch/powerpc/perf/htm-perf.c
 [ ... ]
-> @@ -173,6 +177,99 @@ static ssize_t htm_return_check(int rc)
->  #define HTM_TRACING_ACTIVE	1
->  #define HTM_TRACING_INACTIVE	0
-> =20
-> +#define HTM_MEM_MAX_ENTRIES	2013U
-> +#define HTM_MEM_BUF_SIZE	(32 + HTM_MEM_MAX_ENTRIES * 32)
+> +struct htm_pmu_ctx {
+> +	struct perf_output_handle handle;
+> +};
 > +
-> +static int htm_collect_memory_config(struct perf_event *event,
-> +				      struct htm_pmu_buf *aux_buf)
+> +static DEFINE_PER_CPU(struct htm_pmu_ctx, htm_pmu_ctx);
+> +
+[ ... ]
+> +static int htm_dump_sample_data(struct perf_event *event)
 > +{
-> +	struct perf_sample_data data;
-> +	struct perf_raw_record raw;
-> +	struct pt_regs regs;
-        ^^^^^^^^^^^^^^^^^^^^
+> +	struct htm_pmu_ctx *htm_ctx =3D this_cpu_ptr(&htm_pmu_ctx);
+[ ... ]
+> +	/* Start AUX transaction session framework */
+> +	aux_buf =3D perf_aux_output_begin(&htm_ctx->handle, event);
 
 [Severity: High]
-Does this leak kernel stack memory to userspace?
+What happens to the perf_output_handle if this is re-entered from an NMI
+context?
 
-The regs struct is allocated on the stack but never zeroed or initialized.
-If userspace configures the perf event with PERF_SAMPLE_REGS_INTR or
-PERF_SAMPLE_CALLCHAIN, the core perf framework will read these
-uninitialized bytes in perf_event_overflow() and write them to the ring
-buffer.
+htm_event_read() initiates a synchronous AUX output transaction using a
+per-CPU struct perf_output_handle. Since this can be called from process
+context (for instance, userspace reading the perf event fd), an NMI
+interrupting this could trigger a BPF program that calls
+bpf_perf_event_read() on the same CPU.
 
-Should regs be initialized, for example via perf_fetch_caller_regs(&regs)
-or memset(&regs, 0, sizeof(regs))?
+Would this overwrite the per-CPU handle, causing the interrupted outer
+call to use a corrupted handle when it resumes, leading to underflowing
+reference counts and a use-after-free of the AUX pages? Could the
+handle be allocated on the stack instead to prevent this?
 
-> +	u8 *htm_mem_buf =3D aux_buf->htm_mem_buf;
-> +	__be64 *num_entries;
-> +	u64 next_start;
-> +	u64 to_copy;
+> +	if (!aux_buf)
+> +		return 0;
 [ ... ]
-> +		memcpy(emit_buf, aux_buf->htm_mem_buf, to_copy);
+> +	/*
+> +	 * Assess constraints regarding space remaining across the mapping
+> +	 * context boundary
+> +	 */
+> +	chunk_size =3D htm_ctx->handle.size;
+> +	chunk_size &=3D PAGE_MASK;
 > +
-> +		perf_sample_data_init(&data, 0, event->hw.last_period);
-> +		memset(&raw, 0, sizeof(raw));
-> +		raw.frag.data =3D emit_buf;
-> +		raw.frag.size =3D to_copy;
-> +		perf_sample_save_raw_data(&data, event, &raw);
-> +
-> +		if (perf_event_overflow(event, &data, &regs)) {
-> +			ret =3D 0;
-> +			break;
-> +		}
-                ^^^^^
-
-[Severity: Medium]
-If perf_event_overflow() throttles the event and returns a non-zero value,
-we break out of the loop before advancing the iterator.
-
-When tracing resumes and htm_collect_memory_config() is called again,
-it will start with the stale aux_buf->mem_start value and repeatedly ask
-the hypervisor for the same configuration block. Will this emit duplicate
-records into the perf stream?
-
-> +
-> +		/* Record written: advance next read iterator */
-> +		aux_buf->mem_start =3D next_start;
-> +		emitted =3D 1;
-> +
-> +		if (!next_start) {
-> +			aux_buf->collect_htm_mem =3D 0;
-> +			break;
-> +		}
-> +	}
+> +	if (chunk_size > (aux_buf->size - dump_offset))
+> +		chunk_size =3D aux_buf->size - dump_offset;
 [ ... ]
-> @@ -568,7 +672,23 @@ static void *htm_setup_aux(struct perf_event *event,=
- void **pages,
->  		return NULL;
->  	}
-> =20
-> +	buf->htm_mem_buf =3D kmalloc_node(PAGE_SIZE, GFP_KERNEL, cpu_to_node(cp=
-u));
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^=
-^^^^^^
+> +	/* Bound transfer length tightly within the validated contiguous window=
+ */
+> +	if (chunk_size > max_contiguous_bytes)
+> +		chunk_size =3D max_contiguous_bytes;
+> +
+> +	if (!chunk_size) {
+> +		aux_buf->collect_htm_trace =3D 0;
 
-[Severity: Critical]
-Can this corrupt physical memory on systems with 4K pages?
+[Severity: High]
+Does this permanently disable trace collection during a transient buffer fu=
+ll
+condition?
 
-buf->htm_mem_buf is allocated using PAGE_SIZE, which is 4096 bytes if
-CONFIG_PPC_4K_PAGES is enabled.
+If the remaining space in the user-space perf ring buffer is temporarily
+less than PAGE_SIZE, chunk_size will evaluate to 0. This sets
+collect_htm_trace to 0, which prevents any future trace collection for the
+lifetime of the buffer.
 
-However, in htm_collect_memory_config(), the hypervisor is instructed that
-the buffer length is HTM_MEM_BUF_SIZE:
-
-arch/powerpc/perf/htm-perf.c:htm_collect_memory_config() {
-...
-			rc =3D htm_hcall_wrapper(htmflags, 0, 0, 0,
-					       0, H_HTM_OP_DUMP_SYSMEM_CONF,
-					       virt_to_phys(aux_buf->htm_mem_buf),
-					       HTM_MEM_BUF_SIZE, aux_buf->mem_start);
-...
-}
-
-Since HTM_MEM_BUF_SIZE is defined as 32 + 2013 * 32 =3D 64448, the hypervis=
-or
-will assume it can write 64448 bytes, silently overwriting up to ~60KB of
-contiguous physical kernel memory past the 4KB allocation.
-
-Should this allocate HTM_MEM_BUF_SIZE bytes instead of PAGE_SIZE?
-
-> +	if (!buf->htm_mem_buf) {
-> +		kfree(buf);
-> +		return NULL;
+> +		perf_aux_output_end(&htm_ctx->handle, 0);
+> +		return 0;
 > +	}
 > +
+[ ... ]
+> +	do {
+> +		/*
+> +		 * Invoke H_HTM call with:
+> +		 * - operation as htm dump (H_HTM_OP_DUMP_DATA)
+> +		 * - last three values are address, size and offset
+> +		 */
+> +		rc =3D htm_hcall_wrapper(htmflags, cfg.nodeindex, cfg.nodalchipindex,
+> +				cfg.coreindexonchip, cfg.htmtype, H_HTM_OP_DUMP_DATA,
+> +				hypervisor_target_phys, chunk_size, aux_buf->head);
+> +		ret =3D htm_return_check(rc);
+> +	} while (ret =3D=3D -EBUSY && ++retries < MAX_RETRIES);
+> +
+> +	if (ret > 0) {
+> +		aux_buf->head +=3D chunk_size;
+> +		aux_buf->trace_records++;
+> +		perf_aux_output_end(&htm_ctx->handle, chunk_size);
+> +		return ret;
+> +	}
+> +
+> +	aux_buf->collect_htm_trace =3D 0;
+
+[Severity: High]
+If the hypervisor returns a transient long-busy status (like
+H_LONG_BUSY_ORDER_1_MSEC), htm_return_check() returns -EAGAIN.
+
+Will the loop exit and fall through to this block, permanently disabling
+tracing for this buffer session?
+
+> +	perf_aux_output_end(&htm_ctx->handle, 0);
+> +	return ret;
+> +}
+> +
+> +static void htm_event_read(struct perf_event *event)
+> +{
+> +	int ret;
+> +
+> +	/*
+> +	 * Update event->count as a binary indicator:
+> +	 * 1 if data was dumped into the
+> +	 * AUX buffer, 0 otherwise. Actual trace record
+> +	 * decoding is left to userspace.
+> +	 */
+> +	ret =3D htm_dump_sample_data(event);
+> +	if (ret <=3D 0)
+> +		local64_set(&event->count, 0);
+
+[Severity: High]
+Since the transient buffer full condition or hypervisor busy state causes
+htm_dump_sample_data() to return 0 or -EAGAIN, does this falsely signal
+an EOF to userspace by setting event->count to 0?
+
+> +	else
+> +		local64_set(&event->count, 1);
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260720104447.1184=
-3-1-atrajeev@linux.ibm.com?part=3D4
+3-1-atrajeev@linux.ibm.com?part=3D3
