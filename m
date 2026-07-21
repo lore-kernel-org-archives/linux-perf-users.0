@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF9E433055;
-	Tue, 21 Jul 2026 07:34:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4818B435526;
+	Tue, 21 Jul 2026 07:34:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784619258; cv=none; b=oqBVRrZdRiVURk72QzYaRY4HtTAumM/pCdz5QwvhffZeVgXMKBr3hHbG3d9gob1k8LklZb34hS0htFMiFy4PPDdjjLGyLxrJJINNK97oZcXJhcNFGpuh5cBxDANPsyE+soNC6QO4YxeWB3zGxrMciAEWlcqrqhKOdsbhxfaT3r8=
+	t=1784619262; cv=none; b=PVLCyzAWTcyLjxWhBUZ0flV6vPSVrmLamHjvCfTxw3MBzdTSY76xAnD32SFhMKoWAHocZ1LYOfSfe7DiCHprZGP7z5/TUaY1gfyoIT82JchIrox/OzZ1tIJz3mvV1uSCYgmetcntvbLGGcssfHRRvlicOkSKigBivfQ8uZVGYEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784619258; c=relaxed/simple;
-	bh=vg6A1TG5ZR+eJho5kgtQ7Tfw6dnVr3Nqkv5u6dIsNds=;
+	s=arc-20240116; t=1784619262; c=relaxed/simple;
+	bh=ZlrKCpd6oTxmFtSiRfBHCacb/aL/7Dj9vR4pzbLssA4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=AAjSyiNo/VL4DiOyippX116m3A2+tmKVPsIPG3cofO2nxOR3KW2Wkl7UC4AuyAJI1jLURVulTVeeZCOF1fMmf0jxTazW3RgEa1K2Ouf4vOtgBcphDaiq5UWOG9dIjPNhXuDHc4qodRM7erG8Dri/3kkDRX0BztWFZwRUJTGheIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UJHCnFPo; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version; b=P65z7wglG8VEBvlU+kuUY550vodHBsy6YQN/t9jOEqXMqNRjMsrlUduAufCU0TpSv/DCLa/Hr7lGGUmctvaFE9kDpOTbnJm6VhCjuCdyyzueIA0OMrSqU3WsBc1A0vBwQKHP7y2jvyy90ZbVfjph1shJljyxdEMTRUiUvwVbPqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=emCVxJKN; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UJHCnFPo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="emCVxJKN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784619256; x=1816155256;
+  t=1784619260; x=1816155260;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vg6A1TG5ZR+eJho5kgtQ7Tfw6dnVr3Nqkv5u6dIsNds=;
-  b=UJHCnFPoeScf40ee6qkB8SgFxgrzkUBIi/vTIwTEmizOmfLAz0XdaOh9
-   Blz+2d223VwEVW2gcHNflo7t5ffFbl87kbL0zh8M7/ZgmAh1tPk5I3yXN
-   ky+4uvkHM0iTFe5/U4tYZ9YAOv0KF1oS8Ee88ZQD8JRcM8YnrBmKh/uNs
-   pBPu00E1GoiLYbhO9RYd07wG6JRXYitanPYml3PNIH14bzS5YJqMOSDs7
-   QkhUvM+64CWOgUlVKB3DI+SHqvEe3n28bRSe/JAbdnDHgw+lRJHSfJQEg
-   i/4u9xvyXMGiwanW76LYBi36H/N3mElA8/vpGotnN+6uCXVJZEnbOw4JH
-   w==;
-X-CSE-ConnectionGUID: 43OuYCGUQ5y+WpmmlzXrNg==
-X-CSE-MsgGUID: zMATDzwbTeSwafYJnRiyeA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11852"; a="84190162"
+  bh=ZlrKCpd6oTxmFtSiRfBHCacb/aL/7Dj9vR4pzbLssA4=;
+  b=emCVxJKNT62ZpGm0KGjuchKq3fWJUFA965CioxycDPSMHtb59685KgND
+   G/iCQVdhq82X9doxhNgaxsaDJDHI9k0rpai28z+BwqeDN2GjXgKKqMfbL
+   7ccu17RxZ4uG0vKIY6NkOF4g9lmc4YPiOASR+prZwrSEmqBl/CLcVXiRL
+   sYYkqLcubftlO+blJaqIkYPfqRCgMka8EuSQ/wPtB0+BoxztiP43u3Nct
+   9VgD1ILZtYA33qaFn8JS3gEDPB5ENcOJKZ90MTjEpqB5ww7r5VG1RCf2B
+   25dxq/EoUnIfPzKg7Db/iOXN4sFe3sPQzXq6m0lpl1cHw2Cw3UmUADIST
+   Q==;
+X-CSE-ConnectionGUID: Ja/FY2HSRXy4YE/jg8F3+w==
+X-CSE-MsgGUID: 1o+qCETMQ0m+puJ/hZeNPg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11852"; a="84190168"
 X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
-   d="scan'208";a="84190162"
+   d="scan'208";a="84190168"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 00:34:16 -0700
-X-CSE-ConnectionGUID: RGQwEQXnSL6m79SkdERoKw==
-X-CSE-MsgGUID: ETDT9QbPRmKZ6KIqVvLlNw==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 00:34:20 -0700
+X-CSE-ConnectionGUID: tvAZQ4oFTZCcGCQc7ivBOg==
+X-CSE-MsgGUID: cTT8RUj+QyCtRMKd1K/5vA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
-   d="scan'208";a="256484550"
+   d="scan'208";a="256484569"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa010.jf.intel.com with ESMTP; 21 Jul 2026 00:34:13 -0700
+  by orviesa010.jf.intel.com with ESMTP; 21 Jul 2026 00:34:17 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,9 +58,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v10 08/10] perf dwarf-regs: Add SIMD/eGPRs support for x86 DWARF registers
-Date: Tue, 21 Jul 2026 15:27:05 +0800
-Message-Id: <20260721072707.3787848-9-dapeng1.mi@linux.intel.com>
+Subject: [Patch v10 09/10] perf tests: Add x86 eGPRs/SSP registers sampling test
+Date: Tue, 21 Jul 2026 15:27:06 +0800
+Message-Id: <20260721072707.3787848-10-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260721072707.3787848-1-dapeng1.mi@linux.intel.com>
 References: <20260721072707.3787848-1-dapeng1.mi@linux.intel.com>
@@ -70,295 +70,161 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Enhance the x86-specific DWARF register handling by adding support for
-SIMD and eGPRs registers.
-
-This update is based on the "DWARF Register Number Mapping" table from
-the "System V Application Binary Interface AMD64 Architecture Processor
-Supplement" (version 1.0).
-
-Modifications include:
-- Updating the x86_64_regidx_table[] array to incorporate SIMD and eGPRs
-  registers.
-- Enhancing the __get_dwarf_regnum_for_perf_regnum_x86_64() function to
-  retrieve the DWARF register index for eGPRs.
-
-Since currently libdw doesn't support SIMD and APX eGPRs registers yet,
-still keep the original return value for get_libdw_frame_nregs() helper.
+Validate that eGPRs (extended general purpose registers) and SSP
+(shadow stack pointer) registers can be sampled correctly on x86
+platforms with hardware support.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- .../util/dwarf-regs-arch/dwarf-regs-x86.c     | 138 +++++++++++++++---
- tools/perf/util/dwarf-regs.c                  |   9 +-
- tools/perf/util/include/dwarf-regs.h          |   7 +-
- tools/perf/util/unwind-libdw.c                |   6 +-
- 4 files changed, 132 insertions(+), 28 deletions(-)
+ tools/perf/tests/shell/record.sh | 126 +++++++++++++++++++++++++++++++
+ 1 file changed, 126 insertions(+)
 
-diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c
-index c2a70e03b1a9..bb17d779036a 100644
---- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c
-+++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c
-@@ -90,22 +90,22 @@ static const struct dwarf_regs_idx x86_64_regidx_table[] = {
- 	{ "r14", 14 }, { "r14d", 14 }, { "r14w", 14 }, { "r14b", 14 },
- 	{ "r15", 15 }, { "r15d", 15 }, { "r15w", 15 }, { "r15b", 15 },
- 	// 16 - Return Address RA
--	{ "xmm0", 17},
--	{ "xmm1", 18},
--	{ "xmm2", 19},
--	{ "xmm3", 20},
--	{ "xmm4", 21},
--	{ "xmm5", 22},
--	{ "xmm6", 23},
--	{ "xmm7", 24},
--	{ "xmm8", 25},
--	{ "xmm9", 26},
--	{ "xmm10", 27},
--	{ "xmm11", 28},
--	{ "xmm12", 29},
--	{ "xmm13", 30},
--	{ "xmm14", 31},
--	{ "xmm15", 32},
-+	{ "zmm0", 17 }, { "ymm0", 17 }, { "xmm0", 17 },
-+	{ "zmm1", 18 }, { "ymm1", 18 }, { "xmm1", 18 },
-+	{ "zmm2", 19 }, { "ymm2", 19 }, { "xmm2", 19 },
-+	{ "zmm3", 20 }, { "ymm3", 20 }, { "xmm3", 20 },
-+	{ "zmm4", 21 }, { "ymm4", 21 }, { "xmm4", 21 },
-+	{ "zmm5", 22 }, { "ymm5", 22 }, { "xmm5", 22 },
-+	{ "zmm6", 23 }, { "ymm6", 23 }, { "xmm6", 23 },
-+	{ "zmm7", 24 }, { "ymm7", 24 }, { "xmm7", 24 },
-+	{ "zmm8", 25 }, { "ymm8", 25 }, { "xmm8", 25 },
-+	{ "zmm9", 26 }, { "ymm9", 26 }, { "xmm9", 26 },
-+	{ "zmm10", 27 }, { "ymm10", 27 }, { "xmm10", 27 },
-+	{ "zmm11", 28 }, { "ymm11", 28 }, { "xmm11", 28 },
-+	{ "zmm12", 29 }, { "ymm12", 29 }, { "xmm12", 29 },
-+	{ "zmm13", 30 }, { "ymm13", 30 }, { "xmm13", 30 },
-+	{ "zmm14", 31 }, { "ymm14", 31 }, { "xmm14", 31 },
-+	{ "zmm15", 32 }, { "ymm15", 32 }, { "xmm15", 32 },
- 	{ "st0", 33},
- 	{ "st1", 34},
- 	{ "st2", 35},
-@@ -129,7 +129,7 @@ static const struct dwarf_regs_idx x86_64_regidx_table[] = {
- 	{ "ds", 53},
- 	{ "fs", 54},
- 	{ "gs", 55},
--	// 56-47 - reserved
-+	// 56-57 - reserved
- 	{ "fs.base", 58},
- 	{ "gs.base", 59},
- 	// 60-61 - reserved
-@@ -138,6 +138,49 @@ static const struct dwarf_regs_idx x86_64_regidx_table[] = {
- 	{ "mxcsr", 64}, // 128-bit Media Control and Status
- 	{ "fcw", 65}, // x87 Control Word
- 	{ "fsw", 66}, // x87 Status Word
-+	// 67-82 - Upper Vector Registers 16–31
-+	{ "zmm16", 67 }, { "ymm16", 67 }, { "xmm16", 67 },
-+	{ "zmm17", 68 }, { "ymm17", 68 }, { "xmm17", 68 },
-+	{ "zmm18", 69 }, { "ymm18", 69 }, { "xmm18", 69 },
-+	{ "zmm19", 70 }, { "ymm19", 70 }, { "xmm19", 70 },
-+	{ "zmm20", 71 }, { "ymm20", 71 }, { "xmm20", 71 },
-+	{ "zmm21", 72 }, { "ymm21", 72 }, { "xmm21", 72 },
-+	{ "zmm22", 73 }, { "ymm22", 73 }, { "xmm22", 73 },
-+	{ "zmm23", 74 }, { "ymm23", 74 }, { "xmm23", 74 },
-+	{ "zmm24", 75 }, { "ymm24", 75 }, { "xmm24", 75 },
-+	{ "zmm25", 76 }, { "ymm25", 76 }, { "xmm25", 76 },
-+	{ "zmm26", 77 }, { "ymm26", 77 }, { "xmm26", 77 },
-+	{ "zmm27", 78 }, { "ymm27", 78 }, { "xmm27", 78 },
-+	{ "zmm28", 79 }, { "ymm28", 79 }, { "xmm28", 79 },
-+	{ "zmm29", 80 }, { "ymm29", 80 }, { "xmm29", 80 },
-+	{ "zmm30", 81 }, { "ymm30", 81 }, { "xmm30", 81 },
-+	{ "zmm31", 82 }, { "ymm31", 82 }, { "xmm31", 82 },
-+	// 118-125 - Vector Mask Registers 0–7
-+	{ "k0", 118 },
-+	{ "k1", 119 },
-+	{ "k2", 120 },
-+	{ "k3", 121 },
-+	{ "k4", 122 },
-+	{ "k5", 123 },
-+	{ "k6", 124 },
-+	{ "k7", 125 },
-+	// 130-145 - APX Integer Registers 16-31
-+	{ "r16", 130 }, { "r16d", 130 }, { "r16w", 130 }, { "r16b", 130 },
-+	{ "r17", 131 }, { "r17d", 131 }, { "r17w", 131 }, { "r17b", 131 },
-+	{ "r18", 132 }, { "r18d", 132 }, { "r18w", 132 }, { "r18b", 132 },
-+	{ "r19", 133 }, { "r19d", 133 }, { "r19w", 133 }, { "r19b", 133 },
-+	{ "r20", 134 }, { "r20d", 134 }, { "r20w", 134 }, { "r20b", 134 },
-+	{ "r21", 135 }, { "r21d", 135 }, { "r21w", 135 }, { "r21b", 135 },
-+	{ "r22", 136 }, { "r22d", 136 }, { "r22w", 136 }, { "r22b", 136 },
-+	{ "r23", 137 }, { "r23d", 137 }, { "r23w", 137 }, { "r23b", 137 },
-+	{ "r24", 138 }, { "r24d", 138 }, { "r24w", 138 }, { "r24b", 138 },
-+	{ "r25", 139 }, { "r25d", 139 }, { "r25w", 139 }, { "r25b", 139 },
-+	{ "r26", 140 }, { "r26d", 140 }, { "r26w", 140 }, { "r26b", 140 },
-+	{ "r27", 141 }, { "r27d", 141 }, { "r27w", 141 }, { "r27b", 141 },
-+	{ "r28", 142 }, { "r28d", 142 }, { "r28w", 142 }, { "r28b", 142 },
-+	{ "r29", 143 }, { "r29d", 143 }, { "r29w", 143 }, { "r29b", 143 },
-+	{ "r30", 144 }, { "r30d", 144 }, { "r30w", 144 }, { "r30b", 144 },
-+	{ "r31", 145 }, { "r31d", 145 }, { "r31w", 145 }, { "r31b", 145 },
- 	// End of regular dwarf registers.
- 	{ "rip", DWARF_REG_PC }, { "eip", DWARF_REG_PC }, { "ip", DWARF_REG_PC },
- };
-@@ -204,7 +247,7 @@ int __get_dwarf_regnum_for_perf_regnum_i386(int perf_regnum)
- 	return dwarf_i386_regnums[perf_regnum];
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 625240809fce..3c17f68ceb92 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -127,6 +127,131 @@ test_register_capture() {
+   echo "Register capture test [Success]"
  }
  
--int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum)
-+int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum, int abi)
- {
- 	static const int dwarf_x86_64_regnums[] = {
- 		[PERF_REG_X86_AX] = 0,
-@@ -248,13 +291,66 @@ int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum)
- 		[PERF_REG_X86_XMM14] = 31,
- 		[PERF_REG_X86_XMM15] = 32,
- 	};
-+	static const int dwarf_x86_64_regnums_apx[] = {
-+		[PERF_REG_X86_AX] = 0,
-+		[PERF_REG_X86_BX] = 3,
-+		[PERF_REG_X86_CX] = 2,
-+		[PERF_REG_X86_DX] = 1,
-+		[PERF_REG_X86_SI] = 4,
-+		[PERF_REG_X86_DI] = 5,
-+		[PERF_REG_X86_BP] = 6,
-+		[PERF_REG_X86_SP] = 7,
-+		[PERF_REG_X86_IP] = 16,
-+		[PERF_REG_X86_FLAGS] = 49,
-+		[PERF_REG_X86_CS] = 51,
-+		[PERF_REG_X86_SS] = 52,
-+		[PERF_REG_X86_DS] = 53,
-+		[PERF_REG_X86_ES] = 50,
-+		[PERF_REG_X86_FS] = 54,
-+		[PERF_REG_X86_GS] = 55,
-+		[PERF_REG_X86_R8] = 8,
-+		[PERF_REG_X86_R9] = 9,
-+		[PERF_REG_X86_R10] = 10,
-+		[PERF_REG_X86_R11] = 11,
-+		[PERF_REG_X86_R12] = 12,
-+		[PERF_REG_X86_R13] = 13,
-+		[PERF_REG_X86_R14] = 14,
-+		[PERF_REG_X86_R15] = 15,
-+		[PERF_REG_X86_R16] = 130,
-+		[PERF_REG_X86_R17] = 131,
-+		[PERF_REG_X86_R18] = 132,
-+		[PERF_REG_X86_R19] = 133,
-+		[PERF_REG_X86_R20] = 134,
-+		[PERF_REG_X86_R21] = 135,
-+		[PERF_REG_X86_R22] = 136,
-+		[PERF_REG_X86_R23] = 137,
-+		[PERF_REG_X86_R24] = 138,
-+		[PERF_REG_X86_R25] = 139,
-+		[PERF_REG_X86_R26] = 140,
-+		[PERF_REG_X86_R27] = 141,
-+		[PERF_REG_X86_R28] = 142,
-+		[PERF_REG_X86_R29] = 143,
-+		[PERF_REG_X86_R30] = 144,
-+		[PERF_REG_X86_R31] = 145,
-+	};
- 
- 	if (perf_regnum == 0)
- 		return 0;
- 
--	if (perf_regnum < 0 || perf_regnum >= (int)ARRAY_SIZE(dwarf_x86_64_regnums) ||
--	    dwarf_x86_64_regnums[perf_regnum] == 0)
-+	if (perf_regnum < 0)
-+		return -ENOENT;
++has_required_regs() {
++  local regs_output="$1"
++  shift
 +
-+	if (!(abi & PERF_SAMPLE_REGS_ABI_SIMD) &&
-+	    (perf_regnum >= (int)ARRAY_SIZE(dwarf_x86_64_regnums) ||
-+	     dwarf_x86_64_regnums[perf_regnum] == 0))
-+		return -ENOENT;
++  for reg in "$@"
++  do
++    if ! echo "${regs_output}" | grep -q -i "${reg}"
++    then
++      return 1
++    fi
++  done
 +
-+	if ((abi & PERF_SAMPLE_REGS_ABI_SIMD) &&
-+	    (perf_regnum >= (int)ARRAY_SIZE(dwarf_x86_64_regnums_apx) ||
-+	     dwarf_x86_64_regnums_apx[perf_regnum] == 0))
- 		return -ENOENT;
- 
--	return dwarf_x86_64_regnums[perf_regnum];
-+	return abi & PERF_SAMPLE_REGS_ABI_SIMD ?
-+			dwarf_x86_64_regnums_apx[perf_regnum] :
-+			dwarf_x86_64_regnums[perf_regnum];
++  return 0
++}
++
++validate_gp_reg_sampling() {
++  local regs_opt="$1"
++  local regs_value="$2"
++  local script_field="$3"
++  local sample_output
++  shift 3
++
++  if ! sample_output=$(perf record -o - "${regs_opt}=${regs_value}" \
++    -e br_inst_retired.near_call -c 1000 --per-thread ${testprog} 2> /dev/null \
++    | perf script -F ip,sym,"${script_field}" -i - 2> /dev/null)
++  then
++    return 1
++  fi
++
++  if ! has_required_regs "${sample_output}" "$@"
++  then
++    return 1
++  fi
++
++  return 0
++}
++
++test_egpr_register_capture() {
++  local arch
++  local intr_regs
++  local user_regs
++  local tested=0
++
++  echo "eGPR/SSP register capture test"
++
++  arch=$(uname -m)
++  case ${arch} in
++  x86_64|i386)
++    ;;
++  *)
++    echo "eGPR/SSP register capture test [Skipped non-x86 platform]"
++    return
++    ;;
++  esac
++
++  if ! perf list pmu | grep -q 'br_inst_retired.near_call'
++  then
++    echo "eGPR/SSP register capture test [Skipped missing event]"
++    return
++  fi
++
++  intr_regs=$(perf record --intr-regs=\? 2>&1 || true)
++  user_regs=$(perf record --user-regs=\? 2>&1 || true)
++
++  if has_required_regs "${intr_regs}" R16 R31
++  then
++    if ! validate_gp_reg_sampling "--intr-regs" "r16,r31" "iregs" "R16:" "R31:"
++    then
++      echo "eGPR/SSP register capture test [Failed eGPR intr-regs validation]"
++      err=1
++      return
++    fi
++    tested=1
++  else
++    echo "eGPR/SSP register capture test [Skipped missing eGPR intr-regs (R16/R31)]"
++  fi
++
++  if has_required_regs "${user_regs}" R16 R31
++  then
++    if ! validate_gp_reg_sampling "--user-regs" "r16,r31" "uregs" "R16:" "R31:"
++    then
++      echo "eGPR/SSP register capture test [Failed eGPR user-regs validation]"
++      err=1
++      return
++    fi
++    tested=1
++  else
++    echo "eGPR/SSP register capture test [Skipped missing eGPR user-regs (R16/R31)]"
++  fi
++
++  if has_required_regs "${intr_regs}" SSP
++  then
++    if ! validate_gp_reg_sampling "--intr-regs" "ssp" "iregs" "SSP:"
++    then
++      echo "eGPR/SSP register capture test [Failed SSP intr-regs validation]"
++      err=1
++      return
++    fi
++    tested=1
++  else
++    echo "eGPR/SSP register capture test [Skipped missing SSP intr-regs]"
++  fi
++
++  if has_required_regs "${user_regs}" SSP
++  then
++    if ! validate_gp_reg_sampling "--user-regs" "ssp" "uregs" "SSP:"
++    then
++      echo "eGPR/SSP register capture test [Failed SSP user-regs validation]"
++      err=1
++      return
++    fi
++    tested=1
++  else
++    echo "eGPR/SSP register capture test [Skipped missing SSP user-regs]"
++  fi
++
++  if [ ${tested} -eq 0 ]
++  then
++    echo "eGPR/SSP register capture test [Skipped missing eGPR/SSP registers]"
++    return
++  fi
++
++  echo "eGPR/SSP register capture test [Success]"
++}
++
+ check_system_wide() {
+   perf report -i "${perfdata}" -q | grep -q "${testsym}"
  }
-diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
-index 797f455eba0d..67f38342247e 100644
---- a/tools/perf/util/dwarf-regs.c
-+++ b/tools/perf/util/dwarf-regs.c
-@@ -158,6 +158,10 @@ static int get_libdw_frame_nregs(unsigned int machine, unsigned int flags __mayb
- {
- 	switch (machine) {
- 	case EM_X86_64:
-+		/*
-+		 * Since libdw doesn't support SIMD and APX eGPR register yet,
-+		 * still keep nregs to 17.
-+		 */
- 		return 17;
- 	case EM_386:
- 		return 9;
-@@ -187,13 +191,14 @@ static int get_libdw_frame_nregs(unsigned int machine, unsigned int flags __mayb
- }
+@@ -491,6 +616,7 @@ fi
  
- int get_dwarf_regnum_for_perf_regnum(int perf_regnum, unsigned int machine,
--				     unsigned int flags, bool only_libdw_supported)
-+				     unsigned int flags,
-+				     bool only_libdw_supported, int abi)
- {
- 	int reg;
- 
- 	switch (machine) {
- 	case EM_X86_64:
--		reg = __get_dwarf_regnum_for_perf_regnum_x86_64(perf_regnum);
-+		reg = __get_dwarf_regnum_for_perf_regnum_x86_64(perf_regnum, abi);
- 		break;
- 	case EM_386:
- 		reg = __get_dwarf_regnum_for_perf_regnum_i386(perf_regnum);
-diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/include/dwarf-regs.h
-index 46a764cf322f..92cf0af93e9e 100644
---- a/tools/perf/util/include/dwarf-regs.h
-+++ b/tools/perf/util/include/dwarf-regs.h
-@@ -103,7 +103,7 @@ int __get_csky_regnum(const char *name, unsigned int flags);
- int __get_dwarf_regnum_i386(const char *name);
- int __get_dwarf_regnum_x86_64(const char *name);
- int __get_dwarf_regnum_for_perf_regnum_i386(int perf_regnum);
--int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum);
-+int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum, int abi);
- 
- int __get_dwarf_regnum_for_perf_regnum_arm(int perf_regnum);
- int __get_dwarf_regnum_for_perf_regnum_arm64(int perf_regnum);
-@@ -125,8 +125,9 @@ int get_dwarf_regnum(const char *name, unsigned int machine, unsigned int flags)
- /*
-  * get_dwarf_regnum - Returns DWARF regnum from perf register number.
-  */
--int get_dwarf_regnum_for_perf_regnum(int perf_regnum, unsigned int machine, unsigned int flags,
--				     bool only_libdw_supported);
-+int get_dwarf_regnum_for_perf_regnum(int perf_regnum, unsigned int machine,
-+				     unsigned int flags,
-+				     bool only_libdw_supported, int abi);
- 
- void get_powerpc_regs(u32 raw_insn, int is_source, struct annotated_op_loc *op_loc);
- 
-diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-libdw.c
-index 7f35042be567..13fd81af5b54 100644
---- a/tools/perf/util/unwind-libdw.c
-+++ b/tools/perf/util/unwind-libdw.c
-@@ -273,7 +273,8 @@ static bool libdw_set_initial_registers(Dwfl_Thread *thread, void *arg)
- 			int dwarf_reg =
- 				get_dwarf_regnum_for_perf_regnum(perf_reg, e_machine,
- 								 e_flags,
--								 /*only_libdw_supported=*/true);
-+								 /*only_libdw_supported=*/true,
-+								 user_regs->abi);
- 			if (dwarf_reg > max_dwarf_reg)
- 				max_dwarf_reg = dwarf_reg;
- 		}
-@@ -288,7 +289,8 @@ static bool libdw_set_initial_registers(Dwfl_Thread *thread, void *arg)
- 			int dwarf_reg =
- 				get_dwarf_regnum_for_perf_regnum(perf_reg, e_machine,
- 								 e_flags,
--								 /*only_libdw_supported=*/true);
-+								 /*only_libdw_supported=*/true,
-+								 user_regs->abi);
- 			if (dwarf_reg >= 0) {
- 				val = 0;
- 				if (perf_reg_value(&val, user_regs, perf_reg) == 0)
+ test_per_thread
+ test_register_capture
++test_egpr_register_capture
+ test_system_wide
+ test_workload
+ test_branch_counter
 -- 
 2.34.1
 
