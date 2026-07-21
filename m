@@ -1,214 +1,253 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609D322157B
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 07:52:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784620331; cv=none; b=djT7/GTfQxZR1uCIRUGIEyIy6XMEqm2+c/9d6E7W1b4hQ5UQHxWe1mL7h/c/kyEL92WOJwW70ZMoe70GSkwQHR5xj9+AkPJiB77HdmEZauhQfsvGwCv+qKl3bozCU8/MlAZyDxjV+oqEJpX1YyRn+Cw9tDKbl2+2JObM7CoVmDM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784620331; c=relaxed/simple;
-	bh=LyU8j9GZp9xRuum/bRXxy2dTQlMz7pFMNVee6h2bY0I=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=D0NhdMMgbdi8Tr9htSOVrWEucuIHk+Rn6BRr4YG0tSrn8NdGg4r2lTm+UbcpdWYW86AbfXSOMqZa0uUkSfHkdPJ/hiTLFvRw1D6qNPER2bt55MG/1IZywxxedbQtukb6UhEBPhoDU2lrZJWjaFhfTkm2aSmksOSMJSIO02XgNj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I08URDSf; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7DC73D3CE4;
+	Tue, 21 Jul 2026 08:09:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784621355; cv=fail; b=I8nRvBEL2Szy2E+f0bckTIL3N9ceKfFAENTi0FMPjmJgoMeEcnWdx6H2dQ2WW+HjBAnC4ppWi5UijlV+IHiHxsNiGDuQ9rFWwtgDqf1Jbs2uBgDz/abkvFohSEfhxWSkSdVomayf4X4zKwGtx9Tsy63k3HJXcYC0zX/XQpWjM9w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784621355; c=relaxed/simple;
+	bh=iPYAy4bk7RRF/MNN9SRM594VzI3wxaQ5q5elKYuNPi4=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=vGQfXH6qArAKcj+Ymv7hQ1sq3ELIa2hLPSLFTQJlHlz/6rfFDzyHJtyx7lh7QLHRkROSMQrxO92csyXUrfz39Bmg6y+VsNMjzwHbqUCjKDLBL07wi7emkXHDUNH6tYmPo7QfCZWHlUZyhwpPdeBO38zwsGF7EYJcKMWrvgZMaAg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fbWeJ6gy; arc=fail smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I08URDSf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC4A41F00A3D;
-	Tue, 21 Jul 2026 07:52:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784620330;
-	bh=XnRdlHu3adUb3ZiKxA614sMDE5/dvOWwXYMfviGjsc4=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=I08URDSfQWOmln4BfsQzi8/xcZ0EymRbfTI49rZbxfzEAF7O6KRao5gOZPcvKijeK
-	 3onI3q/wm/mO+bCpi7uUeZmzdYI+Dv4lZzQSvMWEThS4T2LqBDY0MWNdDMJAMZSbJn
-	 kI713iHdr99GtxaUoUdCZEWb4lgZ/6lfh1GqAHyXjSNyHJTBgzuv/d3Y/QoMWG9sKP
-	 FPkrwrMklOE4JgEsAmrqep5zlPbBRV+DgpFBbKzWK/ALQBM1rShixA8TnajlvlvCea
-	 0A/HgYIExviS8gCobuz7wnSlqbQzPJdwwkyXmgnJd0ZOm2NF+ZIqgEkah1AzVhmvXV
-	 F+M9ZVhXKJR7w==
-From: sashiko-bot@kernel.org
-Subject: Re: [Patch v10 05/10] perf regs: Support x86 eGPRs/SSP sampling
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260721072707.3787848-6-dapeng1.mi@linux.intel.com>
-References: <20260721072707.3787848-1-dapeng1.mi@linux.intel.com>
- <20260721072707.3787848-6-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 21 Jul 2026 07:52:09 +0000
-Message-Id: <20260721075209.EC4A41F00A3D@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fbWeJ6gy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784621353; x=1816157353;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=iPYAy4bk7RRF/MNN9SRM594VzI3wxaQ5q5elKYuNPi4=;
+  b=fbWeJ6gyaI7HATbD7nYcDexqy73zaxtzKfwE5DPnBTEcNKU7XunixL8J
+   cwN+SFOizF+qsMeKbEvBnV68aRHb98y+3kDjXPcvfJR1dQ4mvUEfP20+Y
+   wck9g8jvT1Mhur2laRdwVPBZRU3cdakTcYqm4PLSjD2s0/QeKXvZdS5t6
+   6pAR+Z4iBIU3i2V4r7bxKBNvK9FD6tqFxTSmeaweoQ8drMT1CzGYg5Y1V
+   E+o2PySBcsKwvh4QvY3scF2B4cNAMh0b1dd6rrYeSA68pgQxImno7Ucby
+   iMtjAF+GpUeItEIkL3CRe+/47W1F+EE7t8j2hH8w+7WFX2Y/B8H3fqngI
+   A==;
+X-CSE-ConnectionGUID: 2fv30HWySD2lgQss+sp2jQ==
+X-CSE-MsgGUID: PlF80qNyQTO0ShB0OsIymg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11852"; a="85068560"
+X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
+   d="scan'208";a="85068560"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 01:09:12 -0700
+X-CSE-ConnectionGUID: pH5akjZuQ9+is+WiEplyhw==
+X-CSE-MsgGUID: RezT8YTRRl2ykSbUzVIJyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
+   d="scan'208";a="251365573"
+Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 01:09:12 -0700
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43; Tue, 21 Jul 2026 01:09:11 -0700
+Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43 via Frontend Transport; Tue, 21 Jul 2026 01:09:11 -0700
+Received: from CH1PR05CU001.outbound.protection.outlook.com (52.101.193.48) by
+ edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.43; Tue, 21 Jul 2026 01:09:11 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=spta5aoT4LGHIRxcrbfsl71NhYbvtrWV381QXAvjKoBnLgyhPYD9JdX2/u+V48mW74nGJ96OzxuuIhHEseaikf3bFrJC/aCtcV2g78pEa4GeRc0z5toXWSfchJs3ZgvOS3ID5j4v8yDxRyV8MKOPUFM1om03baa0/TG4D2tjCiNNX1pkRxSF0sNUjle0ytYCjKLPTQP6g5gYepLbUki93cICeP5w+1DecU6vitQtSla0N//s3uKcJ+uqZVPJ9BNpTzM4jGhGHQSJ/qTlnnXQ2TngXqAt9y4gP/wc7iEhF95XbMg0PYaSPPcsTIn0UkUmMht6W0F0svevWtR5jid3qw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CTrItQi2efJI5qehPGcm7hg657YaN/ckHxxAak2JjVg=;
+ b=fCK6pqbazb3NzimTTxZnLezTqlgIdPBwq77iiM8M6dbWsKs3nG4Hqs+tYXvEiTXrnw6GK9s6bJIkcJvh+Q21Y1OZ/8Jgu4JvVqADALno9ojQK9AFTsJnB9CAedc/vXheiAo4Xf/ksLwrAKpCQ6vg8DUOZxPB5pzoD9SFTnGKsNUriU0wigif59qvnbtj6AG/+uEQfMd+JarkigBrGMGMKHjjQ0xAOz+srAGubXuttM40/VaYca06nNA4sFQipk/0WrYC+W70vjdDL5tgknV7i/sBG7fuofNRGA5pXN5y0l7QbmUIFVk2ukSoj7LouiqeNpty8PQZkit/XAMxGMgxHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
+ by DM3PPF195D11F0C.namprd11.prod.outlook.com (2603:10b6:f:fc00::f0c) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.10; Tue, 21 Jul
+ 2026 08:09:03 +0000
+Received: from IA1PR11MB7198.namprd11.prod.outlook.com
+ ([fe80::2c4e:e92a:4fa:a456]) by IA1PR11MB7198.namprd11.prod.outlook.com
+ ([fe80::2c4e:e92a:4fa:a456%3]) with mapi id 15.21.0223.017; Tue, 21 Jul 2026
+ 08:09:03 +0000
+Message-ID: <07c8c780-5eeb-4310-80cd-3ff18952a688@intel.com>
+Date: Tue, 21 Jul 2026 11:08:57 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 11/21] perf auxtrace: Set default period to 1 for
+ PERF_ITRACE_PERIOD_INSTRUCTIONS type
+To: Tengda Wu <wutengda@huaweicloud.com>, Namhyung Kim <namhyung@kernel.org>,
+	<james.clark@linaro.org>, <xueshuai@linux.alibaba.com>, Li Huafei
+	<lihuafei1@huawei.com>
+CC: Peter Zijlstra <peterz@infradead.org>, <leo.yan@linux.dev>, Ian Rogers
+	<irogers@google.com>, Kim Phillips <kim.phillips@arm.com>, Mark Rutland
+	<mark.rutland@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, "Ingo
+ Molnar" <mingo@redhat.com>, Bill Wendling <morbo@google.com>, Nick
+ Desaulniers <nick.desaulniers+lkml@gmail.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Zecheng Li <zli94@ncsu.edu>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<llvm@lists.linux.dev>
+References: <20260701035355.752944-1-wutengda@huaweicloud.com>
+ <20260701035355.752944-12-wutengda@huaweicloud.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
+ 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
+ 4, Domiciled in Helsinki
+In-Reply-To: <20260701035355.752944-12-wutengda@huaweicloud.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DUZP191CA0059.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:10:4fa::13) To IA1PR11MB7198.namprd11.prod.outlook.com
+ (2603:10b6:208:419::15)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|DM3PPF195D11F0C:EE_
+X-MS-Office365-Filtering-Correlation-Id: 07e5903b-291e-4414-3b38-08dee6ff53f6
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|366016|7416014|376014|1800799024|3023799007|56012099006|11063799006|4143699003|10067099003|6133799003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: hmYnZH1bEEBVicBEPvlduXbhwETr72N7q2YFTZjybCgbC7HVvDpbZ2t+WeQbQaDMqItS++DFijxWUbt7553lXSAwSeTWsbXjRnelr4Xuc+5qKqM7RylivDqEQItOpTb24rHwTq1sseKBPEUtVZOyv+tr0o4DTEplgn79CaFbNOQXE3jPhByv7yxWBmVsNExVUQfw2P1sf6pggYJM482Clt+RoAKaY2s/GG5/7rmKKqD9RPkfTl7ttmnw9oO6VvsKvGeVPZWHLLQ/uM692nj5v0rPUOXsPVqQz0am7mwz5JsRKOBz4Fdu2FpzTlOLFbE73EPq6Yrf/IFnmVeu7++8GTkntTFxmYILmTSa8Au2wyJLBHQbOPUDj+YhsY3p2iPLFnSkEK8I1PnyLIWZrEtTOkX/Oi5Rp7LTGUt+o8MSTo6pS9W7XCQp7C6XJ4AczzbCLeUHByN694XXZCtMmlD4g7ldcyrAp4ThKhvBYsID5izVVqu6wYMKIxk6XLcHUVXEMdvhTrzoykoU9c68KQgU16yr9XmpVd8x7ilwfU10aRz7qNc558xJ0e3xbAODHPVDn1dJNrXnqM2+/KT9Qb26pYSQyX51WGOceY/lPAcMjLsK0Fl/vhqcjSjxa0rH6kShS4vYyrd6vu7caQhurqCn6WKpM2K/FTMUenmrnnMlNgI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(7416014)(376014)(1800799024)(3023799007)(56012099006)(11063799006)(4143699003)(10067099003)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?d3d5Q0xaZkEyMWRIZjVKbUJzMkpDT0hMNk1hanZlQ2pZK2U2VWZ3Sk8rUVFB?=
+ =?utf-8?B?c25yRWJhODE2WXI1N1FUNWhjVThVWGtBMVh6b3RkYlVuYTRCSmorcFFtbm1L?=
+ =?utf-8?B?SWNCRXE0ZHpZTTJUT3ZocnlXTVJ0b09JdG0zOVY1SVcxUWFrOTcwTkYvYzR5?=
+ =?utf-8?B?cDhmQnF6bFBSYXZ2aDl3NjFnbnNLeUVPSjJ2UUxhZlVaK1pvUFV0a0pSUTVP?=
+ =?utf-8?B?WnhHYmI1K3BCMlZ5WmpsUC8zR1ZYTWhPQ2RSQWw3WlFwc1gvUGw4RlZOYTZj?=
+ =?utf-8?B?b1lQLzYydlpBTlBBaGltYnRad05zN1JUVzBRNEdpU1RvYmNUMHN3Q2FzaHdp?=
+ =?utf-8?B?UjI0dFhnMnU4Um9aUkJHdWU2UnUrZWM2NUJIYjcxWVJFanltSFUwNmpRMU44?=
+ =?utf-8?B?Zy9YbWNzSWNUVUhHNTA2bXdvK1lHYzdsRGJoY1ZhWE85cWFaa0Q3ZGRJRFlK?=
+ =?utf-8?B?VFVTQ3diVkFWalA5dVN1TFFTNEZCNDZ5QlE3TmFFZEpwMUU5dEViRlJNc1Rp?=
+ =?utf-8?B?ZmROcmFxMGNHMU1raW1SeWdWVStyTlJkU1lTOGJJQlQ1S3hja3NQVXA0b1cv?=
+ =?utf-8?B?N25sbnpjcFhQcXpncTNzdDJydTNlSE5EM1N4RTlaY3hLRXdqMk4xRnprVXZh?=
+ =?utf-8?B?OXpRWmZadmh0b1R5amNyVmxuVHJ3WHFFTTVBRU5sWTBUdS90WFhBcnk4M05a?=
+ =?utf-8?B?b2xreWhTNm9KZ3ZaTk9tamxCQTFuaFZhNDNPdmw3MG1helpEemZrcnBBVXZI?=
+ =?utf-8?B?Y01zNnB0U3NrZ3pBYm5LdGVsZHlucnJLaG5oRVFGUDFjZSt5ZWlCWEtjRVpQ?=
+ =?utf-8?B?bzZZOFdnbml0UGtpbHJFcWNBc09kcTJjYmdPUUMvbE9kUmwrTXplbktJMW8w?=
+ =?utf-8?B?R3FvU0ZJN1lxK0l3WjhVN0hleUpKZmdVekJ5eUh4eVlyTzU0Y0ZNMlpPODJX?=
+ =?utf-8?B?NDVnRzR2Y280bnBERHVsYVpKeU1USnVHeTZQUTRYblE3WVRmR25MRDdPQ3pu?=
+ =?utf-8?B?N1hhcHZXdmZ6U1RtcnF0aVIrT2hwOW5UbHY3d1lwVnR4U3NjbG9pUjlBc29M?=
+ =?utf-8?B?dC8xZkcwWS83YWJSRVNGSVNKZWU0ejdmWk5FTWN5b2NISVRXcS9qYm16R1Q0?=
+ =?utf-8?B?bXBCQWxobFRyQVcyWlhKZUtRQ0w4K1RFZE5QQ0QveUNMR2NkcTJ2VWltMlhN?=
+ =?utf-8?B?SEVxQWprRlZ5bjd5Um9FZS9PTVF4bGt4VC81UUV3NGFJajdKS01oRmVYQ0ww?=
+ =?utf-8?B?aW5iTHgrMVk1T2Y3dFloRGluWFo3Ui9WbWhQcTZXcWdVcEtqWjI1VlRWVEZa?=
+ =?utf-8?B?RFpnWEQ5b1hFVnZDem1UVjBIL2FCN0hKWXhWRWZ5alRkc1VFUUZvUm9rbjU1?=
+ =?utf-8?B?YTI5UHBnOFdPNDR3di9DZlNXSFV4U1BONUxWQ0FFZUJhV1VCcnJLblkvUFMz?=
+ =?utf-8?B?cVdNYzRlcEZmOE5mNzYyQUhISlE2TXAyNW13dEVwWDBxNXltdUR5d3RLZld4?=
+ =?utf-8?B?dDhFY2RRaTgvZThMdHppT1RkNlAyU1M0M0FVZ3Z2dGRuV2c1RFRZTnZpeEV4?=
+ =?utf-8?B?LytCZzRzbzU3YVhsTWpxV0l2NXNBcEJFcUNJeHRMdm5FeExEeU5TeDR5MDB5?=
+ =?utf-8?B?YU1aTGI2KzcvLzh6ZTFtVVZLNjgzR3RETFNKVVFJbldxTFZFaDZUUHYxK1hm?=
+ =?utf-8?B?VC9MdU9JSW9ENVFkZGlOQXF1bHNMVThzRDJ4c0x1cmpTNWo2ZkFHT3RacExp?=
+ =?utf-8?B?VCtiYUFiNUZWdXQxLzkwQkVSeUxXVXNQNlZkZmZ3c2U0VFJleDhOS0pETGVx?=
+ =?utf-8?B?T1dDQnBaV2drNmV1Mk42MXlIdEJwOXB3NGoxRTRhcDdZTVVTQWkwR01NcUNa?=
+ =?utf-8?B?dDdDVk1LaXN3a2xhWkY5Z3NRSmJSUW5MbGRuZDRabnFCdFIzWGxyMUJzcGhX?=
+ =?utf-8?B?dEgxWHNVRDFQUURGSjlwZ0dvajBBOW1zM3REa3JVK3RQOENEU2FBcXJrakNG?=
+ =?utf-8?B?ZkoxREVJWVZ2WnJkZ2ZYTEJLYW45K3ZTNWxINjNHKzE5bG5tMVBMWExkeDl4?=
+ =?utf-8?B?RnBLejdzR2xMUWxvVE16S1NrdkUzVnBYazVvRTlwUWF4RTI3RjM4a2hQVC8w?=
+ =?utf-8?B?YlI2bnl2R2E5UkFnSmlHNG1MZW5oNGlvWHRmQzBSS3ZYelZ0SWRicEJ2R1BD?=
+ =?utf-8?B?UE02amlMbWhsSC9uK0tzUndZZFZVRUUxQVFZUXNhNVlJTVpueThNUDRpTGl5?=
+ =?utf-8?B?UHhCS2prbGF0SEFrZ3N3Y3pMN3Y2b2dnSVdIWFlWZkhsTjBJL1lMMG5qVnl0?=
+ =?utf-8?B?S2hFdklsT2F5cFNvV3p6SU00VkVJcm1TSUY1RG1IUU4vM3BsaUV5Qzl4bG94?=
+ =?utf-8?Q?U9yV44H/Mwqif7QY=3D?=
+X-Exchange-RoutingPolicyChecked: PJUsxonQCeCDxxQHzm3fbBIT8Nk0Dqi3/svEm21sqpWuOs70UKbS08znW/zhSBuAB6GNORtQa+MVfeP8PD+obncKxUfwqCoCxWR1Pi/J69c0+3b0LJ9qOj9VibNjKtBIJSfDEOMmnnEf98BblntDEMemkrvLiWMLSx8YIsZuntTly5UclCgdZo/9jB2MGa+nm4YCXwD2v2m6eVP8gtTQ/v00UbMW1JCZ2gjuNSyrzbvL/Jx7h+/y+YOjKdJs2q1YTummhFK/FaTX/ktVbC+EohJ09AuBI/Qx9fG6gfg6+B7HE7L4R8gjh0vwR1/MZxwoezmBcEYhHUtqgUr97qPTUg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07e5903b-291e-4414-3b38-08dee6ff53f6
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7198.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jul 2026 08:09:03.5815
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2kx5oPB49jo6e0+UAbOCR9QqO3TL3Py/s1POKjq/xfet/8u4yJ+mvpd4KLVcqwnSC+FfyeOWdkhvuIWbGxw3Ng==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PPF195D11F0C
+X-OriginatorOrg: intel.com
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] Hardcoded 32-byte SIMD header skip in `__evsel__parse_sample` corr=
-upts parsing of future `perf.data` files containing actual SIMD data payloa=
-ds.
-- [High] `perf_event__synthesize_sample` fails to write the SIMD register h=
-eader, leading to uninitialized memory leaks and corruption of synthesized =
-events.
-- [High] Silently substituting requested eGPRs with legacy XMM registers on=
- non-hardware events.
---
+On 01/07/2026 06:53, Tengda Wu wrote:
+> When using --itrace=M for data type profiling on arm64, the 'Percent'
+> values in perf annotate output are all zero:
+> 
+> Annotate type: 'struct mmu_gather_batch' in [kernel.kallsyms] (15 samples):
+> ============================================================================
+>  Percent     offset       size  field
+>     0.00          0       0x10  struct mmu_gather_batch  {
+>     0.00          0        0x8      struct mmu_gather_batch*    next;
+>     0.00        0x8        0x4      unsigned int        nr;
+>     0.00        0xc        0x4      unsigned int        max;
+>     0.00       0x10          0      struct encoded_page*[]      encoded_pages;
+>                                 };
+> 
+> However, adding the -n option reveals non-zero sample counts:
+> 
+> Annotate type: 'struct mmu_gather_batch' in [kernel.kallsyms] (15 samples):
+> ============================================================================
+>  Samples     offset       size  field
+>       15          0       0x10  struct mmu_gather_batch  {
+>       13          0        0x8      struct mmu_gather_batch*    next;
+>        2        0x8        0x4      unsigned int        nr;
+>        0        0xc        0x4      unsigned int        max;
+>        0       0x10          0      struct encoded_page*[]      encoded_pages;
+>                                 };
+> 
+> The root cause is that when period is not explicitly specified in the
+> --itrace option, it remains zero after itrace_do_parse_synth_opts().
+> The zero period then flows through annotated_data_type__update_samples()
+> where h->period accumulates to zero, and print_annotated_data_type_value()
+> calculates the 'Percent' as zero.
 
---- Patch [5]: [Patch v10 05/10] perf regs: Support x86 eGPRs/SSP sampling =
----
-commit 8930556b90beb6ec5b6f4e43ddaf5145e6dda06d
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+The period is for instructions samples i.e. options 'i' or 'y'.  Why is
+it being used in the 'M' case?  What samples are being synthesized in
+that case?
 
-perf regs: Support x86 eGPRs/SSP sampling
-
-This commit adds support for sampling x86 extended GP registers (R16-R31)
-and the shadow stack pointer (SSP) register. It reclaims the original XMM
-registers space in the sampling masks to represent eGPRs and SSP when SIMD
-sampling is supported, distinguishing them with a new abi flag.
-
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index a5b0687a3a79f..da0ad06446091 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-
-[ ... ]
-
-> @@ -1661,12 +1664,16 @@ void evsel__config(struct evsel *evsel, const str=
-uct record_opts *opts,
->  	if (opts->sample_intr_regs && !evsel->no_aux_samples &&
->  	    !evsel__is_dummy_event(evsel)) {
->  		attr->sample_regs_intr =3D opts->sample_intr_regs;
-> +		attr->sample_simd_regs_enabled =3D evsel__is_hardware_event(evsel) ?
-> +				!!opts->sample_simd_regs_enabled : 0;
-
-[Severity: High]
-Does clearing the sample_simd_regs_enabled flag for non-hardware events
-cause the kernel to misinterpret the bits as legacy XMM requests?
-
-If a user requests sampling of eGPRs on a software event, this flag is
-forcibly cleared, but the opts->sample_intr_regs bitmask is preserved.
-Because eGPR definitions alias legacy XMM definitions, wouldn't the kernel
-see the bits set alongside sample_simd_regs_enabled =3D 0 and dump legacy X=
-MM
-data instead?
-
-The tool might then read it back without the SIMD ABI flag and print it as
-XMM, silently losing the user's intent to capture eGPRs. Should the
-aliasing eGPR bits be masked out from the sample_regs mask when clearing
-the SIMD flag?
-
->  		evsel__set_sample_bit(evsel, REGS_INTR);
+> 
+> In itrace_do_parse_synth_opts(), non-'iy' options have their period
+> type set to PERF_ITRACE_PERIOD_INSTRUCTIONS, but period remains zero.
+> Since a zero period is meaningless for this type, default to 1 (one
+> sample per instruction).
+> 
+> With this fix applied, the result is as follows:
+> 
+> Annotate type: 'struct mmu_gather_batch' in [kernel.kallsyms] (15 samples):
+> ============================================================================
+>  Percent     offset       size  field
+>   100.00          0       0x10  struct mmu_gather_batch  {
+>    86.67          0        0x8      struct mmu_gather_batch*    next;
+>    13.33        0x8        0x4      unsigned int        nr;
+>     0.00        0xc        0x4      unsigned int        max;
+>     0.00       0x10          0      struct encoded_page*[]      encoded_pages;
+>                                 };
+> 
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> ---
+>  tools/perf/util/auxtrace.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index 0b851f32e98c..415b68a2bba9 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -1759,6 +1759,12 @@ int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
+>  			synth_opts->period = PERF_ITRACE_DEFAULT_PERIOD;
 >  	}
-> =20
->  	if (opts->sample_user_regs && !evsel->no_aux_samples &&
->  	    !evsel__is_dummy_event(evsel)) {
->  		attr->sample_regs_user |=3D opts->sample_user_regs;
-> +		attr->sample_simd_regs_enabled =3D evsel__is_hardware_event(evsel) ?
-> +				!!opts->sample_simd_regs_enabled : 0;
-
-[Severity: High]
-This seems to have the same aliasing issue as above where eGPR requests on
-non-hardware events will be silently interpreted as legacy XMM registers.
-
->  		evsel__set_sample_bit(evsel, REGS_USER);
->  	}
-
-[ ... ]
-
-> @@ -3679,6 +3686,13 @@ int __evsel__parse_sample(struct evsel *evsel, uni=
-on perf_event *event,
->  			regs->mask =3D mask;
->  			regs->regs =3D (u64 *)array;
->  			array =3D (void *)array + sz;
+>  
+> +	if (!period_set &&
+> +	    synth_opts->period_type == PERF_ITRACE_PERIOD_INSTRUCTIONS) {
+> +		/* Indicates a sample is taken for every instruction. */
+> +		synth_opts->period = 1;
+> +	}
 > +
-> +			if (regs->abi & PERF_SAMPLE_REGS_ABI_SIMD) {
-> +				/* Skip SIMD-regs header. */
-> +				sz =3D 4 * sizeof(u64);
-> +				OVERFLOW_CHECK(array, sz, max_size);
-> +				array =3D (void *)array + sz;
-> +			}
->  		}
->  	}
+>  	return 0;
+>  
+>  out_err:
 
-[Severity: High]
-Will this hardcoded 32-byte header skip corrupt parsing for files containing
-actual SIMD data payloads?
-
-The parser unconditionally skips exactly 4 u64s for the SIMD header, but it
-doesn't dynamically compute and skip the variable-length SIMD payload that
-might follow it in future files. This would misalign the array pointer for
-subsequent fields like STACK_USER, causing garbage reads and triggering
-OVERFLOW_CHECK aborts.
-
-[ ... ]
-
-> @@ -3736,6 +3750,13 @@ int __evsel__parse_sample(struct evsel *evsel, uni=
-on perf_event *event,
->  			regs->mask =3D mask;
->  			regs->regs =3D (u64 *)array;
->  			array =3D (void *)array + sz;
-> +
-> +			if (regs->abi & PERF_SAMPLE_REGS_ABI_SIMD) {
-> +				/* Skip SIMD-regs header. */
-> +				sz =3D 4 * sizeof(u64);
-> +				OVERFLOW_CHECK(array, sz, max_size);
-> +				array =3D (void *)array + sz;
-> +			}
->  		}
->  	}
-
-[Severity: High]
-This appears to have the same issue with skipping the SIMD header without
-handling the variable-length payload.
-
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
-ic-events.c
-> index b75f9dcf4dbfe..503a239b0b10f 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -1527,6 +1527,8 @@ size_t perf_event__sample_event_size(const struct p=
-erf_sample *sample, u64 type,
->  		if (sample->user_regs && sample->user_regs->abi) {
->  			result +=3D sizeof(u64);
->  			sz =3D hweight64(sample->user_regs->mask) * sizeof(u64);
-> +			if (sample->user_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD)
-> +				sz +=3D 4 * sizeof(u64);
-
-[Severity: High]
-Does perf_event__synthesize_sample() also need to be updated to write these
-32 bytes?
-
-Since perf_event__sample_event_size() allocates 32 extra bytes for the SIMD
-header here, if perf_event__synthesize_sample() doesn't write them,
-subsequent fields could be written 32 bytes early.
-
-When the malformed event is parsed by __evsel__parse_sample(), the parser
-will skip 32 bytes after the registers, completely missing the early-written
-subsequent fields and corrupting the stream. The final 32 bytes of the event
-buffer would remain uninitialized heap memory, leaking information when
-emitted.
-
->  			result +=3D sz;
->  		} else {
->  			result +=3D sizeof(u64);
-> @@ -1555,6 +1557,8 @@ size_t perf_event__sample_event_size(const struct p=
-erf_sample *sample, u64 type,
->  		if (sample->intr_regs && sample->intr_regs->abi) {
->  			result +=3D sizeof(u64);
->  			sz =3D hweight64(sample->intr_regs->mask) * sizeof(u64);
-> +			if (sample->intr_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD)
-> +				sz +=3D 4 * sizeof(u64);
-
-[Severity: High]
-This appears to have the same issue as above, where the allocated SIMD
-header bytes might not be written by perf_event__synthesize_sample().
-
->  			result +=3D sz;
->  		} else {
->  			result +=3D sizeof(u64);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260721072707.3787=
-848-1-dapeng1.mi@linux.intel.com?part=3D5
