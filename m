@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161E242B338;
-	Tue, 21 Jul 2026 07:33:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C020442BEA8;
+	Tue, 21 Jul 2026 07:33:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784619232; cv=none; b=P9Sfv1ChWBlb1Yp+x/ipAGwNLsujXyR/NwCAe5hABeCQ5hx0ArlryS6sAlzjWgDXGQlbes9h1wL3Gp9SnmeG0jUqonKaZjFQhn9GaNbh9q8ay05vlWfIe5k70CS5cvt8+SVkIF1mzUxk4Rz4OeOH7sgkpxyV+HqO+VlJ5ekmSUI=
+	t=1784619235; cv=none; b=apgKO9bNIqQkJV+ZGOOOllXcI5WhE/XiHjjrGNjeUBZ+Rw/PnGdkuRfPoDoRNDLzgDEZWo8kb4ajAsT2xpPBM+tnPRTDMuTkO+l1+VCyuPJHHngyGWSWktoa5TaFvMm/fSOhRuypocZUllnMXmmieDJ+j/VZqac5y05MQ9bBs7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784619232; c=relaxed/simple;
-	bh=pxJzxFGmovWLPUDuWUNj9KZYnkLCj1OxBc/huuuNsV4=;
+	s=arc-20240116; t=1784619235; c=relaxed/simple;
+	bh=pm80ylUB24EdaTcYvUk2T9VT/BgRn8PM4tYeHi+311M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=U5keZybFDzoDdXAf9vFRn2WtRAg2c/+PcxomHp2VaUXpO9DPz0ig/LXTbIEyhHu1rvuJpDUUWQtyWehITWL8WAFUW7h9r+YyQR+q6ateWfomaIlZPeP5kTpVbibQDbo413WO3yhfSZC0IAuCZCg3C6mRYXpRsfbrgZp7YOWAddc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gbVRXi59; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version; b=hYirGkfCyKKrEb+RrFw3eTKSe+HFrOGlUPXUTH0ffVEp1syMVuPlZqg2gSJcuKXHFqJc/DrsAr1ZzSEH9als895F/qwTswoZxoiMwvS2swCr1YRtseBksDxZjzUMpxHmQHuuMI3qIYzRkSCvGFCMeaoUY7jwbU91QehBZTIlrcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Zo1pg18p; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gbVRXi59"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Zo1pg18p"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784619230; x=1816155230;
+  t=1784619233; x=1816155233;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=pxJzxFGmovWLPUDuWUNj9KZYnkLCj1OxBc/huuuNsV4=;
-  b=gbVRXi59WD0c9zS4rcd8vC3kIuPZWyJbQGQ4t3kMIDvqwsKsJy1KYp72
-   kgxaWx3rtDXJkwKJogLf5kcUQs4ZKlBDeSn4A90PxKCO6WPU4OPsnUnRH
-   WUwZAdTknKZoOwt8K3jX+VqVuUimg9kW7kvGopfpYTpZBM1Gsy0WOBBrL
-   jXKwYGO2Qwm1iUSXWEKJVBw4K8ivlYzuLeeorsuS+kDyXsUNTcU/jYDhn
-   EATnlrtqde7E4b6xs458PgyoR30H4CjuaC871wU/d+2ryuXtEmX8An94Z
-   a/6NMxOQ4XjRneSdE9cLEXhmhViB4l4aXxrKK9Dq634Rvh73jVRVKOuAM
-   g==;
-X-CSE-ConnectionGUID: f2TLop5mR1m+07TxA9wCCg==
-X-CSE-MsgGUID: iWQ5k3eTRXO6f+91OG24hg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11852"; a="84190104"
+  bh=pm80ylUB24EdaTcYvUk2T9VT/BgRn8PM4tYeHi+311M=;
+  b=Zo1pg18ptftYI4kz1RLfVltHcRJsN5eexIhHJaOlKndafYCBQrrIME0m
+   5Ym6Dn5Gh9XbAZ8EC+Sd3c3WiM4gBnPqUUATXcY/V5sPbw8Xo4H0zfRxJ
+   R/3Atumdo4kS8b9DEZybrC2HEvcdqTJxDQEgRUY/qSBgsqP4Uk348xWwA
+   hQkUVoCO5G4KqCSyIX0xHFn5TtFOBCcJyr1m699O1v0rugI4hDofF/9gk
+   oL1dgnmARITzuqXzYuDqQvQ3OYZC3Kk5XymG+KqGjfr4xpNt+dNeaoYrz
+   hAX4p4ZDSqF9RZ4T5lemCEqo2gWbn0ItOTuqYV+i/vEe42FvTsYwUmXXb
+   Q==;
+X-CSE-ConnectionGUID: ZDbRH2u2THWxd8cHNgGDdw==
+X-CSE-MsgGUID: YTJ3b/CQQzmQh0n4+Mi0CQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11852"; a="84190110"
 X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
-   d="scan'208";a="84190104"
+   d="scan'208";a="84190110"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 00:33:49 -0700
-X-CSE-ConnectionGUID: naIL1K6wQfqZkW7MBGjZqA==
-X-CSE-MsgGUID: vP5zrB62RSCeg9xUBQk2XA==
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 00:33:53 -0700
+X-CSE-ConnectionGUID: JD3s5NR3QdWCpBJhtn6DPw==
+X-CSE-MsgGUID: ZoMV67JTTfCBWmm4p0yzbA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
-   d="scan'208";a="256484435"
+   d="scan'208";a="256484451"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa010.jf.intel.com with ESMTP; 21 Jul 2026 00:33:47 -0700
+  by orviesa010.jf.intel.com with ESMTP; 21 Jul 2026 00:33:50 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -58,9 +58,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v10 01/10] perf dwarf-regs: Fix DWARF register index bounds check
-Date: Tue, 21 Jul 2026 15:26:58 +0800
-Message-Id: <20260721072707.3787848-2-dapeng1.mi@linux.intel.com>
+Subject: [Patch v10 02/10] perf util: Add missed fields in _attr__fprintf() and __attr_swap()
+Date: Tue, 21 Jul 2026 15:26:59 +0800
+Message-Id: <20260721072707.3787848-3-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260721072707.3787848-1-dapeng1.mi@linux.intel.com>
 References: <20260721072707.3787848-1-dapeng1.mi@linux.intel.com>
@@ -72,83 +72,59 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Tighten bounds validation in __get_dwarf_regnum_for_perf_regnum_xxx()
-helpers by changing perf_regnum > ARRAY_SIZE() to
-perf_regnum >= ARRAY_SIZE().
+Some new introduced perf_event_attr fields, like config3 and config4,
+are forgotten to add into perf_event_attr__fprintf() and
+perf_event__attr_swap() helpers. Add these missed fields into these 2
+helpers.
 
-This fixes an off-by-one condition where perf_regnum == ARRAY_SIZE()
-could pass validation and cause out-of-bounds access for
-dwarf_xxx_regnums[].
+The aux_action is an exception. aux_action aliases bitfields
+(e.g. aux_start_paused) in a union. Bitfields and plain u32 fields
+follow different endian rules, so both views cannot be swapped
+correctly at the same time. Leave aux_action unswapped until the ABI
+is represented in a byte-order-safe form.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- tools/perf/util/dwarf-regs-arch/dwarf-regs-csky.c    | 2 +-
- tools/perf/util/dwarf-regs-arch/dwarf-regs-powerpc.c | 2 +-
- tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c    | 2 +-
- tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c     | 4 ++--
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/util/perf_event_attr_fprintf.c |  4 ++++
+ tools/perf/util/session.c                 | 10 ++++++++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-csky.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-csky.c
-index cb44b774f8d9..7f976aa3cfa2 100644
---- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-csky.c
-+++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-csky.c
-@@ -118,7 +118,7 @@ int __get_dwarf_regnum_for_perf_regnum_csky(int perf_regnum, unsigned int flags)
- 	if (flags & EF_CSKY_ABIV2)
- 		idx++;
+diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+index 3933639d76c5..cc817294ad3d 100644
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -405,6 +405,10 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 		PRINT_ATTRf_bf(aux_pause, p_unsigned);
+ 		PRINT_ATTRf_bf(aux_resume, p_unsigned);
+ 	}
++	if (attr_size >= offsetof(struct perf_event_attr, config4))
++		PRINT_ATTRf(config3, p_hex);
++	if (attr_size > offsetof(struct perf_event_attr, config4))
++		PRINT_ATTRf(config4, p_hex);
  
--	if (perf_regnum <  0 || perf_regnum > (int)ARRAY_SIZE(dwarf_csky_regnums) ||
-+	if (perf_regnum < 0 || perf_regnum >= (int)ARRAY_SIZE(dwarf_csky_regnums) ||
- 	    dwarf_csky_regnums[perf_regnum][idx] == 0)
- 		return -ENOENT;
+ 	return ret;
+ }
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 3237870a1a34..212506aa8baa 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -629,6 +629,16 @@ do { 						\
+ 	bswap_field_32(aux_watermark);
+ 	bswap_field_16(sample_max_stack);
+ 	bswap_field_32(aux_sample_size);
++	/*
++	 * aux_action aliases bitfields (e.g. aux_start_paused) in a union.
++	 * Bitfields and plain u32 fields follow different endian rules, so
++	 * both views cannot be swapped correctly at the same time.
++	 * Leave aux_action unswapped until the ABI is represented in a
++	 * byte-order-safe form.
++	 */
++	bswap_field_64(sig_data);
++	bswap_field_64(config3);
++	bswap_field_64(config4);
  
-diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-powerpc.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-powerpc.c
-index 51892a09725b..98e7f2b2791c 100644
---- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-powerpc.c
-+++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-powerpc.c
-@@ -128,7 +128,7 @@ int __get_dwarf_regnum_for_perf_regnum_powerpc(int perf_regnum)
- 	if (perf_regnum == 0)
- 		return 0;
- 
--	if (perf_regnum <  0 || perf_regnum > (int)ARRAY_SIZE(dwarf_powerpc_regnums) ||
-+	if (perf_regnum < 0 || perf_regnum >= (int)ARRAY_SIZE(dwarf_powerpc_regnums) ||
- 	    dwarf_powerpc_regnums[perf_regnum] == 0)
- 		return -ENOENT;
- 
-diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c
-index 310a37451bdc..9cef846ef9c0 100644
---- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c
-+++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-s390.c
-@@ -45,7 +45,7 @@ int __get_dwarf_regnum_for_perf_regnum_s390(int perf_regnum)
- 	if (perf_regnum == 0)
- 		return 0;
- 
--	if (perf_regnum <  0 || perf_regnum > (int)ARRAY_SIZE(dwarf_s390_regnums) ||
-+	if (perf_regnum < 0 || perf_regnum >= (int)ARRAY_SIZE(dwarf_s390_regnums) ||
- 	    dwarf_s390_regnums[perf_regnum] == 0)
- 		return -ENOENT;
- 
-diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c
-index cadef120aeb4..c2a70e03b1a9 100644
---- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c
-+++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-x86.c
-@@ -197,7 +197,7 @@ int __get_dwarf_regnum_for_perf_regnum_i386(int perf_regnum)
- 	if (perf_regnum == 0)
- 		return 0;
- 
--	if (perf_regnum <  0 || perf_regnum > (int)ARRAY_SIZE(dwarf_i386_regnums) ||
-+	if (perf_regnum < 0 || perf_regnum >= (int)ARRAY_SIZE(dwarf_i386_regnums) ||
- 	    dwarf_i386_regnums[perf_regnum] == 0)
- 		return -ENOENT;
- 
-@@ -252,7 +252,7 @@ int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum)
- 	if (perf_regnum == 0)
- 		return 0;
- 
--	if (perf_regnum <  0 || perf_regnum > (int)ARRAY_SIZE(dwarf_x86_64_regnums) ||
-+	if (perf_regnum < 0 || perf_regnum >= (int)ARRAY_SIZE(dwarf_x86_64_regnums) ||
- 	    dwarf_x86_64_regnums[perf_regnum] == 0)
- 		return -ENOENT;
- 
+ 	/*
+ 	 * After read_format are bitfields. Check read_format because
 -- 
 2.34.1
 
