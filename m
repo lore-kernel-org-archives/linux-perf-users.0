@@ -1,174 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f10.google.com (mail-wm2-f10.google.com [74.125.225.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 725EC46EF60
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 19:26:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C06B4302F5
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 19:44:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784662008; cv=none; b=dyCiJor485ZjEVZsnyj24RJw5VX63qTtgPTlXe0yzbWL4LoyIQlU98IbjdiI8gTUKovcuRh+AUQGHAKejG/B/mwJfjKTsLsthtEyouAsMCQH3diTz4AyMew93kiRxJ+Djhc2XQuC7cXxEzCAouVWFsEW3M6MwWH+P6benKGAY1I=
+	t=1784663066; cv=none; b=P0DbpmT4PiycRnANkBDIPl+VznQk6pVkFymEWMcRQoLBZq3ndR57/JeLwRhqRqH17yEeHKnoRoT/Lu2dqOr2gE8gL5r2Ic2mJSngq+hK5TwQfUy1ooxDQ6/viy07ZCvlBDF5PZ0LYn3wxDqbcRqy9liO2kBPfRBT3NUN5JV419A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784662008; c=relaxed/simple;
-	bh=CYBXUim/74C+v4342siptTSBtQ1HRYLhgRT5VBmICWU=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=tuuGysJBVNd4KmzHusQiQ1nDCIVOnEUMzZN9XxnwllilKQfGNmr05vaQd/XM2m3h4FjK3+fsJXKTPAhYavPFbJcU0J0Bi1YPgQZhE507WyejfxtdBnyBxU/psXQhXEhGGnHI4oqFRC+qQ5Rk0Vkb4X6dexIMCSZinlfk59sqZVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVHvIT3L; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784663066; c=relaxed/simple;
+	bh=wNB9eaLGichIrF407lXC91sdLTgFfNTxKaTb73FP9AU=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=kzLkSBPC6I3pGGARLiSiyZ8qru/aXBAD1BuXAFYJCNOiF5zxlm/q66gCdB3fsVD17bY6GI7zd7QX8KOAU28Oj/tB0HGlZsp11/vi1BE+1e3BRG/d/QmnRWuh8ACpF13R9Mt4sHpe6mJ2uMBokFVh+Vala3i5AOH48B78UismP98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DvhwsCHP; arc=none smtp.client-ip=74.125.225.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVHvIT3L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C6891F000E9;
-	Tue, 21 Jul 2026 19:26:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784662007;
-	bh=AQ6j6QDpXKDLBgTb1wA2WGfn1m8eH9y+oRnelICyg94=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WVHvIT3LbGVMGiWZBbPS4Ai2XUbV0tDWRyIoLG+jVDm60zNJPqPXQPDDhGBIf3Kz/
-	 YkFh8a/ObiPyusGaQLY2grPw2aKul6Kj1gtYn8ei8K8P4khiDi4dYV0xdftMw/8tKr
-	 m8upxk+HTZtZ14JWKZe6iw9tnraLscchSgabFkvYo9LvYYqSH0DsCIMcTP2Ji9WmSD
-	 wm7gUrZKRosaIcmdyX9PgtL99iZ3x7lYKNf/NBByQQyOcveD08OXPiA8JSdBkdRvv7
-	 2MB3Lql3MjR3mAF+qKsY4nwcCXO3lAZRJGQJ3zra9UuD+gLVD/g8gjH87AFGtSnfBN
-	 so0Z2SL/QtAdQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 2/4] perf synthetic-events: Fix line synchronization,
- bounds, and truncation bugs in proc maps reader
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260721182150.94016-3-irogers@google.com>
-References: <20260721173347.9163-1-irogers@google.com>
- <20260721182150.94016-1-irogers@google.com>
- <20260721182150.94016-3-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 21 Jul 2026 19:26:46 +0000
-Message-Id: <20260721192647.3C6891F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvhwsCHP"
+Received: by mail-wm2-f10.google.com with SMTP id 5b1f17b1804b1-495473da596so1679905e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 12:44:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784663062; x=1785267862; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-type:content-transfer-encoding:mime-version:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=4TfZyNSsFF/kFGOiqlXhDm8eBgtcovpMS9Ai/8/zxBo=;
+        b=DvhwsCHPJnpbbsS0TKN57PTPoDiYfSH+g3blUtA2zH2/1uGoMNzg/ghnjQ7JVULr6v
+         FtrghUcG6Q1tXWje80K3IKw1sScp/iJsbPczYE/vd0uEwvimN5TjBaCOqz3M1NJUeleC
+         mSeZY2LCqOu6TqV2fGYmIflPJUd45LTNt/0w7frozY3pHonq6y3fHSNfmLoioUCCvrqN
+         0JVEckkbpU3JgXeCjqOTQaHAyyEtuK35wm/6u3idrkdHJv0xFT7puhspGIZVg8vJNNEy
+         ff0a1MYfAYfN7AQ4acd5JA6X6vEi4iuxEOJyKs07jHG1F37rJFNddvIQ8FB7Hr4WiOCg
+         QuvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784663062; x=1785267862;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-type:content-transfer-encoding:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=4TfZyNSsFF/kFGOiqlXhDm8eBgtcovpMS9Ai/8/zxBo=;
+        b=mOm8a0ovJJEB4yFpT4/+6TsIATFQiHNCLGrMtSGshySpANecBb14JVBKkH5ETIKHdF
+         bkEw2VdlgBcIji/aBnGZ6MKLX/Z8eT1NHdKhaa3ckU88faFENvDFvYzPdmJYANZQZHBK
+         xsh2HZ3QQj7jxzpDySutbaRaiCHQzw3cn4/drHJzSJSziBur8sUS8B3q8c8qneJhagq8
+         /RJ6K7X3kz9125iJebEPgkOGEW6zGVRCbbTsOzppsI1TtrAdZZBkHjuTTRn0gtz0Y3VA
+         AK4451PVZ6FNbrKaQhCFSQGyUVAjCKWlq1uo762xqxwJsM02IDtcg0dOeS5xAwJQUWqR
+         RLRA==
+X-Forwarded-Encrypted: i=1; AHgh+RqD724t5X3SnUNIG+B4aI+5Go0xi/0u9y6aiNDvrupx2UPsmvputvnjZUQH4UJXR34yHLOwz7wtUshewy4Q1V4d@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+o5e8xDiUsoNd5jHcK8Effcid6wXpWmmLOdD7zaBUjeS8xo2Z
+	qkEF8ggvfH51aPrkdXaZM9aL0QpVRNwBMtwrrmZedPKip2H2IGcTh8bq
+X-Gm-Gg: AfdE7ckASvewnpm2ii1WjHUlNOoBzHx5frWONyDZSA6I0HtHVAopcz65CbOrlOzZGRb
+	zM4ofuHmFjZ9qe9CSJBM2RmEI4Mj70I0a6k/iO8qovIhvw5eRIrRDGKhjVsG6gHLBCsjj90fuPm
+	rVKph1DneepYFRcgd7OfpmxFgQu5rVkhbkvU4ntF16FOrug70kh+XRs2CkqaduOk07Sn05QaUL2
+	LcBpCnWHwt7IMs6cNRzM7FxvrTNKOjnmKtb96y3JqdVToU7CMeZbm5GqM9ud3LdkvybAy5Zv78Q
+	xp4/JoC4n29DQphFqH4rippu191sp3B52R1deFWw5bBANKmT11uO5fMWySAu9AhFjFHH2P4DF8F
+	eDN9jsU8AP4zDkcycod+5pg2XJfa8tfGVID1rAJzNj7SZpI9leI7yTVIQuW77/xv0AtWHXxGx+V
+	3/qsrpcmegVNJZcy3Uy+DjBmyQAbSu/tifg5kUk66AOKoIisgpI53WBMQKyfXusiTum48I1f5x4
+	zFJg99nEBprYJNJr2w9tQRuuYZvs8C/uXdfpQD2DKqN
+X-Received: by 2002:a05:600d:8449:b0:495:6022:5a23 with SMTP id 5b1f17b1804b1-4956a51d5c4mr13525275e9.19.1784663061533;
+        Tue, 21 Jul 2026 12:44:21 -0700 (PDT)
+Received: from localhost (nat-icclus-192-26-29-3.epfl.ch. [192.26.29.3])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49565373200sm85700775e9.5.2026.07.21.12.44.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Jul 2026 12:44:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 21 Jul 2026 21:44:20 +0200
+Message-Id: <DK4I97UIL347.3P2KEBO828JK8@gmail.com>
+Cc: "Lai Jiangshan" <jiangshanlai@gmail.com>, "Paul E. McKenney"
+ <paulmck@kernel.org>, "Josh Triplett" <josh@joshtriplett.org>, "Masami
+ Hiramatsu" <mhiramat@kernel.org>, "Oleg Nesterov" <oleg@redhat.com>,
+ "Arnaldo Carvalho de Melo" <acme@kernel.org>, "Namhyung Kim"
+ <namhyung@kernel.org>, "Alexei Starovoitov" <ast@kernel.org>, "Andrii
+ Nakryiko" <andrii@kernel.org>, "Steven Rostedt" <rostedt@goodmis.org>,
+ "Mathieu Desnoyers" <mathieu.desnoyers@efficios.com>, "Mark Rutland"
+ <mark.rutland@arm.com>, "Alexander Shishkin"
+ <alexander.shishkin@linux.intel.com>, "Jiri Olsa" <jolsa@kernel.org>, "Ian
+ Rogers" <irogers@google.com>, "Adrian Hunter" <adrian.hunter@intel.com>,
+ "James Clark" <james.clark@linaro.org>, <rcu@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+ <linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
+Subject: Re: [PATCH bpf-next 2/2] uprobes: Switch uretprobes_srcu to
+ SRCU-fast-updown
+From: "Kumar Kartikeya Dwivedi" <memxor@gmail.com>
+To: "Andrii Nakryiko" <andrii.nakryiko@gmail.com>, "Puranjay Mohan"
+ <puranjay@kernel.org>, "Peter Zijlstra" <peterz@infradead.org>, "Ingo
+ Molnar" <mingo@redhat.com>
+X-Mailer: aerc 0.21.0
+References: <20260706172744.3920417-1-puranjay@kernel.org>
+ <20260706172744.3920417-3-puranjay@kernel.org>
+ <CAEf4BzaDSeUxeZmHjXRYXnXDZj8Obwd3rmOsfNygjcXJ0yy5bA@mail.gmail.com>
+In-Reply-To: <CAEf4BzaDSeUxeZmHjXRYXnXDZj8Obwd3rmOsfNygjcXJ0yy5bA@mail.gmail.com>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
+On Fri Jul 10, 2026 at 11:23 PM CEST, Andrii Nakryiko wrote:
+> On Mon, Jul 6, 2026 at 10:28=E2=80=AFAM Puranjay Mohan <puranjay@kernel.o=
+rg> wrote:
+>>
+>> uretprobes_srcu currently uses normal SRCU, which issues
+>> two smp_mb() per read lock/unlock pair. This overhead is
+>> paid on every uretprobe hit.
+>>
+>> Switch to SRCU-fast-updown, which eliminates the per-reader
+>> memory barriers by moving the ordering cost to the
+>> grace-period side (synchronize_rcu() instead of smp_mb()).
+>> This is acceptable because grace periods (uprobe
+>> unregistration) are infrequent compared to reader-side
+>> uretprobe hits.
+>>
+>> The updown flavor is required because the SRCU read lock is
+>> taken in prepare_uretprobe() when a return instance is
+>> created and is held until that return instance is finalized.
+>> The traced thread returns to user space in between, so the
+>> lock is inherently released in a different context from
+>> where it was acquired: on the normal return path via
+>> uprobe_handle_trampoline() -> hprobe_finalize(), or from
+>> ri_timer() (expiry) or dup_utask() (fork) via
+>> hprobe_expire(). srcu_down_read_fast() / srcu_up_read_fast()
+>> are designed for this acquire-here / release-elsewhere
+>> pattern and, unlike the same-context srcu_read_lock_fast()
+>> variant, do not carry the lockdep read-side tracking that
+>> would warn on it.
+>>
+>> The short, same-context SRCU sections in ri_timer() and
+>> dup_utask() (which guard the uprobe against reuse across the
+>> hprobe_expire() cmpxchg) instead use guard(srcu_fast_updown)
+>> for proper lockdep coverage.
+>>
+>> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+>> ---
+>>  include/linux/uprobes.h |  5 +++--
+>>  kernel/events/uprobes.c | 29 +++++++++++++++++------------
+>>  2 files changed, 20 insertions(+), 14 deletions(-)
+>>
+>
+> Very straightforward replacement and will improve performance, thanks!
+> LGTM. Peter or Mingo, I assume you guys will want to route this
+> through your tip tree, right?
+>
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+>
 
-New issues:
-- [Critical] Bypassing _FORTIFY_SOURCE array bounds checks introduces an ex=
-ploitable stack buffer overflow when zeroing event trailers.
-- [High] Removal of the stale build ID clearing leaks state and corrupts su=
-bsequent kernel module events.
+Hi Peter, Ingo,
 
-Pre-existing issues:
-- [High] Incomplete fix: _FORTIFY_SOURCE array bounds aborts still exist in=
- multiple other synthesis functions.
---
+Gentle ping for this.
 
---- Patch [2]: [PATCH v4 2/4] perf synthetic-events: Fix line synchronizati=
-on, bounds, and truncation bugs in proc maps reader ---
-commit ba0b89af1798a9c26d45cb174748a43558ce4d9d
-Author: Ian Rogers <irogers@google.com>
+> [...]
 
-perf synthetic-events: Fix line synchronization, bounds, and truncation bug=
-s in proc maps reader
-
-This commit fixes bugs in read_proc_maps_line() and its callers by ensuring
-proper line draining on parsing failures. It also adds standard fallbacks
-for over-length paths, safely emits timeout flags, and introduces pointer
-casts to prevent _FORTIFY_SOURCE array bounds aborts when zeroing trailers.
-
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
-ic-events.c
-> index 5307d707711d8..e0680d770462c 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-[ ... ]
-> @@ -463,45 +533,53 @@ int perf_event__synthesize_mmap_events(const struct=
- perf_tool *tool,
-[ ... ]
-> -		memset(event->mmap2.filename + size, 0, machine->id_hdr_size +
-> -			(aligned_size - size));
-> -		event->mmap2.header.size +=3D machine->id_hdr_size;
-> +		/* Zero the padding and ID header trailer safely! */
-> +		memset((char *)event + offsetof(struct perf_record_mmap2, filename) + =
-size, 0,
-> +		       (aligned_size - size) + machine->id_hdr_size);
-> +
-> +		event->mmap2.header.size +=3D machine->id_hdr_size;
-
-[Severity: Critical]
-Can bypassing the _FORTIFY_SOURCE array bounds checks introduce a stack
-buffer overflow regression here?
-
-When this function is called via machine__init_live(), the event union is
-allocated on the stack without the extra padding for id_hdr_size:
-
-tools/perf/util/machine.c:machine__init_live() {
-    union perf_event event;
-    memset(&event, 0, sizeof(event));
-    ...
-    perf_event__synthesize_mmap_events(tool, &event, ...);
-}
-
-If an attacker provides a pathname approaching PATH_MAX in /proc/pid/maps,
-size pushes the memset destination to the end of the union perf_event
-structure. By bypassing the fortify check, this memset blindly writes
-machine->id_hdr_size bytes of zeroes completely outside the bounds of the
-stack variable, silently corrupting the stack frame instead of safely
-aborting.
-
-[Severity: High]
-This is a pre-existing issue, but does the same _FORTIFY_SOURCE array
-bounds abort regression still exist in other synthesis functions?
-
-While this patch applies a cast bypass here in
-perf_event__synthesize_mmap_events(), similar bounds-violating memset calls
-remain in other paths.=20
-
-For example, in perf_event__prepare_comm():
-
-tools/perf/util/synthetic-events.c:perf_event__prepare_comm() {
-    ...
-    memset(event->comm.comm + size, 0, machine->id_hdr_size);
-    ...
-}
-
-Since event->comm.comm is a static 16-byte array, if a process name is 15
-characters long, the memset begins exactly at the end of the array and
-writes id_hdr_size bytes. Under modern compiler flags (_FORTIFY_SOURCE=3D2
-or 3), this reliably triggers an abort because the compiler detects
-the memset writing past the bounds of the array. The same pattern is
-also present in perf_event__synthesize_cgroups().
-
-[ ... ]
-> @@ -703,11 +781,6 @@ static int perf_event__synthesize_modules_maps_cb(st=
-ruct map *map, void *data)
-> =20
->  		memcpy(event->mmap2.filename, dso__long_name(dso), dso__long_name_len(=
-dso) + 1);
-> =20
-> -		/* Clear stale build ID from previous module iteration */
-> -		event->mmap2.header.misc &=3D ~PERF_RECORD_MISC_MMAP_BUILD_ID;
-> -		memset(event->mmap2.build_id, 0, sizeof(event->mmap2.build_id));
-> -		event->mmap2.build_id_size =3D 0;
-> -
->  		perf_record_mmap2__read_build_id(&event->mmap2, args->machine, false);
->  	} else {
->  		size =3D PERF_ALIGN(dso__long_name_len(dso) + 1, sizeof(u64));
-
-[Severity: High]
-Could removing this explicit clearing of the shared union's build ID leak
-state between loop iterations?
-
-The perf_event__synthesize_modules() function allocates a single
-union perf_event structure outside the loop and reuses it for every kernel
-module via maps__for_each_map().
-
-By removing the explicit clearing of PERF_RECORD_MISC_MMAP_BUILD_ID, if one
-module successfully reads a build ID, the flag remains set for all
-subsequent modules.
-
-When processing subsequent modules, perf_record_mmap2__read_build_id() sees
-the flag is already set, assumes the event already contains a valid build
-ID, and reads the stale build ID from the previous iteration. This could
-attribute samples to incorrect binaries.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260721182150.9401=
-6-1-irogers@google.com?part=3D2
