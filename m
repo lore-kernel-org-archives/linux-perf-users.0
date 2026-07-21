@@ -1,66 +1,66 @@
-Received: from mail-oo1-f47.google.com (mail-oo1-f47.google.com [209.85.161.47])
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3129230FC21
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 12:48:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6BB0360EE8
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 13:25:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784638117; cv=none; b=hurbWmocexWhWFHj7Mg654p2hAVD0tmdQUPq7OrFd+h/0J+NQlpx4PA2oaL5iXjWXtTtvoNnCQK32+S049wu/UyvMDj6X32tGiAj8Y16Gg6HkCc5Lo2rrlWRJlzw6yxC1kNRIwDgPreX94XeqCjNODUiMaPLLD95we88vGi6fIA=
+	t=1784640325; cv=none; b=mh3TnDP2gwRJI6HUsZDPVDNnp9j3R1qpwjfWn6bD5C+DyboA0LNUiTIFrdxx4T3FhBOqHTScEfl/eLl8L43+HKMzbsp+5MPHGWZHerH9v7T2dGg8CsWHqvxWuSjd+SkfaGjeqDTLwN6WLY2ouoj2MSITVF7+AwGIQZ08jHXZzfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784638117; c=relaxed/simple;
-	bh=+3pPPzkN5vSN5uc06d/jwUE+LQ23KJmEngSIHcTZfSQ=;
+	s=arc-20240116; t=1784640325; c=relaxed/simple;
+	bh=mBgn0w0K5UbBJxILaFSI5FT01iGeSBDgXfKOAFVnQbw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IXd7yBiSudyEuzzwADz6zHY+K0aIfW6tJp5gHdr0JEi2SjJOvCPBB9yqsuFBH9SWPnZvm58Ipl2JZ/ouNU904veJubqSYOZEdVNdsQEgsHXzF0r63kT4A0l9xpd1Vv5jPayOBKJX4eNQ9Tue3R9r4OTGHJPqUmRkmMCf2NdHlPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kyyZpskx; arc=none smtp.client-ip=209.85.161.47
+	 In-Reply-To:Content-Type; b=od3Lbmz7V52NccmnRR3jexvTaj7pxPGRspzZPa+8ADaS6CvRlIRnKDS7JmAYkLBVH4IjLIcmzPOVutNueBXkBKBzXaUiwdJvkBfHT580REfXrAt19Otn1aYpp+VIOjJGgwi4F4MfkVoS8swm3UfNZnaLUAyfJL30lU9RR0D/JNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=s6AsbF9D; arc=none smtp.client-ip=209.85.210.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kyyZpskx"
-Received: by mail-oo1-f47.google.com with SMTP id 006d021491bc7-6a38d7904b7so399374eaf.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 05:48:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s6AsbF9D"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-7e9f69ee6f4so6101284a34.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 06:25:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784638115; x=1785242915; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1784640322; x=1785245122; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:in-reply-to:from:references
          :cc:to:content-language:subject:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=f9BdUyGIX1sBYdd4LfNbX4BHjyUWmMKKhhuvfWpGKTI=;
-        b=kyyZpskxRIMFVzDhGWhVTDRIY3ucz1uBiZD5JhdQEBmfQtbVUuZfcpLhDbCnyAKW7r
-         xgXNiSB1WFi3ZYQsbrh+SP/P+H4dS6YnluZ+vS3KqOeJcC0msl1TYlMbvZH4W8C20DBg
-         ATMnMfrXr/+WBR8YpJ/chFVDDlBSE3Wfnf6hooPPflJ0zXYTOGvQmSdljeYvYYYw0t00
-         96SlYwx6DDckhfFKkP8M3wVdu8rT+x+cbnnzud2LQ/QcEf9rxB9YhwEKj5xs/MT8ftmH
-         isWba7m8yk68idBUVVFN0IP4Q0/Xtfers/POhHJclHVznig4yLcd/s1yVCbT/Jj46y/W
-         LUHQ==
+        bh=NUGRrLpcbADBJyrtxfRhKxWvRc1OgkKW+dNy23AsVnk=;
+        b=s6AsbF9DpU8ULTgrvc0/tzsaDjesyt9YhpAhRwr//iHzIMAf/e2Mp9Lzz/HJanvhnp
+         Wtfkn/VFKSY/HmZwVknlhNMwmkMhOn3YA7P9VAZ9kVTGQIlgtrYuOnsV413Rkbyj5kqg
+         b8sNQ49cNrzM7sJWvphpy34Cug6H6aUhSYpIWEsI2LWj0nDSkdlwlhS6gd8eqwP2tbQD
+         ZFIqjzWaXoq4NKkaVo47dH3Id+oNXw24bkah4MZtIbBsXkh2/dxb+GCfJuDK3oPUNoB5
+         W9LLclVyV6JJFaTlHGniXjTf76I191z8YBschfvQShpXhYXYbl/qitJi6sd4BOVFqTy2
+         kWgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784638115; x=1785242915;
+        d=1e100.net; s=20251104; t=1784640322; x=1785245122;
         h=content-transfer-encoding:content-type:in-reply-to:from:references
          :cc:to:content-language:subject:user-agent:mime-version:date
          :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=f9BdUyGIX1sBYdd4LfNbX4BHjyUWmMKKhhuvfWpGKTI=;
-        b=WVfHWYUBTIN+SYTLrPFpHSBuuooNEACAPsD4NMce4IbGQk/QwOKDoW81n8kekLxPuc
-         NKc9YTjFdKv0dZipiAPFhYklokfSJW/XiswOjhc3q8RevB8V+0qGl5KktvEjKZ4l+/gi
-         Aen/U1wrBxiQFYD0v05TSGZtSD3nkY7HMFWJMJqWkrcb1gZQ96uMamiR3D/TJvzaD4us
-         8m2m7g601yjgNH8tH29C7N4oLnfolEmPIc6kJXy0hLsyGaUf+mxNu2dWzyzJpNMOSGeq
-         9yXdQgOnwLWAIgaNsNva8zPcDgPiwyxyfUDphiT3nukLr7L0ZeVKxgaf9ra8Y3q/6BWa
-         Gmsw==
-X-Forwarded-Encrypted: i=1; AHgh+RoeUSy11URRITtAndBmCS6X231pvhTx0N7YKwXyLP2Z2hrHNxFnz7BU38wCfRLDvlqXJmHB8JTx1icHdznRmapz@vger.kernel.org
-X-Gm-Message-State: AOJu0YycRPwRtHEie/ITHZNQnHsbudz2UD7pfJr3GW2mz+6bOdIqOel1
-	foCQz7OVIkgwfOeTAglEnAeKAqOOTkHEPoep8mth2OqK/bOO5l7AqTxP
-X-Gm-Gg: AfdE7cm3IVYD17FfhVC3VQgzAPw6/JPNkqaFEgr6veO8tMq4wNqNyw9NYC6pJPcjE5y
-	PdDEAa/0ZZTFQ75IX6rvl3PHC5UNQQbSbiPK6Wkc83jvEQij6bSMRK6BhIudY6jwRH617SUXPuc
-	QKAgfe0SL9W1yeBHXBR08Y+LyosYnUjwW6OL+ZTVhhTILqwksTr63q1eTqdrQzC0d7kFo3th6iz
-	fJaCka8MDllCoDu8vhzBIwCA0K+i4z7+0i7Qcg1/I6MSwjHPqKyioVHki/krB2f+25JyDkyG4i4
-	tQoynZsS0sNilORl46TDyq2ohxxWY5yvpx3hCIvoHQnUrWmppjDdfRpLCACkrvLoHqSpZFR0Itq
-	hRUGYTb/5BCHhHEfRXeY9/0UDQJepsRUiO6sE1O5B2qSGqxCXCKKIQltxB/XFOeJNtMASX/ioZc
-	FFScks1Q==
-X-Received: by 2002:a05:6820:f02f:b0:6a1:8cd5:c9d8 with SMTP id 006d021491bc7-6a536ada646mr9327016eaf.68.1784638114876;
-        Tue, 21 Jul 2026 05:48:34 -0700 (PDT)
+        bh=NUGRrLpcbADBJyrtxfRhKxWvRc1OgkKW+dNy23AsVnk=;
+        b=nHE7c6/l1DaOC8sncZyIobpAIBsYVuz6Y/cGUzzn6KrS1JEl6safAgk5f3CoXNzDrU
+         u8zPhsUSQ8CjJKILfR9gbjpqOUVAn9T3gd6AC+xh5fjBFDMt9n6vGSIHxbxp3XlUSdQW
+         ED9SXO2bISd7SXnIC/usj+zHuvG7nLIfyR6L2dlqj9cniznH0/unCEQVH6cpafFwGr94
+         4n2BCir5625gA+Hi/XXuhCbIkvZ48XsnT9w2IxJxXMR45SBZZa7N7skGBOsEsUIzPif5
+         SneJ6ILLJ764+SmlEbXkECjRMla5J6xLJde19TTi76e1un785P+TNZE2RCQfeOeNfkM6
+         fwpA==
+X-Forwarded-Encrypted: i=1; AHgh+Rp83lpEzSw9fBvEvU/splNrWRO5UkGjPseIVaQCBIAnVgzYwLz1BhK2IVk6cCX86VspZ4WgHXFnJgr7cPp40Z5d@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0ECLrbz4ABfsAJmjtUPL5jGMzx+ICvnWGLaMUsfvyCV22itc5
+	4/tPtwH2liYMA/4LYIyhm6s3Y8l0F46mDPFbYqHBv31co36W/9oQbo8m
+X-Gm-Gg: AfdE7ckyAU13dq4McmvYvcW0qpNe1ZF26aq0MQAbc4mFdWUKILEo6dApoXiNlNvbhT3
+	sHehe92FfMYBh3bAlC9PZmGOUj/IyXZvEjuHRFutgDQdyW+ARQhPCiO6hqe5VGGq8Gso8/7DX4i
+	ZsKyyGulZUNr35mJI8IsfOQqN3nElXw+Ho3Q1mvWGAs1HRhXNElExcZrnG7lBQQDgVh5rWHmD5p
+	+WtGtgvFn0k9Xgl1X7f9/mknjMwB93AS6dNbnDCMuh4WZA+Ntwl5qrLIr6I6ktLQ3RUFj7PIPBL
+	f6AXNRusbHvPe1AhRhVrByhcmtvXlMk26XQqguoOmStcVrvVC49M+QLQmwEIys6zoTo9CO5TBjv
+	M6kiJ2Waw/s5MMXyG5trt8dQd6KaPnTmWrK0evH0FGUwSnl1ZAbQ41h2u4mGqLKToD8FcDnOdGt
+	RsHuvAbA==
+X-Received: by 2002:a05:6830:6a97:b0:7e9:b4cf:d8cc with SMTP id 46e09a7af769-7eda4d90dd0mr12044065a34.32.1784640322334;
+        Tue, 21 Jul 2026 06:25:22 -0700 (PDT)
 Received: from [198.18.0.1] ([144.24.58.22])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-4568e0bddefsm11251568fac.4.2026.07.21.05.48.25
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7edad94e86csm11116231a34.7.2026.07.21.06.25.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jul 2026 05:48:34 -0700 (PDT)
-Message-ID: <f23b0cf4-840f-4fb0-aab5-750dee42a7b2@gmail.com>
-Date: Tue, 21 Jul 2026 08:48:22 -0400
+        Tue, 21 Jul 2026 06:25:21 -0700 (PDT)
+Message-ID: <c3fc1db1-5199-42b1-9e29-e7766b23a599@gmail.com>
+Date: Tue, 21 Jul 2026 09:25:09 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -71,64 +71,114 @@ User-Agent: Mozilla Thunderbird
 Subject: Re: [RFC PATCH v2 00/13] mm/kwatch: dynamic hardware watchpoints for
  hunting memory corruption
 Content-Language: en-US
-To: Dave Hansen <dave.hansen@intel.com>,
- Andrew Morton <akpm@linux-foundation.org>,
+To: Marco Elver <elver@google.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
  Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
- <hpa@zytor.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  David Hildenbrand <david@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
  Matthew Wilcox <willy@infradead.org>, Alan Stern
  <stern@rowland.harvard.edu>, Randy Dunlap <rdunlap@infradead.org>,
- Alexander Potapenko <glider@google.com>, Marco Elver <elver@google.com>,
- Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-doc@vger.kernel.org
+ Alexander Potapenko <glider@google.com>, Mike Rapoport <rppt@kernel.org>,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linux-doc@vger.kernel.org
 References: <20260717125023.1895892-1-wangjinchao600@gmail.com>
- <91f3486b-3b85-4b43-b099-0a5325643352@intel.com>
+ <CANpmjNMpKXxk2KsZORakwwdOpDG=pRbtJKi7doBt7QmQwUKdgw@mail.gmail.com>
 From: Jinchao Wang <wangjinchao600@gmail.com>
-In-Reply-To: <91f3486b-3b85-4b43-b099-0a5325643352@intel.com>
+In-Reply-To: <CANpmjNMpKXxk2KsZORakwwdOpDG=pRbtJKi7doBt7QmQwUKdgw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 7/17/2026 9:41 AM, Dave Hansen wrote:
-> On 7/17/26 05:50, Jinchao Wang wrote:
->>  24 files changed, 2115 insertions(+), 63 deletions(-)
-> Reading this, I wonder how many kernel debugging features we need. I
-> don't even think we have a centralized list of them. They all just live
-> in their own silos.
+On 7/20/2026 11:26 AM, Marco Elver wrote:
+> On Fri, 17 Jul 2026 at 14:50, Jinchao Wang <wangjinchao600@gmail.com> wrote:
+>>
+>> Motivation
+>> ==========
+>>
+>> The hardest memory corruption bugs are the silent ones: a rogue writer
+>> scribbles over a live object through a stale pointer or a race, and
 > 
-> This one really seems like a super specialized tool. It has to be
-> enabled at compile time and specifically aimed at a specific function.
+Thanks, Marco. These are good points. My cover letter did not clearly
+separate two different classes of bugs.
+
+> The stale/dangling pointer (use-after-free) case is the main one you're after?
+
+Not exclusively. KASAN already does a good job as a general
+use-after-free detector. However, a stale-pointer write after the
+storage has been recycled, which may no longer be reported by Generic
+KASAN, is one of the cases that the scoped watchpoint can help
+localize.
+
+The broader target is silent corruption of a known live victim object,
+including non-UAF cases such as an in-bounds racing write to an object
+whose allocation is still live.
+
+>> the victim crashes in a code path far away from the culprit. Any
+>> single developer hits such a bug rarely, but across the kernel's code
+>> base and install base they keep arriving, and each one is
+>> disproportionately expensive to localize. The question to answer is
+>> "who wrote to this object, and from where?", and it is hard to get at
+>> with the existing tools:
+>>
+>>  - The kernel's own reports - an oops on a clobbered pointer, a
+>>    BUG_ON, a list-corruption warning - fire at the victim's access,
+>>    not at the corrupting write.
+>>  - KASAN/KFENCE catch memory-safety violations: out-of-bounds
+>>    accesses and use-after-free. But they have a blind spot: a
+>>    corrupting write can be fully memory-safe - a *valid* pointer, in
 > 
-> Maybe this should live off on the side for a while. If folks end up
-> actually needing it, they can point their friendly LLM over to its tree.
+> Language-semantically speaking, a use-after-free write to recycled
+> memory (be it in heap or stack) is NOT memory-safe. The detectors may
+> not always catch these (KASAN relies on quarantine for that to
+> increase the chances, but yeah, not guaranteed..).
+> 
 
-Thanks, Dave.
+You are right that a stale-pointer write to recycled storage remains a
+use-after-free, so "memory-safe" was the wrong term. What I meant was
+that such a corrupting write may not be detected by Generic KASAN at
+the point where it occurs. KWatch was intended to use a hardware
+watchpoint to catch the write and report the actual writer and its call
+stack.
 
-I agree that adding another standalone in-kernel debugging facility of
-this size is not the right direction.
+>>    bounds, to a live object, written just at the wrong time or to the
+>>    wrong place - and then they stay silent by design. And even for
+>>    the bugs they can catch, KASAN's rebuild, overhead and redzones
+>>    change timing and layout enough that racy corruption often no
+>>    longer reproduces.
+> 
+> There's also tag-based KASAN (KASAN_SW_TAGS or KASAN_HW_TAGS), of
+> which KASAN_SW_TAGS has an x86 version based on LAM (not yet merged
+> though? see https://lwn.net/ml/all/cover.1773164688.git.m.wieczorretman@pm.me/).
+> 
+> One property of tag-based schemes (and any other lock+key detection
+> scheme) is that upon recycling some memory, the tag (or key) to that
+> location changes, and any previous pointer that still has the old tag
+> will fault. The caveat with current pointer-tagging schemes is that
+> entropy is relatively low (4 bit tags).
+Thanks for pointing this out. I agree that tag-based KASAN can detect a
+recycled-storage UAF when the new allocation receives a different tag,
+so it covers part of the intended use case.
 
-The motivation was practical. I have encountered several silent memory
-corruption bugs for which I wrote similar one-off instrumentation to
-identify the writer. KWatch was an attempt to make that technique
-reusable instead of rebuilding it for each bug, and to reduce the same
-setup cost for other developers facing similar problems.
+There are still cases it cannot detect, such as an in-bounds corrupting
+write to the same still-live allocation, or a recycled allocation which
+reuses the same tag. Software tag-based KASAN also still instruments
+memory accesses and can perturb a timing-sensitive bug enough that it
+no longer reproduces; hardware tag checking reduces this overhead but
+is not available everywhere.
 
-This approach proved useful for localizing the dummy_hcd corruption:
-
-https://lore.kernel.org/all/20260714064829.172098-1-wangjinchao600@gmail.com/
-
-It identified the copy that overwrote req->complete and recorded the
-writer's call stack. So I believe the debugging use case is valid, but
-it does not require a separate KWatch implementation.
-
-As discussed in my reply to Masami and Boris, I will stop pursuing the
-standalone KWatch series and work with Masami on implementing the
-necessary scoped watchpoint features in wprobe/tracing instead.
+The original goal of KWatch, which I now plan to pursue through wprobe,
+was to provide a simple and targeted interface to hardware watchpoints.
+It does not instrument every memory access system-wide, so it can have
+lower overall overhead and less timing perturbation while identifying
+the actual writer. I see this as complementary to KASAN rather than a
+replacement for it.
 
 Thanks,
 Jinchao
+
