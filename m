@@ -1,129 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F98D472F77
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 17:48:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F35A40099C
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 18:21:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784656141; cv=none; b=f7gTunGaIiVE4QlE5koNir/wJHdzoxPwToBP9nU7AkV39K/lsgvoYeetutnaPM8YyR2SL0pF+p3+oGz0w6uHodfITtBZAwk1B9EZ9GoINvQIZ1t0heckIczmjpHw3Dky6pzAUujWsNjkFBszv1RuSxztKIEhX7dPHj2Aq1eJ06Q=
+	t=1784658119; cv=none; b=u9Fseds1B7zfCTT686OW32+eKwdY+kM2MMtXDnJeiJCf1j9Cs+iXBy5SAWiyHzU8cjuyGE4NKNNdqojlFEiFCqQkXk2570eXo9Mf8Mt05qLlKb4mDxMSgZWVvSf3YDonEugQuXNPFeSvX9sDkyjTKPRVYsmMgtdohtnHw2q6q6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784656141; c=relaxed/simple;
-	bh=b9QbzBgvu3fagoCGxsztOljhOMQUod5GuQKMjmWgrqM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=qBK+bl0q40iKmsYt31xlL1m+rcH69eB7/TBygUs0me8yRwp8wOxvxmjdBbhLbaSnOyGReMOlEjwbtfbGwp9GcMkw+Ck3Vt8c+pltTC1h2ze2+drTwlaW/GjeFbn00vHYvPASLRGI7kAPgqU41uYB5qTAApuJjwz/qNC4cXWn1ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5e8/J+7; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784658119; c=relaxed/simple;
+	bh=k9UPC2jWtUyT+AZ/nqyJ/OP5rEB4L7bredx0YRihRBQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=uBRYAm+ThEfaXh3A/a25EeGUHuciBI4E93QQJ1kQ3ekitf1jikumRDOA0JkNwahkbmR0LnEbMPFOeWLA0LHX5qOazNyYHoHLDDcse0zlR2wn8BvDqgMTKb5Df98wzvo580iJahsPHgUog8tqFJgW3uyOu1SUj7SBgzrp3macRsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rUKcV/SE; arc=none smtp.client-ip=209.85.216.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5e8/J+7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 739451F00A3A;
-	Tue, 21 Jul 2026 17:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784656138;
-	bh=/zoEbDqkcRS4X8I/Y1uT7/+AUoR3nCR++9fDgx+rIBg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=C5e8/J+7Y5b+6m+Mop8cJFp/7AIDwugbB9/7rgdLmKAeJVdNgLi0C/8++ImJkHGgu
-	 Al5ONnM6qGfkUyNqHvhyk5Ku8gR86bRqZgjV3HdjbOmc9fUaXCHG25cfpWv5eRo9LR
-	 531+7M+AmlHbbvnrmg+glj76T6hDoRZw9l88WmldqyCynMTsGJejL3WBX2T04BQcY2
-	 4WDCRwSokYvEOiYlGScWQ7LYP1qEZwU4fq0UDKq9G7jq0GlZ1hO6uzDuP9EeCr0Q52
-	 FhcE7hov3u4IIhF5sahoDgTSjVzsBhHLeD4PZw91YUU1Ix6cQ5SCD9+yagbtCj2oFg
-	 Uu2nuBJiXPEXQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 2/4] perf synthetic-events: Fix line synchronization,
- bounds, and truncation bugs in proc maps reader
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260721173347.9163-3-irogers@google.com>
-References: <20260720225200.3810501-1-irogers@google.com>
- <20260721173347.9163-1-irogers@google.com>
- <20260721173347.9163-3-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 21 Jul 2026 17:48:56 +0000
-Message-Id: <20260721174857.739451F00A3A@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rUKcV/SE"
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-38dd87656d3so11431392a91.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 11:21:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784658118; x=1785262918; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=5yX27j+RKf1WJllB4mwQCE41TCPkOFTd4aXkNKaJTAI=;
+        b=rUKcV/SEtYE7dAIAws1KeQ+GFmGdnrGO6sDTvDxAfPhIbxwNTeEGGeShCOz2OHimT2
+         EAv1/Hk489tTZKUGJPdu1NLkK7QQ8Ta4+/I/MWxMUN88E/dZF9e0v9/Ci0+j0LZnmZO8
+         PLw1xImF53kdZ8kaqZoqC4tYJ4jaiwTSc4q+ib4pEffDejloC0m0mEWWZCazi4Nvs0i/
+         PwplyBJ2Bn74JHZV+YGpL5rxyj0HMsyEwyjrbajCOctWsSrcqUd+LsFX3ZfKNz8BUqeC
+         FOEW8RenmsHCsU94mQiWjD9YRKvGsFQbagJm4fFGPGiqHtolFx2Fdq0d1Pn5VYE/siMU
+         fdEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784658118; x=1785262918;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=5yX27j+RKf1WJllB4mwQCE41TCPkOFTd4aXkNKaJTAI=;
+        b=sa8F/QMBtty13cQHIUJhy0+bCigiLpxEvxJQXo1OCUMLhEAHHNqZ51QwPYTzQUwPvf
+         tL4dG82VdhdndeGh6eCysS8uC5EIM49bLYjYqIq4ws7ZN3ZHoMr8CNO/tnyWlztubNk+
+         2sMVnDmqETR4lL53nbBGYRu7vAvpcKeC7g5wk4tSc7Opz4pvjuWi84NJ9u1IpCHPoR5y
+         pE6Sk1xBD0Obi1+DEaSHQehbvHzX5XV+9bKFjFWT9P2QG4SaX7kR/buRiBJ3H1C6yEi0
+         FL0RstkBcY7uoYf3Gq3tAzGfIlbF5NH1YjFjRDVEeI4FR5IybQThLd6Auq2d4KdFuSUW
+         2GrQ==
+X-Forwarded-Encrypted: i=1; AHgh+RraeeVzLF198sQYWoQnRmb6jfzqgMra5ZZ+t5nqhdtEDgMBWpE2n/8/bAX4QdVUz21lIyU7Uw/36ooyIR/YnMj0@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8ajb0bJZPkHVsRBL8tD3s7cORt0MEELRYveNUlhi630JgRdnm
+	HI39WsAoUzlB/4hkk2Vti1aya9iUKN7Oa6YyQOSCEUClEqKEFRt0lpSkWYrbZXtTWTIXctD5R/h
+	d60mUIZgtMg==
+X-Received: from dlbsi6.prod.google.com ([2002:a05:7022:b886:b0:13c:cee1:f20a])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2692:b0:38e:79f:76ad
+ with SMTP id 98e67ed59e1d1-38e4b52efd9mr19034377a91.23.1784658117383; Tue, 21
+ Jul 2026 11:21:57 -0700 (PDT)
+Date: Tue, 21 Jul 2026 11:21:46 -0700
+In-Reply-To: <20260721173347.9163-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260721173347.9163-1-irogers@google.com>
+X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
+Message-ID: <20260721182150.94016-1-irogers@google.com>
+Subject: [PATCH v4 0/4] perf: Fix and optimize maps parsing, boundaries, and
+ bounds safety
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, ravi.bangoria@amd.com, 
+	swapnil.sapkal@amd.com
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] io__drain_line() fails to drain the line when a parsing error oc=
-curs, breaking map parsing synchronization and causing inefficient cascadin=
-g failures.
---
+It turns out that PATH_MAX is respected by system calls but isn't
+respected by file paths in /proc/pid/maps and /proc/pid/smaps. In the
+kernel "//toolong" is placed in the filename of mmap/mmap2 events
+where the filename is longer than PATH_MAX, do the same in the
+mmap/mmap2 synthesis code to avoid overrunning the event buffer -
+note, the filename buffer is bounds checked but this makes the
+synthesis more similar to the kernel approach. With Gemini's help try
+to address other correctness and overrun issues.
 
---- Patch [2]: [PATCH v3 2/4] perf synthetic-events: Fix line synchronizati=
-on, bounds, and truncation bugs in proc maps reader ---
-commit ffbc393b4ac8d55ab5ee2db18d5f9a92e83c09d1
-Author: Ian Rogers <irogers@google.com>
+V4 addresses review feedback:
+- Ensures io__drain_line()'s do-while loop is properly included and
+  committed directly within Patch 2. When ch == -2 is passed on parsing
+  errors, the loop correctly reads and discards remaining line
+  characters until a newline or EOF is reached, preventing tight failure
+  loops and preserving line synchronization.
+- Replaces member array memset destination pointers in Patches 2 & 3
+  with offsetof() casts on (char *)event to avoid _FORTIFY_SOURCE
+  runtime array bound aborts when zeroing padding trailers for long
+  pathnames.
 
-perf synthetic-events: Fix line synchronization, bounds, and truncation bug=
-s in proc maps reader
+V3 addresses review feedback:
+- Updates io__drain_line() loop condition from a while loop to a
+  do-while loop to ensure initial non-hex/dec failures correctly
+  drain line remnants.
 
-This commit fixes logic and boundary bugs in read_proc_maps_line() and its
-callers. It adds io__drain_line() to safely ignore already-consumed
-newlines and preserve synchronization for subsequent map entries.
+V2 addresses community review feedback:
+- Corrects read_proc_maps_line() and io__drain_line() to safely handle
+  already consumed newlines, preventing valid map data from being skipped.
+- Restores the early exit block for timeouts so the TIMEOUT flag is
+  always emitted to tools.
+- Removes an unused assignment to avoid promoting warnings to build errors.
+- Clarifies and dynamically computes the maximum filename length boundaries
+  using offsetof() to prevent E2BIG errors regardless of struct layout.
 
-> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthet=
-ic-events.c
-> index 5307d707711d8..059dd558a564c 100644
-> --- a/tools/perf/util/synthetic-events.c
-> +++ b/tools/perf/util/synthetic-events.c
-> @@ -291,6 +291,17 @@ static int perf_event__synthesize_fork(const struct =
-perf_tool *tool,
->  	return 0;
->  }
-> =20
-> +static void io__drain_line(struct io *io, int ch)
-> +{
-> +	if (ch =3D=3D '\n')
-> +		return;
-> +	if (ch =3D=3D -2 && io->data > io->buf && io->data[-1] =3D=3D '\n')
-> +		return;
-> +
-> +	while (ch >=3D 0 && ch !=3D '\n')
-> +		ch =3D io__get_char(io);
+Ian Rogers (4):
+  perf find-map: Remove PATH_MAX 128-byte stack array restriction
+  perf synthetic-events: Fix line synchronization, bounds, and
+    truncation bugs in proc maps reader
+  perf synthetic-events: Fix bounds, stale state, and misc flags in
+    kernel module synthesis
+  perf synthetic-events: Fix bounds and union member access in mmap2
+    build_id synthesis
 
-[Severity: Medium]
-Will this loop correctly drain the line when a parsing error occurs?
+ tools/perf/util/find-map.c         |  10 +-
+ tools/perf/util/synthetic-events.c | 288 ++++++++++++++++++++---------
+ 2 files changed, 208 insertions(+), 90 deletions(-)
 
-When io__get_hex() or io__get_dec() encounters an invalid first character,
-they consume it and return -2. read_proc_maps_line() then calls
-io__drain_line(io, -2).
+-- 
+2.55.0.229.g6434b31f56-goog
 
-Because the loop condition strictly requires ch >=3D 0, it will skip entire=
-ly
-when passed the -2 error code, returning without consuming any characters.
-
-Instead of draining the rest of the line, the parser will re-evaluate every
-remaining character as the potential start of a new map entry, leading to
-parsing desynchronization and a tight loop of failures that could trigger
-the timeout watchdog.
-
-> +}
-> +
->  static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
->  				u32 *prot, u32 *flags, __u64 *offset,
->  				u32 *maj, u32 *min,
-> @@ -299,69 +310,127 @@ static bool read_proc_maps_line(struct io *io, __u=
-64 *start, __u64 *end,
->  {
->  	__u64 temp;
->  	int ch;
-> -	char *start_pathname =3D pathname;
-> +	size_t written =3D 0;
-> +	bool overflowed =3D false;
-> =20
-> -	if (io__get_hex(io, start) !=3D '-')
-> +	ch =3D io__get_hex(io, start);
-> +	if (ch !=3D '-') {
-> +		if (!io->eof)
-> +			io__drain_line(io, ch);
->  		return false;
-> -	if (io__get_hex(io, end) !=3D ' ')
-> +	}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260721173347.9163=
--1-irogers@google.com?part=3D2
