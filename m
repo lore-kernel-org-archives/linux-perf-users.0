@@ -1,131 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C47A53E172E;
-	Tue, 21 Jul 2026 14:59:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3E2246C4AE
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 17:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784645944; cv=none; b=sHcnvJ/uuTHMzHrugvOmQ6BVRi7xPcq65010Cui0FPpPtvnxUa7wKWBKduvK81So2nS4y6Rzg5O//1yEiwozel8z5A6B3zsw5BqEkFLcvaiNA1yeAz779ESK4z/2eZ3Mj7I4z8U2qP4LypxBduSO/CyqMurhvVjMHGLfkopLwDE=
+	t=1784655242; cv=none; b=JAUnAS2m99vX0RHEkKUm4hWMOpZUhIJed/OGnoUmaKIOKTBrguwyVV4awBsLAJq932muYmdssOu8LFNrl60blHjtLu0sa2raHVoj2yIg7+wc6vIRyS3cFtVSpaUAnOXp9WRn7689gSUfBVWw4S5ryMkGKIVExXNH2oML8CKAFig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784645944; c=relaxed/simple;
-	bh=lySFQEjlfKoTDHuiizi/oHl86RY6OEHE5uMcnI0QSfA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NGR8L0mJGQAjm0gonnW02kpi9T1TXSvPlF8KnxniCcXtZKRhogm7Olc+WY2Qax+5IpMYAaNgJpEhbwDQW6Ve+Oz+9PpZ7BzU+yXlbSX/G7gkR3gD5cHsy8tEajYXZKDk7jM2Z51DwfpwVhk+ZWt7o/QwadLCCCBGTxz26WXiz40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WiO8ruG+; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1784655242; c=relaxed/simple;
+	bh=OYTObqt3amkSPdQxg3z1kF/GbtBjryn45sQZDBynauk=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Xdb5PYlQHdLtKBvMoFgRi3JQ7ek+CjETYwSTkgbpwC+hG+3+w+Hx4q7vzgFI/QPLJTHH5UcLvScS3hV2jE7ez2Zk3Go+rgKWq0pSA5D9R6vjk5AnIJ6kRJms7/vpRdRJnlcpnGGIIzzhO0j/kayu4dXBeK5b1kW3Rga3Aex6H/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GOBuhQco; arc=none smtp.client-ip=209.85.216.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WiO8ruG+"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784645942; x=1816181942;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lySFQEjlfKoTDHuiizi/oHl86RY6OEHE5uMcnI0QSfA=;
-  b=WiO8ruG+mFKbWloib77/jHoxRxRghI+m/DmiMBpg5obSHTWLp+w9QrYo
-   AAiv58yxcvQXopf5CwetFm0BKgc0ARKxSzZH6mkgpeklcKmw5X/8mw/Xb
-   ycxm2sf40JE/swrW2ithec6lJFvHN8H2VSfiUqfNojTMiAWrtQV7eUmZh
-   yabqvT3HEzIrUMRdsn5GQGJtIyCx36qEFpta77PWfaWl+DKIEUOcaz9Xa
-   FdIn3RWRNph5AEYucC497Un8EHBlXxaaYKg/jq3x52Jz94Cheqj8vxdnY
-   X12wha9ov+IpsW8ZkxOMo/7cjMQWNLMmG1iLQlUOpz+yik7yNrTtYzzFu
-   w==;
-X-CSE-ConnectionGUID: IAlT9FcwTKimGqoZ6yR1rQ==
-X-CSE-MsgGUID: 0VKaZ57dRWyNXCsiNKklag==
-X-IronPort-AV: E=McAfee;i="6800,10657,11853"; a="85192975"
-X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
-   d="scan'208";a="85192975"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 07:59:01 -0700
-X-CSE-ConnectionGUID: g3H+t0LEQXu9iPLzbt24zg==
-X-CSE-MsgGUID: oZfbx44FTZiMtP5zzCoglg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,176,1779174000"; 
-   d="scan'208";a="261348250"
-Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.185.5]) ([10.122.185.5])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jul 2026 07:59:00 -0700
-Message-ID: <a47f0dbc-e7a2-4d22-acfa-9d6925da1603@intel.com>
-Date: Tue, 21 Jul 2026 09:58:59 -0500
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GOBuhQco"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-38827cee19eso12600812a91.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 10:34:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784655241; x=1785260041; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=cSCvDk5nPww14vo9MHhWAorlTeMJB2zBj5PcutPInCE=;
+        b=GOBuhQcoDLdSFA4EoQTfWwrmbx1TM1NMZ46b4/KG1VBzpA100CoUzgen302ZtMtF0C
+         GGgBJtnMbukn4I7+J2JrLwI7ga7el/Ff6a7kvUEQrP19bBNagKvGGCMC8CObIw4Ve/ra
+         twVzN7SH+kom617TZK9xfb3c3YWmgcapTgP4EiXsZmmJK13TqcYuyHWuEr2bttxU6vYx
+         h1ceJRpf4CenhdQOwzHA3+RMIk4fkGVrc41oNNqaeTHz5upVyAHewl58VDeVCAk/S3My
+         x5KtG67guMa1EFk81+xEAzd/vRfP2dcznhywqZG4VsMiFMfjKrrdVwNHBZUr5uflaa2G
+         Ws6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784655241; x=1785260041;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=cSCvDk5nPww14vo9MHhWAorlTeMJB2zBj5PcutPInCE=;
+        b=rLjnGP1ZW59DEec00rpoE/nhq9/UbGU260cdj1tYBtdqIkwR/5CxYOVj9ND24mjgBe
+         YqWrrA4GsmgfZLSnf2pHu6KaK3xjfXTuiQ66QYNWVllwhIAVIPLjYeLr49pM0ruvV1Np
+         PWWd7uz22BitC85BZKJwTi/MTohOYpP6qDHxxKjtx+PuHRXuMzlkhq/iKAqNkuE8PXrz
+         lou+ieD9P9r+obHX4mQUYJJSWDxkifoB35Jx7RTRbizLol/kgx/buNw4qONx/NtFb+vw
+         yEbQA9C/rZA5eAgc+M4qlKEhi4zdNzH+DXKejxd50RNxRa/lVB2BX3ykL3VAEXGVHcx/
+         xc8w==
+X-Forwarded-Encrypted: i=1; AHgh+RokjTlR2ipE7l8WBjbRFLv8M48jqLAeRkEUET/wTt2d8mTtTXLUIjl7nrQOYlnzWWyiM7IvlFU2sIxXMS9gZ/ZG@vger.kernel.org
+X-Gm-Message-State: AOJu0YzTwWuF4+kbpCZbz7uIZsYBX8M8lKJp7Hwp4eEBpOe9GQDQNtFf
+	e9YyEAVgVdSYeORv4xP/bfv5Fsfm4uRJYy3G4KcB5LrwWPPexnT4UhFFynPL3CjDf+GSyciWkP4
+	el8lgzQvQlg==
+X-Received: from dlbsn8.prod.google.com ([2002:a05:7022:b908:b0:13c:e5e8:c617])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1f8d:b0:38d:c0f9:30be
+ with SMTP id 98e67ed59e1d1-38e4b578797mr19205476a91.38.1784655240105; Tue, 21
+ Jul 2026 10:34:00 -0700 (PDT)
+Date: Tue, 21 Jul 2026 10:33:43 -0700
+In-Reply-To: <20260720225200.3810501-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 0/8] perf/x86: Miscellaneous PMU bug fixes and
- optimizations
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
- Xudong Hao <xudong.hao@intel.com>
-References: <20260717080342.1879573-1-dapeng1.mi@linux.intel.com>
-Content-Language: en-US
-From: "Chen, Zide" <zide.chen@intel.com>
-In-Reply-To: <20260717080342.1879573-1-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20260720225200.3810501-1-irogers@google.com>
+X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
+Message-ID: <20260721173347.9163-1-irogers@google.com>
+Subject: [PATCH v3 0/4] perf: Fix and optimize maps parsing, boundaries, and
+ bounds safety
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, ravi.bangoria@amd.com, 
+	swapnil.sapkal@amd.com
+Content-Type: text/plain; charset="UTF-8"
 
+It turns out that PATH_MAX is respected by system calls but isn't
+respected by file paths in /proc/pid/maps and /proc/pid/smaps. In the
+kernel "//toolong" is placed in the filename of mmap/mmap2 events
+where the filename is longer than PATH_MAX, do the same in the
+mmap/mmap2 synthesis code to avoid overrunning the event buffer. With
+Gemini's help try to address other correctness and overrun issues.
 
-For the whole series:
-Reviewed-by: Zide Chen <zide.chen@intel.com>
+V3 addresses Sashiko AI review feedback:
+- Updates io__drain_line() loop condition from a while loop to a
+  do-while loop to ensure that when ch == -2 (initial character
+  non-hex/dec failure), the loop correctly reads and discards
+  characters from io__get_char(io) until a newline or EOF is reached,
+  preserving map line synchronization.
 
+V2 addresses community review feedback:
+- Corrects read_proc_maps_line() and io__drain_line() to safely handle
+  already consumed newlines, preventing valid map data from being skipped.
+- Restores the early exit block for timeouts so the TIMEOUT flag is
+  always emitted to tools.
+- Removes an unused assignment to avoid promoting warnings to build errors.
+- Clarifies and dynamically computes the maximum filename length boundaries
+  using offsetof() to prevent E2BIG errors regardless of struct layout.
 
-On 7/17/2026 3:03 AM, Dapeng Mi wrote:
-> Changes since v2:
-> - Patch 6/8: Fix the typo in comments (Thomas).
-> - Patch 8/8: New patch which prevents drain_pebs() reentry.
-> 
-> Changes since v1:
-> - Patch 3/7: Ensure cpuc->pmu is not the static pmu before calling
->   hybrid_pmu(cpuc->pmu) in intel_pmu_cpu_dead() (Sashiko).
-> 
-> This series fixes recently found x86 core PMU bugs. Most of bugs are
-> found by Sashiko in reviewing the "Support SIMD/eGPRs/SSP registers 
-> sampling for perf" patch-set, e.g.,
-> https://lore.kernel.org/all/20260706022123.480411F000E9@smtp.kernel.org/
-> https://lore.kernel.org/all/20260706021852.DE2ED1F000E9@smtp.kernel.org/
-> 
-> The patch 7/8 optimizes ACR handling in match_prev_assignment() and
-> mitigate the performance overhead.
-> 
-> The patch 8/8 enhances intel_pmu_drain_pebs_buffer() to prevent
-> drain_pebs() reentry.
-> 
-> Tests:
-> Below test cases are run on Diamonds and Novalake. No issues are found.
-> - Perf stat test
->   $ perf test 119
-> - Perf record tests 
->   $ perf test 155
-> - Perf record LBR tests
->   $ perf test 156
-> 
-> History:
-> v2: https://lore.kernel.org/all/20260713082734.3162099-1-dapeng1.mi@linux.intel.com/ 
-> v1: https://lore.kernel.org/all/20260710065128.1799838-1-dapeng1.mi@linux.intel.com/
-> 
-> Dapeng Mi (8):
->   perf/x86: Unregister PMI handler on PMU init failure
->   perf/x86: Free hybrid state on PMU init failure
->   perf/x86: Guard intel_pmu_cpu_dead() against invalid hybrid PMU casts
->   perf/x86/intel: Unwind cpuc state if PEBS buffer setup fails
->   perf/x86: Remove stale fixed counter helper and fix hybrid PMU access
->   perf/x86/intel: Fix intel_cap handling on hybrid PMUs
->   perf/x86: Optimize ACR handling in match_prev_assignment()
->   perf/x86/intel: Prevent drain_pebs() reentry
-> 
->  arch/x86/events/core.c       |  45 ++++++++++++----
->  arch/x86/events/intel/core.c | 101 ++++++++++++++++++++++++++---------
->  arch/x86/events/intel/ds.c   |   7 ---
->  arch/x86/events/perf_event.h |  12 ++---
->  4 files changed, 113 insertions(+), 52 deletions(-)
-> 
-> 
-> base-commit: edda9051e267b7390c7ce24b1b71434414ad156e
+Ian Rogers (4):
+  perf find-map: Remove PATH_MAX 128-byte stack array restriction
+  perf synthetic-events: Fix line synchronization, bounds, and
+    truncation bugs in proc maps reader
+  perf synthetic-events: Fix bounds, stale state, and misc flags in
+    kernel module synthesis
+  perf synthetic-events: Fix bounds and union member access in mmap2
+    build_id synthesis
+
+ tools/perf/util/find-map.c         |  10 +-
+ tools/perf/util/synthetic-events.c | 288 ++++++++++++++++++++---------
+ 2 files changed, 208 insertions(+), 90 deletions(-)
+
+-- 
+2.55.0.229.g6434b31f56-goog
 
