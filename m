@@ -1,56 +1,56 @@
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0BA146D557
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 17:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06934470449
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 17:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784655249; cv=none; b=NVqFkHyKrVQjFGHPGnnMSIktHjxvvIfWDiqOiX8OL+yU9oNCoLm38uq/yZ1n1tw1slZg6kQBUnP4ZOphlqnrorUD+P1xTyAUD686UoY55q2FTwdsRUrp2TPEWHHTOJp4k8Xf93EisB0lUMkTjtKAGm8K94pyY3GU+c4+Em6hNZE=
+	t=1784655251; cv=none; b=dyk2UpFvkuppB4UYiwn/d+iuSjn/8oUOOnVREULJJWnEXJ1lGo7ZGPZWdJ67QgrUZebALrQFAiHVv/2riWvJBwNUL0sSwSZF+cn+RLh4OqylEb8FYlw0pw6iGcBiu5sCwCFyT3yGBVHE+KP0MQqmpcl3nTm6K/O4IEvN7R6UwqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784655249; c=relaxed/simple;
-	bh=5HHYV2YtuskvpVXWLLiEwNUcmcEMrY8dXvLciuEgNo4=;
+	s=arc-20240116; t=1784655251; c=relaxed/simple;
+	bh=CEzrLZPHqPdQhLMLgsk270qr2KafmCep5+ZkSOMjTrI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rQNno9FaWjVNvYe1uwJG2+Btb7RkCoc47oXA92neoY6t2lAKsYe3aY7FQev3gxucTKKmcymXnUQrebflESypRyFiFqk5D35BllaR3h9kdhZe4vTht9be0EHcqa8RzjxrH2cJxVyhzQugU7FWpb7efWjmc1rJd08t6MHl5zF2x/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QrcWUTkH; arc=none smtp.client-ip=209.85.215.199
+	 To:Cc:Content-Type; b=RPgWfhuqnt2kF2SEDukX9G9Vi3LP3H1/xroTNXUKwnB5AzLgDuOXy6UPPJEP4ClVTd8AtiFAx+uNCRSPlx9HkxI1R8gNrxbuv9BIM5Q8+/fWvccTCORsY1QIgd4fgS+C4zArAIz4R849QmyYUgHZJMIZQl7k3HJfb59bce+eQcY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K7eqcyYp; arc=none smtp.client-ip=209.85.216.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QrcWUTkH"
-Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-c9c26587e67so5743246a12.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 10:34:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K7eqcyYp"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-38ea32e57e2so195850a91.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 10:34:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784655247; x=1785260047; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1784655249; x=1785260049; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=dVysXzCxvN0YWO4pl9MoMoRFZ8JrR13DJYNHpKFDQUI=;
-        b=QrcWUTkHE114E7/73aCuWVO78Dg69vNN63FnEcdFqdB6zpCF09Hc/37JmCPGXONDr3
-         9YI/tnODDZEZyqRjsrGFAA5hSLHVXedOuHx5tdXgkLC1dMLpxIuCg3CfTs7CAwHJWSpy
-         J+Nte1rb53/ht8XVL1kaZclpPm9GfOPq9QBwS6hjUF6BrEns6G/Yum1d6N8jrk3+fsY2
-         oK+vx3e4FR/SMoyCnAmq1iehtvZ91wgvbcFlVlCY397o3FXI+tnZbcxQ7ynsUPXDMO7E
-         z8505BqumwTEIfg0ZPXsNjbWQaJ9EYVJWOc+HQHks33QOblarJTDi9DSOi++d+DjUD2F
-         lYtQ==
+        bh=ypc5c864N+DZk1m/raoCh7jyW2ktVuTgipXiePtRM3c=;
+        b=K7eqcyYp+wUTsWX0N4hgLz8pLiY+jlbwg7d7Iv/5b11hRoVE+6UhisQ9hEHDwarGW6
+         XdjVqNwldcmvGfRzNKan0UdeJroU840ozxdZY9u1Tk09IfMdFqEEuEH1Qp0blfyX7g1/
+         wDcy3T8srUXmREg/WwB9H1rY1QwWpWJYu3kdNFFyS+7Fr7GtSiUTZXMplPaAH1WVMCF9
+         9QfExzjOKmTCOspVRbR20XD4hW6cl2Rn11uVKksZeFlrL3XB/IRZxW6B6af/KYA7xsJx
+         f/j1TuTM2zC9Xu2mFQktJY8Tlf5mQ6crLthoCpIRXtWx6HVjM9qD/TCkaWMqufCIEB40
+         l0mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784655247; x=1785260047;
+        d=1e100.net; s=20251104; t=1784655249; x=1785260049;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=dVysXzCxvN0YWO4pl9MoMoRFZ8JrR13DJYNHpKFDQUI=;
-        b=nJoC6W3BQXp/eiK1iwErhjKszqyvo890lY8f/21CL7/gPL5wg1VYPH/mO9MvGrWHIY
-         lqldQQ84IRwSh+KZxPtoN4yI+P9CQLl4DelY0Ry4Cmz/ZHH3xX2ZvHZ6S4tBuCdPt/HB
-         QK8XO+MoQPHueQcgI+vnHD4cH0xTk9rhIwYinMXAzSgvkT8+fpRF3gVsU3c4cUOPdZeM
-         gMyT1hwxT30+4ai1r/NiHwFK1YVR7E8Xu2E+RV65nRuNXcvnzNkl75L8iB7saNn6j6Di
-         em+VSkIsIKPckLKSPUtlCe0JTWGR5RaDT/bpxf/syyXh1vi1xTp/7Z49ls/7C12kURlW
-         RhbA==
-X-Forwarded-Encrypted: i=1; AHgh+Rrvm03FFm443yhHFQUto2b/JUeBSy6QcKduvtAspJ2O1fS0lq9un7VTwBxYLh1/A+zvmP/Lqt3Xeqflapf/sIfI@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDGMY81FNkmWwRvw62ihAnqn4syiAfoWqm4lQKNcpXuudJ52/w
-	yKGKyBpLBVWelk4Ugn/pTjs+Nve3IU9OAcRjf7/v6nAMao742tb6HAL6gJpCt66ILK8UnoW5xpO
-	Mqv+EbAr1Dw==
-X-Received: from dldyq2-n2.prod.google.com ([2002:a05:701b:4542:20b0:139:ce3e:27b3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:4d05:b0:3bd:1cfc:1b9b
- with SMTP id adf61e73a8af0-3c4292c1e37mr586336637.10.1784655246881; Tue, 21
- Jul 2026 10:34:06 -0700 (PDT)
-Date: Tue, 21 Jul 2026 10:33:46 -0700
+        bh=ypc5c864N+DZk1m/raoCh7jyW2ktVuTgipXiePtRM3c=;
+        b=lHaL+yjMWOPxIdtoARIXTVf8KBc+vOYeL24Xhg9o/iH2Q3j2cQUJU2NKHl0gavQcpp
+         nmLEYwdjjamgWPrixx+i/+ZBFz0tTN1jkywcEUOZ82/FAUSZBxEgH0tolrnHENOZH8R4
+         pSseALP5I5kQBqs9VwvdXB+r7yfya6aSEAXUIiR88F71p80h4iktyU7ArXfyFPHVc4xk
+         /yFm2VFew5Wpi8q4WQi9uOsyR/+yasSoXnRSmGPlk9EJTWV9H7FmF39ddAQoRS3sjXC8
+         nFGECz8aqHakjQY7IgzVp2zXd6iRcHsyiFFJ+iO4d+M9VIukBZLaSwqHrwXh67ZXgX8A
+         agZQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqbM8XHOO65kQhebuXdpb3DvfY4Thq9al+1RIqBwrbbA60S2L6vLlg/u/DSXkKPe72JMN3IrI8XYlQ2RdGrILcd@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz62iJDyMM6sYSGPfy/6tBRpSXwwvEdSE2qX/YPYTNyKGpU8NFw
+	0JqqDokyhaDgg3iR+i4vJ/lyBkVfOdCFOYqKW34NjI6K/F/L1lh6oUfPcuCEyZ+lX7fMA5gw5bj
+	TDVtSHwVn3g==
+X-Received: from dlbvg20.prod.google.com ([2002:a05:7022:7f14:b0:13c:f3ec:ddf4])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5604:b0:37f:9ce2:348f
+ with SMTP id 98e67ed59e1d1-38e4b55ab8dmr19806756a91.32.1784655248954; Tue, 21
+ Jul 2026 10:34:08 -0700 (PDT)
+Date: Tue, 21 Jul 2026 10:33:47 -0700
 In-Reply-To: <20260721173347.9163-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260720225200.3810501-1-irogers@google.com> <20260721173347.9163-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
-Message-ID: <20260721173347.9163-4-irogers@google.com>
-Subject: [PATCH v3 3/4] perf synthetic-events: Fix bounds, stale state, and
- misc flags in kernel module synthesis
+Message-ID: <20260721173347.9163-5-irogers@google.com>
+Subject: [PATCH v3 4/4] perf synthetic-events: Fix bounds and union member
+ access in mmap2 build_id synthesis
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -71,143 +71,77 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	swapnil.sapkal@amd.com
 Content-Type: text/plain; charset="UTF-8"
 
-Fix potential buffer overruns in perf_event__synthesize_modules_maps_cb()
-by safely clamping long DSO names to the mmap/mmap2 filename boundaries.
-Explicitly assign and clear the misc flags and union padding across all
-iterations to prevent stale Build-ID state from leaking between module
-synthesis events.
+Fix a critical logic bug in perf_event__synthesize_mmap2_build_id() where
+the wrong union member structure size and offset boundaries were utilized.
+Safely calculate the exact maximum allowed filename length to guarantee
+absolute stack and alignment boundaries for ID sample trailers, preventing
+-E2BIG overruns on very long filenames while meeting strict standard C
+compliance.
 
 Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/synthetic-events.c | 70 +++++++++++++++++++++---------
- 1 file changed, 50 insertions(+), 20 deletions(-)
+ tools/perf/util/synthetic-events.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
 diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 9a2b4d561e9e..068323b9510d 100644
+index 068323b9510d..6477a726c8ba 100644
 --- a/tools/perf/util/synthetic-events.c
 +++ b/tools/perf/util/synthetic-events.c
-@@ -754,6 +754,7 @@ struct perf_event__synthesize_modules_maps_cb_args {
- 	perf_event__handler_t process;
- 	struct machine *machine;
- 	union perf_event *event;
-+	u16 misc;
- };
+@@ -298,8 +298,9 @@ static void io__drain_line(struct io *io, int ch)
+ 	if (ch == -2 && io->data > io->buf && io->data[-1] == '\n')
+ 		return;
  
- static int perf_event__synthesize_modules_maps_cb(struct map *map, void *data)
-@@ -761,49 +762,78 @@ static int perf_event__synthesize_modules_maps_cb(struct map *map, void *data)
- 	struct perf_event__synthesize_modules_maps_cb_args *args = data;
- 	union perf_event *event = args->event;
- 	struct dso *dso;
--	size_t size;
-+	size_t size, aligned_size;
-+	int rc = 0;
- 
- 	if (!__map__is_kmodule(map))
- 		return 0;
- 
- 	dso = map__dso(map);
- 	if (!symbol_conf.no_buildid_mmap2) {
--		size = PERF_ALIGN(dso__long_name_len(dso) + 1, sizeof(u64));
-+		const char *long_name = dso__long_name(dso);
-+
-+		size = strlen(long_name);
-+		if (size >= sizeof(event->mmap2.filename))
-+			size = sizeof(event->mmap2.filename) - 1;
-+
-+		strlcpy(event->mmap2.filename, long_name,
-+			sizeof(event->mmap2.filename));
-+
-+		aligned_size = PERF_ALIGN(size + 1, sizeof(u64));
- 		event->mmap2.header.type = PERF_RECORD_MMAP2;
--		event->mmap2.header.size = (sizeof(event->mmap2) -
--					(sizeof(event->mmap2.filename) - size));
--		memset(event->mmap2.filename + size, 0, args->machine->id_hdr_size);
-+		event->mmap2.header.misc = args->misc;
-+		event->mmap2.header.size =
-+			offsetof(struct perf_record_mmap2, filename) +
-+			aligned_size;
-+
-+		/* Zero the padding and ID header trailer safely! */
-+		memset(event->mmap2.filename + size, 0,
-+		       (aligned_size - size) + args->machine->id_hdr_size);
-+
- 		event->mmap2.header.size += args->machine->id_hdr_size;
- 		event->mmap2.start = map__start(map);
- 		event->mmap2.len   = map__size(map);
- 		event->mmap2.pid   = args->machine->pid;
- 
--		memcpy(event->mmap2.filename, dso__long_name(dso), dso__long_name_len(dso) + 1);
--
--		/* Clear stale build ID from previous module iteration */
-+		/* Clear stale build ID and entire union from previous module iteration */
- 		event->mmap2.header.misc &= ~PERF_RECORD_MISC_MMAP_BUILD_ID;
- 		memset(event->mmap2.build_id, 0, sizeof(event->mmap2.build_id));
- 		event->mmap2.build_id_size = 0;
-+		event->mmap2.__reserved_1 = 0;
-+		event->mmap2.__reserved_2 = 0;
- 
- 		perf_record_mmap2__read_build_id(&event->mmap2, args->machine, false);
- 	} else {
--		size = PERF_ALIGN(dso__long_name_len(dso) + 1, sizeof(u64));
-+		const char *long_name = dso__long_name(dso);
-+
-+		size = strlen(long_name);
-+		if (size >= sizeof(event->mmap.filename))
-+			size = sizeof(event->mmap.filename) - 1;
-+
-+		strlcpy(event->mmap.filename, long_name,
-+			sizeof(event->mmap.filename));
-+
-+		aligned_size = PERF_ALIGN(size + 1, sizeof(u64));
- 		event->mmap.header.type = PERF_RECORD_MMAP;
--		event->mmap.header.size = (sizeof(event->mmap) -
--					(sizeof(event->mmap.filename) - size));
--		memset(event->mmap.filename + size, 0, args->machine->id_hdr_size);
-+		event->mmap.header.misc = args->misc;
-+		event->mmap.header.size =
-+			offsetof(struct perf_record_mmap, filename) +
-+			aligned_size;
-+
-+		/* Zero the padding and ID header trailer safely! */
-+		memset(event->mmap.filename + size, 0,
-+		       (aligned_size - size) + args->machine->id_hdr_size);
-+
- 		event->mmap.header.size += args->machine->id_hdr_size;
- 		event->mmap.start = map__start(map);
- 		event->mmap.len   = map__size(map);
- 		event->mmap.pid   = args->machine->pid;
--
--		memcpy(event->mmap.filename, dso__long_name(dso), dso__long_name_len(dso) + 1);
- 	}
- 
- 	if (perf_tool__process_synth_event(args->tool, event, args->machine, args->process) != 0)
--		return -1;
-+		rc = -1;
- 
--	return 0;
-+	return rc;
+-	while (ch >= 0 && ch != '\n')
++	do {
+ 		ch = io__get_char(io);
++	} while (ch >= 0 && ch != '\n');
  }
  
- int perf_event__synthesize_modules(const struct perf_tool *tool, perf_event__handler_t process,
-@@ -828,13 +858,13 @@ int perf_event__synthesize_modules(const struct perf_tool *tool, perf_event__han
- 	}
+ static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
+@@ -2447,13 +2448,18 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
+ 	size_t filename_len = strlen(filename);
+ 	size_t ev_len;
+ 	u64 sample_type = sample->evsel ? sample->evsel->core.attr.sample_type : 0;
+-	void *array;
++	void *array = &ev;
+ 	int ret;
++	size_t max_filename_len;
  
- 	/*
--	 * kernel uses 0 for user space maps, see kernel/perf_event.c
--	 * __perf_event_mmap
-+	 * Just like the kernel, see perf_misc_flags() in
-+	 * kernel/events/core.c
- 	 */
- 	if (machine__is_host(machine))
--		args.event->header.misc = PERF_RECORD_MISC_KERNEL;
-+		args.misc = PERF_RECORD_MISC_KERNEL;
- 	else
--		args.event->header.misc = PERF_RECORD_MISC_GUEST_KERNEL;
-+		args.misc = PERF_RECORD_MISC_GUEST_KERNEL;
+-	if (filename_len >= sizeof(ev.mmap2.filename))
+-		return -EINVAL;
++	max_filename_len = sizeof(ev) -
++			   (MAX_ID_HDR_ENTRIES * sizeof(__u64)) -
++			   offsetof(struct perf_record_mmap2, filename) - 1;
  
- 	rc = maps__for_each_map(maps, perf_event__synthesize_modules_maps_cb, &args);
+-	ev_len = sizeof(ev.mmap2) - sizeof(ev.mmap2.filename) + filename_len + 1;
++	if (filename_len > max_filename_len)
++		filename_len = max_filename_len;
++
++	ev_len = offsetof(struct perf_record_mmap2, filename) + filename_len + 1;
+ 	ev_len = PERF_ALIGN(ev_len, sizeof(u64));
  
+ 	if (ev_len + MAX_ID_HDR_ENTRIES * sizeof(__u64) > sizeof(ev))
+@@ -2473,16 +2479,15 @@ int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
+ 
+ 	ev.mmap2.build_id_size = bid->size;
+ 	if (ev.mmap2.build_id_size > sizeof(ev.mmap2.build_id))
+-		ev.build_id.size = sizeof(ev.mmap2.build_id);
++		ev.mmap2.build_id_size = sizeof(ev.mmap2.build_id);
+ 	memcpy(ev.mmap2.build_id, bid->data, ev.mmap2.build_id_size);
+ 
+ 	ev.mmap2.prot = prot;
+ 	ev.mmap2.flags = flags;
+ 
+-	memcpy(ev.mmap2.filename, filename, min(strlen(filename), sizeof(ev.mmap.filename)));
++	strlcpy(ev.mmap2.filename, filename, filename_len + 1);
+ 
+-	array = &ev;
+-	array += ev.header.size;
++	array = (void *)((char *)&ev + ev.header.size);
+ 	ret = perf_event__synthesize_id_sample(array, sample_type, sample);
+ 	if (ret < 0)
+ 		return ret;
 -- 
 2.55.0.229.g6434b31f56-goog
 
