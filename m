@@ -1,56 +1,56 @@
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29EE443E38
-	for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 23:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FBCC44210A
+	for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 23:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784675402; cv=none; b=gahQ2+kvJ4yYEgezZj9Mh12N2DEb+1R332ewNmJsrYI00ZHh55BB35OnXnh4zMljIHheyulon9mVKu/Cl6o/FVxw9JLccrAeCQk0kRNZLI2qQE9drgjHaxBfELRYB0u68MOafwpy2QY5b7bILrfeQDsH+ZGa0EZCaqmBt59tQTM=
+	t=1784675404; cv=none; b=XjBxMUJFULvHSJn5CR6e54gmM63ge6OPEdDG13O1Gk0HFNt+OS2iClpF61Iz6JicbI8ccxK0JjFWXrN+m+VZP4x4yP2LePQRhoSIzsdM3T9X2xjLmpUZFPauiHb34zgjqVNNwMq5iwEbw+ylWBUpSX8vhv/FVu4hnOt0kBtcP1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784675402; c=relaxed/simple;
-	bh=vMihCiw/8AO+eHNdXnnpwYltDYk9DeshmVHLy+zLYPQ=;
+	s=arc-20240116; t=1784675404; c=relaxed/simple;
+	bh=tf8a7E3zLZPXOo8wdboL07PVGKzbNs86Kz6VLzQ5/MM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=FNxP2c6J+w32226c5ahVTGjyYDkofDIQKzZKrg7GFz0CXZ9d9mEDaxpgfVw7tEs69UbI189nTeJRicS4uic+pO7bVlZLO00javQ68lvOtG7IyePkqUU1usp/AP/T/0bkKtyGLp9i7gqXsvW8vKp/+3k2ZPaD8dg6C+rQtjV5yuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q7zs7c8U; arc=none smtp.client-ip=209.85.210.199
+	 To:Cc:Content-Type; b=N68Z3Emc+ZvsIygivPkO7HpYdsBWtgMrA8Q03/uXIlfimIMpeDCxsbrlROJL9Tk9IB/H9Q9ndzLEn+/eULlqOcBBKXjOIy3xjMUNZiw8IhXai+HWJ1kECBVFGjv34cdmLZzW/L0wviMOZmIDudeT4pA+EnpxMHbTebZR7uZUOCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mD5c94lN; arc=none smtp.client-ip=209.85.214.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q7zs7c8U"
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-8488ac68185so21805322b3a.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 16:10:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mD5c94lN"
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2ccbb61893fso249260705ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 21 Jul 2026 16:10:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784675400; x=1785280200; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1784675402; x=1785280202; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=4XzRy9P2Zj1BiZg4KwUnMx60z08NkGZxv94q78xdiew=;
-        b=q7zs7c8UAH1yXb+DwqWDN0kqUMrUly9RGjiS0D7pCkOqHl8Tbcd2x61OBvKjxBhex4
-         4p8XMTzsuA4ld8bnYa6XrF0b+lpttcCQGTtjEgykygUwtzSXpohx86kQvL0+vOc5NoCW
-         NhOg2nGiXAmO9hqZvvdYXlZCEDC/fsN8IyBqINF9EOznBO/YpPL50Ldmqf0AAzDPQGft
-         jWCDH5ifokDAFTEXZKUlGqlae2TIapTcQTSN9g2L7xTTUaCm7wjaiWKQ0yJkWwOS59y/
-         rWrv7a5gOMDWTCUDMswql8Qk0VLuuA217AURMl4CmsuLFOiJdHAB1ueAgEeb7ZjX/hq0
-         aQ6A==
+        bh=nCcmiUW+ScGTENgJGOrWJXCdaGzQrQOCf0avkLvcTWM=;
+        b=mD5c94lNj6VdqupV/SPPHPqtxF0Pk0DgLM0YZCzvT6bZhJbjo5zdF2nYkGpy0+lM76
+         uDTytnVnG0q0YThevAdzDLq26vzZ6/NFzPb7Guoce3eB3l4bQ1dQgyDrDXE4SuGdYqVV
+         EAh3gjfDRtEzF/89n5Mi3f8uoLcOH/wC46OcJLWf3/+JpT2bCrcLA7+WthvHIqQwwztu
+         s3wcsbqRGY+M3gmTEKvaaNiCJdyaRUsBx+bQyqFKmfHTIJUmGU1+AxBK72T2bk8ajABu
+         W7vxXdkwccLL8a669KLtiXQL1WhvqqJiR8GAJpNhVZ8VcyuHlT1ojJJbTdg93VlIZaiA
+         oyug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784675400; x=1785280200;
+        d=1e100.net; s=20251104; t=1784675402; x=1785280202;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=4XzRy9P2Zj1BiZg4KwUnMx60z08NkGZxv94q78xdiew=;
-        b=BnebJDtgJwvIxbKUhhbOUn6PzSrBmQkn0IqBK5WWpivoNufdEaTciAKvlehgfSmTbE
-         tGbxc592UlnqNAi0SCwahZv9Ew92bg9+x5A4eX7lC0fF0rY9wGshlbTy6Y89SvOyrbcJ
-         aigbPX/82Hod5lXJA2QFIHHXoBfO52Isd2oufPlM3I/+nVO2nCRKyj+/g8cFU47O2EIX
-         5HAfeO7RxhnuQQiCFef37nTZZH9Vw6ehqNujXjD4S5W5ufdvcT2e50+c4JFGs0QfyKDt
-         GFYrVhIpui8bVw/yKFP/hGG3m4ommq045rTrU2wp2AY8owfieReBkrlyqer3FjrPxsRu
-         vVBg==
-X-Forwarded-Encrypted: i=1; AHgh+RqZWocMjFzobAxJrtlWESoQZUtfdkX8wTo524ovr0v37K5tcCLo408IXkxlGSZTqH2tfQn31urvPikKXhDQXk57@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw745Pax5chsYG2w84Z1SXGj9ILLdDaa2w+8kubgGxu2BpooQ/5
-	9G4lDjplvZbC+U+lBZypeqh0wqCVtWVm9IXUTCsUN1yEVMXIdjrg43JuPXzhHZnnIySTBZqKsvK
-	OUun2hCqq2Q==
-X-Received: from pfbbn6.prod.google.com ([2002:a05:6a00:3246:b0:84e:46f:f15e])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:27a6:b0:848:6b43:35dc
- with SMTP id d2e1a72fcca58-84c2946f76fmr20435995b3a.35.1784675399730; Tue, 21
- Jul 2026 16:09:59 -0700 (PDT)
-Date: Tue, 21 Jul 2026 16:09:50 -0700
+        bh=nCcmiUW+ScGTENgJGOrWJXCdaGzQrQOCf0avkLvcTWM=;
+        b=NjFJJw/fsDfUIFt+dGtiijOCWgpbvR8DJCJj0hX4hMU81uFir4GVOnQL1ryDl9z61U
+         on4G499Rdq7mHfNgq9PxzObEUVxuD2KNsXHjPp4KLKqYsxe8L7CG1h3XLDN8W1f3mQib
+         TUoqprrJRHZWPFgY+4zOpvYkDhOcth8pV58O7QN2bR4EhW2psj+B0wqf7zz25wNnWz9j
+         jr5Cwz4LvPFCNlLCxoTdwM7LPKDwSrcE90Z9mbIfTs9byx4vAEsXd5X7U1oLc2rbP6kE
+         xSpMruv2hu9DsmmEF0wGVmUo+viNgDqteu4dJFAHTw8kqaEe4mna/sNWNk/AKolll+et
+         VvwQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqnPsNJcUgepMhPC69dw+sht5f4s92H8UyE9oBkc0bTRoe53rIQ2OP+r3isenlPXvQmdAiSPLJA4I6rXf/g/5u/@vger.kernel.org
+X-Gm-Message-State: AOJu0YyToMyNBJhACKbRJI7aEw9rWP24CmnjcRWRsXlhbTFeep5l9OSb
+	UqHGOW+cJbgzzM9H1F41Ks5Dr4QjePqhot4W5FFw066qZdpHqVuuhU+0EAiFLwBKVjYYVcbmOHt
+	DO2nsT8EIJg==
+X-Received: from dygg9.prod.google.com ([2002:a05:693c:80c9:b0:313:d984:da01])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:6a0a:b0:3b4:7d99:a23f
+ with SMTP id adf61e73a8af0-3c3ad8b3abbmr24843081637.45.1784675401631; Tue, 21
+ Jul 2026 16:10:01 -0700 (PDT)
+Date: Tue, 21 Jul 2026 16:09:51 -0700
 In-Reply-To: <20260721230952.267754-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260721205746.183206-1-irogers@google.com> <20260721230952.267754-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
-Message-ID: <20260721230952.267754-3-irogers@google.com>
-Subject: [PATCH v6 2/4] perf synthetic-events: Fix line synchronization,
- bounds, and truncation bugs in proc maps reader
+Message-ID: <20260721230952.267754-4-irogers@google.com>
+Subject: [PATCH v6 3/4] perf synthetic-events: Fix bounds, stale state, and
+ misc flags in kernel module synthesis
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
@@ -71,333 +71,144 @@ Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org,
 	swapnil.sapkal@amd.com
 Content-Type: text/plain; charset="UTF-8"
 
-Fix critical logic and boundary bugs in read_proc_maps_line() and caller.
-Ensure any mid-line hex/dec/char parsing failure invokes io__drain_line()
-safely, using a do-while loop to read and discard remaining characters
-until a newline or EOF is reached. Clamp pathname extraction size to
-account for trailing sample ID headers, use standard '//toolong' fallback
-literal for over-length pathnames, emit timeout flags for truncated entries
-securely via goto out;, and cast event buffer pointers to avoid
-_FORTIFY_SOURCE array bounds aborts across synthesis handlers.
+Clamp long DSO names to mmap/mmap2 filename boundaries accounting for
+sample ID headers to prevent buffer overruns in
+perf_event__synthesize_modules_maps_cb(). Explicitly clear misc flags and
+union padding to prevent stale Build-ID state from leaking between module
+synthesis events, and cast event buffer pointers to avoid _FORTIFY_SOURCE
+array bounds aborts when zeroing padding trailers.
 
 Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/synthetic-events.c | 204 ++++++++++++++++++++---------
- 1 file changed, 142 insertions(+), 62 deletions(-)
+ tools/perf/util/synthetic-events.c | 70 +++++++++++++++++++++---------
+ 1 file changed, 50 insertions(+), 20 deletions(-)
 
 diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index b75f9dcf4dbf..832b74ffb4db 100644
+index 832b74ffb4db..4043d17a6140 100644
 --- a/tools/perf/util/synthetic-events.c
 +++ b/tools/perf/util/synthetic-events.c
-@@ -179,7 +179,8 @@ static int perf_event__prepare_comm(union perf_event *event, pid_t pid, pid_t ti
+@@ -757,6 +757,7 @@ struct perf_event__synthesize_modules_maps_cb_args {
+ 	perf_event__handler_t process;
+ 	struct machine *machine;
+ 	union perf_event *event;
++	u16 misc;
+ };
  
- 	size = strlen(event->comm.comm) + 1;
- 	size = PERF_ALIGN(size, sizeof(u64));
--	memset(event->comm.comm + size, 0, machine->id_hdr_size);
-+	memset((char *)event + offsetof(struct perf_record_comm, comm) + size,
-+	       0, machine->id_hdr_size);
- 	event->comm.header.size = (sizeof(event->comm) -
- 				(sizeof(event->comm.comm) - size) +
- 				machine->id_hdr_size);
-@@ -291,6 +292,18 @@ static int perf_event__synthesize_fork(const struct perf_tool *tool,
- 	return 0;
- }
+ static int perf_event__synthesize_modules_maps_cb(struct map *map, void *data)
+@@ -764,49 +765,78 @@ static int perf_event__synthesize_modules_maps_cb(struct map *map, void *data)
+ 	struct perf_event__synthesize_modules_maps_cb_args *args = data;
+ 	union perf_event *event = args->event;
+ 	struct dso *dso;
+-	size_t size;
++	size_t size, aligned_size;
++	int rc = 0;
  
-+static void io__drain_line(struct io *io, int ch)
-+{
-+	if (ch == '\n')
-+		return;
-+	if (ch == -2 && io->data > io->buf && io->data[-1] == '\n')
-+		return;
+ 	if (!__map__is_kmodule(map))
+ 		return 0;
+ 
+ 	dso = map__dso(map);
+ 	if (!symbol_conf.no_buildid_mmap2) {
+-		size = PERF_ALIGN(dso__long_name_len(dso) + 1, sizeof(u64));
++		const char *long_name = dso__long_name(dso);
 +
-+	do {
-+		ch = io__get_char(io);
-+	} while (ch >= 0 && ch != '\n');
-+}
++		size = strlen(long_name);
++		if (size >= sizeof(event->mmap2.filename) - args->machine->id_hdr_size)
++			size = sizeof(event->mmap2.filename) - args->machine->id_hdr_size - 1;
 +
- static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
- 				u32 *prot, u32 *flags, __u64 *offset,
- 				u32 *maj, u32 *min,
-@@ -299,69 +312,127 @@ static bool read_proc_maps_line(struct io *io, __u64 *start, __u64 *end,
- {
- 	__u64 temp;
- 	int ch;
--	char *start_pathname = pathname;
-+	size_t written = 0;
-+	bool overflowed = false;
- 
--	if (io__get_hex(io, start) != '-')
-+	ch = io__get_hex(io, start);
-+	if (ch != '-') {
-+		if (!io->eof)
-+			io__drain_line(io, ch);
- 		return false;
--	if (io__get_hex(io, end) != ' ')
-+	}
-+	ch = io__get_hex(io, end);
-+	if (ch != ' ') {
-+		if (!io->eof)
-+			io__drain_line(io, ch);
- 		return false;
-+	}
- 
- 	/* map protection and flags bits */
- 	*prot = 0;
- 	ch = io__get_char(io);
- 	if (ch == 'r')
- 		*prot |= PROT_READ;
--	else if (ch != '-')
-+	else if (ch != '-') {
-+		if (!io->eof)
-+			io__drain_line(io, ch);
- 		return false;
-+	}
- 	ch = io__get_char(io);
- 	if (ch == 'w')
- 		*prot |= PROT_WRITE;
--	else if (ch != '-')
-+	else if (ch != '-') {
-+		if (!io->eof)
-+			io__drain_line(io, ch);
- 		return false;
-+	}
- 	ch = io__get_char(io);
- 	if (ch == 'x')
- 		*prot |= PROT_EXEC;
--	else if (ch != '-')
-+	else if (ch != '-') {
-+		if (!io->eof)
-+			io__drain_line(io, ch);
- 		return false;
-+	}
- 	ch = io__get_char(io);
- 	if (ch == 's')
- 		*flags = MAP_SHARED;
- 	else if (ch == 'p')
- 		*flags = MAP_PRIVATE;
--	else
-+	else {
-+		if (!io->eof)
-+			io__drain_line(io, ch);
- 		return false;
--	if (io__get_char(io) != ' ')
-+	}
-+	ch = io__get_char(io);
-+	if (ch != ' ') {
-+		if (!io->eof)
-+			io__drain_line(io, ch);
- 		return false;
-+	}
- 
--	if (io__get_hex(io, offset) != ' ')
-+	ch = io__get_hex(io, offset);
-+	if (ch != ' ') {
-+		if (!io->eof)
-+			io__drain_line(io, ch);
- 		return false;
-+	}
- 
--	if (io__get_hex(io, &temp) != ':')
-+	ch = io__get_hex(io, &temp);
-+	if (ch != ':') {
-+		if (!io->eof)
-+			io__drain_line(io, ch);
- 		return false;
-+	}
- 	*maj = temp;
--	if (io__get_hex(io, &temp) != ' ')
-+	ch = io__get_hex(io, &temp);
-+	if (ch != ' ') {
-+		if (!io->eof)
-+			io__drain_line(io, ch);
- 		return false;
-+	}
- 	*min = temp;
- 
- 	ch = io__get_dec(io, inode);
- 	if (ch != ' ') {
--		*pathname = '\0';
--		return ch == '\n';
-+		if (ch == '\n') {
-+			pathname[0] = '\0';
-+			return true;
-+		}
-+		if (!io->eof)
-+			io__drain_line(io, ch);
-+		return false;
- 	}
++		strlcpy(event->mmap2.filename, long_name,
++			sizeof(event->mmap2.filename) - args->machine->id_hdr_size);
 +
- 	do {
- 		ch = io__get_char(io);
- 	} while (ch == ' ');
-+
- 	while (true) {
--		if (ch < 0)
--			return false;
--		if (ch == '\0' || ch == '\n' ||
--		    (pathname + 1 - start_pathname) >= pathname_size) {
--			*pathname = '\0';
--			return true;
-+		if (ch < 0) {
-+			if (overflowed) {
-+				strlcpy(pathname, "//toolong", pathname_size);
-+				return true;
-+			}
-+			pathname[written] = '\0';
-+			return written > 0;
- 		}
--		*pathname++ = ch;
-+		if (ch == '\0' || ch == '\n')
-+			break;
-+
-+		if (written < (size_t)pathname_size - 1)
-+			pathname[written++] = (char)ch;
-+		else
-+			overflowed = true;
- 		ch = io__get_char(io);
- 	}
-+
-+	if (overflowed)
-+		strlcpy(pathname, "//toolong", pathname_size);
-+	else
-+		pathname[written] = '\0';
-+
-+	return true;
- }
- 
- static void perf_record_mmap2__read_build_id(struct perf_record_mmap2 *event,
-@@ -463,45 +534,53 @@ int perf_event__synthesize_mmap_events(const struct perf_tool *tool,
- 	while (!io.eof) {
- 		static const char anonstr[] = "//anon";
- 		size_t size, aligned_size;
--
--		/* ensure null termination since stack will be reused. */
--		event->mmap2.filename[0] = '\0';
-+		__u64 start, end, pgoff, ino;
-+		u32 prot, flags, maj, min;
- 
- 		/* 00400000-0040c000 r-xp 00000000 fd:01 41038  /bin/cat */
--		if (!read_proc_maps_line(&io,
--					&event->mmap2.start,
--					&event->mmap2.len,
--					&event->mmap2.prot,
--					&event->mmap2.flags,
--					&event->mmap2.pgoff,
--					&event->mmap2.maj,
--					&event->mmap2.min,
--					&event->mmap2.ino,
--					sizeof(event->mmap2.filename),
--					event->mmap2.filename))
-+		/* Read directly into event->mmap2.filename, clamping for id_hdr_size! */
-+		if (!read_proc_maps_line(&io, &start, &end,
-+					 &prot, &flags, &pgoff,
-+					 &maj, &min, &ino,
-+					 sizeof(event->mmap2.filename) - machine->id_hdr_size,
-+					 event->mmap2.filename)) {
-+			if (io.eof)
-+				break;
- 			continue;
-+		}
- 
--		if ((rdclock() - t) > timeout) {
--			pr_warning("Reading %s/proc/%d/task/%d/maps time out. "
--				   "You may want to increase "
--				   "the time limit by --proc-map-timeout\n",
--				   machine->root_dir, pid, pid);
--			truncation = true;
--			goto out;
-+		if (!strcmp(event->mmap2.filename, ""))
-+			strcpy(event->mmap2.filename, anonstr);
-+
-+		if (hugetlbfs_mnt_len &&
-+		    !strncmp(event->mmap2.filename, hugetlbfs_mnt, hugetlbfs_mnt_len)) {
-+			strcpy(event->mmap2.filename, anonstr);
-+			flags |= MAP_HUGETLB;
- 		}
- 
--		event->mmap2.ino_generation = 0;
-+		size = strlen(event->mmap2.filename) + 1;
-+		aligned_size = PERF_ALIGN(size, sizeof(u64));
-+
-+		event->mmap2.header.type = PERF_RECORD_MMAP2;
- 
- 		/*
--		 * Just like the kernel, see __perf_event_mmap in kernel/perf_event.c
-+		 * Just like the kernel, see perf_misc_flags() in
-+		 * kernel/events/core.c
- 		 */
- 		if (machine__is_host(machine))
- 			event->header.misc = PERF_RECORD_MISC_USER;
- 		else
- 			event->header.misc = PERF_RECORD_MISC_GUEST_USER;
- 
--		if ((event->mmap2.prot & PROT_EXEC) == 0) {
--			if (!mmap_data || (event->mmap2.prot & PROT_READ) == 0)
-+		if ((rdclock() - t) > timeout) {
-+			pr_warning("Reading %s/proc/%d/task/%d/maps time out. You may want to increase the time limit by --proc-map-timeout\n",
-+				   machine->root_dir, pid, pid);
-+			truncation = true;
-+			goto out;
-+		}
-+
-+		if ((prot & PROT_EXEC) == 0) {
-+			if (!mmap_data || (prot & PROT_READ) == 0)
- 				continue;
- 
- 			event->header.misc |= PERF_RECORD_MISC_MMAP_DATA;
-@@ -511,26 +590,26 @@ int perf_event__synthesize_mmap_events(const struct perf_tool *tool,
- 		if (truncation)
- 			event->header.misc |= PERF_RECORD_MISC_PROC_MAP_PARSE_TIMEOUT;
- 
--		if (!strcmp(event->mmap2.filename, ""))
--			strcpy(event->mmap2.filename, anonstr);
++		aligned_size = PERF_ALIGN(size + 1, sizeof(u64));
+ 		event->mmap2.header.type = PERF_RECORD_MMAP2;
+-		event->mmap2.header.size = (sizeof(event->mmap2) -
+-					(sizeof(event->mmap2.filename) - size));
+-		memset(event->mmap2.filename + size, 0, args->machine->id_hdr_size);
++		event->mmap2.header.misc = args->misc;
 +		event->mmap2.header.size =
 +			offsetof(struct perf_record_mmap2, filename) +
 +			aligned_size;
- 
--		if (hugetlbfs_mnt_len &&
--		    !strncmp(event->mmap2.filename, hugetlbfs_mnt,
--			     hugetlbfs_mnt_len)) {
--			strcpy(event->mmap2.filename, anonstr);
--			event->mmap2.flags |= MAP_HUGETLB;
--		}
++
 +		/* Zero the padding and ID header trailer safely! */
 +		memset((char *)event + offsetof(struct perf_record_mmap2, filename) + size, 0,
-+		       (aligned_size - size) + machine->id_hdr_size);
++		       (aligned_size - size) + args->machine->id_hdr_size);
++
+ 		event->mmap2.header.size += args->machine->id_hdr_size;
+ 		event->mmap2.start = map__start(map);
+ 		event->mmap2.len   = map__size(map);
+ 		event->mmap2.pid   = args->machine->pid;
  
--		size = strlen(event->mmap2.filename) + 1;
--		aligned_size = PERF_ALIGN(size, sizeof(u64));
--		event->mmap2.len -= event->mmap.start;
--		event->mmap2.header.size = (sizeof(event->mmap2) -
--					(sizeof(event->mmap2.filename) - aligned_size));
--		memset(event->mmap2.filename + size, 0, machine->id_hdr_size +
--			(aligned_size - size));
- 		event->mmap2.header.size += machine->id_hdr_size;
-+		event->mmap2.start = start;
-+		event->mmap2.len = end - start;
-+		event->mmap2.pgoff = pgoff;
-+		event->mmap2.maj = maj;
-+		event->mmap2.min = min;
-+		event->mmap2.ino = ino;
-+		event->mmap2.ino_generation = 0;
- 		event->mmap2.pid = tgid;
- 		event->mmap2.tid = pid;
-+		event->mmap2.prot = prot;
-+		event->mmap2.flags = flags;
+-		memcpy(event->mmap2.filename, dso__long_name(dso), dso__long_name_len(dso) + 1);
+-
+-		/* Clear stale build ID from previous module iteration */
++		/* Clear stale build ID and entire union from previous module iteration */
+ 		event->mmap2.header.misc &= ~PERF_RECORD_MISC_MMAP_BUILD_ID;
+ 		memset(event->mmap2.build_id, 0, sizeof(event->mmap2.build_id));
+ 		event->mmap2.build_id_size = 0;
++		event->mmap2.__reserved_1 = 0;
++		event->mmap2.__reserved_2 = 0;
  
- 		if (!symbol_conf.no_buildid_mmap2)
- 			perf_record_mmap2__read_build_id(&event->mmap2, machine, false);
-@@ -579,7 +658,8 @@ static int perf_event__synthesize_cgroup(const struct perf_tool *tool,
+ 		perf_record_mmap2__read_build_id(&event->mmap2, args->machine, false);
+ 	} else {
+-		size = PERF_ALIGN(dso__long_name_len(dso) + 1, sizeof(u64));
++		const char *long_name = dso__long_name(dso);
++
++		size = strlen(long_name);
++		if (size >= sizeof(event->mmap.filename) - args->machine->id_hdr_size)
++			size = sizeof(event->mmap.filename) - args->machine->id_hdr_size - 1;
++
++		strlcpy(event->mmap.filename, long_name,
++			sizeof(event->mmap.filename) - args->machine->id_hdr_size);
++
++		aligned_size = PERF_ALIGN(size + 1, sizeof(u64));
+ 		event->mmap.header.type = PERF_RECORD_MMAP;
+-		event->mmap.header.size = (sizeof(event->mmap) -
+-					(sizeof(event->mmap.filename) - size));
+-		memset(event->mmap.filename + size, 0, args->machine->id_hdr_size);
++		event->mmap.header.misc = args->misc;
++		event->mmap.header.size =
++			offsetof(struct perf_record_mmap, filename) +
++			aligned_size;
++
++		/* Zero the padding and ID header trailer safely! */
++		memset((char *)event + offsetof(struct perf_record_mmap, filename) + size, 0,
++		       (aligned_size - size) + args->machine->id_hdr_size);
++
+ 		event->mmap.header.size += args->machine->id_hdr_size;
+ 		event->mmap.start = map__start(map);
+ 		event->mmap.len   = map__size(map);
+ 		event->mmap.pid   = args->machine->pid;
+-
+-		memcpy(event->mmap.filename, dso__long_name(dso), dso__long_name_len(dso) + 1);
+ 	}
  
- 	event->cgroup.id = handle.cgroup_id;
- 	strncpy(event->cgroup.path, path + mount_len, path_len);
--	memset(event->cgroup.path + path_len, 0, machine->id_hdr_size);
-+	memset((char *)event + offsetof(struct perf_record_cgroup, path) + path_len,
-+	       0, machine->id_hdr_size);
+ 	if (perf_tool__process_synth_event(args->tool, event, args->machine, args->process) != 0)
+-		return -1;
++		rc = -1;
  
- 	if (perf_tool__process_synth_event(tool, event, machine, process) < 0) {
- 		pr_debug("process synth event failed\n");
+-	return 0;
++	return rc;
+ }
+ 
+ int perf_event__synthesize_modules(const struct perf_tool *tool, perf_event__handler_t process,
+@@ -831,13 +861,13 @@ int perf_event__synthesize_modules(const struct perf_tool *tool, perf_event__han
+ 	}
+ 
+ 	/*
+-	 * kernel uses 0 for user space maps, see kernel/perf_event.c
+-	 * __perf_event_mmap
++	 * Just like the kernel, see perf_misc_flags() in
++	 * kernel/events/core.c
+ 	 */
+ 	if (machine__is_host(machine))
+-		args.event->header.misc = PERF_RECORD_MISC_KERNEL;
++		args.misc = PERF_RECORD_MISC_KERNEL;
+ 	else
+-		args.event->header.misc = PERF_RECORD_MISC_GUEST_KERNEL;
++		args.misc = PERF_RECORD_MISC_GUEST_KERNEL;
+ 
+ 	rc = maps__for_each_map(maps, perf_event__synthesize_modules_maps_cb, &args);
+ 
 -- 
 2.55.0.229.g6434b31f56-goog
 
