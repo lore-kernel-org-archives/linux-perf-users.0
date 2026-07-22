@@ -1,139 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A9F40F72B
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 23:25:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C443793D0
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 23:26:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784762707; cv=none; b=XXDWEys2LptBhPWJfCSiHyJ6BXte3ZTAg5OjUk9yZlNhmcKT/9zx14wuEyCoT9yt6PKg9WkcpNtLpw8f8zq1TzVgx/MDTET4OQ0GWVnSa/c9dz4RXbB9JDUd2EFVQYrAgTvi8LO47XzKRnlB0Mm9tB1FFlElm3x/ikcH/4tk4E8=
+	t=1784762763; cv=none; b=DXI4Cu4XmIC221z1LGzrCt6GssQpMOvjADppAbTBkBQsbr7KD9cktcieXOLD0e380vpvPujssJHVhP6B/nA7rkDL/8pfHbSJvKvhxigK+40gnH7qGVrbL3ZNrcaqxMV6GlyHeq0Pkf+6K7GnN7qTa7NxY1TPtBePK1MnbPPnnck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784762707; c=relaxed/simple;
-	bh=wQPJyQoM6Y2JA3a5Ck1jFBRqhBXt4/LiwuVhDZQBc/4=;
+	s=arc-20240116; t=1784762763; c=relaxed/simple;
+	bh=AqZC8SozR/PqfDgdfZtoONmHrk5+WCzTOGKJyDIQmOE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=bS+voGQZBs14bb50mbPVFZRLHk6bYq23TsaXSMk7JHAjiHAaNkkikJEPuQ5GGnoSBBPXUX0MWXd8apEJA9WBVOSfg2neIqz6Gj0du6FqOsiDs1hrAP8E2Pepgk2FSsZxaH5mIPohJTe/C49RCpOYGI3s606DTFVTJbLQaOzq8lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f795Fbsx; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=P2WeHXdUJjdYis9lVyCbSUrPOmOTt8byts3DisLo+GKLiNR0CCmiMz9hvehOzIjUUHyYRml91JBU+nrW+6ptHprazkmMAyVZYEkP5aI+WAhxcWhe3Ph/t16W4mgZUzDz+wlNEx+9ISjKyvV9IcNJjtKIbo980oiYQohY7mvJW9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iU8WR4mU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f795Fbsx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10D5C1F000E9;
-	Wed, 22 Jul 2026 23:25:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iU8WR4mU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D366D1F000E9;
+	Wed, 22 Jul 2026 23:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784762706;
-	bh=DgAa1BOSVwdLJHYt+JzKYrXTu9uiH/uYyM+F86qwtYM=;
+	s=k20260515; t=1784762762;
+	bh=B05SjCvPhDt7ZcsdCwgGIeWa7jKysag9WrgLv6jwaCE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=f795FbsxpOc23vW681CDuiy9JfkBWr0jm/MfX5RB7hUMhooS0G76/KT0mLWR/tAPJ
-	 LMhghGDJFv9im3xPJReymniV4LVagRP276qIeBveCQig8h91jXSjux1zhgnJnCVltG
-	 69tIpsivpGkmisI3Yo9ZAsY/qC9PBuzemCzsvN1VPaJ3SPmuqrFg8blJBU5QFNqfVt
-	 jsb4RjkbhXP1BHp4jpT56Kkiu0+83uZWLE8uAp0r46gM0ncwz227uNSlmnOECb6pj2
-	 1liIZSyLRAVlg+Ko2HK8A07JiWQhRdO8DCbeYgNFZJ5+d7LGtnKLm3pmc9QQf7JnTo
-	 1btwHY+yX2ibg==
+	b=iU8WR4mUXV1EPNn6iLwYmhNjdwiPzMHwT6TVVOLSx7k5v642GwFAQuDQfH4jYQgcf
+	 nORTjupIf+0hajm+RJa7XVg4JstXOVucQNf/DuZ9VJgrvES5uDBtGkmSJecyShZq6q
+	 /9zN44ZcyCYRMpbzabRWgqlkBeKtikenRHClPPGa+wcpb9IvRchknqYgt6wgha8U0r
+	 5KK/Cgr7taHZzt4O5n7tOFyVFvareNUgbg0pomz53mmggypop1L0EAUt1bvKUBFQq+
+	 01LJjpU84VHY4bPozRRgJTbl1TplA4ZS+mraL8CdogHlhAcUCG7F1OuGZkaESJLYJs
+	 3MNMqzB5uJHlw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 06/11] x86/hw_breakpoint: Add
- arch_reinstall_hw_breakpoint
+Subject: Re: [PATCH v10 05/11] x86/hw_breakpoint: Unify breakpoint
+ install/uninstall
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <178476141832.26117.3201454711538502687.stgit@devnote2>
+In-Reply-To: <178476140665.26117.10482752209138090031.stgit@devnote2>
 References: <178476134787.26117.10094977293012760490.stgit@devnote2>
- <178476141832.26117.3201454711538502687.stgit@devnote2>
+ <178476140665.26117.10482752209138090031.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 22 Jul 2026 23:25:05 +0000
-Message-Id: <20260722232506.10D5C1F000E9@smtp.kernel.org>
+Date: Wed, 22 Jul 2026 23:26:01 +0000
+Message-Id: <20260722232601.D366D1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] Spurious debug exceptions during reinstall of AMD range breakpoi=
-nts due to incorrect hardware register update ordering.
+
+New issues:
+- [High] Spurious debug exceptions due to modifying DR0-DR3 while enabled i=
+n DR7.
+
+Pre-existing issues:
+- [High] NMI race condition during breakpoint uninstallation leaves the har=
+dware breakpoint permanently enabled.
 --
 
---- Patch [6]: [PATCH v10 06/11] x86/hw_breakpoint: Add arch_reinstall_hw_b=
-reakpoint ---
-commit f97fcd502b5557f06d1cd0cadf2259bf2197dc51
+--- Patch [5]: [PATCH v10 05/11] x86/hw_breakpoint: Unify breakpoint instal=
+l/uninstall ---
+commit 68cc4a145838d44957bc67ccfa580a6107987aa3
 Author: Jinchao Wang <wangjinchao600@gmail.com>
 
-x86/hw_breakpoint: Add arch_reinstall_hw_breakpoint
+x86/hw_breakpoint: Unify breakpoint install/uninstall
 
-The new arch_reinstall_hw_breakpoint() function can be used in an
-atomic context, unlike the more expensive free and re-allocation path.
-This allows callers to efficiently re-establish an existing breakpoint.
+Consolidate breakpoint management to reduce code duplication.
+The diffstat was misleading, so the stripped code size is compared instead.
+After refactoring, it is reduced from 11976 bytes to 11448 bytes on my
+x86_64 system built with clang.
 
 > diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpo=
 int.c
-> index c323c2aab2af9..0df3ff556f479 100644
+> index f846c15f21ca1..c323c2aab2af9 100644
 > --- a/arch/x86/kernel/hw_breakpoint.c
 > +++ b/arch/x86/kernel/hw_breakpoint.c
 
 [ ... ]
 
-> @@ -129,23 +133,36 @@ static int manage_bp_slot(struct perf_event *bp, en=
-um bp_slot_action action)
->  static void setup_hwbp(struct arch_hw_breakpoint *info, int slot, bool e=
+> +static void setup_hwbp(struct arch_hw_breakpoint *info, int slot, bool e=
 nable)
->  {
->  	unsigned long dr7;
-> -
-> -	set_debugreg(info->address, slot);
-> -	__this_cpu_write(cpu_debugreg[slot], info->address);
-> +	bool enabled;
-> =20
->  	dr7 =3D this_cpu_read(cpu_dr7);
-> +	enabled =3D dr7 & ((DR_LOCAL_ENABLE | DR_GLOBAL_ENABLE) << (slot * DR_E=
-NABLE_SIZE));
->  	dr7 &=3D ~(__encode_dr7(slot, 0xc, 0x3) |
->  		 (DR_LOCAL_ENABLE << (slot * DR_ENABLE_SIZE)));
-> -	if (enable)
-> -		dr7 |=3D encode_dr7(slot, info->len, info->type);
-> +
-> +	/*
-> +	 * If the slot is currently enabled, disable it first before updating
-> +	 * the address register to prevent spurious debug exceptions.
-> +	 */
-> +	if (enable && enabled) {
-> +		barrier();
-> +		set_debugreg(dr7, 7);
-> +		barrier();
-> +		this_cpu_write(cpu_dr7, dr7);
-> +	}
+> +{
+> +	unsigned long dr7;
 > +
 > +	set_debugreg(info->address, slot);
 > +	__this_cpu_write(cpu_debugreg[slot], info->address);
-> =20
->  	/*
->  	 * Enabling:
->  	 *   Ensure we first write cpu_dr7 before we set the DR7 register.
->  	 *   This ensures an NMI never see cpu_dr7 0 when DR7 is not.
->  	 */
-> -	if (enable)
-> +	if (enable) {
+
+[Severity: High]
+Does this code introduce a spurious debug exception when uninstalling a
+breakpoint?
+
+When uninstalling (enable =3D=3D false), the debug address register is modi=
+fied
+here, but its corresponding enable bit in the hardware DR7 register is still
+active. According to the Intel SDM Volume 3 (Section 17.2.4), modifying
+DR0-DR3 without first clearing the corresponding enable bits in DR7 is
+forbidden. The old implementation bypassed modifying DR0-DR3 on uninstall,
+which avoided this issue.
+
+> +
+> +	dr7 =3D this_cpu_read(cpu_dr7);
+> +	dr7 &=3D ~(__encode_dr7(slot, 0xc, 0x3) |
+> +		 (DR_LOCAL_ENABLE << (slot * DR_ENABLE_SIZE)));
+> +	if (enable)
 > +		dr7 |=3D encode_dr7(slot, info->len, info->type);
->  		this_cpu_write(cpu_dr7, dr7);
-> +	}
-> =20
->  	barrier();
+> +
+> +	/*
+> +	 * Enabling:
+> +	 *   Ensure we first write cpu_dr7 before we set the DR7 register.
+> +	 *   This ensures an NMI never see cpu_dr7 0 when DR7 is not.
+> +	 */
+> +	if (enable)
+> +		this_cpu_write(cpu_dr7, dr7);
+> +
+> +	barrier();
+> +
+> +	set_debugreg(dr7, 7);
+> +
+> +	amd_set_dr_addr_mask(enable ? info->mask : 0, slot);
+> +
+> +	barrier();
+> +
+> +	/*
+> +	 * Disabling:
+> +	 *   Ensure the write to cpu_dr7 is after we've set the DR7 register.
+> +	 *   This ensures an NMI never see cpu_dr7 0 when DR7 is not.
+> +	 */
+> +	if (!enable)
+> +		this_cpu_write(cpu_dr7, dr7);
 
-[Severity: Medium]
-Could this ordering cause a spurious debug exception when reinstalling a
-breakpoint with a narrowed address mask?
+[Severity: High]
+This is a pre-existing issue, but does this sequence create an NMI race
+condition that could leave the hardware breakpoint permanently enabled?
 
-When arch_reinstall_hw_breakpoint() is called to narrow the mask of an acti=
-ve
-AMD breakpoint (e.g., changing from a wide range mask like 0xFF to an exact
-match 0x0), setup_hwbp() re-enables the breakpoint in DR7 via
-set_debugreg(dr7, 7) just after this barrier, but before the AMD address ma=
-sk
-is updated via amd_set_dr_addr_mask().
+When uninstalling, this code writes to the hardware DR7 register first
+(set_debugreg(dr7, 7)), issues a barrier, and then updates the per-CPU
+tracking variable (this_cpu_write(cpu_dr7, dr7)).
 
-If an NMI occurs in this small window, or if the memory accesses of
-amd_set_dr_addr_mask() itself fall within the old wider range around the new
-address, it seems a spurious #DB exception could fire.
+If an NMI (like SysRq-G for KGDB) fires in the window between these writes,
+the NMI handler (such as kgdb_correct_hw_break()) will call
+hw_breakpoint_restore(). This reads the stale cpu_dr7 (which still has the
+slot enabled) and writes it back to hardware DR7, re-enabling the
+breakpoint.
 
-Should the mask be updated before re-enabling the breakpoint in DR7?
+When the NMI returns, setup_hwbp() continues and writes the disabled state
+to cpu_dr7 in memory, but the hardware DR7 is left enabled. If the
+breakpoint triggers later, hw_breakpoint_handler() will see a NULL
+bp_per_reg and could enter an infinite #DB loop.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178476134787.26117.=
-10094977293012760490.stgit@devnote2?part=3D6
+10094977293012760490.stgit@devnote2?part=3D5
