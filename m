@@ -1,142 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38EE3B635A
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 23:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A9F40F72B
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 23:25:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784762671; cv=none; b=rA/p6lALDhjWLC1T9okZ1yhlvE1VehyxJxDIBNwLJUKkvZfRGUZarx61wr1NTLkRn9DpOwYrD+f1oajT8vnfdemwfdWqvNHykBJNTOtDvVBDm7bNEag9S54S92V9mn5lOYxMe6ZzM7ATpeFgc1Am96+7TgH+tTSBBBltwxAC05A=
+	t=1784762707; cv=none; b=XXDWEys2LptBhPWJfCSiHyJ6BXte3ZTAg5OjUk9yZlNhmcKT/9zx14wuEyCoT9yt6PKg9WkcpNtLpw8f8zq1TzVgx/MDTET4OQ0GWVnSa/c9dz4RXbB9JDUd2EFVQYrAgTvi8LO47XzKRnlB0Mm9tB1FFlElm3x/ikcH/4tk4E8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784762671; c=relaxed/simple;
-	bh=pBflsT81qdfN3qA1r6lGnnc6NuQ/DEK2gyeoOLRjcY4=;
+	s=arc-20240116; t=1784762707; c=relaxed/simple;
+	bh=wQPJyQoM6Y2JA3a5Ck1jFBRqhBXt4/LiwuVhDZQBc/4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Nj9OhrJOZXqymrgq38w8vu9qUnI+NbTtSGcr/IqSMEizYGw9y8VQNTzAt9rXOAWUC3TRPkVJMrKfoEbt40Sz08LzL0MHg6YGQxkKkdjUwwNdao14BkOt1sMn2i0zq5P2TAUby25iA9B91w5j9oTSdlp1HuoaPypidZU/0AbZRUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OAho5psO; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=bS+voGQZBs14bb50mbPVFZRLHk6bYq23TsaXSMk7JHAjiHAaNkkikJEPuQ5GGnoSBBPXUX0MWXd8apEJA9WBVOSfg2neIqz6Gj0du6FqOsiDs1hrAP8E2Pepgk2FSsZxaH5mIPohJTe/C49RCpOYGI3s606DTFVTJbLQaOzq8lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f795Fbsx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OAho5psO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A12491F000E9;
-	Wed, 22 Jul 2026 23:24:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f795Fbsx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10D5C1F000E9;
+	Wed, 22 Jul 2026 23:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784762669;
-	bh=pBflsT81qdfN3qA1r6lGnnc6NuQ/DEK2gyeoOLRjcY4=;
+	s=k20260515; t=1784762706;
+	bh=DgAa1BOSVwdLJHYt+JzKYrXTu9uiH/uYyM+F86qwtYM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OAho5psOcNIc3476yADQlM+uji2CXP1e5BYrDYExRwLkTo32SQZ7t57D00fWE3+xz
-	 5ygozH51/69iCnBSQdDUfzjvE0UenSNcprULQh1JdcCB+lLpK65G22T8K2YcDc5Pk6
-	 sDFJ1KKRuEuEJr0g9HT7KXI7lGeoN3xbZJHG62GqoqCDHolpjKJ1kld1m8wWHZFoCi
-	 XvHvsnEdbcc1Asni8HwZt0Xo0niH2d52kQUfH0aybxJp0PipbgJyFj+y8fkDT0g6HX
-	 KnRKJiPSVheAT8qgeiR3WEkBuAWAUU3uho5wwg/TnDoLR26usaHJ0TKnDLVos4pkDD
-	 GNJVtGNdEqZLw==
+	b=f795FbsxpOc23vW681CDuiy9JfkBWr0jm/MfX5RB7hUMhooS0G76/KT0mLWR/tAPJ
+	 LMhghGDJFv9im3xPJReymniV4LVagRP276qIeBveCQig8h91jXSjux1zhgnJnCVltG
+	 69tIpsivpGkmisI3Yo9ZAsY/qC9PBuzemCzsvN1VPaJ3SPmuqrFg8blJBU5QFNqfVt
+	 jsb4RjkbhXP1BHp4jpT56Kkiu0+83uZWLE8uAp0r46gM0ncwz227uNSlmnOECb6pj2
+	 1liIZSyLRAVlg+Ko2HK8A07JiWQhRdO8DCbeYgNFZJ5+d7LGtnKLm3pmc9QQf7JnTo
+	 1btwHY+yX2ibg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 09/11] selftests: ftrace: Add wprobe trigger
- testcase
+Subject: Re: [PATCH v10 06/11] x86/hw_breakpoint: Add
+ arch_reinstall_hw_breakpoint
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <178476145365.26117.17416572855784144092.stgit@devnote2>
+In-Reply-To: <178476141832.26117.3201454711538502687.stgit@devnote2>
 References: <178476134787.26117.10094977293012760490.stgit@devnote2>
- <178476145365.26117.17416572855784144092.stgit@devnote2>
+ <178476141832.26117.3201454711538502687.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 22 Jul 2026 23:24:29 +0000
-Message-Id: <20260722232429.A12491F000E9@smtp.kernel.org>
+Date: Wed, 22 Jul 2026 23:25:05 +0000
+Message-Id: <20260722232506.10D5C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Test teardown verification is bypassed due to shell quoting and =
-explicit `exit 0`, hiding teardown failures.
-- [Medium] Hard-enabling `dentry_kill` before dropping caches floods the tr=
-ace ring buffer, causing test flakiness.
-- [Medium] Global tracepoints lacking PID filters allow background processe=
-s to hijack the wprobe watchpoint, causing test flakiness.
+- [Medium] Spurious debug exceptions during reinstall of AMD range breakpoi=
+nts due to incorrect hardware register update ordering.
 --
 
---- Patch [9]: [PATCH v10 09/11] selftests: ftrace: Add wprobe trigger test=
-case ---
-commit fe30508ad92d4c48b6107f15074a5539f6b55528
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+--- Patch [6]: [PATCH v10 06/11] x86/hw_breakpoint: Add arch_reinstall_hw_b=
+reakpoint ---
+commit f97fcd502b5557f06d1cd0cadf2259bf2197dc51
+Author: Jinchao Wang <wangjinchao600@gmail.com>
 
-selftests: ftrace: Add wprobe trigger testcase
+x86/hw_breakpoint: Add arch_reinstall_hw_breakpoint
 
-Add a testcase for checking wprobe trigger. This sets set_wprobe and
-clear_wprobe triggers on fprobe events to watch dentry access.
+The new arch_reinstall_hw_breakpoint() function can be used in an
+atomic context, unlike the more expensive free and re-allocation path.
+This allows callers to efficiently re-establish an existing breakpoint.
 
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe=
-.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
-> new file mode 100644
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+> diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpo=
+int.c
+> index c323c2aab2af9..0df3ff556f479 100644
+> --- a/arch/x86/kernel/hw_breakpoint.c
+> +++ b/arch/x86/kernel/hw_breakpoint.c
+
 [ ... ]
-> +:;: "Add wprobe triggers" ;:
-> +echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
+
+> @@ -129,23 +133,36 @@ static int manage_bp_slot(struct perf_event *bp, en=
+um bp_slot_action action)
+>  static void setup_hwbp(struct arch_hw_breakpoint *info, int slot, bool e=
+nable)
+>  {
+>  	unsigned long dr7;
+> -
+> -	set_debugreg(info->address, slot);
+> -	__this_cpu_write(cpu_debugreg[slot], info->address);
+> +	bool enabled;
+> =20
+>  	dr7 =3D this_cpu_read(cpu_dr7);
+> +	enabled =3D dr7 & ((DR_LOCAL_ENABLE | DR_GLOBAL_ENABLE) << (slot * DR_E=
+NABLE_SIZE));
+>  	dr7 &=3D ~(__encode_dr7(slot, 0xc, 0x3) |
+>  		 (DR_LOCAL_ENABLE << (slot * DR_ENABLE_SIZE)));
+> -	if (enable)
+> -		dr7 |=3D encode_dr7(slot, info->len, info->type);
+> +
+> +	/*
+> +	 * If the slot is currently enabled, disable it first before updating
+> +	 * the address register to prevent spurious debug exceptions.
+> +	 */
+> +	if (enable && enabled) {
+> +		barrier();
+> +		set_debugreg(dr7, 7);
+> +		barrier();
+> +		this_cpu_write(cpu_dr7, dr7);
+> +	}
+> +
+> +	set_debugreg(info->address, slot);
+> +	__this_cpu_write(cpu_debugreg[slot], info->address);
+> =20
+>  	/*
+>  	 * Enabling:
+>  	 *   Ensure we first write cpu_dr7 before we set the DR7 register.
+>  	 *   This ensures an NMI never see cpu_dr7 0 when DR7 is not.
+>  	 */
+> -	if (enable)
+> +	if (enable) {
+> +		dr7 |=3D encode_dr7(slot, info->len, info->type);
+>  		this_cpu_write(cpu_dr7, dr7);
+> +	}
+> =20
+>  	barrier();
 
 [Severity: Medium]
-Since this trigger is attached globally without a PID filter, could a
-background process hitting do_truncate latch the wprobe onto the wrong
-dentry?
+Could this ordering cause a spurious debug exception when reinstalling a
+breakpoint with a narrowed address mask?
 
-If another process truncates a file before the test modifies its temporary
-file, it seems the test might fail to detect its own file accesses, causing
-flakiness.
+When arch_reinstall_hw_breakpoint() is called to narrow the mask of an acti=
+ve
+AMD breakpoint (e.g., changing from a wide range mask like 0xFF to an exact
+match 0x0), setup_hwbp() re-enables the breakpoint in DR7 via
+set_debugreg(dr7, 7) just after this barrier, but before the AMD address ma=
+sk
+is updated via amd_set_dr_addr_mask().
 
-> +echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
-> +cat events/fprobes/truncate/trigger | grep ^set_wprobe
-> +cat events/fprobes/dentry_kill/trigger | grep ^clear_wprobe
-> +
-> +:;: "Ensure wprobe is still disabled" ;:
-> +cat events/wprobes/watch/enable | grep 0
-> +
-> +:;: "Enable events for triggers" ;:
-> +echo 1 >> events/fprobes/truncate/enable
-> +echo 1 >> events/fprobes/dentry_kill/enable
-> +
-> +:;: "Start test workload" ;:
-> +echo 1 >> tracing_on
-> +
-> +echo aaa > $TMPDIR/hoge
-> +echo bbb > $TMPDIR/hoge
-> +echo ccc > $TMPDIR/hoge
-> +rm $TMPDIR/hoge
-> +
-> +:;: "Drop dentry caches (for dentry_kill)" ;:
-> +# Use append (>>) to avoid calling do_truncate again.
-> +sync && echo 2 >> /proc/sys/vm/drop_caches
+If an NMI occurs in this small window, or if the memory accesses of
+amd_set_dr_addr_mask() itself fall within the old wider range around the new
+address, it seems a spurious #DB exception could fire.
 
-[Severity: Medium]
-Will hard-enabling the dentry_kill fprobe earlier cause this drop_caches
-command to flood the trace ring buffer?
-
-A system-wide dentry eviction generates a massive number of dentry_kill
-events. This could easily wrap the default ftrace ring buffer, potentially
-overwriting the watch events needed for the final assertion.
-
-> +
-> +:;: "Check trace results" ;:
-> +cat trace | grep watch
-> +
-> +
-> +:;: "Ensure wprobe becomes disabled again" ;:
-> +cat events/wprobes/watch/enable | grep 0
-> +
-> +:;: "Remove wprobe triggers" ;:
-> +echo '!set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
-> +echo '!clear_wprobe:watch' >> events/fprobes/dentry_kill/trigger
-> +! grep ^set_wprobe events/fprobes/truncate/trigger
-> +! grep ^clear_wprobe events/fprobes/dentry_kill/trigger
-> +
-> +exit 0
-
-[Severity: Medium]
-Does this sequence properly fail the test if the triggers cannot be removed?
-
-Because the script ends with exit 0, and the grep pipeline ignores the shell
-errexit option, any failures in verifying the trigger removal might be
-swallowed, causing the test to pass even if teardown fails.
+Should the mask be updated before re-enabling the breakpoint in DR7?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178476134787.26117.=
-10094977293012760490.stgit@devnote2?part=3D9
+10094977293012760490.stgit@devnote2?part=3D6
