@@ -1,283 +1,180 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B123A345EC6;
-	Wed, 22 Jul 2026 17:24:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE3D4334D3
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 17:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784741071; cv=none; b=B1WVPGXGzlBlhV0MxLc0J0JH2XlM0E4J0waxBW2Z/PHI2w4amUTWI6LKJvlWrbk/c6lN9RPlrFcsuMH8TLXqrFBiE68xz9JIplt9JxP93PHARHRXcviwCMTmnDI+ws0h5WUWYOr2Cb+kn6KaXaRyrbIYSi8CXrHTts2BvUMRR8Q=
+	t=1784741521; cv=none; b=aAsomDAFkFniv12JeOghwJDea/ULn/v/0LFFdmmz1LXXyS6hMDirVuxuN0Mb2Ts8CM7Ptazz+lTksDBEYYsH6hgYblcwdCUbMKhIIG9Ubwht6ttgVlz1hfM2W87nZqIv+VADDPPiDlmJyT7DgvJHEEJclUAZfmqVpI2+Pks9ucA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784741071; c=relaxed/simple;
-	bh=nNGk27kIAJtnHvBM8Fw1MAPELdpkezDlDBUbqc5x9zQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c15HWGeku8ivkV9Cp5Zz8jZdTXkcKQz/Jk73ZycIhOF3xUwzlWCJf189atxQ526ZPJbQ6Aprvzy1dcxM41WCAVsWjDY9sOQZgpX61ckB67az/pocPXNbJDOpKC17m/Iv90vn5E+A2CvY3D7rkqREa+Cw84TDvsMXcw3WTNy+gjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=q/TD1fPS; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1784741521; c=relaxed/simple;
+	bh=RmiNgHhl4/gTd/JKzR/7AM5zeWlxwdw3HFZKgMxMj+A=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=INH4C5s5UfBSezsPyNOaSinuZyOa4b+CUhsxEm+wElOUR0hCVPKz0cbqju8mirL0GmgcUm8wzkveUGZJrTWkKAB3k0dSNpm9ubr3MI3i6qFDVkVRSCCkRKGhoojqW44+yfhAYc6Sh5lG7tGtNunoEit900GKHuoo20NGA7tb8HY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b0yuQnE1; arc=none smtp.client-ip=209.85.216.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="q/TD1fPS"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E47E61692;
-	Wed, 22 Jul 2026 10:24:24 -0700 (PDT)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.2.212.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6D9263F66F;
-	Wed, 22 Jul 2026 10:24:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1784741069; bh=nNGk27kIAJtnHvBM8Fw1MAPELdpkezDlDBUbqc5x9zQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=q/TD1fPS8vmH7tlcPu/5SzzX55V04ocZ5LnNC54yfODivGs1jr6ZVBWXEZISeeD/l
-	 TESSGTyVrAR2+4cfGgFzNKWsD+RtPlZ8/S4T2COFY5uTTy0XcV0Chf3UmMdXMBsHwp
-	 HCPfkprAUotagGA+dZSyfy5SJV/S8xImnErGRHMs=
-From: Robin Murphy <robin.murphy@arm.com>
-To: will@kernel.org,
-	mark.rutland@arm.com,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] perf/arm-cmn: Switch to generic cpumask
-Date: Wed, 22 Jul 2026 18:24:18 +0100
-Message-ID: <fff3eca9886d2626a8be95a22629d8650fd45177.1784653319.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.54.0.dirty
-In-Reply-To: <cover.1784653319.git.robin.murphy@arm.com>
-References: <cover.1784653319.git.robin.murphy@arm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b0yuQnE1"
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-38dbe39ce62so6625056a91.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 10:31:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784741510; x=1785346310; darn=vger.kernel.org;
+        h=content-type:to:from:subject:message-id:mime-version:date:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=l18VXGNYcOmQG/0BfithWocT6bT2K2vgr8dII6Ia0aE=;
+        b=b0yuQnE1J0M/OB4xI7Y6EEKVf1KXTFUFHM9DL8MtwH6opeYqiNGyErGsOzH4Nmo52q
+         yEwY6Tn4Smkn4RTA/XKi7zbIl1qMMKl3BYsTvzVB3Bi6PwOj4zUVBS0jHV3hcFSeEFC0
+         bUoNxEAEVxWE3QEErHv9vVskJNs6q02CgScwn1YlNZE9275ChAtepTCZ7OqAIRIg9nQ7
+         SkrmdwRDH6ni/qf7qnO/aF1YJJZOQb9UdvQcXQ08LJ/OmUWKIMWuniMZo7dFgi2g/o+x
+         onh1nVbPE86lEcx4fU1VAYIYTZPucTBLpEJFs2rtqAS5twIuT7BZfgF8mYk4lJTBA11h
+         92Vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784741510; x=1785346310;
+        h=content-type:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=l18VXGNYcOmQG/0BfithWocT6bT2K2vgr8dII6Ia0aE=;
+        b=YB2NsgAjRV79RNEpNiIn6GLzbaCwdyMVeFCcjBYQuHXsV6iz7RZ7vOFrQnek406rGf
+         i+8/NhtN+sC4I7+brh4uFHD41PDIDgZ3iXz18o2BPn5+sAZAKnQKs2lqty1p8J04BvVO
+         I6ReOJP3REk97gMTvGuxlknW8XH07YhlrPdnphgz3CdBbHl40Pm1/s3eguB+ZR3hcbTx
+         FpMcwkLAE0q+eKGGIIe61GD2U5d4sN5Cr/02n1yK0p7NCyhARg09fnAEP9+26rjxGR2d
+         CejD3iawU+Z70ddX9igtxzbnWLpwqMSLJHrwJD6iQCoztdNuFrlJ17HPYjpsNzyiW1NC
+         +QpQ==
+X-Forwarded-Encrypted: i=1; AHgh+Ro6DnH+lXJdG4nZ9Xb9av1txgbjnrdZywrL9QPJvzB0wLr41cd3PjCCb/Sr3LaS6x6ZfmfxDM3k6VIeb9oIMbgE@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0ld7OGmgGUwYrgwAvVLl5bI3CMvD6W0zgxUuHaVgxZr8J087t
+	UlKpb0kfp5KuwLbRiJ8Ma+pEhBPxWo43gw2gju4aWjcOrkySV3CASYh+uqZAfV7/fCOcNjJmMXo
+	rNPCtZr/bsQ==
+X-Received: from dlbtu15.prod.google.com ([2002:a05:7022:3c0f:b0:13d:1bd0:e6cd])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d445:b0:38e:7f52:c8a9
+ with SMTP id 98e67ed59e1d1-38ea379633dmr5048244a91.15.1784741509451; Wed, 22
+ Jul 2026 10:31:49 -0700 (PDT)
+Date: Wed, 22 Jul 2026 10:31:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
+Message-ID: <20260722173138.720586-1-irogers@google.com>
+Subject: [PATCH v1] perf pmu-events: Parallelize JSON and metric
+ pre-computation in jevents.py
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-With perf core now providing appropriately-sequenced hotplug callbacks
-via the new PMU scope, all the state management boilerplate can go,
-while the cpumask also takes care of enforcing event affinity.
+Currently, jevents.py parses hundreds of JSON event and metric files
+sequentially across all CPU architectures during Kbuild startup,
+taking ~3.5 seconds of single-core execution time.
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Refactor jevents.py to pre-populate its internal JSON AST cache in
+parallel across all available CPU cores using
+ProcessPoolExecutor. First gather all the paths with ftw and
+collect_json, then spawn _parallel_read_json_events that starts
+workers to just read the json events. Define the worker process
+initializer _init_worker so that _arch_std_events is available under
+spawn multiprocessing semantics.
+
+This accelerates the JSON parsing phase by over 10x (from ~3.0s down
+to ~290ms), reducing overall jevents.py execution time by 3.5x (from
+~3.56s down to ~1.03s).
+
+Tested-by: James Clark <james.clark@linaro.org>
+Assisted-by: Gemini:gemini-3.1-pro-preview
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- drivers/perf/arm-cmn.c | 96 ++++++++++--------------------------------
- 1 file changed, 23 insertions(+), 73 deletions(-)
+This change was originally part of a larger set of build speed ups,
+but was taken out to focus on more important fixes. Mailing now
+separately. The original series at v7 with this change is:
+https://lore.kernel.org/lkml/20260518154638.2798789-1-irogers@google.com/
 
-diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-index 6e5cc4086a9e..10243ac6217d 100644
---- a/drivers/perf/arm-cmn.c
-+++ b/drivers/perf/arm-cmn.c
-@@ -358,17 +358,12 @@ struct arm_cmn {
- 	struct arm_cmn_dtc *dtc;
- 	unsigned int num_dtcs;
+Note, the change assumes Python 3.9 for type annotations. The parallel
+execution APIs were added in Python 3.7. This means the python code
+should meet the minimum build requirements in:
+https://www.kernel.org/doc/Documentation/Changes
+---
+ tools/perf/pmu-events/jevents.py | 36 ++++++++++++++++++++++++++++----
+ 1 file changed, 32 insertions(+), 4 deletions(-)
+
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index 5c15485d695a..860027bb71b2 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -464,8 +464,8 @@ class JsonEvent:
+     return f'{make_comment(s)}\t{{ { _bcs.offsets[s] } }},\n'
  
--	int cpu;
--	struct hlist_node cpuhp_node;
--
- 	struct pmu pmu;
- 	struct dentry *debug;
- };
  
- #define to_cmn(p)	container_of(p, struct arm_cmn, pmu)
+-@lru_cache(maxsize=None)
+-def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
++_json_cache = {}
++def _read_json_events_impl(path: str, topic: str) -> Sequence[JsonEvent]:
+   """Read json events from the specified file."""
+   try:
+     events = json.load(open(path), object_hook=JsonEvent)
+@@ -481,12 +481,16 @@ def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
+   if updates:
+     for event in events:
+       if event.metric_name in updates:
+-        # print(f'Updated {event.metric_name} from\n"{event.metric_expr}"\n'
+-        #       f'to\n"{updates[event.metric_name]}"')
+         event.metric_expr = updates[event.metric_name]
  
--static int arm_cmn_hp_state;
--
- struct arm_cmn_nodeid {
- 	u8 port;
- 	u8 dev;
-@@ -1322,17 +1317,6 @@ static const struct attribute_group arm_cmn_format_attrs_group = {
- 	.attrs = arm_cmn_format_attrs,
- };
+   return events
  
--static ssize_t arm_cmn_cpumask_show(struct device *dev,
--				    struct device_attribute *attr, char *buf)
--{
--	struct arm_cmn *cmn = to_cmn(dev_get_drvdata(dev));
--
--	return cpumap_print_to_pagebuf(true, buf, cpumask_of(cmn->cpu));
--}
--
--static struct device_attribute arm_cmn_cpumask_attr =
--		__ATTR(cpumask, 0444, arm_cmn_cpumask_show, NULL);
--
- static ssize_t arm_cmn_identifier_show(struct device *dev,
- 				       struct device_attribute *attr, char *buf)
- {
-@@ -1345,7 +1329,6 @@ static struct device_attribute arm_cmn_identifier_attr =
- 		__ATTR(identifier, 0444, arm_cmn_identifier_show, NULL);
- 
- static struct attribute *arm_cmn_other_attrs[] = {
--	&arm_cmn_cpumask_attr.attr,
- 	&arm_cmn_identifier_attr.attr,
- 	NULL,
- };
-@@ -1779,10 +1762,6 @@ static int arm_cmn_event_init(struct perf_event *event)
- 	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
- 		return -EINVAL;
- 
--	event->cpu = cmn->cpu;
--	if (event->cpu < 0)
--		return -EINVAL;
--
- 	type = CMN_EVENT_TYPE(event);
- 	/* DTC events (i.e. cycles) already have everything they need */
- 	if (type == CMN_TYPE_DTC)
-@@ -2008,48 +1987,38 @@ static int arm_cmn_commit_txn(struct pmu *pmu)
- 	return 0;
++def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
++  key = (path, topic)
++  if key not in _json_cache:
++    _json_cache[key] = _read_json_events_impl(path, topic)
++  return _json_cache[key]
++
+ def preprocess_arch_std_files(archpath: str) -> None:
+   """Read in all architecture standard events."""
+   global _arch_std_events
+@@ -1446,6 +1450,14 @@ const char *describe_metricgroup(const char *group)
  }
+ """)
  
--static void arm_cmn_migrate(struct arm_cmn *cmn, unsigned int cpu)
-+static bool arm_cmn_migrate(struct arm_cmn *cmn, unsigned int cpu)
- {
--	unsigned int i;
--
--	perf_pmu_migrate_context(&cmn->pmu, cmn->cpu, cpu);
--	for (i = 0; i < cmn->num_dtcs; i++)
--		irq_set_affinity(cmn->dtc[i].irq, cpumask_of(cpu));
--	cmn->cpu = cpu;
-+	cmn->pmu.cpumask = cpumask_of(cpu);
-+	for (int i = 0; i < cmn->num_dtcs; i++)
-+		irq_set_affinity(cmn->dtc[i].irq, cmn->pmu.cpumask);
-+	return true;
- }
++def _parallel_read_json_events(task: Tuple[str, str]) -> Tuple[str, str, Sequence[JsonEvent]]:
++  path, topic = task
++  return path, topic, _read_json_events_impl(path, topic)
++
++def _init_worker(std_events: dict) -> None:
++  global _arch_std_events
++  _arch_std_events = std_events
++
+ def main() -> None:
+   global _args
  
--static int arm_cmn_pmu_online_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
-+static bool arm_cmn_init_cpu(struct pmu *pmu, int cpu)
- {
--	struct arm_cmn *cmn;
--	int node;
-+	struct arm_cmn *cmn = to_cmn(pmu);
-+	int node = dev_to_node(cmn->dev);
+@@ -1524,9 +1536,25 @@ struct pmu_table_entry {
+     raise IOError(f'Missing architecture directory \'{_args.arch}\'')
  
--	cmn = hlist_entry_safe(cpuhp_node, struct arm_cmn, cpuhp_node);
--	node = dev_to_node(cmn->dev);
--	if (cpu_to_node(cmn->cpu) != node && cpu_to_node(cpu) == node)
--		arm_cmn_migrate(cmn, cpu);
--	return 0;
-+	if (!cpumask_intersects(pmu->cpumask, cpumask_of_node(node)) &&
-+	    (cpu_to_node(cpu) == node || cpumask_empty(pmu->cpumask)))
-+		return arm_cmn_migrate(cmn, cpu);
-+	return false;
- }
+   archs.sort()
++  import concurrent.futures
++  tasks = []
++  def collect_json(parents: Sequence[str], item: os.DirEntry) -> None:
++    if len(parents) == 0:
++      return
++    if item.is_file() and item.name.endswith('.json') and not item.name.endswith('metricgroups.json'):
++      tasks.append((item.path, get_topic(item.name)))
++
+   for arch in archs:
+     arch_path = f'{_args.starting_dir}/{arch}'
+     preprocess_arch_std_files(arch_path)
++    ftw(arch_path, [], collect_json)
++
++  with concurrent.futures.ProcessPoolExecutor(initializer=_init_worker, initargs=(_arch_std_events,)) as executor:
++    for path, topic, events in executor.map(_parallel_read_json_events, tasks):
++      _json_cache[(path, topic)] = events
++
++  for arch in archs:
++    arch_path = f'{_args.starting_dir}/{arch}'
+     ftw(arch_path, [], preprocess_one_file)
  
--static int arm_cmn_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
-+static bool arm_cmn_exit_cpu(struct pmu *pmu, int cpu)
- {
--	struct arm_cmn *cmn;
-+	struct arm_cmn *cmn = to_cmn(pmu);
-+	int node = dev_to_node(cmn->dev);
- 	unsigned int target;
--	int node;
--
--	cmn = hlist_entry_safe(cpuhp_node, struct arm_cmn, cpuhp_node);
--	if (cpu != cmn->cpu)
--		return 0;
--
--	node = dev_to_node(cmn->dev);
- 
- 	target = cpumask_any_and_but(cpumask_of_node(node), cpu_online_mask, cpu);
- 	if (target >= nr_cpu_ids)
- 		target = cpumask_any_but(cpu_online_mask, cpu);
- 
- 	if (target < nr_cpu_ids)
--		arm_cmn_migrate(cmn, target);
--
--	return 0;
-+		return arm_cmn_migrate(cmn, target);
-+	return false;
- }
- 
- static irqreturn_t arm_cmn_handle_irq(int irq, void *dev_id)
-@@ -2101,15 +2070,12 @@ static int arm_cmn_init_irqs(struct arm_cmn *cmn)
- 				goto next;
- 			}
- 		}
-+		/* Affinity will get set during PMU registration */
- 		err = devm_request_irq(cmn->dev, irq, arm_cmn_handle_irq,
- 				       IRQF_NOBALANCING | IRQF_NO_THREAD,
- 				       dev_name(cmn->dev), &cmn->dtc[i]);
- 		if (err)
- 			return err;
--
--		err = irq_set_affinity(irq, cpumask_of(cmn->cpu));
--		if (err)
--			return err;
- 	next:
- 		; /* isn't C great? */
- 	}
-@@ -2565,7 +2531,6 @@ static int arm_cmn_probe(struct platform_device *pdev)
- 
- 	cmn->dev = &pdev->dev;
- 	cmn->part = (unsigned long)device_get_match_data(cmn->dev);
--	cmn->cpu = cpumask_local_spread(0, dev_to_node(cmn->dev));
- 	platform_set_drvdata(pdev, cmn);
- 
- 	cfg = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -2610,6 +2575,9 @@ static int arm_cmn_probe(struct platform_device *pdev)
- 		.start_txn = arm_cmn_start_txn,
- 		.commit_txn = arm_cmn_commit_txn,
- 		.cancel_txn = arm_cmn_end_txn,
-+		.scope = PERF_PMU_SCOPE_CPUMASK,
-+		.init_cpu = arm_cmn_init_cpu,
-+		.exit_cpu = arm_cmn_exit_cpu,
- 	};
- 
- 	this_id = atomic_fetch_inc(&id);
-@@ -2617,14 +2585,8 @@ static int arm_cmn_probe(struct platform_device *pdev)
- 	if (!name)
- 		return -ENOMEM;
- 
--	err = cpuhp_state_add_instance(arm_cmn_hp_state, &cmn->cpuhp_node);
--	if (err)
--		return err;
--
- 	err = perf_pmu_register(&cmn->pmu, name, -1);
--	if (err)
--		cpuhp_state_remove_instance_nocalls(arm_cmn_hp_state, &cmn->cpuhp_node);
--	else
-+	if (!err)
- 		arm_cmn_debugfs_init(cmn, this_id);
- 
- 	return err;
-@@ -2637,7 +2599,6 @@ static void arm_cmn_remove(struct platform_device *pdev)
- 	writel_relaxed(0, cmn->dtc[0].base + CMN_DT_DTC_CTL);
- 
- 	perf_pmu_unregister(&cmn->pmu);
--	cpuhp_state_remove_instance_nocalls(arm_cmn_hp_state, &cmn->cpuhp_node);
- 	debugfs_remove(cmn->debug);
- }
- 
-@@ -2679,28 +2640,17 @@ static int __init arm_cmn_init(void)
- {
- 	int ret;
- 
--	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
--				      "perf/arm/cmn:online",
--				      arm_cmn_pmu_online_cpu,
--				      arm_cmn_pmu_offline_cpu);
--	if (ret < 0)
--		return ret;
--
--	arm_cmn_hp_state = ret;
- 	arm_cmn_debugfs = debugfs_create_dir("arm-cmn", NULL);
- 
- 	ret = platform_driver_register(&arm_cmn_driver);
--	if (ret) {
--		cpuhp_remove_multi_state(arm_cmn_hp_state);
-+	if (ret)
- 		debugfs_remove(arm_cmn_debugfs);
--	}
- 	return ret;
- }
- 
- static void __exit arm_cmn_exit(void)
- {
- 	platform_driver_unregister(&arm_cmn_driver);
--	cpuhp_remove_multi_state(arm_cmn_hp_state);
- 	debugfs_remove(arm_cmn_debugfs);
- }
- 
+   assert _bcs is not None
 -- 
-2.54.0.dirty
+2.55.0.229.g6434b31f56-goog
 
