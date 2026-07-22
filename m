@@ -1,180 +1,249 @@
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE3D4334D3
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 17:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5B78400E1F
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 17:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784741521; cv=none; b=aAsomDAFkFniv12JeOghwJDea/ULn/v/0LFFdmmz1LXXyS6hMDirVuxuN0Mb2Ts8CM7Ptazz+lTksDBEYYsH6hgYblcwdCUbMKhIIG9Ubwht6ttgVlz1hfM2W87nZqIv+VADDPPiDlmJyT7DgvJHEEJclUAZfmqVpI2+Pks9ucA=
+	t=1784741898; cv=none; b=AYf/o3PuP/PRjKULTO1UNmlT3Vog3RkwPch1EzrTH3mFIY6aeMDLy/FjuU0D2kQXtBjr6gD3rkWw+pCLPS7CN+zjOi74KqqT4aXqxGCP1xkm9g/HgXfv4RkFcVieyhBwvUVCV3XI5dEcsqMUYJy0T5d7hwRqn3BqmvF4e3ekKIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784741521; c=relaxed/simple;
-	bh=RmiNgHhl4/gTd/JKzR/7AM5zeWlxwdw3HFZKgMxMj+A=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=INH4C5s5UfBSezsPyNOaSinuZyOa4b+CUhsxEm+wElOUR0hCVPKz0cbqju8mirL0GmgcUm8wzkveUGZJrTWkKAB3k0dSNpm9ubr3MI3i6qFDVkVRSCCkRKGhoojqW44+yfhAYc6Sh5lG7tGtNunoEit900GKHuoo20NGA7tb8HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b0yuQnE1; arc=none smtp.client-ip=209.85.216.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1784741898; c=relaxed/simple;
+	bh=1qbyKx205frSo2yB/fI+bsGOftYjALIM/EX29TW2ud0=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=lTBh+1CpGJsdJcpoVGkfZ7O7bKBplozE8dnTaWEQ13RbQuzWzWFVV9ypsCq7Z1BnE0tVWBdXiVVTLEiWzPM4qXt/IMgTET1BMy1YzE14dAqb9OnqjCrN361uE/FcR6j/WLvikeCPOYuBbAkYYzXqQ2xrYJOOcp+LfxmLRm2vkZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AyZ/D8Um; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b0yuQnE1"
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-38dbe39ce62so6625056a91.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 10:31:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784741510; x=1785346310; darn=vger.kernel.org;
-        h=content-type:to:from:subject:message-id:mime-version:date:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=l18VXGNYcOmQG/0BfithWocT6bT2K2vgr8dII6Ia0aE=;
-        b=b0yuQnE1J0M/OB4xI7Y6EEKVf1KXTFUFHM9DL8MtwH6opeYqiNGyErGsOzH4Nmo52q
-         yEwY6Tn4Smkn4RTA/XKi7zbIl1qMMKl3BYsTvzVB3Bi6PwOj4zUVBS0jHV3hcFSeEFC0
-         bUoNxEAEVxWE3QEErHv9vVskJNs6q02CgScwn1YlNZE9275ChAtepTCZ7OqAIRIg9nQ7
-         SkrmdwRDH6ni/qf7qnO/aF1YJJZOQb9UdvQcXQ08LJ/OmUWKIMWuniMZo7dFgi2g/o+x
-         onh1nVbPE86lEcx4fU1VAYIYTZPucTBLpEJFs2rtqAS5twIuT7BZfgF8mYk4lJTBA11h
-         92Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784741510; x=1785346310;
-        h=content-type:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=l18VXGNYcOmQG/0BfithWocT6bT2K2vgr8dII6Ia0aE=;
-        b=YB2NsgAjRV79RNEpNiIn6GLzbaCwdyMVeFCcjBYQuHXsV6iz7RZ7vOFrQnek406rGf
-         i+8/NhtN+sC4I7+brh4uFHD41PDIDgZ3iXz18o2BPn5+sAZAKnQKs2lqty1p8J04BvVO
-         I6ReOJP3REk97gMTvGuxlknW8XH07YhlrPdnphgz3CdBbHl40Pm1/s3eguB+ZR3hcbTx
-         FpMcwkLAE0q+eKGGIIe61GD2U5d4sN5Cr/02n1yK0p7NCyhARg09fnAEP9+26rjxGR2d
-         CejD3iawU+Z70ddX9igtxzbnWLpwqMSLJHrwJD6iQCoztdNuFrlJ17HPYjpsNzyiW1NC
-         +QpQ==
-X-Forwarded-Encrypted: i=1; AHgh+Ro6DnH+lXJdG4nZ9Xb9av1txgbjnrdZywrL9QPJvzB0wLr41cd3PjCCb/Sr3LaS6x6ZfmfxDM3k6VIeb9oIMbgE@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw0ld7OGmgGUwYrgwAvVLl5bI3CMvD6W0zgxUuHaVgxZr8J087t
-	UlKpb0kfp5KuwLbRiJ8Ma+pEhBPxWo43gw2gju4aWjcOrkySV3CASYh+uqZAfV7/fCOcNjJmMXo
-	rNPCtZr/bsQ==
-X-Received: from dlbtu15.prod.google.com ([2002:a05:7022:3c0f:b0:13d:1bd0:e6cd])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d445:b0:38e:7f52:c8a9
- with SMTP id 98e67ed59e1d1-38ea379633dmr5048244a91.15.1784741509451; Wed, 22
- Jul 2026 10:31:49 -0700 (PDT)
-Date: Wed, 22 Jul 2026 10:31:38 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AyZ/D8Um"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E7AF1F000E9;
+	Wed, 22 Jul 2026 17:38:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784741896;
+	bh=qEXkdboNetVT7L+F9e7XRQQ2dinhiymUmqeG5krjWK8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=AyZ/D8Um+dz5MiUaJcwdqDWPj8g8pDBPyNasHJYIhQoiAxEld/e9TI0WieqoUhQNe
+	 /TiK/WHL0w2+m4zg3g4uLfeoAOANXn2Mo5N2qvBVJtP3KltqgREeK4gmgGJLtEP7aL
+	 aLyzetHC4CFVy+IqUzTfdSdCUGOo+H5cPqUnXPZNx/zIfxjsOv/AmcS6bz5iLvf1jt
+	 GQRjqKjfTY8ptR/fk7BB8YjzCEu8f9buaNWFtLLY04VnM3/cgviMagmmmeC0xAXz1U
+	 tGXnBRPahnyOEkv+JPpPYr21i8OIZg3CDxdTIlHjQMewr19zzWWGeYRjqEGjRYaQvX
+	 9rpe2zh8J8yyg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/2] perf: Generic hotplug/cpumask for system PMUs
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Robin Murphy" <robin.murphy@arm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <b8aae1114794a348ecfb4e9cf7a792b3ac300d56.1784653319.git.robin.murphy@arm.com>
+References: <cover.1784653319.git.robin.murphy@arm.com>
+ <b8aae1114794a348ecfb4e9cf7a792b3ac300d56.1784653319.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 22 Jul 2026 17:38:15 +0000
+Message-Id: <20260722173816.3E7AF1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
-Message-ID: <20260722173138.720586-1-irogers@google.com>
-Subject: [PATCH v1] perf pmu-events: Parallelize JSON and metric
- pre-computation in jevents.py
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-Currently, jevents.py parses hundreds of JSON event and metric files
-sequentially across all CPU architectures during Kbuild startup,
-taking ~3.5 seconds of single-core execution time.
+Thank you for your contribution! Sashiko AI review found 8 potential issue(=
+s) to consider:
+- [Critical] Taking a CPU offline triggers a NULL pointer dereference if a =
+PMU defines `init_cpu` but not `exit_cpu`.
+- [High] CPU online context migration passes the new CPU as both source and=
+ destination to `perf_pmu_migrate_context`, causing a self-deadlock and fai=
+ling to migrate events.
+- [High] When a PMU is unregistered, the perf core fails to invoke the `pmu=
+->exit_cpu()` callback for currently online CPUs, leaking state.
+- [High] Missing bounds check in `perf_event_setup_cpumask` leads to an out=
+-of-bounds per-CPU pointer access during migration.
+- [High] `perf_pmu_register()` invokes the PMU's `init_cpu` callback in ato=
+mic IPI context, contradicting its documented thread context.
+- [Medium] Secondary CPU hotplug triggers a `WARN_ON_ONCE` because `perf_ev=
+ent_setup_cpumask` incorrectly iterates up to `PERF_PMU_SCOPE_CPUMASK`.
+- [Medium] PMUs using `PERF_PMU_SCOPE_CPUMASK` with static masks but no hot=
+plug callbacks will never have their context migrated on CPU offline.
+- [Medium] If `perf_pmu_register()` fails during the IDR allocation step, i=
+t leaks the CPU-affine state initialized via `pmu->init_cpu()`.
+--
 
-Refactor jevents.py to pre-populate its internal JSON AST cache in
-parallel across all available CPU cores using
-ProcessPoolExecutor. First gather all the paths with ftw and
-collect_json, then spawn _parallel_read_json_events that starts
-workers to just read the json events. Define the worker process
-initializer _init_worker so that _arch_std_events is available under
-spawn multiprocessing semantics.
+--- Patch [1]: [PATCH 1/2] perf: Generic hotplug/cpumask for system PMUs ---
+commit aa795c7bb07889a3ee4d3e9c388a299913298dba
+Author: Robin Murphy <robin.murphy@arm.com>
 
-This accelerates the JSON parsing phase by over 10x (from ~3.0s down
-to ~290ms), reducing overall jevents.py execution time by 3.5x (from
-~3.56s down to ~1.03s).
+perf: Generic hotplug/cpumask for system PMUs
 
-Tested-by: James Clark <james.clark@linaro.org>
-Assisted-by: Gemini:gemini-3.1-pro-preview
-Signed-off-by: Ian Rogers <irogers@google.com>
----
-This change was originally part of a larger set of build speed ups,
-but was taken out to focus on more important fixes. Mailing now
-separately. The original series at v7 with this change is:
-https://lore.kernel.org/lkml/20260518154638.2798789-1-irogers@google.com/
+This commit extends the generic uncore machinery to handle system PMUs
+by introducing a new PERF_PMU_SCOPE_CPUMASK scope. It allows the core
+code to retrieve a per-PMU cpumask dynamically and adds optional callbacks
+to manage CPU-affine state during hotplug operations.
 
-Note, the change assumes Python 3.9 for type annotations. The parallel
-execution APIs were added in Python 3.7. This means the python code
-should meet the minimum build requirements in:
-https://www.kernel.org/doc/Documentation/Changes
----
- tools/perf/pmu-events/jevents.py | 36 ++++++++++++++++++++++++++++----
- 1 file changed, 32 insertions(+), 4 deletions(-)
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index ba5bd6a78fe7b..505cbda2ac41f 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
 
-diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-index 5c15485d695a..860027bb71b2 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -464,8 +464,8 @@ class JsonEvent:
-     return f'{make_comment(s)}\t{{ { _bcs.offsets[s] } }},\n'
- 
- 
--@lru_cache(maxsize=None)
--def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
-+_json_cache = {}
-+def _read_json_events_impl(path: str, topic: str) -> Sequence[JsonEvent]:
-   """Read json events from the specified file."""
-   try:
-     events = json.load(open(path), object_hook=JsonEvent)
-@@ -481,12 +481,16 @@ def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
-   if updates:
-     for event in events:
-       if event.metric_name in updates:
--        # print(f'Updated {event.metric_name} from\n"{event.metric_expr}"\n'
--        #       f'to\n"{updates[event.metric_name]}"')
-         event.metric_expr = updates[event.metric_name]
- 
-   return events
- 
-+def read_json_events(path: str, topic: str) -> Sequence[JsonEvent]:
-+  key = (path, topic)
-+  if key not in _json_cache:
-+    _json_cache[key] = _read_json_events_impl(path, topic)
-+  return _json_cache[key]
-+
- def preprocess_arch_std_files(archpath: str) -> None:
-   """Read in all architecture standard events."""
-   global _arch_std_events
-@@ -1446,6 +1450,14 @@ const char *describe_metricgroup(const char *group)
- }
- """)
- 
-+def _parallel_read_json_events(task: Tuple[str, str]) -> Tuple[str, str, Sequence[JsonEvent]]:
-+  path, topic = task
-+  return path, topic, _read_json_events_impl(path, topic)
-+
-+def _init_worker(std_events: dict) -> None:
-+  global _arch_std_events
-+  _arch_std_events = std_events
-+
- def main() -> None:
-   global _args
- 
-@@ -1524,9 +1536,25 @@ struct pmu_table_entry {
-     raise IOError(f'Missing architecture directory \'{_args.arch}\'')
- 
-   archs.sort()
-+  import concurrent.futures
-+  tasks = []
-+  def collect_json(parents: Sequence[str], item: os.DirEntry) -> None:
-+    if len(parents) == 0:
-+      return
-+    if item.is_file() and item.name.endswith('.json') and not item.name.endswith('metricgroups.json'):
-+      tasks.append((item.path, get_topic(item.name)))
-+
-   for arch in archs:
-     arch_path = f'{_args.starting_dir}/{arch}'
-     preprocess_arch_std_files(arch_path)
-+    ftw(arch_path, [], collect_json)
-+
-+  with concurrent.futures.ProcessPoolExecutor(initializer=_init_worker, initargs=(_arch_std_events,)) as executor:
-+    for path, topic, events in executor.map(_parallel_read_json_events, tasks):
-+      _json_cache[(path, topic)] = events
-+
-+  for arch in archs:
-+    arch_path = f'{_args.starting_dir}/{arch}'
-     ftw(arch_path, [], preprocess_one_file)
- 
-   assert _bcs is not None
--- 
-2.55.0.229.g6434b31f56-goog
+[ ... ]
 
+> @@ -12920,6 +12945,16 @@ int perf_pmu_register(struct pmu *_pmu, const ch=
+ar *name, int type)
+>  	INIT_LIST_HEAD(&pmu->events);
+>  	spin_lock_init(&pmu->events_lock);
+> =20
+> +	/*
+> +	 * Finally, if appropriate give the PMU a chance to initialise any
+> +	 * of its own CPU-affine state. Note that we're serialised against
+> +	 * perf_event_{init,exit}_cpu() themselves by virtue of pmus_lock.
+> +	 */
+> +	if (pmu->init_cpu) {
+> +		for_each_online_cpu(cpu)
+> +			smp_call_function_single(cpu, perf_scope_init_cpu, pmu, 1);
+> +	}
+> +
+
+[Severity: High]
+Does executing init_cpu via smp_call_function_single() conflict with the
+header documentation?
+
+The documentation states init_cpu runs from CPUHP_AP_PERF_ONLINE context,
+which is preemptible. However, smp_call_function_single() executes the
+callback in atomic IPI context. If a driver sleeps here, will it cause a
+panic?
+
+[Severity: Medium]
+If idr_cmpxchg() fails shortly after this initialization loop, does this
+leak the newly allocated CPU-affine state?
+
+There doesn't appear to be an error path to invoke exit_cpu on the online C=
+PUs
+to unwind this initialization.
+
+[Severity: High]
+While not explicitly in this diff, since this function sets up CPU-affine
+state for a PMU during registration, is there a corresponding teardown step
+missing?
+
+It appears perf_pmu_unregister() doesn't invoke exit_cpu across the online
+CPUs, which could leave this state dangling when a driver is unloaded.
+
+>  	/*
+>  	 * Now that the PMU is complete, make it visible to perf_try_init_event=
+().
+>  	 */
+
+[ ... ]
+
+> @@ -15189,10 +15225,19 @@ static void perf_event_clear_cpumask(unsigned i=
+nt cpu)
+> =20
+>  	/* migrate */
+>  	list_for_each_entry(pmu, &pmus, entry) {
+> +		bool cpumask_migrate =3D false;
+> +
+> +		if (pmu->init_cpu && (!pmu->cpumask || cpumask_test_cpu(cpu, pmu->cpum=
+ask)))
+> +			cpumask_migrate =3D pmu->exit_cpu(pmu, cpu);
+> +
+
+[Severity: Critical]
+Is there a risk of a NULL pointer dereference here?
+
+This code checks if pmu->init_cpu is present, but then invokes
+pmu->exit_cpu. Because both callbacks are optional, a PMU driver might
+define init_cpu but leave exit_cpu as NULL.
+
+>  		if (pmu->scope =3D=3D PERF_PMU_SCOPE_NONE ||
+>  		    WARN_ON_ONCE(pmu->scope >=3D PERF_PMU_MAX_SCOPE))
+>  			continue;
+> =20
+> +		target[PERF_PMU_SCOPE_CPUMASK] =3D -1;
+> +		if (cpumask_migrate && !WARN_ON_ONCE(!pmu->cpumask))
+> +			target[PERF_PMU_SCOPE_CPUMASK] =3D cpumask_any_but(pmu->cpumask, cpu);
+> +
+
+[Severity: Medium]
+Does this strand PMU contexts for PMUs that use a static cpumask without
+providing hotplug callbacks?
+
+Since cpumask_migrate defaults to false and is only set if a callback
+is invoked, target[PERF_PMU_SCOPE_CPUMASK] remains -1 and the migration
+seems to be bypassed, leaving the context orphaned on the offline CPU.
+
+>  		if (target[pmu->scope] >=3D 0 && target[pmu->scope] < nr_cpu_ids)
+>  			perf_pmu_migrate_context(pmu, cpu, target[pmu->scope]);
+>  	}
+
+[ ... ]
+
+> @@ -15246,7 +15292,7 @@ static void perf_event_setup_cpumask(unsigned int=
+ cpu)
+>  		goto end;
+>  	}
+> =20
+> -	for (scope =3D PERF_PMU_SCOPE_NONE + 1; scope < PERF_PMU_MAX_SCOPE; sco=
+pe++) {
+> +	for (scope =3D PERF_PMU_SCOPE_NONE + 1; scope <=3D PERF_PMU_SCOPE_CPUMA=
+SK; scope++) {
+
+[Severity: Medium]
+Does iterating up to PERF_PMU_SCOPE_CPUMASK unconditionally trigger a
+warning during secondary CPU hotplug?
+
+For this scope, perf_scope_cpumask() explicitly returns NULL, which would
+immediately trip the WARN_ON_ONCE(!pmu_cpumask || !cpumask) check later in
+this loop.
+
+>  		const struct cpumask *cpumask =3D perf_scope_cpu_topology_cpumask(scop=
+e, cpu);
+> =20
+>  		pmu_cpumask =3D perf_scope_cpumask(scope);
+
+[ ... ]
+
+> @@ -15258,6 +15304,16 @@ static void perf_event_setup_cpumask(unsigned in=
+t cpu)
+>  		    cpumask_any_and(pmu_cpumask, cpumask) >=3D nr_cpu_ids)
+>  			cpumask_set_cpu(cpu, pmu_cpumask);
+>  	}
+> +
+> +	/* Allow migrating if the new CPU is preferable (e.g. NUMA locality) */
+> +	list_for_each_entry(pmu, &pmus, entry) {
+> +		bool cpumask_migrate =3D false;
+> +
+> +		if (pmu->init_cpu && (!pmu->cpumask || !cpumask_test_cpu(cpu, pmu->cpu=
+mask)))
+> +			cpumask_migrate =3D pmu->init_cpu(pmu, cpu);
+> +		if (cpumask_migrate && !WARN_ON_ONCE(!pmu->cpumask))
+> +			perf_pmu_migrate_context(pmu, cpu, cpumask_any(pmu->cpumask));
+> +	}
+
+[Severity: High]
+Will this cause a self-deadlock in perf_pmu_migrate_context()?
+
+The newly onlined CPU is passed as both the source CPU (cpu) and
+potentially the destination CPU (via cpumask_any). This would lock the same
+mutex twice in perf_pmu_migrate_context():
+
+kernel/events/core.c:perf_pmu_migrate_context() {
+    ...
+    mutex_lock_double(&src_ctx->mutex, &dst_ctx->mutex);
+    ...
+}
+
+Should this be migrating from the old CPU to the new CPU instead?
+
+[Severity: High]
+What happens if the PMU cpumask is empty here?
+
+If init_cpu returns true but the PMU's mask is empty (for example, if it
+defaulted to cpu_none_mask), cpumask_any() could return a value greater
+than or equal to nr_cpu_ids. Passing this out-of-bounds value to
+perf_pmu_migrate_context() might result in corrupting memory when it access=
+es
+the per-CPU pointers.
+
+>  end:
+>  	cpumask_set_cpu(cpu, perf_online_mask);
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1784653319.gi=
+t.robin.murphy@arm.com?part=3D1
