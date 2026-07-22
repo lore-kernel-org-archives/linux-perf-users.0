@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28C443793D0
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 23:26:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FA3388890
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 23:29:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784762763; cv=none; b=DXI4Cu4XmIC221z1LGzrCt6GssQpMOvjADppAbTBkBQsbr7KD9cktcieXOLD0e380vpvPujssJHVhP6B/nA7rkDL/8pfHbSJvKvhxigK+40gnH7qGVrbL3ZNrcaqxMV6GlyHeq0Pkf+6K7GnN7qTa7NxY1TPtBePK1MnbPPnnck=
+	t=1784762990; cv=none; b=Ae3zmE4Dn1CbHPa397033C3c1+3Ih0pmLGsnJf4EbQQ5AN5b+eu6vIkSob3po03sfBaDLCq4VzYSV7/Vn385SaX6Yli70xN83FATz9uLab1ETABpUQCC2y+tTrsFCb9O/vOY1jXj7g86nnx5h5es/wWHgCrnqFhB5XqjS7qGYQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784762763; c=relaxed/simple;
-	bh=AqZC8SozR/PqfDgdfZtoONmHrk5+WCzTOGKJyDIQmOE=;
+	s=arc-20240116; t=1784762990; c=relaxed/simple;
+	bh=zdV2aaJckP16f9FWAE97Wx0og5Nfn4yLNaBhhfT4ppM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=P2WeHXdUJjdYis9lVyCbSUrPOmOTt8byts3DisLo+GKLiNR0CCmiMz9hvehOzIjUUHyYRml91JBU+nrW+6ptHprazkmMAyVZYEkP5aI+WAhxcWhe3Ph/t16W4mgZUzDz+wlNEx+9ISjKyvV9IcNJjtKIbo980oiYQohY7mvJW9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iU8WR4mU; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ZZJdICu1nc/CoVGOl6p7ptXTbwjDn5YGLwp6lOkDOautoue9FwZbD886mr1hfdJJlHUgxSVPhMLAP19Mg6gQ0PmyjPfRWUUDO1N+3iY0oNCrhl3I2TmftX/isD/oOMWE22KbGcef8kHNOkL9vWYOY4WH3uNv6DXjyvCErDLvkw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GS/FDElJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iU8WR4mU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D366D1F000E9;
-	Wed, 22 Jul 2026 23:26:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GS/FDElJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2F8C1F000E9;
+	Wed, 22 Jul 2026 23:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784762762;
-	bh=B05SjCvPhDt7ZcsdCwgGIeWa7jKysag9WrgLv6jwaCE=;
+	s=k20260515; t=1784762988;
+	bh=gjNuTptJLmrip3n+w0B+4kZP3mF1rpib9ndYLx9tUSU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iU8WR4mUXV1EPNn6iLwYmhNjdwiPzMHwT6TVVOLSx7k5v642GwFAQuDQfH4jYQgcf
-	 nORTjupIf+0hajm+RJa7XVg4JstXOVucQNf/DuZ9VJgrvES5uDBtGkmSJecyShZq6q
-	 /9zN44ZcyCYRMpbzabRWgqlkBeKtikenRHClPPGa+wcpb9IvRchknqYgt6wgha8U0r
-	 5KK/Cgr7taHZzt4O5n7tOFyVFvareNUgbg0pomz53mmggypop1L0EAUt1bvKUBFQq+
-	 01LJjpU84VHY4bPozRRgJTbl1TplA4ZS+mraL8CdogHlhAcUCG7F1OuGZkaESJLYJs
-	 3MNMqzB5uJHlw==
+	b=GS/FDElJsjhzXQDAw2RTAxPEtaXvupek5nRLZbW2+d1YHOl/0MIYDbcLIzdGUpkeQ
+	 5xTZpjDGDdsuSu901puGBXCyszDp5skU/+TDJTg20JbpGXpkKqMr/qASu7CNnE0Q9x
+	 yinTubi2Zjx4amkOmCn0Kb5bvQzEtEeSmMfmZSz5mI4uTTJ2SoaLjQjRa/71fTGqvx
+	 6kjQXE0mmO77tNrlmsvSYTERbyCmos48yLsbtc9tCYxNvc4RsLIvELVJsyMfTcJf2s
+	 HQXSVBMjQ5bjTBNreCDQoAIdH1nLDvW/Q8nAms7WakmaGup5Q62fVGk5/9LKEjRcSG
+	 t9yzYOEb82EJA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 05/11] x86/hw_breakpoint: Unify breakpoint
- install/uninstall
+Subject: Re: [PATCH v10 08/11] tracing: wprobe: Add wprobe event trigger
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <178476140665.26117.10482752209138090031.stgit@devnote2>
+In-Reply-To: <178476144141.26117.8004746214529353062.stgit@devnote2>
 References: <178476134787.26117.10094977293012760490.stgit@devnote2>
- <178476140665.26117.10482752209138090031.stgit@devnote2>
+ <178476144141.26117.8004746214529353062.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 22 Jul 2026 23:26:01 +0000
-Message-Id: <20260722232601.D366D1F000E9@smtp.kernel.org>
+Date: Wed, 22 Jul 2026 23:29:48 +0000
+Message-Id: <20260722232948.B2F8C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,106 +46,144 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-
-New issues:
-- [High] Spurious debug exceptions due to modifying DR0-DR3 while enabled i=
-n DR7.
-
-Pre-existing issues:
-- [High] NMI race condition during breakpoint uninstallation leaves the har=
-dware breakpoint permanently enabled.
+- [High] Premature teardown of wprobe resources during trigger unregistrati=
+on leads to a Use-After-Free and NULL pointer dereference in the deferred w=
+orkqueue because RCU synchronization is missing.
+- [High] Incorrect RCU synchronization primitive in `wprobe_trigger_cmd_par=
+se()` error path leads to a Use-After-Free on faultable (syscall) tracepoin=
+ts.
 --
 
---- Patch [5]: [PATCH v10 05/11] x86/hw_breakpoint: Unify breakpoint instal=
-l/uninstall ---
-commit 68cc4a145838d44957bc67ccfa580a6107987aa3
-Author: Jinchao Wang <wangjinchao600@gmail.com>
+--- Patch [8]: [PATCH v10 08/11] tracing: wprobe: Add wprobe event trigger =
+---
+commit 7a3a7529186a14015a2ccb9a93108962a135a419
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-x86/hw_breakpoint: Unify breakpoint install/uninstall
+tracing: wprobe: Add wprobe event trigger
 
-Consolidate breakpoint management to reduce code duplication.
-The diffstat was misleading, so the stripped code size is compared instead.
-After refactoring, it is reduced from 11976 bytes to 11448 bytes on my
-x86_64 system built with clang.
+Add wprobe event trigger to set and clear the watch event dynamically.
+This allows us to set an watchpoint on a given local variables and
+a slab object instead of static objects.
 
-> diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpo=
-int.c
-> index f846c15f21ca1..c323c2aab2af9 100644
-> --- a/arch/x86/kernel/hw_breakpoint.c
-> +++ b/arch/x86/kernel/hw_breakpoint.c
-
+> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+> index 4c23c310a383e..1edfdddf241de 100644
+> --- a/kernel/trace/trace_wprobe.c
+> +++ b/kernel/trace/trace_wprobe.c
 [ ... ]
-
-> +static void setup_hwbp(struct arch_hw_breakpoint *info, int slot, bool e=
-nable)
+> @@ -794,3 +794,391 @@ static __init int init_wprobe_trace(void)
+>  }
+>  fs_initcall(init_wprobe_trace);
+> =20
+> +#ifdef CONFIG_WPROBE_TRIGGERS
+> +
+> +static int wprobe_trigger_global_enabled;
+> +
+> +#define SET_WPROBE_STR		"set_wprobe"
+> +#define CLEAR_WPROBE_STR	"clear_wprobe"
+> +#define WPROBE_DEFAULT_CLEAR_ADDRESS ((unsigned long)&wprobe_trigger_glo=
+bal_enabled)
+> +
+> +struct wprobe_trigger_data {
+> +	struct rcu_head rcu;
+> +	struct trace_event_file *file;
+> +	struct trace_wprobe *tw;
+> +	unsigned int		offset;
+> +	long			adjust;
+> +	const char		*field;
+> +	bool			clear;
+> +};
+> +
+> +static void wprobe_trigger(struct event_trigger_data *data,
+> +			   struct trace_buffer *buffer,  void *rec,
+> +			   struct ring_buffer_event *event)
 > +{
-> +	unsigned long dr7;
+> +	struct wprobe_trigger_data *wprobe_data =3D data->private_data;
+> +	struct trace_wprobe *tw =3D wprobe_data->tw;
+> +	unsigned long addr, flags;
+> +	bool changed =3D false;
+[ ... ]
+> +	if (changed)
+> +		irq_work_queue(&tw->irq_work);
 > +
-> +	set_debugreg(info->address, slot);
-> +	__this_cpu_write(cpu_debugreg[slot], info->address);
+> +	raw_spin_unlock_irqrestore(&tw->lock, flags);
+> +}
+[ ... ]
+> +static void wprobe_trigger_free(struct event_trigger_data *data)
+> +{
+> +	struct wprobe_trigger_data *wprobe_data =3D data->private_data;
+> +
+> +	if (WARN_ON_ONCE(data->ref <=3D 0))
+> +		return;
+> +
+> +	data->ref--;
+> +	if (!data->ref) {
+> +		/* Remove the SOFT_MODE flag */
+> +		trace_event_enable_disable(wprobe_data->file, 0, 1);
 
 [Severity: High]
-Does this code introduce a spurious debug exception when uninstalling a
-breakpoint?
+Does this disable the wprobe event synchronously before waiting for RCU
+readers?=20
 
-When uninstalling (enable =3D=3D false), the debug address register is modi=
-fied
-here, but its corresponding enable bit in the hardware DR7 register is still
-active. According to the Intel SDM Volume 3 (Section 17.2.4), modifying
-DR0-DR3 without first clearing the corresponding enable bits in DR7 is
-forbidden. The old implementation bypassed modifying DR0-DR3 on uninstall,
-which avoided this issue.
+If an in-flight RCU reader is executing wprobe_trigger() when this is calle=
+d,
+trace_event_enable_disable() will trigger __unregister_trace_wprobe() which
+nullifies tw->bp_event and allows tw to be concurrently freed.
 
+The in-flight reader could then queue tw->irq_work in wprobe_trigger():
+
+	if (changed)
+		irq_work_queue(&tw->irq_work);
+
+This work then executes trace_wprobe_update_local() which dereferences the
+nullified tw->bp_event:
+
+	struct perf_event *bp =3D *this_cpu_ptr(tw->bp_event);
+
+Can this lead to a NULL pointer dereference or use-after-free since the
+cleanup doesn't wait for the RCU readers to finish?
+
+> +		trace_event_put_ref(wprobe_data->file->event_call);
+> +		trigger_data_free(data);
+> +	}
+> +}
 > +
-> +	dr7 =3D this_cpu_read(cpu_dr7);
-> +	dr7 &=3D ~(__encode_dr7(slot, 0xc, 0x3) |
-> +		 (DR_LOCAL_ENABLE << (slot * DR_ENABLE_SIZE)));
-> +	if (enable)
-> +		dr7 |=3D encode_dr7(slot, info->len, info->type);
-> +
-> +	/*
-> +	 * Enabling:
-> +	 *   Ensure we first write cpu_dr7 before we set the DR7 register.
-> +	 *   This ensures an NMI never see cpu_dr7 0 when DR7 is not.
-> +	 */
-> +	if (enable)
-> +		this_cpu_write(cpu_dr7, dr7);
-> +
-> +	barrier();
-> +
-> +	set_debugreg(dr7, 7);
-> +
-> +	amd_set_dr_addr_mask(enable ? info->mask : 0, slot);
-> +
-> +	barrier();
-> +
-> +	/*
-> +	 * Disabling:
-> +	 *   Ensure the write to cpu_dr7 is after we've set the DR7 register.
-> +	 *   This ensures an NMI never see cpu_dr7 0 when DR7 is not.
-> +	 */
-> +	if (!enable)
-> +		this_cpu_write(cpu_dr7, dr7);
+> +static int wprobe_trigger_cmd_parse(struct event_command *cmd_ops,
+> +				    struct trace_event_file *file,
+> +				    char *glob, char *cmd,
+> +				    char *param_and_filter)
+> +{
+[ ... ]
+> +	ret =3D event_trigger_register(cmd_ops, file, glob, trigger_data);
+> +	if (ret) {
+> +		event_trigger_reset_filter(cmd_ops, trigger_data);
+> +		trace_event_enable_disable(wprobe_file, 0, 1);
+> +		trace_event_put_ref(wprobe_file->event_call);
+> +		synchronize_rcu();
 
 [Severity: High]
-This is a pre-existing issue, but does this sequence create an NMI race
-condition that could leave the hardware breakpoint permanently enabled?
+Is synchronize_rcu() sufficient to wait for faultable tracepoint readers?
 
-When uninstalling, this code writes to the hardware DR7 register first
-(set_debugreg(dr7, 7)), issues a barrier, and then updates the per-CPU
-tracking variable (this_cpu_write(cpu_dr7, dr7)).
+Faultable tracepoints (like syscall tracepoints) use RCU Tasks Trace for
+protection, which synchronize_rcu() does not wait for. If this error path is
+hit while attaching to a syscall tracepoint, the in-flight readers could st=
+ill
+be executing when the memory is freed via the __free() cleanup attributes at
+the end of the function scope.
 
-If an NMI (like SysRq-G for KGDB) fires in the window between these writes,
-the NMI handler (such as kgdb_correct_hw_break()) will call
-hw_breakpoint_restore(). This reads the stale cpu_dr7 (which still has the
-slot enabled) and writes it back to hardware DR7, re-enabling the
-breakpoint.
+Should this use tracepoint_synchronize_unregister() instead to ensure it
+waits for all tracepoint reader types?
 
-When the NMI returns, setup_hwbp() continues and writes the disabled state
-to cpu_dr7 in memory, but the hardware DR7 is left enabled. If the
-breakpoint triggers later, hw_breakpoint_handler() will see a NULL
-bp_per_reg and could enter an infinite #DB loop.
+> +		return ret;
+> +	}
+> +	/* Make it NULL to avoid freeing trigger_data and wprobe_data by __free=
+() */
+> +	wprobe_data =3D NULL;
+> +	event_trigger_free(trigger_data);
+> +	trigger_data =3D NULL;
+> +
+> +	return 0;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178476134787.26117.=
-10094977293012760490.stgit@devnote2?part=3D5
+10094977293012760490.stgit@devnote2?part=3D8
