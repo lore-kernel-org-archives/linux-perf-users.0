@@ -1,96 +1,238 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9B230C164
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 22:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.180
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784758788; cv=pass; b=ThRJA/L/WrJprvm+nmyQJcyfj0t2MQrfT/eP/OuipBMpArfYqXGyRcleM5IpA+3o3mNUTsVxqBC2l6GQhozuzzD+mN6UOteYZeJpg3vZZvQkS5fsO2ttZNhk10MbjLFkgjel4Ev1bnMhhcW+xJ8DVTVjIzN8vPsVyD7aQ1jvHQA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784758788; c=relaxed/simple;
-	bh=nvOkdvxUYQ2eWCG5t4YaWQHp4JUali09FLGYLUD5cio=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=ZF7r+UVB9rDHC3OPkwBETOY4S1ZP9uCqos65nfklVhIbICl3z1VP2BSQl2VStqirbTcd/WVTjP/Xc6lqsYW8Wx4OrTl3ywUQ/9PspLs8gy9HOk0fU12p0KXsVG7MclW4EpEi1UuOs3nJ11orT6W9WwZa67b/1tHnHzWfxAjOyrY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oLCr+luR; arc=pass smtp.client-ip=209.85.160.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45D82741A0;
+	Wed, 22 Jul 2026 23:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784761356; cv=none; b=Hr03h/Irtm8A3bnvEyIMNb7mlsAHbDRSKO472aZ89019L7HS6N5030QGluG1NsjkueCaCqD21u+JobufQIEhHdfbR7RCuj9oOlH29fv0VcHodGIY/paiNaQvhUov5RBkk97P0wJc0jm38NYXEgmxyeZ6Wv4ALzD/at0O8kWcwvQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784761356; c=relaxed/simple;
+	bh=bvLB011Sm5dmD8Mz/zmUcWFCnSA1Y8VC0VUGPtd6eMY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ToZtHRu4WnyptocTDCo7PCzgpwQq7NFV9WVPMD3jfG3Z2bSapDWsvROOrzx0FD7GYKUcLDrQXEdRlQrzbEdCkAPX3aQNcv06+ICY149L0i9HF15d1vuWcS29T9rwfNpg7PqiaTEQxtR1t1hzuUkMdJQtikVcZljSczSzGfvmTWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbzLblx4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oLCr+luR"
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-51c10e86e52so18391cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 15:19:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1784758786; cv=none;
-        d=google.com; s=arc-20260327;
-        b=TfokzQ8XATOGE8QGdYZaBxggQARWBvqFpJVZEAbS9MHaiEv08ZFr6ZgeeiZRtJIu7S
-         9tll44fqAcNzCw55Ny30J8/u/gNFTvsV3oozugMyXqGQhg3vHDXbYhPB/rbzoIeoUDej
-         rfF9jmMXmcnWzdxmSDOplQ12wE+I29ogJDX2hueD9Tcn+9KwNpL7gKPaQyy5kXzD1XbY
-         yqe3pwcGbvnLAC9cInGuhtOzBDhXwQEeOYYatW9xMoj+7+Sl8om2W7vOWEwCOPBFX+9d
-         HghRaVqeYfrbYcuTZE9/fztzJ908HBYm2m/oMKw/0ROkzPYtwrgLzwh03pD3nZXz6Dky
-         9a/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=to:subject:message-id:date:from:mime-version:dkim-signature;
-        bh=nvOkdvxUYQ2eWCG5t4YaWQHp4JUali09FLGYLUD5cio=;
-        fh=t8OuTzzvqg+3wDdqGHBzFQ9IE7nhquQaa7ECUKQdzpY=;
-        b=aTnUCiHJoYg1XHNS+RTQB327ocKOx+B80lZUW3lz9dFDSlIdZcaWGFSXaZKYUB3MNw
-         0JMnN4lCbi+/fDOdVAtLy3u0F14lhDYepecxu3jDwf9nUbKx4g6Qme+5vM4t1Irougxd
-         hHttgNp936AoxH3plax9YoMYvAKl5T3h5nk/rr0PnWPaRwPdQi0hU5zl5sOe0ad2dwGd
-         ezVKhJcId0/tGvuqPsMu+tMG0jZC46k5ChMWMEFFJceHvo7LXxrMlxuGxq2+oM9wR+o3
-         pADVapX76g5+cluD3a4zpiXOU080xpIKSMa1t6wPgcZyiCBgygUNw11IbJQ9T3xALiob
-         hf+Q==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784758786; x=1785363586; darn=vger.kernel.org;
-        h=content-type:to:subject:message-id:date:from:mime-version:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=nvOkdvxUYQ2eWCG5t4YaWQHp4JUali09FLGYLUD5cio=;
-        b=oLCr+luRu02ycwQNb0BUk7kGfCQWQ5XkmmYmRNMlTh1FTvwMKtkh98JZlkS9wMZNZS
-         DE+PZFd9AtNmAaVl6vs4J0MIU/JzE2r2jCUkRxtV3QSV7GnR9k1o2GBiAix3Sz9+DcAC
-         J6giixprjHH5VPqxDS7kpNcHAWtnq7EdgWEnBNKsYYE4T85odnxOKkp67lKBxD92UZVy
-         RGORAhYd1bHlNoG9e2EQGq5Ay9yAbtVykCuZJOqOjGTSHimQtKAFa0aMdLxUkUci9v0v
-         b4L64IiIyuPAqTyv9iKeikrqmnWCwkQs3dxTvMjKhejZ5EGrZeLfQkczeHKyEQb3TIco
-         629g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784758786; x=1785363586;
-        h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=nvOkdvxUYQ2eWCG5t4YaWQHp4JUali09FLGYLUD5cio=;
-        b=RY8+0MS1ip262mAjWsM5EBrY+Ju9AgGplGmwOwEi0ArQMonAlC+HzDKcsqa7NXArVS
-         o/yRHEkCJJMURY6DF+bB2mF7QeOyuF0gvv33Ij1epU5bmhp/Ej+p0bsDOpK2TwGA/nqR
-         dHcsJJ+uPhCvlPgizHk9JZ2kvv5OC3FxyxmyJ5J0Bo+rvy5i6DOXmHV7WUetjhCB8HAu
-         2t2IjZKDqpF12X7j2tXOo7757cs15jV4ygFLtaRIwGBDDdzbETwFMycqpEsxe5CQhMSt
-         n5alV5TuwVwWx92eX3NqLejo4E8QMM4LIMvHDjyEUuBLPBRqY+Zyn/BwHSm7gz351Z1M
-         V04w==
-X-Gm-Message-State: AOJu0YwH9o+XYB6ciBwk1+YTeWhwUc6oHHdq9s58Agymgr17AJEyRsf0
-	M3ZhkQgU4wmjKMn9G//HzJHe7DJbD7Wp13aGsobeKysB7k68gQi7NIUKHfnghxiockRUtrkxk+o
-	xSqnzAGCXT/tphPVtYERaQlQr/l3JEMkb31sP6IRSDuMeifPl42j8OcpYPEs=
-X-Gm-Gg: AR+sD12efyC7k0RwCtbFQ5ha3ZT78cYlP+BVxsbdVyrFc8ZHo7yjlDLL49fU7eYAO28
-	lLrjy3aqQTc2RQkwF7iJuLIsnuAaNGqYnqNKvE/QRxEYd2r0xyg+ohIcozHJ3quRPJ7wat4Y4Jr
-	zqdd5BAiin5c6a2xfnWwfI7tJa0KjsmeztxK+OKUI5Lz+mSWFA4MEipIGX/wTyt9ZDNstREnFqD
-	8+UbMgeHcG1N5WJpYz8uLxotp5Su7P9plVr6SEdFnFjwlTUorkxP8wIDMuC5i0=
-X-Received: by 2002:ac8:5802:0:b0:516:d570:82c0 with SMTP id
- d75a77b69052e-5283d8576f4mr1540071cf.15.1784758785485; Wed, 22 Jul 2026
- 15:19:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HbzLblx4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FD021F000E9;
+	Wed, 22 Jul 2026 23:02:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784761354;
+	bh=uig3pVN/J3FMcxzYiz9PSoJw+bQoCVuUExLZ2b5dx14=;
+	h=From:To:Cc:Subject:Date;
+	b=HbzLblx4TBJsKHQEfxYjDi66yN1C7+GGxCtbg9hmL14GM71ya+1u0Kpnjy1/9OqML
+	 TWTT3SfhH3hMQItVZXNOtKuekELt+IoqoZsyRXJCqh+xb7p2xk7I2MljPqOjWhHi1M
+	 5aekzB8uyTJjVDUibfW/tA5QRxz3FzKsLn2OPqrhmJ7oW4Yhxc4em3lttAaV9cn8jo
+	 QTtRnL+qylrPZ4XPQwfGcL8f+NNOrbW0J8IXolPNEBe2JCoiRrilYJculKrTv25uqy
+	 brUDGTkBEUNg1qTZJEPSGg8EAH8o7wNfewPs6WYqCfgmJpEcHcUzTa2IBtkm9lV2K2
+	 ohnWkKaiA2lvg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	x86@kernel.org
+Cc: Jinchao Wang <wangjinchao600@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v10 00/11] tracing: wprobe: x86: Add wprobe for watchpoint
+Date: Thu, 23 Jul 2026 08:02:28 +0900
+Message-ID: <178476134787.26117.10094977293012760490.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 22 Jul 2026 15:19:33 -0700
-X-Gm-Features: AUfX_myba1DSzLaCzr6uAzadebvIo-Q5WArr8gnBDXnvemETkFrVpjU2ZbaELQo
-Message-ID: <CAP-5=fVpPktV2Y8XYxOMpZuY1oYQMwxmwqtaphRG4i6qkSVZyw@mail.gmail.com>
-Subject: Getting positive, and not just negative, Sashiko reviews
-To: linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
 Hi,
 
-I wanted to give a heads up. I sent out a 1 line email policy change
-for linux-perf-users to get positive Sashiko reviews, not just
-negative ones:
-https://github.com/sashiko-dev/sashiko/pull/363
-Please comment/complain if this upsets you and I can abandon the PR.
+Here is the 10th version of the series for adding new wprobe (watch probe)
+which provides memory access tracing event. Moreover, this can be used
+via event trigger. Thus it can trace memory access on a dynamically
+allocated objects too.
+The previous version is here:
 
-Thanks,
-Ian
+  https://lore.kernel.org/all/178429796992.157981.3393977217853767915.stgit@devnote2/
+
+This version add BTF support in wprobe trigger command[11/11]. With this
+feature, user do not need to decode the offset of structure fields.
+(Since the previous version lacked base-commit tag, Sashiko failed to
+ apply it for review. Thus this is just add a BTF support.)
+
+To support kprobe events, we need to check the previous NMI context
+or need to use an atomic refcount etc. But that should be another
+patch for review.
+
+To support arm64, we need to avoid major pagefault on single-stepping
+issue. I think we can solve it with checking whether the address is the
+kernel (which must not cause a major page fault), or not.
+
+Public branch
+-------------
+I will push this branch as topic/wprobe-v2 to my tree so that it
+can be easily tested.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/wprobe-v2 
+
+This is based on linux-trace tree's probes/for-next.
+
+Usage
+-----
+
+The basic usage of this wprobe is similar to other probes;
+
+  w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+OFFS]> [FETCHARGS]
+
+This defines a new wprobe event. For example, to trace jiffies update,
+you can do;
+
+ echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
+ echo 1 > events/wprobes/my_jiffies/enable
+
+Moreover, this can be combined with event trigger to trace the memory
+accecss on slab objects. The trigger syntax is;
+
+  set_wprobe:WPROBE_EVENT:FIELD[+OFFSET] [if FILTER]
+  clear_wprobe:WPROBE_EVENT[:FIELD[+OFFSET]] [if FILTER]
+
+set_wprobe sets WPROBE_EVENT's watch address on FIELD[+OFFSET].
+clear_wprobe clears WPROBE_EVENT's watch address if it is set to
+FIELD[+OFFSET]. If FIELD is omitted, forcibly clear the watch address
+when trigger event is hit.
+
+For example, trace the first 8 byte of the dentry data structure passed
+to do_truncate() until it is deleted by dentry_kill().
+(Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
+
+  # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
+
+  # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
+  # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
+
+  # echo 'f:dentry_kill dentry_kill dentry=$arg1' >> dynamic_events
+  # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
+
+  # echo 1 >> events/fprobes/truncate/enable
+  # echo 1 >> events/fprobes/dentry_kill/enable
+
+  # echo aaa > /tmp/hoge
+  # echo bbb > /tmp/hoge
+  # echo ccc > /tmp/hoge
+  # rm /tmp/hoge
+
+Then, the trace data will show;
+
+ # tracer: nop
+ #
+ # entries-in-buffer/entries-written: 32/32   #P:8
+ #
+ #                                _-----=> irqs-off/BH-disabled
+ #                               / _----=> need-resched
+ #                              | / _---=> hardirq/softirq
+ #                              || / _--=> preempt-depth
+ #                              ||| / _-=> migrate-disable
+ #                              |||| /     delay
+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+ #              | |         |   |||||     |         |
+               sh-107     [004] ...1.     9.990418: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+               sh-107     [004] ...1.     9.990914: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b3de78
+               sh-107     [004] ...1.     9.993175: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049ddd40
+               sh-107     [004] .....     9.995198: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.     9.995389: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db998
+               sh-107     [004] ..Zff     9.997503: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997509: watch: (path_openat+0x211/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997514: watch: (path_openat+0xa56/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997518: watch: (path_openat+0xae2/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] .....     9.997521: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.     9.997582: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004808270
+               sh-107     [004] ...1.     9.999365: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db728
+               sh-107     [004] ...1.     9.999388: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b1c000
+               rm-113     [005] ..Zff    10.000965: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000971: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000984: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000988: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001010: watch: (lookup_one_qstr_excl+0x28/0x140) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001014: watch: (lookup_one_qstr_excl+0xd1/0x140) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001018: watch: (may_delete_dentry+0x1c/0x200) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001021: watch: (may_delete_dentry+0x195/0x200) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001031: watch: (vfs_unlink+0x5e/0x260) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] d.Z..    10.001067: watch: (d_make_discardable+0x1b/0x40) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] d.Z..    10.001071: watch: (d_make_discardable+0x29/0x40) address=0xffff8880048083a8 value=0x200080
+               rm-113     [005] ...1.    10.001072: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
+               rm-113     [005] ...1.    10.001218: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.    10.001416: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db110
+               sh-107     [004] ...1.    10.001444: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db248
+               sh-107     [004] ...1.    10.001500: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+               sh-107     [004] ...1.    10.002067: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
+               sh-107     [004] ...1.    10.904920: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
+               sh-107     [004] ...1.    10.905129: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+
+
+Thank you,
+
+---
+base-commit: 1a416ae446afa42d2d8500ce25bd61c564508721
+
+Jinchao Wang (2):
+      x86/hw_breakpoint: Unify breakpoint install/uninstall
+      x86/hw_breakpoint: Add arch_reinstall_hw_breakpoint
+
+Masami Hiramatsu (Google) (9):
+      tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
+      x86: hw_breakpoint: Add a kconfig to clarify when a breakpoint fires
+      selftests: tracing: Add a basic testcase for wprobe
+      selftests: tracing: Add syntax testcase for wprobe
+      HWBP: Add modify_wide_hw_breakpoint_local() API
+      tracing: wprobe: Add wprobe event trigger
+      selftests: ftrace: Add wprobe trigger testcase
+      tracing/wprobe: Support BTF typecast in fetchargs
+      tracing/wprobe: Support BTF typecast in wprobe trigger command
+
+
+ Documentation/trace/index.rst                      |    1 
+ Documentation/trace/wprobetrace.rst                |  163 +++
+ arch/Kconfig                                       |   20 
+ arch/x86/Kconfig                                   |    2 
+ arch/x86/include/asm/hw_breakpoint.h               |    8 
+ arch/x86/kernel/hw_breakpoint.c                    |  164 ++-
+ include/linux/hw_breakpoint.h                      |    6 
+ include/linux/trace_events.h                       |    3 
+ kernel/events/hw_breakpoint.c                      |   61 +
+ kernel/trace/Kconfig                               |   24 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/trace.c                               |    9 
+ kernel/trace/trace.h                               |    7 
+ kernel/trace/trace_events_trigger.c                |   12 
+ kernel/trace/trace_probe.c                         |   24 
+ kernel/trace/trace_probe.h                         |   14 
+ kernel/trace/trace_wprobe.c                        | 1300 ++++++++++++++++++++
+ tools/testing/selftests/ftrace/config              |    2 
+ .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   63 +
+ .../test.d/dynevent/wprobes_syntax_errors.tc       |   20 
+ .../test.d/trigger/trigger-wprobe-btf-offset.tc    |   73 +
+ .../test.d/trigger/trigger-wprobe-btf-typecast.tc  |   80 +
+ .../ftrace/test.d/trigger/trigger-wprobe.tc        |   70 +
+ 23 files changed, 2056 insertions(+), 71 deletions(-)
+ create mode 100644 Documentation/trace/wprobetrace.rst
+ create mode 100644 kernel/trace/trace_wprobe.c
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
