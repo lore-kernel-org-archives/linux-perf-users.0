@@ -1,269 +1,96 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E8F04457B6
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 18:42:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784745769; cv=none; b=XJlZYzZ/1WIE5STuZp1rxxFtAatrfsqqWVQ1eQCh4RgSy9/O5oRkPqVsCFcV7FGfylvaDeDTvdmEvt9F5zXV9Rgw6KuqGYeaxtbZVv9BnErjQd/S4IUBzBKV/o86YRYz3oTlZByLsDHhxnq8fJFyM1hSon0o3p8lzDZX5DUU1SI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784745769; c=relaxed/simple;
-	bh=UpkkLVhcUdbV4sHkaLil4o/61r82DGsnOUXMquq08gs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r05OT6wuRlM1JTfi9BRpKZ7erwIORmKVASot8MByWZrCMn3eTEHLF9q9FGbndYC3sWiuD0D8xkSlrsmQaPit4xiEvD3wM3pzHpnFGLRKrtY0lawcZZEQ388F1kb0oBP41dVOztqKDfJ+6YRhuf6aoOb8IlDH46OF5ZZ9krnmLUU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=OWShmEZS; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9B230C164
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 22:19:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.180
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784758788; cv=pass; b=ThRJA/L/WrJprvm+nmyQJcyfj0t2MQrfT/eP/OuipBMpArfYqXGyRcleM5IpA+3o3mNUTsVxqBC2l6GQhozuzzD+mN6UOteYZeJpg3vZZvQkS5fsO2ttZNhk10MbjLFkgjel4Ev1bnMhhcW+xJ8DVTVjIzN8vPsVyD7aQ1jvHQA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784758788; c=relaxed/simple;
+	bh=nvOkdvxUYQ2eWCG5t4YaWQHp4JUali09FLGYLUD5cio=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=ZF7r+UVB9rDHC3OPkwBETOY4S1ZP9uCqos65nfklVhIbICl3z1VP2BSQl2VStqirbTcd/WVTjP/Xc6lqsYW8Wx4OrTl3ywUQ/9PspLs8gy9HOk0fU12p0KXsVG7MclW4EpEi1UuOs3nJ11orT6W9WwZa67b/1tHnHzWfxAjOyrY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oLCr+luR; arc=pass smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="OWShmEZS"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A990F1595;
-	Wed, 22 Jul 2026 11:42:41 -0700 (PDT)
-Received: from [10.2.212.23] (e121345-lin.cambridge.arm.com [10.2.212.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E28D03F59E;
-	Wed, 22 Jul 2026 11:42:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1784745765; bh=UpkkLVhcUdbV4sHkaLil4o/61r82DGsnOUXMquq08gs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OWShmEZSOMqFrSAc1zqVaBsfBPkVAiS2i09Q1XprvrOIH7LcYSMSFmUgSlfKDhKOk
-	 O8GAC3nAlIEkJ1oHBWCkGD07+aHbIsPX1AlX0ZlDA4LZth7hldqId7O91S0k5FcoO1
-	 umDWV3/0B6b4hEL1SCBSKhb9eRzN1c97ZAzr5XGk=
-Message-ID: <30da4613-dfc3-4126-8873-f6320a3db0bf@arm.com>
-Date: Wed, 22 Jul 2026 19:42:37 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oLCr+luR"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-51c10e86e52so18391cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 15:19:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784758786; cv=none;
+        d=google.com; s=arc-20260327;
+        b=TfokzQ8XATOGE8QGdYZaBxggQARWBvqFpJVZEAbS9MHaiEv08ZFr6ZgeeiZRtJIu7S
+         9tll44fqAcNzCw55Ny30J8/u/gNFTvsV3oozugMyXqGQhg3vHDXbYhPB/rbzoIeoUDej
+         rfF9jmMXmcnWzdxmSDOplQ12wE+I29ogJDX2hueD9Tcn+9KwNpL7gKPaQyy5kXzD1XbY
+         yqe3pwcGbvnLAC9cInGuhtOzBDhXwQEeOYYatW9xMoj+7+Sl8om2W7vOWEwCOPBFX+9d
+         HghRaVqeYfrbYcuTZE9/fztzJ908HBYm2m/oMKw/0ROkzPYtwrgLzwh03pD3nZXz6Dky
+         9a/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=nvOkdvxUYQ2eWCG5t4YaWQHp4JUali09FLGYLUD5cio=;
+        fh=t8OuTzzvqg+3wDdqGHBzFQ9IE7nhquQaa7ECUKQdzpY=;
+        b=aTnUCiHJoYg1XHNS+RTQB327ocKOx+B80lZUW3lz9dFDSlIdZcaWGFSXaZKYUB3MNw
+         0JMnN4lCbi+/fDOdVAtLy3u0F14lhDYepecxu3jDwf9nUbKx4g6Qme+5vM4t1Irougxd
+         hHttgNp936AoxH3plax9YoMYvAKl5T3h5nk/rr0PnWPaRwPdQi0hU5zl5sOe0ad2dwGd
+         ezVKhJcId0/tGvuqPsMu+tMG0jZC46k5ChMWMEFFJceHvo7LXxrMlxuGxq2+oM9wR+o3
+         pADVapX76g5+cluD3a4zpiXOU080xpIKSMa1t6wPgcZyiCBgygUNw11IbJQ9T3xALiob
+         hf+Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784758786; x=1785363586; darn=vger.kernel.org;
+        h=content-type:to:subject:message-id:date:from:mime-version:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=nvOkdvxUYQ2eWCG5t4YaWQHp4JUali09FLGYLUD5cio=;
+        b=oLCr+luRu02ycwQNb0BUk7kGfCQWQ5XkmmYmRNMlTh1FTvwMKtkh98JZlkS9wMZNZS
+         DE+PZFd9AtNmAaVl6vs4J0MIU/JzE2r2jCUkRxtV3QSV7GnR9k1o2GBiAix3Sz9+DcAC
+         J6giixprjHH5VPqxDS7kpNcHAWtnq7EdgWEnBNKsYYE4T85odnxOKkp67lKBxD92UZVy
+         RGORAhYd1bHlNoG9e2EQGq5Ay9yAbtVykCuZJOqOjGTSHimQtKAFa0aMdLxUkUci9v0v
+         b4L64IiIyuPAqTyv9iKeikrqmnWCwkQs3dxTvMjKhejZ5EGrZeLfQkczeHKyEQb3TIco
+         629g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784758786; x=1785363586;
+        h=content-type:to:subject:message-id:date:from:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=nvOkdvxUYQ2eWCG5t4YaWQHp4JUali09FLGYLUD5cio=;
+        b=RY8+0MS1ip262mAjWsM5EBrY+Ju9AgGplGmwOwEi0ArQMonAlC+HzDKcsqa7NXArVS
+         o/yRHEkCJJMURY6DF+bB2mF7QeOyuF0gvv33Ij1epU5bmhp/Ej+p0bsDOpK2TwGA/nqR
+         dHcsJJ+uPhCvlPgizHk9JZ2kvv5OC3FxyxmyJ5J0Bo+rvy5i6DOXmHV7WUetjhCB8HAu
+         2t2IjZKDqpF12X7j2tXOo7757cs15jV4ygFLtaRIwGBDDdzbETwFMycqpEsxe5CQhMSt
+         n5alV5TuwVwWx92eX3NqLejo4E8QMM4LIMvHDjyEUuBLPBRqY+Zyn/BwHSm7gz351Z1M
+         V04w==
+X-Gm-Message-State: AOJu0YwH9o+XYB6ciBwk1+YTeWhwUc6oHHdq9s58Agymgr17AJEyRsf0
+	M3ZhkQgU4wmjKMn9G//HzJHe7DJbD7Wp13aGsobeKysB7k68gQi7NIUKHfnghxiockRUtrkxk+o
+	xSqnzAGCXT/tphPVtYERaQlQr/l3JEMkb31sP6IRSDuMeifPl42j8OcpYPEs=
+X-Gm-Gg: AR+sD12efyC7k0RwCtbFQ5ha3ZT78cYlP+BVxsbdVyrFc8ZHo7yjlDLL49fU7eYAO28
+	lLrjy3aqQTc2RQkwF7iJuLIsnuAaNGqYnqNKvE/QRxEYd2r0xyg+ohIcozHJ3quRPJ7wat4Y4Jr
+	zqdd5BAiin5c6a2xfnWwfI7tJa0KjsmeztxK+OKUI5Lz+mSWFA4MEipIGX/wTyt9ZDNstREnFqD
+	8+UbMgeHcG1N5WJpYz8uLxotp5Su7P9plVr6SEdFnFjwlTUorkxP8wIDMuC5i0=
+X-Received: by 2002:ac8:5802:0:b0:516:d570:82c0 with SMTP id
+ d75a77b69052e-5283d8576f4mr1540071cf.15.1784758785485; Wed, 22 Jul 2026
+ 15:19:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] perf: Generic hotplug/cpumask for system PMUs
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <cover.1784653319.git.robin.murphy@arm.com>
- <b8aae1114794a348ecfb4e9cf7a792b3ac300d56.1784653319.git.robin.murphy@arm.com>
- <20260722173816.3E7AF1F000E9@smtp.kernel.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260722173816.3E7AF1F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 22 Jul 2026 15:19:33 -0700
+X-Gm-Features: AUfX_myba1DSzLaCzr6uAzadebvIo-Q5WArr8gnBDXnvemETkFrVpjU2ZbaELQo
+Message-ID: <CAP-5=fVpPktV2Y8XYxOMpZuY1oYQMwxmwqtaphRG4i6qkSVZyw@mail.gmail.com>
+Subject: Getting positive, and not just negative, Sashiko reviews
+To: linux-perf-users <linux-perf-users@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On 22/07/2026 6:38 pm, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 8 potential issue(s) to consider:
-> - [Critical] Taking a CPU offline triggers a NULL pointer dereference if a PMU defines `init_cpu` but not `exit_cpu`.
-> - [High] CPU online context migration passes the new CPU as both source and destination to `perf_pmu_migrate_context`, causing a self-deadlock and failing to migrate events.
-> - [High] When a PMU is unregistered, the perf core fails to invoke the `pmu->exit_cpu()` callback for currently online CPUs, leaking state.
-> - [High] Missing bounds check in `perf_event_setup_cpumask` leads to an out-of-bounds per-CPU pointer access during migration.
-> - [High] `perf_pmu_register()` invokes the PMU's `init_cpu` callback in atomic IPI context, contradicting its documented thread context.
-> - [Medium] Secondary CPU hotplug triggers a `WARN_ON_ONCE` because `perf_event_setup_cpumask` incorrectly iterates up to `PERF_PMU_SCOPE_CPUMASK`.
-> - [Medium] PMUs using `PERF_PMU_SCOPE_CPUMASK` with static masks but no hotplug callbacks will never have their context migrated on CPU offline.
-> - [Medium] If `perf_pmu_register()` fails during the IDR allocation step, it leaks the CPU-affine state initialized via `pmu->init_cpu()`.
-> --
-> 
-> --- Patch [1]: [PATCH 1/2] perf: Generic hotplug/cpumask for system PMUs ---
-> commit aa795c7bb07889a3ee4d3e9c388a299913298dba
-> Author: Robin Murphy <robin.murphy@arm.com>
-> 
-> perf: Generic hotplug/cpumask for system PMUs
-> 
-> This commit extends the generic uncore machinery to handle system PMUs
-> by introducing a new PERF_PMU_SCOPE_CPUMASK scope. It allows the core
-> code to retrieve a per-PMU cpumask dynamically and adds optional callbacks
-> to manage CPU-affine state during hotplug operations.
-> 
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index ba5bd6a78fe7b..505cbda2ac41f 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
-> 
-> [ ... ]
-> 
->> @@ -12920,6 +12945,16 @@ int perf_pmu_register(struct pmu *_pmu, const char *name, int type)
->>   	INIT_LIST_HEAD(&pmu->events);
->>   	spin_lock_init(&pmu->events_lock);
->>   
->> +	/*
->> +	 * Finally, if appropriate give the PMU a chance to initialise any
->> +	 * of its own CPU-affine state. Note that we're serialised against
->> +	 * perf_event_{init,exit}_cpu() themselves by virtue of pmus_lock.
->> +	 */
->> +	if (pmu->init_cpu) {
->> +		for_each_online_cpu(cpu)
->> +			smp_call_function_single(cpu, perf_scope_init_cpu, pmu, 1);
->> +	}
->> +
-> 
-> [Severity: High]
-> Does executing init_cpu via smp_call_function_single() conflict with the
-> header documentation?
-> 
-> The documentation states init_cpu runs from CPUHP_AP_PERF_ONLINE context,
-> which is preemptible.
+Hi,
 
-The documentation states it runs from there *and* once upon initial 
-registration. This is the initial registration.
+I wanted to give a heads up. I sent out a 1 line email policy change
+for linux-perf-users to get positive Sashiko reviews, not just
+negative ones:
+https://github.com/sashiko-dev/sashiko/pull/363
+Please comment/complain if this upsets you and I can abandon the PR.
 
-> However, smp_call_function_single() executes the
-> callback in atomic IPI context. If a driver sleeps here, will it cause a
-> panic?
-
-Probably they just shouldn't sleep, since the vast majority of cases are 
-basically only to invoke irq_set_affinity() anyway. Hence it didn't seem 
-worth overcomplicating the initial design, but if something does turn 
-out to really need a thread, it could be done.
-
-> [Severity: Medium]
-> If idr_cmpxchg() fails shortly after this initialization loop, does this
-> leak the newly allocated CPU-affine state?
-> 
-> There doesn't appear to be an error path to invoke exit_cpu on the online CPUs
-> to unwind this initialization.
-> 
-> [Severity: High]
-> While not explicitly in this diff, since this function sets up CPU-affine
-> state for a PMU during registration, is there a corresponding teardown step
-> missing?
-> 
-> It appears perf_pmu_unregister() doesn't invoke exit_cpu across the online
-> CPUs, which could leave this state dangling when a driver is unloaded.
-
-The expectation is that drivers should be able to clean up without 
-requiring explicit teardown calls. This cpu_init call is really just to 
-allow picking _some_ initial affinity at the right point in the process 
-to avoid the races, without having to have some additional dedicated 
-method just for that.
-
->>   	/*
->>   	 * Now that the PMU is complete, make it visible to perf_try_init_event().
->>   	 */
-> 
-> [ ... ]
-> 
->> @@ -15189,10 +15225,19 @@ static void perf_event_clear_cpumask(unsigned int cpu)
->>   
->>   	/* migrate */
->>   	list_for_each_entry(pmu, &pmus, entry) {
->> +		bool cpumask_migrate = false;
->> +
->> +		if (pmu->init_cpu && (!pmu->cpumask || cpumask_test_cpu(cpu, pmu->cpumask)))
->> +			cpumask_migrate = pmu->exit_cpu(pmu, cpu);
->> +
-> 
-> [Severity: Critical]
-> Is there a risk of a NULL pointer dereference here?
-
-Oops, just a copy-paste error.
-
-> This code checks if pmu->init_cpu is present, but then invokes
-> pmu->exit_cpu. Because both callbacks are optional, a PMU driver might
-> define init_cpu but leave exit_cpu as NULL.
-> 
->>   		if (pmu->scope == PERF_PMU_SCOPE_NONE ||
->>   		    WARN_ON_ONCE(pmu->scope >= PERF_PMU_MAX_SCOPE))
->>   			continue;
->>   
->> +		target[PERF_PMU_SCOPE_CPUMASK] = -1;
->> +		if (cpumask_migrate && !WARN_ON_ONCE(!pmu->cpumask))
->> +			target[PERF_PMU_SCOPE_CPUMASK] = cpumask_any_but(pmu->cpumask, cpu);
->> +
-> 
-> [Severity: Medium]
-> Does this strand PMU contexts for PMUs that use a static cpumask without
-> providing hotplug callbacks?
-> 
-> Since cpumask_migrate defaults to false and is only set if a callback
-> is invoked, target[PERF_PMU_SCOPE_CPUMASK] remains -1 and the migration
-> seems to be bypassed, leaving the context orphaned on the offline CPU.
-
-The idea of a driver which sets PERF_PMU_SCOPE_CPUMASK but does not 
-provide init_cpu/exit_cpu was kind of in case of CPU-coupled devices 
-which want to provide per-CPU events for some fixed subset of CPUs. I'm 
-not sure any such thing exists, but it seems like more work to actively 
-forbid it than to leave the possibility open...
-
-> 
->>   		if (target[pmu->scope] >= 0 && target[pmu->scope] < nr_cpu_ids)
->>   			perf_pmu_migrate_context(pmu, cpu, target[pmu->scope]);
->>   	}
-> 
-> [ ... ]
-> 
->> @@ -15246,7 +15292,7 @@ static void perf_event_setup_cpumask(unsigned int cpu)
->>   		goto end;
->>   	}
->>   
->> -	for (scope = PERF_PMU_SCOPE_NONE + 1; scope < PERF_PMU_MAX_SCOPE; scope++) {
->> +	for (scope = PERF_PMU_SCOPE_NONE + 1; scope <= PERF_PMU_SCOPE_CPUMASK; scope++) {
-> 
-> [Severity: Medium]
-> Does iterating up to PERF_PMU_SCOPE_CPUMASK unconditionally trigger a
-> warning during secondary CPU hotplug?
-
-Oops, could have sworn I fixed that... For these loops I initially had 
-"< PERF_PMU_SCOPE_CPUMASK", decided that "<= PERF_PMU_SCOPE_SYS_WIDE" 
-might be clearer, apparently somehow this one got stuck in-between.
-
-> For this scope, perf_scope_cpumask() explicitly returns NULL, which would
-> immediately trip the WARN_ON_ONCE(!pmu_cpumask || !cpumask) check later in
-> this loop.
-> 
->>   		const struct cpumask *cpumask = perf_scope_cpu_topology_cpumask(scope, cpu);
->>   
->>   		pmu_cpumask = perf_scope_cpumask(scope);
-> 
-> [ ... ]
-> 
->> @@ -15258,6 +15304,16 @@ static void perf_event_setup_cpumask(unsigned int cpu)
->>   		    cpumask_any_and(pmu_cpumask, cpumask) >= nr_cpu_ids)
->>   			cpumask_set_cpu(cpu, pmu_cpumask);
->>   	}
->> +
->> +	/* Allow migrating if the new CPU is preferable (e.g. NUMA locality) */
->> +	list_for_each_entry(pmu, &pmus, entry) {
->> +		bool cpumask_migrate = false;
->> +
->> +		if (pmu->init_cpu && (!pmu->cpumask || !cpumask_test_cpu(cpu, pmu->cpumask)))
->> +			cpumask_migrate = pmu->init_cpu(pmu, cpu);
->> +		if (cpumask_migrate && !WARN_ON_ONCE(!pmu->cpumask))
->> +			perf_pmu_migrate_context(pmu, cpu, cpumask_any(pmu->cpumask));
->> +	}
-> 
-> [Severity: High]
-> Will this cause a self-deadlock in perf_pmu_migrate_context()?
-> 
-> The newly onlined CPU is passed as both the source CPU (cpu) and
-> potentially the destination CPU (via cpumask_any). This would lock the same
-> mutex twice in perf_pmu_migrate_context():
-> 
-> kernel/events/core.c:perf_pmu_migrate_context() {
->      ...
->      mutex_lock_double(&src_ctx->mutex, &dst_ctx->mutex);
->      ...
-> }
-> 
-> Should this be migrating from the old CPU to the new CPU instead?
-
-Ooh, now that is a real bug. Indeed this isn't the same as the exit_cpu 
-path, it needs to be in fully inverse order such that we sample the 
-cpumask *before* init_cpu might update it.
-
-> [Severity: High]
-> What happens if the PMU cpumask is empty here?
-
-Then the driver has done something egregiously wrong. However I guess 
-since I do already have the WARN condition (for a misbehaving 
-hotplug-only driver invalidly requesting migration), I may as well add 
-cpumask_empty() to that as well.
-
-Robin.
-
-> If init_cpu returns true but the PMU's mask is empty (for example, if it
-> defaulted to cpu_none_mask), cpumask_any() could return a value greater
-> than or equal to nr_cpu_ids. Passing this out-of-bounds value to
-> perf_pmu_migrate_context() might result in corrupting memory when it accesses
-> the per-CPU pointers.
-> 
->>   end:
->>   	cpumask_set_cpu(cpu, perf_online_mask);
->>   }
-> 
-
+Thanks,
+Ian
