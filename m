@@ -1,189 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00FA3388890
-	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 23:29:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A155B175A79
+	for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 23:30:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784762990; cv=none; b=Ae3zmE4Dn1CbHPa397033C3c1+3Ih0pmLGsnJf4EbQQ5AN5b+eu6vIkSob3po03sfBaDLCq4VzYSV7/Vn385SaX6Yli70xN83FATz9uLab1ETABpUQCC2y+tTrsFCb9O/vOY1jXj7g86nnx5h5es/wWHgCrnqFhB5XqjS7qGYQ4=
+	t=1784763011; cv=none; b=X285GXMuwFsSj6rmp0jl4J9XX3yw8BpOjK6EnhL3g2741Sp65lk2fDoDMVvY/3evsFsqDx8mLPBFl4OvZF3wXvS2fzIKi2jkEtcgDtw5IX/ABoOxjwp5ll6R115eu+ytA+fO6ruBh1Pad18AgwZ4Y7Ig9OrjE5zjapQ5Y5sbAGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784762990; c=relaxed/simple;
-	bh=zdV2aaJckP16f9FWAE97Wx0og5Nfn4yLNaBhhfT4ppM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ZZJdICu1nc/CoVGOl6p7ptXTbwjDn5YGLwp6lOkDOautoue9FwZbD886mr1hfdJJlHUgxSVPhMLAP19Mg6gQ0PmyjPfRWUUDO1N+3iY0oNCrhl3I2TmftX/isD/oOMWE22KbGcef8kHNOkL9vWYOY4WH3uNv6DXjyvCErDLvkw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GS/FDElJ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784763011; c=relaxed/simple;
+	bh=GDy18Suyu/XOvZ/DGW5GlcqYZDHFbKKK6g/UZV+3fL4=;
+	h=Date:From:To:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=M+iqCQTOa5Gy8OFlvoQAs+NojCG/Bz5CVrA9apMW1xZ/h/xvSLpYikmTAyoWUdkaAxJ1jq9hI3q8b648+TT4/O3r72Ik/aC1jhgfs0HfUrC1qcghzYuRL598u/yJec0XT6OLlJt768jT1GQiXoH/ac28T+ygF6IaIIvLF6LCZtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=q2dcbOtq; arc=none smtp.client-ip=209.85.222.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GS/FDElJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2F8C1F000E9;
-	Wed, 22 Jul 2026 23:29:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784762988;
-	bh=gjNuTptJLmrip3n+w0B+4kZP3mF1rpib9ndYLx9tUSU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GS/FDElJsjhzXQDAw2RTAxPEtaXvupek5nRLZbW2+d1YHOl/0MIYDbcLIzdGUpkeQ
-	 5xTZpjDGDdsuSu901puGBXCyszDp5skU/+TDJTg20JbpGXpkKqMr/qASu7CNnE0Q9x
-	 yinTubi2Zjx4amkOmCn0Kb5bvQzEtEeSmMfmZSz5mI4uTTJ2SoaLjQjRa/71fTGqvx
-	 6kjQXE0mmO77tNrlmsvSYTERbyCmos48yLsbtc9tCYxNvc4RsLIvELVJsyMfTcJf2s
-	 HQXSVBMjQ5bjTBNreCDQoAIdH1nLDvW/Q8nAms7WakmaGup5Q62fVGk5/9LKEjRcSG
-	 t9yzYOEb82EJA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 08/11] tracing: wprobe: Add wprobe event trigger
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <178476144141.26117.8004746214529353062.stgit@devnote2>
-References: <178476134787.26117.10094977293012760490.stgit@devnote2>
- <178476144141.26117.8004746214529353062.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 22 Jul 2026 23:29:48 +0000
-Message-Id: <20260722232948.B2F8C1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q2dcbOtq"
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-971a7a7061bso12848241.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 16:30:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1784763009; x=1785367809; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:message-id
+         :references:in-reply-to:user-agent:subject:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=K4tfl6txiUD85Nea9WxjY1Jry32vVpQwp8K3x8BssLU=;
+        b=q2dcbOtqo5HBkGSzda5gV38E7cWfZvbKuSBCdjDepYyBvjrnpEjAr8T07GYkRDLopw
+         RLpkTcqJHFDjxfP6yHReEtQma5yMqfNxQLpsHZEzsF9XL/MtZCK/wNXKOVIMpRcCrATt
+         NnO0pGoWjUfpWu9nVnaVUGT5cMg8Qo92cHwOKZ5pMXLpGP4CjulIW0mEkVckoak0NX7a
+         fJvneSruX3OMJ1bkgINsP3MGxo9zoVKiM/Nmoc3VQqwRcPqeH7a35Fv6rTJSy6uE8ghP
+         DPJRG+M8mLyOu6gKDjvSvmennV0U8t6Kyrdk3wXzR/an36p1fiEGT5rjBKGMEdZbJNx0
+         Q+0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784763009; x=1785367809;
+        h=content-transfer-encoding:content-type:mime-version:message-id
+         :references:in-reply-to:user-agent:subject:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=K4tfl6txiUD85Nea9WxjY1Jry32vVpQwp8K3x8BssLU=;
+        b=lfv+Y21oHD7DiHbHTzMDwhWbSyLJIi0aN5z2aDbOV/LQ58aB6HK/LDTaMi5LsnF8N6
+         STWjNSgRR/feYTlXInQCHZ+ECvx59jHCMUzQSso/VMxFc7xD7fdkAeLJj6TD88x6FMmN
+         5G14qO4SN6hyNdDYBKfJb196pm/uaxSbuk+tAlV7O6bpYFCcE6gZfFxZGmfKDFTm6yrT
+         Tsk1ELOO9IGHdIHIVKBEI7e73t4c3JAWKy12Lug1g5zUqWUqavwPgy3a0Irrko70F4IZ
+         lVt4uXBbAMOeHwUmG44+ir3CiKMWX35MQuw1rlqpCsxrGBEI6IzpqcpC42O3EQy/pFrq
+         6uuw==
+X-Forwarded-Encrypted: i=1; AHgh+RqJbC5LOGRfLipduJlnq2G+S7K+sEhqahVpy+9g9a5I9fQy/x7oBmaFMgPx03/+2M9USHR4laMcJwnexhH9bJnu@vger.kernel.org
+X-Gm-Message-State: AOJu0YyiOUI9ZX2E22jdXIsjLSsawiKqiiyjSwB/oCWayCtrhV5yFBta
+	on6Dw4PpWmOhOQ6q29cKIxQ7MtNRdW85MdEakOJnj0W5dAVzrAnPC37j9+93Hw==
+X-Gm-Gg: AR+sD12m1aGyssW4XpZej1exE8c0xjg/ZNqHnaVmoATcNVIgzHl490Svxfbg5amzccv
+	TbaJQtTAksFlKvDnyj9IVlMWmEAxZ2aNx1vt7E5AYA13vOCsR5EyVqiWSedXyNiilnE5R8EFVFC
+	a7nwc96O3NM8M/MhhqmRVO8rsWjRNdPT2GyVJ3uyyFsbXAjaDFKzzhkZHiKCZRpph2W5G2jV6oa
+	xRXqfcIu/FI+XOb7ygh4zGUxSjpKSGxhLxlguQh9hUML+ZZhnb+Y0cpIpC2Fs6mRIbja/Xa9nk4
+	6tF4lCttj3ld0MjnI4Jx0HmtC1ZiPLWdwF+TMEtM38Y7t6wfapl/8v12qFXJqm/sq5NyPvk2D9+
+	pnlOG6LxqsBOiJPHlbItBtGHVqp4iuHVDIHZKQAxQNhFUcuDMe+l+gLAGielOBxsrLHvZ2VpV78
+	kA5ni7EV1DbBu5ghQKdj4=
+X-Received: by 2002:a05:6102:3f87:b0:74a:9ac9:792c with SMTP id ada2fe7eead31-74d5e3cb58dmr267883137.12.1784763009482;
+        Wed, 22 Jul 2026 16:30:09 -0700 (PDT)
+Received: from ehlo.thunderbird.net ([2804:2bf0:60e7:ae00:62ab:67e4:f6f3:271f])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-9774407726dsm3367442241.5.2026.07.22.16.30.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Jul 2026 16:30:08 -0700 (PDT)
+Date: Wed, 22 Jul 2026 20:30:04 -0300
+From: Arnaldo Melo <arnaldo.melo@gmail.com>
+To: Ian Rogers <irogers@google.com>,
+ linux-perf-users <linux-perf-users@vger.kernel.org>
+Subject: Re: Getting positive, and not just negative, Sashiko reviews
+User-Agent: Thunderbird for Android
+In-Reply-To: <CAP-5=fVpPktV2Y8XYxOMpZuY1oYQMwxmwqtaphRG4i6qkSVZyw@mail.gmail.com>
+References: <CAP-5=fVpPktV2Y8XYxOMpZuY1oYQMwxmwqtaphRG4i6qkSVZyw@mail.gmail.com>
+Message-ID: <E034E1D9-D2EA-428C-AD7C-A8F40B2E0E52@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] Premature teardown of wprobe resources during trigger unregistrati=
-on leads to a Use-After-Free and NULL pointer dereference in the deferred w=
-orkqueue because RCU synchronization is missing.
-- [High] Incorrect RCU synchronization primitive in `wprobe_trigger_cmd_par=
-se()` error path leads to a Use-After-Free on faultable (syscall) tracepoin=
-ts.
---
 
---- Patch [8]: [PATCH v10 08/11] tracing: wprobe: Add wprobe event trigger =
----
-commit 7a3a7529186a14015a2ccb9a93108962a135a419
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-tracing: wprobe: Add wprobe event trigger
+On July 22, 2026 7:19:33 PM GMT-03:00, Ian Rogers <irogers@google=2Ecom> w=
+rote:
+>Hi,
+>
+>I wanted to give a heads up=2E I sent out a 1 line email policy change
+>for linux-perf-users to get positive Sashiko reviews, not just
+>negative ones:
+>https://github=2Ecom/sashiko-dev/sashiko/pull/363
+>Please comment/complain if this upsets you and I can abandon the PR=2E
 
-Add wprobe event trigger to set and clear the watch event dynamically.
-This allows us to set an watchpoint on a given local variables and
-a slab object instead of static objects.
+And it's merged upstream already, let's see how it goes, I think it may be=
+ a good move=2E=20
 
-> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-> index 4c23c310a383e..1edfdddf241de 100644
-> --- a/kernel/trace/trace_wprobe.c
-> +++ b/kernel/trace/trace_wprobe.c
-[ ... ]
-> @@ -794,3 +794,391 @@ static __init int init_wprobe_trace(void)
->  }
->  fs_initcall(init_wprobe_trace);
-> =20
-> +#ifdef CONFIG_WPROBE_TRIGGERS
-> +
-> +static int wprobe_trigger_global_enabled;
-> +
-> +#define SET_WPROBE_STR		"set_wprobe"
-> +#define CLEAR_WPROBE_STR	"clear_wprobe"
-> +#define WPROBE_DEFAULT_CLEAR_ADDRESS ((unsigned long)&wprobe_trigger_glo=
-bal_enabled)
-> +
-> +struct wprobe_trigger_data {
-> +	struct rcu_head rcu;
-> +	struct trace_event_file *file;
-> +	struct trace_wprobe *tw;
-> +	unsigned int		offset;
-> +	long			adjust;
-> +	const char		*field;
-> +	bool			clear;
-> +};
-> +
-> +static void wprobe_trigger(struct event_trigger_data *data,
-> +			   struct trace_buffer *buffer,  void *rec,
-> +			   struct ring_buffer_event *event)
-> +{
-> +	struct wprobe_trigger_data *wprobe_data =3D data->private_data;
-> +	struct trace_wprobe *tw =3D wprobe_data->tw;
-> +	unsigned long addr, flags;
-> +	bool changed =3D false;
-[ ... ]
-> +	if (changed)
-> +		irq_work_queue(&tw->irq_work);
-> +
-> +	raw_spin_unlock_irqrestore(&tw->lock, flags);
-> +}
-[ ... ]
-> +static void wprobe_trigger_free(struct event_trigger_data *data)
-> +{
-> +	struct wprobe_trigger_data *wprobe_data =3D data->private_data;
-> +
-> +	if (WARN_ON_ONCE(data->ref <=3D 0))
-> +		return;
-> +
-> +	data->ref--;
-> +	if (!data->ref) {
-> +		/* Remove the SOFT_MODE flag */
-> +		trace_event_enable_disable(wprobe_data->file, 0, 1);
+The maintainers summit list discussion (public) touches lots of aspects ab=
+out Sashiko collaboration, we need to take its reviews with a grain of salt=
+, but my experience so far is very positive, I've been using it locally for=
+ perf and pahole development, in a loop with Claude code, with very good re=
+sults=2E
 
-[Severity: High]
-Does this disable the wprobe event synchronously before waiting for RCU
-readers?=20
-
-If an in-flight RCU reader is executing wprobe_trigger() when this is calle=
-d,
-trace_event_enable_disable() will trigger __unregister_trace_wprobe() which
-nullifies tw->bp_event and allows tw to be concurrently freed.
-
-The in-flight reader could then queue tw->irq_work in wprobe_trigger():
-
-	if (changed)
-		irq_work_queue(&tw->irq_work);
-
-This work then executes trace_wprobe_update_local() which dereferences the
-nullified tw->bp_event:
-
-	struct perf_event *bp =3D *this_cpu_ptr(tw->bp_event);
-
-Can this lead to a NULL pointer dereference or use-after-free since the
-cleanup doesn't wait for the RCU readers to finish?
-
-> +		trace_event_put_ref(wprobe_data->file->event_call);
-> +		trigger_data_free(data);
-> +	}
-> +}
-> +
-> +static int wprobe_trigger_cmd_parse(struct event_command *cmd_ops,
-> +				    struct trace_event_file *file,
-> +				    char *glob, char *cmd,
-> +				    char *param_and_filter)
-> +{
-[ ... ]
-> +	ret =3D event_trigger_register(cmd_ops, file, glob, trigger_data);
-> +	if (ret) {
-> +		event_trigger_reset_filter(cmd_ops, trigger_data);
-> +		trace_event_enable_disable(wprobe_file, 0, 1);
-> +		trace_event_put_ref(wprobe_file->event_call);
-> +		synchronize_rcu();
-
-[Severity: High]
-Is synchronize_rcu() sufficient to wait for faultable tracepoint readers?
-
-Faultable tracepoints (like syscall tracepoints) use RCU Tasks Trace for
-protection, which synchronize_rcu() does not wait for. If this error path is
-hit while attaching to a syscall tracepoint, the in-flight readers could st=
-ill
-be executing when the memory is freed via the __free() cleanup attributes at
-the end of the function scope.
-
-Should this use tracepoint_synchronize_unregister() instead to ensure it
-waits for all tracepoint reader types?
-
-> +		return ret;
-> +	}
-> +	/* Make it NULL to avoid freeing trigger_data and wprobe_data by __free=
-() */
-> +	wprobe_data =3D NULL;
-> +	event_trigger_free(trigger_data);
-> +	trigger_data =3D NULL;
-> +
-> +	return 0;
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178476134787.26117.=
-10094977293012760490.stgit@devnote2?part=3D8
+- Arnaldo 
