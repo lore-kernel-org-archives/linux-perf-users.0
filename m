@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B45D82741A0;
-	Wed, 22 Jul 2026 23:02:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A437350A35;
+	Wed, 22 Jul 2026 23:02:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784761356; cv=none; b=Hr03h/Irtm8A3bnvEyIMNb7mlsAHbDRSKO472aZ89019L7HS6N5030QGluG1NsjkueCaCqD21u+JobufQIEhHdfbR7RCuj9oOlH29fv0VcHodGIY/paiNaQvhUov5RBkk97P0wJc0jm38NYXEgmxyeZ6Wv4ALzD/at0O8kWcwvQ=
+	t=1784761368; cv=none; b=jZskjIAxZctmxg2W6GXN4f0liU51Y2KrP2KEZKCEkLXl1vk1L3GWjt2BfQjfXla3BHfl8Vnh7r7t+M9TbLeWUunmzosvdSOH4mujJjY1CK9kJuBd/JbSxUtfCBcxRbp29473PA04/9hFqGBNBO+VX/wNJLt+WTdi6oQDg0EapbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784761356; c=relaxed/simple;
-	bh=bvLB011Sm5dmD8Mz/zmUcWFCnSA1Y8VC0VUGPtd6eMY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ToZtHRu4WnyptocTDCo7PCzgpwQq7NFV9WVPMD3jfG3Z2bSapDWsvROOrzx0FD7GYKUcLDrQXEdRlQrzbEdCkAPX3aQNcv06+ICY149L0i9HF15d1vuWcS29T9rwfNpg7PqiaTEQxtR1t1hzuUkMdJQtikVcZljSczSzGfvmTWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbzLblx4; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784761368; c=relaxed/simple;
+	bh=lmemxfWOHeA7+iJrHZ6nNmIZ7GV/N2WY0OeaB6Orepo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mlytksLwsjdCj+JgXDYmyy4W4YRDAUFmmkUyXoAx2N9XZADyKBqTXhcv6V+z4CWpG1a2cF29YQRFNINHuzsIQb5dC14EpkRHUivSUdrT5SCgZG1m5UR3xtUFcchQB1xDvznQBWmPw3v6/isJzw0GXZ5iqlRybfpqyiY/6OIQ1dk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P7LOky2w; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HbzLblx4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FD021F000E9;
-	Wed, 22 Jul 2026 23:02:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P7LOky2w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B6E01F000E9;
+	Wed, 22 Jul 2026 23:02:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784761354;
-	bh=uig3pVN/J3FMcxzYiz9PSoJw+bQoCVuUExLZ2b5dx14=;
-	h=From:To:Cc:Subject:Date;
-	b=HbzLblx4TBJsKHQEfxYjDi66yN1C7+GGxCtbg9hmL14GM71ya+1u0Kpnjy1/9OqML
-	 TWTT3SfhH3hMQItVZXNOtKuekELt+IoqoZsyRXJCqh+xb7p2xk7I2MljPqOjWhHi1M
-	 5aekzB8uyTJjVDUibfW/tA5QRxz3FzKsLn2OPqrhmJ7oW4Yhxc4em3lttAaV9cn8jo
-	 QTtRnL+qylrPZ4XPQwfGcL8f+NNOrbW0J8IXolPNEBe2JCoiRrilYJculKrTv25uqy
-	 brUDGTkBEUNg1qTZJEPSGg8EAH8o7wNfewPs6WYqCfgmJpEcHcUzTa2IBtkm9lV2K2
-	 ohnWkKaiA2lvg==
+	s=k20260515; t=1784761366;
+	bh=M1brsFTUJq/EemZNLhdjkMWM4+LCExCxz3pBIdhtPAE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=P7LOky2wjA69Fk03EIc0nG+QvxpYgD7urna8W6PWS2xSyUTs/qpQUVq8WhH7wNk7F
+	 PTV5818jin84k+HsXu8JMErDSy/Tdhf9BHnHLm8gWhMipqIZU8ctLmzb57w3AiUOlZ
+	 i7dsk3ICeolR2BrGHmgc0nBSGxmPxJ3jgeDahlqTI7w0OORq9Nvu2K2o0kj7dAMG2T
+	 V2yESVW5HYLRr6QIE45ctR03LRPhMgBRbnBSpQY6gitKbzB5cKXZV+XjvOnEpvqHbg
+	 A9eBVhJcKoG974ghr0wyW+romZjVJo2n+H1cnW27Ea5z2Jiop6LD5bfQ3k32yiejaq
+	 Sa5ojfLi/Kajw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -43,10 +44,12 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v10 00/11] tracing: wprobe: x86: Add wprobe for watchpoint
-Date: Thu, 23 Jul 2026 08:02:28 +0900
-Message-ID: <178476134787.26117.10094977293012760490.stgit@devnote2>
+Subject: [PATCH v10 01/11] tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
+Date: Thu, 23 Jul 2026 08:02:39 +0900
+Message-ID: <178476135985.26117.13000026917772873088.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <178476134787.26117.10094977293012760490.stgit@devnote2>
+References: <178476134787.26117.10094977293012760490.stgit@devnote2>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -57,182 +60,1101 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Here is the 10th version of the series for adding new wprobe (watch probe)
-which provides memory access tracing event. Moreover, this can be used
-via event trigger. Thus it can trace memory access on a dynamically
-allocated objects too.
-The previous version is here:
+Add a new probe event for the hardware breakpoint called wprobe-event.
+This wprobe allows user to trace (watch) the memory access at the
+specified memory address.
+The new syntax is;
 
-  https://lore.kernel.org/all/178429796992.157981.3393977217853767915.stgit@devnote2/
+ w[:[GROUP/]EVENT] [r|w|rw]@[ADDR|SYM][:SIZE] [FETCH_ARGs]
 
-This version add BTF support in wprobe trigger command[11/11]. With this
-feature, user do not need to decode the offset of structure fields.
-(Since the previous version lacked base-commit tag, Sashiko failed to
- apply it for review. Thus this is just add a BTF support.)
+User also can use $addr to fetch the accessed address and $value to fetch
+the accessed memory value (shorthand for '+0($addr)'). No other variables
+are supported.
 
-To support kprobe events, we need to check the previous NMI context
-or need to use an atomic refcount etc. But that should be another
-patch for review.
+For example, tracing updates of the jiffies;
 
-To support arm64, we need to avoid major pagefault on single-stepping
-issue. I think we can solve it with checking whether the address is the
-kernel (which must not cause a major page fault), or not.
-
-Public branch
--------------
-I will push this branch as topic/wprobe-v2 to my tree so that it
-can be easily tested.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/wprobe-v2 
-
-This is based on linux-trace tree's probes/for-next.
-
-Usage
------
-
-The basic usage of this wprobe is similar to other probes;
-
-  w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+OFFS]> [FETCHARGS]
-
-This defines a new wprobe event. For example, to trace jiffies update,
-you can do;
-
- echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
- echo 1 > events/wprobes/my_jiffies/enable
-
-Moreover, this can be combined with event trigger to trace the memory
-accecss on slab objects. The trigger syntax is;
-
-  set_wprobe:WPROBE_EVENT:FIELD[+OFFSET] [if FILTER]
-  clear_wprobe:WPROBE_EVENT[:FIELD[+OFFSET]] [if FILTER]
-
-set_wprobe sets WPROBE_EVENT's watch address on FIELD[+OFFSET].
-clear_wprobe clears WPROBE_EVENT's watch address if it is set to
-FIELD[+OFFSET]. If FIELD is omitted, forcibly clear the watch address
-when trigger event is hit.
-
-For example, trace the first 8 byte of the dentry data structure passed
-to do_truncate() until it is deleted by dentry_kill().
-(Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
-
-  # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
-
-  # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
-  # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
-
-  # echo 'f:dentry_kill dentry_kill dentry=$arg1' >> dynamic_events
-  # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
-
-  # echo 1 >> events/fprobes/truncate/enable
-  # echo 1 >> events/fprobes/dentry_kill/enable
-
-  # echo aaa > /tmp/hoge
-  # echo bbb > /tmp/hoge
-  # echo ccc > /tmp/hoge
-  # rm /tmp/hoge
-
-Then, the trace data will show;
-
- # tracer: nop
- #
- # entries-in-buffer/entries-written: 32/32   #P:8
- #
- #                                _-----=> irqs-off/BH-disabled
- #                               / _----=> need-resched
- #                              | / _---=> hardirq/softirq
- #                              || / _--=> preempt-depth
- #                              ||| / _-=> migrate-disable
- #                              |||| /     delay
+ /sys/kernel/tracing # echo 'w:my_jiffies w@jiffies' >> dynamic_events
+ /sys/kernel/tracing # cat dynamic_events
+ w:wprobes/my_jiffies w@jiffies:4
+ /sys/kernel/tracing # echo 1 > events/wprobes/my_jiffies/enable
+ /sys/kernel/tracing # head -n 20 trace | tail -n 5
  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
  #              | |         |   |||||     |         |
-               sh-107     [004] ...1.     9.990418: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
-               sh-107     [004] ...1.     9.990914: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b3de78
-               sh-107     [004] ...1.     9.993175: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049ddd40
-               sh-107     [004] .....     9.995198: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
-               sh-107     [004] ...1.     9.995389: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db998
-               sh-107     [004] ..Zff     9.997503: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] ..Zff     9.997509: watch: (path_openat+0x211/0xda0) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] ..Zff     9.997514: watch: (path_openat+0xa56/0xda0) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] ..Zff     9.997518: watch: (path_openat+0xae2/0xda0) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] .....     9.997521: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
-               sh-107     [004] ...1.     9.997582: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004808270
-               sh-107     [004] ...1.     9.999365: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db728
-               sh-107     [004] ...1.     9.999388: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b1c000
-               rm-113     [005] ..Zff    10.000965: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.000971: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.000984: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.000988: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001010: watch: (lookup_one_qstr_excl+0x28/0x140) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001014: watch: (lookup_one_qstr_excl+0xd1/0x140) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001018: watch: (may_delete_dentry+0x1c/0x200) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001021: watch: (may_delete_dentry+0x195/0x200) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001031: watch: (vfs_unlink+0x5e/0x260) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] d.Z..    10.001067: watch: (d_make_discardable+0x1b/0x40) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] d.Z..    10.001071: watch: (d_make_discardable+0x29/0x40) address=0xffff8880048083a8 value=0x200080
-               rm-113     [005] ...1.    10.001072: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
-               rm-113     [005] ...1.    10.001218: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
-               sh-107     [004] ...1.    10.001416: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db110
-               sh-107     [004] ...1.    10.001444: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db248
-               sh-107     [004] ...1.    10.001500: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
-               sh-107     [004] ...1.    10.002067: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
-               sh-107     [004] ...1.    10.904920: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
-               sh-107     [004] ...1.    10.905129: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+          <idle>-0       [000] d.Z1.   206.547317: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+          <idle>-0       [000] d.Z1.   206.548341: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+          <idle>-0       [000] d.Z1.   206.549346: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
 
-
-Thank you,
-
+Assisted-by: Antigravity:gemini-3.5-flash
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-base-commit: 1a416ae446afa42d2d8500ce25bd61c564508721
-
-Jinchao Wang (2):
-      x86/hw_breakpoint: Unify breakpoint install/uninstall
-      x86/hw_breakpoint: Add arch_reinstall_hw_breakpoint
-
-Masami Hiramatsu (Google) (9):
-      tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
-      x86: hw_breakpoint: Add a kconfig to clarify when a breakpoint fires
-      selftests: tracing: Add a basic testcase for wprobe
-      selftests: tracing: Add syntax testcase for wprobe
-      HWBP: Add modify_wide_hw_breakpoint_local() API
-      tracing: wprobe: Add wprobe event trigger
-      selftests: ftrace: Add wprobe trigger testcase
-      tracing/wprobe: Support BTF typecast in fetchargs
-      tracing/wprobe: Support BTF typecast in wprobe trigger command
-
-
- Documentation/trace/index.rst                      |    1 
- Documentation/trace/wprobetrace.rst                |  163 +++
- arch/Kconfig                                       |   20 
- arch/x86/Kconfig                                   |    2 
- arch/x86/include/asm/hw_breakpoint.h               |    8 
- arch/x86/kernel/hw_breakpoint.c                    |  164 ++-
- include/linux/hw_breakpoint.h                      |    6 
- include/linux/trace_events.h                       |    3 
- kernel/events/hw_breakpoint.c                      |   61 +
- kernel/trace/Kconfig                               |   24 
- kernel/trace/Makefile                              |    1 
- kernel/trace/trace.c                               |    9 
- kernel/trace/trace.h                               |    7 
- kernel/trace/trace_events_trigger.c                |   12 
- kernel/trace/trace_probe.c                         |   24 
- kernel/trace/trace_probe.h                         |   14 
- kernel/trace/trace_wprobe.c                        | 1300 ++++++++++++++++++++
- tools/testing/selftests/ftrace/config              |    2 
- .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   63 +
- .../test.d/dynevent/wprobes_syntax_errors.tc       |   20 
- .../test.d/trigger/trigger-wprobe-btf-offset.tc    |   73 +
- .../test.d/trigger/trigger-wprobe-btf-typecast.tc  |   80 +
- .../ftrace/test.d/trigger/trigger-wprobe.tc        |   70 +
- 23 files changed, 2056 insertions(+), 71 deletions(-)
+ Changes in v10:
+  - Use zalloc_flex() in alloc_trace_wprobe().
+  - Support matching command arguments in trace_wprobe_match().
+ Changes in v9:
+  - Rebased on probes/for-next branch.
+  - Add WPROBE_NO_SIBLING error log to explicitly reject sibling probes
+    since event triggers identify the target wprobe by event name.
+  - Use traceprobe_parse_event_name() to properly validate group/event
+    names instead of using the raw command string directly.
+  - Generate unique event name (w_0x<addr>) for anonymous address-based
+    watchpoints to avoid naming collisions.
+  - Call traceprobe_update_arg() in __register_trace_wprobe() to resolve
+    @symbol fetch arguments, consistent with kprobe and fprobe.
+ Changes in v8:
+  - Include required header files.
+  - Use READ_ONCE(tw->addr) in trace handler to safely check dynamically
+    updated addresses.
+  - Prohibit unsafe perf support by returning -EOPNOTSUPP in
+    wprobe_register().
+  - Add rollback logic to unregister already-enabled sibling probes if
+    registration fails mid-loop.
+  - Resolve symbol offsets dynamically in trace_wprobe_show() using
+    kallsyms_lookup_name().
+  - Fix memory leak of parse_address_spec()'s symbol output in
+    __trace_wprobe_create().
+  - Print "rw" instead of "x" for read-write type breakpoints in
+    trace_wprobe_show().
+  - Document the $value fetcharg in wprobetrace.rst.
+ Changes in v7:
+  - Include IS_ERR_PCPU fix.
+  - use seq_print_ip_sym_offset().
+  - fix checkpatch warning on DEFINE_FREE()
+  - Use bp->attr.bp_addr instead of tw->addr because it can be updated from another CPU.
+---
+ Documentation/trace/index.rst       |    1 
+ Documentation/trace/wprobetrace.rst |   70 +++
+ include/linux/trace_events.h        |    2 
+ kernel/trace/Kconfig                |   13 +
+ kernel/trace/Makefile               |    1 
+ kernel/trace/trace.c                |    9 
+ kernel/trace/trace.h                |    5 
+ kernel/trace/trace_probe.c          |   21 +
+ kernel/trace/trace_probe.h          |    9 
+ kernel/trace/trace_wprobe.c         |  746 +++++++++++++++++++++++++++++++++++
+ 10 files changed, 873 insertions(+), 4 deletions(-)
  create mode 100644 Documentation/trace/wprobetrace.rst
  create mode 100644 kernel/trace/trace_wprobe.c
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
 
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+index 5d9bf4694d5d..2f04f32001ed 100644
+--- a/Documentation/trace/index.rst
++++ b/Documentation/trace/index.rst
+@@ -36,6 +36,7 @@ the Linux kernel.
+    kprobes
+    kprobetrace
+    fprobetrace
++   wprobetrace
+    eprobetrace
+    fprobe
+    ring-buffer-design
+diff --git a/Documentation/trace/wprobetrace.rst b/Documentation/trace/wprobetrace.rst
+new file mode 100644
+index 000000000000..eb4f10607530
+--- /dev/null
++++ b/Documentation/trace/wprobetrace.rst
+@@ -0,0 +1,70 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++=======================================
++Watchpoint probe (wprobe) Event Tracing
++=======================================
++
++.. Author: Masami Hiramatsu <mhiramat@kernel.org>
++
++Overview
++--------
++
++Wprobe event is a dynamic event based on the hardware breakpoint, which is
++similar to other probe events, but it is for watching data access. It allows
++you to trace which code accesses a specified data.
++
++As same as other dynamic events, wprobe events are defined via
++`dynamic_events` interface file on tracefs.
++
++Synopsis of wprobe-events
++-------------------------
++::
++
++  w:[GRP/][EVENT] SPEC [FETCHARGS]                       : Probe on data access
++
++ GRP            : Group name for wprobe. If omitted, use "wprobes" for it.
++ EVENT          : Event name for wprobe. If omitted, an event name is
++                  generated based on the address or symbol.
++ SPEC           : Breakpoint specification.
++                  [r|w|rw]@<ADDRESS|SYMBOL[+|-OFFS]>[:LENGTH]
++
++   r|w|rw       : Access type, r for read, w for write, and rw for both.
++                  Default is rw if omitted.
++   ADDRESS      : Address to trace (hexadecimal).
++   SYMBOL       : Symbol name to trace.
++   LENGTH       : Length of the data to trace in bytes. (1, 2, 4, or 8)
++
++  FETCHARGS      : Arguments. Each probe can have up to 128 args.
++   $addr         : Fetch the accessing address.
++   $value        : Fetch the memory value at the accessing address (same as +0($addr)).
++   @ADDR         : Fetch memory at ADDR (ADDR should be in kernel)
++  @SYM[+|-offs] : Fetch memory at SYM +|- offs (SYM should be a data symbol)
++  +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*1)(\*2)
++  \IMM          : Store an immediate value to the argument.
++  NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
++  FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
++                  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
++                  (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
++                  and bitfield are supported.
++
++  (\*1) this is useful for fetching a field of data structures.
++  (\*2) "u" means user-space dereference.
++
++For the details of TYPE, see :ref:`kprobetrace documentation <kprobetrace_types>`.
++
++Usage examples
++--------------
++Here is an example to add a wprobe event on a variable `jiffies`.
++::
++
++  # echo 'w:my_jiffies w@jiffies' >> dynamic_events
++  # cat dynamic_events
++  w:wprobes/my_jiffies w@jiffies
++  # echo 1 > events/wprobes/enable
++  # cat trace | head
++  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
++  #              | |         |   |||||     |         |
++           <idle>-0       [000] d.Z1.  717.026259: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
++           <idle>-0       [000] d.Z1.  717.026373: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
++
++You can see the code which writes to `jiffies` is `tick_do_update_jiffies64()`.
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 308c76b57d13..d1e5ab71d928 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -328,6 +328,7 @@ enum {
+ 	TRACE_EVENT_FL_UPROBE_BIT,
+ 	TRACE_EVENT_FL_EPROBE_BIT,
+ 	TRACE_EVENT_FL_FPROBE_BIT,
++	TRACE_EVENT_FL_WPROBE_BIT,
+ 	TRACE_EVENT_FL_CUSTOM_BIT,
+ 	TRACE_EVENT_FL_TEST_STR_BIT,
+ };
+@@ -358,6 +359,7 @@ enum {
+ 	TRACE_EVENT_FL_UPROBE		= (1 << TRACE_EVENT_FL_UPROBE_BIT),
+ 	TRACE_EVENT_FL_EPROBE		= (1 << TRACE_EVENT_FL_EPROBE_BIT),
+ 	TRACE_EVENT_FL_FPROBE		= (1 << TRACE_EVENT_FL_FPROBE_BIT),
++	TRACE_EVENT_FL_WPROBE		= (1 << TRACE_EVENT_FL_WPROBE_BIT),
+ 	TRACE_EVENT_FL_CUSTOM		= (1 << TRACE_EVENT_FL_CUSTOM_BIT),
+ 	TRACE_EVENT_FL_TEST_STR		= (1 << TRACE_EVENT_FL_TEST_STR_BIT),
+ };
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 0ab5916575a9..b58c2565024f 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -862,6 +862,19 @@ config EPROBE_EVENTS
+ 	  convert the type of an event field. For example, turn an
+ 	  address into a string.
+ 
++config WPROBE_EVENTS
++	bool "Enable wprobe-based dynamic events"
++	depends on TRACING
++	depends on HAVE_HW_BREAKPOINT
++	select PROBE_EVENTS
++	select DYNAMIC_EVENTS
++	help
++	  This allows the user to add watchpoint tracing events based on
++	  hardware breakpoints on the fly via the ftrace interface.
++
++	  Those events can be inserted wherever hardware breakpoints can be
++	  set, and record accessed memory address and values.
++
+ config BPF_EVENTS
+ 	depends on BPF_SYSCALL
+ 	depends on (KPROBE_EVENTS || UPROBE_EVENTS) && PERF_EVENTS
+diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+index f934ff586bd4..141c8323de20 100644
+--- a/kernel/trace/Makefile
++++ b/kernel/trace/Makefile
+@@ -126,6 +126,7 @@ obj-$(CONFIG_FTRACE_RECORD_RECURSION) += trace_recursion_record.o
+ obj-$(CONFIG_FPROBE) += fprobe.o
+ obj-$(CONFIG_RETHOOK) += rethook.o
+ obj-$(CONFIG_FPROBE_EVENTS) += trace_fprobe.o
++obj-$(CONFIG_WPROBE_EVENTS) += trace_wprobe.o
+ 
+ obj-$(CONFIG_TRACEPOINT_BENCHMARK) += trace_benchmark.o
+ obj-$(CONFIG_RV) += rv/
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index c9e182d40059..1bc27c0ad029 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -4294,8 +4294,12 @@ static const char readme_msg[] =
+ 	"  uprobe_events\t\t- Create/append/remove/show the userspace dynamic events\n"
+ 	"\t\t\t  Write into this file to define/undefine new trace events.\n"
+ #endif
++#ifdef CONFIG_WPROBE_EVENTS
++	"  wprobe_events\t\t- Create/append/remove/show the hardware breakpoint dynamic events\n"
++	"\t\t\t  Write into this file to define/undefine new trace events.\n"
++#endif
+ #if defined(CONFIG_KPROBE_EVENTS) || defined(CONFIG_UPROBE_EVENTS) || \
+-    defined(CONFIG_FPROBE_EVENTS)
++    defined(CONFIG_FPROBE_EVENTS) || defined(CONFIG_WPROBE_EVENTS)
+ 	"\t  accepts: event-definitions (one definition per line)\n"
+ #if defined(CONFIG_KPROBE_EVENTS) || defined(CONFIG_UPROBE_EVENTS)
+ 	"\t   Format: p[:[<group>/][<event>]] <place> [<args>]\n"
+@@ -4305,6 +4309,9 @@ static const char readme_msg[] =
+ 	"\t           f[:[<group>/][<event>]] <func-name>[%return] [<args>]\n"
+ 	"\t           t[:[<group>/][<event>]] <tracepoint> [<args>]\n"
+ #endif
++#ifdef CONFIG_WPROBE_EVENTS
++	"\t           w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]\n"
++#endif
+ #ifdef CONFIG_HIST_TRIGGERS
+ 	"\t           s:[synthetic/]<event> <field> [<field>]\n"
+ #endif
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 80fe152af1dd..2f07c5c4ffc8 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -179,6 +179,11 @@ struct fexit_trace_entry_head {
+ 	unsigned long		ret_ip;
+ };
+ 
++struct wprobe_trace_entry_head {
++	struct trace_entry	ent;
++	unsigned long		ip;
++};
++
+ #define TRACE_BUF_SIZE		1024
+ 
+ struct trace_array;
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 7568f5e68de7..5d5e9b477b86 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -1405,6 +1405,23 @@ static int parse_probe_vars(char *orig_arg, const struct fetch_type *t,
+ 			return 0;
+ 	}
+ 
++	/* wprobe only support "$addr" and "$value" variable */
++	if (ctx->flags & TPARG_FL_WPROBE) {
++		if (!strcmp(arg, "addr")) {
++			code->op = FETCH_OP_BADDR;
++			return 0;
++		}
++		if (!strcmp(arg, "value")) {
++			code->op = FETCH_OP_BADDR;
++			code++;
++			code->op = FETCH_OP_DEREF;
++			code->offset = 0;
++			*pcode = code;
++			return 0;
++		}
++		goto inval;
++	}
++
+ 	if (strcmp(arg, "comm") == 0 || strcmp(arg, "COMM") == 0) {
+ 		code->op = FETCH_OP_COMM;
+ 		return 0;
+@@ -1464,8 +1481,8 @@ static int parse_probe_arg_register(char *arg, struct fetch_insn *code,
+ {
+ 	int ret;
+ 
+-	if (ctx->flags & (TPARG_FL_TEVENT | TPARG_FL_FPROBE)) {
+-		/* eprobe and fprobe do not handle registers */
++	if (ctx->flags & (TPARG_FL_TEVENT | TPARG_FL_FPROBE | TPARG_FL_WPROBE)) {
++		/* eprobe, fprobe and wprobe do not handle registers */
+ 		trace_probe_log_err(ctx->offset, BAD_VAR);
+ 		return -EINVAL;
+ 	}
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index ebdc706e7cb6..7380502a85af 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -91,6 +91,7 @@ typedef int (*print_type_func_t)(struct trace_seq *, void *, void *);
+ 	FETCH_OP(STACK, param),		/* Stack: .param = index */	\
+ 	FETCH_OP(STACKP, none),		/* Stack pointer */		\
+ 	FETCH_OP(RETVAL, none),		/* Return value */		\
++	FETCH_OP(BADDR, none),		/* Break address */		\
+ 	FETCH_OP(IMM, imm),		/* Immediate: .immediate */	\
+ 	FETCH_OP(COMM, none),		/* Current comm */		\
+ 	FETCH_OP(CURRENT, none),	/* Current task_struct address */\
+@@ -420,6 +421,7 @@ static inline int traceprobe_get_entry_data_size(struct trace_probe *tp)
+ #define TPARG_FL_USER   BIT(4)
+ #define TPARG_FL_FPROBE BIT(5)
+ #define TPARG_FL_TPOINT BIT(6)
++#define TPARG_FL_WPROBE BIT(7)
+ #define TPARG_FL_LOC_MASK	GENMASK(4, 0)
+ 
+ static inline bool tparg_is_function_entry(unsigned int flags)
+@@ -546,6 +548,10 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+ 	C(ARG_TOO_LONG,		"Argument expression is too long"),		\
+ 	C(ARRAY_NO_CLOSE,	"Array is not closed"),		\
+ 	C(ARRAY_TOO_BIG,	"Array number is too big"),		\
++	C(BAD_ACCESS_ADDR,	"Invalid access memory address"),		\
++	C(BAD_ACCESS_FMT,	"Access memory address requires @"),		\
++	C(BAD_ACCESS_LEN,	"This memory access length is not supported"),	\
++	C(BAD_ACCESS_TYPE,	"Bad memory access type"),			\
+ 	C(BAD_ADDR_SUFFIX,	"Invalid probed address suffix"),		\
+ 	C(BAD_ARG_NAME,		"Argument name must follow the same rules as C identifiers"),	\
+ 	C(BAD_ARG_NUM,		"Invalid argument number"),		\
+@@ -628,7 +634,8 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+ 	C(TYPECAST_NOT_EVENT,	"Typecasts are only for eprobe fields"),	\
+ 	C(TYPECAST_REQ_FIELD,	"Typecast requires a field access"),	\
+ 	C(TYPECAST_SYM_OFFSET,	"@SYM+/-OFFSET with typecast needs parentheses"),	\
+-	C(USED_ARG_NAME,	"This argument name is already used"),
++	C(USED_ARG_NAME,	"This argument name is already used"),		\
++	C(WPROBE_NO_SIBLING,	"Watchpoint probe does not support sibling probes"),
+ 
+ #undef C
+ #define C(a, b)		TP_ERR_##a
+diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+new file mode 100644
+index 000000000000..4c23c310a383
+--- /dev/null
++++ b/kernel/trace/trace_wprobe.c
+@@ -0,0 +1,746 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Hardware-breakpoint-based tracing events
++ *
++ * Copyright (C) 2023, Masami Hiramatsu <mhiramat@kernel.org>
++ */
++#define pr_fmt(fmt)	"trace_wprobe: " fmt
++
++#include <linux/compiler.h>
++#include <linux/hw_breakpoint.h>
++#include <linux/kallsyms.h>
++#include <linux/list.h>
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/perf_event.h>
++#include <linux/rculist.h>
++#include <linux/security.h>
++#include <linux/tracepoint.h>
++#include <linux/uaccess.h>
++
++#include <asm/ptrace.h>
++
++#include "trace_dynevent.h"
++#include "trace_probe.h"
++#include "trace_probe_kernel.h"
++#include "trace_probe_tmpl.h"
++#include "trace_output.h"
++
++#define WPROBE_EVENT_SYSTEM "wprobes"
++
++static int trace_wprobe_create(const char *raw_command);
++static int trace_wprobe_show(struct seq_file *m, struct dyn_event *ev);
++static int trace_wprobe_release(struct dyn_event *ev);
++static bool trace_wprobe_is_busy(struct dyn_event *ev);
++static bool trace_wprobe_match(const char *system, const char *event,
++			       int argc, const char **argv, struct dyn_event *ev);
++
++static struct dyn_event_operations trace_wprobe_ops = {
++	.create = trace_wprobe_create,
++	.show = trace_wprobe_show,
++	.is_busy = trace_wprobe_is_busy,
++	.free = trace_wprobe_release,
++	.match = trace_wprobe_match,
++};
++
++struct trace_wprobe {
++	struct dyn_event	devent;
++	struct perf_event * __percpu *bp_event;
++	unsigned long		addr;
++	int			len;
++	int			type;
++	const char		*symbol;
++	struct trace_probe	tp;
++};
++
++static bool is_trace_wprobe(struct dyn_event *ev)
++{
++	return ev->ops == &trace_wprobe_ops;
++}
++
++static struct trace_wprobe *to_trace_wprobe(struct dyn_event *ev)
++{
++	return container_of(ev, struct trace_wprobe, devent);
++}
++
++#define for_each_trace_wprobe(pos, dpos)			\
++	for_each_dyn_event(dpos)				\
++		if (is_trace_wprobe(dpos) && (pos = to_trace_wprobe(dpos)))
++
++static bool trace_wprobe_is_busy(struct dyn_event *ev)
++{
++	struct trace_wprobe *tw = to_trace_wprobe(ev);
++
++	return trace_probe_is_enabled(&tw->tp);
++}
++
++static bool trace_wprobe_match(const char *system, const char *event,
++			       int argc, const char **argv, struct dyn_event *ev)
++{
++	struct trace_wprobe *tw = to_trace_wprobe(ev);
++
++	if (event[0] != '\0' && strcmp(trace_probe_name(&tw->tp), event))
++		return false;
++
++	if (system && strcmp(trace_probe_group_name(&tw->tp), system))
++		return false;
++
++	return trace_probe_match_command_args(&tw->tp, argc, argv);
++}
++
++/*
++ * Note that we don't verify the fetch_insn code, since it does not come
++ * from user space.
++ */
++static int
++process_fetch_insn(struct fetch_insn *code, void *rec, void *edata,
++		   void *dest, void *base)
++{
++	void *baddr = rec;
++	unsigned long val;
++	int ret;
++
++retry:
++	/* 1st stage: get value from context */
++	switch (code->op) {
++	case FETCH_OP_BADDR:
++		val = (unsigned long)baddr;
++		break;
++	case FETCH_NOP_SYMBOL:	/* Ignore a place holder */
++		code++;
++		goto retry;
++	default:
++		ret = process_common_fetch_insn(code, &val);
++		if (ret < 0)
++			return ret;
++	}
++	code++;
++
++	return process_fetch_insn_bottom(code, val, dest, base);
++}
++NOKPROBE_SYMBOL(process_fetch_insn)
++
++static void wprobe_trace_handler(struct trace_wprobe *tw,
++				 unsigned long addr,
++				 struct pt_regs *regs,
++				 struct trace_event_file *trace_file)
++{
++	struct wprobe_trace_entry_head *entry;
++	struct trace_event_call *call = trace_probe_event_call(&tw->tp);
++	struct trace_event_buffer fbuffer;
++	int dsize;
++
++	if (WARN_ON_ONCE(call != trace_file->event_call))
++		return;
++
++	if (trace_trigger_soft_disabled(trace_file))
++		return;
++
++	if (READ_ONCE(tw->addr) != addr)
++		return;
++
++	dsize = __get_data_size(&tw->tp, (void *)addr, NULL);
++
++	entry = trace_event_buffer_reserve(&fbuffer, trace_file,
++					   sizeof(*entry) + tw->tp.size + dsize);
++	if (!entry)
++		return;
++
++	entry->ip = instruction_pointer(regs);
++	store_trace_args(&entry[1], &tw->tp, (void *)addr, NULL, sizeof(*entry), dsize);
++
++	fbuffer.regs = regs;
++	trace_event_buffer_commit(&fbuffer);
++}
++
++static void wprobe_perf_handler(struct perf_event *bp,
++			      struct perf_sample_data *data,
++			      struct pt_regs *regs)
++{
++	struct trace_wprobe *tw = bp->overflow_handler_context;
++	struct event_file_link *link;
++	unsigned long addr = bp->attr.bp_addr;
++
++	trace_probe_for_each_link_rcu(link, &tw->tp)
++		wprobe_trace_handler(tw, addr, regs, link->file);
++}
++
++static int __register_trace_wprobe(struct trace_wprobe *tw)
++{
++	struct perf_event_attr attr;
++	int i, ret;
++
++	if (tw->bp_event)
++		return -EINVAL;
++
++	for (i = 0; i < tw->tp.nr_args; i++) {
++		ret = traceprobe_update_arg(&tw->tp.args[i]);
++		if (ret)
++			return ret;
++	}
++
++	hw_breakpoint_init(&attr);
++	attr.bp_addr = tw->addr;
++	attr.bp_len = tw->len;
++	attr.bp_type = tw->type;
++
++	tw->bp_event = register_wide_hw_breakpoint(&attr, wprobe_perf_handler, tw);
++	if (IS_ERR_PCPU(tw->bp_event)) {
++		int ret = PTR_ERR_PCPU(tw->bp_event);
++
++		tw->bp_event = NULL;
++		return ret;
++	}
++
++	return 0;
++}
++
++static void __unregister_trace_wprobe(struct trace_wprobe *tw)
++{
++	if (tw->bp_event) {
++		unregister_wide_hw_breakpoint(tw->bp_event);
++		tw->bp_event = NULL;
++	}
++}
++
++static void free_trace_wprobe(struct trace_wprobe *tw)
++{
++	if (tw) {
++		trace_probe_cleanup(&tw->tp);
++		kfree(tw->symbol);
++		kfree(tw);
++	}
++}
++DEFINE_FREE(free_trace_wprobe, struct trace_wprobe *,
++	if (!IS_ERR_OR_NULL(_T))
++		free_trace_wprobe(_T))
++
++
++static struct trace_wprobe *alloc_trace_wprobe(const char *group,
++					       const char *event,
++					       const char *symbol,
++					       unsigned long addr,
++					       int len, int type, int nargs)
++{
++	struct trace_wprobe *tw __free(free_trace_wprobe) = NULL;
++	int ret;
++
++	tw = kzalloc_flex(*tw, tp.args, nargs);
++	if (!tw)
++		return ERR_PTR(-ENOMEM);
++
++	if (symbol) {
++		tw->symbol = kstrdup(symbol, GFP_KERNEL);
++		if (!tw->symbol)
++			return ERR_PTR(-ENOMEM);
++	}
++	tw->addr = addr;
++	tw->len = len;
++	tw->type = type;
++
++	ret = trace_probe_init(&tw->tp, event, group, false, nargs);
++	if (ret < 0)
++		return ERR_PTR(ret);
++
++	dyn_event_init(&tw->devent, &trace_wprobe_ops);
++	return_ptr(tw);
++}
++
++static struct trace_wprobe *find_trace_wprobe(const char *event,
++					      const char *group)
++{
++	struct dyn_event *pos;
++	struct trace_wprobe *tw;
++
++	for_each_trace_wprobe(tw, pos)
++		if (strcmp(trace_probe_name(&tw->tp), event) == 0 &&
++		    strcmp(trace_probe_group_name(&tw->tp), group) == 0)
++			return tw;
++	return NULL;
++}
++
++static enum print_line_t
++print_wprobe_event(struct trace_iterator *iter, int flags,
++		   struct trace_event *event)
++{
++	struct wprobe_trace_entry_head *field;
++	struct trace_seq *s = &iter->seq;
++	struct trace_probe *tp;
++
++	field = (struct wprobe_trace_entry_head *)iter->ent;
++	tp = trace_probe_primary_from_call(
++		container_of(event, struct trace_event_call, event));
++	if (WARN_ON_ONCE(!tp))
++		goto out;
++
++	trace_seq_printf(s, "%s: (", trace_probe_name(tp));
++
++	if (!seq_print_ip_sym_offset(s, field->ip, flags))
++		goto out;
++
++	trace_seq_putc(s, ')');
++
++	if (trace_probe_print_args(s, tp->args, tp->nr_args,
++			     (u8 *)&field[1], field) < 0)
++		goto out;
++
++	trace_seq_putc(s, '\n');
++out:
++	return trace_handle_return(s);
++}
++
++static int wprobe_event_define_fields(struct trace_event_call *event_call)
++{
++	int ret;
++	struct wprobe_trace_entry_head field;
++	struct trace_probe *tp;
++
++	tp = trace_probe_primary_from_call(event_call);
++	if (WARN_ON_ONCE(!tp))
++		return -ENOENT;
++
++	DEFINE_FIELD(unsigned long, ip, FIELD_STRING_IP, 0);
++
++	return traceprobe_define_arg_fields(event_call, sizeof(field), tp);
++}
++
++static struct trace_event_functions wprobe_funcs = {
++	.trace	= print_wprobe_event
++};
++
++static struct trace_event_fields wprobe_fields_array[] = {
++	{ .type = TRACE_FUNCTION_TYPE,
++	  .define_fields = wprobe_event_define_fields },
++	{}
++};
++
++static int wprobe_register(struct trace_event_call *event,
++			   enum trace_reg type, void *data);
++
++static inline void init_trace_event_call(struct trace_wprobe *tw)
++{
++	struct trace_event_call *call = trace_probe_event_call(&tw->tp);
++
++	call->event.funcs = &wprobe_funcs;
++	call->class->fields_array = wprobe_fields_array;
++	call->flags = TRACE_EVENT_FL_WPROBE;
++	call->class->reg = wprobe_register;
++}
++
++static int register_wprobe_event(struct trace_wprobe *tw)
++{
++	init_trace_event_call(tw);
++	return trace_probe_register_event_call(&tw->tp);
++}
++
++static int register_trace_wprobe_event(struct trace_wprobe *tw)
++{
++	struct trace_wprobe *old_tw;
++	int ret;
++
++	guard(mutex)(&event_mutex);
++
++	old_tw = find_trace_wprobe(trace_probe_name(&tw->tp),
++				   trace_probe_group_name(&tw->tp));
++	if (old_tw) {
++		/*
++		 * Wprobe does not support sibling probes because the event
++		 * trigger (set_wprobe/clear_wprobe) identifies the target
++		 * wprobe by its event name. Having multiple wprobes sharing
++		 * the same event name would make the target ambiguous.
++		 */
++		trace_probe_log_set_index(0);
++		trace_probe_log_err(0, WPROBE_NO_SIBLING);
++		return -EBUSY;
++	}
++
++	ret = register_wprobe_event(tw);
++	if (ret)
++		return ret;
++
++	dyn_event_add(&tw->devent, trace_probe_event_call(&tw->tp));
++	return 0;
++}
++static int unregister_wprobe_event(struct trace_wprobe *tw)
++{
++	return trace_probe_unregister_event_call(&tw->tp);
++}
++
++static int unregister_trace_wprobe(struct trace_wprobe *tw)
++{
++	if (trace_probe_has_sibling(&tw->tp))
++		goto unreg;
++
++	if (trace_probe_is_enabled(&tw->tp))
++		return -EBUSY;
++
++	if (trace_event_dyn_busy(trace_probe_event_call(&tw->tp)))
++		return -EBUSY;
++
++	if (unregister_wprobe_event(tw))
++		return -EBUSY;
++
++unreg:
++	__unregister_trace_wprobe(tw);
++	dyn_event_remove(&tw->devent);
++	trace_probe_unlink(&tw->tp);
++
++	return 0;
++}
++
++static int enable_trace_wprobe(struct trace_event_call *call,
++			       struct trace_event_file *file)
++{
++	struct trace_probe *tp;
++	struct trace_wprobe *tw;
++	bool enabled;
++	int ret = 0;
++
++	tp = trace_probe_primary_from_call(call);
++	if (WARN_ON_ONCE(!tp))
++		return -ENODEV;
++	enabled = trace_probe_is_enabled(tp);
++
++	if (file) {
++		ret = trace_probe_add_file(tp, file);
++		if (ret)
++			return ret;
++	} else {
++		trace_probe_set_flag(tp, TP_FLAG_PROFILE);
++	}
++
++	if (!enabled) {
++		list_for_each_entry(tw, trace_probe_probe_list(tp), tp.list) {
++			ret = __register_trace_wprobe(tw);
++			if (ret < 0) {
++				struct trace_wprobe *tmp;
++
++				list_for_each_entry(tmp, trace_probe_probe_list(tp), tp.list) {
++					if (tmp == tw)
++						break;
++					__unregister_trace_wprobe(tmp);
++				}
++				if (file)
++					trace_probe_remove_file(tp, file);
++				else
++					trace_probe_clear_flag(tp, TP_FLAG_PROFILE);
++				return ret;
++			}
++		}
++	}
++
++	return 0;
++}
++
++static int disable_trace_wprobe(struct trace_event_call *call,
++				struct trace_event_file *file)
++{
++	struct trace_wprobe *tw;
++	struct trace_probe *tp;
++
++	tp = trace_probe_primary_from_call(call);
++	if (WARN_ON_ONCE(!tp))
++		return -ENODEV;
++
++	if (file) {
++		if (!trace_probe_get_file_link(tp, file))
++			return -ENOENT;
++		if (!trace_probe_has_single_file(tp))
++			goto out;
++		trace_probe_clear_flag(tp, TP_FLAG_TRACE);
++	} else {
++		trace_probe_clear_flag(tp, TP_FLAG_PROFILE);
++	}
++
++	if (!trace_probe_is_enabled(tp)) {
++		list_for_each_entry(tw, trace_probe_probe_list(tp), tp.list) {
++			__unregister_trace_wprobe(tw);
++		}
++	}
++
++out:
++	if (file)
++		trace_probe_remove_file(tp, file);
++
++	return 0;
++}
++
++static int wprobe_register(struct trace_event_call *event,
++			   enum trace_reg type, void *data)
++{
++	struct trace_event_file *file = data;
++
++	switch (type) {
++	case TRACE_REG_REGISTER:
++		return enable_trace_wprobe(event, file);
++	case TRACE_REG_UNREGISTER:
++		return disable_trace_wprobe(event, file);
++
++#ifdef CONFIG_PERF_EVENTS
++	case TRACE_REG_PERF_REGISTER:
++	case TRACE_REG_PERF_UNREGISTER:
++	case TRACE_REG_PERF_OPEN:
++	case TRACE_REG_PERF_CLOSE:
++	case TRACE_REG_PERF_ADD:
++	case TRACE_REG_PERF_DEL:
++		return -EOPNOTSUPP;
++#endif
++	}
++	return 0;
++}
++
++static int parse_address_spec(const char *spec, unsigned long *addr, int *type,
++			      int *len, char **symbol)
++{
++	char *_spec __free(kfree) = NULL;
++	int _len = HW_BREAKPOINT_LEN_4;
++	int _type = HW_BREAKPOINT_RW;
++	unsigned long _addr = 0;
++	char *at, *col;
++
++	_spec = kstrdup(spec, GFP_KERNEL);
++	if (!_spec)
++		return -ENOMEM;
++
++	at = strchr(_spec, '@');
++	col = strchr(_spec, ':');
++
++	if (!at) {
++		trace_probe_log_err(0, BAD_ACCESS_FMT);
++		return -EINVAL;
++	}
++
++	if (at != _spec) {
++		*at = '\0';
++
++		if (strcmp(_spec, "r") == 0)
++			_type = HW_BREAKPOINT_R;
++		else if (strcmp(_spec, "w") == 0)
++			_type = HW_BREAKPOINT_W;
++		else if (strcmp(_spec, "rw") == 0)
++			_type = HW_BREAKPOINT_RW;
++		else {
++			trace_probe_log_err(0, BAD_ACCESS_TYPE);
++			return -EINVAL;
++		}
++	}
++
++	if (col) {
++		*col = '\0';
++		if (kstrtoint(col + 1, 0, &_len)) {
++			trace_probe_log_err(col + 1 - _spec, BAD_ACCESS_LEN);
++			return -EINVAL;
++		}
++
++		switch (_len) {
++		case 1:
++			_len = HW_BREAKPOINT_LEN_1;
++			break;
++		case 2:
++			_len = HW_BREAKPOINT_LEN_2;
++			break;
++		case 4:
++			_len = HW_BREAKPOINT_LEN_4;
++			break;
++		case 8:
++			_len = HW_BREAKPOINT_LEN_8;
++			break;
++		default:
++			trace_probe_log_err(col + 1 - _spec, BAD_ACCESS_LEN);
++			return -EINVAL;
++		}
++	}
++
++	if (kstrtoul(at + 1, 0, &_addr) != 0) {
++		char *off_str = strpbrk(at + 1, "+-");
++		int offset = 0;
++
++		if (off_str) {
++			if (kstrtoint(off_str, 0, &offset) != 0) {
++				trace_probe_log_err(off_str - _spec, BAD_PROBE_ADDR);
++				return -EINVAL;
++			}
++			*off_str = '\0';
++		}
++		_addr = kallsyms_lookup_name(at + 1);
++		if (!_addr) {
++			trace_probe_log_err(at + 1 - _spec, BAD_ACCESS_ADDR);
++			return -ENOENT;
++		}
++		_addr += offset;
++		*symbol = kstrdup(at + 1, GFP_KERNEL);
++		if (!*symbol)
++			return -ENOMEM;
++	}
++
++	*addr = _addr;
++	*type = _type;
++	*len = _len;
++	return 0;
++}
++
++static int __trace_wprobe_create(int argc, const char *argv[])
++{
++	/*
++	 * Argument syntax:
++	 *  b[:[GRP/][EVENT]] SPEC
++	 *
++	 * SPEC:
++	 *  [r|w|rw]@[ADDR|SYMBOL[+OFFS]][:LEN]
++	 */
++	struct traceprobe_parse_context *ctx __free(traceprobe_parse_context) = NULL;
++	struct trace_wprobe *tw __free(free_trace_wprobe) = NULL;
++	const char *event = NULL, *group = WPROBE_EVENT_SYSTEM;
++	const char *tplog __free(trace_probe_log_clear) = NULL;
++	char *symbol __free(kfree) = NULL;
++	char *gbuf __free(kfree) = NULL;
++	char *ebuf __free(kfree) = NULL;
++	unsigned long addr;
++	int len, type, i;
++	int ret = 0;
++
++	if (argv[0][0] != 'w')
++		return -ECANCELED;
++
++	if (argc < 2)
++		return -EINVAL;
++
++	tplog = trace_probe_log_init("wprobe", argc, argv);
++
++	if (argv[0][1] != '\0') {
++		if (argv[0][1] != ':') {
++			trace_probe_log_set_index(0);
++			trace_probe_log_err(1, BAD_MAXACT_TYPE);
++			return -EINVAL;
++		}
++		event = &argv[0][2];
++	}
++
++	trace_probe_log_set_index(1);
++	ret = parse_address_spec(argv[1], &addr, &type, &len, &symbol);
++	if (ret < 0)
++		return ret;
++
++	trace_probe_log_set_index(0);
++	if (event) {
++		gbuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
++		if (!gbuf)
++			return -ENOMEM;
++		ret = traceprobe_parse_event_name(&event, &group, gbuf,
++						  event - argv[0]);
++		if (ret)
++			return ret;
++	}
++
++	if (!event) {
++		/* Make a new event name */
++		ebuf = kmalloc(MAX_EVENT_NAME_LEN, GFP_KERNEL);
++		if (!ebuf)
++			return -ENOMEM;
++		if (symbol)
++			snprintf(ebuf, MAX_EVENT_NAME_LEN, "%s", symbol);
++		else
++			snprintf(ebuf, MAX_EVENT_NAME_LEN, "w_0x%lx", addr);
++		sanitize_event_name(ebuf);
++		event = ebuf;
++	}
++
++	argc -= 2; argv += 2;
++	tw = alloc_trace_wprobe(group, event, symbol, addr, len, type, argc);
++	if (IS_ERR(tw))
++		return PTR_ERR(tw);
++
++	ctx = kzalloc_obj(*ctx);
++	if (!ctx)
++		return -ENOMEM;
++
++	ctx->flags = TPARG_FL_KERNEL | TPARG_FL_WPROBE;
++
++	/* parse arguments */
++	for (i = 0; i < argc; i++) {
++		trace_probe_log_set_index(i + 2);
++		ctx->offset = 0;
++		ret = traceprobe_parse_probe_arg(&tw->tp, i, argv[i], ctx);
++		if (ret)
++			return ret;	/* This can be -ENOMEM */
++	}
++
++	ret = traceprobe_set_print_fmt(&tw->tp, PROBE_PRINT_NORMAL);
++	if (ret < 0)
++		return ret;
++
++	ret = register_trace_wprobe_event(tw);
++	if (!ret)
++		tw = NULL; /* To avoid free */
++
++	return ret;
++}
++
++static int trace_wprobe_create(const char *raw_command)
++{
++	return trace_probe_create(raw_command, __trace_wprobe_create);
++}
++
++static int trace_wprobe_release(struct dyn_event *ev)
++{
++	struct trace_wprobe *tw = to_trace_wprobe(ev);
++	int ret = unregister_trace_wprobe(tw);
++
++	if (!ret)
++		free_trace_wprobe(tw);
++	return ret;
++}
++
++static int trace_wprobe_show(struct seq_file *m, struct dyn_event *ev)
++{
++	struct trace_wprobe *tw = to_trace_wprobe(ev);
++	int i;
++
++	seq_printf(m, "w:%s/%s", trace_probe_group_name(&tw->tp),
++		   trace_probe_name(&tw->tp));
++
++	const char *type_str;
++
++	if (tw->type == HW_BREAKPOINT_R)
++		type_str = "r";
++	else if (tw->type == HW_BREAKPOINT_W)
++		type_str = "w";
++	else
++		type_str = "rw";
++
++	int len;
++
++	if (tw->len == HW_BREAKPOINT_LEN_1)
++		len = 1;
++	else if (tw->len == HW_BREAKPOINT_LEN_2)
++		len = 2;
++	else if (tw->len == HW_BREAKPOINT_LEN_4)
++		len = 4;
++	else
++		len = 8;
++
++	if (tw->symbol) {
++		unsigned long sym_addr = kallsyms_lookup_name(tw->symbol);
++		long offset = sym_addr ? (long)(tw->addr - sym_addr) : 0;
++
++		if (offset)
++			seq_printf(m, " %s@%s%+ld:%d", type_str, tw->symbol, offset, len);
++		else
++			seq_printf(m, " %s@%s:%d", type_str, tw->symbol, len);
++	} else {
++		seq_printf(m, " %s@0x%lx:%d", type_str, tw->addr, len);
++	}
++
++	for (i = 0; i < tw->tp.nr_args; i++)
++		seq_printf(m, " %s=%s", tw->tp.args[i].name, tw->tp.args[i].comm);
++	seq_putc(m, '\n');
++
++	return 0;
++}
++
++static __init int init_wprobe_trace(void)
++{
++	return dyn_event_register(&trace_wprobe_ops);
++}
++fs_initcall(init_wprobe_trace);
++
+
