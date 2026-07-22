@@ -1,31 +1,31 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2257345EB5;
-	Wed, 22 Jul 2026 17:24:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B123A345EC6;
+	Wed, 22 Jul 2026 17:24:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784741071; cv=none; b=QjxtujSrG5jlxjwzjDVUsn89cTL21FEi5Xf60T5RTx5okuqZclnq+M6o2eyjSLjl8aQCeAdGqaAsBAspV4rdP0nFVQyAkTPe5RzzsAaKPCMrNKGpGfK6vA3BC3gvKa35gTAd80/9pVQGa+CO8Qu26F4fzBInrPLPW9FfMza8Zz4=
+	t=1784741071; cv=none; b=B1WVPGXGzlBlhV0MxLc0J0JH2XlM0E4J0waxBW2Z/PHI2w4amUTWI6LKJvlWrbk/c6lN9RPlrFcsuMH8TLXqrFBiE68xz9JIplt9JxP93PHARHRXcviwCMTmnDI+ws0h5WUWYOr2Cb+kn6KaXaRyrbIYSi8CXrHTts2BvUMRR8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1784741071; c=relaxed/simple;
-	bh=Kn8pH+9+puB434Y7fFq6KsqVuN6cTxleHuJprPNP4uE=;
+	bh=nNGk27kIAJtnHvBM8Fw1MAPELdpkezDlDBUbqc5x9zQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TR8WqzlOYf/KisdYlIaEcFMTUUMpdOoH444nx+vailSUPZmOUxtc3nYrgNQsIdeavRoZVGqdbr03Fw+KahKbzut7dMds8NArbo8FEYAohQ3mMeLGQHqF8ld7mdLOUlOr3sk0O6F3oklEr9xYbTKhETxeNg5JCYppsbbTHi3uudI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=dFyLqZdM; arc=none smtp.client-ip=217.140.110.172
+	 MIME-Version; b=c15HWGeku8ivkV9Cp5Zz8jZdTXkcKQz/Jk73ZycIhOF3xUwzlWCJf189atxQ526ZPJbQ6Aprvzy1dcxM41WCAVsWjDY9sOQZgpX61ckB67az/pocPXNbJDOpKC17m/Iv90vn5E+A2CvY3D7rkqREa+Cw84TDvsMXcw3WTNy+gjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=q/TD1fPS; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="dFyLqZdM"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="q/TD1fPS"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF2111691;
-	Wed, 22 Jul 2026 10:24:22 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E47E61692;
+	Wed, 22 Jul 2026 10:24:24 -0700 (PDT)
 Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.2.212.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7AAD83F66F;
-	Wed, 22 Jul 2026 10:24:25 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6D9263F66F;
+	Wed, 22 Jul 2026 10:24:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1784741067; bh=Kn8pH+9+puB434Y7fFq6KsqVuN6cTxleHuJprPNP4uE=;
+	t=1784741069; bh=nNGk27kIAJtnHvBM8Fw1MAPELdpkezDlDBUbqc5x9zQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dFyLqZdMDVz9RTUlNC0G0CDfEopVUZLJtThAgFD1HpW0ELuZgxRcDit51HQ+eT6O8
-	 wwLg58HAA1G6NWJmYs6tsTf6+rf3aIS7FZRvPoEn02RUIA/q2ZUM87iw7wPeTaQjuI
-	 Z9oaBH3dJk8iwqWF4FYJr21ZsywXZVUj3XvHsIDY=
+	b=q/TD1fPS8vmH7tlcPu/5SzzX55V04ocZ5LnNC54yfODivGs1jr6ZVBWXEZISeeD/l
+	 TESSGTyVrAR2+4cfGgFzNKWsD+RtPlZ8/S4T2COFY5uTTy0XcV0Chf3UmMdXMBsHwp
+	 HCPfkprAUotagGA+dZSyfy5SJV/S8xImnErGRHMs=
 From: Robin Murphy <robin.murphy@arm.com>
 To: will@kernel.org,
 	mark.rutland@arm.com,
@@ -41,9 +41,9 @@ Cc: alexander.shishkin@linux.intel.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] perf: Generic hotplug/cpumask for system PMUs
-Date: Wed, 22 Jul 2026 18:24:17 +0100
-Message-ID: <b8aae1114794a348ecfb4e9cf7a792b3ac300d56.1784653319.git.robin.murphy@arm.com>
+Subject: [PATCH 2/2] perf/arm-cmn: Switch to generic cpumask
+Date: Wed, 22 Jul 2026 18:24:18 +0100
+Message-ID: <fff3eca9886d2626a8be95a22629d8650fd45177.1784653319.git.robin.murphy@arm.com>
 X-Mailer: git-send-email 2.54.0.dirty
 In-Reply-To: <cover.1784653319.git.robin.murphy@arm.com>
 References: <cover.1784653319.git.robin.murphy@arm.com>
@@ -55,265 +55,229 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Using the distinction of "uncore" PMUs being x86-style sliced across
-standard ACPI topological scopes, and "system" PMUs being arbitrary
-independent instances, while the former's PERF_PMU_SCOPE_SYS_WIDE has
-some overlap with the latter, it still involves some assumptions which
-don't quite carry over. System PMUs may be associated with irregular
-subsets of CPUs, and they usually have overflow interrupts, which
-require maintaining specific CPU affinity to avoid races against
-reading or scheduling out events.
-
-Fortunately, with the generic uncore machinery in place, it doesn't
-take much to extend with a new PMU-defined scope to do the job for
-system PMUs - all we really need is a way for the core code to retrieve
-a per-PMU cpumask, which can simply be a pointer rather than needing a
-function method, plus a couple of methods to cover the driver-specific
-work currently done by all the many, many open-coded hotplug states.
-
-Not only does this save whole swathes of boilerplate in drivers, it also
-finally eliminates the fiddly race condition where depending on the
-order in which cpuhp_setup_state/add_instance() is called relative to
-perf_pmu_register(), one would theoretically risk either missing a
-hotplug event, or attempting to migrate an uninitialised PMU.
+With perf core now providing appropriately-sequenced hotplug callbacks
+via the new PMU scope, all the state management boilerplate can go,
+while the cpumask also takes care of enforcing event affinity.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
- include/linux/perf_event.h | 19 ++++++++++
- kernel/events/core.c       | 76 +++++++++++++++++++++++++++++++++-----
- 2 files changed, 85 insertions(+), 10 deletions(-)
+ drivers/perf/arm-cmn.c | 96 ++++++++++--------------------------------
+ 1 file changed, 23 insertions(+), 73 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 48d851fbd8ea..ff29c45eb082 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -317,6 +317,8 @@ enum perf_pmu_scope {
- 	PERF_PMU_SCOPE_CLUSTER,
- 	PERF_PMU_SCOPE_PKG,
- 	PERF_PMU_SCOPE_SYS_WIDE,
-+	/* Dynamically determined by PMU driver via pmu->cpumask */
-+	PERF_PMU_SCOPE_CPUMASK,
- 	PERF_PMU_MAX_SCOPE,
- };
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index 6e5cc4086a9e..10243ac6217d 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -358,17 +358,12 @@ struct arm_cmn {
+ 	struct arm_cmn_dtc *dtc;
+ 	unsigned int num_dtcs;
  
-@@ -350,6 +352,7 @@ struct pmu {
- 	 * PMU scope
- 	 */
- 	unsigned int			scope;
-+	const struct cpumask		*cpumask;
- 
- 	struct perf_cpu_pmu_context * __percpu *cpu_pmu_context;
- 	atomic_t			exclusive_cnt; /* < 0: cpu; > 0: tsk */
-@@ -589,6 +592,22 @@ struct pmu {
- 	 * Check period value for PERF_EVENT_IOC_PERIOD ioctl.
- 	 */
- 	int (*check_period)		(struct perf_event *event, u64 value); /* optional */
-+
-+	/*
-+	 * For PMUs to manage any private CPU-affine state, e.g. IRQs.
-+	 *
-+	 * Called from CPU hotplug. PMUs with PERF_PMU_SCOPE_CPUMASK may
-+	 * return true if pmu->cpumask was updated and PMU context should be
-+	 * be migrated to a new CPU; otherwise should return false.
-+	 *
-+	 * ->exit_cpu() runs from CPUHP_AP_PERF_OFFLINE context, unless @cpu
-+	 * is already absent from pmu->cpumask
-+	 * ->init_cpu() runs from CPUHP_AP_PERF_ONLINE context, unless @cpu is
-+	 * already present in pmu->cpumask, plus once for each online CPU upon
-+	 * initial registration
-+	 */
-+	bool (*exit_cpu)		(struct pmu *pmu, int cpu); /* optional */
-+	bool (*init_cpu)		(struct pmu *pmu, int cpu); /* optional */
- };
- 
- enum perf_addr_filter_action_t {
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 954c36e28101..506bdd3c572c 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -12651,6 +12651,13 @@ perf_event_mux_interval_ms_store(struct device *dev,
- }
- static DEVICE_ATTR_RW(perf_event_mux_interval_ms);
- 
-+static void perf_scope_init_cpu(void *info)
-+{
-+	struct pmu *pmu = info;
-+
-+	pmu->init_cpu(pmu, smp_processor_id());
-+}
-+
- static inline const struct cpumask *perf_scope_cpu_topology_cpumask(unsigned int scope, int cpu)
- {
- 	switch (scope) {
-@@ -12664,9 +12671,11 @@ static inline const struct cpumask *perf_scope_cpu_topology_cpumask(unsigned int
- 		return topology_core_cpumask(cpu);
- 	case PERF_PMU_SCOPE_SYS_WIDE:
- 		return cpu_online_mask;
-+	case PERF_PMU_SCOPE_CPUMASK:
-+		return cpumask_of(cpu);
-+	default:
-+		return NULL;
- 	}
+-	int cpu;
+-	struct hlist_node cpuhp_node;
 -
--	return NULL;
- }
+ 	struct pmu pmu;
+ 	struct dentry *debug;
+ };
  
- static inline struct cpumask *perf_scope_cpumask(unsigned int scope)
-@@ -12682,16 +12691,26 @@ static inline struct cpumask *perf_scope_cpumask(unsigned int scope)
- 		return perf_online_pkg_mask;
- 	case PERF_PMU_SCOPE_SYS_WIDE:
- 		return perf_online_sys_mask;
-+	default:
-+		return NULL;
- 	}
-+}
+ #define to_cmn(p)	container_of(p, struct arm_cmn, pmu)
  
--	return NULL;
-+static inline const struct cpumask *perf_pmu_cpumask(const struct pmu *pmu)
-+{
-+	switch (pmu->scope) {
-+	case PERF_PMU_SCOPE_CPUMASK:
-+		return pmu->cpumask;
-+	default:
-+		return perf_scope_cpumask(pmu->scope);
-+	}
- }
+-static int arm_cmn_hp_state;
+-
+ struct arm_cmn_nodeid {
+ 	u8 port;
+ 	u8 dev;
+@@ -1322,17 +1317,6 @@ static const struct attribute_group arm_cmn_format_attrs_group = {
+ 	.attrs = arm_cmn_format_attrs,
+ };
  
- static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
- 			    char *buf)
+-static ssize_t arm_cmn_cpumask_show(struct device *dev,
+-				    struct device_attribute *attr, char *buf)
+-{
+-	struct arm_cmn *cmn = to_cmn(dev_get_drvdata(dev));
+-
+-	return cpumap_print_to_pagebuf(true, buf, cpumask_of(cmn->cpu));
+-}
+-
+-static struct device_attribute arm_cmn_cpumask_attr =
+-		__ATTR(cpumask, 0444, arm_cmn_cpumask_show, NULL);
+-
+ static ssize_t arm_cmn_identifier_show(struct device *dev,
+ 				       struct device_attribute *attr, char *buf)
  {
- 	struct pmu *pmu = dev_get_drvdata(dev);
--	struct cpumask *mask = perf_scope_cpumask(pmu->scope);
-+	const struct cpumask *mask = perf_pmu_cpumask(pmu);
+@@ -1345,7 +1329,6 @@ static struct device_attribute arm_cmn_identifier_attr =
+ 		__ATTR(identifier, 0444, arm_cmn_identifier_show, NULL);
  
- 	if (mask)
- 		return cpumap_print_to_pagebuf(true, buf, mask);
-@@ -12849,6 +12868,12 @@ int perf_pmu_register(struct pmu *_pmu, const char *name, int type)
- 		      "Can not register a pmu with an invalid scope.\n"))
+ static struct attribute *arm_cmn_other_attrs[] = {
+-	&arm_cmn_cpumask_attr.attr,
+ 	&arm_cmn_identifier_attr.attr,
+ 	NULL,
+ };
+@@ -1779,10 +1762,6 @@ static int arm_cmn_event_init(struct perf_event *event)
+ 	if (is_sampling_event(event) || event->attach_state & PERF_ATTACH_TASK)
  		return -EINVAL;
  
-+	if (pmu->scope == PERF_PMU_SCOPE_CPUMASK && !pmu->cpumask) {
-+		if (WARN_ONCE(!pmu->init_cpu, "PMU must provide cpumask or init callback\n"))
-+			return -EINVAL;
-+		pmu->cpumask = cpu_none_mask;
-+	}
-+
- 	pmu->name = name;
- 
- 	if (type >= 0)
-@@ -12918,6 +12943,16 @@ int perf_pmu_register(struct pmu *_pmu, const char *name, int type)
- 	INIT_LIST_HEAD(&pmu->events);
- 	spin_lock_init(&pmu->events_lock);
- 
-+	/*
-+	 * Finally, if appropriate give the PMU a chance to initialise any
-+	 * of its own CPU-affine state. Note that we're serialised against
-+	 * perf_event_{init,exit}_cpu() themselves by virtue of pmus_lock.
-+	 */
-+	if (pmu->init_cpu) {
-+		for_each_online_cpu(cpu)
-+			smp_call_function_single(cpu, perf_scope_init_cpu, pmu, 1);
-+	}
-+
- 	/*
- 	 * Now that the PMU is complete, make it visible to perf_try_init_event().
- 	 */
-@@ -13124,11 +13159,11 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
- 
- 	if (pmu->scope != PERF_PMU_SCOPE_NONE && event->cpu >= 0) {
- 		const struct cpumask *cpumask;
--		struct cpumask *pmu_cpumask;
-+		const struct cpumask *pmu_cpumask;
- 		int cpu;
- 
- 		cpumask = perf_scope_cpu_topology_cpumask(pmu->scope, event->cpu);
--		pmu_cpumask = perf_scope_cpumask(pmu->scope);
-+		pmu_cpumask = perf_pmu_cpumask(pmu);
- 
- 		ret = -ENODEV;
- 		if (!pmu_cpumask || !cpumask)
-@@ -13138,7 +13173,8 @@ static int perf_try_init_event(struct pmu *pmu, struct perf_event *event)
- 		if (cpu >= nr_cpu_ids)
- 			goto err_destroy;
- 
--		event->event_caps |= PERF_EV_CAP_READ_SCOPE;
-+		if (pmu->scope <= PERF_PMU_SCOPE_SYS_WIDE)
-+			event->event_caps |= PERF_EV_CAP_READ_SCOPE;
- 	}
- 
+-	event->cpu = cmn->cpu;
+-	if (event->cpu < 0)
+-		return -EINVAL;
+-
+ 	type = CMN_EVENT_TYPE(event);
+ 	/* DTC events (i.e. cycles) already have everything they need */
+ 	if (type == CMN_TYPE_DTC)
+@@ -2008,48 +1987,38 @@ static int arm_cmn_commit_txn(struct pmu *pmu)
  	return 0;
-@@ -15169,7 +15205,7 @@ static void perf_event_clear_cpumask(unsigned int cpu)
- 
- 	cpumask_clear_cpu(cpu, perf_online_mask);
- 
--	for (scope = PERF_PMU_SCOPE_NONE + 1; scope < PERF_PMU_MAX_SCOPE; scope++) {
-+	for (scope = PERF_PMU_SCOPE_NONE + 1; scope <= PERF_PMU_SCOPE_SYS_WIDE; scope++) {
- 		const struct cpumask *cpumask = perf_scope_cpu_topology_cpumask(scope, cpu);
- 		struct cpumask *pmu_cpumask = perf_scope_cpumask(scope);
- 
-@@ -15186,10 +15222,19 @@ static void perf_event_clear_cpumask(unsigned int cpu)
- 
- 	/* migrate */
- 	list_for_each_entry(pmu, &pmus, entry) {
-+		bool cpumask_migrate = false;
-+
-+		if (pmu->init_cpu && (!pmu->cpumask || cpumask_test_cpu(cpu, pmu->cpumask)))
-+			cpumask_migrate = pmu->exit_cpu(pmu, cpu);
-+
- 		if (pmu->scope == PERF_PMU_SCOPE_NONE ||
- 		    WARN_ON_ONCE(pmu->scope >= PERF_PMU_MAX_SCOPE))
- 			continue;
- 
-+		target[PERF_PMU_SCOPE_CPUMASK] = -1;
-+		if (cpumask_migrate && !WARN_ON_ONCE(!pmu->cpumask))
-+			target[PERF_PMU_SCOPE_CPUMASK] = cpumask_any_but(pmu->cpumask, cpu);
-+
- 		if (target[pmu->scope] >= 0 && target[pmu->scope] < nr_cpu_ids)
- 			perf_pmu_migrate_context(pmu, cpu, target[pmu->scope]);
- 	}
-@@ -15227,6 +15272,7 @@ static void perf_event_setup_cpumask(unsigned int cpu)
- {
- 	struct cpumask *pmu_cpumask;
- 	unsigned int scope;
-+	struct pmu *pmu;
- 
- 	/*
- 	 * Early boot stage, the cpumask hasn't been set yet.
-@@ -15234,7 +15280,7 @@ static void perf_event_setup_cpumask(unsigned int cpu)
- 	 * Always unconditionally set the boot CPU for the perf_online_<domain>_masks.
- 	 */
- 	if (cpumask_empty(perf_online_mask)) {
--		for (scope = PERF_PMU_SCOPE_NONE + 1; scope < PERF_PMU_MAX_SCOPE; scope++) {
-+		for (scope = PERF_PMU_SCOPE_NONE + 1; scope <= PERF_PMU_SCOPE_SYS_WIDE; scope++) {
- 			pmu_cpumask = perf_scope_cpumask(scope);
- 			if (WARN_ON_ONCE(!pmu_cpumask))
- 				continue;
-@@ -15243,7 +15289,7 @@ static void perf_event_setup_cpumask(unsigned int cpu)
- 		goto end;
- 	}
- 
--	for (scope = PERF_PMU_SCOPE_NONE + 1; scope < PERF_PMU_MAX_SCOPE; scope++) {
-+	for (scope = PERF_PMU_SCOPE_NONE + 1; scope <= PERF_PMU_SCOPE_CPUMASK; scope++) {
- 		const struct cpumask *cpumask = perf_scope_cpu_topology_cpumask(scope, cpu);
- 
- 		pmu_cpumask = perf_scope_cpumask(scope);
-@@ -15255,6 +15301,16 @@ static void perf_event_setup_cpumask(unsigned int cpu)
- 		    cpumask_any_and(pmu_cpumask, cpumask) >= nr_cpu_ids)
- 			cpumask_set_cpu(cpu, pmu_cpumask);
- 	}
-+
-+	/* Allow migrating if the new CPU is preferable (e.g. NUMA locality) */
-+	list_for_each_entry(pmu, &pmus, entry) {
-+		bool cpumask_migrate = false;
-+
-+		if (pmu->init_cpu && (!pmu->cpumask || !cpumask_test_cpu(cpu, pmu->cpumask)))
-+			cpumask_migrate = pmu->init_cpu(pmu, cpu);
-+		if (cpumask_migrate && !WARN_ON_ONCE(!pmu->cpumask))
-+			perf_pmu_migrate_context(pmu, cpu, cpumask_any(pmu->cpumask));
-+	}
- end:
- 	cpumask_set_cpu(cpu, perf_online_mask);
  }
+ 
+-static void arm_cmn_migrate(struct arm_cmn *cmn, unsigned int cpu)
++static bool arm_cmn_migrate(struct arm_cmn *cmn, unsigned int cpu)
+ {
+-	unsigned int i;
+-
+-	perf_pmu_migrate_context(&cmn->pmu, cmn->cpu, cpu);
+-	for (i = 0; i < cmn->num_dtcs; i++)
+-		irq_set_affinity(cmn->dtc[i].irq, cpumask_of(cpu));
+-	cmn->cpu = cpu;
++	cmn->pmu.cpumask = cpumask_of(cpu);
++	for (int i = 0; i < cmn->num_dtcs; i++)
++		irq_set_affinity(cmn->dtc[i].irq, cmn->pmu.cpumask);
++	return true;
+ }
+ 
+-static int arm_cmn_pmu_online_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
++static bool arm_cmn_init_cpu(struct pmu *pmu, int cpu)
+ {
+-	struct arm_cmn *cmn;
+-	int node;
++	struct arm_cmn *cmn = to_cmn(pmu);
++	int node = dev_to_node(cmn->dev);
+ 
+-	cmn = hlist_entry_safe(cpuhp_node, struct arm_cmn, cpuhp_node);
+-	node = dev_to_node(cmn->dev);
+-	if (cpu_to_node(cmn->cpu) != node && cpu_to_node(cpu) == node)
+-		arm_cmn_migrate(cmn, cpu);
+-	return 0;
++	if (!cpumask_intersects(pmu->cpumask, cpumask_of_node(node)) &&
++	    (cpu_to_node(cpu) == node || cpumask_empty(pmu->cpumask)))
++		return arm_cmn_migrate(cmn, cpu);
++	return false;
+ }
+ 
+-static int arm_cmn_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
++static bool arm_cmn_exit_cpu(struct pmu *pmu, int cpu)
+ {
+-	struct arm_cmn *cmn;
++	struct arm_cmn *cmn = to_cmn(pmu);
++	int node = dev_to_node(cmn->dev);
+ 	unsigned int target;
+-	int node;
+-
+-	cmn = hlist_entry_safe(cpuhp_node, struct arm_cmn, cpuhp_node);
+-	if (cpu != cmn->cpu)
+-		return 0;
+-
+-	node = dev_to_node(cmn->dev);
+ 
+ 	target = cpumask_any_and_but(cpumask_of_node(node), cpu_online_mask, cpu);
+ 	if (target >= nr_cpu_ids)
+ 		target = cpumask_any_but(cpu_online_mask, cpu);
+ 
+ 	if (target < nr_cpu_ids)
+-		arm_cmn_migrate(cmn, target);
+-
+-	return 0;
++		return arm_cmn_migrate(cmn, target);
++	return false;
+ }
+ 
+ static irqreturn_t arm_cmn_handle_irq(int irq, void *dev_id)
+@@ -2101,15 +2070,12 @@ static int arm_cmn_init_irqs(struct arm_cmn *cmn)
+ 				goto next;
+ 			}
+ 		}
++		/* Affinity will get set during PMU registration */
+ 		err = devm_request_irq(cmn->dev, irq, arm_cmn_handle_irq,
+ 				       IRQF_NOBALANCING | IRQF_NO_THREAD,
+ 				       dev_name(cmn->dev), &cmn->dtc[i]);
+ 		if (err)
+ 			return err;
+-
+-		err = irq_set_affinity(irq, cpumask_of(cmn->cpu));
+-		if (err)
+-			return err;
+ 	next:
+ 		; /* isn't C great? */
+ 	}
+@@ -2565,7 +2531,6 @@ static int arm_cmn_probe(struct platform_device *pdev)
+ 
+ 	cmn->dev = &pdev->dev;
+ 	cmn->part = (unsigned long)device_get_match_data(cmn->dev);
+-	cmn->cpu = cpumask_local_spread(0, dev_to_node(cmn->dev));
+ 	platform_set_drvdata(pdev, cmn);
+ 
+ 	cfg = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -2610,6 +2575,9 @@ static int arm_cmn_probe(struct platform_device *pdev)
+ 		.start_txn = arm_cmn_start_txn,
+ 		.commit_txn = arm_cmn_commit_txn,
+ 		.cancel_txn = arm_cmn_end_txn,
++		.scope = PERF_PMU_SCOPE_CPUMASK,
++		.init_cpu = arm_cmn_init_cpu,
++		.exit_cpu = arm_cmn_exit_cpu,
+ 	};
+ 
+ 	this_id = atomic_fetch_inc(&id);
+@@ -2617,14 +2585,8 @@ static int arm_cmn_probe(struct platform_device *pdev)
+ 	if (!name)
+ 		return -ENOMEM;
+ 
+-	err = cpuhp_state_add_instance(arm_cmn_hp_state, &cmn->cpuhp_node);
+-	if (err)
+-		return err;
+-
+ 	err = perf_pmu_register(&cmn->pmu, name, -1);
+-	if (err)
+-		cpuhp_state_remove_instance_nocalls(arm_cmn_hp_state, &cmn->cpuhp_node);
+-	else
++	if (!err)
+ 		arm_cmn_debugfs_init(cmn, this_id);
+ 
+ 	return err;
+@@ -2637,7 +2599,6 @@ static void arm_cmn_remove(struct platform_device *pdev)
+ 	writel_relaxed(0, cmn->dtc[0].base + CMN_DT_DTC_CTL);
+ 
+ 	perf_pmu_unregister(&cmn->pmu);
+-	cpuhp_state_remove_instance_nocalls(arm_cmn_hp_state, &cmn->cpuhp_node);
+ 	debugfs_remove(cmn->debug);
+ }
+ 
+@@ -2679,28 +2640,17 @@ static int __init arm_cmn_init(void)
+ {
+ 	int ret;
+ 
+-	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
+-				      "perf/arm/cmn:online",
+-				      arm_cmn_pmu_online_cpu,
+-				      arm_cmn_pmu_offline_cpu);
+-	if (ret < 0)
+-		return ret;
+-
+-	arm_cmn_hp_state = ret;
+ 	arm_cmn_debugfs = debugfs_create_dir("arm-cmn", NULL);
+ 
+ 	ret = platform_driver_register(&arm_cmn_driver);
+-	if (ret) {
+-		cpuhp_remove_multi_state(arm_cmn_hp_state);
++	if (ret)
+ 		debugfs_remove(arm_cmn_debugfs);
+-	}
+ 	return ret;
+ }
+ 
+ static void __exit arm_cmn_exit(void)
+ {
+ 	platform_driver_unregister(&arm_cmn_driver);
+-	cpuhp_remove_multi_state(arm_cmn_hp_state);
+ 	debugfs_remove(arm_cmn_debugfs);
+ }
+ 
 -- 
 2.54.0.dirty
 
