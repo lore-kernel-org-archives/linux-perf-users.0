@@ -1,25 +1,25 @@
 Received: from LO2P265CU024.outbound.protection.outlook.com (mail-uksouthazon11021091.outbound.protection.outlook.com [52.101.95.91])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B45432300;
-	Wed, 22 Jul 2026 15:51:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FDBC439F97;
+	Wed, 22 Jul 2026 15:51:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.95.91
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784735464; cv=fail; b=TXUgHWXwC3fjp7n2wU/OSsW0bADV9C5p8Y+iUBbVbMduM7kH6UZ4P4N21WyKLVvql14gpluFStiC2QtMkVo+Y7Ne6RUZVETFtNdLVI0l4/QrK49iPCfJA6/aIs01aKi8y4rp2EcXX3AY6imt9cUqHOgahL5msJTf01FqCDUQOXk=
+	t=1784735466; cv=fail; b=cOrjiKT+IAiadMQw9wh+FM6rlyLysjCY/2YvxuJ2ePPlyaCxoAEFR7G4pME0siYqzl6DVbOzSDKX1dEwKm3VbdSaJf202dw4l1TzLeuPdvvYGejU+I4h0Zs2aFmasr8+MlRpDwwYfJrVXsuzRMCikO+IKedtISidRMWSxDYWcPI=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784735464; c=relaxed/simple;
-	bh=FB20Epr+e0WpqAtd5VRySspv11KQCHSm1luebsLFEH8=;
+	s=arc-20240116; t=1784735466; c=relaxed/simple;
+	bh=x06OEboMOSkk/zJURmvgeow5ncAKVuht7qg4qhdVaG0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DLj0DXD0aLI8Ihfwf57ibeqqiAdm7VdRnueyDPHp0KLonM8AuwBMn8nbtC683QRZIK2aKNKOr/HGWwd85BcaYyVqq10wn4wy+eMlWH+FQ26H93zDjP+k5d2OJxDF/rGMMWoqhxY9xEx6nAzVT5ytmzEfWHDJCvUVPuMtKnGRqjo=
+	 Content-Type:MIME-Version; b=OgF5RehG5soBumOp3vS/fgiTBBC/VnkFK2oG6Pl+sb41VimxQjspghdxqDmqu9cmYJG78xFngLbTaQrZgt4BmbnQGvhZTCIoZf1IH94DjgzGqQhpxp1xnHkSA37YFA9ktdEuMijjKO79+DHM+ElTMwyyMhNTgqFLwQt12VU++yc=
 ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.95.91
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gnII71Yl/sZHBoc+YQshZD+nHnHEVb8bJdej3CuSJvH/Q3Zbtot6hErkHoFIdjG8wxD5HY0JlIWNKAyu/gW2egE+6Ts9LHvPbXqz18eV9HNN4mvDCGdgEs4kLVYaVqy1Wsa74xZqlQSBowszy93MDfV5Q20VHJwgZ1UIS6pRxhROM/cnOCKAycRm+yrYNu++Rt0BGs0pfBjK7yVeFJmHMjXSwt6+kDYYkMBlnCauEgcA/gIyX0ZKZplpbLOaDIrHMxXi3IRmYDKKRX8nreOPZwoOlg9K8grB7RAWn9uiuT0rWXMetl2dYhFueuWCNsBQenWJyeMDAMgmwupvdqYOUA==
+ b=tWTFhS5H7haoLlSkvdmW/fOWII1et0YpIamze7IM4omIz+QToZNTLRpU5ed/6v3SD+62rU3oYNJeyg1ZdhwJ08xfEgRK7ONmyOy9v3vWQ8QngXe3n3lMLgUtavrFZZb3iZ/0T4KNwpjrrXrB4MrdOdZezHpXctqWqvM8Jm4XNuC1q4UQwpb8bt7JRj/wdSKXGASI+pWrmwEcfnLY8kgrLc1u6U/mNctcytFGJLfRl9yUDQ3oza++MTLj6TlhY7TrOuHvCAiFvl3dnHHDkWB2gEMHlF77WP1ISiGoGB3mZ2USm3VANxxmvNAY45iQv00v826KJTDY1x5QZn/UhekK8g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=NBFQnGTRkEv2g0Dd2oPTFpD9KVWMTnUYqI5OBdbqz64=;
- b=bmiG6iSqDVX8hID9O3feEcpjH9FzWDKSKtZcggAA/p8l10ODRTROTzZsZfjaam+r/91ErUrPGEW/NF4xpJJRm9F8KCcpkmfO2oKd7nVvGfLYSjg7Ep2nICgLHTiMzWgpZz2O4+XFLsTLx3Et7SrtmkfJrQz0r0obMmjMXYgxQig50Dk6vqXt8s5QmGQOuv6sfD5bJ2fNSrAecnfRpjMTvu4rb/1kN4DbvlmhQuGl5tZGQB+kMb6pSVnsBcCqnFsXZxDrtkOzHYAH2EPNVAvw91tlbdqgPCi89CUrVqxgGTt+4NOGA2R0+4UTwBhuejarwOWXrTw+Pj3gbp6N5g73kA==
+ bh=A1h2eTqjl44ASLk8mjXcTGyrgbCn/F+xy84doniGtMM=;
+ b=L7SJb7NUdW+0ZPIuVuAvvlsu/Pqll2s1S7bkTtv22LPZDFY1Ht0Y2ni7Qnnn2w2ZUVXDlU8P3pE+qttCC9nEtpw0ux47gpXfSFOjAxAz85uy5B6Hs3u3/+RogL32Mmntw7VKq3R+KHsZM1fpf9WPW7KIiIpaE59gcOEWk/mX0jsOU94Dqxu09M9jMSFKmgDd81dCsqXuXmurRQjVsqbY53RkB69JuANdMQH42EIP5dLrj6U+Xt6H6a1c4/gYv0KRob/ecFP1WTbZGMtCBRI0f41d5ja53EXCyBoEnnxhol6k4MG28lS/LXPnKgpL5ibIM5egrtQJehUUy08eFEQu2A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
@@ -29,11 +29,11 @@ Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
  by LO8P123MB7473.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:3a7::5) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.10; Wed, 22 Jul
- 2026 15:50:58 +0000
+ 2026 15:51:01 +0000
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0245.009; Wed, 22 Jul 2026
- 15:50:58 +0000
+ 15:51:01 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -53,16 +53,16 @@ Cc: mark.rutland@arm.com,
 	steve@abita.co,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/2] perf trace: Correct default cpumask formatting to hexadecimal
-Date: Wed, 22 Jul 2026 11:50:48 -0400
-Message-ID: <20260722155050.503516-2-atomlin@atomlin.com>
+Subject: [PATCH v4 2/2] perf trace: Add --bitmask-list command-line option
+Date: Wed, 22 Jul 2026 11:50:49 -0400
+Message-ID: <20260722155050.503516-3-atomlin@atomlin.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260722155050.503516-1-atomlin@atomlin.com>
 References: <20260722155050.503516-1-atomlin@atomlin.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BL1P223CA0004.NAMP223.PROD.OUTLOOK.COM
- (2603:10b6:208:2c4::9) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-ClientProxiedBy: BLAP220CA0011.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:208:32c::16) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -72,298 +72,132 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO8P123MB7473:EE_
-X-MS-Office365-Filtering-Correlation-Id: e4be3201-34a0-4f4a-69c5-08dee809059d
+X-MS-Office365-Filtering-Correlation-Id: 89e2cf47-724c-46ac-a907-08dee80907ca
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|376014|23010399003|7416014|1800799024|6133799003|18002099003|22082099003|3023799007|56012099006|10067099003;
+	BCL:0;ARA:13230040|366016|376014|23010399003|7416014|1800799024|6133799003|18002099003|22082099003|56012099006|10067099003;
 X-Microsoft-Antispam-Message-Info:
-	O/wVBdU06OlyCaYAtKu56gDpVnGAdYAClHh3e2+q2sH9vovXkE7c1YozcRjuk83m3bLlxJeNv61SNym2w6FryihmK6Nrmp6qqs1/Id0gy0owIrr+5w28CfsKkJXn/iNkZt+TW9MSJ51jsG9gzGRzK6eSCJeTABmfKVqlwUtEIIAWQoWKxaDom+DmvnVijVvUCeMc4svFRDhQ2nU3LotDGaTvv5PPRkthZGVh/+nK/B3LG2F5r+sQ8pEUaMExtFZ0iug2Zyx4298mK8GN48y1ODkOnJxDPb3mf7C/+pNw0kDqZ5i/e+8+AdJjGCuukgIn72S8zeDSKGUgr9db5gP8qTFjDu6lJMuk/rRtwadMRtIK4JFu9JMHGPVj9ob2D248LNP69TRyTBq1SfM2aH0Hu4RF7PLlBfRIIo395wvizZVE3BefQNoZ70MWQBYvDkTBKrIrXzKSfqUPlyrY5F5XXrGOc3UaLy6hiQwxX3e3URNF6pwFsbvXhd66RYAbFn4TNt7v1oMkHmyW2cjBXZAyKp0XYPSuiZe8tIjhZNfGAxzyugqzmkKpVFyMi8tKDbJS8fSGYCswg8GC7sXfIdr9JOUxYMWhGiadwNMqNT6nZYDfzdft9kUmj9Ngj56GfIMJjN7F0eNQjbDJpLJ2ULG3/WSLm4Ne2zL4d4SVn5sEWMQ=
+	S1wCp2HqXXYlCLRLxpjjS1rRA42DA/DAH41iYIS0o0Vdu6K9qgyjng/5aWP6b/JsoD8maF6gIcbNgl9op+YD9HGPE9QdGMTh1qRJsc9DkxXYrAG3KN/6O2HWzlwuO4nIpYHSO3jJl3Vam6pE3QQJ8Mq2dg6oAJHqwe5T+TO2ZIJRdRgtpXkeOew2iS6+bR+K2HmpqzcYeLwXQYAYL8jrGTaZvqnUCkoHNlyj5Y/gyhZRb+9GMeJR65Pajy7vj7H8fkDek58zb9EVKGy65KGYrYdKH4JItHR50v7fak3cmwyHO3YIFIYT0BX1n6eOpiM1WxKuEYMl4J409DC9s+lc/MdImybgq+Qoq/bNyBY2Dqe7lFUgyTDC07nXlNhiKKkMBs3kNiRdmDjKv3AOi5fAy1lPUQuLh8E2GHxlm31LepYP138mkUbciMXFaVwrdCDdb8cpiqFwJrHY8rAIgn/A6oYMx2I0ZyYyui/Bmid8ycs+wm1NtSI1SNndhh/r6pwnZW47gCd2V7MkdVkyq0zAu2GZ320Cd1dkw36qXXdjGMmpAgnlK4tGO1BLBr1aezhWWTSwndnknm7uJw0HTCJjMCtgNrsvBLpamJ9D7pd69wY6nuOxG3i0yLiPZJ8RCxGIssKdP2lroXFm1WF5j35GQtLLvsKhuvJ80OdWGWbhaPQ=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(23010399003)(7416014)(1800799024)(6133799003)(18002099003)(22082099003)(3023799007)(56012099006)(10067099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(23010399003)(7416014)(1800799024)(6133799003)(18002099003)(22082099003)(56012099006)(10067099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?r2CrxCb6eKtCjgBlhyAowiiZmWEFGTukS6Jvu5Gqs52QkXmcD7lGbUTC8fHA?=
- =?us-ascii?Q?itxI9/UttYU0VXXv9+W784BtcJt5qjvW8A9OwffK1av/MFfQFWiI168O+DCF?=
- =?us-ascii?Q?paTxlTSE+C3aXrN/6+tXyN97f+6p891ClVYfFIDQOO0dzriGsyqm4VllB5UL?=
- =?us-ascii?Q?O7sJSTbtdrtNHqqWIpdf2li5vnvAtA63XjhGL0L2Wfv+j87gS70Lj6HZkkno?=
- =?us-ascii?Q?y8vi+eHdOhWAX5mKplwMb2P5EGItcn2VyaaugfCCmOYQ5Tkbi68qZblxsaHH?=
- =?us-ascii?Q?QIAB/MvuDkvx7pcN+jq5ypk7GgUPP2ytsJXGI1tmKXzhKVkwT4AaNe60lA0g?=
- =?us-ascii?Q?tdhGyv9P2sASUbGCmqVpn2hMpBlsNyz1nLsaLAewdLid2uX0EKYs98r0LA9F?=
- =?us-ascii?Q?JpLG3ZApbXEJSaEn50HaGru2FMgAv8ZBT2U0lNPvvXobR8oLz4vIvx5WU662?=
- =?us-ascii?Q?hPAQClCGGaaujmaa+76FdsBtdxr1qSh4tL2e9KiQOwctMzGs2E3x8vqvay3Q?=
- =?us-ascii?Q?jJi3KG/jxPcC5hg9u8Gi4seYe5G8RCG4PJJqknePXj0fPmc0ClIBAOD7m7oW?=
- =?us-ascii?Q?ZO0sT7qXjWswzjGxRv+W8W7xAykWGoKei1OlJ5NL0WK4z0+jGvE6qNZk94T6?=
- =?us-ascii?Q?SQ2YKZzFOv8DtyjxF562v8jyLXy8Eh3gsYL+BxvoWnkwrPMuqacbkWaRE3qj?=
- =?us-ascii?Q?/+Dtj6Iut77FazSYwphKVYL12nQxZhpnGdPRAueh/q1TKOfJroItWr8K7tP1?=
- =?us-ascii?Q?BlQoTrkEVOHLM/ZWO5TzU5r6hMg0NlDHB8CbpLao8Q27egZ3bMa9F1z5Vja1?=
- =?us-ascii?Q?03cc/Bx4rUw0uJHNNmK8L5q12bvihB1TvlpdUWVYgBuek1wVCqCk0ogHW6o5?=
- =?us-ascii?Q?KYIw7EV709qrQGIPStsH53a2ji+ZPKGkJGxWFCyiBOIslqr+D+JzLgptI6w6?=
- =?us-ascii?Q?2KCaWLOpKaT/DPv/QoCiFmOJOCz5kb1Z8H391jX8KuTDzKlsic05F0blnyGn?=
- =?us-ascii?Q?dcVm55Q0L6indqC7O9Rafqjv1ob5MorEr2pcw3Gf3IAVMUJuMv/q2WYo6ETJ?=
- =?us-ascii?Q?a6jcGxj6i8AbavG2sxRpYjBhFDDnejg+L7kZ4s02k0uiC8Ahl7SwGqKTHBXt?=
- =?us-ascii?Q?S9b8noMgncjIOHHts4dcmwQ61u2JSYGFX21ASJgtOnmqsciixKDKgqEENkX/?=
- =?us-ascii?Q?DtWbrAQOjF+QwvoQNiVq7r5Or+Z8rWhZGjJDEd8RqKJ2eAqaHHnX3TCY5phG?=
- =?us-ascii?Q?PQKoN4VQ3oX8Rq6qPaU9AqlakwpgNcMYUpECW8d2JfVwZVf6bMGDlIsE/OSQ?=
- =?us-ascii?Q?O5xCCQ1Q+AD5x0DLuFI5H0nq3LWc8DRy+YJqcxFATREuiA5elBwcDyxfotFp?=
- =?us-ascii?Q?dr8fMmEz6a+R0k2M1+G//TFHLDoXydW1P4vjeDhaCgAdgR4TF5LWhQSDUw6d?=
- =?us-ascii?Q?3v4X4XcDf1QYh7HrlF3zffMHv2hINfWGbvo7iE8IQBWlsSbA4FIevC5MEQDI?=
- =?us-ascii?Q?gPlJkK3+uK98VtvZToijwP+AFVhtaO6RRFCQ3VDqXGs3g6zCgXK1WSk/vZGI?=
- =?us-ascii?Q?lpi2X8MZ3LPuCxHPVmJxf+GDulzYyJ8yzHuNK06cX5MzGoQnUH2bxZGUPo3T?=
- =?us-ascii?Q?Ht1qBdlvu7Z09Dk/WmxMxNFJYWZTHS3kjGcBbTdSPUZuzbhfAsYNmEz9vJNt?=
- =?us-ascii?Q?H1gVL087LgF55Uqnts56m38/qGjxne/IUmgyAccDcW2zTcjB0ApF59XlO/U9?=
- =?us-ascii?Q?X21pJ4GzyA=3D=3D?=
+	=?utf-8?B?UVBSSDJ3NW5pTmV1U3Foc2RPU3IzemtYRXpCcDhwMXdHWWEvVVF0cVpsSUFq?=
+ =?utf-8?B?dHA5MC9JenVpYmJ0OHpEQ3IwM3pEaDF1TTUwRmNuNUI5WVh5QXZoUGR6SFBH?=
+ =?utf-8?B?a2U2YXBWb1VIZ3kvaGVRMEJxdnhycW1PQXZiYTBXVWU3aHRacEpGbG5BOHZP?=
+ =?utf-8?B?NmlnQjVlbjk2SENoTVhob2tMdmZzWjRnRlJYYTdXdThBc3NKd09scnJSQkw0?=
+ =?utf-8?B?Q3J3bVdDTkpqcWlMbndBTGV0NEhNYjZhRTcrUUdheFRoWTd1alo3SC95Rldl?=
+ =?utf-8?B?VVYvdWYyMENDZ1lWOTRQTmcxVTV0czB4YkdDWDU1YUEyand2dFZCNjg5eGV5?=
+ =?utf-8?B?NUVHenBTUU1tUCtHYUNRb2J3cmUyOVpsaHhjbmhIZk1FaGVvTmNQWkgzTW84?=
+ =?utf-8?B?bEJITTd6bjFMNWlZK0J5bFFiVHJ2M1MvcndCNWloUnZkVlRMSFR4OGUzRnBS?=
+ =?utf-8?B?eWZiYWlIV09WQk82OHJ1ZlFoZGxkbDBWOC8zWDlmQUd4SVJZNVAzUlFaRXo0?=
+ =?utf-8?B?VDc0MmJKMDNDRENGMVoxeFVkNkNCUTV3NEhCK1pySlFMVDdOaVN3YStrd1hj?=
+ =?utf-8?B?Z1B6OXA0N3hzb1AxYkV2RnVZUTJBMnN1Vjl5enpkM3ZlMTBSTXErb2NRREVa?=
+ =?utf-8?B?cWdSYldlWlluQjNIRUNHbmlrbDdBOVJNQXViYUIyZElqZHQxZXJDZHF2V0FU?=
+ =?utf-8?B?WEpkYkNPWVJJZ1VZdG43ckJhTmNhR0xONWtza1VJc3FsZ2RTaFBIbUgvSnVB?=
+ =?utf-8?B?T2VQUC9FZkxzNlJMbmExMU10ejlpQ0MxSElJeVpNeE9yWmR4ZUludHNSTWNC?=
+ =?utf-8?B?VEttT3kxdEplSzNlODJ0Y1hUdVVLQ2hMc3ZYN3VIRkJKaVczUXBoZ3l0UWl1?=
+ =?utf-8?B?V1dlV2RIT21LUzIwdFpEb3FveUxWN1k0dEhXczMvbWdKU1VETUZ5ZjNub0hI?=
+ =?utf-8?B?ZWEvZjEremJ6WElob1JRQ25qZVEyVHRDZ1VhNmpoSkE0OFJmdW9BVG1zRjB2?=
+ =?utf-8?B?QklHbkxxbVAzYWZCaGFyUEs1bURvYjg1dlJwbXF4YkkwMHFnVGt6NTczdmxi?=
+ =?utf-8?B?MkZzVHVHMVBsNlJ0RHFRc2RRaGNkTU5ZbUNFT0dlZEppd1BHOXdnTmtQLzBa?=
+ =?utf-8?B?WkJpMUQ1NHk4WnBqcGIrRHRveVhrL0JMK09oN0p0Qk9Rd2p3UFZEc3dPNDIz?=
+ =?utf-8?B?bmNta2ZiNDd4UlFvczJmd2puZ3Y5WGozdUpmY3NvaFowQm1EQ0wzMVk2YXlo?=
+ =?utf-8?B?c3ozaWl2YWtFWVZFZVdLNGlKQUVIZnZGWFBjTUw3MkN1bm1LUGxOOCtKZTli?=
+ =?utf-8?B?cmwxYjF2a2pFbE9ncStYdi9CQmxRYUg1UWFzWmZzb1BKK0RLQUxHSGxWOEc4?=
+ =?utf-8?B?TmRuc1BPOTlpcGxrQU01T1ZYampEdWxYWXgxMnZPVG14WXNYWEdIVDlMUUY1?=
+ =?utf-8?B?L3BkcDNOdVZ2YjFOd3RIa1dDc2lPUlBUVExhVVF3R0pxekhjYXo1bmhzdXhu?=
+ =?utf-8?B?T2NJWnhHUkpWWE1oNFpYWXJsS0FaanVucVozLzhhRmxmVXBMTHhjeUxUbVRs?=
+ =?utf-8?B?eHN1M2U3N1ZjVUJNYWsydjVEMjRhV0Q0Z2I4MWE0WlBZMHJSTjFyTERxL3da?=
+ =?utf-8?B?YlJ0aHl1cFFvZmpaNGVEV1V3UXFRaUxHTmVrVGVvSElHZ3VPcmFVVzhuSEw2?=
+ =?utf-8?B?djBHbWhNRkt2UGdXWkI0Z1orOHlsWDdESVhpbmhGY0dXNVMxU2ZvMkNPd0J2?=
+ =?utf-8?B?dG52dlZOdXVJMm1tQ1o1TVhaVmE1VDV1MG5McGk2akxKQlFMZ2NEaWoxRGcz?=
+ =?utf-8?B?eFpubjJYZ05EbXdHcXNNcmZ1WXczN2Zwczc0UlptckZKeWV1SEdPWHZWUmkv?=
+ =?utf-8?B?bVZncmN4RXlUQ0pOVW1ZcmRYNTVJb29ycTRsK283a1RCMVpRczB4dWl6eU1L?=
+ =?utf-8?B?cEp4eTRwUWR3ZjJPK01kd1ZYMVlYKzcvUUMyRStkNTNhMnRvYkZjSVFsVzQv?=
+ =?utf-8?B?YjFpYWdhbHFrNWxyOS9SVGpqdDA0K3pFcGU2bWpNU3d5SW0zbjFnSWx0djl4?=
+ =?utf-8?B?T0I4dkF4YURQSnZoZWJJVjBkdHlGQU96T2NUV0h4NFllZzdzOUt0SVJxK2RS?=
+ =?utf-8?B?RVgzbVJaRW1sMXdEdDZUeVlReC9KNy9VZlFxcFF1VkZpTkozYkpXeUZ3TlJj?=
+ =?utf-8?B?clhVSE5UMlVWVG5UMzNFK3lWRmNOMDJOQlMzMmtBcHovNVNhc3RkUlJmZERv?=
+ =?utf-8?B?aXJpcGUyejNBdW5UYW5jYVdiY0ZQU01KV1Znam1LSXFUY0UwMlhsYWVDL0tZ?=
+ =?utf-8?B?cGxIeUxUUE5iZkNUZTBVYk9wNXJvNGo3YlZiM01PcnlrK1RiN25mZz09?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e4be3201-34a0-4f4a-69c5-08dee809059d
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89e2cf47-724c-46ac-a907-08dee80907ca
 X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2026 15:50:58.2238
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jul 2026 15:51:01.7957
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 407yu8juW9sgHJJ3w+lKSDK9l6NysqH8SaXqQIVxYAlG+YTDvkKClHQTSviNAY0IuWes4a/I/v7CjyNu9ft4VQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: lYSjld2kg6MVb/SIK5o2HZNYI6grVPoGDaytl6NBB8HNUKZRUK67i+3y3+mywCDyY4EJHckY6BFjbhYj8DtEhA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO8P123MB7473
 
-Currently, dynamic non-array fields such as 'cpumask_t' are mishandled in
-'perf trace', causing the raw length and offset descriptors to be interpreted
-and displayed as a literal integer (e.g., "cpumask: 524320" instead of the
-actual mask data).
+Introduce a new '--bitmask-list' command-line option for 'perf trace'.
+When this option is specified, the formatting of cpumasks is delegated
+to bitmap_scnprintf(), enabling cpumasks to be displayed as a condensed,
+human-readable list (e.g., "0,2-5,7") instead of the default hexadecimal
+representation. An example is provided below:
 
-Correct the parsing of dynamic fields that do not have the
-TEP_FIELD_IS_ARRAY flag set by introducing helper functions
-format_field__get_raw_data() and format_field__get_cpumask().
-Using these helpers, resolve the pointer to the raw bits within the
-payload and format the cpumask as a zero-padded hexadecimal string by default.
+❯ sudo ./perf trace --show-cpu --bitmask-list --event ipi:ipi_send_cpumask --max-event 5
+     0.000 [000] Xorg/1434 ipi:ipi_send_cpumask(cpumask: 2-3,6, callsite: 0xffffffff9994f8e4, callback: 0xffffffff9994fdd0)
+   694.527 [002] chrome/2894 ipi:ipi_send_cpumask(cpumask: 1,3-5, callsite: 0xffffffff9994f8e4, callback: 0xffffffff9994fdd0)
+  2666.608 [003] Chrome_ChildIO/2948 ipi:ipi_send_cpumask(cpumask: 4,7, callsite: 0xffffffff9994f8e4, callback: 0xffffffff9994fdd0)
+  2673.638 [000] Chrome_IOThrea/2920 ipi:ipi_send_cpumask(cpumask: 2-5, callsite: 0xffffffff9994f8e4, callback: 0xffffffff9994fdd0)
+  2714.228 [005] chrome/3375 ipi:ipi_send_cpumask(cpumask: 0-4,6-7, callsite: 0xffffffff9994f8e4, callback: 0xffffffff9994fdd0)
 
-Fixes: c5e006cdbd27 ("perf trace: Support tracepoint dynamic char arrays")
 Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 ---
- tools/perf/builtin-trace.c | 71 +++++++++++++++++++++++++----
- tools/perf/util/evsel.c    | 91 ++++++++++++++++++++++++++++++++++++++
- tools/perf/util/evsel.h    |  6 +++
- 3 files changed, 159 insertions(+), 9 deletions(-)
+ tools/perf/Documentation/perf-trace.txt | 4 ++++
+ tools/perf/builtin-trace.c              | 5 +++++
+ 2 files changed, 9 insertions(+)
 
+diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
+index d0b6c771a1b9..d20b43ea3d37 100644
+--- a/tools/perf/Documentation/perf-trace.txt
++++ b/tools/perf/Documentation/perf-trace.txt
+@@ -247,6 +247,10 @@ the thread executes on the designated CPUs. Default is to monitor all CPUs.
+ 	pretty-printing serves as a fallback to hand-crafted pretty printers, as the latter can
+ 	better pretty-print integer flags and struct pointers.
+ 
++--bitmask-list::
++	Show bitmasks as a human-readable, condensed list (e.g. "0,2-5,7")
++	instead of the default hexadecimal representation.
++
+ --bpf-summary::
+ 	Collect system call statistics in BPF.  This is only for live mode and
+ 	works well with -s/--summary option where no argument information is
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index ba0f8749fc7d..5808adad52ae 100644
+index 5808adad52ae..9307c2aae4ba 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -3207,6 +3207,22 @@ static void bpf_output__fprintf(struct trace *trace,
- 	++trace->nr_events_printed;
- }
+@@ -226,6 +226,7 @@ struct trace {
+ 	bool			force;
+ 	bool			vfs_getname;
+ 	bool			force_btf;
++	bool			bitmask_list;
+ 	bool			summary_bpf;
+ 	int			trace_pgfaults;
+ 	char			*perfconfig_events;
+@@ -3280,6 +3281,9 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *
  
-+static unsigned char bitmap_byte(const unsigned long *mask, int byte_idx)
-+{
-+	unsigned char b_val = 0;
-+	int bit_in_byte;
-+
-+	for (bit_in_byte = 0; bit_in_byte < 8; bit_in_byte++) {
-+		int b_idx = byte_idx * 8 + bit_in_byte;
-+		int host_w_idx = b_idx / BITS_PER_LONG;
-+		int host_bit_in_word = b_idx % BITS_PER_LONG;
-+
-+		if (mask[host_w_idx] & (1UL << host_bit_in_word))
-+			b_val |= (1 << bit_in_byte);
-+	}
-+	return b_val;
-+}
-+
- static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *sample,
- 				       struct thread *thread, void *augmented_args, int augmented_args_size)
- {
-@@ -3238,17 +3254,54 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *
- 		syscall_arg.len = 0;
- 		syscall_arg.fmt = arg;
- 		if (field->flags & TEP_FIELD_IS_ARRAY) {
--			int offset = field->offset;
--
--			if (field->flags & TEP_FIELD_IS_DYNAMIC) {
--				offset = format_field__intval(field, sample, evsel->needs_swap);
--				syscall_arg.len = offset >> 16;
--				offset &= 0xffff;
--				if (tep_field_is_relative(field->flags))
--					offset += field->offset + field->size;
-+			void *ptr = format_field__get_raw_data(field, sample,
-+							       evsel->needs_swap,
-+							       &syscall_arg.len);
-+
-+			if (!ptr) {
-+				pr_err("Problem processing %s field, skipping...\n", field->name);
-+				continue;
-+			}
-+			val = (uintptr_t)ptr;
-+		} else if ((field->flags & TEP_FIELD_IS_DYNAMIC) &&
-+			   strstr(field->type, "cpumask")) {
-+			unsigned long *mask = format_field__get_cpumask(field, sample,
-+									evsel->needs_swap,
-+									&syscall_arg.len);
-+
-+			if (!mask) {
-+				pr_err("Problem processing %s field, skipping...\n", field->name);
-+				continue;
- 			}
- 
--			val = (uintptr_t)(sample->raw_data + offset);
-+			printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
-+			if (trace->show_arg_names)
-+				printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
-+
-+			if (syscall_arg.len == 0) {
-+				printed += scnprintf(bf + printed, size - printed, "0");
-+			} else {
-+				int i;
-+				bool skip_zero = true;
-+
-+				printed += scnprintf(bf + printed, size - printed, "0x");
-+				/* Print bytes from most significant to least significant */
-+				for (i = syscall_arg.len - 1; i >= 0; i--) {
-+					unsigned char b_val = bitmap_byte(mask, i);
-+
-+					if (skip_zero && b_val == 0 && i > 0)
-+						continue;
-+
-+					if (skip_zero) {
-+						printed += scnprintf(bf + printed, size - printed, "%x", b_val);
-+						skip_zero = false;
-+					} else {
-+						printed += scnprintf(bf + printed, size - printed, "%02x", b_val);
-+					}
-+				}
-+			}
-+			free(mask);
-+			continue;
- 		} else
- 			val = format_field__intval(field, sample, evsel->needs_swap);
- 		/*
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index ea9fa04429f0..185673874aa0 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -16,9 +16,11 @@
- #include <errno.h>
- #include <inttypes.h>
- #include <stdlib.h>
-+#include <string.h>
- 
- #include <dirent.h>
- #include <linux/bitops.h>
-+#include <linux/bitmap.h>
- #include <linux/compiler.h>
- #include <linux/ctype.h>
- #include <linux/err.h>
-@@ -3933,6 +3935,95 @@ void *perf_sample__rawptr(struct perf_sample *sample, const char *name)
- 	return sample->raw_data + offset;
- }
- 
-+void *format_field__get_raw_data(struct tep_format_field *field, struct
-+				 perf_sample *sample, bool needs_swap,
-+				 u16 *len_out)
-+{
-+	int offset = field->offset;
-+	int size = field->size;
-+
-+	if (field->flags & TEP_FIELD_IS_DYNAMIC) {
-+		unsigned int dynamic_data;
-+
-+		if (out_of_bounds(field, field->offset, field->size, sample->raw_size))
-+			return NULL;
-+
-+		dynamic_data = format_field__intval(field, sample, needs_swap);
-+
-+		offset = dynamic_data & 0xffff;
-+		size = (dynamic_data >> 16) & 0xffff;
-+
-+		if (tep_field_is_relative(field->flags))
-+			offset += field->offset + field->size;
-+	}
-+
-+	if (out_of_bounds(field, offset, size, sample->raw_size))
-+		return NULL;
-+
-+	*len_out = size;
-+	return sample->raw_data + offset;
-+}
-+
-+unsigned long *format_field__get_cpumask(struct tep_format_field *field,
-+					 struct perf_sample *sample,
-+					 bool needs_swap, u16 *len_out)
-+{
-+	u16 len;
-+	void *ptr = format_field__get_raw_data(field, sample, needs_swap, &len);
-+	unsigned long *mask;
-+	struct perf_env *env;
-+	bool target_is_64;
-+	int target_word_size;
-+	int nr_words;
-+	int bit_idx;
-+	int nbits;
-+
-+	if (!ptr)
-+		return NULL;
-+
-+	nbits = len * 8;
-+	mask = bitmap_zalloc(nbits ?: 1);
-+	if (!mask)
-+		return NULL;
-+
-+	env = evsel__env(sample->evsel);
-+	target_is_64 = env ? perf_env__kernel_is_64_bit(env) : (sizeof(void *) == 8);
-+	target_word_size = target_is_64 ? 8 : 4;
-+	nr_words = len / target_word_size;
-+
-+	for (bit_idx = 0; bit_idx < nbits; bit_idx++) {
-+		int w_idx = bit_idx / (target_word_size * 8);
-+		int bit_in_word = bit_idx % (target_word_size * 8);
-+		bool set = false;
-+
-+		if (w_idx >= nr_words)
-+			break;
-+
-+		if (target_is_64) {
-+			u64 word;
-+			memcpy(&word, (unsigned char *)ptr + w_idx * 8, 8);
-+			if (needs_swap)
-+				word = bswap_64(word);
-+			set = (word & (1ULL << bit_in_word)) != 0;
-+		} else {
-+			u32 word32;
-+			memcpy(&word32, (unsigned char *)ptr + w_idx * 4, 4);
-+			if (needs_swap)
-+				word32 = bswap_32(word32);
-+			set = (word32 & (1U << bit_in_word)) != 0;
-+		}
-+
-+		if (set) {
-+			int host_w_idx = bit_idx / BITS_PER_LONG;
-+			int host_bit_in_word = bit_idx % BITS_PER_LONG;
-+			mask[host_w_idx] |= (1UL << host_bit_in_word);
-+		}
-+	}
-+
-+	*len_out = len;
-+	return mask;
-+}
-+
- u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sample,
- 			 bool needs_swap)
- {
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 163fc2b6a7ea..02129a022ea3 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -400,6 +400,12 @@ static inline char *perf_sample__strval(struct perf_sample *sample, const char *
- 
- struct tep_format_field;
- 
-+void *format_field__get_raw_data(struct tep_format_field *field,
-+				 struct perf_sample *sample,
-+				 bool needs_swap, u16 *len_out);
-+unsigned long *format_field__get_cpumask(struct tep_format_field *field,
-+					 struct perf_sample *sample,
-+					 bool needs_swap, u16 *len_out);
- u64 format_field__intval(struct tep_format_field *field, struct perf_sample *sample, bool needs_swap);
- 
- #ifdef HAVE_LIBTRACEEVENT
+ 			if (syscall_arg.len == 0) {
+ 				printed += scnprintf(bf + printed, size - printed, "0");
++			} else if (trace->bitmask_list) {
++				printed += bitmap_scnprintf(mask, syscall_arg.len * 8,
++							    bf + printed, size - printed);
+ 			} else {
+ 				int i;
+ 				bool skip_zero = true;
+@@ -5590,6 +5594,7 @@ int cmd_trace(int argc, const char **argv)
+ 		     "start"),
+ 	OPT_BOOLEAN(0, "force-btf", &trace.force_btf, "Prefer btf_dump general pretty printer"
+ 		       "to customized ones"),
++	OPT_BOOLEAN(0, "bitmask-list", &trace.bitmask_list, "Show bitmask as a human-readable list"),
+ 	OPT_BOOLEAN(0, "bpf-summary", &trace.summary_bpf, "Summary syscall stats in BPF"),
+ 	OPT_INTEGER(0, "max-summary", &trace.max_summary,
+ 		     "Max number of entries in the summary."),
 -- 
 2.54.0
 
