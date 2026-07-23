@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F5841687A
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jul 2026 09:58:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83AB423EA84
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jul 2026 10:10:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784800709; cv=none; b=Xad4UuTznXoi/IUiHu6mW9Q6w1ygHeY11G1HBUhTF1lgHFK+0LSK34kueIL9kTIeZ5dlbAseO2/xdN5FZw5bPb7xBdsyByU1YCt35bLJVSx2fXX8Wn89wOYvf+6PIEKL6imi25lJeoy+RB1NxlAScnTANaBnDv8/cBQcaLE83hw=
+	t=1784801455; cv=none; b=lmok1pJLzqEWb3v6GXaYiHc631cXHgQXsACO64qxlBNfVGm9u4Cq/0tofKt2Zh6qfwk/X+wOiPKHOe0pPdWdMTH8ku4xdMw2+NnFA9lVouvjeRxvglu9HmRluAJM9Ny+ATNvCY616fnndJllnEEi3x6MFhzFd5KmGYvwLNJqps8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784800709; c=relaxed/simple;
-	bh=C/9h3LnVEpkXTqe97W2bbJ6gn4oqOhlka6XOjD95uVI=;
+	s=arc-20240116; t=1784801455; c=relaxed/simple;
+	bh=Np2VfH1Pwm7u1ZXZ0FJ0m9Qjl/QfgG9Zsv10gFadfQ0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=WJ2oP96aDg0HlayWRgLLPT4mI4mPOiesBvRNNnNQZqk6jJpYDwLRtPeuVdKRK62mBMSY0B6MK99FrvL2Dgu88BjumxrdU0AgIICmPKJR2Q66d8Zmf8jPF4EB00DdzqHWOBGp3Dk6aG4Yfs0frqTHNS/rTgBdCMsIL1paNeDZx1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6IUZ0XE; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=CD/cmpfMz6uDggZxsWQoEgdgrxxLt6yHHxt9Hat+0Cf3E8woWub7IGKBf+cXcUB/7XDmLSD/1K2BmjmcNhesifXGynxLm6hCYItI3kF5M4W6rhjD8yustbbZuhkZzhQqMnN07BPh5VZAjaRS5zlfWLZTPpUhCrKTeQbW1QLY9F8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRMkoNbD; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6IUZ0XE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 659211F000E9;
-	Thu, 23 Jul 2026 09:58:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRMkoNbD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09ABE1F000E9;
+	Thu, 23 Jul 2026 10:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784800707;
-	bh=RNtQjdQymwkMRjaBrzYBjdLpd7aGYV2iOcWD7vGyotc=;
+	s=k20260515; t=1784801454;
+	bh=ae0OWHctOJiozJRD9/TXID3MSYk4xmoJH6N1jL922dU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=m6IUZ0XEgH+xx0tNHtJckHUqTU5LdsItjg1ianP/HG8Gk3xiA2Ka++SRenKy2P2PU
-	 u1uXr7x4YvSls4PvNwmKitsgjMUbDONIDeH0EJSvd0nn+13/t3ioGD6fatbHNiLNSD
-	 0gj4uTIKJdGwq+PXgGd+4AIKGbd+0m9W2ZB40vaEG6XI7pCB6KRIpd8vtlN2RIHB+y
-	 tuSM0HDlYFkmVpnkt6EMeu8ix4/5bTksFsZOcoAssJ/o63ZjMlt3nTFae31AWFKPbR
-	 L49YNJOnQnjUh6fabOHWW/SDOVa7/A3+Gvrqhm7FBIWoACD4hHYA+73vknX5wC4MLo
-	 rFQcT0hey0/NA==
+	b=gRMkoNbDn2sakhQiowl00ctKzweH3bwpP1mP26hJSE72PRnAhW6LNs42JM1TeEzS4
+	 5r/EHfX9rFwBMMIVTrI9jzlZfc93zl4gyII06FCEmQj/QI+AEh1jkSSEmtAyX5sTNW
+	 MKC2aBIojxO6zoRHBqhlvc7SbwGzWiuZrVi0ZiKD+OFid7zKtteDBj9pKau62nJZKZ
+	 IhqCDiTJZD4kN8xJ9ET/64umGZrUuCIfu8NDqtCuSeeRVxTzvcZn25sVe5UaGwsFcn
+	 5lWxRBjrlwW6LLVBSr/wHMFq0hBzlBn6aPWw+duu8UikEvjQj8HEVu8QcRxwMw7XRn
+	 kDn79kU/80Kog==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/2] perf trace-event: Fix buffer overflow in
- read_string()
+Subject: Re: [PATCH v2 2/2] perf trace-event: Fix integer truncation in
+ do_read() and skip()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tanushree Shah" <tshah@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260723093958.416650-5-tshah@linux.ibm.com>
+In-Reply-To: <20260723093958.416650-6-tshah@linux.ibm.com>
 References: <20260723093958.416650-3-tshah@linux.ibm.com>
- <20260723093958.416650-5-tshah@linux.ibm.com>
+ <20260723093958.416650-6-tshah@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 23 Jul 2026 09:58:26 +0000
-Message-Id: <20260723095827.659211F000E9@smtp.kernel.org>
+Date: Thu, 23 Jul 2026 10:10:52 +0000
+Message-Id: <20260723101054.09ABE1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,102 +47,105 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Error path in trace_report() leads to a double free of tevent->pev=
-ent when session initialization fails.
-- [High] Integer truncation in do_read() allows a malicious trace file to c=
-ause the parser to process uninitialized heap memory.
+- [Critical] Heap buffer overflow in `read_ftrace_printk` unmasked by `size=
+_t` conversion.
+- [High] Infinite loop in `skip()` leading to Denial of Service.
 --
 
---- Patch [1]: [PATCH v2 1/2] perf trace-event: Fix buffer overflow in read=
-_string() ---
-commit fca4f0cc3071265252215647838a7b30c9c0baaf
+--- Patch [2]: [PATCH v2 2/2] perf trace-event: Fix integer truncation in d=
+o_read() and skip() ---
+commit b30cf605f4d2ba7957c47c5106a821726355dd7e
 Author: Tanushree Shah <tshah@linux.ibm.com>
 
-perf trace-event: Fix buffer overflow in read_string()
+perf trace-event: Fix integer truncation in do_read() and skip()
 
-This patch fixes a potential stack buffer overflow in read_string() by
-adding a bounds check before writing each byte into the buffer. If the
-string exceeds the buffer size, it logs a debug message and returns NULL,
-matching other error handling paths.
+This commit modifies do_read(), __do_read(), and skip() to use size_t and
+ssize_t instead of int for sizes and return values. This addresses integer
+truncation of 64-bit sizes, fixing uninitialized memory dumps and out-of-bo=
+unds
+reads in the perf tools.
 
 > diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-e=
 vent-read.c
-> index ecbbb93f01853..afd458cf1387d 100644
+> index afd458cf1387d..52ed496d92c3b 100644
 > --- a/tools/perf/util/trace-event-read.c
 > +++ b/tools/perf/util/trace-event-read.c
-> @@ -127,6 +127,11 @@ static char *read_string(void)
->  			}
->  		}
+> @@ -51,13 +51,13 @@ static int __do_read(int fd, void *buf, int size)
+>  	return rsize;
+>  }
 > =20
-> +		if (size >=3D (int)sizeof(buf) - 1) {
-> +			pr_debug("string too long (max %zu bytes)", sizeof(buf) - 1);
-> +			goto out;
+> -static int do_read(void *data, int size)
+> +static ssize_t do_read(void *data, size_t size)
+
+[Severity: Critical]
+Does changing the size parameter to size_t unmask a heap buffer overflow in
+read_ftrace_printk()?
+
+If a crafted file supplies 0xFFFFFFFF, it triggers an overflow in
+read_ftrace_printk():
+
+read_ftrace_printk() {
+        size =3D read4(pevent);
+        ...
+        buf =3D malloc(size + 1);
+        if (buf =3D=3D NULL)
+                return -1;
+
+        if (do_read(buf, size) < 0) {
+        ...
+}
+
+Because size + 1 overflows to 0, malloc(0) returns a minimal heap chunk.
+
+Previously, passing 0xFFFFFFFF to do_read() truncated the size parameter
+to -1. When this -1 was passed to the read() syscall on 64-bit systems,
+it became ULLONG_MAX. This failed boundary checks against TASK_SIZE_MAX,
+causing the kernel to immediately return -EFAULT and preventing the read.
+
+With size now being size_t, 0xFFFFFFFF is passed directly to the read()
+syscall as 4294967295ULL. Because this is below the 64-bit TASK_SIZE_MAX
+limit, the kernel will read up to MAX_RW_COUNT of file data into the tiny
+allocated buffer.
+
+Could this be prevented by adding a bounds check before the allocation?
+
+>  {
+> -	int r;
+> +	ssize_t r;
+> =20
+>  	r =3D __do_read(input_fd, data, size);
+
+[ ... ]
+
+>  /* If it fails, the next read will report it */
+> -static void skip(int size)
+> +static void skip(size_t size)
+>  {
+>  	char buf[BUFSIZ];
+> -	int r;
+> +	size_t r;
+> =20
+>  	while (size) {
+>  		r =3D size > BUFSIZ ? BUFSIZ : size;
+>  		do_read(buf, r);
+>  		size -=3D r;
+>  	}
+>  }
 
 [Severity: High]
-This is a pre-existing issue, but could this error path trigger a double fr=
-ee
-of tevent->pevent?
+Does this change introduce an infinite loop when a maliciously crafted
+perf.data file provides a massive 64-bit size?
 
-If read_string() returns NULL due to the bounds check, the error propagates
-and trace_report() jumps to its error path:
+Before the patch, passing ULLONG_MAX was implicitly truncated to -1.
+In the first loop iteration, r =3D size > BUFSIZ ? BUFSIZ : size evaluated
+-1 > 8192 as false, setting r =3D -1. Then size -=3D r set size to 0,
+terminating the loop immediately.
 
-tools/perf/util/trace-event-read.c:trace_report() {
-    ...
-out:
-	if (pevent)
-		trace_event__cleanup(tevent);
-    ...
-}
-
-trace_event__cleanup() frees t->pevent but leaves the pointer dangling:
-
-tools/perf/util/trace-event.c:trace_event__cleanup() {
-    ...
-	tep_free(t->pevent);
-    ...
-}
-
-Later, during session teardown, perf_session__delete() unconditionally calls
-trace_event__cleanup(&session->tevent), which will attempt to free the same
-pointer again.
-
-[Severity: High]
-This is also a pre-existing issue, but does do_read() suffer from an integer
-truncation issue?
-
-Functions like read_event_file() allocate memory based on a 64-bit size:
-
-tools/perf/util/trace-event-read.c:read_event_file() {
-    ...
-	ret =3D do_read(buf, size);
-	if (ret < 0)
-		goto out;
-
-	ret =3D parse_event_file(pevent, buf, size, sys);
-    ...
-}
-
-But do_read() takes size as an int:
-
-tools/perf/util/trace-event-read.c:do_read() {
-static int do_read(void *data, int size)
-...
-}
-
-If a maliciously crafted perf.data provides a size larger than 32 bits, the
-size is truncated when passed to do_read(), causing it to read fewer bytes.
-Since read_event_file() only checks if ret < 0 rather than verifying
-ret =3D=3D size, it will pass the large, mostly uninitialized buffer to
-parse_event_file().
-
-> +		}
-> +
->  		buf[size++] =3D c;
-> =20
->  		if (!c)
+Now that size is widened to size_t, skip() will continuously subtract
+BUFSIZ from ULLONG_MAX. Because skip() ignores the return value of
+do_read(), does this cause the perf process to spin endlessly even
+after reaching EOF?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260723093958.4166=
-50-3-tshah@linux.ibm.com?part=3D1
+50-3-tshah@linux.ibm.com?part=3D2
