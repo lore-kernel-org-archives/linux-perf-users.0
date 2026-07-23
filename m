@@ -1,126 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B6BC29408;
-	Thu, 23 Jul 2026 00:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9DF286A7;
+	Thu, 23 Jul 2026 01:32:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784765121; cv=none; b=PYEv9QYXvZ21AMAOZ6OLDzBDsK51w/JUk4OCC+yIXNfTLNfZwCdPY10oUW/DtnFCNzOYrckvVwG4Z9kHWEmCj13WFFzYoSqRM6gYwGQ1rvT8lbbt3boCyXJXSMXJ+uMjcXNLbqVqrsAwI+H0Tym0rxEZ1Mz7oZNkNv4Lrt14+cA=
+	t=1784770355; cv=none; b=fAY2ZM9xtW9lWYK0i4MDVLFjJX0zarVFJwY6qrDJKZDr9PIk6myedJP9f48caewDrX0hq8badQ1I9jUXR3X/K2pOUbx07CDHQY/gHxsxD9AIkqC6l7AbEehqGL5lSEMpILQPZDATn7w6GgDiCA27bEZramsTgMudlO3sTIM5Vpc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784765121; c=relaxed/simple;
-	bh=ODmOs3ql59doMX2LLbQGHzR/0R/3iWA9I+z34aQiHZA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=XU3M3EkWnWRg14fe33g7Qy151R2fXRcUFFuo6cgBxzl60o+9IUKlCbS4j/xlrGYd/8pgBxzncpbCcgKM7npzIOvzvOU58ePUe4mC/b5GInEVmhGxjnvARVL8KTVRx005xk7yRx4THLT0ncaT3sDcZrGQZ6UeBriiYoX8KorXk/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QttpmbDm; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784770355; c=relaxed/simple;
+	bh=cyNydO2VqSvszUm4EjQWwLVzTcbah6H1Fw01t9ZSyjk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=msDeFkzT8cyqrxryXjdBr8JzgdpJ70wMn9DBxlLgXo3mvCDu8AwCQCVopvdNNdXu8NYI2US09KO3xj66X2dkkmxSezpH4497oIb3cTMyAPL1h+CQx4jN5+GGHW2c/wi/eieKnPhzIxw4SU39DX1OAfGJiZtJc7PPkSWw55Myrqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=jEmyjhJm; arc=none smtp.client-ip=115.124.30.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QttpmbDm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEE6B1F000E9;
-	Thu, 23 Jul 2026 00:05:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784765120;
-	bh=cERcVi3l194vR2K7MPvUZ59VryqFLMg43o/10bMmISM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=QttpmbDmFm3XT7advN73O+eWorj1Ah46zEsaAUHvor3l+aSKENGVnf8JVCdfRJMoC
-	 UtILpVt6UfIYIJXf/mi8iq+Geg1cQwTn7RAO82o10FnFichBdWbjjPcQu/nuEYnDw3
-	 J9nPPAZuGX9RDBc4b/IjDypVrNUKXfd/dbOugDl50C/rH+2ey51sYFijTgfyPqp1EF
-	 J5i/WT8GDkNXkeZxffEoCJiV19FVq+XBCrTfmMPuRYUSdWm2J4uStkirxgsmga1tmE
-	 sY7TbKMmaarKpQLKirwlyrmklQal0pzhh7tj4avo7ifK5m9QezOMgb/JWh+fB+G02a
-	 wOisoMdBcnkYQ==
-Date: Thu, 23 Jul 2026 09:05:11 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jinchao Wang <wangjinchao600@gmail.com>
-Cc: Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@intel.com>,
- Andrew Morton <akpm@linux-foundation.org>, Peter Zijlstra
- <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, Steven Rostedt
- <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Dave Hansen
- <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>,
- x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu
- Desnoyers <mathieu.desnoyers@efficios.com>, David Hildenbrand
- <david@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Matthew Wilcox
- <willy@infradead.org>, Alan Stern <stern@rowland.harvard.edu>, Randy Dunlap
- <rdunlap@infradead.org>, Alexander Potapenko <glider@google.com>, Marco
- Elver <elver@google.com>, Mike Rapoport <rppt@kernel.org>,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [RFC PATCH v2 00/13] mm/kwatch: dynamic hardware watchpoints
- for hunting memory corruption
-Message-Id: <20260723090511.bd1547ef01b8702a0449c887@kernel.org>
-In-Reply-To: <0565e7d4-fb0f-4b84-a20c-0c73ac964b51@gmail.com>
-References: <20260717125023.1895892-1-wangjinchao600@gmail.com>
-	<91f3486b-3b85-4b43-b099-0a5325643352@intel.com>
-	<20260717181004.GBalpv_MOaAflgFxgh@fat_crate.local>
-	<20260720232442.3e6b0e70c6939541b8362e05@kernel.org>
-	<0565e7d4-fb0f-4b84-a20c-0c73ac964b51@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="jEmyjhJm"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1784770349; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=Ffb8HuUn7oxunFjlvB6SA3X4fMM99E5+jBR0sfFb7F0=;
+	b=jEmyjhJmRcnYGsJX5TwIahNLyjjcKXdvTSO4LQA7p2PLiDheMvoh1J2wmzO4uuUULDEcUp9XSBx20KE27oTem6lmGOG9ynr4U2dcgKMVkwEZZSMkdtdzYFw6s4Oop7Af7IMvKay7ZUFfJUVm01qzK7IPzR5pqvCsHQMFbB3LBCk=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R861e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0X7eTJH5_1784770346;
+Received: from 30.246.177.242(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X7eTJH5_1784770346 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Thu, 23 Jul 2026 09:32:27 +0800
+Message-ID: <31bebd39-8534-417c-866d-6d6e3468473c@linux.alibaba.com>
+Date: Thu, 23 Jul 2026 09:32:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] perf: Remove redundant dev_err()/dev_err_probe()
+To: Pan Chuang <panchuang@vivo.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Frank Li <Frank.li@nxp.com>,
+ Xu Yang <xu.yang_2@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+ Khuong Dinh <khuong@os.amperecomputing.com>,
+ "moderated list:ARM PMU PROFILING AND DEBUGGING"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:ARM PMU PROFILING AND DEBUGGING"
+ <linux-perf-users@vger.kernel.org>, open list
+ <linux-kernel@vger.kernel.org>,
+ "open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+ "open list:ARM/QUALCOMM MAILING LIST" <linux-arm-msm@vger.kernel.org>
+References: <20260717103123.34887-1-panchuang@vivo.com>
+ <20260717103123.34887-2-panchuang@vivo.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20260717103123.34887-2-panchuang@vivo.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 21 Jul 2026 08:36:01 -0400
-Jinchao Wang <wangjinchao600@gmail.com> wrote:
 
-> On 7/20/2026 10:24 AM, Masami Hiramatsu (Google) wrote:
-> > On Fri, 17 Jul 2026 11:10:04 -0700
-> > Borislav Petkov <bp@alien8.de> wrote:
+
+On 7/17/26 6:31 PM, Pan Chuang wrote:
+> Since commit 55b48e23f5c4 ("genirq/devres: Add error handling in
+> devm_request_*_irq()"), devm_request_irq() automatically logs
+> detailed error messages on failure. Remove the now-redundant
+> driver-specific dev_err() and dev_err_probe() calls.
 > 
-> >> Looks to me like folks need to sit down and agree on strategy first.
-> > 
-> > Yeah, I need to talk with Jinchao.
-> > 
-> > Like kprobe, wprobe itself integrates watchpoint functionality into
-> > the tracing subsystem. Jinchao, I would like to ask you to redesign
-> > the kwatch tool based on fprobe and wprobe events in user space?
-> > I think that could reduce redundant efforts on the similar feature.
-> > 
-> > Using fprobe entry and exit event trigger, we can make a Function-
-> > scoped watch window. Also, since fprobe and wprobe are having BTF
-> > typecast support, you can access to the members of data structures
-> > more naturally.
-> > 
-> > If you are interested, I would be open to having you handle the
-> > development of the necessary features for wprobe.
-> > 
-> > Thank you,
-> > 
-> Thank you, Boris and Masami.
+> Signed-off-by: Pan Chuang <panchuang@vivo.com>
+> ---
+>   drivers/perf/alibaba_uncore_drw_pmu.c | 5 +----
+>   drivers/perf/fsl_imx8_ddr_perf.c      | 4 +---
+>   drivers/perf/fsl_imx9_ddr_perf.c      | 4 +---
+>   drivers/perf/fujitsu_uncore_pmu.c     | 2 +-
+>   drivers/perf/qcom_l2_pmu.c            | 5 +----
+>   drivers/perf/qcom_l3_pmu.c            | 5 +----
+>   drivers/perf/starfive_starlink_pmu.c  | 2 +-
+>   drivers/perf/xgene_pmu.c              | 4 +---
+>   8 files changed, 8 insertions(+), 23 deletions(-)
 > 
-> Boris is right that we should agree on the overall strategy before
-> moving either series forward, especially since they share the low-level
-> HWBP work. Masami is also right that fprobe and wprobe provide a more
-> appropriate foundation than introducing KWatch as another standalone
-> debugging tool.
+> diff --git a/drivers/perf/alibaba_uncore_drw_pmu.c b/drivers/perf/alibaba_uncore_drw_pmu.c
+> index 74786a5dd6a2..fc934bccf4a6 100644
+> --- a/drivers/perf/alibaba_uncore_drw_pmu.c
+> +++ b/drivers/perf/alibaba_uncore_drw_pmu.c
+> @@ -449,11 +449,8 @@ static struct ali_drw_pmu_irq *__ali_drw_pmu_init_irq(struct platform_device
+>   	 */
+>   	ret = devm_request_irq(&pdev->dev, irq_num, ali_drw_pmu_isr,
+>   			       IRQF_SHARED, dev_name(&pdev->dev), irq);
+> -	if (ret < 0) {
+> -		dev_err(&pdev->dev,
+> -			"Fail to request IRQ:%d ret:%d\n", irq_num, ret);
+> +	if (ret < 0)
+>   		goto out_free;
+> -	}
+>   
+>   	ret = irq_set_affinity_hint(irq_num, cpumask_of(irq->cpu));
+>   	if (ret)
+For Alibaba PMU part,
 
-Agreed. I just sent v10 because v9 lacked base-commit and Sashiko did
-not reviewed. (so it just add a trigger-side BTF support which was
-dropped in v9).
-Think of v10 as the complete set of ideas we wanted to implement
-with this wprobe.
+Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
 
-> 
-> After reconsidering the design, I will stop the standalone KWatch
-> series. Instead, I would like to work with Masami on extending wprobe
-> to support the function-scoped dynamic-watchpoint use cases that
-> motivated KWatch.
-
-Thanks Jinchao, I appreciate to work with you on this project.
-
-> 
-> Masami, thank you for being open to having me develop the necessary
-> wprobe features. I am interested in taking that direction.
-
-OK, please share your thoughts on watchpoint usage in the kernel.
-
-Basically, I will fix the points raised in the review, but please
-let me know if you have any other suggestions.
-
-Thank you,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+Shuai
