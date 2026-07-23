@@ -1,230 +1,148 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46964429CC6
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jul 2026 09:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08F5841687A
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jul 2026 09:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784799665; cv=none; b=QEKBDccRoPP1gmX8kGRa3B+xCNI1hf+XHbZaLybYl4kSz9fIX1FbsZFiAMzu8cPk5xhQSYcHXLCphB6q3dx8BlxWJ0bq2fNbjE9LSTNue1DTXxYav0z4mRvell9INLBPGj/i9VmOFLD5KWafnlukA9dqLyntw7PJpKhQAFt1c+s=
+	t=1784800709; cv=none; b=Xad4UuTznXoi/IUiHu6mW9Q6w1ygHeY11G1HBUhTF1lgHFK+0LSK34kueIL9kTIeZ5dlbAseO2/xdN5FZw5bPb7xBdsyByU1YCt35bLJVSx2fXX8Wn89wOYvf+6PIEKL6imi25lJeoy+RB1NxlAScnTANaBnDv8/cBQcaLE83hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784799665; c=relaxed/simple;
-	bh=DygkHp7assjV+aJ0TOApqs3CMbYbgpcIQWJRhhvHrqw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I2fPQniC+ZT4GL5TEgvhitpdzEC7Lor0bPcfoF73KT/kcBZ6oI3crjGZVHF7HcGSV6t8SXZaQaBhzbIRqaVlPwz/FPOuDIMR3WKZrSZCDmc1eyiS9DYW40DOhrLvi1CTax0AWB6d8Hi/fBpf+qkrRg6500MwS32jyvc3vfUc79E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ihm5/mh0; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1784800709; c=relaxed/simple;
+	bh=C/9h3LnVEpkXTqe97W2bbJ6gn4oqOhlka6XOjD95uVI=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=WJ2oP96aDg0HlayWRgLLPT4mI4mPOiesBvRNNnNQZqk6jJpYDwLRtPeuVdKRK62mBMSY0B6MK99FrvL2Dgu88BjumxrdU0AgIICmPKJR2Q66d8Zmf8jPF4EB00DdzqHWOBGp3Dk6aG4Yfs0frqTHNS/rTgBdCMsIL1paNeDZx1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m6IUZ0XE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ihm5/mh0"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66N9Btsb701622;
-	Thu, 23 Jul 2026 09:40:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=50E1KF9n0Gw/7vPEA
-	WrdKza/ZUKnBEn8VRiBmwhiid4=; b=ihm5/mh0xdHTKRyN0Vd6ivvCTOar6ijYu
-	/Omkq9etDylCRr4BeV6jAGebQRgeYPQB0L4bQRhSW1YNUQCvQlV9Uo2hNl3wXOYK
-	OCqiVas1HOlRCO0XFBHHDulKNf25igO0VzH/owtiSp0cXDVYDaI6GXrvIOREUnF6
-	dzMNZGOBzUErQQS41N4ekETUgU2I5YF1RnqSDE48OvbybLwKIDW973ZZ2SzaL4Ok
-	s88dTnrjeQlfVcEoGHVarwOTu7xkCd0jEzHQkb6svI3gPDcujavZOcTDd47QkwL+
-	4KsSfj6j4V41sX6bjpKYwUDS51iDj9v7m1RdbbpudILr7Vc7aZfQA==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fg77aptx0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 Jul 2026 09:40:56 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66N9Ye7J029124;
-	Thu, 23 Jul 2026 09:40:55 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fgmtk3hrr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 23 Jul 2026 09:40:55 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66N9epsJ41288104
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 23 Jul 2026 09:40:51 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8502A20099;
-	Thu, 23 Jul 2026 09:40:51 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D80D02009A;
-	Thu, 23 Jul 2026 09:40:44 +0000 (GMT)
-Received: from li-4c4c4544-0047-4210-804e-b5c04f423534.bl1-in.ibm.com (unknown [9.123.15.94])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 23 Jul 2026 09:40:44 +0000 (GMT)
-From: Tanushree Shah <tshah@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
-        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
-        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com,
-        Tanushree Shah <tshah@linux.ibm.com>
-Subject: [PATCH v2 2/2] perf trace-event: Fix integer truncation in do_read() and skip()
-Date: Thu, 23 Jul 2026 15:10:01 +0530
-Message-ID: <20260723093958.416650-6-tshah@linux.ibm.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260723093958.416650-3-tshah@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m6IUZ0XE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 659211F000E9;
+	Thu, 23 Jul 2026 09:58:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784800707;
+	bh=RNtQjdQymwkMRjaBrzYBjdLpd7aGYV2iOcWD7vGyotc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=m6IUZ0XEgH+xx0tNHtJckHUqTU5LdsItjg1ianP/HG8Gk3xiA2Ka++SRenKy2P2PU
+	 u1uXr7x4YvSls4PvNwmKitsgjMUbDONIDeH0EJSvd0nn+13/t3ioGD6fatbHNiLNSD
+	 0gj4uTIKJdGwq+PXgGd+4AIKGbd+0m9W2ZB40vaEG6XI7pCB6KRIpd8vtlN2RIHB+y
+	 tuSM0HDlYFkmVpnkt6EMeu8ix4/5bTksFsZOcoAssJ/o63ZjMlt3nTFae31AWFKPbR
+	 L49YNJOnQnjUh6fabOHWW/SDOVa7/A3+Gvrqhm7FBIWoACD4hHYA+73vknX5wC4MLo
+	 rFQcT0hey0/NA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 1/2] perf trace-event: Fix buffer overflow in
+ read_string()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Tanushree Shah" <tshah@linux.ibm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260723093958.416650-5-tshah@linux.ibm.com>
 References: <20260723093958.416650-3-tshah@linux.ibm.com>
+ <20260723093958.416650-5-tshah@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 23 Jul 2026 09:58:26 +0000
+Message-Id: <20260723095827.659211F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: nUwtQFi_vSEgwlu1_oxF6r2wCNakJria
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzIzMDA5MSBTYWx0ZWRfX3A2algyfTajG
- CFYNM03GtieamWBfDKXmDgEwaPRiaoWpE+03uD9MdPsiYSriSMbVFexkRJvlVPaoDkN3QclCE3K
- PdQJpUPruNu0qpgZ+yb3TblIP7zijIY=
-X-Proofpoint-GUID: fv0eLqSIEJts6gqWgIJULBlzkaRLXava
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzIzMDA5MSBTYWx0ZWRfX3Ogw+1AONF3v
- h5p2/utsvXltgcpc46Fn//vjO7LHc/zamAxUmOAtdQgTFRk3rOq6eEK+wFCeN0vLgR2UZp2v+pY
- 7bK33X6C3nas+uWxp9EQhL2+sL6C9ZWCjwAIVR3mvXHNwB0zwL4b3FkHKflAPvQl0CnQQZ/Fe6V
- AtYxO+KHWP/P7bhwiHYk+Glxt6A8quMuYE0zxykmz8BYgHy8I5S+BwqD6Gn2m4ztgKtS4ctY0zZ
- Prq9bROA+2Dmaq0hwEhgzu3dl00eoiXoZk8i7C5E3GGAGS/BMfErdCpkpPWo6cN17Zkm7ZqBXxQ
- MFjmZf0qxzZz30VMcwfLQo452YHIO5AmsRL956qUvZJwPM7WvZK0NsmA040rS2WNsqHStpg5xk9
- ti6OTe9InUA7D82MitbbakTaYovX6CtFITyzlClilTMmO02oU0r1dQC3CJup5bIvVt4TVauLbG/
- xFTBrpKzTZLhA+d6Gxw==
-X-Authority-Analysis: v=2.4 cv=K7AS2SWI c=1 sm=1 tr=0 ts=6a61e1a9 cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=Reu3Uk4wQY_54RsGqhsA:9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-23_03,2026-07-22_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 suspectscore=0 bulkscore=0 clxscore=1015
- priorityscore=1501 spamscore=0 phishscore=0 malwarescore=0 adultscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2607230091
 
-The do_read() and skip() functions use 'int' for size parameters,
-truncating 64-bit sizes from callers. This causes two issues:
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-1. Uninitialized memory dump: do_read() reads fewer bytes than
-   allocated, leaving uninitialized heap memory that gets written
-   to output files.
+Pre-existing issues:
+- [High] Error path in trace_report() leads to a double free of tevent->pev=
+ent when session initialization fails.
+- [High] Integer truncation in do_read() allows a malicious trace file to c=
+ause the parser to process uninitialized heap memory.
+--
 
-2. Out-of-bounds read: Parsing functions process the full 64-bit
-   size while only partial data was read into the buffer.
+--- Patch [1]: [PATCH v2 1/2] perf trace-event: Fix buffer overflow in read=
+_string() ---
+commit fca4f0cc3071265252215647838a7b30c9c0baaf
+Author: Tanushree Shah <tshah@linux.ibm.com>
 
-Change do_read(), __do_read(), and skip() to use size_t for size
-parameters and ssize_t for return values (where applicable), matching
-read()/write() system calls.
-Update callers to use ssize_t for storing return values.
+perf trace-event: Fix buffer overflow in read_string()
 
-Fixes: 454c407ec17a ("perf tools: Get rid of read_or_die() in trace-event-read.c")
-Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
----
- tools/perf/util/trace-event-read.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+This patch fixes a potential stack buffer overflow in read_string() by
+adding a bounds check before writing each byte into the buffer. If the
+string exceeds the buffer size, it logs a debug message and returns NULL,
+matching other error handling paths.
 
-diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
-index afd458cf1387..52ed496d92c3 100644
---- a/tools/perf/util/trace-event-read.c
-+++ b/tools/perf/util/trace-event-read.c
-@@ -25,18 +25,18 @@ static int input_fd;
- static ssize_t trace_data_size;
- static bool repipe;
- 
--static int __do_read(int fd, void *buf, int size)
-+static ssize_t __do_read(int fd, void *buf, size_t size)
- {
--	int rsize = size;
-+	size_t rsize = size;
- 
- 	while (size) {
--		int ret = read(fd, buf, size);
-+		ssize_t ret = read(fd, buf, size);
- 
- 		if (ret <= 0)
- 			return -1;
- 
- 		if (repipe) {
--			int retw = write(STDOUT_FILENO, buf, ret);
-+			ssize_t retw = write(STDOUT_FILENO, buf, ret);
- 
- 			if (retw <= 0 || retw != ret) {
- 				pr_debug("repiping input file");
-@@ -51,13 +51,13 @@ static int __do_read(int fd, void *buf, int size)
- 	return rsize;
- }
- 
--static int do_read(void *data, int size)
-+static ssize_t do_read(void *data, size_t size)
- {
--	int r;
-+	ssize_t r;
- 
- 	r = __do_read(input_fd, data, size);
- 	if (r <= 0) {
--		pr_debug("reading input file (size expected=%d received=%d)",
-+		pr_debug("reading input file (size expected=%zu received=%zd)",
- 			 size, r);
- 		return -1;
- 	}
-@@ -68,10 +68,10 @@ static int do_read(void *data, int size)
- }
- 
- /* If it fails, the next read will report it */
--static void skip(int size)
-+static void skip(size_t size)
- {
- 	char buf[BUFSIZ];
--	int r;
-+	size_t r;
- 
- 	while (size) {
- 		r = size > BUFSIZ ? BUFSIZ : size;
-@@ -202,7 +202,7 @@ static int read_header_files(struct tep_handle *pevent)
- 	unsigned long long size;
- 	char *header_page;
- 	char buf[BUFSIZ];
--	int ret = 0;
-+	ssize_t ret = 0;
- 
- 	if (do_read(buf, 12) < 0)
- 		return -1;
-@@ -250,7 +250,7 @@ static int read_header_files(struct tep_handle *pevent)
- 
- static int read_ftrace_file(struct tep_handle *pevent, unsigned long long size)
- {
--	int ret;
-+	ssize_t ret;
- 	char *buf;
- 
- 	buf = malloc(size);
-@@ -276,7 +276,7 @@ static int read_ftrace_file(struct tep_handle *pevent, unsigned long long size)
- static int read_event_file(struct tep_handle *pevent, char *sys,
- 			   unsigned long long size)
- {
--	int ret;
-+	ssize_t ret;
- 	char *buf;
- 
- 	buf = malloc(size);
-@@ -322,7 +322,7 @@ static int read_event_files(struct tep_handle *pevent)
- 	int systems;
- 	int count;
- 	int i,x;
--	int ret;
-+	ssize_t ret;
- 
- 	systems = read4(pevent);
- 
-@@ -350,7 +350,7 @@ static int read_saved_cmdline(struct tep_handle *pevent)
- {
- 	unsigned long long size;
- 	char *buf;
--	int ret;
-+	ssize_t ret;
- 
- 	/* it can have 0 size */
- 	size = read8(pevent);
--- 
-2.47.3
+> diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-e=
+vent-read.c
+> index ecbbb93f01853..afd458cf1387d 100644
+> --- a/tools/perf/util/trace-event-read.c
+> +++ b/tools/perf/util/trace-event-read.c
+> @@ -127,6 +127,11 @@ static char *read_string(void)
+>  			}
+>  		}
+> =20
+> +		if (size >=3D (int)sizeof(buf) - 1) {
+> +			pr_debug("string too long (max %zu bytes)", sizeof(buf) - 1);
+> +			goto out;
 
+[Severity: High]
+This is a pre-existing issue, but could this error path trigger a double fr=
+ee
+of tevent->pevent?
+
+If read_string() returns NULL due to the bounds check, the error propagates
+and trace_report() jumps to its error path:
+
+tools/perf/util/trace-event-read.c:trace_report() {
+    ...
+out:
+	if (pevent)
+		trace_event__cleanup(tevent);
+    ...
+}
+
+trace_event__cleanup() frees t->pevent but leaves the pointer dangling:
+
+tools/perf/util/trace-event.c:trace_event__cleanup() {
+    ...
+	tep_free(t->pevent);
+    ...
+}
+
+Later, during session teardown, perf_session__delete() unconditionally calls
+trace_event__cleanup(&session->tevent), which will attempt to free the same
+pointer again.
+
+[Severity: High]
+This is also a pre-existing issue, but does do_read() suffer from an integer
+truncation issue?
+
+Functions like read_event_file() allocate memory based on a 64-bit size:
+
+tools/perf/util/trace-event-read.c:read_event_file() {
+    ...
+	ret =3D do_read(buf, size);
+	if (ret < 0)
+		goto out;
+
+	ret =3D parse_event_file(pevent, buf, size, sys);
+    ...
+}
+
+But do_read() takes size as an int:
+
+tools/perf/util/trace-event-read.c:do_read() {
+static int do_read(void *data, int size)
+...
+}
+
+If a maliciously crafted perf.data provides a size larger than 32 bits, the
+size is truncated when passed to do_read(), causing it to read fewer bytes.
+Since read_event_file() only checks if ret < 0 rather than verifying
+ret =3D=3D size, it will pass the large, mostly uninitialized buffer to
+parse_event_file().
+
+> +		}
+> +
+>  		buf[size++] =3D c;
+> =20
+>  		if (!c)
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260723093958.4166=
+50-3-tshah@linux.ibm.com?part=3D1
