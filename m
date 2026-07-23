@@ -1,143 +1,396 @@
-Received: from LO2P265CU024.outbound.protection.outlook.com (mail-uksouthazon11021091.outbound.protection.outlook.com [52.101.95.91])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43B02FE566;
-	Thu, 23 Jul 2026 15:28:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.95.91
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784820539; cv=fail; b=QDpDF5KwfvhnrDzH2LuxhOkzkkLq/+z1lWGfmkOdBkWX9aeJv2fwMzp2iOSBKL0XbWtwCgLJhx2k8HAfVs2RuZlkK4lMpMz8ZcRubB04KXK+AZhMrwigBBOqjLrxSnDN8zWy7UvduT3m8HYQ0QO/JLALwrdrs7wDQL7OJ1SDGo4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784820539; c=relaxed/simple;
-	bh=0PvQy9aCxT3deLhCCFEyn4PUvZJA/VwkkkGi+34VTRQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Z0oP7WWuS21KWldSSqGiBF9TcAZaUjkY4lajYTDBhA7ZSpz+0HiOCEjlVeNSz1SS79C3ooyq6+toX/eX98g2y1qGqdEw6QnQehPE30Ao4Q1MYxbqC8jnoZZLB6jLwM5KOO0UTPFRJEuchUTplKIYBZlVFe8nOPzEMkiW52oEEpY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.95.91
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Lwh/ZU3EIfgjZGM4lr+VpjZtb1K5JmxEVKreFQG72LXFcCAOfKxzxPdpSL9Eq6xByYwu86FBfNSoA6lYxK3OZdqOc/pupxRaCWy0i6BFDFf6xiNoAEPNJV+KMvOpWsDqV30CbdhG1E68KgxxsNdbs+mAJFd3MxGAg0UQyVTFev32WpOeYb2DGEtxRBot6Ri5r4po993THsfGQ7EpB7KxB0clJZ9Eg4hYz++R7tbCyDR4OBlTRbOSkGZkYSsY5e8HHPffgnB37Xqu2Vt9m56B/BzD6gaJYHdE1zF7W2iVo+bX+QiwnCzP5T1MyXi0B32tSDgUAFjfted7n8KwxquqSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=kvrbXKD9mZFOXX3bOB8zn1gnK+jKM9cOBNucvNb0jlA=;
- b=WUyk3zGdW8xL6m1JJ27VF2g1gBjWeYjC9WxyGrw8OqMfjZ4kmYQ8lq/f8RAnhW5sh/q81LrMBf5XiWJajVfyxQzyyarNyLjQfyOGbJMD4PoDNfRFOl0mOD5N84wVUoPitPl4RyHAtWJqSE8HqrWIY+Mjd8nBfo27aIdhB1nAt2tc3BmTE/IIJrQviBjVFuCjXDiqjhqWi5gXXtqa71sUOiNCu5lDCCPLFbh5a3+X8gbjm2HE+l0RiTHwMKCuR9wN2MFarvYtbpak8Tl3IVEtVW1f5VgBFH4VNsuimHo5bdgML/h7ybWpoYnIJGmPGX24arWsIiCjCz+LZXC31k0usw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by LOYP123MB3374.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:116::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.10; Thu, 23 Jul
- 2026 15:28:53 +0000
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0245.009; Thu, 23 Jul 2026
- 15:28:53 +0000
-Date: Thu, 23 Jul 2026 11:28:48 -0400
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, 
-	howardchu95@gmail.com, neelx@suse.com, chjohnst@mail.com, sean@ashe.io, steve@abita.co, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] perf trace: Add --bitmask-list command-line option
-Message-ID: <kick2ndzn7nisgdnxjit2tp6tfyub3nor54dbgqxqwy7ctgsdd@zxy23kkhc3uh>
-References: <20260722155050.503516-1-atomlin@atomlin.com>
- <20260722155050.503516-3-atomlin@atomlin.com>
- <amGrbXzdup2hvg3k@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <amGrbXzdup2hvg3k@google.com>
-X-ClientProxiedBy: BN0PR04CA0147.namprd04.prod.outlook.com
- (2603:10b6:408:ed::32) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:183::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4E303E7BCA
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jul 2026 16:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.197
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784825070; cv=none; b=RZMRz9T/LZ70BprnBv2Y1eMxJgtPbU8Rj9m/xgpBWrq5ZqWxktmqIiVCvZNEhsC13dUwQUV3JUG0aeXqAryGGjaU6RjKtsu3X5p51ww6rrmzJ0vsmN8vxMXIGK9c5t8e7n86iN+OpF4UyRe/+Vt1c5XlcQmAIKOPXDnvBzwQ9UE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784825070; c=relaxed/simple;
+	bh=H5f/jZNxtKdhBIogXkdiX/ObDwTOheRpqVofpkcPXJ4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=sDhMVJIgHz2Jftu2HlPmnMx2ZEaH6mCGR12V221C63l82b9qRtHpw0KGllq96dVlmruiYh05gKbkFlArV5SMY5hu9I5AjfRIjLP5l0E7RbUORLrir63v7mHp1Wl2HF9gbc2pgPn6ry8euK1wBhqDIpfVdduZO2HooIXCINz/rac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=N0HisUZs; arc=none smtp.client-ip=209.85.214.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="N0HisUZs"
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2cceabd70f5so23054535ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 23 Jul 2026 09:44:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1784825065; x=1785429865; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=/fguQcClVNog0VqgUtDPGk0XZ5rwJBQNhp6T1KiWiIo=;
+        b=N0HisUZsa00khtGdJzGeN898FdAcryF28kpA6fG4PHCvp5a1lXtmgUVR8UdeE2TU+Z
+         zP9zXwfFd3z8vkQ0zJUcd2yrgsGkb3mAYIujZqoByz2Ocg9445E0eeBUfrmgBW8QUDlg
+         AJVJP4mVAYlQ1UGS5BoZhYcVyEdaB0xneIRrAtxBaABEdfz1ub0i89U+E6sVTfZTYnXV
+         oORY6+Luga1hvWJ+xDXDxI6/sg3SbLmfYtu3VyUrkhoX+s/FnquqpLfA6i2GJE3onNLn
+         87MhrYDRUcP5QJk0nh5bX1/H2e389Um+c7mt8GCN7LihzT2TAZfjG4DjJ2jQg9S70H0v
+         NZxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784825065; x=1785429865;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=/fguQcClVNog0VqgUtDPGk0XZ5rwJBQNhp6T1KiWiIo=;
+        b=EWbGu+UOd8ZX+PepbHeyrXyK6fgIrjyColDgpSQBCUMLBekHwaJW2b/fFstc9P3Clw
+         o7Ykb2UpGa6PEc1bdWAykWs6JmnJtw4YHlGNp9n5QIrNjMViLdwNFbQR2OfzOOL2cF5n
+         DPSSJ0eIZ5IazF0gCyukdY7BWba6CotqjSkO07XbzWdyKdTa4RFWP2LXGg1URr+NQXs8
+         RWEHf55DwBHx7UKRrtS0nqMLsKOrbsErntotPmskpp/+Q7zBxkVh7L406CAFQ8VOn0iZ
+         tl8p+EoII7VbxE+E9HxnmlghqD2G3QPrHIJWVxojmjg7Wa8s/+VnbJMaDdDpRedVluHn
+         kjbg==
+X-Forwarded-Encrypted: i=1; AHgh+Rr31g2NeodPDw9LzTzuA5VGfNUniSmynW8wGEwmxb3amjoCzKO0L1DqqaPwsqA8TBgaD+VpgO3aV4Wxsrr2b5lJ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzaDWAIHT0WvQqsdMvrccdf1HrWUxVJFyHPw9bOXsbzZZMKDjn
+	mU0TvwGPkMJeteOgGTQ1/v1ceZoFCyGlahvb141oIdcgCygDkVaSwhnIp475JZHM5mW//9U+8LW
+	AsOatMs6k1w==
+X-Received: from dlbec11.prod.google.com ([2002:a05:7022:d8b:b0:13b:9ad0:582f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3489:b0:3c4:2eb6:c3a0
+ with SMTP id adf61e73a8af0-3c44b00b782mr4077377637.30.1784825064672; Thu, 23
+ Jul 2026 09:44:24 -0700 (PDT)
+Date: Thu, 23 Jul 2026 09:44:21 -0700
+In-Reply-To: <amGnWXQgP9Hu5xUT@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LOYP123MB3374:EE_
-X-MS-Office365-Filtering-Correlation-Id: e8539a87-e059-4a87-fd1b-08dee8cf1a18
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|23010399003|1800799024|4143699003|56012099006|22082099003|18002099003|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	Bl8GiJbK7l8LAlOpoqIj5y0oZtD/0zQx63hk2BAdjznR1M45gJFUvV2BLgf1MVVx4bamHJ4METxU9y09rLBuRgmnaqTm5PvRc3munMLDG5V9ZMg2hmPTy2LpsN99xOljjyABKMqcOyINCdplWnVdymkZ8CAddgmezR4KOKobAEDq4USsDrxLoY2/wbkG7Umd34YD0L4vJK3JsxMJe63FntI5jXV7VIkBv30ZgHsM8gWQYSJIKpugVDfF9u1/cWIg1kCioyxAyMwgio4boxOchdW6iMv9jYaBiIUv9LQ27+KCDzbszkzyw8iq2bg9LPrPj84LF0VCSKgokXJSFcqzn2UlNYAVoO0+hB27eovEhKrcYbNvYpci2cuMtW/tHk67NSxD/26lfZegtxsBrBm43fzryHlbgvowDe+eJSsqkNewwXAVWV6uzfIjrbIvFXyZNS+nPQRviOlXZrcD0RefzUa2ueAIteKCI6rYHveFo8RdCuBWOxI2DQks864SQz06HbYCz33aZB7hIW26Z+bakgvVk44dqcrYTluKZe1+BIMzAYFhHbQ3w2qs0UlSsGmKG+nLqJ033GuDnA9S5UTYfapc+ehE4XA8fuVTeSmm7LX5FNg6WyItnlRhXgyaude05tgO1Vc4V7Mi6KKMSINHzfcWmhWzqfjBKTA/H5sTSq8=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(23010399003)(1800799024)(4143699003)(56012099006)(22082099003)(18002099003)(10067099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RHJpKzZzWW15MDYyeC94NzdvSGt6WlEwK1BuZGhmMk9oY2V2VjVGOWFrRFMr?=
- =?utf-8?B?SjlRVjk4OGZJRXFPK0hTY0R5aFhJSTdBZW5FNDh6TkQwdEJraXplMk9GMHh2?=
- =?utf-8?B?T1E0UW4welkxaWZQNmV5V1NUbHYvT05UTFkrN0xKTXNYalArcVMyRG9EM1Zq?=
- =?utf-8?B?SThWN2tNeGRzYUpEUm5Lck8xYlhvbldmMmN1K3FnQytnTmhUTjczZTlVTFhs?=
- =?utf-8?B?SE5rMFV2WHZ2MGhrNi9EbnZjcXZXeVpKbXNvRFo3dWltTE84VDRsMGl6L280?=
- =?utf-8?B?WGVGbFp6OFlJeHVGdWZPbzhmVUk0WEJLb3BtS0E5eVEzdFNVZGVreUY4VG5z?=
- =?utf-8?B?aGtRZWRLZ29peHJEM2tFcEtWaVZMU3JpSEdJT1RYNVVYYkJvcFhoL2pNOXpV?=
- =?utf-8?B?M3kzcmh2S3l5eGo0Q3ZmMGpVWWROVmladnduU2FGWXI4QkIyTTZlR0pYUVVw?=
- =?utf-8?B?c0REMUU5Y2swUXZZZ3BvSWR6WE1ORWVzK3AyWWFsN3RBNEl5WHh0Vm9hZXFY?=
- =?utf-8?B?YzdubHJ5QzVRSFFBbFBkUjQzL0w2d2JwRUpOazZjZTBHazNHR1dWb29QRkpJ?=
- =?utf-8?B?ZGF5eXNyVGVOTjNHS3oxRnh0cGVCNk91cURzaUJUbzE5RzBEODEyU1NocTRu?=
- =?utf-8?B?dmtka25ZcWsxcTVFUGpUMjJidWQxT3diVDFqUlJjNERCK2dGays4djlZUHVt?=
- =?utf-8?B?TTNXcGtSSGhDMHlwR2FmTGpwZmxFZi9PMXZwYWR1RlJTY3JHVmY5WUZJcEpV?=
- =?utf-8?B?SGZHaE9xQm52bkpVUlUxRnR2NVMzZTV2Rk1FUGdQZWtJWUdUaXNDcUErYnpX?=
- =?utf-8?B?L1Jzay9rK0Q1clhodEgyeS9LRDhQaDRCVjMwNkhKQ2RDVE9uNW1USWdGQzlm?=
- =?utf-8?B?emhqeWtsVTBJY21ZK2FWVjdlNTg5YVZDai9FaE5GNTZaalVDZWpTVnhobWFJ?=
- =?utf-8?B?NnVYQ0E3ZmNRUVBLWmpJc2FvbS9LV25vcllGVG02bHROWlFXTDd4dFN2ZVJy?=
- =?utf-8?B?M2dVcEh0Z1lWdHZnN1g1V2hydC9objVSWXdtQ1cvcHRuS2xhcTY2MzJ4VlZB?=
- =?utf-8?B?ZEFaNFp5Q2ZtU3owa3NqT0Z4WG90SjhiSmlRdGROaUovbHBrRXJTU0RxZVBU?=
- =?utf-8?B?NGxxS0NYNU1PTDduUHB5SlgycDR3NGlSbG9aYW8waVpmL1V4Y05tM1d6OWJU?=
- =?utf-8?B?RTlSeUMvd2p0VXRJWkNqN3Q1MnExUVhuRXczbVV2NUhkMVUvVno3cUR5ZFMz?=
- =?utf-8?B?T0tNZ2YydW11U3NCRkp2aUtrYTdhZFUwelhCbjNTcmhRZThXdlhOZUkwWjdh?=
- =?utf-8?B?OUorRkxkZ0hrN05sS2t6RkhNUWpQenJEeFl1Q0RRM1RldjhKMVFIeWNyN3RF?=
- =?utf-8?B?R2tuRDNiOWQ0cFNUOWxGOHBSNmo4cUtjc3cwdW5tengwUExtblVtVGRxUXRZ?=
- =?utf-8?B?eEdvcjNDTnhTMUJLQi8zRmlURWRacVJia1Y0bmFnOUEzcE1lUGc1K3VpZlM5?=
- =?utf-8?B?WHhJZTNRNkhUWmNISHd4aXN4SlpGaHJ1ekVXeDF1Q2UzL1lYWFFzeTVsaHIv?=
- =?utf-8?B?SWplMnQxdkxsWVNDaWRaUzVkcHNwZEk5bnpqWXRZZTJ2WXBTd0ZXWWVGc2pL?=
- =?utf-8?B?SUxMbitUaUxOWGZEUE5zNy9WaVd4MzFBTnVKOWR1dG5iSk9wbFZUV2YvWW5Z?=
- =?utf-8?B?RFRDYjE2R2dyR1hTQ0c4TU9FeFZYM3R6RHdaY3VPekhmMFQwSjk3QllML0VE?=
- =?utf-8?B?c0RndUFTOUpscTZJc2FZeTVPREpKNjIweE9xTVNuMWZMY1JCRWl0LzB5elRk?=
- =?utf-8?B?azVOd1k4UGZpQ0FlNDNKNE8remVSaXdUMGdNY3JlMXF5eDZ2NVFRYW41NjZw?=
- =?utf-8?B?UjBaUmFrRDk0eFpMTkM3RzVSeVlvTUowZ0o5cm56ZzNHckZFdlhIbjVmZjRn?=
- =?utf-8?B?eHA4a0ZPVTM0dEh6c25acGlXbWtzUHluWEdEbzVxQWlOaFA3d0NkNTZ2bFZL?=
- =?utf-8?B?aU1MWVFNWWd5ZlB3KzJPQ3kyTE5YeDdGSTBocjJJNmpBSVFGS1I2ZnVzUFVW?=
- =?utf-8?B?YnIwUlNpZEdZd016SmtVRW9rRmRtQkttZVorMVgxMFQ1UGI1c2NZQk5ibWR2?=
- =?utf-8?B?dENxVWw0TzI0V0ZBaFZwZ1lxeDF2aC9oUlRKWnNaVzVDYjVSWVBzNm5TT0ZJ?=
- =?utf-8?B?WkNYUVJUQndKdFQ1eFlER05aaVBsUG1PdVRlN1cwRUVzMktyQ0lNWklVdncv?=
- =?utf-8?B?NDVRZklDencwZ2xtZVdsYWRQakdDMTRuOUU5blVuVzY0dllNWmVLOXd2Z01l?=
- =?utf-8?B?V3ZqRVkyK1hQUnU5ZWg5YnptTThMQU1kSWJSTXd2Qk9ZMmV3bHNwZz09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8539a87-e059-4a87-fd1b-08dee8cf1a18
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jul 2026 15:28:52.9450
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: u0lKumxv+1V2j2I+oF+eqrUd723s4hA/4Wia/vmDNaGxBWQ5O7mS7+KPa8+EIem6caXg7TrnxksO1XFtyE5mjw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOYP123MB3374
+Mime-Version: 1.0
+References: <amGnWXQgP9Hu5xUT@google.com>
+X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
+Message-ID: <20260723164421.1232688-1-irogers@google.com>
+Subject: [PATCH v2] perf python: Clean up and restructure setup.py
+From: Ian Rogers <irogers@google.com>
+To: namhyung@kernel.org, acme@kernel.org
+Cc: adrian.hunter@intel.com, irogers@google.com, james.clark@linaro.org, 
+	jolsa@kernel.org, leo.yan@arm.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mingo@redhat.com, peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jul 22, 2026 at 10:49:33PM -0700, Namhyung Kim wrote:
-> On Wed, Jul 22, 2026 at 11:50:49AM -0400, Aaron Tomlin wrote:
-> > Introduce a new '--bitmask-list' command-line option for 'perf trace'.
-> > When this option is specified, the formatting of cpumasks is delegated
-> > to bitmap_scnprintf(), enabling cpumasks to be displayed as a condensed,
-> > human-readable list (e.g., "0,2-5,7") instead of the default hexadecimal
-> > representation. An example is provided below:
-> 
-> Do you know any other places than cpumask use bitmask too?  I'm just
-> curious if it needs to handle other cases or not.
+Clean up and restructure the python setup script to resolve pylint
+warnings, improve code quality, and increase robustness and
+readability, targeting Python 3.9+ (the Linux kernel build minimum
+Python version).
 
-Hi Namhyung,
+Changes:
+- Restructure the script to use a `main()` function as the entry point,
+  leaving only imports, classes, and pure functions at module level.
+- Eliminate all global/module-level variables, making them local to
+  `main()` or the respective classes/functions.
+- Make `clang_has_option` a pure function by passing all necessary
+  parameters explicitly.
+- Extract clang compiler flag filtering into a new
+  `filter_clang_options` helper function. This function uses a loop
+  over a tuple of options, replacing ~30 lines of repetitive blocks
+  and reducing branch/statement complexity in the main flow.
+- Cleanly define attributes in `__init__` for `BuildExt` and `InstallLib`
+  and read environment variables dynamically within the methods, removing
+  their dependency on global variables.
+- Replace legacy Popen with subprocess.run for safer process handling.
+- Use list-based flag filtering (split, filter, re-join) instead of regex
+  `re.sub` substitutions on space-separated compiler flag strings. This
+  avoids boundary bugs and safely handles flags with arguments (e.g.
+  `-fcf-protection=full`).
+- Safely parse `CC` env var using `shlex.split` to handle quotes and pass
+  compiler arguments as `list[str]` lists to helper functions, avoiding
+  redundant string formatting and parsing.
+- Remove unused `import re`.
+- Rename setuptools command subclasses to PascalCase (BuildExt, InstallLib).
+- Add type annotations to functions and methods.
+- Add missing docstrings for module, functions, and classes.
+- Split long lines to adhere to standard limits.
 
-As far as I can tell, currently no other users.
+Assisted-by: Antigravity:gemini-3.5-flash
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+v2: Rebase
+---
+ tools/perf/util/setup.py | 248 ++++++++++++++++++++++++++-------------
+ 1 file changed, 164 insertions(+), 84 deletions(-)
 
-Kind regards,
+diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
+index cb14554454a2..1385f07424b7 100644
+--- a/tools/perf/util/setup.py
++++ b/tools/perf/util/setup.py
+@@ -1,112 +1,192 @@
+-from os import getenv, path
+-from subprocess import Popen, PIPE
+-from re import sub
++"""Setup script for perf python extension.
++
++This script is used to build and install the perf python binding.
++It handles compiler-specific flags, especially for clang, and configures
++the setuptools Extension.
++"""
++
++import os
+ import shlex
+ import shutil
++import subprocess
++import sysconfig
+ 
+-cc = getenv("CC")
+-assert cc, "Environment variable CC not set"
++from setuptools import setup, Extension
++from setuptools.command.build_ext import build_ext as _build_ext
++from setuptools.command.install_lib import install_lib as _install_lib
+ 
+-# Check if CC has options, as is the case in yocto, where it uses CC="cc --sysroot..."
+-cc_tokens = cc.split()
+-if len(cc_tokens) > 1:
+-    cc = cc_tokens[0]
+-    cc_options = " ".join([str(e) for e in cc_tokens[1:]]) + " "
+-else:
+-    cc_options = ""
+ 
+-# ignore optional stderr could be None as it is set to PIPE to avoid that.
+-# mypy: disable-error-code="union-attr"
+-cc_is_clang = b"clang version" in Popen([cc, "-v"], stderr=PIPE).stderr.readline()
++def clang_has_option(cc: str, cc_args: list[str], src_feature_tests: str, option: str) -> bool:
++    """Check if clang supports a specific option.
+ 
+-srctree = getenv('srctree')
+-assert srctree, "Environment variable srctree, for the Linux sources, not set"
+-src_feature_tests  = f'{srctree}/tools/build/feature'
++    Args:
++        cc: The compiler executable.
++        cc_args: Compiler arguments from CC environment variable.
++        src_feature_tests: Path to the feature tests directory.
++        option: The compiler option to check (e.g., "-mcet").
+ 
+-def clang_has_option(option):
++    Returns:
++        True if the option is supported, False otherwise.
++    """
+     error_substrings = (
+         b"unknown argument",
+         b"is not supported",
+         b"unknown warning option"
+     )
+-    cmd = shlex.split(f"{cc} {cc_options} {option}") + [
++    cmd = [cc] + cc_args + [
++        option,
+         "-o", "/dev/null",
+-        path.join(src_feature_tests, "test-hello.c")
++        os.path.join(src_feature_tests, "test-hello.c")
+     ]
+-    cc_output = Popen(cmd, stderr=PIPE).stderr.readlines()
++    try:
++        res = subprocess.run(cmd, stderr=subprocess.PIPE, stdout=subprocess.DEVNULL, check=False)
++        cc_output = res.stderr.splitlines()
++    except OSError:
++        return False
+     return not any(any(error in line for error in error_substrings) for line in cc_output)
+ 
+-if cc_is_clang:
+-    from sysconfig import get_config_vars
+-    vars = get_config_vars()
++
++def filter_clang_options(cc: str, cc_args: list[str], src_feature_tests: str) -> None:
++    """Filter out unsupported clang options from sysconfig CFLAGS and OPT.
++
++    Args:
++        cc: The compiler executable.
++        cc_args: Compiler arguments from CC environment variable.
++        src_feature_tests: Path to the feature tests directory.
++    """
++    config_vars = sysconfig.get_config_vars()
+     for var in ('CFLAGS', 'OPT'):
+-        vars[var] = sub("-specs=[^ ]+", "", vars[var])
+-        if not clang_has_option("-mcet"):
+-            vars[var] = sub("-mcet", "", vars[var])
+-        if not clang_has_option("-fcf-protection"):
+-            vars[var] = sub("-fcf-protection", "", vars[var])
+-        if not clang_has_option("-fstack-clash-protection"):
+-            vars[var] = sub("-fstack-clash-protection", "", vars[var])
+-        if not clang_has_option("-fstack-protector-strong"):
+-            vars[var] = sub("-fstack-protector-strong", "", vars[var])
+-        if not clang_has_option("-fno-semantic-interposition"):
+-            vars[var] = sub("-fno-semantic-interposition", "", vars[var])
+-        if not clang_has_option("-ffat-lto-objects"):
+-            vars[var] = sub("-ffat-lto-objects", "", vars[var])
+-        if not clang_has_option("-ftree-loop-distribute-patterns"):
+-            vars[var] = sub("-ftree-loop-distribute-patterns", "", vars[var])
+-        if not clang_has_option("-gno-variable-location-views"):
+-            vars[var] = sub("-gno-variable-location-views", "", vars[var])
++        if var not in config_vars:
++            continue
++
++        # Split into individual flags to avoid regex boundary issues
++        flags = config_vars[var].split()
++
++        # Remove -specs=...
++        flags = [f for f in flags if not f.startswith("-specs=")]
++
++        options = (
++            "-mcet",
++            "-fcf-protection",
++            "-fstack-clash-protection",
++            "-fstack-protector-strong",
++            "-fno-semantic-interposition",
++            "-ffat-lto-objects",
++            "-ftree-loop-distribute-patterns",
++            "-gno-variable-location-views"
++        )
++        for option in options:
++            if not clang_has_option(cc, cc_args, src_feature_tests, option):
++                # Remove the option and any variant (e.g. -option=...)
++                flags = [f for f in flags if not f.startswith(option)]
++
++        # Re-join flags
++        config_vars[var] = " ".join(flags)
++
++
++class BuildExt(_build_ext):
++    """Custom build_ext command to set output directories."""
++
++    def __init__(self, *args, **kwargs):
++        self.build_lib = None
++        self.build_temp = None
++        super().__init__(*args, **kwargs)
++
++    def finalize_options(self) -> None:
++        _build_ext.finalize_options(self)
++        build_lib = os.getenv('PYTHON_EXTBUILD_LIB')
++        build_tmp = os.getenv('PYTHON_EXTBUILD_TMP')
++        if build_lib:
++            self.build_lib = build_lib
++        if build_tmp:
++            self.build_temp = build_tmp
+ 
+-from setuptools import setup, Extension
+ 
+-from setuptools.command.build_ext   import build_ext   as _build_ext
+-from setuptools.command.install_lib import install_lib as _install_lib
++class InstallLib(_install_lib):
++    """Custom install_lib command to set output directory."""
+ 
+-class build_ext(_build_ext):
+-    def finalize_options(self):
+-        _build_ext.finalize_options(self)
+-        self.build_lib  = build_lib
+-        self.build_temp = build_tmp
++    def __init__(self, *args, **kwargs):
++        self.build_dir = None
++        super().__init__(*args, **kwargs)
+ 
+-class install_lib(_install_lib):
+-    def finalize_options(self):
++    def finalize_options(self) -> None:
+         _install_lib.finalize_options(self)
+-        self.build_dir = build_lib
++        build_lib = os.getenv('PYTHON_EXTBUILD_LIB')
++        if build_lib:
++            self.build_dir = build_lib
+ 
+     def run(self):
+         _install_lib.run(self)
+         shutil.copy2(f'{src_perf}/python/perf.pyi', self.install_dir)
+ 
+ 
+-# switch off several checks (need to be at the end of cflags list)
+-extra_cflags = ['-fno-strict-aliasing', '-Wno-write-strings', '-Wno-unused-parameter', '-Wno-redundant-decls' ]
+-if cc_is_clang:
+-    extra_cflags += ["-Wno-unused-command-line-argument" ]
+-    if clang_has_option("-Wno-cast-function-type-mismatch"):
+-        extra_cflags += ["-Wno-cast-function-type-mismatch" ]
+-else:
+-    extra_cflags += ['-Wno-cast-function-type' ]
+-
+-# The python headers have mixed code with declarations (decls after asserts, for instance)
+-extra_cflags += [ "-Wno-declaration-after-statement" ]
+-
+-src_perf  = f'{srctree}/tools/perf'
+-build_lib = getenv('PYTHON_EXTBUILD_LIB')
+-build_tmp = getenv('PYTHON_EXTBUILD_TMP')
+-
+-perf = Extension('perf',
+-                 sources = [ src_perf + '/util/python.c' ],
+-		         include_dirs = ['util/include'],
+-		         extra_compile_args = extra_cflags,
+-                 )
+-
+-setup(name='perf',
+-      version='0.1',
+-      description='Interface with the Linux profiling infrastructure',
+-      author='Arnaldo Carvalho de Melo',
+-      author_email='acme@redhat.com',
+-      license='GPLv2',
+-      url='http://perf.wiki.kernel.org',
+-      ext_modules=[perf],
+-      cmdclass={'build_ext': build_ext, 'install_lib': install_lib})
++def main() -> None:
++    """Main entry point for the setup script."""
++    cc_env = os.getenv("CC")
++    assert cc_env, "Environment variable CC not set"
++
++    # Safe parsing of CC environment variable which might contain options/quotes
++    cc_tokens = shlex.split(cc_env)
++    cc = cc_tokens[0]
++    cc_args = cc_tokens[1:]
++
++    # Run CC -v to check if it is clang.
++    try:
++        cc_info = subprocess.run(
++            [cc, "-v"], stderr=subprocess.PIPE, stdout=subprocess.DEVNULL, check=False
++        )
++        cc_is_clang = b"clang version" in cc_info.stderr
++    except OSError as e:
++        raise RuntimeError(f"Failed to execute compiler '{cc}': {e}") from e
++
++    srctree = os.getenv('srctree')
++    assert srctree, "Environment variable srctree, for the Linux sources, not set"
++    src_feature_tests = f'{srctree}/tools/build/feature'
++
++    if cc_is_clang:
++        filter_clang_options(cc, cc_args, src_feature_tests)
++
++    cflags = os.getenv('CFLAGS', '').split()
++    # switch off several checks (need to be at the end of cflags list)
++    cflags += [
++        '-fno-strict-aliasing',
++        '-Wno-write-strings',
++        '-Wno-unused-parameter',
++        '-Wno-redundant-decls'
++    ]
++    if cc_is_clang:
++        cflags += ["-Wno-unused-command-line-argument"]
++        if clang_has_option(
++            cc, cc_args, src_feature_tests, "-Wno-cast-function-type-mismatch"
++        ):
++            cflags += ["-Wno-cast-function-type-mismatch"]
++    else:
++        cflags += ['-Wno-cast-function-type']
++
++    # The python headers have mixed code with declarations (decls after asserts, for instance)
++    cflags += ["-Wno-declaration-after-statement"]
++
++    src_perf = f'{srctree}/tools/perf'
++
++    perf = Extension(
++        'perf',
++        sources=[os.path.join(src_perf, 'util/python.c')],
++        include_dirs=['util/include'],
++        extra_compile_args=cflags,
++    )
++
++    setup(
++        name='perf',
++        version='0.1',
++        description='Interface with the Linux profiling infrastructure',
++        author='Arnaldo Carvalho de Melo',
++        author_email='acme@redhat.com',
++        license='GPLv2',
++        url='http://perf.wiki.kernel.org',
++        ext_modules=[perf],
++        cmdclass={'build_ext': BuildExt, 'install_lib': InstallLib},
++    )
++
++
++if __name__ == '__main__':
++    main()
 -- 
-Aaron Tomlin
+2.55.0.229.g6434b31f56-goog
+
