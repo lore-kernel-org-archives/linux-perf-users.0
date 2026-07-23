@@ -1,68 +1,67 @@
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EF43932D8
-	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jul 2026 04:59:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8108E2E7BB6
+	for <linux-perf-users@vger.kernel.org>; Thu, 23 Jul 2026 04:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784782798; cv=none; b=P5C7ipmFqZoYX+S7KzVfow31PnaVkYBmlrN43r477+jRhnGm44l3esalg30bn8Wn+mfk/iN+S84mQ7HoSj1VJfJbWLITgCI25VjkA9gKNViIDxGB6bJPEmJTbUXGm5QWaNEnWHYqT7CEmIVPP9Yg575RZLTHfaUSwL0yfai7nJQ=
+	t=1784782802; cv=none; b=f9ZspgvXqDaU5B76WmdqPT4Y8YbC3LNuptTjkwJ6YVQEBW754OCcrkdsgDuGGWAk54nT2dtHX+/so7QklXMF+qB0mWGd35YAsTAdgs/XHx7hpmBhudr6VNtlFWB35mcCvnOZY1/4z3jh6RdBo657jFp8go2/Ssuh9ZmKT271w3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784782798; c=relaxed/simple;
-	bh=4e5lJdshyVNLKjHpTciKZbgUhuEA4gmHv2L0MMDkQ6U=;
+	s=arc-20240116; t=1784782802; c=relaxed/simple;
+	bh=pID4/alJYNG0QOaOzBgne03+sPbT/nEX+vME0pae7N8=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WXySHD03XzeaYX/wGqF85//XVYg3D/sTCt55zhPzRBAnGcVIawXg6ZKR2mVw7gwpMaVWyEw+p1aLhscTUmKuZ5/9PGAc21ssMUmOt9j2haYqCyHolDrEjqwIugZDoyX7RfHKpQejDi+pdDs+krrHj/Cg4s10+Bw8Wshg8uF+RME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H2EzmqdH; arc=none smtp.client-ip=209.85.216.71
+	 To:Cc:Content-Type; b=NBrr/c6zo6SPF6c9BhdOYTR6rLYoZRdb9Twt2JSwAkq8FKhxYzBsgsZKYD6BzLiF1Ew8eaM/6vs8g3BPH111UCDh+JYxZwloPjI/2Qv5nO5Z7bzlY5rb4EV/EL26F4OTZdXW0brfW/2lzFT+mCGJL4TI9uO1tUnvoPEDrYabY+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s6rZlfaI; arc=none smtp.client-ip=209.85.216.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H2EzmqdH"
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-38e8e864ef0so659048a91.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 21:59:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s6rZlfaI"
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-38ec0f510a9so632242a91.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 22 Jul 2026 21:59:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1784782794; x=1785387594; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1784782796; x=1785387596; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=b/udcemSvZpoMA77w8mffwylF1dXnKAWFX5RvsMWK8I=;
-        b=H2EzmqdHDn4UNG5wOGlXYNUMPWFIYkTxw4nRYXRUffk2nQBF+czUl/Ez/9ddMiBe/n
-         1CJ6GoD4/3N86e87OU1RCeysqrla1lMfQFxyrBkffNaw0J91tCO22D4rMQatLM4Lnuey
-         vFxkSDv3QD4qqYkGckLDETjZUIt9ewA5mX637Y5Ptj+nofyDGDvR/5NFRKnHspnraHqZ
-         lkvo4W7J5LaWkaeqvR13RAysh3L4LNTHmA4UvlR4QyUoo/OBDSE5eKNn5poDdKNden1c
-         GmF24wB8TMNZJ2LYNyJ1AA/OTh/X+R490jHLZ71rDvsu4GOHKfeisdNcCMB+08KWHcGP
-         juRw==
+        bh=5Ve2zmIa6pxnua96cTXgBtsg/co1g9aZD4YRJ0W7aCc=;
+        b=s6rZlfaIyl68jcxGMqbfMq+9A7kPk9Vd2d75F1BdbrveLhTVRnpPdz4oTn9TXQp7n9
+         yIBj7yhhH8/o9nknakPqL+AZHNNYFlrbGtqy+M5Fm9O68icYiDMx7a4BvyWK95Nbk4Vk
+         mSaW1s/gbyyYdLXDMzdn6+JZ/qDId+DI8k5we39fvVZM+acw+O/6xhEWLY0s6g+NG27W
+         +jJ1+zO1f94lRoRGhue+qCDkM3bM4YREsxjv/GiQ4ZTsj7AgrFkVlsuGbG1+pywEZnyV
+         CRrtIDO8Tr0D14zTUnpclHs32cfJsSm+uIFMzf3iPuQZ2rmymJx/wPmnrNUAIO9XHxIX
+         Terg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784782794; x=1785387594;
+        d=1e100.net; s=20251104; t=1784782796; x=1785387596;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=b/udcemSvZpoMA77w8mffwylF1dXnKAWFX5RvsMWK8I=;
-        b=hozqz966SvyDZqaXVy6xY31msF1KbyVHlFcm0Bp6RD9kEwRU80szcFY5eNL+fO6Hcn
-         IyShw4MZuHXIjUiOXHki+BGi+6pR8Tyfd2eQ9NgRqulNlqM+mqumAx1fnOA0mJ65V5f5
-         XFeM8TjiFnEDcwNs2IQAhQ7q5vElaQb5chRCxKvor1OxVXIsisZjiKAU0H1wIsHkqPTh
-         P0+gYOn02WlCq1uyhVLK6CR5hOsa1EyTvrUkM6PpOyVNmpc5rDZciMs3eOQBqIHvmjWh
-         Qeye9c8TNajpxGl3QFtz/NjyPv89GNR8bNyEASXC8+/zWWvZY44VdpF5Mxcc2Jfo3PZu
-         JODw==
-X-Forwarded-Encrypted: i=1; AHgh+Rp0cBdGLq1wNjkVuyB7owxB0K7E/PVBaOBP1D8d8MWHbu3YrR1rv/VHWxJgp3lAGpXi4XvDGONSvOlJo1qXEJHj@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWwLWbRjJxWIevuUhYvukWVz+/XZg7GMVvJlStRFXc3bsG1yFX
-	88xm/in+oAANJlzXArfI4zkN70YodhBN1RZ5i6BNdyOfMPD9VrPeC9gJdXz3BP2vQpQFrfDvlFv
-	T5cC/kvdFZA==
-X-Received: from dlbup12.prod.google.com ([2002:a05:7022:fd0c:b0:13b:340f:d011])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2f06:b0:38e:adf1:5b03
- with SMTP id 98e67ed59e1d1-38ec6665307mr1653963a91.35.1784782794287; Wed, 22
- Jul 2026 21:59:54 -0700 (PDT)
-Date: Wed, 22 Jul 2026 21:59:43 -0700
-In-Reply-To: <20260716072351.560311-1-irogers@google.com>
+        bh=5Ve2zmIa6pxnua96cTXgBtsg/co1g9aZD4YRJ0W7aCc=;
+        b=LmH7uNb7AD80xz+dzsJyglAXv55TySGZPz0R9pPgnrS2+6Xq3YAa76DFUAugWZ3wwd
+         IQcqsU9e7+qQkOphiCfRStNaktG090YtpUDo7uB7lhD6sFJfJXI4gg3jOFSDZImoQNuE
+         hzzODu/J+yHJfiiLOVLwt6t3Y0Nm6V/IjpEME6dU5/wg9QjfNongdGjxNY+aFJCbzUYc
+         wJCzZ5aDi8viREMHRVNeGwMJYWNXUcNtGGDbljxpKBTkaAq0NFkBRYmal03ikO4wCFlm
+         qF8wpG3oFGhwc0n55arg8ghBEK+1abm0nAvzd2vgKCFic/FD8xAguTk169eMOJa2qLW4
+         CNFw==
+X-Forwarded-Encrypted: i=1; AHgh+Rrv8bjcCFCV8svTZLcZej/ClKvsYDV5yoH/2rj+RmVy4Xdj53cZxCwM5Wiu8/awAk0uM17MqB0LEA6Y53W7+HkL@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfZE3A5ym4298IfqZCYJ1RthL9fxp8WY2OldCoiOEVVwlmv4Io
+	iUrVg4Z+uj9JM+UbGPONR6bmVCMolOCXvKg3odDEhvzM3r+Feicm9O8Vf4j7GqsTA/eO2QRXG7l
+	dKibtrksxsQ==
+X-Received: from dlbut13.prod.google.com ([2002:a05:7022:7e0d:b0:13b:8034:c3ce])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:134d:b0:38e:bbf1:de34
+ with SMTP id 98e67ed59e1d1-38ec653883bmr1691770a91.7.1784782796226; Wed, 22
+ Jul 2026 21:59:56 -0700 (PDT)
+Date: Wed, 22 Jul 2026 21:59:44 -0700
+In-Reply-To: <20260723045949.988740-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260716072351.560311-1-irogers@google.com>
+References: <20260716072351.560311-1-irogers@google.com> <20260723045949.988740-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.229.g6434b31f56-goog
-Message-ID: <20260723045949.988740-1-irogers@google.com>
-Subject: [PATCH v7 0/6] perf ui hists / annotate: Remaining fixes for
- reference counting and annotation
+Message-ID: <20260723045949.988740-2-irogers@google.com>
+Subject: [PATCH v7 1/6] perf ui hists: Fix stack use-after-return in symbol_filter_str
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com, 
@@ -71,51 +70,70 @@ Cc: adrian.hunter@intel.com, dapeng1.mi@linux.intel.com,
 	mingo@redhat.com, peterz@infradead.org, tianyou.li@intel.com
 Content-Type: text/plain; charset="UTF-8"
 
-This series contains the remaining 6 unmerged patches from our UI, hists,
-and annotate fix series. Upstream maintainer Namhyung Kim applied patches
-1-6 (except patch 4) from the v6 series into perf-tools-next.
+In evsel__hists_browse(), the local stack array 'buf' is assigned
+directly to the persistent 'hists->symbol_filter_str' pointer. When the
+browser returns or is exited, this dangling pointer remains active in
+the 'hists' struct and is read asynchronously by the perf top background
+timer, triggering a stack use-after-return.
 
-This v7 series includes:
-  - Fix stack use-after-return for symbol_filter_str by duplicating with
-    strdup() and freeing during evsel destruction in hists_evsel__exit().
-  - Guard against NULL hist_entry in add_script_opt() when trace is empty.
-  - Populate map_symbol thread in report UI with proper reference counting
-    (map_symbol__copy, thread__get) and memset zeroing in
-    free_popup_actions().
-  - Fix dso_filter reference leak and exit zoom cleanup.
-  - Robust cross-platform disassembly fallback when annotating without a
-    thread.
-  - Remove duplicated thread member from struct popup_action (placed at the
-    end of the series per reviewer feedback).
+Fix it by properly duplicating the input string using strdup(), safely
+invoking zfree() to prevent memory leaks when overwriting, and cleanly
+resetting and freeing the symbol filter string upon exiting the browser.
 
-v7 Changes:
-  - Rebased onto latest perf-tools-next (after patches 1-3, 5-6 were
-    merged).
-  - Move symbol_filter_str teardown to hists_evsel__exit() to allow filter
-    persistence across TUI navigation while preventing memory leaks.
-  - Add memset zeroing to free_popup_actions() to prevent cross-iteration
-    stale action leakage.
-  - Placed "Remove duplicated thread in popup_action" as the final patch
-    in the series as requested.
+Assisted-by: Antigravity:gemini-3.5-flash
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/builtin-report.c    | 7 +++++--
+ tools/perf/ui/browsers/hists.c | 5 ++++-
+ tools/perf/util/hist.c         | 1 +
+ 3 files changed, 10 insertions(+), 3 deletions(-)
 
-Ian Rogers (6):
-  perf ui hists: Fix stack use-after-return in symbol_filter_str
-  perf ui hists: Guard against NULL hist_entry in add_script_opt()
-  perf ui hists: In report UI ensure thread is set with reference
-    counting
-  perf ui hists: Fix dso_filter reference leak and exit zoom cleanup
-  perf annotate: Be robust to annotating without a thread
-  perf ui hists: Remove duplicated thread in popup_action
-
- tools/perf/builtin-report.c       |   7 +-
- tools/perf/ui/browsers/annotate.c |   2 +-
- tools/perf/ui/browsers/hists.c    | 153 ++++++++++++++++++++----------
- tools/perf/util/annotate.c        |  51 +++++++---
- tools/perf/util/annotate.h        |   3 +-
- tools/perf/util/capstone.c        |  42 ++++++--
- tools/perf/util/hist.c            |   1 +
- 7 files changed, 182 insertions(+), 77 deletions(-)
-
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 10db1e5f1e6c..60d1f166629e 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -726,8 +726,11 @@ static int report__collapse_hists(struct report *rep)
+ 	evlist__for_each_entry(rep->session->evlist, pos) {
+ 		struct hists *hists = evsel__hists(pos);
+ 
+-		if (pos->core.idx == 0)
+-			hists->symbol_filter_str = rep->symbol_filter_str;
++		if (pos->core.idx == 0) {
++			hists->symbol_filter_str =
++				rep->symbol_filter_str ?
++				strdup(rep->symbol_filter_str) : NULL;
++		}
+ 
+ 		hists->socket_filter = rep->socket_filter;
+ 
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index b6002724bc3a..be8a6b169722 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -3220,7 +3220,10 @@ static int evsel__hists_browse(struct evsel *evsel, int nr_events, const char *h
+ 					"To remove the filter later, press / + ENTER.",
+ 					buf, "ENTER: OK, ESC: Cancel",
+ 					delay_secs * 2) == K_ENTER) {
+-				hists->symbol_filter_str = *buf ? buf : NULL;
++				char *new_filter = *buf ? strdup(buf) : NULL;
++
++				zfree(&hists->symbol_filter_str);
++				hists->symbol_filter_str = new_filter;
+ 				hists__filter_by_symbol(hists);
+ 				hist_browser__reset(browser);
+ 			}
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index c93915625ee7..443694926f1a 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -3056,6 +3056,7 @@ static void hists_evsel__exit(struct evsel *evsel)
+ 	struct perf_hpp_list_node *node, *tmp;
+ 
+ 	hists__delete_all_entries(hists);
++	zfree(&hists->symbol_filter_str);
+ 	zfree(&hists->mem_stat_types);
+ 	zfree(&hists->mem_stat_total);
+ 
 -- 
 2.55.0.229.g6434b31f56-goog
 
