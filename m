@@ -1,68 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9246724336D
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jul 2026 05:47:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3687024336D;
+	Fri, 24 Jul 2026 05:47:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784872037; cv=none; b=Ss8b5wJFYZWRDC/g3cLPgpv4a5ES6uu9z53eXVU6E+mEWqfgUQNEQNVQ5kVvVQCGiomrXv3ajU2zIvwyY+1JL8zsORWP/PqEbomJMLJqX6bUvEumBDck4mn4/bF6SR6gwHrvqOvZ90WmTVZ8uI+VdgsCncWUb80LJ6jKTIdCVN4=
+	t=1784872077; cv=none; b=ivzRUgpVCekKgQjYEwlpaI7iTLo/9MNJ36rx3uuMONZsBSgXhS3Pmw6xE9kbFkZi2qDXILPLLltZ5HVfSsA6OqQDQxqputjF1VRbyNrvG4MmQAXa3MYAEJ+44wJ84373jjfZXfAnY2jDM2IcyDzerB2dJ74aIE1EqYlSBEKhbdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784872037; c=relaxed/simple;
-	bh=MOIZr2bLwFuWf64HO25lkKcJA5i6HPxiyHhX+cujERY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=bRXbJ5KK6G5uzrRjiEqk49eyiP9s7Tuijj3OO/aeoCd4CGhDnBjTXJZ8ICNS5Ep3i2oMoDPCPELP2PdF6VJCY4i85XrDdJEPc5Yd+zhDW97VDqOPs+cV1lgXcSvW/ongm9acfScpOb43psLdsU6duSp6zm15d58EybcM1Nw5W4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LGeLqg6M; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784872077; c=relaxed/simple;
+	bh=9S6t33Kt/s0SKnuZez3a2frufd5qLytCC6Ut6pkY8Oo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eLCkg3m6HOQVroBMz+A5BZ+KaCMLJU0T7C8Y5s01UKjymJzvrjua/rZUzA1n9d4Ea7R73wvKbPB6o++/ru8gvTBOn/bxkOLToNufhH8bsAhFdfyVUHfgNz3ujKg+79v8rx+jUTUkQo/jQQPZdWEy2e/oOVDb0kajlBa2Cl/ynHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOLcE+Pn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LGeLqg6M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDEB81F000E9;
-	Fri, 24 Jul 2026 05:47:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOLcE+Pn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 776451F000E9;
+	Fri, 24 Jul 2026 05:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784872036;
-	bh=F+En/bNUfvq5UDKWEKTIJOS62zs7KhEQjTs+bfpIaMw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=LGeLqg6MBufxU8gjR/M2nLX1JSxS3eEQ1DKi6rnIr6bXLf1sGK5+FdFMZXh0y53xG
-	 9wd0/kiwYdMAIc6hsLxbqmBZti0fMDm3Q2pVlncowuYG5lH25wrcSvhQsMuioiqCFi
-	 e8bRrxqdnQPmmzSV2XPvXRr7l32LyYsWKSqgX7NnCeCiu3TwNMBlMKIUlCp+pRuG+b
-	 vT7oqtJr5kN9kqdgA22Dq6lakHV/qEL/ToVw4v83vIhLwvV//QpeXN76FvTx186IwO
-	 QVTZOPpxopuchY7OxgZ2lHqFTnnSt7ZapS1RdN5ZE5rR/7uSai5Js/9JvqNYg0e6VR
-	 3uf/i5D+4d3LA==
+	s=k20260515; t=1784872075;
+	bh=5c6px/NKFl5ekTSD9oL5y9dX8xFZLK9PfF82fPvMeqk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=UOLcE+Pn7gOU5c+WwlHYbTgEkAtbfHmsWQYlXNo5+J7z1NuVEGjWHBcHS/Cbs4ZUh
+	 h6TdrXTEmwttJrSTZFJuTBeWZ3NsQ9WUNHKF5h4+zlmi9lyXnAKkOp3UkcXb21dLD+
+	 3p8ERay3XmH1JcP3W3n1fZpGPuklYyJA1gbdTxCfAfsAoTsb4M3f6iOZ8YvkL0JdAR
+	 UuaeMwYTGoXK7SPjB82LNd0FP0fmhtJHrf4Ziku4gmCow+wsgXlL/EjwhcJiyfe8md
+	 P2Ov8ipTeiQr7vxjzYJxcTgoQDHpQmhFLqwebYPuYXj++bl72zkeVQacrX45lwffCl
+	 vpieq85TOHWtg==
+Date: Thu, 23 Jul 2026 22:47:53 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@arm.com>, 
- James Clark <james.clark@linaro.org>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>, Leo Yan <leo.yan@arm.com>
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
- linux-perf-users@vger.kernel.org, Suyash Mahar <smahar@meta.com>
-In-Reply-To: <20260720-perf_cs_etm_fix_big_size-v1-1-97ded24636b1@arm.com>
-References: <20260720-perf_cs_etm_fix_big_size-v1-1-97ded24636b1@arm.com>
-Subject: Re: [PATCH] perf cs-etm: Avoid truncating AUX buffer sizes to int
-Message-Id: <178487203590.824432.12306420213217895178.b4-ty@kernel.org>
-Date: Thu, 23 Jul 2026 22:47:15 -0700
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, abyssmystery@gmail.com, adrian.hunter@intel.com,
+	james.clark@linaro.org, jolsa@kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	mingo@redhat.com, peterz@infradead.org
+Subject: Re: [PATCH v3] perf cap: Remove used_root parameter and simplify
+ capability checks
+Message-ID: <amL8icNhBkZvTzEB@google.com>
+References: <20260716074028.568999-1-irogers@google.com>
+ <20260723050640.992865-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260723050640.992865-1-irogers@google.com>
 
-On Mon, 20 Jul 2026 11:01:21 +0100, Leo Yan wrote:
-> cs_etm__get_trace() returns an int, but it used to return etmq->buf_len
-> on success. That value comes from auxtrace_buffer::size, which is a
-> size_t. For a large AUX trace block, returning the byte count through an
-> int can overflow and make a valid buffer look like a negative error.
+On Wed, Jul 22, 2026 at 10:06:40PM -0700, Ian Rogers wrote:
+> Refactor perf_cap__capable() to completely remove the used_root out-parameter
+> as requested by the maintainer. Relying on an explicit used_root boolean
+> poisoned sequential capability checks (e.g. failing CAP_SYS_ADMIN checks
+> poisoning the flag for subsequent CAP_PERFMON evaluations for unprivileged
+> users) and created redundant complexity across check_ftrace_capable(),
+> symbol__read_kptr_restrict(), and perf_event_paranoid_check().
 > 
-> The callers do not need the actual byte count from cs_etm__get_trace().
-> The buffer length is already stored in the etmq->buf_len. The callers
-> only need to distinguish three states:
-> 
-> [...]
+> Streamline the capability API to perform a pure true/false boolean
+> evaluation. The function checks the Effective set using SYS_capget; if
+> the syscall is missing or fails on legacy kernels, it cleanly falls back
+> to checking EUID == 0. This perfectly preserves modern capability-aware host
+> sessions, guarantees transparent fallback for older kernels, and correctly
+> rejects privileged operations for containerized root processes that have
+> explicitly dropped their capability bounding and permitted sets.
+
 Applied to perf-tools-next, thanks!
 
 Best regards,
 Namhyung
-
 
