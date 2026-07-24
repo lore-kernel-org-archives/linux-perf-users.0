@@ -1,124 +1,140 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F091643CE66
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jul 2026 14:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AEB324716
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jul 2026 14:54:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784904463; cv=none; b=SQGyZuINyXHdJtRV13uXgqEegC0OEe/8NrTy7YFrhKM5cy52ORwC39yGcBKd57wgy7F9JEap3ope++rlHpznk8m8KkvVrWV7IEQlMM3J39SQinqMUL80FOegZTdnb90HONdOm3y+NB8t4D072ZTHgW0AI3mhRxNQ2ePK0wNLw1g=
+	t=1784904878; cv=none; b=U2Q3HQ6/DKUn0+7RFQe2s2wgJ9ZVs69L+iKH6QJjfuJ7uDF1YkVCCYo5tEvk/XQQXs1C6ic5EIjTG/Eft1JWNoeWVV6asVd07nRNk1RZlLp/OL9dBhK4lPz4noXvg62V5UAJ9DGLo4as/tLExoMpe4/CEoxPxzsw0b2fZrIyJb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784904463; c=relaxed/simple;
-	bh=oaZYlF4WjsLRSJUtRY713RXzf94Irbv1Ut6+Oawbeso=;
+	s=arc-20240116; t=1784904878; c=relaxed/simple;
+	bh=Fs2OmUak6Sxx9BmOUGBgUK52nd7U+ErP8J1xS6BgV/A=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ReqlgYJ4CxbUyUUX9sHcdRLv3KOJCVF7ooMnblq62c9ghQcR2kTCWa/XMf7NBT6goDMQ/gE1hzzqRWcqe6+TxEUmOOAmnjRhB5LBI1wM+L7d9q5Hd67/xqUZz5OdjSAggG8IPFNrs5JxJG8nMR86YXiDM8+1vtljl8KmucwQczY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CUcW64xi; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=k1Hoo6QZlHfFzWVToNFZmdD/BreZjsfIS9fRu2qMBbsItjpSbaSjurRXGskdRB5LCULOokBcXUgaO7E6ZaiKM1qQHfUe8FSfkceeMEGnWqDYEzj1aN+7o0RQx4gQ77qUFCXWf8PMSNlDFpj3yL34UwtsQfXLUlFfbClJHbaEYyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrHDOHPW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CUcW64xi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D8FE1F000E9;
-	Fri, 24 Jul 2026 14:47:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrHDOHPW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 944741F00A3A;
+	Fri, 24 Jul 2026 14:54:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784904461;
-	bh=NOiUnNj3QNNSZg78wVtOwbIU/PPD2eatQEST+jLUIPQ=;
+	s=k20260515; t=1784904873;
+	bh=iMudD46VPVyL6OCjzvohdNuUsuVuq+KR76PpKRgAFFY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=CUcW64xi6uBdqplLN7ZfJvOFGuCO1QAPVDM4IiV/taunaWm4cbSnDH4Zf3IB6PQj5
-	 kpL8gNXCtwA+SoX18GJFafXWiETsF8GF/r8ApxDvSMvhSQu2w2Pamb6k4EviUteykS
-	 4E5J1Rx6IZIaZDKmZdDr6FcgrAyFGnuGVp6RPpQkWh8gDutHkqf3fVe/Tg1ZWx1tqh
-	 H+AGFoCUYdWQpLmr6znvQeT24DXsbQwcnYcED7+Rb75nIro+mEvShBYfCz4c1XrfWY
-	 0xMJVVELl8PuFLGcXxx9dkRTVZbj5LV8VDcFCN1WHuRL5dhPbg4i0T7EizFjxteCKD
-	 HGfIByGawXEqQ==
+	b=OrHDOHPW7YVk3YNWtTYS5HDogpR2lLchcLGNCVP7zRWD0P9xx+eowQvIGvTSux2O0
+	 W7OmW8p141lD0wZm/ZHbTJ6Rtq2yujgUE5yyFPAsX5Tbzu18kSdbvVUZU60eQEwgbA
+	 anpsKX/U1EJroyjG7BeBOy9jinycjDaqnuf+ScppyWtmai0AuKeJOfubOQBpU60vKX
+	 8TXibNfg7QMyXCp2pt5++BT9BE/ezBgQXEDfsqBLIS7415QR+wua75fCtIEqsM9UfL
+	 wcLJiMPlXMmVIKV2NN6jjFyZElc/L7XV577Mt4eQvIG1RUyj/yyqF745q8C5vrdDYO
+	 b+GN/V2Ln9sZw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 2/5] perf trace-event: Fix integer truncation in
- do_read() and skip()
+Subject: Re: [PATCH v3 4/5] perf trace-event: Fix heap buffer overflow in
+ read_ftrace_printk()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tanushree Shah" <tshah@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260724141316.99507-3-tshah@linux.ibm.com>
+In-Reply-To: <20260724141316.99507-5-tshah@linux.ibm.com>
 References: <20260724141316.99507-1-tshah@linux.ibm.com>
- <20260724141316.99507-3-tshah@linux.ibm.com>
+ <20260724141316.99507-5-tshah@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Jul 2026 14:47:40 +0000
-Message-Id: <20260724144741.5D8FE1F000E9@smtp.kernel.org>
+Date: Fri, 24 Jul 2026 14:54:33 +0000
+Message-Id: <20260724145433.944741F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
+New issues:
+- [Low] The patch uses `UINT_MAX` without explicitly including `<limits.h>`=
+, violating musl compatibility guidelines.
+
 Pre-existing issues:
-- [Critical] Integer overflow in read_saved_cmdline() leads to massive heap=
- buffer overflow
+- [Critical] The commit patches a heap buffer overflow in `read_ftrace_prin=
+tk()` by preventing `malloc(size + 1)` from wrapping to 0, but misses an id=
+entical vulnerability in `read_saved_cmdline()`.
 --
 
---- Patch [2]: [PATCH v3 2/5] perf trace-event: Fix integer truncation in d=
-o_read() and skip() ---
-commit 907c8b1b7591be61f25cc72141dbcdba5822dfa4
+--- Patch [4]: [PATCH v3 4/5] perf trace-event: Fix heap buffer overflow in=
+ read_ftrace_printk() ---
+commit e35d114b06414be20beac51dfd3a3e158eba2833
 Author: Tanushree Shah <tshah@linux.ibm.com>
+Subject: perf trace-event: Fix heap buffer overflow in read_ftrace_printk()
 
-perf trace-event: Fix integer truncation in do_read() and skip()
-
-The do_read() and skip() functions use 'int' for size parameters,
-truncating 64-bit sizes from callers. This causes two issues:
-
-1. Uninitialized memory dump: do_read() reads fewer bytes than
-   allocated, leaving uninitialized heap memory that gets written
-   to output files.
-
-2. Out-of-bounds read: Parsing functions process the full 64-bit
-   size while only partial data was read into the buffer.
-
-Change do_read(), __do_read(), and skip() to use size_t for size
-parameters and ssize_t for return values (where applicable), matching
-read()/write() system calls.
-Update callers to use ssize_t for storing return values.
+Fixes a heap buffer overflow in read_ftrace_printk() by preventing
+malloc(size + 1) from wrapping to 0 when size is UINT_MAX.
 
 > diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-e=
 vent-read.c
-> index afd458cf1387d..52ed496d92c3b 100644
+> index 52ed496d92c3b..147a3b95ce06b 100644
 > --- a/tools/perf/util/trace-event-read.c
 > +++ b/tools/perf/util/trace-event-read.c
 
 [ ... ]
 
-> @@ -350,7 +350,7 @@ static int read_saved_cmdline(struct tep_handle *peve=
-nt)
->  {
->  	unsigned long long size;
->  	char *buf;
-> -	int ret;
-> +	ssize_t ret;
+> @@ -180,6 +180,11 @@ static int read_ftrace_printk(struct tep_handle *pev=
+ent)
+>  	if (!size)
+>  		return 0;
 > =20
->  	/* it can have 0 size */
->  	size =3D read8(pevent);
+> +	if (size =3D=3D UINT_MAX) {
+> +		pr_debug("invalid ftrace printk size\n");
+> +		return -1;
+> +	}
+> +
+
+[Severity: Low]
+Does this code need to include <limits.h>?
+
+The perf tools guidelines for musl compatibility state that we shouldn't re=
+ly
+on implicit header inclusions.
+
+Compiling against musl could fail since UINT_MAX is used without explicitly
+including <limits.h>.
+
+>  	buf =3D malloc(size + 1);
+>  	if (buf =3D=3D NULL)
+>  		return -1;
+
+[ ... ]
 
 [Severity: Critical]
-This is a pre-existing issue, but can this lead to a massive heap buffer
-overflow?
+This is a pre-existing issue, but doesn't the exact same wrapping
+issue exist in read_saved_cmdline() in the same file?
 
-In read_saved_cmdline(), size is an 8-byte value read directly from the
-untrusted file:
+tools/perf/util/trace-event-read.c:read_saved_cmdline() {
+	unsigned long long size;
+	char *buf;
+	ssize_t ret;
 
+	/* it can have 0 size */
 	size =3D read8(pevent);
 	if (!size)
 		return 0;
 
 	buf =3D malloc(size + 1);
-	if (buf =3D=3D NULL)
+	if (buf =3D=3D NULL) {
+		pr_debug("memory allocation failure\n");
 		return -1;
+	}
 
 	ret =3D do_read(buf, size);
+	...
+}
 
-If the size read from the file is ULLONG_MAX (or UINT_MAX on 32-bit systems=
-),
-the size + 1 expression will wrap to 0.
+If size is ULLONG_MAX, size + 1 wraps to 0.
 
-The malloc(0) call will then succeed and return a small heap chunk, but the
-original unwrapped massive size is passed to do_read(), which will loop and
-read an enormous amount of data directly into the tiny buffer.
+This causes malloc(0) to return a minimal allocation while the original
+ULLONG_MAX size is passed to do_read(), leading to a heap buffer overflow.
+
+Should a similar size check be added here to prevent malicious perf.data fi=
+les
+from triggering this?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260724141316.9950=
-7-1-tshah@linux.ibm.com?part=3D2
+7-1-tshah@linux.ibm.com?part=3D4
