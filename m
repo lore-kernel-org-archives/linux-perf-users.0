@@ -1,140 +1,117 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AEB324716
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jul 2026 14:54:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252802F549F
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jul 2026 14:55:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784904878; cv=none; b=U2Q3HQ6/DKUn0+7RFQe2s2wgJ9ZVs69L+iKH6QJjfuJ7uDF1YkVCCYo5tEvk/XQQXs1C6ic5EIjTG/Eft1JWNoeWVV6asVd07nRNk1RZlLp/OL9dBhK4lPz4noXvg62V5UAJ9DGLo4as/tLExoMpe4/CEoxPxzsw0b2fZrIyJb0=
+	t=1784904916; cv=none; b=OGhNtLL9QSCJ+SzN++2Axt0jeAbxrbJqne06tfWCKKu07eYMc+tnCaBcn2zRlE4w0eU6nCDaamXjz5kGXXlS1bWyK6VMwsrFKzfwGJ76v/z3N0kSbgmRT33c/ooUHxLcM9oXzJOKTdROVQlE+/A16dOuF+5+zVbmZhMeQx1UDqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784904878; c=relaxed/simple;
-	bh=Fs2OmUak6Sxx9BmOUGBgUK52nd7U+ErP8J1xS6BgV/A=;
+	s=arc-20240116; t=1784904916; c=relaxed/simple;
+	bh=omnAV/QkoDK/0nBud+f+zu6NBgZ7qB+owcztTvCd5u0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=k1Hoo6QZlHfFzWVToNFZmdD/BreZjsfIS9fRu2qMBbsItjpSbaSjurRXGskdRB5LCULOokBcXUgaO7E6ZaiKM1qQHfUe8FSfkceeMEGnWqDYEzj1aN+7o0RQx4gQ77qUFCXWf8PMSNlDFpj3yL34UwtsQfXLUlFfbClJHbaEYyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrHDOHPW; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=nlQnNnW9H3/C7C0DqOB0WPLAiQpNvB14u+TWSHDXTtoPuFPNWIoTIiIXSivC9oB+S5KoPY5+ybeHcEY+SNcvHu2pcdEMMvDw2cg1bQva3/Ex/lIDCpqoXaj2CpabmJLQHnQq77eBP1WhJeDs1oSQI1NfOdHhTI5r+0UV9hVLz8U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HimGM9Gh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrHDOHPW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 944741F00A3A;
-	Fri, 24 Jul 2026 14:54:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HimGM9Gh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90C7E1F000E9;
+	Fri, 24 Jul 2026 14:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784904873;
-	bh=iMudD46VPVyL6OCjzvohdNuUsuVuq+KR76PpKRgAFFY=;
+	s=k20260515; t=1784904914;
+	bh=4Z9LkJbKElkxJk5q9zzcmY8ocTuiE/0vHD8D/gb3IxY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OrHDOHPW7YVk3YNWtTYS5HDogpR2lLchcLGNCVP7zRWD0P9xx+eowQvIGvTSux2O0
-	 W7OmW8p141lD0wZm/ZHbTJ6Rtq2yujgUE5yyFPAsX5Tbzu18kSdbvVUZU60eQEwgbA
-	 anpsKX/U1EJroyjG7BeBOy9jinycjDaqnuf+ScppyWtmai0AuKeJOfubOQBpU60vKX
-	 8TXibNfg7QMyXCp2pt5++BT9BE/ezBgQXEDfsqBLIS7415QR+wua75fCtIEqsM9UfL
-	 wcLJiMPlXMmVIKV2NN6jjFyZElc/L7XV577Mt4eQvIG1RUyj/yyqF745q8C5vrdDYO
-	 b+GN/V2Ln9sZw==
+	b=HimGM9GhSKlSDdv8GMCupB3PxxR5etrWN+QWW8eR3k7C7Wfw+wxrSLPg36EflRleZ
+	 wkWJ00wwtVnZOSmagzJidp/1Sc+MQOTIXJgf051t+PgAxE2418YL/Y/McqND9TXhwK
+	 Ssvr3sHmCpmYlEZQhQtD9aI/td2KJtQKkU3UQMIi5cgd0yFujhiMqBOJUhmV+OyXfM
+	 L56SDqO3FnTOFct6jTBF38kZenzSbbMJ3rJr9c7KlleC5BzbUmmgcKBv5wrZhpg+Pn
+	 nhCUs7auyYsC+f6g56jSz/9EUGOjDbbytBA/qn6u61JUQCaFUocqvYZHDJbQxjYTq2
+	 Feqe5XsPHVIAA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 4/5] perf trace-event: Fix heap buffer overflow in
- read_ftrace_printk()
+Subject: Re: [PATCH v3 3/5] perf trace-event: Avoid double free in
+ trace_event__cleanup()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tanushree Shah" <tshah@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260724141316.99507-5-tshah@linux.ibm.com>
+In-Reply-To: <20260724141316.99507-4-tshah@linux.ibm.com>
 References: <20260724141316.99507-1-tshah@linux.ibm.com>
- <20260724141316.99507-5-tshah@linux.ibm.com>
+ <20260724141316.99507-4-tshah@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Jul 2026 14:54:33 +0000
-Message-Id: <20260724145433.944741F00A3A@smtp.kernel.org>
+Date: Fri, 24 Jul 2026 14:55:14 +0000
+Message-Id: <20260724145514.90C7E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
-New issues:
-- [Low] The patch uses `UINT_MAX` without explicitly including `<limits.h>`=
-, violating musl compatibility guidelines.
-
 Pre-existing issues:
-- [Critical] The commit patches a heap buffer overflow in `read_ftrace_prin=
-tk()` by preventing `malloc(size + 1)` from wrapping to 0, but misses an id=
-entical vulnerability in `read_saved_cmdline()`.
+- [High] Calling trace_event__init() repeatedly on the same struct trace_ev=
+ent leaks the previously allocated tep_handle and plugins.
 --
 
---- Patch [4]: [PATCH v3 4/5] perf trace-event: Fix heap buffer overflow in=
- read_ftrace_printk() ---
-commit e35d114b06414be20beac51dfd3a3e158eba2833
+--- Patch [3]: [PATCH v3 3/5] perf trace-event: Avoid double free in trace_=
+event__cleanup() ---
+commit 1eb2775370e0095c8df022b4a83dcd46f4b90b94
 Author: Tanushree Shah <tshah@linux.ibm.com>
-Subject: perf trace-event: Fix heap buffer overflow in read_ftrace_printk()
 
-Fixes a heap buffer overflow in read_ftrace_printk() by preventing
-malloc(size + 1) from wrapping to 0 when size is UINT_MAX.
+perf trace-event: Avoid double free in trace_event__cleanup()
 
-> diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-e=
-vent-read.c
-> index 52ed496d92c3b..147a3b95ce06b 100644
-> --- a/tools/perf/util/trace-event-read.c
-> +++ b/tools/perf/util/trace-event-read.c
+trace_event__cleanup() frees t->pevent but never clears the pointer. It can=
+ be
+called twice on the same trace_event: once from trace_report()'s error path,
+and again from perf_session__delete() during session teardown, resulting in=
+ a
+double free / use-after-free.
 
-[ ... ]
-
-> @@ -180,6 +180,11 @@ static int read_ftrace_printk(struct tep_handle *pev=
-ent)
->  	if (!size)
->  		return 0;
+> diff --git a/tools/perf/util/trace-event.c b/tools/perf/util/trace-event.c
+> index 6a8c66c64b705..cf40e98d16177 100644
+> --- a/tools/perf/util/trace-event.c
+> +++ b/tools/perf/util/trace-event.c
+> @@ -63,8 +63,12 @@ int trace_event__register_resolver(struct machine *mac=
+hine,
 > =20
-> +	if (size =3D=3D UINT_MAX) {
-> +		pr_debug("invalid ftrace printk size\n");
-> +		return -1;
-> +	}
+>  void trace_event__cleanup(struct trace_event *t)
+>  {
+> +	if (!t->pevent)
+> +		return;
 > +
 
-[Severity: Low]
-Does this code need to include <limits.h>?
+[Severity: High]
+This isn't a bug introduced by this patch, but while we are making it safe
+to call trace_event__cleanup() multiple times, should we also call it from
+trace_event__init() to prevent memory leaks?
 
-The perf tools guidelines for musl compatibility state that we shouldn't re=
-ly
-on implicit header inclusions.
+If a maliciously crafted perf.data file contains multiple
+PERF_RECORD_HEADER_TRACING_DATA headers, trace_report() can be called
+multiple times on the same session, invoking trace_event__init() repeatedly:
 
-Compiling against musl could fail since UINT_MAX is used without explicitly
-including <limits.h>.
-
->  	buf =3D malloc(size + 1);
->  	if (buf =3D=3D NULL)
->  		return -1;
-
-[ ... ]
-
-[Severity: Critical]
-This is a pre-existing issue, but doesn't the exact same wrapping
-issue exist in read_saved_cmdline() in the same file?
-
-tools/perf/util/trace-event-read.c:read_saved_cmdline() {
-	unsigned long long size;
-	char *buf;
-	ssize_t ret;
-
-	/* it can have 0 size */
-	size =3D read8(pevent);
-	if (!size)
-		return 0;
-
-	buf =3D malloc(size + 1);
-	if (buf =3D=3D NULL) {
-		pr_debug("memory allocation failure\n");
-		return -1;
-	}
-
-	ret =3D do_read(buf, size);
-	...
+tools/perf/util/trace-event-read.c:trace_report() {
+    ...
+	if (trace_event__init(tevent)) {
+    ...
 }
 
-If size is ULLONG_MAX, size + 1 wraps to 0.
+This overwrites the previously allocated tep_handle and plugins without
+freeing them, leaking the memory:
 
-This causes malloc(0) to return a minimal allocation while the original
-ULLONG_MAX size is passed to do_read(), leading to a heap buffer overflow.
+tools/perf/util/trace-event.c:trace_event__init() {
+    ...
+		t->plugin_list =3D tep_load_plugins(pevent);
+		t->pevent  =3D pevent;
+    ...
+}
 
-Should a similar size check be added here to prevent malicious perf.data fi=
-les
-from triggering this?
+>  	tep_unload_plugins(t->plugin_list, t->pevent);
+>  	tep_free(t->pevent);
+> +	t->pevent =3D NULL;
+>  }
+> =20
+>  /*
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260724141316.9950=
-7-1-tshah@linux.ibm.com?part=3D4
+7-1-tshah@linux.ibm.com?part=3D3
