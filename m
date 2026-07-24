@@ -1,100 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB94377A87;
-	Fri, 24 Jul 2026 10:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60FCF3AFCFF
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jul 2026 10:09:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784887431; cv=none; b=Q3Ly2quaCz+iakKYMuGBBxmlOU5N9Tm1wWXokSmJIGWdabwQGY33sRxZdw/rfDl01AFfaslN64gKoN4wrEpTVxWYWa0uTd3tx0h7SdXPSoaqM25pvtj1RP8WdYeWmX0zPZ38ILNvvjuXoM+DRFDeutP6Nq4HvmUpLd/W7XSU38E=
+	t=1784887775; cv=none; b=HpXDCrgvhdY+7m8/kRPNcQKzNDhpPmbIzTCP1eDmIGViu15ODzcFVMpQac40NMfmgBmtoZCiXxopsTZE+RUvhynN5+A1FGmncxffjVXjog8HoVXGVyj0WhkOEjesaibkLlhrBtzkCLp24xGfLKdE28xAQVmj5ouTiSCers+a8IU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784887431; c=relaxed/simple;
-	bh=TTNu8z8C8+rZhy9RvimN7rsnzmN3UBOiCxCqvmg7/eA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A9lt0IXndyZS7Ukq+I8lPSTAEE8b0ergQI81Y7qyvCg1AXBJ2xk9xd5OzUrPzvj3lFC6sDeMcsAfbnPzZHVcE5F8RyLaFmWFvSoNo42SXp42WpN84XUOga3TZbR9lYRZALDn6rDMLb6RrHznY4e/E4a9M2yIUpq4DIBp3Vylvf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dwc32GJ3; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1784887775; c=relaxed/simple;
+	bh=xNbwP1Bpq87cubxahqkeUvI97FQ5gz+s3HImi0RrA8U=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Swyp9JZFjqJAfKvJ7eH3tNURyfP17CuYwZzzbOspv4TZ3YvxYw5sx5/h6y66Sn53c6qwMazNOdrIon/VRn9w/8VIV6sXUicDFvFVIErOA5EtotxP78KQxi/TnK/PE75Et9tSZjCw5oirFIBm9CRmIEZXm9/YK4qmyo154RDReDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rv4fVy6A; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dwc32GJ3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1784887430; x=1816423430;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TTNu8z8C8+rZhy9RvimN7rsnzmN3UBOiCxCqvmg7/eA=;
-  b=Dwc32GJ3NdKERex+kMgXdSGfXyCwuLYj7Iyz9XBkGcPsb2Ahc4OySyYI
-   YJdQSBsIV4Q4szmtLfqTM9m+IS4KUEOWJmqAFf8q0Vf8XHDmEU61YXRn5
-   gduutJfta2RZmQ+4B9MGyegFMiPSzt8/GMgjIAiVWx+dS6WBWLQyceLAu
-   x9XtyHql9h2f0l5MgziAGxHJUZZudwVhIx1WbL09IxKPlcZa8CmLjgrQA
-   bKEYpKOg1PTJZ3lstnRgz3gQikenZ0XXRouGDmdK17IPk+6YpnsmIYM88
-   YcUnJ3yMKseDFvTKS3kYsIR/68f4A0puNm3nyQduzC5iI4u9I8xvTcTtW
-   Q==;
-X-CSE-ConnectionGUID: 8R13VHNuQG2f2dnZ6iHh6w==
-X-CSE-MsgGUID: Vx83yCn7RDaHJIq8Hhs71A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="89442968"
-X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
-   d="scan'208";a="89442968"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 03:03:48 -0700
-X-CSE-ConnectionGUID: Ie4yQ/HUQ6KcGASQE2/OrQ==
-X-CSE-MsgGUID: Fbh0ge/9SV+iQseXMt1oDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
-   d="scan'208";a="255302811"
-Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by fmviesa007.fm.intel.com with ESMTP; 24 Jul 2026 03:03:44 -0700
-From: Jiebin Sun <jiebin.sun@intel.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: acme@kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	irogers@google.com,
-	james.clark@linaro.org,
-	jolsa@kernel.org,
-	mark.rutland@arm.com,
-	dapeng1.mi@linux.intel.com,
-	thomas.falcon@intel.com,
-	tianyou.li@intel.com,
-	wangyang.guo@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jiebin Sun <jiebin.sun@intel.com>
-Subject: Re: [PATCH 00/14] perf c2c: add a function view
-Date: Fri, 24 Jul 2026 18:10:29 +0800
-Message-ID: <20260724101029.1000212-1-jiebin.sun@intel.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <amGpVYnDyqe7-xdy@google.com>
-References: <amGpVYnDyqe7-xdy@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rv4fVy6A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C67671F000E9;
+	Fri, 24 Jul 2026 10:09:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1784887774;
+	bh=m97HWWgo3aOxw1u1jp1iJl7ffxAMd5T2zkvLIsj3ZuY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Rv4fVy6AppiFUa+FnTCTKHjSB4XDfTi6muHqztFI8cR0yJY9vdrNRd7cQ2xdTttzJ
+	 qGvJ6waobSlH/DnnGFwj7xs15j2WAUo4Gn+LfsQKuohCuyAtp1eCoYMPDMTLgg2C4Y
+	 v/B9YEk4LIO8dsJ3fn9zhe7I2BvG4HjCNJPW4TIsfvXiFG1As7QXh5wBCEjAd5VtQk
+	 5bQcqqMhnkBKd/b+C5apIm7a3k+OCHbbhqSlw2HMt+if7HGHn+atPbZ40D7aYS3bbO
+	 4zEjiLXGcULZ+Dr4klxrcVl6qsqDnjj7OIsCKj4J6cczmU7mobN+btZhjRAWDBOR+F
+	 heQyVWxmsDJLw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v4 3/9] perf c2c: add column rendering for function view
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Jiebin Sun" <jiebin.sun@intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260724095842.995920-4-jiebin.sun@intel.com>
+References: <20260717020530.1645123-1-jiebin.sun@intel.com>
+ <20260724095842.995920-1-jiebin.sun@intel.com>
+ <20260724095842.995920-4-jiebin.sun@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 24 Jul 2026 10:09:33 +0000
+Message-Id: <20260724100933.C67671F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi Namhyung,
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The minimum column width logic (`cl_min`) is incorrectly guarded=
+ by an upper-bound check (`width > SYMBOL_WIDTH`), causing silent truncatio=
+n of cacheline addresses when level-1 function names are short.
+--
 
-Thanks a lot for the review and for confirming the layout.
+--- Patch [3]: [PATCH v4 3/9] perf c2c: add column rendering for function v=
+iew ---
+commit 93e94f0dd4e849fd17843f49f904f0cf603d364c
+Author: Jiebin Sun <jiebin.sun@intel.com>
 
-I've just posted v4 with the reworked hierarchy:
+perf c2c: add column rendering for function view
 
-  Level 1: the read-side function (pays the estimated HITM/peer
-           load-cycle cost)
-  Level 2: the contending function that writes the shared lines
-  Level 3: the specific shared cachelines
+This commit adds the column renderers for the perf c2c function view,
+including Cycles %, Store count, and the single indented identity column
+for functions and cachelines. It also adds helpers for width and header
+calculations, and the estimated-cycles computation.
 
-Every level now shows functions and cachelines only, with per-level
-indentation; the code addresses and offsets are no longer shown in the
-main view -- they remain available in the cacheline detail view. The
-series is also reorganized into 9 logically self-contained patches.
+> diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browse=
+rs/c2c-function.c
+> index 3f6822f616004..4eda97894d1d4 100644
+> --- a/tools/perf/ui/browsers/c2c-function.c
+> +++ b/tools/perf/ui/browsers/c2c-function.c
 
-> ... add a shortcut to the cacheline view on the given item.
+[ ... ]
 
-The function view already supports this for level-3 cacheline entries:
-pressing 'd' opens the corresponding cacheline detail view.
+> +static int symbol_width(struct hists *hists, struct sort_entry *se)
+> +{
+> +	int width =3D hists__col_len(hists, se->se_width_idx);
+> +
+> +	/*
+> +	 * Cap long symbol names as the cacheline view does, but never below
+> +	 * what a level-3 cacheline address needs (deepest indent + folded sign
+> +	 * + "0x" + 16 hex digits), so the address is not truncated when the
+> +	 * level-1 function names happen to be short.
+> +	 */
+> +	if (!c2c.symbol_full && width > SYMBOL_WIDTH) {
+> +		int cl_min =3D 2 * C2C_FUNC_INDENT + C2C_FUNC_FOLD_WIDTH + 2 + 16;
+> +
+> +		width =3D max(SYMBOL_WIDTH, cl_min);
+> +	}
+> +
+> +	return width;
+> +}
 
-Thanks,
-Jiebin
+[Severity: Medium]
+Does this logic unintentionally skip the minimum bound calculation when the
+symbol width is short?=20
+
+The comment states that the width should be "never below what a level-3
+cacheline address needs", but the calculation for cl_min is nested inside t=
+he
+upper-bound check (width > SYMBOL_WIDTH). If the longest level-1 function
+name is short, this block is skipped entirely, leaving the width too small
+to fit the cacheline address.
+
+[ ... ]
+
+> +static int
+> +symbol_view_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+> +		  struct hist_entry *he)
+> +{
+
+[ ... ]
+
+> +	if (hist_entry__is_cacheline(he)) {
+> +		/* Level 3: the shared cacheline address. */
+> +		u64 addr =3D he->mem_info ?
+> +			cl_address(mem_info__daddr(he->mem_info)->addr, chk_double_cl) : 0;
+> +		char symbuf[32];
+> +
+> +		scnprintf(symbuf, sizeof(symbuf), "0x%" PRIx64, addr);
+> +		ret +=3D scnprintf(hpp->buf + ret, hpp->size - ret, "%-*.*s",
+> +				 text_width, text_width, symbuf);
+
+[Severity: Medium]
+Will this actively truncate the cacheline address when the logic in
+symbol_width() leaves text_width undersized?
+
+Because the minimum width check fails to apply for short function names,
+text_width will be too small to fit the 18-character cacheline address,
+causing it to be silently truncated on display.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260724095842.9959=
+20-1-jiebin.sun@intel.com?part=3D3
