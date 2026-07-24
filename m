@@ -1,58 +1,58 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0C1A3A2E25;
-	Fri, 24 Jul 2026 07:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9FB4908B7;
+	Fri, 24 Jul 2026 07:03:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784876456; cv=none; b=uJmhKZah3xLCwgq6t2RZ/pB1CYHfSJNzlqqDboQyYr3kIcUcbvZQF/JIqo3VS09Gv+KhYLnSO5k8iJLg4ObQiHoBFoDCWbk1ZnN8J9Xe+AiUDsRL9x3C6bygFQN9D/itrsmPHSLSpBD49PRIFDmEtE01EsWBAkwy5oXF5E77CVc=
+	t=1784876593; cv=none; b=L2h6pLLW+1InL1btsqqbxf82pkadXTqmjFrv0tTJhBqFDgsePivlya3RtIrdnTlBdG5GImK8S9bGYQFwXLIUwtJ4SZEMVaUlsupE2+HQSb4BWtrJ//FJXbbIPKlhY9EVRy5nS+EaKqa1rCoZb0SGemlyPwsa9MrPhJgjL6vCpyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784876456; c=relaxed/simple;
-	bh=OHe3Zs34Fs7f857r5TiIrn2hnA6smAcBxAkDVyPudf0=;
+	s=arc-20240116; t=1784876593; c=relaxed/simple;
+	bh=PJ/+ByJksAe7HOdMDSfC6NV924/lgQj6Ni60jm9Ders=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=B20kkOq0ilNIvlS37Z/TihKmMN0kjdgV/K4yqqKSn6NZSsJclw9icnG1N8YjkPHQIT8vX7D1cYaRKuPcbDj0xK31GCwYRsbQ6lA60DzW2vq+RBaHdVv9XVmX8kPVbn5l8RzYkGtry/5nhw58cDvRrw7DKE6tgurVG5Xt2UOJQAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LHVIsstU; arc=none smtp.client-ip=148.163.156.1
+	 Message-Id:References:To; b=XJ384GYlb9b+g38Niw8HkuWP5O0QHQ99gQCsnDU3grEl1uyvDFe9fHJ8cLu2kYB86kjMq8ahIIRsywl6YAPRpJyiUZd8MltwJ+QH9GEALiL8re+UDK9Q1mWndDHqXm7u8Rq/C1oZ2LI3mDcp7VVEf9ldUl9G48yv4TwcCrP6U+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bG4H+j5D; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LHVIsstU"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66O5Bc933220060;
-	Fri, 24 Jul 2026 07:00:54 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bG4H+j5D"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66O5BlWX913982;
+	Fri, 24 Jul 2026 07:03:11 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=QK8tOG
-	MytvCJpk46i0dZoWlYD3BjeoFUBmReF8vc1yE=; b=LHVIsstU5Iw/F3n7IGyWdW
-	ao5uyEN5FB/x0CNAgGI75rRez0TsHrc6/Bwk3eRTJus6ZMHJ2Bd3+gX3lYniVjpO
-	4FU/swBiuitJNPaQJFz2lPscS5HI56MyOeqe/9veeko79Ir04w06UfbSi7LW1Dh3
-	w7S+UBfQ5pY+ghgpGqAK7rNfkhwdR26YM87pmvE1IN/fnq22+tJrlpSjjDa4EuX/
-	hiDJUQzQFZupyTh9qBr7xJzPgxmHNKp/Mh1SwYHzigUGQYxGEPSz4+hhIMjiGQGP
-	3P90NZhz4RSCSg5MVWr4oTEWhMuHhf4G8FXlOdAK3ERE/jcgQp4SvRJTerauglNw
+	:message-id:mime-version:references:subject:to; s=pp1; bh=m8mRTY
+	+YW7PlP6TzGh55fpIegJOfbBL0IriTvNKR6Kg=; b=bG4H+j5D4nyMcMo3Uxot0r
+	u7jhcEttQlUsfXgTsZxXWmAViMjh4wSTU/w843IYFdLO9bi9YDnFlJ3PUFvs1NKE
+	+sxW3VpzWx04tMv/771c4XF3rDvrXqUK3BdYa2j179vG8quA8Y7OEEofJZfJvyw1
+	XCjAY/Av2CIwGZCY3rq7LmBXGNKKjPcYB7lq9Vb/fwXw5auJTYpQ+gys8uI+bG+d
+	jiwv9linioC12wnaHh1gT2CSMzoGotUvBGGFoN9tje2GzWia/u0L+6re4+c1tZWl
+	6OZsmRHFEkfvX38v6T0AcItmAbO1JcIJ/rEZwHpXtZm2O7apbH3GhRKBiGK6Dc7g
 	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fg77aueyq-1
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fg7ahjt5a-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 24 Jul 2026 07:00:53 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66O6ndDR019918;
-	Fri, 24 Jul 2026 07:00:52 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fgpgyqj5p-1
+	Fri, 24 Jul 2026 07:03:10 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66O6neRm032303;
+	Fri, 24 Jul 2026 07:03:10 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fgp1gqmy1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 24 Jul 2026 07:00:52 +0000 (GMT)
+	Fri, 24 Jul 2026 07:03:10 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66O70px148365894
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66O738RH31457796
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 24 Jul 2026 07:00:51 GMT
+	Fri, 24 Jul 2026 07:03:08 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F129520150;
-	Fri, 24 Jul 2026 07:00:50 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 40E6F201C7;
+	Fri, 24 Jul 2026 07:03:08 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 520582014E;
-	Fri, 24 Jul 2026 07:00:50 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 96A31201C5;
+	Fri, 24 Jul 2026 07:03:07 +0000 (GMT)
 Received: from smtpclient.apple (unknown [9.124.222.110])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 24 Jul 2026 07:00:50 +0000 (GMT)
+	Fri, 24 Jul 2026 07:03:07 +0000 (GMT)
 Content-Type: text/plain;
 	charset=utf-8
 Precedence: bulk
@@ -61,241 +61,143 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCH V2 3/6] powerpc/perf: Add AUX buffer management to capture
- HTM trace data
+Subject: Re: [PATCH V2 5/6] docs: ABI: sysfs-bus-event_source-devices-htm:
+ Document sysfs event format entries for htm pmu
 From: Athira Rajeev <atrajeev@linux.ibm.com>
-In-Reply-To: <20260720111003.6D80D1F00A3A@smtp.kernel.org>
-Date: Fri, 24 Jul 2026 12:30:38 +0530
+In-Reply-To: <20260720111314.3B2DD1F0155E@smtp.kernel.org>
+Date: Fri, 24 Jul 2026 12:32:56 +0530
 Cc: linux-perf-users@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <26CDABC1-1D77-41D9-AE1A-FAABDD7FD27C@linux.ibm.com>
+Message-Id: <D07F241C-1C04-49DE-8F5C-ACC97CD75873@linux.ibm.com>
 References: <20260720104447.11843-1-atrajeev@linux.ibm.com>
- <20260720104447.11843-4-atrajeev@linux.ibm.com>
- <20260720111003.6D80D1F00A3A@smtp.kernel.org>
+ <20260720104447.11843-6-atrajeev@linux.ibm.com>
+ <20260720111314.3B2DD1F0155E@smtp.kernel.org>
 To: sashiko-reviews@lists.linux.dev
 X-Mailer: Apple Mail (2.3864.300.41.1.7)
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: KvjKxs803wiz0cSGEBU4qROrssvv_XIX
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI0MDA1OSBTYWx0ZWRfX4Dvbv4fBwR9X
- PFqpOiW45fYapX7TT8vCRsy14RL2UymXh/C3GY6CBELrmHWvQTeDFo0GeZfTmv6omR0k1ejbXtT
- RB5bRuM6KqApeygY5CME4GqDdEEzzWQ=
-X-Proofpoint-GUID: KvjKxs803wiz0cSGEBU4qROrssvv_XIX
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI0MDA1OSBTYWx0ZWRfX68WLItR2IcmI
- NogYNgeTAEsiSZ38NOeB1nqegn4o54Y+Ph01v0OVwkWhGBL37Ud3VqnWqEqFdjyM7uRbJe5lxsy
- wdiOcICEjLyVqiLf9kkvRDuWlG4XUPXk3x4ToHT5bmDRftGCojSPxzcCr6DdAIf8X7TH3OM44TW
- 2oGCSuZyEM8asO5QKob6M0AwpuE0AdEXTHHcMNgYn1e3ECO/cJsIwVOEr615IXGlqpC6nFxx1Mi
- lgl2DCRZEJNFxlrYizF4wBCx9ypfl9utaXIUhcRcbeqv5vF8YEfPfe/+G1kzDd90UWB+MyW45D2
- SJvOb55o8JY810sgUvIL+YkCaoWAVx1tSILqvF/z5Im88pZvXVV6wQhen2XhdvwujTTZZUtkTXP
- f4qtSXJbwdZSYFL/XI6xC9g0Qi7yj1DH/pG5udm+WA7LjmmSu0eysmEvLj0jqlebuEArYRoJJ8a
- 5a1+w239cm9glko3rJA==
-X-Authority-Analysis: v=2.4 cv=K7AS2SWI c=1 sm=1 tr=0 ts=6a630da5 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+X-Proofpoint-ORIG-GUID: hrim4SkEDmoI_bEx9RkbYs6zVxG5m5HE
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI0MDA1OSBTYWx0ZWRfX3ggHIXJcpAs6
+ 5Ffv4hdMrp8cKQxy24Hrte1i3H8T3GayDBcLTQBbUzPVwbpij71sJvJ/vEcpKfkDYSdz7Nv7Dru
+ PTdG49t+EUihkMrWJ00HhAN9SYJ8arSAdvZMZs4+AnSivQrsn/hN1+Irp9jMeJveta1CLzokirY
+ L/ojsUSqjo9dkYiuQ+iswuvYhoMJ0kwI7Jvo7b/kgeKZtfvzBe1r2hsf6Av3bLPY70PTOFhgXR2
+ bR7K66Dc4spdXq9wl/mtVrbmCLk6UV0fNZ0J5oVASBqJjgX9JriMKGxzPqwAPUAGwsvQ24VWwwM
+ /raLwRAlaWLD7u/7Ve1t7DPlq2vNf6OAwOKl3jPXJVTLzTEcLgS7RQx3okdDBIBDWOxbeH/w8n5
+ 3wj0GTSgpG8WuhDvZ38Kk5CVfijeY3nGkfz/hdwBmImbbULjxb3pTLTuUsEq1pJlAfexLYURkMB
+ xVdXizaSxImPNaEqPiA==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI0MDA1OSBTYWx0ZWRfXxaRo6gLLPhmx
+ mNK6hi21RgxYSKWjrW0wZzLUvlYHxts2+z1HwZBUtq1ZSSmGnwjMjYFwbTjQEvVQSP7hJ+M8a84
+ FVilIfswK6k3fVdZ9nQUqGwg1xMee/E=
+X-Proofpoint-GUID: hrim4SkEDmoI_bEx9RkbYs6zVxG5m5HE
+X-Authority-Analysis: v=2.4 cv=SM5ykuvH c=1 sm=1 tr=0 ts=6a630e2f cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
  a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=c92rfblmAAAA:8
- a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=cLtKFc2OmvHjvkrIsPwA:9 a=QEXdDO2ut3YA:10
- a=GvGzcOZaWPEFPQC_NcjD:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=c92rfblmAAAA:8
+ a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=voM4FWlXAAAA:8 a=jfP95tfrkVojahAY4dIA:9
+ a=QEXdDO2ut3YA:10 a=GvGzcOZaWPEFPQC_NcjD:22 a=IC2XNlieTeVoXbcui8wp:22
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-24_01,2026-07-22_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 suspectscore=0 bulkscore=0 clxscore=1015
- priorityscore=1501 spamscore=0 phishscore=0 malwarescore=0 adultscore=0
- impostorscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2607240059
+ clxscore=1015 lowpriorityscore=0 bulkscore=0 suspectscore=0 adultscore=0
+ spamscore=0 malwarescore=0 priorityscore=1501 phishscore=0 impostorscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607240059
 
 
 
-> On 20 Jul 2026, at 4:40=E2=80=AFPM, sashiko-bot@kernel.org wrote:
+> On 20 Jul 2026, at 4:43=E2=80=AFPM, sashiko-bot@kernel.org wrote:
 >=20
-> Thank you for your contribution! Sashiko AI review found 2 potential =
+> Thank you for your contribution! Sashiko AI review found 3 potential =
 issue(s) to consider:
-> - [High] Reentrancy corruption of the per-CPU perf_output_handle leads =
-to Use-After-Free.
-> - [High] Transient conditions permanently disable trace collection and =
-falsely signal EOF.
+> - [Medium] The format attributes documented in the ABI file do not =
+match the V2 layout claimed in the commit message.
+> - [Medium] The commit message provides a fundamentally flawed example =
+for using the 'events' attribute group, conflating it with the 'format' =
+group.
+> - [Low] Minor grammatical error in the description text.
 > --
 >=20
-> --- Patch [3]: [PATCH V2 3/6] powerpc/perf: Add AUX buffer management =
-to capture HTM trace data ---
-> commit edd04ff363591ec700b1e3d07e1003b1787ccb4a
+> --- Patch [5]: [PATCH V2 5/6] docs: ABI: =
+sysfs-bus-event_source-devices-htm: Document sysfs event format entries =
+for htm pmu ---
+> commit 9ec8c4a8a34dc7a4a75859018f086bb71432aa4a
 > Author: Athira Rajeev <atrajeev@linux.ibm.com>
 >=20
-> powerpc/perf: Add AUX buffer management to capture HTM trace data
+> docs: ABI: sysfs-bus-event_source-devices-htm: Document sysfs event =
+format entries for htm pmu
 >=20
-> This commit adds support for auxiliary (AUX) ring buffers in the HTM =
-PMU
-> driver. It implements the core lifecycle hooks and dynamically checks =
-for
-> physical continuity before dumping data to prevent memory corruption.
+> This commit adds ABI documentation for the sysfs entries exposed by =
+the
+> HTM PMU under /sys/bus/event_source/devices/htm/. It documents the =
+format
+> attribute group and the events attribute group.
 >=20
->> diff --git a/arch/powerpc/perf/htm-perf.c =
-b/arch/powerpc/perf/htm-perf.c
->> index a188a40287044..b4020a6e8f30b 100644
->> --- a/arch/powerpc/perf/htm-perf.c
->> +++ b/arch/powerpc/perf/htm-perf.c
-> [ ... ]
->> +struct htm_pmu_ctx {
->> + struct perf_output_handle handle;
->> +};
+>> Document the events attribute group, which lists the named events
+>> available on the PMU.  Users can pass these names directly to perf:
+>>=20
+>>  # perf record -e htm/nodalchipindex=3D2,nodeindex=3D0,htm_type=3D1/ =
+...
+>=20
+> [Severity: Medium]
+> Does this example conflate the 'events' attribute group with the =
+'format'
+> group? The example provided uses format attribute fields (key-value =
+pairs),
+> whereas the 'events' directory is supposed to provide named aliases.
+Thanks for the feedback
+
+I will address this in V3
+>=20
+>> diff --git =
+a/Documentation/ABI/testing/sysfs-bus-event_source-devices-htm =
+b/Documentation/ABI/testing/sysfs-bus-event_source-devices-htm
+>> new file mode 100644
+>> index 0000000000000..784ba7c31b89b
+>> --- /dev/null
+>> +++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-htm
+>> @@ -0,0 +1,21 @@
+>> +What:           /sys/bus/event_source/devices/htm/format
+>> +Date:           June 2026
+>> +Contact:        Linux on PowerPC Developer List <linuxppc-dev at =
+lists.ozlabs.org>
+>> +Description:    Read-only. Attribute group to describe the magic =
+bits
+>> +                that go into perf_event_attr.config for a particular =
+pmu.
+>> +                (See =
+ABI/testing/sysfs-bus-event_source-devices-format).
 >> +
->> +static DEFINE_PER_CPU(struct htm_pmu_ctx, htm_pmu_ctx);
+>> +                Each attribute under this group defines a bit range =
+of the
+>> +                perf_event_attr.config. Supported attribute are =
+listed
+>                                                             ^^^^^^^^^
+> [Severity: Low]
+> This isn't a bug, but there is a grammatical error here ("attribute =
+are"
+> instead of "attributes are=E2=80=9D).
+Sure
+>=20
+>> +                below::
 >> +
-> [ ... ]
->> +static int htm_dump_sample_data(struct perf_event *event)
->> +{
->> + struct htm_pmu_ctx *htm_ctx =3D this_cpu_ptr(&htm_pmu_ctx);
-> [ ... ]
->> + /* Start AUX transaction session framework */
->> + aux_buf =3D perf_aux_output_begin(&htm_ctx->handle, event);
+>> + event  =3D "config:0-27"  - event ID
 >=20
-> [Severity: High]
-> What happens to the perf_output_handle if this is re-entered from an =
-NMI
-> context?
+> [Severity: Medium]
+> Is the documentation missing the format attributes claimed in the =
+commit
+> message?
 >=20
-> htm_event_read() initiates a synchronous AUX output transaction using =
-a
-> per-CPU struct perf_output_handle. Since this can be called from =
-process
-> context (for instance, userspace reading the perf event fd), an NMI
-> interrupting this could trigger a BPF program that calls
-> bpf_perf_event_read() on the same CPU.
->=20
-> Would this overwrite the per-CPU handle, causing the interrupted outer
-> call to use a corrupted handle when it resumes, leading to =
-underflowing
-> reference counts and a use-after-free of the AUX pages? Could the
-> handle be allocated on the stack instead to prevent this?
-
-Thanks for the feedback Sashiko
-
-The reentrancy concern is handled by perf_aux_output_begin() itself in =
-kernel/events/ring_buffer.c:
-
-nest =3D READ_ONCE(rb->aux_nest);
-/*
- * Nesting is not supported for AUX area, make sure nested
- * writers are caught early
- */
-if (WARN_ON_ONCE(nest))
-    goto err_put;   /* returns NULL */
-
-
-rb->aux_nest is a per-ring-buffer nesting counter maintained by the perf =
-core. Before writing anything to the per-CPU handle, =
-perf_aux_output_begin() checks this counter. If a nested caller (NMI, =
-BPF, or any interrupt) attempts to begin an AUX transaction on the same =
-ring buffer while one is already in progress, it hits the WARN_ON_ONCE =
-and returns NULL.
+> The commit message explicitly states that htm_type, nodeindex,
+> nodalchipindex, and coreindexonchip were added for the V2 layout, but =
+only
+> the generic 'event' attribute is listed here.
+Will be updated, sorry for missing that information in patch
 
 Thanks
 Athira
-
->=20
-
-
->> + if (!aux_buf)
->> + return 0;
-> [ ... ]
->> + /*
->> + * Assess constraints regarding space remaining across the mapping
->> + * context boundary
->> + */
->> + chunk_size =3D htm_ctx->handle.size;
->> + chunk_size &=3D PAGE_MASK;
->> +
->> + if (chunk_size > (aux_buf->size - dump_offset))
->> + chunk_size =3D aux_buf->size - dump_offset;
-> [ ... ]
->> + /* Bound transfer length tightly within the validated contiguous =
-window */
->> + if (chunk_size > max_contiguous_bytes)
->> + chunk_size =3D max_contiguous_bytes;
->> +
->> + if (!chunk_size) {
->> + aux_buf->collect_htm_trace =3D 0;
->=20
-> [Severity: High]
-> Does this permanently disable trace collection during a transient =
-buffer full
-> condition?
->=20
-> If the remaining space in the user-space perf ring buffer is =
-temporarily
-> less than PAGE_SIZE, chunk_size will evaluate to 0. This sets
-> collect_htm_trace to 0, which prevents any future trace collection for =
-the
-> lifetime of the buffer.
-
-This is good point. I will fix this in V3
->=20
->> + perf_aux_output_end(&htm_ctx->handle, 0);
->> + return 0;
->> + }
->> +
-> [ ... ]
->> + do {
->> + /*
->> + * Invoke H_HTM call with:
->> + * - operation as htm dump (H_HTM_OP_DUMP_DATA)
->> + * - last three values are address, size and offset
->> + */
->> + rc =3D htm_hcall_wrapper(htmflags, cfg.nodeindex, =
-cfg.nodalchipindex,
->> + cfg.coreindexonchip, cfg.htmtype, H_HTM_OP_DUMP_DATA,
->> + hypervisor_target_phys, chunk_size, aux_buf->head);
->> + ret =3D htm_return_check(rc);
->> + } while (ret =3D=3D -EBUSY && ++retries < MAX_RETRIES);
->> +
->> + if (ret > 0) {
->> + aux_buf->head +=3D chunk_size;
->> + aux_buf->trace_records++;
->> + perf_aux_output_end(&htm_ctx->handle, chunk_size);
->> + return ret;
->> + }
->> +
->> + aux_buf->collect_htm_trace =3D 0;
->=20
-> [Severity: High]
-> If the hypervisor returns a transient long-busy status (like
-> H_LONG_BUSY_ORDER_1_MSEC), htm_return_check() returns -EAGAIN.
->=20
-> Will the loop exit and fall through to this block, permanently =
-disabling
-> tracing for this buffer session?
->=20
->> + perf_aux_output_end(&htm_ctx->handle, 0);
->> + return ret;
->> +}
->> +
->> +static void htm_event_read(struct perf_event *event)
->> +{
->> + int ret;
->> +
->> + /*
->> + * Update event->count as a binary indicator:
->> + * 1 if data was dumped into the
->> + * AUX buffer, 0 otherwise. Actual trace record
->> + * decoding is left to userspace.
->> + */
->> + ret =3D htm_dump_sample_data(event);
->> + if (ret <=3D 0)
->> + local64_set(&event->count, 0);
->=20
-> [Severity: High]
-> Since the transient buffer full condition or hypervisor busy state =
-causes
-> htm_dump_sample_data() to return 0 or -EAGAIN, does this falsely =
-signal
-> an EOF to userspace by setting event->count to 0?
->=20
->> + else
->> + local64_set(&event->count, 1);
->> +}
 >=20
 > --=20
 > Sashiko AI review =C2=B7 =
 https://sashiko.dev/#/patchset/20260720104447.11843-1-atrajeev@linux.ibm.c=
-om?part=3D3
+om?part=3D5
 
