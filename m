@@ -1,334 +1,513 @@
-Received: from mail-yx1-f46.google.com (mail-yx1-f46.google.com [74.125.224.46])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E3AA3AEF20
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jul 2026 20:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.46
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784925333; cv=none; b=f/wiX0+oZ4LQ/PRjhWg9hROvZCVh1NjzNsk2wtl3PC7UdcM4Lcbe1MCAxOY4dBqAgFSKVeXYIqPxhTieOpYJyYShSQ6Fz1/DKmV5LZ09Xf3IYn8/jemne0xM2xhwcnG/pCIvDJyk9xTIAr/eAP9SbjJE6M1dZwyO98wRfLD1s2s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784925333; c=relaxed/simple;
-	bh=TIdb+PrmPRPIJerRy/ogzvQiQrvIOHY0y1wo5UN9DMM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=akXkoLjZblPPiNOprKqG/NubGq4Wn7UW9I7Gb2aeCHq700x32h1p+dRkUINg+WVrwBL6Dui/rqO9VrMLnpFgoUDKgCWwFu5na8mvp6gtvw6lKb0a88XpGdrZdpZ4Xeg60Lv0Y8bKda0jCAxY892lSahg/tpSBXRAuTRhuy4yNwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MxbopMaS; arc=none smtp.client-ip=74.125.224.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FE131A07B
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jul 2026 23:27:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784935642; cv=pass; b=MdV/wqJA6gXVJbpSg3D3SpZ3MvnLeg5wOkv+c7KGqYsY4PeJGiuecFca5bdAJK3+ima10Krgymw1H2li5224fJQNxFUYEs+xTIVuG2v3w8r4Nv+yUuy60hfDQZZdaSx0+fGRu9Q4sTzKS0Vsdpy3L7hVtFHNwTOmDL2E8smjbJ0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784935642; c=relaxed/simple;
+	bh=BKHkFkDk2dIstaypKR7HzNqA6eQZvcD/EHRPzl0qFIA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a2FI8851/JHo/mBtp22CuOyYga0QwsFD4EznjP3222iRJgw9HrYG2Zg8yQ9A51pQDNuCzhSUyehhpnnbBzBBGXGax2IahO5g4G8LY2B1EsG0QxD+vtVEIJz5kcbovD7DSNXas9LzJGth9MCCIpOxIotiNqm//EnlakcF0GQgM4Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=J6GesGlA; arc=pass smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MxbopMaS"
-Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-668c1b780e5so497295d50.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 24 Jul 2026 13:35:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="J6GesGlA"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-51c01c79467so104661cf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 24 Jul 2026 16:27:20 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1784935639; cv=none;
+        d=google.com; s=arc-20260327;
+        b=RaKuzeGxCVs4SaCBQoHg0IHvLCWBUlDiBTlqb7tsfwqPMPpkW4TTA5rYTGmLp2ouIG
+         L5b0DP1kSG+e6UgKv+6Zs4wNycbMu8j3L22h6q0QdkwVDVlk9tuKFcTs3mJn4SfvZEE1
+         r8arK9Ce9zwxS03xZK+h3Lm/q6CiiUMB5pAo6CAw801q1g+ldFqahZI1mjWXRjKu1umW
+         DgfHpGqWE7usORDVIdcmFX39Qfg6qbuIVhWlyXfLsZzK/WksNBO/LKlaVEq830K8z7/w
+         qstrKtU15UTjra+HkR4p9bjB8wvAaZYDMzdKM1nLXIQRiXJJJdP80NhXsrWL1r94N80+
+         MziQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=PoqjSSihks2KoUNcB45aaCTkprCz3/yXGp46FIQac8M=;
+        fh=ubY2cCB9PaTwAQor4t4ztbLhK8ZemFXy+nG+zuFTZqs=;
+        b=nCFlN5CJrPTmn36R83YzEi2D/zhkAt9TmB65U5fnZOiH3q8ZetQY0Qb2QJfZ8D5lFa
+         j+06rRbC2zcvfI9wAI29MtHhK/2/zvXIz2KSnSryAlIX9Yw0ogekt/15I+T/Qns94ERo
+         MvuvXS93kRSD0s424CyFzhIt0sc736Cq6wj0wRmuVhdHx2RxCGHSldCwDVNqExR+2fXn
+         mUSetQF7Bk/LuE1cIyhTqbroh54/8xaW1VRDqoJih/sgQ7pEz2Tx+dmq9jdje6sCkGbi
+         qMOUstbQMm5xr9XQtL+w/w6RqbCDhQs+9ce5Q9mpfJUfjP+LJ72MIB60zvFCE8GJBnVW
+         SJGQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1784925330; x=1785530130; darn=vger.kernel.org;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=q/8kImmPB4tQ/JHFIpayA/JIm7PmQB1mt4kK24yFpjU=;
-        b=MxbopMaSEbgL+KxR9/xyT+gM5Om4AmEFUsVi+9Zcfgeh3CENNroRbgjkSiMDradbEH
-         K8rdviMh2pQu0L7YZuy4VD8RIoDfwPhZthlQiXOMOF+KQICTGUyhwaGScBn2iS5qMLfp
-         bmKb0/TCM+08yYsrmTurrllrPtABMC6S4jMdni9A3ne/KnQ9IsTBqFqVUuF1taaYKPlh
-         KbwV4RCeWhKVq0WoDXIWc2+TYS07Z/qAHbAbOsQvkpjae9ZiQWtMMcfH2U31Rpe2bMk8
-         JjN9xHKufsKQ7OwSOudVktKdi9WwtlWKBiqLdcsXH0eB++4xcUSMicZ/372h57f44Dnx
-         eceQ==
+        d=google.com; s=20251104; t=1784935639; x=1785540439; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=PoqjSSihks2KoUNcB45aaCTkprCz3/yXGp46FIQac8M=;
+        b=J6GesGlAYPA2lNVUjoLz7UlKRGj7s1U8da54PU/towkRcneyz1RUakdlywM4aDpga8
+         aiHMLHDDfxzidKwxGYu/Qe/tQ7EkIPr65HBsNmN/SPnZASflFIRdZAMaPZR7Jg2wD6p2
+         7vVY9zz9jrpUgI4geJgDXPD+QbYD6elbjcdTB/rdCRb2RFnndO4feef5HPLgeu+Fz8fE
+         BpIgYs1UYzazrFTCCojNEdngAZFcBfhm2CFRRK9AqmwRulSKj8ALXA7qRq56Ne2cxReu
+         Osde9rj6LDg+WpdKcVU1grQYS3g69fAhu+rymatGUcqaZ7gP4gJKacHnGp7/genP1dAK
+         Alxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1784925330; x=1785530130;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:x-gm-gg
+        d=1e100.net; s=20251104; t=1784935639; x=1785540439;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=q/8kImmPB4tQ/JHFIpayA/JIm7PmQB1mt4kK24yFpjU=;
-        b=hNx+dNpWGLTJuMqeFtkxuXoGa0P4VPOpuNhZciRTVxn1uC7W95iBoVT4tVK4p8kxOx
-         bU9y2Pw1RP6UtLpUIaeH6xTSPcUb547FURPTd/GcrBwv1U4LzGNWw2835gAZUAqkzAkF
-         xdr2Tv6p/EL6trtLhy0IpxTRQWj7ORfAdsH3EqQlyQxLyV0olPK8yMMoIYTCTsVswCY6
-         nytxcRIy+TANJkGjDwa3GIDFh2zczEIiEMpUA9gmg//ZZXoRCCw9xQw32CYUIh5MaQir
-         d+D/bOxhrGnNcOkYpv2uwAhNwNp/wlV2fzRYLiuTafGgQCYyNsKtQLUmn8pg3fUt/UZ1
-         JwQg==
-X-Forwarded-Encrypted: i=1; AHgh+RpJed+JkczwXlHvMEqGVPg0Ef+9gfHCdQEDZILhTI+OUNCgUg1rpguIxFxXxSNYKYUepYiiFCTiayL3SHOXUMns@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAXEZGVYkAJPFENDtoi5CM4Q1MllOT+JEygenbTD2Lg+ODxwls
-	fpN5jrnZr9SGLA15CswkPaDOVmtCBY232oP6LDQZAp1BkkFjp7+F8cwT
-X-Gm-Gg: AR+sD11z3AsFWyFfkW+F2k1x7kUizIfhlYozbinqNApGjFAi7zPyF3w3EbWLC/wyK61
-	/SY0bCB7Adh5UVfEoaTX89x6no1UrVDC943UrX2O1ge2kuJ9ha0iqI6frG92tQMg/YIlpsXAokp
-	hNzKyJ4kZYaCO53EqRjLGnrmmkN/pZl89II2ALfLxLYnRqCigpMTwHXczHb9oTSBs8mpUQmPjZ8
-	NUraOPkaTCumod0WvLl/eeZRnkzsmObsJaoCurWT7APGbxkxOnHn7Oy2LPt2Yq7+Sm3Utzco5zI
-	G3zx/AkICWEYbm11ol2IrlJJsniw9+Ygt0wdtbXiA3uwdAx3p5vBY7jBpv+0zJvAYTYmIwqIH/0
-	qgzlfZhWbE4MtcFY42kPARmZWEIkC5g8JJGfyt+w91a/TQQv54T8JjiYPKnEEHYSxIhe7K+DibS
-	E7sEcU
-X-Received: by 2002:a05:690e:43da:b0:662:ebb0:36fa with SMTP id 956f58d0204a3-668a4bb68b6mr1963039d50.20.1784925330394;
-        Fri, 24 Jul 2026 13:35:30 -0700 (PDT)
-Received: from [10.138.10.6] ([185.98.168.14])
-        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-668c6dd57a0sm108d50.8.2026.07.24.13.35.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 24 Jul 2026 13:35:29 -0700 (PDT)
-Message-ID: <0ccda05f-077c-4661-b852-e6bf9bf40be3@gmail.com>
-Date: Fri, 24 Jul 2026 16:35:13 -0400
+        bh=PoqjSSihks2KoUNcB45aaCTkprCz3/yXGp46FIQac8M=;
+        b=cH78Q1MXLKcGqljR4zhFXR8nsX0qpO247wnGcamqCPy9p6fe0E2rerLhlWXulaU8DF
+         wywp+0oyBgnr0SN8EURFYIdSWd67wHIMWah6sThSj4kzPLWUcm1OD9OUeFY4hULjFi6b
+         4LvX9K49F84BGevnHq5oU1M3tKN2uJPx8aVn5JP2JTOuB1JJWYvZaIi6CE3/FqnddJ8z
+         SGmZW7qVUWep3a706J5ZsnJFQHq0jI1SpClraWyAzyRjqBu9TMgf8WvftexJIxXCYmIj
+         d2orETocAEwAzcxeIZ0GsIi1+FOjrCFSHgd9JvRgjlIPuwzEXpcs54gJqovc2cLCDy7K
+         w/iw==
+X-Forwarded-Encrypted: i=1; AHgh+RocBPhOk8/7Kj5WESN65a23yFSXxgnU0gRa6K+XnFWPBK22NvRAxljTpJsqgwMRpC7hLnQAxSfmHTJoWg2yE2rz@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywil3enIYx5aHmKpcZocBZlP4x1j5uJxytbY+pb1ldM6WDP5+1H
+	9fCffC68mxTiS/mOgvxWnIU/sHSs1KN6QDkjDv8rWMQ+fzw8xfmSxrnITYpFOro/YovBiGFwKLM
+	/8Yi+Rl8/xCFYDABNGe1/StqkzoMnSnYj6pApvL0S
+X-Gm-Gg: AR+sD120k8tLohj+NYsvucJKKvlyjVBfyAU43aldXTvxI8B0ATOA1O+xPCQmQ0TFYwz
+	ua3AdasHLoHxm0UOcQe86ugrT5zYi8ms+juDxPxRrIEW+kB8bTcgCWms1gPNatqJPwyDSRRgvkb
+	zTC44ekgxp9s2nTk8a8nvkxAom1Nteij640ugJ2WljIt99JqqEQG+xNBnFY+pn6nwvvmMG4L2BX
+	UstKu86tiEYIv8OL/cBx351YJR/m5op3/2auaCSXgpQxHC+IWiXoWo4TvVPWHk=
+X-Received: by 2002:a05:622a:a918:b0:51c:ad5:93be with SMTP id
+ d75a77b69052e-529a5e72857mr6361791cf.8.1784935638565; Fri, 24 Jul 2026
+ 16:27:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] AF_ALG: Drop support for off-CPU cryptography
-To: Dominique Martinet <asmadeus@codewreck.org>,
- Eric Biggers <ebiggers@kernel.org>
-Cc: Harald Freudenberger <freude@linux.ibm.com>, acme@kernel.org,
- adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
- ardb@kernel.org, axboe@kernel.dk, corbet@lwn.net, davem@davemloft.net,
- edumazet@google.com, herbert@gondor.apana.org.au, horms@kernel.org,
- io-uring@vger.kernel.org, irogers@google.com, james.clark@linaro.org,
- jolsa@kernel.org, kuba@kernel.org, kuniyu@google.com,
- linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
- netdev@vger.kernel.org, pabeni@redhat.com, peterz@infradead.org,
- skhan@linuxfoundation.org, willemb@google.com, linux-s390@vger.kernel.org
-References: <20260523-af-alg-harden-v1-2-c76755c3a5c5@gmail.com>
- <20260603133312.12848-1-freude@linux.ibm.com>
- <amOGWwdjnJqyxH5L@codewreck.org> <20260724160034.GB2032@sol>
- <amOTjPW__CNZui3_@codewreck.org>
-Content-Language: en-US
-From: Demi Marie Obenour <demiobenour@gmail.com>
-Autocrypt: addr=demiobenour@gmail.com; keydata=
- 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
- +MYSfkEjBz0E8CLOcAw7JIwAaeBT
-In-Reply-To: <amOTjPW__CNZui3_@codewreck.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------8JNKQ02asdP8sqLTJjoHdKEp"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------8JNKQ02asdP8sqLTJjoHdKEp
-Content-Type: multipart/mixed; boundary="------------tHcDdCFADMuM4KeFqlrbc8bo";
- protected-headers="v1"; hp="clear"
-Message-ID: <0ccda05f-077c-4661-b852-e6bf9bf40be3@gmail.com>
-Date: Fri, 24 Jul 2026 16:35:13 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] AF_ALG: Drop support for off-CPU cryptography
-To: Dominique Martinet <asmadeus@codewreck.org>,
- Eric Biggers <ebiggers@kernel.org>
-Cc: Harald Freudenberger <freude@linux.ibm.com>, acme@kernel.org,
- adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
- ardb@kernel.org, axboe@kernel.dk, corbet@lwn.net, davem@davemloft.net,
- edumazet@google.com, herbert@gondor.apana.org.au, horms@kernel.org,
- io-uring@vger.kernel.org, irogers@google.com, james.clark@linaro.org,
- jolsa@kernel.org, kuba@kernel.org, kuniyu@google.com,
- linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
- netdev@vger.kernel.org, pabeni@redhat.com, peterz@infradead.org,
- skhan@linuxfoundation.org, willemb@google.com, linux-s390@vger.kernel.org
-References: <20260523-af-alg-harden-v1-2-c76755c3a5c5@gmail.com>
- <20260603133312.12848-1-freude@linux.ibm.com>
- <amOGWwdjnJqyxH5L@codewreck.org> <20260724160034.GB2032@sol>
- <amOTjPW__CNZui3_@codewreck.org>
-Content-Language: en-US
-From: Demi Marie Obenour <demiobenour@gmail.com>
-Autocrypt: addr=demiobenour@gmail.com; keydata=
- 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
- +MYSfkEjBz0E8CLOcAw7JIwAaeBT
-In-Reply-To: <amOTjPW__CNZui3_@codewreck.org>
-
---------------tHcDdCFADMuM4KeFqlrbc8bo
-Content-Type: text/plain; charset=UTF-8
+References: <20260724201207.661300-1-atomlin@atomlin.com>
+In-Reply-To: <20260724201207.661300-1-atomlin@atomlin.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 24 Jul 2026 16:27:07 -0700
+X-Gm-Features: AUfX_mxARhnAWr8oJ7GNjWbvhqk8J79_MOgnPNiq2VcZu9PSvPsII2NaUo7vbSc
+Message-ID: <CAP-5=fWmV2YoBdGKhxt9G_VByMzqimxEamxbjh_Gf_vBx9=cng@mail.gmail.com>
+Subject: Re: [RFC PATCH] perf sched latency: Add histogram and time interval options
+To: Aaron Tomlin <atomlin@atomlin.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
+	howardchu95@gmail.com, neelx@suse.com, chjohnst@mail.com, sean@ashe.io, 
+	steve@abita.co, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On 7/24/26 12:32, Dominique Martinet wrote:
-> Eric Biggers wrote on Fri, Jul 24, 2026 at 09:00:34AM -0700:
->> On Sat, Jul 25, 2026 at 12:35:55AM +0900, Dominique Martinet wrote:
->>> The tool source is available here:
->>> https://github.com/nxp-imx/crypto_af_alg
->>> (which now fails with:
->>> bind(3, {sa_family=3DAF_ALG, salg_type=3D"skcipher", salg_feat=3D0, s=
-alg_mask=3D0, salg_name=3D"tk(cbc(aes))"}, 88) =3D -1 ENOENT (No such fil=
-e or directory)
->>> )
->>>
->>>
->>> I don't particularily care for the API used as long as we can keep us=
-ing
->>> the hardware key, but as far as I can see there's no alternative API =
---
->>> what's the path forward?
->>
->> There's no "tk(cbc(aes))" algorithm in the upstream kernel.  So, it's
->> not possible that this ever worked with upstream.  Given that, there's=
+On Fri, Jul 24, 2026 at 1:12=E2=80=AFPM Aaron Tomlin <atomlin@atomlin.com> =
+wrote:
+>
+> While 'perf sched latency' reports task runtime and delay statistics
+> (average and maximum delay), it does not provide a visual representation
+> of how task wait times are distributed across latency ranges between
+> snapshots (start and finish of the analysis window).
+>
+> The --histogram option collects CPU wait latencies (time between when
+> a task becomes runnable and when it gets scheduled onto a CPU) into 22
+> latency buckets, displaying an ASCII bar chart distribution.
+>
+> The --hist-mode option configures the bucketing scheme:
+>   - log (default). Logarithmic latency buckets ranging from
+>     sub-microsecond (< 1 us) up to >=3D 1.05 seconds
+>
+>   - linear. Equal-width linear latency buckets
+>     (i.e., 100 us steps up to >=3D 2.1 ms)
+>
+> The --time option allows filtering trace event processing to a
+> specific time interval [start,stop].
+>
+> Example histogram output excerpt:
+>
+>     =E2=9D=AF sudo perf sched latency --histogram --CPU 0
+>
+>      CPU Wait Latency Distribution Histogram (between snapshots) (total s=
+amples: 36114)
+>      -------------------------------------------------------------------
+>       Latency Range    |      Count |    Pct | Histogram Graph
+>      -------------------------------------------------------------------
+>       < 1 us           |         17 |   0.0% | #
+>       2 - 4 us         |        673 |   1.9% | #
+>       4 - 8 us         |       6237 |  17.3% | ######
+>       8 - 16 us        |       3224 |   8.9% | ###
+>       16 - 32 us       |       1388 |   3.8% | #
+>       32 - 64 us       |        709 |   2.0% | #
+>       64 - 128 us      |        690 |   1.9% | #
+>       128 - 256 us     |        789 |   2.2% | #
+>       256 - 512 us     |        541 |   1.5% | #
+>       512 - 1024 us    |       2256 |   6.2% | ##
+>       1 - 2 ms         |       3577 |   9.9% | ###
+>       2 - 4 ms         |      13259 |  36.7% | ##############
+>       4 - 8 ms         |       2523 |   7.0% | ##
+>       8 - 16 ms        |        222 |   0.6% | #
+>       16 - 32 ms       |         10 |   0.0% | #
+>       >=3D 1.05 s        |          3 |   0.0% | #
+>      -------------------------------------------------------------------
+>
+> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 
->> no regression in upstream for this program, and it wouldn't be
->> appropriate to consider a sysctl knob in upstream at this time.
->=20
-> Bleh, you are correct, it's an NXP patch in
-> drivers/crypto/caam/caamalg.c that they've been carrying in their
-> tree(s) since 2018[1] and has apparently never been upstreamed...
-> [1] https://github.com/nxp-imx/linux-imx/commit/6868c9e49c1854028fb4602=
-2daac3b1b10ca2c70
->=20
-> Sorry for not having checked, I was hoping for better.
-> (I should be used to it by now...)
->=20
->=20
-> Regardless of the specific algorithm, most recent SoCs flaunt some
-> "secure element" or similiar hardware-backed keys (so one wouldn't be
-> able to decrypt $whatever without running on the specific board it was
-> intended for); I'm sure _some_ of them are upstream?
-> (Never used it so not sure if they are reachable from af_alg, but for
-> example drivers/crypto/ccree/cc_cipher.c talks about hardware key...)
->=20
-> There's not much I can do about the vendor's kernel I'm stuck with, but=
+This looks like a useful addition and because the behavior is behind a
+flag it won't break anyone. I saw Sashiko had some issues, but I'd be
+happy to add my tags once that's cleaned up.
 
-> that doesn't make having encryption material not accessible to userspac=
-e
-> useless as a concept;
-> forgetting about the sysctl for now, what are the alternatives API this=
+Thanks,
+Ian
 
-> kind of implementations could be based on?
->=20
-> I guess I should start looking at how tpm backed encryption works,
-> some other day, it's getting late here...
-
-I actually had this thought myself, though with a different
-use-case: preventing long-term keys (like TLS and SSH keys and
-cookie signing/encryption keys) from being accidentally leaked.
-
-I came up with a much simpler API than AF_ALG:
-
-1. Generate a file descriptor and a wrapping key.  The wrapping key
-   is used to encrypt data that will be imported.
-
-2. Import an encrypted secret key.  The key contains both the secret
-   key and the algorithm it will be used with.
-
-3. Optionally, attach a restriction policy that requires data to
-   be signed to start with a certain prefix.  This provides domain
-   separation in contexts where the same key is used for multiple
-   purposes.
-
-4. Pass the file descriptor to another process via SCM_RIGHTS.
-
-5. The receiving process can use ioctls to perform secret-key
-   operations, such as ML-KEM, ML-DSA, XChaCha20-Poly1305, and
-   XAES-256-GCM.
-
-6. When the file descriptor is closed, the secret key is securely
-   deleted.
-  =20
-Compared to AF_ALG, the kernel attack surface is very small.  It's not
-quite a "hello world" character device driver, but compared to many
-of the other drivers in the kernel, it is tiny.  Furthermore, the
-whole thing should be able to be written in safe Rust.
-
-To keep the attack surface minimal, this would only use library
-functions, so there would be no support for hardware-wrapped keys.
-
-I don't plan to work on this myself, but I think it's of potential
-value in the future.  For asymmetric algorithms, the overhead of a
-system call should be fairly small compared to the operation itself.
---=20
-Sincerely,
-Demi Marie Obenour (she/her/hers)
-
---------------tHcDdCFADMuM4KeFqlrbc8bo--
-
---------------8JNKQ02asdP8sqLTJjoHdKEp
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEopQtqVJW1aeuo9/sszaHOrMp8lMFAmpjzIsACgkQszaHOrMp
-8lNPug/+IDHRwaftOISwVsC+WuuG9FgGOwTLlQjjABKkrEhHZObZ/mWU4BpfL+Ek
-ujcELLLDD1+ewxFwJoh9hynjIG9XDJEwXB7dLJuOYCiMLBWFk/Gujjh2YK2Pd+La
-VGBc9XNcz96+3O8jQtwTbu1P5kQBg5+5WUOPTmONUetB2pzwACQUuRrtMW3g2LrU
-PA9IyEB2n3i/D74GD5L0ca5RVzqf6YrUMrQ9qeMXGLCehhyZecnsMeweBWR6ikIT
-b1s8wFFMD2V0/A5mWhoCnFmmfiyFR3zZQ14ZuxJ1/rhwZVUYgtMnsC6L8zjJLsVm
-pNxg7iXUTnzVjL8467eLCS2Cl3r02dXgvSHt2/xxlpKjPiexOcb5DCzr1ecPlHuh
-TvX19LaVBuITkjtzOlyvzQ0EvBKVqUh3B6btKfyYQ3NEP57Khbjp71rSICESPqdv
-j6fv7iJMmYVPPsIb4yPYowfIHBm7baekQfml+0o+/8Wkmj62T2Cd0dUS7yEGJRIz
-WSiK+99wi6ucfbVEEJNR5vckddmPfpYOasHohP3IhTM89G3FLxmuwfO+2WBJPPXo
-2NcfEWnlp7l8+QaZzvqnTqIVrqEPrfTuMIR421Z+OoDYCzdaP/hz+SLLPyZXBjF0
-eISqWWtGWHVcK7u8UNxBEkFZFbj5385JeXjl4UhysytbZVCK9v0=
-=cZKJ
------END PGP SIGNATURE-----
-
---------------8JNKQ02asdP8sqLTJjoHdKEp--
+> ---
+>  tools/perf/Documentation/perf-sched.txt |   6 +
+>  tools/perf/builtin-sched.c              | 180 +++++++++++++++++++++++-
+>  2 files changed, 183 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documen=
+tation/perf-sched.txt
+> index a4221398e5e0..4da06215163a 100644
+> --- a/tools/perf/Documentation/perf-sched.txt
+> +++ b/tools/perf/Documentation/perf-sched.txt
+> @@ -40,6 +40,12 @@ There are several variants of 'perf sched':
+>    Tasks with the same command name are merged and the merge count is
+>    given within (), However if -p option is used, pid is mentioned.
+>
+> +  If -H or --histogram option is passed, a CPU wait latency distribution
+> +  histogram is displayed illustrating how long tasks waited for CPU
+> +  runtime across latency buckets between snapshots. The --time
+> +  option (start,stop) limits analysis to a specific snapshot time interv=
+al.
+> +  The --hist-mode option (log or linear) configures the latency bucketin=
+g scheme.
+> +
+>    'perf sched script' to see a detailed trace of the workload that
+>     was recorded (aliased to 'perf script' for now).
+>
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index b3cf678573e0..b73149b84fb8 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -59,6 +59,68 @@
+>  #define MAX_PRIO               140
+>  #define SEP_LEN                        100
+>
+> +#define NUM_LAT_BUCKETS 22
+> +
+> +enum hist_mode {
+> +       HIST_MODE_LOG =3D 0,
+> +       HIST_MODE_LINEAR,
+> +};
+> +
+> +static const char *lat_bucket_names[NUM_LAT_BUCKETS] =3D {
+> +       "< 1 us",
+> +       "1 - 2 us",
+> +       "2 - 4 us",
+> +       "4 - 8 us",
+> +       "8 - 16 us",
+> +       "16 - 32 us",
+> +       "32 - 64 us",
+> +       "64 - 128 us",
+> +       "128 - 256 us",
+> +       "256 - 512 us",
+> +       "512 - 1024 us",
+> +       "1 - 2 ms",
+> +       "2 - 4 ms",
+> +       "4 - 8 ms",
+> +       "8 - 16 ms",
+> +       "16 - 32 ms",
+> +       "32 - 64 ms",
+> +       "64 - 128 ms",
+> +       "128 - 256 ms",
+> +       "256 - 512 ms",
+> +       "512 - 1024 ms",
+> +       ">=3D 1.05 s"
+> +};
+> +
+> +static const char *linear_bucket_names[NUM_LAT_BUCKETS] =3D {
+> +       "< 100 us",
+> +       "100 - 200 us",
+> +       "200 - 300 us",
+> +       "300 - 400 us",
+> +       "400 - 500 us",
+> +       "500 - 600 us",
+> +       "600 - 700 us",
+> +       "700 - 800 us",
+> +       "800 - 900 us",
+> +       "900 - 1000 us",
+> +       "1.0 - 1.1 ms",
+> +       "1.1 - 1.2 ms",
+> +       "1.2 - 1.3 ms",
+> +       "1.3 - 1.4 ms",
+> +       "1.4 - 1.5 ms",
+> +       "1.5 - 1.6 ms",
+> +       "1.6 - 1.7 ms",
+> +       "1.7 - 1.8 ms",
+> +       "1.8 - 1.9 ms",
+> +       "1.9 - 2.0 ms",
+> +       "2.0 - 2.1 ms",
+> +       ">=3D 2.1 ms"
+> +};
+> +
+> +struct perf_sched;
+> +static int latency_bucket(struct perf_sched *sched, u64 delta_ns);
+> +static void print_latency_histogram(struct perf_sched *sched, u64 *hist,
+> +                                   u64 total_count, const char *title);
+> +
+>  static const char *cpu_list;
+>  static struct perf_cpu_map *user_requested_cpus;
+>  static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+> @@ -124,6 +186,7 @@ struct work_atoms {
+>         u64                     nb_atoms;
+>         u64                     total_runtime;
+>         int                     num_merged;
+> +       u64                     hist[NUM_LAT_BUCKETS];
+>  };
+>
+>  typedef int (*sort_fn_t)(struct work_atoms *, struct work_atoms *);
+> @@ -219,6 +282,10 @@ struct perf_sched {
+>         struct list_head sort_list, cmp_pid;
+>         bool force;
+>         bool skip_merge;
+> +       bool show_histogram;
+> +       enum hist_mode hist_mode;
+> +       const char *hist_mode_str;
+> +       u64 global_hist[NUM_LAT_BUCKETS];
+>         struct perf_sched_map map;
+>
+>         /* options for timehist command */
+> @@ -246,6 +313,59 @@ struct perf_sched {
+>         struct perf_data *data;
+>  };
+>
+> +static int latency_bucket(struct perf_sched *sched, u64 delta_ns)
+> +{
+> +       u64 delta_us =3D delta_ns / NSEC_PER_USEC;
+> +       int b;
+> +
+> +       if (sched->hist_mode =3D=3D HIST_MODE_LINEAR) {
+> +               b =3D delta_us / 100;
+> +       } else {
+> +               if (delta_us =3D=3D 0)
+> +                       return 0;
+> +               b =3D 64 - __builtin_clzll(delta_us);
+> +       }
+> +
+> +       if (b >=3D NUM_LAT_BUCKETS - 1)
+> +               return NUM_LAT_BUCKETS - 1;
+> +       return b;
+> +}
+> +
+> +static void print_latency_histogram(struct perf_sched *sched, u64 *hist,
+> +                                   u64 total_count, const char *title)
+> +{
+> +       const char **bucket_names =3D (sched->hist_mode =3D=3D HIST_MODE_=
+LINEAR) ?
+> +               linear_bucket_names : lat_bucket_names;
+> +       int bar_total =3D 40;
+> +       char bar[] =3D "########################################";
+> +       int i;
+> +
+> +       if (total_count =3D=3D 0)
+> +               return;
+> +
+> +       printf("\n %s (total samples: %" PRIu64 ")\n", title, total_count=
+);
+> +       printf(" --------------------------------------------------------=
+-----------\n");
+> +       printf("  %-16s | %10s | %6s | %s\n",
+> +              "Latency Range", "Count", "Pct", "Histogram Graph");
+> +       printf(" --------------------------------------------------------=
+-----------\n");
+> +
+> +       for (i =3D 0; i < NUM_LAT_BUCKETS; i++) {
+> +               double pct;
+> +               int bar_len;
+> +
+> +               if (hist[i] =3D=3D 0)
+> +                       continue;
+> +               pct =3D (double)hist[i] * 100.0 / total_count;
+> +               bar_len =3D (hist[i] * bar_total) / total_count;
+> +               if (bar_len =3D=3D 0 && hist[i] > 0)
+> +                       bar_len =3D 1;
+> +               printf("  %-16s | %10" PRIu64 " | %5.1f%% | %.*s\n",
+> +                      bucket_names[i], hist[i], pct,
+> +                      bar_len, bar);
+> +       }
+> +       printf(" --------------------------------------------------------=
+-----------\n");
+> +}
+> +
+>  /* per thread run time data */
+>  struct thread_runtime {
+>         u64 last_time;      /* time of previous sched in/out event */
+> @@ -1129,10 +1249,12 @@ add_runtime_event(struct work_atoms *atoms, u64 d=
+elta,
+>  }
+>
+>  static void
+> -add_sched_in_event(struct work_atoms *atoms, u64 timestamp)
+> +add_sched_in_event(struct perf_sched *sched, struct work_atoms *atoms,
+> +                  u64 timestamp)
+>  {
+>         struct work_atom *atom;
+>         u64 delta;
+> +       int b;
+>
+>         if (list_empty(&atoms->work_list))
+>                 return;
+> @@ -1158,6 +1280,10 @@ add_sched_in_event(struct work_atoms *atoms, u64 t=
+imestamp)
+>                 atoms->max_lat_end =3D timestamp;
+>         }
+>         atoms->nb_atoms++;
+> +
+> +       b =3D latency_bucket(sched, delta);
+> +       atoms->hist[b]++;
+> +       sched->global_hist[b]++;
+>  }
+>
+>  static void free_work_atoms(struct work_atoms *atoms)
+> @@ -1188,6 +1314,9 @@ static int latency_switch_event(struct perf_sched *=
+sched,
+>         int cpu =3D sample->cpu, err =3D -1;
+>         s64 delta;
+>
+> +       if (perf_time__skip_sample(&sched->ptime, sample->time))
+> +               return 0;
+> +
+>         /* perf.data is untrusted input =E2=80=94 CPU may be absent or co=
+rrupted */
+>         if (cpu >=3D MAX_CPUS || cpu < 0) {
+>                 pr_warning("WARNING: at offset %#" PRIx64 ": out-of-bound=
+ sample CPU %d, skipping sample\n",
+> @@ -1241,7 +1370,7 @@ static int latency_switch_event(struct perf_sched *=
+sched,
+>                 if (add_sched_out_event(in_events, 'R', timestamp))
+>                         goto out_put;
+>         }
+> -       add_sched_in_event(in_events, timestamp);
+> +       add_sched_in_event(sched, in_events, timestamp);
+>         err =3D 0;
+>  out_put:
+>         thread__put(sched_out);
+> @@ -1255,11 +1384,15 @@ static int latency_runtime_event(struct perf_sche=
+d *sched,
+>  {
+>         const u32 pid      =3D perf_sample__intval(sample, "pid");
+>         const u64 runtime  =3D perf_sample__intval(sample, "runtime");
+> -       struct thread *thread =3D machine__findnew_thread(machine, -1, pi=
+d);
+> +       struct thread *thread;
+>         struct work_atoms *atoms;
+>         u64 timestamp =3D sample->time;
+>         int cpu =3D sample->cpu, err =3D -1;
+>
+> +       if (perf_time__skip_sample(&sched->ptime, sample->time))
+> +               return 0;
+> +
+> +       thread =3D machine__findnew_thread(machine, -1, pid);
+>         if (thread =3D=3D NULL)
+>                 return -1;
+>
+> @@ -1302,6 +1435,9 @@ static int latency_wakeup_event(struct perf_sched *=
+sched,
+>         u64 timestamp =3D sample->time;
+>         int err =3D -1;
+>
+> +       if (perf_time__skip_sample(&sched->ptime, sample->time))
+> +               return 0;
+> +
+>         wakee =3D machine__findnew_thread(machine, -1, pid);
+>         if (wakee =3D=3D NULL)
+>                 return -1;
+> @@ -1362,6 +1498,9 @@ static int latency_migrate_task_event(struct perf_s=
+ched *sched,
+>         struct thread *migrant;
+>         int err =3D -1;
+>
+> +       if (perf_time__skip_sample(&sched->ptime, sample->time))
+> +               return 0;
+> +
+>         /*
+>          * Only need to worry about migration when profiling one CPU.
+>          */
+> @@ -1438,6 +1577,11 @@ static void output_lat_thread(struct perf_sched *s=
+ched, struct work_atoms *work_
+>                  work_list->nb_atoms, (double)avg / NSEC_PER_MSEC,
+>                  (double)work_list->max_lat / NSEC_PER_MSEC,
+>                  max_lat_start, max_lat_end);
+> +
+> +       if (sched->show_histogram && verbose > 0)
+> +               print_latency_histogram(sched, work_list->hist,
+> +                                       work_list->nb_atoms,
+> +                                       "Task Latency Histogram");
+>  }
+>
+>  static int pid_cmp(struct work_atoms *l, struct work_atoms *r)
+> @@ -3544,6 +3688,8 @@ static void __merge_work_atoms(struct rb_root_cache=
+d *root, struct work_atoms *d
+>                                 this->max_lat_start =3D data->max_lat_sta=
+rt;
+>                                 this->max_lat_end =3D data->max_lat_end;
+>                         }
+> +                       for (int i =3D 0; i < NUM_LAT_BUCKETS; i++)
+> +                               this->hist[i] +=3D data->hist[i];
+>                         free_work_atoms(data);
+>                         return;
+>                 }
+> @@ -3602,6 +3748,24 @@ static int perf_sched__lat(struct perf_sched *sche=
+d)
+>
+>         setup_pager();
+>
+> +       if (sched->hist_mode_str) {
+> +               sched->show_histogram =3D true;
+> +               if (!strcmp(sched->hist_mode_str, "linear"))
+> +                       sched->hist_mode =3D HIST_MODE_LINEAR;
+> +               else if (!strcmp(sched->hist_mode_str, "log"))
+> +                       sched->hist_mode =3D HIST_MODE_LOG;
+> +               else {
+> +                       pr_err("Invalid --hist-mode '%s', expected 'log' =
+or 'linear'\n",
+> +                              sched->hist_mode_str);
+> +                       return -EINVAL;
+> +               }
+> +       }
+> +
+> +       if (sched->time_str && perf_time__parse_str(&sched->ptime, sched-=
+>time_str) !=3D 0) {
+> +               pr_err("Invalid time string\n");
+> +               return -EINVAL;
+> +       }
+> +
+>         if (setup_cpus_switch_event(sched))
+>                 return rc;
+>
+> @@ -3634,6 +3798,10 @@ static int perf_sched__lat(struct perf_sched *sche=
+d)
+>         print_bad_events(sched);
+>         printf("\n");
+>
+> +       if (sched->show_histogram)
+> +               print_latency_histogram(sched, sched->global_hist, sched-=
+>all_count,
+> +                                       "CPU Wait Latency Distribution Hi=
+stogram (between snapshots)");
+> +
+>         rc =3D 0;
+>
+>         while ((next =3D rb_first_cached(&sched->sorted_atom_root))) {
+> @@ -5052,6 +5220,12 @@ int cmd_sched(int argc, const char **argv)
+>                     "CPU to profile on"),
+>         OPT_BOOLEAN('p', "pids", &sched.skip_merge,
+>                     "latency stats per pid instead of per comm"),
+> +       OPT_BOOLEAN('H', "histogram", &sched.show_histogram,
+> +                   "show CPU wait latency distribution histogram"),
+> +       OPT_STRING(0, "hist-mode", &sched.hist_mode_str, "log|linear",
+> +                  "latency bucket mode (log or linear, default: log)"),
+> +       OPT_STRING(0, "time", &sched.time_str, "str",
+> +                  "Time span for analysis (start,stop)"),
+>         OPT_PARENT(sched_options)
+>         };
+>         const struct option replay_options[] =3D {
+> --
+> 2.54.0
+>
