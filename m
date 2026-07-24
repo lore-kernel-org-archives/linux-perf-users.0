@@ -1,58 +1,58 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9FB4908B7;
-	Fri, 24 Jul 2026 07:03:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F51381EAA;
+	Fri, 24 Jul 2026 07:05:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784876593; cv=none; b=L2h6pLLW+1InL1btsqqbxf82pkadXTqmjFrv0tTJhBqFDgsePivlya3RtIrdnTlBdG5GImK8S9bGYQFwXLIUwtJ4SZEMVaUlsupE2+HQSb4BWtrJ//FJXbbIPKlhY9EVRy5nS+EaKqa1rCoZb0SGemlyPwsa9MrPhJgjL6vCpyI=
+	t=1784876733; cv=none; b=Dk9xYI7nri2urDkqWZS8NyiEpTjtR6CEG9sqmsMl44b56VTECMzncmYkHyZ/vhxAmHIl+c4dF+T6jvC77GCzPluBEJr9p48QdeANEJZpe+O4ovSqzwoYaryYkYg9F6mOWz52mCqyWW2qD47JIprviQp3I3fZxrOOT60VdkZd1NM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784876593; c=relaxed/simple;
-	bh=PJ/+ByJksAe7HOdMDSfC6NV924/lgQj6Ni60jm9Ders=;
+	s=arc-20240116; t=1784876733; c=relaxed/simple;
+	bh=XUbpMgWjS3eQLbh/6Yw5kIA0fDtK0Q7uc2UOWlyhSmY=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=XJ384GYlb9b+g38Niw8HkuWP5O0QHQ99gQCsnDU3grEl1uyvDFe9fHJ8cLu2kYB86kjMq8ahIIRsywl6YAPRpJyiUZd8MltwJ+QH9GEALiL8re+UDK9Q1mWndDHqXm7u8Rq/C1oZ2LI3mDcp7VVEf9ldUl9G48yv4TwcCrP6U+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bG4H+j5D; arc=none smtp.client-ip=148.163.158.5
+	 Message-Id:References:To; b=VJaUGi6S9WcXEPu2dN17yMnpsUH+wO7trPhp4EaiD9cV3qz7DsWNTRa3ys9HBkFEi/+iOQL6zMiNkLo6uy51ZE2l/24PCnsEeDNJZAw27DW4sLoI7x0zFHRlYFpWWBKs5Om/w3q27M5m4Y4rYd0M4ulz026+gCZyPxeRkk4m5QE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=sKeiLy9J; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bG4H+j5D"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66O5BlWX913982;
-	Fri, 24 Jul 2026 07:03:11 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="sKeiLy9J"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66O5Bfsj919608;
+	Fri, 24 Jul 2026 07:05:31 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=m8mRTY
-	+YW7PlP6TzGh55fpIegJOfbBL0IriTvNKR6Kg=; b=bG4H+j5D4nyMcMo3Uxot0r
-	u7jhcEttQlUsfXgTsZxXWmAViMjh4wSTU/w843IYFdLO9bi9YDnFlJ3PUFvs1NKE
-	+sxW3VpzWx04tMv/771c4XF3rDvrXqUK3BdYa2j179vG8quA8Y7OEEofJZfJvyw1
-	XCjAY/Av2CIwGZCY3rq7LmBXGNKKjPcYB7lq9Vb/fwXw5auJTYpQ+gys8uI+bG+d
-	jiwv9linioC12wnaHh1gT2CSMzoGotUvBGGFoN9tje2GzWia/u0L+6re4+c1tZWl
-	6OZsmRHFEkfvX38v6T0AcItmAbO1JcIJ/rEZwHpXtZm2O7apbH3GhRKBiGK6Dc7g
+	:message-id:mime-version:references:subject:to; s=pp1; bh=7+xbnt
+	d17Pbk6uJqqWEuI34yEVSgXnY3Vt1REyAKm7k=; b=sKeiLy9J05R64JKH6sfu31
+	UO7dfLEdjSAYRYq7tMKccpvrGVfeZnGFqQYxOjHXFEOiiBFmgx0YFlJUvYpxs9fj
+	OE1a+X9mpuLP+uYN67Cc157m8KbOAQ0deF89QnlVDBPFjkDOn0EaREFoPQ48wh+Q
+	PlEqiQL6TZvgRi7QH6GM6cFan9dsB/UtSlWv4Cvd93s48qjd77jiRnxrJVmDejQS
+	R3S3U91ahVdEfANKKpFIBtPL6QfiJIcjXG7lgUSGeTvpv5Qaljvi/krG7ZW4jd9n
+	cVbpKBKmuST+UnJJPXaDvKm1A5MwpR/BI6W5U1Tnfo1S6zODYdaNpEvkitxv6rVQ
 	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fg7ahjt5a-1
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fg791bfyv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 24 Jul 2026 07:03:10 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66O6neRm032303;
-	Fri, 24 Jul 2026 07:03:10 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fgp1gqmy1-1
+	Fri, 24 Jul 2026 07:05:30 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66O74fws007018;
+	Fri, 24 Jul 2026 07:05:29 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fgm6wfx85-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 24 Jul 2026 07:03:10 +0000 (GMT)
+	Fri, 24 Jul 2026 07:05:29 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66O738RH31457796
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66O75R0x49021424
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 24 Jul 2026 07:03:08 GMT
+	Fri, 24 Jul 2026 07:05:27 GMT
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 40E6F201C7;
-	Fri, 24 Jul 2026 07:03:08 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 16259201D8;
+	Fri, 24 Jul 2026 07:05:27 +0000 (GMT)
 Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 96A31201C5;
-	Fri, 24 Jul 2026 07:03:07 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 6B8E2201D6;
+	Fri, 24 Jul 2026 07:05:26 +0000 (GMT)
 Received: from smtpclient.apple (unknown [9.124.222.110])
 	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 24 Jul 2026 07:03:07 +0000 (GMT)
+	Fri, 24 Jul 2026 07:05:26 +0000 (GMT)
 Content-Type: text/plain;
 	charset=utf-8
 Precedence: bulk
@@ -61,143 +61,280 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCH V2 5/6] docs: ABI: sysfs-bus-event_source-devices-htm:
- Document sysfs event format entries for htm pmu
+Subject: Re: [PATCH V2 6/6] powerpc/perf/htm: Add documentation for Hardware
+ Trace Macro PMU
 From: Athira Rajeev <atrajeev@linux.ibm.com>
-In-Reply-To: <20260720111314.3B2DD1F0155E@smtp.kernel.org>
-Date: Fri, 24 Jul 2026 12:32:56 +0530
+In-Reply-To: <20260720111748.95D4A1F00A3D@smtp.kernel.org>
+Date: Fri, 24 Jul 2026 12:35:14 +0530
 Cc: linux-perf-users@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <D07F241C-1C04-49DE-8F5C-ACC97CD75873@linux.ibm.com>
+Message-Id: <EA5FEAF7-4C4B-4FD7-B668-8B8EBFC1F8E3@linux.ibm.com>
 References: <20260720104447.11843-1-atrajeev@linux.ibm.com>
- <20260720104447.11843-6-atrajeev@linux.ibm.com>
- <20260720111314.3B2DD1F0155E@smtp.kernel.org>
+ <20260720104447.11843-7-atrajeev@linux.ibm.com>
+ <20260720111748.95D4A1F00A3D@smtp.kernel.org>
 To: sashiko-reviews@lists.linux.dev
 X-Mailer: Apple Mail (2.3864.300.41.1.7)
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: hrim4SkEDmoI_bEx9RkbYs6zVxG5m5HE
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI0MDA1OSBTYWx0ZWRfX3ggHIXJcpAs6
- 5Ffv4hdMrp8cKQxy24Hrte1i3H8T3GayDBcLTQBbUzPVwbpij71sJvJ/vEcpKfkDYSdz7Nv7Dru
- PTdG49t+EUihkMrWJ00HhAN9SYJ8arSAdvZMZs4+AnSivQrsn/hN1+Irp9jMeJveta1CLzokirY
- L/ojsUSqjo9dkYiuQ+iswuvYhoMJ0kwI7Jvo7b/kgeKZtfvzBe1r2hsf6Av3bLPY70PTOFhgXR2
- bR7K66Dc4spdXq9wl/mtVrbmCLk6UV0fNZ0J5oVASBqJjgX9JriMKGxzPqwAPUAGwsvQ24VWwwM
- /raLwRAlaWLD7u/7Ve1t7DPlq2vNf6OAwOKl3jPXJVTLzTEcLgS7RQx3okdDBIBDWOxbeH/w8n5
- 3wj0GTSgpG8WuhDvZ38Kk5CVfijeY3nGkfz/hdwBmImbbULjxb3pTLTuUsEq1pJlAfexLYURkMB
- xVdXizaSxImPNaEqPiA==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI0MDA1OSBTYWx0ZWRfXxaRo6gLLPhmx
- mNK6hi21RgxYSKWjrW0wZzLUvlYHxts2+z1HwZBUtq1ZSSmGnwjMjYFwbTjQEvVQSP7hJ+M8a84
- FVilIfswK6k3fVdZ9nQUqGwg1xMee/E=
-X-Proofpoint-GUID: hrim4SkEDmoI_bEx9RkbYs6zVxG5m5HE
-X-Authority-Analysis: v=2.4 cv=SM5ykuvH c=1 sm=1 tr=0 ts=6a630e2f cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+X-Proofpoint-ORIG-GUID: egfWcuK7mRpvqw-nG_y1kkXLLk1j4qBC
+X-Authority-Analysis: v=2.4 cv=V6RNF+ni c=1 sm=1 tr=0 ts=6a630eba cx=c_pps
+ a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
  a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=c92rfblmAAAA:8
- a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=voM4FWlXAAAA:8 a=jfP95tfrkVojahAY4dIA:9
- a=QEXdDO2ut3YA:10 a=GvGzcOZaWPEFPQC_NcjD:22 a=IC2XNlieTeVoXbcui8wp:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=c92rfblmAAAA:8
+ a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=x9h1URMS6bne3Vs6GEoA:9 a=QEXdDO2ut3YA:10
+ a=GvGzcOZaWPEFPQC_NcjD:22
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI0MDA1OSBTYWx0ZWRfXzlop3L1wceIq
+ FO5A/Tfw5YJ6EAaLbN563bSQa8SMFrIdKmFptpYZoSimB/ZVfQ844scEUW2l/tk3X1F+mtp79fH
+ WePt6T8N47uBYZXAmzMUaqyPoLqs+Pc=
+X-Proofpoint-GUID: egfWcuK7mRpvqw-nG_y1kkXLLk1j4qBC
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI0MDA1OSBTYWx0ZWRfX4ZAO7gQIr7LJ
+ iqkaEeYh6zYn1WL1Xw4L99VrejXoPRtVga96aGgcz4RGt6p38TOHZHBEKZP54rUEukwBFPT3Syt
+ 3gFT9N499DTWIObSGTwGBir947GdPRYVxztUKzhNBdyKh6uzfQwqCprSXg21ypRpnuW3fFMARHF
+ xlT6UmzZl8tdJPsX74CEw8LUGKZsTEoJnFWLY9CMm8ITsAgowJ+AWc9uuPjtnMzd6j7Y/7jmGCP
+ 44wSFknS9zIQ1NtAiB+YZs2RX/Lw6/8u2SNcrz0W9iaxOBNZgsoasuyf8EXE/aWYGWFM3WDHqTN
+ 946tjlJ3/7RpXJqI50Wf3J1DP0Wt7uV3P5VGxp4DrofBUgSzsmWfWQX/82NZfQCneOdPHlWHriB
+ SL2IPGvUQfFGgXDr5hmUuRtXe2kVeXFJNV29vsFZN9YYoJQSvOX4dnLzkHhu5IDVf80keSzO9kY
+ H0BMZrFGJ5rtxp275lQ==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-24_01,2026-07-22_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 lowpriorityscore=0 bulkscore=0 suspectscore=0 adultscore=0
- spamscore=0 malwarescore=0 priorityscore=1501 phishscore=0 impostorscore=0
+ malwarescore=0 adultscore=0 bulkscore=0 lowpriorityscore=0 clxscore=1015
+ spamscore=0 impostorscore=0 phishscore=0 priorityscore=1501 suspectscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607240059
 
 
 
-> On 20 Jul 2026, at 4:43=E2=80=AFPM, sashiko-bot@kernel.org wrote:
+> On 20 Jul 2026, at 4:47=E2=80=AFPM, sashiko-bot@kernel.org wrote:
 >=20
 > Thank you for your contribution! Sashiko AI review found 3 potential =
 issue(s) to consider:
-> - [Medium] The format attributes documented in the ABI file do not =
-match the V2 layout claimed in the commit message.
-> - [Medium] The commit message provides a fundamentally flawed example =
-for using the 'events' attribute group, conflating it with the 'format' =
-group.
-> - [Low] Minor grammatical error in the description text.
+> - [Medium] The documentation states that `perf record` or `perf report =
+-D` generates specific binary output files (`htm.bin.*` and =
+`translation.*`), but this functionality does not exist in the upstream =
+`tools/perf` codebase.
+> - [Medium] The commit message claims to document `htmdecode` usage and =
+notes on PMU restrictions, but these sections are entirely missing from =
+the documentation text.
+> - [Low] There are several grammatical errors, typos, and =
+inconsistencies in the newly added documentation text.
 > --
 >=20
-> --- Patch [5]: [PATCH V2 5/6] docs: ABI: =
-sysfs-bus-event_source-devices-htm: Document sysfs event format entries =
-for htm pmu ---
-> commit 9ec8c4a8a34dc7a4a75859018f086bb71432aa4a
+> --- Patch [6]: [PATCH V2 6/6] powerpc/perf/htm: Add documentation for =
+Hardware Trace Macro PMU ---
+> commit 630c94afa3c07b9d61db47792f5a5e0b40edd107
 > Author: Athira Rajeev <atrajeev@linux.ibm.com>
 >=20
-> docs: ABI: sysfs-bus-event_source-devices-htm: Document sysfs event =
-format entries for htm pmu
+> powerpc/perf/htm: Add documentation for Hardware Trace Macro PMU
 >=20
-> This commit adds ABI documentation for the sysfs entries exposed by =
+> This commit extends the HTM documentation with a new section covering =
 the
-> HTM PMU under /sys/bus/event_source/devices/htm/. It documents the =
-format
-> attribute group and the events attribute group.
+> perf PMU interface. It describes event configuration, syntax, basic =
+usage
+> examples, and expected output files.
 >=20
->> Document the events attribute group, which lists the named events
->> available on the PMU.  Users can pass these names directly to perf:
+>>    The added documentation covers:
 >>=20
->>  # perf record -e htm/nodalchipindex=3D2,nodeindex=3D0,htm_type=3D1/ =
-...
+>>      - How to open HTM events using perf record, including the event
+>>        syntax (nodalchipindex, nodeindex, htm_type, cpu=3DN) and the
+>>        required AUX buffer size (-m,256).
+>>=20
+>>      - The two output files produced by perf report:
+>>          htm.bin.nX.pX.cX     raw bus-trace AUX data
+>>          translation.nX.pX.cX memory-configuration records
+>>=20
+>>      - How to pass the output files to htmdecode for trace decoding.
+>>=20
+>>      - Notes on system-wide collection (-a) vs CPU-pinned collection
+>>        (-C N) and the one-event-per-target PMU restriction.
 >=20
 > [Severity: Medium]
-> Does this example conflate the 'events' attribute group with the =
-'format'
-> group? The example provided uses format attribute fields (key-value =
-pairs),
-> whereas the 'events' directory is supposed to provide named aliases.
-Thanks for the feedback
+> The commit message claims to document htmdecode usage, as well as =
+notes on
+> system-wide vs CPU-pinned collection and PMU restrictions, but these =
+sections
+> appear to be missing entirely from the added documentation text. Did =
+these get
+> dropped during patch iteration?
+>=20
+>> diff --git a/Documentation/arch/powerpc/htm.rst =
+b/Documentation/arch/powerpc/htm.rst
+>> index fcb4eb6306b16..d574fd2225ea5 100644
+>> --- a/Documentation/arch/powerpc/htm.rst
+>> +++ b/Documentation/arch/powerpc/htm.rst
+> [ ... ]
+>> @@ -94,7 +95,137 @@ This trace file will contain the relevant =
+instruction traces
+>> collected during the workload execution. And can be used as
+>> input file for trace decoders to understand data.
+>>=20
+>> -Benefits of using HTM debugfs interface
+>> +HTM perf interface usage
+>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
 
-I will address this in V3
->=20
->> diff --git =
-a/Documentation/ABI/testing/sysfs-bus-event_source-devices-htm =
-b/Documentation/ABI/testing/sysfs-bus-event_source-devices-htm
->> new file mode 100644
->> index 0000000000000..784ba7c31b89b
->> --- /dev/null
->> +++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-htm
->> @@ -0,0 +1,21 @@
->> +What:           /sys/bus/event_source/devices/htm/format
->> +Date:           June 2026
->> +Contact:        Linux on PowerPC Developer List <linuxppc-dev at =
-lists.ozlabs.org>
->> +Description:    Read-only. Attribute group to describe the magic =
-bits
->> +                that go into perf_event_attr.config for a particular =
-pmu.
->> +                (See =
-ABI/testing/sysfs-bus-event_source-devices-format).
+> [ ... ]
+>> +- event: "config:0-27"
+>> +- htm_type: "config:0-3"
+>> +- nodeindex: "config:4-11"
+>> +- nodalchipindex: "config:12-19"
+>> +- coreindexonchip: "config:20-27"
 >> +
->> +                Each attribute under this group defines a bit range =
-of the
->> +                perf_event_attr.config. Supported attribute are =
-listed
->                                                             ^^^^^^^^^
+>> +1) nodeindex, nodalchipindex, coreindexonchip: this specifies
+>> +   which partition to configure the HTM for.
+>> +2) htmtype: specifies the type of HTM.
+>=20
 > [Severity: Low]
-> This isn't a bug, but there is a grammatical error here ("attribute =
-are"
-> instead of "attributes are=E2=80=9D).
-Sure
+> This isn't a bug, but should this say htm_type instead of htmtype to =
+match
+> the parameter list above?
 >=20
->> +                below::
 >> +
->> + event  =3D "config:0-27"  - event ID
+>> +Event Syntax
+>> +------------
+>> +
+>> +The event configuration uses named parameters::
+>> +
+>> +   htm/nodeindex=3DN,nodalchipindex=3DC,coreindexonchip=3DR,htm_type=3D=
+T/
+>> +
+>> +To open the event on a specific cpu can be specified using::
+>=20
+> [Severity: Low]
+> This isn't a bug, but there is a grammatical error here. Could this be =
+updated
+> to something like "Opening the event on a specific CPU can be =
+specified
+> using::"?
+>=20
+>> +
+>> +   =
+htm/nodeindex=3DN,nodalchipindex=3DC,coreindexonchip=3DR,htm_type=3DT,cpu=3D=
+x/
+>> +
+>> +Where:
+>> +
+>> +- N =3D node index
+>> +- C =3D chip index within the node
+>> +- R =3D core index on the chip
+>> +- T =3D HTM type
+>> +- x =3D CPU number
+>> +
+>> +Basic Usage Example
+>> +-------------------
+>> +
+>> +To collect HTM trace data for a specific chip:
+>> +
+>> +.. code-block:: sh
+>> +
+>> +   # perf record -C 1 -e =
+htm/nodalchipindex=3D2,nodeindex=3D0,htm_type=3D1/ <workload>
+>> +
+>> +In this example:
+>> +
+>> +- ``-C 1``: Collect on CPU 1
+>> +- ``nodeindex=3D0``: Target node 0
+>> +- ``nodalchipindex=3D2``: Target chip 2 within node 0
+>> +- ``htm_type=3D1``: HTM trace type 1
+>> +
+>> +.. code-block:: sh
+>> +
+>> +   # perf record -m,256 -e =
+htm/coreindexonchip=3D6,nodalchipindex=3D0,nodeindex=3D0,htm_type=3D2,cpu=3D=
+16/ -a sleep 1
+>> +
+>> +In this example:
+>> +
+>> +- ``cpu=3D16``: Collect on CPU 16
+>> +- ``nodeindex=3D0``: Target node 0
+>> +- ``nodalchipindex=3D0``: Target chip 0 within node 0
+>> +- ``coreindexonchip=3D6``: Target code 6
+>=20
+> [Severity: Low]
+> This isn't a bug, but there's a typo here. Should "Target code" be
+> "Target core"?
+>=20
+>> +- ``htm_type=3D2``: HTM trace type 2
+>> +- ``-m,256``: specifies number of mmap pages
+>> +
+>> +Running trace collection for multiple targets:
+>> +
+>> +.. code-block:: sh
+>> +
+>> +   # perf record -m,256 -e =
+htm/nodalchipindex=3D2,nodeindex=3D0,htm_type=3D1,cpu=3D8/ -e =
+htm/nodalchipindex=3D1,nodeindex=3D0,htm_type=3D1,cpu=3D9/ -a sleep 1
+>> +
+>> +
+>> +In this example, trace is collected for two events on different =
+target chips
+>> +
+>> +Output Files
+>> +------------
+>> +
+>> +After running ``perf record``, the following files are generated:
+>> +
+>> +.. code-block:: sh
+>> +
+>> +   # ls htm.bin.*
+>> +   htm.bin.n0.p2.c0 htm.bin.n1.p3.c0  # Binary trace files
+>> +
+>> +   # ls translation.*
+>> +   translation.n0.p2.c0  translation.n1.p3.c0  # Memory =
+configuration files
+>> +
+>> +These files contain:
+>> +
+>> +- **htm.bin.*** - Raw HTM trace data in binary format
+>> +- **translation.*** - Memory address translation information for =
+decoding
+>> +
+>> +Complete Workflow Example
+>> +--------------------------
+>> +
+>> +Here's a complete example of collecting and analyzing HTM traces:
+>> +
+>> +.. code-block:: sh
+>> +
+>> +   # Step 1: Collect trace data
+>> +   perf record -C 1 -e htm/nodalchipindex=3D2,nodeindex=3D0,htm_type=3D=
+1/ sleep 5
+>> +
+>> +   # Step 2: Verify output files
+>> +   perf report -D
+>> +
+>> +   ls htm.bin.*        # Binary trace files
+>> +   ls translation.*    # Memory configuration files
 >=20
 > [Severity: Medium]
-> Is the documentation missing the format attributes claimed in the =
-commit
-> message?
+> Does perf report -D natively generate these specific binary output =
+files
+> (htm.bin.* and translation.*) in the upstream tools/perf codebase?
 >=20
-> The commit message explicitly states that htm_type, nodeindex,
-> nodalchipindex, and coreindexonchip were added for the V2 layout, but =
-only
-> the generic 'event' attribute is listed here.
-Will be updated, sorry for missing that information in patch
+> This documentation seems to describe a non-existent feature in =
+upstream
+> tools/perf and might rely on out-of-tree tooling that was not included =
+in
+> this patch series. Should this be updated to reflect only supported =
+features?
+
+Thanks for all the comments
+
+I will address the wording/mistakes in V3.=20
+
+The documentation is part of arch/powerpc and is generally picked via =
+powerpc tree. Since tools side patches are posted
+separately ( to be picked by tools side tree ) the patches adding the =
+perf report changes are not in kernel series.
 
 Thanks
 Athira
 >=20
+>> +   ls perf.data        # Perf data file
+>> +
+>> +Benefits of using HTM interface
+>=20
 > --=20
 > Sashiko AI review =C2=B7 =
 https://sashiko.dev/#/patchset/20260720104447.11843-1-atrajeev@linux.ibm.c=
-om?part=3D5
+om?part=3D6
 
