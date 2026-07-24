@@ -1,181 +1,229 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73549426EB2
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jul 2026 10:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6457D439F88
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jul 2026 14:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784888549; cv=none; b=G8AAwy2I/yH/pf7aVPaDv3WRGBDyV/KWZ5iwe2pMSiq34bZv78DnVmrXWahXKoXGjQxjTIUlMODHHk2yuSDYPC/hlCOy4f63YdLu4/pYk70Ul3+dGZT49C70U6jU6IwB5oZ2RtTrdcmoL6SArwumSiOyThUIKs+0fuMhp7+e36g=
+	t=1784902442; cv=none; b=izvbcqSmgitlRAbgTF/8/WOtN3gl1sICkr/jHx8PFNHZNWCWLKnQlo91VMctnvfDZtsOl22XlrQ1EJf0FxGJAlo4lIJe3GZBPrgQveo1svmc9NWYGUHE3Qgzjq6xLu7U+d0CcWvo6GE5vzivC3n3fPFANXvc9LqN1oyr7QgojbM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784888549; c=relaxed/simple;
-	bh=NLb0dqOGwcktSYbe9lka3YxkN/4q9A7FS4Ppi+1Rsl0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=gxcIgXMj9prko4sJRqrrqOa4hG0+z2ewEu++/BNyGk24Mtnkp8TMSI/37FwjF3RYLuQj0TK9yp6tPNH+adlcAB10HASB3KM/T0eZvgHWGaP3Tavu947cR9nqOzfTZJryQHaKBa5Xn7EqLtnUfiP7iCgFw/tEDNwkD/t1YrpvylE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mp4qW0lD; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784902442; c=relaxed/simple;
+	bh=DygkHp7assjV+aJ0TOApqs3CMbYbgpcIQWJRhhvHrqw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=rnBCv5J85IzVb6aEzWWas/p1A5l6DfpGCI7YQ6olzYZfG1iydVYXWtB/Sm5ZNSUje537OdXTVyckl/RqCb6dHqM7OPIkTekD0NPvScJXGtt8PThkB0382iPlwKDNQvT8fqwtOZkyRx/95tGi80CvHeUVrV/4QGPDjIeATn7ZQP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Gv+fhs0B; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mp4qW0lD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C939E1F00A3D;
-	Fri, 24 Jul 2026 10:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784888548;
-	bh=1Ap/tr8rjwt4TsxWwot1CHvcUifesv2BC3rDL4acq2I=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mp4qW0lDz9+993RvFOsqRSWcR9ZF/SWep/Ke0IqHRy32MBz9aGjdSCQzZ7zvjt2lc
-	 EqydVY+Q6ov0xC4WojgR8xa54qrJIAkC2sZjlyJ3+Y7v5WmY2IE3BXEw7q5wE2z+4w
-	 du3JCmN5t7AWq2hy+n2nQGIOxFcljityxuYLkdYyn9ezW0fyg3ACmkIUuS2Ngj+92V
-	 zffZ4zgIOcSgUzSmvEJHvhmYdsTnP0wK/yp/4D0u2dlwhBOZ4LruREM2hsP4D15YiK
-	 vPud++nRJ6uMUKbQfs9fGh5dgPhHEzooshpJU82WZa0S9daojz0R8+aRxSnXKOS4Sd
-	 E4Ra5lfbp1KpA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 7/9] perf c2c: build and finalize the function view
- hierarchy
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Jiebin Sun" <jiebin.sun@intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260724095842.995920-8-jiebin.sun@intel.com>
-References: <20260717020530.1645123-1-jiebin.sun@intel.com>
- <20260724095842.995920-1-jiebin.sun@intel.com>
- <20260724095842.995920-8-jiebin.sun@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Jul 2026 10:22:27 +0000
-Message-Id: <20260724102227.C939E1F00A3D@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Gv+fhs0B"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66ODfg811992890;
+	Fri, 24 Jul 2026 14:13:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=50E1KF9n0Gw/7vPEA
+	WrdKza/ZUKnBEn8VRiBmwhiid4=; b=Gv+fhs0BMnudPrZ7he3hl9ToOZWkxREUq
+	tz9LYO8yhADcHnhR/ZuTSNordGNcpLsGJjj+jNR3SQXbcg9dH5Oi9SvKxgoHMNDr
+	T6+hDfMN/3M0Y5sjLO2qcSGE5J0zyhxSnEZG7yzFm852zaBYaQrpATxGguSAs2ph
+	QGLScdFUjpYFGy0iKaabO0vN8FW87sxcpMe/e+Qn/T7r3uPwDgidIiSHwNNt6+nB
+	Yi0lXQFoCFSMbhGaS+Gc1snLwkZKlsOUCgdycB2iZl+Uz+reO46zl0UlCDh6aIVF
+	eWcR9Zpz8j/ikN+PorxY21644i1LUzyThu5VxPU44/yk7r7dJhs4A==
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fm8h00any-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 Jul 2026 14:13:41 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66OE4eCK014358;
+	Fri, 24 Jul 2026 14:13:40 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fgktqhd3f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 Jul 2026 14:13:40 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66OEDa1Z46596444
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 24 Jul 2026 14:13:36 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 64BDC2021B;
+	Fri, 24 Jul 2026 14:13:36 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4C87F2021A;
+	Fri, 24 Jul 2026 14:13:32 +0000 (GMT)
+Received: from li-4c4c4544-0047-4210-804e-b5c04f423534.ibm.com.com (unknown [9.39.22.34])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 24 Jul 2026 14:13:32 +0000 (GMT)
+From: Tanushree Shah <tshah@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
+        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
+        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com,
+        Tanushree Shah <tshah@linux.ibm.com>
+Subject: [PATCH v3 2/5] perf trace-event: Fix integer truncation in do_read() and skip()
+Date: Fri, 24 Jul 2026 19:43:13 +0530
+Message-ID: <20260724141316.99507-3-tshah@linux.ibm.com>
+X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260724141316.99507-1-tshah@linux.ibm.com>
+References: <20260724141316.99507-1-tshah@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=LdcMLDfi c=1 sm=1 tr=0 ts=6a637315 cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
+ a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=Reu3Uk4wQY_54RsGqhsA:9
+X-Proofpoint-ORIG-GUID: IJ_6VvIa68JPfNwkqngvcRtpxaZjCrlD
+X-Proofpoint-GUID: 97XbBCtXDaKRXaQgHXVj8_Xlxym8NR-3
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI0MDEyOCBTYWx0ZWRfX0mnPPidN75W3
+ Ihi1dAqgfA+zPDU+zk2PelqB8aXJqk9AVjJM3VjAmUgAycbiD9jvzuHucSMk+p4nehpiBcN0YEL
+ iWxzPwy0rZF8TmUwae4rdcqakjRHurboIElOac8JJtLV1Pox0kB3hIVRcsPoN3N+nv7MH5HCRwC
+ xgp/JODOY92NbCQIMG5tNrnFtl0Qq5uRi4hM65E4OJAFDzQf31QHx4D7EjrofabcTVBGsnnn5BU
+ DPV+qmTaFlyqRPNQLTCrjoNAg3G1IsUASUDVZXnXwQ3UQW+5RWGEMyGEwDpqRRG60rSTAyHIl2a
+ +nAkPAouDD+FjmKoQSc4tUrZGoSHG5Leg+uSAL9ok0Bks91961UOEb6/mic9Fz8vhBes9a09Xbg
+ aVNVFW27X8c46HMtVNS2WOs9kihTOuC3xOmKt+cJse4DurC/wXFAAudmNDbWcE++2XGNR0L9Wbt
+ JrxrnVsILQZdDD/6uEA==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI0MDEyOCBTYWx0ZWRfX6hfIowvV0Ffe
+ QyOHy07FuHO8yp5czGTSLb29rVwx3Idtc8T97gMnbQcYEbVVu/gnwIJ98kKpx4J5i324a8F4BNL
+ YncEOpQY2BF+UTOSaI06nJRPb7jkoxo=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-24_03,2026-07-24_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 suspectscore=0 lowpriorityscore=0 spamscore=0 malwarescore=0
+ clxscore=1015 adultscore=0 priorityscore=1501 phishscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607240128
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] Cross-platform analysis violation due to host-specific symbol so=
-rting.
-- [Medium] Reference count bypass causing potential Use-After-Free under RE=
-FCNT_CHECKING.
-- [Medium] Unprotected NULL pointer dereference when calculating symbol sta=
-rt address with a missing map.
---
+The do_read() and skip() functions use 'int' for size parameters,
+truncating 64-bit sizes from callers. This causes two issues:
 
---- Patch [7]: [PATCH v4 7/9] perf c2c: build and finalize the function vie=
-w hierarchy ---
-commit f2e1f195d1ddc82d8ab908b3806ba29cab6acf88
-Author: Jiebin Sun <jiebin.sun@intel.com>
+1. Uninitialized memory dump: do_read() reads fewer bytes than
+   allocated, leaving uninitialized heap memory that gets written
+   to output files.
 
-perf c2c: build and finalize the function view hierarchy
+2. Out-of-bounds read: Parsing functions process the full 64-bit
+   size while only partial data was read into the buffer.
 
-Add the builder that walks the cacheline histograms once and, for each
-read-side function, records the functions that write the lines it reads
-(level 2) and the specific cachelines they contend over (level 3),
-aggregating the write traffic per contending function. Add the store-count
-resort, the pruning of writers/functions with no contention, and the
-finalize pass that computes the per-function cycle totals.
+Change do_read(), __do_read(), and skip() to use size_t for size
+parameters and ssize_t for return values (where applicable), matching
+read()/write() system calls.
+Update callers to use ssize_t for storing return values.
 
-> diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browse=
-rs/c2c-function.c
-> index 9a7b1353e11ca..bb7f967ab904b 100644
-> --- a/tools/perf/ui/browsers/c2c-function.c
-> +++ b/tools/perf/ui/browsers/c2c-function.c
+Fixes: 454c407ec17a ("perf tools: Get rid of read_or_die() in trace-event-read.c")
+Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
+---
+ tools/perf/util/trace-event-read.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-[ ... ]
+diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
+index afd458cf1387..52ed496d92c3 100644
+--- a/tools/perf/util/trace-event-read.c
++++ b/tools/perf/util/trace-event-read.c
+@@ -25,18 +25,18 @@ static int input_fd;
+ static ssize_t trace_data_size;
+ static bool repipe;
+ 
+-static int __do_read(int fd, void *buf, int size)
++static ssize_t __do_read(int fd, void *buf, size_t size)
+ {
+-	int rsize = size;
++	size_t rsize = size;
+ 
+ 	while (size) {
+-		int ret = read(fd, buf, size);
++		ssize_t ret = read(fd, buf, size);
+ 
+ 		if (ret <= 0)
+ 			return -1;
+ 
+ 		if (repipe) {
+-			int retw = write(STDOUT_FILENO, buf, ret);
++			ssize_t retw = write(STDOUT_FILENO, buf, ret);
+ 
+ 			if (retw <= 0 || retw != ret) {
+ 				pr_debug("repiping input file");
+@@ -51,13 +51,13 @@ static int __do_read(int fd, void *buf, int size)
+ 	return rsize;
+ }
+ 
+-static int do_read(void *data, int size)
++static ssize_t do_read(void *data, size_t size)
+ {
+-	int r;
++	ssize_t r;
+ 
+ 	r = __do_read(input_fd, data, size);
+ 	if (r <= 0) {
+-		pr_debug("reading input file (size expected=%d received=%d)",
++		pr_debug("reading input file (size expected=%zu received=%zd)",
+ 			 size, r);
+ 		return -1;
+ 	}
+@@ -68,10 +68,10 @@ static int do_read(void *data, int size)
+ }
+ 
+ /* If it fails, the next read will report it */
+-static void skip(int size)
++static void skip(size_t size)
+ {
+ 	char buf[BUFSIZ];
+-	int r;
++	size_t r;
+ 
+ 	while (size) {
+ 		r = size > BUFSIZ ? BUFSIZ : size;
+@@ -202,7 +202,7 @@ static int read_header_files(struct tep_handle *pevent)
+ 	unsigned long long size;
+ 	char *header_page;
+ 	char buf[BUFSIZ];
+-	int ret = 0;
++	ssize_t ret = 0;
+ 
+ 	if (do_read(buf, 12) < 0)
+ 		return -1;
+@@ -250,7 +250,7 @@ static int read_header_files(struct tep_handle *pevent)
+ 
+ static int read_ftrace_file(struct tep_handle *pevent, unsigned long long size)
+ {
+-	int ret;
++	ssize_t ret;
+ 	char *buf;
+ 
+ 	buf = malloc(size);
+@@ -276,7 +276,7 @@ static int read_ftrace_file(struct tep_handle *pevent, unsigned long long size)
+ static int read_event_file(struct tep_handle *pevent, char *sys,
+ 			   unsigned long long size)
+ {
+-	int ret;
++	ssize_t ret;
+ 	char *buf;
+ 
+ 	buf = malloc(size);
+@@ -322,7 +322,7 @@ static int read_event_files(struct tep_handle *pevent)
+ 	int systems;
+ 	int count;
+ 	int i,x;
+-	int ret;
++	ssize_t ret;
+ 
+ 	systems = read4(pevent);
+ 
+@@ -350,7 +350,7 @@ static int read_saved_cmdline(struct tep_handle *pevent)
+ {
+ 	unsigned long long size;
+ 	char *buf;
+-	int ret;
++	ssize_t ret;
+ 
+ 	/* it can have 0 size */
+ 	size = read8(pevent);
+-- 
+2.47.3
 
-> @@ -1044,7 +1044,7 @@ c2c_function_hists__level1_entry(struct symbol *sym,
->   * same writer function aggregate into one row without merging identical=
-ly
->   * named functions from different DSOs.
->   */
-> -static __maybe_unused struct c2c_hist_entry *
-> +static struct c2c_hist_entry *
->  c2c_function_hists__level2_entry(struct c2c_hist_entry *level1_c2c,
->  				 struct symbol *sym, struct hist_entry *detail_he)
->  {
-
-[Severity: Medium]
-When calling c2c_child_entry__alloc() inside this function (and also when
-allocating the level 3 entry), the underlying allocation directly assigns
-reference-counted structs without taking a reference:
-
-c2c_child_entry__alloc() {
-    ...
-    memcpy(&child_he->ms, &src_he->ms, sizeof(struct map_symbol));
-    ...
-    child_he->thread =3D src_he->thread;
-    ...
-}
-
-Does this bypass the reference count and risk a use-after-free when
-REFCNT_CHECKING is enabled? Should this code use map__get() and
-thread__get() to acquire proper reference handles?
-
-[Severity: Medium]
-Does this code risk an unprotected NULL pointer dereference when calculating
-the symbol start address?
-
-Inside this function, and similarly in c2c_function_hists__level1_entry(), =
-the
-map is used to unmap the IP:
-
-    sym ? map__unmap_ip(detail_he->ms.map, sym->start) : hist_entry__iaddr(=
-detail_he);
-
-If detail_he->ms.map is NULL (which can happen with unmapped symbols), pass=
-ing
-it directly to map__unmap_ip() will dereference it. Should this verify that
-detail_he->ms.map is valid before calling map__unmap_ip()?
-
-[ ... ]
-
-> @@ -1132,6 +1132,453 @@ c2c_function_hists__level3_entry(struct c2c_hist_=
-entry *level2_c2c, u64 cl_addr,
->  	return level3_c2c;
->  }
-> =20
-> +/*
-> + * Re-sort child entries of @parent_he by total store count, descending.
-> + */
-> +static void c2c_he__resort_by_stores(struct hist_entry *parent_he)
-> +{
-
-[ ... ]
-
-> +		while (*p) {
-> +			struct hist_entry *iter =3D rb_entry(*p, struct hist_entry, rb_node);
-> +			u64 iter_store =3D hist_entry__displayed_stores(iter);
-> +
-> +			parent =3D *p;
-> +			if (he_store !=3D iter_store) {
-> +				cmp =3D he_store > iter_store ? -1 : 1;
-> +			} else {
-> +				/* Stable tie-break: instruction address, then name. */
-> +				u64 a =3D hist_entry__iaddr(he), b =3D hist_entry__iaddr(iter);
-> +
-> +				if (a !=3D b)
-> +					cmp =3D a < b ? -1 : 1;
-> +				else if (he->ms.sym && iter->ms.sym)
-> +					cmp =3D arch__compare_symbol_names(he->ms.sym->name,
-> +									 iter->ms.sym->name);
-
-[Severity: Medium]
-Does using arch__compare_symbol_names() here break cross-platform sorting?
-
-This invokes a host-compiled architecture-specific hook instead of dynamica=
-lly
-querying the target e_machine, which can cause incorrect sorting behavior
-during cross-platform analysis of perf.data files.
-
-> +				else
-> +					cmp =3D (iter->ms.sym ? 1 : 0) - (he->ms.sym ? 1 : 0);
-> +			}
-> +
-> +			if (cmp < 0) {
-> +				p =3D &parent->rb_left;
-> +			} else {
-> +				p =3D &parent->rb_right;
-> +				leftmost =3D false;
-> +			}
-> +		}
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260724095842.9959=
-20-1-jiebin.sun@intel.com?part=3D7
