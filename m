@@ -1,190 +1,136 @@
-Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020109.outbound.protection.outlook.com [52.101.196.109])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2469A3921E6;
-	Fri, 24 Jul 2026 14:29:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.109
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784903349; cv=fail; b=TA8SQsfC9zHBA8WDHuhYiT36ZrsBghhdstxpUDGmxFaEZIzDHuwaNLQbAJAUhIuCCc31BCfMktNwRr1rfhPQ5Wz/mHVQ8pvaULA94xlBjNfuph9T5Tpzg+QIcegNL9AKiKIyp08o8Rvr2gFM7nDZMXJz/ozDGK035ouCWCUE9jk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784903349; c=relaxed/simple;
-	bh=AzVE2MAho7EV9YVirdBmkAbeLSab3RHkh5abS+u/n20=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=P3cRadrhdWJnpQnpkwvf+kV2b3PKo4v1j+g17og1cGKVj1ptc3ktLJFp+BMY4hj3+A8WsxMLYolz94GtqPHQzqe29E8NdQ+P/+gbSGG9/k6gQHAesClU0p+0nl9YmvXZX2UPpnI5i86hAuidT5me3I9P6dI92BOn8a+6bdgnMYA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.196.109
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=vQhK5LId/Oa7NkvMfkzPHNczqsG1vHDvmVuUAElIO8ZNWSNgVFZsBJGnEB0Jax8RIVoM/Wrr6fIzEcN6Ow7fAveyqo0KoJ7EU/z5nnkeS18oNbQxmbJxqWgHiZCs8+pEcADyTwTVIRufrH3SAAtAbt6sWSAdKYVVgt8hMj8SnzgSI2xGViiJMDwpNjzVPk/UjZmgT+OzTa4io27Q2KKhN2MeIAjpppOVa3ZsyNM+9/F9n+Q7yeQAlB38OjHBfnKcT3UUBIaR7yo1U7Lk41gqYdJS+Zqznj/mhzp1qJG/LTd9IAhe1Ux08kS1Fj3/2p3F+uVoOXj1Tm+mniPpo/z02g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=5CsDdTm9aotaWc3LfQHuysx/jE6ZIKMr8aQuIY87R7U=;
- b=EAAkw96ww2hnLAW8L2ZsBDcCrVZFzJ9Ixple9ka327vHIo9ioBWRvmujoW8G1EB8Y4Zxri4KbZv1Qd/uL8GYJWzAu/6UfazLjwagxQ2bwzt7hchoBhmlIIFt9HfIL3atveLwjRJ+JkgKcY1+dU5pg5ObFrI3BldAeeQ48YQiULrP7XcU71HksiFrQvW3o+xhPxVCU+B3vaAVYq3QX7x7EF90TMYL5oyKmiJj1gP0lGHphTGcjbJa1VnUqrcLMe1yYKLN0xBhDgiSnOAnMbyhBFe4E1Gk+nfTV8f2Mo9NAOM4KIPiBjrT1yAbAbZiRdVw0rAkrj0ug4or20NGRt/Tfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by LOAP123MB8364.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:43b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.11; Fri, 24 Jul
- 2026 14:29:04 +0000
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0245.010; Fri, 24 Jul 2026
- 14:29:04 +0000
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	howardchu95@gmail.com,
-	atomlin@atomlin.com,
-	neelx@suse.com,
-	chjohnst@mail.com,
-	sean@ashe.io,
-	steve@abita.co,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf sched: Suppress latency table output when trace samples are missing
-Date: Fri, 24 Jul 2026 10:29:01 -0400
-Message-ID: <20260724142901.634761-1-atomlin@atomlin.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB1143CE77
+	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jul 2026 14:32:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784903543; cv=none; b=iHFsFjQykj5Sfh4/jUFvCGrO4nDX6IEd5T7poVHPVVBEFRls3D1If0VWMiq1lug4VqjVEt65+RCwOa/nHaQI9fuffO6TloG/I35FddUVazdfCBi3TOJ1VFgQaZAfj5SzgkRXHsMcjvEXcfOLp1uBN4UOfNVnzTWxgWs7L9dFV/M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784903543; c=relaxed/simple;
+	bh=ylM/6ye6xypg9DLWF3GDHXcW0l5CSp5KaDRbp5xdWkc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=fWceS/puq5+4N/oVFOuVF3FxQW8AfU3sCYikDVGgfDF6wVqcha2awQ9EZ3fUGpJzDiRvfEhd/7GIZXEg1bBdNpi3gSVIuZQyV52rcJved5FqRyG0YXV99uu8oBjgP2JmuQXmyx8iJyEkeSqa5gtpdsECpAAtCGgqEaEOJjCdKSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=BFBU8sBp; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BFBU8sBp"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66ODfp221869292;
+	Fri, 24 Jul 2026 14:32:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=w7d7iOIr4JYo5xD1x
+	ds79ix5oGBdZQ9fFETxdf9csPQ=; b=BFBU8sBpfFBjV2WU/9olCSFCSPFV0p2NL
+	9QUrYjykJFIjZeFuspjZu6NK5cQxvV8vG4auDqOyn9Rp9zoPnjsRcbRrAGjE3AZp
+	0fuvYiBJbnuDqXJbDxrVkCpW8pgJUT6idk9wCDtfdPw6bUr1p/gp00jl0YlRnBjM
+	bjp1K54NCYG/gc4KZFh+VVhfMwkvXH0vxCHYl3X4R6pVTx7IV6vYuJoWIVNGRC/n
+	Sl2xfvHD8VpBOrDfFUazRW72SgVqHB+1n5dNtGF4WeL0c+OITfNv0eazxP55peeB
+	XLliZDbuTLAwmmjRdKas81/z5ohy5DIesEwXish591EocgNewZS9g==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fg78gmeyg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 Jul 2026 14:32:10 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66OEJrJu028472;
+	Fri, 24 Jul 2026 14:32:10 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fgnahh877-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 24 Jul 2026 14:32:10 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66OEW6IP45941068
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 24 Jul 2026 14:32:06 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4107C20218;
+	Fri, 24 Jul 2026 14:13:30 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2916220219;
+	Fri, 24 Jul 2026 14:13:26 +0000 (GMT)
+Received: from li-4c4c4544-0047-4210-804e-b5c04f423534.ibm.com.com (unknown [9.39.22.34])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 24 Jul 2026 14:13:25 +0000 (GMT)
+From: Tanushree Shah <tshah@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
+        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
+        Tanushree.Shah@ibm.com, Shivani.Nittor@ibm.com,
+        Tanushree Shah <tshah@linux.ibm.com>
+Subject: [PATCH v3 1/5] perf trace-event: Fix buffer overflow in read_string()
+Date: Fri, 24 Jul 2026 19:43:12 +0530
+Message-ID: <20260724141316.99507-2-tshah@linux.ibm.com>
 X-Mailer: git-send-email 2.54.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: IA4P220CA0003.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:208:558::12) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:183::5)
+In-Reply-To: <20260724141316.99507-1-tshah@linux.ibm.com>
+References: <20260724141316.99507-1-tshah@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LOAP123MB8364:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4e0df951-d74d-4932-9518-08dee98fe9be
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|7416014|376014|366016|1800799024|6133799003|3023799007|56012099006|5023799004|10067099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	8sSew4Ww05Lf+nTc50ZcLkaFQna9lwcPHfbdf8SDpOWMupdOwJQlvvZI2nkS7AsLVkYBSXV3EsCHpA4mhVcxd8KT1o3cMTF05EtGcixaCOCYi8gse4PM4NzGmC9YFf95Y6xMA7DcSJL2XIwq5d8IoRfBmJ+1Urh0/2lNLGNaz8Jc3UONURQFpW0ybY6MvIqtovhViEG+bNUYOe2w3My0CNK9wslKQ9+DcGCyAxAM6Wa+o7+LxN4RXzKJR/emmp73i24hs9yR2rX2qTmBaLqStNZpby82kQFwveRofV8KKcgdJvQR1yrF594v4/XJgkdopzAd9+JkFOks3laXOZKNF5jwD+fCWNbyWt9x+JHNhtiJ/c29qtwgr69/fTji0/9VWHCEM+Ll8rPB6NiVz4XeB63HEaFvVZ2b61MXaQuAA7n41Pxs4v8beQ+92G9uaBQaT8IYby4s8LO8dw2WaIM0EFlAWf5TPub2F+8jd03KTSniepxdan3afoEXpiU9YJiP1ZQVb9+hmp19JTfI87JVImldr1If2PYOGZ8KAVZ6onzg6Rn3MlS6bkF6VcIMG5bH5+apf9DZroIWqsaMsuIx/i7RT5h0HOcYRYcomLndJ5/vkfMzUMmLBqJzpLh+JLi9SAjPUCtiHHyTSGLJUdFfQ81nBYoDEcMXo5nTlN+MxNg=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(366016)(1800799024)(6133799003)(3023799007)(56012099006)(5023799004)(10067099003)(18002099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?oA6a4XWTyVVrsftb1SUxqsoQXMTteXuK4yMYZ5TdB3yC9LY+pmHGe3dNFPhP?=
- =?us-ascii?Q?h3rQGblEn4/Bim6mIJiskpgwZBQJLR524yte92PhP5U9SlnKDXmiDv8Ix0rh?=
- =?us-ascii?Q?Rd3/4NvLqSOp4VRflGrM0KZ9DxvgHPwreY/ayZYbJvk36kG6ilDOjup8Qu0r?=
- =?us-ascii?Q?SlmzOsff3KEhU9GBubfP8w9Ax7NN2XkBucVM+5oz6OhskwioF5YrzWdRHxJc?=
- =?us-ascii?Q?ZsLx82Y8Qp0qZUYiD/jWYaOm4a7ZQm5Yx9VVo7KHp1xhLfiHYgrKFgsgFA1n?=
- =?us-ascii?Q?a8Ddhtjn7chUj9+xzOf4rlODimZj4PkFR4b+szGqanzNrHuFy596H3N5xsB4?=
- =?us-ascii?Q?Pps6q/G1d4fcewHKyKGOgR5pYvsII3/qwMO76pUVnN+2GnhV65p+LGVnnpUE?=
- =?us-ascii?Q?kTII2CCerKxqJiirKCaiQG4G5ui8P5qf45ZGe4JQrRHaXD2p0g2dG5fGqBmN?=
- =?us-ascii?Q?dStLXCXqD/Z8zR9vcPkcEA+yGVRpv5HgqmHRLxISy3n2/u2Mz/aIvlI1oBnQ?=
- =?us-ascii?Q?lz9VlTuiKktvFxgo2ES6FJ1zuG71ceBOtD7jOPbRC3qd4uA22Sx0cDfib3vC?=
- =?us-ascii?Q?3SrXJ0pmrpUGmLZC08d+j2JBZQ70m/rxX2zuwrWdQcqnXvMfqSIV0U/+9Eed?=
- =?us-ascii?Q?OQ8Y5HPGPhZj0/F9MKqCqxFBAyRFHlq4eeioaXnXoGnPp9Sfx9qK731PRVSN?=
- =?us-ascii?Q?Y1v83OzlnGtJ5Y/MjZQCs6xo5bqCkA08xEuV7gJwZL7Rtzc9SozshpqZRvn/?=
- =?us-ascii?Q?X8K9l6RjeXlpW+78p4h4Ly++FQ1E8f0+AHwXL+Ibdygh0e1qQ8R3bHEeEccB?=
- =?us-ascii?Q?qr8uUKA+rpIhGhWdjhM+ocC0RGIUWXL3Zh74x8aIWnrjWC6LuBrUEKkQ8Y3M?=
- =?us-ascii?Q?7fGWLio5fCT1gMaCgygGN/5p8p79clWnTWrbVZttb4j6BnuNt2lIO5x/ml5v?=
- =?us-ascii?Q?/qPB5vgp8O1tUiqnoGrarintMQcv/vkqwE/PcCFfhKl7IH8vGP2MHG8dGMQQ?=
- =?us-ascii?Q?omkPyyBVD7aapil3jqPRo1l7/Pwj+QRd6DVgrBwqVTpWCZf27ORSXteIJ4Kk?=
- =?us-ascii?Q?WOSuXFXMafA+1E8XG/KxeuwFPj1cZOic/4LhepkXNUtCH6qNg4NrwJwTePIl?=
- =?us-ascii?Q?pA+pAAU0Okft638rkjy8lWhy9f62Dpm2R/nmp6YS1g+vjQ0s0Iv0X5k2W7CU?=
- =?us-ascii?Q?sUaCEhZo7+cc99kPr53Jdxvs4AW8XKoN1lgoSU3tqc0oxOvs2v7GdbwJLL0d?=
- =?us-ascii?Q?OKoFP+e8Uyffx3e6bMw/jRLPHW/jCOyUlPhAMdva2KQmhpRZnvW2PzAmmUch?=
- =?us-ascii?Q?3iuYT8/mDvjwBg2fUYhA31M3MaXIvFb7U1UrkjjgJbVsDLUtlHIE54y6aWVL?=
- =?us-ascii?Q?VzLcBx5LGDb86vL2d+I0SoPUbMko0A/YhKuhU8fOGpxnEd3I8B+OoAvljMGP?=
- =?us-ascii?Q?ezaYXjgjYCwZv0fpE+fHBqenzr8/43nAU6k6wgxXlcNxIKzWGKqbWVcDoWAa?=
- =?us-ascii?Q?dJU/6UaJIJk71v7cbgySGZargURdp/vu+A7MZId666w/raMrEiB7KFQ+tIXO?=
- =?us-ascii?Q?MJc4VB9hdDoeXZ8ljYHs1DabrIRTp+Jeo8tnUTE2yUTnxNo21bomK5R8wOsP?=
- =?us-ascii?Q?Yvqi1M3GLQQoynwmeLcXseJihqJXq5nE9GBQgCAyIc1YW7CB758Y4yf2qvbj?=
- =?us-ascii?Q?Qbu50t0rB5/AwHHnxvGz3zvx3fOjOgYtJCHu2t7tPAmTA1iufqgjEfHnP/Oa?=
- =?us-ascii?Q?/GzSkk5MLQ=3D=3D?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e0df951-d74d-4932-9518-08dee98fe9be
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2026 14:29:04.5597
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UUb/eG+C2dqqiMod8+X1bLBtJ31N8ilkk9ZSuxuKY7Npyhf7thzP26OIl7Us5Unj77Wx1javA+hyHkUX+ZbZwg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOAP123MB8364
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI0MDEyOCBTYWx0ZWRfX5dSNSyfiHuuQ
+ QchkfPkZuoIFejLrF0tqaq3lliyCT5nAQ7omipGu0EdbqiWF5ZlSoRn1+2Jdxe2CnRZcJ6yqyBo
+ rr9Yyu6dtjKVHP8ZhZzFbEZxOO5TtJmNAndDlxkmTCHlwyW6RQCszRdw8a1elevVySF+0cqeWFS
+ 2LBTZ5y7kIhjHCe9Y8g4Ac0SCBmyYmbeVaSIQSzTOpQ6hg9ux0EvD/yELxXd5AJp4kkoGFpo+WD
+ YV5Mbvab4BZjMz+w5KQWvRYqVN1YlHhIT56j0/raC4VkEfppZt18Q3wWFtA1gSGA7g3PtdyNOMW
+ 9EeYgeZ9Ymr1U7/bg160Q0ivB0V772yo+CP0xlYXZyJh8A3AkEMuUc8Z02+sgvQY1HUT/0GoXLC
+ gb4MwrPpkxm75OzPtEFTjyQFiTdeOrK77edyGsCXkUxsVmV/09oQdcNXhHPDjNqWE6ATt1B3YRC
+ fGbzg6uiAVF9OSSH9yg==
+X-Proofpoint-GUID: JmEmseLqAqvadcmJ53hvSbQl9U8LCiiR
+X-Authority-Analysis: v=2.4 cv=MelcfZ/f c=1 sm=1 tr=0 ts=6a63776b cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=dRiuFSZL0wyzTp01T68A:9
+ a=zgiPjhLxNE0A:10
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI0MDEyOCBTYWx0ZWRfX5+nQOJkWgubE
+ jAsI9qq1NvCCulgB0oGWi4axGAtagM9s+4JOhlLIwKzD3jxyWH7RXBkYKOfubBjwMxhfJ4Fs51S
+ 1/BvRI+jjnhNx9yX5a6dkrTrxlFH2mg=
+X-Proofpoint-ORIG-GUID: uw26TiD8GjMtASbZASF3rX9VFAw0hoYm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-24_03,2026-07-24_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 lowpriorityscore=0 priorityscore=1501 bulkscore=0 spamscore=0
+ clxscore=1015 malwarescore=0 phishscore=0 adultscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607240128
 
-When 'perf sched latency' is executed on a perf.data file that lacks
-tracepoint samples (i.e., a file recorded without the -R flag or
-containing only non-tracepoint events), perf_session__has_traces()
-correctly outputs an error message. However, perf_sched__read_events()
-subsequently falls through and returns 0 (success).
+read_string() writes into buf[BUFSIZ] one byte at a time without
+checking 'size' against the buffer bound before each write. A
+string longer than BUFSIZ in the input overflows the stack buffer.
 
-Consequently, caller functions such as perf_sched__lat() assume event
-processing succeeded and proceed to render empty latency header tables
-and total summary statistics.
+Add a bounds check before each write to prevent overflow. On
+overflow the function returns NULL, matching its other error paths.
 
-Fix this behaviour by ensuring perf_sched__read_events() aborts early
-and returns a suitable error code when perf_session__has_traces()
-evaluates to false. This prevents superfluous table output from being
-generated when no trace data is available.
-
-Fixes: 27295592c22e ("perf session: Share the common trace sample_check routine as perf_session__has_traces")
-Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+Fixes: 9215545e99d8 ("perf: Convert perf tracing data into a tracing_data event")
+Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
 ---
- tools/perf/builtin-sched.c | 21 +++++++++++----------
- 1 file changed, 11 insertions(+), 10 deletions(-)
+ tools/perf/util/trace-event-read.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 7fd63a9db457..b3cf678573e0 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -2001,7 +2001,7 @@ static int perf_sched__read_events(struct perf_sched *sched)
- 		.mode  = PERF_DATA_MODE_READ,
- 		.force = sched->force,
- 	};
--	int rc = -1;
-+	int rc = -1, err;
+diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
+index ecbbb93f0185..afd458cf1387 100644
+--- a/tools/perf/util/trace-event-read.c
++++ b/tools/perf/util/trace-event-read.c
+@@ -127,6 +127,11 @@ static char *read_string(void)
+ 			}
+ 		}
  
- 	session = perf_session__new(&data, &sched->tool);
- 	if (IS_ERR(session)) {
-@@ -2018,18 +2018,19 @@ static int perf_sched__read_events(struct perf_sched *sched)
- 	if (perf_session__set_tracepoints_handlers(session, handlers))
- 		goto out_delete;
- 
--	if (perf_session__has_traces(session, "record -R")) {
--		int err = perf_session__process_events(session);
--		if (err) {
--			pr_err("Failed to process events, error %d", err);
--			goto out_delete;
--		}
-+	if (!perf_session__has_traces(session, "record -R"))
-+		goto out_delete;
- 
--		sched->nr_events      = session->evlist->stats.nr_events[0];
--		sched->nr_lost_events = session->evlist->stats.total_lost;
--		sched->nr_lost_chunks = session->evlist->stats.nr_events[PERF_RECORD_LOST];
-+	err = perf_session__process_events(session);
-+	if (err) {
-+		pr_err("Failed to process events, error %d", err);
-+		goto out_delete;
- 	}
- 
-+	sched->nr_events      = session->evlist->stats.nr_events[0];
-+	sched->nr_lost_events = session->evlist->stats.total_lost;
-+	sched->nr_lost_chunks = session->evlist->stats.nr_events[PERF_RECORD_LOST];
++		if (size >= (int)sizeof(buf) - 1) {
++			pr_debug("string too long (max %zu bytes)", sizeof(buf) - 1);
++			goto out;
++		}
 +
- 	rc = 0;
- out_delete:
- 	perf_session__delete(session);
+ 		buf[size++] = c;
+ 
+ 		if (!c)
 -- 
-2.54.0
+2.47.3
 
