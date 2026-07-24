@@ -1,109 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBEAD3F8EDE
-	for <linux-perf-users@vger.kernel.org>; Fri, 24 Jul 2026 10:02:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB94377A87;
+	Fri, 24 Jul 2026 10:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784887371; cv=none; b=hvdvyY/4/lPSRb9fZG+5UCG74GrPrdQ68cFcwIuTUiWHr+os9k1mJnMR13aq3jhxAqZOifS3C+mYf8lA7ggVOdaTcEASdgYWZPNppTqqYTgjprN3/jN0aoeZxBzLMGYNDApho13pGjeP7FaQwyH1XW+L0rtRnZUBii1U7pqPkkU=
+	t=1784887431; cv=none; b=Q3Ly2quaCz+iakKYMuGBBxmlOU5N9Tm1wWXokSmJIGWdabwQGY33sRxZdw/rfDl01AFfaslN64gKoN4wrEpTVxWYWa0uTd3tx0h7SdXPSoaqM25pvtj1RP8WdYeWmX0zPZ38ILNvvjuXoM+DRFDeutP6Nq4HvmUpLd/W7XSU38E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784887371; c=relaxed/simple;
-	bh=2MXyhrwNjXqwMQtP0N43Og1oFZ+aNLVXpZRv/5yojZA=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=WAeElk18cJr3VbDLT4PnveTNVl79d3LmzZVS+ZNS0oOrcqw9jn2SjUnKE9C9ILTwhhMLvVEjWZey2hm13xcinV5qingJke3lBF8VMe4RkWZKHntSBNCUjG8iEt3HYfLhfzi9Qf1NC4oRaCVvHYn/FFIQi07ZV8o29LwjwwNwsNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VruHV6iP; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784887431; c=relaxed/simple;
+	bh=TTNu8z8C8+rZhy9RvimN7rsnzmN3UBOiCxCqvmg7/eA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=A9lt0IXndyZS7Ukq+I8lPSTAEE8b0ergQI81Y7qyvCg1AXBJ2xk9xd5OzUrPzvj3lFC6sDeMcsAfbnPzZHVcE5F8RyLaFmWFvSoNo42SXp42WpN84XUOga3TZbR9lYRZALDn6rDMLb6RrHznY4e/E4a9M2yIUpq4DIBp3Vylvf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dwc32GJ3; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VruHV6iP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 314251F00A3A;
-	Fri, 24 Jul 2026 10:02:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784887367;
-	bh=Bf6PgeN9XulDIxpKb3Kw6URs/iSUk/cDteSNibSgkEs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VruHV6iPfymnH1K6vNu2wr2r5ZlCM0zEceEjefyLyEXuSphEJ8LSyknyfC9xlPs9+
-	 d1GZJxdr0Q9FgW1nf41ovmGKWu9u7G/RG/NAVuKKr6Q2K+2OabpKiZvklgakVDTmwJ
-	 GH50buT9WZ5eUxq9OYG6Mf8ULWDKGJrtIqQwD7uJB5uSThiX/aYtTSo77MG4ZHkDLs
-	 ZFhcvjXHEEyqavJ6my4g+nOdwVasJz3rQ71pRpIzJgSosA+gjeovulPOUUZgZwpQ2K
-	 cZMxOhfyNj9o4zavEueO/EHHB4U5EOpnCIzz+CQWChXdW2P0ZlGLSiuDX3AtIkIJbx
-	 difVk2YaUl8Ng==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 4/9] perf c2c: add HPP list parsing for function view
- columns
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Jiebin Sun" <jiebin.sun@intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260724095842.995920-5-jiebin.sun@intel.com>
-References: <20260717020530.1645123-1-jiebin.sun@intel.com>
- <20260724095842.995920-1-jiebin.sun@intel.com>
- <20260724095842.995920-5-jiebin.sun@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Jul 2026 10:02:46 +0000
-Message-Id: <20260724100247.314251F00A3A@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dwc32GJ3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1784887430; x=1816423430;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=TTNu8z8C8+rZhy9RvimN7rsnzmN3UBOiCxCqvmg7/eA=;
+  b=Dwc32GJ3NdKERex+kMgXdSGfXyCwuLYj7Iyz9XBkGcPsb2Ahc4OySyYI
+   YJdQSBsIV4Q4szmtLfqTM9m+IS4KUEOWJmqAFf8q0Vf8XHDmEU61YXRn5
+   gduutJfta2RZmQ+4B9MGyegFMiPSzt8/GMgjIAiVWx+dS6WBWLQyceLAu
+   x9XtyHql9h2f0l5MgziAGxHJUZZudwVhIx1WbL09IxKPlcZa8CmLjgrQA
+   bKEYpKOg1PTJZ3lstnRgz3gQikenZ0XXRouGDmdK17IPk+6YpnsmIYM88
+   YcUnJ3yMKseDFvTKS3kYsIR/68f4A0puNm3nyQduzC5iI4u9I8xvTcTtW
+   Q==;
+X-CSE-ConnectionGUID: 8R13VHNuQG2f2dnZ6iHh6w==
+X-CSE-MsgGUID: Vx83yCn7RDaHJIq8Hhs71A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11854"; a="89442968"
+X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
+   d="scan'208";a="89442968"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2026 03:03:48 -0700
+X-CSE-ConnectionGUID: Ie4yQ/HUQ6KcGASQE2/OrQ==
+X-CSE-MsgGUID: Fbh0ge/9SV+iQseXMt1oDg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,182,1779174000"; 
+   d="scan'208";a="255302811"
+Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
+  by fmviesa007.fm.intel.com with ESMTP; 24 Jul 2026 03:03:44 -0700
+From: Jiebin Sun <jiebin.sun@intel.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	irogers@google.com,
+	james.clark@linaro.org,
+	jolsa@kernel.org,
+	mark.rutland@arm.com,
+	dapeng1.mi@linux.intel.com,
+	thomas.falcon@intel.com,
+	tianyou.li@intel.com,
+	wangyang.guo@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiebin Sun <jiebin.sun@intel.com>
+Subject: Re: [PATCH 00/14] perf c2c: add a function view
+Date: Fri, 24 Jul 2026 18:10:29 +0800
+Message-ID: <20260724101029.1000212-1-jiebin.sun@intel.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <amGpVYnDyqe7-xdy@google.com>
+References: <amGpVYnDyqe7-xdy@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The commit message claims to modify the core `perf_hpp__setup_ou=
-tput_field()` function to operate on a caller-provided list, but the patch =
-actually implements a local workaround function instead.
---
+Hi Namhyung,
 
---- Patch [4]: [PATCH v4 4/9] perf c2c: add HPP list parsing for function v=
-iew columns ---
-commit c0d30306be98707f48f543440ba43c56408600b2
-Author: Jiebin Sun <jiebin.sun@intel.com>
+Thanks a lot for the review and for confirming the layout.
 
-perf c2c: add HPP list parsing for function view columns
+I've just posted v4 with the reworked hierarchy:
 
-This commit adds parsing to turn an output/sort column string into the func=
-tion
-view's hpp_list. It includes dimension lookup, comparator wrappers, format
-allocation, and initialization entry points.
+  Level 1: the read-side function (pays the estimated HITM/peer
+           load-cycle cost)
+  Level 2: the contending function that writes the shared lines
+  Level 3: the specific shared cachelines
 
-> Make perf_hpp__setup_output_field() register appended sort keys on the
-> hpp_list passed by its caller.  It previously used the global-list wrappe=
-r,
-> which left a local list without output fields and linked its formats into
-> the global perf_hpp_list instead.
+Every level now shows functions and cachelines only, with per-level
+indentation; the code addresses and offsets are no longer shown in the
+main view -- they remain available in the cacheline detail view. The
+series is also reorganized into 9 logically self-contained patches.
 
-[Severity: Medium]
-This isn't a bug, but the commit message states that it modifies the core
-perf_hpp__setup_output_field() function to operate on a caller-provided lis=
-t.
-However, the patch does not actually modify perf_hpp__setup_output_field().
+> ... add a shortcut to the cacheline view on the given item.
 
-> diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browse=
-rs/c2c-function.c
-> index 4eda97894d1d4..21e156bbbef35 100644
-> --- a/tools/perf/ui/browsers/c2c-function.c
-> +++ b/tools/perf/ui/browsers/c2c-function.c
-[ ... ]
-> @@ -400,13 +400,277 @@ static struct c2c_dimension dim_symbol_view =3D {
-[ ... ]
-> +/*
-> + * Append the function view's sort keys to its own output fields, mirror=
-ing
-> + * perf_hpp__setup_output_field() but on the local @list. The shared hel=
-per
-> + * registers onto the global perf_hpp_list, which would leave this local=
- list
-> + * without output columns, so the function view keeps its own copy here.
-> + */
-> +static void c2c_function_hists__setup_output_field(struct perf_hpp_list =
-*list)
-> +{
-> +	struct perf_hpp_fmt *fmt;
-> +
+The function view already supports this for level-3 cacheline entries:
+pressing 'd' opens the corresponding cacheline detail view.
 
-Could the commit message be updated to accurately reflect that this local
-helper c2c_function_hists__setup_output_field() was introduced rather than
-modifying the core function?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260724095842.9959=
-20-1-jiebin.sun@intel.com?part=3D4
+Thanks,
+Jiebin
