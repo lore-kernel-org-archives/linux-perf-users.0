@@ -1,43 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3687024336D;
-	Fri, 24 Jul 2026 05:47:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FFC26738B;
+	Fri, 24 Jul 2026 05:54:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784872077; cv=none; b=ivzRUgpVCekKgQjYEwlpaI7iTLo/9MNJ36rx3uuMONZsBSgXhS3Pmw6xE9kbFkZi2qDXILPLLltZ5HVfSsA6OqQDQxqputjF1VRbyNrvG4MmQAXa3MYAEJ+44wJ84373jjfZXfAnY2jDM2IcyDzerB2dJ74aIE1EqYlSBEKhbdo=
+	t=1784872479; cv=none; b=mx3xesM8dEKWp/PzqOC9jBYTRi/CYgTyNV+CwHdsPNQcHbOcxgVG+Ye3xlulnvMLon+Xv7/W3FMAj2zsQlsQGOWjKyxTOn/Jp0fqLe8nAkO44SQDp2Ge7RoKdzc/EzFe8fSObwHSEn+CkLAYjhPDafFrkxziKl0iHTuVNc18DbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784872077; c=relaxed/simple;
-	bh=9S6t33Kt/s0SKnuZez3a2frufd5qLytCC6Ut6pkY8Oo=;
+	s=arc-20240116; t=1784872479; c=relaxed/simple;
+	bh=kzU8IhqAm37yQQeYM2Xf/TwOmctkRnxvQBBZHtJsGo4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eLCkg3m6HOQVroBMz+A5BZ+KaCMLJU0T7C8Y5s01UKjymJzvrjua/rZUzA1n9d4Ea7R73wvKbPB6o++/ru8gvTBOn/bxkOLToNufhH8bsAhFdfyVUHfgNz3ujKg+79v8rx+jUTUkQo/jQQPZdWEy2e/oOVDb0kajlBa2Cl/ynHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOLcE+Pn; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=You0Fqdleakpn54dhmnvCYW+93BlKrXLTJUHPrkn8ZpEmueFPO3njibSW78I+r+AFUK+oY9H4IGVPsuCj54E8LdH/9g7YsdIOfZPeSFqPSqzdCPBRvby2K3o90MGzFnCVXUt2etFYdHJLHQrxIN924ggyku4WqAm4Vj5j0yijAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yo9/Ndai; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOLcE+Pn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 776451F000E9;
-	Fri, 24 Jul 2026 05:47:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yo9/Ndai"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7DB51F000E9;
+	Fri, 24 Jul 2026 05:54:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784872075;
-	bh=5c6px/NKFl5ekTSD9oL5y9dX8xFZLK9PfF82fPvMeqk=;
+	s=k20260515; t=1784872478;
+	bh=8t39udPraz8NCdDRgiJMs4JsYMg5tRsmrIZnwlrW5nM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=UOLcE+Pn7gOU5c+WwlHYbTgEkAtbfHmsWQYlXNo5+J7z1NuVEGjWHBcHS/Cbs4ZUh
-	 h6TdrXTEmwttJrSTZFJuTBeWZ3NsQ9WUNHKF5h4+zlmi9lyXnAKkOp3UkcXb21dLD+
-	 3p8ERay3XmH1JcP3W3n1fZpGPuklYyJA1gbdTxCfAfsAoTsb4M3f6iOZ8YvkL0JdAR
-	 UuaeMwYTGoXK7SPjB82LNd0FP0fmhtJHrf4Ziku4gmCow+wsgXlL/EjwhcJiyfe8md
-	 P2Ov8ipTeiQr7vxjzYJxcTgoQDHpQmhFLqwebYPuYXj++bl72zkeVQacrX45lwffCl
-	 vpieq85TOHWtg==
-Date: Thu, 23 Jul 2026 22:47:53 -0700
+	b=Yo9/NdaiFmVxHWvaaD6fmqawZBmbaZzGjWBam9LjEqF1DDLJEsJbOLdNZ3xh4XQ7k
+	 q4LIa7lTxXaGq2a90/64QXue4ZbbbZvu0BajrCKpm4RXf1zSYLEDtkOiU9o1SPeEgM
+	 14BJT7ipGgfV+kGUsB3Cv71EZnysndNoLbwqn9q2aT4g4X1l4J1UdaFJAzfTxkbrjH
+	 yDqxiF4ujRWflj1TbBZs8gzVbfqILV8dm+YEPbtMVvIoUrTAks/SOOzvR9Z9AE84HP
+	 C0PSU/QGpgpNeECUN6qJx7hjwFx5oawpWvWfQqukPtxoZoqBc52/ylNyzwlqGMcmxk
+	 5ZOxnfIUp37jw==
+Date: Thu, 23 Jul 2026 22:54:35 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, abyssmystery@gmail.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, jolsa@kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mingo@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH v3] perf cap: Remove used_root parameter and simplify
- capability checks
-Message-ID: <amL8icNhBkZvTzEB@google.com>
-References: <20260716074028.568999-1-irogers@google.com>
- <20260723050640.992865-1-irogers@google.com>
+To: Aaron Tomlin <atomlin@atomlin.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	james.clark@linaro.org, howardchu95@gmail.com, neelx@suse.com,
+	chjohnst@mail.com, sean@ashe.io, steve@abita.co,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] perf trace: Add --bitmask-list command-line option
+Message-ID: <amL-G7h_LC5Vsa-U@google.com>
+References: <20260722155050.503516-1-atomlin@atomlin.com>
+ <20260722155050.503516-3-atomlin@atomlin.com>
+ <amGrbXzdup2hvg3k@google.com>
+ <kick2ndzn7nisgdnxjit2tp6tfyub3nor54dbgqxqwy7ctgsdd@zxy23kkhc3uh>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,26 +49,28 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260723050640.992865-1-irogers@google.com>
+In-Reply-To: <kick2ndzn7nisgdnxjit2tp6tfyub3nor54dbgqxqwy7ctgsdd@zxy23kkhc3uh>
 
-On Wed, Jul 22, 2026 at 10:06:40PM -0700, Ian Rogers wrote:
-> Refactor perf_cap__capable() to completely remove the used_root out-parameter
-> as requested by the maintainer. Relying on an explicit used_root boolean
-> poisoned sequential capability checks (e.g. failing CAP_SYS_ADMIN checks
-> poisoning the flag for subsequent CAP_PERFMON evaluations for unprivileged
-> users) and created redundant complexity across check_ftrace_capable(),
-> symbol__read_kptr_restrict(), and perf_event_paranoid_check().
+On Thu, Jul 23, 2026 at 11:28:48AM -0400, Aaron Tomlin wrote:
+> On Wed, Jul 22, 2026 at 10:49:33PM -0700, Namhyung Kim wrote:
+> > On Wed, Jul 22, 2026 at 11:50:49AM -0400, Aaron Tomlin wrote:
+> > > Introduce a new '--bitmask-list' command-line option for 'perf trace'.
+> > > When this option is specified, the formatting of cpumasks is delegated
+> > > to bitmap_scnprintf(), enabling cpumasks to be displayed as a condensed,
+> > > human-readable list (e.g., "0,2-5,7") instead of the default hexadecimal
+> > > representation. An example is provided below:
+> > 
+> > Do you know any other places than cpumask use bitmask too?  I'm just
+> > curious if it needs to handle other cases or not.
 > 
-> Streamline the capability API to perform a pure true/false boolean
-> evaluation. The function checks the Effective set using SYS_capget; if
-> the syscall is missing or fails on legacy kernels, it cleanly falls back
-> to checking EUID == 0. This perfectly preserves modern capability-aware host
-> sessions, guarantees transparent fallback for older kernels, and correctly
-> rejects privileged operations for containerized root processes that have
-> explicitly dropped their capability bounding and permitted sets.
+> Hi Namhyung,
+> 
+> As far as I can tell, currently no other users.
 
-Applied to perf-tools-next, thanks!
+Ok, I was thinking about --cpumask-list or --cpulist.  But I'm fine with
+the current name as long as we can update other use cases in the future.
+I'll process this unless others have different opinions.
 
-Best regards,
+Thanks,
 Namhyung
 
