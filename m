@@ -1,192 +1,159 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88772F7EE3;
-	Sat, 25 Jul 2026 17:46:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B3B21CC44;
+	Sat, 25 Jul 2026 17:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785001573; cv=none; b=MjhoaONCKNzMNK1cwC1oNGDQb461z5MWIPF6WcF1bnjTzRwJEyaTUX2k7sGvtDYuvWYY+xNO97GXvGU1QEYRqQpCL5ke6M1kqEPeSaXcxXqDuQ4cGiDVahWJ7ES+JFopw3omHK/P4yYMlZduZe8VsHLWCuoOg34tKIXWngpHyPc=
+	t=1785001751; cv=none; b=ZN46YRGm91Lfy3ok6XDcXSYrj+QYgIIVALzFAIcCSVDWtIO//3+zjBk1hfJVbkDDF/1kfj/ejeLshm7oooJh3T4p1X3/adDK0hOihx6FIw4ddHw2kFecmlx2yXf8bywmAMB4q4hYq0lWXKJt9ptbI3IWTHSxvc7nNbdheD15VeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785001573; c=relaxed/simple;
-	bh=q0GzCZuWcGGFn0X61K38eyRMR8SVn/GxuxDImN6skno=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WvCeC9XLHLbK/LmZwkQVvgQxRtlM6B22aFwQuf1qR5ZZLLvznyHeg2dfY3ty4IhI5N4n+6IqGGX5EbBzttmR7bfxOHk9Mz8BZKmfWi776qV0rVGeZ48TlvsY1cVqFnnpEvnj5bTK4/gCJ66NbBawax16yPjYEMGE91Y2bC8pF48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JmRJgpsF; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1785001751; c=relaxed/simple;
+	bh=g2zxBVtQ/1sgGgGkuKKbs+j8xl+qgJFofasBkoJyQdI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HYsk2Iu/g0/VJfGkKlMva/phmU1eyeZx+lKTHE5jI6Cv4cNziV0TOcgeGDZGWxiGJrdLjnJ8IjvPvK61u/XB5uh4w6xpXwunB8a44VkSS3dBTvqIAFX1nVX8W0XKNdHWpXvVR4/jcWYJZmaQbDvZ1aklkzoCUaUNJjBEGNPXGzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T8I4b6Er; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JmRJgpsF"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66PHHfm63527512;
-	Sat, 25 Jul 2026 17:46:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=yjf+Or
-	6vB0U/BYccXBma3X31iRyGo8KEEAiNCJ36yNE=; b=JmRJgpsFjaPWf0fHWDcHcL
-	cKER3Dm46jDNfqz2V8i2/7yBXdT2hmWmPF9ATQ+EKIRNPZfmqs22MhbTYKGmVEss
-	qeJaxrJqGn1Nrwenf/nonUxVXeF9ZMot8BJ8a3yuh48z8Kfpegj5YnVDjCNOQqun
-	YOLSMhqFCeIE6i6Vh/21sv+FR2edGpVBekH/UiwOlFCIiqh1/b7szQGLMrc5oWdX
-	Zx7G+DpXqI82KKQHeFbTUNWTiRNWvPEFvbBgsmw728o9zKr5V5J0Cg8om1C4hAKi
-	KyjQhOljaEmHvUlwB85qZgbW+2UJ38ANOG/df+4h639mc+ZgwmUQ3yUw/8i5kVSA
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fmuyc0xgy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 25 Jul 2026 17:46:09 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66PHfIdL003826;
-	Sat, 25 Jul 2026 17:46:08 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fmn5ha14y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 25 Jul 2026 17:46:08 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66PHk76H22348426
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 25 Jul 2026 17:46:07 GMT
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2264158054;
-	Sat, 25 Jul 2026 17:46:07 +0000 (GMT)
-Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B946D58045;
-	Sat, 25 Jul 2026 17:46:03 +0000 (GMT)
-Received: from [9.39.22.45] (unknown [9.39.22.45])
-	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Sat, 25 Jul 2026 17:46:03 +0000 (GMT)
-Message-ID: <aa5c4592-4412-4d09-8ced-0ef227ac3c38@linux.ibm.com>
-Date: Sat, 25 Jul 2026 23:16:01 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T8I4b6Er"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B3AB1F000E9;
+	Sat, 25 Jul 2026 17:49:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785001749;
+	bh=2Qn9qcCPN9f2sZGtQb6IdvTnxe98CDptH48FCRNf8CI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=T8I4b6ErvUpV1fJcGr95aRhtKGwcAGm33JK8yv3kzyeh2eywbuQary097solhxPqj
+	 BWcpYQGvljvKnhl4Q6xilhAsdV1tSoxLZ2a+TMtvFWBIWFrn75NcKX5Mc9XS6lUemG
+	 I2XBkoQq/gugRTVC+ZM/NqgH/90a/8Y32UhFy5tuAffFGFkT6IRdH3qN0K4qIChJFi
+	 cFUw/tO0HvrF/tp9W3/RjMqQa/ioPw8BeJS2WoTN1MHXP7A1/TvYJvrJkeD6+EDzzf
+	 bIrN/gtAm9HJ7bSkZeDAqe29NrUTatOMAPdAIt0Q5Pvqtkna6t2dV6qHkEnU3Szs9O
+	 eXRFSuGFBXUQA==
+Date: Sat, 25 Jul 2026 10:49:03 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Dominique Martinet <asmadeus@codewreck.org>
+Cc: Demi Marie Obenour <demiobenour@gmail.com>,
+	Harald Freudenberger <freude@linux.ibm.com>, acme@kernel.org,
+	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
+	ardb@kernel.org, axboe@kernel.dk, corbet@lwn.net,
+	davem@davemloft.net, edumazet@google.com,
+	herbert@gondor.apana.org.au, horms@kernel.org,
+	io-uring@vger.kernel.org, irogers@google.com,
+	james.clark@linaro.org, jolsa@kernel.org, kuba@kernel.org,
+	kuniyu@google.com, linux-crypto@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+	mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
+	pabeni@redhat.com, peterz@infradead.org, skhan@linuxfoundation.org,
+	willemb@google.com, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 2/3] AF_ALG: Drop support for off-CPU cryptography
+Message-ID: <20260725174903.GA150173@quark>
+References: <0ccda05f-077c-4661-b852-e6bf9bf40be3@gmail.com>
+ <20260724180951.GA1572592@google.com>
+ <amRntEmCUK-8wXcw@codewreck.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] perf trace-event: Fix buffer overflow in
- read_string()
-To: sashiko-reviews@lists.linux.dev,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, hbathini@linux.ibm.com,
-        maddy@linux.vnet.ibm.com, atrajeev@linux.ibm.com
-References: <20260724141316.99507-1-tshah@linux.ibm.com>
- <20260724141316.99507-2-tshah@linux.ibm.com>
- <20260724144710.7180C1F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: Tanushree Shah <tshah@linux.ibm.com>
-In-Reply-To: <20260724144710.7180C1F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: J6Alu67CuQGfBkekOil-ge-LoCHU71tY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI1MDE2NCBTYWx0ZWRfX9OenscgBWvht
- nmGT6bVPsLq0Z/0tn8pvozya7S9dx54ZjN0mFJo5/js04UgjYbQmP1ntuNYThWIl8WQp3kZLtIO
- QiepymYQlQcsH1UyqeRBorWSfhAvr9fpobNS5BbOu4BcFo+RWjA/8w32KXZHjenW6rsqZJ9ITEU
- tXPkpJ5M1TZlpm4e0jl5JJNvUtqFzWOk4HuffP8yo+x7ZdwroEEA7aOi7NqvGM87SLbU/1ltlhW
- 6YtnNU/34VDILIlQdbMz0xeyH4veC8Ibll+gFsP4gfoFKKWUK40N7jBgH+yYGYh8LmbO7sDv4bk
- gKF4dVIgW55YpE02mmBh5Q5tx9zdU3bcQkjwb1Ir6V8XBXQK0ZfErR1E9UVvlC7HjK4Nii3sMuW
- TFz22B5E6XxGhUCuzsHWGexH0OQF+c1zH+ludNvh5dnC31nYN6YsF3Rbzhag1wzuYSKfVsmY7XD
- TtpFFi/zhAFBGUFE78w==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI1MDE2NCBTYWx0ZWRfX4+zH2opJf65p
- LqQ5p6QHohrHARxQZ4uUyq/OYPtRw7ZnOWGYMe5Z3ZmIDYNj6W3xrYEtIeHJLDCrdBzLSo74Pm5
- hCtb/SU6qkVvlN86JTrUsM/sux/oCSM=
-X-Authority-Analysis: v=2.4 cv=AZeB2XXG c=1 sm=1 tr=0 ts=6a64f661 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=gpuuEuwup9TChx9WPhwA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: Qcb5JjNrip9HFLXcaHJNG3l-GF4MalG6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-25_05,2026-07-24_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 priorityscore=1501 phishscore=0 adultscore=0 impostorscore=0
- clxscore=1015 malwarescore=0 suspectscore=0 lowpriorityscore=0 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607250164
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <amRntEmCUK-8wXcw@codewreck.org>
 
-Thanks for the review
+On Sat, Jul 25, 2026 at 04:37:24PM +0900, Dominique Martinet wrote:
+> Thank you both for your time replying
+> 
+> Eric Biggers wrote on Fri, Jul 24, 2026 at 06:09:51PM +0000:
+> > On Sat, Jul 25, 2026 at 01:32:12AM +0900, Dominique Martinet wrote:
+> > > There's not much I can do about the vendor's kernel I'm stuck with, but
+> > > that doesn't make having encryption material not accessible to userspace
+> > > useless as a concept;
+> > > forgetting about the sysctl for now, what are the alternatives API this
+> > > kind of implementations could be based on?
+> > > 
+> > > I guess I should start looking at how tpm backed encryption works,
+> > > some other day, it's getting late here...
+> > 
+> > First, we should remember that implementing hardware-bound keys via a
+> > standalone crypto engine is a dated approach.  Inline crypto engines and
+> > CPUs, which work much better than and are much easier to use than legacy
+> > standalone crypto engines, can support hardware-bound keys as well.  The
+> > former is already supported, and is already being widely used, in the
+> > kernel via the hardware-wrapped inline crypto keys feature.  For the
+> > latter, see e.g. RISC-V High Assurance Cryptography.  In the CPU case no
+> > UAPI is even needed; userspace can just use it directly.
+> 
+> Thank you, this is exactly what I was asking about - my background isn't
+> crypto and ultimately whatever direction is implemented will depend on
+> $vendor and I'll just be following along, but I'll read up on this.
+> 
+> "Inline crypto engine" seems to be a qualcomm marketing term, but from
+> looking at their doc the API seems to be PKCS#11 smart card?
+> Having worked on these for some other hardware I can't say I find it
+> easier to use than af alg, but it's definitely something that can be
+> worked out.
 
-On 24/07/26 20:17, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+I guess I should have written "inline encryption hardware", which is the
+vendor-independent term we've been using in the kernel, just in case
+anyone thinks "inline crypto engine" means the "Qualcomm Inline Crypto
+Engine" specifically (but really, IMO they are just descriptive phrases
+that mean the same thing).  There are many different hardware vendors
+that have inline encryption hardware for UFS and/or eMMC.
+
+Their interface is quite simple and doesn't use PKCS#11 at all.  I don't
+know where you're seeing anything about PKCS#11.
+
+See also the documentation in Documentation/block/inline-encryption.rst
+
+> "The CPU case" (looking at the RISC-V High Assurance Cryptography) would
+> be some CPU instructions (ISA) reserved for crypto ops?
+> That's interesting, I had never seen this but I can see this would
+> likely provide the best performance.. And if the ISA gain enough
+> traction having them supported out of the box by OpenSSL or whatsnot
+> might actually be possible, that'd be a great step forward.
+
+Yes, and similar developments are also occurring on other CPU
+architectures, like Intel's Key Locker.
+
+> Right, sorry for asking about an out-of-tree driver, I hadn't realized
+> since caam itself has been upstream for a while.
 > 
-> Pre-existing issues:
-> - [High] Integer truncation when passing 64-bit sizes to do_read() and skip() leads to parser stream corruption and potential out-of-bounds memory reads.
-> - [High] read_proc_kallsyms() attempts to skip the kallsyms payload using lseek() but ignores the return value, breaking parsing when perf.data is read from an unseekable stream like a pipe.
-> --
+> I was just curious about the double-take approach taken with these two patches:
+>  crypto: af_alg - Drop support for off-CPU cryptography (this)
+>  crypto: af_alg - Add af_alg_restrict sysctl, defaulting to 1 ([4])
+> [4] https://lore.kernel.org/linux-crypto/20260622234803.6982-1-ebiggers@kernel.org/T/#u
 > 
-> --- Patch [1]: [PATCH v3 1/5] perf trace-event: Fix buffer overflow in read_string() ---
-> commit 933d8da6e80dadef6bdc3760f4e01eb9c825faeb
-> Author: Tanushree Shah <tshah@linux.ibm.com>
+> I assume part of it was just that the whitelist wasn't ready yet when
+> this patch was merged, but as far as I understand if the whitelist
+> sysctl is implemented this is basically noop?
+> (Well, I guess it'll allow code simplification over time, but these
+> hopefully won't be backported to stable kernels too aggressively.. While
+> I fully expect to see this "Drop support for off-CPU crypto" patch to
+> show up in a couple of weeks in older stable trees; and for practical
+> purposes I don't see much way around just reverting it for now)
 > 
-> perf trace-event: Fix buffer overflow in read_string()
-> 
-> This commit adds a bounds check to read_string() to prevent a stack buffer
-> overflow when reading strings longer than BUFSIZ from the input. It ensures
-> the function returns NULL on overflow, matching other error paths.
-> 
->> diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
->> index ecbbb93f01853..afd458cf1387d 100644
->> --- a/tools/perf/util/trace-event-read.c
->> +++ b/tools/perf/util/trace-event-read.c
-> [ ... ]
-> 
-> [Severity: High]
-> This is a pre-existing issue, but I noticed a potential integer truncation
-> when passing 64-bit sizes to do_read() and skip().
-> 
-> In tools/perf/util/trace-event-read.c, do_read() and skip() take an int:
-> 
-> static int do_read(void *data, int size)
-> { ... }
-> 
-> static void skip(int size)
-> { ... }
-> 
-> But in read_header_files(), a 64-bit size is passed directly to them:
-> 
-> static int read_header_files(struct tep_handle *pevent)
-> {
-> 	unsigned long long size;
-> 	...
-> 	size = read8(pevent);
-> 	...
-> 	if (do_read(header_page, size) < 0) {
-> 	...
-> 	size = read8(pevent);
-> 	skip(size);
-> }
-> 
-> Could this lead to silent truncation and parser stream corruption if a
-> malicious perf.data file provides a large 64-bit size (like 0x100000005)?
-> 
-> On 32-bit systems, malloc() would allocate a small buffer, while the parser
-> uses the full 64-bit size, causing an immediate out-of-bounds read. On 64-bit
-> systems, skip() truncates the size, skipping only a few bytes, which might
-> desync the parser and allow arbitrary data into subsequent parsing stages.
-> 
-Thanks, this is already fixed by patch 2 in this series.
-> 
-> [Severity: High]
-> This is also a pre-existing issue, but does read_proc_kallsyms() properly
-> handle unseekable streams like pipes?
-> 
-> In tools/perf/util/trace-event-read.c:read_proc_kallsyms():
-> 
-> 	lseek(input_fd, size, SEEK_CUR);
-> 
-> This lseek() is called without checking its return value or providing a
-> read-based fallback.
-> 
-> If a user pipes a perf.data file into the tool (e.g., perf report -i -),
-> the stream pointer is not advanced. Could subsequent parser functions
-> (like read_ftrace_printk()) interpret ASCII text from the kallsyms payload
-> as a 4-byte size header, resulting in massive arbitrary memory allocations
-> and tool crashes?
-> 
-> This appears to violate the subsystem rule which states that pipe streams
-> do not support seek and must be properly handled.
-> 
-Thanks for catching this. This one's unrelated to the rest of this
-series (buffer overflows / UAF / leaks).I'll look at it seperately.
+> Thanks for putting up with me.
+
+Neither of these patches is tagged with 'Cc stable', and I don't expect
+them to be backported to stable kernels soon.  That being said, it seems
+the people using LLMs to find vulnerabilities haven't focused much on
+drivers/crypto/ yet.  Once they do, well, they will of course find
+vulnerabilities everywhere (accessible from unprivileged userspace via
+AF_ALG), and when that happens there may be little choice.
+
+The addition of the af_alg_restrict sysctl (and the possibility of
+userspace explicitly choosing to disable restrictions by setting
+af_alg_restrict=0) doesn't necessarily mean that problematic
+functionality should be, or should have been, moved under
+af_alg_restrict=0 rather than removed outright.  It's just an option
+that can be used if needed for compatibility reasons, if actual user
+reports come in.  If something is not needed at all it can just be
+dropped right away.  This actually happens way more often than people
+might think, due to the immense amount of unnecessary functionality that
+AF_ALG has: *many* crypto algorithms have been removed from AF_ALG over
+the years without any complaints, since they were never used.
+
+I'll also note that hardware crypto "decelerator" driver authors are
+actually now *depending* on the drivers no longer being usable from
+AF_ALG in mainline in order to argue for more relaxed driver inclusion
+criteria.  I don't think they can have it both ways!
+
+- Eric
