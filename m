@@ -1,224 +1,466 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177B62F7EEE
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Jul 2026 07:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306472931FB
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Jul 2026 07:28:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784964148; cv=none; b=EA3UtIEAHSHJdqvgYYDsKDk5MPQSO15KO+4ET7DUWxyla+xzNV4/quZCOOYmKf6cEMNMcNFG94oP8fI3+kmo9JS9OLOe8Rmq+OnK1LgxwrD6O8XbXEi+nSBZrp9OQUJpOV1J9l7+orLYTLq83w9URNx/lnqDdlD7LhI9c98EbCo=
+	t=1784964530; cv=none; b=nElKLqD/OwYJX6UlyH6No0B4XBJ63CUFGRk31SO4htExz8LXjdyB286fupN24RP5xPbrgGwoJW4lpx6FbiD8NFyg12A/3fyM+/Wb08I/bPV+fKmdnHCK3AGJNmCIATlaeI65itLb1Sltc48qmX5zHPnK13IJaC6Rs7yg1Dq05Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784964148; c=relaxed/simple;
-	bh=9CBmTqID3viU01vCso5RlxG35P/hIkB13NOWIvIbea0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FLW3bO7JMO/+IiJYWr5Ri0j//P79bFZ6vxRD2AoxJZSJlJYNu2HFPtpV5wHeCKbb8v8WcCF3/tZH/bz+W52zMX+kJUk3V29AxkHRyv/loGxT6PSwdxZXi6rIWM8D3WFotuhy2d54HhLdQDSffFlh4xqnkLfTqqHWF6095r3Q4qM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nv1hMAQr; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1784964530; c=relaxed/simple;
+	bh=GnzdlLxcQprxTPN1d9o3VTBCqMRK74pczl66oQMIpV0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d+S+9PPk0kx0GhHpblWQi8VfnQiNPyJKKPjNRsGdAs46XLMEGUwirlcCk7f/l8esC105szPe6MukQLcG7I3h7gn2S0RTUl/1kviqnNaRSuPXOYVrqnvnbG0vDW/6thYzmiNl/kikF0R9T2bqAx97jVI2RSXnXiKi60xY7YAg7IE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qLmj4AAX; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nv1hMAQr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70E471F000E9;
-	Sat, 25 Jul 2026 07:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784964146;
-	bh=I7RbKlL5G/TiNHS+6nNBti+OKtAaBNcTSKPu2QzSL2M=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nv1hMAQrbxB27mfuL0y8SK15notukgTfQN/TV0ODrje4ruL87bEaTonyZhhDohWRQ
-	 wSv4MnF95WN3P1ERqE0GuTCjMwqpVUY7YtrjCV2vwwVOCQsIsB4OTI61vxUvm5SDK3
-	 81MSN6JaYsEoFRtrcqd/vWdFSz5u6q5Xd1/gFZL5MET3tc0hZXVJ1T6jmm0vPNiCyD
-	 QIwJzESt/FKAV6Ydjyhyarxv4nOz6b/zNYYk20FNWsRCHN6sJUMtun7a6l64G2K9zx
-	 EqMAnEApLsbf8pHpSxmD3j6C1k/MAewfvOajBQc6CaERbs+lPxbb1LsMC/cLlFwUiN
-	 J9D950hHcQ4yg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V3 6/6] tools/perf: Add perf tool support for processing
- powerpc HTM AUXTRACE records
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Athira Rajeev" <atrajeev@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260725070747.81435-7-atrajeev@linux.ibm.com>
-References: <20260725070747.81435-1-atrajeev@linux.ibm.com>
- <20260725070747.81435-7-atrajeev@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Jul 2026 07:22:25 +0000
-Message-Id: <20260725072226.70E471F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qLmj4AAX"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66P5Cm242080372;
+	Sat, 25 Jul 2026 07:28:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=ikUuMo
+	Q5Gdg8fwi6HvCV8ewDzztlwCUWMae+wSCrXWk=; b=qLmj4AAXI5J5gdcCIRLZbT
+	hQEhsvUn12uUfvXcpzxXJxgRg4xfsQlhgnF/K785gKerOUpgOm+ViHyaMN2jSasM
+	3Hw2fZrSzdcapQYESuoe6CWV3dGBl4XL105d6rOg4bALZUG6/Kkr4snZKXf/831D
+	rC6ca2IATjMk2KCWsdk6i+Qtl/pInie7AoDLi9sxGrbdF/yWfF7DbqIVRPVXugvI
+	XkLf2BQ4SFvvmFYlRAtpzBuuF57T/2e3DFoZXhmMb4iWU0Jj7nXQl8gLpUaNArGe
+	+hcOfAiD4SonoXxB4AOZLPW6dXmsnWrSAwmOeTY53uDlArrEZxfzLBGlfO6ShZlg
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fmmtq0kr8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 25 Jul 2026 07:28:44 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66P7QQg1015833;
+	Sat, 25 Jul 2026 07:28:43 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fmn1u0jts-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 25 Jul 2026 07:28:43 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66P7SbpO39321980
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 25 Jul 2026 07:28:37 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 416212011B;
+	Sat, 25 Jul 2026 07:00:08 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B157620113;
+	Sat, 25 Jul 2026 07:00:05 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.124.222.178])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sat, 25 Jul 2026 07:00:05 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com
+Cc: linux-perf-users@vger.kernel.org, atrajeev@linux.ibm.com,
+        hbathini@linux.vnet.ibm.com, tejas05@linux.ibm.com,
+        venkat88@linux.ibm.com, tshah@linux.ibm.com, usha.r2@ibm.com
+Subject: [PATCH V3 4/6] powerpc/perf: Capture the HTM memory configuration as part of perf data
+Date: Sat, 25 Jul 2026 12:29:40 +0530
+Message-Id: <20260725065942.78839-5-atrajeev@linux.ibm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20260725065942.78839-1-atrajeev@linux.ibm.com>
+References: <20260725065942.78839-1-atrajeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=JcWMa0KV c=1 sm=1 tr=0 ts=6a6465ac cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8
+ a=58y-Zh21SeqGuYnbM7gA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI1MDA2NiBTYWx0ZWRfX33gBTMCcjXFc
+ zu3es8Ec5nIymob6Tokbt0ldVrywGqvB0K9ew9oxhuDI+6Rrja9NthUe/4rPht5pXyBWT+Vk0h7
+ Xs6FrSE9LOWB0xYeGzXvfaxZU7Geectgbo64VupQnrn3GGiAsT9bscc1+X18Wy9xkquN+JH0Nw5
+ tvELRMeq7hK8YavFWm2FgDTls6gkJxDrRRS8jbHiGku55S9VbsQKs92RJppF389qfWdvIfzZgxC
+ JGlzphjH1iUXbXfqBjDfrEQ1SGwH8OTw2eL+8MPbQ5FIWxBOrtGMGuLd7aqJxJU4rK5mF0awYIU
+ v4E5QCVrcCdVthN4Ir07w0L1eCm5ra2w69l7bw9Vj4xQVvJsYXz3ECCKNSeWCjYjkuP38x1Gr3F
+ swvhut7Bri3I23AWUrxnuPhq2a2ZSYAgzhhLIZK0FB87c4zzPLgDETsh/4aUeOn7Tuyr3n3j0lm
+ 8UbnfYi/rzuoXCwQJSA==
+X-Proofpoint-GUID: VPQdaGonm6N-7ogSHr8eFljbxIeyy6xC
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI1MDA2NiBTYWx0ZWRfX4BKNYxFbj6jx
+ zipXN4nzvybAon/X1VXeSXaRpr8wZApYU8WzB044oP7sGUyVTrnNxwE/L2huabRRVHdANX3O2Vo
+ 6yxdOAZbEpxYt+sUbxak6OptkmsvuLY=
+X-Proofpoint-ORIG-GUID: VPQdaGonm6N-7ogSHr8eFljbxIeyy6xC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-25_02,2026-07-24_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 spamscore=0 adultscore=0 phishscore=0 bulkscore=0
+ malwarescore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
+ suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2607250066
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-- [Medium] The implementation is missing the HTM_MAX_SAFE_TARGETS (1024) ca=
-p for num_events that was explicitly promised in the commit message.
-- [Medium] htm_config_for_cpu conflates a lookup failure with a valid 0 PMU=
- configuration, causing valid auxtrace events to be dropped.
-- [Low] Assigning write() return value to a size_t variable masks the actua=
-l error code and produces misleading log messages.
-- [Low] Missing explicit inclusion of POSIX standard headers required for m=
-usl libc compatibility.
---
+The H_HTM hypervisor call can also return the system memory
+configuration, which describes the physical to logical real address
+mapping for logical partitions.
 
---- Patch [6]: [PATCH V3 6/6] tools/perf: Add perf tool support for process=
-ing powerpc HTM AUXTRACE records ---
-commit b319ae58a675d493de8d8d9853fc6d781771f6b8
-Author: Athira Rajeev <atrajeev@linux.ibm.com>
+After dumping HTM trace data into the AUX buffer, capture the
+corresponding HTM system memory configuration records and emit them as
+raw perf sample data for userspace parsing.
 
-tools/perf: Add perf tool support for processing powerpc HTM AUXTRACE recor=
-ds
+Add AUX-private tracking for a hypervisor memory-configuration dump
+buffer, a stable emit buffer, and iterator state. Once AUX trace dumping
+completes, htm_event_read() switches to H_HTM_OP_DUMP_SYSMEM_CONF and
+iterates over the returned records until the configuration stream is
+exhausted.
 
-powerpc_htm_process_auxtrace_info() reads the (cpu, attr.config) pairs
-stored by htm_info_fill() at record time and builds a cpu_configs[]
-table.  This lets process_auxtrace_event() map each AUX buffer, which
-carries event->auxtrace.cpu, to the correct (node, chip, core) target
-and write the raw trace data to htm.bin.nX.pX.cX immediately.
+Trace payload continues to be written to the AUX buffer, while memory
+configuration records are emitted as raw perf samples. This keeps the
+AUX stream focused on trace data and allows the configuration records to
+be decoded separately in userspace.
 
-[ ... ]
-> - Cap num_events at HTM_MAX_SAFE_TARGETS (1024) to prevent size_t
-> truncation on 32-bit platforms when passed to calloc().
+The hypervisor fills as many 32-byte entries as fit within the buffer
+size passed to H_HTM_OP_DUMP_SYSMEM_CONF — it does not cap at a fixed
+entry count.  Observed maximum fill is 64480 bytes (2015 entries at
+32 bytes each plus a 32-byte header).  HTM_MEM_BUF_SIZE is therefore
+defined as the allocation size (65440 bytes) and HTM_MEM_MAX_ENTRIES is
+derived from it ((HTM_MEM_BUF_SIZE - 32) / 32 = 2043), not the other
+way around.  This ensures the hcall is always told the true buffer size
+and the WARN_ON_ONCE(to_copy > HTM_MEM_BUF_SIZE) guard is a genuine
+impossibility check rather than a post-overflow assertion.
 
-[Severity: Medium]
-This isn't a bug, but the commit message mentions capping num_events at 1024
-(HTM_MAX_SAFE_TARGETS).
+HTM_MEM_BUF_SIZE = 65440 is the largest multiple of 32 that satisfies
+both constraints: it exceeds the observed 64480-byte maximum fill by 960
+bytes of headroom, and the resulting perf record (65440 + 92 bytes of
+fixed overhead = 65532) stays below 65535, the __u16 limit of
+perf_event_header.size.  The 92-byte overhead is: 8 (perf_event_header)
++ 64 (header_size worst case: 8 u64 sample fields) + 16 (id_header_size
+worst case) + 4 (PERF_SAMPLE_RAW u32 size prefix).
 
-Looking at powerpc_htm_process_auxtrace_info(), the arrays are allocated
-using num_events directly:
+perf_fetch_caller_regs() is used to initialise the pt_regs argument
+passed to perf_event_overflow().  An uninitialised stack frame would
+leak kernel stack bytes to userspace if the event is opened with
+PERF_SAMPLE_REGS_INTR.  This follows the pattern used by tracepoints
+and BPF perf-event helpers for synthetic sample emission.
 
-tools/perf/util/powerpc-htm.c:powerpc_htm_process_auxtrace_info() {
-    ...
-    htm->nr_targets   =3D (int)num_events;
-    htm->cpu_configs  =3D calloc((size_t)num_events, sizeof(*htm->cpu_confi=
-gs));
-    ...
-}
+When perf_event_overflow() throttles the event (returns non-zero), the
+iterator mem_start is not advanced.  The same memory configuration block
+will be retried on the next htm_event_read() call once the event is
+unthrottled.  collect_htm_mem is left set so the retry path is entered;
+ENOSPC is returned so event->count is set to 1 and the drain loop
+keeps retrying until the ring buffer consumer catches up.
 
-Has the 1024 maximum cap and truncation prevention logic been omitted here?
+Keep HTM tracing state in event->pmu_private via htm_target_id. AUX
+private state is used only for dump progress and staging buffers.
 
-> diff --git a/tools/perf/util/powerpc-htm.c b/tools/perf/util/powerpc-htm.c
-> index 952ed32997d9a..1d1b4302e2e4a 100644
-> --- a/tools/perf/util/powerpc-htm.c
-> +++ b/tools/perf/util/powerpc-htm.c
-> @@ -12,9 +12,14 @@
->  #include "util/session.h"
->  #include "color.h"
->  #include "powerpc-htm.h"
-> +#include <errno.h>
->  #include "debug.h"
->  #include "sample.h"
-> =20
-> +#include <linux/unaligned.h>
-> +
-> +struct perf_session;
+Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+---
+Changes in V3:
+- Fixed HTM_MEM_BUF_SIZE defined as (32 + 2013 * 32 = 64448 bytes) while
+  the hypervisor actually fills up to 64480 bytes (2015 entries) when
+  given a sufficiently large buffer — overflowing the allocation by 32
+  bytes.  The hypervisor fills as many entries as fit within the given
+  buffer size; it does not cap at a fixed entry count.  Fixed by
+  redefining HTM_MEM_BUF_SIZE as 65440U (the largest multiple of 32
+  fitting in perf_event_header.size __u16 with 92 bytes of worst-case
+  header overhead: 65440 + 92 = 65532 < 65535) and deriving
+  HTM_MEM_MAX_ENTRIES from it ((HTM_MEM_BUF_SIZE - 32) / 32 = 2043).
+  The buffer now covers the observed maximum with 960 bytes headroom,
+  and the WARN_ON_ONCE guard is a genuine impossibility check.
+- Fixed htm_mem_buf allocated as PAGE_SIZE (4096 bytes on 4K-page
+  configs) while the hypervisor was told the buffer length is
+  HTM_MEM_BUF_SIZE.  Changed to kmalloc_node with HTM_MEM_BUF_SIZE.
+- Fixed uninitialized struct pt_regs regs passed to perf_event_overflow().
+  If the event is opened with PERF_SAMPLE_REGS_INTR the perf core reads
+  these bytes into the ring buffer, leaking kernel stack memory to
+  userspace.  Added perf_fetch_caller_regs(&regs) after the declaration
+  block, following the pattern in kernel/trace/trace_event_perf.c and
+  kernel/trace/bpf_trace.c.
+- Clarified the perf_event_overflow() throttle path: when the event is
+  throttled, mem_start is intentionally not advanced (the same block will
+  be retried on the next drain pass once unthrottled).  Added a comment
+  making this explicit and distinguishing it from the error/EOF paths
+  that clear collect_htm_mem.
 
-[Severity: Low]
-Are the standard POSIX headers missing here?
+Changes in V2:
+- Memory configuration records are now emitted as PERF_SAMPLE_RAW
+  samples directly by htm_event_read() after the AUX trace dump
+  completes, using H_HTM_OP_DUMP_SYSMEM_CONF.  V1 embedded the
+  configuration data inside the AUX buffer itself and used two
+  PERF_SAMPLE_RAW boundary markers (start/end) to delimit it.
+- The two-marker boundary scheme is removed.  There is no longer any
+  interleaving of memory configuration data inside the AUX stream;
+  the AUX buffer carries only bus-trace data.
+- Separate AUX-private fields for a hypervisor dump buffer, a stable
+  emit buffer, and iterator state are introduced to manage the
+  multi-call SYSMEM_CONF dump loop.
+- Tracing state remains in event->pmu_private (htm_target_id); AUX
+  private state is used only for dump progress and staging buffers,
+  consistent with the restructuring in patches 1 and 3.
 
-The code uses functions like open(), write(), lseek(), snprintf(), strerror=
-(),
-calloc(), and free().
+ arch/powerpc/perf/htm-perf.c | 205 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 204 insertions(+), 1 deletion(-)
 
-Without explicitly including fcntl.h, unistd.h, stdio.h, string.h, and
-stdlib.h, could this fail to compile on systems using musl libc due to
-relying on implicit header inclusions?
+diff --git a/arch/powerpc/perf/htm-perf.c b/arch/powerpc/perf/htm-perf.c
+index f880a5fc8833..af9a8412ff20 100644
+--- a/arch/powerpc/perf/htm-perf.c
++++ b/arch/powerpc/perf/htm-perf.c
+@@ -103,6 +103,10 @@ struct htm_pmu_buf {
+ 	u64	head;
+ 	u64     size;
+ 	int     collect_htm_trace;
++	void    *htm_mem_buf;	/* Staging bounce area allocated node-locally */
++	void	*emit_buf;	/* Stable buffer for perf raw sample emission */
++	u64     mem_start;	/* Hypervisor offset state iterator tracker */
++	int     collect_htm_mem;	/* State flag tracking whether memory logging is ongoing */
+ };
+ 
+ struct htm_pmu_ctx {
+@@ -173,6 +177,174 @@ static ssize_t htm_return_check(int rc)
+ #define HTM_TRACING_ACTIVE	1
+ #define HTM_TRACING_INACTIVE	0
+ 
++/*
++ * HTM_MEM_BUF_SIZE is the allocation size for the hcall staging buffer.
++ * The hypervisor fills as many 32-byte entries as fit within the buffer
++ * size passed to H_HTM_OP_DUMP_SYSMEM_CONF — it does not cap at a fixed
++ * entry count.  Observed maximum fill is 64480 bytes (2015 entries).
++ *
++ * HTM_MEM_BUF_SIZE is chosen to satisfy two hard constraints:
++ *
++ *   1. Must cover the observed maximum fill:
++ *        HTM_MEM_BUF_SIZE >= 64480  (2015 * 32 + 32-byte header)
++ *
++ *   2. The full perf record (perf_event_header + fixed sample fields +
++ *      PERF_SAMPLE_RAW u32 size prefix + to_copy) must fit in
++ *      perf_event_header.size which is __u16 (max 65535):
++ *        overhead = 8 (perf_event_header)
++ *                 + 64 (header_size, worst case: 8 u64 sample fields)
++ *                 + 16 (id_header_size, worst case)
++ *                 +  4 (PERF_SAMPLE_RAW u32 size prefix)
++ *                 = 92 bytes
++ *        to_copy <= 65535 - 92 = 65443
++ *        round down to multiple of 32: 65440
++ *
++ *   3. HTM_MEM_BUF_SIZE must be a multiple of 32 so a whole number of
++ *      32-byte entries fill it exactly.
++ *
++ * 65440 = 32 + 2043 * 32 is the largest multiple of 32 satisfying all
++ * three constraints:
++ *   - covers 64480 with 960 bytes headroom
++ *   - total record: 65440 + 92 = 65532 < 65535 (3-byte u16 margin)
++ *
++ * HTM_MEM_MAX_ENTRIES is derived from HTM_MEM_BUF_SIZE — not the other
++ * way around — so the hcall is always given the true buffer size and
++ * the WARN_ON_ONCE(to_copy > HTM_MEM_BUF_SIZE) guard is a genuine
++ * impossibility check rather than a post-overflow assertion.
++ */
++#define HTM_MEM_BUF_SIZE	65440U
++#define HTM_MEM_MAX_ENTRIES	((HTM_MEM_BUF_SIZE - 32) / 32)	/* 2043 */
++
++/*
++ * htm_collect_memory_config - drain H_HTM_OP_DUMP_SYSMEM_CONF into the
++ * perf ring buffer as PERF_SAMPLE_RAW records.
++ *
++ * Returns the number of 32-byte memory configuration entries emitted
++ * (to_copy / 32) on success, 0 if the event was throttled or the stream
++ * ended normally, or a negative error code on hard failure.  The caller
++ * (htm_dump_sample_data) uses the return value directly as event->count,
++ * consistent with the AUX trace path returning chunk_size / 128.
++ */
++static ssize_t htm_collect_memory_config(struct perf_event *event,
++					 struct htm_pmu_buf *aux_buf)
++{
++	struct perf_sample_data data;
++	struct perf_raw_record raw;
++	struct pt_regs regs;
++	u8 *htm_mem_buf = aux_buf->htm_mem_buf;
++	__be64 *num_entries;
++	u64 next_start;
++	u64 to_copy;
++	void *emit_buf = aux_buf->emit_buf;
++	long rc;
++	ssize_t ret = 0;
++	int retries;
++
++	/*
++	 * Initialise regs to the current caller context.  perf_event_overflow()
++	 * may sample register state into the ring buffer if the event was
++	 * opened with PERF_SAMPLE_REGS_INTR; an uninitialised stack frame
++	 * would leak kernel stack bytes to userspace.  Use
++	 * perf_fetch_caller_regs() to capture a safe, deterministic snapshot
++	 * of the current CPU state — the same pattern used by tracepoints and
++	 * BPF perf-event helpers for synthetic sample emission.
++	 */
++	perf_fetch_caller_regs(&regs);
++
++	/*
++	 * htm_mem_buf is the hcall memory buffer target reused each iteration.
++	 * emit_buf is a preallocated stable buffer used for perf raw
++	 * sample emission, so raw.frag.data remains valid during
++	 * perf_event_overflow().
++	 * Size: 32-byte header + HTM_MEM_MAX_ENTRIES * 32-byte entries.
++	 */
++	while (true) {
++		retries = 0;
++		do {
++			rc = htm_hcall_wrapper(htmflags, 0, 0, 0,
++					       0, H_HTM_OP_DUMP_SYSMEM_CONF,
++					       virt_to_phys(aux_buf->htm_mem_buf),
++					       HTM_MEM_BUF_SIZE, aux_buf->mem_start);
++			ret = htm_return_check(rc);
++		} while (ret == -EBUSY && ++retries < MAX_RETRIES);
++
++		/*
++		 * ret == 0 (H_NOT_AVAILABLE): normal end of stream — clear
++		 *   collect_htm_mem so the next read does not re-enter.
++		 * ret < 0 (error): hard failure — clear collect_htm_mem and
++		 *   stop.
++		 * Both cases are treated as "no more data for this session".
++		 */
++		if (ret <= 0) {
++			aux_buf->collect_htm_mem = 0;
++			break;
++		}
++
++		/*
++		 * Read next iterator value from the hcall response BEFORE
++		 * emitting — but only commit it to mem_start after a
++		 * successful write of raw data.
++		 */
++		next_start = be64_to_cpu(*((__be64 *)(htm_mem_buf + 0x8)));
++
++		/*
++		 * The hcall was given HTM_MEM_BUF_SIZE bytes of buffer space,
++		 * so num_entries is already bounded to HTM_MEM_MAX_ENTRIES.
++		 * The response is a complete hcall data:
++		 *   [32-byte header][num_entries * 32-byte entries]
++		 * Userspace can validate and parse it directly.
++		 */
++		num_entries = (__be64 *)(htm_mem_buf + 0x10);
++		to_copy = 32 + (be64_to_cpu(*num_entries) * 32);
++		if (WARN_ON_ONCE(to_copy > HTM_MEM_BUF_SIZE)) {
++			ret = -EIO;
++			aux_buf->collect_htm_mem = 0;
++			break;
++		}
++
++		memcpy(emit_buf, aux_buf->htm_mem_buf, to_copy);
++
++		perf_sample_data_init(&data, 0, event->hw.last_period);
++		memset(&raw, 0, sizeof(raw));
++		raw.frag.data = emit_buf;
++		raw.frag.size = to_copy;
++		perf_sample_save_raw_data(&data, event, &raw);
++
++		if (perf_event_overflow(event, &data, &regs)) {
++			/*
++			 * Event throttled: the record was not written to the
++			 * ring buffer.  Do NOT advance mem_start — the same
++			 * block will be retried on the next htm_event_read()
++			 * call once the event is unthrottled.  Leave
++			 * collect_htm_mem set so the retry path is entered.
++			 * Return -ENOSPC so htm_event_read() sets event->count=1,
++			 * keeping the drain loop alive until the ring buffer
++			 * consumer catches up.
++			 */
++			ret = -ENOSPC;
++			break;
++		}
++
++		/* Record written successfully: advance the iterator */
++		aux_buf->mem_start = next_start;
++
++		/*
++		 * Return the number of 32-byte memory configuration entries
++		 * in this batch (to_copy / 32).  Dividing here keeps
++		 * htm_event_read() free of format knowledge, consistent with
++		 * the AUX trace path returning chunk_size / 128.
++		 */
++		ret = (ssize_t)(to_copy / 32);
++
++		if (!next_start) {
++			aux_buf->collect_htm_mem = 0;
++			break;
++		}
++	}
++
++	return ret;
++}
++
+ static void reset_htm_active(struct perf_event *event)
+ {
+ 	struct htm_target_id *target = event->pmu_private;
+@@ -450,7 +622,7 @@ static ssize_t htm_dump_sample_data(struct perf_event *event)
+ 	if (!aux_buf)
+ 		return 0;
+ 
+-	if (!aux_buf->collect_htm_trace) {
++	if (!aux_buf->collect_htm_trace && !aux_buf->collect_htm_mem) {
+ 		perf_aux_output_end(&htm_ctx->handle, 0);
+ 		return 0;
+ 	}
+@@ -470,6 +642,11 @@ static ssize_t htm_dump_sample_data(struct perf_event *event)
+ 		}
+ 	}
+ 
++	if (!aux_buf->collect_htm_trace) {
++		ret = htm_collect_memory_config(event, aux_buf);
++		goto out;
++	}
++
+ 	/* Derive the exact target destination point directly out of active ring pointers */
+ 	dump_offset = htm_ctx->handle.head & (aux_buf->size - 1);
+ 	page_index = dump_offset >> PAGE_SHIFT;
+@@ -572,6 +749,8 @@ static ssize_t htm_dump_sample_data(struct perf_event *event)
+ 	 * buffer session.
+ 	 */
+ 	aux_buf->collect_htm_trace = 0;
++	ret = htm_collect_memory_config(event, aux_buf);
++out:
+ 	perf_aux_output_end(&htm_ctx->handle, 0);
+ 	return ret;
+ }
+@@ -646,7 +825,29 @@ static void *htm_setup_aux(struct perf_event *event, void **pages,
+ 		return NULL;
+ 	}
+ 
++	/*
++	 * htm_mem_buf is the staging area passed directly to the
++	 * H_HTM_OP_DUMP_SYSMEM_CONF hcall.  The hypervisor is told the
++	 * buffer length is HTM_MEM_BUF_SIZE (65440 bytes); allocate exactly
++	 * that amount.  See the HTM_MEM_BUF_SIZE comment for the derivation.
++	 */
++	buf->htm_mem_buf = kmalloc_node(HTM_MEM_BUF_SIZE, GFP_KERNEL, cpu_to_node(cpu));
++	if (!buf->htm_mem_buf) {
++		kfree(buf);
++		return NULL;
++	}
++
++	buf->emit_buf = kmalloc_node(HTM_MEM_BUF_SIZE, GFP_KERNEL,
++			cpu_to_node(cpu));
++	if (!buf->emit_buf) {
++		kfree(buf->htm_mem_buf);
++		kfree(buf);
++		return NULL;
++	}
++
+ 	buf->collect_htm_trace = 1;
++	buf->collect_htm_mem = 1;
++	buf->mem_start = 0;
+ 	buf->head = 0;
+ 	return buf;
+ }
+@@ -661,6 +862,8 @@ static void htm_free_aux(void *aux)
+ 	if (!buf)
+ 		return;
+ 
++	kfree(buf->emit_buf);
++	kfree(buf->htm_mem_buf);
+ 	kfree(buf);
+ }
+ 
+-- 
+2.43.0
 
-[ ... ]
-> +/*
-> + * Look up attr.config by the CPU number carried in event->auxtrace.cpu.
-> + * Returns 0 if not found.
-> + */
-> +static u64 htm_config_for_cpu(struct powerpc_htm *htm, int cpu)
-> +{
-> +	int i;
-> +
-> +	for (i =3D 0; i < htm->nr_cpu_configs; i++) {
-> +		if (htm->cpu_configs[i].cpu =3D=3D cpu)
-> +			return htm->cpu_configs[i].config;
-> +	}
-> +	return 0;
-> +}
-
-[Severity: Medium]
-Can a valid configuration evaluate to 0?
-
-If the HTM PMU is configured with node=3D0, chip=3D0, core=3D0 and no other=
- flags,
-attr.config could legitimately be 0.
-
-If it returns 0, the caller powerpc_htm_process_auxtrace_event() checks:
-
-tools/perf/util/powerpc-htm.c:powerpc_htm_process_auxtrace_event() {
-    ...
-    ev_config =3D htm_config_for_cpu(htm, (int)event->auxtrace.cpu);
-    if (!ev_config) {
-        ...
-        return 0;
-    }
-    ...
-}
-
-Would this cause valid auxtrace events to be dropped by conflating a lookup
-failure with a valid 0 PMU configuration?
-
-[ ... ]
-> +static int write_htm(struct powerpc_htm *htm, void *data, size_t size,
-> +		     u32 node, u32 chip, u32 core, int mem_maps)
-> +{
-> +	u32 target_key =3D htm_pack_target(node, chip, core);
-> +	char target_file[128];
-> +	size_t written;
-> +	int flags;
-> +	int fd;
-[ ... ]
-> +		written =3D write(fd, data, payload);
-> +		close(fd);
-> +
-> +		if (written !=3D payload) {
-> +			pr_err("Failed to write memory config: expected %zu bytes, wrote %zu\=
-n",
-> +			       payload, written);
-> +			return -EIO;
-> +		}
-> +
-> +		return 0;
-> +	}
-> +
-> +	/* AUX bus-trace path */
-> +	snprintf(target_file, sizeof(target_file),
-> +		 "htm.bin.n%d.p%d.c%d", node, chip, core);
-> +	flags |=3D htm_target_seen(htm->htm_bin_targets,
-> +				 &htm->nr_htm_bin_targets,
-> +				 htm->nr_targets,
-> +				 target_key) ? O_APPEND : O_TRUNC;
-> +	fd =3D open(target_file, flags, 0644);
-> +	if (fd =3D=3D -1) {
-> +		pr_err("Failed to open %s: %s\n", target_file, strerror(errno));
-> +		return -errno;
-> +	}
-> +
-> +	written =3D write(fd, data, size);
-> +	close(fd);
-> +
-> +	if (written !=3D size) {
-> +		pr_err("Failed to write htm trace data: expected %zu bytes, wrote %zu\=
-n",
-> +		       size, written);
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-
-[Severity: Low]
-Does this code assign the signed return value of write() to a size_t variab=
-le?
-
-If write() fails and returns -1, it will be assigned to size_t written,
-wrapping it to SIZE_MAX.
-
-While the error is still caught by the written !=3D payload and written !=
-=3D size
-checks, will this result in logging an impossibly large value for bytes wri=
-tten
-and mask the actual error code?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260725070747.8143=
-5-1-atrajeev@linux.ibm.com?part=3D6
