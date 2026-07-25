@@ -1,60 +1,60 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEF483769F0;
-	Sat, 25 Jul 2026 17:55:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4FB73F788F;
+	Sat, 25 Jul 2026 18:12:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785002146; cv=none; b=lG21AGyEoVE+VITSXPnyX1x9+dWfRobEqh9SoeCyM9ISXuKAKjCpLYNCbJHqWime5tAuReZj6D553E761f/5PuwHyxU9BaruPMkjptqyGpTDiY3Hv0w0badX5CUo+wkRIW1AqPlJATjEH3uOhH0Fl/jk0DqhDmN1ULYL/cYf/Ic=
+	t=1785003122; cv=none; b=rfCSKBZbCM8pgtHYyIv6J/leKxzz2PYzLQqiM6ZMokf+W+UP6OfLwsl+y/tDR/7J/zdyMVVnE4BUIqRSM5EJzGjr6FQ1opJ4GOhCGwrKYElxn/GbjlmswTdHTja2CJJjjNglA5RggqQZzl3uOIY3/Nq5yVPsACOscmM9aVSzjgg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785002146; c=relaxed/simple;
-	bh=HVXSIcNQgvskszgEj2uvUh0ZEvjU/z9whE0IEolBCtw=;
+	s=arc-20240116; t=1785003122; c=relaxed/simple;
+	bh=L/ZpVH1x2xHELdbjpIxJbmftD9deFc5Pl04Tq47624Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t1D/rDmF6vhDvRXsIhlO4Pvzceqb1FUqrpfQvzZcWe6g4VOMznuyhcsDTEEgEGW1WMSG9S9aRjRkpXpHAY3P+sdRX9BfGYGUi2rqz7OExpaw69LbuqxryZt5Ukustf93y6UJFwsdU2/UGoHKI+Jo6CFHF6rfdF88+AL4f4HWmVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=fLOjBQd8; arc=none smtp.client-ip=148.163.156.1
+	 In-Reply-To:Content-Type; b=nFyoMQ6Lga8n0Pcf3LfpzLHoWNzS4m90cE+DO6Bz4VIDK1yBqYEBDMOFzxBwQT/g/2uYPFzHR0vwXf8b7Hgz7hGf4baBX6NlAZs0wtwU+2VsRj37mkqmX81z7AW7HOhkegyy3eB+eFO97FeT6RvJoey08r78RqqNssvN4IRSiYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QK/5j2VH; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="fLOjBQd8"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66PHHrha1204799;
-	Sat, 25 Jul 2026 17:55:43 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QK/5j2VH"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66PHI54P1229321;
+	Sat, 25 Jul 2026 18:11:58 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=sUemA7
-	5wCL9FikLUUYV6lBtpNYFQWSUv1GJ/OTiEpXk=; b=fLOjBQd81hHsHX5asz4Y0w
-	O1H5dreN0hx8CetgsYhHQA7gREwykhWGh6aOeROrjOx7jngx6uALIkr2hjv0Y7IN
-	50aVou1nD2NInkJYs9sFvVAAe/s5eu8WNqbo4SG3In/88pYBoFmguM/xC58/ZaK3
-	t40E5w0C+oO8zX5MrlTBF44u789RlV3POqsKYdLkMoqGKaaD04LCnPt+o+o0UhsT
-	YucwmAVHPDhsQy1hwDpZwHRocNwu6hApmDQd6Fr1xaWy9A3veyrx0Mz+EVeEd3O+
-	Km4w48fPAZmR/Pvb3JVyIkV0+Ztmkzt7sDfAWo+PVIoq2dbOut3G2L+hZUR0m4rg
+	:message-id:mime-version:references:subject:to; s=pp1; bh=0ap4z0
+	P3dEX6S4rpWrhCP/EWtfeEZymSWZQRF0DUEgE=; b=QK/5j2VHBjiGL3TseiVpCH
+	amsjZtlrWUp+YtDkcbGNTFdwJ1lRqjwxrD/6GiKtCR6zTLDQSk4BPUXtlf4t//Gh
+	MuO/46sIwrYviLp5B0KY4RK39rX3jtkvreqBBkJrn5/ppT5HOER9uoalmHBZcttj
+	p0WFArVkfXVlsqottMA1wIvkx8drScafiG73Qpvjtpo+JsbYMxL571hUGBJZBhO1
+	65WJ0Jsj54BU9KfuzSf3nFFGEF3vL8RYEfFW3puJY4oPczpPKLlUMTt6nmVYvW0y
+	QQvrrO4az3j3VCd9+bAStxxIMN4+88qV6TI5lB9OmV+9Qm05q13pHtR1eobQRKAg
 	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fmuw70ymy-1
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fmv0x90gd-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 25 Jul 2026 17:55:42 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66PHfFBD003777;
-	Sat, 25 Jul 2026 17:55:41 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fmn5ha1uy-1
+	Sat, 25 Jul 2026 18:11:58 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66PIBIo5026240;
+	Sat, 25 Jul 2026 18:11:57 GMT
+Received: from smtprelay05.dal12v.mail.ibm.com ([172.16.1.7])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fmn12j4e0-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sat, 25 Jul 2026 17:55:41 +0000 (GMT)
+	Sat, 25 Jul 2026 18:11:57 +0000 (GMT)
 Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66PHteq232375468
+	by smtprelay05.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66PIBuCL9241188
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 25 Jul 2026 17:55:40 GMT
+	Sat, 25 Jul 2026 18:11:56 GMT
 Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8F94258056;
-	Sat, 25 Jul 2026 17:55:40 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 0F7E858050;
+	Sat, 25 Jul 2026 18:11:56 +0000 (GMT)
 Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3D93C58045;
-	Sat, 25 Jul 2026 17:55:37 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id B9EF958045;
+	Sat, 25 Jul 2026 18:11:52 +0000 (GMT)
 Received: from [9.39.22.45] (unknown [9.39.22.45])
 	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-	Sat, 25 Jul 2026 17:55:36 +0000 (GMT)
-Message-ID: <2caa358c-2127-4739-a2ae-cb7ffa201882@linux.ibm.com>
-Date: Sat, 25 Jul 2026 23:25:35 +0530
+	Sat, 25 Jul 2026 18:11:52 +0000 (GMT)
+Message-ID: <ed0005f1-be39-414a-9ac9-23440001ae58@linux.ibm.com>
+Date: Sat, 25 Jul 2026 23:41:50 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,118 +62,137 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/5] perf trace-event: Avoid double free in
- trace_event__cleanup()
+Subject: Re: [PATCH v3 4/5] perf trace-event: Fix heap buffer overflow in
+ read_ftrace_printk()
 To: sashiko-reviews@lists.linux.dev,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org,
-        Madhavan Srinivasan <maddy@linux.ibm.com>, hbathini@linux.ibm.com,
-        atrajeev@linux.ibm.com
+        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, hbathini@linux.ibm.com,
+        Madhavan Srinivasan <maddy@linux.ibm.com>, atrajeev@linux.ibm.com
 References: <20260724141316.99507-1-tshah@linux.ibm.com>
- <20260724141316.99507-4-tshah@linux.ibm.com>
- <20260724145514.90C7E1F000E9@smtp.kernel.org>
+ <20260724141316.99507-5-tshah@linux.ibm.com>
+ <20260724145433.944741F00A3A@smtp.kernel.org>
 Content-Language: en-US
 From: Tanushree Shah <tshah@linux.ibm.com>
-In-Reply-To: <20260724145514.90C7E1F000E9@smtp.kernel.org>
+In-Reply-To: <20260724145433.944741F00A3A@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: xPCXebp_PSRcUvtIEoiJy3TH0pJNzCIB
-X-Proofpoint-ORIG-GUID: sDhaULdLzLdnmZrt8cQL3h7MJeScjpnS
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI1MDE2OSBTYWx0ZWRfX0d6m8lWhldoi
- txbQtYKjJpXqCZURxGMsMI4/WIOw2yy41Dpczc/jQw+yZs5gMhpkWB83S//91HifcM+DrajqTLX
- Vi+QZK6PTF8eftZ870K0rvhHhGr90Q1jsUrR8GZwbgEcl04ia2uo++5ujlW+DayiDu1JZgJrSH/
- n/rbXhFJMKFWF0YNh38EXbhla49b6wsWpidEBw9eLuXxkbE1QMKHNLwndzuVSGkzJkTDhDP9c8G
- /TJ5OTV66L2pmkiGNOzltZfjlw+ELzNQrmIJov+NceijOV2YfaaFi8SZbxxiISiCFsjNIjLFt8K
- VTT5WSUY73O64lPIaQ400Fwjfzu2dmde2E9oKAH9LD8HcZfNuf4rrq2DqO+WqxCphQlJdw+Pozh
- um5io8kJ98XuQDFn+r0w5H0Y75xlQ5yFzH5gPWhAwfEzoU4Isq/mU52RM3SJ6meUHYDTvqx6DcS
- ZQ2ABAZJvA9m+Jm26ag==
-X-Authority-Analysis: v=2.4 cv=SKFykuvH c=1 sm=1 tr=0 ts=6a64f89f cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+X-Proofpoint-GUID: SZmIchF1y9nqOxmdmTG2ZsIZ7eppdlPg
+X-Proofpoint-ORIG-GUID: 3xJcQ6KUVNVaDjnJu7qJafGnGVmMK8bt
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI1MDE2OSBTYWx0ZWRfX7wzJCl+rYFu8
+ Sf2QjTqL5kQHIgOkLBvQkkAbZol9MIqusd8zCbnfCIwJ8uvnvTUc8qErROXnYZ+O0toJQlNsno3
+ HTxEjezZD73Q7m6yUZsIVAh24PAOQXA=
+X-Authority-Analysis: v=2.4 cv=dYuwG3Xe c=1 sm=1 tr=0 ts=6a64fc6e cx=c_pps
+ a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
  a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=l53iYGRtcJ9rzQUW14wA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI1MDE2OSBTYWx0ZWRfXx/0RtoQC99fH
- oUuvfeu8CJeeyQh1DhaFqujjwXdNLqcZUZNbhHomI5u3COuEnanaEPF6QE/KJIpxjwJYu2gZevH
- SKWtuGQa6+Xfp1aEquig2puUKL2JlyY=
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=aRRoLgKOAvR5kCXd9xwA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI1MDE2OSBTYWx0ZWRfX16LIkSoHpwlO
+ uIq1T+7milvCxNhd7mpHew4M4pC6wTa41TDNAw5zqt1t6w+rEYBZKaXfhj1drCjWde8g0yxJne1
+ HRqh9IuIIydSEy9B7AmYknvLwNBSTY6HbmfkFZeRbwImqy2nv0mEDwPrM3TNIxpYy6EHfjuXHp9
+ zHJibdZGG1REwsJOjCg7djgMdvRxRI5d5dJsGrieGvkZL8XhJjdRNnQmgujerf5nL6gUUbqhqU+
+ V1VVYLb8FzpNK5uDYgM0J1CbHJ0l1/MvcQP3FtDvbsMUf4Kk9Mlih8bGnwISfwVkgtR4rtFfSvX
+ +347c2Cjn2Ynitw7O7XNVCt0i7wOYVtq/PJRfr8EFx9GR9VPU6sx0jUYeiuiVMVT4izB0s73SJb
+ B9FYV6+sQsuoqsBQdVv6gZjHLdr4ijOHX7499d7zhT8aDam3eqRNqjTFN3/4G7j32JQjP02+Fpb
+ iv5H4NTxC14XVjVNTlA==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-25_05,2026-07-24_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- priorityscore=1501 malwarescore=0 clxscore=1015 adultscore=0
- lowpriorityscore=0 bulkscore=0 impostorscore=0 phishscore=0 spamscore=0
- suspectscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2607250169
+ priorityscore=1501 impostorscore=0 clxscore=1015 phishscore=0 malwarescore=0
+ spamscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607250169
 
-Thanks for the review
+Thanks for the review.
 
-On 24/07/26 20:25, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+On 24/07/26 20:24, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> 
+> New issues:
+> - [Low] The patch uses `UINT_MAX` without explicitly including `<limits.h>`, violating musl compatibility guidelines.
 > 
 > Pre-existing issues:
-> - [High] Calling trace_event__init() repeatedly on the same struct trace_event leaks the previously allocated tep_handle and plugins.
+> - [Critical] The commit patches a heap buffer overflow in `read_ftrace_printk()` by preventing `malloc(size + 1)` from wrapping to 0, but misses an identical vulnerability in `read_saved_cmdline()`.
 > --
 > 
-> --- Patch [3]: [PATCH v3 3/5] perf trace-event: Avoid double free in trace_event__cleanup() ---
-> commit 1eb2775370e0095c8df022b4a83dcd46f4b90b94
+> --- Patch [4]: [PATCH v3 4/5] perf trace-event: Fix heap buffer overflow in read_ftrace_printk() ---
+> commit e35d114b06414be20beac51dfd3a3e158eba2833
 > Author: Tanushree Shah <tshah@linux.ibm.com>
+> Subject: perf trace-event: Fix heap buffer overflow in read_ftrace_printk()
 > 
-> perf trace-event: Avoid double free in trace_event__cleanup()
+> Fixes a heap buffer overflow in read_ftrace_printk() by preventing
+> malloc(size + 1) from wrapping to 0 when size is UINT_MAX.
 > 
-> trace_event__cleanup() frees t->pevent but never clears the pointer. It can be
-> called twice on the same trace_event: once from trace_report()'s error path,
-> and again from perf_session__delete() during session teardown, resulting in a
-> double free / use-after-free.
+>> diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-event-read.c
+>> index 52ed496d92c3b..147a3b95ce06b 100644
+>> --- a/tools/perf/util/trace-event-read.c
+>> +++ b/tools/perf/util/trace-event-read.c
 > 
->> diff --git a/tools/perf/util/trace-event.c b/tools/perf/util/trace-event.c
->> index 6a8c66c64b705..cf40e98d16177 100644
->> --- a/tools/perf/util/trace-event.c
->> +++ b/tools/perf/util/trace-event.c
->> @@ -63,8 +63,12 @@ int trace_event__register_resolver(struct machine *machine,
+> [ ... ]
+> 
+>> @@ -180,6 +180,11 @@ static int read_ftrace_printk(struct tep_handle *pevent)
+>>   	if (!size)
+>>   		return 0;
 >>   
->>   void trace_event__cleanup(struct trace_event *t)
->>   {
->> +	if (!t->pevent)
->> +		return;
+>> +	if (size == UINT_MAX) {
+>> +		pr_debug("invalid ftrace printk size\n");
+>> +		return -1;
+>> +	}
 >> +
 > 
-> [Severity: High]
-> This isn't a bug introduced by this patch, but while we are making it safe
-> to call trace_event__cleanup() multiple times, should we also call it from
-> trace_event__init() to prevent memory leaks?
+> [Severity: Low]
+> Does this code need to include <limits.h>?
 > 
-> If a maliciously crafted perf.data file contains multiple
-> PERF_RECORD_HEADER_TRACING_DATA headers, trace_report() can be called
-> multiple times on the same session, invoking trace_event__init() repeatedly:
+> The perf tools guidelines for musl compatibility state that we shouldn't rely
+> on implicit header inclusions.
+> 
+> Compiling against musl could fail since UINT_MAX is used without explicitly
+> including <limits.h>.
 
-Confirmed, this is a real leak. I'll fold a fix into v4 alongside
-the trace_event__cleanup() double-free fix, since the two are
-related.
+Fair point on musl compatibility. Although it compiles fine without it 
+via transitive includes, I will add it explicitly. Will include in v4.
 > 
-> tools/perf/util/trace-event-read.c:trace_report() {
->      ...
-> 	if (trace_event__init(tevent)) {
->      ...
+>>   	buf = malloc(size + 1);
+>>   	if (buf == NULL)
+>>   		return -1;
+> 
+> [ ... ]
+> 
+> [Severity: Critical]
+> This is a pre-existing issue, but doesn't the exact same wrapping
+> issue exist in read_saved_cmdline() in the same file?
+> 
+> tools/perf/util/trace-event-read.c:read_saved_cmdline() {
+> 	unsigned long long size;
+> 	char *buf;
+> 	ssize_t ret;
+> 
+> 	/* it can have 0 size */
+> 	size = read8(pevent);
+> 	if (!size)
+> 		return 0;
+> 
+> 	buf = malloc(size + 1);
+> 	if (buf == NULL) {
+> 		pr_debug("memory allocation failure\n");
+> 		return -1;
+> 	}
+> 
+> 	ret = do_read(buf, size);
+> 	...
 > }
 > 
-> This overwrites the previously allocated tep_handle and plugins without
-> freeing them, leaking the memory:
+> If size is ULLONG_MAX, size + 1 wraps to 0.
 > 
-> tools/perf/util/trace-event.c:trace_event__init() {
->      ...
-> 		t->plugin_list = tep_load_plugins(pevent);
-> 		t->pevent  = pevent;
->      ...
-> }
+> This causes malloc(0) to return a minimal allocation while the original
+> ULLONG_MAX size is passed to do_read(), leading to a heap buffer overflow.
 > 
->>   	tep_unload_plugins(t->plugin_list, t->pevent);
->>   	tep_free(t->pevent);
->> +	t->pevent = NULL;
->>   }
->>   
->>   /*
+> Should a similar size check be added here to prevent malicious perf.data files
+> from triggering this?
 > 
+Confirmed, same as noted earlier in this thread ( patch 2 review ). Will 
+fix it in v4.
 
