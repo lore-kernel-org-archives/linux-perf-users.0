@@ -1,293 +1,152 @@
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 289783F8EB3
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Jul 2026 17:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC263F4107
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Jul 2026 17:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785001098; cv=none; b=jXRCJSt/cpDiwqvrBR0zWjzVxvJXlCEPN7kfVND4RLMB19+20U5QxItHEYnGZgDq01pabJrG2A0NQ+Ru1OUgBxY8ka20sM5SWzRJZcAv6u4lBTAhFlJ8luB346fxnAopMvZ8P+DqNfFpSd89QuQq6ItA/t1/NTpLKR/vCUyYen4=
+	t=1785001178; cv=none; b=H/krsmciAtKx5HmLUSFcq7l25tsmXulFYsF7oKZ3y7uUUrCYEqNLiKks1cEHIYGtk7q2iS5AKtx77WxD928KFGGdXmVWK/y4rYtrTzV1ZbhaqlMAHOZ9wWtCnFMVpGw1WLdJulE2tAHH6vwxwcbXQOgmCUnliI70FkfntyAwD3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785001098; c=relaxed/simple;
-	bh=pTp18fyAAM/0sN10DjiOcE3NuT0ohGx2OknY4w/Sn/U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m+09U4+wl8A7SntiPX/gnCjhtMNTsL0Ti/STUQ7MuFqjBNrIhzzcnL7XzoHVp/mlzO5p6XfO50M2CihlJ/fcFqt7mQhN6xpInws1WK+D5CPdl66U5tCYtt9CjPkNA0pqJfVYtGgNqGAji1hpXvb/BTx6Ua5Jfd6jl6ZGX4sO1hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b8oaX60L; arc=none smtp.client-ip=209.85.128.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785001178; c=relaxed/simple;
+	bh=IoIHwgwaZP6eYzNTM6ly2hHcDKWwQbXHLbg7LAPBK7U=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Nk+G0Zw94BoeHjioWc0F0THPxZB2vAGXgD3DEnz6OVnTZvXbAsKIdVPqsS2ChO611PYY/VuSVOYRcv0ydWxg5CSFQ2mxaoU6HT4fH4HZPgawKLciO3ncA5PuhKDyLuhQZOlqNNuY4/+9DrXtJGGr0ejw7Gv4SFeSMjc+q0sSH58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JdtEeeZq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b8oaX60L"
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-81ed2a00f12so16077287b3.2
-        for <linux-perf-users@vger.kernel.org>; Sat, 25 Jul 2026 10:38:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785001092; x=1785605892; darn=vger.kernel.org;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=TsABodENPiu91UKwsowi36mSYBdIiGJTh+xQVG4w3D0=;
-        b=b8oaX60LDz+pZFmtR0hsYu8rr3OmDtJIOLInup+VSr/UVdasnkG5dUjmTiKAfYBPQ+
-         tmuo7OFlRlG5mh705zXeEWwVhJ6layShPihQBvgLDmtH3tEZtDsAJw5TOdbkLkI8AVqM
-         F70IFgM2kD1pe7j6nKiofRO+2+GZ7vIbhk9FT2C1fkkQM0n/1iXY1u14c/HzwSHKxhTa
-         SkiHf+8yna6bdFJeEopmmvTFst+iLj3e34uVoUhOIWI0P/j7ji91DFooVFtl9jgOTyxW
-         JZQjaGiMFFxSEzo0SplSEGdkQMntTMWsh3LeoaVprJxRddbMTBN8b/FfpGrOoYZ9cZ7g
-         NwLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785001092; x=1785605892;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=TsABodENPiu91UKwsowi36mSYBdIiGJTh+xQVG4w3D0=;
-        b=tGiuf3aLoTs4S/2mVaJ1UxsEIkxJK6+xay+6H4Lo+pb0wb69iTHNhKZeY6nMudoYJh
-         wzqz1RqFIXJg0INFfZtOGEr6hXs1nJxXPIjBydPXXJziTEyri+rl1NREMa7ZJSJFNQUP
-         nRMnLfOU91I/dtjGxOh4qzQqUDzbtMu242DIAhY10xNapDLSfSaDxl0RWKtxM7qo/7si
-         EGpjxFlhfe6VhO43ASyMZAwIYR0Wd0An5mFoB5DxX4GET9weNqhjBhreD8xoYs9W/Ny2
-         09CLoFZbp+t6pyDDHMgZ7008eg0UuT2qSA3s66kejl2XRjRwd6+XXzoqbwurMF0BkPJP
-         /Vbw==
-X-Forwarded-Encrypted: i=1; AHgh+RpNaatVCKznvfxwdZCLVbQD/s2XVFGvwcWgGsNl/6axEK6F9xfV1UGNF51LywYcpGXqqrsrR7rxlaZlqq3Eqjm2@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvhgeE3Fqi2qQVqeGqD95ExF37bmOdFZfU6wtyYHEgJKwLnMfu
-	qrTRM5WjMYQx0rwrRMOFpv3tVD93UPCcpXcQ6YzknvAyiWDmVlWuTVet
-X-Gm-Gg: AR+sD10+gov9E8YR3J5r9/1inxId10JUntQP01/TEMNMnoMFkmzyhHs79wRt+7Tu6fz
-	uSzQgUjlhUQrISWbvPRGh4mmBj8rVbvQP/J0NcvqaqvzptgIun5BTZ5PH9Eklv1TjRcK/QCrCWg
-	jcYt+Hz4hWqqP4IIaY9s1gd944+6x/sWjDNMzOClVxKPh941nuUYw/jqJceIMEVtcr8ewfqeuP9
-	VoSMaeLvPcJ/kvAnUgNEU4M+Paeq5K1TIclh8SlMRugUAelOjTxRvCDmAM3+1LMMpEeAYikBIFP
-	n7iV6FA/IQ7neLZ7M+nd/7G/PcfSo7UuDjIEh530W7OQwcCX83Wt1liyy3+Ags61dYnTU6YXruB
-	Dtt7+YGFL26tLvJaHfRqOyFvBi0UMg02cYwJvBTuCr3UblKYAUPLK+1XYlqtWN2khPkBxCWPb6O
-	auWX3D
-X-Received: by 2002:a05:690c:692:b0:7dd:3463:6872 with SMTP id 00721157ae682-81f69e2f21amr10154877b3.41.1785001091612;
-        Sat, 25 Jul 2026 10:38:11 -0700 (PDT)
-Received: from [10.138.10.6] ([185.98.168.14])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-81f6576ee52sm13270607b3.3.2026.07.25.10.38.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 25 Jul 2026 10:38:09 -0700 (PDT)
-Message-ID: <a7593240-bb61-4acd-b7ac-3d50b6efed0c@gmail.com>
-Date: Sat, 25 Jul 2026 13:38:02 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JdtEeeZq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D5241F000E9;
+	Sat, 25 Jul 2026 17:39:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785001174;
+	bh=GYD+zGdcPB2KrVb6JFNZ8xMDg1WYyDsaMRgqE+2FnQM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=JdtEeeZqBDeCdS3FeHHdqbcMMSZ8yLHJlRBCGi8kAWiNVkEGBHZVINqfLha5Anl1m
+	 8TNciuBKf9qMRzJmpCIHVgWJC2pnbsUlkeG4sox7oCwXSayu4bRXIPkMjnI2D0IA4v
+	 hpJKBdqDowdgWvFUCky7Er7erpRTHXaQwBJQcxYzwSRjgaAogpSIPwcKnrcrVRO3UM
+	 ApnjUHTLKd2btuF5M1xuCttAIP7+DG0zCOCDoXwcLhrtMl5aLfji2CKBQ2D8eyuhlv
+	 yMSCTcxJLYNbxEVltWlAEKvE1Hp2CCAjGYN0Rm3kvu94pLjDVWqU4sC1kYRnkMr+zg
+	 fqK/B7vQVLncA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 2/3] perf sched latency: Auto-scale latency and
+ runtime display units
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Aaron Tomlin" <atomlin@atomlin.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260725173341.679782-3-atomlin@atomlin.com>
+References: <20260725173341.679782-1-atomlin@atomlin.com>
+ <20260725173341.679782-3-atomlin@atomlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 25 Jul 2026 17:39:33 +0000
+Message-Id: <20260725173934.1D5241F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] AF_ALG: Drop support for off-CPU cryptography
-To: Dominique Martinet <asmadeus@codewreck.org>,
- Eric Biggers <ebiggers@kernel.org>
-Cc: Harald Freudenberger <freude@linux.ibm.com>, acme@kernel.org,
- adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
- ardb@kernel.org, axboe@kernel.dk, corbet@lwn.net, davem@davemloft.net,
- edumazet@google.com, herbert@gondor.apana.org.au, horms@kernel.org,
- io-uring@vger.kernel.org, irogers@google.com, james.clark@linaro.org,
- jolsa@kernel.org, kuba@kernel.org, kuniyu@google.com,
- linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
- netdev@vger.kernel.org, pabeni@redhat.com, peterz@infradead.org,
- skhan@linuxfoundation.org, willemb@google.com, linux-s390@vger.kernel.org
-References: <amRntEmCUK-8wXcw@codewreck.org>
-Content-Language: en-US
-From: Demi Marie Obenour <demiobenour@gmail.com>
-Autocrypt: addr=demiobenour@gmail.com; keydata=
- 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
- +MYSfkEjBz0E8CLOcAw7JIwAaeBT
-In-Reply-To: <amRntEmCUK-8wXcw@codewreck.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------Qav0WqtOq9GpvT00AbFXKs8Q"
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------Qav0WqtOq9GpvT00AbFXKs8Q
-Content-Type: multipart/mixed; boundary="------------9woazU20l50m9dxJk2VCDnaq";
- protected-headers="v1"; hp="clear"
-Message-ID: <a7593240-bb61-4acd-b7ac-3d50b6efed0c@gmail.com>
-Date: Sat, 25 Jul 2026 13:38:02 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] AF_ALG: Drop support for off-CPU cryptography
-To: Dominique Martinet <asmadeus@codewreck.org>,
- Eric Biggers <ebiggers@kernel.org>
-Cc: Harald Freudenberger <freude@linux.ibm.com>, acme@kernel.org,
- adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
- ardb@kernel.org, axboe@kernel.dk, corbet@lwn.net, davem@davemloft.net,
- edumazet@google.com, herbert@gondor.apana.org.au, horms@kernel.org,
- io-uring@vger.kernel.org, irogers@google.com, james.clark@linaro.org,
- jolsa@kernel.org, kuba@kernel.org, kuniyu@google.com,
- linux-crypto@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- mark.rutland@arm.com, mingo@redhat.com, namhyung@kernel.org,
- netdev@vger.kernel.org, pabeni@redhat.com, peterz@infradead.org,
- skhan@linuxfoundation.org, willemb@google.com, linux-s390@vger.kernel.org
-References: <amRntEmCUK-8wXcw@codewreck.org>
-Content-Language: en-US
-From: Demi Marie Obenour <demiobenour@gmail.com>
-Autocrypt: addr=demiobenour@gmail.com; keydata=
- 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
- +MYSfkEjBz0E8CLOcAw7JIwAaeBT
-In-Reply-To: <amRntEmCUK-8wXcw@codewreck.org>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] The table column alignment in `perf sched latency` is broken by the=
+ new formatting widths, contradicting the commit message's claim of maintai=
+ning column alignment.
+--
 
---------------9woazU20l50m9dxJk2VCDnaq
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+--- Patch [2]: [PATCH v2 2/3] perf sched latency: Auto-scale latency and ru=
+ntime display units ---
+commit bd1f9f65443ae53474112d9990f8290686a5aaa3
+Author: Aaron Tomlin <atomlin@atomlin.com>
 
-On 7/25/26 03:37, Dominique Martinet wrote:
-> Thank you both for your time replying
->=20
-> Eric Biggers wrote on Fri, Jul 24, 2026 at 06:09:51PM +0000:
->> On Sat, Jul 25, 2026 at 01:32:12AM +0900, Dominique Martinet wrote:
->>> There's not much I can do about the vendor's kernel I'm stuck with, b=
-ut
->>> that doesn't make having encryption material not accessible to usersp=
-ace
->>> useless as a concept;
->>> forgetting about the sysctl for now, what are the alternatives API th=
-is
->>> kind of implementations could be based on?
->>>
->>> I guess I should start looking at how tpm backed encryption works,
->>> some other day, it's getting late here...
->>
->> First, we should remember that implementing hardware-bound keys via a
->> standalone crypto engine is a dated approach.  Inline crypto engines a=
-nd
->> CPUs, which work much better than and are much easier to use than lega=
-cy
->> standalone crypto engines, can support hardware-bound keys as well.  T=
-he
->> former is already supported, and is already being widely used, in the
->> kernel via the hardware-wrapped inline crypto keys feature.  For the
->> latter, see e.g. RISC-V High Assurance Cryptography.  In the CPU case =
-no
->> UAPI is even needed; userspace can just use it directly.
->=20
-> Thank you, this is exactly what I was asking about - my background isn'=
-t
-> crypto and ultimately whatever direction is implemented will depend on
-> $vendor and I'll just be following along, but I'll read up on this.
->=20
-> "Inline crypto engine" seems to be a qualcomm marketing term, but from
-> looking at their doc the API seems to be PKCS#11 smart card?
-> Having worked on these for some other hardware I can't say I find it
-> easier to use than af alg, but it's definitely something that can be
-> worked out.
+perf sched latency: Auto-scale latency and runtime display units
 
-The Qualcomm Inline Crypto Engine is a type of inline encryption
-hardware.  Inline encryption hardware is integrated in the I/O path,
-so using it doesn't involve any extra copies or interrupts.  The data
-goes from memory to crypto hardware to the I/O target, and from the
-I/O target to crypto hardware to memory.  The ciphertext is never
-written to memory.
+This commit introduces dynamic scaling for latency and runtime values in
+'perf sched latency' output. It replaces hardcoded millisecond output with
+auto-scaled units (ns, us, ms, s) and updates the table formatting to
+improve readability.
 
-In the case of the Qualcomm Inline Crypto Engine, the I/O target is
-the the storage device.  On Android, that's eMMC or UFS.  I would be
-very surprised if the Inline Crypto Engine was any slower than the
-storage device connected to it.
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index b3cf678573e0a..00ff5abb08b57 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
 
-In Linux, inline storage encryption is exposed via the blk-crypto
-framework.  It works very well and is widely used on Android.
+[ ... ]
+
+> @@ -1430,14 +1443,17 @@ static void output_lat_thread(struct perf_sched *=
+sched, struct work_atoms *work_
+>  		printf(" ");
+> =20
+>  	avg =3D work_list->total_lat / work_list->nb_atoms;
+> +	scnprintf_latency_unit(runtime_lat, sizeof(runtime_lat), work_list->tot=
+al_runtime);
+> +	scnprintf_latency_unit(avg_lat, sizeof(avg_lat), avg);
+> +	scnprintf_latency_unit(max_lat, sizeof(max_lat), work_list->max_lat);
+>  	timestamp__scnprintf_usec(work_list->max_lat_start, max_lat_start, size=
+of(max_lat_start));
+>  	timestamp__scnprintf_usec(work_list->max_lat_end, max_lat_end, sizeof(m=
+ax_lat_end));
+> =20
+> -	printf("|%11.3f ms |%9" PRIu64 " | avg:%8.3f ms | max:%8.3f ms | max st=
+art: %12s s | max end: %12s s\n",
+> -	      (double)work_list->total_runtime / NSEC_PER_MSEC,
+> -		 work_list->nb_atoms, (double)avg / NSEC_PER_MSEC,
+> -		 (double)work_list->max_lat / NSEC_PER_MSEC,
+> -		 max_lat_start, max_lat_end);
+> +	printf("|%13s |%9" PRIu64 " | avg:%10s | max:%10s | max start: %12s s |=
+ max end: %12s s\n",
+> +	       runtime_lat,
+> +	       work_list->nb_atoms, avg_lat, max_lat,
+> +	       max_lat_start, max_lat_end);
+> +
+>  }
+
+[Severity: Low]
+Does this format string break the column alignment?
+
+The table header defines a width of 15 characters for the "Runtime" column
+(|   Runtime     |), and 17 characters for the "Avg delay" and "Max delay"
+columns. The new formats %13s and avg:%10s produce strings that are shorter
+than these expected widths, which appears to cause the vertical bar separat=
+ors
+to misalign.
+
+[ ... ]
+
+> @@ -3612,7 +3629,7 @@ static int perf_sched__lat(struct perf_sched *sched)
+>  	perf_sched__sort_lat(sched);
+> =20
+>  	printf("\n ------------------------------------------------------------=
+---------------------------------------------------------------------------=
+----\n");
+> -	printf("  Task                  |   Runtime ms  |  Count   | Avg delay =
+ms    | Max delay ms    | Max delay start           | Max delay end        =
+  |\n");
+> +	printf("  Task                  |   Runtime     |  Count   | Avg delay =
+      | Max delay       | Max delay start           | Max delay end        =
+  |\n");
+>  	printf(" --------------------------------------------------------------=
+---------------------------------------------------------------------------=
+--\n");
+
+[ ... ]
+
+> @@ -3626,8 +3643,9 @@ static int perf_sched__lat(struct perf_sched *sched)
+>  	}
+> =20
+>  	printf(" --------------------------------------------------------------=
+---------------------------------------------------\n");
+> -	printf("  TOTAL:                |%11.3f ms |%9" PRIu64 " |\n",
+> -		(double)sched->all_runtime / NSEC_PER_MSEC, sched->all_count);
+> +	scnprintf_latency_unit(total_runtime_str, sizeof(total_runtime_str), sc=
+hed->all_runtime);
+> +	printf("  TOTAL:                |%13s |%9" PRIu64 " |\n",
+> +	       total_runtime_str, sched->all_count);
+> =20
+>  	printf(" ---------------------------------------------------\n");
+
+[Severity: Low]
+Does the use of %13s here also break the vertical alignment of the first
+column for the TOTAL row summary?
+
 --=20
-Sincerely,
-Demi Marie Obenour (she/her/hers)
-
---------------9woazU20l50m9dxJk2VCDnaq--
-
---------------Qav0WqtOq9GpvT00AbFXKs8Q
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEopQtqVJW1aeuo9/sszaHOrMp8lMFAmpk9HsACgkQszaHOrMp
-8lOjDA//WdudKCsYd4EOeGAM3aieLtjj76rGYztK+AN03rlrekbuRjKfdi5rGqvl
-CBJlSGsY/t3sI+l7RcGn6/UrExCEIHyn1T4ZZCuoing0/W5vQHKUs3HHy4rITs5L
-xjnIb07/dInn++O082yVF1n5YwLNLOmRApXFYwD6+aOFLM1wCuXrYKXWUdcTLRGg
-PGExszD2QPJKA329UZSfP/iM02svhONaGXioEyTAbJw7aIUErTWFMt90Di1z8Fj5
-51Fvkj0YawiQXNg3+YzSC6mJCeTWuZy8R5OEYc5BSDN4cakZyiaG2cedKGZNJMfB
-MAcCsNov4fqgpuFeglR5eibzZpy0a7Y2nj/LKQkjQeoHNloYm5XGFpHA0TL1ryLj
-gJNBn28DolzkwoOj3y5bcCx3wMNNujjh00yPmvaewmDMNDQuqcYTs+udikfc8lap
-GhIiR9zpctGfoYQFRbyoUw8MFN3I5CllKcMkqQtDtCIcgA+UL8NbqYSRIth90p2c
-WR0vpZHL1OdhlaVEo1PTNN5OWuThQPUoQCBc6/bQbb/bGAboZLKRRDiFfeIcREat
-6j8+oB6mLtGB8+vZVgKW/NaKjmRG0yxJ3i5vRA+IrXskQH6ya2yFpwVT8lTMnvOZ
-hz9A6o5cnQKH+mnhG3IUUAC0+KqM2dcBoNbyvzp7JUzpvkcy2no=
-=M8sN
------END PGP SIGNATURE-----
-
---------------Qav0WqtOq9GpvT00AbFXKs8Q--
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260725173341.6797=
+82-1-atomlin@atomlin.com?part=3D2
