@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9624248867
-	for <linux-perf-users@vger.kernel.org>; Sat, 25 Jul 2026 19:27:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0DC34E763
+	for <linux-perf-users@vger.kernel.org>; Sat, 25 Jul 2026 19:27:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785007643; cv=none; b=RaeTWGFDroBV65bk+SN6UkeQyNJeCDrfj3DvRPK2BYXzMZfXo48zhT3pjR+5fCEpABJEmIW9Z35hPW5NkTLNyLP2pua1xROp5hR4pbh2pVs5eDsZBorlybukLayGpDkOys7mNPzIP543b485pFIA3ovzAj5tYy3ipUhJoms9jXQ=
+	t=1785007654; cv=none; b=hHpTRokBVc5c4YhmW6verADqzIAocQvUQAeUTPHMgwvmaHwwzZLM2EzJ/C+RvuAAg144R/9bewqUO4VE18kkezDB8evUv5JMj3wERJX9VfkOnxqj5rmfnHeucFIXuutUSWqfblEC75mdpjdem0yCTr7tpQL2vK5QuGSLgrxqt1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785007643; c=relaxed/simple;
-	bh=cy7x+J9c9ABxEe+Eg0/i+7lc06rc/CFChZOIhIY4HHs=;
+	s=arc-20240116; t=1785007654; c=relaxed/simple;
+	bh=bsuecbN3827QXbzL8fBavHd+aK6XVpK3d3VXnu3QuzI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Haqi5a4rW14RL38ofpwnDwKaUM3CopALl/uGBry7dJm+3fL66VqS6U7JbcGLANBbTsMDUYKSX6gYnd1WF9tHVFc3D3BRU71GTlX6hd2KB+5xYN/PiWUheYda38csR7/uzBVDhP4qqwNinHMCwslYswJqlMHgfqm00NJ4LLLDhSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kWX/A0jj; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=iMuA8YEUQ/6zJ+3vEjf7TPnUaT2A/QJ0szpzqpJShZl8V+q5WPtTf49IHM9jjKFEXQTbpX3PvXGWkn/85ykEQLmLWrsaDVYcy5F1YIt1UVxlYWY32/xuFv54SaON/lMsguvy7jpLtzMBCZbw4immfjjyOuYqfWugf29S/Qzw+Ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ke/ROIer; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kWX/A0jj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FBCB1F000E9;
-	Sat, 25 Jul 2026 19:27:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ke/ROIer"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA9971F000E9;
+	Sat, 25 Jul 2026 19:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785007642;
-	bh=sx6CBPqmaR+mtxzAYdvLkfFD7GR5gJdJjEs1AqiOY/c=;
+	s=k20260515; t=1785007653;
+	bh=i5Z1QNTJq67R0RYsP5PYyclIm8fOLpgUfnGWsjgDPkY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kWX/A0jjU0gCm3bSqjrvz7fGHKv9zprZVaxvWhbljK9taeQEx54rIFE55ichooA1Z
-	 EQwDt/zPDcwGxbUY/FnXSLtIEFuuiDngPZi3droEc6LUjRzGNNp0OC6NyAO+Po/Akp
-	 5XqQpaTLgIwsjGdM5X8IJyqm7wyErXuEKmzNfohrXSmPRoLnUzeL5agrebUnGGxycu
-	 KmLPlzB3QdkiFN0TvZ1Qi6jWdceeQJfK6VQyWmk0AqW0Y3OX/GHuPMx1CbpcE2iuNz
-	 Ag+D5VtU4HNst/mLb7xZPsIRq8yAuawaRUJBlbH8yfY6T+hq4aBNxzDu6PdenBuWOn
-	 aSecKeFY475cQ==
+	b=Ke/ROIer9YQ9IeIfwWbBgg4r5wz5VnC4xH4O1lpScaxG9WI1Ml1aF8Vls9eTij0FF
+	 wKIn1H8VGyPQjQ8pG7qgucumPSeYzyt+XIyzz1YCi2qDrfVXGVcQdVvEW4BD9rpGc4
+	 aUDJkXDnxHhm5XNGuPV72oLph17QrQmOXzbV8NverULaiZzx6f42HVGveYW/qJsCmq
+	 Yl3ovOENyXvFlhRnYBPnoX02OUao7/AzPq1b4GubfURc+o+Ge87z3LMEQn+E1emhr6
+	 gjswLQX06dl5EW27rVYVDLJ76e3IMWfpE0S1mLWEMXDlqAFK45mRf+8vbQajEEHWNm
+	 foIwybLpIkOhg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 4/5] perf trace-event: Fix heap overflows in
- read_ftrace_printk()/read_saved_cmdline()
+Subject: Re: [PATCH v4 1/5] perf trace-event: Fix buffer overflow in
+ read_string()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tanushree Shah" <tshah@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260725184953.234759-5-tshah@linux.ibm.com>
+In-Reply-To: <20260725184953.234759-2-tshah@linux.ibm.com>
 References: <20260725184953.234759-1-tshah@linux.ibm.com>
- <20260725184953.234759-5-tshah@linux.ibm.com>
+ <20260725184953.234759-2-tshah@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 25 Jul 2026 19:27:21 +0000
-Message-Id: <20260725192722.1FBCB1F000E9@smtp.kernel.org>
+Date: Sat, 25 Jul 2026 19:27:32 +0000
+Message-Id: <20260725192732.CA9971F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,77 +49,97 @@ Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [Critical] Incomplete fix for a heap buffer overflow in read_saved_cmdlin=
-e() on 32-bit architectures.
-- [High] Data corruption and pipe failures in read_proc_kallsyms() due to t=
-he use of lseek().
+- [High] Dangling pointer dereference of session->tevent.pevent on malforme=
+d perf.data due to error check bypass.
+- [High] Implicit truncation of 64-bit sizes to 32-bit signed integers in `=
+do_read` and `skip`, and integer overflows in allocations, lead to stack/he=
+ap buffer overflows and uninitialized memory disclosures.
 --
 
---- Patch [4]: [PATCH v4 4/5] perf trace-event: Fix heap overflows in read_=
-ftrace_printk()/read_saved_cmdline() ---
-commit 8469cf15f119b26dcccff6c290c31c101e46c1ab
+--- Patch [1]: [PATCH v4 1/5] perf trace-event: Fix buffer overflow in read=
+_string() ---
+commit b0a22e84b8d80d3f8d078756fde29ba8352194d0
 Author: Tanushree Shah <tshah@linux.ibm.com>
 
-perf trace-event: Fix heap overflows in read_ftrace_printk()/read_saved_cmd=
-line()
+perf trace-event: Fix buffer overflow in read_string()
 
-This commit attempts to fix heap buffer overflows in read_ftrace_printk()
-and read_saved_cmdline() by rejecting maximum integer sizes. This prevents
-an integer overflow where size + 1 wraps to zero, avoiding a minimal memory
-allocation before calling do_read().
+This commit fixes a stack buffer overflow in read_string() by adding a boun=
+ds
+check before writing each character into the buffer. If the string from the
+input is longer than BUFSIZ, it now prevents the overflow and returns NULL,
+matching other error paths.
 
 > diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-e=
 vent-read.c
-> index 52ed496d92c3b..53f1920c3fcbe 100644
+> index ecbbb93f01853..afd458cf1387d 100644
 > --- a/tools/perf/util/trace-event-read.c
 > +++ b/tools/perf/util/trace-event-read.c
-
-[ ... ]
-
-> @@ -357,6 +363,11 @@ static int read_saved_cmdline(struct tep_handle *pev=
-ent)
->  	if (!size)
->  		return 0;
+> @@ -127,6 +127,11 @@ static char *read_string(void)
+>  			}
+>  		}
 > =20
-> +	if (size =3D=3D ULLONG_MAX) {
-> +		pr_debug("invalid saved cmdline size");
-> +		return -1;
-> +	}
+> +		if (size >=3D (int)sizeof(buf) - 1) {
+> +			pr_debug("string too long (max %zu bytes)", sizeof(buf) - 1);
+> +			goto out;
+> +		}
 > +
->  	buf =3D malloc(size + 1);
-
-[Severity: Critical]
-This isn't a bug introduced by this patch, but on 32-bit architectures,
-does this check prevent size + 1 from wrapping to zero if size is
-0xFFFFFFFF?
-
-Since size is an unsigned long long and malloc takes a size_t, a 32-bit
-SIZE_MAX value will bypass this ULLONG_MAX check. When passed to
-malloc(size + 1), it would truncate to 32 bits and wrap to zero, causing
-do_read() to overflow the allocation. Could we check against SIZE_MAX here
-instead?
+>  		buf[size++] =3D c;
+> =20
+>  		if (!c)
 
 [Severity: High]
-This is a pre-existing issue, but looking at read_proc_kallsyms() in the
-same file:
+This isn't a bug introduced by this patch, but since we are fixing buffer
+overflows in this file, are there similar truncation issues in do_read() and
+skip()?
 
-read_proc_kallsyms() {
-    ...
-    lseek(input_fd, size, SEEK_CUR);
-    trace_data_size +=3D size;
-    return 0;
+Looking at do_read() and skip() in tools/perf/util/trace-event-read.c, they
+take size as a signed int:
+
+static int do_read(void *data, int size)
+static void skip(int size)
+
+When a large 32-bit or 64-bit size is read from the trace data and passed to
+these functions, it can be truncated to a negative integer. In skip(), could
+this negative value cause the computed read amount to become negative,
+triggering do_read() and eventually the read() system call to attempt readi=
+ng a
+massive amount of data into the local stack buffer?
+
+Similarly, in read_ftrace_printk() and read_saved_cmdline(), can the
+malloc(size + 1) calculation overflow to 0 when a large size is provided,
+creating a tiny allocation before do_read() is called with the truncated
+negative size, leading to a heap overflow?
+
+[Severity: High]
+This is a pre-existing issue, but can a malformed perf.data file cause a
+dangling pointer dereference during error handling?
+
+In tools/perf/util/header.c:perf_event__process_tracing_data(), if
+trace_report() returns an error (-1), size_read becomes -1. The subsequent
+padding calculation:
+
+	padding =3D PERF_ALIGN(-1, 8) - (-1);
+
+evaluates to 1. This means size_read + padding equals 0. If the provided ev=
+ent
+size is 0, the size mismatch check:
+
+	if (size_read + padding !=3D size)
+
+evaluates to 0 !=3D 0, which is false, bypassing the error check.
+
+Since trace_report() triggers trace_event__cleanup() on error paths, which
+frees t->pevent without setting it to NULL:
+
+tools/perf/util/trace-event.c:trace_event__cleanup() {
+	tep_unload_plugins(t->plugin_list, t->pevent);
+	tep_free(t->pevent);
 }
 
-Does using lseek() instead of the skip() helper silently fail on pipes?
-
-If input_fd is a pipe, lseek fails and returns -1, which is ignored. This
-prevents the file pointer from advancing and can cause the next parsing
-function to interpret the payload bytes as its own trace section.
-
-Also, when repipe is enabled, the size header is repiped but the skipped
-payload bytes are not, which corrupts the resulting perf.data file. Could
-this be updated to use skip() instead?
+Does this bypass lead to evlist__prepare_tracepoint_events() being called w=
+ith
+a dangling session->tevent.pevent pointer?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260725184953.2347=
-59-1-tshah@linux.ibm.com?part=3D4
+59-1-tshah@linux.ibm.com?part=3D1
