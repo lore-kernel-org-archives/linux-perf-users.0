@@ -1,100 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E848E37E5D9;
-	Sun, 26 Jul 2026 23:40:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5AC0175A7C
+	for <linux-perf-users@vger.kernel.org>; Sun, 26 Jul 2026 23:49:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785109247; cv=none; b=FMhCX4/bqJdFtHeTgshRoWauq/ylGiR5mYPEakS4GHsUV4CueQq6mfmiCpgIzItbF3w7dkJ4Vlq5Nt7Z2iDPdq9B8eVN3hk2WHn+4m9hdU/q8zsIq1x6kPPt+S43JwB6sNmF5w6qrwx01C/0yKArWpK4T5TQuPy9nvKsVirvJ/E=
+	t=1785109745; cv=none; b=SFOOl9DmJ2H8MCL7tMesY43YV46+GCzfpxKNJ7VFTdA5DtdMFB9541hEAl65Mg4zISI7lBHlHeQQ/uAqcJuaaFpWKv0ZdbtnAY+7TvjB7kzjt6RMB7QxH5PzjeR+TYKY7yIVcgD9usFNkvfY/prmZ4Gjb/Ic7YzeBqOLt25+H4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785109247; c=relaxed/simple;
-	bh=LAHtLektIKA8XpdBPQNUgnNs3KrlQSijNrias/e7bTo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XKHWDbL3a2R1aMbKTw68J6zncjNAO8HTTMyO2+0mIBHL9z9crGoK+bUHhydjTNiRXciEge7j57/R121Tfas+4mQxaBfY/LgOeCwYW2BKDzQSNGIJAUYzHdxNiY+XY35HmIuqAY9BvBccE2AaVf4RIZw1EXGUaXqqasbR/nQf0M4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iLQ7Yg4E; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785109745; c=relaxed/simple;
+	bh=N6XirMYRc6AwfgYcC3b/G1CQzvHDGX3LCylBldYvMmM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=mUYYAw5MyhTyRKkoMvX87dLJbkvniBq7jngtN3jv1uVDZuopi2LFOafSwoUqjSaPyF4qzdxL15aw6T4WttzRk7uCuqd/UoTYqT0VrEzk0P0NE1ElZs2VYSRKqERpKuJi4MVRYLaG0gTjmQaDpLAiLgHX2mXnka3GyW88FhmeAlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=liTfVuXb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iLQ7Yg4E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C32F91F000E9;
-	Sun, 26 Jul 2026 23:40:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="liTfVuXb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 335061F000E9;
+	Sun, 26 Jul 2026 23:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785109245;
-	bh=OrM5ln6FqFE9sB3lHmsKn1EcIM+CoGNOrcyTrZsiOKA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=iLQ7Yg4ECcKEpZvEP3esDC8PdQ9ZdlDCUC8ZfRWcOompX+6gmT/HJLW+rncKFbwwe
-	 6QwebpHX/nGqG2ge5khQa4Pdv045W84+Q/24H2MpGRpUkiqWfNhX3p5wYFr1Gd+f2i
-	 jEFiKVIGx1WYOeiuBL5UfHrYsSFEyL5GGJbLQHm00Z2qo4VEZjZQFM9r6Qzue9on5l
-	 iT0pHnNA2Ku+h0mUO27cSWxNlofStraqNT2sKH1KURvOj3cldoFCbJOj51EIAz7GeX
-	 ukAUFVV+dIDczjABUCNTB1IsFC6mGzyT4ujGns3/SFdNQdedM87LHKYz/Qs/Kh58Th
-	 Tuh+VFPgHQHrg==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot <sashiko-bot@kernel.org>,
-	"Zhang, Yanmin" <yanmin_zhang@linux.intel.com>
-Subject: [PATCH 8/8] perf machine: Check snprintf truncation for guest kallsyms path
-Date: Sun, 26 Jul 2026 20:40:14 -0300
-Message-ID: <20260726234014.63111-9-acme@kernel.org>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260726234014.63111-1-acme@kernel.org>
+	s=k20260515; t=1785109744;
+	bh=FtI5GVNS04GYL7IQMN25pUr2fslUgYnVNOIHCNDIywQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=liTfVuXbc7vQ6uBKajkT+LGUeTF/3xquB19BzsUtQBEbltxnyBZCwgim1Xv5WEVfJ
+	 DcbAMScEK1o8FXDybuOAnzbMDnJsFwwx/k4shDF74a6T9MTDhSSnYKUd2yXMKQh40E
+	 6zpyZhhMwfKTecmRmjlSYpDremgFU6rvQrdHtERBbrEgOCF8z5odk2fCnxwgnZDE3v
+	 ohffWI+D5F+7pwacUtgGivtuJ56jtAAr44+gAIx86dmmsSaGrdqnHw1UqbbrVC1vKK
+	 BmNVxWv8qBKq5ubzRnSPNQHvVo9Vw1bEEDUfSmQgjiXYoZ+i/Ke0NQHl/i4hJLJgTa
+	 +V6uUOP212jJQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 6/8] perf machine: Reset errno before strtol in guest
+ kernel map creation
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260726234014.63111-7-acme@kernel.org>
 References: <20260726234014.63111-1-acme@kernel.org>
+ <20260726234014.63111-7-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 26 Jul 2026 23:49:03 +0000
+Message-Id: <20260726234904.335061F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-machines__create_guest_kernel_maps() builds the guest kallsyms path
-with snprintf() without checking the return value.  A truncated path
-could pass the access() check if a prefix directory happens to contain
-a file named "kallsyms", leading to the wrong file being used for
-symbol resolution.
+Pre-existing issues:
+- [Low] Missing explicit POSIX header inclusions for <stdio.h> and <limits.=
+h>.
+--
 
-Check for truncation and skip the directory.
+--- Patch [6]: [PATCH 6/8] perf machine: Reset errno before strtol in guest=
+ kernel map creation ---
+commit 8cf9920f21a3b72d2b6dbb2087000cbeceb43bbb
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Fixes: a1645ce12adb ("perf: 'perf kvm' tool for monitoring guest performance from host")
-Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Zhang, Yanmin <yanmin_zhang@linux.intel.com>
-Assisted-by: Claude:claude-opus-4.6
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/machine.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+perf machine: Reset errno before strtol in guest kernel map creation
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 48c4b963e8097f4a..f86b3b7df742e0c1 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -1269,9 +1269,14 @@ int machines__create_guest_kernel_maps(struct machines *machines)
- 				free(namelist[i]);
- 				continue;
- 			}
--			snprintf(path, sizeof(path), "%s/%s/proc/kallsyms",
--				 symbol_conf.guestmount,
--				 namelist[i]->d_name);
-+			if (snprintf(path, sizeof(path), "%s/%s/proc/kallsyms",
-+				     symbol_conf.guestmount,
-+				     namelist[i]->d_name) >= (int)sizeof(path)) {
-+				pr_debug("Guest kallsyms path too long for %s. Skipping.\n",
-+					 namelist[i]->d_name);
-+				free(namelist[i]);
-+				continue;
-+			}
- 			if (access(path, R_OK)) {
- 				pr_debug("Can't access file %s\n", path);
- 				free(namelist[i]);
--- 
-2.55.0
+This commit resets errno to 0 before calling strtol() in
+machines__create_guest_kernel_maps(). This prevents a stale ERANGE from
+earlier library calls from causing valid directory names to be skipped.
 
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index 83d38637afe34..1700130adedb3 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+
+[Severity: Low]
+This is a pre-existing issue, but is this file missing explicit POSIX header
+inclusions for <stdio.h> and <limits.h>?
+
+Looking at the include block at the top of tools/perf/util/machine.c:
+
+// SPDX-License-Identifier: GPL-2.0
+#include <dirent.h>
+#include <errno.h>
+#include <inttypes.h>
+#include <regex.h>
+#include <stdlib.h>
+#include <string.h>
+#include "callchain.h"
+
+The code relies on PATH_MAX and snprintf() further down in
+machines__create_guest_kernel_maps(). Relying on implicit header inclusions
+works for glibc, but does it cause build failures under musl libc environme=
+nts?
+
+Could <stdio.h> and <limits.h> be explicitly included to ensure strict musl
+compatibility?
+
+> @@ -1258,6 +1258,7 @@ int machines__create_guest_kernel_maps(struct machi=
+nes *machines)
+>  				/* Filter out . and .. */
+>  				continue;
+>  			}
+> +			errno =3D 0;
+>  			pid =3D (pid_t)strtol(namelist[i]->d_name, &endp, 10);
+>  			if ((*endp !=3D '\0') ||
+>  			    (endp =3D=3D namelist[i]->d_name) ||
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260726234014.6311=
+1-1-acme@kernel.org?part=3D6
