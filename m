@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5AC0175A7C
-	for <linux-perf-users@vger.kernel.org>; Sun, 26 Jul 2026 23:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412DC33D6DD
+	for <linux-perf-users@vger.kernel.org>; Sun, 26 Jul 2026 23:50:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785109745; cv=none; b=SFOOl9DmJ2H8MCL7tMesY43YV46+GCzfpxKNJ7VFTdA5DtdMFB9541hEAl65Mg4zISI7lBHlHeQQ/uAqcJuaaFpWKv0ZdbtnAY+7TvjB7kzjt6RMB7QxH5PzjeR+TYKY7yIVcgD9usFNkvfY/prmZ4Gjb/Ic7YzeBqOLt25+H4E=
+	t=1785109847; cv=none; b=S5shx7ZO2azOp3L4XRKmLNSDHJlupifR7GxP2FMH8tx9eMEworDaLriLsDsJFYgns0bC9ID4F858ia6+Gj+J7fHmclAvG30QlxBkDZPI52I5CNwOG+oecqscZe94Xc7OBXe06TGrwYAhxIb5OwREZyqVTQ7FAVc3n4BvRZPApsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785109745; c=relaxed/simple;
-	bh=N6XirMYRc6AwfgYcC3b/G1CQzvHDGX3LCylBldYvMmM=;
+	s=arc-20240116; t=1785109847; c=relaxed/simple;
+	bh=+9Y9mdzYNarI/Ne8ZgEjAG+8paVdSQUcV1v5uJq+cVY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=mUYYAw5MyhTyRKkoMvX87dLJbkvniBq7jngtN3jv1uVDZuopi2LFOafSwoUqjSaPyF4qzdxL15aw6T4WttzRk7uCuqd/UoTYqT0VrEzk0P0NE1ElZs2VYSRKqERpKuJi4MVRYLaG0gTjmQaDpLAiLgHX2mXnka3GyW88FhmeAlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=liTfVuXb; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=K9wAtKmGxIYR6r6R7O4KDeCF+ZxPsqyfoeoXxU1RndQSnj8eg1S2kjsg895xdc9MV3+cViFH4eKETIJxcH3i3qwC2PeTPqJElijXhE8B+K0S1iE3PiX0sQj5ERa86i6mFyTOe155XmAjIWDRon0vh7EFjOc56PfFt2H5irqHwog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LsEAXDZA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="liTfVuXb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 335061F000E9;
-	Sun, 26 Jul 2026 23:49:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LsEAXDZA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA0E21F000E9;
+	Sun, 26 Jul 2026 23:50:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785109744;
-	bh=FtI5GVNS04GYL7IQMN25pUr2fslUgYnVNOIHCNDIywQ=;
+	s=k20260515; t=1785109845;
+	bh=t2Q/yDB7vretBvXJRJw/o3B3QlOHCAj+bCnmRmgpP0k=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=liTfVuXbc7vQ6uBKajkT+LGUeTF/3xquB19BzsUtQBEbltxnyBZCwgim1Xv5WEVfJ
-	 DcbAMScEK1o8FXDybuOAnzbMDnJsFwwx/k4shDF74a6T9MTDhSSnYKUd2yXMKQh40E
-	 6zpyZhhMwfKTecmRmjlSYpDremgFU6rvQrdHtERBbrEgOCF8z5odk2fCnxwgnZDE3v
-	 ohffWI+D5F+7pwacUtgGivtuJ56jtAAr44+gAIx86dmmsSaGrdqnHw1UqbbrVC1vKK
-	 BmNVxWv8qBKq5ubzRnSPNQHvVo9Vw1bEEDUfSmQgjiXYoZ+i/Ke0NQHl/i4hJLJgTa
-	 +V6uUOP212jJQ==
+	b=LsEAXDZA4SaqPB2Yiio5mCqcfDs4+kD0Xn0D5pZVyXdfwdI7RrolLtGnINwfJXYay
+	 fsxs+kGgSng/elo5u3nJwomPm6bWosoXZ7CDvyg5YDDAesjmN/FGd4FuQHTU8iQedk
+	 xxkFHOvktGh1sbWoI5TS3455NM7sNQpP2SmL3eIlwGacD+IhW+JeP+9Wnbpg+5RSw5
+	 kWgBQNiYroEzk0cgMOwRRRdKclgcgbDyl1quyB+dwnKEzqze7owV7g9sxwlz5HufLb
+	 S81kuw3XQnqed3iRENIGX6I89kP10HyCf7mrwlX/vth3RXY+4EUp9cj6y6I0usxSqS
+	 NvlufZ+Xjyhug==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 6/8] perf machine: Reset errno before strtol in guest
- kernel map creation
+Subject: Re: [PATCH 5/8] perf machine: Don't abort guest map creation on
+ first inaccessible dir
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260726234014.63111-7-acme@kernel.org>
+In-Reply-To: <20260726234014.63111-6-acme@kernel.org>
 References: <20260726234014.63111-1-acme@kernel.org>
- <20260726234014.63111-7-acme@kernel.org>
+ <20260726234014.63111-6-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 26 Jul 2026 23:49:03 +0000
-Message-Id: <20260726234904.335061F000E9@smtp.kernel.org>
+Date: Sun, 26 Jul 2026 23:50:45 +0000
+Message-Id: <20260726235045.AA0E21F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,59 +49,75 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [Low] Missing explicit POSIX header inclusions for <stdio.h> and <limits.=
-h>.
+- [High] errno is checked for ERANGE after calling strtol() without explici=
+tly clearing it to 0 beforehand, causing a logic error where one invalid di=
+rectory skips all subsequent valid guest directories.
 --
 
---- Patch [6]: [PATCH 6/8] perf machine: Reset errno before strtol in guest=
- kernel map creation ---
-commit 8cf9920f21a3b72d2b6dbb2087000cbeceb43bbb
+--- Patch [5]: [PATCH 5/8] perf machine: Don't abort guest map creation on =
+first inaccessible dir ---
+commit 3942aff28b363eb417be58b368d8c95bd54e8551
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf machine: Reset errno before strtol in guest kernel map creation
+perf machine: Don't abort guest map creation on first inaccessible dir
 
-This commit resets errno to 0 before calling strtol() in
-machines__create_guest_kernel_maps(). This prevents a stale ERANGE from
-earlier library calls from causing valid directory names to be skipped.
+machines__create_guest_kernel_maps() is modified to use 'continue'
+instead of jumping to a failure label when a guest directory's
+kallsyms file is inaccessible. This allows the loop to process
+remaining valid guest directories rather than aborting early.
 
 > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> index 83d38637afe34..1700130adedb3 100644
+> index 05724277c2a97..83d38637afe34 100644
 > --- a/tools/perf/util/machine.c
 > +++ b/tools/perf/util/machine.c
+> @@ -1269,14 +1269,12 @@ int machines__create_guest_kernel_maps(struct mac=
+hines *machines)
 
-[Severity: Low]
-This is a pre-existing issue, but is this file missing explicit POSIX header
-inclusions for <stdio.h> and <limits.h>?
+[Severity: High]
+This is a pre-existing issue, but does this loop correctly handle errno
+after a failed strtol() call?
 
-Looking at the include block at the top of tools/perf/util/machine.c:
+Looking at machines__create_guest_kernel_maps(), the loop checks errno
+for ERANGE after calling strtol(), but there doesn't appear to be an
+explicit reset of errno beforehand:
 
-// SPDX-License-Identifier: GPL-2.0
-#include <dirent.h>
-#include <errno.h>
-#include <inttypes.h>
-#include <regex.h>
-#include <stdlib.h>
-#include <string.h>
-#include "callchain.h"
+tools/perf/util/machine.c:machines__create_guest_kernel_maps() {
+    ...
+    pid =3D (pid_t)strtol(namelist[i]->d_name, &endp, 10);
+    if ((*endp !=3D '\0') ||
+        (endp =3D=3D namelist[i]->d_name) ||
+        (errno =3D=3D ERANGE)) {
+    ...
+}
 
-The code relies on PATH_MAX and snprintf() further down in
-machines__create_guest_kernel_maps(). Relying on implicit header inclusions
-works for glibc, but does it cause build failures under musl libc environme=
-nts?
+If a directory name causes an overflow (e.g., exceeding LONG_MAX), strtol()
+sets errno to ERANGE. In the next loop iteration, if errno is not cleared
+to 0, it will retain the ERANGE value. When strtol() processes a valid PID,
+it succeeds, but the (errno =3D=3D ERANGE) check evaluates to true, causing=
+ the
+valid directory to be incorrectly skipped.
 
-Could <stdio.h> and <limits.h> be explicitly included to ensure strict musl
-compatibility?
+Since this loop processes directories from guestmount, could an unprivileged
+user create a bogus directory to prevent symbol resolution for all subseque=
+nt
+guests?
 
-> @@ -1258,6 +1258,7 @@ int machines__create_guest_kernel_maps(struct machi=
-nes *machines)
->  				/* Filter out . and .. */
->  				continue;
+>  			snprintf(path, sizeof(path), "%s/%s/proc/kallsyms",
+>  				 symbol_conf.guestmount,
+>  				 namelist[i]->d_name);
+> -			ret =3D access(path, R_OK);
+> -			if (ret) {
+> +			if (access(path, R_OK)) {
+>  				pr_debug("Can't access file %s\n", path);
+> -				goto failure;
+> +				continue;
 >  			}
-> +			errno =3D 0;
->  			pid =3D (pid_t)strtol(namelist[i]->d_name, &endp, 10);
->  			if ((*endp !=3D '\0') ||
->  			    (endp =3D=3D namelist[i]->d_name) ||
+>  			machines__create_kernel_maps(machines, pid);
+>  		}
+> -failure:
+>  		free(namelist);
+>  	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260726234014.6311=
-1-1-acme@kernel.org?part=3D6
+1-1-acme@kernel.org?part=3D5
