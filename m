@@ -1,124 +1,178 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF8D36C0C8
-	for <linux-perf-users@vger.kernel.org>; Sun, 26 Jul 2026 12:34:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354043812EF
+	for <linux-perf-users@vger.kernel.org>; Sun, 26 Jul 2026 12:35:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785069287; cv=none; b=qGysYKEPFimzk2gD7lRoSENgZNcWpuItR7WgW55UnOhr1ILx4yYtajDXIpm7dd+/bupaL5kT/SK9LvcG3krhFeaOvn5ILeFKnBulJW4ndxzsyYO08adDZOSdqzFll1zlLt7PM7lq2Cpn2A4HXoPas7wx1bDUWajJCMMG0LXSXOs=
+	t=1785069318; cv=none; b=lZDbvG+Q8EifzeCqmFMy/J8uUz7xi+cDerVlm/417xt+OE93FqzBleozBnZ+f+m1CsuyU8EeIm+BxoBdfFDFR0qoqzlsJFSZ8/34QcbCbM86PEAZkQTFfUDX/4rq3wWysDkFKhGFbgdGxFFxIJUSkd8kQpRwyTB0ECbi4DjvMs0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785069287; c=relaxed/simple;
-	bh=m8IhKrX9bcghHtoibYzUUeSOj1GFn7YlO80VR1YSaDk=;
+	s=arc-20240116; t=1785069318; c=relaxed/simple;
+	bh=aTMt+AzxBcO4LnZtkWMn5UXKYHV1b1UpPLuXvQiHcuQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UTibwc4jvDUJaPBSKeiRV/4V2YEa0fu0Lueetah2aGbGi5HxyF66CTrovLiCEtyQt0l7lFIhMpJpMIANQe2HQ32tivgYC59R2TBpCyeMpCXBgzyZ2yxjPejaVGw5m8VqSUgZfjL5jCQJ0yTkCBcUeO2Ug+lTAuwRWU9tD/+fQQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O8VLIpKQ; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=mCe/Rpa2rA+sLQLNbOWDlxTJlQIS1zFObX83F5jsPhFkAw/daUNq9fkWZWz/IPz57YwujiHTtzt1z8Ty32qugchyFPR6dRfghNo12JIQ3ZDHUYk9EbwxbOpLsTscWz08NgmGdB4A0fhKDSi6Nqe1OhKXzi/QnK+DmTE8jV7BD2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UV5MTeQj; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O8VLIpKQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D07391F000E9;
-	Sun, 26 Jul 2026 12:34:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UV5MTeQj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90DE51F000E9;
+	Sun, 26 Jul 2026 12:35:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785069286;
-	bh=QI+NH2HS3QBNH7p5uG0iPr+1TNx5LIGi8NrZj+wZ04c=;
+	s=k20260515; t=1785069316;
+	bh=KdEw2BuzSDFyVD6CTqc1hQHKYrnJDbISg/HPpt51pCU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=O8VLIpKQ6x2SLCIIm9+nnTnJn4bBjpiGJY4KOITJzakHBSHAhY1g3FFY+OTVFtHTs
-	 bzFxmzOIzMjOA7XenER3Ba1SJxP04whPagifQurySIYdL6VxvXTdcfLdjt2gIexWpo
-	 NPVgYMFqZEFvlHmP9FdeqfXzuEx7JHjOVHN9S+uyDWahPYvaePVaf7upw1bCVePY6b
-	 p0o+dPsBJNeXzy4486dWsF23yMXXPgiTfuukcRrU7umQxDdUZgNaavPIfpeQeFzBJ6
-	 +fMewpeMiWrIWbtDORFGxGfC4gSdi7YSp/h5vuPJRFEfQVNNYZONVbXhVVprsdkuLR
-	 qlAAcyGOZHI5Q==
+	b=UV5MTeQjc9Lv2FUbr4DNlRguWFQAYAnkf2dOlenzLey6NX1uMtDlJILvQE4X2g0sH
+	 fqBCsjeRcErwLNKWwqK62kHp2HQxzOUgjADKNQ2L6x7emKKZqrTYlPLehnADC8r1Z2
+	 IA7Y76tM/sZRjyZ1l2VKc/K8z859h/ib3maK4MlDfuyvGS+PpiEwQiqbglYeB0d4wz
+	 CtslzSlWA5F5/Z/X6UOeN3snsKMaFYuYrCRYE4jFV9Ewy3ySjI1sDgkENyZnk+VA1i
+	 QB4JEFHihV1mrV5YDQJJkqATAnBMh2GRMHmF7XE/Gjb1cN+iWkceByTmwlp6w4kzY0
+	 4YPkG1/tXLsrQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/3] x86/hw_breakpoints: Add
- arch_modify_local_hw_breakpoint_addr() API
+Subject: Re: [PATCH 3/3] HWBP: Add modify_local_hw_breakpoint_addr() API
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Jinchao Wang" <wangjinchao600@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com>
+In-Reply-To: <f9c49dfa49bdc57ba8c0574bc9981c1e581acf92.1785067572.git.wangjinchao600@gmail.com>
 References: <178476143000.26117.9810509272687580410.stgit@devnote2>
  <cover.1785067572.git.wangjinchao600@gmail.com>
- <59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com>
+ <f9c49dfa49bdc57ba8c0574bc9981c1e581acf92.1785067572.git.wangjinchao600@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 26 Jul 2026 12:34:45 +0000
-Message-Id: <20260726123445.D07391F000E9@smtp.kernel.org>
+Date: Sun, 26 Jul 2026 12:35:16 +0000
+Message-Id: <20260726123516.90DE51F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] arch_modify_local_hw_breakpoint_addr() fails to increment cpu_dr7_=
-seq, causing a race condition that can desynchronize hardware debug registe=
-rs from their shadow state if interrupted by an NMI.
-- [High] arch_modify_local_hw_breakpoint_addr() fails to update the primary=
- breakpoint shadow address (info->address), causing future updates to silen=
-tly revert the address.
+- [High] arch_modify_local_hw_breakpoint_addr() lacks NMI-safe sequence cou=
+nter protection and violates the x86 SDM by modifying active debug register=
+s.
+- [High] modify_local_hw_breakpoint_addr() bypasses mandatory architecture-=
+specific address validation, allowing safe-guards to be circumvented.
+- [Medium] modify_local_hw_breakpoint_addr() updates generic software state=
+ locklessly before calling the arch-specific function, and returns success =
+even if the arch function fails.
 --
 
---- Patch [2]: [PATCH 2/3] x86/hw_breakpoints: Add arch_modify_local_hw_bre=
-akpoint_addr() API ---
-commit 91337a1d81005389f6b66cba9728d9f95a16cec3
-Author: Jinchao Wang <wangjinchao600@gmail.com>
+--- Patch [3]: [PATCH 3/3] HWBP: Add modify_local_hw_breakpoint_addr() API =
+---
+commit 46c7b1b307ec0fc122a4f26e8e8f3b876fbd24b7
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
-
-Wprobe needs to move an active per-CPU watchpoint without releasing and
-reserving its hardware slot. This adds a new API to find the installed
-local slot and update only its address shadow and hardware debug address
-register.
-
-> diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpo=
-int.c
-> index 9ef24b55737f8..ff1b9b78f78c1 100644
-> --- a/arch/x86/kernel/hw_breakpoint.c
-> +++ b/arch/x86/kernel/hw_breakpoint.c
+HWBP: Add modify_local_hw_breakpoint_addr() API
+   =20
+Add modify_local_hw_breakpoint_addr() to update only the watched
+address of an installed hardware breakpoint on the local CPU without
+releasing and reserving its hardware slot. This is available when the
+architecture selects CONFIG_HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR.
+   =20
+The caller must provide an installed local event and a valid address,
+and update other CPUs separately.
 
 [ ... ]
 
-> @@ -128,6 +128,26 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
-> =20
->  void arch_modify_local_hw_breakpoint_addr(struct perf_event *bp,
->  					  unsigned long addr)
->  {
->  	int i;
-> =20
->  	lockdep_assert_irqs_disabled();
-> =20
->  	for (i =3D 0; i < HBP_NUM; i++) {
->  		if (this_cpu_read(bp_per_reg[i]) =3D=3D bp)
->  			break;
->  	}
-> =20
->  	if (WARN_ONCE(i =3D=3D HBP_NUM, "Can't find any breakpoint slot"))
->  		return;
-> =20
-
-[Severity: High]
-Does this missing cpu_dr7_seq increment leave a race condition if interrupt=
-ed
-by an NMI?
-
-If hw_breakpoint_restore() is running, reads the old shadow value, and is
-interrupted by an NMI that calls this function to update the address, the
-lack of a sequence bump means hw_breakpoint_restore() will not detect the
-interruption. It would exit its retry loop and overwrite the hardware
-register with the stale value.
-
-[Severity: High]
-Could this also cause the watchpoint to silently revert to its previous
-value when rescheduled?
-
-Since the perf_event's internal info->address (retrieved via
-counter_arch_bp(bp)) is not updated here, any future call to
-arch_install_hw_breakpoint() during PMU multiplexing or CPU hotplug
-would reinstall the breakpoint using that stale address.
-
->  	this_cpu_write(cpu_debugreg[i], addr);
->  	barrier();
->  	set_debugreg(addr, i);
+> diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+> index 789add0c185a0..0b1fc01f19349 100644
+> --- a/kernel/events/hw_breakpoint.c
+> +++ b/kernel/events/hw_breakpoint.c
+> @@ -888,6 +888,36 @@ void unregister_wide_hw_breakpoint(struct perf_event=
+ * __percpu *cpu_events)
 >  }
+>  EXPORT_SYMBOL_GPL(unregister_wide_hw_breakpoint);
+> =20
+> +/**
+> + * modify_local_hw_breakpoint_addr - update a local breakpoint address
+> + * @bp: the hwbp perf event for this CPU
+> + * @addr: the new address for @bp
+> + *
+> + * Update only the address of an installed breakpoint on the local CPU w=
+ithout
+> + * releasing and reserving its hardware slot. The caller must update oth=
+er CPUs.
+> + * Return 0, or -EOPNOTSUPP if the architecture does not support this op=
+eration.
+> + */
+> +#ifdef CONFIG_HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR
+> +int modify_local_hw_breakpoint_addr(struct perf_event *bp,
+> +				    unsigned long addr)
+> +{
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	counter_arch_bp(bp)->address =3D addr;
+> +	bp->attr.bp_addr =3D addr;
+
+[Severity: High]
+Is mandatory architecture-specific address validation bypassed here?
+
+The normal breakpoint installation path uses hw_breakpoint_arch_parse() to
+ensure the address is safe (e.g., properly aligned, canonical, and not
+overlapping with critical CPU entry areas like cpu_dr7_seq or the GDT).
+
+By blindly assigning the new address and passing it to the architecture lay=
+er
+without invoking hw_breakpoint_arch_parse() or any architectural validation,
+modify_local_hw_breakpoint_addr() bypasses all these safe-guards.
+
+Since generic code cannot know x86-specific exclusion zones, any caller
+supplying an invalid address will directly program the hardware, potentially
+triggering recursive exceptions that hang the system.
+
+> +	arch_modify_local_hw_breakpoint_addr(bp, addr);
+
+[Severity: High]
+Are we missing NMI-safe sequence counter protection in
+arch_modify_local_hw_breakpoint_addr()?
+
+Looking at arch_modify_local_hw_breakpoint_addr() in
+arch/x86/kernel/hw_breakpoint.c, it modifies the CPU debug register directly
+without incrementing cpu_dr7_seq to protect against NMI races, and without
+temporarily disabling the breakpoint in DR7:
+
+    this_cpu_write(cpu_debugreg[i], addr);
+    barrier();
+    set_debugreg(addr, i);
+
+If an NMI occurs inside hw_breakpoint_restore() between reading a debug
+register and writing it, and the NMI handler uses
+modify_local_hw_breakpoint_addr() to update the same debug register, the
+sequence counter (cpu_dr7_seq) is not incremented.
+
+When hw_breakpoint_restore() resumes, it will overwrite the debug register
+with the old stale address without detecting the interference, while the
+software state retains the new address.
+
+Additionally, does writing directly to DR0-DR3 while the breakpoint is
+enabled in DR7 violate the Intel SDM (Vol 3, 18.2.2)? This could result in
+hardware and software breakpoint state becoming permanently desynced, and
+undefined hardware behavior may occur.
+
+> +
+> +	return 0;
+
+[Severity: Medium]
+Could this unconditionally return success even if the underlying architectu=
+re
+function fails?
+
+If a caller passes an inactive or remote-CPU hardware breakpoint to
+modify_local_hw_breakpoint_addr(), the generic code unconditionally updates
+bp->attr.bp_addr and counter_arch_bp(bp)->address locklessly before calling
+the arch-specific function.
+
+The arch_modify_local_hw_breakpoint_addr() function will fail to find the
+slot, trigger a WARN_ONCE, and return early without modifying hardware.
+
+However, since it returns void, the generic function unconditionally
+returns 0 (success). This leaves the software and hardware states permanent=
+ly
+desynced.
+
+> +}
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1785067572.gi=
-t.wangjinchao600@gmail.com?part=3D2
+t.wangjinchao600@gmail.com?part=3D3
