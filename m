@@ -1,178 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 354043812EF
-	for <linux-perf-users@vger.kernel.org>; Sun, 26 Jul 2026 12:35:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76DBF3BC69C;
+	Sun, 26 Jul 2026 15:52:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785069318; cv=none; b=lZDbvG+Q8EifzeCqmFMy/J8uUz7xi+cDerVlm/417xt+OE93FqzBleozBnZ+f+m1CsuyU8EeIm+BxoBdfFDFR0qoqzlsJFSZ8/34QcbCbM86PEAZkQTFfUDX/4rq3wWysDkFKhGFbgdGxFFxIJUSkd8kQpRwyTB0ECbi4DjvMs0=
+	t=1785081139; cv=none; b=ENI4mOf2Ly0llgKteOIcqzknNGnZhvOAHVT/H/BbseWjZJB7SjdmcnkLi2nntZu3PovVLSeHXy3gUMIa0BYLNz8sVCXoH3n1RLfyZa+E3WvuWYtxP+XHBEBzB5PkLXFgrsSNMzT5dq3ClQa3vSn2fUUSYAycgHBIaEeJQTegJlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785069318; c=relaxed/simple;
-	bh=aTMt+AzxBcO4LnZtkWMn5UXKYHV1b1UpPLuXvQiHcuQ=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=mCe/Rpa2rA+sLQLNbOWDlxTJlQIS1zFObX83F5jsPhFkAw/daUNq9fkWZWz/IPz57YwujiHTtzt1z8Ty32qugchyFPR6dRfghNo12JIQ3ZDHUYk9EbwxbOpLsTscWz08NgmGdB4A0fhKDSi6Nqe1OhKXzi/QnK+DmTE8jV7BD2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UV5MTeQj; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785081139; c=relaxed/simple;
+	bh=CntcIonM9I0QlK+PLIkdPKTiyF1MW70gGi74k+GC07Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fx+Z6+MDtqI0WpZL73WEDUZKNP21LIpmjRl7C9ZHc2FRNCFkh/M2TZIY4TSdGDoF3L7proQLlof8+r91pM3TH2nNJK90c1rFzf/9OWm7080slCDwOwoWhXPBwpoQWcPIKhOxCG1y8vSdnWncaC3IkX1Dv0bEgPcLt8Aaf2iHwag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ro1iKTqb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UV5MTeQj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90DE51F000E9;
-	Sun, 26 Jul 2026 12:35:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ro1iKTqb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 091A41F000E9;
+	Sun, 26 Jul 2026 15:52:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785069316;
-	bh=KdEw2BuzSDFyVD6CTqc1hQHKYrnJDbISg/HPpt51pCU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UV5MTeQjc9Lv2FUbr4DNlRguWFQAYAnkf2dOlenzLey6NX1uMtDlJILvQE4X2g0sH
-	 fqBCsjeRcErwLNKWwqK62kHp2HQxzOUgjADKNQ2L6x7emKKZqrTYlPLehnADC8r1Z2
-	 IA7Y76tM/sZRjyZ1l2VKc/K8z859h/ib3maK4MlDfuyvGS+PpiEwQiqbglYeB0d4wz
-	 CtslzSlWA5F5/Z/X6UOeN3snsKMaFYuYrCRYE4jFV9Ewy3ySjI1sDgkENyZnk+VA1i
-	 QB4JEFHihV1mrV5YDQJJkqATAnBMh2GRMHmF7XE/Gjb1cN+iWkceByTmwlp6w4kzY0
-	 4YPkG1/tXLsrQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/3] HWBP: Add modify_local_hw_breakpoint_addr() API
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Jinchao Wang" <wangjinchao600@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <f9c49dfa49bdc57ba8c0574bc9981c1e581acf92.1785067572.git.wangjinchao600@gmail.com>
-References: <178476143000.26117.9810509272687580410.stgit@devnote2>
- <cover.1785067572.git.wangjinchao600@gmail.com>
- <f9c49dfa49bdc57ba8c0574bc9981c1e581acf92.1785067572.git.wangjinchao600@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 26 Jul 2026 12:35:16 +0000
-Message-Id: <20260726123516.90DE51F000E9@smtp.kernel.org>
+	s=k20260515; t=1785081138;
+	bh=uqkCckTZP/oUm6TGK+F/qrjFgcat1+M2w/YXj+9Q7CY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Ro1iKTqbVdCghKAp3LD2qNRnM8OFPuPVcJVrOVpsRp4enPKNhAQd1VGnEPAwu21X9
+	 vQJyolh2oLHkTFP9Uta7KZTRwYDZKsM2LxNCz1aLhrOSfo0B2cfbYRj/L+3mfZIi6s
+	 sArefMy/nJEJG24qthmObCx7dIw2ot/2OqAR0egYfwK1b2CI4rAchuNyx2nCqmTii3
+	 goc1hAaej7Gsf0+/9By6FQd6qrQRjgiZQYFw2F5mqpmJ/tbzNyVFoiJKbqNE/54CTo
+	 u3cJWjH9LceRJ6uMQ4+NLjMhGI3QbclggsiJz5U3tfG4nJsvnodXgTMyfjtatq2yRL
+	 BpmSxESC4VmqQ==
+Date: Sun, 26 Jul 2026 08:50:24 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: Richard Weinberger <richard.weinberger@gmail.com>
+Cc: Dominique Martinet <asmadeus@codewreck.org>, demiobenour@gmail.com,
+	Harald Freudenberger <freude@linux.ibm.com>, acme@kernel.org,
+	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
+	ardb@kernel.org, axboe@kernel.dk, corbet@lwn.net,
+	davem@davemloft.net, edumazet@google.com,
+	herbert@gondor.apana.org.au, horms@kernel.org,
+	io-uring@vger.kernel.org, irogers@google.com,
+	james.clark@linaro.org, jolsa@kernel.org, kuba@kernel.org,
+	kuniyu@google.com, linux-crypto@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com,
+	mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
+	pabeni@redhat.com, peterz@infradead.org, skhan@linuxfoundation.org,
+	willemb@google.com, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 2/3] AF_ALG: Drop support for off-CPU cryptography
+Message-ID: <20260726155024.GB1673@sol>
+References: <20260523-af-alg-harden-v1-2-c76755c3a5c5@gmail.com>
+ <20260603133312.12848-1-freude@linux.ibm.com>
+ <amOGWwdjnJqyxH5L@codewreck.org>
+ <20260724160034.GB2032@sol>
+ <amOTjPW__CNZui3_@codewreck.org>
+ <CAFLxGvy+ec3nQLrQtwFZgGELhT2pKBDnHdD0pMvEGh-Mf3rjgQ@mail.gmail.com>
+ <20260725220443.GA41199@quark>
+ <CAFLxGvyBGzfwh61F5YkYqctNPCQJCpFOwTtKfDs4L+iK8WJZpQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFLxGvyBGzfwh61F5YkYqctNPCQJCpFOwTtKfDs4L+iK8WJZpQ@mail.gmail.com>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] arch_modify_local_hw_breakpoint_addr() lacks NMI-safe sequence cou=
-nter protection and violates the x86 SDM by modifying active debug register=
-s.
-- [High] modify_local_hw_breakpoint_addr() bypasses mandatory architecture-=
-specific address validation, allowing safe-guards to be circumvented.
-- [Medium] modify_local_hw_breakpoint_addr() updates generic software state=
- locklessly before calling the arch-specific function, and returns success =
-even if the arch function fails.
---
+On Sun, Jul 26, 2026 at 09:28:14AM +0200, Richard Weinberger wrote:
+> On Sun, Jul 26, 2026 at 12:04 AM Eric Biggers <ebiggers@kernel.org> wrote:
+> > > You can create a CAAM BLOB (a generated and sealed key) using the
+> > > trusted keys subsystem and use this BLOB
+> > > later in AF_ALG to perform AES with a key invisible to userspace.
+> > >
+> > > e.g.
+> > > kid=$(keyctl add trusted mykey "new 32 pk" @s)
+> > > keyctl print $kid | xxd -r -p > blob.bin
+> > > Then just create a caam_pkey_info in userspace and feed it into AF_ALG
+> > > and perform AES with it.
+> >
+> > Well, specifically AES-CBC.  That's the only one that is in the driver.
+> 
+> Yes.
+> 
+> > > So, pretty please,  if you kill AF_ALG and all this, offer some way to
+> > > achieve the same in userspace.
+> >
+> > If needed, "cbc(paes)" and/or "cbc-paes-caam" (whichever name it is
+> > being accessed as) can be allowed as a special case, as a stop-gap.
+> 
+> Would be great.
+> 
+> > This would need confirmed use of that specific algorithm with upstream,
+> > which we don't quite have yet.  Dominique had a confirmed use of
+> > "tk(cbc(aes))", but that has never existed upstream in the first place,
+> > so it's not something that could be allowlisted upstream.
+> 
+> It's "cbc(paes)".
+> 
+> From one of my demo applications:
+> 
+> struct sockaddr_alg sa = {
+>        .salg_family = AF_ALG,
+>        .salg_type = "skcipher",
+>        .salg_name = "cbc(paes)",
+> };
+> 
+> > You've only mentioned that it "can" be used in this way in upstream.
+> > Can you confirm that it *is* used, and with an actual upstream algorithm
+> > name, and if so which one(s)?  And if so, would you also be able to
+> > share whether this is for dm-crypt or not?  We should remember that
+> > dm-crypt accepts keys directly and AF_ALG is not needed to use it.
+> 
+> Well, if you require me to point to some open source application, sorry I can't.
+> 
+> But no, the use cases I know about are not dm-crypt.
+> It's more allowing to encrypt/decrypt data in userspace without being able to
+> extract the key from the device. Since the key is hardware bound too,
+> it is device
+> specific and you cannot decrypt on device B what you have encrypted on A, even
+> if you share the BLOB.
+> So, it's more like a building block for a poor man's secure element.
+> 
+> At $dayjob we've been recommending AF_ALG because it's a standard interface.
+> Not like other ad-hoc horrors via sysfs or worse we've seen on some BSPs.
 
---- Patch [3]: [PATCH 3/3] HWBP: Add modify_local_hw_breakpoint_addr() API =
----
-commit 46c7b1b307ec0fc122a4f26e8e8f3b876fbd24b7
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Then I would suggest that skcipher_bind() should check if the name is
+"cbc(paes)", and if so use 0 instead of AF_ALG_CRYPTOAPI_MASK.  Please
+go ahead and send a patch against mainline (for v7.2-rc6) if you're
+interested.
 
-HWBP: Add modify_local_hw_breakpoint_addr() API
-   =20
-Add modify_local_hw_breakpoint_addr() to update only the watched
-address of an installed hardware breakpoint on the local CPU without
-releasing and reserving its hardware slot. This is available when the
-architecture selects CONFIG_HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR.
-   =20
-The caller must provide an installed local event and a valid address,
-and update other CPUs separately.
+On cryptodev/master (future 7.3) it should get an entry in the new
+skcipher_allowlist as well: { "cbc(paes)", true }.  That would be a
+separate patch.
 
-[ ... ]
+With those it will keep working as root.  (And you mentioned in your
+other email it's used only as root anyway.)
 
-> diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
-> index 789add0c185a0..0b1fc01f19349 100644
-> --- a/kernel/events/hw_breakpoint.c
-> +++ b/kernel/events/hw_breakpoint.c
-> @@ -888,6 +888,36 @@ void unregister_wide_hw_breakpoint(struct perf_event=
- * __percpu *cpu_events)
->  }
->  EXPORT_SYMBOL_GPL(unregister_wide_hw_breakpoint);
-> =20
-> +/**
-> + * modify_local_hw_breakpoint_addr - update a local breakpoint address
-> + * @bp: the hwbp perf event for this CPU
-> + * @addr: the new address for @bp
-> + *
-> + * Update only the address of an installed breakpoint on the local CPU w=
-ithout
-> + * releasing and reserving its hardware slot. The caller must update oth=
-er CPUs.
-> + * Return 0, or -EOPNOTSUPP if the architecture does not support this op=
-eration.
-> + */
-> +#ifdef CONFIG_HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR
-> +int modify_local_hw_breakpoint_addr(struct perf_event *bp,
-> +				    unsigned long addr)
-> +{
-> +	lockdep_assert_irqs_disabled();
-> +
-> +	counter_arch_bp(bp)->address =3D addr;
-> +	bp->attr.bp_addr =3D addr;
-
-[Severity: High]
-Is mandatory architecture-specific address validation bypassed here?
-
-The normal breakpoint installation path uses hw_breakpoint_arch_parse() to
-ensure the address is safe (e.g., properly aligned, canonical, and not
-overlapping with critical CPU entry areas like cpu_dr7_seq or the GDT).
-
-By blindly assigning the new address and passing it to the architecture lay=
-er
-without invoking hw_breakpoint_arch_parse() or any architectural validation,
-modify_local_hw_breakpoint_addr() bypasses all these safe-guards.
-
-Since generic code cannot know x86-specific exclusion zones, any caller
-supplying an invalid address will directly program the hardware, potentially
-triggering recursive exceptions that hang the system.
-
-> +	arch_modify_local_hw_breakpoint_addr(bp, addr);
-
-[Severity: High]
-Are we missing NMI-safe sequence counter protection in
-arch_modify_local_hw_breakpoint_addr()?
-
-Looking at arch_modify_local_hw_breakpoint_addr() in
-arch/x86/kernel/hw_breakpoint.c, it modifies the CPU debug register directly
-without incrementing cpu_dr7_seq to protect against NMI races, and without
-temporarily disabling the breakpoint in DR7:
-
-    this_cpu_write(cpu_debugreg[i], addr);
-    barrier();
-    set_debugreg(addr, i);
-
-If an NMI occurs inside hw_breakpoint_restore() between reading a debug
-register and writing it, and the NMI handler uses
-modify_local_hw_breakpoint_addr() to update the same debug register, the
-sequence counter (cpu_dr7_seq) is not incremented.
-
-When hw_breakpoint_restore() resumes, it will overwrite the debug register
-with the old stale address without detecting the interference, while the
-software state retains the new address.
-
-Additionally, does writing directly to DR0-DR3 while the breakpoint is
-enabled in DR7 violate the Intel SDM (Vol 3, 18.2.2)? This could result in
-hardware and software breakpoint state becoming permanently desynced, and
-undefined hardware behavior may occur.
-
-> +
-> +	return 0;
-
-[Severity: Medium]
-Could this unconditionally return success even if the underlying architectu=
-re
-function fails?
-
-If a caller passes an inactive or remote-CPU hardware breakpoint to
-modify_local_hw_breakpoint_addr(), the generic code unconditionally updates
-bp->attr.bp_addr and counter_arch_bp(bp)->address locklessly before calling
-the arch-specific function.
-
-The arch_modify_local_hw_breakpoint_addr() function will fail to find the
-slot, trigger a WARN_ONCE, and return early without modifying hardware.
-
-However, since it returns void, the generic function unconditionally
-returns 0 (success). This leaves the software and hardware states permanent=
-ly
-desynced.
-
-> +}
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1785067572.gi=
-t.wangjinchao600@gmail.com?part=3D3
+- Eric
