@@ -1,45 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776AF3093CF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8E6E31960B;
 	Sun, 26 Jul 2026 05:23:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785043438; cv=none; b=BGjSTb3nqRhd+DzrlwjVRHe5ZbEpE02NS0zH1mIrWbY+pBhTKR36MutjaNRtZ768bv0UHMW6Mft9X6vOFYwAQF7qSdbPkL0yadvGayTuG8Mv7DWV5+Z9DkPbdzczqZQo8hz05XO38QGt2PfNqlbaiI8NElOSyEhahSMzVc/BfDE=
+	t=1785043438; cv=none; b=rjxO8i7M47U915XLW8ZPr0PIbNMj1PohMZljBFkjqQn7ry63BJgmDc7hajIazFcQaUAmYIMX+3D/A4rz6kY1owZ/n2OcAN8nhaZzQ3/dsIcyJvRwms80nxAGqabP/0XamK3ZIK4kLcPHtJUscB9l9l/DhP0D2acuU469Yv4D4XU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785043438; c=relaxed/simple;
-	bh=FBBt3xdcrkp6b3gPO1JuvIhgrGVl6t5Zw+h01W0T+gQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=AtxHgAfnjZ3mVL8unwL1RTIkhsR48QIdX335hYnoxowRWr7+RbOW03APHvoK+skNK+MSWTEEzSbK2JKNWvZ2QftPO0JURdnwsVKy32PJyw/gflsv7TLBP73YGouaqBT882KszpocPw+uRW+D0JIyLkcjDL98VIyLbuDZJ3/GgLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mHy8L6Sl; arc=none smtp.client-ip=100.103.45.18
+	bh=Tn82WsBWCa0UbZxHoLncq6ZPCgmSXNXTcOeFwIbDAX4=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=nHUQ3GpN75R/Q7MCsWEDLFvcGd54al2jomy/gFfLELePfIQVpVj2vWMLHjQFj2350MlRPia8CouXJZyZuQ8gHPZ2/J0l6bEo+db5AFswe15LYGQxQFFnR6MxA6x524HE+hFzg6PvMv6DRY4+9q8nE6NIp/E/ABoPcg8toSb9Qt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HioXxm6w; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mHy8L6Sl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCE1E1F00A3F;
-	Sun, 26 Jul 2026 05:23:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HioXxm6w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E85B1F00AC4;
+	Sun, 26 Jul 2026 05:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
 	s=k20260515; t=1785043437;
-	bh=yef5P7IaoTQzr8pJAmjfQwzd9o2YTYweIRZ+/1uRSOY=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=mHy8L6SlWI3a7IzFAaeW8rxcWT7AHkeoEpz3LWxxq4smq5Gpq9gwd9XV836sLEDbz
-	 WyYwmnM4pfS7zQxKy2kzGyH7O0C+1c3d9yJJNsoHYcy/q6s2mUoW4+eQga2azeR3n4
-	 u11OgNY+D51I5rHiCNOdw2+2QUIfaW4fQX05LN1x0p0fK/iNyCmHVZJY+9iR7khAXS
-	 lxCtwbg1Z32Kf5G0GScytLvr+dujI5kDvJPaBKYpxmsul7v1kLsw7dvmyYyIEubJFo
-	 fDvvJTS3KpFXah6Sw60QDH+dJKnK07KEBuXYFi6KkFJOYkfidUGH8fGQeYcvQeeqDo
-	 YeS+3brALH8CA==
+	bh=8CZdKIycBm6cwd2zsAyOhseVPTrweSnuop6RSGFKBRg=;
+	h=From:To:In-Reply-To:References:Subject:Date;
+	b=HioXxm6wwlR1o7Ovh21LoJDyXJrjgfvvbD/AOXyBmqFl4CZsy0hIK5HizDjs9xAuN
+	 GEenguGSMjZq9f/BrPKvKUnAvluYw7Ibj4woC4u+riH41AR48MTS0lt1mODKEoM7ca
+	 caAtUVtECKZcoz36vJf/gl+ZcFTG604LBF+6C84WLHA0EGA5xiaJDqoqcZCfwtNv3M
+	 wyp7lbMvKaiA44FtGrtoMKfqWXyz9CjQ5ZhT0SX03etfCftrvCPQoOnHt85A/vZaG5
+	 SJKt6AVhzlaev5MgjWNPBriqoQ8coRfFM6+r6dN1d2h34nUA5ZF8YQEC0Co0/NTljN
+	 za3gHNHryqwNg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
- Aaron Tomlin <atomlin@atomlin.com>
-Cc: mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
- jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
- james.clark@linaro.org, howardchu95@gmail.com, neelx@suse.com, 
- chjohnst@mail.com, sean@ashe.io, steve@abita.co, 
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20260722155050.503516-1-atomlin@atomlin.com>
-References: <20260722155050.503516-1-atomlin@atomlin.com>
-Subject: Re: [PATCH v4 0/2] perf trace: Correct cpumask formatting and add
- --bitmask-list
-Message-Id: <178504343680.1075259.11521383454860356072.b4-ty@kernel.org>
-Date: Sat, 25 Jul 2026 22:23:56 -0700
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, 
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Ian Rogers <irogers@google.com>
+In-Reply-To: <20260722173138.720586-1-irogers@google.com>
+References: <20260722173138.720586-1-irogers@google.com>
+Subject: Re: [PATCH v1] perf pmu-events: Parallelize JSON and metric
+ pre-computation in jevents.py
+Message-Id: <178504343734.1075259.10134324476190064322.b4-ty@kernel.org>
+Date: Sat, 25 Jul 2026 22:23:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,16 +49,18 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Wed, 22 Jul 2026 11:50:47 -0400, Aaron Tomlin wrote:
-> This series corrects cpumask formatting inside 'perf trace' and introduces
-> a new command-line option to display these masks as human-readable CPU
-> lists.
+On Wed, 22 Jul 2026 10:31:38 -0700, Ian Rogers wrote:
+> Currently, jevents.py parses hundreds of JSON event and metric files
+> sequentially across all CPU architectures during Kbuild startup,
+> taking ~3.5 seconds of single-core execution time.
 > 
-> Currently, when parsing tracepoints containing 'cpumask_t' fields (which
-> are represented as dynamic non-array fields in libtraceevent), 'perf trace'
-> incorrectly interprets and prints the raw length and offset descriptor as a
-> decimal integer (i.e., "cpumask: 524320") rather than formatting the actual
-> mask data.
+> Refactor jevents.py to pre-populate its internal JSON AST cache in
+> parallel across all available CPU cores using
+> ProcessPoolExecutor. First gather all the paths with ftw and
+> collect_json, then spawn _parallel_read_json_events that starts
+> workers to just read the json events. Define the worker process
+> initializer _init_worker so that _arch_std_events is available under
+> spawn multiprocessing semantics.
 > 
 > [...]
 Applied to perf-tools-next, thanks!
