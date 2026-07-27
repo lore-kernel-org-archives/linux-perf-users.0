@@ -1,125 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012021.outbound.protection.outlook.com [40.107.209.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9603FFD
-	for <linux-perf-users@vger.kernel.org>; Sun, 26 Jul 2026 23:54:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785110050; cv=none; b=KEyrZeLQD10OxiWxb3aoio/EDBO4eV4+oRI+/KFyxn6c3jzTsunzsEKsDKUh1Cit90niPQ5izE8UOYkH45dASHszS3JMei3D2uaPZEnW0oghec2Z2sM3vKCOfqnrpaAyD7juZ67BU5OFyJsfD5nAis5fbIgi2Sir/HM4PyqpnDM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785110050; c=relaxed/simple;
-	bh=F0ZnJMs73KQyST/8KO2dSOTDbvDzGKTW5OOw2an+4Oo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=fjgagFEHI1+WzejeoiBqeOysn64vMYC895yrWO1H5rmUXOIudFwrD4TGO0L5ZejyP56C21uzQN8BYWBsHw4k5oUtTgcb5rggjGa4rXtSTcvwtMPqv233yGOIqi0lDy3n2I1rOBTJWNJXd6L4/iiGi10Sc6v0ngoNzSYQH2cCtxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LohEKUe7; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573653DFC8A;
+	Mon, 27 Jul 2026 10:38:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.21
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785148718; cv=fail; b=p4/qA9toAb/WicKKcXPLMOTOTiwTMcg726xzfi8TGiomVuIQbBe8BfYPUjYVkfJ7FptkEjkCo1Ez+ut/b7dNwyefgYwdDoK2JF+UbGNFZkyIdL52pE4bN9mOqCbuSS1n+cIoej9MURWfhzxNkY3s0jRt9OIdlpN8AoOv1XIcBY0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785148718; c=relaxed/simple;
+	bh=gYkIfP5VfZiqRvynuFJOeepRV9AxF7nZNEpjJIGG9K8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=OtF/YOCBtTKcsARsmNanunfZGBEyERE+dg1pFcbSGcdzn8kxt5117u0nUqQfQRb38KeQLi+AWF5AAC7CgHU4I68BhnVHiG14uCnCKy+mc6t9qJQzKVq8YILahZH9VX3kRtN/8GhPu3iWHrQ46cddeCaRmxTp0eeI42/HGL++t+E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=aAto3MuL; arc=fail smtp.client-ip=40.107.209.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LohEKUe7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D65C1F000E9;
-	Sun, 26 Jul 2026 23:54:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785110048;
-	bh=7E/v0ZOHu3CGKCUr35PWSbOTDuw3ySPZtfugYKFZvEg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LohEKUe70HgsIGZ+2/5b1/xwm/sSjsk8daTqFqWN6mDjkx1ohVc9Y+Xgd+vxtogng
-	 5+aAnuM4hQ8zXi+92lfGnbOcYvG17twNS/OAQSHzaHL8BpR9DuK/cPG78IJtDf5Gqk
-	 10+BvuAbL2SwSauBpAIzSx1knCn/Hfs36hVeg6W+j4ia2OL8sYtmt3G6Xuk0mdDBwA
-	 YIbDO46MQaG43rroekX61rh6dWFayDAJcY78vwAeSaz1LrrxbOF7jnvSQvQ1i7p3w0
-	 6EkVrDuiVqPL7OXIKcDzzJbf/i8rdyX1FtPmPmSN9nqlHKpi0xqhwztNrzbsT35Jw+
-	 x+2/mUs/eYN2w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/8] perf machine: Fix NULL parent dereference in fork
- event processing
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260726234014.63111-3-acme@kernel.org>
-References: <20260726234014.63111-1-acme@kernel.org>
- <20260726234014.63111-3-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 26 Jul 2026 23:54:08 +0000
-Message-Id: <20260726235408.8D65C1F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="aAto3MuL"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ma3NzOpDlGHX2QU2HIdsa3F/4zrQNcL9aqtOARLabiZjhPjZ/STNbdtzQCHgqNrm4Au/iK1TOE9n/eopYc+Yq/lewUj6G29UJ3YK/J318/aaikmpwriBClKkRPE3/BMThpwErCX4QrAgm1wVsvGmWiLEWCK2YO3hVvR6sv/mBve88eOoctYPapzaHWsqoEUWhT/klPIQIAzhFD+0hRjpN43DgnBE5APKsFzejHVCL7siXgbfSccJKCSrfzuASQQ+XvlPVOHiOcVoRxdqj/ClioyeIjkVtbvSyyRnqmW4pndQJb64+eNDNZy9b4MepKpKm6M2koiiZowBMAuAUgdvzQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zvILWDWhCWGS/Buz3oDd//qhtaHIJ/QC6wkfKcV4Hac=;
+ b=IRwMA8DrEvxzhD38BU2ia0byyzNt9Km6GwfrfH2PhP9+9BAl+NWPw5KXlSjjud3I3y85/fCMyyA/MKZ5afmqBhVw7IcWRSC0HFerkDwXeUlV191peDIKuJeIOLwq9uoqgjcgSdmSMqMr6xgdX7bhvDawUB2JAf6AxYmnV8ohnMUHkLiQA/YqqVoopA6cirytE7f8TIH01PJxpw7YMOV9Wj4wC77LTmwbW6iuTTT2czTWZgMwqaJ+q1kW7i7sxC5tQo17iWMHYNmInP3Ns5nmDHgJ6c+E0Yj9iqF1MGmpJDGsxTVnrH9VlXeSfQGjUeU/BQkYGtUHSKqUl7V4xXeklg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zvILWDWhCWGS/Buz3oDd//qhtaHIJ/QC6wkfKcV4Hac=;
+ b=aAto3MuL+Dp++4ljEWX9hqYGzRRbbLynT9l5Jam5Dd+bg7GOyUfZJ1zqH9otdGgE3eFq/4lKzfwcxYELdNTcKqOHYDdLrOO9oPmmqy3Pm9ajNYEDYPDc7jzuB6CxW0SYD+bV13DqlPbprP+kUptNIqC72DxzO++egTqeTwjtXls=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB5766.namprd12.prod.outlook.com (2603:10b6:8:75::12) by
+ MW4PR12MB7192.namprd12.prod.outlook.com (2603:10b6:303:22a::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.245.13; Mon, 27 Jul
+ 2026 10:38:34 +0000
+Received: from DS7PR12MB5766.namprd12.prod.outlook.com
+ ([fe80::222:966a:d65d:d08e]) by DS7PR12MB5766.namprd12.prod.outlook.com
+ ([fe80::222:966a:d65d:d08e%3]) with mapi id 15.21.0223.013; Mon, 27 Jul 2026
+ 10:38:33 +0000
+Message-ID: <7e10f25d-dd4f-4df1-9d40-c9d890641ca4@amd.com>
+Date: Mon, 27 Jul 2026 16:08:24 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] x86/events/amd/iommu: Fix cpumask of IOMMU events
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, james.clark@linaro.org
+Cc: x86@kernel.org, dave.hansen@linux.intel.com, tglx@kernel.org,
+ bp@alien8.de, hpa@zytor.com, iommu@lists.linux.dev, joro@8bytes.org,
+ suravee.suthikulpanit@amd.com, sandipan.das@amd.com
+References: <20260517114026.6817-1-vasant.hegde@amd.com>
+Content-Language: en-US
+From: Vasant Hegde <vasant.hegde@amd.com>
+In-Reply-To: <20260517114026.6817-1-vasant.hegde@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA5P287CA0053.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:1d3::18) To DS7PR12MB5766.namprd12.prod.outlook.com
+ (2603:10b6:8:75::12)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB5766:EE_|MW4PR12MB7192:EE_
+X-MS-Office365-Filtering-Correlation-Id: 23bd99a6-fe6d-4aa8-1de7-08deebcb3530
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|366016|376014|1800799024|23010399003|921020|56012099006|11063799006|10067099003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	XtrX4Gem9bi/NB2BD8UeWRzciPthc4YWPT/WNT6jO3e9i2mQaGTLcnWC/PGn0NfJkk0siskV2H3eM80mG0n6NkSc6ZOx7F3RO7ivFd2d1PXx4l2bHU/eG90HmY+NHceFiLyugahjHTt+e/XmNhIc3jrrbECYqMO7/J59CigYLNMZICe7t62+3AQKW5uNfnDE1w8u+kj73LYHlQdIApk7DVlePCCIuxU063SXDkOnMfFC2/pEdIKgSuAeSIptA1FYyXw7Oa4RJ6AIsXHIN2ac9YE9Z0VdtnxlLLjhNch/l+dG1bV61t25yp5WYlboaHCj9nkl1YLPgnZGfxOnLtq4BVXoCJBnGtqWZMHrYmW6cFLVRVXKIKsWAAVtu6wlVizCfmFFYu+BHyfeHItFRpWNXwfsiBmLxO5TgdvnSRu5nlvvMZTMZPe5zLAMVq3a8SSHIP7mTPvzM4a0/YxEwbV3JAeXlaijVqkjzyGnfnlENO1DQnPJWg+Jsit3qjQLDnnFq7zzx4IAuBsiALg/WqLs8d5tMcvNhFvzw0QUh+zWF2jRRYv/NG29aKrT0Sk0+i6lWG5zDut+5oBvG7tAjAMOjcaIZnwtvxRpH75h5QPFQFUq4TPzg1D6U71GP6dfn/hZvZaqTFR0QW9TqN+LNaLxb4BV1DNbk0lN22HV8rHM/NRHXsjQ+MFFCSHzGukbOgsUPKhSyjrkPH0Q7c0WZhbgRg==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB5766.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024)(23010399003)(921020)(56012099006)(11063799006)(10067099003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?a3BEemJSUTRPUVUya3IwTk83dVRCbU5kRDIxejlaRVRaSHB1cTNWWWxCcnJn?=
+ =?utf-8?B?RnhHVzUyb1BZWUpDNHUvQ29MbCs2MmZPWU55N1N3amRRZmFnd1dBK0pmazg2?=
+ =?utf-8?B?MFZUVUQrMGRIUlNYVTJ3ZVBVTVNVWmZvMnM1Ui9UaFkybEZ1T2FGcFZiZEpM?=
+ =?utf-8?B?R09iRGdxMW45bnJvbTdnYU9UYXBUUlFTYThmNmJCei9QdUxsWmJScmhUanBT?=
+ =?utf-8?B?K3RJSEVGT0xkN0MvWmdJRDI1bTQzNmlvMEtCWU1wZE1TQ2dPWW8xc2NHNUlo?=
+ =?utf-8?B?OFdFRXNQTDFPZ1RuK0RQTmVzbzR2MGw3TGxHblFrbTVQR1J2SmlFNWpSY3dw?=
+ =?utf-8?B?d291WVY4cms2d3Y1RUx1amk1Sm9xM0xMSWlvYWxkM0hxQmZZL3RiQy9RUkFP?=
+ =?utf-8?B?SUZWY3VsenhrbVluMm91bGVGaTNiK3hhTllZWk5HVmF4akhqb1RNS2QxT2pG?=
+ =?utf-8?B?UGZ1S28xOXRHWFhQUjNZU1ZURnZHczcwMmhBYW40NVZLd0c3WGJrTFlyL3dr?=
+ =?utf-8?B?Mnl4SWVtczVVQ1U1ZjQ0QTlUclh3VHB6a0pKMGxaUCt2ZkZsUHU3clVpRUcr?=
+ =?utf-8?B?KzhNMkpZUjAyb3JwOE4ycG1HNXM5K2Q1c3IzZk1OQWxNRlJQYnRHVUs1aVBR?=
+ =?utf-8?B?OVRvSXQ0d0laNVFBeU5SU3RtRTNQNXdEajVhUDRKSGlhQXJOZkE4cFhzMy9U?=
+ =?utf-8?B?L0IwbEthS2JvV0RLMy9uOExQQVVXTmplZURaRmJvWmJWek1aODNSWlBXam82?=
+ =?utf-8?B?anFNQlJadVJvNXhCYytjaHMrenBjRE5VcWVra2hvUy9Malp3QXA2MHFDTEVR?=
+ =?utf-8?B?aklESnl0VGcwdHpyYUFYMGlpOFltV2owQVRTc2pPcytWM080WHpwQkpTUlNh?=
+ =?utf-8?B?Y1VQTjRiN2tWU1NzVkROL0VNR3RKU29zTjZnUTlnV1FBTW1PY2hLcUNmbDFF?=
+ =?utf-8?B?YkdxS0gzRkc1ZFBTMFJ3SGEzdmtGcCtWblBrb2FGVWd5dSs0bVJLT0RxVUVp?=
+ =?utf-8?B?d1pKMURLZG00enNOZVBUdzhoRzRZT0JhRERCMW5GR3doajIxMnQrR3N3NU1i?=
+ =?utf-8?B?TmhVdy9XTGZ0Q3Ixb2dPQ0pzYkgxMzF6WlQzRnJ3c1JodThDL2hJTHh4T0ps?=
+ =?utf-8?B?QkV0SXoyUmY3MDlnS0o1Z1N6ZXpRSFIxSWx2aWNjSGthYkRaVlFqcVloMUVi?=
+ =?utf-8?B?SEd1aFhqZVNKdk52bEpEb3BOYlhxNjRKYnlFRXhDNnRmazVDV2lLT1pZVGpt?=
+ =?utf-8?B?UnAwREV0dlBQczh1MUZJOVVxUk13b1VMbFFOVG5OTWVyV2RKMzdUVlpqbHEy?=
+ =?utf-8?B?aHd0VFVTZmk1Rks0TVRmZUtlNDdYdzdnazZFNFpkUmd2ajZNelFLWnVuS2xG?=
+ =?utf-8?B?TnJzY3JibE9YcDVZZHcwK2RaRFdYdFRMNkc5TGRVNkt0SkRxVzA3MWdGdXVv?=
+ =?utf-8?B?a016RHpzcVJRd1NDK2FLTGQ5ZFBjbG5Vb2YwSHVvdVdDaGRseHZvOEpuc25i?=
+ =?utf-8?B?SGRDVUpoQ1orbThaQ1BYUXhUWFhwS2ZxWHFYVlJsTUFpVDREMWJUVUdYY0pX?=
+ =?utf-8?B?bzM2K2ppT09uZjMyVS9wcFRKN0dwL3hmOWNRSnZVa3pBZGJMeFhsNzNJNld5?=
+ =?utf-8?B?N0l2Q0hxRXozL1lGRFVWcUd2Mm5rSjdVSnZOeFNhK3hTdUNnRTYwaFJ1WDRx?=
+ =?utf-8?B?RnhoUHJScHczeFJtQmxWWHJhNDRtbnplamJEcFJjZ2M3Z29hZ2x4bUY5RHVZ?=
+ =?utf-8?B?dGRMdm13Q1hlSURuN3JWT0VWRHJwZ2tuRElFblAwK1lQT3diZCsxOU55ODc5?=
+ =?utf-8?B?ZjVBK28vbkJFSU9ZQ0tRdmErN1F5Q1kxdzZRaWY2c3hWT0NqLzI5UHViK2dN?=
+ =?utf-8?B?MlhwK2JYdHVpOE42VXBGTEhaWkFZbVp0cDdXWndwWHZNRDdzNTNEMFdnaTFu?=
+ =?utf-8?B?S0Z5RENsRWtnSEQzelh2eTFJdXBRYVZrRlR1cDV2eUFDTEtuUHM3UjVBRlhL?=
+ =?utf-8?B?R3Jib2tJNzNnODJNSlBueGRuWFppeUZGL25qYjE1ZVVha1hvdGM1UzRJREVx?=
+ =?utf-8?B?ZW44OEp6TnlJUUVJdkZvMEQvcVM4VUk2aWFFOGVHTHVuS05rblBHdU5qSlFD?=
+ =?utf-8?B?YThPK04vMGoyNTFqOXZPUEJJL3lhRGZiS1hxRFVRSWRJWW9pUFlPZW1WcC90?=
+ =?utf-8?B?TUlhSWZLWVNpTUhwVHJhQiszU3AzTXNzNjVKV25LQ0JDWENJR3h3dW5tYTR2?=
+ =?utf-8?B?bDJrckhuRVpvcFJFVStBRlFKOVVFWEg5c250WnkzNkNFN01EaVlDNDBXMUgv?=
+ =?utf-8?B?eGttcDhGSzBrRDBoV3c4NlFRN1Zwc3Y1T2hqZU1NdlQ2akFoMmU1UT09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 23bd99a6-fe6d-4aa8-1de7-08deebcb3530
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB5766.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jul 2026 10:38:33.8137
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lzi6q603XWz+P4busSy5agWFSisEx2upChtljkL6JfammWP55iGmgOrOnhP5ZBze47kpNdZKsvE+IfDW2Q7H/w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7192
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+Hi,
 
-Pre-existing issues:
-- [High] Uninitialized pointer dereference in `threads__remove`.
-- [Medium] TOCTOU / Key-value mismatch in `threads__remove` deletes the wro=
-ng thread.
---
+On 5/17/2026 5:10 PM, Vasant Hegde wrote:
+> IOMMU performance counters are accessed via MMIO space. Currently IOMMU
+> PMUs uses a single global cpumask (iommu_cpumask) shared across all AMD
+> IOMMU PMU instances. This prevents collecting per-socket numbers
+> (ex: perf stat --per-socket).
+> 
+> Fix this by adjusting cpumask based on IOMMUs NUMA node.
 
---- Patch [2]: [PATCH 2/8] perf machine: Fix NULL parent dereference in for=
-k event processing ---
-commit 44c208f6def23d87c4b23fe6a8843f00fca91108
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf machine: Fix NULL parent dereference in fork event processing
+Can you please review/pick this patch?
 
-This commit fixes a NULL pointer dereference when processing fork events
-by adding a NULL guard before accessing the parent thread.
+-Vasant
 
-> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> --- a/tools/perf/util/machine.c
-> +++ b/tools/perf/util/machine.c
-> @@ -1923,7 +1923,8 @@ int machine__process_fork_event(struct machine *mac=
-hine, union perf_event *event
->  	 * (fork) event that would have removed the thread was lost. Assume the
->  	 * latter case and continue on as best we can.
->  	 */
-> -	if (thread__pid(parent) !=3D (pid_t)event->fork.ppid) {
-> +	if (parent !=3D NULL &&
-> +	    thread__pid(parent) !=3D (pid_t)event->fork.ppid) {
->  		dump_printf("removing erroneous parent thread %d/%d\n",
->  			    thread__pid(parent), thread__tid(parent));
->  		machine__remove_thread(machine, parent);
 
-[Severity: High]
-This isn't a bug introduced by this patch, but looking at how
-machine__remove_thread() eventually calls into threads__remove(), is it
-possible for thread__put() to dereference an uninitialized pointer?
-
-In tools/perf/util/threads.c:threads__remove():
-
-struct thread *old_value;
-...
-hashmap__delete(&table->shard, thread__tid(thread), NULL, &old_value);
-thread__put(old_value);
-
-If the thread's TID is not found in the hashmap, hashmap__delete() returns
-false and leaves old_value uninitialized. Since the return value is not
-checked, thread__put(old_value) will unconditionally execute with whatever
-data was left on the stack.
-
-Could this happen during malformed event processing here in
-machine__process_fork_event() if thread recreation fails due to memory
-pressure, and a subsequent thread removal fails to find the TID in the
-hashmap?
-
-[Severity: Medium]
-This is also a pre-existing issue, but looking at the same deletion logic
-in tools/perf/util/threads.c:threads__remove():
-
-hashmap__delete(&table->shard, thread__tid(thread), NULL, &old_value);
-
-Does this unconditionally delete whatever entry currently matches the TID,
-without verifying that the stored value actually matches the thread pointer
-passed in?
-
-If machine__process_fork_event() encounters a malformed event where the
-TID matches the parent TID but the PIDs differ, the parent is replaced.
-Could a subsequent removal of the child thread incorrectly delete this
-newly created parent thread from the hashmap instead of failing gracefully?
-
-> 		thread__put(parent);
-> 		parent =3D machine__findnew_thread(machine, event->fork.ppid,
-> 						 event->fork.ptid);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260726234014.6311=
-1-1-acme@kernel.org?part=3D2
