@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4231A26B764
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Jul 2026 16:34:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4799026B764
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Jul 2026 16:35:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785170087; cv=none; b=i91JRU7lruZkAunc96wP2+F4p7DlCKsXhDTg3TDAORqKw9Ro2NfFTs8OdPxhhMoc/kh59LX0AxyHLM/aGYoq7/gXJcyXNfvTZU66jeE+zW8yzzfhy4/47YTtf/hVN+PRbu5cz1GvzAXGSvgcj2Lia2i7Juii9IVYAjVVUc+ymj8=
+	t=1785170123; cv=none; b=tS7oMLbO4B2qVluEupmc/iesfELzZBd2x8VQ1qSAfxZH4GF0bTvNdoHLz1qxn8SC8sRSqXqWSCd4V08PTuf3fo/hPcU1yngruondGX3/jq4yaoJquO61A+YFatr5K0CjhGqTguo3HXcYMailsS8ztsDPxMqHWk0ju2hzx5KGm2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785170087; c=relaxed/simple;
-	bh=P0tPWidf3VSw5v0AWuszRYIVu5V7mBblLA+8k09fGdo=;
+	s=arc-20240116; t=1785170123; c=relaxed/simple;
+	bh=Z6ePAo298cTff92T7EcbwYcvcpwrGO7w9AqJDLSUkXE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=XZSXFcNsbqa2KnmUSkwvE9QltRnZOE+MbraV3tQO2/jsu8gBwrbSKqt6nomJdmJ4eC0sChtxGds9zU6FSJwJi71Q/gETGWzDfaiYonzYfFwGnekIINGedTathhxlFeuW1Hvfl6tQgB0w9A/9E4zL+VjUl5sxHnnwWQreEoTcopE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ff0qb4yT; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=BkNUsvJ1B27EblT2HbXPP8EsXqHGTfit2lTbjxzmMmd6hWFeEu1aH6+2jJUY1A3g6on1QWUCyJP0Uq8z5Fi3PAKus9vujVZwO+N9fJyDo86v9WH/M2gmuXYyK/wSIDsUv1XvD56C7Xu9Wn7y58N+Rmpj+EZaQXsPguIa9uv+GE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RW+7pQCW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ff0qb4yT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEFC61F000E9;
-	Mon, 27 Jul 2026 16:34:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RW+7pQCW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A311F000E9;
+	Mon, 27 Jul 2026 16:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785170085;
-	bh=yQbzo4BZ6+cIunQXqH0a0pcy1Wi6JSwQHO5+hJGWo8I=;
+	s=k20260515; t=1785170121;
+	bh=IEqaOR8PxwfxK9Bg2BRLv93ZVdwbbrETldxziQMJXu4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Ff0qb4yTWWxglkfZrFjkd/zb3/LzFrrKBpctvYUJdgmsfuznLy5whyUOT/12PeoZz
-	 zwhcJ9EFw7IhaWZZ5LcZhffgD3tgq8/brcQFmxVK+mL+W/Zft1sIIhq/WK6jmJEaQV
-	 J0nsG0K83RPS9WPzILHAwKo+xmp/G+FXnQQ6rdfE2txHHnfqEBECVaeMjdqiCUo+7u
-	 g59DsW6ydjlSqFjzK5Z7jaXZ3amax2/VWc3SZZoG+Od21nH56eKHu8mCDaZDhtUusn
-	 aS3/om0NXww4yV1IqKbsdH5he5yeo+bDxu5qclEJ9xxdHTynPgmEG4w1dpvoroM10S
-	 u8Zcp+JL66jTw==
+	b=RW+7pQCWSStjnafUcFDeYNgfBppt0P7JZ2taq0ND2ZFG60TNAnM98N/96xyJlaZXr
+	 ydfKohWrcrrRyQ+n2LNOSh1W6gU+lr79odAcRUbfUQTcFG+Vn/nmroFtSg80BkSeOW
+	 IIppVj/kCSlucZtXWitrnNZpfwBU7ptghPBfOWH8Nb4d6dg6I8LCTNCpMqK2ID/kWU
+	 g8fCVmbZbCsDzwTLrMUhX49LHfBFagwNBJ1B0d3jkSJhB6qhUUlljagca3p4Gd3f60
+	 83dPOUl9yhAHvEiEtua8K41BWJ7ZXXTCZO03RmJLmTMh1+F01YmARqWokXZHKjrl2M
+	 HEffhj9p0zSsQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/5] perf intel-bts: Fix off-by-one in auxtrace_info
+Subject: Re: [PATCH 3/5] perf intel-pt: Fix off-by-one in auxtrace_info
  minimum size check
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260727161705.64807-5-acme@kernel.org>
+In-Reply-To: <20260727161705.64807-4-acme@kernel.org>
 References: <20260727161705.64807-1-acme@kernel.org>
- <20260727161705.64807-5-acme@kernel.org>
+ <20260727161705.64807-4-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 27 Jul 2026 16:34:45 +0000
-Message-Id: <20260727163445.BEFC61F000E9@smtp.kernel.org>
+Date: Mon, 27 Jul 2026 16:35:21 +0000
+Message-Id: <20260727163521.A8A311F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,106 +49,160 @@ Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Off-by-one minimum size check in powerpc_vpadtl_process_auxtrace_i=
-nfo allows out-of-bounds read.
-- [High] Missing NULL pointer check before dereferencing session->itrace_sy=
-nth_opts leads to deterministic crash.
-- [High] Overwriting session->auxtrace unconditionally without cleanup caus=
-es memory leaks.
-- [High] Out-of-bounds read in arm_spe__alloc_metadata when bypassing the v=
-ersion 1 size check.
+- [High] Missing or off-by-one boundary checks in sibling auxtrace info pro=
+cessors lead to out-of-bounds reads.
+- [High] Integer overflow when calculating the filter string length causes =
+a 0-byte allocation and subsequent heap out-of-bounds read.
+- [Medium] The function passes the raw, potentially endian-scrambled `filte=
+r` pointer to `addr_filters__parse_bare_filter()` instead of the corrected =
+`pt->filter` buffer.
+- [Medium] Missing cleanup for `pt->vmcs_info` and `pt->br_stack` on the er=
+ror paths in `intel_pt_process_auxtrace_info`.
 --
 
---- Patch [4]: [PATCH 4/5] perf intel-bts: Fix off-by-one in auxtrace_info =
-minimum size check ---
-commit 0ac93f3d0cb5566f1e0f79a1c4a2f73b3281434a
+--- Patch [3]: [PATCH 3/5] perf intel-pt: Fix off-by-one in auxtrace_info m=
+inimum size check ---
+commit d7842efbb6c00a1eec2b67aee65980fda65e6112
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf intel-bts: Fix off-by-one in auxtrace_info minimum size check
-   =20
-Same pattern as the Intel PT fix: min_sz is set to
-sizeof(u64) * INTEL_BTS_SNAPSHOT_MODE, but the code accesses
-auxtrace_info->priv[INTEL_BTS_SNAPSHOT_MODE], which requires at least
-INTEL_BTS_SNAPSHOT_MODE + 1 elements.
+perf intel-pt: Fix off-by-one in auxtrace_info minimum size check
 
-> diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-> index 0b18ebd13f7c8..02df3e4604891 100644
-> --- a/tools/perf/util/intel-bts.c
-> +++ b/tools/perf/util/intel-bts.c
-> @@ -830,7 +830,7 @@ int intel_bts_process_auxtrace_info(union perf_event =
-*event,
->  				    struct perf_session *session)
+This commit fixes an off-by-one error in the intel_pt_process_auxtrace_info
+minimum size check by ensuring the array is large enough to access the
+INTEL_PT_PER_CPU_MMAPS element. A crafted perf.data file with exactly min_sz
+bytes could previously pass the check and trigger an out-of-bounds read.
+
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index 56a9e439f5f8f..806cd173a0067 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -4430,7 +4430,7 @@ int intel_pt_process_auxtrace_info(union perf_event=
+ *event,
+>  				   struct perf_session *session)
 >  {
 >  	struct perf_record_auxtrace_info *auxtrace_info =3D &event->auxtrace_in=
 fo;
-> -	size_t min_sz =3D sizeof(u64) * INTEL_BTS_SNAPSHOT_MODE;
-> +	size_t min_sz =3D sizeof(u64) * (INTEL_BTS_SNAPSHOT_MODE + 1);
+> -	size_t min_sz =3D sizeof(u64) * INTEL_PT_PER_CPU_MMAPS;
+> +	size_t min_sz =3D sizeof(u64) * (INTEL_PT_PER_CPU_MMAPS + 1);
 
 [Severity: High]
-This isn't a bug introduced by this patch, but the exact same pattern seems
-to exist in tools/perf/util/powerpc-vpadtl.c.
+This isn't a bug introduced by this patch, but does this same vulnerability=
+=20
+exist in other auxtrace info processors?
 
-In powerpc_vpadtl_process_auxtrace_info():
+In tools/perf/util/intel-bts.c:intel_bts_process_auxtrace_info(), is min_sz=
+=20
+undersized by calculating with INTEL_BTS_SNAPSHOT_MODE instead of=20
+(INTEL_BTS_SNAPSHOT_MODE + 1)?
 
-    size_t min_sz =3D sizeof(u64) * POWERPC_VPADTL_TYPE;
+In tools/perf/util/powerpc-vpadtl.c:powerpc_vpadtl_process_auxtrace_info(),=
+=20
+POWERPC_VPADTL_TYPE is 0, which makes min_sz =3D 0, but the code later read=
+s=20
+index 0. Could this cause an out-of-bounds read on minimally sized payloads?
+
+In tools/perf/util/arm-spe.c:arm_spe__alloc_metadata(), the v2 metadata pat=
+h=20
+unconditionally accesses index 3, even though min_sz is only enforced to be=
+ 16=20
+bytes (2 elements). Are we risking an out-of-bounds read here?
+
+In tools/perf/util/cs-etm.c:cs_etm__process_auxtrace_info_full(), the code =
+reads=20
+index 1 (CS_PMU_TYPE_CPUS) to calculate bounds before validating that the=20
+event's priv_size is large enough to contain the global header. Is this saf=
+e?
+
+
+[Severity: High]
+This is a pre-existing issue, but further down in=20
+intel_pt_process_auxtrace_info(), could an integer overflow lead to a 0-byt=
+e=20
+allocation and out-of-bounds read?
+
+When calculating the filter string length from user-controlled event data:
+
+    len =3D auxtrace_info->priv[INTEL_PT_FILTER_STR_LEN];
     ...
-    vpa->pmu_type =3D auxtrace_info->priv[POWERPC_VPADTL_TYPE];
+    if (len) {
+        ...
+        len =3D roundup(len + 1, 8);
+        info +=3D len >> 3;
+        if ((void *)info > info_end) {
 
-POWERPC_VPADTL_TYPE evaluates to 0, which makes min_sz =3D 0, failing to
-protect the subsequent access to auxtrace_info->priv[0]. Should that be fix=
-ed
-similarly to prevent an out-of-bounds read?
+If a crafted perf.data file sets len to SIZE_MAX, would roundup(len + 1, 8)=
+=20
+overflow to 0?
 
->  	struct intel_bts *bts;
->  	int err;
+This would prevent info from advancing, bypassing the info > info_end point=
+er=20
+validation.=20
 
-[Severity: High]
-This is a pre-existing issue, but since we are looking at
-intel_bts_process_auxtrace_info(), I noticed that session->auxtrace is
-unconditionally overwritten later in this function without checking for or
-freeing a previously active context:
+Then memdup(filter, len) would allocate 0 bytes, and the subsequent check:
 
-    session->auxtrace =3D &bts->auxtrace;
+    if (pt->filter[len - 1]) {
 
-If a maliciously crafted perf.data file contains multiple=20
-PERF_RECORD_AUXTRACE_INFO events, each event would sequentially overwrite=20
-session->auxtrace without calling the appropriate .free() callback. Does th=
-is=20
-lead to a memory leak of the dynamically allocated auxtrace context?
+would read pt->filter[SIZE_MAX] (offset -1), causing an out-of-bounds read =
+into=20
+the heap chunk's header.
 
-I noticed the same behavior in intel_pt_process_auxtrace_info() and
-cs_etm__process_auxtrace_info_full().
 
-[Severity: High]
-This is another pre-existing issue, but further down in
-intel_bts_process_auxtrace_info(), the code does:
+[Severity: Medium]
+This is a pre-existing issue, but in the same block handling the filter str=
+ing,=20
+are we passing the wrong buffer to addr_filters__parse_bare_filter()?
 
-    if (session->itrace_synth_opts->set) {
+If session->header.needs_swap is true, the priv array payload is endian-swa=
+pped,=20
+which scrambles string characters and relocates the null terminator.=20
 
-Is it possible for session->itrace_synth_opts to be NULL? If a subcommand
-like perf data convert --to-json processes PERF_RECORD_AUXTRACE_INFO
-events but does not allocate session->itrace_synth_opts, could this lead to
-a NULL pointer dereference?
+The code copies the string and un-swaps it:
 
-This pattern is also present in intel_pt_process_auxtrace_info() and
-cs_etm__process_auxtrace_info_full().
+    pt->filter =3D memdup(filter, len);
+    ...
+    if (session->header.needs_swap)
+        mem_bswap_64(pt->filter, len);
 
-[Severity: High]
-This is a pre-existing issue in another auxtrace file, but looking at how
-auxtrace info is processed, I noticed a potential out-of-bounds read in
-tools/perf/util/arm-spe.c:arm_spe__alloc_metadata().
+However, it then passes the raw, un-swapped filter variable instead of the=
+=20
+corrected pt->filter buffer:
 
-If metadata_size is 24 bytes, the version 1 strict equality check
-(metadata_size =3D=3D 16) is bypassed, falling through to the version 2 par=
-sing
-which does:
+    err =3D addr_filters__parse_bare_filter(&pt->filts, filter);
 
-    *nr_cpu =3D ptr[ARM_SPE_CPUS_NUM];
+Since the scrambled filter string might not contain a null terminator where=
+=20
+expected, could the parsing function read out-of-bounds until it finds a ra=
+ndom=20
+null byte?
 
-Since ARM_SPE_CPUS_NUM is 3, this requires at least 32 bytes. If the payload
-only has 24 bytes, does this read past the end of the event payload and use
-a garbage value for the allocation size?
+
+[Severity: Medium]
+This isn't a bug introduced by this patch, but are there missing cleanups o=
+n the=20
+error paths in intel_pt_process_auxtrace_info()?
+
+If initialization fails and the code jumps to the error labels:
+
+    err_delete_thread:
+        thread__zput(pt->unknown_thread);
+    err_free_queues:
+        intel_pt_log_disable();
+        auxtrace_queues__free(&pt->queues);
+
+It appears the RB tree pt->vmcs_info (allocated via=20
+intel_pt_parse_vm_tm_corr_args()) and pt->br_stack (allocated dynamically=20
+inside intel_pt_synth_events()) are not freed.
+
+Unlike the successful teardown path (intel_pt_free()), these error paths la=
+ck=20
+calls to intel_pt_free_vmcs_info(pt) and zfree(&pt->br_stack). Will this re=
+sult=20
+in a memory leak?
+
+>  	struct intel_pt *pt;
+>  	void *info_end;
+>  	__u64 *info;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260727161705.6480=
-7-1-acme@kernel.org?part=3D4
+7-1-acme@kernel.org?part=3D3
