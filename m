@@ -1,161 +1,113 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8148432B9BB
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Jul 2026 16:29:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2D0422E2A
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Jul 2026 16:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785169776; cv=none; b=QXN6n3pydfVo0sOctyzsVSSkppc2zwB8DgThLTe3KFuIOaPjvq5OM//aHeVil+4PrRtwXwsJkodbVaMxOVc1I77qnWg67OWppF3h9sKLEhR2SZCnB5rjw5iztz9NQYdTTIdd25afxvcQ19NVoi6yaU3kZIlf2FaWhF1bZHFV+ZQ=
+	t=1785169896; cv=none; b=d1u26QP/JgmpL342r80eE1rxnuemmSIr4GnMkQHmL0XCLBvYvii+HOxEQY+dq7dhSHYaeSun9x/caTFkNnHy8kRpgBBnsDbaht9HMEofoz7OzDII4vQZuQAyW1Hdbu24whABu5TcgM8V9Nl+rX7UOXJ8eiwCZKf95oQgQcyEWQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785169776; c=relaxed/simple;
-	bh=M8FpEWz5l5Q+c/2652ZBVlbSx+t9O4m0fVUhTyIf6dI=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=NQOrIFcQaoVk8d5pKbgouvEy523Xek3OpXsyR+l1cm+LPjmUy/6R6Zc/nEV3EfCJDA8yudC3xnH9AxBpMoGi4L5NCE+qJAW6utQ2tN5W3RUShUZ4r3jmTCx2enR5ydWPEjETwuoM+JrZ5VfCFBjcKK3bFTOnuspnF7EQSbzY6R4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KvjADMqf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785169896; c=relaxed/simple;
+	bh=TBM/ZHsiWJAzbb7q0Px6Yb7cMUeos26DNoh+MT9oXGo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fDUv6Oqv0n1v23MJDq6ME4HTEX2Y0Jh8Z/uC3tOnnG4gMpup8mgMxCbZ/n48I45nrlGouKLGG7JRyQ8BphRTrKq7EvosEQz1lWrdWnbBhhq4EdPyhWMeppV4C1TZ67XnjVQBPQ0ZXOpALtQlU7TMOPtpL592C+YeQXJJkQ2l8N4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UYS5VynZ; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KvjADMqf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CFB51F000E9;
-	Mon, 27 Jul 2026 16:29:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785169775;
-	bh=1Kj4+1R41Nln9b2cv0gEdnzAhk3Pq/a3ySGM2g2GrXo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KvjADMqf4sml4D0DZlQM1N9lnNPwWbcbyQxgYlOcAdLEQoMUgNOZx8MNB3Ya7ewQs
-	 Q/OY80vmXMeyFyiq9mOm5QLR4DqhtdZnYYol2Nm3dQf7BXiC4G8/3OC6yjSuganZlx
-	 4/2P5BHgwMUH5msZpI9oQa/x4HQZpj44cw9ZeXGr4uvz7iyxa7x6Ly/+Z/AUZpj0xQ
-	 mVWOBRoq+jp8YJklkoC/1VD0i1bxqf3upxSYqB4Pw7myr+c5h9bKRVgOgJUQsHj0Nj
-	 NfCau6cHcRGe+JTKQSL9IVYQBkPQ+5pqs1NvQqPRp/CZvBc1q16PyH4J7IoUPLxTww
-	 pA+jiA053PILQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/5] perf auxtrace: Fix queue grow overflow and old
- array leak
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260727161705.64807-3-acme@kernel.org>
-References: <20260727161705.64807-1-acme@kernel.org>
- <20260727161705.64807-3-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 27 Jul 2026 16:29:34 +0000
-Message-Id: <20260727162935.3CFB51F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UYS5VynZ"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-493f75f7172so24953075e9.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jul 2026 09:31:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1785169891; x=1785774691; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=mUWwYF9bQTDgsPrNQzc5tTQtPSp1qyE0UfW4AXxm6fg=;
+        b=UYS5VynZhNQD3lENgy3c7NHTs4GqInNFA7/zHDYSGn1HbykE0KeAkIwIYKnfYxs92Q
+         WVxUcJKe8w6Y8ejb0/HFyrnY0tAqUZEoj/C8N5ijhtgZSNShbLbsMiMkXZ74+vayn32L
+         rBxaW5lGKZUIGuXn4w772Ii6xCP9ZH6vxbTNypXHJoIZudWcJ80ySVASDQkrbbr3pvej
+         NXAy8Q8WIbDRgLNWkFG7ayEKsBm9m30R3kDBgDwO2Z56vJbcTRY29Y7S38DgNLHPFZS/
+         jp5NmRC2O58TM5NvfUDrlhNDsh0IrCd5SDbCfvMwotDmA4aW+fRCP3L7/6v/3KOnQ6hJ
+         HeAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785169891; x=1785774691;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=mUWwYF9bQTDgsPrNQzc5tTQtPSp1qyE0UfW4AXxm6fg=;
+        b=NeUYmLNRuvSYrDcqFFY7qqeuSpg2tYSbWafi9hJlhc2u4krlq49LebsmnJRRgt8qUl
+         z5d08BBgZaKbbQKY0DsoPWqjzJy0wcZIKwwlTgpW73omJXsw2dyvPF9kNbIfa81YWNw4
+         mO1URSegfgJF8ILBdRYdGXitlERYTyOQpaNOV+kbg+ut7OqsX3YTlzO23eruVDrrxPXv
+         w4uFyfnZrrmEzwxiA3hrzzuyNAgUFaPUpaorBoqtaNV8n6BbZgC+J+sLhVmM42l9l7kG
+         UoTiBD4PFZlJu6RPbIaBhulSPd9ruW3laHOif1PfvbtsSP0TwpkfVgfG8Xv8RbHWUpgg
+         fo7w==
+X-Forwarded-Encrypted: i=1; AHgh+RomihgJXAFpnuJtrzZ3F//scUDiVnTAhPdVkL9A2ApIxAU4TpS+2qwjyIPlG8IHj6eyzYpnTVCJ8t5KM6ze7oTv@vger.kernel.org
+X-Gm-Message-State: AOJu0YxCf85zLFYIUQFQIvfH2E0eiqcg18P9/SKe4YiiktQpNuXd6qTx
+	vq9nhfG0S/HGzq1sYFBE3c5rsXbpbDUEnRjIhO0dl3zdAlzBMlBFM+SyS/ZVrhT9Ua0=
+X-Gm-Gg: AR+sD12Fl+QGPoZV2v060qP6DxHmx0sEi2W3bozPM8C/q6C/oRlq1FsNr1/6/wQVY9F
+	/hoYIybhl3In+d4hMnYqZI8dpW3g0sprys4Q9HHHGXNXFB6a7xNQe02VVdFjqVYZwfzD3iIvW8M
+	zOJ/ZjSn2R851/+Ki0+IP/PnUQvx5XJvwgbAjDnLFdIE0KPl81+mReJRuqXnJj7FHJh06LfwmCy
+	XnGKqI2K5012hpmNaowyUtIkOqBoHZsNZdr/JKh/2UZ1aaMFD6GwcPR0tZv36iDeF3YfmhlD4L6
+	cMNtOdAjGI0ChILc8578AjLUzB5EkSINWvd3SpUDtt46y0wUlJYhygciwOlNXAE9iyM40RYwraJ
+	ATv8xQseeO4pTjGzUQWJaDokVZt1F+KIRR8mzrLBSHdok9yqi26EsimCxAaLAD5xUM/aV/x4P7O
+	GFYh2Ft2M=
+X-Received: by 2002:a05:600c:630d:b0:495:7952:64df with SMTP id 5b1f17b1804b1-496b570d9e3mr127529465e9.36.1785169891640;
+        Mon, 27 Jul 2026 09:31:31 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-496c44afaecsm4829975e9.2.2026.07.27.09.31.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 27 Jul 2026 09:31:30 -0700 (PDT)
+Message-ID: <ee11c4ba-6002-4722-bc84-da0234373431@linaro.org>
+Date: Mon, 27 Jul 2026 17:31:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHES 0/5 v1] perf tools auxtrace hardening series
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Clark Williams
+ <williams@redhat.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20260727161705.64807-1-acme@kernel.org>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260727161705.64807-1-acme@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
 
-Pre-existing issues:
-- [High] An infinite loop can be triggered in `auxtrace_heap__add()` when `=
-queue_nr >=3D 0x80000000`. This is reachable via the CoreSight ETM decoder =
-(`cs-etm.c`) which shifts `queue_nr` left by 16. An attacker can supply a m=
-alformed `perf.data` file with an AUXTRACE event `idx` of 32768 to trigger =
-this.
---
 
---- Patch [2]: [PATCH 2/5] perf auxtrace: Fix queue grow overflow and old a=
-rray leak ---
-commit 6cc7c2090ef2457b5027b79136b869818ae856ee
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+On 27/07/2026 5:17 pm, Arnaldo Carvalho de Melo wrote:
+> Hi,
+> 
+> 	Please consider applying,
+> 
+> - Arnaldo
+> 
+> Arnaldo Carvalho de Melo (5):
+>    perf thread-stack: Fix heap buffer overflow on branch stack wrap copy
+>    perf auxtrace: Fix queue grow overflow and old array leak
+>    perf intel-pt: Fix off-by-one in auxtrace_info minimum size check
+>    perf intel-bts: Fix off-by-one in auxtrace_info minimum size check
+>    perf arm-spe: Reject zero nr_cpu in metadata to prevent division by zero
+> 
+>   tools/perf/util/arm-spe.c      |  4 ++++
+>   tools/perf/util/auxtrace.c     | 15 ++++++++++-----
+>   tools/perf/util/intel-bts.c    |  2 +-
+>   tools/perf/util/intel-pt.c     |  2 +-
+>   tools/perf/util/thread-stack.c |  2 +-
+>   5 files changed, 17 insertions(+), 8 deletions(-)
+> 
 
-perf auxtrace: Fix queue grow overflow and old array leak
 
-auxtrace_queues__grow() has two bugs:
+Reviewed-by: James Clark <james.clark@linaro.org>
 
-1. When idx is UINT_MAX, the caller passes new_nr_queues =3D idx + 1 =3D 0.
-   The function skips growing (since any nr_queues >=3D 0), returns
-   success, and the caller accesses queue_array[UINT_MAX] =E2=80=94 an OOB
-   heap write.  Fix by rejecting new_nr_queues =3D=3D 0 up front.
-
-2. The function allocates a new queue_array via calloc and copies
-   elements from the old array, but never frees the old array.  Fix
-   by saving the old pointer and freeing it after the copy.
-
-Fixes: e502789302a6ece9 ("perf auxtrace: Add helpers for queuing AUX area t=
-racing data")
-Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Assisted-by: Claude:claude-opus-4.6
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index 4cd2caf540152..171edddc982fc 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -251,8 +251,12 @@ static int auxtrace_queues__grow(struct auxtrace_que=
-ues *queues,
->  {
->  	unsigned int nr_queues =3D queues->nr_queues;
->  	struct auxtrace_queue *queue_array;
-> +	struct auxtrace_queue *old_array =3D queues->queue_array;
->  	unsigned int i;
-> =20
-> +	if (!new_nr_queues)
-> +		return -EINVAL;
-> +
->  	if (!nr_queues)
->  		nr_queues =3D AUXTRACE_INIT_NR_QUEUES;
-> =20
-> @@ -267,16 +271,17 @@ static int auxtrace_queues__grow(struct auxtrace_qu=
-eues *queues,
->  		return -ENOMEM;
-> =20
->  	for (i =3D 0; i < queues->nr_queues; i++) {
-> -		list_splice_tail(&queues->queue_array[i].head,
-> +		list_splice_tail(&old_array[i].head,
->  				 &queue_array[i].head);
-> -		queue_array[i].tid =3D queues->queue_array[i].tid;
-> -		queue_array[i].cpu =3D queues->queue_array[i].cpu;
-> -		queue_array[i].set =3D queues->queue_array[i].set;
-> -		queue_array[i].priv =3D queues->queue_array[i].priv;
-> +		queue_array[i].tid =3D old_array[i].tid;
-> +		queue_array[i].cpu =3D old_array[i].cpu;
-> +		queue_array[i].set =3D old_array[i].set;
-> +		queue_array[i].priv =3D old_array[i].priv;
->  	}
-> =20
->  	queues->nr_queues =3D nr_queues;
->  	queues->queue_array =3D queue_array;
-> +	free(old_array);
-> =20
->  	return 0;
->  }
-
-[Severity: High]
-This isn't a bug introduced by this patch, but while reviewing the queue si=
-ze
-checks here, I noticed a similar unbounded shift loop in auxtrace_heap__add=
-().
-
-Could a malformed perf.data file with an AUXTRACE event idx of 32768 trigger
-an infinite loop?
-
-The CoreSight ETM decoder shifts the queue_nr left by 16:
-
-tools/perf/util/cs-etm.c:TO_CS_QUEUE_NR() {
-#define TO_CS_QUEUE_NR(queue_nr, trace_chan_id)	\
-		      (queue_nr << 16 | trace_chan_id)
-}
-
-If queue_nr is 32768, the macro evaluates to 0x80000000. When this value is
-passed to auxtrace_heap__add(), it triggers this loop:
-
-tools/perf/util/auxtrace.c:auxtrace_heap__add() {
-	if (queue_nr >=3D heap->heap_sz) {
-		unsigned int heap_sz =3D AUXTRACE_INIT_NR_QUEUES;
-
-		while (heap_sz <=3D queue_nr)
-			heap_sz <<=3D 1;
-...
-}
-
-When heap_sz reaches 0x80000000, it satisfies 0x80000000 <=3D 0x80000000,
-shifts left by 1 overflowing to 0, and then 0 <=3D 0x80000000 remains true
-indefinitely, causing an infinite loop.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260727161705.6480=
-7-1-acme@kernel.org?part=3D2
