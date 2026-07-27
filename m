@@ -1,113 +1,194 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B2D0422E2A
-	for <linux-perf-users@vger.kernel.org>; Mon, 27 Jul 2026 16:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4965E41A55A
+	for <linux-perf-users@vger.kernel.org>; Mon, 27 Jul 2026 16:32:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785169896; cv=none; b=d1u26QP/JgmpL342r80eE1rxnuemmSIr4GnMkQHmL0XCLBvYvii+HOxEQY+dq7dhSHYaeSun9x/caTFkNnHy8kRpgBBnsDbaht9HMEofoz7OzDII4vQZuQAyW1Hdbu24whABu5TcgM8V9Nl+rX7UOXJ8eiwCZKf95oQgQcyEWQI=
+	t=1785169944; cv=none; b=ZyELFIcuC3wcR1+A3LQdp5yHgCVCA1B9igp5S64KnJfeafh7pU9L259J5k4F3rE7V2uViDxl33CpTnisTDMZCVEE9JLfx6pgBLtrqlbLaUwqpsMUJ9S9eCHFJ0EcnNAIu6yV8minYDEQBo0Wzugs4DacUyeTDfMekGRjtYQjSBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785169896; c=relaxed/simple;
-	bh=TBM/ZHsiWJAzbb7q0Px6Yb7cMUeos26DNoh+MT9oXGo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fDUv6Oqv0n1v23MJDq6ME4HTEX2Y0Jh8Z/uC3tOnnG4gMpup8mgMxCbZ/n48I45nrlGouKLGG7JRyQ8BphRTrKq7EvosEQz1lWrdWnbBhhq4EdPyhWMeppV4C1TZ67XnjVQBPQ0ZXOpALtQlU7TMOPtpL592C+YeQXJJkQ2l8N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UYS5VynZ; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1785169944; c=relaxed/simple;
+	bh=qP9Kp/3ypNwYPzxdqDnQ2wXe/k/gf67SMqu5GKRQljQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=ls2kZzBeeBAQdDLHcx442ieONZQEV6qNvB8eniIyKVHiEL8jJGFFZrSWIPYGxA6E3wuvRrBcvdSe+zNDUQG0j3Dhvtu95QHHcPURDwmsMqgzHEzkKAoktVfZf89jTIeWd3gmUWuT6QIU+s/ccTCQSKDlMl85po+9shC3qjijA9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZ2FL0S+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UYS5VynZ"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-493f75f7172so24953075e9.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jul 2026 09:31:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1785169891; x=1785774691; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=mUWwYF9bQTDgsPrNQzc5tTQtPSp1qyE0UfW4AXxm6fg=;
-        b=UYS5VynZhNQD3lENgy3c7NHTs4GqInNFA7/zHDYSGn1HbykE0KeAkIwIYKnfYxs92Q
-         WVxUcJKe8w6Y8ejb0/HFyrnY0tAqUZEoj/C8N5ijhtgZSNShbLbsMiMkXZ74+vayn32L
-         rBxaW5lGKZUIGuXn4w772Ii6xCP9ZH6vxbTNypXHJoIZudWcJ80ySVASDQkrbbr3pvej
-         NXAy8Q8WIbDRgLNWkFG7ayEKsBm9m30R3kDBgDwO2Z56vJbcTRY29Y7S38DgNLHPFZS/
-         jp5NmRC2O58TM5NvfUDrlhNDsh0IrCd5SDbCfvMwotDmA4aW+fRCP3L7/6v/3KOnQ6hJ
-         HeAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785169891; x=1785774691;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=mUWwYF9bQTDgsPrNQzc5tTQtPSp1qyE0UfW4AXxm6fg=;
-        b=NeUYmLNRuvSYrDcqFFY7qqeuSpg2tYSbWafi9hJlhc2u4krlq49LebsmnJRRgt8qUl
-         z5d08BBgZaKbbQKY0DsoPWqjzJy0wcZIKwwlTgpW73omJXsw2dyvPF9kNbIfa81YWNw4
-         mO1URSegfgJF8ILBdRYdGXitlERYTyOQpaNOV+kbg+ut7OqsX3YTlzO23eruVDrrxPXv
-         w4uFyfnZrrmEzwxiA3hrzzuyNAgUFaPUpaorBoqtaNV8n6BbZgC+J+sLhVmM42l9l7kG
-         UoTiBD4PFZlJu6RPbIaBhulSPd9ruW3laHOif1PfvbtsSP0TwpkfVgfG8Xv8RbHWUpgg
-         fo7w==
-X-Forwarded-Encrypted: i=1; AHgh+RomihgJXAFpnuJtrzZ3F//scUDiVnTAhPdVkL9A2ApIxAU4TpS+2qwjyIPlG8IHj6eyzYpnTVCJ8t5KM6ze7oTv@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCf85zLFYIUQFQIvfH2E0eiqcg18P9/SKe4YiiktQpNuXd6qTx
-	vq9nhfG0S/HGzq1sYFBE3c5rsXbpbDUEnRjIhO0dl3zdAlzBMlBFM+SyS/ZVrhT9Ua0=
-X-Gm-Gg: AR+sD12Fl+QGPoZV2v060qP6DxHmx0sEi2W3bozPM8C/q6C/oRlq1FsNr1/6/wQVY9F
-	/hoYIybhl3In+d4hMnYqZI8dpW3g0sprys4Q9HHHGXNXFB6a7xNQe02VVdFjqVYZwfzD3iIvW8M
-	zOJ/ZjSn2R851/+Ki0+IP/PnUQvx5XJvwgbAjDnLFdIE0KPl81+mReJRuqXnJj7FHJh06LfwmCy
-	XnGKqI2K5012hpmNaowyUtIkOqBoHZsNZdr/JKh/2UZ1aaMFD6GwcPR0tZv36iDeF3YfmhlD4L6
-	cMNtOdAjGI0ChILc8578AjLUzB5EkSINWvd3SpUDtt46y0wUlJYhygciwOlNXAE9iyM40RYwraJ
-	ATv8xQseeO4pTjGzUQWJaDokVZt1F+KIRR8mzrLBSHdok9yqi26EsimCxAaLAD5xUM/aV/x4P7O
-	GFYh2Ft2M=
-X-Received: by 2002:a05:600c:630d:b0:495:7952:64df with SMTP id 5b1f17b1804b1-496b570d9e3mr127529465e9.36.1785169891640;
-        Mon, 27 Jul 2026 09:31:31 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-496c44afaecsm4829975e9.2.2026.07.27.09.31.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Jul 2026 09:31:30 -0700 (PDT)
-Message-ID: <ee11c4ba-6002-4722-bc84-da0234373431@linaro.org>
-Date: Mon, 27 Jul 2026 17:31:29 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZ2FL0S+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF5141F000E9;
+	Mon, 27 Jul 2026 16:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785169941;
+	bh=iK1ml+b3iTvtYpieo+6yAqNSQX0sT+nlGpNhY9fx/yg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=cZ2FL0S+qRmB7FHk7CdKvFl44yXQOGMB6dcJPJTZ4PbCmfcorJJEGnlWgpxqXRgis
+	 PiD6LS6irQ2fXrUdm2eksODBZESWofMa1hilOWIebbx7EELE+NJp52EwuLkxlzCYvy
+	 TsIzwNDD4TjL3mxYe8hgbT30Q/r75tOdcsxS/4zn6npSYkUUx9OUuaBLJ112ns5i20
+	 MI0EYrB164PhIgfD2mJ0wrf/X/7+RYKP4arlR2INRTZNeGKi4X7y4KNc3imfeAPdj4
+	 YaYqrkA36aaObhBJvVZiYLSpKMfKMAk3BXQKiyQvGbNSkUMcmDOhIuNAmAsXb+PXZI
+	 NdAfHjDMV8Fpw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 5/5] perf arm-spe: Reject zero nr_cpu in metadata to
+ prevent division by zero
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260727161705.64807-6-acme@kernel.org>
+References: <20260727161705.64807-1-acme@kernel.org>
+ <20260727161705.64807-6-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 27 Jul 2026 16:32:21 +0000
+Message-Id: <20260727163221.AF5141F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHES 0/5 v1] perf tools auxtrace hardening series
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Clark Williams
- <williams@redhat.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20260727161705.64807-1-acme@kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260727161705.64807-1-acme@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+s) to consider:
 
+Pre-existing issues:
+- [Critical] `arm_spe_print_info` uses unvalidated, attacker-controlled fie=
+lds to index into static format string arrays, leading to arbitrary memory =
+dereferences and format string vulnerabilities.
+- [High] Missing bounds check on user-controlled `hdr_sz` allows `ptr` to a=
+dvance out of bounds and causes integer underflow in the `per_cpu_sz` calcu=
+lation, leading to arbitrary heap out-of-bounds reads.
+- [High] Missing minimum size validation on `per_cpu_sz` allows crafted inp=
+uts to cause heap out-of-bounds reads in downstream functions.
+- [High] Missing payload size validation before accessing V2 metadata field=
+s leads to an out-of-bounds read.
+- [High] Bypassing the metadata allocation error check via a crafted V1 ver=
+sion flag causes an unhandled NULL pointer dereference in `arm_spe__is_homo=
+geneous`.
+--
 
-On 27/07/2026 5:17 pm, Arnaldo Carvalho de Melo wrote:
-> Hi,
-> 
-> 	Please consider applying,
-> 
-> - Arnaldo
-> 
-> Arnaldo Carvalho de Melo (5):
->    perf thread-stack: Fix heap buffer overflow on branch stack wrap copy
->    perf auxtrace: Fix queue grow overflow and old array leak
->    perf intel-pt: Fix off-by-one in auxtrace_info minimum size check
->    perf intel-bts: Fix off-by-one in auxtrace_info minimum size check
->    perf arm-spe: Reject zero nr_cpu in metadata to prevent division by zero
-> 
->   tools/perf/util/arm-spe.c      |  4 ++++
->   tools/perf/util/auxtrace.c     | 15 ++++++++++-----
->   tools/perf/util/intel-bts.c    |  2 +-
->   tools/perf/util/intel-pt.c     |  2 +-
->   tools/perf/util/thread-stack.c |  2 +-
->   5 files changed, 17 insertions(+), 8 deletions(-)
-> 
+--- Patch [5]: [PATCH 5/5] perf arm-spe: Reject zero nr_cpu in metadata to =
+prevent division by zero ---
+commit cdd9c13905fbd08524e5237d0ba280b139dcb3bc
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: perf arm-spe: Reject zero nr_cpu in metadata to prevent division b=
+y zero
 
+This patch adds a check to reject nr_cpu <=3D 0 in arm_spe__alloc_metadata()
+before performing a division by nr_cpu. This prevents a division by zero
+when a crafted perf.data file provides a zero value for the CPU count.
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index 552f063f126e6..401aab529309c 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -1604,8 +1604,12 @@ static u64 **arm_spe__alloc_metadata(struct perf_r=
+ecord_auxtrace_info *info,
+>  	*ver =3D ptr[ARM_SPE_HEADER_VERSION];
+>  	hdr_sz =3D ptr[ARM_SPE_HEADER_SIZE];
+>  	*nr_cpu =3D ptr[ARM_SPE_CPUS_NUM];
 
+[Severity: High]
+This isn't a bug introduced by this patch, but does this read out of bounds
+if the payload is exactly 24 bytes?
+
+In arm_spe_process_auxtrace_info(), the payload is only validated against a
+minimum size of 16 bytes for V1 metadata. If a crafted perf.data provides a
+payload size of exactly 24 bytes (and is not V1), accessing ptr at index 3
+(ARM_SPE_CPUS_NUM) attempts to read 32 bytes into the payload, which goes
+beyond the verified payload bounds.
+
+> =20
+> +	/* nr_cpu is used as a divisor below */
+> +	if (*nr_cpu <=3D 0)
+> +		return NULL;
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does returning NULL here
+trigger a NULL pointer dereference in arm_spe__is_homogeneous() if the
+attacker sets the version to 1?
+
+If a crafted file sets ARM_SPE_HEADER_VERSION to 1, and the
+arm_spe__alloc_metadata() function returns NULL due to an allocation failure
+or a negative nr_cpu, the error check in arm_spe_process_auxtrace_info() is
+bypassed:
+
+tools/perf/util/arm-spe.c:arm_spe_process_auxtrace_info() {
+    ...
+	metadata =3D arm_spe__alloc_metadata(auxtrace_info, &metadata_ver,
+					   &nr_cpu);
+	if (!metadata && metadata_ver !=3D 1) {
+		pr_err("Failed to parse Arm SPE metadata.\n");
+		return -EINVAL;
+	}
+    ...
+	spe->metadata_nr_cpu =3D nr_cpu;
+	spe->is_homogeneous =3D arm_spe__is_homogeneous(metadata, nr_cpu);
+    ...
+}
+
+Because metadata_ver =3D=3D 1, execution proceeds and passes the NULL metad=
+ata
+pointer to arm_spe__is_homogeneous(), where it dereferences metadata[i]
+without checking if metadata itself is NULL.
+
+> =20
+>  	metadata =3D calloc(*nr_cpu, sizeof(*metadata));
+>  	if (!metadata)
+>  		return NULL;
+>=20
+>  	/* Locate the start address of per CPU metadata */
+>  	ptr +=3D hdr_sz;
+>  	per_cpu_sz =3D (metadata_size - (hdr_sz * sizeof(u64))) / (*nr_cpu);
+
+[Severity: High]
+This is a pre-existing issue, but does this allow ptr to advance out of
+bounds if hdr_sz is larger than metadata_size?
+
+Since hdr_sz is controlled by the input and lacks a bounds check against
+metadata_size, a large hdr_sz could advance ptr past the payload bounds and
+cause an integer underflow in the per_cpu_sz calculation.
+
+[Severity: High]
+This is a pre-existing issue, but is there a missing minimum size validation
+on per_cpu_sz?
+
+If per_cpu_sz is too small (e.g. 8 bytes), arm_spe__alloc_per_cpu_metadata()
+allocates an undersized buffer. Later, arm_spe__is_homogeneous()
+unconditionally accesses fields at fixed indices like ARM_SPE_CPU_MIDR,
+which would result in out-of-bounds heap reads:
+
+tools/perf/util/arm-spe.c:arm_spe__is_homogeneous() {
+    ...
+		if (i =3D=3D 0) {
+			midr =3D metadata[i][ARM_SPE_CPU_MIDR];
+			continue;
+		}
+
+		if (midr !=3D metadata[i][ARM_SPE_CPU_MIDR])
+			return false;
+    ...
+}
+
+[Severity: Critical]
+This is a pre-existing issue, but does arm_spe_print_info() use the
+unvalidated hdr_size to index into static format string arrays?
+
+If a crafted file provides a large hdr_size or cpu_size, these unchecked
+values are used as loop bounds, leading to out-of-bounds reads of format
+string pointers which are then passed to fprintf():
+
+tools/perf/util/arm-spe.c:arm_spe_print_info() {
+    ...
+	for (i =3D 0; i < hdr_size; i++)
+		fprintf(stdout, hdr_fmts[i], arr[i]);
+    ...
+		cpu_size =3D (ARM_SPE_CPU_NR_PARAMS + 1) + arr[ARM_SPE_CPU_NR_PARAMS];
+		for (i =3D 0; i < cpu_size; i++)
+			fprintf(stdout, metadata_per_cpu_fmts[i], arr[i]);
+    ...
+}
+
+Could this lead to an arbitrary memory read or format string vulnerability
+when running perf report with dump_trace?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260727161705.6480=
+7-1-acme@kernel.org?part=3D5
