@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FED9420889;
-	Mon, 27 Jul 2026 16:17:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F9542047A;
+	Mon, 27 Jul 2026 16:17:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785169043; cv=none; b=YBCD+14FRDVYNwwtZ2CrSjvFAqlLarEkL07euW3c9clZOft7eZKOLErwuuXBzzeNFCACOTsqf5TWOAl6oq0Pg5opTQFrLz8H3x47/unVOeotd7weqV59WQoInwna6bD+P11N1pz0huE2aOWEBnewPn4qnKHg1U31I60cf3O+MiM=
+	t=1785169046; cv=none; b=KWarbpB6AXeDo08Eg1SIG701Ad3S9fCjnOv0CtET4hR92NfGdSIMdKZJhGLas6ECzXIvbjgl5dsg8yM0LwGO0zjmQVMI+R4+EiPCOG3w8+30IYsBcltw9PHgo2Sh+E5mhcZcVKSzFK2woQODrYwwFJr4Yo5KTXLMXzs6sg5afFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785169043; c=relaxed/simple;
-	bh=bRqcCa6daN3XJU6jEQxFF+Uv0Et0xS8RonF9dw98iXU=;
+	s=arc-20240116; t=1785169046; c=relaxed/simple;
+	bh=f6vOzQfFALCGWHsydpmF/9bh5rHN2IotmtiER0C/p88=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jORjbLcChFbmzi7TjiAclTvf4iuallFvYDohQjcndHcogMsxwLFsWi9mpBy6uihqHg4Dbgg3RgVkZq4epN/R774aPbfvtRK4Z1hyzNK4wY4HcTq8B6WXWH/DnYms9F+c97SIO2kgvALO3ScIMrS0O6GXRD6zHL2lWwFWwhCST0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AcLgANzo; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=bJAwVxNXaL3No2TFjemHluSV4vTmqR+Ww/7UFfFNK4khX9pcgreNuj5MOeb2Zqji0wUYyxGFTXdT5zUNYqfvo/CHgPtSRwq6KA4VFaTmLqq2v9G35bgiJPvZZJGI8AFHS74f7bHDAdErRBsJY0HBmO9nFcyGV1M6xGJPL7LA2R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGOeIHz3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AcLgANzo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 552E61F000E9;
-	Mon, 27 Jul 2026 16:17:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGOeIHz3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7402F1F00A3D;
+	Mon, 27 Jul 2026 16:17:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785169042;
-	bh=BNRj/UHytL/XWHBpwQpI5NSJDqXpT/8Gw9BXnE4fgeE=;
+	s=k20260515; t=1785169045;
+	bh=t+q8PoH66cXwZ6uMLAf3XybaDlPVha7EfQcBztJGi6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=AcLgANzo0BLjtgsHQDQqHLT0zdYNJc30UPWAIKphpT8f60gHBwDE2S2Nu+chWn0ey
-	 Ik+vhe2UoT4G2afHltwuwN/1ljTL2dkoBbxGGSTS++RHdP4p7CzYsLrWdWFOekkouu
-	 FjwhDhv2ZFqLi9E+xZojjH9IzqYDNWXRFkVBolchxkdPpz63wCyIgtbhRU1ocSB2k5
-	 PiqJ3ec2kRhO8nU6tADH/Q8w7NqpBxjC9pFI9mXl4//OW0VJL8hNx8ac9YpJSZKyvC
-	 X9Gua8tzmjBcXkbsnjaWIG6h/GbY7aFRdZArxFjm2uBx4JJdfD3bRZoUXdSZfdXDkr
-	 bHHKCns+gR8Zg==
+	b=iGOeIHz3eg4h+o+Y+qRXtzvIclafPAJuvYAUsJIxqSDCjXkRh/MOMaZ1JI37bS6iH
+	 DLGQH/fzcnIrwXvkgXeopSOJJTN8dNxW9POC1q8h/WGKTULAhFKcHhGkLk9Koawfzg
+	 FiH3mjYR+wX/tZwXUzNgM7z6K3niqWopFoYWu4RG87tqflQgWUInzTljxF28sRjFXr
+	 Ua8mjt7HITkIwPzpmxOQzciY0GD+4UObaLK0af9ZgET9/u7YploO/JkxXVC4ZHgtTs
+	 1HgOScMhfLeRupzcVm8Zf5NLt0jnNNVF7weaPL0501YkjgthWM0cCbf/mT0nRVOCEB
+	 NPI9YxzgOQKtQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>
-Subject: [PATCH 2/5] perf auxtrace: Fix queue grow overflow and old array leak
-Date: Mon, 27 Jul 2026 13:17:02 -0300
-Message-ID: <20260727161705.64807-3-acme@kernel.org>
+Subject: [PATCH 3/5] perf intel-pt: Fix off-by-one in auxtrace_info minimum size check
+Date: Mon, 27 Jul 2026 13:17:03 -0300
+Message-ID: <20260727161705.64807-4-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260727161705.64807-1-acme@kernel.org>
 References: <20260727161705.64807-1-acme@kernel.org>
@@ -51,71 +51,41 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-auxtrace_queues__grow() has two bugs:
+min_sz is set to sizeof(u64) * INTEL_PT_PER_CPU_MMAPS, but the code
+accesses auxtrace_info->priv[INTEL_PT_PER_CPU_MMAPS], which requires
+at least INTEL_PT_PER_CPU_MMAPS + 1 elements.  A file with exactly
+min_sz bytes of priv data passes the size check but the access reads
+one u64 past the validated region.
 
-1. When idx is UINT_MAX, the caller passes new_nr_queues = idx + 1 = 0.
-   The function skips growing (since any nr_queues >= 0), returns
-   success, and the caller accesses queue_array[UINT_MAX] — an OOB
-   heap write.  Fix by rejecting new_nr_queues == 0 up front.
+Use (INTEL_PT_PER_CPU_MMAPS + 1) to ensure the highest accessed index
+is within bounds.
 
-2. The function allocates a new queue_array via calloc and copies
-   elements from the old array, but never frees the old array.  Fix
-   by saving the old pointer and freeing it after the copy.
-
-Fixes: e502789302a6ece9 ("perf auxtrace: Add helpers for queuing AUX area tracing data")
+Fixes: 90e457f7be087005 ("perf tools: Add Intel PT support")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Assisted-by: Claude:claude-opus-4.6
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/auxtrace.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ tools/perf/util/intel-pt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 0b851f32e98c8517..aa749e1c30365a02 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -251,8 +251,12 @@ static int auxtrace_queues__grow(struct auxtrace_queues *queues,
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index d83439c8c7b0ab0f..9d6628169fd95772 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -4432,7 +4432,7 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
+ 				   struct perf_session *session)
  {
- 	unsigned int nr_queues = queues->nr_queues;
- 	struct auxtrace_queue *queue_array;
-+	struct auxtrace_queue *old_array = queues->queue_array;
- 	unsigned int i;
- 
-+	if (!new_nr_queues)
-+		return -EINVAL;
-+
- 	if (!nr_queues)
- 		nr_queues = AUXTRACE_INIT_NR_QUEUES;
- 
-@@ -267,16 +271,17 @@ static int auxtrace_queues__grow(struct auxtrace_queues *queues,
- 		return -ENOMEM;
- 
- 	for (i = 0; i < queues->nr_queues; i++) {
--		list_splice_tail(&queues->queue_array[i].head,
-+		list_splice_tail(&old_array[i].head,
- 				 &queue_array[i].head);
--		queue_array[i].tid = queues->queue_array[i].tid;
--		queue_array[i].cpu = queues->queue_array[i].cpu;
--		queue_array[i].set = queues->queue_array[i].set;
--		queue_array[i].priv = queues->queue_array[i].priv;
-+		queue_array[i].tid = old_array[i].tid;
-+		queue_array[i].cpu = old_array[i].cpu;
-+		queue_array[i].set = old_array[i].set;
-+		queue_array[i].priv = old_array[i].priv;
- 	}
- 
- 	queues->nr_queues = nr_queues;
- 	queues->queue_array = queue_array;
-+	free(old_array);
- 
- 	return 0;
- }
+ 	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
+-	size_t min_sz = sizeof(u64) * INTEL_PT_PER_CPU_MMAPS;
++	size_t min_sz = sizeof(u64) * (INTEL_PT_PER_CPU_MMAPS + 1);
+ 	struct intel_pt *pt;
+ 	void *info_end;
+ 	__u64 *info;
 -- 
 2.55.0
 
