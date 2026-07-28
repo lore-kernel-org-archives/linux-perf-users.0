@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 938D23FB055;
-	Tue, 28 Jul 2026 21:05:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDF303F4831;
+	Tue, 28 Jul 2026 21:05:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785272759; cv=none; b=O0mCs3pKrdVxVJhW/bsABlxUaKidDutD89HdDdr2M/HTLlZA/eD8M9fQMH3juVS/4LDVoMFVz4rTE1O5pdSO+rO1dkcI7BDJHsfQaJAOI8yhKqVJsbhfpfqwdXr2L5TF1yBujak34BGtPfCEaXyOUiiGqpBLvPrlg4XjgizQfqM=
+	t=1785272761; cv=none; b=t3YoK0zQBnLAV9Ug3VOs9p9pph4geohyd4o9ZrUvs3hdGglcmaAXw1WL6cBJnU8F7cSPddzTdZjlv6xUCiBsxUwmDmR6Jnt2W409pwqelc1PLtrecwNl3DHVxxRAy9xveyl7v+VxV0ZWs3RlFsalNfVE+lNscDo11Ed7pmrZIhU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785272759; c=relaxed/simple;
-	bh=EvtJ8IANxm+2z3OWTx27rF5aD44B2rqSAcBoNY1ZTvk=;
+	s=arc-20240116; t=1785272761; c=relaxed/simple;
+	bh=I9WTYfWN3ttcqDNU7b/0d3CGtaZ2nl9jKGIIYgdTYzs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fBEBgnnZS0H+4KpvUiih9g95AFdctia7vDdqNH/u4K01uYuFWmGCnXjc2O9h8IWr7Youx7XcTWfL0tPiWRRfixobgxaq6Mr2CKku4cCd/YCyTUpb664shwjHeBzafzB6SVYWal0TQG+WybS+u9GAFp9wRIvlUqayByHF3NEjkH4=
+	 MIME-Version; b=b75wCPwWFx2ZlWtNPyKoxFGPNcOC2hHHrI7bbQTTMkC4kBjL4byi5my6SzihEHUDigx05/bQUo+rQRGUJA5qd1EMdD4HRDO0UYsStP1aRcdVUQqyO6laz04Sl9WGWbsNBeAP0k5pRjjQAdVmGOvb5wYlVIj3rbSqVJLn7TDPNos=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17F551F00A3D;
-	Tue, 28 Jul 2026 21:05:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 775461F000E9;
+	Tue, 28 Jul 2026 21:05:59 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
@@ -22,9 +22,9 @@ Cc: jic23@kernel.org,
 	mark.rutland@arm.com,
 	dave@stgolabs.net,
 	sashiko-bot@kernel.org
-Subject: [PATCH 2/9] perf/cxl: Clear stale event fields before reprogramming a counter
-Date: Tue, 28 Jul 2026 14:05:44 -0700
-Message-ID: <20260728210551.2449093-3-dave.jiang@intel.com>
+Subject: [PATCH 3/9] perf/cxl: Drop bogus counter overflow fixup
+Date: Tue, 28 Jul 2026 14:05:45 -0700
+Message-ID: <20260728210551.2449093-4-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260728210551.2449093-1-dave.jiang@intel.com>
 References: <20260728210551.2449093-1-dave.jiang@intel.com>
@@ -36,14 +36,15 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cxl_pmu_event_start() ORs the event group id, event mask, edge and invert
-selections into a configurable counter's config register without clearing
-those fields first, and cxl_pmu_event_stop() leaves them set. Reusing a
-counter for another event therefore ORs the new selection onto the old,
-counting the wrong events with stale edge/invert behaviour.
+On the overflow path __cxl_pmu_read() adds a full counter period to the
+delta: `delta += (1UL << counter_width)` when `delta < mask`. The masked
+unsigned subtraction already gives the correct delta across a wrap, so
+this over-counts by ~one period on nearly every overflow (the guard holds
+for all but one delta value), and the shift is undefined for counter
+widths >= 32 (32-bit kernels) or == 64.
 
-Clear EVENT_GRP_ID_IDX, EVENTS, EDGE and INVERT before applying the new
-values.
+Drop the fixup to match every other perf driver. The overflow argument is
+now unused, so fold __cxl_pmu_read() into cxl_pmu_read().
 
 Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
 Reported-by: sashiko-bot@kernel.org
@@ -51,30 +52,56 @@ Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net
 Assisted-by: Claude:claude-opus-4-8
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/perf/cxl_pmu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/perf/cxl_pmu.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index e77c0650a7eb..3138514157cd 100644
+index 3138514157cd..410c9162c824 100644
 --- a/drivers/perf/cxl_pmu.c
 +++ b/drivers/perf/cxl_pmu.c
-@@ -641,6 +641,7 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
+@@ -686,7 +686,7 @@ static u64 cxl_pmu_read_counter(struct perf_event *event)
+ 	return readq(base + CXL_PMU_COUNTER_REG(event->hw.idx));
+ }
+ 
+-static void __cxl_pmu_read(struct perf_event *event, bool overflow)
++static void cxl_pmu_read(struct perf_event *event)
+ {
+ 	struct cxl_pmu_info *info = pmu_to_cxl_pmu_info(event->pmu);
+ 	struct hw_perf_event *hwc = &event->hw;
+@@ -698,21 +698,15 @@ static void __cxl_pmu_read(struct perf_event *event, bool overflow)
+ 	} while (local64_cmpxchg(&hwc->prev_count, prev_cnt, new_cnt) != prev_cnt);
+ 
+ 	/*
+-	 * If we know an overflow occur then take that into account.
+-	 * Note counter is not reset as that would lose events
++	 * The counter is not reset on overflow, and the unsigned subtraction
++	 * masked to the counter width already yields the correct delta across a
++	 * single wrap, so no overflow fixup is needed.
+ 	 */
+ 	delta = (new_cnt - prev_cnt) & GENMASK_ULL(info->counter_width - 1, 0);
+-	if (overflow && delta < GENMASK_ULL(info->counter_width - 1, 0))
+-		delta += (1UL << info->counter_width);
+ 
+ 	local64_add(delta, &event->count);
+ }
+ 
+-static void cxl_pmu_read(struct perf_event *event)
+-{
+-	__cxl_pmu_read(event, false);
+-}
+-
+ static void cxl_pmu_event_stop(struct perf_event *event, int flags)
+ {
+ 	struct cxl_pmu_info *info = pmu_to_cxl_pmu_info(event->pmu);
+@@ -793,7 +787,7 @@ static irqreturn_t cxl_pmu_irq(int irq, void *data)
+ 			continue;
+ 		}
+ 
+-		__cxl_pmu_read(event, true);
++		cxl_pmu_read(event);
  	}
  
- 	cfg = readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
-+	cfg &= ~(CXL_PMU_COUNTER_CFG_EDGE | CXL_PMU_COUNTER_CFG_INVERT);
- 	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
- 	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_FREEZE_ON_OVRFLW, 1);
- 	cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_ENABLE, 1);
-@@ -651,6 +652,8 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
- 
- 	/* Fixed purpose counters have next two fields RO */
- 	if (test_bit(hwc->idx, info->conf_counter_bm)) {
-+		cfg &= ~(CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK |
-+			 CXL_PMU_COUNTER_CFG_EVENTS_MSK);
- 		cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK,
- 				  hwc->event_base);
- 		cfg |= FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENTS_MSK,
+ 	writeq(overflowed, base + CXL_PMU_OVERFLOW_REG);
 -- 
 2.55.0
 
