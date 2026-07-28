@@ -1,130 +1,89 @@
-Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4758B349B0D
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Jul 2026 03:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B887C34E741;
+	Tue, 28 Jul 2026 12:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785209780; cv=none; b=mRcFUXxAU0hfZieTonokE0Dz57iozhcsbOYbDjnHLr6yQ1WXXVF67KmAjiAKHId2H/bX4dQ0bb0QAz4RJ0HW2UuldnhoDcKqtJgwSMAIuzERQ4JXrPZiECGfK5TmJTWJViW27f+qOf8A9ArdgRjikk03ZDrZ1MsJeHjEaag2jXI=
+	t=1785240242; cv=none; b=PL7wkYH7Od8ngDk7r8dCjqrU5SqYdMtvbjQzAlz758/soNjKtxmtj2HPoJNF9TbnzTA9HwD4nx9SKIK7Vzd6lAl27m9tFGuC5QwqqF2qoiAa/J34bacB5mmjiWGeqUdYDRHeNcCEFyGkr6LPh9F5ilfTFR+g/4N9DECbx7Ljbus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785209780; c=relaxed/simple;
-	bh=GpS2JFnB2ewM0P6iTWx+8S5QdjPxDiOe4wzSD6rvXxU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LD7Ymxb6zokHPUym3bg6gTK4birdzgRb+z4OqxioU60vpRyrc12NtxNsZrhGPpLpWgSJne7ZvBoE22Ko8cv3eRjG568ZKVhmlAEmM2bf82VdfsLjr/ayUZHjd1ct2AVYGa/dFTE6Y1b6AUuMvz55Izb4gGnQGXKzwgGJPO6wDVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=iGbPoPHl; arc=none smtp.client-ip=209.85.215.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1785240242; c=relaxed/simple;
+	bh=QPMGxfL7sRTASsW/WHWUTA/jar9afmNRd3cjtJDfS60=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=UtD19umO7XK/u+ITsOjU9P2BPl8NBRYC8dTrA22FH9f27lDqyPRaMkQ16i5V/KWLMWtq3wga161xuoHiZI/21mByGU/3plpi15TCvPCdugavo6H2zvVnQShBuSXqsYFkCN4JBilrRXHPZLOxI7ez59TMZqdxuUebb3JP4NOpO+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=lI2HlSLE; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="iGbPoPHl"
-Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-c998fd549a8so2353369a12.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jul 2026 20:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1785209776; x=1785814576; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=OTv+ZI9c6fC7+DaQLSs6uSK+t6kk33LjEjqmF5l8N7k=;
-        b=iGbPoPHl30KjLs7vja+dvO2YMfwN//NplaWit/zm7m0Ytm/gu7zgCQyIw0Hwokjqn6
-         fieFMIYfXeGixPAuba2fskmGVsAr8obPyfztJBOMsEiCHyW28Jdv2c2wyhtAXEpYt/cy
-         jxPpFdnq1vZjAHTg3HURoXr605a+7L5OyYJPgHWhaMkSBTi86n+DIA+p9bi3RCu9nhj5
-         1jMm2rG0J/iJCYmx3Q2DD2itM71LYVbymfVt2GPDxgZOBqrcjuF7z8G7MAqOyPQtPyJx
-         egP+aO5dHzOwYF3t58mXJQqmkz7+daqsjMDSQud4hbjZg//GgOe4hTCf00eB8dDKO14R
-         UbLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785209776; x=1785814576;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=OTv+ZI9c6fC7+DaQLSs6uSK+t6kk33LjEjqmF5l8N7k=;
-        b=O/ztjYMTs9JMjdmb+ZHGJi0URWLOZ2gl3E73ht/gt95ek1C8EhK2LOUK28YL6ixUiX
-         YmufvqLO/Z4a/RVOtv5AqRgxF8Y3zKmONKh0hgbQFQI0CWFETReN4rWydaeykNZerQ1M
-         Vzbyhjn1pOQqvjozrPOeuQs/Du7CXv1dk7GbwcDdx+ikVqBQzSS054vE03o01oB2tg7i
-         1jPiBISk4Bd7OHdLa7fuV8WPAM3VDytYgwW7OUbqWHYi+RBGEdPbPbTUE+My2tTeIifC
-         5tIQIX4Am4G//1rBhDejE2F/xJqe9hRAMVRdE4xAc7uLi0gPpPoftXyB886UnfzKGxLu
-         PNfw==
-X-Forwarded-Encrypted: i=1; AHgh+Ro6COcRnJHdP5fDtK1sui6XKcXz11YywVTHpGEOvvn1oD1/rU0GmIV3CzR4tDLu7gVWDzy3GHIcBrb/57C1oExQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YyuWheYwKO40k/mOEYNLfoeC3n3D5E8jXuC/Q/LVoeHKUSTesQC
-	gMq2sLtA+GDIMpicNNUH7dwaV17KE4PC3YVvAL0XQvgFzRGoBkijVo0XrtpcWD49D/A=
-X-Gm-Gg: AR+sD13vWWhGoz3GPm5TR2VJqKYwCpi8wODtE1bQLPt5V7KszbNifAsugSQiaAGtUaJ
-	rXStpvvOVKLSR+ugGPh6O4RRrYDPagPJBFdlYcdHy9JJcvRIC+hwKunANyJVyfK5LCBJL/BzWjr
-	EP8T7GALea3smM+3mESjsyXi1pWCixIFSuBxv1XHb+gPl9DKYfG320dZLNVAeqstK/MOa+9LbTB
-	dK14di+CoGscMPs563mfi54HNm47PUdj6/F5pTsHUJ0wakkbA1+b2u5eINBiQxSKzfEjU05BHCi
-	UHlzfnnrHi49hCLArvyJCtL6Ku1oqiVL9Yjx1iR2Q2RwpciJLWRRHpp9zVazONtoaNR57ObKvG4
-	zQQsQbfvECIG5k5sKFcW+lv/MBEMAEHgmApiG3wzZpUqlaZqBL8dIZUkc+fIt/SiFvdWcPj4Esm
-	HbO4ATg6QlIxT18w/HNK34IbEyXAt+1LpLKp21QT+lUBrvPIbfqoisk7brij9P5gtBDSUceeRtW
-	Yl5UhKTo3cgDSI4wmSCI2DshW20SIItfSb6eQ==
-X-Received: by 2002:a05:6a21:b8c:b0:3ba:cd5b:3dc8 with SMTP id adf61e73a8af0-3c8ba46c563mr928062637.31.1785209776301;
-        Mon, 27 Jul 2026 20:36:16 -0700 (PDT)
-Received: from FJ7FR2JRQ3.bytedance.net ([178.93.176.7])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13d13003f12sm102135749c88.2.2026.07.27.20.36.07
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Mon, 27 Jul 2026 20:36:15 -0700 (PDT)
-From: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
-To: acme@kernel.org,
-	namhyung@kernel.org
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	cuiyunhui@bytedance.com,
-	yuanzhu@bytedance.com
-Subject: [PATCH] perf symbols: Skip dynamic symbols with invalid section indexes
-Date: Tue, 28 Jul 2026 11:35:53 +0800
-Message-ID: <20260728033559.90302-1-zhangzhanpeng.jasper@bytedance.com>
-X-Mailer: git-send-email 2.50.1
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="lI2HlSLE"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35E3E168F;
+	Tue, 28 Jul 2026 05:03:54 -0700 (PDT)
+Received: from [10.2.212.23] (e121345-lin.cambridge.arm.com [10.2.212.23])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D980E3F86F;
+	Tue, 28 Jul 2026 05:03:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1785240238; bh=QPMGxfL7sRTASsW/WHWUTA/jar9afmNRd3cjtJDfS60=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=lI2HlSLEWWdzGRHJUWPkDET2bYIhr+PKaIuu/cVoXdNqZOKj2PnlZn8Rx6MLNH+F0
+	 WeD7R+qbMzYIRM67Ka4N1ZcUXfJsMH78O6Hc1MPjbVUE4iwhsPzCOhFHmuEU3MKK5P
+	 vIL2NjO7vAlNUN6P5TLN9tSgX/hiZKT88cPCR3e4=
+Message-ID: <54c60aa5-6fd7-44fd-9a9c-2d7e658e8c7f@arm.com>
+Date: Tue, 28 Jul 2026 13:03:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] perf: Generic hotplug/cpumask for system PMUs
+From: Robin Murphy <robin.murphy@arm.com>
+To: will@kernel.org, mark.rutland@arm.com, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org
+Cc: alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, james.clark@linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1784911757.git.robin.murphy@arm.com>
+ <d85ac6d5f5f6383be5b882b6694052eac8062ced.1784911757.git.robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <d85ac6d5f5f6383be5b882b6694052eac8062ced.1784911757.git.robin.murphy@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-RISC-V post-link processing can remove relocation sections from the final
-vmlinux while some .dynsym entries retain stale section indexes. perf
-aborts the whole ELF symbol load when elf_getscn() rejects one of them,
-discarding otherwise valid .symtab symbols.
+On 24/07/2026 6:48 pm, Robin Murphy wrote:
+[...]
+> @@ -12918,6 +12943,17 @@ int perf_pmu_register(struct pmu *_pmu, const char *name, int type)
+>   	INIT_LIST_HEAD(&pmu->events);
+>   	spin_lock_init(&pmu->events_lock);
+>   
+> +	/*
+> +	 * Finally, if appropriate give the PMU a chance to pick an initial CPU
+> +	 * affinity for its cpumask, or initialise any general per-CPU state.
+> +	 * Note that we're serialised against perf_event_{init,exit}_cpu()
+> +	 * themselves here by virtue of pmus_lock.
+> +	 */
+> +	if (pmu->init_cpu) {
+> +		for_each_online_cpu(cpu)
 
-Skip only dynamic symbols whose normal section index is outside the final
-section table. Keep the existing error path for .symtab, reserved indexes,
-and other libelf failures.
+Having thought about it, while the drivers I want to convert should all 
+be fine with a potential double-init, I guess it is true that an 
+outgoing CPU in between CPUHP_AP_PERF_ONLINE and CPUHP_TEARDOWN_CPU 
+would still be in cpu_online_mask with interrupts enabled, and thus 
+potentially able to be picked by the driver callback, and thus end up 
+inaccessible unless and until that CPU comes back again. So indeed for 
+true race elimination this probably should use perf_online_mask. I'll 
+save spamming a v3 until I get some feedback that the overall idea is 
+worth pursuing at all, though.
 
-On an affected system, the vmlinux symtab matches kallsyms test changes
-from Skip to Ok. [unknown] rows in the same perf.data change from 41 to 0.
+(But I shall continue to ignore the rest of the twaddle from word-salad 
+models which apparently can't differentiate "initialise" from "allocate"...)
 
-Signed-off-by: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
----
- tools/perf/util/symbol-elf.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Thanks,
+Robin.
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index f6f6b54da131..e955c3feddcd 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-@@ -1681,8 +1681,13 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
- 			continue;
- 
- 		sec = elf_getscn(syms_ss->elf, sym.st_shndx);
--		if (!sec)
-+		if (!sec) {
-+			if (dynsym && ehdr.e_shnum &&
-+			    sym.st_shndx < SHN_LORESERVE &&
-+			    sym.st_shndx >= ehdr.e_shnum)
-+				continue;
- 			goto out_elf_end;
-+		}
- 
- 		gelf_getshdr(sec, &shdr);
- 
--- 
-2.50.1 (Apple Git-155)
-
+> +			smp_call_function_single(cpu, perf_scope_init_cpu, pmu, 1);
+> +	}
+> +
+>   	/*
+>   	 * Now that the PMU is complete, make it visible to perf_try_init_event().
+>   	 */
