@@ -1,157 +1,149 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ADFB37F00C
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Jul 2026 16:57:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90CDF23909F;
+	Tue, 28 Jul 2026 17:13:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785257858; cv=none; b=p/F9B7VP/lVIsgGOEEYw/OTd6T9cjXPAQpK0GkXvtO+I653U+2FB1aKIi918VOHGN+fVo6ASgIYZG4P0kM/EK4mG/qBbuRSL/m00pu9ONcn1aOljkos5/hWvENr8jC7qfK2OK8jXSiVQ5YCMI3SGmotl879aamnuuzVGKHcSmqg=
+	t=1785258829; cv=none; b=YP345EXmNVFAEuUojrvF3VOREwAz1HdO6Nit60ykHQYSyteLT1kinD1GrezJd4w54JSO/W9aSKkvRVvQXt/JXmpEJ+AnNgZ2sSmBvHQfxqm4PncHkcsKEQkEutrTB2SIadJD1lJnLMy4CRFeP4oLEjWaeiqnhRyCYBczhHryGrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785257858; c=relaxed/simple;
-	bh=+TAcyfa1Psu6qn4X0XB2GFI5ueb3tYwTfqzmhvxa3Iw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=r5Qsm3Osq05o2tFcoAqEDWUuIt5F3RXAudjRDvvuQPdQ33PjTpHbIj6ar+ee/tgP7atYD52cg7xD4Ci0UT5al/uFJ2y78JHHNJo/BjvvFnFfpCst3BbnmyK4hiIt0F2tM3U9U/51C8yADorvfvUCNi6B8e6RmPKdovoT7L8CYNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcWaZ/5/; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785258829; c=relaxed/simple;
+	bh=floiWPiCs23VBi14a9hCKNP+Gw2OuPuAAW8WjYIJhGg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U+qpKDx8tbVcjjwkbKOYKkfGkfjHEiZ4exg7fhtPleqf3hQJJ1EC6ztJZ6auvid+Bit0Oq1igpIWVta4TKQSsaYm0hLP3pza/PhvMYQSMjOPQFPQuIO0NNCJZKAtodYaNM9NupgidpddY8qWle2exwwO37J6AU0J00Pz05m0FbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YuOZT/gc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcWaZ/5/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B5DA1F000E9;
-	Tue, 28 Jul 2026 16:57:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YuOZT/gc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA6531F000E9;
+	Tue, 28 Jul 2026 17:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785257857;
-	bh=bOBHUCgCJpN+b3UTMRHkaZFoQhZ25OumoFbMxdZdqbg=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=BcWaZ/5//i/UK5SBdcUfIcGsC9+5Hz1KCown1C6dkBqJrSE0emYP0fg6w+yXl6Zok
-	 IFL6yyD/0ovyVboncisBgAxOI9kvoj0ILTeDBgvUSb+KF6SN/pNyyAEQSmQD7jGcaP
-	 Qalmpr8NMYkHOWVbgmnxXvpyis9EFau6YmH3+EYRxICf/VC/oX+mA8pAFi00arm2Fi
-	 SrxgLERnGHmqgRGzSvy06mQ/aJdLlB97xvbNtVLVKWRp77TZH9NKuDDnjlygz2/NuJ
-	 Skr3H5xwQyLenFmJwqxSlF3xlmF9zlHh0AnZcaST59dbhTXGb+DS6nsMTizSXuDZZs
-	 geHNMbOv9iIJA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 5/5] perf/arm-cmn: Support CMN S3 r2
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Robin Murphy" <robin.murphy@arm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <86b7093bc5de0f2aedc63fc4826ce911cb22d16f.1785252273.git.robin.murphy@arm.com>
-References: <cover.1785252273.git.robin.murphy@arm.com>
- <86b7093bc5de0f2aedc63fc4826ce911cb22d16f.1785252273.git.robin.murphy@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 28 Jul 2026 16:57:36 +0000
-Message-Id: <20260728165737.0B5DA1F000E9@smtp.kernel.org>
+	s=k20260515; t=1785258828;
+	bh=sKF2JB8nJu7uRvnXy2GtPNV3qzGScxKuhuGQwQEYhoI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=YuOZT/gcsUD4P7wQllcUGeF5Y024oqFHULsNLody8tSMAeiDJ2EiiO99sCzu2Udib
+	 ynPDgjCiziEtOMS5SZYsE5Vg/iolYoeedUdKqDN2Q3JhCcE/sjGf5srGRMA1gkIOIL
+	 dgEYuZjn/1wwiNMFfobJ60DYacxELdXb5fIezeHiYOmr88sp5+1MyYB6DGAMkPGYPR
+	 xncf/I+03MS3i8VUziEyuS5t/5DbSJMdP+8OhmF1ncZYq+28b7E9/xmHlMciFRC/EV
+	 d9bzCllor2MxY4NV8HB5LlRsFTLQqWGyWfRwBTXMW+uYNFdxiixUPz/Ysu/ZSeoTw8
+	 0X5+eJvfJ9lcw==
+Date: Tue, 28 Jul 2026 10:13:46 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Thomas Falcon <thomas.falcon@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v2 2/6] perf mem: Add support for printing
+ PERF_MEM_LVLNUM_L0
+Message-ID: <amjjSlWIQRA64qSy@google.com>
+References: <20260714004359.179451-1-thomas.falcon@intel.com>
+ <20260714004359.179451-3-thomas.falcon@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260714004359.179451-3-thomas.falcon@intel.com>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+Hello,
 
-New issues:
-- [Medium] The virtual channel count fields (rsp_vc_num, dat_vc_num, snp_vc=
-_num, req_vc_num) in struct arm_cmn are defined as 2-bit bitfields. The pat=
-ch adds support for CMN-S3 R2, which uses 3-bit values for these counts in =
-the hardware registers. When extracting these 3-bit values and assigning th=
-em to the 2-bit bitfields, values of 4 or higher are silently truncated. Co=
-nsequently, in arm_cmn_event_attr_is_visible(), the truncated value incorre=
-ctly evaluates as < 2 (e.g., 4 truncates to 0), falsely hiding valid PMU pe=
-rformance events from userspace.
+On Mon, Jul 13, 2026 at 07:43:55PM -0500, Thomas Falcon wrote:
+> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> 
+> Add support for printing PERF_MEM_LVLNUM_L0 in perf mem report.
 
-Pre-existing issues:
-- [High] In arm_cmn_discover(), the 16-bit field cmn->num_dns accumulates t=
-he number of child nodes across all XP nodes using MMIO values (CMN_CI_CHIL=
-D_COUNT). Since CMN_CI_CHILD_COUNT is a 16-bit field, accumulating multiple=
- of these can overflow the 16-bit num_dns field. This wrapped value is used=
- to calculate the size of the kernel heap allocation for the dn array (devm=
-_kcalloc). During the second pass, the driver re-reads the un-wrapped hardw=
-are child counts and linearly writes to the dn array inside the loop, sever=
-ely overflowing the undersized heap allocation.
---
+What's the L0, by the way?
 
---- Patch [5]: [PATCH v2 5/5] perf/arm-cmn: Support CMN S3 r2 ---
-commit b19f5d8af33d67287a2dac3c0584d98dc6d08406
-Author: Robin Murphy <robin.murphy@arm.com>
+Thanks,
+Namhyung
 
-perf/arm-cmn: Support CMN S3 r2
-
-This commit adds support for CMN S3 r2. It splits the internal model
-abstraction, adds new filters, changes existing events, and provides
-a means of working around the isolation feature.
-
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index 9d5833f8cff2b..b162de3d9d169 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-
-[ ... ]
-
-> @@ -2431,21 +2538,33 @@ static int arm_cmn_discover(struct arm_cmn *cmn, =
-unsigned int rgn_offset)
-
-[ ... ]
-
->  	reg =3D readq_relaxed(cfg_region + CMN_CFGM_INFO_GLOBAL_1);
-> -	cmn->snp_vc_num =3D FIELD_GET(CMN_INFO_SNP_VC_NUM, reg);
-> -	cmn->req_vc_num =3D FIELD_GET(CMN_INFO_REQ_VC_NUM, reg);
-> +	if (model < CMNS3R2) {
-> +		cmn->snp_vc_num =3D FIELD_GET(CMN_INFO_SNP_VC_NUM, reg);
-> +		cmn->req_vc_num =3D FIELD_GET(CMN_INFO_REQ_VC_NUM, reg);
-> +	} else {
-> +		cmn->rsp_vc_num =3D FIELD_GET(CMN_S3_R2_RSP_VC_NUM, reg);
-> +		cmn->dat_vc_num =3D FIELD_GET(CMN_S3_R2_DAT_VC_NUM, reg);
-> +		cmn->snp_vc_num =3D FIELD_GET(CMN_S3_R2_SNP_VC_NUM, reg);
-> +		cmn->req_vc_num =3D FIELD_GET(CMN_S3_R2_REQ_VC_NUM, reg);
-> +	}
-
-[Severity: Medium]
-Does assigning the 3-bit CMN_S3_R2_RSP_VC_NUM value into the 2-bit
-rsp_vc_num bitfield in struct arm_cmn cause silent truncation?
-
-Looking at struct arm_cmn, the virtual channel fields are defined as 2 bits:
-
-struct arm_cmn {
-    ...
-    unsigned int rsp_vc_num : 2;
-    unsigned int dat_vc_num : 2;
-    unsigned int snp_vc_num : 2;
-    unsigned int req_vc_num : 2;
-    ...
-};
-
-If a hardware value of 4 or 5 is truncated to 0 or 1 here, could it
-incorrectly evaluate as < 2 in arm_cmn_event_attr_is_visible() and falsely
-hide valid PMU events from userspace?
-
-[ ... ]
-
->  	reg =3D readq_relaxed(cfg_region + CMN_CHILD_INFO);
->  	child_count =3D FIELD_GET(CMN_CI_CHILD_COUNT, reg);
->=20
-> 	cmn->num_xps =3D child_count;
-> 	cmn->num_dns =3D cmn->num_xps;
->=20
-> 	/* Pass 1: visit the XPs, enumerate their children */
-> 	cfg_region +=3D child_poff;
-> 	for (i =3D 0; i < cmn->num_xps; i++) {
-> 		reg =3D readq_relaxed(cfg_region + i * 8);
-> 		xp_region =3D cmn->base + (reg & CMN_CHILD_NODE_ADDR);
->=20
-> 		reg =3D readq_relaxed(xp_region + CMN_CHILD_INFO);
-> 		cmn->num_dns +=3D FIELD_GET(CMN_CI_CHILD_COUNT, reg);
-> 	}
-
-[Severity: High]
-This is a pre-existing issue, but can accumulating 16-bit hardware counts
-here overflow the 16-bit cmn->num_dns field?
-
-If multiple XP nodes return large values for CMN_CI_CHILD_COUNT, could
-cmn->num_dns wrap around, resulting in an undersized devm_kcalloc()
-allocation for the dn array?
-
-Later in the second pass, the un-wrapped counts control the loop bounds,
-which seems like it could lead to linear out-of-bounds writes into the
-undersized array.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1785252273.gi=
-t.robin.murphy@arm.com?part=3D5
+> 
+> Assisted-by: Sashiko:gemini-3.1-pro-preview
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+> ---
+>  tools/perf/Documentation/perf-record.txt | 2 +-
+>  tools/perf/util/bpf-filter.l             | 1 +
+>  tools/perf/util/mem-events.c             | 5 +++++
+>  tools/perf/util/mem-events.h             | 1 +
+>  4 files changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 178f483140ed..b54032efe41c 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -212,7 +212,7 @@ OPTIONS
+>  	The <value> can be one of:
+>  	  <number> (for any term)
+>  	  na, load, store, pfetch, exec (for mem_op)
+> -	  l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem (for mem_lvl)
+> +	  l0, l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem (for mem_lvl)
+>  	  na, none, hit, miss, hitm, fwd, peer (for mem_snoop)
+>  	  remote (for mem_remote)
+>  	  na, locked (for mem_locked)
+> diff --git a/tools/perf/util/bpf-filter.l b/tools/perf/util/bpf-filter.l
+> index 6aa65ade3385..1be9df6550fc 100644
+> --- a/tools/perf/util/bpf-filter.l
+> +++ b/tools/perf/util/bpf-filter.l
+> @@ -131,6 +131,7 @@ store		{ return constant(PERF_MEM_OP_STORE); }
+>  pfetch		{ return constant(PERF_MEM_OP_PFETCH); }
+>  exec		{ return constant(PERF_MEM_OP_EXEC); }
+>  
+> +l0		{ return constant(PERF_MEM_LVLNUM_L0); }
+>  l1		{ return constant(PERF_MEM_LVLNUM_L1); }
+>  l2		{ return constant(PERF_MEM_LVLNUM_L2); }
+>  l3		{ return constant(PERF_MEM_LVLNUM_L3); }
+> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+> index 4e490f9cd348..4fd48fd20055 100644
+> --- a/tools/perf/util/mem-events.c
+> +++ b/tools/perf/util/mem-events.c
+> @@ -391,6 +391,7 @@ static const char * const mem_lvlnum[] = {
+>  	[PERF_MEM_LVLNUM_L4] = "L4",
+>  	[PERF_MEM_LVLNUM_L2_MHB] = "L2 MHB",
+>  	[PERF_MEM_LVLNUM_MSC] = "Memory-side Cache",
+> +	[PERF_MEM_LVLNUM_L0] = "L0",
+>  	[PERF_MEM_LVLNUM_UNC] = "Uncached",
+>  	[PERF_MEM_LVLNUM_CXL] = "CXL",
+>  	[PERF_MEM_LVLNUM_IO] = "I/O",
+> @@ -831,6 +832,8 @@ int mem_stat_index(const enum mem_stat_type mst, const u64 val)
+>  		}
+>  	case PERF_MEM_STAT_CACHE:
+>  		switch (src.mem_lvl_num) {
+> +		case PERF_MEM_LVLNUM_L0:
+> +			return MEM_STAT_CACHE_L0;
+>  		case PERF_MEM_LVLNUM_L1:
+>  			return MEM_STAT_CACHE_L1;
+>  		case PERF_MEM_LVLNUM_L2:
+> @@ -915,6 +918,8 @@ const char *mem_stat_name(const enum mem_stat_type mst, const int idx)
+>  		}
+>  	case PERF_MEM_STAT_CACHE:
+>  		switch (idx) {
+> +		case MEM_STAT_CACHE_L0:
+> +			return "L0";
+>  		case MEM_STAT_CACHE_L1:
+>  			return "L1";
+>  		case MEM_STAT_CACHE_L2:
+> diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
+> index 5b98076904b0..daa22748f9fe 100644
+> --- a/tools/perf/util/mem-events.h
+> +++ b/tools/perf/util/mem-events.h
+> @@ -109,6 +109,7 @@ enum mem_stat_op {
+>  };
+>  
+>  enum mem_stat_cache {
+> +	MEM_STAT_CACHE_L0,
+>  	MEM_STAT_CACHE_L1,
+>  	MEM_STAT_CACHE_L2,
+>  	MEM_STAT_CACHE_L3,
+> -- 
+> 2.43.0
+> 
