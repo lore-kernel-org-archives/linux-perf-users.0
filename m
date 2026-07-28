@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47D836F911;
-	Tue, 28 Jul 2026 21:14:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644413BED7D;
+	Tue, 28 Jul 2026 21:26:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785273253; cv=none; b=XQkt+Qv+/PeyhopKzookclKtfaukFEKtHQfaJKlQOdBErC14mRpDiZngDuhzDLV2HnoDenTiG+EETKI9EqLRKjWnWRUnW/Pe7IHrwXZbJSLRv9+dT0f3E4wsfsRjLYgECpFcyafFmU3vWOWVLDr8dEa0/0yPWd8BzEeF3oQ3ClA=
+	t=1785273964; cv=none; b=bQQGnKp0YNCUEg2WWEMKAbB34YzAqz3Li8R0TdHUyIDYIvxNPDdgKdyUXeL2yqU5H5Sgr5mLKHKoqi3htDu4Qii5Wzmwh3SwSRFlDcKiSNZBN3P2D7fYCGJySSYwtS9zj2b3Nie0ROzPfcnPpkehDrt7lgupPUl+WqxGQX+9Z7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785273253; c=relaxed/simple;
-	bh=GhWO2RwY0NnNtEpgULPeB0J7crm0o/zVdkPla48nG0U=;
+	s=arc-20240116; t=1785273964; c=relaxed/simple;
+	bh=TI7STE90aWripsjQxMiKSk1gFe4YB7FyxAPtCicahzI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GXidoQ2qHJB/kl6MxDtbmXRCm8KBacWBrd5pSE3Tgh6Aw+jaAKvVnuopG2im266oSxXGGKG2jVOEBFmJiuT7HxHVpO2m1c+Lf06y+t1z++FWfsNnNjEd3gv7yTZifccPL9SVdE6JDJP/95TOkeE/xMM2hdLeQJTWA0VjU6smyR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nEO9C93l; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=hTatC00eyi9roAEcEr2j8GRl0kTqOuQUxKoeEtH0GZI0g90A880EdUdaa7bBALy288bgxS09Nd1RFpnwckA75o8yV6UFL0cNrkfNf83fjW7VL/0a3WuNBLMr82PwrS1ELkD8/991J3QjPxUAXX98oJkJEA22vWYijcY0VgoGAJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LaClP0Bd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nEO9C93l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47B2D1F000E9;
-	Tue, 28 Jul 2026 21:14:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LaClP0Bd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBF1E1F00A3A;
+	Tue, 28 Jul 2026 21:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785273251;
-	bh=bERl4FgK4QuJNE/Jjx85DIDS9YPiBKu+Gsj+1W3nSZg=;
+	s=k20260515; t=1785273963;
+	bh=cQj68nnpzmP/I6Mb5vh6Dv7Tpoxp0KVkB4bK4K9jNbw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=nEO9C93lJ6nKXf9o6GvlcllvFx3WhowqO9NoNh4aXnoGV31AksP/8+eX7aB5UEjBx
-	 n/6f9KEvqr7zDk1caaf6Zg3uIGLvkwhR2EbUMVPffWLmMh0kOY4i5f+qPRgBPzQuul
-	 owAbS3xMrkK8Re/Q5kLCfC6CCMoyCgNNJFEvas8bqUCY2w7BQAp9QMUYwrJMHZFDn1
-	 EoGHoY/0WH8XiuOqs1k28wYsvT1p3m4ZzYYdpxQx3nWtcuTUj0shyNvkVbE673Br+U
-	 J6CYUR6oIHHKQtBTy+CyaqDh0g1xWgLDit71xN+/Hn5yIcENB5jKpV2xgUvNjp+HNB
-	 L4zKhVOkeNazA==
+	b=LaClP0Bdp4xiM+ezcBZLfhHdX32Si8zOH8/WoOw2ItuFKk+JjMMKvv84jSwH1TgC1
+	 +NDxy9iXozAYvp84MSii9d3pHWundYxaDRxWj87RWD1giyItVAx2znquaHqhdS4NpP
+	 QL7CsGCXtmBmHXk/xI2m6jlPv593twsfA5HOXxkt1jXFwsVG0V4JknvPysaCtZRPDV
+	 JvXc3x8V/DheHjQphuy8SklPWO5OlAU3mmwk9hbPYqWFtCmJkNyDFGISlVWogyy8ub
+	 1X5TT06MYgmr6RrlmTM3faZmFYznZVzh8Idd/N8dh1tQKOV+3EJfLEuQo6ShqLNMBw
+	 b7pSSAUpNkDbQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/9] perf/cxl: Drop bogus counter overflow fixup
+Subject: Re: [PATCH 2/9] perf/cxl: Clear stale event fields before
+ reprogramming a counter
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-cxl@vger.kernel.org
-In-Reply-To: <20260728210551.2449093-4-dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260728210551.2449093-3-dave.jiang@intel.com>
 References: <20260728210551.2449093-1-dave.jiang@intel.com>
- <20260728210551.2449093-4-dave.jiang@intel.com>
+ <20260728210551.2449093-3-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 28 Jul 2026 21:14:10 +0000
-Message-Id: <20260728211411.47B2D1F000E9@smtp.kernel.org>
+Date: Tue, 28 Jul 2026 21:26:02 +0000
+Message-Id: <20260728212602.BBF1E1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,68 +47,77 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Removing the overflow fixup entirely causes the CXL PMU driver t=
-o silently drop a full period of events on overflow when the new counter sk=
-id is greater than or equal to the previous skid.
+
+Pre-existing issues:
+- [High] Incorrect overflow handling in __cxl_pmu_read() double-counts even=
+ts and invokes undefined behavior via an out-of-bounds shift.
 --
 
---- Patch [3]: [PATCH 3/9] perf/cxl: Drop bogus counter overflow fixup ---
-commit 9b5168bc2e13d25590b1bb314d5cd8b527ba4f3e
+--- Patch [2]: [PATCH 2/9] perf/cxl: Clear stale event fields before reprog=
+ramming a counter ---
+commit 7bcf06641417cf2542677bb2d2607c683f730512
 Author: Dave Jiang <dave.jiang@intel.com>
 
-perf/cxl: Drop bogus counter overflow fixup
+perf/cxl: Clear stale event fields before reprogramming a counter
 
-This commit removes the overflow fixup in __cxl_pmu_read() and folds it into
-cxl_pmu_read(). The stated rationale is that masked unsigned subtraction
-already produces the correct delta across a wrap, and that the previous
-fixup caused overcounting.
+This commit clears stale event fields from the configuration register
+before reprogramming a counter in the CXL PMU driver. This ensures
+the counter does not count the wrong events with old edge or invert
+behavior when reused.
 
 Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolab=
 s.net?part=3D1
 
 > diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index 3138514157cde..410c9162c8246 100644
+> index e77c0650a7eb6..3138514157cde 100644
 > --- a/drivers/perf/cxl_pmu.c
 > +++ b/drivers/perf/cxl_pmu.c
+> @@ -641,6 +641,7 @@ static void cxl_pmu_event_start(struct perf_event *ev=
+ent, int flags)
+>  	}
+> =20
+>  	cfg =3D readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
+> +	cfg &=3D ~(CXL_PMU_COUNTER_CFG_EDGE | CXL_PMU_COUNTER_CFG_INVERT);
+>  	cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
+
 [ ... ]
-> @@ -698,21 +698,15 @@ static void __cxl_pmu_read(struct perf_event *event=
-, bool overflow)
->  	} while (local64_cmpxchg(&hwc->prev_count, prev_cnt, new_cnt) !=3D prev=
-_cnt);
+
+> @@ -651,6 +652,8 @@ static void cxl_pmu_event_start(struct perf_event *ev=
+ent, int flags)
 > =20
->  	/*
-> -	 * If we know an overflow occur then take that into account.
-> -	 * Note counter is not reset as that would lose events
-> +	 * The counter is not reset on overflow, and the unsigned subtraction
-> +	 * masked to the counter width already yields the correct delta across a
-> +	 * single wrap, so no overflow fixup is needed.
->  	 */
->  	delta =3D (new_cnt - prev_cnt) & GENMASK_ULL(info->counter_width - 1, 0=
+>  	/* Fixed purpose counters have next two fields RO */
+>  	if (test_bit(hwc->idx, info->conf_counter_bm)) {
+> +		cfg &=3D ~(CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK |
+> +			 CXL_PMU_COUNTER_CFG_EVENTS_MSK);
+>  		cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK,
+>  				  hwc->event_base);
+
+[Severity: High]
+This isn't a bug introduced by this patch, but I noticed a potential problem
+in how overflows are handled in __cxl_pmu_read() in this same file:
+
+drivers/perf/cxl_pmu.c:__cxl_pmu_read() {
+    ...
+    delta =3D (new_cnt - prev_cnt) & GENMASK_ULL(info->counter_width - 1, 0=
 );
-> -	if (overflow && delta < GENMASK_ULL(info->counter_width - 1, 0))
-> -		delta +=3D (1UL << info->counter_width);
+    if (overflow && delta < GENMASK_ULL(info->counter_width - 1, 0))
+        delta +=3D (1UL << info->counter_width);
+    ...
+}
 
-[Severity: Medium]
-Does removing the overflow fixup entirely cause the driver to drop a full
-period of events when new_cnt >=3D prev_cnt?
+Does this double-count the overflow events? Since the subtraction is already
+masked by GENMASK_ULL(), the wraparound is correctly accounted for in delta.
+Adding (1UL << info->counter_width) appears redundant and might corrupt the
+resulting metrics.
 
-While standard modulo math handles wraps when the counter is reprogrammed to
-a high value (ensuring new_cnt < prev_cnt), the CXL PMU does not reprogram
-counters on overflow. They start at 0, wrap, and freeze at a small skid
-value.
+Additionally, does this shift operation risk undefined behavior? If
+info->counter_width is 64 (the maximum width allowed by the CXL 3.0
+specification) on 64-bit systems, or 32 or greater on 32-bit systems,
+shifting 1UL by that width would cause an out-of-bounds shift.
 
-If a counter overflows, prev_cnt becomes skid1. On the next overflow,
-new_cnt becomes skid2. If skid2 >=3D skid1 (which has a roughly 50% chance),
-the masked subtraction only yields the tiny difference (skid2 - skid1),
-completely missing the wrapped period.
-
-Would it be more correct to keep an overflow fixup specifically for the
-new_cnt >=3D prev_cnt case when an overflow occurs?
-
-> =20
->  	local64_add(delta, &event->count);
->  }
+Is it safe to rely on this delta calculation when counter_width can be large
+enough to trigger this undefined behavior?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260728210551.2449=
-093-1-dave.jiang@intel.com?part=3D3
+093-1-dave.jiang@intel.com?part=3D2
