@@ -1,124 +1,130 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD811FC110
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Jul 2026 00:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4758B349B0D
+	for <linux-perf-users@vger.kernel.org>; Tue, 28 Jul 2026 03:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785198484; cv=none; b=B8pEDz99rhPli0EX9nUyUkOwXJIt5blg5+Y4DcUp4C3yJhVgujNs2oSsie0jnVxY9GY7blZF2PG/K/m1A72Fzy+q/vHXgurfly28xM44DOkGamu7PeE88AnPZitX+7IE1lY5IEZI6fznIX1DPYzhiDcDj9VEnhViNu3ko9xORYQ=
+	t=1785209780; cv=none; b=mRcFUXxAU0hfZieTonokE0Dz57iozhcsbOYbDjnHLr6yQ1WXXVF67KmAjiAKHId2H/bX4dQ0bb0QAz4RJ0HW2UuldnhoDcKqtJgwSMAIuzERQ4JXrPZiECGfK5TmJTWJViW27f+qOf8A9ArdgRjikk03ZDrZ1MsJeHjEaag2jXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785198484; c=relaxed/simple;
-	bh=58UrrrBGVaEGVINzZ+jPzXOU7si+//wFrDLwFhd/yvY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DAESb8gymrHPqUGAsUeYoc6ycQ1sN0qMwGmLXTZe+oUO8Bh5yAnluV9aDUrawxPvEBNI0Wtt5C1UFwqrATd2fBFS44u8E1vH8vYYqph6DzYH0Jbt8wbPF/N6yq+CebQImx+v/D4kA+JJpqHbOom+zyOm48mNareCu5q36yVIxc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zh2tBK+a; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785209780; c=relaxed/simple;
+	bh=GpS2JFnB2ewM0P6iTWx+8S5QdjPxDiOe4wzSD6rvXxU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LD7Ymxb6zokHPUym3bg6gTK4birdzgRb+z4OqxioU60vpRyrc12NtxNsZrhGPpLpWgSJne7ZvBoE22Ko8cv3eRjG568ZKVhmlAEmM2bf82VdfsLjr/ayUZHjd1ct2AVYGa/dFTE6Y1b6AUuMvz55Izb4gGnQGXKzwgGJPO6wDVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=iGbPoPHl; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zh2tBK+a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E4101F000E9;
-	Tue, 28 Jul 2026 00:28:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785198482;
-	bh=N0cyFmSmHoP/rTwt+6UmbBtwWXOJgIDr6hcSkE5Y6Bs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Zh2tBK+aLIbIZdg1h4SD4zYZGt4vx5BTYahlsn3h7LRMirvkSYv4c7/M7xI0a4H7/
-	 0lXrsvetGqzgpkdQaChNl754xeeKW08alf8+P+7ogFe0rrUbu3xOLOAMYIuef1HqpI
-	 +6MzWBnZfpoGa6pafYnn3Yej6xhlHblQ20uviLnoUV7B/ur5BserpnqFh3NUhL3+Ac
-	 3O05Ylxph/cseXIwi7vUV4XEX8hopssr9hbnUIKYPI5D37K8dKnjwFI3RzLM+k0sgW
-	 U8bXkeSloGCrTKZ91Dg5jgxZ48zi2VGBoTz43/XCbtSZJDiwVee3Z1j07nkNkfoLYv
-	 2v40fS2WIeezg==
-Date: Mon, 27 Jul 2026 17:28:01 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Aaron Tomlin <atomlin@atomlin.com>
-Cc: irogers@google.com, acme@kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] perf sched: Suppress latency table output when
- trace samples are missing
-Message-ID: <amf3kcpsgjjbQcwA@google.com>
-References: <20260726032533.712462-1-atomlin@atomlin.com>
- <20260726032533.712462-2-atomlin@atomlin.com>
- <20260726033725.C765A1F000E9@smtp.kernel.org>
- <sgw62mtino7m4h3whr553dijcn5hiiz46hrbqdmj6qamudo26m@nri7gkvw2t7i>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="iGbPoPHl"
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-c998fd549a8so2353369a12.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 27 Jul 2026 20:36:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1785209776; x=1785814576; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=OTv+ZI9c6fC7+DaQLSs6uSK+t6kk33LjEjqmF5l8N7k=;
+        b=iGbPoPHl30KjLs7vja+dvO2YMfwN//NplaWit/zm7m0Ytm/gu7zgCQyIw0Hwokjqn6
+         fieFMIYfXeGixPAuba2fskmGVsAr8obPyfztJBOMsEiCHyW28Jdv2c2wyhtAXEpYt/cy
+         jxPpFdnq1vZjAHTg3HURoXr605a+7L5OyYJPgHWhaMkSBTi86n+DIA+p9bi3RCu9nhj5
+         1jMm2rG0J/iJCYmx3Q2DD2itM71LYVbymfVt2GPDxgZOBqrcjuF7z8G7MAqOyPQtPyJx
+         egP+aO5dHzOwYF3t58mXJQqmkz7+daqsjMDSQud4hbjZg//GgOe4hTCf00eB8dDKO14R
+         UbLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785209776; x=1785814576;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=OTv+ZI9c6fC7+DaQLSs6uSK+t6kk33LjEjqmF5l8N7k=;
+        b=O/ztjYMTs9JMjdmb+ZHGJi0URWLOZ2gl3E73ht/gt95ek1C8EhK2LOUK28YL6ixUiX
+         YmufvqLO/Z4a/RVOtv5AqRgxF8Y3zKmONKh0hgbQFQI0CWFETReN4rWydaeykNZerQ1M
+         Vzbyhjn1pOQqvjozrPOeuQs/Du7CXv1dk7GbwcDdx+ikVqBQzSS054vE03o01oB2tg7i
+         1jPiBISk4Bd7OHdLa7fuV8WPAM3VDytYgwW7OUbqWHYi+RBGEdPbPbTUE+My2tTeIifC
+         5tIQIX4Am4G//1rBhDejE2F/xJqe9hRAMVRdE4xAc7uLi0gPpPoftXyB886UnfzKGxLu
+         PNfw==
+X-Forwarded-Encrypted: i=1; AHgh+Ro6COcRnJHdP5fDtK1sui6XKcXz11YywVTHpGEOvvn1oD1/rU0GmIV3CzR4tDLu7gVWDzy3GHIcBrb/57C1oExQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuWheYwKO40k/mOEYNLfoeC3n3D5E8jXuC/Q/LVoeHKUSTesQC
+	gMq2sLtA+GDIMpicNNUH7dwaV17KE4PC3YVvAL0XQvgFzRGoBkijVo0XrtpcWD49D/A=
+X-Gm-Gg: AR+sD13vWWhGoz3GPm5TR2VJqKYwCpi8wODtE1bQLPt5V7KszbNifAsugSQiaAGtUaJ
+	rXStpvvOVKLSR+ugGPh6O4RRrYDPagPJBFdlYcdHy9JJcvRIC+hwKunANyJVyfK5LCBJL/BzWjr
+	EP8T7GALea3smM+3mESjsyXi1pWCixIFSuBxv1XHb+gPl9DKYfG320dZLNVAeqstK/MOa+9LbTB
+	dK14di+CoGscMPs563mfi54HNm47PUdj6/F5pTsHUJ0wakkbA1+b2u5eINBiQxSKzfEjU05BHCi
+	UHlzfnnrHi49hCLArvyJCtL6Ku1oqiVL9Yjx1iR2Q2RwpciJLWRRHpp9zVazONtoaNR57ObKvG4
+	zQQsQbfvECIG5k5sKFcW+lv/MBEMAEHgmApiG3wzZpUqlaZqBL8dIZUkc+fIt/SiFvdWcPj4Esm
+	HbO4ATg6QlIxT18w/HNK34IbEyXAt+1LpLKp21QT+lUBrvPIbfqoisk7brij9P5gtBDSUceeRtW
+	Yl5UhKTo3cgDSI4wmSCI2DshW20SIItfSb6eQ==
+X-Received: by 2002:a05:6a21:b8c:b0:3ba:cd5b:3dc8 with SMTP id adf61e73a8af0-3c8ba46c563mr928062637.31.1785209776301;
+        Mon, 27 Jul 2026 20:36:16 -0700 (PDT)
+Received: from FJ7FR2JRQ3.bytedance.net ([178.93.176.7])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13d13003f12sm102135749c88.2.2026.07.27.20.36.07
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Mon, 27 Jul 2026 20:36:15 -0700 (PDT)
+From: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+To: acme@kernel.org,
+	namhyung@kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	cuiyunhui@bytedance.com,
+	yuanzhu@bytedance.com
+Subject: [PATCH] perf symbols: Skip dynamic symbols with invalid section indexes
+Date: Tue, 28 Jul 2026 11:35:53 +0800
+Message-ID: <20260728033559.90302-1-zhangzhanpeng.jasper@bytedance.com>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <sgw62mtino7m4h3whr553dijcn5hiiz46hrbqdmj6qamudo26m@nri7gkvw2t7i>
+Content-Transfer-Encoding: 8bit
 
-Hello,
+RISC-V post-link processing can remove relocation sections from the final
+vmlinux while some .dynsym entries retain stale section indexes. perf
+aborts the whole ELF symbol load when elf_getscn() rejects one of them,
+discarding otherwise valid .symtab symbols.
 
-On Sun, Jul 26, 2026 at 03:31:57PM -0400, Aaron Tomlin wrote:
-> On Sun, Jul 26, 2026 at 03:37:25AM +0000, sashiko-bot@kernel.org wrote:
-> > > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> > > index 7fd63a9db4574..b3cf678573e0a 100644
-> > > --- a/tools/perf/builtin-sched.c
-> > > +++ b/tools/perf/builtin-sched.c
-> > [ ... ]
-> > > @@ -2018,18 +2018,19 @@ static int perf_sched__read_events(struct perf_sched *sched)
-> > >  	if (perf_session__set_tracepoints_handlers(session, handlers))
-> > >  		goto out_delete;
-> > >  
-> > > -	if (perf_session__has_traces(session, "record -R")) {
-> > > -		int err = perf_session__process_events(session);
-> > > -		if (err) {
-> > > -			pr_err("Failed to process events, error %d", err);
-> > > -			goto out_delete;
-> > > -		}
-> > > +	if (!perf_session__has_traces(session, "record -R"))
-> > > +		goto out_delete;
-> > 
-> > [Severity: Medium]
-> > This is a pre-existing issue, but does this patch now cause pipe mode to
-> > always fail and return an error code?
-> > 
-> > Because sched.tool is initialized in cmd_sched() without the mandatory
-> > .attr and .feature callbacks:
-> > 
-> > 	perf_tool__init(&sched.tool, /*ordered_events=*/true);
-> > 	sched.tool.sample	 = perf_sched__process_tracepoint_sample;
-> > 	sched.tool.comm		 = perf_sched__process_comm;
-> > 	sched.tool.namespaces	 = perf_event__process_namespaces;
-> > 	sched.tool.lost		 = perf_event__process_lost;
-> > 	sched.tool.fork		 = perf_sched__process_fork_event;
-> > 
-> > In pipe mode, PERF_RECORD_HEADER_ATTR events are silently dropped by the
-> > fallback stub handler, which prevents evlist population. As a result,
-> > perf_session__has_traces() always evaluates to false when reading from a
-> > pipe.
-> > 
-> > With this patch adding an early abort, does this mean commands like
-> > 'perf sched latency -i -' will now unconditionally fail instead of processing
-> > what they can?
-> > 
-> > [ ... ]
-> > 
-> > While reviewing the rest of the file, I noticed another pre-existing issue
-> > in map_switch_event() that might surface under memory pressure:
-> > 
-> > 	sched_out:
-> > 		if (sched->map.task_name) {
-> > 			tr = thread__get_runtime(sched->curr_out_thread[this_cpu.cpu]);
-> > 			if (strcmp(tr->shortname, "") == 0)
-> > 				goto out;
-> > 
-> > [Severity: High]
-> > This is a pre-existing issue, but could this lead to a segmentation fault?
-> > 
-> > If memory allocation fails inside thread__init_runtime(), thread__get_runtime()
-> > returns NULL. Unlike other places in map_switch_event() that verify the
-> > returned pointer, the tr pointer is immediately dereferenced by strcmp() here
-> > without a NULL check.
-> 
-> Hi Ian, Namhyung, Arnaldo,
-> 
-> These are pre-existing issues. However, do you mind if I resolve these
-> valid concerns within this series?
+Skip only dynamic symbols whose normal section index is outside the final
+section table. Keep the existing error path for .symtab, reserved indexes,
+and other libelf failures.
 
-I'm fine as long as you address them either in this series or a separate
-one.
+On an affected system, the vmlinux symtab matches kallsyms test changes
+from Skip to Ok. [unknown] rows in the same perf.data change from 41 to 0.
 
-Thanks,
-Namhyung
+Signed-off-by: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+---
+ tools/perf/util/symbol-elf.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index f6f6b54da131..e955c3feddcd 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1681,8 +1681,13 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 			continue;
+ 
+ 		sec = elf_getscn(syms_ss->elf, sym.st_shndx);
+-		if (!sec)
++		if (!sec) {
++			if (dynsym && ehdr.e_shnum &&
++			    sym.st_shndx < SHN_LORESERVE &&
++			    sym.st_shndx >= ehdr.e_shnum)
++				continue;
+ 			goto out_elf_end;
++		}
+ 
+ 		gelf_getshdr(sec, &shdr);
+ 
+-- 
+2.50.1 (Apple Git-155)
 
