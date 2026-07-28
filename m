@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF3731E852;
-	Tue, 28 Jul 2026 21:31:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCFC44746C9;
+	Tue, 28 Jul 2026 21:32:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785274313; cv=none; b=XzDeOancwVR39d+4Dwf2s4pbF8PUtXWYswSQ3xufEmoJHs3GlyS26TLLZ2B1pO5FIJv9YEDA0qmH2PCL6cWGT24enugB4Zm7nXJJ3lFjgNn0A6iHW7tAdioxcaoMgQ+pijAN5LZA4iyuPApn1/9r9WM7sJ6rjotV9TvA2N83XHU=
+	t=1785274364; cv=none; b=uPMDSEuZ1C+4EQ+iZnE/Z2OvJwe/zAJiY3Bre/qQ66njigPecFzptuRf3wjZCcb3tPAivgQAALfdcSc+pw62f5jc7vln7sMbNwawLBlz1RjtAZJxlriCSnDb24OYi21v0TMCLCgJXEXxdGDS2vBCwWuLOucbhwPjKCRC/kZ+EnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785274313; c=relaxed/simple;
-	bh=yKpt2ubkQ0ORgLVfOR4kriA/86bk7MAc09QHEsJ0KtA=;
+	s=arc-20240116; t=1785274364; c=relaxed/simple;
+	bh=iyv9OS198OCeyWA0n/MCG7YBoiNg6P5+pD0cz5gs8l0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ssehjF1er1OHKrKId0LCqRh2CPmJbsdlaBHQIA7KvCmY+9qCfJNXyQFlbklGWq5Ypr31f3Yz14bWxMKiRQuLeAt6h8xdNIAO4eYSi2CeRia8OpqpyKf8BbAo9cDIK07r9PikLX9Zq8vmjpQReUTpQGHdC4Q22bnDgsU3cdwJ4PQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hoG41n8S; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=r9pFNuW+QNdgW70wXXozFMySW9F6V4z83ZzojE+xuxDbi9c5ghvKH0O6ykOjzd0xx9/t2TwDPKQYXLuVOEPK4ncc22t1ECwB1DANhoNhmKkOPQASHbPRsBPAONli4d0cUQKpulRaKKu+Loc4fhPKI/XnLYV4G3tAxDBt8A7zUag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DFMs+xUi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hoG41n8S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AF401F000E9;
-	Tue, 28 Jul 2026 21:31:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DFMs+xUi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 653521F000E9;
+	Tue, 28 Jul 2026 21:32:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785274311;
-	bh=nMK8q2uKH/EPsUfI6SWJA3crRfRdW4PT9sXekboIyk0=;
+	s=k20260515; t=1785274363;
+	bh=dZYkde4Aa68PZCTxWZ/Tt1dK27ocgNnB9/uNH7SwpHg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hoG41n8SzH9K3DYU6HYVxSvlXQPh5fS7A9ETZ+IAJze24we2bRpabucMCOVNO3JDK
-	 vr+0veWfHq/EeHBtN1PUZ5yzNcFgP/J9J78HBnVfKYGf+SHvJQHa1wt0TlR0Jl7Y3C
-	 iQI1Me4Jz6lBSNiy6ve6NBxGlsjxLXE2bpH7IeoYJuS+I+RFOyQch6tUi7ON1jFGm2
-	 nn6O64UM8HBIbABXjYxz2hJIIaZC4rdnH1kcJfsV5ySkLqmTGkWTCUHtZrKYjNm1Up
-	 LowKKPvVmqhRikoHYMTdMd4/S6PH2e5nkVxMGopDDt2P4qir/bGZa1sBYAPzY1BRz7
-	 UuWW4Zyt3HMyA==
+	b=DFMs+xUi+Hhr0tE8QHojLHngWUr6VyzjyfbM3jg3Lu3KqCdux5AIRUjiE5zGhxAb5
+	 wIkhhkEA+p+C9Zr7vGBfMqgN3lHX1LosTT86N4IJDu3dkn780kqZ2weoH8+VSYfRMr
+	 NuHOBBy2fZ0LVuPhZXeptoh4xxGcxj/qpcufaXBjKDVs4QtctLcHL57sr+YFu7xeJw
+	 xa2CHikxwYrXde0e4aYULvgP4Bk5ZwUSGlBRrQ8YHNG/uo13POplz8rBM/1ra+7cBF
+	 1bCWscrqpg8OXMi/hMWji1nS6e6NwVXwatTaj/x34rGDl/YU3sNegauIm2brZoHNWG
+	 78N5hGGg/3fog==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 9/9] perf/cxl: Avoid cpumask_of(-1) when no CPU is
- assigned
+Subject: Re: [PATCH 1/9] perf/cxl: Program the requested event group on
+ configurable counters
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-cxl@vger.kernel.org
-In-Reply-To: <20260728210551.2449093-10-dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260728210551.2449093-2-dave.jiang@intel.com>
 References: <20260728210551.2449093-1-dave.jiang@intel.com>
- <20260728210551.2449093-10-dave.jiang@intel.com>
+ <20260728210551.2449093-2-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 28 Jul 2026 21:31:50 +0000
-Message-Id: <20260728213151.3AF401F000E9@smtp.kernel.org>
+Date: Tue, 28 Jul 2026 21:32:42 +0000
+Message-Id: <20260728213243.653521F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,78 +49,69 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] The patch fixes an out-of-bounds pointer dereference in `cpumask_s=
-how()` caused by `info->on_cpu =3D=3D -1`, but fails to fix the exact same =
-condition in `cxl_pmu_event_init()`. This omission allows `event->cpu` to b=
-ecome `-1`, leading to an out-of-bounds array read and a wild pointer deref=
-erence in the perf core.
+- [High] In cxl_pmu_event_start(), configuration bitfields are bitwise-ORed=
+ with the existing register value without being cleared first, leading to c=
+orrupted register state.
 --
 
---- Patch [9]: [PATCH 9/9] perf/cxl: Avoid cpumask_of(-1) when no CPU is as=
-signed ---
-commit 94b991fd5de15c6e9d3fde196012a4cea806254d
+--- Patch [1]: [PATCH 1/9] perf/cxl: Program the requested event group on c=
+onfigurable counters ---
+commit a96f996812668f5b85e51cf8c46d25fbd3781fce
 Author: Dave Jiang <dave.jiang@intel.com>
 
-perf/cxl: Avoid cpumask_of(-1) when no CPU is assigned
+perf/cxl: Program the requested event group on configurable counters
 
-This patch fixes an out-of-bounds pointer dereference in cpumask_show()
-by checking if info->on_cpu is -1. When no CPU is assigned, it emits
-an empty mask instead of performing invalid pointer arithmetic.
+cxl_pmu_get_event_idx() sets the counter index for a configurable counter b=
+ut
+never sets the event index, causing the event base to stay 0. This change
+returns the matched capability's event index to correctly program the group.
 
-Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolab=
-s.net?part=3D1
+Link: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.=
+net?part=3D1
 
 > diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index f1110c5029d6a..80145e85fe36b 100644
 > --- a/drivers/perf/cxl_pmu.c
 > +++ b/drivers/perf/cxl_pmu.c
-> @@ -501,8 +501,17 @@ static ssize_t cpumask_show(struct device *dev, stru=
-ct device_attribute *attr,
->  			    char *buf)
->  {
->  	struct cxl_pmu_info *info =3D dev_get_drvdata(dev);
-> +	int cpu =3D READ_ONCE(info->on_cpu);
+> @@ -552,6 +552,8 @@ static int cxl_pmu_get_event_idx(struct perf_event *e=
+vent, int *counter_idx,
+>  			return -EINVAL;
 > =20
-> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(info->on_cpu));
-> +	/*
-> +	 * on_cpu is -1 before the first online callback and transiently during
-> +	 * cxl_pmu_offline_cpu(). cpumask_of(-1) computes an out-of-bounds
-> +	 * pointer, so report an empty mask instead.
-> +	 */
-> +	if (cpu < 0)
-> +		return sysfs_emit(buf, "\n");
-> +
-> +	return cpumap_print_to_pagebuf(true, buf, cpumask_of(cpu));
->  }
+>  		*counter_idx =3D i;
+> +		if (event_idx)
+> +			*event_idx =3D pmu_ev->event_idx;
 
 [Severity: High]
-This is a pre-existing issue, but since info->on_cpu can be -1 during
-cxl_pmu_offline_cpu(), does this same out-of-bounds issue happen in
-cxl_pmu_event_init()?
+This is a pre-existing issue, but does assigning non-zero event indices here
+expose a bit accumulation bug in cxl_pmu_event_start()?
 
-cxl_pmu_event_init() unconditionally assigns info->on_cpu to event->cpu:
+When the event starts, cxl_pmu_event_start() updates the configuration
+register using a bitwise-OR against the existing value:
 
-drivers/perf/cxl_pmu.c:cxl_pmu_event_init() {
+drivers/perf/cxl_pmu.c:cxl_pmu_event_start() {
+    cfg =3D readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
     ...
-    event->cpu =3D info->on_cpu;
-    ...
-}
-
-If a user calls perf_event_open() concurrently with cxl_pmu_offline_cpu(),
-this bypasses the perf core's initial validation of the cpu argument.
-
-The perf core will then use the -1 value:
-
-kernel/events/core.c:find_get_context() {
-    ...
-    cpuctx =3D per_cpu_ptr(&perf_cpu_context, event->cpu);
+    if (test_bit(hwc->idx, info->conf_counter_bm)) {
+        cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK,
+                          hwc->event_base);
+        cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENTS_MSK,
+                          cxl_pmu_config_get_mask(event));
+    }
     ...
 }
 
-Could this lead to an out-of-bounds array read and wild pointer dereference
-in the perf core? Should cxl_pmu_event_init() also validate that
-info->on_cpu is not -1 before assignment?
+Since cxl_pmu_event_stop() only clears the ENABLE and INT_ON_OVRFLW fields,
+the old group ID bits remain in the register. Because the event base is
+now correctly populated by this patch instead of remaining 0, won't
+consecutive events reusing the same counter cause EVENT_GRP_ID_IDX_MSK
+and other fields to accumulate stale bits from previous events?
+
+Could this lead to corrupted hardware state over time, and should the
+relevant register fields be explicitly cleared before applying the new
+configuration?
+
+>  		return 0;
+>  	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260728210551.2449=
-093-1-dave.jiang@intel.com?part=3D9
+093-1-dave.jiang@intel.com?part=3D1
