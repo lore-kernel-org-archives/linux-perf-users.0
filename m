@@ -1,68 +1,268 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 667923A0E8D
-	for <linux-perf-users@vger.kernel.org>; Tue, 28 Jul 2026 17:16:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841D539FCBF;
+	Tue, 28 Jul 2026 17:17:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785258979; cv=none; b=pjB5TWggkeZuEAm05xRUvzff28pvYzey6eZg9hBxAFC4V1Xj+hAuRvYP752//UrmrcD28Tr+5BAspt64wfNeutSUJ3sZhDJsgqLZbb20jjU83aQiFSxbwuNPuVSBt0Dsh0R6I59E7iIvYi78Mn8CTtHRs0bN7GFw3w4s2vjb5Nw=
+	t=1785259058; cv=none; b=F9v4/2nx6GoVrymOKG6NDel5gfEIsuHKnRdbYEAbCHR/rmsUTyJIrsNuXJhjyG34KFcRVK3OEWK63w8C0QWcFOXNk5Y4duHYdA90e+pktxsN02+SZ8hmRVDn1UOzS/88N83Udq0VmQpM/WDoYC/EjZOm/gg2pOCyi5Wxh81jzT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785258979; c=relaxed/simple;
-	bh=46ScApkIrDTtWkBCjlYJLkYvszohTk3t/IW3MVAcULE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lZuhVLsVjR0SIvq9ooSnY2NJLxnYza99w7pqEkSH/2v7pl71zZ0MYlqsUHscTCbsoTrO3VHHbOJ+yPoey55vL5ZLwNjZJSm7QW1CFU3IpKAncENw7OTj4q3i4DBN3rfV+u2ewKStefamjxkjCF+0SRqNws6L3qvDIffCdD0FJIY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Ds4p05cm; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1785259058; c=relaxed/simple;
+	bh=vyxnAx0eBtapr/ztKMLH9G7/lz65I9w2CV87mbr6NJg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P6R7rzQAzYtJTS1wc7MQhNzc82j5B59pSvrGDtI8K0j8JwFlc9nNNXX8j6TPZGMsA3Q745MkfuKgM1/qjoM4KVf/z/5I6O8r2/DO1kvpr7J4AgB10nzyWjlP2/TwR4A8OdTy+l8qFExvN/LO6pwWzFYvgqF50FbtvPvqpb/cg5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JImk5MVO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Ds4p05cm"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82AEA169E;
-	Tue, 28 Jul 2026 10:16:11 -0700 (PDT)
-Received: from [10.2.212.23] (e121345-lin.cambridge.arm.com [10.2.212.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28F393F763;
-	Tue, 28 Jul 2026 10:16:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1785258975; bh=46ScApkIrDTtWkBCjlYJLkYvszohTk3t/IW3MVAcULE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ds4p05cmxAUMGd0qH8xkhFzgl/z0v3Whviz+LjKwqVFBB+moXzZ1xDGJbiU2Ebe9U
-	 jGzKaQgab/q/G1CEQPfTQ2stD44X51ootCply1fzqBPKk2VLCVJ6yxQrU80qJW/Cke
-	 bndOkWpjOzBmwP8PH68ZilqJz5tvh6zjx8p4qgP8=
-Message-ID: <fe126e13-440b-4c0b-8e38-4dbcfd3f7846@arm.com>
-Date: Tue, 28 Jul 2026 18:16:13 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JImk5MVO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A49A11F000E9;
+	Tue, 28 Jul 2026 17:17:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785259057;
+	bh=8Lb0Xcb5kAjyBLBykDAWCe6CRCPihzm+h6Go/x76UP4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=JImk5MVOv0+h9/Id6nJnBiU9bYzYKoI6qPaeNIO/e8fBzMl5tNDeKOwU0kvVA1bLw
+	 IlK7q9O534slzIS/3/egYpvvkTCdNpiDptMaS+E3YEt9FcDkwhysvHkCmVjdb/Y4Vk
+	 iYtA6ZTPlrov42DgSkdjZzCZlsYgIBzIQvcU+WBmP/CNkL25l9zzBNDMadjciUBk2y
+	 iTTwCGXHNI8AKypmqaPTz/YLBcSg3+YiSkmFF4HM/ZfxFOpq1wv2YecbXeSmz08P7I
+	 cCbCcT1KNpMyDdFAEqRZU4A/mblBifYecTcqatBlabMgvPA5kWCYpoJOQ60AwS1b8R
+	 JV4ZcHmo998CA==
+Date: Tue, 28 Jul 2026 10:17:35 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Thomas Falcon <thomas.falcon@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v2 3/6] perf tools: Show memory region in perf-c2c
+ subcommand
+Message-ID: <amjkL7PBbHJpr9HV@google.com>
+References: <20260714004359.179451-1-thomas.falcon@intel.com>
+ <20260714004359.179451-4-thomas.falcon@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] perf/arm-cmn: Support CMN S3 r2
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <cover.1785252273.git.robin.murphy@arm.com>
- <86b7093bc5de0f2aedc63fc4826ce911cb22d16f.1785252273.git.robin.murphy@arm.com>
- <20260728165737.0B5DA1F000E9@smtp.kernel.org>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260728165737.0B5DA1F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260714004359.179451-4-thomas.falcon@intel.com>
 
-On 28/07/2026 5:57 pm, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+On Mon, Jul 13, 2026 at 07:43:56PM -0500, Thomas Falcon wrote:
+> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 > 
-> New issues:
-> - [Medium] The virtual channel count fields (rsp_vc_num, dat_vc_num, snp_vc_num, req_vc_num) in struct arm_cmn are defined as 2-bit bitfields. The patch adds support for CMN-S3 R2, which uses 3-bit values for these counts in the hardware registers. When extracting these 3-bit values and assigning them to the 2-bit bitfields, values of 4 or higher are silently truncated. Consequently, in arm_cmn_event_attr_is_visible(), the truncated value incorrectly evaluates as < 2 (e.g., 4 truncates to 0), falsely hiding valid PMU performance events from userspace.
+> Add memory region field to the cacheline list view to help users
+> identify the memory region to which the cacheline belongs. The memory
+> region field was included with the introduction of support for the
+> Off-module Response facility (OMR) [1] in Intel's Diamond Rapids and
+> Nova Lake architectures.
+> 
+> An example of the new perf c2c output including the memory region
+> field is shown below:
+> 
+> Shared Data Cache Line Table     (112 entries, sorted on Total HITMs)
+>        --------------- Cacheline --------------      Tot  ------- Load Hitm -------    Total    Total    Total
+> Index             Address  Region  Node  PA cnt     Hitm    Total  LclHitm  RmtHitm  records    Loads   Stores
+>     0  0xff1b7032a1e8c5c0  N/A        1      47    2.25%       50       44        6     1024     1023        1
+>     1  0xff1b6ff3255bb880  N/A        0      11    1.62%       36       34        2       96       93        4
+>     2  0xff1b70328e3b9880  N/A        1      13    1.49%       33       33        0      100       91        9
+>     3  0xff1b70328b023800  N/A        1       1    1.40%       31       14       17       52       48        4
+>     4  0xff1b70328e3b9c00  N/A        1       1    1.31%       29       27        2       67       33       34
+>     5  0xff1b70328b0237c0  N/A        1       1    1.26%       28       10       18      154      150        4
+>     6  0xff1b6ff3255bbc00  N/A        0       1    1.13%       25       25        0       48       25       23
+>     7  0xff1b6ff3255bba40  N/A        0       1    0.99%       22       22        0       46       23       23
+>     8  0xff3ab9ba50255c80  N/A      N/A       0    0.77%       17       15        2       35       35        0
+>     9  0xff3ab9ba503e3040  N/A      N/A       0    0.77%       17       11        6       37       37        1
+>    10  0xff1b703289e88f40  N/A        1      33    0.72%       16        9        7       69       63        6
+>    11  0xff1b70328e3b9a40  N/A        1       1    0.68%       15       15        0       43       17       26
+>    12  0xff1b7032c9fd6a40  N/A        1      15    0.68%       15       15        0       57       54        4
+>    13  0xff1b7032a1e8c980  N/A        1      27    0.54%       12       11        1      761      761        0
+>    14  0xff1b70727ffd57c0  N/A        1       7    0.54%       12       12        0      219      218        1
+>    15  0xffffffffaefe2380  N/A        1       1    0.50%       11        8        3       14       14        0
+> 
+> Note: DMR simics does not support memory regions. Since the output is
+> captured on SPR, the memory region field shows "N/A" for all cachelines.
 
-Anyone who has a beef with the ID register field being 3 bits when the 
-relevant control register field is only 2 can take it up with the CMN 
-design team. After previous lessons learned I'm choosing to leave room 
-in the UAPI just in case...
+My concern is that it increase the length of data and makes it harder to
+read.  Can it be conditional on the feature bit?
 
-> Pre-existing issues:
-> - [High] In arm_cmn_discover(), the 16-bit field cmn->num_dns accumulates the number of child nodes across all XP nodes using MMIO values (CMN_CI_CHILD_COUNT). Since CMN_CI_CHILD_COUNT is a 16-bit field, accumulating multiple of these can overflow the 16-bit num_dns field. This wrapped value is used to calculate the size of the kernel heap allocation for the dn array (devm_kcalloc). During the second pass, the driver re-reads the un-wrapped hardware child counts and linearly writes to the dn array inside the loop, severely overflowing the undersized heap allocation.
+Also I'm curious if a cacheline can belong to different regions.  In
+that case, will it have multiple entries in the output?
 
-But what if it was a 64-bit field and the child counts still overflowed 
-that? WHAT THEN? Oh noes we are doomed! Quick we must reimplement Linux 
-in multi-precision arithmetic forthwith!
+Thanks,
+Namhyung
 
-Robin.
+> 
+> [1]: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
+> 
+> Assisted-by: Sashiko:gemini-3.1-pro-preview
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+> ---
+> Changes in v2:
+> -- Added missing new line in WARN_ONCE message in c2c_he__set_mem_region()
+> ---
+>  tools/perf/builtin-c2c.c | 56 ++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 54 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index c9584dbedf77..cba2e9f21ae7 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -74,6 +74,7 @@ struct c2c_hist_entry {
+>  	unsigned long		*nodeset;
+>  	struct c2c_stats	*node_stats;
+>  	unsigned int		 cacheline_idx;
+> +	unsigned int		 mem_region;
+>  
+>  	struct compute_stats	 cstats;
+>  
+> @@ -281,6 +282,18 @@ static void c2c_he__set_node(struct c2c_hist_entry *c2c_he,
+>  	}
+>  }
+>  
+> +static void c2c_he__set_mem_region(struct c2c_hist_entry *c2c_he,
+> +				   unsigned int mem_region)
+> +{
+> +	if (WARN_ONCE(mem_region > PERF_MEM_REGION_MEM7,
+> +		      "WARNING: invalid memory region ID\n"))
+> +		return;
+> +
+> +	/* Update mem_region only if it really accesses memory */
+> +	if (mem_region >= PERF_MEM_REGION_MMIO)
+> +		c2c_he->mem_region = mem_region;
+> +}
+> +
+>  static void compute_stats(struct c2c_hist_entry *c2c_he,
+>  			  struct c2c_stats *stats,
+>  			  u64 weight)
+> @@ -339,6 +352,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+>  	struct addr_location al;
+>  	struct mem_info *mi = NULL;
+>  	struct callchain_cursor *cursor;
+> +	unsigned int mem_region;
+>  	int ret;
+>  
+>  	addr_location__init(&al);
+> @@ -366,6 +380,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+>  	}
+>  
+>  	c2c_decode_stats(&stats, mi);
+> +	mem_region = mem_info__data_src(mi)->mem_region;
+>  
+>  	he = hists__add_entry_ops(&c2c_hists->hists, &c2c_entry_ops,
+>  				  &al, NULL, NULL, mi, NULL,
+> @@ -382,6 +397,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+>  	c2c_he__set_cpu(c2c_he, sample);
+>  	c2c_he__set_node(c2c_he, sample);
+>  	c2c_he__set_evsel(c2c_he, evsel);
+> +	c2c_he__set_mem_region(c2c_he, mem_region);
+>  
+>  	hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
+>  
+> @@ -435,6 +451,7 @@ static int process_sample_event(const struct perf_tool *tool __maybe_unused,
+>  		c2c_he__set_cpu(c2c_he, sample);
+>  		c2c_he__set_node(c2c_he, sample);
+>  		c2c_he__set_evsel(c2c_he, evsel);
+> +		c2c_he__set_mem_region(c2c_he, mem_region);
+>  
+>  		hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
+>  		ret = hist_entry__append_callchain(he, sample);
+> @@ -603,6 +620,29 @@ dcacheline_node_count(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+>  	return scnprintf(hpp->buf, hpp->size, "%*lu", width, c2c_he->paddr_cnt);
+>  }
+>  
+> +static int
+> +dcacheline_node_mem_region(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+> +			   struct hist_entry *he)
+> +{
+> +	int width = c2c_width(fmt, hpp, he->hists);
+> +	struct c2c_hist_entry *c2c_he;
+> +	unsigned int mem_region;
+> +	char buf[20];
+> +
+> +	c2c_he = container_of(he, struct c2c_hist_entry, he);
+> +	mem_region = c2c_he->mem_region;
+> +
+> +	if (mem_region == PERF_MEM_REGION_NA)
+> +		scnprintf(buf, sizeof(buf),  "N/A");
+> +	/* mem_region could only be >= PERF_MEM_REGION_MMIO */
+> +	else if (mem_region == PERF_MEM_REGION_MMIO)
+> +		scnprintf(buf, sizeof(buf), "MMIO");
+> +	else
+> +		scnprintf(buf, sizeof(buf), "0x%x", mem_region - 0x8);
+> +
+> +	return scnprintf(hpp->buf, hpp->size, "%*s", width, buf);
+> +}
+> +
+>  static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+>  			struct hist_entry *he)
+>  {
+> @@ -1425,7 +1465,7 @@ cl_idx_empty_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+>  	}
+>  
+>  static struct c2c_dimension dim_dcacheline = {
+> -	.header		= HEADER_SPAN("--- Cacheline ----", "Address", 2),
+> +	.header		= HEADER_SPAN("--- Cacheline ----", "Address", 3),
+>  	.name		= "dcacheline",
+>  	.cmp		= dcacheline_cmp,
+>  	.entry		= dcacheline_entry,
+> @@ -1440,6 +1480,14 @@ static struct c2c_dimension dim_dcacheline_node = {
+>  	.width		= 4,
+>  };
+>  
+> +static struct c2c_dimension dim_dcacheline_mem_region = {
+> +	.header		= HEADER_LOW("Region"),
+> +	.name		= "dcacheline_mem_region",
+> +	.cmp		= empty_cmp,
+> +	.entry		= dcacheline_node_mem_region,
+> +	.width		= 6,
+> +};
+> +
+>  static struct c2c_dimension dim_dcacheline_count = {
+>  	.header		= HEADER_LOW("PA cnt"),
+>  	.name		= "dcacheline_count",
+> @@ -1871,6 +1919,7 @@ static struct c2c_dimension dim_dcacheline_num_empty = {
+>  
+>  static struct c2c_dimension *dimensions[] = {
+>  	&dim_dcacheline,
+> +	&dim_dcacheline_mem_region,
+>  	&dim_dcacheline_node,
+>  	&dim_dcacheline_count,
+>  	&dim_offset,
+> @@ -2898,8 +2947,9 @@ static int ui_quirks(void)
+>  	/* Fix the zero line for dcacheline column. */
+>  	buf = fill_line(chk_double_cl ? "Double-Cacheline" : "Cacheline",
+>  				dim_dcacheline.width +
+> +				dim_dcacheline_mem_region.width +
+>  				dim_dcacheline_node.width +
+> -				dim_dcacheline_count.width + 4);
+> +				dim_dcacheline_count.width + 6);
+>  	if (!buf)
+>  		return -ENOMEM;
+>  
+> @@ -3319,6 +3369,7 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	if (c2c.display != DISPLAY_SNP_PEER)
+>  		output_str = "cl_idx,"
+>  			     "dcacheline,"
+> +			     "dcacheline_mem_region,"
+>  			     "dcacheline_node,"
+>  			     "dcacheline_count,"
+>  			     "percent_costly_snoop,"
+> @@ -3334,6 +3385,7 @@ static int perf_c2c__report(int argc, const char **argv)
+>  	else
+>  		output_str = "cl_idx,"
+>  			     "dcacheline,"
+> +			     "dcacheline_mem_region,"
+>  			     "dcacheline_node,"
+>  			     "dcacheline_count,"
+>  			     "percent_costly_snoop,"
+> -- 
+> 2.43.0
+> 
