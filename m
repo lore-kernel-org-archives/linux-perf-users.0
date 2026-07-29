@@ -1,25 +1,25 @@
-Received: from CWXP265CU010.outbound.protection.outlook.com (mail-ukwestazon11022078.outbound.protection.outlook.com [52.101.101.78])
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020077.outbound.protection.outlook.com [52.101.195.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0519B48D860;
-	Wed, 29 Jul 2026 14:45:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.101.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 780694C6EE0;
+	Wed, 29 Jul 2026 14:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.195.77
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785336303; cv=fail; b=Mmczfl+DciPHdvVb76XlpjISXnLaHGBGCPfW2xFzihthuczSERxNYPcVN4oEhMQOecSTusR30YzFrOM9lcbhsvUXlzja8TtQMe21Reud4pAXs8FizjRlpMBzKiaKBnCAFgE/BWlJB/1IbxLwsQmSb9Jxo2mwka/Sg6L20lHP7ig=
+	t=1785336311; cv=fail; b=cWxgasHyDT84Akz2SSXK00jDnUUpB4is+j9pJQxLiVSzI92K/zuLS8AxOIM+F8kvmjrxHzEgW7Itcpb7JNVu14yoBl+5ToN3KbI9mFG9Ytyq5dAa18reSSOgSqa3gVk5J8Q/QRUPrIvY6ufCfmKrnHU7P34j+UdTtpBOqS3pTjw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785336303; c=relaxed/simple;
-	bh=IRhFxWoNRwDnzHqEBgrt2VKUb3dzsmSDZxnFyjyf39s=;
+	s=arc-20240116; t=1785336311; c=relaxed/simple;
+	bh=b/M3jP0gnjhyyzBPFYMFEPt4rdxCe6oj7TYLejJe/Qw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=f5e1Z4kw9JaRPgth2NlH7Gdhf2aL8WTEJNQ7WZ50VQhkSK1uts08lQYr2++0kpoI7AFbNe26Q53pfsAZZ/ztkXt+Hii5SnVYvXFuUNPC+vJsiNJvzzxrmNbnnU/5ajIfUL+w6W8nNDsyOZXuTXShKx2hTIrUpcHmc+F4joFxlQ4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.101.78
+	 Content-Type:MIME-Version; b=GT0Y9EmktmkyUBkeCz3+/eDBClDQvzaVKyTOijVYhzw/ZKvWd8CRbf86u1/lo8SnsIiwRvzOaCf0lovPMDgX5XO+u5aBAl/ZsmQhrXzpfd7Y/hUHbBHcCrbJXs+4Z/cTq5SgMaTuY8CMhtitF99kEqx4vcPuku/lFKLG6ypiS0U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.195.77
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=khQsj868KEP2QRKKcJCkHIeeK8MdIk58ApcN/LqypXfDG5jJA9VX/6rk+MV8oLDJwAp/yDxAsKJVswwWyGU9z6VjR4sMRXKngtSXxn4e8sq1KN+9q0mK/Swc82sCpMjdMAqSyaQ+Mwx2WIg57/P6Lan3WXRVDN2af3cXD0MdkNnJrbwrT+sPV+JH2YTdvnvMGZeRguamlx4uCVeh0om7fVVUdBELEE/z8X3bx0Y9GYDA7SJDB6MvfvLegmuV4OlvNhSQDNj3EbJUoOScbA9mwXNYzpRKW52s0p0FuUf72vnK0OEpUDoUViGvLwZg7UHS5Uq5Ik6ZLwSbs36SXkDIkQ==
+ b=tk+b1vs8O2ldhDIx9svHLnjKy+VZ7E8NN5V0zu+BX3/qQmfFpkpHcMSn5TId0ZhAzWhHNovamE4I3DGQor6MDmEJMjResAsPqp1FJmT85Cd6jgeWU1XLuPA4S8+sn0fCQ1D62OQ97P+tNvbbsBjaUwEQ2KBXcQmRIaHiWBkeI6YyRQeaQHn9vmu+VAY+nx7dRiK+GtsawB6lTzgCEPxUSeNkueB/7cYNoaa7Ycs8EdpqjLwgKP0XVa+CfcoV9tM0fvEtPfq8w/0yl0IrgMrq61KIj8cySrcome4VkVgaD7fklYLD3oFmpYiiURP4Qu1wp1hKBjb/NX0cmz/iYH6SGA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=7zoozAA+qB3DJYAKEgMaZyUqwGAj4vXpX323WaDiQNo=;
- b=J5udT090JCMYTyovtUHF/YuGORVFTN/JlbiPiRxz5XK+hBFOa/hbQHooWjG87CNVwO2cYyUj1ltAfYzrRG64cFApyA8HZ52MAkpsgg/jsRPZbRwWH6F/rZLRrUXOFCONidF5DU+o6HgfMsHqJZSxE/GHYIF+R+8QRKXj0+4mnwn6pjYmc6FCOAGcZWm3N4zUnjvUDfKpEeeqN3gjHIfwmIR7fgfW1Z8KqxXdbrHcKmQ00S8/eE8+Qyq3b4Yq+gl3xfIZ4mMxZTv1K+fh3HizU0Xl5fHCfYhtSCat3WRoguwxEfJf6RtlwE8BDCV7Z4IDS4EIQYSFDEY7YmfaJuAwyA==
+ bh=9SvhooG2mqehHizPQxzcCTw7XrdzAlNrxer572AzGXc=;
+ b=AONRIlQesPSXYryh516PH/JbB1vB4C/RSFVx1CLyIsQe7P1ArTV2EEPtpmYnInV+Etpnqh2LPXF5V36cDgBHuF/5mWuU9ryGCsoYF/1REpMXGgBg+9XS76jQNFeg/R4XsRGvFZ+AM0sZTM0R5h4M4EWBB2WBAQLaQ3XZiYsyCsmE6brpzZjo2177Dojo4NRHqKE1WsSJqjyYVRymarCnHa6q/Pm/eIJL2v0CZdkqPjlUPcBM/yGiYliNeGFiBHhG+cAGoMiR3/KfztuybypHrzou+YqAGv+rlyFZbSuayNDgsg0/unnvvyRdoz3mMk4mSooPCKJOu/5fYOHv9bIG6g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
@@ -29,11 +29,11 @@ Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
  by LOVP123MB8527.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:487::20) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.13; Wed, 29 Jul
- 2026 14:44:59 +0000
+ 2026 14:45:02 +0000
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0270.012; Wed, 29 Jul 2026
- 14:44:59 +0000
+ 14:45:02 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -53,16 +53,16 @@ Cc: mark.rutland@arm.com,
 	steve@abita.co,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/3] perf sched: Suppress latency table output when trace samples are missing
-Date: Wed, 29 Jul 2026 10:44:49 -0400
-Message-ID: <20260729144451.38286-2-atomlin@atomlin.com>
+Subject: [PATCH v4 2/3] perf sched latency: Auto-scale latency and runtime display units
+Date: Wed, 29 Jul 2026 10:44:50 -0400
+Message-ID: <20260729144451.38286-3-atomlin@atomlin.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260729144451.38286-1-atomlin@atomlin.com>
 References: <20260729144451.38286-1-atomlin@atomlin.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: MN2PR08CA0008.namprd08.prod.outlook.com
- (2603:10b6:208:239::13) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-ClientProxiedBy: MN0PR04CA0001.namprd04.prod.outlook.com
+ (2603:10b6:208:52d::35) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -72,155 +72,166 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LOVP123MB8527:EE_
-X-MS-Office365-Filtering-Correlation-Id: 58a7e5f1-40c4-43ae-8e00-08deed7ff6ae
+X-MS-Office365-Filtering-Correlation-Id: 3990cfda-275c-4ab0-c9c5-08deed7ff8df
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|23010399003|366016|1800799024|6133799003|22082099003|18002099003|3023799007|56012099006|5023799004|10067099003;
+	BCL:0;ARA:13230040|376014|7416014|23010399003|366016|1800799024|6133799003|22082099003|18002099003|3023799007|56012099006|10067099003;
 X-Microsoft-Antispam-Message-Info:
-	uD8jEMUwngr3vp1rTzMXNh4iTEm+LDQHh+FJg8lb6wInp/QzNhBmnGcJhQGpnWKwWUBFjYBUsx10YD4Pw9TpVMhaZcNC/KyxzmMuWxCb7YKWEx3SA4hYBgjarlN23rhs7AUGBvh3l42OlqGnXcvsekd0wFxGAoaRnZXXuPK/HFZEUG9C0Yz3sSACWG0kyGVfirt5HKgOU75kJGL952FZ4elkZh+ccJAxxep36nKaewcq09ZssCwzuFQionTtnU5ww6mFSg0FypD40TB9twegsSga8UkTET7e9lP6wszuCUfBILmi1o9RaiRO2B+GDl9jWrLVQ4zv+WG3uZUu/rvstQDbT3pT620VFErGXBxKFavHNc1gEJIIUAc5bsLuMbexUqVUThBinSv6pXqVf6rc7B53KphdUEIj/GOlazaJ35eEiSCAhCz1JrCow+cn0U1zVW2eVUSDvZr6gO+SajPQhrKV8wsYkfuKB3v661ErnTy9wBjNeVwGsEPdZcawOs532b8BXj6EHVihgL4h+IxAt/mIRWIKEBM70VBCb4QOUNWOKeuk/c3rq+5+zO2Nyv2fYdFb8q1t9xuAcuAM/Nbi02YMG8oNjhDRCRwGjBxRDC/lXrPqO9OB6t1gdlh8Nfp0rHJ0hI0LetyH9xJSHTbozgleqOFpVScPMPMo+2TpmqI=
+	PzbWroZNoB2Asqa2l5BPW+3GB7i/ULo+rkKyosVfHAGxUORUNI4xXfoyJqPZQsxIl40NiQMvixlfh0CoulEQHDxF58yzVQtKRi1bGVfUvBme+cqlacXdr0PLKfNvYjorYt0DakBSGCxcYSsOf+r8ubqy5qNHN7doNJ/EJzeS56v3u8ChFQlYxPC1gRhYsHAiDtuYZHIRo30qKfHiznJzpp3RkW1yZ0P3mmsr6KKN1iztM3GLLAOMIGElQlE5r4MrFDUtHeuNc3a0mJhR76HShUEpXww0NpdxqEU91WGwN/bmujQ111oghBVG//ZEgDW0VQQ29VPjH8CA5+zu4N4+MByRStuzrF0l/skLCvkNCpKQsq1uC60dJP/SrEsA9gCw5uTr84EhVB+KXyryH5PtFgliIhpFrywabfo6ZDiK+bQyQF6G6nliboW9Uw75K5juWK1iHjmNvjr7ic19eALoknub/wZVTATe4fn3/5pQoFOLIOHZo78NNbqrkY3ThoBQ8XWeFbHosPUeBw41+QL9WbuP6d4zvp7PsmPChG525wfy/cGPOkd0klgk5MGiHnxEMC0QCg3hSq/b/V63X7N2NGnDIZ9QGUcZ8CrhD7mZk9WgYiptHFrg93+Bvgs01u0NE6u86zDMrtu+bkzsknbjW8OrXli07+oeCGs9V0oWtDg=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(23010399003)(366016)(1800799024)(6133799003)(22082099003)(18002099003)(3023799007)(56012099006)(5023799004)(10067099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(23010399003)(366016)(1800799024)(6133799003)(22082099003)(18002099003)(3023799007)(56012099006)(10067099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?9BMsioJ8OppABujVNaZZJuj3qtArV3hJFiwtOPHVqcbICei2lOYIB7QVluM8?=
- =?us-ascii?Q?Vxw3lvCXX1VRD6irho8qUe92IglFGJYZ++8+lwnQdVPcKHTFoaWh8sF48XDK?=
- =?us-ascii?Q?V53VE0PVUa/ERl/h9M2OKuM9dPjIP4NKgPzgdjEkYP4wM7NFlgAQcZPdfGEn?=
- =?us-ascii?Q?OTF4iW+ATFq4z7XEnDWtIuHLFzd7SCWBgF7evp287SxXiVDi/Hg7qpnE2YkQ?=
- =?us-ascii?Q?WVjqnAev2BEd4P0Jqlx/gMAspLKJR5mlNH7ZiCOgSdGBapl9e1893r3fyI6N?=
- =?us-ascii?Q?toA4SSZHiWrqdip52tv+/v4LwIrOsDeX0/wAmCHTUEQaagaaIFVSJvbNs/z+?=
- =?us-ascii?Q?9Z04ns3sygISk9aFuht7M76Ic3PNMEnjEcgJXjumrD1vjSShdO/IRNWnOxgf?=
- =?us-ascii?Q?emlkZ1IWtlsoN/CZkTzEDNTRecKUOAvE77RlWOTj5CMQTx4qid/gS5gEchWf?=
- =?us-ascii?Q?9AJc1SZyluuebpq2EAUXqyh5K8wMB9jzPiVT2w0Yjj/uEBIapE6H8w2ObLR5?=
- =?us-ascii?Q?EiDH0PQPX0/q1Xa47kAvDMcB9RGK7MhQ/PkWLnUZKHftbiqLtGARCgBJuo73?=
- =?us-ascii?Q?Ikshfx9hurlIlVc00FcpkbJpHuXJFj8CGdQ6VFXYMlSdI4kJFNKpaT2KKWu+?=
- =?us-ascii?Q?vOVTOLf6+V0BLXrxrjnmzeMviSjlNSJamK0ep9/5bLVVzjS2bcBvGvQgr1VR?=
- =?us-ascii?Q?zcpX2Eg9rnlo1Ls1gsmMFR6dOXeWrmmHgMUwZ6AQfaDjRDNdrDO8GXoZKpgg?=
- =?us-ascii?Q?Svpzzz2HZywZplbKckueBoDhG0Zw+rl0NTEBDtIN6DnHzFLgwhFNziEf5AAc?=
- =?us-ascii?Q?VNHS2GM9iGQohKPSdtwo7BIL5pN3kPzcUk9JEk4uQjjzQMJEGadS7Qe/ryVM?=
- =?us-ascii?Q?A3+e8QAMujfAw0YwLzmKeZcU+X7CuyMndsNRKj5oWWC67cKiMrxovAeG8tvv?=
- =?us-ascii?Q?rYMnjMAKh3nzGAZIxvUzb51QtCHs1Bco+zmzauX/0y4dXZ83MaYnlrN2KJ+8?=
- =?us-ascii?Q?f2oXPIHT/BhPqE3z9XcaWECJmvpX1SPFrEQVxGYh6YAKYnFYZgZf+hDKynxw?=
- =?us-ascii?Q?zh+fhwzBgdKaoeWRAKkme25Vfx6zz+qmVuvcL32eU2Dh/ioff7u1HiFZscA4?=
- =?us-ascii?Q?ii129wKy2H7tF54OLeo/ZzZ12Vc5EZ6Y81TAHRhLQOVj3OUAUrF3ughb9y0i?=
- =?us-ascii?Q?EH3F4sgdr106kMSh5LDgRAVu3qn+zL7LpNjpvyJlojaTzWdZNO0F+ySXGDX8?=
- =?us-ascii?Q?HBg/kNNAGXgBRGxYkVhyCVqnznucZfujM7Bklh7X1AmRdJrucv+LAMjtw+ii?=
- =?us-ascii?Q?VIqWhJPd+rOu2fLQGhg6SqO5Jt9uI+18dLTfGJV2Cv95+SwDe9WlrWHIvMhW?=
- =?us-ascii?Q?Xkp3g7G0zkZe+KE4zcPwv2wiibBqNMnBj0RNkY9H6TgEJywp0ps+epjTq5xd?=
- =?us-ascii?Q?P9tuFrTJnNynuRol9P5pDgblLlUqtWUPOuIF2lPJGa2NBkvtPS+xsImdw5t6?=
- =?us-ascii?Q?VsDZjKxw9AOL6C9elnyfdFfPwmywahig/sAy88D9bfpXMKm4LEaooBrW39Al?=
- =?us-ascii?Q?nD+NUEt2MhWMfrKpXO3cRXT/4gfggHMJnX7dDxtRhBMDWM5joriqlEUaWTbo?=
- =?us-ascii?Q?2s9jENdsw+lDzGk0MvABb7htyOUFgljb1aE6ds/FWCISJlQLYg/1w2tk4bW2?=
- =?us-ascii?Q?SbPRilrmCHbuSKztYuqslx/myQkP8idhWXNYQuCfCMWMHJ1l2IbBskLVy/L9?=
- =?us-ascii?Q?AgljLE4okg=3D=3D?=
+	=?us-ascii?Q?XIaNLj9NG0TVIH/uUSS2VJaILuuOF1+EhbBbBYcDzuX2ffqje2iVfQQ+tsoL?=
+ =?us-ascii?Q?65VKYsbnsXE6aIaoQcHebgFqOgG7pPqgAlDgJuWTKmPs+T7TQiLdeYZ9+6wB?=
+ =?us-ascii?Q?Wl1p1dvB7e60F2++bF4j2rq4d27u5i6CSDmqow+McRTLF0eJArdnYok9laiw?=
+ =?us-ascii?Q?aKtkDE0Zxxb8Z8aleHCSP65vjCoz0cERZu2omnotIc86F3FU7REjMUUE0BsG?=
+ =?us-ascii?Q?lYNHpNlGpajdcUQwP4N2mm2TPd8afnC5VldztmjAhMKClWw1/YMDHKDVD7RT?=
+ =?us-ascii?Q?K5x0YWfWU+WXW3S/vIy2UwlThAvKjI+FI6Y296lIvN/hV8C7baByRhB9PplO?=
+ =?us-ascii?Q?rXa/gplyRPClL9NsmkOrAVXPOzZ+3E98LshS7F8tYkFh7EOYUdXdv1HYMhSJ?=
+ =?us-ascii?Q?gvTZH5dzWPWx95nS6OfsYDokdzNW4oRzS1gYhyQTaQsSQYkJOC5r9NfLJOg/?=
+ =?us-ascii?Q?rFl9kpclLqfelZ0bfu50njAMRfmxa7S7Svm8vP95gbqELj4o4oRdhShok1RI?=
+ =?us-ascii?Q?nowUVYConoqupbQTw1XV843kiFDP6P66hvLW2lNuMFmN22zffB7FWevHV4/C?=
+ =?us-ascii?Q?MQlsC1SL22NbaXjTAQFfqrdyzfobI8M6jAqDkV5015CbQUfQ0x0ijBKCzQ4R?=
+ =?us-ascii?Q?WH4ZjnH46f22Emgr6Xsoy21cpYWTSa+m1H6VKKHiGdnBScdYZXkR/qmtjgj3?=
+ =?us-ascii?Q?1/UUdOfRMs0PjLzNdRujUbBIWyg147H7N65vQ6Fnd5zzsb1O6dK92Knib5kI?=
+ =?us-ascii?Q?sgo3GK0EGGJWLEXCh0DJfX/9jiNWOJ0aJzhxbGfluswFkQo8iFgfIMd2xxKX?=
+ =?us-ascii?Q?X+W2L1CN501tl9Tsk3M8c5iIAlYU1h4jmFzdALqtDtehV+ori4oMMnRRdWMO?=
+ =?us-ascii?Q?18JOtLCy8ARwdXZVylFOqgEbgmdJqZieOLZi+LtDKbDE4F/io1FgehW+XoX4?=
+ =?us-ascii?Q?f8A7Mig0BKAddzphJB25ZrZ07OlknNFGtWz2woCPj/CS+zDqZfw62k2Av52d?=
+ =?us-ascii?Q?jbRgJw+Ekxg15nxFKlbYV9HUshbqr8/5upOeJ4HCNmYNZWIiTxYvl/h63OzC?=
+ =?us-ascii?Q?3hJqR6+wo1mwLCqtx6ZTqTvLYnBehdt9Jqhylp9hDi8Qq6RXkqKGHIAI19fx?=
+ =?us-ascii?Q?8qkU9nCZbY2inOFtrMiddSfzLB6IY5h2xwBKR2OiQQ6SWb/UHo0wWzdLZNQz?=
+ =?us-ascii?Q?cfRRgBPw+vFGGeU9/UibZQlyDdlSxhMsd5KfSaJMc8f7UJoJ9/7t7NBJAUIu?=
+ =?us-ascii?Q?9+Az7PQayzaJU4y6MGRUow4QbwViGr4/NLxb+6mSFWOQ3QGyTq9uka/HMXKN?=
+ =?us-ascii?Q?5Jdc9wSpgcbkwfaVhGj20RTrEyJaO6e5Y5yEVmnZllv/KIEbz5HA1xtinlY9?=
+ =?us-ascii?Q?2aH5Y81i2q3i7U+QbFD0X6sMXkVg/i++5v7YnMft5Y5bxT5r5/Y8GUY1sElO?=
+ =?us-ascii?Q?vWqTjvZgdaiGH5MLVz51e0F200cegAyjxnaPYRlOr5T3+CR+brCo7Xs/0zge?=
+ =?us-ascii?Q?Q5DMqgkkGB8rT8BirRm6ddvFYxy+wJ8y4xA2xN9pUPr7GewCPwi3i3Z28WSZ?=
+ =?us-ascii?Q?t+l9YfKVc5/P8sXGkJdW2O9J14DXIaKDP8BpIX1k7n/ve5gR7ib/EzUToHcb?=
+ =?us-ascii?Q?fp9C6TqeSRsGxlApCKWbIT83CjCmsXCreS7a83X6GLEVvyfsqr2GLvb43tmP?=
+ =?us-ascii?Q?BSaAZUJTgNIbn9vXoqy5TWoh21B9YqxofxF4Y+BpweJy2m9Kz7ZdtuFbx4ue?=
+ =?us-ascii?Q?IoF6lJD/yA=3D=3D?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 58a7e5f1-40c4-43ae-8e00-08deed7ff6ae
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3990cfda-275c-4ab0-c9c5-08deed7ff8df
 X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 14:44:58.9819
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2026 14:45:02.7568
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RO0e6nvSr1GoXGOtK8yyN7074FLEwjCaLaUOAbzX0eKTtycuw7WfLnC5dL5ioTc840Mw3a8038VK9PLAuHBCAA==
+X-MS-Exchange-CrossTenant-UserPrincipalName: LfWHD0Sw6y7IV4lI+2Qh4gZLnPmA/tDnZE9uFlWKS6b2mZCSJ22/wvALB8qOQIfQN0l7DRAKFymWSlD8WN5CiA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOVP123MB8527
 
-When 'perf sched latency' is executed on a perf.data file that lacks
-tracepoint samples (i.e., a file recorded without the -R flag or
-containing only non-tracepoint events), perf_session__has_traces()
-correctly outputs an error message. However, perf_sched__read_events()
-subsequently falls through and returns 0 (success).
+Currently, 'perf sched latency' displays task runtime and delay values
+exclusively in milliseconds (ms). This can be hard to read when
+latencies are very small (in the microsecond or nanosecond range) or
+unusually large (seconds).
 
-Consequently, caller functions such as perf_sched__lat() assume event
-processing succeeded and proceed to render empty latency header tables
-and total summary statistics.
+Introduce auto-scaling for latency and runtime display columns. Values
+are dynamically scaled and output with the most appropriate unit:
+nanoseconds (ns), microseconds (us), milliseconds (ms), or seconds (s).
 
-Fix this behavior by ensuring perf_sched__read_events() aborts early and
-returns a suitable error code when perf_session__has_traces() evaluates
-to false.
+Additionally, rename column headers from "Runtime ms", "Avg delay ms",
+and "Max delay ms" to "Runtime", "Avg delay", and "Max delay"
+respectively, and adjust spacing to maintain column alignment.
 
-For pipe mode streams, event attributes are received dynamically during
-event processing, meaning session->evlist is not populated prior to
-perf_session__process_events(). To handle pipe input correctly, register
-the missing .attr, .tracing_data, and .build_id callbacks in cmd_sched(),
-and perform the trace check after event processing when handling pipe data.
-
-Additionally, validate thread__get_runtime() against NULL in
-map_switch_event() to prevent potential null-pointer dereferences.
-
-Fixes: 27295592c22e ("perf session: Share the common trace sample_check routine as perf_session__has_traces")
 Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 ---
- tools/perf/builtin-sched.c | 32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ tools/perf/builtin-sched.c | 40 +++++++++++++++++++++++++++-----------
+ 1 file changed, 29 insertions(+), 11 deletions(-)
 
 diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 7fd63a9db457..fabd99a18aad 100644
+index fabd99a18aad..c34726b87eaa 100644
 --- a/tools/perf/builtin-sched.c
 +++ b/tools/perf/builtin-sched.c
-@@ -1833,7 +1833,7 @@ static int map_switch_event(struct perf_sched *sched,  struct perf_sample *sampl
- sched_out:
- 	if (sched->map.task_name) {
- 		tr = thread__get_runtime(sched->curr_out_thread[this_cpu.cpu]);
--		if (strcmp(tr->shortname, "") == 0)
-+		if (tr == NULL || strcmp(tr->shortname, "") == 0)
- 			goto out;
+@@ -246,6 +246,17 @@ struct perf_sched {
+ 	struct perf_data *data;
+ };
  
- 		if (proceed == 1)
-@@ -2001,7 +2001,7 @@ static int perf_sched__read_events(struct perf_sched *sched)
- 		.mode  = PERF_DATA_MODE_READ,
- 		.force = sched->force,
- 	};
--	int rc = -1;
-+	int rc = -1, err;
++static int scnprintf_latency_unit(char *buf, size_t size, u64 nsecs)
++{
++	if (nsecs < 1000)
++		return scnprintf(buf, size, "%6" PRIu64 " ns", nsecs);
++	if (nsecs < NSEC_PER_MSEC)
++		return scnprintf(buf, size, "%6.3f us", (double)nsecs / NSEC_PER_USEC);
++	if (nsecs < NSEC_PER_SEC)
++		return scnprintf(buf, size, "%6.3f ms", (double)nsecs / NSEC_PER_MSEC);
++	return scnprintf(buf, size, "%6.3f s ", (double)nsecs / NSEC_PER_SEC);
++}
++
+ /* per thread run time data */
+ struct thread_runtime {
+ 	u64 last_time;      /* time of previous sched in/out event */
+@@ -1405,6 +1416,8 @@ static void output_lat_thread(struct perf_sched *sched, struct work_atoms *work_
+ 	int i;
+ 	int ret;
+ 	u64 avg;
++	char runtime_lat[32];
++	char avg_lat[32], max_lat[32];
+ 	char max_lat_start[32], max_lat_end[32];
  
- 	session = perf_session__new(&data, &sched->tool);
- 	if (IS_ERR(session)) {
-@@ -2018,18 +2018,25 @@ static int perf_sched__read_events(struct perf_sched *sched)
- 	if (perf_session__set_tracepoints_handlers(session, handlers))
- 		goto out_delete;
+ 	if (!work_list->nb_atoms)
+@@ -1430,14 +1443,17 @@ static void output_lat_thread(struct perf_sched *sched, struct work_atoms *work_
+ 		printf(" ");
  
--	if (perf_session__has_traces(session, "record -R")) {
--		int err = perf_session__process_events(session);
--		if (err) {
--			pr_err("Failed to process events, error %d", err);
--			goto out_delete;
--		}
-+	if (!perf_data__is_pipe(session->data) &&
-+	    !perf_session__has_traces(session, "record -R"))
-+		goto out_delete;
+ 	avg = work_list->total_lat / work_list->nb_atoms;
++	scnprintf_latency_unit(runtime_lat, sizeof(runtime_lat), work_list->total_runtime);
++	scnprintf_latency_unit(avg_lat, sizeof(avg_lat), avg);
++	scnprintf_latency_unit(max_lat, sizeof(max_lat), work_list->max_lat);
+ 	timestamp__scnprintf_usec(work_list->max_lat_start, max_lat_start, sizeof(max_lat_start));
+ 	timestamp__scnprintf_usec(work_list->max_lat_end, max_lat_end, sizeof(max_lat_end));
  
--		sched->nr_events      = session->evlist->stats.nr_events[0];
--		sched->nr_lost_events = session->evlist->stats.total_lost;
--		sched->nr_lost_chunks = session->evlist->stats.nr_events[PERF_RECORD_LOST];
-+	err = perf_session__process_events(session);
-+	if (err) {
-+		pr_err("Failed to process events, error %d", err);
-+		goto out_delete;
+-	printf("|%11.3f ms |%9" PRIu64 " | avg:%8.3f ms | max:%8.3f ms | max start: %12s s | max end: %12s s\n",
+-	      (double)work_list->total_runtime / NSEC_PER_MSEC,
+-		 work_list->nb_atoms, (double)avg / NSEC_PER_MSEC,
+-		 (double)work_list->max_lat / NSEC_PER_MSEC,
+-		 max_lat_start, max_lat_end);
++	printf("|%14s |%9" PRIu64 " | avg:%11s | max:%11s | max start: %12s s | max end: %12s s\n",
++	       runtime_lat,
++	       work_list->nb_atoms, avg_lat, max_lat,
++	       max_lat_start, max_lat_end);
++
+ }
+ 
+ static int pid_cmp(struct work_atoms *l, struct work_atoms *r)
+@@ -3605,6 +3621,7 @@ static int perf_sched__lat(struct perf_sched *sched)
+ {
+ 	int rc = -1;
+ 	struct rb_node *next;
++	char total_runtime_str[32];
+ 
+ 	setup_pager();
+ 
+@@ -3617,9 +3634,9 @@ static int perf_sched__lat(struct perf_sched *sched)
+ 	perf_sched__merge_lat(sched);
+ 	perf_sched__sort_lat(sched);
+ 
+-	printf("\n -------------------------------------------------------------------------------------------------------------------------------------------\n");
+-	printf("  Task                  |   Runtime ms  |  Count   | Avg delay ms    | Max delay ms    | Max delay start           | Max delay end          |\n");
+-	printf(" -------------------------------------------------------------------------------------------------------------------------------------------\n");
++	printf("\n ------------------------------------------------------------------------------------------------------------------------------------------------\n");
++	printf("  Task                  |    Runtime     |  Count   |    Avg delay    |    Max delay    |      Max delay start      |     Max delay end     |\n");
++	printf(" ------------------------------------------------------------------------------------------------------------------------------------------------\n");
+ 
+ 	next = rb_first_cached(&sched->sorted_atom_root);
+ 
+@@ -3631,9 +3648,10 @@ static int perf_sched__lat(struct perf_sched *sched)
+ 		next = rb_next(next);
  	}
  
-+	if (perf_data__is_pipe(session->data) &&
-+	    !perf_session__has_traces(session, "record -R")) {
-+		goto out_delete;
-+	}
-+
-+	sched->nr_events      = session->evlist->stats.nr_events[0];
-+	sched->nr_lost_events = session->evlist->stats.total_lost;
-+	sched->nr_lost_chunks = session->evlist->stats.nr_events[PERF_RECORD_LOST];
-+
- 	rc = 0;
- out_delete:
- 	perf_session__delete(session);
-@@ -5167,6 +5174,9 @@ int cmd_sched(int argc, const char **argv)
- 	sched.tool.namespaces	 = perf_event__process_namespaces;
- 	sched.tool.lost		 = perf_event__process_lost;
- 	sched.tool.fork		 = perf_sched__process_fork_event;
-+	sched.tool.attr		 = perf_event__process_attr;
-+	sched.tool.tracing_data	 = perf_event__process_tracing_data;
-+	sched.tool.build_id	 = perf_event__process_build_id;
+-	printf(" -----------------------------------------------------------------------------------------------------------------\n");
+-	printf("  TOTAL:                |%11.3f ms |%9" PRIu64 " |\n",
+-		(double)sched->all_runtime / NSEC_PER_MSEC, sched->all_count);
++	printf(" ------------------------------------------------------------------------------------------------------------------------------------------------\n");
++	scnprintf_latency_unit(total_runtime_str, sizeof(total_runtime_str), sched->all_runtime);
++	printf("  TOTAL:                |%14s |%9" PRIu64 " |\n",
++	       total_runtime_str, sched->all_count);
  
- 	argc = parse_options_subcommand(argc, argv, sched_options, sched_subcommands,
- 					sched_usage, PARSE_OPT_STOP_AT_NON_OPTION);
+ 	printf(" ---------------------------------------------------\n");
+ 
 -- 
 2.55.0
 
