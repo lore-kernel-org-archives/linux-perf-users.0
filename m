@@ -1,57 +1,57 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D141C481FA6
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 12:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF09B4779B0
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 12:44:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785329080; cv=none; b=E12Pf3LzB6tq0quoR0rkm8DELlreYHeeDOlHxPPbkPJvyjIQBmeFGvJwJBCPfpRz2PpfvNEqG/PzZ+huAhUGohOYin3ApyERVcihLgHTM/IEXX27LfI/P8DVMoV0W4QaXTgIo/C5v3xuIHPPWMZ34t1UM4NOdKzs2tvCrzauwks=
+	t=1785329080; cv=none; b=s2Tsc7z+fnsA8Yi5wQzbB/o8FdxAW7tNrK/I3MqRgc8VEsv2j38NYQaWjYsdVN0PGDVjbcDMV3bySpsDnJjGRrMzNHGlHRByN5wRzGnO/foE/5197ltNrKqp4zz8rWglh5/Ay4P8WjajkENfen98XB/lr4mTxzhMLyzZUssRu2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785329080; c=relaxed/simple;
-	bh=GVTXxGlN76zQEKPqleGsGInh1pi5zgptGjEEmzdxtyE=;
+	bh=fZFX3P9jZOXRzAtEL+HImhwtRWbCxbVAyNx50zlbyF0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=IJ3ANn/RfcPO2cNJRhq1Z+MrENdqX9AYx6MJjijKYR0Iz+LlTapGBS78v5vCIpdnL7hzmCWuU1lrWDsNrKKhrpLrZc2xLH5nfvCs5HkevzJkHYuP8+in1dcWKXxRmhoV3S3HVgJStiuKNOljI9fZm9CQfJFdWmXOifomCyMvfvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Sv4B5az/; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=Os/y/pu+Y51aBsIs76UQPMllZTl+NxNiV2koermmVwK1JKSihEoZwq6VbRkMYRT16uDSZZqwyREcMzPAFlwszmk3WKgN5opdC0Is/qJ4eVz31eV4/36lAMOpbf7kt7WiqhR7BeCsIred9Fil2/RL70DsjxQBQ+B7WKMAZt8KX/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pvAUbq3j; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Sv4B5az/"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66TBISFx2165879;
-	Wed, 29 Jul 2026 12:44:19 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pvAUbq3j"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66TBHl5F4063650;
+	Wed, 29 Jul 2026 12:44:26 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=4pWCId6B+KmmOP+72
-	E8DoFhHIod+LTKaTs3/zXTzVWc=; b=Sv4B5az/4FFPZQWgHjz0rq8eNXa9shbbt
-	jNis18bB0BHkXanRGusXVnOi1YC+JSurxHUqxqXV7pLzjj9J0XpcqIKu12I8rmaT
-	TRv2OsIrmJYG6zj8HmLfoRs0PD61uBOVF6vlYtcYFUEJMtDFzJd1FvZ3STSTVTr9
-	frBV5RDIclI17NTYlCnSifdoDmWPuanLbfkFLBBvm2yMv+kywTtvkOP6StUdgT5+
-	ZxcST/mvzZ6bpgqK79/LdlzVwGHVUMGMfijZqvlDRaJ2bBHdWavkr03g0SvVwfnb
-	tJTKBAGEH2wzT3YD78xVvGNzTnjs4vqFE/CrN0k83s5qYhRiw6FQg==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fmuycjmb0-1
+	:mime-version:references:subject:to; s=pp1; bh=CwNBgyhGuh2UPePac
+	IbYbdnR3+jGFbqitWxP85iob1E=; b=pvAUbq3jjPNGmyiIj4maVOZ10eTWUMGpi
+	1Qzz8wC4jIsQ/sbcC9N2HMuWCh39bKP5i2a7zGMfdPMOYSbiSSaLTTGGIf21JYKI
+	tNDlaMYUDi7jOphkV2qV1/BBJwfJiT+2o5Y/yJCEiaERGFoEWQ9mWxA/Hg1Unfew
+	bA+fG5Xbspl8WZcfErIiY95jjzxkp0NCvz54wOGpv1RYUo4Cr40nF8r3PhK1AKDQ
+	0ICFfhjdlt+A13MTI6hv4U+0Rvv6fr/r5kGa4Vn0qxNq321snnGCLODpUjIJnaDl
+	ho0G+MYqqG0IGhVnHfdp+xtTFZq0SM1S/tdUaEE0N149EsEDK6Eiw==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fmv0xtq5f-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jul 2026 12:44:18 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66TCfQRv027181;
-	Wed, 29 Jul 2026 12:44:17 GMT
+	Wed, 29 Jul 2026 12:44:26 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66TCfFbv028627;
+	Wed, 29 Jul 2026 12:44:24 GMT
 Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fn7uw6u4v-1
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fn8yhembx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jul 2026 12:44:17 +0000 (GMT)
+	Wed, 29 Jul 2026 12:44:24 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66TCiDUL36241762
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66TCiLCc44499282
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Jul 2026 12:44:13 GMT
+	Wed, 29 Jul 2026 12:44:21 GMT
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 61DD520043;
-	Wed, 29 Jul 2026 12:44:13 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id DC30820043;
+	Wed, 29 Jul 2026 12:44:20 +0000 (GMT)
 Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C9CC720040;
-	Wed, 29 Jul 2026 12:44:09 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 7C9FC20040;
+	Wed, 29 Jul 2026 12:44:17 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.39.22.136])
 	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 29 Jul 2026 12:44:09 +0000 (GMT)
+	Wed, 29 Jul 2026 12:44:17 +0000 (GMT)
 From: Athira Rajeev <atrajeev@linux.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
         maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
@@ -59,9 +59,9 @@ Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
         tejas05@linux.ibm.com, tshah@linux.ibm.com, venkat88@linux.ibm.com,
         usha.r2@ibm.com
-Subject: [PATCH V4 2/6] tools/perf: Add AUXTRACE recording support for powerpc HTM
-Date: Wed, 29 Jul 2026 18:13:56 +0530
-Message-Id: <20260729124400.65009-3-atrajeev@linux.ibm.com>
+Subject: [PATCH V4 4/6] tools/perf: Add powerpc callback support for arch_perf_record__need_read
+Date: Wed, 29 Jul 2026 18:13:58 +0530
+Message-Id: <20260729124400.65009-5-atrajeev@linux.ibm.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20260729124400.65009-1-atrajeev@linux.ibm.com>
 References: <20260729124400.65009-1-atrajeev@linux.ibm.com>
@@ -74,438 +74,161 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-ORIG-GUID: Mw4seqrCxRCWvtakDW03E3qRSqX1XqiH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI5MDEwMiBTYWx0ZWRfX1p78WkfrznwW
- acIp9TQfiRPZjch8BRzR61SMwYnuWMLRkMH94y60pSKLWwMctFPsgWfwFCTJ35GLEcVucUbkft9
- 2SlMBqbuBnmFaXjGSqtyXrNaHVRCNySzPNkkiIj2cCLHnDgiH2w1wmi3Xw7aJonq6i9vKAAdh9/
- YgHDUNbyLawvFhvWbCOGDhPVVq3Y7FvW4Tt38vD1L+l++/Y2Se1KiG8f0yP5/6GY6sD9aJnLMgY
- TNrld7Y16L1r0lhQgHf1ptXjgz8idvzaPe6JugGeJLNAqXJEpJNWeqJV9131TNGrBBON3BcBe6w
- wYZRNC36C/6OGqfpK7oA5G+hA7e2gNkt++Md365K9f0lyKSS7C4Hlg5kSjV2HmU0H4spjBcmsTh
- Gm8Q+CRJLdrnlCbCRw2H5vzrPcCbz+LHPApq2Qwev3SKBpqyM+wML5vhc29ZxOGqJj1Qsx3dmNc
- NchdI4W7Vsx/wBxWv+w==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI5MDEwMiBTYWx0ZWRfX3yBoooVpqOro
- I8iw5b1wwiPHcnJq/nvZg9xNv+66sKQjFTSr3sRSO4mujTN7xNSSY2LGIcXb1HTmowF13T0Bvte
- l9kD1Ktn5J1EocgRyyT1g88X67sYn5g=
-X-Authority-Analysis: v=2.4 cv=AZeB2XXG c=1 sm=1 tr=0 ts=6a69f5a3 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+X-Proofpoint-GUID: yKkqyDsanbV4YTcFOJzybeHed-lFTJ55
+X-Proofpoint-ORIG-GUID: db7ozRr7RlcFb8Flj9k2mopAl55_NhwN
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI5MDEwMiBTYWx0ZWRfX80WQJEu3/XCA
+ uvPtzShNW4OW1OUEknLylfXRA+JP//DLehHcKDWUDYMxmI9qnXOic5GdcjKFUmMhydIloVoJTuF
+ WUyA8eS+QuOSc2ixQ00CgT7auU6ghXM=
+X-Authority-Analysis: v=2.4 cv=dYuwG3Xe c=1 sm=1 tr=0 ts=6a69f5aa cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
  a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=uAbxVGIbfxUO_5tXvNgY:22 a=VnNF1IyMAAAA:8 a=4EnaXKK5IqdJy50f37cA:9
-X-Proofpoint-GUID: qb8b2A42MfhsNxw6jByH2_SVSeyNq_FR
+ a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=2CLxpyUa9fGFCfGWS_AA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI5MDEwMiBTYWx0ZWRfX64dRXdmyKEFc
+ Kk20503P05dEmamyWv3owLK0z2mv/78YukfezHI2Znq8uxPpxUE0H6S/YOtZeShKr/tDmDf5whq
+ nXHAipThv/FOF6zdS6A6K2vvEAHUo+rj6WqRc0Va/MIxTLFyugHNfJypymLP4nw9HRaWMgimf5L
+ edJF9eo6gBoNoxjayJ6F8KG7KSaZ8l0Ee9u/viG6PwQTscwZ5TAqeC5kG0HPiRRwpFyGGOArEKA
+ ZVWSbAJ5sB1+fPcH8dht0t79oL/tFPk2On4gEIjsIE67HRvyaAZtos1UR+9UFgFKawjscWpl3fo
+ oHUbxVKuHELHqLNbXRcYiBKTH1wD00suJOqBidLK2eVIQ6whnsjzzmAmjHLsF6bs1Fj42BeJonc
+ FJju9KjbrmlEiAr6WdA0zguNyT6ofPMEnsctjBrvhjAsLY51LbQmATpfjwfJwxM8JuuuCTrmaFd
+ a8R2Z+wZKzA8RbTakbQ==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-07-29_04,2026-07-28_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 priorityscore=1501 phishscore=0 adultscore=0 impostorscore=0
- clxscore=1015 malwarescore=0 suspectscore=0 lowpriorityscore=0 bulkscore=0
+ priorityscore=1501 impostorscore=0 clxscore=1015 phishscore=0 malwarescore=0
+ spamscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0 adultscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607290102
 
-Add powerpc perf tool support for the HTM PMU AUXTRACE recording path.
+Implement the arch_perf_record__need_read() architecture-specific hook
+for powerpc in arch/powerpc/util/evsel.c.
 
-Introduce htm_recording_init() and the associated auxtrace callbacks so
-perf record can create PERF_RECORD_AUXTRACE records for HTM data.
+The HTM kernel driver sets event->count to the number of records still
+staged in its internal buffers (total_size / record_size), and to 0
+once the stream is exhausted.  This hook reads that count for every open
+htm evsel via perf_evsel__read() and accumulates the values into
+total_pending_records.  A non-zero total means at least one HTM target
+still has records pending; the recording loop added in the previous
+patch will perform another mmap-read pass.
 
-htm_info_fill() stores the PMU type, number of HTM evsels, and a
-(cpu, attr.config) pair for each evsel into PERF_RECORD_AUXTRACE_INFO
-priv[].  The decode side reads these back to map each AUX buffer
-(identified by event->auxtrace.cpu) to the correct (node, chip, core)
-target when writing htm.bin.* output files.
+The drain uses a two-layer safety check: event->count detects records
+staged by the driver, and record__bytes_written() in the drain loop
+confirms data was actually moved into perf.data.  This combination
+handles the case where the driver count is briefly stale while hardware
+is still flushing.
 
-Update auxtrace_record__init() to detect HTM events and dispatch to the
-HTM-specific recording initializer.
+The implementation scans the evlist using evsel__pmu_name() to identify
+HTM events by their kernel-assigned PMU name rather than the
+user-visible event name, preventing false matches.  It iterates the fd/
+sample-id xyarray, and skips any evsel whose fd and sample-id arrays are
+mismatched to avoid reading stale state.  When the accumulated record
+count reaches zero the hook returns 0 and the recording loop proceeds to
+disable and close the events.
 
 Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
 ---
 Changes in V4:
-- Add explicit mutual-exclusion check in auxtrace_record__init(): if
-  both vpa_dtl_evsel and htm_evsel are set after scanning the evlist,
-  print an error, set *err = -EINVAL, and return NULL.  V3 silently
-  fell through to prefer VPA-DTL when both PMU types were present,
-  leaving HTM AUX buffers collected without a
-  PERF_RECORD_AUXTRACE_INFO record and the trace undecodable.
-- Drop the superfluous pos->name && null-guard from the HTM detection
-  condition in auxtrace_record__init(): the condition becomes
-  !strcmp(evsel__pmu_name(pos), "htm") without the leading check.
-  evsel__pmu_name() handles a NULL name internally so the guard is
-  redundant.
-- Apply the same simplification in htm_recording_options() and
-  htm_nr_events() in htm.c: remove the !pos->name || prefix from
-  the evsel__pmu_name() comparisons, consistent with the dispatcher
-  change above.
-- Set pos->core.attr.sample_period = 1 for each HTM evsel inside
-  htm_recording_options().  V3 set freq=0 and aux_watermark but did
-  not set sample_period, leaving the kernel to use whatever default
-  value was in the attr, which could cause the HTM event to fire at
-  an unintended rate.
+- No changes from V3.
 
 Changes in V3:
-- Switch HTM event detection in auxtrace_record__init() from
-strstarts(pos->name, "htm") to !strcmp(evsel__pmu_name(pos), "htm"),
-matching the kernel-assigned PMU name and preventing false
-matches on user-named events.
-- Switch htm_recording_options(), htm_nr_events(), and the
-loop in htm_info_fill() from strstarts(pos->name, "htm")
-to evsel__pmu_name(), consistent with the above and with
-patches 4 and 6.
-- Add #include <linux/zalloc.h> to htm.c for zalloc().
-- Set auxtrace_info->type = PERF_AUXTRACE_POWERPC_HTM directly
-in htm_info_fill(), removing the placeholder comment. (V2
-deferred this to patch 5; it is cleaner to set it in the same
-patch that defines the enum.)
-- Set aux_watermark to half the AUX ring-buffer size
-(auxtrace_mmap_pages * page_size / 2) so there is always
-headroom for hardware to write while userspace drains. V2 set
-it to the full buffer size, risking data loss under back-pressure.
-- Add PERF_AUXTRACE_POWERPC_HTM to the enum auxtrace_type in
-util/auxtrace.h and add #include "powerpc-htm.h" plus a stub
-case PERF_AUXTRACE_POWERPC_HTM: (falls through to
-PERF_AUXTRACE_UNKNOWN) in util/auxtrace.c in this patch, so
-the enum is defined before it is used in htm_info_fill().
-(V2 did this in patch 5.)
+- Use evsel__pmu_name(evsel) instead of strstarts(evsel->name, "htm")
+to identify HTM events, matching by kernel-assigned PMU name rather
+than user-visible event name.
+- Remove the redundant two-pass loop (first pass to set found_htm,
+second to accumulate counts); a single pass with evsel__pmu_name()
+is sufficient. if no HTM event exists total_pending_records stays 0
+and the function returns 0.
+- Remove the dead !strcmp(evsel->name, "dummy:u") check;
+- evsel__pmu_name() will never return "htm" for a dummy:u software
+event.
+- Rename total_pending_bytes -> total_pending_records to match what
+the driver actually reports (event->count = total_size / record_size,
+a record count, not a byte count).
+- Add #include <string.h> for musl compatibility (strcmp() without
+it warns on some toolchains).
 
 Changes in V2:
-- htm_info_fill() now stores a (cpu, attr.config) pair for every HTM
-  evsel into PERF_RECORD_AUXTRACE_INFO priv[].  V1 stored only the PMU
-  type and a single config value; there was no per-CPU mapping.
-- The priv[] layout is formalised in util/powerpc-htm.h with enum
-  constants POWERPC_HTM_PMU_TYPE, POWERPC_HTM_NUM_EVENTS, and
-  POWERPC_HTM_EVENT_DATA and the helper macros HTM_AUXTRACE_PRIV_FIXED
-  and HTM_AUXTRACE_PRIV_SIZE(n).  V1 used bare numeric offsets.
-- PERF_SAMPLE_RAW is enabled in the recording options so that memory
-  configuration records emitted by the kernel driver are captured
-  alongside the AUX stream.  V1 added this in a later patch.
-- PERF_AUXTRACE_POWERPC_HTM type constant is set in htm_info_fill()
-  (wired up in patch 5 once the enum is defined).
-- Patch is now 2/6 instead of 2/9.
+- Implements the renamed arch_perf_record__need_read() hook (V1
+  implemented arch_record__collect_final_data()).
+- Skips evsels whose fd and sample-id xyarrays are mismatched, avoiding
+  stale-state reads.  V1 had no such guard.
+- evlist__enable cycling is removed; that responsibility now belongs to
+  the drain loop in builtin-record.c added in patch 3.
+- File location changed to arch/powerpc/util/evsel.c (V1 used
+  arch/powerpc/util/powerpc-htm.c).
+- Patch is now 4/6 instead of 4/9.
 
- tools/perf/arch/powerpc/util/Build      |   1 +
- tools/perf/arch/powerpc/util/auxtrace.c |  21 +++
- tools/perf/arch/powerpc/util/htm.c      | 171 ++++++++++++++++++++++++
- tools/perf/util/auxtrace.c              |   2 +
- tools/perf/util/auxtrace.h              |   1 +
- tools/perf/util/powerpc-htm.h           |  43 ++++++
- 6 files changed, 239 insertions(+)
- create mode 100644 tools/perf/arch/powerpc/util/htm.c
- create mode 100644 tools/perf/util/powerpc-htm.h
+ tools/perf/arch/powerpc/util/evsel.c | 55 ++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
-index 7819c8f5af2d..297152591046 100644
---- a/tools/perf/arch/powerpc/util/Build
-+++ b/tools/perf/arch/powerpc/util/Build
-@@ -8,3 +8,4 @@ perf-util-$(CONFIG_LIBDW) += skip-callchain-idx.o
- 
- perf-util-y += auxtrace.o
- perf-util-y += vpa-dtl.o
-+perf-util-y += htm.o
-diff --git a/tools/perf/arch/powerpc/util/auxtrace.c b/tools/perf/arch/powerpc/util/auxtrace.c
-index e04a0bd61755..c77ffc4c6a9d 100644
---- a/tools/perf/arch/powerpc/util/auxtrace.c
-+++ b/tools/perf/arch/powerpc/util/auxtrace.c
-@@ -12,6 +12,7 @@
- #include "../../util/debug.h"
- #include "../../util/auxtrace.h"
- #include "../../util/powerpc-vpadtl.h"
-+#include "../../util/powerpc-htm.h"
- #include "../../util/record.h"
- 
- struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
-@@ -19,6 +20,7 @@ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
- {
- 	struct evsel *pos;
- 	struct evsel *vpa_dtl_evsel = NULL;
-+	struct evsel *htm_evsel = NULL;
- 
- 	/*
- 	 * Set err value to zero here. Any fail later
-@@ -32,11 +34,30 @@ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
- 			/* Remember the first matching VPA DTL event */
- 			if (!vpa_dtl_evsel)
- 				vpa_dtl_evsel = pos;
-+		} else if (!strcmp(evsel__pmu_name(pos), "htm")) {
-+			pos->needs_auxtrace_mmap = true;
-+			/* Remember the first matching HTM event */
-+			if (!htm_evsel)
-+				htm_evsel = pos;
- 		}
- 	}
- 
-+	/*
-+	 * Only one auxtrace PMU can be initialised per session.  Reject
-+	 * concurrent VPA DTL and HTM events: HTM AUX buffers would be
-+	 * collected without a PERF_RECORD_AUXTRACE_INFO record, making
-+	 * the trace undecodable.
-+	 */
-+	if (vpa_dtl_evsel && htm_evsel) {
-+		pr_err("Cannot record VPA DTL and HTM auxtrace events simultaneously\n");
-+		*err = -EINVAL;
-+		return NULL;
-+	}
-+
- 	if (vpa_dtl_evsel)
- 		return vpa_dtl_recording_init(vpa_dtl_evsel, err);
-+	else if (htm_evsel)
-+		return htm_recording_init(htm_evsel, err);
- 
- 	return NULL;
- }
-diff --git a/tools/perf/arch/powerpc/util/htm.c b/tools/perf/arch/powerpc/util/htm.c
-new file mode 100644
-index 000000000000..7757f548ef22
---- /dev/null
-+++ b/tools/perf/arch/powerpc/util/htm.c
-@@ -0,0 +1,171 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * HTM AUX tracing support
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/types.h>
+diff --git a/tools/perf/arch/powerpc/util/evsel.c b/tools/perf/arch/powerpc/util/evsel.c
+index 2f733cdc8dbb..3c7ccc955b0a 100644
+--- a/tools/perf/arch/powerpc/util/evsel.c
++++ b/tools/perf/arch/powerpc/util/evsel.c
+@@ -1,8 +1,63 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <stdio.h>
++#include <string.h>
 +#include <linux/string.h>
-+#include <linux/zalloc.h>
-+#include <stdlib.h>
-+#include <limits.h>
-+#include "../../util/evsel.h"
-+#include "../../util/evlist.h"
-+#include "../../util/session.h"
-+#include "../../util/debug.h"
-+#include "../../util/auxtrace.h"
-+#include "../../util/powerpc-htm.h"
-+#include "../../util/record.h"
-+#include <internal/lib.h> /* page_size */
-+#include <errno.h>
-+
-+#define KiB(x) ((x) * 1024)
-+
-+struct htm_recording {
-+	struct auxtrace_record	itr;
-+	struct evsel		*evsel;
-+};
-+
-+static int
-+htm_recording_options(struct auxtrace_record *itr __maybe_unused,
-+		      struct evlist *evlist,
-+		      struct record_opts *opts)
-+{
-+	struct evsel *pos;
-+
-+	opts->full_auxtrace = true;
-+
-+	if (!opts->auxtrace_mmap_pages) {
-+		opts->auxtrace_mmap_pages = KiB(128) / page_size;
-+		if (opts->mmap_pages == UINT_MAX)
-+			opts->mmap_pages = KiB(256) / page_size;
-+	}
-+
-+	evlist__for_each_entry(evlist, pos) {
-+		if (strcmp(evsel__pmu_name(pos), "htm"))
-+			continue;
-+		pos->core.attr.aux_watermark =
-+			opts->auxtrace_mmap_pages * (size_t)page_size / 2;
-+		pos->core.attr.sample_type |= PERF_SAMPLE_RAW;
-+		pos->core.attr.freq = 0;
-+		pos->core.attr.sample_period = 1;
-+		pos->needs_auxtrace_mmap = true;
-+	}
-+
-+	return 0;
-+}
-+
-+/* Count htm evsels in the evlist */
-+static int htm_nr_events(struct evlist *evlist)
-+{
-+	struct evsel *pos;
-+	int n = 0;
-+
-+	evlist__for_each_entry(evlist, pos) {
-+		if (!strcmp(evsel__pmu_name(pos), "htm"))
-+			n++;
-+	}
-+	return n;
-+}
-+
-+static size_t htm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
-+				 struct evlist *evlist)
-+{
-+	return HTM_AUXTRACE_PRIV_SIZE(htm_nr_events(evlist));
-+}
+ #include "util/evsel.h"
++#include "util/record.h"
++#include "util/evlist.h"
++#include "util/debug.h"
++#include <internal/xyarray.h>
+ 
+ void arch_evsel__set_sample_weight(struct evsel *evsel)
+ {
+ 	evsel__set_sample_bit(evsel, WEIGHT_STRUCT);
+ }
 +
 +/*
-+ * Fill the PERF_RECORD_AUXTRACE_INFO private data with:
-+ *   priv[POWERPC_HTM_PMU_TYPE]   = pmu->type of the first htm evsel
-+ *   priv[POWERPC_HTM_NUM_EVENTS] = number of htm evsels
-+ *   priv[POWERPC_HTM_EVENT_DATA + n*2]     = CPU for nth htm evsel
-+ *   priv[POWERPC_HTM_EVENT_DATA + n*2 + 1] = attr.config for nth htm evsel
++ * Check if HTM events have more data to collect.
 + *
-+ * The CPU is the first CPU in the evsel's cpu map; for events opened with
-+ * cpu=N there is exactly one CPU.  The decode side uses event->auxtrace.cpu
-+ * to look up the matching config and derive (node, chip, core) for the
-+ * output file name.
++ * This function reads the HTM event counts. When the kernel driver
++ * has more data available, it returns a non-zero count. When all
++ * data has been collected, it returns zero.
++ *
++ * Returns: 1 if more data exists, 0 if collection is complete
 + */
-+static int
-+htm_info_fill(struct auxtrace_record *itr,
-+	      struct perf_session *session,
-+	      struct perf_record_auxtrace_info *auxtrace_info,
-+	      size_t priv_size)
++int arch_perf_record__need_read(struct evlist *evlist)
 +{
-+	struct htm_recording *htm_r = container_of(itr, struct htm_recording, itr);
-+	struct evlist *evlist = session->evlist;
-+	struct evsel *pos;
-+	int n = 0;
-+	int expected_n = htm_nr_events(evlist);
++	struct evsel *evsel;
++	u64 total_pending_records = 0;
++	int x, y;
 +
-+	if (priv_size != HTM_AUXTRACE_PRIV_SIZE(expected_n))
-+		return -EINVAL;
++	/* there was an error during record__open */
++	if (!evlist)
++		return 0;
 +
-+	auxtrace_info->type = PERF_AUXTRACE_POWERPC_HTM;
-+	auxtrace_info->priv[POWERPC_HTM_PMU_TYPE] = htm_r->evsel->core.attr.type;
-+	auxtrace_info->priv[POWERPC_HTM_NUM_EVENTS] = expected_n;
++	/* Read HTM event counts to check if more data is available */
++	evlist__for_each_entry(evlist, evsel) {
++		struct xyarray *xy = evsel->core.sample_id;
 +
-+	evlist__for_each_entry(evlist, pos) {
-+		struct perf_cpu_map *cpus;
-+		int cpu;
-+
-+		if (strcmp(evsel__pmu_name(pos), "htm"))
++		if (strcmp(evsel__pmu_name(evsel), "htm"))
 +			continue;
 +
-+		/*
-+		 * Get the CPU this evsel is pinned to.  For events opened
-+		 * with cpu=N, evsel__cpus() returns a single-entry map {N}
-+		 * at record time (not during replay).
-+		 */
-+		cpus = evsel__cpus(pos);
-+		if (cpus && perf_cpu_map__nr(cpus) > 0)
-+			cpu = perf_cpu_map__cpu(cpus, 0).cpu;
-+		else
-+			cpu = -1;
++		if (xy == NULL || evsel->core.fd == NULL)
++			continue;
 +
-+		auxtrace_info->priv[POWERPC_HTM_EVENT_DATA + n * 2]     = cpu;
-+		auxtrace_info->priv[POWERPC_HTM_EVENT_DATA + n * 2 + 1] =
-+							pos->core.attr.config;
-+		n++;
++		if (xyarray__max_x(evsel->core.fd) != xyarray__max_x(xy) ||
++		    xyarray__max_y(evsel->core.fd) != xyarray__max_y(xy)) {
++			pr_debug("Unmatched FD vs sample ID array for HTM event\n");
++			continue;
++		}
++
++		for (x = 0; x < xyarray__max_x(xy); x++) {
++			for (y = 0; y < xyarray__max_y(xy); y++) {
++				struct perf_counts_values count = { .val = 0 };
++
++				if (perf_evsel__read(&evsel->core, x, y, &count) == 0)
++					total_pending_records += count.val;
++			}
++		}
 +	}
 +
-+	return 0;
++	/* Collection is complete only when ALL hardware queues have no pending records */
++	return (total_pending_records > 0) ? 1 : 0;
 +}
-+
-+static u64 htm_reference(struct auxtrace_record *itr __maybe_unused)
-+{
-+	return 0;
-+}
-+
-+static void htm_free(struct auxtrace_record *itr)
-+{
-+	struct htm_recording *htm_r = container_of(itr, struct htm_recording, itr);
-+
-+	free(htm_r);
-+}
-+
-+struct auxtrace_record *htm_recording_init(struct evsel *pos, int *err)
-+{
-+	struct htm_recording *htm_r;
-+
-+	/*
-+	 * To obtain the auxtrace buffer file descriptor, the auxtrace event
-+	 * must come first.
-+	 */
-+	evlist__to_front(pos->evlist, pos);
-+
-+	htm_r = zalloc(sizeof(*htm_r));
-+	if (!htm_r) {
-+		pr_debug("htm_recording allocation failed (-ENOMEM)\n");
-+		*err = -ENOMEM;
-+		return NULL;
-+	}
-+
-+	htm_r->evsel = pos;
-+	htm_r->itr.recording_options = htm_recording_options;
-+	htm_r->itr.info_priv_size    = htm_info_priv_size;
-+	htm_r->itr.info_fill         = htm_info_fill;
-+	htm_r->itr.free              = htm_free;
-+	htm_r->itr.reference         = htm_reference;
-+	return &htm_r->itr;
-+}
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 0b851f32e98c..31c0db933f61 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -56,6 +56,7 @@
- #include "s390-cpumsf.h"
- #include "util/mmap.h"
- #include "powerpc-vpadtl.h"
-+#include "powerpc-htm.h"
- 
- #include <linux/ctype.h>
- #include "symbol/kallsyms.h"
-@@ -1427,6 +1428,7 @@ int perf_event__process_auxtrace_info(const struct perf_tool *tool __maybe_unuse
- 	case PERF_AUXTRACE_VPA_DTL:
- 		err = powerpc_vpadtl_process_auxtrace_info(event, session);
- 		break;
-+	case PERF_AUXTRACE_POWERPC_HTM:
- 	case PERF_AUXTRACE_UNKNOWN:
- 	default:
- 		return -EINVAL;
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 6947f3f284c0..68b17802a419 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -46,6 +46,7 @@ enum auxtrace_type {
- 	PERF_AUXTRACE_S390_CPUMSF,
- 	PERF_AUXTRACE_HISI_PTT,
- 	PERF_AUXTRACE_VPA_DTL,
-+	PERF_AUXTRACE_POWERPC_HTM,
- };
- 
- enum itrace_period_type {
-diff --git a/tools/perf/util/powerpc-htm.h b/tools/perf/util/powerpc-htm.h
-new file mode 100644
-index 000000000000..18e39417d556
---- /dev/null
-+++ b/tools/perf/util/powerpc-htm.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __POWERPC_HTM_H
-+#define __POWERPC_HTM_H
-+
-+#include <linux/types.h>
-+
-+/*
-+ * Layout of the private data in PERF_RECORD_AUXTRACE_INFO for HTM.
-+ *
-+ * priv[POWERPC_HTM_PMU_TYPE]   = htm PMU type ID (pmu->type from kernel)
-+ * priv[POWERPC_HTM_NUM_EVENTS] = number of htm evsels recorded (N)
-+ *
-+ * Followed by N pairs (2 u64 each):
-+ *   priv[POWERPC_HTM_EVENT_DATA + n*2 + 0] = CPU number for nth htm evsel
-+ *   priv[POWERPC_HTM_EVENT_DATA + n*2 + 1] = attr.config for nth htm evsel
-+ *
-+ * Total priv entries: POWERPC_HTM_EVENT_DATA + N * 2
-+ */
-+enum {
-+	POWERPC_HTM_PMU_TYPE  = 0,
-+	POWERPC_HTM_NUM_EVENTS,
-+	POWERPC_HTM_EVENT_DATA,	/* variable-length: 2 u64 per event */
-+};
-+
-+/* Fixed header size (everything before the per-event data) */
-+#define HTM_AUXTRACE_PRIV_FIXED  (POWERPC_HTM_EVENT_DATA * sizeof(u64))
-+
-+/* Total priv size for N htm evsels */
-+#define HTM_AUXTRACE_PRIV_SIZE(n) \
-+	(HTM_AUXTRACE_PRIV_FIXED + (n) * 2 * sizeof(u64))
-+
-+struct evsel;
-+struct evlist;
-+union perf_event;
-+struct perf_session;
-+struct auxtrace_record;
-+
-+struct auxtrace_record *htm_recording_init(struct evsel *pos, int *err);
-+
-+int powerpc_htm_process_auxtrace_info(union perf_event *event,
-+				      struct perf_session *session);
-+
-+#endif /* __POWERPC_HTM_H */
 -- 
 2.43.0
 
