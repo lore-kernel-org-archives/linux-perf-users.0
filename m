@@ -1,65 +1,338 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B02D2DF142;
-	Wed, 29 Jul 2026 08:47:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9495C39AD49
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 10:16:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785314826; cv=none; b=QBZSCClY0XTVN3NzC3gKJCffM+Wsr/gaWVwNLD8FmKV2VJesr09xkwkpli/EA/ykoSXnL14J+0Th7B96svsq+fIf2sxxIy2raQAH01iNOIhKihHXjAS+0t4IKFtgO9n60GNLbYlO9ZiH3JFeahimV0hPOHNls271krjIaKhXSH0=
+	t=1785320169; cv=none; b=PM5jK9hUAD6fhaH8ip9xDvHfbRSHaCT67HVrT14Xrwr7aDbe9SDL4aCDxSFa0XqLph/lFDlPA/gphYDpy33tC90NIVMpDjqPtaeoqRioxeWbrPpvcJyT6+xAy05NFUt0QPyR3kqKrvASGqNDJBPufK1BgbkO7+3bqwp9uV59An8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785314826; c=relaxed/simple;
-	bh=hDt4g6wufmTGCeIWbKt1zmtfyCY6o1typYHKUE2h6EI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZJNDmT/rUktdNppXF6Dj11xCEagdOkf1sFfhsEzTprbIVEhc14Yd6pwy4/s2c/gmeEnDUCs1w3ckcuTrf8bPJ5c/pEuaoxFVjbKdseSTnngK0p+N+qXM4oID6KW6bfn0kSwSMwyokvK4CTMsAdIxXBfCg11m3pcFpdoqHngZx0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O98AQmik; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785320169; c=relaxed/simple;
+	bh=Wbf26hIs9JYHQT/h8rr2OSqvGy7s0yG6N3roBjRqXEo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HFXvoJ6Dn2rT1GyPWXsIys+MsB2STDim4qb5mHeYXun2UeHHN/DwnuSZ0VZIp+lUexhuOSAX1c4pqJyXlrAovjVxVjDA3ewTZBnP3PrnmQsaFBD7uzeHtFisuyqkenihkykQyucMWm9dorUax3O7oUBKECNq1D21L3GqAwn1lVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g/BTCE5P; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O98AQmik"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EFA71F000E9;
-	Wed, 29 Jul 2026 08:47:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785314825;
-	bh=JWdAI1NvPYdtxpdNDYy2eq7d4+X1bKpjAzLxCp6XRws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=O98AQmik0gvB8yXO8+8UNiVZEKw7CpRGsyMeY84TO7cYjJEVEpCfHNa9DBiIVK9nv
-	 YrUvT9wYqZB/NxxMoswZ4jX/XVb7YFBa6idysfl8BBNvfGnuc6VWcbrJgul4jVO5G+
-	 sfdW+82KQxW+U9x19C2XrNtE56BvYhKDnNoNWxRuR/Sxw+KHEs9kejbZ+FlHDvbuGX
-	 CYP6r8qiOAdWQr4A1psdQx5jbieO9JDgnG5eKGmIyLJwVKRyPvolAyoDjXz2DxnmDc
-	 YOUFEQUfueF2mVvzqExnFdHRpXK2p5ZXlLXyfe8ZskjXrjGuswCsLUUEaS0SfN0ZAS
-	 yQ9Bb/YgMjo+Q==
-Date: Wed, 29 Jul 2026 10:47:00 +0200
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: will@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/3] dt-bindings: perf: Add Arm Bus Monitor Unit
-Message-ID: <20260729-glossy-strong-seahorse-81c9da@quoll>
-References: <cover.1784214112.git.robin.murphy@arm.com>
- <1cc6acae06fb4910e27cc89e2270a52e80e310ef.1784214112.git.robin.murphy@arm.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g/BTCE5P"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-69e8ea2783aso1081311a12.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 03:16:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1785320166; x=1785924966; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=XRzDa/r/YmBt+wlpaMQ61Gn8ZKl0NmHc9HVdDTLA0QU=;
+        b=g/BTCE5PCJ2ZyBvrRxM/lyBjjPlI5JJSlC3IMqt23sbzInK/U4Q4uYYPMMmruE01Eo
+         kgqODiHqqQZPuh+goY7Tr+dk03RxwouNtg5fDUnu2NLaofh16eIzVQO2YnIUe2qTTQve
+         GwkRR+phmRcXv1vxcq2I7C1X/XpOwKorRzJBPsiud0pRTzEWgcDAZT7T1dJzFgCQSi74
+         imEBhiXjkfu6EEfq6ZutTMCr6dESir05THlhcyMGWyk7E0Jiz3GTwDRcrrZWbB0a8pWG
+         TKGJEJtkByqc65akeOtLQgkNogI/BwHidaq4vrVI8nDRyqcH0QsnNrQ5KwaaRDixzn/3
+         lEaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785320166; x=1785924966;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=XRzDa/r/YmBt+wlpaMQ61Gn8ZKl0NmHc9HVdDTLA0QU=;
+        b=o5t+32tqoR9t2DORv4cSOL/KvQLpDd9sIHF7iY8IBA5g3qUn+DjtJmBkj0cdDZAusf
+         nUSCzH7Q0jP6FEY9JuJXe8FUyocID4ETAZv+MJjAHusLC9edNGnBbpXHPWCJPqDftgKm
+         hV1aZ0DPzOFmTus47rBZbZVZbnOBmvgKJG5n7kRy6ZSTaN4Unl9xnd6igdls6EqpazL4
+         qKnoFv1moQFu1zzxe5Vqg27Sci+VuwTx8FcnGnJstkciz1xTURBi/0gRWvqkz6pOMnLv
+         CUvWfVWNSy+x4lrL6CL5rec1iJSYVoZlPnD6L2qF5vobs1oZoJsGa13Yshgpd21LwUg5
+         oT8g==
+X-Forwarded-Encrypted: i=1; AHgh+Rr4Lci7ukzaJxarXi7zdHO7AWHTfpcV+SiHeSwyEq02mmoBUhjNSD3xcTQVz+Wusk7n5W6VfzW/iF4Og5NQ+W17@vger.kernel.org
+X-Gm-Message-State: AOJu0YwPlRybxEcp9OQTiWxtdbpn3DFHZ5HgxnW02A7ylCboeulijem9
+	kCstMa9UBHRISNdpg10I/56OhHi3Zf3GaEvXeXrWyEmZbq3tG9pQqTaMA6f06wh3aRH5oCOTVFr
+	CXOenew4=
+X-Gm-Gg: AR+sD1372D5ZpOP9o3gTVjZKjb01dVBhgpyBeSSU2KNSRcikkwtTe1Iy/ZMP45KN/NR
+	0ideW1Cp9TVlGmgnVMj4VgzOGmq8TuE5oxZmnv4KA85czgGLhOjJZyHoJkR1d5fAg7QItgFyRSS
+	9a1obDZpBKHgdaS5wb9pK6zyHFxdZxF3n90ekrjDMFeAU7AEmvJlShiT5zo80B4C1arhlgmjlhq
+	FZFK92z56oQaZ+o3aRH3RXKF0HM1pVGHVN6kPZ0NqZVmpwHEYrGrfs46U7EnGbhErAyBtn8Ecmi
+	cDraa4UjO99hHs4gGiC3PnRTh1JllUnsizyKbIKtYLQ4hAOWkc9pT2jcHhPW+JdZ5V0F8s+Y2/D
+	ma5jWaTDcKD4CPzvdKuR79MHUzSl1/0iZIY85SliOpnWjavCKUOifoM5bkB1Njdle1LSDldRbp0
+	fVoGIggnGTgjxj4cGOHvnTbUPFdBPd49rdZ5Rbz70pIH0n43QLiSc5QFavkRHJxgfsjw==
+X-Received: by 2002:a05:6402:1e8e:b0:69f:d41c:fef with SMTP id 4fb4d7f45d1cf-6a034a0861dmr2962192a12.6.1785320165584;
+        Wed, 29 Jul 2026 03:16:05 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a050be3a33sm650268a12.10.2026.07.29.03.16.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Jul 2026 03:16:03 -0700 (PDT)
+Message-ID: <d748b44b-d81c-4ea7-ac7d-03a3c72e9e14@linaro.org>
+Date: Wed, 29 Jul 2026 11:16:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1cc6acae06fb4910e27cc89e2270a52e80e310ef.1784214112.git.robin.murphy@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] perf hisi-ptt: Fix PTT trace TLP header parsing
+To: Sizhe Liu <liusizhe5@huawei.com>
+Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-doc@vger.kernel.org, linuxarm@huawei.com, prime.zeng@hisilicon.com,
+ wuyifan50@huawei.com, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, corbet@lwn.net, skhan@linuxfoundation.org,
+ bhelgaas@google.com, yangyccccc@gmail.com, jic23@kernel.org,
+ john.g.garry@oracle.com, will@kernel.org, mike.leach@arm.com,
+ leo.yan@linux.dev, peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, wangyushan12@huawei.com
+References: <20260729060220.624250-1-liusizhe5@huawei.com>
+ <20260729060220.624250-3-liusizhe5@huawei.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260729060220.624250-3-liusizhe5@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jul 16, 2026 at 04:12:40PM +0100, Robin Murphy wrote:
-> Arm's Bus Monitor Unit is a low-level performance analysis tool for
-> matching and counting transactions at interconnect interfaces. Typical
-> platforms will have multiple BMUs each measuring multiple interfaces in
-> various parts of the system, hence for the sake of usability we make it
-> mandatory for the platform to label each instance such that the end user
-> can correlate with platform documentation to know what's what.
+
+
+On 29/07/2026 7:02 am, Sizhe Liu wrote:
+> TLP Headers traced by HiSilicon PCIe tune and trace device (PTT) in
+> 4DW format are shown in the document as below:
+> bits [31:30] [ 29:25 ][24][23][22][21][    20:11   ][    10:0    ]
+>       |-----|---------|---|---|---|---|-------------|-------------|
+> DW0  [ Fmt ][  Type  ][T9][T8][TH][SO][   Length   ][    Time    ]
+> DW1  [                     Header DW1                            ]
+> DW2  [                     Header DW2                            ]
+> DW3  [                     Header DW3                            ]
 > 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> Problem:
+> The DW0 bit field layout of the hisi_ptt_4dw union does not match the
+> actual bit ordering in little-endian memory, causing incorrect field
+> decoding.
 > 
+> Test on Kunpeng 930 SOC, generating data flow with `iperf` commands:
+> - server side:
+>      iperf -s
+> - client side:
+>      iperf -c $ip_addr -t 30
+> 
+> Trace the TLP headers with hisi_ptt on server side at the same time:
+>    perf record -e hisi_ptt12_0/type=4,filter=0x05101,direction=2,format=0/ \
+>    --max-size 50M -o perf.data &
+> The trace aims to capture completion TLPs, learn more in the document:
+>    https://docs.kernel.org/trace/hisi-ptt.html
+> 
+> Decode perf.data with hisi_ptt decoder:
+>    perf report -D
+> 
+> The hisi_ptt decoder produces the following result:
+> [...perf headers and other information]
+> . ... HISI PTT data: size 8388608 bytes
+> .  00000000: 68 87 20 94                                 Format 3 Type 1a T9 0 T8 1 TH 1 SO 1 Length 10 Time 4a1
+> .  00000004: 40 00 00 00                                 Header DW1
+> .  00000008: 40 00 01 51                                 Header DW2
+> .  0000000c: 00 00 00 00                                 Header DW3
+> [...other hisi_ptt TLP headers]
+> 
+> According to PCIe r5.0 2.2.1, the Fmt & Type of Cpl/CplD is supposed to be
+> 8b'00001010' / 8b'01001010'
+> However, the Format & Type decoder analyzing result is 8b'01111010'.
+> It does not match field encodings of any TLP messages.
+> 
+> Correct decoder result should be:
+> [...perf headers and other information]
+> . ... HISI PTT data: size 8388608 bytes
+> .  00000000: 94 20 87 68                                 Format 2 Type a T9 0 T8 0 TH 0 SO 1 Length 10 Time 768
+> .  00000004: 00 00 00 40                                 Header DW1
+> .  00000008: 51 01 00 40                                 Header DW2
+> .  0000000c: 00 00 00 00                                 Header DW3
+> [...other hisi_ptt TLP headers]
+> 
+> To solve the problem:
+> 1. Drop the union and C bitfield struct, store the raw DW value in
+> a plain uint32_t, and extract the fields with FIELD_GET() against
+> GENMASK/BIT masks declared in the header so they can be reused by
+> other translation units. The masks are portable across endianness and
+> compilers.
+> 
+> 2. Print all DW hex values in big-endian byte order for readability,
+> matching the bit field layout shown in the 4DW format diagram.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 5e91e57e6809 ("perf auxtrace arm64: Add support for parsing HiSilicon PCIe Trace packet")
+> Signed-off-by: Sizhe Liu <liusizhe5@huawei.com>
 > ---
-> v2: Invent example
+>   Documentation/trace/hisi-ptt.rst              | 28 +++++------
+>   .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   | 46 +++++++++----------
+>   .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   | 12 +++++
+>   3 files changed, 49 insertions(+), 37 deletions(-)
+> 
+> diff --git a/Documentation/trace/hisi-ptt.rst b/Documentation/trace/hisi-ptt.rst
+> index 6eef28ebb0c7..f6a2655f99e5 100644
+> --- a/Documentation/trace/hisi-ptt.rst
+> +++ b/Documentation/trace/hisi-ptt.rst
+> @@ -285,20 +285,20 @@ according to the format described previously (take 8DW as an example):
+>       [...perf headers and other information]
+>       . ... HISI PTT data: size 4194304 bytes
+>       .  00000000: 00 00 00 00                                 Prefix
+> -    .  00000004: 01 00 00 60                                 Header DW0
+> -    .  00000008: 0f 1e 00 01                                 Header DW1
+> -    .  0000000c: 04 00 00 00                                 Header DW2
+> -    .  00000010: 40 00 81 02                                 Header DW3
+> -    .  00000014: 33 c0 04 00                                 Time
+> +    .  00000004: 60 00 00 01                                 Header DW0
+> +    .  00000008: 01 00 1e 0f                                 Header DW1
+> +    .  0000000c: 00 00 00 04                                 Header DW2
+> +    .  00000010: 02 81 00 40                                 Header DW3
+> +    .  00000014: 00 04 c0 33                                 Time
+>       .  00000020: 00 00 00 00                                 Prefix
+> -    .  00000024: 01 00 00 60                                 Header DW0
+> -    .  00000028: 0f 1e 00 01                                 Header DW1
+> -    .  0000002c: 04 00 00 00                                 Header DW2
+> -    .  00000030: 40 00 81 02                                 Header DW3
+> -    .  00000034: 02 00 00 00                                 Time
+> +    .  00000024: 60 00 00 01                                 Header DW0
+> +    .  00000028: 01 00 1e 0f                                 Header DW1
+> +    .  0000002c: 00 00 00 04                                 Header DW2
+> +    .  00000030: 02 81 00 40                                 Header DW3
+> +    .  00000034: 00 00 00 02                                 Time
+>       .  00000040: 00 00 00 00                                 Prefix
+> -    .  00000044: 01 00 00 60                                 Header DW0
+> -    .  00000048: 0f 1e 00 01                                 Header DW1
+> -    .  0000004c: 04 00 00 00                                 Header DW2
+> -    .  00000050: 40 00 81 02                                 Header DW3
+> +    .  00000044: 60 00 00 01                                 Header DW0
+> +    .  00000048: 01 00 1e 0f                                 Header DW1
+> +    .  0000004c: 00 00 00 04                                 Header DW2
+> +    .  00000050: 02 81 00 40                                 Header DW3
+>       [...]
+> diff --git a/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
+> index c48b2ce7c4a3..c1e169561087 100644
+> --- a/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
+> +++ b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
+> @@ -10,6 +10,7 @@
+>   #include <endian.h>
+>   #include <byteswap.h>
+>   #include <linux/bitops.h>
+> +#include <linux/kernel.h>
+>   #include <stdarg.h>
+>   
+>   #include "../color.h"
+> @@ -73,29 +74,20 @@ static const char * const hisi_ptt_4dw_pkt_field_name[] = {
+>   	[HISI_PTT_4DW_HEAD3]	= "Header DW3",
+>   };
+>   
+> -union hisi_ptt_4dw {
+> -	struct {
+> -		uint32_t format : 2;
+> -		uint32_t type : 5;
+> -		uint32_t t9 : 1;
+> -		uint32_t t8 : 1;
+> -		uint32_t th : 1;
+> -		uint32_t so : 1;
+> -		uint32_t len : 10;
+> -		uint32_t time : 11;
+> -	};
+> -	uint32_t value;
+> -};
+> -
+>   static void hisi_ptt_print_pkt(const unsigned char *buf, int pos, const char *desc)
+>   {
+>   	const char *color = PERF_COLOR_BLUE;
+> +	uint32_t value;
+> +	uint8_t byte;
+>   	int i;
+>   
+> +	value = le32_to_cpu(*(__le32 *)(buf + pos));
+>   	printf(".");
+>   	color_fprintf(stdout, color, "  %08x: ", pos);
+> -	for (i = 0; i < HISI_PTT_FIELD_LENGTH; i++)
+> -		color_fprintf(stdout, color, "%02x ", buf[pos + i]);
+> +	for (i = 0; i < HISI_PTT_FIELD_LENGTH; i++) {
+> +		byte = (value >> (24 - i * 8)) & 0xFF;
+> +		color_fprintf(stdout, color, "%02x ", byte);
+> +	}
+>   	for (i = 0; i < HISI_PTT_MAX_SPACE_LEN; i++)
+>   		color_fprintf(stdout, color, "   ");
+>   	color_fprintf(stdout, color, "  %s\n", desc);
+> @@ -122,22 +114,30 @@ static int hisi_ptt_8dw_pkt_desc(const unsigned char *buf, int pos)
+>   static void hisi_ptt_4dw_print_dw0(const unsigned char *buf, int pos)
+>   {
+>   	const char *color = PERF_COLOR_BLUE;
+> -	union hisi_ptt_4dw dw0;
+> +	uint8_t byte;
+> +	uint32_t dw;
+>   	int i;
+>   
+> -	dw0.value = *(uint32_t *)(buf + pos);
+> +	dw = le32_to_cpu(*(__le32 *)(buf + pos));
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Sashiko and the comment in generic.h say to use get_unaligned_le32() for 
+unaligned data. It looks like this always is aligned but it's not 
+enforced by the function, so to avoid anyone wondering if it's correct I 
+would just use get_unaligned_le32().
 
-Best regards,
-Krzysztof
+With that:
+
+Reviewed-by: James Clark <james.clark@linaro.org>
+
+Sashiko also says there is another endianess issue in 
+hisi_ptt_check_packet_type(). Up to you whether you want to fix it or 
+not: 
+https://sashiko.dev/#/patchset/20260729060220.624250-1-liusizhe5%40huawei.com
+
+>   	printf(".");
+>   	color_fprintf(stdout, color, "  %08x: ", pos);
+> -	for (i = 0; i < HISI_PTT_FIELD_LENGTH; i++)
+> -		color_fprintf(stdout, color, "%02x ", buf[pos + i]);
+> +	for (i = 0; i < HISI_PTT_FIELD_LENGTH; i++) {
+> +		byte = (dw >> (24 - i * 8)) & 0xFF;
+> +		color_fprintf(stdout, color, "%02x ", byte);
+> +	}
+>   	for (i = 0; i < HISI_PTT_MAX_SPACE_LEN; i++)
+>   		color_fprintf(stdout, color, "   ");
+>   
+>   	color_fprintf(stdout, color,
+>   		      "  %s %x %s %x %s %x %s %x %s %x %s %x %s %x %s %x\n",
+> -		      "Format", dw0.format, "Type", dw0.type, "T9", dw0.t9,
+> -		      "T8", dw0.t8, "TH", dw0.th, "SO", dw0.so, "Length",
+> -		      dw0.len, "Time", dw0.time);
+> +		      "Format", FIELD_GET(HISI_PTT_HEAD0_4DW_FORMAT, dw),
+> +		      "Type", FIELD_GET(HISI_PTT_HEAD0_4DW_TYPE, dw),
+> +		      "T9", FIELD_GET(HISI_PTT_HEAD0_4DW_T9, dw),
+> +		      "T8", FIELD_GET(HISI_PTT_HEAD0_4DW_T8, dw),
+> +		      "TH", FIELD_GET(HISI_PTT_HEAD0_4DW_TH, dw),
+> +		      "SO", FIELD_GET(HISI_PTT_HEAD0_4DW_SO, dw),
+> +		      "Length", FIELD_GET(HISI_PTT_HEAD0_4DW_LEN, dw),
+> +		      "Time", FIELD_GET(HISI_PTT_HEAD0_4DW_TIME, dw));
+>   }
+>   
+>   static int hisi_ptt_4dw_pkt_desc(const unsigned char *buf, int pos)
+> diff --git a/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
+> index 6772b16b817b..3b349fcc24ae 100644
+> --- a/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
+> +++ b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
+> @@ -9,12 +9,24 @@
+>   
+>   #include <stddef.h>
+>   #include <stdint.h>
+> +#include <linux/bits.h>
+> +#include <linux/bitfield.h>
+>   
+>   #define HISI_PTT_8DW_CHECK_MASK		GENMASK(31, 11)
+>   #define HISI_PTT_IS_8DW_PKT		GENMASK(31, 11)
+>   #define HISI_PTT_MAX_SPACE_LEN		10
+>   #define HISI_PTT_FIELD_LENGTH		4
+>   
+> +/* Header DW0 fields for 4DW format */
+> +#define HISI_PTT_HEAD0_4DW_TIME		GENMASK_U32(10, 0)
+> +#define HISI_PTT_HEAD0_4DW_LEN		GENMASK_U32(20, 11)
+> +#define HISI_PTT_HEAD0_4DW_SO		BIT_U32(21)
+> +#define HISI_PTT_HEAD0_4DW_TH		BIT_U32(22)
+> +#define HISI_PTT_HEAD0_4DW_T8		BIT_U32(23)
+> +#define HISI_PTT_HEAD0_4DW_T9		BIT_U32(24)
+> +#define HISI_PTT_HEAD0_4DW_TYPE		GENMASK_U32(29, 25)
+> +#define HISI_PTT_HEAD0_4DW_FORMAT	GENMASK_U32(31, 30)
+> +
+>   enum hisi_ptt_pkt_type {
+>   	HISI_PTT_4DW_PKT,
+>   	HISI_PTT_8DW_PKT,
 
