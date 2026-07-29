@@ -1,67 +1,33 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B4B40DB5E
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 10:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 201C244212B;
+	Wed, 29 Jul 2026 11:05:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785320467; cv=none; b=R0o69Gp+ZlibkYGcbVJDXjDtet2y4o3GW18XReoccsiMSMHR7dOcJ1ieWlnHnGumjnnOGlD5NDp2l8aoozDEbpjDMKKDZbXI64J1S4Y/RATwuTPgHD22SSphBaU65Ka4K0MWlB3JSTW4A6yuh1MR0Abh0DHzZHGZdqiVmUtYngI=
+	t=1785323149; cv=none; b=k9AkK9Teb8tIsLGD1JrCwJG6w0q2hXpQMYfBMLwcTHT7vEGmEnmlu+j6kII/kjsBxAsRFMek0F6hV4wa5SkaOhrOkCVTSx5Kbf/HHuA1gaz+xALMtW3BjZ8YQCKjvGqCo7chOZAg3yG0PRIebT4/zvmSYADSUVFjQ31K0B6zsCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785320467; c=relaxed/simple;
-	bh=lm7HkwRtfaKPxRJmndAb593LB5pEPAaiQkeDKCHyS2Q=;
+	s=arc-20240116; t=1785323149; c=relaxed/simple;
+	bh=3hA+Z/GFqg1WJ97ZA7rquKKA6G+3V0bNHBuVdvl1ErM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oxHN4uBLHQ+LhtNLfAJMj3cqVG0yM05ITVnrGRT/rrCJSNtBHclBj2fXlYNtKngyA6xGluwcafITEhYQ6Cgt+KUGJG8T4ytV4vTld48zK1q71W9AynW8TK8X2+M/1k+5Z5G9ShEEeWpRtmt4nx71rYlvEsGPgSpmYvs8caEw12Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aid9Lx7K; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=hpLDHsvXTWZOghst/7Db6/jyxf7tYkq6rTU27j2M/XMm0uq+y5Of1+lWI963Fr2Ewo7rutwKGpnaSOh/7Mb0/C94PFnmLAaT+UZ1qgcEdz25+Akm4etL2fyGlZMiQjxr/In5cgR4khoqfeF9jKlkSkIanGSuCtRb7OgsYHDCC2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b48irzvs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aid9Lx7K"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-697bd21fdc2so1247103a12.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 03:21:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1785320464; x=1785925264; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=woyG06gmH+8jnzwxUeoujoEkRkTWjBa9EBmmYnPEOuc=;
-        b=aid9Lx7Kqmr5giGIjdIKz0fxaEFNlfzJ2jbFSoRAzLLCh0enHmWSs5vBhDLURRd+O9
-         UFhwcZ1Z2TFq6wG6yYOQz4XETfhdX3465CNi3vSh6JTKcwcoLH7vAByl9k7HbexC1ea1
-         /5D0+50Xbji5+UsprF29HGOtedczS9207s0enUhugcSMTZ8BJtLURStT9ZJkKnBER1tn
-         JStHvzIYZSFouMyAND19d9SUkI9MOGurgVjw6TYh/1T+U4m25XtRTLzBQVcDjTqDfumV
-         UFdSi8IGU9DbNaCHpP6v4dC+Ib1fkzAcZaUevX7w919gyuXPBDKRsak1sIiFu/CNfSV9
-         LOXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785320464; x=1785925264;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=woyG06gmH+8jnzwxUeoujoEkRkTWjBa9EBmmYnPEOuc=;
-        b=P3R1yz2E+9LKuAjd7pSh8C9l3fYGC6rmMTaeaNDOPkh7QA/XdvgDJHIpmo+zSbcjO2
-         2r65jthaIErqYEEAC1RVzhX1dGrY3ywIrO2Fja4mIHxvsZef1XzI52Xrmk2c3jdn8Ega
-         UeSLyXu5pFHVD3VMJQw380jpchIblkFwyRKOAcyu+s43FV47NPhdFHZc/fXu6bbsp1n/
-         eSGNTZrCZwU+oK8YBdwtyRMbYDHWJXAWk8TBtU516OGTu2deWDlFLXNe80vyV2jzapnB
-         JFApEcIuR6hx4guJVioF4h8inZtA5KQ/23zBPKdG2Ji45OuwrzV0hLjTpwZQMXKQYIWg
-         oX3w==
-X-Forwarded-Encrypted: i=1; AHgh+Rp0DluAg20DUkkJOkxvHJiAlX5tLgS171G16OQ+YB0VVWYwBl+gyDLnceCtZIjD8ZZlvdBCG/daMAM7WfnCnBNq@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhE2O2IyonTSed/MKITgDiP4ieaWeffYhsFW68L2rYNEmf2Glv
-	rhsPPoebLgMb6xlvAPp06ts3Ftx1gacwr/2gB3YtjWvQ1NfJcRdXaA5o/H7yc1ZOCUk=
-X-Gm-Gg: AR+sD13dM0OYtqgTXTI3P9HVS3A/lJ3xMI9eWDRlAI2pRLQJFjscJf0eh0/4YgInlJY
-	zXfRxhjRoFHDaYWEqGpmY16roudBE8cKT/1/8kKO2KdPpgm6kMhfOXVXIAHrSze94vxUZB/odkD
-	576t+eo11pyc2JNG/bBJ+TDPRZhnWBBRk2SMZ0nu87m6s2TiLW1Vh95sivCGoUD4X8WtUabZiP3
-	NsbYBqMke2RsNOT10PYQxqNWOr/JlAQPi8R+WHYC5jNrjQbxhewPvPlr8TKpEiKSNUlraibemGv
-	wCQYksNfQ+w7FzYLfs7idpd2zJ1vNnhCu9HVj8XI/mmnypFAE2b7/wWtC/mFntC7hxi1Y6rNTx3
-	L0srVhDeqRL299cICwOWEPnyIRhyTX4XmoZCtOCXqd76prSl2aeIPqcPpwhXBhJiGcWc2uCekv4
-	/Jz6AXPbxhg3XwzBTaISP1U8xkzcYV+ItzjTSBlKyiTSgIRJyED7KVxBExawVx7CAKsA==
-X-Received: by 2002:a05:6402:430b:b0:69f:4b71:41e7 with SMTP id 4fb4d7f45d1cf-6a0349eab87mr3375108a12.8.1785320464133;
-        Wed, 29 Jul 2026 03:21:04 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6a050c5cf21sm651510a12.21.2026.07.29.03.21.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Jul 2026 03:21:03 -0700 (PDT)
-Message-ID: <7d980402-84d0-4cef-9bc2-af8fd5e13224@linaro.org>
-Date: Wed, 29 Jul 2026 11:21:02 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b48irzvs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9E6C1F000E9;
+	Wed, 29 Jul 2026 11:05:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785323147;
+	bh=36vCc8VcM+L87TfsrGnoD5hR3X1siACB/VnlnYWIbd4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=b48irzvsg0Rb9HPmpRz1cRt988CITLctIsdsmAzYoCGHcqqDXZ2gNYuTnHHIrJbj7
+	 4H2B2eH12UqMFJgYMLsCy1KZ8q4b7/HtBh+ESujT8zNC3k4hQqfRfj+yc+rkURzE4h
+	 70Dn1hj1howXlSwenX2dUF2/DWVG876GsmhZQP8m1Dia942tWYnyC3PKB5EAolTNmB
+	 CONyTksT7fwOidO2ekfK6pe1uDUU/xaLuhg3IVs/5z07rdUbVvn8YGTImADEAyTk9V
+	 +kH3OunfyfncZZV5MjIcpVdG3+JC+QgBBibA6vztnHMkc1m9JC4YLICz4dpEmla0Jm
+	 pExAKbv9xiF0g==
+Message-ID: <6db0a8c0-b500-4364-be3d-d3a537c61258@kernel.org>
+Date: Wed, 29 Jul 2026 13:05:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,111 +35,134 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] perf libdw: Fix outer-frame name resolution and
- spurious "(inlined)" tag
-To: Michael Liang <mliang@purestorage.com>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>
-References: <20260728204215.327318-1-mliang@purestorage.com>
- <20260728204215.327318-2-mliang@purestorage.com>
+Subject: Re: [PATCH RFC 00/11] mm: distinguish PTE table storage from PTE
+ values
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Muhammad Usama Anjum <usama.anjum@arm.com>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich
+ <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Uladzislau Rezki <urezki@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ ziy@nvidia.com, pfalcato@suse.de, ryan.roberts@arm.com,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-parisc@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, damon@lists.linux.dev
+References: <20260727164715.2866609-1-usama.anjum@arm.com>
+ <2c19247e-bee6-45f4-a353-2fcc60db26e6@kernel.org>
+ <7813b5fe-e767-442c-a356-afc1a5c567ad-agordeev@linux.ibm.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260728204215.327318-2-mliang@purestorage.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <7813b5fe-e767-442c-a356-afc1a5c567ad-agordeev@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+On 7/29/26 12:13, Alexander Gordeev wrote:
+> On Tue, Jul 28, 2026 at 09:26:06PM +0200, David Hildenbrand (Arm) wrote:
+>>> The generic definition aliases hw_pte_t to pte_t, so this series preserves
+>>> the representation and behaviour of every architecture. ptep_get() keeps
+>>> its existing READ_ONCE() semantics and converts the stored element through
+>>> __pte_from_hw(). An architecture can later define a distinct hw_pte_t and
+>>> convert its PTE interfaces to make the distinction compiler-enforced.
+>>> Architecture PTE implementations and most architecture code are
+>>> deliberately left for those later opt-in conversions.
+> ...
+>> Do you have a pointer at the arm64 part, so people can get a feeling for how an
+>> actual hw_pte_t implementation can look like.
+> 
+> May be we need the generic hw_pte_t implementation as { pte_t pte; }
+> right away?
 
+Indeed, that makes sense. We just need a way for the architecture to opt-in that
+it did the conversion.
 
-On 28/07/2026 9:42 pm, Michael Liang wrote:
-> cu_walk_functions_at() calls libdw_a2l_cb() with the containing
-> DW_TAG_subprogram DIE first, then each DW_TAG_inlined_subroutine
-> nested inside.  The callback treated both the same way, causing two
-> bugs:
 > 
->    1) die_name() returns the unqualified DW_AT_name, so every C++
->       frame lost its namespace/class prefix (ns::Class::method
->       collapsed to method).
-> 
->    2) new_inline_sym() re-uses base_sym only when funcname matches
->       base_sym->name exactly; otherwise it fabricates a fake symbol
->       tagged "(inlined)".  Any mismatch between the DWARF name and
->       the ELF symbol name mis-tags an outer, non-inline frame as
->       inlined.  This hits C++ (die_name()'s unqualified output never
->       matches the demangled ELF symbol) and it also hits C functions
->       that GCC IPA-cloned (foo vs foo.isra.0 / .constprop / .part /
->       .cold), since DW_AT_linkage_name doesn't reflect those renames.
-> 
-> Fix both:
-> 
->    * Prefer die_get_linkage_name() (mangled, fully qualified),
->      falling back to die_name() when absent (C, extern "C").
->      new_inline_sym() already demangles via dso__demangle_sym().
-> 
->    * For DW_TAG_subprogram DIEs, use base_sym directly -- the DIE
->      tag already tells us it is the outer function, sidestepping
->      the name comparison entirely for both C++ qualification and
->      GCC IPA-clone renames.
-> 
-> Fixes: 88c51002d06f9a68 ("perf addr2line: Add a libdw implementation")
-> Signed-off-by: Michael Liang <mliang@purestorage.com>
+> Also, can you envision a case when sizeof(pte_t) != sizeof(hw_pte_t)?
+> If not, the compile-time check is worth adding.
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+That wouldn't work as is. We'd have to intercept ptep++ and instead have a
+helper to advance the ptep pointer.
 
-> ---
->   tools/perf/util/libdw.c | 34 ++++++++++++++++++++++++++++++----
->   1 file changed, 30 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/util/libdw.c b/tools/perf/util/libdw.c
-> index d5d2958902c0..4ca7e7e4fbe9 100644
-> --- a/tools/perf/util/libdw.c
-> +++ b/tools/perf/util/libdw.c
-> @@ -82,13 +82,39 @@ struct libdw_a2l_cb_args {
->   static int libdw_a2l_cb(Dwarf_Die *die, void *_args)
->   {
->   	struct libdw_a2l_cb_args *args  = _args;
-> -	struct symbol *inline_sym = new_inline_sym(args->dso, args->sym, die_name(die));
->   	const char *call_fname = die_get_call_file(die);
->   	int call_lineno = die_get_call_lineno(die);
->   	char *call_srcline = srcline__unknown;
-> -
-> -	if (!inline_sym)
-> -		goto abort_enomem;
-> +	struct symbol *inline_sym;
-> +
-> +	if (dwarf_tag(die) == DW_TAG_subprogram && args->sym) {
-> +		/*
-> +		 * cu_walk_functions_at() opens the walk with the
-> +		 * containing DW_TAG_subprogram DIE (the non-inlined outer
-> +		 * function). That's just the base symbol -- use it
-> +		 * directly. Avoids a fragile name-vs-name compare in
-> +		 * new_inline_sym() that misfires when GCC IPA passes
-> +		 * (.isra/.constprop/.part/.cold) rename the ELF symbol
-> +		 * while DWARF keeps the pre-clone linkage name, which
-> +		 * left the outer frame spuriously tagged "(inlined)".
-> +		 */
-> +		inline_sym = args->sym;
-> +	} else {
-> +		/*
-> +		 * Prefer DW_AT_linkage_name so C++ inline frames keep
-> +		 * their namespace/class qualification. new_inline_sym()
-> +		 * runs the name through dso__demangle_sym(), so the
-> +		 * mangled linkage name is turned back into
-> +		 * "Namespace::Class::method". Fall back to DW_AT_name
-> +		 * (unqualified) when no linkage name is present, e.g.
-> +		 * for C code or extern "C" functions.
-> +		 */
-> +		const char *funcname = die_get_linkage_name(die) ?: die_name(die);
-> +
-> +		inline_sym = new_inline_sym(args->dso, args->sym, funcname);
-> +		if (!inline_sym)
-> +			goto abort_enomem;
-> +	}
->   
->   	/* Assign caller information to the parent. */
->   	if (call_fname)
+One idea for that would be to let the compiler catch that by marking hw_pte_t an
+undefined struct (unknown size), such that the compiler would indicate any usage
+of ptep++ properly.
 
+That can be done when it would actually required, so as a first step having a
+generic hw_pte_t would just work.
+
+-- 
+Cheers,
+
+David
