@@ -1,218 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2166F486E45
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 12:58:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A743E317C
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 13:01:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785329913; cv=none; b=HF+GgLmbK9laTV3eJe3QlpY9sIokTz0J4YrBZSqA+ahoHuK48+h6vZMT9wWsWqfkomFsb/WBkh5p+T6drpLssi4yv+TnZkPCC5ll8EwglQHKksAurxcaOTamp2Bf3f+9ZxdqmeReB6cHbI09XXWh94TI+6FdYxj0j+oImrIh68s=
+	t=1785330062; cv=none; b=BlxkVGNJx/jD6msoeZ3Fqh2eWotnaWqcqqcBcSBQAAMQ9hYhSpq6NWDaEVwB67+cyz9kMj4LnPh0Ioaj94UIdxBy9FaBBybQnK2vgsM7dTKrbe7VOK4Em6CHn+RCefTw4xy+nEGdkom9JMzeBxuUYvMivngcZnBCjSGkDzY6wx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785329913; c=relaxed/simple;
-	bh=X50zz+riKI1ZlMvx4FyNauZiErq7Rbakmj4HcNUsEE0=;
+	s=arc-20240116; t=1785330062; c=relaxed/simple;
+	bh=En/NTCjAHdEEaVJBJStF1Uk+TELxxXpFpmBXIN58Qs4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=b7nQ5RN2gROCT1K1i6h6k+6qRmLvmkSFqzHQ0XKay3kLpH3DHhngGkfiXbti6GvsZbFqvx2j4DDeke5WYsYctDpal0NVr+f5dXaIpBukqrWepWkjuEutP8Oq3432h0x2n4iQ0c8LcNtHef7VyLI4W1yc21L5UDshBc7OrXNs9PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QEZkDGpU; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=awTd5C3RxNpDkPkmofWv5aMZf1Ih0QVDH1tqf9ZkamtmEIX4iO8FurNf6ssmmXFwYNmgZfsfLgFiBP6naCo0I4jb36Hs47XTIx1Z/fqARBoBJ/CdUWEJFe6h6dbtHeWPVjzJ3pkNTL2WzD/vuNwe1HGC4WOPyrnkA281dwERrzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Udfz/oIM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QEZkDGpU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A77A11F00A3D;
-	Wed, 29 Jul 2026 12:58:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Udfz/oIM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DB2C1F00A3A;
+	Wed, 29 Jul 2026 13:01:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785329908;
-	bh=2sQIxLL1SUbRlbqkfkmpEpJx8Gh50fUOlbdrSBQn0cY=;
+	s=k20260515; t=1785330060;
+	bh=VjGyBYcI9mEPERKMAodm4cnebWMXfC2gFQys0Q20gfU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=QEZkDGpUH1HgkAukpSdmA0/SqlEBIBClg/tAPlpHcdrn93pjYzNnzzh/wXg/Jaf7R
-	 oAXSlwGGYw0I5fx1M8RnD1+QkWJpp/eQYsssESdjMu++hhXZsS37oXAnTi93ZpxtbL
-	 fzZB9XqOPAMyfq4e81dVpi+km4y0zcDzAYsYs5L5hXoeJx4eB+I4KvYTKojdOYOvX2
-	 88ZYaxe/Ye2GVtCyChk/Jfe7bF/AcctL3vcV+CLQMFcme4kJo8GCH2BBJGF3GEzX7r
-	 7sNNDjZWHqj2wy81JFhO89WmIngjbdy6co3w42vzmZi5q3NcNPQkOexy5XnKVv+Hpu
-	 p75G0ldtM6K/Q==
+	b=Udfz/oIMRVCAzEEX+kW0FGG2opPWCfXPLV0ZdWL8lMdQHHnWp80L8NDJa9I7pIgpn
+	 4+jppBMDR5F49mkxihZs3KRcNybr1/4eH1ffWbhsz+nMp2kkiwKG1k0QQOfS5eYd/a
+	 ELaGUF+6PuSE2aqZU0dU5IS7M5mRsb4taMUYarS4qz6KzLK1dQiO+lX+Tqn7jUpE5t
+	 enUxosbgjlyVNRfB/Ao2QXJSb/dyu5vpSEuP6oh353DiKPuhD1SgR5Ouwq1+IunLl5
+	 BSqvGqvKRHhmjJJh6qj+81JPaE44vdFWt/B/rCD7EAouGuc87r/a/ToDo3w+s4/rOo
+	 L5o1LRXazxgHQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V4 4/6] powerpc/perf: Capture the HTM memory
- configuration as part of perf data
+Subject: Re: [PATCH V4 4/6] tools/perf: Add powerpc callback support for
+ arch_perf_record__need_read
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Athira Rajeev" <atrajeev@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260729123752.63010-5-atrajeev@linux.ibm.com>
-References: <20260729123752.63010-1-atrajeev@linux.ibm.com>
- <20260729123752.63010-5-atrajeev@linux.ibm.com>
+In-Reply-To: <20260729124400.65009-5-atrajeev@linux.ibm.com>
+References: <20260729124400.65009-1-atrajeev@linux.ibm.com>
+ <20260729124400.65009-5-atrajeev@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 29 Jul 2026 12:58:28 +0000
-Message-Id: <20260729125828.A77A11F00A3D@smtp.kernel.org>
+Date: Wed, 29 Jul 2026 13:00:59 +0000
+Message-Id: <20260729130100.7DB2C1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] The HTM_MEM_BUF_SIZE (65440 bytes) combined with dynamic sample ty=
-pes causes perf_event_header.size to overflow its 16-bit limit, leading to =
-severe ring buffer corruption.
-- [High] BPF programs running in NMI context can concurrently invoke the dr=
-iver's .read callback, causing unprotected state mutations and hardware des=
-ynchronization.
-- [High] Uninitialized `struct pt_regs regs` in `htm_collect_memory_config(=
-)` leaks kernel stack memory to userspace via `PERF_SAMPLE_CALLCHAIN` and B=
-PF attachments.
-- [Medium] The memory configuration dump is prematurely aborted if the AUX =
-ring buffer is full.
-- [Medium] Silent loss of HTM memory configuration data on main ring buffer=
- pressure due to incorrectly advancing the hypervisor iterator.
+- [High] The use of `perf_evsel__read()` causes silent read failures for si=
+bling HTM events in a group, leading to premature termination of the record=
+ loop.
 --
 
---- Patch [4]: [PATCH V4 4/6] powerpc/perf: Capture the HTM memory configur=
-ation as part of perf data ---
-commit 2c90eb9bba9472cb2bbddbb6b37c3d4c8154e12b
+--- Patch [4]: [PATCH V4 4/6] tools/perf: Add powerpc callback support for =
+arch_perf_record__need_read ---
+commit aa9cd81264b9ba7389f3532c4f16fea15643247b
 Author: Athira Rajeev <atrajeev@linux.ibm.com>
 
-powerpc/perf: Capture the HTM memory configuration as part of perf data
+tools/perf: Add powerpc callback support for arch_perf_record__need_read
 
-This commit introduces functionality to capture the hypervisor's memory
-configuration during an HTM trace. It handles emitting the configuration as
-a raw perf sample data record after the AUX trace dump completes. A
-dedicated buffer is tracked per AUX session to stage the hcall payload.
+This commit implements the arch_perf_record__need_read() hook for powerpc.
+It reads the count for every open htm evsel via perf_evsel__read() and
+accumulates the values into total_pending_records. A non-zero total means
+at least one HTM target still has records pending.
 
-> diff --git a/arch/powerpc/perf/htm-perf.c b/arch/powerpc/perf/htm-perf.c
-> index 0b954a7ed4dd9..093d54d803ce9 100644
-> --- a/arch/powerpc/perf/htm-perf.c
-> +++ b/arch/powerpc/perf/htm-perf.c
+> diff --git a/tools/perf/arch/powerpc/util/evsel.c b/tools/perf/arch/power=
+pc/util/evsel.c
+> index 2f733cdc8dbbe..3c7ccc955b0af 100644
+> --- a/tools/perf/arch/powerpc/util/evsel.c
+> +++ b/tools/perf/arch/powerpc/util/evsel.c
+
 [ ... ]
-> +static ssize_t htm_collect_memory_config(struct perf_event *event,
-> +					 struct htm_pmu_buf *aux_buf)
-> +{
-> +	struct perf_sample_data data;
-> +	struct perf_raw_record raw;
-> +	struct pt_regs regs;
-[ ... ]
-> +	/*
-> +	 * Initialise regs to the current caller context.  perf_event_overflow()
-> +	 * may sample register state into the ring buffer. Use
-> +	 * perf_fetch_caller_regs() to capture a safe, deterministic snapshot
-> +	 * of the current CPU state =E2=80=94 the same pattern used by tracepoi=
-nts and
-> +	 * BPF perf-event helpers for synthetic sample emission.
-> +	 */
-> +	perf_fetch_caller_regs(&regs);
+
+> +		for (x =3D 0; x < xyarray__max_x(xy); x++) {
+> +			for (y =3D 0; y < xyarray__max_y(xy); y++) {
+> +				struct perf_counts_values count =3D { .val =3D 0 };
+> +
+> +				if (perf_evsel__read(&evsel->core, x, y, &count) =3D=3D 0)
 
 [Severity: High]
-Does this leak uninitialized stack memory?
+Does this code silently ignore read failures when the HTM event is a
+sibling in a group?
 
-perf_fetch_caller_regs() on PowerPC only initializes a few fields (result,
-nip, gpr[1], msr) in the pt_regs structure. The rest of the stack-allocated
-regs structure remains uninitialized.
+If a user groups the HTM event with other events (e.g., using
+perf record -e '{cycles,htm}:S'), evsel__config() sets the
+PERF_FORMAT_GROUP flag for all members of the group.
 
-If the event is opened with PERF_SAMPLE_CALLCHAIN, perf_callchain_kernel()
-can read from regs->link and write the uninitialized stack bytes to the ring
-buffer. Is it necessary to zero the structure before fetching the regs?
+When perf_evsel__read() is called on the HTM sibling, it will delegate to
+perf_evsel__read_group(). The userspace buffer size is calculated using the
+sibling's nr_members (which is 0), but the kernel enforces event->read_size
+based on the group leader's nr_siblings.
 
-> +
-> +	/* Issue one hcall with the current iterator position */
-[ ... ]
-> +	perf_sample_data_init(&data, 0, event->hw.last_period);
-> +	memset(&raw, 0, sizeof(raw));
-> +	raw.frag.data =3D htm_mem_buf;
-> +	raw.frag.size =3D to_copy;
-> +	perf_sample_save_raw_data(&data, event, &raw);
+The kernel then rejects the read with -ENOSPC because the userspace buffer
+size is smaller than the required group payload size.
 
-[Severity: High]
-Can the calculated size overflow perf_event_header.size?
+Since the error is silently ignored here, count.val remains 0, which could
+abort the drain loop prematurely and drop the remaining records.
 
-The HTM_MEM_BUF_SIZE is 65440 bytes. With 92 bytes of fixed overhead, this
-leaves very little room before overflowing the 65535-byte limit of the u16
-header size.
-
-If dynamic sample types like PERF_SAMPLE_CALLCHAIN or PERF_SAMPLE_STACK_USER
-are configured (since they are not rejected in htm_event_init()), dyn_size
-will increase and the total size will exceed 65535, truncating the header
-size and causing ring buffer corruption. Should dynamic sample sizes be
-restricted for this event?
-
-> +
-> +	if (perf_event_overflow(event, &data, &regs)) {
-> +		/*
-> +		 * Event throttled: overflow_handler ran unconditionally before
-> +		 * returning, so the sample WAS written to the ring buffer.
-> +		 * Advance mem_start so the same block is not emitted again.
-> +		 * Return -ENOSPC so htm_event_read() sets event->count=3D1,
-> +		 * keeping the drain loop alive to emit the next block once
-> +		 * the event is unthrottled.
-> +		 */
-> +		aux_buf->mem_start =3D next_start;
-> +		if (!next_start)
-> +			aux_buf->collect_htm_mem =3D 0;
-> +		return -ENOSPC;
+> +					total_pending_records +=3D count.val;
+> +			}
+> +		}
 > +	}
 > +
-> +	/* Record emitted successfully: advance the iterator */
-> +	aux_buf->mem_start =3D next_start;
-
-[Severity: Medium]
-Does this unconditionally advance the hypervisor iterator even if the sample
-is dropped?
-
-If the main ring buffer is full, perf_output_begin() fails and the sample is
-dropped. However, perf_event_overflow() still returns 0 (it only returns
-non-zero if the event is throttled).
-
-Since the return value is 0, the code falls through and advances
-aux_buf->mem_start =3D next_start. Could this cause silent data loss of the
-memory configuration records?
-
-> +	if (!next_start)
-> +		aux_buf->collect_htm_mem =3D 0;
-> +
-> +	/*
-> +	 * Return the number of 32-byte entries emitted.  Dividing here keeps
-> +	 * htm_event_read() free of format knowledge, consistent with the AUX
-> +	 * trace path returning chunk_size / 128.
-> +	 */
-> +	return (ssize_t)(to_copy / 32);
+> +	/* Collection is complete only when ALL hardware queues have no pending=
+ records */
+> +	return (total_pending_records > 0) ? 1 : 0;
 > +}
-[ ... ]
-> @@ -523,7 +674,7 @@ static ssize_t htm_dump_sample_data(struct perf_event=
- *event)
-[ ... ]
->  	/* Start AUX transaction session framework */
->  	aux_buf =3D perf_aux_output_begin(&htm_ctx->handle, event);
->  	if (!aux_buf)
->  		return 0;
-
-[Severity: Medium]
-Does returning 0 here prematurely abort the memory configuration dump?
-
-If the AUX ring buffer is full, perf_aux_output_begin() returns NULL.
-Returning 0 signals EOF to userspace, preventing htm_collect_memory_config()
-from being called. Does this prevent userspace from receiving the required
-configuration data to decode the trace?
-
-> =20
-> -	if (!aux_buf->collect_htm_trace) {
-> +	if (!aux_buf->collect_htm_trace && !aux_buf->collect_htm_mem) {
->  		/*
->  		 * collect_htm_trace is cleared on hcall error and reset to 1
->  		 * in htm_event_start() when tracing restarts.  If it is still
-[ ... ]
->  	if (target->tracing_active =3D=3D HTM_TRACING_ACTIVE) {
->  		htm_event_stop(event, 0);
-
-[Severity: High]
-Can this lockless evaluation race with a BPF program running in NMI context?
-
-If a BPF program attached to an NMI event calls bpf_perf_event_read_value()
-on the HTM event, it invokes htm_event_read() -> htm_dump_sample_data()
-locklessly.
-
-If this interrupts htm_event_start() between a successful start hcall and
-setting target->tracing_active =3D HTM_TRACING_ACTIVE, this read will see
-HTM_TRACING_INACTIVE and incorrectly issue H_HTM_OP_DUMP_DATA while the
-hardware is actively running, leading to hardware desynchronization.
-
->  		if (target->tracing_active =3D=3D HTM_TRACING_ACTIVE) {
->  			/*
->  			 * H_HTM_OP_STOP failed.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260729123752.6301=
-0-1-atrajeev@linux.ibm.com?part=3D4
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260729124400.6500=
+9-1-atrajeev@linux.ibm.com?part=3D4
