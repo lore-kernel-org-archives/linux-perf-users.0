@@ -1,92 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2B0A46C833;
-	Wed, 29 Jul 2026 19:28:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785353322; cv=none; b=sOXwECBFzvKjEYOUWUvq13GotB21BTDdJZY2+/3VAYNcBcOAehLSWEp6eMEvcMOI0pz+LML2+BGo1HpoNRUdOPIpjSr2zCInVX3kauCuUmcwRMBjxxzjjU2q52WmiawDiz+uaT8n9+A5R5sf44HsEl1V2UAB6jiamdB0ZBsI66s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785353322; c=relaxed/simple;
-	bh=HDupeP+/VU2Czyp6G9QUOgHjT9Sa68UJUFWBpM5oBvM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r8luNpiF8tIppspae75AZ7dKa5YMXElqfEdo+xnlkbe/Pqmf9cf99WwU4Q9EW2BZqEFwdzIfMeh8hqGPao728tvXWb4uYN8ZQrQcRk/0VuSopP7+5FSS79Fd+Q6mRjbAp3jTy1xKqkF3L6R9eRsrATrQc4H49RUtOH7zJcVU7oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J4glAfKf; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46C473B5841
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 19:31:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.170
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785353488; cv=pass; b=fQrVGrLbtkmIZ8C7VpyZjONH12M/5K+511F+MvZEkyx3ZO6qLo0yKlYmeDEyTtcISsPv89uTG6+AEpTl+CzjF4jj3U4e12ebMMsv1GqIzA4BMsuL4DhvHL4ntNO6HeiU9ceITtsIBIE+ZOyVQEhWxG9WE0AhwtsCKpHAabfmf6o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785353488; c=relaxed/simple;
+	bh=AW+2NReGvoch2mVxj+60oV42GoQXvVY/28NZ+o3sxTQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SHLrVjIQK7oUINJhg2ru9ecHFCtmqDX/n2Ei4mG7OSvcfYY1fXvDhZOmGCkYoKXKVy8qLlViZXG7b66KR98sMM8Mr8ME/BMMrOVcEaQvcxXT3ZRu3yp46zZuegkWjMTkR4cl4PUk8a3N8w1T0vx/D5YKMCuVSPosaHfcfHpAHbI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OsCuZjvw; arc=pass smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J4glAfKf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FD911F000E9;
-	Wed, 29 Jul 2026 19:28:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785353312;
-	bh=Qftu12ZXhaE+oi4prIE03G+6pqgNMX5iRk3LbukTmu4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=J4glAfKfs585lMEt1V2Cxy7PprkIrrXS4v58TIlWdqx4w5QHPJYyJ6VdSpOrFRXbe
-	 KTvVrqecgssodMKX0eedNjb12O3AjuFtDDy7hhNHoI/9p1pLr/I4z0tIkKYbShPwc1
-	 hKrAspm6RFLm4JkBtkSXnkQ4bj5lPmfP3oyadGm3FTMf8GUFQnYM1pkRGfmOPGa3rK
-	 c/7/kvcgUR8fgMJNAjaEJcMUSjFx8VMX59KOoTY0G7GqSspAO+1L/tdRLWn0ORY2TK
-	 VV0zJ73nzARACXCBs5Nm13Q2zB+iFx2xfb+j9/J8r+9/8WdVRrbBx/GFSOZezrdFNL
-	 u/jamppGwerCw==
-Date: Wed, 29 Jul 2026 20:28:27 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
- will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
- sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 4/9] perf/cxl: Accept an overflow interrupt on MSI
- message number 0
-Message-ID: <20260729202827.5f2e9d4c@jic23-huawei>
-In-Reply-To: <20260729145555.3919550-5-dave.jiang@intel.com>
-References: <20260729145555.3919550-1-dave.jiang@intel.com>
-	<20260729145555.3919550-5-dave.jiang@intel.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OsCuZjvw"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-8487214ad2bso2033442b3a.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 12:31:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785353481; cv=none;
+        d=google.com; s=arc-20260327;
+        b=FUPMxXgMrYRXvEMrgb76netWIx6soXtvCwTcpEnZJ5hrhOdj3k3rex+7gC6LjQNMKm
+         po3pzcRQoct0ZF87qBedHk0OxbgeVI72PNrGJfmVQfo2pwJEu6raPRtZjWijB+sHO3wp
+         JcyIURkbm1dKVPhQCJCDrTjyZ8rkv89J0w4Kc8GxIna4lidpkw/LXOmY2DCociUhOYQb
+         Wuh9ngQkVg6pcXtXBV/jT3OmoUk52yUj8RawNd51zXMU1APO9WTcDZXG87kXZWYP5B51
+         U4GVSeJIXB7KT6KrJLwUHATltTZBV6U7AWeEPTLNeS2bu9oR8KhyauQ1VbGa1dzUmNzf
+         jzrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ZEPCjaM0A4Cy5/l9buwk6OfkCA8SEBnX/nbFrur6xxY=;
+        fh=jzdqsyGSD35OLK3wchzc3UbB55syTQVCFZuZpps+oEA=;
+        b=oYAqBZN9BZMc8S+2Yi/qN6zy/4okgC3CsGlST9zWHyovD9dmVR6P/uRQmTRDGZhdTB
+         jOTPLF1y8dKKlRVnh0HRW+MiLVVJeabhavDS7Bz+W12z5xWB3IoXw1CpkwoWPcaqHDcL
+         y2JOA48NcIunp9ZVRiVdNNdg7rdQ+8qx2sQttAujclo4V62RZUANyu6QRXKB6XK3xhNb
+         eyBRrZaJVo3ZlV/o1d4h7jS0j+TRMcBL2r9BEnE48dUZwMHEnqe4Qob6iKbe7vFAy4H/
+         1K5sA87RYAL3r0PDf7pvC9827ezvqzOI5FH1lZTNBW9oztecPFHB3aLMpn0bWgYN4Dtb
+         +3yQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785353481; x=1785958281; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ZEPCjaM0A4Cy5/l9buwk6OfkCA8SEBnX/nbFrur6xxY=;
+        b=OsCuZjvwu53Bt5xqrwiBNeckfkSjiWJzvvxKY6fbPq4G9COH7Ao7fQV0AZfz58z/1k
+         GIZ0BpmtujRkYBugLG2dR+6rnEbekKdfRwMITuWdJ8AovWlwsl79XJXZ5Y0ApsTWtZgQ
+         Nwq1xEj6eWtYpteKMtKivHRPP0cXIzm+bijLcsOZNaHcXMIqDgkiRng3pDo4lNxhPxdC
+         F/nexB2rV7cfx0Z3y8j/Z5yx+8U2YR1MBMfuizTq7qRQsbLhZ/rsbm+u8zL8A2nNqO3r
+         d5HSRi2bbkmlizmKOvTi+lj8k8U+pyQNgWfRLduHxsxFKU8VZvg9B1GSRrPNyI1u8+jq
+         3zMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785353481; x=1785958281;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ZEPCjaM0A4Cy5/l9buwk6OfkCA8SEBnX/nbFrur6xxY=;
+        b=HO4H4hGFhhbgkCu+3js+h81R2a4NNErgiapPUWXfwnEN9aEhidqARCYDrI9EBrFXl1
+         LtgdUSCFSqHNH0KtYWEHi+LPUUNc8xnRYcx7C415oxGReko2wTTfb0n+iW6m96mVekCJ
+         JekHG/+qA8XWQdnQedicqFQziyWuOClFrsjq7dvNno7wUA9hSgWHQk85aOHf5s9icwgI
+         3ykEzHETKIDNsBDATWluifBhnFLf52QEwVgf/E6OQB/SLjYr0jejS26RZJU8IhJ1VgvO
+         xSjFkOLfT5vAPEka5h7qXGw1eq9sGnwd5Xi6z7498GKARJtNtBscd0D0DbLrN8A8/6d0
+         VP1A==
+X-Forwarded-Encrypted: i=1; AHgh+RrTvzGiU7k7oKdCThrrvde1EZ0xtcdnXGzZPeoT1DQJk5MRtWwtyEpjQRc/PWtRK8r6n/WYhEVxA+FG5RxjDv6C@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywsi2Q+Yn3710tg4HgaKYW39eGkK6kmZ7aAeSAqI8is/9qn8lsa
+	KUllnRV5x+tLcOo7Sfn5Cvn3Fz3WGEWfDDjOFpTg5WwCrFyFiND6bXyTaaZ9zcC50PQfISeanL+
+	+rVsD50fFYkRC2MgPyWCjdPwKlQblUio=
+X-Gm-Gg: AR+sD11AKTNACA+O5qvqBUEoc48jIzX4MgMXy5pClDTc+067A42q8IkO/jNp2SO1k+6
+	ZDfls8OxbGawgFKfRSBXYtmppr43OZ98owrRjSMjJ2c0P1d9mknZ+AauT2beVMxAvHH0v5d3moK
+	poWkX0f4Napq5aX4szYX4R78UOLBIMIWxI2PEFbNg0VhgjNb6uDBypOBkAtdJHi+RZf32c2d/Xi
+	ZIW6n0xIk4ClPCvQOl0z82J7T8Zv4BgvzR4V+Qh4jG+lNxble7Cj+E+y2yNn+mzpkd+f9D+lgkx
+	Y6HmZqLyIihuHR3rpcwoMJAwVu7fASQWjtTYutDYeJN17SEHoU9wDadY3urz0sdjF9e8MFWu6Lf
+	rIZvXMc7Q9pd+Wf+w9vngNPS4By+uexJqyt0M
+X-Received: by 2002:a05:6a00:2d28:b0:847:8250:2b2b with SMTP id
+ d2e1a72fcca58-84eba209c22mr58219b3a.52.1785353480816; Wed, 29 Jul 2026
+ 12:31:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20260729-uprobe-v1-1-61896b87c867@debian.org> <amokG13tEnA7VVVf@redhat.com>
+In-Reply-To: <amokG13tEnA7VVVf@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 29 Jul 2026 12:31:08 -0700
+X-Gm-Features: AUfX_mwlnvUi1r-ku73ZCSAcs_YOxNgVJkyNNO_0D-3nnjYBTZf7rGtYqZPK430
+Message-ID: <CAEf4BzYON57L_HD71qUOdRdni_=1S-Xomz27PeDBxbbXDy0Jug@mail.gmail.com>
+Subject: Re: [PATCH] uprobes: Fix NULL pointer dereference in hprobe_expire()
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Breno Leitao <leitao@debian.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	kernel-team@meta.com, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 29 Jul 2026 07:55:50 -0700
-Dave Jiang <dave.jiang@intel.com> wrote:
+On Wed, Jul 29, 2026 at 9:02=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
+>
+> On 07/29, Breno Leitao wrote:
+> >
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -832,7 +832,7 @@ static struct uprobe *hprobe_expire(struct hprobe *=
+hprobe, bool get)
+> >               if (try_cmpxchg(&hprobe->state, &hstate, uprobe ? HPROBE_=
+STABLE : HPROBE_GONE)) {
+> >                       /* We won the race, we are the ones to unlock SRC=
+U */
+> >                       __srcu_read_unlock(&uretprobes_srcu, hprobe->srcu=
+_idx);
+> > -                     return get ? get_uprobe(uprobe) : uprobe;
+> > +                     return get && uprobe ? get_uprobe(uprobe) : uprob=
+e;
+>
+> Well, looks "obviously correct". At least the current code is obviously
+> wrong, it even checks uprobe !=3D NULL 3 lines above.
+>
+> Andrii ?
+>
 
-> cxl_pmu_probe() rejects the PMU with -EINVAL when info->irq <= 0, but
-> info->irq holds the MSI/MSI-X message number the device signals overflow
-> on (CXL_PMU_CAP_MSI_N_MSK, a 0-based 4-bit field), with -1 meaning "no
-> interrupt support". Message number 0 is valid and pci_irq_vector() takes
-> a 0-based index, so a compliant device signalling on the first vector is
-> wrongly refused and fails to probe.
-> 
-> Reject only the no-interrupt case (info->irq < 0), matching the sibling
-> CXL mailbox and event IRQ handling.
-> 
-> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
-> Reported-by: sashiko-bot@kernel.org
-> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
-> Assisted-by: Claude:claude-opus-4-8
-> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Yes, indeed, I'm more surprised this didn't come up much earlier
+(probably it's rare enough to have uretprobe with refcnt at zero
+during fork). The fix looks good, thanks!
 
-Anyone who puts the PMU on vector 0 is presumably sharing one vector
-for everything - which to me sounds unwise.  Still indeed a bug.
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
 
-Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-
-> ---
->  drivers/perf/cxl_pmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index 956da8202551..d1e810601e36 100644
-> --- a/drivers/perf/cxl_pmu.c
-> +++ b/drivers/perf/cxl_pmu.c
-> @@ -876,7 +876,7 @@ static int cxl_pmu_probe(struct device *dev)
->  		.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
->  	};
->  
-> -	if (info->irq <= 0)
-> +	if (info->irq < 0)
->  		return -EINVAL;
->  
->  	rc = pci_irq_vector(pdev, info->irq);
-
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+>
+>
