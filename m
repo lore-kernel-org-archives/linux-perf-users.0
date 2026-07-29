@@ -1,132 +1,169 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from canpmsgout01.his.huawei.com (canpmsgout01.his.huawei.com [113.46.200.216])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421C7253B58;
-	Wed, 29 Jul 2026 00:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F33525C804;
+	Wed, 29 Jul 2026 06:02:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.216
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785284856; cv=none; b=S4FadX0wwFrvECEOx+CbPo0SIsik1uYGUri41HoheD+VR57Slgi0cklx2GRm/KEUXeNvA1Nh1vqruRGMFAa+J5BwB667NlD6K6J8eH9KEfjgv5nmZRVRvIG3kY0EBaq9RJ08Y/MTi8Rr4teHRlLaWzqgKIItbHNAv68RwxdO/Hs=
+	t=1785304954; cv=none; b=WJb6eJzy6L7ISz5ZHdzFlfkX3K7WDKM4P6IUYPXlDIBi+MZkqcAAuoTrU+4GXd8tjgoQKPDMe6l1FFne6NYauCdhY+uf3rP5n15rH8d1Ow5lM/FUscQlWjbrXCsSHCRZKD5TvotzAmNpc8eT2k2ZQUf7onQgjYjWlVrU12CpYXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785284856; c=relaxed/simple;
-	bh=YRSORLjnM2WwHuZhe4BS9ofIbsb31uGVmX4H2pg8E+8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LWvIVe133x1+hpeIGSvEp/jAenC7T5ihYaRQhOMSaAale394FTy+ZAnfvxst+68FVvu852M2LcyRheC/qtHOA8pezYY3UQaPeD4mElroJpOVdV9ZhcT2S/5up/fnhLkELJpZy8diKClp0JxnMMzYIFfNkXMLZtZPOB5FYJt2r7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f978zxyr; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1785304954; c=relaxed/simple;
+	bh=DbOzlWJwPPwSCdtDroAeYMVmB7fY1dkx5sDks1j9GgQ=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Vo0NiMFufkNLXj1ENTnKxxqnZLn6eytkvEfWOwVqBOnjo0PxyQsmcqlqZ1oPGnQQv5WZ1C5EZSDcFSroYa3V19RdQOZVDRtmZz1B0iHqgVV3xty9EqnDvPU3EM2Sekr5C2lEShq6Vq3Tl129Yk7xN51wDDaZYdEcc/QourmRYec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Pn03m0U8; arc=none smtp.client-ip=113.46.200.216
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f978zxyr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785284853; x=1816820853;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=YRSORLjnM2WwHuZhe4BS9ofIbsb31uGVmX4H2pg8E+8=;
-  b=f978zxyrw/Y2fGI0XLQwQ8xrIlBPWVGBn6pKI4hukoR36Dp0gwh+MK41
-   OJFBWMPVvL/9Ldbwldi8woL4vVwkAzKtgt8BOmZuiNC1qo0Ut3g6rIkuI
-   tTSNt8QGZ/+0A8pv8YF81FqNEMb2VuMLp7DZTkFWUEGYnnCx3UVVnhtfi
-   jNbkIBicFExBlWJNMUv8WmhPpSYEAQZ8cA8nE4Le+IrgTCtKKgS8PI1Is
-   TvZKzcDWBVqJNbcPj9PnlA1h6zU7beLTNglzWOOhfa905Nco6feDLqqJX
-   ZG1+4NbVMVivhIPQApE+CmiBGPc+DAxBo7I3hcgoRWUsyjJvVOL2FIKCf
-   g==;
-X-CSE-ConnectionGUID: nbt/Zz/UTpShU97MMBHM/A==
-X-CSE-MsgGUID: DbBM9e1/QA+piGFWEmU50g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11859"; a="108680490"
-X-IronPort-AV: E=Sophos;i="6.25,191,1779174000"; 
-   d="scan'208";a="108680490"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2026 17:27:31 -0700
-X-CSE-ConnectionGUID: Nt1OMDs7Qp2tofte8Q437g==
-X-CSE-MsgGUID: X3od+ZL5SJmUqV1sfdFBcg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,191,1779174000"; 
-   d="scan'208";a="283195056"
-Received: from dnelso2-mobl.amr.corp.intel.com (HELO [10.125.111.111]) ([10.125.111.111])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2026 17:27:30 -0700
-Message-ID: <b84dbd70-41af-46e2-8052-725dd687c52f@intel.com>
-Date: Tue, 28 Jul 2026 17:27:29 -0700
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Pn03m0U8"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=cWe+vZO8oMF8iNfLKj+yBqRETDq4Lrm39k4z5xsUJ0I=;
+	b=Pn03m0U8N/O5z/ABeFdtW7TR4YtFtE2huApdQvQBo84LcKAuMZzPV3ocTwkNuWCyUav7KyR+F
+	8O8TnRIteVURwaBao6wRavJHRONmJ+ZV3bBJ09uek8Eguj+Gl+BuADSq8aJntiYizUO5XWByfNX
+	OajjJrrgtClaQstRSd9dSGk=
+Received: from mail.maildlp.com (unknown [172.19.162.197])
+	by canpmsgout01.his.huawei.com (SkyGuard) with ESMTPS id 4h91hR3NMMz1T4Mc;
+	Wed, 29 Jul 2026 13:52:55 +0800 (CST)
+Received: from whupemo200004.china.huawei.com (unknown [7.152.184.18])
+	by mail.maildlp.com (Postfix) with ESMTPS id BD8894057D;
+	Wed, 29 Jul 2026 14:02:25 +0800 (CST)
+Received: from huawei.com (10.50.163.32) by whupemo200004.china.huawei.com
+ (7.152.184.18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 29 Jul
+ 2026 14:02:23 +0800
+From: Sizhe Liu <liusizhe5@huawei.com>
+To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <corbet@lwn.net>,
+	<skhan@linuxfoundation.org>, <bhelgaas@google.com>, <yangyccccc@gmail.com>,
+	<jic23@kernel.org>, <john.g.garry@oracle.com>, <will@kernel.org>,
+	<james.clark@linaro.org>, <mike.leach@arm.com>, <leo.yan@linux.dev>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <wangyushan12@huawei.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-doc@vger.kernel.org>, <linuxarm@huawei.com>,
+	<prime.zeng@hisilicon.com>, <wuyifan50@huawei.com>, <liusizhe5@huawei.com>
+Subject: [PATCH 1/2] perf hisi-ptt: Fix spelling and abbreviation errors
+Date: Wed, 29 Jul 2026 14:02:19 +0800
+Message-ID: <20260729060220.624250-2-liusizhe5@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20260729060220.624250-1-liusizhe5@huawei.com>
+References: <20260729060220.624250-1-liusizhe5@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/9] perf/cxl: Drop bogus counter overflow fixup
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org, linux-cxl@vger.kernel.org
-References: <20260728210551.2449093-1-dave.jiang@intel.com>
- <20260728210551.2449093-4-dave.jiang@intel.com>
- <20260728211411.47B2D1F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260728211411.47B2D1F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ whupemo200004.china.huawei.com (7.152.184.18)
 
+Fix spelling and abbreviation errors in the PTT packet decoder:
+- HISI_PTT_FIELD_LENTH -> HISI_PTT_FIELD_LENGTH
+- hisi_ptt_8dw_kpt_desc -> hisi_ptt_8dw_pkt_desc
+- hisi_ptt_4dw_kpt_desc -> hisi_ptt_4dw_pkt_desc
 
+Cc: stable@vger.kernel.org
+Fixes: 5e91e57e6809 ("perf auxtrace arm64: Add support for parsing HiSilicon PCIe Trace packet")
+Signed-off-by: Sizhe Liu <liusizhe5@huawei.com>
+---
+ .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   | 20 +++++++++----------
+ .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   |  2 +-
+ 2 files changed, 11 insertions(+), 11 deletions(-)
 
-On 7/28/26 2:14 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] Removing the overflow fixup entirely causes the CXL PMU driver to silently drop a full period of events on overflow when the new counter skid is greater than or equal to the previous skid.
-
-Will fix in v2.
-
-DJ
-
-> --
-> 
-> --- Patch [3]: [PATCH 3/9] perf/cxl: Drop bogus counter overflow fixup ---
-> commit 9b5168bc2e13d25590b1bb314d5cd8b527ba4f3e
-> Author: Dave Jiang <dave.jiang@intel.com>
-> 
-> perf/cxl: Drop bogus counter overflow fixup
-> 
-> This commit removes the overflow fixup in __cxl_pmu_read() and folds it into
-> cxl_pmu_read(). The stated rationale is that masked unsigned subtraction
-> already produces the correct delta across a wrap, and that the previous
-> fixup caused overcounting.
-> 
-> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
-> 
->> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
->> index 3138514157cde..410c9162c8246 100644
->> --- a/drivers/perf/cxl_pmu.c
->> +++ b/drivers/perf/cxl_pmu.c
-> [ ... ]
->> @@ -698,21 +698,15 @@ static void __cxl_pmu_read(struct perf_event *event, bool overflow)
->>  	} while (local64_cmpxchg(&hwc->prev_count, prev_cnt, new_cnt) != prev_cnt);
->>  
->>  	/*
->> -	 * If we know an overflow occur then take that into account.
->> -	 * Note counter is not reset as that would lose events
->> +	 * The counter is not reset on overflow, and the unsigned subtraction
->> +	 * masked to the counter width already yields the correct delta across a
->> +	 * single wrap, so no overflow fixup is needed.
->>  	 */
->>  	delta = (new_cnt - prev_cnt) & GENMASK_ULL(info->counter_width - 1, 0);
->> -	if (overflow && delta < GENMASK_ULL(info->counter_width - 1, 0))
->> -		delta += (1UL << info->counter_width);
-> 
-> [Severity: Medium]
-> Does removing the overflow fixup entirely cause the driver to drop a full
-> period of events when new_cnt >= prev_cnt?
-> 
-> While standard modulo math handles wraps when the counter is reprogrammed to
-> a high value (ensuring new_cnt < prev_cnt), the CXL PMU does not reprogram
-> counters on overflow. They start at 0, wrap, and freeze at a small skid
-> value.
-> 
-> If a counter overflows, prev_cnt becomes skid1. On the next overflow,
-> new_cnt becomes skid2. If skid2 >= skid1 (which has a roughly 50% chance),
-> the masked subtraction only yields the tiny difference (skid2 - skid1),
-> completely missing the wrapped period.
-> 
-> Would it be more correct to keep an overflow fixup specifically for the
-> new_cnt >= prev_cnt case when an overflow occurs?
-> 
->>  
->>  	local64_add(delta, &event->count);
->>  }
-> 
+diff --git a/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
+index a17c423a526d..c48b2ce7c4a3 100644
+--- a/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
++++ b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
+@@ -94,26 +94,26 @@ static void hisi_ptt_print_pkt(const unsigned char *buf, int pos, const char *de
+ 
+ 	printf(".");
+ 	color_fprintf(stdout, color, "  %08x: ", pos);
+-	for (i = 0; i < HISI_PTT_FIELD_LENTH; i++)
++	for (i = 0; i < HISI_PTT_FIELD_LENGTH; i++)
+ 		color_fprintf(stdout, color, "%02x ", buf[pos + i]);
+ 	for (i = 0; i < HISI_PTT_MAX_SPACE_LEN; i++)
+ 		color_fprintf(stdout, color, "   ");
+ 	color_fprintf(stdout, color, "  %s\n", desc);
+ }
+ 
+-static int hisi_ptt_8dw_kpt_desc(const unsigned char *buf, int pos)
++static int hisi_ptt_8dw_pkt_desc(const unsigned char *buf, int pos)
+ {
+ 	int i;
+ 
+ 	for (i = 0; i < HISI_PTT_8DW_TYPE_MAX; i++) {
+ 		/* Do not show 8DW check field and reserved fields */
+ 		if (i == HISI_PTT_8DW_CHK_AND_RSV0 || i == HISI_PTT_8DW_RSV1) {
+-			pos += HISI_PTT_FIELD_LENTH;
++			pos += HISI_PTT_FIELD_LENGTH;
+ 			continue;
+ 		}
+ 
+ 		hisi_ptt_print_pkt(buf, pos, hisi_ptt_8dw_pkt_field_name[i]);
+-		pos += HISI_PTT_FIELD_LENTH;
++		pos += HISI_PTT_FIELD_LENGTH;
+ 	}
+ 
+ 	return hisi_ptt_pkt_size[HISI_PTT_8DW_PKT];
+@@ -128,7 +128,7 @@ static void hisi_ptt_4dw_print_dw0(const unsigned char *buf, int pos)
+ 	dw0.value = *(uint32_t *)(buf + pos);
+ 	printf(".");
+ 	color_fprintf(stdout, color, "  %08x: ", pos);
+-	for (i = 0; i < HISI_PTT_FIELD_LENTH; i++)
++	for (i = 0; i < HISI_PTT_FIELD_LENGTH; i++)
+ 		color_fprintf(stdout, color, "%02x ", buf[pos + i]);
+ 	for (i = 0; i < HISI_PTT_MAX_SPACE_LEN; i++)
+ 		color_fprintf(stdout, color, "   ");
+@@ -140,16 +140,16 @@ static void hisi_ptt_4dw_print_dw0(const unsigned char *buf, int pos)
+ 		      dw0.len, "Time", dw0.time);
+ }
+ 
+-static int hisi_ptt_4dw_kpt_desc(const unsigned char *buf, int pos)
++static int hisi_ptt_4dw_pkt_desc(const unsigned char *buf, int pos)
+ {
+ 	int i;
+ 
+ 	hisi_ptt_4dw_print_dw0(buf, pos);
+-	pos += HISI_PTT_FIELD_LENTH;
++	pos += HISI_PTT_FIELD_LENGTH;
+ 
+ 	for (i = 0; i < HISI_PTT_4DW_TYPE_MAX; i++) {
+ 		hisi_ptt_print_pkt(buf, pos, hisi_ptt_4dw_pkt_field_name[i]);
+-		pos += HISI_PTT_FIELD_LENTH;
++		pos += HISI_PTT_FIELD_LENGTH;
+ 	}
+ 
+ 	return hisi_ptt_pkt_size[HISI_PTT_4DW_PKT];
+@@ -158,7 +158,7 @@ static int hisi_ptt_4dw_kpt_desc(const unsigned char *buf, int pos)
+ int hisi_ptt_pkt_desc(const unsigned char *buf, int pos, enum hisi_ptt_pkt_type type)
+ {
+ 	if (type == HISI_PTT_8DW_PKT)
+-		return hisi_ptt_8dw_kpt_desc(buf, pos);
++		return hisi_ptt_8dw_pkt_desc(buf, pos);
+ 
+-	return hisi_ptt_4dw_kpt_desc(buf, pos);
++	return hisi_ptt_4dw_pkt_desc(buf, pos);
+ }
+diff --git a/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
+index e78f1b5bc836..6772b16b817b 100644
+--- a/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
++++ b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h
+@@ -13,7 +13,7 @@
+ #define HISI_PTT_8DW_CHECK_MASK		GENMASK(31, 11)
+ #define HISI_PTT_IS_8DW_PKT		GENMASK(31, 11)
+ #define HISI_PTT_MAX_SPACE_LEN		10
+-#define HISI_PTT_FIELD_LENTH		4
++#define HISI_PTT_FIELD_LENGTH		4
+ 
+ enum hisi_ptt_pkt_type {
+ 	HISI_PTT_4DW_PKT,
+-- 
+2.33.0
 
