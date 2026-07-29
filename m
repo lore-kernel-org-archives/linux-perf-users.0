@@ -1,122 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B924052AE;
-	Wed, 29 Jul 2026 15:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6387C411A1D
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 16:02:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785339264; cv=none; b=Ro+Pgpssy3C4QUJGmGelm2ToCCV5z6qub2O4m1tFxl5fh2VNlcvSQpZjD+CEyBNva7aJlhdlvG6ZZ8q4fqxoIif+KaKC798hTY9ZLrbeGJlk2vAYhxjMa1MY7LAOKktP5cXczPxl4hJT68EzET+1/HDTw5ffwbYOoXXJiQAFHSg=
+	t=1785340971; cv=none; b=JgzKN6s9LYCN+Bl/IA3Rvg7/5VAZuI4EgkUSzN3OtNxARm4rx9lquZxsoWN30snGYc+B4RHY71uuSrYLqecHHQaFqDq4rxEUzvQtzl59QPl2zSy/BRqi1a7IUqIftkmAGuPdQQ3FOJcnlX8tx92R8vXavQAzh8jRyS441PMpbPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785339264; c=relaxed/simple;
-	bh=eM9XGcryDhEtPIl0PlnMEB1umS7ff8nSqvnjhR9xgak=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=PF2ujfF3+lvqY78VYdZv/W1RfZabvRIDkcLe/l9rnO6/EqCMSdYD7aw+Vn6KrPro/ZegbNBWMtpOOypXp7+V4CYGc8yomnrI7hgKYV9VT3z+GfwnwWGy4ec5lSxIhiy2XDuq4U7hSVNIP+Kf0IFmrPrnYkx55BBePAJF9psz/bQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UnrtFuwh; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785340971; c=relaxed/simple;
+	bh=HBo82KCSUGdmfLmw+XjkjGQ3vVLAwAp/lLnwHsyPBn0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fhb22K15K3bqFnaNx5ohUd6TVImrWthwPF0EYkjsqVNSlF++czmI+ZJ/hlDt9HPpPVbxXbovTbP2W5JpUuVUn7CPtMtIY8BEGSS4KAfsj8weeLCy2x7OnemvG15UGaEeemuUZoeT9UGEbM4dRf9+u+rbWYcuWuy8zFh0ZJetUvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D6gZptb0; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UnrtFuwh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31E0D1F000E9;
-	Wed, 29 Jul 2026 15:34:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785339260;
-	bh=IopSN6z277y/pWQZ6XfMa76rI5If44HKl5RR1HbLqmk=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UnrtFuwhLis9kBi1SD5RIqQ6uCC3SCbRs1hsP91ARsZinVJLTVq6w6JOEuosY50Ci
-	 hKs6tS1k6eEdYGzqvKKO71frlzyHSgI0lsdIsDJuW4NLRp4xz0ZuMZFTW+Id5kXEgO
-	 yt2/4VPx0E18X/ncN3/3uJrFzFr6mU2rImUvW+au4AocKqXKHQw204cE/VBADZ/pdu
-	 BBWtj11atFYZL5YGFnLuJsC6oukW6so7LVtih6qFTDoWlwEAv25rC/5cGADsyfVfcO
-	 jtBmI5esTKiPIhw2zDmSPv/dBA3KLYg/JriNBl7pWp59ChC4S0qA9HLLOmJJ3/qRKK
-	 8UEpHSByA6mHg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 8/9] perf/cxl: Don't use pmu.dev in IRQ and hotplug
- callbacks after unregister
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dave Jiang" <dave.jiang@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-cxl@vger.kernel.org
-In-Reply-To: <20260729145555.3919550-9-dave.jiang@intel.com>
-References: <20260729145555.3919550-1-dave.jiang@intel.com>
- <20260729145555.3919550-9-dave.jiang@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 29 Jul 2026 15:34:18 +0000
-Message-Id: <20260729153419.31E0D1F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D6gZptb0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1785340969;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j+wsHGBgw5K19naIhGYr3W/foVErV3j2PeWPVr+UF1c=;
+	b=D6gZptb0UiiiVyCxXUzoxFVO2LaJd2yzK8Ie9tbHi3vnzkEvpeO0fE4aIVX+5MtxmdtLuf
+	zJntmjFsGA6AzDIeaY+suKdb17OkGk6VJMeTsCGXTsSNuqQBXU2k+elefHyLcnwCuk3yiv
+	PjbJxrOZpDkap33MYPcBd5GzZdsBnyM=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-442-ZZiDhcJDM1ieTJmFYB9W_g-1; Wed,
+ 29 Jul 2026 12:02:46 -0400
+X-MC-Unique: ZZiDhcJDM1ieTJmFYB9W_g-1
+X-Mimecast-MFC-AGG-ID: ZZiDhcJDM1ieTJmFYB9W_g_1785340963
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 87BA319560A6;
+	Wed, 29 Jul 2026 16:02:42 +0000 (UTC)
+Received: from fedora (unknown [10.44.33.21])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id CAA26180044F;
+	Wed, 29 Jul 2026 16:02:36 +0000 (UTC)
+Received: by fedora (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 29 Jul 2026 18:02:42 +0200 (CEST)
+Date: Wed, 29 Jul 2026 18:02:35 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Breno Leitao <leitao@debian.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, kernel-team@meta.com,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] uprobes: Fix NULL pointer dereference in hprobe_expire()
+Message-ID: <amokG13tEnA7VVVf@redhat.com>
+References: <20260729-uprobe-v1-1-61896b87c867@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260729-uprobe-v1-1-61896b87c867@debian.org>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+On 07/29, Breno Leitao wrote:
+>
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -832,7 +832,7 @@ static struct uprobe *hprobe_expire(struct hprobe *hprobe, bool get)
+>  		if (try_cmpxchg(&hprobe->state, &hstate, uprobe ? HPROBE_STABLE : HPROBE_GONE)) {
+>  			/* We won the race, we are the ones to unlock SRCU */
+>  			__srcu_read_unlock(&uretprobes_srcu, hprobe->srcu_idx);
+> -			return get ? get_uprobe(uprobe) : uprobe;
+> +			return get && uprobe ? get_uprobe(uprobe) : uprobe;
 
-Pre-existing issues:
-- [High] The patch correctly fixes a UAF in logging statements during teard=
-own but leaves a critical lifecycle race unaddressed. The IRQ is registered=
- via `devm_request_irq` before `cxl_pmu_perf_unregister` is registered. On =
-device removal, `devm` unwinds LIFO, so `perf_pmu_unregister` runs while th=
-e shared IRQ is still live. If the IRQ fires concurrently on another CPU (e=
-.g., due to a co-function changing the shared MSI vector's affinity), `cxl_=
-pmu_irq` can read a non-NULL `event` right before it is detached, leading t=
-o a NULL pointer dereference in `__cxl_pmu_read` when it accesses `event->p=
-mu`.
---
+Well, looks "obviously correct". At least the current code is obviously
+wrong, it even checks uprobe != NULL 3 lines above.
 
---- Patch [8]: [PATCH v2 8/9] perf/cxl: Don't use pmu.dev in IRQ and hotplu=
-g callbacks after unregister ---
-commit 34ab4c1ad03386965fbc73a1d534f56456842698
-Author: Dave Jiang <dave.jiang@intel.com>
+Andrii ?
 
-perf/cxl: Don't use pmu.dev in IRQ and hotplug callbacks after unregister
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
-The patch replaces info->pmu.dev with info->pmu.parent in the IRQ and CPU
-hotplug callbacks to fix a use-after-free during device removal.
 
-Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolab=
-s.net?part=3D1
-
-> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index 2e817a52ff1e1..f42238b2b6b0d 100644
-> --- a/drivers/perf/cxl_pmu.c
-> +++ b/drivers/perf/cxl_pmu.c
-> @@ -803,7 +803,7 @@ static irqreturn_t cxl_pmu_irq(int irq, void *data)
->  		struct perf_event *event =3D info->hw_events[i];
-> =20
->  		if (!event) {
-> -			dev_dbg(info->pmu.dev,
-> +			dev_dbg(info->pmu.parent,
->  				"overflow but on non enabled counter %d\n", i);
->  			continue;
->  		}
-
-[Severity: High]
-This is a pre-existing issue, but since this patch addresses teardown races,
-does it leave a critical lifecycle race unaddressed here?
-
-Because the IRQ is registered via devm before cxl_pmu_perf_unregister() is
-registered, the LIFO unwinding order means perf_pmu_unregister() runs while
-the shared IRQ is still live.
-
-If a shared MSI interrupt fires concurrently with cxl_pmu_perf_unregister(),
-cxl_pmu_irq() can read a valid event right before it is detached:
-
-cxl_pmu_irq() {
-        ...
-        struct perf_event *event =3D info->hw_events[i];
-        ...
-        __cxl_pmu_read(event, true);
-}
-
-Meanwhile on another CPU, the unregister thread detaches the events and
-synchronously sets event->pmu =3D NULL. When the IRQ handler calls
-__cxl_pmu_read(), it dereferences event->pmu:
-
-__cxl_pmu_read() {
-        struct cxl_pmu_info *info =3D pmu_to_cxl_pmu_info(event->pmu);
-        ...
-}
-
-Could this lead to a null pointer dereference and a kernel panic when
-info->base is subsequently accessed during device unbind or module removal?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260729145555.3919=
-550-1-dave.jiang@intel.com?part=3D8
