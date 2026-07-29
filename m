@@ -1,146 +1,149 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FC73EC800
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 15:00:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F903EC812;
+	Wed, 29 Jul 2026 15:06:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785337240; cv=none; b=DSpwMOFhxDxLDuzsPkRI1T2QgUyG0IU/AEwOZigeQxmuVK74aDrkP5gFpMaBck5P//F4zo6NsfPA/cNcpOGCiK1YZdZ//II0iqNTqxIc8Urij5WSJ3pHJ60VX8YAhD6crERH1Wd7cY50APyzmpAznnR5KVwcwIzIFNLRNqSvEbQ=
+	t=1785337618; cv=none; b=eqWymdCmMX00NMopdz4z7YK8c6y2a+dgh/bEwa9s9BT4qHGGUUBpYIbT/DcpEYlnSNWuEbPvDlBkMA5nu2gjUGP1pmjRcMtsGWLaToZgwfCbpILDm03S5qQlTNLSweHo7mvHjRs7xO+gars++6Htnji7+jAJCO4rcGdPVFUms/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785337240; c=relaxed/simple;
-	bh=1A7NrMenHf8TiJJ1Ha33KEkcn5+cFSL53awpbaRj3FI=;
+	s=arc-20240116; t=1785337618; c=relaxed/simple;
+	bh=VKurCtOVNqG5A5m5crOAuNAlkxGZno+f0X00hPebgZo=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Z07wLK/HRRKkXdDNSUQzWyi+clj/M/qPZAC0ua+40Wbpu2SzsDpP4FMcUAvDgjf9q/ssnjj1accPdoaMr8fx8mPLpy8URjIPFdzv2cKm+/MclDVMSpxV5u3zCBbqsuVWMMXYUo1ARGTPSzc7aHAM7NBAUYZGPdgOeyNWwdnXU6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FGHA7hPr; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=OLYifuzCjGLXFqQlfjguX+Mb3jHiafqYeF7lGxgKNdEmLPE0mGGM4/X0Mva3uprcxi0KJGhmN4IfXbB0ZebV2iaavBHI6VYHN64uYcB8LYCUOEqBh0L/pDsIRcMxqw5vYBfgDoMVqJ16UubqQxFQuuvfU3o/Ra+3YAJS2BfNtj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DtsP/KWH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FGHA7hPr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C1941F000E9;
-	Wed, 29 Jul 2026 15:00:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DtsP/KWH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4169C1F000E9;
+	Wed, 29 Jul 2026 15:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785337239;
-	bh=oENj4r6HVvjxJGubbnxaMtXLVsArFoJ54ooeKUPMxOQ=;
+	s=k20260515; t=1785337617;
+	bh=QblsDXET2hm+LhUiNa1DfHn4lRxpWvr6LV2Qc9HeoME=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FGHA7hPrObBn5WgOkvubCu4GVxhgQ3kPXd73jQzZNI5aFYnO4gCQfxCLd5HdnRkpi
-	 CUFuuLNS92+hGbpCpBJX6AAeLtnEcy4/MVy8UxJFrBcCkw+8E2HM4tSg8Cyp0GLwGl
-	 ex1+fmRAgtsUdi3STQr6eCWxiUs7SKd6mYzUvmx98Zg/XN78xorOp9L2v4aBy3Wg2k
-	 5CrGldYDyGDTS2ern7dc3wHhMWC8mmthglUHHHlfqTXYRux3LZ7KkHvM3184J7Lfq6
-	 LcAUCbpX6M+hlhUZ+b0XHTCm0EDfZOFRIbRPaRZi+PMyDj/ZrQAMk0PQSqq+wP6XlB
-	 yhvYwpUC9Io0g==
+	b=DtsP/KWH1yR/14GTq1gbLzCoUdNuCDVjHfp3cysFbYPEs27Q2vSEMt6E4o+VeeVQ2
+	 RjFu98vS3Au+yxxV99TWh45xhpxQ0TAn8QmBRBwdJhnV2TLRUlXCLrz6igpvUvdfZz
+	 V1VZEPQBSd+URHocdhSoWzJD/41XbAGb30TAWqLy+EE4itrVZ4BG/+PJY5lvEOIYe+
+	 oQ/yKoHGa53Ln/oygN+mxPoMKgY4ZaKQSHyzg3tm6OCBL3BUuuhNgFBjEkKoDgeoUV
+	 QtrM2pvlKTENSYdZQJIpnC0zfwK9edZ2xjcP8YiqaLV5fTO728prP0P5+F+IPgbAzC
+	 n0NY0cIJUjL+Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 1/3] perf sched: Suppress latency table output when
- trace samples are missing
+Subject: Re: [PATCH v2 1/9] perf/cxl: Program the requested event group on
+ configurable counters
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Aaron Tomlin" <atomlin@atomlin.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260729144451.38286-2-atomlin@atomlin.com>
-References: <20260729144451.38286-1-atomlin@atomlin.com>
- <20260729144451.38286-2-atomlin@atomlin.com>
+To: "Dave Jiang" <dave.jiang@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-cxl@vger.kernel.org
+In-Reply-To: <20260729145555.3919550-2-dave.jiang@intel.com>
+References: <20260729145555.3919550-1-dave.jiang@intel.com>
+ <20260729145555.3919550-2-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 29 Jul 2026 15:00:38 +0000
-Message-Id: <20260729150039.4C1941F000E9@smtp.kernel.org>
+Date: Wed, 29 Jul 2026 15:06:56 +0000
+Message-Id: <20260729150657.4169C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [Medium] Tracepoint handlers are not set for events read from a pipe, cau=
-sing all trace samples to be silently dropped.
-- [Medium] The patch adds dynamic callbacks for pipe mode but omits the `.f=
-eature` callback, leaving `perf_env` unpopulated.
+
+Pre-existing issues:
+- [High] Hardware State Pollution / Missing Bitmask Clear on PMU Counter Re=
+use
+- [High] Invalid 64-bit Write on a 32-bit PCIe Register
+- [High] Undefined Behavior Due to Out-of-Bounds Shift in Overflow Handling
 --
 
---- Patch [1]: [PATCH v4 1/3] perf sched: Suppress latency table output whe=
-n trace samples are missing ---
-commit e9be5c25be0368a795779cd7fdb10479f3b3c099
-Author: Aaron Tomlin <atomlin@atomlin.com>
+--- Patch [1]: [PATCH v2 1/9] perf/cxl: Program the requested event group o=
+n configurable counters ---
+commit 3f34f60eb49c6f10c29064fdd1d2a3cf3e95a287
+Author: Dave Jiang <dave.jiang@intel.com>
+Date:   Wed Jul 29 14:55:47 2026 +0000
 
-perf sched: Suppress latency table output when trace samples are missing
+perf/cxl: Program the requested event group on configurable counters
 
-This commit updates perf_sched__read_events() to abort early and return an
-error when trace samples are missing. It also adds callbacks in cmd_sched()
-to support pipe mode streams and adds a null check in map_switch_event().
+cxl_pmu_get_event_idx() sets *counter_idx for a configurable counter but
+never sets *event_idx, so hwc->event_base stays 0 and cxl_pmu_event_start()
+programs event group 0 regardless of the group the user requested.
 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 7fd63a9db4574..fabd99a18aad4 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
+Return the matched capability's event_idx.
 
-[ ... ]
+Link: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.=
+net?part=3D1
 
-> @@ -2001,7 +2001,7 @@ static int perf_sched__read_events(struct perf_sche=
-d *sched)
->  		.mode  =3D PERF_DATA_MODE_READ,
->  		.force =3D sched->force,
->  	};
-> -	int rc =3D -1;
-> +	int rc =3D -1, err;
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index 68a54d97d2a8a..e77c0650a7eb6 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -552,6 +552,8 @@ static int cxl_pmu_get_event_idx(struct perf_event *e=
+vent, int *counter_idx,
+>  			return -EINVAL;
 > =20
->  	session =3D perf_session__new(&data, &sched->tool);
->  	if (IS_ERR(session)) {
-> @@ -2018,18 +2018,25 @@ static int perf_sched__read_events(struct perf_sc=
-hed *sched)
->  	if (perf_session__set_tracepoints_handlers(session, handlers))
->  		goto out_delete;
+>  		*counter_idx =3D i;
+> +		if (event_idx)
+> +			*event_idx =3D pmu_ev->event_idx;
 
-[Severity: Medium]
-Does setting the tracepoint handlers before processing events work for
-pipe mode?
+[Severity: High]
+This isn't a bug introduced by this patch, but returning the correct=20
+event_idx here fully exposes an existing state pollution issue in=20
+cxl_pmu_event_start().
 
-Since the evlist is empty in pipe mode until events are processed, it appea=
-rs
-perf_session__set_tracepoints_handlers() won't set up the handlers.
+When a hardware counter is reused, the configuration is bitwise-ORed:
 
-When samples later arrive in perf_sched__process_tracepoint_sample():
+drivers/perf/cxl_pmu.c:cxl_pmu_event_start() {
+...
+	cfg =3D readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
+	cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
+...
+	if (test_bit(hwc->idx, info->conf_counter_bm)) {
+		cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENT_GRP_ID_IDX_MSK,
+				  hwc->event_base);
+		cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_EVENTS_MSK,
+				  cxl_pmu_config_get_mask(event));
+	}
+...
+}
 
-    if (evsel->handler !=3D NULL) {
-        tracepoint_handler f =3D evsel->handler;
-        err =3D f(tool, sample, machine);
-    }
+Because the previous bits are not cleared, does this code accumulate=20
+garbage on reused counters (e.g., ORing the new hwc->event_base with=20
+the old one)?
 
-Will they be silently dropped because evsel->handler is NULL?
 
-> -	if (perf_session__has_traces(session, "record -R")) {
-> -		int err =3D perf_session__process_events(session);
-> -		if (err) {
-> -			pr_err("Failed to process events, error %d", err);
-> -			goto out_delete;
-> -		}
-> +	if (!perf_data__is_pipe(session->data) &&
-> +	    !perf_session__has_traces(session, "record -R"))
-> +		goto out_delete;
-> =20
-> -		sched->nr_events      =3D session->evlist->stats.nr_events[0];
-> -		sched->nr_lost_events =3D session->evlist->stats.total_lost;
-> -		sched->nr_lost_chunks =3D session->evlist->stats.nr_events[PERF_RECORD=
-_LOST];
-> +	err =3D perf_session__process_events(session);
+[Severity: High]
+This is another pre-existing issue, but I noticed a potential hardware acce=
+ss
+violation in cxl_pmu_event_start() when dealing with HDM filtering:
 
-[ ... ]
+drivers/perf/cxl_pmu.c:cxl_pmu_event_start() {
+...
+		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
+...
+}
 
-> @@ -5167,6 +5174,9 @@ int cmd_sched(int argc, const char **argv)
->  	sched.tool.namespaces	 =3D perf_event__process_namespaces;
->  	sched.tool.lost		 =3D perf_event__process_lost;
->  	sched.tool.fork		 =3D perf_sched__process_fork_event;
-> +	sched.tool.attr		 =3D perf_event__process_attr;
-> +	sched.tool.tracing_data	 =3D perf_event__process_tracing_data;
-> +	sched.tool.build_id	 =3D perf_event__process_build_id;
+Since CXL_PMU_FILTER_CFG_REG is a 32-bit register, could sending a 64-bit
+write with writeq() trigger a PCIe Unsupported Request error or silently
+overwrite the adjacent Filter 1 register?
 
-[Severity: Medium]
-Does this code omit the feature callback required for pipe mode?
 
-Without registering perf_event__process_feature to tool.feature, it seems
-feature events from the pipe stream will be silently dropped, leaving
-struct perf_env unpopulated.
+[Severity: High]
+This is a pre-existing issue, but there appears to be a shift out of bounds
+in the overflow handling path:
 
-> =20
->  	argc =3D parse_options_subcommand(argc, argv, sched_options, sched_subc=
-ommands,
->  					sched_usage, PARSE_OPT_STOP_AT_NON_OPTION);
+drivers/perf/cxl_pmu.c:__cxl_pmu_read() {
+...
+	if (overflow && delta < GENMASK_ULL(info->counter_width - 1, 0))
+		delta +=3D (1UL << info->counter_width);
+...
+}
+
+If the platform supports a counter_width of 64 (or >=3D 32 on 32-bit
+architectures), does the use of 1UL rather than 1ULL invoke undefined
+behavior and silently corrupt the delta calculation?
+
+>  		return 0;
+>  	}
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260729144451.3828=
-6-1-atomlin@atomlin.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260729145555.3919=
+550-1-dave.jiang@intel.com?part=3D1
