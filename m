@@ -1,184 +1,238 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C813E122F;
-	Wed, 29 Jul 2026 12:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A360847D462
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 12:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785328973; cv=none; b=I74MRrgwD/pqGqIMvWJIi/qrr6XNsZmo5RLooTyGZ1lR6HAOruteB7N4HEyz8lPmOlclkoBlEW4wPfpJHuvsX+6q4q90/BVxleRQMuhAoeN+gES+vRi9hZkTKMyA7dcHu8KzC4SD7AeNbVggzmgl5T6dXjD9JTj/01VyhW9sNSs=
+	t=1785329069; cv=none; b=mN4MhxvT66KFQaEstpsFx8/DOsGxr3PtUAfao5W8mWQHtfduChLhTCwzqG5p26wtw24JdmulZHSnF1UbyNyHl4CdmzCDXt3hWEVEtIqZN131o1/jpu7EJOV+/0KRMqC+XQvBZrk6O/GRN0qNMdbXVX5s5+P0lXdEKsH2Q8x8TAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785328973; c=relaxed/simple;
-	bh=eZqAWjHL2jPePlq3RJEMJ4AbBs3kRH8xuH9dG8mq7qc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZaEdhodkgbbxSDE043BO8LfMozMZL7V+1hHgfOVVHr/W00HWIKOn5rvVYRa9prvipvqr2T8ViNwSJcp7TAocC5Ud8Hhlyt0SAhg9k38I/bn/naSYD9eOZCyjdAzQylNg0TaSEol4GDElmot41ze/F7p08bluYnA/O68RxcmIMg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OIiVNrud; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785329069; c=relaxed/simple;
+	bh=AcKKHU1sWD48jrNY3A971qJgZ5jO2T26nlzf1RW6hhc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cjjRYP571gJ2Jq7sqFSbPqKor/LczU0ekwU9iggIqeMKqPeRi/tN9EkXImNbX3D56PnTW36WbKyva1zY70RqZoT27m6GazG1+gT18jfXFDsDHh6lVGuhlu7H/51tQt3GPOb7Cwu6e9G9eeO7YVI2cTHOxAQ/NyqErKC6BiH5HxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EXGrozop; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OIiVNrud"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D1321F000E9;
-	Wed, 29 Jul 2026 12:42:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785328962;
-	bh=CCfnfjBFYExAnxJTD/rzMs4G+JVWk8LnuYF1LstcYDw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=OIiVNrudGYMgEdVIx0kkjz41K/abfMmWQCuVMoltvKL88ry5vvzeu9fzcY/9OXDWp
-	 urmM5jTj5uYEwxtowv6dnJlwSS9PTo7quWtNi7gHj3ZqfWleJMlYHWWtwoq0IDEkky
-	 8P8JnLCx+cJFeHdNFsas608FWlQT7bVkC2bwM046FAmQ7zDEHB0zW1hDtHOw8f8bql
-	 4k70NlZODBKCZTfjYFNVdqOJ/v1f/eicr7a9D82muWKPn8AlDCyXeFCuwaSWyiZ0iA
-	 7EW64naZjqP6zUdWAdVwIEaL++olcUVsOGEeMV8mWUj+uyYo7qTGP16v8aSA/cUEkI
-	 1GtsvDfHUTVwQ==
-Message-ID: <5abb6bbb-973e-41e7-820c-057e85edeb95@kernel.org>
-Date: Wed, 29 Jul 2026 14:42:30 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EXGrozop"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66TBHdAR2163972;
+	Wed, 29 Jul 2026 12:44:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=fbma4ZbOOkHDIcKJVfgSOSzbPRHhl5pdJLufN+Mt4
+	Ac=; b=EXGrozop4bm5wavbBsQ6DctYdrl6W8kN//7sVXHrxEFV9DXSDYBWj3LeP
+	ULq0DB+i5tC4umq79yYNuO7lxsnbdIy0PHy3REFH/hfQgux5Ruer2jU04p0OE60z
+	BZPyHsHm18323TQwuv9PMbpFVCOFSmM7kj6M4AjEZsFMztf4y67JObeqR4nMuHy/
+	0UogKY4MKMxlZcVwUb8Qh9L9WSUN9cs6DJY+Bnt6DTHviyqe5cGtZGD7lgenWqw5
+	HCfyqtrDayQ8HuTSfUNaBHHkIzdr6DCD47RR5boxKrl166hd05IVimRDp3Prtdpj
+	wu6j8xoKXisl6BbcU1pBgP6STLX0A==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fmuycjm9g-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Jul 2026 12:44:10 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66TCfFD7029917;
+	Wed, 29 Jul 2026 12:44:09 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fna5y6e76-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Jul 2026 12:44:09 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66TCi5tE28312044
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 29 Jul 2026 12:44:05 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 735F420040;
+	Wed, 29 Jul 2026 12:44:05 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2BFB820043;
+	Wed, 29 Jul 2026 12:44:02 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.39.22.136])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 29 Jul 2026 12:44:01 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
+        tejas05@linux.ibm.com, tshah@linux.ibm.com, venkat88@linux.ibm.com,
+        usha.r2@ibm.com
+Subject: [PATCH V4 0/6] tools/perf: Add powerpc HTM auxtrace support
+Date: Wed, 29 Jul 2026 18:13:54 +0530
+Message-Id: <20260729124400.65009-1-atrajeev@linux.ibm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 09/11] misc/sgi-gru: use ptep_get() for page-table
- reads
-To: Pedro Falcato <pfalcato@suse.de>,
- Muhammad Usama Anjum <usama.anjum@arm.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich
- <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Uladzislau Rezki <urezki@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou <dennis@kernel.org>,
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
- Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- ziy@nvidia.com, agordeev@linux.ibm.com, ryan.roberts@arm.com,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-parisc@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, damon@lists.linux.dev
-References: <20260727164715.2866609-1-usama.anjum@arm.com>
- <20260727164715.2866609-10-usama.anjum@arm.com>
- <amnxCmFU40QQaxTx@pedro-suse.lan>
-From: "David Hildenbrand (Arm)" <david@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=david@kernel.org; keydata=
- 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
- qIws/H2t
-In-Reply-To: <amnxCmFU40QQaxTx@pedro-suse.lan>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Proofpoint-ORIG-GUID: gjpu4VuNDMMFoCJlb-xD_aAuJd466ILn
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI5MDEwMiBTYWx0ZWRfX6hD9XmPe3T5r
+ 4ICg/RHq0cq4U8J/+8TFchaRE/TuSpRbPf5DzAIUonCjVBvIra5HlOQXQhXBEvQq+LUwNUjJgC6
+ Oy6EUqGonQG/Bni3g2VHmBcvKjp96KZgPjrOC/s+v+G/b3EI2fWURjq4zRgFUkQ0pPKGMjMzO6t
+ ODDlJK94iJy7v9hJQrHaJvibcjhL5ucsMUNYfYSAXv+3WDswOdzU5YV6COYID4w+RRAXB7KydIh
+ PqReQjM3Or7bmAeX/V65nybzn3PMQRkkzt0Bh4pctgou2AFfzpd0z05kGe2qLEOXmEMlf2X+v06
+ GjXlROYuKMS94Ypzo3UxWlJqnPa2APDDcly83U3oORhS/j3aeahlCZzmnkWO1kgs/qArlPaU6W0
+ 1FPUkoHOkutKBVuLhzh2IsKB6CYB2iaC03FUZ+bI2izEY+UgJshYDbt72S3JTyd8cwiYOj1WXtS
+ TeGBheV12OeyW/rBp1g==
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI5MDEwMiBTYWx0ZWRfX+vTCRHCYpOWa
+ hwEhtkhpWA9sDwkwN9p/yj0JIad6tuMQ93rkzUmdVA2ebkQ7k3SYm9iMphoQGIJ7hDCHhPstgok
+ oJeVlxZlmYyOiWnJ1xtfuKEJTnLvRzw=
+X-Authority-Analysis: v=2.4 cv=AZeB2XXG c=1 sm=1 tr=0 ts=6a69f59a cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
+ a=Lql3lfElDkBJbt6mtbwA:9
+X-Proofpoint-GUID: _CNZh1BRC7Tpyc9Y5bBn9X8HBiw-aJTA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-29_04,2026-07-28_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 priorityscore=1501 phishscore=0 adultscore=0 impostorscore=0
+ clxscore=1015 malwarescore=0 suspectscore=0 lowpriorityscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607290102
 
-On 7/29/26 14:36, Pedro Falcato wrote:
-> On Mon, Jul 27, 2026 at 05:47:00PM +0100, Muhammad Usama Anjum wrote:
->> A leaf PMD is being read through ptep_get() by treating the PMD address
->> as PTE-sized table storage. ptep_get() now accepts hw_pte_t *, so update
->> the cast accordingly.
->>
->> pte_offset_kernel() also returns hw_pte_t *. Get pte_t value by calling
->> ptep_get().
->>
->> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
->> ---
->>  drivers/misc/sgi-gru/grufault.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufault.c
->> index 3557d78ee47a2..ff89d34ad2aa4 100644
->> --- a/drivers/misc/sgi-gru/grufault.c
->> +++ b/drivers/misc/sgi-gru/grufault.c
->> @@ -228,10 +228,10 @@ static int atomic_pte_lookup(struct vm_area_struct *vma, unsigned long vaddr,
->>  		goto err;
->>  #ifdef CONFIG_X86_64
->>  	if (unlikely(pmd_leaf(*pmdp)))
->> -		pte = ptep_get((pte_t *)pmdp);
->> +		pte = ptep_get((hw_pte_t *)pmdp);
->>  	else
->>  #endif
->> -		pte = *pte_offset_kernel(pmdp, vaddr);
->> +		pte = ptep_get(pte_offset_kernel(pmdp, vaddr));
->>  
->>  	if (unlikely(!pte_present(pte) ||
->>  		     (write && (!pte_write(pte) || !pte_dirty(pte)))))
-> 
-> This code is super, super broken. Can we remove this ASAP? For starters,
-> we're using is_vm_hugetlb_page() to detect page shift, the code does not
-> grab refs on the pages, uses pte_offset_kernel() on user page tables,
-> does not handle PUD-level hugepages, does not handle PMD-level hugepages on !x86_64,
-> does not hold page table locks nor check for pte table retraction, etc
-> 
-> I don't think I need to go on.
-> 
+Overview:
+This series adds perf tool support for capturing and processing Hardware
+Trace Macro (HTM) trace data on POWER systems.  HTM exposes raw bus-trace
+data via the H_HTM hypervisor call.  The kernel-side HTM PMU driver
+(submitted separately) streams this data into perf AUX buffers and emits
+memory configuration as PERF_SAMPLE_RAW records.
 
-Heh, when Usama first showed me an early diffstat I was like "what the hell are
-drivers doing with page tables here, they shouldn't be doing that".
+This series wires up the record and report sides in the perf tool so that
+'perf record' collects HTM data and 'perf report' writes the trace and
+memory configuration to files ready for post-processing with htmdecode.
 
-atomic_pte_lookup documents: "Only supports Intel large pages (2MB only) on
-x86_64. ZZZ - hugepage support is incomplete"
+Patch overview:
+Patch 1 refactors the existing powerpc auxtrace dispatch.  All VPA-DTL
+recording logic is moved from arch/powerpc/util/auxtrace.c into its own
+file, arch/powerpc/util/vpa-dtl.c, leaving auxtrace_record__init() as a
+thin per-PMU dispatcher.  This is a prerequisite for adding the HTM
+recording path cleanly.
 
-What is this crap? :)
+Patch 2 adds the HTM recording path (arch/powerpc/util/htm.c and
+util/powerpc-htm.h).  htm_recording_init() sets up the auxtrace_record
+callbacks.  htm_info_fill() stores the PMU type and a (cpu, attr.config)
+pair for each htm evsel into the PERF_RECORD_AUXTRACE_INFO priv[] area.
+The decode side reads these back to map each AUX buffer to its
+(node, chip, core) target using event->auxtrace.cpu.  PERF_SAMPLE_RAW is
+also enabled here so that memory configuration records are captured
+alongside the AUX stream.
+
+Patch 3 adds a generic weak arch_perf_record__need_read() hook in
+builtin-record.c.  When the hook returns non-zero, perf record performs
+an extra mmap-read pass before disabling events.  The drain loop runs
+until the hook returns 0 or no forward progress is made, then the events
+are disabled and closed normally.
+
+Patch 4 implements arch_perf_record__need_read() for powerpc.  It reads
+event->count for all open htm evsels via perf_evsel__read() and
+accumulates the values.  The kernel driver sets this count to the number
+of 128-byte HTM trace records written on a successful dump, 1 when the
+AUX buffer is temporarily full but the hypervisor stream is intact, and
+0 once the stream is exhausted or a hard error occurs.  A non-zero total
+causes the recording loop to perform another read pass.
+
+Patch 5 adds PERF_AUXTRACE_POWERPC_HTM to the auxtrace_type enum and
+wires the dispatch in perf_event__process_auxtrace_info().  It also
+amends htm_info_fill() to set auxtrace_info->type now that the constant
+is available.
+
+Patch 6 adds the full HTM decode path in util/powerpc-htm.c.
+powerpc_htm_process_auxtrace_info() reads the (cpu, config) pairs from
+priv[] and builds a cpu_configs[] lookup table.  As each
+PERF_RECORD_AUXTRACE event arrives, process_auxtrace_event() maps it to
+the correct target and writes the data to htm.bin.nX.pX.cX immediately.
+PERF_RECORD_SAMPLE RAW records are written to translation.nX.pX.cX by
+process_event().  Per-run first-write tracking (htm_target_seen) ensures
+O_TRUNC on the first write and O_APPEND on subsequent writes.
+
+Patches not included in V2:
+Three patches present in V1 are intentionally dropped from this series
+and will be submitted as a follow-on once the core infrastructure gets
+integrated:
+
+  - htmdecode integration: V1 patch 6 invoked the external htmdecode
+    tool via fork/exec after writing htm.bin.* to decode the raw
+    bus-trace data in-process.  This is deferred because the interface
+    between perf and an external decode tool needs more discussion.
+
+  - Physical-to-logical address mapping: V1 patch 7 read the current
+    partition ID from /proc/powerpc/lparcfg, parsed the translation.*
+    memory map entries, and mapped physical addresses in the decoded
+    trace to logical addresses within the LPAR.
+
+  - Synthetic sample generation: V1 patches 8 and 9 created a
+    PERF_TYPE_SYNTH event named "htm", injected synthetic perf samples
+    with the translated logical addresses as sample IP, and wrote a
+    separate .out.l file with logical addresses alongside the decoded
+    trace.  The appropriate abstraction for synthetic HTM samples in the
+    perf tool requires further discussion.
+
+Usage example:
+Collect HTM trace data from a single chip target:
+
+  # perf record -C 9 -m,256 \
+      -e htm/nodalchipindex=2,nodeindex=0,htm_type=1/ sleep 3
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 256.277 MB perf.data ]
+
+  # perf report
+
+Output files written by perf report:
+
+  htm.bin.n0.p2.c0       raw HTM bus-trace data
+  translation.n0.p2.c0   memory configuration records
+
+Multiple targets can be collected simultaneously:
+
+  # perf record -m,256 \
+      -e htm/nodalchipindex=2,nodeindex=0,htm_type=1,cpu=8/ \
+      -e htm/nodalchipindex=1,nodeindex=0,htm_type=1,cpu=9/ \
+      -a sleep 10
+
+Testing:
+Tested on POWER10.  Both htm.bin.* and translation.* files are produced
+correctly for single and dual target collection.
+
+Note: Link to kernel patches:
+https://lore.kernel.org/linuxppc-dev/20260729123752.63010-1-atrajeev@linux.ibm.com/T/#t
+
+Athira Rajeev (6):
+  tools/perf: Move powerpc VPA-DTL auxtrace init into a separate file
+  tools/perf: Add AUXTRACE recording support for powerpc HTM
+  tools/perf: Add arch hook to drain remaining data before event close
+  tools/perf: Add powerpc callback support for
+    arch_perf_record__need_read
+  tools/perf: Add powerpc HTM auxtrace event processing support
+  tools/perf: Add perf tool support for processing powerpc HTM AUXTRACE
+    records
+
+ tools/perf/arch/powerpc/util/Build      |   2 +
+ tools/perf/arch/powerpc/util/auxtrace.c |  97 ++----
+ tools/perf/arch/powerpc/util/evsel.c    |  55 +++
+ tools/perf/arch/powerpc/util/htm.c      | 171 +++++++++
+ tools/perf/arch/powerpc/util/vpa-dtl.c  |  96 +++++
+ tools/perf/builtin-record.c             |  77 ++++
+ tools/perf/util/Build                   |   1 +
+ tools/perf/util/auxtrace.c              |   4 +
+ tools/perf/util/auxtrace.h              |   1 +
+ tools/perf/util/powerpc-htm.c           | 446 ++++++++++++++++++++++++
+ tools/perf/util/powerpc-htm.h           |  43 +++
+ tools/perf/util/powerpc-vpadtl.h        |   1 +
+ tools/perf/util/record.h                |   3 +
+ 13 files changed, 925 insertions(+), 72 deletions(-)
+ create mode 100644 tools/perf/arch/powerpc/util/htm.c
+ create mode 100644 tools/perf/arch/powerpc/util/vpa-dtl.c
+ create mode 100644 tools/perf/util/powerpc-htm.c
+ create mode 100644 tools/perf/util/powerpc-htm.h
 
 -- 
-Cheers,
+2.43.0
 
-David
