@@ -1,182 +1,213 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE0047AF5D
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 12:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0352B47CA7B
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 12:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785328642; cv=none; b=iufmYGGAxMMcNiSPnWZ8LKK0Kzp2gNcdbcPteddarxHCOiwxC+JS0WVmuuP2vDvRiXf0TY9KVDfS+PZXWNnMj4m6eaHaz7FD8Ya01u2nVbtrYCoFw+t/oLm0rpfaOz0EyCX+nm1agz09t8pM4pli5WM6mQ4Tsj3MQYZm0VarTn8=
+	t=1785328704; cv=none; b=KxBLh5RuH02VYOM5C8obq2tIF79x6hyysHPs4bUkR6HaNgHGP6J6K09I8rJCwphdtKqRmmRPCH0s7G0tg0kruPzTX6kFM9vWfw+JZwVm5edkljYyVmA5y3MHPkyHRloToeTnwguYQLzI6/Zmgl+OSIKIGQMu7DToOCfXLfx5Kaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785328642; c=relaxed/simple;
-	bh=RqBIaQtofOMglq8E0sS3S2TKa8v1b6XvPGQKltQWdqU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CYUheYypq8b00bNdB6OfEShzEHAPvrseUCYXX5L5b/fiI91zTC2uCVfB1anh0k6tEFrz6BvgeaQj/WgntSVfOSx+GujYyacw8JX/yd15IJcA7QDLh9ow/+6+elv6ml1XwKSmmwJ9GP9j2MSDaYKL/4GOHjU3+2JEHV9SPD1ym2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=HsBO/9wN; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=vhLdNBgT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=nBonCs6a; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=BT3fFBrc; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1785328704; c=relaxed/simple;
+	bh=8yofatNMfuuR+qMI+wKosEf0EJY3gCc3A372McMBDlc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=PLbKXsRS8GXRVeFybBntrGp1zBIEqm0eJ4X4VgeCk/P9AKDR8ubGhBAzKdN1N8FhnUPF0Za+/icntG8ya0hQDf3HnQck0xej3vi35QTKiLHIYCI67iX2y8ReKbVx/mofkgfAKF6H+CpXO8tvnZ9yc4l1E9ukbTa4zGY5Suw9ZGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=InGnhc61; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="HsBO/9wN";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="vhLdNBgT";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="nBonCs6a";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="BT3fFBrc"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 0B2C43E10;
-	Wed, 29 Jul 2026 12:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1785328628; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aCPopA3duELZWRFQ7PC+zcU7UIlf1ZyVyMzN0xmYHFs=;
-	b=HsBO/9wNGNK0BBi/KZnybjT4wfzH1RbauNRa3BkCq1Gz1ZFYfyulio9BMMz/Qhlayjht8v
-	gD7JzPlP/j/lbzamJYZIEmtCD/24X5mlh9Cm7ueizVVj2a3/38UgR1iUgozDxsYGd00nVJ
-	81gftDjjAsCoQcZd/g/wQgIFNVzYSPo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1785328628;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aCPopA3duELZWRFQ7PC+zcU7UIlf1ZyVyMzN0xmYHFs=;
-	b=vhLdNBgT3LES3Nfy+reOhuZbF+sRDMgTm8/+rp44QydsQ0PgJmekRb7kN8gf1KeP/gQfF2
-	vhVMad65mEjeOWBw==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1785328624; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aCPopA3duELZWRFQ7PC+zcU7UIlf1ZyVyMzN0xmYHFs=;
-	b=nBonCs6auu91fwhTCPSwwqM/BnHZLlIGXt/TmMHVYSy429b64ZCJOljFWGBAHwpGwsp+VY
-	26DPb6Xoz2zlvJd7icT3XVFcHRopeHCqPAv9U3TcLO99ha0MheRXkinzHltD+E4YU5GueL
-	hsbqCAyQMiJN0MmV5BgL9eX8TbAHxvo=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1785328624;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=aCPopA3duELZWRFQ7PC+zcU7UIlf1ZyVyMzN0xmYHFs=;
-	b=BT3fFBrcAWB//UVTCQRGI3kpRDayFQs1zsoB1XrNCj60pSuBHTbHXO+sVcJVpP7eK4LEaV
-	7UMRX0P/16CpuzAw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 11699779A1;
-	Wed, 29 Jul 2026 12:37:00 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id +/ToAOzzaWpxRgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 29 Jul 2026 12:37:00 +0000
-Date: Wed, 29 Jul 2026 13:36:58 +0100
-From: Pedro Falcato <pfalcato@suse.de>
-To: Muhammad Usama Anjum <usama.anjum@arm.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>, 
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>, 
-	Stefano Stabellini <sstabellini@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	David Hildenbrand <david@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, 
-	Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, ziy@nvidia.com, 
-	agordeev@linux.ibm.com, ryan.roberts@arm.com, linux-kernel@vger.kernel.org, 
-	intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, linux-parisc@vger.kernel.org, 
-	xen-devel@lists.xenproject.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org, 
-	linux-arch@vger.kernel.org, kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, damon@lists.linux.dev
-Subject: Re: [PATCH RFC 09/11] misc/sgi-gru: use ptep_get() for page-table
- reads
-Message-ID: <amnxCmFU40QQaxTx@pedro-suse.lan>
-References: <20260727164715.2866609-1-usama.anjum@arm.com>
- <20260727164715.2866609-10-usama.anjum@arm.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="InGnhc61"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66TBHjAc4063626;
+	Wed, 29 Jul 2026 12:38:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pp1; bh=C8XpmTNtyOnVshdL8wT+JgkWoGyW
+	dDMu7s0faSV7tco=; b=InGnhc61TBU1UWra0Iq06xqQTkI2LxI+bkq3Bz3+kvWz
+	jVTIeJ5ff5hJSGIGSwDiLIG68XW/Atkpz9Z9gLqjoOV4+ck99wPx3d9T+XKRYCsR
+	qSRdQ/N48a2OQIUI5sVk5lLPiEKCeJ4F4pMWjHFwxJtDvMlOo6X+V/Q8I8OUwUL1
+	t76yi+VP3LkI/yW+LmsY6ty8oKpR67OJ6UumVeoGEbTbvxMLythHomyoMDgR5a9C
+	0S55+A/mB1TiFrnJauXNXywJMVEvkHBgN+TM/kSR3lhiiN7caX7Ap53zRU640SUL
+	10DazVwQoVrA0yWFbwSxbqvdT2Cc/OT2u8gMpM3LKQ==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fmv0xtntj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Jul 2026 12:38:09 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66TCQHvZ031848;
+	Wed, 29 Jul 2026 12:38:08 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fn8fk6pvh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 29 Jul 2026 12:38:08 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66TCc3VK27853094
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 29 Jul 2026 12:38:03 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ED4DD20040;
+	Wed, 29 Jul 2026 12:38:02 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CB13920043;
+	Wed, 29 Jul 2026 12:37:59 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.39.22.136])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 29 Jul 2026 12:37:59 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com
+Cc: linux-perf-users@vger.kernel.org, atrajeev@linux.ibm.com,
+        hbathini@linux.vnet.ibm.com, tejas05@linux.ibm.com,
+        venkat88@linux.ibm.com, tshah@linux.ibm.com, usha.r2@ibm.com
+Subject: [PATCH V4 0/6] powerpc/perf: Add HTM PMU driver and perf AUX support
+Date: Wed, 29 Jul 2026 18:07:46 +0530
+Message-Id: <20260729123752.63010-1-atrajeev@linux.ibm.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260727164715.2866609-10-usama.anjum@arm.com>
-X-Spamd-Result: default: False [-2.80 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	SUSPICIOUS_RECIPS(1.50)[];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	TAGGED_RCPT(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MISSING_XM_UA(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	RCPT_COUNT_GT_50(0.00)[66];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[linux.intel.com,intel.com,ursulin.net,gmail.com,ffwll.ch,hpe.com,arndb.de,linuxfoundation.org,hansenpartnership.com,gmx.de,suse.com,kernel.org,linux.dev,suse.de,linux-foundation.org,infradead.org,soleen.com,tencent.com,goodmis.org,iogearbox.net,redhat.com,suse.cz,ziepe.ca,huawei.com,gentwo.org,cmpxchg.org,nvidia.com,linux.ibm.com,arm.com,vger.kernel.org,lists.freedesktop.org,lists.xenproject.org,kvack.org,googlegroups.com,lists.linux.dev];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	TO_MATCH_ENVRCPT_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[arm.com:email,pedro-suse.lan:mid,imap1.dmz-prg2.suse.org:helo]
-X-Spam-Flag: NO
-X-Spam-Score: -2.80
-X-Spam-Level: 
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 9klTidsbiwjcHKMgMVGV-jCIHblLKQmn
+X-Proofpoint-ORIG-GUID: 9klTidsbiwjcHKMgMVGV-jCIHblLKQmn
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI5MDEwMiBTYWx0ZWRfX5Dv3xK+hpe7I
+ PFjZer6bHwOlRe+BTXbvMLSl5w5G4y6kMH093qJq4LB8XjY/Ew5UYNTEWDfTVh3gF8Dhzc7Ezev
+ /C9UillNQq5HGwprovTk4GUYVN+unmQ=
+X-Authority-Analysis: v=2.4 cv=dYuwG3Xe c=1 sm=1 tr=0 ts=6a69f432 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=IkcTkHD0fZMA:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=zQHK5bSOx5GkbYARfgoA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI5MDEwMiBTYWx0ZWRfX8jeR1l5bF4Ht
+ Uro+R/LbJSslLYcd31BLNslVYwsVOty5VPjbrVgZMVwirhFgWeBC40VTYPrwFGCJzoSSSTRUMVY
+ Y5ol3zAsDervEl/JQn+r76rnDKKOq5R7V89FVF4fzurtkxG2r981VRlLu62THNY9MXRsl1nefyK
+ 2JE7F5hhgpYM6KoD9ZYf3kpY0Vs2ggnZJ0JylnhOw0FIpQC1shiRB1ope+xP2OXNPNZcRDfSmHm
+ 69LBBIfEBmORbYzTUS10vs4Evo4pG8nXmsEAs58IHFvQw/bjl9j3pLsDWFu6gimnBgTs5fyg10e
+ bJApjpgOG0Vmed4VdzV037bUdtNGEiijvNls5MCInMVTKNHXSCOE4I92Fqg4qW1r53aXXV88mFm
+ H5O6FcNFPVklwB9HIXewsNirk2LQ38XcQSWvgizq0QDU8fk2xqA+Kuk0YcxzHWerHxu5lImFNnJ
+ mrHrHyR+gYNUrBU3f8Q==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-29_04,2026-07-28_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 impostorscore=0 clxscore=1015 phishscore=0 malwarescore=0
+ spamscore=0 lowpriorityscore=0 bulkscore=0 suspectscore=0 adultscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607290102
 
-On Mon, Jul 27, 2026 at 05:47:00PM +0100, Muhammad Usama Anjum wrote:
-> A leaf PMD is being read through ptep_get() by treating the PMD address
-> as PTE-sized table storage. ptep_get() now accepts hw_pte_t *, so update
-> the cast accordingly.
-> 
-> pte_offset_kernel() also returns hw_pte_t *. Get pte_t value by calling
-> ptep_get().
-> 
-> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
-> ---
->  drivers/misc/sgi-gru/grufault.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufault.c
-> index 3557d78ee47a2..ff89d34ad2aa4 100644
-> --- a/drivers/misc/sgi-gru/grufault.c
-> +++ b/drivers/misc/sgi-gru/grufault.c
-> @@ -228,10 +228,10 @@ static int atomic_pte_lookup(struct vm_area_struct *vma, unsigned long vaddr,
->  		goto err;
->  #ifdef CONFIG_X86_64
->  	if (unlikely(pmd_leaf(*pmdp)))
-> -		pte = ptep_get((pte_t *)pmdp);
-> +		pte = ptep_get((hw_pte_t *)pmdp);
->  	else
->  #endif
-> -		pte = *pte_offset_kernel(pmdp, vaddr);
-> +		pte = ptep_get(pte_offset_kernel(pmdp, vaddr));
->  
->  	if (unlikely(!pte_present(pte) ||
->  		     (write && (!pte_write(pte) || !pte_dirty(pte)))))
+Overview:
+The Hardware Trace Macro (HTM) on POWER systems provides hardware-level
+bus-trace data for a specific node/chip/core target within a logical
+partition.  It is accessed via the H_HTM hypervisor call and traces
+continuously at node, chip, or core scope independent of task scheduling.
 
-This code is super, super broken. Can we remove this ASAP? For starters,
-we're using is_vm_hugetlb_page() to detect page shift, the code does not
-grab refs on the pages, uses pte_offset_kernel() on user page tables,
-does not handle PUD-level hugepages, does not handle PMD-level hugepages on !x86_64,
-does not hold page table locks nor check for pte table retraction, etc
+This series adds a new "htm" PMU driver under arch/powerpc/perf/ that
+exposes HTM trace collection via the standard perf interface using the
+perf AUX buffer infrastructure, together with ABI and RST documentation.
 
-I don't think I need to go on.
+Patch overview:
+Patch 1 introduces the core HTM PMU driver (htm-perf.c).  The event
+configuration encodes the trace target as a 28-bit value in
+perf_event_attr.config:
+
+  bits  0-3:  htm_type         (HTM_CORE=2, HTM_NEST=1)
+  bits  4-11: nodeindex
+  bits 12-19: nodalchipindex
+  bits 20-27: coreindexonchip
+
+The PMU lifecycle maps to H_HTM_OP_CONFIGURE/DECONFIGURE at add/del time
+and H_HTM_OP_START/STOP at start/stop time.  Context-switch callbacks
+(PERF_EF_RELOAD / PERF_EF_UPDATE) are intentionally ignored because HTM
+traces the hardware scope, not individual tasks.  Tracing state is kept
+in event->pmu_private (HTM_TRACING_ACTIVE / HTM_TRACING_INACTIVE) as the
+authoritative source, with event->hw.state kept in sync as a hint for the
+perf core.
+
+Patch 2 adds duplicate-reservation protection.  When 'perf record -a' is
+used, perf opens system-wide events on all CPUs in parallel.  Without
+driver-side tracking, concurrent opens for the same HTM target (node,
+chip, core, type) can race and issue duplicate H_HTM_OP_CONFIGURE flows.
+A global reserved-targets list is added; htm_event_init() rejects any
+open that matches an already-reserved tuple, while different targets can
+still be opened simultaneously on different CPUs.
+
+Patch 3 adds AUX ring-buffer support so that high-volume trace data can
+be streamed into a perf AUX buffer.  The driver opts into
+PERF_PMU_CAP_AUX_NO_SG | PERF_PMU_CAP_AUX_PREFER_LARGE to request
+physically contiguous allocations, which H_HTM_OP_DUMP_DATA requires.
+A page-by-page physical-continuity scan is performed before each dump to
+detect and bound any fragmentation gaps, preventing silent memory
+corruption.  event->count is set to the number of 128-byte HTM trace
+records written on a successful dump, 1 when the AUX buffer is
+temporarily full but the hypervisor stream is intact, and 0 when the
+stream is exhausted or a hard error occurs; the perf tool uses this as
+a drain signal to decide whether another read pass is needed before
+closing the event.
+
+Patch 4 adds system memory configuration capture.  After writing trace
+data to the AUX buffer, htm_event_read() calls H_HTM_OP_DUMP_SYSMEM_CONF
+and emits the returned physical-to-logical address mapping records as
+PERF_SAMPLE_RAW data.  Keeping trace data in the AUX stream and memory
+configuration in raw samples allows each to be decoded independently in
+userspace.
+
+Patch 5 adds ABI documentation for the sysfs entries under
+/sys/bus/event_source/devices/htm/, covering the format attribute
+(config bit layout) and the events attribute group.
+
+Patch 6 extends Documentation/arch/powerpc/htm.rst with a new section
+on the perf interface: event syntax, required options, the two output
+files (htm.bin.nX.pX.cX and translation.nX.pX.cX), and how to pass
+them to htmdecode for trace decoding.
+
+Usage example:
+Collect HTM trace data from two simultaneous chip targets:
+
+  # perf record -m,256                                          \
+      -e htm/nodalchipindex=2,nodeindex=0,htm_type=1,cpu=8/    \
+      -e htm/nodalchipindex=1,nodeindex=0,htm_type=1,cpu=9/    \
+      -a -- sleep 10
+
+  # perf report
+
+Output files written by perf report:
+
+  htm.bin.n0.p2.c0       raw HTM bus-trace, chip 2
+  htm.bin.n0.p1.c0       raw HTM bus-trace, chip 1
+  translation.n0.p2.c0   memory config records, chip 2
+  translation.n0.p1.c0   memory config records, chip 1
+
+The htm.bin.* files can then be decoded with htmdecoder to produce
+trace output.
+
+Testing:
+Tested on POWER10 with two simultaneous HTM targets.  Both htm.bin.*
+and translation.* files are produced correctly.
+
+  # perf record -C 9 -m,256 \
+      -e htm/nodalchipindex=2,nodeindex=0,htm_type=1/ sleep 3
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 256.277 MB perf.data ]
+
+Athira Rajeev (6):
+  powerpc/perf: Add HTM PMU driver to expose Hardware Trace Macro data
+  powerpc/perf: Reject duplicate HTM target reservations
+  powerpc/perf: Add AUX buffer management to capture HTM trace data
+  powerpc/perf: Capture the HTM memory configuration as part of perf
+    data
+  docs: ABI: sysfs-bus-event_source-devices-htm: Document sysfs event
+    format entries for htm pmu
+  powerpc/perf/htm: Add documentation for Hardware Trace Macro PMU
+
+ .../sysfs-bus-event_source-devices-htm        |  34 +
+ Documentation/arch/powerpc/htm.rst            | 158 ++-
+ arch/powerpc/perf/Makefile                    |   2 +-
+ arch/powerpc/perf/htm-perf.c                  | 968 ++++++++++++++++++
+ 4 files changed, 1158 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-htm
+ create mode 100644 arch/powerpc/perf/htm-perf.c
 
 -- 
-Pedro
+2.43.0
+
