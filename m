@@ -1,346 +1,184 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FF441CB26
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 12:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C813E122F;
+	Wed, 29 Jul 2026 12:42:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785328721; cv=none; b=u381aXu67v/Ufu3BWCC2/UwScXySsYEBpwUJr4qMeWJSOXGM6WwaEfOJSObBBB5vWi5AxbzeUX+CbraTLlVve9pCD3ka5/74tzV9+QaWVFYxp4bt+77dh2AU5y6VSwZNpQ/Kw32NUNhIVZB/mUXwz5222UsNrSzJ6YQDh9zciuM=
+	t=1785328973; cv=none; b=I74MRrgwD/pqGqIMvWJIi/qrr6XNsZmo5RLooTyGZ1lR6HAOruteB7N4HEyz8lPmOlclkoBlEW4wPfpJHuvsX+6q4q90/BVxleRQMuhAoeN+gES+vRi9hZkTKMyA7dcHu8KzC4SD7AeNbVggzmgl5T6dXjD9JTj/01VyhW9sNSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785328721; c=relaxed/simple;
-	bh=YpqnnkgRcd2eQPU7xVnbbR331QwodbEB19/Gdgfd/98=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=obyFosWWeAoyyPe2OK1Et5V9g4TxP0vGceS54yue4qJ4tMQKeTARpFFnYGwZp+8K+aIS8qcgfILpK4Rp7hvukfkuFiGbriPrVK4mLku/BvQCYQ2hMYZ/dGd4UZoZ8Djc7e7eX9zx8gJWA/+X8/MX2hXcDmxlErs1FnhXU/4c+dM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=V2ZmI4Jz; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1785328973; c=relaxed/simple;
+	bh=eZqAWjHL2jPePlq3RJEMJ4AbBs3kRH8xuH9dG8mq7qc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZaEdhodkgbbxSDE043BO8LfMozMZL7V+1hHgfOVVHr/W00HWIKOn5rvVYRa9prvipvqr2T8ViNwSJcp7TAocC5Ud8Hhlyt0SAhg9k38I/bn/naSYD9eOZCyjdAzQylNg0TaSEol4GDElmot41ze/F7p08bluYnA/O68RxcmIMg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OIiVNrud; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="V2ZmI4Jz"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66TBI9Vi4077212;
-	Wed, 29 Jul 2026 12:38:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=TAbc+0KUKMduW0G4W
-	s33F9oJtE6kKp6K3iXTwbxkt90=; b=V2ZmI4Jzk8ZiiCdjj7+gq/rU8y/MeHs7D
-	b82R7zhwiWOoOHCNznhtKE0v0a7qHkgWGZV6uPoottpwEzAJ858IixCUpH7BIm5/
-	GyJe7YAUFRd8T7jn1n9S+ks2Npfg3uV84lRv/zhV3ft9zJyo8LThP3+Nr+a55wFk
-	Q9hEKEnffRLP4vexmOdOgx6+7nkf8piVuY+OAgfc5grsVTESZCztxjdeLRZJqqTU
-	b7S7nXRbGZ1DhLvr6iSbNym4ebOCAif4y5qkeqMzKD5x+e1M89ITlPIy20/rVOmn
-	kVBjEwZB500B1CR0y5jizIYYiYDuU/P7EtEJ/y3RF0RI2ifhkBhhA==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fmuwd1vwd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jul 2026 12:38:26 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66TCQIi6015753;
-	Wed, 29 Jul 2026 12:38:25 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fn7fqev4w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Jul 2026 12:38:25 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66TCcKLV33227212
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 29 Jul 2026 12:38:20 GMT
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 35EE020043;
-	Wed, 29 Jul 2026 12:38:20 +0000 (GMT)
-Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C05CD20040;
-	Wed, 29 Jul 2026 12:38:17 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.39.22.136])
-	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 29 Jul 2026 12:38:17 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org, maddy@linux.ibm.com
-Cc: linux-perf-users@vger.kernel.org, atrajeev@linux.ibm.com,
-        hbathini@linux.vnet.ibm.com, tejas05@linux.ibm.com,
-        venkat88@linux.ibm.com, tshah@linux.ibm.com, usha.r2@ibm.com
-Subject: [PATCH V4 6/6] powerpc/perf/htm: Add documentation for Hardware Trace Macro PMU
-Date: Wed, 29 Jul 2026 18:07:52 +0530
-Message-Id: <20260729123752.63010-7-atrajeev@linux.ibm.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20260729123752.63010-1-atrajeev@linux.ibm.com>
-References: <20260729123752.63010-1-atrajeev@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OIiVNrud"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D1321F000E9;
+	Wed, 29 Jul 2026 12:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785328962;
+	bh=CCfnfjBFYExAnxJTD/rzMs4G+JVWk8LnuYF1LstcYDw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=OIiVNrudGYMgEdVIx0kkjz41K/abfMmWQCuVMoltvKL88ry5vvzeu9fzcY/9OXDWp
+	 urmM5jTj5uYEwxtowv6dnJlwSS9PTo7quWtNi7gHj3ZqfWleJMlYHWWtwoq0IDEkky
+	 8P8JnLCx+cJFeHdNFsas608FWlQT7bVkC2bwM046FAmQ7zDEHB0zW1hDtHOw8f8bql
+	 4k70NlZODBKCZTfjYFNVdqOJ/v1f/eicr7a9D82muWKPn8AlDCyXeFCuwaSWyiZ0iA
+	 7EW64naZjqP6zUdWAdVwIEaL++olcUVsOGEeMV8mWUj+uyYo7qTGP16v8aSA/cUEkI
+	 1GtsvDfHUTVwQ==
+Message-ID: <5abb6bbb-973e-41e7-820c-057e85edeb95@kernel.org>
+Date: Wed, 29 Jul 2026 14:42:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: pPPKmKcPnn2O9L30uz4TqBnCdR46Qbja
-X-Proofpoint-Spam-Info: AW1haW4tMjYwNzI5MDEwMiBTYWx0ZWRfX8AFgyJFBXs7i
- RIbuy29KAJcKWXKfK4K6Yq19zSUk1UMUg/efQx0VBG2JsBKznxrm3zH5B8CbLH4AkBpU4vnili1
- dAO460BXiW6rEeVDxtnLJsYDLjG5FQs=
-X-Authority-Analysis: v=2.4 cv=E/z9Y6dl c=1 sm=1 tr=0 ts=6a69f442 cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=RzCfie-kr_QcCd8fBx8p:22 a=VnNF1IyMAAAA:8 a=9lDVIUTEpXIqPQKb_LQA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzI5MDEwMiBTYWx0ZWRfX7Lb+ZUdZyxAF
- hN3P22hqJ+rKJbofUC+u/6vp8vuxHis84Q8JLQKF72sFE5k7npyGW9OBQCHCIqavtY+CYxCGcqc
- KTu4SHGcS1CGomfevmyiaFFxrFtk3hoii96AZWU1WdtAdoQ7Dw8vazBXJ2jiTFDtt35Cb1tRK4y
- 2XQymwrBhwKK9WqYCwIS0m6aUiNrHcb/3c0gdT/YFUnp9QVXwGIWZlEo6ZB6eNj2z9b8UBi/EGX
- q3s2Msn42U1toAzlHJ1qF7U3zpnXH5GmUwctS3s37UkkKXgLvY6qnhn1znwGFTAaMK/DSadNBpn
- rvmjAC+dyyS5MnyeON0tK1kfRQ+3FNd8VjxH3EvotLPCdMQBNPXxHM8w9YvbTywfJNdsEmDQ6se
- Zj636Ky9bVJ/9aRqY1SmjgfckwkLjmpfuCqsGtQZFGixFsEax9HWcc7zhWi8KWXp3APEFm/1O4n
- g/ucNBRNv/K9NNdUZzA==
-X-Proofpoint-GUID: pPPKmKcPnn2O9L30uz4TqBnCdR46Qbja
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-07-29_04,2026-07-28_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- adultscore=0 priorityscore=1501 spamscore=0 clxscore=1015 phishscore=0
- lowpriorityscore=0 bulkscore=0 malwarescore=0 impostorscore=0 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607290102
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 09/11] misc/sgi-gru: use ptep_get() for page-table
+ reads
+To: Pedro Falcato <pfalcato@suse.de>,
+ Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich
+ <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Uladzislau Rezki <urezki@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ ziy@nvidia.com, agordeev@linux.ibm.com, ryan.roberts@arm.com,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-parisc@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, damon@lists.linux.dev
+References: <20260727164715.2866609-1-usama.anjum@arm.com>
+ <20260727164715.2866609-10-usama.anjum@arm.com>
+ <amnxCmFU40QQaxTx@pedro-suse.lan>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <amnxCmFU40QQaxTx@pedro-suse.lan>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Extend Documentation/arch/powerpc/htm.rst with a new section covering
-the HTM perf PMU interface.
+On 7/29/26 14:36, Pedro Falcato wrote:
+> On Mon, Jul 27, 2026 at 05:47:00PM +0100, Muhammad Usama Anjum wrote:
+>> A leaf PMD is being read through ptep_get() by treating the PMD address
+>> as PTE-sized table storage. ptep_get() now accepts hw_pte_t *, so update
+>> the cast accordingly.
+>>
+>> pte_offset_kernel() also returns hw_pte_t *. Get pte_t value by calling
+>> ptep_get().
+>>
+>> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+>> ---
+>>  drivers/misc/sgi-gru/grufault.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/misc/sgi-gru/grufault.c b/drivers/misc/sgi-gru/grufault.c
+>> index 3557d78ee47a2..ff89d34ad2aa4 100644
+>> --- a/drivers/misc/sgi-gru/grufault.c
+>> +++ b/drivers/misc/sgi-gru/grufault.c
+>> @@ -228,10 +228,10 @@ static int atomic_pte_lookup(struct vm_area_struct *vma, unsigned long vaddr,
+>>  		goto err;
+>>  #ifdef CONFIG_X86_64
+>>  	if (unlikely(pmd_leaf(*pmdp)))
+>> -		pte = ptep_get((pte_t *)pmdp);
+>> +		pte = ptep_get((hw_pte_t *)pmdp);
+>>  	else
+>>  #endif
+>> -		pte = *pte_offset_kernel(pmdp, vaddr);
+>> +		pte = ptep_get(pte_offset_kernel(pmdp, vaddr));
+>>  
+>>  	if (unlikely(!pte_present(pte) ||
+>>  		     (write && (!pte_write(pte) || !pte_dirty(pte)))))
+> 
+> This code is super, super broken. Can we remove this ASAP? For starters,
+> we're using is_vm_hugetlb_page() to detect page shift, the code does not
+> grab refs on the pages, uses pte_offset_kernel() on user page tables,
+> does not handle PUD-level hugepages, does not handle PMD-level hugepages on !x86_64,
+> does not hold page table locks nor check for pte table retraction, etc
+> 
+> I don't think I need to go on.
+> 
 
-The added documentation covers:
+Heh, when Usama first showed me an early diffstat I was like "what the hell are
+drivers doing with page tables here, they shouldn't be doing that".
 
-  - How to open HTM events using perf record, including the event
-    syntax (nodalchipindex, nodeindex, htm_type, cpu=N) and the
-    required AUX buffer size (-m,256).
+atomic_pte_lookup documents: "Only supports Intel large pages (2MB only) on
+x86_64. ZZZ - hugepage support is incomplete"
 
-  - The two output files produced by perf report:
-      htm.bin.nX.pX.cX     raw bus-trace AUX data
-      translation.nX.pX.cX memory-configuration records
+What is this crap? :)
 
-  - How to pass the output files to htmdecode for trace decoding.
-
-  - Notes on system-wide collection (-a) vs CPU-pinned collection
-    (cpu=N in event config) and the one-event-per-target PMU
-    restriction.
-
-The existing debugfs interface documentation is retained unchanged.
-A brief cross-reference is added at the top to point readers to the
-new perf interface section.
-
-Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
----
-Changes in V3:
-- Fixed "After running perf record, the following files are generated":
-  htm.bin.* and translation.* are written by perf report (which runs
-  powerpc_htm_process_auxtrace_info), not by perf record.  perf record
-  produces only perf.data.  Corrected the Output Files section and the
-  Complete Workflow example accordingly.  Note: powerpc_htm_process_-
-  auxtrace_info() is implemented in the companion tools/perf patch series
-  ("tools/perf: Add perf tool support for processing powerpc HTM AUXTRACE
-  records"); the documentation is written against the complete two-series
-  feature, which is standard practice for kernel+tools PMU submissions.
-- Fixed "perf report -D" in the workflow: perf report -D only prints
-  AUX buffer sizes; it does not produce htm.bin.* or translation.*.
-  The output files are produced by plain "perf report".
-- Added the missing htmdecode usage section (referenced in commit
-  message and V2 changelog but absent from the doc body).
-- Added the missing PMU restriction note: the HTM PMU uses
-  PERF_PMU_CAP_EXCLUSIVE so only one event per target (node/chip/core)
-  is allowed; a second event on the same target returns -EBUSY.  Also
-  noted that cpu=N in the event config is the supported way to pin
-  collection to a CPU, and -a without cpu=N causes -EBUSY from the
-  kernel (HTM events require cpu=N since the PMU operates on physical
-  hardware addresses, not per-task context).
-- Fixed typo "htmtype" -> "htm_type" in the config description list.
-- Fixed grammar "To open the event on a specific cpu can be specified
-  using" -> "To specify a CPU, include the cpu= parameter".
-- Fixed typo "Target code 6" -> "Target core 6".
-
-Changes in V2:
-- Added a new perf-interface section to Documentation/arch/powerpc/htm.rst
-  describing perf record usage, required AUX buffer size (-m,256), the
-  two output files (htm.bin.nX.pX.cX and translation.nX.pX.cX), and how
-  to pass them to htmdecode.
-- Added notes on system-wide (-a) vs CPU-pinned collection and
-  the one-event-per-target PMU restriction introduced in patch 2.
-- A cross-reference is added at the top of htm.rst pointing readers to
-  the new perf interface section.
-- The existing debugfs interface documentation is retained unchanged.
-- Patch is now 6/6 instead of 5/5.
-
- Documentation/arch/powerpc/htm.rst | 158 ++++++++++++++++++++++++++++-
- 1 file changed, 155 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/arch/powerpc/htm.rst b/Documentation/arch/powerpc/htm.rst
-index fcb4eb6306b1..15e7484f2836 100644
---- a/Documentation/arch/powerpc/htm.rst
-+++ b/Documentation/arch/powerpc/htm.rst
-@@ -18,9 +18,10 @@ H_HTM is used as an interface for executing Hardware Trace Macro (HTM)
- functions, including setup, configuration, control and dumping of the HTM data.
- For using HTM, it is required to setup HTM buffers and HTM operations can
- be controlled using the H_HTM hcall. The hcall can be invoked for any core/chip
--of the system from within a partition itself. To use this feature, a debugfs
--folder called "htmdump" is present under /sys/kernel/debug/powerpc.
-+of the system from within a partition itself.
- 
-+To use this feature, a debugfs folder called "htmdump" is present under
-+/sys/kernel/debug/powerpc. Another interface is via perf.
- 
- HTM debugfs example usage
- =========================
-@@ -94,7 +95,158 @@ This trace file will contain the relevant instruction traces
- collected during the workload execution. And can be used as
- input file for trace decoders to understand data.
- 
--Benefits of using HTM debugfs interface
-+HTM perf interface usage
-+========================
-+
-+The HTM (Hardware Trace Macro) perf interface enables collection and analysis
-+of hardware trace data from PowerPC systems. This interface allows users to
-+capture detailed execution traces for performance analysis and debugging.
-+
-+Event Configuration
-+-------------------
-+
-+Use ``perf record`` with the htm PMU event. The event is configured using
-+named parameters that specify the target hardware location and trace type:
-+
-+.. list-table::
-+   :header-rows: 1
-+   :widths: 25 75
-+
-+   * - Parameter
-+     - Description
-+   * - htm_type
-+     - Type of HTM trace to collect (bits 0-3)
-+   * - nodeindex
-+     - Node index in the system topology (bits 4-11)
-+   * - nodalchipindex
-+     - Chip index within the specified node (bits 12-19)
-+   * - coreindexonchip
-+     - Core index on the specified chip (bits 20-27)
-+
-+- event: "config:0-27"
-+- htm_type: "config:0-3"
-+- nodeindex: "config:4-11"
-+- nodalchipindex: "config:12-19"
-+- coreindexonchip: "config:20-27"
-+
-+1) nodeindex, nodalchipindex, coreindexonchip: this specifies
-+   which partition to configure the HTM for.
-+2) htm_type: specifies the type of HTM.
-+
-+Event Syntax
-+------------
-+
-+The event configuration uses named parameters::
-+
-+   htm/nodeindex=N,nodalchipindex=C,coreindexonchip=R,htm_type=T/
-+
-+Opening the event on a specific CPU can be specified::
-+
-+   htm/nodeindex=N,nodalchipindex=C,coreindexonchip=R,htm_type=T,cpu=x/
-+
-+Where:
-+
-+- N = node index
-+- C = chip index within the node
-+- R = core index on the chip
-+- T = HTM type
-+- x = CPU number
-+
-+Basic Usage Example
-+-------------------
-+
-+To collect HTM trace data for a specific chip:
-+
-+.. code-block:: sh
-+
-+   # perf record -C 1 -e htm/nodalchipindex=2,nodeindex=0,htm_type=1/ <workload>
-+
-+In this example:
-+
-+- ``-C 1``: Collect on CPU 1
-+- ``nodeindex=0``: Target node 0
-+- ``nodalchipindex=2``: Target chip 2 within node 0
-+- ``htm_type=1``: HTM trace type 1
-+
-+.. code-block:: sh
-+
-+   # perf record -m,256 -e htm/coreindexonchip=6,nodalchipindex=0,nodeindex=0,htm_type=2,cpu=16/ -a sleep 1
-+
-+In this example:
-+
-+- ``cpu=16``: Collect on CPU 16
-+- ``nodeindex=0``: Target node 0
-+- ``nodalchipindex=0``: Target chip 0 within node 0
-+- ``coreindexonchip=6``: Target core 6
-+- ``htm_type=2``: HTM trace type 2
-+- ``-m,256``: specifies number of mmap pages
-+
-+Running trace collection for multiple targets:
-+
-+.. code-block:: sh
-+
-+   # perf record -m,256 -e htm/nodalchipindex=2,nodeindex=0,htm_type=1,cpu=8/ -e htm/nodalchipindex=1,nodeindex=0,htm_type=1,cpu=9/ -a sleep 1
-+
-+
-+In this example, trace is collected for two events on different target chips
-+
-+Output Files
-+------------
-+
-+``perf record`` produces ``perf.data``.  Running ``perf report`` on that
-+file invokes the HTM auxtrace handler, which writes the output files:
-+
-+- **htm.bin.nX.pX.cX** : raw bus-trace AUX data for node X, chip X, core X
-+- **translation.nX.pX.cX** : memory-configuration records for the same target
-+
-+.. code-block:: sh
-+
-+   # perf report
-+   # ls htm.bin.* translation.*
-+   htm.bin.n0.p2.c0  translation.n0.p2.c0
-+
-+Note: ``perf report -D`` prints AUX buffer sizes but does not produce
-+the output files.  Use plain ``perf report`` to extract trace data.
-+
-+Decoding Output Files
-+---------------------
-+
-+Pass the generated files to htmdecode for trace decoding::
-+
-+   htmdecode htm.bin.n0.p2.c0 translation.n0.p2.c0
-+
-+PMU Restrictions
-+----------------
-+
-+The HTM PMU uses ``PERF_PMU_CAP_EXCLUSIVE``, which enforces a limit of one
-+active event per target (node/chip/core tuple) at a time.  Attempting to open
-+a second event on the same target returns ``-EBUSY``.
-+
-+HTM events must be pinned to a CPU using the ``cpu=N`` parameter in the event
-+config.  Using ``-a`` (system-wide) without ``cpu=N`` causes ``-EBUSY`` from
-+the kernel because the HTM PMU operates on physical hardware addresses and
-+requires an explicit CPU binding.
-+
-+Complete Workflow Example
-+-------------------------
-+
-+.. code-block:: sh
-+
-+   # Step 1: Collect trace data
-+   perf record -m,256 -e htm/nodalchipindex=2,nodeindex=0,htm_type=1,cpu=9/ -a sleep 5
-+
-+   # Step 2: Extract trace and memory-config files
-+   perf report
-+
-+   # Step 3: Verify output files
-+   ls htm.bin.*          # htm.bin.n0.p2.c0
-+   ls translation.*      # translation.n0.p2.c0
-+   ls perf.data
-+
-+   # Step 4: Decode the trace
-+   htmdecode htm.bin.n0.p2.c0 translation.n0.p2.c0
-+
-+Benefits of using HTM interface
- =======================================
- 
- It is now possible to collect traces for a particular core/chip
 -- 
-2.43.0
+Cheers,
 
+David
