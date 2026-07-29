@@ -1,166 +1,203 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4CB485CC8
-	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 12:49:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644BD434E48
+	for <linux-perf-users@vger.kernel.org>; Wed, 29 Jul 2026 12:51:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785329385; cv=none; b=jzUS50dLJ01ggiXKD/7PXwlYTM9PmRqAzTnOuoYYEn9dL2KBFeM2KYSYG/+PygyYauEdMC64fATMD7kITI6xGMnneLzF16FHIbUXS9dWB0g1tta4NzVcgDE4kRblQo+qEx3exDhuPsfMzOVgwxNNFY7axgmcEzKxX8H+6modQwI=
+	t=1785329506; cv=none; b=Sb1Nv91hjg7UkvE79zzR+5ryfnO390fqOE52gqVzs/rpIas9iTeIinrckhiRbo7yx/9vwWHajUq4Fqt35GzN/2haA+oElFxkG7g3K5J1RcvwmyhslGsZUEPbXlD1ekZraaejYzfl2MIk8wZ8ZoKTyNlCPPIgnxvKLuMZURQ3LCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785329385; c=relaxed/simple;
-	bh=xy2y8zq7P+nKJp0Ra1QPGxT36GVDqZSXRhvDvE/hmrU=;
+	s=arc-20240116; t=1785329506; c=relaxed/simple;
+	bh=DkOHR0Wm4QxtlTNJis1AuJQBbFScAQnIky8zDCnng34=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=A7cctbdqRGZohxhT1EN8Mcowux67RMIyTo3h3QKXE9QO02JilcA39txkC0DFW7+jUfAV8A5sR5tCvsffNRoukR7/PJ0eMoixKxnY1WHEVVWuTwypm46FXo5bmVayyYgt+u2O4lBxzqdACoPm+AjjrM3dWANe2RhuMrjXUlp6P7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=caWwOKSj; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=nPSrR3rveHeozAFUNUnjC/Uk2NakjUgx07dbfIwEsiKiUCi8H8spcEh8JxsbcOl1474c+aig3WPPMB2+BJ1NktpHf9lHJ4OsQ409HOe+kqK2dcC6STa6WYNF0QptBOwLRsbO0225fpU+Oc0zKu3OLFm+6CAamaukHvKnrH4rNYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzavAjc1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="caWwOKSj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2102B1F000E9;
-	Wed, 29 Jul 2026 12:49:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzavAjc1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0673D1F00A3A;
+	Wed, 29 Jul 2026 12:51:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785329383;
-	bh=PwnPBj3HaxiU/BgKZxJn3cRTsKcUB/zwFdgOkG85FQM=;
+	s=k20260515; t=1785329505;
+	bh=3R1QUmg5yba4cKEjLqmBfly4MZx9JnSb/94lDPSmaDg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=caWwOKSjxC2uARTEvX+Qt+trKRVjnbwfGjlEO8/bgjkY1xExebW9LneH3UhFYd2zT
-	 Shgc7OY6cE25I7+++5hcLJ8kp3FohhqoOT3Ty4VJY+1XAlbYdGtzlItmWNgDrdvsWz
-	 9OeIxlB2SxgyK3QRzAJa6btJaxbrX7nOlZPNHdsecBLI8YYVxYHvew/zJgAae6bTly
-	 UCBZ1UMaH9h0YJLV6J2bcnBoFY6sQv94JXnyfeX/8BNJVOaJPXemCqDh5ICDlGNe1V
-	 U9TecU7RUCOv6g8GRl1YQLYotNbxSZ7BEFmkt0M2dbz9vqhTutze6pYoyOSDeG9q7x
-	 90PI0iU6sdb6A==
+	b=KzavAjc1nKZNy+rOon+fictgczAg5rlNE28Cy9gFRYW/0gqcC8J/Mmt9ea+MwT71j
+	 yj/m50aC26NvjvPqtlCeFT2n6lcdE8B9CWWPv103ixLqapJiAOoRvwaW3ZrqJZLi1r
+	 /MBCA3xMcJaX7KnuepK1MzsgekF+RWdxtmhw62Kzw82K7fxX2dt5ZP7mT0LbzQj6Bu
+	 W3BXiXSfQhKNpJUkYrjfaKq5QHxVLJL96o0bLfnzQnT1AT1BhqNF6GcdNGS9d/ovm6
+	 ECcyHx+B+k/dnN/Qj/k9YJC3wA3VG8oJXF7tPr4OJHNXdUl54zJzxXFgy0uir7tPtX
+	 XfojwlENIBFIQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V4 1/6] powerpc/perf: Add HTM PMU driver to expose
- Hardware Trace Macro data
+Subject: Re: [PATCH V4 3/6] powerpc/perf: Add AUX buffer management to
+ capture HTM trace data
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Athira Rajeev" <atrajeev@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260729123752.63010-2-atrajeev@linux.ibm.com>
+In-Reply-To: <20260729123752.63010-4-atrajeev@linux.ibm.com>
 References: <20260729123752.63010-1-atrajeev@linux.ibm.com>
- <20260729123752.63010-2-atrajeev@linux.ibm.com>
+ <20260729123752.63010-4-atrajeev@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 29 Jul 2026 12:49:42 +0000
-Message-Id: <20260729124943.2102B1F000E9@smtp.kernel.org>
+Date: Wed, 29 Jul 2026 12:51:44 +0000
+Message-Id: <20260729125145.0673D1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] Unbalanced H_HTM_OP_DECONFIGURE hcalls in htm_event_del can hijack=
- concurrent trace sessions and cause kernel log spam.
+- [High] Nested calls to `perf_aux_output_begin` from NMI context corrupt t=
+he outer context's shared per-CPU `struct perf_output_handle`.
+- [High] `htm_dump_sample_data()` permanently stops the hardware trace buff=
+er during a read without restarting it, breaking continuous streaming.
+- [High] Applying `PAGE_MASK` to `chunk_size` zeroes the size when availabl=
+e ring buffer space is under `PAGE_SIZE`, causing a permanent stall and 100=
+% CPU hog in userspace.
 --
 
---- Patch [1]: [PATCH V4 1/6] powerpc/perf: Add HTM PMU driver to expose Ha=
-rdware Trace Macro data ---
-commit ac0e563af1a2f5f6278332191b43b79a4c0d0029
+--- Patch [3]: [PATCH V4 3/6] powerpc/perf: Add AUX buffer management to ca=
+pture HTM trace data ---
+commit 8304e887ab454be629979799f609224f8a64f9ec
 Author: Athira Rajeev <atrajeev@linux.ibm.com>
 
-powerpc/perf: Add HTM PMU driver to expose Hardware Trace Macro data
+powerpc/perf: Add AUX buffer management to capture HTM trace data
 
-This commit introduces a new "htm" Performance Monitoring Unit (PMU) driver
-for POWER systems. It exposes HTM control via the standard perf interface,
-allowing node/chip/core scoped trace configuration.
+This patch implements support for auxiliary (AUX) ring buffers in the HTM
+PMU driver. It introduces core lifecycle hooks and data structures to stream
+trace data into perf AUX buffers.
+
+>     htm_pmu_ctx embeds a struct perf_output_handle as a per-CPU variable,
+>     following the established upstream pattern.  Reentrancy is handled by
+>     perf_aux_output_begin() itself via rb->aux_nest: when a nested caller
+>     (e.g. from NMI context) detects that aux_nest is already non-zero, it
+>     falls through to the err path, which sets the *nested* handle->event =
+to
+>     NULL and returns NULL to the nested caller.  The outer handle is never
+>     touched; its handle->event remains valid throughout the outer
+>     perf_aux_output_end() call.
+
+[Severity: High]
+Is this description accurate regarding the outer handle?
+
+Since htm_pmu_ctx is defined as a static per-CPU variable, the nested conte=
+xt
+uses the exact same perf_output_handle object as the outer context. When the
+nested perf_aux_output_begin() call hits the error path, it clears handle->=
+event
+on that shared object.
+
+Would this clear the event pointer of the interrupted outer transaction, ca=
+using
+the outer perf_aux_output_end() to return early without decrementing rb->au=
+x_nest?
 
 > diff --git a/arch/powerpc/perf/htm-perf.c b/arch/powerpc/perf/htm-perf.c
-> new file mode 100644
-> index 0000000000000..7ad592f26bb46
-> --- /dev/null
+> index 1879125bc4102..0b954a7ed4dd9 100644
+> --- a/arch/powerpc/perf/htm-perf.c
 > +++ b/arch/powerpc/perf/htm-perf.c
 
 [ ... ]
 
-> +static int htm_event_add(struct perf_event *event, int flags)
-> +{
+> @@ -95,6 +95,22 @@ static inline void parse_htm_config(u64 config, struct=
+ htm_config *cfg)
+>  	cfg->coreindexonchip =3D (config >> 20) & 0xff;
+>  }
+> =20
+> +struct htm_pmu_buf {
+> +	int     nr_pages;
+> +	bool    snapshot;
+> +	void    *base;
+> +	void	**pages;
+> +	u64	head;
+> +	u64     size;
+> +	int     collect_htm_trace;
+> +};
+> +
+> +struct htm_pmu_ctx {
+> +	struct perf_output_handle handle;
+> +};
+> +
+> +static DEFINE_PER_CPU(struct htm_pmu_ctx, htm_pmu_ctx);
+
+[Severity: High]
+Is it safe to share a single perf_output_handle per-CPU?
+
+If an NMI interrupts an active AUX transaction on the same CPU, the nested
+execution passes this exact same handle pointer to perf_aux_output_begin().
+Could we define the handle as a stack variable in htm_dump_sample_data() and
+htm_event_start() instead to prevent reentrancy corruption?
 
 [ ... ]
 
-> +	do {
-> +		rc =3D htm_hcall_wrapper(htmflags, cfg.nodeindex, cfg.nodalchipindex,
-> +				       cfg.coreindexonchip, cfg.htmtype,
-> +				       H_HTM_OP_CONFIGURE, param1, param2, 0);
-> +		ret =3D htm_return_check(rc);
-> +	} while (ret =3D=3D -EBUSY && ++retries < MAX_RETRIES);
-> +
-> +	if (ret <=3D 0) {
-> +		perf_event_disable_inatomic(event);
-> +		return 0;
+> @@ -465,8 +504,254 @@ static void htm_event_del(struct perf_event *event,=
+ int flags)
+>  	/* pmu_private freed by event->destroy =3D reset_htm_active */
+>  }
+> =20
+> +static ssize_t htm_dump_sample_data(struct perf_event *event)
+> +{
+> +	struct htm_pmu_ctx *htm_ctx =3D this_cpu_ptr(&htm_pmu_ctx);
+
+[ ... ]
+
+> +	if (target->tracing_active =3D=3D HTM_TRACING_ACTIVE) {
+> +		htm_event_stop(event, 0);
+> +		if (target->tracing_active =3D=3D HTM_TRACING_ACTIVE) {
+> +			/*
+> +			 * H_HTM_OP_STOP failed.
+> +			 * Cannot dump data while the trace is still running.
+> +			 * Return -EIO to signal a non-retriable hardware failure;
+> +			 * htm_event_read() will set event->count=3D0 and the drain
+> +			 * loop will stop cleanly.
+> +			 */
+> +			perf_aux_output_end(&htm_ctx->handle, 0);
+> +			return -EIO;
+> +		}
 > +	}
 
 [Severity: High]
-If H_HTM_OP_CONFIGURE fails here (e.g. returning -EAGAIN on a long busy),
-does returning 0 trick the perf core into considering the event successfully
-added?
+Does this permanently halt tracing when data is read?
 
-Since the perf core assumes the event is successfully added, it will
-eventually call htm_event_del(), which unconditionally deconfigures the
-resource.
-
-[ ... ]
-
-> +			retries =3D 0;
-> +			do {
-> +				rc =3D htm_hcall_wrapper(htmflags, cfg.nodeindex,
-> +						       cfg.nodalchipindex, cfg.coreindexonchip,
-> +						       cfg.htmtype, H_HTM_OP_DECONFIGURE, 0, 0, 0);
-> +				ret =3D htm_return_check(rc);
-> +			} while (ret =3D=3D -EBUSY && ++retries < MAX_RETRIES);
-> +			if (ret <=3D 0) {
-> +				pr_err("DECONFIGURE failed in htm event add (ret=3D%d) node:%u chip:=
-%u core:%u type:%u;\n",
-> +						ret, cfg.nodeindex, cfg.nodalchipindex, cfg.coreindexonchip, cfg.h=
-tmtype);
-> +			}
-> +			perf_event_disable_inatomic(event);
-> +			return 0;
-
-[Severity: High]
-Similarly, if the start hcall fails, the driver explicitly issues a
-DECONFIGURE here but still returns 0. Will this cause htm_event_del() to
-incorrectly issue a second DECONFIGURE later?
+When htm_dump_sample_data() is called (via pmu->read), it calls htm_event_s=
+top()
+to halt the hardware trace before dumping. After the dump finishes, the tra=
+ce
+is never restarted. Will this cause the hardware trace to silently stop
+collecting further data the first time userspace reads from the event?
 
 [ ... ]
 
-> +static void htm_event_del(struct perf_event *event, int flags)
-> +{
-
-[ ... ]
-
-> +	htm_event_stop(event, 0);
-> +
 > +	/*
-> +	 * Deconfigure the hardware resource.  Only H_BUSY is retried.
-> +	 * If H_LONG_BUSY_* or any other error is returned, the resource
-> +	 * cannot be reclaimed in this atomic context; log the failure so it
-> +	 * is visible in the kernel log.
+> +	 * Assess constraints regarding space remaining across the mapping
+> +	 * context boundary
 > +	 */
-> +	do {
-> +		rc =3D htm_hcall_wrapper(htmflags, cfg.nodeindex, cfg.nodalchipindex,
-> +				       cfg.coreindexonchip, cfg.htmtype,
-> +				       H_HTM_OP_DECONFIGURE, 0, 0, 0);
-> +		ret =3D htm_return_check(rc);
-> +	} while (ret =3D=3D -EBUSY && ++retries < MAX_RETRIES);
-> +	if (ret <=3D 0) {
-> +		pr_err("DECONFIGURE failed in htm event del (ret=3D%d) node:%u chip:%u=
- core:%u type:%u;\n",
-> +				ret, cfg.nodeindex, cfg.nodalchipindex, cfg.coreindexonchip, cfg.htm=
-type);
-> +	}
-> +	/* pmu_private freed by event->destroy =3D reset_htm_active */
-> +}
+> +	chunk_size =3D htm_ctx->handle.size;
+> +	chunk_size &=3D PAGE_MASK;
 
 [Severity: High]
-Can this unconditional DECONFIGURE in htm_event_del() hijack or destroy a
-concurrent trace session?
+Can this truncation cause a permanent stall in userspace?
 
-If htm_event_add() previously failed and returned 0, this path is still
-reached. Because this patch permits concurrent opens for the same HTM targe=
-t,
-could this double deconfigure silently destroy a valid trace session establ=
-ished
-by another CPU, in addition to spamming the kernel log with pr_err() messag=
-es?
+If the available free space (handle.size) is less than a full page, this ap=
+plies
+PAGE_MASK and truncates chunk_size to 0.
+
+Later in this function:
+
+	if (!chunk_size) {
+		/* ... */
+		perf_aux_output_end(&htm_ctx->handle, 0);
+		return -ENOSPC;
+	}
+
+Returning -ENOSPC sets event->count =3D 1, signaling userspace to drain the
+buffer and retry. However, because 0 bytes were written, userspace has noth=
+ing
+new to drain, the free space remains < PAGE_SIZE, and the next read will ag=
+ain
+truncate to 0 and return -ENOSPC. Does this create an infinite retry loop
+consuming 100% CPU?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260729123752.6301=
-0-1-atrajeev@linux.ibm.com?part=3D1
+0-1-atrajeev@linux.ibm.com?part=3D3
