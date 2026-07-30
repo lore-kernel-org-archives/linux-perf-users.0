@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07A6F369985;
-	Thu, 30 Jul 2026 17:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816084483A6;
+	Thu, 30 Jul 2026 17:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785431991; cv=none; b=IQTjdwQXePQDSjvi30i2ged6dYc63UJxjm/zJoDiWdt/zZ8aB0tzP/Pny0N++byUO+2GVdfkKQRAt2x2YEqZvwze5i1ZZimQhlI4R+zGajhlA+j3orxvAqQK7WBEMHP+Hf74+gqHBIEmQnCTDsOJDd0GxSfshsCUhajSFEki/jQ=
+	t=1785434249; cv=none; b=nI9xHZYRTFSpoNHGRbTphBvDIqiD2e1JbE8De8HJ3D6NnYSltJVXHwZt1u4nefo2QW8BOi8UOHVDySX0brrrePDZqBhfEbCgfP1SoLz2grarLiNdh7kwXGiOsMwReDTsMp8Rwb5ONsMh77HOzfb8H4NpwisYUJNZG+pty1FixjI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785431991; c=relaxed/simple;
-	bh=ViQWE/f6mt9esMrkIl54egjxeviF7jxXItG5Isil0Cg=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=JB0nOgsSTy4IwBJLbWR/rtUwp4FP8DBvMgI1AUJzkm5+Vz5f5Z8Xy/H2R5AqgNceD3vQZDqYIINPxc8/V09IcxQL91IUM//KnzHdttBntf9FnILYiG6W6qEstd2wYqj76hLcKY4gUWanJDFMu6ilYVMElPttvGCFMxasjbWSvrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c8EC+kUG; arc=none smtp.client-ip=198.175.65.16
+	s=arc-20240116; t=1785434249; c=relaxed/simple;
+	bh=5yUx3xf9dCQoSx5kOdbmIk1BcwJMFu3Myu7XNWB5DCw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aUgLm4hhJHh3xTSR4SBYwDR+OuUM+wzM++tMrwBXc5VPT8mmiWoC0n0rHaupiKyLe5uxwws2xtPJLDh4uaQe5utkCQH6wKYGmz3IXa78QEqEUNOaA4ndJs6wRTAlMWxdURxA5e5Tp1rSb8sdVgpiF2tTz3NkdnFIY9GPFBwOgxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JiC858Sb; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c8EC+kUG"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JiC858Sb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785431989; x=1816967989;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=ViQWE/f6mt9esMrkIl54egjxeviF7jxXItG5Isil0Cg=;
-  b=c8EC+kUGhWp9xizF0ozPCd+Qzlf6tOIq4m1UNyem0uF75wHvEgAaWLol
-   JLQUTXIttfxRZfu095fxcKrLZIHshyBSCIRUpwsoohfXsYQm5vXxwT8T/
-   WRG0mwGr9x9X8dkAjbIa0/WxFFQgYIaL6ruI2OmmEhtosJqNvFbhX4vQh
-   oLUg3TYPpAfNL9RCLVpuXxsHO3cqR5SFirRknBNHeDnPPRzv3AfS04r8q
-   uGp0ryrghs7iEalkdLOEMTVlQFhc302N+3ag6pCxBdPbaY1E3KY4tf3No
-   IL04CRcUDDU3vtY0v5FjnMLDdCfN4UwLeqEi91RE2UaTrC260jUwKozlG
-   A==;
-X-CSE-ConnectionGUID: tJek0L4KQ1CBm29e7RKP7g==
-X-CSE-MsgGUID: L0/MAAGmSGS8xAUJcemKTg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="86249027"
-X-IronPort-AV: E=Sophos;i="6.25,194,1779174000"; 
-   d="scan'208";a="86249027"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 10:19:49 -0700
-X-CSE-ConnectionGUID: OT6jGRnnRcKLq64jP2vYzw==
-X-CSE-MsgGUID: 0TpfASWIR+26RAmqcS5tFA==
+  t=1785434248; x=1816970248;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=5yUx3xf9dCQoSx5kOdbmIk1BcwJMFu3Myu7XNWB5DCw=;
+  b=JiC858SbExKoJqrID5hxElHYWxlVSEOSEhEJRLEeaWjtXn6+TsIRvI7t
+   31dnlumgMvOtKSkNQdMJg6iy/wuSi9FNazopTNLv/PelffeqvAm12cStL
+   zmfH+gfj7T/xvTmrawfsNG1iNI+ItSvTZjLOv+BIziv6r5iODM/cOspuE
+   nSX7DnGAfMllIabrQviHVo8yx7JmniieqRb6WDBaCJfqVvpVezJoV6InY
+   9vP87PUCm6lOLJn0lvlOtA3DGVWDqvBVAMCow4XFDYI/ajw2pJ43z7sTQ
+   NVIBIfLHUFRx6SIHjfA4AT/0JitDM5kszwqB0Ic6Pg2kKkXbQntBabZ6a
+   g==;
+X-CSE-ConnectionGUID: xNlww0PGQCmJgktU8exLWQ==
+X-CSE-MsgGUID: hrbAX80ISgicaZUF67AJBw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="85036931"
+X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
+   d="scan'208";a="85036931"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 10:57:27 -0700
+X-CSE-ConnectionGUID: akzqjswMTrqP2aoYfyh+OA==
+X-CSE-MsgGUID: Fsxmg3lgR3CPEc7R5V7Wtg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,194,1779174000"; 
-   d="scan'208";a="264628952"
+   d="scan'208";a="257682985"
 Received: from rfrazer-mobl3.amr.corp.intel.com (HELO [10.125.111.248]) ([10.125.111.248])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 10:19:48 -0700
-Message-ID: <fd6701db-82b7-4a94-a223-b0d051035dc7@intel.com>
-Date: Thu, 30 Jul 2026 10:19:47 -0700
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 10:57:26 -0700
+Message-ID: <8b665956-773f-439e-ad9e-f09a3ba88b79@intel.com>
+Date: Thu, 30 Jul 2026 10:57:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,68 +52,64 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/9] perf/cxl: Fix the counter overflow delta fixup
-From: Dave Jiang <dave.jiang@intel.com>
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
- will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
- sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 4/9] perf/cxl: Accept an overflow interrupt on MSI
+ message number 0
+To: Robin Murphy <robin.murphy@arm.com>, linux-cxl@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Cc: jic23@kernel.org, will@kernel.org, mark.rutland@arm.com,
+ dave@stgolabs.net, sashiko-bot@kernel.org
 References: <20260729145555.3919550-1-dave.jiang@intel.com>
- <20260729145555.3919550-4-dave.jiang@intel.com>
- <20260729232142.050ed34c@jic23-huawei>
- <51728f3b-e75d-4b63-a355-7d0b0398d0dc@intel.com>
+ <20260729145555.3919550-5-dave.jiang@intel.com>
+ <5196c172-9ef3-43ae-98df-57a95427a00a@arm.com>
 Content-Language: en-US
-In-Reply-To: <51728f3b-e75d-4b63-a355-7d0b0398d0dc@intel.com>
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <5196c172-9ef3-43ae-98df-57a95427a00a@arm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 7/30/26 9:56 AM, Dave Jiang wrote:
+On 7/30/26 5:18 AM, Robin Murphy wrote:
+> On 29/07/2026 3:55 pm, Dave Jiang wrote:
+>> cxl_pmu_probe() rejects the PMU with -EINVAL when info->irq <= 0, but
+>> info->irq holds the MSI/MSI-X message number the device signals overflow
+>> on (CXL_PMU_CAP_MSI_N_MSK, a 0-based 4-bit field), with -1 meaning "no
+>> interrupt support". Message number 0 is valid and pci_irq_vector() takes
+>> a 0-based index, so a compliant device signalling on the first vector is
+>> wrongly refused and fails to probe.
 > 
-> 
-> On 7/29/26 3:21 PM, Jonathan Cameron wrote:
->> On Wed, 29 Jul 2026 07:55:49 -0700
->> Dave Jiang <dave.jiang@intel.com> wrote:
->>
->>> Counters are configured with Freeze on Overflow and are never reloaded: on
->>> overflow the counter wraps to 0, counts on until the CPMU freezes, and
->> Hi Dave,
->>
->> Thanks for looking at these.
->>
->> Why would it count on if it froze?  I think the bot is tripping over the
->> fact we don't yet implement free running counters (and the other bug
->> about not unfreezing) for currently the ability to freeze on only some
->> counters (to do periodic sampling for instance).
->>
->> The CXL CPMU spec is incredibly broad in what is supported, so maybe
->> we want to harden things anyway but I'm not sure the condition described
->> by most of this is real.
->>
->>> retains that residual (CXL r4.0 8.2.7.2.3). So the masked subtraction in
->>> __cxl_pmu_read() only spans the wrap when new_cnt < prev_cnt.
->>
->> It's been a long time so maybe I have how this was meant to work wrong.
->>
->> There are two paths to __cxl_pmu_read()
->>
->> 1. We have freeze on overflow enabled so any counter that overflows results
->> in an interrupt. At that point all counters are frozen.
->> We then read only the counter that overflowed (which is 0) and that
->> will update the prev_cnt storage.  No chance of hitting the full wrap
->> around seen here.
->>
->> 2. An on demand read (polling) In this case the counter may
->> take any value, but because we have freeze on overflow it can't have
->> wrapped (as otherwise we'd have taken path 1).
->>
->> So slightly fun question of why we have any wrapping control and I think
->> the answer is because the freeze on overflow isn't very specific in the
->> spec for whether it freezes on max value or 0.
-> 
-> Vague enough that hardware can freeze on overflow but leave greater than 0 value? Or is it always either max value or 0? If you don't think this patch is needed I can drop.
+> If info->irq is a PCI MSI vector index, not the Linux vIRQ number, then surely that means the irq_set_affinity() calls are wrong as well?
 
-Actually the spec does defines it to be 0 on overflow (8.2.7.2.3). Although there isn't clear language that indicates with the freeze, if any chance of any additional events being counted before freeze take effect.
+So info->irq reverts back to Linux vIRQ after the irq is requested. It's kind of messy. Maybe we should split it into two fields to remove the confusion? I can create a patch for that before this patch change.
 
+DJ
+
+> 
+> Thanks,
+> Robin.
+> 
+>> Reject only the no-interrupt case (info->irq < 0), matching the sibling
+>> CXL mailbox and event IRQ handling.
+>>
+>> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+>> Reported-by: sashiko-bot@kernel.org
+>> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
+>> Assisted-by: Claude:claude-opus-4-8
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>   drivers/perf/cxl_pmu.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+>> index 956da8202551..d1e810601e36 100644
+>> --- a/drivers/perf/cxl_pmu.c
+>> +++ b/drivers/perf/cxl_pmu.c
+>> @@ -876,7 +876,7 @@ static int cxl_pmu_probe(struct device *dev)
+>>           .capabilities = PERF_PMU_CAP_NO_EXCLUDE,
+>>       };
+>>   -    if (info->irq <= 0)
+>> +    if (info->irq < 0)
+>>           return -EINVAL;
+>>         rc = pci_irq_vector(pdev, info->irq);
+> 
 
