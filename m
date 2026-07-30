@@ -1,136 +1,94 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E91476CDC;
-	Thu, 30 Jul 2026 23:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE143E49D7;
+	Thu, 30 Jul 2026 23:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785454655; cv=none; b=tO/hoHmOAzalU7Zr9o8r4ZiHUTDOCRqYbsNXURfaqWZnDAQYq32vwaSnIfMeHDQIWnYNx9xKcdvAUU81/irmW1YQfnp+lhmQaXzuAKzYEIFK7XbriYePyB77Vx8HxCucVarUorWXIekuPvMsI4WGrZd/F/86boL5NC9G+7RSJ7o=
+	t=1785455988; cv=none; b=SojL5dCkgeVAFxWCJFc5opze0xkqhFEQerTmj7Kz8LJbw5R5+Mg7i4tLfaeHX+TwpIxDWV+RVR2oBcFITo/+h0fCUqAF31U8Hb/c8QWWxibCOSmBswQfOdb3PAKSZ/668iCN1Pc0Jdk1vYVbtl+2r1ztuI4EpO9LfnjX6lwbazw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785454655; c=relaxed/simple;
-	bh=CHae/PQNyGnK+cAwdETrjX+TvDIGQh4fuLvoP+AlPlY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KRsHMQViD+kPIlNeplGog035/ihNjM4dow6xHMckzLtUW57rEh6nPgkOKyNLeRvBb5MILicHt8nhu+DB/SZMal9acyE33ys3PimjFKu55erSp1i4nuzLVlcTfTH+X0T9HVFe+iZvxBhzWRDsm5RhYBjyXQVp115NJ0yQarBJW6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=gLAtWP2Z; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1785455988; c=relaxed/simple;
+	bh=yi4gqRt9ul77JleP1bjpsD+zc1C5DbN8vXbgwbnShtY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BXOziVP4qE4SLJRdhzd7BEgvAHbL9KVnndIFl9NaxyNggEanOZDQQbm2btn79ZJkqT77kfTnIBfmBwXNAa2c3QVY6DxgTH0IGj7ffVl+cgOfuwtLefcKWJp8k8rk8jQJ3x/28fkHWAfcTrG/8rP5Gr3aDhjiBNd56pLvLsxNTqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGlTiEoa; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gLAtWP2Z"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=CAtKSI6m+4Gh/IO7Lr6iBocpHFoEfkL6KKgxA4beTgg=; b=gLAtWP2ZiiTF5jaWCra5e/pq8h
-	0CXiMcbEcrBaokrjOC9e5/zFgU2ADom77GKb7KUNm/ayEyf9H0gIsg5aFPAd1lIloek+6RDMIQkDu
-	jFM+EeGiHejlCeIGaZFwj+GTB/sQHGzDneDBnSWQjJS8eREfWFpjPLNy4SIAXCbIKfEjP49br+DmF
-	tpnBD+HYhX2tx8OT/k4I9sWUfRrw3kmo8jHKJAafKTyGGk0rhpzWcYDL2mnKsyE2HAxxpYox3/L2d
-	qdl+w6Kk9vSNumwm2ldLTxQ27yPjw/PDMlNoqGkmWGbUYcPKIXsv1/5AC6QaJeTUMzSPPsPfh+7uu
-	bt1ADutg==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wpaJW-00000004bEg-1els;
-	Thu, 30 Jul 2026 23:37:22 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id EF7BF3004C9; Fri, 31 Jul 2026 01:37:20 +0200 (CEST)
-Date: Fri, 31 Jul 2026 01:37:20 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Puranjay Mohan <puranjay@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGlTiEoa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEDC81F000E9;
+	Thu, 30 Jul 2026 23:59:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785455987;
+	bh=5QQ0sGTHmC0CmT0OUvz2BBXS9LspEW5NESBGglrUW28=;
+	h=From:To:Cc:Subject:Date;
+	b=EGlTiEoanuXEQLPeu3o33MXg1L7L3wKcNOV9fAgHjpB0biAuCBr3bVzcqBtckOdwu
+	 WCs8QXi4midaQgcTnrx9Fcu5TulmvPgBEejUDxi9oIhTdgjhfxEQmSAJVWPw9H3YF0
+	 MEO/rLRytcoXg0vQSSawVte5R/shk18B7hy6r8IGtbANr41y/o+g+NhmIozGgMQdwm
+	 l6S5BwsHq26RHtsLKHZli/Ea7Z7yFCEICnGBDU0eIslwD+QAN4la8yxWRbPnXSMHbv
+	 tX4J4eUp6uLg6TuUDj7DjBw3TufFaEAvr8Gc7I/7pSk0o/YCh8QAR8x5jETzK4vdYh
+	 Ql8rkZMrA0F5Q==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, rcu@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH bpf-next 2/2] uprobes: Switch uretprobes_srcu to
- SRCU-fast-updown
-Message-ID: <20260730233720.GC776954@noisy.programming.kicks-ass.net>
-References: <20260706172744.3920417-1-puranjay@kernel.org>
- <20260706172744.3920417-3-puranjay@kernel.org>
- <CAEf4BzaDSeUxeZmHjXRYXnXDZj8Obwd3rmOsfNygjcXJ0yy5bA@mail.gmail.com>
- <DK4I97UIL347.3P2KEBO828JK8@gmail.com>
- <CAEf4Bza3LeVB-z3jwMdnBGLdjpPr9tZFhGHt5pUwui64ZX66Lw@mail.gmail.com>
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf build: Fix a build error on 32-bit x86
+Date: Thu, 30 Jul 2026 16:59:46 -0700
+Message-ID: <20260730235946.618096-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.55.0.571.g244d577d93-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4Bza3LeVB-z3jwMdnBGLdjpPr9tZFhGHt5pUwui64ZX66Lw@mail.gmail.com>
 
-On Thu, Jul 30, 2026 at 03:27:27PM -0700, Andrii Nakryiko wrote:
-> On Tue, Jul 21, 2026 at 12:44 PM Kumar Kartikeya Dwivedi
-> <memxor@gmail.com> wrote:
-> >
-> > On Fri Jul 10, 2026 at 11:23 PM CEST, Andrii Nakryiko wrote:
-> > > On Mon, Jul 6, 2026 at 10:28 AM Puranjay Mohan <puranjay@kernel.org> wrote:
-> > >>
-> > >> uretprobes_srcu currently uses normal SRCU, which issues
-> > >> two smp_mb() per read lock/unlock pair. This overhead is
-> > >> paid on every uretprobe hit.
-> > >>
-> > >> Switch to SRCU-fast-updown, which eliminates the per-reader
-> > >> memory barriers by moving the ordering cost to the
-> > >> grace-period side (synchronize_rcu() instead of smp_mb()).
-> > >> This is acceptable because grace periods (uprobe
-> > >> unregistration) are infrequent compared to reader-side
-> > >> uretprobe hits.
-> > >>
-> > >> The updown flavor is required because the SRCU read lock is
-> > >> taken in prepare_uretprobe() when a return instance is
-> > >> created and is held until that return instance is finalized.
-> > >> The traced thread returns to user space in between, so the
-> > >> lock is inherently released in a different context from
-> > >> where it was acquired: on the normal return path via
-> > >> uprobe_handle_trampoline() -> hprobe_finalize(), or from
-> > >> ri_timer() (expiry) or dup_utask() (fork) via
-> > >> hprobe_expire(). srcu_down_read_fast() / srcu_up_read_fast()
-> > >> are designed for this acquire-here / release-elsewhere
-> > >> pattern and, unlike the same-context srcu_read_lock_fast()
-> > >> variant, do not carry the lockdep read-side tracking that
-> > >> would warn on it.
-> > >>
-> > >> The short, same-context SRCU sections in ri_timer() and
-> > >> dup_utask() (which guard the uprobe against reuse across the
-> > >> hprobe_expire() cmpxchg) instead use guard(srcu_fast_updown)
-> > >> for proper lockdep coverage.
-> > >>
-> > >> Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
-> > >> ---
-> > >>  include/linux/uprobes.h |  5 +++--
-> > >>  kernel/events/uprobes.c | 29 +++++++++++++++++------------
-> > >>  2 files changed, 20 insertions(+), 14 deletions(-)
-> > >>
-> > >
-> > > Very straightforward replacement and will improve performance, thanks!
-> > > LGTM. Peter or Mingo, I assume you guys will want to route this
-> > > through your tip tree, right?
-> > >
-> > > Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> > >
-> >
-> > Hi Peter, Ingo,
-> >
-> > Gentle ping for this.
-> >
-> 
-> Another ping, please consider applying, thanks!
+The commit d7507a94a072 ("KVM: SVM: Treat exit_code as an unsigned
+64-bit value through all of KVM") added "ull" suffix to SVM exit codes
+and it makes the 32-bit build fail like below.
 
-Got them, thanks!
+  In file included from util/kvm-stat-arch/kvm-stat-x86.c:4:
+  util/kvm-stat-arch/../../../arch/x86/include/uapi/asm/svm.h:137:32:
+             error: conversion from 'long long unsigned int' to 'long unsigned int' changes
+                    value from '18446744073709551615' to '4294967295' [-Werror=overflow]
+    137 | #define SVM_EXIT_ERR           -1ull
+        |                                ^
+  util/kvm-stat-arch/../kvm-stat.h:131:17: note: in definition of macro 'define_exit_reasons_table'
+    131 |                 symbols, { -1, NULL }                   \
+        |                 ^~~~~~~
+  util/kvm-stat-arch/../../../arch/x86/include/uapi/asm/svm.h:249:11: note: in expansion of macro 'SVM_EXIT_ERR'
+    249 |         { SVM_EXIT_ERR,         "invalid_guest_state" }
+        |           ^~~~~~~~~~~~
+  util/kvm-stat-arch/kvm-stat-x86.c:12:45: note: in expansion of macro 'SVM_EXIT_REASONS'
+     12 | define_exit_reasons_table(svm_exit_reasons, SVM_EXIT_REASONS);
+        |                                             ^~~~~~~~~~~~~~~~
+
+As the exit_code was unsigned long, the compiler complained about the
+truncation.  Let's convert it to u64 to suppress the error.
+
+Fixes: fac520e43a60 ("tools headers: Sync KVM headers with the kernel sources")
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/kvm-stat.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
+index 1db31c0751875875..8eee8d073f4147f2 100644
+--- a/tools/perf/util/kvm-stat.h
++++ b/tools/perf/util/kvm-stat.h
+@@ -69,7 +69,7 @@ struct kvm_events_ops {
+ };
+ 
+ struct exit_reasons_table {
+-	unsigned long exit_code;
++	u64 exit_code;
+ 	const char *reason;
+ };
+ 
+-- 
+2.55.0.571.g244d577d93-goog
+
