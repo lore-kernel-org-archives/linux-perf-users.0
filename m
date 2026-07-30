@@ -1,137 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31F937A829;
-	Thu, 30 Jul 2026 06:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E3B3B42DC;
+	Thu, 30 Jul 2026 06:50:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785393824; cv=none; b=VMnpWqxIhXzMOgSoQVwRVIsvODY69of74AAHpzRVdvInkWwZu29Xnbg7amuIth4t1unOmFPBy2QedLRjC4PXn+9jnD/ZhoCMK8GZvnpqmfTmxcasQ9s5cHqHs9CM9oCi1DFsaltoSzmx5eLjtVlpVMCR7gLVBIQPM4ecUM205uw=
+	t=1785394254; cv=none; b=RX6IkGp7kLmmdo1RaAbJnDcsfIBhZHR/TdWZVbbcpt0SUVu76e6tBW02nMty4s+x2jiZ8Kpob4rm62J/rCv+42xiz04OLnqs9Z4yvAoXKUQnbEheX5X/UheUdPrkIiTF7axWsRUxtOYt/K1vQAWMGHhNOGi7q24K/WFzPxEOvUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785393824; c=relaxed/simple;
-	bh=EuSemK3BkMuFVc+R1l10uTDSqNGs2SCOzyEa+qEEVm4=;
+	s=arc-20240116; t=1785394254; c=relaxed/simple;
+	bh=PsENX3SOFwXHPZknhwGhoVZLQpVuobODLiBQ73pyTNQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=W6jDC/22nYBRw+KI5P7fxioiOeZMuXgFZeZEJemcFqpySine5EYX17Hir5f+hkHPqZNFxF4CIIhZqy2mB1a/CSG0cX8pkRgRWjm1aYH+dAz7NVBakLhK11c/0N+EsT1YnL7VmfKooiicFw6xJ3BZIrkPLHZb1CsgAq370RS2HIw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oALEx8Aa; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=MwLIKQKaAILV0w/NYroHDDr+zuvhsAxZfUUTeLgds5Q2lnN7Fs7qV7QEV4beaZGS3ZY3G7qqn1Mvh3+3QAEIMpsqSFxq40Gtkq0ovZxkS87GK5xyL9KDaW61Q0jOWU4/fTh4CvqQE/hMloCMABV0XtFssuLuOYgmpLYMfq6fnqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fUc6zfHf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oALEx8Aa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 711431F000E9;
-	Thu, 30 Jul 2026 06:43:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fUc6zfHf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E875D1F000E9;
+	Thu, 30 Jul 2026 06:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785393822;
-	bh=mUihL8cpHZKmkxDeuCmSLvsE/kP9sYQfoIPueVuyWYw=;
+	s=k20260515; t=1785394252;
+	bh=PsENX3SOFwXHPZknhwGhoVZLQpVuobODLiBQ73pyTNQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oALEx8AaNM2h7QTyMCc71Cu0MfoUQSnd6cubiwlHGeCfElw/7jRm8bQmFTWUC8PqC
-	 eqCmlWLq0ImcHi0Tz6r8uYZjIpBL9F6/rTAn8X0KpotNFx7nlasHMsoaslG7sI+j4W
-	 vYJkq/AOWJuOuTtESjiBwfQAHhzYh06gXtMAi352+qy9TNsOgjQgmQfCHSUqFZ0EKm
-	 E03ZE+uMoEe7vj3ZBbY+Gr58DV0dA3OXYzS0l/BC/a6+cTCiypPjK0vgXIQKsUaUsY
-	 Vzo0oM5Q1EmSyym+KwsTqLJ3KGjc4anoFFVYMJDevD+NHXyhmRXI/rk5IFEXhP5mjL
-	 13HODVaHL7meg==
+	b=fUc6zfHfuB5wlw9G/SHuFyz2Vmwexce1EyuHEttoXcJfYNLB+x8131kukDHMAghvI
+	 qKNwQe4F4FlnZyJ9aAEvt4iQUD8LT0KSbNsci9g2qpoNJ9C5a2/puBU+5tQ8afq+bI
+	 W/xX2Ka/LNyEd8/p+oL0Tbu9ZUi7uIykjP4UGVdnynYBSWKFu3hItQ5WUIzQOX+d/t
+	 07wRcx8dnMySnDBBP1mDbUoaf91P2ycBIcF8Gq70yZJz49eGgbo9BUiXBIKN49Mu6y
+	 dNozo2P08G8bfnLjwSI/wF6HZOMkAUEI/QCjkCUekpFJSGe8Z/Tt3MFv4+cPjpk1bB
+	 geB5kcMMxhVZA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/3] perf hisi-ptt: Fix PTT trace TLP header parsing
+Subject: Re: [PATCH v2 2/3] perf hisi-ptt: Strengthen auxtrace event
+ handling and packet type detection
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Sizhe Liu" <liusizhe5@huawei.com>
 Cc: linux-perf-users@vger.kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20260730062709.534139-2-liusizhe5@huawei.com>
+In-Reply-To: <20260730062709.534139-3-liusizhe5@huawei.com>
 References: <20260730062709.534139-1-liusizhe5@huawei.com>
- <20260730062709.534139-2-liusizhe5@huawei.com>
+ <20260730062709.534139-3-liusizhe5@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 30 Jul 2026 06:43:42 +0000
-Message-Id: <20260730064342.711431F000E9@smtp.kernel.org>
+Date: Thu, 30 Jul 2026 06:50:51 +0000
+Message-Id: <20260730065051.E875D1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+> Fix pre-existing robustness issues in the hisi-ptt auxtrace decoder
+> reported by Sashiko:
+>=20
+> 1. Endianness in hisi_ptt_check_packet_type(): The first 32-bit word was
+> read with a host-endian memory cast (*(uint32_t *)buf). On big-endian
+> hosts analyzing a little-endian trace, the bit[31:11] 8DW magic check
+> fails and every 8DW packet is misclassified as 4DW. Read the header
+> with get_unaligned_le32().
+>=20
+> 2. Heap out-of-bounds read: hisi_ptt_dump() called
+> hisi_ptt_check_packet_type() which dereferenced 4 bytes of the buffer
+> without any size check. A malformed or truncated event with
+> auxtrace.size in {0,1,2,3} may cause a heap OOB read. Pass the buffer
+> length to hisi_ptt_check_packet_type() and return (defaulting to
+> 4DW) when the buffer is shorter than HISI_PTT_FIELD_LENTH.
+>=20
+> 3. Integer truncation: event->auxtrace.size is __u64 but was stored in
+> an int. Traces larger than 2GB became negative (malloc failure), and
+> huge sizes wrapping to a small positive caused a short readn() that
+> left unread payload in the pipe and permanently desynchronized the
+> stream. Use u64 for the size, reject anything larger than SSIZE_MAX
+> before malloc (same bound used by auxtrace_copy_data()), and compare
+> readn()'s return value against (ssize_t)size to detect truncation.
+>=20
+> Signed-off-by: Sizhe Liu <liusizhe5@huawei.com>
 
-Pre-existing issues:
-- [Medium] The patch fixes endianness and strict-aliasing for packet decodi=
-ng by replacing unaligned casts with `get_unaligned_le32()`, but misses `hi=
-si_ptt_check_packet_type()` which dictates the packet format for the entire=
- trace.
-- [Medium] Missing length validation before packet type detection can lead =
-to an out-of-bounds read and potential crash when processing an auxtrace ev=
-ent with a size less than 4 bytes.
---
-
---- Patch [1]: [PATCH v2 1/3] perf hisi-ptt: Fix PTT trace TLP header parsi=
-ng ---
-commit 94e8b50cd3127d5e0f6a440877771f9ffe7c6e0e
-Author: Sizhe Liu <liusizhe5@huawei.com>
-
-perf hisi-ptt: Fix PTT trace TLP header parsing
-
-This commit fixes incorrect field decoding of HiSilicon PTT trace TLP heade=
-rs
-in 4DW format. It replaces the C bitfield struct with explicit bitmasks and
-uses get_unaligned_le32() to extract the fields, resolving endianness and
-strict-aliasing issues.
-
-> diff --git a/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c b/to=
-ols/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
-> index a17c423a526dd..5db44556fc4f5 100644
-> --- a/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
-> +++ b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
-[ ... ]
-> @@ -73,29 +75,20 @@ static const char * const hisi_ptt_4dw_pkt_field_name=
-[] =3D {
-[ ... ]
->  static void hisi_ptt_print_pkt(const unsigned char *buf, int pos, const =
-char *desc)
->  {
->  	const char *color =3D PERF_COLOR_BLUE;
-> +	uint8_t byte;
-> +	uint32_t dw;
->  	int i;
-> =20
-> +	dw =3D get_unaligned_le32(buf + pos);
-
-[Severity: Medium]
-This is a pre-existing issue, but while this patch fixes endianness and
-strict-aliasing during packet decoding, there appears to be another unalign=
-ed
-pointer cast in hisi_ptt_check_packet_type() in tools/perf/util/hisi-ptt.c:
-
-tools/perf/util/hisi-ptt.c:hisi_ptt_check_packet_type() {
-    ...
-    uint32_t head =3D *(uint32_t *)buf;
-    ...
-}
-
-Will this cause decoding failures on big-endian hosts because the native
-unaligned 32-bit cast interprets the little-endian packet header with
-incorrect byte order, causing the packet type bitmask check to misidentify
-packets?
-
-[Severity: Medium]
-This is also a pre-existing issue, but can missing length validation before
-packet type detection lead to an out-of-bounds read?
-
-When processing an auxtrace event with a size less than 4 bytes,
-hisi_ptt_dump() in tools/perf/util/hisi-ptt.c unconditionally calls
-hisi_ptt_check_packet_type() without verifying len:
-
-tools/perf/util/hisi-ptt.c:hisi_ptt_dump() {
-    ...
-    type =3D hisi_ptt_check_packet_type(buf);
-    ...
-}
-
-This immediately dereferences 4 bytes in hisi_ptt_check_packet_type():
-
-tools/perf/util/hisi-ptt.c:hisi_ptt_check_packet_type() {
-    ...
-    uint32_t head =3D *(uint32_t *)buf;
-    ...
-}
-
-Could this result in a heap out-of-bounds read and potential crash?
-
->  	printf(".");
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260730062709.5341=
-39-1-liusizhe5@huawei.com?part=3D1
+39-1-liusizhe5@huawei.com?part=3D2
+
