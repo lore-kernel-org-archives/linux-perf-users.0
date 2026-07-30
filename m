@@ -1,262 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from canpmsgout09.his.huawei.com (canpmsgout09.his.huawei.com [113.46.200.224])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CAC33DEC0;
-	Thu, 30 Jul 2026 05:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5108E3AF64B;
+	Thu, 30 Jul 2026 06:27:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.224
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785390642; cv=none; b=rDOiXhFfg7iKa6cCBEKufLOQm9rVgUoPD70idPVHpBqYQwiWler5uTourrVbbyKQoRk4uvtowKa4OrDW1bzwojDkGDQj1Hs/nSmT4xHXZ2nXKgCAtq0XXlRRQXB4bhieAlVJEc1+APNXvfLWmrQbfyfJMUM3JNmDrJUHxRLxO2Y=
+	t=1785392848; cv=none; b=m4UCqe73enhh361YTo4ntG+qkkdAj9YSmYeUqfXbEP7hZ3PZaMvqkysELcUFkCzFS1MvuqMAuRJeBfumeD9g+VaJr+YzH5NPF8fez1oCmjuKEbyUZD2ERKpuMMPgPweBC67b6BavhbZjSluO3+07+K+w7Wta8J70ENpbgQcFV6s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785390642; c=relaxed/simple;
-	bh=z9/pesGbgdc0TNX+gkQnVawgAw9OF9LneU4R/kjbs8I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S4RaJxI2Q122PoreJr8qJfg48IqsvDTDNocm9r7QbEujJMfrA2Tp1Y0wJlfPRbw0Puk+4+ZrFUyGG7vp69+qLe2ZgfqNKGR2iLL7ABRTXB7aPE9yIVZCrvWxwCQP5tuwHz+abApCgU33QFxcujpL9olx5SYZc80CF9FECsePimE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dOL+lEZ0; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1785392848; c=relaxed/simple;
+	bh=k8/WnG3ePQdVblZPDObuf9UqlKYYUvPONQb60zzrpqE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=J2zGxps0iWYd5/QCDqHBUUUeDYvGeO7R0Kg+K7ENMGEqrr1Pm7ptDbT/qOi8vNyOcuzJ0CZtIkZ6K69/TSYcrDQNh+5wvfwPY2f/U3URMivTYvh7cTlBhT5mWaJJZEgx1d2o1yPILk9QD+5sEQmbZuQbw+3VQfZlBwMuSA2+kGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=Rt+xRyeG; arc=none smtp.client-ip=113.46.200.224
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dOL+lEZ0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785390641; x=1816926641;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=z9/pesGbgdc0TNX+gkQnVawgAw9OF9LneU4R/kjbs8I=;
-  b=dOL+lEZ0WLQ4GVsdT67HJpXHO6HyoK9/6uUHUxZM7oNJ9iAFavYJluab
-   UItpEK2HRrewQ7VtYTzei6twMeb/EsIJtBJtcze9N2uYboNFufTINAoHd
-   Le4/KLbkh6xXsyTkXsd9FabpGzT48qi0IupT/qtDIDQXv4Q/3toEPCsm1
-   qwyrx1UCePVGdEEUB+UupP2Gy2KakA353+hpjqXuUaz29YmTamixBB/r7
-   E87x9KusG9GltwFK+r00f4tFin6HCLAVR8hAFkWOJPJEs9uVqTtsvlowt
-   KF+Z7FGF7jTrh4FTp91iOkFVUhX3NpcoArWSrdlYRk5Y9FfMYPrasHPlk
-   A==;
-X-CSE-ConnectionGUID: TYzNFpcWS1C9k2pTvUNqyA==
-X-CSE-MsgGUID: VWbyL6whS2SubDYtXqQrJQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11859"; a="85766048"
-X-IronPort-AV: E=Sophos;i="6.25,193,1779174000"; 
-   d="scan'208";a="85766048"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2026 22:50:41 -0700
-X-CSE-ConnectionGUID: Z2zYNWgxSI2unsX0Mq/gGg==
-X-CSE-MsgGUID: vUVUSc5sT66kA1BGQBfilw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,193,1779174000"; 
-   d="scan'208";a="262162198"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.178]) ([10.124.241.178])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jul 2026 22:50:37 -0700
-Message-ID: <f317bf8b-253a-4862-8d72-74507232a1bf@linux.intel.com>
-Date: Thu, 30 Jul 2026 13:50:35 +0800
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="Rt+xRyeG"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=Qqd8wGXWEw9LjEjKWEX/5ui0R27Uajy4hyfMozJIyIY=;
+	b=Rt+xRyeG+TiNo/EjpbUkr58F4sKUjxE5+cx3G9V2AMZ+e0oyStS2I+T3Ha50VqaYd6DzVaiuv
+	ijRpeWxCTOBesuGB2s60YJm+DZhsQX9mjCib58AFLtuHTPBJv6KDhIZ3msJPRTS//vSgvtwHHRJ
+	fsOCQ5HX0ZoRRRoE0VtVdto=
+Received: from mail.maildlp.com (unknown [172.19.163.127])
+	by canpmsgout09.his.huawei.com (SkyGuard) with ESMTPS id 4h9fBf1bvQz1cyTD;
+	Thu, 30 Jul 2026 14:17:46 +0800 (CST)
+Received: from whupemo200004.china.huawei.com (unknown [7.152.184.18])
+	by mail.maildlp.com (Postfix) with ESMTPS id 52B9540572;
+	Thu, 30 Jul 2026 14:27:12 +0800 (CST)
+Received: from huawei.com (10.50.163.32) by whupemo200004.china.huawei.com
+ (7.152.184.18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Thu, 30 Jul
+ 2026 14:27:09 +0800
+From: Sizhe Liu <liusizhe5@huawei.com>
+To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <corbet@lwn.net>,
+	<skhan@linuxfoundation.org>, <bhelgaas@google.com>, <yangyccccc@gmail.com>,
+	<jic23@kernel.org>, <john.g.garry@oracle.com>, <will@kernel.org>,
+	<james.clark@linaro.org>, <mike.leach@arm.com>, <leo.yan@linux.dev>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <wangyushan12@huawei.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-doc@vger.kernel.org>, <linuxarm@huawei.com>,
+	<prime.zeng@hisilicon.com>, <wuyifan50@huawei.com>, <liusizhe5@huawei.com>
+Subject: [PATCH v2 0/3] perf hisi-ptt: Fix TLP header parsing and naming
+Date: Thu, 30 Jul 2026 14:27:06 +0800
+Message-ID: <20260730062709.534139-1-liusizhe5@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/6] perf tools: Show memory region in perf-script
- subcommand
-To: Namhyung Kim <namhyung@kernel.org>,
- Thomas Falcon <thomas.falcon@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
-References: <20260714004359.179451-1-thomas.falcon@intel.com>
- <20260714004359.179451-5-thomas.falcon@intel.com>
- <amjkb_AGLUTB7GAx@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <amjkb_AGLUTB7GAx@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ whupemo200004.china.huawei.com (7.152.184.18)
 
+This series fixes bugs and issues in the hisi_ptt packet decoder that were
+introduced by commit 5e91e57e6809 ("perf auxtrace arm64: Add support
+for parsing HiSilicon PCIe Trace packet").
 
-On 7/29/2026 1:18 AM, Namhyung Kim wrote:
-> On Mon, Jul 13, 2026 at 07:43:57PM -0500, Thomas Falcon wrote:
->> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>
->> Show the memory region in perf-script subcommand. Memory region is found
->> in the mem_region field of the memory information data source. This
->> field was included with the introduction of support for the Off-module
->> Response facility (OMR) [1] in Intel's Diamond Rapids and Nova Lake
->> Architectures.
->>
->> An example of perf-script output with the new memory region field is shown
->> below:
->>
->> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2ec
->> random    2411a68201042 |OP LOAD|LVL RAM hit|SNP Hit|TLB L1 or L2 hit|LCK No|BLK  N/A|Region  Mem-1                          561de7f8910a
->> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
->> random      20e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  Data|Region  N/A                          7f32ae64a2d0
->> random      20e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  Data|Region  N/A                          7f32ae64a2d0
->> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2ec
->> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
->> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
->> random    2411a68201042 |OP LOAD|LVL RAM hit|SNP Hit|TLB L1 or L2 hit|LCK No|BLK  N/A|Region  Mem-1                          561de7f8910a
->> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2ec
->> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
->>
->> [1]: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
->> ---
->> Changes in v2:
->> -- increased buffers passed to perf_script__meminfo_scnprintf() from 150
->>    to 200 bytes to avoid silent truncation
->> ---
->>  tools/perf/builtin-script.c                   |  8 +--
->>  tools/perf/util/mem-events.c                  | 68 +++++++++++++++++++
->>  .../scripting-engines/trace-event-python.c    |  4 +-
->>  3 files changed, 74 insertions(+), 6 deletions(-)
->>
->> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
->> index f91d8b1fbd01..ba8ec0093f4f 100644
->> --- a/tools/perf/builtin-script.c
->> +++ b/tools/perf/builtin-script.c
->> @@ -2081,8 +2081,8 @@ static int evlist__max_name_len(struct evlist *evlist)
->>  static int data_src__fprintf(u64 data_src, FILE *fp)
->>  {
->>  	struct mem_info *mi = mem_info__new();
->> -	char decode[100];
->> -	char out[100];
->> +	char decode[200];
->> +	char out[200];
->>  	static int maxlen;
->>  	int len;
->>  
->> @@ -2090,10 +2090,10 @@ static int data_src__fprintf(u64 data_src, FILE *fp)
->>  		return -ENOMEM;
->>  
->>  	mem_info__data_src(mi)->val = data_src;
->> -	perf_script__meminfo_scnprintf(decode, 100, mi);
->> +	perf_script__meminfo_scnprintf(decode, 200, mi);
->>  	mem_info__put(mi);
->>  
->> -	len = scnprintf(out, 100, "%16" PRIx64 " %s", data_src, decode);
->> +	len = scnprintf(out, 200, "%16" PRIx64 " %s", data_src, decode);
->>  	if (maxlen < len)
->>  		maxlen = len;
->>  
->> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
->> index 4fd48fd20055..ff08f1fee0e3 100644
->> --- a/tools/perf/util/mem-events.c
->> +++ b/tools/perf/util/mem-events.c
->> @@ -604,6 +604,72 @@ int perf_mem__blk_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
->>  	return l;
->>  }
->>  
->> +static int perf_mem__region_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
->> +{
->> +	size_t l = 0;
->> +	u64 mem = PERF_MEM_REGION_NA;
->> +
->> +	sz -= 1; /* -1 for null termination */
->> +	out[0] = '\0';
->> +
->> +	if (mem_info)
->> +		mem = mem_info__const_data_src(mem_info)->mem_region;
->> +
->> +	switch (mem) {
->> +	case PERF_MEM_REGION_NA:
->> +	case PERF_MEM_REGION_RSVD:
->> +		l += scnprintf(out + l, sz - l, " N/A");
->> +		break;
->> +	case PERF_MEM_REGION_L_SHARE:
->> +		l += scnprintf(out + l, sz - l, " Local-shared-cache");
->> +		break;
->> +	case PERF_MEM_REGION_L_NON_SHARE:
->> +		l += scnprintf(out + l, sz - l, " Local-non-shared-cache");
->> +		break;
->> +	case PERF_MEM_REGION_O_IO:
->> +		l += scnprintf(out + l, sz - l, " Other-IO");
->> +		break;
->> +	case PERF_MEM_REGION_O_SHARE:
->> +		l += scnprintf(out + l, sz - l, " Other-shared-cache");
->> +		break;
->> +	case PERF_MEM_REGION_O_NON_SHARE:
->> +		l += scnprintf(out + l, sz - l, " Other-non-shared-cache");
->> +		break;
->> +	case PERF_MEM_REGION_MMIO:
->> +		l += scnprintf(out + l, sz - l, " MMIO");
->> +		break;
->> +	case PERF_MEM_REGION_MEM0:
->> +		l += scnprintf(out + l, sz - l, " Mem-0");
->> +		break;
->> +	case PERF_MEM_REGION_MEM1:
->> +		l += scnprintf(out + l, sz - l, " Mem-1");
->> +		break;
->> +	case PERF_MEM_REGION_MEM2:
->> +		l += scnprintf(out + l, sz - l, " Mem-2");
->> +		break;
->> +	case PERF_MEM_REGION_MEM3:
->> +		l += scnprintf(out + l, sz - l, " Mem-3");
->> +		break;
->> +	case PERF_MEM_REGION_MEM4:
->> +		l += scnprintf(out + l, sz - l, " Mem-4");
->> +		break;
->> +	case PERF_MEM_REGION_MEM5:
->> +		l += scnprintf(out + l, sz - l, " Mem-5");
->> +		break;
->> +	case PERF_MEM_REGION_MEM6:
->> +		l += scnprintf(out + l, sz - l, " Mem-6");
->> +		break;
->> +	case PERF_MEM_REGION_MEM7:
->> +		l += scnprintf(out + l, sz - l, " Mem-7");
->> +		break;
->> +	default:
->> +		l += scnprintf(out + l, sz - l, " N/A");
->> +		break;
->> +	}
->> +
->> +	return l;
->> +}
->> +
->>  int perf_script__meminfo_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
->>  {
->>  	int i = 0;
->> @@ -620,6 +686,8 @@ int perf_script__meminfo_scnprintf(char *out, size_t sz, const struct mem_info *
->>  	i += perf_mem__lck_scnprintf(out + i, sz - i, mem_info);
->>  	i += scnprintf(out + i, sz - i, "|BLK ");
->>  	i += perf_mem__blk_scnprintf(out + i, sz - i, mem_info);
->> +	i += scnprintf(out + i, sz - i, "|Region ");
->> +	i += perf_mem__region_scnprintf(out + i, sz - i, mem_info);
-> Same thing.  Would be nice if it can be conditional.
+Patch 1: Bugfix:
+The DW0 bit-field layout of the hisi_ptt_4dw union does not match
+the actual little-endian memory ordering, so the extracted
+Format/Type/T9/T8/TH/SO/Length/Time fields are wrong.
 
-Sure. Thanks.
+Meanwhile, make all DW hex values printed in big-endian byte order
+for readability.
 
+Patch 2: Fix endianness / Heap out-of-bounds read / Integer truncation
+issues.
 
->
-> Thanks,
-> Namhyung
->
->>  
->>  	return i;
->>  }
->> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
->> index 8f832ae316ca..57ec259897e4 100644
->> --- a/tools/perf/util/scripting-engines/trace-event-python.c
->> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
->> @@ -695,7 +695,7 @@ static void set_sample_datasrc_in_dict(PyObject *dict,
->>  				      struct perf_sample *sample)
->>  {
->>  	struct mem_info *mi = mem_info__new();
->> -	char decode[100];
->> +	char decode[200];
->>  
->>  	if (!mi)
->>  		Py_FatalError("couldn't create mem-info");
->> @@ -704,7 +704,7 @@ static void set_sample_datasrc_in_dict(PyObject *dict,
->>  			PyLong_FromUnsignedLongLong(sample->data_src));
->>  
->>  	mem_info__data_src(mi)->val = sample->data_src;
->> -	perf_script__meminfo_scnprintf(decode, 100, mi);
->> +	perf_script__meminfo_scnprintf(decode, 200, mi);
->>  	mem_info__put(mi);
->>  
->>  	pydict_set_item_string_decref(dict, "datasrc_decode",
->> -- 
->> 2.43.0
->>
+Patch 3: Fix spelling / abbreviation errors in symbol names and macros.
+
+---
+Changes in v2:
+- Move spelling error fixes to the end of the patch series.
+- Add fixes tag only for bugfix.
+- Use get_unaligned_le32() to make memory read more robust.
+- Fix pre-existing issues reported by Sashiko in patch 2.
+- Link to v1: https://lore.kernel.org/linux-pci/20260729060220.624250-1-liusizhe5@huawei.com/
+
+---
+Sizhe Liu (3):
+  perf hisi-ptt: Fix PTT trace TLP header parsing
+  perf hisi-ptt: Strengthen auxtrace event handling and packet type
+    detection
+  perf hisi-ptt: Fix spelling and abbreviation errors
+
+ Documentation/trace/hisi-ptt.rst              | 28 ++++-----
+ .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   | 63 ++++++++++---------
+ .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   | 14 ++++-
+ tools/perf/util/hisi-ptt.c                    | 24 +++++--
+ 4 files changed, 77 insertions(+), 52 deletions(-)
+
+-- 
+2.33.0
+
