@@ -1,140 +1,188 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ECD763FCB11;
-	Thu, 30 Jul 2026 09:36:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B1593EA97B;
+	Thu, 30 Jul 2026 10:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785404202; cv=none; b=aH8jPNwtZvKQMP8MvRjzwiILpPAmekAcrKuLEPWaKuycPY3QtAUcLyTWvUI2UPAbiwUdIrY6JTDp+1ML6BFanTTMCzVwspvdgcOuisOt4ncw47ck2HdUelQymkol9aVQ92N2J3Z9E8jbQ4ZGg89AGMCRXdKdXRjE0dInxFZCjf8=
+	t=1785406195; cv=none; b=l9Gno9QpbvtwcA8ciyGhEW7iJRao9MxbgoY9dK50Nhd3V6Hd7RHu9UMY17qOjzuwYckZiplnQ3X5smhrWx6pMWcC3l/KQa6HaSA/oKZjjUP1P360Rwiv5q3j/gTSzGKrAlpsLT53qGF8pB7ajuPjtEpY6CJcJoXHyKBwao38UOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785404202; c=relaxed/simple;
-	bh=sbiS7/mhJqPdX+9Zj95HBA4DYxZrYAH88hJZ7+G/CDE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aXlOhxELTGsBahZ0ljSJ3VSGAR+/ZKuHoTE+iV8ee8dMC4pUda50bG36qYCqW3PfFSEq3GVZ1T70cLH9+UoNxP2Ce14KIoXwdw3qsYWLTzaxSrAC2C5pgcStTWem3xR4gGTSLb/q8ufpxEnBlq6h/xqljbcI6buOqk7Ds+DzmDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Sf61sdsx; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1785406195; c=relaxed/simple;
+	bh=e5hVGagBJwDFZRPGo3gprKptArnbYpCpTmxxKu9+8wQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vGgJyOTmTRrXukx6jH5yh2Tko9+jbeYgoE8xNONQVTgPduXLXNpt3ldCfDq8ed9jIXyXBDR/TYz9DReCuc6SHh365uSF1rL7gqFzB8HyEBsx+OI5zM7ZhQOBnUBbyLPrBlucxo4zVtbJfOQIYcLhQLinTzR1zF5fyGJtksDFuZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mpgStl8w; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Sf61sdsx"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2EEEE1684;
-	Thu, 30 Jul 2026 02:36:36 -0700 (PDT)
-Received: from [10.57.84.210] (unknown [10.57.84.210])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03D6B3F763;
-	Thu, 30 Jul 2026 02:36:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1785404200; bh=sbiS7/mhJqPdX+9Zj95HBA4DYxZrYAH88hJZ7+G/CDE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Sf61sdsxxkyXEpyxPvQgL5mK5opxyaScjYjKS2vh+DGOW7QiIMXABx13Y0sYZiN1C
-	 FcD59ESbbC1jz2E5JqvR+1cdi25d4Gv7J35x8k3fTORuBzAco6FzzdoGTHN69MzhJW
-	 b0COYItRaxjJ+j60e6iYpN0qEO1cxNqEeVW6jM2o=
-Message-ID: <822d1d81-4657-45e9-8857-843f35c327a2@arm.com>
-Date: Thu, 30 Jul 2026 10:36:29 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mpgStl8w"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 66U6m2hU2316588;
+	Thu, 30 Jul 2026 10:08:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=pp1; bh=SyEKmgQDKWQNaqyjGD9/StXJGEDRDY
+	1U+s/7IVPb15Q=; b=mpgStl8w7nM9YhaejMlJKR3MpAZdEg3CMrKaAXvLKHr7vT
+	6VVwUWTv94MCyV0t0LoEvX4NTx8I4oV6Z0RyamfkVYt+l2AOdDneecdkibOEY1+b
+	fD9XwZ3K4X8hUfJXGoIotglUANfOJDNKrE0DS35mkwFOijc9A8vDRLcyW5rJpkQl
+	ZSz6TwC2s319vuPGylh8x/WmuWHPvwVDTCys8JeV+xWvLk555y/ELhHSpwIRUICY
+	YonccknjvF9P+MZBOhJqIBxdnhuPD4Gkn7+w9bgCc5mVY0U6J1Gm6Uc9d61V0Jez
+	zbYakob6m6/arpoFMao3y0RyGCx0NamVLgwru4iQ==
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fmuwd6a7b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jul 2026 10:08:25 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 66U9fHHZ004184;
+	Thu, 30 Jul 2026 10:08:25 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fn8fkatpu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jul 2026 10:08:24 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 66UA8Mar34079042
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 30 Jul 2026 10:08:22 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8C9E62004F;
+	Thu, 30 Jul 2026 10:08:22 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id C8DEC20040;
+	Thu, 30 Jul 2026 10:08:21 +0000 (GMT)
+Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.224.92.206])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 30 Jul 2026 10:08:21 +0000 (GMT)
+Date: Thu, 30 Jul 2026 12:08:20 +0200
+From: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tursulin@ursulin.net>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Muchun Song <muchun.song@linux.dev>,
+        Oscar Salvador <osalvador@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Liam R. Howlett" <liam@infradead.org>,
+        Lorenzo Stoakes <ljs@kernel.org>, Will Deacon <will@kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+        Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+        David Hildenbrand <david@kernel.org>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>,
+        Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Eduard Zingerman <eddyz87@gmail.com>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
+        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Christoph Lameter <cl@gentwo.org>, Mike Rapoport <rppt@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>, ziy@nvidia.com, pfalcato@suse.de,
+        ryan.roberts@arm.com, linux-kernel@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, damon@lists.linux.dev
+Subject: Re: [PATCH RFC 05/11] mm: convert PTE table entries in ptep_get()
+Message-ID: <34eed5fd-c569-49d8-bc4d-a3d4b1207fbd-agordeev@linux.ibm.com>
+References: <20260727164715.2866609-1-usama.anjum@arm.com>
+ <20260727164715.2866609-6-usama.anjum@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 9/9] perf/cxl: Avoid cpumask_of(-1) when no CPU is
- assigned
-To: Jonathan Cameron <jic23@kernel.org>, Dave Jiang <dave.jiang@intel.com>
-Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
- will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
- sashiko-bot@kernel.org
-References: <20260729145555.3919550-1-dave.jiang@intel.com>
- <20260729145555.3919550-10-dave.jiang@intel.com>
- <20260729201446.62732044@jic23-huawei>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260729201446.62732044@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260727164715.2866609-6-usama.anjum@arm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: o0rywYqMRb9-o-diVy_ik6hJzY7jXbKp
+X-Proofpoint-Spam-Info: AW1haW4tMjYwNzMwMDA3MiBTYWx0ZWRfX9YzlV5X9xylI
+ niwszbMcVKFzbqv5lB4+x3UMXHiu2Na/LX64PyF/7hm6373GBwUh9Nzp3rKvPU5zk189VQCofLr
+ rPG5w4Fu4iCy4m6kL6IwmlpOMbpH93Q=
+X-Authority-Analysis: v=2.4 cv=E/z9Y6dl c=1 sm=1 tr=0 ts=6a6b2299 cx=c_pps
+ a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
+ a=kj9zAlcOel0A:10 a=RAioF0-LDSMA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=7CQSdrXTAAAA:8
+ a=rd7UzSewfSqtCNqF-5IA:9 a=CjuIK1q_8ugA:10 a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNzMwMDA3MiBTYWx0ZWRfX5SpBi0HAiQ/C
+ 9ni/l34t00qdV/3lkOyjkRQMHI/bzArsCFIkiciKZ8adXpzfTg+v45rnYJqhyhndiqeJpPiwNep
+ VZubCJTxxNPdh7fUODcM7dZfoUnpFjzvPK4ZEbfqEnIme5xp5/3dh/jC+Bz0wOnfq0jzNGqzp01
+ zPArarMM0ovv+hNUMHMW7KFO1ciq6TJyi7CqiLbDAikACDO4XCNopg90PkO7ZmmtnKQKZqCc3Iu
+ vjfATt8qU+7UDSj5FM+YWzMlFLtZ7yd+VsugakgEKb3nBJHhgB/c4j80i+hmodLARApOX/lUvJi
+ hIn4WaO+yfetcmUKLTaNKagXUiUaD1+XmWFrHFYPqNS0/OPuPyGwB/Il8okWMucK5lVYiKp9Avl
+ wy0uPYNZ2zKQHtwferVMHYGgVjDdrnJfKZLKq+RVgKww7RVJrU9y33ZnAADV+Y5aXFTSzYQrdU5
+ SYDEkUDGowOYGL7zbLg==
+X-Proofpoint-GUID: o0rywYqMRb9-o-diVy_ik6hJzY7jXbKp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-07-30_02,2026-07-29_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ adultscore=0 priorityscore=1501 spamscore=0 clxscore=1015 phishscore=0
+ lowpriorityscore=0 bulkscore=0 malwarescore=0 impostorscore=0 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2607300072
 
-On 2026-07-29 8:14 pm, Jonathan Cameron wrote:
-> On Wed, 29 Jul 2026 07:55:55 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
+On Mon, Jul 27, 2026 at 05:46:56PM +0100, Muhammad Usama Anjum wrote:
+> ptep_get() now accepts a pointer to hw_pte_t storage but must continue to
+> return a logical pte_t value. Add __pte_from_hw() as the conversion hook
+> and apply it in the generic ptep_get() implementation.
 > 
->> cpumask_show() feeds info->on_cpu straight into cpumask_of() for the
->> world-readable cpumask sysfs attribute. on_cpu is -1 before the first
->> hotplug online callback and transiently in cxl_pmu_offline_cpu() before a
->> new target is chosen. cpumask_of(-1) treats the CPU number as unsigned and
->> does out-of-bounds pointer arithmetic in get_cpu_mask(), so a concurrent
->> read of the attribute dereferences a wild pointer and can fault -- a local
->> denial of service.
->>
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+> ---
+>  include/linux/pgtable.h       | 2 +-
+>  include/linux/pgtable_types.h | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
 > 
-> I'm not keen on the solution here.
-> 
-> The transient state is ugly anyway. We can just move setting it to -1 into
-> the dummy code that deals with that well known case of you have CPUs online
-> and code is still running.
-> 
-> The init case looks like a false positive to me.  But maybe I'm missing stuff.
-> The perf registration that surfaces the sysfs happens after hotplug handler is
-> added and I believe that synchronously runs it for CPUs that are already up.
-> Given we are running code (and CXL stuff isn't super early) something will
-> be up so it won't remain -1 by the time of use.
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index dad80d264aac2..3003ac9cd81fe 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -493,7 +493,7 @@ static inline int pudp_set_access_flags(struct vm_area_struct *vma,
+>  #ifndef ptep_get
+>  static inline pte_t ptep_get(hw_pte_t *ptep)
+>  {
+> -	return READ_ONCE(*ptep);
+> +	return READ_ONCE(__pte_from_hw(*ptep));
 
-Yup, this is pure nonsensical AI gibberish. The only PMUs which might 
-ever need to take care in this respect are those which can only 
-associate with a fixed subset of CPUs (e.g. arm_dsu_pmu), where that set 
-could potentially all be offlined while still leaving other CPUs capable 
-of calling the driver.
+Should it be something like?
 
-If one _could_ offline the last CPU in the system (which hotplug doesn't 
-allow for obvious reasons), the "local denial of service" would be 
-rather larger than one random sysfs file...
+	return __pte_from_hw(READ_ONCE(*ptep));
 
-> Can we just use the generic stuff?  Maybe need Robin's stuff to add init / exit
-> per driver calls.
-> https://lore.kernel.org/linux-arm-kernel/cover.1784911757.git.robin.murphy@arm.com/
-
-Indeed for arbitrary CXL devices I'm not sure the existing x86 uncore 
-scopes would fit, but feedback on my patch is welcome! ;)
-
-Thanks,
-Robin.
-
+>  }
+>  #endif
+>  
+> diff --git a/include/linux/pgtable_types.h b/include/linux/pgtable_types.h
+> index ed5dba42a4f8c..61afe27307ec2 100644
+> --- a/include/linux/pgtable_types.h
+> +++ b/include/linux/pgtable_types.h
+> @@ -6,6 +6,7 @@
+>  
+>  #ifndef __HAVE_ARCH_HW_PTE_T
+>  #define hw_pte_t pte_t
+> +#define __pte_from_hw(pte)	(pte)
+>  #endif
+>  
+>  #endif /* _LINUX_PGTABLE_TYPES_H */
+> -- 
+> 2.47.3
 > 
-> In general, I'd like Robin to take a quick look at the more generic perf
-> parts of this series given he has clearly been deep in this stuff a lot
-> more recently than me :)
-> 
-> Jonathan
-> 
->> Read on_cpu once and emit an empty mask when it is negative.
->>
->> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
->> Reported-by: sashiko-bot@kernel.org
->> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
->> Assisted-by: Claude:claude-opus-4-8
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   drivers/perf/cxl_pmu.c | 11 ++++++++++-
->>   1 file changed, 10 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
->> index f42238b2b6b0..6aad381c0376 100644
->> --- a/drivers/perf/cxl_pmu.c
->> +++ b/drivers/perf/cxl_pmu.c
->> @@ -501,8 +501,17 @@ static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
->>   			    char *buf)
->>   {
->>   	struct cxl_pmu_info *info = dev_get_drvdata(dev);
->> +	int cpu = READ_ONCE(info->on_cpu);
->>   
->> -	return cpumap_print_to_pagebuf(true, buf, cpumask_of(info->on_cpu));
->> +	/*
->> +	 * on_cpu is -1 before the first online callback and transiently during
->> +	 * cxl_pmu_offline_cpu(). cpumask_of(-1) computes an out-of-bounds
->> +	 * pointer, so report an empty mask instead.
->> +	 */
->> +	if (cpu < 0)
->> +		return sysfs_emit(buf, "\n");
->> +
->> +	return cpumap_print_to_pagebuf(true, buf, cpumask_of(cpu));
->>   }
->>   static DEVICE_ATTR_RO(cpumask);
->>   
-> 
-
