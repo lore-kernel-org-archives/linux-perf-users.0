@@ -1,103 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA9BF21CC5C;
-	Thu, 30 Jul 2026 01:45:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A5DEEC0
+	for <linux-perf-users@vger.kernel.org>; Thu, 30 Jul 2026 01:59:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785375949; cv=none; b=Ax5HdPrGka2epEgymKmRPXRv1wWnWbohbYJrmqbNb6uwkdWVOyN2Gnj7zfkqm/1p+ckHwb59DDxHd5gvI9fbD8vLyh8efOiD3B8snnZ2zswGVK4Xc4tZarFFoS/tueeUjpGfKR7yqY/kLF5jIDYxS7PC2l7RZLcEmAPaoHSwiNU=
+	t=1785376789; cv=none; b=ffrCZnrXDbMZSbiv/DphCTUclsrp3wrzPgF1mRULzEylPYivz6a3ASVTdn9gwBjBGWah25uj7ipeU8sUpa/Q6jk1c6+6PXlJGoRB79l5WKM7I7lb4ymLeFD+WuW3jye9U2WTDyZrv8+OYT1b2z1DIjSqJGyV/V3ik9Q3iyuQ9Ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785375949; c=relaxed/simple;
-	bh=us3O2M2noA9oreE2jgQQGgKnPbpyGbhmoq11dc+i65w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ufpvWHH4+2xel06oY/qXsr0DY4WPqKmmqjziX6rfQpgmW8yb9+0QrFcrM+fHjWEXLs97TWrMRsitPNz7rsynCMC/oJzIVO0pWHUgKuUqNVZDwfg3JaU3rDiJbM/RCaWaUcnC66xtyVWFekxkca1Vlkb5WeLGxws1LEttGR+ZqUA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=golwfR8x; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785376789; c=relaxed/simple;
+	bh=MJ96hmMC7tGW5a5w1oQrCn2zYzaKm/lOvRrkBNbRNsc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=pa7NFLaL04z8Rh8l4nS4U8ukvMhTGplQT5KBpGq0m+CWXF1pRTGG2TLU8so0aB0DBrZO5wdlKP6FYB7bDx5ipsZ3k8Au9/NWzlJdM0dS+3ixbxlp2/1D7Jtnd9jU3tIA5WOi70IDitQzXm4sTV4VFJfpsEV6V+tGQgHkPu3MxmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HW0nPWjJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="golwfR8x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78EDB1F000E9;
-	Thu, 30 Jul 2026 01:45:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HW0nPWjJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECA9A1F000E9;
+	Thu, 30 Jul 2026 01:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785375945;
-	bh=WQ0h9MK1Wssob41tw0Gum2uoamjPMHA5cQ8q3NlSoOg=;
-	h=From:To:Cc:Subject:Date;
-	b=golwfR8x/FlSROWEYDoqA9HsJemcsYnjP34neK+oeXHz7acKHilnJZ1EmU/6SGXoN
-	 IVbE2Ap6grYZ/RY6hofqmO7yj87Z7onwfBXdKbqivrtr/YJX+/qXx2cA4pNe0LOGWr
-	 +JatktpnLoiRiHqIcAUO28Py8aNhy0hCVDWbLA+GIExWFLgyEHBUvKlOjdTbOUMqSZ
-	 9/J3wPmK9zOQwCSoIjsFYMftnLJ96iZTPvw9fKj7k0l3M35OOuMfnc9/12aJM6ziAY
-	 n8AaBGHVomxMKQ9JMKcG/MR2nqj5RKNrcGWTI9GDsY3SQsgC+JLdq6UDpE0/URq9Jc
-	 a4pfFBcYIRMqg==
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] uprobes: Remove redundant guard(rcu) in find_active_uprobe_speculative()
-Date: Thu, 30 Jul 2026 10:45:39 +0900
-Message-ID: <178537593930.153254.1296986092000402239.stgit@devnote2>
-X-Mailer: git-send-email 2.43.0
-User-Agent: StGit/0.19
+	s=k20260515; t=1785376788;
+	bh=0OHz5dZrO25xp8cUEijXwVq7dEvRGmriLYd27tLTIgs=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=HW0nPWjJWzKQyE1FLxsHFDkE6xHDWDPpe2/7fyrbCU4By+BXe4l/+1P2rzgqNwUHs
+	 EbYH5yo0XbXhPGxJP5FT3w15dw/9Emck0fS+CZxDo8cb/AwtB7VBtyDrQqmUFjun5K
+	 RkUZQlw5AONYsgUVBxmD+ZW+dHsuyppy9U/lsE662pz9h8BrmtJeh+DtMI2HA9zBsz
+	 Uug5xlhElCF1JqO2nNdV/b8rQHjrJMiXmLw71ffc0SWW0OKRazSClCe9gac9mFSsYj
+	 e+BY+K2yt6OcgfkWFsoVzaslw9rmH0BeAIEO2/Y+Q1ozMMfiQsHuZz9Q57zTQUxZzS
+	 Neag8PNXzmPgg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] uprobes: Remove redundant guard(rcu) in
+ find_active_uprobe_speculative()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <178537593930.153254.1296986092000402239.stgit@devnote2>
+References: <178537593930.153254.1296986092000402239.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 30 Jul 2026 01:59:47 +0000
+Message-Id: <20260730015947.ECA9A1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] Removing `guard(rcu)()` from `find_active_uprobe_speculative()` el=
+iminates standard RCU protection, exposing lockless VMA and file accesses t=
+o Use-After-Free and page faults.
+--
 
-find_active_uprobe_speculative() is called from find_active_uprobe_rcu(),
-which is invoked by handle_swbp() and handle_syscall_uprobe().
-Both callers already hold RCU Tasks Trace (via rcu_read_lock_trace() or
-guard(rcu_tasks_trace)()).
+--- Patch [1]: [PATCH] uprobes: Remove redundant guard(rcu) in find_active_=
+uprobe_speculative() ---
+commit 008639a39e6344f6f057b7d120c62792b7cd6ddf
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Calling guard(rcu)() inside find_active_uprobe_speculative() is redundant
-because the caller already guarantees RCU Tasks Trace protection.
-Furthermore, standard RCU (rcu_read_lock()) does not protect uprobes_tree
-against asynchronous uprobe destruction (call_rcu_tasks_trace()).
+uprobes: Remove redundant guard(rcu) in find_active_uprobe_speculative()
 
-Remove the redundant guard(rcu)() from find_active_uprobe_speculative() and
-replace it with lockdep_assert(rcu_read_lock_trace_held()) and a comment
-documenting that callers must hold RCU Tasks Trace protection, matching the
-convention used by find_active_uprobe_rcu() and find_uprobe_rcu().
+This commit removes the guard(rcu)() from find_active_uprobe_speculative()
+and adds a lockdep assertion for RCU Tasks Trace, assuming Tasks Trace RCU
+protection provided by the caller is sufficient.
 
-Fixes: e0925f2dc4de ("uprobes: add speculative lockless VMA-to-inode-to-uprobe resolution")
-Assisted-by: Antigravity:gemini-3.6-flash
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/events/uprobes.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 07f69dd3093d5..52833db53b25c 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -2416,6 +2416,7 @@ static int is_trap_at_addr(struct mm_struct *mm, un=
+signed long vaddr)
+>  	return is_trap_insn(&opcode);
+>  }
+> =20
+> +/* assumes being inside RCU Tasks Trace protected region */
+>  static struct uprobe *find_active_uprobe_speculative(unsigned long bp_va=
+ddr)
+>  {
+>  	struct mm_struct *mm =3D current->mm;
+> @@ -2425,7 +2426,7 @@ static struct uprobe *find_active_uprobe_speculativ=
+e(unsigned long bp_vaddr)
+>  	loff_t offset;
+>  	unsigned int seq;
+> =20
+> -	guard(rcu)();
+> +	lockdep_assert(rcu_read_lock_trace_held());
+> =20
+>  	if (!mmap_lock_speculate_try_begin(mm, &seq))
+>  		return NULL;
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 4084e926e284..b4e253d43b30 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -2424,6 +2424,7 @@ static int is_trap_at_addr(struct mm_struct *mm, unsigned long vaddr)
- 	return is_trap_insn(&opcode);
- }
- 
-+/* assumes being inside RCU Tasks Trace protected region */
- static struct uprobe *find_active_uprobe_speculative(unsigned long bp_vaddr)
- {
- 	struct mm_struct *mm = current->mm;
-@@ -2433,7 +2434,7 @@ static struct uprobe *find_active_uprobe_speculative(unsigned long bp_vaddr)
- 	loff_t offset;
- 	unsigned int seq;
- 
--	guard(rcu)();
-+	lockdep_assert(rcu_read_lock_trace_held());
- 
- 	if (!mmap_lock_speculate_try_begin(mm, &seq))
- 		return NULL;
+[Severity: High]
+Does removing the standard RCU protection here expose the subsequent VMA and
+file accesses to use-after-free and page faults?
 
+The VMA and file objects are allocated from SLAB_TYPESAFE_BY_RCU caches,
+meaning their underlying slab pages can be returned to the page allocator
+after a standard RCU grace period. RCU Tasks Trace does not block standard
+RCU grace periods.
+
+The subsequent call to vma_lookup() briefly takes standard RCU to safely wa=
+lk
+the Maple Tree, but drops it before returning the VMA pointer. If the thread
+is preempted after this point, and another thread unmaps the VMA and closes
+the file, a standard RCU grace period could complete, freeing the VMA and f=
+ile
+slab pages.
+
+When the thread wakes up and dereferences vma->vm_file or vm_file->f_inode =
+on
+a freed page, could it cause a fatal page fault? The code relies on the VMA
+and file not being freed from under it, which appears to require standard R=
+CU
+protection.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178537593930.153254=
+.1296986092000402239.stgit@devnote2?part=3D1
