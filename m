@@ -1,139 +1,84 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11BA146EF9B;
-	Thu, 30 Jul 2026 23:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ACB84779BB;
+	Thu, 30 Jul 2026 23:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785452443; cv=none; b=au0/eBumGjtB0Sti9diEGw3l4VgWVXWFsJ7jGF8j9lbW7s89w8kRWy15k6lcYzwPIDplqnW0euXdHJG3npXXeNLqGiVF3Did30G3PimhLTz3WVjs5coXEzFGk/sXBHGjKXiN3EJam6S+sOGrv4z0XX0dWWiKTrq33ofF2CDdkxw=
+	t=1785454473; cv=none; b=n77n+Ko9RK6gwTpN+fuy8CT2lNjZUplCAryGCQP/5fT5/ZKgFRObHeYiiSbuPZSmrmpTAqvRLIBMZXULmalqCW+8y0Esq9i3pXo4/+L9Ou5KEKKGzkpU6xG64U9Dd9QNRPjoImuCQ6tb/lVao/GBjlCaMl7f6xQiivI/2Xa7JTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785452443; c=relaxed/simple;
-	bh=uCYWKp4UStM+MGuse6L/bw9Ttb4tZx0GkNoTb28c1PQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wm2SdI7BDdGHKGaEMoeaaaMoUIPz4rrZweB+ZpbLYmt6FqmUxZsBpc3haoedmj55zaDFIyBuSxUu4CLf6GbpQJcxtJ3SVDfwMdlF4cJuhl3nKqdn9UJQhk25q/amq1ghnkCIOUCg2wkn6Mu2v1cnkG3pIaaGP2k+A6y5P30vrR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BkCyq/vU; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1785454473; c=relaxed/simple;
+	bh=X+NL8iI60GaAeZtxSALjdcMuw+9fJvViDZaApw0pX14=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UvEj3ed8UYXybR3PXSt8TdN9vkL15o4ppIB3bIliFilNmqRkH86Ajv+U3zpmhBuShsLJ+8Jyv59VNDEzTrVmBY5kxcRJZBdm+v334lSrAUe4K59Q8COZ/tSFXPc69KE+pSiX2e0qVRJj+TeRLMvYLgJLJ8SOyODC59Wz0IVLeGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=zWweAbvC; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BkCyq/vU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785452442; x=1816988442;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=uCYWKp4UStM+MGuse6L/bw9Ttb4tZx0GkNoTb28c1PQ=;
-  b=BkCyq/vUFfBdtmJld5HpmDPuNLI2YbskONG/k7AyZ9uldljp0lhI+AhJ
-   fuzUWVJCc/TUkO/N8voBbMSeFyABAIwZrkh15gKlLt3j3aoAW+lcbsGFz
-   nS9vrRvRGITXXTUkHKA6d7fZVJA9DEG0FXbKSGZgHRRyiVT4OlNazvVdJ
-   l2bZkhSnaymswkx8aZsHzoRN4R1DCIcW68/pUIx5udWacio4kwTh5OgiE
-   qanexvHU3RY2zElekrPhqFycAs5CuGBa2yopvZM4lUcthPoSJo25y3r2j
-   v00dMl04isCqkioFH9zxisM671Do5ZatNIGOW/MyRNSf2HN2A5368oC7f
-   A==;
-X-CSE-ConnectionGUID: aKx7jmOwSgm9KRFFd6bq8A==
-X-CSE-MsgGUID: z+DIgYAMT3yocQsMOPMrnQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="96440830"
-X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
-   d="scan'208";a="96440830"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 16:00:41 -0700
-X-CSE-ConnectionGUID: yGU3RCGTRp6+wnL3vF1C6g==
-X-CSE-MsgGUID: dWKxWgzcRL+/itCZyFc73A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,195,1779174000"; 
-   d="scan'208";a="262368533"
-Received: from rfrazer-mobl3.amr.corp.intel.com (HELO [10.125.111.248]) ([10.125.111.248])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 16:00:39 -0700
-Message-ID: <6d0c2109-6e02-4df8-a732-557e0d6e81df@intel.com>
-Date: Thu, 30 Jul 2026 16:00:38 -0700
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zWweAbvC"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=WSnUXtzk/IAMW2FmLOZfHRFAdW0dhihRTBKbHPsoNO4=; b=zWweAbvC4iMSZkao9/8mJkN6jL
+	AU4BQkNncwHZ4erawZ1xS5qAqepfysBvn0WQnytH9yYOxN/VeMqaPFLbnZvJknC4ZLfEsaz2h7Pmv
+	VbU+p47tQsTq8ybc+6Kj3fJWTozFKEMLXpKxF9Q3sco4Mrv65cjnAzESF/t71239xf1Az61YSQwTZ
+	AvlMNL1GKsfjVpYdaWwa/M/xkDnL4zHn5G58BBWuQTmVGkhzr1pOaXA+Vdgl4IZoBppOELh9wPmbT
+	FDcN8OzX2K9vpGpPk2kLRvTZ0Fvu4Cbf6jCGFAL2/hCqscz5zuT+lA2jznoXQTmzk3POtzGkaPgtR
+	XQtb14qA==;
+Received: from [50.53.43.113] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wpaGk-0000000BViq-1z3b;
+	Thu, 30 Jul 2026 23:34:30 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	x86@kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 0/5] x86: clean up some kernel-doc comments
+Date: Thu, 30 Jul 2026 16:34:24 -0700
+Message-ID: <20260730233429.285788-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/9] perf/cxl: Unfreeze counters after handling an
- overflow interrupt
-To: Jonathan Cameron <jic23@kernel.org>, Robin Murphy <robin.murphy@arm.com>
-Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
- will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
- sashiko-bot@kernel.org
-References: <20260729145555.3919550-1-dave.jiang@intel.com>
- <20260729145555.3919550-7-dave.jiang@intel.com>
- <3dc5c366-652f-4977-84a1-6e5a921a74cc@arm.com>
- <20260730195313.3e2c0b8e@jic23-huawei>
-Content-Language: en-US
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20260730195313.3e2c0b8e@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Patches 1, 4, and 5 are new.
+
+ [PATCH 1/5] perf/x86/intel/pt: drop kernel-doc for deleted struct members
+ [PATCH 2/5 RESEND] x86/barrier: use correct parameter names in kernel-doc
+ [PATCH 3/5 RESEND] x86/lib: checksum_64.h: eliminate all kernel-doc warnings
+ [PATCH 4/5] x86/speculation: drop Excess function parameter descriptions
+ [PATCH 5/5] x86/intel/quark: clean up function kernel-doc
+
+ arch/x86/events/intel/pt.h                   |    2 -
+ arch/x86/include/asm/barrier.h               |    6 +--
+ arch/x86/include/asm/checksum_64.h           |   29 +++++++++--------
+ arch/x86/include/asm/spec-ctrl.h             |    2 -
+ arch/x86/platform/intel-quark/imr_selftest.c |    7 ----
+ 5 files changed, 21 insertions(+), 25 deletions(-)
 
 
-On 7/30/26 11:53 AM, Jonathan Cameron wrote:
-> On Thu, 30 Jul 2026 13:04:17 +0100
-> Robin Murphy <robin.murphy@arm.com> wrote:
-> 
->> On 29/07/2026 3:55 pm, Dave Jiang wrote:
->>> The counters are configured with Freeze on Overflow, so when any counter
->>> overflows the CPMU freezes every counter in the block (CXL r4.0
->>> §8.2.7.2.1). cxl_pmu_irq() reads the overflowed counters and clears the
->>> overflow status, but never writes the CPMU Freeze register to unfreeze,
->>> so all counters stay frozen until the next pmu_enable() and events in
->>> that window are silently lost.
->>>
->>> Unfreeze after clearing the overflow status so counting resumes.
->>>
->>> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
->>> Reported-by: sashiko-bot@kernel.org
->>> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
->>> Assisted-by: Claude:claude-opus-4-8
->>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->>> ---
->>>   drivers/perf/cxl_pmu.c | 9 +++++++++
->>>   1 file changed, 9 insertions(+)
->>>
->>> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
->>> index 8b89db8f4d68..52e78a6e0960 100644
->>> --- a/drivers/perf/cxl_pmu.c
->>> +++ b/drivers/perf/cxl_pmu.c
->>> @@ -804,6 +804,15 @@ static irqreturn_t cxl_pmu_irq(int irq, void *data)
->>>   
->>>   	writeq(overflowed, base + CXL_PMU_OVERFLOW_REG);
->>>   
->>> +	/*
->>> +	 * Counters are configured to freeze on overflow (Freeze on Overflow),
->>> +	 * which freezes every counter in the CPMU. Once the overflowed counters
->>> +	 * have been read and their status cleared, unfreeze so counting resumes;
->>> +	 * otherwise all counters stay frozen until the next pmu_enable() and
->>> +	 * events are silently lost.
->>> +	 */
->>> +	writeq(0, base + CXL_PMU_FREEZE_REG);  
->>
->> Does this unconditionally unfreeze _all_ counters, including any which 
->> might have have overflowed since the read of CXL_PMU_OVERFLOW_REG and 
->> thus have not been handled yet? Or are we hoping that the "global 
->> freeze" behaviour prevents that from being able to happen?
->>
-> 
-> Yes global freeze should stop world on first one overflowing - if two go together
-> we should see them both in the handler.
-> 
->> Furthermore, what if an overflow happens to occur just as 
->> cxl_pmu_disable() is intentionally freezing all the counters, such that 
->> by the time we get here, unfreezing them would be the wrong thing to do?
-> 
-> Hmm. That may indeed be bad.
-
-I can add a bool as a en/disable state in info to guard against that. > 
->>
->> Thanks,
->> Robin.
->>
->>> +
->>>   	return IRQ_HANDLED;
->>>   }
->>>     
->>
-> 
-
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Gleixner <tglx@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: x86@kernel.org
+Cc: linux-perf-users@vger.kernel.org
