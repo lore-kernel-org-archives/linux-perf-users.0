@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81ED63ADBAD;
-	Thu, 30 Jul 2026 18:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65ECF45C710;
+	Thu, 30 Jul 2026 18:53:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785437495; cv=none; b=OwucPF4MjLFIVYKZAl2PiEq+uVFtm58QqAmUha4Q03zmaWM/kLKC8OqPoekMbsYDlAWkpdKt8AXybUljsyhMC7baauhErjWmTu5erLg9IBQTsuiJ1Fu4AjFRovlfZFRDrSi+Ge6LrK3oRQJEjwStncXqchooGxpx8Cxa8ZnJWF4=
+	t=1785437602; cv=none; b=fCVqK6WvLGTHFrjXbHzwoLNRS+Z0l5TFMCVZ0uVQedaTW6YfggBieu8eOVmL6ugRr9GmjPQY/S7hbUaZ5LDkMaUND9/47MWx+QsN6aGPcppLEyX4KZWG04m0JGCb1kJaZN4QrlvuSaFjlyGQO+Ye7BjK9ePK+u/hdgESg1fxNKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785437495; c=relaxed/simple;
-	bh=28JGgY/XN4TEkGDOqjD4Mp2no9FPukMQ5Yl+k0HjhHI=;
+	s=arc-20240116; t=1785437602; c=relaxed/simple;
+	bh=kYZRCIV953NDcqkNwXAy6ARunyYoZelm9iB2MeqKvDg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=C3NXxE3JyG4k4GfUOgK+mmxCRNyqI6zUHmhFyoDX41ReZlfEC3HKFvAcrPN+/FU8RbrzZNWeTmGBLDFE9Zro3pkUpRd86heeASlwde8UB/Dt2CWgLnDGQ4mU0NudsTmUmeGwNYaNt9tq9bbIHAsmDVC0yVaaJzlbsaNIFonciQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kQt8dpvG; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=NSZEn/o/N/dKOieqjglPaJ3MumcCIHG2lzqlWSzUj16nYkPJgX82PAuk32NZWij0gy//TRYCP7YlqkpCCTYG55LD6Zbn9FshxIjxexzBVaUeXRdduiwhi+Rzd89TVNVv9P87KnB+w4igvWIyCX51R/EXlwJbucwDnepmO9vHZS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZfvcP5I; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kQt8dpvG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AC671F000E9;
-	Thu, 30 Jul 2026 18:51:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZfvcP5I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5300E1F000E9;
+	Thu, 30 Jul 2026 18:53:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785437491;
-	bh=oFAp8XdSVJul7SU+BtQlBxtXLWL3iNzaxJra5JATbog=;
+	s=k20260515; t=1785437599;
+	bh=xYIMU6IJKgEgBnB9Sw4bSHlQMhtRlASNzquQ/9m0UP4=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=kQt8dpvG3F2xf1YVl4HMiKXSacgmmBUmPJzaLfrjTopQteByHFeaWc1ueuOay9K+O
-	 3GafNXMc/PBzI/T2OGpLRZmzNcqFDpPk2n40HwpGmHQMWpfHUr+h6xIJIhdXdeGV+d
-	 yZiVMBSVkUrKHIfDazM9EQwRBcdOlhFFd5+0pY8Ssb0kJSZPPvKzZiJYimeWNKVp+W
-	 IaBcAZTYJp14/rGn12g9Y+KFqdHzFqni1xKClwu2432xVei17lxqH/En0KiJVCSjPw
-	 94jccNDImM0VgFDsPl7PTEIW70jaDO0vKT7u73rB1uipfcN23RPzOFmsiHX95KkwoT
-	 6qK9OA/bjm5mA==
-Date: Thu, 30 Jul 2026 19:51:27 +0100
+	b=DZfvcP5Iy83u08qnrtWGZEt+czTAhzvWL3OhxN994VBrRCV161d7DYO4GEd5xFWyc
+	 hwqoZDTjLytpmXftccgyAOYs28uZ+j1xozZZEtnZgdIuEB7Hhj0Xlpn7PyYzKPY30+
+	 3tHDfA2EZcUbQFf0sL6D4q5533SzewP429ncLVuA5eKKfs6lncTAJT6cwHZB3jCbgE
+	 HZN1Gglsht9L2l0hQBMSlYxdVLLeJKEQGjnb6O5bpMQ6RdFA3BuJ7/ARfNLAMIU3ca
+	 2JphssMjkGKVPZe6N5l9go5CfwTFX1oncVeB12n3wZ+E9jb6giA65RcLwA/aMeMkoK
+	 wbFh5n2bgJq3Q==
+Date: Thu, 30 Jul 2026 19:53:13 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Robin Murphy <robin.murphy@arm.com>
 Cc: Dave Jiang <dave.jiang@intel.com>, linux-cxl@vger.kernel.org,
  linux-perf-users@vger.kernel.org, will@kernel.org, mark.rutland@arm.com,
  dave@stgolabs.net, sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 8/9] perf/cxl: Don't use pmu.dev in IRQ and hotplug
- callbacks after unregister
-Message-ID: <20260730195127.208d939a@jic23-huawei>
-In-Reply-To: <76fbd2ce-5d25-47a4-82d8-5577860a948c@arm.com>
+Subject: Re: [PATCH v2 6/9] perf/cxl: Unfreeze counters after handling an
+ overflow interrupt
+Message-ID: <20260730195313.3e2c0b8e@jic23-huawei>
+In-Reply-To: <3dc5c366-652f-4977-84a1-6e5a921a74cc@arm.com>
 References: <20260729145555.3919550-1-dave.jiang@intel.com>
-	<20260729145555.3919550-9-dave.jiang@intel.com>
-	<76fbd2ce-5d25-47a4-82d8-5577860a948c@arm.com>
+	<20260729145555.3919550-7-dave.jiang@intel.com>
+	<3dc5c366-652f-4977-84a1-6e5a921a74cc@arm.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -46,88 +46,75 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 30 Jul 2026 12:38:28 +0100
+On Thu, 30 Jul 2026 13:04:17 +0100
 Robin Murphy <robin.murphy@arm.com> wrote:
 
 > On 29/07/2026 3:55 pm, Dave Jiang wrote:
-> > On device removal the devm actions unwind LIFO, so cxl_pmu_perf_unregister()
-> > runs first and perf_pmu_unregister() frees info->pmu.dev (device_del() +
-> > put_device() -> kfree()). The overflow IRQ (freed last) and the CPU-hotplug
-> > instance (removed next) are still live at that point, and both
-> > cxl_pmu_irq() and cxl_pmu_offline_cpu() log via dev_dbg()/dev_err() on
-> > info->pmu.dev, dereferencing freed memory. The shared IRQ can be entered
-> > for a co-function on the same MSI vector, and a CPU can go offline in the
-> > window before the hotplug instance is removed.
-> > 
-> > Log through info->pmu.parent instead, the cxl_pmu device passed to probe,
-> > which is devm-managed and outlives every teardown action.
-> > 
+> > The counters are configured with Freeze on Overflow, so when any counter
+> > overflows the CPMU freezes every counter in the block (CXL r4.0
+> > =C2=A78.2.7.2.1). cxl_pmu_irq() reads the overflowed counters and clear=
+s the
+> > overflow status, but never writes the CPMU Freeze register to unfreeze,
+> > so all counters stay frozen until the next pmu_enable() and events in
+> > that window are silently lost.
+> >=20
+> > Unfreeze after clearing the overflow status so counting resumes.
+> >=20
 > > Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
 > > Reported-by: sashiko-bot@kernel.org
-> > Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
+> > Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stg=
+olabs.net?part=3D1
 > > Assisted-by: Claude:claude-opus-4-8
 > > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > > ---
-> >   drivers/perf/cxl_pmu.c | 4 ++--
-> >   1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
+> >   drivers/perf/cxl_pmu.c | 9 +++++++++
+> >   1 file changed, 9 insertions(+)
+> >=20
 > > diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> > index 2e817a52ff1e..f42238b2b6b0 100644
+> > index 8b89db8f4d68..52e78a6e0960 100644
 > > --- a/drivers/perf/cxl_pmu.c
 > > +++ b/drivers/perf/cxl_pmu.c
-> > @@ -803,7 +803,7 @@ static irqreturn_t cxl_pmu_irq(int irq, void *data)
-> >   		struct perf_event *event = info->hw_events[i];
-> >   
-> >   		if (!event) {
-> > -			dev_dbg(info->pmu.dev,
-> > +			dev_dbg(info->pmu.parent,
-> >   				"overflow but on non enabled counter %d\n", i);
-> >   			continue;  
-> 
-> This seems dubious - we don't permit sharing the IRQ, and all events 
-> must have been stopped and descheduled to allow the PMU to be removed in 
-> the first place, so how would an overflow interrupt happen?
+> > @@ -804,6 +804,15 @@ static irqreturn_t cxl_pmu_irq(int irq, void *data)
+> >  =20
+> >   	writeq(overflowed, base + CXL_PMU_OVERFLOW_REG);
+> >  =20
+> > +	/*
+> > +	 * Counters are configured to freeze on overflow (Freeze on Overflow),
+> > +	 * which freezes every counter in the CPMU. Once the overflowed count=
+ers
+> > +	 * have been read and their status cleared, unfreeze so counting resu=
+mes;
+> > +	 * otherwise all counters stay frozen until the next pmu_enable() and
+> > +	 * events are silently lost.
+> > +	 */
+> > +	writeq(0, base + CXL_PMU_FREEZE_REG); =20
+>=20
+> Does this unconditionally unfreeze _all_ counters, including any which=20
+> might have have overflowed since the read of CXL_PMU_OVERFLOW_REG and=20
+> thus have not been handled yet? Or are we hoping that the "global=20
+> freeze" behaviour prevents that from being able to happen?
+>=20
 
-Hmm. Today the driver itself does permit sharing.  Which is awkward given
-need for the interrupts not to get migrated to different CPUs which
-I guess might happen if we get a race with driver bind and hotplug events.
-I may well be missing other reasons sharing is bad, but that one seems
-like enough to rule it out.
+Yes global freeze should stop world on first one overflowing - if two go to=
+gether
+we should see them both in the handler.
 
-Perhaps the fix for now is remove the IRQF_SHARED flag.   Clear no one
-was using the driver yet with real hardware given some of the fixes
-in this series so we aren't going to regress anyone.
+> Furthermore, what if an overflow happens to occur just as=20
+> cxl_pmu_disable() is intentionally freezing all the counters, such that=20
+> by the time we get here, unfreezing them would be the wrong thing to do?
 
-Hopefully no one actually thinks a device that puts PMUs on shared interrupts
-is a good idea and no host running CXL runs out and has to force the PCIe
-stuff to collapse them to a smaller set of vectors.
+Hmm. That may indeed be bad.
 
-> 
-> >   		}
-> > @@ -966,7 +966,7 @@ static int cxl_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
-> >   	info->on_cpu = -1;
-> >   	
-target = cpumask_any_but(cpu_online_mask, cpu);
-> >   	if (target >= nr_cpu_ids) {  
-> 
-> And this again is nonsense anyway - if the pointless dead code is 
-> bothering people, just delete the whole check.
-True enough.  I fear I gut and paste that from somewhere so might
-be worth a more general scrub for other instances :(  
-
-J
-> 
+>=20
 > Thanks,
 > Robin.
-> 
-> > -		dev_err(info->pmu.dev, "Unable to find a suitable CPU\n");
-> > +		dev_err(info->pmu.parent, "Unable to find a suitable CPU\n");
-> >   		return 0;
-> >   	}
-> >     
-> 
-> 
+>=20
+> > +
+> >   	return IRQ_HANDLED;
+> >   }
+> >    =20
+>=20
 
