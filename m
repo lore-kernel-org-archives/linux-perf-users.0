@@ -1,34 +1,35 @@
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ACB84779BB;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA54B477E3A;
 	Thu, 30 Jul 2026 23:34:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785454473; cv=none; b=n77n+Ko9RK6gwTpN+fuy8CT2lNjZUplCAryGCQP/5fT5/ZKgFRObHeYiiSbuPZSmrmpTAqvRLIBMZXULmalqCW+8y0Esq9i3pXo4/+L9Ou5KEKKGzkpU6xG64U9Dd9QNRPjoImuCQ6tb/lVao/GBjlCaMl7f6xQiivI/2Xa7JTs=
+	t=1785454473; cv=none; b=HaA26tf7NMleTY043DFZuHKjQL9B0YywXWA0zdbLee5U0laRV6ihicHYZk9Iir2j5axQVSGZH+yUrQZ5Yar5jADLcwTECtJ4oArSsDbVsDZwEtkALlzUEYVGVCiD3DDy0TT00/ccd/68KRPLpX4ge/nP4Z5uljtLfAhEbR2qUEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785454473; c=relaxed/simple;
-	bh=X+NL8iI60GaAeZtxSALjdcMuw+9fJvViDZaApw0pX14=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UvEj3ed8UYXybR3PXSt8TdN9vkL15o4ppIB3bIliFilNmqRkH86Ajv+U3zpmhBuShsLJ+8Jyv59VNDEzTrVmBY5kxcRJZBdm+v334lSrAUe4K59Q8COZ/tSFXPc69KE+pSiX2e0qVRJj+TeRLMvYLgJLJ8SOyODC59Wz0IVLeGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=zWweAbvC; arc=none smtp.client-ip=198.137.202.133
+	bh=pghY57qcgcZvrl6KH1UxUr+D0kd8Iuo5aILhiUUkxd0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aa4j5nK8SSdLuxWL4gGqqtV8b0unuTnfu0/iyYZzMy370Wb/1J8ttC02A+EE1kdmHalO/sU0lDg44+X81a0EM/pgfLf79x/X202OPuv4KHqbboBKNn9tc7MDOF7fwbdeyQHsLDkmkmcLo8yf5p26AiQY3PsVn5GeHNolwXj8SYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=eLET2Ekh; arc=none smtp.client-ip=198.137.202.133
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zWweAbvC"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eLET2Ekh"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
-	Content-ID:Content-Description:In-Reply-To:References;
-	bh=WSnUXtzk/IAMW2FmLOZfHRFAdW0dhihRTBKbHPsoNO4=; b=zWweAbvC4iMSZkao9/8mJkN6jL
-	AU4BQkNncwHZ4erawZ1xS5qAqepfysBvn0WQnytH9yYOxN/VeMqaPFLbnZvJknC4ZLfEsaz2h7Pmv
-	VbU+p47tQsTq8ybc+6Kj3fJWTozFKEMLXpKxF9Q3sco4Mrv65cjnAzESF/t71239xf1Az61YSQwTZ
-	AvlMNL1GKsfjVpYdaWwa/M/xkDnL4zHn5G58BBWuQTmVGkhzr1pOaXA+Vdgl4IZoBppOELh9wPmbT
-	FDcN8OzX2K9vpGpPk2kLRvTZ0Fvu4Cbf6jCGFAL2/hCqscz5zuT+lA2jznoXQTmzk3POtzGkaPgtR
-	XQtb14qA==;
+	MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender
+	:Reply-To:Content-Type:Content-ID:Content-Description;
+	bh=dvPJ52fgIMGTmnjF5pBYGganUiGNj+LbNvx1+D/IU1o=; b=eLET2EkhHgHtAYP0/Xy2fCkeLE
+	HeueJi1pFkXJ4HwELtPZxdK4OsekodnWP2ApkpZsL3noUoufxgNYmjQSQaRfVx6IAqjHX6B3xIU7z
+	/CFm+83mPZDzynKzUT95LBV33hMImR8j6GAr0NTWJ80KxtMcopJXaKaFhlGeH3jXT+g2cMf1LmeaD
+	rAwmz0x+QqxG3av4Pn49G2pCRovVFPKEzL/urbitMPRqTBmfVTvuqOLJbdVZ4aAyRQOxt5KsXxPA0
+	UwKtfQrXpi9Htwh4dRBgI+xyiMhGp3UxjaWk+vFoZY75kbNdz9IOL940qMftzViFNH4VK+FmuLWf3
+	6EeqplrQ==;
 Received: from [50.53.43.113] (helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1wpaGk-0000000BViq-1z3b;
-	Thu, 30 Jul 2026 23:34:30 +0000
+	id 1wpaGl-0000000BViq-1XKl;
+	Thu, 30 Jul 2026 23:34:31 +0000
 From: Randy Dunlap <rdunlap@infradead.org>
 To: linux-kernel@vger.kernel.org
 Cc: Randy Dunlap <rdunlap@infradead.org>,
@@ -43,10 +44,12 @@ Cc: Randy Dunlap <rdunlap@infradead.org>,
 	Josh Poimboeuf <jpoimboe@kernel.org>,
 	x86@kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH 0/5] x86: clean up some kernel-doc comments
-Date: Thu, 30 Jul 2026 16:34:24 -0700
-Message-ID: <20260730233429.285788-1-rdunlap@infradead.org>
+Subject: [PATCH 2/5 RESEND] x86/barrier: use correct parameter names in kernel-doc
+Date: Thu, 30 Jul 2026 16:34:26 -0700
+Message-ID: <20260730233429.285788-3-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260730233429.285788-1-rdunlap@infradead.org>
+References: <20260730233429.285788-1-rdunlap@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,30 +58,44 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Patches 1, 4, and 5 are new.
+Use the correct macro parameter names in the kernel-doc comments
+to avoid kernel-doc warnings:
 
- [PATCH 1/5] perf/x86/intel/pt: drop kernel-doc for deleted struct members
- [PATCH 2/5 RESEND] x86/barrier: use correct parameter names in kernel-doc
- [PATCH 3/5 RESEND] x86/lib: checksum_64.h: eliminate all kernel-doc warnings
- [PATCH 4/5] x86/speculation: drop Excess function parameter descriptions
- [PATCH 5/5] x86/intel/quark: clean up function kernel-doc
+Warning: arch/x86/include/asm/barrier.h:35 function parameter 'idx' not
+ described in 'array_index_mask_nospec'
+Warning: arch/x86/include/asm/barrier.h:35 function parameter 'sz' not
+ described in 'array_index_mask_nospec'
+Warning: arch/x86/include/asm/barrier.h:35 Excess function parameter
+ 'index' description in 'array_index_mask_nospec'
+Warning: arch/x86/include/asm/barrier.h:35 Excess function parameter
+ 'size' description in 'array_index_mask_nospec'
 
- arch/x86/events/intel/pt.h                   |    2 -
- arch/x86/include/asm/barrier.h               |    6 +--
- arch/x86/include/asm/checksum_64.h           |   29 +++++++++--------
- arch/x86/include/asm/spec-ctrl.h             |    2 -
- arch/x86/platform/intel-quark/imr_selftest.c |    7 ----
- 5 files changed, 21 insertions(+), 25 deletions(-)
-
-
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+---
 Cc: Thomas Gleixner <tglx@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Josh Poimboeuf <jpoimboe@kernel.org>
 Cc: x86@kernel.org
-Cc: linux-perf-users@vger.kernel.org
+
+ arch/x86/include/asm/barrier.h |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- linux-next-20260717.orig/arch/x86/include/asm/barrier.h
++++ linux-next-20260717/arch/x86/include/asm/barrier.h
+@@ -27,11 +27,11 @@
+ /**
+  * array_index_mask_nospec() - generate a mask that is ~0UL when the
+  * 	bounds check succeeds and 0 otherwise
+- * @index: array element index
+- * @size: number of elements in array
++ * @idx: array element index
++ * @sz: number of elements in array
+  *
+  * Returns:
+- *     0 - (index < size)
++ *     0 - (@idx < @sz)
+  */
+ #define array_index_mask_nospec(idx,sz) ({	\
+ 	typeof((idx)+(sz)) __idx = (idx);	\
