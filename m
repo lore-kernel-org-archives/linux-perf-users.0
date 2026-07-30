@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6713F54D8;
-	Thu, 30 Jul 2026 09:01:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9A3E3F6C42;
+	Thu, 30 Jul 2026 09:01:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785402064; cv=none; b=I49SvO0MUeJGlLXlRo/0VS+TEH0ZbJ5GQBNiMjfJVpwSl1HcQ2K7rM5Bs1R+ytpx3dW4nbj2xW5ISpo5UfJqWiIoYzmfFuWjKvZhqADNPf2aQgQKSLY8M6lYKWpwfRNR7gJPw2yiXh5jAWmWN8WQLYhSPOqaf5Y6e05iPYvAB9o=
+	t=1785402068; cv=none; b=igEqg53wjtouJ3UVcevMcjaxVo2CRCf1Q9vcd4kdIt7XsjqNo9EzVNqQZM1UHId85Wxw9FauVMVbTINo/Tu4QM6FeqAV677g1XxllKPiPwch/0CUzxNKajTPWtbxXM3ZcTX55RVC7yghEzn2b99N/MEhNVXMvGYZznDHF7zTv2U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785402064; c=relaxed/simple;
-	bh=MjZwVIjdv5N8afM/wDndFDbhKYUmyX2k+Mhzo3j2rTA=;
+	s=arc-20240116; t=1785402068; c=relaxed/simple;
+	bh=2+EZDb9w/zV3Oiis8rORw9FJnmPd6QcP/OSohznCbmk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FG12WptRHWhdNtoKB95EN7t1iMwVIvdlLbCVmWr7jXqKA4RXAARm1Q0wIcERK0sEbWV8SNeWWmhuUZjcN4Y7NysM/ORd50t8LUnAftaN4uT5f5lttBm2qqfaSQvNu7elqIVsf1H+NaWzGcsBatTezEFB1XNxXmrWqUEQd2s+6EA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PhOZGNpt; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=CzInaxh4T9ZB+BH8P6wAVjOefhlwQcP33ya4C3O8Ed+lQPa3PgrgAOcXZBaVIVBSSg/W7wBXQawqZCidKtnsNUO56iMB6NojfuLb2IJwh9aL1TBOD5AtJaOSI/Cxau285cJjdNP8kGlURKtt2VoipjHBf+rABd75MqFGrHj6vg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DzfrhfNW; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PhOZGNpt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DzfrhfNW"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785402063; x=1816938063;
+  t=1785402067; x=1816938067;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=MjZwVIjdv5N8afM/wDndFDbhKYUmyX2k+Mhzo3j2rTA=;
-  b=PhOZGNptA4/97ADosDUnKPv/uYKyjEdmPAOnkBCM+7qo6VGypXSC6eVn
-   Yh2k5s4WPeM5QuwIQSa9aGCnA0RFxyH7A5/yvE1cLSXxdxh3str8JRfGy
-   3dLOS4m1XuS1kzKbXamtk/AMjcXHYPo6j8DvZUabgLgrXh5As12arunZa
-   iviaAY0CLMmp3Tr+V5HG+0F+zaezZx7VH1MARCw/4BqJXNv6u3Em7bLS+
-   s5wWQW2bQXB1BkxOrodkCsjhpv9UImS0RBmJKIlSmO3uY3ay+MHOSmfha
-   cAxp7DuvaEn2ATfBWjMMacfhX+Ta2A76Z4lTRha1hAUUttWBcbzoArpJo
-   Q==;
-X-CSE-ConnectionGUID: FtGH4GCCQ52pQ8Yojqcw5A==
-X-CSE-MsgGUID: b9EQq8noRY28JrbQdizK/A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11859"; a="111563549"
+  bh=2+EZDb9w/zV3Oiis8rORw9FJnmPd6QcP/OSohznCbmk=;
+  b=DzfrhfNWBUHbbDoMwW3P/b8wJtieClcJpO5uEIPk+GcqSpBxqXmKVkYw
+   n9hjopNljBjROvJ+iTX/rNyNmH263XP2qJkI+1WrPIQ3P7WhEcr+tsQTr
+   GB6eZ2y9ldYmPW99EQ30jj2lwH2pBfr6mjbqwjl0rKRFUs027aqmHJ00P
+   Oz81YRlHslA9811VfUt2BY2W9eyIFOvOC4c3eH2qsSYh3qjn9XRLc9AmT
+   yh89ZJBdEw2OkDut9Wvu2F3dKlTPBjETUD3JRIjEwX/OP7FNHFScXrF2t
+   5mpd2L7/EV6AJA8z5fNxdkK5lpEwz9c4bv4BqWMFxog0hPCve5Qsbu09/
+   A==;
+X-CSE-ConnectionGUID: FghNuIk9T6OLi0pEhvf31A==
+X-CSE-MsgGUID: 71MITZwlSbmvPk9ayATe3g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11859"; a="111563560"
 X-IronPort-AV: E=Sophos;i="6.25,194,1779174000"; 
-   d="scan'208";a="111563549"
+   d="scan'208";a="111563560"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 02:01:03 -0700
-X-CSE-ConnectionGUID: K1aB+oYhQKyCk0Sf7NCNTg==
-X-CSE-MsgGUID: pHpGaFD2Rs6MsZ8eHYxpLw==
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jul 2026 02:01:06 -0700
+X-CSE-ConnectionGUID: yuw9jSYQR9uLqFqrZmiDYQ==
+X-CSE-MsgGUID: O3wgfdwQQfWtj1lOcR+Z2Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,194,1779174000"; 
-   d="scan'208";a="260846541"
+   d="scan'208";a="260846567"
 Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by orviesa009.jf.intel.com with ESMTP; 30 Jul 2026 02:00:59 -0700
+  by orviesa009.jf.intel.com with ESMTP; 30 Jul 2026 02:01:03 -0700
 From: Jiebin Sun <jiebin.sun@intel.com>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: acme@kernel.org,
@@ -61,9 +61,9 @@ Cc: acme@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Jiebin Sun <jiebin.sun@intel.com>
-Subject: [PATCH v5 v5 8/9] perf c2c: add function view browser UI and cacheline detail
-Date: Thu, 30 Jul 2026 17:05:20 +0800
-Message-ID: <20260730090521.2206375-9-jiebin.sun@intel.com>
+Subject: [PATCH v5 v5 9/9] perf c2c: document function view in perf-c2c man page
+Date: Thu, 30 Jul 2026 17:05:21 +0800
+Message-ID: <20260730090521.2206375-10-jiebin.sun@intel.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260730090521.2206375-1-jiebin.sun@intel.com>
 References: <20260730090521.2206375-1-jiebin.sun@intel.com>
@@ -75,27 +75,15 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the browser front end: create/run/delete the hist_browser and add the
-title. The d shortcut opens the existing per-cacheline detail view for the
-selected level-3 cacheline. Level-3 entries retain the source cacheline
-index, so the shortcut can locate the original entry without relying on a
-potentially ambiguous virtual address.
+Describe the function view hierarchy (read-side function -> contending
+writer function -> shared cachelines), the per-level indentation, and the
+keys, with a worked example.
 
-Require `iaddr` in the cacheline coalescing fields before building the
-view. Without it, the detail histograms may already have merged samples
-from different functions and cannot support reliable function attribution.
-
-Keep visible-row accounting local to the function view by wrapping the
-generic browser refresh callback and recounting the currently reachable
-hierarchy before each redraw. This keeps navigation correct when a level-1
-row is collapsed while level-3 descendants remain expanded, without adding
-C2C-specific hooks to the shared hist_browser or enabling report_hierarchy
-and its incompatible ownership rules. Also handle Ctrl-C like the other
-function-view exit keys.
-
-Wire the builder into perf_c2c__browse_function_view() and refuse to run
-under report_hierarchy, whose hist_entry__delete() recursion would put the
-borrowed child references.
+Document that reliable function attribution requires `iaddr` in
+`--coalesce`, that the reader and writer may be the same function, and why
+the coalesced function view cannot distinguish same-thread from
+different-thread accesses in that case. Also document that verbose mode
+includes code addresses in function rows.
 
 Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -113,301 +101,91 @@ Cc: Thomas Falcon <thomas.falcon@intel.com>
 Reviewed-by: Tianyou Li <tianyou.li@intel.com>
 Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
 ---
- tools/perf/ui/browsers/c2c-function.c | 239 +++++++++++++++++++++++++-
- 1 file changed, 236 insertions(+), 3 deletions(-)
+ tools/perf/Documentation/perf-c2c.txt | 71 +++++++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
 
-diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browsers/c2c-function.c
-index 9a95355eedf5..44fb072fa937 100644
---- a/tools/perf/ui/browsers/c2c-function.c
-+++ b/tools/perf/ui/browsers/c2c-function.c
-@@ -15,6 +15,7 @@
- #include <inttypes.h>
- #include <stdlib.h>
- #include <string.h>
-+#include <sys/ttydefaults.h>
- #include <tools/libc_compat.h> /* reallocarray */
- #include <asm/bug.h>
- #include <linux/list.h>
-@@ -49,6 +50,7 @@ static struct perf_c2c_ext c2c_ext;
+diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
+index e57a122b8719..8775889bc0a3 100644
+--- a/tools/perf/Documentation/perf-c2c.txt
++++ b/tools/perf/Documentation/perf-c2c.txt
+@@ -365,6 +365,77 @@ TUI OUTPUT
+ The TUI output provides interactive interface to navigate
+ through cachelines list and to display offset details.
  
- struct c2c_function_browser {
- 	struct hist_browser	hb;
-+	unsigned int		(*orig_refresh)(struct ui_browser *browser);
- };
++Pressing the 'TAB' key in the cacheline view switches to the function
++view.  The function view shows a three-level hierarchy of the symbolized
++entries retained in the cacheline view, organized around functions rather
++than cachelines.  Levels 1 and 2 normally show function names, while level 3
++shows cacheline addresses.  Lower levels are indented beneath their parents.
++Verbose mode also includes code addresses in function rows, and code addresses
++remain available in the per-cacheline detail view ('d').
++
++The function view requires `iaddr` in the cacheline coalescing fields.  If
++`--coalesce` omits it, TAB reports that the view is unavailable rather than
++attributing already-coalesced samples to an arbitrary function.
++
++  Level 1: the read-side function, sorted by Cycles % (estimated load
++           cycles: HITM, peer-snoop and other-load cycles)
++  Level 2: the functions sampled writing the shared lines read by the
++           level-1 function, sorted by store count.  This can be the same
++           function when it has both read and write samples
++  Level 3: the specific cachelines shared by the reader/writer pair
++
++The Cycles % value is the function's share of event-provided load
++latency/weight estimates from cacheline-detail entries retained in the
++current view.  It can include non-HITM and non-peer loads coalesced into
++entries that pass the C2C filter, so it is not a pure contention-cycle
++percentage.  The share is relative to the functions and entries retained
++for the current report and is not comparable across recordings or different
++`--coalesce` settings.
++
++The store count on a level-1 row is the number of sampled stores by writers
++shown in the function view into the cachelines that function reads, including
++stores from the same function.  It decomposes into the level-2 writer rows;
++each level-2 count in turn decomposes into that writer's stores on its level-3
++cachelines.  A level-3 count is therefore not the cacheline's total store
++count.  The level-1 value is not the number of stores made by the reader and
++is not additive across level-1 rows: two functions reading the same line each
++carry the stores into that line.
++
++Each function aggregates all of its code addresses into a single entry,
++and a level-2 writer aggregates all of its shared cachelines, so a
++reader/writer pair is a single row with its total shown -- there is no
++need to sum a writer's traffic across cachelines by hand.
++
++In the function view the 'd' key opens the detail view of the selected
++level-3 cacheline, 'e'/'+' expands or collapses the current entry, and 'TAB',
++'ESC', 'q' or Ctrl-C returns to the cacheline view.
++
++For example, with the first two read-side functions collapsed and
++dequeue_pushable_task expanded to show the functions writing the lines it
++reads -- two of which are further expanded to their individual cachelines:
++
++  Shared Data Functions Table     (19 entries, sorted on Cycles %)
++     Cycles    Store
++          %    count  Function / Contending function / Cacheline
++  ----------------------------------------------------------------------
++  +  35.67%      876  + [k] cpupri_set
++  +  24.31%      424  + [k] pull_rt_task
++  -  16.53%      555  - [k] dequeue_pushable_task
++                 145    - [k] pull_rt_task
++                 145        0xff2d0082809da080
++                 139    - [k] enqueue_pushable_task
++                  70        0xff2d00a2071f9640
++                  69        0xff2d0082809da000
++
++Here dequeue_pushable_task pays 16.53% of the estimated read-side load-cycle
++cost.  Its store count decomposes into its level-2 writers, and each writer's
++count decomposes into its level-3 cachelines: pull_rt_task's 145 stores fall
++on a single line, while enqueue_pushable_task's 139 stores split across two
++lines (70 and 69).  A writer can be the same function as the reader when it
++has both read and write samples; after cacheline coalescing and
++function-level grouping, the view cannot distinguish same-thread accesses
++from different threads running the same function.
++
+ For details please refer to the help window by pressing '?' key.
  
- static inline u64 c2c_hitm_count(const struct c2c_stats *stats)
-@@ -93,6 +95,10 @@ static inline u64 hist_entry__iaddr(struct hist_entry *he)
- 	return he->ip;
- }
- 
-+/*
-+ * Hierarchy levels (by depth): L1 = read-side function, L2 = the writing
-+ * function it contends with, L3 = the specific shared cacheline.
-+ */
- static inline bool hist_entry__is_cacheline(struct hist_entry *he)
- {
- 	return he->parent_he && he->parent_he->parent_he;	/* level 3: cacheline */
-@@ -701,6 +707,7 @@ c2c_function_hists__reinit(struct c2c_hists *c2c_hists,
- 	return function_hpp_list__parse(&c2c_hists->list, output, sort, env);
- }
- 
-+/* Welford online merge of two "stats" (from util/stat.h) accumulators. */
- static void c2c_stats_merge(struct stats *dest, const struct stats *src)
- {
- 	double delta;
-@@ -1440,6 +1447,58 @@ static void c2c_function__update_symbol_width(struct hist_entry *he)
- 		hists__set_col_len(hists, HISTC_SYMBOL, need);
- }
- 
-+/*
-+ * Count visible entries in @root, descending only through visible, unfolded
-+ * parents. Match hists__filter_entries(), which drives generic browser
-+ * navigation, so the count cannot include rows the browser skips.
-+ */
-+static u64
-+c2c_function__nr_visible_rows(struct rb_root_cached *root, float min_pcnt)
-+{
-+	struct rb_node *nd;
-+	u64 rows = 0;
-+
-+	for (nd = rb_first_cached(root); nd; nd = rb_next(nd)) {
-+		struct hist_entry *he = rb_entry(nd, struct hist_entry, rb_node);
-+
-+		/*
-+		 * The generic refresh folds filtered parents and therefore hides
-+		 * their subtree. A percentage-rejected parent is merely skipped;
-+		 * if it is unfolded, qualifying descendants are still rendered.
-+		 */
-+		if (he->filtered)
-+			continue;
-+
-+		if (hist_entry__get_percent_limit(he) >= min_pcnt)
-+			rows++;
-+		if (he->has_children && he->unfolded)
-+			rows += c2c_function__nr_visible_rows(&he->hroot_out,
-+							     min_pcnt);
-+	}
-+	return rows;
-+}
-+
-+static void
-+c2c_function_browser__update_nr_entries(struct c2c_function_browser *browser)
-+{
-+	u64 nr_entries;
-+
-+	nr_entries = c2c_function__nr_visible_rows(&browser->hb.hists->entries,
-+						   browser->hb.min_pcnt);
-+	browser->hb.nr_non_filtered_entries = nr_entries;
-+	browser->hb.b.nr_entries = nr_entries;
-+}
-+
-+static unsigned int c2c_function_browser__refresh(struct ui_browser *ui_browser)
-+{
-+	struct hist_browser *hist_browser = container_of(ui_browser, struct hist_browser, b);
-+	struct c2c_function_browser *browser;
-+
-+	browser = container_of(hist_browser, struct c2c_function_browser, hb);
-+	c2c_function_browser__update_nr_entries(browser);
-+	return browser->orig_refresh(ui_browser);
-+}
-+
- /*
-  * Prune writers with no stores, drop functions left with no contending
-  * writer, sort the survivors by store count, then compute the global total.
-@@ -1512,7 +1571,7 @@ static void c2c_function_hists__reset(void)
-  *   L2: writing functions contending with each level-1 function
-  *   L3: shared cachelines for each function pair
-  */
--static int __maybe_unused build_function_view_hierarchy(void)
-+static int build_function_view_hierarchy(void)
- {
- 	static const char output_fields[] =
- 		"cycles_percent,total_stores,symbol_view";
-@@ -1591,8 +1650,182 @@ static int __maybe_unused build_function_view_hierarchy(void)
- 	return ret;
- }
- 
--int perf_c2c__browse_function_view(void)
-+static int c2c_function_browser__title(struct hist_browser *browser,
-+				       char *bf, size_t size)
- {
--	ui__warning("C2C function view is not implemented yet.\n");
-+	scnprintf(bf, size,
-+		  "Shared Data Functions Table     (%" PRIu64 " entries, sorted on Cycles %%)",
-+		  browser->hists->nr_non_filtered_entries);
- 	return 0;
- }
-+
-+static struct c2c_function_browser *c2c_function_browser__new(struct hists *hists)
-+{
-+	struct c2c_function_browser *browser;
-+
-+	if (!hists)
-+		return NULL;
-+
-+	browser = zalloc(sizeof(*browser));
-+	if (!browser)
-+		return NULL;
-+
-+	hist_browser__init(&browser->hb, hists);
-+	browser->orig_refresh = browser->hb.b.refresh;
-+	browser->hb.b.refresh = c2c_function_browser__refresh;
-+
-+	browser->hb.title = c2c_function_browser__title;
-+	browser->hb.c2c_filter = true;
-+	browser->hb.show_headers = true;
-+	/* Keep title line count consistent with forcing headers on. */
-+	browser->hb.b.extra_title_lines = hists->hpp_list->nr_header_lines;
-+	browser->hb.min_pcnt = 0.0;
-+
-+	/*
-+	 * Note: symbol_conf.report_hierarchy is deliberately left unset.
-+	 * The generic browser still descends into hroot_out children via
-+	 * rb_hierarchy_next()/can_goto_child(), which key off he->unfolded,
-+	 * so 'e'/'+' expands L1 -> L2 -> L3 correctly. Setting the flag would
-+	 * additionally make hist_entry__delete() recurse hroot_out and free
-+	 * each child, but our children borrow thread/ms (see
-+	 * c2c_child_entry__alloc()), so that would underflow their refcounts.
-+	 * Teardown is handled by c2c_he__free_hierarchy() instead.
-+	 */
-+	return browser;
-+}
-+
-+/*
-+ * c2c_function_browser__delete - Free function browser
-+ */
-+static void c2c_function_browser__delete(struct c2c_function_browser *browser)
-+{
-+	free(browser);
-+}
-+
-+static int c2c_function_browser__browse_cacheline_detail(struct hist_entry *he_selection)
-+{
-+	struct c2c_hist_entry *c2c_he;
-+	struct rb_node *nd;
-+
-+	if (!he_selection || !he_selection->parent_he ||
-+	    !he_selection->parent_he->parent_he)
-+		return -1;
-+
-+	c2c_he = container_of(he_selection, struct c2c_hist_entry, he);
-+
-+	for (nd = rb_first_cached(&c2c.hists.hists.entries); nd; nd = rb_next(nd)) {
-+		struct hist_entry *he = rb_entry(nd, struct hist_entry, rb_node);
-+		struct c2c_hist_entry *cacheline_he;
-+
-+		if (he->filtered)
-+			continue;
-+
-+		cacheline_he = container_of(he, struct c2c_hist_entry, he);
-+		if (cacheline_he->hists &&
-+		    cacheline_he->cacheline_idx == c2c_he->cacheline_idx)
-+			return perf_c2c__browse_cacheline(he);
-+	}
-+
-+	return -1;
-+}
-+
-+static bool c2c_function__has_iaddr(void)
-+{
-+	const char *field = c2c.cl_sort;
-+
-+	while (field && *field) {
-+		const char *end = strchr(field, ',');
-+		size_t len = end ? (size_t)(end - field) : strlen(field);
-+
-+		if (len == sizeof("iaddr") - 1 && !strncmp(field, "iaddr", len))
-+			return true;
-+		field = end ? end + 1 : NULL;
-+	}
-+	return false;
-+}
-+
-+/*
-+ * perf_c2c__browse_function_view - Browse function view with TAB key support
-+ *
-+ * Returns: 0 on success, negative error code on failure
-+ */
-+int perf_c2c__browse_function_view(void)
-+{
-+	struct c2c_function_browser *sym_browser;
-+	bool saved_use_callchain = symbol_conf.use_callchain;
-+	int key, ret;
-+	static const char help[] =
-+	" d             Display details for the selected level-3 cacheline\n"
-+	" e/+           Expand/collapse the selected entry\n"
-+	" TAB/ESC/q/^C  Return to the cacheline view\n";
-+
-+	if (!c2c_function__has_iaddr()) {
-+		ui__warning("The function view requires iaddr in --coalesce.\n");
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * The level-2/3 children borrow thread/ms (see c2c_child_entry__alloc())
-+	 * and are torn down by c2c_he__free_hierarchy(). report_hierarchy would
-+	 * make hist_entry__delete() recurse into hroot_out and put those borrowed
-+	 * refs (and call a NULL ops->free), so refuse to run if it is ever set.
-+	 */
-+	if (WARN_ON_ONCE(symbol_conf.report_hierarchy))
-+		return -EINVAL;
-+
-+	/* Disable callchain before building so no callchain structs are allocated. */
-+	symbol_conf.use_callchain = false;
-+
-+	ret = build_function_view_hierarchy();
-+	if (ret) {
-+		ui__error("Failed to build function view hierarchy (ret=%d)\n", ret);
-+		goto out;
-+	}
-+
-+	sym_browser = c2c_function_browser__new(&c2c_ext.function_hists.hists);
-+	if (!sym_browser) {
-+		ret = -ENOMEM;
-+		goto out_reset;
-+	}
-+
-+	/* Reset abort key so we can receive Ctrl-C as a key. */
-+	SLang_reset_tty();
-+	SLang_init_tty(0, 0, 0);
-+	SLtty_set_suspend_state(true);
-+
-+	while (1) {
-+		c2c_function_browser__update_nr_entries(sym_browser);
-+		key = hist_browser__run(&sym_browser->hb, "? - help", true, 0);
-+
-+		switch (key) {
-+		case 'q':
-+		case K_TAB:
-+		case K_ESC:
-+		case CTRL('c'):
-+			goto browser_done;
-+		case 'd':
-+			/* Cacheline detail honors the user's callchain setting. */
-+			symbol_conf.use_callchain = saved_use_callchain;
-+			c2c_function_browser__browse_cacheline_detail(sym_browser->hb.he_selection);
-+			/* Preserve any toggle made in the detail view, then
-+			 * re-disable callchain for the function view.
-+			 */
-+			saved_use_callchain = symbol_conf.use_callchain;
-+			symbol_conf.use_callchain = false;
-+			break;
-+		case '?':
-+			ui_browser__help_window(&sym_browser->hb.b, help);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+browser_done:
-+	c2c_function_browser__delete(sym_browser);
-+out_reset:
-+	c2c_function_hists__reset();
-+out:
-+	symbol_conf.use_callchain = saved_use_callchain;
-+	return ret;
-+}
+ CREDITS
 -- 
 2.52.0
 
