@@ -1,18 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8826125F7B9;
-	Fri, 31 Jul 2026 23:28:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2ECE45A2AE;
+	Fri, 31 Jul 2026 23:28:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785540510; cv=none; b=D2Ty48RH1aiaXyXaW0pui/ZLNZLKNVeFKNpDAY9G9JO1mJos67pB/MTBKJwvJIqA+TZ4/j+dXEGh6F7v+qyPY449KbuygHZyiGKt/CWJAOdRFeyZGg7nvwtgPhZPNC6rA0gO+ZdItIK6qxXQhrdWaU1NwUcF8MxAt77Z7ZrXGxI=
+	t=1785540512; cv=none; b=twbwwSiHtZrJ3TZIJ0j+dy5MJyl7Xar6+yXRD0KIuGjdwxcQSnkNqaeF0664tbdKryw+G5uXvPUPAr3QdA29/0q6NtQDruvPgGcNnGqcO0AgpQk04mCOmBFB4fvALk7C2wFzVYVHnY0EIBZ9Zvde+WUR2sKqnF7pDyAr7jNs85s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785540510; c=relaxed/simple;
-	bh=iiEkSAAwx55Zn5peXJTzFixohV/NENi3eyR9Kg3paYk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qNeNfT7oqgrKuIF5ySDIjA96UU+efkZRVpzO312vdFY6DpiInd6XVtnbLkcn7tbQBwIzERqebTUeYGjeZFh1ihgYwCrf3wtQNrNazMWyqnWq2wqZAKO4kJp/qwvM4m4YzJ0ZUD1qjgsXYfwZZtH/Dwsd/wV5fBjhppRVs6y/NV4=
+	s=arc-20240116; t=1785540512; c=relaxed/simple;
+	bh=uyQoEyxA8tyoeBJLGNmryq0yKR8SEy7WNGyIHdHNP4s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ST6sFH4KPNxkL266FmVrfX9qQm4SOoDHOJQR9RTWCwTW5T2c0S4ZncWF23Uu0pm2bIQCTFag9V25FLMM8IsNH1nrAiLD7hJqTyMxi2T74pr+QySW4Q9ZhPtEP2XCu2iqnLKQKtixu04OyzOUu9CshtkCGogoBBfCEbjMiCUWEI8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57F3B1F00AC4;
-	Fri, 31 Jul 2026 23:28:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0E791F00ACA;
+	Fri, 31 Jul 2026 23:28:30 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: linux-cxl@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
@@ -21,11 +22,14 @@ Cc: jic23@kernel.org,
 	mark.rutland@arm.com,
 	dave@stgolabs.net,
 	robin.murphy@arm.com,
+	sashiko-bot@kernel.org,
 	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Subject: [PATCH v3 0/9] perf/cxlpmu: Misc sashiko raised issues fixes
-Date: Fri, 31 Jul 2026 16:28:18 -0700
-Message-ID: <20260731232827.401447-1-dave.jiang@intel.com>
+Subject: [PATCH v3 1/9] perf/cxl: Program the requested event group on configurable counters
+Date: Fri, 31 Jul 2026 16:28:19 -0700
+Message-ID: <20260731232827.401447-2-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260731232827.401447-1-dave.jiang@intel.com>
+References: <20260731232827.401447-1-dave.jiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -34,59 +38,58 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Teed off of Davidlohr's misc cxlpmu series [1]. I had Claude pick up all
-the sashiko raised issues and then continued multiple internal review
-iterations to pick up a number of fixes. I'm no CXL PMU or perf expert,
-but the fixes look reasonable to me AFAICT.
+cxl_pmu_get_event_idx() sets *counter_idx for a configurable counter but
+never *event_idx. hwc->event_base stays 0, so cxl_pmu_event_start()
+programs event group 0 no matter which group the user asked for.
 
-Since v2:
-- 1/9: check event_idx alongside counter_idx (Jonathan).
-- 2/9: use FIELD_MODIFY() rather than mask-then-OR, for the four fields
-  that can carry a stale value (Jonathan).
-- 3/9: rewrite the rationale, no code change (Jonathan).
-- 4/9: new patch, split the MSI vector out of info->irq (Robin, Jonathan).
-- 5/9: was 4/9, now tests info->msi_vec. Fix unchanged.
-- 6/9: was 5/9, retitled. Drop IRQF_SHARED as well as adding
-  IRQF_NOBALANCING (Jonathan, Robin). Review tags dropped as the patch
-  grew.
-- 7/9: was 6/9. Don't unfreeze if the PMU has been disabled meanwhile
-  (Robin, Jonathan). Review tag dropped as the patch grew a hunk.
-- 8/9: was 7/9, unchanged.
-- 9/9: was 8/9, retitled. Drop the cxl_pmu_offline_cpu() hunk, and clear
-  the overflow status at probe so a stale bit from firmware cannot reach
-  the handler (Robin). Ack dropped as the patch grew a hunk.
-- dropped: the old 9/9 (cpumask_of(-1) guard).
+Return the matched capability's event_idx.
 
-Since v1:
-- Updated 3/9 to address sashiko issue.
-- No other changes as sashiko only raised issue with pre-existing.
+Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+Reported-by: sashiko-bot@kernel.org
+Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
+Assisted-by: Claude:claude-opus-4-8
+Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+---
+v3:
+- Check event_idx alongside counter_idx at the top of the scope. (Jonathan)
+---
+ drivers/perf/cxl_pmu.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Two follow-ups this series does not attempt. cxl_pmu_read() relies on
-local64_t being same-CPU, which is the only reason the interrupt has to be
-pinned at all; moving prev_count and event->count off local64_t would make
-that moot and Robin may have a view on whether it is worth it. And the
-on_cpu transient plus dead branch above want the same patch, possibly on
-top of the generic PMU hotplug rework Jonathan pointed at [2].
-
-[1]: https://lore.kernel.org/linux-cxl/20260715191454.459673-1-dave@stgolabs.net/
-[2]: https://lore.kernel.org/linux-arm-kernel/cover.1784911757.git.robin.murphy@arm.com/
-
-Dave Jiang (9):
-  perf/cxl: Program the requested event group on configurable counters
-  perf/cxl: Clear stale event fields before reprogramming a counter
-  perf/cxl: Fix the counter overflow delta fixup
-  perf/cxl: Split the MSI vector out of info->irq
-  perf/cxl: Accept an overflow interrupt on MSI message number 0
-  perf/cxl: Don't share the overflow interrupt, and keep it pinned
-  perf/cxl: Unfreeze counters after handling an overflow interrupt
-  perf/cxl: Validate the hardware-reported counter width
-  perf/cxl: Don't log through pmu.dev in the overflow interrupt handler
-
- drivers/perf/cxl_pmu.c | 88 +++++++++++++++++++++++++++++++-----------
- 1 file changed, 65 insertions(+), 23 deletions(-)
-
-
-base-commit: f5098b6bae761e346ebcd9da7f95622c04733cff
+diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+index 68a54d97d2a8..ff01b658e1b4 100644
+--- a/drivers/perf/cxl_pmu.c
++++ b/drivers/perf/cxl_pmu.c
+@@ -513,7 +513,10 @@ static const struct attribute_group *cxl_pmu_attr_groups[] = {
+ 	NULL
+ };
+ 
+-/* If counter_idx == NULL, don't try to allocate a counter. */
++/*
++ * If counter_idx == NULL, don't try to allocate a counter. Callers that
++ * allocate pass both counter_idx and event_idx.
++ */
+ static int cxl_pmu_get_event_idx(struct perf_event *event, int *counter_idx,
+ 				 int *event_idx)
+ {
+@@ -541,7 +544,7 @@ static int cxl_pmu_get_event_idx(struct perf_event *event, int *counter_idx,
+ 
+ 	pmu_ev = cxl_pmu_find_config_counter_ev_cap(info, vid, gid, mask);
+ 	if (!IS_ERR(pmu_ev)) {
+-		if (!counter_idx)
++		if (!counter_idx || !event_idx)
+ 			return 0;
+ 
+ 		bitmap_andnot(configurable_and_free, info->conf_counter_bm,
+@@ -552,6 +555,7 @@ static int cxl_pmu_get_event_idx(struct perf_event *event, int *counter_idx,
+ 			return -EINVAL;
+ 
+ 		*counter_idx = i;
++		*event_idx = pmu_ev->event_idx;
+ 		return 0;
+ 	}
+ 
 -- 
 2.55.0
 
