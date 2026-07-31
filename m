@@ -1,180 +1,191 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAE2646DFF6;
-	Fri, 31 Jul 2026 23:40:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 948C747DF99;
+	Fri, 31 Jul 2026 23:45:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785541241; cv=none; b=Oo4lUbv6vZlkXAdD3xpMRDpqVZ9C0jsMY3Iv7fcFDHQPvnOHk05KtvcJc1/aBDSC+tIAzSuopCxDUI5Zf7iHgCtjs0WR97VDeIQ4IgCVZthRBoxbe5bwqt4EaaCbqBPB//kjDfToJpsySdgL1rmlwX/vKUxmgXrbQ2r4vrK+4gE=
+	t=1785541514; cv=none; b=aJMRWCTctxAU11fMOmSOXDvUQfSLeK0SK5/jc/448jUNylgFCa+bFBcerLnk0XPhxjAxF9voRYtXc4zrOIoZIRfLJceFaDu2lsOXcVAvRXfEoJ0DW8LQBnCMKRP7Rd6TcELVpLS7gSa8+PMe5EQvceDnlY21ugLPvcyg+hmzVy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785541241; c=relaxed/simple;
-	bh=zAPoIHo9Sw0Pa8KhlliXVTFTMU0/1NjrYJ+qY1UA7LM=;
+	s=arc-20240116; t=1785541514; c=relaxed/simple;
+	bh=unFWOJg9QVDQhSuJ3wbhIllEBy4ZvR6jQWgX9R7IR6A=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=sHJeVUNoKY0prQM439aPt2HwKbPZ4KfpF1sgUYOQgIY9uYumVt1pGGZQ6HI4nPMtKKT5wiMqOxbci6r5o8GGoKmAiX2RbVsSXN5n2ht+KxUVZjy2A4H9ian/UZSfutRnOEmPOr1nvUjcN7TkncjfyCF17TUMSWlW4OcICCuSdSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l6IMa5XQ; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=tlSUGz01QeBan/NhAj5ZP6ydwXulcszfSj07QqZqPqv68fDQrv/ZhIaeYGZZpqVivjT3ZgDoH0k9i61PeIAnIq+HfUtkG+xxTjRl8IONyDRK0R1uPjygYB2IshhsmzfcT2Ookt5O9V4cLD4DzaXjDyLbbTJg6fIb3D8kSc94Npo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eHeZdwSr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l6IMa5XQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 627B01F00AC4;
-	Fri, 31 Jul 2026 23:40:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eHeZdwSr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5474A1F00AC4;
+	Fri, 31 Jul 2026 23:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785541239;
-	bh=o/FjPsnFkJkaHXDaSK+ssn+hHf8/X7Zr6GetgkMA6ms=;
+	s=k20260515; t=1785541513;
+	bh=ciuXeGUVPS/XYsdHyOz9SMrnvZDkNAL9VymGj8dLgBU=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=l6IMa5XQ0+VC2KRgGcXuJcYaLNzh8zYSGFpPLgN4VABzZ+Rp2x+KhjpFCh4gcNJXM
-	 H2+tekRLCYSVnu+395hNLpR87/AR1CQjWZRrNQQdiaVc2jKrPQiC77VPU/Lxm/5diU
-	 RZLu97K/hD50OiDpdpTCh+UB5QxJWNBKupoRCcg54r9CwRQS4tpZ+mB4Tc1+j/5yT8
-	 ICsTOl3cI1ExkzAIu2CVjBhKWX04fZ3EDAf6O4hxr9XNrfbvrrMtmP5vdF7eJqRoAA
-	 ffCQAmQYKgodZf/MopTDDrFEpMKuSvQvBAoxEpYtZpiCIVc+p1JXltIEaKo88g/BIr
-	 EhNQLTRLfIfvQ==
+	b=eHeZdwSrsCp7Zr9rTKfAI9TEJZniUMrjs+H9zT3N+jgAbqmYWOcWPVbOy0J8Ja8qn
+	 SKo8MKTcUMDYvZ/gKR+g2VI6GiN89XVT/EFHs6GxivtDzHb/vd68GYBTxw027OVZ2E
+	 syv9eW0Cg+gPZjUwJoqf8eRSKT1Wsr5m8HWGOJnjVFmkjdrXLss9yz81UOONBREv3G
+	 iBJpRBbBGXwkpOC3JPgAuCatEtrauh8z4udqSX+Z+AeqZmbgdGHoNbpTGtniubNkqY
+	 jHPAKUGDkkJvkNCQcJ/lxwIZOmXL/gddR7Hh//XwtBIO/cqQBP3W/ejU5U4oflkOv0
+	 kiK0yjWGlU6aQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 7/9] perf/cxl: Unfreeze counters after handling an
- overflow interrupt
+Subject: Re: [PATCH v3 4/9] perf/cxl: Split the MSI vector out of info->irq
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
 Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260731232827.401447-8-dave.jiang@intel.com>
+In-Reply-To: <20260731232827.401447-5-dave.jiang@intel.com>
 References: <20260731232827.401447-1-dave.jiang@intel.com>
- <20260731232827.401447-8-dave.jiang@intel.com>
+ <20260731232827.401447-5-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 31 Jul 2026 23:40:39 +0000
-Message-Id: <20260731234039.627B01F00AC4@smtp.kernel.org>
+Date: Fri, 31 Jul 2026 23:45:12 +0000
+Message-Id: <20260731234513.5474A1F00AC4@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 6 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Cross-CPU data race on local64_t variables and spurious counter in=
-crements during CPU hotplug migration.
-- [High] Unregistering the PMU before removing the CPU hotplug instance cre=
-ates a Use-After-Free window during driver removal.
+- [High] The check `info->msi_vec <=3D 0` incorrectly rejects valid MSI vec=
+tor index 0.
+- [High] Incorrect registration order of the PMU and CPU hotplug instance l=
+eads to a Use-After-Free or NULL pointer dereference during hotplug events.
+- [High] PMU hardware is not frozen during CPU hotplug migration, and the i=
+nterrupt is shared, leading to concurrent SMP execution of `local64_t` oper=
+ations without SMP safety.
+- [High] The driver dynamically changes the CPU affinity of an interrupt re=
+quested with IRQF_SHARED, forcibly breaking affinity for other devices shar=
+ing the IRQ.
+- [Medium] The PMU firmware's counter width is used without validation, whi=
+ch can cause undefined behavior via out-of-bounds bit shifts.
+- [Medium] Silent truncation of user-provided PMU threshold values.
 --
 
---- Patch [7]: [PATCH v3 7/9] perf/cxl: Unfreeze counters after handling an=
- overflow interrupt ---
-commit d6decd45c5a5019eddbbf261ba3f712c1ad75535
+--- Patch [4]: [PATCH v3 4/9] perf/cxl: Split the MSI vector out of info->i=
+rq ---
+commit ad9898396611ac9af6c4819fa48aba52e6dbeb08
 Author: Dave Jiang <dave.jiang@intel.com>
+Subject: perf/cxl: Split the MSI vector out of info->irq
 
-perf/cxl: Unfreeze counters after handling an overflow interrupt
-
-This patch ensures CXL PMU counters are unfrozen after clearing an overflow
-interrupt. Previously, counters remained frozen until the next pmu_enable(),
-causing events to be lost during that window. It tracks the PMU enabled
-state to avoid unfreezing if the PMU was disabled concurrently.
-
-Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolab=
-s.net?part=3D1
+The commit separates the MSI/MSI-X message number from the Linux virq by
+introducing a new msi_vec field in struct cxl_pmu_info. This clarifies
+the use of the field during probe before it gets overwritten with the virq.
 
 > diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index 6fdc66a01fb67..580a75bc9210a 100644
+> index 3511d049aea40..56e6ae7bebf7c 100644
 > --- a/drivers/perf/cxl_pmu.c
 > +++ b/drivers/perf/cxl_pmu.c
 
 [ ... ]
 
-> @@ -803,6 +807,9 @@ static irqreturn_t cxl_pmu_irq(int irq, void *data)
+> @@ -874,10 +875,10 @@ static int cxl_pmu_probe(struct device *dev)
+>  		.capabilities =3D PERF_PMU_CAP_NO_EXCLUDE,
+>  	};
 > =20
->  	writeq(overflowed, base + CXL_PMU_OVERFLOW_REG);
-> =20
-> +	if (READ_ONCE(info->enabled))
-> +		writeq(0, base + CXL_PMU_FREEZE_REG);
-> +
->  	return IRQ_HANDLED;
->  }
+> -	if (info->irq <=3D 0)
+> +	if (info->msi_vec <=3D 0)
 
 [Severity: High]
-This is a pre-existing issue, but can this sequence corrupt performance
-counters during CPU hotplug?
+This is a pre-existing issue, but does this incorrectly reject a valid MSI
+vector index of 0?
 
-Looking at cxl_pmu_offline_cpu(), perf_pmu_migrate_context() is called
-before the IRQ affinity is updated:
+The CXL PMU capability register provides a 0-based MSI vector number (0-15).
+If the firmware specifies MSI message number 0, info->msi_vec becomes 0.
+cxl_pmu_probe() then erroneously aborts with -EINVAL, causing valid
+devices using MSI vector 0 to fail probing completely.
 
-drivers/perf/cxl_pmu.c:cxl_pmu_offline_cpu() {
-	...
-	perf_pmu_migrate_context(&info->pmu, cpu, target);
-	info->on_cpu =3D target;
-	/*
-	 * CPU HP lock is held so we should be guaranteed that this CPU hasn't
-	 * yet gone away.
-	 */
-	WARN_ON(irq_set_affinity(info->irq, cpumask_of(target)));
-	...
-}
+>  		return -EINVAL;
+> =20
+> -	rc =3D pci_irq_vector(pdev, info->irq);
+> +	rc =3D pci_irq_vector(pdev, info->msi_vec);
+>  	if (rc < 0)
+>  		return rc;
+>  	irq =3D rc;
 
-If an overflow MSI is delivered to the old CPU in this narrow window,
-cxl_pmu_irq() runs on the old CPU. If the new CPU has already re-added and
-started the event, it has cleared hwc->prev_count to 0.
-
-Because the hardware overflow register is only cleared by the IRQ handler,
-the old CPU sees a stale overflow flag and invokes __cxl_pmu_read(). The
-condition new_cnt >=3D prev_cnt passes (since prev_cnt is 0), causing it to
-erroneously add a full period (mask + 1) to the counter:
-
-drivers/perf/cxl_pmu.c:__cxl_pmu_read() {
-	...
-	do {
-		prev_cnt =3D local64_read(&hwc->prev_count);
-		new_cnt =3D cxl_pmu_read_counter(event);
-	} while (local64_cmpxchg(&hwc->prev_count, prev_cnt, new_cnt) !=3D prev_cn=
-t);
-
-	/* ... */
-	mask =3D GENMASK_ULL(info->counter_width - 1, 0);
-	delta =3D (new_cnt - prev_cnt) & mask;
-	if (overflow && new_cnt >=3D prev_cnt)
-		delta +=3D mask + 1;
-
-	local64_add(delta, &event->count);
-}
-
-Does this also cause a data race since local64_t operations lack cross-CPU
-atomic guarantees?
+I also noticed a few other pre-existing issues in this file:
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does the devm teardown order
-create a use-after-free window during driver removal?
+This isn't a bug introduced by this patch, but could the PMU registration
+order cause a NULL pointer dereference or use-after-free during hotplug?
 
-In cxl_pmu_probe(), the CPU hotplug instance is registered before the PMU:
+In cxl_pmu_probe(), cpuhp_state_add_instance() is called before
+perf_pmu_register(). If a CPU hotplug event triggers immediately:
 
-drivers/perf/cxl_pmu.c:cxl_pmu_probe() {
-	...
-	rc =3D cpuhp_state_add_instance(cxl_pmu_cpuhp_state_num, &info->node);
-	if (rc)
-		return rc;
+cxl_pmu_offline_cpu()
+  perf_pmu_migrate_context()
 
-	rc =3D devm_add_action_or_reset(dev, cxl_pmu_cpuhp_remove, info);
-	if (rc)
-		return rc;
+Since perf_pmu_register() hasn't allocated pmu->pmu_cpu_context yet,
+could this result in a NULL pointer dereference?=20
 
-	rc =3D perf_pmu_register(&info->pmu, info->pmu.name, -1);
-	if (rc)
-		return rc;
+Furthermore, upon module unload, devm executes teardown in reverse order.
+perf_pmu_unregister() is called before removing the hotplug instance,
+creating a window where a CPU offline event could trigger a use-after-free
+on the unregistered PMU context.
 
-	rc =3D devm_add_action_or_reset(dev, cxl_pmu_perf_unregister, info);
-	...
+[Severity: High]
+This is a pre-existing issue, but is it safe to use local64_cmpxchg() when
+the PMU interrupt is shared and not disabled during migration?
+
+cxl_pmu_offline_cpu() migrates PMU events without disabling the PMU hardwar=
+e.
+Because the interrupt is shared (IRQF_SHARED), it can fire on any CPU at any
+time due to other devices sharing the line:
+
+cxl_pmu_irq()
+  __cxl_pmu_read()
+    local64_cmpxchg()
+
+Concurrently, the new CPU can start or read events, also invoking
+__cxl_pmu_read(). Since local64_t operations are only safe for single-CPU
+access, could cross-CPU concurrent access corrupt the performance counters?
+
+[Severity: Medium]
+This isn't a bug introduced by this patch, but could an unvalidated counter
+width from firmware cause undefined behavior?
+
+In cxl_pmu_parse_caps(), info->counter_width is read directly from the hard=
+ware
+capability register. If firmware reports a width of 0, __cxl_pmu_read()
+computes GENMASK_ULL(0 - 1, 0).
+
+Since 0 - 1 promotes to an int value of -1, passing it to GENMASK_ULL
+evaluates to a negative bit shift (~0ULL >> 64), which is undefined behavio=
+r.
+
+[Severity: High]
+This is a pre-existing issue, but does this driver dynamically alter the
+affinity of a shared interrupt?
+
+cxl_pmu_probe() requests the PMU interrupt with the IRQF_SHARED flag.
+However, during CPU hotplug events, cxl_pmu_online_cpu() and
+cxl_pmu_offline_cpu() unconditionally call irq_set_affinity() to bind the
+interrupt to a specific CPU.
+
+Dynamically changing the hardware affinity of a shared interrupt can reroute
+interrupts for all other unrelated devices sharing that IRQ line, violating
+system isolation and potentially causing performance regressions or timeouts
+for other drivers.
+
+[Severity: Medium]
+This isn't a bug introduced by this patch, but does the configuration
+accessor truncate user-provided threshold values?
+
+The format attribute threshold is exposed via sysfs as config1:0-15 (16 bit=
+s).
+However, cxl_pmu_config1_get_threshold() uses a u8 return type:
+
+static u8 cxl_pmu_config1_get_threshold(struct perf_event *event)
+{
+	return FIELD_GET(CXL_PMU_ATTR_CONFIG1_THRESHOLD_MSK, event->attr.config1);
 }
 
-During driver removal, devm executes actions in LIFO order.
-cxl_pmu_perf_unregister() runs first, delegating to perf_pmu_unregister(),
-which frees pmu->cpu_pmu_context.
-
-If a CPU is offlined concurrently before cxl_pmu_cpuhp_remove() runs,
-cxl_pmu_offline_cpu() is invoked:
-
-drivers/perf/cxl_pmu.c:cxl_pmu_offline_cpu() {
-	...
-	perf_pmu_migrate_context(&info->pmu, cpu, target);
-	...
-}
-
-Will perf_pmu_migrate_context() access the freed cpu_pmu_context when it
-calls find_get_pmu_context()?
+This silently truncates any 16-bit user input to 8 bits, resulting in the P=
+MU
+being configured with an incorrect threshold without returning any error to
+userspace.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260731232827.4014=
-47-1-dave.jiang@intel.com?part=3D7
+47-1-dave.jiang@intel.com?part=3D4
