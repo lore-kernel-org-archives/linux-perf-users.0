@@ -1,92 +1,102 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D58430F92D;
-	Fri, 31 Jul 2026 06:59:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BCE8C1F;
+	Fri, 31 Jul 2026 07:37:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785481187; cv=none; b=rd02oQ92CBQRNDFeHXm3Svbic1eHfTnNf6lzrhuy8ObKalEOsu3O64rcXa6Uu28lxpyYTh5vQIGBlQv2ulmLBzXwgfVv1gPJ62XUYbqcZSSIS9ubHCwVnE0hKVG5yAaXDd22qNN3TeefWCetkir4MU9CiBk3bzAdXY+IodDDxhw=
+	t=1785483477; cv=none; b=kJpfvmSWPN48SA93Kl6GW2Lkp4tK1AI6YD6V0Cru61F/OsYNj6T52De8Ba+k/Xmb5+w7Jo7mFt4mcXcV6SOCMWhiKk+yLDWev84yU7OOeen601m5LYoKWXKfYYnuXlw+wk64Obcl+81d5GsA3dgAMmssBa7cbq+bEazkNbfd1nw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785481187; c=relaxed/simple;
-	bh=OAzUPG308bSFiJus+9fUvVqFx60KXPL0dOljxnhzkyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MXFcULYmNl+QwbUgZXlR8UFAFBON1S1kNhivjmUnSxphO2Kef8rCR07f29c4+fW0pSHF8nwhFGtxc9cMVQrHjxliJyTAcASsIJXy273Tuee/RtifWDD1qtIEYiqQvyTC6Zc1xc+6goxb81lMawyiq5bZYosrOWA8+wZMgw6S74o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=QC02GEhf; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1785483477; c=relaxed/simple;
+	bh=uw6A37i8UknN3xWJtGW5LZq90o9FhxG1Gc0xI35RaAU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=E83XbPwwr53iQzS9BHqd1fHPChsipkURtRpjuFHVSAT9obIoua4ypXuJ9eU0KOVSTCFUOG6HCna6TuAC6S0lB3qG40veaivk9TjYLFMA0l6qndlZZtGe54BQdSdWC+zXS3fbZYq4CRneVZeUaktEj0P/Z0reASSynicoEMR5ygc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hvC9PhNo; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="QC02GEhf"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1855820E3;
-	Thu, 30 Jul 2026 23:59:40 -0700 (PDT)
-Received: from localhost (a085714.arm.com [10.164.19.28])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F1523F86F;
-	Thu, 30 Jul 2026 23:59:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1785481184; bh=OAzUPG308bSFiJus+9fUvVqFx60KXPL0dOljxnhzkyQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QC02GEhfCiI0em67YgTLHRPfaCb/dfs+G3WtGfvhepMbRXWH055GKUXJXt6pMlijz
-	 hT9rJRKzYW9aKfsLaUp7wjeWgB7ykVkZ7QlwPmt8SYdkcC4HSzMtMhiD9uqxfhjbvP
-	 vXMSQz6l2emXPCT4oaiM9BcgLtdshUgS/uOEQARE=
-Date: Fri, 31 Jul 2026 12:29:40 +0530
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-To: =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Cc: Muhammad Usama Anjum <usama.anjum@arm.com>, 
-	Jani Nikula <jani.nikula@linux.intel.com>, Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin <tursulin@ursulin.net>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Dimitri Sivanich <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, 
-	Helge Deller <deller@gmx.de>, Stefano Stabellini <sstabellini@kernel.org>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
-	Andrew Morton <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>, 
-	Lorenzo Stoakes <ljs@kernel.org>, Will Deacon <will@kernel.org>, 
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
-	David Hildenbrand <david@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
-	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Leon Romanovsky <leon@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, 
-	Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, ziy@nvidia.com, 
-	pfalcato@suse.de, agordeev@linux.ibm.com, ryan.roberts@arm.com, 
-	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org, linux-mm@kvack.org, 
-	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, kasan-dev@googlegroups.com, 
-	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	damon@lists.linux.dev
-Subject: Re: [PATCH RFC 01/11] mm: introduce hw_pte_t for PTE table storage
-Message-ID: <dzpt4ays25vvoyt56oy4iatfbqwp7z4gdsxumirv3v2nbvhoy4@73upph7f2hbk>
-References: <20260727164715.2866609-1-usama.anjum@arm.com>
- <20260727164715.2866609-2-usama.anjum@arm.com>
- <6xah74eadjmo2bozyr62wcxo4hhpsiufx2mshh7tztyy2dzzps@63m327m7pl5u>
- <41414c5b-e98a-4a55-ac87-ca982b248ca3@suse.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hvC9PhNo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785483476; x=1817019476;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=uw6A37i8UknN3xWJtGW5LZq90o9FhxG1Gc0xI35RaAU=;
+  b=hvC9PhNorzPnYt/gxJifJx6vbXVzphPv1heMlogysnvGQYIMc7DJek8f
+   OyTv3nWN2FzarsxItnGOOood4ooBlIRbCesBV9tKuWFweT8+AuhCn8CmB
+   8NIkQUiPJmh1HCDNJYAYJKZ7JTJSyJhOANgsyba/Bb6HZpSKXybYh3Fmc
+   7bBm7UkPP0itRwc2GtRtkUAuvr7bGfbZ3zRSPiN4sQLc7ghrJ/+l/PVVV
+   9rMkk/yDdYsLaQUdIkWqb863YvToKUrL6jNLX9gTw/w7BiByCfB7HkZrn
+   4D79plWE54XHL3IcSYtPEcbfVVKuMd1/2AwBuXXbthltJheXKDenNtvxG
+   Q==;
+X-CSE-ConnectionGUID: e20/ZI+TRO6uyCN5j1Lo2Q==
+X-CSE-MsgGUID: EgPGai4lT1uoJFpOK6e4Lw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11860"; a="96464751"
+X-IronPort-AV: E=Sophos;i="6.25,196,1779174000"; 
+   d="scan'208";a="96464751"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2026 00:37:55 -0700
+X-CSE-ConnectionGUID: 8+LeXcwvRI+QIE4L5X5hXw==
+X-CSE-MsgGUID: ccXYFHKnR3G7rB9fH0G38g==
+X-ExtLoop1: 1
+Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
+  by fmviesa003.fm.intel.com with ESMTP; 31 Jul 2026 00:37:51 -0700
+From: Jiebin Sun <jiebin.sun@intel.com>
+To: namhyung@kernel.org
+Cc: acme@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	irogers@google.com,
+	james.clark@linaro.org,
+	jolsa@kernel.org,
+	mark.rutland@arm.com,
+	dapeng1.mi@linux.intel.com,
+	thomas.falcon@intel.com,
+	tianyou.li@intel.com,
+	wangyang.guo@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiebin Sun <jiebin.sun@intel.com>
+Subject: Re: [PATCH v4 0/9] perf c2c: add a function view
+Date: Fri, 31 Jul 2026 15:44:20 +0800
+Message-ID: <20260731074420.359844-1-jiebin.sun@intel.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <amwL794Mj0O3vOkr@google.com>
+References: <amwL794Mj0O3vOkr@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <41414c5b-e98a-4a55-ac87-ca982b248ca3@suse.com>
 
-On Fri, Jul 31, 2026 at 08:53:46AM +0200, Jürgen Groß wrote:
-> On 31.07.26 07:49, Anshuman Khandual wrote:
-> > On Mon, Jul 27, 2026 at 05:46:52PM +0100, Muhammad Usama Anjum wrote:
-> > > pte_t is used both for logical PTE values and for entries stored in a PTE
-> > > table, so pte_t * does not distinguish a pointer to a copied value from a
-> > > pointer to table storage.
-> > 
-> > Should we rather call them as "Linux PTE" and "HW PTE" instead ?
-> 
-> What about "SW PTE"?
+On Thu, Jul 30, 2026 at 07:43:59PM -0700, Namhyung Kim wrote:
+> Is it possible to add proper refcounts instead of borrowing?  I guess
+> that'd make the code simpler.
 
-Both Linux PTE or SW PTE would be better than current Logical PTE description.
+Yes, and it is simpler. Let me check the approach with you before I post v6.
 
+The children now take their own references:
 
+      child_he->ops = &c2c_function_entry_ops;
+      map_symbol__copy(&child_he->ms, &src_he->ms);   /* was memcpy() */
+      child_he->thread = thread__get(src_he->thread); /* was a raw assign */
+
+      hist_entry__delete(child_he);                   /* was a custom free */
+
+hist_entry__delete() takes care of thread/ms, mem_info, stat_acc and
+srcline/srcfile, and calls ops->free() for the c2c-private fields. So the
+custom destructor and the WARN_ON_ONCE(report_hierarchy) guard both go away.
+
+Two sashiko comments fall out of this as well: the leaked srcline/srcfile and
+the missing ops are both covered by the generic destructor now, so I did not
+treat them separately. It also asked for NO_SLANG stubs for the two entry
+points declared in c2c.h, so I added them the way util/hist.h does.
+
+If this looks right, I will send v6.
+
+Thanks,
+Jiebin
