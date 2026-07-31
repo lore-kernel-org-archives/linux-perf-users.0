@@ -1,138 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AB444781A;
-	Fri, 31 Jul 2026 23:32:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08ACADDCD;
+	Fri, 31 Jul 2026 23:37:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785540761; cv=none; b=rmWKBCzv6xKiMLz3on4jKkfl+4i4tEVLy84AqOyX8HWsUP91R/J+qA2fEg29oDj3Q+yer+tVmxejMhScV7Vd4JuuUSU285FgweYstvK3FSeYJkiXJTFSzUmPuu/DfXEV2ZGF62hM2xzQM2X8iBPsNHHMcyfr6D2J9fxFcaleaTQ=
+	t=1785541047; cv=none; b=RtyVTNpFfkCMNrDxf/qv2icZuEnq4MgKmAsw1dvqtjX4Hu38DjOV23K7KJB2N9NiXj4w21ayHD0963hQgLFj+0rRK3jZMpak6ABXfnnPt2YKSfm9XOcQV1ceqlWaJQ6uuNb6VhatB1ksLUH9b7glK5dCssbbZ0zTOJWxGpugNrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785540761; c=relaxed/simple;
-	bh=NX+qMY7Z+Tz4La2FhpK7ALZnDA8LaIeePy2CJi2hCr4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QuGEz5IlKTMB0JShLOJTMIRMwa1C5e95K2+//jBcKMkxii4vlD8Zyk/mMbNnG0zdU+B1IA+UUMoh+XDubJhZj+bPbJ1QOxz9og+iKMLVe9WKvZhM8o7MYd0jPc5NW87f2mP54m408URZlHsrgLtRMQD8BBNFje9Js8VDDEpxKYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DJ5oAPr1; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785541047; c=relaxed/simple;
+	bh=WqQfjkWetI2gSUGpr0bE6MJPNxeXn/ZfqwmK9TD6PYQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=gb8FqL5Qb57MOzn/UlNs7o4KQFn3DohQNohcNANkIb7dazA4V1WDlLoiMcFVa2827UQwjGtvfucEnunYEAIiSMVsXTmgkGJGHC8Ji+h7Yy9ir94BdL6dVNgvm6tFwY15AY20jsai8DYt6jnPskp/iqh2dkQ2I9ofw6BIQzEZw84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AGOIJDB5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DJ5oAPr1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA771F00AC4;
-	Fri, 31 Jul 2026 23:32:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AGOIJDB5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 724FE1F00AC4;
+	Fri, 31 Jul 2026 23:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785540760;
-	bh=czqlfcEAMjWrlTHx1B9wJwhXcruEO6Ku+5ixIxaRqU4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=DJ5oAPr1pz6M1zU275NSFKL7OI6KYRYEVw9vuZDb4YdwWHtK/QhOmL4tp07fToy4k
-	 F+nQq5E8IiJ7HQupShpelGACJvbRKwsnfkEHTCtZxG6FI87+cR5Oqaa7fcII/2GxEm
-	 z31ZXktr6iy2bdQEUptiocLcDjUBdYCRpBNd1oABpsbwcUO91nCTldC4QLmH9KlGPJ
-	 t0x1cXfsS/xgnUuwSlcQ+o8D/cdjNBZR+xVyuaeHRQg56RZ/LKcQM7lSqHLfj8Z/qe
-	 uhYv6EStFkbrJJXQlRpUTieferLaUKyvgXvSn+Ak4CZECUeHy/OwdGIsVCbaQ7W7BV
-	 ep5EkBfnrFFaQ==
-Date: Fri, 31 Jul 2026 16:32:38 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: Flaky tests
-Message-ID: <am0wljqUaRYvsS-T@google.com>
-References: <amaWoGWxQ4Z4iNPk@x1>
- <amadxFFSer95vdNc@x1>
+	s=k20260515; t=1785541045;
+	bh=Lh1/0FfraVLa7SimcsHUMfALGyAerQY5MToPlCDM8v8=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=AGOIJDB5yLK+d/KCkq1OXc0O2b9UogpQW6YqusAo+goN4stGR9sFsiIRYTanEoI/H
+	 1VEa/hZCeWPxzw5nNcNZiZFHrVAaE5ORSI5SF8sC0i4AIgg4dfp38JMopjb5O7beMe
+	 XRqV+TVLVnoXerot/4PkgJ7eJUhpbBm+jz3vO/N+vp+hKD4f+0RctQHN6sJfAKDQ6C
+	 m51aOFpbrZqOcs6mOdIVntBsyBLLlqQJiMoBd4PljnKbzgEhvjrtgYmIXMBYtQW7Fy
+	 GfVPzKy0te8JI35qNbZQZI6GaL8LtnR5+5Ml3P5MQHn1PZZeUbNRJSujGH+XeLmFdQ
+	 H4Ki5xvNbU2mw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 3/9] perf/cxl: Fix the counter overflow delta fixup
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Dave Jiang" <dave.jiang@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-cxl@vger.kernel.org
+In-Reply-To: <20260731232827.401447-4-dave.jiang@intel.com>
+References: <20260731232827.401447-1-dave.jiang@intel.com>
+ <20260731232827.401447-4-dave.jiang@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 31 Jul 2026 23:37:24 +0000
+Message-Id: <20260731233725.724FE1F00AC4@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <amadxFFSer95vdNc@x1>
 
-On Sun, Jul 26, 2026 at 08:52:36PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Sun, Jul 26, 2026 at 08:22:08PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Hi,
-> > 
-> > 	Getting back on track with perf I noticed these two flaky tests,
-> > not investigated yet:
-> 
-> Sry, sent to another Ian, from another life :-)
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-:)
+Pre-existing issues:
+- [Medium] A race condition between a polled read and the overflow IRQ hand=
+ler causes a double-counting of a full period if the polled read executes a=
+fter the counter wraps but before the IRQ handler.
+- [Medium] Missing validation for `info->counter_width` allows a non-compli=
+ant or buggy CXL device to trigger Undefined Behavior when `GENMASK_ULL` is=
+ evaluated.
+--
 
->  
-> > ⬢ [acme@toolbx perf-tools-next]$ git log --oneline -1
-> > 98bc7deff4858aa8 (HEAD -> perf/hardening-machine, number/perf/hardening-machine) perf machine: Check snprintf truncation for guest kallsyms path
-> > ⬢ [acme@toolbx perf-tools-next]$ perf -v
-> > perf version 7.2.rc1.g98bc7deff485
-> > ⬢ [acme@toolbx perf-tools-next]$
-> > logout
-> > acme@x1:~/git/perf-tools-next$
-> > acme@x1:~/git/perf-tools-next$ sudo su -
-> > [sudo] password for acme:
-> > root@x1:~# perf -vv
-> > perf version 7.2.rc1.g98bc7deff485
-> >                    aio: [ on  ]  # HAVE_AIO_SUPPORT
-> >                    bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-> >          bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
-> >             debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
-> >                  dwarf: [ on  ]  # HAVE_LIBDW_SUPPORT
-> >     dwarf_getlocations: [ on  ]  # HAVE_LIBDW_SUPPORT
-> >           dwarf-unwind: [ on  ]  # HAVE_DWARF_UNWIND_SUPPORT
-> >                 libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT ( tip: Deprecated, license incompatibility, use BUILD_NONDISTRO=1 and install binutils-dev[el] )
-> > babeltrace2-ctf-writer: [ on  ]  # HAVE_BABELTRACE2_CTF_WRITER_SUPPORT
-> >         libbpf-strings: [ on  ]  # HAVE_LIBBPF_STRINGS_SUPPORT
-> >            libcapstone: [ on  ]  # HAVE_LIBCAPSTONE_SUPPORT
-> >     libdw-dwarf-unwind: [ on  ]  # HAVE_LIBDW_SUPPORT
-> >                 libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-> >                libLLVM: [ on  ]  # HAVE_LIBLLVM_SUPPORT
-> >                libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> >             libopencsd: [ on  ]  # HAVE_CSTRACE_SUPPORT
-> >                libperl: [ OFF ]  # HAVE_LIBPERL_SUPPORT ( tip: Deprecated, use LIBPERL=1 and install perl-ExtUtils-Embed/libperl-dev to build with it )
-> >                libpfm4: [ on  ]  # HAVE_LIBPFM
-> >              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-> >               libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-> >          libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-> >              libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT ( tip: Deprecated, use LIBUNWIND=1 and install libunwind-dev[el] to build with it )
-> >                   lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-> > numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-> >                   zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-> >                   zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-> >                   rust: [ on  ]  # HAVE_RUST_SUPPORT
-> > root@x1:~# perf test
-[SNIP]
-> > === Test Summary ===
-> > Passed main tests : 133
-> > Passed subtests   : 152
-> > Skipped tests     : 24
-> > Failed tests      : 2
-> > List of failed tests:
-> >    23: Object code reading
-> >   110: perf record sample filtering (by BPF) tests
-> > root@x1:~# perf test 23
-> >  23: Object code reading                                                                                       : Ok
+--- Patch [3]: [PATCH v3 3/9] perf/cxl: Fix the counter overflow delta fixu=
+p ---
+commit 333d6be6b59d292e876b5c4888ab33d0abc8cc03
+Author: Dave Jiang <dave.jiang@intel.com>
 
-Right, I'm seeing this is flaky.  Sometimes it fails to find a map for
-some kernel address.
+perf/cxl: Fix the counter overflow delta fixup
 
-> > 
-> > === Test Summary ===
-> > Passed main tests : 1
-> > Passed subtests   : 0
-> > Skipped tests     : 0
-> > Failed tests      : 0
-> > root@x1:~# perf test 110
-> > 110: perf record sample filtering (by BPF) tests                                                               : Ok
+This commit alters the CXL PMU counter overflow logic to condition the fixup
+on new_cnt >=3D prev_cnt, aiming to correctly handle cases where the subtra=
+ction
+cannot express the span over a period boundary, while accommodating events
+that increment by more than 1 per cycle. It also modifies the period additi=
+on
+to use mask + 1 to avoid undefined behavior on 64-bit counters.
 
-I never saw this before.  Do you have error message?
+Link: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.=
+net?part=3D1
 
-Thanks,
-Namhyung
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index b16e2e4090a39..3511d049aea40 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -689,7 +689,7 @@ static void __cxl_pmu_read(struct perf_event *event, =
+bool overflow)
+>  {
+>  	struct cxl_pmu_info *info =3D pmu_to_cxl_pmu_info(event->pmu);
+>  	struct hw_perf_event *hwc =3D &event->hw;
+> -	u64 new_cnt, prev_cnt, delta;
+> +	u64 new_cnt, prev_cnt, delta, mask;
+> =20
+>  	do {
+>  		prev_cnt =3D local64_read(&hwc->prev_count);
 
-> > 
-> > === Test Summary ===
-> > Passed main tests : 1
-> > Passed subtests   : 0
-> > Skipped tests     : 0
-> > Failed tests      : 0
-> > root@x1:~#
+[ ... ]
+
+>  	/*
+> -	 * If we know an overflow occur then take that into account.
+> -	 * Note counter is not reset as that would lose events
+> +	 * The mask discards exactly the bit that says the counter wrapped, so a
+> +	 * delta of one whole period reads back as 0, the same as no events at
+> +	 * all. Only the overflow status distinguishes them, and new_cnt >=3D
+> +	 * prev_cnt is that case, so add the period back. mask + 1 is
+> +	 * 2^counter_width, which is 0 for a 64-bit counter - the right value to
+> +	 * add once the top bit is gone, and no undefined 1 << 64.
+>  	 */
+> -	delta =3D (new_cnt - prev_cnt) & GENMASK_ULL(info->counter_width - 1, 0=
+);
+> -	if (overflow && delta < GENMASK_ULL(info->counter_width - 1, 0))
+> -		delta +=3D (1UL << info->counter_width);
+> +	mask =3D GENMASK_ULL(info->counter_width - 1, 0);
+
+[Severity: Medium]
+This is a pre-existing issue, but could a buggy or malicious CXL device
+reporting a counter width of 0 (or > 64) trigger Undefined Behavior here?
+
+If the device reports 0 for the counter width in the capability registers,
+the driver reads this into info->counter_width without bounds validation.
+
+When GENMASK_ULL(info->counter_width - 1, 0) is evaluated, it results in a
+negative shift amount which leads to Undefined Behavior and corrupted PMU
+masks.
+
+> +	delta =3D (new_cnt - prev_cnt) & mask;
+> +	if (overflow && new_cnt >=3D prev_cnt)
+> +		delta +=3D mask + 1;
+
+[Severity: Medium]
+This isn't a bug introduced by this patch, but does this sequence allow a=20
+race condition between a polled read and the overflow IRQ handler to
+double-count a full period?
+
+If the hardware counter wraps, setting the overflow bit, a polled read
+(such as via perf stat -I) might read the counter before the hardware IRQ
+is delivered.
+
+The polled read would compute the delta, correctly including the period
+because new_cnt is wrapped and smaller than prev_cnt, and then update
+prev_count to the small post-wrap value.
+
+When the delayed overflow IRQ handler subsequently runs, it reads the
+overflow bit and calls __cxl_pmu_read(event, true). Because prev_cnt is
+now the small post-wrap value, new_cnt >=3D prev_cnt evaluates to true.
+
+The handler would then execute delta +=3D mask + 1, incorrectly adding a
+second full period because it assumes the wrap wasn't already consumed.
+
+> =20
+>  	local64_add(delta, &event->count);
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260731232827.4014=
+47-1-dave.jiang@intel.com?part=3D3
