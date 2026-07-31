@@ -1,89 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6003733939E;
-	Fri, 31 Jul 2026 02:44:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C2602C21DD;
+	Fri, 31 Jul 2026 05:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785465843; cv=none; b=jINEVNTfGUDQh8F+d4YbHl3W/bKmze7dt/hFRmMA2QA5U15WHQMsF4b1524C3sPhYV4Ted/mlQwWWycaL1FzXGsM3dOG7/czoEEvCBv7H5Yd01dhwewzea01mHgJmzu09ODE6breHKxGfLfZG2evhViuS6okpH0ykKk7gfX+tyg=
+	t=1785476979; cv=none; b=Xg+QyafKMnpc1YjFOGfiCoCv9e0xBfeGbdCevtqOWH0HUfLLRCC0EmttvSCUQTTJqhAHCuI5kTAxSmeDo1cx3ncknWztVSvk4vcTlGfEto3XpdrnnbGjYk8nj8gDe9eQ8Gis0umbqvA4s6VpFz8Vp0C5FNhCRhHvONMP9WFz6Hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785465843; c=relaxed/simple;
-	bh=CpWe4DNXgDUHIJavIejFCbOQ37fSck9AS1zt9eQ8XDE=;
+	s=arc-20240116; t=1785476979; c=relaxed/simple;
+	bh=cp77iJVRWq97XcYYpGanGjI9nrMi/T9XyEKlGtEm3F4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HVtzhhAtQFa85zDB5meP5p+xzRI/Yro3H0/DE0j388jSFEA89HZ6gv4gi2aN3BgV+48JXf3ntQ5FAxljqtv9z+px3XPBc/CUfvIN7sDJVqM3btwncJGO62qh6/DmzNqTQQAoQrBdTpFWK/cLPVvkquCzn5g8qL2wD3tql3m1l98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mt92lSl3; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=fEoIFqcsui2dMdfKLk8ia+N44qJ0+oy/jwYNEbOPknMgbD0HHOkpH1Rtz0rN9N3Dzuu8zkR1wIhwcIQCVzIf9pLIEI1P3xMtJCDs0C0B0TBWc4p5T6POun9SZe7L0RwHNbhTSe/l+gty+3o88IuOYV0p8dSRZbh4Un4wgp1bcNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=lm4Y9AxI; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mt92lSl3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56BB31F00A3A;
-	Fri, 31 Jul 2026 02:44:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785465842;
-	bh=NSU0VQsd1sbkkQATX+6i4OyR/+z4T/0Gk2puGlmOTac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Mt92lSl3FZqg/V/6rK7WFrlpUU+Py4v+6XNbS7uoYa5eTF4xTgNCP0Q3+iJwxLcCY
-	 9/xL2B/QyhCMDRyf3MER0kxJkFDV8bqdKT/T32luv4YCyi68NaPggCNH0iviT94BpC
-	 UBeoQTAyEifREfXaFPfwZ6eTBHzgVvO/cKEAGIo+EcO4snze+VDpoWWK3723YIv2A9
-	 A6hNHgm8s7Y+RVDA/AAeC44yh/sy9irn+vFpUMj83/USJjaDvPGSkeyxrR05T1oIks
-	 k+Ftl5YXF1v00Y1fAlKT87godIqhuUVx8AWszLz18Pc1wSE9RPO4/PQcfTdj5zmfbr
-	 ACKbnnKauhoBA==
-Date: Thu, 30 Jul 2026 19:43:59 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Jiebin Sun <jiebin.sun@intel.com>
-Cc: acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
-	irogers@google.com, james.clark@linaro.org, jolsa@kernel.org,
-	mark.rutland@arm.com, dapeng1.mi@linux.intel.com,
-	thomas.falcon@intel.com, tianyou.li@intel.com,
-	wangyang.guo@intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/9] perf c2c: add a function view
-Message-ID: <amwL794Mj0O3vOkr@google.com>
-References: <amjxS3hcWlvQHerx@google.com>
- <20260730090901.2216672-1-jiebin.sun@intel.com>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="lm4Y9AxI"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 465B520E3;
+	Thu, 30 Jul 2026 22:49:31 -0700 (PDT)
+Received: from localhost (a085714.arm.com [10.164.19.28])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A18D93F7B4;
+	Thu, 30 Jul 2026 22:49:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1785476975; bh=cp77iJVRWq97XcYYpGanGjI9nrMi/T9XyEKlGtEm3F4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lm4Y9AxItuwNS2mYWEbr3jeJY8GANTkzrsF3Zc1UhcaT3R88O+XiEF6xuLUzbJgMf
+	 FuLzKLdX/kUlFIkefo4NK3Qi11BbQwnmzc6Nw1Vo8+JrLjJC2+mL2OLu9EqmXtZRR3
+	 PZUd6bbH8SNkQ4gsNj8M2Hcw3mNZqsBDiFwuMLbY=
+Date: Fri, 31 Jul 2026 11:19:32 +0530
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>, 
+	Stefano Stabellini <sstabellini@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+	David Hildenbrand <david@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
+	Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, 
+	Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, ziy@nvidia.com, 
+	pfalcato@suse.de, agordeev@linux.ibm.com, ryan.roberts@arm.com, 
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, kasan-dev@googlegroups.com, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	damon@lists.linux.dev
+Subject: Re: [PATCH RFC 01/11] mm: introduce hw_pte_t for PTE table storage
+Message-ID: <6xah74eadjmo2bozyr62wcxo4hhpsiufx2mshh7tztyy2dzzps@63m327m7pl5u>
+References: <20260727164715.2866609-1-usama.anjum@arm.com>
+ <20260727164715.2866609-2-usama.anjum@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260730090901.2216672-1-jiebin.sun@intel.com>
+In-Reply-To: <20260727164715.2866609-2-usama.anjum@arm.com>
 
-On Thu, Jul 30, 2026 at 05:09:01PM +0800, Jiebin Sun wrote:
-> On Tue, Jul 28, 2026 at 11:13:31AM -0700, Namhyung Kim wrote:
-> > Thanks for the update, I think it's almost ready to merge.  But can you
-> > please address some sashiko review comments?
-> 
-> Thanks for the review. I went through the sashiko comments and prepared
-> v5, rebased onto perf-tools-next at 0d40fedcd1b9. The full change list is
-> in the cover letter. The view layout is unchanged, and the changes address
-> correctness, robustness, and style, along with some adjustments to which
-> entries are retained.
-> 
-> A few comments did not require code changes:
-> 
->   - The ms/thread reference handling is deliberate. Child entries borrow
->     references from the cacheline-side entries, which outlive the function
->     hierarchy. Their custom destructor does not put those references, so
->     adding get() calls would leak them.
+On Mon, Jul 27, 2026 at 05:46:52PM +0100, Muhammad Usama Anjum wrote:
+> pte_t is used both for logical PTE values and for entries stored in a PTE
+> table, so pte_t * does not distinguish a pointer to a copied value from a
+> pointer to table storage.
 
-Is it possible to add proper refcounts instead of borrowing?  I guess
-that'd make the code simpler.
+Should we rather call them as "Linux PTE" and "HW PTE" instead ?
 
-Thanks,
-Namhyung
+Some like "Logical PTE" does not really sound very clear on what it represents.
 
 > 
->   - c2c.h directly includes <linux/types.h> and <stdbool.h>, while
->     <linux/compiler.h> is provided through <asm/bug.h> and <linux/list.h>.
+> Introduce hw_pte_t as the generic name for a PTE table element. Define it
+> as an alias of pte_t by default so architectures retain their existing
+> representation and behavior until they opt in to a distinct storage type.
+
+Makes sense.
+
 > 
->   - The level-3 cacheline address is not truncated. The symbol-column width
->     is expanded to fit the deepest identity cell before the browser is
->     created.
+> Include asm/page.h so pte_t is defined before the generic alias.
 > 
-> Tested with and without SLANG support; `perf test c2c` passes, and the
-> cacheline `--stdio` output is unchanged from the base commit.
+> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+> ---
+>  MAINTAINERS                   |  1 +
+>  include/linux/pgtable_types.h | 11 +++++++++++
+>  2 files changed, 12 insertions(+)
+>  create mode 100644 include/linux/pgtable_types.h
 > 
-> Thanks,
-> Jiebin
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 15dd00c7ffec5..78aac05949829 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16981,6 +16981,7 @@ F:	include/linux/mmu_notifier.h
+>  F:	include/linux/pagewalk.h
+>  F:	include/linux/pgalloc.h
+>  F:	include/linux/pgtable.h
+> +F:	include/linux/pgtable_types.h
+
+s/pgtable_types.h/pgtable_hw_types.h ?
+
+>  F:	include/linux/ptdump.h
+>  F:	include/linux/vmpressure.h
+>  F:	include/linux/vmstat.h
+> diff --git a/include/linux/pgtable_types.h b/include/linux/pgtable_types.h
+> new file mode 100644
+> index 0000000000000..ed5dba42a4f8c
+> --- /dev/null
+> +++ b/include/linux/pgtable_types.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_PGTABLE_TYPES_H
+> +#define _LINUX_PGTABLE_TYPES_H
+> +
+> +#include <asm/page.h>
+> +
+> +#ifndef __HAVE_ARCH_HW_PTE_T
+
+__HAVE_ARCH_HW_PTE_T macro is a better approach here or a config ARCH_HAS_HW_PTE_T
+based selective platform subscription should be introduced instead ?
+
+> +#define hw_pte_t pte_t
+> +#endif
+> +
+> +#endif /* _LINUX_PGTABLE_TYPES_H */
+> -- 
+> 2.47.3
+> 
