@@ -1,45 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1D224DCF9;
-	Fri, 31 Jul 2026 21:34:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BF1489880;
+	Fri, 31 Jul 2026 21:37:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785533650; cv=none; b=oPqmtTnydI97eA3WqYnEq9I+pawaSNxHerohm+CfSr3NlDo+83dfOFGS7NRLd6Q9p3MsS6NpNvN6KM1r/D6sz9bSwIPg3s6Ju6CAnss/RT8d1BloAgPF1UMI/tP4GZsNQdQEWhkZS2gJ2rJmhlh+XKQxYKrqo0aXpXIAdAkM1cI=
+	t=1785533829; cv=none; b=lWeFe64WUWhqqXvcaY4pDtCFxl59znnNfSRoWlAOTevMsAyzyr4gs/fi8N/6kC5y8Z+ns6qhLM/A/mD+Ftba7zC7pA9ZhBLSWOzN7+GqQnVbpOppEEbTjpBM96NQ8C9CfUl8OUw6WjTOglNVvyz3kdwEv6Wsl8yNAVu6Jdaq/yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785533650; c=relaxed/simple;
-	bh=FudgXTU4ZJTufU4pi0e481awJUx5986po5dy55dOzOU=;
+	s=arc-20240116; t=1785533829; c=relaxed/simple;
+	bh=2D3WGVaatyIhqQJGUgKu+IuSgLqmh2EieCTUSrkb2iM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MuzAcLOMFMqxxmdaZbTm5AJ3zAcYwujlG9GWcETYIlj5/Xf2tPEKHsO16MQ9zmpXwIaLLPELOeqn3fra5dl6AuT5qgY18n6c0lr22jG8N1RQxFRBEBVTmu7c4dZI9muMW4/h9WsMKYLMmURJNk+nwW2o8ARv81fEpgnbVQbe82c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VsQ/ANIw; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=XAOy7ATnolWdcDM+67bJjvrwOmWTULiv6t21Q4y2iZfVZFo2x3l50mb1mPOZAh2zPwXS2rPTa2GdyqI7rI6HNj0/YKegtyfifF8iwi3Bf2UM+hbHC72KpgxcNh0w59aJ8l3BiOvf/5Fo+EDiodlgCUft3Ppk6Yncsw3XkNTZppQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ah02780e; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VsQ/ANIw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 079BF1F00AC4;
-	Fri, 31 Jul 2026 21:34:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ah02780e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B53A91F00AC4;
+	Fri, 31 Jul 2026 21:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785533649;
-	bh=yEVnA1WSQ0ag/HvhcHi5kYIwwHhi6yD3GWY3cF6g9ME=;
+	s=k20260515; t=1785533828;
+	bh=Ek8XHZE4EmB/vc6T4UyCyoBNL7M6eI/UpaQAOvfeZuk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=VsQ/ANIwKbiglIwBHfdv/XX3deRlIUO17Y5Qb+2+n7NNOI5NmxiNTEix+J5KLylbF
-	 mV7UY55Toj6t2GUYNNhYFFoFB0JiE9M/WFFqkBI3WBOCNHtWdw3WBtIQR3BjVDib2p
-	 6b0uFMYsLG+ni8md30LG0nc0T2dch75kggHpDBhdLQcVtst71T9RINI4Gd299bEmCL
-	 DQkXnoM7UlnlaKzxfCN5CXh9eDomIChxc3Ky2QRWn5Kc2pDsnakrueUOaWxaeF+xNF
-	 pPFew+pSluMjZKa+WfQRURY+akhyR4L35sxPWbfzF0+D9GFY0RZljG6rYWXk5e69D0
-	 arg1+KG3MWrkQ==
-Date: Fri, 31 Jul 2026 14:34:07 -0700
+	b=ah02780emoIOp3lfE1qerXj5RuTtVWLkA64/+qM6OZZ4fBAuTyjxMHGb+rXhwv/M5
+	 sCT3eqYYFBR0rbnlMhBEKdt0i3JrRvN1kD/Xa0XXG4sfzSbd2H381Cu0oj+qAnDX2T
+	 wxJoSGkg3lVBaQi8HUCnyfezg9r/8gt9th7AoZNrm3jCvZli2N7nXtPlDBSbvnRHZi
+	 gtyXZnFUnUdpTCkPt3xCTIAiLTFYFBWaLClQUivq8eS3auyA6GjxCZtDgpoc/YitWR
+	 FjCsIgxAsq7qqSgjrG/Eo8blhghLP4lJ+OVwmEUKbCby1YlkWNc+/iufF69oUgSDK/
+	 +3JK3uW9a3Dgw==
+Date: Fri, 31 Jul 2026 14:37:06 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Jiebin Sun <jiebin.sun@intel.com>
-Cc: acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
-	irogers@google.com, james.clark@linaro.org, jolsa@kernel.org,
-	mark.rutland@arm.com, dapeng1.mi@linux.intel.com,
-	thomas.falcon@intel.com, tianyou.li@intel.com,
-	wangyang.guo@intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/9] perf c2c: add a function view
-Message-ID: <am0UzxbS-K61_eAd@google.com>
-References: <amwL794Mj0O3vOkr@google.com>
- <20260731074420.359844-1-jiebin.sun@intel.com>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Thomas Falcon <thomas.falcon@intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>
+Subject: Re: [PATCH v2 2/6] perf mem: Add support for printing
+ PERF_MEM_LVLNUM_L0
+Message-ID: <am0Vgnayr0WVdeOH@google.com>
+References: <20260714004359.179451-1-thomas.falcon@intel.com>
+ <20260714004359.179451-3-thomas.falcon@intel.com>
+ <amjjSlWIQRA64qSy@google.com>
+ <8829286c-c05c-456d-82ad-6e75ab864f1d@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,35 +54,33 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260731074420.359844-1-jiebin.sun@intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8829286c-c05c-456d-82ad-6e75ab864f1d@linux.intel.com>
 
-On Fri, Jul 31, 2026 at 03:44:20PM +0800, Jiebin Sun wrote:
-> On Thu, Jul 30, 2026 at 07:43:59PM -0700, Namhyung Kim wrote:
-> > Is it possible to add proper refcounts instead of borrowing?  I guess
-> > that'd make the code simpler.
+On Thu, Jul 30, 2026 at 01:46:27PM +0800, Mi, Dapeng wrote:
 > 
-> Yes, and it is simpler. Let me check the approach with you before I post v6.
+> On 7/29/2026 1:13 AM, Namhyung Kim wrote:
+> > Hello,
+> >
+> > On Mon, Jul 13, 2026 at 07:43:55PM -0500, Thomas Falcon wrote:
+> >> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> >>
+> >> Add support for printing PERF_MEM_LVLNUM_L0 in perf mem report.
+> > What's the L0, by the way?
 > 
-> The children now take their own references:
+> Per my understanding, the L0 cache is newly added a small piece of cache
+> which is the closest, lowest-latency memory cache tied directly to the
+> execution pipeline. 
 > 
->       child_he->ops = &c2c_function_entry_ops;
->       map_symbol__copy(&child_he->ms, &src_he->ms);   /* was memcpy() */
->       child_he->thread = thread__get(src_he->thread); /* was a raw assign */
+> The table "Table 9-4. Data Source Field Encodings for Panther Cove and
+> Coyote Cove Microarchitectures" in the ISE doc chapter "9.2.1 Panther Cove
+> and Coyote Cove Microarchitectures Memory Auxiliary Field Layout" indicates
+> the code "01H" means the "L0 Hit - Minimal latency core cache hit. This
+> request was satisfied by the L0 data cache."
 > 
->       hist_entry__delete(child_he);                   /* was a custom free */
-> 
-> hist_entry__delete() takes care of thread/ms, mem_info, stat_acc and
-> srcline/srcfile, and calls ops->free() for the c2c-private fields. So the
-> custom destructor and the WARN_ON_ONCE(report_hierarchy) guard both go away.
-> 
-> Two sashiko comments fall out of this as well: the leaked srcline/srcfile and
-> the missing ops are both covered by the generic destructor now, so I did not
-> treat them separately. It also asked for NO_SLANG stubs for the two entry
-> points declared in c2c.h, so I added them the way util/hist.h does.
-> 
-> If this looks right, I will send v6.
+> https://www.intel.com/content/www/us/en/content-details/922690/intel-architecture-instruction-set-extensions-programming-reference.html 
 
-Sounds good to me.
+Interesting, thanks for the explanation!
 
 Thanks,
 Namhyung
