@@ -1,141 +1,115 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91CA427F94
-	for <linux-perf-users@vger.kernel.org>; Fri, 31 Jul 2026 12:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1F8416856;
+	Fri, 31 Jul 2026 13:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785499445; cv=none; b=ixe8twdao41qfCJ6lx+lkkoZKlsMSCek4hSaFl/0TYTP+kvBJunpRR9wQcBD42oyts5UINtn+sYPP+Mqa3bLLCWwBI7p1GtSoaEiDrxWoZD7TPx2PNMBRX5dFgH/R+vxB579PxavkP4REpanMzwY0tmKmW31c23WQ3Jsh462wxw=
+	t=1785504495; cv=none; b=heEe8IWfQiXytHMwfsRKhezK1n7HQyfCfmctVopHVPgp856Ib1fF9k6pZIZNID+1mHblSedk/+TTQ7w0otsjoiQr7tfp1UcYdw43uAyrgcAeFRwv/0FLAO0J0oIzHQmYEM/Ahp5Z7i61abboppjPcqpoMdifYx+CI2PN8jQzhNk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785499445; c=relaxed/simple;
-	bh=Fgg8L4dQDWa8oN7Wne9HCI2H4XFsQy2TGSLzDwWfVjo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rp9a0XIUCfx+odMe0VHqYntNuFcC257JAiAfzsr6h/qz+1N0i9j7KMJ7ooZwckpTfmii8Agp7FBZcqt7YjE3Dza6UJ/+b3Y42/Tk4OuP97+H7N/UOblZmLc/LdLMP3gchLsNB/hkO7lhvikUxkxVshaH0NbsJKLpW5LLTcS7bs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com; spf=pass smtp.mailfrom=trailofbits.com; dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b=gHV2riPz; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=trailofbits.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trailofbits.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trailofbits.com header.i=@trailofbits.com header.b="gHV2riPz"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-51c2149571dso7591301cf.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 31 Jul 2026 05:04:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=trailofbits.com; s=google; t=1785499442; x=1786104242; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Uo79vog2GV8rTnOYOZ60atjBxSb7dltR6Y3nOhEe8mk=;
-        b=gHV2riPz4S+HoxqXtpASXf7jsTfb0+ntod9CP1ZAsWfW66LMyByrv2G32NwXbqRTNb
-         fosmWGq/FnJGAR97kG87UF7uKFK35Dg3n9Utc/rDMjA6u+3oBIv+kOfj/M8lXMHzcTG1
-         ENIxWXLxBJEiiCKf2xoga8Q7AcMYziVn2dYjA5iw0AohR22kDBrIsIUCQfpHoI88F2iw
-         cdxA1Wg4M8BeoNBgrZAC74Uz8ZmF9ziK714XquFemgS6vHewsVpUiRbTsxUo/6HAvw0q
-         z4JZL2iciMYX+EMkD9YW7NrqOcr5s5Qyps0dQXsX8nPbqqhwPLlVuPpikfqUD69gl9Zs
-         789A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785499442; x=1786104242;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Uo79vog2GV8rTnOYOZ60atjBxSb7dltR6Y3nOhEe8mk=;
-        b=YtcVSmdSayZCXla1HcfWIr1G9AgtqAdi9UemHmWarLQ1lI9uvuR0AgsbTdkuVB+hVB
-         3tfCMoqWxVIjiaHjLT8OwcfldeJzYRoySTLqXqgaBcTVHUZe/O8IXRVJdhQdCmBI9Dhn
-         xozIp9rL0e0U8iT7CMmOEpNZOSaWw0WSs4iVWC5snOVsLsk+PuptW2GGa/H1uvUPdo9+
-         gLMR06jGQLcDqCC7Lzif23quSkVCyJJ57EWwJOJWCwQNhexSHmBLATQFcxN70l29ppbt
-         ZktT2mHdv/lHGmGJ+cjNM9TlrD0I70+R+Lubf4KreXBhU3UFAJ9I7Vj5WMAkmzMFZ7fH
-         QKvg==
-X-Forwarded-Encrypted: i=1; AHgh+RpcHNdMdNbKUgl9sTdtne0aO/ODBob5XoBU74XeKw22780ppUmR8R+rtzdkZg/xCTSiF3EVeFdHP6k4MCq9c1PW@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPb7nSMj6eGsO/r5kHPuhg+nZaOr/kcC4PpVz0lbbep7kXteUL
-	feb9IR6Qh3Nw6K9hlvRGGNa3xHFVM4h297GWtQZtptFYG+AfJoSprw4YwdLpz86Eyl0=
-X-Gm-Gg: AR+sD12ZUmcq2xepHRIx5IY7ts6L/KpdD+ypWzGKgHv4FHMIosX0Y2CRh3FhgbRl8hb
-	2TWM9kXCjnTBAQRbJletpvVklzxYvBDOulsk8XfMmqPADWhKONS5Yvd7/8XUfUz4ci2weT9hQeg
-	O9uOedXVB3HC8SUZfAkjQdvNm2DFq6k72Wy/BCdg9ECsZIThPO5P8sNBd7Di0fJnu3OTOiuCxUI
-	4D6RSuRWHGU2EYUEKoj1J0M9HI/phkphob7zRfd3ceeFq/5L37XqdE4jYtn5nCvVKOR3onwZ0Ut
-	wAjF9aI3S0ihUR7cFgDHEXzMffohx6WkC3gbv3YSoqPMwpOzzSph1tf8OXJApbXP91RdqJWuZi1
-	nU2Yo/sTTCbiclDIB9YfamHl29Ee8kBoYDjgOpIrf+pAy3wuqI57N12UH+EKvoRNaYLe5fUXi1+
-	RXVlw4Jyb1f1kbM4mCDWUWU8E/7K23gn2zUtj5SgdbdC1d+hulxiaesDRbAvguSdb+pw==
-X-Received: by 2002:a05:622a:5814:b0:519:5680:1b5 with SMTP id d75a77b69052e-52b4af96409mr24025201cf.21.1785499442561;
-        Fri, 31 Jul 2026 05:04:02 -0700 (PDT)
-Received: from localhost ([146.190.222.192])
-        by smtp.gmail.com with UTF8SMTPSA id d75a77b69052e-52b4eb6b5b5sm6353351cf.19.2026.07.31.05.04.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jul 2026 05:04:02 -0700 (PDT)
-From: David Lee <david.lee@trailofbits.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: David Lee <david.lee@trailofbits.com>,
-	Kyle Zeng <kylebot@openai.com>,
-	Dominik 'Disconnect3d' Czarnota <dominik.czarnota@trailofbits.com>,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf: Fix mmap replacement ring lifetime race
-Date: Fri, 31 Jul 2026 12:04:01 +0000
-Message-ID: <20260731120401.558858-1-david.lee@trailofbits.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1785504495; c=relaxed/simple;
+	bh=oi6aO5YdOOjB5Yvtjg8wrDX+VBEC3DBUvOL+gFJ43PE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Udb1XHJQn8c95Z46Q3mczcoHJcIKNv9Ri8EarnXnx/CzfJbd/lIepE4SebbBJl3KgvUSD/QwGAc9WCCbcLkrPHH8yGjtIufwijQ1qSIw6ex40yTm92LMEGtg40SCDZTtYqSzFNewOnnqqKCwyz+3gl4qWeNa3ow3d3alF2cE3UE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf12.hostedemail.com (lb01a-stub [10.200.18.249])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id F1D761A0431;
+	Fri, 31 Jul 2026 13:28:09 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf12.hostedemail.com (Postfix) with ESMTPA id E384117;
+	Fri, 31 Jul 2026 13:27:45 +0000 (UTC)
+Date: Fri, 31 Jul 2026 09:28:25 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, =?UTF-8?B?SsO8cmdlbiBH?=
+ =?UTF-8?B?cm/Dnw==?= <jgross@suse.com>, Jani Nikula
+ <jani.nikula@linux.intel.com>, Joonas Lahtinen
+ <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich
+ <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>, Greg
+ Kroah-Hartman <gregkh@linuxfoundation.org>, "James E.J. Bottomley"
+ <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>,
+ Stefano Stabellini <sstabellini@kernel.org>, Muchun Song
+ <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, Andrew Morton
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <liam@infradead.org>,
+ Lorenzo Stoakes <ljs@kernel.org>, Will Deacon <will@kernel.org>, "Aneesh
+ Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>,
+ Peter Zijlstra <peterz@infradead.org>, Andrey Ryabinin
+ <ryabinin.a.a@gmail.com>, David Hildenbrand <david@kernel.org>, Pasha
+ Tatashin <pasha.tatashin@soleen.com>, Chris Li <chrisl@kernel.org>, Kairui
+ Song <kasong@tencent.com>, Uladzislau Rezki <urezki@gmail.com>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya
+ Dwivedi <memxor@gmail.com>, Ingo Molnar <mingo@redhat.com>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, SJ
+ Park <sj@kernel.org>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan
+ Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky
+ <leon@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou
+ <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter
+ <cl@gentwo.org>, Mike Rapoport <rppt@kernel.org>, Johannes Weiner
+ <hannes@cmpxchg.org>, ziy@nvidia.com, pfalcato@suse.de,
+ agordeev@linux.ibm.com, ryan.roberts@arm.com, linux-kernel@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org,
+ linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
+ linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
+ linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, damon@lists.linux.dev
+Subject: Re: [PATCH RFC 01/11] mm: introduce hw_pte_t for PTE table storage
+Message-ID: <20260731092825.36992dc9@gandalf.local.home>
+In-Reply-To: <9ac33752-b587-4901-b5f2-473e573d7ede@arm.com>
+References: <20260727164715.2866609-1-usama.anjum@arm.com>
+	<20260727164715.2866609-2-usama.anjum@arm.com>
+	<6xah74eadjmo2bozyr62wcxo4hhpsiufx2mshh7tztyy2dzzps@63m327m7pl5u>
+	<9ac33752-b587-4901-b5f2-473e573d7ede@arm.com>
+X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Stat-Signature: bk4wphtnyr8oskxq6ok6poi7ogrp6zg4
+X-Rspamd-Server: rspamout04
+X-Rspamd-Queue-Id: E384117
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX188VTzKisaRifdK5JzAhtUj+tNTYkibFXo=
+X-HE-Tag: 1785504465-704596
+X-HE-Meta: U2FsdGVkX1+okbaURBZ2Qkn+l9IgiK40Gqe8ZThpseNdxUoxO6+yJtshZ3puroffdGsnNQX9lyVqqMfMDNqtsaiMVrZRSqd7CxcOf+tlTFcxBWBx10qhJ57MkLj8ndzBOYoA/OODEfAwWEkK0Ynym/vN8RHly0+jRGqqJSDy6cHg7VOGub/UmsJX6TfoBSOwr0+39CvO+c3eZRPTPuO9wuZjY0AitKZFKa26poYwhlLhVPb0FYC1FMbtcEIPwcv0BUAY4FqESIdzLvKNozpw1fVotcfhrX1NJojLWeahTii05xgjJv7utljWLfUJzJrqYVN7s4pCcDgRjK7TriyixEP+/JmhkJIq3qIe3n8mNyiV8HHld6EP1z7IlvkGJKR3
 
-perf_mmap_close() drops the ring-local mmap_count before serializing
-with perf_mmap() through event->mmap_mutex.  When the last mapping is
-being closed, a concurrent mmap can therefore observe a nonzero
-event->mmap_count and a zero rb->mmap_count.
+On Fri, 31 Jul 2026 11:19:32 +0100
+Muhammad Usama Anjum <usama.anjum@arm.com> wrote:
 
-In that case perf_mmap_rb() detaches the old ring, installs a replacement,
-and resets event->mmap_count to one.  The old close then consumes that
-replacement count and detaches the new ring.  Its pages can consequently
-be freed while the replacement VMA still maps their PFNs.
+> On 31/07/2026 6:49 am, Anshuman Khandual wrote:
+> > On Mon, Jul 27, 2026 at 05:46:52PM +0100, Muhammad Usama Anjum wrote:  
+> >> pte_t is used both for logical PTE values and for entries stored in a PTE
+> >> table, so pte_t * does not distinguish a pointer to a copied value from a
+> >> pointer to table storage.  
+> > 
+> > Should we rather call them as "Linux PTE" and "HW PTE" instead ?
+> > 
+> > Some like "Logical PTE" does not really sound very clear on what it represents.  
+> Yeah, I should make distinction more visible in the cover letter.
 
-Take event->mmap_mutex before updating either count.  This makes the
-ring-local and event-global count transitions atomic with respect to
-perf_mmap(), so a replacement cannot be installed until the old close has
-detached its ring.
+Just as an outside observer, so take this with a grain of salt and feel
+free to totally ignore it, the term "Logical" and "Physical" to me would be
+that the Logical one is created by software and is not mapped to hardware,
+whereas the "Physical" one would be backed by hardware.
 
-Fixes: 59741451b49c ("perf: Identify the 0->1 transition for event::mmap_count")
-Bug found and triaged by OpenAI Security Research and 
-validated by Trail of Bits.
+Just using the terminology from LVM where there are Logical volumes and
+Physical volumes.
 
-Assisted-by: Codex:gpt-5.6-sol gpt-5.5-cyber
-Signed-off-by: Kyle Zeng <kylebot@openai.com>
----
-Trail of Bits has a reproducer for this bug that triggers a
-kernel panic and can share if needed.
+But if that doesn't represent what you are trying to accomplish here, then
+it is indeed not the appropriate terminology.
 
- kernel/events/core.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+Again, feel free to ignore this comment, but I just wanted to give an
+outside perspective of the terminology that I see.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index ba5bd6a78..f93327c76 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7053,11 +7053,19 @@ static void perf_mmap_close(struct vm_area_struct *vma)
- 		mutex_unlock(&rb->aux_mutex);
- 	}
- 
-+	/*
-+	 * Serialize both count updates with perf_mmap() so they cannot
-+	 * refer to different ring buffer generations.
-+	 */
-+	mutex_lock(&event->mmap_mutex);
-+
- 	if (refcount_dec_and_test(&rb->mmap_count))
- 		detach_rest = true;
- 
--	if (!refcount_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex))
-+	if (!refcount_dec_and_test(&event->mmap_count)) {
-+		mutex_unlock(&event->mmap_mutex);
- 		goto out_put;
-+	}
- 
- 	ring_buffer_attach(event, NULL);
- 	mutex_unlock(&event->mmap_mutex);
--- 
-2.53.0
+Cheers,
+
+-- Steve
