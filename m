@@ -1,385 +1,94 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D86B426ED40
-	for <linux-perf-users@vger.kernel.org>; Fri, 31 Jul 2026 15:23:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8DD43CEEF;
+	Fri, 31 Jul 2026 15:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785511387; cv=none; b=ZsHEzM61nLK8dLxaM/1wavyCtSauuXFgEibC1jZSlL4N2kd26z76rKp/I/k+CCLdrm257iKTsN9iaixin0pmKYa10K18X3t8xSDDcOE7ILMZsp0WRaWmAwGKBaPfcgLfxLkU0CiyDApfqYpsgYn8RX/hara4Tu7d/7jF9VbxdHA=
+	t=1785511677; cv=none; b=DJoxXdfNGVLxU9rMa42NLRm2+Nq7TlNTOXs+wmYiikMcuTuNMgLBinr/y+GPlCsOy7OjKpZWWK51e/dKJf5dJF0Pfi6/QxCkvO+TTb8/R1wsVkwm/Rps+uj6Qo4UTqCShu1LPLDWqk211WMOGKj5NKXDoOqKLHUidWq6QTukBQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785511387; c=relaxed/simple;
-	bh=qF7X6G6poyy5lqDPXb9HhX6b/JufNdkincTkzi8dE9Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Knp5Od3xS4rPlPNmqo8B+Kt2NA+jWvdD5dxwPi4JwSW/niBdnjh1NgVB8YNEPh0i5Q8Fd3MVyGfM6bIKcnigRxYp30wjLbS/E+F/B4QYGsotkbo/XchYgEfO2PfQperWAdjrsJd1nzfZnoWVngezj69YMbXjLaT8krRXDzpfglo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=NhT9O7OI; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1785511677; c=relaxed/simple;
+	bh=WOrILL/qcC+g2TnqPE3qt8ATp+07jRtQXLcKLB2umr8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F/UIKaP84MqB1aMBNHs4ZQk14ZxNW+dIOBuVtnKfoJ+TMvqB+AX9zqraFHgexprmM93hgwo8jQuqjIT5/EJwxFDKmKEKZrvhNcfgEe2lJfnRr4OGcs6KgQdbBUZgl64pq7V01rG1MIj1n6Gaw0LY4+/iLBFQRJyhhLGEatcI7W0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R/G2Psrw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="NhT9O7OI"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0E28204C;
-	Fri, 31 Jul 2026 08:22:59 -0700 (PDT)
-Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.2.212.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C56833F66F;
-	Fri, 31 Jul 2026 08:23:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1785511383; bh=qF7X6G6poyy5lqDPXb9HhX6b/JufNdkincTkzi8dE9Y=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NhT9O7OI9UYxPZJrrf5Asf2YyGTeuspp2rqFtafYrqcb0/kSUwVDBIqdiczg9Bq8N
-	 u7exZrzRAcrYIpEcn0cbytVZTS2VlOloCDmMcQCmwo3lkaWGk2wGLy7pLeTwNYrDHn
-	 h0amUIwqKl8x4NherSn25u7HOt70bIrmDrqQouEE=
-From: Robin Murphy <robin.murphy@arm.com>
-To: will@kernel.org,
-	mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	ilkka@os.amperecomputing.com,
-	bwicaksono@nvidia.com
-Subject: [PATCH v2] perf/arm_cspmu: Support 64-bit programmers' model
-Date: Fri, 31 Jul 2026 16:22:58 +0100
-Message-ID: <2bde4469c918494e8fa04b2d297a6189ac8b7796.1785511378.git.robin.murphy@arm.com>
-X-Mailer: git-send-email 2.54.0.dirty
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R/G2Psrw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE4BA1F000E9;
+	Fri, 31 Jul 2026 15:27:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785511675;
+	bh=JT8xi+LYfJ/lkhRCzd7X6UxWwkgghhtU4W+AfhVJTFk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=R/G2PsrwbLj5UBqI6fxnplbccH2TfJ3is2/eG1W2dpWNhFJNrcccWcQabCsK66mV9
+	 RN5yQ/LdtVmoE883tZpRN1KmoqjLEgwoQ4yJRMnlxyJM1XwSECwPcjqdMYc7QHduXx
+	 9FyFTxmLWomYtFbP/JtxpCvKYJ7EoeOiBb5ocYZOfWb09k9/6LGUese17ekddwMeJK
+	 cqnYzYdIHKPrloDtidEOgIeLHDKF8McnAUiu4rugXFJErzOXq7f6kPfpUtjPUHensW
+	 GJdsYRC8ogNosBpHJd3//l25n1/wdVcefDC7TueCXNtrmYZNC9BfNUzHK0SUN1+42n
+	 9NQaaNuhsLlKw==
+Date: Fri, 31 Jul 2026 16:27:50 +0100
+From: Will Deacon <will@kernel.org>
+To: Ben Horgan <ben.horgan@arm.com>
+Cc: Geethasowjanya Akula <gakula@marvell.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"mark.rutland@arm.com" <mark.rutland@arm.com>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"james.morse@arm.com" <james.morse@arm.com>,
+	Sunil Kovvuri Goutham <sgoutham@marvell.com>,
+	Tanmay Jagdale <tanmay@marvell.com>
+Subject: Re: [EXTERNAL] Re: [PATCH v4 1/3] perf: marvell: Add MPAM partid
+ filtering to CN10K TAD PMU
+Message-ID: <amy-9oBsRnQd_Qtr@google.com>
+References: <20260618153610.13649-1-gakula@marvell.com>
+ <20260618153610.13649-2-gakula@marvell.com>
+ <6b15d3fc-4b4e-4c6c-a96d-5817d7114d02@arm.com>
+ <CH0PR18MB43394668EAEBD367DB4D4990CDEB2@CH0PR18MB4339.namprd18.prod.outlook.com>
+ <44cd4364-37ac-4a54-a7b2-256fbad10446@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <44cd4364-37ac-4a54-a7b2-256fbad10446@arm.com>
 
-The 64-bit Programmers' model extension, now named FEAT_CSPMU_EXT64,
-makes all the non-counter registers 64-bit as well, of which we most
-need to care PMEVFILTR<n>, PMEVTYPER<n>, and PMCR since it changes
-location. Our event config fields are ready for this internally, but
-we need a few more tweaks to propagate 64-bit values properly from
-end to end.
+On Fri, Jun 26, 2026 at 09:57:44AM +0100, Ben Horgan wrote:
+> >> Where is the user expected to get the PARTID from? The MPAM driver
+> >> considers the PARTID as an internal only value.
+> >> …
+> >> Perhaps some helpers along the lines of:
+> >> int resctrl_mount_generation(void)
+> >> …
+> > Thank you for the detailed feedback — the concern you raise is valid, particularly when 
+> > viewed from the perspective of resctrl-managed deployments.
+> > 
+> > However, to clarify the intent of this patch: the exposure of partid in the TAD PMU is deliberately
+> > a low-level, hardware-facing interface, and is not intended to integrate with or mirror the
+> > abstractions provided by resctrl. It is mainly meant for platform bring-up and low-level
+> > performance/debug users, who already have explicit knowledge of the MPAM configuration,
+> > typically provisioned by firmware or other privileged software layers (e.g. EL3/EL2).
+> > In such environments, PARTIDs are known out-of-band, so the expectation is that the
+> > user supplying partid is already aware of the MPAM IDs programmed on the system.
+> 
+> When this was proposed before, [1], there was feedback asking to
+> document how to get the PARTID.
 
-Since 64-bit events leave no room for our existing "cycles" encoding,
-and we don't really expect to see implementations of it anyway, we
-deliberately omit generic support for the architectural fixed cycle
-counter in this case to save some bother. At worst, vendor modules
-can still implement their own encoding if they really want to.
+Yes, please can you update the documentation to cover this? I'm not
+necessarily asking for a programmatic way to do it, but even something
+like a reference to a document or a firmware table would be useful for
+people trying to use the driver to profile their workload. Otherwise,
+it's just an opaque id :/
 
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
----
+There are also some comments from Sashiko to consider:
 
-v2: Fix off-by-one in the event format
----
- drivers/perf/arm_cspmu/arm_cspmu.c    | 121 +++++++++++++++++++++-----
- drivers/perf/arm_cspmu/arm_cspmu.h    |  25 +++---
- drivers/perf/arm_cspmu/nvidia_cspmu.c |   2 +-
- 3 files changed, 114 insertions(+), 34 deletions(-)
+https://sashiko.dev/#/patchset/20260618153610.13649-1-gakula@marvell.com?part=1
 
-diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
-index ad82de166dd1..3b48a35b6241 100644
---- a/drivers/perf/arm_cspmu/arm_cspmu.c
-+++ b/drivers/perf/arm_cspmu/arm_cspmu.c
-@@ -78,13 +78,13 @@ static struct acpi_apmt_node *arm_cspmu_apmt_node(struct device *dev)
- }
- 
- /*
-- * In CoreSight PMU architecture, all of the MMIO registers are 32-bit except
-- * counter register. The counter register can be implemented as 32-bit or 64-bit
-- * register depending on the value of PMCFGR.SIZE field. For 64-bit access,
-- * single-copy 64-bit atomic support is implementation defined. APMT node flag
-- * is used to identify if the PMU supports 64-bit single copy atomic. If 64-bit
-- * single copy atomic is not supported, the driver treats the register as a pair
-- * of 32-bit register.
-+ * With FEAT_CSPMU_EXT32, all of the MMIO registers are 32-bit except the
-+ * counter registers, which are either 32-bit or 64-bit depending on the value
-+ * of PMCFGR.SIZE. It is implementation-defined whether single-copy-atomic
-+ * 64-bit accesses are supported, so we rely on a firmware flag to identify
-+ * that, and otherwise treat a 64-bit counter as a non-atomic pair of 32-bit
-+ * registers. With FEAT_CSPMU_EXT64, everything is 64-bit, but we may still
-+ * have to deal with atomicity being broken.
-  */
- 
- /*
-@@ -173,13 +173,30 @@ arm_cspmu_event_attr_is_visible(struct kobject *kobj,
- 	eattr = container_of(attr, typeof(*eattr), attr.attr);
- 
- 	/* Hide cycle event if not supported */
--	if (!supports_cycle_counter(cspmu) &&
-+	if ((cspmu->has_ext64 || !supports_cycle_counter(cspmu)) &&
- 	    eattr->id == ARM_CSPMU_EVT_CYCLES_DEFAULT)
- 		return 0;
- 
- 	return attr->mode;
- }
- 
-+ssize_t arm_cspmu_default_format_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf)
-+{
-+	struct perf_pmu_events_attr *fmt = container_of(attr, typeof(*fmt), attr);
-+	struct arm_cspmu *cspmu = to_arm_cspmu(dev_get_drvdata(dev));
-+	u64 field = cspmu->has_ext64 ? U64_MAX : U32_MAX;
-+	DECLARE_BITMAP(bits, 64) = { BITMAP_FROM_U64(field) };
-+
-+	if (!fmt->id) {
-+		set_bit(32, bits); /* For 32-bit "cycles" event */
-+		return sysfs_emit(buf, "config:%*pbl\n", 64, bits);
-+	}
-+
-+	return sysfs_emit(buf, "config%lld:%*pbl\n", fmt->id, 64, bits);
-+}
-+EXPORT_SYMBOL_GPL(arm_cspmu_default_format_show);
-+
- static struct attribute *arm_cspmu_format_attrs[] = {
- 	ARM_CSPMU_FORMAT_EVENT_ATTR,
- 	ARM_CSPMU_FORMAT_FILTER_ATTR,
-@@ -198,9 +215,9 @@ arm_cspmu_get_format_attrs(const struct arm_cspmu *cspmu)
- 	return attrs;
- }
- 
--static u32 arm_cspmu_event_type(const struct perf_event *event)
-+static u64 arm_cspmu_event_type(const struct perf_event *event)
- {
--	return event->attr.config & ARM_CSPMU_EVENT_MASK;
-+	return event->attr.config;
- }
- 
- static bool arm_cspmu_is_cycle_counter_event(const struct perf_event *event)
-@@ -208,6 +225,16 @@ static bool arm_cspmu_is_cycle_counter_event(const struct perf_event *event)
- 	return (event->attr.config == ARM_CSPMU_EVT_CYCLES_DEFAULT);
- }
- 
-+static u64 arm_cspmu_filter(const struct perf_event *event)
-+{
-+	return event->attr.config1;
-+}
-+
-+static u64 arm_cspmu_filter2(const struct perf_event *event)
-+{
-+	return event->attr.config2;
-+}
-+
- static ssize_t arm_cspmu_identifier_show(struct device *dev,
- 					 struct device_attribute *attr,
- 					 char *page)
-@@ -417,6 +444,17 @@ static int arm_cspmu_init_impl_ops(struct arm_cspmu *cspmu)
- 		DEFAULT_IMPL_OP(event_attr_is_visible),
- 	};
- 
-+	/*
-+	 * With 64-bit events, since our default "cycles" encoding won't work,
-+	 * and the architecture recommends against implementing it anyway, we
-+	 * choose to effectively ignore FEAT_CSPMU_CCNTR, unless a vendor
-+	 * module really wants to provide its own encoding and ops.
-+	 */
-+	if (cspmu->has_ext64) {
-+		cspmu->impl.ops.is_cycle_counter_event = NULL;
-+		cspmu->impl.ops.set_cc_filter = NULL;
-+	}
-+
- 	/* Firmware may override implementer/product ID from PMIIDR */
- 	if (apmt_node && apmt_node->impl_id)
- 		cspmu->impl.pmiidr = apmt_node->impl_id;
-@@ -518,19 +556,24 @@ static int arm_cspmu_alloc_attr_groups(struct arm_cspmu *cspmu)
- 	return 0;
- }
- 
-+static inline int arm_cspmu_pmcr(struct arm_cspmu *cspmu)
-+{
-+	return cspmu->has_ext64 ? PMCR_64 : PMCR;
-+}
-+
- static inline void arm_cspmu_reset_counters(struct arm_cspmu *cspmu)
- {
--	writel(PMCR_C | PMCR_P, cspmu->base0 + PMCR);
-+	writel(PMCR_C | PMCR_P, cspmu->base0 + arm_cspmu_pmcr(cspmu));
- }
- 
- static inline void arm_cspmu_start_counters(struct arm_cspmu *cspmu)
- {
--	writel(PMCR_E, cspmu->base0 + PMCR);
-+	writel(PMCR_E, cspmu->base0 + arm_cspmu_pmcr(cspmu));
- }
- 
- static inline void arm_cspmu_stop_counters(struct arm_cspmu *cspmu)
- {
--	writel(0, cspmu->base0 + PMCR);
-+	writel(0, cspmu->base0 + arm_cspmu_pmcr(cspmu));
- }
- 
- static void arm_cspmu_enable(struct pmu *pmu)
-@@ -561,7 +604,8 @@ static int arm_cspmu_get_event_idx(struct arm_cspmu_hw_events *hw_events,
- 	struct arm_cspmu *cspmu = to_arm_cspmu(event->pmu);
- 
- 	if (supports_cycle_counter(cspmu)) {
--		if (cspmu->impl.ops.is_cycle_counter_event(event)) {
-+		if (cspmu->impl.ops.is_cycle_counter_event &&
-+		    cspmu->impl.ops.is_cycle_counter_event(event)) {
- 			/* Search for available cycle counter. */
- 			if (test_and_set_bit(cspmu->cycle_counter_logical_idx,
- 					     hw_events->used_ctrs))
-@@ -804,26 +848,33 @@ static void arm_cspmu_event_update(struct perf_event *event)
- static inline void arm_cspmu_set_event(struct arm_cspmu *cspmu,
- 					struct hw_perf_event *hwc)
- {
--	u32 offset = PMEVTYPER + (4 * hwc->idx);
--
--	writel(hwc->config, cspmu->base0 + offset);
-+	if (cspmu->has_ext64)
-+		writeq(hwc->config, cspmu->base0 + PMEVTYPER + (8 * hwc->idx));
-+	else
-+		writel(hwc->config, cspmu->base0 + PMEVTYPER + (4 * hwc->idx));
- }
- 
- static void arm_cspmu_set_ev_filter(struct arm_cspmu *cspmu,
- 				    const struct perf_event *event)
- {
--	u32 filter = event->attr.config1 & ARM_CSPMU_FILTER_MASK;
--	u32 filter2 = event->attr.config2 & ARM_CSPMU_FILTER_MASK;
--	u32 offset = 4 * event->hw.idx;
-+	u64 filter = arm_cspmu_filter(event);
-+	u64 filter2 = arm_cspmu_filter2(event);
-+	int n = event->hw.idx;
- 
--	writel(filter, cspmu->base0 + PMEVFILTR + offset);
--	writel(filter2, cspmu->base0 + PMEVFILT2R + offset);
-+	if (cspmu->has_ext64) {
-+		writeq(filter, cspmu->base0 + PMEVFILTR + (8 * n));
-+		writeq(filter2, cspmu->base0 + PMEVFILT2R + (8 * n));
-+	} else {
-+		writel(filter, cspmu->base0 + PMEVFILTR + (4 * n));
-+		writel(filter2, cspmu->base0 + PMEVFILT2R + (4 * n));
-+	}
- }
- 
-+/* Note we deliberately don't expect 64-bit filters here; see init_impl_ops */
- static void arm_cspmu_set_cc_filter(struct arm_cspmu *cspmu,
- 				    const struct perf_event *event)
- {
--	u32 filter = event->attr.config1 & ARM_CSPMU_FILTER_MASK;
-+	u32 filter = arm_cspmu_filter(event);
- 
- 	writel(filter, cspmu->base0 + PMCCFILTR);
- }
-@@ -976,6 +1027,30 @@ static int arm_cspmu_init_mmio(struct arm_cspmu *cspmu)
- 		}
- 	}
- 
-+	/*
-+	 * We can infer FEAT_CSPMU_EXT64 from PMCNTEN, or hope that anything
-+	 * that failed to get that right has at least implemented the optional
-+	 * PMDEVARCH correctly...
-+	 *
-+	 * Note that architecturally, has_ext64 *should* imply has_atomic_dword,
-+	 * but enough implementations have ignored that already that we'll just
-+	 * have to still rely on the firmware flag.
-+	 */
-+	writel(~0U, cspmu->base0 + PMCNTENCLR);
-+	writel(~0U, cspmu->base0 + PMCNTEN);
-+	if (readl(cspmu->base0 + PMCNTENCLR)) {
-+		cspmu->has_ext64 = true;
-+		writel(0, cspmu->base0 + PMCNTEN);
-+	} else {
-+		u32 reg = readl(cspmu->base0 + PMDEVARCH);
-+
-+		if (reg & ARM_CSPMU_PMDEVARCH_PRESENT) {
-+			reg &= ARM_CSPMU_PMDEVARCH_ARCHPART;
-+			if (reg == 0xaf4 || reg == 0xaf5)
-+				cspmu->has_ext64 = true;
-+		}
-+	}
-+
- 	cspmu->pmcfgr = readl(cspmu->base0 + PMCFGR);
- 
- 	cspmu->num_logical_ctrs = FIELD_GET(PMCFGR_N, cspmu->pmcfgr) + 1;
-diff --git a/drivers/perf/arm_cspmu/arm_cspmu.h b/drivers/perf/arm_cspmu/arm_cspmu.h
-index 3fc5c8d77266..c4058d602477 100644
---- a/drivers/perf/arm_cspmu/arm_cspmu.h
-+++ b/drivers/perf/arm_cspmu/arm_cspmu.h
-@@ -35,21 +35,15 @@
- 	PMU_EVENT_ATTR_ID(_name, arm_cspmu_sysfs_event_show, _config)
- 
- 
--/* Default event id mask */
--#define ARM_CSPMU_EVENT_MASK	GENMASK_ULL(63, 0)
--
--/* Default filter value mask */
--#define ARM_CSPMU_FILTER_MASK	GENMASK_ULL(63, 0)
--
- /* Default event format */
- #define ARM_CSPMU_FORMAT_EVENT_ATTR	\
--	ARM_CSPMU_FORMAT_ATTR(event, "config:0-32")
-+	PMU_EVENT_ATTR_ID(event, arm_cspmu_default_format_show, 0)
- 
- /* Default filter format */
- #define ARM_CSPMU_FORMAT_FILTER_ATTR	\
--	ARM_CSPMU_FORMAT_ATTR(filter, "config1:0-31")
-+	PMU_EVENT_ATTR_ID(filter, arm_cspmu_default_format_show, 1)
- #define ARM_CSPMU_FORMAT_FILTER2_ATTR	\
--	ARM_CSPMU_FORMAT_ATTR(filter2, "config2:0-31")
-+	PMU_EVENT_ATTR_ID(filter2, arm_cspmu_default_format_show, 2)
- 
- /*
-  * This is the default event number for cycle count, if supported, since the
-@@ -78,6 +72,7 @@
- #define PMEVFILT2R			0x800
- #define PMEVFILTR			0xA00
- #define PMCNTENSET			0xC00
-+#define PMCNTEN				0xC10
- #define PMCNTENCLR			0xC20
- #define PMINTENSET			0xC40
- #define PMINTENCLR			0xC60
-@@ -87,6 +82,8 @@
- #define PMCFGR				0xE00
- #define PMCR				0xE04
- #define PMIIDR				0xE08
-+#define PMCR_64				0xE10
-+#define PMDEVARCH			0xFBC
- #define PMPIDR0				0xFE0
- #define PMPIDR1				0xFE4
- #define PMPIDR2				0xFE8
-@@ -154,6 +151,10 @@
- #define ARM_CSPMU_IMPL_ID_NVIDIA	0x36B
- #define ARM_CSPMU_IMPL_ID_AMPERE	0xA16
- 
-+/* PMDEVARCH */
-+#define ARM_CSPMU_PMDEVARCH_PRESENT	BIT(20)
-+#define ARM_CSPMU_PMDEVARCH_ARCHPART	GENMASK(11, 0)
-+
- struct arm_cspmu;
- 
- /* This tracks the events assigned to each counter in the PMU. */
-@@ -183,7 +184,7 @@ struct arm_cspmu_impl_ops {
- 	/* Check if the event corresponds to cycle count event */
- 	bool (*is_cycle_counter_event)(const struct perf_event *event);
- 	/* Decode event type/id from configs */
--	u32 (*event_type)(const struct perf_event *event);
-+	u64 (*event_type)(const struct perf_event *event);
- 	/* Set/reset event filters */
- 	void (*set_cc_filter)(struct arm_cspmu *cspmu,
- 			      const struct perf_event *event);
-@@ -234,6 +235,7 @@ struct arm_cspmu {
- 	int irq;
- 
- 	bool has_atomic_dword;
-+	bool has_ext64;
- 	u32 pmcfgr;
- 	u32 num_logical_ctrs;
- 	u32 num_set_clr_reg;
-@@ -250,6 +252,9 @@ ssize_t arm_cspmu_sysfs_event_show(struct device *dev,
- 				   struct device_attribute *attr,
- 				   char *buf);
- 
-+ssize_t arm_cspmu_default_format_show(struct device *dev,
-+				      struct device_attribute *attr, char *buf);
-+
- /* Register vendor backend. */
- int arm_cspmu_impl_register(const struct arm_cspmu_impl_match *impl_match);
- 
-diff --git a/drivers/perf/arm_cspmu/nvidia_cspmu.c b/drivers/perf/arm_cspmu/nvidia_cspmu.c
-index bac83e424d6d..a4c1ab886709 100644
---- a/drivers/perf/arm_cspmu/nvidia_cspmu.c
-+++ b/drivers/perf/arm_cspmu/nvidia_cspmu.c
-@@ -762,7 +762,7 @@ static void pcie_tgt_pmu_reset_ev_filter(struct arm_cspmu *cspmu,
- 	pcie_tgt_pmu_config_addr_filter(cspmu, false, base, mask, idx);
- }
- 
--static u32 pcie_tgt_pmu_event_type(const struct perf_event *event)
-+static u64 pcie_tgt_pmu_event_type(const struct perf_event *event)
- {
- 	return event->attr.config & NV_PCIE_TGT_EV_TYPE_MASK;
- }
--- 
-2.54.0.dirty
+Thanks,
 
+Will
