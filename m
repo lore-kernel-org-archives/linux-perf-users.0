@@ -1,107 +1,138 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC69745DF4B;
-	Fri, 31 Jul 2026 23:28:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62AB444781A;
+	Fri, 31 Jul 2026 23:32:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785540523; cv=none; b=YaBzhuRBRPDVsNT+QT0ddjo041g886mxenn2Vcp+iBsPnJ0s2H/jsFEBmCuNxyN2FteMD85uGy87aGW3CpKsD+LcXu6JjZqmledMcOWPcm+RBMo90nU3E/eFrOKx7TbB0lnNicxyyZobvH875ura7U11ykFuZkhOuz5OW3cBFQI=
+	t=1785540761; cv=none; b=rmWKBCzv6xKiMLz3on4jKkfl+4i4tEVLy84AqOyX8HWsUP91R/J+qA2fEg29oDj3Q+yer+tVmxejMhScV7Vd4JuuUSU285FgweYstvK3FSeYJkiXJTFSzUmPuu/DfXEV2ZGF62hM2xzQM2X8iBPsNHHMcyfr6D2J9fxFcaleaTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785540523; c=relaxed/simple;
-	bh=Si+2IbyZr5DwcAODuS4rS50l5gS6BgXYead8EhBYFiU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OZWX1zSmnQvg21npaFq/LBUBnv7ydLv+WtnnxZFadjr9TLhrZ5a3rmwbMdBnjbk7hGRIwyH8+YXTUI/OFx6bAcyBkSMaK/sGgu5vND3fLD3vxgQgDbB+oNGMpBo+fyv9SK8mbBznPOCAxG5vMC8G/GEuBM3XRKrEtXB5HigOTeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8048B1F00ACF;
-	Fri, 31 Jul 2026 23:28:41 +0000 (UTC)
-From: Dave Jiang <dave.jiang@intel.com>
-To: linux-cxl@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: jic23@kernel.org,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	dave@stgolabs.net,
-	robin.murphy@arm.com,
-	sashiko-bot@kernel.org
-Subject: [PATCH v3 9/9] perf/cxl: Don't log through pmu.dev in the overflow interrupt handler
-Date: Fri, 31 Jul 2026 16:28:27 -0700
-Message-ID: <20260731232827.401447-10-dave.jiang@intel.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260731232827.401447-1-dave.jiang@intel.com>
-References: <20260731232827.401447-1-dave.jiang@intel.com>
+	s=arc-20240116; t=1785540761; c=relaxed/simple;
+	bh=NX+qMY7Z+Tz4La2FhpK7ALZnDA8LaIeePy2CJi2hCr4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QuGEz5IlKTMB0JShLOJTMIRMwa1C5e95K2+//jBcKMkxii4vlD8Zyk/mMbNnG0zdU+B1IA+UUMoh+XDubJhZj+bPbJ1QOxz9og+iKMLVe9WKvZhM8o7MYd0jPc5NW87f2mP54m408URZlHsrgLtRMQD8BBNFje9Js8VDDEpxKYM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DJ5oAPr1; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DJ5oAPr1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAA771F00AC4;
+	Fri, 31 Jul 2026 23:32:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785540760;
+	bh=czqlfcEAMjWrlTHx1B9wJwhXcruEO6Ku+5ixIxaRqU4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=DJ5oAPr1pz6M1zU275NSFKL7OI6KYRYEVw9vuZDb4YdwWHtK/QhOmL4tp07fToy4k
+	 F+nQq5E8IiJ7HQupShpelGACJvbRKwsnfkEHTCtZxG6FI87+cR5Oqaa7fcII/2GxEm
+	 z31ZXktr6iy2bdQEUptiocLcDjUBdYCRpBNd1oABpsbwcUO91nCTldC4QLmH9KlGPJ
+	 t0x1cXfsS/xgnUuwSlcQ+o8D/cdjNBZR+xVyuaeHRQg56RZ/LKcQM7lSqHLfj8Z/qe
+	 uhYv6EStFkbrJJXQlRpUTieferLaUKyvgXvSn+Ak4CZECUeHy/OwdGIsVCbaQ7W7BV
+	 ep5EkBfnrFFaQ==
+Date: Fri, 31 Jul 2026 16:32:38 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: Flaky tests
+Message-ID: <am0wljqUaRYvsS-T@google.com>
+References: <amaWoGWxQ4Z4iNPk@x1>
+ <amadxFFSer95vdNc@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <amadxFFSer95vdNc@x1>
 
-perf_pmu_unregister() frees pmu->dev without clearing the pointer, and
-cxl_pmu_probe() registers its devm actions so that teardown runs
-perf_pmu_unregister() first, then the hotplug instance removal, then
-free_irq(). Nothing before free_irq() masks the interrupt, so the handler
-stays live across a window where info->pmu.dev is freed and its dev_dbg()
-walks that pointer.
+On Sun, Jul 26, 2026 at 08:52:36PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Sun, Jul 26, 2026 at 08:22:08PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Hi,
+> > 
+> > 	Getting back on track with perf I noticed these two flaky tests,
+> > not investigated yet:
+> 
+> Sry, sent to another Ian, from another life :-)
 
-Unsharing the interrupt does not close that window. cxl_pmu_event_stop()
-leaves the counter's overflow status bit set, and only the handler clears
-it, so an overflow taken just before teardown is still delivered and still
-gets past the "did anything overflow" early-out. It lands in the !event
-branch, where the dev_dbg() is.
+:)
 
-Log through info->pmu.parent instead, which is devm-managed and outlives
-every teardown action.
+>  
+> > ⬢ [acme@toolbx perf-tools-next]$ git log --oneline -1
+> > 98bc7deff4858aa8 (HEAD -> perf/hardening-machine, number/perf/hardening-machine) perf machine: Check snprintf truncation for guest kallsyms path
+> > ⬢ [acme@toolbx perf-tools-next]$ perf -v
+> > perf version 7.2.rc1.g98bc7deff485
+> > ⬢ [acme@toolbx perf-tools-next]$
+> > logout
+> > acme@x1:~/git/perf-tools-next$
+> > acme@x1:~/git/perf-tools-next$ sudo su -
+> > [sudo] password for acme:
+> > root@x1:~# perf -vv
+> > perf version 7.2.rc1.g98bc7deff485
+> >                    aio: [ on  ]  # HAVE_AIO_SUPPORT
+> >                    bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+> >          bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
+> >             debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
+> >                  dwarf: [ on  ]  # HAVE_LIBDW_SUPPORT
+> >     dwarf_getlocations: [ on  ]  # HAVE_LIBDW_SUPPORT
+> >           dwarf-unwind: [ on  ]  # HAVE_DWARF_UNWIND_SUPPORT
+> >                 libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT ( tip: Deprecated, license incompatibility, use BUILD_NONDISTRO=1 and install binutils-dev[el] )
+> > babeltrace2-ctf-writer: [ on  ]  # HAVE_BABELTRACE2_CTF_WRITER_SUPPORT
+> >         libbpf-strings: [ on  ]  # HAVE_LIBBPF_STRINGS_SUPPORT
+> >            libcapstone: [ on  ]  # HAVE_LIBCAPSTONE_SUPPORT
+> >     libdw-dwarf-unwind: [ on  ]  # HAVE_LIBDW_SUPPORT
+> >                 libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+> >                libLLVM: [ on  ]  # HAVE_LIBLLVM_SUPPORT
+> >                libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+> >             libopencsd: [ on  ]  # HAVE_CSTRACE_SUPPORT
+> >                libperl: [ OFF ]  # HAVE_LIBPERL_SUPPORT ( tip: Deprecated, use LIBPERL=1 and install perl-ExtUtils-Embed/libperl-dev to build with it )
+> >                libpfm4: [ on  ]  # HAVE_LIBPFM
+> >              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+> >               libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+> >          libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+> >              libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT ( tip: Deprecated, use LIBUNWIND=1 and install libunwind-dev[el] to build with it )
+> >                   lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+> > numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+> >                   zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+> >                   zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+> >                   rust: [ on  ]  # HAVE_RUST_SUPPORT
+> > root@x1:~# perf test
+[SNIP]
+> > === Test Summary ===
+> > Passed main tests : 133
+> > Passed subtests   : 152
+> > Skipped tests     : 24
+> > Failed tests      : 2
+> > List of failed tests:
+> >    23: Object code reading
+> >   110: perf record sample filtering (by BPF) tests
+> > root@x1:~# perf test 23
+> >  23: Object code reading                                                                                       : Ok
 
-Clear the overflow status before requesting the interrupt too, since the
-driver never touched it at probe and a counter left enabled with
-INT_ON_OVRFLW by firmware or a previous kernel can raise an interrupt at
-any point.
+Right, I'm seeing this is flaky.  Sometimes it fails to find a map for
+some kernel address.
 
-Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
-Reported-by: sashiko-bot@kernel.org
-Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
-Assisted-by: Claude:claude-opus-4-8
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
-v3:
-- Clear CXL_PMU_OVERFLOW_REG at probe, before the handler is armed. A stale
-  status bit from firmware can cause overflow interrupt. (Robin)
-- Ack dropped as the patch grew a hunk.
-- Drop the cxl_pmu_offline_cpu() hunk. That dev_err() cannot be reached.
----
- drivers/perf/cxl_pmu.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+> > 
+> > === Test Summary ===
+> > Passed main tests : 1
+> > Passed subtests   : 0
+> > Skipped tests     : 0
+> > Failed tests      : 0
+> > root@x1:~# perf test 110
+> > 110: perf record sample filtering (by BPF) tests                                                               : Ok
 
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 37742ce43d9f..3683427fbb7e 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -806,7 +806,7 @@ static irqreturn_t cxl_pmu_irq(int irq, void *data)
- 		struct perf_event *event = info->hw_events[i];
- 
- 		if (!event) {
--			dev_dbg(info->pmu.dev,
-+			dev_dbg(info->pmu.parent,
- 				"overflow but on non enabled counter %d\n", i);
- 			continue;
- 		}
-@@ -903,6 +903,15 @@ static int cxl_pmu_probe(struct device *dev)
- 	if (!irq_name)
- 		return -ENOMEM;
- 
-+	/*
-+	 * Clear any overflow status left set by firmware or a previous kernel
-+	 * before the handler goes live, so it cannot mistake a stale bit for an
-+	 * overflow on a counter no event owns yet. The register is RW1C, and
-+	 * bits above the implemented counters are RsvdZ, so only write those.
-+	 */
-+	writeq(GENMASK_ULL(info->num_counters - 1, 0),
-+	       info->base + CXL_PMU_OVERFLOW_REG);
-+
- 	/*
- 	 * The handler must run on info->on_cpu, so the interrupt cannot be
- 	 * shared - IRQF_NOBALANCING is only honoured for the first action on a
--- 
-2.55.0
+I never saw this before.  Do you have error message?
 
+Thanks,
+Namhyung
+
+> > 
+> > === Test Summary ===
+> > Passed main tests : 1
+> > Passed subtests   : 0
+> > Skipped tests     : 0
+> > Failed tests      : 0
+> > root@x1:~#
