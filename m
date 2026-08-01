@@ -1,48 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7420359A9B;
-	Sat,  1 Aug 2026 11:28:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4146438029;
+	Sat,  1 Aug 2026 11:28:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785583728; cv=none; b=ICk9nCfjoD1htbJslJmmeLYE3CC1A8eYzYme1u5NTGNBFvqkshBpo/n9UQeUZs0ADUvAVwM4vsWnuCYXyj0GNUFJzxAhxZarI522Gfu3HnLnfQiYiEs/06d02d8PyNG680cf5EE99SS1gIZpgdkO0QMe+DyCUl+kSDWIP+rf8tA=
+	t=1785583730; cv=none; b=k1sCJtcK07dFC5kcep760YI9Ev5JYi+wnYwEsmaakiXLo29GJsi/6H7ZypOne8RsrmNwsfkqhmVT+E+v4oLrCl0gKI+kxUCPbhI7hJ504ucf/9MB5HO74bD8okWbiN7NsXcFfoJry3VHuNdhDPHiRryciFQgHL+aVoVyOAcJ/xQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785583728; c=relaxed/simple;
-	bh=fcnZbbeqljOwmjnfwamAiamIxrC/pATHemwzBgub2TA=;
+	s=arc-20240116; t=1785583730; c=relaxed/simple;
+	bh=JpTO3eqMIPrhICzmbLqz2MpX1J3/iEmleEvrJZJGUL4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dj82zoJnOPd5Jn4ijZrmBtlkl4GhquGMlSVeQdYkk+TeGhh1f8GmsbSHL3n7xptfbRXVxrye2hv4n0Ep+UGUCakVx6W37gv5zWd/wGM+Pi6eKX/W6KQ+UIb+6brUTltAtplxaWcAGqyHN89pF9gCmkkBBzkQgrfiC88liV3mgVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MNDHhV1n; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=ks6jvXPhWBl3ZsdF3HbD8gVKf/yYvwsRT90kVu5N6bw2CxY+UdwPvmFXlK7k2L604ZUlqhDzYz+guTnUJTHvGvYhn4FyIxAyCwdPYPlB4sUrTK2hH7DVzcCjaJsJW2ZFSqiS9VGEnP9/n3YXLoXS4z/ttrAxJTokMu8jM9XhVQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OeLVnyd6; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MNDHhV1n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 008441F00ADE;
-	Sat,  1 Aug 2026 11:28:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OeLVnyd6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88D331F00ACA;
+	Sat,  1 Aug 2026 11:28:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785583727;
-	bh=8NltONilZ9GycYIdkxMP4OoeJI6kGzsHNsdiT8Ul84U=;
+	s=k20260515; t=1785583729;
+	bh=hJFRZYvUMbiVIUOjSQH500WaF8jMfo/BVWXDkXdQIaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=MNDHhV1nD1XnRgFmarxfgWSy/KNHCUgDwqfve5p6hv8yCl4YL/fP7jYgzaaVxgcZT
-	 xO53pg8GSoWVzN46pvycWvlsnDMTDnY7swqk+fVg82a+8orDWb3ge15lXu75Fg8i4s
-	 nyMHk4m2pVuijZj1U/CJeCPrcFoJiEWad4wka9/HcFx7FvFN9XPMphJ4oq/o5V4G4M
-	 NHPC5WTbcXnEazp4pwKPdwRuulnnzfGwyNyTEeq9DnkuGgnYsjnNpQEeZMKjlI2LLt
-	 nu5BNB2ilGsKzIHpXeuxaUnGTmHDt/IR3sYBdhAYbwBG1D3ARjQlMbwu6ITqRvSPSl
-	 ZK29vYmgK6YtA==
+	b=OeLVnyd6zGgLFlnhUiVUgc1C9g7ew9Y8Gn9so0Dzjq7p8dz/R/WEK7EDgRmqlgSPW
+	 7+fMl19S1i3WzGWYMvP68Mb6bQqgj4a/W9K3XjvabG8uStuGOR/dFhgHFPC/1wgF/G
+	 pMAWeYOEOYVSCcFgOODx22ciVjQ2XK94oF4XTnkmqHKyEx51CQedmxEE8TCJh5nKaL
+	 rHsJHfk0taP1pXAClIZlsQ0O0e8fiEvwKQ79g5HuLvsResNEN6KJMPDPQLbc9NhFHk
+	 CcfoQND/759OElU7zCrv3eKOgOCsfiGPZVgnj5iyXeVm5Xhhq0DTY0GaiaADShbARy
+	 LsebwpdGeCm8Q==
 From: Will Deacon <will@kernel.org>
-To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+To: Mark Rutland <mark.rutland@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	Geetha sowjanya <gakula@marvell.com>
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Leo Yan <leo.yan@arm.com>
 Cc: catalin.marinas@arm.com,
 	kernel-team@android.com,
-	Will Deacon <will@kernel.org>,
-	mark.rutland@arm.com,
-	krzk+dt@kernel.org
-Subject: Re: [PATCH v8 0/3] perf: marvell: Add CN20K DDR PMU support
-Date: Sat,  1 Aug 2026 12:28:29 +0100
-Message-ID: <178551108395.325729.8003584070138244623.b4-ty@kernel.org>
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH] perf: arm_spe: Make wakeup range check overflow safe
+Date: Sat,  1 Aug 2026 12:28:30 +0100
+Message-ID: <178550621893.239311.16566989493274037656.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260601073318.7098-1-gakula@marvell.com>
-References: <20260601073318.7098-1-gakula@marvell.com>
+In-Reply-To: <20260702170521.4103426-1-leo.yan@arm.com>
+References: <20260702170521.4103426-1-leo.yan@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,26 +50,20 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Mon, 01 Jun 2026 13:03:15 +0530, Geetha sowjanya wrote:
-> This series adds support for the DDR Performance Monitoring Unit (PMU)
-> present in Marvell CN20K SoCs.
+On Thu, 02 Jul 2026 18:05:21 +0100, Leo Yan wrote:
+> The current code checks whether the wakeup point is in the current
+> writable range by comparing it with handle->head + handle->size.
 > 
-> The DDR PMU is part of the DRAM Subsystem (DSS) and provides hardware
-> counters to monitor DDR traffic and performance events. The block
-> implements eight programmable counters and two fixed-function counters
-> tracking DDR read and write activity, and is accessed via a dedicated
-> MMIO region.
+> The perf AUX head is a monotonically increasing index, so that addition
+> can overflow when head is close to ULONG_MAX. In that case, a wakeup
+> point which is still inside the free space range can be missed.
 > 
 > [...]
 
 Applied to arm64 (for-next/perf), thanks!
 
-[1/3] dt-bindings: perf: marvell: Add CN20K DDR PMU binding
-      https://git.kernel.org/arm64/c/6e0aa591af99
-[2/3] perf: marvell: Add CN20K DDR PMU support
-      https://git.kernel.org/arm64/c/9b551a2446b2
-[3/3] perf: marvell: Cancel CN10K DDR PMU hrtimer on device remove
-      https://git.kernel.org/arm64/c/7dbcb0268d1e
+[1/1] perf: arm_spe: Make wakeup range check overflow safe
+      https://git.kernel.org/arm64/c/fcc5eaea2d23
 
 Cheers,
 -- 
