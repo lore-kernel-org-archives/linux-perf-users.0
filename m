@@ -1,207 +1,154 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from CWXP265CU010.outbound.protection.outlook.com (mail-ukwestazon11022122.outbound.protection.outlook.com [52.101.101.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033513839A3
-	for <linux-perf-users@vger.kernel.org>; Sat,  1 Aug 2026 14:32:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785594772; cv=none; b=S7CGzlITcilk77MD9f05jjgbZIQLlQA8YAiT6f9LMTqvHZ1YysgyyFt/23accXb4urHexz13MBOQRBFEeaGXPLtc+5Cen199m9sWiJO4fL4f60nk3dhX6s+nXh3Vfik8FOIvFepbslKaOi7p9PktC87UgO1GjSsbMIVlMmRqk+0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785594772; c=relaxed/simple;
-	bh=xA97G47wyRvIgAgtg+lfOCMaER2FjiU1CJVS4+HZnOI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vs8orbP3oJr0SMoCY2bHSTPYKBBafNI1dyplpjknUyrjBFDHYmYqBa4nR4d5/adeDGEEhqTZ96+ErtVymEpqATdfSoEUKK4b8UqJJsTfgn+Tmq11prRQYnI6GsaU0pbabgGM9jcpIQ4mscnrBS2yZXA3qJg3166UEKRjHrK+Dys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=b1MJ2KvV; arc=none smtp.client-ip=95.215.58.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="b1MJ2KvV"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1785594758;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9ri60wTe3lRq/wyazLvLAJHMWphJ53DXAVPzpa92v8E=;
-	b=b1MJ2KvVydMkbGpiSM2vSJhXzcu6GCUhE0pgi57LctVN7QP7thbs+314VxzqPZ0y2fArlf
-	zLY1i65Y6JE/Xt/8+PFW0EPl2ofxtl+fUxbw+hmqUM1Nk0YFt8YDyt37ciBE3FfwWAblHr
-	Ops92EnsY7B5tMRb4P3SdCuy3WE/xkA=
-From: Usama Arif <usama.arif@linux.dev>
-To: Zi Yan <ziy@nvidia.com>
-Cc: Usama Arif <usama.arif@linux.dev>,
-	David Hildenbrand <david@kernel.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Nico Pache <nico.pache@linux.dev>,
-	Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>,
-	Barry Song <baohua@kernel.org>,
-	Lance Yang <lance.yang@linux.dev>,
-	Gregory Price <gourry@gourry.net>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Kairui Song <kasong@tencent.com>,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH RFC 02/14] perf/ring_buffer: stop using PG_private as AUX page high-order marker
-Date: Sat,  1 Aug 2026 07:32:26 -0700
-Message-ID: <20260801143227.1267657-1-usama.arif@linux.dev>
-In-Reply-To: <20260731-remove-pg_private-v1-2-142c97ba3562@nvidia.com>
-References: 
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D181F30BB;
+	Sat,  1 Aug 2026 21:45:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.101.122
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785620737; cv=fail; b=NV4Ujx+RfTDZxBjbM/N7RNaSbuOGusE4sl6/tH3PUhsMS8txgK+iIpkhj/J8E1gmwcTRgjejaN6uIM0CkvBvbnp/3IWbijpH4FPxA2+qKMyT7ECuV7+xkGEFEjf4pOG4n6PVwf4S3rT2z4b6/3a3wIEJIYojnnttHA8jk77m85c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785620737; c=relaxed/simple;
+	bh=iaKNa5K3emxq8CfRGsELCAi2wm4dcl6QkbDoOi+a5Os=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ZgP2YPyUKrv3izk/oqOc1Fly9VEaCYDtytHaDIsHpCxp48RiB8s5nZkjQCGfMur6W9LF8wvWhWValeE4b4LLsVJFBlQujbUlYDATgtdOvEqKeU0uvN20btcyBBENl+8vx4XNsT9hxVxI+2xVRUzAmZZvDyI0EKXAfra/y20DJmk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.101.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=JXatNt8ZfS0bcwdVCdixomJeTB81OT7gow34JMbr/MTLV6pelx7GFS4oX/t5PJgMT9F7nfLx0eAzfwLhM2Bg8d7q69aD2m/ljaLZ3jVaYJ0M10wkqhRtxg/rLtWPFpf9h5hlgOT1mNnG8SN5gFgxA8nCuYyFNNWD0CfKsIkXHl9WxUiJuz2rVeAPPC9T9P+TSa+W6AfQFAMR+B3b7bBoE6uMU+S+duxrboesd41YYkV5Hd60mwosLeQi0/KFrxvrEX68VP8nn4/+XrV85NeqgtUwzut13JTTzL2IbbLmW1GoM/YtGIjVEyT3DscSe0HoPkdZ3nIHqMcL7p/cPPfvdw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=+wvQ00zCXOCA5AZKeWyBE0gFimZxZ51iORysTMSabZU=;
+ b=W88ZdREo7J03c17k2+Bxn6hPPpwBlPt0/JSqYOMXJkWPJNt79/XmWMawqJ1T4EVuDkk5fbqpBMLCLASHTD8s155OWgQ56t1leAnmtvPeHaZ0P67RC3HCfQ5XEAf/N0/NOHvawW6rgy6eusdjktEW16RhVt8oSgQM75nK18P8vcFe4ZS90Yk06jCuNxnxsWpHhntjbkj0LUZjsKyPF01Vhd3xoljQyxN42rl/5RzwTSMPXRNFMZbcwLly8Jj1jtHIDy9VTT6BgiykmL2seY5EHHwnjHEo76abf5TEWsWgcR0xgE2vIB8AcPSLinYMtPjtj6bDqXvJo827DmZgOe84dg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
+ by LOBP123MB8220.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:440::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.17; Sat, 1 Aug
+ 2026 21:45:32 +0000
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0270.016; Sat, 1 Aug 2026
+ 21:45:31 +0000
+Date: Sat, 1 Aug 2026 17:45:27 -0400
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, 
+	howardchu95@gmail.com, neelx@suse.com, chjohnst@mail.com, sean@ashe.io, steve@abita.co, 
+	rishil1999@outlook.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/3] perf sched latency: Auto-scale latency and
+ runtime display units
+Message-ID: <oisjadpeh7gyua3hhqni6ctazrosulcvbndftuxuovfczuqn2a@cej6shjbossa>
+References: <20260730185416.97166-1-atomlin@atomlin.com>
+ <20260730185416.97166-3-atomlin@atomlin.com>
+ <am0bSUV7tRYWoWyr@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <am0bSUV7tRYWoWyr@google.com>
+X-ClientProxiedBy: BN9PR03CA0046.namprd03.prod.outlook.com
+ (2603:10b6:408:fb::21) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LOBP123MB8220:EE_
+X-MS-Office365-Filtering-Correlation-Id: c8f966ea-7f53-4b48-0e5d-08def01635b6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|7416014|1800799024|23010399003|366016|18002099003|22082099003|3023799007|56012099006|5023799004|4143699003|10067099003;
+X-Microsoft-Antispam-Message-Info:
+	WgzfDCcBwMmQxaRY2/vYOazN5xK9kavUSAss6D2fTkrCA1xT6CgcOx6GD9L5x46kb9/TzHphndHhYSAgoBWRszlmY+C3bPX5OUfbDOV8kkuopjYQ9pSP5z4x4QCuHs+43Cyy51gafSmBK4oKxLhMCPXY5qUNhbFSwKPKQ0zix5gjj9vXDfkyj0yEfPMFHXXPcynyrWHHGdSfDegWJqnWLsZcM5APhuqxKwT17P/cdOV+GCTiSp1wBW70hD6+lm/ZBA0c75l/pVb3eoIRu+AS/eVXKhbehdYlkE8g6upP+TWFxMYN9UiyZ3YHgztG2n4lf8I5eQ8NJY0nLl0Vv6haOhxdPklaIIn8KluvGwRqNGCl8hhK42J8Esk0leIgKXG8k0/P0zbk0K826ww22vBzcZhcc99jPDL4AOE4ScyBYFVR2S/+Y0bfjFR4UQGbitgAlSns4n2NMkzffp8uyc8dlktA8EZBihIQD7Dt/NK4iP0rpB+hl5mUrFPxAfNGKytOCsLu/VEd5i0W0pmPUhvhVs83PShepAmvgTTur7WcqfaayLTT1mfylXfcYmJ1IDWz9Fj0ooDZUWgyoWutUKar4unb9AlU6Cbe/kyzQ4whbYLgvXAwTzi54ChGCqsw+dgKbocx8OOwkGJjmOoBK9nEiFw6NGyJ0O8swjApI76EURY=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(23010399003)(366016)(18002099003)(22082099003)(3023799007)(56012099006)(5023799004)(4143699003)(10067099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YkhMTmtHZjkxSkxPMFFPa1drdU03QWlvTzZYR1g3YW1GcXJIbXMwckZpcnpQ?=
+ =?utf-8?B?eDQ4Y1A0RWx4MFVzMkYrUmtPMXdWcHdFV2tQaUUvd3R6WnkvK0VpeEZKQWpk?=
+ =?utf-8?B?cDBKbGRSdzlFZmpicVVYbWtNeHFyRkg2L1hWWmlrMlhZakN1UllpMFNacjRz?=
+ =?utf-8?B?MEZyMU03Q0cwQmI5VDRFbGdZNVZDYVBmajVwVTc4MGxneENHUkE2d3grOUJi?=
+ =?utf-8?B?N25JVTFtcm5jWjg1bWUzakt0Wm1EZnh6MXJYNE9qS3lpTWtNMXJYb1dPcTlT?=
+ =?utf-8?B?VWFIZFFESkxWam1FZWM0NC9ndmVPaFh5bEdwUlNVYXFlUjY2VkxRUDVoemtl?=
+ =?utf-8?B?RUtnOUd2d25JcGN1akt5VUxWZ2s0OHdLYjZjdFZORk5aREVNV0U2TFFuc1pS?=
+ =?utf-8?B?TGFtdVBPaXJwL2kvWEEwRUhRU2I1WTFnV05UTkU1SUFxQkNscmdqQmVkb2hK?=
+ =?utf-8?B?QmwxTVBOZG9qZTJ3SnFiazBScXlQSjJZOHhFQ2szMldiNUpJWU5sWnp5clJH?=
+ =?utf-8?B?bjdzZEZQNGZjVmZremNqc2pBQ01EOVBwOWoraUNlakVsclVjU2ZhSkhraitl?=
+ =?utf-8?B?ODRLRExNblBibVpBYWhVdHV0TmhoWHhTQS9KczZ5SVVMTzRxUk5velRiRjI2?=
+ =?utf-8?B?UnFEcUt1UnpMazh2SWFwNVZNS05ocWxRU1p5azZ5SXBsRWNtaUxOSmFZUmV1?=
+ =?utf-8?B?eitzNDVxOHlqNVNaQ2JiODR2ZVJEZ1dLNXYrVzczT2ZWdFFrSXlLLzEzVkhC?=
+ =?utf-8?B?ajEvOTBxWEhTOUYyb0NKV2RsKzBFenNMc2YyQlVZMURYNU1vaHF6cmNkbytk?=
+ =?utf-8?B?NllwcmE3VUp5alh1Z3AzOFg1YXNFMzZ4UW8vS0VlUVNXbytaSTRWWE5oSTZM?=
+ =?utf-8?B?SlZjTCtIYmViNi9oakdyZ0pUQkdMaTVCUzNjWHBIT3FHMEZRQlhWR2lJYnpj?=
+ =?utf-8?B?MVhFeDc4YWhRS1RDUXZtYXFIVnZXUzV0VWFMUk02eWVtYkx6cDZFZ1dEbHNW?=
+ =?utf-8?B?eFhHdXVCREZVSE91Q1lrd1FMdWZTZklHNFB3WUt6ZXBPYUVzMllaQlY3WVcz?=
+ =?utf-8?B?bzJhMmdTOWJqLzJYNzQyOGRtL0hpWHJOQ3ZQNUt2Q1dQVW92YWJQQjVhK29I?=
+ =?utf-8?B?TUorNUdSbW93WG1OMDNqN05DZ1dmUUFoVnMycVNOT3VXVVNKYTgzbWdlMUEw?=
+ =?utf-8?B?MWNnS3Z6RDI1Yyt1UjhOcGErRTR0ZVlEeklMQUN3UmpMYUNXNDV6L3Fvd0RY?=
+ =?utf-8?B?VEwxTHNIQzlSenFQeWJDQlhuRU1CcXgxVXFZVVc3NWNVNmhqNmxtZVFZVVF3?=
+ =?utf-8?B?bVJnV3haSHhEVTlpTWhEU2kxOWNQU0dtUzhFTnlnR3ZUNG5ibHBlVUJQZ1ZX?=
+ =?utf-8?B?NHJ6dkZzZnAzS0xlYytiS3lvK2dLZGp2amExbDFqN3RhNkxFNnA5aGtBckhK?=
+ =?utf-8?B?dGdVaEtNNy9pMkVFRFZOdVhRd0o0ZzUzbjJ0ZnFRR3ZXb1YrSHkySlh4Rkt5?=
+ =?utf-8?B?M25sbmpvQzhyQzI4M0huakFOYTRuekZ5Q21HVUc2YXIvM3pIcnQ2YjZGbkFm?=
+ =?utf-8?B?M3JQTWFRd2h5TVdqN3ZuV01rbkNhRyt0dmV0RkJoZUVTNVl6SlEvdlkvSnRY?=
+ =?utf-8?B?OTNQNG1YdHZNaXFCWXVZRi9IMDVWcTQ1Y0NwWEU1WlVmQUJvQVFlTlpUdTl2?=
+ =?utf-8?B?QkowVVlWRVRLMUJEaXNlSXpaN0dtWER0bW9CZTJmeHZ4cjVjdFBmRU9DVWJz?=
+ =?utf-8?B?U3kyZVh5SFZOeTJ2Q0oreTR0ZEFhV3VINk5VUURObDBJVG9WZTZRTjI0WUYz?=
+ =?utf-8?B?bnBiUXNVMlRITFlYSVhnaGVtMDQ0eVF0WnNaMEI5REx3dDB5NkN2UG5sNG5Y?=
+ =?utf-8?B?OVNtUWNwYXJGTkpQQUYxT01RbGtDcVNob3phMmtEMkg4TWpCZ0xOZHJCVDJn?=
+ =?utf-8?B?ZG8xQWF5Z1E3VVVwRDl2eGNISUpSVGJrOHRlU0dBTWRLMjFEWUZiRXN6MWRC?=
+ =?utf-8?B?ejdJWG84ZnlGckhJSno5UHczMVExS21TdFdyWUFJOEVMQkg0UVgrRVhBZW13?=
+ =?utf-8?B?bjVNRjJMMTFJNjhOWndWdHRMeU5FeGFWSnZrN0FZeWxlTnZPaE5scWw5Y3pw?=
+ =?utf-8?B?RkUwRWpYN0hUcFNoV1M0eFkxL0F2bzJsWTNPWHorVWJreGpZSDNGUkRuOFBz?=
+ =?utf-8?B?M3JYVWFtam1odHVIQkZ5ODRzbVo3eTh2Nm9Ob01LTHhKQXJvbFZFK1ZCWENL?=
+ =?utf-8?B?a1B3eXlmRGN1a28rQnhLN0RkejZuWWdpTkRHLzdMSW8xSFVYZGlIR2NxZFFu?=
+ =?utf-8?B?VFJhUzlMdDhLNm1weUd2M2VOaE1wSjlDQmZmWlpRWVkxZG1Sbld2UT09?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8f966ea-7f53-4b48-0e5d-08def01635b6
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Aug 2026 21:45:31.6471
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xkJpiYdH5SrIpdWZPNOeMjqyLe5CHORQixMe9TvzNzHE3tVJJ3zg3MDzyTYa+Lod09ecAEyAF5EpFe9gp0wnlA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOBP123MB8220
 
-On Fri, 31 Jul 2026 22:13:25 -0400 Zi Yan <ziy@nvidia.com> wrote:
-
-> A high-order AUX page sets PG_private on its first page and stores the
-> order in first_page->private. Stop using PG_private and check
-> first_page->private for AUX page order only ring buffer and its users.
+On Fri, Jul 31, 2026 at 03:01:45PM -0700, Namhyung Kim wrote:
+> On Thu, Jul 30, 2026 at 02:54:15PM -0400, Aaron Tomlin wrote:
+> > Currently, 'perf sched latency' displays task runtime and delay values
+> > exclusively in milliseconds (ms). This can be hard to read when
+> > latencies are very small (in the microsecond or nanosecond range) or
+> > unusually large (seconds).
+> > 
+> > Introduce auto-scaling for latency and runtime display columns. Values
+> > are dynamically scaled and output with the most appropriate unit:
+> > nanoseconds (ns), microseconds (us), milliseconds (ms), or seconds (s).
+> > 
+> > Additionally, rename column headers from "Runtime ms", "Avg delay ms",
+> > and "Max delay ms" to "Runtime", "Avg delay", and "Max delay"
+> > respectively, adjust spacing to maintain column alignment and stripe
+> > redundant prefix strings from each row's format string to produce a
+> > clean, tabular output.
 > 
+> It'd be nice if you could include example output when you touched user-
+> visible area.  Comparing before and after would be great.
 
-nit: only "in the" ring buffer?
+Hi Namhyung,
 
-> It prepares for a future commit that remove PG_private.
-> 
-> No functional change intended.
-> 
-> Assisted-by: Claude:claude-opus-4-8
-> Assisted-by: Codex:gpt-5
-> Signed-off-by: Zi Yan <ziy@nvidia.com>
-> To: Peter Zijlstra <peterz@infradead.org>
-> To: Ingo Molnar <mingo@redhat.com>
-> To: Arnaldo Carvalho de Melo <acme@kernel.org>
-> To: Namhyung Kim <namhyung@kernel.org>
-> To: Thomas Gleixner <tglx@kernel.org>
-> To: Borislav Petkov <bp@alien8.de>
-> To: Dave Hansen <dave.hansen@linux.intel.com>
-> To: x86@kernel.org
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  arch/x86/events/intel/bts.c | 3 ---
->  arch/x86/events/intel/pt.c  | 6 ++----
->  kernel/events/ring_buffer.c | 7 +++----
->  3 files changed, 5 insertions(+), 11 deletions(-)
-> 
-> diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
-> index cbac54cb3a9ec..5849392cf26d5 100644
-> --- a/arch/x86/events/intel/bts.c
-> +++ b/arch/x86/events/intel/bts.c
-> @@ -66,9 +66,6 @@ static struct pmu bts_pmu;
->  
->  static int buf_nr_pages(struct page *page)
->  {
-> -	if (!PagePrivate(page))
-> -		return 1;
-> -
+Acknowledged—will do.
 
-
-For order 0, 1 << 0 is 1, which is exactly what the !PagePrivate(page) so LGTM.
-
-The commit message probably needs more text but everything else looks good.
-
-Feel free to add
-
-Acked-by: Usama Arif <usama.arif@linux.dev>
-
-
->  	return 1 << page_private(page);
->  }
->  
-> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-> index b5726b50e77db..29d8b4a3560cd 100644
-> --- a/arch/x86/events/intel/pt.c
-> +++ b/arch/x86/events/intel/pt.c
-> @@ -774,8 +774,7 @@ static int topa_insert_pages(struct pt_buffer *buf, int cpu, gfp_t gfp)
->  	struct page *p;
->  
->  	p = virt_to_page(buf->data_pages[buf->nr_pages]);
-> -	if (PagePrivate(p))
-> -		order = page_private(p);
-> +	order = page_private(p);
->  
->  	if (topa_table_full(topa)) {
->  		topa = topa_alloc(cpu, gfp);
-> @@ -1289,8 +1288,7 @@ static int pt_buffer_try_single(struct pt_buffer *buf, int nr_pages)
->  	if (!intel_pt_validate_hw_cap(PT_CAP_single_range_output))
->  		goto out;
->  
-> -	if (PagePrivate(p))
-> -		order = page_private(p);
-> +	order = page_private(p);
->  
->  	if (1 << order != nr_pages)
->  		goto out;
-> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-> index 9fe92161715e0..061b5cb222266 100644
-> --- a/kernel/events/ring_buffer.c
-> +++ b/kernel/events/ring_buffer.c
-> @@ -630,11 +630,10 @@ static struct page *rb_alloc_aux_page(int node, int order)
->  		/*
->  		 * Communicate the allocation size to the driver:
->  		 * if we managed to secure a high-order allocation,
-> -		 * set its first page's private to this order;
-> -		 * !PagePrivate(page) means it's just a normal page.
-> +		 * set its first page's private to this order, otherwise page's
-> +		 * private remains zero.
->  		 */
->  		split_page(page, order);
-> -		SetPagePrivate(page);
->  		set_page_private(page, order);
->  	}
->  
-> @@ -645,7 +644,7 @@ static void rb_free_aux_page(struct perf_buffer *rb, int idx)
->  {
->  	struct page *page = virt_to_page(rb->aux_pages[idx]);
->  
-> -	ClearPagePrivate(page);
-> +	set_page_private(page, 0);
->  	__free_page(page);
->  }
->  
-> 
-> -- 
-> 2.53.0
-> 
-> 
+Kind regards,
+-- 
+Aaron Tomlin
