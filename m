@@ -1,74 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4146438029;
-	Sat,  1 Aug 2026 11:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033513839A3
+	for <linux-perf-users@vger.kernel.org>; Sat,  1 Aug 2026 14:32:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785583730; cv=none; b=k1sCJtcK07dFC5kcep760YI9Ev5JYi+wnYwEsmaakiXLo29GJsi/6H7ZypOne8RsrmNwsfkqhmVT+E+v4oLrCl0gKI+kxUCPbhI7hJ504ucf/9MB5HO74bD8okWbiN7NsXcFfoJry3VHuNdhDPHiRryciFQgHL+aVoVyOAcJ/xQ=
+	t=1785594772; cv=none; b=S7CGzlITcilk77MD9f05jjgbZIQLlQA8YAiT6f9LMTqvHZ1YysgyyFt/23accXb4urHexz13MBOQRBFEeaGXPLtc+5Cen199m9sWiJO4fL4f60nk3dhX6s+nXh3Vfik8FOIvFepbslKaOi7p9PktC87UgO1GjSsbMIVlMmRqk+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785583730; c=relaxed/simple;
-	bh=JpTO3eqMIPrhICzmbLqz2MpX1J3/iEmleEvrJZJGUL4=;
+	s=arc-20240116; t=1785594772; c=relaxed/simple;
+	bh=xA97G47wyRvIgAgtg+lfOCMaER2FjiU1CJVS4+HZnOI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ks6jvXPhWBl3ZsdF3HbD8gVKf/yYvwsRT90kVu5N6bw2CxY+UdwPvmFXlK7k2L604ZUlqhDzYz+guTnUJTHvGvYhn4FyIxAyCwdPYPlB4sUrTK2hH7DVzcCjaJsJW2ZFSqiS9VGEnP9/n3YXLoXS4z/ttrAxJTokMu8jM9XhVQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OeLVnyd6; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=Vs8orbP3oJr0SMoCY2bHSTPYKBBafNI1dyplpjknUyrjBFDHYmYqBa4nR4d5/adeDGEEhqTZ96+ErtVymEpqATdfSoEUKK4b8UqJJsTfgn+Tmq11prRQYnI6GsaU0pbabgGM9jcpIQ4mscnrBS2yZXA3qJg3166UEKRjHrK+Dys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=b1MJ2KvV; arc=none smtp.client-ip=95.215.58.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OeLVnyd6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88D331F00ACA;
-	Sat,  1 Aug 2026 11:28:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785583729;
-	bh=hJFRZYvUMbiVIUOjSQH500WaF8jMfo/BVWXDkXdQIaQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=OeLVnyd6zGgLFlnhUiVUgc1C9g7ew9Y8Gn9so0Dzjq7p8dz/R/WEK7EDgRmqlgSPW
-	 7+fMl19S1i3WzGWYMvP68Mb6bQqgj4a/W9K3XjvabG8uStuGOR/dFhgHFPC/1wgF/G
-	 pMAWeYOEOYVSCcFgOODx22ciVjQ2XK94oF4XTnkmqHKyEx51CQedmxEE8TCJh5nKaL
-	 rHsJHfk0taP1pXAClIZlsQ0O0e8fiEvwKQ79g5HuLvsResNEN6KJMPDPQLbc9NhFHk
-	 CcfoQND/759OElU7zCrv3eKOgOCsfiGPZVgnj5iyXeVm5Xhhq0DTY0GaiaADShbARy
-	 LsebwpdGeCm8Q==
-From: Will Deacon <will@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="b1MJ2KvV"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1785594758;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9ri60wTe3lRq/wyazLvLAJHMWphJ53DXAVPzpa92v8E=;
+	b=b1MJ2KvVydMkbGpiSM2vSJhXzcu6GCUhE0pgi57LctVN7QP7thbs+314VxzqPZ0y2fArlf
+	zLY1i65Y6JE/Xt/8+PFW0EPl2ofxtl+fUxbw+hmqUM1Nk0YFt8YDyt37ciBE3FfwWAblHr
+	Ops92EnsY7B5tMRb4P3SdCuy3WE/xkA=
+From: Usama Arif <usama.arif@linux.dev>
+To: Zi Yan <ziy@nvidia.com>
+Cc: Usama Arif <usama.arif@linux.dev>,
+	David Hildenbrand <david@kernel.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Lorenzo Stoakes <ljs@kernel.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Nico Pache <nico.pache@linux.dev>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Barry Song <baohua@kernel.org>,
+	Lance Yang <lance.yang@linux.dev>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Kairui Song <kasong@tencent.com>,
+	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	Leo Yan <leo.yan@arm.com>
-Cc: catalin.marinas@arm.com,
-	kernel-team@android.com,
-	Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] perf: arm_spe: Make wakeup range check overflow safe
-Date: Sat,  1 Aug 2026 12:28:30 +0100
-Message-ID: <178550621893.239311.16566989493274037656.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20260702170521.4103426-1-leo.yan@arm.com>
-References: <20260702170521.4103426-1-leo.yan@arm.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH RFC 02/14] perf/ring_buffer: stop using PG_private as AUX page high-order marker
+Date: Sat,  1 Aug 2026 07:32:26 -0700
+Message-ID: <20260801143227.1267657-1-usama.arif@linux.dev>
+In-Reply-To: <20260731-remove-pg_private-v1-2-142c97ba3562@nvidia.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 02 Jul 2026 18:05:21 +0100, Leo Yan wrote:
-> The current code checks whether the wakeup point is in the current
-> writable range by comparing it with handle->head + handle->size.
+On Fri, 31 Jul 2026 22:13:25 -0400 Zi Yan <ziy@nvidia.com> wrote:
+
+> A high-order AUX page sets PG_private on its first page and stores the
+> order in first_page->private. Stop using PG_private and check
+> first_page->private for AUX page order only ring buffer and its users.
 > 
-> The perf AUX head is a monotonically increasing index, so that addition
-> can overflow when head is close to ULONG_MAX. In that case, a wakeup
-> point which is still inside the free space range can be missed.
+
+nit: only "in the" ring buffer?
+
+> It prepares for a future commit that remove PG_private.
 > 
-> [...]
+> No functional change intended.
+> 
+> Assisted-by: Claude:claude-opus-4-8
+> Assisted-by: Codex:gpt-5
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
+> To: Peter Zijlstra <peterz@infradead.org>
+> To: Ingo Molnar <mingo@redhat.com>
+> To: Arnaldo Carvalho de Melo <acme@kernel.org>
+> To: Namhyung Kim <namhyung@kernel.org>
+> To: Thomas Gleixner <tglx@kernel.org>
+> To: Borislav Petkov <bp@alien8.de>
+> To: Dave Hansen <dave.hansen@linux.intel.com>
+> To: x86@kernel.org
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  arch/x86/events/intel/bts.c | 3 ---
+>  arch/x86/events/intel/pt.c  | 6 ++----
+>  kernel/events/ring_buffer.c | 7 +++----
+>  3 files changed, 5 insertions(+), 11 deletions(-)
+> 
+> diff --git a/arch/x86/events/intel/bts.c b/arch/x86/events/intel/bts.c
+> index cbac54cb3a9ec..5849392cf26d5 100644
+> --- a/arch/x86/events/intel/bts.c
+> +++ b/arch/x86/events/intel/bts.c
+> @@ -66,9 +66,6 @@ static struct pmu bts_pmu;
+>  
+>  static int buf_nr_pages(struct page *page)
+>  {
+> -	if (!PagePrivate(page))
+> -		return 1;
+> -
 
-Applied to arm64 (for-next/perf), thanks!
 
-[1/1] perf: arm_spe: Make wakeup range check overflow safe
-      https://git.kernel.org/arm64/c/fcc5eaea2d23
+For order 0, 1 << 0 is 1, which is exactly what the !PagePrivate(page) so LGTM.
 
-Cheers,
--- 
-Will
+The commit message probably needs more text but everything else looks good.
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+Feel free to add
+
+Acked-by: Usama Arif <usama.arif@linux.dev>
+
+
+>  	return 1 << page_private(page);
+>  }
+>  
+> diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
+> index b5726b50e77db..29d8b4a3560cd 100644
+> --- a/arch/x86/events/intel/pt.c
+> +++ b/arch/x86/events/intel/pt.c
+> @@ -774,8 +774,7 @@ static int topa_insert_pages(struct pt_buffer *buf, int cpu, gfp_t gfp)
+>  	struct page *p;
+>  
+>  	p = virt_to_page(buf->data_pages[buf->nr_pages]);
+> -	if (PagePrivate(p))
+> -		order = page_private(p);
+> +	order = page_private(p);
+>  
+>  	if (topa_table_full(topa)) {
+>  		topa = topa_alloc(cpu, gfp);
+> @@ -1289,8 +1288,7 @@ static int pt_buffer_try_single(struct pt_buffer *buf, int nr_pages)
+>  	if (!intel_pt_validate_hw_cap(PT_CAP_single_range_output))
+>  		goto out;
+>  
+> -	if (PagePrivate(p))
+> -		order = page_private(p);
+> +	order = page_private(p);
+>  
+>  	if (1 << order != nr_pages)
+>  		goto out;
+> diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+> index 9fe92161715e0..061b5cb222266 100644
+> --- a/kernel/events/ring_buffer.c
+> +++ b/kernel/events/ring_buffer.c
+> @@ -630,11 +630,10 @@ static struct page *rb_alloc_aux_page(int node, int order)
+>  		/*
+>  		 * Communicate the allocation size to the driver:
+>  		 * if we managed to secure a high-order allocation,
+> -		 * set its first page's private to this order;
+> -		 * !PagePrivate(page) means it's just a normal page.
+> +		 * set its first page's private to this order, otherwise page's
+> +		 * private remains zero.
+>  		 */
+>  		split_page(page, order);
+> -		SetPagePrivate(page);
+>  		set_page_private(page, order);
+>  	}
+>  
+> @@ -645,7 +644,7 @@ static void rb_free_aux_page(struct perf_buffer *rb, int idx)
+>  {
+>  	struct page *page = virt_to_page(rb->aux_pages[idx]);
+>  
+> -	ClearPagePrivate(page);
+> +	set_page_private(page, 0);
+>  	__free_page(page);
+>  }
+>  
+> 
+> -- 
+> 2.53.0
+> 
+> 
