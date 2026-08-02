@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7DC331ED6
-	for <linux-perf-users@vger.kernel.org>; Sun,  2 Aug 2026 14:54:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9EA331ED6
+	for <linux-perf-users@vger.kernel.org>; Sun,  2 Aug 2026 14:54:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785682475; cv=none; b=XfgR8zmR/8k/XyjKDiHce1kLA0Lk5P20+tQLAOVpP/zfJ0xlvgGcOmx3y1TLroWdN+XT2mAZ1PG7P9l3HNA9Er1M/Pc+eCepHa1J8jN0f0AH6bAWQoYZn/X58pBgdnOwpeZq7tL8DIuYaKn1S/wUpSL81ti++Yyk0XoscA7Mkm0=
+	t=1785682481; cv=none; b=X2vN/UGKeuSX4tAUi1AHfwAgb/miKDjEZmRibbA9UQRd06qa0Zun11bX3SN2ES181Qbz59oONC8z/bsP9o0s/X3Z9nDx2Ta8/Gb7RZLYQ1uYYyOpy0voaGV37SEpi25PQ8Q6nabAdxUqGNX94OIpTGBYVRHtkfZS3xktJri3kn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785682475; c=relaxed/simple;
-	bh=rjRX7vfurqA4C4bjJOc/QAi+chFCdacw1kp+ewcmKn4=;
+	s=arc-20240116; t=1785682481; c=relaxed/simple;
+	bh=lMrZkPOvTnhWxr7qx3BvGbwCcO/K2wroSiw18Iyhk54=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=t0abDByWv1iOWZEdCCGK9yML7Vf9vhgCtS5YuGAKhj29DIrshfzV7aR3DcA7wwvopT9QTmNjK7aG4l/p/5dOQWEqjsdhtbXMEZPDtCziuxeIvB7UuNHnjeKOOwrx1CKVd7SwKqVkWgft22GOhl4dBpxDp0JVS207IBbtUPVwaUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W1D0zkfG; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=AFJn6mi7EDOArJB24e6cAnmFmJau+lUForN6A4RlGopN2p7/280wllmAQdHpcR+AQncyZWdpEHXjrmCQNpp5Qiydf++MUxgOIJ/W2bJUsA0Vrkctc6I57WpemDQaPZ/80jWqGFtBd/8O2DgnSJBKY2VQhdfDzQoW3vVnNitK2U8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ag/R8Atl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W1D0zkfG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AA961F000E9;
-	Sun,  2 Aug 2026 14:54:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ag/R8Atl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3536B1F000E9;
+	Sun,  2 Aug 2026 14:54:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785682474;
-	bh=73CXkGXeoHZp7ET/qc9cictJjk8BZA2JQR3o2UMmG00=;
+	s=k20260515; t=1785682480;
+	bh=5MpuCvJvgFSeaRkhMvqi7RppCF2z7bUrUTYLIKulF2g=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=W1D0zkfGh+QZKX/QgNF9V2gbKR78mT/D76b3BA9AKDsciMY+y0uVhtivv2zVeiF8q
-	 oSk/JsI9/2euCXPBi/Ya8j8KXAGAMawoT4MJgffU8cIfIZW+LiFrW7fURAt14XZL+Q
-	 vVYjZclRe8h5KRkRhrOP0K4yjvTggLj7zXCG1uBO/8HZMf2Li+PN+FjFfsB5vHS7/+
-	 LEnVulYUZ+L1wR43zPIjAscYCe6Kem2cABcOtVT05fJfjZrCY/iaV3cM+diDC43kyf
-	 YROjfHk1r2VbuS8LVp+UfoFMsMlcyJCrnasIUFBYpveNCM15h7DBHNCk5zsci6l2Zm
-	 qEabPZlhSybnQ==
+	b=ag/R8AtlkLKvKhqYP4KmckU7XJagl/ASWNLxUQM3rN8KOjEGTd7C2eFfDaoYQ/49J
+	 rUgLjbScX+iHQ0b11PQY2qKeBGlgUI+vDLN+QaJTE1WIq/LZ4UyPAkYKjbHhxw6CX4
+	 KehWooS9KUr2fzpxBDXB64ew3RSLEKTPoe2byQz6RJBVUj+mF4yiB06aST1i/3+5jS
+	 iVaiHM8yrSVr1zojyH3rbVVfffU0BOpIwbRKFdbmYcWA7+ElJ9AV+ytEa0hQ6NqYgq
+	 +4iU+O5BY3uQVUroqOXPqcsj4oO6OW7PaXhqP8dtOvreLcqhDZqjMJvE0+nAu0+Mqx
+	 AFAZ4ynJ0q3Ng==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/5] perf dso: Guard against cache underflow on short
- reads in dso_cache__memcpy()
+Subject: Re: [PATCH 1/4] perf libbfd: Validate BPF prog info arrays before
+ pointer cast
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260802142022.154219-5-acme@kernel.org>
-References: <20260802142022.154219-1-acme@kernel.org>
- <20260802142022.154219-5-acme@kernel.org>
+In-Reply-To: <20260802142712.154726-2-acme@kernel.org>
+References: <20260802142712.154726-1-acme@kernel.org>
+ <20260802142712.154726-2-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 02 Aug 2026 14:54:33 +0000
-Message-Id: <20260802145434.3AA961F000E9@smtp.kernel.org>
+Date: Sun, 02 Aug 2026 14:54:39 +0000
+Message-Id: <20260802145440.3536B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,107 +48,100 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
-New issues:
-- [High] Returning 0 from `dso_cache__memcpy()` causes a permanent EOF rath=
-er than triggering a cache miss and re-read as intended, breaking reads fro=
-m dynamically growing files.
-
 Pre-existing issues:
-- [High] The RB-tree traversal in `__dso_cache__find()` is performed lockle=
-ssly, creating a data race with concurrent cache insertions.
+- [High] Missing bitmask validation for several PERF_BPIL_* flags before ca=
+lling bpf_prog_linfo__new(), leading to raw file offset dereferences.
+- [High] Missing bitmask validation for PERF_BPIL_PROG_TAGS and PERF_BPIL_F=
+UNC_INFO in bpf-event.c call sites.
 --
 
---- Patch [4]: [PATCH 4/5] perf dso: Guard against cache underflow on short=
- reads in dso_cache__memcpy() ---
-commit 06837abfd5cca9da5670ee54ec02e3164860900c
+--- Patch [1]: [PATCH 1/4] perf libbfd: Validate BPF prog info arrays befor=
+e pointer cast ---
+commit 91de4e21d8f65551a65e6afd999ee44cac7b52f7
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf dso: Guard against cache underflow on short reads in dso_cache__memcpy=
-()
+perf libbfd: Validate BPF prog info arrays before pointer cast
 
-dso_cache__memcpy() computes cache_size based on cache->size, but a short
-pread can leave cache->size smaller than the RB tree lookup window. This
-causes a subtraction wrap-around and an out-of-bounds memcpy when accessed
-past the cached size. This patch attempts to fix it by returning 0 (cache
-miss) when the offset falls outside the valid cached range so the caller
-re-reads from the backing file.
+This commit adds bitmask checks for PERF_BPIL_JITED_INSNS and
+PERF_BPIL_JITED_KSYMS in libbfd.c before casting them to pointers. This
+prevents raw file offsets from being dereferenced when processing a crafted
+perf.data file.
 
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index 207f8744aac97..a0de56c93592a 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -1002,7 +1002,17 @@ static ssize_t dso_cache__memcpy(struct dso_cache =
-*cache, u64 offset, u8 *data,
->  				 u64 size, bool out)
->  {
->  	u64 cache_offset =3D offset - cache->offset;
-> -	u64 cache_size   =3D min(cache->size - cache_offset, size);
-> +	u64 cache_size;
-> +
-> +	/*
-> +	 * The RB tree matches using DSO__DATA_CACHE_SIZE, but a short
-> +	 * pread may leave cache->size smaller.  Treat an offset past
-> +	 * the valid data as a cache miss so the caller re-reads.
-> +	 */
-> +	if (cache_offset >=3D cache->size)
-> +		return 0;
+> perf libbfd: Validate BPF prog info arrays before pointer cast
+>
+> symbol__disassemble_bpf_libbfd() casts info_linear->info.jited_prog_insns
+> and info_linear->info.jited_ksyms to pointers without checking whether
+> bpil_offs_to_addr() actually converted the file offsets.  A crafted
+> perf.data with PERF_BPIL_* bits unset but non-zero counts causes raw
+> file offsets to be dereferenced as pointers.
+>
+> Add bitmask checks for PERF_BPIL_JITED_INSNS and PERF_BPIL_JITED_KSYMS
+> before the casts, matching the validation added to bpf-event.c call
+> sites.
 
 [Severity: High]
-Does returning 0 here actually trigger a re-read?
+This is a pre-existing issue, but is the validation in the bpf-event.c call
+sites complete?
 
-Looking at cached_io() which calls this function, it seems to treat a 0 ret=
-urn
-value strictly as an EOF condition:
+In tools/perf/util/bpf-event.c:__bpf_event__print_bpf_prog_info(), the
+required_arrays bitmask fails to include PERF_BPIL_PROG_TAGS and
+PERF_BPIL_FUNC_INFO.
 
-cached_io() {
+It then proceeds to call synthesize_bpf_prog_name(), which dereferences
+info->prog_tags without checking if they were converted:
+
+tools/perf/util/bpf-event.c:synthesize_bpf_prog_name() {
     ...
-    ret =3D dso_cache__memcpy(cache, offset, data, size, out);
-    if (!ret)
-        break;
+    name_len +=3D snprintf_hex(buf + name_len, size - name_len,
+                             prog_tags[sub_id], BPF_TAG_SIZE);
     ...
 }
 
-If the file has grown and we hit this condition, won't this cause cached_io=
-()
-to terminate the loop with a silent EOF instead of reading the new data from
-the backing file?
+Could a crafted perf.data file provide non-zero counts but omit the
+corresponding bits in the array mask, leaving them as unconverted raw
+file offsets?
 
-> +
-> +	cache_size =3D min(cache->size - cache_offset, size);
+> diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
+> index c1c12308cc12f..d6c2d9807fc9c 100644
+> --- a/tools/perf/util/libbfd.c
+> +++ b/tools/perf/util/libbfd.c
+
+[ ... ]
+
+> @@ -581,6 +586,12 @@ int symbol__disassemble_bpf_libbfd(struct symbol *sy=
+m __maybe_unused,
+>  	if (disassemble =3D=3D NULL)
+>  		abort();
 > =20
->  	if (out)
->  		memcpy(data, cache->data + cache_offset, cache_size);
+> +	/* jited_ksyms is only valid if bpil_offs_to_addr() converted it */
+> +	if (!(info_linear->arrays & (1UL << PERF_BPIL_JITED_KSYMS))) {
+> +		ret =3D SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF;
+> +		goto out;
+> +	}
+> +
 
 [Severity: High]
-This is a pre-existing issue, but I noticed a potential data race when look=
-ing
-at the RB-tree lookups in this file.
+This is a pre-existing issue, but does calling bpf_prog_linfo__new() earlier
+in this function before validating the PERF_BPIL_JITED_KSYMS bitmask risk
+dereferencing raw file offsets?
 
-In __dso_cache__find(), the RB-tree traversal is performed locklessly:
+Because bpf_prog_linfo__new() relies on jited_ksyms internally, putting the
+validation for PERF_BPIL_JITED_KSYMS here means the validation happens after
+the structure has already been accessed:
 
-    while (*p !=3D NULL) {
-        ...
-        cache =3D rb_entry(parent, struct dso_cache, rb_node);
-        ...
-        if (offset < cache->offset)
-            p =3D &(*p)->rb_left;
-        else if (offset >=3D end)
-            p =3D &(*p)->rb_right;
-    }
-
-However, dso_cache__insert() modifies the RB-tree while correctly holding
-the dso__lock(dso) mutex:
-
-    mutex_lock(dso__lock(dso));
+tools/lib/bpf/bpf_prog_linfo.c:dissect_jited_func() {
     ...
-    rb_link_node(&new->rb_node, parent, p);
-    rb_insert_color(&new->rb_node, root);
+    if (ksym_func[0] !=3D *jited_linfo)
+    ...
+}
 
-If a lockless reader in __dso_cache__find() traverses the tree concurrently
-with a cache miss that triggers dso_cache__insert(), could the reader obser=
-ve
-inconsistent tree pointers during the rb_insert_color() rotations?
+It also seems that bpf_prog_linfo__new() uses info->line_info, which doesn't
+have a PERF_BPIL_LINE_INFO check before the call.
+
+Should the validation for PERF_BPIL_JITED_KSYMS (and other arrays like
+line_info) be moved earlier, before info_linear->info is passed to
+bpf_prog_linfo__new()?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260802142022.1542=
-19-1-acme@kernel.org?part=3D4
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260802142712.1547=
+26-1-acme@kernel.org?part=3D1
