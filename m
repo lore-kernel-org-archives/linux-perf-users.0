@@ -1,51 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45D493148A7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B17C34252D;
 	Sun,  2 Aug 2026 05:46:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785649594; cv=none; b=PmYaouA9b02PzmFo8udGBeQpsuyoqnQ+dDkGcSQ+btnMTh2V1OnQUTfWiV3TCQtAByMVj0Kc1njhGMYFfJJNvc7NW956WKBVf6Uu91lhqnv5jsV23wTsFbaSrEPv+1w4I7hjyqKIueDknrvG915khilfVly9MksbVMqdFwIru6k=
+	t=1785649594; cv=none; b=lKj1kKe4mXyCclcC+/k1L3bmTdatIpvFNo6c4ojpEfcSBjO0MfmPkSzBGoDNUHSYYmp6hqvFB8B11j3Ky8dJp0Wtnv0b+hRuVwMqO9+xD2xs2ZP5ILafE6TpuyXIw8alKI4soW37yCB5ePmzZiDp81Tq5lmBpkJ/9TeGF3TLA5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785649594; c=relaxed/simple;
-	bh=MqapeSfNopgYXh8J6thU9zppztHyJ13gCnQCSY/K5+Y=;
+	bh=tg5RvoWmYApLfTCkTssCSgJfNFTtXJuh4wYGQD4ETA8=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=vA0GA6amn6AYnbezajyXKOpTxwGHdRzxQbSkhyZ94Zy6dKwInvNpq7icGNBzCkL3GKt+qE6RDASdv0y3DGvTTme7h6XaZL/De9YzcvIklOocw8zYcPFIVZVlQ0vZPkgF/uVnALS/CwXx7H4E+qmADeLHYws+E6CCqHs2AVjJib0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UpIwgUlj; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=tPDK5JdtZAGC4twHPiVoBmObRr9XrUHcbaE8fv7HC6B6txppDOGE7y+v3MoMKZQGTRKvauGffKk6wGllkX6Ssa5eWoKMLLcKr1sEcOFS27aekyxR/64bynUYLfCg1xL6ieMX0F9GAyvBDZGsm8eymALO5fDCPLgOc2UT1E+iECQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jV8Ybyip; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UpIwgUlj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B54E1F00ACA;
-	Sun,  2 Aug 2026 05:46:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jV8Ybyip"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12D0E1F00ACF;
+	Sun,  2 Aug 2026 05:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785649592;
-	bh=WxhMRZaTW3jvA16d0Id8N7tbILuRU61GurYOALobZfM=;
+	s=k20260515; t=1785649593;
+	bh=j9hbdTdgX21CXv3Gi2di7w90jOnQwDmNw6nWgzh8i/Q=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=UpIwgUlj62DgCKqLWODGmUVytwPztj+oUaaCsPQtgForKx8/hb4RHrDRW/C5dCvqO
-	 b3gU8g6Vt458clRa/HZ7eJzdVgW9oE/A0QzkCT3YOPZBQS+V01dOpADopxEjqJA8o1
-	 5V7bHP1Xe9sb1qsCg+36y9AFP7Ev+fzVPYDvjINRQQW9mDHL7qzljgIio9hIdayc93
-	 OrinNFLjV5wGvr5S26wwEkh220ttgoTl8UQo4ONaAajbmqcLwc4HsMLbDvzG0ns59H
-	 gWFSpeKNtKqZ1Gf2qfXFd64llX9DCnE6TjwQQ+8vnIMRG0hF80xYuKIsarcsZQa9Wj
-	 dkul43QeqBKDA==
+	b=jV8YbyipTEdvzufftYnMsciEblz3RAGhCkac71NLFXeVExoCxodB1eEmay73zssBv
+	 cPICmrm1TpCKArYNJpMOzod/ooEsopPn/Sf9/rZKI5iiD5MYfnGyDNNRs1cmotq/Ue
+	 8hoo9ot4uHQ1AI0Iay/jtCzwa9gFtt2xyGMJUB4Yzw48TBgr3fGTxzYUYH6wXeFZ0d
+	 Y+FItop6NednI2hD2qKX4wlrvwItNj5PBea6GJeEEMAyezskNGhbrelAtR4/TdM9yr
+	 tBVFXgYvVX6SfKj1TYyxiLysiRZEs/Dp1Ssiku9Wr/OQ5vLFRILitvkRItbcOOs0OJ
+	 R/EonyiuipOHg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: rostedt@goodmis.org, mhiramat@kernel.org, 
- mathieu.desnoyers@efficios.com, corbet@lwn.net, skhan@linuxfoundation.org, 
- bhelgaas@google.com, yangyccccc@gmail.com, jic23@kernel.org, 
- john.g.garry@oracle.com, will@kernel.org, james.clark@linaro.org, 
- mike.leach@arm.com, leo.yan@linux.dev, peterz@infradead.org, 
- mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com, 
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
- adrian.hunter@intel.com, wangyushan12@huawei.com, 
- Sizhe Liu <liusizhe5@huawei.com>
-Cc: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-doc@vger.kernel.org, linuxarm@huawei.com, prime.zeng@hisilicon.com, 
- wuyifan50@huawei.com
-In-Reply-To: <20260730062709.534139-1-liusizhe5@huawei.com>
-References: <20260730062709.534139-1-liusizhe5@huawei.com>
-Subject: Re: [PATCH v2 0/3] perf hisi-ptt: Fix TLP header parsing and
- naming
-Message-Id: <178564959213.665203.10969359308974116817.b4-ty@kernel.org>
-Date: Sat, 01 Aug 2026 22:46:32 -0700
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, James Clark <james.clark@linaro.org>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>
+In-Reply-To: <20260726234014.63111-1-acme@kernel.org>
+References: <20260726234014.63111-1-acme@kernel.org>
+Subject: Re: [PATCHES 0/8 v1] perf machine fixes
+Message-Id: <178564959303.665203.18105792717707415852.b4-ty@kernel.org>
+Date: Sat, 01 Aug 2026 22:46:33 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,15 +48,21 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-c04d2
 
-On Thu, 30 Jul 2026 14:27:06 +0800, Sizhe Liu wrote:
-> This series fixes bugs and issues in the hisi_ptt packet decoder that were
-> introduced by commit 5e91e57e6809 ("perf auxtrace arm64: Add support
-> for parsing HiSilicon PCIe Trace packet").
+On Sun, 26 Jul 2026 20:40:06 -0300, Arnaldo Carvalho de Melo wrote:
+>     Here is a series of patches fixing issues with the 'struct machine'
+> methods, please consider applying to perf-tools-next.
 > 
-> Patch 1: Bugfix:
-> The DW0 bit-field layout of the hisi_ptt_4dw union does not match
-> the actual little-endian memory ordering, so the extracted
-> Format/Type/T9/T8/TH/SO/Length/Time fields are wrong.
+> - Arnaldo
+> 
+> Arnaldo Carvalho de Melo (8):
+>   perf machine: Fix fd leak on bounds check in maps__set_modules_path_dir()
+>   perf machine: Fix NULL parent dereference in fork event processing
+>   perf machine: Guard against NULL strlist in machines__findnew()
+>   perf machine: Check snprintf truncation in machines__findnew()
+>   perf machine: Don't abort guest map creation on first inaccessible dir
+>   perf machine: Reset errno before strtol in guest kernel map creation
+>   perf machine: Free scandir entries in guest kernel map creation
+>   perf machine: Check snprintf truncation for guest kallsyms path
 > 
 > [...]
 Applied to perf-tools-next, thanks!
