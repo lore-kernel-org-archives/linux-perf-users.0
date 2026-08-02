@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B10A83B3BF2;
-	Sun,  2 Aug 2026 14:27:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BD23BBFA7;
+	Sun,  2 Aug 2026 14:27:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785680855; cv=none; b=g3/+mxJrrXwMlJMypVO5BkeS+NPc0yRC9koRzf7IDpF/AA/g6zNA+RYqazxVSeVpcMXp1jsTn6DnRLl/u+2wGkBzWJyqpuECOiBWBZQPW8/tdT0whUgHdNGf+LE8UxhmfaNgBIe25oYvTmc9hmQD5/fyrHcAr8by/2km+McYDU0=
+	t=1785680859; cv=none; b=JtKqfGsV2zcv8nR1vxlY5Jm3wEzhKxAwW3DoKGjrUFqJ2jJOOKX/beckbB0JZuG9vR6F+VupQjhnmcR86FZT1jb9tj/sERz0E3hSyXjvRhg8D+8kswpwN7vlL/DaDQkly+O802sPpQY4UXPyrJhTHM3u3U4ekK76I4tfUIaTmQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785680855; c=relaxed/simple;
-	bh=x0unN/UQx+AgsfupzIsukpdZ6hVjrnR2Yb7n+UW85dE=;
+	s=arc-20240116; t=1785680859; c=relaxed/simple;
+	bh=RssS8yXWgi99ltQFt5HsQBN1pUKisoH39b+GInwBNs8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ei3bgbEqqCzqPLytw/h2h7GYU2hmWGIZWhJgfWjn0hkLjTL16oCTi3J3ckfDdaGB/m6aEquyPNzPKY8OkeBs6iZgm32T89wYap6otH4HfR1VyZ/QYocCyu9bn6qnvgK1HjjwhNQQ4CixrxUQDB+8Cy3FHPolFsU+lVwc1y95KMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Avj2MTpE; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=Es+pCas/W11ebkmmR00yI/PwVQ4Nn9yxahj6Jy15SKKvE2cDXweaTTWHICBrzOD651EamOb0cYbUhXEFx04GziXD300OwgXpuOws0i0Hkc1YsbK1p6gZ4PmsUXYDXxZKZvpla+MkM/00VCP/+3O0c9BQsyV9fdl762OhdJxY0rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=neEzol0W; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Avj2MTpE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 008001F000E9;
-	Sun,  2 Aug 2026 14:27:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="neEzol0W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D70501F00A3A;
+	Sun,  2 Aug 2026 14:27:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785680854;
-	bh=RiCwrxeVEM+TddSPFLmqOr/uymJkz7tQ39k0YA6dst8=;
+	s=k20260515; t=1785680858;
+	bh=UMPFYv9gvFZQWW2DITLYJDCibDQw6FEHiT9noD/oGKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Avj2MTpErXHcGwYyRC+KCF9G9VW2bK7ObLbK7bXX6HDPUUiZw71tbQIL/vECYT21E
-	 AIOL5G3/mCipwutqrSLbcCW6mu+uEoHRS69Pa5U5Pa/5JXLWTs9FOfvy4WS2jpT9mU
-	 WHblG9xlMmJ06pTbYagd8rbXwwfxuO2RxBdUcEyNNCYsS2dTKto6yjJNmFYaoKrS85
-	 SSVpFcklJutYq/vCE7xOGF4xpbLnNCcuQtyVQquyJ/caGpMcfx3xQMAwZZIHcKCGGR
-	 3mVPJcMfsTJ+VIAByb+myxR9YLbjeu34WkUD0bMGecak0xmaoVwOsdlL/3yiv7/YH7
-	 CDu/xdeeOSRrw==
+	b=neEzol0WquA+aw9hSQ1vQNboZocNjacwd1T9m0VoYpKQ1ER9bCYXh/wDnCPebK+T3
+	 McQ13L8VuGDqA8Pk1wJQNgwKY+ReBljglk5tuQUiQFU8uXl4/QnIli1ZcklycfgO6V
+	 E4ajHnKux5EEj9r09w51gJTTiqT69VItmRIksE7UnEgTUP0eE0wD3H33+vwRSg+bpy
+	 cG299zS/HMOKF2IccIh8uNKT+mcdGMyzbc4rjKZrCH4z0vpQKtDzeyvRUJPehLrrvk
+	 DZxQhvf+vdZiK7inVNRXKm4ejVbxS8ze2Ez3yWaIK+6/7OinJO/f/AtETCdSh7mkul
+	 yYsnVyRUBgMGg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,9 +40,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
 	Song Liu <songliubraving@fb.com>
-Subject: [PATCH 3/4] perf bpf: Add PROG_TAGS to required arrays in __bpf_event__print_bpf_prog_info()
-Date: Sun,  2 Aug 2026 11:27:11 -0300
-Message-ID: <20260802142712.154726-4-acme@kernel.org>
+Subject: [PATCH 4/4] perf libbfd: Fix memory leaks and NULL fclose in BPF disassembly
+Date: Sun,  2 Aug 2026 11:27:12 -0300
+Message-ID: <20260802142712.154726-5-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260802142712.154726-1-acme@kernel.org>
 References: <20260802142712.154726-1-acme@kernel.org>
@@ -52,47 +52,89 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-synthesize_bpf_prog_name() unconditionally dereferences prog_tags[sub_id]
-(line: u8 (*prog_tags)[BPF_TAG_SIZE] = (void *)(uintptr_t)(info->prog_tags))
-but __bpf_event__print_bpf_prog_info() only requires JITED_KSYMS and
-JITED_FUNC_LENS in its required_arrays bitmask.
+symbol__disassemble_bpf_libbfd() has four resource management bugs:
 
-If a crafted perf.data has the PROG_TAGS bit cleared (or the array was
-invalidated by bpil_offs_to_addr() bounds checking), info->prog_tags
-contains either zero or a raw file offset.  Dereferencing it causes a
-NULL pointer dereference or an arbitrary memory read.
+1. free(prog_linfo) leaks internal arrays.  bpf_prog_linfo contains
+   raw_linfo, raw_jited_linfo, nr_jited_linfo_per_func, and
+   jited_linfo_func_idx pointers that are only freed by the proper
+   destructor bpf_prog_linfo__free().
 
-Add PERF_BPIL_PROG_TAGS to required_arrays so the function returns early
-when prog_tags was not present or failed validation.
+2. open_memstream(&buf, &buf_size) allocates a dynamic buffer that the
+   caller must free after fclose().  The function calls fclose(s) but
+   never free(buf), leaking the stream buffer on every call.
 
-Fixes: f8dfeae009effc0b ("perf bpf: Show more BPF program info in print_bpf_prog_info()")
+3. args->line = strdup(srcline) is immediately consumed by
+   disasm_line__new(args) which internally calls strdup(args->line)
+   again via annotation_line__init().  The first strdup result is then
+   overwritten by args->line = buf + prev_buf_size without being freed.
+
+4. If open_memstream() fails, the error path jumps to 'out:' which
+   calls fclose(s) with s == NULL — undefined behavior.
+
+Fix by using bpf_prog_linfo__free(), initializing buf to NULL, adding
+free(buf) after fclose(s), guarding fclose() against NULL, and removing
+the redundant strdup since annotation_line__init() makes its own copy.
+
+Fixes: 6987561c9e86eace ("perf annotate: Enable annotation of BPF programs")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
 Cc: Song Liu <songliubraving@fb.com>
 Cc: Ian Rogers <irogers@google.com>
 Assisted-by: Claude:claude-opus-4.6
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/bpf-event.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/libbfd.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/bpf-event.c b/tools/perf/util/bpf-event.c
-index fa3ebc8ea7f09cdd..e67f28a8e92bdeb0 100644
---- a/tools/perf/util/bpf-event.c
-+++ b/tools/perf/util/bpf-event.c
-@@ -969,7 +969,8 @@ void __bpf_event__print_bpf_prog_info(struct perf_bpil *info_linear,
- {
- 	struct bpf_prog_info *info = &info_linear->info;
- 	__u64 required_arrays = (1UL << PERF_BPIL_JITED_KSYMS) |
--				(1UL << PERF_BPIL_JITED_FUNC_LENS);
-+				(1UL << PERF_BPIL_JITED_FUNC_LENS) |
-+				(1UL << PERF_BPIL_PROG_TAGS);
- 	__u32 *prog_lens;
- 	__u64 *prog_addrs;
- 	char name[KSYM_NAME_LEN];
+diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
+index 0b7164f0e9fdbbed..33dc6158b2b1ffab 100644
+--- a/tools/perf/util/libbfd.c
++++ b/tools/perf/util/libbfd.c
+@@ -15,6 +15,7 @@
+ #ifdef HAVE_LIBBPF_SUPPORT
+ #include <bpf/bpf.h>
+ #include <bpf/btf.h>
++#include <bpf/libbpf.h>
+ #endif
+ #include <fcntl.h>
+ #include <stdio.h>
+@@ -510,7 +511,7 @@ int symbol__disassemble_bpf_libbfd(struct symbol *sym __maybe_unused,
+ 	char tpath[PATH_MAX];
+ 	size_t buf_size;
+ 	int nr_skip = 0;
+-	char *buf;
++	char *buf = NULL;
+ 	bfd *bfdf;
+ 	int ret;
+ 	FILE *s;
+@@ -620,7 +621,7 @@ int symbol__disassemble_bpf_libbfd(struct symbol *sym __maybe_unused,
+ 
+ 		if (!annotate_opts.hide_src_code && srcline) {
+ 			args->offset = -1;
+-			args->line = strdup(srcline);
++			args->line = (char *)srcline;
+ 			args->line_nr = 0;
+ 			args->fileloc = NULL;
+ 			args->ms->sym = sym;
+@@ -645,9 +646,12 @@ int symbol__disassemble_bpf_libbfd(struct symbol *sym __maybe_unused,
+ 
+ 	ret = 0;
+ out:
+-	free(prog_linfo);
++	bpf_prog_linfo__free(prog_linfo);
+ 	btf__free(btf);
+-	fclose(s);
++	if (s) {
++		fclose(s);
++		free(buf);
++	}
+ 	bfd_close(bfdf);
+ 	return ret;
+ #else
 -- 
 2.55.0
 
