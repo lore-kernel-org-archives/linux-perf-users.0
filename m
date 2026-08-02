@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5358523C516;
-	Sun,  2 Aug 2026 14:20:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 922C02931E9;
+	Sun,  2 Aug 2026 14:20:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785680434; cv=none; b=kUUnoHnzw1Zp90868lR0akjg2hZCv6Ar9pS4szCx1xUOx9aMPc8zoU33TnnoCIlmNbgjpEM4CdfSu7SYeNwcD729cP1bXmhuuM+o+K5evIGB2Z6Kp5yjtlIkg16Btp/w9WPe/4exCY3u210f0oT/ch/EwS76n/5BiSGoMSrG0+4=
+	t=1785680437; cv=none; b=RjqipHA5gTu9AizaqXOICd6hoHfQlops6zpk9ACeBHnZh9hM82UgGS7vLuJ1N1Lmmj2Yq+p4ZSv2DI9kCmT6AYD/sPG2AJAGwlC5V5kIE9RfgEkR0Dn3TFSpc20nvFWEYEQvQ/Cn5sQ2m+jw6OZcPLdpAn4ZRWlK2+X7M281YFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785680434; c=relaxed/simple;
-	bh=aU6z7QwckH6bvQO/v+gH/GmpjkrwmXuKodsDmnhGVx0=;
+	s=arc-20240116; t=1785680437; c=relaxed/simple;
+	bh=n1QmrkenUqO3WkREjTlLTszPnas3fHNaLp3UhQYWC+E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LD96d/T86RMN6SWdJMAelH+jSRVew53i651qubvR3Coc3pYHdqByAbzqdI4Sx1iuXHmXa12GA1A2vy18LWWtJngxDDWdAEN8mH+0l48q6qVmJr1v3Tgzf5yB9+s4hwl0ntC58CfvfzS5NG/AWcQ3iEkQ2ClRjKRv9l3GGxB7WBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hAtGdcuS; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=sDLKWRQCqSibpDgkJ7G2XE5MOE6XLMjeDTOh3WCeq1Nk4p6Yq0lS62WPyvtfZKRpkgKMZQze7ICQ9gFsbgo9PJpQ7Z4w7NtPvXDGACW/bM3sMGf6vx/ah0jK1tYbt47hYB3VucHwmW5peJKdYmapZAGAnWJXSIhCaCGBU3YVrzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oPCVsQt2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hAtGdcuS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E77AD1F00A3A;
-	Sun,  2 Aug 2026 14:20:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oPCVsQt2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 737701F000E9;
+	Sun,  2 Aug 2026 14:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785680433;
-	bh=MlJqZupASTk6ZYzHVpbWwsTkfNh0zHoNLoH1Cv5WpbY=;
+	s=k20260515; t=1785680436;
+	bh=CgtmxRD/mwQTFtenYmEuWnKNKZuIi1hpoSEM9ZDXMKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hAtGdcuSjvEMm0A37+ien0b0B3/VlSKDig2AIr8Ndi5yU4925RleAOiYgyQ6zs2xl
-	 ptYq3JgyLTg0BB7hus3c0lIBo2oLoBzelrD6mZ/6+7WjkdOiuGDbHnzfClg5H2jUBJ
-	 OuyRxPQ1Pm2ibGe7zK1v9OlB2RlrSxXgQmhHtFa/+gwtelZZt1I2PPkDdJdK8kedVv
-	 p+RjP9FZ2MNkKFQ7DFZ/t+bFOJ3Bz0PO1XStei8hdrSymSOq9QnpZlos0YS8xIM4DO
-	 R8JoKFBA4EUTo2L7tjlcsXEaUFrHjFO/zzlogsQBDak1ek1QQa+sRRFhTQr1sR/l0K
-	 +Y88Mz5JYoLAg==
+	b=oPCVsQt2Lp4SeDVQkc3A6FuKryV0KGVSzRguKvUn/ia30DWV4pnNXmw+QYR1f6BbT
+	 1Ct3HsFkAIvNGN/ZMgFatkaWArQ5Ogsr0NUWQC4BlIPVKYHjMXnc3rCbTVVpHN9c/J
+	 iwYJI9kynr0VFwLxyB2WGc6yHAKt4d/RqV8avjHkFIT+Q/BLlwrwHBHDKkq37mO4sN
+	 vjjv/HZgnH/9Xu8S8F8oisjy9fKBxPmpjkAyZaZsOncTfdxR7posLGW9A6NRi4ASDt
+	 33T8bv6oFkxNanH6yrsPD60fhzVQT2rOpOHGhpNY9bXJQsSRw2ONGYR4VBGbWcd8SS
+	 5zMXXOw2b0wJw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>
-Subject: [PATCH 1/5] perf dso: Guard against errno==0 when dso__get_filename() returns NULL
-Date: Sun,  2 Aug 2026 11:20:18 -0300
-Message-ID: <20260802142022.154219-2-acme@kernel.org>
+Subject: [PATCH 2/5] perf dso: Guard close() against invalid fd in dso__decompress_kmodule_path()
+Date: Sun,  2 Aug 2026 11:20:19 -0300
+Message-ID: <20260802142022.154219-3-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260802142022.154219-1-acme@kernel.org>
 References: <20260802142022.154219-1-acme@kernel.org>
@@ -56,37 +56,39 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-__open_dso() computes fd = -errno when dso__get_filename() returns NULL.
-Some failure paths in dso__get_filename() (e.g. binary type mismatch)
-return NULL without making a syscall, leaving errno at 0 from a prior
-successful call.  fd = -0 = 0, which is stdin — subsequent code treats
-it as a valid file descriptor.
+dso__decompress_kmodule_path() unconditionally calls close(fd) on the
+return value of decompress_kmodule().  When decompression fails or the
+DSO is not compressed, decompress_kmodule() returns -1.  close(-1)
+fails with EBADF and clobbers errno, which callers up the chain
+(dso__get_filename → __open_dso) depend on for error propagation.
 
-Fall back to ENOENT when errno is 0, ensuring fd is always negative on
-failure.
+Guard the close() call with fd >= 0 so only valid file descriptors are
+closed.
 
-Fixes: eba5102d2f0b ("perf tools: Add global list of opened dso objects")
+Fixes: 42b3fa670825 ("perf tools: Introduce dso__decompress_kmodule_{fd,path}")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: Claude:claude-opus-4.6
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dso.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/dso.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 2309196d8df3111c..e087a89066bdbc02 100644
+index e087a89066bdbc02..d9c008465f377e79 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -643,7 +643,7 @@ static int __open_dso(struct dso *dso, struct machine *machine)
- 	if (name)
- 		fd = do_open(name);
- 	else
--		fd = -errno;
-+		fd = errno ? -errno : -ENOENT;
+@@ -395,7 +395,9 @@ int dso__decompress_kmodule_path(struct dso *dso, const char *name,
+ {
+ 	int fd = decompress_kmodule(dso, name, pathname, len);
  
- 	if (decomp)
- 		unlink(name);
+-	close(fd);
++	/* decompress_kmodule() returns -1 on failure, don't close(-1) */
++	if (fd >= 0)
++		close(fd);
+ 	return fd >= 0 ? 0 : -1;
+ }
+ 
 -- 
 2.55.0
 
