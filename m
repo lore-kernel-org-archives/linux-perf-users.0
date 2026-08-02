@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9162123C516;
-	Sun,  2 Aug 2026 14:20:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5358523C516;
+	Sun,  2 Aug 2026 14:20:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785680430; cv=none; b=pBYyKqTLlwbnWj08Hqh7jOXj695cff27kQLeDkDwEwl+vLoD0ew2p/8KvxBg+ilnsxZrz94DcnTMhHP1SJqZB751N2pgbRXusQ2sqa83Q5yoKatGJ9cXiclGUi0spqxYNPiNHuJS+SQhV4o0BN095YjhCYvRiaob0nbP7A5c1uw=
+	t=1785680434; cv=none; b=kUUnoHnzw1Zp90868lR0akjg2hZCv6Ar9pS4szCx1xUOx9aMPc8zoU33TnnoCIlmNbgjpEM4CdfSu7SYeNwcD729cP1bXmhuuM+o+K5evIGB2Z6Kp5yjtlIkg16Btp/w9WPe/4exCY3u210f0oT/ch/EwS76n/5BiSGoMSrG0+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785680430; c=relaxed/simple;
-	bh=NHcepYOic0lCuTbpqaOaoyLy80mn/eSmlLg5chwuc0E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hbRZ/du0KaTI56wUOVhM/mRlkmOwIkIXcuQZprh4qDRHO6XOD/ZJBfbVfXvAPDJQAdcWE0qdFQ4Xrt+2JRR82XVWKRjzUZcKx2ds1+3qNXcbuMs8EIUXLkQZ4oqaVPKet+yHGCbTw8dKyOqZQk6PVhqRvm9hQe2iMrutb0LYjhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=myLHAGsx; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785680434; c=relaxed/simple;
+	bh=aU6z7QwckH6bvQO/v+gH/GmpjkrwmXuKodsDmnhGVx0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LD96d/T86RMN6SWdJMAelH+jSRVew53i651qubvR3Coc3pYHdqByAbzqdI4Sx1iuXHmXa12GA1A2vy18LWWtJngxDDWdAEN8mH+0l48q6qVmJr1v3Tgzf5yB9+s4hwl0ntC58CfvfzS5NG/AWcQ3iEkQ2ClRjKRv9l3GGxB7WBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hAtGdcuS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="myLHAGsx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F8521F000E9;
-	Sun,  2 Aug 2026 14:20:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hAtGdcuS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E77AD1F00A3A;
+	Sun,  2 Aug 2026 14:20:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785680429;
-	bh=v5x4mestDr/J4Kdz2/XaBATk3+SvretAT+F80q/VaNA=;
-	h=From:To:Cc:Subject:Date;
-	b=myLHAGsxmwBmmtx+JdwG6rRUKJ/YsCbyUk6skq28kiG3m9GYJGYGAvaJDbO3FAw0O
-	 9PSrOKpKHZHjp0cSHXUEDLx4LaR98MPu88v+2QYSmpZ+PZYNnyosQY/bz+TXN98W7m
-	 I9T3/FHWrO2V6jIzgxDNLJO1evZyfTgiLF6MEq8S5h8eh9G5yYEVOOWG+eh06N0+AO
-	 sSxQJuR8siwigk/VrOOEhzjt1RMMc/jKCqDDc3ddIKvRo0qL6UmcjB986FlfJoWvuj
-	 CNg4gehtPsc164h47Iq8yNi3IOVd43C6PVu8TK9MxZQMj0FteqRPlR6gaINyV1MW8G
-	 ckRNGd4IbSLWQ==
+	s=k20260515; t=1785680433;
+	bh=MlJqZupASTk6ZYzHVpbWwsTkfNh0zHoNLoH1Cv5WpbY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=hAtGdcuSjvEMm0A37+ien0b0B3/VlSKDig2AIr8Ndi5yU4925RleAOiYgyQ6zs2xl
+	 ptYq3JgyLTg0BB7hus3c0lIBo2oLoBzelrD6mZ/6+7WjkdOiuGDbHnzfClg5H2jUBJ
+	 OuyRxPQ1Pm2ibGe7zK1v9OlB2RlrSxXgQmhHtFa/+gwtelZZt1I2PPkDdJdK8kedVv
+	 p+RjP9FZ2MNkKFQ7DFZ/t+bFOJ3Bz0PO1XStei8hdrSymSOq9QnpZlos0YS8xIM4DO
+	 R8JoKFBA4EUTo2L7tjlcsXEaUFrHjFO/zzlogsQBDak1ek1QQa+sRRFhTQr1sR/l0K
+	 +Y88Mz5JYoLAg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -36,11 +37,14 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCHES 0/5] perf DSO hardening series
-Date: Sun,  2 Aug 2026 11:20:17 -0300
-Message-ID: <20260802142022.154219-1-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	sashiko-bot <sashiko-bot@kernel.org>
+Subject: [PATCH 1/5] perf dso: Guard against errno==0 when dso__get_filename() returns NULL
+Date: Sun,  2 Aug 2026 11:20:18 -0300
+Message-ID: <20260802142022.154219-2-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260802142022.154219-1-acme@kernel.org>
+References: <20260802142022.154219-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,22 +54,39 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-	Please consider merging,
+__open_dso() computes fd = -errno when dso__get_filename() returns NULL.
+Some failure paths in dso__get_filename() (e.g. binary type mismatch)
+return NULL without making a syscall, leaving errno at 0 from a prior
+successful call.  fd = -0 = 0, which is stdin — subsequent code treats
+it as a valid file descriptor.
 
-- Arnaldo
+Fall back to ENOENT when errno is 0, ensuring fd is always negative on
+failure.
 
-Arnaldo Carvalho de Melo (5):
-  perf dso: Guard against errno==0 when dso__get_filename() returns NULL
-  perf dso: Guard close() against invalid fd in dso__decompress_kmodule_path()
-  perf dso: Use stored fd error instead of stale errno in file_read()
-  perf dso: Guard against cache underflow on short reads in dso_cache__memcpy()
-  perf dso: Replace assert with runtime check in dso__read_symbol()
+Fixes: eba5102d2f0b ("perf tools: Add global list of opened dso objects")
+Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Assisted-by: Claude:claude-opus-4.6
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/dso.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- tools/perf/util/dso.c | 28 +++++++++++++++++++++++-----
- 1 file changed, 23 insertions(+), 5 deletions(-)
-
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 2309196d8df3111c..e087a89066bdbc02 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -643,7 +643,7 @@ static int __open_dso(struct dso *dso, struct machine *machine)
+ 	if (name)
+ 		fd = do_open(name);
+ 	else
+-		fd = -errno;
++		fd = errno ? -errno : -ENOENT;
+ 
+ 	if (decomp)
+ 		unlink(name);
 -- 
 2.55.0
 
