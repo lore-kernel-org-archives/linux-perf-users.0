@@ -1,147 +1,366 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268AB3BCD14
-	for <linux-perf-users@vger.kernel.org>; Sun,  2 Aug 2026 14:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4981A9FBC
+	for <linux-perf-users@vger.kernel.org>; Sun,  2 Aug 2026 18:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785682798; cv=none; b=DlL46fanqFPlHcGo+Ng2orlzbx/REd4P+b3dgbZJdEnmmxpJ6Xqb/Fydz6SIVqN3K1+gOu7F4i3RS1Rzg+LzvyKNjAZTVCRAvjA2PTunt+AXwT8H9wLfoVyE35xD+Z79liOlsldQk+rErFmLlEBCGjIpohXkgNEZhs4dXwg6ne4=
+	t=1785694113; cv=none; b=aA+aPYc+Y5RVGDqt5979iz21bSbtpzyy4u1hPQTQFjqxcrU4LoqdNb1Deh/YubYaXtzY6wPKTs5j11BxbaIWnply6kL7/HpC3p3nGuGVU8pPlmPc9IDGBu133yQOie+cbaVm6HGx52bWxIDsThaP4mQUPWV5CpUTQF5TxShiZTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785682798; c=relaxed/simple;
-	bh=F3Ku8RVbjM+eK4wNRLi75OD7lI7hfsDFAM9dErxHj6I=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=dUFlqbNGDzp6ySdto4n8DAb5E0v8MPYqIsC5yvvSzzgePOVYMsbiRZqbPTyUqgTk56AWlVvemV+GvLE8WShdYoOlyEPfznIPVBtwHlS+0gdNkC2PQ1GPmnWLxFp+cePKcR7uonnisg22bq8IUUL0lsAGtgqXmkHqUvmuA916xZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EvYMXmy8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785694113; c=relaxed/simple;
+	bh=13fnCGPi/Jeffh/ltlctYpMfv75U1f+PSY8Thkf5+28=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gOzZw79FrMYMQNEO7gQI8UvgqqoGaDrq4lTrkIIxSPI2EpL8Q+2BraBzMnmYJN0wDZOk3ovdrdy28VCGQbDRo/TFs57PN/+ac+tLKcxyuQ1uo2obnbG7ptVsYoCxujJHVA86MzqNqagL6kVpTm20yzQBijHvq0cCBP7elfhFV/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KLK0KaYW; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EvYMXmy8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 481701F000E9;
-	Sun,  2 Aug 2026 14:59:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785682796;
-	bh=nYzWKFkR95ds5VM6erlpUCoenNl8besWLxTXva8O/+E=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EvYMXmy8Z8Lk6m7gtNI/giQJpt2XxfjDd2ulkAdW4aan4r8WzERKZvfXrouPKr741
-	 dfZQoSyezwXoKCwwFPvOo2NJlFn0oGR8q7rUHYlwO2noW2mQsDaR6lMsrwoNJ5bvfv
-	 t1YOSJiJY6SVZ4TyfVBRN2t/5I+e6Lb5K1TLv37UB9wsyUYUNjN1SRyPcUeZ/r5opY
-	 0BU8F4QhXJ8AyOCtn6w3HNfTefwjjwZm5KT9joHiRfldi9SOKHi2x7tpsxtLNgpP1M
-	 4pYFcHdDN/0c/G8dz0CnERmBqrkk3VNaTXU/UU3e4l+w5+Xh9Y9inZYTykhQDNNbYL
-	 YcagNv0tfJ0xg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/4] perf header: Use write lock when translating BPF
- prog info pointers
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260802142712.154726-3-acme@kernel.org>
-References: <20260802142712.154726-1-acme@kernel.org>
- <20260802142712.154726-3-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 02 Aug 2026 14:59:55 +0000
-Message-Id: <20260802145956.481701F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KLK0KaYW"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 672FtDT13735374;
+	Sun, 2 Aug 2026 18:08:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=q0qTP4m8eHOCHX1LMRcC2wRX6SrCNUskkvHW97Cht
+	AI=; b=KLK0KaYWs7M+bdjxQS5cyLlXiKbY2y7yH6Kg8kJcmMxLCIW24wum0E+5H
+	nBexbx06VOu4CN4blM4GAD1k+1EljMpgEod3X5x8wuhSwL036gp8apS5RfKYI2VJ
+	Y3jWwW5zCoOIfsDibqkssBGmBaEdWVcUxpLE+JK8QFKzfr+sRFLItq/lYIjWnZch
+	/NwmHWkSCIlt3HjG5bGmakhRKbNP8DgI85BvvbWJpD+c5b5XeLO+M/k06O/tK1Fq
+	mSZugE5PiVS5J5rPRKQywkOabp8Ki5X/W0LwNOrJPopv0yI6v5EETDRLjF/3ZQX1
+	dVI/val4Nmxyp/w/Jx6QvpbS6McoQ==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fs8a3n7mr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 02 Aug 2026 18:08:14 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 672HuUoi018831;
+	Sun, 2 Aug 2026 18:08:13 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fswbg209c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 02 Aug 2026 18:08:13 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 672I89mX46596366
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 2 Aug 2026 18:08:09 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 48F5F20043;
+	Sun,  2 Aug 2026 18:08:09 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D456620040;
+	Sun,  2 Aug 2026 18:08:03 +0000 (GMT)
+Received: from li-4c4c4544-0047-4210-804e-b5c04f423534.ibm.com.com (unknown [9.124.211.158])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sun,  2 Aug 2026 18:08:03 +0000 (GMT)
+From: Tanushree Shah <tshah@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
+        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
+        Tanushree.Shah@ibm.com, rostedt@goodmis.org,
+        Tanushree Shah <tshah@linux.ibm.com>
+Subject: [RFC PATCH v2 0/5] Add perf.data tracepoint events to trace.dat conversion
+Date: Sun,  2 Aug 2026 23:37:55 +0530
+Message-ID: <20260802180801.65183-1-tshah@linux.ibm.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=E6P9Y6dl c=1 sm=1 tr=0 ts=6a6f878e cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
+ a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
+ a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
+ a=Tp0rbDIa7SUVJQcLoPQA:9
+X-Proofpoint-ORIG-GUID: hzOpupDFGji-iPUcCDyHpRObpBXbdlT0
+X-Proofpoint-GUID: SGqVXB0FMvXwEg5ILYMtTmIwLeroYyBN
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODAyMDE2MiBTYWx0ZWRfXymBrmDZdu7c6
+ AHJug1BtGdcKq0knRC2mpVfnggmZsdameZGuvhpldfU7yoUFb/VU793ovgdBZxxi0ur8kNJaRpB
+ ngbIrgNq8fc/8F7JcL7HjTmX5tDYVjc=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODAyMDE2MiBTYWx0ZWRfXyo6+ij9MqVth
+ 7Q3PJ7liaLmfX9wmOkmHTdNtViS0WCPUHNPc4Ej1pxJsuYzXkXdaU9ffY+MMhylS0w+KZKrqgzp
+ WcrKfR7NEs3BjC0qyb7dktXRL6x7PzeUvXlPeLDSccZkVs11JLkn2MrIEO9a1StzFzRHW+TueTM
+ 3+D//XTVfI55+a2LBv5ba2neRaKDB/fE8gnpGl7pS/YQt8Ki+DtIU1VAIs6LcLzyCi/HFYv4DIC
+ IraVYWI5YTYi01TawVh0MhA7afAW9XpIL4ZmJ3j/44RV2ncl4aB/p57tGbkAG9KRHZYA+BcKbpD
+ NRFpXweWJwPG1xa7KVuHygfSrofQrip9Np+WqsCb9oduSwjaXR+/hv/gRB81YAs9+pXMNuEf14l
+ TRL6dj+WFg3otZTPZwK4yoJnthTCODcCoOFq+01LyXCmf+2sDxDSkaayoNBieI7aZRef5Eyo9S1
+ K/FaA6eSy8SS4K0b/kw==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-02_05,2026-07-30_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 impostorscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2608020162
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+This RFC patch series introduces support for converting perf.data files
+containing tracepoint events into trace.dat format, enabling seamless
+visualization and analysis using KernelShark.
 
-Pre-existing issues:
-- [High] The patch changes `down_read` to `down_write` to protect in-place =
-pointer mutations, but the fix is ineffective because primary readers acces=
-s the data locklessly.
-- [Medium] `bpil_offs_to_addr()` permanently corrupts the in-memory `info_l=
-inear->arrays` mask when restoring a valid object containing empty trailing=
- arrays.
---
+======================
+Background and Motivation
+======================
 
---- Patch [2]: [PATCH 2/4] perf header: Use write lock when translating BPF=
- prog info pointers ---
-commit b51042073da80b7c616b5e20db21243852bbccec
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Currently, perf and trace-cmd operate as separate tracing ecosystems with
+incompatible data formats. Users who collect tracepoint data with
+'perf record' cannot easily visualize it in KernelShark's graphical
+timeline view or leverage trace-cmd's analysis capabilities.
 
-perf header: Use write lock when translating BPF prog info pointers
+This creates workflow friction when users need to:
 
-write_bpf_prog_info() temporarily mutates pointers into file offsets,
-causing concurrent readers to dereference invalid addresses. This patch
-upgrades the synchronization from a read lock to a write lock during the
-translation window to exclude concurrent readers.
+- Visualize perf tracepoint data in KernelShark's interactive graphical
+  timeline
+- Share trace data between perf and trace-cmd workflows and toolchains
+- Perform architecture-independent conversion and analysis of traces
 
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 091d8f7f6bd2c..70ba9570e3179 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -1120,7 +1120,8 @@ static int write_bpf_prog_info(struct feat_fd *ff  =
-__maybe_unused,
->  	struct rb_node *next;
->  	int ret =3D 0;
-> =20
-> -	down_read(&env->bpf_progs.lock);
-> +	/* write lock: bpil_addr_to_offs() temporarily mutates info_linear */
-> +	down_write(&env->bpf_progs.lock);
+This conversion bridge eliminates these barriers by enabling seamless
+data exchange between perf and trace-cmd ecosystems, allowing users to
+choose the best tool for each analysis phase.
 
-[Severity: High]
-This is a pre-existing issue, but does upgrading to a write lock actually
-prevent concurrent accesses from seeing the mutated pointers?
+======================
+Implementation Overview
+======================
 
-Looking at perf_env__find_bpf_prog_info(), it acquires the read lock but
-drops it before returning the node pointer:
+The series implements the trace.dat file format specification (version 7)
+within perf's data conversion framework.
 
-tools/perf/util/env.c:perf_env__find_bpf_prog_info() {
-    ...
-    up_read(&env->bpf_progs.lock);
-    return node;
-}
+**Patch 1/5: Core trace.dat Export Infrastructure**
+Introduces util/trace-dat.c and util/trace-dat.h implementing:
+- Per-CPU raw event buffer management (init, collect, free)
+- Ftrace ring buffer page construction
+- trace.dat section writers (strings, options, flyrecord sections)
 
-This means callers like machine__process_bpf_event_load() will dereference
-the pointer locklessly:
+**Patch 2/5: Metadata Integration**
+Extends util/trace-event-read.c to write trace.dat metadata during
+perf.data
+parsing:
+- Initial format header (magic, version, endian, page size, compression)
+- Section 16: HEADER INFO (header_page + header_event)
+- Section 17: FTRACE EVENT FORMATS
+- Section 18: EVENT FORMATS (per system/event format files)
+- Section 19: KALLSYMS
+- Section 21: CMDLINES
+- Section 15: STRINGS (written last after all sections)
 
-tools/perf/util/bpf-event.c:machine__process_bpf_event_load() {
-    ...
-    u64 *addrs =3D (u64 *)(uintptr_t)(info_linear->info.jited_ksyms);
-    ...
-}
+**Patch 3/5: Conversion Backend**
+Implements util/data-convert-trace.c with trace_convert__perf2dat()
+function:
+- Processes PERF_TYPE_TRACEPOINT samples via process_sample_event()
+- Collects raw event data per-CPU using trace_dat__collect_cpu_event()
+- Writes OPTIONS sections (CPUCOUNT, TRACECLOCK, metadata offsets)
+- Writes FLYRECORD section with per-CPU ring buffer pages
 
-Because the primary readers are accessing the data outside the critical
-section, could they still observe a file offset instead of a valid pointer
-even with down_write() here?
+**Patch 4/5: User Interface**
+Extends tools/perf/builtin-data.c with --to-trace-dat option:
+- Adds command-line option for trace.dat output
+- Mutually exclusive with --to-ctf and --to-json
+- Calls trace_convert__perf2dat() to perform conversion
 
-> =20
->  	ret =3D do_write(ff, &env->bpf_progs.infos_cnt,
->  		       sizeof(env->bpf_progs.infos_cnt));
-> @@ -1150,7 +1151,7 @@ static int write_bpf_prog_info(struct feat_fd *ff  =
-__maybe_unused,
->  			goto out;
+**Patch 5/5: Shell Test**
+Adds a shell test (tools/perf/tests/shell/) covering normal tracepoint
+recordings, pipe mode and mixed tracepoint/non-tracepoint recording
+conversions and --force flag behaviour.
 
-[Severity: Medium]
-This isn't a bug introduced by this patch, but could calling
-bpil_offs_to_addr() just before this return permanently corrupt the state
-for empty trailing arrays?
+======================
+Current Implementation Details
+======================
 
-If a BPF program contains an empty array (count =3D 0) at the end of the
-serialized struct, its offset is exactly data_len. When this function calls
-bpil_offs_to_addr(node->info_linear) to reverse the offsets, it hits this
-bounds check:
+**trace.dat Format Version:**
+The implementation currently targets trace.dat format version 7, which
+is the stable version supported by current trace-cmd releases (v3.x).
+This version is hardcoded to ensure compatibility with existing
+trace-cmd and KernelShark installations. Future enhancements could add
+version negotiation or support for newer format versions as they become
+standardized.
 
-tools/perf/util/bpf-utils.c:bpil_offs_to_addr() {
-    ...
-    if (offs >=3D info_linear->data_len || ...)
-        ...
-        info_linear->arrays &=3D ~(1UL << i);
-    ...
-}
+**Compression Strategy:**
+Compression is explicitly disabled (set to NONE) in the generated
+trace.dat files.
+This design choice:
+- Simplifies the initial implementation and testing
+- Ensures maximum compatibility across trace-cmd versions
+- Avoids external compression library dependencies
 
-Since offs >=3D data_len evaluates to true, will this falsely mark an empty
-array as absent in the arrays bitmask, corrupting the live in-memory object?
+Future work could add support for various compression algorithms (zlib,
+zstd, lz4) with runtime selection via command-line options, significantly
+reducing file sizes for large traces.
 
->  	}
->  out:
-> -	up_read(&env->bpf_progs.lock);
-> +	up_write(&env->bpf_progs.lock);
->  	return ret;
+======================
+Usage Example
+======================
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260802142712.1547=
-26-1-acme@kernel.org?part=3D2
+```bash
+*Record tracepoint events with perf*
+perf record -e sched:sched_switch -e sched:sched_wakeup -a sleep 10
+
+*Convert to trace.dat format*
+perf data convert --to-trace-dat=output.dat
+
+*Verify trace.dat structure*
+trace-cmd dump --summary output.dat
+
+*Analyze with trace-cmd*
+trace-cmd report output.dat
+
+*Visualize in KernelShark*
+kernelshark output.dat
+```
+
+**Conversion Output:**
+```
+[ perf data convert: Converted 'perf.data' into trace.dat format
+'output.dat' ]
+[ perf data convert: Converted 2684 events ]
+```
+**trace-cmd dump --summary Output:**
+```
+ Tracing meta data in file output.dat:
+	[Initial format]
+		7	[Version]
+		0	[Little endian]
+		8	[Bytes in a long]
+		65536	[Page size, bytes]
+		none	[Compression algorithm]
+			[Compression version]
+	[buffer "", "local" clock, 65536 page size, 16 cpus, 1048576 bytes
+    flyrecord data]
+	[10 options]
+	[Saved command lines, 0 bytes]
+	[Kallsyms, 0 bytes]
+	[Ftrace format, 0 events]
+	[Header page, 206 bytes]
+	[Header event, 205 bytes]
+	[Events format, 1 systems]
+	[9 sections]
+```	
+======================
+Testing and Verification
+======================
+
+The series has been extensively tested with:
+- Various tracepoint events (sched, irq, syscalls, block I/O)
+- Mixed recordings containing both tracepoint and non-tracepoint events
+  only tracepoints converted)
+- Verification with trace-cmd report and KernelShark visualization
+- Memory leak testing with Valgrind (0 bytes leaked).
+- Cross-architecture testing: v1 tested x86_64 and ppc64le. v2 adds
+  s390 (big-endian) perf.data converted on both ppc64le
+  (little-endian) and x86_64 (little-endian) hosts, in addition to
+  same-arch x86_64 (LE->LE) and ppc64le (BE->BE) conversion.
+- Pipe mode support has been tested end-to-end. (in v2)
+
+All generated trace.dat files successfully open in:
+- trace-cmd report (v3.1+)
+- KernelShark (v2.0+)
+
+
+======================
+Next Steps
+======================
+
+We would highly appreciate reviews, comments, and feedback on:
+- The overall architectural approach and integration points
+- Compatibility considerations with trace-cmd ecosystem
+- Performance characteristics for large-scale traces
+- Additional use cases or workflow scenarios
+- Future enhancement priorities
+
+---
+Changes in v2
+
+Addressing the Sashiko AI review findings on v1:
+ 
+Cross-arch correctness:
+  - Introduce to_file_u16/u32/u64 helpers (wrapping tep_read_number())
+    to write all multi-byte fields in the recorded machine's byte order;
+    apply throughout metadata sections and flyrecord page/record headers
+    (ts, commit, TIME_EXTEND, large-event data_len).
+  - Fix flyrecord record header bit layout for big-endian files.
+    The record header word bit layout differs by file endianness,
+    matching kbuffer-parse.c type_len4host()/ts4host():
+      LE: type_len in bits [4:0],   time_delta in bits [31:5]
+      BE: type_len in bits [31:27], time_delta in bits [26:0]
+ 
+Pipe mode:
+  - Add process_attr(), process_feature(), and process_tracing_data()
+    callbacks required for pipe mode operation.
+  - Defer CPU buffer initialisation until the first tracepoint sample,
+    after process_feature()/process_tracing_data() have populated the
+    session header. This ensures the recorded machine's CPU count is
+    used rather than the host's - critical for cross-platform analysis.
+ 
+Format compliance:
+  - Implement TIME_EXTEND records for timestamp deltas >27 bits to
+    prevent silent truncation and maintain chronological ordering.
+  - Fix large event encoding (>=29 words): use type_len=0 with a
+    separate 32-bit length word, avoiding collision with reserved types
+    (PADDING=29, TIME_EXTEND=30, TIME_STAMP=31).
+  - Add bounds check rejecting records larger than a page payload before
+    batching, preventing heap overflow in trace_dat__write_page().
+  - Fix flyrecord section_size to exclude the 16-byte section header,
+    matching trace.dat specification and trace-cmd behaviour.
+ 
+CLI behavior:
+  - Fix --force flag: open with O_CREAT|O_EXCL when force is not set,
+    failing with -EEXIST instead of silently overwriting existing files.
+ 
+Memory safety:
+  - Fix realloc overwrite of cpu_events->events and page_records on
+    failure: use temporary pointers, only commit on success.
+  - Fix use-after-free/double-free in sequential page_records realloc
+    failure: replace with malloc+memcpy+free pattern.
+  - Fix section_size computed from before section header position.
+  - Add NULL checks for get_tracing_file(), calloc() padding, and
+    trace_dat_options_offset assignment on write failure.
+  - Use goto out_free on record allocation failure to avoid leaking
+    accumulated page_records entries.
+  - Replace direct read() with do_read() in read_proc_kallsyms() to
+    handle short reads correctly.
+  - On fwrite failure, set trace_dat_write_failed and continue parsing
+    so that perf.data processing completes normally.
+ 
+Testing (new in v2):
+  - Add shell test covering conversion, trace-cmd dump validation,
+    sched_switch event verification, and --force flag behaviour.
+ 
+Documentation (new in v2):
+  - Add documentation for 'perf data convert --to-trace-dat', covering
+    usage and supported options.
+
+v1: https://lore.kernel.org/linux-perf-users/20260608125951.90425-2-tshah@linux.ibm.com/
+
+Tanushree Shah (5):
+  perf/trace-dat: Add trace.dat export infrastructure
+  perf/trace-event: Write trace.dat metadata sections during parsing
+  perf data-convert: Add perf.data to trace.dat conversion backend
+  perf data: Add --to-trace-dat option for converting perf.data
+    tracepoint events into trace.dat format
+  perf test: Add test validating trace.dat generated by 'perf data
+    convert --to-trace-dat'
+
+
+ tools/perf/Documentation/perf-data.txt        |   7 +
+ tools/perf/builtin-data.c                     |  40 +-
+ ...rf_data_converter_tracepoints_trace_dat.sh | 169 ++++
+ tools/perf/util/Build                         |   2 +
+ tools/perf/util/data-convert-trace.c          | 240 +++++
+ tools/perf/util/data-convert.h                |   4 +
+ tools/perf/util/trace-dat.c                   | 876 ++++++++++++++++++
+ tools/perf/util/trace-dat.h                   | 113 +++
+ tools/perf/util/trace-event-read.c            | 307 +++++-
+ 9 files changed, 1749 insertions(+), 9 deletions(-)
+ create mode 100755 tools/perf/tests/shell/test_perf_data_converter_tracepoints_trace_dat.sh
+ create mode 100644 tools/perf/util/data-convert-trace.c
+ create mode 100644 tools/perf/util/trace-dat.c
+ create mode 100644 tools/perf/util/trace-dat.h
+
+-- 
+2.47.3
+
