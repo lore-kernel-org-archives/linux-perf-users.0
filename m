@@ -1,136 +1,289 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022120.outbound.protection.outlook.com [52.101.96.120])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE23233F582
-	for <linux-perf-users@vger.kernel.org>; Sun,  2 Aug 2026 21:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785704912; cv=none; b=Lpg91TSqHGsyYTgLQqn2kFtkhLk4F/s0g0KlvK026zJuxw8f5vlVYCZca+XMT49dwlInE35Y/mwfZ7FhSADD7ifX5SbtLVMnAuRihK0yMZeJitplK+ykoNdH+WYg8OjgW3Zdh8FATM/vAmc4yTRW2TAV7zfHArexHxzmJiK5QM8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785704912; c=relaxed/simple;
-	bh=V5r7QIrQPvds6l+pD3FjfXC43XlRt28TuckiYHbmcJI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ZUbftqFdM0Z62aRm76GDaGqjH7G635E7GHEMeijCnuoEgNo8TPDbhJoJ2R0b4bSs9XgmrEH2c6zz7FtFRR8Dni2HyR/YrHbozTVhq2NHi0JNbNLPbErN4Ah5fWhUyb8SNZKmIQNkudfLmlbWCXuEV3JE6MkINQ7YWFSU9KvLu+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jCkM/bRo; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCkM/bRo"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4957eefd361so9632035e9.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 02 Aug 2026 14:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785704909; x=1786309709; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=fFuId5/et30IIYrYQj18+p/LDPIR45GxUSBdCpaynGE=;
-        b=jCkM/bRoilSuD9BlBxZyWj1a9HuDTenH6psopcH2fNfI2kL7b/mnB4KXG8R/M0F8Z7
-         G+me/lmHhKvEejxPsyZurkED/YOZLMZmajKznAKkbK973pzmAuv9t46Griw4nJ3b+U3n
-         Ng/HOI46RCazvsOn3wGWDTyS9H4YVGIJShxpwCAsYtgqZqcAvlBijJxnCkssKHkYnFDe
-         oap1CsJk43zmfmyQ0VM+jLyNjKwXl1avsLgLDIqj3iSBDbQrySvXOYFphEqH0eX1WG8W
-         bUN2z6vBSAj581mkTKhUIJTZtIuzR5mnKupL/JrdG479jKaA0OzxYu+zySeNE0lOOWap
-         77EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785704909; x=1786309709;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=fFuId5/et30IIYrYQj18+p/LDPIR45GxUSBdCpaynGE=;
-        b=czIxw3fTC0yYALqhDasjXYH4Mmx/8XKq6vpfTnIx/h2Qj8q9ZE4N5qZN8xIZAdwPoR
-         x86/ruAXm5z1B1C7aJaWaR/abnITB7vDGxl0pabzhCi9YA7Yr00Wtpw4H89S6sE1j8EA
-         Aa6UbcGgIn45nTnrSb9C5nG63fGJA+/aR0eFI8kXY2tt2xZM/BbA5UWS948w6WkzlIMc
-         7WTVjF8vURW0hXrBajlux5WHW6LF57RHGt03z2jssP2/t8ssbqgQVlaB32QgxyBnD115
-         14sJC7iC6snjaWlUr//MNm/d2IJyGU1cb8ufC0cBXCH+GZAEc9FtCyDw/d8lk9Z+WhzG
-         Xbuw==
-X-Forwarded-Encrypted: i=1; AHgh+RpDZ4Qhk68U72ZTRU9vGJ4mC7pojS1myFFP4BHraC3kc0BwtW2nTyugUCd2yrEvPGFO8b2nHC/Z45vMJAK+Lgj3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5GNqFT3oWXDVa73pQmD3WhA6qjh0145DcNMTdMdY55xYQWLQj
-	n9ph8YTRDeP2Y0/oO3R8TqvnLAshxcnC/5j5Puc2ylBvSu3POuFtOwLo
-X-Gm-Gg: AR+sD13jvJ3YJrdodJGwivIKDMPClGhpzGsPeWxAUhlgEynxw/38+wfjOp9NKskWXL9
-	OuNOULVPx4XSnzbw4d0f11l6AIgPkBFbKgnF3DMubkYdJDsBF2WcABuLjYsUULlj2FMRnb3YnGC
-	QQoH6xr/BcQ1UYN8O1Lt6dEfpW0c9LMLefbrD86h4RyQCmE7nYN6X3AKtW3GAFfGzWuJfIgDcra
-	ay4OdOm4HYFWlvc5yxbAAxo/6qyY14A8J3bV0rd5ptO9OwEchcADyHw9gMGkrUqjXi8gbANKzvL
-	hNWRj91hsU/x5BVQH1nEKz/FvXFfuOBtL4/fnEnBkK/MLvfbjDOuEYF3ai8a4yts7qvEuCLZ0ip
-	9T6Fz30p2uwm8iV20Pm07kZichUzd2zIlupSJXoM+jaPVfeugpraOcDTYA/An+vqiFSRaizrsCr
-	dphZM+DU+rjcg6sHIw75alljiI6PWpER41VxgH/6pifw5XV2IQpvwOfoqQq5Kx/Qwcu9W7NCnUM
-	E2Qsx6lFEVa/NAMWqfbbf1usA==
-X-Received: by 2002:a05:600c:840f:b0:495:5fdf:2075 with SMTP id 5b1f17b1804b1-4980c5fa29amr140848065e9.0.1785704908822;
-        Sun, 02 Aug 2026 14:08:28 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49808691014sm163988045e9.11.2026.08.02.14.08.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Aug 2026 14:08:28 -0700 (PDT)
-Date: Sun, 2 Aug 2026 22:08:27 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian
- Hunter <adrian.hunter@intel.com>, Clark Williams <williams@redhat.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo
- Carvalho de Melo <acme@redhat.com>, sashiko-bot <sashiko-bot@kernel.org>
-Subject: Re: [PATCH 1/5] perf dso: Guard against errno==0 when
- dso__get_filename() returns NULL
-Message-ID: <20260802220827.38ea6e32@pumpkin>
-In-Reply-To: <20260802142022.154219-2-acme@kernel.org>
-References: <20260802142022.154219-1-acme@kernel.org>
-	<20260802142022.154219-2-acme@kernel.org>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25EC633F582;
+	Sun,  2 Aug 2026 21:09:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.120
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785704963; cv=fail; b=feNImyVG2izO/MvTCoQw+v64B0KFK/dihvhF/OXKlcvlbCA4AJ8hMsKrvz3NjxdDk8pp/sfyt1v9eprnKMn1PBTT2t11BDIJzrdWMi2m2IZE2k3FUMfccrKzQPi7uvuwg/1DO8Ajs2izZRLtWXLdjBQJgtD6WU2URzHMK2dbcuo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785704963; c=relaxed/simple;
+	bh=YSJjgP6tvfZKPsTk8TCs0jHLTvvo8nfKaPQAAQOVP8s=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=MNABAV0xDAdYXYF+oM01dPCyGASZDQFR0Eg0ig/MjH7D7BJnTVfce2ZM+diVLewGdSLq7PR0Gj4dvrmFSgXVYBMLhcENovAjZlBo5Z7/GnQR7dXckeS+NWD8DZE4EdLodOAvjjTVrdEUFqgJKl2PzPF/tLCeO0vldTxcMpN97yo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.96.120
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CpGNN01O6Ya9j/NKKFjaRdcKAA4w7QxL4QhKq84eotqYM355ALHGTKboLTaD28xh7h+Br+IUlYvZEvARzqXZ0DGGHfrLGeIrNLRIPIqI0NbA3TrERieWu6l56wSuDkKKogB1OD6p+9i8adPJsYcvEYi/3qHthUkt0d24pNA9f02bWG9cDt5gV1x/l20HIcrYtPhkGHVHEFy5LU9eSq1HpU5DAyZZuKXilKZIZubpUCqNVN7P9Zu0PV/Bj+GdqDz9TDYmMzXdb0o74kWuitrlUnVD95pkjWY5zFk74sWYIr6iTmmW94Bj+Txnk7JE3QAEKsaaYvPJmFZhjk2RKRWysQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=2xVRE03YndDYG/57NakflczCSX75YqbXcGvuVbg77uQ=;
+ b=INoxP6t1VJFSJw8YIEE28GhgrOGohz5HcLo/e2SMPiyCyK1NTZNACXI36kzPkzeupo3Va7tgl11vn57TlN224tfBEv6Dd2HQUJBhbGyjJAfI+kxOEOXVsdR6mcnMnWRxs55TV41y0p6i78rGnj7QqCRiV+m22gWXamfu3ixc4sWeSk5j3xLUXO+91c+NNGgGt61IqpCd+nWsDYQmdOj1eWsmu37M6p9LDSvL9XTiafJjhj2Ix40m26yWgsCn6f7AbEze8M5kV1WFuEhB521wXxpcXBwRsIXmjo3sEIAP84aMkEWDBrmsZCsHtYwaoKXkYNdBGmlR5GiV44M0AWhcdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
+ by CWLP123MB5940.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:1c4::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.17; Sun, 2 Aug
+ 2026 21:09:17 +0000
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0270.016; Sun, 2 Aug 2026
+ 21:09:17 +0000
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	howardchu95@gmail.com,
+	atomlin@atomlin.com,
+	neelx@suse.com,
+	chjohnst@mail.com,
+	sean@ashe.io,
+	steve@abita.co,
+	rishil1999@outlook.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/4] perf sched latency: Refine outputs, unit scaling, and histogram support
+Date: Sun,  2 Aug 2026 17:09:10 -0400
+Message-ID: <20260802210914.199941-1-atomlin@atomlin.com>
+X-Mailer: git-send-email 2.55.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BN9PR03CA0776.namprd03.prod.outlook.com
+ (2603:10b6:408:13a::31) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|CWLP123MB5940:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3e83a891-2e20-4181-2909-08def0da5027
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|366016|376014|1800799024|7416014|5023799004|56012099006|10067099003|6133799003|18002099003|3023799007;
+X-Microsoft-Antispam-Message-Info:
+	SydnjA9KtFNyKDwidNE0HLYDhiF6HsQB0WzrkwaXMOD90C2zg/iEK4ZiVgG4eE7oPvDfLWIyIZbvaJKfU7hOygLnH+F3G9Sl6HRqakyDY+dMvYi6diRq4nQ8yxIKDgSokoW97p+0mc5yWAIL23mrZ6xwlXFKxhpwVuGjXlbcWcy1L5WzGiA11fZ7ywHaNwQbjbZRYfhDrMoVM/FrdSL0ydLkpmKXC7Gzt+u+RSUYOLiUf6YaB9n18HbHYIr7OqTEwD1xJ2HfVO1hx8e4RBZIgDZ2Y9JlhZNRPr8YWmKykH1Qul6D7+BCztI19iJNRmVTNahyxn/va+TrxspWHc6Fw11a9ywBBwBA+FeH+WhMIA/NjfZXqhJn8XXn04oCGl91CZJNQjKFpgRiP4B9wBfp+Aa/4k3Ue6R4FPpYLrgulY0hKteqkt0LXgyLKDGezEj+nTFTcyvaQff9pOfGa2KfUYtJiIoaz21I8DtuZwU/ITdVH0dGPsspP/D1IZwOh+4fcifAm1JqgJXZke1OaS8GPRqEb14Qho7RyRC9S+wHyTu0w5D009QMYVXwrENq9dLE8/J0y4YluVSN6V7if0HjFeSE+Mk8yJZwXD0pTHnFWBMYqUUGtaZM8fINkjscTFJWjHlvEUIPYmwidIDPEi0IIgQ95cENnZZ8xZUUGzzmroY=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(376014)(1800799024)(7416014)(5023799004)(56012099006)(10067099003)(6133799003)(18002099003)(3023799007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?hwhXpalJmhAR4UkKOCoATHhuV8Y9YshLjy70mgol6X+BzJ7U81m0bA0+fyTB?=
+ =?us-ascii?Q?bZPbip+FwkBNKu4dDAj3CnBZIZALrr7tDI9zmlQm1E8z+C8tpCowl49HHnXR?=
+ =?us-ascii?Q?GDCjyTUub3ZIzjtIsa9cQ7obypGuxPEr3vxKWcG5NwyJX+kxwxATuNjhoTWf?=
+ =?us-ascii?Q?BeeZnPtFH8oAalOpalQeS9OzOkYi/cMVnNGKX/Sp6wsMVinllQ+4sbi6uieC?=
+ =?us-ascii?Q?PTHcI2vbjBkONOzGNdgO1i1m+ya5HURJLZAh7r/iCwyhu8G7JFBDI7vi98S4?=
+ =?us-ascii?Q?uik9GakV0YNN/KQOEVBUK8gb+8CevWVmpm2NHF1FBbee7vGJIY3hYVdpQ7jv?=
+ =?us-ascii?Q?tVwtBhSXOWHZSqsDKv0btvovfiFOeYj7X369Kt+2xw8x3gk4DHwmyY8uiCRL?=
+ =?us-ascii?Q?s1sDXCPcYK0quhWnJI7aybzM/AxY1lPzuYFypUftstLdpgS37j2Cd2OCwM7T?=
+ =?us-ascii?Q?BFtq15i6NeL0dYF5unv8thqHDIpbm6FTStrP/Czw29+0ORjsxeb3jVlxiSQh?=
+ =?us-ascii?Q?6Ar30HZ1XbesOoyWTDUXKFeJzJVpKGUVuLspH8vrP/TCkUyY7aQTTDHijy0y?=
+ =?us-ascii?Q?+ol1wCEMdEhzXozmLYlY1usFT8WYkyUxXW7eeBebMmMmyO1fCEYM2LUlr64r?=
+ =?us-ascii?Q?z0WXBZWLjOjszgfu3xYdwoZ7zQWKh6sFSQv3rccGkGO6bjq8zWE24ELJ1FU7?=
+ =?us-ascii?Q?XtjVQFhsFLM11vmNMQf/Hef5b5xdU33Xx1JWDwCq+GUfKMeFQ1xVxd0E/qIv?=
+ =?us-ascii?Q?bM/LLUQe+EmDA/UNdW9BV59/4u6WxkxnFQO93tlZJdlj4lOSEDfz2NwaaVZe?=
+ =?us-ascii?Q?ZugxaksVpDQg9KZ0RubHuCI5RxtEFd286PVJ55+XHVvf1Nu1uWAJPHeuQ7Dy?=
+ =?us-ascii?Q?fP+VkhTOCDhGjy36SuY60XzHECoMr8hs0428KyV+Xx78tK34CgotY61kCGFu?=
+ =?us-ascii?Q?lNbTCE1zjHWjsd2k9GyOnE0Ni8McnTn81yQqOPrOm/y0qa2a9S93WUZwQiuD?=
+ =?us-ascii?Q?lv0RphAGSiEoFa01v8F5jJ0vBOLUAxQZ9cuiz5eoqou3LtxFwN52G47FEj0U?=
+ =?us-ascii?Q?5xaDHYTgsobknESPN0NV7midYCW4SSa7+7jdLf1F72UveWMDXS9zSc1PrKna?=
+ =?us-ascii?Q?XiAGONtiQtMXc3IztUadb4i8XwdZ51+zLIVueBfYU7E7Hdwmi8arZvH/sAjx?=
+ =?us-ascii?Q?cPok/WxnwhjejWddQ6rzzjxd1K/lUyDR3rDNIYo2CfFUTz0f2j5Vt05R9bje?=
+ =?us-ascii?Q?Ebc4utTjb27Eu/QceWSbqR+OAzEolHqWkUY5w/tmz4GQ1MrRIhcWTdxH6Kut?=
+ =?us-ascii?Q?Kro2GQkZTlXW7aFMweuFZAz4vuL0ecaotabac9UWDzErHR7TrO1p87hPMkKF?=
+ =?us-ascii?Q?B1VIYv/Jb2ALfC3C8NrazRuu92nZ2Xf/s4tmMtV4XHQhhXkwJXn0qeIeftKB?=
+ =?us-ascii?Q?W7sydIxs6xFU5V/JZgPXOhTMaaDmEecf5NxR9euTExSm4qG0nXQXclThu+vF?=
+ =?us-ascii?Q?yxgfQgwNtZbcPP//yr/oRWZhge16AOoGpkRjLq4JPM1e+A8m9D4fHj1NTtTo?=
+ =?us-ascii?Q?3vYT1gJ9+bsF+M1oeEl3fmkVNCBAN7Fxjb5BXat9PljpN40kD/JhnWbgouBT?=
+ =?us-ascii?Q?Afc3OPESgKu5PGWRJ1kUVhKfzBHJeEppkoAlCYnzDlwp2JW+OacmdOPtDQcq?=
+ =?us-ascii?Q?ie82ElrX3xjufIt+LwaAd4FeatyrUlwAMXXnR3xJJwfD6Oq55UTDMg1wQzVS?=
+ =?us-ascii?Q?042GpqU6jQ=3D=3D?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e83a891-2e20-4181-2909-08def0da5027
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2026 21:09:17.3908
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YqcL/YkYpdyr4nBQuNR9eNGqMd5QwBC6yTY8Ql0qk6l9DsMj31J99ApE3sFCAEqAVpYL+orT6Jv7shf+6J4FNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CWLP123MB5940
 
-On Sun,  2 Aug 2026 11:20:18 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+This patch series improves 'perf sched latency' by suppressing misleading
+empty table output, extending pipe mode stream processing, introducing
+dynamic unit auto-scaling for latency and runtime statistics, and adding
+latency histogram visualisation alongside time-span filtering.
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->=20
-> __open_dso() computes fd =3D -errno when dso__get_filename() returns NULL.
-> Some failure paths in dso__get_filename() (e.g. binary type mismatch)
-> return NULL without making a syscall, leaving errno at 0 from a prior
-> successful call.
+Patch 1 addresses an issue where 'perf sched latency' fell through and
+returned success (0) when perf_session__has_traces() failed due to missing
+tracepoint events in a perf.data file. This caused empty header tables and
+zeroed summary statistics to be rendered. In addition,
+thread__get_runtime() in map_switch_event() is guarded against potential
+NULL pointer dereferences under memory allocation failures.
 
-Except that errno isn't set to zero by successful syscalls.
-It is only ever set by ones that fail.
-The application may set errno to zero (eg to detect errors from some
-library functions).
+Patch 2 extends pipe mode stream support. Because event attributes in pipe
+mode are received dynamically during event processing, session->evlist is
+not populated prior to event processing.
+To handle pipe input correctly:
+    - Missing callbacks (.attr, .tracing_data, .build_id, and .feature) are
+      registered in cmd_sched() so header events are parsed correctly
 
-So paths that don't make syscalls will be returning a 'random' errno.
+    - The handlers array is promoted to file-scope (latency_handlers[]) and
+      evlist__set_tracepoints_handlers() is invoked dynamically inside
+      perf_sched__process_tracepoint_sample() when evsel->handler is NULL
 
-	David
+    - Trace presence checks are performed post-processing when handling
+      pipe data, while non-pipe files continue to abort early upfront
 
->  fd =3D -0 =3D 0, which is stdin =E2=80=94 subsequent code treats
-> it as a valid file descriptor.
->=20
-> Fall back to ENOENT when errno is 0, ensuring fd is always negative on
-> failure.
->=20
-> Fixes: eba5102d2f0b ("perf tools: Add global list of opened dso objects")
-> Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Assisted-by: Claude:claude-opus-4.6
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/dso.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index 2309196d8df3111c..e087a89066bdbc02 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -643,7 +643,7 @@ static int __open_dso(struct dso *dso, struct machine=
- *machine)
->  	if (name)
->  		fd =3D do_open(name);
->  	else
-> -		fd =3D -errno;
-> +		fd =3D errno ? -errno : -ENOENT;
-> =20
->  	if (decomp)
->  		unlink(name);
+Patch 3 introduces dynamic auto-scaling for latency and runtime display
+columns (Runtime, Avg delay, Max delay). Previously, all values were
+unconditionally formatted in milliseconds (ms), making microsecond- or
+second-scale latencies difficult to read. Columns are now dynamically
+scaled to the most appropriate unit (ns, us, ms, s), column headers are
+updated, and format specifiers are aligned character-for-character with
+table headers.
+
+Patch 4 adds three new command-line options to 'perf sched latency':
+    --histogram (-H):
+            Displays an ASCII bar chart of CPU wait latencies between
+            snapshots
+    --hist-mode:
+            Configures the bucketing scheme to either logarithmic (log) or
+            100 us equal-width linear (linear) mode
+    --time:
+            Filters trace event processing to a specified [start,stop] time
+            span
+
+Changes since v6:
+
+ - Fixed O(N) hot-path traversal overhead in
+   perf_sched__process_tracepoint_sample() for unhandled tracepoints by
+   assigning a dummy ignore handler (process_sched_ignore)
+
+ - Replaced evlist__set_tracepoints_handlers() in sample processing with a
+   per-evsel lookup to prevent -EEXIST early aborts and avoid dropping
+   late-arriving pipe events
+
+ - Updated commit message for the pipe mode patch to reflect the
+   single-pass handler assignment logic
+
+ - Link to v6: https://lore.kernel.org/lkml/20260801234008.176724-1-atomlin@atomlin.com/
+
+Changes since v5:
+
+ - Split pipe mode trace sample handling from Patch 1 into a standalone
+   patch (Namhyung Kim)
+
+ - Added a Fixes: tag to the pipe mode patch referencing commit
+   27295592c22e ("perf session: Share the common trace sample_check routine
+   as perf_session__has_traces")
+
+ - Updated commit log with before and after illustrations of table header
+   formatting
+
+ - Link to v5: https://lore.kernel.org/lkml/20260730185416.97166-1-atomlin@atomlin.com/
+
+Changes since v4:
+
+ - Added the missing .feature callback to sched.tool in cmd_sched()
+
+ - Fixed memory leak by reusing uncompleted work atoms when sched_in events
+   are skipped or lost
+
+ - Promoted the handlers array to file-scope (i.e., latency_handlers[]) and
+   added a dynamic lookup via evlist__set_tracepoints_handlers() inside
+   perf_sched__process_tracepoint_sample() whenever a sample arrives with
+   an unattached handler (i.e., evsel->handler == NULL)
+
+ - Prevented double-counting wakeups (i.e., ignore sched:sched_wakeup)
+   in pipe mode and non-pipe modes
+
+ - Added missing trailing pipe in output_lat_thread's new auto-scaling
+   format string
+
+ - Stripped redundant prefix strings from each row's format string to
+   produce a clean, tabular output
+
+ - Link to v4: https://lore.kernel.org/lkml/20260729144451.38286-1-atomlin@atomlin.com/
+
+Changes since v3:
+
+ - Registered Missing Callbacks. In perf_tool__init configuration inside
+   cmd_sched(), added the .attr, .tracing_data, and .build_id callbacks.
+   Without these callbacks, pipe mode drops header attributes entirely,
+   preventing tracepoints from being populated in session->evlist
+
+ - Introduced an explicit post-processing pipe check. This ensures that
+   pipe mode aborts correctly and does not produce superfluous empty
+   latency tables when no trace samples are available
+
+ - Prevented potential NULL pointer dereference. Added a NULL check for
+   thread__get_runtime() in map_switch_event() under memory allocation
+   failures
+
+ - Fixed column alignment. Modified format specifiers to align
+   character-for-character with header column widths across all rows
+
+ - Adjusted header label padding. Updated header label padding and column
+   width delimiters in perf_sched__lat() to match the exact field format
+   specifiers printed in output_lat_thread()
+
+ - Fixed swapper histogram inclusion. Excluded "swapper" (i.e.,
+   CPU-specific idle thread) from global_hist buckets
+
+ - Preserved task state machine across --time bounds. Moved time-window
+   filtering inside add_sched_in_event() to gate latency statistics
+   recording without breaking wakeup state tracking across time interval
+   boundaries
+
+ - Link to v3: https://lore.kernel.org/lkml/20260726032533.712462-1-atomlin@atomlin.com/
+
+Changes since v2:
+
+ - Ensured vertical pipe separators align across all latency table columns
+
+ - Excluded "swapper" (idle thread) latency samples from global_hist
+
+ - Preserved task state machine transitions across --time boundaries
+
+ - Suppressed empty table headers, total lines, and histogram graphs when
+   no matching trace samples exist (e.g., when --time, --CPU, or --pids
+   exclude all samples), outputting "No matching trace samples found."
+   instead
+
+ - Linked to v2: https://lore.kernel.org/lkml/20260725173341.679782-1-atomlin@atomlin.com/
+
+Changes since v1:
+
+ - Fixed integer overflow in latency_bucket() (Ian Rogers)
+
+ - Linked to v1: https://lore.kernel.org/lkml/20260724142901.634761-1-atomlin@atomlin.com/
+
+Aaron Tomlin (4):
+  perf sched: Suppress latency table output when trace samples are
+    missing
+  perf sched: Handle missing trace samples in pipe mode
+  perf sched latency: Auto-scale latency and runtime display units
+  perf sched latency: Add histogram and time interval options
+
+ tools/perf/Documentation/perf-sched.txt |   6 +
+ tools/perf/builtin-sched.c              | 338 +++++++++++++++++++++---
+ 2 files changed, 301 insertions(+), 43 deletions(-)
+
+-- 
+2.55.0
 
