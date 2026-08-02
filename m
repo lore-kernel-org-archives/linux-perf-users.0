@@ -1,140 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BD23BBFA7;
-	Sun,  2 Aug 2026 14:27:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16042EACF2
+	for <linux-perf-users@vger.kernel.org>; Sun,  2 Aug 2026 14:54:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785680859; cv=none; b=JtKqfGsV2zcv8nR1vxlY5Jm3wEzhKxAwW3DoKGjrUFqJ2jJOOKX/beckbB0JZuG9vR6F+VupQjhnmcR86FZT1jb9tj/sERz0E3hSyXjvRhg8D+8kswpwN7vlL/DaDQkly+O802sPpQY4UXPyrJhTHM3u3U4ekK76I4tfUIaTmQw=
+	t=1785682469; cv=none; b=NSuXHVuC0EjSdxRNBUVQ6OxAEvNt5rd4wQUZRYP/UrCk97dZ+QbuaxdcqHPL+eJzUufrqfuGNLeUoyU1arvlupCBfeanjDv2+S0TeAwTSD/+fYOSW/4eIIfeV4UlJmYzdOBaTwuuDn/bx09Iy6NnrjjupK9Eu90XmClYRAd4ToM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785680859; c=relaxed/simple;
-	bh=RssS8yXWgi99ltQFt5HsQBN1pUKisoH39b+GInwBNs8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Es+pCas/W11ebkmmR00yI/PwVQ4Nn9yxahj6Jy15SKKvE2cDXweaTTWHICBrzOD651EamOb0cYbUhXEFx04GziXD300OwgXpuOws0i0Hkc1YsbK1p6gZ4PmsUXYDXxZKZvpla+MkM/00VCP/+3O0c9BQsyV9fdl762OhdJxY0rU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=neEzol0W; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785682469; c=relaxed/simple;
+	bh=p8krSJwmMHywNzo1/MbVEROwNamIHPOcxFbQSKLzv5o=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=lXgVGRoyWT1i2z98Uk84FQLsH3R7iiIVml1HWsoXAyFrFv8PNu5gzrB+72qlWQzQYmORPDWsX4aiJspT+ifqdEWlMe3pnowm0xGqkI5haadr2Au5USZKHD97NET5dJKhKB9sEysI3lBRn4Xs3elQEajHYIiBruvN8H4Gwj4yx2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lc0EzYxp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="neEzol0W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D70501F00A3A;
-	Sun,  2 Aug 2026 14:27:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lc0EzYxp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 445311F000E9;
+	Sun,  2 Aug 2026 14:54:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785680858;
-	bh=UMPFYv9gvFZQWW2DITLYJDCibDQw6FEHiT9noD/oGKg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=neEzol0WquA+aw9hSQ1vQNboZocNjacwd1T9m0VoYpKQ1ER9bCYXh/wDnCPebK+T3
-	 McQ13L8VuGDqA8Pk1wJQNgwKY+ReBljglk5tuQUiQFU8uXl4/QnIli1ZcklycfgO6V
-	 E4ajHnKux5EEj9r09w51gJTTiqT69VItmRIksE7UnEgTUP0eE0wD3H33+vwRSg+bpy
-	 cG299zS/HMOKF2IccIh8uNKT+mcdGMyzbc4rjKZrCH4z0vpQKtDzeyvRUJPehLrrvk
-	 DZxQhvf+vdZiK7inVNRXKm4ejVbxS8ze2Ez3yWaIK+6/7OinJO/f/AtETCdSh7mkul
-	 yYsnVyRUBgMGg==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot <sashiko-bot@kernel.org>,
-	Song Liu <songliubraving@fb.com>
-Subject: [PATCH 4/4] perf libbfd: Fix memory leaks and NULL fclose in BPF disassembly
-Date: Sun,  2 Aug 2026 11:27:12 -0300
-Message-ID: <20260802142712.154726-5-acme@kernel.org>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260802142712.154726-1-acme@kernel.org>
-References: <20260802142712.154726-1-acme@kernel.org>
+	s=k20260515; t=1785682468;
+	bh=4zLHuZI8YfKS97Kcri40qQIzptqD07hhZ6fuLClMzx4=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Lc0EzYxpE1sOkZdpHav8w4DuMAdBlXhehrURD4CZAniBHFAtcgPKFNEhg1F4410Wb
+	 vYMRQS4FTqtFD9wcObYWLxKDbm6UxzFWg9yLvWTyD96vCC4+CA40aRvfIK1ou5g4VZ
+	 QbiLfJAiAxcVMvq2s6W6/lq8mwO+To13qLs/cID0gM8eK/McN/JUG3KmuNSr/iX/d9
+	 qylnBVaT9pro+0oNm/A3t2nPVJPKhtmIcAYIeX6biYuhakO9dO9SMNiAueKiNtqtwQ
+	 guKa87AsPTSnzIPcc5Y8+SP0jKqi4z2i2kusTN4Mu3CEAnMw6LklK6On6M8p7eH6LZ
+	 g/bRKaSrwMOvw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 5/5] perf dso: Replace assert with runtime check in
+ dso__read_symbol()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260802142022.154219-6-acme@kernel.org>
+References: <20260802142022.154219-1-acme@kernel.org>
+ <20260802142022.154219-6-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 02 Aug 2026 14:54:27 +0000
+Message-Id: <20260802145428.445311F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-symbol__disassemble_bpf_libbfd() has four resource management bugs:
+Pre-existing issues:
+- [Medium] dso__read_symbol() fails to offset into the concatenated BPF JIT=
+ instruction buffer for subprograms, unconditionally returning the instruct=
+ions for the first subprogram.
+- [Medium] The `is_64bit` flag for BPF JIT disassembly is hardcoded to the =
+host's `sizeof(void *)` instead of reflecting the target's architecture, br=
+eaking cross-platform disassembly.
+--
 
-1. free(prog_linfo) leaks internal arrays.  bpf_prog_linfo contains
-   raw_linfo, raw_jited_linfo, nr_jited_linfo_per_func, and
-   jited_linfo_func_idx pointers that are only freed by the proper
-   destructor bpf_prog_linfo__free().
+--- Patch [5]: [PATCH 5/5] perf dso: Replace assert with runtime check in d=
+so__read_symbol() ---
+commit 53ccbff8c0716057dbbc219812e142e5e96f1fe9
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-2. open_memstream(&buf, &buf_size) allocates a dynamic buffer that the
-   caller must free after fclose().  The function calls fclose(s) but
-   never free(buf), leaking the stream buffer on every call.
+    perf dso: Replace assert with runtime check in dso__read_symbol()
+   =20
+    dso__read_symbol() asserts that len <=3D jited_prog_len, where both
+    values originate from untrusted file input. With NDEBUG, the assert
+    is compiled out, allowing an out-of-bounds heap read. This replaces
+    the assert with a runtime bounds check that returns NULL.
 
-3. args->line = strdup(srcline) is immediately consumed by
-   disasm_line__new(args) which internally calls strdup(args->line)
-   again via annotation_line__init().  The first strdup result is then
-   overwritten by args->line = buf + prev_buf_size without being freed.
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index a0de56c93592a..f3209f285db76 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -2024,7 +2024,12 @@ const u8 *dso__read_symbol(struct dso *dso, const =
+char *symfs_filename,
 
-4. If open_memstream() fails, the error path jumps to 'out:' which
-   calls fclose(s) with s == NULL — undefined behavior.
+[Severity: Medium]
+This is a pre-existing issue in dso__read_symbol(), but should the
+is_64bit flag be based on the host's architecture?
 
-Fix by using bpf_prog_linfo__free(), initializing buf to NULL, adding
-free(buf) after fclose(s), guarding fclose() against NULL, and removing
-the redundant strdup since annotation_line__init() makes its own copy.
+Earlier in this function, it sets:
 
-Fixes: 6987561c9e86eace ("perf annotate: Enable annotation of BPF programs")
-Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Ian Rogers <irogers@google.com>
-Assisted-by: Claude:claude-opus-4.6
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/libbfd.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+    *is_64bit =3D sizeof(void *) =3D=3D sizeof(u64);
 
-diff --git a/tools/perf/util/libbfd.c b/tools/perf/util/libbfd.c
-index 0b7164f0e9fdbbed..33dc6158b2b1ffab 100644
---- a/tools/perf/util/libbfd.c
-+++ b/tools/perf/util/libbfd.c
-@@ -15,6 +15,7 @@
- #ifdef HAVE_LIBBPF_SUPPORT
- #include <bpf/bpf.h>
- #include <bpf/btf.h>
-+#include <bpf/libbpf.h>
- #endif
- #include <fcntl.h>
- #include <stdio.h>
-@@ -510,7 +511,7 @@ int symbol__disassemble_bpf_libbfd(struct symbol *sym __maybe_unused,
- 	char tpath[PATH_MAX];
- 	size_t buf_size;
- 	int nr_skip = 0;
--	char *buf;
-+	char *buf = NULL;
- 	bfd *bfdf;
- 	int ret;
- 	FILE *s;
-@@ -620,7 +621,7 @@ int symbol__disassemble_bpf_libbfd(struct symbol *sym __maybe_unused,
- 
- 		if (!annotate_opts.hide_src_code && srcline) {
- 			args->offset = -1;
--			args->line = strdup(srcline);
-+			args->line = (char *)srcline;
- 			args->line_nr = 0;
- 			args->fileloc = NULL;
- 			args->ms->sym = sym;
-@@ -645,9 +646,12 @@ int symbol__disassemble_bpf_libbfd(struct symbol *sym __maybe_unused,
- 
- 	ret = 0;
- out:
--	free(prog_linfo);
-+	bpf_prog_linfo__free(prog_linfo);
- 	btf__free(btf);
--	fclose(s);
-+	if (s) {
-+		fclose(s);
-+		free(buf);
-+	}
- 	bfd_close(bfdf);
- 	return ret;
- #else
--- 
-2.55.0
+If analyzing a perf.data file generated on a 32-bit target using a 64-bit
+host, won't this cause cross-platform disassembly to break because downstre=
+am
+disassemblers receive the wrong bitness flag? Could we dynamically inspect
+the target machine architecture from perf_env (e.g. e_machine) instead?
 
+>  			errno =3D SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF;
+>  			return NULL;
+>  		}
+> -		assert(len <=3D info_linear->info.jited_prog_len);
+> +		if (len > info_linear->info.jited_prog_len) {
+> +			pr_debug("BPF symbol length %zu exceeds jited_prog_len %u\n",
+> +				 len, info_linear->info.jited_prog_len);
+> +			errno =3D SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF;
+> +			return NULL;
+> +		}
+>  		*out_buf_len =3D len;
+>  		return (const u8 *)(uintptr_t)(info_linear->info.jited_prog_insns);
+
+[Severity: Medium]
+This isn't a bug introduced by this patch, but does returning the base of
+the JITed instructions handle subprograms correctly?
+
+If the perf.data file contains a multi-function BPF program (where
+dso__bpf_prog(dso)->sub_id > 0), this appears to blindly return the
+instructions for the first subprogram instead of the requested subprogram.
+
+Should this calculate the byte offset for the target subprogram using
+jited_func_lens?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260802142022.1542=
+19-1-acme@kernel.org?part=3D5
