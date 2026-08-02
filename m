@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2ECAE3203B6;
-	Sun,  2 Aug 2026 08:20:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0033203B6;
+	Sun,  2 Aug 2026 08:20:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785658815; cv=none; b=RJJTNdL8/p/wut7SI8LFdgw7ZzUZHuer2ompzrAEOZ2Tc9Q+LHu4ETID3rn5Bmr8CTqDH/hWvK2wpIpjwZ0jFUE3JkXI00Hc1NHEy0jrJmerQf46AnkikczvVTCkd05xLJ4h1kntcjlXPLu+2rIhKlv4B33hUYZcPVXqqEqP2rg=
+	t=1785658825; cv=none; b=W88n7KwglCqSgEoI0mC5WNrQXtmyxo5yhexhV02+fNcOh9uD0pDSHzfT2PfXvWPW1w9fUGngSvnAu1FCXNead+mYueB526WXBSKuqNQqslRep3zRHozumxvGHZAVVRGqnlEaLaFmL3zKiNV3wntZ8Sdc4yEEQIExoTpOp7oMGfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785658815; c=relaxed/simple;
-	bh=ViOVyO8yDqguHkU+X02XP0Bs/msFq4/hK8uTCxWGmGY=;
+	s=arc-20240116; t=1785658825; c=relaxed/simple;
+	bh=H08wUjjwkKNAfGXA/aTivlHCK3GXh8nFiYIyaLFsc4k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OOQzQ/lxx1+4FjeDnYQnKeFC1SPh8wguwAsxeww0El6Hzsr5UNBk16yyF5UVgpSBPXJVoc3nObyqiiRE7KbkgP/9Iq60WqMMRt79/jRMFVpAvDhbDnIxdK8/S/OrcrMsX4WtGkiV4NYlq7MEj2G2LcliDF6VCBDi94G/1f5MJTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fb2cAbBl; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=l5KHSymvNl59UbsqmQkIsKyUjBltFJvRBTSX5YqXycSiU6g4owyEizuiBPowq2npO3yLA2sMEohBwh8ZQ5OO6+DVnbCjbT4kwJ23Ry6ng24+kVHwmh5JDmBgssIUmc566xYhbVFtA7Odv4lvisEIeHo1URyyiOHL6OBwwNfmYQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7m12BSO; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fb2cAbBl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F4B91F00AC4;
-	Sun,  2 Aug 2026 08:20:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7m12BSO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81C7D1F00AC4;
+	Sun,  2 Aug 2026 08:20:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785658812;
-	bh=JJ9Ut0yjyuZ90u+R8cbjLYmw1iskToab/1RjRS9W24Y=;
+	s=k20260515; t=1785658823;
+	bh=Tdrw/5yTYgh/qdWgDYAeuaoaNlZs2dP5Wt6z39VZXHM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=fb2cAbBlXiRqIJed4RgHx2UlOh9J7Mp9TspFsomOUka0fCEQ9iJ8jJGFPFbHlfgND
-	 bYaMI5lnGDykAM9ZzQIBcYsRFHIbBDlm+V+a2kFvmvaw8cwueQ7LLG39ufO+fxy7Vm
-	 rrgiiJtzdxRDucwcNUer514YVs4889wpe/KbfID/z2nxfhRn7ZdAusbjLV3+hKXzEt
-	 VooMpndTQlLFDrmHr4W8me4PxWRK/0BAsMRdFRv9Rfg4gOKwQX55+8x77aLDJL4Heu
-	 4jhj6MSt25OskhBk653SUWeefUZ0b+ZqUkAOuOch4VThMZpMf4FcOfgRMw1kAO/0pq
-	 pLvdgtd8B4d1g==
+	b=T7m12BSO4cAKeZqwKM5EOJE+Gebv70LsvgGk8w+vbEf8Zx0RLb2hykOEimpVPciS1
+	 H928jVpkHpZo9yBIHnUSpukS1Uslxf9hg167s+6o01sX1oIsZoL/6khLWJBj24CalU
+	 1847w8YihP+oKEpLPrVyOukFOp57OOOpStli/6vBHCAgFNpLdLw1sxKJv8eWPb6cX0
+	 ByPZ3J/2UHMVLi7XDYC9XZMM07dcU6m/74P2pyvgouLkvGXJXXa6pOvkVBufrtnrI4
+	 73meTZVIYFVnFhLh/apRV8CSbVhjPSzt+oIjAHZsDmFuU686Dnmo+Tpxr0o+tju2GK
+	 Jr91cevnQKpFQ==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -44,9 +44,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v11 09/11] selftests: ftrace: Add wprobe trigger testcase
-Date: Sun,  2 Aug 2026 17:20:07 +0900
-Message-ID: <178565880692.714490.8439336315058403320.stgit@devnote2>
+Subject: [PATCH v11 10/11] tracing/wprobe: Support BTF typecast in fetchargs
+Date: Sun,  2 Aug 2026 17:20:18 +0900
+Message-ID: <178565881815.714490.8235446972645905404.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178565870538.714490.11309825813968306287.stgit@devnote2>
 References: <178565870538.714490.11309825813968306287.stgit@devnote2>
@@ -62,40 +62,108 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add a testcase for checking wprobe trigger. This sets set_wprobe and
-clear_wprobe triggers on fprobe event and static trace event to
-monitor memory accesses within the trace-events-sample kernel module.
+Allow BTF typecast syntax (STRUCT)FETCHARG->MEMBER in wprobe event
+fetchargs. Previously, handle_typecast() rejected any probe context
+that was not a function entry/return or tracepoint event probe.
 
+Wprobe events use $addr (the accessed address) and $value (the value
+at that address). By enabling BTF typecast, users can now cast these
+to a concrete struct type and access its fields directly. For example:
+
+  echo 'w:watch rw@0:8 dflag=(dentry)$addr->d_flags' >> dynamic_events
+
+With a set_wprobe trigger pointing the watchpoint at a dentry address,
+the resulting trace shows d_flags being accessed at that location.
+
+Note that $addr and $value are restricted to kernel-space memory,
+which is consistent with the existing TPARG_FL_KERNEL flag used when
+parsing wprobe fetchargs.
+
+Assisted-by: Antigravity:gemini-3.5-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
 Changes in v11:
- - Update testcase to use trace-events-sample kernel module instead of
-   VFS file operations.
+ - Update trigger-wprobe-btf-typecast.tc to use trace-events-sample
+   kernel module.
+ - Fix commit comment.
+Changes in v9:
+ - Newly added.
 ---
+ kernel/trace/trace_probe.c                         |   13 +++-
+ kernel/trace/trace_probe.h                         |    5 +
  tools/testing/selftests/ftrace/config              |    1 
- .../ftrace/test.d/trigger/trigger-wprobe.tc        |   85 ++++++++++++++++++++
- 2 files changed, 86 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+ .../test.d/trigger/trigger-wprobe-btf-typecast.tc  |   72 ++++++++++++++++++++
+ 4 files changed, 90 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
 
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 9f4cad18977a..af8fb2a246b6 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -889,6 +889,16 @@ static int query_btf_struct(const char *sname, struct traceprobe_parse_context *
+ 		ctx->struct_btf = NULL;
+ 	}
+ 
++	if (ctx->btf) {
++		id = btf_find_by_name_kind(ctx->btf, sname, BTF_KIND_STRUCT);
++		if (id > 0) {
++			btf_get(ctx->btf);
++			ctx->struct_btf = ctx->btf;
++			ctx->last_struct = btf_type_by_id(ctx->struct_btf, id);
++			return 0;
++		}
++	}
++
+ 	id = bpf_find_btf_id(sname, BTF_KIND_STRUCT, &btf);
+ 	if (id < 0)
+ 		return id;
+@@ -964,7 +974,8 @@ static int handle_typecast(char *arg, struct traceprobe_parse_context *ctx)
+ 
+ 	if (!(tparg_is_event_probe(ctx->flags) ||
+ 	      tparg_is_function_entry(ctx->flags) ||
+-	      tparg_is_function_return(ctx->flags))) {
++	      tparg_is_function_return(ctx->flags) ||
++	      tparg_is_wprobe(ctx->flags))) {
+ 		trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
+ 		return -EOPNOTSUPP;
+ 	}
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index 6543d4c2cda5..6e927bb0e8dc 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -437,6 +437,11 @@ static inline bool tparg_is_event_probe(unsigned int flags)
+ 	return !!(flags & TPARG_FL_TEVENT);
+ }
+ 
++static inline bool tparg_is_wprobe(unsigned int flags)
++{
++	return !!(flags & TPARG_FL_WPROBE);
++}
++
+ /* Each typecast consumes nested level. So the max number of typecast is 8. */
+ #define TRACEPROBE_MAX_NESTED_LEVEL 8
+ 
 diff --git a/tools/testing/selftests/ftrace/config b/tools/testing/selftests/ftrace/config
-index d2f503722020..ecdee77f360f 100644
+index ecdee77f360f..f067874902ed 100644
 --- a/tools/testing/selftests/ftrace/config
 +++ b/tools/testing/selftests/ftrace/config
-@@ -28,3 +28,4 @@ CONFIG_TRACER_SNAPSHOT=y
- CONFIG_UPROBES=y
- CONFIG_UPROBE_EVENTS=y
- CONFIG_WPROBE_EVENTS=y
-+CONFIG_WPROBE_TRIGGERS=y
-diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+@@ -1,5 +1,6 @@
+ CONFIG_BPF_SYSCALL=y
+ CONFIG_DEBUG_INFO_BTF=y
++CONFIG_DEBUG_INFO_BTF_MODULES=y
+ CONFIG_DEBUG_INFO_DWARF4=y
+ CONFIG_EPROBE_EVENTS=y
+ CONFIG_FPROBE=y
+diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
 new file mode 100644
-index 000000000000..4071fe0c878b
+index 000000000000..3f2bebb28837
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
-@@ -0,0 +1,85 @@
++++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
+@@ -0,0 +1,72 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
-+# description: event trigger - test wprobe trigger
-+# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README events/sched/sched_process_fork/trigger
++# description: event trigger - test wprobe trigger with BTF typecast fetchargs
++# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README events/sched/sched_process_fork/trigger "[(structname[,field])]<argname>[->field[->field|.field...]]":README
 +
 +rmmod trace-events-sample ||:
 +if ! modprobe trace-events-sample ; then
@@ -106,9 +174,6 @@ index 000000000000..4071fe0c878b
 +cleanup_wprobe_triggers() {
 +  if [ -f events/fprobes/testevent/trigger ]; then
 +    reset_trigger_file events/fprobes/testevent/trigger || true
-+  fi
-+  if [ -f events/sample-trace/foo_bar_with_fn/trigger ]; then
-+    reset_trigger_file events/sample-trace/foo_bar_with_fn/trigger || true
 +  fi
 +  echo 0 > events/enable 2>/dev/null || true
 +  echo > dynamic_events 2>/dev/null || true
@@ -133,43 +198,33 @@ index 000000000000..4071fe0c878b
 +    exit_unresolved
 +fi
 +
-+:;: "Add a wprobe event used by trigger" ;:
-+echo 'w:watch rw@0:8 address=$addr value=$value' > dynamic_events
++:;: "Add a wprobe event with BTF typecast fetchargs" ;:
++# (foo_timer_data,timer)$addr->counter reads counter from struct foo_timer_data via BTF typecast
++echo 'w:watch rw@0:8 address=$addr counter=(foo_timer_data,timer)$addr->counter' >> dynamic_events
 +
-+:;: "Add events for triggering wprobe" ;:
++:;: "Check the wprobe event is registered with counter field" ;:
++grep -q "counter" dynamic_events
++
++:;: "Add fprobe event for sample_timer_cb" ;:
 +echo 'f:fprobes/testevent sample_timer_cb timer=t' >> dynamic_events
 +
 +:;: "Enable all events before setting triggers" ;:
 +echo 1 > tracing_on
 +echo 1 >> events/fprobes/testevent/enable
-+echo 1 >> events/sample-trace/foo_bar_with_fn/enable
 +
 +:;: "Set set_wprobe trigger on testevent" ;:
 +echo 'set_wprobe:watch:timer' >> events/fprobes/testevent/trigger
 +cat events/fprobes/testevent/trigger | grep ^set_wprobe
 +
 +# Wait for sample_timer_cb to fire and set_wprobe trigger to activate
-+sleep 2
++sleep 3
 +
 +:;: "Check set_wprobe trigger activated the watchpoint" ;:
 +cat trace | grep watch
 +
-+:;: "Set clear_wprobe trigger on foo_bar_with_fn" ;:
-+echo 'clear_wprobe:watch' >> events/sample-trace/foo_bar_with_fn/trigger
-+cat events/sample-trace/foo_bar_with_fn/trigger | grep ^clear_wprobe
-+
-+# Clear trace and wait to ensure no new watchpoint events are generated
-+clear_trace
-+sleep 1
-+
-+:;: "Ensure clear_wprobe trigger deactivated the watchpoint" ;:
-+! grep -q watch trace
-+
 +:;: "Remove wprobe triggers" ;:
 +echo '!set_wprobe:watch:timer' >> events/fprobes/testevent/trigger
-+echo '!clear_wprobe:watch' >> events/sample-trace/foo_bar_with_fn/trigger
 +! grep ^set_wprobe events/fprobes/testevent/trigger
-+! grep ^clear_wprobe events/sample-trace/foo_bar_with_fn/trigger
 +
 +:;: "Disable events and remove dynamic events" ;:
 +echo 0 > events/enable
