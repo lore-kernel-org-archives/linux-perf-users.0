@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16042EACF2
-	for <linux-perf-users@vger.kernel.org>; Sun,  2 Aug 2026 14:54:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7DC331ED6
+	for <linux-perf-users@vger.kernel.org>; Sun,  2 Aug 2026 14:54:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785682469; cv=none; b=NSuXHVuC0EjSdxRNBUVQ6OxAEvNt5rd4wQUZRYP/UrCk97dZ+QbuaxdcqHPL+eJzUufrqfuGNLeUoyU1arvlupCBfeanjDv2+S0TeAwTSD/+fYOSW/4eIIfeV4UlJmYzdOBaTwuuDn/bx09Iy6NnrjjupK9Eu90XmClYRAd4ToM=
+	t=1785682475; cv=none; b=XfgR8zmR/8k/XyjKDiHce1kLA0Lk5P20+tQLAOVpP/zfJ0xlvgGcOmx3y1TLroWdN+XT2mAZ1PG7P9l3HNA9Er1M/Pc+eCepHa1J8jN0f0AH6bAWQoYZn/X58pBgdnOwpeZq7tL8DIuYaKn1S/wUpSL81ti++Yyk0XoscA7Mkm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785682469; c=relaxed/simple;
-	bh=p8krSJwmMHywNzo1/MbVEROwNamIHPOcxFbQSKLzv5o=;
+	s=arc-20240116; t=1785682475; c=relaxed/simple;
+	bh=rjRX7vfurqA4C4bjJOc/QAi+chFCdacw1kp+ewcmKn4=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lXgVGRoyWT1i2z98Uk84FQLsH3R7iiIVml1HWsoXAyFrFv8PNu5gzrB+72qlWQzQYmORPDWsX4aiJspT+ifqdEWlMe3pnowm0xGqkI5haadr2Au5USZKHD97NET5dJKhKB9sEysI3lBRn4Xs3elQEajHYIiBruvN8H4Gwj4yx2s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lc0EzYxp; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=t0abDByWv1iOWZEdCCGK9yML7Vf9vhgCtS5YuGAKhj29DIrshfzV7aR3DcA7wwvopT9QTmNjK7aG4l/p/5dOQWEqjsdhtbXMEZPDtCziuxeIvB7UuNHnjeKOOwrx1CKVd7SwKqVkWgft22GOhl4dBpxDp0JVS207IBbtUPVwaUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W1D0zkfG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lc0EzYxp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 445311F000E9;
-	Sun,  2 Aug 2026 14:54:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W1D0zkfG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AA961F000E9;
+	Sun,  2 Aug 2026 14:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785682468;
-	bh=4zLHuZI8YfKS97Kcri40qQIzptqD07hhZ6fuLClMzx4=;
+	s=k20260515; t=1785682474;
+	bh=73CXkGXeoHZp7ET/qc9cictJjk8BZA2JQR3o2UMmG00=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Lc0EzYxpE1sOkZdpHav8w4DuMAdBlXhehrURD4CZAniBHFAtcgPKFNEhg1F4410Wb
-	 vYMRQS4FTqtFD9wcObYWLxKDbm6UxzFWg9yLvWTyD96vCC4+CA40aRvfIK1ou5g4VZ
-	 QbiLfJAiAxcVMvq2s6W6/lq8mwO+To13qLs/cID0gM8eK/McN/JUG3KmuNSr/iX/d9
-	 qylnBVaT9pro+0oNm/A3t2nPVJPKhtmIcAYIeX6biYuhakO9dO9SMNiAueKiNtqtwQ
-	 guKa87AsPTSnzIPcc5Y8+SP0jKqi4z2i2kusTN4Mu3CEAnMw6LklK6On6M8p7eH6LZ
-	 g/bRKaSrwMOvw==
+	b=W1D0zkfGh+QZKX/QgNF9V2gbKR78mT/D76b3BA9AKDsciMY+y0uVhtivv2zVeiF8q
+	 oSk/JsI9/2euCXPBi/Ya8j8KXAGAMawoT4MJgffU8cIfIZW+LiFrW7fURAt14XZL+Q
+	 vVYjZclRe8h5KRkRhrOP0K4yjvTggLj7zXCG1uBO/8HZMf2Li+PN+FjFfsB5vHS7/+
+	 LEnVulYUZ+L1wR43zPIjAscYCe6Kem2cABcOtVT05fJfjZrCY/iaV3cM+diDC43kyf
+	 YROjfHk1r2VbuS8LVp+UfoFMsMlcyJCrnasIUFBYpveNCM15h7DBHNCk5zsci6l2Zm
+	 qEabPZlhSybnQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 5/5] perf dso: Replace assert with runtime check in
- dso__read_symbol()
+Subject: Re: [PATCH 4/5] perf dso: Guard against cache underflow on short
+ reads in dso_cache__memcpy()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260802142022.154219-6-acme@kernel.org>
+In-Reply-To: <20260802142022.154219-5-acme@kernel.org>
 References: <20260802142022.154219-1-acme@kernel.org>
- <20260802142022.154219-6-acme@kernel.org>
+ <20260802142022.154219-5-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 02 Aug 2026 14:54:27 +0000
-Message-Id: <20260802145428.445311F000E9@smtp.kernel.org>
+Date: Sun, 02 Aug 2026 14:54:33 +0000
+Message-Id: <20260802145434.3AA961F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,72 +48,107 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
+New issues:
+- [High] Returning 0 from `dso_cache__memcpy()` causes a permanent EOF rath=
+er than triggering a cache miss and re-read as intended, breaking reads fro=
+m dynamically growing files.
+
 Pre-existing issues:
-- [Medium] dso__read_symbol() fails to offset into the concatenated BPF JIT=
- instruction buffer for subprograms, unconditionally returning the instruct=
-ions for the first subprogram.
-- [Medium] The `is_64bit` flag for BPF JIT disassembly is hardcoded to the =
-host's `sizeof(void *)` instead of reflecting the target's architecture, br=
-eaking cross-platform disassembly.
+- [High] The RB-tree traversal in `__dso_cache__find()` is performed lockle=
+ssly, creating a data race with concurrent cache insertions.
 --
 
---- Patch [5]: [PATCH 5/5] perf dso: Replace assert with runtime check in d=
-so__read_symbol() ---
-commit 53ccbff8c0716057dbbc219812e142e5e96f1fe9
+--- Patch [4]: [PATCH 4/5] perf dso: Guard against cache underflow on short=
+ reads in dso_cache__memcpy() ---
+commit 06837abfd5cca9da5670ee54ec02e3164860900c
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-    perf dso: Replace assert with runtime check in dso__read_symbol()
-   =20
-    dso__read_symbol() asserts that len <=3D jited_prog_len, where both
-    values originate from untrusted file input. With NDEBUG, the assert
-    is compiled out, allowing an out-of-bounds heap read. This replaces
-    the assert with a runtime bounds check that returns NULL.
+perf dso: Guard against cache underflow on short reads in dso_cache__memcpy=
+()
+
+dso_cache__memcpy() computes cache_size based on cache->size, but a short
+pread can leave cache->size smaller than the RB tree lookup window. This
+causes a subtraction wrap-around and an out-of-bounds memcpy when accessed
+past the cached size. This patch attempts to fix it by returning 0 (cache
+miss) when the offset falls outside the valid cached range so the caller
+re-reads from the backing file.
 
 > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index a0de56c93592a..f3209f285db76 100644
+> index 207f8744aac97..a0de56c93592a 100644
 > --- a/tools/perf/util/dso.c
 > +++ b/tools/perf/util/dso.c
-> @@ -2024,7 +2024,12 @@ const u8 *dso__read_symbol(struct dso *dso, const =
-char *symfs_filename,
+> @@ -1002,7 +1002,17 @@ static ssize_t dso_cache__memcpy(struct dso_cache =
+*cache, u64 offset, u8 *data,
+>  				 u64 size, bool out)
+>  {
+>  	u64 cache_offset =3D offset - cache->offset;
+> -	u64 cache_size   =3D min(cache->size - cache_offset, size);
+> +	u64 cache_size;
+> +
+> +	/*
+> +	 * The RB tree matches using DSO__DATA_CACHE_SIZE, but a short
+> +	 * pread may leave cache->size smaller.  Treat an offset past
+> +	 * the valid data as a cache miss so the caller re-reads.
+> +	 */
+> +	if (cache_offset >=3D cache->size)
+> +		return 0;
 
-[Severity: Medium]
-This is a pre-existing issue in dso__read_symbol(), but should the
-is_64bit flag be based on the host's architecture?
+[Severity: High]
+Does returning 0 here actually trigger a re-read?
 
-Earlier in this function, it sets:
+Looking at cached_io() which calls this function, it seems to treat a 0 ret=
+urn
+value strictly as an EOF condition:
 
-    *is_64bit =3D sizeof(void *) =3D=3D sizeof(u64);
+cached_io() {
+    ...
+    ret =3D dso_cache__memcpy(cache, offset, data, size, out);
+    if (!ret)
+        break;
+    ...
+}
 
-If analyzing a perf.data file generated on a 32-bit target using a 64-bit
-host, won't this cause cross-platform disassembly to break because downstre=
-am
-disassemblers receive the wrong bitness flag? Could we dynamically inspect
-the target machine architecture from perf_env (e.g. e_machine) instead?
+If the file has grown and we hit this condition, won't this cause cached_io=
+()
+to terminate the loop with a silent EOF instead of reading the new data from
+the backing file?
 
->  			errno =3D SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF;
->  			return NULL;
->  		}
-> -		assert(len <=3D info_linear->info.jited_prog_len);
-> +		if (len > info_linear->info.jited_prog_len) {
-> +			pr_debug("BPF symbol length %zu exceeds jited_prog_len %u\n",
-> +				 len, info_linear->info.jited_prog_len);
-> +			errno =3D SYMBOL_ANNOTATE_ERRNO__BPF_MISSING_BTF;
-> +			return NULL;
-> +		}
->  		*out_buf_len =3D len;
->  		return (const u8 *)(uintptr_t)(info_linear->info.jited_prog_insns);
+> +
+> +	cache_size =3D min(cache->size - cache_offset, size);
+> =20
+>  	if (out)
+>  		memcpy(data, cache->data + cache_offset, cache_size);
 
-[Severity: Medium]
-This isn't a bug introduced by this patch, but does returning the base of
-the JITed instructions handle subprograms correctly?
+[Severity: High]
+This is a pre-existing issue, but I noticed a potential data race when look=
+ing
+at the RB-tree lookups in this file.
 
-If the perf.data file contains a multi-function BPF program (where
-dso__bpf_prog(dso)->sub_id > 0), this appears to blindly return the
-instructions for the first subprogram instead of the requested subprogram.
+In __dso_cache__find(), the RB-tree traversal is performed locklessly:
 
-Should this calculate the byte offset for the target subprogram using
-jited_func_lens?
+    while (*p !=3D NULL) {
+        ...
+        cache =3D rb_entry(parent, struct dso_cache, rb_node);
+        ...
+        if (offset < cache->offset)
+            p =3D &(*p)->rb_left;
+        else if (offset >=3D end)
+            p =3D &(*p)->rb_right;
+    }
+
+However, dso_cache__insert() modifies the RB-tree while correctly holding
+the dso__lock(dso) mutex:
+
+    mutex_lock(dso__lock(dso));
+    ...
+    rb_link_node(&new->rb_node, parent, p);
+    rb_insert_color(&new->rb_node, root);
+
+If a lockless reader in __dso_cache__find() traverses the tree concurrently
+with a cache miss that triggers dso_cache__insert(), could the reader obser=
+ve
+inconsistent tree pointers during the rb_insert_color() rotations?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260802142022.1542=
-19-1-acme@kernel.org?part=3D5
+19-1-acme@kernel.org?part=3D4
