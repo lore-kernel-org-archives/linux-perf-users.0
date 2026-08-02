@@ -1,265 +1,136 @@
-Received: from CWXP265CU009.outbound.protection.outlook.com (mail-ukwestazon11021118.outbound.protection.outlook.com [52.101.100.118])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A7425B0AE
-	for <linux-perf-users@vger.kernel.org>; Sun,  2 Aug 2026 20:18:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.100.118
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785701889; cv=fail; b=WKoki4hKAIpMTCKbgdDnIAYx0OsMx/Os9hvrhGs+c7WAmKkbBK221emSB5Bvp6vROoQCVW16n3Dr1gwRydEIXA6IgQhkaGc7aNfikhJSf6FlpiXvqlZQkPBgliK68TqoGXtif5A8tiV3ROy5rTGR+xnHXINPNfqdwuJSqPpZZVg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785701889; c=relaxed/simple;
-	bh=aTt2pym8qCVVRqRs6KdZjwaHPGbAc81JAeCZO38WNVA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=qGqiBmsQQfSEd1qXPVu7R+t8hK+DpZsF9eHOQl0RgOh8li6G+ZqT6wdjTyOteobtIbZ1l/or4ifR/i+cwoS1OKjm5wmyJtO3K3vA5Ftr73IzBMU0FpuUhJKmcwlj9t2dga09O9+PHXczTJ3lc99HfGSC4J3Z9kU+Jg4WnYMpJBw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.100.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nmxfgaMrmBNUoRotns+NzxgrUfI4meoLKf2MRbYODKm6m2CZ0CA8SQt+qxehStpOSy4fS/VbSV6XtKKvZ75mM5IxvbTw+xNKfXIzXwLbtgX7vYGaDfVC8tKa+liivktnhwZ188zkvyFna/bkiqv42Y0W/48Bt2z/XmMnn2MxOACUUiGzh6lYm1Aoi/ku8r+jLXYc3ffSqNwaWAjRMtvOTphR+yCpkkiyz50JzYyp2YJy7S2ythHcyfoJ1+1JuctEmOXy3DflG1JAJmA35lZpC70unMEMZpAHKU7BMSs5nkuK3jsBL1vnP+EjsiXnoSVAevibukmeTC3L2ysI2rRS7g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=3qOK34rBk8ol2sjcyTNDWR/yRu3edcAo/gqA6VrPWp4=;
- b=AWNhgHU3UcxHpGHqSRffuLSQ7aAeoiVlW0Z7y4FHJaafRACEK+cy47Wy6N4uuQxXpIBQ6TgvsAM03AjQKF45y6Vu/aVhMjjc0jqDCmAAOo1vn/j5K3bhTApCkPdDXTDz1yiP+lLz9EKnE0t4eeqigR+MBhtLdo1ebI9tKY+FJxRB5BwI1iV9qsx31MUiKP/IN+wnag02zsYioL7O6GY7EWmgqydU4Ap04ouIcDrWzEbPCd551lkXpHDH1vxzAFDEh/JvXCkcQzhzO8HMJCtKUvLKUzZ1gtnsXJb4yf8ZJl//F1XhPLlqV/wfP8PrePdMHa5U4ZIuFcAN332Jbp6XxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by LOYP123MB3008.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:ec::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.17; Sun, 2 Aug
- 2026 20:18:04 +0000
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0270.016; Sun, 2 Aug 2026
- 20:18:03 +0000
-Date: Sun, 2 Aug 2026 16:17:59 -0400
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: namhyung@kernel.org, acme@kernel.org, irogers@google.com
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v6 2/4] perf sched: Handle missing trace samples in pipe
- mode
-Message-ID: <p6d7han43ahvb2f2qwzxqva3ubf4tcj463oirh6wdowbs4qpfq@vczv7tuuc7vg>
-References: <20260801234008.176724-1-atomlin@atomlin.com>
- <20260801234008.176724-3-atomlin@atomlin.com>
- <20260802000140.90AE91F00AC4@smtp.kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260802000140.90AE91F00AC4@smtp.kernel.org>
-X-ClientProxiedBy: BN9P220CA0019.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:408:13e::24) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:183::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE23233F582
+	for <linux-perf-users@vger.kernel.org>; Sun,  2 Aug 2026 21:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785704912; cv=none; b=Lpg91TSqHGsyYTgLQqn2kFtkhLk4F/s0g0KlvK026zJuxw8f5vlVYCZca+XMT49dwlInE35Y/mwfZ7FhSADD7ifX5SbtLVMnAuRihK0yMZeJitplK+ykoNdH+WYg8OjgW3Zdh8FATM/vAmc4yTRW2TAV7zfHArexHxzmJiK5QM8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785704912; c=relaxed/simple;
+	bh=V5r7QIrQPvds6l+pD3FjfXC43XlRt28TuckiYHbmcJI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZUbftqFdM0Z62aRm76GDaGqjH7G635E7GHEMeijCnuoEgNo8TPDbhJoJ2R0b4bSs9XgmrEH2c6zz7FtFRR8Dni2HyR/YrHbozTVhq2NHi0JNbNLPbErN4Ah5fWhUyb8SNZKmIQNkudfLmlbWCXuEV3JE6MkINQ7YWFSU9KvLu+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jCkM/bRo; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCkM/bRo"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4957eefd361so9632035e9.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 02 Aug 2026 14:08:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785704909; x=1786309709; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=fFuId5/et30IIYrYQj18+p/LDPIR45GxUSBdCpaynGE=;
+        b=jCkM/bRoilSuD9BlBxZyWj1a9HuDTenH6psopcH2fNfI2kL7b/mnB4KXG8R/M0F8Z7
+         G+me/lmHhKvEejxPsyZurkED/YOZLMZmajKznAKkbK973pzmAuv9t46Griw4nJ3b+U3n
+         Ng/HOI46RCazvsOn3wGWDTyS9H4YVGIJShxpwCAsYtgqZqcAvlBijJxnCkssKHkYnFDe
+         oap1CsJk43zmfmyQ0VM+jLyNjKwXl1avsLgLDIqj3iSBDbQrySvXOYFphEqH0eX1WG8W
+         bUN2z6vBSAj581mkTKhUIJTZtIuzR5mnKupL/JrdG479jKaA0OzxYu+zySeNE0lOOWap
+         77EA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785704909; x=1786309709;
+        h=content-transfer-encoding:content-type:mime-version:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=fFuId5/et30IIYrYQj18+p/LDPIR45GxUSBdCpaynGE=;
+        b=czIxw3fTC0yYALqhDasjXYH4Mmx/8XKq6vpfTnIx/h2Qj8q9ZE4N5qZN8xIZAdwPoR
+         x86/ruAXm5z1B1C7aJaWaR/abnITB7vDGxl0pabzhCi9YA7Yr00Wtpw4H89S6sE1j8EA
+         Aa6UbcGgIn45nTnrSb9C5nG63fGJA+/aR0eFI8kXY2tt2xZM/BbA5UWS948w6WkzlIMc
+         7WTVjF8vURW0hXrBajlux5WHW6LF57RHGt03z2jssP2/t8ssbqgQVlaB32QgxyBnD115
+         14sJC7iC6snjaWlUr//MNm/d2IJyGU1cb8ufC0cBXCH+GZAEc9FtCyDw/d8lk9Z+WhzG
+         Xbuw==
+X-Forwarded-Encrypted: i=1; AHgh+RpDZ4Qhk68U72ZTRU9vGJ4mC7pojS1myFFP4BHraC3kc0BwtW2nTyugUCd2yrEvPGFO8b2nHC/Z45vMJAK+Lgj3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5GNqFT3oWXDVa73pQmD3WhA6qjh0145DcNMTdMdY55xYQWLQj
+	n9ph8YTRDeP2Y0/oO3R8TqvnLAshxcnC/5j5Puc2ylBvSu3POuFtOwLo
+X-Gm-Gg: AR+sD13jvJ3YJrdodJGwivIKDMPClGhpzGsPeWxAUhlgEynxw/38+wfjOp9NKskWXL9
+	OuNOULVPx4XSnzbw4d0f11l6AIgPkBFbKgnF3DMubkYdJDsBF2WcABuLjYsUULlj2FMRnb3YnGC
+	QQoH6xr/BcQ1UYN8O1Lt6dEfpW0c9LMLefbrD86h4RyQCmE7nYN6X3AKtW3GAFfGzWuJfIgDcra
+	ay4OdOm4HYFWlvc5yxbAAxo/6qyY14A8J3bV0rd5ptO9OwEchcADyHw9gMGkrUqjXi8gbANKzvL
+	hNWRj91hsU/x5BVQH1nEKz/FvXFfuOBtL4/fnEnBkK/MLvfbjDOuEYF3ai8a4yts7qvEuCLZ0ip
+	9T6Fz30p2uwm8iV20Pm07kZichUzd2zIlupSJXoM+jaPVfeugpraOcDTYA/An+vqiFSRaizrsCr
+	dphZM+DU+rjcg6sHIw75alljiI6PWpER41VxgH/6pifw5XV2IQpvwOfoqQq5Kx/Qwcu9W7NCnUM
+	E2Qsx6lFEVa/NAMWqfbbf1usA==
+X-Received: by 2002:a05:600c:840f:b0:495:5fdf:2075 with SMTP id 5b1f17b1804b1-4980c5fa29amr140848065e9.0.1785704908822;
+        Sun, 02 Aug 2026 14:08:28 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49808691014sm163988045e9.11.2026.08.02.14.08.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Aug 2026 14:08:28 -0700 (PDT)
+Date: Sun, 2 Aug 2026 22:08:27 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian
+ Hunter <adrian.hunter@intel.com>, Clark Williams <williams@redhat.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, Arnaldo
+ Carvalho de Melo <acme@redhat.com>, sashiko-bot <sashiko-bot@kernel.org>
+Subject: Re: [PATCH 1/5] perf dso: Guard against errno==0 when
+ dso__get_filename() returns NULL
+Message-ID: <20260802220827.38ea6e32@pumpkin>
+In-Reply-To: <20260802142022.154219-2-acme@kernel.org>
+References: <20260802142022.154219-1-acme@kernel.org>
+	<20260802142022.154219-2-acme@kernel.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LOYP123MB3008:EE_
-X-MS-Office365-Filtering-Correlation-Id: 03a9cc2d-e9bb-40fb-7c63-08def0d327dd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|23010399003|366016|18002099003|22082099003|56012099006|6133799003|5023799004|10067099003|4143699003;
-X-Microsoft-Antispam-Message-Info:
-	aAtgf9WkaSzOcqeH06k5EgqNJwImvS3yjv7UUiNC5YC+u3rRNsI+SPwIp0nBPBdg+H7+ZXclD46zRMi17B/KJVVRdVGmA7KHTS+UmRWlfR4frbI9dL3J5ENaWSgxnV24/vbTPcRNxcS/l7r/V8GUtlzw/5jiaRExurXqtafhWe5t4r8do97To6HN5PbEcpfDAHuQhkXgICoQ/dnR0qGbKjDqBCt/DNi8iPckGc04k+ZTAVfeiRK0Hqgc5THow6Msgez3fNGYWTgENy+lII78DWo+BCtPmqvyB9JMQbituWcvqoyCHtMKqv475/ngzgoFaVKfC81tv0/g8gtN/lI+PsXTonCHsAyd3ndFFsCWAJ5PwaOjOinIEbOE5UJo/LoTuhHqjfhNutjP7azUC5/bRPAU6HARJF3wnkwUqtGeKH82cvcyHYN21Yn1J5VEYtRGDuRpAEKFdYm3fUBqUvPd352ix4FGFMMXHjN8CGENFgn7BrTPnAsYFWjBnHqTytM9QpnmT1ISvkTO00U+Qtu/TdFYvBrdVUauIEwbFw+Cs+XnxD4q6HhBPgkE82Hx9FFSSvrHKycrZZGdYZeBitrjppR0aUhphovBCRQaY/Ckskk=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(23010399003)(366016)(18002099003)(22082099003)(56012099006)(6133799003)(5023799004)(10067099003)(4143699003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?T3ZkUzBDTFl3WFhzY2hLcEFhbkxQV3ZlUmxIN0VQeGUzUkoxNUZSOGdRdFdH?=
- =?utf-8?B?Qk4xR0ZJZmJJelNMd283S2h2a2FjeThZZWRHdlVtY2cwcE1aQzRXcCtYaEtH?=
- =?utf-8?B?M0hNOEhvV3RYSzl4T2d4WHBqWG05aXp2dlpUZnpJNlVXSmtlZnFpRmI5a1Fz?=
- =?utf-8?B?OVZJNjhSSEpGN294ck1QQk1CQU1CMG1kSVhIdnd4d2ZoY1NzT2dHVTI1cU0r?=
- =?utf-8?B?VEdQY0MvWmhlbUhDYklsNUQvS1NpUEYrUmFXb28xN25wWGNNaEtsUVQ1aFo5?=
- =?utf-8?B?QWJUT3QyQ1dHNzB3RGRYZGhLa1hQSlRJMWVldi82TWJ1SGdXSzhzN24rUFRD?=
- =?utf-8?B?YVorWlhscDM4MkZOdmdnOXozTVhmd1BhL0RNR2JOUHFhMUd4WHRDSmpYM0xO?=
- =?utf-8?B?eGRnSWQrWWx4bmxudkZ2SlRacUhNcUFTaCtqUFFSSk9wcnRWOWl1RHNxaWhl?=
- =?utf-8?B?RGpGa1BqTVpvYnpLdzFiU0Mzb2Y3cWxrQ09XaVRLbnc0Qk0zOFMxVzhSOWdo?=
- =?utf-8?B?WFMzanFodXcweFMvbW1NdHhWdnFDMFFnRFdSa3VvVkJ0ay9HdXJCSXBGbXMr?=
- =?utf-8?B?QUFENWxic0cxSUZVbEhRSW5tT1B6QWd4eFM5K0xvZHFRNG5ZWnZFNWVRUUVn?=
- =?utf-8?B?a0dvQ2RmUitybk1uOFdDS1FpTFBlM2xoQ2tXMk9QRk1JMk1wQUl2KzFWN2d0?=
- =?utf-8?B?NVIrdU1yYXRXWkRTWDRlMk5PNkN0N1Zrei9ic0FzNk5tMFhtanpTamRFa3Vr?=
- =?utf-8?B?WXh0Q29iclBJOUlva1dTMVRYR2lGckhPWHlmNDQvaVROVks2RU4xek9ETTV5?=
- =?utf-8?B?cGZ2TmF5Y05hWXV6MlpKaHlGWjdNREl2Z0FPUmZRazV2R1d6YXNYdHNKcUZN?=
- =?utf-8?B?dXc5YkpQK3haM3NscHNCMzJlSDNhVTVyWFFGRDNObjdrclZZRmNJRi9PTjNi?=
- =?utf-8?B?SXVaVjMzS3lDWXpTaVZhbm95a1pLYWZwam5ycEFNRFFrdWlwUXJybUNLTEJh?=
- =?utf-8?B?ajZ6RStieWg1QzFKaTB3WnRUWlJhUzdIY0kyTGlNYitYa2xJZnJuVWx2R3Bs?=
- =?utf-8?B?NEJlTGM4QnNpVklXd2U2U3Uxam5QOGpBL0t3S3YrUFhUSHFyVXpuUDI5Qjdr?=
- =?utf-8?B?eWJYWCtKdWdjQno4MWFhNGZOQmkxV2w2dEZIS2taL093N3FzclIrQTRJZ1Zp?=
- =?utf-8?B?NlE1TEtXY1d6NkFleURaYnBDYVdiWjUzdG4xWXdNdENid2tkaU1uekV6c1BP?=
- =?utf-8?B?SW5zdEw4cVFka1YrV3BmbzlhMUFGV3NIZGJZRWVuRyt0dlFPQSt6V2ZiaURS?=
- =?utf-8?B?WmUzMnJKc1RRUVNzTHRwUzRHUmZZTERmSzRjMWNJVHlOdkg1aTgzSkxlM09s?=
- =?utf-8?B?d093V3MvNUZYR2g5MGd2YmhPdDJVeXBSK2R0VERsZEJ2TExldHV4QUp5dnhk?=
- =?utf-8?B?OVUxVjdwdXh4c2tMb3VVdno0NTNEdVVZVUxyMDVHNlVGNysvTzY4MFE2Y1BQ?=
- =?utf-8?B?L0I3WXJwVDlOOXExQXU4M1J2VytzQzVWVjhpN0dESXMrZTVFazRHTDd0MGx0?=
- =?utf-8?B?d2ZtMjFNMzFBUi83VFNRaWc2RmYvZ2U0U1RLMVo2cXc3NzNLNVJ4UGNIdytW?=
- =?utf-8?B?dDRlOXBVT2JFazVCVERKWFF0T1E0Qlh3LzlwY3pOSjhSQ1V0ZDhSNGsxUDk1?=
- =?utf-8?B?RGJnczVHRHR4ckR6VEQvYUhRZkNXQ3BQemFlQ2hHVDZ1QlBzME9WOGNqMHFL?=
- =?utf-8?B?OEF3TTZpK0hORDRab1hjbkxFOFJHcHVJaTUwTkJyek5uRUZqTUFnSkVPOW5C?=
- =?utf-8?B?TFp5WVA2UWZPM1pQN1RneFYxY2pSdDBLMjRGeFFYQnB0SlBqSGVpRkZmdzVD?=
- =?utf-8?B?S1B2TGltdDdQM2JBdE01NkpYcXVwTW5ObFE3OXZQbytqZjhRbUJtVHlYWGhB?=
- =?utf-8?B?b2c3RSs0NjZkaUhYdzBqbnVvRVlxZE5zRUdoM25pYkRIRW1VcG9DOXdOcCt5?=
- =?utf-8?B?MmpOVDJyckFTSUMrQ2hLc1VxVm1IczhEMTFTdkdxSEVGWjFUZzVvMkNlTEpF?=
- =?utf-8?B?S1U3MmlKTEppQkE1dU9TbDBVTncvT3Fja1BEZWJ5V3FteDZuY3FjSGJ6LzRI?=
- =?utf-8?B?ekY5Y3BEM1IxVTRyUVdiOEh3ZDdVaUR5NUdkMkczU3BzNDNxa3pseDBjQzJP?=
- =?utf-8?B?S1JnOGR5V3RZN3llQitSYUVEUVhyc2d4VkZMQmRBL3VNKytvK2F0T3JHYk5O?=
- =?utf-8?B?Rkc2RUZZdkVFc1lZZkZjdzB6ZWdvRW9iekE1NEtCQWVVRlZFSnI3MG90cktn?=
- =?utf-8?B?VjV1dXA5TjBJcGZpREhhYXZLQU85UTQ1WnMrVlZKYldPNGxSL3piUT09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 03a9cc2d-e9bb-40fb-7c63-08def0d327dd
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Aug 2026 20:18:03.4649
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JYXMHOJrUzzGEINYpUilYN5D16o5UZUcedLG9yQ3iTz7Dwa8GbGtIDMRMyh9BeXpf9KzYysCXt+6S+gnNEi4CQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOYP123MB3008
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Aug 02, 2026 at 12:01:40AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
-> 
-> New issues:
-> - [High] Using `evsel->handler == NULL` to conditionally initialize handlers inside the sample processing hot path causes repeated O(N) evlist iterations for unhandled events and drops late-arriving tracepoints.
-> 
-> Pre-existing issues:
-> - [High] `symbol__init` accesses the `perf_env` before it is populated by pipe feature events, leading to incorrect host-fallback initialization for cross-platform traces.
-> - [High] `perf sched timehist` remains completely broken for pipe mode streams.
-> --
-> 
-> --- Patch [2]: [PATCH v6 2/4] perf sched: Handle missing trace samples in pipe mode ---
-> commit bdcbf92a5b81c957ee21cce440488c2da3569c14
-> Author: Aaron Tomlin <atomlin@atomlin.com>
-> 
-> perf sched: Handle missing trace samples in pipe mode
-> 
-> For pipe mode streams, event attributes are received dynamically during
-> event processing, meaning session->evlist is not populated prior to
-> perf_session__process_events(). To handle pipe input correctly:
->   - Register the missing .attr, .tracing_data, .build_id, and .feature
->     callbacks in cmd_sched()
->   - Promote the handlers array to file-scope (latency_handlers[]) and
->     invoke evlist__set_tracepoints_handlers() dynamically inside
->     perf_sched__process_tracepoint_sample() when evsel->handler is NULL
->   - Perform the trace check post-processing when handling pipe data
-> 
-> > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> > index 94a323da0799a..0abf9f1f3c2e2 100644
-> > --- a/tools/perf/builtin-sched.c
-> > +++ b/tools/perf/builtin-sched.c
-> [ ... ]
-> > @@ -1946,6 +1955,14 @@ static int perf_sched__process_tracepoint_sample(const struct perf_tool *tool __
-> >  	struct evsel *evsel = sample->evsel;
-> >  	int err = 0;
-> >  
-> > +	if (evsel->handler == NULL && sample->evsel->evlist) {
-> > +		/* prefer sched_waking if it is captured */
-> > +		if (evlist__find_tracepoint_by_name(sample->evsel->evlist, "sched:sched_waking"))
-> > +			latency_handlers[2].handler = process_sched_wakeup_ignore;
-> > +
-> > +		evlist__set_tracepoints_handlers(sample->evsel->evlist, latency_handlers);
-> > +	}
-> > +
-> 
-> [Severity: High]
-> Does this cause an O(N) traversal on every sample for unhandled events?
-> 
-> If a tracepoint is explicitly recorded but not in latency_handlers (such as
-> sched:sched_process_fork), evsel->handler will remain NULL. For every sample
-> of these unhandled events, this condition evaluates to true.
-> 
-> This repeatedly triggers evlist__find_tracepoint_by_name() and a call to
-> evlist__set_tracepoints_handlers(), which immediately aborts with -EEXIST.
-> 
-> Could this drop late-arriving tracepoints and cause a significant performance
-> regression on the event processing hot path?
-> 
-> >  	if (evsel->handler != NULL) {
-> >  		tracepoint_handler f = evsel->handler;
-> >  		err = f(tool, sample, machine);
-> [ ... ]
-> > @@ -2011,14 +2020,17 @@ static int perf_sched__read_events(struct perf_sched *sched)
-> >  
-> >  	symbol__init(perf_session__env(session));
-> 
+On Sun,  2 Aug 2026 11:20:18 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Hi Namhyung, Arnaldo, Ian,
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>=20
+> __open_dso() computes fd =3D -errno when dso__get_filename() returns NULL.
+> Some failure paths in dso__get_filename() (e.g. binary type mismatch)
+> return NULL without making a syscall, leaving errno at 0 from a prior
+> successful call.
 
-This is a valid identified problem.
+Except that errno isn't set to zero by successful syscalls.
+It is only ever set by ones that fail.
+The application may set errno to zero (eg to detect errors from some
+library functions).
 
-Because unhandled tracepoints (e.g. sched:sched_process_fork) are not in
-latency_handlers[], evsel->handler remained NULL. This caused every
-subsequent sample of an unhandled event to re-trigger the O(N) evlist
-search and evlist__set_tracepoints_handlers() call on the sample processing
-hot path.
+So paths that don't make syscalls will be returning a 'random' errno.
 
-Furthermore, __evlist__set_tracepoints_handlers() aborts immediately with
--EEXIST as soon as it encounters a non-NULL handler (e.g.,
-sched:sched_switch), which prevented handlers for late-arriving tracepoints
-in pipe mode from being registered and caused their samples to be dropped.
+	David
 
-To fix this, I have updated perf_sched__process_tracepoint_sample() to
-perform a single-pass, per-evsel lazy handler lookup and assign a dummy
-sentinel handler (process_sched_ignore) for unhandled events.
+>  fd =3D -0 =3D 0, which is stdin =E2=80=94 subsequent code treats
+> it as a valid file descriptor.
+>=20
+> Fall back to ENOENT when errno is 0, ensuring fd is always negative on
+> failure.
+>=20
+> Fixes: eba5102d2f0b ("perf tools: Add global list of opened dso objects")
+> Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Assisted-by: Claude:claude-opus-4.6
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/util/dso.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 2309196d8df3111c..e087a89066bdbc02 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -643,7 +643,7 @@ static int __open_dso(struct dso *dso, struct machine=
+ *machine)
+>  	if (name)
+>  		fd =3D do_open(name);
+>  	else
+> -		fd =3D -errno;
+> +		fd =3D errno ? -errno : -ENOENT;
+> =20
+>  	if (decomp)
+>  		unlink(name);
 
-This guarantees that evsel->handler is non-NULL after its first sample,
-eliminating the hot-path O(N) traversal, bypassing -EEXIST aborts, and
-ensuring late-arriving tracepoints in pipe mode are correctly bound.
-
-> [Severity: High]
-> This is a pre-existing issue, but does this early symbol__init() call break
-> cross-platform pipe mode?
-> 
-> In pipe mode, perf_env is populated during event processing. Calling
-> symbol__init() here accesses an uninitialized env->arch.
-> 
-> This causes perf_env__os_release() to fall back to the host's uname(),
-> permanently poisoning env->os_release and vmlinux_path__init() with host
-> paths.
-> 
-> > -	/* prefer sched_waking if it is captured */
-> > -	if (evlist__find_tracepoint_by_name(session->evlist, "sched:sched_waking"))
-> > -		handlers[2].handler = process_sched_wakeup_ignore;
-> [ ... ]
-> 
-> I also noticed a related pre-existing issue in perf_sched__timehist()
-> where timehist remains broken for pipe mode streams:
-> 
-> tools/perf/builtin-sched.c:perf_sched__timehist() {
-> [ ... ]
-> 	/* setup per-evsel handlers */
-> 	if (perf_session__set_tracepoints_handlers(session, handlers))
-> 		goto out;
-> 
-> 	/* sched_switch event at a minimum needs to exist */
-> 	if (!evlist__find_tracepoint_by_name(session->evlist, "sched:sched_switch")) {
-> 		pr_err("No sched_switch events found. Have you run 'perf sched record'?\n");
-> 		goto out;
-> 	}
-> [ ... ]
-> }
-> 
-> [Severity: High]
-> This is a pre-existing issue, but does this strict check break the
-> perf sched timehist subcommand for pipe streams?
-> 
-> Since the evlist is unpopulated before processing pipe events,
-> evlist__find_tracepoint_by_name() fails immediately, causing the timehist
-> command to abort.
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260801234008.176724-1-atomlin@atomlin.com?part=2
-
-The above are valid too.
-
-However, I will address all of the above in a separate series.
-
-
-Kind regards,
--- 
-Aaron Tomlin
