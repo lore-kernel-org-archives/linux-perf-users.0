@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 887583BD659
-	for <linux-perf-users@vger.kernel.org>; Sun,  2 Aug 2026 14:58:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 268AB3BCD14
+	for <linux-perf-users@vger.kernel.org>; Sun,  2 Aug 2026 14:59:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785682710; cv=none; b=dqt0TNwL3yRXc8UZ+fSp3mgiNVM3nPuMcbylU5K6pUpdD9R8utFr2b+LyhxybHAIlbHcU80oFA7u8ocajf6rL3FNmJB823BIcwOxyBjlsU9GK2ZWye2+6Qaj9Ws+dd2doFb1fwd2gd3xMRCSfbjuYqK5goZMoLHJIkfHbQXLb1g=
+	t=1785682798; cv=none; b=DlL46fanqFPlHcGo+Ng2orlzbx/REd4P+b3dgbZJdEnmmxpJ6Xqb/Fydz6SIVqN3K1+gOu7F4i3RS1Rzg+LzvyKNjAZTVCRAvjA2PTunt+AXwT8H9wLfoVyE35xD+Z79liOlsldQk+rErFmLlEBCGjIpohXkgNEZhs4dXwg6ne4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785682710; c=relaxed/simple;
-	bh=DmETugVpc6eOXbL7itcAMF/ApN594fH+JBiY5Fmrnfo=;
+	s=arc-20240116; t=1785682798; c=relaxed/simple;
+	bh=F3Ku8RVbjM+eK4wNRLi75OD7lI7hfsDFAM9dErxHj6I=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=CAj3D+sULNzw7lmX9oaAlznSH+G536hycOF/FB0S8zcZb5Wbu9Z+0yx9QvBgYaQl53qBkc6YCtXU11nkn0GnpGNcG0qcJViq2WjFxNKcUiH3xKvEy6dOqsdx8pOU3Pn3/qbYlDrwS4uhaMDsuwZzKzuGS2uHZfLuEgdSai31R/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GvPHEW9C; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=dUFlqbNGDzp6ySdto4n8DAb5E0v8MPYqIsC5yvvSzzgePOVYMsbiRZqbPTyUqgTk56AWlVvemV+GvLE8WShdYoOlyEPfznIPVBtwHlS+0gdNkC2PQ1GPmnWLxFp+cePKcR7uonnisg22bq8IUUL0lsAGtgqXmkHqUvmuA916xZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EvYMXmy8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GvPHEW9C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 439EC1F00A3A;
-	Sun,  2 Aug 2026 14:58:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EvYMXmy8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 481701F000E9;
+	Sun,  2 Aug 2026 14:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785682709;
-	bh=BFr5iGmOKi/4EzPxQKvSEhgoJu5I24KiHGmcOX1KvH8=;
+	s=k20260515; t=1785682796;
+	bh=nYzWKFkR95ds5VM6erlpUCoenNl8besWLxTXva8O/+E=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GvPHEW9CdQKY5kj4KFU9XU3AyqoAV5hAUSMV8HjMmpsddC+uDdveSDiwYRZy4GPKG
-	 3TfkdFwlKyuvFQGLYsCzLh7CXxSt4rfC5fnKkkj7BOx7VHFfQsSSxSa0De130rQHdn
-	 4NO+omedXjhM0lsfUY8KbVlrn1iDZv7o4AWAm758h3hQfNl+o7o4TLqLp/ygD3KVW5
-	 oDMV33RWCDj1FvgbzFeuEW6ukYQn/a9V531CRVVcLljIMrnio6oe0366jlz3oX3dQ0
-	 82Q1eMPUZ71AW/x2Y6OVuwzjifK9H5r2ESI5rQ9PBukaTZ11vMhTG8l2q8rIMn8b8C
-	 HPRl55s2YsdZg==
+	b=EvYMXmy8Z8Lk6m7gtNI/giQJpt2XxfjDd2ulkAdW4aan4r8WzERKZvfXrouPKr741
+	 dfZQoSyezwXoKCwwFPvOo2NJlFn0oGR8q7rUHYlwO2noW2mQsDaR6lMsrwoNJ5bvfv
+	 t1YOSJiJY6SVZ4TyfVBRN2t/5I+e6Lb5K1TLv37UB9wsyUYUNjN1SRyPcUeZ/r5opY
+	 0BU8F4QhXJ8AyOCtn6w3HNfTefwjjwZm5KT9joHiRfldi9SOKHi2x7tpsxtLNgpP1M
+	 4pYFcHdDN/0c/G8dz0CnERmBqrkk3VNaTXU/UU3e4l+w5+Xh9Y9inZYTykhQDNNbYL
+	 YcagNv0tfJ0xg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/5] perf dso: Guard against errno==0 when
- dso__get_filename() returns NULL
+Subject: Re: [PATCH 2/4] perf header: Use write lock when translating BPF
+ prog info pointers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260802142022.154219-2-acme@kernel.org>
-References: <20260802142022.154219-1-acme@kernel.org>
- <20260802142022.154219-2-acme@kernel.org>
+In-Reply-To: <20260802142712.154726-3-acme@kernel.org>
+References: <20260802142712.154726-1-acme@kernel.org>
+ <20260802142712.154726-3-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 02 Aug 2026 14:58:28 +0000
-Message-Id: <20260802145829.439EC1F00A3A@smtp.kernel.org>
+Date: Sun, 02 Aug 2026 14:59:55 +0000
+Message-Id: <20260802145956.481701F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,99 +48,100 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
-New issues:
-- [Medium] Incomplete fix in `__open_dso()` causes error swallowing in call=
-ers by returning negative fd without setting `errno`.
-
 Pre-existing issues:
-- [Medium] Data race on adjacent `struct dso` bitfields leads to corruption=
- and a TOCTOU mount namespace leak.
+- [High] The patch changes `down_read` to `down_write` to protect in-place =
+pointer mutations, but the fix is ineffective because primary readers acces=
+s the data locklessly.
+- [Medium] `bpil_offs_to_addr()` permanently corrupts the in-memory `info_l=
+inear->arrays` mask when restoring a valid object containing empty trailing=
+ arrays.
 --
 
---- Patch [1]: [PATCH 1/5] perf dso: Guard against errno=3D=3D0 when dso__g=
-et_filename() returns NULL ---
-commit db31953321ccfc3f2f28e5db31230d5fef57578f
+--- Patch [2]: [PATCH 2/4] perf header: Use write lock when translating BPF=
+ prog info pointers ---
+commit b51042073da80b7c616b5e20db21243852bbccec
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf dso: Guard against errno=3D=3D0 when dso__get_filename() returns NULL
+perf header: Use write lock when translating BPF prog info pointers
 
-This commit updates __open_dso() to fall back to ENOENT when
-dso__get_filename() returns NULL but leaves errno as 0. This ensures fd
-is always negative on failure.
+write_bpf_prog_info() temporarily mutates pointers into file offsets,
+causing concurrent readers to dereference invalid addresses. This patch
+upgrades the synchronization from a read lock to a write lock during the
+translation window to exclude concurrent readers.
 
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index 2309196d8df31..e087a89066bdb 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -643,7 +643,7 @@ static int __open_dso(struct dso *dso, struct machine=
- *machine)
->  	if (name)
->  		fd =3D do_open(name);
->  	else
-> -		fd =3D -errno;
-> +		fd =3D errno ? -errno : -ENOENT;
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 091d8f7f6bd2c..70ba9570e3179 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+> @@ -1120,7 +1120,8 @@ static int write_bpf_prog_info(struct feat_fd *ff  =
+__maybe_unused,
+>  	struct rb_node *next;
+>  	int ret =3D 0;
+> =20
+> -	down_read(&env->bpf_progs.lock);
+> +	/* write lock: bpil_addr_to_offs() temporarily mutates info_linear */
+> +	down_write(&env->bpf_progs.lock);
 
-[Severity: Medium]
-Does this code need to explicitly set errno to ENOENT as well?
+[Severity: High]
+This is a pre-existing issue, but does upgrading to a write lock actually
+prevent concurrent accesses from seeing the mutated pointers?
 
-Callers of __open_dso() appear to check if the returned file descriptor is
-negative, and then compute their return value using errno. For example, in
-file_read():
+Looking at perf_env__find_bpf_prog_info(), it acquires the read lock but
+drops it before returning the node pointer:
 
-tools/perf/util/dso.c:file_read() {
+tools/perf/util/env.c:perf_env__find_bpf_prog_info() {
     ...
-    fd =3D data_file_open(dso, machine);
-    if (fd < 0)
-        return -errno;
+    up_read(&env->bpf_progs.lock);
+    return node;
+}
+
+This means callers like machine__process_bpf_event_load() will dereference
+the pointer locklessly:
+
+tools/perf/util/bpf-event.c:machine__process_bpf_event_load() {
+    ...
+    u64 *addrs =3D (u64 *)(uintptr_t)(info_linear->info.jited_ksyms);
     ...
 }
 
-Since errno is left as 0, callers like file_read() will evaluate -errno
-to 0, which incorrectly reports EOF instead of an open failure. Should we
-update errno directly?
-
-[Severity: Medium]
-This is a pre-existing issue, but can the adjacent bitfields in struct dso
-cause a data race that leaks mount namespaces?
-
-Looking at the struct dso definition:
-
-tools/perf/util/dso.h:struct dso {
-    ...
-    enum dso_binary_type symtab_type:8;
-    enum dso_binary_type binary_type:8;
-    ...
-}
-
-If one thread calls try_to_open_dso() and locklessly modifies binary_type,
-while another concurrently modifies symtab_type holding dso__lock(dso),
-the concurrent read-modify-write on the shared memory word can corrupt
-binary_type.
-
-This corruption appears to break the namespace exit check in open_dso():
-
-tools/perf/util/dso.c:open_dso() {
-    ...
-    if (dso__binary_type(dso) !=3D DSO_BINARY_TYPE__BUILD_ID_CACHE) {
-        mutex_lock(dso__lock(dso));
-        nsinfo__mountns_enter(dso__nsinfo(dso), &nsc);
-        mutex_unlock(dso__lock(dso));
-    }
-    fd =3D __open_dso(dso, machine);
-    if (dso__binary_type(dso) !=3D DSO_BINARY_TYPE__BUILD_ID_CACHE)
-        nsinfo__mountns_exit(&nsc);
-    ...
-}
-
-If the bitfield gets corrupted during __open_dso(), the exit check might
-fail, skipping nsinfo__mountns_exit() and permanently stranding the thread
-in the wrong mount namespace. Should access to these bitfields be protected
-by dso__lock, or should they be separated to avoid sharing memory bytes?
+Because the primary readers are accessing the data outside the critical
+section, could they still observe a file offset instead of a valid pointer
+even with down_write() here?
 
 > =20
->  	if (decomp)
->  		unlink(name);
+>  	ret =3D do_write(ff, &env->bpf_progs.infos_cnt,
+>  		       sizeof(env->bpf_progs.infos_cnt));
+> @@ -1150,7 +1151,7 @@ static int write_bpf_prog_info(struct feat_fd *ff  =
+__maybe_unused,
+>  			goto out;
+
+[Severity: Medium]
+This isn't a bug introduced by this patch, but could calling
+bpil_offs_to_addr() just before this return permanently corrupt the state
+for empty trailing arrays?
+
+If a BPF program contains an empty array (count =3D 0) at the end of the
+serialized struct, its offset is exactly data_len. When this function calls
+bpil_offs_to_addr(node->info_linear) to reverse the offsets, it hits this
+bounds check:
+
+tools/perf/util/bpf-utils.c:bpil_offs_to_addr() {
+    ...
+    if (offs >=3D info_linear->data_len || ...)
+        ...
+        info_linear->arrays &=3D ~(1UL << i);
+    ...
+}
+
+Since offs >=3D data_len evaluates to true, will this falsely mark an empty
+array as absent in the arrays bitmask, corrupting the live in-memory object?
+
+>  	}
+>  out:
+> -	up_read(&env->bpf_progs.lock);
+> +	up_write(&env->bpf_progs.lock);
+>  	return ret;
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260802142022.1542=
-19-1-acme@kernel.org?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260802142712.1547=
+26-1-acme@kernel.org?part=3D2
