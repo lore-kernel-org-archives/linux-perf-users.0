@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C03280338;
-	Sun,  2 Aug 2026 08:18:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862F636F426;
+	Sun,  2 Aug 2026 08:18:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785658715; cv=none; b=Ul5Jb7EX+9bQGwNVg4M7NkDnxMK26j2NWVplbTLWzS1jXlzpAmCaeWDz6xl70pHkAsfcksp85yM3CgRBxGRKclRCFDyYObNazTlSpuY/rk6j/RS9X9qRAvZfqaqQ1ymJ3aZDpYmG9l2ERttMB3GFZU8CblhrbNYvkKw4bA/lfs0=
+	t=1785658725; cv=none; b=jGtr5qaM4x9d2wBlQ2ec3oBRi3swCVTBIRGi5bOg1Ifb8gcoofLdF1hQGf0m2UJdbfbB/ActNyF2hS/Y58hfp5l99FavRVTFw5wvicw4Ob/Pi+7pYzw8/YvEUi/XjbKkmXSB0kk7ot+WkV6csKseaaJKUR5VkNQrfxmTNweOJMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785658715; c=relaxed/simple;
-	bh=jixRizPvdcXlYpvqjr8nl5oD3qgJT1PQiqIEHr3UXJg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=iw9Y3PPEvwocozW4b2e4iI8YxAbfenYb/Sd5RbTa+77gPVzrD9jAWSxRea/8y5L2Rcjb7Ka27Uf/jQmKg7VyaPpJOONiIY53LWfWivfmqFWI1rN3EOdSIVGqVvTfqiCzzd2LrFnkVktiAIFnw8YcTOJhMcWzOvljBaeKu7xDC20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XkS7XmJM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785658725; c=relaxed/simple;
+	bh=/CWafS+K6eB1m+Pvkmx+7fz1Yk7FD0UsrD+xkftt5sk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=etCUflZ7nYA0AnEiJXZ4G0iEobcE0ErTHtCLPHaBQIQTEnXRDDYFftyJRbM+5GQToD1AnRkopqZTA5HSZ1HTBgU6Ou+I9kRJWgsxx1pK9fpiEPRxrLxfJ/O5wQNohY198ZnhUxN82+NQ0spPNf9+JtCWxNTz6RrkPVs/fk7ZId8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SJPdEZDu; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XkS7XmJM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86E7D1F00AC4;
-	Sun,  2 Aug 2026 08:18:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SJPdEZDu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A25D21F00AC4;
+	Sun,  2 Aug 2026 08:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785658712;
-	bh=+bKQ9jGZ86fkiuazazVrkevVGniHjeQX6eWxdYJNrqk=;
-	h=From:To:Cc:Subject:Date;
-	b=XkS7XmJMVGq5t69wnFbHJvHPllIxlRCDs+XUfYLxF3MmBEBXixmawNGUKxyYzlef4
-	 qWk7wEVCDbRIq8bMJfqYzuDaA6V4TX9zxSQb5lXTxRDKS8cbCUjrsl/u82cPpiAGIF
-	 O4PyshmbB4h/55B6QFj+zFLRSg+1vCUb/Dr4En3cJiIOAnnkH76B7BIqpGTs3vGzfa
-	 kCUDN78kYHTXSXVNPObNisv3zzXgTyUJJQxgY6Q1HSG+loFsgpWnjfLne1vKSnyesw
-	 NyULG3H83NjZyT6s+54oAYunQBihiJwUlKbj3mnUDLV0xoGUI24J7xiKsXVZ+CLrzb
-	 N4c/mbZvP1c+g==
+	s=k20260515; t=1785658723;
+	bh=uIHhTXoUrUyGkqLMEuvwwMOZZdqckdZTqxA0AW3Sgdw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=SJPdEZDumyAWBojKIF6OYZnfI7XE9HBzQyXTxHamJiZFyUQ/a1E9YhzwtaiHvHQd8
+	 ZN+H2Df0an4PjXwPREOhpqrxDnD4Pljv6L4cehO/3OJZqumSUya7rYwbOmJ+2IHubB
+	 fPeJG8EHHBlE0lCrI7b37x8VOn4gOTJqHKXzNfsSRFOE79LGKmSWx0Qm9HW8J2c9Oc
+	 MBcGEKnH8SOdqw5Ns5LXVyqpUi0Xh/JBaHn05A62aYP6EtM8u6ANt8fFXMrDUCDO4A
+	 wmxT1GWCYcqZnYFN5kaxf0ubhJsvp5hG37pEya09sqOOAKJvCDIaiPGLFUj5XMZZsr
+	 InQAsGHni/mCA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -43,10 +44,12 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v11 00/11] tracing: wprobe: x86: Add wprobe for watchpoint
-Date: Sun,  2 Aug 2026 17:18:25 +0900
-Message-ID: <178565870538.714490.11309825813968306287.stgit@devnote2>
+Subject: [PATCH v11 01/11] x86/hw_breakpoints: Make DR7 updates NMI safe
+Date: Sun,  2 Aug 2026 17:18:37 +0900
+Message-ID: <178565871750.714490.5506415865016304088.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <178565870538.714490.11309825813968306287.stgit@devnote2>
+References: <178565870538.714490.11309825813968306287.stgit@devnote2>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -57,204 +60,400 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Jinchao Wang <wangjinchao600@gmail.com>
 
-Here is the 11th version of the series for adding new wprobe (watch probe)
-which provides memory access tracing event. Moreover, this can be used
-via event trigger. Thus it can trace memory access on dynamically
-allocated objects too.
-The previous version is here:
+Hardware breakpoint installation and removal run with IRQs disabled, but
+an NMI can still enter the same code through KGDB. The interrupted
+operation and the NMI can consequently claim the same slot or overwrite
+each other's DR7 state.
 
-  https://lore.kernel.org/all/178476134787.26117.10094977293012760490.stgit@devnote2/
+Claim and release per-CPU slots with cmpxchg. Update cpu_dr7 with
+single-instruction per-CPU operations, and preserve hardware-first
+disable and hardware-last enable ordering. Add a per-CPU sequence number
+so interrupted DR7 writers and restore paths detect an NMI update and
+retry from the latest shadow state.
 
-The major changes in this version is to use Jinchao's new
-modify_local_hw_breakpoint_addr() API, add count option support to
-wprobe trigger, skip wprobe trigger during another wprobe trigger is
-working and rewrite selftests for wprobe trigger with
-trace-events-sample module.
+Link: https://lore.kernel.org/all/4ee0a2efc9e8387af83286b8495b7d490247e165.1785067572.git.wangjinchao600@gmail.com/
 
-Changes in v11:
- - Updated hardware breakpoint modification API:
-   - Replaced arch_reinstall_hw_breakpoint() with
-     arch_modify_local_hw_breakpoint_addr() and
-     modify_local_hw_breakpoint_addr() API.
-   - Made DR7 updates NMI safe by using atomic cmpxchg for slot management
-     and per-CPU sequence number (cpu_dr7_seq) to detect concurrent NMI
-     updates.
- - Refactored wprobe trigger implementation:
-   - Updated set_wprobe/clear_wprobe trigger to use
-     modify_local_hw_breakpoint_addr().
-   - Added tracepoint_synchronize_unregister() in wprobe_unregister_trigger()
-     and parse error path.
-   - Added NULL check for tw->bp_event in trace_wprobe_update_local() to
-     prevent race conditions.
-   - Switched trigger data freeing to use event_trigger_data::private_data_free.
-   - Added count option support (count=N) for wprobe triggers.
-   - Fixed trigger address calculation (cast rec to char *).
-   - Added work_pending flag to avoid update conflicts between CPUs.
-   - Fixed wprobe_trigger_find_same() to check wprobe_data->clear flag.
-   - Update trigger-wprobe*.tc to use trace-events-sample kernel module.
- - Fixed selftest:
-   - Updated trigger-wprobe.tc assertion logic for clear_wprobe trigger
-     test to check trace log instead of sysfs enable file (which remains 1
-     under soft-disable).
-
-Public branch
--------------
-I will push this branch as topic/wprobe-v2 to my tree so that it
-can be easily tested.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/wprobe-v2 
-
-This is based on linux-trace tree's probes/for-next.
-
-Usage
------
-
-The basic usage of this wprobe is similar to other probes;
-
-  w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+OFFS]> [FETCHARGS]
-
-This defines a new wprobe event. For example, to trace jiffies update,
-you can do;
-
- echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
- echo 1 > events/wprobes/my_jiffies/enable
-
-Moreover, this can be combined with event trigger to trace the memory
-access on slab objects. The trigger syntax is;
-
-  set_wprobe:WPROBE_EVENT:FIELD[+OFFSET] [if FILTER]
-  clear_wprobe:WPROBE_EVENT[:FIELD[+OFFSET]] [if FILTER]
-
-set_wprobe sets WPROBE_EVENT's watch address on FIELD[+OFFSET].
-clear_wprobe clears WPROBE_EVENT's watch address if it is set to
-FIELD[+OFFSET]. If FIELD is omitted, forcibly clear the watch address
-when trigger event is hit.
-
-For example, trace the first 8 byte of the dentry data structure passed
-to do_truncate() until it is deleted by dentry_kill().
-(Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
-
-  # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
-
-  # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
-  # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
-
-  # echo 'f:dentry_kill dentry_kill dentry=$arg1' >> dynamic_events
-  # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
-
-  # echo 1 >> events/fprobes/truncate/enable
-  # echo 1 >> events/fprobes/dentry_kill/enable
-
-  # echo aaa > /tmp/hoge
-  # echo bbb > /tmp/hoge
-  # echo ccc > /tmp/hoge
-  # rm /tmp/hoge
-
-Then, the trace data will show;
-
- # tracer: nop
- #
- # entries-in-buffer/entries-written: 32/32   #P:8
- #
- #                                _-----=> irqs-off/BH-disabled
- #                               / _----=> need-resched
- #                              | / _---=> hardirq/softirq
- #                              || / _--=> preempt-depth
- #                              ||| / _-=> migrate-disable
- #                              |||| /     delay
- #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
- #              | |         |   |||||     |         |
-               sh-107     [004] ...1.     9.990418: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
-               sh-107     [004] ...1.     9.990914: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b3de78
-               sh-107     [004] ...1.     9.993175: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049ddd40
-               sh-107     [004] .....     9.995198: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
-               sh-107     [004] ...1.     9.995389: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db998
-               sh-107     [004] ..Zff     9.997503: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] ..Zff     9.997509: watch: (path_openat+0x211/0xda0) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] ..Zff     9.997514: watch: (path_openat+0xa56/0xda0) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] ..Zff     9.997518: watch: (path_openat+0xae2/0xda0) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] .....     9.997521: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
-               sh-107     [004] ...1.     9.997582: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004808270
-               sh-107     [004] ...1.     9.999365: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db728
-               sh-107     [004] ...1.     9.999388: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b1c000
-               rm-113     [005] ..Zff    10.000965: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.000971: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.000984: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.000988: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001010: watch: (lookup_one_qstr_excl+0x28/0x140) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001014: watch: (lookup_one_qstr_excl+0xd1/0x140) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001018: watch: (may_delete_dentry+0x1c/0x200) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001021: watch: (may_delete_dentry+0x195/0x200) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001031: watch: (vfs_unlink+0x5e/0x260) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] d.Z..    10.001067: watch: (d_make_discardable+0x1b/0x40) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] d.Z..    10.001071: watch: (d_make_discardable+0x29/0x40) address=0xffff8880048083a8 value=0x200080
-               rm-113     [005] ...1.    10.001072: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
-               rm-113     [005] ...1.    10.001218: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
-               sh-107     [004] ...1.    10.001416: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db110
-               sh-107     [004] ...1.    10.001444: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db248
-               sh-107     [004] ...1.    10.001500: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
-               sh-107     [004] ...1.    10.002067: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
-               sh-107     [004] ...1.    10.904920: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
-               sh-107     [004] ...1.    10.905129: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
-
-
-Thank you,
-
+Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
+ arch/x86/include/asm/debugreg.h |   36 ++++++++++----
+ arch/x86/kernel/cpu/mce/core.c  |   20 +++++---
+ arch/x86/kernel/hw_breakpoint.c |   98 +++++++++++++++++++--------------------
+ arch/x86/kernel/nmi.c           |   10 +++-
+ arch/x86/kernel/traps.c         |   10 +++-
+ 5 files changed, 101 insertions(+), 73 deletions(-)
 
-Jinchao Wang (2):
-      x86/hw_breakpoints: Make DR7 updates NMI safe
-      x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
+diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
+index a2c1f2d24b64..b1fe1c47978d 100644
+--- a/arch/x86/include/asm/debugreg.h
++++ b/arch/x86/include/asm/debugreg.h
+@@ -18,6 +18,7 @@
+ #define DR7_FIXED_1	0x00000400
+ 
+ DECLARE_PER_CPU(unsigned long, cpu_dr7);
++DECLARE_PER_CPU(unsigned int, cpu_dr7_seq);
+ 
+ #ifndef CONFIG_PARAVIRT_XXL
+ /*
+@@ -125,18 +126,20 @@ static __always_inline bool hw_breakpoint_active(void)
+ 
+ extern void hw_breakpoint_restore(void);
+ 
+-static __always_inline unsigned long local_db_save(void)
++static __always_inline void local_db_save(unsigned long *dr7,
++					  unsigned int *dr7_seq)
+ {
+-	unsigned long dr7;
++	*dr7 = 0;
++	*dr7_seq = this_cpu_read(cpu_dr7_seq);
+ 
+ 	if (static_cpu_has(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
+-		return 0;
++		return;
+ 
+-	get_debugreg(dr7, 7);
++	get_debugreg(*dr7, 7);
+ 
+ 	/* Architecturally set bit */
+-	dr7 &= ~DR7_FIXED_1;
+-	if (dr7)
++	*dr7 &= ~DR7_FIXED_1;
++	if (*dr7)
+ 		set_debugreg(DR7_FIXED_1, 7);
+ 
+ 	/*
+@@ -145,20 +148,33 @@ static __always_inline unsigned long local_db_save(void)
+ 	 * be good.
+ 	 */
+ 	barrier();
+-
+-	return dr7;
+ }
+ 
+-static __always_inline void local_db_restore(unsigned long dr7)
++static __always_inline void local_db_restore(unsigned long dr7,
++					     unsigned int dr7_seq)
+ {
++	unsigned int seq;
++
+ 	/*
+ 	 * Ensure the compiler doesn't raise this statement into
+ 	 * the critical section; enabling breakpoints early would
+ 	 * not be good.
+ 	 */
+ 	barrier();
+-	if (dr7)
++
++	do {
++		seq = this_cpu_read(cpu_dr7_seq);
++		if (seq == dr7_seq) {
++			if (!dr7)
++				return;
++		} else {
++			dr7 = this_cpu_read(cpu_dr7);
++			if (!dr7)
++				dr7 = DR7_FIXED_1;
++		}
++
+ 		set_debugreg(dr7, 7);
++	} while (unlikely(seq != this_cpu_read(cpu_dr7_seq)));
+ }
+ 
+ #ifdef CONFIG_CPU_SUP_AMD
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index 9bba1e2f03af..8dba9cd04bfa 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -2139,20 +2139,22 @@ static __always_inline void exc_machine_check_user(struct pt_regs *regs)
+ DEFINE_IDTENTRY_MCE(exc_machine_check)
+ {
+ 	unsigned long dr7;
++	unsigned int dr7_seq;
+ 
+-	dr7 = local_db_save();
++	local_db_save(&dr7, &dr7_seq);
+ 	exc_machine_check_kernel(regs);
+-	local_db_restore(dr7);
++	local_db_restore(dr7, dr7_seq);
+ }
+ 
+ /* The user mode variant. */
+ DEFINE_IDTENTRY_MCE_USER(exc_machine_check)
+ {
+ 	unsigned long dr7;
++	unsigned int dr7_seq;
+ 
+-	dr7 = local_db_save();
++	local_db_save(&dr7, &dr7_seq);
+ 	exc_machine_check_user(regs);
+-	local_db_restore(dr7);
++	local_db_restore(dr7, dr7_seq);
+ }
+ 
+ #ifdef CONFIG_X86_FRED
+@@ -2170,13 +2172,14 @@ DEFINE_IDTENTRY_MCE_USER(exc_machine_check)
+ DEFINE_FREDENTRY_MCE(exc_machine_check)
+ {
+ 	unsigned long dr7;
++	unsigned int dr7_seq;
+ 
+-	dr7 = local_db_save();
++	local_db_save(&dr7, &dr7_seq);
+ 	if (user_mode(regs))
+ 		exc_machine_check_user(regs);
+ 	else
+ 		exc_machine_check_kernel(regs);
+-	local_db_restore(dr7);
++	local_db_restore(dr7, dr7_seq);
+ }
+ #endif
+ #else
+@@ -2184,13 +2187,14 @@ DEFINE_FREDENTRY_MCE(exc_machine_check)
+ DEFINE_IDTENTRY_RAW(exc_machine_check)
+ {
+ 	unsigned long dr7;
++	unsigned int dr7_seq;
+ 
+-	dr7 = local_db_save();
++	local_db_save(&dr7, &dr7_seq);
+ 	if (user_mode(regs))
+ 		exc_machine_check_user(regs);
+ 	else
+ 		exc_machine_check_kernel(regs);
+-	local_db_restore(dr7);
++	local_db_restore(dr7, dr7_seq);
+ }
+ #endif
+ 
+diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+index f846c15f21ca..9ef24b55737f 100644
+--- a/arch/x86/kernel/hw_breakpoint.c
++++ b/arch/x86/kernel/hw_breakpoint.c
+@@ -40,6 +40,9 @@
+ DEFINE_PER_CPU(unsigned long, cpu_dr7);
+ EXPORT_PER_CPU_SYMBOL(cpu_dr7);
+ 
++/* Sequence number of the per-CPU DR7 state. */
++DEFINE_PER_CPU(unsigned int, cpu_dr7_seq);
++
+ /* Per cpu debug address registers values */
+ static DEFINE_PER_CPU(unsigned long, cpu_debugreg[HBP_NUM]);
+ 
+@@ -97,38 +100,30 @@ int decode_dr7(unsigned long dr7, int bpnum, unsigned *len, unsigned *type)
+ int arch_install_hw_breakpoint(struct perf_event *bp)
+ {
+ 	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
+-	unsigned long *dr7;
++	unsigned int seq;
+ 	int i;
+ 
+ 	lockdep_assert_irqs_disabled();
+ 
+ 	for (i = 0; i < HBP_NUM; i++) {
+-		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
+-
+-		if (!*slot) {
+-			*slot = bp;
++		if (!this_cpu_cmpxchg(bp_per_reg[i], NULL, bp))
+ 			break;
+-		}
+ 	}
+ 
+ 	if (WARN_ONCE(i == HBP_NUM, "Can't find any breakpoint slot"))
+ 		return -EBUSY;
+ 
+-	set_debugreg(info->address, i);
+-	__this_cpu_write(cpu_debugreg[i], info->address);
+-
+-	dr7 = this_cpu_ptr(&cpu_dr7);
+-	*dr7 |= encode_dr7(i, info->len, info->type);
+-
+-	/*
+-	 * Ensure we first write cpu_dr7 before we set the DR7 register.
+-	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
+-	 */
+-	barrier();
+-
+-	set_debugreg(*dr7, 7);
+-	if (info->mask)
+-		amd_set_dr_addr_mask(info->mask, i);
++	do {
++		seq = this_cpu_inc_return(cpu_dr7_seq);
++		this_cpu_write(cpu_debugreg[i], info->address);
++		barrier();
++		set_debugreg(info->address, i);
++		if (info->mask)
++			amd_set_dr_addr_mask(info->mask, i);
++		this_cpu_or(cpu_dr7, encode_dr7(i, info->len, info->type));
++		barrier();
++		set_debugreg(this_cpu_read(cpu_dr7), 7);
++	} while (seq != this_cpu_read(cpu_dr7_seq));
+ 
+ 	return 0;
+ }
+@@ -146,36 +141,33 @@ void arch_uninstall_hw_breakpoint(struct perf_event *bp)
+ {
+ 	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
+ 	unsigned long dr7;
++	unsigned int seq;
+ 	int i;
+ 
+ 	lockdep_assert_irqs_disabled();
+ 
+ 	for (i = 0; i < HBP_NUM; i++) {
+-		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
+-
+-		if (*slot == bp) {
+-			*slot = NULL;
++		if (this_cpu_read(bp_per_reg[i]) == bp)
+ 			break;
+-		}
+ 	}
+ 
+ 	if (WARN_ONCE(i == HBP_NUM, "Can't find any breakpoint slot"))
+ 		return;
+ 
+-	dr7 = this_cpu_read(cpu_dr7);
+-	dr7 &= ~__encode_dr7(i, info->len, info->type);
+-
+-	set_debugreg(dr7, 7);
+-	if (info->mask)
+-		amd_set_dr_addr_mask(0, i);
+-
+-	/*
+-	 * Ensure the write to cpu_dr7 is after we've set the DR7 register.
+-	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
+-	 */
+-	barrier();
+-
+-	this_cpu_write(cpu_dr7, dr7);
++	do {
++		seq = this_cpu_inc_return(cpu_dr7_seq);
++		dr7 = this_cpu_read(cpu_dr7);
++		dr7 &= ~__encode_dr7(i, info->len, info->type);
++		set_debugreg(dr7, 7);
++		if (info->mask)
++			amd_set_dr_addr_mask(0, i);
++		barrier();
++		this_cpu_and(cpu_dr7,
++			     ~__encode_dr7(i, info->len, info->type));
++	} while (seq != this_cpu_read(cpu_dr7_seq));
++
++	WARN_ONCE(this_cpu_cmpxchg(bp_per_reg[i], bp, NULL) != bp,
++		  "Can't release breakpoint slot");
+ }
+ 
+ static int arch_bp_generic_len(int x86_len)
+@@ -309,13 +301,14 @@ static inline bool within_cpu_entry(unsigned long addr, unsigned long end)
+ 				sizeof(struct tlb_state)))
+ 			return true;
+ 
+-		/*
+-		 * When in guest (X86_FEATURE_HYPERVISOR), local_db_save()
+-		 * will read per-cpu cpu_dr7 before clear dr7 register.
+-		 */
++		/* local_db_save() reads this state before clearing DR7. */
+ 		if (within_area(addr, end, (unsigned long)&per_cpu(cpu_dr7, cpu),
+ 				sizeof(cpu_dr7)))
+ 			return true;
++		if (within_area(addr, end,
++				(unsigned long)&per_cpu(cpu_dr7_seq, cpu),
++				sizeof(cpu_dr7_seq)))
++			return true;
+ 	}
+ 
+ 	return false;
+@@ -483,12 +476,17 @@ void flush_ptrace_hw_breakpoint(struct task_struct *tsk)
+ 
+ void hw_breakpoint_restore(void)
+ {
+-	set_debugreg(__this_cpu_read(cpu_debugreg[0]), 0);
+-	set_debugreg(__this_cpu_read(cpu_debugreg[1]), 1);
+-	set_debugreg(__this_cpu_read(cpu_debugreg[2]), 2);
+-	set_debugreg(__this_cpu_read(cpu_debugreg[3]), 3);
+-	set_debugreg(DR6_RESERVED, 6);
+-	set_debugreg(__this_cpu_read(cpu_dr7), 7);
++	unsigned int seq;
++
++	do {
++		seq = this_cpu_inc_return(cpu_dr7_seq);
++		set_debugreg(this_cpu_read(cpu_debugreg[0]), 0);
++		set_debugreg(this_cpu_read(cpu_debugreg[1]), 1);
++		set_debugreg(this_cpu_read(cpu_debugreg[2]), 2);
++		set_debugreg(this_cpu_read(cpu_debugreg[3]), 3);
++		set_debugreg(DR6_RESERVED, 6);
++		set_debugreg(this_cpu_read(cpu_dr7), 7);
++	} while (seq != this_cpu_read(cpu_dr7_seq));
+ }
+ EXPORT_SYMBOL_FOR_KVM(hw_breakpoint_restore);
+ 
+diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+index 3c9f60d6ca5a..f55a0cbd5927 100644
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -532,10 +532,13 @@ enum nmi_states {
+ static DEFINE_PER_CPU(enum nmi_states, nmi_state);
+ static DEFINE_PER_CPU(unsigned long, nmi_cr2);
+ static DEFINE_PER_CPU(unsigned long, nmi_dr7);
++static DEFINE_PER_CPU(unsigned int, nmi_dr7_seq);
+ 
+ DEFINE_IDTENTRY_RAW(exc_nmi)
+ {
+ 	irqentry_state_t irq_state;
++	unsigned long dr7;
++	unsigned int dr7_seq;
+ 	struct nmi_stats *nsp = this_cpu_ptr(&nmi_stats);
+ 
+ 	/*
+@@ -572,7 +575,9 @@ DEFINE_IDTENTRY_RAW(exc_nmi)
+ 	 */
+ 	sev_es_ist_enter(regs);
+ 
+-	this_cpu_write(nmi_dr7, local_db_save());
++	local_db_save(&dr7, &dr7_seq);
++	this_cpu_write(nmi_dr7, dr7);
++	this_cpu_write(nmi_dr7_seq, dr7_seq);
+ 
+ 	irq_state = irqentry_nmi_enter(regs);
+ 
+@@ -594,7 +599,8 @@ DEFINE_IDTENTRY_RAW(exc_nmi)
+ 
+ 	irqentry_nmi_exit(regs, irq_state);
+ 
+-	local_db_restore(this_cpu_read(nmi_dr7));
++	local_db_restore(this_cpu_read(nmi_dr7),
++			 this_cpu_read(nmi_dr7_seq));
+ 
+ 	sev_es_ist_exit();
+ 
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 30aa8369957e..018abe736285 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -1231,8 +1231,12 @@ static noinstr void exc_debug_kernel(struct pt_regs *regs, unsigned long dr6)
+ 	 * it results in an endless recursion and stack overflow. Thus we stay
+ 	 * with the IDT approach, i.e., save DR7 and disable #DB.
+ 	 */
+-	unsigned long dr7 = local_db_save();
+-	irqentry_state_t irq_state = irqentry_nmi_enter(regs);
++	unsigned long dr7;
++	unsigned int dr7_seq;
++	irqentry_state_t irq_state;
++
++	local_db_save(&dr7, &dr7_seq);
++	irq_state = irqentry_nmi_enter(regs);
+ 	instrumentation_begin();
+ 
+ 	/*
+@@ -1289,7 +1293,7 @@ static noinstr void exc_debug_kernel(struct pt_regs *regs, unsigned long dr6)
+ 	instrumentation_end();
+ 	irqentry_nmi_exit(regs, irq_state);
+ 
+-	local_db_restore(dr7);
++	local_db_restore(dr7, dr7_seq);
+ }
+ 
+ static noinstr void exc_debug_user(struct pt_regs *regs, unsigned long dr6)
 
-Masami Hiramatsu (Google) (9):
-      HWBP: Add modify_local_hw_breakpoint_addr() API
-      tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
-      x86: hw_breakpoint: Add a kconfig to clarify when a breakpoint fires
-      selftests: tracing: Add a basic testcase for wprobe
-      selftests: tracing: Add syntax testcase for wprobe
-      tracing: wprobe: Add wprobe event trigger
-      selftests: ftrace: Add wprobe trigger testcase
-      tracing/wprobe: Support BTF typecast in fetchargs
-      tracing/wprobe: Support BTF typecast in wprobe trigger command
-
-
- Documentation/trace/index.rst                      |    1 
- Documentation/trace/wprobetrace.rst                |  163 ++
- arch/Kconfig                                       |   18 
- arch/x86/Kconfig                                   |    2 
- arch/x86/include/asm/debugreg.h                    |   36 -
- arch/x86/include/asm/hw_breakpoint.h               |    2 
- arch/x86/kernel/cpu/mce/core.c                     |   20 
- arch/x86/kernel/hw_breakpoint.c                    |  125 +-
- arch/x86/kernel/nmi.c                              |   10 
- arch/x86/kernel/traps.c                            |   10 
- include/linux/hw_breakpoint.h                      |    6 
- include/linux/trace_events.h                       |    3 
- kernel/events/hw_breakpoint.c                      |   35 +
- kernel/trace/Kconfig                               |   24 
- kernel/trace/Makefile                              |    1 
- kernel/trace/trace.c                               |    9 
- kernel/trace/trace.h                               |    6 
- kernel/trace/trace_events_trigger.c                |    2 
- kernel/trace/trace_probe.c                         |   34 
- kernel/trace/trace_probe.h                         |   15 
- kernel/trace/trace_wprobe.c                        | 1392 ++++++++++++++++++++
- tools/testing/selftests/ftrace/config              |    3 
- .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   63 +
- .../test.d/dynevent/wprobes_syntax_errors.tc       |   21 
- .../test.d/trigger/trigger-wprobe-btf-offset.tc    |   74 +
- .../test.d/trigger/trigger-wprobe-btf-typecast.tc  |   72 +
- .../ftrace/test.d/trigger/trigger-wprobe.tc        |   85 +
- 27 files changed, 2156 insertions(+), 76 deletions(-)
- create mode 100644 Documentation/trace/wprobetrace.rst
- create mode 100644 kernel/trace/trace_wprobe.c
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
-
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
