@@ -1,136 +1,155 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530F02EF66B;
-	Mon,  3 Aug 2026 16:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F88416876
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 17:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785772868; cv=none; b=DYxT8D9KgXcHjGBmXNlfIEkPTUlpE6gl4JqD0fiue8zYQKW25uSJmyjy5xcPv8cg0AbaOJCppdBKXJc9iG9OojmRgGKnX6xfs6lHsSSdTW9fLPuUpK/TvnR/Xjvug5fhYHzzBYen1qXlVrYo0uqpaY3W8df77dxwNnSVKhC6wKQ=
+	t=1785777263; cv=none; b=la3WBndkUZeAryBz8sZ7msY3u2vaeb29c+XYdkemWfvG0waQw08kyJjdJgxOGr5PC597QiPa7fT+IHRJRBK4HTIhctfpYyVdPMBHUUnJQ6s3JtdpV2Ybk886aS/mIrpqAXuw5jUHn4YBDHhC2OO4UlGNwErOYfAn7i433Y3+sbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785772868; c=relaxed/simple;
-	bh=Ir8o5TbqMkWU4xH647a9ZPxtXOsvWt+HjGoWV195J88=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kvd8FsTNo9xuRfiLhi9alJEVLbus1h3NFDJX6HM+o/Kms6cQ4G+98REoqzrSkKQe585J0DIEfVECajseEWl30DDESQoLpvfFLA8uir0RHX3LgZjKgT99Cmr/5AwZrma+YLkrvXIzET6PAOi8+QW6hDVqMGGDGnwwnePXgTaK3Ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dShiq9Xr; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1785777263; c=relaxed/simple;
+	bh=3ARyZ8YwE0T8VWNx+yGfZ4urhJw8OuYUwAcNHAdIGEc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=izctF6PPMat9xQAKxSuN/QEc4q2nIe8Qj6+jWTIXodVCc6zTu0qE4+ayNgJFpwiCUCJbpns5dBtxLSF+KNjvKwmZb8hIcsTf3TE1P0zv+MkYnTT3xLZJIQGbjV2To3Im/l5myfEI3MGLqlWA/tgeXoroCG5yHWCruUcJloRyaqo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lJTPYzsw; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dShiq9Xr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785772867; x=1817308867;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Ir8o5TbqMkWU4xH647a9ZPxtXOsvWt+HjGoWV195J88=;
-  b=dShiq9Xro7CaU8zSuuqWF2SssxfSH4iovC4bXw2HaiNk13KdCSLZdbZU
-   AAVNDW+tAKHITtl4UTShN1JL2JozhwFDB6rruElmD3NX0Mh0BmLRSM0Hf
-   N0MVchkam5pLI/caqTRhJvqA1suE4U9DgU5kKIOfGB/lh4wAF/keUc8EH
-   rVYK9Z8BN5G6fChkxoCoAQAHxQcx4MaO3fhflwhq4gK8UKpI7CkEuSiAu
-   fxHuqxSKvJ99KS6vRwl98kDDNWZn+sHHzo0MhNw41DTOQ7sTnS0htbLUJ
-   h5uRHI5Gg1FTAUs8oycA2iSu4oMnredL9PeKmu9mE1nYEvIGcJ9hdgEOd
-   w==;
-X-CSE-ConnectionGUID: o0omsYheTBW7N3wYd0f5Iw==
-X-CSE-MsgGUID: RXzQ+2t8SB+OyDmgfZkRuA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11864"; a="86435055"
-X-IronPort-AV: E=Sophos;i="6.25,202,1779174000"; 
-   d="scan'208";a="86435055"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2026 09:01:06 -0700
-X-CSE-ConnectionGUID: 4HFuHvY8SsuKMffI5xJh0g==
-X-CSE-MsgGUID: OyLEquncT2eqzuUio+GwOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,202,1779174000"; 
-   d="scan'208";a="265526755"
-Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.108.187]) ([10.125.108.187])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2026 09:01:06 -0700
-Message-ID: <ab9b7f3a-e2a5-4627-b2ac-d53ce3a82477@intel.com>
-Date: Mon, 3 Aug 2026 09:01:04 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJTPYzsw"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2cc7ef7ec27so40845765ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Aug 2026 10:14:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1785777261; x=1786382061; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:date
+         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=tQ+UNxE6uM8fSSYlklXepIB8FuY8kEOpEwFATNyW7No=;
+        b=lJTPYzsw620PD4SeSvh+G4dKVLB9B3/z1ieJE5+a15kaqS6KesSiJd5KpaIuInb/q0
+         EU7kg1RUVNQDqFQIhQzrAM1Qla8eqp/+B7NWfnx76mnJzrF9lFIR25Ai+fkVyc0dr/8Y
+         TvA0ejIxvJe++6lN8yqkPq7rnNJy6E+lZry9YqvM1RL9qm0EunZElAViUAq/4kMd1T/j
+         FSBurRcyXeDotrDSnSqKkwPfobfJp/j3CV42w/PqhkL8z/DgymiCnnO0duSseaPGfXrB
+         cpIrhxPZXccXy9URn1HO3vhhhB2ZXTZHz4PCiQq2D/eRk2s682M1jc4bpaUaS1AcERCB
+         O8uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785777261; x=1786382061;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :content-type:mime-version:references:message-id:subject:cc:to:date
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=tQ+UNxE6uM8fSSYlklXepIB8FuY8kEOpEwFATNyW7No=;
+        b=VL6mZtikqXALUHKrCFZsRhiTFp3WYklId5lZg9wsIInK7b2N+zHD8crmNF+pFAb4n3
+         g6T6lEkLEvEG9uKtgtjvE/jku2cPM03/ldz3X4sSRYEgvVG22BJfx5gPxK8sQWQFnxs2
+         zJYC16Lf3Bgma3gU7Wm5V4X2T8wfaqVGwbG0ALNKnologC/00S5VG9IkGU3Z2c1ch5xW
+         DJA7VWKr9hxpaN2lqKi0LeRqJr/qsBSG0bZF9BiNoBTZvsPMy4qo72u47Qp39EXH9n6p
+         QC+ulclu9xmcbJMhotw/2amgZtjWnVuUBoLSD8PPQbkKyYLsU+2uAlK3EobAa3Hm7zMf
+         59CA==
+X-Gm-Message-State: AOJu0Yy/a0HakwNtU5PI0uBYmOqlymH8BrZ6zpY3Okz3ykyGee5EXUgN
+	cxg4ZmrHBiVMM09Y80QW4X/tWwtvTvdxDymqG3fji9oDFUw9WXPv4DV4+1HbYQ==
+X-Gm-Gg: AR+sD10UgKPqaRrHnblPV1J7OvpCRaFmz4z9jM54EmwbVR3IprIZYxWI6cyKqsHcz8/
+	iAZEv+tBqdyZ0QZWORpmCtyd+8SMAL4VnrrUMb+XB1Pz/XP5eCH0zQ6tNkIdiVvTyjB9o9doWBU
+	kMlxcdAQzurdoK4mkNkwFMN4gcdoid/ZkFFUHdXD6neQWMVsfLglYTYJRXP3hdnvhtRAR6XRdih
+	4vbTijwYsHy3DJM0kcvFDNJEAq5fm8tdn0IQS72oX8FEGgxVo8bwVCGY7f363WTSsEuq3a1yTu7
+	5zVYgAgWYxl9EyHu/Nu97CLuhQnm3uh4cP5GSotw+AmpnCv2TxcFyLnDr2cB/Wo9PsbAVtKmhbj
+	8ZmulK335Fer01Gt4wGv9pzNfHrrf7U/PdOhMjeTdbqNfXNBUt6TAjQbUG16Dn6ry+oXY3VEFCF
+	VjZypEQS4H0eLmLH+7cB56NcQGesaeRVKbVNVVR5xHW4tWRYTI8dKF
+X-Received: by 2002:a05:6a20:2d09:b0:3b1:cce5:9140 with SMTP id adf61e73a8af0-3c92a75ec8fmr10521733637.33.1785777261007;
+        Mon, 03 Aug 2026 10:14:21 -0700 (PDT)
+Received: from localhost ([2804:388:90d2:b659:18c8:3d0f:fc92:3c1b])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-13fab050d8csm54545112c88.0.2026.08.03.10.14.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Aug 2026 10:14:20 -0700 (PDT)
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Date: Mon, 3 Aug 2026 14:14:16 -0300
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/2] perf c2c: Fix error masking, OOM, and unchecked
+ caller errors in hpp_list__parse()
+Message-ID: <anDMaPQdsyn8b4qs@localhost>
+References: <20260803144119.185637-1-acme@kernel.org>
+ <20260803144119.185637-2-acme@kernel.org>
+ <20260803150230.0AB731F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/9] perf/cxl: Split the MSI vector out of info->irq
-To: Robin Murphy <robin.murphy@arm.com>, linux-cxl@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Cc: jic23@kernel.org, will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net
-References: <20260731232827.401447-1-dave.jiang@intel.com>
- <20260731232827.401447-5-dave.jiang@intel.com>
- <a4a807e6-b477-40c3-ac42-2bef8dd82d7e@arm.com>
-From: Dave Jiang <dave.jiang@intel.com>
-Content-Language: en-US
-In-Reply-To: <a4a807e6-b477-40c3-ac42-2bef8dd82d7e@arm.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260803150230.0AB731F000E9@smtp.kernel.org>
 
-
-
-On 8/3/26 5:04 AM, Robin Murphy wrote:
-> On 01/08/2026 12:28 am, Dave Jiang wrote:
->> info->irq means two different things depending on how far probe has got.
->> cxl_pmu_parse_caps() sets it to the MSI/MSI-X message number from the CPMU
->> Capability register. cxl_pmu_probe() passes that to pci_irq_vector() and
->> then overwrites it with the Linux virq, which is what the hotplug callbacks
->> hand to irq_set_affinity().
->>
->> Give the message number its own field. No functional change.
+On Mon, Aug 03, 2026 at 03:02:29PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] The `%m` format specifier is used in `__hpp_list__parse` to log generic callback errors, which can result in incorrect or stale error messages.
+> --
 > 
-> Thanks, this makes it much less confusing;
+> --- Patch [1]: [PATCH 1/2] perf c2c: Fix error masking, OOM, and unchecked caller errors in hpp_list__parse() ---
+> commit 318c268818f1c0f5bf8bb06a4099029b27a33ee1
+> Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+> perf c2c: Fix error masking, OOM, and unchecked caller errors in hpp_list__parse()
 > 
-> If the fix itself was just the comparison operator then I'd suggest folding it in so as to avoid extra backporting dependencies/conflicts, but it sounds like we might have a corner case where 0 may still mean "no IRQ", so maybe sort that first then put this refactoring on top?
+> This commit addresses multiple bugs in hpp_list__parse(). It ensures that errors
+> from output and sort parsing are not silently masked, handles OOM conditions
+> from strdup() correctly, and properly propagates failures out of the strtok loop
+> and up the call chain.
+> 
+> > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> > index c9584dbedf77a..b0f2ba8318304 100644
+> > --- a/tools/perf/builtin-c2c.c
+> > +++ b/tools/perf/builtin-c2c.c
+> [ ... ]
+> > @@ -2063,26 +2065,34 @@ static int c2c_hists__init_sort(struct perf_hpp_list *hpp_list, char *name, stru
+> [ ... ]
+> > +static int __hpp_list__parse(struct perf_hpp_list *hpp_list, char *_list, struct perf_env *env,
+> > +			     int (*_fn)(struct perf_hpp_list *hpp_list, char *name, struct perf_env *env))
+> > +{
+> > +	char *tmp, *tok;
+> > +	int ret = 0;
+> > +
+> > +	if (!_list)
+> > +		return 0;
+> > +
+> > +	for (tok = strtok_r(_list, ", ", &tmp); tok; tok = strtok_r(NULL, ", ", &tmp)) {
+> > +		ret = _fn(hpp_list, tok, env);
+> > +		switch (ret) {
+> > +		case 0:
+> > +			continue;
+> > +		case -EINVAL:
+> > +			pr_err("Invalid --fields key: `%s'", tok);
+> > +			goto out;
+> > +		case -ESRCH:
+> > +			pr_err("Unknown --fields key: `%s'", tok);
+> > +			goto out;
+> > +		default:
+> > +			pr_err("%m for --fields key: `%s'", tok);
+> 
+> [Severity: Medium]
+> Will %m print the correct error message here?
+> 
+> The _fn callback returns a negative error code in ret (such as -ENOMEM), but it
+> does not necessarily set errno.
+> 
+> Even if it did, if the callback or its callees log anything, functions called
+> internally by pr_err() (like fprintf or localtime_r) can clobber errno even on
+> success. This could cause %m to print a stale or incorrect error string (e.g.,
+> "No such file or directory" instead of "Cannot allocate memory").
+> 
+> Could we format the string using the actual error code available in ret instead
+> of relying on the implicit global errno variable?
+ 
 
-Will do. I'll flip the order.
+Indeed, I'll use str_error_r() in v5.
 
-DJ
-
+- Arnaldo
+> > +			goto out;
+> > +		}
+> > +	}
+> > +out:
+> > +	return ret;
+> > +}
 > 
-> Cheers,
-> Robin.
-> 
->> Assisted-by: Claude:claude-opus-4-8
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->> v3:
->> - New patch
->> ---
->>   drivers/perf/cxl_pmu.c | 9 +++++----
->>   1 file changed, 5 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
->> index 3511d049aea4..56e6ae7bebf7 100644
->> --- a/drivers/perf/cxl_pmu.c
->> +++ b/drivers/perf/cxl_pmu.c
->> @@ -106,6 +106,7 @@ struct cxl_pmu_info {
->>       int on_cpu;
->>       struct hlist_node node;
->>       bool filter_hdm;
->> +    int msi_vec;
->>       int irq;
->>   };
->>   @@ -143,9 +144,9 @@ static int cxl_pmu_parse_caps(struct device *dev, struct cxl_pmu_info *info)
->>         info->filter_hdm = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) & CXL_PMU_FILTER_HDM;
->>       if (FIELD_GET(CXL_PMU_CAP_INT, val))
->> -        info->irq = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
->> +        info->msi_vec = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
->>       else
->> -        info->irq = -1;
->> +        info->msi_vec = -1;
->>         /* First handle fixed function counters; note if configurable counters found */
->>       for (i = 0; i < info->num_counters; i++) {
->> @@ -874,10 +875,10 @@ static int cxl_pmu_probe(struct device *dev)
->>           .capabilities = PERF_PMU_CAP_NO_EXCLUDE,
->>       };
->>   -    if (info->irq <= 0)
->> +    if (info->msi_vec <= 0)
->>           return -EINVAL;
->>   -    rc = pci_irq_vector(pdev, info->irq);
->> +    rc = pci_irq_vector(pdev, info->msi_vec);
->>       if (rc < 0)
->>           return rc;
->>       irq = rc;
-> 
-
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260803144119.185637-1-acme@kernel.org?part=1
