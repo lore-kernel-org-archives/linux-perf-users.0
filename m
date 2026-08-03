@@ -1,57 +1,57 @@
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A198403156
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 15:01:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C09630D416
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 15:01:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785769264; cv=none; b=enfm14PjQvgIw0+QLIlKsmjAge5la2lsfD3r211gpxsY6pwiwV2yWVa7/hV6qzrbPQ1uUxZByrIeYCEyHNmdi1oZuHPjnuEbD//kir8NIoxEOq+vVDRBpocSuHZf62LQrszLbTAH4U9AKtQZz0MuCMYKFTrvYMivmA4Qav7C/HM=
+	t=1785769270; cv=none; b=SzfKarxXsSOkRcO+0iyCgV8e60CCudqXJWNZeshdW0s42zWJSC+gFJeuwtFW1aO515uL8iDtKr7yBUuX224U1gKp8xeVkY2kRc6GxXS9ikSXOw/3fBrl3VVFHC9vhsXPiXaqAtob8cQwRDTP3u0iygm2vzWNxHAbf9HwUM3NA1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785769264; c=relaxed/simple;
-	bh=eqiEW0q9pDg0N9DcgFqL/pwowkxkCiaM8GypqkO28Is=;
+	s=arc-20240116; t=1785769270; c=relaxed/simple;
+	bh=ANBamaEzvLzkMtC8m+9vZaTY0gH6k2xVfKL7ti3Q1oI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ItCTSzMHJOQsq2/eTsLMAgMEw0yi9+LzVhcWQYmlqI0AzrDqoy+MZ6j4zxWBPpYSQTANsK41AkhZSjlYtqM7Oi7TS76B+Zjco68tZymSM7Az8hFcThqyAdsEqR/KGlKwo2G8giw/BwGao/H2hYTgjdXUiMUlc73HukFSDbceCsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HsvTEeZZ; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=kdnelZRNDSqj1NLIub55hUghps5fzwlrf3jSWEZn4f/ZIRvZK3l/EaUWTslXKeIY2il0M2PEVuBBclaHi17Q73oDfsugpJ/KT9o/G031PMo/c7MEnJtVJL8g+bu6FSmwPCdafgZlqNnnM1/yNhvz5TtSjFLo3aJtZAqhpECl8RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=O7/nbhqx; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HsvTEeZZ"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 673EHeg92206057;
-	Mon, 3 Aug 2026 15:00:51 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="O7/nbhqx"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 673EIqPI2203944;
+	Mon, 3 Aug 2026 15:00:57 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=GwhWTk0o2wOov+/ac
-	4Z6uYx1HZwaEJTWApvxmJXZGhk=; b=HsvTEeZZMzQeMCVxYnUUvss+bDeLTIvOI
-	2tPoWQGZxY0hIS5Y/yY6UGL5c1B46HXvho6WEqU3nsTEOiihoDJU1wU8duRgQ8AV
-	+zWnmg2bBujOBVTl/qScqtcyE3JOtyb2PzkJj4JHCuES77Q/0v6xt7rhq3ysjaxV
-	9iNTsx797n5lsWJf6ANYBP7TItT/t+9qdLHnObaTPcnyuoNX+jIkN581RxXPsa2E
-	KOiPsFhSj4NQ8Yx4NMXTxJT0tGcHhCaeBoKWrRWCOEeH0g3Wv565yNK4pFehRTG6
-	CMmWVWoznQcGoOKhHVR72U9XCqzM9FPGwNxyHv9Jqw+XEto4pm2MQ==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fs77g1823-1
+	:mime-version:references:subject:to; s=pp1; bh=tBkGHj7NLFWGec++e
+	6fPnEStG4RmckR3SWbzz+iAVRY=; b=O7/nbhqxgiUsD7VjSBBCGwgQ7VEkRhnSE
+	yefaosRl2WQ777CCqAqsfCvtjPiu7oL+xDmUbY8If0LA4yweFDYWU+iQHTnjWlKg
+	WrBNCxiE8uDgUXZGRStZEEUPGkE3zoOYfnt4REskE3uvOCpLNdPt7q2zVV1+fLuu
+	Of45zd+3s2AHsX9s65CR4RJWTs+4a0f7q3i2Nwi/CWCq+EbsUk23uQcqx4Dap77e
+	r0y61O+Mvrr/OYeLuOhGx8N47mhFEdqfS339ikW0EsOmPTuL7C4HQOJ3b3T/Atto
+	XWUC3ce9FOM1qIFsGT2PzpeSCXjZrA3tK5JdMtP1+Nvf2hkgNwqqg==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fs67hhcak-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Aug 2026 15:00:51 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 673EuUQC026009;
-	Mon, 3 Aug 2026 15:00:50 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fsugvwyxn-1
+	Mon, 03 Aug 2026 15:00:56 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 673EuIWQ014645;
+	Mon, 3 Aug 2026 15:00:55 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fswbg5pfx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Aug 2026 15:00:50 +0000 (GMT)
+	Mon, 03 Aug 2026 15:00:55 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 673F0kYj31392042
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 673F0pXL27590988
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Aug 2026 15:00:46 GMT
+	Mon, 3 Aug 2026 15:00:51 GMT
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 218212004F;
-	Mon,  3 Aug 2026 15:00:46 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 5E2D82004B;
+	Mon,  3 Aug 2026 15:00:51 +0000 (GMT)
 Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C580920040;
-	Mon,  3 Aug 2026 15:00:41 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 6CB8720040;
+	Mon,  3 Aug 2026 15:00:47 +0000 (GMT)
 Received: from li-4c4c4544-0047-4210-804e-b5c04f423534.ibm.com.com (unknown [9.39.27.135])
 	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  3 Aug 2026 15:00:41 +0000 (GMT)
+	Mon,  3 Aug 2026 15:00:47 +0000 (GMT)
 From: Tanushree Shah <tshah@linux.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
         vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
@@ -60,9 +60,9 @@ Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
         Tanushree.Shah@ibm.com, rostedt@goodmis.org,
         Tanushree Shah <tshah@linux.ibm.com>
-Subject: [RFC PATCH v3 4/5] perf data: Add --to-trace-dat option for converting perf.data tracepoint events into trace.dat format
-Date: Mon,  3 Aug 2026 20:29:54 +0530
-Message-ID: <20260803145958.299956-5-tshah@linux.ibm.com>
+Subject: [RFC PATCH v3 5/5] perf test: Add test validating trace.dat generated by 'perf data convert --to-trace-dat'
+Date: Mon,  3 Aug 2026 20:29:55 +0530
+Message-ID: <20260803145958.299956-6-tshah@linux.ibm.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260803145958.299956-1-tshah@linux.ibm.com>
 References: <20260803145958.299956-1-tshah@linux.ibm.com>
@@ -75,159 +75,226 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODAzMDEzMyBTYWx0ZWRfX4FNFCr9r9UVp
- ptXgJVLSLKykgj7UcGfgTOt2E2kn3vTy9vddL3tL9g5OfY7MAPKj6fVhI1VknOL++ku8GxS0B3M
- 5DG06JsYKIgM+VIUdekyL6zom2IZ3papwhLjvQsAp0blunSDzJ9zOQ4TSTgwQ8fG6h2vI11agRW
- 8PtUeY1PdvqvkRTMxNtiLabbPNozAN3aBOfCzj4/0u1uX2ukVykux96tqbybZsrDIaUiRViikn+
- a8m2/VOPIyyHwgDNXReK6LAB2gH9Pp0aKywiXyflrujqEqrV7Px7Ku6rDN/RTx5HkUWfYOlD870
- hZTMJQZrJUI20uF5VBHV4eG5UWWRuTOxYnKQBhIHCPO6ZboB2JNL9mjleuDXJwsyeb69JEJe6p+
- fRWmh5jJ1cfXjPIOacuIE8UM2eTtX7z/HgCQkinqG8fTX3vnft3THUZ5BrLzxgSPuBJzCSBcWC+
- z7+yRzqCUZUWpmXjsHw==
-X-Authority-Analysis: v=2.4 cv=WIFPmHsR c=1 sm=1 tr=0 ts=6a70ad23 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODAzMDEzMyBTYWx0ZWRfX1NKYkUQMfBTW
+ z13z//EVAJhJB76PXZrYPo/gEbvAn9M9NyaCsQsn4Uh2n84wN/PZgx9cxNYUsFcdmOkUYYSDlGI
+ zRzLrFHJ8zda4i63yH6TH+Qng6j0MZA=
+X-Authority-Analysis: v=2.4 cv=I7VVgtgg c=1 sm=1 tr=0 ts=6a70ad28 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
  a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=-X2ovouQhoOeBv6AmF4A:9
-X-Proofpoint-GUID: ayyT-r0E1Ly_jr5_n53191UbsBCAOFZf
-X-Proofpoint-ORIG-GUID: cn2ylnEYqi0SwA6IPkb5igsYcnb1fTjC
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODAzMDEzMyBTYWx0ZWRfX/ISoei+JvCRB
- HeXf7phKLAe3wuvL5s11RT3dsueiYh2G28lbC2RWfeCdK6s2RTXrqhcrgz1v1R+0BX4apxBu7yn
- qY5jPvn6+UQkQ39rsQoFJ4pFJorJ4kY=
+ a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=Yoc1fSEfpoo6qmh3DYcA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODAzMDEzMyBTYWx0ZWRfXy1MGl17H8jM9
+ uLpOa3I0jpG+PBJDb1MAPLlTtoM6nx8KdFxqu/6W1HVO7SAl3Zgwc2bzmeph2BpuYvAAoOwo2bz
+ UytMHE71oacBg8z90XFt2eTDpTouPtRwBl/Elzbqm+1Ez1vtbL16rzFtKjOeTR09/y2/GK9uitR
+ Dze3fx6fUhVs66Sy/Awxuzl8yU+U22T/TUmmS0v0yi19zcliOVU2T029LQBckkEhkncSSaDPfE+
+ qJxQ5463SSE1wcpfthUDL9Yo+ZwgEkhx00qOkg1igIh7wNJkZw6Bg/LUugj84HmMNHulTv9Xbm7
+ LtkCFbmHJHYUadxMMtua78vh+YfZMziIBVuSGYOAwJgcHRIbFN0XrefDtofNI5ipgau1x2G8e7X
+ QirN0Xpa39YdkVxNJwKFyuZv9sTTBIbJx/F2RWdlGAMlbJ1pAXeFxsPwW1/yomcUv0SFJEJ/QEY
+ AhsqakQBe964BTsIQ8w==
+X-Proofpoint-ORIG-GUID: FaSaOSby6Pi0R1RBGgx_0b4ks5uySHqR
+X-Proofpoint-GUID: vJqUWWuPHPjgIJuI9PQtkh6LcehU4CSd
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-08-03_03,2026-08-03_02,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 lowpriorityscore=0 priorityscore=1501 phishscore=0 malwarescore=0
- suspectscore=0 clxscore=1015 impostorscore=0 bulkscore=0 adultscore=0
+ bulkscore=0 impostorscore=0 clxscore=1015 priorityscore=1501 suspectscore=0
+ malwarescore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
  classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
  reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608030133
 
-Add new command-line option to perf data convert for generating
-trace.dat output files.
+Add a shell test covering perf data convert --to-trace-dat,
+alongside the existing --to-json and --to-ctf tests.
 
-The --to-trace-dat option:
-- Accepts output filename for trace.dat format
-- Mutually exclusive with --to-ctf and --to-json
-- Calls trace_convert__perf2dat() to perform conversion
-
-Usage:
-  $ perf record -e sched:* -a sleep 1
-  $ perf data convert --to-trace-dat=trace.dat
-  $ trace-cmd report trace.dat
-
-Document the new option in Documentation/perf-data.txt alongside
-the existing --to-ctf and --to-json entries.
+The test:
+- skips if perf isn't linked with libtraceevent
+- converts a plain sched:sched_switch recording to trace.dat
+- converts a pipe-mode recording (perf record -o - | perf data
+  convert -i -)
+- converts a recording with both tracepoint and non-tracepoint
+  events (sched:sched_switch,cycles)
+- validates the resulting file with trace-cmd report if trace-cmd
+  is installed, otherwise falls back to a basic non-empty-file check
 
 Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
 ---
- tools/perf/Documentation/perf-data.txt |  7 +++++
- tools/perf/builtin-data.c              | 43 ++++++++++++++++++++++++++
- tools/perf/util/trace-dat.c            |  3 ++
- 3 files changed, 53 insertions(+)
+ ...rf_data_converter_tracepoints_trace_dat.sh | 169 ++++++++++++++++++
+ 1 file changed, 169 insertions(+)
+ create mode 100755 tools/perf/tests/shell/test_perf_data_converter_tracepoints_trace_dat.sh
 
-diff --git a/tools/perf/Documentation/perf-data.txt b/tools/perf/Documentation/perf-data.txt
-index 20f178d61ed7..578ba6357183 100644
---- a/tools/perf/Documentation/perf-data.txt
-+++ b/tools/perf/Documentation/perf-data.txt
-@@ -30,6 +30,13 @@ OPTIONS for 'convert'
- --to-json::
- 	Triggers JSON conversion. Specify the JSON filename to output.
- 
-+--to-trace-dat::
-+	Triggers trace.dat conversion. Converts perf.data tracepoint events
-+	to trace.dat format v7, compatible with trace-cmd and KernelShark.
-+	Only PERF_TYPE_TRACEPOINT events are converted. Specify the
-+	trace.dat filename to output. Requires libtraceevent support.
-+	Mutually exclusive with --to-ctf and --to-json.
+diff --git a/tools/perf/tests/shell/test_perf_data_converter_tracepoints_trace_dat.sh b/tools/perf/tests/shell/test_perf_data_converter_tracepoints_trace_dat.sh
+new file mode 100755
+index 000000000000..9ca6432618cb
+--- /dev/null
++++ b/tools/perf/tests/shell/test_perf_data_converter_tracepoints_trace_dat.sh
+@@ -0,0 +1,169 @@
++#!/bin/bash
++# 'perf data convert --to-trace-dat' command test
++# SPDX-License-Identifier: GPL-2.0-or-later
++#
++# Copyright 2026, IBM Corporation
++# Author: Tanushree Shah <tshah@linux.ibm.com>
 +
- --tod::
- 	Convert time to wall clock time.
- 
-diff --git a/tools/perf/builtin-data.c b/tools/perf/builtin-data.c
-index 1dd73ed6bdcb..c9c863197d02 100644
---- a/tools/perf/builtin-data.c
-+++ b/tools/perf/builtin-data.c
-@@ -30,6 +30,11 @@ static const char *data_usage[] = {
- 
- static const char *to_json;
- static const char *to_ctf;
++set -e
 +
-+#ifdef HAVE_LIBTRACEEVENT
-+static const char *trace_dat_output;
-+#endif
++err=0
 +
- static struct perf_data_convert_opts opts = {
- 	.force = false,
- 	.all = false,
-@@ -46,6 +51,10 @@ static const struct option data_options[] = {
- 		OPT_BOOLEAN(0, "all", &opts.all, "Convert all events"),
- 		OPT_STRING(0, "time", &opts.time_str, "str",
- 			   "Time span of interest (start,stop)"),
-+#ifdef HAVE_LIBTRACEEVENT
-+		OPT_STRING(0, "to-trace-dat", &trace_dat_output,
-+			   "file", "Convert to trace.dat format using perf.data tracepoints"),
-+#endif
- 		OPT_END()
- 	};
- 
-@@ -63,10 +72,44 @@ static int cmd_data_convert(int argc, const char **argv)
- 		pr_err("You cannot specify both --to-ctf and --to-json.\n");
- 		return -1;
- 	}
-+#ifdef HAVE_LIBTRACEEVENT
-+	if (trace_dat_output && (to_json || to_ctf)) {
-+		pr_err("You cannot specify --to-trace-dat with --to-ctf or --to-json.\n");
-+		return -1;
-+	}
-+#endif
++perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++result=$(mktemp /tmp/__perf_test.output.trace.dat.XXXXX)
 +
-+#ifdef HAVE_LIBBABELTRACE_SUPPORT
-+	#ifdef HAVE_LIBTRACEEVENT
-+	if (!to_json && !to_ctf && !trace_dat_output) {
-+		pr_err("You must specify one of --to-ctf, --to-json, or --to-trace-dat.\n");
-+		return -1;
-+	}
-+	#else
- 	if (!to_json && !to_ctf) {
- 		pr_err("You must specify one of --to-ctf or --to-json.\n");
- 		return -1;
- 	}
-+	#endif
-+#else
-+	#ifdef HAVE_LIBTRACEEVENT
-+	if (!to_json && !trace_dat_output) {
-+		pr_err("You must specify --to-json or --to-trace-dat.\n");
-+		return -1;
-+	}
-+	#else
-+	if (!to_json) {
-+		pr_err("You must specify --to-json.\n");
-+		return -1;
-+	}
-+	#endif
-+#endif
++cleanup()
++{
++	rm -f "${perfdata}"
++	rm -f "${result}"
++	trap - exit term int
++}
 +
-+#ifdef HAVE_LIBTRACEEVENT
-+	if (trace_dat_output)
-+		return trace_convert__perf2dat(input_name ? input_name : "perf.data",
-+					       trace_dat_output, &opts);
-+#endif
- 
- 	if (to_json)
- 		return bt_convert__perf2json(input_name, to_json, &opts);
-diff --git a/tools/perf/util/trace-dat.c b/tools/perf/util/trace-dat.c
-index f71e03716e27..5598496c9a61 100644
---- a/tools/perf/util/trace-dat.c
-+++ b/tools/perf/util/trace-dat.c
-@@ -861,6 +861,9 @@ void trace_dat__free_cpu_buffers(void)
- 	for (cpu = 0; cpu < trace_dat_nr_cpus; cpu++) {
- 		int i;
- 
-+		if (!trace_cpu_data[cpu].events)
-+			continue;
++trap_cleanup()
++{
++	echo "Unexpected signal in ${FUNCNAME[1]}"
++	cleanup
++	exit 1
++}
++trap trap_cleanup exit term int
 +
- 		for (i = 0; i < trace_cpu_data[cpu].count; i++)
- 			free(trace_cpu_data[cpu].events[i].raw);
- 		free(trace_cpu_data[cpu].events);
++# Check if libtraceevent support is available
++if ! perf check feature libtraceevent
++then
++	echo "perf not linked with libtraceevent, skipping test"
++	exit 2
++fi
++
++# Check if trace-cmd is available for validation
++have_trace_cmd=0
++if command -v trace-cmd >/dev/null 2>&1; then
++	have_trace_cmd=1
++fi
++
++check_sched_switch()
++{
++	if ! perf list | grep -q 'sched:sched_switch'
++	then
++		echo "sched:sched_switch tracepoint not available, skipping test"
++		exit 2
++	fi
++}
++
++test_trace_converter_command()
++{
++	echo "Testing Perf Data Conversion Command to trace.dat"
++
++	if ! perf record -e sched:sched_switch -o "$perfdata" -- sleep 0.1
++	then
++		echo "Failed to record perf data"
++		err=1
++		return
++	fi
++
++	rm -f "$result"
++
++	if ! perf data convert --to-trace-dat "$result" --force -i "$perfdata"
++	then
++		echo "Perf Data Converter Command to trace.dat [FAILED]"
++		err=1
++		return
++	fi
++
++	if [ -f "$result" ] && [ -s "$result" ] ; then
++		echo "Perf Data Converter Command to trace.dat [SUCCESS]"
++	else
++		echo "Perf Data Converter Command to trace.dat [FAILED]"
++		err=1
++	fi
++}
++
++test_trace_converter_pipe()
++{
++	echo "Testing Perf Data Conversion Command to trace.dat (Pipe mode)"
++
++	rm -f "$result"
++
++	if ! perf record -e sched:sched_switch -o - -- sleep 0.1 | \
++	   perf data convert --to-trace-dat "$result" --force -i -
++	then
++		echo "Perf Data Converter Command to trace.dat (Pipe mode) [FAILED]"
++		err=1
++		return
++	fi
++
++	if [ -f "$result" ] && [ -s "$result" ]; then
++		echo "Perf Data Converter Command to trace.dat (Pipe mode) [SUCCESS]"
++	else
++		echo "Perf Data Converter Command to trace.dat (Pipe mode) [FAILED]"
++		err=1
++	fi
++}
++
++test_trace_converter_mixed_events()
++{
++	echo "Testing Perf Data Conversion with tracepoint and non-tracepoint events"
++
++	# Record both tracepoint and non-tracepoint events
++	if ! perf record -e sched:sched_switch,cycles -o "$perfdata" -- sleep 0.1
++	then
++		echo "Failed to record perf data (mixed events)"
++		err=1
++		return
++	fi
++
++	rm -f "$result"
++
++	if ! perf data convert --to-trace-dat "$result" --force -i "$perfdata"
++	then
++		echo "Perf Data Converter with mixed events [FAILED]"
++		err=1
++		return
++	fi
++
++	if [ -f "$result" ] && [ -s "$result" ] ; then
++		echo "Perf Data Converter with mixed events [SUCCESS]"
++	else
++		echo "Perf Data Converter with mixed events [FAILED]"
++		err=1
++	fi
++}
++
++validate_trace_format()
++{
++	echo "Validating Perf Data Converted trace.dat file"
++
++	if [ ! -f "$result" ] ; then
++		echo "File not found [FAILED]"
++		err=1
++		return
++	fi
++
++	# If trace-cmd is available, use it to validate the file
++	if [ "$have_trace_cmd" -eq 1 ] ; then
++		if trace-cmd report -i "$result" >/dev/null 2>&1 ; then
++			echo "trace-cmd can read the file [SUCCESS]"
++		else
++			echo "trace-cmd cannot read the file [FAILED]"
++			err=1
++		fi
++	else
++		# Without trace-cmd, just check file exists and has content
++		if [ -s "$result" ] ; then
++			echo "Output file exists and has content [SUCCESS]"
++		else
++			echo "Output file is empty [FAILED]"
++			err=1
++		fi
++	fi
++}
++
++check_sched_switch
++test_trace_converter_command
++validate_trace_format
++test_trace_converter_pipe
++validate_trace_format
++test_trace_converter_mixed_events
++validate_trace_format
++
++cleanup
++exit ${err}
 -- 
 2.47.1
 
