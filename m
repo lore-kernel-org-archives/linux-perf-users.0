@@ -1,149 +1,105 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A03389DEC;
-	Mon,  3 Aug 2026 10:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F5924DCF6
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 10:42:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785753206; cv=none; b=BphCAgHek+ulC6UqX2Xh+NZlrQGvCSa4xznN1FHu/GIVu1aswl30Y9vYNW+5k9wqXyUlVymApwenWqYQPP8zPJwBmidoSliNiZ8bMo1l/3PIV8P4jaaWAkRtt47OdYjAJ30KHJjAeXdfTAT+7z3RknJgtMo9JpbVFbh8fHKOHjE=
+	t=1785753729; cv=none; b=Qaj5fVPwVirOe+SVFsJHuL4V5QgVOUT1nQrAgKeUc6i3C+uiu0+HQ9KnTqv3OaHHr9l/20Iwv7Vg0LK5hqIbXHytUqQfXdBTKazkTsh5LfBte+eLa8GiAJQUZ5wQmUuLKH5et6VicBHbmEFuxTH4GIKUGPP7GY1B32RuQMpZxMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785753206; c=relaxed/simple;
-	bh=ze3/aIIA1Z656V9GipRlbTXw90aS1EjG5KR5o6i1Kvo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sSlGsxT+2uyOJBOWZH48miVaRa1HyonkjRCbZCKpCZJ7WyjUO5UC6uiH2iKEQn2P88aAx7UGUJzMA4HvXiC3PsZ8BvQcSwOugyrI8U+nmADIEOBpliDlQm36rQGDZ3RTI8/mKthtr7lPhoyiJbxpHoFO59CwjFujiFCuhGeYb0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VYFlnG8u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1785753729; c=relaxed/simple;
+	bh=mz/KtsA+BbVkTXGts5XZDgjHA1IeHb3zjYUyh5DnaFg=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=khfI4EOZa3igCLvqxhh1RhaJWOTyF+qdaKJpo/J3/MDa0SdzZufVC7M6qvSEdZxd6csmXnUZ2gYWWPMxGNKagsf5McHhz6DllgbOzZAf+REYq+HE08OwbrqT7ogu+K/T8GDe+dc81wQNWr4ZWgyBenDOnz8hyZiNJ4JH25t2oTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LN5R6ZKC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VYFlnG8u"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C280CC2BCFB;
-	Mon,  3 Aug 2026 10:33:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1785753205;
-	bh=ze3/aIIA1Z656V9GipRlbTXw90aS1EjG5KR5o6i1Kvo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=VYFlnG8ueth9oLL0Ux34ru2jZ9XGPNiLLv+iww6Ejb9GnqnnSWigZ3wcX3I80f4+a
-	 TRmNgFNR9qZlS6vYvFJ7l7SreWR9aNDiuaGxhI9GVI14z4zuWHaBChpMneX7EM03tg
-	 T4AtCG9k/Osy235a7OSqT3FQYXxVoFXOl6hr/uq4cm6gvYhgqeNw0Lqrcw9/s6KrZi
-	 FPBuoMBBs0vKxaSj3ffrBw+E9IG5OuSiWlfFCSxbHziCAchomhuj+60ufmn28FSsI6
-	 jh8cyMZT44yJ+a8Vv8Ka9k619+misWKOw7C4EcDrnxwwESNslFIVsiG3UbcASfd0Wq
-	 8L7D4PrUVKLvQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA79C5518E;
-	Mon,  3 Aug 2026 10:33:25 +0000 (UTC)
-From: Michalis Niarchos via B4 Relay <devnull+michael.niarchos.gmail.com@kernel.org>
-Date: Mon, 03 Aug 2026 12:33:23 +0200
-Subject: [PATCH 4/4] perf tools: Fix memory leak in cmd_kvm()
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LN5R6ZKC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90A0E1F000E9;
+	Mon,  3 Aug 2026 10:42:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785753727;
+	bh=VLbFgeMBX8HvEH3jpLz7e5JFmJP6G/OCtriQD5p797c=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=LN5R6ZKCUvtlLZNHsk8mYbBm8OLdifWRThU+7409t2Lf4VMSHz/8cuQdXiLiY3Tyi
+	 HXL45YcNX7CoaUskL6cmQmT59PFiddj+r9K1yQl3mvaMIGgs87KhqNiAmVzBT5aGJJ
+	 mgqlKQ05MZDhC1JXjFrno4Ge8v4F/K4BgnfGTyqq8eJNfo1WNMpQn56XUlj1jxj1Ps
+	 y1Y5bJPP35+4T7i0wXS0Y/azOsw6DdbSPobDzQ1/8wADNYmYzXNZLcYSOQ8H2xtFb7
+	 ipdKBnp+zJKUUjAd1QQKPOmX0ftPnmuy0yAZQfeVDOIDaBomIrc8KaDZakeoyClnYQ
+	 M/RM57AOW4KUA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/4] perf tools: Fix memory leak in cmd_kvm()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Michalis Niarchos" <michael.niarchos@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260803-perf-kvm-fixes-v1-1-a5db849ac973@gmail.com>
+References: <20260803-perf-kvm-fixes-v1-0-a5db849ac973@gmail.com>
+ <20260803-perf-kvm-fixes-v1-1-a5db849ac973@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 03 Aug 2026 10:42:06 +0000
+Message-Id: <20260803104207.90A0E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260803-perf-kvm-fixes-v1-4-a5db849ac973@gmail.com>
-References: <20260803-perf-kvm-fixes-v1-0-a5db849ac973@gmail.com>
-In-Reply-To: <20260803-perf-kvm-fixes-v1-0-a5db849ac973@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michalis Niarchos <michael.niarchos@gmail.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785753204; l=2666;
- i=michael.niarchos@gmail.com; s=20260731; h=from:subject:message-id;
- bh=aAXwiliLnci6ARcvdP09SP99aBXKZEyzobOz6tm8hbA=;
- b=1HQJR92TTBq0FroPdOZA3NsqlEbOi/eh3gya1ArmHe/YqCqXG/yB1xKKbd9s4KbDvgWa9eNj8
- uu4K3EbE7WZB7ScJc+nn1uROs3i2P9Hsn7Hce3RKQ72cWvH1r0zqN3M
-X-Developer-Key: i=michael.niarchos@gmail.com; a=ed25519;
- pk=/LBZRQzfuxTnSaZhgZE8EP7mHr0poyqlKeFssNqkzFE=
-X-Endpoint-Received: by B4 Relay for michael.niarchos@gmail.com/20260731
- with auth_id=912
-X-Original-From: Michalis Niarchos <michael.niarchos@gmail.com>
-Reply-To: michael.niarchos@gmail.com
 
-From: Michalis Niarchos <michael.niarchos@gmail.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] The error check evaluating `if (!file_name)` immediately following =
+`get_filename_for_perf_kvm()` is functionally dead code and prints an obsol=
+ete error message.
+--
 
-The usage string is allocated by parse_options_subcommand() and freed
-only on one return path. Using a single return point guarantees it is
-freed on all occasions.
+--- Patch [1]: [PATCH 1/4] perf tools: Fix memory leak in cmd_kvm() ---
+commit 85aa78ecdd5ada6c616d04d112b0f46542981162
+Author: Michalis Niarchos <michael.niarchos@gmail.com>
 
-Signed-off-by: Michalis Niarchos <michael.niarchos@gmail.com>
----
- tools/perf/builtin-kvm.c | 39 +++++++++++++++++++++++++--------------
- 1 file changed, 25 insertions(+), 14 deletions(-)
+perf tools: Fix memory leak in cmd_kvm()
 
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 189ef3576e34..56062c305db1 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -2145,6 +2145,7 @@ int cmd_kvm(int argc, const char **argv)
- 	const char *const kvm_subcommands[] = { "top", "record", "report", "diff",
- 						"buildid-list", "stat", NULL };
- 	const char *kvm_usage[] = { NULL, NULL };
-+	int ret = 0;
- 
- 	exclude_GH_default = true;
- 	perf_host  = 0;
-@@ -2163,29 +2164,39 @@ int cmd_kvm(int argc, const char **argv)
- 
- 		if (!file_name) {
- 			pr_err("Failed to allocate memory for filename\n");
--			return -ENOMEM;
-+			ret = -ENOMEM;
-+			goto exit;
- 		}
- 	}
- 
--	if (strlen(argv[0]) > 2 && strstarts("record", argv[0]))
--		return __cmd_record(file_name, argc, argv);
--	else if (strlen(argv[0]) > 2 && strstarts("report", argv[0]))
--		return __cmd_report(file_name, argc, argv);
--	else if (strlen(argv[0]) > 2 && strstarts("diff", argv[0]))
--		return cmd_diff(argc, argv);
--	else if (!strcmp(argv[0], "top"))
--		return __cmd_top(argc, argv);
--	else if (strlen(argv[0]) > 2 && strstarts("buildid-list", argv[0]))
--		return __cmd_buildid_list(file_name, argc, argv);
-+	if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
-+		ret = __cmd_record(file_name, argc, argv);
-+		goto exit;
-+	} else if (strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
-+		ret = __cmd_report(file_name, argc, argv);
-+		goto exit;
-+	} else if (strlen(argv[0]) > 2 && strstarts("diff", argv[0])) {
-+		ret = cmd_diff(argc, argv);
-+		goto exit;
-+	} else if (!strcmp(argv[0], "top")) {
-+		ret = __cmd_top(argc, argv);
-+		goto exit;
-+	} else if (strlen(argv[0]) > 2 && strstarts("buildid-list", argv[0])) {
-+		ret = __cmd_buildid_list(file_name, argc, argv);
-+		goto exit;
-+	}
- #if defined(HAVE_LIBTRACEEVENT)
--	else if (strlen(argv[0]) > 2 && strstarts("stat", argv[0]))
--		return kvm_cmd_stat(file_name, argc, argv);
-+	else if (strlen(argv[0]) > 2 && strstarts("stat", argv[0])) {
-+		ret = kvm_cmd_stat(file_name, argc, argv);
-+		goto exit;
-+	}
- #endif
- 	else
- 		usage_with_options(kvm_usage, kvm_options);
- 
-+exit:
- 	/* free usage string allocated by parse_options_subcommand */
- 	free((void *)kvm_usage[0]);
- 
--	return 0;
-+	return ret;
- }
+filename may get allocated by get_filename_for_perf_kvm(), but is
+never freed. Use string literals to remove the need for freeing.
 
--- 
-2.55.0
+> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+> index 394302ebdb161..44c6998f2ee5d 100644
+> --- a/tools/perf/builtin-kvm.c
+> +++ b/tools/perf/builtin-kvm.c
+> @@ -606,11 +606,11 @@ static const char *get_filename_for_perf_kvm(void)
+>  	const char *filename;
+> =20
+>  	if (perf_host && !perf_guest)
+> -		filename =3D strdup("perf.data.host");
+> +		filename =3D "perf.data.host";
+>  	else if (!perf_host && perf_guest)
+> -		filename =3D strdup("perf.data.guest");
+> +		filename =3D "perf.data.guest";
+>  	else
+> -		filename =3D strdup("perf.data.kvm");
+> +		filename =3D "perf.data.kvm";
+> =20
+>  	return filename;
+>  }
 
+[Severity: Low]
+Since get_filename_for_perf_kvm() now exclusively returns static string
+literals, it can never return NULL.
 
+Is it worth cleaning up the now-dead error handling block in cmd_kvm() that
+still checks for allocation failures?
+
+tools/perf/builtin-kvm.c:cmd_kvm() {
+    ...
+	if (!file_name) {
+		file_name =3D get_filename_for_perf_kvm();
+
+		if (!file_name) {
+			pr_err("Failed to allocate memory for filename\n");
+			return -ENOMEM;
+		}
+	}
+    ...
+}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260803-perf-kvm-f=
+ixes-v1-0-a5db849ac973@gmail.com?part=3D1
