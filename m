@@ -1,279 +1,337 @@
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2FB3BCD27;
-	Mon,  3 Aug 2026 09:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5113F3B9DBB
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 09:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785748042; cv=none; b=VHNHP7xJnPfTGMCApBGPLj7sDjeapioWd+jLsPxi00weD35svcfUdPeYpSZr9bKWf46aC0RrqOyP1WzV5dbuKro2oWMRUuttjFNennic6SDXbiqxcvLoODJcw+Rq+ks03V5CfDaOlrcH0MXKENjZxUz5oY/ICLgwZe8x4w71NcY=
+	t=1785748066; cv=none; b=t88YtRTdojRcOYrsGQ7ehEWEkt1nDfscVcqV+eXeuimR14mr9R7vMDgYzlGrJzFcN98WYnxTDYlgjV8/a+ZdjCNLXh8gW5+d/yvG4DtBo6oyuNtqbGoN4pfavY4EV1iRxvwoc8/yhrorDpkQW4YfRX+6ypWAe+S/aKDSd7t4DX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785748042; c=relaxed/simple;
-	bh=0BehhMYEO1Y6W0D4MIg4UHXbLLtdNAOI0tOor2+eziw=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aZ8HK+ZCb0EP5NLtwNvKUPGeQo3ExnfAO2T1tJiVOYhkF6nyJRtx1suMX2SKZActyrOC/f8nvv9uBOH/rd+QyU8UnLX0nzljwzqx8Jqs7CbhYkGjc8Jwo5yX9la4D1xD7wJb6CZ3dhUrwSp7m9Uhm0XOjlT8DX3DqUmXSYsvwIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b=Ce02WSQh; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	s=arc-20240116; t=1785748066; c=relaxed/simple;
+	bh=b16T4GW68hAFFc0osm9lAVRPnORne6TE2Xjz+8jsFek=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NI5yAEqRGIS9kRLIE2X4jiUUcGKB5E3Vm71xEsxNBdmSXmSTpxoy0rpfv9HyHY3F2I2U1HBZnlevFreagxEuLWElCRxYUA3PNw97sjzG/hNzc7AXFQsNGCwTv23VmzWo5tp0BDRR5gRPulqy8r6HQDBdBBArUvWAEvQCwCOklm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Z7FcCeXM; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b="Ce02WSQh"
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6734sMrV4069467;
-	Mon, 3 Aug 2026 02:06:47 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	pps82601-s2048-2026-q3; bh=2lOMyDzCSwZWKg7uFx3vnVZinKnCcqtGHVq4C
-	b2ttXc=; b=Ce02WSQhk5oKB0AgWj5bgeqncNv38xkO0zghJF7FI4tqPqbBWFkH9
-	prnVnkkQ1lM0J6ZpTnwZiTN9+lDzsY/hkRGerZNA/HAZKIs7NAouh+lYT55PhIKK
-	NDjQun+b3Ds5x+QzR8S/yYAwNZnkMxCMkmGsNKcclyG7hmMNDmIAZytmVGnOBXK8
-	VnLw5nBF65DaekOfMKFBYSlcCCtZGZxgbofz/jjWGAq9ylN2rlnyIEzvMGN9fuPJ
-	/UEbKZuj2e0Umiul0kMw/2lOFwImqXHI0TbQnyxAvH8xiKKLS7D67KXyKZ+jmPIm
-	E4XvH3VvY55UzGtBKvMdrqyRAOj8z6ZBw==
-Received: from maileast.thefacebook.com ([163.114.135.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4fsc41rnw4-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 03 Aug 2026 02:06:46 -0700 (PDT)
-Received: from localhost (2620:10d:c0a8:1c::1b) by mail.thefacebook.com
- (2620:10d:c0a9:6f::8fd4) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.45; Mon, 3 Aug
- 2026 09:06:45 +0000
-From: Amir Ayupov <aaupov@fb.com>
-To: <linux-perf-users@vger.kernel.org>, <coresight@lists.linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Suzuki K Poulose
-	<suzuki.poulose@arm.com>,
-        James Clark <james.clark@linaro.org>, Leo Yan
-	<leo.yan@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
-	<mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim
-	<namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander
- Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>
-CC: <linux-doc@vger.kernel.org>, Mike Leach <mike.leach@arm.com>,
-        Jonathan
- Corbet <corbet@lwn.net>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Swapnil
- Sapkal <swapnil.sapkal@amd.com>
-Subject: [PATCH 5/9] perf cs-etm: Split up cs_etm__process_timestamped_queues()
-Date: Mon, 3 Aug 2026 02:06:36 -0700
-Message-ID: <20260803090640.2412336-5-aaupov@fb.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260803090640.2412336-1-aaupov@fb.com>
-References: <20260803090640.2412336-1-aaupov@fb.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Z7FcCeXM"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-c197eaaab00so507728166b.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 03 Aug 2026 02:07:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1785748061; x=1786352861; darn=vger.kernel.org;
+        h=content-type:in-reply-to:autocrypt:from:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=b16T4GW68hAFFc0osm9lAVRPnORne6TE2Xjz+8jsFek=;
+        b=Z7FcCeXMrLdA4ufKv3RkAK2XjzoZuT/WD08supKBZltexr6brLI0QqJPKhEFpp7sDA
+         HYwMxY6FxX3YOfFApphDCuPUATxu/y7qeBLbAYu2yqLWCsoazm1ItwgVq/96TCwk2TVB
+         NskwtZLSfce+7JT1U/CaS5eF+YV5r/p+7Fu0QSkZM/ct5NBcWxBaJYW5ejWTdqYrKH0g
+         iHU3TWlIcNrtWFPmirdzAJvhrbUHrEZ8uN5R6Xj2UsFTie7NP31NaB/rU1jAIK06snvc
+         WiKINhlA/NwAlwH1BiG08IOFmuWiCfghR5one6/3xPzDMazxuybkHNld5dcyXIFNMQOo
+         Guig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785748061; x=1786352861;
+        h=content-type:in-reply-to:autocrypt:from:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=b16T4GW68hAFFc0osm9lAVRPnORne6TE2Xjz+8jsFek=;
+        b=Wat63rj3z6+73yKBWE0Q4wQojM7TPyBB3WiurEM+0OM+OBNgVQFZQYkYToBovjsBJG
+         9TOLODWEPUyg5IGUHqtrPdSU2LHlN37BtXa6OmLib53ovwfcXN/jHAMEn9XW00FcaZ4J
+         g15pQo6dWGs7vf6jqxAY5d1xBZNY4H/FTgIVCJxuko8W2XAj82UODxgvIJHXUCa8FA7a
+         7JSG6Laxg5gsczMI8FDIhvTY1Tt+dBwmFlACMrBhpSkcfu4ue0EEAzm0M4a8m1dKYYo0
+         DgivKpCwNLxSa9rVXeRjO78zS0C+dUsOnyeY7DtZT3wdAgAyepD27ACePdfpdcaJqs7b
+         07lA==
+X-Forwarded-Encrypted: i=1; AHgh+RoxZ2WZ4c5ttUo4E11i3zV0hcqtIu+izoUCN9jmLEp+F9UJVQ4wImPd8vF9yMfJ7OocOktSL9QvpMtus4CSCdXD@vger.kernel.org
+X-Gm-Message-State: AOJu0YzD0HizXKXtC0jssSg4GAz6Sll6vQAuLSyq8oQHX4y8o6BSPy4k
+	Lot7IjkJY4vm+jpeNlYcaUvKaJAUiqNnvjes8HI/hE47HOrOxnMI4yW6FkgydPzAiGI=
+X-Gm-Gg: AR+sD10x4UA5EIAjGRW0WnQLXR+Ulou6g+4JNdFc6K8uB4gNz4L2piWEt2hvNVHfDK/
+	xJ5GLc7rvIkwj42wwVporUOEKuOhCKV5blKIra86CpzegyQKp+OIITxN6EYUgx1rbTsY0jl/RvP
+	Y46wLlaoZ3mnHpfk+X7AhA7CHMyVr6ng67PdhC77hQvJuEV/8Gj5cugo4VgSaL27f+Z15iAycHI
+	yd/H+N+Oxr+wLN3Jr4pZ45Z+Fbvx5GJE3TsldBvLR5dUWENbf/ttdCOIfK72J6QmUroZRizIXNr
+	lO1U3Gs0o2CL8c3s+9EIm6cCdp8bR62wkM7DMlgdWFoKFjeT+JYxB/FiV3ST7GBl87NUSJQuhmv
+	8RV+5of+vFaTN12cNRnm1VRr5hx97s5XLhR0kvR3zk16TvKmkP1gWWf6GCf6Z992Zs13+j21l+b
+	BYlEtWPHKhxIsoex3EPVVeXhDvowWumTm2amoUKUlmxh2KKnn+IjMmjlFu+fXMHYdzryC6x14Si
+	bykKLavvY+jwAQQmzQYBRI5H3lbb2a/OaYqxs2NNf8n3np+qOFM1RMpuT1Mi4JE/fV1PpoJE6Kg
+	/CrVvAYY3u3hkxA=
+X-Received: by 2002:a17:907:76fa:b0:c19:fb6e:5ff0 with SMTP id a640c23a62f3a-c1fe81a5d9fmr582774266b.15.1785748061532;
+        Mon, 03 Aug 2026 02:07:41 -0700 (PDT)
+Received: from ?IPV6:2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112? (2a00-12d0-af5d-ad01-5d3f-14e6-9bcb-5112.ip.tng.de. [2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1fd445432dsm507440166b.41.2026.08.03.02.07.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 03 Aug 2026 02:07:41 -0700 (PDT)
+Message-ID: <5ca4d0e4-1747-45a7-a916-a7516bb1692b@suse.com>
+Date: Mon, 3 Aug 2026 11:07:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: GTZ6Ve85zsefTd_VsdcGO-lxhPjScmGA
-X-Proofpoint-ORIG-GUID: GTZ6Ve85zsefTd_VsdcGO-lxhPjScmGA
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODAzMDA4MSBTYWx0ZWRfX45UxcL7EUIGU
- irgQotk1RAi0Nu3nfhe09PyXJwmBmsGkVF64Fpd8fLONEFK0EOOGAABetYMFyCwP5y02ikPE9s1
- uXsY1KFgySn4MJ7J0RcgJoefCMM91RTSiL2rDFUYM8GVcQckEGgmMTTdo1yU3Wh4adWW+Ihexje
- 597qmj53PelOyw2B5Bl9O80nWTfPLCoB0tE4nlVOMcSO08voN0Zbwc3WH6q/8duSNF0Rzr4e+MU
- TvMUQXEo37ee4b0XLSodgfglW6wkYn3WRrwRmm5lCIy67r5pRTT2AWK3Isx+5t1LbrLUHAY2c2V
- Ga5QoUIYk5Dd5KQ5vwEw7H1otZaRIM1booqPf4NqV9FslIJ94NZUX2Swg0fh9kaCw146FrVr+wr
- FoMJZYajaSAmz9M4akPgcK7dLGqaYyaB4pwBLazBKQ0cBHgxtEO9BwaZ1jsrvG2l2TPHy4blrdT
- sNHMU/3qbUcRkBzK8Ow==
-X-Authority-Analysis: v=2.4 cv=A7Fc+aWG c=1 sm=1 tr=0 ts=6a705a26 cx=c_pps
- a=MfjaFnPeirRr97d5FC5oHw==:117 a=MfjaFnPeirRr97d5FC5oHw==:17
- a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=7x6HtfJdh03M6CCDgxCd:22
- a=8elwO82fXORLTBIkMd32:22 a=FOH2dFAWAAAA:8 a=nEhC7NrZ7_LQuKocUF8A:9
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODAzMDA4MSBTYWx0ZWRfX/V4tq3+1Wduv
- 6cmJavzYOgVpfQ9CDML+NYkO0zPJDWhoVXGL8IbVSO9Hp/X2qw4AsO8Yg2ES4RFAXXj9nokKkre
- UinP7UUDqhBxBsM2z+DwNIyLXOKoVFU=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-02_06,2026-07-30_01,2025-10-01_01
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 00/14] Remove PG_private by using page/folio->private
+ checks instead
+To: Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>,
+ Gregory Price <gourry@gourry.net>, Ying Huang
+ <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Minchan Kim <minchan@kernel.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, Stefano Stabellini
+ <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ xen-devel@lists.xenproject.org, Eric Biggers <ebiggers@kernel.org>,
+ "Theodore Y. Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
+ linux-fscrypt@vger.kernel.org, Oscar Salvador <osalvador@suse.de>,
+ Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
+ Gao Xiang <xiang@kernel.org>, Jan Kara <jack@suse.cz>,
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+ Sandeep Dhavale <dhavale@google.com>, Hongbo Li <hongbohbli@tencent.com>,
+ Chunhai Guo <guochunhai@vivo.com>, linux-erofs@lists.ozlabs.org,
+ linux-fsdevel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Axel Rasmussen
+ <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, linux-trace-kernel@vger.kernel.org,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ linux-nfs@vger.kernel.org, Song Liu <song@kernel.org>,
+ Yu Kuai <yukuai@fygo.io>, Ilya Dryomov <idryomov@gmail.com>,
+ Alex Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>,
+ Li Nan <magiclinan@didiglobal.com>, Xiao Ni <xiao@kernel.org>,
+ linux-raid@vger.kernel.org, ceph-devel@vger.kernel.org,
+ Richard Weinberger <richard@nod.at>, Zhihao Cheng <chengzhihao1@huawei.com>,
+ linux-mtd@lists.infradead.org, Baoquan He <baoquan.he@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Dave Young <ruirui.yang@linux.dev>, Shuah Khan <skhan@linuxfoundation.org>,
+ kexec@lists.infradead.org, linux-doc@vger.kernel.org
+References: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
+Content-Language: en-US
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Autocrypt: addr=jgross@suse.com; keydata=
+ xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
+In-Reply-To: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------Vg9NJvq3ine0Gyx1IX0BEzQC"
 
-cs_etm__process_timestamped_queues() currently does three things: it seeds
-the auxtrace heap with one entry per queue, it decodes until the heap is
-empty, and it then walks every traceID queue to flush whatever is left in
-the branch stacks. That is fine while the only caller is
-cs_etm__flush_events(), which runs once, but it does not survive the
-function being called repeatedly.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------Vg9NJvq3ine0Gyx1IX0BEzQC
+Content-Type: multipart/mixed; boundary="------------1XNOHvG0ftKOzuceeKWaT2Id";
+ protected-headers="v1"
+From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+To: Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>,
+ Gregory Price <gourry@gourry.net>, Ying Huang
+ <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Kairui Song <kasong@tencent.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+ Minchan Kim <minchan@kernel.org>,
+ Sergey Senozhatsky <senozhatsky@chromium.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, Stefano Stabellini
+ <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ xen-devel@lists.xenproject.org, Eric Biggers <ebiggers@kernel.org>,
+ "Theodore Y. Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
+ linux-fscrypt@vger.kernel.org, Oscar Salvador <osalvador@suse.de>,
+ Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
+ Gao Xiang <xiang@kernel.org>, Jan Kara <jack@suse.cz>,
+ Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
+ Sandeep Dhavale <dhavale@google.com>, Hongbo Li <hongbohbli@tencent.com>,
+ Chunhai Guo <guochunhai@vivo.com>, linux-erofs@lists.ozlabs.org,
+ linux-fsdevel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+ Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Axel Rasmussen
+ <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
+ Wei Xu <weixugc@google.com>, linux-trace-kernel@vger.kernel.org,
+ Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ linux-nfs@vger.kernel.org, Song Liu <song@kernel.org>,
+ Yu Kuai <yukuai@fygo.io>, Ilya Dryomov <idryomov@gmail.com>,
+ Alex Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>,
+ Li Nan <magiclinan@didiglobal.com>, Xiao Ni <xiao@kernel.org>,
+ linux-raid@vger.kernel.org, ceph-devel@vger.kernel.org,
+ Richard Weinberger <richard@nod.at>, Zhihao Cheng <chengzhihao1@huawei.com>,
+ linux-mtd@lists.infradead.org, Baoquan He <baoquan.he@linux.dev>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>,
+ Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Dave Young <ruirui.yang@linux.dev>, Shuah Khan <skhan@linuxfoundation.org>,
+ kexec@lists.infradead.org, linux-doc@vger.kernel.org
+Message-ID: <5ca4d0e4-1747-45a7-a916-a7516bb1692b@suse.com>
+Subject: Re: [PATCH RFC 00/14] Remove PG_private by using page/folio->private
+ checks instead
+References: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
+In-Reply-To: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
 
-Seeding cannot be repeated because a queue that still holds a heap slot
-would be seeded again, adding duplicate entries and growing the heap
-without bound. Flushing cannot be repeated either, because ending a block
-finalises state that later trace still needs.
+--------------1XNOHvG0ftKOzuceeKWaT2Id
+Content-Type: multipart/mixed; boundary="------------emnYBJyIfA0mAuf1FBk0JrWD"
 
-Move both out. Seeding becomes cs_etm__update_queues(), gated on
-queues.new_data so it only runs when new AUX data has been queued, with
-etmq->on_heap tracking whether a queue currently occupies a heap slot;
-this mirrors intel_pt_update_queues() and intel_pt_queue::on_heap.
-Flushing becomes cs_etm__flush_timestamped_queues(). What remains is the
-decode loop on its own, which a later patch can then drive incrementally.
+--------------emnYBJyIfA0mAuf1FBk0JrWD
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-No functional change: the sole caller performs the same three steps in the
-same order.
+T24gMDEuMDguMjYgMDQ6MTMsIFppIFlhbiB3cm90ZToNCj4gSGkgYWxsLA0KPiANCj4gVGhp
+cyBwYXRjaHNldCByZW1vdmVzIFBHX3ByaXZhdGUgdG8gbWFrZSBzcGFjZSBmb3IgdXBjb21p
+bmcgUEdfZm9saW8NCj4gKHJlc2VydmVkIGFzIF9fUEdfZm9saW8pIGZvciBpZGVudGlmeWlu
+ZyBwYWdlcyBmcm9tIGEgZm9saW8gKG1vcmUgZGV0YWlscw0KPiBpbiBOb3RlIGJlbG93KS4g
+SW5zdGVhZCBvZiBjaGVja2luZyBQR19wcml2YXRlLCBhbGwgY29kZSBpcyBjaGFuZ2VkIHRv
+DQo+IGNoZWNrIHBhZ2UvZm9saW8tPnByaXZhdGUgIT0gTlVMTCBpbnN0ZWFkLg0KDQpJJ20g
+YSBsaXR0bGUgYml0IHdvcnJpZWQgdGhhdCBwYWdlL2ZvbGlvLT5wcml2YXRlIGlzIGluIGEg
+dW5pb24sIHNvIHRvZGF5DQppdCBjb3VsZCAoaW4gdGhlb3J5KSBiZSAhPSBOVUxMIHdoaWxl
+IFBHX3ByaXZhdGUgaXNuJ3Qgc2V0Lg0KDQpJcyBpdCByZWFsbHkgbm90IHBvc3NpYmxlIHRv
+IGVudGVyIGEgcGF0aCB3aGVyZSBQR19wcml2YXRlIGlzIHRlc3RlZCB3aGlsZQ0KcGFnZS9m
+b2xpby0+cHJpdmF0ZSAhPSBOVUxMIGR1ZSB0byB0aGUgdW5pb24gYmVpbmcgdXNlZCBvdGhl
+cndpc2UgKFBHX3ByaXZhdGUNCm5vdCBzZXQpPw0KDQoNCkp1ZXJnZW4NCg==
+--------------emnYBJyIfA0mAuf1FBk0JrWD
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Amir Ayupov <aaupov@fb.com>
----
- tools/perf/util/cs-etm.c | 71 ++++++++++++++++++++++++++++++++++------
- 1 file changed, 61 insertions(+), 10 deletions(-)
+-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 114b3cd2da495..4d895f11deb7f 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -136,9 +136,13 @@ struct cs_etm_queue {
- 	 */
- 	struct intlist *own_traceid_list;
- 	u32 sink_id;
-+	/* Whether this queue currently occupies a slot in etm->heap */
-+	bool on_heap;
- };
- 
-+static int cs_etm__update_queues(struct cs_etm_auxtrace *etm);
- static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm);
-+static int cs_etm__flush_timestamped_queues(struct cs_etm_auxtrace *etm);
- static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
- 					   pid_t tid);
- static int cs_etm__get_data_block(struct cs_etm_queue *etmq);
-@@ -939,6 +943,8 @@ static int cs_etm__flush_events(struct perf_session *session,
- 	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
- 						   struct cs_etm_auxtrace,
- 						   auxtrace);
-+	int ret;
-+
- 	if (dump_trace)
- 		return 0;
- 
-@@ -953,7 +959,15 @@ static int cs_etm__flush_events(struct perf_session *session,
- 		return cs_etm__process_timeless_queues(etm, -1);
- 	}
- 
--	return cs_etm__process_timestamped_queues(etm);
-+	ret = cs_etm__update_queues(etm);
-+	if (ret)
-+		return ret;
-+
-+	ret = cs_etm__process_timestamped_queues(etm);
-+	if (ret)
-+		return ret;
-+
-+	return cs_etm__flush_timestamped_queues(etm);
- }
- 
- static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
-@@ -1330,6 +1344,8 @@ static int cs_etm__queue_first_cs_timestamp(struct cs_etm_auxtrace *etm,
- 	 */
- 	cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_chan_id);
- 	ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, cs_timestamp);
-+	if (!ret)
-+		etmq->on_heap = true;
- out:
- 	return ret;
- }
-@@ -2767,23 +2783,30 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
- 	return 0;
- }
- 
--static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
-+/*
-+ * Seed the heap with one entry from each queue that is not already
-+ * represented in it, so that decoding proceeds in time order across all
-+ * queues. Only queues that have newly queued data need to be considered.
-+ */
-+static int cs_etm__update_queues(struct cs_etm_auxtrace *etm)
- {
- 	int ret = 0;
--	unsigned int cs_queue_nr, queue_nr, i;
--	u8 trace_chan_id;
--	u64 cs_timestamp;
--	struct auxtrace_queue *queue;
-+	unsigned int i;
- 	struct cs_etm_queue *etmq;
--	struct cs_etm_traceid_queue *tidq;
-+
-+	if (!etm->queues.new_data)
-+		return 0;
-+
-+	etm->queues.new_data = false;
- 
- 	/*
- 	 * Pre-populate the heap with one entry from each queue so that we can
--	 * start processing in time order across all queues.
-+	 * start processing in time order across all queues. Skip queues that
-+	 * already occupy a heap slot, otherwise they would be added twice.
- 	 */
- 	for (i = 0; i < etm->queues.nr_queues; i++) {
- 		etmq = etm->queues.queue_array[i].priv;
--		if (!etmq)
-+		if (!etmq || etmq->on_heap)
- 			continue;
- 
- 		ret = cs_etm__queue_first_cs_timestamp(etm, etmq, i);
-@@ -2791,6 +2814,19 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
- 			return ret;
- 	}
- 
-+	return ret;
-+}
-+
-+static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
-+{
-+	int ret = 0;
-+	unsigned int cs_queue_nr, queue_nr;
-+	u8 trace_chan_id;
-+	u64 cs_timestamp;
-+	struct auxtrace_queue *queue;
-+	struct cs_etm_queue *etmq;
-+	struct cs_etm_traceid_queue *tidq;
-+
- 	while (1) {
- 		if (!etm->heap.heap_cnt)
- 			break;
-@@ -2807,6 +2843,7 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
- 		 * to process it.
- 		 */
- 		auxtrace_heap__pop(&etm->heap);
-+		etmq->on_heap = false;
- 
- 		tidq  = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
- 		if (!tidq) {
-@@ -2874,7 +2911,21 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
- 		 */
- 		cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_chan_id);
- 		ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, cs_timestamp);
-+		if (ret)
-+			goto out;
-+		etmq->on_heap = true;
- 	}
-+out:
-+	return ret;
-+}
-+
-+/* Flush any branch stack entries left over once all trace is decoded */
-+static int cs_etm__flush_timestamped_queues(struct cs_etm_auxtrace *etm)
-+{
-+	int ret = 0;
-+	unsigned int i;
-+	struct cs_etm_queue *etmq;
-+	struct cs_etm_traceid_queue *tidq;
- 
- 	for (i = 0; i < etm->queues.nr_queues; i++) {
- 		struct int_node *inode;
-@@ -2893,7 +2944,7 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
- 				return ret;
- 		}
- 	}
--out:
-+
- 	return ret;
- }
- 
--- 
-2.52.0
+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
+kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
+=3DeeAB
+-----END PGP PUBLIC KEY BLOCK-----
 
+--------------emnYBJyIfA0mAuf1FBk0JrWD--
+
+--------------1XNOHvG0ftKOzuceeKWaT2Id--
+
+--------------Vg9NJvq3ine0Gyx1IX0BEzQC
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmpwWlsFAwAAAAAACgkQsN6d1ii/Ey/i
+jgf/ZwJPxlL37xKWgHvTpcOyxx9OjPwR5NnmxhKYC+qK1G+dCKRR2aNsNRd92IvtuR/zlwoSK3Bz
+7Knn/QAX+Sr8+MzzkoSZZy4464mITxuVnjBsYOy1wmVfTRA9xJ5kPDsLcow9h9fba5YWY5JKjJEr
+fuIk59vC3iZC8TXbrwFnUB118QfIzPMfnHvl18ioDjqN/X6ooFJudXLB3hTrlpzsxtdu1OFI+TsY
+0FUiNapbbcLYtM5X9v/bo7LSqQNdjZKmfV2DVQHs8Vj2bH/TyrIG+SvEggEztdqBgec9T7Ix66uU
+FOasApx6jWOz0UmYAKKBF0iBOhSZaPnQhSA6xqkzCw==
+=lraB
+-----END PGP SIGNATURE-----
+
+--------------Vg9NJvq3ine0Gyx1IX0BEzQC--
