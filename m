@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B9992D949C;
-	Mon,  3 Aug 2026 01:11:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5012D8385;
+	Mon,  3 Aug 2026 01:11:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785719512; cv=none; b=m8LlwS1HCgu5YYtkScHDDJN65LfzG8Fty8TVmT1qtZ1kcUE3TSTURy/dS89hHblwC0GPhBIGJDMo85gTGy4aWDmOJHcvQ0y2pi9lN38P5+jHgISNS8a6Klu0xyoK3A0Uh9+a3fF1SeD/a2DowTD1zMPSBwvFuYdLBBLwu29qBtA=
+	t=1785719515; cv=none; b=iMu9/i9+1lOV2Rg/tnYgxFFdsy4N3b2l4WvsAGnHvUJlquiWdk7hosCUyDuknvZIo0JcFtoSnBbmtiiyy+PRtr1S9c0m1O+lcpFavnVFpbXSFsafpactI+lkPNCHiVUWR4OZCfI7Zc2HQBN29M1h9GmD4jkPojjq3WkYDj/iiy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785719512; c=relaxed/simple;
-	bh=ttYcqu4qrJ7YD1NMVsN5D7j0h4bPZwJPpbL8X5H9oR4=;
+	s=arc-20240116; t=1785719515; c=relaxed/simple;
+	bh=I3/+4upVeqL/IgnzYhvhhFAkUQNlR840yF7ej3qujNU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TTFVK7B9D0LC/Wuc1DOMe09GussMJdJuozZ/UyPdNpekdLxBqJ90l9NV38UAaXPu9SC3C4wDMGKJdfYAKIPGxRvJpaaNeRCXsFIeTlFKg29VK8EksaYoNSLtgl9r2TTFHRnJwmUDtbZE/pZHpaX+A1EuVa0jsWg6kvxJiCocLhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WY02y1XY; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=av/V4otSULgMJQ7drMDuDWHubMmNpTCCoBd8YZHY4+UzulZ62+RVenMiD7J6E+kZsjHiH1fiyGjbYMtJ4mq1jKikWVEJ4aXXBfM7CA01JvN6pgKEyJpNAw0nR2O0WiVDpjoEVLtyyW/bHnsrFEof/Lenv/McC04ZlVt5hsOblns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=clQvI5wP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WY02y1XY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 792871F00A3A;
-	Mon,  3 Aug 2026 01:11:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="clQvI5wP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06DCD1F000E9;
+	Mon,  3 Aug 2026 01:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785719510;
-	bh=JbPcBM1pijKIIniNdkaqelB/3LHnd848Lbgh+q+4Qqk=;
+	s=k20260515; t=1785719514;
+	bh=iBTAdqnyic/plxCO+GjAFBJ8z9lhqDZNFuzWAHGOAUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=WY02y1XYi1yAocf5nTGM3eO1P9sfajyWTTwv0EF8xoOP0a7flbE+F9fGnnO1KUwVF
-	 jxXTTolU5sdh/olft2WYvkrq20yYjOzv0i8lSkKf1vFnuFbram8DJY2c2cW8HOp6vk
-	 u5hfdPEA4h1VnKYkt0OJYFkzSP7zzaBOVSDnX+fdU68kgfG1Gio923i1IbE1hhsMUx
-	 5S8GUMQvJlVOiLRdeYHv+YgBJeqXlHB1Z8qeZy9UDylUdbp07r74MAn+S5VPKa5lkH
-	 dKOf+mw17OsrX7ffvTxiiEFMEphBDUT3GD7x/vt2iQ2FpirGdKUZwgOAYGeRS4VsqH
-	 xb5wXc6//u6xA==
+	b=clQvI5wPqujxtE+Tv05CkKOrrFdC0wBbumDE6LUPFYtwIka5n4wiGoITO0n5lDMHn
+	 dHLsHItIKEPXz9SDbh0UBli0tmkJ4TuHOUUhgb84FPANV9xLxzD7ntgXeQqfU6Ivha
+	 QwLfec0y9hr00VAjr87LJX9OeLlhSQCgnBQz7Mmfq6H7qfIlxt3fI3Zyfeq+dSc7UJ
+	 0+wXAudZ5TgGe70sT57QsCFk+CKugzyP1/hhwjGAe43ZGL7grlwhH/l7HqHo70ChNW
+	 q3Hvxp0PLtYimoJu2ks1YNE7Tc6SYhfk8gNkzlEe4B2aW91I4/FHORKRBHWu2x/Zaa
+	 k9hkmzkgOGwwA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>
-Subject: [PATCH 1/2] perf c2c: Fix error masking, OOM, and unchecked caller errors in hpp_list__parse()
-Date: Sun,  2 Aug 2026 22:11:39 -0300
-Message-ID: <20260803011140.179943-2-acme@kernel.org>
+Subject: [PATCH 2/2] perf c2c: Clean up registered formats on c2c_hists__init() failure
+Date: Sun,  2 Aug 2026 22:11:40 -0300
+Message-ID: <20260803011140.179943-3-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260803011140.179943-1-acme@kernel.org>
 References: <20260803011140.179943-1-acme@kernel.org>
@@ -55,112 +55,53 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-hpp_list__parse() has two bugs:
+When c2c_hists__init() calls hpp_list__parse() and it fails partway
+through, format structures registered via perf_hpp_list__column_register()
+and perf_hpp_list__register_sort_field() are left on the hpp_list.  The
+c2c_he__alloc_hists() caller handles this with
+perf_hpp__reset_output_field(),
+but perf_c2c_report() does not, leaking the partially registered entries.
 
-1. The PARSE_LIST macro resets ret = 0 at the start of each invocation,
-   so an error from output parsing is silently overwritten when the sort
-   parsing block runs.  The function returns success with partially
-   initialized state.
+Fix by adding cleanup inside c2c_hists__init() itself, so all callers
+are protected.
 
-2. When the caller passes a non-NULL output_ or sort_ string, but
-   strdup() returns NULL due to OOM, NULL is passed to PARSE_LIST which
-   treats it as empty input (the "if (!_list) break" branch).  No error
-   is returned.
-
-Fix both by checking strdup() return values before proceeding and adding
-a cleanup label so that ret from each PARSE_LIST call is checked before
-the next runs, preserving the first error.
-
-The early exits now skip perf_hpp__setup_output_field(), which means
-c2c_hists__reinit() can return a non-zero value in cases that previously
-always succeeded silently.  Both callers discarded its return:
-resort_cl_cb() continued into hists__collapse_resort() on a broken list,
-and perf_c2c__report() proceeded with uninitialised hists.  Fix the full
-chain: check and propagate the error in resort_cl_cb() -- hists__iterate_cb()
-already stops iteration and returns the callback error -- and check both
-c2c_hists__reinit() and hists__iterate_cb() in perf_c2c__report().
-
-Fixes: 2d388bd0c9d3 ("perf c2c report: Add stdio output support")
+Fixes: 78b275437873 ("perf c2c report: Add sample processing")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
 Cc: Jiri Olsa <jolsa@kernel.org>
-Assisted-by: Claude:claude-sonnet-4.6
+Assisted-by: Claude:claude-opus-4.6
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-c2c.c | 26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
+ tools/perf/builtin-c2c.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index c9584dbedf77afe8..df07e97155df2584 100644
+index df07e97155df2584..9b59197f01aa642c 100644
 --- a/tools/perf/builtin-c2c.c
 +++ b/tools/perf/builtin-c2c.c
-@@ -2093,8 +2093,18 @@ static int hpp_list__parse(struct perf_hpp_list *hpp_list,
- 	char *sort   = sort_   ? strdup(sort_) : NULL;
- 	int ret;
- 
-+	/* strdup() returns NULL on OOM, don't silently treat as empty */
-+	if ((output_ && !output) || (sort_ && !sort)) {
-+		ret = -ENOMEM;
-+		goto out;
-+	}
-+
- 	PARSE_LIST(output, c2c_hists__init_output);
-+	if (ret)
-+		goto out;
- 	PARSE_LIST(sort,   c2c_hists__init_sort);
-+	if (ret)
-+		goto out;
- 
- 	/* copy sort keys to output fields */
- 	perf_hpp__setup_output_field(hpp_list);
-@@ -2111,6 +2121,7 @@ static int hpp_list__parse(struct perf_hpp_list *hpp_list,
- 	perf_hpp__append_sort_keys(&hists->list);
- #endif
- 
-+out:
- 	free(output);
- 	free(sort);
- 	return ret;
-@@ -2281,6 +2292,7 @@ static int resort_cl_cb(struct hist_entry *he, void *arg)
- 	struct c2c_hist_entry *c2c_he;
- 	struct c2c_hists *c2c_hists;
- 	bool display = he__display(he, &c2c.shared_clines_stats);
+@@ -2132,6 +2132,8 @@ static int c2c_hists__init(struct c2c_hists *hists,
+ 			   int nr_header_lines,
+ 			   struct perf_env *env)
+ {
 +	int ret;
++
+ 	__hists__init(&hists->hists, &hists->list);
  
- 	c2c_he = container_of(he, struct c2c_hist_entry, he);
- 	c2c_hists = c2c_he->hists;
-@@ -2291,7 +2303,9 @@ static int resort_cl_cb(struct hist_entry *he, void *arg)
- 		c2c_he->cacheline_idx = idx++;
- 		calc_width(c2c_he);
+ 	/*
+@@ -2144,7 +2146,13 @@ static int c2c_hists__init(struct c2c_hists *hists,
+ 	/* Overload number of header lines.*/
+ 	hists->list.nr_header_lines = nr_header_lines;
  
--		c2c_hists__reinit(c2c_hists, c2c.cl_output, c2c.cl_resort, env);
-+		ret = c2c_hists__reinit(c2c_hists, c2c.cl_output, c2c.cl_resort, env);
-+		if (ret)
-+			return ret;
+-	return hpp_list__parse(&hists->list, /*output=*/NULL, sort, env);
++	ret = hpp_list__parse(&hists->list, /*output=*/NULL, sort, env);
++
++	/* Unregister any formats added before the failure point */
++	if (ret)
++		perf_hpp__reset_output_field(&hists->list);
++
++	return ret;
+ }
  
- 		hists__collapse_resort(&c2c_hists->hists, NULL);
- 		hists__output_resort_cb(&c2c_hists->hists, NULL, filter_cb);
-@@ -3356,13 +3370,19 @@ static int perf_c2c__report(int argc, const char **argv)
- 	else if (c2c.display == DISPLAY_SNP_PEER)
- 		sort_str = "tot_peer";
- 
--	c2c_hists__reinit(&c2c.hists, output_str, sort_str, perf_session__env(session));
-+	err = c2c_hists__reinit(&c2c.hists, output_str, sort_str, perf_session__env(session));
-+	if (err) {
-+		pr_err("Failed to reinitialize hists\n");
-+		goto out_mem2node;
-+	}
- 
- 	ui_progress__init(&prog, c2c.hists.hists.nr_entries, "Sorting...");
- 
- 	hists__collapse_resort(&c2c.hists.hists, NULL);
- 	hists__output_resort_cb(&c2c.hists.hists, &prog, resort_shared_cl_cb);
--	hists__iterate_cb(&c2c.hists.hists, resort_cl_cb, perf_session__env(session));
-+	err = hists__iterate_cb(&c2c.hists.hists, resort_cl_cb, perf_session__env(session));
-+	if (err)
-+		goto out_mem2node;
- 
- 	ui_progress__finish();
- 
+ static int c2c_hists__reinit(struct c2c_hists *c2c_hists,
 -- 
 2.55.0
 
