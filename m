@@ -1,116 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2AE1C5799
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 13:39:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2968840DB25;
+	Mon,  3 Aug 2026 13:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785764365; cv=none; b=EC7MAHzeB2A3lAj+SBmiYmj/5thaglNntfn9Rac0dO8yTKfj9f7/Xrw0jKF+3qDT9YpjsTyZ+8UHH9VotitOlCZ6XZHOy0nI3Gg0WgsFATNctMyFva0keIAsG3YNurnRo2+VzuIfztkyucjYNXWM392gUniGAraoSuPF5L7uRmo=
+	t=1785765120; cv=none; b=EnIDabtZtvp1FJDSwyHDvtjsVzy6mU9ify+mnOV8NxPlLg8qVGLNdIRVxZYxIboHeImLvToJVVSee2qd7lPbW7hdLmz2wRNfjt4+EaKF/w32BbDRrDJH1IWvdLCHqwA8vpgDmPW2vvTCmEwxOQZMZgTJDW2ULgZRIy0yRSt/2Vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785764365; c=relaxed/simple;
-	bh=oHufdLrEKU0yfKb5AqGkrg4lPat5XUuoNf/xSFQqMNs=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hKYRYIJgu3Wr+LvMSY6QkYnH7ORLiogXeQURPnE9YVix1gm1xZvuapElBGqklnbrwKCJM7+jbl6Ul243Pi/4jvDwMA0jkjsjfjpaiVaPFwGE8kapjL0pP8pqsf778G+sGm5bZtm97r3spaA5iAJDdh7owDD0rAyOLN4aSx5MUBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dAv+QXFN; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785765120; c=relaxed/simple;
+	bh=PJ1AXo1bE4Xib7XSRHSemd8i5WPgCv3avsMGp3YygL0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=QkXCTl288RMY3w7fwdR1feO/FarowRJGKEASHqj9/ADEvLrMO3jm6P8xIZ2M67MSspVTjF9aMMORRjuvGawBYx5aNPyFmWB6tS4Opom0v3wow4im2lYmv6bFPutyQIchSw+FZwkpdc37xoIN+WrZSPoPyGWbaltza6JjH+TTrRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iljXzuR+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dAv+QXFN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C7DE1F000E9;
-	Mon,  3 Aug 2026 13:39:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785764364;
-	bh=kkCBhui7tiJ1lFnvFvMdlrSSF6vn7A07ciDCoUi/ycs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dAv+QXFNIy6mqROS15YgAhgA5Jc0mjh8lsCzsWohLY5Mp5Sy/iVP8BqkcR5seXGeB
-	 QcICQD3kRbb84lvnVL7mM/ULTj5EJvMd0mzcf564Y3a2HCzuaZ5tlf3fZtqb7nWZ0l
-	 tNlzI5x6+cEaPEu++YG+9HoglqMuxODmpX57tESkXMBMOi8OS5ELp0BEKNZR2PXOjz
-	 +6hZeM86A6pooeo8a4HuqIijCvK/eb5Ssf6d6MnFrhUtP3tcq9jbmro3DoC0OeBtmF
-	 Vq+z6EiN93nXyxokgO2NrBOytuoohsZwEn+A22ju8rY6WyoMSHQML89snUpZmZuamd
-	 iRbqN1TDSXh3Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 4/4] perf tools: Fix double frees and memory leaks in
- cmd_kvm()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Michalis Niarchos" <michael.niarchos@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260803-perf-kvm-fixes-v2-4-1b337189fffc@gmail.com>
-References: <20260803-perf-kvm-fixes-v2-0-1b337189fffc@gmail.com>
- <20260803-perf-kvm-fixes-v2-4-1b337189fffc@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 03 Aug 2026 13:39:22 +0000
-Message-Id: <20260803133923.6C7DE1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iljXzuR+"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DCA85C2BCFD;
+	Mon,  3 Aug 2026 13:51:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1785765119;
+	bh=PJ1AXo1bE4Xib7XSRHSemd8i5WPgCv3avsMGp3YygL0=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=iljXzuR+5OmfdH9dSaAaiEzxSIH11uqyrp+TPTOzX+fKUSvvKqhLQRX4c2owm1EcP
+	 6sx3XANfPnbnwv2Qc68EKfJCwW4Q/LxniBUrIbrUNr0Cbk9qhvZ+NjIiHLya+sCfg/
+	 l44actuZxot2amIsyy/G5CHdtSe9XCqg5xa9LrbpUg1YQZSvcCCdfcYWdn6sq2EgOM
+	 XKE1oGSDKNYUZMJRzKz8ENtKhowQVPSSNv/IO8oBfp8SKfmEYNt9+Hzn7QY1FD6t56
+	 lQBEshVwjriDSsaEJKx5CEOYki4xNxGPbUbAwSOZ26MOYTaqDOqFe9c/e7Mtx2yM6W
+	 ZxgpiScnTZKzw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6143C55179;
+	Mon,  3 Aug 2026 13:51:59 +0000 (UTC)
+From: Michalis Niarchos via B4 Relay <devnull+michael.niarchos.gmail.com@kernel.org>
+Date: Mon, 03 Aug 2026 15:51:54 +0200
+Subject: [PATCH v3 3/3] perf tools: Fix memory leak in cmd_kvm()
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260803-perf-kvm-fixes-v3-3-e06268ec06fa@gmail.com>
+References: <20260803-perf-kvm-fixes-v3-0-e06268ec06fa@gmail.com>
+In-Reply-To: <20260803-perf-kvm-fixes-v3-0-e06268ec06fa@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Michalis Niarchos <michael.niarchos@gmail.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1785765118; l=2577;
+ i=michael.niarchos@gmail.com; s=20260731; h=from:subject:message-id;
+ bh=B7Sv0QwuZKxlNQr0I80Lih/KewWi/BiAYs14XtbWNDU=;
+ b=cFuraravjFmqBCMXVT84PwL5QT8273nbZCySTuEdsjJMW0LBZyoIfW+j3L/qqXkQcF3FtbCFn
+ TQTFSENnlZ2Bjndc8DJDxNA9pzmaxFxRxBVvD6AoXNe0cYRCV7UiF7t
+X-Developer-Key: i=michael.niarchos@gmail.com; a=ed25519;
+ pk=/LBZRQzfuxTnSaZhgZE8EP7mHr0poyqlKeFssNqkzFE=
+X-Endpoint-Received: by B4 Relay for michael.niarchos@gmail.com/20260731
+ with auth_id=912
+X-Original-From: Michalis Niarchos <michael.niarchos@gmail.com>
+Reply-To: michael.niarchos@gmail.com
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+From: Michalis Niarchos <michael.niarchos@gmail.com>
 
-Pre-existing issues:
-- [High] The patch fixes memory leaks and double-free vulnerabilities in `_=
-_cmd_record`, `__cmd_report`, `__cmd_buildid_list`, and `__cmd_top` by remo=
-ving `STRDUP_FAIL_EXIT` and the element-wise `free()` loop on `rec_argv`, b=
-ut it misses applying the exact same fix to `kvm_events_record()` which suf=
-fers from the identical bug.
---
+The usage string is allocated by parse_options_subcommand() and freed
+only on one return path. Using a single return point guarantees it is
+freed on all occasions.
 
---- Patch [4]: [PATCH v2 4/4] perf tools: Fix double frees and memory leaks=
- in cmd_kvm() ---
-commit 0b9d8e748caa2edae90fe11689ed1a0bf618e63b
-Author: Michalis Niarchos <michael.niarchos@gmail.com>
+Signed-off-by: Michalis Niarchos <michael.niarchos@gmail.com>
+---
+ tools/perf/builtin-kvm.c | 36 +++++++++++++++++++++++-------------
+ 1 file changed, 23 insertions(+), 13 deletions(-)
 
-perf tools: Fix double frees and memory leaks in cmd_kvm()
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 8e14d037d7d9..04cf9bd5b595 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -2132,6 +2132,7 @@ int cmd_kvm(int argc, const char **argv)
+ 	const char *const kvm_subcommands[] = { "top", "record", "report", "diff",
+ 						"buildid-list", "stat", NULL };
+ 	const char *kvm_usage[] = { NULL, NULL };
++	int ret = 0;
+ 
+ 	exclude_GH_default = true;
+ 	perf_host  = 0;
+@@ -2148,25 +2149,34 @@ int cmd_kvm(int argc, const char **argv)
+ 	if (!file_name)
+ 		file_name = get_filename_for_perf_kvm();
+ 
+-	if (strlen(argv[0]) > 2 && strstarts("record", argv[0]))
+-		return __cmd_record(file_name, argc, argv);
+-	else if (strlen(argv[0]) > 2 && strstarts("report", argv[0]))
+-		return __cmd_report(file_name, argc, argv);
+-	else if (strlen(argv[0]) > 2 && strstarts("diff", argv[0]))
+-		return cmd_diff(argc, argv);
+-	else if (!strcmp(argv[0], "top"))
+-		return __cmd_top(argc, argv);
+-	else if (strlen(argv[0]) > 2 && strstarts("buildid-list", argv[0]))
+-		return __cmd_buildid_list(file_name, argc, argv);
++	if (strlen(argv[0]) > 2 && strstarts("record", argv[0])) {
++		ret = __cmd_record(file_name, argc, argv);
++		goto exit;
++	} else if (strlen(argv[0]) > 2 && strstarts("report", argv[0])) {
++		ret = __cmd_report(file_name, argc, argv);
++		goto exit;
++	} else if (strlen(argv[0]) > 2 && strstarts("diff", argv[0])) {
++		ret = cmd_diff(argc, argv);
++		goto exit;
++	} else if (!strcmp(argv[0], "top")) {
++		ret = __cmd_top(argc, argv);
++		goto exit;
++	} else if (strlen(argv[0]) > 2 && strstarts("buildid-list", argv[0])) {
++		ret = __cmd_buildid_list(file_name, argc, argv);
++		goto exit;
++	}
+ #if defined(HAVE_LIBTRACEEVENT)
+-	else if (strlen(argv[0]) > 2 && strstarts("stat", argv[0]))
+-		return kvm_cmd_stat(file_name, argc, argv);
++	else if (strlen(argv[0]) > 2 && strstarts("stat", argv[0])) {
++		ret = kvm_cmd_stat(file_name, argc, argv);
++		goto exit;
++	}
+ #endif
+ 	else
+ 		usage_with_options(kvm_usage, kvm_options);
+ 
++exit:
+ 	/* free usage string allocated by parse_options_subcommand */
+ 	free((void *)kvm_usage[0]);
+ 
+-	return 0;
++	return ret;
+ }
 
-This commit fixes double free and memory leak vulnerabilities in various
-builtin KVM commands (like __cmd_record, __cmd_report, __cmd_buildid_list,
-and __cmd_top). It achieves this by removing the use of STRDUP_FAIL_EXIT and
-dropping the element-wise free loop on rec_argv.
+-- 
+2.55.0
 
-> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index 9504c83e20744..04cf9bd5b5959 100644
-> --- a/tools/perf/builtin-kvm.c
-> +++ b/tools/perf/builtin-kvm.c
-> @@ -2018,8 +2018,6 @@ static int __cmd_record(const char *file_name, int =
-argc, const char **argv)
->  	ret =3D cmd_record(i, rec_argv);
-> =20
->  EXIT:
-> -	for (i =3D 0; i < rec_argc; i++)
-> -		free((void *)rec_argv[i]);
->  	free(rec_argv);
->  	return ret;
->  }
 
-[Severity: High]
-This is a pre-existing issue and was not introduced by this patch, but does
-kvm_events_record() in tools/perf/builtin-kvm.c require this exact same fix?
-
-The commit message notes that the fixed functions follow the same pattern
-as kvm_events_record(). However, looking at kvm_events_record(), it appears
-it still contains the flawed cleanup loop:
-
-tools/perf/builtin-kvm.c:kvm_events_record() {
-    ...
-EXIT:
-    for (i =3D 0; i < rec_argc; i++)
-        free((void *)rec_argv[i]);
-    free(rec_argv);
-    return ret;
-}
-
-When a user runs 'perf kvm stat record', cmd_record() processes the argumen=
-ts
-by calling parse_options(). Since parse_options() shifts the array in-place
-using memmove() to consume recognized arguments, iterating over the original
-length of rec_argv (rec_argc) during cleanup encounters duplicated pointers=
- at
-the end of the array.
-
-Will leaving this loop in kvm_events_record() lead to a double-free memory
-corruption when those duplicate pointers are freed?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260803-perf-kvm-f=
-ixes-v2-0-1b337189fffc@gmail.com?part=3D4
