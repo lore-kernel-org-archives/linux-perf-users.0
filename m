@@ -1,107 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5012D8385;
-	Mon,  3 Aug 2026 01:11:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC51A26D4C3
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 01:28:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785719515; cv=none; b=iMu9/i9+1lOV2Rg/tnYgxFFdsy4N3b2l4WvsAGnHvUJlquiWdk7hosCUyDuknvZIo0JcFtoSnBbmtiiyy+PRtr1S9c0m1O+lcpFavnVFpbXSFsafpactI+lkPNCHiVUWR4OZCfI7Zc2HQBN29M1h9GmD4jkPojjq3WkYDj/iiy0=
+	t=1785720490; cv=none; b=uWlVM+0zsoSnkDpHD5nxYqNjLRE7KkkTH/1PsUdjW9L4aldZ/Ie8u/AD4/HiYVavnRtIBVZGJQ6/Mp7CMdGTLlBUuEEx94qgK2WI91TNzv/NX+ciMz2NhnvTk6tVGulZVQAfPRJSzt8c30iGaUTBDctYw/EfQjRUGjUGNakA5HM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785719515; c=relaxed/simple;
-	bh=I3/+4upVeqL/IgnzYhvhhFAkUQNlR840yF7ej3qujNU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=av/V4otSULgMJQ7drMDuDWHubMmNpTCCoBd8YZHY4+UzulZ62+RVenMiD7J6E+kZsjHiH1fiyGjbYMtJ4mq1jKikWVEJ4aXXBfM7CA01JvN6pgKEyJpNAw0nR2O0WiVDpjoEVLtyyW/bHnsrFEof/Lenv/McC04ZlVt5hsOblns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=clQvI5wP; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785720490; c=relaxed/simple;
+	bh=lNUXYIrXkSFJQEjEiGkcGgFJY5TPcp+/3WB92Ob9PxA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=hxD1crSagnWXigCk3PHhnLQJQHiYLdwS/ZmGykkO9vh1a8xV/tRHE2Xt1NO687952XbO+AK1YBAUsYCX1YeUdYQ9zhKPNpTvJOtP0+vZfid7LGqpMFXsWHBn5hAONKBsh0Yuy77wcEfwoV2irrfDksVQ1KR7gobQ8QbuQwzRmQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=csE0eeh0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="clQvI5wP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06DCD1F000E9;
-	Mon,  3 Aug 2026 01:11:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="csE0eeh0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F7C1F000E9;
+	Mon,  3 Aug 2026 01:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785719514;
-	bh=iBTAdqnyic/plxCO+GjAFBJ8z9lhqDZNFuzWAHGOAUo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=clQvI5wPqujxtE+Tv05CkKOrrFdC0wBbumDE6LUPFYtwIka5n4wiGoITO0n5lDMHn
-	 dHLsHItIKEPXz9SDbh0UBli0tmkJ4TuHOUUhgb84FPANV9xLxzD7ntgXeQqfU6Ivha
-	 QwLfec0y9hr00VAjr87LJX9OeLlhSQCgnBQz7Mmfq6H7qfIlxt3fI3Zyfeq+dSc7UJ
-	 0+wXAudZ5TgGe70sT57QsCFk+CKugzyP1/hhwjGAe43ZGL7grlwhH/l7HqHo70ChNW
-	 q3Hvxp0PLtYimoJu2ks1YNE7Tc6SYhfk8gNkzlEe4B2aW91I4/FHORKRBHWu2x/Zaa
-	 k9hkmzkgOGwwA==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot <sashiko-bot@kernel.org>
-Subject: [PATCH 2/2] perf c2c: Clean up registered formats on c2c_hists__init() failure
-Date: Sun,  2 Aug 2026 22:11:40 -0300
-Message-ID: <20260803011140.179943-3-acme@kernel.org>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260803011140.179943-1-acme@kernel.org>
+	s=k20260515; t=1785720488;
+	bh=pLe0MdCkdQHGkWzz82VI44AgGxUIOIBK/4EZhdcXSWw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=csE0eeh0CnwEPpqmUqlHsyneZMW3amH635+PBbqJaNoQJ3g5Pg7qskWfn1S5M7mA5
+	 y4jPAMJ1Rr3uyIjsk2WAbVjAUJVrdxhnqYtzdxzvfhCPSTtPnyijGKTwTxo2f6Y/+q
+	 XBI+1QvBxR77EsZE1vJfQfn2yf9TiQyr0+xPih+294buP2HvHvCxuEzO+b2nasDQB+
+	 dgEm7v0ofmPYmah9JmBoG6Kv97yyG1wVr3jUG8P1zsDvVcIUCCDPgB8+tN4e7fIHJj
+	 h3K7wYMYWUI5eqZUGUJX5M9sfyPuzDxcP0hNwEy7yiQ6K3okE+IxCScB57YpGdrr6k
+	 hvsoH87LuNoMQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/2] perf c2c: Fix error masking, OOM, and unchecked
+ caller errors in hpp_list__parse()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260803011140.179943-2-acme@kernel.org>
 References: <20260803011140.179943-1-acme@kernel.org>
+ <20260803011140.179943-2-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 03 Aug 2026 01:28:08 +0000
+Message-Id: <20260803012808.51F7C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-When c2c_hists__init() calls hpp_list__parse() and it fails partway
-through, format structures registered via perf_hpp_list__column_register()
-and perf_hpp_list__register_sort_field() are left on the hpp_list.  The
-c2c_he__alloc_hists() caller handles this with
-perf_hpp__reset_output_field(),
-but perf_c2c_report() does not, leaking the partially registered entries.
+New issues:
+- [Medium] The newly added error handling `if (ret) goto out;` is bypassed =
+because the `PARSE_LIST` macro silently masks non-terminal errors (like OOM=
+) from individual tokens, undermining the commit's intended fix.
 
-Fix by adding cleanup inside c2c_hists__init() itself, so all callers
-are protected.
+Pre-existing issues:
+- [Low] Missing explicit POSIX standard header inclusions for libc function=
+s.
+--
 
-Fixes: 78b275437873 ("perf c2c report: Add sample processing")
-Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Assisted-by: Claude:claude-opus-4.6
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/builtin-c2c.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+--- Patch [1]: [PATCH 1/2] perf c2c: Fix error masking, OOM, and unchecked =
+caller errors in hpp_list__parse() ---
+commit 840153db94480f61d734e3e7494d6e8309bb2f8f
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index df07e97155df2584..9b59197f01aa642c 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2132,6 +2132,8 @@ static int c2c_hists__init(struct c2c_hists *hists,
- 			   int nr_header_lines,
- 			   struct perf_env *env)
- {
-+	int ret;
-+
- 	__hists__init(&hists->hists, &hists->list);
- 
- 	/*
-@@ -2144,7 +2146,13 @@ static int c2c_hists__init(struct c2c_hists *hists,
- 	/* Overload number of header lines.*/
- 	hists->list.nr_header_lines = nr_header_lines;
- 
--	return hpp_list__parse(&hists->list, /*output=*/NULL, sort, env);
-+	ret = hpp_list__parse(&hists->list, /*output=*/NULL, sort, env);
-+
-+	/* Unregister any formats added before the failure point */
-+	if (ret)
-+		perf_hpp__reset_output_field(&hists->list);
-+
-+	return ret;
- }
- 
- static int c2c_hists__reinit(struct c2c_hists *c2c_hists,
--- 
-2.55.0
+perf c2c: Fix error masking, OOM, and unchecked caller errors in hpp_list__=
+parse()
+   =20
+This commit addresses error handling bugs in hpp_list__parse() where output
+parsing errors were silently overwritten and OOM conditions for strdup() we=
+re
+ignored. It also fixes unhandled return values from c2c_hists__reinit() and
+hists__iterate_cb() in the calling functions.
 
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index c9584dbedf77a..df07e97155df2 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -2093,8 +2093,18 @@ static int hpp_list__parse(struct perf_hpp_list *h=
+pp_list,
+>  	char *sort   =3D sort_   ? strdup(sort_) : NULL;
+>  	int ret;
+> =20
+> +	/* strdup() returns NULL on OOM, don't silently treat as empty */
+> +	if ((output_ && !output) || (sort_ && !sort)) {
+> +		ret =3D -ENOMEM;
+> +		goto out;
+> +	}
+
+[Severity: Low]
+This is a pre-existing issue, but does this file correctly include the POSIX
+standard headers for the libc functions it uses? Functions like strdup() and
+free() require <string.h> and <stdlib.h>. Relying on implicit inclusion
+can cause build failures on musl libc systems.
+
+>  	PARSE_LIST(output, c2c_hists__init_output);
+> +	if (ret)
+> +		goto out;
+
+[Severity: Medium]
+Will this properly catch all errors from the parsing callback? Looking at
+the PARSE_LIST macro definition:
+
+	ret =3D _fn(hpp_list, tok, env);
+	if (ret =3D=3D -EINVAL) {
+		pr_err("Invalid --fields key: '%s'", tok);
+		break;
+	} else if (ret =3D=3D -ESRCH) {
+		pr_err("Unknown --fields key: '%s'", tok);
+		break;
+	}
+
+If the callback returns an error like -1 due to an allocation failure on a
+token that isn't the last in the list, the loop won't break. Does this mean
+subsequent iterations could succeed and overwrite ret to 0, causing the new=
+ly
+added if (ret) goto out; check to be bypassed?
+
+>  	PARSE_LIST(sort,   c2c_hists__init_sort);
+> +	if (ret)
+> +		goto out;
+>
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260803011140.1799=
+43-1-acme@kernel.org?part=3D1
