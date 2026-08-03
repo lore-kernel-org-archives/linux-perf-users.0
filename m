@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4B437B01E;
-	Mon,  3 Aug 2026 03:45:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D939383312;
+	Mon,  3 Aug 2026 03:45:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785728740; cv=none; b=kvOYy78cOqO5piBmn9SIj9ssxtX4vVHfRLTLj/f2G1Fd/u38/efDwHGiJMn5pfF/OhIa41E/oKmiqpDenUEr/aT47470dV01p1t38jrpOWrUYMwMNAAtH6ge6CKgNXdwQRCBW99SQDv+HBxCqhZdZDcuE/NveaM3YjbhS/4gbew=
+	t=1785728741; cv=none; b=MpxHmQtLZ6N2EhETwAW/1ybZMlg8fZUN6Y4i8b762XNxHzKUmoS6m2MPXGGLp35GHp0eU+j2Gpajr+QWoDAv4e8PUuR9Gz819H4oNUUWFH3aMxnvk6+RYVPgXvdvZ7JAreH4DngM/dcIynzvtiifaw6snc4yU0j+ChVptBKNsl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785728740; c=relaxed/simple;
-	bh=Q4pLECA3wa+COS9EyuHl2rWvr+EppQfJgPM2VvpVo5g=;
+	s=arc-20240116; t=1785728741; c=relaxed/simple;
+	bh=n73mG7ZValrAk+ples/QrCNMYRMrkhso2G12lL7ZV34=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mShEZdR/NWaU8QC5Qec6SPl4uW5az9UzwwvfhCT6M4ka5dflF5VLt8t5+2hHT2haQNSn8uOnyNVGQcaaq0IaqQUxkAp17Rz/tC0HvfQ2jgC1u+8dXFzWirBbPa/Mq4X02M8brvW5asTPFYu5ykvhNLWavb9R+sWOCfAWZ9mEwFA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S3zxCM6d; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=i+85W7pf1t2z/V6AXJQ5jDqVqL7XxcYZl2TeG/y96jwxoc66CHTCIbIJ6KrCkg44Nz4qLDTOeG57VPNwsXfnigaaJGo05JCX9GqfWP2orjCSta7sVKaRRzVDWu2Iyehf0ojWkpgHkYImd8DCmU2W5IzJZtoKPmD+ds/XkZN/iuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IqNVFbY5; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S3zxCM6d"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IqNVFbY5"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1785728738; x=1817264738;
+  t=1785728740; x=1817264740;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Q4pLECA3wa+COS9EyuHl2rWvr+EppQfJgPM2VvpVo5g=;
-  b=S3zxCM6dzkxYC+Sxv5oHnVNEeROdG2c5lLUfXfRpKA10tmr3uZfyTeDD
-   t36VKt3xc/dhBBuAZ1hpRqyvGz+j9uPTg0yfNeefHA33xMjwCQFhKtyxP
-   v70WAtcGMbFHEetGtFMTpvF6pv6xIefTMswoqaOH93PfP+De1qcHHIoy0
-   jY31A4T8bh68ltia3jtVewItIK2KdmSr3/pqQO4k2A9aZMs+FuNkFsphd
-   9S7rIWnBYJ1naDp6Y8i2latusYVa2LwFZdS0MlF0ls5jiyLOmqqrXUDb4
-   rdQ6P3sN1kIVZ0hNHK1cFH4BsvXL695Snq2Bu2fK67qOCDbA4M81dv0IN
-   g==;
-X-CSE-ConnectionGUID: Pq4TOn3eR0y21VbWGqtGPg==
-X-CSE-MsgGUID: Np0N4w+USPyajJbAKZ2dCA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11863"; a="86210152"
+  bh=n73mG7ZValrAk+ples/QrCNMYRMrkhso2G12lL7ZV34=;
+  b=IqNVFbY5Ii/DkMrGAR15wJ25LOd/jPxX/vFINun2gm7oivg4jBMJFxe+
+   lhIlcMFdYnUa1KJA6KbQ/ICzTaFy5Ol3vyJ3mTFw7ZBVNEQYg3lhXGkj0
+   55XQV563Zowm60cbxmsqCDeHDN+DQlXAOzORAW7e5AcXcr3TGe7AqDvQD
+   SBxKruD0GRHl2BwWLt3cB+pubU8DRUrH1GyN0bee0fzKxBUy9r3xMzW91
+   +qFnsnUBI+mkPpfGPNV7ojLzHk3bhiOmVRgIEE9TghhLhTG7GznByqHMC
+   IW5gnPNLa6CeIaxb4zvE+nQh9gA7zyO8Lh9Z2qoHjhz7MiWcZswxCZl4k
+   A==;
+X-CSE-ConnectionGUID: vyXk1sm4TCKFPnndhmcetQ==
+X-CSE-MsgGUID: EsimItggQxW6Ln/12DmEHA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11863"; a="86210173"
 X-IronPort-AV: E=Sophos;i="6.25,201,1779174000"; 
-   d="scan'208";a="86210152"
+   d="scan'208";a="86210173"
 Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2026 20:45:37 -0700
-X-CSE-ConnectionGUID: 9TXOCSFDS/+TcS3AcAnkvQ==
-X-CSE-MsgGUID: HcXB/wVdRVWrHDIuHSjxCQ==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2026 20:45:40 -0700
+X-CSE-ConnectionGUID: GUeiZpWBS8qPmkAPVyXf4A==
+X-CSE-MsgGUID: lG2dgdTlRJmhubKcwyqKcg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,201,1779174000"; 
-   d="scan'208";a="261719144"
+   d="scan'208";a="261719158"
 Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by orviesa009.jf.intel.com with ESMTP; 02 Aug 2026 20:45:32 -0700
+  by orviesa009.jf.intel.com with ESMTP; 02 Aug 2026 20:45:36 -0700
 From: Jiebin Sun <jiebin.sun@intel.com>
 To: namhyung@kernel.org
 Cc: acme@kernel.org,
@@ -60,11 +60,10 @@ Cc: acme@kernel.org,
 	wangyang.guo@intel.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Jiebin Sun <jiebin.sun@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>
-Subject: [PATCH v6 1/9] perf c2c: extract shared data structures into c2c.h
-Date: Mon,  3 Aug 2026 11:52:12 +0800
-Message-ID: <20260803035220.172022-2-jiebin.sun@intel.com>
+	Jiebin Sun <jiebin.sun@intel.com>
+Subject: [PATCH v6 2/9] perf c2c: add function view browser skeleton
+Date: Mon,  3 Aug 2026 11:52:13 +0800
+Message-ID: <20260803035220.172022-3-jiebin.sun@intel.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260803035220.172022-1-jiebin.sun@intel.com>
 References: <20260803035220.172022-1-jiebin.sun@intel.com>
@@ -76,22 +75,18 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Move c2c_hists, compute_stats, c2c_hist_entry, perf_c2c, and the shared
-column-formatting structures and macros from builtin-c2c.c into a new
-shared header c2c.h. This allows the upcoming function view browser
-(c2c-function.c) to reuse these types and formatting definitions.
-
-Make the global perf_c2c instance 'c2c' non-static, export
-perf_c2c__browse_cacheline(), and export c2c_fmt_free() and
-c2c_fmt_equal() for use by the new function view module.
-
-No functional change.
+Add the skeleton of the c2c function view: a new TUI browser in
+tools/perf/ui/browsers/c2c-function.c reached by pressing TAB in the
+cacheline view. This commit wires up the entry point (a stub that will be
+filled in by later patches), registers the file in the build, declares
+perf_c2c__browse_function_view() in c2c.h, and adds the TAB key handler
+and help text to the cacheline browser.
 
 Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Dapeng Mi <dapeng1.mi@intel.com>
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: James Clark <james.clark@linaro.org>
@@ -103,362 +98,159 @@ Cc: Thomas Falcon <thomas.falcon@intel.com>
 Reviewed-by: Tianyou Li <tianyou.li@intel.com>
 Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
 ---
- tools/perf/builtin-c2c.c | 126 ++-------------------------------
- tools/perf/c2c.h         | 149 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 156 insertions(+), 119 deletions(-)
- create mode 100644 tools/perf/c2c.h
+ tools/perf/builtin-c2c.c              |  4 ++
+ tools/perf/c2c.h                      | 12 +++--
+ tools/perf/ui/browsers/Build          |  1 +
+ tools/perf/ui/browsers/c2c-function.c | 77 +++++++++++++++++++++++++++
+ 4 files changed, 91 insertions(+), 3 deletions(-)
+ create mode 100644 tools/perf/ui/browsers/c2c-function.c
 
 diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index c9584dbedf77..39f70ef6597b 100644
+index 39f70ef6597b..92e276eea85c 100644
 --- a/tools/perf/builtin-c2c.c
 +++ b/tools/perf/builtin-c2c.c
-@@ -38,6 +38,7 @@
- #include "mem-events.h"
- #include "mem-info.h"
- #include "mem2node.h"
-+#include "c2c.h"
- #include "pmus.h"
- #include "session.h"
- #include "sort.h"
-@@ -52,75 +53,9 @@
- #include "util/symbol.h"
- #include "util/util.h"
+@@ -2693,6 +2693,7 @@ static int perf_c2c__hists_browse(struct hists *hists)
+ 	static const char help[] =
+ 	" d             Display cacheline details \n"
+ 	" ENTER         Toggle callchains (if present) \n"
++	" TAB           Switch to function view\n"
+ 	" q             Quit \n";
  
--struct c2c_hists {
--	struct hists		hists;
--	struct perf_hpp_list	list;
--	struct c2c_stats	stats;
--};
--
--struct compute_stats {
--	struct stats		 lcl_hitm;
--	struct stats		 rmt_hitm;
--	struct stats		 lcl_peer;
--	struct stats		 rmt_peer;
--	struct stats		 load;
--};
--
--struct c2c_hist_entry {
--	struct c2c_hists	*hists;
--	struct evsel		*evsel;
--	struct c2c_stats	 stats;
--	unsigned long		*cpuset;
--	unsigned long		*nodeset;
--	struct c2c_stats	*node_stats;
--	unsigned int		 cacheline_idx;
--
--	struct compute_stats	 cstats;
--
--	unsigned long		 paddr;
--	unsigned long		 paddr_cnt;
--	bool			 paddr_zero;
--	char			*nodestr;
--
--	/*
--	 * must be at the end,
--	 * because of its callchain dynamic entry
--	 */
--	struct hist_entry	he;
--};
- 
- static char const *coalesce_default = "iaddr";
- 
--struct perf_c2c {
--	struct perf_tool	tool;
--	struct c2c_hists	hists;
--	struct mem2node		mem2node;
--
--	unsigned long		**nodes;
--	int			 nodes_cnt;
--	int			 cpus_cnt;
--	int			*cpu2node;
--	int			 node_info;
--
--	bool			 show_src;
--	bool			 show_all;
--	bool			 use_stdio;
--	bool			 stats_only;
--	bool			 symbol_full;
--	bool			 stitch_lbr;
--
--	/* Shared cache line stats */
--	struct c2c_stats	shared_clines_stats;
--	int			shared_clines;
--
--	int			 display;
--
--	const char		*coalesce;
--	char			*cl_sort;
--	char			*cl_resort;
--	char			*cl_output;
--};
--
- enum {
- 	DISPLAY_LCL_HITM,
- 	DISPLAY_RMT_HITM,
-@@ -141,7 +76,7 @@ static const struct option c2c_options[] = {
- 	OPT_END()
- };
- 
--static struct perf_c2c c2c;
-+struct perf_c2c c2c;
- 
- static void *c2c_he_zalloc(size_t size)
- {
-@@ -458,36 +393,6 @@ static const char * const __usage_report[] = {
- 
- static const char * const *report_c2c_usage = __usage_report;
- 
--#define C2C_HEADER_MAX 2
--
--struct c2c_header {
--	struct {
--		const char *text;
--		int	    span;
--	} line[C2C_HEADER_MAX];
--};
--
--struct c2c_dimension {
--	struct c2c_header	 header;
--	const char		*name;
--	int			 width;
--	struct sort_entry	*se;
--
--	int64_t (*cmp)(struct perf_hpp_fmt *fmt,
--		       struct hist_entry *, struct hist_entry *);
--	int   (*entry)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
--		       struct hist_entry *he);
--	int   (*color)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
--		       struct hist_entry *he);
--};
--
--struct c2c_fmt {
--	struct perf_hpp_fmt	 fmt;
--	struct c2c_dimension	*dim;
--};
--
--#define SYMBOL_WIDTH 30
--
- static struct c2c_dimension dim_symbol;
- static struct c2c_dimension dim_srcline;
- 
-@@ -1389,23 +1294,6 @@ cl_idx_empty_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
- 	return scnprintf(hpp->buf, hpp->size, "%*s", width, "");
- }
- 
--#define HEADER_LOW(__h)			\
--	{				\
--		.line[1] = {		\
--			.text = __h,	\
--		},			\
--	}
--
--#define HEADER_BOTH(__h0, __h1)		\
--	{				\
--		.line[0] = {		\
--			.text = __h0,	\
--		},			\
--		.line[1] = {		\
--			.text = __h1,	\
--		},			\
--	}
--
- #define HEADER_SPAN(__h0, __h1, __s)	\
- 	{				\
- 		.line[0] = {		\
-@@ -1928,7 +1816,7 @@ static struct c2c_dimension *dimensions[] = {
- 	NULL,
- };
- 
--static void fmt_free(struct perf_hpp_fmt *fmt)
-+void c2c_fmt_free(struct perf_hpp_fmt *fmt)
- {
- 	struct c2c_fmt *c2c_fmt;
- 
-@@ -1936,7 +1824,7 @@ static void fmt_free(struct perf_hpp_fmt *fmt)
- 	free(c2c_fmt);
- }
- 
--static bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
-+bool c2c_fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
- {
- 	struct c2c_fmt *c2c_a = container_of(a, struct c2c_fmt, fmt);
- 	struct c2c_fmt *c2c_b = container_of(b, struct c2c_fmt, fmt);
-@@ -2021,8 +1909,8 @@ static struct c2c_fmt *get_format(const char *name)
- 	fmt->header	= c2c_header;
- 	fmt->width	= c2c_width;
- 	fmt->collapse	= dim->se ? c2c_se_collapse : dim->cmp;
--	fmt->equal	= fmt_equal;
--	fmt->free	= fmt_free;
-+	fmt->equal	= c2c_fmt_equal;
-+	fmt->free	= c2c_fmt_free;
- 
- 	return c2c_fmt;
- }
-@@ -2710,7 +2598,7 @@ c2c_cacheline_browser__new(struct hists *hists, struct hist_entry *he)
- 	return browser;
- }
- 
--static int perf_c2c__browse_cacheline(struct hist_entry *he)
-+int perf_c2c__browse_cacheline(struct hist_entry *he)
- {
- 	struct c2c_hist_entry *c2c_he;
- 	struct c2c_hists *c2c_hists;
+ 	browser = perf_c2c_browser__new(hists);
+@@ -2714,6 +2715,9 @@ static int perf_c2c__hists_browse(struct hists *hists)
+ 		case 'd':
+ 			perf_c2c__browse_cacheline(browser->he_selection);
+ 			break;
++		case '\t':
++			perf_c2c__browse_function_view();
++			break;
+ 		case '?':
+ 			ui_browser__help_window(&browser->b, help);
+ 			break;
 diff --git a/tools/perf/c2c.h b/tools/perf/c2c.h
-new file mode 100644
-index 000000000000..aac01d4f6760
---- /dev/null
+index aac01d4f6760..704b452aa390 100644
+--- a/tools/perf/c2c.h
 +++ b/tools/perf/c2c.h
-@@ -0,0 +1,149 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _PERF_C2C_H_
-+#define _PERF_C2C_H_ 1
+@@ -132,18 +132,24 @@ void c2c_fmt_free(struct perf_hpp_fmt *fmt);
+ bool c2c_fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b);
+ 
+ /*
+- * The TUI browser is only built with SLANG support. The stub below keeps the
+- * header self-contained for NO_SLANG builds, as util/hist.h does for its own
+- * TUI entry points.
++ * The TUI browsers are only built with SLANG support. The stubs below keep
++ * the header self-contained for NO_SLANG builds, as util/hist.h does for its
++ * own TUI entry points.
+  */
+ #ifdef HAVE_SLANG_SUPPORT
+ int perf_c2c__browse_cacheline(struct hist_entry *he);
++int perf_c2c__browse_function_view(void);
+ #else
+ static inline int
+ perf_c2c__browse_cacheline(struct hist_entry *he __maybe_unused)
+ {
+ 	return 0;
+ }
 +
-+#include <stdbool.h>
-+#include <linux/types.h>
-+#include "util/stat.h"
-+#include "util/hist.h"
-+#include "util/mem-events.h"
-+#include "util/mem2node.h"
-+#include "util/tool.h"
-+
-+struct sort_entry;
-+
-+struct c2c_hists {
-+	struct hists		hists;
-+	struct perf_hpp_list	list;
-+	struct c2c_stats	stats;
-+};
-+
-+struct compute_stats {
-+	struct stats		 lcl_hitm;
-+	struct stats		 rmt_hitm;
-+	struct stats		 lcl_peer;
-+	struct stats		 rmt_peer;
-+	struct stats		 load;
-+};
-+
-+struct c2c_hist_entry {
-+	struct c2c_hists	*hists;
-+	struct evsel		*evsel;
-+	struct c2c_stats	 stats;
-+	unsigned long		*cpuset;
-+	unsigned long		*nodeset;
-+	struct c2c_stats	*node_stats;
-+	unsigned int		 cacheline_idx;
-+
-+	struct compute_stats	 cstats;
-+
-+	unsigned long		 paddr;
-+	unsigned long		 paddr_cnt;
-+	bool			 paddr_zero;
-+	char			*nodestr;
-+
-+	/*
-+	 * must be at the end,
-+	 * because of its callchain dynamic entry
-+	 */
-+	struct hist_entry	he;
-+};
-+
-+struct perf_c2c {
-+	struct perf_tool	tool;
-+	struct c2c_hists	hists;
-+	struct mem2node		mem2node;
-+
-+	unsigned long		**nodes;
-+	int			 nodes_cnt;
-+	int			 cpus_cnt;
-+	int			*cpu2node;
-+	int			 node_info;
-+
-+	bool			 show_src;
-+	bool			 show_all;
-+	bool			 use_stdio;
-+	bool			 stats_only;
-+	bool			 symbol_full;
-+	bool			 stitch_lbr;
-+
-+	/* Shared cache line stats */
-+	struct c2c_stats	shared_clines_stats;
-+	int			shared_clines;
-+
-+	int			 display;
-+
-+	const char		*coalesce;
-+	char			*cl_sort;
-+	char			*cl_resort;
-+	char			*cl_output;
-+};
-+
-+extern struct perf_c2c c2c;
-+
-+#define C2C_HEADER_MAX 2
-+
-+struct c2c_header {
-+	struct {
-+		const char *text;
-+		int	    span;
-+	} line[C2C_HEADER_MAX];
-+};
-+
-+struct c2c_dimension {
-+	struct c2c_header	 header;
-+	const char		*name;
-+	int			 width;
-+	struct sort_entry	*se;
-+
-+	int64_t (*cmp)(struct perf_hpp_fmt *fmt,
-+		       struct hist_entry *left, struct hist_entry *right);
-+	int   (*entry)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-+		       struct hist_entry *he);
-+	int   (*color)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-+		       struct hist_entry *he);
-+};
-+
-+struct c2c_fmt {
-+	struct perf_hpp_fmt	 fmt;
-+	struct c2c_dimension	*dim;
-+};
-+
-+#define SYMBOL_WIDTH 30
-+
-+#define HEADER_LOW(__h)			\
-+	{				\
-+		.line[1] = {		\
-+			.text = __h,	\
-+		},			\
-+	}
-+
-+#define HEADER_BOTH(__h0, __h1)		\
-+	{				\
-+		.line[0] = {		\
-+			.text = __h0,	\
-+		},			\
-+		.line[1] = {		\
-+			.text = __h1,	\
-+		},			\
-+	}
-+
-+void c2c_fmt_free(struct perf_hpp_fmt *fmt);
-+bool c2c_fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b);
-+
-+/*
-+ * The TUI browser is only built with SLANG support. The stub below keeps the
-+ * header self-contained for NO_SLANG builds, as util/hist.h does for its own
-+ * TUI entry points.
-+ */
-+#ifdef HAVE_SLANG_SUPPORT
-+int perf_c2c__browse_cacheline(struct hist_entry *he);
-+#else
-+static inline int
-+perf_c2c__browse_cacheline(struct hist_entry *he __maybe_unused)
++static inline int perf_c2c__browse_function_view(void)
 +{
 +	return 0;
 +}
-+#endif
+ #endif
+ 
+ #endif /* _PERF_C2C_H_ */
+diff --git a/tools/perf/ui/browsers/Build b/tools/perf/ui/browsers/Build
+index a07489e44765..ae67a2161f7d 100644
+--- a/tools/perf/ui/browsers/Build
++++ b/tools/perf/ui/browsers/Build
+@@ -5,3 +5,4 @@ perf-ui-y += map.o
+ perf-ui-y += scripts.o
+ perf-ui-y += header.o
+ perf-ui-y += res_sample.o
++perf-ui-y += c2c-function.o
+diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browsers/c2c-function.c
+new file mode 100644
+index 000000000000..c0fd7799e4f8
+--- /dev/null
++++ b/tools/perf/ui/browsers/c2c-function.c
+@@ -0,0 +1,77 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * C2C Function Browser - function-level cacheline sharing analysis
++ *
++ * Displays a 3-level hierarchy showing which functions share cachelines:
++ *   Level 1: Read-side functions sorted by Cycles % (estimated load cycles)
++ *   Level 2: Functions sampled writing the shared lines read by level 1
++ *   Level 3: The specific cachelines where the two functions contend
++ *
++ * Builds the hierarchy from the existing cacheline histograms
++ * (c2c_hist_entry->hists), reusing the shared c2c data structures.
++ */
 +
-+#endif /* _PERF_C2C_H_ */
++#include <errno.h>
++#include <inttypes.h>
++#include <stdlib.h>
++#include <string.h>
++#include <tools/libc_compat.h> /* reallocarray */
++#include <asm/bug.h>
++#include <linux/list.h>
++#include <linux/rbtree.h>
++#include <linux/zalloc.h>
++
++#include "../browser.h"
++#include "../keysyms.h"
++#include "../libslang.h"
++#include "../ui.h"
++#include "../../util/addr_location.h"
++#include "../../util/cacheline.h"
++#include "../../util/debug.h"
++#include "../../util/hist.h"
++#include "../../util/map.h"
++#include "../../util/mem-events.h"
++#include "../../util/mem-info.h"
++#include "../../util/sort.h"
++#include "../../util/symbol.h"
++#include "../../util/thread.h"
++#include "../../c2c.h"
++#include "hists.h"
++
++struct perf_c2c_ext {
++	struct c2c_hists	function_hists;
++	/* Total estimated cycles across all level-1 entries. */
++	u64			total_cycles;
++};
++
++static struct perf_c2c_ext c2c_ext __maybe_unused;
++
++struct c2c_function_browser {
++	struct hist_browser	hb;
++};
++
++static inline __maybe_unused u64 c2c_hitm_count(const struct c2c_stats *stats)
++{
++	return stats->tot_hitm;
++}
++
++static inline __maybe_unused bool symbol_name_equal(struct symbol *a, struct symbol *b)
++{
++	/* Two unknown symbols compare equal, matching cmp_null() in util/sort.c. */
++	if (!a || !b)
++		return a == b;
++	return arch__compare_symbol_names(a->name, b->name) == 0;
++}
++
++static inline __maybe_unused u64 hist_entry__iaddr(struct hist_entry *he)
++{
++	if (he->mem_info)
++		return mem_info__iaddr(he->mem_info)->addr;
++	return he->ip;
++}
++
++int perf_c2c__browse_function_view(void)
++{
++	ui__warning("C2C function view is not implemented yet.\n");
++	return 0;
++}
 -- 
 2.52.0
 
