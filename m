@@ -1,117 +1,168 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901973A7F7E
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 20:54:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904FD33438F
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 20:57:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785790492; cv=none; b=AEw4dKqM77f98eCb1rV6fFaX1Qv0TffatklPpbpcNCfyY7Zbm+T4yMYiTSciFiEQQGjt4evee775ifV6l+9AWbyTPGd81Ew0DWizogY1eIsfIt2V5MJlXqY3tF7GZdwGK1yQoqk49ygIcOuCPaXczFoxNRxvFPT62CmFJqOUPlI=
+	t=1785790638; cv=none; b=AvMyfLo5Sz5APaxg1iA9ye7xkhACc7qKPaYSd0W2ay0omKfDjtmrCJH6srNsBNZ98IhKippIt4hsy4szd7Hp7uKI23Yigr6DvRZBT37BpquMCvX7y7qN560b5norLxH3/TYe4YA2Wf0hdA+iCSnoQiQdhyevij2RdfF3WUwsZzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785790492; c=relaxed/simple;
-	bh=83uTAIF2uRYBb0UWcAEksM7UDjQuHpgw4g/HbkiyB+o=;
+	s=arc-20240116; t=1785790638; c=relaxed/simple;
+	bh=e3xGAQXx4eJP64rY+nOESE2gXlrWEt+LBAkjWS3sfKQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=KxA8WqGANCVsr4P6nCLNz75UE3Sw6NhWpzKtczSKDjG4ZSfP36vOsiDdSICLX8fRiXtIiwG8+2+WwwttidN6w1gsihR+6OJUxtgzICEj46TkSG3sV9POloD8hMWq8NYhB0ajC91EDoESHlegMj2808OJ3PWX0r76n3O6kpitljs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cu7cC3C8; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=M2lHuUeOvY3d3sUHsAV8R90VE9CgP/kxP0LhUqUGC1ahJWmD86/VTujtHDE/6UmTLtm8ldhtwHFwG6j0pnG5MIiJVixUGb2ijjzLctcoOlpiSIFnW3CA+vaO5cKtkdeGrL8mP1d4nzGwokA+IqIGhzV0WFvq/ipLxxg7k2JvXSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WmizVRKv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cu7cC3C8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CA231F000E9;
-	Mon,  3 Aug 2026 20:54:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WmizVRKv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 567A71F000E9;
+	Mon,  3 Aug 2026 20:57:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785790491;
-	bh=RiNvpVq8DhaTbOqcSq9w9aYKclI5b+Sm7U0KU+ySrwA=;
+	s=k20260515; t=1785790637;
+	bh=GPW/b5EgZVYQccsIo4xOPMzyja0hnDLoA7qnTDAL2g0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cu7cC3C80lyp8hfcDHWVzEe+Tbzz2hMr+W9rU7DJMKk0bLARYIi6Bj57hLEowfIHt
-	 BmJikU2+XpfUcIBRCRmDerzUZE9dIvCEZ/XlFTKHxybyEfYEJMUDy5tpHz5mnAouFu
-	 IzfrvMjeTtXJSuvNcgnp4yC3wBheiwBQWA41ClRpeDbLzmXVy3v/HsH5AC2tL6Mnxa
-	 ynXNSIYns8ZEJ2ljLFZfzYEBErAsZPiTHOhkrLk9KF/KO/LShUHXt0Ets7QhS9GoEV
-	 dnlAgGluO/6E76u03Vx7y7ekaYKR6GZsXLf1ol+8WuVUazQ0qo4BmjhF1PmK0Nzh3p
-	 o8vWyHegtu1Sw==
+	b=WmizVRKv4xht1RdL9RDd1IDMN1NuRRY+hO+JhyKXxg9efS4jvJIwlyHU4bQVXH1hk
+	 FoaUhiCRow9n1D3yZDqSwYsI08VnHO0flz/GS7sshKXDDaXNc3A5A98ERTL8k3gVzD
+	 UCJQmv1pmlcH2UZzKi6/ngSbGWF26vQkwkKp/Deb1P5epwDNHhqCI387JHIk7UA/we
+	 UIQi5CXvUWTgX4mQR6wYSrztLetnY0o9IE1Y6uLYCS/BDIuRx9Va9XYIbZPpaTIUfV
+	 Lrd89ymjrYMH4IdhdK2/lLpG50XlgzoAFXIDng1BaB7RdpFetIVO0/ZTVFbEnKYABZ
+	 7OLvDlu/9zQWw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/6] perf mem: Fix size tracking for mem_lvl's in
- perf_script__meminfo_scnprintf()
+Subject: Re: [PATCH v3 4/6] perf tools: Show memory region in perf-c2c
+ subcommand
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Thomas Falcon" <thomas.falcon@intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260803204540.100348-2-thomas.falcon@intel.com>
+In-Reply-To: <20260803204540.100348-5-thomas.falcon@intel.com>
 References: <20260803204540.100348-1-thomas.falcon@intel.com>
- <20260803204540.100348-2-thomas.falcon@intel.com>
+ <20260803204540.100348-5-thomas.falcon@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 03 Aug 2026 20:54:50 +0000
-Message-Id: <20260803205451.4CA231F000E9@smtp.kernel.org>
+Date: Mon, 03 Aug 2026 20:57:16 +0000
+Message-Id: <20260803205717.567A71F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [Critical] Insufficient stack buffer size and unsafe string operations in=
- memory event formatting lead to severe integer underflows and stack buffer=
- overflows.
+- [Medium] Unconditional header span and width changes break the perf c2c U=
+I layout for older or unsupported perf.data files.
+- [Medium] perf_c2c__report incorrectly returns 0 (success) when asprintf m=
+emory allocation fails.
 --
 
---- Patch [1]: [PATCH v3 1/6] perf mem: Fix size tracking for mem_lvl's in =
-perf_script__meminfo_scnprintf() ---
-commit ac4418d3c38063a8fbcd5e19348324171261d3d5
-Author: Thomas Falcon <thomas.falcon@intel.com>
+--- Patch [4]: [PATCH v3 4/6] perf tools: Show memory region in perf-c2c su=
+bcommand ---
+commit a204da119426634f593eeb8162efcca17a1e1e85
+Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-perf mem: Fix size tracking for mem_lvl's in perf_script__meminfo_scnprintf=
-()
+perf tools: Show memory region in perf-c2c subcommand
 
-When printing memory info in perf script, the entire size of the
-buffer is passed to perf_mem__lvl_scnprintf() instead of the remaining
-size. Pass the remaining buffer size instead.
+This commit adds a memory region field to the cacheline list view in the
+perf c2c subcommand output. It parses the memory region from memory info
+and dynamically adds the column if the HEADER_MEMORY_RANGES feature is
+present in the perf.data file.
 
-> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> index 0b49fce251fcc..4e490f9cd3488 100644
-> --- a/tools/perf/util/mem-events.c
-> +++ b/tools/perf/util/mem-events.c
-> @@ -610,7 +610,7 @@ int perf_script__meminfo_scnprintf(char *out, size_t =
-sz, const struct mem_info *
->  	i +=3D scnprintf(out, sz, "|OP ");
->  	i +=3D perf_mem__op_scnprintf(out + i, sz - i, mem_info);
->  	i +=3D scnprintf(out + i, sz - i, "|LVL ");
-> -	i +=3D perf_mem__lvl_scnprintf(out + i, sz, mem_info);
-> +	i +=3D perf_mem__lvl_scnprintf(out + i, sz - i, mem_info);
+Link: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.=
+intel.com/
 
-[Severity: Critical]
-This is a pre-existing issue, but by passing sz - i here, does it make it
-more likely to hit buffer overflows and integer underflows in the helper
-functions?
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index c9584dbedf77a..6954a48c60e46 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -1425,7 +1466,7 @@ cl_idx_empty_entry(struct perf_hpp_fmt *fmt, struct=
+ perf_hpp *hpp,
+>  	}
+> =20
+>  static struct c2c_dimension dim_dcacheline =3D {
+> -	.header		=3D HEADER_SPAN("--- Cacheline ----", "Address", 2),
+> +	.header		=3D HEADER_SPAN("--- Cacheline ----", "Address", 3),
 
-In tools/perf/builtin-script.c:data_src__fprintf(), a fixed 100-byte stack
-buffer is used:
+[Severity: Medium]
+Will this unconditional header span break the UI layout when the memory reg=
+ion
+column is excluded?
 
-    char decode[100];
-    ...
-    perf_script__meminfo_scnprintf(decode, 100, mi);
+Because has_mem_regions conditionally adds the column, if the perf.data file
+lacks the HEADER_MEMORY_RANGES feature, this static span of 3 might swallow
+the headers of subsequent columns.
 
-As perf_script__meminfo_scnprintf() accumulates the printed length into i
-without bounding it to sz, if the total length exceeds 100 bytes (e.g., with
-multiple mem_lvl or snoop flags), i will exceed sz. This causes sz - i to
-underflow to a massive size_t value, bypassing bounds checks in subsequent
-helper calls.
+>  	.name		=3D "dcacheline",
+>  	.cmp		=3D dcacheline_cmp,
+>  	.entry		=3D dcacheline_entry,
 
-Additionally, if the remaining size becomes exactly 0 or very small, helpers
-like perf_mem__lvl_scnprintf() and perf_mem__snp_scnprintf() do:
+[ ... ]
 
-    sz -=3D 1; /* -1 for null termination */
-    ...
-    strcat(out, "Remote ");
-    l +=3D 7;
+> @@ -2898,8 +2948,9 @@ static int ui_quirks(void)
+>  	/* Fix the zero line for dcacheline column. */
+>  	buf =3D fill_line(chk_double_cl ? "Double-Cacheline" : "Cacheline",
+>  				dim_dcacheline.width +
+> +				dim_dcacheline_mem_region.width +
+>  				dim_dcacheline_node.width +
+> -				dim_dcacheline_count.width + 4);
+> +				dim_dcacheline_count.width + 6);
 
-If passed a size of 0, sz -=3D 1 underflows to a massive unsigned value. Un=
-checked
-strcat() calls will then write out-of-bounds on the stack.
+[Severity: Medium]
+Could this width calculation also cause visual artifacts when the memory
+region column is absent?
 
->  	i +=3D scnprintf(out + i, sz - i, "|SNP ");
->  	i +=3D perf_mem__snp_scnprintf(out + i, sz - i, mem_info);
->  	i +=3D scnprintf(out + i, sz - i, "|TLB ");
+Similar to the header span, the zero-line text width unconditionally includ=
+es
+the new column's width and spacing, which could pad the zero line excessive=
+ly
+when the column is not rendered.
+
+>  	if (!buf)
+>  		return -ENOMEM;
+
+[ ... ]
+
+> @@ -3370,50 +3370,50 @@ static int perf_c2c__report(int argc, const char =
+**argv)
+> =20
+>  	has_mem_regions =3D perf_header__has_feat(&session->header,
+>  						HEADER_MEMORY_RANGES);
+> =20
+>  	if (c2c.display !=3D DISPLAY_SNP_PEER) {
+>  		ret =3D asprintf(&output_str,
+>  			       "cl_idx,"
+>  			       "dcacheline,"
+
+[ ... ]
+
+>  			       has_mem_regions ? "dcacheline_mem_region," : "");
+>  		if (ret < 0)
+>  			goto out_mem2node;
+
+[Severity: Medium]
+Does this error path accidentally return success when asprintf() fails?
+
+The original code sets err =3D 0 at the beginning of perf_c2c__report(),
+and this goto statement jumps to cleanup without setting err =3D ret or sim=
+ilar,
+so the function will return 0 even though memory allocation failed.
+
+>  	} else {
+>  		ret =3D asprintf(&output_str,
+>  			       "cl_idx,"
+>  			       "dcacheline,"
+
+[ ... ]
+
+>  			       has_mem_regions ? "dcacheline_mem_region," : "");
+>  		if (ret < 0)
+>  			goto out_mem2node;
+
+[Severity: Medium]
+Does this alternative display layout's error path also accidentally return
+success when asprintf() fails?
+
+Similar to the previous block, err is not updated before jumping to cleanup.
+
+>  	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260803204540.1003=
-48-1-thomas.falcon@intel.com?part=3D1
+48-1-thomas.falcon@intel.com?part=3D4
