@@ -1,55 +1,66 @@
-Received: from CWXP265CU010.outbound.protection.outlook.com (mail-ukwestazon11022073.outbound.protection.outlook.com [52.101.101.73])
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020092.outbound.protection.outlook.com [52.101.195.92])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49BC935839E
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 12:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.101.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87B2E4317D;
+	Mon,  3 Aug 2026 12:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.195.92
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785761126; cv=fail; b=Pxwcwka2+bbnzZ8vs8l4ABNWHtZHSe7/+TCD0KQ4BixrljaoEyTV/kw9vZIAZHbyoky4LcQe0bngzjcTsQQclVLigjRGITja9KOX4+EcldHZJtGK3hCik+Ue4lAQRZSYmQMOiXucwBYcgogwpKRvYRbXcB2BTBN7T/Yhfh68Tr0=
+	t=1785761335; cv=fail; b=X1PllnoUG94CaOv7XnIIJRq4qn5S+GQisGCvOByHJ4LiwW0Asnz5tA6Llg6mjoreYR1bT7raELZhjsYWRaK8/jw5HyAI+2aVNX39b0+TRADdubAbdX9poccK4pLdRiWPFoiVg29dzVtP8Ji2XGN37ipx2y43+QS1DsoCjTrkeec=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785761126; c=relaxed/simple;
-	bh=jy6RdD2QMM8G0t7apiqqiI3Cr9IPcgY0qwGC/b34ugE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=kp0R1TasPqyPEV7chfGheMMVoMT+BAfgdRKEEFhVdGUmj7i1TbS7fKqkqvLW8phA6oB15vOrgh+0chg7RC5gBGT1ROGiM35xwx9dANotgjV4bE66/VwGKzCLIhi8TbhZ8M/t3UUk+e1r3edpViOZmGDmH/gXOgNo1eGFr2qRWkg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.101.73
+	s=arc-20240116; t=1785761335; c=relaxed/simple;
+	bh=KXVIwWJfa4ZoFdZR/cZ0HXQLc4Sm/fCUQzIpEcUqJL0=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=W/E2BQ0zvvykfaQqMfLQ6Vw3a3LvgUPZ18FaX94GQCIrYSyLMWEMv0W3Bc77CQpRGPajKykj5AtdQv7vY7LIAQ5br1w2LlVARyyAU/7cppd684QuWJhqgQBYZY7U/sQ8o0548LlueIQHU2TGYzwtuUjj6/TG7hvFC1sLwL0qepI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.195.92
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HX/zK8I6/X+WGOOmaEaJjIocc2Fe9z0mp+iWOi8hpbug0MHTj/uYoiYBx6UPzkkYncmzdvQ1ZlsRSMi4+LI9xkTipA2105GqxPk1157ZAVckOFIJTHLgjdcX/TUNRwW9wcxADBA0mnJY7FH+LU2aKeTKAAH7m0kiaJ5yhbZAJZfw88Y9lZl0z8w3ebE8wplMlyPTgeFx3ASJdJ5f1HW3BJD769Iok565Y0MuZz3Z8LHltWNkkQL9erGGMBGM8bh3wlZrB/acilZBaCSGPl6XPgdAXKWLRu9AxCtwMQ9zwjOjY2CQAuRODdhg0uoNgnsHzyeYxOd6K9/yS2mOfZ9Ysg==
+ b=Fqllc2G1ljWwqQ4eCNJ44Iv/p3J5WKqUU5S+raVI3l2Fe4749Q4QBht977kiYf0jL7q+LpLiUJNYwVRUlF+Kyh3WiKG8EF5Gvd18y6l/aeg7wrsgQyGNl2euxlZY7uqhZ20kAuWR/crwQyfcVh52GjTymqpo9dfxs2V0GJTF/N/IM1ClCb+gTIu6+4/KTLik17uhfbM0WPpYhKuSB46FUdH/yr6kb0wMuQWqWgMOoOji0MfRVxNq0yjdaa+EoyhW/woy3fkzwyLie6zUn3zAeXRTg7hH9WHj4Z77sFGvKDspsgSVrWRuNq/pr83U6G/T3BoqEENuqYPWB8RzkVHBuw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=M1X2Q4LFNhHaChf4BPZrFwVKhp+0GjjcWg5ATJLDs5M=;
- b=K/svTuYaBv56SM0MYdpXlf9IiaSekjr0lIiH0vw/ABBeKYgYUZr/uB2eA1sOu9My+U2WMEjgePIOqltFQMkhVGUmkh2M0du0jcvfAPOQZ/dKbM7e7cYfBylOoXWXrkPozU/WhdZvxTHMnFA29NwLtpmrs2GaLS91S39d/3iftgRqEsOjMKFAHXoNCdGOo3kN81rbk0vC+5gnkgX9jyZqL4eKUz1TKTl6f1oIb0hVrm0XYYu5iKsMVSd7pRErOwQzhOPEGfnGjIc4X3OHtvDUYbWPE+ESCbYXt+OV5aqTuAh9AHqUuX/nWpkHOfKC8+nmmE5/HWYeGTMj480vuMAzhg==
+ bh=SXd0HUwTT2cTeiszPdWWeDza/DyNL3yjg7iDO5Mer7o=;
+ b=q00szM4uSjMyYA4lDH8SychwNAUkFJ8WWpBxcx+kI4nwTdJuTR4pGlKg1kFLv0a67yl09OP7vH8QiEjRm8TXsFX432W1Y305aTmOmndsP+4apvXAev7Am6qCALioQ/JQ1ge+gvPKeuPfuQeAkyNtwpFLYB9SQVHkL4ZRNzxE7rDZASy81lWg3E7o6P+U7s8PJXJI1I8zm4jeBcwlcT4+lFkTZydSNqxVjz9hgYcSOUjcvQ+6cltrfFpls+AuCw3dEbC6sqyhwnj1iNJ7Prff8mCZ3g13KDhG6mzgZy9GDbyZ1zqWoDQD5MxxnxHCY/1H2PgODt8VrMGafQFQLzem8Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=atomlin.com;
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by LO0P123MB6963.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:2cc::7) with
+ by CW1P123MB7556.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:207::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.18; Mon, 3 Aug
- 2026 12:45:20 +0000
+ 2026 12:48:49 +0000
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0270.016; Mon, 3 Aug 2026
- 12:45:19 +0000
-Date: Mon, 3 Aug 2026 08:45:16 -0400
+ 12:48:49 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
-To: acme@kernel.org, namhyung@kernel.org, irogers@google.com, 
-	jolsa@kernel.org
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf trace: Format fields with hex specifiers in
- print_fmt as hexadecimal
-Message-ID: <w6k5v3c7qtjqb7a7lgeqdci4olligryfyiozul2xwiurumzp4u@zv7gwvhev7tl>
-References: <20260731215909.125335-1-atomlin@atomlin.com>
- <20260731221204.654141F00AC4@smtp.kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	howardchu95@gmail.com,
+	atomlin@atomlin.com,
+	neelx@suse.com,
+	chjohnst@mail.com,
+	sean@ashe.io,
+	steve@abita.co,
+	rishil1999@outlook.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] perf trace: Format fields with hex specifiers in print_fmt as hexadecimal
+Date: Mon,  3 Aug 2026 08:48:45 -0400
+Message-ID: <20260803124845.213165-1-atomlin@atomlin.com>
+X-Mailer: git-send-email 2.55.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260731221204.654141F00AC4@smtp.kernel.org>
-X-ClientProxiedBy: IA1P220CA0002.NAMP220.PROD.OUTLOOK.COM
- (2603:10b6:208:461::8) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-ClientProxiedBy: MN2PR05CA0064.namprd05.prod.outlook.com
+ (2603:10b6:208:236::33) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,141 +69,175 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO0P123MB6963:EE_
-X-MS-Office365-Filtering-Correlation-Id: 68f7161f-ac14-4301-1f95-08def15d1382
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|CW1P123MB7556:EE_
+X-MS-Office365-Filtering-Correlation-Id: 64c5bc67-6ecb-44d7-58ec-08def15d90a0
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|23010399003|1800799024|366016|22082099003|18002099003|56012099006|4143699003|3023799007|6133799003|10067099003;
+	BCL:0;ARA:13230040|366016|23010399003|1800799024|7416014|376014|56012099006|10067099003|3023799007|6133799003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	tt11vRYQeq2OMIBSCrgy4qSRH/Ig69i/aEGSYNkhZUG1RHzmbwA4Fs9mOd0VRZBBDugPDsiY4KisAUIFDmQ0iKNFALii+b3JC+CzXD+F6rxyA3AiCZECZskMlqx8LL0HE+EDz7CYNiy2M2/xP1+6gYhjwfYBwtWjN/UWMCMMhYVICbYrMB3PC7VLjOv9v7P4eGDZ5ww3c8DGL2fBJNEROTrmdSuxPoUzFQuIr0oYeXteENF47HBCTxtPUbGJkeLGMc5OYBVVS32B5ZisSVIe55G9SVtBe2/Ra6tvynT+mWMkNHV0mhxA4RsAd3QoHdF6rrq3XnvfT2QBORXrxTYaizVNOG/e+/AUFNaQU4K+x0NFdILTJDzD+XugW0Ma/80uflqOIOrqZNIiZdujrwJwix8JdWEKNc3GRWo6J3mB7I4nCwpX8+REBqnkvOZz8DCtp62F1A3Hkp7VsnxWhtuyr6lxkBLzDX+Yo7qwB0zGHk9T5xXwaLmAbXb1Jfiq+qrAMdW/lmCRWoWOS+kZ1GnaobJ6owJxo5dzS56YGinY0zJZs114MZuCjT2SW2OYxyhCQxjb1m4A6JMlhQQugvj8X/gvE3Chuc4fxLJC4HrB+iA=
+	MYvrvpRihRSl/7w2dbahFXv20e6tUqZnmdIpS/H4cqJygyYS0oiRVG7Ld30VADgjj9sl4OUd4iRfojfl7jVXbwr6RlQMASHQ3LOCbZY/ymScoepw6Am08V043SXDxRCqpvPZnWhaz7ZLaS3Lx0LM4slBAsQf4gkWp7vTMYqMv23GGNBwTQ/bggLDI3QkulcyupNZDN4veGHD3R87sAjYlx2qndxavEGbg1DZH5mS8nZlw5zEzt2lGP/p1/dluWRfNZ5WIU0pQUnVMjv+XUeofRIDPFQW0Vld2Hu37/wfFRCA70hrFSdfCG/FNHhgapFpGIypPHlKczzJRRva8LVGiyKq9z0g7z891tEcJOkh7i6SwTFXmydm7liW8kEkoqr2mj0pOmSw33VXLaQkZ5WnyMOqkiri59KfcOwGOE5+L7gcwrkK5vI43Xg8cCM2l9VjMC2zIvWtpbHPerghV/3MjEwH6Y3Y/rsZApZuTPBVaHi83dWGTaV4VoOzHtR0yRuF6whnLtVAILdc3fdkA/r7p69R6PcQY/GW6/ggLf3i/iihjnD1F/69UcA/oEUFyc7MvfiYN3nzKEqWrQdh48h2d3YUmFQooWKreRWfShlj1Cunn9io7npTLcbbdXtEZRp1AynhqJGSxzNC5ex0KWWyI9H382Q1lV4v830qvb3k+7o=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(1800799024)(366016)(22082099003)(18002099003)(56012099006)(4143699003)(3023799007)(6133799003)(10067099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(1800799024)(7416014)(376014)(56012099006)(10067099003)(3023799007)(6133799003)(18002099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UFZrQ0V5WHZ5QkJ6WGJZSTlIWXVkL3h0ZlNoSzhHZ3hOSW1hWmVLR1FXTVFp?=
- =?utf-8?B?YVp1dXNZbGQxOVQ3Sy9Qb244WWJoek1VdTBId3dpQ2J4cERIdElQMEx1V0xy?=
- =?utf-8?B?WlBrVW5TbW5jdXd2UXYrZzlGU2kycVNnUHNHaUtERGF4V2lDZk5ueXBmUVFr?=
- =?utf-8?B?UG5KT2VCeVhPeW9lMXJTSjh0akh0Q3RGdnl5NGJEVHZXSDhXZmRhMHk4MGVt?=
- =?utf-8?B?d0RoOUx1UlJEc1VucEw5UGxPS2ljUzYwLzU1L1ZMOStHL29Kdk54K014bVd1?=
- =?utf-8?B?NjgrektGMDlIYi95OVdyaTZJWk9rVElmb0NzNkh1N0JwbDNBek9zNEo4Uyt6?=
- =?utf-8?B?OEVtTUo3TmJRVm4zREsrR2xxblZISjFSbi9Zd3dDakpJUzhCcG84Y1QwN1Zn?=
- =?utf-8?B?UXhkSmJJK3ZrbFRhY0hyU2lXU2Z6eWZUbmNYNWJkaHFkaVhIR0sxUnRRUjNO?=
- =?utf-8?B?WkRGYklLM25NbzZRNTNVd0FibmR0ZytvTWFTVUN6YXVMTm1Xd0VUUkpTdmM5?=
- =?utf-8?B?Mk9SakdMenZXdTJBaVhhRDJTSk8vc2VtMG9ENndNRXdmdkJ5R3Q5TGcyem5C?=
- =?utf-8?B?UEJRRXYxRW41NXhKcWhRV3hpSDNwQmt2QTBWcFRTT3I5UHZack9ZazdmeEdS?=
- =?utf-8?B?QkhBR0xidzZ6dkgxaGJxVmp0dlFIWUZmbTRYN0xaMERrR3daUnprb0o2K3h3?=
- =?utf-8?B?Zzh0OG43Z0FwK2RaRTNBbDdvQjZybVJOWmUxQ2hWSDZpbTRyaWRFRzluSnhp?=
- =?utf-8?B?WkNEeEIxNXhma0ZSY0k4ZktQOU9MMWREa2s5em5ZbHBkK3I0dFpkSmMyYjJh?=
- =?utf-8?B?UW1teDFxdlhsZG1VUFB4eWVobzZGbDNCR0Z1M2toRmJSOU4wYXB4UFpJb3My?=
- =?utf-8?B?ay9YL1phUk0yZmYrOGFYK0pUcFlRQmNYdmdRdUx6eU9hazc1ZTBKLytuYlpY?=
- =?utf-8?B?YktLOXJUdWFwb2p2NGMxVkhYN2ZDekpTU0hjMTVxZWd0aXh0SXRTQTBYM0ti?=
- =?utf-8?B?T3h0T3l5QkFoNkJOTldKbWFyVHJVTkNGOUQycng4d1ozN1VwU2VGYUNMVEIx?=
- =?utf-8?B?YUlOWnJyRllKNnhLcUxTUnZlZzAvYkxTWkx6V21SNUcwbWRLZFM2Y1BiSUda?=
- =?utf-8?B?Y0EwYndPSTQ1aUFnYkQ5T1pjWDdRLzFUdjc3ZjllZ3lnRk5zM2Vva1ZEYzF6?=
- =?utf-8?B?QWhHTmMyRG1ESTdwL3BLQy96Zk1VOE14QStIU1hwaDJxeUhPN1FxSGVTR2VB?=
- =?utf-8?B?aWdWWnZEWnE5MUV3SUZKcTJpa3hGNXRnRFRkc3NXMWhzR2VKM3ZsbEZ4SmJM?=
- =?utf-8?B?ZFA4YTEwVmczU0QrNjBtR0xuQlRwSkNOWVYvbHpTbmZScE1UekpRTzdEWklJ?=
- =?utf-8?B?MGp4TVZPeHorN2dNYTRmaXNaY3JjenZ1VllCSW43TUNMUzlJbXpzZS80T3hx?=
- =?utf-8?B?TUhmb1Z4UW8wcndQRUtzai9Zd3lWTWhiZUxvWUV0RDdaK0NSVG5VVUtYei9P?=
- =?utf-8?B?TURUcDdWY09NTUNqTWJJdDEvNVcvdGtlZmxKYTZzUW5ocENFazFvUlJrSXcw?=
- =?utf-8?B?VGIxeGsyNW9OclZNWkh1NEE2K1JySlEybndLMUhGb3lTdTJYNS9GVHBhYmF3?=
- =?utf-8?B?RTV0Y3psWmhaNnI3bXlLTGs5emh0MnpzSldwcmRXR0dLZ2ZGc0RiZitxaGgv?=
- =?utf-8?B?UjY1MFk5YlZyQjZEU1A0VlVxdjROc0syNHRpeFBzQXlsVk5UQXNCYm8yTUR3?=
- =?utf-8?B?Sm5Td1dhRmdzTnF4YXBCaGRMOWRYZFJVQWtJdm9rOC8xcFl0OXFSekhFZXhY?=
- =?utf-8?B?N2ZJaTFEUms1VitxWkl5eWtDR2NjM2ZrR0RiaHFoWWFDcE9Qa0p3bkxuaEN6?=
- =?utf-8?B?bmNtU1kwa09raGhYVmNCOTJYZ3dCcklqVWE0V0tXK3IyZC9SNnpEVE1aTnlH?=
- =?utf-8?B?MDJvaFA3V0NDVmZQa2dTRkVaZmRzV3FoUXFHWkViRjVHdnhiNFkxYlQ1Z0Zm?=
- =?utf-8?B?ZkhFVm5xOVYzTzU2djFxUmw2QUIwTU92SytBZEpyWnN6V0o1TVB5c2piSm8w?=
- =?utf-8?B?TSs5RUg2U3pXYTllT05GS3YzRzN6WWY5S2JFcG94TGtEQXJYMUJtekZJbUE1?=
- =?utf-8?B?SXFWSlhpYk1VdXFwSWJHSVFUWUhYdlpJQ1dhNSsyMnErNEdyODBzd2JFVTFr?=
- =?utf-8?B?eVA2b3FRa1VWUVVYV3FuOXlDTEkzYTJDV1RGMjBkZzQvanVTb2FKWngvYW5u?=
- =?utf-8?B?cWJGMVZKMC9FSFdodDVpeTl3SGxySFhlQzY0SExZOVRyd1RaejMwSHkvQVZn?=
- =?utf-8?B?MEV2YUFqOUhVV2NJazUxclVvbHJudVVoaUtZU0FPd0dlTHJJdTlIQT09?=
+	=?utf-8?B?RlNTUFdMY2ZqRUE2YllOdy9uTm5FZm9oYVFjelNFdXNqeER4aU1CdmVXT2xw?=
+ =?utf-8?B?UWEzR2VBeXpNUUhIUjJHVVdKS1lJeGxzZXpFMmdJNUF0cDNiQ0I3RE82TGRm?=
+ =?utf-8?B?eGU4ZHdySEdrQmM2MzFzQndxN0NTdnpnb3VaRUU5bzF5OTlLaEtwRWtsRkQ5?=
+ =?utf-8?B?VGNSQmgyZDA3TjZ2YkNzQVU4TE91Z0Y3VXRld2JqMVRHaEpjODJ3VkVJZ3dC?=
+ =?utf-8?B?WlU5M0h6WTBoaS9TUU1LVkgvc1JlUXNUSEgySHJHSzBoN3RaTEZIUERjRzlZ?=
+ =?utf-8?B?TU9NbEZYVjRHTGFPZTNST25SNGEwd0s5dk9ZempuVkZPeVlHdUxIOHU3YWZh?=
+ =?utf-8?B?UEYwNG5yQk9rVU9sSlk5WnU1WG5sT1hUZ29pS3Z5VTRrOFBUNEV1VEhGQ1Rn?=
+ =?utf-8?B?c0hDV2ZJbk9iMzkxNzlNa3lWblhqMmlTVlhKekt4Um5lRURCTjRCbzZieVF2?=
+ =?utf-8?B?SjROTnRXSXdXUEpESTlEbHdtZ3FHWi81TDg0bkZadWpkMDB6Y3lwZ2JRVnlO?=
+ =?utf-8?B?ZnNvMUdjTUg3cHFpR2Q2SExmLzJUWlBIcjRuVGlHN1dzTUc1eDQ3ZzY4K1JS?=
+ =?utf-8?B?OWR1YUEzZVpyWCtLRXFyWlZIM0tvWTh6bDRpUGpCU2lXVFAyY0NwTzlmelFD?=
+ =?utf-8?B?dVBiRFFvSGZHc01CN014cXBTRkdZY1pLRURNWHJOMVhZL0lydFJMMnBLSzBi?=
+ =?utf-8?B?Wkk0YmRTeDlUcjBWcm5tNmZvVXMrUXRBL24raUZkWHRFWXZOOENldFJ6UVY0?=
+ =?utf-8?B?bENaa1FHNG8zSyt4VysxWjk4Y2w2OWpiNWo2OXpqQ3duREo1NlBHNjQ2Z1Ez?=
+ =?utf-8?B?YlJYZ0Z5NVMwRVJ5bmU4YWVpOG5yMEpYLzc1WGVzZWx4OXhla0didWxDbmxU?=
+ =?utf-8?B?c3FaS2ZteVZ3YkNlWnpWSnBBcG9SdzhldXVWbVRWZ2J5WmFTelFPZm5zWFNu?=
+ =?utf-8?B?YnFMWFg4ejhuT3FDQ2hGQzk0VGFHUnlUOUljTUhkNHFrZ2czSmRKdWd4MkxH?=
+ =?utf-8?B?SEZqWDdQd2tPR0M1b3liM09IemFSd1hOZUFIZ2tMVDQzci9SZDQzZEsvd0kv?=
+ =?utf-8?B?dFFIeElhWUN4UUVtRW9VS2RHMEdsTlZJdXhnVzRSUmhUMXpIOGYzUTFYdVlR?=
+ =?utf-8?B?SHY2NG5rYWU5UGd0ZTlmWTgxZlZQc2dzRHJRdVV4MXlnK3JZSFdnM3oyQnd5?=
+ =?utf-8?B?ZEhkdElGSEZ0dktONERGQkxCby9mbTh1RVhmOVJyUGQvVHNiSG43T1F6UWwy?=
+ =?utf-8?B?TGx2cFNZZG5kb01qcnlYMTZqcm9XOE1WSTFrUEZVRUhWb1hDNENodzlMb3Va?=
+ =?utf-8?B?V0JlaTR6RkMxdGc5eFNFaE84b2VhckcwTEpQY0gwWFpJVnBkZ3NCL1FlRys2?=
+ =?utf-8?B?WFR4aDZtc1cyelBlRUpZTVZJYTFVeHh2NkNESlU0TmJWWk5ZbkIzN1Mrczk0?=
+ =?utf-8?B?UXByMGdyVUNPSitLOFhDK3F6cHpjZ2dxdlZFR2V6M3REZHBncTZseER2UFRU?=
+ =?utf-8?B?RnRhZ0E1cDFpWlkxdUU2TFlEanNGazVvaWVydk5yQnNiV2crTGx3VHZXaFdV?=
+ =?utf-8?B?V0NRdGtobU81M29OdkFvbkhEMEZ4UzZ2akpnb1hxN0dvU1NxWVBNUUVjQTJ3?=
+ =?utf-8?B?TmJyQkQvYTg0RzQ0ZXhFU0tOUEZhdEFxc0ROYTRYSC84Z0Z0RktVQ2ZrYitn?=
+ =?utf-8?B?enZlOGVUQUVDcjlzRDZtNHV5QmdkZ2ZHQzVsa2N0WDVidkNOa1BMQWRpaG5Q?=
+ =?utf-8?B?bnM3OGttZUFOOFd3MmllWkdkNENjY1JEQUV3ZGFGY09OUWVUYWFjU2lSTVF2?=
+ =?utf-8?B?NHdycVp6WGR4WWJyM1k1ckk0YWZVTHNxTjh2ZGRVR2QwT2EweStWaVhXRllN?=
+ =?utf-8?B?bURxdFg5Rms0MGFNZWFXZFRORHRkb0dwNER3ckRHSW5IVTIzVFQrTlNCZzVq?=
+ =?utf-8?B?eTN4c0JsVVZSRjhIdjBZelRadndkTGh4VUhBWmliQzZiaUFROUo3UkN5eUg0?=
+ =?utf-8?B?OUp2L2pCaXFqanZhLzErcWl6b1JjQXVaRFNmM1Zod1hjcWZCcmluaEk2NjhK?=
+ =?utf-8?B?QWRYUmxPOXBLbUJRQ1hBTitsSk1ubk1rY214R3piektML3pQRzVWL0w2aWRG?=
+ =?utf-8?B?OS9LODlZWmRnbmxHY09sMUZ0VUJrdWN5Z0FaZnd6ZnFoSEw3c3ZRT0l2S2Jm?=
+ =?utf-8?B?aEJBMk5tVU9jSDBjMUwrUksyRGd6bE5mTFUxY044bEJiQm42LzdFb1JIcWt3?=
+ =?utf-8?B?Z0xQRnZSVGRwRS9DREZnRURSYlEyZ1N2OHB0Q0RaNjZ5eTV2U3FGMWFHTGZF?=
+ =?utf-8?B?ZHF4eWt1Y2JhQ1ZsMHVrUmZnb3g2VWtPNGVjTzhFR016cXdNeStzQT09?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68f7161f-ac14-4301-1f95-08def15d1382
+X-MS-Exchange-CrossTenant-Network-Message-Id: 64c5bc67-6ecb-44d7-58ec-08def15d90a0
 X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2026 12:45:19.7683
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Aug 2026 12:48:49.5711
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: j70rpPIqjDVKywuY+o2GkpLXE7DZsnQwuwNgUCMpGcsQZcNsN34eXuI4XY8I429NSS5kcRpT24F9Yvkrkoz1aw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P123MB6963
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2hQ5jqPuwb37VV52R2QbRnZcWwABPmpYJzdbg/hOCpZ30U2leQ1KSX7gPbtw3mgcpI64JuMZWG6LzRCTLQQLuA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CW1P123MB7556
 
-On Fri, Jul 31, 2026 at 10:12:03PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] field_has_hex_fmt() prematurely truncates the format string search when it encounters escaped quotes.
-> --
-> 
-> --- Patch [1]: [PATCH] perf trace: Format fields with hex specifiers in print_fmt as hexadecimal ---
-> commit 1d9edf5adf3cf666d7e9393e5db036cd73d6656a
-> Author: Aaron Tomlin <atomlin@atomlin.com>
-> 
-> perf trace: Format fields with hex specifiers in print_fmt as hexadecimal
-> 
-> This commit introduces field_has_hex_fmt to inspect tracepoint print_fmt
-> strings. If a field uses hexadecimal specifiers, it assigns SCA_PTR formatting
-> to display the value in hexadecimal by default.
-> 
-> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> > index ba0f8749fc7d7..b0ce9c2a24e57 100644
-> > --- a/tools/perf/builtin-trace.c
-> > +++ b/tools/perf/builtin-trace.c
-> [ ... ]
-> > @@ -2098,6 +2098,37 @@ static bool is_internal_field(struct tep_format_field *field)
-> >  	return !strcmp(field->type, "__data_loc char[]");
-> >  }
-> >  
-> > +static bool field_has_hex_fmt(struct tep_format_field *field, int len)
-> > +{
-> > +	const char *fmt, *pos, *end;
-> > +
-> > +	if (!field || !field->event || !field->event->print_fmt.format)
-> > +		return false;
-> > +
-> > +	fmt = field->event->print_fmt.format;
-> > +
-> > +	/* Limit scanning strictly to the quoted printf format string */
-> > +	if (*fmt == '"') {
-> > +		fmt++;
-> > +		end = strchr(fmt, '"');
-> 
-> [Severity: Medium]
-> Does this parsing correctly handle escaped quotes inside the format string?
-> 
-> If a tracepoint format string contains an escaped quote, this strchr call
-> will incorrectly match it as the end of the format string, causing the end
-> pointer to be prematurely truncated.
-> 
-> > +	} else {
-> > +		end = strchr(fmt, ',');
-> > +	}
-> > +
-> > +	for (pos = strstr(fmt, field->name); pos && (!end || pos < end); pos = strstr(pos + 1, field->name)) {
-> 
-> [Severity: Medium]
-> Because the end pointer can be truncated by an escaped quote earlier, won't
-> the pos < end loop condition evaluate to false for any fields positioned after
-> that escaped quote?
-> 
-> This seems like it would skip hex format detection for those subsequent fields,
-> causing them to fall back to default decimal formatting.
-> 
-> > +		if (pos == fmt || !(isalnum(pos[-1]) || pos[-1] == '_')) {
-> > +			const char *after = pos + len;
-> [ ... ]
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260731215909.125335-1-atomlin@atomlin.com?part=1
+Currently, when a probe event is added using perf probe --add with a
+hexadecimal type cast (e.g., var:x64 and var:x32), the kernel traceprobe
+subsystem sets the field type to "u64" in the event's format file, yet
+generates a print format specifier of "var=0x%Lx" or "0x%x".
 
-Hi Arnaldo, Namhyung, Jiri, Ian,
+By default, perf trace uses its internal beautifiers which only inspect
+field->type and field->flags. Because traceprobe events declare
+primitive integer field types ("u64") without a C pointer asterisk
+(i.e., "*"), perf trace defaults to printing the field's value as a
+decimal unsigned long ("%ld"), ignoring the hexadecimal intent.
 
-I have updated the field_has_hex_fmt() function to use an escape-aware
-scanner that explicitly skips backslash-escaped characters when seeking the
-closing quote. I shall send through a v2 containing this fix shortly.
+Introduce field_has_hex_fmt() to inspect the tracepoint's print_fmt
+format string. If a field's print format assignment uses hexadecimal
+specifiers (i.e., "=0x", "=%#", or "=%p"), assign SCA_PTR formatting so
+perf trace displays the value in hexadecimal by default without
+requiring --libtraceevent. For example:
 
-Kind regards,
+    ❯ sudo ./perf probe --add 'enqueue_task_fair rq=rq:x64 p=p:x64 flags=flags:x32'
+    Added new event:
+      probe:enqueue_task_fair (on enqueue_task_fair with rq=rq:x64 p=p:x64 flags=flags:x32)
+
+    You can now use it in all perf tools, such as:
+
+            perf record -e probe:enqueue_task_fair -aR sleep 1
+
+    ❯ sudo ./perf trace --show-cpu --event probe:enqueue_task_fair --max-event 3
+         0.000 [000] :0/0 probe:enqueue_task_fair(rq: 0xffff8ac632233180, p: 0xffff8ac2c1240000, flags: 0x100009)
+         0.006 [004] :0/0 probe:enqueue_task_fair(rq: 0xffff8ac632433180, p: 0xffff8ac624cf8000, flags: 0x9)
+         0.069 [001] :0/0 probe:enqueue_task_fair(rq: 0xffff8ac6322b3180, p: 0xffff8ac4c4212c40, flags: 0x9)
+
+Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+---
+Changes since v1:
+
+ - Fixed field_has_hex_fmt() to properly handle escaped quotes (\") in
+   format strings
+
+ - Link to v1: https://lore.kernel.org/lkml/20260731215909.125335-1-atomlin@atomlin.com/
+---
+ tools/perf/builtin-trace.c | 46 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 45 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index ba0f8749fc7d..5a3e043b5b72 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -2098,6 +2098,49 @@ static bool is_internal_field(struct tep_format_field *field)
+ 	return !strcmp(field->type, "__data_loc char[]");
+ }
+ 
++static bool field_has_hex_fmt(struct tep_format_field *field, int len)
++{
++	const char *fmt, *pos, *end = NULL;
++
++	if (!field || !field->event || !field->event->print_fmt.format)
++		return false;
++
++	fmt = field->event->print_fmt.format;
++
++	/* NB: Limit scanning strictly to the quoted printf format string */
++	if (*fmt == '"') {
++		const char *p = ++fmt;
++
++		while (*p) {
++			if (*p == '\\' && p[1] != '\0') {
++				/* NB: Skip escaped character */
++				p += 2;
++			} else if (*p == '"') {
++				end = p;
++				break;
++			} else {
++				p++;
++			}
++		}
++	} else {
++		end = strchr(fmt, ',');
++	}
++
++	for (pos = strstr(fmt, field->name); pos && (!end || pos < end);
++	     pos = strstr(pos + 1, field->name)) {
++		if (pos == fmt || !(isalnum(pos[-1]) || pos[-1] == '_')) {
++			const char *after = pos + len;
++
++			if (*after == '=' && (strstarts(after + 1, "0x") ||
++					      strstarts(after + 1, "%#") ||
++					      strstarts(after + 1, "%p")))
++				return true;
++		}
++	}
++
++	return false;
++}
++
+ static struct tep_format_field *
+ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field *field,
+ 			    bool *use_btf)
+@@ -2125,7 +2168,8 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+ 		    ((len >= 4 && strcmp(field->name + len - 4, "name") == 0) ||
+ 		     strstr(field->name, "path") != NULL)) {
+ 			arg->scnprintf = SCA_FILENAME;
+-		} else if ((field->flags & TEP_FIELD_IS_POINTER) || strstr(field->name, "addr"))
++		} else if ((field->flags & TEP_FIELD_IS_POINTER) || strstr(field->name, "addr") ||
++			   field_has_hex_fmt(field, len))
+ 			arg->scnprintf = SCA_PTR;
+ 		else if (strcmp(field->type, "pid_t") == 0)
+ 			arg->scnprintf = SCA_PID;
 -- 
-Aaron Tomlin
+2.55.0
+
