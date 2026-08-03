@@ -1,118 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 297F841A4F6;
-	Mon,  3 Aug 2026 13:52:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1EE22E7165;
+	Mon,  3 Aug 2026 14:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785765120; cv=none; b=cbfjmYZAZd/q7kO4UTHti0YhYCXsDjGWVx/1ICZdzJxki2r2JBXEk3539DD9F4XN5rMlhicrdLOZbszHvxOq5O2Jv2AYzqDJwzclfwT+saZLE8IKtorx5hJviBXx4GYINPDTegeWsRU6/OZsUo2WnUCjVx3LUNtssR6C5pmU8ws=
+	t=1785767405; cv=none; b=luU/fa6lKt+tqFgA3R9HYGuz0qo7kosVMu9X7KmZY9oJIOAwoRlzDl92vXY60Lv8T3RaY8GgjoYo4JEmFsri5nPLH2Cgj9eYhqHo2SaAN2WBibeqYGuxUuwm/Y5O9qSqErG5FzqPOXPuZDVhsAGfhJRSUCPGXQJnPetRPfD4Hf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785765120; c=relaxed/simple;
-	bh=ZsG77edvOhH6XVLAwy7LIPSIlfSX56ZFI2RUHuh1Ges=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Yf1xf0tNITEcW+jQLCCocYgV1WuEcfSliqbsfkdrCE+eMZM8mHnFZ31Js7DnhQaR2mZ2NJzLIGAPeHXJo6vO4jTWJYvC2Ixvp7xrEuDJNd61N5APA2eU1M//Fl2DG/4QHyAlDGOF7oJVdGLG9kImxGvNd+/kkU42w4Gk3dLFIhU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HhSyIxX3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1785767405; c=relaxed/simple;
+	bh=PYAv4bqgM/MLswi+SC1lDlrOY7sM4RTk8o4SNYMUtbA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NVIGv22T7aRP+OpXlmlWDUAnmyV6ZLjLRBTSXKQhnpHtGG8PZp0VQ/MqIXVgvsU64sTvXh0JIS1JEvDZVLtQH3mH+OIVlrc4z2fu6NnmITrVy/VXWGN2IW5CnrYygky2lTcvJLMpN6/z5Zp4CpqTIGQaw7vbpmFzEUvNmKUazuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K9dXX/mT; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhSyIxX3"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C79DEC2BCF6;
-	Mon,  3 Aug 2026 13:51:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1785765119;
-	bh=ZsG77edvOhH6XVLAwy7LIPSIlfSX56ZFI2RUHuh1Ges=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=HhSyIxX3IIa/Ji0lGLgiEs1+oCNeylXqiQPjpuzSebuo2DuMQe61O65cEGUBYWn7W
-	 XeRw6Dzp7RG18Kub48sllMLoYesTGgRz6u5vYmQqDmjekdgQyTWX2A22M70Iy42j8j
-	 f3rSY0KS4vwjFke8ZbhFQsiFo3fxhOqcJwwlxDLH7TuEDs8KuU55VAxt35bRDxnBrx
-	 i5eO3A4pHFwdoRJBhnIEYDI3AQRYwPGGJKCv2CCjf+8RlKdfRLNN7i8qI5DfNakiYH
-	 aLqUk7Iws56R8YBwaxfgUh+29xl0IP57XnoN/gNmULMZoE+t8gBjSNxY+1346vFUaz
-	 0IPFqSHpOf6SA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D7CC55182;
-	Mon,  3 Aug 2026 13:51:59 +0000 (UTC)
-From: Michalis Niarchos via B4 Relay <devnull+michael.niarchos.gmail.com@kernel.org>
-Date: Mon, 03 Aug 2026 15:51:52 +0200
-Subject: [PATCH v3 1/3] perf tools: Fix memory leak in cmd_kvm()
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K9dXX/mT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785767404; x=1817303404;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=PYAv4bqgM/MLswi+SC1lDlrOY7sM4RTk8o4SNYMUtbA=;
+  b=K9dXX/mTWTcOXAdaRCkrS5CviAqD/Cpbebziwi6lp0FcdoC118zTRpg9
+   r/eiTHTZrMnlIpbL2c7KQT2FofpLiIIS51+avEeA+WavF1olxm0INRjtz
+   RVAI6zKhh5SCGTqCdQWCD7HCEuMr9Go+EYvcVb+ZaXW3eRdKJHmrKQCyT
+   mrxmr5cCL9aQLkfx9a17UztdOZb7MqyuAHFHV8fAqJTjvmArqmJGAu7z7
+   36R+P6fxRzZGN1pRCCcckJagPXWIwX4HNHqpzYAQZJRyjNJuBPCtzqTWD
+   yvYJUljHy16yYVOzJhOdn3vyAd1JBZYogUJTrO4X4YcG4kLrNMTFP2cXI
+   w==;
+X-CSE-ConnectionGUID: OGcAe5yYSequR93B5ZMw+A==
+X-CSE-MsgGUID: 379z6DdiSk6EaocQ8GwhAg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11864"; a="96892331"
+X-IronPort-AV: E=Sophos;i="6.25,202,1779174000"; 
+   d="scan'208";a="96892331"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2026 07:30:03 -0700
+X-CSE-ConnectionGUID: cmdQApsrSbmp0EuChi6QLQ==
+X-CSE-MsgGUID: 3LlnOa9ERXCZMDQtherwEA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,202,1779174000"; 
+   d="scan'208";a="285869655"
+Received: from bradocaj-mobl.ger.corp.intel.com (HELO [10.125.108.187]) ([10.125.108.187])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Aug 2026 07:30:02 -0700
+Message-ID: <2d89c314-c0d9-4895-83cf-52f12a3f6ef0@intel.com>
+Date: Mon, 3 Aug 2026 07:30:00 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/9] perf/cxl: Accept an overflow interrupt on MSI
+ message number 0
+To: Richard Cheng <icheng@nvidia.com>
+Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ jic23@kernel.org, will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net,
+ robin.murphy@arm.com, sashiko-bot@kernel.org,
+ Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+References: <20260731232827.401447-1-dave.jiang@intel.com>
+ <20260731232827.401447-6-dave.jiang@intel.com> <anAs42gO1Yd7MCid@MWDK4CY14F>
+Content-Language: en-US
+From: Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <anAs42gO1Yd7MCid@MWDK4CY14F>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260803-perf-kvm-fixes-v3-1-e06268ec06fa@gmail.com>
-References: <20260803-perf-kvm-fixes-v3-0-e06268ec06fa@gmail.com>
-In-Reply-To: <20260803-perf-kvm-fixes-v3-0-e06268ec06fa@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Michalis Niarchos <michael.niarchos@gmail.com>
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785765118; l=1401;
- i=michael.niarchos@gmail.com; s=20260731; h=from:subject:message-id;
- bh=g8MhihpU3z6FgOHyL6TpVKQEHy5oaO74U3jKb0sNYoY=;
- b=BbRDa2JL+T5vHyyCpP1ffABm/DHENH52ZcIixvt5R+vfjvE4bHm9TXCeYzkjepYGFE17yRfwp
- kJ0Oa4an6p1CKk+vy+ZE9JgCNLaI2P3PW2iYhyOqtAcvw9w7Cg9IUa9
-X-Developer-Key: i=michael.niarchos@gmail.com; a=ed25519;
- pk=/LBZRQzfuxTnSaZhgZE8EP7mHr0poyqlKeFssNqkzFE=
-X-Endpoint-Received: by B4 Relay for michael.niarchos@gmail.com/20260731
- with auth_id=912
-X-Original-From: Michalis Niarchos <michael.niarchos@gmail.com>
-Reply-To: michael.niarchos@gmail.com
 
-From: Michalis Niarchos <michael.niarchos@gmail.com>
 
-filename may get allocated by get_filename_for_perf_kvm(), but is
-never freed. Use string literals to remove the need for freeing.
 
-Signed-off-by: Michalis Niarchos <michael.niarchos@gmail.com>
----
- tools/perf/builtin-kvm.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+On 8/2/26 10:57 PM, Richard Cheng wrote:
+> On Fri, Jul 31, 2026 at 04:28:23PM +0800, Dave Jiang wrote:
+>> cxl_pmu_probe() rejects the PMU when info->msi_vec <= 0, but that field
+>> holds the MSI/MSI-X message number the device signals overflow on. The
+>> field is 0-based, and -1 means no interrupt support. Message number 0 is
+>> valid and pci_irq_vector() takes a 0-based index, so a compliant device
+>> signalling on the first vector fails to probe.
+>>
+>> Reject only the no-interrupt case, matching how the CXL mailbox and event
+>> interrupts handle it.
+>>
+>> Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
+>> Reported-by: sashiko-bot@kernel.org
+>> Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
+>> Assisted-by: Claude:claude-opus-4-8
+>> Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+>> Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>> v3:
+>> - Rebase on the preceding patch, so this tests info->msi_vec rather than
+>>   info->irq. The fix is unchanged and the hunk is still one line.
+>> - Not guarding against pci_irq_vector()'s INTx fallback for vector 0, which
+>>   it returns when neither MSI nor MSI-X is enabled. A v3 draft added a
+>>   pci_dev_msi_enabled() check for that, but a modern CXL device wiring up
+>>   INTx is not a realistic prospect, and the consequence otherwise is a PMU
+>>   that counts nothing rather than anything unsafe. Left alone to keep this
+>>   a one-liner.
+>> ---
+>>  drivers/perf/cxl_pmu.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+>> index 56e6ae7bebf7..c9e30cb149df 100644
+>> --- a/drivers/perf/cxl_pmu.c
+>> +++ b/drivers/perf/cxl_pmu.c
+>> @@ -875,7 +875,7 @@ static int cxl_pmu_probe(struct device *dev)
+>>  		.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
+>>  	};
+>>  
+>> -	if (info->msi_vec <= 0)
+>> +	if (info->msi_vec < 0)
+>>  		return -EINVAL;
+>>
+> 
+> Hi Dave,
+> 
+> I agree that 0 is a legal message number, but do we need to check whether
+> MSI is actually enabled ?
 
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 394302ebdb16..16cfa7ce7856 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -606,11 +606,11 @@ static const char *get_filename_for_perf_kvm(void)
- 	const char *filename;
- 
- 	if (perf_host && !perf_guest)
--		filename = strdup("perf.data.host");
-+		filename = "perf.data.host";
- 	else if (!perf_host && perf_guest)
--		filename = strdup("perf.data.guest");
-+		filename = "perf.data.guest";
- 	else
--		filename = strdup("perf.data.kvm");
-+		filename = "perf.data.kvm";
- 
- 	return filename;
- }
-@@ -2158,15 +2158,9 @@ int cmd_kvm(int argc, const char **argv)
- 	if (!perf_host)
- 		perf_guest = 1;
- 
--	if (!file_name) {
-+	if (!file_name)
- 		file_name = get_filename_for_perf_kvm();
- 
--		if (!file_name) {
--			pr_err("Failed to allocate memory for filename\n");
--			return -ENOMEM;
--		}
--	}
--
- 	if (strlen(argv[0]) > 2 && strstarts("record", argv[0]))
- 		return __cmd_record(file_name, argc, argv);
- 	else if (strlen(argv[0]) > 2 && strstarts("report", argv[0]))
+I actually dropped the check and added notes so sashiko doesn't freak out. I don't think it's necessary given there's not likely to have devices with INTX support.
 
--- 
-2.55.0
 
+> 
+> something like
+> """
+> if (info->msi_vec < 0 || (!pdev->msi_enabled && !pdev->msix_enabled))
+>     return -EINVAL;
+> """
+
+I can add that if you still think it's needed. The one thing I can think of is someone pass in no_msi at the kernel commandline.  
+
+> 
+> Best regards,
+> Richard Cheng
+> 
+> 
+> 
+> 
+>>  	rc = pci_irq_vector(pdev, info->msi_vec);
+>> -- 
+>> 2.55.0
+>>
+>>
 
