@@ -1,269 +1,148 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41949408031;
-	Mon,  3 Aug 2026 12:33:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83CA0405C3F
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 12:34:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785760396; cv=none; b=HIO7BOSaX1ll+Qz3uNNLaPyNXzOmwGHhWHvL3t6XUwTF8OQ128sTwWVW5Hm5XEg/bVDv0lHzNOEeBnqwPr2uDFD209P2a3TdEUI3w62PDwS3R7tU/jSFd0g6NG4zi9vgNtJGgrd6uhz1u4gNpHE96gStHfx2UV5N3Dur/37VyeA=
+	t=1785760449; cv=none; b=h0jFIEKQcgEhMqyTnteeytVzI13NmVpGggmrKzq906Xbga/wxtNejYrrwbe69Z6ZAoAY9tIptqf9PuHaJ2Jvit7xEsK90tcGgTUpnUeUqPkXzKKEt8w3t7ijAtSuHDeELxJACsyZiWHMY8qZoxRBmh1xLuZlV0gQ1p8pGaS5UGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785760396; c=relaxed/simple;
-	bh=Zdqe5rG8MMuCQFdj8MvgN1UdO43dVP+caQNL2i6/NT4=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=bHglgTc50dat5lqfAGtY0hSoZJkZQVLgz4CpexMf+yDf/BVv183lxfG0CE/EYjbPQPnPF0dK1JST+CRnafE0DoXpB263dS4FmhmcKgKVz1zuNlaBLfIuVFH4ThlJs2QNHywmvUuvujrdNyb48lPlE7dL1i5YvIj0M1d/hCAidx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GqpC3mkm; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785760449; c=relaxed/simple;
+	bh=cvkCUySjHyh/CsEqFC2mRN96HSUjMZvECOJTuy1Mbec=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=HdrnfT4l+G0spteOtXI4vkiIdhf14N86MHnmuJ9Tq6tvvABMajQce/0smSVKWQnc5skjT5r3WsqXrU5Gf1m+YzSegGbqb00O9ueS1oezeFnSlCtwPWVSoAS3QLXOfyva+UvoNbjtCWM336TFvGt0MGRCbR/m5RmAL+cMqPay0sQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LHVJMDr5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GqpC3mkm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AB4D1F00A3D;
-	Mon,  3 Aug 2026 12:33:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LHVJMDr5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED1161F000E9;
+	Mon,  3 Aug 2026 12:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785760393;
-	bh=TjxtLTr1Ur/B7tyQMM0xK2Ieoel5FexyFCt+au7L/aM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=GqpC3mkmK3tkBfUSIBW+dB0NNppm2NcmuIsJBa2YquxYTL3W88ewjDOvwnJWsyArz
-	 O9s0GZaUsgRT8D3Rau9RXFuTEb1nAJ1YQlNYnRi2DpqlfpR/iP4iUNDs7AmsjvO3qB
-	 7VlYeB0UzW/oh1jDiblEQ2PIntEtk/zX6yhExyTQrdchyF99LIH2BQWOlj0wwNFHSZ
-	 +n9eRLxgVrPFQNlwyDNHBJM7sdDvq6rjdQa+NTAZ0+0XqsYdKMbMeAIFDzocoYgAB2
-	 BoNr3MCVm8/g9XNKzuD5hX98w89RddCLoBzUSeTUFrYz6SupOIRh3444KD1oVVZiET
-	 n00bpffnTDskQ==
-Date: Mon, 3 Aug 2026 21:33:07 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
- Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v11 00/11] tracing: wprobe: x86: Add wprobe for
- watchpoint
-Message-Id: <20260803213307.60116859f73bdeba3b72dbba@kernel.org>
-In-Reply-To: <178565870538.714490.11309825813968306287.stgit@devnote2>
-References: <178565870538.714490.11309825813968306287.stgit@devnote2>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20260515; t=1785760448;
+	bh=Ga0FevkmgSXUYUHl3HpeN9Q14d5mJiZOJtVd5cApKQE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=LHVJMDr5lH7YERqGq5fOzutft6EytKbwGQPOWmK9/KJKyyP1thfX6g3eJ7n60L9fJ
+	 PC3xJBZSlK6n2/v7qwBWAw+K7EBg7E5Xivjv8R1en3RloSP2gR7U2YEihDXqQFmLV8
+	 /mmc4j/xnFSDrS+pzFf6lEvegx/6NrR4Ij6YW8JF47aAAkcUkdyfOrC04dOAyO0q3w
+	 8P0MBfoNdCqFz5Zwwrqq4OHNgSNcZFK6Uq0+jx8Jvx78Ib32W3eUkz6WHOWxG/gHf5
+	 D7P1uaNuv/l0YYJDkyYzjCkONXyNGwCgSrwULtDN9tuOwn/uTTsIsA4qj2c0kn9WgK
+	 NpaF5ZzKpZkyQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/2] perf c2c: Clean up registered formats on
+ c2c_hists__init() failure
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260803120452.181273-3-acme@kernel.org>
+References: <20260803120452.181273-1-acme@kernel.org>
+ <20260803120452.181273-3-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 03 Aug 2026 12:34:07 +0000
+Message-Id: <20260803123407.ED1161F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Sun,  2 Aug 2026 17:18:25 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] `__hpp_list__parse()` contains a bug where breaking out of a swi=
+tch statement fails to terminate the enclosing for-loop, leading to order-d=
+ependent error masking.
+--
 
-> Hi,
-> 
-> Here is the 11th version of the series for adding new wprobe (watch probe)
-> which provides memory access tracing event. Moreover, this can be used
-> via event trigger. Thus it can trace memory access on dynamically
-> allocated objects too.
-> The previous version is here:
-> 
->   https://lore.kernel.org/all/178476134787.26117.10094977293012760490.stgit@devnote2/
-> 
-> The major changes in this version is to use Jinchao's new
-> modify_local_hw_breakpoint_addr() API, add count option support to
-> wprobe trigger, skip wprobe trigger during another wprobe trigger is
-> working and rewrite selftests for wprobe trigger with
-> trace-events-sample module.
-> 
-> Changes in v11:
->  - Updated hardware breakpoint modification API:
->    - Replaced arch_reinstall_hw_breakpoint() with
->      arch_modify_local_hw_breakpoint_addr() and
->      modify_local_hw_breakpoint_addr() API.
->    - Made DR7 updates NMI safe by using atomic cmpxchg for slot management
->      and per-CPU sequence number (cpu_dr7_seq) to detect concurrent NMI
->      updates.
->  - Refactored wprobe trigger implementation:
->    - Updated set_wprobe/clear_wprobe trigger to use
->      modify_local_hw_breakpoint_addr().
->    - Added tracepoint_synchronize_unregister() in wprobe_unregister_trigger()
->      and parse error path.
->    - Added NULL check for tw->bp_event in trace_wprobe_update_local() to
->      prevent race conditions.
->    - Switched trigger data freeing to use event_trigger_data::private_data_free.
->    - Added count option support (count=N) for wprobe triggers.
->    - Fixed trigger address calculation (cast rec to char *).
->    - Added work_pending flag to avoid update conflicts between CPUs.
->    - Fixed wprobe_trigger_find_same() to check wprobe_data->clear flag.
->    - Update trigger-wprobe*.tc to use trace-events-sample kernel module.
->  - Fixed selftest:
->    - Updated trigger-wprobe.tc assertion logic for clear_wprobe trigger
->      test to check trace log instead of sysfs enable file (which remains 1
->      under soft-disable).
-> 
-> Public branch
-> -------------
-> I will push this branch as topic/wprobe-v2 to my tree so that it
-> can be easily tested.
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/wprobe-v2 
-> 
-> This is based on linux-trace tree's probes/for-next.
-> 
-> Usage
-> -----
-> 
-> The basic usage of this wprobe is similar to other probes;
-> 
->   w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+OFFS]> [FETCHARGS]
-> 
-> This defines a new wprobe event. For example, to trace jiffies update,
-> you can do;
-> 
->  echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
->  echo 1 > events/wprobes/my_jiffies/enable
-> 
-> Moreover, this can be combined with event trigger to trace the memory
-> access on slab objects. The trigger syntax is;
-> 
->   set_wprobe:WPROBE_EVENT:FIELD[+OFFSET] [if FILTER]
->   clear_wprobe:WPROBE_EVENT[:FIELD[+OFFSET]] [if FILTER]
-> 
-> set_wprobe sets WPROBE_EVENT's watch address on FIELD[+OFFSET].
-> clear_wprobe clears WPROBE_EVENT's watch address if it is set to
-> FIELD[+OFFSET]. If FIELD is omitted, forcibly clear the watch address
-> when trigger event is hit.
-> 
-> For example, trace the first 8 byte of the dentry data structure passed
-> to do_truncate() until it is deleted by dentry_kill().
-> (Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
-> 
->   # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
-> 
->   # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
->   # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
-> 
->   # echo 'f:dentry_kill dentry_kill dentry=$arg1' >> dynamic_events
->   # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
-> 
->   # echo 1 >> events/fprobes/truncate/enable
->   # echo 1 >> events/fprobes/dentry_kill/enable
-> 
->   # echo aaa > /tmp/hoge
->   # echo bbb > /tmp/hoge
->   # echo ccc > /tmp/hoge
->   # rm /tmp/hoge
-> 
-> Then, the trace data will show;
-> 
->  # tracer: nop
->  #
->  # entries-in-buffer/entries-written: 32/32   #P:8
->  #
->  #                                _-----=> irqs-off/BH-disabled
->  #                               / _----=> need-resched
->  #                              | / _---=> hardirq/softirq
->  #                              || / _--=> preempt-depth
->  #                              ||| / _-=> migrate-disable
->  #                              |||| /     delay
->  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
->  #              | |         |   |||||     |         |
->                sh-107     [004] ...1.     9.990418: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
->                sh-107     [004] ...1.     9.990914: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b3de78
->                sh-107     [004] ...1.     9.993175: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049ddd40
->                sh-107     [004] .....     9.995198: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
->                sh-107     [004] ...1.     9.995389: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db998
->                sh-107     [004] ..Zff     9.997503: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
->                sh-107     [004] ..Zff     9.997509: watch: (path_openat+0x211/0xda0) address=0xffff8880048083a8 value=0x8200080
->                sh-107     [004] ..Zff     9.997514: watch: (path_openat+0xa56/0xda0) address=0xffff8880048083a8 value=0x8200080
->                sh-107     [004] ..Zff     9.997518: watch: (path_openat+0xae2/0xda0) address=0xffff8880048083a8 value=0x8200080
->                sh-107     [004] .....     9.997521: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
->                sh-107     [004] ...1.     9.997582: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004808270
->                sh-107     [004] ...1.     9.999365: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db728
->                sh-107     [004] ...1.     9.999388: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b1c000
->                rm-113     [005] ..Zff    10.000965: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
->                rm-113     [005] ..Zff    10.000971: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
->                rm-113     [005] ..Zff    10.000984: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
->                rm-113     [005] ..Zff    10.000988: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
->                rm-113     [005] ..Zff    10.001010: watch: (lookup_one_qstr_excl+0x28/0x140) address=0xffff8880048083a8 value=0x8200080
->                rm-113     [005] ..Zff    10.001014: watch: (lookup_one_qstr_excl+0xd1/0x140) address=0xffff8880048083a8 value=0x8200080
->                rm-113     [005] ..Zff    10.001018: watch: (may_delete_dentry+0x1c/0x200) address=0xffff8880048083a8 value=0x8200080
->                rm-113     [005] ..Zff    10.001021: watch: (may_delete_dentry+0x195/0x200) address=0xffff8880048083a8 value=0x8200080
->                rm-113     [005] ..Zff    10.001031: watch: (vfs_unlink+0x5e/0x260) address=0xffff8880048083a8 value=0x8200080
->                rm-113     [005] d.Z..    10.001067: watch: (d_make_discardable+0x1b/0x40) address=0xffff8880048083a8 value=0x8200080
->                rm-113     [005] d.Z..    10.001071: watch: (d_make_discardable+0x29/0x40) address=0xffff8880048083a8 value=0x200080
->                rm-113     [005] ...1.    10.001072: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
->                rm-113     [005] ...1.    10.001218: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
->                sh-107     [004] ...1.    10.001416: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db110
->                sh-107     [004] ...1.    10.001444: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db248
->                sh-107     [004] ...1.    10.001500: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
->                sh-107     [004] ...1.    10.002067: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
->                sh-107     [004] ...1.    10.904920: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
->                sh-107     [004] ...1.    10.905129: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
-> 
-> 
-> Thank you,
-> 
-> ---
+--- Patch [2]: [PATCH 2/2] perf c2c: Clean up registered formats on c2c_his=
+ts__init() failure ---
+commit 8cd4f405e8cab7ae300b2dd0a747dc102c29836e
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Oops, I found I missed base-commit: tag here...
-I'll update my tool to add it automatically.
+perf c2c: Clean up registered formats on c2c_hists__init() failure
 
-Thanks,
+When c2c_hists__init() calls hpp_list__parse() and fails partway through,
+format structures registered are left on the hpp_list. This adds cleanup
+inside c2c_hists__init() itself, so all callers are protected.
 
-> 
-> Jinchao Wang (2):
->       x86/hw_breakpoints: Make DR7 updates NMI safe
->       x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
-> 
-> Masami Hiramatsu (Google) (9):
->       HWBP: Add modify_local_hw_breakpoint_addr() API
->       tracing: wprobe: Add watchpoint probe event based on hardware breakpoint
->       x86: hw_breakpoint: Add a kconfig to clarify when a breakpoint fires
->       selftests: tracing: Add a basic testcase for wprobe
->       selftests: tracing: Add syntax testcase for wprobe
->       tracing: wprobe: Add wprobe event trigger
->       selftests: ftrace: Add wprobe trigger testcase
->       tracing/wprobe: Support BTF typecast in fetchargs
->       tracing/wprobe: Support BTF typecast in wprobe trigger command
-> 
-> 
->  Documentation/trace/index.rst                      |    1 
->  Documentation/trace/wprobetrace.rst                |  163 ++
->  arch/Kconfig                                       |   18 
->  arch/x86/Kconfig                                   |    2 
->  arch/x86/include/asm/debugreg.h                    |   36 -
->  arch/x86/include/asm/hw_breakpoint.h               |    2 
->  arch/x86/kernel/cpu/mce/core.c                     |   20 
->  arch/x86/kernel/hw_breakpoint.c                    |  125 +-
->  arch/x86/kernel/nmi.c                              |   10 
->  arch/x86/kernel/traps.c                            |   10 
->  include/linux/hw_breakpoint.h                      |    6 
->  include/linux/trace_events.h                       |    3 
->  kernel/events/hw_breakpoint.c                      |   35 +
->  kernel/trace/Kconfig                               |   24 
->  kernel/trace/Makefile                              |    1 
->  kernel/trace/trace.c                               |    9 
->  kernel/trace/trace.h                               |    6 
->  kernel/trace/trace_events_trigger.c                |    2 
->  kernel/trace/trace_probe.c                         |   34 
->  kernel/trace/trace_probe.h                         |   15 
->  kernel/trace/trace_wprobe.c                        | 1392 ++++++++++++++++++++
->  tools/testing/selftests/ftrace/config              |    3 
->  .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   63 +
->  .../test.d/dynevent/wprobes_syntax_errors.tc       |   21 
->  .../test.d/trigger/trigger-wprobe-btf-offset.tc    |   74 +
->  .../test.d/trigger/trigger-wprobe-btf-typecast.tc  |   72 +
->  .../ftrace/test.d/trigger/trigger-wprobe.tc        |   85 +
->  27 files changed, 2156 insertions(+), 76 deletions(-)
->  create mode 100644 Documentation/trace/wprobetrace.rst
->  create mode 100644 kernel/trace/trace_wprobe.c
->  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
->  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
->  create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc
->  create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
->  create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
-> 
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index c9584dbedf77a..9f6ae3adb7951 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
 
+[ ... ]
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> @@ -2063,26 +2065,34 @@ static int c2c_hists__init_sort(struct perf_hpp_l=
+ist *hpp_list, char *name, stru
+>  	return 0;
+>  }
+> =20
+> -#define PARSE_LIST(_list, _fn)							\
+> -	do {									\
+> -		char *tmp, *tok;						\
+> -		ret =3D 0;							\
+> -										\
+> -		if (!_list)							\
+> -			break;							\
+> -										\
+> -		for (tok =3D strtok_r((char *)_list, ", ", &tmp);			\
+> -				tok; tok =3D strtok_r(NULL, ", ", &tmp)) {	\
+> -			ret =3D _fn(hpp_list, tok, env);				\
+> -			if (ret =3D=3D -EINVAL) {					\
+> -				pr_err("Invalid --fields key: `%s'", tok);	\
+> -				break;						\
+> -			} else if (ret =3D=3D -ESRCH) {				\
+> -				pr_err("Unknown --fields key: `%s'", tok);	\
+> -				break;						\
+> -			}							\
+> -		}								\
+> -	} while (0)
+> +static int __hpp_list__parse(struct perf_hpp_list *hpp_list, char *_list=
+, struct perf_env *env,
+> +			     int (*_fn)(struct perf_hpp_list *hpp_list, char *name, struct pe=
+rf_env *env))
+> +{
+> +	char *tmp, *tok;
+> +	int ret =3D 0;
+> +
+> +	if (!_list)
+> +		return 0;
+> +
+> +	for (tok =3D strtok_r(_list, ", ", &tmp); tok; tok =3D strtok_r(NULL, "=
+, ", &tmp)) {
+> +		ret =3D _fn(hpp_list, tok, env);
+> +		switch (ret) {
+> +		case 0:
+> +			continue;
+> +		case -EINVAL:
+> +			pr_err("Invalid --fields key: `%s'", tok);
+> +			break;
+
+[Severity: Medium]
+Will this break statement only exit the switch block, rather than the enclo=
+sing
+for-loop?
+
+In the old PARSE_LIST macro, breaking out of the loop aborted parsing upon =
+the
+first invalid key.
+
+With a switch statement, it looks like this will continue parsing remaining
+tokens, overwriting ret and masking the earlier error if a subsequent token
+succeeds.
+
+Does this need to return immediately or use a goto to exit the loop?
+
+> +		case -ESRCH:
+> +			pr_err("Unknown --fields key: `%s'", tok);
+> +			break;
+> +		default:
+> +			pr_err("%m for --fields key: `%s'", tok);
+> +			break;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260803120452.1812=
+73-1-acme@kernel.org?part=3D2
