@@ -1,126 +1,230 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC51A26D4C3
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 01:28:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFAD1383312;
+	Mon,  3 Aug 2026 03:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785720490; cv=none; b=uWlVM+0zsoSnkDpHD5nxYqNjLRE7KkkTH/1PsUdjW9L4aldZ/Ie8u/AD4/HiYVavnRtIBVZGJQ6/Mp7CMdGTLlBUuEEx94qgK2WI91TNzv/NX+ciMz2NhnvTk6tVGulZVQAfPRJSzt8c30iGaUTBDctYw/EfQjRUGjUGNakA5HM=
+	t=1785728736; cv=none; b=uyIO3icvSuT9pkGyDgLmK90EhmS7QoDWTRJ+GTwecOZpVhUkYKkb5TrsVeyduNO0KyBTuF0Zp2rlRp4suzrsCzJaNiAABivQBUQWAgWTCrKUFPRcFcvtHe/zT6KJsuA9j0xn+geD2N/en02slHuVZFvl1oG1M1Inv67l3GqxeEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785720490; c=relaxed/simple;
-	bh=lNUXYIrXkSFJQEjEiGkcGgFJY5TPcp+/3WB92Ob9PxA=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hxD1crSagnWXigCk3PHhnLQJQHiYLdwS/ZmGykkO9vh1a8xV/tRHE2Xt1NO687952XbO+AK1YBAUsYCX1YeUdYQ9zhKPNpTvJOtP0+vZfid7LGqpMFXsWHBn5hAONKBsh0Yuy77wcEfwoV2irrfDksVQ1KR7gobQ8QbuQwzRmQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=csE0eeh0; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785728736; c=relaxed/simple;
+	bh=tQrEtRSMT4dO91vYVI56CXVFGEviUnFzsRkbRD7Osfw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QC/uh6v8N/fmjPsyIMOansPc6FMwBQ/j+zOfgSYKKLvGSy34wMaOni7nRJoJtT8H9UIAYOHNFgOGf2OIxd0QuNikSv+UtIOdyxJjRFbNKu2XDTVVD2z1ZPEvcUjmD7Y5iM3u4e9SGycKZ+qeRfcUPsM00NeCZHNEvAz+mmAVoOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ka7A2su2; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="csE0eeh0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F7C1F000E9;
-	Mon,  3 Aug 2026 01:28:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785720488;
-	bh=pLe0MdCkdQHGkWzz82VI44AgGxUIOIBK/4EZhdcXSWw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=csE0eeh0CnwEPpqmUqlHsyneZMW3amH635+PBbqJaNoQJ3g5Pg7qskWfn1S5M7mA5
-	 y4jPAMJ1Rr3uyIjsk2WAbVjAUJVrdxhnqYtzdxzvfhCPSTtPnyijGKTwTxo2f6Y/+q
-	 XBI+1QvBxR77EsZE1vJfQfn2yf9TiQyr0+xPih+294buP2HvHvCxuEzO+b2nasDQB+
-	 dgEm7v0ofmPYmah9JmBoG6Kv97yyG1wVr3jUG8P1zsDvVcIUCCDPgB8+tN4e7fIHJj
-	 h3K7wYMYWUI5eqZUGUJX5M9sfyPuzDxcP0hNwEy7yiQ6K3okE+IxCScB57YpGdrr6k
-	 hvsoH87LuNoMQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/2] perf c2c: Fix error masking, OOM, and unchecked
- caller errors in hpp_list__parse()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260803011140.179943-2-acme@kernel.org>
-References: <20260803011140.179943-1-acme@kernel.org>
- <20260803011140.179943-2-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 03 Aug 2026 01:28:08 +0000
-Message-Id: <20260803012808.51F7C1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ka7A2su2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1785728733; x=1817264733;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=tQrEtRSMT4dO91vYVI56CXVFGEviUnFzsRkbRD7Osfw=;
+  b=ka7A2su2cI28TGEKDQjMfVGw0HbQsT2R0Z4DlXCLK2UcSGR0EnmxCt1g
+   lQJnkF5Nh7tljTsEwujW8rV7DqWe4J7LfeNa0RoB0OJvFQOpZpL7jt3Cy
+   kiHgqYQ7kL+VD8mmoCRsmIgXgEHdaUvKbTTHnKhlsIDAKO97pIuJERFjE
+   XWHNPdlZQE38YYxp3fvSzs9mEobhp5i88aD03dOuAxjLOE8kdnNyxMX+7
+   S+Atlgr3fjhqCkmv1+XmG35RFTClgbp+W8pxgaJ0LI6xv2Mg5RkdBx1YD
+   hYMcIiyWYl8xCXDLcck45V9fAaCBBvTEZ4vhfYNaAAJxws1fLzgmnkj5p
+   Q==;
+X-CSE-ConnectionGUID: zKxR7w1VSemcM7pDMBE0zA==
+X-CSE-MsgGUID: ughxdmTHRRSdjU7Bq+1iGA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11863"; a="86210135"
+X-IronPort-AV: E=Sophos;i="6.25,201,1779174000"; 
+   d="scan'208";a="86210135"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2026 20:45:32 -0700
+X-CSE-ConnectionGUID: oufhHvSARvC9JOdmAhygFQ==
+X-CSE-MsgGUID: jtcsz4+0QWiPSOaU7b77Ig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,201,1779174000"; 
+   d="scan'208";a="261719132"
+Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
+  by orviesa009.jf.intel.com with ESMTP; 02 Aug 2026 20:45:28 -0700
+From: Jiebin Sun <jiebin.sun@intel.com>
+To: namhyung@kernel.org
+Cc: acme@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	irogers@google.com,
+	james.clark@linaro.org,
+	jolsa@kernel.org,
+	mark.rutland@arm.com,
+	dapeng1.mi@linux.intel.com,
+	thomas.falcon@intel.com,
+	tianyou.li@intel.com,
+	wangyang.guo@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiebin Sun <jiebin.sun@intel.com>
+Subject: [PATCH v6 0/9] perf c2c: add a function view
+Date: Mon,  3 Aug 2026 11:52:11 +0800
+Message-ID: <20260803035220.172022-1-jiebin.sun@intel.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+This series adds a new "function view" to perf c2c report, on top of the
+existing cacheline view. Existing cacheline-view data and operations remain
+unchanged; TAB adds access to a complementary way to inspect the same
+cache-to-cache (C2C) data.
 
-New issues:
-- [Medium] The newly added error handling `if (ret) goto out;` is bypassed =
-because the `PARSE_LIST` macro silently masks non-terminal errors (like OOM=
-) from individual tokens, undermining the commit's intended fix.
+v1: https://lore.kernel.org/linux-perf-users/20260626070355.1556721-1-jiebin.sun@intel.com/
+v2: https://lore.kernel.org/linux-perf-users/20260710084247.3576706-1-jiebin.sun@intel.com/
+v3: https://lore.kernel.org/linux-perf-users/20260717020530.1645123-1-jiebin.sun@intel.com/
+v4: https://lore.kernel.org/linux-perf-users/20260724095842.995920-1-jiebin.sun@intel.com/
+v5: https://lore.kernel.org/linux-perf-users/20260730090521.2206375-1-jiebin.sun@intel.com/
 
-Pre-existing issues:
-- [Low] Missing explicit POSIX standard header inclusions for libc function=
-s.
---
+Changes since v5
+================
 
---- Patch [1]: [PATCH 1/2] perf c2c: Fix error masking, OOM, and unchecked =
-caller errors in hpp_list__parse() ---
-commit 840153db94480f61d734e3e7494d6e8309bb2f8f
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+  - Give the function-view children their own references instead of
+    borrowing them, as suggested by Namhyung. They set ops and take refs
+    via map_symbol__copy() and thread__get(), so hist_entry__delete()
+    frees them; the custom child destructor and the
+    WARN_ON_ONCE(report_hierarchy) guard are gone.
 
-perf c2c: Fix error masking, OOM, and unchecked caller errors in hpp_list__=
-parse()
-   =20
-This commit addresses error handling bugs in hpp_list__parse() where output
-parsing errors were silently overwritten and OOM conditions for strdup() we=
-re
-ignored. It also fixes unhandled return values from c2c_hists__reinit() and
-hists__iterate_cb() in the calling functions.
+  - Add NO_SLANG stubs for the two TUI entry points declared in c2c.h,
+    matching how util/hist.h declares its own.
 
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index c9584dbedf77a..df07e97155df2 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -2093,8 +2093,18 @@ static int hpp_list__parse(struct perf_hpp_list *h=
-pp_list,
->  	char *sort   =3D sort_   ? strdup(sort_) : NULL;
->  	int ret;
-> =20
-> +	/* strdup() returns NULL on OOM, don't silently treat as empty */
-> +	if ((output_ && !output) || (sort_ && !sort)) {
-> +		ret =3D -ENOMEM;
-> +		goto out;
-> +	}
+  - Spell out in the symbol renderer why the length returned by
+    se_snprintf() cannot exceed the cell.
 
-[Severity: Low]
-This is a pre-existing issue, but does this file correctly include the POSIX
-standard headers for the libc functions it uses? Functions like strdup() and
-free() require <string.h> and <stdlib.h>. Relying on implicit inclusion
-can cause build failures on musl libc systems.
+  - Rebase onto perf-tools-next at d04ef71492fa.
 
->  	PARSE_LIST(output, c2c_hists__init_output);
-> +	if (ret)
-> +		goto out;
+No intended change to the rendered output, cacheline-view data, existing
+cacheline operations, or --stdio output.
 
-[Severity: Medium]
-Will this properly catch all errors from the parsing callback? Looking at
-the PARSE_LIST macro definition:
+Changes since v4
+================
 
-	ret =3D _fn(hpp_list, tok, env);
-	if (ret =3D=3D -EINVAL) {
-		pr_err("Invalid --fields key: '%s'", tok);
-		break;
-	} else if (ret =3D=3D -ESRCH) {
-		pr_err("Unknown --fields key: '%s'", tok);
-		break;
-	}
+  - Rebase onto perf-tools-next at 0d40fedcd1b9.
 
-If the callback returns an error like -1 due to an allocation failure on a
-token that isn't the last in the list, the loop won't break. Does this mean
-subsequent iterations could succeed and overwrite ret to 0, causing the new=
-ly
-added if (ret) goto out; check to be bypassed?
+  - Require `iaddr` in --coalesce before entering the function view;
+    without it, coalesced samples cannot be reliably attributed.
 
->  	PARSE_LIST(sort,   c2c_hists__init_sort);
-> +	if (ret)
-> +		goto out;
->
+  - Reuse each source cacheline's existing index as the level-3 identity,
+    so same-address sources no longer merge and 'd' finds the original
+    entry, without adding fields to the shared C2C structures.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260803011140.1799=
-43-1-acme@kernel.org?part=3D1
+  - Keep same-function reader/writer pairs, which the coalesced view cannot
+    reliably tell apart from cross-thread contention.
+
+  - Robustness and cleanup: build the hierarchy only from filtered
+    cachelines with a lightweight entry allocator; explicit
+    mem_info__new() handling; a local bound in the symbol renderer; a
+    NULL-map guard; deterministic tie-breaks; function-view-local row
+    recounting; Ctrl-C as an exit key; and expanded man-page docs.
+
+Changes since v3
+================
+
+Reworked the function view into a true function-centric hierarchy, as
+discussed with Namhyung:
+
+  - Level 1 is the read-side function itself, aggregating all of its code
+    addresses into one entry and sorting by Cycles %.
+
+  - Level 2 is the contending function that writes the shared lines,
+    aggregated across cachelines and sorted by store count. Level 3 is the
+    specific cachelines.
+
+  - Dedicated code-address and offset columns were removed from the main
+    view. Verbose function formatting can still include a representative
+    code address, and full code-address information remains available in
+    the per-cacheline detail view ('d').
+
+  - Lower-level entries are indented like the normal perf report hierarchy
+    view, and entries with no contending writer are pruned.
+
+  - Reorganized the series from 14 mechanical patches into 9 logically
+    self-contained patches.
+
+Changes since v2
+================
+
+  - Prefix helpers exported from builtin-c2c.c with c2c_, as suggested by
+    Namhyung.
+
+Changes since v1
+================
+
+  - Add a worked man-page example, as suggested by Namhyung.
+
+In the perf c2c TUI, press TAB in the cacheline view to switch to the
+function view. It presents a three-level hierarchy:
+
+  Level 1: read-side function, sorted by Cycles %
+  Level 2: functions writing the shared lines, sorted by store count
+  Level 3: cachelines where the two functions contend
+
+For example, with dequeue_pushable_task expanded to its level-2 writers and
+two of those writers expanded to their level-3 cachelines:
+
+  Shared Data Functions Table     (19 entries, sorted on Cycles %)
+     Cycles    Store
+          %    count  Function / Contending function / Cacheline
+  ----------------------------------------------------------------------
+  +  35.67%      876  + [k] cpupri_set
+  +  24.31%      424  + [k] pull_rt_task
+  -  16.53%      555  - [k] dequeue_pushable_task
+                 145    - [k] pull_rt_task
+                 145        0xff2d0082809da080
+                 139    - [k] enqueue_pushable_task
+                  70        0xff2d00a2071f9640
+                  69        0xff2d0082809da000
+
+A level-1 store count decomposes into its level-2 writers, and each writer's
+count decomposes into its level-3 cachelines (here 145 = 145, 139 = 70 + 69).
+
+Keys in the function view:
+
+  TAB/ESC/q/Ctrl-C   return to the cacheline view
+  d                  show details for the selected level-3 cacheline
+  e / +              expand / collapse the selected entry
+  ?                  help
+
+The function view is a separate hist_browser in
+tools/perf/ui/browsers/c2c-function.c. Shared types and helpers used by
+both views are factored out of builtin-c2c.c into c2c.h. The hierarchy is
+constructed from the existing cacheline histograms into dedicated hists
+and rendered with custom column formatters.
+
+Testing: each commit builds individually; the full series builds with and
+without SLANG support; perf test c2c passes (one permission-related skip);
+cacheline --stdio output is byte-identical to the base commit; and the
+perf-c2c man page builds.
+
+Jiebin Sun (9):
+  perf c2c: extract shared data structures into c2c.h
+  perf c2c: add function view browser skeleton
+  perf c2c: add column rendering for function view
+  perf c2c: add HPP list parsing for function view columns
+  perf c2c: add function view stats merge and memory management
+  perf c2c: add function view hierarchy entry creation
+  perf c2c: build and finalize the function view hierarchy
+  perf c2c: add function view browser UI and cacheline detail
+  perf c2c: document function view in perf-c2c man page
+
+ tools/perf/Documentation/perf-c2c.txt |   71 +
+ tools/perf/builtin-c2c.c              |  130 +-
+ tools/perf/c2c.h                      |  155 +++
+ tools/perf/ui/browsers/Build          |    1 +
+ tools/perf/ui/browsers/c2c-function.c | 1783 +++++++++++++++++++++++++
+ 5 files changed, 2021 insertions(+), 119 deletions(-)
+ create mode 100644 tools/perf/c2c.h
+ create mode 100644 tools/perf/ui/browsers/c2c-function.c
+
+
+base-commit: d04ef71492fad7230d474efe33d05f4c0563d409
+-- 
+2.52.0
+
