@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7F5380FE0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7B4637E2F3;
 	Mon,  3 Aug 2026 10:33:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785753206; cv=none; b=P1Le1GSJIbq5ZnTV9v64RAiONOBT+sljpWDEPFpy8v8SobKSGffO5t5JreS4lJTaTAjxUBjmZYz6FWtjs9yBkDDs0oLkPREloHhfJWW29yozjJLxCBMe1XL09zGCDb6Z7wUFlp5S/X7xdL1vTx5qkDJ938HCS3kk8hMvjfA9qMM=
+	t=1785753206; cv=none; b=aUlkYc/mRK6yKIRwKg5EZsAOpRUJPOeSteZwXHtwjbrRoCxByFUDTUex6nSmvDjQfDGg2sar3pZZ/DzEUyIQ8UrVmoxh+ljkw06rkyscTZ/ez+MOdTrNvwQctw8Vt+ddnNvuCFSWHdHvxUs8CLMEvnEz6QcjJodnR1pEaYQnh2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785753206; c=relaxed/simple;
-	bh=BrttYSDCZ3UPdyXCnU0naHlWRe3etFk1gvV4ByRhCIk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=LOX2i9+ACqx49BjAtBr6g1XOSiTbIPek8PJmNun3Di9pKFJfc9k7Blw6i3fKMg6Yk60BHvGAqZa0xKSSqvLA4q6Q4ECdmA9o2cX0BbFCUzszD9XVBnXXe6a+dSgXMLrKbV+o1Yk7rzDxrKv27IkpdkGVBwD0cPfS+EV9+jlTV7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbsPfO6a; arc=none smtp.client-ip=10.30.226.201
+	bh=2emraA7vYJ+V/gpaYUlHVZOozsNY0erxhiZGRizAnRk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tcYYJE+Hh1fKl0ZTXKA4Vs/Hs8hXc87mAoVEmBUCaAGQefgZw5uQwqVFqsUbNLPob19tc++R5/ITygxz/kGV0TWUotyTz7L8NLYeB47D92e9gFHCodvzJSGXyRfvDdq2P4/KmaLaQspKWwYkiRj91/cdTkRZL+CfLY55ED+1yi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QUAkQtfG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbsPfO6a"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AA833C2BCF6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QUAkQtfG"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8E0D8C2BCF4;
 	Mon,  3 Aug 2026 10:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1785753205;
-	bh=BrttYSDCZ3UPdyXCnU0naHlWRe3etFk1gvV4ByRhCIk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=mbsPfO6aZarcXg+qNfWL0PtzG30Hd5Qyt4E2mqcbwEzZ1EIGbYZnt8VWu1jAHEAR2
-	 vOwIjm7MTdLkX2eo97M9mMu2HlC8z4QwrSp91aY0chH+8KtniTgQfM9Mvc94iCW2Zb
-	 VIg4hoDVKx3ugT5iWD4Qvdt505yrVqFAzJwRg1hZ8JD39cx/Id6JETFrh+Ig2svJU2
-	 2Biex0vzfH7HCWSCfs2+ybElQuS1JJxnheB/hxqOM/ZnWTlZ/6hEJf+RvM40Cb/AQH
-	 At0j0RZ04KSUY0E2LQtoKnJDPjUPVQbFy7yShU+yTYDchoAbLcCPskkggd8/facmBx
-	 VJQbflNEKwO5w==
+	bh=2emraA7vYJ+V/gpaYUlHVZOozsNY0erxhiZGRizAnRk=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=QUAkQtfGhaiKN/PJfIE8HSX89fP9PdfmX20m1eYo7s0Rshu1paxlIeaMOomr9x7q2
+	 mnGRQuFvxVrWMksrRX+kz9+T9ffVM97lwFDF8ghO3fLfROFlI9kJuHdG8JRzGld5Ck
+	 NjG8C547dD+0vYKyru5uWVM7Y9SYDp+nw7gZ0yOgZVtFuLLJTMG2VKmd/oVqFXW9a9
+	 dbXtwXXc8Rh5hkGJZEyz2cjqRR/zDgHOlhUS7cbYqrE5hF0DkPHsCzQgDHsP1xQJS/
+	 I15oqRbKfGNVbA+wNQulPoQLJWGgwzHKMXmJvB7lApYbvgJ1lgiFWqa6ODPuBsC3ll
+	 HwgUpZIgjnShA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 885DBC55184;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67F6AC5518E;
 	Mon,  3 Aug 2026 10:33:25 +0000 (UTC)
 From: Michalis Niarchos via B4 Relay <devnull+michael.niarchos.gmail.com@kernel.org>
-Date: Mon, 03 Aug 2026 12:33:21 +0200
-Subject: [PATCH 2/4] perf tools: Fix memory leak in kvm_events_report()
+Subject: [PATCH 0/4] perf tools: Fix memory issues
+Date: Mon, 03 Aug 2026 12:33:19 +0200
+Message-Id: <20260803-perf-kvm-fixes-v1-0-a5db849ac973@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,9 +40,10 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260803-perf-kvm-fixes-v1-2-a5db849ac973@gmail.com>
-References: <20260803-perf-kvm-fixes-v1-0-a5db849ac973@gmail.com>
-In-Reply-To: <20260803-perf-kvm-fixes-v1-0-a5db849ac973@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIzMDc2ND3YLUojTd7LJc3bTMitRi3URD8zSDxEQDE4vEFCWgpoKiVLAEUE9
+ 0LIRfXJqUlZpcAjJFqbYWALrZqrdyAAAA
+X-Change-ID: 20260731-perf-kvm-fixes-a17f0aa048ad
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -53,11 +54,11 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Michalis Niarchos <michael.niarchos@gmail.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785753204; l=761;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1785753204; l=929;
  i=michael.niarchos@gmail.com; s=20260731; h=from:subject:message-id;
- bh=+xGD7FspTyvyggckeT50Nwqu43WI7i8N4AYpJ8estqw=;
- b=AdZ2NDsuv585bd+dL1dq8Z6u78WO7LwJ50KwamPaKemrMj3ZQDmMM4oB3Ot8YfkM7/YVw528o
- XgrkQSZEBeID61nF3k/9x40UxpiivbdVB4ZmP5KlpbNNa1GM7zFp6pL
+ bh=2emraA7vYJ+V/gpaYUlHVZOozsNY0erxhiZGRizAnRk=;
+ b=mlRkIPLQJGuCelVBWP8Yafg9cbOuJNC/9/LKkM2UYzC6TGgngfUOBDVIoFb7Eqqp1ysT6e9mn
+ Z8uOaN264rJCHl/X3YdFpQjWYORStigeIStyKlKrrBPU5NdRXW/u6+v
 X-Developer-Key: i=michael.niarchos@gmail.com; a=ed25519;
  pk=/LBZRQzfuxTnSaZhgZE8EP7mHr0poyqlKeFssNqkzFE=
 X-Endpoint-Received: by B4 Relay for michael.niarchos@gmail.com/20260731
@@ -65,32 +66,32 @@ X-Endpoint-Received: by B4 Relay for michael.niarchos@gmail.com/20260731
 X-Original-From: Michalis Niarchos <michael.niarchos@gmail.com>
 Reply-To: michael.niarchos@gmail.com
 
-From: Michalis Niarchos <michael.niarchos@gmail.com>
+Running:
+  $ perf kvm stat record -a sleep 10
 
-parse_options() calls parse_options_subcommand(), which allocates the
-usage string. Free it.
+gives this output:
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 1.361 MB perf.data.guest ]
+  double free or corruption (!prev)
+
+In the process of resolving this, I came across some memory leaks.
 
 Signed-off-by: Michalis Niarchos <michael.niarchos@gmail.com>
 ---
- tools/perf/builtin-kvm.c | 3 +++
- 1 file changed, 3 insertions(+)
+Michalis Niarchos (4):
+      perf tools: Fix memory leak in cmd_kvm()
+      perf tools: Fix memory leak in kvm_events_report()
+      perf tools: Fix double free and memory leak in kvm_events_record()
+      perf tools: Fix memory leak in cmd_kvm()
 
-diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 44c6998f2ee5..1a013698cae3 100644
---- a/tools/perf/builtin-kvm.c
-+++ b/tools/perf/builtin-kvm.c
-@@ -1755,6 +1755,9 @@ kvm_events_report(struct perf_kvm_stat *kvm, int argc, const char **argv)
- 		if (argc)
- 			usage_with_options(kvm_events_report_usage,
- 					   kvm_events_report_options);
-+
-+		/* free usage string allocated by parse_options */
-+		free((void *)kvm_events_report_usage[0]);
- 	}
- 
- #ifndef HAVE_SLANG_SUPPORT
+ tools/perf/builtin-kvm.c | 63 ++++++++++++++++++++++++++++--------------------
+ 1 file changed, 37 insertions(+), 26 deletions(-)
+---
+base-commit: 2162d9b24ba1a9a402baabe5382b33e792aa074f
+change-id: 20260731-perf-kvm-fixes-a17f0aa048ad
 
--- 
-2.55.0
+Best regards,
+--  
+Michalis Niarchos <michael.niarchos@gmail.com>
 
 
