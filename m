@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D83433BA2;
-	Mon,  3 Aug 2026 19:02:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BCA5431E51;
+	Mon,  3 Aug 2026 19:03:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785783749; cv=none; b=qetfL8o4LTGSn3oBe4k6NlSwv+W2BzLlGDYTB+8cyHMywfPIEarawHfYZQfu8xlHQlyqWtEwAKtWzAyAaZU6bigEiZJoQDwmW3trNM3EJsv10g8z/oVM1OPVyBrcK6TIVpfOgTYuXSVbRPTHGYIHL0bVnoeS/UD39w6K8A/VXaI=
+	t=1785783793; cv=none; b=kvkrEFgAhs/DpcTLt+d1lx9YGp2LdqzO2gE19qIoIrF84V0MeeWC1TqWkjhvodVjT+YoBCHHjuKxgIrdxHbaOSmGnNcGVn8uad+64Waffr7yTaZiXN2maF6qOIMTv2LmrkJ48oJ8A2/OdzibSjcCyFoWKUYDo7eNMxlIeM2JS8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785783749; c=relaxed/simple;
-	bh=VdEPFFIK9v4oK3n9lyzGt0+LpVa6m2n7DEC0udR6TIk=;
+	s=arc-20240116; t=1785783793; c=relaxed/simple;
+	bh=9ovv44+Mnmj2cD26Xq0W0L5rS2QaG7sUiUlUfdpxPEI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OEL8L/fKygGcgHHehavpGGYg94E/Q2iZvEfb95ikZH1tIVGWZ5QpKYctJfQTRz9kJU/XGRR42GV7kBNtXKrYR/99PIqIzaW+T7oho0PtPsv16oE8dGUFlcm25zUdUX3yT/BLbRL7XlPGQI6hI+Ob4H1HBtsbGMN+e/gY0DIqle0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l3N/K7Xz; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=IkfdySjdm+V84BhiRNDKgqSND4tHYmcTU8s6mc3K1t4QEjGX3kV4wOd8gKYtJxOBaOAn8E1Q5rgHEF0aYwIVCXfVY1nmBXwIkZrxfVaZfP8jAI6Cby4ex0AZJUj9AfRqbZlc9Pz6Em8X/D7q2o7jxoAy3TvuQi89o6lrx4acUrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bCzfnaOl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l3N/K7Xz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F39A1F000E9;
-	Mon,  3 Aug 2026 19:02:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bCzfnaOl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A97C71F000E9;
+	Mon,  3 Aug 2026 19:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785783748;
-	bh=lkGUEiJlQxDIOKEqvENBdks8oX6NYvEYrvf4uwwHl+A=;
+	s=k20260515; t=1785783791;
+	bh=OSlT+1QU066vGRZd2mcg5MvdWcriyX0BMDjBe/4IvXI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=l3N/K7XzfR1uHp0Oz2evWxsVMyMxTDIMi3ziVfnKIljOvkvXWkj2g4F2N4wT+liun
-	 JOoet9k8zzd35TNYpT4KIxjTQf9cRL861g9AAs+gYLPqwgPCHv+nzW1aYNB2SO9wBS
-	 KGKBUw/yWt1IK22AFSrQFQ9GSnPH/fwNXUF4JGqlPI66HA1CijHCW1+klvt7AfICiv
-	 0Zg0K+pQVHQoMQxbjzFGa+oD886pG6rzPyhx0WiQs5fECo0asxZSzER/k9o1hkunB+
-	 6eNEL8qHtLSDNqeDEMgh07cFO0uoqGxZZwykZ0esu8QUA3Uwwmwcuar9hCiBsh+Qf3
-	 uEqiY9cx+9S1w==
-Date: Mon, 3 Aug 2026 16:02:22 -0300
+	b=bCzfnaOlZ298MrAXsZaiLaHqrW0W08KvnKhMxW7GVod4IQ8bgQoetR4CcBcQh+7Zf
+	 9rVFtoN0WqoSCy1b79K+8AGXzEY+egjX7l+Q2y1O3h7BMmGqura0JA6NvtPL70FGoF
+	 NtOAMj2j6HI9DEK+8rabvNxQI89WoviBBCww0Qg67vyGVHzab25kR+zE7KWXdT8mRQ
+	 PdqxghtVKdagPo9wFXpQlKn8tKxt4JXQAoFETRdyFLDkA7A/aKEyyikWfXJj8z818C
+	 6p7i5jXrlYf+sRGheejeQRtQE9MBPX+7E2YKtq8kLU+ZF4uGwTiQTx5dwnAbjyRXtQ
+	 1h2lMM6YpLYlw==
+Date: Mon, 3 Aug 2026 16:02:59 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
@@ -34,15 +34,12 @@ Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
 	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot <sashiko-bot@kernel.org>, Leo Yan <leo.yan@arm.com>
-Subject: Re: [PATCH 5/5] perf arm-spe: Reject zero nr_cpu in metadata to
- prevent division by zero
-Message-ID: <anDlvtOEBK4QRS9P@x1>
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCHES 0/5 v1] perf tools auxtrace hardening series
+Message-ID: <anDl49CuYEtbemLq@x1>
 References: <20260727161705.64807-1-acme@kernel.org>
- <20260727161705.64807-6-acme@kernel.org>
- <df7bf01f-b0f6-403c-8415-305f3ea63fdb@intel.com>
+ <am0vWwqDMib_NF6q@google.com>
+ <dd4a6a5b-5abf-45e5-bb88-59d6e911123f@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,54 +48,28 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <df7bf01f-b0f6-403c-8415-305f3ea63fdb@intel.com>
+In-Reply-To: <dd4a6a5b-5abf-45e5-bb88-59d6e911123f@intel.com>
 
-On Mon, Aug 03, 2026 at 09:46:49PM +0300, Adrian Hunter wrote:
-> On 27/07/2026 19:17, Arnaldo Carvalho de Melo wrote:
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > arm_spe__alloc_metadata() reads nr_cpu from the auxtrace_info priv
-> > array without validation.  When a crafted perf.data provides nr_cpu=0,
-> > the per_cpu_sz calculation divides by zero:
-> > 
-> >   per_cpu_sz = (metadata_size - (hdr_sz * sizeof(u64))) / (*nr_cpu);
-> > 
-> > Reject nr_cpu <= 0 early, before the division.  The caller already
-> > treats NULL return with metadata_ver != 1 as a parse failure.
-> > 
-> > Fixes: e52abceb4b6c2723 ("perf arm-spe: Dump metadata with version 2")
-> 
-> git blame shows 7842a4b6ff698 "perf arm-spe: Support metadata version 2"
-> for the relevant lines
+On Mon, Aug 03, 2026 at 09:46:38PM +0300, Adrian Hunter wrote:
+> On 01/08/2026 02:27, Namhyung Kim wrote:
+> > On Mon, Jul 27, 2026 at 01:17:00PM -0300, Arnaldo Carvalho de Melo wrote:
 
-That is right, Namhyung, can you please fix this Fixme tag while merging?
+> >> Arnaldo Carvalho de Melo (5):
+> >>   perf thread-stack: Fix heap buffer overflow on branch stack wrap copy
+> >>   perf auxtrace: Fix queue grow overflow and old array leak
+> >>   perf intel-pt: Fix off-by-one in auxtrace_info minimum size check
+> >>   perf intel-bts: Fix off-by-one in auxtrace_info minimum size check
+> >>   perf arm-spe: Reject zero nr_cpu in metadata to prevent division by zero
 
-Thanks!
+> > Can you please review this series?
+ 
+> Certainly!
+ 
+> Other than the Fixes tag in "[PATCH 5/5] perf arm-spe: Reject zero
+> nr_cpu in metadata to prevent division by zero", for the series:
+ 
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+
+Thanks Adrian!
 
 - Arnaldo
- 
-> > Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-> > Cc: Leo Yan <leo.yan@arm.com>
-> > Cc: James Clark <james.clark@linaro.org>
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Assisted-by: Claude:claude-opus-4.6
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  tools/perf/util/arm-spe.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> > index 552f063f126e6769..401aab529309cbd6 100644
-> > --- a/tools/perf/util/arm-spe.c
-> > +++ b/tools/perf/util/arm-spe.c
-> > @@ -1605,6 +1605,10 @@ static u64 **arm_spe__alloc_metadata(struct perf_record_auxtrace_info *info,
-> >  	hdr_sz = ptr[ARM_SPE_HEADER_SIZE];
-> >  	*nr_cpu = ptr[ARM_SPE_CPUS_NUM];
-> >  
-> > +	/* nr_cpu is used as a divisor below */
-> > +	if (*nr_cpu <= 0)
-> > +		return NULL;
-> > +
-> >  	metadata = calloc(*nr_cpu, sizeof(*metadata));
-> >  	if (!metadata)
-> >  		return NULL;
