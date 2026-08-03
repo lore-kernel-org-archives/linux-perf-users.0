@@ -1,150 +1,148 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 688AB40B11C
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 15:07:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84CC40F73A
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 15:11:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785769641; cv=none; b=rKI/embUcr1G4PFk9jpVX2NL0Utypdx3kK8bENEid3uQlLW2UvSn3FiJ+OF3zs6lODDhNQFc9Z6BiiEW2ZK2I21Urj6eWIlSHPbhhwOJn4aTOY0f4+5mDhY/dLc+8wJIhb3ieUXOEtaMtd+/LdP59qfaHP6onqSccIXFKluJahc=
+	t=1785769912; cv=none; b=NM1pFb5R0eG1QI3JAl2qyef/gMY/CkTsxAJv7yydZHSJSP3m5wMoMTC4HIre8j91rojzjihaBY0ygbKpjrQEzWccStC2h//jd/uR31M/m4m8u9Ro3LbbOx90HZzeXoZWvZ9P4KSYgYC0o9/9lWPPrbv6ZXgYBj7jcq9AgDtAgug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785769641; c=relaxed/simple;
-	bh=7LCkkaHDIwhzFF9xsw6cf678pSpO60Z+9+2HupLBVwU=;
+	s=arc-20240116; t=1785769912; c=relaxed/simple;
+	bh=kr2JotTcZsY0j/u/6yrqBpbqLvZio4/xo6bqsxVz4MI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=lkbopWtLZEnrX9r8iXTqg+m2J6GqaNaqzdiLliEWFKXdA7Tvxg72dtbBTNsjk8s9TuDDbF3gYCTUTUMKWhzAP4NnqYYGJc9g7bBqE2Gt9vwsNumAcy337AKnKg3qnx3ontZuVGpopIbueNuR7P+W3CvGT9ATaUHYfoYV2PYOxVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kc7Mo3JV; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=T4DzHEvQ73Zs1AM6fTrLuRguFrB4VsYdsyi1Re0T03EK3rlAdMomeqHG6SVCzV3nt+B8Gr7Bz02NtxnTMtepPrxWz7SYGdsezPDWpritIde+SGkRwlccGHSCSLakdPALLFV/3YIUFd9Ph7/mCgD8AWpScJvkWAp8FYZ8CBj6X9c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TeFw9zti; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kc7Mo3JV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D69A81F000E9;
-	Mon,  3 Aug 2026 15:07:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TeFw9zti"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C33031F000E9;
+	Mon,  3 Aug 2026 15:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785769640;
-	bh=1HfqNstYAWqopEwpXwMT+ACK9Tnax65+YHaER1y6NOg=;
+	s=k20260515; t=1785769911;
+	bh=gTRjyZ4udGIntHr+Q8PoIE6DsMMUX41oLYY1/7rxBOs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kc7Mo3JVmx+nAn4BKMFMOlj7JcJLrdLQTCmqmX4bxCyuItmZG4IufIOv5skAYwsow
-	 s9ZLTMhTCmTsedPbWfd3jnkAbIdkfvCZkTx2C4C6C7Ebqpq6tW6Kab+i7Dw/EO+UuV
-	 TzPRb8Hs37G67SKU3SonIU/c45gq2uaJzzEgN0iNDyfznWbiTfI6aofQKzP9lIn3s9
-	 j1ry+XDrHb8Okpy2BadDCbyo/XWA/SCPB8BHbzKXmpD+cKK21Y+aniHGivYG+azCjA
-	 z3cfm8YwCVEL071DqkyIR8afYjAO9LvKJnqOChdiztyX/hlTOuSFbWGm0GplrYbOP9
-	 Z97B8TaIY53Hg==
+	b=TeFw9zti7n93P0+NrhG6+wbeHQRp3YFhpZFUARpjno0l+1p+5Hiz8wxSzs+Lu/yTv
+	 YqH5IJBizKwxF3T0qmslQJsYiQXJ5a9jlzTicLQC7NBFlbl+RA4BEQ9DPtR0dheD/K
+	 cDCrRY6zFvpjcVQf7VPjLi4p/jtmct1IIZ96C/Sg7aSHQVvusaCtfch0ujtn/nNKOW
+	 0V+meDdvTdbE5KUoltHGKl8mt7KYAIDpB97duHVQVhvduYcUgl2+F+WrFxynH8bQr6
+	 BMLdwftnxYUgD5+ojrOVsTX6IGkB6aRcaIgAmcQkys9iTyQEqmQTk1V1pot3Trp4B0
+	 GQ+i/4lMExd5A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/2] perf c2c: Clean up registered formats on
- c2c_hists__init() failure
+Subject: Re: [RFC PATCH v3 3/5] perf data-convert: Add perf.data to
+ trace.dat conversion backend
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+To: "Tanushree Shah" <tshah@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260803144119.185637-3-acme@kernel.org>
-References: <20260803144119.185637-1-acme@kernel.org>
- <20260803144119.185637-3-acme@kernel.org>
+In-Reply-To: <20260803145958.299956-4-tshah@linux.ibm.com>
+References: <20260803145958.299956-1-tshah@linux.ibm.com>
+ <20260803145958.299956-4-tshah@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 03 Aug 2026 15:07:19 +0000
-Message-Id: <20260803150719.D69A81F000E9@smtp.kernel.org>
+Date: Mon, 03 Aug 2026 15:11:50 +0000
+Message-Id: <20260803151150.C33031F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Unconditional memory leak of dynamically allocated format structur=
-es in `print_pareto()`.
-- [High] Architectural/API Misuse: `perf_hpp__setup_output_field()` and `pe=
-rf_hpp__append_sort_keys()` silently corrupt the global `perf_hpp_list`.
+- [Medium] Missing inline fallback stub for `trace_convert__perf2dat` when =
+`HAVE_LIBTRACEEVENT` is undefined.
+- [Medium] Missing POSIX header `<stdio.h>` for file I/O operations.
+- [Medium] Resource leak: orphaned file left on the filesystem if `fdopen()=
+` fails.
 --
 
---- Patch [2]: [PATCH 2/2] perf c2c: Clean up registered formats on c2c_his=
-ts__init() failure ---
-commit c2ba37f5e0548f4ffed858d39e640349044131b2
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+--- Patch [3]: [RFC PATCH v3 3/5] perf data-convert: Add perf.data to trace=
+.dat conversion backend ---
+commit 25ab95b73fc4726a00bca4e0429ad24d8f04129d
+Author: Tanushree Shah <tshah@linux.ibm.com>
 
-perf c2c: Clean up registered formats on c2c_hists__init() failure
+perf data-convert: Add perf.data to trace.dat conversion backend
 
-This commit addresses a memory leak when c2c_hists__init() fails partway
-through parsing. It ensures partially registered format structures are
-unregistered before returning the error. This protects callers from leaking
-memory during report generation.
+Add data-convert-trace.c implementing trace_convert__perf2dat() to
+convert perf.data tracepoint events to trace.dat format.
 
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index b0f2ba8318304..e66e9ca8618dc 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -2142,6 +2142,8 @@ static int c2c_hists__init(struct c2c_hists *hists,
->  			   int nr_header_lines,
->  			   struct perf_env *env)
->  {
-> +	int ret;
+> diff --git a/tools/perf/util/data-convert-trace.c b/tools/perf/util/data-=
+convert-trace.c
+> new file mode 100644
+> index 0000000000000..8dbdb2c9caa4f
+> --- /dev/null
+> +++ b/tools/perf/util/data-convert-trace.c
+> @@ -0,0 +1,241 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+[ ... ]
+> +#include <errno.h>
+> +#include <inttypes.h>
+> +#include <fcntl.h>
+> +#include <string.h>
+> +#include <unistd.h>
+
+[Severity: Medium]
+Does this file also need to include <stdio.h>?=20
+
+The code heavily relies on FILE pointers and stdio routines like fopen(),=20
+fdopen(), and fclose(). Without the explicit include, builds might fail on=
+=20
+musl libc due to relying on implicit inclusions.
+
+> +#include <linux/compiler.h>
+> +#include <linux/err.h>
+[ ... ]
+> +int trace_convert__perf2dat(const char *input, const char *to_trace,
+> +			   struct perf_data_convert_opts *opts)
+> +{
+[ ... ]
+> +	if (!opts->force) {
+> +		int fd =3D open(to_trace, O_WRONLY | O_CREAT | O_EXCL, 0644);
 > +
->  	__hists__init(&hists->hists, &hists->list);
+> +		if (fd < 0) {
+[ ... ]
+> +			return -errno;
+> +		}
+> +		trace_dat_fp =3D fdopen(fd, "wb");
+> +		if (!trace_dat_fp) {
+> +			int err =3D errno;
+> +
+> +			close(fd);
+> +			pr_err("Failed to open output file '%s': %s\n",
+> +			       to_trace, strerror(err));
+> +			return -err;
+
+[Severity: Medium]
+Can this error path leave an orphaned file on the filesystem?=20
+
+By returning directly instead of jumping to the out_close label where
+unlink(to_trace) is called, the newly created 0-byte file isn't cleaned up.=
+=20
+This might break subsequent runs without --force since O_EXCL would fail=20
+with EEXIST.
+
+> +		}
+[ ... ]
+> diff --git a/tools/perf/util/data-convert.h b/tools/perf/util/data-conver=
+t.h
+> index a96240f156712..f041c23252263 100644
+> --- a/tools/perf/util/data-convert.h
+> +++ b/tools/perf/util/data-convert.h
+> @@ -19,4 +19,8 @@ int bt_convert__perf2ctf(const char *input_name, const =
+char *to_ctf,
+>  int bt_convert__perf2json(const char *input_name, const char *to_ctf,
+>  			 struct perf_data_convert_opts *opts);
 > =20
->  	/*
-> @@ -2154,7 +2156,13 @@ static int c2c_hists__init(struct c2c_hists *hists,
->  	/* Overload number of header lines.*/
->  	hists->list.nr_header_lines =3D nr_header_lines;
-> =20
-> -	return hpp_list__parse(&hists->list, NULL, sort, env);
-> +	ret =3D hpp_list__parse(&hists->list, NULL, sort, env);
-> +
-> +	/* Unregister any formats added before the failure point */
-> +	if (ret)
-> +		perf_hpp__reset_output_field(&hists->list);
-> +
-> +	return ret;
->  }
+> +#ifdef HAVE_LIBTRACEEVENT
+> +int trace_convert__perf2dat(const char *input, const char *to_trace,
+> +			   struct perf_data_convert_opts *opts);
+> +#endif /* HAVE_LIBTRACEEVENT */
 
-[Severity: High]
-This is a pre-existing issue, but does print_pareto() unconditionally leak
-dynamically allocated format structures?
+[Severity: Medium]
+Should this declaration include a corresponding #else block with a dummy
+inline fallback?=20
 
-Every time print_pareto() is called during C2C reporting, it initializes
-a local stack variable for the formats:
-
-tools/perf/builtin-c2c.c:print_pareto() {
-        struct perf_hpp_list hpp_list;
-        ...
-        perf_hpp_list__init(&hpp_list);
-        ret =3D hpp_list__parse(&hpp_list, cl_output, NULL, env);
-        ...
-}
-
-However, when the function exits on both success and error paths, it doesn't
-call perf_hpp__reset_output_field() on hpp_list. Does this mean the formats
-attached to this local list are permanently leaked when the list goes out of
-scope?
-
-[Severity: High]
-This is a pre-existing issue, but do perf_hpp__setup_output_field() and
-perf_hpp__append_sort_keys() unintentionally corrupt the global
-perf_hpp_list instead of updating the passed local list?
-
-When these functions are called with a local list, they iterate over the
-local list but invoke the register functions directly:
-
-tools/perf/ui/hist.c:perf_hpp__setup_output_field() {
-        ...
-        perf_hpp__column_register(fmt);
-        ...
-}
-
-tools/perf/ui/hist.c:perf_hpp__append_sort_keys() {
-        ...
-        perf_hpp__register_sort_field(fmt);
-        ...
-}
-
-These wrappers appear to be hardcoded to insert elements into the global li=
-st:
-
-tools/perf/util/hist.h:
-#define perf_hpp__column_register(format) \
-        perf_hpp_list__column_register(&perf_hpp_list, format)
-
-Does this leave the required fields missing from the local list, while
-simultaneously polluting the global perf_hpp_list state with dynamically
-allocated objects?
+When libtraceevent is disabled, omitting the stub could cause compilation=20
+failures if callers do not wrap their usage in #ifdef blocks.
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260803144119.1856=
-37-1-acme@kernel.org?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260803145958.2999=
+56-1-tshah@linux.ibm.com?part=3D3
