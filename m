@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2972E40F73E;
-	Mon,  3 Aug 2026 13:51:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298B341A4F8;
+	Mon,  3 Aug 2026 13:52:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785765120; cv=none; b=kxQpruMqDEDcnH2KutNtr3nGwKyVemT0PpiAJGQ+OAWak58P9Hm9qTDBNJ/rbF44j21jnKXGSvdRmAksaVP00tU0ZsSYoi8Jkg9O6MBbQj8vUYImIhLul4CB6V776UkC5uVw/vaNvZwk279xkYrbzq/T/zhiLQjASIOYls6sp1w=
+	t=1785765120; cv=none; b=eB7Au1sW4vCyyg9oHOHx2Gph6fypT7qEQOzv+ENUpuSAZctXjGw4f/zaV+GUIke2goirZWkbWgQIhk0oE/GZJJMK4li/RmU0eqf5zwzhaOF5SV7sr+J1dM11Gv+UQ4VRLyeYYoQ1Qh+uOSiXHZVbeQBqxVyeQdBOi6jV/u9mu2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1785765120; c=relaxed/simple;
-	bh=de1kxqA8d5DKcqsyDmns5DBbAlbhCSnEvCt61EciqhY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PAsr8b71QMAF5U9o1O4fWjdtLyb3VILxzOci74KXHg+CNqqC8VVGJ/2ouWP2I317Ls5RsAUgvUodWCwIRPnqCmS+uA1NpV88qqw1lpeXogIeFkCyjAO/YHetW2u1icFFoGlZV5xTUOaIZ/+aj+1iSZUZTjG7fYeR+AUr7uIs7aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lnedkFjX; arc=none smtp.client-ip=10.30.226.201
+	bh=bjd+dx76baLZRoTBIv1V7NebSOO9zBQIv9I4rk4CyfI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hY/jXc2nHjTdSssQSIPlDz0CAFcq4+DTih/kPBU3dKghKDHFAup1j/BbGmMTdRjiAEVBB/akS1S4A0fMEibgtBjnVfW71QDM9YyS/RPAhY8FP9jcmrl617a/HZ7g+gifoq+mWdjwk8/HNd1Xn5UcXTH4FnsIMYpjYCvGXS8e09Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DL2CRTHk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lnedkFjX"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A74E7C2BCB9;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DL2CRTHk"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D245AC2BCF7;
 	Mon,  3 Aug 2026 13:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1785765119;
-	bh=de1kxqA8d5DKcqsyDmns5DBbAlbhCSnEvCt61EciqhY=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=lnedkFjXBQ84ovPlB0NN53ioPJRyIRoAUZomfdTJ+eTBU+t2QNroUZV4+1kfDpqi5
-	 +9wTYn9BLVkPC/uvHYHwOSpQKtrHR8r7yq4rjNgh5zfix+YTRIM9OyDrp5a+bqsTUV
-	 rjfjWBiFdAdBgHRJNc/QdcKwuo7FW73z9iY9aTZ4h0B9SDLVlqRuQuYNMVijwBSuSj
-	 IFwNLuCDKZb+lVtpILuZNWd9CtroEGexifw5P3sYfqIPFnFnbcsvDzLH8W69pt1pAV
-	 8rUN+6zerjDkX0kQK4KaQqdrZlW2N1iNRUWEgOOpumJeX8QfcPlL31u5n27b18G6pm
-	 pniC3cqwhuMZw==
+	bh=bjd+dx76baLZRoTBIv1V7NebSOO9zBQIv9I4rk4CyfI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=DL2CRTHkyif8ee21N21p5XqBs/ACNsuFyiQEGmyNG6EZ4QcANBz2yBHtmFvWH0pzr
+	 pwCza5ciTNJc/+qb3IvYckzOheg7WfJF9vkYcCqCWDOnDdLkFEGsfhceLAxsSV705H
+	 ExwIq1YJv87Bz6DnuGB4tgkOVZWaK6ujHGXMcnoqkpETUGTWsqKC8OfjCy6x1WrT+5
+	 QmA1qSmIrfDVeMpqhORTd8X8/W4QOQ8aK1F1OiLYtFDQFhogesXFjoK96bnEv/9ZWy
+	 TclGqOa3yV0GawiDW0af7MDM0OZR5jOSVQCur6/Xr76XLKAT8vCvzL/y7DsY+oM0hZ
+	 Wyh0kIpSG/e0Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C0BC55184;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B664AC5518F;
 	Mon,  3 Aug 2026 13:51:59 +0000 (UTC)
 From: Michalis Niarchos via B4 Relay <devnull+michael.niarchos.gmail.com@kernel.org>
-Subject: [PATCH v3 0/3] perf tools: Fix memory issues
-Date: Mon, 03 Aug 2026 15:51:51 +0200
-Message-Id: <20260803-perf-kvm-fixes-v3-0-e06268ec06fa@gmail.com>
+Date: Mon, 03 Aug 2026 15:51:53 +0200
+Subject: [PATCH v3 2/3] perf tools: Fix double free and memory leak issues
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,11 +40,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/32Nyw6CMBBFf4V0bU0fKMWV/2FcDGUKVXmkxUZD+
- Hdb2BgXLk/mnjMz8egsenLKZuIwWG+HPoLcZUS30DdIbR2ZCCaOrJCcjugMvYeOGvtCT4EXhgG
- wXEFNojQ6XA/RuVw39s/qhnpKlbRorZ8G914/Bp52W1wx+RsPnDIKh7pSeQm6LOS56cA+9nroS
- IoH8V8XUeeVlAVXpTFGf+vLsnwA1eAdUP0AAAA=
-X-Change-ID: 20260731-perf-kvm-fixes-a17f0aa048ad
+Message-Id: <20260803-perf-kvm-fixes-v3-2-e06268ec06fa@gmail.com>
+References: <20260803-perf-kvm-fixes-v3-0-e06268ec06fa@gmail.com>
+In-Reply-To: <20260803-perf-kvm-fixes-v3-0-e06268ec06fa@gmail.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -55,11 +53,11 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Michalis Niarchos <michael.niarchos@gmail.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1785765118; l=2152;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1785765118; l=6450;
  i=michael.niarchos@gmail.com; s=20260731; h=from:subject:message-id;
- bh=de1kxqA8d5DKcqsyDmns5DBbAlbhCSnEvCt61EciqhY=;
- b=783VwVM02QH6oEPgnq4OpaH7Ap2E9GdY7TNM0t624Qj1NtQdb2+KiuYnQKK9ccMUhON+euAvn
- qg9J0eRQ3OfB4inSRz9zumUImhSh7EyVd331E3hsoomdMh/6zA2jHTm
+ bh=pJlrs2g9K4W+VPjPzId6fOvC6ZaAAwlqcisBbFjHGDQ=;
+ b=wlwDVDvesTS+7ow5n9HZXUAhYE/xzE6YaTzvh7Lh6YDlOyj9tyqBAUW0v23osz7d7Sa0fC29/
+ rTaiu32VXrjAs8ZUVfN6ctdpzEu947hY0zlSIk7oCoFUFt9afVUNyBK
 X-Developer-Key: i=michael.niarchos@gmail.com; a=ed25519;
  pk=/LBZRQzfuxTnSaZhgZE8EP7mHr0poyqlKeFssNqkzFE=
 X-Endpoint-Received: by B4 Relay for michael.niarchos@gmail.com/20260731
@@ -67,62 +65,206 @@ X-Endpoint-Received: by B4 Relay for michael.niarchos@gmail.com/20260731
 X-Original-From: Michalis Niarchos <michael.niarchos@gmail.com>
 Reply-To: michael.niarchos@gmail.com
 
-Running:
-  $ perf kvm stat record -a sleep 10
+From: Michalis Niarchos <michael.niarchos@gmail.com>
 
-gives this output:
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 1.361 MB perf.data.guest ]
-  double free or corruption (!prev)
+parse_options() reorders the contents of the rec_argv pointer array, so
+its entry order no longer matches the order in which the caller
+originally allocated them. Freeing the contents of rec_argv by
+iterating the reordered array results in some pointers being freed
+twice and others never freed.
 
-In the process of resolving this, I came across some memory leaks.
+All the entries of rec_argv come from literals or pointers that are
+valid for the lifetime of the respective call. Reference them directly
+instead of duplicating to remove the need to individually track and free
+each entry.
 
 Signed-off-by: Michalis Niarchos <michael.niarchos@gmail.com>
 ---
-Changes in v3:
-- Moved dead code removal to the correct patch.
-- Squashed double free patches, as both fix the same rec_argv
-  double-free/leak pattern.
-- Link to v2: https://patch.msgid.link/20260803-perf-kvm-fixes-v2-0-1b337189fffc@gmail.com
-
-Changes in v2:
-- Removed code block that was rendered dead by the
-  get_filename_for_perf_kvm() change.
-- Dropped invalid free() fix from kvm_events_report().
-- Added double free fixes for: __cmd_record(), __cmd_report(),
-  __cmd_buildid_list(), and __cmd_top(), which follow the same pattern
-  as kvm_events_record().
-- Link to v1: https://patch.msgid.link/20260803-perf-kvm-fixes-v1-0-a5db849ac973@gmail.com
-
-To: Peter Zijlstra <peterz@infradead.org>
-To: Ingo Molnar <mingo@redhat.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-To: Mark Rutland <mark.rutland@arm.com>
-To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To: Jiri Olsa <jolsa@kernel.org>
-To: Ian Rogers <irogers@google.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-To: James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-
----
-Michalis Niarchos (3):
-      perf tools: Fix memory leak in cmd_kvm()
-      perf tools: Fix double free and memory leak issues
-      perf tools: Fix memory leak in cmd_kvm()
-
- tools/perf/builtin-kvm.c                         | 99 +++++++++++-------------
+ tools/perf/builtin-kvm.c                         | 51 +++++++++---------------
  tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c |  4 +-
- tools/perf/util/kvm-stat-arch/kvm-stat-x86.c     | 10 +--
- 3 files changed, 50 insertions(+), 63 deletions(-)
----
-base-commit: a1ed064cb4db70af8c4177b3805ca5b8b0be567e
-change-id: 20260731-perf-kvm-fixes-a17f0aa048ad
+ tools/perf/util/kvm-stat-arch/kvm-stat-x86.c     | 10 ++---
+ 3 files changed, 24 insertions(+), 41 deletions(-)
 
-Best regards,
---  
-Michalis Niarchos <michael.niarchos@gmail.com>
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 16cfa7ce7856..8e14d037d7d9 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -1681,18 +1681,18 @@ kvm_events_record(struct perf_kvm_stat *kvm, int argc, const char **argv)
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(record_args); i++)
+-		rec_argv[i] = STRDUP_FAIL_EXIT(record_args[i]);
++		rec_argv[i] = record_args[i];
+ 
+ 	for (j = 0; j < events_tp_size; j++) {
+-		rec_argv[i++] = STRDUP_FAIL_EXIT("-e");
+-		rec_argv[i++] = STRDUP_FAIL_EXIT(kvm_events_tp(e_machine)[j]);
++		rec_argv[i++] = "-e";
++		rec_argv[i++] = kvm_events_tp(e_machine)[j];
+ 	}
+ 
+-	rec_argv[i++] = STRDUP_FAIL_EXIT("-o");
+-	rec_argv[i++] = STRDUP_FAIL_EXIT(kvm->file_name);
++	rec_argv[i++] = "-o";
++	rec_argv[i++] = kvm->file_name;
+ 
+ 	for (j = 1; j < (unsigned int)argc; j++, i++)
+-		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
++		rec_argv[i] = argv[j];
+ 
+ 	set_option_flag(record_options, 'e', "event", PARSE_OPT_HIDDEN);
+ 	set_option_flag(record_options, 0, "filter", PARSE_OPT_HIDDEN);
+@@ -1717,9 +1717,6 @@ kvm_events_record(struct perf_kvm_stat *kvm, int argc, const char **argv)
+ 	record_usage = kvm_stat_record_usage;
+ 	ret = cmd_record(i, rec_argv);
+ 
+-EXIT:
+-	for (i = 0; i < rec_argc; i++)
+-		free((void *)rec_argv[i]);
+ 	free(rec_argv);
+ 	return ret;
+ }
+@@ -2006,11 +2003,11 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
+ 	if (!rec_argv)
+ 		return -ENOMEM;
+ 
+-	rec_argv[i++] = STRDUP_FAIL_EXIT("record");
+-	rec_argv[i++] = STRDUP_FAIL_EXIT("-o");
+-	rec_argv[i++] = STRDUP_FAIL_EXIT(file_name);
++	rec_argv[i++] = "record";
++	rec_argv[i++] = "-o";
++	rec_argv[i++] = file_name;
+ 	for (j = 1; j < argc; j++, i++)
+-		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
++		rec_argv[i] = argv[j];
+ 
+ 	BUG_ON(i + 2 != rec_argc);
+ 
+@@ -2021,8 +2018,6 @@ static int __cmd_record(const char *file_name, int argc, const char **argv)
+ 	ret = cmd_record(i, rec_argv);
+ 
+ EXIT:
+-	for (i = 0; i < rec_argc; i++)
+-		free((void *)rec_argv[i]);
+ 	free(rec_argv);
+ 	return ret;
+ }
+@@ -2037,19 +2032,16 @@ static int __cmd_report(const char *file_name, int argc, const char **argv)
+ 	if (!rec_argv)
+ 		return -ENOMEM;
+ 
+-	rec_argv[i++] = STRDUP_FAIL_EXIT("report");
+-	rec_argv[i++] = STRDUP_FAIL_EXIT("-i");
+-	rec_argv[i++] = STRDUP_FAIL_EXIT(file_name);
++	rec_argv[i++] = "report";
++	rec_argv[i++] = "-i";
++	rec_argv[i++] = file_name;
+ 	for (j = 1; j < argc; j++, i++)
+-		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
++		rec_argv[i] = argv[j];
+ 
+ 	BUG_ON(i != rec_argc);
+ 
+ 	ret = cmd_report(i, rec_argv);
+ 
+-EXIT:
+-	for (i = 0; i < rec_argc; i++)
+-		free((void *)rec_argv[i]);
+ 	free(rec_argv);
+ 	return ret;
+ }
+@@ -2065,19 +2057,16 @@ __cmd_buildid_list(const char *file_name, int argc, const char **argv)
+ 	if (!rec_argv)
+ 		return -ENOMEM;
+ 
+-	rec_argv[i++] = STRDUP_FAIL_EXIT("buildid-list");
+-	rec_argv[i++] = STRDUP_FAIL_EXIT("-i");
+-	rec_argv[i++] = STRDUP_FAIL_EXIT(file_name);
++	rec_argv[i++] = "buildid-list";
++	rec_argv[i++] = "-i";
++	rec_argv[i++] = file_name;
+ 	for (j = 1; j < argc; j++, i++)
+-		rec_argv[i] = STRDUP_FAIL_EXIT(argv[j]);
++		rec_argv[i] = argv[j];
+ 
+ 	BUG_ON(i != rec_argc);
+ 
+ 	ret = cmd_buildid_list(i, rec_argv);
+ 
+-EXIT:
+-	for (i = 0; i < rec_argc; i++)
+-		free((void *)rec_argv[i]);
+ 	free(rec_argv);
+ 	return ret;
+ }
+@@ -2097,7 +2086,7 @@ static int __cmd_top(int argc, const char **argv)
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < argc; i++)
+-		rec_argv[i] = STRDUP_FAIL_EXIT(argv[i]);
++		rec_argv[i] = argv[i];
+ 
+ 	BUG_ON(i != argc);
+ 
+@@ -2108,8 +2097,6 @@ static int __cmd_top(int argc, const char **argv)
+ 	ret = cmd_top(i, rec_argv);
+ 
+ EXIT:
+-	for (i = 0; i < rec_argc; i++)
+-		free((void *)rec_argv[i]);
+ 	free(rec_argv);
+ 	return ret;
+ }
+diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c b/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
+index 96d9c4ae0209..37f36c6bf895 100644
+--- a/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
++++ b/tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c
+@@ -196,8 +196,8 @@ int __kvm_add_default_arch_event_powerpc(int *argc, const char **argv)
+ 	parse_options(j, tmp, event_options, NULL, PARSE_OPT_KEEP_UNKNOWN);
+ 	if (!event) {
+ 		if (perf_pmus__have_event("trace_imc", "trace_cycles")) {
+-			argv[j++] = strdup("-e");
+-			argv[j++] = strdup("trace_imc/trace_cycles/");
++			argv[j++] = "-e";
++			argv[j++] = "trace_imc/trace_cycles/";
+ 			*argc += 2;
+ 		} else {
+ 			free(tmp);
+diff --git a/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c b/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
+index 788d216f0852..67babdd3daf1 100644
+--- a/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
++++ b/tools/perf/util/kvm-stat-arch/kvm-stat-x86.c
+@@ -213,7 +213,7 @@ int __kvm_add_default_arch_event_x86(int *argc, const char **argv)
+ {
+ 	const char **tmp;
+ 	bool event = false;
+-	int ret = 0, i, j = *argc;
++	int i, j = *argc;
+ 
+ 	const struct option event_options[] = {
+ 		OPT_BOOLEAN('e', "event", &event, NULL),
+@@ -233,17 +233,13 @@ int __kvm_add_default_arch_event_x86(int *argc, const char **argv)
+ 
+ 	parse_options(j, tmp, event_options, NULL, PARSE_OPT_KEEP_UNKNOWN);
+ 	if (!event) {
+-		argv[j++] = STRDUP_FAIL_EXIT("-e");
+-		argv[j++] = STRDUP_FAIL_EXIT("cycles");
++		argv[j++] = "-e";
++		argv[j++] = "cycles";
+ 		*argc += 2;
+ 	}
+ 
+ 	free(tmp);
+ 	return 0;
+-
+-EXIT:
+-	free(tmp);
+-	return ret;
+ }
+ 
+ const char * const *__kvm_events_tp_x86(void)
+
+-- 
+2.55.0
 
 
