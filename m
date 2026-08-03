@@ -1,44 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A171DFFB
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 10:43:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D427130DEA6
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 10:43:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785753800; cv=none; b=Io5ZT44NjEy1Gm87GEkWuvoEk1o8Oe22d0rQaE/DKWFJhvR3+U6iziGASYiVu+bWq9VunHeEKy7Q2NslYRvTDG2ms9pkzu2WxAI/xQv3CW2xmh76fuckSKAT8OqiXagdbYZ5AEZTkX08WSlL35MpqD6XYthq949oLu3f/D7qihQ=
+	t=1785753829; cv=none; b=VTDM+XmuNpo3R8V/3TjXvJSgl1aPDsmWGLyPtaI5R9iwRgKSEvTrT88LcTVG0WZQK74twE++68zaQrmaaEaQBAprCIAY00MdXr3GA4xzPa9HWrE1zWIohycio9Pvc+P0Ck3HmsG7IZ0xGuWrsJaanhsZdganLu6gxhgK0jQCcaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785753800; c=relaxed/simple;
-	bh=82l9XzKfNmOoLypV5qiuy1ASy0xwoRrzJCRXxcI0qjQ=;
+	s=arc-20240116; t=1785753829; c=relaxed/simple;
+	bh=2tiKSHqXWN+ytEJyswuvILJWMfbvNXY+FcW1aguSSuk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=n7Ljw/VsYeJltAYmGTaVcBXEgWnh5oDZ10dVl/w20Qv8oSYwDTLZhzZ3NK9UIFDnT99Ux+MMdaXr0cqRXB2wz9dJyu62bygR8spOLaoa78OpFI69EUCKXbMXOejUIJ0GRgohxinzmIsMb/4qBq/D2srgxkABDT3MJmU8n7CUz9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VxMSunVB; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=fVoyP73a/62DP56uoR4RFfHs6yZIjohuUaEDtfr7Yk28V1mr2RpDjMjL2TGIjUQsDcmtzuHzZRtUpqJbobgz3UFnVoyF/Mts6zhoYKAOCzpYgmyQrEm+yc6t3Vxk4jFlNUB9gQaYle+XLEXtez+GjbbQJYfsbMM/t5KIOVMxT/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PU/doZ88; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VxMSunVB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52C291F000E9;
-	Mon,  3 Aug 2026 10:43:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PU/doZ88"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED751F00A3A;
+	Mon,  3 Aug 2026 10:43:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785753799;
-	bh=Bn2E14HpnmuJK1IZZGP+5MS7KVqnl/qGJQv/lzUfvTs=;
+	s=k20260515; t=1785753828;
+	bh=OjjZJko+JaRaWkfjimIAURK7Tsmgt1OSAFCxV7ejtqQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VxMSunVBTlErCbDH1v3hnoRATpCXgjkoB/1BXQqCpqonwnwBy3PonwljRE24tyJmK
-	 89IsZEpe7DN7PfQ+jAE7AcWblvPRQpJ/ALNZdwVUNfUbdWL+4MdzDy53FM8kRuEY4M
-	 k7RgxbRpc31qeAQMl/LghAhskRKU+wPqI98G5ou0aIi8Yfx569FnPT7SrVgvDZ1fsp
-	 De1hP8Bsyu7taN/Qi0c/+QZYV254BW5RYBtdL/f/FFkLtvjrVYQzErvnhVjdaGttub
-	 BlhASh46d/4VAMEpix4xlrUE5t367XmDyThJdoBo+kcdtKvebr5SFT3KXnHl4gPuoe
-	 6dL4AYivgyYXQ==
+	b=PU/doZ884+MNL8zDTRndTDxF3HKYSftQ8HUWTsCDTL1r0QoD+PLYxB2akQTTL+hh1
+	 YpnLkjzHjjgM2vY35OtiDwY8pzYHo/JFP16mrcmTcG/GtkFOiED46m9aLWScaX8trd
+	 AMTUpXlD25DI+HgwkNnpWA5cnCc3ZFjod3EGapIO1I++LMiQ/WoYOsx+AAZmwrwCOB
+	 ODl16QYSWtA0bw0ohkt6WDeaKqkq9EcKM0iKVyhfipADfmqrHXYHPyLfPlIoVQ9ArC
+	 K8KIu589/GZH4+iFEhbd3uic37RZ+gA2C2ItGSzKv3C+Fvh5VtpI+EBmMKT4N/ed9m
+	 +oXyWxPAd2ctA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/4] perf tools: Fix double free and memory leak in
- kvm_events_record()
+Subject: Re: [PATCH 2/4] perf tools: Fix memory leak in kvm_events_report()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Michalis Niarchos" <michael.niarchos@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260803-perf-kvm-fixes-v1-3-a5db849ac973@gmail.com>
+In-Reply-To: <20260803-perf-kvm-fixes-v1-2-a5db849ac973@gmail.com>
 References: <20260803-perf-kvm-fixes-v1-0-a5db849ac973@gmail.com>
- <20260803-perf-kvm-fixes-v1-3-a5db849ac973@gmail.com>
+ <20260803-perf-kvm-fixes-v1-2-a5db849ac973@gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 03 Aug 2026 10:43:18 +0000
-Message-Id: <20260803104319.52C291F000E9@smtp.kernel.org>
+Date: Mon, 03 Aug 2026 10:43:47 +0000
+Message-Id: <20260803104348.7ED751F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,62 +46,51 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [Medium] The patch resolves a double-free and memory leak in `kvm_events_=
-record()` but leaves identical vulnerabilities unpatched in `__cmd_record()=
-`, `__cmd_report()`, `__cmd_buildid_list()`, and `__cmd_top()`.
+- [Medium] Invalid free of a string literal causes a segmentation fault.
 --
 
---- Patch [3]: [PATCH 3/4] perf tools: Fix double free and memory leak in k=
-vm_events_record() ---
-commit 03f3f88662347e4848a16bffad56206678f9263b
+--- Patch [2]: [PATCH 2/4] perf tools: Fix memory leak in kvm_events_report=
+() ---
+commit b736af0d386356e57597151f619466500011da0a
 Author: Michalis Niarchos <michael.niarchos@gmail.com>
 
-perf tools: Fix double free and memory leak in kvm_events_record()
+perf tools: Fix memory leak in kvm_events_report()
 
-cmd_record() reorders the contents of the rec_argv pointer array, so
-its entry order no longer matches the order in which the caller
-originally allocated them. Freeing the contents of rec_argv by
-iterating the reordered array results in some pointers being freed
-twice and others never freed. This patch fixes it by referencing the
-arguments directly instead of duplicating them.
+This commit attempts to fix a memory leak in kvm_events_report() by freeing
+the usage string after parse_options() completes.
 
 > diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-> index 1a013698cae34..189ef3576e34e 100644
 > --- a/tools/perf/builtin-kvm.c
 > +++ b/tools/perf/builtin-kvm.c
-[ ... ]
-> @@ -1717,9 +1717,6 @@ kvm_events_record(struct perf_kvm_stat *kvm, int ar=
+> @@ -1755,6 +1755,9 @@ kvm_events_report(struct perf_kvm_stat *kvm, int ar=
 gc, const char **argv)
->  	record_usage =3D kvm_stat_record_usage;
->  	ret =3D cmd_record(i, rec_argv);
-> =20
-> -EXIT:
-> -	for (i =3D 0; i < rec_argc; i++)
-> -		free((void *)rec_argv[i]);
->  	free(rec_argv);
->  	return ret;
->  }
+>  		if (argc)
+>  			usage_with_options(kvm_events_report_usage,
+>  					   kvm_events_report_options);
+> +
+> +		/* free usage string allocated by parse_options */
+> +		free((void *)kvm_events_report_usage[0]);
 
 [Severity: Medium]
-This isn't a bug introduced by this patch, but since you are fixing the
-double-free and memory leak here, should the same fix be applied to other
-functions in this file that follow the exact same pattern?
+Will this result in an invalid free and a segmentation fault?
 
-Looking at tools/perf/builtin-kvm.c, the same iteration and free approach
-is still used in __cmd_record(), __cmd_report(), __cmd_buildid_list(), and
-__cmd_top(). For example, in __cmd_record():
+Looking at the definition of kvm_events_report_usage in builtin-kvm.c:
 
-	ret =3D cmd_record(i, rec_argv);
+const char * const kvm_events_report_usage[] =3D {
+        "perf kvm stat report [<options>]",
+        NULL
+};
 
-	for (i =3D 0; i < rec_argc; i++)
-		free((void *)rec_argv[i]);
+Since parse_options() bypasses allocation when subcommands is NULL, it
+appears kvm_events_report_usage[0] remains pointing to the statically
+allocated string literal rather than dynamically allocated memory. Freeing a
+read-only string literal will crash the perf tool unconditionally on every
+successful invocation.
 
-Because parse_options() shifts elements around in rec_argv during the
-cmd_*() calls, wouldn't these other functions also suffer from the same
-double-free and memory leak when the elements are freed?
+>  	}
+> =20
+>  #ifndef HAVE_SLANG_SUPPORT
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260803-perf-kvm-f=
-ixes-v1-0-a5db849ac973@gmail.com?part=3D3
+ixes-v1-0-a5db849ac973@gmail.com?part=3D2
