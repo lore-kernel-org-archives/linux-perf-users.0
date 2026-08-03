@@ -1,300 +1,132 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C09630D416
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 15:01:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E2D432AABD
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 15:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785769270; cv=none; b=SzfKarxXsSOkRcO+0iyCgV8e60CCudqXJWNZeshdW0s42zWJSC+gFJeuwtFW1aO515uL8iDtKr7yBUuX224U1gKp8xeVkY2kRc6GxXS9ikSXOw/3fBrl3VVFHC9vhsXPiXaqAtob8cQwRDTP3u0iygm2vzWNxHAbf9HwUM3NA1E=
+	t=1785769351; cv=none; b=aFag85uAg6lLyqFvVscEOQtn4CSPLeUCpQOrQ/UfPwowfN+/Q2XcpZ9vtjYoELx5m11AcotZQh4MqCmglVfIQ2uMKR4rIac6rtFK1z8kcJt2ogOHGr0MuO3MUP6d6HD+sjhah6ahix9jBjAEZBH46ZiWDsGpZ6Ag7XzhvaIxSMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785769270; c=relaxed/simple;
-	bh=ANBamaEzvLzkMtC8m+9vZaTY0gH6k2xVfKL7ti3Q1oI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kdnelZRNDSqj1NLIub55hUghps5fzwlrf3jSWEZn4f/ZIRvZK3l/EaUWTslXKeIY2il0M2PEVuBBclaHi17Q73oDfsugpJ/KT9o/G031PMo/c7MEnJtVJL8g+bu6FSmwPCdafgZlqNnnM1/yNhvz5TtSjFLo3aJtZAqhpECl8RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=O7/nbhqx; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1785769351; c=relaxed/simple;
+	bh=A159jkiJhMX/tr3qLwetqw4uq7ZVnzUPgr/4p+c9gw0=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=nMuSKzhqNX4jXfKRZM/5kpR8jZH2H4P9OF9PYtb8NIE8JDBG/GhB8pmxPaWPEq4otChPWWcbDLMA9MzJOIkVZeOSxhbUf65mYJsm+6817lL1yJHZrVEvZYDd28USVpCe8cd+c/1UGjeNmpbuPwvl0WZk+MRbnNM4qqZqrju3AQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B8e7EadA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="O7/nbhqx"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 673EIqPI2203944;
-	Mon, 3 Aug 2026 15:00:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=tBkGHj7NLFWGec++e
-	6fPnEStG4RmckR3SWbzz+iAVRY=; b=O7/nbhqxgiUsD7VjSBBCGwgQ7VEkRhnSE
-	yefaosRl2WQ777CCqAqsfCvtjPiu7oL+xDmUbY8If0LA4yweFDYWU+iQHTnjWlKg
-	WrBNCxiE8uDgUXZGRStZEEUPGkE3zoOYfnt4REskE3uvOCpLNdPt7q2zVV1+fLuu
-	Of45zd+3s2AHsX9s65CR4RJWTs+4a0f7q3i2Nwi/CWCq+EbsUk23uQcqx4Dap77e
-	r0y61O+Mvrr/OYeLuOhGx8N47mhFEdqfS339ikW0EsOmPTuL7C4HQOJ3b3T/Atto
-	XWUC3ce9FOM1qIFsGT2PzpeSCXjZrA3tK5JdMtP1+Nvf2hkgNwqqg==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fs67hhcak-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Aug 2026 15:00:56 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 673EuIWQ014645;
-	Mon, 3 Aug 2026 15:00:55 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fswbg5pfx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 03 Aug 2026 15:00:55 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 673F0pXL27590988
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 3 Aug 2026 15:00:51 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5E2D82004B;
-	Mon,  3 Aug 2026 15:00:51 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6CB8720040;
-	Mon,  3 Aug 2026 15:00:47 +0000 (GMT)
-Received: from li-4c4c4544-0047-4210-804e-b5c04f423534.ibm.com.com (unknown [9.39.27.135])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  3 Aug 2026 15:00:47 +0000 (GMT)
-From: Tanushree Shah <tshah@linux.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
-        maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
-        Tanushree.Shah@ibm.com, rostedt@goodmis.org,
-        Tanushree Shah <tshah@linux.ibm.com>
-Subject: [RFC PATCH v3 5/5] perf test: Add test validating trace.dat generated by 'perf data convert --to-trace-dat'
-Date: Mon,  3 Aug 2026 20:29:55 +0530
-Message-ID: <20260803145958.299956-6-tshah@linux.ibm.com>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260803145958.299956-1-tshah@linux.ibm.com>
-References: <20260803145958.299956-1-tshah@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B8e7EadA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AB731F000E9;
+	Mon,  3 Aug 2026 15:02:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785769350;
+	bh=yRYEurtSEOqkYr+MqmkdoLuT5xPlzwvFKznLi/A4nPE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=B8e7EadA6Ik/wKLskjY71RYXkb6Lah8oUJ5eQFI4f/hjrqE3hb25UmoAGomfHuWq2
+	 RTO6XMpRA+pJMS8rz65g5wX4iy444W3u0ZxmGLLv0JB6HrlC+NXNgwVy6/L0+SMTYI
+	 JGZ06AY3mq3+H8D+MN3FiwkNRStz9Up0xklHZ8Ofdx6ZIN/foDkn8zUJlXY5nRJrSz
+	 AUI7it7SBbEMtyE9ovFUGHOsWber/Oo6DD8PLAI8vI0D3Popk1VnZPx34B6M/lKnxh
+	 bl2dfpIVd6hicw8Q3jeRxKgYV0m/s7i9etKao2HdNdWxFoZYXkumJIKl7+jsGweI/9
+	 GzXQSlsOEbHTA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/2] perf c2c: Fix error masking, OOM, and unchecked
+ caller errors in hpp_list__parse()
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260803144119.185637-2-acme@kernel.org>
+References: <20260803144119.185637-1-acme@kernel.org>
+ <20260803144119.185637-2-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 03 Aug 2026 15:02:29 +0000
+Message-Id: <20260803150230.0AB731F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODAzMDEzMyBTYWx0ZWRfX1NKYkUQMfBTW
- z13z//EVAJhJB76PXZrYPo/gEbvAn9M9NyaCsQsn4Uh2n84wN/PZgx9cxNYUsFcdmOkUYYSDlGI
- zRzLrFHJ8zda4i63yH6TH+Qng6j0MZA=
-X-Authority-Analysis: v=2.4 cv=I7VVgtgg c=1 sm=1 tr=0 ts=6a70ad28 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=Y2IxJ9c9Rs8Kov3niI8_:22 a=VnNF1IyMAAAA:8 a=Yoc1fSEfpoo6qmh3DYcA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODAzMDEzMyBTYWx0ZWRfXy1MGl17H8jM9
- uLpOa3I0jpG+PBJDb1MAPLlTtoM6nx8KdFxqu/6W1HVO7SAl3Zgwc2bzmeph2BpuYvAAoOwo2bz
- UytMHE71oacBg8z90XFt2eTDpTouPtRwBl/Elzbqm+1Ez1vtbL16rzFtKjOeTR09/y2/GK9uitR
- Dze3fx6fUhVs66Sy/Awxuzl8yU+U22T/TUmmS0v0yi19zcliOVU2T029LQBckkEhkncSSaDPfE+
- qJxQ5463SSE1wcpfthUDL9Yo+ZwgEkhx00qOkg1igIh7wNJkZw6Bg/LUugj84HmMNHulTv9Xbm7
- LtkCFbmHJHYUadxMMtua78vh+YfZMziIBVuSGYOAwJgcHRIbFN0XrefDtofNI5ipgau1x2G8e7X
- QirN0Xpa39YdkVxNJwKFyuZv9sTTBIbJx/F2RWdlGAMlbJ1pAXeFxsPwW1/yomcUv0SFJEJ/QEY
- AhsqakQBe964BTsIQ8w==
-X-Proofpoint-ORIG-GUID: FaSaOSby6Pi0R1RBGgx_0b4ks5uySHqR
-X-Proofpoint-GUID: vJqUWWuPHPjgIJuI9PQtkh6LcehU4CSd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-03_03,2026-08-03_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 clxscore=1015 priorityscore=1501 suspectscore=0
- malwarescore=0 adultscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608030133
 
-Add a shell test covering perf data convert --to-trace-dat,
-alongside the existing --to-json and --to-ctf tests.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The `%m` format specifier is used in `__hpp_list__parse` to log =
+generic callback errors, which can result in incorrect or stale error messa=
+ges.
+--
 
-The test:
-- skips if perf isn't linked with libtraceevent
-- converts a plain sched:sched_switch recording to trace.dat
-- converts a pipe-mode recording (perf record -o - | perf data
-  convert -i -)
-- converts a recording with both tracepoint and non-tracepoint
-  events (sched:sched_switch,cycles)
-- validates the resulting file with trace-cmd report if trace-cmd
-  is installed, otherwise falls back to a basic non-empty-file check
+--- Patch [1]: [PATCH 1/2] perf c2c: Fix error masking, OOM, and unchecked =
+caller errors in hpp_list__parse() ---
+commit 318c268818f1c0f5bf8bb06a4099029b27a33ee1
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Signed-off-by: Tanushree Shah <tshah@linux.ibm.com>
----
- ...rf_data_converter_tracepoints_trace_dat.sh | 169 ++++++++++++++++++
- 1 file changed, 169 insertions(+)
- create mode 100755 tools/perf/tests/shell/test_perf_data_converter_tracepoints_trace_dat.sh
+perf c2c: Fix error masking, OOM, and unchecked caller errors in hpp_list__=
+parse()
 
-diff --git a/tools/perf/tests/shell/test_perf_data_converter_tracepoints_trace_dat.sh b/tools/perf/tests/shell/test_perf_data_converter_tracepoints_trace_dat.sh
-new file mode 100755
-index 000000000000..9ca6432618cb
---- /dev/null
-+++ b/tools/perf/tests/shell/test_perf_data_converter_tracepoints_trace_dat.sh
-@@ -0,0 +1,169 @@
-+#!/bin/bash
-+# 'perf data convert --to-trace-dat' command test
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+#
-+# Copyright 2026, IBM Corporation
-+# Author: Tanushree Shah <tshah@linux.ibm.com>
-+
-+set -e
-+
-+err=0
-+
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+result=$(mktemp /tmp/__perf_test.output.trace.dat.XXXXX)
-+
-+cleanup()
-+{
-+	rm -f "${perfdata}"
-+	rm -f "${result}"
-+	trap - exit term int
-+}
-+
-+trap_cleanup()
-+{
-+	echo "Unexpected signal in ${FUNCNAME[1]}"
-+	cleanup
-+	exit 1
-+}
-+trap trap_cleanup exit term int
-+
-+# Check if libtraceevent support is available
-+if ! perf check feature libtraceevent
-+then
-+	echo "perf not linked with libtraceevent, skipping test"
-+	exit 2
-+fi
-+
-+# Check if trace-cmd is available for validation
-+have_trace_cmd=0
-+if command -v trace-cmd >/dev/null 2>&1; then
-+	have_trace_cmd=1
-+fi
-+
-+check_sched_switch()
-+{
-+	if ! perf list | grep -q 'sched:sched_switch'
-+	then
-+		echo "sched:sched_switch tracepoint not available, skipping test"
-+		exit 2
-+	fi
-+}
-+
-+test_trace_converter_command()
-+{
-+	echo "Testing Perf Data Conversion Command to trace.dat"
-+
-+	if ! perf record -e sched:sched_switch -o "$perfdata" -- sleep 0.1
-+	then
-+		echo "Failed to record perf data"
-+		err=1
-+		return
-+	fi
-+
-+	rm -f "$result"
-+
-+	if ! perf data convert --to-trace-dat "$result" --force -i "$perfdata"
-+	then
-+		echo "Perf Data Converter Command to trace.dat [FAILED]"
-+		err=1
-+		return
-+	fi
-+
-+	if [ -f "$result" ] && [ -s "$result" ] ; then
-+		echo "Perf Data Converter Command to trace.dat [SUCCESS]"
-+	else
-+		echo "Perf Data Converter Command to trace.dat [FAILED]"
-+		err=1
-+	fi
-+}
-+
-+test_trace_converter_pipe()
-+{
-+	echo "Testing Perf Data Conversion Command to trace.dat (Pipe mode)"
-+
-+	rm -f "$result"
-+
-+	if ! perf record -e sched:sched_switch -o - -- sleep 0.1 | \
-+	   perf data convert --to-trace-dat "$result" --force -i -
-+	then
-+		echo "Perf Data Converter Command to trace.dat (Pipe mode) [FAILED]"
-+		err=1
-+		return
-+	fi
-+
-+	if [ -f "$result" ] && [ -s "$result" ]; then
-+		echo "Perf Data Converter Command to trace.dat (Pipe mode) [SUCCESS]"
-+	else
-+		echo "Perf Data Converter Command to trace.dat (Pipe mode) [FAILED]"
-+		err=1
-+	fi
-+}
-+
-+test_trace_converter_mixed_events()
-+{
-+	echo "Testing Perf Data Conversion with tracepoint and non-tracepoint events"
-+
-+	# Record both tracepoint and non-tracepoint events
-+	if ! perf record -e sched:sched_switch,cycles -o "$perfdata" -- sleep 0.1
-+	then
-+		echo "Failed to record perf data (mixed events)"
-+		err=1
-+		return
-+	fi
-+
-+	rm -f "$result"
-+
-+	if ! perf data convert --to-trace-dat "$result" --force -i "$perfdata"
-+	then
-+		echo "Perf Data Converter with mixed events [FAILED]"
-+		err=1
-+		return
-+	fi
-+
-+	if [ -f "$result" ] && [ -s "$result" ] ; then
-+		echo "Perf Data Converter with mixed events [SUCCESS]"
-+	else
-+		echo "Perf Data Converter with mixed events [FAILED]"
-+		err=1
-+	fi
-+}
-+
-+validate_trace_format()
-+{
-+	echo "Validating Perf Data Converted trace.dat file"
-+
-+	if [ ! -f "$result" ] ; then
-+		echo "File not found [FAILED]"
-+		err=1
-+		return
-+	fi
-+
-+	# If trace-cmd is available, use it to validate the file
-+	if [ "$have_trace_cmd" -eq 1 ] ; then
-+		if trace-cmd report -i "$result" >/dev/null 2>&1 ; then
-+			echo "trace-cmd can read the file [SUCCESS]"
-+		else
-+			echo "trace-cmd cannot read the file [FAILED]"
-+			err=1
-+		fi
-+	else
-+		# Without trace-cmd, just check file exists and has content
-+		if [ -s "$result" ] ; then
-+			echo "Output file exists and has content [SUCCESS]"
-+		else
-+			echo "Output file is empty [FAILED]"
-+			err=1
-+		fi
-+	fi
-+}
-+
-+check_sched_switch
-+test_trace_converter_command
-+validate_trace_format
-+test_trace_converter_pipe
-+validate_trace_format
-+test_trace_converter_mixed_events
-+validate_trace_format
-+
-+cleanup
-+exit ${err}
--- 
-2.47.1
+This commit addresses multiple bugs in hpp_list__parse(). It ensures that e=
+rrors
+from output and sort parsing are not silently masked, handles OOM conditions
+from strdup() correctly, and properly propagates failures out of the strtok=
+ loop
+and up the call chain.
 
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index c9584dbedf77a..b0f2ba8318304 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+[ ... ]
+> @@ -2063,26 +2065,34 @@ static int c2c_hists__init_sort(struct perf_hpp_l=
+ist *hpp_list, char *name, stru
+[ ... ]
+> +static int __hpp_list__parse(struct perf_hpp_list *hpp_list, char *_list=
+, struct perf_env *env,
+> +			     int (*_fn)(struct perf_hpp_list *hpp_list, char *name, struct pe=
+rf_env *env))
+> +{
+> +	char *tmp, *tok;
+> +	int ret =3D 0;
+> +
+> +	if (!_list)
+> +		return 0;
+> +
+> +	for (tok =3D strtok_r(_list, ", ", &tmp); tok; tok =3D strtok_r(NULL, "=
+, ", &tmp)) {
+> +		ret =3D _fn(hpp_list, tok, env);
+> +		switch (ret) {
+> +		case 0:
+> +			continue;
+> +		case -EINVAL:
+> +			pr_err("Invalid --fields key: `%s'", tok);
+> +			goto out;
+> +		case -ESRCH:
+> +			pr_err("Unknown --fields key: `%s'", tok);
+> +			goto out;
+> +		default:
+> +			pr_err("%m for --fields key: `%s'", tok);
+
+[Severity: Medium]
+Will %m print the correct error message here?
+
+The _fn callback returns a negative error code in ret (such as -ENOMEM), bu=
+t it
+does not necessarily set errno.
+
+Even if it did, if the callback or its callees log anything, functions call=
+ed
+internally by pr_err() (like fprintf or localtime_r) can clobber errno even=
+ on
+success. This could cause %m to print a stale or incorrect error string (e.=
+g.,
+"No such file or directory" instead of "Cannot allocate memory").
+
+Could we format the string using the actual error code available in ret ins=
+tead
+of relying on the implicit global errno variable?
+
+> +			goto out;
+> +		}
+> +	}
+> +out:
+> +	return ret;
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260803144119.1856=
+37-1-acme@kernel.org?part=3D1
