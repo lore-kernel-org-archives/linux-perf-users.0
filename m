@@ -1,337 +1,107 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5113F3B9DBB
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 09:07:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D96D43D6472
+	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 09:19:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785748066; cv=none; b=t88YtRTdojRcOYrsGQ7ehEWEkt1nDfscVcqV+eXeuimR14mr9R7vMDgYzlGrJzFcN98WYnxTDYlgjV8/a+ZdjCNLXh8gW5+d/yvG4DtBo6oyuNtqbGoN4pfavY4EV1iRxvwoc8/yhrorDpkQW4YfRX+6ypWAe+S/aKDSd7t4DX0=
+	t=1785748799; cv=none; b=AFSoQE3qyeExdM8YSF5TE8K6m9d7GDbUdFjB58OhJvoWdjk7BELrkyainNSqCo94tu8MM+89pjHwXEZ7A37cyE+h7AdAnBHIckRGQND71pJEpkFelpjDydfxrBeDeiwcZlwvI/vkuGJGW3XpGcQQ+qhPd88UruLDc0Tx7gTVocU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785748066; c=relaxed/simple;
-	bh=b16T4GW68hAFFc0osm9lAVRPnORne6TE2Xjz+8jsFek=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NI5yAEqRGIS9kRLIE2X4jiUUcGKB5E3Vm71xEsxNBdmSXmSTpxoy0rpfv9HyHY3F2I2U1HBZnlevFreagxEuLWElCRxYUA3PNw97sjzG/hNzc7AXFQsNGCwTv23VmzWo5tp0BDRR5gRPulqy8r6HQDBdBBArUvWAEvQCwCOklm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Z7FcCeXM; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1785748799; c=relaxed/simple;
+	bh=P5H56jpyQ/7SoTcQ4PIUMcA8qlOygHxccYAqoaHaVIg=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=oczSBO/UK/GN4Y9S2FNfTM8FyjJymdTQQ1Q3FXo7faQlVkdIb/h3iwiRQlQ89zyvcwnt+LLIZD8xaXieIUgXikUK3kp6nnweZZmU2+HCjq4Di5ZQlRb6286J5MrEh3oHxkrq6huvy090ZgQ2y8fKeC+HfBc11rOzTvu7zoSTuTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gVwn1/OG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Z7FcCeXM"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-c197eaaab00so507728166b.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Aug 2026 02:07:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1785748061; x=1786352861; darn=vger.kernel.org;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=b16T4GW68hAFFc0osm9lAVRPnORne6TE2Xjz+8jsFek=;
-        b=Z7FcCeXMrLdA4ufKv3RkAK2XjzoZuT/WD08supKBZltexr6brLI0QqJPKhEFpp7sDA
-         HYwMxY6FxX3YOfFApphDCuPUATxu/y7qeBLbAYu2yqLWCsoazm1ItwgVq/96TCwk2TVB
-         NskwtZLSfce+7JT1U/CaS5eF+YV5r/p+7Fu0QSkZM/ct5NBcWxBaJYW5ejWTdqYrKH0g
-         iHU3TWlIcNrtWFPmirdzAJvhrbUHrEZ8uN5R6Xj2UsFTie7NP31NaB/rU1jAIK06snvc
-         WiKINhlA/NwAlwH1BiG08IOFmuWiCfghR5one6/3xPzDMazxuybkHNld5dcyXIFNMQOo
-         Guig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785748061; x=1786352861;
-        h=content-type:in-reply-to:autocrypt:from:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=b16T4GW68hAFFc0osm9lAVRPnORne6TE2Xjz+8jsFek=;
-        b=Wat63rj3z6+73yKBWE0Q4wQojM7TPyBB3WiurEM+0OM+OBNgVQFZQYkYToBovjsBJG
-         9TOLODWEPUyg5IGUHqtrPdSU2LHlN37BtXa6OmLib53ovwfcXN/jHAMEn9XW00FcaZ4J
-         g15pQo6dWGs7vf6jqxAY5d1xBZNY4H/FTgIVCJxuko8W2XAj82UODxgvIJHXUCa8FA7a
-         7JSG6Laxg5gsczMI8FDIhvTY1Tt+dBwmFlACMrBhpSkcfu4ue0EEAzm0M4a8m1dKYYo0
-         DgivKpCwNLxSa9rVXeRjO78zS0C+dUsOnyeY7DtZT3wdAgAyepD27ACePdfpdcaJqs7b
-         07lA==
-X-Forwarded-Encrypted: i=1; AHgh+RoxZ2WZ4c5ttUo4E11i3zV0hcqtIu+izoUCN9jmLEp+F9UJVQ4wImPd8vF9yMfJ7OocOktSL9QvpMtus4CSCdXD@vger.kernel.org
-X-Gm-Message-State: AOJu0YzD0HizXKXtC0jssSg4GAz6Sll6vQAuLSyq8oQHX4y8o6BSPy4k
-	Lot7IjkJY4vm+jpeNlYcaUvKaJAUiqNnvjes8HI/hE47HOrOxnMI4yW6FkgydPzAiGI=
-X-Gm-Gg: AR+sD10x4UA5EIAjGRW0WnQLXR+Ulou6g+4JNdFc6K8uB4gNz4L2piWEt2hvNVHfDK/
-	xJ5GLc7rvIkwj42wwVporUOEKuOhCKV5blKIra86CpzegyQKp+OIITxN6EYUgx1rbTsY0jl/RvP
-	Y46wLlaoZ3mnHpfk+X7AhA7CHMyVr6ng67PdhC77hQvJuEV/8Gj5cugo4VgSaL27f+Z15iAycHI
-	yd/H+N+Oxr+wLN3Jr4pZ45Z+Fbvx5GJE3TsldBvLR5dUWENbf/ttdCOIfK72J6QmUroZRizIXNr
-	lO1U3Gs0o2CL8c3s+9EIm6cCdp8bR62wkM7DMlgdWFoKFjeT+JYxB/FiV3ST7GBl87NUSJQuhmv
-	8RV+5of+vFaTN12cNRnm1VRr5hx97s5XLhR0kvR3zk16TvKmkP1gWWf6GCf6Z992Zs13+j21l+b
-	BYlEtWPHKhxIsoex3EPVVeXhDvowWumTm2amoUKUlmxh2KKnn+IjMmjlFu+fXMHYdzryC6x14Si
-	bykKLavvY+jwAQQmzQYBRI5H3lbb2a/OaYqxs2NNf8n3np+qOFM1RMpuT1Mi4JE/fV1PpoJE6Kg
-	/CrVvAYY3u3hkxA=
-X-Received: by 2002:a17:907:76fa:b0:c19:fb6e:5ff0 with SMTP id a640c23a62f3a-c1fe81a5d9fmr582774266b.15.1785748061532;
-        Mon, 03 Aug 2026 02:07:41 -0700 (PDT)
-Received: from ?IPV6:2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112? (2a00-12d0-af5d-ad01-5d3f-14e6-9bcb-5112.ip.tng.de. [2a00:12d0:af5d:ad01:5d3f:14e6:9bcb:5112])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c1fd445432dsm507440166b.41.2026.08.03.02.07.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 03 Aug 2026 02:07:41 -0700 (PDT)
-Message-ID: <5ca4d0e4-1747-45a7-a916-a7516bb1692b@suse.com>
-Date: Mon, 3 Aug 2026 11:07:39 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVwn1/OG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9C781F000E9;
+	Mon,  3 Aug 2026 09:19:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785748796;
+	bh=GHJZ+rgkReRcD/oDU9TUD4l4xdazrJbdiH3JPgTpJEI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=gVwn1/OGadmPlbykpDt/sgOExcpx3Rrr2+HdSnZdX5u/mO4quIqNWIbqB0oGmsfSu
+	 dGChKmKyTMMeuTp49xZDX2wzShhZK9+rwRbxSH2JVsQ8oou76/4dQndsZSTkfjGwqq
+	 TX4XcMXmL0MhyKIIa4voHrT8VAHwv7OPSr4T1SoFyky+W/vxNMjcFUMdVEUvqKMyC8
+	 cY+BbDQK7AtvML4u0EbAreSp5NCi9Wj1bGSjFOJXx3Qq0HyjrKw36xTFCSGtdZsVWs
+	 jJu9ULQnxg7tIg2qcpFndPy5jneTS0IsH0Ry8ok5JQ3YUrdbdC6Rp/1hx9QtszwvCi
+	 eZUJQ+m+xMRew==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/9] perf thread-stack: Report branch stack hw_idx as
+ not available
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Amir Ayupov" <aaupov@fb.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260803090640.2412336-2-aaupov@fb.com>
+References: <20260803090640.2412336-1-aaupov@fb.com>
+ <20260803090640.2412336-2-aaupov@fb.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 03 Aug 2026 09:19:56 +0000
+Message-Id: <20260803091956.A9C781F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 00/14] Remove PG_private by using page/folio->private
- checks instead
-To: Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>,
- Gregory Price <gourry@gourry.net>, Ying Huang
- <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Kairui Song <kasong@tencent.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, Stefano Stabellini
- <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- xen-devel@lists.xenproject.org, Eric Biggers <ebiggers@kernel.org>,
- "Theodore Y. Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
- linux-fscrypt@vger.kernel.org, Oscar Salvador <osalvador@suse.de>,
- Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
- Gao Xiang <xiang@kernel.org>, Jan Kara <jack@suse.cz>,
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
- Sandeep Dhavale <dhavale@google.com>, Hongbo Li <hongbohbli@tencent.com>,
- Chunhai Guo <guochunhai@vivo.com>, linux-erofs@lists.ozlabs.org,
- linux-fsdevel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Axel Rasmussen
- <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, linux-trace-kernel@vger.kernel.org,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- linux-nfs@vger.kernel.org, Song Liu <song@kernel.org>,
- Yu Kuai <yukuai@fygo.io>, Ilya Dryomov <idryomov@gmail.com>,
- Alex Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>,
- Li Nan <magiclinan@didiglobal.com>, Xiao Ni <xiao@kernel.org>,
- linux-raid@vger.kernel.org, ceph-devel@vger.kernel.org,
- Richard Weinberger <richard@nod.at>, Zhihao Cheng <chengzhihao1@huawei.com>,
- linux-mtd@lists.infradead.org, Baoquan He <baoquan.he@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Dave Young <ruirui.yang@linux.dev>, Shuah Khan <skhan@linuxfoundation.org>,
- kexec@lists.infradead.org, linux-doc@vger.kernel.org
-References: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
-Content-Language: en-US
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-Autocrypt: addr=jgross@suse.com; keydata=
- xsBNBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
- ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
- dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
- NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
- XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
- AAHNH0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT7CwHkEEwECACMFAlOMcK8CGwMH
- CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
- mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
- G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
- kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
- Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
- RoVBYuiocc51872tRGywc03xaQydB+9R7BHPzsBNBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
- vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
- sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
- aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
- w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
- auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAHCwF8EGAECAAkFAlOMcBYCGwwACgkQsN6d
- 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
- fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
- HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
- QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
- ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHfw==
-In-Reply-To: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------Vg9NJvq3ine0Gyx1IX0BEzQC"
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------Vg9NJvq3ine0Gyx1IX0BEzQC
-Content-Type: multipart/mixed; boundary="------------1XNOHvG0ftKOzuceeKWaT2Id";
- protected-headers="v1"
-From: =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
-To: Zi Yan <ziy@nvidia.com>, David Hildenbrand <david@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>,
- Andrew Morton <akpm@linux-foundation.org>,
- Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes <ljs@kernel.org>,
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
- Nico Pache <nico.pache@linux.dev>, Ryan Roberts <ryan.roberts@arm.com>,
- Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
- Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>,
- Gregory Price <gourry@gourry.net>, Ying Huang
- <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
- Shakeel Butt <shakeel.butt@linux.dev>, Kairui Song <kasong@tencent.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Minchan Kim <minchan@kernel.org>,
- Sergey Senozhatsky <senozhatsky@chromium.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, "H. Peter Anvin" <hpa@zytor.com>,
- linux-perf-users@vger.kernel.org, Stefano Stabellini
- <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- xen-devel@lists.xenproject.org, Eric Biggers <ebiggers@kernel.org>,
- "Theodore Y. Ts'o" <tytso@mit.edu>, Jaegeuk Kim <jaegeuk@kernel.org>,
- linux-fscrypt@vger.kernel.org, Oscar Salvador <osalvador@suse.de>,
- Chao Yu <chao@kernel.org>, linux-f2fs-devel@lists.sourceforge.net,
- Gao Xiang <xiang@kernel.org>, Jan Kara <jack@suse.cz>,
- Yue Hu <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>,
- Sandeep Dhavale <dhavale@google.com>, Hongbo Li <hongbohbli@tencent.com>,
- Chunhai Guo <guochunhai@vivo.com>, linux-erofs@lists.ozlabs.org,
- linux-fsdevel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Matthew Brost <matthew.brost@intel.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
- Byungchul Park <byungchul@sk.com>, Axel Rasmussen
- <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>,
- Wei Xu <weixugc@google.com>, linux-trace-kernel@vger.kernel.org,
- Trond Myklebust <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
- linux-nfs@vger.kernel.org, Song Liu <song@kernel.org>,
- Yu Kuai <yukuai@fygo.io>, Ilya Dryomov <idryomov@gmail.com>,
- Alex Markuze <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>,
- Li Nan <magiclinan@didiglobal.com>, Xiao Ni <xiao@kernel.org>,
- linux-raid@vger.kernel.org, ceph-devel@vger.kernel.org,
- Richard Weinberger <richard@nod.at>, Zhihao Cheng <chengzhihao1@huawei.com>,
- linux-mtd@lists.infradead.org, Baoquan He <baoquan.he@linux.dev>,
- Pasha Tatashin <pasha.tatashin@soleen.com>,
- Pratyush Yadav <pratyush@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Dave Young <ruirui.yang@linux.dev>, Shuah Khan <skhan@linuxfoundation.org>,
- kexec@lists.infradead.org, linux-doc@vger.kernel.org
-Message-ID: <5ca4d0e4-1747-45a7-a916-a7516bb1692b@suse.com>
-Subject: Re: [PATCH RFC 00/14] Remove PG_private by using page/folio->private
- checks instead
-References: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
-In-Reply-To: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
---------------1XNOHvG0ftKOzuceeKWaT2Id
-Content-Type: multipart/mixed; boundary="------------emnYBJyIfA0mAuf1FBk0JrWD"
+Pre-existing issues:
+- [Critical] Pre-existing heap buffer overflow in thread_stack__br_sample d=
+ue to incorrect memcpy length.
+--
 
---------------emnYBJyIfA0mAuf1FBk0JrWD
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+--- Patch [2]: [PATCH 2/9] perf thread-stack: Report branch stack hw_idx as=
+ not available ---
+commit 51033b3641484a31783c5c945c25ef5ee0bfb23e
+Author: Amir Ayupov <aaupov@fb.com>
 
-T24gMDEuMDguMjYgMDQ6MTMsIFppIFlhbiB3cm90ZToNCj4gSGkgYWxsLA0KPiANCj4gVGhp
-cyBwYXRjaHNldCByZW1vdmVzIFBHX3ByaXZhdGUgdG8gbWFrZSBzcGFjZSBmb3IgdXBjb21p
-bmcgUEdfZm9saW8NCj4gKHJlc2VydmVkIGFzIF9fUEdfZm9saW8pIGZvciBpZGVudGlmeWlu
-ZyBwYWdlcyBmcm9tIGEgZm9saW8gKG1vcmUgZGV0YWlscw0KPiBpbiBOb3RlIGJlbG93KS4g
-SW5zdGVhZCBvZiBjaGVja2luZyBQR19wcml2YXRlLCBhbGwgY29kZSBpcyBjaGFuZ2VkIHRv
-DQo+IGNoZWNrIHBhZ2UvZm9saW8tPnByaXZhdGUgIT0gTlVMTCBpbnN0ZWFkLg0KDQpJJ20g
-YSBsaXR0bGUgYml0IHdvcnJpZWQgdGhhdCBwYWdlL2ZvbGlvLT5wcml2YXRlIGlzIGluIGEg
-dW5pb24sIHNvIHRvZGF5DQppdCBjb3VsZCAoaW4gdGhlb3J5KSBiZSAhPSBOVUxMIHdoaWxl
-IFBHX3ByaXZhdGUgaXNuJ3Qgc2V0Lg0KDQpJcyBpdCByZWFsbHkgbm90IHBvc3NpYmxlIHRv
-IGVudGVyIGEgcGF0aCB3aGVyZSBQR19wcml2YXRlIGlzIHRlc3RlZCB3aGlsZQ0KcGFnZS9m
-b2xpby0+cHJpdmF0ZSAhPSBOVUxMIGR1ZSB0byB0aGUgdW5pb24gYmVpbmcgdXNlZCBvdGhl
-cndpc2UgKFBHX3ByaXZhdGUNCm5vdCBzZXQpPw0KDQoNCkp1ZXJnZW4NCg==
---------------emnYBJyIfA0mAuf1FBk0JrWD
-Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
-Content-Description: OpenPGP public key
-Content-Transfer-Encoding: quoted-printable
+perf thread-stack: Report branch stack hw_idx as not available
 
------BEGIN PGP PUBLIC KEY BLOCK-----
+This commit sets hw_idx to -1ULL for synthesised branch stacks to indicate
+that the hardware index is not available. This prevents consumers from
+erroneously assuming these branch stacks start at LBR TOS entry 0, matching
+the behaviour of intel-pt and cs-etm.
 
-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
-kt+z4drzFUyEjLM1vVvIMjkUoJs=3D
-=3DeeAB
------END PGP PUBLIC KEY BLOCK-----
+> diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stac=
+k.c
+> --- a/tools/perf/util/thread-stack.c
+> +++ b/tools/perf/util/thread-stack.c
+> @@ -624,6 +624,7 @@ void thread_stack__br_sample(struct thread *thread, i=
+nt cpu,
+>  	unsigned int nr;
+> =20
+>  	dst->nr =3D 0;
+> +	dst->hw_idx =3D -1ULL;
+> =20
+>  	if (!ts)
+>  		return;
 
---------------emnYBJyIfA0mAuf1FBk0JrWD--
+[ ... ]
 
---------------1XNOHvG0ftKOzuceeKWaT2Id--
+>  	if (src->nr >=3D ts->br_stack_sz) {
+>  		sz -=3D nr;
+>  		be =3D &dst->entries[nr];
+>  		nr =3D min(ts->br_stack_pos, sz);
+>  		memcpy(be, &src->entries[0], bsz * ts->br_stack_pos);
 
---------------Vg9NJvq3ine0Gyx1IX0BEzQC
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature.asc"
+[Severity: Critical]
+This is a pre-existing issue, but does this memcpy() write past the end of
+the dst buffer?
 
------BEGIN PGP SIGNATURE-----
+We calculate nr as min(ts->br_stack_pos, sz), which limits the count
+to the available size in the buffer. However, the memcpy() uses
+bsz * ts->br_stack_pos instead of bsz * nr.
 
-wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmpwWlsFAwAAAAAACgkQsN6d1ii/Ey/i
-jgf/ZwJPxlL37xKWgHvTpcOyxx9OjPwR5NnmxhKYC+qK1G+dCKRR2aNsNRd92IvtuR/zlwoSK3Bz
-7Knn/QAX+Sr8+MzzkoSZZy4464mITxuVnjBsYOy1wmVfTRA9xJ5kPDsLcow9h9fba5YWY5JKjJEr
-fuIk59vC3iZC8TXbrwFnUB118QfIzPMfnHvl18ioDjqN/X6ooFJudXLB3hTrlpzsxtdu1OFI+TsY
-0FUiNapbbcLYtM5X9v/bo7LSqQNdjZKmfV2DVQHs8Vj2bH/TyrIG+SvEggEztdqBgec9T7Ix66uU
-FOasApx6jWOz0UmYAKKBF0iBOhSZaPnQhSA6xqkzCw==
-=lraB
------END PGP SIGNATURE-----
+When running perf commands that parse Intel PT traces, ts->br_stack_sz can
+be larger than the sample size sz. This could cause ts->br_stack_pos to
+exceed nr, leading to a heap buffer overflow when copying to be.
 
---------------Vg9NJvq3ine0Gyx1IX0BEzQC--
+>  	}
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260803090640.2412=
+336-1-aaupov@fb.com?part=3D2
