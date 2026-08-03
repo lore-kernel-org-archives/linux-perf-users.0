@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707222E889C;
-	Mon,  3 Aug 2026 22:55:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB34344D91;
+	Mon,  3 Aug 2026 23:00:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785797724; cv=none; b=ankyJPoz6oDg+edR/XKU93tnMD7JdsBmeYpcbmKo2UXrcrQB1Fa5kTI8kEdm0NZN0g8iSSN5yZWgOnfPFUS4xgym9HJnOTrCJp4GiANqeJIJLwNiCSa6rfDnX6rKTjn6O+EG1wiZgSER7lEacSGU8UhIuNKrfhRYfEiQieovLVA=
+	t=1785798042; cv=none; b=uVDqrZT5crRey1e7I2pylUD+rjLS91IGKXWU+/zr9puuGQKWK2S4CerVFuVFCtM9og28uW9cSUda26QYWCBQtJIG5a8e7QhprBxBSrxNSv7kINSd8aYCN9w36beETsfE1GfJRUwMjt+qQagJui1jRHWpz5g4tHoyODPoCmwL1+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785797724; c=relaxed/simple;
-	bh=TtT3SCban8dIHGX0O/qXCSaf4EiAnfg2woc9icwJrEE=;
+	s=arc-20240116; t=1785798042; c=relaxed/simple;
+	bh=YF5+/9H2xV6xvo6lRJ2MMOWcjOwld/NW7J8V1HI3g4w=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=ubrap0DqENbmeYyMVfJwcAztQp7h0X6WpdnghLvnQwr1hOkf1wKeNsuZ8oNlLGETU8aYXgeDAUpaSK4XsYa5FuZx4PMCPoloM9cjVcknFryPoKFZS3JRPCF/1uIdTBkmHyD5jsuqOt085bthGHgFEKEibmwkWG3L8o7mjiWS+AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h1EmJFmh; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=nLOC9wqsbfiBv8wvx1ZFEv5QHCYxXWQsJOhj/yHnL3WBoKUZW4lqCzoOSgyAuuo21mK2HiEEhlqtfGaOFk719xHQoD2MvoxsTh8bFMDl5NurqdHVFi66p8BrzVsqUewtnqepneWXLvJPqiH++52H/RP+TbhsGpUweULP/bhRsTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lj1FJiLC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h1EmJFmh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4A451F000E9;
-	Mon,  3 Aug 2026 22:55:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lj1FJiLC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A8BD1F000E9;
+	Mon,  3 Aug 2026 23:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785797723;
-	bh=nBWgxKKY6rM3Ce1VAhJtncb2rgqPqxzBOqqS2/KeM+E=;
+	s=k20260515; t=1785798041;
+	bh=ODXR5dipyjzg+KUI475fueZXSulmDm0R6sqEfjhXAFg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=h1EmJFmhS9hIa57gelHm9RUAUqiCqcMeTV94xio6mPUvE7ea1qRC20UUowV8oqtcT
-	 FGvn8gFcXcK1MaTNZxCH28Y2OkyR59wrWeBM0n63cm25KhsuD7DQHIPs0+BNbWzpLz
-	 qPrREpYdvtskpRewzKPZe9/aXSmJ6V0TPsKV7evST3bufKeqK+7U0i1tDW5h17FEzE
-	 vukWwJEXxrJfC09PDIFNKNknGLahgxZHTVn+LqC7+72Crv8hkxJOaXegXc/An7tksV
-	 SYskSGxa5dGJPcJF6nbksEkRiDSJTbGvWT5N6v28c06gwFgmRmk2zyY80iSl6awux3
-	 gaOGMEPfbdntg==
-Date: Tue, 4 Aug 2026 07:55:17 +0900
+	b=Lj1FJiLCgoVDcGdR3ID0q2FvRl0IcLMAW57Hd012RIyo46fGoXKzHTLTNvQ88pX4a
+	 0PsdB97shbTK14mgdrwC68bHhiHQUkFwWO3FKuRa97SNI4TCQNUtxXhNzic9pPXTqJ
+	 YQeVHrKlbauRcqEP/MmlXSYGi5l5ZrYL1dpOSYgRvtUmSgwm1FM8x2I9ZDBZOIbYFL
+	 nAlPNCz2zpNQDxNQgXYedpVzepmFdosrIxFa2p2reGkChGHagnp4Q/7eYyNqkbX/k2
+	 rKMnLfMferO29KNK39QBNGxZZIGI1p1vLh+LDWZQOt0dP/2KW7XaRr8+tezwCf8Se7
+	 3NRMiSrHidxyg==
+Date: Tue, 4 Aug 2026 08:00:35 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
@@ -37,12 +37,13 @@ Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
  <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
  linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
  linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v11 01/11] x86/hw_breakpoints: Make DR7 updates NMI safe
-Message-Id: <20260804075517.1c1c9e2dc6ff66e0e73f946d@kernel.org>
-In-Reply-To: <20260803065744.GU49951@noisy.programming.kicks-ass.net>
+Subject: Re: [PATCH v11 04/11] tracing: wprobe: Add watchpoint probe event
+ based on hardware breakpoint
+Message-Id: <20260804080035.6b719368c9328bbdd8219867@kernel.org>
+In-Reply-To: <20260803070356.GV49951@noisy.programming.kicks-ass.net>
 References: <178565870538.714490.11309825813968306287.stgit@devnote2>
-	<178565871750.714490.5506415865016304088.stgit@devnote2>
-	<20260803065744.GU49951@noisy.programming.kicks-ass.net>
+	<178565875046.714490.17724442147958346980.stgit@devnote2>
+	<20260803070356.GV49951@noisy.programming.kicks-ass.net>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -53,54 +54,38 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Mon, 3 Aug 2026 08:57:44 +0200
+On Mon, 3 Aug 2026 09:03:56 +0200
 Peter Zijlstra <peterz@infradead.org> wrote:
 
-> On Sun, Aug 02, 2026 at 05:18:37PM +0900, Masami Hiramatsu (Google) wrote:
-> > From: Jinchao Wang <wangjinchao600@gmail.com>
+> On Sun, Aug 02, 2026 at 05:19:10PM +0900, Masami Hiramatsu (Google) wrote:
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > > 
-> > Hardware breakpoint installation and removal run with IRQs disabled, but
-> > an NMI can still enter the same code through KGDB. The interrupted
-> > operation and the NMI can consequently claim the same slot or overwrite
-> > each other's DR7 state.
+> > Add a new probe event for the hardware breakpoint called wprobe-event.
+> > This wprobe allows user to trace (watch) the memory access at the
+> > specified memory address.
 > 
-> Is KGDB really the only way to trip this? Mostly I think we let KGDB
-> have the pieces if it does something 'funny'.
+> s/the memory/the kernel memory/
 
-Hmm, I think even if so, this detection is better to be handled in
-hw_breakpoint layer. And I plan to use this from kprobe events,
-which is also a kind of NMI.
+Indeed.
 
 > 
-> > diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-> > index f846c15f21ca..9ef24b55737f 100644
-> > --- a/arch/x86/kernel/hw_breakpoint.c
-> > +++ b/arch/x86/kernel/hw_breakpoint.c
-> > @@ -40,6 +40,9 @@
-> >  DEFINE_PER_CPU(unsigned long, cpu_dr7);
-> >  EXPORT_PER_CPU_SYMBOL(cpu_dr7);
-> >  
-> > +/* Sequence number of the per-CPU DR7 state. */
-> > +DEFINE_PER_CPU(unsigned int, cpu_dr7_seq);
+> > The new syntax is;
+> > 
+> >  w[:[GROUP/]EVENT] [r|w|rw]@[ADDR|SYM][:SIZE] [FETCH_ARGs]
+> > 
+> > User also can use $addr to fetch the accessed address and $value to fetch
+> > the accessed memory value (shorthand for '+0($addr)'). No other variables
+> > are supported.
 > 
-> > diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-> > index 3c9f60d6ca5a..f55a0cbd5927 100644
-> > --- a/arch/x86/kernel/nmi.c
-> > +++ b/arch/x86/kernel/nmi.c
-> > @@ -532,10 +532,13 @@ enum nmi_states {
-> >  static DEFINE_PER_CPU(enum nmi_states, nmi_state);
-> >  static DEFINE_PER_CPU(unsigned long, nmi_cr2);
-> >  static DEFINE_PER_CPU(unsigned long, nmi_dr7);
-> > +static DEFINE_PER_CPU(unsigned int, nmi_dr7_seq);
-> 
-> This is weird, why have two distinct sequence numbers for dr7?
+> This seems limited to kernel addresses only? Should not also userspace
+> addresses be supported?
 
-nmi_dr7_seq is for sequence number of operation, which is for
-detecting dr7 overwrite in NMI.
-nmi_dr7 is for saving the DR7.
+Hmm, for x86, yes, since it causes a trap after executing (all page fault
+are handled). But other architecture like arm64 may not be able to support
+it because it needs to enable watchpoint after major page fault.
+At this step, I would like to limit it just for kernel memory.
 
-Thanks,
-
+Thank you,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
