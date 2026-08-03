@@ -1,221 +1,215 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 737B93B71AC
-	for <linux-perf-users@vger.kernel.org>; Mon,  3 Aug 2026 08:57:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8ADF3AFD19;
+	Mon,  3 Aug 2026 09:02:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785747478; cv=none; b=l2FBMndQiSIiFM4rG38URF873N5vN9hJ4sEcWXE5NaU+WfdPCJVhocCq5yFCzwHTWXtVslK0gV3UJfca3qLljvKr0M3SDGhpA9awdGgfhqHMKfFX5wVyZg6y/drbWkci0HOk5pT+rq2AFpzi8nm+6d4lb6+Vel9WJj2gE9WcD4I=
+	t=1785747769; cv=none; b=jb0RtC9G9UR1hXO5EEmSOusyfa0I6f0mGtU+ZGbSXlmAARCci3zNPl/H+6W/r+wkEUo8Ck+3qPiKWjDh1h85BkScL2z8QhrvYK6vnw+QR45A0N0veTDLdi4ydGL8jd6Krh2gwMWz9Q0+UzyOCxUMFuf+NhVm7YkDHiJEsqsNgWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785747478; c=relaxed/simple;
-	bh=utJ+sBQX68JoONUFlf4nYR3UIpRqDL5wnJ2dyXL2qYA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VKwvo7veh3XoYIkxehHowxJinYMh4Yk+5938f06M+StdXE/j9ijll6CQtrykdKavpVJhbD2lkFfizAh+xlp4btmkY59PR22c9k5bshoOsLKhnfxYHS4arDdFm9AsVT0Egw2hnWJNIFY65h+D6lt5txBsxyTIwfbjaD58V/2Wtu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=DjThoO88; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1785747769; c=relaxed/simple;
+	bh=xiGz42PFIL8bCNj5vPqOL4TeTi+5tnz7pkEDDqpFp4s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kXGNf+YzVODFAotAJn6Ves9hhmwBCyKR9+GPR6OIZkxEQgn5LAgjnCaWXRSEN+osVdUAD6FCiuprjEONSPPn3Bh0Z+/fWPpSSHnfvZTeUdPKD0bszF5OBbKC7uV+Or+QrL5qTpEhuHDW2L2rhIP4FKz/tX0RlPFaH1kzjwkZlSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b=qXRqHd+i; arc=none smtp.client-ip=67.231.153.30
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="DjThoO88"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-4955c545a94so1836945e9.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 03 Aug 2026 01:57:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1785747475; x=1786352275; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=QNlWLzOtWY2GfkcJcUqWNM+srtqBUFdfVlqmq0ROfDw=;
-        b=DjThoO88WrhzldiVNOgoweCb6k3Dj8b0ROeqHvObtjhjsthVCr+nanD78U+FOxCYBv
-         41WAHqcnI5CkRK2KrbUynNRBqEQ7X4rhxTyngmPwKF2UEPB3QOmYpddhh5+3IxJamg6I
-         Vs0esr/JVF7BJ+0LNqODzNzlw2UCOkn3kNxHTFZSkUy/7RjKjyCUW1R0W1n4ncjCmxf/
-         UMuuINhs/VFG6TuR4UOfUoBV0olGI8MuXLg7IZzwmYfBq45PHlG6Ar7GHvVP/dHQJEpr
-         trq4a7jSXblD8UAOhvR+0iawCbDK6q+YGoxLiiFKyvU4A5SdGSoLoJqcqykYxgrkiSWA
-         +OxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785747475; x=1786352275;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=QNlWLzOtWY2GfkcJcUqWNM+srtqBUFdfVlqmq0ROfDw=;
-        b=Ih62KI48/0tphDkxCa6td5uEhSU8eQol0+PRK7qH/q/gKzcxUNl0kWcgpUQ0AR89ll
-         qzQ12pDvSkvR74AA0nVQ+/5czE62bdJ/J+U2A1MJZrAVA4GYTRfPBUC9N8THyFrDtQWJ
-         o2cjkpybYx+3kIPEK+Ge06pVihE+85goWOZlL2Fizt+su0BW4bvceTcLluAZXCStmT/v
-         j7RTLkmAWuOnUI8SxlknBoC60TCHEO0k52lLWZVbwPfgw7qlR92ymABlwgTTtfJF2eE/
-         vnDkh7k0bXN849bG7S6yj/bcdv9HRGfUw6aL6fML8RkOTII8gDUTNQzOW5bcnMdj6YOU
-         bF0Q==
-X-Forwarded-Encrypted: i=1; AHgh+RpM04nRcf6OKPyf5mS5fh3lyKIAPrd9uB00QADP0T71KddVWjO4kziNiZfdRfzL8Zs+vCelj9JE8C953ljTLmBq@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlQ3/KlLOhnjFJvOcPpHFAsnpLKtORyTkmSZcZpYH38TtrU8F3
-	forAu01fP0DPQqCbGj7uBQLHVT+EvhM5u0dGh25qKlYTYl4qEOGZ3y2YfFwww5C7uQo=
-X-Gm-Gg: AR+sD10Aw2wM2orB9CLszJi2LuaFC9MC3TOAVy/rt29bT50i0DUudMnXVvkRACa9fnh
-	F+xPe3MgNPayDQAj5bYPzo8Qsfs433m+SSk60p6coaZl2iHtVDevsDGpsQyBrKQYYSnJUb3WmD2
-	fV3rK81Up/PGeikafPSvRp2qx1S7lPKWJNMjEQmdwxCHpEwcZnYLe/vem4NyZoJXL5HZN4P0GNY
-	5D/aBbtJl9iyOv3HczDaZ37bRFnkua0x69tGJUElvys5QcjjLzEY5ygsS5mBqDIklsCYz1ry7zs
-	uu/Z8hfxp3FGDSMl1wQ17AagD58hmnSFXgfyuOtxO3acOH/GaOOGbzQfNxxwER+b6nEocot7gsg
-	3xViRUfiqAOSkIwelRq+UjE1/FLBwAEwnvhW/jegVhsVDtqVlczvE/ne33RNDJ7MMh22UuC5336
-	MULJJfEhi+9yRxF/Sbdv2Rd0yg2UGbhKGLFkCzWVNpAAPZRuvyv7Slr9YQOBU2fBAEkkuBYbg1/
-	QYq8DCwSPZGVnboKokWQhW9IJ6nN0SaK9fbQSynKgRIw1sST2jQpIDhG0r6gXiTrA==
-X-Received: by 2002:a05:600c:1d0a:b0:492:7082:92e9 with SMTP id 5b1f17b1804b1-4980c5ec794mr112090505e9.0.1785747474701;
-        Mon, 03 Aug 2026 01:57:54 -0700 (PDT)
-Received: from mordecai (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49807b2a61asm150614545e9.0.2026.08.03.01.57.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Aug 2026 01:57:54 -0700 (PDT)
-Date: Mon, 3 Aug 2026 10:57:51 +0200
-From: Petr Tesarik <ptesarik@suse.com>
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Thomas
- Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Ingo
- Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] perf/x86: Do not read fixed counter control
- register if there is none
-Message-ID: <20260803105751.17146a49@mordecai>
-In-Reply-To: <82ff3301-13e1-4ebf-9f74-aa4318848cc5@amd.com>
-References: <20260717150315.2868314-1-ptesarik@suse.com>
-	<82ff3301-13e1-4ebf-9f74-aa4318848cc5@amd.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b="qXRqHd+i"
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+	by m0089730.ppops.net (8.18.1.11/8.18.1.11) with ESMTP id 6735Rrc6027890;
+	Mon, 3 Aug 2026 02:02:09 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pps82601-s2048-2026-q3; bh=+UUe0PyDK
+	6tuicC2KrGKRi9zSihQwNnXSE/D8m2YEXU=; b=qXRqHd+iKHEN8GAIKcn4lsHdv
+	zXRU87DZS59mKYW79Ti4id0Pex8lKcQvo9xLQuY5JtjoIIssJRQqeJsUlKHF9HPp
+	SRJDuD0E5bnhXVlMsPwuv79sP/eRnlsX43AJsHWeqPSa3Y3Jt8aSrYSlWES5zjzH
+	Ll8Yuh7hFmsME8yWsYHt9NzZzwd4tfSgrX62EBDdqENbY0MKiE8tCHY8M721L7qA
+	bp3kDrcArwnU49hqvhoktw9zGBz++nE7ZlBTVTZ7bxYmeNcJ0WgVsCxEkOB2wpm/
+	RFSd6HWXK2Vy3EmjpwjzcK8Yj+Hbg3XMoDgzMxPnZBwDfa1w24uw06vPKu2bw==
+Received: from mail.thefacebook.com ([163.114.134.16])
+	by m0089730.ppops.net (PPS) with ESMTPS id 4fsc9q8mdx-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Mon, 03 Aug 2026 02:02:08 -0700 (PDT)
+Received: from localhost (2620:10d:c085:108::150d) by mail.thefacebook.com
+ (2620:10d:c08b:78::c78f) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.45; Mon, 3 Aug
+ 2026 09:02:07 +0000
+From: Amir Ayupov <aaupov@fb.com>
+To: <linux-perf-users@vger.kernel.org>, <coresight@lists.linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Suzuki K Poulose
+	<suzuki.poulose@arm.com>,
+        James Clark <james.clark@linaro.org>, Leo Yan
+	<leo.yan@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
+	<mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim
+	<namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>
+CC: <linux-doc@vger.kernel.org>, Mike Leach <mike.leach@arm.com>,
+        Jonathan
+ Corbet <corbet@lwn.net>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Swapnil
+ Sapkal <swapnil.sapkal@amd.com>
+Subject: [PATCH 0/9] perf cs-etm: Add branch history to existing samples
+Date: Mon, 3 Aug 2026 02:01:53 -0700
+Message-ID: <20260803090202.2324641-1-aaupov@fb.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=DtpmPm/+ c=1 sm=1 tr=0 ts=6a705910 cx=c_pps
+ a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
+ a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=7x6HtfJdh03M6CCDgxCd:22
+ a=855S8uPTkML1Oy45N9_h:22 a=axNnc2LJDcEVcFH0QQkA:9
+X-Proofpoint-GUID: yDUsO4gfDXBGr2c08-1MdmnfzIQYnF4O
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODAzMDA4MCBTYWx0ZWRfX22+EUbsmVN9b
+ 5tTSfYz1BUtkaSwARUFU32/C9VNbI7+S2hsphm1elzMv2gjtlhhHibb3XSgW1lR4CA7h6Q7TQQK
+ W2GQG7QBzQSYk+/t6YM1XN6RztE6pL0=
+X-Proofpoint-ORIG-GUID: yDUsO4gfDXBGr2c08-1MdmnfzIQYnF4O
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODAzMDA4MCBTYWx0ZWRfX4kYTgkUiP3L1
+ ZoPehi/7Qpu8bediNfHWCyeBX+jyEWuhyEf3VHKJybPS1Prej8Y5HEoaI5Fhrdty6/58DnuFLX1
+ KE8QbtrlCu06T5TGiOOV1DxAVz8zIDoZesHsCkZKf4TbK0bvhZiTO8ps6+Fzg88SH7cC36x66re
+ n/HO2ukcxYAsZxXRbK4iWYpMkd2y3H/Whk8Mk9j4etxdKjxwiNcF/mPu3fX8Rxj8aQY1C8rFDfo
+ 5iJVtZU+tUd83ViMcGiQl+bEFv/iVKm5XCJUpJ/XTf6KICqBKy6/9t5QwTYofVWls+naAPvu2HS
+ PCPqsgxaBRaSgaJSE2p8UWMg6G8ZSmcauN6yNKxJoh+Qa+YMwMFRSQGamygOsRyKQyjrJoKanJq
+ JyMM9UPqhkSqOjim3reRXllT1+pGh8XowHs7UezhNniwtbnqJqFymqgw1XvIAcVpB91Dz+zE44s
+ w1FNY4IUu/KcKNZaQbw==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-02_06,2026-07-30_01,2025-10-01_01
 
-On Mon, 20 Jul 2026 14:57:25 +0530
-Sandipan Das <sandipan.das@amd.com> wrote:
+This series implements --itrace=L for Arm CoreSight ETM: decoded branch
+history is attached to the PMU samples already present in the recording,
+rather than to synthesised instruction samples.
 
-> On 17-07-2026 20:33, Petr Tesarik wrote:
-> > [You don't often get email from ptesarik@suse.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
-> > 
-> > When printing out CPU performance registers for debugging, skip
-> > MSR_ARCH_PERFMON_FIXED_CTR_CTRL if fixed counters are not implemented.
-> > 
-> > Since AMD CPUs with PerMonV2 do not implement this register, attempts to
-> > read it generate a #GP. In particular, SysRq-P logs something like this:
-> > 
-> > [   14.748144] [   T1118] sysrq: Show Regs
-> > [   14.748896] [   T1118] unchecked MSR access error: RDMSR from 0x38d at rIP: 0xffffffff937154c6 (native_read_msr+0x6/0x40)
-> > [   14.750878] [   T1118] Call Trace:
-> > [   14.751505] [   T1118]  <TASK>
-> > [   14.752057] [   T1118]  paravirt_read_msr+0x7/0x10
-> > [   14.752940] [   T1118]  perf_event_print_debug+0x135/0x240
-> > [   14.753931] [   T1118]  __handle_sysrq.cold+0x9b/0xde
-> > [   14.754855] [   T1118]  write_sysrq_trigger+0x59/0x80
-> > [   14.755779] [   T1118]  proc_reg_write+0x5a/0xb0
-> > [   14.756631] [   T1118]  vfs_write+0xce/0x430
-> > [   14.757406] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.758322] [   T1118]  ? security_file_fcntl+0x5f/0x120
-> > [   14.759083] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.759754] [   T1118]  ? __x64_sys_fcntl+0x80/0x110
-> > [   14.760334] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.761005] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.761676] [   T1118]  ? __ct_user_enter+0x27/0xc0
-> > [   14.762270] [   T1118]  ksys_write+0x6a/0xe0
-> > [   14.762776] [   T1118]  do_syscall_64+0xe1/0x610
-> > [   14.763324] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.763995] [   T1118]  ? __ct_user_enter+0x27/0xc0
-> > [   14.764564] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.765233] [   T1118]  ? do_syscall_64+0x205/0x610
-> > [   14.765806] [   T1118]  ? __x64_sys_ioctl+0x97/0xe0
-> > [   14.766375] [   T1118]  ? __pfx_woken_wake_function+0x10/0x10
-> > [   14.767048] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.767717] [   T1118]  ? get_close_on_exec+0x34/0x40
-> > [   14.768311] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.768985] [   T1118]  ? do_fcntl+0x6da/0x8e0
-> > [   14.769502] [   T1118]  ? do_syscall_64+0x205/0x610
-> > [   14.770083] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.772321] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.773166] [   T1118]  ? tty_read+0x150/0x220
-> > [   14.773722] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.774423] [   T1118]  ? filp_flush+0x5b/0x80
-> > [   14.774966] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.775660] [   T1118]  ? filp_close+0x25/0x40
-> > [   14.776214] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.776936] [   T1118]  ? do_dup2+0xae/0x140
-> > [   14.777486] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.778309] [   T1118]  ? ksys_dup3+0x67/0xf0
-> > [   14.778870] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.779600] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.780310] [   T1118]  ? __ct_user_enter+0x27/0xc0
-> > [   14.780917] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.781613] [   T1118]  ? do_syscall_64+0x205/0x610
-> > [   14.782215] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.782907] [   T1118]  ? ksys_read+0x6a/0xe0
-> > [   14.783429] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.784120] [   T1118]  ? __ct_user_enter+0x27/0xc0
-> > [   14.784741] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.785431] [   T1118]  ? __ct_user_exit+0x15/0xb0
-> > [   14.786014] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
-> > [   14.786706] [   T1118]  ? do_syscall_64+0x98/0x610
-> > [   14.787282] [   T1118]  ? exc_page_fault+0x6d/0x180
-> > [   14.787873] [   T1118]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
-> > [   14.788612] [   T1118] RIP: 0033:0x7f70d6497e0a
-> > [   14.789186] [   T1118] Code: 08 03 00 00 59 5e 48 83 f8 fc 75 1e 83 e2 39 83 fa 08 75 16 e8 05 ff ff ff 0f 1f 80 00 00 00 00 49 89 ca 48 8b 44 24 20 0f 05 <48> 83 c4 18 c3 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f
-> > [   14.791587] [   T1118] RSP: 002b:00007ffc36a93580 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
-> > [   14.792617] [   T1118] RAX: ffffffffffffffda RBX: 00007f70d65f6580 RCX: 00007f70d6497e0a
-> > [   14.793594] [   T1118] RDX: 0000000000000002 RSI: 0000556f34e41c30 RDI: 0000000000000001
-> > [   14.794574] [   T1118] RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
-> > [   14.795563] [   T1118] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
-> > [   14.796537] [   T1118] R13: 0000556f34e41c30 R14: 0000000000000001 R15: 0000000000000000
-> > [   14.797514] [   T1118]  </TASK>
-> > 
-> > Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> > ---
-> >  arch/x86/events/core.c | 7 +++++--
-> >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > index d1af33d96d0a3..8310bedfc364f 100644
-> > --- a/arch/x86/events/core.c
-> > +++ b/arch/x86/events/core.c
-> > @@ -1581,13 +1581,16 @@ void perf_event_print_debug(void)
-> >                 rdmsrq(MSR_CORE_PERF_GLOBAL_CTRL, ctrl);
-> >                 rdmsrq(MSR_CORE_PERF_GLOBAL_STATUS, status);
-> >                 rdmsrq(MSR_CORE_PERF_GLOBAL_OVF_CTRL, overflow);  
-> 
-> GLOBAL_{CTRL,STATUS,OVF_CTRL} functionality is also provided via different MSRs
-> for AMD PMU version 2 and I assume that reading the ones above will also raise
-> #GPs. If they don't, the reported values will surely be incorrect.
+The motivating use case is context-sensitive PGO, which wants a callchain
+and a branch stack describing the same point in time. Recording a cycles
+event with call-graph=fp and aux-action=pause supplies the callchain, and
+the ETM trace leading up to that sample supplies the branch stack, without
+having to trace a long-running process continuously.
 
-They do not raise #GPs on my Ryzen 7 system, but that's about the only
-system I have tried. 
+Intel PT has had this since commit f0a0251cee80 ("perf intel-pt: Add
+support for synthesizing branch stacks for regular events"), so this
+deliberately follows intel-pt: the same --itrace=L option and the same
+thread_stack__br_sample_late() call.
 
-Honetly, I was very unsure about the availability of the feauture(s)
-and what the appropriate checks would be; that was the reason to
-include you as a recipient. What is the AMD-recommended method to check
-whether a CPU supports global perf control MSRs? Does x86.pmu_version
-even work? If yes, should I then simply make the actual MSR numbers
-conditional on AMD/Intel?
+Patches 1 to 4 are independent fixes and infrastructure the feature needs:
 
-Any guidance welcome.
+  1  makes an inconsistent HEADER_GROUP_DESC non-fatal. AUX recordings
+     using aux-action pause/resume produce a group descriptor the strict
+     reader rejects, which makes an otherwise readable perf.data
+     unreadable, so without this the recipe in patch 9 cannot be decoded
+     at all. Useful on its own.
+  2  reports hw_idx as -1 rather than 0 in reconstructed branch stacks,
+     since they have no hardware index.
+  3  bounds a wrapped memcpy in thread_stack__br_sample(). Latent today,
+     reachable once a caller keeps a ring larger than the requested output
+     depth.
+  4  adds a dlfilter that drops samples with an empty branch stack.
 
-Petr T
+Patch 5 is a no-functional-change refactor splitting
+cs_etm__process_timestamped_queues() into its three parts. Heap seeding
+moves to cs_etm__update_queues(), gated on queues.new_data and mirroring
+intel_pt_update_queues(); the end-of-session flush moves to
+cs_etm__flush_timestamped_queues(); and the decode loop is left on its own
+so patch 6 can drive it once per sample. Neither seeding nor flushing can
+be repeated, which is why they have to come out first. The moved code is
+unchanged, so both loops appear as context in the diff.
 
-> 
-> > -               rdmsrq(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, fixed);
-> > 
-> >                 pr_info("\n");
-> >                 pr_info("CPU#%d: ctrl:       %016llx\n", cpu, ctrl);
-> >                 pr_info("CPU#%d: status:     %016llx\n", cpu, status);
-> >                 pr_info("CPU#%d: overflow:   %016llx\n", cpu, overflow);
-> > -               pr_info("CPU#%d: fixed:      %016llx\n", cpu, fixed);
-> > +
-> > +               if (x86_pmu.fixedctr) {
-> > +                       rdmsrq(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, fixed);
-> > +                       pr_info("CPU#%d: fixed:      %016llx\n", cpu, fixed);
-> > +               }
-> >                 if (pebs_constraints) {
-> >                         rdmsrq(MSR_IA32_PEBS_ENABLE, pebs);
-> >                         pr_info("CPU#%d: pebs:       %016llx\n", cpu, pebs);
-> > --
-> > 2.54.0
-> >   
-> 
+Patch 6 is the feature and patch 7 adds a shell test.
+
+Patch 8 is where review attention is most useful. --itrace=L attaches
+whatever the thread stack holds when a sample is processed. With a duty
+cycled trace most samples fire while the trace is off; they have nothing
+newly decoded, but the thread stack still holds the previous window, so
+they were being given branches that ran an arbitrary amount of time
+earlier. On a 12 s capture with pause period 100003 and resume period
+8350251, of 335291 samples that received branch history only 3371 were
+backed by trace decoded for that sample.
+
+A trace window belongs to exactly one sample, and with AUX pause and
+resume the sample is what stops the trace, so the pairing is one to one by
+construction. Patch 8 therefore takes the branch history when attaching it
+instead of copying it, and a later sample with nothing newly decoded finds
+an empty branch stack, which the dlfilter removes.
+thread_stack__br_sample() is unchanged, so lowercase --itrace=l keeps the
+overlapping branch stacks it produces today.
+
+Patch 9 documents the workflow.
+
+Because the sample is what stops the trace, the history attached to it
+lines up well with the callchain: on a brstack capture the leaf of the
+callchain matched the function containing the newest branch stack entry's
+target for 93.5% of attached samples. The residual comes from the decode
+loop stopping on interpolated timestamps, so a few branches that ran just
+after the sample can still be included. Trimming those with the sample ip
+raises it to 96.8%, but that matters far more for free-running ETM
+strobing than for pause and resume, so I have left it out of this series
+and will send it separately.
+
+Patch 8 could be squashed into patch 6, since patch 6 on its own produces
+mostly stale history. I kept them apart so the decode mechanism and the
+attachment policy can be reviewed separately, but I am happy to fold them.
+
+Testing
+-------
+
+Built with:
+
+  make -C tools/perf NO_LIBELF=1 NO_LIBTRACEEVENT=1 CORESIGHT=1
+
+Every patch builds individually. checkpatch reports only "does MAINTAINERS
+need updating?" for the two new files and "quoted string split across
+lines" for the dlfilter description string, which matches how
+dlfilter-show-cycles.c already writes it.
+
+Tested on Arm Neoverse V2 with CoreSight ETM:
+
+  - perf test "CoreSight branch history on existing samples": Ok, 3 for 3
+  - captures from 5 MiB to 2.5 GiB decoded with --itrace=L64, no decode
+    errors
+  - the other CoreSight tests are unchanged by this series; four of them
+    fail identically at the base commit on this machine
+
+Amir Ayupov (9):
+  perf header: Tolerate inconsistent HEADER_GROUP_DESC
+  perf thread-stack: Report branch stack hw_idx as not available
+  perf thread-stack: Bound wrapped branch stack copy
+  perf dlfilter: Add non-empty branch stack filter
+  perf cs-etm: Split up cs_etm__process_timestamped_queues()
+  perf cs-etm: Add branch history to existing samples
+  perf test cs-etm: Test branch history on existing samples
+  perf cs-etm: Consume branch history when attaching it to a sample
+  Documentation: coresight: Document context-sensitive PGO workflow
+
+ .../trace/coresight/coresight-perf.rst        |  62 +++++
+ tools/perf/Makefile.perf                      |   1 +
+ .../dlfilters/dlfilter-nonempty-brstack.c     |  26 ++
+ .../tests/shell/coresight/add_last_branch.sh  | 175 +++++++++++++
+ tools/perf/util/cs-etm.c                      | 242 ++++++++++++++++--
+ tools/perf/util/header.c                      |  42 ++-
+ tools/perf/util/thread-stack.c                |  21 +-
+ tools/perf/util/thread-stack.h                |   1 +
+ 8 files changed, 544 insertions(+), 26 deletions(-)
+ create mode 100644 tools/perf/dlfilters/dlfilter-nonempty-brstack.c
+ create mode 100755 tools/perf/tests/shell/coresight/add_last_branch.sh
+
+
+base-commit: da85966dfd23a3b03e00ee3bce6ad301f0a2b229
+-- 
+2.52.0
 
