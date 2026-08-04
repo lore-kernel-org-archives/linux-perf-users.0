@@ -1,128 +1,75 @@
-Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com [209.85.167.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDA92305691
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Aug 2026 21:25:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BF63DAAA7;
+	Tue,  4 Aug 2026 23:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785878730; cv=none; b=WosCGJgdsOYtnjAmJj9XIVXZ36o14+VSgId1lTX8e2xO5NZVyGPL9E96r79j1OtIMm03t9iQpW/6bsd1ZkJUB4Wbw3tCh/hEPF2Zto0CmKJV/qQnKxLUrMCUz1LddMM4cb+86J/uhgnVD54dtZ/Ahnmo1rgYTANX3c9QyREzjiY=
+	t=1785885940; cv=none; b=EQaiJHsC4rv+2tLip0AObJdl3mYjvM5D00ujxyojVRym+QWdwkySrA7A6aV0GOcb2NjiVNwLhcCjPN5ljmDRaG3+13pUeVEyGhEWjgbMwds0hEyC2413ZMm13MTAQain3CyaXPRWeTWnsUd8wK362FpyRh/NAdthp71yZYFxzEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785878730; c=relaxed/simple;
-	bh=huPoN5bucRUnQLu5sCfSPLzeR3X2OREye170NNUzpZQ=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=o1aBbrvNBvV9nbFkzF/3VU2nMdji6NqJT4FLpylkj0vV0IyTUFMCBdIhU4kISGBUS5J5HeuSlccyLQYhRLxY6O5vDo00C0fbw6Zro+5WFf+YnLjNldLfuFW+ScRrbCw/jhWU0nt8lmI4P6wqwh1WFtWFJRiBY2RCdcF92+Dr3zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=j6TrE47T; arc=none smtp.client-ip=209.85.167.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+	s=arc-20240116; t=1785885940; c=relaxed/simple;
+	bh=KR0N+ffIJeKukvlkCual0w0q+VyUBNnBzz5GJocGm4w=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hLlvA+jLN/0w7EndFvEs7YjVjVM6dcnvmKTVN23mmBXX4CN6uts5tvEPsKYICHb0AmUuqF7fgUxjwlapDwnLzz24Wmx18nmF0HDl4/AwVWWNzTgfuIXLbg4vkZVMD7M08VNcHiv+PCyLIaVyNFIeTpv0omn2nuhsoI3vNZp9+pY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gBueRxty; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="j6TrE47T"
-Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-4ab8b646492so402575b6e.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Aug 2026 14:25:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785878728; x=1786483528; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=OoNJERa7N+ihiUvZZhE29iP6C+dCF84EVkVoe6Oj4kU=;
-        b=j6TrE47TkiIUjqnqlxoibCfkMDopXAbDeHw3P8PWSxhionCIkjmotZAneHaM2R5Arl
-         zq6WLxtaMGNVcFJGkYUjv+nZTiUNqA+kgflFavBQPIDM6/GaOt6TU4EvfqAjCe8Bmmll
-         3l32UBCHa40KWBQBXv7DRIErZJ28LY2IZa6ckXrOZOpZQ6u4ANf2xllwhXuYYth5u9md
-         2S90slRmai/s2f6MTNtUxESnZ+WBdxCaN3++F0VcX/V5O0JDn3qvwiPLE6M09bNr+mM1
-         WLgdQvSoD3rtPeUNYsyIdwM9TQiCe5ch6vrCTM/f9ZQ30SkZturjP8JclHfckIJqP0Lv
-         DDwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785878728; x=1786483528;
-        h=content-type:cc:to:from:subject:message-id:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=OoNJERa7N+ihiUvZZhE29iP6C+dCF84EVkVoe6Oj4kU=;
-        b=afYY0m3hx579clUQ2bzhQDO5ymhGeH6KgRIGtbEMMejzE1CJxhtrst6qa8JzYytcXP
-         JWq1o8wM4NHFo7+64N/slGCapmOmGxtWbQzvuuSBNv9l0XZMN4AATMZj1VkaaiS6PcEz
-         tIr4CfsG8k6MW2XRvwmuOhqtuHMxC8Xbn0c6n1dB4NTvpi5ivtZEUOLPWkhVAImTbGoa
-         xbUBv06o9gDoTONAdeogCCLsbv9ht2e6+CdWxxAUGkYGEcZZXFyNXrTyn2wM7+otc1yA
-         2ZLJ/OmYWDt+9DLPjI/FkHRid4igNyzCuc+y06i5/rVBSNEltj1FmhRSR/oHKavoZb58
-         S+kA==
-X-Forwarded-Encrypted: i=1; AHgh+Rod+r29Hil6kHNp0E1nL7yzXNrOjVBl9Z/csTP6CtM4dSl7Xq4FeHnspwRcxEoLnUCtYVQ97dFtv58epxUPKLHB@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFP5+U+uBvesHrKZ+Xo7GW7HnqNrLvbLbzc0O6WzUWQS6sYSYN
-	V/bsDNi5hcKMa4vY2CVN2JX/YVp6bVenM0ao4u8CqZyP7kE3gh8vB8cyDGjT7+4JOaLZnyCK7f/
-	/LEFzRt+g4dLoZCeUa4E10rGt/Q==
-X-Received: from iobmp17-n2.prod.google.com ([2002:a05:6602:a2d1:20b0:9ab:7c1:c30a])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:3986:b0:495:f85b:d08f with SMTP id 5614622812f47-4afadfd7dc5mr1041308b6e.18.1785878727621;
- Tue, 04 Aug 2026 14:25:27 -0700 (PDT)
-Date: Tue, 04 Aug 2026 21:25:27 +0000
-In-Reply-To: <b8b1fbe4-fb73-418a-b43d-086894d31ce8@arm.com> (message from
- Robin Murphy on Tue, 28 Jul 2026 16:07:44 +0100)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gBueRxty"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A319F1F000E9;
+	Tue,  4 Aug 2026 23:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785885938;
+	bh=F6bnoC0uo9IGH0cOMPy+k1Qy1T/eK3SlwaiW/6NceV8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References;
+	b=gBueRxtyL1mYzDbdrW1e1N7tJhLUFwak5BnADb3TTiKTMI8GgbFrsgcLbu9h1r5XV
+	 C/JzFyfCPosyAq5jIus7ub1cVMkTq4YRt7Oab3wFFCTp2FEL3KtMUa35qCLyMJGCqQ
+	 kfUb0AU531BxfUHzqqbIVgwwy7JuKJbEukRQbDZOTg+jOHJkZGHB3uNRwlKe0JMGWK
+	 BgBUCf9F1wWcsLr5un2yHLDN+CqJ+dJcmkCtbnPl18D+cp7jWUCueGLlTPMGxOVmuv
+	 PHWv7TIUX3DOlXqodhjRXiHEm6E1ZNYWVIuH/iKDBkcouOzjVwyKZWWDPkObtBeEgn
+	 lJMokykGIaYTw==
+Date: Tue, 4 Aug 2026 17:25:33 -0600 (MDT)
+From: Paul Walmsley <pjw@kernel.org>
+To: Atish Patra <atish.patra@linux.dev>
+cc: Jiri Olsa <jolsa@kernel.org>, Paul Walmsley <pjw@kernel.org>, 
+    Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, 
+    Anup Patel <anup@brainfault.org>, Namhyung Kim <namhyung@kernel.org>, 
+    Arnaldo Carvalho de Melo <acme@kernel.org>, 
+    Krzysztof Kozlowski <krzk+dt@kernel.org>, Ian Rogers <irogers@google.com>, 
+    Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>, 
+    linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+    linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+    linux-perf-users@vger.kernel.org, Conor Dooley <conor@kernel.org>
+Subject: Re: [PATCH v8 01/22] RISC-V: perf: fix resource cleanup on driver
+ probe failure
+In-Reply-To: <20260701-counter_delegation-v8-1-7909f863a645@meta.com>
+Message-ID: <bec23082-4f4c-0dc6-e6d7-3d64c8e22df2@kernel.org>
+References: <20260701-counter_delegation-v8-0-7909f863a645@meta.com> <20260701-counter_delegation-v8-1-7909f863a645@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Message-ID: <gsntpkzxvarc.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH 05/21] perf: arm_pmuv3: Check cntr_mask before using pmccntr
-From: Colton Lewis <coltonlewis@google.com>
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: kvm@vger.kernel.org, alexandru.elisei@arm.com, pbonzini@redhat.com, 
-	corbet@lwn.net, linux@armlinux.org.uk, catalin.marinas@arm.com, 
-	will@kernel.org, maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com, 
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
-	mark.rutland@arm.com, shuah@kernel.org, gankulkarni@os.amperecomputing.com, 
-	james.clark@linaro.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 
-Hi Robin, thanks for the review
+On Wed, 1 Jul 2026, Atish Patra wrote:
 
-Robin Murphy <robin.murphy@arm.com> writes:
+> From: Atish Patra <atishp@meta.com>
+> 
+> Sashiko pointed out various UAF and memory leak issues around
+> pmu_sbi_device_probe() error paths.
+> 
+> If the probe fails, here are list of cleanups needed.
+> a. Already registered pmu must be freed
+> b. per cpu IRQ must be released
+> c. pmu_ctr_list data structure must be freed
+> d. cpu hotplug state must be cleaned up only if added.
+> 
+> Fix the resource cleanup by reorganizing the code around probe failure.
+> 
+> Reported-by: Sashiko AI <sashiko-bot@kernel.org>
+> Signed-off-by: Atish Patra <atishp@meta.com>
 
-> On 12/06/2026 8:28 pm, Colton Lewis wrote:
->> Check cntr_mask before using pmccntr to ensure it's available. With a
->> partitioned PMU, there may be instances where pmccntr is being used by
->> the guest and will be absent from cntr_mask.
+Thanks, queued for v7.3.
 
->> Signed-off-by: Colton Lewis <coltonlewis@google.com>
->> ---
->>    drivers/perf/arm_pmuv3.c | 3 ++-
->>    1 file changed, 2 insertions(+), 1 deletion(-)
 
->> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
->> index 1cceb1f614515..17bb1cfdc271c 100644
->> --- a/drivers/perf/arm_pmuv3.c
->> +++ b/drivers/perf/arm_pmuv3.c
->> @@ -1028,7 +1028,8 @@ static int armv8pmu_get_event_idx(struct  
->> pmu_hw_events *cpuc,
-
->>    	/* Always prefer to place a cycle counter into the cycle counter. */
->>    	if (armv8pmu_can_use_pmccntr(cpuc, event)) {
-
-> Something smells wrong here - we can use PMCCNTR but we can't?
-
->> -		if (!test_and_set_bit(ARMV8_PMU_CYCLE_IDX, cpuc->used_mask))
->> +		if (test_bit(ARMV8_PMU_CYCLE_IDX, cpu_pmu->cntr_mask) &&
-
-> ...i.e. this test would seem to belong in the helper function.
->> +		    !test_and_set_bit(ARMV8_PMU_CYCLE_IDX, cpuc->used_mask))
->>    			return ARMV8_PMU_CYCLE_IDX;
->>    		else if (armv8pmu_event_is_64bit(event) &&
->>    			   armv8pmu_event_want_user_access(event) &&
-
-> Plus it also doesn't make much sense to fall through to the "we _could_
-> accommodate this event if only PMCCNTR was free" case here if we know
-> PMCCNTR can never be free because it's not even available.
-
-I agree it would be a good idea to refactor these if statements.
-
-Probably something like:
-
-/* tests moved to `armv8pmu_can_use_pmccntr` */
-if (armv8pmu_can_use_pmccntr()) {
-	set_bit(ARMV8_PMU_CYCLE_IDX, cpu_pmu->used_mask);
-         return ARMV8_PMU_CYCLE_IDX;
-}
-
-if (armv8pmu_event_is_64bit(event) &&
-     armv8pmu_event_want_user_access(event) &&
-     !armv8pmu_has_long_event(cpu_pmu))
-	return -EAGAIN;
+- Paul
