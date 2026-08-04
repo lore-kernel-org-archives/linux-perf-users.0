@@ -1,45 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDF0B483BE9;
-	Tue,  4 Aug 2026 17:11:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E7346AA76;
+	Tue,  4 Aug 2026 17:16:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785863497; cv=none; b=tZB+8g+mMBYasAqJdpn6WPyWQCgS7oSen4B1abgSJ1+kZkscvZnhFVFdJr1lUzFWszasye4QuDJ9yEPS+YPRCxDg8tnZIm3kLCCwIdpfYDrMzTinhf9UyB1dbaAYpyMwItLVRrnriDFiWhh+z0nOnlCj9SL1iVmY4CRpCJlzfqM=
+	t=1785863774; cv=none; b=QVilxGvngPJleryUwbtkVrC30malBO5Mh/KqhGQQAEWHHbePri7we0avbKvBvvjDktZ4ghb1berI2CDWnim8AuUaPAORNVyHWghVqBS3PGKV6uOEES23mjzm14C4JhmP8+BAgdkCSFSMct6RvTl8WvDrhEriMHBKjsft+3aMHdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785863497; c=relaxed/simple;
-	bh=snErptEN7swa2qfyvgS3TMKj15+lzYb7uwBNWnxs5b0=;
+	s=arc-20240116; t=1785863774; c=relaxed/simple;
+	bh=+UhG3zAbCzryuhJl5ulcHn4rRXU7jh8zBKSUT7+NM0I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UUUgkx3zjpaKbSPTbWZ/NPyDH8YxtSiVHqzUm6zRoBWWy04qKVdvFseVNUGcPIp1iV2sIsoddPJpP5w18QD/XZbkvbnR9DntMZcWsjUDTaIcfjn8tFxwkJY5ua/zyqVGgl1vSHMvRzEs8cWA7DR5PVHdhzxQOrqVaVpm1W26BDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U15hPaqr; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=ux1Sqixl9GsuCunvDqqXiSJlcHQjHGmyGmq0zplhV9mc/8i9VJHGIQ3vyGHDDWqcAEJW9HZOfMZiafj3CRka+eWkUUTgS+wC56GuFapBCoWMCvVzlB1II67BF4Rm9jegv4coBZo2wjpVBDjWMlGCHosQJLv8BcBYCLpvCXInD2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gVsEqxER; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U15hPaqr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE6761F000E9;
-	Tue,  4 Aug 2026 17:11:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVsEqxER"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0582B1F000E9;
+	Tue,  4 Aug 2026 17:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785863486;
-	bh=hTC479HM7EHrH2maTiTAeS9hJ7C7HZJRusCjnPicEaE=;
+	s=k20260515; t=1785863762;
+	bh=7sNZpEQ0zMR1Ta0y6y9ln6xHRlY7xpsNchHx3GFDdME=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=U15hPaqruBCd+lm/EnJ37nSj7UFeNNbVlD+1JhEGVUv7n1MnJApWV44sboijqUJsD
-	 w9EZY7bl7e3uTvGAMVS1QkzD85hya6mN99PgsTy2DZ9TB6ORGOdL13cIdXPEY9azcD
-	 mRo8D25WnrI9raQBlRUAIjr+1Btyv82wKAmgFFHWiSQmpw4MaIf5AK4NMngpKfw9dy
-	 uRt02xaMMQL5CmBEyDslGG49NhnrBXUUhB8Sq3UMI8tUlsCEVaRw26mVJnrS/UMetL
-	 hZF/Q79/eHUC9HxycloUPXps3npVBV28+69A5fGXj0NOU9CnnJR7mN8aXIO+2bURVk
-	 etzzgloFpf4sw==
-Date: Tue, 4 Aug 2026 10:11:23 -0700
+	b=gVsEqxERy5tKiimCIoGtPqXMpE+prx4NpFwbJVR8CX8wSUQn/rJYZMeaC1uVyJ2Xs
+	 aDCbTSPk4RDUIuENyUIS6hsIagIEzNVWU7FcyNpRDsJ22B7qEYTNJgeXZVA/Fgqyl4
+	 7TpniFDr1nPl3lJo5lqT8/GmTVAOUpmX7DUBYAZruGUvisliBBp34lUr37u9469Wl9
+	 z8nScm4SMJAx3QcaanSm9zkLOIcJ0tNTBNhoD9ZD4uYJV7TH6E0H0bAS2W27pIhnhw
+	 +Stqa+PeNevSRLakRAY3wGgk/dzQdthjAVetT5mD5nzjQNtF1JOztebu3F2Dcr9No/
+	 cqf2WSnD/yJdg==
+Date: Tue, 4 Aug 2026 10:15:59 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Aaron Tomlin <atomlin@atomlin.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, howardchu95@gmail.com, neelx@suse.com,
-	chjohnst@mail.com, sean@ashe.io, steve@abita.co,
-	rishil1999@outlook.com, linux-perf-users@vger.kernel.org,
+To: Jiebin Sun <jiebin.sun@intel.com>
+Cc: acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
+	irogers@google.com, james.clark@linaro.org, jolsa@kernel.org,
+	mark.rutland@arm.com, dapeng1.mi@linux.intel.com,
+	thomas.falcon@intel.com, tianyou.li@intel.com,
+	wangyang.guo@intel.com, linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 0/4] perf sched latency: Refine outputs, unit scaling,
- and histogram support
-Message-ID: <anIdO3ejoRWTF_0V@google.com>
-References: <20260802210914.199941-1-atomlin@atomlin.com>
+Subject: Re: [PATCH v6 0/9] perf c2c: add a function view
+Message-ID: <anIeT4yBy6WX2ky5@google.com>
+References: <20260803035220.172022-1-jiebin.sun@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,176 +47,172 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260802210914.199941-1-atomlin@atomlin.com>
+In-Reply-To: <20260803035220.172022-1-jiebin.sun@intel.com>
 
-On Sun, Aug 02, 2026 at 05:09:10PM -0400, Aaron Tomlin wrote:
-> This patch series improves 'perf sched latency' by suppressing misleading
-> empty table output, extending pipe mode stream processing, introducing
-> dynamic unit auto-scaling for latency and runtime statistics, and adding
-> latency histogram visualisation alongside time-span filtering.
-> 
-> Patch 1 addresses an issue where 'perf sched latency' fell through and
-> returned success (0) when perf_session__has_traces() failed due to missing
-> tracepoint events in a perf.data file. This caused empty header tables and
-> zeroed summary statistics to be rendered. In addition,
-> thread__get_runtime() in map_switch_event() is guarded against potential
-> NULL pointer dereferences under memory allocation failures.
-> 
-> Patch 2 extends pipe mode stream support. Because event attributes in pipe
-> mode are received dynamically during event processing, session->evlist is
-> not populated prior to event processing.
-> To handle pipe input correctly:
->     - Missing callbacks (.attr, .tracing_data, .build_id, and .feature) are
->       registered in cmd_sched() so header events are parsed correctly
-> 
->     - The handlers array is promoted to file-scope (latency_handlers[]) and
->       evlist__set_tracepoints_handlers() is invoked dynamically inside
->       perf_sched__process_tracepoint_sample() when evsel->handler is NULL
-> 
->     - Trace presence checks are performed post-processing when handling
->       pipe data, while non-pipe files continue to abort early upfront
-> 
-> Patch 3 introduces dynamic auto-scaling for latency and runtime display
-> columns (Runtime, Avg delay, Max delay). Previously, all values were
-> unconditionally formatted in milliseconds (ms), making microsecond- or
-> second-scale latencies difficult to read. Columns are now dynamically
-> scaled to the most appropriate unit (ns, us, ms, s), column headers are
-> updated, and format specifiers are aligned character-for-character with
-> table headers.
-> 
-> Patch 4 adds three new command-line options to 'perf sched latency':
->     --histogram (-H):
->             Displays an ASCII bar chart of CPU wait latencies between
->             snapshots
->     --hist-mode:
->             Configures the bucketing scheme to either logarithmic (log) or
->             100 us equal-width linear (linear) mode
->     --time:
->             Filters trace event processing to a specified [start,stop] time
->             span
+Hello,
 
-Can you please also add a test case to check the basic functionality?
+On Mon, Aug 03, 2026 at 11:52:11AM +0800, Jiebin Sun wrote:
+> This series adds a new "function view" to perf c2c report, on top of the
+> existing cacheline view. Existing cacheline-view data and operations remain
+> unchanged; TAB adds access to a complementary way to inspect the same
+> cache-to-cache (C2C) data.
+> 
+> v1: https://lore.kernel.org/linux-perf-users/20260626070355.1556721-1-jiebin.sun@intel.com/
+> v2: https://lore.kernel.org/linux-perf-users/20260710084247.3576706-1-jiebin.sun@intel.com/
+> v3: https://lore.kernel.org/linux-perf-users/20260717020530.1645123-1-jiebin.sun@intel.com/
+> v4: https://lore.kernel.org/linux-perf-users/20260724095842.995920-1-jiebin.sun@intel.com/
+> v5: https://lore.kernel.org/linux-perf-users/20260730090521.2206375-1-jiebin.sun@intel.com/
+> 
+> Changes since v5
+> ================
+> 
+>   - Give the function-view children their own references instead of
+>     borrowing them, as suggested by Namhyung. They set ops and take refs
+>     via map_symbol__copy() and thread__get(), so hist_entry__delete()
+>     frees them; the custom child destructor and the
+>     WARN_ON_ONCE(report_hierarchy) guard are gone.
+> 
+>   - Add NO_SLANG stubs for the two TUI entry points declared in c2c.h,
+>     matching how util/hist.h declares its own.
+> 
+>   - Spell out in the symbol renderer why the length returned by
+>     se_snprintf() cannot exceed the cell.
+> 
+>   - Rebase onto perf-tools-next at d04ef71492fa.
+> 
+> No intended change to the rendered output, cacheline-view data, existing
+> cacheline operations, or --stdio output.
+
+I'm about to merge the series.  But please consider a follow-up work to
+add support for --stdio and add a test case.
 
 Thanks,
 Namhyung
 
+
 > 
-> Changes since v6:
+> Changes since v4
+> ================
 > 
->  - Fixed O(N) hot-path traversal overhead in
->    perf_sched__process_tracepoint_sample() for unhandled tracepoints by
->    assigning a dummy ignore handler (process_sched_ignore)
+>   - Rebase onto perf-tools-next at 0d40fedcd1b9.
 > 
->  - Replaced evlist__set_tracepoints_handlers() in sample processing with a
->    per-evsel lookup to prevent -EEXIST early aborts and avoid dropping
->    late-arriving pipe events
+>   - Require `iaddr` in --coalesce before entering the function view;
+>     without it, coalesced samples cannot be reliably attributed.
 > 
->  - Updated commit message for the pipe mode patch to reflect the
->    single-pass handler assignment logic
+>   - Reuse each source cacheline's existing index as the level-3 identity,
+>     so same-address sources no longer merge and 'd' finds the original
+>     entry, without adding fields to the shared C2C structures.
 > 
->  - Link to v6: https://lore.kernel.org/lkml/20260801234008.176724-1-atomlin@atomlin.com/
+>   - Keep same-function reader/writer pairs, which the coalesced view cannot
+>     reliably tell apart from cross-thread contention.
 > 
-> Changes since v5:
+>   - Robustness and cleanup: build the hierarchy only from filtered
+>     cachelines with a lightweight entry allocator; explicit
+>     mem_info__new() handling; a local bound in the symbol renderer; a
+>     NULL-map guard; deterministic tie-breaks; function-view-local row
+>     recounting; Ctrl-C as an exit key; and expanded man-page docs.
 > 
->  - Split pipe mode trace sample handling from Patch 1 into a standalone
->    patch (Namhyung Kim)
+> Changes since v3
+> ================
 > 
->  - Added a Fixes: tag to the pipe mode patch referencing commit
->    27295592c22e ("perf session: Share the common trace sample_check routine
->    as perf_session__has_traces")
+> Reworked the function view into a true function-centric hierarchy, as
+> discussed with Namhyung:
 > 
->  - Updated commit log with before and after illustrations of table header
->    formatting
+>   - Level 1 is the read-side function itself, aggregating all of its code
+>     addresses into one entry and sorting by Cycles %.
 > 
->  - Link to v5: https://lore.kernel.org/lkml/20260730185416.97166-1-atomlin@atomlin.com/
+>   - Level 2 is the contending function that writes the shared lines,
+>     aggregated across cachelines and sorted by store count. Level 3 is the
+>     specific cachelines.
 > 
-> Changes since v4:
+>   - Dedicated code-address and offset columns were removed from the main
+>     view. Verbose function formatting can still include a representative
+>     code address, and full code-address information remains available in
+>     the per-cacheline detail view ('d').
 > 
->  - Added the missing .feature callback to sched.tool in cmd_sched()
+>   - Lower-level entries are indented like the normal perf report hierarchy
+>     view, and entries with no contending writer are pruned.
 > 
->  - Fixed memory leak by reusing uncompleted work atoms when sched_in events
->    are skipped or lost
+>   - Reorganized the series from 14 mechanical patches into 9 logically
+>     self-contained patches.
 > 
->  - Promoted the handlers array to file-scope (i.e., latency_handlers[]) and
->    added a dynamic lookup via evlist__set_tracepoints_handlers() inside
->    perf_sched__process_tracepoint_sample() whenever a sample arrives with
->    an unattached handler (i.e., evsel->handler == NULL)
+> Changes since v2
+> ================
 > 
->  - Prevented double-counting wakeups (i.e., ignore sched:sched_wakeup)
->    in pipe mode and non-pipe modes
+>   - Prefix helpers exported from builtin-c2c.c with c2c_, as suggested by
+>     Namhyung.
 > 
->  - Added missing trailing pipe in output_lat_thread's new auto-scaling
->    format string
+> Changes since v1
+> ================
 > 
->  - Stripped redundant prefix strings from each row's format string to
->    produce a clean, tabular output
+>   - Add a worked man-page example, as suggested by Namhyung.
 > 
->  - Link to v4: https://lore.kernel.org/lkml/20260729144451.38286-1-atomlin@atomlin.com/
+> In the perf c2c TUI, press TAB in the cacheline view to switch to the
+> function view. It presents a three-level hierarchy:
 > 
-> Changes since v3:
+>   Level 1: read-side function, sorted by Cycles %
+>   Level 2: functions writing the shared lines, sorted by store count
+>   Level 3: cachelines where the two functions contend
 > 
->  - Registered Missing Callbacks. In perf_tool__init configuration inside
->    cmd_sched(), added the .attr, .tracing_data, and .build_id callbacks.
->    Without these callbacks, pipe mode drops header attributes entirely,
->    preventing tracepoints from being populated in session->evlist
+> For example, with dequeue_pushable_task expanded to its level-2 writers and
+> two of those writers expanded to their level-3 cachelines:
 > 
->  - Introduced an explicit post-processing pipe check. This ensures that
->    pipe mode aborts correctly and does not produce superfluous empty
->    latency tables when no trace samples are available
+>   Shared Data Functions Table     (19 entries, sorted on Cycles %)
+>      Cycles    Store
+>           %    count  Function / Contending function / Cacheline
+>   ----------------------------------------------------------------------
+>   +  35.67%      876  + [k] cpupri_set
+>   +  24.31%      424  + [k] pull_rt_task
+>   -  16.53%      555  - [k] dequeue_pushable_task
+>                  145    - [k] pull_rt_task
+>                  145        0xff2d0082809da080
+>                  139    - [k] enqueue_pushable_task
+>                   70        0xff2d00a2071f9640
+>                   69        0xff2d0082809da000
 > 
->  - Prevented potential NULL pointer dereference. Added a NULL check for
->    thread__get_runtime() in map_switch_event() under memory allocation
->    failures
+> A level-1 store count decomposes into its level-2 writers, and each writer's
+> count decomposes into its level-3 cachelines (here 145 = 145, 139 = 70 + 69).
 > 
->  - Fixed column alignment. Modified format specifiers to align
->    character-for-character with header column widths across all rows
+> Keys in the function view:
 > 
->  - Adjusted header label padding. Updated header label padding and column
->    width delimiters in perf_sched__lat() to match the exact field format
->    specifiers printed in output_lat_thread()
+>   TAB/ESC/q/Ctrl-C   return to the cacheline view
+>   d                  show details for the selected level-3 cacheline
+>   e / +              expand / collapse the selected entry
+>   ?                  help
 > 
->  - Fixed swapper histogram inclusion. Excluded "swapper" (i.e.,
->    CPU-specific idle thread) from global_hist buckets
+> The function view is a separate hist_browser in
+> tools/perf/ui/browsers/c2c-function.c. Shared types and helpers used by
+> both views are factored out of builtin-c2c.c into c2c.h. The hierarchy is
+> constructed from the existing cacheline histograms into dedicated hists
+> and rendered with custom column formatters.
 > 
->  - Preserved task state machine across --time bounds. Moved time-window
->    filtering inside add_sched_in_event() to gate latency statistics
->    recording without breaking wakeup state tracking across time interval
->    boundaries
+> Testing: each commit builds individually; the full series builds with and
+> without SLANG support; perf test c2c passes (one permission-related skip);
+> cacheline --stdio output is byte-identical to the base commit; and the
+> perf-c2c man page builds.
 > 
->  - Link to v3: https://lore.kernel.org/lkml/20260726032533.712462-1-atomlin@atomlin.com/
+> Jiebin Sun (9):
+>   perf c2c: extract shared data structures into c2c.h
+>   perf c2c: add function view browser skeleton
+>   perf c2c: add column rendering for function view
+>   perf c2c: add HPP list parsing for function view columns
+>   perf c2c: add function view stats merge and memory management
+>   perf c2c: add function view hierarchy entry creation
+>   perf c2c: build and finalize the function view hierarchy
+>   perf c2c: add function view browser UI and cacheline detail
+>   perf c2c: document function view in perf-c2c man page
 > 
-> Changes since v2:
+>  tools/perf/Documentation/perf-c2c.txt |   71 +
+>  tools/perf/builtin-c2c.c              |  130 +-
+>  tools/perf/c2c.h                      |  155 +++
+>  tools/perf/ui/browsers/Build          |    1 +
+>  tools/perf/ui/browsers/c2c-function.c | 1783 +++++++++++++++++++++++++
+>  5 files changed, 2021 insertions(+), 119 deletions(-)
+>  create mode 100644 tools/perf/c2c.h
+>  create mode 100644 tools/perf/ui/browsers/c2c-function.c
 > 
->  - Ensured vertical pipe separators align across all latency table columns
 > 
->  - Excluded "swapper" (idle thread) latency samples from global_hist
-> 
->  - Preserved task state machine transitions across --time boundaries
-> 
->  - Suppressed empty table headers, total lines, and histogram graphs when
->    no matching trace samples exist (e.g., when --time, --CPU, or --pids
->    exclude all samples), outputting "No matching trace samples found."
->    instead
-> 
->  - Linked to v2: https://lore.kernel.org/lkml/20260725173341.679782-1-atomlin@atomlin.com/
-> 
-> Changes since v1:
-> 
->  - Fixed integer overflow in latency_bucket() (Ian Rogers)
-> 
->  - Linked to v1: https://lore.kernel.org/lkml/20260724142901.634761-1-atomlin@atomlin.com/
-> 
-> Aaron Tomlin (4):
->   perf sched: Suppress latency table output when trace samples are
->     missing
->   perf sched: Handle missing trace samples in pipe mode
->   perf sched latency: Auto-scale latency and runtime display units
->   perf sched latency: Add histogram and time interval options
-> 
->  tools/perf/Documentation/perf-sched.txt |   6 +
->  tools/perf/builtin-sched.c              | 338 +++++++++++++++++++++---
->  2 files changed, 301 insertions(+), 43 deletions(-)
-> 
+> base-commit: d04ef71492fad7230d474efe33d05f4c0563d409
 > -- 
-> 2.55.0
+> 2.52.0
 > 
