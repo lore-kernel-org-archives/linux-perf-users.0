@@ -1,157 +1,320 @@
-Received: from mail-oi1-f199.google.com (mail-oi1-f199.google.com [209.85.167.199])
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B635C3E5EF1
-	for <linux-perf-users@vger.kernel.org>; Tue,  4 Aug 2026 21:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD984399E2
+	for <linux-perf-users@vger.kernel.org>; Tue,  4 Aug 2026 21:07:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785877589; cv=none; b=YQvgs4q5hd1oX+OfEl8HXYXO6l5BMjykOX7P+X8PQyxc9X2FSPg+/mrk1tDHU17P3SVNc/ZZdzClCbZ3KAyDIlk36pKw8BxxFUAtXwat8B2xw76Dv/Q3MkPDf1UJwcerdEWMknpxwR3EWRdo+SHfK71FL3zPSbgby/iuIIus3ok=
+	t=1785877636; cv=none; b=GkWU+ijCTfPzODJhq2ITVXIJRCK++15kD09kouJFSae4E3ViYdF42QKnn8FYqage8QxT62y+sHl8/Hq/FaBcROPNKJwCe7Sxsy+o/jU1r6AUTBMBk4x6qe9JgMcDIdH32TebxaVcr7IMuPrq5Hm4nsdIAC5aHlZ6NBhQgbOTDYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785877589; c=relaxed/simple;
-	bh=pfxpbIeNFSc0ZoYnjnPfD4XHfZ+dclFczBOLL7vzNQ4=;
-	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=dqDWUvb8lNMNe7uvvF7eGuAru3eoRLrwjXYsmgvP8R1At0ZQ9zynxNBqPZaXa28CbKlnHih9U0BxIKr03Gk1RFbhLq8LfI/0Wci+MZ3PBUQstdohY6wPgXeOzbjHZxvSf3SqrEbhMMjuuLNQo3WPZVe4eymvdxfW6c5/teBqNMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VAxrX+kA; arc=none smtp.client-ip=209.85.167.199
+	s=arc-20240116; t=1785877636; c=relaxed/simple;
+	bh=Db0r9KExC2kHjk21Z5Mzc886/cJBw8aUc7g53hi/VSo=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=XsyBybUp2E6qVJMfUiyuQqvV0armtk4+qqr401fKHUMnO+R8AY92z9TLEQtmjfLEE8Qd7NBkbimtZ+pz4pZVMtzPlhF8MKJ/Mojx+0H+nQC3r3dvopJ6mh40kzp2CAQdFYNfN+xKJtKzoFMS7Bcs2u5aNS9XWJF6uq18XiNKOo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mc5wvCcr; arc=none smtp.client-ip=209.85.216.71
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VAxrX+kA"
-Received: by mail-oi1-f199.google.com with SMTP id 5614622812f47-4ab4af22d09so332852b6e.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 04 Aug 2026 14:06:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mc5wvCcr"
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-38f5ac7416eso330508a91.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Aug 2026 14:07:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785877587; x=1786482387; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=i5gQ2rzJspE7/RJU8+W1PyPQZBbheaHsGbRmii6HKrA=;
-        b=VAxrX+kA5FQwKeL5zZ9VscSZ9ZYnlN6k0HLBpqDAV1U028F5dQuAUi3W6WCaWpSzD7
-         oktkwBhVvrbJ9Nenh67kHwEZW+eMlofty50B3CQk/m/J5u+INJkq6RmjzAXOomgY7ROg
-         KHby4ZSeCHgVS4P7phUdcXmWnJN3ySMnXkRRgcL0OBdoeqbCUDHH9et3n+YMVcoiBMPJ
-         nUCL8Pgl/8UirWZYl7x2Av2mh3G70Anvdz3+RQTag9dxzHiGDl/pm+WR4jSbd3n6n3vX
-         Y8ET3vSwLdfYpjQu0Mg5wLZk8yEKcfiCNr9Tto/QD8hievdduOqqMWC8685g8+TmMA74
-         K/uA==
+        d=google.com; s=20251104; t=1785877634; x=1786482434; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:mime-version:date:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=wweMmvmBP5UOlMtUNWCLKhh7nVd00D8+jUX20XzqKgc=;
+        b=Mc5wvCcrJ160J7JsotZstw5APKqLRAU1JA66v2226CuVt3Zm8zo3zK//wAQCuF39ve
+         RpurN4GX4qFV+SH2OdbcJNk0shO+O9TuW9IfgFkjcaX9S5Y3JcD8Y3dio5c3U5oQVmkQ
+         47tu0m1FvRcGC3+QRtm6ctdsEYIcdPy31JvGY3qRnP5bk081RDEth3ssq/LakNUciS0E
+         Khr4MEWdmN7/mBfCZcvXAFEAYhSUIEhmKnU5p0oNbyb/UuZ9kv9MRY7HB4Irlta72+S5
+         ucZ/JYwzWIo0mhvsPujzHKfNToW/5oxrkrmWRsg+DwXFlwdi5py2a6U+xwMnsMYF0DVH
+         kxyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785877587; x=1786482387;
-        h=content-type:cc:to:from:subject:message-id:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=i5gQ2rzJspE7/RJU8+W1PyPQZBbheaHsGbRmii6HKrA=;
-        b=pcyaUKaxLjh5e4jVTCt4RLXuQtyP3L/ustpRtMIwxrIpFhMc+TBVSPVVenAbj1Q+ou
-         U/qykrifefF73oK/nTkw4gtfOGMXv83GELhI4CWy2ruvFlBa3LX4pNN4EsQZCtI1IfCM
-         L+J6GKlQV1x1U2SwXprvu2LDbkxqOoESV3eT35oAzCGMTK81EwHOPWlwRJkPKBsODrxl
-         xKaAqjHcYKS9kov6TQV6MuwsOF91VG9/VQfUSOwtHr6jGiXHwMrumJxd0MouL92y3tXF
-         TuvkmkmLdK1KDqY+v8lPEvv2K3pW+unsXkwVCmuHow6BDVpR8JSwJxs2liOkyeZxnOSc
-         2ZYQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rof3CiH8NLxUUIHs1ayuunZBEXxqifsR/T6zV6D3rtbnguRtR76P0jdwClH2GVOGy+xjz6EUEP9GvQsTloGtYgf@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZp5W9jle4YNWY2C2wzfU7oUkj6nuKjdIUJfT0p9Lxrm6p+jJ8
-	qqAx241xQSV6Gzn3NQh7LL5oZEgmjlflGyPOLc53r67DKOlNDRNz1FNnCxeRJaoZXhsLaFmYUyK
-	S4fpdZAMFD+NmbnmIEoFJkJ0A9w==
-X-Received: from ilhw4.prod.google.com ([2002:a92:ad04:0:b0:507:c444:90fb])
- (user=coltonlewis job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6808:1587:b0:487:61da:70fb with SMTP id 5614622812f47-4afae0c7caamr886481b6e.10.1785877586456;
- Tue, 04 Aug 2026 14:06:26 -0700 (PDT)
-Date: Tue, 04 Aug 2026 21:06:25 +0000
-In-Reply-To: <2941da1a-b0b4-47a6-b57c-b28703dc0454@linaro.org> (message from
- James Clark on Mon, 27 Jul 2026 12:04:17 +0100)
+        d=1e100.net; s=20251104; t=1785877634; x=1786482434;
+        h=content-transfer-encoding:content-type:cc:to:from:subject
+         :message-id:mime-version:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=wweMmvmBP5UOlMtUNWCLKhh7nVd00D8+jUX20XzqKgc=;
+        b=jOe92Tpei4eC/P/8CVu2vTXEJAdq1pMlBNXMzdYbs2XIAUU9Y/FjD1WAFRP5IYlSpF
+         hMfBWSrNd01iIobWEtzsf2IONU11F5OIeno+639x64wYaboHqiMDtJTNRp0+KyrQI5pV
+         76oJDRu/kw0CM6+1AK4ZhI6tVojYL4q1n1V81gWgUUv101u96RPno8mb85qCrn1EY5gQ
+         i9tuUvRV0BTh1kYLRwx0U/RfKrFycSmj9jwD+kC1y1y7dnM9f0mRmhoZ7zN87mA1pppa
+         pTMMJq3EhAcYNXo9sCbvoJUHCRBxP3MXlmdM7Qzdl29ef8p55tBRGXZXmQ7Rw2u0yR+m
+         GEww==
+X-Forwarded-Encrypted: i=1; AHgh+RoARDG9FGJiT+K5ghlgr878omOFRhmc1T11hfQ/Rz90lLxqX9QAw+56vMXNQSY49ryqZxqW81fiKn0mjETzMfxR@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6uUhgM+AadHUl3fMYS4f9szltqQSS0CYwKIJQM84GJgD+Bg2M
+	V7BXRbKpSbcFqF8b0TAVOHEZJoLARgfYSeo8z2F0iT4THp3oe4nzj1ttlavhn+bkwMNdxncUjxI
+	tRWNNrA==
+X-Received: from pjye9.prod.google.com ([2002:a17:90a:ee09:b0:38f:659:4491])
+ (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2248:b0:38d:adae:4866
+ with SMTP id 98e67ed59e1d1-3903c63c51dmr1230763a91.21.1785877633439; Tue, 04
+ Aug 2026 14:07:13 -0700 (PDT)
+Date: Tue,  4 Aug 2026 14:06:59 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Message-ID: <gsntse4tvbn2.fsf@coltonlewis-kvm.c.googlers.com>
-Subject: Re: [PATCH v8 00/21] ARM64 PMU Partitioning
-From: Colton Lewis <coltonlewis@google.com>
-To: James Clark <james.clark@linaro.org>
-Cc: kvm@vger.kernel.org, alexandru.elisei@arm.com, pbonzini@redhat.com, 
-	corbet@lwn.net, linux@armlinux.org.uk, catalin.marinas@arm.com, 
-	will@kernel.org, maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com, 
-	joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, 
-	mark.rutland@arm.com, shuah@kernel.org, gankulkarni@os.amperecomputing.com, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-Mailer: git-send-email 2.55.0.571.g244d577d93-goog
+Message-ID: <20260804210659.112192-1-ctshao@google.com>
+Subject: [PATCH v4] perf stat: Include PMU name and split uncore events per
+ PMU in metric-only JSON output
+From: Chun-Tse Shao <ctshao@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Chun-Tse Shao <ctshao@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-James Clark <james.clark@linaro.org> writes:
+When running `perf stat` with `-A` (--no-aggr) and `--metric-only` in
+JSON output mode (`-j`), `perf stat` evaluates metric expressions
+across all matching PMUs (including uncore PMUs like `uncore_iio_0`,
+`uncore_iio_1`, etc.).
 
-> On 23/07/2026 9:57 pm, Colton Lewis wrote:
->> James Clark <james.clark@linaro.org> writes:
->>>>> When running the guest on a single CPU I get different counts for the
->>>>> same event for a single process, although this never happens on a  
->>>>> host.
->>>>> I think there might even be some Perf tests which expect them to be  
->>>>> the
->>>>> same, and this doesn't depend on whether any events are running on the
->>>>> host or not. Not sure if you ran all the Perf selftests in a guest or
->>>>> not?
+However, `perf stat` previously formatted JSON output by printing only
+"cpu" : "<id>" and grouping all metric values on a single line per CPU
+without identifying which PMU instance evaluated each metric. As a
+result, when an uncore event spans multiple PMU boxes, `perf stat`
+printed repeated, ambiguous metric keys without PMU names.
 
->>>> I'll investigate but I'm not sure perf is intended to guarantee
->>>> that. perf stat just runs the event counters but may not write or read
->>>> them at exactly the same time.
+Fix this by:
+1. Including "pmu" : "<pmu_name>" in print_aggr_id_json when evsel->pmu
+   is a non-core or hybrid PMU in AGGR_NONE mode (-A).
+2. Starting a new JSON metric line in AGGR_NONE mode (-A) whenever the
+   underlying hardware PMU instance changes across PMU events.
+3. Bypassing line initialization for tool events (e.g. -e user_time) in
+   metric-only mode so that JSON lines are opened only by hardware PMUs,
+   preventing tool events from corrupting PMU name labels or creating
+   spurious empty {"pmu": "tool"} JSON objects.
+4. Updating perf_json_output_lint.py to recognize the new "pmu" key in
+   the JSON test suite.
 
+Before the fix:
+  $ perf stat -M iio_bandwidth_read -a -A --metric-only -j -I 1000
+  {"interval" : 1.001017947, "cpu" : "0", "MB/s  iio_bandwidth_read" : "0.0=
+", "MB/s  iio_bandwidth_read" : "0.0", "MB/s  iio_bandwidth_read" : "22.5",=
+ "MB/s  iio_bandwidth_read" : "0.0", "MB/s  iio_bandwidth_read" : "0.2", "M=
+B/s  iio_bandwidth_read" : "0.0", "MB/s  iio_bandwidth_read" : "0.0", "MB/s=
+  iio_bandwidth_read" : "0.0", "MB/s  iio_bandwidth_read" : "0.0", "MB/s  i=
+io_bandwidth_read" : "0.0"}
 
->>> Is that true? The perf core calls perf_pmu_disable() when a process is
->>> scheduled out before reading the count of each event of that process in
->>> an inner loop. The perf_pmu_disable() clears PMCR_EL0.E which freezes
->>> all of the counters so they can be read out in a consistent state.
+There is no way to determine which uncore device generated the metrics.
 
->>> It's important that they're all stopped at the same time because
->>> counters might be used in metrics as ratios of each other. So I think
->>> it's deliberately designed that way and appears to not be working in a
->>> guest now.
+After:
+  $ perf stat -M iio_bandwidth_read -a -A --metric-only -j -I 1000
+  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_0", "MB/s  ii=
+o_bandwidth_read" : "0.0"}
+  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_1", "MB/s  ii=
+o_bandwidth_read" : "0.1"}
+  {"interval" : 1.000314908, "cpu" : "0", "pmu" : "uncore_iio_11", "MB/s  i=
+io_bandwidth_read" : "0.0"}
+  ...
+  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_0", "MB/s  i=
+io_bandwidth_read" : "0.0"}
+  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_1", "MB/s  i=
+io_bandwidth_read" : "0.0"}
+  {"interval" : 1.000314908, "cpu" : "56", "pmu" : "uncore_iio_11", "MB/s  =
+iio_bandwidth_read" : "0.0"}
 
->> By default I think perf assumes events can be measured independently, If
->> you want to guarantee events are scheduled together to avoid measurement
->> skew you need to make sure the events are grouped.
+Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+Assisted-by: Gemini:gemini-3.1-pro-preview
+Reviewed-by: Ian Rogers <irogers@google.com>
+---
+v4:
+  - Fix the line splitting issue, causing spurious empty {"pmu": "tool"}
+    objects and order-dependent PMU mislabeling.
 
->> The common way to do that is with {} around the event list:
+v3: lore.kernel.org/20260729170416.41904-1-ctshao@google.com
+  - Add before the fix output.
 
->> perf stat -e {branches,branches}
+v2: lore.kernel.org/20260715203055.2981363-1-ctshao@google.com
+  - Fix print_metric_begin() initialization in print_no_aggr_metric()
+    to ensure tool events always open lines cleanly.
+  - Simplify and fix PMU line-split transition tracking when switching
+    between different PMU instances or transitioning from tool events.
+  - Add bounds check on aggr_map index in print_no_aggr_metric() to
+    prevent out-of-bounds array reads if sysfs CPU topology is incomplete.
 
->> Please see if that resolves the issue.
+v1: lore.kernel.org/20260714174052.1826692-1-ctshao@google.com
 
+ .../tests/shell/lib/perf_json_output_lint.py  |  1 +
+ tools/perf/util/stat-display.c                | 62 +++++++++++++++----
+ 2 files changed, 51 insertions(+), 12 deletions(-)
 
-> Groups only change how the events are scheduled, not how the driver
-> starts or stops multiple events running on the same PMU (grouped or
-> ungrouped). In my repro I had less events than counters in HW, so they
-> will always be scheduled at the same time regardless of grouping.
+diff --git a/tools/perf/tests/shell/lib/perf_json_output_lint.py b/tools/pe=
+rf/tests/shell/lib/perf_json_output_lint.py
+index dafbde56cc76..36767905fcdb 100644
+--- a/tools/perf/tests/shell/lib/perf_json_output_lint.py
++++ b/tools/perf/tests/shell/lib/perf_json_output_lint.py
+@@ -64,6 +64,7 @@ def check_json_output(expected_items):
+       'metric-threshold': lambda x: x in ['unknown', 'good', 'less good', =
+'nearly bad', 'bad'],
+       'metricgroup': lambda x: True,
+       'node': lambda x: True,
++      'pmu': lambda x: True,
+       'pcnt-running': lambda x: isfloat(x),
+       'socket': lambda x: True,
+       'thread': lambda x: True,
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.=
+c
+index b337cc23f413..681f83c7295d 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -397,6 +397,9 @@ static void print_aggr_id_json(struct perf_stat_config =
+*config, struct outstate
+ 			json_out(os, "\"cpu\" : \"%d\"",
+ 				id.cpu.cpu);
+ 		}
++		if (evsel && !evsel__is_tool(evsel) && evsel->pmu &&
++		    (!evsel->pmu->is_core || evsel__is_hybrid(evsel)))
++			json_out(os, "\"pmu\" : \"%s\"", evsel->pmu->name);
+ 		break;
+ 	case AGGR_THREAD:
+ 		json_out(os, "\"thread\" : \"%s-%d\"",
+@@ -1012,11 +1015,12 @@ static void print_counter_aggrdata(struct perf_stat=
+_config *config,
 
-> I did notice something extra though, you have to first open some amount
-> of counters, and then open more than that. Then the second time the ones
-> with different counts will be however many were opened first time, as if
-> some state has stuck.
+ static void print_metric_begin(struct perf_stat_config *config,
+ 			       struct evlist *evlist,
+-			       struct outstate *os, int aggr_idx)
++			       struct outstate *os, int aggr_idx,
++			       struct evsel *counter)
+ {
+ 	struct perf_stat_aggr *aggr;
+ 	struct aggr_cpu_id id;
+-	struct evsel *evsel;
++	struct evsel *evsel =3D counter ?: evlist__first(evlist);
 
-> For example if I open two counters then 6, the first two always have
-> different counts the second time:
+ 	os->first =3D true;
+ 	if (!config->metric_only)
+@@ -1031,7 +1035,6 @@ static void print_metric_begin(struct perf_stat_confi=
+g *config,
+ 		else
+ 			fprintf(config->output, "%s", os->timestamp);
+ 	}
+-	evsel =3D evlist__first(evlist);
+ 	id =3D config->aggr_map->map[aggr_idx];
+ 	aggr =3D &evsel->stats->aggr[aggr_idx];
+ 	aggr_printout(config, os, evsel, id, aggr->nr);
+@@ -1069,7 +1072,7 @@ static void print_aggr(struct perf_stat_config *confi=
+g,
+ 	 * Without each counter has its own line.
+ 	 */
+ 	cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
+-		print_metric_begin(config, evlist, os, aggr_idx);
++		print_metric_begin(config, evlist, os, aggr_idx, NULL);
 
->     $ perf stat -e branches,branches true
+ 		evlist__for_each_entry(evlist, counter) {
+ 			print_counter_aggrdata(config, counter, aggr_idx, os);
+@@ -1095,7 +1098,7 @@ static void print_aggr_cgroup(struct perf_stat_config=
+ *config,
+ 		os->cgrp =3D evsel->cgrp;
 
->     Performance counter stats for 'true':
+ 		cpu_aggr_map__for_each_idx(aggr_idx, config->aggr_map) {
+-			print_metric_begin(config, evlist, os, aggr_idx);
++			print_metric_begin(config, evlist, os, aggr_idx, NULL);
 
->               106129      branches
+ 			evlist__for_each_entry(evlist, counter) {
+ 				if (counter->cgrp !=3D os->cgrp)
+@@ -1131,7 +1134,9 @@ static void print_no_aggr_metric(struct perf_stat_con=
+fig *config,
 
->               106129      branches
+ 	perf_cpu_map__for_each_cpu(cpu, all_idx, evlist__core(evlist)->user_reque=
+sted_cpus) {
+ 		struct evsel *counter;
+-		bool first =3D true;
++		struct evsel *last_evsel =3D NULL;
++		struct perf_pmu *last_pmu =3D NULL;
++		bool line_open =3D false;
 
+ 		evlist__for_each_entry(evlist, counter) {
+ 			u64 ena, run, val;
+@@ -1146,13 +1151,46 @@ static void print_no_aggr_metric(struct perf_stat_c=
+onfig *config,
+ 				if (config->aggr_map->map[aggr_idx].cpu.cpu =3D=3D cpu.cpu)
+ 					break;
+ 			}
++			if (aggr_idx >=3D config->aggr_map->nr)
++				continue;
 
+ 			os->evsel =3D counter;
+ 			os->id =3D aggr_cpu_id__cpu(cpu, /*data=3D*/NULL);
+-			if (first) {
+-				print_metric_begin(config, evlist, os, aggr_idx);
+-				first =3D false;
++
++			if (config->metric_only) {
++				struct perf_pmu *pmu =3D counter->pmu;
++				bool is_tool =3D evsel__is_tool(counter);
++
++				if (config->json_output && line_open) {
++					bool pmu_changed;
++
++					if (is_tool) {
++						pmu_changed =3D last_pmu &&
++							(!last_pmu->is_core ||
++							 (last_evsel &&
++							  evsel__is_hybrid(last_evsel)));
++					} else if (last_pmu) {
++						pmu_changed =3D (pmu !=3D last_pmu);
++					} else {
++						pmu_changed =3D pmu &&
++							(!pmu->is_core ||
++							 evsel__is_hybrid(counter));
++					}
++
++					if (pmu_changed) {
++						print_metric_end(config, os);
++						line_open =3D false;
++					}
++				}
++				if (!line_open) {
++					print_metric_begin(config, evlist, os,
++							   aggr_idx, counter);
++					line_open =3D true;
++				}
++				last_pmu =3D is_tool ? NULL : pmu;
++				last_evsel =3D counter;
+ 			}
++
+ 			val =3D ps->aggr[aggr_idx].counts.val;
+ 			ena =3D ps->aggr[aggr_idx].counts.ena;
+ 			run =3D ps->aggr[aggr_idx].counts.run;
+@@ -1160,7 +1198,7 @@ static void print_no_aggr_metric(struct perf_stat_con=
+fig *config,
+ 			uval =3D val * counter->scale;
+ 			printout(config, os, uval, run, ena, 1.0, aggr_idx);
+ 		}
+-		if (!first)
++		if (line_open)
+ 			print_metric_end(config, os);
+ 	}
+ }
+@@ -1523,7 +1561,7 @@ static void print_cgroup_counter(struct perf_stat_con=
+fig *config, struct evlist
+ 				print_metric_end(config, os);
 
->     $ perf stat -e
-> '{branches,branches,branches,branches,branches,branches}' true
+ 			os->cgrp =3D counter->cgrp;
+-			print_metric_begin(config, evlist, os, /*aggr_idx=3D*/0);
++			print_metric_begin(config, evlist, os, /*aggr_idx=3D*/0, NULL);
+ 		}
 
->     Performance counter stats for 'true':
+ 		print_counter(config, counter, os);
+@@ -1573,7 +1611,7 @@ void evlist__print_counters(struct evlist *evlist, st=
+ruct perf_stat_config *conf
+ 		} else if (config->cgroup_list) {
+ 			print_cgroup_counter(config, evlist, &os);
+ 		} else {
+-			print_metric_begin(config, evlist, &os, /*aggr_idx=3D*/0);
++			print_metric_begin(config, evlist, &os, /*aggr_idx=3D*/0, NULL);
+ 			evlist__for_each_entry(evlist, counter) {
+ 				print_counter(config, counter, &os);
+ 			}
+--
+2.55.0.571.g244d577d93-goog
 
->               117013      branches
-
->               117013      branches
-
->               110364      branches
-
->               110364      branches
-
->               110364      branches
-
->               110364      branches
-
-
-> After opening 6 again a third time they'll all have the same counts.
-
-Interesting. Thanks. To clarify, is this happening in the host or VM?
