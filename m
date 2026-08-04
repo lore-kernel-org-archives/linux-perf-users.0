@@ -1,1105 +1,288 @@
-Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADB0B316190;
-	Tue,  4 Aug 2026 06:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785826604; cv=none; b=gzaYElMI47ekAbUXeKlwZw7f6U8THHrxmGZCgX5vtDlH4XID5jfMl4qG8wTdtUbFgGisgEinm4x9su3cHUn3nBQLhWJm77A8VrCZKDFr/0Tz4GpGelWiK5j0Lq4VRtjtMZYeI5StRfquCpj6gvjO+mA2QXWSgZIfZFPh3LcQaLo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785826604; c=relaxed/simple;
-	bh=i4lAS7Bb/HG5MihApcIEBGbgdJf60R//HuKY8y5nVXc=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kzQitwEE/b6DffvM71QrQSzdLfEusyI17USpAinfnf5qjPfI6mL6ec1sO4K4Dsz9jWqPf2Rk7hzsevlq7UMYZdCn49hduFxxip48pNVbbn1hWnm6cOblRo7FI9UIDwVcA2NzV6hkP+vapUs9oGTzXXThlrn7i+jfrc1FTnwEhK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
-Received: from maildlp1.hygon.cn (unknown [127.0.0.1])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4hDkpw2LY2zVbqb;
-	Tue,  4 Aug 2026 14:56:24 +0800 (CST)
-Received: from maildlp1.hygon.cn (unknown [172.23.18.60])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4hDkpt1cmdzVbqb;
-	Tue,  4 Aug 2026 14:56:22 +0800 (CST)
-Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
-	by maildlp1.hygon.cn (Postfix) with ESMTPS id 1E6A71D7;
-	Tue,  4 Aug 2026 14:56:17 +0800 (CST)
-Received: from neptune.hygon.cn (172.22.228.105) by cncheex04.Hygon.cn
- (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Tue, 4 Aug
- 2026 14:56:21 +0800
-From: Qi Liu <liuqi@hygon.cn>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<sandipan.das@amd.com>, <ravi.bangoria@amd.com>, <x86@kernel.org>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lijing@hygon.cn>, <liuqi@hygon.cn>, Zhenglang Hu <huzhenglang@hygon.cn>
-Subject: [PATCH v4 1/2] perf/x86/amd/uncore: Add Hygon uncore PMU support
-Date: Tue, 4 Aug 2026 06:56:05 +0000
-Message-ID: <20260804065606.27532-2-liuqi@hygon.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260804065606.27532-1-liuqi@hygon.cn>
-References: <20260804065606.27532-1-liuqi@hygon.cn>
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012043.outbound.protection.outlook.com [52.101.48.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16F0257435;
+	Tue,  4 Aug 2026 07:00:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785826852; cv=fail; b=t8FUVo9zxfWKEl0VHUD3LMIsYbAQWZy4MhrV0j2yUvSGewc7yUuVrGdTrfwtDCE7nzvTVV7jj9lMpKhNDq+DVDqF/Ok2xGUExy3/TqP8APgFh5Ji8JXhDbbvhk4mDJHSFqfDccSX20YBXiD6+sLDUibkPBsGjEZrZFnGIVr8Idk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785826852; c=relaxed/simple;
+	bh=u7zvh7czSjGTuBBhaI3HzouTEbpWTqQ2ITVusbPIRN4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=U9V0GqOB3g3RidYPQOihwLjIuyr+YeWR4syXy0oSx+1cYhEMLDDk5Eyr+JTLUUvCOuEt6oo7BQIl+w+LhvYdAOiia1LWegoWr40WeTDXPTG/hfL6SDlLpbwW/tLaQXGhVpNo80U1h82kEI+rqWJsEmV5DEooqN3itz8UI/30VHw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fBlUzZN+; arc=fail smtp.client-ip=52.101.48.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fBlUzZN+"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ArZXrKnf4fx/fsS1EbU0SrWibroLLiquyKA6mecYkTO9KlSBZFsOwYNNukb4y/7EytUqS35EcRWaIhtReES3/iNqEzLzLnUh9HeiJu3TMQMxyX1bAZqXY1caxqXrVXfF3FUaVM/YZoikC5pR+4YKzS3txCRDeDrCUGKLH2NtLS35y5p6kgWe/aDNaO1HFrqMTzk7WxFWhojB7f09+dLq9WlnYcuoVWipxO/13EHMPAggzQaytfdaVbDCLZeaIfFMSEsEcu0LTYzWdykaJyV2KemSo95VHqoldiVsU2GnEO3K0mj5uzQBz1pmXv1cikexK9yJJjZ/2iyEGSgqCv96xQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HuwLFGCl+/IieWIgQ1aExclXeYbS13DA7x+9xOlbAhU=;
+ b=g0uFtzIGrwElIlCEz+SMgwpnpWRCLTzpliy6v8eQYSRzIpJjP6wSaCRcqhwz6WOp6ed6HtVH3qDHvKSRF0/RYCwy7zF/hUmVKZPpaFoydpLWMwCkrY4dXl5LsAC9vkjVwtwWgduu6u3ZNhrG0VLxVHfu8FylC+J9MMyRXRzSq7k9rRPhISytgv76APiY+yUM3LUXgFxTKDyk+V/iw1Yjzk2dMYdgZIIUGo8OdezMtpS8M9q+rR6UNZgEd7D9zOyoI3uf5z622i3EDsgB662GlV7PlyRSvCzngut7uHmAnYACjrSjbi96FktAODn/qe3Pd+5Q3z3BIOkyS0iWgJXXkw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HuwLFGCl+/IieWIgQ1aExclXeYbS13DA7x+9xOlbAhU=;
+ b=fBlUzZN+fkOdz1ENfsq7vm1q5PFUxD6LGWigvSMGnTh2q3neeKAJ77sCzkgR0BXbf1F6LVPIT7J5mlB6xwq4k9UgAdV3bOR2wc/2YpARW5zXhyqaJsb2h0vgnq9YipHT7tn3awaTfDtLHtBxk+eugRuX9mOJr93Z7hrohiv1oMI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by PH7PR12MB8179.namprd12.prod.outlook.com (2603:10b6:510:2b8::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.270.18; Tue, 4 Aug
+ 2026 07:00:46 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::afe1:7dd0:ea71:b7e7]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::afe1:7dd0:ea71:b7e7%4]) with mapi id 15.21.0292.013; Tue, 4 Aug 2026
+ 07:00:45 +0000
+Message-ID: <7284a598-0799-45d9-85ff-739563ddf226@amd.com>
+Date: Tue, 4 Aug 2026 12:30:36 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] perf/x86: Do not read fixed counter control register
+ if there is none
+To: Petr Tesarik <ptesarik@suse.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260717150315.2868314-1-ptesarik@suse.com>
+ <82ff3301-13e1-4ebf-9f74-aa4318848cc5@amd.com>
+ <20260803105751.17146a49@mordecai>
+Content-Language: en-US
+From: Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <20260803105751.17146a49@mordecai>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA5P287CA0354.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:219::8) To PH7PR12MB5712.namprd12.prod.outlook.com
+ (2603:10b6:510:1e3::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: cncheex06.Hygon.cn (172.23.18.116) To cncheex04.Hygon.cn
- (172.23.18.114)
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|PH7PR12MB8179:EE_
+X-MS-Office365-Filtering-Correlation-Id: 17f1f071-ecb2-4971-cc4a-08def1f61b5f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|23010399003|376014|1800799024|7416014|56012099006|10067099003|11063799006|4143699003|3023799007|6133799003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	4oGRLQrPeGx7jlDgR/OxP6n/cZf2iR4DSHk/hEEfTFnmOkEW8T1meZV+lIXXdTdyMSRFRfHVS2UXT1iEN0LnghdktcFXQxeMhGqbYojTfmPnctfGR0zOaT8KM1CTaABV+AoTMo50XWMEGrA1LQFjUlMDi7sNXN8UBsdDw39zu7zmycxvOkdCgmDLELdvviXq/idL/Dq3EeLj7AuGSaXB7g/dJbUtar8yDn7Rb0gaqK+XrmHOCIlfct50FaGZl6QqPsyD3zGj4yVUOAyltBhKYqJttuyGuWrIfs0GsJ0glV2pZQg7WrhelU/TIhC0sSa5L8g0DbVU28LPbdsfq2yTb29/wO1VESTvvbB/kaZXnf3xerFClXVabPEMClpGrZjsDe9bslLrdB4hz4Xu/psYhzwy9tkT/vmnMsOPXHJfWvxuKs06FsLqDFWx1MktosL6jhElx4AuleYiDbOdZKpzfw/iA5OVjPK/9S+aD6aL99/mCiHXYo5GUpxyl5Y1Uvk07SQoWQPXegG2TCyEz3riCptu6EwsrldhBtO9/iu6yuwKttPDD2vMRquhBN/stJFh8MdnU/pmHLnGkUnb99uOUpdsO+Qw4PH5+a5oAbaV0ec6tladnGYYcu6wJ6kg1oBx9q9kzatZ0COXODhDX7i/+1JY7jHb9MhdfEMNH2kDZzQ=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(376014)(1800799024)(7416014)(56012099006)(10067099003)(11063799006)(4143699003)(3023799007)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eTZKMEFMeXQ4ZS9hOVQzWk1ZcXBlWERUSHdDOE0zYVl1YnpSdVFMb0Rnd3Av?=
+ =?utf-8?B?VEpSTS9OS1NJRkNLNUp4RzRkUUJIQldTN2htcWgxYzVPbW4xQmtQb2NrVHZG?=
+ =?utf-8?B?N1ZUcEdvOUYyLzFJMDltMHRSeFI3bFg4cUFYMFVxb25ZQXJWa1RaVGJLZmdo?=
+ =?utf-8?B?S1pGK0ErRDlocjNCN0xZL01MdzBqbUZRL3VVTU5RTkxuMnlObGdCZk5yTktP?=
+ =?utf-8?B?UU5uc0FNblhsWGF1bzc5eFhBQ1pxV1l0cFZYN1RzQ3plNW5LUXVkWTVlL2lv?=
+ =?utf-8?B?cFpSdGtIVVBkODNlK2pOcGZMN015WGt4Slg4dFR4OXMxOWh6dy8zMjZVWUhv?=
+ =?utf-8?B?eHVNN2hVektqZHZrdklIZ0RKRk5nWnlyMkZNalh0TUxqYlhIQS9oSEZKd21G?=
+ =?utf-8?B?UWE0R0d5OVArd1lSblNBTVE5QThjLzhFZXk2NzJuais0WmdWSmtOSXA3ZG1Y?=
+ =?utf-8?B?L3l0T01uOE0zU3p3cjV1OFFFSy9mdTRTSlJHUlVGZ2c3TTZVeUZCbEJJeTlU?=
+ =?utf-8?B?YWwvOU84N0owS1ZVU01kMlY3S1ZRSDVMbm94SG1IYjdkbnh5bVBkSTZPZGZN?=
+ =?utf-8?B?ZG9uYzBFMU9FQ1QrZHpJcFVaVVNiLzdpZENEUExzVzV3QUhwMEJpQWU4Ykln?=
+ =?utf-8?B?VS80cjJ3ZVFLb1lEMVVhQmdJKzN3K3p5a2Z3eHNweFdKdTU5UXFHSlo2Ty8r?=
+ =?utf-8?B?elVEOXBKWWxycDlxb1A0dmZ5bks5dkVFWVh2WGUrRUVtaU5MN0E3M3RTNW0v?=
+ =?utf-8?B?MVRORGwyLzEzR0Ztb1JHWVo0ZUFyNGd1YjlXRjBlMWdQMEhBNXgvYlhDOG9v?=
+ =?utf-8?B?WU1yWGxZZTBFMUpxcE1QR0lFU1pwa0lITnhsUloyWUxnYnRjL05DSURGbnhL?=
+ =?utf-8?B?R3lXNkNTeHczVlV5bFZZMnJkNmo1Ryt0ay9IZ3oyS0xWNVJyVHd4MFRnVUZw?=
+ =?utf-8?B?Wmp6OEtWSXcyUllBOW1OOEJnZ2NUZElIRFo3SldTUzh3VlBkdXZ1aS9OWTJO?=
+ =?utf-8?B?ZE1lZzVuams5VVo1RUFZYzNRVnpmS2VLMHl4dUlRcktmWGR3b28vcEZWRVdt?=
+ =?utf-8?B?R0JuOC8zakh1TGgvMlZ1YjJFUkUwOEhzY3VnZEFUVUZPWkJpUC85aHdWWE9C?=
+ =?utf-8?B?eXd4Q3hjUVFuQWlFV2d1NjdkT3Q4Q0JYdzF2d01EUXFKcFBoc3hoZlRER3lR?=
+ =?utf-8?B?NHBGN3Y1ZXd5eXRPWFRSb1FXTzBKbU40RjNkZ2ZaRUk0cllIZ1hhMUFJYjMv?=
+ =?utf-8?B?RHZxMitjRlEvRDZZVUk2VWlKd2JwaVIxOVhFMFpjK0dZemZoNk1Bd1gvUzdY?=
+ =?utf-8?B?MW5jWlZpMmNOeUFQZVNLdEdsWUVWdUxacUxEdysyWEh0VUhwN0oxdG44SXFU?=
+ =?utf-8?B?U3UyaCtXS2x6Ymg3eXRWcm85RW9uVFZCZlM4WmJua210L3FneGtMZ1JtU3Fz?=
+ =?utf-8?B?SmRwTE02RkwxQXRPY01iVGxjLzczZWlOd25BeWk2ZUJ1U3BldUY5OHlyYjZp?=
+ =?utf-8?B?SGJMbDFNQmtLSS9FOS9BZitxNzFKbnk0K2QreWQwN2JLbEdsK0sybHlpSENT?=
+ =?utf-8?B?YjJob3lDNzdOODdWZ3RnWU5mdldzQk8zc08rejdoaURaZC9GekZCajJ6aTdV?=
+ =?utf-8?B?YlI2d3F2QWYwaHJIb1ZNNm5nWU1xNWJxeEdsMndTZFRMMXdSZ1BNQUtLOTg3?=
+ =?utf-8?B?UG95OU41N3d3bnRhUFpTbUVwMzc2S3haWTVSTUp3dmFmQ1dTaC9lRmlhMFNS?=
+ =?utf-8?B?NVlHaVVGR3pvaksxSGFLL3poMXlRbnQzNUhuc2tkSmdkbnAvblE3eDNzWmpG?=
+ =?utf-8?B?alBVK0tHeUx6aHdVQTBLdklUSHI5WDllNDJ2TXVtM1VjS2M1UHdnL2RUbm1V?=
+ =?utf-8?B?R2cwZk9qSWNUOHlKdlcxOXhIMlRPYmNPeTZ5aHRmTmlJQ3VDWHVSSEJLNUNu?=
+ =?utf-8?B?dXpsQTl4aTZtb2NrY3JyS3cweitYbU4vYjVEcFlyZm5HY09NQWNQZUlOYlY3?=
+ =?utf-8?B?bVYzcGVpWFVzT054QTdrc0VXNytScjhpYk9qT2JnRVY1UUNEMW9YS1VPNEd0?=
+ =?utf-8?B?Y3JuVlFxZXVhalhWNXRmV2NLYi9aOXo2YnArQ01XZFJncTVwTDRQY3VwQ2hU?=
+ =?utf-8?B?emwvdEpYR01MVVU1STQzb2k1ZUtUaG5wV2gzVVM4dks0bGxGTm9XOWhrRnhL?=
+ =?utf-8?B?RDBoaXRQYnhOaW5wWXpVSE1lWHpoKzgvdjhwZmgrSjVkMHJwRHJmQW92amxz?=
+ =?utf-8?B?ZDErRGdmVlJ4cTJDUkVZOXB4YkhwRmdmSWdDYzJ5ditBWFhwOUxkN2gya2hN?=
+ =?utf-8?B?VXJraWdVT3BFSVdEN2JNaDFVakZoMVN4WHl4dFhOek1WbFNXQTZXZz09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17f1f071-ecb2-4971-cc4a-08def1f61b5f
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Aug 2026 07:00:45.8609
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Zgyz4Kf/jNAZ7XN7jBbxt98ULnZrE8TiIcKAgiJvetVWm9QXjXDKb8g9OV0DAIdtyApYIxGfTDEzqh0UfKOcgQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB8179
 
-Add uncore PMU driver for Hygon Family 18h processors, supporting two
-PMU types:
+On 03-08-2026 14:27, Petr Tesarik wrote:
+> On Mon, 20 Jul 2026 14:57:25 +0530
+> Sandipan Das <sandipan.das@amd.com> wrote:
+> 
+>> On 17-07-2026 20:33, Petr Tesarik wrote:
+>>> [You don't often get email from ptesarik@suse.com. Learn why this is important at https://aka.ms/LearnAboutSenderIdentification ]
+>>>
+>>> When printing out CPU performance registers for debugging, skip
+>>> MSR_ARCH_PERFMON_FIXED_CTR_CTRL if fixed counters are not implemented.
+>>>
+>>> Since AMD CPUs with PerMonV2 do not implement this register, attempts to
+>>> read it generate a #GP. In particular, SysRq-P logs something like this:
+>>>
+>>> [   14.748144] [   T1118] sysrq: Show Regs
+>>> [   14.748896] [   T1118] unchecked MSR access error: RDMSR from 0x38d at rIP: 0xffffffff937154c6 (native_read_msr+0x6/0x40)
+>>> [   14.750878] [   T1118] Call Trace:
+>>> [   14.751505] [   T1118]  <TASK>
+>>> [   14.752057] [   T1118]  paravirt_read_msr+0x7/0x10
+>>> [   14.752940] [   T1118]  perf_event_print_debug+0x135/0x240
+>>> [   14.753931] [   T1118]  __handle_sysrq.cold+0x9b/0xde
+>>> [   14.754855] [   T1118]  write_sysrq_trigger+0x59/0x80
+>>> [   14.755779] [   T1118]  proc_reg_write+0x5a/0xb0
+>>> [   14.756631] [   T1118]  vfs_write+0xce/0x430
+>>> [   14.757406] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.758322] [   T1118]  ? security_file_fcntl+0x5f/0x120
+>>> [   14.759083] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.759754] [   T1118]  ? __x64_sys_fcntl+0x80/0x110
+>>> [   14.760334] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.761005] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.761676] [   T1118]  ? __ct_user_enter+0x27/0xc0
+>>> [   14.762270] [   T1118]  ksys_write+0x6a/0xe0
+>>> [   14.762776] [   T1118]  do_syscall_64+0xe1/0x610
+>>> [   14.763324] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.763995] [   T1118]  ? __ct_user_enter+0x27/0xc0
+>>> [   14.764564] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.765233] [   T1118]  ? do_syscall_64+0x205/0x610
+>>> [   14.765806] [   T1118]  ? __x64_sys_ioctl+0x97/0xe0
+>>> [   14.766375] [   T1118]  ? __pfx_woken_wake_function+0x10/0x10
+>>> [   14.767048] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.767717] [   T1118]  ? get_close_on_exec+0x34/0x40
+>>> [   14.768311] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.768985] [   T1118]  ? do_fcntl+0x6da/0x8e0
+>>> [   14.769502] [   T1118]  ? do_syscall_64+0x205/0x610
+>>> [   14.770083] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.772321] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.773166] [   T1118]  ? tty_read+0x150/0x220
+>>> [   14.773722] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.774423] [   T1118]  ? filp_flush+0x5b/0x80
+>>> [   14.774966] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.775660] [   T1118]  ? filp_close+0x25/0x40
+>>> [   14.776214] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.776936] [   T1118]  ? do_dup2+0xae/0x140
+>>> [   14.777486] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.778309] [   T1118]  ? ksys_dup3+0x67/0xf0
+>>> [   14.778870] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.779600] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.780310] [   T1118]  ? __ct_user_enter+0x27/0xc0
+>>> [   14.780917] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.781613] [   T1118]  ? do_syscall_64+0x205/0x610
+>>> [   14.782215] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.782907] [   T1118]  ? ksys_read+0x6a/0xe0
+>>> [   14.783429] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.784120] [   T1118]  ? __ct_user_enter+0x27/0xc0
+>>> [   14.784741] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.785431] [   T1118]  ? __ct_user_exit+0x15/0xb0
+>>> [   14.786014] [   T1118]  ? srso_alias_return_thunk+0x5/0xfbef5
+>>> [   14.786706] [   T1118]  ? do_syscall_64+0x98/0x610
+>>> [   14.787282] [   T1118]  ? exc_page_fault+0x6d/0x180
+>>> [   14.787873] [   T1118]  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>>> [   14.788612] [   T1118] RIP: 0033:0x7f70d6497e0a
+>>> [   14.789186] [   T1118] Code: 08 03 00 00 59 5e 48 83 f8 fc 75 1e 83 e2 39 83 fa 08 75 16 e8 05 ff ff ff 0f 1f 80 00 00 00 00 49 89 ca 48 8b 44 24 20 0f 05 <48> 83 c4 18 c3 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f
+>>> [   14.791587] [   T1118] RSP: 002b:00007ffc36a93580 EFLAGS: 00000202 ORIG_RAX: 0000000000000001
+>>> [   14.792617] [   T1118] RAX: ffffffffffffffda RBX: 00007f70d65f6580 RCX: 00007f70d6497e0a
+>>> [   14.793594] [   T1118] RDX: 0000000000000002 RSI: 0000556f34e41c30 RDI: 0000000000000001
+>>> [   14.794574] [   T1118] RBP: 0000000000000002 R08: 0000000000000000 R09: 0000000000000000
+>>> [   14.795563] [   T1118] R10: 0000000000000000 R11: 0000000000000202 R12: 0000000000000002
+>>> [   14.796537] [   T1118] R13: 0000556f34e41c30 R14: 0000000000000001 R15: 0000000000000000
+>>> [   14.797514] [   T1118]  </TASK>
+>>>
+>>> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+>>> ---
+>>>  arch/x86/events/core.c | 7 +++++--
+>>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+>>> index d1af33d96d0a3..8310bedfc364f 100644
+>>> --- a/arch/x86/events/core.c
+>>> +++ b/arch/x86/events/core.c
+>>> @@ -1581,13 +1581,16 @@ void perf_event_print_debug(void)
+>>>                 rdmsrq(MSR_CORE_PERF_GLOBAL_CTRL, ctrl);
+>>>                 rdmsrq(MSR_CORE_PERF_GLOBAL_STATUS, status);
+>>>                 rdmsrq(MSR_CORE_PERF_GLOBAL_OVF_CTRL, overflow);
+>>
+>> GLOBAL_{CTRL,STATUS,OVF_CTRL} functionality is also provided via different MSRs
+>> for AMD PMU version 2 and I assume that reading the ones above will also raise
+>> #GPs. If they don't, the reported values will surely be incorrect.
+> 
+> They do not raise #GPs on my Ryzen 7 system, but that's about the only
+> system I have tried.
 
-  - hygon_df:     Data Fabric counters shared across CPUs within the
-                  same DF instance, identified via Node ID.
+Perhaps it is based on Zen 3 or older where x86_pmu.version is set to 0.
 
-  - hygon_df_iod: Data Fabric counters on the IO Die (IOD) for
-                  monitoring memory access metrics.
+> 
+> Honetly, I was very unsure about the availability of the feauture(s)
+> and what the appropriate checks would be; that was the reason to
+> include you as a recipient. What is the AMD-recommended method to check
+> whether a CPU supports global perf control MSRs? Does x86.pmu_version
+> even work? If yes, should I then simply make the actual MSR numbers
+> conditional on AMD/Intel?
+> 
+> Any guidance welcome.
+> 
 
-A per-context hrtimer periodically reads the counters since uncore
-PMUs do not generate interrupts. CPU hotplug callbacks handle context
-creation, migration, and teardown.
+AMD processors with X86_FEATURE_PERFMON_V2 also set x86_pmu.version to 2.
+I think that it is better to move the parts that require the use of
+vendor-specific MSRs to a new callback implemented in
+arch/x86/events/{intel,amd,zhaoxin}/* instead of making additions to
+perf_event_print_debug().
 
-Keeping Hygon support in a separate driver avoids accumulating vendor
-checks in uncore.c as more Hygon-specific features are introduced.
-Remove the now-unnecessary Hygon checks from the AMD uncore driver.
+I'm also not sure why MSR_CORE_PERF_GLOBAL_OVF_CTRL is read here because
+this as well as its AMD counterpart, MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR,
+are both write-only MSRs.
 
-Signed-off-by: Qi Liu <liuqi@hygon.cn>
-Tested-by: Zhenglang Hu <huzhenglang@hygon.cn>
----
- arch/x86/events/Kconfig            |  11 +
- arch/x86/events/amd/Makefile       |   2 +
- arch/x86/events/amd/hygon_uncore.c | 872 +++++++++++++++++++++++++++++
- arch/x86/events/amd/uncore.c       |  11 +-
- arch/x86/include/asm/msr-index.h   |   2 +
- arch/x86/include/asm/perf_event.h  |  20 +
- include/linux/cpuhotplug.h         |   3 +
- 7 files changed, 913 insertions(+), 8 deletions(-)
- create mode 100644 arch/x86/events/amd/hygon_uncore.c
+Mind if I send a cleanup?
 
-diff --git a/arch/x86/events/Kconfig b/arch/x86/events/Kconfig
-index dabdf3d7bf84..cc8387236b95 100644
---- a/arch/x86/events/Kconfig
-+++ b/arch/x86/events/Kconfig
-@@ -45,6 +45,17 @@ config PERF_EVENTS_AMD_UNCORE
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called 'amd-uncore'.
- 
-+config PERF_EVENTS_HYGON_UNCORE
-+	tristate "Hygon Uncore performance events"
-+	depends on PERF_EVENTS && CPU_SUP_HYGON
-+	default y
-+	help
-+	  Include support for Hygon uncore performance events for use with
-+	  e.g., perf stat -e hygon_df/.../.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called 'hygon-uncore'.
-+
- config PERF_EVENTS_AMD_BRS
- 	depends on PERF_EVENTS && CPU_SUP_AMD
- 	bool "AMD Zen3 Branch Sampling support"
-diff --git a/arch/x86/events/amd/Makefile b/arch/x86/events/amd/Makefile
-index 527d947eb76b..c373fd1d1525 100644
---- a/arch/x86/events/amd/Makefile
-+++ b/arch/x86/events/amd/Makefile
-@@ -5,6 +5,8 @@ obj-$(CONFIG_PERF_EVENTS_AMD_POWER)	+= power.o
- obj-$(CONFIG_X86_LOCAL_APIC)		+= ibs.o
- obj-$(CONFIG_PERF_EVENTS_AMD_UNCORE)	+= amd-uncore.o
- amd-uncore-objs				:= uncore.o
-+obj-$(CONFIG_PERF_EVENTS_HYGON_UNCORE)	+= hygon-uncore.o
-+hygon-uncore-objs			:= hygon_uncore.o
- ifdef CONFIG_AMD_IOMMU
- obj-$(CONFIG_CPU_SUP_AMD)		+= iommu.o
- endif
-diff --git a/arch/x86/events/amd/hygon_uncore.c b/arch/x86/events/amd/hygon_uncore.c
-new file mode 100644
-index 000000000000..b8ecb989913f
---- /dev/null
-+++ b/arch/x86/events/amd/hygon_uncore.c
-@@ -0,0 +1,872 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2026 Chengdu Haiguang IC Design Co., Ltd.
-+ *
-+ */
-+
-+#include <linux/cpu.h>
-+#include <linux/cpumask.h>
-+#include <linux/cpufeature.h>
-+#include <linux/hrtimer.h>
-+#include <linux/init.h>
-+#include <linux/perf_event.h>
-+#include <linux/percpu.h>
-+#include <linux/slab.h>
-+#include <linux/smp.h>
-+#include <linux/types.h>
-+
-+#include <asm/amd/nb.h>
-+#include <asm/cpuid/api.h>
-+#include <asm/perf_event.h>
-+#include <asm/msr.h>
-+
-+#define HYGON_UNCORE_NUM_COUNTERS_DF	4
-+#define HYGON_UNCORE_NUM_COUNTERS_MAX	8
-+
-+#define HYGON_UNCORE_NAME_LEN		16
-+#define HYGON_UNCORE_COUNTER_SHIFT	16
-+
-+#undef pr_fmt
-+#define pr_fmt(fmt)	"hygon_uncore: " fmt
-+
-+struct hygon_uncore_ctx {
-+	int refcnt;
-+	int cpu;
-+	struct perf_event **events;
-+	unsigned long active_mask[BITS_TO_LONGS(HYGON_UNCORE_NUM_COUNTERS_MAX)];
-+	int nr_active;
-+	struct hrtimer hrtimer;
-+	u64 hrtimer_duration;
-+};
-+
-+struct hygon_uncore_pmu {
-+	char name[HYGON_UNCORE_NAME_LEN];
-+	int type;
-+	int num_counters;
-+	u32 msr_base;
-+	cpumask_t active_mask;
-+	struct pmu pmu;
-+	struct hygon_uncore_ctx * __percpu *ctx;
-+};
-+
-+enum {
-+	HYGON_UNCORE_TYPE_DF,
-+	HYGON_UNCORE_TYPE_DF_IOD,
-+	HYGON_UNCORE_TYPE_MAX
-+};
-+
-+union hygon_uncore_info {
-+	struct {
-+		u64	num_iods:8;	/* number of iods of each package */
-+		u64	num_pmcs:8;	/* number of counters */
-+		u64	cid:8;		/* context id */
-+	} split;
-+	u64		full;
-+};
-+
-+struct hygon_uncore {
-+	union hygon_uncore_info  __percpu *info;
-+	struct hygon_uncore_pmu pmu;
-+	bool pmu_registered;
-+	bool init_done;
-+	void (*scan)(struct hygon_uncore *uncore, unsigned int cpu);
-+	int  (*init)(struct hygon_uncore *uncore, unsigned int cpu);
-+	void (*move)(struct hygon_uncore *uncore, unsigned int cpu);
-+	void (*free)(struct hygon_uncore *uncore, unsigned int cpu);
-+};
-+static struct hygon_uncore uncores[];
-+
-+static unsigned int update_interval = 60 * MSEC_PER_SEC;
-+module_param(update_interval, uint, 0444);
-+
-+static struct hygon_uncore_pmu *event_to_hygon_uncore_pmu(struct perf_event *event)
-+{
-+	return container_of(event->pmu, struct hygon_uncore_pmu, pmu);
-+}
-+
-+static __always_inline bool is_uncore_df_iod_event(struct hygon_uncore_pmu *pmu)
-+{
-+	return pmu->type == HYGON_UNCORE_TYPE_DF_IOD;
-+}
-+
-+static __always_inline int hygon_uncore_ctx_num_pmcs(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	union hygon_uncore_info *info = per_cpu_ptr(uncore->info, cpu);
-+
-+	return info->split.num_pmcs;
-+}
-+
-+static __always_inline int hygon_uncore_ctx_cid(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	union hygon_uncore_info *info = per_cpu_ptr(uncore->info, cpu);
-+
-+	return info->split.cid;
-+}
-+
-+static __always_inline int hygon_uncore_ctx_num_iods(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	union hygon_uncore_info *info = per_cpu_ptr(uncore->info, cpu);
-+
-+	return info->split.num_iods;
-+}
-+
-+static enum hrtimer_restart hygon_uncore_hrtimer(struct hrtimer *hrtimer)
-+{
-+	struct hygon_uncore_ctx *ctx;
-+	struct perf_event *event;
-+	int bit;
-+
-+	ctx = container_of(hrtimer, struct hygon_uncore_ctx, hrtimer);
-+
-+	if (!ctx->nr_active || ctx->cpu != smp_processor_id())
-+		return HRTIMER_NORESTART;
-+
-+	for_each_set_bit(bit, ctx->active_mask, HYGON_UNCORE_NUM_COUNTERS_MAX) {
-+		event = ctx->events[bit];
-+		event->pmu->read(event);
-+	}
-+
-+	hrtimer_forward_now(hrtimer, ns_to_ktime(ctx->hrtimer_duration));
-+	return HRTIMER_RESTART;
-+}
-+
-+static void hygon_uncore_start_hrtimer(struct hygon_uncore_ctx *ctx)
-+{
-+	hrtimer_start(&ctx->hrtimer, ns_to_ktime(ctx->hrtimer_duration),
-+		      HRTIMER_MODE_REL_PINNED_HARD);
-+}
-+
-+static void hygon_uncore_cancel_hrtimer(struct hygon_uncore_ctx *ctx)
-+{
-+	hrtimer_cancel(&ctx->hrtimer);
-+}
-+
-+static void hygon_uncore_init_hrtimer(struct hygon_uncore_ctx *ctx)
-+{
-+	hrtimer_setup(&ctx->hrtimer, hygon_uncore_hrtimer, CLOCK_MONOTONIC,
-+		      HRTIMER_MODE_REL_HARD);
-+}
-+
-+static void hygon_uncore_read(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	u64 prev, cur;
-+	s64 delta;
-+
-+	do {
-+		prev = local64_read(&hwc->prev_count);
-+		rdmsrq(hwc->event_base, cur);
-+	} while (local64_cmpxchg(&hwc->prev_count, prev, cur) != prev);
-+	delta = (cur << HYGON_UNCORE_COUNTER_SHIFT) -
-+		(prev << HYGON_UNCORE_COUNTER_SHIFT);
-+	delta >>= HYGON_UNCORE_COUNTER_SHIFT;
-+	local64_add(delta, &event->count);
-+}
-+
-+static void hygon_uncore_start(struct perf_event *event, int flags)
-+{
-+	struct hygon_uncore_pmu *pmu = event_to_hygon_uncore_pmu(event);
-+	struct hygon_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (!ctx->nr_active++)
-+		hygon_uncore_start_hrtimer(ctx);
-+
-+	if (flags & PERF_EF_RELOAD)
-+		wrmsrq(hwc->event_base, (u64)local64_read(&hwc->prev_count));
-+
-+	hwc->state = 0;
-+	__set_bit(hwc->idx, ctx->active_mask);
-+	wrmsrq(hwc->config_base, (hwc->config | ARCH_PERFMON_EVENTSEL_ENABLE));
-+	perf_event_update_userpage(event);
-+}
-+
-+static void hygon_uncore_stop(struct perf_event *event, int flags)
-+{
-+	struct hygon_uncore_pmu *pmu = event_to_hygon_uncore_pmu(event);
-+	struct hygon_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	wrmsrq(hwc->config_base, hwc->config);
-+	hwc->state |= PERF_HES_STOPPED;
-+
-+	if ((flags & PERF_EF_UPDATE) && !(hwc->state & PERF_HES_UPTODATE)) {
-+		event->pmu->read(event);
-+		hwc->state |= PERF_HES_UPTODATE;
-+	}
-+
-+	if (!--ctx->nr_active)
-+		hygon_uncore_cancel_hrtimer(ctx);
-+
-+	__clear_bit(hwc->idx, ctx->active_mask);
-+}
-+
-+static int hygon_uncore_add(struct perf_event *event, int flags)
-+{
-+	struct hygon_uncore_pmu *pmu = event_to_hygon_uncore_pmu(event);
-+	struct hygon_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	int i, iod_idx;
-+
-+	if (!ctx)
-+		return -ENODEV;
-+
-+	if (hwc->idx != -1 && ctx->events[hwc->idx] == event)
-+		goto out;
-+
-+	for (i = 0; i < pmu->num_counters; i++) {
-+		if (ctx->events[i] == event) {
-+			hwc->idx = i;
-+			goto out;
-+		}
-+	}
-+
-+	hwc->idx = -1;
-+	if (is_uncore_df_iod_event(pmu)) {
-+		iod_idx = event->attr.config1;
-+		for (i = iod_idx * HYGON_UNCORE_NUM_COUNTERS_DF;
-+		     i < (iod_idx + 1) * HYGON_UNCORE_NUM_COUNTERS_DF;
-+		     i++) {
-+			struct perf_event *tmp = NULL;
-+
-+			if (try_cmpxchg(&ctx->events[i], &tmp, event)) {
-+				hwc->idx = i;
-+				break;
-+			}
-+		}
-+	} else {
-+		for (i = 0; i < pmu->num_counters; i++) {
-+			struct perf_event *tmp = NULL;
-+
-+			if (try_cmpxchg(&ctx->events[i], &tmp, event)) {
-+				hwc->idx = i;
-+				break;
-+			}
-+		}
-+	}
-+out:
-+	if (hwc->idx == -1)
-+		return -EBUSY;
-+
-+	hwc->config_base = pmu->msr_base + (2 * hwc->idx);
-+	hwc->event_base = pmu->msr_base + 1 + (2 * hwc->idx);
-+	hwc->state = PERF_HES_UPTODATE | PERF_HES_STOPPED;
-+	if (flags & PERF_EF_START)
-+		event->pmu->start(event, PERF_EF_RELOAD);
-+
-+	return 0;
-+}
-+
-+static void hygon_uncore_del(struct perf_event *event, int flags)
-+{
-+	struct hygon_uncore_pmu *pmu = event_to_hygon_uncore_pmu(event);
-+	struct hygon_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	int i;
-+
-+	if (!ctx)
-+		return;
-+
-+	event->pmu->stop(event, PERF_EF_UPDATE);
-+	for (i = 0; i < pmu->num_counters; i++) {
-+		struct perf_event *tmp = event;
-+
-+		if (try_cmpxchg(&ctx->events[i], &tmp, NULL))
-+			break;
-+	}
-+
-+	hwc->idx = -1;
-+}
-+
-+static int hygon_uncore_event_init(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	struct hygon_uncore_pmu *pmu;
-+	struct hygon_uncore_ctx *ctx;
-+
-+	if (event->attr.type != event->pmu->type)
-+		return -ENOENT;
-+
-+	if (event->cpu < 0)
-+		return -EINVAL;
-+
-+	pmu = event_to_hygon_uncore_pmu(event);
-+	ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	if (!ctx)
-+		return -ENODEV;
-+
-+	event->cpu = ctx->cpu;
-+	hwc->config = event->attr.config;
-+	hwc->idx = -1;
-+
-+	return 0;
-+}
-+
-+static int hygon_uncore_df_event_init(struct perf_event *event)
-+{
-+	int ret = hygon_uncore_event_init(event);
-+	struct hw_perf_event *hwc = &event->hw;
-+	struct hygon_uncore_pmu *pmu;
-+	struct hygon_uncore *uncore;
-+	u64 event_mask = HYGON_F18H_RAW_EVENT_MASK_DF;
-+
-+	if (ret)
-+		return ret;
-+
-+	pmu = event_to_hygon_uncore_pmu(event);
-+	uncore = &uncores[pmu->type];
-+	if (is_uncore_df_iod_event(pmu) &&
-+	    (event->attr.config1 >= hygon_uncore_ctx_num_iods(uncore, event->cpu)))
-+		return -EINVAL;
-+
-+	if (boot_cpu_data.x86_model == 0x4 ||
-+	    boot_cpu_data.x86_model == 0x5)
-+		event_mask = HYGON_F18H_M4H_RAW_EVENT_MASK_DF;
-+	else if (boot_cpu_data.x86_model >= 0x6 &&
-+		 boot_cpu_data.x86_model <= 0x18)
-+		event_mask = HYGON_F18H_M6H_RAW_EVENT_MASK_DF;
-+
-+	hwc->config = event->attr.config & event_mask;
-+	return 0;
-+}
-+
-+static ssize_t cpumask_show(struct device *dev,
-+			    struct device_attribute *attr,
-+			    char *buf)
-+{
-+	struct pmu *ptr = dev_get_drvdata(dev);
-+	struct hygon_uncore_pmu *pmu = container_of(ptr, struct hygon_uncore_pmu, pmu);
-+
-+	return cpumap_print_to_pagebuf(true, buf, &pmu->active_mask);
-+}
-+static DEVICE_ATTR_RO(cpumask);
-+
-+static struct attribute *hygon_uncore_attrs[] = {
-+	&dev_attr_cpumask.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group hygon_uncore_attr_group = {
-+	.attrs = hygon_uncore_attrs,
-+};
-+
-+#define DEFINE_UNCORE_FORMAT_ATTR(_var, _name, _format)			\
-+static ssize_t __uncore_##_var##_show(struct device *dev,		\
-+				struct device_attribute *attr,		\
-+				char *page)				\
-+{									\
-+	BUILD_BUG_ON(sizeof(_format) >= PAGE_SIZE);			\
-+	return sprintf(page, _format "\n");				\
-+}									\
-+static struct device_attribute format_attr_##_var =			\
-+	__ATTR(_name, 0444, __uncore_##_var##_show, NULL)
-+
-+DEFINE_UNCORE_FORMAT_ATTR(event,	event,		"config:0-5");
-+DEFINE_UNCORE_FORMAT_ATTR(umask8,	umask,		"config:8-15");
-+DEFINE_UNCORE_FORMAT_ATTR(umask10,	umask,		"config:8-17");		/* F18h M4h DF */
-+DEFINE_UNCORE_FORMAT_ATTR(umask12,	umask,		"config:8-19");		/* F18h M6h DF */
-+DEFINE_UNCORE_FORMAT_ATTR(constid,	constid,	"config:6-7,32-35,61-62");
-+DEFINE_UNCORE_FORMAT_ATTR(iod,		iod,		"config1:0-1");
-+
-+static struct attribute *hygon_uncore_df_umask_attr(void)
-+{
-+	if (boot_cpu_data.x86_model == 0x4 ||
-+	    boot_cpu_data.x86_model == 0x5)
-+		return &format_attr_umask10.attr;
-+
-+	if (boot_cpu_data.x86_model >= 0x6 &&
-+	    boot_cpu_data.x86_model <= 0x18)
-+		return &format_attr_umask12.attr;
-+
-+	return &format_attr_umask8.attr;
-+}
-+
-+static struct attribute *hygon_uncore_df_format_attr[] = {
-+	&format_attr_event.attr,	/* event */
-+	&format_attr_umask8.attr,	/* umask */
-+	&format_attr_constid.attr,	/* constid */
-+	NULL,
-+};
-+
-+static struct attribute_group hygon_uncore_df_format_group = {
-+	.name = "format",
-+	.attrs = hygon_uncore_df_format_attr,
-+};
-+
-+static const struct attribute_group *hygon_uncore_df_attr_groups[] = {
-+	&hygon_uncore_attr_group,
-+	&hygon_uncore_df_format_group,
-+	NULL,
-+};
-+
-+static struct attribute *hygon_uncore_df_iod_format_attr[] = {
-+	&format_attr_event.attr,	/* event */
-+	&format_attr_umask10.attr,	/* umask */
-+	&format_attr_constid.attr,	/* constid */
-+	&format_attr_iod.attr,		/* iod */
-+	NULL,
-+};
-+
-+static struct attribute_group hygon_uncore_df_iod_format_group = {
-+	.name = "format",
-+	.attrs = hygon_uncore_df_iod_format_attr,
-+};
-+
-+static const struct attribute_group *hygon_uncore_df_iod_attr_groups[] = {
-+	&hygon_uncore_attr_group,
-+	&hygon_uncore_df_iod_format_group,
-+	NULL,
-+};
-+
-+static int hygon_uncore_cpu_starting(unsigned int cpu)
-+{
-+	struct hygon_uncore *uncore;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &uncores[i];
-+		uncore->scan(uncore, cpu);
-+	}
-+
-+	return 0;
-+}
-+
-+static int hygon_uncore_cpu_dead(unsigned int cpu)
-+{
-+	struct hygon_uncore *uncore;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &uncores[i];
-+		uncore->free(uncore, cpu);
-+	}
-+
-+	return 0;
-+}
-+
-+static int hygon_uncore_cpu_online(unsigned int cpu)
-+{
-+	struct hygon_uncore *uncore;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &uncores[i];
-+		if (uncore->init(uncore, cpu))
-+			continue;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hygon_uncore_cpu_down_prepare(unsigned int cpu)
-+{
-+	struct hygon_uncore *uncore;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &uncores[i];
-+		uncore->move(uncore, cpu);
-+	}
-+
-+	return 0;
-+}
-+
-+static void hygon_uncore_ctx_free(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	struct hygon_uncore_pmu *pmu = &uncore->pmu;
-+	struct hygon_uncore_ctx *ctx;
-+
-+	if (!uncore->init_done || !uncore->pmu_registered)
-+		return;
-+
-+	if (!pmu->ctx)
-+		return;
-+
-+	ctx = *per_cpu_ptr(pmu->ctx, cpu);
-+	if (!ctx)
-+		return;
-+
-+	if (cpu == ctx->cpu)
-+		cpumask_clear_cpu(cpu, &pmu->active_mask);
-+
-+	if (!--ctx->refcnt) {
-+		hygon_uncore_cancel_hrtimer(ctx);
-+		kfree(ctx->events);
-+		kfree(ctx);
-+	}
-+
-+	*per_cpu_ptr(pmu->ctx, cpu) = NULL;
-+}
-+
-+static void hygon_uncore_ctx_move(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	struct hygon_uncore_pmu *pmu = &uncore->pmu;
-+	struct hygon_uncore_ctx *curr, *next;
-+	int i;
-+
-+	if (!uncore->init_done || !uncore->pmu_registered)
-+		return;
-+
-+	if (!pmu->ctx)
-+		return;
-+
-+	curr = *per_cpu_ptr(pmu->ctx, cpu);
-+	if (!curr)
-+		return;
-+
-+	for_each_online_cpu(i) {
-+		next = *per_cpu_ptr(pmu->ctx, i);
-+		if (!next || cpu == i)
-+			continue;
-+
-+		if (curr == next) {
-+			perf_pmu_migrate_context(&pmu->pmu, cpu, i);
-+			cpumask_clear_cpu(cpu, &pmu->active_mask);
-+			cpumask_set_cpu(i, &pmu->active_mask);
-+			next->cpu = i;
-+			break;
-+		}
-+	}
-+}
-+
-+static int hygon_uncore_ctx_init(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	struct hygon_uncore_ctx *curr, *prev;
-+	struct hygon_uncore_pmu *pmu = &uncore->pmu;
-+	int node, cid, i;
-+
-+	if (!uncore->init_done || !uncore->pmu_registered)
-+		return 0;
-+
-+	if (!pmu->ctx)
-+		return 0;
-+
-+	cid = hygon_uncore_ctx_cid(uncore, cpu);
-+	*per_cpu_ptr(pmu->ctx, cpu) = NULL;
-+	curr = NULL;
-+
-+	for_each_online_cpu(i) {
-+		if (cpu == i)
-+			continue;
-+
-+		prev = *per_cpu_ptr(pmu->ctx, i);
-+		if (!prev)
-+			continue;
-+		if (cid == hygon_uncore_ctx_cid(uncore, i)) {
-+			curr = prev;
-+			break;
-+		}
-+	}
-+
-+	if (!curr) {
-+		node = cpu_to_node(cpu);
-+		curr = kzalloc_node(sizeof(*curr), GFP_KERNEL, node);
-+		if (!curr)
-+			goto fail;
-+
-+		curr->cpu = cpu;
-+		curr->events = kzalloc_node(sizeof(*curr->events) *
-+					    pmu->num_counters,
-+					    GFP_KERNEL, node);
-+		if (!curr->events) {
-+			kfree(curr);
-+			goto fail;
-+		}
-+
-+		cpumask_set_cpu(cpu, &pmu->active_mask);
-+
-+		hygon_uncore_init_hrtimer(curr);
-+		curr->hrtimer_duration = (u64)update_interval * NSEC_PER_MSEC;
-+	}
-+
-+	curr->refcnt++;
-+	*per_cpu_ptr(pmu->ctx, cpu) = curr;
-+
-+	return 0;
-+
-+fail:
-+	hygon_uncore_ctx_free(uncore, cpu);
-+
-+	return -ENOMEM;
-+}
-+
-+static void hygon_uncore_df_ctx_scan(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	union hygon_uncore_info info = {};
-+
-+	if (!boot_cpu_has(X86_FEATURE_PERFCTR_NB))
-+		return;
-+
-+	info.split.num_iods = 0;
-+	info.split.num_pmcs = HYGON_UNCORE_NUM_COUNTERS_DF;
-+	info.split.cid = topology_amd_node_id(cpu);
-+
-+	*per_cpu_ptr(uncore->info, cpu) = info;
-+}
-+
-+static
-+int hygon_uncore_df_ctx_init(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	struct hygon_uncore_pmu *pmu = &uncore->pmu;
-+	int num_counters;
-+
-+	if (uncore->init_done)
-+		return hygon_uncore_ctx_init(uncore, cpu);
-+
-+	num_counters = hygon_uncore_ctx_num_pmcs(uncore, cpu);
-+	if (!num_counters)
-+		goto done;
-+
-+	strscpy(pmu->name, "hygon_df", sizeof(pmu->name));
-+	pmu->num_counters = num_counters;
-+	pmu->msr_base = MSR_HYGON_F18H_DF_CTL;
-+	pmu->type = HYGON_UNCORE_TYPE_DF;
-+
-+	hygon_uncore_df_format_attr[1] = hygon_uncore_df_umask_attr();
-+
-+	pmu->ctx = alloc_percpu(struct hygon_uncore_ctx *);
-+	if (!pmu->ctx)
-+		goto done;
-+
-+	pmu->pmu = (struct pmu) {
-+		.task_ctx_nr	= perf_invalid_context,
-+		.attr_groups	= hygon_uncore_df_attr_groups,
-+		.name		= pmu->name,
-+		.event_init	= hygon_uncore_df_event_init,
-+		.add		= hygon_uncore_add,
-+		.del		= hygon_uncore_del,
-+		.start		= hygon_uncore_start,
-+		.stop		= hygon_uncore_stop,
-+		.read		= hygon_uncore_read,
-+		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
-+		.module		= THIS_MODULE,
-+	};
-+
-+	if (perf_pmu_register(&pmu->pmu, pmu->pmu.name, -1)) {
-+		free_percpu(pmu->ctx);
-+		pmu->ctx = NULL;
-+		goto done;
-+	}
-+	uncore->pmu_registered = true;
-+
-+done:
-+	uncore->init_done = true;
-+	return hygon_uncore_ctx_init(uncore, cpu);
-+}
-+
-+static
-+void hygon_uncore_df_iod_ctx_scan(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	union hygon_uncore_info info = {};
-+	int num_packages, num_cdds, iods_per_package;
-+
-+	if (!boot_cpu_has(X86_FEATURE_PERFCTR_NB))
-+		return;
-+
-+	if (boot_cpu_data.x86_model < 0x4 || boot_cpu_data.x86_model == 0x6)
-+		return;
-+
-+	num_packages = topology_max_packages();
-+	num_cdds = topology_max_dies_per_package() * num_packages;
-+	iods_per_package = (amd_nb_num() - num_cdds) / num_packages;
-+
-+	/* Hardware does not support more than 2 IODs per package. */
-+	if (iods_per_package <= 0 || iods_per_package > 2)
-+		return;
-+
-+	info.split.cid = topology_physical_package_id(cpu);
-+	info.split.num_iods = iods_per_package;
-+	info.split.num_pmcs = HYGON_UNCORE_NUM_COUNTERS_DF * iods_per_package;
-+
-+	*per_cpu_ptr(uncore->info, cpu) = info;
-+}
-+
-+static
-+int hygon_uncore_df_iod_ctx_init(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	struct hygon_uncore_pmu *pmu = &uncore->pmu;
-+	int num_counters;
-+
-+	if (uncore->init_done)
-+		return hygon_uncore_ctx_init(uncore, cpu);
-+
-+	num_counters = hygon_uncore_ctx_num_pmcs(uncore, cpu);
-+	if (!num_counters)
-+		goto done;
-+
-+	strscpy(pmu->name, "hygon_df_iod", sizeof(pmu->name));
-+	pmu->num_counters = num_counters;
-+	pmu->msr_base = MSR_HYGON_F18H_DF_IOD_CTL;
-+	pmu->type = HYGON_UNCORE_TYPE_DF_IOD;
-+
-+	hygon_uncore_df_iod_format_attr[1] = hygon_uncore_df_umask_attr();
-+
-+	pmu->ctx = alloc_percpu(struct hygon_uncore_ctx *);
-+	if (!pmu->ctx)
-+		goto done;
-+
-+	pmu->pmu = (struct pmu) {
-+		.task_ctx_nr	= perf_invalid_context,
-+		.attr_groups	= hygon_uncore_df_iod_attr_groups,
-+		.name		= pmu->name,
-+		.event_init	= hygon_uncore_df_event_init,
-+		.add		= hygon_uncore_add,
-+		.del		= hygon_uncore_del,
-+		.start		= hygon_uncore_start,
-+		.stop		= hygon_uncore_stop,
-+		.read		= hygon_uncore_read,
-+		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
-+		.module		= THIS_MODULE,
-+	};
-+
-+	if (perf_pmu_register(&pmu->pmu, pmu->pmu.name, -1)) {
-+		free_percpu(pmu->ctx);
-+		pmu->ctx = NULL;
-+		goto done;
-+	}
-+	uncore->pmu_registered = true;
-+done:
-+	uncore->init_done = true;
-+	return hygon_uncore_ctx_init(uncore, cpu);
-+}
-+
-+static struct hygon_uncore uncores[HYGON_UNCORE_TYPE_MAX] = {
-+	/* HYGON DF */
-+	{
-+		.scan = hygon_uncore_df_ctx_scan,
-+		.init = hygon_uncore_df_ctx_init,
-+		.move = hygon_uncore_ctx_move,
-+		.free = hygon_uncore_ctx_free,
-+	},
-+	/* HYGON DF IOD */
-+	{
-+		.scan = hygon_uncore_df_iod_ctx_scan,
-+		.init = hygon_uncore_df_iod_ctx_init,
-+		.move = hygon_uncore_ctx_move,
-+		.free = hygon_uncore_ctx_free,
-+	}
-+};
-+
-+static void hygon_uncore_pmu_cleanup(void)
-+{
-+	struct hygon_uncore_ctx *ctx;
-+	struct hygon_uncore *uncore;
-+	int i, cpu;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &uncores[i];
-+
-+		/* Unregister PMU before freeing its contexts. */
-+		if (uncore->pmu_registered) {
-+			perf_pmu_unregister(&uncore->pmu.pmu);
-+			uncore->pmu_registered = false;
-+		}
-+
-+		if (!uncore->pmu.ctx)
-+			continue;
-+
-+		/* Shared ctx objects are released through their refcnt. */
-+		for_each_possible_cpu(cpu) {
-+			ctx = *per_cpu_ptr(uncore->pmu.ctx, cpu);
-+			if (!ctx)
-+				continue;
-+
-+			if (!--ctx->refcnt) {
-+				hygon_uncore_cancel_hrtimer(ctx);
-+				kfree(ctx->events);
-+				kfree(ctx);
-+			}
-+			*per_cpu_ptr(uncore->pmu.ctx, cpu) = NULL;
-+		}
-+
-+		free_percpu(uncore->pmu.ctx);
-+		uncore->pmu.ctx = NULL;
-+	}
-+}
-+
-+static void hygon_uncore_info_cleanup(void)
-+{
-+	struct hygon_uncore *uncore;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &uncores[i];
-+		if (uncore->info) {
-+			free_percpu(uncore->info);
-+			uncore->info = NULL;
-+		}
-+	}
-+}
-+
-+static int __init hygon_uncore_init(void)
-+{
-+	struct hygon_uncore *uncore;
-+	int ret = -ENODEV;
-+	int i;
-+
-+
-+	if (!update_interval) {
-+		pr_err("update_interval must be greater than 0 ms\n");
-+		return -EINVAL;
-+	}
-+
-+	if (boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
-+		return -ENODEV;
-+
-+	if (!boot_cpu_has(X86_FEATURE_TOPOEXT))
-+		return -ENODEV;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &uncores[i];
-+
-+		uncore->info = alloc_percpu(union hygon_uncore_info);
-+		if (!uncore->info) {
-+			ret = -ENOMEM;
-+			goto fail;
-+		}
-+	}
-+
-+	ret = cpuhp_setup_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP,
-+				"perf/x86/hygon/uncore:prepare",
-+				NULL, hygon_uncore_cpu_dead);
-+	if (ret)
-+		goto fail;
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING,
-+				"perf/x86/hygon/uncore:starting",
-+				hygon_uncore_cpu_starting, NULL);
-+	if (ret)
-+		goto fail_prep;
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_ONLINE,
-+				"perf/x86/hygon/uncore:online",
-+				hygon_uncore_cpu_online,
-+				hygon_uncore_cpu_down_prepare);
-+	if (ret)
-+		goto fail_start;
-+
-+	return 0;
-+
-+fail_start:
-+	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING);
-+fail_prep:
-+	cpuhp_remove_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP);
-+fail:
-+	hygon_uncore_info_cleanup();
-+	return ret;
-+}
-+
-+static void __exit hygon_uncore_exit(void)
-+{
-+	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_ONLINE);
-+	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING);
-+	cpuhp_remove_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP);
-+
-+	hygon_uncore_pmu_cleanup();
-+	hygon_uncore_info_cleanup();
-+}
-+module_init(hygon_uncore_init);
-+module_exit(hygon_uncore_exit);
-+
-+MODULE_DESCRIPTION("Hygon Uncore Driver");
-+MODULE_LICENSE("GPL");
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index dbc00b6dd69e..6c486e1ab001 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -775,9 +775,7 @@ int amd_uncore_df_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
- 		goto done;
- 	}
- 
--	pr_info("%d %s%s counters detected\n", pmu->num_counters,
--		boot_cpu_data.x86_vendor == X86_VENDOR_HYGON ?  "HYGON " : "",
--		pmu->pmu.name);
-+	pr_info("%d %s counters detected\n", pmu->num_counters, pmu->pmu.name);
- 
- 	uncore->num_pmus = 1;
- 
-@@ -911,9 +909,7 @@ int amd_uncore_l3_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
- 		goto done;
- 	}
- 
--	pr_info("%d %s%s counters detected\n", pmu->num_counters,
--		boot_cpu_data.x86_vendor == X86_VENDOR_HYGON ?  "HYGON " : "",
--		pmu->pmu.name);
-+	pr_info("%d %s counters detected\n", pmu->num_counters, pmu->pmu.name);
- 
- 	uncore->num_pmus = 1;
- 
-@@ -1120,8 +1116,7 @@ static int __init amd_uncore_init(void)
- 	int ret = -ENODEV;
- 	int i;
- 
--	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD &&
--	    boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
-+	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
- 		return -ENODEV;
- 
- 	if (!boot_cpu_has(X86_FEATURE_TOPOEXT))
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 18c4be75e927..d20338f0b2b2 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -851,6 +851,8 @@
- #define MSR_F15H_PTSC			0xc0010280
- #define MSR_F15H_IC_CFG			0xc0011021
- #define MSR_F15H_EX_CFG			0xc001102c
-+#define MSR_HYGON_F18H_DF_CTL		0xc0010240
-+#define MSR_HYGON_F18H_DF_IOD_CTL	0xc0010250
- 
- /* Fam 10h MSRs */
- #define MSR_FAM10H_MMIO_CONF_BASE	0xc0010058
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 1eb13673e889..7c8c00ad56e9 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -124,6 +124,26 @@
- 	(AMD64_PERFMON_V2_EVENTSEL_EVENT_NB	|	\
- 	 AMD64_PERFMON_V2_EVENTSEL_UMASK_NB)
- 
-+#define HYGON_F18H_EVENTSEL_EVENT_DF		0x0000003FULL
-+#define HYGON_F18H_EVENTSEL_UMASK_DF		0x0000FF00ULL
-+#define HYGON_F18H_M4H_EVENTSEL_UMASK_DF	0x0003FF00ULL
-+#define HYGON_F18H_M6H_EVENTSEL_UMASK_DF	0x000FFF00ULL
-+#define HYGON_F18H_EVENTSEL_CONSTID_DF			\
-+	(0x000000C0ULL | GENMASK_ULL(35, 32) | GENMASK_ULL(62, 61))
-+
-+#define HYGON_F18H_RAW_EVENT_MASK_DF			\
-+	(HYGON_F18H_EVENTSEL_EVENT_DF		|	\
-+	 HYGON_F18H_EVENTSEL_UMASK_DF		|	\
-+	 HYGON_F18H_EVENTSEL_CONSTID_DF)
-+#define HYGON_F18H_M4H_RAW_EVENT_MASK_DF		\
-+	(HYGON_F18H_EVENTSEL_EVENT_DF		|	\
-+	 HYGON_F18H_M4H_EVENTSEL_UMASK_DF	|	\
-+	 HYGON_F18H_EVENTSEL_CONSTID_DF)
-+#define HYGON_F18H_M6H_RAW_EVENT_MASK_DF		\
-+	(HYGON_F18H_EVENTSEL_EVENT_DF		|	\
-+	 HYGON_F18H_M6H_EVENTSEL_UMASK_DF	|	\
-+	 HYGON_F18H_EVENTSEL_CONSTID_DF)
-+
- #define AMD64_PERFMON_V2_ENABLE_UMC			BIT_ULL(31)
- #define AMD64_PERFMON_V2_EVENTSEL_EVENT_UMC		GENMASK_ULL(7, 0)
- #define AMD64_PERFMON_V2_EVENTSEL_RDWRMASK_UMC		GENMASK_ULL(9, 8)
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 0fb3a2a62eb0..bccdb87a0c05 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -62,6 +62,7 @@ enum cpuhp_state {
- 	CPUHP_CREATE_THREADS,
- 	CPUHP_PERF_X86_PREPARE,
- 	CPUHP_PERF_X86_AMD_UNCORE_PREP,
-+	CPUHP_PERF_X86_HYGON_UNCORE_PREP,
- 	CPUHP_PERF_POWER,
- 	CPUHP_PERF_SUPERH,
- 	CPUHP_X86_HPET_DEAD,
-@@ -148,6 +149,7 @@ enum cpuhp_state {
- 	CPUHP_AP_IRQ_RISCV_SBI_IPI_STARTING,
- 	CPUHP_AP_ARM_MVEBU_COHERENCY,
- 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
-+	CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING,
- 	CPUHP_AP_PERF_X86_STARTING,
- 	CPUHP_AP_PERF_X86_AMD_IBS_STARTING,
- 	CPUHP_AP_PERF_XTENSA_STARTING,
-@@ -205,6 +207,7 @@ enum cpuhp_state {
- 	CPUHP_AP_PERF_X86_ONLINE,
- 	CPUHP_AP_PERF_X86_UNCORE_ONLINE,
- 	CPUHP_AP_PERF_X86_AMD_UNCORE_ONLINE,
-+	CPUHP_AP_PERF_X86_HYGON_UNCORE_ONLINE,
- 	CPUHP_AP_PERF_X86_AMD_POWER_ONLINE,
- 	CPUHP_AP_PERF_S390_CF_ONLINE,
- 	CPUHP_AP_PERF_S390_SF_ONLINE,
--- 
-2.34.1
-
+> 
+>>
+>>> -               rdmsrq(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, fixed);
+>>>
+>>>                 pr_info("\n");
+>>>                 pr_info("CPU#%d: ctrl:       %016llx\n", cpu, ctrl);
+>>>                 pr_info("CPU#%d: status:     %016llx\n", cpu, status);
+>>>                 pr_info("CPU#%d: overflow:   %016llx\n", cpu, overflow);
+>>> -               pr_info("CPU#%d: fixed:      %016llx\n", cpu, fixed);
+>>> +
+>>> +               if (x86_pmu.fixedctr) {
+>>> +                       rdmsrq(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, fixed);
+>>> +                       pr_info("CPU#%d: fixed:      %016llx\n", cpu, fixed);
+>>> +               }
+>>>                 if (pebs_constraints) {
+>>>                         rdmsrq(MSR_IA32_PEBS_ENABLE, pebs);
+>>>                         pr_info("CPU#%d: pebs:       %016llx\n", cpu, pebs);
+>>> --
+>>> 2.54.0
+>>>
+>>
+> 
 
