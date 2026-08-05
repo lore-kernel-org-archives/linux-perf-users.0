@@ -1,67 +1,60 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5603E63A2
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 10:09:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68D03E6DD0
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 10:40:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785924554; cv=none; b=LKdOgWPdpL6rPazbnEXS5mjfmb0pk5MjkIrDDMQU9yCr5Feh7HHsjo0KVYtopAwZnUdcKOeuLOCFbKYKdIZAr8HONOeNU5jLje5u0dLF/8QIJYQ4kviAIqGUSl3pJ8RGN/7SPkrhMDJvnEJkefT3TQy9vB+QF3FLoZ/jWf0p1o4=
+	t=1785926433; cv=none; b=hCZCzsmxwK29LxnYQ5+QmXGUE2RtYg6e/MTdzuMN/BxDxSsM1aqYgT1X1g8EuTU9MeVl3b+SyRmqcYNUzX3YEiu8ymLm3ZyJg0ufWS2dSHLKnlZ0v7qb8121lX8jrleRjFwq3pkieHAwn0HIzI27sNWnZxefmXqvMx8GMttPSMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785924554; c=relaxed/simple;
-	bh=M2jF0Jt2bDRZzymZQmRY6Uui16djwBoVWK1VjhYmc30=;
+	s=arc-20240116; t=1785926433; c=relaxed/simple;
+	bh=XOWclAMMkuYhDhV+dPAHCPcN8X7muDkskjE3Rwdczos=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a4npNz8ugBgV6r3vkpMBLTlYToNLgMqFRVGLL+mYuXzIq51qL4oAdqhwNgiRj7b2ZV60enIWBCLqoGBUn4TVyh2N47wdqBT9Nw0DHOmrmWKmf9Jk1ypbE/dnETO9YGZEDXp0k0h86Sw2bon2oZ2kDGxsnYHsSNhFnkXScWO1b2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TE/KrOhR; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=B00ewngMu4WLD1sGEnRavlxQvB4L43SDHNT1PwRnhxfOG6vH18Vlt75/A+LQbc1UfirnFQYOKgLaCD+p2lvezOG1GmHWn+YbSJRE1dSWVMjmPlrowJfy/q8PXCFabVNKbSEOrcNpjdq4Hjc0yiWShWcSpVUzajXOVviacKEJ9yg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EtaVx5yG; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TE/KrOhR"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-47f703a9d05so503588f8f.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 03:09:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1785924550; x=1786529350; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=XrcStaMXdkE1hM0cDDyjF0ywdDXESAjsr6s/h+tclqU=;
-        b=TE/KrOhR+hPudONkTR1ud9BiEGids6A4j5g+iSX3NQwqqv6UfQ47ho6Hh78BSarN2j
-         VWzEyTQE8opn3ybr4nWb3fjO7eL+EqXnotKCRyt60OPtewwHVI83MmxQZ0mugzSrfWSR
-         srhdnWhCAL9c4niOLoY674o7bU8UFewIHCw+UewJbpeCNUsTKFEbjz7zh4+rSi11hefP
-         WHUIykpewpxsiYaBLNXJsg12u+XR49pDltYLOwA7VaQ5irinX+W/K7zA1hKrKNV9RHOb
-         psGh+0pSrS7J7E2cxeXYEt60vzL1QgUcqBQJ4tIDLN8LVd7OttdhMhnvv8Rd22OJaTxt
-         N18g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785924550; x=1786529350;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=XrcStaMXdkE1hM0cDDyjF0ywdDXESAjsr6s/h+tclqU=;
-        b=jtY0PMbiBE8N21V2N+wxCo9cBeUsuFQkMRZs2qOiMD2Ge8+3fATObmkGBFd56bqzst
-         ztZ6jhkEREja9yuA/z1aKmxfMpFGfi8U7De9GX6C3QNpXFN+VCajVnTV+yBobD2nN0XJ
-         Md/ToCqt6sIX2eHDgJZm9rxeE9+9fcgdYqhBKpPSkO0UqDXc/RMG/rEvgEDy+ZFzxHDl
-         2OaOWakTpgSVrXGHk6Ifx1grxkNe54ZRWYbQvsdUkyf6WPrLMLGBE7WzldUtWVxa9TX2
-         hK6ffCn0bcHQBKdcQS5+CSFQUxoDtlhZSfy+7q9tPIowVRtuqKXDp0UdpyXCnS5dP3+l
-         wv/w==
-X-Forwarded-Encrypted: i=1; AHgh+RrOolbHiVH055Po6SoWt6xKm+dYnqq4bqsDbcL4nhtM6bkgqRFv1RJDUDjCRV2kWLom4n32GP16UGAAWkjbmVpZ@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRNAN4UO917Z/5axmxgN+R95R6kbBSDyoq/jGqS2WPIicHSON9
-	1mcCbSSYbL2v42Kk2w2SnEYsf07qr3AEH2G8bwd3aC4YTmnpm9Lq+aL2InKWQ+QKCN0=
-X-Gm-Gg: AR+sD11N9g7ehHm2RyGQ0y0Wnbsxqrs1+V72QoH+QRlOrs5uv7ByJy9OEvG3Fv0+jCI
-	ufDADRRB2+du0kGkU0UeCQwb177vScacxytZRQ1yS6X2r5NZP4SZBR/cPFYFG2RvlWOS6c16BF/
-	M7TcQo6rRk/eEGKNpTxnclQQi1xYQoNT2/u4Y/SnPy0nwbpGye3ZWrYDFZb1RIB4I8NEufSTM7H
-	1tb28XC1LPhpXNkj6Zwuhuo5oBHZWD7pdTnoDgOBcwveKRRys7/GoWTabrAueHM5//xFkSAniGe
-	+U9DjHwthSlQyfqcEfS1z4+ZR18Ns4kfEXEqhOvf5C/g8ZKQha4hkMLhlU+SeatMJH4Ww+QQ6G2
-	CgVpualbFpRmSq6oPsPcvhNTksnSYQhU8DbDebf3q1A6BIXCS+Y4Vj7ATpujtphXKoujGCrewDW
-	j1pesoityF2BDLan0Lii4X46hQOzmZ2Iv0u0iyIwQaBG+dBFe61aQLYykP1nIylA3OgiE=
-X-Received: by 2002:a5d:5291:0:b0:47f:d072:87d7 with SMTP id ffacd0b85a97d-47fec4f663fmr7081483f8f.9.1785924550297;
-        Wed, 05 Aug 2026 03:09:10 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47febfda0cbsm7427247f8f.6.2026.08.05.03.09.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2026 03:09:09 -0700 (PDT)
-Message-ID: <ebb8a1b7-d5c8-4be0-af64-1496a7fd29d0@linaro.org>
-Date: Wed, 5 Aug 2026 11:09:08 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EtaVx5yG"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6758lh0L3354542;
+	Wed, 5 Aug 2026 10:40:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=TYULhW
+	4oC3L2Ksd4Waw3BondtEz1OQMHWVeyTdfKkfk=; b=EtaVx5yGwlWm4Uvru9IlwO
+	U/Qswvd6HPvonj17UjFUbVSzTzHsVLn2H9mfwQtQ/A/+HfSbKhobEtDrFNIdxH3d
+	3j7YM3kkXjJ41MGVvekK1QeAPhr7Oh/Cpqnhr4GY2HIWv7PXk5La50Q7xA/FyK0b
+	6d73AJoan9tieutJ2eXldUy0PH3XtXBG9yMKyCDo6dMFH5B7Q1T3rh5ubuLMuFuu
+	0HR+6VWAZqvk+J5Q3iR0FH+Jqe5fO/H2GIVEfbLJKwG1yMDd0NGMKMShn3csmMoR
+	nW/nfJIrf3VbBeSDjBzv1xb0AVwb39zYNSi0hJcUYWKRkIRKZXt15Tdk1Z0u9cmw
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fs8a42kab-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Aug 2026 10:40:15 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 675AQF12025485;
+	Wed, 5 Aug 2026 10:40:15 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fswtynwcm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 05 Aug 2026 10:40:15 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 675AeCNb21889674
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 5 Aug 2026 10:40:12 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0AEF15805A;
+	Wed,  5 Aug 2026 10:40:12 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7D1835805C;
+	Wed,  5 Aug 2026 10:40:05 +0000 (GMT)
+Received: from [9.124.212.93] (unknown [9.124.212.93])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  5 Aug 2026 10:40:05 +0000 (GMT)
+Message-ID: <be4c4d52-a74d-4d71-8ec3-b1fe2ed08349@linux.ibm.com>
+Date: Wed, 5 Aug 2026 16:10:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,110 +62,79 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 00/21] ARM64 PMU Partitioning
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org, alexandru.elisei@arm.com, pbonzini@redhat.com,
- corbet@lwn.net, linux@armlinux.org.uk, catalin.marinas@arm.com,
- will@kernel.org, maz@kernel.org, oliver.upton@linux.dev, mizhang@google.com,
- joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com,
- mark.rutland@arm.com, shuah@kernel.org, gankulkarni@os.amperecomputing.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-References: <gsntse4tvbn2.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [RFC PATCH v2 0/5] Add perf.data tracepoint events to trace.dat
+ conversion
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
+        maddy@linux.ibm.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
+        Tanushree.Shah@ibm.com, rostedt@goodmis.org
+References: <20260802180801.65183-1-tshah@linux.ibm.com>
+ <CAP-5=fXGaMPzt8BUZKQB4QeuxrfiERAF8Kdut+uBPnXWvL82-g@mail.gmail.com>
+ <CAP-5=fV0Y=__y11kmcLBo+1yAMraUKf6pUpdNUfav4NJEocwGA@mail.gmail.com>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <gsntse4tvbn2.fsf@coltonlewis-kvm.c.googlers.com>
+From: Tanushree Shah <tshah@linux.ibm.com>
+In-Reply-To: <CAP-5=fV0Y=__y11kmcLBo+1yAMraUKf6pUpdNUfav4NJEocwGA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=E6P9Y6dl c=1 sm=1 tr=0 ts=6a731310 cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=c92rfblmAAAA:8 a=1XWaLZrsAAAA:8 a=BxoDo6MavbR7QgIzhckA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=GvGzcOZaWPEFPQC_NcjD:22
+X-Proofpoint-ORIG-GUID: BiqrcGLGTCvHt7phAxQOQo3zLCSyiLsv
+X-Proofpoint-GUID: IBomcz3ilk-37tTHJML14EuISnaUA2uI
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODA1MDA4MSBTYWx0ZWRfXwc/j2VHUwg9r
+ CMTVmChTTw36bqeb4DfJTv/hniWW2glNQ/PlZRUWQ81K0/XSNPn/nXOF9y6MUKolmbovfyRkHSx
+ ncmYzdxRdO5AdvsocPnoBXRKSMZIyTc=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA1MDA4MSBTYWx0ZWRfXxJbP7AxVyop5
+ JZasnNM25/0RGVwqXKu9ab8K8FS1MCPk4BMpvnNRmBvPq7kbvtDi4ghJBfE/ZQBzkUjOGEnOsAu
+ 8AxfjYz2KHs4bO5we0ABzlDSA7kT8DDBMCqx7HJYYSBRIwIYaRzZ47nq8dyTEqYag9s9OpdNIlo
+ g3KstgPyW/atBo3rokoQKzARI2UjYbzGtWS650Pled9oWh92wlKDynB+Jj5nnoYG+5w5ayt8PKc
+ CCvdKWJI1FtoRKv2chNzxvN6UzzY03PKgmySexktaMejZBrpnKz38bYDx7uwI/bz/CoBU1euLii
+ tv+2sqEAO7uXl0YeF5sf9v7yktxWrV34NNFayWfYy+lqFirrpHNApsfmhnd1t0kIm5gvP+7idKe
+ vsEiSM/imD9j8Sx426E4wWfUSPU7m3kyIVp6DJBV95XKY6PHFRjmnwMnVheMFiClhKaJ48jC4DO
+ O7c0pnkf/pqGLw7+mTQ==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-05_03,2026-08-04_02,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 impostorscore=0
+ phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2608050081
 
+Thank you Ian for the review, glad it looks good!
 
+Thanks,
+Tanushree Shah
 
-On 04/08/2026 10:06 pm, Colton Lewis wrote:
-> James Clark <james.clark@linaro.org> writes:
+On 05/08/26 07:57, Ian Rogers wrote:
+> On Tue, Aug 4, 2026 at 7:07 PM Ian Rogers <irogers@google.com> wrote:
+>> On Sun, Aug 2, 2026 at 11:08 AM Tanushree Shah <tshah@linux.ibm.com> wrote:
+> ...
+>>> v1: https://lore.kernel.org/linux-perf-users/20260608125951.90425-2-tshah@linux.ibm.com/
+>>
+>> Thanks again Tanushree for pursuing this. I see on sashiko.dev that
+>> sashiko couldn't review the v2 patches because they failed to apply:
+>> https://sashiko.dev/#/log/baseline/53604/2
+>> The SHA of perf-tools-next that sashiko.dev was trying was
+>> d04ef71492fad7230d474efe33d05f4c0563d409, which corresponds to "perf
+>> machine: Check snprintf truncation for guest kallsyms path," added 4
+>> days ago:
+>> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=perf-tools-next&id=d04ef71492fad7230d474efe33d05f4c0563d409
+>> Could you rebase the patches so that we can benefit from the Sashiko review?
 > 
->> On 23/07/2026 9:57 pm, Colton Lewis wrote:
->>> James Clark <james.clark@linaro.org> writes:
->>>>>> When running the guest on a single CPU I get different counts for the
->>>>>> same event for a single process, although this never happens on a 
->>>>>> host.
->>>>>> I think there might even be some Perf tests which expect them to 
->>>>>> be the
->>>>>> same, and this doesn't depend on whether any events are running on 
->>>>>> the
->>>>>> host or not. Not sure if you ran all the Perf selftests in a guest or
->>>>>> not?
+> Fwiw, I went through the individual patches in case I could give some
+> useful early feedback. Everything looks great, and thanks for adding
+> the test!
 > 
->>>>> I'll investigate but I'm not sure perf is intended to guarantee
->>>>> that. perf stat just runs the event counters but may not write or read
->>>>> them at exactly the same time.
-> 
-> 
->>>> Is that true? The perf core calls perf_pmu_disable() when a process is
->>>> scheduled out before reading the count of each event of that process in
->>>> an inner loop. The perf_pmu_disable() clears PMCR_EL0.E which freezes
->>>> all of the counters so they can be read out in a consistent state.
-> 
->>>> It's important that they're all stopped at the same time because
->>>> counters might be used in metrics as ratios of each other. So I think
->>>> it's deliberately designed that way and appears to not be working in a
->>>> guest now.
-> 
->>> By default I think perf assumes events can be measured independently, If
->>> you want to guarantee events are scheduled together to avoid measurement
->>> skew you need to make sure the events are grouped.
-> 
->>> The common way to do that is with {} around the event list:
-> 
->>> perf stat -e {branches,branches}
-> 
->>> Please see if that resolves the issue.
-> 
-> 
->> Groups only change how the events are scheduled, not how the driver
->> starts or stops multiple events running on the same PMU (grouped or
->> ungrouped). In my repro I had less events than counters in HW, so they
->> will always be scheduled at the same time regardless of grouping.
-> 
->> I did notice something extra though, you have to first open some amount
->> of counters, and then open more than that. Then the second time the ones
->> with different counts will be however many were opened first time, as if
->> some state has stuck.
-> 
->> For example if I open two counters then 6, the first two always have
->> different counts the second time:
-> 
->>     $ perf stat -e branches,branches true
-> 
->>     Performance counter stats for 'true':
-> 
->>               106129      branches
-> 
->>               106129      branches
-> 
-> 
-> 
->>     $ perf stat -e
->> '{branches,branches,branches,branches,branches,branches}' true
-> 
->>     Performance counter stats for 'true':
-> 
->>               117013      branches
-> 
->>               117013      branches
-> 
->>               110364      branches
-> 
->>               110364      branches
-> 
->>               110364      branches
-> 
->>               110364      branches
-> 
-> 
->> After opening 6 again a third time they'll all have the same counts.
-> 
-> Interesting. Thanks. To clarify, is this happening in the host or VM?
-
-This is in the VM
+> Thanks,
+> Ian
 
