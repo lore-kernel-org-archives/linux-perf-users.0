@@ -1,162 +1,148 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from LO2P265CU024.outbound.protection.outlook.com (mail-uksouthazon11021080.outbound.protection.outlook.com [52.101.95.80])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953AD3C5DCD
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 18:51:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F0938C2A7;
+	Wed,  5 Aug 2026 18:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.95.80
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785955908; cv=pass; b=urNrO3vDludwnyjdOyc8p9fCLcqi7Ki9eh2Lg1SBu+5BwLr0ql38kKiew/DJxduWgfOAM+CPmliij/UUwj1SwhG2u6ZRjwQQx7VCcC1dEYu4IP78FV/pVb/HL/vly+3BQc+sK8kEjDW4Y5Dw5Rnbs4QEDUTd0lSXpJ/GJ+FxXIw=
+	t=1785955992; cv=fail; b=jX85biFeNbBZM1dN9y/dhh80tiCgzqHb0e7TL9T1Wln+WYzc3NtUC8OkUIVC9Z3cf03RL7iIq/nR4b4A3A9oweu3jmR7Ghfh8n//wmbdJ/yOA7sy5+J1kjTL2lHmSd9cxVJBdVAiw8tFKtA/1jAVpg/3+3GzUi9wgSRO5L9ebjE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785955908; c=relaxed/simple;
-	bh=UBQB8lazqd7k7sHbxSjCyBkFUZzmlO+rkvuiN843uvI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Tix5AtJRm5OgzMxqiwEpcNk1rwWiqxjgzphUCwp7i90mmSThlcMXUHXjziCe/ZWDJxHS6oVnrFIVPtFbHrnJfTe3o2Fh68bFuPKKFalZPxkS7pIBYFlZ1VquC8p4MXm+4OnO9i79fE0qWdpkx6OUk1i8HHT3W+AG+k/JYvTqU4Y=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dy5wzFdl; arc=pass smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dy5wzFdl"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-51c01c79467so49731cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 11:51:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785955906; cv=none;
-        d=google.com; s=arc-20260327;
-        b=HDtkyiUPxeTmPA/imEHcKaVby9+1nA1z/2YpW8mWoc3KTS6hGI8ybXAlwqe6NcQm4h
-         bSNUX8XZRozssrpB34Qg4KvaOqzFgm2YceouIeLTgKAxu7bdCTbisy15JuQkIEOvLFZs
-         Ho9vHTnFV8UH0ldkgazyA5vJpxz5QFbuySKSn8JK4QAZlNZLgOgrlLl7CQhpenKnvlZG
-         UMZxXiggaZYngujtq3gf47MYUyqb0qff9JAYwu9V3uCS1BPWgYJVQdopECnwbbtVDQbA
-         r6f0+AUzTjhtU6ATaD6z7l0/AA0H5BEV4tWEC44aolZ/sOZ1177XJa8YwfyiGiMZiPdq
-         e15w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=6pIFkjv1N5ewUvrjXMwzuAVifAI0srKVRbKjpXTo7o4=;
-        fh=CDfzapmWOiWjPKze8KSnfY33YSEuQd/0B436pwucLFU=;
-        b=jWbDxGoiciF3UIqb/XaJzU94HxmCjTogJ1IlWHDBxFtb2SKs/osndlSxpX/2t24aQN
-         PRAV80SHo5GRsngRRISaXKpaSsIZqT3Kr+cGppgPn0uV5G14//+4T/MbVM45pndAycZR
-         QqKJX/JtHBmKA+WIj+do4qotemr+dS4EAEuAbmlOMWbe9hAuK9JC3E6IFJa7KWqKZEjp
-         xygNGxulJSiW4rgpRKWPjsua2z0MwlvSXuasX7B4m77i3AXuR8OUdW1WRTdhd52zPK4o
-         xQxPs16z5ypjrnbaCBegDUf4lQIdId86+cCdUS3c7iME4UmhKABeA6DozPRW1txYs4tr
-         3y6g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785955906; x=1786560706; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=6pIFkjv1N5ewUvrjXMwzuAVifAI0srKVRbKjpXTo7o4=;
-        b=dy5wzFdlSdTM9I2WHXGoY25VSPTYjtIqHGnL8O0wFVgcttTQ6dsKlrzdhWwGsrSDTz
-         e5ynKcY8UFN8gZCbYTTREQ9ij23Y6wVZyFxhINR4lSnM8Deq5jG13FaQ7eRMv2IFT2Nb
-         RZw6rdgmkRgltJ846CpbuG2eFzHgU/Go7tm5R5d1S0G3lIuRSgljVOVRN1F5tSiVxT+p
-         qArlgAEJfu/JQ1yqDqIOIl4DBEmBiDgnRcGrCGBIZOIFM17HoiSEXdk1iFpt4KFy/2XR
-         d7GTfNeRUK46OibtREItLVi6jGHr6evna4CMVIdqS2ngNsYc5LUSk6jAiVD4OAHZcYga
-         /xkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785955906; x=1786560706;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=6pIFkjv1N5ewUvrjXMwzuAVifAI0srKVRbKjpXTo7o4=;
-        b=AeY5lLLh+EUNYIajsj0SfwxLyDkxLGk+gxHPa8atJZE0khx79CfempINpYcpwrEXax
-         BfiGqd4d1m0NpqlGyTmuF5ZyfjW8EOMgjQT3Sd6Vp/R9dPfvw/Naz+6/cauDKWS2C4dI
-         fzTcb2KpR1kPQYfMOt4wpu4H7O87dvBz4Dk4/ogvDJl/M3fZcgFYXwEuY55TRX9gokyX
-         10tzEixH64gZohUYCbLpCPCN+OUy/R2bMRMg11EaIUa2XD5ARBXDhXgl4noSNX6/R5kn
-         EnuSIrMvGhGDQD6CjIWTs1j84dSukftiPD0o1ZvGAIjwKGrh2kLnORvPPn6sA4itfB+H
-         HQtA==
-X-Forwarded-Encrypted: i=1; AHgh+RqGvY55Mj6MoWkIF6+xHKSCvv2xJ4PRDVquNvrwtD4l2Vs4UrLql7BIQDn7CuKUTj2wNZVldrZk0HEuFo3D5pBL@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMRUaK/ZhWS9RI6rQsZIVCha0sGjoIKm7zfIh3lChKazsHo4CT
-	J+w5uuF4Rz8oRaz9+Fqqa7cVl1Kmrc+c1UR5f3O5z2ezcSh9RHvU8O1+X2vR8eAHvanLqUPqGHA
-	o6hLEUiquuWbT9tDhF32URnI2XcDsoemZfYLpATtL
-X-Gm-Gg: AR+sD13q7HqpyzBWBj+tlqESkEjkHr1MtFK8SKMrvFmYtcpR6+4nJpJfT0fKMsmxDpZ
-	rs7iT5J3TB3cZ+KMqW6gKxuM4M/daMUiFa+t9UsTOfr0RZ42lhR10FSNKP28WZzKUWmBnG4YL+6
-	bzo6D1r7KIc+Mwlggs4hVugv3fMMYEk0x6YgfNeToCZf+ie9lZ2+6AaHOYvO70tsWDbjHwcaIbX
-	thlsLxctwK/JUY4HdCNxOzD8++joG0afpGtW/hjQpUzsGK34dmkT88lWdVn8YtUqgP/PjzzrHV9
-	PcPBLoIjoPofc9KP0Wk+kNmLl096W1aAH9cQxDbqMXQt4A==
-X-Received: by 2002:ac8:5e4e:0:b0:50d:edb1:6bd1 with SMTP id
- d75a77b69052e-52cfc15bad6mr2577571cf.13.1785955905660; Wed, 05 Aug 2026
- 11:51:45 -0700 (PDT)
+	s=arc-20240116; t=1785955992; c=relaxed/simple;
+	bh=XK3AsLP6Q+S0dHFZb4+Quee8RMuCArkuqX0gz6Y+9O4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=g8CSmGFhgfNvIQU3NyyUr5IhokqEa4vUkA4s5iycNmq/maCGlO9e1hqYu1BkSzwmpqOJSPEf1LhmeMrfRogo/X5bT3YQ8zxUd9bRZZd8QSs6DrvNQiVGdhs+vtVESsEPG2XUHMgVCzV1SIOXpBP8toz1FNcUycK8bX8txMOQDoU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.95.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SYrVCaQo5iN9IrAsQqGM7xWX/q933sEvFk8eqCQS5Z/Y3u5nQA0seZMUVt0UnX5bQ8NUSYjWc3oVrVIAmHChP7V24XfzQpA05Ljcnz0R1xaC+gABa4fg+vTbPPVXRmeKEn+lOHHHFQDNotsssExTfEbEhlxOiUcIlu+a9JuxIazDDFD+y4z7lcA1MTfhrbTuTxngMJJL25CPQWPvjHJAI/s5tHyF1LFK39h1D7mXXFe28SAqcs60wmahIFUZ8fF2j08S3l281F3wn2UlNJXqy48T351XYtTyP6XEZ8YVtmY3B51oKL1jBo0xhJLWNE9myv36o4y0/2qMrevFmIwFPQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=jWJ3Bfj/+0194R6EkN/yBl9B0IrDWqiiw/IspQZr6h8=;
+ b=MDm99NpxYdZKrpvvpA7+FJJ+PTnYRNFBIS3BM1rrwaOsbMWhjhDvCRIZty7xrWhLKHaNfSZSSFEe/iTLUak4EnEMvjpet8sPor+UFS8X02UD6IoSWDIAc8uuvIIvyzbmnFBIH92wUlWIFFgSfVYJ3R4GMdJFxaIOQXNX2Zru3b6EvbGPVLaZVHOnstGwaOA8mB7G51N+uXtr4P/IOhHZvnkl5LjxLLYEnyKu0rLi1Oz+aRE3G8jI3HlrsdPSXERMGD1PzFsGM3an+aHhL0EpJLkjU9c1S+e88sjgWj8hbrcJJlOxwBFN/m89r82SAHUXcgmkMyVR30hav7RySn6iwQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
+ by LO0P123MB6136.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:242::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.19; Wed, 5 Aug
+ 2026 18:53:06 +0000
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0292.018; Wed, 5 Aug 2026
+ 18:53:05 +0000
+Date: Wed, 5 Aug 2026 14:53:01 -0400
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, 
+	howardchu95@gmail.com, neelx@suse.com, chjohnst@mail.com, sean@ashe.io, steve@abita.co, 
+	rishil1999@outlook.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf trace: Format fields with hex specifiers in
+ print_fmt as hexadecimal
+Message-ID: <3iulqtbwakupwjjo3iksszlv5orvhssedya3mouw7ufxfdchlz@x3xqjtgmcwdo>
+References: <20260803124845.213165-1-atomlin@atomlin.com>
+ <178595449650.914389.87119431734742911.b4-ty@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <178595449650.914389.87119431734742911.b4-ty@kernel.org>
+X-ClientProxiedBy: BLAPR03CA0142.namprd03.prod.outlook.com
+ (2603:10b6:208:32e::27) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260805133013.235016-1-acme@kernel.org> <20260805133013.235016-2-acme@kernel.org>
-In-Reply-To: <20260805133013.235016-2-acme@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 5 Aug 2026 11:51:33 -0700
-X-Gm-Features: AUfX_mznKeDGpEQ9en9wF6nFihCMxxOYkojT5XAsDyYi3if6d903zQPlJ4q0V-4
-Message-ID: <CAP-5=fW6CkQSM5HRWROMZr0NPR8cSP+EVnHsSQ5NLh_zoFjYfg@mail.gmail.com>
-Subject: Re: [PATCH 01/12] perf jitdump: Fix extended header read that always fails
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	sashiko-bot <sashiko-bot@kernel.org>, Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO0P123MB6136:EE_
+X-MS-Office365-Filtering-Correlation-Id: 72b4c8e1-fcd3-4709-a164-08def322c8a5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|23010399003|22082099003|18002099003|4143699003|56012099006|6133799003|10067099003;
+X-Microsoft-Antispam-Message-Info:
+	R7RvAdeC5+F70+H9kLHl2wqxPFVO9J6sVM/tCsaJilv6YUNXycQkcPW8hMDzk8WUeXiEzpfH8lVfxFMIfl9pWwiGUdazKe0L+K+Rd5jN922GK83sgNbM2lyk1jWnJSoT90tP/Jweqj5c2joIlf3xkWx2LS/MoK7u6nAuS+ujSH7zTO9Cb9zvTWVyLrO6W+tyVsB5PW2hJuLbjoEpFYcBJbFnHqjY2X6i32/aRxBM8ygbDu5cAGrWCW6Zx0y+5zuZFMyjjXtvviPuZBuEZbc0Uhzkz7HJc0CaWTTvAChhHxvhTZKyG3QiadYrm4PfBPybBae7riPvs/znF9GLADn16njyW1zlQ44PBKZIy/w69pxmNiqmzrkokvM+D0o1efeqpkt4YMUF0/uu2Hs6BgNmNWRLkCb2Tt8Z968EM+qLChjHOKec2V0kAa7wEMTMhyyBg4YZW1JFAmyG/p6rXh3Hk7475Z3rgG5RHDBB5jNXHK5fvuhZtn/rvE44eAbC0yNGnlwNmAD3pfsNJBSaUCX81HLBqUTY9/DLR6h7jlgsUZkD4Btm/g0j1lPfgT40dj6PpgDrcENKfxbnXC7kGEHsjwAGXY2JbE4e4D9kT/JC3UBmGqpIBdlPKjoTuLozSpJS8p0atjfxBEHhSs9E6ddJXFTK4aS4EkKjbN9/WXsekYo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(23010399003)(22082099003)(18002099003)(4143699003)(56012099006)(6133799003)(10067099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QXpuZmVOYnhUd2JZODA5M3h5ZGZ4Q0xwUFJIR3dPWVZTekFhZnFqK1pZK1FH?=
+ =?utf-8?B?aE5rSnR5NTlVVWVWbkMvbDB5alJtQlM3Qy9xV0Exb2h0S2NUTVJvb0Z1SjJk?=
+ =?utf-8?B?b2ZTODA1a0hzVnVVcThWaEtDUEMvMHorUWl0alpTcncwcmxnRS9JVGNNMzJ2?=
+ =?utf-8?B?L0lEcnNBcFNQWEdUNmI1aCtwREdYNEl2UXFrRjhhWjg5dlhlcHV5YUdxMWFx?=
+ =?utf-8?B?cHFHSlZUNnBzVER3N3RsNGUySm1idkpmVTFlZ0w1US9udTAzeDBaR0ZQWklO?=
+ =?utf-8?B?SjNuSmVWTjBWVDgzMDNNdk12bktSOUtRYkJGMm1tcUE2UFhVL0o1b2JENlNV?=
+ =?utf-8?B?bTJCaDV4VTVMYzdmWFMzakdIMWJyYitNMVJJNXlkWVRibWNiVGhxRTRyOEpM?=
+ =?utf-8?B?dmdBU0RIOUdkOUxTR3NtTjF1VGFubExla2pKbVo2S21FL3lRVmhUcFFRT2dI?=
+ =?utf-8?B?akVWc1JOUU45WXByTVRmRmN1ZGhvMFNhWlA1enhMSUtMWWg4RW15cFBiRVYw?=
+ =?utf-8?B?OWtKU1RjWTgzZUF0WWQvRlpWUlB3VnpCeEdIMS9HTGdLNUNpejRhOFk2MXdI?=
+ =?utf-8?B?dEkrbXh1QytIN1RXc1JocHV2c1FaRDI5M2sxbUozdXlDNGxqd3ZPREhBY0pU?=
+ =?utf-8?B?TWpzWEgwaEErWDNLT1VEa3BGYk1Od2NNaUFxRHlndTJzQXc0alpuZ1FqYTVW?=
+ =?utf-8?B?WHFTc0U5QmZ4a0FzK3l4MFRZVnljR1RKa1hMbC9vRGdIYkQveVBSOEgydmt4?=
+ =?utf-8?B?NGxkTGh3WWVaN2VJcTJyNkZldDI0dmZjc0pKb1J5ZCtRV043d0ZlK0xvZkQ3?=
+ =?utf-8?B?SGRYZzhYMkJUNGpBMDlySTNmYzBsMXR3clFkaGgzWU5ZdHg3dC9WcDB4K29p?=
+ =?utf-8?B?a0ZWbGZZbWdDcTdYTFF3eUw1UnpMTkQ1MjZ5ZVo3aldsQVhWZFBQR3BvNnEx?=
+ =?utf-8?B?ZDNyWWRRL3JlQ09kZ28ybTl6MkZTbXBLWkVEZGRQYzNXUmNGcStKY25wUG9J?=
+ =?utf-8?B?Q3NCNE5LaVcwTUwrVllNME5kajl1Vk1pS0hpbytLMy9sOWhVcXBabmdSM0tx?=
+ =?utf-8?B?NFF6VytFWjVicUNveW5XeGI3RFUraUtIWEdTN21KcjZtREl5bm82RDZaY29h?=
+ =?utf-8?B?N2lUL3pBdXpFdXJkV1MvVDVZUFZkTVd1anlYNFFDQmpkTHZCUVQzOFJtcDYy?=
+ =?utf-8?B?bUg2NzFXTDJGMGlWSUNWcGNGZXEveEx6MjdEOWN4UEJmR0V6NFJ1aVFRY0t2?=
+ =?utf-8?B?S0hXeDJ3YkZpbFI2cklJWmNVTWtGOWJya3J0MkRjSTA2ZWM5UDR1ZnBQWkJO?=
+ =?utf-8?B?YTlUNmhQeG1BaUJLTmZwWThlQmNOQU00ZXdJeDJvdUN4U0RuN3JpbElONHdY?=
+ =?utf-8?B?UXR4SStENDdCeDl0K2xnRW9CV2N6emNwSGxUWFZicm1uUDdIdlBleGoxZng5?=
+ =?utf-8?B?bDV5QWcxc1NXMVJ3Um5oUmw0RkVUOGJueUR0ekxpUjJaSXBKTG0zZUJHTHY4?=
+ =?utf-8?B?ajB6Q1luTlMrSktKYmRheEZ4M213UmUyeStiR2FoeDB2RUMrWklvaGdKbTBs?=
+ =?utf-8?B?VGg4bFE2em5JRkxJTnFYWEtQUU9Kb0ZWSEVhbWhOTmcvalNzYXRJUUttazVQ?=
+ =?utf-8?B?czdkR0RuMzBXMlFkN2ZXd2k1K2tKRjE0UDYxaTB6MTBhZkFsTlF6NVBiSUM4?=
+ =?utf-8?B?Z0NRSHQ5OHBhTXpscmNLUkRDenRrbGo0c3k2L1JqcE4yQ0VDbThXZ2VFYktv?=
+ =?utf-8?B?aERrblA0V3N4Rk0zbmtIMGhmMk5hU3NjbUhWd09ManRGemUzQU02MHROZ3Qx?=
+ =?utf-8?B?MVdrSm9ESUxWY2JQci9yaVdGc1FXeWMzRndJLzh2UkFxR1RhZGxlSWNCZ2xK?=
+ =?utf-8?B?SWhFdFQrV2NmYnNIYTBISURvei9xWlcrd3NwdzlPUlphTHpSU29sVEZyRzdZ?=
+ =?utf-8?B?Q3IrOWs4QTVqdmcvMDUwSlVSMm4xaisxKzBFWlVTOXdUNzZmVTVzU0hOQk8r?=
+ =?utf-8?B?cDhGY3dycmNpak1XL0phYi9jc3VXSTZraS93QTdnTHNzMWRhaVFXcUV1Vkc3?=
+ =?utf-8?B?RW5rcFdpdmxYVG80YjNiTW5NWHoyUVFnVWZUQmg3L29DdWFTb1JscE1pUjFU?=
+ =?utf-8?B?QVNHVUdhTWhsNjY4dWQrdDR2TVpmUlhSRGtiWGc0WEpGdWFIU3QxQkRmdjZu?=
+ =?utf-8?B?STNQaDlydjNqbVhlcGJ1Y3hpWGMydmNTSW1kMWFnWnUxRmlUV2xuTzJHMDRq?=
+ =?utf-8?B?cmdMakNPcnlKak9pZXJTY09mNW4xb3ZIZFBvZ1orenNDSWYrUmFjL1R4V2o1?=
+ =?utf-8?B?NjlrVXQrNnVaaG52aWYwS254MnVCbEFsUHhhNHl1M1gxLzFlVWpMUT09?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72b4c8e1-fcd3-4709-a164-08def322c8a5
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2026 18:53:05.6639
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TyYiQWU5+roIeSg/58AAsyzImkpdqMSvImXMlCS6e4e/Tniixv+3Dj5DgmITFyuyl+g9Ps/XJDRE+JEdDHvZ2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P123MB6136
 
-On Wed, Aug 5, 2026 at 6:31=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> jit_open() sets bsz =3D bs before the fread() that uses bs - bsz as the
-> read size, making the expression always evaluate to zero.  fread() with
-> size 0 returns 0, which triggers the ret !=3D 1 error path =E2=80=94 so e=
-xtended
-> jitdump headers (total_size > sizeof(header)) have been silently broken
-> since the original implementation.
->
-> Additionally, when 0 < bs <=3D bsz the if (bs > bsz) block is skipped
-> entirely, leaving extended header bytes unread in the stream.  Subsequent
-> jit_get_next_entry() calls then parse those leftover bytes as a
-> jr_prefix, corrupting the record stream.
->
-> Fix by separating the buffer growth from the read: realloc only when
-> bs > bsz, then unconditionally fread bs bytes when bs > 0.
->
-> Fixes: 9b07e27f88b9cd78 ("perf inject: Add jitdump mmap injection support=
-")
-> Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-> Cc: Stephane Eranian <eranian@google.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Assisted-by: Claude:claude-opus-4.6
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Wed, Aug 05, 2026 at 11:28:16AM -0700, Namhyung Kim wrote:
+> On Mon, 03 Aug 2026 08:48:45 -0400, Aaron Tomlin wrote:
+> > Currently, when a probe event is added using perf probe --add with a
+> > hexadecimal type cast (e.g., var:x64 and var:x32), the kernel traceprobe
+> > subsystem sets the field type to "u64" in the event's format file, yet
+> > generates a print format specifier of "var=0x%Lx" or "0x%x".
+> > 
+> > By default, perf trace uses its internal beautifiers which only inspect
+> > field->type and field->flags. Because traceprobe events declare
+> > primitive integer field types ("u64") without a C pointer asterisk
+> > (i.e., "*"), perf trace defaults to printing the field's value as a
+> > decimal unsigned long ("%ld"), ignoring the hexadecimal intent.
+> > 
+> > [...]
+> Applied to perf-tools-next, thanks!
+> 
+> Best regards,
+> Namhyung
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Thank you Namhyung!
 
-Thanks!
-Ian
-
-> ---
->  tools/perf/util/jitdump.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-> index 83005b30b9bf3fd7..4b7c7ba7cd95ddbb 100644
-> --- a/tools/perf/util/jitdump.c
-> +++ b/tools/perf/util/jitdump.c
-> @@ -224,10 +224,12 @@ jit_open(struct jit_buf_desc *jd, const char *name)
->                 n =3D realloc(buf, bs);
->                 if (!n)
->                         goto error;
-> -               bsz =3D bs;
->                 buf =3D n;
-> -               /* read extra we do not know about */
-> -               ret =3D fread(buf, bs - bsz, 1, jd->in);
-> +               bsz =3D bs;
-> +       }
-> +       if (bs > 0) {
-> +               /* consume extended header bytes from the stream */
-> +               ret =3D fread(buf, bs, 1, jd->in);
->                 if (ret !=3D 1)
->                         goto error;
->         }
-> --
-> 2.55.0
->
+-- 
+Aaron Tomlin
