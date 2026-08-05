@@ -1,166 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934303B19B7
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 15:48:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF11A3890EC
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 15:55:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785944925; cv=none; b=QUAQNA7vkCS50enNuoGlUiJj7mlb2KIXm/SUZlReAIhJbXHQgpZHBfwOQkoWAm2HDbbq6fdbLyL6WFdrIIKAtIbfcHC83qep9MlA9mKKq5q1jTLmpR7bDK/YTOGAYkTnMeuahPf33PspL8jvBiUImOrs5kVgaOgG5jaUu4BpaZQ=
+	t=1785945306; cv=none; b=asimbrGFH9NjAZI+0c5x0Z2yreOz+pa4hKfrt9hNRxud6CH465VqY1qqYBPkKv+hEyBkBd2Cg20OP1l0PvT0+2l8tEvgLrfvHUJrZA16HuLnndT51Yn2kdpKcPu3fpdBZlJ86fdeCCEkaw1hYXtrCLDjEhwIXfAKbQ+U0XlSEsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785944925; c=relaxed/simple;
-	bh=8aQRN66TbkAFXWDp/kJBlSHcoIXsXgoqyQRMNlanxeM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UcWN+9bo1maYJ5Mjkl7LX03FEv6XUsvtLSfzOIK79CukpyonDStUkXXeR/HhRmSbs+bEp4+ZmuY7Ke2L9etQSbyxjLU/JQzV8gGYszpkqobmS29JkAg+vGgpyQTWzN7WRdyLu4F4nbbSwNnhwvkPBuyDmEmb7wAjUeG29RSgReM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ks3p10Ah; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ks3p10Ah"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECB391F000E9;
-	Wed,  5 Aug 2026 15:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785944924;
-	bh=UxL+Bx9+vcpdFty0hD152kKWDHtBwNu+MHcAqEcMOHo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ks3p10AhGwJh6bAOExc85CRBFwbxrl1oVJFrScW6RXY6UoYOWOK9EaqUAeoLAi9FQ
-	 jCjLbEXpm97U29fUDidoD0YhINlC915Ox4dAxbDO2QPkaNcnj7DyceR7EUoFZHoODc
-	 hHSRw3HcBZPYaV7VHqzbDo1wbZ09W4cNnu9WrSkK5vzWM9lAA+iNdE1qWH1fygubzR
-	 Wp8mhJp+BPCqnZ64akKTumjlbIheqstNuQB7mSKfxXjjTnf8sKpQg6wzaXtNXXlTta
-	 qmNq/8CZoI6Qgd0v67nnZI+AOfun4k2MTx5Wz1Vmv/C5va/okDZEJrV9yZ01swBgKU
-	 Pde9SPONqkAUw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 06/12] perf jitdump: Fix funlockfile on unlocked stream
- in jit_open() error path
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260805133013.235016-7-acme@kernel.org>
-References: <20260805133013.235016-1-acme@kernel.org>
- <20260805133013.235016-7-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 05 Aug 2026 15:48:43 +0000
-Message-Id: <20260805154843.ECB391F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1785945306; c=relaxed/simple;
+	bh=vc3lcREolEfvjmxBNHCOvz2IqeMLh01gRjoxDFz73eQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JHtm8CDIDcsNtQHREXIpr+2V3kF7Du5ADhZmBxA3503BqZujujnyeYjsW5+W6kI0tZJ9+NDhVfoW6yk2QZOqe35F9DdSsZlA2Xbhb9uj12VgCWtw9/jRrPAEmHkiaYgWhunEnMVyI3reOlYbR7UcU3gS07X6iavqiyE0FaoFEyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4748B1F000E9;
+	Wed,  5 Aug 2026 15:55:04 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: inux-cxl@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: jic23@kernel.org,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	dave@stgolabs.net,
+	robin.murphy@arm.com,
+	icheng@nvidia.com,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Subject: [PATCH v4 00/11] perf/cxlpmu: Misc sashiko raised issues fixes
+Date: Wed,  5 Aug 2026 08:54:50 -0700
+Message-ID: <20260805155501.1294472-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+Teed off of Davidlohr's misc cxlpmu series [1]. I had Claude pick up all
+the sashiko raised issues and then continued multiple internal review
+iterations to pick up a number of fixes. I'm no CXL PMU or perf expert,
+but the fixes look reasonable to me AFAICT.
 
-Pre-existing issues:
-- [Critical] Unvalidated nr_entry field in JIT_CODE_DEBUG_INFO leads to arb=
-itrary heap out-of-bounds read and write.
-- [High] Insecure file creation in jit_emit_elf allows arbitrary file overw=
-rite via symlink attacks, potentially leading to privilege escalation.
---
+Since v3:
+- 4/11 and 5/11 swapped, so the one-line MSI vector 0 fix comes before the
+  info->msi_vec rename and backports on its own (Robin).
+- 6/11: new patch, add the PMUs after configuring events.
+- 7/11: no code change; the commit message no longer overstates what
+  dropping IRQF_SHARED costs a device that shares a vector.
+- 8/11: quote the spec sentence that makes the freeze sticky, and correct
+  the claim about what the migration window leaves enabled (Richard,
+  sashiko-bot).
+- 10/11: split the probe-time overflow clear out, so this is back to the
+  single hunk Jonathan acked.
+- 11/11: new patch. Clear a counter's stale overflow status when starting
+  an event, which is where the reuse case bites; the probe clear moved
+  here from 10/11 (Richard).
 
---- Patch [6]: [PATCH 06/12] perf jitdump: Fix funlockfile on unlocked stre=
-am in jit_open() error path ---
-commit 9c3ece5485fc42d2bde29b52e999638dd26c389f
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Since v2:
+- 1/11: check event_idx alongside counter_idx (Jonathan).
+- 2/11: use FIELD_MODIFY() rather than mask-then-OR (Jonathan).
+- 3/11: rewrite the rationale, no code change (Jonathan).
+- 5/11: new patch, split the MSI vector out of info->irq (Robin, Jonathan).
+- 7/11: drop IRQF_SHARED as well as adding IRQF_NOBALANCING, and retitle
+  (Jonathan, Robin).
+- 8/11: don't unfreeze if the PMU has been disabled meanwhile (Robin,
+  Jonathan).
+- 10/11: retitle, and drop the cxl_pmu_offline_cpu() hunk since that
+  dev_err() cannot be reached (Robin).
+- Dropped the old 9/9 that guarded cpumask_show() against cpumask_of(-1).
+  The init case was a false positive and neither reviewer liked the shape
+  of it (Jonathan, Robin).
 
-perf jitdump: Fix funlockfile on unlocked stream in jit_open() error path
+Since v1:
+- Updated 3/9 to address sashiko issue.
+- No other changes as sashiko only raised issue with pre-existing.
 
-If the malloc() for the initial read buffer fails, jit_open() jumps to
-the error label which calls funlockfile(jd->in).  However, flockfile()
-is called later in the function, so at this point the stream was never
-locked.  Calling funlockfile() on an unlocked stream is undefined
-behavior per POSIX.
+Three follow-ups this series does not attempt:
 
-> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-> index fd11e07bf00b7..c3f11d1c1d76d 100644
-> --- a/tools/perf/util/jitdump.c
-> +++ b/tools/perf/util/jitdump.c
-> @@ -155,7 +155,7 @@ jit_open(struct jit_buf_desc *jd, const char *name)
-> =20
->  	buf =3D malloc(bsz);
->  	if (!buf)
-> -		goto error;
-> +		goto error_noflock;
-> =20
->  	/*
->  	 * protect from writer modifying the file while we are reading it
-> @@ -244,8 +244,9 @@ jit_open(struct jit_buf_desc *jd, const char *name)
-> =20
->  	return 0;
->  error:
-> -	free(buf);
->  	funlockfile(jd->in);
-> +error_noflock:
-> +	free(buf);
->  	fclose(jd->in);
->  	return retval;
->  }
+cxl_pmu_read() relies on local64_t being same-CPU, which is the only reason
+the interrupt has to be pinned at all. Moving prev_count and event->count
+off local64_t would make the affinity question moot, and Robin may have a
+view on whether that is worth doing.
 
-[Severity: High]
-This is a pre-existing issue, but I noticed an insecure file creation bug
-in jit_emit_elf() while reviewing this file:
+cxl_pmu_offline_cpu() still leaves on_cpu at -1 across a sleeping
+perf_pmu_migrate_context(), and still has an unreachable no-target branch.
+Both want removing, possibly on top of the generic PMU hotplug rework
+Jonathan pointed at [2].
 
-tools/perf/util/jitdump.c:jit_emit_elf() {
-    ...
-	nsinfo__mountns_enter(jd->nsi, &nsc);
-	fd =3D open(filename, O_CREAT|O_TRUNC|O_WRONLY, 0644);
-	saved_errno =3D errno;
-	nsinfo__mountns_exit(&nsc);
-    ...
-}
+Firmware can leave a counter enabled with Global Freeze on Overflow but not
+Interrupt on Overflow, which stalls the whole CPMU with no interrupt to say
+so. Quiescing the block at probe needs two writes per counter to stay
+within the spec's rule about changing an enabled counter, so it belongs in
+its own patch.
 
-The open() call truncates and writes to the file, but lacks O_EXCL or
-O_NOFOLLOW.
+[1]: https://lore.kernel.org/linux-cxl/20260715191454.459673-1-dave@stgolabs.net/
+[2]: https://lore.kernel.org/linux-arm-kernel/cover.1784911757.git.robin.murphy@arm.com/
 
-Does this leave the file creation vulnerable to symlink-based file overwrite
-attacks?
+Dave Jiang (11):
+  perf/cxl: Program the requested event group on configurable counters
+  perf/cxl: Clear stale event fields before reprogramming a counter
+  perf/cxl: Fix the counter overflow delta fixup
+  perf/cxl: Accept an overflow interrupt on MSI message number 0
+  perf/cxl: Split the MSI vector out of info->irq
+  cxl/pci: Add the PMUs after configuring events
+  perf/cxl: Don't share the overflow interrupt, and keep it pinned
+  perf/cxl: Unfreeze counters after handling an overflow interrupt
+  perf/cxl: Validate the hardware-reported counter width
+  perf/cxl: Don't log through pmu.dev in the overflow interrupt handler
+  perf/cxl: Clear stale overflow status before using a counter
 
-If a local attacker pre-creates a symlink matching the expected .so output
-filename (e.g., jitted-<pid>-<count>.so) in a world-writable directory (like
-/tmp), could they point it to a sensitive system file such as /etc/shadow?
-
-When a privileged user runs perf inject on the attacker's perf.data file,
-could the target file be truncated and overwritten with an ELF binary
-containing jitted code?
+ drivers/cxl/pci.c      |  11 +++--
+ drivers/perf/cxl_pmu.c | 107 ++++++++++++++++++++++++++++++++---------
+ 2 files changed, 90 insertions(+), 28 deletions(-)
 
 
-[Severity: Critical]
-This is a pre-existing issue, but the nr_entry field is completely unvalida=
-ted
-against the actual JIT_CODE_DEBUG_INFO record size when jd->needs_bswap is
-false (native endianness):
+base-commit: f5098b6bae761e346ebcd9da7f95622c04733cff
+-- 
+2.54.0
 
-tools/perf/util/jitdump.c:jit_get_next_entry() {
-    ...
-	case JIT_CODE_DEBUG_INFO:
-		if (jd->needs_bswap) {
-    ...
-			/* clamp so downstream consumers don't overrun */
-			jr->info.nr_entry =3D n;
-		}
-		break;
-    ...
-}
-
-If a maliciously crafted jitdump file provides an artificially large nr_ent=
-ry,
-could it cause this loop in jit_process_debug_info() to blindly iterate
-based on the unvalidated value?
-
-tools/perf/util/genelf_debug.c:jit_process_debug_info() {
-    ...
-	for (i =3D 0; i < nr_debug_entries; i++) {
-		ent->addr =3D ent->addr - code_addr;
-		ent =3D debug_entry_next(ent);
-	}
-    ...
-}
-
-If so, it appears debug_entry_next() could read out of bounds, and the
-ent->addr =3D ent->addr - code_addr; operation might repeatedly subtract fu=
-lly
-attacker-controlled values (code_addr) from arbitrary heap metadata.
-
-Could this lead to arbitrary code execution when processing an untrusted fi=
-le?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260805133013.2350=
-16-1-acme@kernel.org?part=3D6
