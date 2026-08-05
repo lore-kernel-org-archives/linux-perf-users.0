@@ -1,69 +1,68 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F4934D398
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 15:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E16F472544
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 15:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785942150; cv=none; b=FO9gKugjVJiTzvwhvopmc8fS3C+o+M3z8Ger+5mOF1Dvx+tNB18MNxCJAoNazsV9rFOsaDLRuesbqWte3gMeFcsfRhiuiZIZH4/fIogX2UcwMtHWL8eb9ZVNdliUzjkrvjjIh6OjK2hITxqhImfbLmxykXQVDg7EVH6ZAfNWBN8=
+	t=1785942153; cv=none; b=QVJYRgymjEAZ4MCUojL/0IyS1EI5pdsSc+d3kcpn1YdBsprnZHGknIsAb2pkz0ulW8Zin/b0dmPye5GBm8XZPQF0xcSNg9ytSHWHUPr3USQQr3JZGSMZNTeyeivbHakPdwdzeggS5pwqU60Kf0VmPCEYGnoyFn4j6PMeztZDkTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785942150; c=relaxed/simple;
-	bh=XjGEA+w8gpV2jQYN6R3+Kgx/wLLSx/0QslA0PACaxXU=;
+	s=arc-20240116; t=1785942153; c=relaxed/simple;
+	bh=VH4YTMPA+h4gFcjeTLNCMEDNTFyTTnloH2eynxYw6wk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CqT5HvfDVAbVtJSraW+9QHJ5MVKLjf1iMoQs5/mjK15aaBw0BLg/MxlHHVDSRFqz8MNoH9zxCPLmRiZpm1KZZAMum0TvZFBnqBqNx3Qv/gKdjnRNG3bskyGi36WCklSJrzTHWLiA/iZ7JmeQAUQOwvjyhrihK/Fu1Q/BJ8IUJiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=K2Cr0bmo; arc=none smtp.client-ip=209.85.221.48
+	 In-Reply-To:To:Cc; b=M1cqDjrO7rucmpZ7vbMbw6V3Ly77r4iuzGHsXTZaWKm2UhL6QMBARH6XSgptdT1X0MX2sMlVZq2nxAShWoyl7kdoScbml2ApJLltPiCvtK/3e7waqleTmMm6aevNnm+A+ygZXmSvHcvtPoqbUTAcsZxfteCLjDbHD8AK+ZTmDIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xaO5rAoK; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K2Cr0bmo"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-47f93b2fe4cso763940f8f.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 08:02:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xaO5rAoK"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-47f703a9d05so742813f8f.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 08:02:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1785942146; x=1786546946; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1785942148; x=1786546948; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=YdFUB2zH6KQ2jS1Qeu0n7oVNGn5pzmET1AhmT2Fra+g=;
-        b=K2Cr0bmoPhlHcTx6kL2912yI2aB/PBx659e7uGML2yzv84YzRp1xTUi71yRt9FnPCX
-         AlcXeptDwzssxXh4I0aYwTFpppgE9Hb00NBJSKGjkwl4AxRdq4+uZZyvFLkE053lidIt
-         BQYziNJncB5j9dVmXpixDhdDYQ1ON1GFtmBOzjBdO6/bcmlHGeeESKDTavNUGkZe2Vo2
-         m9I3PFc24uCFvVj+SoSgb3/x31A0lQoGDXY0GT8w3EQb2jRBKbkxMb+dUDJDaeRYVWVq
-         FpMg0YeK9+PR8Mfy5n6AKGcpPz6eORBrsoEQRC6vns47DeGrPkGHkn8xSvq/M510qplD
-         Bl+Q==
+        bh=Unst9+FN4mg5CbM6AsDlSUXG1OgVFlSrNMGKLNQM9fc=;
+        b=xaO5rAoKIokRKS29hMu5ORnKf97qq0xMcmlaZ4Yuwil1Y95ZfuHKZxe6XmpG0R1Y3y
+         m2vZiCYjAypQces7TKH5axIJX2/TFymCrXvtaIpvLpSPLtXa46Gk576UYKsPiNTWKDO0
+         cHRcbjNpJF5S3TNoIZkP41UDrP9pcfM2NXm4mU6+c3qnmaMLNvERTe9Ezn3OfIZPWjKy
+         GzKAgcUiBnQmPZQCAJtJ/uSvybcwfJELyx8x+IPfCQdUlJz3cNVdVhM60YbOHeOPAYjW
+         G2IoH7XHCWPaUj97Zf0N3cGRbPXPBD4ydneGUKsxXTIUx2SwrNMTlopP2BnCMIOVUxCE
+         ZW+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785942146; x=1786546946;
+        d=1e100.net; s=20251104; t=1785942148; x=1786546948;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=YdFUB2zH6KQ2jS1Qeu0n7oVNGn5pzmET1AhmT2Fra+g=;
-        b=og2JV10vJjYI2bJO/G5ELXCJjRj3SPIRmAmtqr5/ESiiq1x2pq9XOo8uPGinEk32Ag
-         dT0fTTLiQ9rlYZA1D3q0GyrRyzoYG0NtEchTMjkfr4PtGfIjs5NbstORqm+0ORf/Rrgz
-         Z6NVmV76umVzTmWsFAAfbn0Ykn3zi+YvDx6Pr4lTdbpdKetUvRhg56Q70NdxBvgy+19o
-         UMLUTQq9HkGNHks1VQfSirFabzAhXeL0bJRrZ4x3vtjEo4YPf04B007y7ScT4oEt5m2N
-         IxVW0L1T48RHI07ccvyYAu9EPbz/nxg6co6M7hW5kzsFjyWv0v94BoZBWRQxtDe29QMP
-         XRxg==
-X-Forwarded-Encrypted: i=1; AHgh+RolYSkIj+vmibuds1n5A16RfpMYPv1fm5Tkjd86YvEag8tw2Yo2SDRegBfzb2zlea3VBmguGwHRjwy9LsSxywDV@vger.kernel.org
-X-Gm-Message-State: AOJu0YyIRh90vGnVlsdTIdOVc/QHiJRtqnHZjgTt8TXZAhhdgWT14Yr2
-	PLp0ZTazyDXLDcmSpu07jOZSAIilYpd1MtKrrwREJfFb2SD8XxgrzX7kihVbwn/navU=
-X-Gm-Gg: AR+sD106gfAbf3pAxUTuCfxbiMiyuaC8piNq9y3zOoR1sdnAB0lRewkYwAvPcQrVXxL
-	eIh290k1SpDtxP4QeTYW6Ji4KIO8VNAcDPXPfnow5MnEjraXhhAD+UyKZoZGWT0m1M+henIQj+c
-	45hrJMdwhwGoPSOXjnHSCSkbK0V11jiYfd1dwAOQRAx0R/ts1Swq/A7z/1kIrtc3W2gEOQbnPkq
-	sx3PLpy/YY/p/vT8hOVt95fWVpNU0Xo8tMf85VCboff22fxwg8xt1gwirfJgjGsz9/8rzDIy5a5
-	Ckx76iXEWnXWEWv7GLmKRqLGJjCUkI0vK4nzYizSxKJpetEJ6UeQUPPYuXGiLM8fZ4H+r8275eS
-	yNJyWmB56hix0BlY9nki9PTCkAmSHP78L7or8LtSgog3gVuFvH1W4P+fsVBhF/Zo7RJpV+SOBdM
-	OsB9AVm2VikTf9ETI2cQJIQpwdIksjk1FbNBmHLp5rWUf0eVaaFKFaLbUM/e7GkTlVC77EZIuiY
-	5I=
-X-Received: by 2002:a05:600d:4448:20b0:495:5e3d:15e1 with SMTP id 5b1f17b1804b1-4994e7d21fdmr85868895e9.16.1785942146401;
-        Wed, 05 Aug 2026 08:02:26 -0700 (PDT)
+        bh=Unst9+FN4mg5CbM6AsDlSUXG1OgVFlSrNMGKLNQM9fc=;
+        b=ov5I06jdUm7Veo02RJRZ7x7PHk+RK38Jf7Svdj6gUke7f1Lq3NMARVlOds4jmvoeyl
+         +pFiHPOyvjNVuH7erNtiHRDE7KSWHWMqDsnKORz1udYL+f7niwcJ059Mdtpo6F3+zEVW
+         yqpOzog/q/iaX0J3gTJ7ioOWy13gIWQNkd74NpCqrodksabKSY6krIVpUWZ23ozPoVor
+         YpAhi4opBUfc3XLZeglefgqGLNrrPIxKgK42B3hSGEf9y2K6WqI6QE1RA3MNQ5ejFaxs
+         5Oh1EZcAUyJcAWsFPtnWn9lv41umP5muZFlJB9aKUj6AEO0CYB3TSVh24WXG7vX6WE1p
+         O6Vw==
+X-Forwarded-Encrypted: i=1; AHgh+Rpvf+rmY9X76rLkGk9USIskXjjuD91rGh4/+9ESgN84xorK/szHASf1WMzkjUwXlK+EDpgoi60FPvHiaVGON7BX@vger.kernel.org
+X-Gm-Message-State: AOJu0YzBXLbmklxettEu0b/NbfV2AFNTnZ/emKKTauQrBqMZuc/dzriw
+	Crm0NppoAi5qNjE8QGll9yk0AYYMXo6/J5XjcG2tLEaSYOiUzppCxzYzSmCiMKU/kdE=
+X-Gm-Gg: AR+sD11ZxjkbVoQ+JJfBLKDz+04lELQtvmcfX63dq6iJI2unbi+yqTwdALrvv+kIU9J
+	KAbHBh+fPNhkkSzPp2obtzN4THvABYN1OY3qVAZaDPBMpKKch5pb/pI1vi6kZMh74omcbh/vyiF
+	33ZcbovmYWtujA2yz2R9ZpoSvkNDUnwMaErjlqAAJwRZzcuuJ9cnATpsMIwFWrIC8dORddUdOOL
+	rioj3wFApy9xP4nxZqd+rnXPHYgrCpfW5pJoou9awflUf/BFJrYwooL2GebvXZ62ReLy/YOiGvX
+	MSkjwLc7yew9A4xdotLJhsSHeR5lVmm469u0Qc1+tqvCly2TDohhUpdSg/wDkkQ3bHwvhNcKnJz
+	2Azh0bKsqX8qsagbphKlzhuINaXDA4WmDAT4jU/tIBzKKTxpzSfvx5543CKzjS9nqzm5KG19K60
+	+xcMF/g9fNixem0tE48GO5faSXOl9LKd4/bDHXUQ6KVX+vnTi+Osj2iTXHc1JN/8Xg
+X-Received: by 2002:a05:6000:41d0:b0:45e:73eb:5119 with SMTP id ffacd0b85a97d-47fec62ea74mr13867635f8f.22.1785942148094;
+        Wed, 05 Aug 2026 08:02:28 -0700 (PDT)
 Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fec23ede6sm10308695f8f.30.2026.08.05.08.02.25
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fec23ede6sm10308695f8f.30.2026.08.05.08.02.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2026 08:02:25 -0700 (PDT)
+        Wed, 05 Aug 2026 08:02:27 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Wed, 05 Aug 2026 16:01:51 +0100
-Subject: [PATCH 1/3] perf: arm_spe: Factor aux output and flags out of
- buffer fault handler
+Date: Wed, 05 Aug 2026 16:01:53 +0100
+Subject: [PATCH 3/3] perf: arm_spe: Add support for a 'software' discard
+ mode
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -72,7 +71,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260805-james-spe-software-discard-v1-1-0ff0e44c4c92@linaro.org>
+Message-Id: <20260805-james-spe-software-discard-v1-3-0ff0e44c4c92@linaro.org>
 References: <20260805-james-spe-software-discard-v1-0-0ff0e44c4c92@linaro.org>
 In-Reply-To: <20260805-james-spe-software-discard-v1-0-0ff0e44c4c92@linaro.org>
 To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -82,125 +81,288 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
  linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.15.2
 
-Software discard mode will still want to handle buffer faults, but
-doesn't have a real aux buffer to set flags or call
-perf_aux_output_end() on. Factor the aux buffer parts out of
-arm_spe_pmu_buf_get_fault_act() so it only decodes the fault, which
-better matches the name and can be used by the new mode later.
+Currently discard mode needs hardware support, but we can get something
+that appears pretty similar to userspace by writing to a single page
+allocated by the driver and not emitting aux records.
 
-This makes the arm_spe_pmu_stop() handling a bit simpler because it
-doesn't need to conditionally call arm_spe_perf_aux_output_end() anymore
-to handle the case when the fault handler didn't do it.
+Remove the -EOPNOTSUPP, as now we use the same discard mode format attr
+as with HW support but fall back to the software version.
 
-No functional changes intended.
+Don't call perf_get_aux() in discard mode as it unconditionally
+dereferences a NULL event->rb when handle->event exists, which can now
+be true.
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- drivers/perf/arm_spe_pmu.c | 36 +++++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
+ drivers/perf/arm_spe_pmu.c | 160 +++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 134 insertions(+), 26 deletions(-)
 
 diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index dbd0da111639..10d28ad81256 100644
+index 562a1d3be39f..093fa3cc5084 100644
 --- a/drivers/perf/arm_spe_pmu.c
 +++ b/drivers/perf/arm_spe_pmu.c
-@@ -677,11 +677,12 @@ static void arm_spe_pmu_disable_and_drain_local(void)
- 
- /* IRQ handling */
- static enum arm_spe_pmu_buf_fault_action
--arm_spe_pmu_buf_get_fault_act(struct perf_output_handle *handle)
-+arm_spe_pmu_buf_get_fault_act(u64 *aux_flags)
- {
- 	const char *err_str;
- 	u64 pmbsr;
--	enum arm_spe_pmu_buf_fault_action ret;
-+
-+	*aux_flags = 0;
- 
- 	/*
- 	 * Ensure new profiling data is visible to the CPU and any external
-@@ -703,12 +704,11 @@ arm_spe_pmu_buf_get_fault_act(struct perf_output_handle *handle)
- 	 * flag to indicate that the last record is corrupted.
- 	 */
- 	if (FIELD_GET(PMBSR_EL1_DL, pmbsr))
--		perf_aux_output_flag(handle, PERF_AUX_FLAG_TRUNCATED |
--					     PERF_AUX_FLAG_PARTIAL);
-+		*aux_flags |= PERF_AUX_FLAG_TRUNCATED | PERF_AUX_FLAG_PARTIAL;
- 
- 	/* Report collisions to userspace so that it can up the period */
- 	if (FIELD_GET(PMBSR_EL1_COLL, pmbsr))
--		perf_aux_output_flag(handle, PERF_AUX_FLAG_COLLISION);
-+		*aux_flags |= PERF_AUX_FLAG_COLLISION;
- 
- 	/* We only expect buffer management events */
- 	switch (FIELD_GET(PMBSR_EL1_EC, pmbsr)) {
-@@ -727,8 +727,7 @@ arm_spe_pmu_buf_get_fault_act(struct perf_output_handle *handle)
- 	/* Buffer management event */
- 	switch (FIELD_GET(PMBSR_EL1_BUF_BSC_MASK, pmbsr)) {
- 	case PMBSR_EL1_BUF_BSC_FULL:
--		ret = SPE_PMU_BUF_FAULT_ACT_OK;
--		goto out_stop;
-+		return SPE_PMU_BUF_FAULT_ACT_OK;
- 	default:
- 		err_str = "Unknown buffer status code";
- 	}
-@@ -738,11 +737,7 @@ arm_spe_pmu_buf_get_fault_act(struct perf_output_handle *handle)
- 			   err_str, smp_processor_id(), pmbsr,
- 			   read_sysreg_s(SYS_PMBPTR_EL1),
- 			   read_sysreg_s(SYS_PMBLIMITR_EL1));
--	ret = SPE_PMU_BUF_FAULT_ACT_FATAL;
--
--out_stop:
--	arm_spe_perf_aux_output_end(handle);
--	return ret;
-+	return SPE_PMU_BUF_FAULT_ACT_FATAL;
+@@ -60,6 +60,7 @@ static bool get_spe_event_has_cx(struct perf_event *event)
  }
  
- static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
-@@ -750,14 +745,18 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
- 	struct perf_output_handle *handle = dev;
- 	struct perf_event *event = handle->event;
- 	enum arm_spe_pmu_buf_fault_action act;
-+	u64 aux_flags;
+ #define ARM_SPE_BUF_PAD_BYTE			0
++#define ARM_SPE_DISCARD_BUF_SIZE		SZ_4M
  
- 	if (!perf_get_aux(handle))
+ struct arm_spe_pmu_buf {
+ 	int					nr_pages;
+@@ -67,6 +68,12 @@ struct arm_spe_pmu_buf {
+ 	void					*base;
+ };
+ 
++struct arm_spe_pmu_sw_discard_buf {
++	struct page				*page;
++	void					*base;
++	refcount_t				refcount;
++};
++
+ struct arm_spe_pmu {
+ 	struct pmu				pmu;
+ 	struct platform_device			*pdev;
+@@ -85,7 +92,7 @@ struct arm_spe_pmu {
+ #define SPE_PMU_FEAT_LDS			(1UL << 4)
+ #define SPE_PMU_FEAT_ERND			(1UL << 5)
+ #define SPE_PMU_FEAT_INV_FILT_EVT		(1UL << 6)
+-#define SPE_PMU_FEAT_DISCARD			(1UL << 7)
++#define SPE_PMU_FEAT_HW_DISCARD			(1UL << 7)
+ #define SPE_PMU_FEAT_EFT			(1UL << 8)
+ #define SPE_PMU_FEAT_FDS			(1UL << 9)
+ #define SPE_PMU_FEAT_DEV_PROBED			(1UL << 63)
+@@ -218,7 +225,8 @@ static const struct attribute_group arm_spe_pmu_cap_group = {
+ #define ATTR_CFG_FLD_store_filter_CFG		config	/* PMSFCR_EL1.ST */
+ #define ATTR_CFG_FLD_store_filter_LO		34
+ #define ATTR_CFG_FLD_store_filter_HI		34
+-#define ATTR_CFG_FLD_discard_CFG		config	/* PMBLIMITR_EL1.FM = DISCARD */
++/* PMBLIMITR_EL1.FM = DISCARD, or scratch buffer if no HW support */
++#define ATTR_CFG_FLD_discard_CFG		config
+ #define ATTR_CFG_FLD_discard_LO			35
+ #define ATTR_CFG_FLD_discard_HI			35
+ #define ATTR_CFG_FLD_branch_filter_mask_CFG	config	/* PMSFCR_EL1.Bm */
+@@ -309,9 +317,6 @@ static umode_t arm_spe_pmu_format_attr_is_visible(struct kobject *kobj,
+ 	struct device *dev = kobj_to_dev(kobj);
+ 	struct arm_spe_pmu *spe_pmu = dev_get_drvdata(dev);
+ 
+-	if (attr == &format_attr_discard.attr && !(spe_pmu->features & SPE_PMU_FEAT_DISCARD))
+-		return 0;
+-
+ 	if (attr == &format_attr_inv_event_filter.attr && !(spe_pmu->features & SPE_PMU_FEAT_INV_FILT_EVT))
+ 		return 0;
+ 
+@@ -368,6 +373,82 @@ static bool arm_spe_discard_mode(struct perf_event *event)
+ 	return ATTR_CFG_GET_FLD(&event->attr, discard);
+ }
+ 
++static bool arm_spe_uses_sw_discard_buf(struct perf_event *event)
++{
++	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
++
++	return arm_spe_discard_mode(event) &&
++	       !(spe_pmu->features & SPE_PMU_FEAT_HW_DISCARD);
++}
++
++static void arm_spe_pmu_free_discard_buf(struct perf_event *event)
++{
++	struct arm_spe_pmu_sw_discard_buf *buf = event->pmu_private;
++
++	event->pmu_private = NULL;
++	if (!refcount_dec_and_test(&buf->refcount))
++		return;
++
++	vunmap(buf->base);
++	__free_page(buf->page);
++	kfree(buf);
++}
++
++/*
++ * Map a single page multiple times to make up ARM_SPE_DISCARD_BUF_SIZE.
++ *
++ * This reduces the number of interrupts that have to be serviced in software
++ * discard mode, but at the same time only uses a page of memory. We don't need
++ * to worry about samples being overwritten because they're never read.
++ */
++static int arm_spe_pmu_alloc_discard_buf(struct perf_event *event)
++{
++	int node = (event->cpu == -1) ? -1 : cpu_to_node(event->cpu);
++	int nr_pages = ARM_SPE_DISCARD_BUF_SIZE / PAGE_SIZE;
++	struct arm_spe_pmu_sw_discard_buf *buf;
++	struct page **pglist;
++	int i;
++
++	if (event->parent) {
++		buf = event->parent->pmu_private;
++		refcount_inc(&buf->refcount);
++		event->pmu_private = buf;
++		event->destroy = arm_spe_pmu_free_discard_buf;
++		return 0;
++	}
++
++	buf = kzalloc_node(sizeof(*buf), GFP_KERNEL, node);
++	if (!buf)
++		return -ENOMEM;
++
++	buf->page = alloc_pages_node(node, GFP_KERNEL, 0);
++	if (!buf->page)
++		goto out_free_buf;
++
++	pglist = kvmalloc_array(nr_pages, sizeof(*pglist), GFP_KERNEL);
++	if (!pglist)
++		goto out_free_page;
++
++	for (i = 0; i < nr_pages; i++)
++		pglist[i] = buf->page;
++
++	buf->base = vmap(pglist, nr_pages, VM_MAP, PAGE_KERNEL);
++	kvfree(pglist);
++	if (!buf->base)
++		goto out_free_page;
++
++	refcount_set(&buf->refcount, 1);
++	event->pmu_private = buf;
++	event->destroy = arm_spe_pmu_free_discard_buf;
++	return 0;
++
++out_free_page:
++	__free_page(buf->page);
++out_free_buf:
++	kfree(buf);
++	return -ENOMEM;
++}
++
+ /* Convert between user ABI and register values */
+ static u64 arm_spe_event_to_pmscr(struct perf_event *event)
+ {
+@@ -617,10 +698,26 @@ static u64 arm_spe_pmu_next_off(struct perf_output_handle *handle)
+ static void arm_spe_pmu_begin_discard(struct perf_output_handle *handle,
+ 				      struct perf_event *event)
+ {
+-	u64 limit;
++	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
++	struct arm_spe_pmu_sw_discard_buf *discard_buf = event->pmu_private;
++	u64 base, limit;
++
++	if (spe_pmu->features & SPE_PMU_FEAT_HW_DISCARD) {
++		limit = FIELD_PREP(PMBLIMITR_EL1_FM, PMBLIMITR_EL1_FM_DISCARD);
++		limit |= PMBLIMITR_EL1_E;
++	} else {
++		base = (u64) discard_buf->base;
++		limit = base + ARM_SPE_DISCARD_BUF_SIZE;
++		limit |= PMBLIMITR_EL1_E;
++		write_sysreg_s(base, SYS_PMBPTR_EL1);
+ 
+-	limit = FIELD_PREP(PMBLIMITR_EL1_FM, PMBLIMITR_EL1_FM_DISCARD);
+-	limit |= PMBLIMITR_EL1_E;
++		/*
++		 * Track the event so we can access the discard buffer through
++		 * event->pmu_private. perf_aux_output_begin() normally handles
++		 * this, but we can do it manually if that's not being used.
++		 */
++		handle->event = event;
++	}
+ 
+ 	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
+ }
+@@ -757,15 +854,20 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
+ 	enum arm_spe_pmu_buf_fault_action act;
+ 	u64 aux_flags;
+ 
+-	if (!perf_get_aux(handle))
++	if (!event)
++		return IRQ_NONE;
++
++	if (!arm_spe_discard_mode(event) && !perf_get_aux(handle))
  		return IRQ_NONE;
  
--	act = arm_spe_pmu_buf_get_fault_act(handle);
-+	act = arm_spe_pmu_buf_get_fault_act(&aux_flags);
+ 	act = arm_spe_pmu_buf_get_fault_act(&aux_flags);
  	if (act == SPE_PMU_BUF_FAULT_ACT_SPURIOUS)
  		return IRQ_NONE;
  
-+	perf_aux_output_flag(handle, aux_flags);
-+	arm_spe_perf_aux_output_end(handle);
-+
+-	perf_aux_output_flag(handle, aux_flags);
+-	arm_spe_perf_aux_output_end(handle);
++	if (!arm_spe_discard_mode(event)) {
++		perf_aux_output_flag(handle, aux_flags);
++		arm_spe_perf_aux_output_end(handle);
++	}
+ 
  	/*
  	 * Ensure perf callbacks have completed, which may disable the
- 	 * profiling buffer in response to a TRUNCATION flag.
-@@ -927,6 +926,7 @@ static void arm_spe_pmu_stop(struct perf_event *event, int flags)
+@@ -819,6 +921,7 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
+ static int arm_spe_pmu_event_init(struct perf_event *event)
+ {
+ 	u64 reg;
++	int ret;
+ 	struct perf_event_attr *attr = &event->attr;
  	struct arm_spe_pmu *spe_pmu = to_spe_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct perf_output_handle *handle = this_cpu_ptr(spe_pmu->handle);
-+	u64 aux_flags;
  
- 	/* If we're already stopped, then nothing to do */
- 	if (hwc->state & PERF_HES_STOPPED)
-@@ -944,10 +944,12 @@ static void arm_spe_pmu_stop(struct perf_event *event, int flags)
- 		if (perf_get_aux(handle)) {
- 			enum arm_spe_pmu_buf_fault_action act;
+@@ -880,14 +983,16 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
+ 	    !(spe_pmu->features & SPE_PMU_FEAT_EFT))
+ 		return -EOPNOTSUPP;
  
--			act = arm_spe_pmu_buf_get_fault_act(handle);
--			if (act == SPE_PMU_BUF_FAULT_ACT_SPURIOUS)
--				arm_spe_perf_aux_output_end(handle);
--			else
-+			act = arm_spe_pmu_buf_get_fault_act(&aux_flags);
-+			perf_aux_output_flag(handle, aux_flags);
-+			arm_spe_perf_aux_output_end(handle);
+-	if (arm_spe_discard_mode(event) &&
+-	    !(spe_pmu->features & SPE_PMU_FEAT_DISCARD))
+-		return -EOPNOTSUPP;
+-
+ 	set_spe_event_has_cx(event);
+ 	reg = arm_spe_event_to_pmscr(event);
+-	if (reg & (PMSCR_EL1_PA | PMSCR_EL1_PCT))
+-		return perf_allow_kernel();
++	if (reg & (PMSCR_EL1_PA | PMSCR_EL1_PCT)) {
++		ret = perf_allow_kernel();
++		if (ret)
++			return ret;
++	}
 +
-+			/* Assume PMBSR only needs clearing for real faults */
-+			if (act != SPE_PMU_BUF_FAULT_ACT_SPURIOUS)
- 				write_sysreg_s(0, SYS_PMBSR_EL1);
++	if (arm_spe_uses_sw_discard_buf(event))
++		return arm_spe_pmu_alloc_discard_buf(event);
+ 
+ 	return 0;
+ }
+@@ -954,23 +1059,26 @@ static void arm_spe_pmu_stop(struct perf_event *event, int flags)
+ 	arm_spe_pmu_disable_and_drain_local();
+ 
+ 	if (flags & PERF_EF_UPDATE) {
++		enum arm_spe_pmu_buf_fault_action act;
++
+ 		/*
+ 		 * If there's a fault pending then ensure we contain it
+ 		 * to this buffer, since we might be on the context-switch
+ 		 * path.
+ 		 */
+-		if (perf_get_aux(handle)) {
+-			enum arm_spe_pmu_buf_fault_action act;
+-
+-			act = arm_spe_pmu_buf_get_fault_act(&aux_flags);
++		act = arm_spe_pmu_buf_get_fault_act(&aux_flags);
++		if (!arm_spe_discard_mode(event) && perf_get_aux(handle)) {
+ 			perf_aux_output_flag(handle, aux_flags);
+ 			arm_spe_perf_aux_output_end(handle);
+-
+-			/* Assume PMBSR only needs clearing for real faults */
+-			if (act != SPE_PMU_BUF_FAULT_ACT_SPURIOUS)
+-				write_sysreg_s(0, SYS_PMBSR_EL1);
++		} else {
++			/* Discard mode tracks event outside of perf_aux_output_X() */
++			handle->event = NULL;
  		}
  
++		/* Assume PMBSR only needs clearing for real faults */
++		if (act != SPE_PMU_BUF_FAULT_ACT_SPURIOUS)
++			write_sysreg_s(0, SYS_PMBSR_EL1);
++
+ 		/*
+ 		 * This may also contain ECOUNT, but nobody else should
+ 		 * be looking at period_left, since we forbid frequency
+@@ -1180,7 +1288,7 @@ static void __arm_spe_pmu_dev_probe(void *info)
+ 		spe_pmu->features |= SPE_PMU_FEAT_ERND;
+ 
+ 	if (spe_pmu->pmsver >= ID_AA64DFR0_EL1_PMSVer_V1P2)
+-		spe_pmu->features |= SPE_PMU_FEAT_DISCARD;
++		spe_pmu->features |= SPE_PMU_FEAT_HW_DISCARD;
+ 
+ 	if (FIELD_GET(PMSIDR_EL1_EFT, reg))
+ 		spe_pmu->features |= SPE_PMU_FEAT_EFT;
 
 -- 
 2.43.0
