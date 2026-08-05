@@ -1,127 +1,385 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7BAD29D264;
-	Wed,  5 Aug 2026 01:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785891659; cv=none; b=iO2YYityGxKhvmzLHs9VVylEDw+vP70XM17yeTbl1plZWtENHuCBfxybRRqTegYuBKtQOy9YtRiPI6rYlgXusUmrvu1aRatablF8092YRcQQRkDD9HZPc688qqERrGUmBBkiS6qlKFwSSjKwZk/4pMm238dXSPtc0oFtgb/m7+s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785891659; c=relaxed/simple;
-	bh=HwR9nVlD+ktFrbwizV6BSjgnNtJiBICHuVrBCSIDaMA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=pL/xwwCHaIyxf7uxR/Mhta2eakqNOisPnoq3+WUow+nsXbic17NDb+kaWdt8QcaLW1c5TaJD04p/FMpEm0ERZegvCQG/D4MdUBrxCaVrvzpKuYWoMLq8xjdlfYgHDPvb/5qBJIVNvZR2tOraphZZt/l3kSQ/+Pvo3qYi3n1tXHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZdiRkgYO; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD1181EB5FD
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 02:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.181
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1785895645; cv=pass; b=kVdVCIXodTBsIYsOLkVsjk0SndDMIeehcmw3QNngpHGsGfZ1fkDG2hoROncyOXmaxd1rXrzO+hyOzPfUYdFqciCNjodBSmiJ+CHeuTG1XsYbLLZLaWPqch7zltrEs2q4Tj7y2VVgHy4ZLaoRVjpRHeFgwIZgsTiV4W60+Y2IsjQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1785895645; c=relaxed/simple;
+	bh=H/8UXti04KBE8ZgXrPZRZZFEgXsOgF3QIT31PUuxfxA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ny4kzSJWhC3roIS+03GcYkSZTRz52on00IPuexigpi0hqsbS8KsBAkc7iEDxE+XnculyL8w7cHZanOo4HT7Pamgf80K2EgUxe5BFBT6zT08aaREp3YDkO5f0YqhxU4n6zBCQ4n7I7gFOeSRAgjqtZGSBMEOWeJP7f28sSSTWVh0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=smYECRpH; arc=pass smtp.client-ip=209.85.160.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZdiRkgYO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50DB11F00A3E;
-	Wed,  5 Aug 2026 01:00:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785891656;
-	bh=o3KX9skCpKY11w+0FlGhhpohym5ngk1RFk12GUsJf1c=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=ZdiRkgYOxwCPkyMP9MXyafK1991EZ2jyJgUEjzC2UWj9+QArYQs43RDm9QZJNPw0m
-	 oy0b1mpk81lRd6mP9Kd9YkyGgkV1nRaJrd01I4S90yQpJEKYyP8gRTOLOUS81omaFE
-	 xeWYq13BjLzViMjeSeU45Ni79OpHKVfICNf85FDTslgPXrV98IaZvWvqEhmd1q2KTN
-	 fG38PHUUcJr3FF2zkt88SvL1ShkgvHtc2+0xQ/wCSJAxsL46ftyEAP0X4WbI5NP3lJ
-	 bBHYQLmu27YWWGOIGiaZkH3m31IkjoAIV1qCeQzcqpRZlOvtdE3wFNxW6emnA80SNb
-	 c/VoDu4hfMiBQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id D09C53926663;
-	Wed,  5 Aug 2026 01:00:17 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="smYECRpH"
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-51c10e86e52so87441cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 04 Aug 2026 19:07:23 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785895643; cv=none;
+        d=google.com; s=arc-20260327;
+        b=f9AYNev+o2dk33WMz5xypB/bZjbT/8Bi6EnCbzYJE3ZW6meic2hOQJRS08TV0AbSw/
+         +eubZTQJ4r2NP/xqPKD0ifrLWsfi1df6nwYmmp6+nKf5pjlrPcS01asXliu2I2mGW9bh
+         j/edtQ7FHSVFBxUWr3KfLF5Ku569MkiR2mW9HJG09taUCTkv26InU8LTxK8GJ7c9NYUg
+         QtvSYQ20mWids4fVgrpt/or99AvX3qUbiTzGAerWpKuiv2xHeWQ/qEmqKPjSRTRPLXD6
+         AKBsPDizo6+Dwo+T0OZDQznk4I0dAKjPzu/jqbN/EFwYYmNWtv7gZmqbBdRngGsykCpZ
+         SgEQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=t9PYmyQbnxhX6P6w3VmvET5K3sj0GsRwOG5w5bheb/8=;
+        fh=3a+8MJ5tdCy1jY2wBKHo5LTynJPedPJA487uahB8O+A=;
+        b=DmTInYSRFlGaujJjVFFTiSgNArRDWcpisR/Nw8jQjkZRiXON1nXkcNX60CyNshS/9r
+         O1Pyt01hScc88ueNF8FY5l2JMkBtL1YBbIB4V0aH2F0fjJoF6qgMETmn9Lkk+CrJRabM
+         VtLWKz90KZvFQuak4+FtWVBzSxhJslb5Tk65dkiRs3NvDEkdZp2t1KAXc7YnfRAypI4K
+         hCrvPRsDSTR7XaHUdiXXydDU15CbrkKs25v4nheFkmpaCy9SudiU4el1dIhaiK/qfLbJ
+         BdCxkcxiEdwABgN83ILO9oc8m2jzT6GljOkf0TQ3M33VhljDDd6iiHYTcgpP4Pb3X5X9
+         tl0w==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1785895643; x=1786500443; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=t9PYmyQbnxhX6P6w3VmvET5K3sj0GsRwOG5w5bheb/8=;
+        b=smYECRpHrYdYetbcNHdz0oiz1TXnUjpUdWdePFUB2XXMT1WIzWZRprZwYnEFbVfkqv
+         nfltkYDC/fckaM0Z3UUdVbiLalGR+KppGesj3o/wTOG9eovawSHam1oGE2zceYM9T8tx
+         dA9+Gpi4EYojBW/DlDD+EL4nM0cjLo+wQw4GD5NreDhRIYaVMrXMsyl8r61a3tkDO31B
+         hJvZAAr5K35iumsKBYpNggaaXXgO+RAy7tMP/mm1Ke76GgiJGEGmYlvTyWT5lfE4klYT
+         SYj/QMYQ1qYyXsP7kDDTZqNvuwiOvAPGsvBBo6t3ZSYYlMKG7JyVnJmUQUzDsYgGmYr+
+         on5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785895643; x=1786500443;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=t9PYmyQbnxhX6P6w3VmvET5K3sj0GsRwOG5w5bheb/8=;
+        b=id0ji0kGs/LFKUz9bCWhv3l+HO1QkZZpjrES2z6H4HCwlz8RNcJnaSRvo4K3Jy4ecF
+         EiebO992k6kYAll+QaHDDuW7kqQnlJwb8b48PFtoOdIhyNYy461NfNM3oO/gxpNCJ8tu
+         MBEZJJVbEF0ReuyiSI2ujLw7pNq/AzOX6b4kESG2K7ULx4S2B600kQER02bE2ilpkIcg
+         zYO44XginLJ0L/zXcOp7PBP14G47TLgQCkeGDtGPw1B10HPbO1zBhdri+QxuMrgxvN7r
+         rFnMzx73tFy+cuyNW7DXZQEVQujW71C5wiAvFybvcPcuMwPq8baxVt+ajwVf+ouXPuny
+         /UVA==
+X-Forwarded-Encrypted: i=1; AHgh+RrHYR4QEaqG3NqZIqhYvojCg0mx0GmQpJ3zi91tg0cq4DOiYWR0QpwKtTLMI99sG2A5fSnBnqI6udd0TeOnEE9P@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZEnutsmizhtCoTgMBhlxzHNP3oiHSZdOi/KgiCZ9mQ69XOQfp
+	7CUTK5O3AsHUPJHckhFuqovLiLUx7SfrwmqFqsmLZ1ri37VQqTKUc2TY8Hg5MazqZhEOxrYFb+D
+	0fQldVziK2/ufEmx7dpQRO7N9hfjOqVFjhLTOIRZI
+X-Gm-Gg: AR+sD13TjkvyNufBuB3Pu5ojNac2KHRKeR9ask9eTZbuOyiC61m+PL5fu2CBMp0eHrk
+	VvyvgS390i3GFIq2y5hxvchNo++QDAmzveBdpEGrUhrhqPT6e72uWEYKDgDTHC79r6iX6RgvQXG
+	crAuoXncaF9RaaYxDcj2+CEip3f5eawgku9zLU4WeG4beJTvn09oflFAclGArRxQk/cLPYVneWZ
+	U0iKiHQy575mAloyZwF34PjdG1IN2IAF7NDZ3+Xy9L/48yILlrgzofamPAGxZw0EsMTRN4Ewuwp
+	9bkRGKWkNr66BLIe9nWKZDEBjcCP5H+9ml1oHJSTM8HhwW2+rqQ9vQOU
+X-Received: by 2002:ac8:7c51:0:b0:517:6010:7c71 with SMTP id
+ d75a77b69052e-52ce693a5b0mr10312871cf.4.1785895641906; Tue, 04 Aug 2026
+ 19:07:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v8 00/22] Add Counter delegation ISA extension support
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <178589161639.3856351.5268442875805678038.git-patchwork-notify@kernel.org>
-Date: Wed, 05 Aug 2026 01:00:16 +0000
-References: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
-In-Reply-To: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
-To: Atish Patra <atish.patra@linux.dev>
-Cc: linux-riscv@lists.infradead.org, jolsa@kernel.org, pjw@kernel.org,
- mark.rutland@arm.com, robh@kernel.org, anup@brainfault.org,
- namhyung@kernel.org, acme@kernel.org, krzk+dt@kernel.org, irogers@google.com,
- will@kernel.org, james.clark@linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-perf-users@vger.kernel.org,
- conor@kernel.org
+References: <20260802180801.65183-1-tshah@linux.ibm.com>
+In-Reply-To: <20260802180801.65183-1-tshah@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 4 Aug 2026 19:07:10 -0700
+X-Gm-Features: AUfX_mwYjaXJrOhwgGizy9vBeAtHaoOt-f0P8k6jgU6FXsqa3x8xZnCk6rmAGVY
+Message-ID: <CAP-5=fXGaMPzt8BUZKQB4QeuxrfiERAF8Kdut+uBPnXWvL82-g@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 0/5] Add perf.data tracepoint events to trace.dat conversion
+To: Tanushree Shah <tshah@linux.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
+	vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com, 
+	maddy@linux.ibm.com, namhyung@kernel.org, linux-perf-users@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, atrajeev@linux.ibm.com, hbathini@linux.ibm.com, 
+	Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, rostedt@goodmis.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Sun, Aug 2, 2026 at 11:08=E2=80=AFAM Tanushree Shah <tshah@linux.ibm.com=
+> wrote:
+>
+> This RFC patch series introduces support for converting perf.data files
+> containing tracepoint events into trace.dat format, enabling seamless
+> visualization and analysis using KernelShark.
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Background and Motivation
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> Currently, perf and trace-cmd operate as separate tracing ecosystems with
+> incompatible data formats. Users who collect tracepoint data with
+> 'perf record' cannot easily visualize it in KernelShark's graphical
+> timeline view or leverage trace-cmd's analysis capabilities.
+>
+> This creates workflow friction when users need to:
+>
+> - Visualize perf tracepoint data in KernelShark's interactive graphical
+>   timeline
+> - Share trace data between perf and trace-cmd workflows and toolchains
+> - Perform architecture-independent conversion and analysis of traces
+>
+> This conversion bridge eliminates these barriers by enabling seamless
+> data exchange between perf and trace-cmd ecosystems, allowing users to
+> choose the best tool for each analysis phase.
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Implementation Overview
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> The series implements the trace.dat file format specification (version 7)
+> within perf's data conversion framework.
+>
+> **Patch 1/5: Core trace.dat Export Infrastructure**
+> Introduces util/trace-dat.c and util/trace-dat.h implementing:
+> - Per-CPU raw event buffer management (init, collect, free)
+> - Ftrace ring buffer page construction
+> - trace.dat section writers (strings, options, flyrecord sections)
+>
+> **Patch 2/5: Metadata Integration**
+> Extends util/trace-event-read.c to write trace.dat metadata during
+> perf.data
+> parsing:
+> - Initial format header (magic, version, endian, page size, compression)
+> - Section 16: HEADER INFO (header_page + header_event)
+> - Section 17: FTRACE EVENT FORMATS
+> - Section 18: EVENT FORMATS (per system/event format files)
+> - Section 19: KALLSYMS
+> - Section 21: CMDLINES
+> - Section 15: STRINGS (written last after all sections)
+>
+> **Patch 3/5: Conversion Backend**
+> Implements util/data-convert-trace.c with trace_convert__perf2dat()
+> function:
+> - Processes PERF_TYPE_TRACEPOINT samples via process_sample_event()
+> - Collects raw event data per-CPU using trace_dat__collect_cpu_event()
+> - Writes OPTIONS sections (CPUCOUNT, TRACECLOCK, metadata offsets)
+> - Writes FLYRECORD section with per-CPU ring buffer pages
+>
+> **Patch 4/5: User Interface**
+> Extends tools/perf/builtin-data.c with --to-trace-dat option:
+> - Adds command-line option for trace.dat output
+> - Mutually exclusive with --to-ctf and --to-json
+> - Calls trace_convert__perf2dat() to perform conversion
+>
+> **Patch 5/5: Shell Test**
+> Adds a shell test (tools/perf/tests/shell/) covering normal tracepoint
+> recordings, pipe mode and mixed tracepoint/non-tracepoint recording
+> conversions and --force flag behaviour.
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Current Implementation Details
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> **trace.dat Format Version:**
+> The implementation currently targets trace.dat format version 7, which
+> is the stable version supported by current trace-cmd releases (v3.x).
+> This version is hardcoded to ensure compatibility with existing
+> trace-cmd and KernelShark installations. Future enhancements could add
+> version negotiation or support for newer format versions as they become
+> standardized.
+>
+> **Compression Strategy:**
+> Compression is explicitly disabled (set to NONE) in the generated
+> trace.dat files.
+> This design choice:
+> - Simplifies the initial implementation and testing
+> - Ensures maximum compatibility across trace-cmd versions
+> - Avoids external compression library dependencies
+>
+> Future work could add support for various compression algorithms (zlib,
+> zstd, lz4) with runtime selection via command-line options, significantly
+> reducing file sizes for large traces.
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Usage Example
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> ```bash
+> *Record tracepoint events with perf*
+> perf record -e sched:sched_switch -e sched:sched_wakeup -a sleep 10
+>
+> *Convert to trace.dat format*
+> perf data convert --to-trace-dat=3Doutput.dat
+>
+> *Verify trace.dat structure*
+> trace-cmd dump --summary output.dat
+>
+> *Analyze with trace-cmd*
+> trace-cmd report output.dat
+>
+> *Visualize in KernelShark*
+> kernelshark output.dat
+> ```
+>
+> **Conversion Output:**
+> ```
+> [ perf data convert: Converted 'perf.data' into trace.dat format
+> 'output.dat' ]
+> [ perf data convert: Converted 2684 events ]
+> ```
+> **trace-cmd dump --summary Output:**
+> ```
+>  Tracing meta data in file output.dat:
+>         [Initial format]
+>                 7       [Version]
+>                 0       [Little endian]
+>                 8       [Bytes in a long]
+>                 65536   [Page size, bytes]
+>                 none    [Compression algorithm]
+>                         [Compression version]
+>         [buffer "", "local" clock, 65536 page size, 16 cpus, 1048576 byte=
+s
+>     flyrecord data]
+>         [10 options]
+>         [Saved command lines, 0 bytes]
+>         [Kallsyms, 0 bytes]
+>         [Ftrace format, 0 events]
+>         [Header page, 206 bytes]
+>         [Header event, 205 bytes]
+>         [Events format, 1 systems]
+>         [9 sections]
+> ```
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Testing and Verification
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> The series has been extensively tested with:
+> - Various tracepoint events (sched, irq, syscalls, block I/O)
+> - Mixed recordings containing both tracepoint and non-tracepoint events
+>   only tracepoints converted)
+> - Verification with trace-cmd report and KernelShark visualization
+> - Memory leak testing with Valgrind (0 bytes leaked).
+> - Cross-architecture testing: v1 tested x86_64 and ppc64le. v2 adds
+>   s390 (big-endian) perf.data converted on both ppc64le
+>   (little-endian) and x86_64 (little-endian) hosts, in addition to
+>   same-arch x86_64 (LE->LE) and ppc64le (BE->BE) conversion.
+> - Pipe mode support has been tested end-to-end. (in v2)
+>
+> All generated trace.dat files successfully open in:
+> - trace-cmd report (v3.1+)
+> - KernelShark (v2.0+)
+>
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Next Steps
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> We would highly appreciate reviews, comments, and feedback on:
+> - The overall architectural approach and integration points
+> - Compatibility considerations with trace-cmd ecosystem
+> - Performance characteristics for large-scale traces
+> - Additional use cases or workflow scenarios
+> - Future enhancement priorities
+>
+> ---
+> Changes in v2
+>
+> Addressing the Sashiko AI review findings on v1:
+>
+> Cross-arch correctness:
+>   - Introduce to_file_u16/u32/u64 helpers (wrapping tep_read_number())
+>     to write all multi-byte fields in the recorded machine's byte order;
+>     apply throughout metadata sections and flyrecord page/record headers
+>     (ts, commit, TIME_EXTEND, large-event data_len).
+>   - Fix flyrecord record header bit layout for big-endian files.
+>     The record header word bit layout differs by file endianness,
+>     matching kbuffer-parse.c type_len4host()/ts4host():
+>       LE: type_len in bits [4:0],   time_delta in bits [31:5]
+>       BE: type_len in bits [31:27], time_delta in bits [26:0]
+>
+> Pipe mode:
+>   - Add process_attr(), process_feature(), and process_tracing_data()
+>     callbacks required for pipe mode operation.
+>   - Defer CPU buffer initialisation until the first tracepoint sample,
+>     after process_feature()/process_tracing_data() have populated the
+>     session header. This ensures the recorded machine's CPU count is
+>     used rather than the host's - critical for cross-platform analysis.
+>
+> Format compliance:
+>   - Implement TIME_EXTEND records for timestamp deltas >27 bits to
+>     prevent silent truncation and maintain chronological ordering.
+>   - Fix large event encoding (>=3D29 words): use type_len=3D0 with a
+>     separate 32-bit length word, avoiding collision with reserved types
+>     (PADDING=3D29, TIME_EXTEND=3D30, TIME_STAMP=3D31).
+>   - Add bounds check rejecting records larger than a page payload before
+>     batching, preventing heap overflow in trace_dat__write_page().
+>   - Fix flyrecord section_size to exclude the 16-byte section header,
+>     matching trace.dat specification and trace-cmd behaviour.
+>
+> CLI behavior:
+>   - Fix --force flag: open with O_CREAT|O_EXCL when force is not set,
+>     failing with -EEXIST instead of silently overwriting existing files.
+>
+> Memory safety:
+>   - Fix realloc overwrite of cpu_events->events and page_records on
+>     failure: use temporary pointers, only commit on success.
+>   - Fix use-after-free/double-free in sequential page_records realloc
+>     failure: replace with malloc+memcpy+free pattern.
+>   - Fix section_size computed from before section header position.
+>   - Add NULL checks for get_tracing_file(), calloc() padding, and
+>     trace_dat_options_offset assignment on write failure.
+>   - Use goto out_free on record allocation failure to avoid leaking
+>     accumulated page_records entries.
+>   - Replace direct read() with do_read() in read_proc_kallsyms() to
+>     handle short reads correctly.
+>   - On fwrite failure, set trace_dat_write_failed and continue parsing
+>     so that perf.data processing completes normally.
+>
+> Testing (new in v2):
+>   - Add shell test covering conversion, trace-cmd dump validation,
+>     sched_switch event verification, and --force flag behaviour.
+>
+> Documentation (new in v2):
+>   - Add documentation for 'perf data convert --to-trace-dat', covering
+>     usage and supported options.
+>
+> v1: https://lore.kernel.org/linux-perf-users/20260608125951.90425-2-tshah=
+@linux.ibm.com/
 
-This series was applied to riscv/linux.git (for-next)
-by Paul Walmsley <pjw@kernel.org>:
+Thanks again Tanushree for pursuing this. I see on sashiko.dev that
+sashiko couldn't review the v2 patches because they failed to apply:
+https://sashiko.dev/#/log/baseline/53604/2
+The SHA of perf-tools-next that sashiko.dev was trying was
+d04ef71492fad7230d474efe33d05f4c0563d409, which corresponds to "perf
+machine: Check snprintf truncation for guest kallsyms path," added 4
+days ago:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/commit/?h=3Dperf-tools-next&id=3Dd04ef71492fad7230d474efe33d05f4c0563d409
+Could you rebase the patches so that we can benefit from the Sashiko review=
+?
 
-On Wed, 01 Jul 2026 01:46:48 -0700 you wrote:
-> This series adds the counter delegation extension support. It is based on
-> very early PoC work done by Kevin Xue and mostly rewritten after that.
-> The counter delegation ISA extension(Smcdeleg/Ssccfg) actually depends
-> on multiple ISA extensions.
-> 
-> 1. S[m|s]csrind : The indirect CSR extension[1] which defines additional
->    5 ([M|S|VS]IREG2-[M|S|VS]IREG6) register to address size limitation of
->    RISC-V CSR address space.
-> 2. Smstateen: The stateen bit[60] controls the access to the registers
->    indirectly via the above indirect registers.
-> 3. Smcdeleg/Ssccfg: The counter delegation extensions[2]
-> 
-> [...]
+Thanks,
+Ian
 
-Here is the summary with links:
-  - [v8,01/22] RISC-V: perf: fix resource cleanup on driver probe failure
-    https://git.kernel.org/riscv/c/bf08074d8a20
-  - [v8,02/22] RISC-V: Add Sxcsrind ISA extension CSR definitions
-    https://git.kernel.org/riscv/c/7c31031b2974
-  - [v8,03/22] RISC-V: Add Sxcsrind ISA extension definition and parsing
-    https://git.kernel.org/riscv/c/7fe9435ef9e7
-  - [v8,04/22] dt-bindings: riscv: add Sxcsrind ISA extension description
-    https://git.kernel.org/riscv/c/010e2b79bd08
-  - [v8,05/22] RISC-V: Define indirect CSR access helpers
-    https://git.kernel.org/riscv/c/6f1ece4a6691
-  - [v8,06/22] RISC-V: Add Smcntrpmf extension parsing
-    https://git.kernel.org/riscv/c/935bfae38e57
-  - [v8,07/22] dt-bindings: riscv: add Smcntrpmf ISA extension description
-    https://git.kernel.org/riscv/c/837eaefa4d63
-  - [v8,08/22] RISC-V: Add Sscfg extension CSR definition
-    https://git.kernel.org/riscv/c/db40f62b80ec
-  - [v8,09/22] RISC-V: Add Ssccfg/Smcdeleg ISA extension definition and parsing
-    https://git.kernel.org/riscv/c/2ea70441fe0f
-  - [v8,10/22] dt-bindings: riscv: add Counter delegation ISA extensions description
-    https://git.kernel.org/riscv/c/b8d69e7159cc
-  - [v8,11/22] RISC-V: perf: Restructure the SBI PMU code
-    (no matching commit)
-  - [v8,12/22] RISC-V: perf: Modify the counter discovery mechanism
-    (no matching commit)
-  - [v8,13/22] RISC-V: perf: Add a mechanism to defined legacy event encoding
-    (no matching commit)
-  - [v8,14/22] RISC-V: perf: Implement supervisor counter delegation support
-    (no matching commit)
-  - [v8,15/22] RISC-V: perf: Skip PMU SBI extension when not implemented
-    (no matching commit)
-  - [v8,16/22] RISC-V: perf: Use config2/vendor table for event to counter mapping
-    (no matching commit)
-  - [v8,17/22] RISC-V: perf: Add legacy event encodings via sysfs
-    (no matching commit)
-  - [v8,18/22] RISC-V: perf: Add Qemu virt machine events
-    (no matching commit)
-  - [v8,19/22] tools/perf: Support event code for arch standard events
-    (no matching commit)
-  - [v8,20/22] tools/perf: Add RISC-V CounterIDMask event field
-    (no matching commit)
-  - [v8,21/22] TEST(do-not-upstream): fake qemu-virt PMU events for cdeleg counter-mask testing
-    (no matching commit)
-  - [v8,22/22] TEST(do-not-upstream): fake qemu vendor JSON + mapfile entry for CounterIDMask path
-    (no matching commit)
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+> Tanushree Shah (5):
+>   perf/trace-dat: Add trace.dat export infrastructure
+>   perf/trace-event: Write trace.dat metadata sections during parsing
+>   perf data-convert: Add perf.data to trace.dat conversion backend
+>   perf data: Add --to-trace-dat option for converting perf.data
+>     tracepoint events into trace.dat format
+>   perf test: Add test validating trace.dat generated by 'perf data
+>     convert --to-trace-dat'
+>
+>
+>  tools/perf/Documentation/perf-data.txt        |   7 +
+>  tools/perf/builtin-data.c                     |  40 +-
+>  ...rf_data_converter_tracepoints_trace_dat.sh | 169 ++++
+>  tools/perf/util/Build                         |   2 +
+>  tools/perf/util/data-convert-trace.c          | 240 +++++
+>  tools/perf/util/data-convert.h                |   4 +
+>  tools/perf/util/trace-dat.c                   | 876 ++++++++++++++++++
+>  tools/perf/util/trace-dat.h                   | 113 +++
+>  tools/perf/util/trace-event-read.c            | 307 +++++-
+>  9 files changed, 1749 insertions(+), 9 deletions(-)
+>  create mode 100755 tools/perf/tests/shell/test_perf_data_converter_trace=
+points_trace_dat.sh
+>  create mode 100644 tools/perf/util/data-convert-trace.c
+>  create mode 100644 tools/perf/util/trace-dat.c
+>  create mode 100644 tools/perf/util/trace-dat.h
+>
+> --
+> 2.47.3
+>
