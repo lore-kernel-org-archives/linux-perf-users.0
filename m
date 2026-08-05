@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5681ACED5
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 15:20:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158FB47DD57
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 15:37:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785943260; cv=none; b=RyZ66g+tTUJYS005oy/fFzOuz5ETI6pWuw0XOF85pIlR6tzagZSDRCRnb70tC04xXAmW+eEtWz4Anm+dCglZCqt/mEv7FFZJUo/R4lJPlsqcB2ga9QpKDjWFZkWRThy+UJ6Q6R//OzFTSvlJGfipuV+xVFrn7islaXhryiqznnQ=
+	t=1785944275; cv=none; b=Slzft3Z/ruylU3/VH0NnJh7a/OUGTNEr81VYuET/J6Lp58E7mzFkt9/ZciBuBhUQX+g3JaUpptlUtDdaUE8ifVpt+XZYDKgdkEKMOz8rAmDUaXGm+Nk/9CTolBiVHXrA2OJuHEbAgsIJqu81r4c6+0J0JBg1nmYJupmEpWxm8eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785943260; c=relaxed/simple;
-	bh=eTXay/nhwqR9wCsqiE/bd8ZilVrOCCWAzQzOLwKY4aA=;
+	s=arc-20240116; t=1785944275; c=relaxed/simple;
+	bh=x+44tHeIyXyGn3f68dJqtP8hc8SUWyP2MWU78mZp1YU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=msfVEVS97G9yCVus5smxBbZgGQgeZMSiZLaqghGPMCZd03eeR289hyfUHNCxmPB098MoXEhWHBJg+j82hpMDMplq6mSBqKeBx6vONsB/cTzcYSvVav/Bj+mRq/m9CHMUqtVugdxTobpF6SseZQQABi3LZESrFOTYxTyx9q5w094=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BJVPvFn4; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Tf3PcNaXUpwQOWAwxZTwOWNorp+8s2jGxuBPxF63kJavq0FZFj2rjEmmrwtRoK/50jCApawfoFGV4rwrLcVP9bMAMsj1PA6FFvOk8OXgW2SGQa42te14qLkGygoGnKWxXg9G2MXYbt8MbsP47C3BMuYYX3P9TvUZNcMjNyh/9y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mp5uIUZt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BJVPvFn4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 575771F000E9;
-	Wed,  5 Aug 2026 15:20:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mp5uIUZt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86FFE1F000E9;
+	Wed,  5 Aug 2026 15:37:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785943258;
-	bh=pzsoUoRIYlUEJ0uLiXe+kfJD68x0huq5zepxVh72SC8=;
+	s=k20260515; t=1785944270;
+	bh=jHJsKxcHP2UDw8nnhtEuSG61AKAplavHuDjFSNXbT9g=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=BJVPvFn49sptYj5PVpd0TFuWF2rw+9HzN7DETccXim690v3PGFOEt/M7AkgbIkGQa
-	 KHHhVSdq5fudbXCumkRydp1vCbao085fxJ3tiN9oM1R5sbvDJbQ+8+qWuv2dmIL7hj
-	 1o7FSO/OWSAlqV84f0nyzHe0YIpOWcATdi1PX52Yr+a2J1HmiqtrRg1X+ovFUswSif
-	 6AgGJm/FO6VubqAi0Uv6hFPyKoyiLGOuKlKFjqm58tSYPx5RyDmmaR6aDu0ZkhNAXO
-	 Gkv+JavlXbfL89e5QfSDmz+w8EWSQzHKUQ8YYiEARAdXh+Fd+U4dlkYszg9VT4nRmH
-	 DqOYrtzF9YYtw==
+	b=mp5uIUZtO+thU5Smqsxvl9jChZ77oKCCbhrBVunk3XbBYHXGZ7HDFkKaQ7/cpBfaZ
+	 eogcWDghczFTS7AoCrZIKCVLsqSdAZhTxDJugP6j0AeuVP4N1G6FO6WP1bB3Pw2+ee
+	 vF/ZaM1/bwcQmft6Yo7+j+enRE0Z4zUqEGATLsZe3TEdGcLW1vIoMH4Xp4tc+vvGv9
+	 xJRZvEeRvA8QsN2YBx4C3FRL3G3V2ZbiSAapyGEkusgG+U0EaA2e2UecgyXNSvfciG
+	 PTD4XsgUR4oCrKhx7f40aXO+A1WmVWFfBeANotYZpalJwIBMJ9jXRB5ZwdFnZCFR15
+	 +xOEHepSXSmsw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/3] perf: arm_spe: Factor aux output and flags out of
- buffer fault handler
+Subject: Re: [PATCH 2/3] perf: arm_spe: Factor HW discard mode out of
+ arm_spe_perf_aux_output_begin()
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Clark" <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260805-james-spe-software-discard-v1-1-0ff0e44c4c92@linaro.org>
+In-Reply-To: <20260805-james-spe-software-discard-v1-2-0ff0e44c4c92@linaro.org>
 References: <20260805-james-spe-software-discard-v1-0-0ff0e44c4c92@linaro.org>
- <20260805-james-spe-software-discard-v1-1-0ff0e44c4c92@linaro.org>
+ <20260805-james-spe-software-discard-v1-2-0ff0e44c4c92@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 05 Aug 2026 15:20:57 +0000
-Message-Id: <20260805152058.575771F000E9@smtp.kernel.org>
+Date: Wed, 05 Aug 2026 15:37:50 +0000
+Message-Id: <20260805153750.86FFE1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,71 +48,91 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
 
+New issues:
+- [High] Unhandled Interrupt Storm / Unreachable Code due to uninitialized =
+perf_output_handle in discard mode
+
 Pre-existing issues:
-- [High] Missing immediate `isb()` after writing to control-plane system re=
-gister `SYS_PMBLIMITR_EL1`.
-- [High] Missing immediate `isb()` after writing to control-plane system re=
-gister `SYS_PMSCR_EL1`.
+- [High] Missing Context Synchronization Event (ISB) after writing to SYS_P=
+MBLIMITR_EL1
 --
 
---- Patch [1]: [PATCH 1/3] perf: arm_spe: Factor aux output and flags out o=
-f buffer fault handler ---
-commit 454b555e21bef7b51b93cb02a78486de3845b1b9
+--- Patch [2]: [PATCH 2/3] perf: arm_spe: Factor HW discard mode out of arm=
+_spe_perf_aux_output_begin() ---
+commit 61201ea6d6b4e69de62f9788efe1db4fd64b4fd9
 Author: James Clark <james.clark@linaro.org>
-Subject: perf: arm_spe: Factor aux output and flags out of buffer fault han=
-dler
 
-This patch refactors the ARM SPE PMU buffer fault handling by separating the
-auxiliary buffer output management and flags from the fault decoding logic.
-This simplifies the stop handling routine as it no longer conditionally
-calls the aux output end function. No functional changes are intended.
+perf: arm_spe: Factor HW discard mode out of arm_spe_perf_aux_output_begin()
+
+Discard mode doesn't call perf_aux_output_begin() or emit aux records,
+and enabling it never fails. We'll add a second discard mode in the
+next commit so it will be cleaner if there is a separate begin function
+just for discard mode.
 
 > diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> index dbd0da1116390..10d28ad81256f 100644
 > --- a/drivers/perf/arm_spe_pmu.c
 > +++ b/drivers/perf/arm_spe_pmu.c
-> @@ -677,11 +677,12 @@ static void arm_spe_pmu_disable_and_drain_local(voi=
-d)
+[ ... ]
+> @@ -609,18 +614,23 @@ static u64 arm_spe_pmu_next_off(struct perf_output_=
+handle *handle)
+>  	return limit;
+>  }
 > =20
->  /* IRQ handling */
->  static enum arm_spe_pmu_buf_fault_action
-> -arm_spe_pmu_buf_get_fault_act(struct perf_output_handle *handle)
-> +arm_spe_pmu_buf_get_fault_act(u64 *aux_flags)
->  {
-
-[ ... ]
-
-> out_write_limit:
-> 	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
-> 	return (limit & PMBLIMITR_EL1_E) ? 0 : -EIO;
-
-[Severity: High]
-This is a pre-existing issue, but is an immediate isb() required here?
-
-The ARM64 architecture guidelines state that writes to control-plane system
-registers like SYS_PMBLIMITR_EL1 must be followed by an isb() as the very
-next instruction. In arm_spe_perf_aux_output_begin() in=20
-drivers/perf/arm_spe_pmu.c, the function returns immediately after the writ=
-e,
-which could leave the CPU pipeline in an architecturally undefined state for
-subsequent instructions.
-
-[ ... ]
-
-> 	reg =3D arm_spe_event_to_pmscr(event);
-> 	isb();
-> 	write_sysreg_s(reg, SYS_PMSCR_EL1);
-> }
+> +static void arm_spe_pmu_begin_discard(struct perf_output_handle *handle,
+> +				      struct perf_event *event)
+> +{
+> +	u64 limit;
+> +
+> +	limit =3D FIELD_PREP(PMBLIMITR_EL1_FM, PMBLIMITR_EL1_FM_DISCARD);
+> +	limit |=3D PMBLIMITR_EL1_E;
+> +
+> +	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
+> +}
 
 [Severity: High]
-This isn't a bug introduced by this patch, but shouldn't there be an isb()
-after this system register write?
+This isn't a bug introduced by this patch, but writing to a control-plane
+system register like SYS_PMBLIMITR_EL1 requires an immediate isb() to avoid
+leaving the CPU pipeline in an architecturally undefined state.
 
-In arm_spe_pmu_start() in drivers/perf/arm_spe_pmu.c, an isb() is issued
-before writing to SYS_PMSCR_EL1, but it appears missing immediately after
-the write. Missing context synchronization after a system register write
-might leave the pipeline exposed to a stale configuration state.
+Looking at the caller in arm_spe_pmu_irq_handler(), the isb() is issued aft=
+er
+this function returns, which means the CPU executes the function return
+instructions before the barrier. In arm_spe_pmu_start(), execution proceeds=
+ to
+even more instructions before an isb() is eventually issued.
+
+Should the isb() be placed immediately after the write_sysreg_s() directly
+inside arm_spe_pmu_begin_discard() to guarantee architectural compliance?
+
+[ ... ]
+> @@ -884,7 +900,9 @@ static void arm_spe_pmu_start(struct perf_event *even=
+t, int flags)
+>  	struct perf_output_handle *handle =3D this_cpu_ptr(spe_pmu->handle);
+> =20
+>  	hwc->state =3D 0;
+> -	if (arm_spe_perf_aux_output_begin(handle, event)) {
+> +	if (arm_spe_discard_mode(event)) {
+> +		arm_spe_pmu_begin_discard(handle, event);
+> +	} else if (arm_spe_perf_aux_output_begin(handle, event)) {
+>  		arm_spe_pmu_stop(event, 0);
+>  		return;
+>  	}
+
+[Severity: High]
+Because discard mode explicitly bypasses perf_aux_output_begin() here, the
+per-CPU perf_output_handle is never initialized with the ring buffer or eve=
+nt.
+
+If the PMU hardware asserts an interrupt during this mode, wouldn't
+arm_spe_pmu_irq_handler() see an uninitialized (or previously NULLed) handl=
+e?
+
+It looks like early checks in the IRQ handler, such as checking if the event
+is present or if perf_get_aux(handle) is valid, would evaluate to true and
+return IRQ_NONE immediately without clearing the hardware interrupt syndrom=
+e.
+Could this lead to an unhandled interrupt storm that locks up the CPU?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260805-james-spe-=
-software-discard-v1-0-0ff0e44c4c92@linaro.org?part=3D1
+software-discard-v1-0-0ff0e44c4c92@linaro.org?part=3D2
