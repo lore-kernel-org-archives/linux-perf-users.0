@@ -1,140 +1,235 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E68D03E6DD0
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 10:40:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F14773F7A94
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 10:44:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785926433; cv=none; b=hCZCzsmxwK29LxnYQ5+QmXGUE2RtYg6e/MTdzuMN/BxDxSsM1aqYgT1X1g8EuTU9MeVl3b+SyRmqcYNUzX3YEiu8ymLm3ZyJg0ufWS2dSHLKnlZ0v7qb8121lX8jrleRjFwq3pkieHAwn0HIzI27sNWnZxefmXqvMx8GMttPSMg=
+	t=1785926644; cv=none; b=BVfvz8mFuMeglQDZuzUcV//3URBxZYb6DF0EPoA5VekFqWUVeRyQ87HqJdLWeG+sDXJLnqBqlG2K7d7uwfgUCt06GommxpI0+VaSVyxhl5HseS89L4CeG/PJ1LiE1LqPqElKRce4TqTK8YMnrjnVfsBxcrY77H1wlLnyyl/f+eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785926433; c=relaxed/simple;
-	bh=XOWclAMMkuYhDhV+dPAHCPcN8X7muDkskjE3Rwdczos=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B00ewngMu4WLD1sGEnRavlxQvB4L43SDHNT1PwRnhxfOG6vH18Vlt75/A+LQbc1UfirnFQYOKgLaCD+p2lvezOG1GmHWn+YbSJRE1dSWVMjmPlrowJfy/q8PXCFabVNKbSEOrcNpjdq4Hjc0yiWShWcSpVUzajXOVviacKEJ9yg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EtaVx5yG; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1785926644; c=relaxed/simple;
+	bh=kxROKPG/rbAzWU6TPUVSx+oJmuNV3M41eJL/lbIb5q4=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=KPOgyVXpnb87Te9uSP37TfBaC0QVpvfmOxo13vhBBVJUhpilGXRQDIPDl51AJGsi3+A0Le9wQDDBfrMGWI9sBXjYgmKpuYLvz4nFNq3ssZy1YdqWsjq+MbEcJyaxlstTxPzTWbbjDYodEz/mFTnVls/oDa2POJkhg7YS0Fn+5Ic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R1PQIUQm; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EtaVx5yG"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6758lh0L3354542;
-	Wed, 5 Aug 2026 10:40:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=TYULhW
-	4oC3L2Ksd4Waw3BondtEz1OQMHWVeyTdfKkfk=; b=EtaVx5yGwlWm4Uvru9IlwO
-	U/Qswvd6HPvonj17UjFUbVSzTzHsVLn2H9mfwQtQ/A/+HfSbKhobEtDrFNIdxH3d
-	3j7YM3kkXjJ41MGVvekK1QeAPhr7Oh/Cpqnhr4GY2HIWv7PXk5La50Q7xA/FyK0b
-	6d73AJoan9tieutJ2eXldUy0PH3XtXBG9yMKyCDo6dMFH5B7Q1T3rh5ubuLMuFuu
-	0HR+6VWAZqvk+J5Q3iR0FH+Jqe5fO/H2GIVEfbLJKwG1yMDd0NGMKMShn3csmMoR
-	nW/nfJIrf3VbBeSDjBzv1xb0AVwb39zYNSi0hJcUYWKRkIRKZXt15Tdk1Z0u9cmw
-	==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fs8a42kab-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Aug 2026 10:40:15 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 675AQF12025485;
-	Wed, 5 Aug 2026 10:40:15 GMT
-Received: from smtprelay03.dal12v.mail.ibm.com ([172.16.1.5])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fswtynwcm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 05 Aug 2026 10:40:15 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 675AeCNb21889674
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 5 Aug 2026 10:40:12 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0AEF15805A;
-	Wed,  5 Aug 2026 10:40:12 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7D1835805C;
-	Wed,  5 Aug 2026 10:40:05 +0000 (GMT)
-Received: from [9.124.212.93] (unknown [9.124.212.93])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  5 Aug 2026 10:40:05 +0000 (GMT)
-Message-ID: <be4c4d52-a74d-4d71-8ec3-b1fe2ed08349@linux.ibm.com>
-Date: Wed, 5 Aug 2026 16:10:03 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R1PQIUQm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1785926641;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=M3NMRwj+bv04AD/DEC2xE+Q9d9tOIG4BeOEkx053FvA=;
+	b=R1PQIUQmIjVI0j+k9a1OkQSY52cgKN+utdrP+JIEFoti5C8NhYnrNBHPEknn+HjaRY6XU3
+	fSaYR5dLAwgtDBdvYMKuOtAHtoblGiXZ0976CwuWlWrn/OaI2GktDlfkcVzcsbVaIuSt0Z
+	QZLFAfYejXfPPcrQtbPjWd09yM4MBSQ=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-277-pf7ymubxMKiRiIeVUt4ldA-1; Wed,
+ 05 Aug 2026 06:43:56 -0400
+X-MC-Unique: pf7ymubxMKiRiIeVUt4ldA-1
+X-Mimecast-MFC-AGG-ID: pf7ymubxMKiRiIeVUt4ldA_1785926635
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 19CEB1800642;
+	Wed,  5 Aug 2026 10:43:55 +0000 (UTC)
+Received: from Carbon (unknown [10.44.24.16])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E710718005A7;
+	Wed,  5 Aug 2026 10:43:52 +0000 (UTC)
+Date: Wed, 5 Aug 2026 12:43:49 +0200 (CEST)
+From: Michael Petlan <mpetlan@redhat.com>
+To: james.clark@linaro.org
+cc: irogers@google.com, linux-perf-users@vger.kernel.org, leo.yan@linux.dev, 
+    namhyung@kernel.org, acme@kernel.org
+Subject: Re: [PATCH v3] perf tests: mmap-basic: fix user rdpmc detection
+ logic
+In-Reply-To: <CAATMXfnDxRdLJRo9LEiM6iGXooQGUFWrj+2=rd8=KL7GUK9Rbw@mail.gmail.com>
+Message-ID: <4181fd3b-1e22-4884-c349-63c5abfb814d@redhat.com>
+References: <20260302055557.3708296-1-qzhao@redhat.com> <CAATMXfmK73HSM=DZMBHGcoqu=79ftqhYNNtcpUGF-76Ydp9KMA@mail.gmail.com> <CAATMXfnDxRdLJRo9LEiM6iGXooQGUFWrj+2=rd8=KL7GUK9Rbw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 0/5] Add perf.data tracepoint events to trace.dat
- conversion
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com,
-        maddy@linux.ibm.com, namhyung@kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        atrajeev@linux.ibm.com, hbathini@linux.ibm.com, Tejas.Manhas1@ibm.com,
-        Tanushree.Shah@ibm.com, rostedt@goodmis.org
-References: <20260802180801.65183-1-tshah@linux.ibm.com>
- <CAP-5=fXGaMPzt8BUZKQB4QeuxrfiERAF8Kdut+uBPnXWvL82-g@mail.gmail.com>
- <CAP-5=fV0Y=__y11kmcLBo+1yAMraUKf6pUpdNUfav4NJEocwGA@mail.gmail.com>
-Content-Language: en-US
-From: Tanushree Shah <tshah@linux.ibm.com>
-In-Reply-To: <CAP-5=fV0Y=__y11kmcLBo+1yAMraUKf6pUpdNUfav4NJEocwGA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=E6P9Y6dl c=1 sm=1 tr=0 ts=6a731310 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=iQ6ETzBq9ecOQQE5vZCe:22 a=VwQbUJbxAAAA:8
- a=VnNF1IyMAAAA:8 a=c92rfblmAAAA:8 a=1XWaLZrsAAAA:8 a=BxoDo6MavbR7QgIzhckA:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=GvGzcOZaWPEFPQC_NcjD:22
-X-Proofpoint-ORIG-GUID: BiqrcGLGTCvHt7phAxQOQo3zLCSyiLsv
-X-Proofpoint-GUID: IBomcz3ilk-37tTHJML14EuISnaUA2uI
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODA1MDA4MSBTYWx0ZWRfXwc/j2VHUwg9r
- CMTVmChTTw36bqeb4DfJTv/hniWW2glNQ/PlZRUWQ81K0/XSNPn/nXOF9y6MUKolmbovfyRkHSx
- ncmYzdxRdO5AdvsocPnoBXRKSMZIyTc=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA1MDA4MSBTYWx0ZWRfXxJbP7AxVyop5
- JZasnNM25/0RGVwqXKu9ab8K8FS1MCPk4BMpvnNRmBvPq7kbvtDi4ghJBfE/ZQBzkUjOGEnOsAu
- 8AxfjYz2KHs4bO5we0ABzlDSA7kT8DDBMCqx7HJYYSBRIwIYaRzZ47nq8dyTEqYag9s9OpdNIlo
- g3KstgPyW/atBo3rokoQKzARI2UjYbzGtWS650Pled9oWh92wlKDynB+Jj5nnoYG+5w5ayt8PKc
- CCvdKWJI1FtoRKv2chNzxvN6UzzY03PKgmySexktaMejZBrpnKz38bYDx7uwI/bz/CoBU1euLii
- tv+2sqEAO7uXl0YeF5sf9v7yktxWrV34NNFayWfYy+lqFirrpHNApsfmhnd1t0kIm5gvP+7idKe
- vsEiSM/imD9j8Sx426E4wWfUSPU7m3kyIVp6DJBV95XKY6PHFRjmnwMnVheMFiClhKaJ48jC4DO
- O7c0pnkf/pqGLw7+mTQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-05_03,2026-08-04_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
- suspectscore=0 adultscore=0 spamscore=0 malwarescore=0 impostorscore=0
- phishscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2608050081
+Content-Type: multipart/mixed; boundary="659969-1385548246-1785926634=:4835"
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Thank you Ian for the review, glad it looks good!
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Thanks,
-Tanushree Shah
+--659969-1385548246-1785926634=:4835
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 
-On 05/08/26 07:57, Ian Rogers wrote:
-> On Tue, Aug 4, 2026 at 7:07 PM Ian Rogers <irogers@google.com> wrote:
->> On Sun, Aug 2, 2026 at 11:08 AM Tanushree Shah <tshah@linux.ibm.com> wrote:
-> ...
->>> v1: https://lore.kernel.org/linux-perf-users/20260608125951.90425-2-tshah@linux.ibm.com/
->>
->> Thanks again Tanushree for pursuing this. I see on sashiko.dev that
->> sashiko couldn't review the v2 patches because they failed to apply:
->> https://sashiko.dev/#/log/baseline/53604/2
->> The SHA of perf-tools-next that sashiko.dev was trying was
->> d04ef71492fad7230d474efe33d05f4c0563d409, which corresponds to "perf
->> machine: Check snprintf truncation for guest kallsyms path," added 4
->> days ago:
->> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/commit/?h=perf-tools-next&id=d04ef71492fad7230d474efe33d05f4c0563d409
->> Could you rebase the patches so that we can benefit from the Sashiko review?
+Hi James and Ian,
+
+what do you think about the v3? Can we get it merged? Thanks.
+
+Regards,
+Michael
+
+On Wed, 11 Mar 2026, Qiao Zhao wrote:
+> Hi James, Ian,
 > 
-> Fwiw, I went through the individual patches in case I could give some
-> useful early feedback. Everything looks great, and thanks for adding
-> the test!
+> Just a gentle ping on this patch.
+> Could you take a look when convenient?
 > 
 > Thanks,
-> Ian
+> Qiao
+> 
+> On Thu, Mar 5, 2026 at 11:08 AM Qiao Zhao <qzhao@redhat.com> wrote:
+> >
+> > Hi James, Ian,
+> >
+> > Do you mind reviewing this v3 change?  Thanks a lot!
+> >
+> > - Qiao
+> >
+> > On Mon, Mar 2, 2026 at 1:56 PM Qiao Zhao <qzhao@redhat.com> wrote:
+> > >
+> > > The mmap-basic test incorrectly determined rdpmc availability in
+> > > several environments, leading to unexpected failures on arm64 and
+> > > other architectures.
+> > >
+> > > Previously the rdpmc capability decision lived in test_stat_user_read(),
+> > > which caused inconsistent behaviour when:
+> > >  - perf_user_access sysctl state is unknown
+> > >  - architectures expose cap_user_rdpmc differently
+> > >  - arm64 platforms where rdpmc semantics differ from x86
+> > >
+> > > As suggested during review, move the rdpmc capability decision into
+> > > set_user_read() so that the user_read state and expected behavior
+> > > are decided in a single place.
+> > >
+> > > Changes in v3:
+> > >  - Moves perf_user_access handling into set_user_read()
+> > >  - Simplify test_stat_user_read() expectation logic
+> > >  - Use unified rdpmc_supported calculation
+> > >  - Handle USER_READ_UNKNOWN consistently
+> > >
+> > > v2:
+> > > https://lore.kernel.org/linux-perf-users/20260203141608.14128-1-qzhao@redhat.com/
+> > >
+> > > Note:
+> > > A potential cleanup around perf_event.h mentioned during review is
+> > > intentionally deferred and will be handled in a follow-up change
+> > > to keep this fix minimal and focused.
+> > >
+> > > Tested on:
+> > >  - ARM64 (armv8_pmuv3): all mmap-basic user-space counter tests pass
+> > >  - X86(include hybrid): all mmap-basic tests pass
+> > >  - IBM Power9: all mmap-basic tests pass
+> > >
+> > > Signed-off-by: Qiao Zhao <qzhao@redhat.com>
+> > > ---
+> > >  tools/perf/tests/mmap-basic.c | 55 +++++++++++++++++++++++++----------
+> > >  1 file changed, 39 insertions(+), 16 deletions(-)
+> > >
+> > > diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+> > > index 3313c236104e..3633e7c87dc1 100644
+> > > --- a/tools/perf/tests/mmap-basic.c
+> > > +++ b/tools/perf/tests/mmap-basic.c
+> > > @@ -185,38 +185,57 @@ static enum user_read_state set_user_read(struct perf_pmu *pmu, enum user_read_s
+> > >  {
+> > >         char buf[2] = {0, '\n'};
+> > >         ssize_t len;
+> > > -       int events_fd, rdpmc_fd;
+> > > +       int events_fd, fd;
+> > >         enum user_read_state old_user_read = USER_READ_UNKNOWN;
+> > >
+> > >         if (enabled == USER_READ_UNKNOWN)
+> > >                 return USER_READ_UNKNOWN;
+> > >
+> > > +       // Try the PMU rdpmc sysfs interface or similar
+> > >         events_fd = perf_pmu__event_source_devices_fd();
+> > > -       if (events_fd < 0)
+> > > -               return USER_READ_UNKNOWN;
+> > > -
+> > > -       rdpmc_fd = perf_pmu__pathname_fd(events_fd, pmu->name, "rdpmc", O_RDWR);
+> > > -       if (rdpmc_fd < 0) {
+> > > +       if (events_fd >= 0) {
+> > > +               fd = perf_pmu__pathname_fd(events_fd, pmu->name, "rdpmc", O_RDWR);
+> > > +               if (fd >= 0) {
+> > > +                       len = read(fd, buf, sizeof(buf));
+> > > +                       if (len == sizeof(buf))
+> > > +                               old_user_read = (buf[0] == '1') ?
+> > > +                                       USER_READ_ENABLED :
+> > > +                                       USER_READ_DISABLED;
+> > > +
+> > > +                       if (enabled != old_user_read) {
+> > > +                               buf[0] = (enabled == USER_READ_ENABLED) ? '1' : '0';
+> > > +                               len = write(fd, buf, sizeof(buf));
+> > > +                               if (len != sizeof(buf))
+> > > +                                       pr_debug("%s write failed\n", __func__);
+> > > +                       }
+> > > +                       close(fd);
+> > > +                       close(events_fd);
+> > > +                       return old_user_read;
+> > > +               }
+> > >                 close(events_fd);
+> > > -               return USER_READ_UNKNOWN;
+> > >         }
+> > >
+> > > -       len = read(rdpmc_fd, buf, sizeof(buf));
+> > > -       if (len != sizeof(buf))
+> > > -               pr_debug("%s read failed\n", __func__);
+> > > +       // Fallback: perf_user_access interface (arm64, riscv, or similar)
+> > > +       fd = open("/proc/sys/kernel/perf_user_access", O_RDWR);
+> > > +       if (fd < 0)
+> > > +               return USER_READ_UNKNOWN;
+> > >
+> > >         // Note, on Intel hybrid disabling on 1 PMU will implicitly disable on
+> > >         // all the core PMUs.
+> > > -       old_user_read = (buf[0] == '1') ? USER_READ_ENABLED : USER_READ_DISABLED;
+> > > +       len = read(fd, buf, sizeof(buf));
+> > > +       if (len == sizeof(buf))
+> > > +               old_user_read = (buf[0] == '1') ?
+> > > +                       USER_READ_ENABLED :
+> > > +                       USER_READ_DISABLED;
+> > >
+> > >         if (enabled != old_user_read) {
+> > >                 buf[0] = (enabled == USER_READ_ENABLED) ? '1' : '0';
+> > > -               len = write(rdpmc_fd, buf, sizeof(buf));
+> > > +               len = write(fd, buf, sizeof(buf));
+> > >                 if (len != sizeof(buf))
+> > >                         pr_debug("%s write failed\n", __func__);
+> > >         }
+> > > -       close(rdpmc_fd);
+> > > -       close(events_fd);
+> > > +
+> > > +       close(fd);
+> > >         return old_user_read;
+> > >  }
+> > >
+> > > @@ -295,12 +314,16 @@ static int test_stat_user_read(u64 event, enum user_read_state enabled)
+> > >                         goto cleanup;
+> > >                 }
+> > >
+> > > +#if defined(__aarch64__) || defined(__riscv)
+> > > +               rdpmc_supported = pc->cap_user_rdpmc;
+> > > +#else
+> > >                 if (saved_user_read_state == USER_READ_UNKNOWN)
+> > > -                       rdpmc_supported = pc->cap_user_rdpmc && pc->index;
+> > > +                       rdpmc_supported = pc->cap_user_rdpmc;
+> > >                 else
+> > >                         rdpmc_supported = (enabled == USER_READ_ENABLED);
+> > > +#endif
+> > >
+> > > -               if (rdpmc_supported && (!pc->cap_user_rdpmc || !pc->index)) {
+> > > +               if (rdpmc_supported && !pc->cap_user_rdpmc) {
+> > >                         pr_err("User space counter reading for PMU %s [Failed unexpected supported counter access %d %d]\n",
+> > >                                 pmu->name, pc->cap_user_rdpmc, pc->index);
+> > >                         ret = TEST_FAIL;
+> > > --
+> > > 2.49.0
+> > >
+> 
+> 
+--659969-1385548246-1785926634=:4835--
 
