@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905FA471246;
-	Wed,  5 Aug 2026 13:31:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A2FD471D09;
+	Wed,  5 Aug 2026 13:31:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785936685; cv=none; b=bn82dmDw9Ul+nGdD3AJ/ZG6J7rNjuCqmz7+YE2yFHw4VhwePLDOoA8JM0iDlvvW0LZcicq/Fu8ZpBDqo2W3QczGdA93AWFFJdFwmo+htGmZn2VnQiPQTV0JpVuMtakp7IYb6reX8PlQPMUYIQc4SCAHmlZAtkXjOrVaAdkZeWCw=
+	t=1785936691; cv=none; b=ERsdnf3ahxUgW4e3BoQm+wAtW+q03qE4CQUuvcLko72pxi2U1coXVEARc3Dwdugu6abUTd3hHNVVfOxdV1DwnIUuQlFhX0isxw/LyuFKT7FcLlM82luxy2yYSkJasgLE6Yqmo0oRxEzxeGbVubUl5BIjTZxXiTK3rIIJn/vQv5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785936685; c=relaxed/simple;
-	bh=bxkbjvjH3PR73oWSLczuqdxQFZY0bWmOlSKjeaRTDKQ=;
+	s=arc-20240116; t=1785936691; c=relaxed/simple;
+	bh=+eET+vtLrV+dDxyeP+Jq1Slogc/Rmdn3ZTNkCK/wlvY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=H4frXurtVbUFAVAezj9FiS8pIDgS1NneDGGeDda6drYXdixZgz64wA2FatuP3svxZdmXpe99fGx4MyVB4TWdE7TmJxog5/HHCw3jfmryHQtki26X2yXzb+D00RUCbpTkckFmTl2tIUdAajf4PVEnVj65i5POMj31FpH8MrfVYZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eCF6iOje; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=dik66SPhRSMoNivsBX8bA/zWjoM+ZkoUdkPqqKBUMOJhDmLLp6WKusaEa/1gv2q0i+ntlLrdOBeAao91c2xe24VYyLWVmAaLwRJh7MjkuaSc2o52Cxx2yfETegzwL9wveOUgOiDdmZAuJLLRS3E9pacslSEKJBC+WMajQmhJJiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsJkf94/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eCF6iOje"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CC951F000E9;
-	Wed,  5 Aug 2026 13:31:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PsJkf94/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D82771F00A3A;
+	Wed,  5 Aug 2026 13:31:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785936684;
-	bh=5hNEFcTuONvGHX51AFIg3nJnFMlGn8L15Q3WLQ6IMws=;
+	s=k20260515; t=1785936689;
+	bh=myGsoeIiu4huum95gabL7WYLI7F7P1PM7rMMi2FE1aw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=eCF6iOje+7bIyb17Oubd+7v2/vTz4hEAuJ8dbVnwavwf4BfcRRzNEMJX6ooPk3bAE
-	 8hTUBtMNUDrSMkNtCRc78ieYaLd7+kT7NSg/kM73cpYAQwqOQOLgcPD9q9DM4ED9mg
-	 JIRoeckltsvlwnydTKtOIwLt7eqMG1x8pOTc9YTSfdWKtwErE6lHjDFsgz4o9GDntw
-	 MTEcKoGeOL54SbOBDe5PlbtEO7L1EJLpsIKlARHHHl5D0Pngy8Yoiep2v0zcClMFJJ
-	 kcxNKoq+2Bt2eCy9I31pKG6/wyo1edHSvIxgLEFAEUmlVJ5jeVL2M7etT5jJwgsIlS
-	 SVm6l1ShLbkYQ==
+	b=PsJkf94/OZy0wIZBb1SQnkXM9hdpoDusjeitFAi3pQeaMj49plHWQTG5hslrLuVaE
+	 O9YEt6mX6pBTkSKKTGnM3PnRrduNuOHMsTmHKCKh1jL9I9opVGEJP7LKzJoeii8VRD
+	 qxxQSnVxKU8Te5jcj24vcNYJa19qEc7ujSjQAaJaJYLndhIi8YqCfrHKRoj9gYIWhT
+	 MmhfIY7s6SLMNUsLLxXV+gJh2Ce7788JB4Gzt0jDqK2YQs32d1wOxqX7eoGaKMyciq
+	 kGtJ4TT/QCwlbvvokHvZ3yVp+Gx8Fb8YF1qM9aj0Wxx4ddC0WHM2W8coH+fYZSbqwh
+	 Szcvn9NpqAvbQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,10 +39,11 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
-	Stephane Eranian <eranian@google.com>
-Subject: [PATCH 02/12] perf jitdump: Validate code_size against total_size in code load
-Date: Wed,  5 Aug 2026 10:30:01 -0300
-Message-ID: <20260805133013.235016-3-acme@kernel.org>
+	Stephane Eranian <eranian@google.com>,
+	Stefano Sanfilippo <ssanfilippo@chromium.org>
+Subject: [PATCH 03/12] perf jitdump: Prevent integer underflow in debug info size calculation
+Date: Wed,  5 Aug 2026 10:30:02 -0300
+Message-ID: <20260805133013.235016-4-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260805133013.235016-1-acme@kernel.org>
 References: <20260805133013.235016-1-acme@kernel.org>
@@ -56,58 +57,55 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-jit_repipe_code_load() reads code_size from the jitdump record and uses
-it to compute a pointer to the code blob:
+jit_repipe_debug_info() and jit_repipe_unwinding_info() compute payload
+sizes by subtracting the fixed header size from total_size:
 
-  code = (unsigned long)jr + jr->load.p.total_size - csize;
+  sz = jr->prefix.total_size - sizeof(jr->info);
 
-An oversized code_size underflows the pointer arithmetic, causing OOB
-reads into earlier heap memory.  Validate that code_size fits within the
-record (total_size - sizeof(jr->load)) before the pointer computation.
+When total_size is smaller than the header struct (from a truncated or
+corrupted jitdump record), the subtraction underflows to a massive
+value, causing an oversized allocation followed by an OOB memcpy.
 
-code_size is uint64_t but csize is int; values above INT_MAX wrap
-negative when narrowed into csize, which defeats the bounds check and
-sends the code pointer past the end of the record.  Reject those too.
+Validate that total_size covers at least the fixed header before the
+subtraction in both functions.
 
-Fixes: 9b07e27f88b9 ("perf inject: Add jitdump mmap injection support")
+Fixes: 598b7c6919c7 ("perf jit: add source line info support")
+Fixes: 0284fecd13b6 ("perf jit: Add unwinding support")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
 Cc: Stephane Eranian <eranian@google.com>
+Cc: Stefano Sanfilippo <ssanfilippo@chromium.org>
 Assisted-by: Claude:claude-opus-4.6
-Assisted-by: Opencode:mimo-v2.5-free
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/jitdump.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ tools/perf/util/jitdump.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index 4b7c7ba7cd95ddbb..3195f94187164066 100644
+index 3195f94187164066..787f8a03dae87908 100644
 --- a/tools/perf/util/jitdump.c
 +++ b/tools/perf/util/jitdump.c
-@@ -9,6 +9,7 @@
- #include <fcntl.h>
- #include <unistd.h>
- #include <inttypes.h>
-+#include <limits.h>
- #include <byteswap.h>
- #include <sys/stat.h>
- #include <sys/mman.h>
-@@ -450,6 +451,16 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
- 	csize = jr->load.code_size;
- 	usize = jd->unwinding_mapped_size;
- 	addr  = jr->load.code_addr;
-+
-+	/* code blob lives at the end of the record, validate it fits */
-+	if (jr->load.p.total_size < sizeof(jr->load) ||
-+	    jr->load.code_size > jr->load.p.total_size - sizeof(jr->load) ||
-+	    jr->load.code_size > INT_MAX) {
-+		pr_warning("jitdump: invalid code_size %" PRIu64 " (total_size=%u) in code_load record\n",
-+			   (uint64_t)jr->load.code_size, jr->load.p.total_size);
+@@ -669,6 +669,10 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ 	if (!(jd && jr))
+ 		return -1;
+ 
++	/* total_size must cover at least the fixed header */
++	if (jr->prefix.total_size < sizeof(jr->info))
 +		return -1;
-+	}
 +
- 	sym   = (void *)((unsigned long)jr + sizeof(jr->load));
- 	code  = (unsigned long)jr + jr->load.p.total_size - csize;
- 	count = jr->load.code_index;
+ 	sz  = jr->prefix.total_size - sizeof(jr->info);
+ 	data = malloc(sz);
+ 	if (!data)
+@@ -696,6 +700,10 @@ jit_repipe_unwinding_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ 	if (!(jd && jr))
+ 		return -1;
+ 
++	/* total_size must cover at least the fixed header */
++	if (jr->prefix.total_size < sizeof(jr->unwinding))
++		return -1;
++
+ 	unwinding_data_size  = jr->prefix.total_size - sizeof(jr->unwinding);
+ 	unwinding_data = malloc(unwinding_data_size);
+ 	if (!unwinding_data)
 -- 
 2.55.0
 
