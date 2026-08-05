@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC0E456E1E
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 16:16:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6984447D93C;
+	Wed,  5 Aug 2026 16:21:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785946619; cv=none; b=jPUpmSeIvDZZDNXDPTNwGnYpQBLUaf3S6WS0qp5j0HvkZWvA9Bpei5MkaTN3OMoGCxjMQ41buV0uDGjTpUib3lB1usUDl9mWb/+z1ebQwgzgXMp5sI20I3u61qaVUQRIgPUgEbiDqQitb5GbPnjKeB9JepNgeGec8h6TwGUK1Bg=
+	t=1785946911; cv=none; b=aUSwT7EDZU3mZYG0HgjK1kwAzIfpyZubTvlGLUzTtRiZ6O+Zf4ygZh4gsMc7HAKX6tP6ryiHM8W3AONxt1NVGz82dOIPsMfbdJ9lGYtJeqwq+/fSBbS4kW2MVugoV9nI6+XyxVoIZ+V3akjuizDpRErEoAp34Lizt4+ketRGI98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785946619; c=relaxed/simple;
-	bh=MTJF82L3FvvgbAgbt9y9nJXX8nTA/A3KpeoIogHz8zw=;
+	s=arc-20240116; t=1785946911; c=relaxed/simple;
+	bh=2DxAhv7GnhnDW96j5W2CZ/Zkx1PaVNp8q/Bv1w6Wj4Q=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=SDDtSHuZQZrWA4l90QearqwgnTi/p1XmM6RM6NvlStsFZZhkBCqzYUBvpDRMHy4CRPLhgEOs4J1XU79WMcYVZRUMhrZlTwNT3gyyWc9z0IVmFxahwjzGiWpfL9+X0g1eO31Au/bFrOasdneFmdeWFldWetgmSfONsKgPQNc7dCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ngwf+Oib; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=TMtN54Rzl3Kvi/KLjHA99yLOFvZZFggdm4yIUCtQxkBP2A+MQ8/NOWVhqqS2JrCzY9Q81fPxCd+HOJhWZ1E4RcpoUYb9gUeqqfdjpt3Oe2fNHD18rmevcPEYW00f3bp0sF8CyiREV5I0OdmVbl/AjlzLD+aXyNzQuUoP+Cbfz4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KH/+8tUE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ngwf+Oib"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 330401F000E9;
-	Wed,  5 Aug 2026 16:16:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KH/+8tUE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2EDC1F000E9;
+	Wed,  5 Aug 2026 16:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785946617;
-	bh=pY58UlX1fa6HkSzDwxtkJdy+cePvanYjZoQWAAgjxDA=;
+	s=k20260515; t=1785946910;
+	bh=W+rKcyVE23H3qysASqtwbU9J19wW/dNA0ASPvAUChvg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ngwf+OibJTycY7fvP/ZUinbd2r5aHx88LS5IgYp8uqDKkga8D4XQLfDsUCY7Mc8Ar
-	 cYaN6g8kS3YB/mY4TOFfXOx4u6yPESyeuwruPtj/yO1AC8gN6JTMl0y18wmWAWeGqj
-	 EwVkv8wvfc7IFavqBTYHr1EXU8jB8gSoz1roGmusGDoFkRfN0MPpw1Qlyu3ICRr84y
-	 jAbizvafU6n1QgjYfUEjZws8Glaju4ym/mePKUZfkN8GuY3i6AZIjwl1oXDpg+bI2y
-	 m/CzzzAXXkSzTWZxMjAm0PdykK4tNOzuiWvlv2SfkKAryKKrdrCy7LUOT/8HDgrPUn
-	 fSzuCNNOd4RpQ==
+	b=KH/+8tUEmKCBoCRKxvFc6+drZrCOJh++9rEn2lxj/t58GFBfKCYo57+Bq42IoUcYj
+	 cnP31nmgIYalZl/OdSt+zub8qK4BJIhqykuYUb/N56GhESvpTi/lw1mEksFQbk3zGy
+	 vTiVqw/bLKCbsRgKH/2lXBizv6m3RnohR8lclGIMlqxbroPLcnynremJn26im46kEo
+	 NZpG/GEms9SFZlSyqvT9j7hZjZ7CaZnCHQZGZvVCGiwxCw5YaijO4w6+mdvkkfy77u
+	 SezsNpCmHaHUH99o8kMtTopVWlI5MXMBKJPMDIhA/3F3ldGo7A43c5eNSXQEfRJ4GJ
+	 NHURQJ+PwMl1Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 10/11] perf/cxl: Don't log through pmu.dev in the
- overflow interrupt handler
+Subject: Re: [RESEND PATCH v4 11/11] perf/cxl: Clear stale overflow status
+ before using a counter
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Dave Jiang" <dave.jiang@intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260805155501.1294472-11-dave.jiang@intel.com>
-References: <20260805155501.1294472-1-dave.jiang@intel.com>
- <20260805155501.1294472-11-dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260805155911.1304807-12-dave.jiang@intel.com>
+References: <20260805155911.1304807-1-dave.jiang@intel.com>
+ <20260805155911.1304807-12-dave.jiang@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 05 Aug 2026 16:16:56 +0000
-Message-Id: <20260805161657.330401F000E9@smtp.kernel.org>
+Date: Wed, 05 Aug 2026 16:21:48 +0000
+Message-Id: <20260805162149.D2EDC1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,86 +49,75 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Use-After-Free in `cxl_pmu_offline_cpu()` due to devres teardown o=
-rder.
+- [High] Flawed overflow handling adds phantom counts to events when `cxl_p=
+mu_read()` races with the overflow interrupt.
 --
 
---- Patch [10]: [PATCH v4 10/11] perf/cxl: Don't log through pmu.dev in the=
- overflow interrupt handler ---
-commit 9f5d830c7ee5748e40bbe955adff5fe5abd56b9f
+--- Patch [11]: [RESEND PATCH v4 11/11] perf/cxl: Clear stale overflow stat=
+us before using a counter ---
+commit 7eae9f25fd541ecbfdfed643b25d0495c2ec7444
 Author: Dave Jiang <dave.jiang@intel.com>
+perf/cxl: Clear stale overflow status before using a counter
 
-perf/cxl: Don't log through pmu.dev in the overflow interrupt handler
+This commit clears the overflow status register in cxl_pmu_event_start() and
+cxl_pmu_probe(). This ensures that a counter handed from one event to the
+next does not start with a previous owner's pending overflow, preventing
+phantom counts from being added on handover.
 
-This commit changes the overflow interrupt handler to log through
-info->pmu.parent instead of info->pmu.dev. This prevents a use-after-free
-if an overflow occurs just before teardown, as perf_pmu_unregister() frees
-pmu->dev without clearing the pointer.
+Closes: https://lore.kernel.org/linux-cxl/anAVpO--i5heVfz9@MWDK4CY14F/
 
 > diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> index 84ebc7da181d5..45edef53a983d 100644
 > --- a/drivers/perf/cxl_pmu.c
 > +++ b/drivers/perf/cxl_pmu.c
-> @@ -805,7 +805,7 @@ static irqreturn_t cxl_pmu_irq(int irq, void *data)
->  		struct perf_event *event =3D info->hw_events[i];
-> =20
->  		if (!event) {
-> -			dev_dbg(info->pmu.dev,
-> +			dev_dbg(info->pmu.parent,
+> @@ -683,6 +683,15 @@ static void cxl_pmu_event_start(struct perf_event *e=
+vent, int flags)
+>  	 */
+>  	cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_THRESHOLD_MSK,
+>  			  cxl_pmu_config1_get_threshold(event));
+> +
+> +	/*
+> +	 * Drop any overflow the previous owner of this counter left pending;
+> +	 * cxl_pmu_event_stop() does not. Otherwise an interrupt latched over
+> +	 * the handover gets charged to this event. Do it before arming Interru=
+pt
+> +	 * on Overflow below, and note RW1C leaves the other counters alone.
+> +	 */
+> +	writeq(BIT_ULL(hwc->idx), base + CXL_PMU_OVERFLOW_REG);
 
 [Severity: High]
-This is a pre-existing issue, but since we are fixing teardown races with
-freed pmu structures, does a similar use-after-free exist in
-cxl_pmu_offline_cpu() during concurrent cpu hotplug events?
+This is a pre-existing issue, but while we are addressing phantom counts fr=
+om
+stale overflows here, is there still a race condition between cxl_pmu_read()
+and the overflow interrupt that can also result in phantom periods?
 
-In cxl_pmu_probe(), the devm actions are ordered such that the pmu is
-unregistered before the cpu hotplug instance is removed:
+If the hardware counter wraps, it sets the overflow bit and raises an MSI.
+Before the ISR can run, cxl_pmu_read() might be called (for instance, via a
+system call or a periodic timer) while local IRQs are disabled:
 
-drivers/perf/cxl_pmu.c:cxl_pmu_probe() {
-	...
-	rc =3D cpuhp_state_add_instance(cxl_pmu_cpuhp_state_num, &info->node);
-	if (rc)
-		return rc;
+cxl_pmu_read()
+  __cxl_pmu_read(event, false)
 
-	rc =3D devm_add_action_or_reset(dev, cxl_pmu_cpuhp_remove, info);
-	if (rc)
-		return rc;
+This calculates the correct delta, adds it to the event count, and updates
+prev_count to match new_cnt.
 
-	rc =3D perf_pmu_register(&info->pmu, info->pmu.name, -1);
-	if (rc)
-		return rc;
+Once IRQs are re-enabled, the pending MSI fires. cxl_pmu_irq() runs and cal=
+ls:
 
-	rc =3D devm_add_action_or_reset(dev, cxl_pmu_perf_unregister, info);
-	...
-}
+cxl_pmu_irq()
+  __cxl_pmu_read(event, true)
 
-Because devm executes teardown in a reverse order, cxl_pmu_perf_unregister()
-runs first. This calls perf_pmu_unregister(), which frees info->pmu.dev
-and info->pmu.cpu_pmu_context.
+Because prev_count was just updated, prev_count and new_cnt are now equal or
+nearly equal. In __cxl_pmu_read(), we have:
 
-However, the cpu hotplug instance remains active until cxl_pmu_cpuhp_remove=
-()
-runs. If a cpu offline event occurs in this window, cxl_pmu_offline_cpu()
-could be invoked:
+	if (overflow && new_cnt >=3D prev_cnt)
+		delta +=3D mask + 1;
 
-drivers/perf/cxl_pmu.c:cxl_pmu_offline_cpu() {
-	...
-		dev_err(info->pmu.dev, "Unable to find a suitable CPU\n");
-		return 0;
-	}
+Since new_cnt is greater than or equal to prev_cnt and the overflow flag is
+passed as true by the ISR, does this logic erroneously add a full mask + 1
+phantom period to the performance counter?
 
-	perf_pmu_migrate_context(&info->pmu, cpu, target);
-	...
-}
-
-Could this lead to a use-after-free when dereferencing the freed
-info->pmu.dev in the error log, or info->pmu.cpu_pmu_context inside
-perf_pmu_migrate_context()?
-
->  				"overflow but on non enabled counter %d\n", i);
->  			continue;
->  		}
+[ ... ]
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260805155501.1294=
-472-1-dave.jiang@intel.com?part=3D10
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260805155911.1304=
+807-1-dave.jiang@intel.com?part=3D11
