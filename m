@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8038B47D932
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 15:55:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EE2047D932
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 15:55:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785945312; cv=none; b=DicAdSE1/R60Jgwuc/L5+iyFXNqph1ZnDYe10cxSiHisLpPcQ4Y780qrqwUb8X5KmGDAg/Fc5nnqySjIR++y/u1oG6z69rv88mumyPe8zUglCcVh3t0QR/iHDcuBEfbkDRlS2S9BawfY5qBOGf6/s+0miQvk2njmJ+asUYFrGa0=
+	t=1785945314; cv=none; b=pnYAFmHtxQmtCnlJHwZhRnsH9vUplTr7MO685h9ns7zkZWaSfCmHpqAkpsFUFwAOiQ1O0PRCHFeSpQgAbLfXlqR11Ee993dy+oaGDTrRzPUXZetZG8GjsJE+M0LRoq8PkMq5y5i4HZmsE1s4DpYO0jKaAfC9S7Ble64ZY1wZFuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785945312; c=relaxed/simple;
-	bh=9mC0vWnG6zGdJJwjH0qspuBkVa29oc8jd5CQlhwJGbc=;
+	s=arc-20240116; t=1785945314; c=relaxed/simple;
+	bh=zvIx8GZYlZMfIJ5stpFdDNrYpXFApk8rb8wBlS6RYFg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GVWbnB4KhRgf9RR2vcUjAkULEUk7Qk2SszBOef6wHjQHy/x1NbCtoeK4j/KuNCI2pbqYdgw6lIeZ32yaQqwwGXuATHfQ4YBmeJm3380vE875merdt7Oc/ZdxuAN7tH30X21kJ0R5ULfTGTCadCJ72+Yn/drDt0oTLj24DZnATDM=
+	 MIME-Version; b=GT9d0cZUHbySTiXyL57sU1YjTyWRNViSrvrPOxmo4/vpNUFge4LLGqUBFJ74mTX7jfGCwPVBmoj+3MTINnfy7ED6SyAcJWgdteEduqhVvLRGjDcmtwQ4zltF9ll7rw5Jf9CItb8chnNKG4fTnqyuJ9JdsiQY7VC89l3L1rRVNJo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 502831F00A3A;
-	Wed,  5 Aug 2026 15:55:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B61D41F000E9;
+	Wed,  5 Aug 2026 15:55:12 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: inux-cxl@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
@@ -23,9 +23,9 @@ Cc: jic23@kernel.org,
 	dave@stgolabs.net,
 	robin.murphy@arm.com,
 	icheng@nvidia.com
-Subject: [PATCH v4 05/11] perf/cxl: Split the MSI vector out of info->irq
-Date: Wed,  5 Aug 2026 08:54:55 -0700
-Message-ID: <20260805155501.1294472-6-dave.jiang@intel.com>
+Subject: [PATCH v4 06/11] cxl/pci: Add the PMUs after configuring events
+Date: Wed,  5 Aug 2026 08:54:56 -0700
+Message-ID: <20260805155501.1294472-7-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260805155501.1294472-1-dave.jiang@intel.com>
 References: <20260805155501.1294472-1-dave.jiang@intel.com>
@@ -37,65 +37,62 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-info->irq means two different things depending on how far probe has got.
-cxl_pmu_parse_caps() sets it to the MSI/MSI-X message number from the CPMU
-Capability register. cxl_pmu_probe() passes that to pci_irq_vector() and
-then overwrites it with the Linux virq, which is what the hotplug callbacks
-hand to irq_set_affinity().
+cxl_pci_probe() adds the CPMU instances before configuring the event
+interrupts. Both take an MSI/MSI-X vector the device names in its own
+capability registers, and the spec lets a device point several capabilities
+at one message number, so the two can collide.
 
-Both are ints called irq, so nothing catches a mix-up, and the valid ranges
-differ. 0 is a fine message number but never a valid virq.
+They do not fail the same way. A failed devm_cxl_pmu_add() only breaks out
+of the loop, while a failed cxl_event_config() aborts probe and the memory
+device never appears. Going PMUs-first therefore lets a peripheral facility
+take the vector and deny it to one that matters.
 
-Give the message number its own field. No functional change.
+Configure events first, so a collision costs the PMU rather than the
+memdev. Return 0 explicitly afterwards, since rc still holds any PMU error
+that cxl_event_config() used to overwrite on the way past.
 
 Assisted-by: Claude:claude-opus-4-8
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
 v4:
-- Move after the one-line fix so that fix has no dependency on this rename
-  (Robin).
+- New patch, ahead of the PMU dropping IRQF_SHARED. Without this that
+  change can turn a shared vector into a probe failure for the whole
+  memdev rather than a missing PMU (sashiko-bot).
 ---
- drivers/perf/cxl_pmu.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/cxl/pci.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index 2bebbbe67a0a..481d32d0c1b0 100644
---- a/drivers/perf/cxl_pmu.c
-+++ b/drivers/perf/cxl_pmu.c
-@@ -106,6 +106,7 @@ struct cxl_pmu_info {
- 	int on_cpu;
- 	struct hlist_node node;
- 	bool filter_hdm;
-+	int msi_vec;
- 	int irq;
- };
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 267c679b0b3c..975d32716762 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -894,6 +894,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (rc)
+ 		dev_dbg(&pdev->dev, "No CXL FWCTL setup\n");
  
-@@ -143,9 +144,9 @@ static int cxl_pmu_parse_caps(struct device *dev, struct cxl_pmu_info *info)
++	rc = cxl_event_config(host_bridge, mds, irq_avail);
++	if (rc)
++		return rc;
++
+ 	pmu_count = cxl_count_regblock(pdev, CXL_REGLOC_RBI_PMU);
+ 	if (pmu_count < 0)
+ 		return pmu_count;
+@@ -920,13 +924,10 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		}
+ 	}
  
- 	info->filter_hdm = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) & CXL_PMU_FILTER_HDM;
- 	if (FIELD_GET(CXL_PMU_CAP_INT, val))
--		info->irq = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
-+		info->msi_vec = FIELD_GET(CXL_PMU_CAP_MSI_N_MSK, val);
- 	else
--		info->irq = -1;
-+		info->msi_vec = -1;
+-	rc = cxl_event_config(host_bridge, mds, irq_avail);
+-	if (rc)
+-		return rc;
+-
+ 	pci_save_state(pdev);
  
- 	/* First handle fixed function counters; note if configurable counters found */
- 	for (i = 0; i < info->num_counters; i++) {
-@@ -873,10 +874,10 @@ static int cxl_pmu_probe(struct device *dev)
- 		.capabilities = PERF_PMU_CAP_NO_EXCLUDE,
- 	};
+-	return rc;
++	/* A missing PMU is not fatal, the memdev is still usable */
++	return 0;
+ }
  
--	if (info->irq < 0)
-+	if (info->msi_vec < 0)
- 		return -EINVAL;
- 
--	rc = pci_irq_vector(pdev, info->irq);
-+	rc = pci_irq_vector(pdev, info->msi_vec);
- 	if (rc < 0)
- 		return rc;
- 	irq = rc;
+ static const struct pci_device_id cxl_mem_pci_tbl[] = {
 -- 
 2.54.0
 
