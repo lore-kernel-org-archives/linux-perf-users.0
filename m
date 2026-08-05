@@ -1,178 +1,154 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F2B41BA61
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 15:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7613F346E7A;
+	Wed,  5 Aug 2026 15:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785942155; cv=none; b=RqgV3YpvFLwNkXbcD4rak8Icc+HAfIqwiZ3Q3Oa/KiAx/P1Qs9SuauPYRiG8wlcZj/+NpnJOzEdYH3o4Jw9l6IRos6ATbRhnxtUiko4ZtG0aD6m4toiy/z70D4YzDsTWle2LwIUDamFlATZ5bHAd76eSJ+g+cd/r5UN1MpvnJNQ=
+	t=1785942655; cv=none; b=YOQdVvzXxS49FC16hVnMBQI7XgC1T1tI9Ssi3gxVvLnywW8l996EbQfIxEKjnR6g37Pvp1ccgpB9GrX/va8h7Xn+lvGwiTBnYi9GOzY2JLDmFaE4hKzt+RFUazjFScJV0IVp4GL7BZ9phtWxgC4rmuDxri7u975tO+K9i/0EAQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785942155; c=relaxed/simple;
-	bh=YrfVnORDRZngBes7E8aE7nWhzjQkqGopSGj7UdhOOx4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=e/aVSeDobFT21K3q4/15OVyWOrpGHBIvwr9ufrfiVuWPDJV1RoEXSrmmDYifUfxcMXWTFqXVkcvSZDUxmjWnuCRB0EAk2esaIRoximRKyR9DVAamo7AGxe8/Hgr4YXDXTnSLtvhTvPA7Q7zGNJsRA0ylYZfcMU7J1jCmcWvHweY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AKrAi3x4; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1785942655; c=relaxed/simple;
+	bh=M9KHj0L9UaKIIXEc9iMRpFt2TdGgPZ1PVvRWNOOStF8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TFxelcBsAFizaXjQZrUtrrZhODS30a54aphxS7HW+5Q3AfYDYbYbjO0umInR9qZbHvKKHfjJpYTaYgLsv6IQ6EGM2aKsY0uTtVug+x7Kp/nTZr0Dg5YWfkalO4BjxDOsYgeZW4P2tHkhKZtEi7zagPstb9Sq3glP+rcga65hDGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXuq4OZM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AKrAi3x4"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-4720f3bf164so1478904f8f.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 08:02:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1785942152; x=1786546952; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Flg4QZQ4xZBxdFqtD7yG7JFgD80sYwr4xDNIvMLPrJw=;
-        b=AKrAi3x43RZMVyTX6g6jd5V/CXoFWfexVP54e2jkk+D0kXNblNnznlMAZUu6a/bWkq
-         GKCKZ9QOD2CQ6q2x3Kv1ZANqnNJM6sQR0TK0lX1wQkefaAyFiTA9UF/lWRtgdYmXJFbX
-         9/XjPMuSwmH5yRF6oSR7k7pXxR54zm+TeJjNMpFGr3BuORPxadChcKYdA/xBrJ3MoLkQ
-         e5+A+RjboyFmzowj0gHZ1D3a4Z97VEd+pZf2bOmGPQdTrPf2idHjZi4Y1rRACPsrYaRY
-         /TuTnl2CGBb8GchQDa+SkRUqmB/zalfr6MNxan8QUZWKoMoVMS4dItk1QtXVXTSncwyM
-         yNAQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785942152; x=1786546952;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :content-type:mime-version:subject:date:from:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Flg4QZQ4xZBxdFqtD7yG7JFgD80sYwr4xDNIvMLPrJw=;
-        b=QvQkehLTsKid5ckjoN8hTXcm/ymnatj3QGsmo0UImVcRHNcT0eR9iy9VJrPVSreyMw
-         EeUgeliR3zLx44Xwm/mEyVoJ8LU90TWjLGNQyKcERBrSNMOwP9ql67Dy4PGqmSJNJPqu
-         Dz7OY3ZdOSnjiJ66fORUxsLHTq7Am9Auz/3q/i4N9tfI4IH+28jZmc2P5bZXtPCaRoVu
-         FR0NdmuIjIVRXZHMg+dyl/XTZi9ohrlp4kt4oeuIfaMUzDdi5FV+8Q4x3ksE2003Yy/9
-         WJkf2JwOaLLzTqy5XgOQAG9ZyfHVDaxIGqDCogieCmtUkWzTMEDfAWmyJ5MrVnE702zT
-         Ym2w==
-X-Forwarded-Encrypted: i=1; AHgh+RpaKcO9TFeqle+emonFRdmhNJm7zN8m6JY6bO0QXeDDTZ/jHF8XAoDcwZ50arL6upAYCQeJrR/mayYi6klDkX4u@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTS1thaEh6sLLr5b9fAqeqpCBC3sQi4SpvnEOwaYCLvaAzvYuc
-	f6qDXZAZZKt4QSryQA1Bz4KoRekCPDDd5/LUtMGOoIr1HzA8FdbhEnwaf8UyjkYtlF8=
-X-Gm-Gg: AR+sD12cDllrSql9e47XAxMLWVIqxrulTAmjPjkjkZnp2fCUvc/7gQ4GMlrqEfHNYMF
-	2F/Vdajj+ZU0hcaLInl5Mo54Re5QjwsX9p6duLgp2AfEjiy/Fb6CGGK+XDKBqqvraQKwkcvtk3y
-	/4uTxgkS14VlXrOndIXEXHkp0g2LXeO6+bOlN1n7ACTpkjdFOBHLUupN5Nhik2h9wgChbsojuCD
-	xSvSpy1PTd2yJy5ZfyN3n4ijrYYKqPBxgrNtzRZgLA11TCFNBMqGnYoUgwlLZ8bXtLMBRz+cmkO
-	7WR3glcO88boiDKeyy8Mg5SdQiTMkuPTTjgDEMzSj9OQO2830preaJw+HF/H4UoY43dcunuT7+r
-	r0/2dkFPppNa14MHn8fNplx+lTRIU1mdwEVgfoha1GDCHeYJsJ3FJF9tXC7sqrlCEZ97v+dO3Rn
-	+S5Qjj6fBoE0blhnao+zJIb5Foz7mMDJabb+gajHL8aWqMGdugUCXjiU2KtRIz4Gud
-X-Received: by 2002:a5d:64e3:0:b0:47f:f002:3656 with SMTP id ffacd0b85a97d-47ff011797dmr8776881f8f.12.1785942147253;
-        Wed, 05 Aug 2026 08:02:27 -0700 (PDT)
-Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fec23ede6sm10308695f8f.30.2026.08.05.08.02.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Aug 2026 08:02:26 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Wed, 05 Aug 2026 16:01:52 +0100
-Subject: [PATCH 2/3] perf: arm_spe: Factor HW discard mode out of
- arm_spe_perf_aux_output_begin()
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXuq4OZM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD6951F000E9;
+	Wed,  5 Aug 2026 15:10:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1785942654;
+	bh=YLqfv2DFRgn0h7UBoehVIqPvT6aLt+n5JZhabuIEJG4=;
+	h=From:To:Cc:Subject:Date;
+	b=mXuq4OZM9Nmd/Eafcszj5BWGcN/iaTU3Gd1ipmj/BT952HjiaRAJA85fSUIQ2EHTY
+	 bKfkcq99ikDfhmy5MwSGrJYYooH9qUK4sFQ8syNPp0H7p476sZOnstdYdNUFnmQC2v
+	 XuVctPW/qZJ8sYqR+Nn9DGaaOkRwvkqowZDqxJkiFy3ipCJT8tdHG4pq2+yY1qO03e
+	 hcIbfZn33ofTT78SgeCvO+YLngWOeu0A9OgrNKMQBDumLX8d87qsJUgzPuPq2at3dy
+	 sx1nLbW337G8E3E5x0GVipIut9KAfZx9OlkE9CvY2MO0ycu3tvJjlfTiFWLcbg0Mur
+	 08HTlw0b2gErA==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCHES v8 0/2] perf c2c hardening
+Date: Wed,  5 Aug 2026 12:10:41 -0300
+Message-ID: <20260805151043.237233-1-acme@kernel.org>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260805-james-spe-software-discard-v1-2-0ff0e44c4c92@linaro.org>
-References: <20260805-james-spe-software-discard-v1-0-0ff0e44c4c92@linaro.org>
-In-Reply-To: <20260805-james-spe-software-discard-v1-0-0ff0e44c4c92@linaro.org>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Leo Yan <leo.yan@arm.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>, 
- Al Grant <Al.Grant@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.15.2
+Content-Transfer-Encoding: 8bit
 
-Discard mode doesn't call perf_aux_output_begin() or emit aux records,
-and enabling it never fails. We'll add a second discard mode in the
-next commit so it will be cleaner if there is a separate begin function
-just for discard mode.
+Hi,
 
-No functional changes intended.
+	Please consider merging,
 
-Signed-off-by: James Clark <james.clark@linaro.org>
+Two hardening fixes for perf c2c found by the sashiko-bot AI reviewer.
+
+Patch 1 fixes error masking, OOM, and unchecked caller errors in
+hpp_list__parse(): the strdup() return values are now checked, PARSE_LIST
+was turned into a function that bails out on any error returned by the
+parsing callbacks (including -ENOMEM), and the two callers bailing out
+with the newly propagated errors, setup_sort_list() and
+setup_output_list(), now break out of their token loops and propagate the
+error instead of silently overwriting it on the next iteration.
+
+Patch 2 fixes a format list leak: when c2c_hists__[re]init() fails
+partway through, entries registered via perf_hpp_list__column_register()
+and perf_hpp_list__register_sort_field() are left on the hpp_list.  The
+fix moves cleanup into c2c_hists__init()/c2c_hists__reinit() themselves
+so all callers are protected.
+
+This series was developed with AI assistance (Claude:Sonnet 4.6 and
+Opencode:mimo-v2.5-free for the changes up to v7; the changes since v7,
+including the setup_sort_list()/setup_output_list() -ENOMEM propagation
+fix and the c2c_hists__reinit() cleanup amendment, with
+Opencode:DeepSeek-V4-Flash-free).
+
+- Arnaldo
+
+Changes since v7 (20260804185830.228763-1-acme@kernel.org):
+
+  Patch 1:
+  - Addressed sashiko-bot [Medium] finding: with sort_dimension__add()
+    and output_field_add() now propagating -ENOMEM (and other errors),
+    the callers setup_sort_list() and setup_output_list() only checked
+    for -EINVAL and -ESRCH, so an allocation failure was silently
+    overwritten when the next loop iteration ran.  Both callers now break
+    out of their token loops on any error and propagate it.
+
+Changes since v6 (20260803180703.194916-1-acme@kernel.org):
+
+  Patch 2:
+  - c2c_hists__reinit() has the same leak: it clears the list then calls
+    hpp_list__parse(), which can register formats before failing, and
+    neither the function nor its callers clean up on failure.  Add the
+    same cleanup-on-failure pattern to close this gap.
+
+Changes since v5 (20260803180118.194519-1-acme@kernel.org):
+
+  - The second v5 patch didn't go through, resending the same contents
+    as v5.
+
+Changes since v4 (20260803144119.185637-1-acme@kernel.org):
+
+  - Replace %m with str_error_r(-ret) as suggested by sashiko.
+
+Changes since v3 (20260803120452.181273-1-acme@kernel.org):
+
+  - Use 'goto out' to break out from both the switch and the for loop in
+    __hpp_list__parse() as noticed by sashiko.
+
+Changes since v2 (20260803011140.179943-1-acme@kernel.org):
+
+  - Added the string.h and stdlib.h missing headers.
+  - Addressed sashiko comment on PARSE_LIST, turning it into a function
+    and handling all errors returned from _fn().
+
+Changes since v1 (20260802142313.154514-1-acme@kernel.org):
+
+  - Addressed sashiko-bot [Medium] finding: the early exits added by v1
+    skip perf_hpp__setup_output_field(), making undetected errors in the
+    callers consequential.  Fixed by propagating the error through
+    resort_cl_cb() and perf_c2c__report() (hists__iterate_cb() already
+    propagated callback return values).
+  - Dismissed sashiko-bot [Low] finding (missing string.h/stdlib.h):
+    strdup() and free() were already used in this function before this
+    patch; string2.h (included at the top of the file) pulls in string.h.
+    No new library calls were introduced.
+  - Subject updated to reflect the additional caller fixes.
+
+Arnaldo Carvalho de Melo (2):
+  perf c2c: Fix error masking, OOM, and unchecked caller errors in hpp_list__parse()
+  perf c2c: Clean up registered formats on c2c_hists__init() and c2c_hists__reinit() failure
+
+ tools/perf/builtin-c2c.c | 105 ++++++++++++++++++++++++++++++----------
+ tools/perf/util/sort.c   |  76 ++++++++++++++++++++++-------
+ 2 files changed, 130 insertions(+), 52 deletions(-)
+
 ---
- drivers/perf/arm_spe_pmu.c | 34 ++++++++++++++++++++++++++--------
- 1 file changed, 26 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-index 10d28ad81256..562a1d3be39f 100644
---- a/drivers/perf/arm_spe_pmu.c
-+++ b/drivers/perf/arm_spe_pmu.c
-@@ -363,6 +363,11 @@ static const struct attribute_group *arm_spe_pmu_attr_groups[] = {
- 	NULL,
- };
- 
-+static bool arm_spe_discard_mode(struct perf_event *event)
-+{
-+	return ATTR_CFG_GET_FLD(&event->attr, discard);
-+}
-+
- /* Convert between user ABI and register values */
- static u64 arm_spe_event_to_pmscr(struct perf_event *event)
- {
-@@ -609,18 +614,23 @@ static u64 arm_spe_pmu_next_off(struct perf_output_handle *handle)
- 	return limit;
- }
- 
-+static void arm_spe_pmu_begin_discard(struct perf_output_handle *handle,
-+				      struct perf_event *event)
-+{
-+	u64 limit;
-+
-+	limit = FIELD_PREP(PMBLIMITR_EL1_FM, PMBLIMITR_EL1_FM_DISCARD);
-+	limit |= PMBLIMITR_EL1_E;
-+
-+	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
-+}
-+
- static int arm_spe_perf_aux_output_begin(struct perf_output_handle *handle,
- 					 struct perf_event *event)
- {
- 	u64 base, limit;
- 	struct arm_spe_pmu_buf *buf;
- 
--	if (ATTR_CFG_GET_FLD(&event->attr, discard)) {
--		limit = FIELD_PREP(PMBLIMITR_EL1_FM, PMBLIMITR_EL1_FM_DISCARD);
--		limit |= PMBLIMITR_EL1_E;
--		goto out_write_limit;
--	}
--
- 	/* Start a new aux session */
- 	buf = perf_aux_output_begin(handle, event);
- 	if (!buf) {
-@@ -775,6 +785,12 @@ static irqreturn_t arm_spe_pmu_irq_handler(int irq, void *dev)
- 		arm_spe_pmu_disable_and_drain_local();
- 		break;
- 	case SPE_PMU_BUF_FAULT_ACT_OK:
-+		if (arm_spe_discard_mode(event)) {
-+			arm_spe_pmu_begin_discard(handle, event);
-+			isb();
-+			break;
-+		}
-+
- 		/*
- 		 * We handled the fault (the buffer was full), so resume
- 		 * profiling as long as we didn't detect truncation.
-@@ -864,7 +880,7 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
- 	    !(spe_pmu->features & SPE_PMU_FEAT_EFT))
- 		return -EOPNOTSUPP;
- 
--	if (ATTR_CFG_GET_FLD(&event->attr, discard) &&
-+	if (arm_spe_discard_mode(event) &&
- 	    !(spe_pmu->features & SPE_PMU_FEAT_DISCARD))
- 		return -EOPNOTSUPP;
- 
-@@ -884,7 +900,9 @@ static void arm_spe_pmu_start(struct perf_event *event, int flags)
- 	struct perf_output_handle *handle = this_cpu_ptr(spe_pmu->handle);
- 
- 	hwc->state = 0;
--	if (arm_spe_perf_aux_output_begin(handle, event)) {
-+	if (arm_spe_discard_mode(event)) {
-+		arm_spe_pmu_begin_discard(handle, event);
-+	} else if (arm_spe_perf_aux_output_begin(handle, event)) {
- 		arm_spe_pmu_stop(event, 0);
- 		return;
- 	}
+
+Arnaldo Carvalho de Melo (2):
+  perf c2c: Fix error masking, OOM, and unchecked caller errors in
+    hpp_list__parse()
+  perf c2c: Clean up registered formats on c2c_hists__init() and
+    c2c_hists__reinit() failure
+
+ tools/perf/builtin-c2c.c | 106 ++++++++++++++++++++++++++++-----------
+ tools/perf/util/sort.c   |  76 +++++++++++++++++++---------
+ 2 files changed, 130 insertions(+), 52 deletions(-)
 
 -- 
-2.43.0
+2.55.0
 
