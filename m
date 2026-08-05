@@ -1,19 +1,19 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DCC5388377
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 15:55:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFE9B388377
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 15:55:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785945318; cv=none; b=ZMxPowoHSTQ00thuIMhW5hOFt8L4l1PYKtHu0cyEqaWqXBZjwTpc4iX9TWbhVUkaAhk/7u8JyQ02EtpiVI4yCFM0b5qKmE1PfDkAgQHKIxiBGCuprlIv2tvKTfkdFPW2vKCvwq/p5BBGRtzDlg2hT/N+pqEPVwZKoItESDVcAWs=
+	t=1785945319; cv=none; b=LLMAeW8kJYZOC3+7eMce7za96CEkeDRhpchNTE+3WC2S7q2B+bBVMASsiKIq24WspZUmC/MdCKQAV7K8G0gNl+RyWQWrDGmWLsitGHSFoArkc0dtxeIzrBWiEyS5+ZD/iAqYMUykO2UrVtt4rbi8v0RKubVe/bPBYkGyjtGuDrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785945318; c=relaxed/simple;
-	bh=zabtP119DXiF4b+kW/WzYg/ztpIthQuDA8n9E0in1+4=;
+	s=arc-20240116; t=1785945319; c=relaxed/simple;
+	bh=1OeV5SBXd30IjE9CIobfQJAaolE0DoV+XF7N5uJktrs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oCIVepm2bg4qCKjQLradXKoc/oadfmCtCCuciFReCDDGXAY3KXMDi5etAF+axWvKHSSCzr8WbMY2eG+JA1e02jxAWId9ZOxnwxRiKjSaboJA0QUqSTIuZmwBIPMe2ICLPk6ZYiEAJqaQfCLctD0hZJbe/syxn9N6x+ZdeF+LdiQ=
+	 MIME-Version; b=CYWycJS0pjIygahV0ZH5nnNzCtLKI3fTMSRMF0DUdh9QlmxqC8VraSMuakiBKf0D1UF0bnFRoaX3QgEnh10G8eT7A1Pys2GJ1xhtj0G8Ra9Qt4Q1EmMM2uFbMED5lbFqPtFJW9Ie5FZew8G0gmvLn+AMDHzDpDncb+WbVLLLBAc=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F210F1F00A3A;
-	Wed,  5 Aug 2026 15:55:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66D6C1F000E9;
+	Wed,  5 Aug 2026 15:55:18 +0000 (UTC)
 From: Dave Jiang <dave.jiang@intel.com>
 To: inux-cxl@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
@@ -25,9 +25,9 @@ Cc: jic23@kernel.org,
 	icheng@nvidia.com,
 	sashiko-bot@kernel.org,
 	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
-Subject: [PATCH v4 09/11] perf/cxl: Validate the hardware-reported counter width
-Date: Wed,  5 Aug 2026 08:54:59 -0700
-Message-ID: <20260805155501.1294472-10-dave.jiang@intel.com>
+Subject: [PATCH v4 10/11] perf/cxl: Don't log through pmu.dev in the overflow interrupt handler
+Date: Wed,  5 Aug 2026 08:55:00 -0700
+Message-ID: <20260805155501.1294472-11-dave.jiang@intel.com>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260805155501.1294472-1-dave.jiang@intel.com>
 References: <20260805155501.1294472-1-dave.jiang@intel.com>
@@ -39,44 +39,43 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cxl_pmu_parse_caps() takes the Counter Width straight from the CPMU
-Capability register without a bounds check. The Counter Data register is 64
-bits wide, so a device reporting 0 or more than 64 is reporting nonsense,
-and GENMASK_ULL(width - 1, 0) in the read path then shifts out of range.
-That is undefined behaviour, and a UBSAN splat where it is enabled.
+perf_pmu_unregister() frees pmu->dev without clearing the pointer, and
+cxl_pmu_probe() orders its devm actions so that teardown runs it before
+free_irq(). Nothing in between masks the interrupt, and
+cxl_pmu_event_stop() leaves the overflow status bit set, so an overflow
+taken just before teardown is still delivered and still reaches the
+dev_dbg() in the !event branch - by which point info->pmu.dev is freed.
 
-Reject a counter width outside 1..64 at probe.
+Log through info->pmu.parent instead, which is devm-managed and outlives
+every teardown action.
 
 Fixes: 5d7107c72796 ("perf: CXL Performance Monitoring Unit driver")
 Reported-by: sashiko-bot@kernel.org
 Closes: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.net?part=1
 Assisted-by: Claude:claude-opus-4-8
-Reviewed-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Acked-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/perf/cxl_pmu.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+v4:
+- Split the probe-time overflow clear out, so this is back to the single
+  hunk Jonathan acked in v2.
+---
+ drivers/perf/cxl_pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-index a081fcba6991..84ebc7da181d 100644
+index 84ebc7da181d..45edef53a983 100644
 --- a/drivers/perf/cxl_pmu.c
 +++ b/drivers/perf/cxl_pmu.c
-@@ -142,6 +142,15 @@ static int cxl_pmu_parse_caps(struct device *dev, struct cxl_pmu_info *info)
+@@ -805,7 +805,7 @@ static irqreturn_t cxl_pmu_irq(int irq, void *data)
+ 		struct perf_event *event = info->hw_events[i];
  
- 	info->num_counters = FIELD_GET(CXL_PMU_CAP_NUM_COUNTERS_MSK, val) + 1;
- 	info->counter_width = FIELD_GET(CXL_PMU_CAP_COUNTER_WIDTH_MSK, val);
-+	/*
-+	 * The Counter Data register is 64 bits wide, so a Counter Width of 0 or
-+	 * >64 is invalid. Reject it rather than let GENMASK_ULL(width - 1, 0) in
-+	 * the read path shift out of range.
-+	 */
-+	if (info->counter_width == 0 || info->counter_width > 64) {
-+		dev_err(dev, "Invalid counter width %d\n", info->counter_width);
-+		return -ENODEV;
-+	}
- 	info->num_event_capabilities = FIELD_GET(CXL_PMU_CAP_NUM_EVN_CAP_REG_SUP_MSK, val) + 1;
- 
- 	info->filter_hdm = FIELD_GET(CXL_PMU_CAP_FILTERS_SUP_MSK, val) & CXL_PMU_FILTER_HDM;
+ 		if (!event) {
+-			dev_dbg(info->pmu.dev,
++			dev_dbg(info->pmu.parent,
+ 				"overflow but on non enabled counter %d\n", i);
+ 			continue;
+ 		}
 -- 
 2.54.0
 
