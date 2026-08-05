@@ -1,164 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16214478861
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 15:58:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA8603F39E4;
+	Wed,  5 Aug 2026 15:59:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785945492; cv=none; b=Sc8+Ln69GBizCgA2lIWe9LgYbJjO4k+DUXeCDHd9NkLhlyHUa8n64PeqXACwTO+G+cf/F2NWXjGF7ZTcn5f7rwn80dzTs2ipgyuAbIBqQlh8GGX9BVuR5keUA7VNo3b5HQTYKQmfaFBw70+iz885WepwP+wV6UskDApSX39q+Ao=
+	t=1785945562; cv=none; b=fbHs9h5OBOoUWckLp3zqs8oXmT2jvXFKuKfcHOU2+L9hjiE7OyEzYxNRvSS+fTyEL3O9B3/Q1FboMALRoeNFyei9QsvbfKvKeO62QBg54l/qfLR5hIVQ7pk2B4Q3KHRdDWihMHEJ+jw7aVISP+yw1nNY5sqrjMZCpd0wwzE1vCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785945492; c=relaxed/simple;
-	bh=syC5sDQXvkbGdDJ4JMeJuMD7gwX0OYuokSTQaNiU0E0=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=VY8T7ca46Q3WpJdrGKm8R6E1R3hzM8PpT/QF8e/qYtQ7w9hOeqthZv8vlFz2Rhsp8li8LntxSU4LqOzJT/GwIhOVJy8uA0hYNB6KaRKvAtbvvFMTonVwHQJ2/pun6KV6vU7jfgofnzyJwTyPjmY9u9t02HeQvQUcRM/Y8TexlRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kmB1Fypo; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kmB1Fypo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E2A11F000E9;
-	Wed,  5 Aug 2026 15:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785945490;
-	bh=cZ2AO/CTu6FcuKOJmVWhp/ogCRPiAf/fhHEhQe1NxuI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=kmB1Fypo1iwjvvtArq9UNJzYtcrwRUpExuKabAqkPC89BioQRjUIqJtiBK/uge/q4
-	 X12TGbiwLpQ3spmykwagxcruGWQ4NOyvdoMWX3/3sJJVY7la2UpxiIARkYg6+JiHh6
-	 szYsK3jUbqyWnsJd6aXiXdB4P7B+oMJC6iSaEdQvdTB9MojXSqoXzfdvYPB9ba3VaS
-	 JgXk8MbJ+ZU2796z1Ymu3NlLo+inJtj/w+iVWaCzxmrcu37epnjtbUvVv3wrayF5qi
-	 2f2rr6KSBWMRfhjtsz3JG5jcHaQUyAl4jrKQ8TzRx7AFhNAgIT5vdeQqRc8Hti3nZd
-	 n1ucl8/b7pahQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/3] perf: arm_spe: Add support for a 'software' discard
- mode
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "James Clark" <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260805-james-spe-software-discard-v1-3-0ff0e44c4c92@linaro.org>
-References: <20260805-james-spe-software-discard-v1-0-0ff0e44c4c92@linaro.org>
- <20260805-james-spe-software-discard-v1-3-0ff0e44c4c92@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 05 Aug 2026 15:58:09 +0000
-Message-Id: <20260805155810.7E2A11F000E9@smtp.kernel.org>
+	s=arc-20240116; t=1785945562; c=relaxed/simple;
+	bh=WxTTlLBXy0u/aIHvYaKkertGCiP/7Tl/6zsathxXMaY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=s7Y0JlY4tAo6R3Pu4w0IgN8sgeFk+hGBX2mWB+EpvXkOXedb7X0oXZfcqDM3rkBpPdw4JtwFtBAj6H+QEBNiOFgaA6ztggPR9DRBw+r7IirY8um6kH5Z6rPogGDo8VSw+QgDF4wW5uIK/OWZ+yJLwxuTsPapl+ZYqUQVgyAD8To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E0561F000E9;
+	Wed,  5 Aug 2026 15:59:13 +0000 (UTC)
+From: Dave Jiang <dave.jiang@intel.com>
+To: linux-cxl@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: jic23@kernel.org,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	dave@stgolabs.net,
+	robin.murphy@arm.com,
+	icheng@nvidia.com,
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
+Subject: [RESEND PATCH v4 00/11] perf/cxlpmu: Misc sashiko raised issues fixes
+Date: Wed,  5 Aug 2026 08:59:00 -0700
+Message-ID: <20260805155911.1304807-1-dave.jiang@intel.com>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] Writes to control-plane system registers (`SYS_PMBPTR_EL1` and `SY=
-S_PMBLIMITR_EL1`) lack an immediate `isb()` synchronization barrier, violat=
-ing ARM64 architectural invariants.
-- [Medium] User-triggerable allocations for the software discard buffer lac=
-k `__GFP_ACCOUNT`, allowing a user to bypass memory cgroup limits.
---
+[resend, mangled linux-cxl mailing addr]
 
---- Patch [3]: [PATCH 3/3] perf: arm_spe: Add support for a 'software' disc=
-ard mode ---
-commit af3311701234ae1a3b87d9c00cb9f6f3748862b7
-Author: James Clark <james.clark@linaro.org>
+Teed off of Davidlohr's misc cxlpmu series [1]. I had Claude pick up all
+the sashiko raised issues and then continued multiple internal review
+iterations to pick up a number of fixes. I'm no CXL PMU or perf expert,
+but the fixes look reasonable to me AFAICT.
 
-perf: arm_spe: Add support for a 'software' discard mode
+Since v3:
+- 4/11 and 5/11 swapped, so the one-line MSI vector 0 fix comes before the
+  info->msi_vec rename and backports on its own (Robin).
+- 6/11: new patch, add the PMUs after configuring events.
+- 7/11: no code change; the commit message no longer overstates what
+  dropping IRQF_SHARED costs a device that shares a vector.
+- 8/11: quote the spec sentence that makes the freeze sticky, and correct
+  the claim about what the migration window leaves enabled (Richard,
+  sashiko-bot).
+- 10/11: split the probe-time overflow clear out, so this is back to the
+  single hunk Jonathan acked.
+- 11/11: new patch. Clear a counter's stale overflow status when starting
+  an event, which is where the reuse case bites; the probe clear moved
+  here from 10/11 (Richard).
 
-This patch implements a software discard mode for ARM SPE. It falls back
-to writing to a single driver-allocated page and not emitting aux records=20
-when hardware discard support is unavailable.
+Since v2:
+- 1/11: check event_idx alongside counter_idx (Jonathan).
+- 2/11: use FIELD_MODIFY() rather than mask-then-OR (Jonathan).
+- 3/11: rewrite the rationale, no code change (Jonathan).
+- 5/11: new patch, split the MSI vector out of info->irq (Robin, Jonathan).
+- 7/11: drop IRQF_SHARED as well as adding IRQF_NOBALANCING, and retitle
+  (Jonathan, Robin).
+- 8/11: don't unfreeze if the PMU has been disabled meanwhile (Robin,
+  Jonathan).
+- 10/11: retitle, and drop the cxl_pmu_offline_cpu() hunk since that
+  dev_err() cannot be reached (Robin).
+- Dropped the old 9/9 that guarded cpumask_show() against cpumask_of(-1).
+  The init case was a false positive and neither reviewer liked the shape
+  of it (Jonathan, Robin).
 
-> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> --- a/drivers/perf/arm_spe_pmu.c
-> +++ b/drivers/perf/arm_spe_pmu.c
+Since v1:
+- Updated 3/9 to address sashiko issue.
+- No other changes as sashiko only raised issue with pre-existing.
 
-[ ... ]
+Three follow-ups this series does not attempt:
 
-> +static int arm_spe_pmu_alloc_discard_buf(struct perf_event *event)
-> +{
-> +	int node =3D (event->cpu =3D=3D -1) ? -1 : cpu_to_node(event->cpu);
-> +	int nr_pages =3D ARM_SPE_DISCARD_BUF_SIZE / PAGE_SIZE;
-> +	struct arm_spe_pmu_sw_discard_buf *buf;
-> +	struct page **pglist;
-> +	int i;
-> +
-> +	if (event->parent) {
+cxl_pmu_read() relies on local64_t being same-CPU, which is the only reason
+the interrupt has to be pinned at all. Moving prev_count and event->count
+off local64_t would make the affinity question moot, and Robin may have a
+view on whether that is worth doing.
 
-[ ... ]
+cxl_pmu_offline_cpu() still leaves on_cpu at -1 across a sleeping
+perf_pmu_migrate_context(), and still has an unreachable no-target branch.
+Both want removing, possibly on top of the generic PMU hotplug rework
+Jonathan pointed at [2].
 
-> +		return 0;
-> +	}
-> +
-> +	buf =3D kzalloc_node(sizeof(*buf), GFP_KERNEL, node);
-> +	if (!buf)
-> +		return -ENOMEM;
-> +
-> +	buf->page =3D alloc_pages_node(node, GFP_KERNEL, 0);
-> +	if (!buf->page)
-> +		goto out_free_buf;
-> +
-> +	pglist =3D kvmalloc_array(nr_pages, sizeof(*pglist), GFP_KERNEL);
+Firmware can leave a counter enabled with Global Freeze on Overflow but not
+Interrupt on Overflow, which stalls the whole CPMU with no interrupt to say
+so. Quiescing the block at probe needs two writes per counter to stay
+within the spec's rule about changing an enabled counter, so it belongs in
+its own patch.
 
-[Severity: Medium]
-Should these GFP_KERNEL allocations include __GFP_ACCOUNT?=20
+[1]: https://lore.kernel.org/linux-cxl/20260715191454.459673-1-dave@stgolabs.net/
+[2]: https://lore.kernel.org/linux-arm-kernel/cover.1784911757.git.robin.murphy@arm.com/
 
-Since this memory is allocated on behalf of a user process creating an=20
-SPE event, omitting __GFP_ACCOUNT could allow a container to allocate=20
-kernel memory without being charged, potentially bypassing memory limits.
+Dave Jiang (11):
+  perf/cxl: Program the requested event group on configurable counters
+  perf/cxl: Clear stale event fields before reprogramming a counter
+  perf/cxl: Fix the counter overflow delta fixup
+  perf/cxl: Accept an overflow interrupt on MSI message number 0
+  perf/cxl: Split the MSI vector out of info->irq
+  cxl/pci: Add the PMUs after configuring events
+  perf/cxl: Don't share the overflow interrupt, and keep it pinned
+  perf/cxl: Unfreeze counters after handling an overflow interrupt
+  perf/cxl: Validate the hardware-reported counter width
+  perf/cxl: Don't log through pmu.dev in the overflow interrupt handler
+  perf/cxl: Clear stale overflow status before using a counter
 
-> +	if (!pglist)
-> +		goto out_free_page;
+ drivers/cxl/pci.c      |  11 +++--
+ drivers/perf/cxl_pmu.c | 107 ++++++++++++++++++++++++++++++++---------
+ 2 files changed, 90 insertions(+), 28 deletions(-)
 
-[ ... ]
 
-> @@ -617,10 +698,26 @@ static u64 arm_spe_pmu_next_off(struct perf_output_=
-handle *handle)
-> -static void arm_spe_pmu_begin_discard(struct perf_output_handle *handle,
-> -				      struct perf_event *event)
-> +static void arm_spe_pmu_begin_discard(struct perf_output_handle *handle,
-> +				      struct perf_event *event)
->  {
-> -	u64 limit;
-> +	struct arm_spe_pmu *spe_pmu =3D to_spe_pmu(event->pmu);
-> +	struct arm_spe_pmu_sw_discard_buf *discard_buf =3D event->pmu_private;
-> +	u64 base, limit;
-> +
-> +	if (spe_pmu->features & SPE_PMU_FEAT_HW_DISCARD) {
-> +		limit =3D FIELD_PREP(PMBLIMITR_EL1_FM, PMBLIMITR_EL1_FM_DISCARD);
-> +		limit |=3D PMBLIMITR_EL1_E;
-> +	} else {
-> +		base =3D (u64) discard_buf->base;
-> +		limit =3D base + ARM_SPE_DISCARD_BUF_SIZE;
-> +		limit |=3D PMBLIMITR_EL1_E;
-> +		write_sysreg_s(base, SYS_PMBPTR_EL1);
-> +
-> +		/*
-> +		 * Track the event so we can access the discard buffer through
-> +		 * event->pmu_private. perf_aux_output_begin() normally handles
-> +		 * this, but we can do it manually if that's not being used.
-> +		 */
-> +		handle->event =3D event;
+base-commit: f5098b6bae761e346ebcd9da7f95622c04733cff
+-- 
+2.54.0
 
-[Severity: High]
-Does this write to SYS_PMBPTR_EL1 require an immediate isb() synchronization
-barrier?=20
-
-Without it, the subsequent memory store (handle->event =3D event) might exe=
-cute
-while the CPU pipeline is operating under an architecturally undefined stat=
-e.
-
-> +	}
-> =20
-> -	limit =3D FIELD_PREP(PMBLIMITR_EL1_FM, PMBLIMITR_EL1_FM_DISCARD);
-> -	limit |=3D PMBLIMITR_EL1_E;
-> +	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
-> +}
-
-[Severity: High]
-Is an isb() barrier also missing after this write to SYS_PMBLIMITR_EL1?=20
-
-Because it is at the very end of arm_spe_pmu_begin_discard(), the function
-return and any subsequent conditional branches in the caller will execute=20
-before the pipeline state is synchronized.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260805-james-spe-=
-software-discard-v1-0-0ff0e44c4c92@linaro.org?part=3D3
