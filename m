@@ -1,149 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D554582EF
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 16:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54A73EC6A0
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 16:10:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785946074; cv=none; b=otiX8a1IjbX2xDYCEVMvzH/QC7eNRRT5P0Bc7SdEx7GieaaW6QZg1i8OaKijBX4aefuiqTkM7c9+gT59Ey5+IUoXxSV6YTOfR1fFlyK2X3Jf8yZGv4jOuq+tdDdN62lyD8eB+fuunay1M8k8AhyHkauQzeRZWSDQ6XTgXbfKnxY=
+	t=1785946257; cv=none; b=Hn52PiQqmwlmDp5SqsRofn/YLQWShwiIsyY60d/pjcLcVeoLhUWnuoIi7BF98C2TBr6Px64GkHHbcRZKiw6+ShuRlR8ZkikM1+vUA+h4rgV3HsRjLPI/YyqZ0onwu9ikH1sPg+jvrV10nKVYaN83wbAVe/T0mgH0REEV4AIpskw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785946074; c=relaxed/simple;
-	bh=YmBA/w4Jf1r7Xrryhp5T9qKYwFWyTlk2/YDtCrUPZMo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=nX8DgttyMxa441Nn4xKGDpQblNAyjxeBZZ+1nDD5K84hIJtcFdiu1zJE0v3Zgvxq6itDZ9eBzd3Tkp3+rpem/qCcFh/tZ+L7kyDD+G+UFfnsk2o+RsbT5eb6sv+KkbSY0n1JS6egEO7ICSIVj2ZxHwgdxI0Chk5XdGyA1eLO9m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dpW4LJ21; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785946257; c=relaxed/simple;
+	bh=IXEVwfzsahq6FUkJxYJhmc4SAHegCMiUul051MBbDv8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MceMjKPpnf2cM+nWtv0iTREZoqNZ9D5XlDPGfhcJrw2C+ojSk2AW1gFGxWPCnSXwVZO1EMQp5EUPM8MLHXYdyhvXHHp74G9mPOQkBrSvOLjUI1cmokKAQgxoM9kbE1rhx3c7HHP7n+6CKUoVsISefWQCFD8fpJKIxU1QQhyTM/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wYKqPJ85; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dpW4LJ21"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0E671F00A3D;
-	Wed,  5 Aug 2026 16:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785946069;
-	bh=/Y8UIN3NG9jAUoqcziRBpJzXinu0TuNuepShbeJ6gR0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=dpW4LJ21tsNN4oxP5f663qS+VxQ6pru/+fg/qdUQknineVpznws8vGhQwIzZRY9Yz
-	 HfL5U2bo+fxjtGJLJ7H3L8myLvzq1QVrbyLAj4g+kn5qoQG1ndxh16CrPPFgvnw554
-	 f6P7jbwZlf76lmkdKygT1zCWsW1YhMEY1WOkZuUpUzbkJTGkpI2OwPBlMpQbnB4IsG
-	 CXzJsqgZp3EtXcRZqEIP6abCdcN8gomWKvbjOErPiGxTemeAAUH5k509ixHxXzqGsx
-	 /ltqPByojBSDXvMVkU2kAfnHk4Gh2bceqqS/msmzUbKJWR6jGBB+hR5nYmTjKQIA5G
-	 1Oj/FZrljzWHw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 02/11] perf/cxl: Clear stale event fields before
- reprogramming a counter
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dave Jiang" <dave.jiang@intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260805155501.1294472-3-dave.jiang@intel.com>
-References: <20260805155501.1294472-1-dave.jiang@intel.com>
- <20260805155501.1294472-3-dave.jiang@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 05 Aug 2026 16:07:49 +0000
-Message-Id: <20260805160749.A0E671F00A3D@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wYKqPJ85"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4994c49f588so241905e9.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 09:10:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1785946254; x=1786551054; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=WRMc9ELRK9N2OjwBZeonQXM7QBgpvnvx9C7k5nluwVQ=;
+        b=wYKqPJ85W/yv8L+u7P6GHHLzzssjs8VxqutQJ3RVit9XmCDSdXCCSeiyHv65lwNF/L
+         6aaIhiUpZMw7Zwpd5PKxw3vGfOUejkx8r9Uefey02WWgwZYalJqLeYkuk7l1I4+73rKj
+         rGK2guqFvPLR9epbFLrl3kgyzHTDU3lW9KyMyW9dMncUZ+USCcppGRSIDskM62qVTH8a
+         YYUqjdgFnIBvN4AtT/WVjE9vrk4h+mfxTkV4tdB0A3/acRUqqwKuxfp0R/X2SxeYaVj2
+         yooBDz6iHCyRKbGTGt9TdHzsgq4ZDUkr95+Z3rrYIP5Om5qIGuKe3QtoVlAdOuWPizhM
+         3K3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785946254; x=1786551054;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=WRMc9ELRK9N2OjwBZeonQXM7QBgpvnvx9C7k5nluwVQ=;
+        b=T180I0cW5H0Rnuj4LJz9jsXOHlgjOryDOM42chxRPYbpw4IgI/Puvby4POzfXmb16a
+         qSU/kII/6lSJGdmogg8wGA59JuetgKO464uxJy8AUGAa914J8t5fQxgdKNNaUQPRmeQm
+         9hp4oB6rPoRVtVwAsH3WnLTnNCqZdJ9VcBn4SjeQFWVCWufc5QAqUuwYCXgjtJaIUi0q
+         RdarGCfDqM6lghGcBPI3doyz8vm0yHYq4WNPMpr4T9d1dgFw1IOjicTMUNq+OVBMs7mZ
+         RPHHJMS2Xa9TUJniT8SkjMRW2B/T1MaAEMKyUPDYWa+inLjr4e80toplDnvIHNpviMl/
+         Q8lw==
+X-Gm-Message-State: AOJu0YwpAv9FWzzUokEDv3hVf+41TquTuoiEnXPJWtmxO+6MG+sZPFmI
+	NZzD+SvvBdizBp6GXC0NaIQNXzI04fkiuYAWl92JmB34m9RAlZl6S9fHlKwaioJAlK90vPDSySo
+	h34MkhoGVXA==
+X-Gm-Gg: AR+sD12HfsF5exMOcsVViABKjGgS+/kR9IGpYOyK/bKo4uAr8H4z3yYIeetajJAr5UV
+	j6Pr9kE9r0LNLHzC49rkTTyW9hctPxQDKiZP1qJhaIMVYyPtKwwNuzLYXhbrpB86sXDbrDrz7nL
+	ksPRDz1hYLQ473ZP1JP1EA9X5dlaXOpsQPe2nddiMD8rNSfx16spBFotP0vgE1uMiACc9KuuiSM
+	TMVRfdfbsTeZa1jR0/YVtDYdrJyMSy9JNRjKZdRiawBReedtBEodnkOmd0t4owwVmtcrhV5PUNw
+	4GWB7o3ortzTclRTtFcXamLV8a0FAqmB/pYQqBj4u7Jvj3KVVZb3+spS4UZYNtNVQ2QJVRTj+Cg
+	hLQVYg51Lp/hPnF7CPGkZcqUTWegeJLRLImTSEVvPZBGeJ+P9GbgPDDtnNDtjiHacWENrL2sjYk
+	dLNdxIYB7URiZ3gghmZr7uogd2u8nVCLyx7JOo35gWKkL3Q1KbhEDtZCFF16BifDl78A==
+X-Received: by 2002:a7b:c399:0:b0:495:58fe:88e5 with SMTP id 5b1f17b1804b1-49952d92cefmr4071305e9.2.1785946254097;
+        Wed, 05 Aug 2026 09:10:54 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47febfe6b26sm10354973f8f.16.2026.08.05.09.10.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Aug 2026 09:10:53 -0700 (PDT)
+Message-ID: <9dbac460-7f94-43ad-b90c-3fadecefd797@linaro.org>
+Date: Wed, 5 Aug 2026 17:10:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] perf: arm_spe: Factor HW discard mode out of
+ arm_spe_perf_aux_output_begin()
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <20260805-james-spe-software-discard-v1-0-0ff0e44c4c92@linaro.org>
+ <20260805-james-spe-software-discard-v1-2-0ff0e44c4c92@linaro.org>
+ <20260805153750.86FFE1F000E9@smtp.kernel.org>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20260805153750.86FFE1F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
 
-Pre-existing issues:
-- [High] Writing to the 32-bit filter configuration register with `writeq` =
-(64-bit) overwrites the adjacent filter register, causing silent event drop=
-s on hardware with multiple filters.
-- [High] The overflow calculation in `__cxl_pmu_read()` double-counts event=
-s by erroneously adding `2^width` to a correctly computed delta.
---
 
---- Patch [2]: [PATCH v4 02/11] perf/cxl: Clear stale event fields before r=
-eprogramming a counter ---
-commit 54f01a971c5fe0d0d8f7face1960b3232e30fafb
-Author: Dave Jiang <dave.jiang@intel.com>
+On 05/08/2026 16:37, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> 
+> New issues:
+> - [High] Unhandled Interrupt Storm / Unreachable Code due to uninitialized perf_output_handle in discard mode
+> 
+> Pre-existing issues:
+> - [High] Missing Context Synchronization Event (ISB) after writing to SYS_PMBLIMITR_EL1
+> --
+> 
+> --- Patch [2]: [PATCH 2/3] perf: arm_spe: Factor HW discard mode out of arm_spe_perf_aux_output_begin() ---
+> commit 61201ea6d6b4e69de62f9788efe1db4fd64b4fd9
+> Author: James Clark <james.clark@linaro.org>
+> 
+> perf: arm_spe: Factor HW discard mode out of arm_spe_perf_aux_output_begin()
+> 
+> Discard mode doesn't call perf_aux_output_begin() or emit aux records,
+> and enabling it never fails. We'll add a second discard mode in the
+> next commit so it will be cleaner if there is a separate begin function
+> just for discard mode.
+> 
+>> diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+>> --- a/drivers/perf/arm_spe_pmu.c
+>> +++ b/drivers/perf/arm_spe_pmu.c
+> [ ... ]
+>> @@ -609,18 +614,23 @@ static u64 arm_spe_pmu_next_off(struct perf_output_handle *handle)
+>>   	return limit;
+>>   }
+>>   
+>> +static void arm_spe_pmu_begin_discard(struct perf_output_handle *handle,
+>> +				      struct perf_event *event)
+>> +{
+>> +	u64 limit;
+>> +
+>> +	limit = FIELD_PREP(PMBLIMITR_EL1_FM, PMBLIMITR_EL1_FM_DISCARD);
+>> +	limit |= PMBLIMITR_EL1_E;
+>> +
+>> +	write_sysreg_s(limit, SYS_PMBLIMITR_EL1);
+>> +}
+> 
+> [Severity: High]
+> This isn't a bug introduced by this patch, but writing to a control-plane
+> system register like SYS_PMBLIMITR_EL1 requires an immediate isb() to avoid
+> leaving the CPU pipeline in an architecturally undefined state.
+> 
+> Looking at the caller in arm_spe_pmu_irq_handler(), the isb() is issued after
+> this function returns, which means the CPU executes the function return
+> instructions before the barrier. In arm_spe_pmu_start(), execution proceeds to
+> even more instructions before an isb() is eventually issued.
+> 
+> Should the isb() be placed immediately after the write_sysreg_s() directly
+> inside arm_spe_pmu_begin_discard() to guarantee architectural compliance?
+> 
+> [ ... ]
+>> @@ -884,7 +900,9 @@ static void arm_spe_pmu_start(struct perf_event *event, int flags)
+>>   	struct perf_output_handle *handle = this_cpu_ptr(spe_pmu->handle);
+>>   
+>>   	hwc->state = 0;
+>> -	if (arm_spe_perf_aux_output_begin(handle, event)) {
+>> +	if (arm_spe_discard_mode(event)) {
+>> +		arm_spe_pmu_begin_discard(handle, event);
+>> +	} else if (arm_spe_perf_aux_output_begin(handle, event)) {
+>>   		arm_spe_pmu_stop(event, 0);
+>>   		return;
+>>   	}
+> 
+> [Severity: High]
+> Because discard mode explicitly bypasses perf_aux_output_begin() here, the
+> per-CPU perf_output_handle is never initialized with the ring buffer or event.
+> 
 
-perf/cxl: Clear stale event fields before reprogramming a counter
-   =20
-This commit uses FIELD_MODIFY() to clear stale event fields before
-reprogramming a counter. This ensures new selections don't land on top of
-old ones when reusing counters.
+If this is an issue then it's an existing one because this patch is just 
+a refactor.
 
-Link: https://sashiko.dev/#/patchset/20260715191454.459673-1-dave@stgolabs.=
-net?part=3D1
+> If the PMU hardware asserts an interrupt during this mode, wouldn't
+> arm_spe_pmu_irq_handler() see an uninitialized (or previously NULLed) handle?
+> 
+> It looks like early checks in the IRQ handler, such as checking if the event
+> is present or if perf_get_aux(handle) is valid, would evaluate to true and
+> return IRQ_NONE immediately without clearing the hardware interrupt syndrome.
+> Could this lead to an unhandled interrupt storm that locks up the CPU?
+> 
 
-> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
-> --- a/drivers/perf/cxl_pmu.c
-> +++ b/drivers/perf/cxl_pmu.c
+HW discard mode doesn't trigger interrupts. If it does then a separate 
+fixes commit is required unrelated to these patches.
 
-[ ... ]
 
-> @@ -638,30 +638,30 @@ static void cxl_pmu_event_start(struct perf_event *=
-event, int flags)
->  	if (info->filter_hdm) {
->  		if (cxl_pmu_config1_hdm_filter_en(event))
->  			cfg =3D cxl_pmu_config2_get_hdm_decoder(event);
->  		else
->  			cfg =3D GENMASK(31, 0); /* No filtering if 0xFFFF_FFFF */
->  		writeq(cfg, base + CXL_PMU_FILTER_CFG_REG(hwc->idx, 0));
-
-[Severity: High]
-This isn't a bug introduced by this patch, but could this writeq()
-unintentionally overwrite the adjacent filter register?
-
-Since CXL_PMU_FILTER_CFG_REG is a 32-bit register and writeq() performs a
-64-bit write, the variable cfg (which has 0 in its upper 32 bits) will
-inadvertently zero out the adjacent 32 bits corresponding to Filter 1.
-
-Because writing 0 enables a filter and forces an exact match of 0, any
-hardware implementing Filter 1 will logically AND it with Filter 0,
-effectively dropping all non-zero events.
-
->  	}
-> =20
->  	cfg =3D readq(base + CXL_PMU_COUNTER_CFG_REG(hwc->idx));
->  	cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_INT_ON_OVRFLW, 1);
->  	cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_FREEZE_ON_OVRFLW, 1);
->  	cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_ENABLE, 1);
-> -	cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_EDGE,
-> -			  cxl_pmu_config1_get_edge(event) ? 1 : 0);
-> -	cfg |=3D FIELD_PREP(CXL_PMU_COUNTER_CFG_INVERT,
-> -			  cxl_pmu_config1_get_invert(event) ? 1 : 0);
-> +	FIELD_MODIFY(CXL_PMU_COUNTER_CFG_EDGE, &cfg,
-> +		     cxl_pmu_config1_get_edge(event) ? 1 : 0);
-> +	FIELD_MODIFY(CXL_PMU_COUNTER_CFG_INVERT, &cfg,
-> +		     cxl_pmu_config1_get_invert(event) ? 1 : 0);
-
-[ ... ]
-
-> @@ -700,10 +700,10 @@ static void __cxl_pmu_read(struct perf_event *event=
-, bool overflow)
->  	/*
->  	 * If we know an overflow occur then take that into account.
->  	 * Note counter is not reset as that would lose events
->  	 */
->  	delta =3D (new_cnt - prev_cnt) & GENMASK_ULL(info->counter_width - 1, 0=
-);
->  	if (overflow && delta < GENMASK_ULL(info->counter_width - 1, 0))
->  		delta +=3D (1UL << info->counter_width);
-
-[Severity: High]
-This is a pre-existing issue, but is it possible this addition double-counts
-events?
-
-The 2's complement arithmetic delta =3D (new_cnt - prev_cnt) & GENMASK_ULL(=
-...)
-already naturally calculates the delta across a single wrap-around. For
-example, with a 32-bit counter, 0x10 - 0xFFFFFFF0 masked strictly yields 0x=
-20.
-
-If this condition evaluates to true, it injects an additional 2^width into
-the delta, reporting billions of extraneous events per normal overflow.
-
-Additionally, if info->counter_width is 64, does 1UL << 64 result in
-undefined behavior in C?
-
->  	local64_add(delta, &event->count);
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260805155501.1294=
-472-1-dave.jiang@intel.com?part=3D2
