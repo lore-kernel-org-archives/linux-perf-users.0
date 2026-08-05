@@ -1,204 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A32E393DE0
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 14:56:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7046546EF9E
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 15:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785941819; cv=none; b=TrW6RWlKJFq/CSVGGH/qrb3XyjCEfMW55u+fHOgc+YLrlip/1ekAKzCEf4cvUPoY7aYUiF2cs5TDl+2kOKASJajoCgyV4zhitZszlQ2bwlusx8LxezNQaRAQ345fvCa2Rahglc+vy3mJ2JO19J02zsFOF98hGiYZG3U/ex0TSS4=
+	t=1785942149; cv=none; b=rNjQUq3eEcLRh4kX1nksaWmVyAY/4ci8m8zognwgSu4pSQdW/xJGrfipXtyEfaACRUQ+TbZ1W0bLDDbqUsOV6hauBi5q1L77ixfCYBFqswtld2KQFMkar0k9MvWT6OQK4g4/WnE0gYQC22zPpotXNDnQRWRscvpUrCdpGw2FpxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785941819; c=relaxed/simple;
-	bh=UccTHHSVtnlnBBASPfAnT0ou7NQzF5ymgxA0w7jH/Tg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=BqgcdxS1mTEc/d913iQfabSiXxjzQuag2ybjmPeaYEouqm2+gakwJa+9vCYuEIlU53dwlya6AsOvBHH2rTj7faskP8SdXzWcyKEPHzy2CSlDFNb9f+1U21BhCuiNnN++9J9aga5N1IUYwYSLNbjkNZl2vpXGtFJEpnXEbHw3URE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cwBKoVJV; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785942149; c=relaxed/simple;
+	bh=Wj54mRLaARZ9PYNlr4i+zLQI/GYTbiqCc4R3uKPNcBY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=T6w3wzvcImphzo3LIIrG2rcfiBk3bwZ8qxqAbw8rWZvdEKlPin79vuSZ0Q9ND9GAqUxzrqr8P9mAtL424+IqVMldraFH10a6ED221NLVehLVaqQ6U5Z5p/U0skpF661RveryTh5uYOPYFlJTm8icPsxUKPNTX8juONB7RGfWPic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tzuOg1kL; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cwBKoVJV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EC201F00A3A;
-	Wed,  5 Aug 2026 14:56:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785941817;
-	bh=ATAo/pnIULeCDW2jCVarlkzKqPSDCSxc3gCVkqWxmaw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cwBKoVJVveHgoyVVwaFR4etmj/sjfmlstT8ichWzckoFbeZawBQNDjcyygkJFYhng
-	 eiFu7nxEe7qO//nKIuCKcDGSlPaTeGf7cYI44BgkeICiTVI01RTsxekOLQLE4eqbP4
-	 Zw7/S037DuM6Q9YKNGQNpX0pNGPNrAhIbR+xZ9Ht0WiFuRc7sIzFFVOmtvRegEF+fj
-	 Ujx3rc3COeMnO4iadDOyrv9UT+6Y3SILmkOijhgN2bzPdMtSvaEuCkf700ShGo1D9p
-	 SxtpTWk6XuPzF+gy2Hw65JMtDGoh7eL/L0ujFYO1BiAGi7MGnYMENQyBUXE+wijeVy
-	 TKNoWeJoa9O2w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 03/12] perf jitdump: Prevent integer underflow in debug
- info size calculation
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260805133013.235016-4-acme@kernel.org>
-References: <20260805133013.235016-1-acme@kernel.org>
- <20260805133013.235016-4-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 05 Aug 2026 14:56:56 +0000
-Message-Id: <20260805145657.9EC201F00A3A@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tzuOg1kL"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-472326ca506so789088f8f.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 08:02:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1785942145; x=1786546945; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Ep5s2RfCR1ouH4tpNMfbsvxcvHXIBQkHbYkhl2XlO8g=;
+        b=tzuOg1kLfznTvkYNRZDZZ8E3f6DqHDAQGNVMf7GwJanDqYuvDm7CwNh6PkQbyA+XsU
+         yXFnQaGQcu1QJBKSC3Ir7rpcpXbtSWnTCGX9FWigaH/dMFSihj4r1l5FdX8ilvZLPAcF
+         ON9ua5jPe+dRyygcR9vzk5Go29GlqcSIydbt60SBh/PSKa4gM5j0VoaTNS2M3DdEDiCN
+         IbN3cN3+Gt2T9hyQEtMGk6zG2BpLxow2uPPPryP32owCYGQwLrjUopF4M9DWcGcPMX23
+         xYSPy7u61b7bDAZWr3OcL02G5F5SOVL7mkDT7fsG/Rja2Q2tQdE1WkZIwCRwQcU49v6G
+         cDEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785942145; x=1786546945;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=Ep5s2RfCR1ouH4tpNMfbsvxcvHXIBQkHbYkhl2XlO8g=;
+        b=O9GsisCXijTngBrzqzEZQ1nFVhPkBPlyRZOB9Sq0J244SsH1kntCsMT6PNXtcpOXir
+         wvdMHWTEjTvYJ4x0LxL1SC1NUPPYVZ5MR5VdsEZwHzzl+tclZBMU1GLB9dzqpyASlmVf
+         AxH6qCyqJZxP8KQH0xVw7tSqEhPVO2bvIxpdql6BWEaIC4eC+0aleXbnNr5/iUK4v1el
+         lvVD1UraHNl189deKilbFCqiv/syKHAUgZIqVwVJf2F/HjBaiNZwLyVTa6u71Zr9SKnx
+         76YinTaMbEvB/CMr8BQLA3KcNs8x3OSWV6d+x67EKFzFbQKt7SDdwIFniPVCDEkr4H22
+         xnFA==
+X-Forwarded-Encrypted: i=1; AHgh+RppGZPqNlZNJiapHOG9uNcxj352HrbtvYl1VI3Lv9ODybrb26tUqo/lCz4kD6YI9svDmmh7O+601bilytYdclke@vger.kernel.org
+X-Gm-Message-State: AOJu0YyuTZRAT2ujseqNT5BdXCZfVx/kBwkp6wLhFprX5tunLMMlEzMu
+	HUD758p0bGCgMSbRAZni2vJt8ZB1aeM+vsnHVOMqQ5YR237ml46xnbfGwB2ptA+qi6U=
+X-Gm-Gg: AR+sD11s7TVzGqzOwTl3WAIuNwoD589V3OGiicEoSSZX5ykLwdORqJYt0mcnOBJLo8K
+	Js2/zVrBbhJi1fF2t/3ujojJ1KuVyXQlASTgghO3zhoqMrCth+M0C8FAm82I4qPrDBMTrxHcQEo
+	GDwm6N6RHPVQOQ8AISywWceGvREk4vdurD4Cy4HQCFk61tJ67XJg8e/bpmslf/9RuB4nSNW/Ove
+	+aiDVU3HPD7cmVNbdS+ZqATDRJc/HUkJqPnwE/IZuguA2mp4iyQcI9fOodqklMOpF6cw/RpUfNS
+	elAfMpYpsD0QIT1I9H4F/zWlGEcVr/drUtJYd8ym+eY55CkyspiHRPWZS5zuJOG+PrRc5bu52b7
+	2S27rwLbI9bb2pgb2WBuAp/UtQsnnk+PWqh/YMYZhswSLeK1PCHaN53PX8lWyyy080tHuDCORNG
+	2CqWFwnhJ3CYYqoDEpWPAo+fRdtl1urHtuAVNBY6HOClKleKALZS8USqGmK+0xX1HO
+X-Received: by 2002:a5d:5541:0:b0:47a:b86f:3ed1 with SMTP id ffacd0b85a97d-47fec62bacamr9911458f8f.21.1785942145445;
+        Wed, 05 Aug 2026 08:02:25 -0700 (PDT)
+Received: from pop-os.local ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47fec23ede6sm10308695f8f.30.2026.08.05.08.02.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Aug 2026 08:02:24 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH 0/3] perf: arm_spe: Add support for a 'software' discard
+ mode
+Date: Wed, 05 Aug 2026 16:01:50 +0100
+Message-Id: <20260805-james-spe-software-discard-v1-0-0ff0e44c4c92@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAF5Qc2oC/x3MQQqDQAwF0KtI1g3MiKjTq5QuwszXplCVpNiCe
+ PcOXb7NO8hhCqdrc5BhV9d1qYiXhvJDlhmspZra0PZhDB0/5QVn38C+Tu+PGLioZ7HC49CnmBE
+ ldYlqsBkm/f7z2/08fxEhcjRsAAAA
+X-Change-ID: 20260804-james-spe-software-discard-87691ce1a949
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Leo Yan <leo.yan@arm.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>, 
+ Al Grant <Al.Grant@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.15.2
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
+Add a mode similar to discard mode that we get in SPE V1P2, but without
+requiring hardware support. It works by allocating a single page in the
+driver when opening the event so the buffer can still be programmed and
+SPE enabled. The same page is mapped multiple times to make up a 4MB
+buffer so the full interrupt is serviced less frequently.
 
-Pre-existing issues:
-- [High] Missing validation of unwinding_size and eh_frame_hdr_size allows =
-arbitrary heap memory extraction via ELF generation.
-- [High] Broken byte-swapping logic for JIT_CODE_DEBUG_INFO records corrupt=
-s data and writes out of bounds, bypassing length validation.
-- [Low] Lingering memory leak of `jd->debug_data` and `jd->unwinding_data` =
-upon processing completion.
-- [Low] Conditional cleanup in `jit_repipe_code_load()` leaves buffers un-f=
-reed on edge cases.
---
+Unfortunately we can't rely on userspace to do the allocation because
+the existing HW discard mode came with the relaxation that an event can
+be opened without mapping a buffer. Therefore adding SW discard mode
+without doing the allocation in the driver would break old tools. It
+will also be useful for very simple tools that only do raw
+perf_event_open() calls and don't want to mess around with mmaps. Tools
+also can't do the hack to present a 4MB buffer to hardware while only
+being backed by a single page.
 
---- Patch [3]: [PATCH 03/12] perf jitdump: Prevent integer underflow in deb=
-ug info size calculation ---
-commit 4aaa391def5b9dab180e25ac7cc8112352a1ca2a
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Discard mode is used to activate SPE related PMU events so that they can
+be counted by the PMU, without the overhead of collecting any SPE data.
+So it's likely that simple tools are using discard mode with only raw
+perf_event_open() calls.
 
-    perf jitdump: Prevent integer underflow in debug info size calculation
-   =20
-    jit_repipe_debug_info() and jit_repipe_unwinding_info() compute payload
-    sizes by subtracting the fixed header size from total_size:
-   =20
-      sz =3D jr->prefix.total_size - sizeof(jr->info);
-   =20
-    When total_size is smaller than the header struct (from a truncated or
-    corrupted jitdump record), the subtraction underflows to a massive
-    value, causing an oversized allocation followed by an OOB memcpy.
-   =20
-    Validate that total_size covers at least the fixed header before the
-    subtraction in both functions.
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+James Clark (3):
+      perf: arm_spe: Factor aux output and flags out of buffer fault handler
+      perf: arm_spe: Factor HW discard mode out of arm_spe_perf_aux_output_begin()
+      perf: arm_spe: Add support for a 'software' discard mode
 
-> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-> index 3195f94187164..787f8a03dae87 100644
-> --- a/tools/perf/util/jitdump.c
-> +++ b/tools/perf/util/jitdump.c
-> @@ -696,6 +700,10 @@ jit_repipe_unwinding_info(struct jit_buf_desc *jd, u=
-nion jr_entry *jr)
->  	if (!(jd && jr))
->  		return -1;
-> =20
-> +	/* total_size must cover at least the fixed header */
-> +	if (jr->prefix.total_size < sizeof(jr->unwinding))
-> +		return -1;
-> +
->  	unwinding_data_size  =3D jr->prefix.total_size - sizeof(jr->unwinding);
->  	unwinding_data =3D malloc(unwinding_data_size);
->  	if (!unwinding_data)
+ drivers/perf/arm_spe_pmu.c | 208 ++++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 168 insertions(+), 40 deletions(-)
+---
+base-commit: 075b74841bd0065a3bda3440873c747938e69b68
+change-id: 20260804-james-spe-software-discard-87691ce1a949
 
-[Severity: High]
-This is a pre-existing issue, but is it possible for a maliciously crafted
-JIT dump file to provide massive unwinding_size and eh_frame_hdr_size value=
-s?
+Best regards,
+--  
+James Clark <james.clark@linaro.org>
 
-In jit_repipe_unwinding_info(), untrusted sizes are directly assigned to the
-descriptor without validating that they fit within the actual allocated
-payload:
-
-tools/perf/util/jitdump.c:jit_repipe_unwinding_info() {
-    ...
-	jd->eh_frame_hdr_size =3D jr->unwinding.eh_frame_hdr_size;
-	jd->unwinding_size =3D jr->unwinding.unwinding_size;
-    ...
-}
-
-Later, in jit_add_eh_frame_info(), these unvalidated values could cause an
-underflow or massive size calculation:
-
-tools/perf/util/genelf.c:jit_add_eh_frame_info() {
-    ...
-	uint64_t unwinding_table_size =3D unwinding_size - unwinding_header_size;
-    ...
-	d->d_size =3D unwinding_table_size;
-	d->d_buf =3D unwinding;
-    ...
-}
-
-Could this force libelf to read massive amounts of out-of-bounds heap memory
-and embed it into the output ELF file?
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does the byte-swapping logic
-for JIT_CODE_DEBUG_INFO records risk an out-of-bounds access before length
-validation occurs?
-
-In jit_get_next_entry(), a cross-endian file with a maliciously large nr_en=
-try
-could cause issues:
-
-tools/perf/util/jitdump.c:jit_get_next_entry() {
-    ...
-			for (n =3D 0 ; n < jr->info.nr_entry; n++) {
-				jr->info.entries[n].addr    =3D bswap_64(jr->info.entries[n].addr);
-				jr->info.entries[n].lineno  =3D bswap_32(jr->info.entries[n].lineno);
-				jr->info.entries[n].discrim =3D bswap_32(jr->info.entries[n].discrim);
-			}
-    ...
-}
-
-Since struct debug_entry contains a flexible array member (const char name[=
-]),
-the entries are variable-length.
-
-Does using fixed-size array indexing (jr->info.entries[n]) read and byte-sw=
-ap
-memory beyond the allocated jd->buf boundaries?
-
-[Severity: Low]
-This is a pre-existing issue, but is there a conditional cleanup leak in
-jit_repipe_code_load()?
-
-tools/perf/util/jitdump.c:jit_repipe_code_load() {
-    ...
-	if (jd->debug_data && jd->nr_debug_entries) {
-		zfree(&jd->debug_data);
-		jd->nr_debug_entries =3D 0;
-	}
-    ...
-}
-
-If a JIT_CODE_DEBUG_INFO record allocates memory because total_size >
-sizeof(header), but has 0 entries (jd->nr_debug_entries =3D=3D 0), does
-jd->debug_data remain allocated but fail the secondary check, causing a lea=
-k?
-
-[Severity: Low]
-This is a pre-existing issue, but is there a memory leak of jd->debug_data
-and jd->unwinding_data upon processing completion?
-
-In jit_process(), when the function tears down, it frees jd.buf but does not
-appear to clean up jd->debug_data and jd->unwinding_data:
-
-tools/perf/util/jitdump.c:jit_process() {
-    ...
-	nsinfo__put(jd.nsi);
-	free(jd.buf);
-
-	return ret;
-}
-
-Additionally, in jit_repipe_debug_info(), does the assignment to
-jd->debug_data overwrite the previous pointer without properly freeing
-it first?
-
-tools/perf/util/jitdump.c:jit_repipe_debug_info() {
-    ...
-	jd->debug_data       =3D data;
-    ...
-}
-
-Could these issues lead to lingering memory leaks on truncated or
-malformed JIT dump files?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260805133013.2350=
-16-1-acme@kernel.org?part=3D3
