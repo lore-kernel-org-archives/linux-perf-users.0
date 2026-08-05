@@ -1,148 +1,176 @@
-Received: from LO2P265CU024.outbound.protection.outlook.com (mail-uksouthazon11021080.outbound.protection.outlook.com [52.101.95.80])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F0938C2A7;
-	Wed,  5 Aug 2026 18:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.95.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30FD3D5661
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 18:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.182
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785955992; cv=fail; b=jX85biFeNbBZM1dN9y/dhh80tiCgzqHb0e7TL9T1Wln+WYzc3NtUC8OkUIVC9Z3cf03RL7iIq/nR4b4A3A9oweu3jmR7Ghfh8n//wmbdJ/yOA7sy5+J1kjTL2lHmSd9cxVJBdVAiw8tFKtA/1jAVpg/3+3GzUi9wgSRO5L9ebjE=
+	t=1785956313; cv=pass; b=G9IY94oJo41X6emvhVwlH57x9w/IuhWZDY3d2UPEMaeKnXj5lusJFa4769VKuISD6GEU7uh2smQydumUcIjD4RVcWSp5oCD0PpN5l1SMg4ACV0mjH49X6AaEgDMzq5oprO0sVRDn1llYVFPJdNuqxZrzwZU3rp0FyIxLS0HoPsg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785955992; c=relaxed/simple;
-	bh=XK3AsLP6Q+S0dHFZb4+Quee8RMuCArkuqX0gz6Y+9O4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=g8CSmGFhgfNvIQU3NyyUr5IhokqEa4vUkA4s5iycNmq/maCGlO9e1hqYu1BkSzwmpqOJSPEf1LhmeMrfRogo/X5bT3YQ8zxUd9bRZZd8QSs6DrvNQiVGdhs+vtVESsEPG2XUHMgVCzV1SIOXpBP8toz1FNcUycK8bX8txMOQDoU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.95.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SYrVCaQo5iN9IrAsQqGM7xWX/q933sEvFk8eqCQS5Z/Y3u5nQA0seZMUVt0UnX5bQ8NUSYjWc3oVrVIAmHChP7V24XfzQpA05Ljcnz0R1xaC+gABa4fg+vTbPPVXRmeKEn+lOHHHFQDNotsssExTfEbEhlxOiUcIlu+a9JuxIazDDFD+y4z7lcA1MTfhrbTuTxngMJJL25CPQWPvjHJAI/s5tHyF1LFK39h1D7mXXFe28SAqcs60wmahIFUZ8fF2j08S3l281F3wn2UlNJXqy48T351XYtTyP6XEZ8YVtmY3B51oKL1jBo0xhJLWNE9myv36o4y0/2qMrevFmIwFPQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=jWJ3Bfj/+0194R6EkN/yBl9B0IrDWqiiw/IspQZr6h8=;
- b=MDm99NpxYdZKrpvvpA7+FJJ+PTnYRNFBIS3BM1rrwaOsbMWhjhDvCRIZty7xrWhLKHaNfSZSSFEe/iTLUak4EnEMvjpet8sPor+UFS8X02UD6IoSWDIAc8uuvIIvyzbmnFBIH92wUlWIFFgSfVYJ3R4GMdJFxaIOQXNX2Zru3b6EvbGPVLaZVHOnstGwaOA8mB7G51N+uXtr4P/IOhHZvnkl5LjxLLYEnyKu0rLi1Oz+aRE3G8jI3HlrsdPSXERMGD1PzFsGM3an+aHhL0EpJLkjU9c1S+e88sjgWj8hbrcJJlOxwBFN/m89r82SAHUXcgmkMyVR30hav7RySn6iwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by LO0P123MB6136.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:242::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.19; Wed, 5 Aug
- 2026 18:53:06 +0000
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0292.018; Wed, 5 Aug 2026
- 18:53:05 +0000
-Date: Wed, 5 Aug 2026 14:53:01 -0400
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, 
-	howardchu95@gmail.com, neelx@suse.com, chjohnst@mail.com, sean@ashe.io, steve@abita.co, 
-	rishil1999@outlook.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] perf trace: Format fields with hex specifiers in
- print_fmt as hexadecimal
-Message-ID: <3iulqtbwakupwjjo3iksszlv5orvhssedya3mouw7ufxfdchlz@x3xqjtgmcwdo>
-References: <20260803124845.213165-1-atomlin@atomlin.com>
- <178595449650.914389.87119431734742911.b4-ty@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <178595449650.914389.87119431734742911.b4-ty@kernel.org>
-X-ClientProxiedBy: BLAPR03CA0142.namprd03.prod.outlook.com
- (2603:10b6:208:32e::27) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:183::5)
+	s=arc-20240116; t=1785956313; c=relaxed/simple;
+	bh=3rpNT2bCyHAdqTDYDozDlAcvmALQ8RwOKVWfcxey87c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=D6UGezN99tj9R3JVHhBytplt5pC5RJd5hJ3Te1YjY1w0LzOO9ZQbPTyvxuH+gidN37BmaonPuxGKCyjpN72PotmQXTaK8YosVKrLk9q8ETJxvc48xYiEwEo/oexWX4Vp8BhLM6PE81yED9ZkPfk9iXkqfa/AgDQ5LM4973hCg+E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B1Vogv9r; arc=pass smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B1Vogv9r"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-51c01c79467so51781cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 11:58:31 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785956310; cv=none;
+        d=google.com; s=arc-20260327;
+        b=cIAj/bI+7k0kgQtnOkSGTM5VEAsQa3f+D744L+NoWjHYArrttbKrVKhMWH1dh7eEOM
+         VWGEPGNNNSS1V5DU+VKyyqRNdREYhE7mJZLmcYHiNKXsRLxb2VwkT3Ksw2bGqQbRYIUJ
+         Ph9/j9OAEdG8zcq39kbuRtHjOm0hCPT+WFMn4oOos/5dlE1KsNVoYuFGm7HwzzDLLoRR
+         xVja0wpwcIXpMwUqcmKh87MrHrfZAOJdaEt4DttfhlgvpPY+242Wh+Ly1cR1mr3ME6NP
+         ENzJQECcAmcff/1PUMimHEZDYGDtTFlq2F/4Fmdt0kWGvjeOUbeBZFDv8wDUk2DBK2Ku
+         agzA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=C4b985DtoLXI0QgsFYBfnSe6W1L24alcZJnRWdk9TLE=;
+        fh=/u3uJ6CeTGr8ApY6f9yftgbm48LDUEoTWnzKU9F+5j8=;
+        b=aOOtiZ3fKXhPhndxqSK+AruPTwIH8lI1W+yt2Ha4Qkkc9yIAc1OmzxheHzH7Nx4jYB
+         yuTW2WX8QzMLvwWlmeWFA05bu3SYJBDOaoW84KUz9OJaA1bNGi3iCvpi7b9PVASEYSvK
+         Fv2HoqzbVWVVwwhhiEuannHlkAVmjS5peM3jvZStn2/o2fsdX+SKttAw9Qi8TgGa6Y+G
+         gjPRjcK89mYxbC7nlx6fcRh6gLkaMWp2++JUPfG4ZJF/X6vkEYkB4O4m9/jnMV6o/iFg
+         OCXksaWaXifzSe0+6Yp0IHJPgFSMEk9jnBOYCpAnEroLpMMldSifBeZIQHDxPSAhoY1p
+         6p/g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1785956310; x=1786561110; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=C4b985DtoLXI0QgsFYBfnSe6W1L24alcZJnRWdk9TLE=;
+        b=B1Vogv9rnviWcMWcZMkWhfwXugacjCyuwsAt0z6sTKvazAYecMmgjRYzDWJyMUNERg
+         gV5AIBz1q4szHJ7hsBE6b51yp/Wg/nGt+A6SbpWayudBzYfyZ2dPrCw+iXqo2M/HNP89
+         sg2DlUcGKORH1yHrPbEVKbDGAx75581fgU8fOgf68ZOSTrQOVlM18BVLJ2dWE2ofIGVW
+         29q3GM61y1Z+FteD/J56AYprDKcoAlfagH+PhMvH8MnqjWZXf2sj5Ct2FemlPNPCyeS8
+         DOsy0MfwywQVmdOxgmElOUisgtdtbG4QOb+E/FftgANg+hsYPeQWjDmm7ftp16IqkKud
+         LSaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1785956310; x=1786561110;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=C4b985DtoLXI0QgsFYBfnSe6W1L24alcZJnRWdk9TLE=;
+        b=EZW2xtxa7w+dnAIZLpGFcyAaH8VBwaGynY6edISbNK1r9kWr1ElGzM3f07+fsBkqcv
+         CCi2UJiwhOu8u7MQSN80P7lKI2DEJz80BB4KH3XqpF4vkIolrcNH58sLOZOFr7nLOhfj
+         dKDt/3sSSFw5tDQXjyybCgCn17yugumbWfbp115nOJmtiQxFiKOukaLOKe11mpSHOkZa
+         Djiw30lz5i12dNVRV5oZrAGrb5n81PB4Y7HjV64S2jrvz25el4ufc3Qp2FI4sA0Va+hq
+         3ELJ/bj0tZpfdHRPN36YNaBUhxxWOiBvXu+IT7Gqdu7PuwzZBy/xze5faDXPWMa5+veT
+         7SKA==
+X-Forwarded-Encrypted: i=1; AHgh+RqKXkD8HwHDMny3DE+97rquBtAjH72AMe9R1CqaPxpW2R/xVKfwXpVbjK0xdgJV0noFg1uNz9z4xtS8FPiXtH3Z@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxl3DwZdvk4ER08F+K+nlQY3/REeiXU2XIPMmUflYLyJ3ttmALJ
+	IEK1U3jFKgzxHWMSysR9QSJXTSDLlQlsFFzusi5y8D2tRoj9/sWaQYCi52cRCrXVCmLrUMffU8s
+	NgJda2HACrS8Q6BVOYWbEv5ER5TYpPz061itkCFdX
+X-Gm-Gg: AR+sD13zzlFbAX72RRUKbfSxLH7IOyuJT1p3iAuDDFes4H44AobpzhVEdsg6YBj1e9t
+	9vgXGihYF9rwXwDWxcTthF2UM4J2UP/6/ZUjCpNELz37FjRjak0T2o4RnOaOqcVt7NoKrGdZxpu
+	wZosunY2MyRlmDjYWTEg/M/Beq+0O2RGgYquwfWBqvIqqoa5SDVB/dxp0p5hW/5FiMAFQxXapHw
+	zRhGELCUzuhLR8/fX4Pjt/KCgo0CeH+YVHrPWxL98zBvGbOn0Qebvsj3dqI8fdY0Ao+paxh2rVx
+	/nJjZaQYxvBl/RcC7IoR93H+EAqMUNGFVICsrCxloOxLfLwfse3Hr2Qy
+X-Received: by 2002:a05:622a:1493:b0:51b:ff0a:2048 with SMTP id
+ d75a77b69052e-52cfc0ad149mr2815371cf.3.1785956309887; Wed, 05 Aug 2026
+ 11:58:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO0P123MB6136:EE_
-X-MS-Office365-Filtering-Correlation-Id: 72b4c8e1-fcd3-4709-a164-08def322c8a5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|1800799024|376014|7416014|23010399003|22082099003|18002099003|4143699003|56012099006|6133799003|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	R7RvAdeC5+F70+H9kLHl2wqxPFVO9J6sVM/tCsaJilv6YUNXycQkcPW8hMDzk8WUeXiEzpfH8lVfxFMIfl9pWwiGUdazKe0L+K+Rd5jN922GK83sgNbM2lyk1jWnJSoT90tP/Jweqj5c2joIlf3xkWx2LS/MoK7u6nAuS+ujSH7zTO9Cb9zvTWVyLrO6W+tyVsB5PW2hJuLbjoEpFYcBJbFnHqjY2X6i32/aRxBM8ygbDu5cAGrWCW6Zx0y+5zuZFMyjjXtvviPuZBuEZbc0Uhzkz7HJc0CaWTTvAChhHxvhTZKyG3QiadYrm4PfBPybBae7riPvs/znF9GLADn16njyW1zlQ44PBKZIy/w69pxmNiqmzrkokvM+D0o1efeqpkt4YMUF0/uu2Hs6BgNmNWRLkCb2Tt8Z968EM+qLChjHOKec2V0kAa7wEMTMhyyBg4YZW1JFAmyG/p6rXh3Hk7475Z3rgG5RHDBB5jNXHK5fvuhZtn/rvE44eAbC0yNGnlwNmAD3pfsNJBSaUCX81HLBqUTY9/DLR6h7jlgsUZkD4Btm/g0j1lPfgT40dj6PpgDrcENKfxbnXC7kGEHsjwAGXY2JbE4e4D9kT/JC3UBmGqpIBdlPKjoTuLozSpJS8p0atjfxBEHhSs9E6ddJXFTK4aS4EkKjbN9/WXsekYo=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(7416014)(23010399003)(22082099003)(18002099003)(4143699003)(56012099006)(6133799003)(10067099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QXpuZmVOYnhUd2JZODA5M3h5ZGZ4Q0xwUFJIR3dPWVZTekFhZnFqK1pZK1FH?=
- =?utf-8?B?aE5rSnR5NTlVVWVWbkMvbDB5alJtQlM3Qy9xV0Exb2h0S2NUTVJvb0Z1SjJk?=
- =?utf-8?B?b2ZTODA1a0hzVnVVcThWaEtDUEMvMHorUWl0alpTcncwcmxnRS9JVGNNMzJ2?=
- =?utf-8?B?L0lEcnNBcFNQWEdUNmI1aCtwREdYNEl2UXFrRjhhWjg5dlhlcHV5YUdxMWFx?=
- =?utf-8?B?cHFHSlZUNnBzVER3N3RsNGUySm1idkpmVTFlZ0w1US9udTAzeDBaR0ZQWklO?=
- =?utf-8?B?SjNuSmVWTjBWVDgzMDNNdk12bktSOUtRYkJGMm1tcUE2UFhVL0o1b2JENlNV?=
- =?utf-8?B?bTJCaDV4VTVMYzdmWFMzakdIMWJyYitNMVJJNXlkWVRibWNiVGhxRTRyOEpM?=
- =?utf-8?B?dmdBU0RIOUdkOUxTR3NtTjF1VGFubExla2pKbVo2S21FL3lRVmhUcFFRT2dI?=
- =?utf-8?B?akVWc1JOUU45WXByTVRmRmN1ZGhvMFNhWlA1enhMSUtMWWg4RW15cFBiRVYw?=
- =?utf-8?B?OWtKU1RjWTgzZUF0WWQvRlpWUlB3VnpCeEdIMS9HTGdLNUNpejRhOFk2MXdI?=
- =?utf-8?B?dEkrbXh1QytIN1RXc1JocHV2c1FaRDI5M2sxbUozdXlDNGxqd3ZPREhBY0pU?=
- =?utf-8?B?TWpzWEgwaEErWDNLT1VEa3BGYk1Od2NNaUFxRHlndTJzQXc0alpuZ1FqYTVW?=
- =?utf-8?B?WHFTc0U5QmZ4a0FzK3l4MFRZVnljR1RKa1hMbC9vRGdIYkQveVBSOEgydmt4?=
- =?utf-8?B?NGxkTGh3WWVaN2VJcTJyNkZldDI0dmZjc0pKb1J5ZCtRV043d0ZlK0xvZkQ3?=
- =?utf-8?B?SGRYZzhYMkJUNGpBMDlySTNmYzBsMXR3clFkaGgzWU5ZdHg3dC9WcDB4K29p?=
- =?utf-8?B?a0ZWbGZZbWdDcTdYTFF3eUw1UnpMTkQ1MjZ5ZVo3aldsQVhWZFBQR3BvNnEx?=
- =?utf-8?B?ZDNyWWRRL3JlQ09kZ28ybTl6MkZTbXBLWkVEZGRQYzNXUmNGcStKY25wUG9J?=
- =?utf-8?B?Q3NCNE5LaVcwTUwrVllNME5kajl1Vk1pS0hpbytLMy9sOWhVcXBabmdSM0tx?=
- =?utf-8?B?NFF6VytFWjVicUNveW5XeGI3RFUraUtIWEdTN21KcjZtREl5bm82RDZaY29h?=
- =?utf-8?B?N2lUL3pBdXpFdXJkV1MvVDVZUFZkTVd1anlYNFFDQmpkTHZCUVQzOFJtcDYy?=
- =?utf-8?B?bUg2NzFXTDJGMGlWSUNWcGNGZXEveEx6MjdEOWN4UEJmR0V6NFJ1aVFRY0t2?=
- =?utf-8?B?S0hXeDJ3YkZpbFI2cklJWmNVTWtGOWJya3J0MkRjSTA2ZWM5UDR1ZnBQWkJO?=
- =?utf-8?B?YTlUNmhQeG1BaUJLTmZwWThlQmNOQU00ZXdJeDJvdUN4U0RuN3JpbElONHdY?=
- =?utf-8?B?UXR4SStENDdCeDl0K2xnRW9CV2N6emNwSGxUWFZicm1uUDdIdlBleGoxZng5?=
- =?utf-8?B?bDV5QWcxc1NXMVJ3Um5oUmw0RkVUOGJueUR0ekxpUjJaSXBKTG0zZUJHTHY4?=
- =?utf-8?B?ajB6Q1luTlMrSktKYmRheEZ4M213UmUyeStiR2FoeDB2RUMrWklvaGdKbTBs?=
- =?utf-8?B?VGg4bFE2em5JRkxJTnFYWEtQUU9Kb0ZWSEVhbWhOTmcvalNzYXRJUUttazVQ?=
- =?utf-8?B?czdkR0RuMzBXMlFkN2ZXd2k1K2tKRjE0UDYxaTB6MTBhZkFsTlF6NVBiSUM4?=
- =?utf-8?B?Z0NRSHQ5OHBhTXpscmNLUkRDenRrbGo0c3k2L1JqcE4yQ0VDbThXZ2VFYktv?=
- =?utf-8?B?aERrblA0V3N4Rk0zbmtIMGhmMk5hU3NjbUhWd09ManRGemUzQU02MHROZ3Qx?=
- =?utf-8?B?MVdrSm9ESUxWY2JQci9yaVdGc1FXeWMzRndJLzh2UkFxR1RhZGxlSWNCZ2xK?=
- =?utf-8?B?SWhFdFQrV2NmYnNIYTBISURvei9xWlcrd3NwdzlPUlphTHpSU29sVEZyRzdZ?=
- =?utf-8?B?Q3IrOWs4QTVqdmcvMDUwSlVSMm4xaisxKzBFWlVTOXdUNzZmVTVzU0hOQk8r?=
- =?utf-8?B?cDhGY3dycmNpak1XL0phYi9jc3VXSTZraS93QTdnTHNzMWRhaVFXcUV1Vkc3?=
- =?utf-8?B?RW5rcFdpdmxYVG80YjNiTW5NWHoyUVFnVWZUQmg3L29DdWFTb1JscE1pUjFU?=
- =?utf-8?B?QVNHVUdhTWhsNjY4dWQrdDR2TVpmUlhSRGtiWGc0WEpGdWFIU3QxQkRmdjZu?=
- =?utf-8?B?STNQaDlydjNqbVhlcGJ1Y3hpWGMydmNTSW1kMWFnWnUxRmlUV2xuTzJHMDRq?=
- =?utf-8?B?cmdMakNPcnlKak9pZXJTY09mNW4xb3ZIZFBvZ1orenNDSWYrUmFjL1R4V2o1?=
- =?utf-8?B?NjlrVXQrNnVaaG52aWYwS254MnVCbEFsUHhhNHl1M1gxLzFlVWpMUT09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72b4c8e1-fcd3-4709-a164-08def322c8a5
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2026 18:53:05.6639
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TyYiQWU5+roIeSg/58AAsyzImkpdqMSvImXMlCS6e4e/Tniixv+3Dj5DgmITFyuyl+g9Ps/XJDRE+JEdDHvZ2Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P123MB6136
+References: <20260805133013.235016-1-acme@kernel.org> <20260805133013.235016-3-acme@kernel.org>
+In-Reply-To: <20260805133013.235016-3-acme@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 5 Aug 2026 11:58:17 -0700
+X-Gm-Features: AUfX_mwsFa9unwTEGVRPfYRQ8R1GG-Edz4H3WxcsUmue-ErlLcDBq1Qu_F-vMHc
+Message-ID: <CAP-5=fVn_FEioEzuf6g3C9pQHLFSTVSXeHa1MUgNJRcHmAg+Rg@mail.gmail.com>
+Subject: Re: [PATCH 02/12] perf jitdump: Validate code_size against total_size
+ in code load
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	sashiko-bot <sashiko-bot@kernel.org>, Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 05, 2026 at 11:28:16AM -0700, Namhyung Kim wrote:
-> On Mon, 03 Aug 2026 08:48:45 -0400, Aaron Tomlin wrote:
-> > Currently, when a probe event is added using perf probe --add with a
-> > hexadecimal type cast (e.g., var:x64 and var:x32), the kernel traceprobe
-> > subsystem sets the field type to "u64" in the event's format file, yet
-> > generates a print format specifier of "var=0x%Lx" or "0x%x".
-> > 
-> > By default, perf trace uses its internal beautifiers which only inspect
-> > field->type and field->flags. Because traceprobe events declare
-> > primitive integer field types ("u64") without a C pointer asterisk
-> > (i.e., "*"), perf trace defaults to printing the field's value as a
-> > decimal unsigned long ("%ld"), ignoring the hexadecimal intent.
-> > 
-> > [...]
-> Applied to perf-tools-next, thanks!
-> 
-> Best regards,
-> Namhyung
+On Wed, Aug 5, 2026 at 6:31=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
+l.org> wrote:
+>
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>
+> jit_repipe_code_load() reads code_size from the jitdump record and uses
+> it to compute a pointer to the code blob:
+>
+>   code =3D (unsigned long)jr + jr->load.p.total_size - csize;
+>
+> An oversized code_size underflows the pointer arithmetic, causing OOB
+> reads into earlier heap memory.  Validate that code_size fits within the
+> record (total_size - sizeof(jr->load)) before the pointer computation.
+>
+> code_size is uint64_t but csize is int; values above INT_MAX wrap
+> negative when narrowed into csize, which defeats the bounds check and
+> sends the code pointer past the end of the record.  Reject those too.
+>
+> Fixes: 9b07e27f88b9 ("perf inject: Add jitdump mmap injection support")
+> Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+> Cc: Stephane Eranian <eranian@google.com>
+> Assisted-by: Claude:claude-opus-4.6
+> Assisted-by: Opencode:mimo-v2.5-free
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ---
+>  tools/perf/util/jitdump.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+> index 4b7c7ba7cd95ddbb..3195f94187164066 100644
+> --- a/tools/perf/util/jitdump.c
+> +++ b/tools/perf/util/jitdump.c
+> @@ -9,6 +9,7 @@
+>  #include <fcntl.h>
+>  #include <unistd.h>
+>  #include <inttypes.h>
+> +#include <limits.h>
 
-Thank you Namhyung!
+very minor nit: The header files are only partially ordered which
+means we may accidentally double include header files later, etc. `git
+clang-format` should be able to automatically clean this up.
 
--- 
-Aaron Tomlin
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks!
+Ian
+
+>  #include <byteswap.h>
+>  #include <sys/stat.h>
+>  #include <sys/mman.h>
+> @@ -450,6 +451,16 @@ static int jit_repipe_code_load(struct jit_buf_desc =
+*jd, union jr_entry *jr)
+>         csize =3D jr->load.code_size;
+>         usize =3D jd->unwinding_mapped_size;
+>         addr  =3D jr->load.code_addr;
+> +
+> +       /* code blob lives at the end of the record, validate it fits */
+> +       if (jr->load.p.total_size < sizeof(jr->load) ||
+> +           jr->load.code_size > jr->load.p.total_size - sizeof(jr->load)=
+ ||
+> +           jr->load.code_size > INT_MAX) {
+> +               pr_warning("jitdump: invalid code_size %" PRIu64 " (total=
+_size=3D%u) in code_load record\n",
+> +                          (uint64_t)jr->load.code_size, jr->load.p.total=
+_size);
+> +               return -1;
+> +       }
+> +
+>         sym   =3D (void *)((unsigned long)jr + sizeof(jr->load));
+>         code  =3D (unsigned long)jr + jr->load.p.total_size - csize;
+>         count =3D jr->load.code_index;
+> --
+> 2.55.0
+>
