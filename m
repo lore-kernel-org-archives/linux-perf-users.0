@@ -1,95 +1,95 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E103DDDB0
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 19:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8BA3D3339
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 19:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.182
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785957568; cv=pass; b=L2blQD1JWdRQlYEDQKp/X2EoVvXwhcxavdaMg6VqklFNHWdTm7NT00dFOkKXRMX8Bscuz6J8owrFEy1Is0SjW7GU/KuIltjzS7vmYcC/BvmrbN2L01dV62wUB4k7x3pRBqzWA43IQ4xaKfVAbUdbKet2RqYWVUTcz4k37qhNtSk=
+	t=1785957596; cv=pass; b=pEenNgNqgoMUy5C+BpMMpsBT7TgJJWc0BdcZjaxZXRpIDFb64WoN6iZuhgyMGe7yvBuRT6MGQ+BiyIRcNcrc6FUXh/f9rwGk2MfH7QHt9FnByG4oMnkVJz0N9l9ggTPjWkxojAKTMz+OA5c3hpO0l0OkM4BuiATAr3uoeLUocuY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785957568; c=relaxed/simple;
-	bh=/B1xZSAAO5D7YAtStCOCKFuHN1+/9Tb8xfJ/6HWhDwQ=;
+	s=arc-20240116; t=1785957596; c=relaxed/simple;
+	bh=zfxo6xw3z9Oo4FtZgyWY0YalBxWv8/rrxBlOTCzQrjY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m6LQEdqf5WeXbmBnNfKaCaaeVPqis7MOj/ztkdH/NJHWJyuIpoBR/2gC3xhPiH/q5wJrPkdVHfBhU8edf8jxlUJa5exd5G2/sdHxFvSYRZKbv1TDZTCTP3I7z++tpEIBtQKMLgDUXKMJzLzo0z+iIlM62uHbAcrlEKHqFXp0O60=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YGsctjGA; arc=pass smtp.client-ip=209.85.160.177
+	 To:Cc:Content-Type; b=LODak0+ipuyXa/8ULKHQBaKHH5LVh1shmRiXIDNkq/CyRojWRxo5Pj3Ft9mCxprocjhEj8wetbE4NRx9hOykqHJNYM9gVD4NbyC3sayAAIAY5gannQ2p1pcHawlBKVDbW90wno1SQYdCejTbkw16PEZvvAJMT5qE014/HypMh20=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UavyT7YU; arc=pass smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YGsctjGA"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-51c10e86e52so47761cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 12:19:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785957565; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UavyT7YU"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-51c10ed63c0so57201cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 12:19:55 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785957594; cv=none;
         d=google.com; s=arc-20260327;
-        b=YPO8BGIYJ/m+BZ0u75DMvQjA7m30QSFkD19m9VV1y4v4w9JBoRGlfvf2VIscdx/zGa
-         AL6236deyF7XjBz/j8yGylxdV0Yov0Y7PWCkz7eCM3a2PeAjyzgGM2Nr6/R+32k657A2
-         oZMLEbtGmx0qM6g1y3tTn3COy0s8DVdlMCcc//maWrGTU2zMLq8jFI62lsfbKer6ZuEh
-         5nodsG5t2YHDtJKP1UekhdXz2xonrpAexfK5i7Yyl9NdyACzJrjg/k7rRnQYzJ1r47eu
-         P+UobUnoeCrbuRpT9F1VrU2IVOKct2DEW0KHhFXtGz//oIniHBUlDTyOkgJ5oSMfbyF4
-         Ektg==
+        b=VTTdFQsIUtSmPuc3EwGZhLtoEzgEy1sKn05CoKrothqYXWTzr7sY6b2yYT+garZYWk
+         tDDTVoNY+gpZM0j5Xb8Lu2Uo+p9VDUqkXIVUkuMMz/Cz1/9KMtLuVf0j1K77NlDsFuRy
+         4ODJ/j/YNu0/IiHHIr1mEoVWtqCvT6+svuVlEg0IpTzx0INVAhGM5RgWnBRmtUbFlksA
+         dFE5QGTd0ERDuozyl3Pwgqx2mUmViHculMyrqfDcB5kmW4oo7Qqy5wfgeZi3jt6tk+tn
+         Pn+bHjuJwK4XUWa1fC0QnkdLknmTAppkaNts3qIQh8xB8oTIg9a59AtSnSVQG2+yZw4O
+         Fs6A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=I5eZ4pgZC3QRtGp70v91fmZC9aeE/wS/SnLY60OWaik=;
-        fh=FJh0wTNy4NrTZtGZdDZ8sGx4OMGl5zsJ5CuN4KnPphg=;
-        b=LqdD6qt/b7M6+ZJIDbszoPAB4UbbVS8nCL08HgqzH29k0AUV7tsZVcBdBejQeY5wfw
-         26AAs3nBemJSaRaNyUoSMv2zcOLaCLP0AbqCXxoOAiN4ibjsKsqIj9VRgI5r18+LM52A
-         p4fZKnHMXyZO34L4fAQUz6QPqlQqyzIzUDMgPL1JN/tkm7eWWWmDVWBFhcAOnY/x8D8E
-         h9XbaavIOmVTNM0vMb0en6BBqkks6Zgis4vqlmJnQ+Xg5Vbxn+DBEWQR9bJKiBpnIfx2
-         xcd+ddTPYvefhenpT5Bnup/yp9GuIK4oz2glaKNo6chWPPWd01AAk20A1yDN8Iw3+cFr
-         t+8A==;
+        bh=CckD4PX2EsG+s5CE9S2v7XWHjksW6JIGVN74IhwTxcg=;
+        fh=m1pVX/VuaESNxNI3wTufA5IGTkSyqHQsPAPF2xsY8L0=;
+        b=l414VKtPSfB2olrtfeLggxpxftbw5DBAGiBypH641q0nu5JlTCfaF3mKQdMweAAH4h
+         wnbBQ+JMW+R6mxLYSM46ZkP5M+J1DjBZiPGv2TiAdos+7gubpdeSDrN/Yt2sNPa7tG4I
+         M/3gV6xR7K9yy6UYznqKtVTbfcyTt50VLrZfxNXAP9laqp92FKt6ERpQ5Bkma60EBost
+         U0O7l916co1vWFcYcYeXZMoM7BXf5DCtdSDMugWwPLFt3WhMr/2V7J/FnH6Lli+62QBw
+         L7M93jeL+zbFcFuX2ceT952HKj6dKp72LiDwPoV6qIimozAuYo3fThyAURc0Cnky+7zR
+         tJSQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785957565; x=1786562365; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1785957594; x=1786562394; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=I5eZ4pgZC3QRtGp70v91fmZC9aeE/wS/SnLY60OWaik=;
-        b=YGsctjGAwrcA/idXHeMfLuDMNQLL1GFwpbXvX/u5UEdMs1jq7R5i/H9iTwdAIjB0WG
-         K8XQkj5j4ceCCINarGTmpnahOf6mbalMwxb1RqZmyznOv/+BUaNfmko9FYmKvMIw1ADl
-         evJHovKXu0CofCFqwymyquG3vUXcMO8kLv6whCGQA7Fdpoj/+752CbsECAcrE46MmWH0
-         sAcVc5Z+F0emXVcwKqZvsZ6z1dfVKhoqOeLgxrbBFOKr4gmGeUKGV/WM7qvksn17xZyK
-         /mLR+bEjo1UEi4qjqwjyR7cFzbMfRZr9StBtH/mg5dcXFcQYHWSSND8fb2QYLiy1/Hv2
-         4/CA==
+        bh=CckD4PX2EsG+s5CE9S2v7XWHjksW6JIGVN74IhwTxcg=;
+        b=UavyT7YUhDNcDN+Xj8XfAl3zwd/eV/8kw8oM5bLOXMzLtjZMo/un9feJuY8xeuAaPi
+         vY/G7t90XRaR2inhQqDO8xhwZm/KTvXPcbmsCrXBB+Si+UdC11SjuAL+gii6tdAWrbY0
+         Expd30fQm2/LRVi6uBuiTN1qmoBOXGLivNyT1IKjAmSqg5fMcDZKXcGsk8OnSXTMO9tN
+         /qmzIxR5jAqoIRXK72J+/mn5fgzlB/0l6NuurlHnM5rgOKo5mEwgqSsY0fL185skZGkF
+         Oq1LFhfypX3Kg929aPveG6vQwClj5DJo/ZmcR6LRo5PlnqIGCLbGZbNp+mwcRQ7WUXI6
+         yf8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785957565; x=1786562365;
+        d=1e100.net; s=20251104; t=1785957594; x=1786562394;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=I5eZ4pgZC3QRtGp70v91fmZC9aeE/wS/SnLY60OWaik=;
-        b=iW/ymH8mpzC0252zbCcgdY6PF8s/eH2cWVDnDKJcjyYyqIO4H93qCNXpUYv9UMgZfE
-         n0jeSk0RyjotWDLRq/HwdcQFm70Cnj2d4RXmLaSPHYfLpyrIREPCqtQ/xXfFe58yetMh
-         stBGLGbwHaKSRUk20AB0NODN1zjQzLm35L5a09cD1trWpX4hbdTyD37vNXUpNSXCQeT5
-         CyOO1CjRJiMLr8ttBkYmK50Sir0JztZnaSz6gKf8vR3hA39aMXeoja7JMBp6D3lfMU1S
-         NPwwsMBBSQor1Hc/QfvISUk+59mAvDtR6CvWo0CIch3NwVbLRxESZKD2i6fPzvWr2mky
-         lFQA==
-X-Forwarded-Encrypted: i=1; AHgh+RoVZYLoKBaHJA/MLnGxBRWzeCX9ei14kgRK5sWfCOuPFfRTGz+ZnU0R74FHIMndx7oTsuUUYLULzW5ETkySgfBa@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoxDKgRD48CGK2cOsJ9bhN00ysmW1gSgXlUZxZ77wW25bfozD0
-	SZRQM9A3n9EsEro3Mkma4wWhEcrU9PllrNyCfPJKe08NFoOXrHXPtaRbNEccngm+Kap/Cv3EWAu
-	7VBHS+1KT+2sm6Fj2Mz92DL9bh/BqSjkmk06MeqRj
-X-Gm-Gg: AR+sD13q51RijlUvEop/bNN4qyk+btQZvFW0wNvaAbGCCQyfvEjpSZAqYMcA/YYhQYO
-	ZewxziZIsCJPxTdfvgkqnggt4s7mfRz3oF/3gqiF5aI09Qqi8+eX3IIAQeXu6GA5AN4IWM9AJx4
-	cgbye77uvTGO+BTVfQBmy0VQMXshKBXEZVtWCd8puYju63QCCQti5ZttQlyZXls7hvPubgJNjTt
-	KLlP7jMXELv772FLCxYHTLBREcC9MqkQsDEYxA2YBvdToj4YofexWI6VLVrG+6Wq2EyJpTtwqtR
-	A4ksABLXjJMExiQhhmhRVfBmvMq1L/IDpk3NZdppqJv9R5QrJiHdzbYk
-X-Received: by 2002:a05:622a:314:b0:50f:af60:3496 with SMTP id
- d75a77b69052e-52cfc06c2e2mr3382721cf.1.1785957564878; Wed, 05 Aug 2026
- 12:19:24 -0700 (PDT)
+        bh=CckD4PX2EsG+s5CE9S2v7XWHjksW6JIGVN74IhwTxcg=;
+        b=QLc0hTnxRvJtkCRkhNyQcjMZJCfWp8+eZiRZZ0VJ5wYOMdMivu0Z6MgcqGL2DbcULx
+         KIM2smnDdK0ShKoTllzbCtdrgvYgwjZ2fy/qwnvuUSGqjwPsy2h3JIoo1OoqqX53x5D+
+         QtaSjz0OVwWQ4apEfg1U0UYO7k62/ZRUwHJFt/mJkrs57gWUyPzMXmkrjvxUQbJLCiGi
+         CX7oy+OkIuaWw72Tn8Q9M/OzPcy4QD3cbfTczGbswJ+f1DIw8IRrGpm+sCbtr77E7uNx
+         u9NI8vWqCk8UcZbiw/CqmOjbm6KGKC1foVAENgUWt3Dsd4VKsUs5OKpojYrm1tyeaOkK
+         //Tg==
+X-Forwarded-Encrypted: i=1; AHgh+RrnjwYgVgqF9ISzdisR+PFkFh1Fui1nlke4obHxkt8wmR/nieJJSR/MC0EHTXaeEI7J51E22ElvIPsZt68c/E+w@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2a9Ils5xmH4N45qLfDB0KPF13T4iG5yUgHAZXjUKDjOhjlebc
+	UKPLpvczJDm8mRPyCICKDm912+sATfjAIsl4/XJb0o3Q4c6eCd8DROqHklE3JEJm+/+mhE9B1IM
+	FBoghKNJz3J5dxthmC1sDkzirfsMk8muKyhfj+l6H
+X-Gm-Gg: AR+sD12Gw37l4hVq/kxk2Ga8Z5qAsB1XtKK3jXnc0nA30pKGlF6owQOKYLitsA6JCx8
+	x3/bGqTIU9q5H/cGPk33QOOncrGJO0sgiWelBl+wz+P2UuMG5ILP3V1dKSJgKp5F57R/0p/TKrs
+	kfIVNZlMwS+P8W/0ddc7pnb5l2s7LwbYVqigi4dyUTH/vS4Dc45Zk1cJXmLeev03QkZnkS/lXi9
+	x08Tvm51ElwWtce68fdl4Sz9RFmp0IpmMkfvng1y7LYVvgd4Jbh/mtdj47SGNpHe5szfI2Dar8v
+	5JzVsdXsOOblADmc2f3sc6CXFEwQP4n10On106IMuxofjw==
+X-Received: by 2002:a05:622a:4406:b0:52b:806e:2633 with SMTP id
+ d75a77b69052e-52cfc0afcbfmr3259611cf.1.1785957593683; Wed, 05 Aug 2026
+ 12:19:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260805133013.235016-1-acme@kernel.org> <20260805133013.235016-11-acme@kernel.org>
-In-Reply-To: <20260805133013.235016-11-acme@kernel.org>
+References: <20260805133013.235016-1-acme@kernel.org> <20260805133013.235016-12-acme@kernel.org>
+In-Reply-To: <20260805133013.235016-12-acme@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 5 Aug 2026 12:19:13 -0700
-X-Gm-Features: AUfX_mweQ8yIutEySoz3oOC8I6kSq7GChHRed7HGmfWS8uh6zopuqOi6UQsiJAQ
-Message-ID: <CAP-5=fUZU6um4s4z38DVuschE1_BFaGqp09kCC_Kj=ibM-bGfg@mail.gmail.com>
-Subject: Re: [PATCH 10/12] perf jitdump: Validate debug entries on native
- (non-swap) path
+Date: Wed, 5 Aug 2026 12:19:40 -0700
+X-Gm-Features: AUfX_mwm9ILCqRoMBdnsY0ZnuX8uUjjAxCkF1c0BYnF4qZgTa7WKCcuKikHeSWA
+Message-ID: <CAP-5=fUdodt6KrnKqPs0NYwp3tUDQMfQ9OHDYKGPsW=U-MhHLw@mail.gmail.com>
+Subject: Re: [PATCH 11/12] perf jitdump: Validate sym string NUL-termination
+ in code load
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
 	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
@@ -105,19 +105,14 @@ l.org> wrote:
 >
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> The bounds-checking and nr_entry clamping added for the byte-swap path
-> only runs when jd->needs_bswap is true.  On native-endian files, nr_entry
-> passes through unvalidated to jit_repipe_debug_info(), which stores it
-> as jd->nr_debug_entries.  Downstream, jit_process_debug_info() in
-> genelf_debug.c iterates nr_debug_entries times via debug_entry_next(),
-> which calls strlen() on each entry's name field =E2=80=94 a crafted nr_en=
-try
-> causes OOB reads and writes.
+> jit_repipe_code_load() computes sym =3D (void *)jr + sizeof(jr->load) and
+> passes it to jit_emit_elf() which calls strlen(sym) via jit_write_elf().
+> If code_size equals total_size - sizeof(jr->load), the sym pointer
+> aliases the code blob with no NUL terminator, and strlen() scans past
+> the buffer into adjacent heap memory.
 >
-> Add bounds-checked iteration in jit_repipe_debug_info() that validates
-> each debug_entry fits in the payload and its name is NUL-terminated
-> before calling debug_entry_next().  Clamp nr_debug_entries to the count
-> of valid entries.
+> Add a memchr() check to verify the symbol name is NUL-terminated within
+> the region between the load header and the code blob before use.
 >
 > Fixes: 598b7c6919c7bbcc ("perf jit: add source line info support")
 > Reported-by: sashiko-bot <sashiko-bot@kernel.org>
@@ -131,59 +126,29 @@ Thanks!
 Ian
 
 > ---
->  tools/perf/util/jitdump.c | 27 ++++++++++++++++++++++-----
->  1 file changed, 22 insertions(+), 5 deletions(-)
+>  tools/perf/util/jitdump.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 >
 > diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-> index 02840dbf8a1fc16c..87612ef3e232598e 100644
+> index 87612ef3e232598e..5f3a53f818c29f58 100644
 > --- a/tools/perf/util/jitdump.c
 > +++ b/tools/perf/util/jitdump.c
-> @@ -694,8 +694,10 @@ static int jit_repipe_code_move(struct jit_buf_desc =
+> @@ -487,6 +487,13 @@ static int jit_repipe_code_load(struct jit_buf_desc =
 *jd, union jr_entry *jr)
 >
->  static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry=
- *jr)
->  {
-> -       void *data;
-> -       size_t sz;
-> +       struct debug_entry *ent;
-> +       void *data, *end;
-> +       size_t sz, valid;
-> +       uint64_t i;
->
->         if (!(jd && jr))
->                 return -1;
-> @@ -715,10 +717,25 @@ static int jit_repipe_debug_info(struct jit_buf_des=
-c *jd, union jr_entry *jr)
->         jd->debug_data       =3D data;
->
->         /*
-> -        * we must use nr_entry instead of size here because
-> -        * we cannot distinguish actual entry from padding otherwise
-> +        * Clamp nr_debug_entries to entries that actually fit in the
-> +        * payload.  The byte-swap path already does this for cross-endia=
-n
-> +        * files; validate on the native path too, since downstream
-> +        * jit_process_debug_info() iterates via debug_entry_next() which
-> +        * calls strlen() on each entry's name field.
->          */
-> -       jd->nr_debug_entries =3D jr->info.nr_entry;
-> +       end =3D data + sz;
-> +       ent =3D data;
-> +       valid =3D 0;
-> +       for (i =3D 0; i < jr->info.nr_entry; i++) {
-> +               if ((void *)ent + sizeof(*ent) > end)
-> +                       break;
-> +               /* name must be NUL-terminated within the payload */
-> +               if (!memchr(ent->name, '\0', (char *)end - ent->name))
-> +                       break;
-> +               ent =3D debug_entry_next(ent);
-> +               valid++;
+>         sym   =3D (void *)((unsigned long)jr + sizeof(jr->load));
+>         code  =3D (unsigned long)jr + jr->load.p.total_size - csize;
+> +
+> +       /* sym string lives between the load header and the code blob */
+> +       if (!memchr(sym, '\0', code - (unsigned long)sym)) {
+> +               pr_warning("jitdump: unterminated symbol name in code_loa=
+d record\n");
+> +               return -1;
 > +       }
-> +       jd->nr_debug_entries =3D valid;
+> +
+>         count =3D jr->load.code_index;
+>         idr_size =3D jd->machine->id_hdr_size;
 >
->         return 0;
->  }
 > --
 > 2.55.0
 >
