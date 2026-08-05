@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5FB471D1B;
-	Wed,  5 Aug 2026 13:32:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A831047277C;
+	Wed,  5 Aug 2026 13:32:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785936722; cv=none; b=HHEhT+IYY/JNGhWKMI4Uv8ldT4tUv6+OvWKNkM+o9Oqt5mUjWAG5SA9iTcupFXpm9NRwT5MX8JDz4EM0JWFifEvERy6nnDCdFPFCR8BhIhwfPFyAXbswMHleQCLBAUVFmLZiKiNa6T5Lv1VaJJ14JP8EoaUw4+T23WMa8dLmAqk=
+	t=1785936727; cv=none; b=r6VIRDlduGSR8cILR8a/TqtQ0qZW4EnPRZEWlPZCRyEGnw9blnhwgMPtlZSd5WUdBAAhCGMe1LOaPI+f+3N128XWsQX3V/nmTl7MaJsEMiVarH4NOYuhOd4cc4az5HNWH7oiKHkLgiZ+mNaWN81AQOmDmBeFq+QUZuioskE4aKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785936722; c=relaxed/simple;
-	bh=xF81jda+5dqYafQlyt1xrp7a0Ji5p/BUDTIbscvLN8A=;
+	s=arc-20240116; t=1785936727; c=relaxed/simple;
+	bh=OppWOfMkaD8AmvoQxLEpbmpYg/DgP84tAUTmp045jQU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ezl9e9hpPyctsOa7EbJge2yN4u7y0uzQXAIk3qQHRc9dtYv6E9O3jN4PmbPeZ73LHv3OtAt0px/ip4rvB5zBAO8tmbHFQ7eennZXCQOMs6brKb4bis/jSDCanhZav3419VMib0hPlf2I0z1VALdUtJ+IUzFEQkX9ekWNzBWxfaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fkzto8yk; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=RQNM8YGPynzymsfIhGoZD3Aai28f2ZMIJInothnRVfEd1nibj33xJTtrVRFLmQaFQWpz5JhnP/WEz4OXQFr2U9npZf92FR6BZsU8FL4egcpg6zGOtxgFScuYOTvfiZ9w/yFkcZia79muPavCcRRxiQ6eJ7WDIklcVzOw8vBty10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=auFTQJvz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fkzto8yk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C46F1F00A3A;
-	Wed,  5 Aug 2026 13:31:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="auFTQJvz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E48B51F000E9;
+	Wed,  5 Aug 2026 13:32:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785936721;
-	bh=iuGw7UmKVJcSVp1OPKsiB3Zy+LN8qE51vkEEpa+vI+c=;
+	s=k20260515; t=1785936726;
+	bh=E613IRkQNGwdjNPYGRqbp3+jcaqY5Ab60reOU0zoRdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Fkzto8ykWHQBFrLG4VuMczmt9hoBPJ6GEGCLPjspmzltwN49Urcn/0RMQgnteNd4M
-	 Ejycuqmzo1JFw+lCSz9jzCeW7hoCcp0UdZkD4b7aGx4/hXo/MJOvljyYTk2oB9wnkR
-	 abbHsm6pjX0KOCgFv90lbsDmQTWk+sZUH5bXRBu4fGcEVgPBR5kid+To98qTWR5OUl
-	 rHZPoWaoI4XQcU4xb9LmoECR46rSLRvdQtC3p9zp4iMzUy64ZT8bclJy+d+I0Rs3zC
-	 xLuKZf+Bf/J0GBL9mJ2GeIrT7U2IEzA8oyDLLzfOGDJ8MRMRsVhzlyJ3Sb4NVX26m+
-	 DKtpSwvdo85sQ==
+	b=auFTQJvz0/P285MIM3JW+xvcfliQBQfWHnpHQtra6ayn9Bn3VAQ12CrNIyf9LNL3u
+	 CMbfnUsNBqxsRgDyQZ3jlD2McRM2xl2O5/vpVibxRtU51Z8HmAE7wKbX3lCFF7e4cy
+	 O75kiTClyy14jlWBCUvmg2Yq6CuvlX/Zo32lm9pdImaRDPq01odGFdgBl4Kou2QBSQ
+	 Rn2TlJsuxJFTCDWZPFvGwhHlHQdHQ0C0rGprqVLdruoAzqUpGrhizb5GOy0R+Tw+9c
+	 yNo+nPxy5irsx6egU0iLuUrjIKnjsqVitOY6fHEOx3mevScDVcp9Wv4aZbNSiqXD7G
+	 pKXW3njbzBj6A==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,9 +40,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
 	Stephane Eranian <eranian@google.com>
-Subject: [PATCH 09/12] perf jitdump: Use dirname() return value in jit_open()
-Date: Wed,  5 Aug 2026 10:30:08 -0300
-Message-ID: <20260805133013.235016-10-acme@kernel.org>
+Subject: [PATCH 10/12] perf jitdump: Validate debug entries on native (non-swap) path
+Date: Wed,  5 Aug 2026 10:30:09 -0300
+Message-ID: <20260805133013.235016-11-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260805133013.235016-1-acme@kernel.org>
 References: <20260805133013.235016-1-acme@kernel.org>
@@ -57,46 +57,74 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-jit_open() calls dirname(jd->dir) but ignores the return value.  POSIX
-says dirname() may return a pointer to internal static storage — glibc
-does this when the path has no '/', returning "." from a static buffer
-and leaving jd->dir unchanged with the original filename.
+The bounds-checking and nr_entry clamping added for the byte-swap path
+only runs when jd->needs_bswap is true.  On native-endian files, nr_entry
+passes through unvalidated to jit_repipe_debug_info(), which stores it
+as jd->nr_debug_entries.  Downstream, jit_process_debug_info() in
+genelf_debug.c iterates nr_debug_entries times via debug_entry_next(),
+which calls strlen() on each entry's name field — a crafted nr_entry
+causes OOB reads and writes.
 
-Capture the return value and copy it back to jd->dir when dirname()
-returns a different pointer.
+Add bounds-checked iteration in jit_repipe_debug_info() that validates
+each debug_entry fits in the payload and its name is NUL-terminated
+before calling debug_entry_next().  Clamp nr_debug_entries to the count
+of valid entries.
 
-Fixes: 9b07e27f88b9 ("perf inject: Add jitdump mmap injection support")
+Fixes: 598b7c6919c7bbcc ("perf jit: add source line info support")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
 Cc: Stephane Eranian <eranian@google.com>
 Assisted-by: Claude:claude-opus-4.6
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/jitdump.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/util/jitdump.c | 27 ++++++++++++++++++++++-----
+ 1 file changed, 22 insertions(+), 5 deletions(-)
 
 diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index 3085091b95a517ae..02840dbf8a1fc16c 100644
+index 02840dbf8a1fc16c..87612ef3e232598e 100644
 --- a/tools/perf/util/jitdump.c
 +++ b/tools/perf/util/jitdump.c
-@@ -146,6 +146,7 @@ jit_open(struct jit_buf_desc *jd, const char *name)
- 	ssize_t bs, bsz = 0;
- 	void *n, *buf = NULL;
- 	int ret, retval = -1;
-+	char *dname;
+@@ -694,8 +694,10 @@ static int jit_repipe_code_move(struct jit_buf_desc *jd, union jr_entry *jr)
  
- 	nsinfo__mountns_enter(jd->nsi, &nsc);
- 	jd->in = fopen(name, "r");
-@@ -241,7 +242,9 @@ jit_open(struct jit_buf_desc *jd, const char *name)
+ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ {
+-	void *data;
+-	size_t sz;
++	struct debug_entry *ent;
++	void *data, *end;
++	size_t sz, valid;
++	uint64_t i;
+ 
+ 	if (!(jd && jr))
+ 		return -1;
+@@ -715,10 +717,25 @@ static int jit_repipe_debug_info(struct jit_buf_desc *jd, union jr_entry *jr)
+ 	jd->debug_data       = data;
+ 
+ 	/*
+-	 * we must use nr_entry instead of size here because
+-	 * we cannot distinguish actual entry from padding otherwise
++	 * Clamp nr_debug_entries to entries that actually fit in the
++	 * payload.  The byte-swap path already does this for cross-endian
++	 * files; validate on the native path too, since downstream
++	 * jit_process_debug_info() iterates via debug_entry_next() which
++	 * calls strlen() on each entry's name field.
  	 */
- 	strncpy(jd->dir, name, PATH_MAX - 1);
- 	jd->dir[PATH_MAX - 1] = '\0';
--	dirname(jd->dir);
-+	dname = dirname(jd->dir);
-+	if (dname != jd->dir)
-+		strlcpy(jd->dir, dname, PATH_MAX);
- 	free(buf);
+-	jd->nr_debug_entries = jr->info.nr_entry;
++	end = data + sz;
++	ent = data;
++	valid = 0;
++	for (i = 0; i < jr->info.nr_entry; i++) {
++		if ((void *)ent + sizeof(*ent) > end)
++			break;
++		/* name must be NUL-terminated within the payload */
++		if (!memchr(ent->name, '\0', (char *)end - ent->name))
++			break;
++		ent = debug_entry_next(ent);
++		valid++;
++	}
++	jd->nr_debug_entries = valid;
  
  	return 0;
+ }
 -- 
 2.55.0
 
