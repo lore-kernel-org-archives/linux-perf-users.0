@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7613F346E7A;
-	Wed,  5 Aug 2026 15:10:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0670A346E7A;
+	Wed,  5 Aug 2026 15:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785942655; cv=none; b=YOQdVvzXxS49FC16hVnMBQI7XgC1T1tI9Ssi3gxVvLnywW8l996EbQfIxEKjnR6g37Pvp1ccgpB9GrX/va8h7Xn+lvGwiTBnYi9GOzY2JLDmFaE4hKzt+RFUazjFScJV0IVp4GL7BZ9phtWxgC4rmuDxri7u975tO+K9i/0EAQ8=
+	t=1785942660; cv=none; b=Ka3Pvo0yFQ4HbTV6KDviyB/51gClCIFG8JWxWEhmFH2++vNDlagyqMMbnRgfg7EpEqZvLuhUl8ZIRvisoqWdL95QMz3au4cZcHvNFlw64kfurSOYTh7VzlKP4hETZwzfLGYE9te/Th5vdfKXQGkzScsq+XG4qJ68s5IxL7elN5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785942655; c=relaxed/simple;
-	bh=M9KHj0L9UaKIIXEc9iMRpFt2TdGgPZ1PVvRWNOOStF8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TFxelcBsAFizaXjQZrUtrrZhODS30a54aphxS7HW+5Q3AfYDYbYbjO0umInR9qZbHvKKHfjJpYTaYgLsv6IQ6EGM2aKsY0uTtVug+x7Kp/nTZr0Dg5YWfkalO4BjxDOsYgeZW4P2tHkhKZtEi7zagPstb9Sq3glP+rcga65hDGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXuq4OZM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1785942660; c=relaxed/simple;
+	bh=qJK/ewuynEsZcB86jq0MK1Vx/0GyjzBk2BNUN3w15fo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O9qPC6Tr88KChyVxZyIPFUWLYD4/7iB0ZJDLPsm4g5g6f47s9RIXp1XUd09vFQPtMCg+JCOYJIAcmkqpO2JcFtatGX/ahKarIkm1LupjRuRm5lNFzzvzQ8lFH7/8Dxc9M8ChyfnPeoijdOb3Gn2PeheMSzUGIn9vBG+MTfG0ar0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EA8OYctW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXuq4OZM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD6951F000E9;
-	Wed,  5 Aug 2026 15:10:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EA8OYctW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7B331F00A3D;
+	Wed,  5 Aug 2026 15:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785942654;
-	bh=YLqfv2DFRgn0h7UBoehVIqPvT6aLt+n5JZhabuIEJG4=;
-	h=From:To:Cc:Subject:Date;
-	b=mXuq4OZM9Nmd/Eafcszj5BWGcN/iaTU3Gd1ipmj/BT952HjiaRAJA85fSUIQ2EHTY
-	 bKfkcq99ikDfhmy5MwSGrJYYooH9qUK4sFQ8syNPp0H7p476sZOnstdYdNUFnmQC2v
-	 XuVctPW/qZJ8sYqR+Nn9DGaaOkRwvkqowZDqxJkiFy3ipCJT8tdHG4pq2+yY1qO03e
-	 hcIbfZn33ofTT78SgeCvO+YLngWOeu0A9OgrNKMQBDumLX8d87qsJUgzPuPq2at3dy
-	 sx1nLbW337G8E3E5x0GVipIut9KAfZx9OlkE9CvY2MO0ycu3tvJjlfTiFWLcbg0Mur
-	 08HTlw0b2gErA==
+	s=k20260515; t=1785942658;
+	bh=hajgRSCoDXi/OYysUPyK2mQy8Uhr7xOkmiwQoLuTItc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=EA8OYctWW+VRr4t8Ulh2xnIx7jzsSAmKM2VVYAtguMqehdq/c9dPQir1tc/tHxsFy
+	 W1MvKe5hlaPVjdCj7Y3wotuG8HR90SeLA7Z9WQbtDnydJC76xWTEGatz/08C/uFV75
+	 i8gnGsG2qeWaJneFBu31GP6RVlKFG8iTJJCYrqWKBBs8Kod/Sl8AyUpDChNtJccH1C
+	 +Z6EP0RiW1NF9POlP1z1r92Td9bIRvBNBMjDng/EmeVkSf7d4nyqcje+M4ja4z1qw5
+	 sJrKroFfYzyga+b72eQ9/JS5+nHjUL3UTb+lWt1ByDGBiRNJA+JQ9RO6irHkcouZS4
+	 KIM1FHZS+hmXg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -36,11 +37,14 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCHES v8 0/2] perf c2c hardening
-Date: Wed,  5 Aug 2026 12:10:41 -0300
-Message-ID: <20260805151043.237233-1-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	sashiko-bot <sashiko-bot@kernel.org>
+Subject: [PATCH 1/2] perf c2c: Fix error masking, OOM, and unchecked caller errors in hpp_list__parse()
+Date: Wed,  5 Aug 2026 12:10:42 -0300
+Message-ID: <20260805151043.237233-2-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260805151043.237233-1-acme@kernel.org>
+References: <20260805151043.237233-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,106 +53,387 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-	Please consider merging,
+hpp_list__parse() has three bugs:
 
-Two hardening fixes for perf c2c found by the sashiko-bot AI reviewer.
+1. The PARSE_LIST macro resets ret = 0 at the start of each invocation,
+   so an error from output parsing is silently overwritten when the sort
+   parsing block runs.  The function returns success with partially
+   initialized state.
 
-Patch 1 fixes error masking, OOM, and unchecked caller errors in
-hpp_list__parse(): the strdup() return values are now checked, PARSE_LIST
-was turned into a function that bails out on any error returned by the
-parsing callbacks (including -ENOMEM), and the two callers bailing out
-with the newly propagated errors, setup_sort_list() and
-setup_output_list(), now break out of their token loops and propagate the
-error instead of silently overwriting it on the next iteration.
+2. When the caller passes a non-NULL output_ or sort_ string, but
+   strdup() returns NULL due to OOM, NULL is passed to PARSE_LIST which
+   treats it as empty input (the "if (!_list) break" branch).  No error
+   is returned.
 
-Patch 2 fixes a format list leak: when c2c_hists__[re]init() fails
-partway through, entries registered via perf_hpp_list__column_register()
-and perf_hpp_list__register_sort_field() are left on the hpp_list.  The
-fix moves cleanup into c2c_hists__init()/c2c_hists__reinit() themselves
-so all callers are protected.
+3. When the called _fn function fails and returns something other than
+   -ESRCH or -EINVAL (-ENOMEM, for instance) it was not bailing out of
+   the strtok loop.
 
-This series was developed with AI assistance (Claude:Sonnet 4.6 and
-Opencode:mimo-v2.5-free for the changes up to v7; the changes since v7,
-including the setup_sort_list()/setup_output_list() -ENOMEM propagation
-fix and the c2c_hists__reinit() cleanup amendment, with
-Opencode:DeepSeek-V4-Flash-free).
+Fix them by checking strdup() return values before proceeding and adding
+a cleanup label so that ret from each PARSE_LIST call is checked before
+the next runs, preserving the first error.
 
-- Arnaldo
+The early exits now skip perf_hpp__setup_output_field(), which means
+c2c_hists__reinit() can return a non-zero value in cases that previously
+always succeeded silently.  Both callers discarded its return:
+resort_cl_cb() continued into hists__collapse_resort() on a broken list,
+and perf_c2c__report() proceeded with uninitialised hists.  Fix the full
+chain: check and propagate the error in resort_cl_cb() -- hists__iterate_cb()
+already stops iteration and returns the callback error -- and check both
+c2c_hists__reinit() and hists__iterate_cb() in perf_c2c__report().
 
-Changes since v7 (20260804185830.228763-1-acme@kernel.org):
+Also turn PARSE_LIST into a function, using a switch to catch other
+errors, converting the called functions to return an appropriate errno
+instead of -1 on failure.
 
-  Patch 1:
-  - Addressed sashiko-bot [Medium] finding: with sort_dimension__add()
-    and output_field_add() now propagating -ENOMEM (and other errors),
-    the callers setup_sort_list() and setup_output_list() only checked
-    for -EINVAL and -ESRCH, so an allocation failure was silently
-    overwritten when the next loop iteration ran.  Both callers now break
-    out of their token loops on any error and propagate it.
+Also make the two callers that iterate sort_dimension__add() and
+output_field_add() handle the newly propagated errors: setup_sort_list()
+and setup_output_list() only checked for -EINVAL and -ESRCH, so an
+-ENOMEM from a failed allocation was silently overwritten by the next
+loop iteration.  Break out of the loop and propagate any other error.
 
-Changes since v6 (20260803180703.194916-1-acme@kernel.org):
+The hpp_list__parse() fixes were developed with AI assistance from
+Claude:claude-sonnet-4.6, and the setup_sort_list()/setup_output_list()
+caller fixes with AI assistance from Opencode:mimo-v2.5-free and
+Opencode:DeepSeek-V4-Flash-free.
 
-  Patch 2:
-  - c2c_hists__reinit() has the same leak: it clears the list then calls
-    hpp_list__parse(), which can register formats before failing, and
-    neither the function nor its callers clean up on failure.  Add the
-    same cleanup-on-failure pattern to close this gap.
-
-Changes since v5 (20260803180118.194519-1-acme@kernel.org):
-
-  - The second v5 patch didn't go through, resending the same contents
-    as v5.
-
-Changes since v4 (20260803144119.185637-1-acme@kernel.org):
-
-  - Replace %m with str_error_r(-ret) as suggested by sashiko.
-
-Changes since v3 (20260803120452.181273-1-acme@kernel.org):
-
-  - Use 'goto out' to break out from both the switch and the for loop in
-    __hpp_list__parse() as noticed by sashiko.
-
-Changes since v2 (20260803011140.179943-1-acme@kernel.org):
-
-  - Added the string.h and stdlib.h missing headers.
-  - Addressed sashiko comment on PARSE_LIST, turning it into a function
-    and handling all errors returned from _fn().
-
-Changes since v1 (20260802142313.154514-1-acme@kernel.org):
-
-  - Addressed sashiko-bot [Medium] finding: the early exits added by v1
-    skip perf_hpp__setup_output_field(), making undetected errors in the
-    callers consequential.  Fixed by propagating the error through
-    resort_cl_cb() and perf_c2c__report() (hists__iterate_cb() already
-    propagated callback return values).
-  - Dismissed sashiko-bot [Low] finding (missing string.h/stdlib.h):
-    strdup() and free() were already used in this function before this
-    patch; string2.h (included at the top of the file) pulls in string.h.
-    No new library calls were introduced.
-  - Subject updated to reflect the additional caller fixes.
-
-Arnaldo Carvalho de Melo (2):
-  perf c2c: Fix error masking, OOM, and unchecked caller errors in hpp_list__parse()
-  perf c2c: Clean up registered formats on c2c_hists__init() and c2c_hists__reinit() failure
-
- tools/perf/builtin-c2c.c | 105 ++++++++++++++++++++++++++++++----------
- tools/perf/util/sort.c   |  76 ++++++++++++++++++++++-------
- 2 files changed, 130 insertions(+), 52 deletions(-)
-
+Fixes: 2d388bd0c9d3 ("perf c2c report: Add stdio output support")
+Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Assisted-by: Claude:claude-sonnet-4.6
+Assisted-by: Opencode:mimo-v2.5-free
+Assisted-by: Opencode:DeepSeek-V4-Flash-free
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
+ tools/perf/builtin-c2c.c | 85 ++++++++++++++++++++++++++++------------
+ tools/perf/util/sort.c   | 76 +++++++++++++++++++++++------------
+ 2 files changed, 112 insertions(+), 49 deletions(-)
 
-
-Arnaldo Carvalho de Melo (2):
-  perf c2c: Fix error masking, OOM, and unchecked caller errors in
-    hpp_list__parse()
-  perf c2c: Clean up registered formats on c2c_hists__init() and
-    c2c_hists__reinit() failure
-
- tools/perf/builtin-c2c.c | 106 ++++++++++++++++++++++++++++-----------
- tools/perf/util/sort.c   |  76 +++++++++++++++++++---------
- 2 files changed, 130 insertions(+), 52 deletions(-)
-
+diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+index c9584dbedf77afe8..160b82694d391c50 100644
+--- a/tools/perf/builtin-c2c.c
++++ b/tools/perf/builtin-c2c.c
+@@ -12,11 +12,14 @@
+  */
+ #include <errno.h>
+ #include <inttypes.h>
++#include <stdlib.h>
++#include <string.h>
+ 
+ #include <asm/bug.h>
+ #include <linux/compiler.h>
+ #include <linux/err.h>
+ #include <linux/kernel.h>
++#include <linux/string.h>
+ #include <linux/stringify.h>
+ #include <linux/zalloc.h>
+ #include <sys/param.h>
+@@ -2063,26 +2066,38 @@ static int c2c_hists__init_sort(struct perf_hpp_list *hpp_list, char *name, stru
+ 	return 0;
+ }
+ 
+-#define PARSE_LIST(_list, _fn)							\
+-	do {									\
+-		char *tmp, *tok;						\
+-		ret = 0;							\
+-										\
+-		if (!_list)							\
+-			break;							\
+-										\
+-		for (tok = strtok_r((char *)_list, ", ", &tmp);			\
+-				tok; tok = strtok_r(NULL, ", ", &tmp)) {	\
+-			ret = _fn(hpp_list, tok, env);				\
+-			if (ret == -EINVAL) {					\
+-				pr_err("Invalid --fields key: `%s'", tok);	\
+-				break;						\
+-			} else if (ret == -ESRCH) {				\
+-				pr_err("Unknown --fields key: `%s'", tok);	\
+-				break;						\
+-			}							\
+-		}								\
+-	} while (0)
++static int __hpp_list__parse(struct perf_hpp_list *hpp_list, char *_list, struct perf_env *env,
++			     int (*_fn)(struct perf_hpp_list *hpp_list, char *name, struct perf_env *env))
++{
++	char *tmp, *tok;
++	int ret = 0;
++
++	if (!_list)
++		return 0;
++
++	for (tok = strtok_r(_list, ", ", &tmp); tok; tok = strtok_r(NULL, ", ", &tmp)) {
++		ret = _fn(hpp_list, tok, env);
++		switch (ret) {
++		case 0:
++			continue;
++		case -EINVAL:
++			pr_err("Invalid --fields key: `%s'", tok);
++			goto out;
++		case -ESRCH:
++			pr_err("Unknown --fields key: `%s'", tok);
++			goto out;
++		default: {
++			char buf[STRERR_BUFSIZE];
++
++			pr_err("%s for --fields key: `%s'",
++			       str_error_r(-ret, buf, sizeof(buf)), tok);
++			goto out;
++		}
++		}
++	}
++out:
++	return ret;
++}
+ 
+ static int hpp_list__parse(struct perf_hpp_list *hpp_list,
+ 			   const char *output_,
+@@ -2093,8 +2108,18 @@ static int hpp_list__parse(struct perf_hpp_list *hpp_list,
+ 	char *sort   = sort_   ? strdup(sort_) : NULL;
+ 	int ret;
+ 
+-	PARSE_LIST(output, c2c_hists__init_output);
+-	PARSE_LIST(sort,   c2c_hists__init_sort);
++	/* strdup() returns NULL on OOM, don't silently treat as empty */
++	if ((output_ && !output) || (sort_ && !sort)) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	ret = __hpp_list__parse(hpp_list, output, env, c2c_hists__init_output);
++	if (ret)
++		goto out;
++	ret = __hpp_list__parse(hpp_list, sort, env, c2c_hists__init_sort);
++	if (ret)
++		goto out;
+ 
+ 	/* copy sort keys to output fields */
+ 	perf_hpp__setup_output_field(hpp_list);
+@@ -2111,6 +2136,7 @@ static int hpp_list__parse(struct perf_hpp_list *hpp_list,
+ 	perf_hpp__append_sort_keys(&hists->list);
+ #endif
+ 
++out:
+ 	free(output);
+ 	free(sort);
+ 	return ret;
+@@ -2281,6 +2307,7 @@ static int resort_cl_cb(struct hist_entry *he, void *arg)
+ 	struct c2c_hist_entry *c2c_he;
+ 	struct c2c_hists *c2c_hists;
+ 	bool display = he__display(he, &c2c.shared_clines_stats);
++	int ret;
+ 
+ 	c2c_he = container_of(he, struct c2c_hist_entry, he);
+ 	c2c_hists = c2c_he->hists;
+@@ -2291,7 +2318,9 @@ static int resort_cl_cb(struct hist_entry *he, void *arg)
+ 		c2c_he->cacheline_idx = idx++;
+ 		calc_width(c2c_he);
+ 
+-		c2c_hists__reinit(c2c_hists, c2c.cl_output, c2c.cl_resort, env);
++		ret = c2c_hists__reinit(c2c_hists, c2c.cl_output, c2c.cl_resort, env);
++		if (ret)
++			return ret;
+ 
+ 		hists__collapse_resort(&c2c_hists->hists, NULL);
+ 		hists__output_resort_cb(&c2c_hists->hists, NULL, filter_cb);
+@@ -3356,13 +3385,19 @@ static int perf_c2c__report(int argc, const char **argv)
+ 	else if (c2c.display == DISPLAY_SNP_PEER)
+ 		sort_str = "tot_peer";
+ 
+-	c2c_hists__reinit(&c2c.hists, output_str, sort_str, perf_session__env(session));
++	err = c2c_hists__reinit(&c2c.hists, output_str, sort_str, perf_session__env(session));
++	if (err) {
++		pr_err("Failed to reinitialize hists\n");
++		goto out_mem2node;
++	}
+ 
+ 	ui_progress__init(&prog, c2c.hists.hists.nr_entries, "Sorting...");
+ 
+ 	hists__collapse_resort(&c2c.hists.hists, NULL);
+ 	hists__output_resort_cb(&c2c.hists.hists, &prog, resort_shared_cl_cb);
+-	hists__iterate_cb(&c2c.hists.hists, resort_cl_cb, perf_session__env(session));
++	err = hists__iterate_cb(&c2c.hists.hists, resort_cl_cb, perf_session__env(session));
++	if (err)
++		goto out_mem2node;
+ 
+ 	ui_progress__finish();
+ 
+diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
+index dcf9189786f8aeba..58638ec9ae0ede7f 100644
+--- a/tools/perf/util/sort.c
++++ b/tools/perf/util/sort.c
+@@ -3105,7 +3105,7 @@ static int __sort_dimension__add_hpp_sort(struct sort_dimension *sd,
+ 	struct hpp_sort_entry *hse = __sort_dimension__alloc_hpp(sd, level);
+ 
+ 	if (hse == NULL)
+-		return -1;
++		return -ENOMEM;
+ 
+ 	perf_hpp_list__register_sort_field(list, &hse->hpp);
+ 	return 0;
+@@ -3118,7 +3118,7 @@ static int __sort_dimension__add_hpp_output(struct sort_dimension *sd,
+ 	struct hpp_sort_entry *hse = __sort_dimension__alloc_hpp(sd, level);
+ 
+ 	if (hse == NULL)
+-		return -1;
++		return -ENOMEM;
+ 
+ 	perf_hpp_list__column_register(list, &hse->hpp);
+ 	return 0;
+@@ -3742,14 +3742,18 @@ static int __sort_dimension__add(struct sort_dimension *sd,
+ 				 struct perf_hpp_list *list,
+ 				 int level)
+ {
++	int ret;
++
+ 	if (sd->taken)
+ 		return 0;
+ 
+-	if (__sort_dimension__add_hpp_sort(sd, list, level) < 0)
+-		return -1;
++	ret = __sort_dimension__add_hpp_sort(sd, list, level);
++	if (ret < 0)
++		return ret;
+ 
+-	if (__sort_dimension__update(sd, list) < 0)
+-		return -1;
++	ret = __sort_dimension__update(sd, list);
++	if (ret < 0)
++		return ret;
+ 
+ 	sd->taken = 1;
+ 
+@@ -3767,7 +3771,7 @@ static int __hpp_dimension__add(struct hpp_dimension *hd,
+ 
+ 	fmt = __hpp_dimension__alloc_hpp(hd, level);
+ 	if (!fmt)
+-		return -1;
++		return -ENOMEM;
+ 
+ 	hd->taken = 1;
+ 	hd->was_taken = 1;
+@@ -3779,14 +3783,18 @@ static int __sort_dimension__add_output(struct perf_hpp_list *list,
+ 					struct sort_dimension *sd,
+ 					int level)
+ {
++	int ret;
++
+ 	if (sd->taken)
+ 		return 0;
+ 
+-	if (__sort_dimension__add_hpp_output(sd, list, level) < 0)
+-		return -1;
++	ret = __sort_dimension__add_hpp_output(sd, list, level);
++	if (ret < 0)
++		return ret;
+ 
+-	if (__sort_dimension__update(sd, list) < 0)
+-		return -1;
++	ret = __sort_dimension__update(sd, list);
++	if (ret < 0)
++		return ret;
+ 
+ 	sd->taken = 1;
+ 	return 0;
+@@ -3803,7 +3811,7 @@ static int __hpp_dimension__add_output(struct perf_hpp_list *list,
+ 
+ 	fmt = __hpp_dimension__alloc_hpp(hd, level);
+ 	if (!fmt)
+-		return -1;
++		return -ENOMEM;
+ 
+ 	hd->taken = 1;
+ 	perf_hpp_list__column_register(list, fmt);
+@@ -3869,8 +3877,7 @@ int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
+ 				    strlen(tok)))
+ 			return -EINVAL;
+ 
+-		__sort_dimension__add(sd, list, level);
+-		return 0;
++		return __sort_dimension__add(sd, list, level);
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(memory_sort_dimensions); i++) {
+@@ -3882,8 +3889,7 @@ int sort_dimension__add(struct perf_hpp_list *list, const char *tok,
+ 		if (sort__mode != SORT_MODE__MEMORY)
+ 			return -EINVAL;
+ 
+-		__sort_dimension__add(sd, list, level);
+-		return 0;
++		return __sort_dimension__add(sd, list, level);
+ 	}
+ 
+ 	for (i = 0; i < ARRAY_SIZE(hpp_sort_dimensions); i++) {
+@@ -3973,15 +3979,25 @@ static int setup_sort_list(struct perf_hpp_list *list, char *str,
+ 			}
+ 
+ 			ret = sort_dimension__add(list, tok, evlist, env, level);
+-			if (ret == -EINVAL) {
++			switch (ret) {
++			case 0:
++				break;
++			case -EINVAL:
+ 				if (!cacheline_size() && !strncasecmp(tok, "dcacheline", strlen(tok)))
+ 					ui__error("The \"dcacheline\" --sort key needs to know the cacheline size and it couldn't be determined on this system");
+ 				else
+ 					ui__error("Invalid --sort key: `%s'", tok);
+-				break;
+-			} else if (ret == -ESRCH) {
++				goto out;
++			case -ESRCH:
+ 				ui__error("Unknown --sort key: `%s'", tok);
+-				break;
++				goto out;
++			default: {
++				char buf[STRERR_BUFSIZE];
++
++				ui__error("%s for --sort key: `%s'",
++					  str_error_r(-ret, buf, sizeof(buf)), tok);
++				goto out;
++			}
+ 			}
+ 			prev_level = level;
+ 		}
+@@ -3989,6 +4005,7 @@ static int setup_sort_list(struct perf_hpp_list *list, char *str,
+ 		level = next_level;
+ 	} while (tmp);
+ 
++out:
+ 	return ret;
+ }
+ 
+@@ -4315,15 +4332,26 @@ static int setup_output_list(struct perf_hpp_list *list, char *str)
+ 	for (tok = strtok_r(str, ", ", &tmp);
+ 			tok; tok = strtok_r(NULL, ", ", &tmp)) {
+ 		ret = output_field_add(list, tok, &level);
+-		if (ret == -EINVAL) {
+-			ui__error("Invalid --fields key: `%s'", tok);
++		switch (ret) {
++		case 0:
+ 			break;
+-		} else if (ret == -ESRCH) {
++		case -EINVAL:
++			ui__error("Invalid --fields key: `%s'", tok);
++			goto out;
++		case -ESRCH:
+ 			ui__error("Unknown --fields key: `%s'", tok);
+-			break;
++			goto out;
++		default: {
++			char buf[STRERR_BUFSIZE];
++
++			ui__error("%s for --fields key: `%s'",
++				  str_error_r(-ret, buf, sizeof(buf)), tok);
++			goto out;
++		}
+ 		}
+ 	}
+ 
++out:
+ 	return ret;
+ }
+ 
 -- 
 2.55.0
 
