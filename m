@@ -1,95 +1,95 @@
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00C143D3326
-	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 19:07:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4505C3A0E99
+	for <linux-perf-users@vger.kernel.org>; Wed,  5 Aug 2026 19:09:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.175
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785956859; cv=pass; b=kFApqldehTx8HgWtHsRRFXAJ3GbD50N+6LhVCX3mztaLVSoArQ6CfrMbiINajq3Jc9kDR5rSpAHTer+nZJAWjBEk3FrGhOqGUELzr5E1jA76f8Tt3Lo+cH8OHbGgSsSo4doXOs33B3sM3ZVBqwDgIE5Cmljl2Dq0Kw991G9Q1u8=
+	t=1785956966; cv=pass; b=VO0lnhoLpCJcYlAsBEcAbeoEA0BJr5sgTgaxUgKXEufsZ4pFV8a50aAg78kk0Ed3XOqdpPCW5GXrMDLDOyqZmy5coLcDULxIZGYz/rVeQVhz63kt5Zdbe+9V0HeeZiW9szfXnY+X1txlH8RG+frEDXn5rA1xmYyEAy3MusSrY/s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785956859; c=relaxed/simple;
-	bh=gEWVlW/j1dYCq4ooAxJc70ILyIct3UK57IkN1i8Dt1g=;
+	s=arc-20240116; t=1785956966; c=relaxed/simple;
+	bh=tRtbSZM5Zc2m2fCRmYZJ44y9UBxfraKEkCcFQ/lPDDw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EBnPF7ODI4AXlRUDceRVBv+JjwWP2J9SYb55qfTWU7AqePVW8AmP2Mo6dDYHZfGke9vGtseKFtxNJkFAHgk0qwzuH8HZgFmWR6AJfJ20xHYTO4lcOMTeNjfS/28pgt3SuFs8F6zKVECEb4bCn8LBCZ5Cl8BvcSxbgl2Z++Yqyvc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zh+6CdlA; arc=pass smtp.client-ip=209.85.160.178
+	 To:Cc:Content-Type; b=mAgfwo7FnS9pPI7tiJfcfesIzW/htSzJVxzsLvTZdtDa8bZR9exwH49GUSgWZLORg4cFvm4MKaQk5qPE4KVWwCkcv08eSrm4mMV1vJrIqF3t4dRWoWG6ubqBQxV+O4tx8fDcTwonzcfkPFuQ/oVVLArIGgNaVBMrfnJHgo37Zq4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hEejN9mM; arc=pass smtp.client-ip=209.85.160.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zh+6CdlA"
-Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-51c10ed63c0so52811cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 12:07:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785956856; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hEejN9mM"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-51c15a5b265so58461cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 12:09:25 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785956964; cv=none;
         d=google.com; s=arc-20260327;
-        b=f5junKnQH+IeMOziLBjqRSLSfxQMRbuAvuCbg1SgG90ipIzI4mXIgq6+lLc3V7qUwO
-         3CIBhpp+UyT/HOa5OIa+MQ8djVA+vJ0L0s9uw0F1WljGtJG6iZYn8TVLPFKDe6keuG8p
-         n+LY6xBzo/8qwAF3cBiswqGCN+lF6XDlq4iqNQ5fiCYKG0RSWCPtbpqM7zOiuEOrPXYU
-         WGGehUms8DTMwuJ4pZbOwyyn9VweCb8cU5Qs9Q31sgkJLLqIvgGoRC2fWQ7lQ+W2Iwge
-         +lRgfJ9z2DaMNXpjQRFc0Qis7uCrFC0FX3f3vyjxH3I/jnsGL8Gm8HKHM94QEQXMzvf/
-         gPMw==
+        b=DVKnyvriiDZ7eedhrd6MF6fFAoKcN3t2owZM2amXgRR3R7IoDZSJmpmiJytq/oxdFw
+         iOnhdDwykSCDpflUgsQzGnn0Sth0LTDA0HnLKPMONHCYRG+XypgttB4w08NFSwWGnkiJ
+         ZUtcmw1ipSona3yryieC/g1YwA5DG3AfNUPGDyiy0qei/ZvXY4kSWkwjH3TTiuhRx1Uc
+         2suNYFae+1ID9AsY1/f5kxWi2Uf4izkRLSPBBetgUjaTbMMBKkljmg+wGGIua5u3qV1/
+         gu99bfiKUMgEZaBpYxu6FUuUPviAzWEMmmsnc8qi//vyI55J1LnB0qmWydfTywjHjSq0
+         kz7g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=BM9mMDhmrBgxv4uxHoWZ/BZ+gXFjM7aR1C3cbVvwUrk=;
-        fh=6mV7QiA0NuvTnkq8V4Law/BDmwPlDLaHfo4qftw0u7U=;
-        b=QLWmc4XF+/asHEAfxMSb1mUwjcj/bMufxjP84dDohki+8ONR6uhFBa3lam+SF4WPzG
-         LEckRlkB3WjnkRSHufX1w7+obesfd3VHqN3KNqwv9ceTbhpXpyIhg0kx132UNnyyHlZx
-         XHFpJYEVDhyOmq3V3F+FrnbHacWENc1fobwyfMCsSQ4mRaOXP80e+kw4NF2Q8EioLEYA
-         7wp2BhIX8HR8LkaD/Kll1WYlRhfgYWH6VzVHHCa7jhqH0cNLeTEmpNHODByZNdf0YmBt
-         /BjZMxLL6E0rLfZiiD/REcGlvYZur9+HMG+kXnJm2CfCjPCOG45H4+DCfgCH7x/dUob9
-         0/Bw==;
+        bh=ip7sA4v4HXZicF09b9p23+We3T8NTe71O3C/0+Wa4vc=;
+        fh=8GPEfdZcBsN9mhLtGIOEnFj4mDaXBDUxXkSJoY+9Z7o=;
+        b=bVV5X5NInsvui5SFD8vibDdfXWnuTvL+9X9rRKeuscPl74FRmtLe6zjJJXhLzgRShc
+         2ulelWt1Lyx1X0FE5E9n7hTru5wAmS4NBwg8Syjxcxropd7mSFOIr5dAqHtU9UN0mLm2
+         htP3NJqpzlhTxLt7TEJ5k/0OZBNCeUQAs19T0FPcUH2hJ4I+VLdzPf66QbcB6rF391lj
+         HbEO4dES8peyjVd15X7j2YsRVJf/nDbxsN8mk1ORuYvmiCjwZvAaKjV2TCMU2zhFrtEf
+         f7JjOZqLKbA/W81ZPl1z/VgDzIkCkAK2xe/zLQyP+/GD1eQV+3ercp+iIQFfV+Rg0qJX
+         f49Q==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785956856; x=1786561656; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1785956964; x=1786561764; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=BM9mMDhmrBgxv4uxHoWZ/BZ+gXFjM7aR1C3cbVvwUrk=;
-        b=Zh+6CdlARXSZ/yFOc/WdwnWU1ynHFvXTFcTvhFV+BhLG/yBoXA8wbitZ1jCiZiD+6D
-         lHp5WGsa5zR3ytb0+is5jy+v4kIe5LojV1yX9dI5g0KOX0avaTanZEgSHvNN9t0k6cTD
-         YkuoamgoC0SDdDWOyq5n4vfRWcUQJcNe2d5Q4/DyZbj0kuzPuyLKWl1DNv1XtutSM4LT
-         dtBcREwixgWvWiudrW1wGhL4sJxbPu7VTqyj9zVeWV0RXx/qiiKRkuePllX7hrp+734R
-         PtHjOgiadtolGt8KPQqS4jYLoOymDuy2GNedno9p7jioZdAQ1EMbMpD2nFSJlXycpwA3
-         Yzsg==
+        bh=ip7sA4v4HXZicF09b9p23+We3T8NTe71O3C/0+Wa4vc=;
+        b=hEejN9mMe4k2q/fZHyGAIRATIlJLTa7pMavyaqKPaYAugrgtXcbfps1AqLbcsy5CjG
+         C2o2LXkK+5L8R/hEx3LydMaNANhgQI4bcxBy2NwhPk3/TYUmSYTE7/6Y0kBV2ju8lrph
+         PCP5YKdyE09IJuIDMspNxhbZcOoKGhVgi75mK8sepgBJVhvKgrdOQ2TM3XySsj7aqGJN
+         VcQnmUSJS8jXVV8T7mVMPQxA6VcynILopg0sfuSXrcALvK5adc/xVrjrSNFb28g3LZsg
+         4ccohMocoG+avoG/0ZN3mThnr06kb0rbEa8isaAUFYZ3AiwaIsmzc7OCfW9+AQ2TL9d7
+         OgjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785956856; x=1786561656;
+        d=1e100.net; s=20251104; t=1785956964; x=1786561764;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=BM9mMDhmrBgxv4uxHoWZ/BZ+gXFjM7aR1C3cbVvwUrk=;
-        b=l72RdyaA8a/FoY9MovKtfI+pAwiJgWmGBlQuuJJc0t0BDNueY0jhmmfOWUQI16rfDz
-         +45LMIZsK/4E6BwRz7XBweEo//+Jqc5+gml701rEHLCaLwe/ZY9V1WqX/FcYv1a9ctZM
-         PhEkSYqI4SNxucCR4zBiMkCelxzj93Hdm091mQVvPehy4ZOdNti8wJE1rphPKLhmiyyV
-         Z0poT36LxmDW7Ta1uKYYsKonRv8kTdHsNQi5oB/9y7Y4hfHGNj3DZxrlgb+8S7uKIUll
-         yzZhsTKu9Dk3MYZ9rvEfT5E0EW+9eHjCuAIV9cslGSfS1nH3bzsCxz47W+8aQs9XUA/b
-         Iuyw==
-X-Forwarded-Encrypted: i=1; AHgh+RrAztv+yZny/6aLDkBXFKOMbXZiCPot1lRJnn4WUtcVWWEcVOKT0tWgxTjamefuR+BjHBXvqbwcComVM+82eTKv@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO+HsZ0GYUCN1B7C2rMXFw37ut4DZ4f8BoqjXuMxg3uI8TyhNJ
-	Xns3VFhHm10wRiyYYC1f8wDfnrvMU5QvqRKYpTAZH2xHIs+ZidCcGmw1Xjp/8hBlm7iYcLby76L
-	/56zu5NP5ZTPQ+ObCDVg/vFCFi0sXwpv7QSE5NwM6zzVJxdD1PqBG5lluvxU=
-X-Gm-Gg: AR+sD13n86y69/YHi0P9I/PVMXoZfUK119QxOBMQbItiiNfEaf8npyRdBMkzx1asJvI
-	80WE0/gc98uFwnw24ZCHzQB7N5ilZL0apKid7RzDi3qK7q2+gXRZaebWnzVrH8ly3YmmFDxwB+3
-	iz+qmhIDZjktR/qeUahG3Nik2RctWTbbzOpOjauv4v9j1o7IWneJniNvVwB4tl0VR4yot5Xd1ma
-	Q3pDgYtyDaxslnfGAt5lejBVARuNb/9Ni/tAXQM0e1xsuSf/52b13s/8YnTkGPFWcdmQ6tGbkYk
-	0UUipQZmLDMMwU7jundV6KvO99C7Xrgr/HX0zKKmOHhDzw==
-X-Received: by 2002:ac8:5d54:0:b0:528:38d6:71b4 with SMTP id
- d75a77b69052e-52cfc1176damr2502661cf.11.1785956855632; Wed, 05 Aug 2026
- 12:07:35 -0700 (PDT)
+        bh=ip7sA4v4HXZicF09b9p23+We3T8NTe71O3C/0+Wa4vc=;
+        b=X//76gPDD34mzJDBg1PeI797HS8Cj10YZ4x6B7wDBokdpo3UNnPZh2zi2uhmWtJo1J
+         r2PtQGg5GGuM3m4YZNUYfqpvZSQ+wW6wncHl4sPtPFM14l5s9ojl8LPenQMtV7VETqWE
+         LtEEZVg2NICKGMIGhrUqdnVFZmzK2ehHR4yLUbO6Tw/nVtm1kYHXTNiSiNqFXWRKqdCD
+         vuCJGXca13bk0UzLCChJihFOIF86Sep5KPfVNVoeHwwnf7/PbdSQVSPKFQBxsrCiOxl3
+         NRF5zVZv4LNxrNt2dpd/tNvpDlquluBfnREKep4zeV/gAFQT7obiYFZCQV6Q9zZ+p24R
+         O5UA==
+X-Forwarded-Encrypted: i=1; AHgh+RoCyzI94mgykODSg2aCTXUa+64LsYj5lzKUPFvPcALsNd8FnpOyNA8y3YegZZNa6cZrlTA7Qgz4vHhSd4NpmkWO@vger.kernel.org
+X-Gm-Message-State: AOJu0YwZCfbAIHb/tzKvM1J7C8rUNLpM9rK/wMX74CZTAL+HtQ+PmPI8
+	/ilDe2i6iPPv6is2Nr6vYGCauYJD+g3EpHGLDcw58jrn2vTNMReJph/mzUgMs5JUy5bR/yUdmPq
+	TAfZ8fhHjn3fy2r+I3aQRvYVJ37s3hzHNw1fs7RZs
+X-Gm-Gg: AR+sD11beKxQ87JiAaNyrHkaP58yvlyaP+Wn/kaLrp3FyscVMqMeyL9Z+8hdlL+UNGw
+	PFSizZD8ME9fV7FvjwumAO7Lnr4VHLqFE6VyLNtaSluPAar+rF8qKwRE/BRDJaFNCJJSJvUEi1C
+	kHQYpx5GA+TU8yt3MLWHKzIUiev8amd4d0BNwqQhUlwXM9/P2A0yaK87yAB1xlE2othVdiZQdY/
+	PUORf3UTaWnoXg4qSFJrwlgndJP3UlXpFOzA0HUKzE6ZIUPDAcstVsHL5gc/aoU0v2xYy0HK4WC
+	Bf+Bbi54bmosn06ytywxFsDIVA9fwcydHe8cL8p90HftBaAaib2cC1TBlM9OsF601TGp
+X-Received: by 2002:a05:622a:134b:b0:528:3186:5799 with SMTP id
+ d75a77b69052e-52cfbf29554mr2038131cf.10.1785956963538; Wed, 05 Aug 2026
+ 12:09:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260805133013.235016-1-acme@kernel.org> <20260805133013.235016-6-acme@kernel.org>
-In-Reply-To: <20260805133013.235016-6-acme@kernel.org>
+References: <20260805133013.235016-1-acme@kernel.org> <20260805133013.235016-7-acme@kernel.org>
+In-Reply-To: <20260805133013.235016-7-acme@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 5 Aug 2026 12:07:23 -0700
-X-Gm-Features: AUfX_mwIvJ95fvfFRgBHQKe1T077MGjoO95SRFzQmdxWZdeXHsd3tcfF9DEGluY
-Message-ID: <CAP-5=fXRei4AivX_RcqR4xjmLtbYuNsJALOzJMAWvy7HCU09Dg@mail.gmail.com>
-Subject: Re: [PATCH 05/12] perf jitdump: Check snprintf return before
- computing header size
+Date: Wed, 5 Aug 2026 12:09:10 -0700
+X-Gm-Features: AUfX_mz4Fnqg4DBzZJBapcTXAhv3Ra7yRETF6ARcmGNlkgBQEBsPXPVdEa0th8E
+Message-ID: <CAP-5=fUKrQx5hZaNUfYLHAL4Lkg806jNNTRpZwYMnpngX2=a4Q@mail.gmail.com>
+Subject: Re: [PATCH 06/12] perf jitdump: Fix funlockfile on unlocked stream in
+ jit_open() error path
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
 	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
@@ -105,67 +105,55 @@ l.org> wrote:
 >
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >
-> snprintf() returns the would-have-been length on truncation.  When the
-> jitted filename exceeds PATH_MAX, the unclamped 'size' value inflates
-> sizeof(event->mmap2.filename) - size into a massive underflow, causing
-> the header.size computation to write an oversized header.  The
-> subsequent write to 'id =3D event + header.size - idr_size' then corrupts
-> the heap.
+> If the malloc() for the initial read buffer fails, jit_open() jumps to
+> the error label which calls funlockfile(jd->in).  However, flockfile()
+> is called later in the function, so at this point the stream was never
+> locked.  Calling funlockfile() on an unlocked stream is undefined
+> behavior per POSIX.
 >
-> Clamp size to PATH_MAX - 1 after snprintf in both jit_repipe_code_load()
-> and jit_repipe_code_move().
+> Split the error path into two labels: 'error' (after flockfile) calls
+> funlockfile before cleanup, 'error_noflock' (before flockfile) skips
+> the unlock.
 >
 > Fixes: 9b07e27f88b9 ("perf inject: Add jitdump mmap injection support")
 > Reported-by: sashiko-bot <sashiko-bot@kernel.org>
 > Cc: Stephane Eranian <eranian@google.com>
 > Assisted-by: Claude:claude-opus-4.6
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/jitdump.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-> index 078d3304d2b7ebce..fd11e07bf00b7978 100644
-> --- a/tools/perf/util/jitdump.c
-> +++ b/tools/perf/util/jitdump.c
-> @@ -493,6 +493,9 @@ static int jit_repipe_code_load(struct jit_buf_desc *=
-jd, union jr_entry *jr)
->                         jd->dir,
->                         nspid,
->                         count);
-> +       /* snprintf returns would-be length on truncation, clamp to buffe=
-r */
-> +       if (size >=3D PATH_MAX)
-> +               size =3D PATH_MAX - 1;
-
-Given the recent fixes to reading /proc/pid/maps where it was assumed
-the file paths would be limited to PATH_MAX and it turns out that
-PATH_MAX doesn't really do that and we had potential buffer overruns
-during synthesis, I wonder it would be more intention revealing here
-to use "sizeof(event->mmap2.filename)" rather than PATH_MAX. Other
-than the constant used, I agree with the change and using PATH_MAX
-isn't wrong.
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks,
+Thanks!
 Ian
 
+> ---
+>  tools/perf/util/jitdump.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 >
->         size++; /* for \0 */
+> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+> index fd11e07bf00b7978..c3f11d1c1d76d6c7 100644
+> --- a/tools/perf/util/jitdump.c
+> +++ b/tools/perf/util/jitdump.c
+> @@ -155,7 +155,7 @@ jit_open(struct jit_buf_desc *jd, const char *name)
 >
-> @@ -623,6 +626,9 @@ static int jit_repipe_code_move(struct jit_buf_desc *=
-jd, union jr_entry *jr)
->                  jd->dir,
->                  nspid,
->                  jr->move.code_index);
-> +       /* snprintf returns would-be length on truncation, clamp to buffe=
-r */
-> +       if (size >=3D PATH_MAX)
-> +               size =3D PATH_MAX - 1;
+>         buf =3D malloc(bsz);
+>         if (!buf)
+> -               goto error;
+> +               goto error_noflock;
 >
->         size++; /* for \0 */
+>         /*
+>          * protect from writer modifying the file while we are reading it
+> @@ -244,8 +244,9 @@ jit_open(struct jit_buf_desc *jd, const char *name)
 >
+>         return 0;
+>  error:
+> -       free(buf);
+>         funlockfile(jd->in);
+> +error_noflock:
+> +       free(buf);
+>         fclose(jd->in);
+>         return retval;
+>  }
 > --
 > 2.55.0
 >
