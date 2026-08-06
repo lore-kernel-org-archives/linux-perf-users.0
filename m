@@ -1,44 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E221477999;
-	Thu,  6 Aug 2026 16:17:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 666BE384CCB;
+	Thu,  6 Aug 2026 17:12:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786033067; cv=none; b=Z6f3yEwhACVAbtzoD6c8DDCPCm9YTG+d5RD0QqOQ9wF0EfjEeMwhKM5cf+feXFabskMUYTWGIC7M7+V2bL1R982v6TA/xbHJeckzkus7P1arrOe1OP0hgPmRESUke4gly32dHi056MJCpnlssXoZAoVWULkQ6XarvvqCtooIn90=
+	t=1786036334; cv=none; b=stcPVmNZOad4Zj+PnMz3yalm5UcO+fUgIqHSrGM8ide1V+ZwmjJetYlPXPn/4bYC1PcbmcMvrf3x7pP7d0vKM7jS0pAjApEc5GwzdcK/ONSxbstZ2wrExTDtrleosKYSHLAyAjLXG6YnOi72iS54S6ze0frGGPH7sW5EVGStQ78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786033067; c=relaxed/simple;
-	bh=+Lsa3aMiTzKAE5g3aa/F5/P/Pmez2hMftZ8LZa/55gg=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Pk0Kq8Sn7IbkWChjMH0Jof7aENkjQ0+DmLpBiuAPjVtqV75BpX99ZhTSlkLs2+onS2CUt2lfNx/mXTMoGUR72C6kKHNdbSIjGn5eJiUtge7KDKciuqTsEDTJr7Wci6/Yz1/nOUuxz1ILXAAw/urCmlT22Tv7/JXpLZowIxZTl10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nntAzZ28; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786036334; c=relaxed/simple;
+	bh=l3zSn6K90CqOuEnFylWRC5LRf4edRjG5GKRQma8CN3s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=EtzUWcwNIjAVgw6I1WtSwPAaUNZldBLGP1llpBiOwtD9lra77nUL/DCY2xcIG9JS2pCv8j9+6Sr3MUxvWEj1vGs/TUchzfoBIPd5d84sMnBGdP6jKiQSn37/wWN0tjzeBSI2M0eHOdK7CfYsWbWzDxmY5SOaum8iZBqx9h+TIks=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I6ckpMAR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nntAzZ28"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D7C81F00A3A;
-	Thu,  6 Aug 2026 16:17:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I6ckpMAR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A9481F000E9;
+	Thu,  6 Aug 2026 17:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786033061;
-	bh=EQue+Dizrs+j+g5A24gZYRYdbPJgq+Mm4GmojRtEFlI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=nntAzZ287hIfhW9q/UNxqhFo66HjrgYW+n6UIcBxZNY8mHBVWx/cLpBD0APpic3bB
-	 umvkMK/z0FkCn3UDRptxJ12nQ7IEbE4WwdSBtb9EMSy94tJh6mfWQqkErpJpaWnoBD
-	 6DXs1Nsk7CRV9Gsg8o7oGEWq49GL4v3FgGxbILasTbcqmrdvzxEXGpwlLEsEoyN7tc
-	 7j4EKP+NAHsKdd6kEeWVbYrY6pNDPuC5C6qxR/VVZodqdJAbUx/GhvvpbvsNirM3bY
-	 Y+cUriuuqtcZHo3daudauTQhiIEKVX8levaNUbxC/X112v+irqhbT7Ve1CvaI8OK+6
-	 UXx4g4sW3ITCA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: acme@kernel.org, Ian Rogers <irogers@google.com>
-Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- mingo@redhat.com, peterz@infradead.org, ravi.bangoria@amd.com, 
- swapnil.sapkal@amd.com
-In-Reply-To: <20260721235254.294053-1-irogers@google.com>
-References: <20260721230952.267754-1-irogers@google.com>
- <20260721235254.294053-1-irogers@google.com>
-Subject: Re: [PATCH v7 0/5] perf: Fix and optimize maps parsing,
- boundaries, and bounds safety
-Message-Id: <178603306154.1984988.15161799748169880025.b4-ty@kernel.org>
-Date: Thu, 06 Aug 2026 09:17:41 -0700
+	s=k20260515; t=1786036332;
+	bh=ZU0VrTV4GLDlCfx7g+a3UzwLYWGbzU9Cafj3dXrmRs0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=I6ckpMARmovzb8GA7jcN41tiAxs6P02GoIqR/93Jx+k472VjftW/vJBilnwhKIho8
+	 1b3CHjckp2tdT3Oj4xUoVj/PbgSR3Bmf8bVRS+JFjxdp70v8DHvUSyl3MF6E7v6jWb
+	 sZy8rMz08u6jDcr67Yrfcf1GqmNBxH9BC8IizSQ2Qgv4i4I47ttwMtP8U+bnmtXAHl
+	 sBnvuY6caeKLEuLSECNC0gf4sCEdpT30bJn67DZ7v3PwSh9tkPpaIjP3kk8JB3Y+xN
+	 VdlrO7oUo81la9VxR3J6oxu+mefjLW6fEEUyDpayd3HB828y8GAr+sal+IidJAPM/g
+	 XOyYi5eBCmbwA==
+From: Will Deacon <will@kernel.org>
+To: Shuai Xue <xueshuai@linux.alibaba.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Frank Li <Frank.li@nxp.com>,
+	Xu Yang <xu.yang_2@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Yushan Wang <wangyushan12@huawei.com>,
+	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Khuong Dinh <khuong@os.amperecomputing.com>,
+	Besar Wicaksono <bwicaksono@nvidia.com>,
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Chengwen Feng <fengchengwen@huawei.com>,
+	Yury Norov <ynorov@nvidia.com>,
+	Ma Ke <make24@iscas.ac.cn>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev,
+	linux-arm-msm@vger.kernel.org,
+	Pan Chuang <panchuang@vivo.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 0/3] perf: Remove redundant error messages on IRQ request failure
+Date: Thu,  6 Aug 2026 18:11:42 +0100
+Message-ID: <178585020446.3647840.3969322133081891560.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260717103123.34887-1-panchuang@vivo.com>
+References: <20260717103123.34887-1-panchuang@vivo.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,23 +66,33 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
+Content-Transfer-Encoding: 8bit
 
-On Tue, 21 Jul 2026 16:52:49 -0700, Ian Rogers wrote:
-> It turns out that PATH_MAX is respected by system calls but isn't
-> respected by file paths in /proc/pid/maps and /proc/pid/smaps. In the
-> kernel "//toolong" is placed in the filename of mmap/mmap2 events
-> where the filename is longer than PATH_MAX, do the same in the
-> mmap/mmap2 synthesis code to avoid overrunning the event buffer -
-> note, the filename buffer is bounds checked but this makes the
-> synthesis more similar to the kernel approach. With Gemini's help try
-> to address other correctness and overrun issues.
+On Fri, 17 Jul 2026 18:31:16 +0800, Pan Chuang wrote:
+> devm_request_threaded_irq() and devm_request_any_context_irq()
+> automatically log detailed error messages on failure via
+> the devm_request_result() helper, which prints device
+> name, IRQ number, handler functions, and error code.
+> 
+> Since devm_request_irq() is a static inline wrapper around
+> devm_request_threaded_irq(), it also benefits from this
+> automatic logging.
 > 
 > [...]
-Applied to perf-tools-next, thanks!
 
-Best regards,
-Namhyung
+Applied to arm64 (for-next/perf), thanks!
 
+[1/3] perf: Remove redundant dev_err()/dev_err_probe()
+      https://git.kernel.org/arm64/c/a2d0c34f6dc0
+[2/3] perf: arm_cspmu: Remove redundant dev_err()
+      https://git.kernel.org/arm64/c/3bee2a4d210b
+[3/3] drivers/perf: hisi: Remove redundant dev_err()/dev_err_probe()
+      https://git.kernel.org/arm64/c/5f254ed7149e
 
+Cheers,
+-- 
+Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
