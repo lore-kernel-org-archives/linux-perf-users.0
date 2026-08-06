@@ -1,248 +1,279 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1AC548F85B;
-	Thu,  6 Aug 2026 20:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 386BC31E83D
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Aug 2026 21:45:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786048149; cv=none; b=P1wJrDq61Gh6IPmhLJYw8CXEPEa1CyLQhvohCp37BfmSw2GOl4wRmksNPUiOyxU/T7STr6u/yiii+ftBu6b0WffxGNOY9JLPcg1oUur1m1SMMqgdlJf2RrY5WKBFwuG0LiKiPoy0PTxp1MOga8gta91QzW1ZiuUp6IJmXPK0vRg=
+	t=1786052735; cv=none; b=BKVEydktqv8KsdTfP9BxC49Tm8SIzMtO6vDqWEx7cmPKD8OAm4tn0a7eCijmeVCMmCVFQeT51WTZuktXjI0k3XfIJwc8EGmwC7YQDK15vT0HwBAIAZEc7Y8pmPP/alkOy1yk5l0EO3HzVESVqJx8HF8VA2yMV0ymfPXwgDGfPBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786048149; c=relaxed/simple;
-	bh=Hf1sWA2I3g3xjEoBx6Nr1xgWjzHqdTMWAurRnr10dBc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AfR6bqcGX+ZEfw72C5yJDUmJLMPqQCAjgOqNLBPP9KAwI+a7kr641d+RkOjN5fXkqnokghRyJI2DrOC674ltZhOxqJG7DuWW4GZRF1e8vT/gG99QV20oIUpQl6GgxYoTwPKWzJDLfpxMGoVSq6Jy5TgwEncAYyo/CXIjNoa9v9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MqixkwPX; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786052735; c=relaxed/simple;
+	bh=ndR2qgo3rh3kPOj66dJ3oRZW3Pf1rFtTCQ9cMAR+fTc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DvhuofBk5o+RqYP13hI6sHh7BOoCCbA8hnROlOgutKqlt388EIg5HTTQmKEpSWuKimZZUpeXRnRZd+/TEvAd3FZC1WCJisWHZ5o11abtC324dEuKn69oUvPizQhsQcNQqFzQ/Vdv55Cv6UbXN/2TSNaJEhJKHEnl5culSouTukw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iP14MZpK; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MqixkwPX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E6631F01559;
-	Thu,  6 Aug 2026 20:28:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786048145;
-	bh=zxluIbSheiE2FDZ53esBrjUVebLxGYMQbFJodrgP/1g=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=MqixkwPXrlSArdj2AxmQRUBAZOxeLM45HENcNI18hOrmFCubXTqm3d/pW/j+GilWB
-	 9BahqG6yE3oQZYYcsw3PW6+dCIC8tpH1E7EVsm176N3UJmTmu2M/Dq6UlGOOKi0fG/
-	 bZWAQdPIFjolMfp+Tn/LN3PXlnONNeQMHvvqoHDq4L0yGD9qJBJnptEEtbcxSm2wLQ
-	 Z9JO6AB2xF4av8yDDgKhEnLl4sZQt4ZCyPALOpTUCNvnXwIDY6FjrcByNEoCYBm0Yl
-	 89v/zFEEAT7TvOEzEK2scmXfAZHCbFM3Cs7QX5BVF619scXT30pbj7AwTy6jaXq0VU
-	 eOdySbmCEenGw==
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Date: Thu, 06 Aug 2026 21:21:45 +0100
-Subject: [PATCH v4 20/20] tools/testing/selftests/mm: add
- MAP_PRIVATE-/dev/zero merge tests
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iP14MZpK"
+Message-ID: <a8749023-d598-43d9-8a64-569b2d057438@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1786052731;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=WdoFzCI6/MSoPm4Khb52UUh02MpjvNSJrVeGRSfhXrI=;
+	b=iP14MZpKhZJ+z+2rvfX0XlFyk4Tgyh1nCMITUlGFyIb4ogl4Mn/PrfIdy7huNh/NHvrtzz
+	RZvG3RqEQg1vduqQeXJ2WtMVw5h2qF8Ap1r+Sc60B97Z5gL6XiWtGYKYBTTl2CBPSr028Z
+	vucexiDg6x8wsSlrpBWqzkESx7cP1rI=
+Date: Thu, 6 Aug 2026 14:45:03 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260806-b4-scalable-cow-virt-pgoff-v4-20-ab318a350404@kernel.org>
-References: <20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org>
-In-Reply-To: <20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>, 
- David Hildenbrand <david@kernel.org>, 
- "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
- Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
- Pedro Falcato <pfalcato@suse.de>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
- Miaohe Lin <linmiaohe@huawei.com>, 
- Naoya Horiguchi <nao.horiguchi@gmail.com>, Rik van Riel <riel@surriel.com>, 
- Harry Yoo <harry@kernel.org>, Lance Yang <lance.yang@linux.dev>, 
- Kees Cook <kees@kernel.org>, Zi Yan <ziy@nvidia.com>, 
- Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
- Barry Song <baohua@kernel.org>, Usama Arif <usama.arif@linux.dev>, 
- Matthew Brost <matthew.brost@intel.com>, 
- Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
- Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
- Ying Huang <ying.huang@linux.alibaba.com>, 
- Alistair Popple <apopple@nvidia.com>, Peter Xu <peterx@redhat.com>, 
- Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
- Arnd Bergmann <arnd@arndb.de>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Christian Borntraeger <borntraeger@linux.ibm.com>, 
- Janosch Frank <frankja@linux.ibm.com>, 
- Claudio Imbrenda <imbrenda@linux.ibm.com>, 
- Alexander Gordeev <agordeev@linux.ibm.com>, 
- Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
- Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
- Sven Schnelle <svens@linux.ibm.com>, 
- Alex Deucher <alexander.deucher@amd.com>, 
- =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- Boris Brezillon <boris.brezillon@collabora.com>, 
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
- Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>, 
- =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
- Rodrigo Vivi <rodrigo.vivi@intel.com>, 
- Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
- John Hubbard <jhubbard@nvidia.com>, Muchun Song <muchun.song@linux.dev>, 
- Oscar Salvador <osalvador@suse.de>, Chris Li <chrisl@kernel.org>, 
- Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
- Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
- Youngjun Park <youngjun.park@lge.com>
-Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, linux-mm@kvack.org, 
- linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, kvm@vger.kernel.org, 
- linux-s390@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
- dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
- linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
- syzbot@syzkaller.appspotmail.com
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4325; i=ljs@kernel.org;
- h=from:subject:message-id; bh=Hf1sWA2I3g3xjEoBx6Nr1xgWjzHqdTMWAurRnr10dBc=;
- b=owGbwMvMwCV2fu7ZrsZH9SKMp9WSGLJK3lx8f3eBxxNuU4MJd/orhZRcbc8ErJlwcsVS4QDNx
- BWGF9x9O0pZGMS4GGTFFFmefxHfHyQSNq/zgr8bzBxWJpAhDFycAjCRPy8Z/llEfH7qFB7SUJnB
- 6yfno9ad9iN3vuQpqacrFlZ0SamUP2b4pztd5lrZobh1Z9ycDvMcn7Ak4I/HB3mXjVurlwrFbPU
- 0ZwQA
-X-Developer-Key: i=ljs@kernel.org; a=openpgp;
- fpr=E7F417BF5214569E89D04F46CF9DCD8A81E27F14
+Subject: Re: [PATCH v8 14/22] RISC-V: perf: Implement supervisor counter
+ delegation support
+To: Yicong Yang <yang.yicong@picoheart.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Paul Walmsley <pjw@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
+ Anup Patel <anup@brainfault.org>, Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Ian Rogers <irogers@google.com>,
+ Will Deacon <will@kernel.org>, James Clark <james.clark@linaro.org>,
+ linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Conor Dooley <conor@kernel.org>
+References: <20260701-counter_delegation-v8-0-7909f863a645@meta.com>
+ <20260701-counter_delegation-v8-14-7909f863a645@meta.com>
+ <46cc0a87-a6cf-44d0-87d0-187ae8f6791e@picoheart.com>
+ <12675382-8ef2-4dcb-9e12-bc9cf8cc46ab@linux.dev>
+ <15b63bb1-ea29-42cd-905c-fbecc8423118@picoheart.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <15b63bb1-ea29-42cd-905c-fbecc8423118@picoheart.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Assert that MAP_PRIVATE-mapped /dev/zero mappings behave like they are
-anonymous.
 
-We test both unfaulted and faulted/unfaulted merges - each with the regions
-having page offset of 0, which would not merge if the mappings were treated
-as if they were file-backed.
+On 8/6/26 5:16 AM, Yicong Yang wrote:
+> On 8/6/26 10:00 AM, Atish Patra wrote:
+>> On 7/7/26 1:24 AM, Yicong Yang wrote:
+>>> On 7/1/26 4:47 PM, Atish Patra wrote:
+>>>> From: Atish Patra <atishp@rivosinc.com>
+>>>>
+>>>> There are few new RISC-V ISA exensions (ssccfg, sscsrind, smcntrpmf) which
+>>>> allows the hpmcounter/hpmevents to be programmed directly from S-mode. The
+>>>> implementation detects the ISA extension at runtime and uses them if
+>>>> available instead of SBI PMU extension. SBI PMU extension will still be
+>>>> used for firmware counters if the user requests it.
+>>>>
+>>>> The current linux driver relies on event encoding defined by SBI PMU
+>>>> specification for standard perf events. However, there are no standard
+>>>> event encoding available in the ISA. In the future, we may want to
+>>>> decouple the counter delegation and SBI PMU completely. In that case,
+>>>> counter delegation supported platforms must rely on the event encoding
+>>>> defined in the perf json file or in the pmu driver.
+>>>>
+>>>> For firmware events, it will continue to use the SBI PMU encoding as
+>>>> one can not support firmware event without SBI PMU.
+>>>>
+>>>> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+>>>> ---
+>>>>    arch/riscv/include/asm/csr.h   |   1 +
+>>>>    drivers/perf/riscv_pmu_sbi.c   | 578 +++++++++++++++++++++++++++++++++--------
+>>>>    include/linux/perf/riscv_pmu.h |   3 +
+>>>>    3 files changed, 478 insertions(+), 104 deletions(-)
+>>>>
+>>>> diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+>>>> index a3b24b88e401..cd22b5168689 100644
+>>>> --- a/arch/riscv/include/asm/csr.h
+>>>> +++ b/arch/riscv/include/asm/csr.h
+>>>> @@ -258,6 +258,7 @@
+>>>>    #endif
+>>>>      #define SISELECT_SSCCFG_BASE        0x40
+>>>> +#define HPMEVENT_MASK            GENMASK_ULL(63, 56)
+>>>>      /* mseccfg bits */
+>>>>    #define MSECCFG_PMM            ENVCFG_PMM
+>>>> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+>>>> index 2568c6808f5d..7995da4a98a1 100644
+>>>> --- a/drivers/perf/riscv_pmu_sbi.c
+>>>> +++ b/drivers/perf/riscv_pmu_sbi.c
+>>>> @@ -28,6 +28,8 @@
+>>>>    #include <asm/cpufeature.h>
+>>>>    #include <asm/vendor_extensions.h>
+>>>>    #include <asm/vendor_extensions/andes.h>
+>>>> +#include <asm/hwcap.h>
+>>>> +#include <asm/csr_ind.h>
+>>>>      #define ALT_SBI_PMU_OVERFLOW(__ovl)                    \
+>>>>    asm volatile(ALTERNATIVE_2(                        \
+>>>> @@ -60,7 +62,20 @@ asm volatile(ALTERNATIVE(                        \
+>>>>    #define PERF_EVENT_FLAG_USER_ACCESS    BIT(SYSCTL_USER_ACCESS)
+>>>>    #define PERF_EVENT_FLAG_LEGACY        BIT(SYSCTL_LEGACY)
+>>>>    -PMU_FORMAT_ATTR(event, "config:0-55");
+>>>> +#define RVPMU_SBI_PMU_FORMAT_ATTR    "config:0-47"
+>>>> +#define RVPMU_CDELEG_PMU_FORMAT_ATTR    "config:0-55"
+>>>> +
+>>>> +static ssize_t __maybe_unused rvpmu_format_show(struct device *dev, struct device_attribute *attr,
+>>>> +                        char *buf);
+>>>> +
+>>>> +#define RVPMU_ATTR_ENTRY(_name, _func, _config)    (            \
+>>>> +    &((struct dev_ext_attribute[]) {                \
+>>>> +        { __ATTR(_name, 0444, _func, NULL), (void *)_config }    \
+>>>> +    })[0].attr.attr)
+>>>> +
+>>>> +#define RVPMU_FORMAT_ATTR_ENTRY(_name, _config) \
+>>>> +    RVPMU_ATTR_ENTRY(_name, rvpmu_format_show, (char *)_config)
+>>>> +
+>>>>    PMU_FORMAT_ATTR(firmware, "config:62-63");
+>>>>      static bool sbi_v2_available;
+>>>> @@ -68,7 +83,11 @@ static bool sbi_v3_available;
+>>>>    static DEFINE_STATIC_KEY_FALSE(sbi_pmu_snapshot_available);
+>>>>    #define sbi_pmu_snapshot_available() \
+>>>>        static_branch_unlikely(&sbi_pmu_snapshot_available)
+>>>> +
+>>>>    static DEFINE_STATIC_KEY_FALSE(riscv_pmu_sbi_available);
+>>>> +#define riscv_pmu_sbi_available() \
+>>>> +        static_branch_likely(&riscv_pmu_sbi_available)
+>>>> +
+>>>>    static DEFINE_STATIC_KEY_FALSE(riscv_pmu_cdeleg_available);
+>>>>      /* Avoid unnecessary code patching in the one time booting path*/
+>>>> @@ -83,19 +102,35 @@ static DEFINE_STATIC_KEY_FALSE(riscv_pmu_cdeleg_available);
+>>>>    #define riscv_pmu_sbi_available() \
+>>>>            static_branch_likely(&riscv_pmu_sbi_available)
+>>>>    -static struct attribute *riscv_arch_formats_attr[] = {
+>>>> -    &format_attr_event.attr,
+>>>> +static struct attribute *riscv_sbi_pmu_formats_attr[] = {
+>>>> +    RVPMU_FORMAT_ATTR_ENTRY(event, RVPMU_SBI_PMU_FORMAT_ATTR),
+>>>>        &format_attr_firmware.attr,
+>>>>        NULL,
+>>>>    };
+>>>>    -static struct attribute_group riscv_pmu_format_group = {
+>>>> +static struct attribute_group riscv_sbi_pmu_format_group = {
+>>>>        .name = "format",
+>>>> -    .attrs = riscv_arch_formats_attr,
+>>>> +    .attrs = riscv_sbi_pmu_formats_attr,
+>>>>    };
+>>>>    -static const struct attribute_group *riscv_pmu_attr_groups[] = {
+>>>> -    &riscv_pmu_format_group,
+>>>> +static const struct attribute_group *riscv_sbi_pmu_attr_groups[] = {
+>>>> +    &riscv_sbi_pmu_format_group,
+>>>> +    NULL,
+>>>> +};
+>>>> +
+>>>> +static struct attribute *riscv_cdeleg_pmu_formats_attr[] = {
+>>>> +    RVPMU_FORMAT_ATTR_ENTRY(event, RVPMU_CDELEG_PMU_FORMAT_ATTR),
+>>>> +    &format_attr_firmware.attr,
+>>>> +    NULL,
+>>>> +};
+>>>> +
+>>>> +static struct attribute_group riscv_cdeleg_pmu_format_group = {
+>>>> +    .name = "format",
+>>>> +    .attrs = riscv_cdeleg_pmu_formats_attr,
+>>>> +};
+>>>> +
+>>>> +static const struct attribute_group *riscv_cdeleg_pmu_attr_groups[] = {
+>>>> +    &riscv_cdeleg_pmu_format_group,
+>>>>        NULL,
+>>>>    };
+>>>>    @@ -482,6 +517,14 @@ static void rvpmu_sbi_check_std_events(struct work_struct *work)
+>>>>      static DECLARE_WORK(check_std_events_work, rvpmu_sbi_check_std_events);
+>>>>    +static ssize_t rvpmu_format_show(struct device *dev,
+>>>> +                 struct device_attribute *attr, char *buf)
+>>>> +{
+>>>> +    struct dev_ext_attribute *eattr = container_of(attr,
+>>>> +                struct dev_ext_attribute, attr);
+>>>> +    return sysfs_emit(buf, "%s\n", (char *)eattr->var);
+>>>> +}
+>>>> +
+>>>>    static int rvpmu_ctr_get_width(int idx)
+>>>>    {
+>>>>        return pmu_ctr_list[idx].width;
+>>>> @@ -599,6 +642,38 @@ static uint8_t rvpmu_csr_index(struct perf_event *event)
+>>>>        return pmu_ctr_list[event->hw.idx].csr - CSR_CYCLE;
+>>>>    }
+>>>>    +static uint64_t get_deleg_priv_filter_bits(struct perf_event *event)
+>>>> +{
+>>>> +    u64 priv_filter_bits = 0;
+>>> could we explicitly initialize the priv_filter_bits to MINH? though this bit
+>>> is S-mode read-only and won't have any effects, but considering the semantic
+>>> is to inhibit counting at certain privilege mode, initialize it to MINH will
+>>> make it clear.
+>> Wouldn't that be confusing ? I feel we need a comment there as well to explain why
+>> are setting MINH in S-mode if we need that.
+>>
+> sounds reasonable. let's keep it as is.
+>
+>>>> +    bool guest_events = false;
+>>>> +
+>>>> +    if (event->attr.config1 & RISCV_PMU_CONFIG1_GUEST_EVENTS)
+>>>> +        guest_events = true;
+>>> use attr::config1 to distinguish the KVM events looks incorrect. it's a user
+>>> visible interface and could be set explicitly by the user and break the
+>>> logic here.. e.g. perf stat -e cycles/config1=0x1/
+>> Reusing config1 for kvm guest events are already in upstream. As KVM is just another user of host perf driver, it is used. The config is event specific so a user specific event vs kvm initiated event would be separate anyways.
+>>
+>> But we can harden the interface with additional check using this which was exclusive to perf_event_create_kernel_counter which
+>> kvm invokes[1].
+>>
+>> event->owner = TASK_TOMBSTONE;
+>>
+>> [1] https://github.com/torvalds/linux/blob/master/kernel/events/core.c#L14324
+>>
+> makes sense. there's a is_kernel_event() wrapper but currently is local
+> there in the event core (so is TASK_TOMBSTONE).
+Correct.
+> but yes it's not introduced by this patch.
+>
+>>>> +    if (event->attr.exclude_kernel)
+>>>> +        priv_filter_bits |= guest_events ? HPMEVENT_VSINH : HPMEVENT_SINH;
+>>>> +    if (event->attr.exclude_user)
+>>>> +        priv_filter_bits |= guest_events ? HPMEVENT_VUINH : HPMEVENT_UINH;
+>>>> +    if (guest_events && event->attr.exclude_hv)
+>>>> +        priv_filter_bits |= HPMEVENT_SINH;
+>>>> +    if (event->attr.exclude_host)
+>>>> +        priv_filter_bits |= HPMEVENT_UINH | HPMEVENT_SINH;
+>>>> +    if (event->attr.exclude_guest)
+>>>> +        priv_filter_bits |= HPMEVENT_VSINH | HPMEVENT_VUINH;
+>>>> +
+>>>> +    return priv_filter_bits;
+>>>> +}
+>>>> +
+> [...]
+>
+>>>> +static void rvpmu_deleg_ctr_enable_irq(struct perf_event *event)
+>>>> +{
+>>>> +    unsigned long hpmevent_curr;
+>>>> +    unsigned long of_mask;
+>>>> +    struct hw_perf_event *hwc = &event->hw;
+>>>> +    int counter_idx = hwc->idx;
+>>>> +    unsigned long sip_val = csr_read(CSR_SIP);
+>>>> +
+>>>> +    if (!is_sampling_event(event) || (sip_val & SIP_LCOFIP))
+>>> we should also consider overflow for counters of non-sampling events..
+>> This is intentional. As per the sscofpmf, OF bits as a interrupt disable and overflow indicator.
+>> So we need to clear the bit if you need the interrupt for the sampled events.
+>>
+>> For non sampled events, that is not necessary. But If it overflows, it shouldn't raise an interrupt.
+>>
+> okay I see the existing interrupt handler skip the non-sample events as well
+> so it's the current policy of the driver. but generally we should handle
+> the overflow of non sampled events as well to avoid count lost if the counter
+> is implemened less than 64bit. in such case it's possible to overflow
+> several times for a long counting period.
 
-With the recent change that makes them behave as pure anonymous mappings,
-the merges should succeed as their page offsets are equal to their
-anonymous page offsets.
+  The wrap is already accounted for: riscv_pmu_event_update() recovers the
+  delta with (new - prev) & cmask, which is correct for any advance short of a full lap,
+  and the half-width preload in riscv_pmu_event_init() keeps prev_count away from the
+  wrap point. This common design across architectures. If a platform implement too narrow
+  counter width such that overflow several times for a long counting period without a single
+  context switch, that's a platform problem.
 
-Tested-by: syzbot@syzkaller.appspotmail.com
-Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
----
- tools/testing/selftests/mm/merge.c | 104 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 104 insertions(+)
-
-diff --git a/tools/testing/selftests/mm/merge.c b/tools/testing/selftests/mm/merge.c
-index cb7cdb6b7ada..19c9bf9eb9ce 100644
---- a/tools/testing/selftests/mm/merge.c
-+++ b/tools/testing/selftests/mm/merge.c
-@@ -1362,6 +1362,110 @@ TEST_F(merge, anon_and_page_offset_mismatch_memfd)
- 	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 5 * page_size);
- }
- 
-+TEST_F(merge, merge_map_private_dev_zero_unfaulted)
-+{
-+	struct procmap_fd *procmap = &self->procmap;
-+	unsigned int page_size = self->page_size;
-+	char *carveout = self->carveout;
-+	char *ptr, *ptr2;
-+	int fd_zero;
-+
-+	if (access("/dev/zero", F_OK))
-+		SKIP(return, "No /dev/zero.");
-+	fd_zero = open("/dev/zero", O_RDWR);
-+	ASSERT_NE(fd_zero, -1);
-+
-+	/*
-+	 * Map two MAP_PRIVATE-/dev/zero VMAs next to one another with offset 0
-+	 * each.
-+	 *
-+	 * With these being made truly anonymous upon mapping, they will
-+	 * merge. If they were file-backed VMAs the page offsets would prevent
-+	 * merge:
-+	 *
-+	 * |-----||------|    |-------------|
-+	 * | ptr || ptr2 | -> |     ptr     |
-+	 * |-----||------|    |-------------|
-+	 */
-+	ptr = mmap(carveout, 5 * page_size, PROT_READ | PROT_WRITE,
-+		   MAP_FIXED | MAP_PRIVATE, fd_zero, 0);
-+	if (ptr == MAP_FAILED) {
-+		close(fd_zero);
-+		ASSERT_TRUE(false);
-+	}
-+	ptr2 = mmap(&carveout[5 * page_size], 5 * page_size,
-+		   PROT_READ | PROT_WRITE, MAP_FIXED | MAP_PRIVATE, fd_zero, 0);
-+	if (ptr2 == MAP_FAILED) {
-+		close(fd_zero);
-+		ASSERT_TRUE(false);
-+	}
-+	close(fd_zero);
-+
-+	/* Assert that they merged. */
-+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 10 * page_size);
-+}
-+
-+TEST_F(merge, merge_map_private_dev_zero_faulted_unfaulted)
-+{
-+	struct procmap_fd *procmap = &self->procmap;
-+	unsigned int page_size = self->page_size;
-+	char *carveout = self->carveout;
-+	char *ptr, *ptr2;
-+	int fd_zero;
-+
-+	if (access("/dev/zero", F_OK))
-+		SKIP(return, "No /dev/zero.");
-+	fd_zero = open("/dev/zero", O_RDWR);
-+	ASSERT_NE(fd_zero, -1);
-+
-+	/*
-+	 * Map a MAP_PRIVATE mapping of /dev/zero with page offset 0, then fault
-+	 * it in:
-+	 *
-+	 * |-------------------------------|
-+	 * |           faulted             |
-+	 * |-------------------------------|
-+	 */
-+	ptr = mmap(carveout, 15 * page_size, PROT_READ | PROT_WRITE,
-+		   MAP_FIXED | MAP_PRIVATE, fd_zero, 0);
-+	if (ptr == MAP_FAILED) {
-+		close(fd_zero);
-+		ASSERT_TRUE(false);
-+	}
-+	memset(ptr, 'x', 15 * page_size);
-+
-+	/*
-+	 * Unmap the middle:
-+	 *
-+	 * |---------|           |---------|
-+	 * | faulted |           | faulted |
-+	 * |---------|           |---------|
-+	 */
-+	ASSERT_EQ(munmap(&ptr[5 * page_size], 5 * page_size), 0);
-+
-+	/*
-+	 * Map in a new unfaulted mapping in the middle with page offset 0 -
-+	 * this should merge and would not if it were treated as a file rather
-+	 * than pure anon:
-+	 *
-+	 * |---------|-----------|---------|
-+	 * | faulted | unfaulted | faulted |
-+	 * |---------|-----------|---------|
-+	 */
-+	ptr2 = mmap(&carveout[5 * page_size], 5 * page_size,
-+		    PROT_READ | PROT_WRITE, MAP_FIXED | MAP_PRIVATE,
-+		    fd_zero, 0);
-+	close(fd_zero);
-+	ASSERT_NE(ptr2, MAP_FAILED);
-+
-+	/* Assert that they merged. */
-+	ASSERT_TRUE(find_vma_procmap(procmap, ptr));
-+	ASSERT_EQ(procmap->query.vma_start, (unsigned long)ptr);
-+	ASSERT_EQ(procmap->query.vma_end, (unsigned long)ptr + 15 * page_size);
-+}
-+
- TEST_F(merge_with_fork, mremap_faulted_to_unfaulted_prev)
- {
- 	struct procmap_fd *procmap = &self->procmap;
-
--- 
-2.55.0
-
+> it's also another thing not introduced by this patch so we may keep the handling
+> here as is.
+>
+> thanks.
