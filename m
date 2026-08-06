@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4995234CFD0;
-	Thu,  6 Aug 2026 05:04:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97309389DF0;
+	Thu,  6 Aug 2026 05:12:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785992669; cv=none; b=ocl41srZAhWBlIVNE/0+ywB6eq9l3FLGDme2rENMVtdxVXuhDuV1iEGh49KaEhBofaKvq2BVYDglFQbX5DiyI1seAjqvXH7mA3ryrT3I0krSto0MwHs2C92MS/uv7fUn8qNI99JCd7i1xU3tYM00Q2kp9dzN3cfqQPeOYD8kzRg=
+	t=1785993156; cv=none; b=tkPp1BjX4haRySylMn0eIAlfJU5OHxsiKbMIHcQGOYlEG9yMutxNffCzzt3oedNonASEN4zJ1ZOW5Zo+jZI+5N2YYtrYuQwe8xtrxFBcgyVY3OkBOJO2Q9V3z5ifi8qNI6LPeDapB0PE8roUTX25LombsnYaJMZDGuEMwP5R27M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785992669; c=relaxed/simple;
-	bh=y2nY7Ddj1ilDqfuOmu/nq8TuntAGPNteU3SvX2zXoZY=;
+	s=arc-20240116; t=1785993156; c=relaxed/simple;
+	bh=d8Fm8peU8WooM9ToFjEpTedyeDzYHmhxbWPCUY8hbuI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jJiXeZ7z4oHqwi11/e9DIeoHdM8Rt9Rtq4A2Lq+LcuVyS5rU7jXH2M7QNUNpAOqxVBVdUg/FQxLBUHX9mbzN4rP2WmvNgOfPeIKoT0LMnOJ8gn26fPnEI0FUpZzjnaFhCpdqNWOybMBMEu5JMaw7d5Ap3MxHtfikoFdYZDw5pU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nNinsIMT; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=RnK9pjbQ51RZUTCDJKjgc7xvJoTlINYo9Y66Hu+qujKtAwOazYhi0g9IXwjI7b2gScfTV9GFWy9k+GQHrWQNJ8vaVXEKeYicj9XQl8iwd35uVyg2QfIfGgZeqJS8YTn7xC8pbYiLWwyKeD+2y7t4uavxswWxKpI+GE53ICzylAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ya19SGyP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nNinsIMT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55BBA1F000E9;
-	Thu,  6 Aug 2026 05:04:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ya19SGyP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C630F1F000E9;
+	Thu,  6 Aug 2026 05:12:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785992667;
-	bh=orlhqB9RIlj+umpMXPNDPo/x5CnhrUG4fH7OflsucyI=;
+	s=k20260515; t=1785993155;
+	bh=vtnJbjtlFsTnhlZxh7hSJLxgw3p7weNWufTw8cKagKY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=nNinsIMTjxwdsjlgSbDydLu3Qf/iVnliXlbb/x9x+R0y9zG3vYBQn9ccYcf/4VJ2v
-	 fLQE9N8m5OGCRbM7tOkNRIcuAIrz1p4/nlm/k61fOcKF0gZTCXqdn+e33pl+PHkIY3
-	 mltAKFk8/4XDdPz3p+cEuSzYXBhxf3MBm/xwqHb1BV1EsOIsDR2zqoVzNRdfKNdCNz
-	 cP+Vg5IJc4uf0ZTX6n4rZKl74gujyYwoao3XHrSWnnv6SM6s2P/JQflR29doGlXRGq
-	 RUKG78+1Tecr6ei8m8VXQ2+ZYvXyee9VWVyqHjewXA2+TpW5gRUBq70CPMNRBmvzoF
-	 ul6PSoIxhHnHg==
-Date: Wed, 5 Aug 2026 22:04:25 -0700
+	b=Ya19SGyPoFkJUCSW5jxqJe55tUjP5fP5B4ukNTY1X/fRJFG+0qPzecLqIsvrwlanB
+	 p+y798VLMuVKzZX1WXA2sZJDiu2SO1L0HHS3j8fgOCdJ5R2OiWg+fmMUfPF7FMTnco
+	 ldkzae8l4HCvW3ABbx7vhc/tj54Rrrl7cMgLWCIvQdIXdpa1lG7poIZZABFyFDqnkf
+	 0V3B8IVBqkEiZjscQM8L/gjFCmXTQPo7qpwSqdq0EjNIJUlnVSU55GXIXtW05NyLHM
+	 bNbEIgaID3XN7vIJQCNlsU45rb72YZWxlOJhYxuO32QMC8o1S0Th+g0qZUrFxe66zP
+	 GjqNvqpIzAEPw==
+Date: Wed, 5 Aug 2026 22:12:33 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Aaron Tomlin <atomlin@atomlin.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, howardchu95@gmail.com, neelx@suse.com,
-	chjohnst@mail.com, sean@ashe.io, steve@abita.co,
-	rishil1999@outlook.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 0/4] perf sched latency: Refine outputs, unit scaling,
- and histogram support
-Message-ID: <anQV2fx7jhSzql_D@google.com>
-References: <20260805210751.287746-1-atomlin@atomlin.com>
+To: michael.niarchos@gmail.com
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] perf tools: Fix memory issues
+Message-ID: <anQXwT3fD5oZDWz0@google.com>
+References: <20260803-perf-kvm-fixes-v3-0-e06268ec06fa@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,20 +48,74 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260805210751.287746-1-atomlin@atomlin.com>
+In-Reply-To: <20260803-perf-kvm-fixes-v3-0-e06268ec06fa@gmail.com>
 
 Hello,
 
-On Wed, Aug 05, 2026 at 05:07:47PM -0400, Aaron Tomlin wrote:
-> Hi Namhyung, Ian, Arnaldo,
+On Mon, Aug 03, 2026 at 03:51:51PM +0200, Michalis Niarchos via B4 Relay wrote:
+> Running:
+>   $ perf kvm stat record -a sleep 10
 > 
-> This patch series improves 'perf sched latency' by suppressing misleading
-> empty table output, extending pipe mode stream processing, introducing
-> dynamic unit auto-scaling for latency and runtime statistics, and adding
-> latency histogram visualisation alongside time-span filtering.
+> gives this output:
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 1.361 MB perf.data.guest ]
+>   double free or corruption (!prev)
+> 
+> In the process of resolving this, I came across some memory leaks.
 
-Thanks for working on this.  But it doesn't apply unfortunately.
-Can you please rebase on to the current perf-tools-next?
+I think those issues are already fixed in the perf-tools-next.
+Can you please check the latest code?
 
 Thanks,
 Namhyung
+
+> 
+> Signed-off-by: Michalis Niarchos <michael.niarchos@gmail.com>
+> ---
+> Changes in v3:
+> - Moved dead code removal to the correct patch.
+> - Squashed double free patches, as both fix the same rec_argv
+>   double-free/leak pattern.
+> - Link to v2: https://patch.msgid.link/20260803-perf-kvm-fixes-v2-0-1b337189fffc@gmail.com
+> 
+> Changes in v2:
+> - Removed code block that was rendered dead by the
+>   get_filename_for_perf_kvm() change.
+> - Dropped invalid free() fix from kvm_events_report().
+> - Added double free fixes for: __cmd_record(), __cmd_report(),
+>   __cmd_buildid_list(), and __cmd_top(), which follow the same pattern
+>   as kvm_events_record().
+> - Link to v1: https://patch.msgid.link/20260803-perf-kvm-fixes-v1-0-a5db849ac973@gmail.com
+> 
+> To: Peter Zijlstra <peterz@infradead.org>
+> To: Ingo Molnar <mingo@redhat.com>
+> To: Arnaldo Carvalho de Melo <acme@kernel.org>
+> To: Namhyung Kim <namhyung@kernel.org>
+> To: Mark Rutland <mark.rutland@arm.com>
+> To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> To: Jiri Olsa <jolsa@kernel.org>
+> To: Ian Rogers <irogers@google.com>
+> To: Adrian Hunter <adrian.hunter@intel.com>
+> To: James Clark <james.clark@linaro.org>
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> ---
+> Michalis Niarchos (3):
+>       perf tools: Fix memory leak in cmd_kvm()
+>       perf tools: Fix double free and memory leak issues
+>       perf tools: Fix memory leak in cmd_kvm()
+> 
+>  tools/perf/builtin-kvm.c                         | 99 +++++++++++-------------
+>  tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c |  4 +-
+>  tools/perf/util/kvm-stat-arch/kvm-stat-x86.c     | 10 +--
+>  3 files changed, 50 insertions(+), 63 deletions(-)
+> ---
+> base-commit: a1ed064cb4db70af8c4177b3805ca5b8b0be567e
+> change-id: 20260731-perf-kvm-fixes-a17f0aa048ad
+> 
+> Best regards,
+> --  
+> Michalis Niarchos <michael.niarchos@gmail.com>
+> 
+> 
