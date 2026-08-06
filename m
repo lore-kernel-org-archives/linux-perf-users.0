@@ -1,45 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97309389DF0;
-	Thu,  6 Aug 2026 05:12:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BCE1A682C;
+	Thu,  6 Aug 2026 05:40:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785993156; cv=none; b=tkPp1BjX4haRySylMn0eIAlfJU5OHxsiKbMIHcQGOYlEG9yMutxNffCzzt3oedNonASEN4zJ1ZOW5Zo+jZI+5N2YYtrYuQwe8xtrxFBcgyVY3OkBOJO2Q9V3z5ifi8qNI6LPeDapB0PE8roUTX25LombsnYaJMZDGuEMwP5R27M=
+	t=1785994844; cv=none; b=qb2SdXlIWiXnL0UJAr+TJsublvOKR8DrmnNGJpT0s5aERuluekdrJAG9p5MiGLrLnF15SPW5CG5O5YJuCvTh0k3XWGZt6bKhk82snAUanKZNcdS1YGSC6CGpviuTyeCCZYxs7D1nj3suwermE8qKPu0jFN0DHY6NCXmk7QQmops=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785993156; c=relaxed/simple;
-	bh=d8Fm8peU8WooM9ToFjEpTedyeDzYHmhxbWPCUY8hbuI=;
+	s=arc-20240116; t=1785994844; c=relaxed/simple;
+	bh=WADd6vGeeU9OJNepBvcH1C6UnYUHjrAY//NLC6sgTTg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RnK9pjbQ51RZUTCDJKjgc7xvJoTlINYo9Y66Hu+qujKtAwOazYhi0g9IXwjI7b2gScfTV9GFWy9k+GQHrWQNJ8vaVXEKeYicj9XQl8iwd35uVyg2QfIfGgZeqJS8YTn7xC8pbYiLWwyKeD+2y7t4uavxswWxKpI+GE53ICzylAA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ya19SGyP; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=OT2yAFkrqalQqLm5smd/L/C3365Jn+TDZynWmnXeUTckA3m6xUxtKn5Ym/vgw56IDfGZvQ8mH1MuTjJigNwLOjwcUI1kEf/gn0HdqYakccg3eN13KXNmDxBBvLOlTTLcke6jIVX5orfMnwpSJ+3XsBXcQIucX9uI+IqLuv/5ys0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KrLFpZMM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ya19SGyP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C630F1F000E9;
-	Thu,  6 Aug 2026 05:12:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KrLFpZMM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CB291F000E9;
+	Thu,  6 Aug 2026 05:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785993155;
-	bh=vtnJbjtlFsTnhlZxh7hSJLxgw3p7weNWufTw8cKagKY=;
+	s=k20260515; t=1785994842;
+	bh=cFWJ5mmV9ugae6Hj18D13lBKr5wTHjHe+Y+Htr9wxws=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Ya19SGyPoFkJUCSW5jxqJe55tUjP5fP5B4ukNTY1X/fRJFG+0qPzecLqIsvrwlanB
-	 p+y798VLMuVKzZX1WXA2sZJDiu2SO1L0HHS3j8fgOCdJ5R2OiWg+fmMUfPF7FMTnco
-	 ldkzae8l4HCvW3ABbx7vhc/tj54Rrrl7cMgLWCIvQdIXdpa1lG7poIZZABFyFDqnkf
-	 0V3B8IVBqkEiZjscQM8L/gjFCmXTQPo7qpwSqdq0EjNIJUlnVSU55GXIXtW05NyLHM
-	 bNbEIgaID3XN7vIJQCNlsU45rb72YZWxlOJhYxuO32QMC8o1S0Th+g0qZUrFxe66zP
-	 GjqNvqpIzAEPw==
-Date: Wed, 5 Aug 2026 22:12:33 -0700
+	b=KrLFpZMM0el2EkDV0KE/i4gDrgYKwgVwYjnNIe+oHbhDE7HO3F7lF4WYqospuAgeS
+	 AblODgZnk0NKWOrVCkE9rFUQ/m2WZiin0/UF48zoOIfCZ6aqz2ng9bhFpdtk7jk/mU
+	 EH8SvDw/+cRRJ1LjdaxG16QBDY3KtVkgNatXCJa9VWstdSU/01oQNrBYp9vt3tyVQL
+	 SCgwx67PICU1ef6Yy4giJkfGv3nxhJC0jFZN5RatNNnG0kthAaeMlqK6+1Ex4FEUXu
+	 vjgfwt8DFbdQRXpxAVKckcWM14cZK0mkfEXt8bDmNvxZ5SvVODlj+uK4ViTH6EhaLl
+	 BH/Y0JOt0VP8w==
+Date: Wed, 5 Aug 2026 22:40:41 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: michael.niarchos@gmail.com
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] perf tools: Fix memory issues
-Message-ID: <anQXwT3fD5oZDWz0@google.com>
-References: <20260803-perf-kvm-fixes-v3-0-e06268ec06fa@gmail.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: PVS Narasimha Rao <venkatasuryapala@gmail.com>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf test sample-parsing: Validate PERF_FORMAT_GROUP
+ values without LOST
+Message-ID: <anQeWZD8J-gHMt_3@google.com>
+References: <20260725084704.15463-1-venkatasuryapala@gmail.com>
+ <20260725085651.648B11F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,74 +44,95 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260803-perf-kvm-fixes-v3-0-e06268ec06fa@gmail.com>
+In-Reply-To: <20260725085651.648B11F00A3A@smtp.kernel.org>
 
 Hello,
 
-On Mon, Aug 03, 2026 at 03:51:51PM +0200, Michalis Niarchos via B4 Relay wrote:
-> Running:
->   $ perf kvm stat record -a sleep 10
+On Sat, Jul 25, 2026 at 08:56:50AM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
 > 
-> gives this output:
->   [ perf record: Woken up 1 times to write data ]
->   [ perf record: Captured and wrote 1.361 MB perf.data.guest ]
->   double free or corruption (!prev)
+> Pre-existing issues:
+> - [Medium] The test setup for grouped reads without PERF_FORMAT_LOST validates garbage data because it provides a standard C array of structs rather than a tightly packed buffer.
+> --
 > 
-> In the process of resolving this, I came across some memory leaks.
+> --- Patch [1]: [PATCH] perf test sample-parsing: Validate PERF_FORMAT_GROUP values without LOST ---
+> commit 803c0b64d4e8c311df29991bbbdd74726b85a1dd
+> Author: PVS Narasimha Rao <venkatasuryapala@gmail.com>
+> 
+> perf test sample-parsing: Validate PERF_FORMAT_GROUP values without LOST
+> 
+> This patch updates the sample parsing test to validate the value and id
+> fields in grouped reads even when PERF_FORMAT_LOST is absent. It uses
+> next_sample_read_value() to properly navigate the variable-sized group
+> entries during validation.
+> 
+> > diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
+> > index 55f0b73ca20e0..e44b01e5cd14c 100644
+> > --- a/tools/perf/tests/sample-parsing.c
+> > +++ b/tools/perf/tests/sample-parsing.c
+> [ ... ]
+> > @@ -86,10 +86,27 @@ static bool samples_same(struct perf_sample *s1,
+> >  			COMP(read.time_running);
+> >  		/* PERF_FORMAT_ID is forced for PERF_SAMPLE_READ */
+> >  		if (read_format & PERF_FORMAT_GROUP) {
+> > +			struct sample_read_value *v1 = s1->read.group.values;
+> > +			struct sample_read_value *v2 = s2->read.group.values;
+> > +
+> >  			for (i = 0; i < s1->read.group.nr; i++) {
+> > -				/* FIXME: check values without LOST */
+> > -				if (read_format & PERF_FORMAT_LOST)
+> > -					MCOMP(read.group.values[i]);
+> > +				if (v1->value != v2->value) {
+> > +					pr_debug("Samples differ at 'read.group.values[].value'\n");
+> > +					return false;
+> > +				}
+> > +
+> > +				if (v1->id != v2->id) {
+> > +					pr_debug("Samples differ at 'read.group.values[].id'\n");
+> > +					return false;
+> > +				}
+> > +
+> > +				if (read_format & PERF_FORMAT_LOST &&
+> > +				    v1->lost != v2->lost) {
+> > +					pr_debug("Samples differ at 'read.group.values[].lost'\n");
+> > +					return false;
+> > +				}
+> > +				v1 = next_sample_read_value(v1, read_format);
+> > +				v2 = next_sample_read_value(v2, read_format);
+> 
+> [Severity: Medium]
+> This is a pre-existing issue, but does using next_sample_read_value() here
+> inadvertently cause the test to assert equality on misaligned garbage data
+> when PERF_FORMAT_LOST is omitted?
+> 
+> Looking at do_test(), the original sample is initialized with a standard C
+> array of struct sample_read_value:
+> 
+> tools/perf/tests/sample-parsing.c:do_test() {
+>     ...
+>     struct sample_read_value values[] = {{1, 5, 0}, {9, 3, 0}, {2, 7, 0}, {6, 4, 1},};
+>     ...
+>     if (read_format & PERF_FORMAT_GROUP) {
+>         sample.read.group.nr     = 4;
+>         sample.read.group.values = values;
+>     }
+>     ...
+> }
+> 
+> Since this array always has a 24-byte stride, but next_sample_read_value()
+> advances by a 16-byte stride when PERF_FORMAT_LOST is absent, both the
+> synthesizer and this validation loop end up reading overlapping memory
+> instead of the actual struct fields.
+> 
+> Could the test setup be updated to provide a tightly packed buffer so that
+> we validate the actual fields rather than falsely passing on identical
+> misaligned reads?
 
-I think those issues are already fixed in the perf-tools-next.
-Can you please check the latest code?
+I think it's a valid issue and it seems there's a bug in the
+perf_event__synthesize_sample().  The input values contain the lost
+field regardless of the read format.  So it should skip the field
+carefully.
 
 Thanks,
 Namhyung
 
-> 
-> Signed-off-by: Michalis Niarchos <michael.niarchos@gmail.com>
-> ---
-> Changes in v3:
-> - Moved dead code removal to the correct patch.
-> - Squashed double free patches, as both fix the same rec_argv
->   double-free/leak pattern.
-> - Link to v2: https://patch.msgid.link/20260803-perf-kvm-fixes-v2-0-1b337189fffc@gmail.com
-> 
-> Changes in v2:
-> - Removed code block that was rendered dead by the
->   get_filename_for_perf_kvm() change.
-> - Dropped invalid free() fix from kvm_events_report().
-> - Added double free fixes for: __cmd_record(), __cmd_report(),
->   __cmd_buildid_list(), and __cmd_top(), which follow the same pattern
->   as kvm_events_record().
-> - Link to v1: https://patch.msgid.link/20260803-perf-kvm-fixes-v1-0-a5db849ac973@gmail.com
-> 
-> To: Peter Zijlstra <peterz@infradead.org>
-> To: Ingo Molnar <mingo@redhat.com>
-> To: Arnaldo Carvalho de Melo <acme@kernel.org>
-> To: Namhyung Kim <namhyung@kernel.org>
-> To: Mark Rutland <mark.rutland@arm.com>
-> To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> To: Jiri Olsa <jolsa@kernel.org>
-> To: Ian Rogers <irogers@google.com>
-> To: Adrian Hunter <adrian.hunter@intel.com>
-> To: James Clark <james.clark@linaro.org>
-> Cc: linux-perf-users@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> 
-> ---
-> Michalis Niarchos (3):
->       perf tools: Fix memory leak in cmd_kvm()
->       perf tools: Fix double free and memory leak issues
->       perf tools: Fix memory leak in cmd_kvm()
-> 
->  tools/perf/builtin-kvm.c                         | 99 +++++++++++-------------
->  tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c |  4 +-
->  tools/perf/util/kvm-stat-arch/kvm-stat-x86.c     | 10 +--
->  3 files changed, 50 insertions(+), 63 deletions(-)
-> ---
-> base-commit: a1ed064cb4db70af8c4177b3805ca5b8b0be567e
-> change-id: 20260731-perf-kvm-fixes-a17f0aa048ad
-> 
-> Best regards,
-> --  
-> Michalis Niarchos <michael.niarchos@gmail.com>
-> 
-> 
