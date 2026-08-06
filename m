@@ -1,260 +1,146 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11010034.outbound.protection.outlook.com [52.101.193.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3FB3432305;
-	Thu,  6 Aug 2026 09:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786008017; cv=none; b=LyyirSfeN+kxIJS4iNrFkIxWZLWxyku5vlrtKJvO70bRcHYDoxFYXsFsCmg3jSOrK/xT2AAV/TnnCSCNtB1eVG2MrOLMXjJifEc8b44mHtKq0dlu3zSNT8nZlcplPj4GZmPsj8mkmc8+28qvMrQD+1l/hgod6QkRJ/BvPzvtUwU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786008017; c=relaxed/simple;
-	bh=HXAy9pagBUBNMEPp1P9vhv+dr4lTC6jQPcqa97RCplY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fhjn/1zlc68dylsGDtrOpAfG/WukVduWulrCjHCef7rv0PdotvEmRdvXErsEAaNdOHfzG3nlh7702qjvAjmYrBxL7LsOFglufNJRGl/mWLcVaG2RMEgAaROO0efOqVcJD7fsRkXjis3pQy9pp/W7DmhphAJ3CwdySXPUIuYLRRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=tFQbe9p+; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D126C42B73F;
+	Thu,  6 Aug 2026 10:16:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.34
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786011388; cv=fail; b=o40Wg6qmyu9elOc4OUaNEu7ioQjJgXKr7xBuoDkocEaUz0aILtq4mFD+3kEkaJqBW4j5yoqs9L1NIcZzRlNiI1a+pLLTBJVfdE4wxxYDnP3e8eRgNo0LZB540IXPCZoifsFJLHsSzvsBpox5XWYMfxuIpXfiwskPnSc+FiZd+s4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786011388; c=relaxed/simple;
+	bh=7nATPM/FgNbDRgz1TFWlFklMQq0ZYiiV2njax2+oMu0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lz866Yl88aqfZYJB6+m/9firzseelrcCtpqB4ZEbTAVeqg+C1CVBW5WPhXS6JgbcbdI9iNlRMzrNA5LOcMOLyNOobFE7GKONA5I2vAL5TfEr3Rqpz8VDggvNzHCqH/osw+Lfy2DRb8qU5EWQvpdfQ4PKkOemRWnRfL0EHMiI6ig=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=ZRSQgcaU; arc=fail smtp.client-ip=52.101.193.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="tFQbe9p+"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 675NmBgq3404367;
-	Thu, 6 Aug 2026 09:20:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=t+FPok
-	Ke21Lx+DelgigbPE/tIAnMsIbHR8ywdhZCCOU=; b=tFQbe9p+vW4fc3HmemWyfa
-	eyb8hr1T38GO0GZCWUpX7AGzQjSyQIH+Cn6oBmI854EiDQNZmQ7BWUh4bX0VOVVp
-	DDzx9ErbOlP7MS7pgpq7x5LNXl0nckPqfNjVcMoskjWXFt979eei2S1gJSZeK255
-	PGks6WdMAkrTc0+WdTdFLNQHXu8zODaeqpO6BlwaLPbhVLN3BsSJCd0AoLSrUfy/
-	D+Y3ZOV/SiAateJ6P8lgcOIc4vYcgGikRQOUYBp0pG5ARnY3hrJt59fJT/7lSGo/
-	qGBYq/pjyVPlKR4kvhfGw0HKMRQJCWwuq36RbwwsK7wU4CgcAWSm+kVYfZFcN4wQ
-	==
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fs8fqy9kn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Aug 2026 09:20:12 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6769BFc5030472;
-	Thu, 6 Aug 2026 09:20:11 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fsu4qtntu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 06 Aug 2026 09:20:11 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6769KAng56885748
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 6 Aug 2026 09:20:11 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9BB3D58064;
-	Thu,  6 Aug 2026 09:20:10 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6399258057;
-	Thu,  6 Aug 2026 09:20:09 +0000 (GMT)
-Received: from [9.123.15.94] (unknown [9.123.15.94])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Thu,  6 Aug 2026 09:20:09 +0000 (GMT)
-Message-ID: <e47fe37d-b28f-43c1-bd91-4904ec74bc53@linux.ibm.com>
-Date: Thu, 6 Aug 2026 14:50:07 +0530
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="ZRSQgcaU"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=I6s1aTE7LYzgoZL2ynNtlIhnwv/wJVPVst9O8kPCEMrjvMXeyjdajB0jQ+AsuaahQata3SJeTn2nNAjXhMUx0njtYLrdsFsqmUapLnRPNTz+T4QecxJiBOzM+gtqw2mlQG9/WTCPGfIJczlHBWOCz1Kn6zRLQ3txtuMliAEMrxrn1Vkm8xa+FtOEG+AFrL15NT4sUT/kOQB6g8+UTX4P+1fahgV/cabjhE6XqhpjwLdEgfNu885IrvcJhsv9ssby09VnvnR3ckSMEnvj5b7w7RAjnsYVm6iZlIbntk7HBbZL5Ju1003WCvuJ7oF22UwHaMb62T5fxIDLxNwj0AB0FA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=qIIFM5u4E8rUcw1IgBF+57n2mS7mptcnwhiF66PAOEE=;
+ b=GVqKOICqRKo46Kq3EVZ493Tj0WrRfQO/bo3koj7neWAkMYb9BObX2O1sK3vIN+PJaLeEm8zEgjqjrNDI4HQRECJn0hgMxZPca44hLUurPQ3QDLgYfNKL8xYAsz4NTuEw0bo3plrOvjy0dGQmrPCrm4FwWGFwHC4w+jb0OAnR/tVNX3sBsMdICM4hKOZet3lVw3VjmYHpJ59V/ZC4BXzmmYqq8hvq4+alyE/9752Cem05BRal8JVkOViAOl2seTN28uSzezl0ONKuQDmgHnqSJU03hsooC7H2T9NUxsaspYLQnvQZg7P8dv3rI+JzsUJla7o5cUpQMAXAH0oAIusNSg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qIIFM5u4E8rUcw1IgBF+57n2mS7mptcnwhiF66PAOEE=;
+ b=ZRSQgcaUF7oaXYZKQHHHXkrpkyvItEGBqBdActS91/V0jAjZrjM6oBq7bFaU/fcuL349Dw8YFBB2c68lcs88cJgIyizzRB9op0lhoZCHRFzZg7+wZS0XBnuEP320ielbDtDl4aSvNPgHcm1t8oEPz3kB0ir6zyDNxf8h25MU/IM=
+Received: from CH0PR03CA0064.namprd03.prod.outlook.com (2603:10b6:610:cc::9)
+ by CYYPR12MB9016.namprd12.prod.outlook.com (2603:10b6:930:c4::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.20; Thu, 6 Aug
+ 2026 10:16:20 +0000
+Received: from CH3PEPF0000000C.namprd04.prod.outlook.com
+ (2603:10b6:610:cc:cafe::4c) by CH0PR03CA0064.outlook.office365.com
+ (2603:10b6:610:cc::9) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.292.21 via Frontend Transport; Thu, 6
+ Aug 2026 10:16:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CH3PEPF0000000C.mail.protection.outlook.com (10.167.244.39) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.315.6 via Frontend Transport; Thu, 6 Aug 2026 10:16:19 +0000
+Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 6 Aug
+ 2026 05:16:16 -0500
+Received: from sindhu.amdval.net (10.180.168.240) by satlexmb10.amd.com
+ (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.41; Thu, 6 Aug
+ 2026 05:04:16 -0500
+From: Sandipan Das <sandipan.das@amd.com>
+To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
+ Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Petr Tesarik
+	<ptesarik@suse.com>, Ravi Bangoria <ravi.bangoria@amd.com>, Ananth Narayan
+	<ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>
+Subject: [PATCH 0/3] perf/x86: Fix perf_event_print_debug() on non-Intel PMUs
+Date: Thu, 6 Aug 2026 15:33:25 +0530
+Message-ID: <cover.1786010408.git.sandipan.das@amd.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 5/5] perf test: Add test validating trace.dat
- generated by 'perf data convert --to-trace-dat'
-To: Ian Rogers <irogers@google.com>, sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260803145958.299956-1-tshah@linux.ibm.com>
- <20260803145958.299956-6-tshah@linux.ibm.com>
- <20260803151949.4AE511F000E9@smtp.kernel.org>
- <CAP-5=fXdA1YvAoqp61DddxsW4VwjJdmULYOqxk_2e-UAA=E_sA@mail.gmail.com>
-Content-Language: en-US
-From: Tanushree Shah <tshah@linux.ibm.com>
-In-Reply-To: <CAP-5=fXdA1YvAoqp61DddxsW4VwjJdmULYOqxk_2e-UAA=E_sA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Proofpoint-GUID: 7RNnnCyFeJaKr0YiuBjnFVF9Xg4nqWuK
-X-Proofpoint-ORIG-GUID: C8QugMwdvRbChQSC0Lfr2dhjhEhA4iNI
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODA2MDA3MiBTYWx0ZWRfX5jsqv0wmhzVV
- JmegSrb8VYHNZl3mcTTqMhT5v6DC4+cRgerfzW2KhyFZwR7Srk6XVd58Y+4CvuFHViGeJY/+okn
- uo3HsErZXxraNQl+8/D66L5+5Qb0o/k=
-X-Authority-Analysis: v=2.4 cv=K8cS2SWI c=1 sm=1 tr=0 ts=6a7451cc cx=c_pps
- a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17
- a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=c92rfblmAAAA:8
- a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=i4BSLHE9Bb6Zsit8ZBoA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=GvGzcOZaWPEFPQC_NcjD:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA2MDA3MiBTYWx0ZWRfXy3mSueq0xOdf
- wOcU6y/jHs002o0M60eCRZ1vU3KEvgk5IQXvK0oDKxHHw+skw0JH+0PVVl6aK+RgaI/9FnLVS/o
- LK/+UM9+eE4Pj/5k0KNFIsZtU7asBkQv8vqUmyWVusmGBr++uGU35O8bq1UjXX9D6ZqUbHJHgtL
- Ij9ckQBwiZqnGzpp7pVoO1cvIvTqrKj7Ju5n1Nrr5mR5teXkfhyt+C2S7NmKoO7vj6+LPEPGQA4
- XQNGz+uVd1MXkkVzo3Sg90pfygRc2HIzgavYYmeU66AQtKJRnqbas6qy173mx49wjcHtvw0ahPm
- H9RJMxFq1oB1sM5kbLuf4sPm4+hfDOePBsgD4uV6zYl0YEuE7xaQhh1sfMT4SPTeHJ9MCtS5sTQ
- WWhoBqceM9445s6W11PP++oVXs7sildB9NxVaYm7h3dSvObZgdIcQKul2k0vIDu1cn3A763z3fu
- 8F+ofOV45UqClMluARw==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-05_06,2026-08-05_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 spamscore=0 impostorscore=0 bulkscore=0 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 phishscore=0 suspectscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608060072
+Content-Type: text/plain
+X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb10.amd.com
+ (10.181.42.219)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PEPF0000000C:EE_|CYYPR12MB9016:EE_
+X-MS-Office365-Filtering-Correlation-Id: c9c16e7f-d59d-4d73-153a-08def3a3c24b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|36860700016|82310400026|1800799024|23010399003|11063799006|10067099003|56012099006|6133799003|13003099007|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	K2pssQR0OhdD5xEgWI2UqYGRN3KNLHUQKAiDkNVrtmG0gsGJaCjjj4HV/IxBdry92JtJBuU1fTh+R0iVmqoHoObuJ61Wj1yKlmIdCRJ6ue5LBMKxTsysJKspv2hZGdiXTXTC7rVLGIxTSakSbjNgMIsrUz6zNTZlydMK8cLvtXtao1KTrhqRv6va7vW8JN6j/aIG4ZltemIgPU859br3RFJBa+3w61tUZAqBgKQoSaBsFB5axKZved1vqRV3BEmVEa4YN/FVK0P939F0lth4+4yuGjKHK1Psgli2/2qGI70X6FJ8PU2z87Ii3n9Rsv/ODHUvlkamH7f6JvlHVP7AyiIiA89BvDEJZzF6hDCDnhgHlBltN4uDTtyKPxt6N1W0ocM70F7RK2ei5lk8jlw9F8Rt2WmlM/PtHeIDgfgSmKKqG05RDWlT/lQ0rzAKco3zpkxMLtpKxtg9ipPmvB25vNknKBJ2rzi1LLEPp4PgnpXy0vMrZqjbMCQ38CZ5c+XBme6qNcSPqaWFhI0eryr9Fy3t2znIdqccWhIo9/OdUPfksv8Ol7OjHDIvXdRXGu8OENdFtPao4mJaidg/nJVpXgosQouAYBoe0QzgRXIPiZAUmrO/zHcjLSECgneNsQqAJ0mUt+QCI7OcfrJdfWlyVgDJcdj7XncXvVlOFSq61wa9+84Gy4t36wUkM+e6BfCiXUTE4ViZxxlIEkXmjJCwPQ==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700016)(82310400026)(1800799024)(23010399003)(11063799006)(10067099003)(56012099006)(6133799003)(13003099007)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	kJTgBp530835ckySS4v+GFLPE/q2BmY7OxSZU02qNzvRzciIKveUzNeykagNqAOCR2tN9mR6bqjNkLIpB7hYYhxI4rBZzUBrK3ddfb5ciK9jSyt2anbGFmazU6jxQRzKDmAMUSip6TEwJzGMD1wxFV/dMJrXr1ruNiGKFKQHHUmLKzDHhktIBVIW7wmTy0wrZfTA8Vy/fYBpgjbtCWmkQnPFt7DDku1uU5uewOVy09+gV9IQBTguYKh4z5DcocvM7/fZ55nUhNMfc+aecBGl5YhyMBdv9wZyRj730UrroBNWL/vtQVVq05SVE0WsTIj7aenNxjhEDbB3YaS3ZsJEqivV647AiIu8d3OV5fFpOFFRkbV1y9s2/EnWuONHaCgSG+Oe+gFBKMpyHIrdwVs7jutVpOdZSjcLeeoFd2I3nlCkTAbHKUREfqDj69+O4a6N
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2026 10:16:19.7698
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c9c16e7f-d59d-4d73-153a-08def3a3c24b
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH3PEPF0000000C.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB9016
 
+Petr Tesarik reported that reading MSR_ARCH_PERFMON_FIXED_CTR_CTRL
+raises a #GP on AMD processors that support PerfMonV2, and proposed
+skipping that register when no fixed counters are implemented [1].
 
+However, perf_event_print_debug() also dumps the global control and
+status registers whenever x86_pmu.version >= 2, and reads Intel
+Architectural PerfMon MSRs to do so. That condition used to be
+Intel-specific, but since commit 21d59e3e2c40 ("perf/x86/amd/core:
+Detect PerfMonV2 support"), x86_pmu.version is also set to 2 on AMD
+processors that support PerfMonV2, where none of those registers are
+available.
 
-On 06/08/26 05:45, Ian Rogers wrote:
-> On Mon, Aug 3, 2026 at 9:50 AM <sashiko-bot@kernel.org> wrote:
->>
->> Thank you for your contribution! Sashiko AI review found 5 potential issue(s) to consider:
->> - [High] Deleting a securely created temporary file and reusing its path creates a race condition vulnerable to symlink attacks.
->> - [Medium] The exit trap incorrectly overrides intentional test skips (exit code 2), converting them into test failures (exit code 1).
->> - [Medium] Hardcoding the 'cycles' hardware PMU event leads to brittle, spurious test failures on environments without hardware performance counters.
->> - [Low] Stale output file verification due to incorrect cleanup ordering on error paths.
->> - [Low] A temporary file may be leaked if a subsequent initialization step fails before the cleanup trap is registered.
->> --
->>
->> --- Patch [5]: [RFC PATCH v3 5/5] perf test: Add test validating trace.dat generated by 'perf data convert --to-trace-dat' ---
->> commit d717cd6622789cb3b2cd038490f59972dc4015dd
->> Author: Tanushree Shah <tshah@linux.ibm.com>
->>
->> perf test: Add test validating trace.dat generated by 'perf data convert --to-trace-dat'
->>
->> Add a shell test covering perf data convert --to-trace-dat,
->> alongside the existing --to-json and --to-ctf tests.
->>
->>> diff --git a/tools/perf/tests/shell/test_perf_data_converter_tracepoints_trace_dat.sh b/tools/perf/tests/shell/test_perf_data_converter_tracepoints_trace_dat.sh
->>> new file mode 100755
->>> index 0000000000000..9ca6432618cb2
->>> --- /dev/null
->>> +++ b/tools/perf/tests/shell/test_perf_data_converter_tracepoints_trace_dat.sh
->>> @@ -0,0 +1,169 @@
->>> +#!/bin/bash
->>
->> [ ... ]
->>
->>> +perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->>> +result=$(mktemp /tmp/__perf_test.output.trace.dat.XXXXX)
->>
->> [Severity: Low]
->> Could a temporary file be leaked if an early initialization step fails?
->>
->> If the second mktemp fails, the script will exit immediately due to 'set -e'.
->> Since the trap is not yet registered, the first temporary file allocated for
->> $perfdata wouldn't be cleaned up.
->>
->> [ ... ]
->>
->>> +trap_cleanup()
->>> +{
->>> +     echo "Unexpected signal in ${FUNCNAME[1]}"
->>> +     cleanup
->>> +     exit 1
->>> +}
->>> +trap trap_cleanup exit term int
->>
->> [Severity: Medium]
->> Does this trap handler unintentionally override test skips?
->>
->> When the script explicitly executes 'exit 2' for a skip condition (like
->> missing libtraceevent), the EXIT trap is still active. This handler then
->> executes 'exit 1', which converts the skip into a spurious test failure.
->>
->> [ ... ]
->>
->>> +test_trace_converter_command()
->>> +{
->>> +     echo "Testing Perf Data Conversion Command to trace.dat"
->>> +
->>> +     if ! perf record -e sched:sched_switch -o "$perfdata" -- sleep 0.1
->>> +     then
->>> +             echo "Failed to record perf data"
->>> +             err=1
->>> +             return
->>> +     fi
->>> +
->>> +     rm -f "$result"
->>
->> [Severity: High]
->> Does removing the securely created file path here open a symlink race
->> condition?
->>
->> The script uses mktemp to securely allocate the path for $result, but deletes
->> it before passing it to the converter with the --force flag. This leaves
->> a time window where a predictably named path is free. If run as root, this
->> could potentially be replaced with a symlink, allowing an arbitrary file
->> overwrite.
->>
->> [ ... ]
->>
->>> +test_trace_converter_pipe()
->>> +{
->>> +     echo "Testing Perf Data Conversion Command to trace.dat (Pipe mode)"
->>> +
->>> +     rm -f "$result"
->>
->> [Severity: High]
->> This test mode appears to have the same symlink race condition as above,
->> since the securely allocated temporary file is removed prior to use.
->>
->> [ ... ]
->>
->>> +test_trace_converter_mixed_events()
->>> +{
->>> +     echo "Testing Perf Data Conversion with tracepoint and non-tracepoint events"
->>> +
->>> +     # Record both tracepoint and non-tracepoint events
->>> +     if ! perf record -e sched:sched_switch,cycles -o "$perfdata" -- sleep 0.1
->>
->> [Severity: Medium]
->> Could hardcoding the 'cycles' hardware PMU event cause spurious test failures
->> on restricted environments?
->>
->> If the hardware 'cycles' event fails to open on virtual machines or
->> unprivileged containers, perf record will return an error and fail the test
->> step instead of skipping it or falling back to a software event.
-> 
-> As the `perf record` lacks the `-a` flag this will just record events
-> for the sleep command and the number of cycles there will be limited.
-> I'd suggest making this:
-> perf record -e sched:sched_switch,cpu-clock -a -o "$perfdata" -- sleep 0.1
-> The cpu-clock is a perf event based on a timer interrupt and should
-> always exist whether the system be an S390 or a limited system such as
-> running in a hypervisor.
-> 
-> Thanks,
-> Ian
-> 
-Thanks Ian for the suggestion, It makes sense. I will change the command 
-to "perf record -e sched:sched_switch,cpu-clock -a -o "$perfdata" -- 
-sleep 0.1".
+The same reasoning therefore applies to the other registers read here,
+so rather than special-casing each one or reinstating a vendor check,
+this series makes the global register dump a vendor-specific operation.
 
-Thanks
-Tanushree Shah
+[1] https://lore.kernel.org/all/20260717150315.2868314-1-ptesarik@suse.com/
 
->>> +     then
->>> +             echo "Failed to record perf data (mixed events)"
->>> +             err=1
->>> +             return
->>> +     fi
->>> +
->>> +     rm -f "$result"
->>
->> [Severity: Low]
->> Does this cleanup ordering leave stale data available for validation on error
->> paths?
->>
->> If the 'perf record' command above fails, it returns early before this file
->> is removed. When validate_trace_format() is later called in the global flow,
->> it will check the $result file left over from the preceding
->> test_trace_converter_pipe() execution, which might erroneously report success
->> for a failed command.
->>
->> --
->> Sashiko AI review · https://sashiko.dev/#/patchset/20260803145958.299956-1-tshah@linux.ibm.com?part=5
->>
+Sandipan Das (3):
+  perf/x86: Add x86_pmu::print_debug
+  perf/x86: Move MSR_CORE_PERF_GLOBAL_* dump to vendor code
+  perf/x86/amd: Implement x86_pmu::print_debug
+
+ arch/x86/events/amd/core.c     | 20 ++++++++++++
+ arch/x86/events/core.c         | 56 +++++++++++++++-------------------
+ arch/x86/events/intel/core.c   | 32 +++++++++++++++++++
+ arch/x86/events/perf_event.h   |  4 +++
+ arch/x86/events/zhaoxin/core.c | 18 +++++++++++
+ 5 files changed, 98 insertions(+), 32 deletions(-)
+
+-- 
+2.53.0
 
