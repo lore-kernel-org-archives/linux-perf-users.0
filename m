@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 823582BEFFD
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Aug 2026 12:51:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D312BE056
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Aug 2026 12:52:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786020718; cv=none; b=T59GDwnMAt/8V2BMbtbQKI4vyowZkg9S82Im0mHrrc3WjSftM4XKd2cb1tl/1ohRmVo8kNPF15MmvILztCBP/cR0QjtGK3DfMjxcFR1oCM2an/P6DKLuo9U+awlLHLHF8TcLmcq9IUSrYGM/yfeKU0PBvgx3DjENsOOPispVYO0=
+	t=1786020724; cv=none; b=skjaq2gtGedh9LPLOpo6oiEMugnNiaqs/MBLGEKdYrHnUf7BT3CdD8yBoU2LoJFgPUVkpX/VVCibOCsAHBin3Pvl2vDbrhjZmqPKkq7TcDVi8oWnz67bNLALyS+5ydLn+T75cwo84hR3d9XDTzzkvDQ3bFAWpVFm7e80MBIiTSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786020718; c=relaxed/simple;
-	bh=U0ISrlnkLYZSpXq3zlpn3quSG+b3EOIlTcGDqm9brHQ=;
+	s=arc-20240116; t=1786020724; c=relaxed/simple;
+	bh=l0rD98BGGD8J1NLoO4ZGXPa25t7t6+TSaUl0i6NhdFw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=XNRsoZaE5L80aw+qRXVbMUOYzTCAFnv58gJh1hfVQdG/CSvm+7TRbQCsM8iV4aG4rxSIsyPAfFpjs7Uo3+UqwuhK3jXfXXphZLxpVNDiDMg7/cG/xOBvc3jtiXJEwHgSMfruzyV52IUPCvYZxTsZqVd/Zz1Dv2pMna8YbYl4Xl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHuGm9gC; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=s2mDQFlVKocROURhG25RD9kvBMUeRph7ls/maTNLsnY+f8hPya/C807Fnw+DXlOhmx/PPCihBKxs6j/+AoHev4iMFttEYTPxtUhhaMsHVkSz4OlJIuQmokCOJW6bsEPqf+0i82yzuO5pLbLbm3i9FFV/53ndWm49vYuShQBAsJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1MnH2zX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHuGm9gC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADDF61F00A3A;
-	Thu,  6 Aug 2026 12:51:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1MnH2zX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D5E01F000E9;
+	Thu,  6 Aug 2026 12:52:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786020716;
-	bh=edYVU5gjANlEEy1D/VocrwExBWp/WfSsU9AxiO4XVHk=;
+	s=k20260515; t=1786020723;
+	bh=YerniM0z7J8LG9rfvHyUBs/GW9igFUvR0HLSYO7pqyg=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UHuGm9gCXTz3jOT29kbEB9fHqXnW3iDRSXwS2/8yofIWqiQDu15fJ2CHJnCNtC1DT
-	 SrjmdyTLJXRAXYmJbyN9GOuL4urnEnbxcH0j0njku7I6vCuJcAsuzE30JUnpGQuNWy
-	 BHiVNXE23cbzP8LA7W8QrUc/CzSqygLQJw1wX6C8N5Borzf3haK/pbL94ANYBUMazE
-	 sSQTUYt7GGUPJHPr0KTjOf3vgOiu+R6RRzLMm48viu5pFa2Tn46bV4eYcTRvWqSEx2
-	 ayZQlB/DMuJvyBRHJbF5PKPDUnTMaj7zSmsAVAUgNLCzINAayBsaHAni86Rq40Sykj
-	 R/4iXWFrYYrTg==
+	b=H1MnH2zXE6WW8aQm+yP5js2UOOwwi/CREwJ25Jbh1EINlWa0c3phFZ3AxaawhEBtj
+	 GXYGp/61e40W4LavB6csYc4mplsJPJSkj/U9wWrapSln5EjdLjK81/4qdvSP3Gh1eA
+	 zzPTGcQtyxtyucXCnXWeQWBxPCLKAF+BsPR/1m+zl32YP+4VISdZKVSqAyDcdMCOLm
+	 kkcIR4HuYb2sf2KlKrBCQR03oRXKbIg4fu94+PK1BIkPVTQVX5RIwt/Ooaa7Aviv1r
+	 ZMQVWMc6UpXn1SRz0hoOZFk16o/aLlAvoBWZVY5XM4+MRnaGAOPuZknXngKyq9Z4ix
+	 dToZfhnoNJbYw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 05/12] perf jitdump: Bounds-check debug entry byte-swap
- loop
+Subject: Re: [PATCH 02/12] perf jitdump: Fix debug_data and unwinding_data
+ leaks
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260806123604.271277-6-acme@kernel.org>
+In-Reply-To: <20260806123604.271277-3-acme@kernel.org>
 References: <20260806123604.271277-1-acme@kernel.org>
- <20260806123604.271277-6-acme@kernel.org>
+ <20260806123604.271277-3-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 06 Aug 2026 12:51:56 +0000
-Message-Id: <20260806125156.ADDF61F00A3A@smtp.kernel.org>
+Date: Thu, 06 Aug 2026 12:52:02 +0000
+Message-Id: <20260806125203.3D5E01F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,201 +48,181 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Thank you for your contribution! Sashiko AI review found 5 potential issue(=
 s) to consider:
 
-New issues:
-- [Medium] Replacing array indexing with sequential pointer arithmetic (`de=
-bug_entry_next`) on unpadded, variable-length structures results in unalign=
-ed struct pointers, causing undefined behavior and SIGBUS crashes on strict=
--alignment architectures.
-
 Pre-existing issues:
-- [Critical] The newly added bounds checking and `nr_entry` clamping for `J=
-IT_CODE_DEBUG_INFO` records are scoped exclusively inside the `if (jd->need=
-s_bswap)` block, leaving native-endian files completely vulnerable to a mas=
-sive heap buffer overflow.
-- [High] Missing validation of `unwinding_size` against `unwinding_data_siz=
-e` in `JIT_CODE_UNWINDING_INFO` leads to an out-of-bounds read during ELF g=
-eneration.
-- [Medium] The `event` buffer is leaked on all return paths in `jit_repipe_=
-code_move()`.
-- [Medium] `jit_repipe_code_move` fails to validate that the record's `tota=
-l_size` is large enough to contain the `jr_code_move` payload, leading to t=
-he processing of uninitialized memory.
+- [Critical] The `csize` value from the untrusted JIT dump file is not vali=
+dated against `total_size`, allowing an integer underflow that leads to a m=
+assive out-of-bounds heap read and information leak.
+- [Critical] Output `.so` files are opened without `O_EXCL` and `O_NOFOLLOW=
+` in a potentially attacker-controlled directory, allowing a symlink attack=
+ to overwrite arbitrary files.
+- [High] Code load events fail to consume and free `unwinding_data` and `de=
+bug_data` if their respective auxiliary sizes or counts are zero, leading t=
+o state contamination.
+- [High] Calling `funlockfile()` without a preceding `flockfile()` on the `=
+malloc()` error path causes undefined behavior.
+- [High] Missing bounds check on the JIT record `total_size` before accessi=
+ng the `sym` string pointer causes an out-of-bounds string read.
 --
 
---- Patch [5]: [PATCH 05/12] perf jitdump: Bounds-check debug entry byte-sw=
-ap loop ---
-commit 14beafbf2609e41d04f4020f064d84fdbb15c5a7
+--- Patch [2]: [PATCH 02/12] perf jitdump: Fix debug_data and unwinding_dat=
+a leaks ---
+commit e7687575b20ca5df1e7780e1c7b436a5bc7d2f8c
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf jitdump: Bounds-check debug entry byte-swap loop
+perf jitdump: Fix debug_data and unwinding_data leaks
    =20
-This commit replaces array indexing with pointer arithmetic and adds bounds
-checking for JIT_CODE_DEBUG_INFO records during byte-swapping to prevent
-out-of-bounds reads.
+This commit fixes memory leaks in jit_repipe_debug_info() and jit_close().
+It uses zfree() to correctly free existing allocations before reassignment
+and cleans up at the end of the session.
 
 > diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-> index f79e9420c6bd7..7efbaa07f1ba7 100644
 > --- a/tools/perf/util/jitdump.c
 > +++ b/tools/perf/util/jitdump.c
-> @@ -320,14 +320,32 @@ jit_get_next_entry(struct jit_buf_desc *jd)
->  	switch(id) {
->  	case JIT_CODE_DEBUG_INFO:
->  		if (jd->needs_bswap) {
-> +			void *end =3D (void *)jr + jr->prefix.total_size;
-> +			struct debug_entry *ent;
->  			uint64_t n;
-> +
->  			jr->info.code_addr =3D bswap_64(jr->info.code_addr);
->  			jr->info.nr_entry  =3D bswap_64(jr->info.nr_entry);
-> -			for (n =3D 0 ; n < jr->info.nr_entry; n++) {
-> -				jr->info.entries[n].addr    =3D bswap_64(jr->info.entries[n].addr);
-> -				jr->info.entries[n].lineno  =3D bswap_32(jr->info.entries[n].lineno);
-> -				jr->info.entries[n].discrim =3D bswap_32(jr->info.entries[n].discrim=
-);
-> +
-> +			/*
-> +			 * debug_entry has a variable-length name[], so array
-> +			 * indexing would compute wrong offsets =E2=80=94 use
-> +			 * debug_entry_next() and bounds-check each entry.
-> +			 */
-> +			ent =3D &jr->info.entries[0];
-> +			for (n =3D 0; n < jr->info.nr_entry; n++) {
-> +				if ((void *)ent + sizeof(*ent) > end)
-> +					break;
+> @@ -61,12 +61,12 @@ static int
+>  jit_emit_elf(struct jit_buf_desc *jd,
+>  	     char *filename,
+[ ... ]
+>  	nsinfo__mountns_enter(jd->nsi, &nsc);
+>  	fd =3D open(filename, O_CREAT|O_TRUNC|O_WRONLY, 0644);
 
 [Severity: Critical]
-This is a pre-existing issue, but by placing the bounds checking and
-nr_entry clamping exclusively inside the if (jd->needs_bswap) block,
-native-endian files bypass this validation completely.
+This isn't a bug introduced by this patch, but opening output files without
+O_EXCL and O_NOFOLLOW in a potentially attacker-controlled directory might
+allow a symlink attack to overwrite arbitrary files.
 
-If a maliciously crafted JIT dump file with a native endianness matching the
-host provides an arbitrarily large untrusted nr_entry count for a
-JIT_CODE_DEBUG_INFO record, this path is skipped.
+Could this be updated to use safer open flags?
 
-Later in the processing, this unvalidated value is assigned directly:
+[ ... ]
 
-tools/perf/util/jitdump.c:jit_repipe_debug_info()
-    jd->nr_debug_entries =3D jr->info.nr_entry;
+> @@ -117,6 +117,8 @@ jit_close(struct jit_buf_desc *jd)
+>  	funlockfile(jd->in);
+>  	fclose(jd->in);
+>  	jd->in =3D NULL;
+> +	zfree(&jd->debug_data);
+> +	zfree(&jd->unwinding_data);
+>  }
 
-And then blindly iterated over on the heap:
+[ ... ]
 
-tools/perf/util/genelf_debug.c:jit_process_debug_info()
-    for (i =3D 0; i < nr_debug_entries; i++) {
-        ent->addr =3D ent->addr - code_addr;
-        ent =3D debug_entry_next(ent);
-    }
-
-Could we move the bounds validation outside of the byte-swapping block so a=
-ll
-inputs are checked?
-
-> +				/* name must be NUL-terminated within the record */
-> +				if (!memchr(ent->name, '\0', (char *)end - ent->name))
-> +					break;
-> +				ent->addr    =3D bswap_64(ent->addr);
-> +				ent->lineno  =3D bswap_32(ent->lineno);
-> +				ent->discrim =3D bswap_32(ent->discrim);
-> +				ent =3D debug_entry_next(ent);
-
-[Severity: Medium]
-Does this unpadded sequential pointer arithmetic lead to unaligned memory
-accesses?
-
-struct debug_entry contains 64-bit and 32-bit fields, requiring 8-byte
-alignment, but it is not __packed. The debug_entry_next() helper calculates
-the next entry's address by adding the length of the string:
-
-tools/perf/util/jitdump.h:debug_entry_next()
-    void *a =3D ent + 1;
-    size_t l =3D strlen(ent->name) + 1;
-    return a + l;
-
-This leaves the pointer unaligned. When the byte-swapping loop uses
-ent =3D debug_entry_next(ent) and accesses ent->addr =3D bswap_64(ent->addr=
-),
-the compiler generates aligned load/store instructions for an unaligned
-address, leading to SIGBUS crashes on strict-alignment architectures.
-
->  			}
-> +			/* clamp so downstream consumers don't overrun */
-> +			jr->info.nr_entry =3D n;
->  		}
->  		break;
->  	case JIT_CODE_UNWINDING_INFO:
->  		if (jd->needs_bswap) {
->  			jr->unwinding.unwinding_size =3D bswap_64(jr->unwinding.unwinding_siz=
-e);
+> @@ -154,9 +154,9 @@ static int
+>  jit_open(struct jit_buf_desc *jd, const char *name)
+>  {
+[ ... ]
+>  	bsz =3D hmax(sizeof(header), sizeof(*prefix));
+>=20
+>  	buf =3D malloc(bsz);
+>  	if (!buf)
+>  		goto error;
+>=20
+>  	/*
+>  	 * protect from writer modifying the file while we are reading it
+>  	 */
+>  	flockfile(jd->in);
+[ ... ]
+> @@ -217,9 +217,9 @@ static int
+>  	return 0;
+>  error:
+>  	free(buf);
+>  	funlockfile(jd->in);
 
 [Severity: High]
-This is a pre-existing issue, but is the unwinding_size validated against t=
-he
-actual payload size?
+This isn't a bug introduced by this patch, but if the initial malloc(bsz)
+fails, we jump to error and call funlockfile(jd->in) without a preceding
+flockfile().
 
-In jit_repipe_unwinding_info(), the unwinding size is saved directly from t=
-he
-payload without validation against the allocated heap buffer size:
+Does calling funlockfile() on an unlocked FILE stream cause undefined
+behavior or corruption of internal libc mutexes here?
 
-tools/perf/util/jitdump.c:jit_repipe_unwinding_info()
-    jd->unwinding_size =3D jr->unwinding.unwinding_size;
-
-This unvalidated size is later passed to libelf:
-
-tools/perf/util/genelf.c:jit_add_eh_frame_info()
-    d->d_size =3D unwinding_table_size;
-
-A crafted record with a small total_size but a huge unwinding_size could
-cause libelf to read out-of-bounds heap memory and embed it into the output
-ELF, leading to an information leak.
-
->  			jr->unwinding.eh_frame_hdr_size =3D bswap_64(jr->unwinding.eh_frame_h=
-dr_size);
->  			jr->unwinding.mapped_size =3D bswap_64(jr->unwinding.mapped_size);
->  		}
->  		break;
-
-While reviewing this patch, I also noticed a couple of pre-existing issues
-in the handling of JIT_CODE_MOVE records:
-
-tools/perf/util/jitdump.c:jit_repipe_code_move()
-[ ... ]
-> 	nspid =3D jr->load.pid;
-> 	pid   =3D jr_entry_pid(jd, jr);
-
-[Severity: Medium]
-This isn't a bug introduced by this patch, but does jit_repipe_code_move()
-validate that the record's total_size is large enough to contain the
-jr_code_move payload?
-
-If a malformed record is provided with a truncated total_size, fread() will
-read only a partial record into jd->buf. The remaining fields will be
-uninitialized or contain leftover data, which are then used to construct
-the perf event.
+>  	fclose(jd->in);
+>  	return retval;
+>  }
 
 [ ... ]
-> 	event =3D calloc(1, sizeof(*event) + 16);
-> 	if (!event)
-> 		return -1;
+
+> @@ -465,10 +465,10 @@ static int jit_repipe_code_load(struct jit_buf_desc=
+ *jd, union jr_entry *jr)
+>  	nspid =3D jr->load.pid;
+>  	pid   =3D jr_entry_pid(jd, jr);
+>  	tid   =3D jr_entry_tid(jd, jr);
+>  	csize =3D jr->load.code_size;
+>  	usize =3D jd->unwinding_mapped_size;
+>  	addr  =3D jr->load.code_addr;
+>  	sym   =3D (void *)((unsigned long)jr + sizeof(jr->load));
+
+[Severity: High]
+This is a pre-existing issue, but is it possible for jr->load.p.total_size
+to be smaller than sizeof(jr->load)?
+
+The sym pointer is derived assuming total_size is at least 56 bytes, which
+isn't validated before access. Could this lead to an out-of-bounds string
+read if a smaller total_size is provided?
+
+>  	code  =3D (unsigned long)jr + jr->load.p.total_size - csize;
+
+[Severity: Critical]
+This is a pre-existing issue, but the code pointer is calculated using csize
+without checking if it exceeds total_size.
+
+Could an attacker provide a csize larger than total_size to cause an integer
+underflow, resulting in a massive out-of-bounds heap read and information
+leak into the generated ELF file?
+
+>  	count =3D jr->load.code_index;
+>  	idr_size =3D jd->machine->id_hdr_size;
 [ ... ]
-> 	ret =3D perf_event__process_mmap2(tool, event, &sample, jd->machine);
-> 	if (ret)
-> 		goto out;
+> @@ -475,10 +475,10 @@ static int jit_repipe_code_load(struct jit_buf_desc=
+ *jd, union jr_entry *jr)
+>  	event =3D calloc(1, sizeof(*event) + idr_size);
+>  	if (!event)
+>  		return -1;
 >=20
-> 	ret =3D jit_inject_event(jd, event);
-> 	if (!ret)
-> 		build_id__mark_dso_hit(tool, event, &sample, jd->machine);
-> out:
-> 	perf_sample__exit(&sample);
-> 	return ret;
+>  	filename =3D event->mmap2.filename;
+>  	size =3D snprintf(filename, PATH_MAX, "%s/jitted-%d-%" PRIu64 ".so",
+>  			jd->dir,
+>  			nspid,
+>  			count);
 
-[Severity: Medium]
-This is a pre-existing issue, but does this leak the event buffer?
+[Severity: Critical]
+This isn't a bug introduced by this patch, but the filename is predictably
+constructed using fields (nspid and count) controlled by the JIT dump.
 
-The memory for event is allocated via calloc() and the function returns at
-the out: label without calling free(event). Neither of the processing
-functions take ownership of the memory, so the buffer appears to be leaked =
-on
-every JIT_CODE_MOVE record.
+Combined with the lack of O_EXCL|O_NOFOLLOW in jit_emit_elf(), does this
+allow an attacker to perform a symlink attack when perf inject is run?
+
+[ ... ]
+
+> @@ -495,10 +495,10 @@ static int jit_repipe_code_load(struct jit_buf_desc=
+ *jd, union jr_entry *jr)
+>  		jd->nr_debug_entries =3D 0;
+>  	}
+>=20
+>  	if (jd->unwinding_data && jd->eh_frame_hdr_size) {
+>  		zfree(&jd->unwinding_data);
+>  		jd->eh_frame_hdr_size =3D 0;
+>  		jd->unwinding_mapped_size =3D 0;
+>  		jd->unwinding_size =3D 0;
+>  	}
+
+[Severity: High]
+This is a pre-existing issue, but this conditional cleanup leaves
+jd->unwinding_data dangling if eh_frame_hdr_size is zero.
+
+If a JIT runtime emits JIT_CODE_UNWINDING_INFO without .eh_frame_hdr, is the
+unwinding data incorrectly applied to all subsequent JIT_CODE_LOAD events
+until overwritten, producing corrupted ELF files?
+
+[ ... ]
+
+> @@ -665,6 +667,7 @@ static int jit_repipe_debug_info(struct jit_buf_desc =
+*jd, union jr_entry *jr)
+> =20
+>  	memcpy(data, &jr->info.entries, sz);
+> =20
+> +	zfree(&jd->debug_data);
+>  	jd->debug_data       =3D data;
+> =20
+>  	/*
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260806123604.2712=
-77-1-acme@kernel.org?part=3D5
+77-1-acme@kernel.org?part=3D2
