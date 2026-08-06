@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82EA7298991;
-	Thu,  6 Aug 2026 12:36:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6221F26738D;
+	Thu,  6 Aug 2026 12:36:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786019806; cv=none; b=sDYafpyRT6ed15Q7PtJMgCnl74UAJap7neo87+fvXVFC4nMjOgkhd+vZj4g2t/T+mkXXleRIuds4BbfkQdajJRd3a1gK30js9c5EgTCecQqcUf6cPJo/hovh+ct4btEaiNjHf+jjrvm34JzRtEXiiSkQC7rNswTWhFvcgfwIiIk=
+	t=1786019811; cv=none; b=ZKMBLRXXldcnvlO8m9hhw7lA2wip1z/6KTbwexaGjpumvDPjbUGjjgdwEpZaDaWUGgiFQ8rCatTn8AbXgcKuTMSzxCyOJynFNOe8CXZssC7yE5xm1zrCTRIUlLRdyaIZuOvWQOAhucwiGBFVJh8bvWzLrHGoU9GTWDIMICGmkt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786019806; c=relaxed/simple;
-	bh=zOzZ6R9n9cX/hkQsyXcUak2eXDWTGufaDSt4AoIwZiw=;
+	s=arc-20240116; t=1786019811; c=relaxed/simple;
+	bh=Y7qE4d/zcx6zywiShfuPhfsAQaXh59POJvtoif4LMe8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MptKzwKRmKa22xSRTp8PE7rJJbm7YckwP/10oBur1kjUALVXyTUhbWUdEJVGirjTLo5dnO/5e2IlyW3NifvFf16Jt0wUC7Eki9ubs5iRcq8Ngv0Dk5Qgao8VAmkzfYwMhIhNaGZfycikA/dggx53Iz1poDljyADjExTVj9M9G3I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ldam6ImE; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=LKAuHJy8e/02uFeqHIn7cENbIqFaFtGvf8Lm8BNnBXiGtI0O6r/34o1iOyRB4MYlRHXNjSQ9ksDySRNyBf87LVPNoHfjkHmKAEOLVkqjm36x/MwBnP/H50B+iATu7TzSqbic2hLckJLw9F2aIqkXU7c1IT5A167tK45xqpbcSow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c3woAotn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ldam6ImE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 922431F000E9;
-	Thu,  6 Aug 2026 12:36:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c3woAotn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA2E51F00A3A;
+	Thu,  6 Aug 2026 12:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786019805;
-	bh=qkYprDtGWPa4KjbGn9gcW9pfLi13mKr1cL3g3IKZD+g=;
+	s=k20260515; t=1786019810;
+	bh=kKy50RliKU/qsCAJenQgHACMcOw9d+wUOZ+IfaGHPKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ldam6ImE6X1NAPm1hZBdMkqEKTpPCAZA2A5ByP4ACXimS2L+3Wpe02YC5rkLv+syg
-	 Lo6Zpp2mu7AE2iHn6HP5maYpjQ7QZWLVADMdvh9YbZ2iEkC7uYs1MzvUf8cHvv5Fag
-	 I2rGKCasHxdaUeDu+E5GSqDbKB8GAZRgzXrEycgDAdsMOUj2eWy7K2GCoH2gjAEP0j
-	 Fx6JLOrlfkrTrIBmjMWt55Dgx04cK55659eCH7IEWKmkv2Qu/Ww9r0dLLcYze6eIQA
-	 d+bqYOk3DV8G4MDxzrJrskGgA2PXlJLBMQ1bBVnF0ot8z2qV7M42DFhMsePse46aeV
-	 njlbAaIR0Ph4w==
+	b=c3woAotnVfIvEHARjxGIgG1TxHGoItVYJ2vJJ4pG848kBWAZAIZtrsbYcxF17+1HF
+	 n//Nn4MCml5at4W67hOPjUdG2xZDJKtBMnbGgYDdfQZshg5kXW4+8Z3OPEbzdzh+yo
+	 G/VZEA+iiK2mEJGveolnFW4MH0dkNSalx+zsR4PBxUa4TILnZevW8lo2EtNyB1iqCT
+	 lO/bUOOzN4QKVMpa7LYEF2voAzeVRMRFYghYr/s4EXRelCyZqPDTmCnekebbY8wOj6
+	 G2D5kuj6mBVftQ4XRgZE4Bzk52G1Xrpqeruv5qzNQmEeyIr5uTsGgckUZRtF0wyCjq
+	 jq5UpmFdIaQ/A==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -40,9 +40,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>,
 	Stephane Eranian <eranian@google.com>
-Subject: [PATCH 06/12] perf jitdump: Check snprintf return before computing header size
-Date: Thu,  6 Aug 2026 09:35:57 -0300
-Message-ID: <20260806123604.271277-7-acme@kernel.org>
+Subject: [PATCH 07/12] perf jitdump: Fix funlockfile on unlocked stream in jit_open() error path
+Date: Thu,  6 Aug 2026 09:35:58 -0300
+Message-ID: <20260806123604.271277-8-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260806123604.271277-1-acme@kernel.org>
 References: <20260806123604.271277-1-acme@kernel.org>
@@ -56,15 +56,15 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-snprintf() returns the would-have-been length on truncation.  When the
-jitted filename exceeds PATH_MAX, the unclamped 'size' value inflates
-sizeof(event->mmap2.filename) - size into a massive underflow, causing
-the header.size computation to write an oversized header.  The
-subsequent write to 'id = event + header.size - idr_size' then corrupts
-the heap.
+If the malloc() for the initial read buffer fails, jit_open() jumps to
+the error label which calls funlockfile(jd->in).  However, flockfile()
+is called later in the function, so at this point the stream was never
+locked.  Calling funlockfile() on an unlocked stream is undefined
+behavior per POSIX.
 
-Clamp size to PATH_MAX - 1 after snprintf in both jit_repipe_code_load()
-and jit_repipe_code_move().
+Split the error path into two labels: 'error' (after flockfile) calls
+funlockfile before cleanup, 'error_noflock' (before flockfile) skips
+the unlock.
 
 Fixes: 9b07e27f88b9 ("perf inject: Add jitdump mmap injection support")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
@@ -73,33 +73,33 @@ Assisted-by: Claude:claude-opus-4.6
 Reviewed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/jitdump.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/util/jitdump.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-index 7efbaa07f1ba73f9..45f0e21b0e780cb6 100644
+index 45f0e21b0e780cb6..ae63366b86c6d765 100644
 --- a/tools/perf/util/jitdump.c
 +++ b/tools/perf/util/jitdump.c
-@@ -495,6 +495,9 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
- 			jd->dir,
- 			nspid,
- 			count);
-+	/* snprintf returns would-be length on truncation, clamp to buffer */
-+	if (size >= sizeof(event->mmap2.filename))
-+		size = sizeof(event->mmap2.filename) - 1;
+@@ -157,7 +157,7 @@ jit_open(struct jit_buf_desc *jd, const char *name)
  
- 	size++; /* for \0 */
+ 	buf = malloc(bsz);
+ 	if (!buf)
+-		goto error;
++		goto error_noflock;
  
-@@ -625,6 +628,9 @@ static int jit_repipe_code_move(struct jit_buf_desc *jd, union jr_entry *jr)
- 	         jd->dir,
- 		 nspid,
- 		 jr->move.code_index);
-+	/* snprintf returns would-be length on truncation, clamp to buffer */
-+	if (size >= sizeof(event->mmap2.filename))
-+		size = sizeof(event->mmap2.filename) - 1;
+ 	/*
+ 	 * protect from writer modifying the file while we are reading it
+@@ -246,8 +246,9 @@ jit_open(struct jit_buf_desc *jd, const char *name)
  
- 	size++; /* for \0 */
- 
+ 	return 0;
+ error:
+-	free(buf);
+ 	funlockfile(jd->in);
++error_noflock:
++	free(buf);
+ 	fclose(jd->in);
+ 	return retval;
+ }
 -- 
 2.55.0
 
