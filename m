@@ -1,267 +1,381 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5811A34041B
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Aug 2026 00:16:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E0E246BD5
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Aug 2026 00:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.170
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785975370; cv=pass; b=MCfLiV72V1t+WJh2wG9OTnyQcgkyM5czebJUccjq7qNGPsScY8QPh89T+9Jo7/73QanMXJxzMmnkk8DE9TUbfFdDLKe3AoMA04szCKFlcb3R+EHxGa5fiDzsxXgRqcQhBAo15zBtJDn33DoBWU8jUhxk98dmBqTfTyTBMVt9HnI=
+	t=1785975502; cv=pass; b=Xs0f8j8JFGX1nL0bLzQ7K9xpAn4bwXGa/OJxCT6UZpKPH8TyY94BZv7cLy7Oi46es4ntSv9zCY7JX2gbMSsSqta8SPDr565d+D/xUG+I1FxUXhR8sUuKSNWUnsZgzdzdWTU1f/YYOADwdyRLW87UQmucEDXWJvB9sdFhrXT4kwo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785975370; c=relaxed/simple;
-	bh=1d1lwssoXt/w5UuPQU/V3n6PBSQN2l8ZbVnAVXA8kxI=;
+	s=arc-20240116; t=1785975502; c=relaxed/simple;
+	bh=lYoHXxJBzTtlxBRyHJmX8RZa+tk6ZWqgR41jm/jQQ2U=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ORUt8nRGc0/VQO+dEcVmVYKk+/0dQ1ZksB9bj/azJ2iKz5u8ORRPW9ReZhoOdX5EKW97fG5zZ3cSgKem+BDZpigNbD+wF9jOa0g2TaCWOqTTxH+HLz5pJar9IP60HxIzNbPJ00V0v0MHyd5K8+iOMiJY+WAeNyS5pNhjYP/Vtp8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qU/hA32L; arc=pass smtp.client-ip=209.85.160.177
+	 To:Cc:Content-Type; b=jpWrutGRDFvTwN2VY169jDeg5kSRVNzMpG/Pjn5eKOuP+3v3deKhlG+1tvP7xLH/pjeE5xe1tvkg/HpxjHtShvogbGQc9XGe50qKSS+SQNdGYl9advysXBM14CYrPiLzRcvTpKFkIrF8RNGHh4cgTw67Xe1iy3PW0fSUH+gTfZs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D7rweW7y; arc=pass smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qU/hA32L"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-51c15a5b265so133151cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 17:16:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1785975367; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D7rweW7y"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-51c01c79467so121601cf.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 17:18:20 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1785975499; cv=none;
         d=google.com; s=arc-20260327;
-        b=mpnM4Ptq2iaF6rkcsl6mjwGSGMEudNkJNHtiMIBqXpCcV3WGVYraFlPfmGNj1R4Eg4
-         9t+W0k2naguG7jqwHXilZN9G7jxkGNKmVYaZO2cREji0vyHYZi8gcypvc3KhLQBvj+Ad
-         NOw8K52NE+2nnCDPzcOpwkO+ormSFA6Wn/PbF5fnV3V/DIEpgmW1A53T5i01VzniK9fj
-         yUNzkj+g7QDQYz5qyKmitswbzOf5TfOxA/BFg6rzcLpqEphYZRB/z3PtdTtKVuGEdD/9
-         pSKY7ZVd0duHHTtwVW+viq1PKKlUiXGoJDUKHeEGZpWtx0KrB5l33M53fdK1/xa40F2b
-         hy9A==
+        b=mGX+Gn2selaLiK3zwKuxeYkp+13C/aJjo7/TkGCfxKx+rM6mW8xM5qn/PAJb9k7O1g
+         IijNQ89ZYmDMv6MfYm/KFHmj8Nrn+cRNdtEdPviMs1W7ka5p8brSnmkV8TLbPPgx1lWq
+         Xz/ROdaN/nqUJLBPGqahV2wjt+Td2fFmsov79DfI1Ftdkwumdk+rikJwK5t9O8T/DUJr
+         /AEUxcrl84Lz9m8G/Eb6vquHFnYZVsXkNJpaaF8a4G+6DfM86xjZoAL1BNT1hsTms5rP
+         /deoT+kha+YN9LK+7jTTE2dySuNIbhNXerH0LPNMveYHVaWKYaq3+tPh7uOmMquXvong
+         kEsw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=bnWyP7WVZZFVkw6ro1iq5X3/hgo721ZOiHIybOUHuO8=;
-        fh=ot9dwXDpPtDjzw7qNwMIN7TsK0PKk7dg+fPdGSFFrUA=;
-        b=LY/A8FtYiOGlbkNcmzlPBU9U5h16KIt2v9CTPzJbde1wVAcNtfBr7L8K51WIccij0z
-         1EaJwA+X7kSHydmNWq0ceECZ0ME9mizrI+SaxEF7HMNQoha3nWgFvO5lPt9jJ5jqjguW
-         FySZrNvggbxZrzghhpgOCI5/ZGkGfnp03Qc3hgCnyfE+pmERkO5dX8ChFnVyWdDa62WH
-         pK/WZ2Ruw7+5RhRxwomAZC/g2fYGb4Qi746hs4C7zHtn+wnJy2bfmwp2SmJ+Hur5j4No
-         XYrEsVpHVHto2QpXHVVLiqiPooR0P+s6LbFhM6GrX4ggzMu4ngwCgCrfEK43bi2iI8W7
-         Y/eg==;
+        bh=axTHnxyWcvJ5jT/xJHKSS3NucnkSVrenGHjva7q9+Ss=;
+        fh=yMpRd7S187cYE+FITnqyPsdVxtWyQaAGq6ikfv/3ang=;
+        b=Hzcu4znfbmo8vAYWxIPvZ8H2yFbPGx5PTAFmlbjiRkJVnAd13HGq0axT0HfqWlDR+J
+         jIXx6sB4mx1RP6gW9OsF6l7phcx0P52DcYJzQnxtMKPfMt/sWuM+v3S6iIQIAHeqmkKQ
+         oXnZAS3psucEfIpFYjMv25+4homCuafwycNdJcNtCjA7Dpsbl1GqTW8P9+RFDv/JFdCg
+         iVnKxtrV2yvp02cwSoIt383IS5hrKTv2Yxy/unu6U5/7XrkZ68JuhViZlaVE933JHEAd
+         RTKCwxyzB8AXYOF7sFxPRAVwnIXWlRGHEk0PhufB4XTAgUMI58v28t+BnU3o2p85boKs
+         CsZQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1785975367; x=1786580167; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1785975499; x=1786580299; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=bnWyP7WVZZFVkw6ro1iq5X3/hgo721ZOiHIybOUHuO8=;
-        b=qU/hA32L3C69GylP3DjoklIxAkpiDzy2grFf9Dx4WUi0KDI6PIOxpcw2RWZSPb9BQo
-         SH+YZcJvkvA2REHtBJTAn8HajF95cuSnHOMsGxZdMooMWf550vb2o8mnsgRj0qAG5/8+
-         nZF/BCKzVQXTtvxna/Uw7RlO2D9qs2v0rtYfASus8zmslykfSiUgPiOXdGFQUH5WtaRR
-         cwN7z09m9h6MVaIsply+MN9108TeCTPpKI6I6YvrLPohee70iJjf7s/qJ5VpozZ/ZTet
-         lrN4ilXjW0trhp4HvsIfXUI6LTU/K3HM+ZkdruAves/GAwjBc87etQjIA3vsf+Wi/UFv
-         folw==
+        bh=axTHnxyWcvJ5jT/xJHKSS3NucnkSVrenGHjva7q9+Ss=;
+        b=D7rweW7yVgSV9y+DtryKZ/w3X4vYpORatMZmfPS1jGQwJBGTqHyyri8uVJbzoKweCe
+         3sc/GjB8gQS0MpOEk54mRa3vcZJq6iOL7FnGDy2HTEXsLuFDX9VDOGhFbFVI4UmiAtjD
+         KaP4uUxhz964r42gs2TLu2z2dYjR67EQi/3OVieMxYcAeel4DDwWoQ4mDbKvx7ur2WDx
+         yobDxKlC9l6Gb94qejfxqse8q4UtCNTJi2VmdJWKTUJnx05mA5Yif546cuXoffPLlhqx
+         Agb2WRpZFyOyw9ho5Xh+cBOzVe3xN2Fcvl31D+ByoQjjFHRX94SFyBkc5uHYu8SIOtPo
+         OE5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785975367; x=1786580167;
+        d=1e100.net; s=20251104; t=1785975499; x=1786580299;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=bnWyP7WVZZFVkw6ro1iq5X3/hgo721ZOiHIybOUHuO8=;
-        b=ZrOaa0lTH5TJBHGZ2Q9wARKplLNlmmjfrfCMpB9ra6gHEjqwNWXbUhDSk4YpwMAmW+
-         6ULv+Oj7KS7c++enY8+wrQuZ+aSP5hovSXS8ormmoeQZruyA+T/PVx2ysbiJRJcbYzDb
-         4/VcjTLTcTEKJcI4Ey969CkxFwS+rxXTk+h1ZaxMP7/1pHameKgXHJOGxfDyhH/5lTEx
-         43byAsUJWC6NgpCCZt2WhEzpHRWW2ZjnAiNLhv6t9Iio9QXLkYcOy/VseUJUEUwTtpKO
-         x6qZruPujGa7XO9HGvyKAcxGNseQaRE5uf2+3/vzxYYJLokQaYVNl8Y+tt1vUcZcnHvy
-         liGg==
-X-Forwarded-Encrypted: i=1; AHgh+Rodwdbwqtw82ZQpCGN91MNFwnb9fml4qxdVqyKTrNMf1ypkKI+mOmdvOTWLL+KDheY4bm7XBOPxwLxdu7M8pWnK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXf2sxQvTzAHWNqTjI86yc9JyT5Vw2Vi1xVY5H99FYyqJP+whz
-	9FpKtRLJXZEyak1vf//k22ilAwOaOKux9WssYZnEiLo7xnDtb69QXzcUnYudbaGlwUX+ePteSaH
-	4a/BAqsI92QZ/Sk2+/fMl5jBT7hKmpJEtfYv6kVKp
-X-Gm-Gg: AR+sD11FbmnHaA+e59TdsRCp32GqHl4KAJkYm9U7auSECj6Bvg1mQz8KMTIEW3NWqYr
-	EfFz8pYNiYu7OwFz2ov8m5D9dYwk10GLnJrkIvgxFeqd04Q9WalcWX1marN3nJ6j1pm4ID0xYKy
-	2NVLQ6fkZCmFfeyPdaGz5OlKrRakSvsD+FU9GvV4dBslg1095Soedg6rUx8v9KAWRB6lJ7JXmXH
-	am48wFmWWE20ura12YDU0u8t4+reF7Ukna7bQLHhW2NSqdZ6unq1NUeR5C7PeH5idfUr20HiNEj
-	c43+TRFB23BuIAc9grVF7/tONe5plT/AjkfkGfv6zw0y8Dtz5yhw/tMOXg==
-X-Received: by 2002:ac8:5a8e:0:b0:51c:ca9:3d17 with SMTP id
- d75a77b69052e-52cfbf93393mr7508971cf.12.1785975366564; Wed, 05 Aug 2026
- 17:16:06 -0700 (PDT)
+        bh=axTHnxyWcvJ5jT/xJHKSS3NucnkSVrenGHjva7q9+Ss=;
+        b=DxNrrWuj9NTWDadsA/z4wrF3mh6ldo+D0SLY5aD3gLrTaGT/l249fHc3jVCsqt2n6u
+         jJNNJMx0k28AiqQQ++o9RLTsUi3WymfrEWjHvT7VEJDx0K90rV1tCBFy8xU0mqpUKeRQ
+         DW/iMEA/XqXMaoG/hCa6vx3nFGN/JVcy85B6vlkliHz3rXjk6m4CKago/jqPG2nFKI6k
+         iO6UItKEgCqVvHaS4IDv5xIjJqHzWHAjrqlyUWHIJXybdf+C6KeId9W8C4d3ZMk9EWF9
+         ZcHkqfPc9ZMmt2T7OGOuUI8H82Lq3hk40R5LBXDu6W01KHMv5TDFWOGpSGd04ot/H6Ts
+         34Dw==
+X-Forwarded-Encrypted: i=1; AHgh+Ro7vUYWhUqGQ3SQSSYkM9b65sNYoJs8fuPkNPp05q1LjOg9mctITIpI8+yqQu7NJMA7ki3xwxt9e+B63scSMfR5@vger.kernel.org
+X-Gm-Message-State: AOJu0YxI7Webbrl8Yal+yo+O3euU3mh/jpjSFBDeiVu96M2OSD2vSxxV
+	KcwYbexY3eJjctpt93aZo4cqbSsL+L8EKvuResYxucc+0Z695rmFBYUECfFvxKujTZtKr3ZNQA/
+	EcslkooXH4QhOlBTEo94ygMMpYzF8N8rf4HD/l8FI
+X-Gm-Gg: AR+sD121esSZiULAUdC04uXbPElyuacx1vmzuxbGX7BTphAEoMwZBkh5QJsLqbPgjya
+	D+/ojVP8xwgtuUK0ck9Nbk5/5LilqO42OuCPlN4dB5YmCrBoXxTCLyh/vXDBxirUtZesFyenYcA
+	MfcAifqIBhW0z+9HC5n8LEwm6gyE1pp8j7YJnQboeI6dH+jxjXa/tDaDykSD/AT8VOw9P3CfqoO
+	W4n4MOCaocoNbKgGItwcLyucbHl4aW1BsLVvb/uPHfPsr2oOfUJmvUiY2fUJIDgrz5be2khfR8x
+	tD7tTpIwCQ9W4yoWTnF2Cmo+CwAM7D8xSc5bizwzboj9dA==
+X-Received: by 2002:a05:622a:8e0a:b0:50d:edb1:6bd1 with SMTP id
+ d75a77b69052e-52cfea481f8mr3636741cf.13.1785975498641; Wed, 05 Aug 2026
+ 17:18:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260803145958.299956-1-tshah@linux.ibm.com> <20260803145958.299956-6-tshah@linux.ibm.com>
- <20260803151949.4AE511F000E9@smtp.kernel.org>
-In-Reply-To: <20260803151949.4AE511F000E9@smtp.kernel.org>
+References: <20260803145958.299956-1-tshah@linux.ibm.com>
+In-Reply-To: <20260803145958.299956-1-tshah@linux.ibm.com>
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 5 Aug 2026 17:15:55 -0700
-X-Gm-Features: AUfX_mzeNGmPjxUntgQr96gtXyWAyCXdz3ohPUmClKstehdq3XsFqbp4I_lbXmU
-Message-ID: <CAP-5=fXdA1YvAoqp61DddxsW4VwjJdmULYOqxk_2e-UAA=E_sA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 5/5] perf test: Add test validating trace.dat
- generated by 'perf data convert --to-trace-dat'
-To: sashiko-reviews@lists.linux.dev
-Cc: Tanushree Shah <tshah@linux.ibm.com>, linux-perf-users@vger.kernel.org
+Date: Wed, 5 Aug 2026 17:18:07 -0700
+X-Gm-Features: AUfX_mzHfg8OKrzcsskwyhFyBYUk1q6_wR-eNVoFaNypmKRKxw2qqIz2Omn6K9U
+Message-ID: <CAP-5=fUN86_sd6_etczdWvjF4hZDOfUo-G30eoPRHKDOAD8tkQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 0/5] Add perf.data tracepoint events to trace.dat conversion
+To: Tanushree Shah <tshah@linux.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
+	vmolnaro@redhat.com, mpetlan@redhat.com, tmricht@linux.ibm.com, 
+	maddy@linux.ibm.com, namhyung@kernel.org, linux-perf-users@vger.kernel.org, 
+	linuxppc-dev@lists.ozlabs.org, atrajeev@linux.ibm.com, hbathini@linux.ibm.com, 
+	Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, rostedt@goodmis.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 3, 2026 at 9:50=E2=80=AFAM <sashiko-bot@kernel.org> wrote:
+On Mon, Aug 3, 2026 at 8:00=E2=80=AFAM Tanushree Shah <tshah@linux.ibm.com>=
+ wrote:
 >
-> Thank you for your contribution! Sashiko AI review found 5 potential issu=
-e(s) to consider:
-> - [High] Deleting a securely created temporary file and reusing its path =
-creates a race condition vulnerable to symlink attacks.
-> - [Medium] The exit trap incorrectly overrides intentional test skips (ex=
-it code 2), converting them into test failures (exit code 1).
-> - [Medium] Hardcoding the 'cycles' hardware PMU event leads to brittle, s=
-purious test failures on environments without hardware performance counters=
-.
-> - [Low] Stale output file verification due to incorrect cleanup ordering =
-on error paths.
-> - [Low] A temporary file may be leaked if a subsequent initialization ste=
-p fails before the cleanup trap is registered.
-> --
+> This RFC patch series introduces support for converting perf.data files
+> containing tracepoint events into trace.dat format, enabling seamless
+> visualization and analysis using KernelShark.
 >
-> --- Patch [5]: [RFC PATCH v3 5/5] perf test: Add test validating trace.da=
-t generated by 'perf data convert --to-trace-dat' ---
-> commit d717cd6622789cb3b2cd038490f59972dc4015dd
-> Author: Tanushree Shah <tshah@linux.ibm.com>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Background and Motivation
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 >
-> perf test: Add test validating trace.dat generated by 'perf data convert =
---to-trace-dat'
+> Currently, perf and trace-cmd operate as separate tracing ecosystems with
+> incompatible data formats. Users who collect tracepoint data with
+> 'perf record' cannot easily visualize it in KernelShark's graphical
+> timeline view or leverage trace-cmd's analysis capabilities.
 >
-> Add a shell test covering perf data convert --to-trace-dat,
-> alongside the existing --to-json and --to-ctf tests.
+> This creates workflow friction when users need to:
 >
-> > diff --git a/tools/perf/tests/shell/test_perf_data_converter_tracepoint=
-s_trace_dat.sh b/tools/perf/tests/shell/test_perf_data_converter_tracepoint=
-s_trace_dat.sh
-> > new file mode 100755
-> > index 0000000000000..9ca6432618cb2
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/test_perf_data_converter_tracepoints_trace=
-_dat.sh
-> > @@ -0,0 +1,169 @@
-> > +#!/bin/bash
+> - Visualize perf tracepoint data in KernelShark's interactive graphical
+>   timeline
+> - Share trace data between perf and trace-cmd workflows and toolchains
+> - Perform architecture-independent conversion and analysis of traces
 >
-> [ ... ]
+> This conversion bridge eliminates these barriers by enabling seamless
+> data exchange between perf and trace-cmd ecosystems, allowing users to
+> choose the best tool for each analysis phase.
 >
-> > +perfdata=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-> > +result=3D$(mktemp /tmp/__perf_test.output.trace.dat.XXXXX)
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Implementation Overview
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 >
-> [Severity: Low]
-> Could a temporary file be leaked if an early initialization step fails?
+> The series implements the trace.dat file format specification (version 7)
+> within perf's data conversion framework.
 >
-> If the second mktemp fails, the script will exit immediately due to 'set =
--e'.
-> Since the trap is not yet registered, the first temporary file allocated =
-for
-> $perfdata wouldn't be cleaned up.
+> **Patch 1/5: Core trace.dat Export Infrastructure**
+> Introduces util/trace-dat.c and util/trace-dat.h implementing:
+> - Per-CPU raw event buffer management (init, collect, free)
+> - Ftrace ring buffer page construction
+> - trace.dat section writers (strings, options, flyrecord sections)
 >
-> [ ... ]
+> **Patch 2/5: Metadata Integration**
+> Extends util/trace-event-read.c to write trace.dat metadata during
+> perf.data
+> parsing:
+> - Initial format header (magic, version, endian, page size, compression)
+> - Section 16: HEADER INFO (header_page + header_event)
+> - Section 17: FTRACE EVENT FORMATS
+> - Section 18: EVENT FORMATS (per system/event format files)
+> - Section 19: KALLSYMS
+> - Section 21: CMDLINES
+> - Section 15: STRINGS (written last after all sections)
 >
-> > +trap_cleanup()
-> > +{
-> > +     echo "Unexpected signal in ${FUNCNAME[1]}"
-> > +     cleanup
-> > +     exit 1
-> > +}
-> > +trap trap_cleanup exit term int
+> **Patch 3/5: Conversion Backend**
+> Implements util/data-convert-trace.c with trace_convert__perf2dat()
+> function:
+> - Processes PERF_TYPE_TRACEPOINT samples via process_sample_event()
+> - Collects raw event data per-CPU using trace_dat__collect_cpu_event()
+> - Writes OPTIONS sections (CPUCOUNT, TRACECLOCK, metadata offsets)
+> - Writes FLYRECORD section with per-CPU ring buffer pages
 >
-> [Severity: Medium]
-> Does this trap handler unintentionally override test skips?
+> **Patch 4/5: User Interface**
+> Extends tools/perf/builtin-data.c with --to-trace-dat option:
+> - Adds command-line option for trace.dat output
+> - Mutually exclusive with --to-ctf and --to-json
+> - Calls trace_convert__perf2dat() to perform conversion
 >
-> When the script explicitly executes 'exit 2' for a skip condition (like
-> missing libtraceevent), the EXIT trap is still active. This handler then
-> executes 'exit 1', which converts the skip into a spurious test failure.
+> **Patch 5/5: Shell Test**
+> Adds a shell test (tools/perf/tests/shell/) covering normal tracepoint
+> recordings, pipe mode and mixed tracepoint/non-tracepoint recording
+> conversions and --force flag behaviour.
 >
-> [ ... ]
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Current Implementation Details
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 >
-> > +test_trace_converter_command()
-> > +{
-> > +     echo "Testing Perf Data Conversion Command to trace.dat"
-> > +
-> > +     if ! perf record -e sched:sched_switch -o "$perfdata" -- sleep 0.=
-1
-> > +     then
-> > +             echo "Failed to record perf data"
-> > +             err=3D1
-> > +             return
-> > +     fi
-> > +
-> > +     rm -f "$result"
+> **trace.dat Format Version:**
+> The implementation currently targets trace.dat format version 7, which
+> is the stable version supported by current trace-cmd releases (v3.x).
+> This version is hardcoded to ensure compatibility with existing
+> trace-cmd and KernelShark installations. Future enhancements could add
+> version negotiation or support for newer format versions as they become
+> standardized.
 >
-> [Severity: High]
-> Does removing the securely created file path here open a symlink race
-> condition?
+> **Compression Strategy:**
+> Compression is explicitly disabled (set to NONE) in the generated
+> trace.dat files.
+> This design choice:
+> - Simplifies the initial implementation and testing
+> - Ensures maximum compatibility across trace-cmd versions
+> - Avoids external compression library dependencies
 >
-> The script uses mktemp to securely allocate the path for $result, but del=
-etes
-> it before passing it to the converter with the --force flag. This leaves
-> a time window where a predictably named path is free. If run as root, thi=
+> Future work could add support for various compression algorithms (zlib,
+> zstd, lz4) with runtime selection via command-line options, significantly
+> reducing file sizes for large traces.
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Usage Example
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> ```bash
+> *Record tracepoint events with perf*
+> perf record -e sched:sched_switch -e sched:sched_wakeup -a sleep 10
+>
+> *Convert to trace.dat format*
+> perf data convert --to-trace-dat=3Doutput.dat
+>
+> *Verify trace.dat structure*
+> trace-cmd dump --summary output.dat
+>
+> *Analyze with trace-cmd*
+> trace-cmd report output.dat
+>
+> *Visualize in KernelShark*
+> kernelshark output.dat
+> ```
+>
+> **Conversion Output:**
+> ```
+> [ perf data convert: Converted 'perf.data' into trace.dat format
+> 'output.dat' ]
+> [ perf data convert: Converted 2684 events ]
+> ```
+> **trace-cmd dump --summary Output:**
+> ```
+>  Tracing meta data in file output.dat:
+>         [Initial format]
+>                 7       [Version]
+>                 0       [Little endian]
+>                 8       [Bytes in a long]
+>                 65536   [Page size, bytes]
+>                 none    [Compression algorithm]
+>                         [Compression version]
+>         [buffer "", "local" clock, 65536 page size, 16 cpus, 1048576 byte=
 s
-> could potentially be replaced with a symlink, allowing an arbitrary file
-> overwrite.
+>     flyrecord data]
+>         [10 options]
+>         [Saved command lines, 0 bytes]
+>         [Kallsyms, 0 bytes]
+>         [Ftrace format, 0 events]
+>         [Header page, 206 bytes]
+>         [Header event, 205 bytes]
+>         [Events format, 1 systems]
+>         [9 sections]
+> ```
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Testing and Verification
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 >
-> [ ... ]
+> The series has been extensively tested with:
+> - Various tracepoint events (sched, irq, syscalls, block I/O)
+> - Mixed recordings containing both tracepoint and non-tracepoint events
+>   only tracepoints converted)
+> - Verification with trace-cmd report and KernelShark visualization
+> - Memory leak testing with Valgrind (0 bytes leaked).
+> - Cross-architecture testing: v1 tested x86_64 and ppc64le. v2 adds
+>   s390 (big-endian) perf.data converted on both ppc64le
+>   (little-endian) and x86_64 (little-endian) hosts, in addition to
+>   same-arch x86_64 (LE->LE) and ppc64le (BE->BE) conversion.
+> - Pipe mode support has been tested end-to-end. (in v2)
 >
-> > +test_trace_converter_pipe()
-> > +{
-> > +     echo "Testing Perf Data Conversion Command to trace.dat (Pipe mod=
-e)"
-> > +
-> > +     rm -f "$result"
+> All generated trace.dat files successfully open in:
+> - trace-cmd report (v3.1+)
+> - KernelShark (v2.0+)
 >
-> [Severity: High]
-> This test mode appears to have the same symlink race condition as above,
-> since the securely allocated temporary file is removed prior to use.
 >
-> [ ... ]
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> Next Steps
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 >
-> > +test_trace_converter_mixed_events()
-> > +{
-> > +     echo "Testing Perf Data Conversion with tracepoint and non-tracep=
-oint events"
-> > +
-> > +     # Record both tracepoint and non-tracepoint events
-> > +     if ! perf record -e sched:sched_switch,cycles -o "$perfdata" -- s=
-leep 0.1
+> We would highly appreciate reviews, comments, and feedback on:
+> - The overall architectural approach and integration points
+> - Compatibility considerations with trace-cmd ecosystem
+> - Performance characteristics for large-scale traces
+> - Additional use cases or workflow scenarios
+> - Future enhancement priorities
 >
-> [Severity: Medium]
-> Could hardcoding the 'cycles' hardware PMU event cause spurious test fail=
-ures
-> on restricted environments?
+> ---
+> Changes in v3
 >
-> If the hardware 'cycles' event fails to open on virtual machines or
-> unprivileged containers, perf record will return an error and fail the te=
-st
-> step instead of skipping it or falling back to a software event.
+> - Rebase on latest perf-tools-next and resolve merge conflicts.
+> - Drop evsel parameter from process_sample_event() following upstream
+>   commit "perf tool: Remove evsel from tool APIs that pass the sample".
+>
+> Changes in v2
+>
+> Addressing the Sashiko AI review findings on v1:
+>
+> Cross-arch correctness:
+>   - Introduce to_file_u16/u32/u64 helpers (wrapping tep_read_number())
+>     to write all multi-byte fields in the recorded machine's byte order;
+>     apply throughout metadata sections and flyrecord page/record headers
+>     (ts, commit, TIME_EXTEND, large-event data_len).
+>   - Fix flyrecord record header bit layout for big-endian files.
+>     The record header word bit layout differs by file endianness,
+>     matching kbuffer-parse.c type_len4host()/ts4host():
+>       LE: type_len in bits [4:0],   time_delta in bits [31:5]
+>       BE: type_len in bits [31:27], time_delta in bits [26:0]
+>
+> Pipe mode:
+>   - Add process_attr(), process_feature(), and process_tracing_data()
+>     callbacks required for pipe mode operation.
+>   - Defer CPU buffer initialisation until the first tracepoint sample,
+>     after process_feature()/process_tracing_data() have populated the
+>     session header. This ensures the recorded machine's CPU count is
+>     used rather than the host's - critical for cross-platform analysis.
+>
+> Format compliance:
+>   - Implement TIME_EXTEND records for timestamp deltas >27 bits to
+>     prevent silent truncation and maintain chronological ordering.
+>   - Fix large event encoding (>=3D29 words): use type_len=3D0 with a
+>     separate 32-bit length word, avoiding collision with reserved types
+>     (PADDING=3D29, TIME_EXTEND=3D30, TIME_STAMP=3D31).
+>   - Add bounds check rejecting records larger than a page payload before
+>     batching, preventing heap overflow in trace_dat__write_page().
+>   - Fix flyrecord section_size to exclude the 16-byte section header,
+>     matching trace.dat specification and trace-cmd behaviour.
+>
+> CLI behavior:
+>   - Fix --force flag: open with O_CREAT|O_EXCL when force is not set,
+>     failing with -EEXIST instead of silently overwriting existing files.
+>
+> Memory safety:
+>   - Fix realloc overwrite of cpu_events->events and page_records on
+>     failure: use temporary pointers, only commit on success.
+>   - Fix use-after-free/double-free in sequential page_records realloc
+>     failure: replace with malloc+memcpy+free pattern.
+>   - Fix section_size computed from before section header position.
+>   - Add NULL checks for get_tracing_file(), calloc() padding, and
+>     trace_dat_options_offset assignment on write failure.
+>   - Use goto out_free on record allocation failure to avoid leaking
+>     accumulated page_records entries.
+>   - Replace direct read() with do_read() in read_proc_kallsyms() to
+>     handle short reads correctly.
+>   - On fwrite failure, set trace_dat_write_failed and continue parsing
+>     so that perf.data processing completes normally.
+>
+> Testing (new in v2):
+>   - Add shell test covering conversion, trace-cmd dump validation,
+>     sched_switch event verification, and --force flag behaviour.
+>
+> Documentation (new in v2):
+>   - Add documentation for 'perf data convert --to-trace-dat', covering
+>     usage and supported options.
+>
+> v1: https://lore.kernel.org/linux-perf-users/20260608125951.90425-2-tshah=
+@linux.ibm.com/
 
-As the `perf record` lacks the `-a` flag this will just record events
-for the sleep command and the number of cycles there will be limited.
-I'd suggest making this:
-perf record -e sched:sched_switch,cpu-clock -a -o "$perfdata" -- sleep 0.1
-The cpu-clock is a perf event based on a timer interrupt and should
-always exist whether the system be an S390 or a limited system such as
-running in a hypervisor.
+Still looks great, and it's getting better as you address the nits
+Sashiko is raising. I look forward to testing.
 
 Thanks,
 Ian
 
-> > +     then
-> > +             echo "Failed to record perf data (mixed events)"
-> > +             err=3D1
-> > +             return
-> > +     fi
-> > +
-> > +     rm -f "$result"
+> Tanushree Shah (5):
+>   perf/trace-dat: Add trace.dat export infrastructure
+>   perf/trace-event: Write trace.dat metadata sections during parsing
+>   perf data-convert: Add perf.data to trace.dat conversion backend
+>   perf data: Add --to-trace-dat option for converting perf.data
+>     tracepoint events into trace.dat format
+>   perf test: Add test validating trace.dat generated by 'perf data
+>     convert --to-trace-dat'
 >
-> [Severity: Low]
-> Does this cleanup ordering leave stale data available for validation on e=
-rror
-> paths?
->
-> If the 'perf record' command above fails, it returns early before this fi=
-le
-> is removed. When validate_trace_format() is later called in the global fl=
-ow,
-> it will check the $result file left over from the preceding
-> test_trace_converter_pipe() execution, which might erroneously report suc=
-cess
-> for a failed command.
+>  tools/perf/Documentation/perf-data.txt        |   7 +
+>  tools/perf/builtin-data.c                     |  43 +
+>  ...rf_data_converter_tracepoints_trace_dat.sh | 169 ++++
+>  tools/perf/util/Build                         |   2 +
+>  tools/perf/util/data-convert-trace.c          | 241 +++++
+>  tools/perf/util/data-convert.h                |   4 +
+>  tools/perf/util/trace-dat.c                   | 876 ++++++++++++++++++
+>  tools/perf/util/trace-dat.h                   | 113 +++
+>  tools/perf/util/trace-event-read.c            | 307 +++++-
+>  9 files changed, 1755 insertions(+), 7 deletions(-)
+>  create mode 100755 tools/perf/tests/shell/test_perf_data_converter_trace=
+points_trace_dat.sh
+>  create mode 100644 tools/perf/util/data-convert-trace.c
+>  create mode 100644 tools/perf/util/trace-dat.c
+>  create mode 100644 tools/perf/util/trace-dat.h
 >
 > --
-> Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260803145958.29=
-9956-1-tshah@linux.ibm.com?part=3D5
+> 2.47.1
 >
