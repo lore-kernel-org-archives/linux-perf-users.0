@@ -1,138 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20BCE1A682C;
-	Thu,  6 Aug 2026 05:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1FCC38757B;
+	Thu,  6 Aug 2026 07:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785994844; cv=none; b=qb2SdXlIWiXnL0UJAr+TJsublvOKR8DrmnNGJpT0s5aERuluekdrJAG9p5MiGLrLnF15SPW5CG5O5YJuCvTh0k3XWGZt6bKhk82snAUanKZNcdS1YGSC6CGpviuTyeCCZYxs7D1nj3suwermE8qKPu0jFN0DHY6NCXmk7QQmops=
+	t=1786000674; cv=none; b=jjsDL08C+LyMEg9rBRXuWBGHWlRyci0+zL5hqgDO19Q6gai3+GKW4VNKNT9b/0CTsbmLy8y0dg+RQFv6os2d5C4qod9yLTUyOPoLIYMVriFsub99vjDekWv9YlDXJ6NbhxgZTwX1yL2URGczL4M8X+tVx0pzo+KN1q96JFlGgiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785994844; c=relaxed/simple;
-	bh=WADd6vGeeU9OJNepBvcH1C6UnYUHjrAY//NLC6sgTTg=;
+	s=arc-20240116; t=1786000674; c=relaxed/simple;
+	bh=XCW04prNOvJN3+WT8RIPp80KBAK3kRC1ePK5xixfsD8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OT2yAFkrqalQqLm5smd/L/C3365Jn+TDZynWmnXeUTckA3m6xUxtKn5Ym/vgw56IDfGZvQ8mH1MuTjJigNwLOjwcUI1kEf/gn0HdqYakccg3eN13KXNmDxBBvLOlTTLcke6jIVX5orfMnwpSJ+3XsBXcQIucX9uI+IqLuv/5ys0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KrLFpZMM; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=G5BVcx1A+yGGN/0p+5OLUvYLNbLDvAjUjzng2h8MsI2FvfMiJBzQQtYZEnS4Wv1FFSObbBlfL3iZgC3LPWkcGsowQv/RBy61lYGTy3dBYsjG3YPPBJfQ0hPl1EaE8HgZ66dCwqECDw9/Hr92YH+4tXXiShpbqoE5J9uPsZZsyNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=GFuzdmqs; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KrLFpZMM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CB291F000E9;
-	Thu,  6 Aug 2026 05:40:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1785994842;
-	bh=cFWJ5mmV9ugae6Hj18D13lBKr5wTHjHe+Y+Htr9wxws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=KrLFpZMM0el2EkDV0KE/i4gDrgYKwgVwYjnNIe+oHbhDE7HO3F7lF4WYqospuAgeS
-	 AblODgZnk0NKWOrVCkE9rFUQ/m2WZiin0/UF48zoOIfCZ6aqz2ng9bhFpdtk7jk/mU
-	 EH8SvDw/+cRRJ1LjdaxG16QBDY3KtVkgNatXCJa9VWstdSU/01oQNrBYp9vt3tyVQL
-	 SCgwx67PICU1ef6Yy4giJkfGv3nxhJC0jFZN5RatNNnG0kthAaeMlqK6+1Ex4FEUXu
-	 vjgfwt8DFbdQRXpxAVKckcWM14cZK0mkfEXt8bDmNvxZ5SvVODlj+uK4ViTH6EhaLl
-	 BH/Y0JOt0VP8w==
-Date: Wed, 5 Aug 2026 22:40:41 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: PVS Narasimha Rao <venkatasuryapala@gmail.com>,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GFuzdmqs"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=vNP/V7rEoAsXhxstFtyLYmMxzfVTus4oyN4R/xdFQOI=; b=GFuzdmqsHa/BzPqNxfLbruF4VA
+	gkWQxjN3p0wE0LGc8VyaHJh/fGrj8h14hYxJdnChJzAMwTanm49h+CO1OWKyrlnPvBG2o0X91pAxo
+	yAaUOVbf6AdDocXmFPoSPsrvGVIzvmpPvYSciuG7KBYh46KkuoKgFGg6umT4qJGxbdmFdZCvQG2Np
+	GPb34VL4/Cp+IEl1ADCGq6ovG4pTfAW8BDAxmzqyoUO+dWEBd+t5/3UqQSND+NY78G0TebL9EhtFn
+	ARUeaYCGYglrZ6LkNqb2RClHXdo/Xi3m4b+4HsohCpXU6HS2HxlQMbjjPUe//HydkqtMeWXqrvHKc
+	5OQ7U7LA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wrsME-00000008f74-2Zmd;
+	Thu, 06 Aug 2026 07:17:38 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 6AC46301519; Thu, 06 Aug 2026 09:17:37 +0200 (CEST)
+Date: Thu, 6 Aug 2026 09:17:37 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+	Jinchao Wang <wangjinchao600@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf test sample-parsing: Validate PERF_FORMAT_GROUP
- values without LOST
-Message-ID: <anQeWZD8J-gHMt_3@google.com>
-References: <20260725084704.15463-1-venkatasuryapala@gmail.com>
- <20260725085651.648B11F00A3A@smtp.kernel.org>
+Subject: Re: [PATCH v11 04/11] tracing: wprobe: Add watchpoint probe event
+ based on hardware breakpoint
+Message-ID: <20260806071737.GK49951@noisy.programming.kicks-ass.net>
+References: <178565870538.714490.11309825813968306287.stgit@devnote2>
+ <178565875046.714490.17724442147958346980.stgit@devnote2>
+ <20260803070356.GV49951@noisy.programming.kicks-ass.net>
+ <20260805153404.793691b8@gandalf.local.home>
+ <20260805193909.GP776954@noisy.programming.kicks-ass.net>
+ <20260805210629.138f6197@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260725085651.648B11F00A3A@smtp.kernel.org>
+In-Reply-To: <20260805210629.138f6197@gandalf.local.home>
 
-Hello,
+On Wed, Aug 05, 2026 at 09:06:29PM -0400, Steven Rostedt wrote:
+> On Wed, 5 Aug 2026 21:39:09 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > > > This seems limited to kernel addresses only? Should not also userspace
+> > > > addresses be supported?  
+> > > 
+> > > Hmm, how would that work? The address is global for all tasks, so if you
+> > > add a user space address, what task would that be for? The one writing the
+> > > probe?  
+> > 
+> > Schedule the watchpoint along with the task of course. Given there is
+> > breakpoint/perf integration this should be trivial.
+> 
+> I meant, what task is it attached to? Usually the way a probe works is to
+> create the probe and then enable it.
+> 
+>  # cd /sys/kernel/tracing
+>  # echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
+>  # echo 1 > events/wprobes/my_jiffies/enable
+> 
+> If the address is in user space, which task would that address be for?
+> 
+> What would the API look like? Should we add a pid to that for a specific task?
 
-On Sat, Jul 25, 2026 at 08:56:50AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> 
-> Pre-existing issues:
-> - [Medium] The test setup for grouped reads without PERF_FORMAT_LOST validates garbage data because it provides a standard C array of structs rather than a tightly packed buffer.
-> --
-> 
-> --- Patch [1]: [PATCH] perf test sample-parsing: Validate PERF_FORMAT_GROUP values without LOST ---
-> commit 803c0b64d4e8c311df29991bbbdd74726b85a1dd
-> Author: PVS Narasimha Rao <venkatasuryapala@gmail.com>
-> 
-> perf test sample-parsing: Validate PERF_FORMAT_GROUP values without LOST
-> 
-> This patch updates the sample parsing test to validate the value and id
-> fields in grouped reads even when PERF_FORMAT_LOST is absent. It uses
-> next_sample_read_value() to properly navigate the variable-sized group
-> entries during validation.
-> 
-> > diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
-> > index 55f0b73ca20e0..e44b01e5cd14c 100644
-> > --- a/tools/perf/tests/sample-parsing.c
-> > +++ b/tools/perf/tests/sample-parsing.c
-> [ ... ]
-> > @@ -86,10 +86,27 @@ static bool samples_same(struct perf_sample *s1,
-> >  			COMP(read.time_running);
-> >  		/* PERF_FORMAT_ID is forced for PERF_SAMPLE_READ */
-> >  		if (read_format & PERF_FORMAT_GROUP) {
-> > +			struct sample_read_value *v1 = s1->read.group.values;
-> > +			struct sample_read_value *v2 = s2->read.group.values;
-> > +
-> >  			for (i = 0; i < s1->read.group.nr; i++) {
-> > -				/* FIXME: check values without LOST */
-> > -				if (read_format & PERF_FORMAT_LOST)
-> > -					MCOMP(read.group.values[i]);
-> > +				if (v1->value != v2->value) {
-> > +					pr_debug("Samples differ at 'read.group.values[].value'\n");
-> > +					return false;
-> > +				}
-> > +
-> > +				if (v1->id != v2->id) {
-> > +					pr_debug("Samples differ at 'read.group.values[].id'\n");
-> > +					return false;
-> > +				}
-> > +
-> > +				if (read_format & PERF_FORMAT_LOST &&
-> > +				    v1->lost != v2->lost) {
-> > +					pr_debug("Samples differ at 'read.group.values[].lost'\n");
-> > +					return false;
-> > +				}
-> > +				v1 = next_sample_read_value(v1, read_format);
-> > +				v2 = next_sample_read_value(v2, read_format);
-> 
-> [Severity: Medium]
-> This is a pre-existing issue, but does using next_sample_read_value() here
-> inadvertently cause the test to assert equality on misaligned garbage data
-> when PERF_FORMAT_LOST is omitted?
-> 
-> Looking at do_test(), the original sample is initialized with a standard C
-> array of struct sample_read_value:
-> 
-> tools/perf/tests/sample-parsing.c:do_test() {
->     ...
->     struct sample_read_value values[] = {{1, 5, 0}, {9, 3, 0}, {2, 7, 0}, {6, 4, 1},};
->     ...
->     if (read_format & PERF_FORMAT_GROUP) {
->         sample.read.group.nr     = 4;
->         sample.read.group.values = values;
->     }
->     ...
-> }
-> 
-> Since this array always has a 24-byte stride, but next_sample_read_value()
-> advances by a 16-byte stride when PERF_FORMAT_LOST is absent, both the
-> synthesizer and this validation loop end up reading overlapping memory
-> instead of the actual struct fields.
-> 
-> Could the test setup be updated to provide a tightly packed buffer so that
-> we validate the actual fields rather than falsely passing on identical
-> misaligned reads?
-
-I think it's a valid issue and it seems there's a bug in the
-perf_event__synthesize_sample().  The input values contain the lost
-field regardless of the read format.  So it should skip the field
-carefully.
-
-Thanks,
-Namhyung
+Same as uprobes?
 
