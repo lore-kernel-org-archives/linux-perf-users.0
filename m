@@ -1,100 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D0603DD51A;
-	Thu,  6 Aug 2026 07:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB30738736E
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Aug 2026 07:47:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786002030; cv=none; b=iBKYLVOo/UBmsQk3jKAVB53sJNelVU6s9HrYOTvvlshNktGuATyLleYnVBoMU4WEfuvxVw8PXQlkRQS0EW7Zo7kO9cJPm1zx/AlG2QVE9p6zO3OxFwriupGS/Q9EPGr9xcUdJ1Mhmj7GsOdbtoOlu1+4qyZR9XZndErZcBZVni8=
+	t=1786002454; cv=none; b=i4tq61Kd2wnNtHdm0V5QdWex4cWfIWNcK4+BVcTYCsxdW6S6pEeLdTIepR3nFhj2OxTvY28UykkiksegnEWepWbrLsS0n60yLgl8apLQ1o/hrJAuEFZ4JL8Q2/rdXAtu507Dknexy6XrILN0qh9FAX/NldTHZv23c+iE2ODYhyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786002030; c=relaxed/simple;
-	bh=uYpRxxLsuoOgiXMcnlJoCbnfQDxqPjPcQg9S9weBlyE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mfrwtYke9YxDxrcSRmjrpQ72fEm8CVEtWXAObTS7Gnz8QLErPEiy3vOn2NObNEDQzGe40L/AdAqM4e4HpAXmhsNKTECHpDCbk/r57h6gr8AHNmJ5uVHYH8kuucpeCwGZa2LDA+58YxTvSU69fEoReipZfyAOWkPan9LH5intA4w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AL4Jw2ly; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1786002454; c=relaxed/simple;
+	bh=LHMaU8GrCsMdNkBk9LWMP8MmN4UMas5sHOfECpqx8zk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=nmoigxQlEhOfyp/hY6cVtNz9QKu5jZP7LEqVrVy7V17B5nTTQoz0h9s2zxkhrbPPZkZxt9ApR/lI3nQk+kYEYnGjyXxzuqa+GDc91VnLAEofq/fJ6txhFeZ7H8pIcysyfTV/DyV9c9UEgap2rkVCq0eAHEw2S5Otm43botBGM1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUAJQlVe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AL4Jw2ly"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786002029; x=1817538029;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=uYpRxxLsuoOgiXMcnlJoCbnfQDxqPjPcQg9S9weBlyE=;
-  b=AL4Jw2ly57s000Gy1EuoQaZ2qk/6x6Il0oqxjDTR7mWvRyaAlOrJ8DK1
-   1wzD/k5o8LsQIwBqNMlQgV54AS6FSmoMmwdSPLrPzi77+HM6jAHcou9md
-   eIlxJc6qONxcI9hiivmq5UsvTyM024/4KIumaPuIGtvWPl2znqUtDnH6F
-   G1AH4KVCySx/puG7n8dSpxbxjZ76tyirDdJHZ+kDOVE4PJh4eRtS56wGv
-   niLMiA5Nsw1lbwf7Svt1LuY24dvA1TPkO1pFVPT+5M93hoxIuBNq+C1n3
-   ZCAkUtsomY/1XUk7UrHiQqupHIDeIQW9APYT2Joz/cqQ7JzebmR0le87e
-   A==;
-X-CSE-ConnectionGUID: iHw+J4CmQkuwDsKXDDvSxA==
-X-CSE-MsgGUID: foV6l3vvSKy9aMbk2fuvpw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11866"; a="74122642"
-X-IronPort-AV: E=Sophos;i="6.25,208,1779174000"; 
-   d="scan'208";a="74122642"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2026 00:40:27 -0700
-X-CSE-ConnectionGUID: DYGb2ACeTWSp/Yw57ESSyA==
-X-CSE-MsgGUID: nYKP2j4ASDeY/ibux4iOVg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,208,1779174000"; 
-   d="scan'208";a="264014953"
-Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by fmviesa004.fm.intel.com with ESMTP; 06 Aug 2026 00:40:24 -0700
-From: Jiebin Sun <jiebin.sun@intel.com>
-To: namhyung@kernel.org
-Cc: acme@kernel.org,
-	mingo@redhat.com,
-	peterz@infradead.org,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	irogers@google.com,
-	james.clark@linaro.org,
-	jolsa@kernel.org,
-	mark.rutland@arm.com,
-	dapeng1.mi@linux.intel.com,
-	thomas.falcon@intel.com,
-	tianyou.li@intel.com,
-	wangyang.guo@intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 0/9] perf c2c: add a function view
-Date: Thu,  6 Aug 2026 15:47:10 +0800
-Message-ID: <20260806074710.2847155-1-jiebin.sun@intel.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <anN-livkfPdXq7Uy@google.com>
-References: <20260803035220.172022-1-jiebin.sun@intel.com> <anN-livkfPdXq7Uy@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUAJQlVe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B7D21F000E9;
+	Thu,  6 Aug 2026 07:47:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786002452;
+	bh=LHMaU8GrCsMdNkBk9LWMP8MmN4UMas5sHOfECpqx8zk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=VUAJQlVepnvXSb0HpauMzI+m4a6i1hz9TBKUPBhdjHMvklD+PSq3INLaSrqG82lIA
+	 ydPshXpH8+kZje094iDgOOmAWlqIXl4c3oMdg/uEXpkORwHY9OXu36j7o6iyyBHZs9
+	 uc5AiRvw0cpSdY+pD7vL9xTXWbgz9mvNelEjp8cMQ+Bq2MSwlaRQZFn5Ny5Yy+EjOx
+	 h3tOVLu9Cke5KkOezZKlvewBhIy4siLQkmigUbzuJldvB/zhaM/jZrkmJdea0CUQc3
+	 2qtd5aF7RsKTD+9s8FonCS2bQHoMtjvUfHgvQF/DvTqtXlUMILVmLvH3wRLmKGfyj6
+	 jzqfDevhEZ7ZA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v7 3/9] perf c2c: add column rendering for function view
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Jiebin Sun" <jiebin.sun@intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260806074217.2846596-4-jiebin.sun@intel.com>
+References: <20260806074217.2846596-1-jiebin.sun@intel.com>
+ <20260806074217.2846596-4-jiebin.sun@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 06 Aug 2026 07:47:31 +0000
+Message-Id: <20260806074732.4B7D21F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi Namhyung,
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] The macro `C2C_FUNC_FOLD_WIDTH` is defined but never used.
+--
 
-Thanks for reporting this. I reproduced the Python import failure. Although
-the loader reported c2c_fmt_free, checking with `ldd -r` showed four
-unresolved symbols from c2c-function.o: c2c, c2c_fmt_equal, c2c_fmt_free,
-and perf_c2c__browse_cacheline.
+--- Patch [3]: [PATCH v7 3/9] perf c2c: add column rendering for function v=
+iew ---
+commit a3883eb9f33b41bc5b4463fa0fd2cb2ff6a32559
+Author: Jiebin Sun <jiebin.sun@intel.com>
 
-I considered moving the formatter callbacks to util/ as suggested. However,
-that would still leave c2c, the command's global state, and
-perf_c2c__browse_cacheline(), its existing TUI entry point, unresolved.
+perf c2c: add column rendering for function view
 
-The issue comes from placing c2c-function.o in libperf-ui.a, which is linked
-into python/perf.so under --whole-archive, while builtin-c2c.o is not part
-of the Python module. Since the browser is specific to the c2c command, v7
-links it directly into perf alongside builtin-c2c.o, under CONFIG_SLANG.
+This commit adds the function view's column renderers for the perf c2c tool=
+. It
+introduces the necessary width and header helpers, the per-function estimat=
+ed
+cycles computation, and dimension tables to link columns to their renderers.
 
-This is folded into the browser skeleton patch; the other eight patches are
-unchanged. I clean-built every commit and ran `perf test -v 'import perf'`
-at each step. I also verified the full series with and without SLANG.
+> diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browse=
+rs/c2c-function.c
+> index c0fd7799e4f85..89e4e65022b52 100644
+> --- a/tools/perf/ui/browsers/c2c-function.c
+> +++ b/tools/perf/ui/browsers/c2c-function.c
+[ ... ]
+> +/* Spaces of indent per hierarchy level, like the normal report view. */
+> +#define C2C_FUNC_INDENT 2
+> +
+> +/* Width of the folded-sign prefix ("%c ") each identity cell emits. */
+> +#define C2C_FUNC_FOLD_WIDTH 2
 
-The `--stdio` support and function-view test will follow on top of v7.
+[Severity: Low]
+This isn't a bug, but is this macro intended to be used?=20
 
-Thanks,
-Jiebin
+It looks like C2C_FUNC_FOLD_WIDTH is defined here, but the code later in=20
+symbol_view_entry() and cycles_percent_entry() hardcodes the "%c " format
+string and calculates lengths without referencing this macro.=20
+
+Could the renderers use this macro when calculating the remaining buffer=20
+widths instead of manual adjustments?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260806074217.2846=
+596-1-jiebin.sun@intel.com?part=3D3
