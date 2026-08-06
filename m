@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB30738736E
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Aug 2026 07:47:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7913CF1F2
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Aug 2026 07:54:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786002454; cv=none; b=i4tq61Kd2wnNtHdm0V5QdWex4cWfIWNcK4+BVcTYCsxdW6S6pEeLdTIepR3nFhj2OxTvY28UykkiksegnEWepWbrLsS0n60yLgl8apLQ1o/hrJAuEFZ4JL8Q2/rdXAtu507Dknexy6XrILN0qh9FAX/NldTHZv23c+iE2ODYhyA=
+	t=1786002895; cv=none; b=mvt+VEbsUn8motRbdmMG3Ak+e23drhtQ6xYBMSVajx423IjNMBbELpdikr8epgu2nFjxBt9nKcSgBRX0kKxN8Aq0DYdj/5rBZJFW+IktqMFH/0vdWFMIVQqIQ9HqaaxtUIy91ZevjPJv/gi3mcPdO1U0s8Q018bs+AIAsmsisD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786002454; c=relaxed/simple;
-	bh=LHMaU8GrCsMdNkBk9LWMP8MmN4UMas5sHOfECpqx8zk=;
+	s=arc-20240116; t=1786002895; c=relaxed/simple;
+	bh=2xO5tbA4SXjsK5Bdlyom69pnk30hmxkIWAQWmhgf6AM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=nmoigxQlEhOfyp/hY6cVtNz9QKu5jZP7LEqVrVy7V17B5nTTQoz0h9s2zxkhrbPPZkZxt9ApR/lI3nQk+kYEYnGjyXxzuqa+GDc91VnLAEofq/fJ6txhFeZ7H8pIcysyfTV/DyV9c9UEgap2rkVCq0eAHEw2S5Otm43botBGM1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VUAJQlVe; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=jjEyoJievshU68V2XDXw8EYRF8zb2BPXyHER28RpxuOg/6MnXZA4W4dY6p/1RbqURlFfT7UomWd3N8/IQbFzNPZfZjUSut9CM+Znq8fx+D2iWs3dNbb6EeRkMqywoDRv7ZWObXZKKAlHLV94qkqKFaAWkDF1yntPu7R51ThzBwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TvmWULaP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VUAJQlVe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B7D21F000E9;
-	Thu,  6 Aug 2026 07:47:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TvmWULaP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B6371F000E9;
+	Thu,  6 Aug 2026 07:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786002452;
-	bh=LHMaU8GrCsMdNkBk9LWMP8MmN4UMas5sHOfECpqx8zk=;
+	s=k20260515; t=1786002894;
+	bh=N3gD7I50uhpODS+/nDJ3p+XS4HS7/UxT7lt89l3kcI0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=VUAJQlVepnvXSb0HpauMzI+m4a6i1hz9TBKUPBhdjHMvklD+PSq3INLaSrqG82lIA
-	 ydPshXpH8+kZje094iDgOOmAWlqIXl4c3oMdg/uEXpkORwHY9OXu36j7o6iyyBHZs9
-	 uc5AiRvw0cpSdY+pD7vL9xTXWbgz9mvNelEjp8cMQ+Bq2MSwlaRQZFn5Ny5Yy+EjOx
-	 h3tOVLu9Cke5KkOezZKlvewBhIy4siLQkmigUbzuJldvB/zhaM/jZrkmJdea0CUQc3
-	 2qtd5aF7RsKTD+9s8FonCS2bQHoMtjvUfHgvQF/DvTqtXlUMILVmLvH3wRLmKGfyj6
-	 jzqfDevhEZ7ZA==
+	b=TvmWULaPU8UoVmdHQuXiVnBFaUfd1I2KcBm2pTTRp7ZS8BgTongaHGeK0tOlpJ3rs
+	 vHYD7P9xGa7U9XZSeSga6UawLYA5tua7BjjoiOjNH/aHhhGRzHNJ2+jImv8JvgRuV1
+	 r+NU/5rKWwh6icG3A/hdEcN4AYu6ZN+JZCdylU96LJ1eCbJqjrNZ3Dp+4Kk6QnMV+q
+	 LijOfAbxJUxq6xKfG54RTjdVxsfHPTtRqpqy8ilqbB1mVKn5VcaHn6XQsk3OPf4bEW
+	 4StBQz7rWM+XWDEDFWTDjQ/T5k2l1fDkS0zGGZ5qku59R2g95U11aUQW1cTGJ9gQFI
+	 L6hV615rGQ48g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 3/9] perf c2c: add column rendering for function view
+Subject: Re: [PATCH v7 6/9] perf c2c: add function view hierarchy entry
+ creation
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Jiebin Sun" <jiebin.sun@intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260806074217.2846596-4-jiebin.sun@intel.com>
+In-Reply-To: <20260806074217.2846596-7-jiebin.sun@intel.com>
 References: <20260806074217.2846596-1-jiebin.sun@intel.com>
- <20260806074217.2846596-4-jiebin.sun@intel.com>
+ <20260806074217.2846596-7-jiebin.sun@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 06 Aug 2026 07:47:31 +0000
-Message-Id: <20260806074732.4B7D21F000E9@smtp.kernel.org>
+Date: Thu, 06 Aug 2026 07:54:53 +0000
+Message-Id: <20260806075454.4B6371F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,44 +47,79 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] The macro `C2C_FUNC_FOLD_WIDTH` is defined but never used.
+- [Medium] Manual allocation of `hist_entry` with 0 callchain size causes a=
+n out-of-bounds heap read and arbitrary free during `hist_entry__delete()` =
+if callchains are globally enabled.
 --
 
---- Patch [3]: [PATCH v7 3/9] perf c2c: add column rendering for function v=
-iew ---
-commit a3883eb9f33b41bc5b4463fa0fd2cb2ff6a32559
+--- Patch [6]: [PATCH v7 6/9] perf c2c: add function view hierarchy entry c=
+reation ---
+commit 6f1d1721493d4fdd45959567a8ed7813681126d5
 Author: Jiebin Sun <jiebin.sun@intel.com>
 
-perf c2c: add column rendering for function view
+perf c2c: add function view hierarchy entry creation
 
-This commit adds the function view's column renderers for the perf c2c tool=
-. It
-introduces the necessary width and header helpers, the per-function estimat=
-ed
-cycles computation, and dimension tables to link columns to their renderers.
+This commit adds the entry-creation layer for the perf c2c function view. It
+introduces owned-reference child allocation and insertion, reusing the exis=
+ting
+cacheline_idx to preserve source entry identity for the browser.
 
 > diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browse=
 rs/c2c-function.c
-> index c0fd7799e4f85..89e4e65022b52 100644
+> index fc9a4c4bcb03f..fb85f9aeb7415 100644
 > --- a/tools/perf/ui/browsers/c2c-function.c
 > +++ b/tools/perf/ui/browsers/c2c-function.c
+
 [ ... ]
-> +/* Spaces of indent per hierarchy level, like the normal report view. */
-> +#define C2C_FUNC_INDENT 2
+
+> @@ -845,6 +863,259 @@ static int __maybe_unused c2c_he__prune_empty_write=
+rs(struct hist_entry *l1_he)
+
+[ ... ]
+
+> +static struct c2c_hist_entry *
+> +c2c_child_entry__alloc(struct hist_entry *parent_he, struct hist_entry *=
+src_he,
+> +		       int depth, u64 ip)
+> +{
+> +	struct c2c_hist_entry *child_c2c;
+> +	struct hist_entry *child_he;
 > +
-> +/* Width of the folded-sign prefix ("%c ") each identity cell emits. */
-> +#define C2C_FUNC_FOLD_WIDTH 2
+> +	/* Function-view children never own or display callchains. */
+> +	child_he =3D c2c_function_he_zalloc(0);
 
-[Severity: Low]
-This isn't a bug, but is this macro intended to be used?=20
+[Severity: Medium]
+Does this allocation cause an out-of-bounds heap read and arbitrary free
+during teardown if callchains are globally enabled?
 
-It looks like C2C_FUNC_FOLD_WIDTH is defined here, but the code later in=20
-symbol_view_entry() and cycles_percent_entry() hardcodes the "%c " format
-string and calculates lengths without referencing this macro.=20
+Looking at hist_entry__delete() in tools/perf/util/hist.c, it unconditional=
+ly
+calls free_callchain(he->callchain) when destroying an entry:
 
-Could the renderers use this macro when calculating the remaining buffer=20
-widths instead of manual adjustments?
+void hist_entry__delete(struct hist_entry *he)
+{
+	...
+	free_callchain(he->callchain);
+	...
+}
+
+The free_callchain() function checks the global symbol_conf.use_callchain f=
+lag
+rather than verifying if this specific entry actually allocated a callchain.
+
+Since 0 extra bytes are allocated for the trailing flexible array here, if
+callchains are globally enabled (e.g., running perf c2c record -g), wouldn't
+the teardown process read unallocated memory, interpret it as nodes in
+free_callchain_node(), and trigger memory corruption?
+
+> +	if (!child_he)
+> +		return NULL;
+> +
+> +	child_c2c =3D container_of(child_he, struct c2c_hist_entry, he);
+> +	child_he->ops =3D &c2c_function_entry_ops;
+
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260806074217.2846=
-596-1-jiebin.sun@intel.com?part=3D3
+596-1-jiebin.sun@intel.com?part=3D6
