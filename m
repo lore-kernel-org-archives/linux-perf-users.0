@@ -1,125 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7913CF1F2
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Aug 2026 07:54:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA9F352C52;
+	Thu,  6 Aug 2026 07:58:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786002895; cv=none; b=mvt+VEbsUn8motRbdmMG3Ak+e23drhtQ6xYBMSVajx423IjNMBbELpdikr8epgu2nFjxBt9nKcSgBRX0kKxN8Aq0DYdj/5rBZJFW+IktqMFH/0vdWFMIVQqIQ9HqaaxtUIy91ZevjPJv/gi3mcPdO1U0s8Q018bs+AIAsmsisD8=
+	t=1786003131; cv=none; b=NW90P+OH07fcjWZXEi459qTECa/BcuGbIO4z1LI1wo3pl/Fz4niBM45ulI4JuSC2euCJLulHOhurf1NXKeV9+kxokpbXD2F4ggPIc+QALUCMcaoZ6AuwH2eIsnVnjgjaDiZoH7XB8iAZ0lgqpYTek1Jr59mvZoeD9Ir4Xx6wloc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786002895; c=relaxed/simple;
-	bh=2xO5tbA4SXjsK5Bdlyom69pnk30hmxkIWAQWmhgf6AM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=jjEyoJievshU68V2XDXw8EYRF8zb2BPXyHER28RpxuOg/6MnXZA4W4dY6p/1RbqURlFfT7UomWd3N8/IQbFzNPZfZjUSut9CM+Znq8fx+D2iWs3dNbb6EeRkMqywoDRv7ZWObXZKKAlHLV94qkqKFaAWkDF1yntPu7R51ThzBwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TvmWULaP; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786003131; c=relaxed/simple;
+	bh=6Qdw3rPKOE/bqfzieoBLsN+JJCKDj8Yo0JXPMaKeuak=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j+6OjvjM/2+Th73YXjaE38QMUAUezNRhcYZ7mkQ5FVerWXhIHpN8nF3zOY8A4laU48lAKQSpnLGVzktcJWz62E8jJTJGgewAFXzyXlW+xZ0U0pcZgxmMqO5MxAWlg9rI4/SW6/OqnfKJXwbqU3ZPhDp8ak0FA4toNPHniHycyvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8YD+Krb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TvmWULaP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B6371F000E9;
-	Thu,  6 Aug 2026 07:54:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8YD+Krb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C0881F000E9;
+	Thu,  6 Aug 2026 07:58:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786002894;
-	bh=N3gD7I50uhpODS+/nDJ3p+XS4HS7/UxT7lt89l3kcI0=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TvmWULaPU8UoVmdHQuXiVnBFaUfd1I2KcBm2pTTRp7ZS8BgTongaHGeK0tOlpJ3rs
-	 vHYD7P9xGa7U9XZSeSga6UawLYA5tua7BjjoiOjNH/aHhhGRzHNJ2+jImv8JvgRuV1
-	 r+NU/5rKWwh6icG3A/hdEcN4AYu6ZN+JZCdylU96LJ1eCbJqjrNZ3Dp+4Kk6QnMV+q
-	 LijOfAbxJUxq6xKfG54RTjdVxsfHPTtRqpqy8ilqbB1mVKn5VcaHn6XQsk3OPf4bEW
-	 4StBQz7rWM+XWDEDFWTDjQ/T5k2l1fDkS0zGGZ5qku59R2g95U11aUQW1cTGJ9gQFI
-	 L6hV615rGQ48g==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 6/9] perf c2c: add function view hierarchy entry
- creation
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Jiebin Sun" <jiebin.sun@intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260806074217.2846596-7-jiebin.sun@intel.com>
-References: <20260806074217.2846596-1-jiebin.sun@intel.com>
- <20260806074217.2846596-7-jiebin.sun@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 06 Aug 2026 07:54:53 +0000
-Message-Id: <20260806075454.4B6371F000E9@smtp.kernel.org>
+	s=k20260515; t=1786003130;
+	bh=6Qdw3rPKOE/bqfzieoBLsN+JJCKDj8Yo0JXPMaKeuak=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=J8YD+KrbFok+1fwrI0iVh4vH26ewld4lv4yE4DFBk81pY0lZdIVyTtOduja1KQ1L3
+	 BV958JiLuPY/ayW+tVLF8iavvaLcHpcaNd+5HKEnzG/wxP5fw0xcGz5ZrCF96Ga3rQ
+	 ckARtxPyCWzm/OG4zer/hsYuw61JO3TxKyA3pb1bv+sVmLiolZQc9VE6T8be16/0Lj
+	 pxPY2tkmJr0KqCi8N0/leBGXsiRewNbRPX/Jt8LHaJlHqqSX8Ocp0sZRGKAA/snYwu
+	 kWb5phclr88l1FQHh0l1AcAt9lBb+HtlHoWI3czYHgwuZFMhavmOxmga44ZQ7ZyAHq
+	 m/0hJeUVeZY+Q==
+Date: Thu, 6 Aug 2026 08:58:32 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Yunhui Cui <cuiyunhui@bytedance.com>
+Cc: linux-riscv@lists.infradead.org, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, kasan-dev@googlegroups.com, David Hildenbrand <david@kernel.org>
+Subject: Re: [PATCH v2 00/15] riscv: add Svnapot PTE folding support
+Message-ID: <anQ-GfzFl-thu3q8@lucifer>
+References: <cover.1784201104.git.cuiyunhui@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1784201104.git.cuiyunhui@bytedance.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Manual allocation of `hist_entry` with 0 callchain size causes a=
-n out-of-bounds heap read and arbitrary free during `hist_entry__delete()` =
-if callchains are globally enabled.
---
+I already commented on you failing to cc- anybody here (!)
 
---- Patch [6]: [PATCH v7 6/9] perf c2c: add function view hierarchy entry c=
-reation ---
-commit 6f1d1721493d4fdd45959567a8ed7813681126d5
-Author: Jiebin Sun <jiebin.sun@intel.com>
+I am guessing you did the core bits in response to David's request ([0]), but in
+general - if you're changing core mm to suit an arch change, you really need to
+send it as an RFC and then it'd make sense to send the core mm changes
+separately as an RFC with an explanation as to why you need them.
 
-perf c2c: add function view hierarchy entry creation
+[0]:https://lore.kernel.org/all/62c418bc-082b-4ae2-a889-f63dd2b7f503@kernel.org/
 
-This commit adds the entry-creation layer for the perf c2c function view. It
-introduces owned-reference child allocation and insertion, reusing the exis=
-ting
-cacheline_idx to preserve source entry identity for the browser.
-
-> diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browse=
-rs/c2c-function.c
-> index fc9a4c4bcb03f..fb85f9aeb7415 100644
-> --- a/tools/perf/ui/browsers/c2c-function.c
-> +++ b/tools/perf/ui/browsers/c2c-function.c
-
-[ ... ]
-
-> @@ -845,6 +863,259 @@ static int __maybe_unused c2c_he__prune_empty_write=
-rs(struct hist_entry *l1_he)
-
-[ ... ]
-
-> +static struct c2c_hist_entry *
-> +c2c_child_entry__alloc(struct hist_entry *parent_he, struct hist_entry *=
-src_he,
-> +		       int depth, u64 ip)
-> +{
-> +	struct c2c_hist_entry *child_c2c;
-> +	struct hist_entry *child_he;
-> +
-> +	/* Function-view children never own or display callchains. */
-> +	child_he =3D c2c_function_he_zalloc(0);
-
-[Severity: Medium]
-Does this allocation cause an out-of-bounds heap read and arbitrary free
-during teardown if callchains are globally enabled?
-
-Looking at hist_entry__delete() in tools/perf/util/hist.c, it unconditional=
-ly
-calls free_callchain(he->callchain) when destroying an entry:
-
-void hist_entry__delete(struct hist_entry *he)
-{
-	...
-	free_callchain(he->callchain);
-	...
-}
-
-The free_callchain() function checks the global symbol_conf.use_callchain f=
-lag
-rather than verifying if this specific entry actually allocated a callchain.
-
-Since 0 extra bytes are allocated for the trailing flexible array here, if
-callchains are globally enabled (e.g., running perf c2c record -g), wouldn't
-the teardown process read unallocated memory, interpret it as nodes in
-free_callchain_node(), and trigger memory corruption?
-
-> +	if (!child_he)
-> +		return NULL;
-> +
-> +	child_c2c =3D container_of(child_he, struct c2c_hist_entry, he);
-> +	child_he->ops =3D &c2c_function_entry_ops;
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260806074217.2846=
-596-1-jiebin.sun@intel.com?part=3D6
+Thanks, Lorenzo
