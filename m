@@ -1,149 +1,123 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADEC832B100
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Aug 2026 02:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016D232E143
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Aug 2026 04:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1785985125; cv=none; b=T7HntVLP5Fdy5qcFNBEAA84PAvLaWl0SOkY244w/gJM+POutvtAHIz763MAw0rMrbfKdRFXemmN41G8ufHbbQ7WAv5YOraF4n49NaIzytko8t+KiGfDwofI1zuQQvnYkEp9OM/KyNW4X5ljbwAZ+PHAFV5DwqxrHubPz1vfeAuI=
+	t=1785989670; cv=none; b=D8l5RDojiVWhHnBrD7GoiM6pX8ay4IBdcTJKDPCBkCiYkkchvtYej1k4eMwy6GOB+aa/XNtau41yPYmYTWFcnYu3oWYrpKZ9L6IbTdZBL7D6DUoGG5MHnwceFWQXccZPLG56TQC0D6P5UZP2hyN1BH4n4hji5ph064xxSkqaADM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1785985125; c=relaxed/simple;
-	bh=fsWRZDHmdhpEVey7PNeiNthgILPDQgnkk9V8OIsmTHY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t15vH93aXdNiymrwiRI/PcoPktAAnQ44i5LeZb0+NSZ+RpYFL290l/iM5Dnr5w9cZjdQ30uUS9oMmB0JLvwneEAq9HA5+VqVurnPCMugcC49UAChVRr4iWTC5d4CK2vDEWO94fVS7+nHGWEVz2mq4wx50q1YwI3QvPbNWDyHH/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LKDW0I+T; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1785989670; c=relaxed/simple;
+	bh=iZPeBgLnOWluHySgECX5Z9pOvjpbIHDIZlcKBk1CwUA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=FoBELbvP9YAgVGNiRXMOeCBAbhaNiUjISbC+mzhsCsUABS5j0CVqqbLDZv0gbQYO1KCNPMv1ZhdgK0JUEyRrzv9s7btzDvoNmFy+X5A8FwMr3gUtuxhix4KMFEWrRAcwEobCGq1/mh8DyFeKQgxX8QlnRaN56cqnIxe9Qvq5o1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RU6hUEx4; arc=none smtp.client-ip=209.85.216.70
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKDW0I+T"
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-6ae3faeb9c3so950178eaf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 19:58:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RU6hUEx4"
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-38f5ac7416eso2209127a91.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 05 Aug 2026 21:14:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1785985122; x=1786589922; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Cb3qpMNSQjkPFBRsgWqX2QuJCQXNljC6fDwPCJ7VZBs=;
-        b=LKDW0I+TS5kgEgK5PhYaJHnShgS6TQ69xoyA9jq00AsOqWA6ZXC3bpIWJOSNjOrZ+V
-         +0B8gISScl19XWere4KZOr7GItxoxVqmVmavHTTLlTe94vnSDzwPjgksiCBoF55PwB8A
-         BuQHRWSSNs3YUtGX66F2aB+oMd0X72WsxxAXZiIu8LycsUSB4hfc4SdzintLZLntxaQu
-         lxk3tB3f6lx5rheFOkVkMu8WPFu7lftePgBPpHuDm+oSKSPj8x347aGDNrlUGOXtqHZ1
-         Bqe4TwzupE98ZPkyZVC6ZB/xLU69VGZc/4XSdBmwlYOuMmhpHy1Q/td9cjKgX5k4jw4Y
-         lfaQ==
+        d=google.com; s=20251104; t=1785989668; x=1786594468; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=qGNBxIMbjF6ue7QVP0Xn9VPejnBt+3k4MwG5g+tGNLI=;
+        b=RU6hUEx4YoB7gONWRglLpJGzD/1hPEoaZxMvkVS2gmfFKxW1/fylrboNGmuDY1bBhu
+         k2Im+oqGTjXg5hgZVVYWqeD7/Zmiyr0Km7q5IgsYd/HG0JpD9aDzg72F2sBkjVbSayAc
+         miUb5IqZYVWWi69vAcb4WGDIIcW8uyMzwYKA7itLoG07IEfmY3C8HybYMBORlCdhledd
+         SPECwag5x3a2f2pzrIiY2qW3ji1kXKYjwvYeoSyWQvc+Crip1CQJc8Zz49Tg53P7O9WZ
+         C3YgPq6PXzuA4z6Rnj3BmvV4z8/p3Pw0lpUsiyAPpMMB95C34CCDm23d7+NwXw7N0PbL
+         4PuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1785985122; x=1786589922;
-        h=content-transfer-encoding:content-type:in-reply-to:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1785989668; x=1786594468;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Cb3qpMNSQjkPFBRsgWqX2QuJCQXNljC6fDwPCJ7VZBs=;
-        b=S20di+JXjjSGARVdnasIXJCzhXCtoGZ9ZTAwRHA7YB8Xzqo2/p9nc2pOmvEFoTZprt
-         hdZr/jYrlTqSDuI9ObS5tKoeTgD3bxXv8yZHtzaoPaaUOGnGEN2cCsn9aFenK8a0DaND
-         sHyM1ObtRQBAv/xgXiFaIQNPsggnjajVP7T72zUBZOHc33SpaKDQWHd40jHkFO9IjAwp
-         Q8UoGOSUgQ4kuA5HOlc4ptZzK3oyf8ZoOE4eCf0MmLLuuP6qo2yeEGgtGdiXVN/bAG98
-         fuxa6Uw7EYMJKQFCUuFdSf5wg40anYKCo+8wx06dnDtK1u/HoqeeJIl6vy2gJn3lArXD
-         RNeA==
-X-Forwarded-Encrypted: i=1; AHgh+Rrv+DLeCgGxuXhtNi2GptP0SuzSWDaG06zysrsf/QkqogJJnYhCb93yTjrX194/fKJYvjy9BvU8Cimc6VygqX3r@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxKgZpXtY2Zibi9A9OBK7JS+W3ok90LaE8gXgRKIn0ffxAr1cl
-	I4BP5gIeedu+j0NhXplWCfCKtwBaygoXfbt7trbn7HopxWYeP0ssjSiT
-X-Gm-Gg: AR+sD133d46mQ97wCLOH4qiCFlzOhJmqDI/cgZGINQ4w4TVfcr2T2718FG/BH0nNvwD
-	xoUlgaz5brKh30ijG0RuUeWNay5D9IxlA5HPnHF6IaRxbR+LTzYxPTQUkWonPUp9Bf4E+g7/XYr
-	i5zkm41jy2HbyWkeX9z62H+oJ2fgeuvQcfs40/qxphaGZNcZKxosrYaVxwORJgIe6p1dVoIF3+/
-	E4X8QcHxNgYE8b46hkB7yYqixWF8lyejfrnsvKvJbV1GanZBjSlIR0iA9QLT8hUzGcnuXhdFRS2
-	FisDTdiMsUpUvV91xmTuXromsaEJ4lJzcG+Cu8kkC6pZ4UngakM+IkrkFV827V5TxF62Tjr2E2P
-	yox7oxllvW6l5K0kRneZlfvnJzBZRtwD4cVe4svAmHdNjYQAMAXA08fDcLTqcZuUtJflonLGxE1
-	K5Zxn0VSGFxQW6o6mFKnOfS1fsm+Q9bfmPN6ky/tuC/jzp457FPIMrx3eg0Nm8R8U=
-X-Received: by 2002:a05:6820:4dcd:b0:6a1:363d:bc42 with SMTP id 006d021491bc7-6ae96c55f8fmr6311046eaf.15.1785985121804;
-        Wed, 05 Aug 2026 19:58:41 -0700 (PDT)
-Received: from [127.0.0.1] ([144.24.58.22])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6ae93cbf7a9sm4532734eaf.2.2026.08.05.19.58.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 05 Aug 2026 19:58:41 -0700 (PDT)
-Message-ID: <c21f0ba6-912d-45ff-8636-b69a0ddc92e4@gmail.com>
-Date: Thu, 6 Aug 2026 10:58:27 +0800
+        bh=qGNBxIMbjF6ue7QVP0Xn9VPejnBt+3k4MwG5g+tGNLI=;
+        b=o3bgu48py4NMARZ/qD4zq63ZZbr2pPEqmYW9mEmt7ZBsbRWvW54HRncWjc+Ww6clGz
+         THalER3iynDcfhTZHP0++CJTxFLEsuDb6ko0ZtL88TDTiprcbp7V0J64xmKaGx9+3i96
+         MJIlW/8MbsQa/bZaVI8q0hdt37c1NOTm6O4O5zZp+MN+IiYkJ24CbWm1jjZ1cmoGRqUZ
+         d5MJgtNqHDEg6xQeuS7PR+/Zt3CYd57wa/oLygMO4kiuaAu89anPlRluFx3S/P6yKDtJ
+         2fCJfqUvXl6xudtDXCpTcy0ZdCNWdEq+ng5Am4IikiziFNJGYJzxHgTYIO9vs6Wj7e6g
+         b/Vg==
+X-Forwarded-Encrypted: i=1; AHgh+Rqc9xOqy2xSZa0JLcq7hAsQm6iP3RIEfpcw3SY42n7qYKwAGJYv5rbwKxvM6ay2k08sSKIkK/DCJ/bLXVao4XHd@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNJ7V+boQUtVL0aSlOeetDsmn0h/h6psIz+zA+o2mn6sJfSK/D
+	JU/PYaCcx83kQKmyrT0FKhT7vFUnNngKkZBPYqB/jrTLyj4TBGsviuyQXzGOFBD1ikHkrb/RVPd
+	SeOUWvjYKmQ==
+X-Received: from dlbeg24.prod.google.com ([2002:a05:7022:f98:b0:13b:76f7:a531])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:520a:b0:366:10f1:3d91
+ with SMTP id 98e67ed59e1d1-3903c54adbamr11877174a91.1.1785989668073; Wed, 05
+ Aug 2026 21:14:28 -0700 (PDT)
+Date: Wed,  5 Aug 2026 21:14:14 -0700
+In-Reply-To: <20260806021038.2291417-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 04/11] tracing: wprobe: Add watchpoint probe event
- based on hardware breakpoint
-Content-Language: en-US
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin"
- <hpa@zytor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <178565870538.714490.11309825813968306287.stgit@devnote2>
- <178565875046.714490.17724442147958346980.stgit@devnote2>
- <20260803070356.GV49951@noisy.programming.kicks-ass.net>
- <20260804080035.6b719368c9328bbdd8219867@kernel.org>
- <20260803230840.GJ687043@noisy.programming.kicks-ass.net>
- <20260806090641.e59484ac570b0f842bc930bc@kernel.org>
-From: Jinchao Wang <wangjinchao600@gmail.com>
-In-Reply-To: <20260806090641.e59484ac570b0f842bc930bc@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20260806021038.2291417-1-irogers@google.com>
+X-Mailer: git-send-email 2.55.0.629.g250fe7f194-goog
+Message-ID: <20260806041414.20327-1-irogers@google.com>
+Subject: [PATCH v2] perf evlist: Warn when 'sleep' workload is used without
+ system-wide (-a) option
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
+Cc: adrian.hunter@intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	mingo@redhat.com, peterz@infradead.org, tshah@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 
-On 8/6/2026 8:06 AM, Masami Hiramatsu (Google) wrote:
-> On Tue, 4 Aug 2026 01:08:40 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
->> On Tue, Aug 04, 2026 at 08:00:35AM +0900, Masami Hiramatsu wrote:
->>> On Mon, 3 Aug 2026 09:03:56 +0200
->>> Peter Zijlstra <peterz@infradead.org> wrote:
->>>
->>>> On Sun, Aug 02, 2026 at 05:19:10PM +0900, Masami Hiramatsu (Google) wrote:
->>>>> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->>>>>
->>>>> Add a new probe event for the hardware breakpoint called wprobe-event.
->>>>> This wprobe allows user to trace (watch) the memory access at the
->>>>> specified memory address.
->>>>
->>>> s/the memory/the kernel memory/
->>>
->>> Indeed.
->>>
->>>>
->>>>> The new syntax is;
->>>>>
->>>>>  w[:[GROUP/]EVENT] [r|w|rw]@[ADDR|SYM][:SIZE] [FETCH_ARGs]
->>>>>
->>>>> User also can use $addr to fetch the accessed address and $value to fetch
->>>>> the accessed memory value (shorthand for '+0($addr)'). No other variables
->>>>> are supported.
->>>>
->>>> This seems limited to kernel addresses only? Should not also userspace
->>>> addresses be supported?
->>>
->>> Hmm, for x86, yes, since it causes a trap after executing (all page fault
->>> are handled). But other architecture like arm64 may not be able to support
->>> it because it needs to enable watchpoint after major page fault.
->>> At this step, I would like to limit it just for kernel memory.
->>
->> Sure, but suppose you were to add userspace, what would the ABI be?
-> 
-> Ahh, sorry. It was misreading, I mean it should be only for the kernel address,
-> not for user space. So I don't want to add userspace. (I answered the first one)
-> 
-> Thank you,
-> 
+A common mistake when trying to record system-wide profiles for a given
+duration is running commands like 'perf record sleep 1' or 'perf stat
+sleep 1' without passing '-a' / '--all-cpus'. When '-a' is omitted, perf
+defaults to per-process monitoring of the sleep process itself, which
+does not collect system-wide activity and records very few events.
 
-Keeping wprobe limited to kernel addresses makes sense to me.
-Userspace watchpoints are already supported by the perf hardware-breakpoint API,
-and supporting them in wprobe would add unnecessary complexity.
+Add a warning in evlist__prepare_workload() when the workload executable
+is 'sleep' and system-wide mode is not enabled.
 
-An explicit address check could also make this boundary clear.
+Assisted-by: Antigravity:gemini-3.6-flash
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/evlist.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
->>
->> That is, don't paint yourself in a corner etc.
-> 
-> 
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index eb7c0d7be064..b3dd097fbb2c 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -11,6 +11,7 @@
+ #include <inttypes.h>
+ #include <signal.h>
+ #include <stdlib.h>
++#include <string.h>
+ 
+ #include <fcntl.h>
+ #include <linux/bitops.h>
+@@ -1562,6 +1563,20 @@ int evlist__prepare_workload(struct evlist *evlist, struct target *target, const
+ 	int child_ready_pipe[2], go_pipe[2];
+ 	char bf;
+ 
++	if (argv && argv[0] && target && target__none(target)) {
++		const char *cmd = strrchr(argv[0], '/');
++
++		if (cmd)
++			cmd++;
++		else
++			cmd = argv[0];
++
++		if (!strcmp(cmd, "sleep")) {
++			ui__warning("workload '%s' specified without the system-wide (-a) option\n",
++				    cmd);
++		}
++	}
++
+ 	evlist__set_workload_cork_fd(evlist, -1);
+ 
+ 	if (pipe(child_ready_pipe) < 0) {
+-- 
+2.55.0.629.g250fe7f194-goog
 
