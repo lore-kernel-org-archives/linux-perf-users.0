@@ -1,159 +1,119 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FFBE479882
-	for <linux-perf-users@vger.kernel.org>; Thu,  6 Aug 2026 15:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73A69481FCA
+	for <linux-perf-users@vger.kernel.org>; Thu,  6 Aug 2026 15:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786031055; cv=none; b=s5GoDusk4o2xm9cZw4E6o9ETcsFusBzRk432IXV6+vrfaix18WFEXECtFG1VJzwOOA8FMxjJOcPhdJ/KaNKgD+ht2V+rFf4wfY+Uy4kKOATeaotiVNAi05aBmMMC1OIw5knSk6Ul6rOFLLh9jkYYMyoindOUitWwwCPYiRBb1g8=
+	t=1786031594; cv=none; b=G6LHqpHVf7km+T3iyV7MuXKq74SFm3wqOFRS29iDW5B+qwjAcrUHEipQl8ljJzXfhO+ZXvfk9+kjcpI3ofBX30HTPszcPBnv4EBTTXaEDr7Y/ktnLBm5XfZ1qRzxNefwOiT3XUL+McodBTaYCDB7XHpTNKU1OxVpba6X1xDbyiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786031055; c=relaxed/simple;
-	bh=GKDEC9ykCqZQ8xqRJnSWHDaw9GzmoFDVLxGDzWYoQps=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pOT+xhjQ0+6MygYRxSg4A78PO1nJoVS/22QqyRnaNzeO62iCgfB9xkXfSfSqCaxwIbdf7OTuQ0UaW73nvq3cfmGVu/NRRuVUGtqAJY/xFcTt8pkg7uNd1yu3A8yURsiEdF+X1ZTBZ3odOn4zNIx+Y4St4WPYfIuxSgu68+Oq6hU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=VJjXC/HD; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1786031594; c=relaxed/simple;
+	bh=FHwPpHv38PWluWC/nqAfmxw9CX6aMIXFAk8VtAGWbCA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Ia95WEs4eWXkLcScoz/EF0N4rp7bE9oLXa1kohXz7PVRHcNFhb4NLL82mDoUBnc+QgCgM59NOQCFFG28cU+nTKhLixoUYJg60Y5as3Aaac8n5L8VyTkQe6+rzyxohKNRR5SmQtBUUfbyCbuSMlLrlrNyWCGkuzLgYfkIzdhZsS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ra+JBiLP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="VJjXC/HD"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-472d9d69e16so164783f8f.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 06 Aug 2026 08:44:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1786031052; x=1786635852; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=iSx01LGDtUbLvOtP7e6amy9nD5EBRmC9uScCxD+3X/o=;
-        b=VJjXC/HDUDppYclVS7XgUkwEVXfrLLhvMb9Xjw4ZMW9oss+96LMKelEhifFdyHHEsK
-         GewCq++n6dIVRn5iCwVWcdSqdnRCRbSi66rUz1DJb65s0IUOJS3e2PVzdSSET5GXCM6f
-         /Wi8t7kgwcOUIY2jAhPiUAIOQtzl2W3JxxmeL0vYuQQJVWR+N9ObAyARlFsZnEB0RBRQ
-         hj0I2en2XaHzuT3xOY70I4dfKH3o3/g35rUVaVVaI0UCvRJuGHDtdn/Z84kH1iVsIB+P
-         aJRb7n3muxJIwoT52gH2+okspuMLsAOUlcecbcd3+FZwXoWSstIXS/UBkHjRlsEWsN2m
-         zK7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786031052; x=1786635852;
-        h=content-transfer-encoding:content-type:mime-version:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=iSx01LGDtUbLvOtP7e6amy9nD5EBRmC9uScCxD+3X/o=;
-        b=szMkUUYRkvtxNW/6riSdMrkBPStCaB4s/cDdzuPmRR3nFmY5Q+zmDnibmf/bQ7scFG
-         Lhs3FehNVZoeSrxVAS+oZjAs7rfP0AX9a+meZnnYTRc7GE2JIVW6IEy7294V+QyAUvRM
-         VWj/ZZM6s5iXCPVDLtjugKSVJbywS3XfPr4KgSoNRlNCXPzIt3ueaUCyk8YcWPW7tNn5
-         zfgySs2eswCqgxCuQSLAAgSB6J1zFHJVDEGfgZWZlz6JUen77o7gtGVTXgdljuN7J5bf
-         Gs1R4ul+0qrAr38HJP9SRRq4tKu3q4V0YalxbcWRHiUEAR2JMiDZKQ+JSsik4HtD2qzI
-         PtlA==
-X-Gm-Message-State: AOJu0YwZie9BwmDOASbY/U6o5cwRiOqIusOPgauKL0vEiiPyNDitn5q9
-	F3floaJs4bkTHkRhhyONmQ64/XEqUpQAO4VJn3+iDwPez4h5Mrg57B9lfEWTc8Ntriw=
-X-Gm-Gg: AR+sD12JvrmoRZBRhZQNX3Cv2AmUP3BHZL3w6imfaLzelQ0e3bBIhkUNCCz4bqqRPpI
-	ntBr5Oif2DsMjLB8ARUPRfXhhEHjYOunPNj2KA5GGWYrO2icCZ3Q0Ip7BoqkUlyjOORVZLH+UsL
-	FsVhP+HC60ASKQWEyqAdCsZ4jkOUyvqOhs8+HBb7EkLcniKMVMIc9YGyM8XDM5dpW8sN2V6P5lW
-	/CoXkgIrKKn3g4xFGtoTqBXc5tO5a1750KpGU/5WX+g1rYRJJD/o4KWfvjTuRRtC5pJ2TfTxVPz
-	vIobDrifGP5p/ZFD9Hym0V0RREN8476oHCX1oYWpFJmo+b6bowPnp9ggUqAKSgZKonXh6BxaeE/
-	lE/bA3NSdYR3WHWie+r5njubZQGtpinrHtwL0lXuBaRoIGyHWesE5tYyVIt2CPBxPVlIsxz4HKt
-	e6e8S2j2mMFAg+IJtoqA6UdRH2HuG/slNBXPLPkldZ1XfGKidk2l4qDQPPvS/ZNLCtm0iBpJe4V
-	w5mb2pDHYqLisaLFP5urpkQqCYusMCFEMCJ4NZf5bWoMtwszENxrg==
-X-Received: by 2002:a05:6000:2892:b0:47f:dfc1:6907 with SMTP id ffacd0b85a97d-47fec62c0d2mr12588910f8f.3.1786031052493;
-        Thu, 06 Aug 2026 08:44:12 -0700 (PDT)
-Received: from mordecai (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47ff7b250cfsm7334699f8f.28.2026.08.06.08.44.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Aug 2026 08:44:12 -0700 (PDT)
-Date: Thu, 6 Aug 2026 17:44:08 +0200
-From: Petr Tesarik <ptesarik@suse.com>
-To: Sandipan Das <sandipan.das@amd.com>
-Cc: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
- <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa
- <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
- <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, Thomas
- Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave Hansen
- <dave.hansen@linux.intel.com>, <x86@kernel.org>, "H . Peter Anvin"
- <hpa@zytor.com>, Ravi Bangoria <ravi.bangoria@amd.com>, Ananth Narayan
- <ananth.narayan@amd.com>
-Subject: Re: [PATCH 3/3] perf/x86/amd: Implement x86_pmu::print_debug
-Message-ID: <20260806174408.37b8e232@mordecai>
-In-Reply-To: <eedf1d302389327c79a256e8646ac251aba8fefc.1786010408.git.sandipan.das@amd.com>
-References: <cover.1786010408.git.sandipan.das@amd.com>
-	<eedf1d302389327c79a256e8646ac251aba8fefc.1786010408.git.sandipan.das@amd.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-suse-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ra+JBiLP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C49D1F00A3A;
+	Thu,  6 Aug 2026 15:53:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786031580;
+	bh=jhzv1zWJRITAWdxqoNZSQ22NIQ4irmMmaEluwLaV0yY=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Ra+JBiLPvlPbQi76Ntg6rkz0q683MYM0hkHqPnw2CgUvt77GBCCNYEgqnNVK471+j
+	 T7C7YfEygnGcF015BJq7Uh/WVyCUFiRd7KocM5gm1+qEYEx3wT2QkMtKi8bJJQZtnN
+	 mCfvCRN4ITUVcwj8Pk1VzJI6Aj/JKXOzfBMJKqX03hp/G8G0DgOx0wxvSnab5RMYhT
+	 4fnhzyXjc5dFDBLb2FPHVWmG6EGt1HcvoiW5jlXIY6rlBSe+X0/I2dNpX4fJlMvcZK
+	 kLtWDVUJ8eIuxz4Y6ttUI7VYMG1fV3EtI0tlCSm5MsZvCTDrrU+OT4wmgYl2HVZlkI
+	 wMNXKSmY0Wy/A==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v9 4/4] perf sched latency: Add histogram and time
+ interval options
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Aaron Tomlin" <atomlin@atomlin.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260806153926.300499-5-atomlin@atomlin.com>
+References: <20260806153926.300499-1-atomlin@atomlin.com>
+ <20260806153926.300499-5-atomlin@atomlin.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 06 Aug 2026 15:52:59 +0000
+Message-Id: <20260806155300.6C49D1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Thu, 6 Aug 2026 15:33:28 +0530
-Sandipan Das <sandipan.das@amd.com> wrote:
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Low] Missing explicit POSIX libc header inclusions for musl compatibilit=
+y.
+--
 
-> Implement x86_pmu::print_debug for PerfMonV2 capable processors to dump
-> MSR_AMD64_PERF_CNTR_GLOBAL_{CTL,STATUS}, plus MSR_AMD_DBG_EXTN_CFG if
-> LBR Extension Version 2 is available. Chain into x86_pmu_print_debug()
-> afterwards to dump the event selectors and counters.
-> 
-> MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_{CLR,SET} are left out since they are
-> write-only.
-> 
-> Fixes: 21d59e3e2c40 ("perf/x86/amd/core: Detect PerfMonV2 support")
-> Reported-by: Petr Tesarik <ptesarik@suse.com>
-> Closes: https://lore.kernel.org/all/20260717150315.2868314-1-ptesarik@suse.com/
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+--- Patch [4]: [PATCH v9 4/4] perf sched latency: Add histogram and time in=
+terval options ---
+commit 045c1ada1f2d7eef344279deacd80eabe1267dcc
+Author: Aaron Tomlin <atomlin@atomlin.com>
+Subject: perf sched latency: Add histogram and time interval options
 
-This works great on my system, no more unchecked MSR access errors, and
-the logged values look correct. Feel free to add
+This commit adds --histogram, --hist-mode, and --time options to the
+perf sched latency command. These options provide a visual ASCII bar chart
+distribution of how long tasks waited for CPU runtime across latency
+buckets within a specific time interval.
 
-Tested-by: Petr Tesarik <ptesarik@suse.com>
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
 
-Thank you!
+[ ... ]
 
-Petr T
-
-> ---
->  arch/x86/events/amd/core.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-> index a787409f5a62..ecd648af81f7 100644
-> --- a/arch/x86/events/amd/core.c
-> +++ b/arch/x86/events/amd/core.c
-> @@ -841,6 +841,25 @@ static void amd_pmu_v2_disable_all(void)
->  	amd_pmu_check_overflow();
+> @@ -257,6 +324,59 @@ static int scnprintf_latency_unit(char *buf, size_t =
+size, u64 nsecs)
+>  	return scnprintf(buf, size, "%6.3f s ", (double)nsecs / NSEC_PER_SEC);
 >  }
->  
-> +static void amd_pmu_v2_print_debug(int cpu)
-> +{
-> +	u64 ctrl, status, debugextn;
-> +
-> +	rdmsrq(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, ctrl);
-> +	rdmsrq(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS, status);
-> +
-> +	pr_info("\n");
-> +	pr_info("CPU#%d: ctrl:       %016llx\n", cpu, ctrl);
-> +	pr_info("CPU#%d: status:     %016llx\n", cpu, status);
-> +
-> +	if (cpu_feature_enabled(X86_FEATURE_AMD_LBR_V2)) {
-> +		rdmsrq(MSR_AMD_DBG_EXTN_CFG, debugextn);
-> +		pr_info("CPU#%d: debugextn:  %016llx\n", cpu, debugextn);
-> +	}
-> +
-> +	x86_pmu_print_debug(cpu);
-> +}
-> +
->  DEFINE_STATIC_CALL_NULL(amd_pmu_branch_add, *x86_pmu.add);
->  
->  static void amd_pmu_add_event(struct perf_event *event)
-> @@ -1452,6 +1471,7 @@ static int __init amd_core_pmu_init(void)
->  		x86_pmu.disable_all = amd_pmu_v2_disable_all;
->  		x86_pmu.enable = amd_pmu_v2_enable_event;
->  		x86_pmu.handle_irq = amd_pmu_v2_handle_irq;
-> +		x86_pmu.print_debug = amd_pmu_v2_print_debug;
->  		static_call_update(amd_pmu_test_overflow, amd_pmu_test_overflow_status);
->  	}
->  
+> =20
+> +static int latency_bucket(struct perf_sched *sched, u64 delta_ns)
 
+[ ... ]
+
+> +static void print_latency_histogram(struct perf_sched *sched, u64 *hist,
+> +				    u64 total_count, const char *title)
+> +{
+> +	const char **bucket_names =3D (sched->hist_mode =3D=3D HIST_MODE_LINEAR=
+) ?
+> +		linear_bucket_names : lat_bucket_names;
+> +	int bar_total =3D 40;
+> +	char bar[] =3D "########################################";
+> +	int i;
+> +
+> +	if (total_count =3D=3D 0)
+> +		return;
+> +
+> +	printf("\n %s (total samples: %" PRIu64 ")\n", title, total_count);
+
+[Severity: Low]
+Does this file explicitly include <stdio.h>? The patch introduces new calls
+to printf() in print_latency_histogram(), which can cause musl libc builds
+to fail due to missing declarations if the file relies on implicit header
+inclusions.
+
+[ ... ]
+
+> @@ -3649,6 +3803,24 @@ static int perf_sched__lat(struct perf_sched *sche=
+d)
+> =20
+>  	setup_pager();
+> =20
+> +	if (sched->hist_mode_str) {
+> +		sched->show_histogram =3D true;
+> +		if (!strcmp(sched->hist_mode_str, "linear"))
+
+[Severity: Low]
+Are we sure <string.h> is explicitly included? This introduces a new use
+of strcmp() in perf_sched__lat(), which has similar musl compatibility
+requirements for explicit POSIX header inclusions.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260806153926.3004=
+99-1-atomlin@atomlin.com?part=3D4
