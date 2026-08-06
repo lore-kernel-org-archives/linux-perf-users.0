@@ -1,179 +1,244 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1530B4A35;
-	Thu,  6 Aug 2026 07:34:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733AB34B669;
+	Thu,  6 Aug 2026 07:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786001684; cv=none; b=TWQcyqfPZ2DCOWNPx+VF08t6Na5LiGyH9ShiUxgAyfmeXvZVCZ9FrYQ2N4IpSB7i9hTazXqwijNiJk/nz/EFkzLg5kqr73Av6O6pwS8MCJSz5eqw9/L5tHiC8AhSwIAUahsWBIu3+Av6vIomxksJTAtbWaScVq5nO8ZoxnbAS7M=
+	t=1786001736; cv=none; b=pmKEzOkbSRK8KlttbHXItJj8GjY8TmOaz8Q8VhXqtUndrZhjR+GTMHjaSfW9m/B2LGSW07V/eI796dDXaG4dm1dmr87BQbumgfD60/khW42WVe8uAgCEd4pN1/C9qnr/bTWJ0ViNNnnUj4PGJQ+GiLFTzrgVoWr24E9Fx+JLwfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786001684; c=relaxed/simple;
-	bh=wTPvBNOjeKHkAAraDoIpZqoXY/SNX7sFHQtH2Gv7yQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Rxv1HKshhuQuibtArhSdy/H9Dbxq52nqA2SFw8fg53oMvZIGmj7+XbDSqYTiJEKngsSPZADdfOjcRInMBxmJNDrgk5RmxPjE99x87nzV6O6seXrLZ3wqSpXXw0BlWjUfptgktW4/BnsbWexo3wR8tzC/w6dWy0bPlSPmOCaY8io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRtWObil; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786001736; c=relaxed/simple;
+	bh=Vp09duoivpM+8gjUzsBztbz2nIzsHqV5ppcHVVZZEA4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GZwK2JyuDaQQjW9XgWMcznCOemCK2SSGKdVtCjkxF2Po9M5nnNpuxB+fVJBgx+dPTo9aWvs1zcdh+y7gjn/ShW2PMyzfbpLy8xWq/RLnkeZc6ErvP0Rb2fdINXBuvgojPsf0l5XSkbfUQpSO3npnF5amS6pyrCExRm8NErOmC4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IjVaIN5J; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRtWObil"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EA9D1F000E9;
-	Thu,  6 Aug 2026 07:34:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786001682;
-	bh=y3wUW9A5onn8mXoBrGXcecd/b5GN4A+lRTgjr2p0JTI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=gRtWObilZ/zqY2xNJFCFGkSOxfW+x1vY1mLHvaVfFn3nCz/YO+ctLWfNTTs4szgnu
-	 yTVCVopxmFl5NcnYpG991e8Bt2Ezz8pE1lZATTWxE8x5kpf0Cga4wRPeWCS7E5HqWv
-	 XYFKlbUMhZXVnLOpWi/i+ZQVJSvS2hDlXe0DDN6dURjWleKZWV49tMZzt2Af3x0wCx
-	 girzSHfnN2fGQM3POEWVr+brhoQK6GI2hxA4PAd23gY3P1IVF+HqesJZch2/8pByI2
-	 /EHEMqZTbBwqX/8U8p+wI2vggLbJGqS41xPiSDTkTcAYl1PUWUd+oug/OamioWoiLi
-	 FVdw8NszJIKKQ==
-Date: Thu, 6 Aug 2026 08:34:22 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Yunhui Cui <cuiyunhui@bytedance.com>
-Cc: linux-riscv@lists.infradead.org, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, kvm-riscv@lists.infradead.org, 
-	kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, kasan-dev@googlegroups.com, 
-	Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH v2 10/15] mm/gup: add fast-GUP specific lockless PTE
- helpers
-Message-ID: <anQ2bW3JxraT6PFY@lucifer>
-References: <cover.1784201104.git.cuiyunhui@bytedance.com>
- <138d74aa9863ae8ff445e16a2798d062895b75bc.1784201104.git.cuiyunhui@bytedance.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IjVaIN5J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786001735; x=1817537735;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Vp09duoivpM+8gjUzsBztbz2nIzsHqV5ppcHVVZZEA4=;
+  b=IjVaIN5JtkjbFsTsQZVWQK4oyna7pQV4RMwnm5rE5JXJEBTfKMd5mzdO
+   W3i5LpkDmT4I/5+kuYiyNlszqj7ep2tdJWsMFRU8Us6mu8ldNGq5/aW7s
+   itbezD1ZAEHhjkI0YO90y0CyzHucvB7sWbf4lXlp53TgVJ6SeMu2qe29q
+   hX69zTY++8o0qoDgOxNQZaKoMlypfNSlZMA+tQ9GmmqC3gyKD3VqgywpS
+   NXVOd3gUdpO7FC/WjPWEN6VHztEM+HEONsE20V7I2Dg5f4b44xY6oXnux
+   PZBkKY2zZxjBu60l+vsSS5fjc37tff5axV+7Wa81ONqwhsaXEu3i/wnnL
+   w==;
+X-CSE-ConnectionGUID: knPKc0rNTrCE1sUSFPuN/A==
+X-CSE-MsgGUID: 6PqheidMQyaU4phK+5PTqg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11866"; a="86440453"
+X-IronPort-AV: E=Sophos;i="6.25,208,1779174000"; 
+   d="scan'208";a="86440453"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2026 00:35:34 -0700
+X-CSE-ConnectionGUID: x1Qib+B5So2MLMW/7xWxYQ==
+X-CSE-MsgGUID: OiUzMYytTMCwNAnZS+0Stw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,208,1779174000"; 
+   d="scan'208";a="300245417"
+Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
+  by orviesa001.jf.intel.com with ESMTP; 06 Aug 2026 00:35:31 -0700
+From: Jiebin Sun <jiebin.sun@intel.com>
+To: namhyung@kernel.org
+Cc: acme@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	irogers@google.com,
+	james.clark@linaro.org,
+	jolsa@kernel.org,
+	mark.rutland@arm.com,
+	dapeng1.mi@linux.intel.com,
+	thomas.falcon@intel.com,
+	tianyou.li@intel.com,
+	wangyang.guo@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/9] perf c2c: add a function view
+Date: Thu,  6 Aug 2026 15:42:08 +0800
+Message-ID: <20260806074217.2846596-1-jiebin.sun@intel.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <138d74aa9863ae8ff445e16a2798d062895b75bc.1784201104.git.cuiyunhui@bytedance.com>
+Content-Transfer-Encoding: 8bit
 
-+cc literally everybody you failed to contact...!
+This series adds a new "function view" to perf c2c report, on top of the
+existing cacheline view. Existing cacheline-view data and operations remain
+unchanged; TAB adds access to a complementary way to inspect the same
+cache-to-cache (C2C) data.
 
-Why on earth are you doing sending a series like this which changes core mm,
-non-RFC and at v2 to boot, without bothering to Cc relevant people?
+v1: https://lore.kernel.org/linux-perf-users/20260626070355.1556721-1-jiebin.sun@intel.com/
+v2: https://lore.kernel.org/linux-perf-users/20260710084247.3576706-1-jiebin.sun@intel.com/
+v3: https://lore.kernel.org/linux-perf-users/20260717020530.1645123-1-jiebin.sun@intel.com/
+v4: https://lore.kernel.org/linux-perf-users/20260724095842.995920-1-jiebin.sun@intel.com/
+v5: https://lore.kernel.org/linux-perf-users/20260730090521.2206375-1-jiebin.sun@intel.com/
+v6: https://lore.kernel.org/linux-perf-users/20260803035220.172022-1-jiebin.sun@intel.com/
 
-I am also very confused as to why you are sending an ostensible RISC-V series
-then changing how core mm works to fit it, that's not how that works.
+Changes since v6
+================
 
-And if you're seeking to change core mm send it as an RFC!
+  - Link c2c-function.o directly into perf under CONFIG_SLANG instead of
+    including it in libperf-ui.a. The browser depends on state and callbacks
+    provided by builtin-c2c.o, which is not linked into python/perf.so,
+    while libperf-ui.a is linked under --whole-archive. This fixes the
+    unresolved symbols seen when importing the Python module and keeps the
+    TUI-only object out of NO_SLANG builds.
 
-On Thu, Jul 16, 2026 at 08:41:45PM +0800, Yunhui Cui wrote:
-> fast-GUP snapshots a PTE without holding the PTL, pins the page, and
-> then revalidates that the PTE did not change. Keep both reads under the
-> same lockless PTE semantics by defaulting the fast-GUP revalidation to
-> ptep_get_lockless().
+  - Rebase onto perf-tools-next at d74fb8c4c87f.
 
-Why?...
+Changes since v5
+================
 
->
-> Introduce fast-GUP specific PTE snapshot and revalidation helpers. The
-> default implementation preserves the existing ptep_get_lockless()
-> semantics, while allowing architectures to override the helpers when the
-> public lockless getter provides extra semantics that fast-GUP does not
-> consume.
->
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> ---
->  include/linux/pgtable.h | 18 ++++++++++++++++++
->  mm/gup.c                |  6 ++++--
->  2 files changed, 22 insertions(+), 2 deletions(-)
->
-> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
-> index da14328093a86..62943fcbf7046 100644
-> --- a/include/linux/pgtable.h
-> +++ b/include/linux/pgtable.h
-> @@ -813,6 +813,24 @@ static inline pte_t ptep_get_lockless(pte_t *ptep)
->  }
->  #endif
->
+  - Give the function-view children their own references instead of
+    borrowing them, as suggested by Namhyung. They set ops and take refs
+    via map_symbol__copy() and thread__get(), so hist_entry__delete()
+    frees them; the custom child destructor and the
+    WARN_ON_ONCE(report_hierarchy) guard are gone.
 
-Of course, no comments, helpful!
+  - Add NO_SLANG stubs for the two TUI entry points declared in c2c.h,
+    matching how util/hist.h declares its own.
 
-> +#ifndef gup_ptep_get_lockless
-> +static inline pte_t gup_ptep_get_lockless(pte_t *ptep, pte_t *rawp)
+  - Spell out in the symbol renderer why the length returned by
+    se_snprintf() cannot exceed the cell.
 
-rawp? This is terrible naming.
+  - Rebase onto perf-tools-next at d04ef71492fa.
 
-And 'gup_ptep_get_lockless()' is worse. What on earth is this function meant to
-do? And why is 'gup lockless' considered different from lockless?
+No intended change to the rendered output, cacheline-view data, existing
+cacheline operations, or --stdio output.
 
-And you return the value twice, because of course you do. Why? Who knows.
+Changes since v4
+================
 
-> +{
-> +	pte_t pte = ptep_get_lockless(ptep);
-> +
-> +	*rawp = pte;
-> +
-> +	return pte;
-> +}
-> +#endif
-> +
-> +#ifndef gup_ptep_revalidate
-> +static inline bool gup_ptep_revalidate(pte_t *ptep, pte_t raw_pte)
-> +{
-> +	return pte_val(raw_pte) == pte_val(ptep_get_lockless(ptep));
-> +}
+  - Rebase onto perf-tools-next at 0d40fedcd1b9.
 
-Again this naming is utterly terrible and I'm at a loss as to why on earth
-you're doing this?
+  - Require `iaddr` in --coalesce before entering the function view;
+    without it, coalesced samples cannot be reliably attributed.
 
-We don't need to abstract equality checks?
+  - Reuse each source cacheline's existing index as the level-3 identity,
+    so same-address sources no longer merge and 'd' finds the original
+    entry, without adding fields to the shared C2C structures.
 
-> +#endif
-> +
->  #ifndef pmdp_get_lockless
->  static inline pmd_t pmdp_get_lockless(pmd_t *pmdp)
->  {
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 99902c15703b0..72fb147193e55 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -2842,10 +2842,12 @@ static int gup_fast_pte_range(pmd_t pmd, pmd_t *pmdp, unsigned long addr,
->  	if (!ptep)
->  		return 0;
->  	do {
-> -		pte_t pte = ptep_get_lockless(ptep);
-> +		pte_t raw_pte, pte;
+  - Keep same-function reader/writer pairs, which the coalesced view cannot
+    reliably tell apart from cross-thread contention.
 
-What on earth is a 'raw' PTE?
+  - Robustness and cleanup: build the hierarchy only from filtered
+    cachelines with a lightweight entry allocator; explicit
+    mem_info__new() handling; a local bound in the symbol renderer; a
+    NULL-map guard; deterministic tie-breaks; function-view-local row
+    recounting; Ctrl-C as an exit key; and expanded man-page docs.
 
->  		struct page *page;
->  		struct folio *folio;
->
-> +		pte = gup_ptep_get_lockless(ptep, &raw_pte);
-> +
->  		/*
->  		 * Always fallback to ordinary GUP on PROT_NONE-mapped pages:
->  		 * pte_access_permitted() better should reject these pages
-> @@ -2871,7 +2873,7 @@ static int gup_fast_pte_range(pmd_t pmd, pmd_t *pmdp, unsigned long addr,
->  			goto pte_unmap;
->
->  		if (unlikely(pmd_val(pmd) != pmd_val(pmdp_get_lockless(pmdp))) ||
-> -		    unlikely(pte_val(pte) != pte_val(ptep_get_lockless(ptep)))) {
-> +		    unlikely(!gup_ptep_revalidate(ptep, raw_pte))) {
+Changes since v3
+================
 
-Why do we need to refadctor a comparison between a local variable and a lockless
-get?
+Reworked the function view into a true function-centric hierarchy, as
+discussed with Namhyung:
 
-I'm just so confused by what on earth this patch is meant to be or why it's here...
+  - Level 1 is the read-side function itself, aggregating all of its code
+    addresses into one entry and sorting by Cycles %.
 
->  			gup_put_folio(folio, 1, flags);
->  			goto pte_unmap;
->  		}
-> --
-> 2.39.5
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+  - Level 2 is the contending function that writes the shared lines,
+    aggregated across cachelines and sorted by store count. Level 3 is the
+    specific cachelines.
 
---
-Cheers, Lorenzo
+  - Dedicated code-address and offset columns were removed from the main
+    view. Verbose function formatting can still include a representative
+    code address, and full code-address information remains available in
+    the per-cacheline detail view ('d').
+
+  - Lower-level entries are indented like the normal perf report hierarchy
+    view, and entries with no contending writer are pruned.
+
+  - Reorganized the series from 14 mechanical patches into 9 logically
+    self-contained patches.
+
+Changes since v2
+================
+
+  - Prefix helpers exported from builtin-c2c.c with c2c_, as suggested by
+    Namhyung.
+
+Changes since v1
+================
+
+  - Add a worked man-page example, as suggested by Namhyung.
+
+In the perf c2c TUI, press TAB in the cacheline view to switch to the
+function view. It presents a three-level hierarchy:
+
+  Level 1: read-side function, sorted by Cycles %
+  Level 2: functions writing the shared lines, sorted by store count
+  Level 3: cachelines where the two functions contend
+
+For example, with dequeue_pushable_task expanded to its level-2 writers and
+two of those writers expanded to their level-3 cachelines:
+
+  Shared Data Functions Table     (19 entries, sorted on Cycles %)
+     Cycles    Store
+          %    count  Function / Contending function / Cacheline
+  ----------------------------------------------------------------------
+  +  35.67%      876  + [k] cpupri_set
+  +  24.31%      424  + [k] pull_rt_task
+  -  16.53%      555  - [k] dequeue_pushable_task
+                 145    - [k] pull_rt_task
+                 145        0xff2d0082809da080
+                 139    - [k] enqueue_pushable_task
+                  70        0xff2d00a2071f9640
+                  69        0xff2d0082809da000
+
+A level-1 store count decomposes into its level-2 writers, and each writer's
+count decomposes into its level-3 cachelines (here 145 = 145, 139 = 70 + 69).
+
+Keys in the function view:
+
+  TAB/ESC/q/Ctrl-C   return to the cacheline view
+  d                  show details for the selected level-3 cacheline
+  e / +              expand / collapse the selected entry
+  ?                  help
+
+The function view is a separate hist_browser in
+tools/perf/ui/browsers/c2c-function.c. Shared types and declarations used
+by both views are factored out of builtin-c2c.c into c2c.h. The hierarchy
+is constructed from the existing cacheline histograms into dedicated hists
+and rendered with custom column formatters.
+
+Testing: every commit was clean-built and passed `perf test -v 'import
+perf'`. The full series builds with and without SLANG support; the existing
+stdio-only `perf test c2c` and the Python import test pass in both
+configurations; `ldd -r` reports no unresolved symbols in the Python
+extension from either build; and c2c-function.o is no longer included in
+libperf-ui.a. Stdio support and automated function-view coverage remain a
+separate follow-up.
+
+Jiebin Sun (9):
+  perf c2c: extract shared data structures into c2c.h
+  perf c2c: add function view browser skeleton
+  perf c2c: add column rendering for function view
+  perf c2c: add HPP list parsing for function view columns
+  perf c2c: add function view stats merge and memory management
+  perf c2c: add function view hierarchy entry creation
+  perf c2c: build and finalize the function view hierarchy
+  perf c2c: add function view browser UI and cacheline detail
+  perf c2c: document function view in perf-c2c man page
+
+ tools/perf/Build                      |    1 +
+ tools/perf/Documentation/perf-c2c.txt |   71 +
+ tools/perf/builtin-c2c.c              |  130 +-
+ tools/perf/c2c.h                      |  155 +++
+ tools/perf/ui/browsers/c2c-function.c | 1783 +++++++++++++++++++++++++
+ 5 files changed, 2021 insertions(+), 119 deletions(-)
+ create mode 100644 tools/perf/c2c.h
+ create mode 100644 tools/perf/ui/browsers/c2c-function.c
+
+
+base-commit: d74fb8c4c87f10fd147114133f786a10f7e58d8a
+-- 
+2.52.0
