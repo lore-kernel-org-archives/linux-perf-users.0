@@ -1,57 +1,57 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A233385D86
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 14:42:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809FD41D233
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 14:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786113746; cv=none; b=egqEENVRoldBtTBD6M06CRpOtarPGyrupGBMxTPMKQb4W7cLtkU8gfK8UfLwfsqcltUlXX4ytL4r9UYCpS6UHOeSyf80+6hsxKsN31FccdNwcFp3mundZ317aGijq0/3BsgAghIAJscg5ismY0dW1Wo/zCo+WGNcg4XqASTnlMs=
+	t=1786113758; cv=none; b=PYhYy4KlRt4y01xdNdwiBWh3RiCrzQTsAispaRg7jjKbIcUVGJtaLmFibrC6RlRmvskqxiSyrThnoJDsBZ7Wm8AN8PLtVtdxuNyepNo2IO5FSU0o3HhNgWI+SwUkg5trLhgPcQEICt/hN9m6qarXtzRxrcKLhLg5B38woviOPdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786113746; c=relaxed/simple;
-	bh=9R1Q60IyPyy7ZSnIks/LFuRlAJtDUGTdw5t1/L9Loiw=;
+	s=arc-20240116; t=1786113758; c=relaxed/simple;
+	bh=wocxQsKzT3o9GmX7ZpQ4ZfcfNCDQdh2ltszbUWbOvZU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CxrENiK4ieh/yBLpru9YJ/8B7V4hSmU+G4bUiU4cM3TRrIoBLpythV9vfBK4vJfzffNh8BXX5D1ltVP/m0ALOm9X1IAGMIa0UtTCEepLHyyaoBq5xs49QEnsnovR6mtC8l94n7T20Cg4WLj0xmPSPJhq+ispP0xyt/DL91cN/mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=d/wdTEDP; arc=none smtp.client-ip=148.163.156.1
+	 MIME-Version; b=fM7IKPC1lqdb9YL3Jjs0FQtO5yihG3FVcfUaklSLTfGtXVvtjJUhhvyIQq9K2v8y3MJkJSZQxUj8VVxT2z9KV0mSIkkXL2Zw6BvFTybU0f3VzJ16GTENc7p1hSo5ibpxtiDKcatpuZj3dP7zRInBWmjyrGf4k0OiN/fJbUv01TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EMuS2sbK; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="d/wdTEDP"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 677ClgZ61513825;
-	Fri, 7 Aug 2026 14:42:01 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EMuS2sbK"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 677CmArT1413546;
+	Fri, 7 Aug 2026 14:42:08 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
 	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=mg6jUIDBi4LXfr0N6
-	3s62XG+ZGsyOXqx6ANPvz2CCes=; b=d/wdTEDPIY+8brbna06hDaiuQlzz5AitT
-	KBtQ/Kbmn5NBGMf3NKEH6ljPsK989m9oIxyZA3mVCe+PiRu9lYaob2ljjkMsikNw
-	BRV6Hr0Hc4kOv/K4VUhDPpI8X/4K4kpj11cXT1QSyR/8HcXbg1V2vsegDTeVf8JL
-	8AwovHCQ6VR94wi0GF35BJi+rjctqPwD5WSQ6Kw7p3yA5/Pb0nbsmhxz+vBqIILA
-	Ur7gy9C+bwhT9yLhtmjRyZ58fKUOCFh3o2eMvbEl273JJjRqDhxXJ51U/GrUw/f7
-	4kJ5G0uxe0se9vvDZRXDLcAr+/oxSdx3cF/SmGMrME+iBEHcFB7Lw==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fvxyyvc2w-1
+	:mime-version:references:subject:to; s=pp1; bh=JMOoV7XNgH64sazpd
+	Kg4G+LKJuSGlLgNakd0OLEu9Y8=; b=EMuS2sbKA0pPGRNoj99jtxNxB57DFDmXr
+	EuD1Ow8sB2SgWqg54vQjjl6qM/A+bUPrzFAEihRfYvIXKhm40XH2BtCJMEa3n+z2
+	KwbMYc4ShPM7qLpj+Bulh/WNc30Jy5bJftWI+cUKnSDPw42r/p7Oc1B5QAWcSYtd
+	ApNnD81R1kI+qgrxRXrMkeZBJ5C1kw4/omwl6PAkpZRRYvrGE9rNvRepAV+s9xnK
+	+4YSUQn7vRn2wLzwk575M75+qNJ1V7Q6rhoPB102zFNQCWlc7wdnKXuiZm/VU4UT
+	JZVPWKnXV6MCUZdb/z+7ZAavzPyqH+FjZyusoPKjXl2mUsaXzjTjg==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fvy02c7yx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Aug 2026 14:42:00 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 677EfI5M010704;
-	Fri, 7 Aug 2026 14:41:59 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fsvmhr016-1
+	Fri, 07 Aug 2026 14:42:07 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 677EfFjF020138;
+	Fri, 7 Aug 2026 14:42:07 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fswbgqv52-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Aug 2026 14:41:59 +0000 (GMT)
+	Fri, 07 Aug 2026 14:42:07 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 677Eftts44106110
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 677Eg3aR29884856
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Aug 2026 14:41:55 GMT
+	Fri, 7 Aug 2026 14:42:03 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9AE4F20043;
-	Fri,  7 Aug 2026 14:41:55 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 211DE20043;
+	Fri,  7 Aug 2026 14:42:03 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4F08320040;
-	Fri,  7 Aug 2026 14:41:52 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id C299020040;
+	Fri,  7 Aug 2026 14:41:59 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.39.25.17])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  7 Aug 2026 14:41:52 +0000 (GMT)
+	Fri,  7 Aug 2026 14:41:59 +0000 (GMT)
 From: Athira Rajeev <atrajeev@linux.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
         maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
@@ -59,9 +59,9 @@ Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
         tejas05@linux.ibm.com, tshah@linux.ibm.com, venkat88@linux.ibm.com,
         usha.r2@ibm.com
-Subject: [PATCH V5 3/6] tools/perf: Add arch hook to drain remaining data before event close
-Date: Fri,  7 Aug 2026 20:11:32 +0530
-Message-Id: <20260807144135.2607-4-atrajeev@linux.ibm.com>
+Subject: [PATCH V5 5/6] tools/perf: Add powerpc HTM auxtrace event processing support
+Date: Fri,  7 Aug 2026 20:11:34 +0530
+Message-Id: <20260807144135.2607-6-atrajeev@linux.ibm.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20260807144135.2607-1-atrajeev@linux.ibm.com>
 References: <20260807144135.2607-1-atrajeev@linux.ibm.com>
@@ -74,237 +74,224 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=SYrHsPRu c=1 sm=1 tr=0 ts=6a75eeb9 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+X-Authority-Analysis: v=2.4 cv=G6ws1dk5 c=1 sm=1 tr=0 ts=6a75eec0 cx=c_pps
+ a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
  a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8 a=87GMixV78Mb6ydp6ANcA:9
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODA3MDExMiBTYWx0ZWRfX3iXptWno3Pu7
- UPy7eGShsLEjESNhU1gCVpaam6gAp/nNHFs6b4ML03A/s+73jycxOie1ywlA7I4cTUp/2pw793H
- HItKtR8pDNQvjdDjOvy2DfuXHDGCQug=
-X-Proofpoint-ORIG-GUID: -oGUoQUk2RqvmYzqMoUuBMi9qU-bVtAS
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA3MDExMiBTYWx0ZWRfX4xfvwrw80foZ
- m2+jzqJ/CaE0zDwstkOfc23cCGcM0GaAHvZIp31fervKr/qLhNaLvWphRFM2J+LGSUIsNWETVZ/
- gDgQts0urEh0zamxLWLBA9QlgkG/YJl4OhlcvhgxKTsm1OOUoYTpovwyRPfrucDeZvyzvwi/k8F
- CXIPI/q88dE2aOycnPX+fBsqyDzCUfZKIEcAKRht94Gfj+Fq8Op0CEw1qXiW8ukz3xGHUoPrJA9
- QdwBeczgldebmWRPVoH9tQNxXsYhbze9PpxvrCW1cF4HONNARBD9Vr8vTp4yZWVjyVkVPGneDA9
- LEGF0ecouveje9dtfuveTatMJkZYvWp2CAiwwJ58Gh5dM+7Ri53tpnlvnmAPUQPz8DvgBLNaVhY
- UX817Tj1d7C8gMx7JdAORX5k9wkiuYPrux/v+Zvg3oAsCNE24H4/N2Kcn99o6fYn9e+AaWrB7zF
- 6wVS9UaJm602JItJR5A==
-X-Proofpoint-GUID: qFWwL9-6pIbY50H-ySMWimFbkVaTE3v7
+ a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=SOduUkfoBtTWgvstiHsA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA3MDExMiBTYWx0ZWRfX2l4v3FfSZUNO
+ IkSNLM/D5pXo75zJIPkG578bbSTXqJm8ZAcRjoTScOX9Fuk9gcp3+8KwR4VXUvj/j0BB2g9G1qp
+ BN6IAjzSMqfrX6Ja+Hr8hd5oDM570Y0iUlKQcg54/l+8DwCAgeo++FgdUSn393wlKQ1A6L0XZ1D
+ 4wqKqqzuHQqRlExUV5Vs5p0kewDdDhZ7uvUwQP1Qif3P0uGghAhptov8oI47qo4kt85iNA2O1z6
+ EPvViVC+HdOb95IZzKo2ryyvo6xBcWspQSyRp9Uwvyd5xy9+f6GDovcifhVptQuq71AQX4YCghQ
+ NUuEkkconOjxyfljbVDbTNVuy+dhK3w5Sa2IAHvCaxVBbitc3mYz6meaApMQ/btqHVBVWDoiDu6
+ OhneIz8xJqSllzGNZBWtoH5vR0yG0r2J1p2xrdZ8dTGLNQ/3lX34NhEUG+DiO13iP4+t2rqwM57
+ Z/0qm36xCixHbVLRzug==
+X-Proofpoint-ORIG-GUID: 9C7Dt5z4yG7uHqUnYcN1vm76os-GbuOy
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODA3MDExMiBTYWx0ZWRfXzJ5YtB8SKK4k
+ JzuTWbrWt+MftDzdIMVnpK+fRzjHJ5yoRuE49ZA/VGWXDqMl2cDekmOl2/S53YhRWM2N8W6CHBv
+ jft9uRDOPh76nOjEivOVD8lZq9Arx/s=
+X-Proofpoint-GUID: _BoVtGR5Al9IMO7EC0T_5KHYSMIp3DnE
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-08-07_02,2026-08-06_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 malwarescore=0 priorityscore=1501 lowpriorityscore=0
- suspectscore=0 bulkscore=0 impostorscore=0 phishscore=0 spamscore=0
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2608070112
+ impostorscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
+ phishscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608070112
 
-While collecting samples using perf record, __cmd_record() disables the
-evlist once recording is complete. After that, event fds are no longer
-read and any remaining PMU-specific data cannot be drained.
-
-Add a weak arch_perf_record__need_read() hook so architecture code can
-indicate that more data remains to be collected before events are
-disabled and closed. When the hook reports pending data, perf record
-performs another read pass via record__final_data().
-
-A static volatile sig_atomic_t drain_interrupted flag is added.
-sig_handler() sets it when a second signal (SIGINT/SIGTERM) arrives
-while done is already set, allowing a second Ctrl+C during the drain
-loop to abort immediately.  Without this, a user who presses Ctrl+C
-twice while HTM data is being drained would have no way to interrupt
-a stalled drain loop.
-
-This allows architectures such as powerpc HTM to drain trace data and
-associated metadata before the event is closed.
+Add the powerpc-htm.c decode stub and wire the dispatch in
+perf_event__process_auxtrace_info() to call
+powerpc_htm_process_auxtrace_info().
 
 Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
 ---
-Changes in V5:
-- Rename record__final_data() to record__final_aux_data() to make the
-  AUX-specific purpose explicit.
-- Guard both call sites with if (rec->opts.full_auxtrace) so the
-  function is only entered when AUX tracing is actually active.
-- Remove the per-thread TLS redirect loop and 'int t' variable from
-  record__final_aux_data().  The existing record__init_thread_masks()
-  path already rejects --threads combined with full_auxtrace, so
-  rec->nr_threads > 1 and rec->opts.full_auxtrace cannot both be true
-  at runtime; the check was redundant dead code.  A single
-  record__mmap_read_all(rec, true) call on the main thread is sufficient
-  and race-free.
-
 Changes in V4:
-- Fix drain_interrupted to not trigger on SIGCHLD: change the condition
-  in sig_handler() from "if (done)" to "if (done && sig != SIGCHLD)".
-  V3 set drain_interrupted on a SIGCHLD that arrived while done was
-  already set, aborting the drain loop on normal child workload
-  completion even though no second Ctrl+C was pressed.
-- Drain all thread mmaps in record__final_data(): iterate over all
-  rec->nr_threads slots and temporarily switch the TLS 'thread' pointer
-  to each thread_data[t] before calling record__mmap_read_all(), then
-  reset it to thread_data[0] afterwards.  V3 called
-  record__mmap_read_all() once with whatever 'thread' pointed to,
-  leaving the mmaps of worker threads un-drained when --threads is in
-  use.  Adds local variable 'int t' for the loop counter.
-- Fix the post-loop fallback condition from "if (!disabled)" to
-  "if (target__none(&opts->target) || !disabled)" so that the final
-  drain is always executed for child workloads.  In the child-workload
-  path (target__none == true) the in-loop disable block is never
-  entered, so disabled stays false, but the old "!disabled" test
-  happened to be true there only by accident; making the intent
-  explicit also handles any future path where disabled could be set
-  early.  Remove the now-redundant evlist__disable() call that V3
-  placed inside the post-loop block, since the disable is handled by
-  the existing code below.
+- Add #include <linux/zalloc.h> to the powerpc-htm.c stub.  V3 omitted
+it from the stub; without it the zalloc() call added in patch 6 would
+require the include to be introduced there instead of alongside the
+struct definition it serves.  Moving it here keeps the allocation
+header co-located with the powerpc_htm struct that patch 6 expands.
 
 Changes in V3:
-- Add static volatile sig_atomic_t drain_interrupted.  Set it in
-  sig_handler() when a second signal arrives while done is already set.
-  This lets a second Ctrl+C abort the drain loop immediately.  V2
-  tested done > 1 to detect a second signal, which is unreachable
-  because done is only ever set to 1.
-- Replace rec->bytes_written with record__bytes_written(rec)
-  (which includes rec->thread_bytes_written) so the no-progress
-  check accounts for data written by the AIO/thread path.
-- Add a retry counter (FINAL_DATA_MAX_RETRIES 20, 20 x 1 ms = 20 ms
-  maximum) instead of aborting on the first stall.  The no-progress
-  sleep of 1 ms is enough for the AUX ring buffer consumer (perf's
-  ~1 ms poll interval) to advance the tail pointer.
-- Move record__final_data() into the in-loop disable block
-  (before evlist__disable()) as well as into a post-loop if
-  (!disabled) block that covers both the early-break and
-  child-workload paths.  V2 only called it inside the loop
-  with a final_data_drained guard, missing the early-break
-  and child-workload cases.
-- Remove the now-unnecessary bool final_data_drained local variable.
+- Change powerpc_htm_dump_event() parameter from size_t to u64 and
+use %" PRIu64 ", matching the type of buffer->size and avoiding
+truncation on 32-bit platforms.
+- Add #include <inttypes.h> for PRIu64.
+- Remove the htm->auxtrace_type = auxtrace_info->type assignment
+that was added here in V2; this field is now set from
+priv[POWERPC_HTM_PMU_TYPE] in patch 6 where the full processing
+logic lives.
+- Do not re-add PERF_AUXTRACE_POWERPC_HTM to auxtrace.h or the
+stub case in auxtrace.c; those are now in patch 2. This patch only
+adds the powerpc-htm.c decode stub and wires the dispatch to call
+powerpc_htm_process_auxtrace_info().
 
 Changes in V2:
--  V1's callback was responsible for driving the read loop
-  including evlist__enable cycling. Removed that logic
-- Use bytes written to check if session needs to be continued.
-- Patch is now 3/6 instead of 3/9.
+- Scope narrowed: this patch now only adds the PERF_AUXTRACE_POWERPC_HTM
+  enum constant to auxtrace.h and wires the dispatch in
+  perf_event__process_auxtrace_info() to call
+  powerpc_htm_process_auxtrace_info().  It also amends htm_info_fill()
+  (from patch 2) to set auxtrace_info->type now that the constant is
+  defined.
+- All file-writing and decoding logic is moved to patch 6.
+- Patch is now 5/6 instead of 5/9.
 
- tools/perf/builtin-record.c | 65 +++++++++++++++++++++++++++++++++++++
- tools/perf/util/record.h    |  4 +++
- 2 files changed, 69 insertions(+)
+ tools/perf/util/Build         |   1 +
+ tools/perf/util/auxtrace.c    |   2 +
+ tools/perf/util/powerpc-htm.c | 118 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 121 insertions(+)
+ create mode 100644 tools/perf/util/powerpc-htm.c
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index f58d7e3c7879..c3eb0af31142 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -192,6 +192,7 @@ struct record {
- };
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 330311cac550..7fa354853d2a 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -141,6 +141,7 @@ perf-util-y += hisi-ptt.o
+ perf-util-y += hisi-ptt-decoder/
+ perf-util-y += s390-cpumsf.o
+ perf-util-y += powerpc-vpadtl.o
++perf-util-y += powerpc-htm.o
  
- static volatile int done;
-+static volatile sig_atomic_t drain_interrupted;
- 
- static volatile int auxtrace_record__snapshot_started;
- static DEFINE_TRIGGER(auxtrace_snapshot_trigger);
-@@ -681,6 +682,8 @@ static void sig_handler(int sig)
- 	else
- 		signr = sig;
- 
-+	if (done && sig != SIGCHLD)
-+		drain_interrupted = 1;
- 	done = 1;
- #ifdef HAVE_EVENTFD_SUPPORT
- 	if (done_fd >= 0) {
-@@ -2437,6 +2440,57 @@ static unsigned long record__waking(struct record *rec)
- 	return waking;
- }
- 
-+/*
-+ * Weak arch hook called by record__final_data().
-+ * Returns 1 if the arch PMU driver still has records pending (the caller
-+ * will call record__mmap_read_all() and retry), 0 when done.
-+ * Implementations use perf_evsel__read() so this must be called while
-+ * events are still ACTIVE (before evlist__disable()).
-+ */
-+__weak int arch_perf_record__need_read(struct evlist *evlist __maybe_unused)
+ ifdef CONFIG_LIBOPENCSD
+ perf-util-y += cs-etm.o
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index bf08f41d623f..db94e3f33f57 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -1434,6 +1434,8 @@ int perf_event__process_auxtrace_info(const struct perf_tool *tool __maybe_unuse
+ 		err = powerpc_vpadtl_process_auxtrace_info(event, session);
+ 		break;
+ 	case PERF_AUXTRACE_POWERPC_HTM:
++		err = powerpc_htm_process_auxtrace_info(event, session);
++		break;
+ 	case PERF_AUXTRACE_UNKNOWN:
+ 	default:
+ 		return -EINVAL;
+diff --git a/tools/perf/util/powerpc-htm.c b/tools/perf/util/powerpc-htm.c
+new file mode 100644
+index 000000000000..0ef7ecd18c6f
+--- /dev/null
++++ b/tools/perf/util/powerpc-htm.c
+@@ -0,0 +1,118 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <stdio.h>
++#include <stdlib.h>
++#include <inttypes.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <string.h>
++#include <errno.h>
++#include <endian.h>
++#include <linux/zalloc.h>
++#include "util/evsel.h"
++#include "util/evlist.h"
++#include "util/session.h"
++#include "auxtrace.h"
++#include "color.h"
++#include "powerpc-htm.h"
++#include "debug.h"
++#include "sample.h"
++
++struct powerpc_htm {
++	struct auxtrace		auxtrace;
++	struct auxtrace_queues	queues;
++	struct auxtrace_heap	heap;
++	u32			auxtrace_type;
++	struct perf_session	*session;
++	struct machine		*machine;
++};
++
++static void powerpc_htm_dump_event(u64 len)
++{
++	const char *color = PERF_COLOR_BLUE;
++
++	if (dump_trace) {
++		color_fprintf(stdout, color,
++			". ... HTM PMU data: size %" PRIu64 " bytes\n", len);
++	}
++}
++
++static int powerpc_htm_process_event(struct perf_session *session __maybe_unused,
++				     union perf_event *event __maybe_unused,
++				     struct perf_sample *sample __maybe_unused,
++				     const struct perf_tool *tool __maybe_unused)
 +{
 +	return 0;
 +}
 +
-+static void record__final_aux_data(struct record *rec)
++static int powerpc_htm_process_auxtrace_event(struct perf_session *session __maybe_unused,
++					      union perf_event *event,
++					      const struct perf_tool *tool __maybe_unused)
 +{
-+	u64 last_bytes_written = 0;
-+	int retries = 0;
-+#define FINAL_DATA_MAX_RETRIES 20  /* 20 * 1 ms = 20 ms max wait */
++	if (dump_trace)
++		powerpc_htm_dump_event(event->auxtrace.size);
 +
-+	/*
-+	 * Drain any remaining AUX data.  Called only when full_auxtrace is
-+	 * set; --threads is mutually exclusive with full_auxtrace and is
-+	 * rejected at open time, so the main thread's thread_data[0] covers
-+	 * all CPUs here.
-+	 * arch_perf_record__need_read() calls perf_evsel__read() and
-+	 * therefore requires events to still be ACTIVE (before
-+	 * evlist__disable()).
-+	 * A second SIGINT/SIGTERM sets drain_interrupted to abort immediately.
-+	 */
-+	while (arch_perf_record__need_read(rec->evlist)) {
-+		if (drain_interrupted)
-+			break;
-+
-+		last_bytes_written = record__bytes_written(rec);
-+
-+		if (record__mmap_read_all(rec, true) < 0)
-+			return;
-+
-+		if (record__bytes_written(rec) == last_bytes_written) {
-+			if (++retries >= FINAL_DATA_MAX_RETRIES) {
-+				pr_warning("Final AUX data drain made no forward progress after %d retries.\n",
-+					   FINAL_DATA_MAX_RETRIES);
-+				break;
-+			}
-+			usleep(1000); /* 1 ms: let AUX ring buffer consumer advance */
-+		} else {
-+			retries = 0;
-+			usleep(100);
-+		}
-+	}
++	return 0;
 +}
 +
- static int __cmd_record(struct record *rec, int argc, const char **argv)
- {
- 	int err;
-@@ -2864,11 +2918,22 @@ static int __cmd_record(struct record *rec, int argc, const char **argv)
- 		 */
- 		if (done && !disabled && !target__none(&opts->target)) {
- 			trigger_off(&auxtrace_snapshot_trigger);
-+			if (rec->opts.full_auxtrace)
-+				record__final_aux_data(rec);
- 			evlist__disable(rec->evlist);
- 			disabled = true;
- 		}
- 	}
- 
-+	/*
-+	 * If the loop exited without entering the in-loop disable block
-+	 * (early break, or child workload where target__none is true and
-+	 * the block is never reached), drain any remaining AUX data now.
-+	 * Events are still live at this point.
-+	 */
-+	if ((target__none(&opts->target) || !disabled) && rec->opts.full_auxtrace)
-+		record__final_aux_data(rec);
++static int powerpc_htm_flush(struct perf_session *session __maybe_unused,
++			     const struct perf_tool *tool __maybe_unused)
++{
++	return 0;
++}
 +
- 	trigger_off(&auxtrace_snapshot_trigger);
- 	trigger_off(&switch_output_trigger);
- 
-diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-index 93627c9a7338..73bc3de97b2a 100644
---- a/tools/perf/util/record.h
-+++ b/tools/perf/util/record.h
-@@ -95,4 +95,8 @@ static inline bool record_opts__no_switch_events(const struct record_opts *opts)
- 	return opts->record_switch_events_set && !opts->record_switch_events;
- }
- 
-+struct evlist;
-+struct record;
-+int arch_perf_record__need_read(struct evlist *evlist);
++static void powerpc_htm_free_events(struct perf_session *session)
++{
++	struct powerpc_htm *htm;
 +
- #endif // _PERF_RECORD_H
++	if (!session || !session->auxtrace)
++		return;
++
++	htm = container_of(session->auxtrace, struct powerpc_htm, auxtrace);
++	auxtrace_queues__free(&htm->queues);
++}
++
++static void powerpc_htm_free(struct perf_session *session)
++{
++	struct powerpc_htm *htm;
++
++	if (!session || !session->auxtrace)
++		return;
++
++	htm = container_of(session->auxtrace, struct powerpc_htm, auxtrace);
++	powerpc_htm_free_events(session);
++	session->auxtrace = NULL;
++	free(htm);
++}
++
++int powerpc_htm_process_auxtrace_info(union perf_event *event,
++				      struct perf_session *session)
++{
++	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
++	struct powerpc_htm *htm;
++	int err;
++
++	if (auxtrace_info->header.size < sizeof(struct perf_record_auxtrace_info) +
++					 HTM_AUXTRACE_PRIV_FIXED)
++		return -EINVAL;
++
++	htm = zalloc(sizeof(struct powerpc_htm));
++	if (!htm)
++		return -ENOMEM;
++
++	err = auxtrace_queues__init(&htm->queues);
++	if (err) {
++		free(htm);
++		return err;
++	}
++
++	htm->session = session;
++	htm->machine = &session->machines.host;
++	htm->auxtrace.process_event = powerpc_htm_process_event;
++	htm->auxtrace.process_auxtrace_event = powerpc_htm_process_auxtrace_event;
++	htm->auxtrace.flush_events = powerpc_htm_flush;
++	htm->auxtrace.free_events = powerpc_htm_free_events;
++	htm->auxtrace.free = powerpc_htm_free;
++	session->auxtrace = &htm->auxtrace;
++
++	return 0;
++}
 -- 
 2.53.0
 
