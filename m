@@ -1,106 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04E82473C65;
-	Fri,  7 Aug 2026 12:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F550442372
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 12:19:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786104081; cv=none; b=DuIvj7IJFbMeKv2H7tV6UySRuwgjishm8uSnGVguOYV0i8GHnU6HMpAT7BVjS+7N1Ri7IHVaCojjVhmW9E7RH3E5FN83qZDRjxfeIYbMvnlnmsulzsTSgUUmB5xLOp6UsC+BHbpeVanW8Qvj1+/uJk2QpvSoYgE7GE3q26/IVzs=
+	t=1786105151; cv=none; b=hR463DsSVjxRcHPrCx6QZUmQ2RlWn3bhyrJpSpJKu5gYn/u6tknAOvbPGae4BTjd2N3xvr7143oBozQCngEDoymZVEybk/a1I5cfE8/uVUSZQ4nPqgweMd5rXsZQ21GLncRET3eZ1Z1SH1qznY32TpPzo5BHOpz+POTniKu1NgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786104081; c=relaxed/simple;
-	bh=uB/s11ilmxdQO7GBq/teBpPaV3GciAzoWufSnoOveOY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lLEazwbUqqsE/Jkol9VEtU8SlSBS0g9Pvkc8aFTKAvshexrfer4/xIq4IQjLiTqKpWQh+42GnBEJHbVpvhKk/eABv3lPwRnWDTOAxsMNWN3BgzatIPnwVgRDnjkeckHtPPz31Ys+nBoDuuSk7EYxe6Gyc1QwMysdgRnsA/nAqTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LPvN3ulE; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786105151; c=relaxed/simple;
+	bh=q9kUnINnzM2h1qOmbQdjZo4Rw0F8JxCi2/foS2zgXWo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AFVj+9vthotBXZRvnyBD0D7JkkNaL6qhwYGVmljgeJ050KiWX16DBmUL7VaN0vtHKxIiltOG1qG38BZMArxfQgP0AqAFMkfmtmKPVjBUHbaLjMv9WNw99kni/Gtr34cUCH5JNXQupsRPbkMHGjA7VR0X3e2unpMFQadqzyYvK7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fpHij9fd; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LPvN3ulE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A28C1F000E9;
-	Fri,  7 Aug 2026 12:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786104060;
-	bh=382U0Kti+Lbuas3lM6gxe+r8oW1NkwewtCcvuSWntHY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=LPvN3ulE7JsvzaAC1Y1X5HYXWzJ9d9w28Y+8xWAWNf/Rc7Vc9GWsGWMitpowHk9DV
-	 uRELIOTZsuq/VyAVof46vJcf8FMFv/gdA/UMEnOKByaa4snQ+UexuZAS8yGo3q+60D
-	 mCBGbxK20Xm86VWvu2rrUSNVW5US9OgF4O+yC1qMxgZ1V1wrJp130br3MSDVI8IR16
-	 uXAtw8nY1XLJkqLcdQjm5tVNa1Rk5mq4K+n7WCJ9v/Qm1kl8+9KiinWh6n8odIdNRK
-	 tX2Gk2U7Qq6JIcfOK4WoDD+kofYLhel35sR2UtdSMDq5xVIfaPCTtMpmXsCZp6oLBo
-	 Z3YlZZDq8CcXg==
-Date: Fri, 7 Aug 2026 09:00:55 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot <sashiko-bot@kernel.org>,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH 05/12] perf jitdump: Check snprintf return before
- computing header size
-Message-ID: <anXI90wr-sJ0PAY-@x1>
-References: <20260805133013.235016-1-acme@kernel.org>
- <20260805133013.235016-6-acme@kernel.org>
- <CAP-5=fXRei4AivX_RcqR4xjmLtbYuNsJALOzJMAWvy7HCU09Dg@mail.gmail.com>
- <anOS6oYhAKJkAQdh@x1>
- <CAP-5=fU6w8pjDs161=JtKK-OLns9O2iLgTrJhd-Dcahn7xon-Q@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fpHij9fd"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-47fe2d179e2so2136632f8f.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Aug 2026 05:19:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1786105141; x=1786709941; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=b6ARJxBgnBxK+6NZln3mP3Z60UK181/qnNyKgABn96o=;
+        b=fpHij9fd/n1vvKu2ltWtxpzd1ntXCE1fCNezIas5V2lXQXANM14dGxAsLqRr+dAYxn
+         Iw1RiQmEsRdEDj+UOOU5QtjeqtqKJLjQ/jBWJNGk/jxjnRdqHbEulWuw2fM3zPeDr7j6
+         rNLPA37yK8BLrdi/aSz82b7AICpIrSs+DIx3J354eIqhYwMpdcfe8Pxpeeyw3q3lk/0x
+         tAwML/8+gU+oHtBfkcJi1NyZxBoCFDgBkwb9QfcWEqa2GDB40co79YH8Js3OskIX1UNQ
+         g56pIG0ABk8/H3bIhLAWCnPCLCMczDxae1++GDZvnZzFAIYfvoIdtXQgdLB8XJ4ngjaZ
+         FjoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786105141; x=1786709941;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=b6ARJxBgnBxK+6NZln3mP3Z60UK181/qnNyKgABn96o=;
+        b=Jx85CJIPLnSMn8KGL23S26U0fybBTrI772xRRkXyz32Lmvgy6WFaJeEudJZ/MjS9Hz
+         IzTF+rk4bu315iFaed79ygGBRbJtpNeSr8ktf41TPIqVyVOGfnWALCY1uSWsWdwd8OcP
+         fL/VMvEUit+FxoTnS/o/VTEOlGGuVyOO/6xYYoYqdDy0dTG6OX0kcmCtJHOCxRnjJ/Qr
+         M8NzHHJGJbVzvQnFLx2OPAbFj0+PWo2ScTMFq6ioXIvzSMFzpq1N2V0WfAO8cSXun7Dx
+         rbGkdHIhuh2xOx2gBZF/oE896+Ko/pMeWiuTte35jwL6onNzThIEzZdh+w4ozCa9J3jM
+         ISUw==
+X-Forwarded-Encrypted: i=1; AHgh+RqN1LPjHV+PbS2lGpoKrMuVtUxNep1LpJpkUGjrD7FwFCJgAa9JNzCCZrC8eEUbDJIALpR6o6hgJ7nhRIM8Kirz@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6AtVZryHssVlYX9H6mBLdLj90t43OL6ddsrgn3pgcfd4kw/7o
+	TfI5z11lEFCdw8U3B2V/PDXMWrw8ouudxvX8uaSA6CkX/kZqu/niFh5kIUPCKpvFqoE=
+X-Gm-Gg: AR+sD13A2Uxcz2w8DzU1li37++aqCEe9qT+QTQ1Vj2IWhGCL8qmbf9ofH8ZuHcGqD0w
+	P4wE4E0yPq/YYs+0K7tsE0k/2kbneJjUGOUKl0njo75eKnC/qh/HoAcNJHn11ptRfqENkzF7HAi
+	sgl/bAOwA12ohv2aW+xGG6CfAwBk8ZDQWdKLDKqC4bMz/QJt2t9dxVgz+kG/aikVOST+ATJRm/h
+	GgRVzSIK7jZD8EVe6KMneFRR5+TmGz/V1CI+1Qy0u3acSN+tj15becdsctg7aBWTgx1HWZZR3pW
+	aZLALHIAIpjTKoGHcbtF/lOH41+JrQudCxJFoy4R3yeOKIIFb9ekQj6e0V1b2HJRcnUohu0S7vY
+	kSWzKQ0znwNILrntJezYznHJwyqq10JITfqQrBGmjoHoG9Oq37P/V2Dd2JSUFDlot7tdA/PZHNr
+	ht9TrCvWVTI5J/ROCJcQg+tMICA94HBanYwlWEwrv2tdFAivXWsHHEoJHsBCl8SOUe3Q==
+X-Received: by 2002:a05:6000:4715:b0:47f:9752:3277 with SMTP id ffacd0b85a97d-47fec509a9fmr38796349f8f.2.1786105140913;
+        Fri, 07 Aug 2026 05:19:00 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-480021f8b9bsm6038188f8f.25.2026.08.07.05.18.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Aug 2026 05:19:00 -0700 (PDT)
+Message-ID: <66590828-a571-45eb-8e67-a55bebea1b97@linaro.org>
+Date: Fri, 7 Aug 2026 13:18:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU6w8pjDs161=JtKK-OLns9O2iLgTrJhd-Dcahn7xon-Q@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf: arm_pmuv3: Zero initialize hw_id branch stack field
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, "Rob Herring (Arm)" <robh@kernel.org>,
+ Leo Yan <leo.yan@arm.com>, Suzuki Poulose <Suzuki.Poulose@arm.com>
+References: <20260807-james-brbe-init-hw-idx-v1-1-009d1843960a@linaro.org>
+ <a985a304-b399-4e84-99e3-0c6200ae518a@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <a985a304-b399-4e84-99e3-0c6200ae518a@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Aug 05, 2026 at 02:29:47PM -0700, Ian Rogers wrote:
-> On Wed, Aug 5, 2026 at 12:45 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > On Wed, Aug 05, 2026 at 12:07:23PM -0700, Ian Rogers wrote:
-> > > On Wed, Aug 5, 2026 at 6:31 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > > +++ b/tools/perf/util/jitdump.c
-> > > > @@ -493,6 +493,9 @@ static int jit_repipe_code_load(struct jit_buf_desc *jd, union jr_entry *jr)
-> > > >                         jd->dir,
-> > > >                         nspid,
-> > > >                         count);
-> > > > +       /* snprintf returns would-be length on truncation, clamp to buffer */
-> > > > +       if (size >= PATH_MAX)
-> > > > +               size = PATH_MAX - 1;
 
-> > > Given the recent fixes to reading /proc/pid/maps where it was assumed
-> > > the file paths would be limited to PATH_MAX and it turns out that
-> > > PATH_MAX doesn't really do that and we had potential buffer overruns
-> > > during synthesis, I wonder it would be more intention revealing here
-> > > to use "sizeof(event->mmap2.filename)" rather than PATH_MAX. Other
-> > > than the constant used, I agree with the change and using PATH_MAX
-> > > isn't wrong.
 
-> > We need to go on having our tools/perf/AGENTS.md with all those rules
-> > :-)
- 
-> Yeah, I don't know of a plan for AGENTS.md files but there is always:
-> https://github.com/masoncl/review-prompts/blob/main/kernel/subsystem/perf.md
- 
-> Perhaps we can add something like:
-> ```
-> ## PATH_MAX avoidance
+On 07/08/2026 11:44, Anshuman Khandual wrote:
+> On 07/08/26 2:44 PM, James Clark wrote:
+>> PERF_SAMPLE_BRANCH_HW_INDEX is supported by BRBE so hw_id is passed to
+>> userspace, but it's never set by the BRBE driver. Zero initialize it as
+>> it should be according to the docs:
+>>
+>>     * For the architectures whose raw branch records are
+>>     * already stored in age order, the hw_idx should be 0.
 > 
-> The PATH_MAX constant isn't a limit to paths in places like
-> /proc/pid/maps, and reading paths from these locations can lead to
-> buffer overruns for buffers sized at PATH_MAX - as such prefer dynamic
-> memory allocation for paths. When referring to the size of PATH_MAX
-> sized char arrays in kernel system call and ring buffer data
-> structures, prefer to use sizeof the variable rather than the PATH_MAX
-> constant to make it clear the size and possible truncation is being
-> enforced by the kernel which may substitute long paths with the value
-> "//toolong".
-> ```
+> The in code documentation while defining perf_branch_stack.
+> Probably a good idea to specify the same above.
+> 
+>   * For the architectures whose raw branch records are
+>   * already stored in age order, the hw_idx should be 0.
+>   */
+> struct perf_branch_stack {
+> 	u64				nr;
+> 	u64				hw_idx;
+> 	struct perf_branch_entry	entries[];
+> };
+> 
 
-Looks sensible, I encourage you to submit a patch adding that:
+I found it easily enough. I wouldn't want to put the same comment in two 
+places and risk one of them going stale. And if I take it away from one 
+place and move it to the struct then it's just missing from somewhere 
+else instead. So I think I'd rather leave this one.
 
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+>>
+>> It's probably too risky to remove PERF_SAMPLE_BRANCH_HW_INDEX from BRBE
+>> now in case anyone is setting it and reading the value, but zero
+>> initializing the whole struct also protects against the same issue with
+>> new fields that are added in the future.
+> 
+> Agreed. Because PERF_SAMPLE_BRANCH_HW_INDEX is supported in BRBE,
+> hw_idx pushed to the userspace should be zero if HW never updates.
+> This is definitely better than dropping PERF_SAMPLE_BRANCH_HW_INDEX
+> flag all together to avoid breaking current users (if any).
+>>
+>> Fixes: 58074a0fce66 ("perf: arm_pmuv3: Add support for the Branch Record Buffer Extension (BRBE)")
+>> Signed-off-by: James Clark <james.clark@linaro.org>
+> 
+> Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> 
 
-- Arnaldo
+Thanks
+
+>> ---
+>> Very small fix spotted by Sashiko. It was probably always zero during
+>> testing or never looked at.
+>> ---
+>>   drivers/perf/arm_pmuv3.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+>> index 8014ff766cff..b9a8592bf112 100644
+>> --- a/drivers/perf/arm_pmuv3.c
+>> +++ b/drivers/perf/arm_pmuv3.c
+>> @@ -1361,7 +1361,7 @@ static int branch_records_alloc(struct arm_pmu *armpmu)
+>>   		struct pmu_hw_events *events_cpu;
+>>   
+>>   		events_cpu = per_cpu_ptr(armpmu->hw_events, cpu);
+>> -		events_cpu->branch_stack = kmalloc(size, GFP_KERNEL);
+>> +		events_cpu->branch_stack = kzalloc(size, GFP_KERNEL);
+>>   		if (!events_cpu->branch_stack)
+>>   			return -ENOMEM;
+>>   	}
+>>
+>> ---
+>> base-commit: f9a2394a23482bfd330911e9c8295b71724feacd
+>> change-id: 20260807-james-brbe-init-hw-idx-53dec54fe266
+>>
+>> Best regards,
+>> --
+>> James Clark <james.clark@linaro.org>
+>>
+> 
+
