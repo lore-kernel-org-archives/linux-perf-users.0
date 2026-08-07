@@ -1,127 +1,240 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2E93A9612
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 09:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D8334DCE0
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 09:17:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786094124; cv=none; b=YdS+aD1Dp33eNapxwi1N/pHGn7hQTdLpiJr0TUhRuDL2FiFQmeDIcoaf6PbPomsQb0PvZPSNdR3LEDv9lklc0XLUrwAlgqYeaDZGjzl9ioL3YG9bZu1nqar61a1YPG6zQFp3rsgNJD2/zLLxKh56fFBKqsMAFo7+tKdC4P3+KCM=
+	t=1786094231; cv=none; b=RXUl5igVELRhVPt2de8gGIiaTTQdTEUjx+87EEbK67iAffdhqb0UmNZPYlD0QMTR3+MIcE2sOS6GAhxzZMzxst4Db5DKHJCN1EG4wQQ1N5xQ8WU2xKfJp4zMtwP8lj76YW22D7XZNlpiJSAybx5P8iNxJ5+P6aC+MNA1JUlsB4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786094124; c=relaxed/simple;
-	bh=M1pf+02huWyWg7XJVqpd9nXyaTXfzjeclnrKBHS5JO8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=UtC5m9AcPmoYUTweGndP2NzHkQv5ss+O17QvrOnuiLYXJubCmZC+HIWXM4guMt4zlIUbn4trj2AQ2kk91/YUvzpXcJWSouOgbfSZSnU/+23DvFRNW0nEE/gt2Br1Jwmx6S9cvE9dEPjoT94iM4uavPtTgBTdYFsuoAmnQ81G76c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IJxYfMNU; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1786094231; c=relaxed/simple;
+	bh=fHWEiM8x0gEin26oxlBByGH/SvqyHWN8avgJ4NuJrlY=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=I2RLvHKxFi6GwAivi41OQldnb45FriuwWi+OLi5s+CY71fUAI58R4F+gjXIxdRmcChQZh0bW0sKunhvxgGDpjmpPt0sF6HUPlxyvBK4qHbSkjdvBZNrszDTijpQy0CUlG7X1S7NeQBLM2ugUT/wiZM0XZombP/BJqX0gqJVQFQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOraT54q; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IJxYfMNU"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-47f7872abb6so1508740f8f.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Aug 2026 02:15:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1786094119; x=1786698919; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=e6t3+tBS5sN1Dfvci+p8e/0NE4L3dqjBbVzFjBmD5o0=;
-        b=IJxYfMNU6c6p+SQnqF7Y+hjp15zi0HYXKnLUMSkpIxqE6Q/bXyEXrxfeajDhXsXqGi
-         3xOwnZ4D/xwLpwRJ/JlCLuiFHPs0hcYAFqItQo4q6Yv3YkCs15mmWJsEyEpLUCqFj1J2
-         vd+Kl1bpW69O8cjc76PBe12PCzmVE3ZU05k7OhoWQLQsVGq0DdgVFxp1uH9tAVPIH9N+
-         h9bCUxSVyM3cOrHE+tfU+JFXiBSign2tMrx5qWW7Y+p6wiZUZttOd1fXoND6eo25FQ72
-         n11ryd+5eJwZbNxq4uKx/12v5HrOPUVh9fhfWlzN+97q48CamgWeu3pWFORO/yFIdMs1
-         SWGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786094119; x=1786698919;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=e6t3+tBS5sN1Dfvci+p8e/0NE4L3dqjBbVzFjBmD5o0=;
-        b=UeNETr0X6rhRFfOpZJ13Zevpx9nUcfzfQS+viIe28f+IrC8jxtMRNPl2BuCS2wAU7D
-         X/6sACxYzCsc9Z7Z6F1tFooeNLfaTRpEjSkg7QLc1GLGnZkbJmgcdI/NenJcUyqfH82r
-         dC2hiBWIkEcdZsTj2ahLdlENa3g2di8Ldh4FB7BcS8M1Owjf1dCTM/LIpTBvbDvQ0DrJ
-         OBCkLtOXqvaig+7xn/MKeveef65frYSO9o+586H1wURGpjFRPoqVokZCmM9HgRy1Ewk4
-         TjHoJ3zayr8SGeNu6LPcgQy+joveEBR1VkyPwORCiwl1gRuYZBI5nMn7hRKNl6TUxCXE
-         JJnQ==
-X-Forwarded-Encrypted: i=1; AHgh+RqyiKEKQAfZNM/eV6BEHaBQPydpIP7RLCz89Btr80lyY4ID9IUO1gY66L3v92ICwkbJnIcSKRv+sjo6/oPXX0pU@vger.kernel.org
-X-Gm-Message-State: AOJu0YzcOXWV8BXFqxzubDJiA/m3NBHF8ZeqJUrmtSN2O1vbzg+59OjY
-	PXsaFnjeyjrrBsh0L8TGzrKWCx4Y+QmIighVQptlIgkdJrkQJAC9OXWnJqY67GTYA0YoNnuKcyO
-	lnsqWQBU=
-X-Gm-Gg: AR+sD10qaxAZJWQHh5j+4S06Z+Nw1EuxQKdDorivrjXU3y3yozbHsTBbh92DBNINp+0
-	IU3RRjbGQbQ7xzxl0CtLdh+WBOIV1Jr4wKHKhZORB0GDqAJJY5pUom0L4W92iCpENqtJkHiptI9
-	3bHFzmTgrK6k0i6Se45xcCrZm6zWcaeDGbJM98D3lIStEyeMSt3SUj9zpOnncILe4nLnwBIYx17
-	SYzAQYcm1rIF2yYR4GwHpTrh3lciTIEhUBlEwN5RoySMDbtJ9y3vFlia/ReyWWoCdFVYarAf91h
-	I/uB8wJBIs05Y/P/Ar8X3eTP9KoKBwvRj1QcEksxArtWQi3f4Mxy2ZRKz55N3OBHNT7tQ5xQZy1
-	/sjClRx96r+ZmYZVM4NWUC9CQwzYTuYe1LBCLZQc4M5/TSG3QK+7Y25cEglWRRCeUv6f8LE6tse
-	PmdbYT0VRbZQS1OAaitifwmQLoiYM4AowDSzzPaGJG4ImCzoalUO700LVP1D8ZychB
-X-Received: by 2002:a05:6000:d0e:b0:47f:9557:8d77 with SMTP id ffacd0b85a97d-47ffd2236f6mr9845559f8f.10.1786094119255;
-        Fri, 07 Aug 2026 02:15:19 -0700 (PDT)
-Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-480021fd392sm3809077f8f.31.2026.08.07.02.15.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2026 02:15:18 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-Date: Fri, 07 Aug 2026 10:14:59 +0100
-Subject: [PATCH] perf: arm_pmuv3: Zero initialize hw_id branch stack field
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOraT54q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C87F01F000E9;
+	Fri,  7 Aug 2026 09:17:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786094229;
+	bh=Cl1ECq4bBesXGsAoI+S/3oQPqf/4B/nA81fKaWRCrr0=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=eOraT54q/I6rUG3Q21kRrYRMbvfkVzkg2u7CYKVSXu9xUul7xm7dmQU3LXymFBhOU
+	 ljf/oxMxcxqf6aQ4mwt3jGUuVEjYHdVQT7fjyV71kKmBQjAzqVM5p75KuwAsjdLALN
+	 k9sf26r4HOSUd7ECDmraOsZTsZaata2QWMo0eO6/jiW3wKBdCv3CIUbSJ8K0kFPFjV
+	 RH5u8F4sTfPHk4TDfMXpxDV1KnG+vMbjxO+/xg9E9KZeYufPVaA0tMoMuGzzIw9Qix
+	 14dw0QaqBTw+Eg+HNIh280KdKuukvvq5qImzPIEfWWsgqTcgKJQLeyGUFDvefBsDLB
+	 7pkj2bJ75q6og==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 1/2] perf: RISC-V: use BIT_ULL for u64 overflow masks
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Xixin Liu" <liuxixin@kylinos.cn>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <prpmask01bitul.1786092600.git.liuxixin@kylinos.cn>
+References: <cover.1786092600.git.liuxixin@kylinos.cn>
+ <prpmask01bitul.1786092600.git.liuxixin@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 07 Aug 2026 09:17:09 +0000
+Message-Id: <20260807091709.C87F01F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260807-james-brbe-init-hw-idx-v1-1-009d1843960a@linaro.org>
-X-B4-Tracking: v=1; b=H4sIABKidWoC/yWM0Q6CMBAEf4Xcs5fUKtX4K8YHWhY5EqvpoZIQ/
- p1DHye7MzMpikDpUs1U8BGVZzbY7ypKfZPvYGmNyTsf3NmdeGgeUI4l2pJl5P5rj4nrQ4tUHzv
- 4EMjkV0En0y98vf1Z33FAGrcaLcsK1wyFaHoAAAA=
-X-Change-ID: 20260807-james-brbe-init-hw-idx-53dec54fe266
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- "Rob Herring (Arm)" <robh@kernel.org>, 
- Anshuman Khandual <anshuman.khandual@arm.com>, Leo Yan <leo.yan@arm.com>, 
- Suzuki Poulose <Suzuki.Poulose@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>
-X-Mailer: b4 0.15.2
 
-PERF_SAMPLE_BRANCH_HW_INDEX is supported by BRBE so hw_id is passed to
-userspace, but it's never set by the BRBE driver. Zero initialize it as
-it should be according to the docs:
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+s) to consider:
 
-   * For the architectures whose raw branch records are
-   * already stored in age order, the hw_idx should be 0.
+Pre-existing issues:
+- [High] Invalid SBI base index due to out-of-scope loop variable in pmu_sb=
+i_start_ovf_ctrs_snapshot().
+- [High] Incorrect mask arithmetic in pmu_sbi_start_ovf_ctrs_sbi() on RV32 =
+mixes up counter indices.
+- [High] Buffer over-read and undefined shift behavior due to global cmask =
+being an unsigned long.
+- [High] Early exit path in pmu_sbi_ovf_handler() triggers undefined shift =
+and incorrect CSR access on Andes custom PMUs.
+- [High] Absolute 64-bit SBI PMU snapshot shared memory structures are inco=
+rrectly shifted or indexed relative to cbase on RV32.
+--
 
-It's probably too risky to remove PERF_SAMPLE_BRANCH_HW_INDEX from BRBE
-now in case anyone is setting it and reading the value, but zero
-initializing the whole struct also protects against the same issue with
-new fields that are added in the future.
+--- Patch [1]: [PATCH v1 1/2] perf: RISC-V: use BIT_ULL for u64 overflow ma=
+sks ---
+commit d452f12b31f1955f29f737a7fc0bc5084ebd71af
+Author: Xixin Liu <liuxixin@kylinos.cn>
+Subject: perf: RISC-V: use BIT_ULL for u64 overflow masks
 
-Fixes: 58074a0fce66 ("perf: arm_pmuv3: Add support for the Branch Record Buffer Extension (BRBE)")
-Signed-off-by: James Clark <james.clark@linaro.org>
----
-Very small fix spotted by Sashiko. It was probably always zero during
-testing or never looked at.
----
- drivers/perf/arm_pmuv3.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch replaces BIT() with BIT_ULL() for u64 overflow status and
+restart masks in the RISC-V SBI PMU driver. This fixes truncation and
+wrapping issues on RV32 where BIT() resolves to an unsigned long shift.
 
-diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-index 8014ff766cff..b9a8592bf112 100644
---- a/drivers/perf/arm_pmuv3.c
-+++ b/drivers/perf/arm_pmuv3.c
-@@ -1361,7 +1361,7 @@ static int branch_records_alloc(struct arm_pmu *armpmu)
- 		struct pmu_hw_events *events_cpu;
- 
- 		events_cpu = per_cpu_ptr(armpmu->hw_events, cpu);
--		events_cpu->branch_stack = kmalloc(size, GFP_KERNEL);
-+		events_cpu->branch_stack = kzalloc(size, GFP_KERNEL);
- 		if (!events_cpu->branch_stack)
- 			return -ENOMEM;
- 	}
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index 50220f7b46d9b..8ea5ae6173471 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+> @@ -1002,7 +1002,7 @@ static inline void pmu_sbi_start_ovf_ctrs_snapshot(=
+struct cpu_hw_events *cpu_hw_
+>  	struct riscv_pmu_snapshot_data *sdata =3D cpu_hw_evt->snapshot_addr;
+> =20
+>  	for_each_set_bit(idx, cpu_hw_evt->used_hw_ctrs, RISCV_MAX_COUNTERS) {
+> -		if (ctr_ovf_mask & BIT(idx)) {
+> +		if (ctr_ovf_mask & BIT_ULL(idx)) {
+>  			event =3D cpu_hw_evt->events[idx];
+>  			hwc =3D &event->hw;
+>  			max_period =3D riscv_pmu_ctr_get_width_mask(event);
 
----
-base-commit: f9a2394a23482bfd330911e9c8295b71724feacd
-change-id: 20260807-james-brbe-init-hw-idx-53dec54fe266
+[Severity: High]
+This isn't a bug introduced by this patch, but since we're fixing issues in
+pmu_sbi_start_ovf_ctrs_snapshot(), there is an SBI base index problem sligh=
+tly
+lower in this same function:
 
-Best regards,
---  
-James Clark <james.clark@linaro.org>
+pmu_sbi_start_ovf_ctrs_snapshot() {
+    ...
+    for (i =3D 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
+        for_each_set_bit(idx, &cpu_hw_evt->used_hw_ctrs[i], BITS_PER_LONG)
+            ...
+        sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, idx * BITS_PER_LO=
+NG,
+                  cpu_hw_evt->used_hw_ctrs[i], flag, 0, 0, 0);
+    }
+}
 
+Does this pass an invalid base index to the SBI firmware? The for_each_set_=
+bit()
+macro terminates with idx equal to BITS_PER_LONG. So idx * BITS_PER_LONG wo=
+uld
+evaluate to something like 4096 on RV64, which seems like it would cause an
+SBI_ERR_INVALID_PARAM error. Should this use i * BITS_PER_LONG instead?
+
+[Severity: High]
+This is another pre-existing issue in pmu_sbi_start_ovf_ctrs_snapshot() rel=
+ated
+to RV32 shared memory structures:
+
+pmu_sbi_start_ovf_ctrs_snapshot() {
+    ...
+    for (i =3D 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
+        for_each_set_bit(idx, &cpu_hw_evt->used_hw_ctrs[i], BITS_PER_LONG)
+            sdata->ctr_values[idx] =3D
+                cpu_hw_evt->snapshot_cval_shcopy[idx + i * BITS_PER_LONG];
+    ...
+}
+
+Since ctr_values is a 64-element array indexed by absolute counter IDs, does
+using the relative idx (0-31) incorrectly overwrite the states of counters =
+0-31
+when processing chunk i=3D1 (counters 32-63)?
+
+[ ... ]
+
+> @@ -1109,14 +1109,14 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, v=
+oid *dev)
+>  			hidx =3D info->csr - CSR_CYCLE;
+> =20
+>  		/* check if the corresponding bit is set in scountovf or overflow mask=
+ in shmem */
+> -		if (!(overflow & BIT(hidx)))
+> +		if (!(overflow & BIT_ULL(hidx)))
+>  			continue;
+> =20
+>  		/*
+>  		 * Keep a track of overflowed counters so that they can be started
+>  		 * with updated initial value.
+>  		 */
+> -		overflowed_ctrs |=3D BIT(lidx);
+> +		overflowed_ctrs |=3D BIT_ULL(lidx);
+>  		hw_evt =3D &event->hw;
+>  		/* Update the event states here so that we know the state while readin=
+g */
+>  		hw_evt->state |=3D PERF_HES_STOPPED;
+
+[Severity: High]
+This is a pre-existing issue, but while looking at pmu_sbi_ovf_handler(), t=
+he
+early exit path near the beginning of the function caught my eye:
+
+pmu_sbi_ovf_handler() {
+    ...
+    fidx =3D find_first_bit(cpu_hw_evt->used_hw_ctrs, RISCV_MAX_COUNTERS);
+    if (fidx =3D=3D RISCV_MAX_COUNTERS) {
+        csr_clear(CSR_SIP, BIT(riscv_pmu_irq_num));
+        return IRQ_NONE;
+    }
+    ...
+}
+
+For the Andes custom PMU, riscv_pmu_irq_num can be assigned values like 274
+(ANDES_SLI_CAUSE_BASE + ANDES_RV_IRQ_PMOVI). Does BIT(274) cause an undefin=
+ed
+out-of-bounds shift? Furthermore, does clearing CSR_SIP work for Andes PMUs
+which use custom SLIE CSRs for these IRQs? Could this lead to an unacknowle=
+dged
+interrupt storm?
+
+[Severity: High]
+This is a pre-existing issue, but I noticed another mask arithmetic problem=
+ on
+RV32 that might cause broken PMU statistics. In pmu_sbi_start_ovf_ctrs_sbi(=
+):
+
+pmu_sbi_start_ovf_ctrs_sbi() {
+    ...
+    for (i =3D 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
+        ...
+        ctr_start_mask =3D cpu_hw_evt->used_hw_ctrs[i] & ~ctr_ovf_mask;
+        ...
+}
+
+On RV32, when i =3D 1 (counters 32-63), used_hw_ctrs[1] is a 32-bit unsigne=
+d long,
+but ctr_ovf_mask is a 64-bit absolute mask. Since ~ctr_ovf_mask isn't shift=
+ed
+down by i * BITS_PER_LONG, doesn't this evaluate the usage bits for counters
+32-63 against the overflow status of counters 0-31?
+
+[Severity: High]
+This is also a pre-existing issue, but related to 32-bit mask truncation, i=
+s the
+global cmask variable affected?
+
+drivers/perf/riscv_pmu_sbi.c:
+    static unsigned long cmask;
+
+pmu_sbi_get_hpm_info() {
+    ...
+    for_each_set_bit(i, &cmask, RISCV_MAX_COUNTERS) {
+    ...
+}
+
+On RV32, unsigned long is 32 bits, but RISCV_MAX_COUNTERS is 64. Does calli=
+ng
+for_each_set_bit() here force a 64-bit read that accesses out-of-bounds mem=
+ory
+adjacent to cmask? Should cmask be declared with DECLARE_BITMAP()?
+
+[Severity: High]
+Finally, this is a pre-existing issue, but similar to the ctr_values array,=
+ the
+overflow mask is also shifted out-of-bounds on RV32 in pmu_sbi_stop_hw_ctrs=
+():
+
+pmu_sbi_stop_hw_ctrs() {
+    ...
+    for (i =3D 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
+        ...
+        temp_ctr_overflow_mask |=3D sdata->ctr_overflow_mask << (i * BITS_P=
+ER_LONG);
+        ...
+}
+
+On RV32, shifting the 64-bit ctr_overflow_mask by 32 bits when i=3D1 pushes
+the absolute bits 32-63 out of bounds. Doesn't this discard the overflow st=
+ate
+for counters 32-63?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1786092600.gi=
+t.liuxixin@kylinos.cn?part=3D1
