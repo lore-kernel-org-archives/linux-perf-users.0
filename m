@@ -1,36 +1,35 @@
-Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837E2404BC8
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 08:09:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CDE46D551
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 08:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786090167; cv=none; b=Ku2aPW2+dUjs33KgJSg4ibUzrKW8zjasP1CFEAMyn6qWbr7HFrDeiJcHWT59z+tlqGCXLzJmAW59y+tkODn/sLP/66hxll5PKiB2L5FeIawwJad5vgsMZ+llou31Zq7WkBBHYk7uxnoQ51mVSLLiz2Q/IeOHsy9WFWSTpYvQrVg=
+	t=1786090181; cv=none; b=X2d6j7/ED/VPS27B5WpcRKx5ucLfHkbKSI10nOvavV3Sdc2SCBiFwnBDRReRbM60D3ZIU9P8mEhXRoym/9p2zOXs3qgxALsJXUKO/vvXjZVWDeUTItxJ0psgDGqHdT+YLxXjgjnO708TroSYGFlR5Xa29D59yHUBpreqsf6UUV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786090167; c=relaxed/simple;
-	bh=RRpFGn4InffgDVuY7k3RJLIyZVAMmh7IIe27hv72AHI=;
+	s=arc-20240116; t=1786090181; c=relaxed/simple;
+	bh=pD7lUY+ZzddjHY50PUCWkDbTOMu3vOUSZtZ94DJrd0M=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=hbdLEWTH1XKfxpQhJVZ8BOyntYVAw7U8uXsv17T2Pv1qYN6ZG4Jk1Pc0j/p2QFImBb2cREdFH57QSW3lDKqG/K45iSQ6dyHgpFpwGz8ivNjj+4lHWMsvre3af91bcdNwRelxoI4cc9xe0NapH7ol0ZwK73FaUWq/lhEfIiqav5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=mbMKbM2X; arc=none smtp.client-ip=91.218.175.171
+	 In-Reply-To:To:Cc; b=Pkei7L7+n8yA5TSpnw4nubY3XCKzmkPCGFFS9iR95ddGLBOB5CnG4IMKDHabiw2vr0KtKLRJab0WBRCHLl2+aYLddORvNasBIeDCMvClYHKBbjfmYCe8ZA0WJTjtcyHbuSZ2aPsFP4RZimIQSdazy5raVcuwkMFlqAXp1yc9Z8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PUHal4RD; arc=none smtp.client-ip=91.218.175.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="mbMKbM2X"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PUHal4RD"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1786090161;
+	t=1786090173;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pCPGS3U4FPFLg6G2jTJf6cdR1mMeNwwKf+jAqhPpDYU=;
-	b=mbMKbM2XY08MnFDNjyexx39neSu7alR94wx2i2IPWb8aKtonH/s4kNKQh2X6ytmAOy5gZx
-	v+Sm6gmKzr2lWmo+pbfF99INiNflJeZKj7faIUSWdBJSNlhdS7aOin2f5eMXjHpaLnRrJX
-	qPqS2krKoqI0yMp2UZuIF5rhCWn44sE=
+	bh=Z/aatG9xeq1PJrzz8GhMwerq64hjkacWtLJ3rJGHBR0=;
+	b=PUHal4RD0h2MF1ycbehNZsMgPk5LWMXgH/wVZHIiTvG15dOtOrgXOFXMqFIoG9DNbkhe53
+	ZV3KAhrCCA5wyoPnJmf3OYMn3TefEP2fvqGUvBiu/sY6rj7oQss3Eda25f+S7LMI+hmGFU
+	53antfsmj1oHf+AjhymEY1+Ofs1MKBc=
 From: Atish Patra <atish.patra@linux.dev>
-Date: Fri, 07 Aug 2026 01:08:58 -0700
-Subject: [PATCH v9 03/20] RISC-V: Add Smcsrind and Sscsrind ISA extension
- definition and parsing
+Date: Fri, 07 Aug 2026 01:09:00 -0700
+Subject: [PATCH v9 05/20] RISC-V: Define indirect CSR access helpers
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -39,7 +38,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260807-counter_delegation-v9-3-58658104e487@meta.com>
+Message-Id: <20260807-counter_delegation-v9-5-58658104e487@meta.com>
 References: <20260807-counter_delegation-v9-0-58658104e487@meta.com>
 In-Reply-To: <20260807-counter_delegation-v9-0-58658104e487@meta.com>
 To: Will Deacon <will@kernel.org>, Atish Patra <atish.patra@linux.dev>, 
@@ -56,65 +55,87 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Atish Patra <atishp@rivosinc.com>
 
-The S[m|s]csrind extensions extend the indirect CSR access mechanism
-defined in Smaia/Ssaia extensions.
+The indirect CSR requires multiple instructions to read/write CSR.
+Add a few helper macros for ease of usage.
 
-This patch just enables the definition and parsing.
+These have to be macros rather than functions. csr_read()/csr_write()
+stringify their CSR argument into the inline asm template via
+__ASM_STR(), so the CSR number must be a literal token; passing it as a
+function parameter emits "csrr %0, iregcsr", which the assembler rejects
+with "unknown CSR `iregcsr'". The stringification happens in the
+preprocessor, before inlining or constant propagation, so it cannot be
+worked around by forcing inlining or by only ever passing constants -
+gcc 12, gcc 16 and clang 22 all reject it alike. Underneath, csrr/csrw
+encode the CSR as a 12-bit immediate and RISC-V has no register-indirect
+form, which is also why asm/csr.h keeps every one of its accessors as a
+macro.
 
 Signed-off-by: Atish Patra <atishp@rivosinc.com>
 Reviewed-by: Charlie Jenkins <thecharlesjenkins@gmail.com>
 Tested-by: Charlie Jenkins <thecharlesjenkins@gmail.com>
-Link: https://patch.msgid.link/20260701-counter_delegation-v8-3-7909f863a645@meta.com
-[pjw@kernel.org: use official RISC-V extension names in the patch description]
+Link: https://patch.msgid.link/20260701-counter_delegation-v8-5-7909f863a645@meta.com
+[pjw@kernel.org: expand "ind" abbreviation]
 Signed-off-by: Paul Walmsley <pjw@kernel.org>
 ---
- arch/riscv/include/asm/hwcap.h | 4 ++++
- arch/riscv/kernel/cpufeature.c | 2 ++
- 2 files changed, 6 insertions(+)
+ arch/riscv/include/asm/csr_indirect.h | 50 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-diff --git a/arch/riscv/include/asm/hwcap.h b/arch/riscv/include/asm/hwcap.h
-index 7ef8e5f55c8d..d4a7b90e2d78 100644
---- a/arch/riscv/include/asm/hwcap.h
-+++ b/arch/riscv/include/asm/hwcap.h
-@@ -112,6 +112,8 @@
- #define RISCV_ISA_EXT_ZCLSD		103
- #define RISCV_ISA_EXT_ZICFILP		104
- #define RISCV_ISA_EXT_ZICFISS		105
-+#define RISCV_ISA_EXT_SSCSRIND		106
-+#define RISCV_ISA_EXT_SMCSRIND		107
- 
- #define RISCV_ISA_EXT_XLINUXENVCFG	127
- 
-@@ -121,9 +123,11 @@
- #ifdef CONFIG_RISCV_M_MODE
- #define RISCV_ISA_EXT_SxAIA		RISCV_ISA_EXT_SMAIA
- #define RISCV_ISA_EXT_SUPM		RISCV_ISA_EXT_SMNPM
-+#define RISCV_ISA_EXT_SxCSRIND		RISCV_ISA_EXT_SMCSRIND
- #else
- #define RISCV_ISA_EXT_SxAIA		RISCV_ISA_EXT_SSAIA
- #define RISCV_ISA_EXT_SUPM		RISCV_ISA_EXT_SSNPM
-+#define RISCV_ISA_EXT_SxCSRIND		RISCV_ISA_EXT_SSCSRIND
- #endif
- 
- #endif /* _ASM_RISCV_HWCAP_H */
-diff --git a/arch/riscv/kernel/cpufeature.c b/arch/riscv/kernel/cpufeature.c
-index f46aa5602d74..3fa0a563fb21 100644
---- a/arch/riscv/kernel/cpufeature.c
-+++ b/arch/riscv/kernel/cpufeature.c
-@@ -576,11 +576,13 @@ const struct riscv_isa_ext_data riscv_isa_ext[] = {
- 	__RISCV_ISA_EXT_BUNDLE_VALIDATE(zvksg, riscv_zvksg_bundled_exts, riscv_ext_vector_crypto_validate),
- 	__RISCV_ISA_EXT_DATA_VALIDATE(zvkt, RISCV_ISA_EXT_ZVKT, riscv_ext_vector_crypto_validate),
- 	__RISCV_ISA_EXT_DATA(smaia, RISCV_ISA_EXT_SMAIA),
-+	__RISCV_ISA_EXT_DATA(smcsrind, RISCV_ISA_EXT_SMCSRIND),
- 	__RISCV_ISA_EXT_DATA(smmpm, RISCV_ISA_EXT_SMMPM),
- 	__RISCV_ISA_EXT_SUPERSET(smnpm, RISCV_ISA_EXT_SMNPM, riscv_xlinuxenvcfg_exts),
- 	__RISCV_ISA_EXT_DATA(smstateen, RISCV_ISA_EXT_SMSTATEEN),
- 	__RISCV_ISA_EXT_DATA(ssaia, RISCV_ISA_EXT_SSAIA),
- 	__RISCV_ISA_EXT_DATA(sscofpmf, RISCV_ISA_EXT_SSCOFPMF),
-+	__RISCV_ISA_EXT_DATA(sscsrind, RISCV_ISA_EXT_SSCSRIND),
- 	__RISCV_ISA_EXT_SUPERSET(ssnpm, RISCV_ISA_EXT_SSNPM, riscv_xlinuxenvcfg_exts),
- 	__RISCV_ISA_EXT_DATA(sstc, RISCV_ISA_EXT_SSTC),
- 	__RISCV_ISA_EXT_DATA(svade, RISCV_ISA_EXT_SVADE),
+diff --git a/arch/riscv/include/asm/csr_indirect.h b/arch/riscv/include/asm/csr_indirect.h
+new file mode 100644
+index 000000000000..0f558fac8f5f
+--- /dev/null
++++ b/arch/riscv/include/asm/csr_indirect.h
+@@ -0,0 +1,50 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++#ifndef _ASM_RISCV_CSR_INDIRECT_H
++#define _ASM_RISCV_CSR_INDIRECT_H
++
++#include <linux/irqflags.h>
++
++#include <asm/csr.h>
++
++/*
++ * These have to be macros rather than functions: csr_read()/csr_write()
++ * stringify their CSR argument into the inline asm template via __ASM_STR(),
++ * so the CSR number must be a literal token at preprocessing time. Passing it
++ * as a function parameter emits "csrr %0, iregcsr", which no assembler can
++ * resolve. RISC-V has no register-indirect form of csrr/csrw - the CSR is a
++ * 12-bit immediate - so the sireg CSR selecting the indirect window cannot
++ * itself be a variable.
++ */
++#define csr_indirect_read(iregcsr, iselbase, iseloff) ({		\
++	unsigned long __value = 0;				\
++	unsigned long __flags;					\
++	local_irq_save(__flags);				\
++	csr_write(CSR_ISELECT, (iselbase) + (iseloff));		\
++	__value = csr_read(iregcsr);				\
++	local_irq_restore(__flags);				\
++	__value;						\
++})
++
++#define csr_indirect_write(iregcsr, iselbase, iseloff, value) ({	\
++	unsigned long __flags;					\
++	local_irq_save(__flags);				\
++	csr_write(CSR_ISELECT, (iselbase) + (iseloff));		\
++	csr_write(iregcsr, (value));				\
++	local_irq_restore(__flags);				\
++})
++
++#define csr_indirect_warl(iregcsr, iselbase, iseloff, warl_val) ({	\
++	unsigned long __old_val = 0, __value = 0;		\
++	unsigned long __flags;					\
++	local_irq_save(__flags);				\
++	csr_write(CSR_ISELECT, (iselbase) + (iseloff));		\
++	__old_val = csr_read(iregcsr);				\
++	csr_write(iregcsr, (warl_val));				\
++	__value = csr_read(iregcsr);				\
++	csr_write(iregcsr, __old_val);				\
++	local_irq_restore(__flags);				\
++	__value;						\
++})
++
++#endif
 
 -- 
 2.53.0-Meta
