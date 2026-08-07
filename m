@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2394A397958;
-	Fri,  7 Aug 2026 15:33:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D9D035CB60;
+	Fri,  7 Aug 2026 15:33:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786116827; cv=none; b=k39ZlcZ3wI3K3IZUzp4f7sdg4iO7Go7oBbvecwLJKAlgRhdEZBohJGpMIwaejLxr9UipaN2JeuDeQKAAoYe8PWHdujtoll0HamRVygaT0Y3i/uL5LdQmu5Fb/4f2hp+dP3q7nNK4Ew5loCf4MFif7U4Dfft4TwpmIuD3Z8pH1JU=
+	t=1786116838; cv=none; b=haib5+NvTmBQVcJgEKO+MVZMx3zc/R6jqcNQDP2hH2NErazT1Sw5ZmFqcjT8L14dRtrxnnV6EeMc2r4KUO1IGHbmH/icoO4BNF/XVMbd7A2N9VmWBjmh+g5RwjwUA632JndWj+syHLL07PVj/wh33GHvovkM+SkCGODNx7dFoHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786116827; c=relaxed/simple;
-	bh=jdVNS7I1bb509M6k14U2tNrt1dP7h6wl7s1Q4QVj4YI=;
+	s=arc-20240116; t=1786116838; c=relaxed/simple;
+	bh=euYEKhSbBzs+uZi0+3GHoLu2oro05xbR5jy/yfF6Olc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CjmnxeD3HS+u72VyGbU7sXDlBrV6E+vpldVxHDOwnZ6P8/Ow0xDksurqy/BQOVGTvsURqqKf/GKxuhEYj4QXy8WsiB0sl0rqt4bnEEt+oJ9dBMh9eMj/I/xK6neGrYke+CswVjJjFpf4e0lET1bpITwApSqkeT+2hix7yC6wZ7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CBhlb2eu; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=sfbvcdf8ulacefdvrmDkKCsXLXYLFqPK/Y0ziwQXC28hxGcMxoQ/5GLpWjePRTVWgwaL/S6F75B05BBrgwn7Zp+QTRjNEEK9CBiW7VaUs9gmhnUsVczTohPbIuN97ZvubTIPtDYBt2LuSPK7VGaq5RQ+35Dd98k0gTZpy4wL5VE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NHWTBmIx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CBhlb2eu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 705A91F00A3A;
-	Fri,  7 Aug 2026 15:33:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NHWTBmIx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ED0B1F000E9;
+	Fri,  7 Aug 2026 15:33:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786116825;
-	bh=ZzhdsFUmY1PAP7mnpYfjuHIRqOYywJnS409/fS0ZObw=;
+	s=k20260515; t=1786116837;
+	bh=vONymQCWyu1WL1Kcvjiq5u1LVr57kV2nVV9AjpHIWps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=CBhlb2eu8tXGXLqnoyccoPu99JwpsPxATfsHrGYbRSYM0vV0KHJl56ytXNnQlGHS0
-	 zj9uogI1C1Ut+Y3meuWLrdGqmJIsAufg6GlHYEwegwLLAKdMyk+i16UZm+kgAeiRDk
-	 XqmJRyE/jCwBrEMV2b7xubRfMPcmloznwQqOAOQa0BLuiSsHag88yKO/Qq+N6aR0yr
-	 2OJKzpbh3bX7/w7nfSX2eLp7oaHkXlJRhoyFsu1O87Cy/EIg2iFRChpLmVLf1hsST6
-	 wu3PLHO/CjSIsD7oQCrLxECf235GQiFRx1fGL/kdGOraKUNWyozAuOArlRsemV+zgt
-	 DdrqMrLJ2HW6w==
+	b=NHWTBmIx5hTk9eR47vpB20yMtSC/b/0Q9K4VIG253hsb8a0mHi/5XnjGHJKyW8b2H
+	 XnBEdVxsVHW7RjAaF7G4HzQv0mIlNmpHUm1cEC1Baqmeqg1dsQAdrt8XPe/fAHlrTQ
+	 wf7m6FEKrbw6HV56wFFQroSb4Q/seZ39fK1m60+n3M62aAY4PVYs0ZrWFRmR+v681+
+	 4y1DwtXnO+HRQdN74bnoesT8OehUu2wIFTxFNNcw1cbVMJDBRuT0IWyBSo0ccANfNO
+	 xhjHJ1sYmWfP0apglArncH6+fYwVimdLEWWIzL963/YAPOGKjiUnBpAJhGdHYQJGrQ
+	 XfSmfE7+OkCog==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -44,9 +44,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v12 02/11] x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
-Date: Sat,  8 Aug 2026 00:33:40 +0900
-Message-ID: <178611682030.237811.16459191503595231339.stgit@devnote2>
+Subject: [PATCH v12 03/11] HWBP: Add modify_local_hw_breakpoint_addr() API
+Date: Sat,  8 Aug 2026 00:33:51 +0900
+Message-ID: <178611683120.237811.15904891776099424430.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178611679753.237811.10190793347982785419.stgit@devnote2>
 References: <178611679753.237811.10190793347982785419.stgit@devnote2>
@@ -60,90 +60,143 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Jinchao Wang <wangjinchao600@gmail.com>
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Wprobe needs to move an active per-CPU watchpoint without releasing and
-reserving its hardware slot.
+Add modify_local_hw_breakpoint_addr() to update only the watched
+address of an installed hardware breakpoint on the local CPU without
+releasing and reserving its hardware slot. This is available when the
+architecture selects CONFIG_HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR.
 
-Add arch_modify_local_hw_breakpoint_addr() to find the installed local
-slot and update only its address shadow and hardware debug address
-register. Publish the shadow first so hw_breakpoint_restore() observes
-the new address if an NMI interrupts the update.
+The caller must provide an installed local event and a valid address,
+and update other CPUs separately.
 
-The caller must provide an installed local event and a valid address.
-Slot ownership, breakpoint type, length, mask and DR7 remain unchanged.
+Link: https://lore.kernel.org/all/f9c49dfa49bdc57ba8c0574bc9981c1e581acf92.1785067572.git.wangjinchao600@gmail.com/
 
-Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
-
-Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 ---
+Changes in v12:
+ - Update bp->attr.bp_addr and counter_arch_bp(bp)->address before
+   calling arch_modify_local_hw_breakpoint_addr() to prevent race
+   conditions during interrupt handling.
+ - Restore counter_arch_bp(bp)->address and bp->attr.bp_addr if
+   arch_modify_local_hw_breakpoint_addr() fails.
 Changes in v11:
- - Return int error code instead of void.
- - Validate the new address using hw_breakpoint_arch_parse() before
-   updating registers.
- - Increment cpu_dr7_seq in a sequence loop for NMI protection.
- - Return -ENOENT if the breakpoint slot is not found on the local CPU.
+ - Check return value of arch_modify_local_hw_breakpoint_addr() and
+   return error on failure.
+ - Update bp->attr.bp_addr and counter_arch_bp(bp)->address only after
+   arch modification succeeds.
 ---
- arch/x86/include/asm/hw_breakpoint.h |    2 ++
- arch/x86/kernel/hw_breakpoint.c      |   33 +++++++++++++++++++++++++++++++++
- 2 files changed, 35 insertions(+)
+ arch/Kconfig                  |    8 ++++++++
+ arch/x86/Kconfig              |    1 +
+ include/linux/hw_breakpoint.h |    6 ++++++
+ kernel/events/hw_breakpoint.c |   40 ++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 55 insertions(+)
 
-diff --git a/arch/x86/include/asm/hw_breakpoint.h b/arch/x86/include/asm/hw_breakpoint.h
-index 0bc931cd0698..f35ec491f6dd 100644
---- a/arch/x86/include/asm/hw_breakpoint.h
-+++ b/arch/x86/include/asm/hw_breakpoint.h
-@@ -59,6 +59,8 @@ extern int hw_breakpoint_exceptions_notify(struct notifier_block *unused,
+diff --git a/arch/Kconfig b/arch/Kconfig
+index fa7507ac8e13..bea383408e32 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -457,6 +457,14 @@ config HAVE_MIXED_BREAKPOINTS_REGS
+ 	  Select this option if your arch implements breakpoints under the
+ 	  latter fashion.
  
++config HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR
++	bool
++	depends on HAVE_HW_BREAKPOINT
++	help
++	  Select this if the architecture can modify the address of an
++	  installed hardware breakpoint on the local CPU without releasing
++	  and reserving its hardware slot.
++
+ config HAVE_USER_RETURN_NOTIFIER
+ 	bool
  
- int arch_install_hw_breakpoint(struct perf_event *bp);
-+int arch_modify_local_hw_breakpoint_addr(struct perf_event *bp,
-+					 unsigned long addr);
- void arch_uninstall_hw_breakpoint(struct perf_event *bp);
- void hw_breakpoint_pmu_read(struct perf_event *bp);
- void hw_breakpoint_pmu_unthrottle(struct perf_event *bp);
-diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-index 9ef24b55737f..c89f6e71c3a9 100644
---- a/arch/x86/kernel/hw_breakpoint.c
-+++ b/arch/x86/kernel/hw_breakpoint.c
-@@ -128,6 +128,39 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
- 	return 0;
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index fd979e0be1f0..33908103d9a0 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -247,6 +247,7 @@ config X86
+ 	select HAVE_FUNCTION_TRACER
+ 	select HAVE_GCC_PLUGINS
+ 	select HAVE_HW_BREAKPOINT
++	select HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR
+ 	select HAVE_IOREMAP_PROT
+ 	select HAVE_IRQ_EXIT_ON_IRQ_STACK	if X86_64
+ 	select HAVE_IRQ_TIME_ACCOUNTING
+diff --git a/include/linux/hw_breakpoint.h b/include/linux/hw_breakpoint.h
+index db199d653dd1..bf65c7fffd99 100644
+--- a/include/linux/hw_breakpoint.h
++++ b/include/linux/hw_breakpoint.h
+@@ -81,6 +81,9 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
+ 			    perf_overflow_handler_t triggered,
+ 			    void *context);
+ 
++int modify_local_hw_breakpoint_addr(struct perf_event *bp,
++				    unsigned long addr);
++
+ extern int register_perf_hw_breakpoint(struct perf_event *bp);
+ extern void unregister_hw_breakpoint(struct perf_event *bp);
+ extern void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cpu_events);
+@@ -124,6 +127,9 @@ register_wide_hw_breakpoint(struct perf_event_attr *attr,
+ 			    perf_overflow_handler_t triggered,
+ 			    void *context)		{ return NULL; }
+ static inline int
++modify_local_hw_breakpoint_addr(struct perf_event *bp,
++				unsigned long addr) { return -EOPNOTSUPP; }
++static inline int
+ register_perf_hw_breakpoint(struct perf_event *bp)	{ return -ENOSYS; }
+ static inline void unregister_hw_breakpoint(struct perf_event *bp)	{ }
+ static inline void
+diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+index 789add0c185a..7d3a7bc050a4 100644
+--- a/kernel/events/hw_breakpoint.c
++++ b/kernel/events/hw_breakpoint.c
+@@ -888,6 +888,46 @@ void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cpu_events)
  }
+ EXPORT_SYMBOL_GPL(unregister_wide_hw_breakpoint);
  
-+int arch_modify_local_hw_breakpoint_addr(struct perf_event *bp,
-+					  unsigned long addr)
++/**
++ * modify_local_hw_breakpoint_addr - update a local breakpoint address
++ * @bp: the hwbp perf event for this CPU
++ * @addr: the new address for @bp
++ *
++ * Update only the address of an installed breakpoint on the local CPU without
++ * releasing and reserving its hardware slot. The caller must update other CPUs.
++ * Return 0, or -EOPNOTSUPP if the architecture does not support this operation.
++ */
++#ifdef CONFIG_HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR
++int modify_local_hw_breakpoint_addr(struct perf_event *bp,
++				    unsigned long addr)
 +{
-+	struct arch_hw_breakpoint hw;
-+	struct perf_event_attr attr = bp->attr;
-+	unsigned int seq;
-+	int i, ret;
++	unsigned long old_addr;
++	int ret;
 +
 +	lockdep_assert_irqs_disabled();
 +
-+	attr.bp_addr = addr;
-+	ret = hw_breakpoint_arch_parse(bp, &attr, &hw);
-+	if (ret)
++	old_addr = bp->attr.bp_addr;
++	counter_arch_bp(bp)->address = addr;
++	bp->attr.bp_addr = addr;
++
++	ret = arch_modify_local_hw_breakpoint_addr(bp, addr);
++	if (ret) {
++		counter_arch_bp(bp)->address = old_addr;
++		bp->attr.bp_addr = old_addr;
 +		return ret;
-+
-+	for (i = 0; i < HBP_NUM; i++) {
-+		if (this_cpu_read(bp_per_reg[i]) == bp)
-+			break;
 +	}
-+
-+	if (WARN_ONCE(i == HBP_NUM, "Can't find any breakpoint slot"))
-+		return -ENOENT;
-+
-+	do {
-+		seq = this_cpu_inc_return(cpu_dr7_seq);
-+		this_cpu_write(cpu_debugreg[i], addr);
-+		barrier();
-+		set_debugreg(addr, i);
-+	} while (seq != this_cpu_read(cpu_dr7_seq));
 +
 +	return 0;
 +}
++#else
++int modify_local_hw_breakpoint_addr(struct perf_event *bp,
++				    unsigned long addr)
++{
++	return -EOPNOTSUPP;
++}
++#endif
++EXPORT_SYMBOL_GPL(modify_local_hw_breakpoint_addr);
 +
- /*
-  * Uninstall the breakpoint contained in the given counter.
+ /**
+  * hw_breakpoint_is_used - check if breakpoints are currently used
   *
 
