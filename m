@@ -1,199 +1,98 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1394B44A405;
-	Fri,  7 Aug 2026 08:56:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DDC40802B;
+	Fri,  7 Aug 2026 08:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786093031; cv=none; b=K//EZEBj7/pfTEzmvlGSTuUjppvsvqIPILSSCghwzg6lyCUYww29x+nu2paMGiI7T78dWg5hH45Mr0+xjhBNOcGOskakUn35kWpv5rsDaM5amyzJKhVsYNlsmfRkQ69oPxTsSfrUye85rCdIk0zJjo7tlqhkmPFa8giVShiyDHk=
+	t=1786093099; cv=none; b=TzGZ82cKPlsxnTR8u6Yd/zlSBC1v/SagSt+87t3gg75hN0vD4urFVDuPkPRDHJRerUKEnNZXwvaeWXMxjHWpMJj/KaoHFVUZV+Qd3Ws6KKdOaslp3QQL39XXDvVoRuKJ3eEHmHWKSB3QaTt3rBEV+x94jMvoU2S2/ckK8uum7X8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786093031; c=relaxed/simple;
-	bh=MPilSDTj9/2a51iTqBTzvRLKN6MwsQcTyvxkyoruTLU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f3HSBID4znmvCU/6mRz6R/FksFrcrAdElL3WEbvUSWWENZfuSa3gkj/vU2T7BFMGDLIALNiA71UAUS7gBp5oMKCarq2l2WMAzRFlTTBVjV74RDHKN/AmizCVT+AUYoPzAFjut3g+M0odYRGCKFUueWG+9RqPaIi2zsljDcuPYWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: ee63d038923d11f1aa26b74ffac11d73-20260807
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:b4704914-fd26-4b0c-b5cb-91c272e333fb,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:e7bac3a,CLOUDID:f1a8bc65811c2fe3f19bea9bbe9be33c,BulkI
-	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|865|898,TC:nil,Content:0|15|50
-	,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,O
-	SA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: ee63d038923d11f1aa26b74ffac11d73-20260807
-X-User: liuxixin@kylinos.cn
-Received: from [127.0.1.1] [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <liuxixin@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 404231109; Fri, 07 Aug 2026 16:56:51 +0800
-From: Xixin Liu <liuxixin@kylinos.cn>
-To: linux-riscv@lists.infradead.org
-Cc: atish.patra@linux.dev, anup@brainfault.org, will@kernel.org, mark.rutland@arm.com, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, liuxixin@kylinos.cn
-Subject: [PATCH v1 2/2] perf: RISC-V: store available counter mask as bitmap
-Date: Fri, 07 Aug 2026 16:50:00 +0800
-Message-ID: <prpmask02cmap.1786092600.git.liuxixin@kylinos.cn>
-In-Reply-To: <cover.1786092600.git.liuxixin@kylinos.cn>
-References: <cover.1786092600.git.liuxixin@kylinos.cn>
+	s=arc-20240116; t=1786093099; c=relaxed/simple;
+	bh=HOvCZRgllanI9wNXho5avz0HkORUNvmHi2Gm0HMRSZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vd75pUa8c52Tm5hyYj0tC5v/t24v98kEVluzz0HzCsMPvh53MakFsqP14VGABvGwQfKMd5aKFxzvwt84vXrskBrdBo05CviDf2z2CzmrpSXR6ElCIoqFquHdPdu/cd5W48IkRkm5GaqftKweiH7uDVZa5iOh06KnsmRmtU4W7/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=nzr42lDn; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nzr42lDn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=8kvsw19IQtGQNTBg1YRLcY00/ersReS1ZNni7Fkg1Qg=; b=nzr42lDnxlo8DexJQCck6ncQEq
+	Eg62l1mVzfNZ3OzX7MmLMiKaf48DpmmWirwZBPR61Bp6lSGx9wH92WKsXYGuMBLm86IM9gJBInyI/
+	IaR+L5+VbWrhLw3rX/rP7OjjvtROwzsuf/bRXNYWSJO+qlQ5y7zynsVi9bwHdN91BQL2Dp1IO1k+E
+	tGqXxMfEzOUCO4FEvA1Z//08Qvi0xooKkO+wsbvYKVGmMzrc0qfgnD1bvhmbfGplviRb7FG953iYq
+	baKewc8l1NbjGLrhBSsZMcN/3oEtp18JdyWrSMluLqYq41ro4vamZF1jj2BmgKGCF1G67WsskY/cM
+	93ua6OcA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1wsGOz-0000000CDry-3AQZ;
+	Fri, 07 Aug 2026 08:58:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 119EE301127; Fri, 07 Aug 2026 10:57:34 +0200 (CEST)
+Date: Fri, 7 Aug 2026 10:57:34 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Aditya Chillara <aditya.chillara@oss.qualcomm.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Ingo Molnar <mingo@elte.hu>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2] perf/core: Fix group leader use-after-free after
+ sibling detach
+Message-ID: <20260807085734.GQ776954@noisy.programming.kicks-ass.net>
+References: <20260630-fix-group-leader-uaf-v2-1-9349121835ee@oss.qualcomm.com>
+ <20260806195020.GR48970@noisy.programming.kicks-ass.net>
+ <9a965b40-c15d-4802-8d55-aacb9ad33987@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Mailer: patches/scripts/send-local.py
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9a965b40-c15d-4802-8d55-aacb9ad33987@oss.qualcomm.com>
 
-The available-counter mask was a single unsigned long, but iteration
-uses RISCV_MAX_COUNTERS (64). On RV32 that reads past the object. Filling
-with BIT(i) is also wrong for i >= 32.
+On Fri, Aug 07, 2026 at 12:24:20PM +0530, Aditya Chillara wrote:
 
-Use DECLARE_BITMAP, set_bit/bitmap helpers, and stop counters one word
-at a time.
+> > The below code used __event_disable(); and this change is not
+> > mentioned in the Changelog. Why was this changed?
+> 
+> I should've mentioned this in the Changelog, I'll update it.
+> 
+> In case of __perf_remove_from_context(event, ...) where the event is part of a group
+> but is not the leader; by the time we get to perf_group_detach():
+> 
+> 1. perf_cgroup_event_disable(event, ctx) would have been called
+> 2. The sibling's state may have been set to EXIT/REVOKED/DEAD if not OFF
+> 
+> So we cannot use __event_disable() because it would unconditionally call
+> 1. perf_cgroup_event_disable() that would decrement nr_cgroups twice
+> 2. perf_event_set_state(event, PERF_EVENT_STATE_ERROR) that could bring back
+>    the state from EXIT/REVOKED/DEAD/OFF to ERROR.
+> 
+> In previous code, in case of __perf_remove_from_context(event, ...) where the event
+> is a leader; __event_disable() was called for siblings unconditionally but I do not
+> see a reason why the added guards don't hold.
+> 
+> Should we move the guards to __event_disable() instead? That would simplify the code:
+> 
+> static void __event_disable(struct perf_event *event,
+> 			    struct perf_event_context *ctx,
+> 			    enum perf_event_state state)
+> {
+> 	event_sched_out(event, ctx);
+> 	if (event->state > PERF_EVENT_STATE_OFF)
+> 		perf_cgroup_event_disable(event, ctx);
+> 	perf_event_set_state(event, min(event->state, state));
+> }
 
-Signed-off-by: Xixin Liu <liuxixin@kylinos.cn>
----
- drivers/perf/riscv_pmu_legacy.c |  5 +++--
- drivers/perf/riscv_pmu_sbi.c    | 29 ++++++++++++++++++-----------
- include/linux/perf/riscv_pmu.h  |  2 +-
- 3 files changed, 22 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/perf/riscv_pmu_legacy.c b/drivers/perf/riscv_pmu_legacy.c
-index 4d6461d6a..1b8e4789c 100644
---- a/drivers/perf/riscv_pmu_legacy.c
-+++ b/drivers/perf/riscv_pmu_legacy.c
-@@ -110,8 +110,9 @@ static void pmu_legacy_init(struct riscv_pmu *pmu)
- {
- 	pr_info("Legacy PMU implementation is available\n");
- 
--	pmu->cmask = BIT(RISCV_PMU_LEGACY_CYCLE) |
--		BIT(RISCV_PMU_LEGACY_INSTRET);
-+	bitmap_zero(pmu->cmask, RISCV_MAX_COUNTERS);
-+	set_bit(RISCV_PMU_LEGACY_CYCLE, pmu->cmask);
-+	set_bit(RISCV_PMU_LEGACY_INSTRET, pmu->cmask);
- 	pmu->ctr_start = pmu_legacy_ctr_start;
- 	pmu->ctr_stop = NULL;
- 	pmu->event_map = pmu_legacy_event_map;
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index d6c66e375..c913d73f8 100644
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -97,7 +97,7 @@ static unsigned int riscv_pmu_irq_mask;
- static unsigned int riscv_pmu_irq;
- 
- /* Cache the available counters in a bitmask */
--static unsigned long cmask;
-+static DECLARE_BITMAP(cmask, RISCV_MAX_COUNTERS);
- 
- static int pmu_event_find_cache(u64 config);
- struct sbi_pmu_event_data {
-@@ -364,7 +364,7 @@ static void pmu_sbi_check_event(struct sbi_pmu_event_data *edata)
- 	struct sbiret ret;
- 
- 	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH,
--			0, cmask, 0, edata->event_idx, 0, 0);
-+			0, cmask[0], 0, edata->event_idx, 0, 0);
- 	if (!ret.error) {
- 		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
- 			  ret.value, 0x1, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
-@@ -488,10 +488,10 @@ int riscv_pmu_get_hpm_info(u32 *hw_ctr_width, u32 *num_hw_ctr)
- 	union sbi_pmu_ctr_info *info;
- 	u32 hpm_width = 0, hpm_count = 0;
- 
--	if (!cmask)
-+	if (bitmap_empty(cmask, RISCV_MAX_COUNTERS))
- 		return -EINVAL;
- 
--	for_each_set_bit(i, &cmask, RISCV_MAX_COUNTERS) {
-+	for_each_set_bit(i, cmask, RISCV_MAX_COUNTERS) {
- 		info = &pmu_ctr_list[i];
- 		if (!info)
- 			continue;
-@@ -541,7 +541,7 @@ static int pmu_sbi_ctr_get_idx(struct perf_event *event)
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(rvpmu->hw_events);
- 	struct sbiret ret;
- 	int idx;
--	uint64_t cbase = 0, cmask = rvpmu->cmask;
-+	uint64_t cbase = 0, cmask = rvpmu->cmask[0];
- 	unsigned long cflags = 0;
- 
- 	cflags = pmu_sbi_get_filter_flags(event);
-@@ -577,7 +577,7 @@ static int pmu_sbi_ctr_get_idx(struct perf_event *event)
- 	}
- 
- 	idx = ret.value;
--	if (!test_bit(idx, &rvpmu->cmask) || !pmu_ctr_list[idx].value)
-+	if (!test_bit(idx, rvpmu->cmask) || !pmu_ctr_list[idx].value)
- 		return -ENOENT;
- 
- 	/* Additional sanity check for the counter id */
-@@ -881,7 +881,7 @@ static int pmu_sbi_get_ctrinfo(int nctr, unsigned long *mask)
- 			/* The logical counter ids are not expected to be contiguous */
- 			continue;
- 
--		*mask |= BIT(i);
-+		set_bit(i, mask);
- 
- 		cinfo.value = ret.value;
- 		if (cinfo.type == SBI_PMU_CTR_TYPE_FW)
-@@ -898,12 +898,19 @@ static int pmu_sbi_get_ctrinfo(int nctr, unsigned long *mask)
- 
- static inline void pmu_sbi_stop_all(struct riscv_pmu *pmu)
- {
-+	int i;
-+
- 	/*
- 	 * No need to check the error because we are disabling all the counters
- 	 * which may include counters that are not enabled yet.
- 	 */
--	sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
--		  0, pmu->cmask, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
-+	for (i = 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
-+		if (!pmu->cmask[i])
-+			continue;
-+		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
-+			  i * BITS_PER_LONG, pmu->cmask[i],
-+			  SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
-+	}
- }
- 
- static inline void pmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
-@@ -1442,7 +1449,7 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
- 	}
- 
- 	/* cache all the information about counters now */
--	if (pmu_sbi_get_ctrinfo(num_counters, &cmask))
-+	if (pmu_sbi_get_ctrinfo(num_counters, cmask))
- 		goto out_free;
- 
- 	ret = pmu_sbi_setup_irqs(pmu, pdev);
-@@ -1454,7 +1461,7 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
- 
- 	pmu->pmu.attr_groups = riscv_pmu_attr_groups;
- 	pmu->pmu.parent = &pdev->dev;
--	pmu->cmask = cmask;
-+	bitmap_copy(pmu->cmask, cmask, RISCV_MAX_COUNTERS);
- 	pmu->ctr_start = pmu_sbi_ctr_start;
- 	pmu->ctr_stop = pmu_sbi_ctr_stop;
- 	pmu->event_map = pmu_sbi_event_map;
-diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pmu.h
-index f82a28040..ecaa40370 100644
---- a/include/linux/perf/riscv_pmu.h
-+++ b/include/linux/perf/riscv_pmu.h
-@@ -55,7 +55,7 @@ struct riscv_pmu {
- 
- 	irqreturn_t	(*handle_irq)(int irq_num, void *dev);
- 
--	unsigned long	cmask;
-+	DECLARE_BITMAP(cmask, RISCV_MAX_COUNTERS);
- 	u64		(*ctr_read)(struct perf_event *event);
- 	int		(*ctr_get_idx)(struct perf_event *event);
- 	int		(*ctr_get_width)(int idx);
-
+Yes, that looks good.
