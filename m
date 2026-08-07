@@ -1,143 +1,230 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89A83431F5
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 15:53:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70663B14B1
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 15:54:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786118035; cv=none; b=lfcvBic8DohQ1chUkkcZB34VqMm0BBlhqr5HeedDF9/N5TWHp0tUx1dl5gwHn1oG3gZW4I7eCNiHIytRfvDpgg6E3hXF3E3WSNUIXQkuGERkf/Q3lc8ir9bqizEKMl2SHUO9jBqP3B2+xC2ODXjGUJvFGSZ0QDYGl8K1vQEgTfU=
+	t=1786118082; cv=none; b=snu/fYNcJOEFl38H8sJ35zrvxLE2h/FJQ83UUIvNXp+Z0LZHTgduR4ZL8bp7t/z0a1Y0ESfkJDgrzfd5ZEzvMK8Rei9GQw5jA1UCqbMTAK/SQTZjylNx2JrQAgPq+A8Ve/1tEVJ6ajbILk5VmJuWBfMfkDqgXEMjYRWDiZrwaCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786118035; c=relaxed/simple;
-	bh=jY+1K7smWmfHBfyNuBUK1FiPaVhQL/rQl36kfDDGbkA=;
+	s=arc-20240116; t=1786118082; c=relaxed/simple;
+	bh=JcTI9A3MkBxieS7TBMH9y6IGivF31ev+Pa+2yTDrEcY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=kbYlyU4xIO8Kd5D0nORLvXsrh47316QgRU3SoqvurnZ+w40u17OfpcmxN3bb81KD0nAx+bwto7KzVsKfl4/v00Jn65f6Gh4uD+zeYeE8KDw3myksPMrClR6zPfzQ9/MAiF/kEzWLDSf4cSzVh3D7Q4qdZdvxeJDADDzFfLOGK0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lGBbJLLv; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=kbUwKWr3el/Jm3hQ1WK/Ys/EbQzN/uyd8VZ8i+DMgBHcYtgwshNOKd5ndczdMnpiJ47WuyA2F/o0364yhryMxB12Pbf0033l3YGWdW83whWHpmhGdMaHDmQ3BLazu/+607meYXdn3uNJiHXXqm0nGjrbT3aTnNybWeQWbw8BiqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFhFG2f4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lGBbJLLv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EE9C1F000E9;
-	Fri,  7 Aug 2026 15:53:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFhFG2f4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66C461F000E9;
+	Fri,  7 Aug 2026 15:54:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786118034;
-	bh=1E0lSy6/mmoNEW3QjYUFLnBHnCvDq+nIqY8lqWRSwFc=;
+	s=k20260515; t=1786118080;
+	bh=BvOpO7cIgK0Yc5yTeuVAe9YPaCDwulEOHGeDp9vSBAE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lGBbJLLv36wot/a9b1jpRrTIHGQo8fyoe8JuXlaPu8FByW5HFysHCu/A0Ze4yCZgh
-	 ZaSPCexp9NMoQEyUok2mi6CBxwylkyqN3xwmxaqWPPy+S+35Lkucbqst8i2iH2HrGW
-	 u3UQ5Z69kLYC5WU8Cr0q12lndRr/7M9vA0z/g9jJh9VXm69lLwZyUWGEFmjxRO46NB
-	 YUbM76VcCqkhIl6SQtyKSf75WU1BeuHMCV8RJOQqz4zQbG1BWsiMIlaxLZtruB8S1+
-	 24b5zUxycdGWSMz6idAuhAKR9OMlc5TEPS5m6pHgEZChqZb6cf3y4Bjx1buH7kZi2h
-	 ZMgv+TrL9lyPw==
+	b=YFhFG2f4wG8YINBLMEzTsOX4hzBkcLhKkKCgYAZLoamUSvgR/tKaMky8mCpN+wnHh
+	 mg5k+q9RKVpoWGB4KFm9mLTOEj2F02I3wdRJrBdRZDn1ITm0nHRfq+esEwnxk1urU6
+	 BkaqniZMSwSv74gDurjwnfUplpYCAb066Xyd2MJvqqiuBPoCQ0gr8Io6skOMvW+7a7
+	 DqZ5RzXvkN60fImelqxyPOyxELT47Z1iLlsaICx2N4tJZrPLFGY+EuBDsAuS7YwVsh
+	 +050kHi3n0C4cYnXyqPr6zxqkz2GppmlbNfTCEkjEiV0HCoSDe0yTGtmqt3u09skdt
+	 +cuP5tRNboIfQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 09/11] selftests: ftrace: Add wprobe trigger
- testcase
+Subject: Re: [PATCH v12 08/11] tracing/wprobe: Add set_wprobe and
+ clear_wprobe event triggers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <178611689884.237811.7547180621874073837.stgit@devnote2>
+In-Reply-To: <178611688737.237811.17143803996766057381.stgit@devnote2>
 References: <178611679753.237811.10190793347982785419.stgit@devnote2>
- <178611689884.237811.7547180621874073837.stgit@devnote2>
+ <178611688737.237811.17143803996766057381.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 07 Aug 2026 15:53:53 +0000
-Message-Id: <20260807155354.3EE9C1F000E9@smtp.kernel.org>
+Date: Fri, 07 Aug 2026 15:54:39 +0000
+Message-Id: <20260807155440.66C461F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
 s) to consider:
-- [Medium] Race condition in `trigger-wprobe.tc` causes spurious test failu=
-res because `set_wprobe` trigger is not removed before verifying `clear_wpr=
-obe`.
-- [Medium] `trigger-wprobe-syntax-errors.tc` relies on `do_sys_open` withou=
-t verifying its existence, causing the test to fail on kernels where the fu=
-nction is unavailable.
+- [High] Mixing scope-based cleanup (`__free()`) with explicit resource man=
+agement causes double-frees and memory leaks.
+- [High] Hardware breakpoint fallback address spans adjacent kernel variabl=
+es, causing NMI storms.
+- [High] Double initialization of the event trigger reference count causes =
+unconditional memory leaks.
+- [Medium] Trigger `count` is double-decremented, breaking the `:count=3D1`=
+ feature.
+- [Medium] The `clear_wprobe` trigger fails to parse its documented optiona=
+l FIELD parameter.
 --
 
---- Patch [9]: [PATCH v12 09/11] selftests: ftrace: Add wprobe trigger test=
-case ---
-commit d811031bfa18879b95fa2051a73496d3fcc8f562
+--- Patch [8]: [PATCH v12 08/11] tracing/wprobe: Add set_wprobe and clear_w=
+probe event triggers ---
+commit cb59d7e61a8c78c308ca9ae32e1de403900f7a05
 Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Subject: tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
 
-selftests: ftrace: Add wprobe trigger testcase
-
-This patch adds a testcase for checking the wprobe trigger. It sets
-set_wprobe and clear_wprobe triggers on fprobe events and static trace even=
-ts
-to monitor memory accesses. It also includes a testcase to verify wprobe
-trigger syntax error logging.
+This commit adds set_wprobe and clear_wprobe event triggers to dynamically
+attach and detach hardware breakpoint address monitoring based on event fie=
+ld
+contents.
 
 Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.=
 1785067572.git.wangjinchao600@gmail.com/
 
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe=
--syntax-errors.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-w=
-probe-syntax-errors.tc
-> new file mode 100644
-> index 0000000000000..7e02313cf1c73
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-syntax=
--errors.tc
-> @@ -0,0 +1,31 @@
-> +#!/bin/sh
-> +# SPDX-License-Identifier: GPL-2.0
-> +# description: event trigger - test wprobe trigger syntax errors
-> +# requires: dynamic_events error_log "w[:[<group>/][<event>]] [r|w|rw]@<=
-addr>[:<len>]":README "f[:[<group>/][<event>]] <func-name>[%return] [<args>=
-]":README
-> +
-> +check_error() { # command-with-error-pos-by-^
-> +    ftrace_errlog_check "wprobe_trigger" "$1" "events/fprobes/testevent/=
-trigger"
-> +}
-> +
-> +# Add a dummy fprobe event to attach triggers to
-> +echo 'f:fprobes/testevent do_sys_open dfd=3D$arg1' > dynamic_events
-
-[Severity: Medium]
-Will this script fail unconditionally on kernels where do_sys_open is
-unavailable as a valid fprobe target?
-
-On many modern kernels, do_sys_open has been removed, renamed (e.g., to
-do_sys_openat2), or heavily inlined, which causes this echo command to
-dynamic_events to fail with an error.
-
-Could we check against /proc/kallsyms before using it, similar to how
-sample_timer_cb is checked in trigger-wprobe.tc?
+> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+> --- a/kernel/trace/trace_wprobe.c
+> +++ b/kernel/trace/trace_wprobe.c
 
 [ ... ]
-> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe=
-.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
-> new file mode 100644
-> index 0000000000000..4071fe0c878b9
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+
+> +static int wprobe_trigger_global_enabled;
+> +
+> +#define SET_WPROBE_STR		"set_wprobe"
+> +#define CLEAR_WPROBE_STR	"clear_wprobe"
+> +#define WPROBE_DEFAULT_CLEAR_ADDRESS ((unsigned long)&wprobe_trigger_glo=
+bal_enabled)
+
+[Severity: High]
+Will this 4-byte fallback variable safely accommodate 8-byte hardware
+breakpoints?=20
+
+When a wprobe is temporarily disabled, its hardware breakpoint is pointed h=
+ere
+at WPROBE_DEFAULT_CLEAR_ADDRESS, but it retains its configured length (e.g.=
+, 8
+bytes for a 64-bit pointer).=20
+
+Could this cause the breakpoint to monitor the 4-byte variable plus 4 adjac=
+ent
+bytes in the .bss section, potentially triggering NMI storms if a frequently
+accessed kernel variable happens to reside in those adjacent bytes?
+
 [ ... ]
-> +:;: "Set clear_wprobe trigger on foo_bar_with_fn" ;:
-> +echo 'clear_wprobe:watch' >> events/sample-trace/foo_bar_with_fn/trigger
-> +cat events/sample-trace/foo_bar_with_fn/trigger | grep ^clear_wprobe
-> +
-> +# Clear trace and wait to ensure no new watchpoint events are generated
-> +clear_trace
-> +sleep 1
-> +
-> +:;: "Ensure clear_wprobe trigger deactivated the watchpoint" ;:
-> +! grep -q watch trace
+
+> +static void wprobe_trigger(struct event_trigger_data *data,
+> +			   struct trace_buffer *buffer,  void *rec,
+> +			   struct ring_buffer_event *event)
+> +{
+[ ... ]
+> +	/* count < 0 means endless, 0 means trigger count exhausted */
+> +	if (!data->count)
+> +		goto out;
+[ ... ]
+> +	if (changed) {
+> +		if (data->count > 0)
+> +			data->count--;
+
+[ ... ]
+
+> +static struct event_command trigger_wprobe_set_cmd =3D {
+> +	.name			=3D SET_WPROBE_STR,
+[ ... ]
+> +	.trigger		=3D wprobe_trigger,
+> +	.count_func		=3D event_trigger_count,
 
 [Severity: Medium]
-Is there a race condition here that could cause spurious test failures?
+Does this manual decrement in wprobe_trigger() conflict with the core
+event_trigger_count decrement function?=20
 
-Since the set_wprobe trigger on testevent (sample_timer_cb) is still active
-and fires concurrently with foo_bar_with_fn, if sample_timer_cb fires after
-foo_bar_with_fn during this 1-second window, the wprobe could be re-armed.
+The trigger commands are assigned .count_func =3D event_trigger_count, which
+unconditionally executes before the main .trigger callback and pre-decremen=
+ts
+the count.=20
 
-Memory accesses would then generate new watch events, causing this assertion
-to fail.
+If a user specifies :count=3D1, the core framework reduces it to 0.=20
+wprobe_trigger() will then see a count of 0 and abort immediately. Does this
+render a single-count trigger completely non-functional?
 
-Should the set_wprobe trigger be removed before verifying the clear_wprobe
-behavior?
+[ ... ]
+
+> +static int wprobe_trigger_cmd_parse(struct event_command *cmd_ops,
+> +				    struct trace_event_file *file,
+> +				    char *glob, char *cmd,
+> +				    char *param_and_filter)
+> +{
+> +	/*
+> +	 * set_wprobe:EVENT:FIELD[+OFFS]
+> +	 * clear_wprobe:EVENT[:FIELD[+OFFS]]
+> +	 */
+> +	struct wprobe_trigger_data *wprobe_data __free(free_wprobe_trigger_data=
+) =3D NULL;
+> +	struct event_trigger_data *trigger_data __free(kfree) =3D NULL;
+
+[ ... ]
+
+> +	/* clear_wprobe does not need field. */
+> +	if (!clear) {
+> +		char *offs;
+
+[Severity: Medium]
+Does skipping the field parsing here break the documented optional FIELD
+parameter for clear_wprobe?=20
+
+The documentation claims clear_wprobe:WPEVENT[:FIELD] conditionally clears a
+watchpoint, but if clear is true, the parsing code skips extracting the fie=
+ld
+string.=20
+
+It looks like the unparsed string is then passed to event_trigger_parse_num=
+(),
+which expects a numeric string and fails with -EINVAL.
+
+[ ... ]
+
+> +	ret =3D event_trigger_parse_num(param, trigger_data);
+> +	if (ret) {
+> +		wprobe_trigger_log_err(file, glob, param - glob, BAD_IMM);
+> +		return ret;
+> +	}
+
+[Severity: High]
+Can this early error path leak memory?=20
+
+The trigger_data uses __free(kfree), which performs a shallow free. If
+event_trigger_parse_num() fails and returns early, does this permanently le=
+ak
+internal allocations like data->name?
+
+[ ... ]
+
+> +	event_trigger_init(trigger_data);
+> +
+> +	ret =3D event_trigger_register(cmd_ops, file, glob, trigger_data);
+
+[Severity: High]
+Will this result in a double initialization of the reference count?=20
+
+We call event_trigger_init(trigger_data) explicitly here, which increments =
+the
+reference count. Then event_trigger_register() calls the .reg callback
+wprobe_register_trigger(), which executes data->cmd_ops->init(data) and
+increments the reference count a second time.=20
+
+When the trigger is later unregistered, wprobe_trigger_free() decrements the
+count by only 1, leaving a permanent reference and memory leak.
+
+> +	if (ret) {
+> +		event_trigger_reset_filter(cmd_ops, trigger_data);
+> +		trace_event_enable_disable(wprobe_file, 0, 1);
+> +		trace_event_put_ref(wprobe_file->event_call);
+> +		tracepoint_synchronize_unregister();
+> +		event_trigger_free(trigger_data);
+> +		return ret;
+> +	}
+
+[Severity: High]
+Can this late error path cause a double-free?=20
+
+Both trigger_data and wprobe_data are declared with scope-based cleanup
+(__free). If event_trigger_register() fails, the code manually calls
+event_trigger_free(trigger_data), freeing both objects.=20
+
+When the function returns, the __free macros will execute and attempt to fr=
+ee
+them a second time.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178611679753.237811=
-.10190793347982785419.stgit@devnote2?part=3D9
+.10190793347982785419.stgit@devnote2?part=3D8
