@@ -1,56 +1,56 @@
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B64DB3C1983
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 07:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F873C3429
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 07:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786087121; cv=none; b=UzRwEuFh7luFX/7JIuWJ4WdiL8RGI+ePc/OdkIQMGco66YxcU4hnXsleYw1eKaN6sfd2vjxFw8XYx8KigfZxcesMn87BYPo7HnCoTzs7zWm0MVhvSE0hoZaTH+GIQZq0OKYJLyQkWyEr9paAL/nTJKziu8RcNlPqAiyIWGpouLg=
+	t=1786087122; cv=none; b=XRRrhGTiy8PvqNlYy31f218xANi7yl1xYmgWSsKH4pgB0o6LurRELpG0+6mKym2riUYGVH+1r8wcIW3GVkqSBZibAb0C9fUtYQ3axGfjEn11HuZoi9H8VTqcBwI5gbs1fMA9X3R/jI9T+gkCHGyLW6e51SuLz8rFlRVasosKFkk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786087121; c=relaxed/simple;
-	bh=S9QT8b0kd2xRVLf3lLP5oiZ/aD5o4IvDCLPYvHHsR7M=;
+	s=arc-20240116; t=1786087122; c=relaxed/simple;
+	bh=5xQAqmvorxXdNNFmQzGl8mnKvCDu0Bkadw40xjrakYM=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=cdglo4rTrFiaPpI1MUOrbVWCmO9bde0DmOQgDbOhd78ujMLxkjlrS3rEY4k77y/hK0U9rcbQMZcCwAnugLvwS9R2hNJrJT2GlFnthT+sOaERHJ28Kyz1ADyCAZFjHVC2tVGDxvWHt/yncwdJv+uWrLY1uap10BHr/zaRdDWsM7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rNF0Ynmh; arc=none smtp.client-ip=209.85.214.198
+	 To:Content-Type; b=HYbLOAR4qvvYG8/tC1C1gpKYjQayrlMRU/OaDQy8rWMTtwJ6zORWiYe8xlWBGsR9oYu8BAklpIFx0rr+nxfBQsB4B/oyv3tS8qPb2woJuCUD/emFlm8ogOpVJIQT25wj6e4jfea8PepmnKYTCTrFG5+EdBp7SIg4ZgqvYn2qJDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WRUlq72G; arc=none smtp.client-ip=209.85.214.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rNF0Ynmh"
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2d001671a54so57532055ad.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Aug 2026 00:18:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WRUlq72G"
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2d02df2bf09so37672135ad.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 07 Aug 2026 00:18:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786087118; x=1786691918; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1786087120; x=1786691920; darn=vger.kernel.org;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=MgsJriLIU9dRPdYwuhTOgbzKSY3swUpCCJFzn9PAz+E=;
-        b=rNF0YnmhP0fx0ELiTjufJhyMvioSI08C6gBIFsGubuOP6J7svkX9E2LALnPr9PyuDv
-         htGiq2j+TeC8H0O23I1CfYEEdAyzyy7L/vmUK4PpXy14QtaH46htOHBqJIb8HlRuRN64
-         TueYWHIi0T7C6LZteq/iMLaid9UOpkHbvv1H1qdpGA/mjhx+K5SwqNdMWOhX6GTM+uGg
-         tYqJ257IEVqRAIq5rBIg2LaphaJ3si/AV5aC8oseR34KqPOzNpQBsvi2YynJornR5L4h
-         DDU/U8CthYBth2dI6yq2YmC5AQANzmIFKG6pF+pyHZ9uWewUpIac+QX1axoi/12jaM4t
-         lWdg==
+        bh=id+6dnzU4I7sg38xB44NTSjVHYaER430HX1yg72oJFQ=;
+        b=WRUlq72G0QxhV5q2yCiFYNvZEOfg95muzH8jPnmMlxDh8rawA6c3VO8HzN3IQE4a3e
+         le6+AYBsEFK61FVsdcPB7a9R3FOEA/uOkbr/EqdOh5L8TR0C8A88T+7wzSRXrTMPf7r7
+         xUh1E7HBEoE+RHL7Zg4aWG3RoCg57lEy0HFwrYV9cRO6VXqRYdBbAPmogz6aPWj9zJ0f
+         DDHq/7LHtndn0FbPZ8dCUFR2tG9Vave6kg8l1N/JWx8wD/Azs/m5b5c4NFZnnVq1kRcC
+         DkxpBLO5TFQb48HDHfSjx8KSfWLaGQJQMGNsracFrEayzy5oiHIBL7NA1HmOCzH2Tkqc
+         HEvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786087118; x=1786691918;
+        d=1e100.net; s=20251104; t=1786087120; x=1786691920;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=MgsJriLIU9dRPdYwuhTOgbzKSY3swUpCCJFzn9PAz+E=;
-        b=So7pb9bNOzkrkzxZPCGcyqDU/HoNavlm7wb4nfcqZeSdzITldSXjdq1kVXhHS9mfuS
-         7LXEFSywuM52oALa+MjJiOmYSV0TTafKZrqYzc3ZWVXe1O90h9UGM+5w613BNVkrx1F9
-         OsaoRBqDtP2Z/50AKCJdjgP1AT44ABsfHRBaCKGLVOgBXwrt/M90eKcfe+6Hwvukbs2W
-         IdT64qSQdn68qk8KT5BdxNP1CHrdKeKZCCxuZaAIjeHpZjZqUTx0xqkLCgvZN2hix3G3
-         xAfIcnvDPkjccTUDYlYdEfKWdSrIrFyqEwbZualey5IchXtum9Ys1IDMPzNiNqB+aHsw
-         2HoQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrulOEK4mx6MNnx1Xhys+qovfh3Gw+BhtySDDZ3dGJfsznI+rKv/d2cG6ne0sJmjkv7URTIrS1CPX5Hf4RS2UnG@vger.kernel.org
-X-Gm-Message-State: AOJu0YySd/rys115mhSdtCNlp/C8UEs5IlAyB1jKHPoVAUZjexVWz/ds
-	9vIl84x+hBw9QSa1zjXrHzq0gIj5qn1FkcsB4GGzMZk76UqeZdUnP3Yn2Egl1H+64bWvfY7749b
-	CWVI+Yf1UGA==
-X-Received: from dybmx3.prod.google.com ([2002:a05:7300:d403:b0:315:a379:c9e7])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:914b:b0:3c3:bbe6:95b1
- with SMTP id adf61e73a8af0-3cb85eef9d6mr21031304637.24.1786087117513; Fri, 07
- Aug 2026 00:18:37 -0700 (PDT)
-Date: Fri,  7 Aug 2026 00:18:16 -0700
+        bh=id+6dnzU4I7sg38xB44NTSjVHYaER430HX1yg72oJFQ=;
+        b=aR+tHrUh65gt5+C8qete37y8icPPt7iAp5JQItQp5Rkaewd7AtqPDfMnlyFO8Gn8BA
+         CO7FJO56fsAxhJollXCKvFDGZmCG8oyzvPjMcHOc23i1svIOvCdPRaRuL1PHy5+oP3os
+         3Sl74N9+UmcLIq4qjgx7WCG5oR+kEdcy2j/BIV+JKO2nD+THQ+l9Zrtqe0yVOrXLNndc
+         hrWGvgMO98FQz5vVdGW5sbcsfjOgtFVj3JgKtOpOOy9w/8tMAiQlBkpQmcxAuEBPKKLF
+         wRTtuVH2cC3Qp+GPKfn/rN27U8/VbEO8U1OGzDEnOkcfqultZp03+BKryaaVmPAKIlDe
+         YSzQ==
+X-Forwarded-Encrypted: i=1; AHgh+RohMZpoFnOovdgjbo+WUA4Wc1s0YhqQn6C4fKNK/2rADSlhc2f8BwXrYyqKFZYPhRch21nIrL4EOft1a7yZZKvL@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEef6dRp0WmqMt8iS3xEOZ+WcqoCgcF2vDopK9znLVyvvFUcFc
+	+CmRH2IFwKfwI1udn1CUCI6zBWN2r6+z5ANVHxkipMpmxQ3hlMZxa/dla+4PFZ/gRpiYfh+b4xn
+	Y793kFo+nWQ==
+X-Received: from dybhg52.prod.google.com ([2002:a05:7301:2ab4:b0:30f:4402:de4f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:1fc8:b0:3c4:397a:69ba
+ with SMTP id adf61e73a8af0-3cb85ef8666mr24983360637.28.1786087119621; Fri, 07
+ Aug 2026 00:18:39 -0700 (PDT)
+Date: Fri,  7 Aug 2026 00:18:17 -0700
 In-Reply-To: <20260807071818.718751-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260807071818.718751-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.679.g6767b8d81c-goog
-Message-ID: <20260807071818.718751-7-irogers@google.com>
-Subject: [RFC PATCH v1 6/8] perf inject: Extend perf inject to support
- bid_offset conversion
+Message-ID: <20260807071818.718751-8-irogers@google.com>
+Subject: [RFC PATCH v1 7/8] perf record: Add --buildid-offset option
 From: Ian Rogers <irogers@google.com>
 To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
 	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
@@ -91,642 +90,77 @@ To: Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>
 	linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-This adds the --sample-buildids option to perf inject, allowing it to
-drop MMAP events and rewrite samples to use build IDs and offsets
-instead of virtual addresses.
+Add the --buildid-offset flag to perf record to natively request
+PERF_SAMPLE_BUILD_ID_OFFSET and PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET
+from the kernel. This configures the evsel attributes by replacing
+the standard IP and CALLCHAIN bits with the build ID offset equivalents.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-inject.c         |  14 +-
- tools/perf/util/Build               |   1 +
- tools/perf/util/inject_bid_offset.c | 504 ++++++++++++++++++++++++++++
- tools/perf/util/inject_bid_offset.h |  21 ++
- 4 files changed, 539 insertions(+), 1 deletion(-)
- create mode 100644 tools/perf/util/inject_bid_offset.c
- create mode 100644 tools/perf/util/inject_bid_offset.h
+ tools/perf/builtin-record.c |  7 +++++++
+ tools/perf/util/evsel.c     | 11 +++++++++++
+ tools/perf/util/record.h    |  1 +
+ 3 files changed, 19 insertions(+)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 6aa9e3eea438..8f8d5267a37e 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -9,6 +9,7 @@
- #include "builtin.h"
- 
- #include "util/aslr.h"
-+#include "util/inject_bid_offset.h"
- #include "util/color.h"
- #include "util/dso.h"
- #include "util/vdso.h"
-@@ -112,6 +113,7 @@ enum build_id_rewrite_style {
- 	BID_RWS__INJECT_HEADER_ALL,
- 	BID_RWS__MMAP2_BUILDID_ALL,
- 	BID_RWS__MMAP2_BUILDID_LAZY,
-+	BID_RWS__SAMPLE_BUILDID,
- };
- 
- struct perf_inject {
-@@ -371,7 +373,7 @@ static s64 perf_event__repipe_auxtrace(const struct perf_tool *tool,
- 	return event->auxtrace.size;
- }
- 
--static int perf_event__repipe(const struct perf_tool *tool,
-+int perf_event__repipe(const struct perf_tool *tool,
- 			      union perf_event *event,
- 			      struct perf_sample *sample __maybe_unused,
- 			      struct machine *machine __maybe_unused)
-@@ -2687,6 +2689,7 @@ int cmd_inject(int argc, const char **argv)
- 	bool build_id_all = false;
- 	bool mmap2_build_ids = false;
- 	bool mmap2_build_id_all = false;
-+	bool build_id_sample = false;
- 
- 	struct option options[] = {
- 		OPT_BOOLEAN('b', "build-ids", &build_ids,
-@@ -2695,8 +2698,11 @@ int cmd_inject(int argc, const char **argv)
- 			    "Inject build-ids of all DSOs into the output stream"),
- 		OPT_BOOLEAN('B', "mmap2-buildids", &mmap2_build_ids,
- 			    "Drop unused mmap events, make others mmap2 with build IDs"),
-+
- 		OPT_BOOLEAN(0, "mmap2-buildid-all", &mmap2_build_id_all,
- 			    "Rewrite all mmap events as mmap2 events with build IDs"),
-+		OPT_BOOLEAN('S', "sample-buildids", &build_id_sample,
-+			    "Drop all mmap events and rewrite samples to use build ID + offset"),
- 		OPT_STRING(0, "known-build-ids", &known_build_ids,
- 			   "buildid path [,buildid path...]",
- 			   "build-ids to use for given paths"),
-@@ -2815,8 +2821,11 @@ int cmd_inject(int argc, const char **argv)
- 		inject.build_id_style = BID_RWS__MMAP2_BUILDID_ALL;
- 	if (build_ids)
- 		inject.build_id_style = BID_RWS__INJECT_HEADER_LAZY;
-+
- 	if (build_id_all)
- 		inject.build_id_style = BID_RWS__INJECT_HEADER_ALL;
-+	if (build_id_sample)
-+		inject.build_id_style = BID_RWS__SAMPLE_BUILDID;
- 
- 	data.path = inject.input_name;
- 
-@@ -2880,8 +2889,11 @@ int cmd_inject(int argc, const char **argv)
- 
- 	if (IS_ERR(inject.session)) {
- 		ret = PTR_ERR(inject.session);
-+
- 		if (inject.aslr)
- 			aslr_tool__delete(tool);
-+		if (inject.build_id_style == BID_RWS__SAMPLE_BUILDID)
-+			inject_bid_offset_tool__delete(tool);
- 		goto out_close_output;
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index f58d7e3c7879..9ff9cfc06278 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -3608,6 +3608,8 @@ static struct option __record_options[] = {
+ 		   "file", "vmlinux pathname"),
+ 	OPT_BOOLEAN(0, "buildid-all", &record.buildid_all,
+ 		    "Record build-id of all DSOs regardless of hits"),
++	OPT_BOOLEAN(0, "buildid-offset", &record.opts.buildid_offset,
++		    "Record build id offset instead of IP"),
+ 	OPT_BOOLEAN_SET(0, "buildid-mmap", &record.buildid_mmap, &record.buildid_mmap_set,
+ 			"Record build-id in mmap events and skip build-id processing."),
+ 	OPT_BOOLEAN(0, "timestamp-filename", &record.timestamp_filename,
+@@ -4166,6 +4168,11 @@ int cmd_record(int argc, const char **argv)
+ 		rec->no_buildid_cache = true;
  	}
  
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 330311cac550..cefbf2ef3fac 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -7,6 +7,7 @@ perf-util-y += addr2line.o
- perf-util-y += addr_location.o
- perf-util-y += annotate.o
- perf-util-y += aslr.o
-+perf-util-y += inject_bid_offset.o
- perf-util-y += blake2s.o
- perf-util-y += block-info.o
- perf-util-y += block-range.o
-diff --git a/tools/perf/util/inject_bid_offset.c b/tools/perf/util/inject_bid_offset.c
-new file mode 100644
-index 000000000000..f7b5fb05fac7
---- /dev/null
-+++ b/tools/perf/util/inject_bid_offset.c
-@@ -0,0 +1,504 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "inject_bid_offset.h"
-+
-+#include <stdlib.h>
-+
-+#include <linux/compiler.h>
-+#include <linux/string.h>
-+#include <linux/zalloc.h>
-+
-+#include "addr_location.h"
-+#include "debug.h"
-+#include "dso.h"
-+#include "event.h"
-+#include "evlist.h"
-+#include "evsel.h"
-+#include "machine.h"
-+#include "map.h"
-+#include "session.h"
-+#include "synthetic-events.h"
-+#include "thread.h"
-+#include "tool.h"
-+
-+struct inject_bid_offset_tool {
-+	struct delegate_tool tool;
-+	char event_copy[PERF_SAMPLE_MAX_SIZE] __aligned(8);
-+};
-+
-+int perf_event__rewrite_attr_for_build_id_offset(struct perf_event_attr *attr)
-+{
-+	if (attr->sample_type & (PERF_SAMPLE_BUILD_ID_OFFSET |
-+				 PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET)) {
-+		/*
-+		 * Expect to add build ID information from virtual address, if
-+		 * it is already present then things would be confused so fail.
-+		 */
-+		return -1;
-+	}
-+	if (attr->sample_type & PERF_SAMPLE_IP) {
-+		attr->sample_type &= ~PERF_SAMPLE_IP;
-+		attr->sample_type |= PERF_SAMPLE_BUILD_ID_OFFSET;
-+	}
-+	if (attr->sample_type & PERF_SAMPLE_CALLCHAIN) {
-+		attr->sample_type &= ~PERF_SAMPLE_CALLCHAIN;
-+		attr->sample_type |= PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET;
-+	}
-+	return 0;
-+}
-+
-+int perf_event__rewrite_attr_for_sample_ip(struct perf_event_attr *attr)
-+{
-+	if (attr->sample_type & (PERF_SAMPLE_IP | PERF_SAMPLE_CALLCHAIN)) {
-+		/*
-+		 * Expect to remove build ID information for virtual address, if
-+		 * it is already present then things would be confused so fail.
-+		 */
-+		return -1;
-+	}
-+	if (attr->sample_type & PERF_SAMPLE_BUILD_ID_OFFSET) {
-+		attr->sample_type &= ~PERF_SAMPLE_BUILD_ID_OFFSET;
-+		attr->sample_type |= PERF_SAMPLE_IP;
-+	}
-+	if (attr->sample_type & PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET) {
-+		attr->sample_type &= ~PERF_SAMPLE_CALLCHAIN_BUILD_ID_OFFSET;
-+		attr->sample_type |= PERF_SAMPLE_CALLCHAIN;
-+	}
-+	return 0;
-+}
-+
-+static void perf_event__inject_sample_buildid_array(struct thread *thread,
-+						    u64 ip, u8 cpumode,
-+						    __u64 *array)
-+{
-+	struct perf_build_id bid = { .size = 0 };
-+	u64 offset = ip;
-+	struct addr_location al;
-+	struct dso *dso;
-+	const struct build_id *dso_bid;
-+
-+	struct perf_sample ps = { .ip = ip, .cpumode = cpumode };
-+
-+	addr_location__init(&al);
-+
-+	if (!thread)
-+		goto write_bid;
-+
-+	if (!thread__find_map(thread, &ps, &al))
-+		goto write_bid;
-+
-+	dso = al.map ? dso__get(map__dso(al.map)) : NULL;
-+	if (!dso)
-+		goto write_bid;
-+	dso_bid = dso__bid(dso);
-+	if (!dso_bid) {
-+		dso__put(dso);
-+		goto write_bid;
++	if (rec->opts.buildid_offset) {
++		/* Do not drop mmap events here so we can generate build ids later */
++		/* rec->opts.synth &= ~PERF_SYNTH_MMAP; */
 +	}
 +
-+	bid.size = dso_bid->size;
-+	if (bid.size > sizeof(bid.data))
-+		bid.size = sizeof(bid.data);
-+	memcpy(bid.data, &dso_bid->data, bid.size);
-+	offset = map__dso_map_ip(al.map, offset);
-+	dso__put(dso);
-+
-+write_bid:
-+	compiletime_assert(sizeof(struct perf_build_id) == 3 * sizeof(u64),
-+			   "Unexpected perf_build_id size");
-+	memcpy(&array[0], &bid, 3 * sizeof(u64));
-+	array[3] = offset;
-+	addr_location__exit(&al);
-+}
-+
-+static void mark_dso_hit(const struct perf_tool *tool,
-+			 struct perf_sample *sample, struct machine *machine,
-+			 struct thread *thread, u64 ip, u8 cpumode)
-+{
-+	struct addr_location al;
-+	struct dso *dso;
-+
-+	struct perf_sample ps = { .ip = ip, .cpumode = cpumode };
-+
-+	addr_location__init(&al);
-+
-+	if (thread__find_map(thread, &ps, &al)) {
-+		dso = al.map ? dso__get(map__dso(al.map)) : NULL;
-+		if (dso) {
-+			if (!dso__hit(dso)) {
-+				const struct build_id *bid = dso__bid(dso);
-+
-+				dso__set_hit(dso);
-+				if (bid) {
-+					perf_event__synthesize_build_id(
-+						tool, sample, machine,
-+						perf_event__repipe,
-+						dso__kernel(dso) ?
-+							PERF_RECORD_MISC_KERNEL :
-+							PERF_RECORD_MISC_USER,
-+						bid, dso->long_name);
-+				}
-+			}
-+			dso__put(dso);
+ 	if (rec->opts.record_cgroup && !perf_can_record_cgroup()) {
+ 		pr_err("Kernel has no cgroup sampling support.\n");
+ 		err = -EINVAL;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d9a07f5825e8..587f0fa41cce 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1744,6 +1744,17 @@ void evsel__config(struct evsel *evsel, const struct record_opts *opts,
+ 	if (opts->sample_transaction)
+ 		evsel__set_sample_bit(evsel, TRANSACTION);
+ 
++	if (opts->buildid_offset) {
++		if (evsel->core.attr.sample_type & PERF_SAMPLE_IP) {
++			evsel__reset_sample_bit(evsel, IP);
++			evsel__set_sample_bit(evsel, BUILD_ID_OFFSET);
 +		}
-+	}
-+	addr_location__exit(&al);
-+}
-+
-+static int inject_bid_offset_tool__sample(const struct perf_tool *tool,
-+					  union perf_event *event,
-+					  struct perf_sample *sample,
-+					  struct machine *machine)
-+{
-+	struct delegate_tool *dt =
-+		container_of(tool, struct delegate_tool, tool);
-+	struct inject_bid_offset_tool *ibo =
-+		container_of(dt, struct inject_bid_offset_tool, tool);
-+	union perf_event *ev;
-+	struct evsel *evsel = sample->evsel;
-+	__u64 i = 0, j = 0;
-+	__u64 *in_array, *out_array;
-+	__u64 sample_type = evsel->core.attr.sample_type;
-+	const __u64 max_i = event->header.size / sizeof(__u64);
-+	struct thread *thread;
-+	u16 max_size = event->header.size;
-+
-+	if ((sample_type & (PERF_SAMPLE_IP | PERF_SAMPLE_CALLCHAIN)) == 0)
-+		return ibo->tool.delegate->sample(ibo->tool.delegate, event,
-+						  sample, machine);
-+
-+	if (symbol_conf.guest_code && !machine__is_host(machine))
-+		thread = machine__findnew_guest_code(machine, sample->pid);
-+	else
-+		thread = machine__findnew_thread(machine, sample->pid,
-+						 sample->tid);
-+
-+	if (sample_type & PERF_SAMPLE_IP)
-+		max_size += sizeof(struct perf_build_id) + sizeof(u64) -
-+			    sizeof(u64);
-+
-+	if (sample_type & PERF_SAMPLE_CALLCHAIN) {
-+		max_size +=
-+			sample->callchain->nr * (sizeof(struct perf_build_id) +
-+						 sizeof(u64) - sizeof(u64));
-+	}
-+
-+	if (max_size > PERF_SAMPLE_MAX_SIZE) {
-+		pr_debug("Insufficient space to copy event\n");
-+		thread__put(thread);
-+		return -E2BIG;
-+	}
-+
-+	ev = (union perf_event *)ibo->event_copy;
-+	ev->sample.header =
-+		(struct perf_event_header){ .type = event->header.type,
-+					    .misc = event->header.misc,
-+					    .size = max_size };
-+
-+	in_array = &event->sample.array[0];
-+	out_array = &ev->sample.array[0];
-+
-+	if (sample_type & PERF_SAMPLE_IDENTIFIER) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_IP) {
-+		i++;
-+		if (evsel && thread)
-+			mark_dso_hit(ibo->tool.delegate, sample, machine,
-+				     thread, sample->ip, sample->cpumode);
-+	}
-+	if (sample_type & PERF_SAMPLE_TID) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_TIME) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_ADDR) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_ID) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_STREAM_ID) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_CPU) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_PERIOD) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_READ) {
-+		if ((evsel->core.attr.read_format & PERF_FORMAT_GROUP) == 0) {
-+			if (i > max_i)
-+				goto err;
-+			out_array[j++] = in_array[i++];
-+			if (evsel->core.attr.read_format &
-+			    PERF_FORMAT_TOTAL_TIME_ENABLED)
-+				if (i > max_i)
-+					goto err;
-+			out_array[j++] = in_array[i++];
-+			if (evsel->core.attr.read_format &
-+			    PERF_FORMAT_TOTAL_TIME_RUNNING)
-+				if (i > max_i)
-+					goto err;
-+			out_array[j++] = in_array[i++];
-+			if (evsel->core.attr.read_format & PERF_FORMAT_ID)
-+				if (i > max_i)
-+					goto err;
-+			out_array[j++] = in_array[i++];
-+			if (evsel->core.attr.read_format & PERF_FORMAT_LOST)
-+				if (i > max_i)
-+					goto err;
-+			out_array[j++] = in_array[i++];
-+		} else {
-+			u64 nr;
-+
-+			if (i > max_i)
-+				goto err;
-+			nr = out_array[j++] = in_array[i++];
-+			if (evsel->core.attr.read_format &
-+			    PERF_FORMAT_TOTAL_TIME_ENABLED)
-+				if (i > max_i)
-+					goto err;
-+			out_array[j++] = in_array[i++];
-+			if (evsel->core.attr.read_format &
-+			    PERF_FORMAT_TOTAL_TIME_RUNNING)
-+				if (i > max_i)
-+					goto err;
-+			out_array[j++] = in_array[i++];
-+			for (u64 cntr = 0; cntr < nr; cntr++) {
-+				if (i > max_i)
-+					goto err;
-+				out_array[j++] = in_array[i++];
-+				if (evsel->core.attr.read_format &
-+				    PERF_FORMAT_ID)
-+					if (i > max_i)
-+						goto err;
-+				out_array[j++] = in_array[i++];
-+				if (evsel->core.attr.read_format &
-+				    PERF_FORMAT_LOST)
-+					if (i > max_i)
-+						goto err;
-+				out_array[j++] = in_array[i++];
-+			}
-+		}
-+	}
-+	if (sample_type & PERF_SAMPLE_CALLCHAIN) {
-+		i++;
-+		if (evsel && thread) {
-+			for (u64 x = 0; x < sample->callchain->nr; x++)
-+				mark_dso_hit(ibo->tool.delegate, sample,
-+					     machine, thread,
-+					     sample->callchain->ips[x],
-+					     sample->cpumode);
-+		}
-+		i += sample->callchain->nr;
-+	}
-+	if (sample_type & PERF_SAMPLE_RAW) {
-+		size_t bytes = sizeof(u32) + sample->raw_size;
-+
-+		if ((i + (bytes / sizeof(u64))) > max_i)
-+			goto err;
-+		memcpy(&out_array[j], &in_array[i], bytes);
-+		i += bytes / sizeof(u64);
-+		j += bytes / sizeof(u64);
-+	}
-+	if (sample_type & PERF_SAMPLE_BRANCH_STACK) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+		if (sample_type & PERF_SAMPLE_BRANCH_HW_INDEX) {
-+			if (i > max_i)
-+				goto err;
-+			out_array[j++] = in_array[i++];
-+		}
-+		if (i + (sample->branch_stack->nr * 3) > max_i)
-+			goto err;
-+		memcpy(&out_array[j], &in_array[i],
-+		       sample->branch_stack->nr * 3 * sizeof(u64));
-+		i += sample->branch_stack->nr * 3;
-+		j += sample->branch_stack->nr * 3;
-+		if (sample_type & PERF_SAMPLE_BRANCH_COUNTERS) {
-+			if (i + sample->branch_stack->nr > max_i)
-+				goto err;
-+			memcpy(&out_array[j], &in_array[i],
-+			       sample->branch_stack->nr * sizeof(u64));
-+			i += sample->branch_stack->nr;
-+			j += sample->branch_stack->nr;
-+		}
-+	}
-+	if (sample_type & PERF_SAMPLE_REGS_USER) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+		if (sample->user_regs->abi != PERF_SAMPLE_REGS_ABI_NONE) {
-+			u64 nr = hweight64(evsel->core.attr.sample_regs_user);
-+
-+			if (i + nr > max_i)
-+				goto err;
-+			memcpy(&out_array[j], &in_array[i], nr * sizeof(u64));
-+			i += nr;
-+			j += nr;
-+		}
-+	}
-+	if (sample_type & PERF_SAMPLE_STACK_USER) {
-+		u64 size;
-+
-+		if (i > max_i)
-+			goto err;
-+		size = out_array[j++] = in_array[i++];
-+		if (size > 0) {
-+			memcpy(&out_array[j], &in_array[i], size);
-+			i += size / sizeof(u64);
-+			j += size / sizeof(u64);
-+			if (i > max_i)
-+				goto err;
-+			out_array[j++] = in_array[i++];
-+		}
-+	}
-+	if (sample_type & PERF_SAMPLE_WEIGHT_TYPE) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_DATA_SRC) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_TRANSACTION) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_REGS_INTR) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+		if (sample->intr_regs->abi != PERF_SAMPLE_REGS_ABI_NONE) {
-+			u64 nr = hweight64(evsel->core.attr.sample_regs_intr);
-+
-+			if (i + nr > max_i)
-+				goto err;
-+			memcpy(&out_array[j], &in_array[i], nr * sizeof(u64));
-+			i += nr;
-+			j += nr;
-+		}
-+	}
-+	if (sample_type & PERF_SAMPLE_PHYS_ADDR) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_CGROUP) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_DATA_PAGE_SIZE) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_CODE_PAGE_SIZE) {
-+		if (i > max_i)
-+			goto err;
-+		out_array[j++] = in_array[i++];
-+	}
-+	if (sample_type & PERF_SAMPLE_AUX) {
-+		u64 size;
-+
-+		if (i > max_i)
-+			goto err;
-+		size = out_array[j++] = in_array[i++];
-+		if (i + (size / sizeof(u64)) > max_i)
-+			goto err;
-+		memcpy(&out_array[j], &in_array[i], size);
-+		i += size / sizeof(u64);
-+		j += size / sizeof(u64);
-+	}
-+
-+	if (sample_type & PERF_SAMPLE_IP) {
-+		perf_event__inject_sample_buildid_array(
-+			thread, sample->ip, sample->cpumode, &out_array[j]);
-+		j += 4;
-+	}
-+	if (sample_type & PERF_SAMPLE_CALLCHAIN) {
-+		out_array[j++] = sample->callchain->nr;
-+		for (u64 x = 0; x < sample->callchain->nr; x++) {
-+			perf_event__inject_sample_buildid_array(
-+				thread, sample->callchain->ips[x],
-+				sample->cpumode, &out_array[j]);
-+			j += 4;
++		if (evsel->core.attr.sample_type & PERF_SAMPLE_CALLCHAIN) {
++			evsel__reset_sample_bit(evsel, CALLCHAIN);
++			evsel__set_sample_bit(evsel, CALLCHAIN_BUILD_ID_OFFSET);
 +		}
 +	}
 +
-+	thread__put(thread);
-+
-+	return ibo->tool.delegate->sample(ibo->tool.delegate, ev, sample,
-+					  machine);
-+
-+err:
-+	thread__put(thread);
-+	return -EFAULT;
-+}
-+
-+static int
-+inject_bid_offset_tool__mmap(const struct perf_tool *tool __maybe_unused,
-+			     union perf_event *event,
-+			     struct perf_sample *sample,
-+			     struct machine *machine)
-+{
-+	perf_event__process_mmap(tool, event, sample, machine);
-+	return 0; // Drop mmap events from output stream
-+}
-+static int
-+inject_bid_offset_tool__mmap2(const struct perf_tool *tool __maybe_unused,
-+			      union perf_event *event,
-+			      struct perf_sample *sample,
-+			      struct machine *machine)
-+{
-+	perf_event__process_mmap2(tool, event, sample, machine);
-+	return 0; // Drop mmap2 events from output stream
-+}
-+
-+struct perf_tool *inject_bid_offset_tool__new(struct perf_tool *delegate)
-+{
-+	struct inject_bid_offset_tool *ibo = zalloc(sizeof(*ibo));
-+
-+	if (!ibo)
-+		return NULL;
-+
-+	delegate_tool__init(&ibo->tool, delegate);
-+	ibo->tool.tool.sample = inject_bid_offset_tool__sample;
-+	ibo->tool.tool.mmap = inject_bid_offset_tool__mmap;
-+	ibo->tool.tool.mmap2 = inject_bid_offset_tool__mmap2;
-+
-+	return &ibo->tool.tool;
-+}
-+
-+void inject_bid_offset_tool__delete(struct perf_tool *tool)
-+{
-+	struct delegate_tool *dt;
-+
-+	if (!tool)
-+		return;
-+	dt = container_of(tool, struct delegate_tool, tool);
-+	free(container_of(dt, struct inject_bid_offset_tool, tool));
-+}
-diff --git a/tools/perf/util/inject_bid_offset.h b/tools/perf/util/inject_bid_offset.h
-new file mode 100644
-index 000000000000..e4cfea255f6b
---- /dev/null
-+++ b/tools/perf/util/inject_bid_offset.h
-@@ -0,0 +1,21 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef __PERF_INJECT_BID_OFFSET_H
-+#define __PERF_INJECT_BID_OFFSET_H
-+
-+#include <linux/perf_event.h>
-+
-+struct perf_tool;
-+struct evlist;
-+
-+int perf_event__rewrite_attr_for_build_id_offset(struct perf_event_attr *attr);
-+int perf_event__rewrite_attr_for_sample_ip(struct perf_event_attr *attr);
-+union perf_event;
-+struct perf_sample;
-+struct machine;
-+
-+int perf_event__repipe(const struct perf_tool *tool, union perf_event *event,
-+			struct perf_sample *sample, struct machine *machine);
-+struct perf_tool *inject_bid_offset_tool__new(struct perf_tool *delegate);
-+void inject_bid_offset_tool__delete(struct perf_tool *tool);
-+
-+#endif /* __PERF_INJECT_BID_OFFSET_H */
+ 	if (opts->running_time) {
+ 		evsel->core.attr.read_format |=
+ 			PERF_FORMAT_TOTAL_TIME_ENABLED |
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index 93627c9a7338..a8cec7db150e 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -55,6 +55,7 @@ struct record_opts {
+ 	bool	      kcore;
+ 	bool	      text_poke;
+ 	bool	      build_id;
++	bool	      buildid_offset;
+ 	unsigned int  freq;
+ 	unsigned int  mmap_pages;
+ 	unsigned int  auxtrace_mmap_pages;
 -- 
 2.55.0.679.g6767b8d81c-goog
 
