@@ -1,25 +1,25 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E1A137923;
-	Fri,  7 Aug 2026 08:56:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1394B44A405;
+	Fri,  7 Aug 2026 08:56:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786093018; cv=none; b=sW8WXOzEq8Fq0JHGS3KTdhHyFZKv6TJLUzqxtvpXkgdxwjcZtzC3ijo/YMkV1HBc4rUrrzqXC1zb1CDpJsGcCxf3AttOyZQkDONHCkp91VFngzVPiWoIs0BNSMhO3khNcNgZNv00sIzYHZvcgFvTvwrifhyLaG1yV8pj5EhXz5Y=
+	t=1786093031; cv=none; b=K//EZEBj7/pfTEzmvlGSTuUjppvsvqIPILSSCghwzg6lyCUYww29x+nu2paMGiI7T78dWg5hH45Mr0+xjhBNOcGOskakUn35kWpv5rsDaM5amyzJKhVsYNlsmfRkQ69oPxTsSfrUye85rCdIk0zJjo7tlqhkmPFa8giVShiyDHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786093018; c=relaxed/simple;
-	bh=8mTkfPa8lNb58ev0/Ci5vY7QQedlwltXMKyGqkFedl4=;
+	s=arc-20240116; t=1786093031; c=relaxed/simple;
+	bh=MPilSDTj9/2a51iTqBTzvRLKN6MwsQcTyvxkyoruTLU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BI83vs9STzZ71Gn8ZXGX87nHu8p/vXtnBRrDDZlPw/VFIyRSU0FGNvtTW6B7PUTuV8w38vFXB+pG3h2OYhsCoABCz5oHjDUw8/bgS6BU5p9NmfkLsBARcgy3iMAu0YOQphtat7MPwVz4LHaMftaLBwtzn+6XfbOZQpyaHRNsatk=
+	 MIME-Version:Content-Type; b=f3HSBID4znmvCU/6mRz6R/FksFrcrAdElL3WEbvUSWWENZfuSa3gkj/vU2T7BFMGDLIALNiA71UAUS7gBp5oMKCarq2l2WMAzRFlTTBVjV74RDHKN/AmizCVT+AUYoPzAFjut3g+M0odYRGCKFUueWG+9RqPaIi2zsljDcuPYWE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: ed0d6dca923d11f1aa26b74ffac11d73-20260807
+X-UUID: ee63d038923d11f1aa26b74ffac11d73-20260807
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.12,REQID:1adf90be-9f8f-4d82-875a-954d73fa9df5,IP:0,U
+X-CID-O-INFO: VERSION:1.3.12,REQID:b4704914-fd26-4b0c-b5cb-91c272e333fb,IP:0,U
 	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
 	release,TS:0
-X-CID-META: VersionHash:e7bac3a,CLOUDID:6f955b953f9425a81cb56d0c364a5a04,BulkI
+X-CID-META: VersionHash:e7bac3a,CLOUDID:f1a8bc65811c2fe3f19bea9bbe9be33c,BulkI
 	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|865|898,TC:nil,Content:0|15|50
 	,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,O
 	SA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
@@ -27,18 +27,18 @@ X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: ed0d6dca923d11f1aa26b74ffac11d73-20260807
+X-UUID: ee63d038923d11f1aa26b74ffac11d73-20260807
 X-User: liuxixin@kylinos.cn
 Received: from [127.0.1.1] [(10.44.16.150)] by mailgw.kylinos.cn
 	(envelope-from <liuxixin@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1557473672; Fri, 07 Aug 2026 16:56:49 +0800
+	with ESMTP id 404231109; Fri, 07 Aug 2026 16:56:51 +0800
 From: Xixin Liu <liuxixin@kylinos.cn>
 To: linux-riscv@lists.infradead.org
 Cc: atish.patra@linux.dev, anup@brainfault.org, will@kernel.org, mark.rutland@arm.com, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, liuxixin@kylinos.cn
-Subject: [PATCH v1 1/2] perf: RISC-V: use BIT_ULL for u64 overflow masks
+Subject: [PATCH v1 2/2] perf: RISC-V: store available counter mask as bitmap
 Date: Fri, 07 Aug 2026 16:50:00 +0800
-Message-ID: <prpmask01bitul.1786092600.git.liuxixin@kylinos.cn>
+Message-ID: <prpmask02cmap.1786092600.git.liuxixin@kylinos.cn>
 In-Reply-To: <cover.1786092600.git.liuxixin@kylinos.cn>
 References: <cover.1786092600.git.liuxixin@kylinos.cn>
 Precedence: bulk
@@ -51,45 +51,149 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Mailer: patches/scripts/send-local.py
 
-Overflow status and restart masks are u64, but bits were built with
-BIT(). On RV32 that is an unsigned long shift, so indices >= 32 truncate
-or wrap and corrupt the mask.
+The available-counter mask was a single unsigned long, but iteration
+uses RISCV_MAX_COUNTERS (64). On RV32 that reads past the object. Filling
+with BIT(i) is also wrong for i >= 32.
 
-Use BIT_ULL() for those u64 bitops.
+Use DECLARE_BITMAP, set_bit/bitmap helpers, and stop counters one word
+at a time.
 
 Signed-off-by: Xixin Liu <liuxixin@kylinos.cn>
 ---
- drivers/perf/riscv_pmu_sbi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/perf/riscv_pmu_legacy.c |  5 +++--
+ drivers/perf/riscv_pmu_sbi.c    | 29 ++++++++++++++++++-----------
+ include/linux/perf/riscv_pmu.h  |  2 +-
+ 3 files changed, 22 insertions(+), 14 deletions(-)
 
+diff --git a/drivers/perf/riscv_pmu_legacy.c b/drivers/perf/riscv_pmu_legacy.c
+index 4d6461d6a..1b8e4789c 100644
+--- a/drivers/perf/riscv_pmu_legacy.c
++++ b/drivers/perf/riscv_pmu_legacy.c
+@@ -110,8 +110,9 @@ static void pmu_legacy_init(struct riscv_pmu *pmu)
+ {
+ 	pr_info("Legacy PMU implementation is available\n");
+ 
+-	pmu->cmask = BIT(RISCV_PMU_LEGACY_CYCLE) |
+-		BIT(RISCV_PMU_LEGACY_INSTRET);
++	bitmap_zero(pmu->cmask, RISCV_MAX_COUNTERS);
++	set_bit(RISCV_PMU_LEGACY_CYCLE, pmu->cmask);
++	set_bit(RISCV_PMU_LEGACY_INSTRET, pmu->cmask);
+ 	pmu->ctr_start = pmu_legacy_ctr_start;
+ 	pmu->ctr_stop = NULL;
+ 	pmu->event_map = pmu_legacy_event_map;
 diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index dfc886dee..93a31d5d5 100644
+index d6c66e375..c913d73f8 100644
 --- a/drivers/perf/riscv_pmu_sbi.c
 +++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -1002,7 +1002,7 @@ static inline void pmu_sbi_start_ovf_ctrs_snapshot(struct cpu_hw_events *cpu_hw_
- 	struct riscv_pmu_snapshot_data *sdata = cpu_hw_evt->snapshot_addr;
+@@ -97,7 +97,7 @@ static unsigned int riscv_pmu_irq_mask;
+ static unsigned int riscv_pmu_irq;
  
- 	for_each_set_bit(idx, cpu_hw_evt->used_hw_ctrs, RISCV_MAX_COUNTERS) {
--		if (ctr_ovf_mask & BIT(idx)) {
-+		if (ctr_ovf_mask & BIT_ULL(idx)) {
- 			event = cpu_hw_evt->events[idx];
- 			hwc = &event->hw;
- 			max_period = riscv_pmu_ctr_get_width_mask(event);
-@@ -1109,14 +1109,14 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
- 			hidx = info->csr - CSR_CYCLE;
+ /* Cache the available counters in a bitmask */
+-static unsigned long cmask;
++static DECLARE_BITMAP(cmask, RISCV_MAX_COUNTERS);
  
- 		/* check if the corresponding bit is set in scountovf or overflow mask in shmem */
--		if (!(overflow & BIT(hidx)))
-+		if (!(overflow & BIT_ULL(hidx)))
+ static int pmu_event_find_cache(u64 config);
+ struct sbi_pmu_event_data {
+@@ -364,7 +364,7 @@ static void pmu_sbi_check_event(struct sbi_pmu_event_data *edata)
+ 	struct sbiret ret;
+ 
+ 	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH,
+-			0, cmask, 0, edata->event_idx, 0, 0);
++			0, cmask[0], 0, edata->event_idx, 0, 0);
+ 	if (!ret.error) {
+ 		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
+ 			  ret.value, 0x1, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
+@@ -488,10 +488,10 @@ int riscv_pmu_get_hpm_info(u32 *hw_ctr_width, u32 *num_hw_ctr)
+ 	union sbi_pmu_ctr_info *info;
+ 	u32 hpm_width = 0, hpm_count = 0;
+ 
+-	if (!cmask)
++	if (bitmap_empty(cmask, RISCV_MAX_COUNTERS))
+ 		return -EINVAL;
+ 
+-	for_each_set_bit(i, &cmask, RISCV_MAX_COUNTERS) {
++	for_each_set_bit(i, cmask, RISCV_MAX_COUNTERS) {
+ 		info = &pmu_ctr_list[i];
+ 		if (!info)
+ 			continue;
+@@ -541,7 +541,7 @@ static int pmu_sbi_ctr_get_idx(struct perf_event *event)
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(rvpmu->hw_events);
+ 	struct sbiret ret;
+ 	int idx;
+-	uint64_t cbase = 0, cmask = rvpmu->cmask;
++	uint64_t cbase = 0, cmask = rvpmu->cmask[0];
+ 	unsigned long cflags = 0;
+ 
+ 	cflags = pmu_sbi_get_filter_flags(event);
+@@ -577,7 +577,7 @@ static int pmu_sbi_ctr_get_idx(struct perf_event *event)
+ 	}
+ 
+ 	idx = ret.value;
+-	if (!test_bit(idx, &rvpmu->cmask) || !pmu_ctr_list[idx].value)
++	if (!test_bit(idx, rvpmu->cmask) || !pmu_ctr_list[idx].value)
+ 		return -ENOENT;
+ 
+ 	/* Additional sanity check for the counter id */
+@@ -881,7 +881,7 @@ static int pmu_sbi_get_ctrinfo(int nctr, unsigned long *mask)
+ 			/* The logical counter ids are not expected to be contiguous */
  			continue;
  
- 		/*
- 		 * Keep a track of overflowed counters so that they can be started
- 		 * with updated initial value.
- 		 */
--		overflowed_ctrs |= BIT(lidx);
-+		overflowed_ctrs |= BIT_ULL(lidx);
- 		hw_evt = &event->hw;
- 		/* Update the event states here so that we know the state while reading */
- 		hw_evt->state |= PERF_HES_STOPPED;
+-		*mask |= BIT(i);
++		set_bit(i, mask);
+ 
+ 		cinfo.value = ret.value;
+ 		if (cinfo.type == SBI_PMU_CTR_TYPE_FW)
+@@ -898,12 +898,19 @@ static int pmu_sbi_get_ctrinfo(int nctr, unsigned long *mask)
+ 
+ static inline void pmu_sbi_stop_all(struct riscv_pmu *pmu)
+ {
++	int i;
++
+ 	/*
+ 	 * No need to check the error because we are disabling all the counters
+ 	 * which may include counters that are not enabled yet.
+ 	 */
+-	sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
+-		  0, pmu->cmask, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
++	for (i = 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
++		if (!pmu->cmask[i])
++			continue;
++		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
++			  i * BITS_PER_LONG, pmu->cmask[i],
++			  SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
++	}
+ }
+ 
+ static inline void pmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
+@@ -1442,7 +1449,7 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* cache all the information about counters now */
+-	if (pmu_sbi_get_ctrinfo(num_counters, &cmask))
++	if (pmu_sbi_get_ctrinfo(num_counters, cmask))
+ 		goto out_free;
+ 
+ 	ret = pmu_sbi_setup_irqs(pmu, pdev);
+@@ -1454,7 +1461,7 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
+ 
+ 	pmu->pmu.attr_groups = riscv_pmu_attr_groups;
+ 	pmu->pmu.parent = &pdev->dev;
+-	pmu->cmask = cmask;
++	bitmap_copy(pmu->cmask, cmask, RISCV_MAX_COUNTERS);
+ 	pmu->ctr_start = pmu_sbi_ctr_start;
+ 	pmu->ctr_stop = pmu_sbi_ctr_stop;
+ 	pmu->event_map = pmu_sbi_event_map;
+diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pmu.h
+index f82a28040..ecaa40370 100644
+--- a/include/linux/perf/riscv_pmu.h
++++ b/include/linux/perf/riscv_pmu.h
+@@ -55,7 +55,7 @@ struct riscv_pmu {
+ 
+ 	irqreturn_t	(*handle_irq)(int irq_num, void *dev);
+ 
+-	unsigned long	cmask;
++	DECLARE_BITMAP(cmask, RISCV_MAX_COUNTERS);
+ 	u64		(*ctr_read)(struct perf_event *event);
+ 	int		(*ctr_get_idx)(struct perf_event *event);
+ 	int		(*ctr_get_width)(int idx);
 
