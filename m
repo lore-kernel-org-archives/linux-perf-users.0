@@ -1,143 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C833557F3
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 15:50:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89A83431F5
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 15:53:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786117852; cv=none; b=SBBYpsBAnR5qzELGfnq7LePsiAx+MGv2J8ZMyDQMNWGiMAnOsF4XT53lefTayzpoFHLp1HnlkYFlHMQhh1/cKW/mvqaB0UyXwXWjN9/4gV6cEjnDinoqvcBOWzFMp9d6Za9R+Wd5HZ6xfBvGMb5m6GhRmo5VS4jYGMldqBG0ROE=
+	t=1786118035; cv=none; b=lfcvBic8DohQ1chUkkcZB34VqMm0BBlhqr5HeedDF9/N5TWHp0tUx1dl5gwHn1oG3gZW4I7eCNiHIytRfvDpgg6E3hXF3E3WSNUIXQkuGERkf/Q3lc8ir9bqizEKMl2SHUO9jBqP3B2+xC2ODXjGUJvFGSZ0QDYGl8K1vQEgTfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786117852; c=relaxed/simple;
-	bh=XdNDMReQUWwZff6A3EA5HF3sWmrOmYAVvRQY53Vddo4=;
+	s=arc-20240116; t=1786118035; c=relaxed/simple;
+	bh=jY+1K7smWmfHBfyNuBUK1FiPaVhQL/rQl36kfDDGbkA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=eThHTGZoWLGsu3N8rKAPvDeOa9LvPXZ6/QslAVc5epKtL2Kyj0auRSFG/Zgtm7ZHYV7qaoKq6JlOKA9+BL4duuxq3AGeVhhyInZ2ALacigQ4NtU9SvYjy6/wbx3Ol62Xxf+wDxtWGOXx2DCqSVaNMSQTfOeXYjsRDN+/18WCXe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EtFp3ZsO; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=kbYlyU4xIO8Kd5D0nORLvXsrh47316QgRU3SoqvurnZ+w40u17OfpcmxN3bb81KD0nAx+bwto7KzVsKfl4/v00Jn65f6Gh4uD+zeYeE8KDw3myksPMrClR6zPfzQ9/MAiF/kEzWLDSf4cSzVh3D7Q4qdZdvxeJDADDzFfLOGK0w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lGBbJLLv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EtFp3ZsO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 528FB1F000E9;
-	Fri,  7 Aug 2026 15:50:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lGBbJLLv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EE9C1F000E9;
+	Fri,  7 Aug 2026 15:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786117851;
-	bh=tU+g5gnsffG7zFfAprW4hhPRYrFnn3oWRP2ZIpI+nEs=;
+	s=k20260515; t=1786118034;
+	bh=1E0lSy6/mmoNEW3QjYUFLnBHnCvDq+nIqY8lqWRSwFc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EtFp3ZsOtZh/r8Vh9Z6YFA/7dQ5D0OUOsaEw2O5OQK368LoLEV/xdWM1/g887waRw
-	 oO1sxfTjUxjoanWWg1+Dw8Hva5RuWjVrbwplmOQCBANZHOayeNJkmJ/PBxCKwcSP8B
-	 AZDg1JaSHMN3okt3lRlocNmLrS2/Zn61p6ynYGoNp+Abpo8YmHYJ0TuNTNb4sEsZt7
-	 cEVGAcZ6a5TFvK4XEBPYPYjDh0rCf4F6wTW1VnHHf4EIbeWAHZTOVuw6qkLAUZQ0Bw
-	 pgqPxsZHJCf9sB/Pe6ZC7zwdjK8Phw0kk2cMEYqODRi3t9HtS91Mx9+zdOSRJVCNEv
-	 RvUbnpUBv0Jhg==
+	b=lGBbJLLv36wot/a9b1jpRrTIHGQo8fyoe8JuXlaPu8FByW5HFysHCu/A0Ze4yCZgh
+	 ZaSPCexp9NMoQEyUok2mi6CBxwylkyqN3xwmxaqWPPy+S+35Lkucbqst8i2iH2HrGW
+	 u3UQ5Z69kLYC5WU8Cr0q12lndRr/7M9vA0z/g9jJh9VXm69lLwZyUWGEFmjxRO46NB
+	 YUbM76VcCqkhIl6SQtyKSf75WU1BeuHMCV8RJOQqz4zQbG1BWsiMIlaxLZtruB8S1+
+	 24b5zUxycdGWSMz6idAuhAKR9OMlc5TEPS5m6pHgEZChqZb6cf3y4Bjx1buH7kZi2h
+	 ZMgv+TrL9lyPw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 02/11] x86/hw_breakpoints: Add
- arch_modify_local_hw_breakpoint_addr() API
+Subject: Re: [PATCH v12 09/11] selftests: ftrace: Add wprobe trigger
+ testcase
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <178611682030.237811.16459191503595231339.stgit@devnote2>
+In-Reply-To: <178611689884.237811.7547180621874073837.stgit@devnote2>
 References: <178611679753.237811.10190793347982785419.stgit@devnote2>
- <178611682030.237811.16459191503595231339.stgit@devnote2>
+ <178611689884.237811.7547180621874073837.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 07 Aug 2026 15:50:50 +0000
-Message-Id: <20260807155051.528FB1F000E9@smtp.kernel.org>
+Date: Fri, 07 Aug 2026 15:53:53 +0000
+Message-Id: <20260807155354.3EE9C1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] arch_modify_local_hw_breakpoint_addr updates the hardware and shad=
-ow registers but fails to update the perf_event's canonical software state,=
- leading to silent hardware reverts and incorrect event samples.
+- [Medium] Race condition in `trigger-wprobe.tc` causes spurious test failu=
+res because `set_wprobe` trigger is not removed before verifying `clear_wpr=
+obe`.
+- [Medium] `trigger-wprobe-syntax-errors.tc` relies on `do_sys_open` withou=
+t verifying its existence, causing the test to fail on kernels where the fu=
+nction is unavailable.
 --
 
---- Patch [2]: [PATCH v12 02/11] x86/hw_breakpoints: Add arch_modify_local_=
-hw_breakpoint_addr() API ---
-commit bbc277e839d1fd31bb4bfa9d695721e5b6899bf6
-Author: Jinchao Wang <wangjinchao600@gmail.com>
+--- Patch [9]: [PATCH v12 09/11] selftests: ftrace: Add wprobe trigger test=
+case ---
+commit d811031bfa18879b95fa2051a73496d3fcc8f562
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
-   =20
-Wprobe needs to move an active per-CPU watchpoint without releasing and
-reserving its hardware slot.
-   =20
-Add arch_modify_local_hw_breakpoint_addr() to find the installed local
-slot and update only its address shadow and hardware debug address
-register. Publish the shadow first so hw_breakpoint_restore() observes
-the new address if an NMI interrupts the update.
+selftests: ftrace: Add wprobe trigger testcase
+
+This patch adds a testcase for checking the wprobe trigger. It sets
+set_wprobe and clear_wprobe triggers on fprobe events and static trace even=
+ts
+to monitor memory accesses. It also includes a testcase to verify wprobe
+trigger syntax error logging.
 
 Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.=
 1785067572.git.wangjinchao600@gmail.com/
 
-> diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpo=
-int.c
-> index 9ef24b55737f8..c89f6e71c3a91 100644
-> --- a/arch/x86/kernel/hw_breakpoint.c
-> +++ b/arch/x86/kernel/hw_breakpoint.c
+> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe=
+-syntax-errors.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-w=
+probe-syntax-errors.tc
+> new file mode 100644
+> index 0000000000000..7e02313cf1c73
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-syntax=
+-errors.tc
+> @@ -0,0 +1,31 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: event trigger - test wprobe trigger syntax errors
+> +# requires: dynamic_events error_log "w[:[<group>/][<event>]] [r|w|rw]@<=
+addr>[:<len>]":README "f[:[<group>/][<event>]] <func-name>[%return] [<args>=
+]":README
+> +
+> +check_error() { # command-with-error-pos-by-^
+> +    ftrace_errlog_check "wprobe_trigger" "$1" "events/fprobes/testevent/=
+trigger"
+> +}
+> +
+> +# Add a dummy fprobe event to attach triggers to
+> +echo 'f:fprobes/testevent do_sys_open dfd=3D$arg1' > dynamic_events
+
+[Severity: Medium]
+Will this script fail unconditionally on kernels where do_sys_open is
+unavailable as a valid fprobe target?
+
+On many modern kernels, do_sys_open has been removed, renamed (e.g., to
+do_sys_openat2), or heavily inlined, which causes this echo command to
+dynamic_events to fail with an error.
+
+Could we check against /proc/kallsyms before using it, similar to how
+sample_timer_cb is checked in trigger-wprobe.tc?
 
 [ ... ]
-
-> @@ -128,6 +128,39 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
->  	return 0;
->  }
-> =20
-> +int arch_modify_local_hw_breakpoint_addr(struct perf_event *bp,
-> +					  unsigned long addr)
-> +{
-> +	struct arch_hw_breakpoint hw;
-> +	struct perf_event_attr attr =3D bp->attr;
-> +	unsigned int seq;
-> +	int i, ret;
+> diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe=
+.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+> new file mode 100644
+> index 0000000000000..4071fe0c878b9
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+[ ... ]
+> +:;: "Set clear_wprobe trigger on foo_bar_with_fn" ;:
+> +echo 'clear_wprobe:watch' >> events/sample-trace/foo_bar_with_fn/trigger
+> +cat events/sample-trace/foo_bar_with_fn/trigger | grep ^clear_wprobe
 > +
-> +	lockdep_assert_irqs_disabled();
+> +# Clear trace and wait to ensure no new watchpoint events are generated
+> +clear_trace
+> +sleep 1
 > +
-> +	attr.bp_addr =3D addr;
-> +	ret =3D hw_breakpoint_arch_parse(bp, &attr, &hw);
-> +	if (ret)
-> +		return ret;
+> +:;: "Ensure clear_wprobe trigger deactivated the watchpoint" ;:
+> +! grep -q watch trace
 
-[Severity: High]
-Does this discard the validated software state?
+[Severity: Medium]
+Is there a race condition here that could cause spurious test failures?
 
-The new address configuration is successfully validated into the local 'hw'
-struct, but neither the architecture-specific state (counter_arch_bp(bp))
-nor the core attribute (bp->attr.bp_addr) are updated.
+Since the set_wprobe trigger on testevent (sample_timer_cb) is still active
+and fires concurrently with foo_bar_with_fn, if sample_timer_cb fires after
+foo_bar_with_fn during this 1-second window, the wprobe could be re-armed.
 
-If the breakpoint is later re-installed (e.g., during CPU offline/online or
-PMU scheduling), arch_install_hw_breakpoint() will read the stale address:
+Memory accesses would then generate new watch events, causing this assertion
+to fail.
 
-    struct arch_hw_breakpoint *info =3D counter_arch_bp(bp);
-    ...
-    this_cpu_write(cpu_debugreg[i], info->address);
-    barrier();
-    set_debugreg(info->address, i);
-
-Could this silently revert the hardware register back to the old address?
-
-Also, if a watchpoint fires, perf_bp_event() initializes the sample record
-using the unmodified bp->attr.bp_addr. Could this result in reporting
-incorrect addresses in the trace output?
-
-> +
-> +	for (i =3D 0; i < HBP_NUM; i++) {
-> +		if (this_cpu_read(bp_per_reg[i]) =3D=3D bp)
-> +			break;
-> +	}
-> +
-> +	if (WARN_ONCE(i =3D=3D HBP_NUM, "Can't find any breakpoint slot"))
-> +		return -ENOENT;
-> +
-> +	do {
-> +		seq =3D this_cpu_inc_return(cpu_dr7_seq);
-> +		this_cpu_write(cpu_debugreg[i], addr);
-> +		barrier();
-> +		set_debugreg(addr, i);
-> +	} while (seq !=3D this_cpu_read(cpu_dr7_seq));
-> +
-> +	return 0;
-> +}
+Should the set_wprobe trigger be removed before verifying the clear_wprobe
+behavior?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178611679753.237811=
-.10190793347982785419.stgit@devnote2?part=3D2
+.10190793347982785419.stgit@devnote2?part=3D9
