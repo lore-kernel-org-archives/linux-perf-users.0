@@ -1,161 +1,206 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B5A2D061C
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 08:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570563D091A;
+	Fri,  7 Aug 2026 08:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786091407; cv=none; b=Be7nJ+ls5rOyFrduqdNDXznfbk5mP/IhBYAf0T+A/03Md0DAeAkxVFZM4hyF+hgSuD/Yc7w8XheePEeOf3bZQvLCX0lHQjUPXMHy8wzDdfXtRgoUrQWggDivTZTWWEr9FpyghBpizENphCxBgGGjmqAw2jhrdCXZaPjP+/LGjzo=
+	t=1786091463; cv=none; b=LFDwx4EwCs/+EatvmPFKMEkH9BlOkUTbCRrW/UDndsIGOjTn3QG9TW92FLIy2i+c+Fi/gTx02ILH+9eYjzlDkT2kGDLViQ5cBiK9Oh66dC5EpEzA/rx67DgUxYA39fkgDk8fTfOGuabCZ/ZQqA37jy8wx595qGefS6XejDCrnKA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786091407; c=relaxed/simple;
-	bh=zoMgyTnPcxmjrRKo8KjTs2mPLj2NU4aqE86gOU/JCXE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ttQuC1tiU6m+22vLkLCH0H37ZCjgLpjV0pLplBDBn7yidXQoUoPMzLi+RjEuIDCC9ZdTw9CPpSbYKfRP6FDzf9YoZ8brRauxreYoYmGmRqxckNxCOwuAgJwlG1poB0QbIY4cgYlgwdc0vj2YbwctHV9l2xV7rFxoG1ZrWzcULfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cRbWAjG0; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1786091463; c=relaxed/simple;
+	bh=5UbV3kI7Xcb2dYZ4vNjpHLGO4HOqCxlY13VqRSx17Vg=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=COGFhIYGdflLGd5QVWA2iXhui63o3GoGkG7a8lipnfhNYCI4CKT+Z/gyI82eR0cMzsj9+xbr5O9Jh0ng4JC/ZUbZb7MXAxHzFmN+8e5CR5u6NGAwccXDRXIHW0o676Vc8VyneMKsFOX03mHQkI6mxMHMtaYFoYydg2WcJzvB6UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OhZiPNS3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cRbWAjG0"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4954afac04bso34620315e9.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Aug 2026 01:30:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1786091403; x=1786696203; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=1+lNGc2wq23H6MJ/sOQHuT0aX2LUv/n1NhY2pqg5I/E=;
-        b=cRbWAjG03Thgrc21Eh0zl7WKXTzNYmOg2n5vQKhuYoc4LWFAj5ITM2rEr8fNGPN/uv
-         Kr02QidYPiS1R8flnBNKFhEWxCXrb9KIZcX1e79dpt9RAlWOHTTGjVhsRIMgc/iNdRZU
-         fU2i9Swbkjz2uTu5GoN7MPrOCZ6VlmtWhwguhU7ZNwtYi8L/iVSGvMHgxzPv+K8KQbL8
-         dreZyyMJOV2qruysyhBbcWldmduS/7xEZiC3aZ93Kp3fA7CYrTHZVurEeAF33RlHnTEB
-         Pe6MuNU5nOm6mUHYsuXgF48qihFk90Jowh+45xBZMBATJHYUHaqUfpmo01NFo6LVDGZB
-         STbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786091403; x=1786696203;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=1+lNGc2wq23H6MJ/sOQHuT0aX2LUv/n1NhY2pqg5I/E=;
-        b=s19+BREgCJA0YZYDpAVlBaxXW3z8ycOZyXNI5kXIW7WB6SYY6xRzqbYKBNCOsr6ijE
-         OC8lzPGyOj36BokOtnVAJ9oC4Nm6s/2iOCQfrCm+nwVSo99054wfYFuIMLBCutFgG5Aq
-         w2g53UTBkk0JFVLNh0hG0YMtqH+L3A1hmtIR0ciBDN0EgU2Hulha9Ch8z9i5z7iXBkKT
-         6Bad3uGaf1US5AgnneN+xN2n5YUIxtnkO6xzHknUMYJgofjipTKLkUPe0IV05Lt8BzIz
-         KN36dBF04M8VhWd1NPIpkEFwG+9eA1qIOfbjmLN9hLPH4EQWUif74Sp0nB4MBkV7cud6
-         aKyw==
-X-Forwarded-Encrypted: i=1; AHgh+RpPyucmAGAMBUosLdE0XMjA8qQAonkSCPorF9KBhm9swI9d9xPnshAMdgZw4FHrJ0nUlC6oF7cvGNboeCQdhj42@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIa/GLfBd+xbOlUsk3kuYwBw4y5tIGz5aNB/n8HFo/NBkePpLi
-	6rRnPXGjC6g9Y1yV8dT+3sPEM1u/MRXRJEc574/wifBpVDSimnD/CEBPKmhd4vr+Gpw=
-X-Gm-Gg: AR+sD12q3Vb4pCnkzmqSv8ZHVo//JmOro4qM9G34sU5n0U/Sf7UtIglggCBMXkXUA/l
-	z51fbOvmVDz05AcRL+HNVrn/OpTHxHHI6wqSrIrTarfcdeL1kM9wBT4j6pik4KraHOMUv/KKeX/
-	OV52aeMMXudFRF3oaF9XvYi+bp0+Ox1YEWMx8PmC913Ds2dJjDnnGnjUnb3qqnBrvw302QejuXV
-	UCTGpxbUfiMV9gHWIRJcfRjkAeMU34hEEpB+Hj5pdSecTdmtBAxfWiZtQR2lN8QFG52bYuPygPd
-	RJlJftSu+SBLaPWPO+b7QV+2/YWdGJQsvkTEtef23Xa0vvZALcVKAq7r6r/D1rfsXb16tN6ZYGe
-	cCqrTZUvEUWX4sNcnl9FhU5vtLxUvYrgFfh4Czm7JEMBQbmCSHKtcKHD/OYvEoIBvQCzdCFPEWp
-	os/m9YYVgXMNY9QnmglH3b6ksMmlLkBl9kChQKg/eFdcFcLSfcbSPSxGvfQBvRah88Lqt2+r4sr
-	SGw4g==
-X-Received: by 2002:a05:600c:1f86:b0:499:52ab:a50c with SMTP id 5b1f17b1804b1-49952aba5b3mr163509935e9.1.1786091403124;
-        Fri, 07 Aug 2026 01:30:03 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-480021e8c5asm4085508f8f.18.2026.08.07.01.30.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Aug 2026 01:30:02 -0700 (PDT)
-Message-ID: <71b4a5c6-33d5-4d7f-9378-7f913143d0f8@linaro.org>
-Date: Fri, 7 Aug 2026 09:30:01 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OhZiPNS3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3904B1F000E9;
+	Fri,  7 Aug 2026 08:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786091453;
+	bh=9FQ+3lzdV8n137IFhEDYXLA29I0hoT41o9tKvZqQ7uU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=OhZiPNS3Gwenfpw+De9dkxmw0MBdpkZl0LvM23qUUJf4UXW4xsUG1yLMFotjHyPmE
+	 uKKrJutjj80XJegr4zabifhHCuajtllR+olAuMISzRp2d4ZFtNxwValTu43Tjp3q3q
+	 msgX1yO9XYEYypGoR4bzg33qxUHXnwwVIb5TfLdjnm9rkEa8VviwwujWEoUXSX7SvW
+	 Ox/hCOu5TT1Zv6fvzLwbCqPuIcaulPqXVl0MURismWM6DpN51QG0deTCbpKTJXKBPT
+	 CZvKrzVsvX+iwkRhXB4Z9ZQ+vV/5KZdZWsmETWG2cCb+/BkjpWtfqmQDC6A0v0fWVH
+	 rPi+dF4pImFQw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v9 01/20] RISC-V: perf: fix resource cleanup on driver
+ probe failure
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Atish Patra" <atish.patra@linux.dev>
+Cc: robh@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260807-counter_delegation-v9-1-58658104e487@meta.com>
+References: <20260807-counter_delegation-v9-0-58658104e487@meta.com>
+ <20260807-counter_delegation-v9-1-58658104e487@meta.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 07 Aug 2026 08:30:52 +0000
+Message-Id: <20260807083053.3904B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/3] perf/core: sched_task() dispatch and branch entry
- fixes
-To: Puranjay Mohan <puranjay@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Usama Arif <usama.arif@linux.dev>,
- Will Deacon <will@kernel.org>, Anshuman Khandual
- <anshuman.khandual@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
- Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
- Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- x86@kernel.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>
-References: <20260806135224.3267890-1-puranjay@kernel.org>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260806135224.3267890-1-puranjay@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+s) to consider:
 
+Pre-existing issues:
+- [Critical] Process migration during a probe failure leaves the SBI firmwa=
+re configured to write to a freed memory page (Firmware Use-After-Free).
+- [High] The `sbi_pmu_snapshot_available` static key is not disabled on the=
+ probe error path, leading to a potential NULL pointer dereference on subse=
+quent probe attempts.
+- [High] Race condition in the probe error path leads to Use-After-Free of =
+the `pmu` structure.
+- [Medium] Missing cleanup of the registered sysctl table on the probe erro=
+r path.
+- [Low] CPU hotplug state registered in init is not removed if subsequent i=
+nit steps fail.
+--
 
-On 06/08/2026 14:52, Puranjay Mohan wrote:
-> These three fixes were found while adding BRBE support for
-> bpf_get_branch_snapshot() on arm64 and have been carried in that series
-> since v1 [1]. They do not depend on it, so they go on their own from
-> here; the version number continues from that series to avoid two
-> numbering schemes for the same patches.
-> 
-> Patch 1 stops __perf_pmu_sched_task() passing a NULL pmu_ctx to
-> pmu->sched_task(). armv8pmu_sched_task() is the only implementation that
-> dereferences the argument, so the oops needs BRBE.
-> 
-> Patch 2 makes perf_pmu_sched_task() visit PMUs whose events are all
-> CPU-wide. They are skipped today whenever the scheduled task has a perf
-> event of its own, so branch records leak across task boundaries with
-> perf record -b -a. intel_pmu_lbr_add() calls perf_sched_cb_inc()
-> unconditionally, so x86 LBR is affected the same way.
-> 
-> Dropping the early return alone leaves both dispatch paths running for
-> one case, so perf_ctx_sched_task_cb() gains a matching gate. The two
-> could instead be collapsed into perf_pmu_sched_task() alone, since
-> __perf_pmu_sched_task() already passes the same epc, but that would move
-> the callback out of the perf_ctx_disable() window for every PMU rather
-> than just that one case, which seemed like too much for a fix tagged for
-> stable.
-> 
-> Patch 3 clears struct perf_branch_entry with a single struct assignment.
-> perf_clear_branch_entry_bitfields() had drifted from the struct: new_type
-> and priv were never cleared, and arm_pmuv3.c allocates the per-CPU branch
-> stack with kmalloc().
-> 
-> Tested on a 128 CPU arm64 machine with BRBE. A WARN_ON_ONCE() at the gate
-> patch 2 adds to perf_ctx_sched_task_cb() fires within seconds of running
-> perf record -b -a alongside a task-bound event pinned to a different CPU.
-> 
-> Changes in v6:
-> - Split the sched_task() fix into patches 1 and 2; the NULL dereference
->    and the missed dispatch are separate bugs with different reachability.
-> - Gate perf_ctx_sched_task_cb() on cpc->task_epc. v5 removed the early
->    return in perf_pmu_sched_task() without it, so both paths ran for a
->    task whose event for that PMU is pinned to another CPU. Caught by the
->    WARN_ON_ONCE() described above.
-> - Tag patches 1 and 2 for stable.
-> - Send separately from the BRBE series, rebased onto tip perf/core.
-> 
-> [1] https://lore.kernel.org/all/20260616155716.2631508-1-puranjay@kernel.org/
-> 
-> Based on tip perf/core (f4dfab174244).
-> 
-> Puranjay Mohan (3):
->    perf/core: Fix NULL pmu_ctx passed to pmu->sched_task()
->    perf/core: Run sched_task() for PMUs with only CPU-wide events
->    perf/core: Clear the whole branch entry in perf_clear_branch_entry()
-> 
->   arch/x86/events/amd/brs.c   |  2 +-
->   arch/x86/events/amd/lbr.c   |  2 +-
->   arch/x86/events/intel/lbr.c |  6 +++---
->   drivers/perf/arm_brbe.c     |  2 +-
->   include/linux/perf_event.h  | 16 ++--------------
->   kernel/events/core.c        | 15 +++++++++++----
->   6 files changed, 19 insertions(+), 24 deletions(-)
-> 
+--- Patch [1]: [PATCH v9 01/20] RISC-V: perf: fix resource cleanup on drive=
+r probe failure ---
+commit e501d85892f2097d5cb521e3b393610d4683e0a4
+Author: Atish Patra <atishp@meta.com>
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+RISC-V: perf: fix resource cleanup on driver probe failure
 
+This patch fixes various UAF and memory leak issues around
+pmu_sbi_device_probe() error paths. It ensures that registered PMUs,
+per-cpu IRQs, and other data structures are correctly freed on failure.
+
+Link: https://patch.msgid.link/20260701-counter_delegation-v8-1-7909f863a64=
+5@meta.com
+
+> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+> index dfc886dee5ad0..50220f7b46d9b 100644
+> --- a/drivers/perf/riscv_pmu_sbi.c
+> +++ b/drivers/perf/riscv_pmu_sbi.c
+
+[ ... ]
+
+> @@ -1301,7 +1308,8 @@ static void riscv_pmu_destroy(struct riscv_pmu *pmu)
+>  		}
+>  	}
+>  	riscv_pm_pmu_unregister(pmu);
+> -	cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
+> +	if (!hlist_unhashed(&pmu->node))
+> +		cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
+>  }
+
+[Severity: Critical]
+This is a pre-existing issue, but does riscv_pmu_destroy() safely disable t=
+he
+snapshot?
+
+In pmu_sbi_device_probe(), pmu_sbi_snapshot_setup() is called within a
+get_cpu()/put_cpu() block, configuring the SBI firmware for that specific C=
+PU.
+
+However, if probe fails and riscv_pmu_destroy() is called,
+pmu_sbi_snapshot_disable() is executed without CPU pinning.
+
+Could the thread migrate to a different CPU before disabling the snapshot,
+leaving the original CPU's firmware configured to write to the snapshot
+memory which is then freed by pmu_sbi_snapshot_free()?
+
+[ ... ]
+
+> @@ -1469,11 +1479,11 @@ static int pmu_sbi_device_probe(struct platform_d=
+evice *pdev)
+> =20
+>  	ret =3D riscv_pm_pmu_register(pmu);
+>  	if (ret)
+> -		goto out_unregister;
+> +		goto out_destroy;
+> =20
+>  	ret =3D perf_pmu_register(&pmu->pmu, "cpu", PERF_TYPE_RAW);
+>  	if (ret)
+> -		goto out_unregister;
+> +		goto out_destroy;
+
+[Severity: High]
+This is a pre-existing issue, but does this expose the PMU to userspace bef=
+ore
+fallible setups are complete?
+
+Since perf_pmu_register() makes the PMU accessible, if userspace opens a pe=
+rf
+event before a subsequent initialization step fails (such as allocating
+snapshot memory), the driver jumps to out_unregister and eventually calls
+kfree(pmu).
+
+Will this leave the perf core holding a pointer to a freed pmu structure?
+
+[ ... ]
+
+> @@ -1514,9 +1524,20 @@ static int pmu_sbi_device_probe(struct platform_de=
+vice *pdev)
+>  	return 0;
+> =20
+>  out_unregister:
+> +	perf_pmu_unregister(&pmu->pmu);
+> +
+> +out_destroy:
+
+[Severity: Medium]
+This is a pre-existing issue, but is the sysctl table leaked on this error
+path?
+
+Before the return 0, pmu_sbi_device_probe() calls:
+
+    register_sysctl("kernel", sbi_pmu_sysctl_table);
+
+If the subsequent cpuhp_state_add_instance() call fails, the error path ski=
+ps
+unregistering this sysctl table. Will repeated probe failures leak
+ctl_table_header structures?
+
+>  	riscv_pmu_destroy(pmu);
+
+[Severity: High]
+This is a pre-existing issue, but does the error path fail to disable the
+sbi_pmu_snapshot_available static key?
+
+If the probe fails after static_branch_enable(&sbi_pmu_snapshot_available),
+the error path frees the snapshot memory in riscv_pmu_destroy() but never
+disables the static key.
+
+On a subsequent probe attempt or an interrupt, could code paths like
+pmu_sbi_ovf_handler() execute assuming the snapshot memory is active, leadi=
+ng
+to a NULL pointer dereference when accessing sdata->ctr_overflow_mask?
+
+> +	if (irq_requested) {
+> +		free_percpu_irq(riscv_pmu_irq, pmu->hw_events);
+> +		irq_dispose_mapping(riscv_pmu_irq);
+> +		riscv_pmu_irq =3D 0;
+> +	}
+> =20
+>  out_free:
+> +	free_percpu(pmu->hw_events);
+> +	kfree(pmu_ctr_list);
+> +	pmu_ctr_list =3D NULL;
+>  	kfree(pmu);
+>  	return ret;
+>  }
+
+[Severity: Low]
+This is a pre-existing issue, but is there a CPU hotplug state leak in
+pmu_sbi_devinit() if platform registration fails?
+
+pmu_sbi_devinit() registers a multi-state CPU hotplug hook:
+
+    ret =3D cpuhp_setup_state_multi(CPUHP_AP_PERF_RISCV_STARTING, ...);
+
+If platform_driver_register() or platform_device_register_simple() fails
+afterward, the function returns directly without calling
+cpuhp_remove_multi_state(), leaving the hotplug state registered.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260807-counter_de=
+legation-v9-0-58658104e487@meta.com?part=3D1
