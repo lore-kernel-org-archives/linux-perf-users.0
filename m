@@ -1,148 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C827E12B94;
-	Fri,  7 Aug 2026 03:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A6E155A5D;
+	Fri,  7 Aug 2026 03:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786072722; cv=none; b=mrSYoK4P92i7laq+tZHOmurElXo0H6mK9NvgNK/NKqF2/zJm4AtjkembfJdeQyfS3WGMtPQAKo+/7w9NgwDjO5PNr4eUAOZsURR8P1API4PfCxsmMp4zPxMcKjf0NcNP2ULyunDsWfOak8I3JXr/RrS1t/8m6OqYz8VK0AwjaeE=
+	t=1786073476; cv=none; b=Y+41XML7KHh1riIjRBYg18YFWL3A7zd90XnUHI+rQKC3lP/bRC2LF9XtOGUlDIRE/ElTgOnXUDC0IK54ZOIpfbXeZ4ObT/GBQNZ0HXP9ayEG7zvVXKyv+EUOntm2eML4QU2VSPn0uHf3v72YmzeXgE3ZrCr3hxDrDBFN/qYIzKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786072722; c=relaxed/simple;
-	bh=s23l0O6fCghOlWr/zsMY0OzB9sZzX7MTVfXtPB7jxlI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=F5MF1BShN3rY3K1UByrSdRAH2gEvzMzIcZJ/EMNPKbh7iUeXQOe2YGggIPoUHXQdn1zuETbcdYCHgSTPpl1EhMU7ujAi5J3za7s9/sHVBvOZzXwZ5hkJkjl+cE/+HeWTlTbtTTQdMzdDZse1IAuuIXgwrJxOk8IADlXuV5rzTuc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=La2ce4kY; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="La2ce4kY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BD721F000E9;
-	Fri,  7 Aug 2026 03:18:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786072721;
-	bh=Nf9aUtzxN4Fd2ktNXVpkAqfVgFak3j5BcrDp4kyVJyg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=La2ce4kYXl+6fMdw/JB0W2b6eZKRqGmBTQdzn3a28YHbS+QIhcJsiE0W/qKEUvvMn
-	 8S+02iCnmUgR06GlBOdCB7cIaQuZB7PY87dFiFWKC6ikUMXikKW9zlo/weap4g/Qip
-	 Bj+MIzzGtz3cvdrbDic0pCFTgJwFbrLXtv9uhmRp04DufL5EypqBF9du7OTMQyzYBF
-	 0m371Ibfy2Xt8BDcC814Q3p/sjhitDB3zm5CaUcSl4SnoVdxEv8EeCFgWGbj/NYQ8T
-	 1lbIAB+rDlSDL/PDtCupTAXghjrW+fRFcGAQTyYct4KN63F0t7lkymu6cgilMBAwYl
-	 CziK+nCJ+7+/Q==
-Date: Fri, 7 Aug 2026 12:18:32 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Steven Rostedt
- <rostedt@goodmis.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
- Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v11 01/11] x86/hw_breakpoints: Make DR7 updates NMI safe
-Message-Id: <20260807121832.57dccaf6e6b25ef54bb0b0ca@kernel.org>
-In-Reply-To: <20260806090735.0ee427ef5c18445b89d2f3cd@kernel.org>
-References: <178565870538.714490.11309825813968306287.stgit@devnote2>
-	<178565871750.714490.5506415865016304088.stgit@devnote2>
-	<20260803065744.GU49951@noisy.programming.kicks-ass.net>
-	<20260804075517.1c1c9e2dc6ff66e0e73f946d@kernel.org>
-	<20260803230723.GI687043@noisy.programming.kicks-ass.net>
-	<20260806090735.0ee427ef5c18445b89d2f3cd@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1786073476; c=relaxed/simple;
+	bh=sq5y36mjKBBXr2aoudScjekTO0muj2fNNA1Fc6JLxb8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f6EXOjV3XPmwjqpgabPVbMXbk4Tv4aI9B268zIyoDTMQMP2h5TuKYGsN+I7WxTaNHU8veluvxnwlQwLmyzda23nZf7C1brJbiyYHqnfpOe/Mv2+E4IIVBqN3kTOHXJCSZNqp3u7xpyNUrIr4PnTChJvFHQ1DEluhIFIkt+qYGuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 69242580921011f1aa26b74ffac11d73-20260807
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:1683e2b3-7c4a-46ef-9a09-f7fb3d971b86,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:e7bac3a,CLOUDID:3d51184bf2e28b3ea64bce40f1865e9c,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:102|865|898,TC:nil,Content:0|15|50,EDM:-
+	3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,A
+	V:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 69242580921011f1aa26b74ffac11d73-20260807
+X-User: liuxixin@kylinos.cn
+Received: from [127.0.1.1] [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <liuxixin@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1054336515; Fri, 07 Aug 2026 11:31:00 +0800
+From: Xixin Liu <liuxixin@kylinos.cn>
+To: linux-riscv@lists.infradead.org
+Cc: atish.patra@linux.dev, anup@brainfault.org, will@kernel.org, mark.rutland@arm.com, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, liuxixin@kylinos.cn
+Subject: [PATCH] perf: RISC-V: check cpu_hw_evt before dereference in overflow IRQ
+Date: Fri, 07 Aug 2026 08:59:50 +0800
+Message-ID: <prp0001riscv.1786064390.git.liuxixin@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Mailer: patches/scripts/send-local.py
 
-On Thu, 6 Aug 2026 09:07:35 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+The overflow IRQ handler dereferences cpu_hw_evt before the null check.
+Move the check first. Defensive only; the cookie is valid on the normal
+path today.
 
-> On Tue, 4 Aug 2026 01:07:23 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > On Tue, Aug 04, 2026 at 07:55:17AM +0900, Masami Hiramatsu wrote:
-> > > On Mon, 3 Aug 2026 08:57:44 +0200
-> > > Peter Zijlstra <peterz@infradead.org> wrote:
-> > > 
-> > > > On Sun, Aug 02, 2026 at 05:18:37PM +0900, Masami Hiramatsu (Google) wrote:
-> > > > > From: Jinchao Wang <wangjinchao600@gmail.com>
-> > > > > 
-> > > > > Hardware breakpoint installation and removal run with IRQs disabled, but
-> > > > > an NMI can still enter the same code through KGDB. The interrupted
-> > > > > operation and the NMI can consequently claim the same slot or overwrite
-> > > > > each other's DR7 state.
-> > > > 
-> > > > Is KGDB really the only way to trip this? Mostly I think we let KGDB
-> > > > have the pieces if it does something 'funny'.
-> > > 
-> > > Hmm, I think even if so, this detection is better to be handled in
-> > > hw_breakpoint layer. And I plan to use this from kprobe events,
-> > > which is also a kind of NMI.
-> > > 
-> > > > 
-> > > > > diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-> > > > > index f846c15f21ca..9ef24b55737f 100644
-> > > > > --- a/arch/x86/kernel/hw_breakpoint.c
-> > > > > +++ b/arch/x86/kernel/hw_breakpoint.c
-> > > > > @@ -40,6 +40,9 @@
-> > > > >  DEFINE_PER_CPU(unsigned long, cpu_dr7);
-> > > > >  EXPORT_PER_CPU_SYMBOL(cpu_dr7);
-> > > > >  
-> > > > > +/* Sequence number of the per-CPU DR7 state. */
-> > > > > +DEFINE_PER_CPU(unsigned int, cpu_dr7_seq);
+Signed-off-by: Xixin Liu <liuxixin@kylinos.cn>
+---
+ drivers/perf/riscv_pmu_sbi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-This is actual sequence number.
-
-> > > > 
-> > > > > diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-> > > > > index 3c9f60d6ca5a..f55a0cbd5927 100644
-> > > > > --- a/arch/x86/kernel/nmi.c
-> > > > > +++ b/arch/x86/kernel/nmi.c
-> > > > > @@ -532,10 +532,13 @@ enum nmi_states {
-> > > > >  static DEFINE_PER_CPU(enum nmi_states, nmi_state);
-> > > > >  static DEFINE_PER_CPU(unsigned long, nmi_cr2);
-> > > > >  static DEFINE_PER_CPU(unsigned long, nmi_dr7);
-> > > > > +static DEFINE_PER_CPU(unsigned int, nmi_dr7_seq);
-
-and this is a backup.
-
-> > > > 
-> > > > This is weird, why have two distinct sequence numbers for dr7?
-> > > 
-> > > nmi_dr7_seq is for sequence number of operation, which is for
-> > > detecting dr7 overwrite in NMI.
-> > > nmi_dr7 is for saving the DR7.
-> > 
-> > I mean cpu_dr7_seq and nmi_dr7_seq.
-> 
-> Oops, Indeed. Let me fix it. Thanks!
-
-BTW, do we really need nmi_dr7 as a per-cpu variable?
-
-Since this patch changes local_db_save()/restore() to handle both
-DR7 and its sequence number, we need to save/restore both.
-I thought it is used for handling nested NMI but in exc_nmi, we have
-this gate check before using the nmi_dr7.
-
-	if (this_cpu_read(nmi_state) != NMI_NOT_RUNNING) {
-		this_cpu_write(nmi_state, NMI_LATCHED);
-		return;
-	}
-
-Thus the nested NMI is handled serial, not stacked. So we can use
-a local variable instead of per-cpu variable.
-
-Thank you,
-
-> 
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-
+diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+index dfc886dee5ad..f0dd9d2645b4 100644
+--- a/drivers/perf/riscv_pmu_sbi.c
++++ b/drivers/perf/riscv_pmu_sbi.c
+@@ -1050,11 +1050,13 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+ 	u64 overflowed_ctrs = 0;
+ 	struct cpu_hw_events *cpu_hw_evt = dev;
+ 	u64 start_clock = sched_clock();
+-	struct riscv_pmu_snapshot_data *sdata = cpu_hw_evt->snapshot_addr;
++	struct riscv_pmu_snapshot_data *sdata;
+ 
+ 	if (WARN_ON_ONCE(!cpu_hw_evt))
+ 		return IRQ_NONE;
+ 
++	sdata = cpu_hw_evt->snapshot_addr;
++
+ 	/* Firmware counter don't support overflow yet */
+ 	fidx = find_first_bit(cpu_hw_evt->used_hw_ctrs, RISCV_MAX_COUNTERS);
+ 	if (fidx == RISCV_MAX_COUNTERS) {
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.43.0
+
