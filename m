@@ -1,57 +1,56 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576F142D758
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 14:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43A53AAF43
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 14:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786113765; cv=none; b=DfUGCfWBznXIY1hrePZy+/84r49dbN/+hRRBIb0BzY3mCa1YPPR6kHwxmwSib4CB3OdkAksZ+V8Vqxd0N5TeMlljjI538u5kZIa50UJwOkzysDMrjImDkX5FBdKkkpO0Lkr8SBPoWw5B8eAFVirN0UzJywDYdtXPfFInJ4S01D4=
+	t=1786113775; cv=none; b=SGa0iS7Qy6nEk0vInNdoMb+bCFVtnEntvEnJoawsZG89AJkJo5ndkggLq8jcP5yAbdkFqCSXFUv3U78utX6/nUp7jwEiFsdoGvSib6Fn9anpbcv3G3fDpdVbf43TfMnnK54szQLec6IckCsJtLHj+MoTJpWrU5H7wB/4MQEHHcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786113765; c=relaxed/simple;
-	bh=5X8of9cgGLhWM0s95hdIRG/mJqbp/fHX3/iDBdYMpps=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sxPYyRqh+5I+ILLemyAzN1FjsgwlRDKojAcBulPvGsSf9wBHRNadKf4Xt80RqNeYaDee1aj7+Ke3BjkE09ufhvLt8lAoh4jjBNnxc9JBrOiUj/r/LZmM6aX3QUNYoiAVWQLZRHcfIFBN0vtErFTEMJzvx1Hi197+OvgmtSwmGL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=lqIYbn4i; arc=none smtp.client-ip=148.163.158.5
+	s=arc-20240116; t=1786113775; c=relaxed/simple;
+	bh=lbHE6//CK+PNxF5j4ZP0yvnoBvAs0F4psxcHk+eaeOU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lH5ahLHZ//yoV6fqzSIT80AAhiUDKOHXJpsyKYl24SUio/SoQDC/cDCVfBLzG75GEghl2xPfg1ZSfdxXgs24HhF1U9k9rmxPGwqvU+J9367ZDz1KIsCkL6vbHq/cDRntnuULlI3DtMOBo/b/NJOqEA9+M+TMP7sMD9vEt2VZrGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YK0qARf0; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="lqIYbn4i"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 677ClsL01412170;
-	Fri, 7 Aug 2026 14:42:12 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YK0qARf0"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 677ClaqR3829109;
+	Fri, 7 Aug 2026 14:41:50 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=DhjSPH9SYK3m4tVDD
-	5q+4hbVEH1dZ2sT1bMSPmeaWK0=; b=lqIYbn4iKRRMSS8NHE+bMf0UVQFYlgWXX
-	hk6zTyxDL6f/APyEegOnyn/u8iVg30IhIFGWepkYVBecqORIbTnT2CD5XbnZnlqv
-	7IRX/LhzeDqyNEidQKLnbdfic3VmDZgyQGYNa6W3wVP0aW4uxAXUjMxmB3IQ0APj
-	n/1/+bm1JAJWPnuJSa1puNloZs+KyhkntUFQTt+cLR3ww63HVSd9D9WRX8j+TsHs
-	axjj7YylAeKdZSDFFIpCN7QdBWDd7UJ7aLOyunCXKcytM2EGAy66TeJgTfFhzA8C
-	XrYCDqYG/BgizpqJtMSQrzBzTi0861tpcVF1/Y0p/hQsR2V6/WxTw==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fvy02c807-1
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=gBwlbhP0S1yCIiK5FokZEIz3xBqNZOSUz3qIWQ36N
+	2c=; b=YK0qARf0CcAnEdQbct37rkZ6BLnLbP+YnxoPmM+lSGi7s7iSlRfykZjcI
+	qJS+nnvU0nm+ExuX8PjQOdokiBaDmRV4IjGbAJeWDd5rOeC4c/HdTdvti67hYmOy
+	Kulj+qbcMAPJaq6n20xRbdKqlzZEdXYmVaME3B7h+8sODRfetpLLqzVkE0fZxqzx
+	F6+SZdvv8dLgOkk7AKtEXWmAP1ZMh6hYfW0/TyaCVvupZ9fh1LOKhJrOjJegfUNj
+	68OLctqdn0oJzNAUQGwJ0pPwGnz+03CVXBbxQQ0QP8YINR3q717a9UIRh//r8c+M
+	BxoiphsD+WmLPpi2uZ+8bvMWtno7g==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fvy01mbq2-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Aug 2026 14:42:11 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 677EfHQW001803;
-	Fri, 7 Aug 2026 14:42:11 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fsugwg5sf-1
+	Fri, 07 Aug 2026 14:41:49 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 677EfGmL024886;
+	Fri, 7 Aug 2026 14:41:48 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fswtyyu85-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 07 Aug 2026 14:42:11 +0000 (GMT)
+	Fri, 07 Aug 2026 14:41:48 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 677Eg6EK27787734
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 677EfiD749938746
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 7 Aug 2026 14:42:07 GMT
+	Fri, 7 Aug 2026 14:41:44 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D40282004D;
-	Fri,  7 Aug 2026 14:42:06 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 5FECD20043;
+	Fri,  7 Aug 2026 14:41:44 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 84FFB20040;
-	Fri,  7 Aug 2026 14:42:03 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 0D60820040;
+	Fri,  7 Aug 2026 14:41:41 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.39.25.17])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri,  7 Aug 2026 14:42:03 +0000 (GMT)
+	Fri,  7 Aug 2026 14:41:40 +0000 (GMT)
 From: Athira Rajeev <atrajeev@linux.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
         maddy@linux.ibm.com, irogers@google.com, namhyung@kernel.org
@@ -59,12 +58,10 @@ Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
         atrajeev@linux.ibm.com, hbathini@linux.vnet.ibm.com,
         tejas05@linux.ibm.com, tshah@linux.ibm.com, venkat88@linux.ibm.com,
         usha.r2@ibm.com
-Subject: [PATCH V5 6/6] tools/perf: Add perf tool support for processing powerpc HTM AUXTRACE records
-Date: Fri,  7 Aug 2026 20:11:35 +0530
-Message-Id: <20260807144135.2607-7-atrajeev@linux.ibm.com>
+Subject: [PATCH V5 0/6] tools/perf: Add powerpc HTM auxtrace support
+Date: Fri,  7 Aug 2026 20:11:29 +0530
+Message-Id: <20260807144135.2607-1-atrajeev@linux.ibm.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20260807144135.2607-1-atrajeev@linux.ibm.com>
-References: <20260807144135.2607-1-atrajeev@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -74,559 +71,169 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
 X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=G6ws1dk5 c=1 sm=1 tr=0 ts=6a75eec4 cx=c_pps
- a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17
+X-Proofpoint-GUID: zK2-L_LiOzddotOGhLr_c73cIiyDzVto
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODA3MDExMiBTYWx0ZWRfXzflt8LCBsyMy
+ 7FXi+cIKJpCvIsbSZOIKElelsp3k2D4C5yC7V7vNIcggBMJRd7ZDrvDtP7dGJF8NTdVtTh+FmGd
+ y6eWPLzcjZM5bv+O9+pGoe0TnJl8tzM=
+X-Proofpoint-ORIG-GUID: unhZJRsmQYdti7b7WNRdDW6NlV2_8rx2
+X-Authority-Analysis: v=2.4 cv=afNRWxot c=1 sm=1 tr=0 ts=6a75eead cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
  a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=RnoormkPH1_aCDwRdu11:22
- a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8 a=TuMjLJInko8KB4HEWCUA:9
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA3MDExMiBTYWx0ZWRfX51suysTuEkMl
- aRl+wTOMB84pn6XV4/jbBcnYyMDEszFVxX9TG4pMjj8S+2PxeZNSZ8TUdacMUjC8eoexw0R+Mqd
- hd/66o0de/tLgui0YyGfC2LdHmj1SFfj+XwwO1KdC2lgt8im6cYjJf98dshOHU+bJ/rwT25iyOc
- HFpF5gOI60sqTRehgJijhZzlQNgbItzWNBmMNO8k9vjHQX3QcX7TzyyOMfHfszJT4DG35TZGpao
- xC0TKR89yunhoR9AFi3YNembRiu9pVpuhn80UXObqk2Da2u+LxZ+aD3a3OK1cEfFm9yDuTGT31b
- RcN1t1JrlH+xu8rrc2TSFv1nO4FMxneSWcSThBHddyRCrINejCgMLykMn92UtvAH+4iysbrHZid
- dw6psP6BTTjWFaXLaRXaNEyl98AdmeKMRNWU1iVGl2F8q9vNoBrtPswts8dtuwsPFJ49Xhelm4v
- FBVo1YJl7vwYD+9/OtQ==
-X-Proofpoint-ORIG-GUID: kMDMqPR2_o8CHYnUZZjQ3rf8HZmE-HoW
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODA3MDExMiBTYWx0ZWRfX3gSAG7wilrvu
- oUX7kHBaaBG/TzMHWfHZFH2Z0EJgqgffe5RNp7pqW9pWyXNpcZHfb0LMbARqh0EqPAjMggKXbxT
- 1Yw6jZxOc9d91mM7g/73L/qxYNyiweA=
-X-Proofpoint-GUID: cNmYE6ePXaMJsMoJ3ZyCvHfAJCQ--8bR
+ a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8 a=VnNF1IyMAAAA:8
+ a=Lql3lfElDkBJbt6mtbwA:9
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA3MDExMiBTYWx0ZWRfX4d5FYKPq8Z0O
+ n/PHdn7OYCxJQGrSyn1o3l+QeqJpvK3d1oaytS4gNCm9g2mO4Md8Qxj3NGOV6y5ooGmQ5ig+0Lg
+ NhTUczW0jYGTHmCD8rmqUuUJMOxtQZNnWbnQ0XwoaffoRR4SDrjxAbhkHD49zeLy7Zj0Wh9F8ui
+ 2B7mDlqhI3Ac8Iue2pZ+BzpIICXpBPhpvABbVoZ1xbe4Uki70IPR9OFkEQq9/xwYYw4rcjq0oBP
+ VG6FGE0itC/2+//VbFNBSYUk7Hfg830mKwggRCSzsUrhhgwjo5YcGwfZCMvF2ilu+FUqzpCEth+
+ qdQ9pg7JE5kcP8v58VcDXP+RlAq1HGbMKfZ1GvI/f/2zyrMhfy8ReZudZKPUB6zXFNXNpGlnphb
+ D2RBuPfktygCov5sxo/teZUisfdWf1/zz+oay1nIWb0sJbFshKt1aUZX61J/id3e03GZTYqiDpQ
+ Bt0tXSNGiQzi1Y5XZig==
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-08-07_02,2026-08-06_01,2025-10-01_01
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 spamscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
- phishscore=0 priorityscore=1501 adultscore=0 bulkscore=0 clxscore=1015
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608070112
+ malwarescore=0 spamscore=0 phishscore=0 impostorscore=0 adultscore=0
+ suspectscore=0 bulkscore=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 classifier=typeunknown authscore=0 authtc= authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
+ definitions=main-2608070112
 
-powerpc_htm_process_auxtrace_info() reads the (cpu, attr.config) pairs
-stored by htm_info_fill() at record time and builds a cpu_configs[]
-table.  This lets process_auxtrace_event() map each AUX buffer, which
-carries event->auxtrace.cpu, to the correct (node, chip, core) target
-and write the raw trace data to htm.bin.nX.pX.cX.tX immediately.
+Overview:
+This series adds perf tool support for capturing and processing Hardware
+Trace Macro (HTM) trace data on POWER systems.  HTM exposes raw bus-trace
+data via the H_HTM hypervisor call.  The kernel-side HTM PMU driver
+(submitted separately) streams this data into perf AUX buffers and emits
+memory configuration as PERF_SAMPLE_RAW records.
 
-PERF_RECORD_SAMPLE events carrying PERF_SAMPLE_RAW data are handled by
-process_event(), which extracts memory configuration records and writes
-them to translation.nX.pX.cX.tX
+This series wires up the record and report sides in the perf tool so that
+'perf record' collects HTM data and 'perf report' writes the trace and
+memory configuration to files ready for post-processing with htmdecode.
 
-Per-run first-write tracking (htm_target_seen()) ensures each output
-file is opened with O_TRUNC on the first write and O_APPEND on
-subsequent writes, correctly handling multiple AUX chunks from the same
-target and stale files from prior runs.
+Patch overview:
+Patch 1 refactors the existing powerpc auxtrace dispatch.  All VPA-DTL
+recording logic is moved from arch/powerpc/util/auxtrace.c into its own
+file, arch/powerpc/util/vpa-dtl.c, leaving auxtrace_record__init() as a
+thin per-PMU dispatcher.  This is a prerequisite for adding the HTM
+recording path cleanly.
 
-For perf report -D the AUX buffer size is printed.
+Patch 2 adds the HTM recording path (arch/powerpc/util/htm.c and
+util/powerpc-htm.h).  htm_recording_init() sets up the auxtrace_record
+callbacks.  htm_info_fill() stores the PMU type and a (cpu, attr.config)
+pair for each htm evsel into the PERF_RECORD_AUXTRACE_INFO priv[] area.
+The decode side reads these back to map each AUX buffer to its
+(node, chip, core) target using event->auxtrace.cpu.  PERF_SAMPLE_RAW is
+also enabled here so that memory configuration records are captured
+alongside the AUX stream.
 
-Example:
+Patch 3 adds a generic weak arch_perf_record__need_read() hook in
+builtin-record.c.  When the hook returns non-zero, perf record performs
+an extra mmap-read pass before disabling events.  The drain loop runs
+until the hook returns 0 or no forward progress is made, then the events
+are disabled and closed normally.
+
+Patch 4 implements arch_perf_record__need_read() for powerpc.  It reads
+event->count for all open htm evsels via perf_evsel__read() and
+accumulates the values.  The kernel driver sets this count to the number
+of 128-byte HTM trace records written on a successful dump, 1 when the
+AUX buffer is temporarily full but the hypervisor stream is intact, and
+0 once the stream is exhausted or a hard error occurs.  A non-zero total
+causes the recording loop to perform another read pass.
+
+Patch 5 adds PERF_AUXTRACE_POWERPC_HTM to the auxtrace_type enum and
+wires the dispatch in perf_event__process_auxtrace_info().  It also
+amends htm_info_fill() to set auxtrace_info->type now that the constant
+is available.
+
+Patch 6 adds the full HTM decode path in util/powerpc-htm.c.
+powerpc_htm_process_auxtrace_info() reads the (cpu, config) pairs from
+priv[] and builds a cpu_configs[] lookup table.  As each
+PERF_RECORD_AUXTRACE event arrives, process_auxtrace_event() maps it to
+the correct target and writes the data to htm.bin.nX.pX.cX.tX immediately.
+PERF_RECORD_SAMPLE RAW records are written to translation.nX.pX.cX.tX by
+process_event().  Per-run first-write tracking (htm_target_seen) ensures
+O_TRUNC on the first write and O_APPEND on subsequent writes.
+
+Patches not included in V2:
+Three patches present in V1 are intentionally dropped from this series
+and will be submitted as a follow-on once the core infrastructure gets
+integrated:
+
+  - htmdecode integration: V1 patch 6 invoked the external htmdecode
+    tool via fork/exec after writing htm.bin.* to decode the raw
+    bus-trace data in-process.  This is deferred because the interface
+    between perf and an external decode tool needs more discussion.
+
+  - Physical-to-logical address mapping: V1 patch 7 read the current
+    partition ID from /proc/powerpc/lparcfg, parsed the translation.*
+    memory map entries, and mapped physical addresses in the decoded
+    trace to logical addresses within the LPAR.
+
+  - Synthetic sample generation: V1 patches 8 and 9 created a
+    PERF_TYPE_SYNTH event named "htm", injected synthetic perf samples
+    with the translated logical addresses as sample IP, and wrote a
+    separate .out.l file with logical addresses alongside the decoded
+    trace.  The appropriate abstraction for synthetic HTM samples in the
+    perf tool requires further discussion.
+
+Usage example:
+Collect HTM trace data from a single chip target:
+
   # perf record -C 9 -m,256 \
       -e htm/nodalchipindex=2,nodeindex=0,htm_type=1/ sleep 3
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 256.277 MB perf.data ]
+
   # perf report
-  # ls htm.bin.* translation.*
-  htm.bin.n0.p2.c0.t1  translation.n0.p2.c0.t1
 
-Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
----
-Changes in V5:
-- Include htm_type in the output filename and the first-write tracking
-  key.  Previously htm_pack_target() encoded only (node, chip, core),
-  so a core HTM event (htm_type=2) and a nest HTM event (htm_type=1)
-  on the same node/chip/core produced the same key and collided into
-  the same htm.bin.nX.pX.cX file.  The fix encodes type in bits [31:24]
-  of a u64 key: key = (type<<24) | (node<<16) | (chip<<8) | core.
-  Output filenames now include a .tX suffix:
-    htm.bin.nX.pX.cX.tX  and  translation.nX.pX.cX.tX
-  Both htm_bin_targets and translation_targets arrays are widened from
-  u32 to u64, and htm_target_seen() is updated accordingly.  The type
-  field is extracted from attr.config bits [3:0] at both call sites
-  (powerpc_htm_process_event and powerpc_htm_process_auxtrace_event)
-  and passed through write_htm().
+Output files written by perf report:
 
-Changes in V4:
-- Change htm_config_for_cpu() from returning u64 (using 0 as a "not
-  found" sentinel) to returning bool with a u64 *config output
-  parameter.  V3's 0-return sentinel is ambiguous because 0 is a
-  theoretically valid attr.config value; a CPU pinned to the default
-  chip with default field values could legitimately produce config=0,
-  causing htm_config_for_cpu() to silently report "not found" and
-  skip writing the AUX buffer.  The bool+output-param API removes the
-  ambiguity entirely.  Update the call site in
-  powerpc_htm_process_auxtrace_event() to use the new signature:
-  replace "ev_config = htm_config_for_cpu(htm, cpu); if (!ev_config)"
-  with "if (!htm_config_for_cpu(htm, cpu, &ev_config))".
-- Fix the type of the written local variable in write_htm() from
-  size_t to ssize_t, matching the return type of write(2).  V3 stored
-  the signed write() return value in an unsigned size_t, so a write
-  error (-1) would silently wrap to SIZE_MAX and the mismatch check
-  "written != size" would fire with a misleading byte count in the
-  error message rather than surfacing the underlying errno.  Update
-  both pr_err format specifiers from %zu to %zd and both comparisons
-  to cast written: (size_t)written != payload and (size_t)written !=
-  size.
-- Drop the HTM_MAX_SAFE_TARGETS (1024) cap on num_events that V3
-  introduced.  The num_events value is already bounded by the
-  auxtrace_info header size validation added in V3, making the
-  separate cap redundant; removing it simplifies the code without
-  weakening the safety guarantee.
+  htm.bin.n0.p2.c0.t1       raw HTM bus-trace data
+  translation.n0.p2.c0.t1   memory configuration records
 
-Changes in V3:
-- Add #include <linux/unaligned.h> (placed after the perf "..."
-headers so <linux/compiler.h> is already in scope) and use
-get_unaligned_be64(byte_ptr + 0x10) instead of be64_to_cpu(*(__be64 *)(byte_ptr + 0x10))
-to avoid SIGBUS on strict-alignment architectures.
-- Add raw_size underflow guard: skip silently if sample->raw_size <=
-sizeof(uint32_t) before subtracting the 4-byte alignment padding.
-- Reject duplicate PERF_RECORD_AUXTRACE_INFO:
-check session->auxtrace != NULL before allocation to prevent
-overwriting the pointer and leaking the first allocation.
-- Validate num_events against the actual auxtrace_info->header.size
-before using it to index priv[] or allocate arrays, preventing
-out-of-bounds reads from a malformed record.
-- Cap num_events at HTM_MAX_SAFE_TARGETS (1024) to prevent size_t
-truncation on 32-bit platforms when passed to calloc().
-- Fix htm_target_seen(): return true (use O_APPEND) when capacity is
-exceeded, matching the warning message that already claimed append
-behaviour. V2 returned false (would have used O_TRUNC), discarding
-previously written data.
-- Cast calloc() arguments to (size_t)num_events now that num_events
-has been validated and capped.
+Multiple targets can be collected simultaneously:
 
-Changes in V2:
-- Consolidated: the file-writing, memory-configuration processing, and
-  address-mapping logic that was spread across old patches 5 to 9 is
-  rationalised into a single, focused implementation in
-  tools/perf/util/powerpc-htm.c.
-- Synthetic sample generation (old patch 8: PERF_TYPE_SYNTH "htm" event
-  with logical addresses) and the separate logical-address mapping output
-  file (old patch 9: .out.l file) are not included in V2.  These features
-  require further discussion on the appropriate abstraction and will be
-  posted as a follow-on series.
-- Physical-to-logical address mapping (old patch 7) is not included in
-  V2 for the same reason.
-- Memory configuration records are now written via process_event()
-  handling PERF_RECORD_SAMPLE with PERF_SAMPLE_RAW, keyed on the "htm"
-  PMU name from evsel__pmu_name().  V1 used PERF_SAMPLE_RAW boundary
-  markers inside the AUX buffer to locate the configuration data.
-- AUX buffer processing uses htm_config_for_cpu() to map
-  event->auxtrace.cpu to the correct (node, chip, core) target using
-  the (cpu, attr.config) table populated from AUXTRACE_INFO priv[] in
-  powerpc_htm_process_auxtrace_info().  V1 iterated the evlist at
-  report time.
-- Per-run first-write tracking (htm_target_seen()) uses O_TRUNC on the
-  first write and O_APPEND on subsequent writes for both htm.bin.* and
-  translation.* files, correctly handling multiple AUX chunks per target
-  and stale files from prior runs.  V1 always opened with O_TRUNC.
-- HTM_MAX_TARGETS compile-time constant is replaced by dynamic allocation
-  sized to num_events read from AUXTRACE_INFO priv[POWERPC_HTM_NUM_EVENTS].
-- Patch is now 6/6 instead of spanning patches 5 to 9.
+  # perf record -m,256 \
+      -e htm/nodalchipindex=2,nodeindex=0,htm_type=1,cpu=8/ \
+      -e htm/nodalchipindex=1,nodeindex=0,htm_type=1,cpu=9/ \
+      -a sleep 10
 
- tools/perf/util/powerpc-htm.c | 341 +++++++++++++++++++++++++++++++++-
- 1 file changed, 335 insertions(+), 6 deletions(-)
+Testing:
+Tested on POWER11.  Both htm.bin.* and translation.* files are produced
+correctly for single and dual target collection.
 
-diff --git a/tools/perf/util/powerpc-htm.c b/tools/perf/util/powerpc-htm.c
-index 0ef7ecd18c6f..1b5c8d7adf05 100644
---- a/tools/perf/util/powerpc-htm.c
-+++ b/tools/perf/util/powerpc-htm.c
-@@ -17,6 +17,10 @@
- #include "debug.h"
- #include "sample.h"
- 
-+#include <linux/unaligned.h>
-+
-+struct perf_session;
-+
- struct powerpc_htm {
- 	struct auxtrace		auxtrace;
- 	struct auxtrace_queues	queues;
-@@ -24,8 +28,56 @@ struct powerpc_htm {
- 	u32			auxtrace_type;
- 	struct perf_session	*session;
- 	struct machine		*machine;
-+
-+	/*
-+	 * Capacity: number of distinct HTM targets (node/chip/core tuples)
-+	 * recorded, read from auxtrace_info->priv[POWERPC_HTM_NUM_EVENTS] at
-+	 * init time.  All three arrays below are allocated to this size.
-+	 */
-+	int	nr_targets;
-+
-+	/*
-+	 * Per-run first-write tracking for htm.bin.* and translation.* files.
-+	 * Each entry is a packed u64: type<<24 | node<<16 | chip<<8 | core.
-+	 * First write for a given key -> O_TRUNC; subsequent writes -> O_APPEND.
-+	 */
-+	u64	*htm_bin_targets;
-+	int	nr_htm_bin_targets;
-+	u64	*translation_targets;
-+	int	nr_translation_targets;
-+
-+	/*
-+	 * CPU -> attr.config table, populated from auxtrace_info->priv[] at
-+	 * init time.  htm_info_fill() (record side) stores the CPU and config
-+	 * for each htm evsel; we read them back here to map each
-+	 * event->auxtrace.cpu to the correct (node, chip, core) config.
-+	 */
-+	struct {
-+		int	cpu;
-+		u64	config;
-+	} *cpu_configs;
-+	int	nr_cpu_configs;
- };
- 
-+/*
-+ * Look up attr.config by the CPU number carried in event->auxtrace.cpu.
-+ * Returns true and sets *config if found, false if not found.
-+ * Using a bool+output-param avoids the ambiguity of returning 0 as both
-+ * a sentinel (not found) and a theoretically valid config value.
-+ */
-+static bool htm_config_for_cpu(struct powerpc_htm *htm, int cpu, u64 *config)
-+{
-+	int i;
-+
-+	for (i = 0; i < htm->nr_cpu_configs; i++) {
-+		if (htm->cpu_configs[i].cpu == cpu) {
-+			*config = htm->cpu_configs[i].config;
-+			return true;
-+		}
-+	}
-+	return false;
-+}
-+
- static void powerpc_htm_dump_event(u64 len)
- {
- 	const char *color = PERF_COLOR_BLUE;
-@@ -36,22 +88,238 @@ static void powerpc_htm_dump_event(u64 len)
- 	}
- }
- 
--static int powerpc_htm_process_event(struct perf_session *session __maybe_unused,
--				     union perf_event *event __maybe_unused,
--				     struct perf_sample *sample __maybe_unused,
-+#define HTM_MEM_ENTRY_SIZE 32
-+
-+static inline u64 htm_pack_target(u32 node, u32 chip, u32 core, u32 type)
-+{
-+	return ((u64)type << 24) | (node << 16) | (chip << 8) | core;
-+}
-+
-+static bool htm_target_seen(u64 *targets, int *nr, int capacity, u64 key)
-+{
-+	int i;
-+
-+	for (i = 0; i < *nr; i++) {
-+		if (targets[i] == key)
-+			return true;
-+	}
-+
-+	if (*nr < capacity)
-+		targets[(*nr)++] = key;
-+	else {
-+		pr_warning("htm: too many targets (max %d), appending to existing file\n",
-+			   capacity);
-+		return true;  /* treat as seen: use O_APPEND not O_TRUNC */
-+	}
-+
-+	return false;
-+}
-+
-+/*
-+ * Write HTM data to a file.
-+ *
-+ * mem_maps == 0: AUX bus-trace path  -> htm.bin.nX.pX.cX
-+ * mem_maps != 0: memory config path  -> translation.nX.pX.cX
-+ *
-+ * htm_target_seen() decides O_TRUNC (first write this run) vs O_APPEND
-+ * (subsequent writes), keyed on what this process has already written --
-+ * not on whether the file exists on disk.
-+ */
-+static int write_htm(struct powerpc_htm *htm, void *data, size_t size,
-+		     u32 node, u32 chip, u32 core, u32 type, int mem_maps)
-+{
-+	u64 target_key = htm_pack_target(node, chip, core, type);
-+	char target_file[128];
-+	ssize_t written;
-+	int flags;
-+	int fd;
-+
-+	if (!data || !size)
-+		return -EINVAL;
-+
-+	flags = O_CREAT | O_WRONLY | O_NOFOLLOW | O_CLOEXEC;
-+
-+	if (mem_maps) {
-+		uint8_t *byte_ptr = (uint8_t *)data;
-+		size_t entries;
-+		size_t payload;
-+
-+		if (size < HTM_MEM_ENTRY_SIZE) {
-+			pr_err("Malformed memory mapping entry trace segment\n");
-+			return -EINVAL;
-+		}
-+
-+		/* Entry count is at offset 0x10; add 1 for the 32-byte header */
-+		entries = get_unaligned_be64(byte_ptr + 0x10) + 1;
-+		payload = entries * HTM_MEM_ENTRY_SIZE;
-+
-+		if (payload != size) {
-+			pr_err("Bad memory mapping data, invalid number of entries\n");
-+			return -EINVAL;
-+		}
-+
-+		snprintf(target_file, sizeof(target_file),
-+			 "translation.n%d.p%d.c%d.t%d", node, chip, core, type);
-+		flags |= htm_target_seen(htm->translation_targets,
-+					 &htm->nr_translation_targets,
-+					 htm->nr_targets,
-+					 target_key) ? O_APPEND : O_TRUNC;
-+		fd = open(target_file, flags, 0644);
-+		if (fd == -1) {
-+			pr_err("Failed to open %s: %s\n", target_file, strerror(errno));
-+			return -errno;
-+		}
-+
-+		written = write(fd, data, payload);
-+		close(fd);
-+
-+		if ((size_t)written != payload) {
-+			pr_err("Failed to write memory config: expected %zu bytes, wrote %zd\n",
-+			       payload, written);
-+			return -EIO;
-+		}
-+
-+		return 0;
-+	}
-+
-+	/* AUX bus-trace path */
-+	snprintf(target_file, sizeof(target_file),
-+		 "htm.bin.n%d.p%d.c%d.t%d", node, chip, core, type);
-+	flags |= htm_target_seen(htm->htm_bin_targets,
-+				 &htm->nr_htm_bin_targets,
-+				 htm->nr_targets,
-+				 target_key) ? O_APPEND : O_TRUNC;
-+	fd = open(target_file, flags, 0644);
-+	if (fd == -1) {
-+		pr_err("Failed to open %s: %s\n", target_file, strerror(errno));
-+		return -errno;
-+	}
-+
-+	written = write(fd, data, size);
-+	close(fd);
-+
-+	if ((size_t)written != size) {
-+		pr_err("Failed to write htm trace data: expected %zu bytes, wrote %zd\n",
-+		       size, written);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int powerpc_htm_process_event(struct perf_session *session,
-+				     union perf_event *event,
-+				     struct perf_sample *sample,
- 				     const struct perf_tool *tool __maybe_unused)
- {
-+	struct powerpc_htm *htm;
-+	struct evsel *evsel;
-+	u32 node, chip, core, type;
-+	u64 ev_config;
-+
-+	if (!session || !session->auxtrace || !event || !sample)
-+		return 0;
-+
-+	if (event->header.type != PERF_RECORD_SAMPLE || !sample->raw_data)
-+		return 0;
-+
-+	htm = container_of(session->auxtrace, struct powerpc_htm, auxtrace);
-+	evsel = evlist__event2evsel(session->evlist, event);
-+
-+	if (!evsel || strcmp(evsel__pmu_name(evsel), "htm") != 0)
-+		return 0;
-+
-+	ev_config = evsel->core.attr.config;
-+	type = ev_config & 0xf;
-+	node = (ev_config >> 4)  & 0xff;
-+	chip = (ev_config >> 12) & 0xff;
-+	core = (ev_config >> 20) & 0xff;
-+
-+	/*
-+	 * raw_size includes 4 bytes of u64 alignment padding added by the
-+	 * kernel.  Subtract sizeof(u32) to recover the true payload byte count.
-+	 * Guard against underflow: if raw_size is too small, skip silently.
-+	 */
-+	if (sample->raw_size <= sizeof(uint32_t))
-+		return 0;
-+	if (write_htm(htm, sample->raw_data,
-+		      sample->raw_size - sizeof(uint32_t),
-+		      node, chip, core, type, 1) < 0) {
-+		pr_err("Failed to write memory translation block\n");
-+		return -EIO;
-+	}
-+
- 	return 0;
- }
- 
--static int powerpc_htm_process_auxtrace_event(struct perf_session *session __maybe_unused,
-+static int powerpc_htm_process_auxtrace_event(struct perf_session *session,
- 					      union perf_event *event,
- 					      const struct perf_tool *tool __maybe_unused)
- {
-+	struct powerpc_htm *htm;
-+	struct auxtrace_buffer *buffer;
-+	off_t data_offset;
-+	u32 node, chip, core, type;
-+	u64 ev_config;
-+	int fd;
-+	int err;
-+
-+	if (!session || !session->auxtrace)
-+		return 0;
-+
-+	htm = container_of(session->auxtrace, struct powerpc_htm, auxtrace);
-+	fd = perf_data__fd(session->data);
-+
-+	if (perf_data__is_pipe(session->data)) {
-+		data_offset = 0;
-+	} else {
-+		data_offset = lseek(fd, 0, SEEK_CUR);
-+		if (data_offset == -1)
-+			return -errno;
-+	}
-+
-+	/*
-+	 * Queue the buffer and get back a pointer to it.  We immediately load
-+	 * and write the data so htm.bin.* exists on disk before subsequent
-+	 * patches invoke htmdecode during the same session pass.
-+	 */
-+	err = auxtrace_queues__add_event(&htm->queues, session, event,
-+					 data_offset, &buffer);
-+	if (err)
-+		return err;
-+
-+	if (!buffer)
-+		return 0;
-+
-+	/*
-+	 * Map event->auxtrace.cpu -> attr.config using the table built from
-+	 * auxtrace_info->priv[] at init time.  This is reliable because
-+	 * htm_info_fill() stored the exact (cpu, config) pair for each evsel
-+	 * at record time -- no CPU map or evlist iteration needed here.
-+	 */
-+	if (!htm_config_for_cpu(htm, (int)event->auxtrace.cpu, &ev_config)) {
-+		pr_err("htm: no config found for auxtrace cpu %u\n",
-+		       event->auxtrace.cpu);
-+		return 0;
-+	}
-+
-+	type = ev_config & 0xf;
-+	node = (ev_config >> 4)  & 0xff;
-+	chip = (ev_config >> 12) & 0xff;
-+	core = (ev_config >> 20) & 0xff;
-+
-+	if (!auxtrace_buffer__get_data(buffer, fd)) {
-+		pr_err("Failed to read AUX buffer data\n");
-+		return -ENOMEM;
-+	}
-+
- 	if (dump_trace)
--		powerpc_htm_dump_event(event->auxtrace.size);
-+		powerpc_htm_dump_event(buffer->size);
- 
--	return 0;
-+	err = write_htm(htm, buffer->data, buffer->size, node, chip, core, type, 0);
-+	auxtrace_buffer__put_data(buffer);
-+
-+	return err < 0 ? err : 0;
- }
- 
- static int powerpc_htm_flush(struct perf_session *session __maybe_unused,
-@@ -81,6 +349,9 @@ static void powerpc_htm_free(struct perf_session *session)
- 	htm = container_of(session->auxtrace, struct powerpc_htm, auxtrace);
- 	powerpc_htm_free_events(session);
- 	session->auxtrace = NULL;
-+	free(htm->cpu_configs);
-+	free(htm->htm_bin_targets);
-+	free(htm->translation_targets);
- 	free(htm);
- }
- 
-@@ -89,6 +360,8 @@ int powerpc_htm_process_auxtrace_info(union perf_event *event,
- {
- 	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
- 	struct powerpc_htm *htm;
-+	u64 num_events;
-+	u64 i;
- 	int err;
- 
- 	if (auxtrace_info->header.size < sizeof(struct perf_record_auxtrace_info) +
-@@ -99,12 +372,68 @@ int powerpc_htm_process_auxtrace_info(union perf_event *event,
- 	if (!htm)
- 		return -ENOMEM;
- 
-+	/* Reject duplicate AUXTRACE_INFO: would overwrite session->auxtrace and leak */
-+	if (session->auxtrace) {
-+		pr_err("htm: duplicate PERF_RECORD_AUXTRACE_INFO, ignoring\n");
-+		free(htm);
-+		return -EINVAL;
-+	}
-+
-+	htm->auxtrace_type = auxtrace_info->priv[POWERPC_HTM_PMU_TYPE];
-+	num_events = auxtrace_info->priv[POWERPC_HTM_NUM_EVENTS];
-+
-+	/*
-+	 * Validate num_events against the actual header size before using it
-+	 * to index priv[] or allocate arrays.  Each event contributes 2 u64
-+	 * priv entries (cpu + config); reject if the header is too small.
-+	 */
-+	if (num_events > (auxtrace_info->header.size -
-+			  sizeof(struct perf_record_auxtrace_info) -
-+			  HTM_AUXTRACE_PRIV_FIXED) / (2 * sizeof(u64))) {
-+		pr_err("htm: num_events %llu exceeds auxtrace_info payload\n",
-+		       (unsigned long long)num_events);
-+		free(htm);
-+		return -EINVAL;
-+	}
-+
- 	err = auxtrace_queues__init(&htm->queues);
- 	if (err) {
- 		free(htm);
- 		return err;
- 	}
- 
-+	/*
-+	 * All three arrays are sized to num_events -- the exact count of HTM
-+	 * targets written by htm_info_fill() at record time.  num_events has
-+	 * been validated above so the cast to int and size_t are safe.
-+	 */
-+	htm->nr_targets   = (int)num_events;
-+	htm->cpu_configs  = calloc((size_t)num_events, sizeof(*htm->cpu_configs));
-+	htm->htm_bin_targets    = calloc((size_t)num_events, sizeof(*htm->htm_bin_targets));
-+	htm->translation_targets = calloc((size_t)num_events, sizeof(*htm->translation_targets));
-+	if (!htm->cpu_configs || !htm->htm_bin_targets || !htm->translation_targets) {
-+		free(htm->cpu_configs);
-+		free(htm->htm_bin_targets);
-+		free(htm->translation_targets);
-+		auxtrace_queues__free(&htm->queues);
-+		free(htm);
-+		return -ENOMEM;
-+	}
-+
-+	/*
-+	 * Read (cpu, config) pairs from priv[].  These were written by
-+	 * htm_info_fill() at record time -- one pair per htm evsel in evlist
-+	 * order.  Keying by CPU lets process_auxtrace_event() look up the
-+	 * correct attr.config for each AUX buffer using event->auxtrace.cpu.
-+	 */
-+	for (i = 0; i < num_events; i++) {
-+		htm->cpu_configs[i].cpu =
-+			(int)auxtrace_info->priv[POWERPC_HTM_EVENT_DATA + i * 2];
-+		htm->cpu_configs[i].config =
-+			auxtrace_info->priv[POWERPC_HTM_EVENT_DATA + i * 2 + 1];
-+		htm->nr_cpu_configs++;
-+	}
-+
- 	htm->session = session;
- 	htm->machine = &session->machines.host;
- 	htm->auxtrace.process_event = powerpc_htm_process_event;
+Note: Link to kernel patches:
+https://lore.kernel.org/linuxppc-dev/20260807143734.1224-1-atrajeev@linux.ibm.com/T/#t
+
+Athira Rajeev (6):
+  tools/perf: Move powerpc VPA-DTL auxtrace init into a separate file
+  tools/perf: Add AUXTRACE recording support for powerpc HTM
+  tools/perf: Add arch hook to drain remaining data before event close
+  tools/perf: Add powerpc callback support for
+    arch_perf_record__need_read
+  tools/perf: Add powerpc HTM auxtrace event processing support
+  tools/perf: Add perf tool support for processing powerpc HTM AUXTRACE
+    records
+
+ tools/perf/arch/powerpc/util/Build      |   2 +
+ tools/perf/arch/powerpc/util/auxtrace.c |  98 ++----
+ tools/perf/arch/powerpc/util/evsel.c    |  77 ++++
+ tools/perf/arch/powerpc/util/htm.c      | 185 ++++++++++
+ tools/perf/arch/powerpc/util/vpa-dtl.c  |  96 +++++
+ tools/perf/builtin-record.c             |  65 ++++
+ tools/perf/util/Build                   |   1 +
+ tools/perf/util/auxtrace.c              |   4 +
+ tools/perf/util/auxtrace.h              |   1 +
+ tools/perf/util/powerpc-htm.c           | 447 ++++++++++++++++++++++++
+ tools/perf/util/powerpc-htm.h           |  43 +++
+ tools/perf/util/powerpc-vpadtl.h        |   3 +
+ tools/perf/util/record.h                |   4 +
+ 13 files changed, 954 insertions(+), 72 deletions(-)
+ create mode 100644 tools/perf/arch/powerpc/util/htm.c
+ create mode 100644 tools/perf/arch/powerpc/util/vpa-dtl.c
+ create mode 100644 tools/perf/util/powerpc-htm.c
+ create mode 100644 tools/perf/util/powerpc-htm.h
+
 -- 
 2.53.0
 
