@@ -1,137 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121043DAACF;
-	Fri,  7 Aug 2026 08:41:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B491358375;
+	Fri,  7 Aug 2026 08:43:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786092116; cv=none; b=EcAqzUfF8oYVC7FklQx1YtK07ocA80kNsilV7Jl0VXcRyVq4mezaKfHU2SAmeBz1K3Qq+36S2hn3VWTHGzpZzbWp7J6GOglcsZm5yI0NqzpTdPBnfx1uj+S4BKQfwbvETrcWInfO/A2Xr1kcYbflw5yeZGaTOqkqgKr/nfm6iaM=
+	t=1786092226; cv=none; b=ts9xKwboSFuzPVx76ytSJSZZIOc95/jBYeburDS/TapuZtn1gE/W/oBhjiXBnoEjfwyglGix89mGtJrHhbhATBSNzlwKaI71Y+bMrwSDiu1rMvLaB9MoS8n7qFok6V68J+FCdGohRgw6Vr1QrZMqQnxRjOY8/frjbJQ7lZMuev0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786092116; c=relaxed/simple;
-	bh=yPuG8hb5Xf0buZ8efVD2j3dcMx++hGuVCdBXPkG9B70=;
+	s=arc-20240116; t=1786092226; c=relaxed/simple;
+	bh=kFxQkI9bZxLouE0rKXsIOzrk/K4/smlbbnuGCaG8oxE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QO1c7PEfiqh141W76Vc3JDNNwovwr7Css+POG9T7/oh6l5hH9kOYzty+pWMPYmASeu/AyO5Ilg5G00NFkSsbeNQ4MUUhkgtdoCpoRMDS4ApVgpSUnnIfbLgwctlWNN1mZs6Sx1kC0ZkfOoTF/3TjPXvuUI1dFISbK2xNBb1KY7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=btAu8Nbg; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=n0Px0IB8Y5i1/lPP+bNJyicSv331jOIUHEJojiqJ12JMCtvQU8ZqMNQM2hf285u6z7Ooh9/g8a6ykQxazF+61lIqgSWYsR2h5U1NDzgVgYfFD3tDtxu3edEgfUDcXbVhpwF5w1C+0GlSC3Ckv/v/kbDwSNVrkbYmO7DeIbC5ap8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ITzzrHoV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="btAu8Nbg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6F171F000E9;
-	Fri,  7 Aug 2026 08:41:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ITzzrHoV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DABF1F000E9;
+	Fri,  7 Aug 2026 08:43:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786092114;
-	bh=04FBecOjZYsrwkEvpI7rkPOAh2q9kTHhuekUpy/SjXM=;
+	s=k20260515; t=1786092222;
+	bh=aA1Y4phFzgytFdsuCQvZJANmIyaprXjtxdVBWa8Z02c=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=btAu8NbgP4SdsiVMIxe6gKeXvQMVcIqjr7DxfPi/Xpm+XILOYCclAUwJQHXfB3ngl
-	 IvFFRTToCskKfnMSf/zXeU4V3oh2RIxsS9eW9VXuqBHhhp/OZLQ96BcUbCyJmELwBv
-	 LtsFw+XvRCs/hyqxshZUnRWaXto4mnJ6Dy6bHpSS1moDM7FeaR46eQPNvroXd2o/kB
-	 C90V9m6hM34EVMIadNIZ5D8aKysD0+GAXLorroPJdZMBtBpfd/KYDVjP+D5kEg69xa
-	 SNPwRFNIqx8XSf4mcDGYAOHmb4fLRbe1NLkN9xU+5ELVe0Q0oNAhqqtYZ0CRc+o5An
-	 8IkLT2+BX5JEQ==
+	b=ITzzrHoVy3PXZdTjUkGVCgZiTfIsl8cKhdkLs/cupRhckBsnWMPYpcwiU2KN2PaWR
+	 aYIXAAt+ZFR2lB1M9FRsM1G88L/ZTKhqhJ4ND/ms2amcY/4Kn3rK+7Wjl4wPWziRPc
+	 AvK9xQCoOjOPKWq0HW23+oIRiRG1aYGTwTHQrtxtokIBMUrhlWHCPkqp2425QYNblY
+	 50JZNI9zV/UMeezqavNwxQSbto58NHWbNCd+RBR5dgJvIoXGMVgV3Jz08urVfkorRW
+	 1pc/jUh5Zhe7hw7JeW4znJBBBs9G3Jti58sd3NCuiVIlmF8pOlaYwSmCYOon/lc0ln
+	 qUW/PgHMR1qmw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 18/20] RISC-V: perf: Add Qemu virt machine events
+Subject: Re: [PATCH v9 16/20] RISC-V: perf: Use config2/vendor table for
+ event to counter mapping
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Atish Patra" <atish.patra@linux.dev>
-Cc: robh@kernel.org, linux-perf-users@vger.kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org
-In-Reply-To: <20260807-counter_delegation-v9-18-58658104e487@meta.com>
+Cc: conor+dt@kernel.org, linux-perf-users@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20260807-counter_delegation-v9-16-58658104e487@meta.com>
 References: <20260807-counter_delegation-v9-0-58658104e487@meta.com>
- <20260807-counter_delegation-v9-18-58658104e487@meta.com>
+ <20260807-counter_delegation-v9-16-58658104e487@meta.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 07 Aug 2026 08:41:53 +0000
-Message-Id: <20260807084153.E6F171F000E9@smtp.kernel.org>
+Date: Fri, 07 Aug 2026 08:43:41 +0000
+Message-Id: <20260807084342.4DABF1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] The `counterid_mask` for `cycles` and `instructions` events in t=
-he QEMU PMU vendor events table incorrectly excludes fixed counters, unnece=
-ssarily consuming limited programmable counters.
+- [High] Standard host legacy hardware events (e.g., 'perf stat -e cycles')=
+ fail to open and cannot map to fixed counters via the vendor driver table.
+- [High] Raw events with broad counter masks are unconditionally forced to =
+count cycles or instructions on fixed counters, returning incorrect metrics.
 --
 
---- Patch [18]: [PATCH v9 18/20] RISC-V: perf: Add Qemu virt machine events=
- ---
-commit c3b03b30f6d05637f0ec5ea8c549bff42e2bbc49
+--- Patch [16]: [PATCH v9 16/20] RISC-V: perf: Use config2/vendor table for=
+ event to counter mapping ---
+commit 450780026222524d85a7b60f40dbdc3d52fed837
 Author: Atish Patra <atishp@rivosinc.com>
+Subject: RISC-V: perf: Use config2/vendor table for event to counter mapping
 
-RISC-V: perf: Add Qemu virt machine events
-
-Qemu virt machine supports a very minimal set of legacy perf events.
-Add them to the vendor table so that users can use them when
-counter delegation is enabled.
+This patch allows platform vendors to specify custom mapping between
+events and hpmcounters using the config2 parameter in perf attributes.
+Legacy events are mapped via the vendor event table in the driver, while
+the fixed cycle and instruction counters map to legacy events.
 
 > diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-> index 5eb49db8bc7c1..9220c75651a5c 100644
+> index f0b8b6eff2ea7..ee0c077859273 100644
 > --- a/drivers/perf/riscv_pmu_sbi.c
 > +++ b/drivers/perf/riscv_pmu_sbi.c
-
 [ ... ]
+> @@ -1522,24 +1524,85 @@ static int rvpmu_deleg_find_ctrs(void)
+>  static int get_deleg_fixed_hw_idx(struct cpu_hw_events *cpuc, struct per=
+f_event *event)
+>  {
+> -	return -EINVAL;
+> +	bool guest_events =3D event->attr.config1 & RISCV_PMU_CONFIG1_GUEST_EVE=
+NTS;
+> +	int idx;
+> +
+> +	/* event_base is 0 on the delegation path; match via the original perf =
+attrs. */
+> +	if (guest_events) {
+> +		if (event->attr.type !=3D PERF_TYPE_HARDWARE)
+> +			return -EINVAL;
+> +		if (event->attr.config =3D=3D PERF_COUNT_HW_CPU_CYCLES)
+> +			idx =3D 0; /* CY counter */
+> +		else if (event->attr.config =3D=3D PERF_COUNT_HW_INSTRUCTIONS)
+> +			idx =3D 2; /* IR counter */
+> +		else
+> +			return -EINVAL;
+> +	} else if (event->attr.config2 & RISCV_PMU_CYCLE_FIXED_CTR_MASK) {
+> +		idx =3D 0; /* CY counter */
 
-> @@ -468,7 +469,45 @@ struct riscv_vendor_pmu_events {
->  	  .hw_event_map =3D _hw_event_map, .cache_event_map =3D _cache_event_ma=
-p, \
->  	  .attrs_events =3D _attrs },
+[Severity: High]
+Does this unconditionally force raw events with broad counter masks to count
+cycles instead of the requested metric?
+
+If a raw event is provided with a broad counterid_mask (e.g., 0xFFFFFFFF)
+that allows any counter, config2 will have bit 0 set. This causes
+get_deleg_fixed_hw_idx() to immediately assign it to fixed counter 0.
+
+Since fixed counter 0 is architecturally hardwired to count cycles, the
+actual raw event ID is ignored and the PMU returns cycle counts, leading to
+incorrect metrics.
+
+> +	} else if (event->attr.config2 & RISCV_PMU_INSTRUCTION_FIXED_CTR_MASK) {
+> +		idx =3D 2; /* IR counter */
+> +	} else {
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Take the fixed counter only if delegated and free, else fall back. */
+> +	if (!(cmask & BIT(idx)) || test_bit(idx, cpuc->used_hw_ctrs))
+> +		return -EINVAL;
+> +
+> +	return idx;
+>  }
 > =20
-> +/* QEMU virt PMU events */
-> +static const struct riscv_pmu_event qemu_virt_hw_event_map[PERF_COUNT_HW=
-_MAX] =3D {
-> +	PERF_MAP_ALL_UNSUPPORTED,
-> +	[PERF_COUNT_HW_CPU_CYCLES]		=3D {0x01, 0xFFFFFFF8},
-> +	[PERF_COUNT_HW_INSTRUCTIONS]		=3D {0x02, 0xFFFFFFF8}
-> +};
+>  static int get_deleg_next_hpm_hw_idx(struct cpu_hw_events *cpuc, struct =
+perf_event *event)
+>  {
+> -	unsigned long hw_ctr_mask =3D 0;
+> +	u32 hw_ctr_mask =3D 0, temp_mask =3D 0;
+> +	u32 type =3D event->attr.type;
+> +	u64 config =3D event->attr.config;
+> +	int ret;
+> =20
+> -	/*
+> -	 * TODO: Treat every hpmcounter can monitor every event for now.
+> -	 * The event to counter mapping should come from the json file.
+> -	 * The mapping should also tell if sampling is supported or not.
+> -	 */
+> +	/* Select only available hpmcounters */
+> +	hw_ctr_mask =3D cmask & (~0x7) & ~(cpuc->used_hw_ctrs[0]);
 
-[Severity: Medium]
-Does the counterid_mask of 0xFFFFFFF8 inadvertently exclude the fixed hardw=
-are
-counters for these events?
+[Severity: High]
+Will standard host legacy hardware events fail to map to fixed counters if
+the vendor map mandates them?
 
-By clearing bits 0, 1, and 2, this mask prevents the driver from using the
-dedicated fixed counters (counter 0 for cycles, counter 2 for instructions).
+When a user runs a command like "perf stat -e cycles", config2 is 0.
+As a result, get_deleg_fixed_hw_idx() ignores current_pmu_hw_event_map and
+returns -EINVAL without finding a fixed counter mapping.
 
-When checking if a fixed counter is permitted, get_deleg_fixed_hw_idx()=20
-verifies event->attr.config2 against RISCV_PMU_CYCLE_FIXED_CTR_MASK (0x01)
-or RISCV_PMU_INSTRUCTION_FIXED_CTR_MASK (0x04). Because 0xFFFFFFF8 & 0x01 =
-=3D=3D 0
-and 0xFFFFFFF8 & 0x04 =3D=3D 0, the driver will bypass the fixed counters a=
-nd=20
-unnecessarily consume scarce programmable HPM counters instead.
-
-Would it be better to include the respective fixed counter bits in the mask
-(e.g., 0xFFFFFFF9 for cycles and 0xFFFFFFFD for instructions), or perhaps
-use 0xFFFFFFFF?
+This fallback function then explicitly strips out fixed counter bits (~0x7),
+which prevents assigning fixed counters even if the vendor table specifical=
+ly
+requests them. If the vendor map requires counter 0 via counterid_mask, the
+resulting hw_ctr_mask becomes 0, and the allocation fails entirely with
+-ENOENT.
 
 > +
-> +static const struct riscv_pmu_event qemu_virt_cache_event_map[PERF_COUNT=
-_HW_CACHE_MAX]
-> +						[PERF_COUNT_HW_CACHE_OP_MAX]
-> +						[PERF_COUNT_HW_CACHE_RESULT_MAX] =3D {
-
-[ ... ]
-
-> +	[C(ITLB)][C(OP_READ)][C(RESULT_MISS)]	=3D {0x10021, 0xFFFFFFF8},
-> +};
-> +
-> +RVPMU_EVENT_CMASK_ATTR(cycles, cycles, 0x01, 0xFFFFFFF8);
-> +RVPMU_EVENT_CMASK_ATTR(instructions, instructions, 0x02, 0xFFFFFFF8);
-
-[Severity: Medium]
-Since this macro exposes the counterid_mask to userspace via sysfs aliases,=
-=20
-does providing 0xFFFFFFF8 here cause the perf tool to populate config2 with=
-=20
-0xFFFFFFF8?
-
-If so, this will enforce the same fixed-counter bypass on the counter=20
-delegation path. Updating these masks to include the fixed counter bits
-would ensure they can be fully utilized.
-
-> +RVPMU_EVENT_CMASK_ATTR(dTLB-load-misses, dTLB_load_miss, 0x10019, 0xFFFF=
-FFF8);
-
-[ ... ]
+> +	switch (type) {
+> +	case PERF_TYPE_HARDWARE:
+> +		temp_mask =3D current_pmu_hw_event_map[config].counterid_mask;
+> +		break;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260807-counter_de=
-legation-v9-0-58658104e487@meta.com?part=3D18
+legation-v9-0-58658104e487@meta.com?part=3D16
