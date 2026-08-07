@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5583D3327;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE4C03BB13B;
 	Fri,  7 Aug 2026 15:08:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786115326; cv=none; b=HUCBroknR9Eop5YoCjfNuwRuFcOuQtBKvU5aAjcwmPpg0TbPvl4+iHpw1N22N8SZUhIJ9CH23krC1gQUxoPSyh+NfzyIWRNhECoJ4WarILU1g+nhFKR9gApF/3EfhioSac7zrzikxlK9LDNSOSVvNbikALLUrNHsIfXd771gjbI=
+	t=1786115326; cv=none; b=uPQ4ai5kgChU6c5wY3GXa3KYAXbdc1k27yCh8RLKn11ecgUPl51YJlU50P2RAFCVe5nw0EHxukLmlcfv37KJA+ZkJ+OrS7YxbYtk4JB7qG7kvcQzx0T+WfFUnbB/FfSaO+gDJJnz6bBsjjWZMcLJynkGbNw2RmI4PpaPBLHdBhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1786115326; c=relaxed/simple;
-	bh=M4wHK8VFzW1lE9rOKw/akrIuQPmsqmv1O0MSP5bWHcE=;
+	bh=rfl+0bj3ozQ4jj2fALkGdxM4esoHCSqn0jTUim8FZZ0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Z7GGrywkjJ2ggUzqkXwk0l4lhHY6LElpU/47kZLO7M/aJg1L4GE/fDibAq0jw/yGXp+1XYgmqRCRLlLLqikWTtUQ2gcAnS52lF0MBdMw39CgpTlkWO3kX6Rc9qECFfxNjWkHhPO7ZpQF9eg9guqqJ8mibisiVSPCNqvfNqIWEoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmpTWoEc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=YTKTaopO/qAx0vJuChBaSTTqbQwvI4dbw2V6bFZKUFMQNk9toSkKFieai5bT05kH8Ono4k4x/wkYE9YguWY+WGuR+JJJMJyK3+nz6JefjOWoskfFCwwwAeirAjK/pXElK24Pkru2l6ppn39hfHEmPnAjsCFcbSAJXQCJHSrJCt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JThhUhKz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmpTWoEc"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6AE7BC2BCF6;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JThhUhKz"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 7EC08C19425;
 	Fri,  7 Aug 2026 15:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1786115326;
-	bh=M4wHK8VFzW1lE9rOKw/akrIuQPmsqmv1O0MSP5bWHcE=;
+	bh=rfl+0bj3ozQ4jj2fALkGdxM4esoHCSqn0jTUim8FZZ0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=lmpTWoEcfE35xy8UpR/u9g7c56XiF1rNYm+I5doGVmYlOyLHr+LQrh5FSsQNrZiEV
-	 bSt2/zQw+FTlvJNcDwKVtDq5hMVahhNqYPozVYTgj4GOgaIg2Z3Ez+u3YEZQJarC6z
-	 2RbqALAiVX540p3bWXmZ6fxTQjGScYrFXRge9NtUDfT1X5IoL3/V2J7HHMEOrvtTzk
-	 VmWkkwiAkT6blqIzxFHU8s1A/1oylpLK8iUv6M9Qsjc3t+XaQtOKOahhe/1dBifUwI
-	 Ym74VmGyPT+YaDCYBNbbJRBWn3VAlZoSPuUL6UDAdH/2u+twW7MJJ9dYh0YF1bt7md
-	 JNPZIyau6XEnA==
+	b=JThhUhKzKr9ujeb96Z0zig1S+o9FKL6NAk3sBY8YRyQatJ0fFXEgjV3VncZTVezXG
+	 +sXVbYmXKlQOQUfI+pFzYNd/c32pTmez5U+oVNhXTSXMljTd2ZtXvHQPZrD5OGLbNb
+	 tHVAiKUTkefQ62Fc9uXc9N4vHTE1n4xUuJNNZNb6IEhNwOTYhP3nyyzFslQsAfrRrN
+	 jg7ra+HanfZoyH/KMujaXdKrdIBgqJYUpL+xXAI1EdQJ5jhcVaFlxX85LLFyXArmzi
+	 sl/pGLwKZt3qZXE9/HboBxrtw0Vek1dRDWd+f7J3BeReRp+/jByPlVtUbNmUkSPDFB
+	 /hnKZv56kRhvQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D400C5AC7A;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E293C2A09B;
 	Fri,  7 Aug 2026 15:08:46 +0000 (UTC)
 From: Michalis Niarchos via B4 Relay <devnull+michael.niarchos.gmail.com@kernel.org>
-Date: Fri, 07 Aug 2026 17:08:35 +0200
-Subject: [PATCH 1/2] perf kvm: Fix memory leak in process_sample_event()
+Date: Fri, 07 Aug 2026 17:08:36 +0200
+Subject: [PATCH 2/2] perf kvm: Fix memory leak in cmd_kvm()
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,7 +40,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260807-perf-kvm-leaks-v1-1-7b5e2f97905a@gmail.com>
+Message-Id: <20260807-perf-kvm-leaks-v1-2-7b5e2f97905a@gmail.com>
 References: <20260807-perf-kvm-leaks-v1-0-7b5e2f97905a@gmail.com>
 In-Reply-To: <20260807-perf-kvm-leaks-v1-0-7b5e2f97905a@gmail.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -53,11 +53,11 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Michalis Niarchos <michael.niarchos@gmail.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1786115324; l=1353;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1786115324; l=579;
  i=michael.niarchos@gmail.com; s=20260731; h=from:subject:message-id;
- bh=UAZeAebDM873C0dbCUU7lvlcAJE4j8rs08YgESgmpsA=;
- b=qtTjJiu01JaYfeHbocbCEWEI7xu5ZDiixjxUlsRwASTEx6l8a1f3WZ/OYh7JSdC4iJJbIZv2C
- IfJTtZKqDzKD4WMIUnzWL3Vo12eX/f6gsBY7hGlOoW0yWOE0Mrh8F3o
+ bh=bQ7xS4XFaVpnKKpn8MtN9GGFSGILFZ8PV3h9QmDPDm4=;
+ b=ZEL/sEM4aOyQHDXYLa183cP3yfbP/aR9Z7x09kFLrR2Opvj8qjGUEqwryW1+OOYzK+dKokOBk
+ B5H70klsqtcDuizvPnu7Msy4jezVygI2JVsfjBtKg1wapQNWaADsjF2
 X-Developer-Key: i=michael.niarchos@gmail.com; a=ed25519;
  pk=/LBZRQzfuxTnSaZhgZE8EP7mHr0poyqlKeFssNqkzFE=
 X-Endpoint-Received: by B4 Relay for michael.niarchos@gmail.com/20260731
@@ -67,45 +67,25 @@ Reply-To: michael.niarchos@gmail.com
 
 From: Michalis Niarchos <michael.niarchos@gmail.com>
 
-machine__resolve() indirectly acquires a thread reference via
-machine__findnew_thread(). Release it, as suggested by the documentation
-of the former.
+Set the thread private data destructor.
 
 Signed-off-by: Michalis Niarchos <michael.niarchos@gmail.com>
 ---
- tools/perf/builtin-kvm.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/builtin-kvm.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
-index 00baafb05603..8e7bc7b2db18 100644
+index 8e7bc7b2db18..21cb16b10f91 100644
 --- a/tools/perf/builtin-kvm.c
 +++ b/tools/perf/builtin-kvm.c
-@@ -1145,7 +1145,7 @@ static int process_sample_event(const struct perf_tool *tool,
- 	if (machine__resolve(machine, &kvm->al, sample) < 0) {
- 		pr_warning("WARNING: at offset %#" PRIx64 ": fail to resolve address location, skipping sample\n",
- 			   sample->file_offset);
--		return 0;
-+		goto out;
- 	}
+@@ -2149,6 +2149,8 @@ int cmd_kvm(int argc, const char **argv)
+ 	if (!argc)
+ 		usage_with_options(kvm_usage, kvm_options);
  
- 	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
-@@ -1153,13 +1153,16 @@ static int process_sample_event(const struct perf_tool *tool,
- 		pr_debug("problem processing %s (%u) event at offset %#" PRIx64 ", skipping it.\n",
- 			 perf_event__name(event->header.type), event->header.type,
- 			 sample->file_offset);
--		return -1;
-+		err = -1;
-+		goto out;
- 	}
- 
- 	if (!handle_kvm_event(kvm, thread, sample))
- 		err = -1;
- 
- 	thread__put(thread);
-+out:
-+	addr_location__exit(&kvm->al);
- 	return err;
- }
++	thread__set_priv_destructor(free);
++
+ 	if (!perf_host)
+ 		perf_guest = 1;
  
 
 -- 
