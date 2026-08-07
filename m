@@ -1,35 +1,36 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A1D746EF8F
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 08:10:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 729F8470EB4
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 08:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786090242; cv=none; b=rd/2X+9UxK6Zruj//sbrZRT9IEWaYJTwiCozhtjdos6yBdK+GfnRerF2pYyVlmC/ugwqu0bDbE83XfGvys1DUMDsEGZAqGahokXXVPypSwaLeGjpdQOyGfoePBQJRmx04ifv9veiAxNQYm4WXzGlAiY0Ef2b4TSAfipApLJ9lzY=
+	t=1786090242; cv=none; b=cH99F94hhd15jEynd+Mt8//MPVsDXnd5UIksemTr4pbrA0NLdDlaWkKUJN3v28nJuVcyWih6tay3Oq8r6gQYwciJGfBwvFDqUxgdlwojp0rGEVW/crhJefGFZ2uAxl+LLzhl/ZErLs3EM4Gk1ZsjuVFBRA+KgTKrChlG/pfbVnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1786090242; c=relaxed/simple;
-	bh=rvQGoYJsIoarz8zbuO3YQbw6z7/biBDLKdAJXT7MAKA=;
+	bh=PziB6+6pLpNjee0JwACVhpsJ8rg/yPqjCJuzCsmMw6k=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=qKNHhsepkI1weItkJMQzgXLMl1Cftm/wWzTmQZt9ufQADiXldJwsiin5+T4ja4xBsTLDBA9QnFXR9Jvv/ygNmLYr5VeALFF1wBfbxGI9nCC8LFiy1DLjnMCOuW4/X428EYxytSriknaFTX4LmcK2crNvXe3y42hqzK04ehXAAtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pEVXm+sl; arc=none smtp.client-ip=91.218.175.182
+	 In-Reply-To:To:Cc; b=kNShdren957afjl8vvfnuAhXFfBMQFypNCMd58LkUn7Ia3mcU3j4/FcfOg73/suj6b2lUlY8iC/o01LZptw7nyBcX7nfq6ryimyBU8ZG0e912/1rlXP1EoVk1CkUs0wQXVMKDk8bndHSDI1iwxQta7+w56o7apdetUwaT/jqzro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DV3cbjQI; arc=none smtp.client-ip=91.218.175.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pEVXm+sl"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DV3cbjQI"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1786090235;
+	t=1786090231;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=lfX8wCdyVTUS+XJ2Q5P6GVnY13N71rCIRLjwZzSr/b4=;
-	b=pEVXm+slJ0oBeOqLGbXa5oLhXUwk11zKZ57umJBMZV/CbekHW3elsEHm7yq8CahqHPdh5z
-	R+Y0B+SyITUxu7chPOv/Xim90YTM63eSzUMJDJfEK7aKpIUO+XtGzL2de+n/qRc5LqXLH4
-	9F335Q+P3BIp7E0nxIpEH69aOW6cxPs=
+	bh=BfYXgw69zMSEclDnNr5kszfAFVsyyRX4EV9lqJDD4s4=;
+	b=DV3cbjQIASZzTdDYM1EnEUE7GAYOSygcGnb5EH9Hra5RBZsKD8Nh5NASPHOZtCY1mMV/c5
+	6NhXvWxFUpwJ/KCsY+aOCZL+7z2UocgrY7QqgAMgIwaC6+rK1rRXXt6tMafdYFnxzntcSt
+	yN6LOVxSRlvsIYXQWrCV8wyymzLXs3g=
 From: Atish Patra <atish.patra@linux.dev>
-Date: Fri, 07 Aug 2026 01:09:13 -0700
-Subject: [PATCH v9 18/20] RISC-V: perf: Add Qemu virt machine events
+Date: Fri, 07 Aug 2026 01:09:12 -0700
+Subject: [PATCH v9 17/20] RISC-V: perf: Add legacy event encodings via
+ sysfs
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -38,7 +39,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260807-counter_delegation-v9-18-58658104e487@meta.com>
+Message-Id: <20260807-counter_delegation-v9-17-58658104e487@meta.com>
 References: <20260807-counter_delegation-v9-0-58658104e487@meta.com>
 In-Reply-To: <20260807-counter_delegation-v9-0-58658104e487@meta.com>
 To: Will Deacon <will@kernel.org>, Atish Patra <atish.patra@linux.dev>, 
@@ -55,98 +56,70 @@ X-Migadu-Flow: FLOW_OUT
 
 From: Atish Patra <atishp@rivosinc.com>
 
-Qemu virt machine supports a very minimal set of legacy perf events.
-Add them to the vendor table so that users can use them when
-counter delegation is enabled.
-
-Qemu is identified by its marchid. Older Qemu reports all-zero
-mvendorid/marchid/mimpid, while newer Qemu reports the marchid 0x2a (42)
-allocated to it in the RISC-V ISA manual [1]. Register the events for
-both ids so they are available across Qemu versions.
-
-[1] https://github.com/riscv/riscv-isa-manual/blob/main/marchid.md
+Define sysfs details for the legacy events so that any tool can
+parse these to understand the minimum set of legacy events
+supported by the platform. The sysfs entry will describe both event
+encoding and corresponding counter map so that an perf event can be
+programmed accordingly.
 
 Signed-off-by: Atish Patra <atishp@rivosinc.com>
 Reviewed-by: Charlie Jenkins <thecharlesjenkins@gmail.com>
 Tested-by: Charlie Jenkins <thecharlesjenkins@gmail.com>
 ---
- arch/riscv/include/asm/vendorid_list.h |  6 ++++++
- drivers/perf/riscv_pmu_sbi.c           | 39 ++++++++++++++++++++++++++++++++++
- 2 files changed, 45 insertions(+)
+ drivers/perf/riscv_pmu_sbi.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/arch/riscv/include/asm/vendorid_list.h b/arch/riscv/include/asm/vendorid_list.h
-index 7f5030ee1fcf..beaf9236dba7 100644
---- a/arch/riscv/include/asm/vendorid_list.h
-+++ b/arch/riscv/include/asm/vendorid_list.h
-@@ -11,4 +11,10 @@
- #define SIFIVE_VENDOR_ID	0x489
- #define THEAD_VENDOR_ID		0x5b7
- 
-+#define QEMU_VIRT_VENDOR_ID		0x000
-+#define QEMU_VIRT_IMPL_ID		0x000
-+#define QEMU_VIRT_ARCH_ID		0x000
-+/* Newer Qemu reports the spec-allocated marchid 0x2a (42) for non-vendor CPUs */
-+#define QEMU_VIRT_ARCH_ID_SPEC		0x2a
-+
- #endif
 diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-index 5eb49db8bc7c..9220c75651a5 100644
+index ee0c07785927..5eb49db8bc7c 100644
 --- a/drivers/perf/riscv_pmu_sbi.c
 +++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -26,6 +26,7 @@
- #include <asm/sbi.h>
- #include <asm/cpufeature.h>
- #include <asm/vendor_extensions.h>
-+#include <asm/vendorid_list.h>
- #include <asm/vendor_extensions/andes.h>
- #include <asm/hwcap.h>
- #include <asm/csr_indirect.h>
-@@ -468,7 +469,45 @@ struct riscv_vendor_pmu_events {
- 	  .hw_event_map = _hw_event_map, .cache_event_map = _cache_event_map, \
- 	  .attrs_events = _attrs },
- 
-+/* QEMU virt PMU events */
-+static const struct riscv_pmu_event qemu_virt_hw_event_map[PERF_COUNT_HW_MAX] = {
-+	PERF_MAP_ALL_UNSUPPORTED,
-+	[PERF_COUNT_HW_CPU_CYCLES]		= {0x01, 0xFFFFFFF8},
-+	[PERF_COUNT_HW_INSTRUCTIONS]		= {0x02, 0xFFFFFFF8}
-+};
-+
-+static const struct riscv_pmu_event qemu_virt_cache_event_map[PERF_COUNT_HW_CACHE_MAX]
-+						[PERF_COUNT_HW_CACHE_OP_MAX]
-+						[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
-+	PERF_CACHE_MAP_ALL_UNSUPPORTED,
-+	[C(DTLB)][C(OP_READ)][C(RESULT_MISS)]	= {0x10019, 0xFFFFFFF8},
-+	[C(DTLB)][C(OP_WRITE)][C(RESULT_MISS)]	= {0x1001B, 0xFFFFFFF8},
-+
-+	[C(ITLB)][C(OP_READ)][C(RESULT_MISS)]	= {0x10021, 0xFFFFFFF8},
-+};
-+
-+RVPMU_EVENT_CMASK_ATTR(cycles, cycles, 0x01, 0xFFFFFFF8);
-+RVPMU_EVENT_CMASK_ATTR(instructions, instructions, 0x02, 0xFFFFFFF8);
-+RVPMU_EVENT_CMASK_ATTR(dTLB-load-misses, dTLB_load_miss, 0x10019, 0xFFFFFFF8);
-+RVPMU_EVENT_CMASK_ATTR(dTLB-store-misses, dTLB_store_miss, 0x1001B, 0xFFFFFFF8);
-+RVPMU_EVENT_CMASK_ATTR(iTLB-load-misses, iTLB_load_miss, 0x10021, 0xFFFFFFF8);
-+
-+static struct attribute *qemu_virt_event_group[] = {
-+	RVPMU_EVENT_ATTR_PTR(cycles),
-+	RVPMU_EVENT_ATTR_PTR(instructions),
-+	RVPMU_EVENT_ATTR_PTR(dTLB_load_miss),
-+	RVPMU_EVENT_ATTR_PTR(dTLB_store_miss),
-+	RVPMU_EVENT_ATTR_PTR(iTLB_load_miss),
-+	NULL,
-+};
-+
- static struct riscv_vendor_pmu_events pmu_vendor_events_table[] = {
-+	RISCV_VENDOR_PMU_EVENTS(QEMU_VIRT_VENDOR_ID, QEMU_VIRT_ARCH_ID, QEMU_VIRT_IMPL_ID,
-+				qemu_virt_hw_event_map, qemu_virt_cache_event_map,
-+				qemu_virt_event_group)
-+	RISCV_VENDOR_PMU_EVENTS(QEMU_VIRT_VENDOR_ID, QEMU_VIRT_ARCH_ID_SPEC, QEMU_VIRT_IMPL_ID,
-+				qemu_virt_hw_event_map, qemu_virt_cache_event_map,
-+				qemu_virt_event_group)
+@@ -130,7 +130,20 @@ static struct attribute_group riscv_cdeleg_pmu_format_group = {
+ 	.attrs = riscv_cdeleg_pmu_formats_attr,
  };
  
- static const struct riscv_pmu_event *current_pmu_hw_event_map;
++#define RVPMU_EVENT_ATTR_RESOLVE(m) #m
++#define RVPMU_EVENT_CMASK_ATTR(_name, _var, config, mask) \
++	PMU_EVENT_ATTR_STRING(_name, rvpmu_event_attr_##_var, \
++			      "event=" RVPMU_EVENT_ATTR_RESOLVE(config) \
++			      ",counterid_mask=" RVPMU_EVENT_ATTR_RESOLVE(mask))
++
++#define RVPMU_EVENT_ATTR_PTR(name) (&rvpmu_event_attr_##name.attr.attr)
++
++static struct attribute_group riscv_cdeleg_pmu_event_group __ro_after_init = {
++	.name = "events",
++};
++
+ static const struct attribute_group *riscv_cdeleg_pmu_attr_groups[] = {
++	&riscv_cdeleg_pmu_event_group,
+ 	&riscv_cdeleg_pmu_format_group,
+ 	NULL,
+ };
+@@ -446,11 +459,14 @@ struct riscv_vendor_pmu_events {
+ 	const struct riscv_pmu_event *hw_event_map;
+ 	const struct riscv_pmu_event (*cache_event_map)[PERF_COUNT_HW_CACHE_OP_MAX]
+ 						       [PERF_COUNT_HW_CACHE_RESULT_MAX];
++	struct attribute **attrs_events;
+ };
+ 
+-#define RISCV_VENDOR_PMU_EVENTS(_vendorid, _archid, _implid, _hw_event_map, _cache_event_map) \
++#define RISCV_VENDOR_PMU_EVENTS(_vendorid, _archid, _implid, _hw_event_map, \
++				_cache_event_map, _attrs) \
+ 	{ .vendorid = _vendorid, .archid = _archid, .implid = _implid, \
+-	  .hw_event_map = _hw_event_map, .cache_event_map = _cache_event_map },
++	  .hw_event_map = _hw_event_map, .cache_event_map = _cache_event_map, \
++	  .attrs_events = _attrs },
+ 
+ static struct riscv_vendor_pmu_events pmu_vendor_events_table[] = {
+ };
+@@ -472,6 +488,8 @@ static void __init rvpmu_vendor_register_events(void)
+ 		    pmu_vendor_events_table[i].archid == arch_id) {
+ 			current_pmu_hw_event_map = pmu_vendor_events_table[i].hw_event_map;
+ 			current_pmu_cache_event_map = pmu_vendor_events_table[i].cache_event_map;
++			riscv_cdeleg_pmu_event_group.attrs =
++							pmu_vendor_events_table[i].attrs_events;
+ 			break;
+ 		}
+ 	}
 
 -- 
 2.53.0-Meta
