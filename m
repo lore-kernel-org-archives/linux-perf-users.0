@@ -1,230 +1,181 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70663B14B1
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 15:54:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97299318ECD
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 15:58:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786118082; cv=none; b=snu/fYNcJOEFl38H8sJ35zrvxLE2h/FJQ83UUIvNXp+Z0LZHTgduR4ZL8bp7t/z0a1Y0ESfkJDgrzfd5ZEzvMK8Rei9GQw5jA1UCqbMTAK/SQTZjylNx2JrQAgPq+A8Ve/1tEVJ6ajbILk5VmJuWBfMfkDqgXEMjYRWDiZrwaCs=
+	t=1786118284; cv=none; b=ea1BiPJM6GR1mNQM0X6vBrHMyaVB+0kM5RwWMCP7VqKvGjkyPAAPpK9d48vxXnTZhlwKyX4uOxG4SouJsJf8WrT5uAMo48wkRclrxtsZpxJSYDIsFBE2qbh6mVuK31kraHigJAtOwvKkaWu7fEqIITU1a82JnRiHU5Ut/cDHDTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786118082; c=relaxed/simple;
-	bh=JcTI9A3MkBxieS7TBMH9y6IGivF31ev+Pa+2yTDrEcY=;
+	s=arc-20240116; t=1786118284; c=relaxed/simple;
+	bh=SsPFLj6Z7/GVVlC29m3IxuqlggrMFR6OTguiD/CL/Nk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=kbUwKWr3el/Jm3hQ1WK/Ys/EbQzN/uyd8VZ8i+DMgBHcYtgwshNOKd5ndczdMnpiJ47WuyA2F/o0364yhryMxB12Pbf0033l3YGWdW83whWHpmhGdMaHDmQ3BLazu/+607meYXdn3uNJiHXXqm0nGjrbT3aTnNybWeQWbw8BiqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YFhFG2f4; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=us06WTwO4WAvHOq1fXRSHHZqpTt5UMAJv8n6s74evNEZOvfgpGNfBXxBp8qzall7K7kuk7U06lRL8zPjLgcukdootyaUQsHxOAS05q0Mj8CuXqQAmEdiTy3d91RstpmK/HBjq6OXZslJrdTUBJaoRrG7iSlOnfzbkr/DCV6OUyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FJX7tNvX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YFhFG2f4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66C461F000E9;
-	Fri,  7 Aug 2026 15:54:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FJX7tNvX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06041F000E9;
+	Fri,  7 Aug 2026 15:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786118080;
-	bh=BvOpO7cIgK0Yc5yTeuVAe9YPaCDwulEOHGeDp9vSBAE=;
+	s=k20260515; t=1786118283;
+	bh=D4dNnFxWGFwt67McuvkqxhljlKkA4O/6PCtSHM76/ms=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YFhFG2f4wG8YINBLMEzTsOX4hzBkcLhKkKCgYAZLoamUSvgR/tKaMky8mCpN+wnHh
-	 mg5k+q9RKVpoWGB4KFm9mLTOEj2F02I3wdRJrBdRZDn1ITm0nHRfq+esEwnxk1urU6
-	 BkaqniZMSwSv74gDurjwnfUplpYCAb066Xyd2MJvqqiuBPoCQ0gr8Io6skOMvW+7a7
-	 DqZ5RzXvkN60fImelqxyPOyxELT47Z1iLlsaICx2N4tJZrPLFGY+EuBDsAuS7YwVsh
-	 +050kHi3n0C4cYnXyqPr6zxqkz2GppmlbNfTCEkjEiV0HCoSDe0yTGtmqt3u09skdt
-	 +cuP5tRNboIfQ==
+	b=FJX7tNvXENXUH4rrNL/fH1ioQ2n9nmQbP6+czZetYIPXlqCHY6kD6mL0X+lUaoKr3
+	 n1vbqrU5uaR7tpiCo7osPlq9PeT7jf8BIrjZU0tRLNQxNwF2YQtbeAVNyryYx+8ACK
+	 wZAInciQqkykrv9J/Z0AQn/bP84YgLCQAxc7ram8GRynXPQZS0kQC5/SXg/olWq9To
+	 V+wK14DsNqkAMsAzVgQyzTmIFDwXrQ/XOpYd9LcG13Djp0nKm9WJRsUpeFdfYoQNWj
+	 3DWrdpp4ci4vxpEXdQVdIk+ZoLOjg8djJgbaucE13PSv0aB9tV2hFvLc/E1vmoDe4c
+	 fjt/eQRAFDXcg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 08/11] tracing/wprobe: Add set_wprobe and
- clear_wprobe event triggers
+Subject: Re: [PATCH v12 03/11] HWBP: Add modify_local_hw_breakpoint_addr()
+ API
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <178611688737.237811.17143803996766057381.stgit@devnote2>
+In-Reply-To: <178611683120.237811.15904891776099424430.stgit@devnote2>
 References: <178611679753.237811.10190793347982785419.stgit@devnote2>
- <178611688737.237811.17143803996766057381.stgit@devnote2>
+ <178611683120.237811.15904891776099424430.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 07 Aug 2026 15:54:39 +0000
-Message-Id: <20260807155440.66C461F000E9@smtp.kernel.org>
+Date: Fri, 07 Aug 2026 15:58:01 +0000
+Message-Id: <20260807155802.F06041F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] Mixing scope-based cleanup (`__free()`) with explicit resource man=
-agement causes double-frees and memory leaks.
-- [High] Hardware breakpoint fallback address spans adjacent kernel variabl=
-es, causing NMI storms.
-- [High] Double initialization of the event trigger reference count causes =
-unconditional memory leaks.
-- [Medium] Trigger `count` is double-decremented, breaking the `:count=3D1`=
- feature.
-- [Medium] The `clear_wprobe` trigger fails to parse its documented optiona=
-l FIELD parameter.
+
+New issues:
+- [High] Modifying hardware debug address registers (DR0-DR3) while they ar=
+e still enabled in DR7 violates the x86 architectural guidelines and can ca=
+use unpredictable hardware behavior.
+- [Medium] Temporary invalid software state in `bp->attr.bp_addr` before va=
+lidation causes incorrect perf samples if interrupted by an NMI.
+
+Pre-existing issues:
+- [High] Lockless traversal of `kprobe_blacklist` can lead to Use-After-Fre=
+e during module unload.
 --
 
---- Patch [8]: [PATCH v12 08/11] tracing/wprobe: Add set_wprobe and clear_w=
-probe event triggers ---
-commit cb59d7e61a8c78c308ca9ae32e1de403900f7a05
+--- Patch [3]: [PATCH v12 03/11] HWBP: Add modify_local_hw_breakpoint_addr(=
+) API ---
+commit 894126e474a8f66ca7e12e6c727a417646ec68a9
 Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Subject: tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
 
-This commit adds set_wprobe and clear_wprobe event triggers to dynamically
-attach and detach hardware breakpoint address monitoring based on event fie=
-ld
-contents.
+HWBP: Add modify_local_hw_breakpoint_addr() API
 
-Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.=
+This adds modify_local_hw_breakpoint_addr() to update the watched address
+of an installed hardware breakpoint on the local CPU without releasing and
+reserving its hardware slot. It is available when architectures select
+HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR.
+
+Link: https://lore.kernel.org/all/f9c49dfa49bdc57ba8c0574bc9981c1e581acf92.=
 1785067572.git.wangjinchao600@gmail.com/
 
-> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-> --- a/kernel/trace/trace_wprobe.c
-> +++ b/kernel/trace/trace_wprobe.c
+> diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+> index 789add0c185a0..7d3a7bc050a40 100644
+> --- a/kernel/events/hw_breakpoint.c
+> +++ b/kernel/events/hw_breakpoint.c
 
 [ ... ]
 
-> +static int wprobe_trigger_global_enabled;
-> +
-> +#define SET_WPROBE_STR		"set_wprobe"
-> +#define CLEAR_WPROBE_STR	"clear_wprobe"
-> +#define WPROBE_DEFAULT_CLEAR_ADDRESS ((unsigned long)&wprobe_trigger_glo=
-bal_enabled)
-
-[Severity: High]
-Will this 4-byte fallback variable safely accommodate 8-byte hardware
-breakpoints?=20
-
-When a wprobe is temporarily disabled, its hardware breakpoint is pointed h=
-ere
-at WPROBE_DEFAULT_CLEAR_ADDRESS, but it retains its configured length (e.g.=
-, 8
-bytes for a 64-bit pointer).=20
-
-Could this cause the breakpoint to monitor the 4-byte variable plus 4 adjac=
-ent
-bytes in the .bss section, potentially triggering NMI storms if a frequently
-accessed kernel variable happens to reside in those adjacent bytes?
-
-[ ... ]
-
-> +static void wprobe_trigger(struct event_trigger_data *data,
-> +			   struct trace_buffer *buffer,  void *rec,
-> +			   struct ring_buffer_event *event)
+> @@ -888,6 +888,46 @@ void unregister_wide_hw_breakpoint(struct perf_event=
+ * __percpu *cpu_events)
+>  }
+>  EXPORT_SYMBOL_GPL(unregister_wide_hw_breakpoint);
+> =20
+> +/**
+> + * modify_local_hw_breakpoint_addr - update a local breakpoint address
+> + * @bp: the hwbp perf event for this CPU
+> + * @addr: the new address for @bp
+> + *
+> + * Update only the address of an installed breakpoint on the local CPU w=
+ithout
+> + * releasing and reserving its hardware slot. The caller must update oth=
+er CPUs.
+> + * Return 0, or -EOPNOTSUPP if the architecture does not support this op=
+eration.
+> + */
+> +#ifdef CONFIG_HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR
+> +int modify_local_hw_breakpoint_addr(struct perf_event *bp,
+> +				    unsigned long addr)
 > +{
-[ ... ]
-> +	/* count < 0 means endless, 0 means trigger count exhausted */
-> +	if (!data->count)
-> +		goto out;
-[ ... ]
-> +	if (changed) {
-> +		if (data->count > 0)
-> +			data->count--;
-
-[ ... ]
-
-> +static struct event_command trigger_wprobe_set_cmd =3D {
-> +	.name			=3D SET_WPROBE_STR,
-[ ... ]
-> +	.trigger		=3D wprobe_trigger,
-> +	.count_func		=3D event_trigger_count,
+> +	unsigned long old_addr;
+> +	int ret;
+> +
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	old_addr =3D bp->attr.bp_addr;
+> +	counter_arch_bp(bp)->address =3D addr;
+> +	bp->attr.bp_addr =3D addr;
 
 [Severity: Medium]
-Does this manual decrement in wprobe_trigger() conflict with the core
-event_trigger_count decrement function?=20
+Could this early update of bp->attr.bp_addr lead to incorrect perf samples?
 
-The trigger commands are assigned .count_func =3D event_trigger_count, which
-unconditionally executes before the main .trigger callback and pre-decremen=
-ts
-the count.=20
+If an NMI triggers the hardware breakpoint on the old address before the
+hardware registers are updated and validated, the NMI handler might lockles=
+sly
+read the temporarily overwritten bp->attr.bp_addr. Would this attribute the
+sample to the new, potentially invalid address instead of the old one?
 
-If a user specifies :count=3D1, the core framework reduces it to 0.=20
-wprobe_trigger() will then see a count of 0 and abort immediately. Does this
-render a single-count trigger completely non-functional?
-
-[ ... ]
-
-> +static int wprobe_trigger_cmd_parse(struct event_command *cmd_ops,
-> +				    struct trace_event_file *file,
-> +				    char *glob, char *cmd,
-> +				    char *param_and_filter)
-> +{
-> +	/*
-> +	 * set_wprobe:EVENT:FIELD[+OFFS]
-> +	 * clear_wprobe:EVENT[:FIELD[+OFFS]]
-> +	 */
-> +	struct wprobe_trigger_data *wprobe_data __free(free_wprobe_trigger_data=
-) =3D NULL;
-> +	struct event_trigger_data *trigger_data __free(kfree) =3D NULL;
-
-[ ... ]
-
-> +	/* clear_wprobe does not need field. */
-> +	if (!clear) {
-> +		char *offs;
-
-[Severity: Medium]
-Does skipping the field parsing here break the documented optional FIELD
-parameter for clear_wprobe?=20
-
-The documentation claims clear_wprobe:WPEVENT[:FIELD] conditionally clears a
-watchpoint, but if clear is true, the parsing code skips extracting the fie=
-ld
-string.=20
-
-It looks like the unparsed string is then passed to event_trigger_parse_num=
-(),
-which expects a numeric string and fails with -EINVAL.
-
-[ ... ]
-
-> +	ret =3D event_trigger_parse_num(param, trigger_data);
-> +	if (ret) {
-> +		wprobe_trigger_log_err(file, glob, param - glob, BAD_IMM);
-> +		return ret;
-> +	}
-
-[Severity: High]
-Can this early error path leak memory?=20
-
-The trigger_data uses __free(kfree), which performs a shallow free. If
-event_trigger_parse_num() fails and returns early, does this permanently le=
-ak
-internal allocations like data->name?
-
-[ ... ]
-
-> +	event_trigger_init(trigger_data);
 > +
-> +	ret =3D event_trigger_register(cmd_ops, file, glob, trigger_data);
+> +	ret =3D arch_modify_local_hw_breakpoint_addr(bp, addr);
 
 [Severity: High]
-Will this result in a double initialization of the reference count?=20
+Does modifying the hardware debug address register without clearing the DR7
+enable bits violate x86 architectural guidelines?
 
-We call event_trigger_init(trigger_data) explicitly here, which increments =
-the
-reference count. Then event_trigger_register() calls the .reg callback
-wprobe_register_trigger(), which executes data->cmd_ops->init(data) and
-increments the reference count a second time.=20
+When arch_modify_local_hw_breakpoint_addr() is called for x86:
 
-When the trigger is later unregistered, wprobe_trigger_free() decrements the
-count by only 1, leaving a permanent reference and memory leak.
+arch/x86/kernel/hw_breakpoint.c:arch_modify_local_hw_breakpoint_addr() {
+    ...
+    do {
+        seq =3D this_cpu_inc_return(cpu_dr7_seq);
+        this_cpu_write(cpu_debugreg[i], addr);
+        barrier();
+        set_debugreg(addr, i);
+    } while (seq !=3D this_cpu_read(cpu_dr7_seq));
+    ...
+}
+
+Could this cause unpredictable hardware behavior since the Intel manual
+dictates that DR0-DR3 should only be modified when their corresponding
+enable bits in DR7 are clear?
+
+[Severity: High]
+This is a pre-existing issue, but can the lockless traversal in the
+blacklist check lead to a use-after-free during module unload?
+
+When parsing the breakpoint, the call chain goes through:
+arch_modify_local_hw_breakpoint_addr() -> hw_breakpoint_arch_parse() ->
+arch_build_bp_info() -> within_kprobe_blacklist()
+
+kernel/kprobes.c:__within_kprobe_blacklist() {
+    ...
+    list_for_each_entry(ent, &kprobe_blacklist, list) {
+        if (addr >=3D ent->start_addr && addr < ent->end_addr)
+            return true;
+    }
+    ...
+}
+
+If a module is unloaded concurrently, kprobe_remove_area_blacklist() deletes
+entries and immediately frees them with kfree(). Would a concurrent hardware
+breakpoint modification dereference freed memory here since kprobe_mutex
+is not held and RCU protection is not used?
 
 > +	if (ret) {
-> +		event_trigger_reset_filter(cmd_ops, trigger_data);
-> +		trace_event_enable_disable(wprobe_file, 0, 1);
-> +		trace_event_put_ref(wprobe_file->event_call);
-> +		tracepoint_synchronize_unregister();
-> +		event_trigger_free(trigger_data);
+> +		counter_arch_bp(bp)->address =3D old_addr;
+> +		bp->attr.bp_addr =3D old_addr;
 > +		return ret;
 > +	}
-
-[Severity: High]
-Can this late error path cause a double-free?=20
-
-Both trigger_data and wprobe_data are declared with scope-based cleanup
-(__free). If event_trigger_register() fails, the code manually calls
-event_trigger_free(trigger_data), freeing both objects.=20
-
-When the function returns, the __free macros will execute and attempt to fr=
-ee
-them a second time.
+> +
+> +	return 0;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178611679753.237811=
-.10190793347982785419.stgit@devnote2?part=3D8
+.10190793347982785419.stgit@devnote2?part=3D3
