@@ -1,206 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570563D091A;
-	Fri,  7 Aug 2026 08:30:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2CA348C5D;
+	Fri,  7 Aug 2026 08:34:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786091463; cv=none; b=LFDwx4EwCs/+EatvmPFKMEkH9BlOkUTbCRrW/UDndsIGOjTn3QG9TW92FLIy2i+c+Fi/gTx02ILH+9eYjzlDkT2kGDLViQ5cBiK9Oh66dC5EpEzA/rx67DgUxYA39fkgDk8fTfOGuabCZ/ZQqA37jy8wx595qGefS6XejDCrnKA=
+	t=1786091645; cv=none; b=bPMh6FysMNr+7q8/lCXpNfPWzCb7grYCXbsaZYSvRERE+14sqiqhajfI6s7HU+G3HQns3UK+Tgg/uWwDWJf0131Tthx77F6p6iy06fQAU5xudPIxtv2k+hUfTjbSqzCD04zt1Ul3Pvc6bHlSb1lw7HsXPLUv39JWj1bVjcMZCAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786091463; c=relaxed/simple;
-	bh=5UbV3kI7Xcb2dYZ4vNjpHLGO4HOqCxlY13VqRSx17Vg=;
+	s=arc-20240116; t=1786091645; c=relaxed/simple;
+	bh=RuoitR6H60DSllYMhIs4DXZPn70NU4WQWcqp1ckTj1c=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=COGFhIYGdflLGd5QVWA2iXhui63o3GoGkG7a8lipnfhNYCI4CKT+Z/gyI82eR0cMzsj9+xbr5O9Jh0ng4JC/ZUbZb7MXAxHzFmN+8e5CR5u6NGAwccXDRXIHW0o676Vc8VyneMKsFOX03mHQkI6mxMHMtaYFoYydg2WcJzvB6UI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OhZiPNS3; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Y+HklWVcsu5rRj3uasafXmLui1scb9Agti4F97k0CSEphXXgUmKYIPOfxmPS5oLTDfwYgHxA1UbGUyr1AdNwznZ/do6EDkSg6Xy++9y74Npa+FHlYJJT+TF4H9R0O9OpqiyW+OSu5nRrHDML7hdwckrVHlRjZhjUlUA+MHnVE/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egpE/sHd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OhZiPNS3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3904B1F000E9;
-	Fri,  7 Aug 2026 08:30:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egpE/sHd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5833F1F000E9;
+	Fri,  7 Aug 2026 08:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786091453;
-	bh=9FQ+3lzdV8n137IFhEDYXLA29I0hoT41o9tKvZqQ7uU=;
+	s=k20260515; t=1786091643;
+	bh=iXwDOCVwuABsSnsc7nuG5npLY75DePuZTBjYJTNdzSs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OhZiPNS3Gwenfpw+De9dkxmw0MBdpkZl0LvM23qUUJf4UXW4xsUG1yLMFotjHyPmE
-	 uKKrJutjj80XJegr4zabifhHCuajtllR+olAuMISzRp2d4ZFtNxwValTu43Tjp3q3q
-	 msgX1yO9XYEYypGoR4bzg33qxUHXnwwVIb5TfLdjnm9rkEa8VviwwujWEoUXSX7SvW
-	 Ox/hCOu5TT1Zv6fvzLwbCqPuIcaulPqXVl0MURismWM6DpN51QG0deTCbpKTJXKBPT
-	 CZvKrzVsvX+iwkRhXB4Z9ZQ+vV/5KZdZWsmETWG2cCb+/BkjpWtfqmQDC6A0v0fWVH
-	 rPi+dF4pImFQw==
+	b=egpE/sHdEx6c0T8pL5cFZNzJEdSjq+6qepeSas+5guwlK+Y8b9DD6aLPXUxAYE1vv
+	 oUq7JwSLoe4I4Sv1aqCN0lg56roU945SFs1Mv784GJQ7gtpk8/EaktIILv+XbwdOfj
+	 E6BdYqJrhSaxkbmjgOUeuUiiJvsjnSumgibCLwexyoDXE45W2LJdZpiwfG6Y9gRbBs
+	 qbYuGmiPv50VVVcUFiPoO/quT8tQzhAnzUcSn+HtpxfKNpkR31J8ZJzV5fjdidZcJu
+	 wtqxZqdqcfDAQiU6enAc82M9/eoSB1Xht7bnI23Wto7LxvkG5tGYKsbOO4KOWHSA3P
+	 /W8KOYT6NyZnQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v9 01/20] RISC-V: perf: fix resource cleanup on driver
- probe failure
+Subject: Re: [PATCH v9 14/20] RISC-V: perf: Implement supervisor counter
+ delegation support
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Atish Patra" <atish.patra@linux.dev>
-Cc: robh@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260807-counter_delegation-v9-1-58658104e487@meta.com>
+Cc: linux-perf-users@vger.kernel.org, robh@kernel.org, devicetree@vger.kernel.org, conor+dt@kernel.org
+In-Reply-To: <20260807-counter_delegation-v9-14-58658104e487@meta.com>
 References: <20260807-counter_delegation-v9-0-58658104e487@meta.com>
- <20260807-counter_delegation-v9-1-58658104e487@meta.com>
+ <20260807-counter_delegation-v9-14-58658104e487@meta.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 07 Aug 2026 08:30:52 +0000
-Message-Id: <20260807083053.3904B1F000E9@smtp.kernel.org>
+Date: Fri, 07 Aug 2026 08:34:02 +0000
+Message-Id: <20260807083403.5833F1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [Critical] Process migration during a probe failure leaves the SBI firmwa=
-re configured to write to a freed memory page (Firmware Use-After-Free).
-- [High] The `sbi_pmu_snapshot_available` static key is not disabled on the=
- probe error path, leading to a potential NULL pointer dereference on subse=
-quent probe attempts.
-- [High] Race condition in the probe error path leads to Use-After-Free of =
-the `pmu` structure.
-- [Medium] Missing cleanup of the registered sysctl table on the probe erro=
-r path.
-- [Low] CPU hotplug state registered in init is not removed if subsequent i=
-nit steps fail.
+- [Critical] Unconditionally setting the HPMEVENT_OF bit causes an unrecove=
+rable interrupt storm for non-sampling events.
+- [High] Bailing out of `rvpmu_deleg_ctr_enable_irq()` when `SIP_LCOFIP` is=
+ set causes newly started counters to falsely trigger spurious overflows.
+- [High] Calling `__ffs()` on a zero mask when all hardware PMU counters ar=
+e in use invokes undefined behavior and silently corrupts active perf event=
+s.
 --
 
---- Patch [1]: [PATCH v9 01/20] RISC-V: perf: fix resource cleanup on drive=
-r probe failure ---
-commit e501d85892f2097d5cb521e3b393610d4683e0a4
-Author: Atish Patra <atishp@meta.com>
+--- Patch [14]: [PATCH v9 14/20] RISC-V: perf: Implement supervisor counter=
+ delegation support ---
+commit c2b448f2df09243c89d8cc4f0c47edd59230b3d1
+Author: Atish Patra <atishp@rivosinc.com>
 
-RISC-V: perf: fix resource cleanup on driver probe failure
+RISC-V: perf: Implement supervisor counter delegation support
 
-This patch fixes various UAF and memory leak issues around
-pmu_sbi_device_probe() error paths. It ensures that registered PMUs,
-per-cpu IRQs, and other data structures are correctly freed on failure.
-
-Link: https://patch.msgid.link/20260701-counter_delegation-v8-1-7909f863a64=
-5@meta.com
+This commit adds runtime detection and support for RISC-V ISA extensions
+(ssccfg, sscsrind, smcntrpmf) to program hpmcounter/hpmevents directly from
+S-mode. It falls back to the SBI PMU extension if the new extensions are
+unavailable or for firmware counters.
 
 > diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-> index dfc886dee5ad0..50220f7b46d9b 100644
+> index 7afd79b0a29b8..fd4bf8804c9a6 100644
 > --- a/drivers/perf/riscv_pmu_sbi.c
 > +++ b/drivers/perf/riscv_pmu_sbi.c
-
 [ ... ]
-
-> @@ -1301,7 +1308,8 @@ static void riscv_pmu_destroy(struct riscv_pmu *pmu)
->  		}
->  	}
->  	riscv_pm_pmu_unregister(pmu);
-> -	cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
-> +	if (!hlist_unhashed(&pmu->node))
-> +		cpuhp_state_remove_instance(CPUHP_AP_PERF_RISCV_STARTING, &pmu->node);
->  }
+> @@ -1038,55 +1187,75 @@ static inline void rvpmu_sbi_stop_hw_ctrs(struct =
+riscv_pmu *pmu)
+[ ... ]
+> +static void rvpmu_deleg_ctr_enable_irq(struct perf_event *event)
+> +{
+> +	unsigned long hpmevent_curr;
+> +	unsigned long of_mask;
+> +	struct hw_perf_event *hwc =3D &event->hw;
+> +	int counter_idx =3D hwc->idx;
+> +	unsigned long sip_val =3D csr_read(CSR_SIP);
+> +
+> +	if (!is_sampling_event(event) || (sip_val & SIP_LCOFIP))
+> +		return;
 
 [Severity: Critical]
-This is a pre-existing issue, but does riscv_pmu_destroy() safely disable t=
-he
-snapshot?
+write_deleg_hpmevent() unconditionally sets the HPMEVENT_OF flag on the
+counter. If this returns early for non-sampling events, the OF flag remains
+set. When the counter is uninhibited, won't the set OF flag immediately ass=
+ert
+an interrupt?
 
-In pmu_sbi_device_probe(), pmu_sbi_snapshot_setup() is called within a
-get_cpu()/put_cpu() block, configuring the SBI firmware for that specific C=
-PU.
+And since rvpmu_ovf_handler() skips non-sampling events:
 
-However, if probe fails and riscv_pmu_destroy() is called,
-pmu_sbi_snapshot_disable() is executed without CPU pinning.
+	/* Skip if invalid event or user did not request a sampling */
+	if (!event || !is_sampling_event(event))
+		continue;
 
-Could the thread migrate to a different CPU before disabling the snapshot,
-leaving the original CPU's firmware configured to write to the snapshot
-memory which is then freed by pmu_sbi_snapshot_free()?
-
-[ ... ]
-
-> @@ -1469,11 +1479,11 @@ static int pmu_sbi_device_probe(struct platform_d=
-evice *pdev)
-> =20
->  	ret =3D riscv_pm_pmu_register(pmu);
->  	if (ret)
-> -		goto out_unregister;
-> +		goto out_destroy;
-> =20
->  	ret =3D perf_pmu_register(&pmu->pmu, "cpu", PERF_TYPE_RAW);
->  	if (ret)
-> -		goto out_unregister;
-> +		goto out_destroy;
+Will this result in an unrecoverable interrupt storm that hangs the CPU?
 
 [Severity: High]
-This is a pre-existing issue, but does this expose the PMU to userspace bef=
-ore
-fallible setups are complete?
-
-Since perf_pmu_register() makes the PMU accessible, if userspace opens a pe=
-rf
-event before a subsequent initialization step fails (such as allocating
-snapshot memory), the driver jumps to out_unregister and eventually calls
-kfree(pmu).
-
-Will this leave the perf core holding a pointer to a freed pmu structure?
+If SIP_LCOFIP is set from another counter's pending overflow, returning ear=
+ly
+here means this new counter starts with its OF bit still set. When local
+interrupts are re-enabled, won't the overflow handler falsely detect this n=
+ew
+counter as having instantly overflowed, corrupting the event state?
 
 [ ... ]
-
-> @@ -1514,9 +1524,20 @@ static int pmu_sbi_device_probe(struct platform_de=
-vice *pdev)
->  	return 0;
-> =20
->  out_unregister:
-> +	perf_pmu_unregister(&pmu->pmu);
+> @@ -1232,22 +1448,194 @@ static irqreturn_t rvpmu_ovf_handler(int irq, vo=
+id *dev)
+[ ... ]
+> +static int get_deleg_next_hpm_hw_idx(struct cpu_hw_events *cpuc, struct =
+perf_event *event)
+> +{
+> +	unsigned long hw_ctr_mask =3D 0;
 > +
-> +out_destroy:
-
-[Severity: Medium]
-This is a pre-existing issue, but is the sysctl table leaked on this error
-path?
-
-Before the return 0, pmu_sbi_device_probe() calls:
-
-    register_sysctl("kernel", sbi_pmu_sysctl_table);
-
-If the subsequent cpuhp_state_add_instance() call fails, the error path ski=
-ps
-unregistering this sysctl table. Will repeated probe failures leak
-ctl_table_header structures?
-
->  	riscv_pmu_destroy(pmu);
+> +	/*
+> +	 * TODO: Treat every hpmcounter can monitor every event for now.
+> +	 * The event to counter mapping should come from the json file.
+> +	 * The mapping should also tell if sampling is supported or not.
+> +	 */
+> +
+> +	/* Select only hpmcounters */
+> +	hw_ctr_mask =3D cmask & (~0x7);
+> +	hw_ctr_mask &=3D ~(cpuc->used_hw_ctrs[0]);
+> +	return __ffs(hw_ctr_mask);
+> +}
 
 [Severity: High]
-This is a pre-existing issue, but does the error path fail to disable the
-sbi_pmu_snapshot_available static key?
+If all eligible PMU counters are currently active, hw_ctr_mask will be 0.
+Calling __ffs(0) invokes undefined behavior, which on RV32 without the Zbb
+extension evaluates to 31.
 
-If the probe fails after static_branch_enable(&sbi_pmu_snapshot_available),
-the error path frees the snapshot memory in riscv_pmu_destroy() but never
-disables the static key.
+Then in rvpmu_deleg_ctr_get_idx():
 
-On a subsequent probe attempt or an interrupt, could code paths like
-pmu_sbi_ovf_handler() execute assuming the snapshot memory is active, leadi=
-ng
-to a NULL pointer dereference when accessing sdata->ctr_overflow_mask?
+	idx =3D get_deleg_next_hpm_hw_idx(cpuc, event);
+	if (idx < 3 || idx > hw_ctr_max_id)
+		goto out_err;
+found_idx:
+	priv_filter =3D get_deleg_priv_filter_bits(event);
+	write_deleg_hpmevent(idx, hwc->config, priv_filter);
+skip_update:
+	if (!test_and_set_bit(idx, cpuc->used_hw_ctrs))
+		return idx;
 
-> +	if (irq_requested) {
-> +		free_percpu_irq(riscv_pmu_irq, pmu->hw_events);
-> +		irq_dispose_mapping(riscv_pmu_irq);
-> +		riscv_pmu_irq =3D 0;
-> +	}
-> =20
->  out_free:
-> +	free_percpu(pmu->hw_events);
-> +	kfree(pmu_ctr_list);
-> +	pmu_ctr_list =3D NULL;
->  	kfree(pmu);
->  	return ret;
->  }
+Won't this overwrite the configuration of the active counter (e.g. index 31)
+in write_deleg_hpmevent() before verifying its availability with
+test_and_set_bit(), silently corrupting the active counter's
+configuration?
 
-[Severity: Low]
-This is a pre-existing issue, but is there a CPU hotplug state leak in
-pmu_sbi_devinit() if platform registration fails?
-
-pmu_sbi_devinit() registers a multi-state CPU hotplug hook:
-
-    ret =3D cpuhp_setup_state_multi(CPUHP_AP_PERF_RISCV_STARTING, ...);
-
-If platform_driver_register() or platform_device_register_simple() fails
-afterward, the function returns directly without calling
-cpuhp_remove_multi_state(), leaving the hotplug state registered.
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260807-counter_de=
-legation-v9-0-58658104e487@meta.com?part=3D1
+legation-v9-0-58658104e487@meta.com?part=3D14
