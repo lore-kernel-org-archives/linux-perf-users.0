@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD1AD3A5436
-	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 14:45:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B408C381E97
+	for <linux-perf-users@vger.kernel.org>; Fri,  7 Aug 2026 14:51:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786113949; cv=none; b=PsByb/na1MKO2R532ORnAXwFp4uRYkpVW4G2J+D3bI1ki1AwXBA+JkiNM4azlSFacYQMYbcJIn2H4e0yz0+gQJgBKBKcyERzgG0Sl2PVFgtIh6HXhj7NrRCwhCSPbjfD7sdVQb3hauhJHoum54QK6IfZRpxbQEJ+R9g1A7I9+t8=
+	t=1786114289; cv=none; b=o68vm+8O3WIKmXNWJ1Vx3Po1m9wZELDfVZHH9bS4g7yuNq0InQqzB/2H6BsEUSNgrF0Q905mv8T5/R9LieFDwLFupUDSNs+DNV2HQGaGv0LYYupqGiVRuOtkCRxe7iZvSubi02uOBvfO0WK0+Ukwq/fWZcylALkKgu+JV4xb0dQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786113949; c=relaxed/simple;
-	bh=J9UN2ZB9cKNJZZYIKWLt53J/gJkZW8x4yHEgh617+8Q=;
+	s=arc-20240116; t=1786114289; c=relaxed/simple;
+	bh=L9GqZ3acUD40Isbxd/gO0HLXyUmkH9NPu0ktGz8t8Tw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=udsAs1Pho1SnYzANaD+7GoqNbG0+NK7kdZrUMAJlRyN/SQN8UyD1ykAs/8XVhurXHQJuArK3u+493CylXRRr0+7X+khn7qYShmR7q/xwBBi3YCrpWhZrdopMgdwA7/Ehzxtkmt9K4JGP0IWRdueotdku2SCZdHwyDHJNmP2d39A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O0EiHpzR; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=bfnPI1a6mRTtyBDSWHG+SOEl/39fsBUTiS2VtWx46QktK8IZTZCX3uT7O2ZZ5ftyhripX5Pin2A2yVWsXBFu7nFYp05slaxB0xbMcm93RaAY012nd5HQx94nQDA4YqcylCQSND6cmfj3GYFsfHR0e/FD1pTm40myQeXNn3+VTfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BPz+CfLH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O0EiHpzR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F20B1F00A3D;
-	Fri,  7 Aug 2026 14:45:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BPz+CfLH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57FAC1F00A3D;
+	Fri,  7 Aug 2026 14:51:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786113947;
-	bh=DVzXpJ3wKLF2SH3NQSsjuyeYvvCN9WG9qxCFAHDAAOM=;
+	s=k20260515; t=1786114286;
+	bh=jCj8Vy7v4V3tb3RWVxFYIDRwWP331yikffPGKLlWtko=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=O0EiHpzRujWYSmUrQTVMkY3P1Zkc/fJFYARsnDQm/CxluVt5/Wra5vEt46DD81A/v
-	 5ili7zS5NVidGWAnP3qArRx/nrUNNzkn6RTItNacB9hvYHJelzZ9csXRitnzmW25UY
-	 CY4/uxJXAdgrMStED68vwl4bz2Skmn/MHYBPxHWMp+kWU9NYar2yhId/IqqGV8T+pA
-	 ebKql1SQsoI+ZTjlVe7NN7mNy4lCBe/+9Turfulq8jU3Eyt0C5t3/nID0Md6/fI82U
-	 suZwmBxb+8Xk5FnzCC31Ff7Gy8DYxcflDfVUdVZTjsY9rg0oeR490d1UEWU0+N7cwn
-	 OauqFUpujJoaw==
+	b=BPz+CfLHbU14cCpw2IKFJ1Wi93L1RMTQ+LOiKoxi6R8jLaDis9XUIlroT5mAVzG1G
+	 q4cJNvj44046ESHfNkMw0yTWZIIviwP6O2kvnqw3gf7vfBlrSqAAYAz+J5XK5bKNRY
+	 g5rDc0qKcA8q3w0/U8flw09YysvDY545ydSjMDQuheMBj2aHjSUaFe9/Dld+sW4MgX
+	 A/DeX+VISmEeqBzCPXVfTdj7NxLMahQWFlBfJziVr6VpME7darOnGBmZTGP3dmOjHW
+	 /0X+5846ut5ge4Q+Ld2UyYE5AAEwJTn1qrewgFrn3iA+kAgCs74Bd6MJ71SZnO3Zba
+	 IBMswf8TzMIHQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH V5 6/6] powerpc/perf/htm: Add documentation for Hardware
- Trace Macro PMU
+Subject: Re: [PATCH V5 4/6] powerpc/perf: Capture the HTM memory
+ configuration as part of perf data
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Athira Rajeev" <atrajeev@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260807143734.1224-7-atrajeev@linux.ibm.com>
+In-Reply-To: <20260807143734.1224-5-atrajeev@linux.ibm.com>
 References: <20260807143734.1224-1-atrajeev@linux.ibm.com>
- <20260807143734.1224-7-atrajeev@linux.ibm.com>
+ <20260807143734.1224-5-atrajeev@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 07 Aug 2026 14:45:46 +0000
-Message-Id: <20260807144547.3F20B1F00A3D@smtp.kernel.org>
+Date: Fri, 07 Aug 2026 14:51:25 +0000
+Message-Id: <20260807145126.57FAC1F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,76 +47,103 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Low] Malformed ReST inline markup for output filenames will cause Sphinx=
- warnings.
-- [Low] Inconsistent naming of the trace decoding tool ('htmdecode' vs 'htm=
-decoder').
+- [Critical] The fallback logic for draining memory configuration records u=
+ses an uninitialized stack variable `handle` when `perf_aux_output_begin()`=
+ fails, leading to a wild pointer dereference and a kernel crash.
+- [High] The `HTM_MEM_BUF_SIZE` calculation assumes a worst-case fixed over=
+head of 92 bytes, failing to account for dynamic sample sizes when `PERF_SA=
+MPLE_READ` is combined with `PERF_FORMAT_GROUP`. This allows the sample siz=
+e to exceed 65535, overflowing `perf_event_header.size` and corrupting the =
+ring buffer.
 --
 
---- Patch [6]: [PATCH V5 6/6] powerpc/perf/htm: Add documentation for Hardw=
-are Trace Macro PMU ---
-commit f01dd0b2a68c8e69f2fcef07fa210282e973c5a5
+--- Patch [4]: [PATCH V5 4/6] powerpc/perf: Capture the HTM memory configur=
+ation as part of perf data ---
+commit 46bf60d42ede8a36ee43812e6bfd3aeda1d041a9
 Author: Athira Rajeev <atrajeev@linux.ibm.com>
 
-powerpc/perf/htm: Add documentation for Hardware Trace Macro PMU
+powerpc/perf: Capture the HTM memory configuration as part of perf data
 
-This commit extends Documentation/arch/powerpc/htm.rst with a new
-section detailing the HTM perf PMU interface. It covers how to open
-HTM events, explains the required AUX buffer size, details the output
-files produced by perf report, and describes how to decode the traces.
+This commit captures the HTM system memory configuration during AUX trace
+dumps and emits it as raw perf sample data. It adds a staging buffer for
+the hypervisor call and handles drain iteration alongside the AUX data path.
 
-> diff --git a/Documentation/arch/powerpc/htm.rst b/Documentation/arch/powe=
-rpc/htm.rst
-> index fcb4eb6306b16..42ad9924a7f6a 100644
-> --- a/Documentation/arch/powerpc/htm.rst
-> +++ b/Documentation/arch/powerpc/htm.rst
+> diff --git a/arch/powerpc/perf/htm-perf.c b/arch/powerpc/perf/htm-perf.c
+> index 90d26a721616b..7e8ae35269852 100644
+> --- a/arch/powerpc/perf/htm-perf.c
+> +++ b/arch/powerpc/perf/htm-perf.c
+
 [ ... ]
-> @@ -94,7 +95,158 @@ This trace file will contain the relevant instruction=
- traces
->  collected during the workload execution. And can be used as
->  input file for trace decoders to understand data.
-> =20
-> -Benefits of using HTM debugfs interface
-> +HTM perf interface usage
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+> @@ -203,6 +206,168 @@ static ssize_t htm_return_check(int rc)
+
 [ ... ]
-> +Output Files
-> +------------
-> +
-> +``perf record`` produces ``perf.data``.  Running ``perf report`` on that
-> +file invokes the HTM auxtrace handler, which writes the output files:
-> +
-> +- **htm.bin.nX.pX.cX**.tX** : raw bus-trace AUX data for node X, chip X,=
- core X
-> +- **translation.nX.pX.cX**.tX** : memory-configuration records for the s=
-ame target
 
-[Severity: Low]
-Can this formatting cause Sphinx to emit warnings? It looks like there is an
-extra set of bold markup asterisks trailing the first part of the filenames
-that leaves the inline markup unbalanced.
+> + * 65440 =3D 32 + 2043 * 32 is the largest multiple of 32 satisfying all
+> + * constraints:
+> + *   - total record: 65440 + 92 =3D 65532 < 65535 (3-byte u16 margin)
+> + *
+> + * HTM_MEM_MAX_ENTRIES is derived from HTM_MEM_BUF_SIZE =E2=80=94 not th=
+e other
+> + * way around =E2=80=94 so the hcall is always given the true buffer siz=
+e and
+> + * the WARN_ON_ONCE(to_copy > HTM_MEM_BUF_SIZE) guard is a genuine
+> + * impossibility check rather than a post-overflow assertion.
+> + */
+> +#define HTM_MEM_BUF_SIZE	65440U
+> +#define HTM_MEM_MAX_ENTRIES	((HTM_MEM_BUF_SIZE - 32) / 32)	/* 2043 */
+
+[Severity: High]
+Does this buffer size properly account for dynamic sample sizes when=20
+PERF_SAMPLE_READ is combined with PERF_FORMAT_GROUP?
+
+If a large group of siblings is configured, the read format payload can
+scale up significantly. When htm_collect_memory_config() emits a memory
+configuration sample, could the computed size (65440 bytes plus the read
+format overhead) exceed 65535?
+
+If it exceeds 65535, wouldn't this overflow the u16 perf_event_header.size,
+causing perf_output_begin() to reserve much less space than
+perf_output_sample() actually writes, resulting in ring buffer corruption?
+
+[ ... ]
+
+> @@ -594,10 +759,25 @@ static ssize_t htm_dump_sample_data(struct perf_eve=
+nt *event)
+>  	 * NMI reentrancy from corrupting an outer transaction's handle.
+>  	 */
+>  	aux_buf =3D perf_aux_output_begin(&handle, event);
+> -	if (!aux_buf)
+> +	if (!aux_buf) {
+> +		/*
+> +		 * AUX ring buffer is full: perf_aux_output_begin() returned NULL.
+> +		 * If the AUX trace dump is already complete but memory
+> +		 * configuration collection is still in progress, we must not
+> +		 * return 0 here =E2=80=94 that would signal EOF to htm_event_read() a=
+nd
+> +		 * permanently abandon the mem config drain.  Memory config
+> +		 * records go to the main ring buffer via perf_event_overflow(),
+> +		 * which is entirely independent of the AUX ring.  Retrieve the
+> +		 * aux_buf from the ring's aux_private and call directly.
+> +		 */
+> +		struct htm_pmu_buf *fb =3D perf_get_aux(&handle);
+
+[Severity: Critical]
+If perf_aux_output_begin() returns NULL (for instance, if the user didn't
+mmap an AUX buffer), does this leave the stack variable handle
+uninitialized?
+
+If handle is uninitialized, wouldn't perf_get_aux(&handle) dereference
+uninitialized stack memory when it reads handle.event and
+handle.rb->aux_priv?
 
 > +
-> +.. code-block:: sh
-> +
-> +   # perf report
-> +   # ls htm.bin.* translation.*
-> +   htm.bin.n0.p2.c0.t1  translation.n0.p2.c0.t1
-> +
-> +Note: ``perf report -D`` prints AUX buffer sizes but does not produce
-> +the output files.  Use plain ``perf report`` to extract trace data.
-> +
-> +Decoding Output Files
-> +---------------------
-> +
-> +Pass the generated files to htmdecode for trace decoding::
-> +
-> +   htmdecoder <decode_options> htm.bin.n0.p2.c0.t1
-
-[Severity: Low]
-Is the decoding tool named htmdecode or htmdecoder? The descriptive text
-refers to htmdecode, but the code block uses htmdecoder.
+> +		if (fb && !fb->collect_htm_trace && fb->collect_htm_mem)
+> +			return htm_collect_memory_config(event, fb);
+>  		return 0;
+> +	}
+>
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260807143734.1224=
--1-atrajeev@linux.ibm.com?part=3D6
+-1-atrajeev@linux.ibm.com?part=3D4
