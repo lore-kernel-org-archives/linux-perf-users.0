@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957E23EDAC1
-	for <linux-perf-users@vger.kernel.org>; Sat,  8 Aug 2026 13:11:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F67233933
+	for <linux-perf-users@vger.kernel.org>; Sat,  8 Aug 2026 13:11:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786194669; cv=none; b=mlBKeM7mQi1XPqRO0Xe9VmSio/HomrTBctDpk6Vb6/Bz49coR93eXRtRzUxbgm1rU3qroOwXPlXgiQ1KqNdtKSIl5MN9W1Lh18WJyrKH5tmZdeX2qBWpFEY1adzJa9f532DgGvxv7Zc2eDre8qjAKlYDXljSYaKQskhzNd2nURk=
+	t=1786194680; cv=none; b=SBrTgIuTNqVNq7A6EW6E2UL/AvKG+Zs70XgqaBtTe0ImIN73OVXZpgqYRe/COD+rXLgRV5zoNR8qSEdSBFQ9w3RhrEdcwem2UGw7rAjDF/vp8VI4P1UCnVmtfK95EtZ0jDbWUxpVX1o2Al7zW9R5IvfJR5b7cU/oyltHz9fstB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786194669; c=relaxed/simple;
-	bh=S1V4W8UCbFdFUvFEMW9C7hxp3Od6giamRQe2LJ8eXss=;
+	s=arc-20240116; t=1786194680; c=relaxed/simple;
+	bh=H6Ya61lFuwoCN+q12Ka/UYSK9wX0ThM56doMi2E++S0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hX6UtFcGnrDKGmEuCK+S0Pnq1f1rqYlmggpN0UDfyTXH/vg346aMdYi7t3gyZs9rS9cB1MwdI8yeshPL5rEESgr76YRGe9/W6a+WZANtPxXTDrDwHwArHL0kTAD60wq9FfLkBIa7B1SD/DMZxIDk1bUqiOrBPKnLAwKgAEnF7n4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hmua7rmD; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=btNDkn0rShmUuOdbFRQjLKdDjVEKQnuXP1PmriD6oI6/HHNR3D6pUetkQ2YNLiU+C8Gni/MnbYM+vbVLczk0tHk22kCW38WIh1vmcgGbP12nOmLXM6Sp6UWlw4n4hN0T6n6M1bQVfkVjGQ27YLulUvUG6Fg97Kh1m1Ji9sKnYSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzbOhtCW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hmua7rmD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 778F91F000E9;
-	Sat,  8 Aug 2026 13:11:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzbOhtCW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BE021F000E9;
+	Sat,  8 Aug 2026 13:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786194665;
-	bh=MnkUsCm5xXB91h868L+wryJ+BG8n2RkTWPpj7WfQKfE=;
+	s=k20260515; t=1786194676;
+	bh=oGyVwMQutRNLMX3wByR5h8b9x5vf0h+xLR6usGko2x8=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Hmua7rmDwAo+ieKqQ2u6PChyM8U1C3At2kq/HZUcsp1475q43mZ/BxVu9i5earYGY
-	 NPxuLx3bcIFXTBaJ9x+IEDVu21Wb3LYsqb886o7MdAYq//7LFPdNuI8H40YnRvCoG8
-	 PJTynsReR82T3ZbmymnF0TF2oeZ3AEHEK2Vz2JX7rnJMtr5U4K/wOw19j5ud1lr1gp
-	 C8idBwlvfMbLMh2tF7wZkN9gvzlWgZ//Yd3prDpdAbX1s8L5Jav/S9bgfs8CTCnBK/
-	 So2yPdpublp5ApnruoWldhtbdR64OXe5Vw0rxkGhqIpWE4/tofSofZkNTKYt1D2MRY
-	 evGjlXJM8iuZQ==
+	b=KzbOhtCWPWPXC/BpZCtx/de43R3+NpLY+7AVHrYDcd+nQEI9OvuATVprdJCFGJ5Ka
+	 bdk4z97DN4fnot4UKDEK9q53bgM3MWmslNDQmcTW94o2emSxrkDIva134Tr5y9Prrj
+	 ZEsxs0MYTRK/3m0T20cd4j2xfnmyY7ikt2uPcVCGyr/4IKAkW9WyR6/J1ux28jIqJM
+	 e/ji3mJDmMfjQhB4G0Lh2nnXJkdPtXPWWagKaouRNoVtHuVA5ajJikOCXGotHEYARM
+	 MWET3suG06U/J7WJouKMvkbJna1u5mBFoFaYvZ6WIgrgR9p64ybPnr0TYFEUuiG3gM
+	 KZKOo1Y+oBdiA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 15/23] perf annotate-arm64: Support store instruction
- tracking
+Subject: Re: [PATCH v4 07/23] perf annotate: Introduce extract_op_location
+ callback for arch-specific parsing
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260808122400.2961238-16-wutengda@huaweicloud.com>
+In-Reply-To: <20260808122400.2961238-8-wutengda@huaweicloud.com>
 References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-16-wutengda@huaweicloud.com>
+ <20260808122400.2961238-8-wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 08 Aug 2026 13:11:04 +0000
-Message-Id: <20260808131105.778F91F000E9@smtp.kernel.org>
+Date: Sat, 08 Aug 2026 13:11:15 +0000
+Message-Id: <20260808131116.3BE021F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,71 +47,98 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] For post-index addressing modes using a register offset (e.g., `=
-ldr x0, [x1], x2` or `str x1, [x0], x2`), the base register's type state is=
- incorrectly preserved instead of being invalidated.
+- [Medium] Propagating errors from extract_reg_offset aborts instruction st=
+ate processing, breaking register invalidation, and uses a flawed condition.
 --
 
---- Patch [15]: [PATCH v4 15/23] perf annotate-arm64: Support store instruc=
-tion tracking ---
-commit 5069bd6d8cc957f98ba504ae076e8ee35699d61a
+--- Patch [7]: [PATCH v4 07/23] perf annotate: Introduce extract_op_locatio=
+n callback for arch-specific parsing ---
+commit ea4cc06c47d3d877b7277db8368241769c5b60d3
 Author: Tengda Wu <wutengda@huaweicloud.com>
 
-perf annotate-arm64: Support store instruction tracking
+perf annotate: Introduce extract_op_location callback for arch-specific par=
+sing
 
-This commit extends the arm64 update_insn_state() function to handle
-store (STR) instructions. It ignores the transfer itself since it won't
-change the type, but calls adjust_reg_index_state() to handle addressing
-modes for the destination register.
+Assembly syntax for operands varies significantly across different
+architectures, which prevents the operand location (op_loc) parsing
+logic in annotate_get_insn_location() from being directly reused.
 
-> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/=
-util/annotate-arch/annotate-arm64.c
-> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
-> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+To simplify the core logic and improve maintainability, move the
+operand parsing inside the for_each_insn_op_loc loop into arch-specific
+extract_op_location callbacks.
 
-[ ... ]
-
-> @@ -575,6 +575,17 @@ static void update_insn_state_arm64(struct type_stat=
-e *state,
->  	/* Memory to register transfers */
->  	if (!strncmp(dl->ins.name, "ld", 2))
->  		update_load_insn_state(state, dl, src, dst);
-> +	/* Register to memory transfers */
-> +	else if (!strncmp(dl->ins.name, "st", 2)) {
-> +		/*
-> +		 * Ignore transfers since it'd set a value in a struct
-> +		 * and won't change the type.
-> +		 *
-> +		 * Needs to update the pre-index and post-index addressing
-> +		 * modes for the destination register.
-> +		 */
-> +		adjust_reg_index_state(state, dst, "str", insn_offset);
+> This refactoring is primarily a cleanup,
+> but includes a minor x86-specific change: errors from extract_reg_offset()
+> are now propagated, so unrecognized operands are correctly rejected
+> instead of being silently ignored, , and testing confirms no functional
+> regression from this change.
 
 [Severity: Medium]
-When using post-index addressing modes with a register offset (e.g.,=20
-"str x1, [x0], x2"), does adjust_reg_index_state() correctly invalidate=20
-the base register's state?
+Are we certain this change does not introduce functional regressions?
 
-Looking at adjust_reg_index_state() in the same file, when op_loc->multi_re=
-gs=20
-is true (indicating a dynamic register offset), op_loc->offset is 0:
+Propagating errors out of extract_reg_offset() appears to break type state
+tracking for absolute memory references.
 
-tools/perf/util/annotate-arch/annotate-arm64.c:adjust_reg_index_state() {
+> diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/ut=
+il/annotate-arch/annotate-x86.c
+> index 7e61365363938..6044a68966f14 100644
+> --- a/tools/perf/util/annotate-arch/annotate-x86.c
+> +++ b/tools/perf/util/annotate-arch/annotate-x86.c
+[ ... ]
+> @@ -809,6 +811,85 @@ static void update_insn_state_x86(struct type_state =
+*state,
+[ ... ]
+> +static int extract_reg_offset(const struct arch *arch, const char *str,
+> +			      struct annotated_op_loc *op_loc)
+> +{
+[ ... ]
+> +	op_loc->reg1 =3D arch__dwarf_regnum(arch, p);
+> +	if (op_loc->reg1 =3D=3D -1)
+> +		return -1;
+
+[Severity: Medium]
+Will this error check correctly identify unrecognized registers?
+
+If an instruction contains an unrecognized register like '%zmm0',
+arch__dwarf_regnum() returns -2 (-ENOENT). The check for -1 will miss
+unrecognized registers, but it will trigger for absolute memory references
+like 'mov (0x1234), %rax' which lack a '%' character entirely.
+
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index 9d8b4d6b859b8..20be609ebed24 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+[ ... ]
+> @@ -2572,6 +2527,7 @@ int annotate_get_insn_location(const struct arch *a=
+rch, struct disasm_line *dl,
+[ ... ]
+> +		if (arch->extract_op_location) {
+> +			ret =3D arch->extract_op_location(arch, dl, insn_str, i, op_loc);
+> +			if (ret)
+> +				return ret;
+>  		}
+>  	}
+
+[Severity: Medium]
+Does propagating this failure cause issues in update_insn_state_x86()?
+
+When absolute memory references return -1 and trigger this early return,
+annotate_get_insn_location() will fail.
+
+If update_insn_state_x86() bails out early because of this failure:
+
+tools/perf/util/annotate-arch/annotate-x86.c:update_insn_state_x86() {
     ...
-	tsr->offset =3D op_loc->offset + tsr->offset;
+	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
+		return;
     ...
 }
 
-Since op_loc->offset is 0 in this case, this seems to retain the old static
-offset instead of clearing the state via invalidate_reg_state().
-
-Can this cause incorrect struct field attribution in the perf annotate=20
---data-type output for subsequent accesses using the modified base register?
-
-> +	}
->  }
->  #endif
+Won't this bypass the fallback logic that invalidates the destination regis=
+ter?
+This could cause the analyzer to incorrectly assume the destination register
+retains its previous type state, when it actually contains unknown data.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260808122400.2961=
-238-1-wutengda@huaweicloud.com?part=3D15
+238-1-wutengda@huaweicloud.com?part=3D7
