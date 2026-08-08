@@ -1,28 +1,28 @@
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99790412BE7;
-	Sat,  8 Aug 2026 12:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46031412C11;
+	Sat,  8 Aug 2026 12:44:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786193077; cv=none; b=aYKVIc0VXP5SpLWoak6lBEW4Kntm+lnJYjEdEYhRZzwwi8MvvFBUtvNLWA36iuFirQC+Aisu7/gz+F0vGx4ed1Fnv7RKfDv7jL+C4PA+qjtYFidcRGGncFUEBCvFArAW3mdPK4GNND3tTIKr4SB/FE7EdkrBi6OnhJLSGZMIHHw=
+	t=1786193080; cv=none; b=XUrI0+rTZG+m6qub16WQIxOJb19gCbwTB53Wg6+lKg1fvukqrpfNMDpl0ElNCvUWcBQ2ZkLk9PVX7d0lX7+MPLd1qKp9CNwWRIQxwP3PU1fxhEyRO06fsfmXthu9JWDh9W8VPnwivXeUkTGnYPSo1t/oBeMN52/YoKCidL+tKZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786193077; c=relaxed/simple;
-	bh=UPiUQgX3q0791H0AcDHImRuVLupx4M60p6QkrChycjk=;
+	s=arc-20240116; t=1786193080; c=relaxed/simple;
+	bh=uTqKpFd5ac5nw5tkzre5QVhienCAJgAdr+wqaZdg/8I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LRUt3i/EYH/pdPX48nQBdqfavVmd33MPhCpSZsnYg2AxtsBXUrs3uIWP+9G5LSxzA1aGtt911gGZ3Po0CrDxpU6bgNEDJz0KT77u+8bCsciAsx613UosJFiSE5H2Zrq5+LIcdNX8V446OwUEEdLk7+LLv4rS5PmoTkoUVJIwhEI=
+	 MIME-Version; b=UZoDA3XFC97+xTz2kM/5moxNunTMNmqFCwujhrBAL/kkV+oEmBoyIo0hrSlq7cNkaNMJfqysl5FiBhLY81Ky6Htt+0XVHk4M0LyiKYP8uTl7MnoOc8TkRzw9aVKiRGDV8M02/+2MFWPEaScii3usd9GYZF7D6h2Iz+DIQ/OTe60=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hHKvC1qkpzKHNFH;
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hHKvC1LrJzKHND9;
 	Sat,  8 Aug 2026 20:24:07 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 59BC44096E;
+	by mail.maildlp.com (Postfix) with ESMTP id 474EE4057D;
 	Sat,  8 Aug 2026 20:24:18 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgB34YjkH3dqbrhMBg--.41805S12;
-	Sat, 08 Aug 2026 20:24:18 +0800 (CST)
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgB34YjkH3dqbrhMBg--.41805S11;
+	Sat, 08 Aug 2026 20:24:17 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Namhyung Kim <namhyung@kernel.org>,
 	james.clark@linaro.org,
@@ -44,9 +44,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v4 10/23] perf arm-spe: Set default synthesized event period to 1
-Date: Sat,  8 Aug 2026 12:23:47 +0000
-Message-Id: <20260808122400.2961238-11-wutengda@huaweicloud.com>
+Subject: [PATCH v4 09/23] perf annotate: Deduplicate overlapping ARM SPE events for data type profiling
+Date: Sat,  8 Aug 2026 12:23:46 +0000
+Message-Id: <20260808122400.2961238-10-wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260808122400.2961238-1-wutengda@huaweicloud.com>
 References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
@@ -57,10 +57,10 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgB34YjkH3dqbrhMBg--.41805S12
-X-Coremail-Antispam: 1UD129KBjvJXoWxXFy7CFyxXFWkWw1kJryftFb_yoW5uw43pr
-	nFgFyfJr4kJry8KwnrAr4UuFy3twsYvF1fGryxGrWUAw1UKry8tr17try5Cr4UWr1Fyr17
-	XFyqgr1UGr1Utr7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:Syh0CgB34YjkH3dqbrhMBg--.41805S11
+X-Coremail-Antispam: 1UD129KBjvJXoWxGr4fWrWxGr4xtFW5Aw47Jwb_yoWrtrW3pr
+	sI9w15KwnYqr4rKrn3ZF4UXryS93yfXFZ8GwnFya15A3y3ur95tFyxtr15tFZxXwn8Z34a
+	vws0ga98G34rZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUHFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
@@ -72,98 +72,127 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxXFy7CFyxXFWkWw1kJryftFb_yoW5uw43pr
 	CY1x02628vn2kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCY1x0264kExVAvwVAq07x20xyl
 	42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJV
 	WUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAK
-	I48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJV
-	WxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF
+	I48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJV
+	WxJr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF
 	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjTRQYFCDUUUU
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-When using --itrace=M for data type profiling on arm64, the 'Percent'
-values in perf annotate output are all zero:
+When data type profiling is enabled on ARM SPE, multiple overlapping
+events (e.g., l1d-miss, tlb-access) are synthesized for a single sampled
+instruction, as shown below:
 
-Annotate type: 'struct mmu_gather_batch' in [kernel.kallsyms] (15 samples):
-============================================================================
- Percent     offset       size  field
-    0.00          0       0x10  struct mmu_gather_batch  {
-    0.00          0        0x8      struct mmu_gather_batch*    next;
-    0.00        0x8        0x4      unsigned int        nr;
-    0.00        0xc        0x4      unsigned int        max;
-    0.00       0x10          0      struct encoded_page*[]      encoded_pages;
-                                };
+  Available samples
+  0 arm_spe_0/ts_enable=1,pa_enable=1,load_filter=1,store_filter=1,min_latency=30/
+  0 dummy:u
+  84K l1d-miss
+  95K l1d-access
+  77K llc-miss
+  58K llc-access
+  9K tlb-miss
+  108K tlb-access
+  0 branch
+  13K remote-access
+  108K memory
+  108K instructions
 
-However, adding the -n option (show-nr-samples) reveals non-zero sample counts:
+While 'perf report' provides an interactive menu for users to select a
+specific event to prevent duplicate counting, 'perf annotate' lacks such
+a mechanism. Consequently, it counts all instructions across these
+overlapping events, which inflates the profile and distorts the data
+type statistics.
 
-Annotate type: 'struct mmu_gather_batch' in [kernel.kallsyms] (15 samples):
-============================================================================
- Samples     offset       size  field
-      15          0       0x10  struct mmu_gather_batch  {
-      13          0        0x8      struct mmu_gather_batch*    next;
-       2        0x8        0x4      unsigned int        nr;
-       0        0xc        0x4      unsigned int        max;
-       0       0x10          0      struct encoded_page*[]      encoded_pages;
-                                };
+Although using the '--itrace' option can work around this issue (e.g.:
+perf annotate --data-type --stdio --itrace=i1i), it is inconvenient for
+users to specify this explicitly every time.
 
-The root cause is that when --itrace is used with non-i/y options
-(e.g., --itrace=M), the period remains zero after parsing. During
-subsequent propagation, the final percentage calculation results
-in zero:
-
-   arm_spe_prep_sample()
-      sample->period = spe->synth_opts.period;
-
-   __hists__add_entry()
-      he.stat.period = sample->period;
-
-   annotated_data_type__update_samples()
-      h->period += period;
-      h->addr[offset].period += period;
-
-   print_annotated_data_value()
-      double percent = h->period ? (100.0 * period / h->period) : 0;
-
-Fix this by defaulting the period to 1 in the ARM SPE auxtrace info
-processing path if it is not explicitly specified. This ensures that
-downstream tool components can correctly accumulate periods and compute
-event percentages for all synthesized SPE events.
-
-With this fix applied, the result is as follows:
-
-Annotate type: 'struct mmu_gather_batch' in [kernel.kallsyms] (15 samples):
-============================================================================
- Percent     offset       size  field
-  100.00          0       0x10  struct mmu_gather_batch  {
-   86.67          0        0x8      struct mmu_gather_batch*    next;
-   13.33        0x8        0x4      unsigned int        nr;
-    0.00        0xc        0x4      unsigned int        max;
-    0.00       0x10          0      struct encoded_page*[]      encoded_pages;
-                                };
+To address this, introduce itrace_synth_opts.dont_overlap. Set this to true
+when data type profiling is enabled and the user has not explicitly
+specified an itrace option. Then, during arm_spe_process_auxtrace_info(),
+adjust the synthesized event options based on the dont_overlap value to
+only enable instruction event synthesis, thereby achieving automatic
+deduplication.
 
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- tools/perf/util/arm-spe.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ tools/perf/builtin-annotate.c |  8 ++++++++
+ tools/perf/util/arm-spe.c     | 17 +++++++++++++++++
+ tools/perf/util/auxtrace.h    |  2 ++
+ 3 files changed, 27 insertions(+)
 
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index 69cb72b2082a..616f54bf4868 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -873,6 +873,14 @@ int cmd_annotate(int argc, const char **argv)
+ 	annotate.session = perf_session__new(&data, &annotate.tool);
+ 	if (IS_ERR(annotate.session))
+ 		return PTR_ERR(annotate.session);
++	/*
++	 * Hardware tracing (e.g.: ARM SPE) may generate overlapping events
++	 * per instruction. When data type profiling is enabled, enable
++	 * dont_overlap to deduplicate them to avoid skewed stats, but only
++	 * if user hasn't specified itrace options (respect user override).
++	 */
++	if (annotate.data_type && !itrace_synth_opts.set)
++		itrace_synth_opts.dont_overlap = true;
+ 
+ 	annotate.session->itrace_synth_opts = &itrace_synth_opts;
+ 
 diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 1721882423f6..0f656398f2a8 100644
+index 401aab529309..1721882423f6 100644
 --- a/tools/perf/util/arm-spe.c
 +++ b/tools/perf/util/arm-spe.c
-@@ -2043,6 +2043,17 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 		err = -EINVAL;
- 		goto err_free_queues;
+@@ -2033,6 +2033,9 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 		/* Default nanoseconds period not supported */
+ 		spe->synth_opts.period_type = PERF_ITRACE_PERIOD_INSTRUCTIONS;
+ 		spe->synth_opts.period = 1;
++
++		if (session->itrace_synth_opts)
++			spe->synth_opts.dont_overlap = session->itrace_synth_opts->dont_overlap;
  	}
-+
-+	/*
-+	 * When --itrace is used with non-i/y options (e.g., --itrace=M),
-+	 * the period remains 0 because the parser does not apply a default
-+	 * for those paths. However, synthesized SPE events such as memory
-+	 * accesses, TLB walks, and cache misses still require a valid
-+	 * sample->period to correctly accumulate periods and compute event
-+	 * percentages. Set it to 1 to ensure proper accounting.
-+	 */
-+	spe->synth_opts.period = spe->synth_opts.period ?: 1;
-+
- 	if (spe->synth_opts.period > 1)
+ 
+ 	if (spe->synth_opts.period_type != PERF_ITRACE_PERIOD_INSTRUCTIONS) {
+@@ -2044,6 +2047,20 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
  		ui__warning("Arm SPE has a hardware-based sampling period.\n\n"
  			    "--itrace periods > 1i downsample by an interval of n SPE samples rather than n instructions.\n");
+ 
++	if (spe->synth_opts.dont_overlap) {
++		/*
++		 * The 'instructions' event is the most comprehensive,
++		 * synthesize it exclusively.
++		 */
++		spe->synth_opts.flc = false;
++		spe->synth_opts.llc = false;
++		spe->synth_opts.tlb = false;
++		spe->synth_opts.branches = false;
++		spe->synth_opts.remote_access = false;
++		spe->synth_opts.mem = false;
++		spe->synth_opts.instructions = true;
++	}
++
+ 	err = arm_spe_synth_events(spe, session);
+ 	if (err)
+ 		goto err_free_queues;
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index 6947f3f284c0..ebb4e9e8e574 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -80,6 +80,7 @@ enum itrace_period_type {
+  * @intr_events: whether to synthesize interrupt events
+  * @errors: whether to synthesize decoder error events
+  * @dont_decode: whether to skip decoding entirely
++ * @dont_overlap: whether to deduplicate overlapping events
+  * @log: write a decoding log
+  * @calls: limit branch samples to calls (can be combined with @returns)
+  * @returns: limit branch samples to returns (can be combined with @calls)
+@@ -128,6 +129,7 @@ struct itrace_synth_opts {
+ 	bool			intr_events;
+ 	bool			errors;
+ 	bool			dont_decode;
++	bool			dont_overlap;
+ 	bool			log;
+ 	bool			calls;
+ 	bool			returns;
 -- 
 2.34.1
 
