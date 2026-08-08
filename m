@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883233CF217
-	for <linux-perf-users@vger.kernel.org>; Sat,  8 Aug 2026 13:03:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BE140B6F4
+	for <linux-perf-users@vger.kernel.org>; Sat,  8 Aug 2026 13:05:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786194214; cv=none; b=sTcnSVGl1IDR2VKWVWLx3PHsbhDTVMIQVwcV8dgS011CpHRaMW+RnPRoTDb04jTV0XpKP0WB9OD/Wvmin5mUs9uztr9itZCnf0jNjllLJVIIq403uKjnHc2Hpulg69Sspn8drukXzRWR+iE7PPgvzOkoAkgerSXM7o2JHWloy7Y=
+	t=1786194305; cv=none; b=jQ4HbaTwb0vZckyn5wPaZ/hi1v+WrZjxe7P0h6MPjvewNc4BT9tvpbfY4gYeyr54MP7wDkI12/jcuz7CKiJDzRhH1HUvDRvf5gszPOXqDOzG1+GBY5VWrgCQsQPmW0ZmxRPAn8BfNRvW/ua5PGxCjaA5kolGEdxIy3b+RKUJuYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786194214; c=relaxed/simple;
-	bh=FfWhDGnvfxzKGH2Nx52YTFEudHA4HHYZM4kv5cUZWnk=;
+	s=arc-20240116; t=1786194305; c=relaxed/simple;
+	bh=XvTMJfpea16MbdlQSJDYcE5vVgiQhOU4igsUP3aEoHg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=k3J10K3tpclrfwZyWDOR+pl7X6r2Bdtj+Mv0XeQqHbj29GrErf/FEWV8t2q3m3FT5a7jX+04+mvfR9Yv8B1G2eVhd8wzCQA58SdGHtN2cIW3JaKuK/H328ZQIgXYxbNdlUGo5jG7BFh2lGD+NRQ0Cl6hAiEMB6oVS6PFNwxeaQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g50Dpvro; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=E171/nLLOv/2hR16wHo4ygS8twK+HwiWjaP1R6rEBEel1Eq/szwATHOuuxiyLF4qXVG3I0HAHnMXBqdYhtvTaHpQ9a8S9mlSZFuuUKaLS+cBhiZATsLPkRlBdwS2ez/XDS/7qBP92lEBzFStGeMQRYfddu0ZhUXQUYwSXSM4W8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y05Nu0tz; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g50Dpvro"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA6F31F000E9;
-	Sat,  8 Aug 2026 13:03:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y05Nu0tz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02EA31F000E9;
+	Sat,  8 Aug 2026 13:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786194210;
-	bh=CKd/nlHsSZ8pyJPeR4wzsoiDsgJ2lTbWlqBJGxnw9Sg=;
+	s=k20260515; t=1786194302;
+	bh=u0kaq+iSOKAX8Um2VIgvHqVoyFaZ0cVaPOUyp7rEEdA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=g50DpvrolDuBPNlQvJVfKpVdIr2s+Pv3mnVkOEJjK3VbK1FmdoTGkNgV+2Agh+zvG
-	 Nv4VWOmZZKIUjt9yuQJD0wlx435nHiCqeOYB104yH6VwsilqmEWQfyPEyIOottkT9J
-	 LFnIhbAkDsVYzXuST5V79e9f8HJNcK6gk/2HkUQcK5TUCfy4egM8+WpiA7GmDPeijo
-	 WRAHKRFYlvaK+SxEuEdJEWspcpIifscBKJcUUMbLaCXIKgXdPMR+FJk007oysliJKE
-	 sDHyex0l0XVjTVpxBQ20NNGRNnnYHhgPhRfOo9OzCoHTBTTAbQWlPApdzdGW+0D/J8
-	 JYnDJALB+a7nQ==
+	b=Y05Nu0tzxdEvIOZzVo9HLGOyR5T6bieX6aAUZ4itjO17HbnBKDlZKbs3Kk+SapR9b
+	 FEFOaUhRH/U5/x02uDhvpG3we1iiryIa1g6EEr2+XpPI67hSx4vjZERszUNEJHNLIg
+	 l43/DFBeVSA4uNMk/Fg86teeEDZ4A+Ce5FIFJn863scWE7mRuxaEBFr2O3IGDQ5/PM
+	 ZPSOcLMe++fmn/u0EZR5OgXIaX3nLWplBIYRWdVkY4iFh3hT0xBHcTHhsK606Mu9/z
+	 5iaWpagC4znjFPtX2NGlNA2JZMiTmjuyrBOX5ZyW6ODaLRUopgwfnGrWkwn5U7MdOO
+	 W2Pizp1xBH/9g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 02/23] perf llvm: Fix arm64 adrp instruction
- disassembly mismatch with objdump
+Subject: Re: [PATCH v4 03/23] perf annotate-arm64: Generalize
+ arm64_mov__parse to support more instructions
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260808122400.2961238-3-wutengda@huaweicloud.com>
+In-Reply-To: <20260808122400.2961238-4-wutengda@huaweicloud.com>
 References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-3-wutengda@huaweicloud.com>
+ <20260808122400.2961238-4-wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 08 Aug 2026 13:03:29 +0000
-Message-Id: <20260808130329.EA6F31F000E9@smtp.kernel.org>
+Date: Sat, 08 Aug 2026 13:05:01 +0000
+Message-Id: <20260808130502.02EA31F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,62 +47,79 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Memory leak of the dynamically allocated string `name` on an err=
-or path if a comma is missing in the disassembled instruction, which also b=
-rittly aborts the entire disassembly process.
+- [Medium] arch->objdump.memory_ref_char is uninitialized (0) for ARM64, ca=
+using arm64__check_multi_regs() to fail parsing memory operands and creatin=
+g an out-of-bounds read risk.
 --
 
---- Patch [2]: [PATCH v4 02/23] perf llvm: Fix arm64 adrp instruction disas=
-sembly mismatch with objdump ---
-commit d33f174b93415a7430f8bf32e53bbf77ad2fce9a
+--- Patch [3]: [PATCH v4 03/23] perf annotate-arm64: Generalize arm64_mov__=
+parse to support more instructions ---
+commit 0546b270cb844bdab4fcf529e313bb0ead4fc3f8
 Author: Tengda Wu <wutengda@huaweicloud.com>
 
-perf llvm: Fix arm64 adrp instruction disassembly mismatch with objdump
+perf annotate-arm64: Generalize arm64_mov__parse to support more instructio=
+ns
+   =20
+As the default parser for arm64 instructions, arm64_mov__parse()
+currently only supports parsing instructions with the 'addr <symbol>'
+suffix. Other instructions are not supported, causing a lack of
+source and target information for most regular instructions.
+   =20
+Generalize arm64_mov__parse to extend its parsing capabilities:
+1. Parse 'ops->target.raw' and 'ops->source.raw' by default.
+2. Utilize arm64__check_multi_regs() to identify if source and
+   target contain multiple registers.
+3. Maintain backward compatibility for instructions containing the
+   'addr <symbol>' suffix.
 
-This commit addresses an inconsistency where libllvm parses arm64 adrp
-operands as raw immediates instead of the address format used by objdump.
-It extracts the target address and resolves the symbol, reformatting the
-disassembly output to match objdump's expectations.
-
-> diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
-> index a0deb742a7331..6b53b283205ab 100644
-> --- a/tools/perf/util/llvm.c
-> +++ b/tools/perf/util/llvm.c
+> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/=
+util/annotate-arch/annotate-arm64.c
+> index 33080fdca125f..5e824fd617ee5 100644
+> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
 
 [ ... ]
 
-> @@ -230,10 +242,40 @@ int symbol__disassemble_llvm(const char *filename, =
-struct symbol *sym,
->  		if (storage.pcrel_load_addr !=3D 0) {
->  			char *name =3D llvm_name_for_data(dso, filename,
->  							storage.pcrel_load_addr);
-> -			disasm_len +=3D scnprintf(disasm_buf + disasm_len,
-> -						sizeof(disasm_buf) - disasm_len,
-> -						"  # %#"PRIx64,
-> -						storage.pcrel_load_addr);
+> +static bool arm64__check_multi_regs(const struct arch *arch, const char =
+*op)
+> +{
+> +	const char *p =3D op;
+> +	int reg_count =3D 0;
 > +
-> +			if (arch__is_arm64(args->arch)) {
-> +				/*
-> +				 * For arm64, replace the immediate operand with
-> +				 * the resolved address to match objdump's output.
-> +				 *
-> +				 * Example conversion:
-> +				 *   From: adrp  x18, 8014
-> +				 *   To:   adrp  x18, ffff800081f5f000
-> +				 */
-> +				char *s =3D strchr(disasm_buf, ',');
-> +
-> +				if (s =3D=3D NULL)
-> +					goto err;
+> +	while (p && *p) {
+> +		p =3D skip_spaces(p);
+> +		if (*p =3D=3D arch->objdump.memory_ref_char)
+> +			p++;
 
 [Severity: Medium]
-Does this leak name if a comma isn't found in the disassembled instruction?
+Could this result in an out-of-bounds read?
 
-Looking at symbol__disassemble_llvm(), name is allocated earlier in this
-block via llvm_name_for_data(). If strchr() fails and the code jumps to the
-err label, name appears to be leaked since the err cleanup path only frees
-code_buf and line_storage.
+Since arch->objdump.memory_ref_char is not explicitly initialized for ARM64,
+it defaults to 0. If the operand string contains trailing spaces,
+skip_spaces() will advance p to the null terminator.=20
+
+This would cause the following check to match:
+
+    if (*p =3D=3D arch->objdump.memory_ref_char) /* 0 =3D=3D 0 */
+        p++;
+
+This increments p past the null terminator, and the subsequent call to
+arm64__is_reg(p) would access unallocated memory:
+
+    static bool arm64__is_reg(const char *op)
+    {
+        ...
+        if ((op[0] =3D=3D 'x' || op[0] =3D=3D 'w') && isdigit(op[1]))
+        ...
+
+Should memory_ref_char be initialized to '[' for ARM64 so that memory
+operands are correctly parsed?
+
+> +
+> +		if (arm64__is_reg(p))
+> +			reg_count++;
+> +
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260808122400.2961=
-238-1-wutengda@huaweicloud.com?part=3D2
+238-1-wutengda@huaweicloud.com?part=3D3
