@@ -1,111 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F0A2BFC60
-	for <linux-perf-users@vger.kernel.org>; Sat,  8 Aug 2026 13:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B122C37B40A
+	for <linux-perf-users@vger.kernel.org>; Sat,  8 Aug 2026 13:20:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786195129; cv=none; b=Sr3dQZ5a4IFgL7WzgRKthPxoRWvOvUWuPbYHxhUikT0hYSEa4wG3TAJpVk8rhveS58CvYAfVIMFttjBL5NCEts2BBIiqsiUmhxETO/2afPMfLUVeyTDB2WzKJ8QEYAxjMKNFCiarOVZf1CD+nBRjA713WQxaMHf8pjiWRvL0yq8=
+	t=1786195226; cv=none; b=Evsmbq0Km7Cfgln59uxqbGxNzA6k+KvOysHvi6J7C958gacnY6j4U/lg2EMRm9CI59+WHNhJCfWMOwERq10a9xz6krd4PWaflnkAOYrVZLzw9tKGxLvvkGlqpuhfXF5ibj/HTtgB4Tx5DVnDL/5DAXZUNqiZqRFaTFcVllejMso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786195129; c=relaxed/simple;
-	bh=WGQOwcGqKhajaw3B/CZ6WSjJxjIln50c+fPKFkVhe/o=;
+	s=arc-20240116; t=1786195226; c=relaxed/simple;
+	bh=61cNJ7Bv/TNIl6/KdmsePma5n/JqbBx/HLll16EaVXI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FlHh7FaFFiU2kNwso1gy0WhAa8P1TIhxRrxNVLa/BpShkT5rWAV7OVugvCpy+Fp3rQZwyLqiwJCplDTndWvb2ayHiym/IJ1m6x4bEBaX7pxdlxp38c0JALbGp7NGPV9/pHqoDE9USzoKvLc+b9fnQ5G3OV29ACEhpc+L9ZjfX5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O9Hn/+zm; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=N1APHMsIFSZALwnISvckD1leAfwW11FGXS5GF3vakBpULXlJSL2HrXG7vzUiPT6g7cbiSkoXOjoNBtKrPBvWvm6qqOSj7svxcC7BDPBDm8X2AQEq+volI2QnpcoJKjO9FeQnKteEGRGlTuGujdhoToTBHX7g17brgXzk1pHMGPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TneBVA1Z; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O9Hn/+zm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43DEF1F000E9;
-	Sat,  8 Aug 2026 13:18:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TneBVA1Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 515831F000E9;
+	Sat,  8 Aug 2026 13:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786195128;
-	bh=pq4AUd+mlwwcA8xd8GfFjC+ttw8a7Ar+nLvWI+g//Qw=;
+	s=k20260515; t=1786195225;
+	bh=+LsKehzvpwimXYROogUFl6vKw6fEnjxL3EzmS4/4RNA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=O9Hn/+zm65dmuLgWBMRFuXbpqtHKuSMh+UMMNfDEinu2tQKyHKuMsII+Mij8glQuJ
-	 y8ecI5jcmRX2evW47EBvGNExnrlElwbXw1Bkyu1rgLaDrP+FtDrpDHv0/R+39Y1Qnp
-	 q5Nr6idzfK8a1YBj1CsXeyOYzMH00flwMQVF/iSRIow98s0ljGSFfMbIzTBTnWQwK8
-	 QUCnK9c1nvbpfSH7v5Um2xg4BjWZfy7p2G3hELfl3BGImcWQF+s7LccclFHuCW1LBE
-	 1dfTfYsee4Xl9DQRdsyOBn2JEKpNWncj2G8ZzkrMWSQmgisIshs5V1eCUkLNA4OUpA
-	 86zk9CGcpH2mw==
+	b=TneBVA1ZbZlPxpxkulh3/7l6Ys104ujPPl6SEBr78Srut0RIcYeRd0mupHDtasGHj
+	 /S2j9vbd2nIYfn5eBrArDk0yS2S3FvbkAjAJukVG+HsmRudxfMPwDI99BgfAfH3sRX
+	 +pRrjl5ymE6M7ViQYxGwuoGX1aDcqpB8gbGKuAQq2X7LU+116F7u8JrzLjj8DVb6J5
+	 Mxh/578duyfHTm07g0NiIX0Kxv9BrMXnUui6e1yQB00geWwMbloxMdZ70HHWn1M7N7
+	 XvC5ednhiKzMq0I1scQKReAoRPQOUkXXospWNZh/9yYJY1ToJ0Nl+KMGMCeQ2U5O8y
+	 vXeVUUmAbTvFA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 22/23] perf annotate-arm64: Support per-cpu variable
- access tracking
+Subject: Re: [PATCH v4 19/23] perf annotate-arm64: Support 'mov' instruction
+ tracking
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260808122400.2961238-23-wutengda@huaweicloud.com>
+In-Reply-To: <20260808122400.2961238-20-wutengda@huaweicloud.com>
 References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-23-wutengda@huaweicloud.com>
+ <20260808122400.2961238-20-wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 08 Aug 2026 13:18:47 +0000
-Message-Id: <20260808131848.43DEF1F000E9@smtp.kernel.org>
+Date: Sat, 08 Aug 2026 13:20:24 +0000
+Message-Id: <20260808132025.515831F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] Incomplete offset calculation for multi-register memory operands=
- causes inaccurate type resolution.
+- [Medium] Conservative register invalidation incorrectly drops data types =
+for comparison instructions like 'cmp', 'cmn', 'tst', and 'teq'.
+- [Medium] Missing DWARF register lifetime propagation and clearing in ARM6=
+4 `mov` instruction tracking.
 --
 
---- Patch [22]: [PATCH v4 22/23] perf annotate-arm64: Support per-cpu varia=
-ble access tracking ---
-commit d7e10ade80ba3983e6d311e1ab11f19b4af2d53e
+--- Patch [19]: [PATCH v4 19/23] perf annotate-arm64: Support 'mov' instruc=
+tion tracking ---
+commit 16c512fdcea449b7238a3bf5f1a3afbffde8144e
 Author: Tengda Wu <wutengda@huaweicloud.com>
-Subject: perf annotate-arm64: Support per-cpu variable access tracking
 
-This commit extends update_insn_state() for arm64 to handle per-cpu variable
-addressing. It identifies per-cpu base initialization and propagates type
-information to subsequent instructions. This allows the tracker to correctly
-resolve the actual variable type in per-cpu flows.
+perf annotate-arm64: Support 'mov' instruction tracking
 
-> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-d=
-ata.c
-> index 7fe5b979563f7..8b0584486cce9 100644
-> --- a/tools/perf/util/annotate-data.c
-> +++ b/tools/perf/util/annotate-data.c
-> @@ -1253,11 +1253,33 @@ static enum type_match_result check_matching_type=
-(struct type_state *state,
->  	}
-> =20
->  	if (state->regs[reg].kind =3D=3D TSR_KIND_PERCPU_BASE) {
-> -		u64 var_addr =3D dloc->op->offset;
-> +		u64 var_addr;
->  		int var_offset;
+Extend update_insn_state() for arm64 to support register-to-register and
+immediate-to-register 'mov' instructions. This propagates data types and
+constant values to improve subsequent instruction inference.
+
+> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/=
+util/annotate-arch/annotate-arm64.c
+> index 6e09e97072568..7b780bad8c070 100644
+> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
 
 [ ... ]
 
-> +		var_addr =3D dloc->op->offset;
+> +static void update_mov_insn_state(struct type_state *state,
+> +				  struct disasm_line *dl,
+> +				  struct annotated_op_loc *src,
+> +				  struct annotated_op_loc *dst)
+> +{
+> +	struct type_state_reg *tsr;
+> +	u32 insn_offset =3D dl->al.offset;
+> +	int sreg =3D src->reg1;
+> +	int dreg =3D dst->reg1;
 > +
->  		if (dloc->op->multi_regs) {
->  			int reg2 =3D dloc->op->reg2;
+> +	if (!has_reg_type(state, dreg))
+> +		return;
+> +
+> +	tsr =3D &state->regs[dreg];
+> +	tsr->copied_from =3D -1;
+> +
+> +	if (src->imm) {
+> +		tsr->kind =3D TSR_KIND_CONST;
+> +		tsr->imm_value =3D src->offset;
+> +		tsr->offset =3D 0;
+> +		tsr->ok =3D true;
 
 [Severity: Medium]
-Does the TSR_KIND_GLOBAL_ADDR handling later in check_matching_type() need
-similar logic for multi-register operands to ensure accurate type resolutio=
-n?
+Does this code need to clear lifetime_active for the destination register?
 
-Currently, for TSR_KIND_GLOBAL_ADDR, the logic does not consider multi-regi=
-ster
-operands:
+If an immediate value overwrites a register, failing to clear lifetime_acti=
+ve
+might incorrectly protect the new constant from being invalidated across
+function calls.
 
-	if (state->regs[reg].kind =3D=3D TSR_KIND_GLOBAL_ADDR) {
-		u64 var_addr =3D state->regs[reg].imm_value + dloc->op->offset;
-		int var_offset;
+> +
+> +		pr_debug_dtp("mov [%x] imm=3D%#"PRIx64" -> reg%d\n",
+> +			     insn_offset, tsr->imm_value, dreg);
+> +		return;
+> +	}
+> +
+> +	if (!has_reg_type(state, sreg) || !state->regs[sreg].ok) {
+> +		invalidate_reg_state(tsr);
+> +		return;
+> +	}
+> +
+> +	tsr->type =3D state->regs[sreg].type;
+> +	tsr->kind =3D state->regs[sreg].kind;
+> +	tsr->imm_value =3D state->regs[sreg].imm_value;
+> +	tsr->offset =3D state->regs[sreg].offset;
+> +	tsr->ok =3D state->regs[sreg].ok;
 
-This calculation omits adding state->regs[reg2].imm_value for multi-register
-operands, unlike the TSR_KIND_PERCPU_BASE logic in the same function. The
-omission also appears to apply to TSR_KIND_TYPE and TSR_KIND_POINTER.
+[Severity: Medium]
+Does this code miss propagating the DWARF register lifetime?
 
-Can this incomplete offset calculation cause incorrect type resolution in
-tools/perf/util/annotate-data.c:check_matching_type() when perf processes a
-memory instruction where op->multi_regs is true, the primary register is
-TSR_KIND_GLOBAL_ADDR (or TYPE/POINTER), and the secondary register is
-TSR_KIND_CONST?
+If lifetime_active is not propagated from state->regs[sreg] to tsr during a
+register-to-register move, a valid type state might be prematurely invalida=
+ted
+across function calls.
+
+> +
+> +	if (tsr->kind =3D=3D TSR_KIND_TYPE || tsr->kind =3D=3D TSR_KIND_POINTER)
+> +		tsr->copied_from =3D sreg;
+> +
+> +	pr_debug_dtp("mov [%x] reg%d -> reg%d", insn_offset, sreg, dreg);
+> +	pr_debug_type_name(&tsr->type, tsr->kind);
+> +}
+
+[ ... ]
+
+> @@ -703,6 +750,7 @@ static void update_insn_state_arm64(struct type_state=
+ *state,
+>  	 * prevent stale type info from propagating to subsequent instructions.
+>  	 */
+>  	if (has_reg_type(state, dst->reg1) &&
+> +	    strcmp(dl->ins.name, "mov") &&
+>  	    strncmp(dl->ins.name, "ld", 2) && strncmp(dl->ins.name, "st", 2)) {
+>  		pr_debug_dtp("%s [%x] invalidate reg%d",
+>  			     dl->ins.name, insn_offset, dst->reg1);
+>  		invalidate_reg_state(&state->regs[dst->reg1]);
+
+[Severity: Medium]
+Does this conservative register invalidation incorrectly drop data types for
+comparison instructions like cmp, cmn, tst, and teq?
+
+Because comparison instructions are not explicitly exempted alongside mov,
+ld, and st, their first operand (which can be parsed as a target register)
+will be unconditionally invalidated. This causes data type profiling to
+silently fail for subsequent uses of a register after it's checked with a
+comparison instruction.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260808122400.2961=
-238-1-wutengda@huaweicloud.com?part=3D22
+238-1-wutengda@huaweicloud.com?part=3D19
