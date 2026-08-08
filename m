@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7559B157487;
-	Sat,  8 Aug 2026 00:32:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0722D8379;
+	Sat,  8 Aug 2026 00:45:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786149156; cv=none; b=PyaC0lgIYk7arrjbPDsRu+koY3cpDaNDlRjOIcRkGg6xW9NnvhNnKh8+99AJcaaO1yE4bNNieUF4zRSWAhWaJ6TSEb7SXLpj2MC4TaSdY7QCesA80FGkCjf1M1Gu0/uihV313EpgsTAKaxaX0gGY28O31vQwbBoyuTGTEvz0ne4=
+	t=1786149903; cv=none; b=R8L0fTMVajgMSu12ckA71cvBC/ctWVNkMjjDKXKHu3bDCyv2/JY0+zk0cL3xebpafQAVe94xX/DKbh1RKyh7u3NZ9h6jbq3Wsk4WzGt06j4gWYqhytgcMkHerwzt/Whfaq2Bv4vT0tzjaVBQ3/+v9/DrHBRLPD4Xp2nkDuuHQZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786149156; c=relaxed/simple;
-	bh=MfgPd2QznvpRyStY/1+FN8ASaFW2u9RkKzWtezAPryg=;
+	s=arc-20240116; t=1786149903; c=relaxed/simple;
+	bh=Wnvt2uvVNiHYoDyjifQgqfm9rMgcZp/K9dzkDkwslXY=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=SUENPB3EFk7+BT3Bsi94u9Rygk+eBxR08dNuy026xvnye4qUszLfRplEHpjmXY18iX3AGzlbq6IhBUr/7qG1gKS/iM1xa/2aTE/8s5jlBNAx1jDCAcM5NXphhLDMdvYepjnLWOAnAjJigT70vIgJad6aNygHWnkbDqDeu2MmZ5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VazOFjkv; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=pTRwWocZppbk3rytnPbbbBgLvtsMe+h23d9ose794W1br76WaIWrijdDJ+YWIJp9zvIgfz0ZrOtOxnM20rs6wK0FlH4I1VXywPFIz6QEop9/mWXSg08IUJr/7LWiN4ORSgWShl4waZrPdUIvYNgE3R7EX03zBhsi+eXz6iEQmXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mEZR9FYh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VazOFjkv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 488111F000E9;
-	Sat,  8 Aug 2026 00:32:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mEZR9FYh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8E0D1F000E9;
+	Sat,  8 Aug 2026 00:45:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786149155;
-	bh=dmc3Sr56uC/xFBzOAHwswW+8EC/Y4FNYJBinKHwg+a4=;
+	s=k20260515; t=1786149902;
+	bh=o6rc0mXWsY6/K1ldDEszmUHwAu1WzPiAqosXbNFO1Fs=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References;
-	b=VazOFjkvaOFHy83xSYbjGqgdaUthYOr5MtKzcB3yK8A8ZS+jvB/e34IjhXHZ+TK2P
-	 Es/ZNvFiJ4H+5zPlprKlcYVCvlS7RkCX5fWndtR6zGgAXfFkPUnKPVdkFDlaVXe1Az
-	 VKH+7g7CmbNsBDAFEzYn3vazM0oM7qgg2+MDqIp21q05AUm2SY9qgDovLj63IgNKky
-	 T65hrSpEmR8Ob4MD5uGA9lAxasp2NBrh3WL31IT/2MapHM9+BbXbkzErx16wXG0k4P
-	 VJCjBGP9ZilU9Eb2O9ODfz6bH/XCA4VbgXahLrrD8Z94AHysRY0zv/WUyTkP4NhuVy
-	 RZSGcG+NwTlNg==
-Date: Fri, 7 Aug 2026 18:32:33 -0600 (MDT)
+	b=mEZR9FYhPVQi9OEoX82qZV8WuvXELMbvymWxy/n4z094hX48TbK/9pRaUAX41rFjL
+	 YXyGrOSL0Ss+HPoMrdfgMn8b0IGCA86TMRJxD4d4eZJKETEqPPPnqHYDyHUdPoE7xu
+	 WN0Tn7y0rwWU6A2uD0fNsIwWMsSuf581JpdvshKrakQuPGOP1GQDd1/D2rmMZxPn18
+	 LZb5X/ZBJ0IFt9sT5A2UDs0s+CvhPHRROR209EAu18bjeg/NhqCTC3FsoBAYGN4q8N
+	 GNhZiEB3cZJSBpCwu80ZxYhSfOCtLZkVt8y+IXnZ3M8en8lfGCRTjVcRWoCMNhPt18
+	 x/H6ZltPEUUwg==
+Date: Fri, 7 Aug 2026 18:45:00 -0600 (MDT)
 From: Paul Walmsley <pjw@kernel.org>
 To: Xixin Liu <liuxixin@kylinos.cn>
 cc: linux-riscv@lists.infradead.org, atish.patra@linux.dev, 
@@ -34,11 +34,11 @@ cc: linux-riscv@lists.infradead.org, atish.patra@linux.dev,
     palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, 
     linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
     linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 2/2] perf: RISC-V: store available counter mask as
- bitmap
-In-Reply-To: <prpmask02cmap.1786092600.git.liuxixin@kylinos.cn>
-Message-ID: <93cab992-f808-8f3e-03a6-19d84baf38f3@kernel.org>
-References: <cover.1786092600.git.liuxixin@kylinos.cn> <prpmask02cmap.1786092600.git.liuxixin@kylinos.cn>
+Subject: Re: [PATCH] perf: RISC-V: check cpu_hw_evt before dereference in
+ overflow IRQ
+In-Reply-To: <prp0001riscv.1786064390.git.liuxixin@kylinos.cn>
+Message-ID: <9109b689-1145-c714-ebe0-ec368f242a78@kernel.org>
+References: <prp0001riscv.1786064390.git.liuxixin@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,18 +51,16 @@ Hi,
 
 On Fri, 7 Aug 2026, Xixin Liu wrote:
 
-> The available-counter mask was a single unsigned long, but iteration
-> uses RISCV_MAX_COUNTERS (64). On RV32 that reads past the object. Filling
-> with BIT(i) is also wrong for i >= 32.
-> 
-> Use DECLARE_BITMAP, set_bit/bitmap helpers, and stop counters one word
-> at a time.
+> The overflow IRQ handler dereferences cpu_hw_evt before the null check.
+> Move the check first. Defensive only; the cookie is valid on the normal
+> path today.
 > 
 > Signed-off-by: Xixin Liu <liuxixin@kylinos.cn>
 
-This patch contains several array indexes to element 0 of the cmask 
-bitmap, but that element is going to be XLEN bits wide.   Does that 
-actually work on RV32 systems?
+Could you please add a Fixes: tag?  Also, if it was written with LLM 
+assistance, please add the appropriate Assisted-by: tag.
+
+thanks 
 
 
 - Paul
