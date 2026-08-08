@@ -1,27 +1,27 @@
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E513D1CD7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B99DC3D47DA;
 	Sat,  8 Aug 2026 12:24:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786191877; cv=none; b=leyHs0BfVnn05fje5ESzADRY2+xzEeQ/EVhrt845duZathrUOY+osLxmprAE/MXjiVAwyhX8s3E8xL4jiB9e8KtWN+zPau7EHADhzfTsHG0ZM/tMjmYA/xm3GxAxeRSy0TnTX21EdM1Eq4uJK24+18uOFjG2C3gmJI6EorWY4k8=
+	t=1786191877; cv=none; b=nViDM+Lbs1XEE+p2bKFKa9HmnbUIoFE67cdMa34sHJbkTc3rjJ2MdB+6c+oN1k0+rWKLfouxd2ST3yNOlit14Q30FRG2AXTw9smN3mXDCUmJvwFWLaRho1CPJaP81GqoRFZSJtRtA42s8fyxt86vFlnSSDzUnKtz3mCBZi3juOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1786191877; c=relaxed/simple;
-	bh=UG62kwTZ7xw/b8GJcC+VP6HJWyyAOdzFEKpAd8oDzpY=;
+	bh=m8PN6bVedrwkAYY6mgfh4TN4O0z7UNpj4FOn8/eldNU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pUg1jU26DyDEfb1EGOciUFyqsxm67Ailcf4JcBYAr/AtgU1/Pe8XPHUHYM95WfKjq2eVz9gLyjfZA6z1eh0CaGjKXrFXa8fn2gVRvAXcy4VtZeA5Gtnt8EeBkUTQXV97a02e0jJ7WHXHiwiZImjyS0nbtcNgDomddzUWPg0+EC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=qj/jz2OknSstLRs9hZ0ZVq6s6hy1izt8hCwvzRkWlPbLyZ042sAs7bXcl1YvSsjXemFnhz0P6EYCzFKLpHsz0mEYMiP0e5DrjEJ4yFvBUngChG4DmpNSLoXMMaORASk/BJ6r0I1C58YCtvIGV7c7HoSfC4YvY+8Vb5Dwz4H2FRQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hHKtJ2p3HzYQvm0;
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hHKtJ51fHzYQvlt;
 	Sat,  8 Aug 2026 20:23:20 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 8F8DA4097C;
+	by mail.maildlp.com (Postfix) with ESMTP id DAE044056B;
 	Sat,  8 Aug 2026 20:24:18 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgB34YjkH3dqbrhMBg--.41805S14;
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgB34YjkH3dqbrhMBg--.41805S17;
 	Sat, 08 Aug 2026 20:24:18 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Namhyung Kim <namhyung@kernel.org>,
@@ -44,9 +44,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v4 12/23] perf annotate-arm64: Enable instruction tracking support
-Date: Sat,  8 Aug 2026 12:23:49 +0000
-Message-Id: <20260808122400.2961238-13-wutengda@huaweicloud.com>
+Subject: [PATCH v4 15/23] perf annotate-arm64: Support store instruction tracking
+Date: Sat,  8 Aug 2026 12:23:52 +0000
+Message-Id: <20260808122400.2961238-16-wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260808122400.2961238-1-wutengda@huaweicloud.com>
 References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
@@ -57,14 +57,14 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgB34YjkH3dqbrhMBg--.41805S14
-X-Coremail-Antispam: 1UD129KBjvJXoW3WFy7Wr48tF1UCrWDuFy5XFb_yoW7Cw4Upa
-	yDCw15GF45Jr4IgwnxAF4xXry3Kw4fW34Ykr9Ygw4SyFsFyr95tan5KFWaya1rJrZ3Cr47
-	J3WqyF4UX3yUCaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:Syh0CgB34YjkH3dqbrhMBg--.41805S17
+X-Coremail-Antispam: 1UD129KBjvJXoW7CFy7JFWkurWktFy7CF1xXwb_yoW8ZF4DpF
+	Z0k34rtr47trs09Fn3JF4Igrya9a1fJr15Kry7tw4vyFWayrn3tFZ3KF43tFWrJrZxCw1U
+	Aw4DKrs8J3y0kw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUHFb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
 	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
+	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
 	AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x02
 	67AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I
 	80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCj
@@ -77,168 +77,52 @@ X-Coremail-Antispam: 1UD129KBjvJXoW3WFy7Wr48tF1UCrWDuFy5XFb_yoW7Cw4Upa
 	0xvEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjTRQYFCDUUUU
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Enable basic instruction tracking for arm64 by implementing three
-essential functions in the find_data_type_block() call path:
+Extend update_insn_state() for arm64 to handle store (STR) instructions.
 
-  find_data_type_block
-    -> arch_supports_insn_tracking  (1)
-    -> find_data_type_insn
-         -> init_type_state         (2)
-         -> update_var_state
-         -> update_insn_state       (3)
+Unlike load instructions, a store instruction sets a value in the struct
+within the memory where the destination register resides, and does not
+alter its type. Therefore, no processing is required for the transfer.
 
-Changes:
+The only point to note is that store instructions support pre-index and
+post-index addressing modes, so calling adjust_reg_index_state() is still
+necessary to handle their addressing.
 
-* arch_supports_insn_tracking(): add arm64 to the list of supported
-  architectures, allowing find_data_type_block() to proceed with data
-  type analysis.
-
-* init_type_state(): correctly identify ret_reg, stack_reg, and
-  caller-saved registers for arm64 during type state initialization.
-
-* update_insn_state(): add the update_insn_state_arm64() callback with
-  conservative register invalidation for call instructions and those with
-  destination register(s), preventing stale type propagation. Full
-  instruction-level analysis support will be added incrementally in
-  later patches.
-
-With these changes, arm64 gains support for basic variable type
-inference during instruction tracking.
-
-Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- .../perf/util/annotate-arch/annotate-arm64.c  | 66 +++++++++++++++++++
- tools/perf/util/annotate-data.c               | 11 +++-
- 2 files changed, 76 insertions(+), 1 deletion(-)
+ tools/perf/util/annotate-arch/annotate-arm64.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
-index 6b4f1228afa9..44daa0176e51 100644
+index 6557c0ad11b2..ed0f0ef2877d 100644
 --- a/tools/perf/util/annotate-arch/annotate-arm64.c
 +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-@@ -9,6 +9,10 @@
- #include <regex.h>
- #include "../annotate.h"
- #include "../disasm.h"
-+#include "../annotate-data.h"
-+#include "../debug.h"
-+#include "../map.h"
-+#include "../symbol.h"
- 
- struct arch_arm64 {
- 	struct arch arch;
-@@ -353,6 +357,65 @@ static int extract_op_location_arm64(const struct arch *arch,
- 	return 0;
- }
- 
-+#ifdef HAVE_LIBDW_SUPPORT
-+static void update_insn_state_arm64(struct type_state *state,
-+				    struct data_loc_info *dloc, Dwarf_Die *cu_die __maybe_unused,
-+				    struct disasm_line *dl)
-+{
-+	struct annotated_insn_loc loc;
-+	struct annotated_op_loc *dst = &loc.ops[INSN_OP_TARGET];
-+	u32 insn_offset = dl->al.offset;
-+
-+	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
-+		return;
-+
-+	/*
-+	 * Invalidate caller-saved registers on function calls per ARM64 AAPCS64
-+	 * ABI, unless DWARF location info indicates the register remains valid
-+	 * beyond the call address.
-+	 */
-+	if (ins__is_call(&dl->ins)) {
-+		struct symbol *func = dl->ops.target.sym;
-+		const char *call_name;
-+		u64 call_addr;
-+
-+		call_name = func ? func->name : dl->ops.target.name;
-+		pr_debug_dtp("call [%x] %s\n", insn_offset, call_name ?: "<unknown>");
-+
-+		/* Invalidate caller-saved registers after call */
-+		call_addr = map__rip_2objdump(dloc->ms->map,
-+					      dloc->ms->sym->start + dl->al.offset);
-+		for (unsigned int i = 0; i < ARRAY_SIZE(state->regs); i++) {
-+			struct type_state_reg *reg = &state->regs[i];
-+
-+			if (!reg->caller_saved)
-+				continue;
-+			/* Keep register valid within DWARF location lifetime */
-+			if (reg->lifetime_active && call_addr < reg->lifetime_end)
-+				continue;
-+			invalidate_reg_state(reg);
-+		}
-+		return;
+@@ -560,7 +560,7 @@ static void update_insn_state_arm64(struct type_state *state,
+ 	 * prevent stale type info from propagating to subsequent instructions.
+ 	 */
+ 	if (has_reg_type(state, dst->reg1) &&
+-	    strncmp(dl->ins.name, "ld", 2)) {
++	    strncmp(dl->ins.name, "ld", 2) && strncmp(dl->ins.name, "st", 2)) {
+ 		pr_debug_dtp("%s [%x] invalidate reg%d",
+ 			     dl->ins.name, insn_offset, dst->reg1);
+ 		invalidate_reg_state(&state->regs[dst->reg1]);
+@@ -575,6 +575,17 @@ static void update_insn_state_arm64(struct type_state *state,
+ 	/* Memory to register transfers */
+ 	if (!strncmp(dl->ins.name, "ld", 2))
+ 		update_load_insn_state(state, dl, src, dst);
++	/* Register to memory transfers */
++	else if (!strncmp(dl->ins.name, "st", 2)) {
++		/*
++		 * Ignore transfers since it'd set a value in a struct
++		 * and won't change the type.
++		 *
++		 * Needs to update the pre-index and post-index addressing
++		 * modes for the destination register.
++		 */
++		adjust_reg_index_state(state, dst, "str", insn_offset);
 +	}
-+
-+	/*
-+	 * Invalidate destination register(s) for unsupported instructions to
-+	 * prevent stale type info from propagating to subsequent instructions.
-+	 */
-+	if (has_reg_type(state, dst->reg1)) {
-+		pr_debug_dtp("%s [%x] invalidate reg%d",
-+			     dl->ins.name, insn_offset, dst->reg1);
-+		invalidate_reg_state(&state->regs[dst->reg1]);
-+		if (dst->multi_regs) {
-+			pr_debug_dtp(" and reg%d", dst->reg2);
-+			invalidate_reg_state(&state->regs[dst->reg2]);
-+		}
-+		pr_debug_dtp("\n");
-+		return;
-+	}
-+}
-+#endif
-+
- const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *id,
- 				   const char *cpuid __maybe_unused)
- {
-@@ -372,6 +435,9 @@ const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *id,
- 	arch->objdump.imm_char		  = '#';
- 	arch->associate_instruction_ops   = arm64__associate_instruction_ops;
- 	arch->extract_op_location	  = extract_op_location_arm64;
-+#ifdef HAVE_LIBDW_SUPPORT
-+	arch->update_insn_state		  = update_insn_state_arm64;
-+#endif
- 
- 	/* bl, blr */
- 	err = regcomp(&arm->call_insn, "^blr?$", REG_EXTENDED);
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 104b80d471f1..c51b20a7af9b 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -28,6 +28,7 @@
- 
- /* register number of the stack pointer */
- #define X86_REG_SP 7
-+#define ARM64_REG_SP 31
- 
- static void delete_var_types(struct die_var_type *var_types);
- 
-@@ -178,6 +179,13 @@ static void init_type_state(struct type_state *state, const struct arch *arch)
- 		state->regs[11].caller_saved = true;
- 		state->ret_reg = 0;
- 		state->stack_reg = X86_REG_SP;
-+	} else if (arch__is_arm64(arch)) {
-+		int i;
-+
-+		for (i = 0; i < 18; i++)
-+			state->regs[i].caller_saved = true;
-+		state->ret_reg = 0;
-+		state->stack_reg = ARM64_REG_SP;
- 	}
  }
+ #endif
  
-@@ -1437,7 +1445,8 @@ static enum type_match_result find_data_type_insn(struct data_loc_info *dloc,
- 
- static int arch_supports_insn_tracking(struct data_loc_info *dloc)
- {
--	if ((arch__is_x86(dloc->arch)) || (arch__is_powerpc(dloc->arch)))
-+	if (arch__is_x86(dloc->arch) || arch__is_powerpc(dloc->arch) ||
-+	    arch__is_arm64(dloc->arch))
- 		return 1;
- 	return 0;
- }
 -- 
 2.34.1
 
