@@ -1,188 +1,287 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 252503B1B3
-	for <linux-perf-users@vger.kernel.org>; Sat,  8 Aug 2026 04:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.177
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786162436; cv=pass; b=jyK29cKtjxkA2WRSzAMTgt05RAQQvSMncFrbNaQOJ/XN5R7UNEG+W3b/alHOqDOBj+ZNrbkYTIF1P9Moj5gf/CVoRQi1mLrrvrpN+mSLnJupYQrnnw2mqQvjHukWu6xuw7s0tjqEKeg0LktSjQXMp61oAl+Cl4vimXFqT/iwMso=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786162436; c=relaxed/simple;
-	bh=aitTYh0qnUbeJYOzgNmzBLyVNMmg1720VEJ6UqV5Rb4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rce0FKnhnrlcZtuO+jgCHwwGW6nVvF+SyEMWGEd9mR0KrdS6p5XK9W/tjbBORXzeqEUlOn4JlJdFZS0Crh64jj5Dr4Ohg1YKFbi6XjFYto9Wvi0uKX0fO8airVuT7rJZ8LQtDBMC/AxOFZRr9YZP++/3xrDa0Es+e0oOizvzfpc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b5Kzoowh; arc=pass smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 430583246ED
+	for <linux-perf-users@vger.kernel.org>; Sat,  8 Aug 2026 05:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786165925; cv=none; b=EuRZ2sBNydAwVus7fc8nLsZYCOOLdkaLipYnkojclIGD3shDaXnRNIRzpnUF5gl5lf9mnQmdc4oUmS0hqnhZtOJZRnHY+gW9d/SoWCuLHygn24USKKS/E26gJdwPG4sLMfIoBUl1bnehnDFXgIH2JArENsbbBV0AcBuUcLtdc0A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786165925; c=relaxed/simple;
+	bh=NiTffuycnmLAp3ocn+qR+YTEp04ZFtPNASylly7LM5c=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=ZPvLuU0x5lRWeKWrpd2til22mynkZzxefVSjeS1os0Tl5QiPbVAa67MoA0k77K71lgfSYZq+BzfvOvXDob+X02xrKdFEWR9Gf+twsXbxH28S1cw8+YJIkBCI2ochAMY7bM3sRdQaX1xz1hZGszZW+Tppr2ckTmoIz4xqKdh8Q9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=M/PBQ/P3; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b5Kzoowh"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-51c10e86e52so71371cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 07 Aug 2026 21:13:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786162434; cv=none;
-        d=google.com; s=arc-20260327;
-        b=ExwerZuIcC/W1w51Ghs98hVxELoJHJ9sJISjROJclrkpkqhwU++LDc53CyHrO9frt9
-         7gx1wryah/VHNXkZs5psk1zJ3g2P7JfsUrjsT7T7xV5Z43pXmjnNLApW1KntKpEICKYU
-         f2kiR0Y7dL+eTSFxEM1Svo099BXhRcJiDVecS9BKUv7QO/WWVZfo1GnQlJlu5fq6rf80
-         V+xf2ZB2fPo0IDIJLU0RsxMR0DiszTOOKyYNUT/dxs4TI+yD3W+5ylVVnnOPIam+EukF
-         CpIa3yAQFoC5Tyzl/xypTTdV8WBxt+ObQ6b2FBkbwtFdqIsn32zpz5ihsskb71ikCzCd
-         aKkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=G4UK+N1D7eZ3gh+QYJXokrWxjuw5VKrcGy+f6JcSXuM=;
-        fh=Dq2KHGDAIy3Y7QGrSTpsnMk7zCsrTArwRjwrsRlhf88=;
-        b=QU66UEvomJaaX8yCBwpzEo9Q2MezWdTI8JTeNGH+LUad12yj+GpXe08g2iwXyxVuo+
-         WT+uA/fTrC+ytMtrTVbruZU0DEmC+gTU30YZ6nEp46Z5l9R3uwqlbPBYfIk4IlLJ4xya
-         4xTLRWQHLv6EJbwXJo+iupg5GqmpoS0+JXkxt3syJTqIn6d64kraiBwFonrA8pu5gGHr
-         iI0njFcfcgZsV2VBc/0EvDrZn41IXBO7HlaNeEiUZs+bH6Im80XjzaCCbLy+a9/DhsCN
-         3ceoJbZVAK2ohge0zTCNR+qrspBNexqhl9Qiqraddv+A2w5imay5hmh6AXEjrrFGG+Ns
-         CFiQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786162434; x=1786767234; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=G4UK+N1D7eZ3gh+QYJXokrWxjuw5VKrcGy+f6JcSXuM=;
-        b=b5Kzoowhlgqwf21M3r7LghuDOP8n3t8kv79Oy6GnxdlRg8yRAxsLCO4clquC+XEoXe
-         rlHnt9s9e9pGVAeiBnepN4Dqp2MPtBB4OsyvoBAB/aDuAjY6I9Q4N2CBZYAO3pvgmIy9
-         B6xdWxGOFlfleYh+5oIqXGiWRgJzDlsHCTSq/z6kfVYl1AG8bxXVWgwyi2iVu1qweEDv
-         qDOPbFU18j4dJvzxUhOqzDtQj1ghA8a4GpY+uDVFlOpHnzllfXTNS6XCzeTDRZf9ZV07
-         w+9vZ8WX0BHD+XVWW5B/OMnaLh1QDMub+3H8yPfronCdJUiitoTJRBDs+bMLtGRy7v9r
-         w44g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786162434; x=1786767234;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=G4UK+N1D7eZ3gh+QYJXokrWxjuw5VKrcGy+f6JcSXuM=;
-        b=ijWZJ4foukBfj2+6ly6UJujr6+zWuWVgSyWeGSL9OByi3cFBHMOo34JAXv3tVMmycd
-         NIGIiB9pgs3IwdvZ6TClltuXdcnD5wCvBfVJodR6JOd/9wyEoW1qoIMwsndRLkeK0AiY
-         TrAmV5InB7Faf0VJqUMc97vGhbI9PugXX4rJF8DX72ONO2X9bJyNX35UJzV6xGPxd+go
-         TAS94evwfFUrd3pWYyqxif0ftnfYWw+mFvxTyhQOe3OigvoUpgfu8utrGnK6bFr3jLbN
-         rBkuyQdMLlmM3efzi8XA3Tht/fDtlz/LMAa7/jOxQ7KfkJ9ZLS1EPGKxVCUlolz28xgW
-         jozA==
-X-Forwarded-Encrypted: i=1; AHgh+RoMqpYny9ZbRV8DC3sK69OOT8TjPP1j9EzmFHg/urI/zMTNoIL2bfbuiORIujB4mlVgCbrcGlRtYv2qvxK26RlX@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHmd6lo+ey2bTEtI7CSBtivkJnvWRlsjlJFAYuS6X9r3Dy8Gvv
-	Z8FPxm3WerSQzQLkcbwcx1O6r46T137Ga88zOlPwL5DkjCVoLytPocfhwATXOgY3qZuU/b+Y4QT
-	p46tj9JuYlTKyfyxVOXYErpazSXY5JVVxxss6vSyV
-X-Gm-Gg: AR+sD10v+2eZAN4ooAXuXIEKBEo4d6wwa9xn+PMLDoNp6IaFwmPpkk8kvyJMcMWi6TS
-	Ck2DT/9HIl9+lv8Vu3O7UlDfWLgeKsZSbX9nBDvu20+uLndU4+jSWOpBELZ+DC8pcc2HrTKgM1f
-	2GUhwQFBVsOlooAMWXPi2I6ZVXYykNGAwhDoAsmpoSa01TQMNX1sj8DpjFCemxRhD6lnatIxyX2
-	I2AjwbwTxhhnJeQsOVvDUhZEWCdWUi8FUN4ZDaouxRIHB2TIrBygsv3m5YxfrXgCTz9uxhfGWAj
-	m4TyRBNu97874ykcuHUB9K3vvtmGMZzZ8wdg/c7qwGomVA==
-X-Received: by 2002:a05:622a:d0d:b0:516:ccc0:ee38 with SMTP id
- d75a77b69052e-52d28158dbdmr3544431cf.9.1786162433527; Fri, 07 Aug 2026
- 21:13:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="M/PBQ/P3"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67848Jrk3466772;
+	Sat, 8 Aug 2026 05:11:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Tc6X9e
+	mPLl/jNG6oNrbBl52ybSnFgT7wpBv7QnTkr7o=; b=M/PBQ/P3ZIsPpRxgnxFz5z
+	94hrb4U/JjY4R4xfqOWoK3Gtn7hDC8iGshS222U0tHlMbtDKjvqdk29oXa1l50Fi
+	qjSBdXCbbwaCEHQbXgpDnV3FzZUf0dIrIFhru9pLb+vqmaRjXxFnm0KBMCsi+qqj
+	FGKD1W6hneb2AoQQtreNQXDanKE80oqVcyu+fl/miuWtqu2O1NBveOO5M8N73NQr
+	08ksK3e0WTtWlRwQIAST3EqkhbvLxfoYKmf1VJPweBsDn1lia+UjB9aKZztYb0pX
+	/XMflLnItU5rs/beM05dq6XNnFZwWbWdkgc2MB8t5Kh+Od3huKtHpQkP0wZqgEeQ
+	==
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fwvnvr6fj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Aug 2026 05:11:55 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 6785BI5W030632;
+	Sat, 8 Aug 2026 05:11:55 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fswu02cwt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 08 Aug 2026 05:11:54 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 6785BpZs35651898
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sat, 8 Aug 2026 05:11:51 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EE3C720040;
+	Sat,  8 Aug 2026 05:11:50 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 213A820043;
+	Sat,  8 Aug 2026 05:11:48 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.124.213.45])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Sat,  8 Aug 2026 05:11:47 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260807104913.1784943-1-jremus@linux.ibm.com>
-In-Reply-To: <20260807104913.1784943-1-jremus@linux.ibm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 7 Aug 2026 21:13:41 -0700
-X-Gm-Features: AUfX_mxDRuh5UGGtsR2bBKFmY2D2g9rp3fFigNKa7QRRZfcyrxDIcOjJPNv2T3c
-Message-ID: <CAP-5=fWqtWQ+vA5-8ieARsVWqt-D3pUc1+NdwqEJ1F=jCkK86Q@mail.gmail.com>
-Subject: Re: [PATCH] perf evsel: Improve frame pointer unwinding warning for s390
-To: Jens Remus <jremus@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Jan Polensky <japo@linux.ibm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
+Subject: Re: [PATCH V5 0/6] tools/perf: Add powerpc HTM auxtrace support
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <20260807144135.2607-1-atrajeev@linux.ibm.com>
+Date: Sat, 8 Aug 2026 10:41:35 +0530
+Cc: linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        hbathini@linux.vnet.ibm.com, tejas05@linux.ibm.com,
+        tshah@linux.ibm.com, venkat88@linux.ibm.com, usha.r2@ibm.com,
+        maddy@linux.ibm.com
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <083A4990-6158-4C25-B29C-78A8AF9ADCF3@linux.ibm.com>
+References: <20260807144135.2607-1-atrajeev@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org
+X-Mailer: Apple Mail (2.3864.300.41.1.7)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=RsP16imK c=1 sm=1 tr=0 ts=6a76ba9c cx=c_pps
+ a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
+ a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=pCsBzzXw6jkMmXqWeCkA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: -pSmrUBy3-pFA9sfETm_UfK_jT9owVLN
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODA4MDAzNyBTYWx0ZWRfX7SQfccWd7qoG
+ 6UvM7bIvkvW8XBgcm8ACLNdyeWChjYmN89tGvSfIkxC0oeoTxDVulH/0jb7Cz4XMDxGMOVGMSUo
+ CxADRrrCl5q8dRMBZjjeFwHyTBqpGeoK7x968gmNmA0v696Kg/XpLLl1aCC2U0wW7pFWoDJLK+t
+ Xs2kMDihFj0Ef/8fkjtHQIqx3iJATvs+U2xW4MUzIQrYpAuvoMasS3G872FKU6MeasVoKMKa9JE
+ eeNGExZdYK5W5iqkYmCl7drdVmQAh3UXp6N3RX555AvIBTSCNbDajf2gzhykrUfvHZz9oAP299G
+ 4UM88n2qk4+xSgpMHkH2av4oIvZmb3vASfLgN39TEW7Odwntldvtis6wmR8KgzpGmI8MHTLORNT
+ AmVyJlKRUsvXIHvVgaWl2goDF2oUexP2vP+JbrJQebU/Ui8hhMTelUoYryEuCgWXkegJ4VoMGpM
+ nzr5515jICg9AjC+/rg==
+X-Proofpoint-ORIG-GUID: 1752-X3pWtpYLbqB8FWnHUTCsmYRUlTL
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODA4MDAzNyBTYWx0ZWRfXxbtmIJdSW12U
+ 4PXZjm3T/PtB9KbcnxR35nS9ngBOom0b9sOgm3beH7tqNsH2/BOUEyzn1E1hc9gMp9J4DBQH5kF
+ ipgkwy7JuzEkTWZAdgKFNhhRhTD0mzY=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-08_02,2026-08-07_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 suspectscore=0 clxscore=1015 malwarescore=0
+ phishscore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608080037
 
-On Fri, Aug 7, 2026 at 3:49=E2=80=AFAM Jens Remus <jremus@linux.ibm.com> wr=
-ote:
->
-> On s390 the kernel uses s390 back chain instead of frame pointers for
-> stack tracing of user space since v6.7 commit aa44433ac4ee ("s390: add
-> USER_STACKTRACE support").  This is because frame pointers on s390
-> cannot be used for stack tracing. [1]
->
-> This requires user space to maintain a s390 back chain.  For instance
-> user space to be built with compiler option '-mbackchain' (instead of
-> '-fno-omit-frame-pointer' used on other architectures, which should
-> better not be used on s390 [1]).
->
-> Only few distributions and users built user space with '-mbackchain'.
-> Therefore '--call-graph fp' may not produce the expected results.
->
-> Commit ca76fb67ebdd ("perf evlist: Improve default event for s390")
-> added a warning for s390 that wrongly claimed that "Framepointer
-> unwinding lacks kernel support".  Change the warning to hint at using
-> '--call-graph dwarf' if user space does not maintain a s390 back chain.
->
-> Note that '--call-graph fp' may also be useful for other applications,
-> such as OpenJDK maintaining a s390 back chain (does not require JVM
-> option '-XX:+PreserveFramePointer' on s390):
->
->   $ perf record --call-graph fp ... -- \
->     java -XX:+UnlockDiagnosticVMOptions -XX:+DumpPerfMapAtExit ...
->
-> [1]: s390: Stack tracing using Frame Pointer, Back Chain, and SFrame,
->      https://conf.gnu-tools-cauldron.org/opo25/talk/Y3CVHY/
->
-> Fixes: ca76fb67ebdd ("perf evlist: Improve default event for s390")
-> Signed-off-by: Jens Remus <jremus@linux.ibm.com>
-> ---
->  tools/perf/util/evsel.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index ea9fa04429f0..c4d67d1b35f3 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1080,7 +1080,8 @@ static void __evsel__config_callchain(struct evsel =
-*evsel, const struct record_o
->
->         if (EM_HOST =3D=3D EM_S390 && param->record_mode =3D=3D CALLCHAIN=
-_FP) {
->                 pr_warning_once(
-> -                       "Framepointer unwinding lacks kernel support. Use=
- '--call-graph dwarf'\n");
-> +                       "Use '--call-graph dwarf' if user space does not =
-maintain a s390 back chain "
-> +                       "(e.g. is not built with '-mbackchain').\n");
 
-Thanks Jens. The text was based on:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arc=
-h/s390/kernel/perf_cpum_sf.c#n853
-```
-static int cpumsf_pmu_event_init(struct perf_event *event)
-...
- /* No support for callchain, stacks and registers */
-if (has_branch_stack(event) || is_callchain_event(event))
-return -EOPNOTSUPP;
-```
-The backchain option is never tested by perf or apparently in the
-kernel, but this warning is supposed to pre-warn about "not supported"
-being returned when frame pointer unwinding is requested. Of course,
-lacking an s390 I've never tested this. I can imagine the warning
-being overly broad, but my understanding is cpum_sf is the only PMU
-capable of sampling on s390.
 
-Perhaps what is needed is additional text after the "Use '--call-graph
-dwarf'". The existing initial text at least appears to match the
-kernel code. I'm not clear how the lack of back chains would be
-reported as an error code, and this could introduce confusion as we
-have lots of stack, chain and branch related terms in the perf
-codebase.
+> On 7 Aug 2026, at 8:11=E2=80=AFPM, Athira Rajeev =
+<atrajeev@linux.ibm.com> wrote:
+>=20
+> Overview:
+> This series adds perf tool support for capturing and processing =
+Hardware
+> Trace Macro (HTM) trace data on POWER systems.  HTM exposes raw =
+bus-trace
+> data via the H_HTM hypervisor call.  The kernel-side HTM PMU driver
+> (submitted separately) streams this data into perf AUX buffers and =
+emits
+> memory configuration as PERF_SAMPLE_RAW records.
+>=20
+> This series wires up the record and report sides in the perf tool so =
+that
+> 'perf record' collects HTM data and 'perf report' writes the trace and
+> memory configuration to files ready for post-processing with =
+htmdecode.
+>=20
 
-Thanks,
-Ian
+Hi All,
 
->         }
->
->         evsel__set_sample_bit(evsel, CALLCHAIN);
->
-> base-commit: f9a2394a23482bfd330911e9c8295b71724feacd
-> --
+I am currently working on addressing Sashiko's review comments for V5 of =
+the patch series.
+Before I proceed with posting V6, requesting for any feedback or =
+suggestions that I should incorporate in V6, apart from Sashiko's =
+comments.
+
+Thanks
+Athira
+
+> Patch overview:
+> Patch 1 refactors the existing powerpc auxtrace dispatch.  All VPA-DTL
+> recording logic is moved from arch/powerpc/util/auxtrace.c into its =
+own
+> file, arch/powerpc/util/vpa-dtl.c, leaving auxtrace_record__init() as =
+a
+> thin per-PMU dispatcher.  This is a prerequisite for adding the HTM
+> recording path cleanly.
+>=20
+> Patch 2 adds the HTM recording path (arch/powerpc/util/htm.c and
+> util/powerpc-htm.h).  htm_recording_init() sets up the auxtrace_record
+> callbacks.  htm_info_fill() stores the PMU type and a (cpu, =
+attr.config)
+> pair for each htm evsel into the PERF_RECORD_AUXTRACE_INFO priv[] =
+area.
+> The decode side reads these back to map each AUX buffer to its
+> (node, chip, core) target using event->auxtrace.cpu.  PERF_SAMPLE_RAW =
+is
+> also enabled here so that memory configuration records are captured
+> alongside the AUX stream.
+>=20
+> Patch 3 adds a generic weak arch_perf_record__need_read() hook in
+> builtin-record.c.  When the hook returns non-zero, perf record =
+performs
+> an extra mmap-read pass before disabling events.  The drain loop runs
+> until the hook returns 0 or no forward progress is made, then the =
+events
+> are disabled and closed normally.
+>=20
+> Patch 4 implements arch_perf_record__need_read() for powerpc.  It =
+reads
+> event->count for all open htm evsels via perf_evsel__read() and
+> accumulates the values.  The kernel driver sets this count to the =
+number
+> of 128-byte HTM trace records written on a successful dump, 1 when the
+> AUX buffer is temporarily full but the hypervisor stream is intact, =
+and
+> 0 once the stream is exhausted or a hard error occurs.  A non-zero =
+total
+> causes the recording loop to perform another read pass.
+>=20
+> Patch 5 adds PERF_AUXTRACE_POWERPC_HTM to the auxtrace_type enum and
+> wires the dispatch in perf_event__process_auxtrace_info().  It also
+> amends htm_info_fill() to set auxtrace_info->type now that the =
+constant
+> is available.
+>=20
+> Patch 6 adds the full HTM decode path in util/powerpc-htm.c.
+> powerpc_htm_process_auxtrace_info() reads the (cpu, config) pairs from
+> priv[] and builds a cpu_configs[] lookup table.  As each
+> PERF_RECORD_AUXTRACE event arrives, process_auxtrace_event() maps it =
+to
+> the correct target and writes the data to htm.bin.nX.pX.cX.tX =
+immediately.
+> PERF_RECORD_SAMPLE RAW records are written to translation.nX.pX.cX.tX =
+by
+> process_event().  Per-run first-write tracking (htm_target_seen) =
+ensures
+> O_TRUNC on the first write and O_APPEND on subsequent writes.
+>=20
+> Patches not included in V2:
+> Three patches present in V1 are intentionally dropped from this series
+> and will be submitted as a follow-on once the core infrastructure gets
+> integrated:
+>=20
+>  - htmdecode integration: V1 patch 6 invoked the external htmdecode
+>    tool via fork/exec after writing htm.bin.* to decode the raw
+>    bus-trace data in-process.  This is deferred because the interface
+>    between perf and an external decode tool needs more discussion.
+>=20
+>  - Physical-to-logical address mapping: V1 patch 7 read the current
+>    partition ID from /proc/powerpc/lparcfg, parsed the translation.*
+>    memory map entries, and mapped physical addresses in the decoded
+>    trace to logical addresses within the LPAR.
+>=20
+>  - Synthetic sample generation: V1 patches 8 and 9 created a
+>    PERF_TYPE_SYNTH event named "htm", injected synthetic perf samples
+>    with the translated logical addresses as sample IP, and wrote a
+>    separate .out.l file with logical addresses alongside the decoded
+>    trace.  The appropriate abstraction for synthetic HTM samples in =
+the
+>    perf tool requires further discussion.
+>=20
+> Usage example:
+> Collect HTM trace data from a single chip target:
+>=20
+>  # perf record -C 9 -m,256 \
+>      -e htm/nodalchipindex=3D2,nodeindex=3D0,htm_type=3D1/ sleep 3
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 256.277 MB perf.data ]
+>=20
+>  # perf report
+>=20
+> Output files written by perf report:
+>=20
+>  htm.bin.n0.p2.c0.t1       raw HTM bus-trace data
+>  translation.n0.p2.c0.t1   memory configuration records
+>=20
+> Multiple targets can be collected simultaneously:
+>=20
+>  # perf record -m,256 \
+>      -e htm/nodalchipindex=3D2,nodeindex=3D0,htm_type=3D1,cpu=3D8/ \
+>      -e htm/nodalchipindex=3D1,nodeindex=3D0,htm_type=3D1,cpu=3D9/ \
+>      -a sleep 10
+>=20
+> Testing:
+> Tested on POWER11.  Both htm.bin.* and translation.* files are =
+produced
+> correctly for single and dual target collection.
+>=20
+> Note: Link to kernel patches:
+> =
+https://lore.kernel.org/linuxppc-dev/20260807143734.1224-1-atrajeev@linux.=
+ibm.com/T/#t
+>=20
+> Athira Rajeev (6):
+>  tools/perf: Move powerpc VPA-DTL auxtrace init into a separate file
+>  tools/perf: Add AUXTRACE recording support for powerpc HTM
+>  tools/perf: Add arch hook to drain remaining data before event close
+>  tools/perf: Add powerpc callback support for
+>    arch_perf_record__need_read
+>  tools/perf: Add powerpc HTM auxtrace event processing support
+>  tools/perf: Add perf tool support for processing powerpc HTM AUXTRACE
+>    records
+>=20
+> tools/perf/arch/powerpc/util/Build      |   2 +
+> tools/perf/arch/powerpc/util/auxtrace.c |  98 ++----
+> tools/perf/arch/powerpc/util/evsel.c    |  77 ++++
+> tools/perf/arch/powerpc/util/htm.c      | 185 ++++++++++
+> tools/perf/arch/powerpc/util/vpa-dtl.c  |  96 +++++
+> tools/perf/builtin-record.c             |  65 ++++
+> tools/perf/util/Build                   |   1 +
+> tools/perf/util/auxtrace.c              |   4 +
+> tools/perf/util/auxtrace.h              |   1 +
+> tools/perf/util/powerpc-htm.c           | 447 ++++++++++++++++++++++++
+> tools/perf/util/powerpc-htm.h           |  43 +++
+> tools/perf/util/powerpc-vpadtl.h        |   3 +
+> tools/perf/util/record.h                |   4 +
+> 13 files changed, 954 insertions(+), 72 deletions(-)
+> create mode 100644 tools/perf/arch/powerpc/util/htm.c
+> create mode 100644 tools/perf/arch/powerpc/util/vpa-dtl.c
+> create mode 100644 tools/perf/util/powerpc-htm.c
+> create mode 100644 tools/perf/util/powerpc-htm.h
+>=20
+> --=20
 > 2.53.0
->
+>=20
+
