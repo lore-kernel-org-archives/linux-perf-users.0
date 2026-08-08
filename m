@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F93A3E8684
-	for <linux-perf-users@vger.kernel.org>; Sat,  8 Aug 2026 13:07:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A8238E12B
+	for <linux-perf-users@vger.kernel.org>; Sat,  8 Aug 2026 13:07:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786194425; cv=none; b=kagriVUHJpzCjs8InKrTow+bSPe5PXYk3kHKdTeUgBonCxx+lHYd65aNEd+7+bWYJEiu/ldihLDkAryyv479gRZbo+/KPf19R8T1bDubFQcc3A8AkQ7HgmOnVyv89vgJNO0DKFCmf75KJY0+galKNFoI1rtx3DJqFUQ+O/bpB1U=
+	t=1786194431; cv=none; b=mMv7llwyEfayf0Ph+dRanWykH14usGRWzRftDvlF6ug0quuWAARyUIEy+GILeUl25suRh/F1Is7b5XJm8ke/nTjW772UJP2qUpOQfTlINR5qJ9hCv7P9vDNih1cag1mMLlvYfTct+/V1PtaBkBLjAc9Y7d5y0OlomFKuUZ7KUEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786194425; c=relaxed/simple;
-	bh=uRcBbDKx13UqfhOiBjPXHv+b+/zdiFDiLFuZZKTq29c=;
+	s=arc-20240116; t=1786194431; c=relaxed/simple;
+	bh=fymUOzxfInfcYFaLnCFeiwjAEgCfTU82y0l9239JgAo=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=RLaLG7N/otv+s3weQLuZfffV8Q+ChA4r+hZNAa/z5uvlugEnr4dbrk1aclv8Uqh8qvOEAco36yAUfa42VNa1VrgrQTogEQ6pQTicALZT+psRanpoqv7qtBq9ARarYJztDOAodJRQnRnXkxgnkMyhspprbL1t50qSfANYR9Am9LM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lB34qnT3; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=E2W3s78NZPBRcQGGZVFgjM8i/gN+sSgSiqDMs83uaXK1zkQjmRunJoc4yEan3LwAHvoWcF/BWVZa6/qjLJJEf6M2I83azL9hWtt/sK4GUZKZMkIs1S6tiXdSIAKsxEdG5g/JJoFSrg0fXqpZ+1cMD+XWyWV7aPkCvkUYg10zyTc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kcKyBVcE; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lB34qnT3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF40E1F000E9;
-	Sat,  8 Aug 2026 13:07:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kcKyBVcE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 749031F000E9;
+	Sat,  8 Aug 2026 13:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786194422;
-	bh=BRSH3rgEmOG0W+/0dNOhBZjhj8XDOu+V3P63Rq84eQ8=;
+	s=k20260515; t=1786194428;
+	bh=2MAQL0dtXYgRbSod4P23/LJ+bezTpgbsHLqqvjSX1pM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=lB34qnT3X6ULGd0rreq55URlyi3oHMK9Cn4U7HupdAn7vBWbYc0nNrdHqNrBEd2Tl
-	 a6nfRWNG3TLRAWs8XZK4o/wAGd11MgiKFQSx5AUGgI1YRlxFlsuj2zT9gMWxfXG3IG
-	 a3s9HJijUzD9/KPNsvbu6VAs9HQVxQ0/sBBhPny05az8cXppkUyo9nnKxP2Z+ISloj
-	 rvuOh28QUz1Z8vUfCIIkTCQc4v2P4pe2R8Ggt+QYeGvEUMSligH3ISTn1p11WMLMRr
-	 Pqe32+Ir0xxVjbLHg4VR/InVuziaQhLFQo1oZD7KD1B6yChJS4D4QfgkFn5t2ypS4o
-	 NYDk4v24fCqlA==
+	b=kcKyBVcEaRcNAP/BOGUirBPkB7/a1EEkIWW3axy/JZdK1INWM9TJHA2G3DxRCqhXH
+	 qHptMMBEhJEVJTjPigFudDjdGzMGgfz7Z5Z9bXr4UQQivLXZlCnsue+a/pVe4Y/+HC
+	 1GjH83C0VeJFZFn/6N2hoF8TSGHVDhgsiQCDR9KFrfgJSvNMh/fkzKiSDMEePWNlDj
+	 3BCZ4A2zirczeUOODvMNPD3HVkw3iJYbUvE42Dc2kLdJt4LxMu2C95OZALaEc6z6Ol
+	 1Ct3l2WQU/N379w4yOQm71bhV63OKHEhotwt/DupRMKdciCqBN/rWXNcwhPmtPGkPw
+	 C6SwHEiI9yzAQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 04/23] perf annotate-arm64: Handle load and store
- instructions
+Subject: Re: [PATCH v4 06/23] perf annotate: Adapt arch__dwarf_regnum() for
+ arm64
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260808122400.2961238-5-wutengda@huaweicloud.com>
+In-Reply-To: <20260808122400.2961238-7-wutengda@huaweicloud.com>
 References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-5-wutengda@huaweicloud.com>
+ <20260808122400.2961238-7-wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 08 Aug 2026 13:07:00 +0000
-Message-Id: <20260808130701.DF40E1F000E9@smtp.kernel.org>
+Date: Sat, 08 Aug 2026 13:07:08 +0000
+Message-Id: <20260808130708.749031F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,89 +47,93 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] PC-relative loads can be incorrectly parsed and truncated if the=
-ir associated symbol name or trailing comment contains a bracket '[' (e.g.,=
- C++ operator[]).
-- [Medium] The arm64_ldst_ops struct omits a .scnprintf callback, breaking =
-UI formatting for PC-relative loads and discarding resolved symbols.
+- [Medium] The patch's fix to enable arm64 register parsing is unreachable =
+and ineffective because the callers still unconditionally require a registe=
+r prefix.
+- [Medium] The new optional prefix logic in `arch__dwarf_regnum()` fails to=
+ strip the opening bracket from memory operands.
 --
 
---- Patch [4]: [PATCH v4 04/23] perf annotate-arm64: Handle load and store =
-instructions ---
-commit e23857fdcfc409dfdff0cd84b9fe8f31c4283050
+--- Patch [6]: [PATCH v4 06/23] perf annotate: Adapt arch__dwarf_regnum() f=
+or arm64 ---
+commit 1ed2e0e5199a9033fdb64817a106aecaa0871796
 Author: Tengda Wu <wutengda@huaweicloud.com>
 
-perf annotate-arm64: Handle load and store instructions
+perf annotate: Adapt arch__dwarf_regnum() for arm64
 
-Add ldst_ops to handle load and store instructions in order to parse
-the data types and offsets associated with PMU events for memory access
-instructions. Matches instruction prefixes to handle arm64 variants.
+This commit makes the register prefix check in arch__dwarf_regnum() optional
+to support arm64 assembly syntax. It also extends the delimiter set in
+strpbrk() to handle bracketed memory operands and removes the static
+qualifier from arch__dwarf_regnum().
 
-> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/=
-util/annotate-arch/annotate-arm64.c
-> index 5e824fd617ee5..32752a3bc756b 100644
-> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
-> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index df70e95a84704..9d8b4d6b859b8 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+
 [ ... ]
-> @@ -163,6 +164,108 @@ static const struct ins_ops arm64_mov_ops =3D {
->  	.scnprintf =3D arm64_mov__scnprintf,
->  };
+
+> @@ -2472,21 +2472,23 @@ int annotate_check_args(void)
+>  	return 0;
+>  }
 > =20
-> +static bool arm64__insn_is_source_on_left(struct disasm_line *dl)
-> +{
-[ ... ]
-> +static int arm64_ldst__parse(const struct arch *arch,
-> +			     struct ins_operands *ops,
-> +			     struct map_symbol *ms,
-> +			     struct disasm_line *dl)
-> +{
-> +	char *s, *left, *right;
-> +
-> +	right =3D s =3D strchr(ops->raw, arch->objdump.memory_ref_char);
-> +	if (!s) {
-> +		/* Fallback to default parser for PC-relative loads. */
-> +		return arm64_mov__parse(arch, ops, ms, dl);
+> -static int arch__dwarf_regnum(const struct arch *arch, const char *str)
+> +int arch__dwarf_regnum(const struct arch *arch, const char *str)
+
+[Severity: Medium]
+Does this change fully enable arm64 register parsing?
+
+Looking at the callers of arch__dwarf_regnum(), they appear to still
+unconditionally enforce the presence of a register prefix character.
+
+For example, extract_reg_offset() checks:
+
+    if (arch->objdump.register_char =3D=3D 0)
+        return -1;
+
+And annotate_get_insn_location() strictly requires a match:
+
+    if (*s =3D=3D arch->objdump.register_char) {
+        op_loc->reg1 =3D arch__dwarf_regnum(arch, s);
+    }
+
+Will these un-updated callers prevent arm64 registers from actually being
+parsed?
+
+>  {
+> -	const char *p;
+> +	const char *p =3D str;
+>  	char *regname, *q;
+>  	int reg;
+> =20
+> -	p =3D strchr(str, arch->objdump.register_char);
+> -	if (p =3D=3D NULL)
+> -		return -1;
+> +	if (arch->objdump.register_char) {
+> +		p =3D strchr(str, arch->objdump.register_char);
+> +		if (p =3D=3D NULL)
+> +			return -1;
 > +	}
+> =20
+>  	regname =3D strdup(p);
+>  	if (regname =3D=3D NULL)
+>  		return -1;
+> =20
+> -	q =3D strpbrk(regname, ",) ");
+> +	q =3D strpbrk(regname, ",)] ");
 
 [Severity: Medium]
-For PC-relative loads, if the associated symbol name contains a bracket '['
-(such as a C++ operator[] or Objective-C method) or if there is an unstripp=
-ed
-comment containing a bracket, will this strchr() incorrectly match it inste=
-ad
-of falling back to arm64_mov__parse()?
+Since the prefix check is now optional, will p point to the opening bracket
+for arm64 memory operands like [x2, #8]?
 
-If so, it appears the subsequent string manipulation would use this incorre=
-ct
-bracket position, dropping the characters in between and potentially corrup=
-ting
-the operands.
+This strpbrk() strips the closing bracket ], but is there logic to strip the
+leading [ before the string is passed to get_dwarf_regnum()? Can this pass
+[x2 as the register name and cause it to be rejected?
 
-[ ... ]
-> +	ops->source.multi_regs =3D arm64__check_multi_regs(arch, ops->source.ra=
-w);
-> +	ops->target.multi_regs =3D arm64__check_multi_regs(arch, ops->target.ra=
-w);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct ins_ops arm64_ldst_ops =3D {
-> +	.parse	   =3D arm64_ldst__parse,
-> +};
-
-[Severity: Medium]
-Does omitting a .scnprintf callback here break UI formatting for PC-relative
-loads?
-
-Because this structure lacks .scnprintf, it will fall back to
-ins__raw_scnprintf(). For PC-relative loads that successfully fall back to
-arm64_mov__parse() and resolve the symbol into ops->source.name, the raw
-formatter will ignore the resolved symbol and just print ops->raw. Could th=
-is
-result in the UI discarding the resolved symbol and displaying raw hex
-addresses instead?
+>  	if (q)
+>  		*q =3D '\0';
+>
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260808122400.2961=
-238-1-wutengda@huaweicloud.com?part=3D4
+238-1-wutengda@huaweicloud.com?part=3D6
