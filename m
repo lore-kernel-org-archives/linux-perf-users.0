@@ -1,28 +1,28 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D9863D6476;
-	Sat,  8 Aug 2026 12:24:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77830414A21;
+	Sat,  8 Aug 2026 12:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786191877; cv=none; b=pfDE6touIKADPcTYHIPlQq+oZI9PUDLRowROlkkGtheuQTB5cpwSTtO0/JVGGe0YAL3pDl2fFajV8BZY6pWyPxapDhwZTH83x/F9Ktuuy+8UkZk1awMO4QhU/4pkqqg1a32ignJiO+acx4g5l5RQvtNfmGJM6Op87ygkMW3TViA=
+	t=1786193076; cv=none; b=fFXDrwaPUABTfpZd7YxcNCMdZKY2hhgjexis5oxLGCEFCIP5O7E+28tVaNnyOs55Eo2KspZX9EYvMtmIL0KLAcV292zsLth/j+K2fpOKNjFYm0iOCf8GES/KQ7AO7siO8p10MBMhLPmgtbeuvwrhCW5+huaJKzeJyWVkBOHdEN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786191877; c=relaxed/simple;
-	bh=5YeuKHpEOaBE6ODOFH8aCpiibLr97M6y7BQzxMRaeXg=;
+	s=arc-20240116; t=1786193076; c=relaxed/simple;
+	bh=fgjFC7OTBNn6kbehtQ5xn7LKorTtVxFcSxZLVls5MdA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PboyvitXirdjfvD9IM68HKiUsXNvir61Q36nYxy8fwuOvJWLEbudr5Ej6OHbimCNNgZWE/rqlz6osWeQXAlAA6qbGWG+Q077ZrMyaByIpwmU+aitvdKbMZJdRqejx/9KymHyoGaISmGeX03LjuQzmRt93rArOxAqpvSth9wNOvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=tiSijlveE5R4Oi0QGQunWQuLLw88cFdKZCCR/a1TLf8TV7L0XQiY2dYVIYUYHaeKBVjC0rZIDBnHjXVvhB8mUJuPQ9nq6GbEQO0l6v4qEdwHNbgPEQUhn9tvuRAM1cSWrZiUtSMyoO4me8jkwiZvAOFBKl4/fcv+TascxQooLGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hHKtK4CcKzYQvmt;
-	Sat,  8 Aug 2026 20:23:21 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hHKvB2l5czKHMnt;
+	Sat,  8 Aug 2026 20:24:06 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id BF93D4057D;
-	Sat,  8 Aug 2026 20:24:19 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 7E4E240571;
+	Sat,  8 Aug 2026 20:24:17 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgB34YjkH3dqbrhMBg--.41805S25;
-	Sat, 08 Aug 2026 20:24:19 +0800 (CST)
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgB34YjkH3dqbrhMBg--.41805S4;
+	Sat, 08 Aug 2026 20:24:17 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Namhyung Kim <namhyung@kernel.org>,
 	james.clark@linaro.org,
@@ -44,9 +44,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v4 23/23] perf annotate-arm64: Support 'mrs' instruction to track 'current' pointer
-Date: Sat,  8 Aug 2026 12:24:00 +0000
-Message-Id: <20260808122400.2961238-24-wutengda@huaweicloud.com>
+Subject: [PATCH v4 02/23] perf llvm: Fix arm64 adrp instruction disassembly mismatch with objdump
+Date: Sat,  8 Aug 2026 12:23:39 +0000
+Message-Id: <20260808122400.2961238-3-wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260808122400.2961238-1-wutengda@huaweicloud.com>
 References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
@@ -57,201 +57,123 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgB34YjkH3dqbrhMBg--.41805S25
-X-Coremail-Antispam: 1UD129KBjvJXoW3JrW3KFykCr4xKw1DKryxAFb_yoWxJw4fpa
-	yDC34DGrs7Jw4aganxJFWUZryfK393Ww15Kr90ywsayF47Kr1xK3WktFW2kay5Jr95uw17
-	Jr4DKrs8Ww42vF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUHjb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-	AKxVWxJr0_GcWl84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E
-	14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7
-	xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Y
-	z7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6x
-	kF7I0E8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkF7I0Ew4C26cxK6c8Ij28IcwCF
-	04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
-	18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vI
-	r41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr1j6r
-	xdMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY
-	6I8E87Iv6xkF7I0E14v26F4UJVW0obIYCTnIWIevJa73UjIFyTuYvjTRQYFCDUUUU
+X-CM-TRANSID:Syh0CgB34YjkH3dqbrhMBg--.41805S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxWryxGr4xuw48Zr4xCFykKrg_yoW5ZF4fpr
+	ZFka95Jry5Ar1fZ39IkF47WFn0yrZ2gF45K3y3ArWvkr4ftFyxC34xGry29F1DXryqq3y5
+	ArZIvFyUGF4kArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQCb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUXw
+	A2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMc
+	Ij6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_
+	Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I
+	0E8cxan2IY04v7MxkF7I0En4kS14v26r4a6rW5MxkF7I0Ew4C26cxK6c8Ij28IcwCF04k2
+	0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41l
+	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMI
+	IF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E
+	87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjTRQL00DUUUU
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Extend update_insn_state() for arm64 to handle the 'mrs' instruction,
-enabling the tracking of the 'current' task pointer in the kernel.
+The operands of 'adrp' instructions parsed by libllvm are currently
+represented as raw immediates rather than the "address <symbol+offset>"
+format used by objdump. This inconsistency causes arm64_mov__parse()
+to fail when parsing these instructions during post-processing.
 
-On arm64, the kernel uses the 'sp_el0' system register to store the
-address of the currently executing 'struct task_struct'. This is
-typically accessed via the 'get_current()' inline function, resulting
-in the instruction 'mrs xN, sp_el0'.
+Example of the mismatch:
+  Current: adrp  x18, 8014
+  Fix:     adrp  x18, ffff800081f5f000 <this_cpu_vector>
 
-To resolve the data type of the target register, first verify the
-access is to 'sp_el0' within a kernel DSO. Then, locate the
-'get_current()' inline function's DWARF Die at the current PC and
-extract its return type (which is 'struct task_struct *').
+Fix this by manually extracting the target address from the raw adrp
+instruction via symbol_lookup_callback(). The address is then converted
+to a specific symbol during symbol__disassemble_llvm() and formatted
+to match objdump's output, ensuring compatibility with existing
+parsers.
 
-Introduce 'task_struct_cache' to cache the DWARF offset of task_struct
-alongside its corresponding dbg handle. This is particularly important
-because the compiler-generated stack canary check code (which loads from
-'current->stack_canary') often exists in code sections or leaf functions
-where the local Compilation Unit (CU) lacks a full 'struct task_struct'
-definition. Caching the offset allows 'perf annotate' to consistently
-resolve task-related fields across the entire kernel binary.
-
-A real-world example is shown below:
-
-  ffff8000800deee8 <kthread_blkcg>:
-  ffff8000800deef0:  mrs  x0, sp_el0    // x0 = current
-* ffff8000800deef4:  ldr  w1, [x0, #44]
-
-Before this commit, the type flow starts with no information:
-
-  chk [c] reg0 offset=0x2c ok=0 kind=0 cfa : no type information
-  final result: no type information
-
-After this commit, the tracker identifies the 'current' pointer
-from the system register:
-
-  mrs [8] sp_el0 -> reg0 type='struct task_struct*'
-  chk [c] reg0 offset=0x2c ok=1 kind=1 (struct task_struct*) : Good!
-  found by insn track: 0x2c(reg0) type-offset=0x2c
-  final result: type='struct task_struct'
-
-Signed-off-by: Li Huafei <lihuafei1@huawei.com>
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- .../perf/util/annotate-arch/annotate-arm64.c  | 97 ++++++++++++++++++-
- 1 file changed, 95 insertions(+), 2 deletions(-)
+ tools/perf/util/llvm.c | 50 ++++++++++++++++++++++++++++++++++++++----
+ 1 file changed, 46 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
-index b01fa6cf865f..9d1f315dcb28 100644
---- a/tools/perf/util/annotate-arch/annotate-arm64.c
-+++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-@@ -15,6 +15,7 @@
- #include "../dso.h"
- #include "../map.h"
- #include "../symbol.h"
-+#include "../strbuf.h"
+diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
+index a0deb742a733..6b53b283205a 100644
+--- a/tools/perf/util/llvm.c
++++ b/tools/perf/util/llvm.c
+@@ -9,8 +9,10 @@
+ #include "symbol.h"
+ #include <errno.h>
+ #include <fcntl.h>
++#include <string.h>
+ #include <unistd.h>
+ #include <linux/zalloc.h>
++#include <linux/bitops.h>
  
- struct arch_arm64 {
- 	struct arch arch;
-@@ -889,6 +890,96 @@ static void update_adrp_insn_state(struct type_state *state,
- 		     insn_offset, tsr->imm_value, dreg);
+ #ifdef HAVE_LIBLLVM_SUPPORT
+ #include "llvm-c-helpers.h"
+@@ -108,6 +110,16 @@ symbol_lookup_callback(void *disinfo, uint64_t value,
+ 		storage->branch_addr = value;
+ 	else if (*ref_type == LLVMDisassembler_ReferenceType_In_PCrel_Load)
+ 		storage->pcrel_load_addr = value;
++	else if (*ref_type == LLVMDisassembler_ReferenceType_In_ARM64_ADRP) {
++		uint64_t adrp_imm;
++
++		/* immhi (bits 23:5) and immlo (bits 30:29) */
++		adrp_imm = ((value & 0x00ffffe0) >> 3) | ((value >> 29) & 0x3);
++		adrp_imm = sign_extend64(adrp_imm, 20);
++
++		/* Calculate the target page address */
++		storage->pcrel_load_addr = (address & ~0xfffULL) + (adrp_imm << 12);
++	}
+ 	*ref_type = LLVMDisassembler_ReferenceType_InOut_None;
+ 	return NULL;
  }
- 
-+static struct {
-+	Dwarf_Off dieoff;
-+	Dwarf *dbg;
-+} task_struct_cache;
+@@ -230,10 +242,40 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
+ 		if (storage.pcrel_load_addr != 0) {
+ 			char *name = llvm_name_for_data(dso, filename,
+ 							storage.pcrel_load_addr);
+-			disasm_len += scnprintf(disasm_buf + disasm_len,
+-						sizeof(disasm_buf) - disasm_len,
+-						"  # %#"PRIx64,
+-						storage.pcrel_load_addr);
 +
-+static void update_mrs_insn_state(struct type_state *state,
-+				  struct data_loc_info *dloc, Dwarf_Die *cu_die,
-+				  struct disasm_line *dl,
-+				  struct annotated_op_loc *dst)
-+{
-+	struct type_state_reg *tsr;
-+	Dwarf_Die type_die;
-+	u32 insn_offset = dl->al.offset;
-+	int dreg = dst->reg1;
-+	Dwarf_Die func_die;
-+	Dwarf_Attribute attr;
-+	u64 ip, pc;
++			if (arch__is_arm64(args->arch)) {
++				/*
++				 * For arm64, replace the immediate operand with
++				 * the resolved address to match objdump's output.
++				 *
++				 * Example conversion:
++				 *   From: adrp  x18, 8014
++				 *   To:   adrp  x18, ffff800081f5f000
++				 */
++				char *s = strchr(disasm_buf, ',');
 +
-+	if (!has_reg_type(state, dreg))
-+		return;
++				if (s == NULL)
++					goto err;
 +
-+	tsr = &state->regs[dreg];
-+	tsr->copied_from = -1;
++				s++;
++				*s = '\0';
++				disasm_len = strlen(disasm_buf);
++				disasm_len += scnprintf(disasm_buf + disasm_len,
++							sizeof(disasm_buf) - disasm_len,
++							" %"PRIx64,
++							storage.pcrel_load_addr);
++			} else {
++				/*
++				 * For other archs, append the resolved address
++				 * as an inline comment.
++				 */
++				disasm_len += scnprintf(disasm_buf + disasm_len,
++							sizeof(disasm_buf) - disasm_len,
++							"  # %#"PRIx64,
++							storage.pcrel_load_addr);
++			}
 +
-+	/* Handle case difference: LLVM (SP_EL0) vs objdump (sp_el0) */
-+	if (!dso__kernel(map__dso(dloc->ms->map)) ||
-+	    strcasecmp(dl->ops.source.raw, "sp_el0")) {
-+		invalidate_reg_state(tsr);
-+		return;
-+	}
-+
-+	ip = dloc->ms->sym->start + dl->al.offset;
-+	pc = map__rip_2objdump(dloc->ms->map, ip);
-+
-+	/*
-+	 * Invalidate cached DIE offset if the debug info handle changed
-+	 * (e.g. switching between vmlinux and a kernel module).
-+	 */
-+	if (task_struct_cache.dbg != dloc->di->dbg) {
-+		task_struct_cache.dieoff = 0;
-+		task_struct_cache.dbg = dloc->di->dbg;
-+	}
-+
-+	if (!task_struct_cache.dieoff ||
-+	    !dwarf_offdie(dloc->di->dbg, task_struct_cache.dieoff, &type_die)) {
-+		struct strbuf sb;
-+		char *type_name;
-+		/*
-+		 * Find the inline function 'get_current()' Dwarf_Die
-+		 * and obtain its return value data type, which should
-+		 * be 'struct task_struct*'.
-+		 */
-+		if (!die_find_inlinefunc(cu_die, pc, &func_die) ||
-+		    !die_compare_name(&func_die, "get_current") ||
-+		    !dwarf_attr_integrate(&func_die, DW_AT_type, &attr) ||
-+		    !dwarf_formref_die(&attr, &type_die)) {
-+			invalidate_reg_state(tsr);
-+			return;
-+		}
-+
-+		strbuf_init(&sb, 32);
-+		die_get_typename_from_type(&type_die, &sb);
-+		type_name = strbuf_detach(&sb, NULL);
-+
-+		if (!type_name || strcmp(type_name, "struct task_struct*")) {
-+			invalidate_reg_state(tsr);
-+			free(type_name);
-+			return;
-+		}
-+
-+		/*
-+		 * Cache the 'struct task_struct*' die offset globally.
-+		 * This allows us to resolve stack canary accesses even
-+		 * in CUs that lack a full task_struct definition (e.g.,
-+		 * compiler-generated entry/exit code).
-+		 */
-+		task_struct_cache.dieoff = dwarf_dieoffset(&type_die);
-+		free(type_name);
-+	}
-+
-+	tsr->type = type_die;
-+	tsr->kind = TSR_KIND_TYPE;
-+	tsr->offset = 0;
-+	tsr->imm_value = 0;
-+	tsr->ok = true;
-+
-+	pr_debug_dtp("mrs [%x] sp_el0 -> reg%d", insn_offset, dreg);
-+	pr_debug_type_name(&type_die, tsr->kind);
-+}
-+
- static void update_insn_state_arm64(struct type_state *state,
- 				    struct data_loc_info *dloc, Dwarf_Die *cu_die,
- 				    struct disasm_line *dl)
-@@ -951,7 +1042,7 @@ static void update_insn_state_arm64(struct type_state *state,
- 	 * prevent stale type info from propagating to subsequent instructions.
- 	 */
- 	if (has_reg_type(state, dst->reg1) &&
--	    strcmp(dl->ins.name, "adrp") &&
-+	    strcmp(dl->ins.name, "mrs") && strcmp(dl->ins.name, "adrp") &&
- 	    strcmp(dl->ins.name, "add") && strcmp(dl->ins.name, "mov") &&
- 	    strncmp(dl->ins.name, "ld", 2) && strncmp(dl->ins.name, "st", 2)) {
- 		pr_debug_dtp("%s [%x] invalidate reg%d",
-@@ -965,7 +1056,9 @@ static void update_insn_state_arm64(struct type_state *state,
- 		return;
- 	}
- 
--	if (!strcmp(dl->ins.name, "adrp"))
-+	if (!strcmp(dl->ins.name, "mrs"))
-+		update_mrs_insn_state(state, dloc, cu_die, dl, dst);
-+	else if (!strcmp(dl->ins.name, "adrp"))
- 		update_adrp_insn_state(state, dl, dst);
- 	else if (!strcmp(dl->ins.name, "add"))
- 		update_add_insn_state(state, dl, src, dst);
++			/* Append the resolved symbol name if available */
+ 			if (name) {
+ 				disasm_len += scnprintf(disasm_buf + disasm_len,
+ 							sizeof(disasm_buf) -
 -- 
 2.34.1
 
