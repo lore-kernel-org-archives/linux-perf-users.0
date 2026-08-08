@@ -1,163 +1,198 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B122C37B40A
-	for <linux-perf-users@vger.kernel.org>; Sat,  8 Aug 2026 13:20:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095F537B40A
+	for <linux-perf-users@vger.kernel.org>; Sat,  8 Aug 2026 13:20:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786195226; cv=none; b=Evsmbq0Km7Cfgln59uxqbGxNzA6k+KvOysHvi6J7C958gacnY6j4U/lg2EMRm9CI59+WHNhJCfWMOwERq10a9xz6krd4PWaflnkAOYrVZLzw9tKGxLvvkGlqpuhfXF5ibj/HTtgB4Tx5DVnDL/5DAXZUNqiZqRFaTFcVllejMso=
+	t=1786195253; cv=none; b=iU8Bjp9YeTZ3YJ9FQbx8j9ROUJPPydE/f0ssPtmjwg/1mIlkFUUQPmykHPPZSmTl6ovqEdOBrIxgm84npwm2Wqj+nBYydvXiCVZszJO6L2EvSeuresMuaGJwQBvXuh/z80PYbVFWAR9hQEbDmMV6YSnnUbXGax906C95Don8Z/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786195226; c=relaxed/simple;
-	bh=61cNJ7Bv/TNIl6/KdmsePma5n/JqbBx/HLll16EaVXI=;
+	s=arc-20240116; t=1786195253; c=relaxed/simple;
+	bh=P5gLoTzhTpOKAwcJEWrIXcFEaSQ84BQ9BXCfpiQDjKU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=N1APHMsIFSZALwnISvckD1leAfwW11FGXS5GF3vakBpULXlJSL2HrXG7vzUiPT6g7cbiSkoXOjoNBtKrPBvWvm6qqOSj7svxcC7BDPBDm8X2AQEq+volI2QnpcoJKjO9FeQnKteEGRGlTuGujdhoToTBHX7g17brgXzk1pHMGPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TneBVA1Z; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=nE5spfOWp5asi6w4gDrIYLqFrDGbQ75npPhF3iOZkDZjgCIHj5WN9x3nrjR3vT3EWrmVU53xRKIX9cKUOp2Y2qke3dlpGCtoPxJUU/UQEIk2gz2iw1yQ8m0PXQs7gLkdIrc5S9tHCxkx0I2eH3ECI5kL7sbFSgmjJF0P7IndisU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mbSzPeKA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TneBVA1Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 515831F000E9;
-	Sat,  8 Aug 2026 13:20:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mbSzPeKA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F4261F000E9;
+	Sat,  8 Aug 2026 13:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786195225;
-	bh=+LsKehzvpwimXYROogUFl6vKw6fEnjxL3EzmS4/4RNA=;
+	s=k20260515; t=1786195251;
+	bh=oKjO4AYHxyPtR9xPE+h1NuP7Ji1NIjRfGJ6AzWaWxbs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TneBVA1ZbZlPxpxkulh3/7l6Ys104ujPPl6SEBr78Srut0RIcYeRd0mupHDtasGHj
-	 /S2j9vbd2nIYfn5eBrArDk0yS2S3FvbkAjAJukVG+HsmRudxfMPwDI99BgfAfH3sRX
-	 +pRrjl5ymE6M7ViQYxGwuoGX1aDcqpB8gbGKuAQq2X7LU+116F7u8JrzLjj8DVb6J5
-	 Mxh/578duyfHTm07g0NiIX0Kxv9BrMXnUui6e1yQB00geWwMbloxMdZ70HHWn1M7N7
-	 XvC5ednhiKzMq0I1scQKReAoRPQOUkXXospWNZh/9yYJY1ToJ0Nl+KMGMCeQ2U5O8y
-	 vXeVUUmAbTvFA==
+	b=mbSzPeKA793xiPzI9olmseyYfjEP9MRCAdb+7l9UmOx+VX/SXFYcK/7WdIG0vnW0Z
+	 mI26XEUnZ3WAdb0d5BGE4WYi/mwKf3Kp6TsIzfqJnC+5b6QZIII4b75p6n1JSVV7Ye
+	 FH10DtorIApWn+f5z+W5OBiNQokk/CdY/Y9GSuLkgbR09BSwpuPlawAHoVdFh3f4nG
+	 xOSN+NCaKihWBespTqmouSb67p5t4vFx79OdG3Ldtj9OTE9VU3L2F5/Om413G4yDGf
+	 cEeuEg1Bapa0F0xFWqN8ut42lH/d64kjDiDlMMm9AZVJFKI2kkwkJA2NlibgbIIaf1
+	 deIVHd5mkz/0w==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 19/23] perf annotate-arm64: Support 'mov' instruction
- tracking
+Subject: Re: [PATCH v4 23/23] perf annotate-arm64: Support 'mrs' instruction
+ to track 'current' pointer
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260808122400.2961238-20-wutengda@huaweicloud.com>
+In-Reply-To: <20260808122400.2961238-24-wutengda@huaweicloud.com>
 References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-20-wutengda@huaweicloud.com>
+ <20260808122400.2961238-24-wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 08 Aug 2026 13:20:24 +0000
-Message-Id: <20260808132025.515831F000E9@smtp.kernel.org>
+Date: Sat, 08 Aug 2026 13:20:50 +0000
+Message-Id: <20260808132051.7F4261F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
 s) to consider:
-- [Medium] Conservative register invalidation incorrectly drops data types =
-for comparison instructions like 'cmp', 'cmn', 'tst', and 'teq'.
-- [Medium] Missing DWARF register lifetime propagation and clearing in ARM6=
-4 `mov` instruction tracking.
+- [High] The global `task_struct_cache` may permanently cache a DWARF offse=
+t for an incomplete forward declaration of `struct task_struct`, breaking t=
+ask tracking globally.
+- [High] The globally static `task_struct_cache` caches a raw `Dwarf *` poi=
+nter as a validation key, which is susceptible to an ABA problem when DWARF=
+ handles are recycled, leading to corrupt DWARF parsing.
+- [Medium] Calling `die_find_inlinefunc()` with a Compilation Unit DIE (`cu=
+_die`) instead of a Subprogram DIE (`sp_die`) causes a severe O(N) recursiv=
+e DWARF tree traversal.
+- [Medium] Caching the DWARF offset of `struct task_struct *` relies on a b=
+rittle non-deterministic order dependency, silently failing for compiler-ge=
+nerated code like stack canaries.
+- [Low] Missing explicit inclusion of `<strings.h>` for `strcasecmp()`, whi=
+ch violates subsystem guidelines and causes build failures on musl libc.
 --
 
---- Patch [19]: [PATCH v4 19/23] perf annotate-arm64: Support 'mov' instruc=
-tion tracking ---
-commit 16c512fdcea449b7238a3bf5f1a3afbffde8144e
+--- Patch [23]: [PATCH v4 23/23] perf annotate-arm64: Support 'mrs' instruc=
+tion to track 'current' pointer ---
+commit 9ea98019ec4e55f722077c51c12557f82e4d5f60
 Author: Tengda Wu <wutengda@huaweicloud.com>
 
-perf annotate-arm64: Support 'mov' instruction tracking
+perf annotate-arm64: Support 'mrs' instruction to track 'current' pointer
 
-Extend update_insn_state() for arm64 to support register-to-register and
-immediate-to-register 'mov' instructions. This propagates data types and
-constant values to improve subsequent instruction inference.
+This commit extends the arm64 instruction state tracker to handle mrs
+instructions reading from sp_el0. It attempts to track the current
+task pointer by locating the get_current() inline function and caching
+the struct task_struct DWARF offset for subsequent resolution.
 
 > diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/=
 util/annotate-arch/annotate-arm64.c
-> index 6e09e97072568..7b780bad8c070 100644
+> index b01fa6cf865ff..9d1f315dcb280 100644
 > --- a/tools/perf/util/annotate-arch/annotate-arm64.c
 > +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
 
 [ ... ]
 
-> +static void update_mov_insn_state(struct type_state *state,
-> +				  struct disasm_line *dl,
-> +				  struct annotated_op_loc *src,
-> +				  struct annotated_op_loc *dst)
-> +{
-> +	struct type_state_reg *tsr;
-> +	u32 insn_offset =3D dl->al.offset;
-> +	int sreg =3D src->reg1;
-> +	int dreg =3D dst->reg1;
-> +
-> +	if (!has_reg_type(state, dreg))
-> +		return;
-> +
-> +	tsr =3D &state->regs[dreg];
-> +	tsr->copied_from =3D -1;
-> +
-> +	if (src->imm) {
-> +		tsr->kind =3D TSR_KIND_CONST;
-> +		tsr->imm_value =3D src->offset;
-> +		tsr->offset =3D 0;
-> +		tsr->ok =3D true;
-
-[Severity: Medium]
-Does this code need to clear lifetime_active for the destination register?
-
-If an immediate value overwrites a register, failing to clear lifetime_acti=
-ve
-might incorrectly protect the new constant from being invalidated across
-function calls.
-
-> +
-> +		pr_debug_dtp("mov [%x] imm=3D%#"PRIx64" -> reg%d\n",
-> +			     insn_offset, tsr->imm_value, dreg);
-> +		return;
-> +	}
-> +
-> +	if (!has_reg_type(state, sreg) || !state->regs[sreg].ok) {
-> +		invalidate_reg_state(tsr);
-> +		return;
-> +	}
-> +
-> +	tsr->type =3D state->regs[sreg].type;
-> +	tsr->kind =3D state->regs[sreg].kind;
-> +	tsr->imm_value =3D state->regs[sreg].imm_value;
-> +	tsr->offset =3D state->regs[sreg].offset;
-> +	tsr->ok =3D state->regs[sreg].ok;
-
-[Severity: Medium]
-Does this code miss propagating the DWARF register lifetime?
-
-If lifetime_active is not propagated from state->regs[sreg] to tsr during a
-register-to-register move, a valid type state might be prematurely invalida=
-ted
-across function calls.
-
-> +
-> +	if (tsr->kind =3D=3D TSR_KIND_TYPE || tsr->kind =3D=3D TSR_KIND_POINTER)
-> +		tsr->copied_from =3D sreg;
-> +
-> +	pr_debug_dtp("mov [%x] reg%d -> reg%d", insn_offset, sreg, dreg);
-> +	pr_debug_type_name(&tsr->type, tsr->kind);
-> +}
+> @@ -889,6 +890,96 @@ static void update_adrp_insn_state(struct type_state=
+ *state,
 
 [ ... ]
 
-> @@ -703,6 +750,7 @@ static void update_insn_state_arm64(struct type_state=
- *state,
->  	 * prevent stale type info from propagating to subsequent instructions.
->  	 */
->  	if (has_reg_type(state, dst->reg1) &&
-> +	    strcmp(dl->ins.name, "mov") &&
->  	    strncmp(dl->ins.name, "ld", 2) && strncmp(dl->ins.name, "st", 2)) {
->  		pr_debug_dtp("%s [%x] invalidate reg%d",
->  			     dl->ins.name, insn_offset, dst->reg1);
->  		invalidate_reg_state(&state->regs[dst->reg1]);
+> +	/* Handle case difference: LLVM (SP_EL0) vs objdump (sp_el0) */
+> +	if (!dso__kernel(map__dso(dloc->ms->map)) ||
+> +	    strcasecmp(dl->ops.source.raw, "sp_el0")) {
+
+[Severity: Low]
+Is the <strings.h> header missing for strcasecmp()?
+
+Building perf with musl libc requires explicit inclusion of POSIX headers,
+and omitting <strings.h> can cause musl build failures.
+
+> +		invalidate_reg_state(tsr);
+> +		return;
+> +	}
+
+[ ... ]
+
+> +	/*
+> +	 * Invalidate cached DIE offset if the debug info handle changed
+> +	 * (e.g. switching between vmlinux and a kernel module).
+> +	 */
+> +	if (task_struct_cache.dbg !=3D dloc->di->dbg) {
+> +		task_struct_cache.dieoff =3D 0;
+> +		task_struct_cache.dbg =3D dloc->di->dbg;
+> +	}
+
+[Severity: High]
+Does checking the raw Dwarf pointer expose an ABA problem?
+
+If debug info handles are freed and reallocated for different DSOs during
+analysis, the memory address could be recycled. This would bypass the cache
+invalidation and cause perf to use a stale DWARF offset from the old DSO
+on the new DSO, potentially leading to out-of-bounds reads in libdw.
+
+> +
+> +	if (!task_struct_cache.dieoff ||
+> +	    !dwarf_offdie(dloc->di->dbg, task_struct_cache.dieoff, &type_die)) {
+> +		struct strbuf sb;
+> +		char *type_name;
+> +		/*
+> +		 * Find the inline function 'get_current()' Dwarf_Die
 
 [Severity: Medium]
-Does this conservative register invalidation incorrectly drop data types for
-comparison instructions like cmp, cmn, tst, and teq?
+Can this cache mechanism create a non-deterministic order dependency?
 
-Because comparison instructions are not explicitly exempted alongside mov,
-ld, and st, their first operand (which can be parsed as a target register)
-will be unconditionally invalidated. This causes data type profiling to
-silently fail for subsequent uses of a register after it's checked with a
-comparison instruction.
+If the first mrs instruction processed is a stack canary, which does not
+belong to get_current(), the search will fail and the state is invalidated.
+
+However, if a true get_current() is processed first, the cache is populated
+and the function check is bypassed for subsequent stack canaries, allowing
+them to succeed.
+
+> +		 * and obtain its return value data type, which should
+> +		 * be 'struct task_struct*'.
+> +		 */
+> +		if (!die_find_inlinefunc(cu_die, pc, &func_die) ||
+
+[Severity: Medium]
+Will passing the Compilation Unit DIE (cu_die) instead of a Subprogram
+DIE cause a severe performance regression?
+
+Because the underlying callback returns DIE_FIND_CB_CONTINUE, passing
+the entire compilation unit forces die_find_inlinefunc() to perform a
+full, inefficient O(N) recursive DWARF AST walk across every node in the
+file when the cache is empty.
+
+> +		    !die_compare_name(&func_die, "get_current") ||
+> +		    !dwarf_attr_integrate(&func_die, DW_AT_type, &attr) ||
+> +		    !dwarf_formref_die(&attr, &type_die)) {
+> +			invalidate_reg_state(tsr);
+> +			return;
+> +		}
+> +
+> +		strbuf_init(&sb, 32);
+> +		die_get_typename_from_type(&type_die, &sb);
+> +		type_name =3D strbuf_detach(&sb, NULL);
+> +
+> +		if (!type_name || strcmp(type_name, "struct task_struct*")) {
+> +			invalidate_reg_state(tsr);
+> +			free(type_name);
+> +			return;
+> +		}
+> +
+> +		/*
+> +		 * Cache the 'struct task_struct*' die offset globally.
+> +		 * This allows us to resolve stack canary accesses even
+> +		 * in CUs that lack a full task_struct definition (e.g.,
+> +		 * compiler-generated entry/exit code).
+> +		 */
+> +		task_struct_cache.dieoff =3D dwarf_dieoffset(&type_die);
+
+[Severity: High]
+Could this code permanently cache incomplete forward declarations of
+struct task_struct?
+
+The string comparison matches "struct task_struct*", but there is no check
+to verify if the DIE is a complete definition (e.g., by checking
+DW_AT_declaration or dwarf_aggregate_size()).
+
+If the first processed CU only has a forward declaration, its incomplete
+offset will be cached globally, causing all subsequent member offset
+lookups to fail since an incomplete type has no children.
+
+> +		free(type_name);
+> +	}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260808122400.2961=
-238-1-wutengda@huaweicloud.com?part=3D19
+238-1-wutengda@huaweicloud.com?part=3D23
