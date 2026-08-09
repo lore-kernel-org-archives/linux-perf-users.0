@@ -1,57 +1,56 @@
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6263A2E00
-	for <linux-perf-users@vger.kernel.org>; Sun,  9 Aug 2026 04:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB8B4386425
+	for <linux-perf-users@vger.kernel.org>; Sun,  9 Aug 2026 04:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786249007; cv=none; b=IHaJDLwMsicruXc0fQj8GPgJtZ2x6Y/eMu4usS1ZsBUZ4DkEiZStB1yvZP+hujqZ1PREVDpjHl/rXTduW0UQymr0sEopPHc5G0unoj/+rz9VdSgahWcmJvy9KD2P4yFeFazndCVt9TiaCLJLBckmV3P5dZ7flEDYR70sPrHrHls=
+	t=1786249008; cv=none; b=HBMcsIKjdmRQd7cHez+U4CZfL7xqvtqomPLQKEDqzup586JJ1XEAGcQ0SJFyYvNSG4Pti4NwZfuxI5OUXAp/6kkZ87u9KUP1WcuTb1Ty3Hk8NFVYD4UslOT4nWU/Czkuq+AFQ7tUR8Wk4PuCgxutR1uCQZDtw0QYYSffYGq+3Yw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786249007; c=relaxed/simple;
-	bh=mEH//4qopPTMwiG6eZxQiEqMyVZ4g8WiMJvhJ/Rq2bM=;
+	s=arc-20240116; t=1786249008; c=relaxed/simple;
+	bh=Nn0miRX6O32JQOtPVCr92wiRbgVDw32950L1rvjPbWw=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=lwNQRhZG96lKKi63WzbfQ2Ew4jCMjQyruYBkBnq7ngcLku1lrFpfzxltP46ocYE6oWHymtH5ZtHiDqcms5U7jeFO09O+8Pd2tPe1qND1WKNzfOgMfGcCgFHL3NlU58Q/SGpXdBlHdBq+baCWBWUNmbJr0g8h5vNmDDJ14StYSKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VcUkLo6E; arc=none smtp.client-ip=209.85.210.199
+	 To:Cc:Content-Type; b=I1zYqTzj6zbodv8qS3as9svpiq2cVV2AMJtDMAAYxySa5X1Be9UmZgIqEqeEM+ib0pSb4VrNtVp9t0uk7wH5oKtRe2o3618KUu4aXthdjURANqlJLjpAYwNxnzPTF9kdnrWh0Qcl8v5+MWZO0Cra817wwkObKuYWPCEMXBjiDRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K+hGkN6p; arc=none smtp.client-ip=209.85.214.199
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VcUkLo6E"
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-8487ed7f7beso1067911b3a.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 08 Aug 2026 21:16:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K+hGkN6p"
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2cca3673560so18580055ad.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 08 Aug 2026 21:16:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786249003; x=1786853803; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:from:subject
-         :message-id:references:mime-version:in-reply-to:date:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=QGZXWoGsm0gG8UEqRPRw6ZGccLULCKbSmtN9bcKEN5M=;
-        b=VcUkLo6EZSm4yOSntlfx4dc1gTu1/2NdQmFocXY4/mvlzTTCUyOKM1bdF1nWFbeA2l
-         oakQpvKQj3bGvfBzePPbmnVfuWTxtCSYucJ03RpP7nmTDarTG0qXF1LCOe4LOv7z9Uvl
-         JNAf04JVbNsr9ZjC34pAu/cQhoSBknDjrH9Jt/PkARmcdaB56G+FizDKENY0P9/72Ytp
-         al3pVWp4me0jGNBgCCqOc82VN+vexQedYPOVhaPKXvh3Aw346fX+mge6ARK7/HqOEJtG
-         gI/aCSSnCfl6R4YgR+9+b77pEF88jpFb1UlLJbHj0jU7taYQprQKqtm2DZRodCA9ZmFX
-         XHYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786249003; x=1786853803;
-        h=content-transfer-encoding:content-type:cc:to:from:subject
-         :message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=google.com; s=20251104; t=1786249005; x=1786853805; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=QGZXWoGsm0gG8UEqRPRw6ZGccLULCKbSmtN9bcKEN5M=;
-        b=XOPm2Wmloc1RcZ93+XKHZAdAWyVgWvPrzc5NQHT1l+5H/yqHtSy9xxCmSnHmu3Ytya
-         Gm0lmD7qhNtPebQDBe2miACuNnGpV0oPBrt4GNZrh6kvw/SeDqsLSXIk/9SLhMvN+XPF
-         VYwRqg/VOJYgoAhRrpRY9lbcMBIFmheKTDIthteNX6YfHOosNdL4fzumFE0ZsaHRESha
-         63COkLSzgaVRwWS9esDVJdml++corznoWTgKqxAtE/ZcDpi0/cAY7KXSJ43DUB5/aUC0
-         wDsUOyTedQIXTdPyQz2OngzwWcUGV/Zf6XwhBAxGcRaf8cYWR/9vLQZFCuuH3MfLRkj7
-         O/mg==
-X-Forwarded-Encrypted: i=1; AHgh+RpyFNETyqfl1VN9z/MCuPIb6iaRhQcmij03GkfjdhaLcPEpTSFHkm2Nk/n8P1aM2nn9ap6cDy0YUmkR92iPo0Gt@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfrQhNptuloPZ2c9EkuvmfF48D/pggoSr3U97HjvB37LX5/6Vz
-	FQXp6hsFTNs63n/Tzz0JI0mehjiSYA8lpvDNQb1keL9W8ZOupMBC+DpEu/5JEFLwgJYBhymR3OQ
-	472UXRuDwhw==
-X-Received: from dlaj10.prod.google.com ([2002:a05:701b:280a:b0:13c:eacb:77ba])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:d495:b0:3b4:6026:6c5d
- with SMTP id adf61e73a8af0-3cbce6f18e2mr13556476637.5.1786249002866; Sat, 08
- Aug 2026 21:16:42 -0700 (PDT)
-Date: Sat,  8 Aug 2026 21:16:32 -0700
+        bh=fLtFtC/oi2eHemCIy4gg+BvRUETIN+tHfDnRPBDklJg=;
+        b=K+hGkN6pNfA4r7zjktVNCLQZdnx25fqYlcxz9V6jYm+21+HCT1LK8mWM7WnrZlQxwV
+         XsWUAB9g/6G7129Pyrch6ziQt+AiUMXZ1X8O81bwkcBzRJC/ZP50PQsg8qvsTDEEE1mF
+         ACunME8tMhdFDJNyZRQj09hT3QJfFuFwLNu0lMiXVjfttkLq5oYqhvw6kvzpMDAaeiTU
+         QIgpFcY0UHcoAYQzTPa2XCRCbI1qKTwPq0KP1aby1qqhzwE+nOFBHiDU04IGs1Is8K3+
+         Lt+1Ui6WMh7/wqe1QVi+327yv1D+ugvL4R3b8Pi+G3kc0pJKHFo/kD2eeaHDkIivgRty
+         EGbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786249005; x=1786853805;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=fLtFtC/oi2eHemCIy4gg+BvRUETIN+tHfDnRPBDklJg=;
+        b=NZPJnf6N23sw2YbpBhRQOIJokso3ACCUXqmYmGNKUkEN3Am2rcK8hj6Z7Ratq5KgQN
+         rK4NKnST0UTqlatd0WVVV5cgv+bwWalvNBl6zm8fwS2chwK61dcg/XRFQRNm8lFyQe90
+         fFW5eQHTr3GwJnlnk1rt720d2P0Z2/BlGuop+vOLoQi7Y+PltCG3qOMqS8ZJBQIKFdjt
+         fbQnT2AXhbRXc6uHZ8TH/O4RLweKkFu3DjT2W2H/i1aak+Xa8X283UAbIxZMmGz/ExzL
+         xnIDY4SO0soCSlnxNLKSp2CAgCyYTvUgs4OTiG1JsnB+7WexoqGi5yFOVv/WPm3jSLlO
+         sXyw==
+X-Forwarded-Encrypted: i=1; AHgh+Rqfl4LmYHo9TYXrpOW6fVuZbcuklJZIsP3fTHhoFCVPa4N601qN5/d/YHGusrZp+08zv3DKPsfHJ5PEO6Ojbkf/@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz2ql+1BkTaiYTfjYJ49smnIBK25zSlaYo9o59Aa+7+4bi1CR5l
+	JSFMoN4xtiqL08z7z8pBBtRUEjq770OpEeT7mHbw4l/2vU7YVCN9jASk+khP/6ltoBQdEpBixBF
+	Y4WN7ffCmOA==
+X-Received: from dyah27-n2.prod.google.com ([2002:a05:693c:83db:20b0:30f:3f53:35d3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ea01:b0:2c9:bf82:dd11
+ with SMTP id d9443c01a7336-2d0ca71b505mr359738125ad.7.1786249004857; Sat, 08
+ Aug 2026 21:16:44 -0700 (PDT)
+Date: Sat,  8 Aug 2026 21:16:33 -0700
 In-Reply-To: <20260809041638.2402705-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260808065743.2328212-1-irogers@google.com> <20260809041638.2402705-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.654.g21b8a5bc05-goog
-Message-ID: <20260809041638.2402705-2-irogers@google.com>
-Subject: [PATCH v3 1/2] perf python: New treport script
+Message-ID: <20260809041638.2402705-3-irogers@google.com>
+Subject: [PATCH v3] perf test: Fixes for check branch stack sampling
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, alice.mei.rogers@gmail.com, 
 	namhyung@kernel.org
@@ -70,333 +69,237 @@ Cc: adrian.hunter@intel.com, jolsa@kernel.org, laixintaoo@gmail.com,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
 	mingo@redhat.com, peterz@infradead.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-From: Alice Rogers <alice.mei.rogers@gmail.com>
+When filtering branch stack samples on user events they sample in user
+land but may have come from the kernel. Avoid the target address being
+a kernel address but allow the source to be the kernel.
 
-A textual app that displays the results of processing samples similar
-to perf report. The app displays a tree of first processes and then
-functions which drop down to show more detail on the functions they
-call. The functions with the largest number of samples are sorted
-first, after each function the percentage of time spent within it is
-highlighted. If more than one event is recorded then each event
-appears first, with the processes and functions sorted for that event
-beneath it.
+When filtering branch stack samples on kernel events they sample in
+kernel land but may have come from user land. Avoid the target being a
+user address but allow the source to be in user land.
 
-The app is written in python and requires the textual framework. Using
-the textual framework means that in most modern terminals the mouse is
-supported, the color scheme can be configured, and screenshots made.
+Increase the duration of the system call sampling test to make the
+likelihood of sampling a system call higher (increased from 1000 to
+8000 loops - a number found through experimentation on an Intel
+Tigerlake laptop), also make the period of the event a prime number.
 
-With perf report:
-```
-$ perf record -e cycles:u -g perf test -w brstack
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.008 MB perf.data (57 samples) ]
-$ perf report
-...
-Samples: 57  of event 'cycles:u', Event count (approx.): 15907831
-  Children      Self  Command  Shared Object         Symbol
--   88.86%     0.00%  perf     libc.so.6             [.] 0x000079b17df69ca8
-     0x79b17df69ca8
-     main
-     handle_internal_command
-     cmd_test
-   - brstack
-      - 84.27% brstack_bench
-         - 40.69% brstack_foo
-              brstack_bar
-           3.32% brstack_bar
-        3.31% brstack_bar
-        1.27% brstack_foo
-+   88.86%     0.00%  perf     perf                  [.] main
-+   88.86%     0.00%  perf     perf                  [.] handle_internal_co=
-mmand
-+   88.86%     0.00%  perf     perf                  [.] cmd_test
-+   88.86%     0.00%  perf     perf                  [.] brstack
-+   84.27%    40.26%  perf     perf                  [.] brstack_bench
-+   41.96%    30.71%  perf     perf                  [.] brstack_foo
-+   17.89%    17.89%  perf     perf                  [.] brstack_bar
-```
+Put unneeded perf record output into a temporary file so that the test
+output isn't cluttered. More clearly state which test is running and
+the pass, fail or skipped result of the test.
 
-With the treport script:
-```
-$ perf record -e cycles:u -g perf test -w brstack
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.008 MB perf.data (57 samples) ]
-$ tools/perf/python/treport.py
- O                       ReportApp
- Report
-=E2=95=B8=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=95=BA=E2=
-=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=
-=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=
-=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=
-=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=
-=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=
-=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=94=81=E2=
-=94=81=E2=94=81=E2=94=81=E2=94=81
-=E2=96=BC Profile
-=E2=94=94=E2=94=80=E2=94=80 =E2=96=BC cycles:u 100%
-    =E2=94=94=E2=94=80=E2=94=80 =E2=96=BC perf (32963) 100%
-        =E2=94=9C=E2=94=80=E2=94=80 =E2=96=BC /usr/lib/x86_64-linux-gnu/lib=
-c.so.6 0x79b17df6
-        =E2=94=82   =E2=94=94=E2=94=80=E2=94=80 =E2=96=BC main 56.1%
-        =E2=94=82       =E2=94=94=E2=94=80=E2=94=80 =E2=96=BC handle_intern=
-al_command 56.1%
-        =E2=94=82           =E2=94=94=E2=94=80=E2=94=80 =E2=96=BC cmd_test =
-56.1%
-        =E2=94=82               =E2=94=94=E2=94=80=E2=94=80 =E2=96=BC brsta=
-ck 56.1%                 =E2=96=81=E2=96=81
-        =E2=94=82                   =E2=94=9C=E2=94=80=E2=94=80 =E2=96=BC b=
-rstack_bench 52.6%
-        =E2=94=82                   =E2=94=82   =E2=94=9C=E2=94=80=E2=94=80=
- =E2=96=B6 brstack_foo 24.6%
-        =E2=94=82                   =E2=94=82   =E2=94=94=E2=94=80=E2=94=80=
- brstack_bar 1.75%
-        =E2=94=82                   =E2=94=9C=E2=94=80=E2=94=80 brstack_foo=
- 1.75%
-        =E2=94=82                   =E2=94=94=E2=94=80=E2=94=80 brstack_bar=
- 1.75%
-        =E2=94=9C=E2=94=80=E2=94=80 =E2=96=B6 /usr/lib/x86_64-linux-gnu/ld-=
-linux-x86-64.so.2
-                                            =E2=96=8C
-^q Quit                                          =E2=96=8F^p palette
-```
+These changes make the test on an Intel tigerlake laptop reliably pass
+rather than reliably fail.
 
-Co-developed-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Alice Rogers <alice.mei.rogers@gmail.com>
 ---
- tools/perf/python/treport.py | 207 +++++++++++++++++++++++++++++++++++
- 1 file changed, 207 insertions(+)
- create mode 100755 tools/perf/python/treport.py
+ tools/perf/tests/shell/test_brstack.sh | 134 ++++++++++++++++---------
+ 1 file changed, 84 insertions(+), 50 deletions(-)
 
-diff --git a/tools/perf/python/treport.py b/tools/perf/python/treport.py
-new file mode 100755
-index 000000000000..528a640e4d35
---- /dev/null
-+++ b/tools/perf/python/treport.py
-@@ -0,0 +1,207 @@
-+#!/usr/bin/env python3
-+# SPDX-License-Identifier: MIT
-+"""treport.py - perf report like tool written using textual."""
-+from typing import Dict, Optional
-+import argparse
-+import os
-+import sys
-+import perf
-+from textual.app import App, ComposeResult
-+from textual.binding import Binding
-+from textual.widgets import Footer, Header, TabbedContent, TabPane, Tree
-+from textual.widgets.tree import TreeNode
+diff --git a/tools/perf/tests/shell/test_brstack.sh b/tools/perf/tests/shell/test_brstack.sh
+index 85233d435be6..025ed9d3d110 100755
+--- a/tools/perf/tests/shell/test_brstack.sh
++++ b/tools/perf/tests/shell/test_brstack.sh
+@@ -40,7 +40,7 @@ is_arm64() {
+ 
+ check_branches() {
+ 	if ! tr -s ' ' '\n' < "$TMPDIR/perf.script" | grep -E -m1 -q "$1"; then
+-		echo "Branches missing $1"
++		echo "ERROR: Branches missing $1"
+ 		err=1
+ 	fi
+ }
+@@ -48,6 +48,8 @@ check_branches() {
+ test_user_branches() {
+ 	echo "Testing user branch stack sampling"
+ 
++	start_err=$err
++	err=0
+ 	perf record -o "$TMPDIR/perf.data" --branch-filter any,save_type,u -- ${TESTPROG} > "$TMPDIR/record.txt" 2>&1
+ 	perf script -i "$TMPDIR/perf.data" --fields brstacksym > "$TMPDIR/perf.script"
+ 
+@@ -73,59 +75,80 @@ test_user_branches() {
+ 	perf script -i "$TMPDIR/perf.data" --fields brstack | \
+ 		tr ' ' '\n' > "$TMPDIR/perf.script"
+ 
+-	# There should be no kernel addresses with the u option, in either
+-	# source or target addresses.
+-	if grep -E -m1 "0x[89a-f][0-9a-f]{15}" $TMPDIR/perf.script; then
+-		echo "ERROR: Kernel address found in user mode"
++	# There should be no kernel addresses in the target with the u option.
++	if grep -q -E -m1 "^0x[0-9a-f]{0,16}/0x[89a-f][0-9a-f]{15}/" $TMPDIR/perf.script; then
++		echo "Testing user branch stack sampling [Failed kernel address found in user mode]"
+ 		err=1
+ 	fi
+ 	# some branch types are still not being tested:
+ 	# IND COND_CALL COND_RET SYSRET SERROR NO_TX
++	if [ $err -eq 0 ]; then
++		echo "Testing user branch stack sampling [Passed]"
++		err=$start_err
++	else
++		echo "Testing user branch stack sampling [Failed]"
++	fi
+ }
+ 
+ test_trap_eret_branches() {
+ 	echo "Testing trap & eret branches"
 +
-+# Global session.
-+session :Optional[perf.session] =3D None
+ 	if ! is_arm64; then
+-		echo "skip: not arm64"
++		echo "Testing trap & eret branches [Skipped not arm64]"
++		return
++	fi
++	start_err=$err
++	err=0
++	perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u,k -- \
++		perf test -w traploop 1000 > "$TMPDIR/record.txt" 2>&1
++	perf script -i $TMPDIR/perf.data --fields brstacksym | \
++		tr ' ' '\n' > $TMPDIR/perf.script
 +
-+class ProfileNode:
-+    """Represents a single node in a call stack tree.
++	# BRBINF<n>.TYPE == TRAP are mapped to PERF_BR_IRQ by the BRBE driver
++	check_branches "^trap_bench\+[^ ]+/[^ ]/IRQ/"
++	check_branches "^[^ ]+/trap_bench\+[^ ]+/ERET/"
++	if [ $err -eq 0 ]; then
++		echo "Testing trap & eret branches [Passed]"
++		err=$start_err
+ 	else
+-		perf record -o $TMPDIR/perf.data --branch-filter any,save_type,u,k -- \
+-			perf test -w traploop 1000
+-		perf script -i $TMPDIR/perf.data --fields brstacksym | \
+-			tr ' ' '\n' > $TMPDIR/perf.script
+-
+-		# BRBINF<n>.TYPE == TRAP are mapped to PERF_BR_IRQ by the BRBE driver
+-		check_branches "^trap_bench\+[^ ]+/[^ ]/IRQ/"
+-		check_branches "^[^ ]+/trap_bench\+[^ ]+/ERET/"
++		echo "Testing trap & eret branches [Failed]"
+ 	fi
+ }
+ 
+ test_kernel_branches() {
+-	echo "Testing that k option only includes kernel source addresses"
++	echo "Testing kernel branch sampling"
+ 
+-	if ! perf record --branch-filter any,k -o- -- true > /dev/null; then
+-		echo "skip: not enough privileges"
++	if ! perf record --branch-filter any,k -o- -- true > "$TMPDIR/record.txt" 2>&1; then
++		echo "Testing that k option [Skipped not enough privileges]"
++		return
++	fi
++	start_err=$err
++	err=0
++	perf record -o $TMPDIR/perf.data --branch-filter any,k -- \
++		perf bench syscall basic --loop 1000 > "$TMPDIR/record.txt" 2>&1
++	perf script -i $TMPDIR/perf.data --fields brstack | \
++		tr ' ' '\n' > $TMPDIR/perf.script
 +
-+    Generally a ProfileNode corresponds to a symbol in a call stack.
-+    The root is special, its children are events and the events
-+    children are process names. After the process name come the
-+    samples.
++	# Example of branch entries:
++	#       "0xffffffff93bda241/0xffffffff93bda20f/M/-/-/..."
++	# Source addresses come first in user or kernel code. Next is the target
++        # address that must be in the kernel.
 +
-+    Attributes:
-+        name (str): The name of the function, process or event.
-+        value (int): The sample count for this node including counts from =
-its
-+                     children.
-+        parent (ProfileNode): The parent of this node, this node belongs t=
-o its
-+                              children.
-+        children (Dict[str, ProfileNode]): A dictionary of child nodes, ke=
-yed by
-+                                           their names.
-+    """
-+    def __init__(self, name: str, parent: "ProfileNode"):
-+        """Initializes a ProfileNode."""
-+        self.name =3D name
-+        self.value: int =3D 0
-+        self.parent =3D parent if parent else self
-+        self.children: Dict[str, ProfileNode] =3D {}
++	# Look for source addresses with top bit set
++	if ! grep -q -E -m1 "^0x[89a-f][0-9a-f]{15}" $TMPDIR/perf.script; then
++		echo "Testing kernel branch sampling [Failed kernel branches missing]"
++		err=1
++	fi
++	# Look for no target addresses without top bit set
++	if grep -q -E -m1 "^0x[0-9a-f]{0,16}/0x[0-7][0-9a-f]{0,15}/" $TMPDIR/perf.script; then
++		echo "Testing kernel branch sampling [Failed user branches found]"
++		err=1
++	fi
++	if [ $err -eq 0 ]; then
++		echo "Testing kernel branch sampling [Passed]"
++		err=$start_err
+ 	else
+-		perf record -o $TMPDIR/perf.data --branch-filter any,k -- \
+-			perf bench syscall basic --loop 1000
+-		perf script -i $TMPDIR/perf.data --fields brstack | \
+-			tr ' ' '\n' > $TMPDIR/perf.script
+-
+-		# Example of branch entries:
+-		#       "0xffffffff93bda241/0xffffffff93bda20f/M/-/-/..."
+-		# Source addresses come first and target address can be either
+-		# userspace or kernel even with k option, as long as the source
+-		# is in kernel.
+-
+-		#Look for source addresses with top bit set
+-		if ! grep -E -m1 "^0x[89a-f][0-9a-f]{15}" $TMPDIR/perf.script; then
+-			echo "ERROR: Kernel branches missing"
+-			err=1
+-		fi
+-		# Look for no source addresses without top bit set
+-		if grep -E -m1 "^0x[0-7][0-9a-f]{0,15}" $TMPDIR/perf.script; then
+-			echo "ERROR: User branches found with kernel filter"
+-			err=1
+-		fi
++		echo "Testing kernel branch sampling [Failed]"
+ 	fi
+ }
+ 
+@@ -136,14 +159,15 @@ test_filter() {
+ 	test_filter_expect=$2
+ 
+ 	echo "Testing branch stack filtering permutation ($test_filter_filter,$test_filter_expect)"
+-	perf record -o "$TMPDIR/perf.data" --branch-filter "$test_filter_filter,save_type,u" -- ${TESTPROG}  > "$TMPDIR/record.txt" 2>&1
++	perf record -o "$TMPDIR/perf.data" --branch-filter "$test_filter_filter,save_type,u" -- \
++		${TESTPROG}  > "$TMPDIR/record.txt" 2>&1
+ 	perf script -i "$TMPDIR/perf.data" --fields brstack > "$TMPDIR/perf.script"
+ 
+ 	# fail if we find any branch type that doesn't match any of the expected ones
+ 	# also consider UNKNOWN branch types (-)
+ 	if [ ! -s "$TMPDIR/perf.script" ]
+ 	then
+-		echo "Empty script output"
++		echo "Testing branch stack filtering [Failed empty script output]"
+ 		err=1
+ 		return
+ 	fi
+@@ -154,26 +178,36 @@ test_filter() {
+ 	  > "$TMPDIR/perf.script-filtered" || true
+ 	if [ -s "$TMPDIR/perf.script-filtered" ]
+ 	then
+-		echo "Unexpected branch filter in script output"
++		echo "Testing branch stack filtering [Failed unexpected branch filter]"
+ 		cat "$TMPDIR/perf.script"
+ 		err=1
+ 		return
+ 	fi
++	echo "Testing branch stack filtering [Passed]"
+ }
+ 
+ test_syscall() {
+ 	echo "Testing syscalls"
+ 	# skip if perf doesn't have enough privileges
+-	if ! perf record --branch-filter any,k -o- -- true > /dev/null; then
+-		echo "skip: not enough privileges"
++	if ! perf record --branch-filter any,k -o- -- true > "$TMPDIR/record.txt" 2>&1; then
++		echo "Testing syscalls [Skipped: not enough privileges]"
++		return
++	fi
++	start_err=$err
++	err=0
++	perf record -o $TMPDIR/perf.data --branch-filter \
++		any_call,save_type,u,k -c 10007 -- \
++		perf bench syscall basic --loop 8000  > "$TMPDIR/record.txt" 2>&1
++	perf script -i $TMPDIR/perf.data --fields brstacksym | \
++		tr ' ' '\n' > $TMPDIR/perf.script
 +
-+    def find_or_create_node(self, name: str) -> "ProfileNode":
-+        """Finds a child node by name or creates it if it doesn't exist.""=
-"
-+        if name in self.children:
-+            return self.children[name]
-+        child =3D ProfileNode(name, self)
-+        self.children[name] =3D child
-+        return child
++	check_branches "getppid[^ ]*/SYSCALL/"
 +
-+    def depth(self) -> int:
-+        """The maximum depth of the call stack tree from this node down.""=
-"
-+        if not self.children:
-+            return 1
-+        return max(child.depth() for child in self.children.values()) + 1
-+
-+    def process_event(self, sample) -> None:
-+        """Processes a single profiling event to update the call stack tre=
-e.
-+
-+        Args:
-+            sample: a single profiling sample.
-+        """
-+        pid =3D sample.sample_pid
-+        try:
-+            assert session
-+            thread =3D session.find_thread(sample.sample_tid)
-+            comm =3D thread.comm()
-+        except Exception:
-+            comm =3D f"unknown ({pid})"
-+
-+        period =3D sample.sample_period
-+        self.value +=3D period
-+
-+        node =3D self.find_or_create_node(comm)
-+        node.value +=3D period
-+
-+        if sample.callchain:
-+            for entry in reversed(sample.callchain):
-+                name =3D entry.symbol
-+                if not name or name =3D=3D "[unknown]":
-+                    name =3D entry.dso or "unknown"
-+                    if entry.ip:
-+                        name +=3D f" 0x{entry.ip:x}"
-+                node =3D node.find_or_create_node(name)
-+                node.value +=3D period
-+        else:
-+            name =3D sample.symbol
-+            if not name or name =3D=3D "[unknown]":
-+                name =3D sample.dso or "unknown"
-+                if sample.sample_ip:
-+                    name +=3D f" 0x{sample.sample_ip:x}"
-+            node =3D node.find_or_create_node(name)
-+            node.value +=3D period
-+
-+    def add_to_tree(self, node: TreeNode, root_value: int) -> None:
-+        """Recursively adds this node and its children to a textual TreeNo=
-de.
-+
-+        Args:
-+            node (TreeNode): The textual `TreeNode` object to which this
-+                             ProfileNode should be added.
-+            root_value (int): Value at the root of the tree.
-+        """
-+        if root_value =3D=3D 0:
-+            root_value =3D self.value
-+
-+        # Calculate the percentage for the node, highlighting the
-+        # percentage with reversed colors.
-+        if root_value !=3D 0:
-+            percent =3D self.value / root_value * 100
-+            label =3D f"{self.name} [r]{percent:.3g}%[/]"
-+        else:
-+            label =3D self.name
-+
-+        # Add a standalone leaf.
-+        if not self.children:
-+            node.add_leaf(label)
-+            return
-+
-+        # Recursively add children.
-+        new_node =3D node.add(label)
-+        for pnode in sorted(self.children.values(),
-+                            key=3Dlambda pnode: pnode.value, reverse=3DTru=
-e):
-+            pnode.add_to_tree(new_node, root_value)
-+
-+
-+class ReportApp(App):
-+    """A Textual application to display profiling data."""
-+
-+    # The ^q binding is implied but having it here adds it in the Footer.
-+    BINDINGS =3D [
-+        Binding(key=3D"^q", action=3D"quit", description=3D"Quit",
-+                tooltip=3D"Quit the app"),
-+    ]
-+
-+    def __init__(self, root: ProfileNode):
-+        """Initialize the application."""
-+        super().__init__()
-+        self.root =3D root
-+
-+    def make_report_tree(self) -> Tree:
-+        """Make a Tree widget from the profile data."""
-+        tree: Tree[None] =3D Tree("Profile")
-+        # Add events to tree skipping the root.
-+        for pnode in sorted(self.root.children.values(),
-+                            key=3Dlambda node: node.value, reverse=3DTrue)=
-:
-+            pnode.add_to_tree(tree.root, root_value=3D0)
-+
-+        # Expand the root tree (shows all events) and the largest of the c=
-hildren
-+        # for each event.
-+        def expand_first_child(tnode: TreeNode) -> None:
-+            """Recursively expand the first child node"""
-+            if not tnode.children:
-+                return
-+            first =3D tnode.children[0]
-+            first.expand()
-+            expand_first_child(first)
-+        tree.root.expand()
-+        for tnode in tree.root.children:
-+            expand_first_child(tnode)
-+
-+        # If there is only one event, expand it also.
-+        if len(tree.root.children) =3D=3D 1:
-+            tree.root.children[0].expand()
-+
-+        return tree
-+
-+    def compose(self) -> ComposeResult:
-+        """Composes the user interface of the application."""
-+        yield Header()
-+        with TabbedContent(initial=3D"report"):
-+            with TabPane("Report", id=3D"report"):
-+                yield self.make_report_tree()
-+        yield Footer()
-+
-+
-+class ProfileBuilder:
-+    """Constructs a profile tree from a stream of events."""
-+    def __init__(self):
-+        self.root =3D ProfileNode("root", parent=3DNone)
-+
-+    def process_event(self, sample) -> None:
-+        """Called by session.process_events to update the profile tree."""
-+        ev_name =3D str(sample.evsel)[6:-1]
-+        ev_root =3D self.root.find_or_create_node(ev_name)
-+        ev_root.process_event(sample)
-+
-+if __name__ =3D=3D "__main__":
-+    parser =3D argparse.ArgumentParser(description=3D"Create flame graphs =
-using perf python module.")
-+    parser.add_argument("-i", "--input", help=3D"input perf.data file")
-+    args =3D parser.parse_args()
-+
-+    input_file =3D args.input or "perf.data"
-+    if not os.path.exists(input_file):
-+        print(f"Error: {input_file} not found. (try 'perf record' first)",=
- file=3Dsys.stderr)
-+        sys.exit(1)
-+
-+    profile =3D ProfileBuilder()
-+    try:
-+        session =3D perf.session(perf.data(input_file), sample=3Dprofile.p=
-rocess_event)
-+    except Exception as e:
-+        print(f"Error opening session: {e}", file=3Dsys.stderr)
-+        sys.exit(1)
-+
-+    # profle.process_event is called for each perf event to build the prof=
-ile.
-+    session.process_events()
-+
-+    # Visualize data.
-+    app =3D ReportApp(profile.root)
-+    app.run()
---=20
-2.55.0.654.g21b8a5bc05-goog
++	if [ $err -eq 0 ]; then
++		echo "Testing syscalls [Passed]"
++		err=$start_err
+ 	else
+-		perf record -o $TMPDIR/perf.data --branch-filter \
+-			any_call,save_type,u,k -c 10000 -- \
+-			perf bench syscall basic --loop 1000
+-		perf script -i $TMPDIR/perf.data --fields brstacksym | \
+-			tr ' ' '\n' > $TMPDIR/perf.script
+-
+-		check_branches "getppid[^ ]*/SYSCALL/"
++		echo "Testing syscalls [Failed]"
+ 	fi
+ }
+ set -e
+-- 
+2.53.0.1213.gd9a14994de-goog
 
