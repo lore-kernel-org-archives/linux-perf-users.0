@@ -1,142 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AC833A3E95
-	for <linux-perf-users@vger.kernel.org>; Sun,  9 Aug 2026 04:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC19C233941
+	for <linux-perf-users@vger.kernel.org>; Sun,  9 Aug 2026 04:36:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786249801; cv=none; b=E3HZ3Ub2osDGzV5hf6rUzC2DvaXLWlv/zUjDVav4e3lM73CNTS5w4K2pTifhoIesHBjJe3FMngkpi28LYR01mtkiWGT7tNPCTljUNuPCG+SQpgO7oeyoqmrYO0+p8xR5R0HzVTLMD/a6+rlG/2lWm25Sh8VO/twFdbUEklbaq7I=
+	t=1786250199; cv=none; b=h3FATbJKpJk6iLo/UsmPqFJnSL+h5wvn/71N5PTtKmhVSeRiDZyP9YTGZb3Oo3W50V9AZsEglimoSQ4QsJg/QplnEIn7G9SbQ7/thca1BHeqg+wKSNTjxe5hShrZ8jO9iEKyxdvASnO/ENuNHB10f90IUxKs465fQqDFcYOqlvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786249801; c=relaxed/simple;
-	bh=h4KyfwO1aG8anJLCQCgHd/9pi0rfWit6g8MGsh6CsAg=;
+	s=arc-20240116; t=1786250199; c=relaxed/simple;
+	bh=43uaAz0xNYvL868z67s5lQKiLVuhPAvjl1xbnDVo8aw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=P/bQ2oHwHkcM5zf/IsuenoBzuNzLhiPsZ0Lv26XuSUaTkfJ9lsDpO8OhTmzWlBgX4hAquFnJU5OdPqCg8XlVwwfw3MVwoDAyo5l61KSLs/c2+T0fvA+psLk24mPaDoNeUQdTdcoNxyw/zgwE3osfe5CaIEknxtCO+75KdXCKYaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dq80A72Y; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=H327307Njyjv1jJZX9oiEjz4MzZXMtsRdAA+brhSiVxdJRJ3oPh4AWcH0CaQZ7GB2MYsD365Bg7ZqMWbu7YORpFNpdQJOVXLjEyOliO5revhSjo0UAOJjFhCMgZzWR7APKHpaLFRhUjAbhCOWWNPZEWK/Lqa8+In1UMYgsacChM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jvvwOE0U; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dq80A72Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0651E1F000E9;
-	Sun,  9 Aug 2026 04:29:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jvvwOE0U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 549B21F000E9;
+	Sun,  9 Aug 2026 04:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786249798;
-	bh=bJSC0N8MMWmXGNSbFHo6sqVaaWcLDtba6ePtAbVWCf8=;
+	s=k20260515; t=1786250198;
+	bh=DkXhFilatppjt7WItqB0pt62HCs7+Gty9od2gRdalLc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Dq80A72YBPoU5hUNx1/jjIsulbOJ2TGxU0ERTywlYHIwzRJr37ifYTz5kaWc3S2wO
-	 wYkC2PK9X6WdE5/dT8QY8XRDV4nCqEsRWj8TKYjdwguJc7KWJYmHjLuWhJ2DJkYlMP
-	 KO5gvbSdrDk4Y+O2t3zPgbxUVRHiTjR215FN1aXVyvpdMbtH4JEymt2cnQxka3ZNmb
-	 EyD5dOJg2IKgoFRwKepGwGWwylY4zZyPvwG1ltVNDQA1hqLUdATrGXq89EHAooD0VA
-	 q5NH4y9K2twjoiXsQJtlZ8D+bDvVUWEIgyjR4wJR6uwnxPZ3JDvwASpHe+1QJ9A2KB
-	 C0f3O7vfSAlbQ==
+	b=jvvwOE0UlARM3Lklj7Qx7F1bdQmsqzLlVlyi3+kt6Dxxy08cT3Wq7zm7lu5I6PNN+
+	 /Z81vFwM3NlAvQIHdRu6Ij+++gOB6uRoNYxWenShin8QPYaxezIkdq3K8ZJEYKjpUp
+	 +MbLvR4K+cmyKc+a7BRk+HYys1KB21qaEiLjSmrBt8LPg0TImubtU/iO/0uqKVYK8b
+	 SG419u10fyrJL1PoOYC1nHqlF1NQAN9m5u0oWyMbaWg1JAP7mpxq8v9Ej+HdlTQjNF
+	 8fA3F6Kq7mwGu6WerbuZ98aM/CBwPzF45Nazc5TMFrVdQv44Ynf4jtQmPG12q/x7Wr
+	 x8Hs7rLtqKFaw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 1/2] perf python: New treport script
+Subject: Re: [PATCH v3 2/2] perf python: treport add flamegraph support
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260809041638.2402705-2-irogers@google.com>
+In-Reply-To: <20260809041638.2402705-4-irogers@google.com>
 References: <20260808065743.2328212-1-irogers@google.com>
  <20260809041638.2402705-1-irogers@google.com>
- <20260809041638.2402705-2-irogers@google.com>
+ <20260809041638.2402705-4-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 09 Aug 2026 04:29:57 +0000
-Message-Id: <20260809042958.0651E1F000E9@smtp.kernel.org>
+Date: Sun, 09 Aug 2026 04:36:37 +0000
+Message-Id: <20260809043638.549B21F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] The script relies on missing `perf` Python C extension APIs, causi=
-ng immediate crashes on import or execution.
-- [Low] The argparse description inaccurately claims the script creates fla=
-me graphs.
-- [Low] Typo in the source code comments ('profle' instead of 'profile').
+- [Medium] Rich markup injection vulnerability from unescaped DSO/symbol na=
+mes containing brackets.
 --
 
---- Patch [1]: [PATCH v3 1/2] perf python: New treport script ---
-commit d9d175087e8fce3c5649b6249af90e23002fff56
+--- Patch [2]: [PATCH v3 2/2] perf python: treport add flamegraph support -=
+--
+commit 0b23e0e4520eaa617a120b39e7e4595517aedb98
 Author: Alice Rogers <alice.mei.rogers@gmail.com>
 
-perf python: New treport script
-
-This commit adds a new treport.py script that uses the textual framework to
-display an interactive tree report of processed perf samples.
+    perf python: treport add flamegraph support
+   =20
+    Implement a flamegraph widget that recursively walks down a tree
+    splitting line segments based on their value. A visitor pattern is used
+    so that the same logic can both draw the line segments and locate which
+    segment had a mouse click. Add a tab for the flame graph widget.
 
 > diff --git a/tools/perf/python/treport.py b/tools/perf/python/treport.py
-> new file mode 100755
-> index 0000000000000..528a640e4d356
-> --- /dev/null
+> index 528a640e4d356..ec3263a6b6257 100755
+> --- a/tools/perf/python/treport.py
 > +++ b/tools/perf/python/treport.py
-[ ... ]
-> +from textual.widgets import Footer, Header, TabbedContent, TabPane, Tree
-> +from textual.widgets.tree import TreeNode
-> +
-> +# Global session.
-> +session :Optional[perf.session] =3D None
-> +
-
-[Severity: High]
-Are there prerequisite patches missing from this series? The perf Python C
-extension does not currently expose perf.session. Because this type annotat=
-ion
-is evaluated at module load time, running the script results in an immediate
-AttributeError.
 
 [ ... ]
-> +        node.value +=3D period
-> +
-> +        if sample.callchain:
-> +            for entry in reversed(sample.callchain):
-> +                name =3D entry.symbol
-> +                if not name or name =3D=3D "[unknown]":
 
-[Severity: High]
-Does the Python sample_event object expose callchain and symbol? It appears
-these attributes are also missing from the current Python C extension, which
-would cause this to crash when processing samples.
+> @@ -120,6 +150,327 @@ class ProfileNode:
+>                              key=3Dlambda pnode: pnode.value, reverse=3DT=
+rue):
+>              pnode.add_to_tree(new_node, root_value)
 
-[ ... ]
-> +class ProfileBuilder:
-> +    """Constructs a profile tree from a stream of events."""
-> +    def __init__(self):
-> +        self.root =3D ProfileNode("root", parent=3DNone)
-> +
-> +    def process_event(self, sample) -> None:
-> +        """Called by session.process_events to update the profile tree."=
-""
-> +        ev_name =3D str(sample.evsel)[6:-1]
+[Severity: Medium]
+Will this crash the TUI application when handling typical perf traces?
 
-[Severity: High]
-Does the sample object expose evsel? Similar to the other missing attribute=
-s,
-this seems to rely on Python C extension features that are not yet present =
-in
-the tree.
+Looking at ProfileNode.add_to_tree(), self.name is embedded directly into a
+formatted string alongside rich style tags:
 
-[ ... ]
-> +if __name__ =3D=3D "__main__":
-> +    parser =3D argparse.ArgumentParser(description=3D"Create flame graph=
-s using perf python module.")
-> +    parser.add_argument("-i", "--input", help=3D"input perf.data file")
+    if root_value !=3D 0:
+        percent =3D self.value / root_value * 100
+        label =3D f"{self.name} [r]{percent:.3g}%[/]"
 
-[Severity: Low]
-This isn't a bug, but the description says "Create flame graphs" instead
-of describing the interactive tree report this script actually generates.
-Is this a copy-paste error from another script?
+Since perf trace data heavily uses brackets for kernel threads (e.g.,
+[kworker/0:1]), DSOs (e.g., [kernel.kallsyms]), or placeholders like
+[unknown], the Textual Tree widget's rich parser may intercept these as
+unclosed or invalid markup tags.=20
 
-[ ... ]
-> +    except Exception as e:
-> +        print(f"Error opening session: {e}", file=3Dsys.stderr)
-> +        sys.exit(1)
-> +
-> +    # profle.process_event is called for each perf event to build the pr=
-ofile.
-> +    session.process_events()
-
-[Severity: Low]
-This isn't a bug, but there is a typo (profle) in this comment.
+Does this unescaped input trigger a fatal rich.errors.MarkupError when
+constructing the Tree widget?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260809041638.2402=
-705-1-irogers@google.com?part=3D1
+705-1-irogers@google.com?part=3D2
