@@ -1,122 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3B51E492D
-	for <linux-perf-users@vger.kernel.org>; Sun,  9 Aug 2026 07:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B83B01DDA18
+	for <linux-perf-users@vger.kernel.org>; Sun,  9 Aug 2026 08:49:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786261056; cv=none; b=lpGPTq9nVcqgG7U7sI5nkOez1n2MjXQIRcMx9E8iZIjWGrHBNsfWjYBAe6r8tOsG9gdBIue+o/4uQfSusiu8LgEFg5OvFYVKqRkW35qyAUiiwiWpFFw/byYD3jDowe422kw5fT0Vlw8sBtCmXPTGGmJIp6XlxaGlXkJkaGWFKOA=
+	t=1786265367; cv=none; b=p00KIXuVqlNBgHw+JezeNaOA9y9GOwNRnvJmFBI1Tmrp1gX2B506W6g8rcRdSsmpVrZ6iE7GQO0gjnXAASDq15YxdO/lhdMeouheOmrjvcfzLsQsllgzT88GAeI6IlpxXbaO568fHmAzzRx0NXA5FTvqOl2tdDw3yQudaoMZdgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786261056; c=relaxed/simple;
-	bh=h4Nojy5O4QGxR60oyYF1tsIW2dYNoO+0q419D4x+EpU=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ras5SVQFhEt/WbKUN/1eBpz9ty5gaFAlN4FxaQcQ3GAyxwvQPhprAKjvYT4IOj4B7Ig7nYrc0d0Z89LfwEQzoeuFFAL5W2Q8Fra6wFLQ8aZGWhxNdKkQD6s3JfB7VXAEsduPKHTY5qknIts3sosflGLxEEEHSPWV1npxmk/HnG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cIo8lbOY; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786265367; c=relaxed/simple;
+	bh=vKWgmcHfwYmk+WOyH/m/NR1zFQDp05YpYR4cyM855Uw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Di1zpQZMmdjYBBEb+x+y0N0gWfMC4S5UrP/nTijqkZL6e5qjeRLf+T/9Myg3FJrarjXe2AX58FGPq9bSxYYs4tKienQsCXNo8mTUPzXguT/2p5dtKkYuPWpd8tpjJobQI3YvL3lyyFc2ThtunR+CCuqZ+acpIcOAnjBWwFlCG7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MdVR39vm; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cIo8lbOY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D70901F000E9;
-	Sun,  9 Aug 2026 07:37:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786261055;
-	bh=YPK2deluE21XUpMicM7qKj9UzW7/eC0F/Ub3mh/kZjU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cIo8lbOYBV32coqOEMy/mhZlW9Zcx3LfNbyNxTPeSNTI1d6XBaCoV7PVEtXUJ5M/p
-	 KJSHvColLkMnSrNBMg9i9rZvbTzrIziiU724JKXkS12xwuVpOErhLdDJvTi/PeO0CI
-	 A6St8y5XyIvkKv/wyszEugjUxjLL8A2BzCDvZQETpowrdtdUiyLiMBjlaFvSRb6OsL
-	 IheZnFLgtpIA/HFVvsqsKNHfDS4eyFkmDswy8LKCF6TKq2m0A/+xGr/6rzkVCXAbSu
-	 XvHT2KHGMwzxJyLoKlJ/olx6e5LqTmkzqOQyuT0R1raIkhpkFMWjiZIv6ollFI0cKl
-	 GTkrI+OlmFvyQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3 01/15] perf script: Fix metric_evlist leak in
- script_find_metrics
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260809071455.1221514-2-irogers@google.com>
-References: <20260624051535.3584977-1-irogers@google.com>
- <20260809071455.1221514-1-irogers@google.com>
- <20260809071455.1221514-2-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 09 Aug 2026 07:37:33 +0000
-Message-Id: <20260809073734.D70901F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MdVR39vm"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-84e0688b7e8so719484b3a.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 09 Aug 2026 01:49:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786265366; x=1786870166; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=vKWgmcHfwYmk+WOyH/m/NR1zFQDp05YpYR4cyM855Uw=;
+        b=MdVR39vmB79zYVCnuCjTxRTPEbJ2elSh0RfukjsWfRWhT5AC3BZZbwo7/b8B13V64K
+         voDysGnMfFdsaQcNjeaYmXNtP/QWZ4zbgxVSZCXqXydkEq1KxhMHfE6kmZwuowGJs7gc
+         9+Nsq7M9ypSbPcl7b2LYHvhZ+P4sFiEAL2biLrzrdYZTu9Hh+9whLDMYTUF+77meDuXU
+         Tkg3wLJ0vbSA0VoSjoXSq2sMIEnzLdjj87YKcPjkQz+XzXIn9VnSalolcvmboLtLNsdh
+         3oX9t3ggRvySXXtF9HbQywwR1vjC68w+xffETpCcms9H4DHSya++/XqYAufM7ihzg2k/
+         btKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786265366; x=1786870166;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=vKWgmcHfwYmk+WOyH/m/NR1zFQDp05YpYR4cyM855Uw=;
+        b=oVExWByIfmJrR1YEv8qbEuMIHQNrx6eH3uNuslyNlNikZ3zBzuYlu5sXSn2EraRi3T
+         C1FxoAHeh1X78tzWcRs5IRqxpN2gyfsZ1ZE2ZrX6hcOmq227go/C/PtoHTDqrTbB4no3
+         5gc2H+PlcouFn++m/xDq/U8qDU2iUluvFpJnEnU98zQWM7xxk2IqSIRuqhE3DS0DUUUK
+         0YUVAO5hHKAm8fEMxESR1zgjwQg1SL/xy6ekZpcNemkcgeIsniZA0yXkoX+BymVpovWR
+         L2KGfxmtnTs6Zq+AhYOqP7l5mOH0RoKbi31xuURcGHRjR+f2djNeI9trzp9g0614FmdJ
+         ckQw==
+X-Forwarded-Encrypted: i=1; AHgh+RpthoFRGSgxgXVwmJ7LComIIBuOOkpAEe2gwXzdRsenvXR/nuEV6u7xrSQU4wMRpjTRgHzuMmDHrj7opXh5O3mw@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/zHnceoI/YbfFsIFs8fZtI2AZU4zWlNIVyWqK0nb4CzNlIjCl
+	M3E8GH0Ld2a7j8smVCl4IAiSVruleWXuKmcRsfPsbyNUQsGS1c3aOHNnH6Re5w==
+X-Gm-Gg: AR+sD112MxLFNT7tRq8ZvV2geq5MnHcOkdVqoOPaU6DGGd16M5mRdQGvksTbm8VEY+/
+	0p1aUIalL7+Mfc8wJGU0aSw85cieBeGVIUCjh/buoN21qwG4l775eb9y/cN4nS9UqGB29X5g+cF
+	GTHMkRthtrUm2rXL8HQ8OoJPXWR0au3nqZWp+zrD6jHcvs01SJWm5ruQsU6uTdQyXsKc3poLYCE
+	vT2j/v2m5vM+kFPBrWN4RYEvfIAsQejaPiOuvyL0q+krSoys+0jDfW76pQt9vXtsl8D0Gs1FuVE
+	cQQTeuUHnQjN1Cs+717P7MiYyoceZ5bVlGQaR1DZpl/Ej5bX9OhoRM+LglEyRFSP2JXWeKTfGpk
+	bxLH6pfUKyVc6UD8fb+HuMHg/x4+G294/bbTRWGdzM6NKxiLECaIVc8uU+a9uqbdLl9szWMpGJ2
+	zRWNxGT/kxioLT/XDFI7ei/43piS6scqi3+4CMjOrND8bnGeyYESe9HBMgXobm3iCRxF7jBN7m+
+	7BDRCAnWQXck5k=
+X-Received: by 2002:a05:6a20:7f86:b0:3bf:9c93:ac44 with SMTP id adf61e73a8af0-3cb85ea363cmr32830018637.19.1786265366126;
+        Sun, 09 Aug 2026 01:49:26 -0700 (PDT)
+Received: from volcano9dee-host.amd.com ([165.204.217.251])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-315beb877b4sm32757823eec.19.2026.08.09.01.49.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Aug 2026 01:49:24 -0700 (PDT)
+From: PVS Narasimha Rao <venkatasuryapala@gmail.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: sashiko-reviews@lists.linux.dev,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf test sample-parsing: Validate PERF_FORMAT_GROUP values without LOST
+Date: Sun,  9 Aug 2026 14:19:03 +0530
+Message-ID: <20260809084903.23914-1-venkatasuryapala@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <anQeWZD8J-gHMt_3@google.com>
+References: <anQeWZD8J-gHMt_3@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+Hi Namhyung,
 
-Pre-existing issues:
-- [High] Prematurely setting `metric_evsel->metric_id =3D NULL` breaks subs=
-equent metric event lookups, null-terminating the `metric_events` array and=
- dropping events.
---
+Thanks for the review.
 
---- Patch [1]: [PATCH v3 01/15] perf script: Fix metric_evlist leak in scri=
-pt_find_metrics ---
-commit 5fba9e29ce353d01c2f25b3b58a05d2fc79eb299
-Author: Ian Rogers <irogers@google.com>
+I reproduced it with gdb and confirmed the mismatch: the values in
+do_test() are a plain array of struct sample_read_value with a 24-byte
+stride, while sample_read_value_size() is 16 without PERF_FORMAT_LOST.
+So the synthesizer reads overlapping bytes, and the test compares the
+same garbage on both sides and passes.
 
-perf script: Fix metric_evlist leak in script_find_metrics
+read.group.values is expected to be packed per read_format, though
+evsel__parse_sample() points it into the event data, and perf inject
+feeds such a sample straight back to perf_event__synthesize_sample().
+So I plan to fix the test input rather than the synthesizer.
 
-Fix a memory leak in script_find_metrics() where metric_evlist is leaked
-when returning early on error paths.
+I'm preparing v2 and will send it shortly.
 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-
-[ ... ]
-
-> 	evlist__for_each_entry(metric_evlist, metric_evsel) {
-> 		struct evsel *script_evsel =3D
-> 			map_metric_evsel_to_script_evsel(script_evlist, metric_evsel);
-> 		struct metric_event *metric_me =3D
-> 			metricgroup__lookup(evlist__metric_events(metric_evlist),
-> 					    metric_evsel,
-> 					    /*create=3D*/false);
->=20
-> 		if (script_evsel->metric_id =3D=3D NULL) {
-> 			script_evsel->metric_id =3D metric_evsel->metric_id;
-> 			metric_evsel->metric_id =3D NULL;
-> 		}
-
-[Severity: High]
-This is a pre-existing issue, but could clearing metric_evsel->metric_id
-here interfere with mapping resolutions later in this loop?
-
-[ ... ]
-
-> 			list_splice_init(&metric_me->head, &script_me->head);
-> 			list_for_each_entry(expr, &script_me->head, nd) {
-> 				for (int i =3D 0; expr->metric_events[i]; i++) {
-> 					expr->metric_events[i] =3D
-> 						map_metric_evsel_to_script_evsel(script_evlist,
-> 									expr->metric_events[i]);
-> 				}
-> 			}
-> 		}
-> 	}
-
-When map_metric_evsel_to_script_evsel() evaluates the required events,
-would a NULL metric_id from the earlier transfer cause evsel__metric_id()
-to return unknown?=20
-
-It looks like this might fail the ID comparison against the script event
-and return NULL, which would prematurely terminate the expr->metric_events
-array and cause events to be silently dropped.
-
-[ ... ]
-
-> -	evlist__put(metric_evlist);
->  out:
-> +	evlist__put(metric_evlist);
->  	return 0;
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260809071455.1221=
-514-1-irogers@google.com?part=3D1
+Thanks,
+Narasimha
