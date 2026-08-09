@@ -1,56 +1,56 @@
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280D93AAF71
-	for <linux-perf-users@vger.kernel.org>; Sun,  9 Aug 2026 07:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD063A7193
+	for <linux-perf-users@vger.kernel.org>; Sun,  9 Aug 2026 07:15:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786259711; cv=none; b=W8jN0T7RzH7Lw3zuTTMld+sZVgvNorheOgj0OkDjcw1uDbYYIMtn8qV3Rq0oXJ0NgUduD+TwX+8Zw7dRJ3uuKoU3DL/WBNJmyBbQfXQ0wVz77D8gUmaMHMpDxkMIx/Qs3cjfe6tw266ay94lm50g10KqvHs3NZFdYh9qNDaW22Y=
+	t=1786259712; cv=none; b=mIICArBtXGZNjmXQfUQI6v31W9rT6X+CdZR2iYg34y/QfC/nlMNEuBLLLnpWM+Lkyca+nXl/r24BpOFRsKzY8YjcuqWLgIn5pxyFQAAGKtX/ljoH5ACK11O0TR8agQCMfi+nrMECdy9DR5zWlsRMzAZ8mGvPa9fjcrQqWWE0G6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786259711; c=relaxed/simple;
-	bh=EkELwjuoEifgq4yoiaYV05o2puOmeFtCBPEzq98DDQ4=;
+	s=arc-20240116; t=1786259712; c=relaxed/simple;
+	bh=LdRqfYW89uofR6tAJTdTGQmwf9gmFBmDRzi9+itJXKU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=UPY/L15u/Eo0lhKQEUPJaWnc6O075qpeH18lYU633PHcDcR3O+w8TCZlXp50At0ddfeulrguMMrtbT6e76F83jjISdwGjq2EHx+J52wXll8lTMr10CCdpDo42OKsrdp63dGjuJO5rCwatquVzfsjxnes5VO92eO1gcZg3H83rY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Tvyh45Lh; arc=none smtp.client-ip=209.85.216.71
+	 To:Cc:Content-Type; b=MCvnCBYfYKwq71MT6Ac/kxtTn7mr7k/G+n+OHesK5dynOCFmQDBSTRMheiajoMXQQzpCyLVge9bEKo3VRsoN02OuFwpCs+M5VYRWosOaMf/cfdiyojycTRjvVbr/M4x+ghgXA0Vd40UlS0BiRl/DBLCfN+BJlogT0wg/IGXU0XI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q46l23bz; arc=none smtp.client-ip=209.85.216.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Tvyh45Lh"
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-38dde0df80bso1608968a91.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 09 Aug 2026 00:15:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q46l23bz"
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-38ec0f510a9so2537419a91.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 09 Aug 2026 00:15:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786259708; x=1786864508; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1786259710; x=1786864510; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=P0IYRX3k7fgU84M+1N/2f6gf9z+pbW3gfbOLrfXfOEg=;
-        b=Tvyh45LhrgkR9nhkSrn+mMopYKiSCwmgUo6IOs+6/Gd+8SMwQCCpRHT8aeVwBMoluR
-         LVsvY+A6az2XhaHEu519kig3oLucmG8PYON+JI0nte9ZhuAn2yS5eFsQEUIbOrU0eaLT
-         S44y5+RvP3TzIvCQUM4kXZWTPXbtsbr3EM2rulG8GuW3p6+jpYB1vCH/E2LeCMgxdqh+
-         acyb2DztugmTX/8tc6s1cqMPHxfXd67PHPfDl7W6a4pZ1KzI3qIZxf1A6b8yl6hGU4dT
-         +8QiqMOoZc/qFyoi+ku8yybhdc4s5wgwtWI7jlJjrNUc1ImC1TdH7haYR2R+UZAfTPeq
-         Efwg==
+        bh=YvCKU3o2iNN7R3SZ+QP0rUsV6kh1WL0nD/UwzkIgjsg=;
+        b=q46l23bz49NMhZb2zIr7eOxK33PC1ks97x8GZNRDy5a2X/2b3kD1QCGN+QjlhDdYpa
+         5d3BzcoOGMUQmZskIQcrD9sot5CuuChDJiyYqjUOO3JEwpmEew/hVJ8B6W+HC6LHcHa8
+         k2tWqF0uPQ065U5hDlXH2xViIJRwPmRiAv/CGCXkTh0qiVVWicax6+GPUP8Rnbi+vqrx
+         kB5WTzf0vXNjtq/AsHwfhLPALRginnbmWohC+UZ1lGVlbmJ/sEraoMHL4ig6KaknL94F
+         U87xpTUgHpNznMBHXzb5VCPIPUGScGV+dMsVcFzaazscY/OP6lKiM/nzTsIZS/I75QUp
+         rsyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786259708; x=1786864508;
+        d=1e100.net; s=20251104; t=1786259710; x=1786864510;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=P0IYRX3k7fgU84M+1N/2f6gf9z+pbW3gfbOLrfXfOEg=;
-        b=by2o7+oC2kHuxnVj8iBsUK98LwFEs99zDM5l9uTIPN1GwxRY7gbiNVciIORsybGozU
-         ESMMAi5iy3FPiOXmr6mnWjPlMD10SLJbxDOlKJ47SFZGCA8tAIpYHv+lx3HnWE0bQWnq
-         HNYTlNIsrHxDZYU0c0xV7BObJx0gcDen/Reo/TQVmVprXo4W3PFyypdClcYNtFdCMus8
-         tZrtQMqKqzaINPpxN45jefrkCYUcbgMWQMz8hep77QDuKEREQi0MJmXu7Yn11orq31OQ
-         DBotu/Y4h884/TktEUj0xZgo+g2U4L3LlxLYSqW31mu7+AKzAQzNjtSDMirhiPgJzITm
-         NERg==
-X-Forwarded-Encrypted: i=1; AHgh+RrtjRPH3jlWmKGRS91rcvK06f0frhnfu6eNjfEdCzbiwVVJvNAhBO2k5HPoOKy4DiZ9KUDNWt9WdNXJHL7CeezW@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfE7U4YNlvVli20sRbgw2BiDJuIqAlyXHPmlfywBo2A9QqJNkC
-	YLMfOvVSfpxk/iw/Dp9tx+K3dKxINV7e39UCb5UoUwpLV6jbq0qjR4Vjb69wP75pp+f9bmRX2aP
-	2RRZu3V0MhQ==
-X-Received: from dldyr9-n2.prod.google.com ([2002:a05:701b:4509:20b0:13c:bfe9:dc09])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3f43:b0:37c:6130:7a5b
- with SMTP id 98e67ed59e1d1-3903c54302bmr35912690a91.8.1786259708257; Sun, 09
- Aug 2026 00:15:08 -0700 (PDT)
-Date: Sun,  9 Aug 2026 00:14:42 -0700
+        bh=YvCKU3o2iNN7R3SZ+QP0rUsV6kh1WL0nD/UwzkIgjsg=;
+        b=amYygh3hbH4Sql8U0KXgneiB3+rznj83ceyYE9MLJM2cHPjVgZG1YQ3OycvYdiho6k
+         ukSdp4ZP7XqQd+kbY6ioDCPFF8phEtCuApzos2nHXL0P8iOkOG8hxlWeaN0O2E5n23LO
+         38fb2e7sHm+8gp3ejLSE4OCU2bCjA1rCs4W3qhKh+QFVWifwkaOiLFxM5W3UM+LuRjya
+         A01WaopEUGRAHjrbvNND+AOvmgXUbNiaSacgxhh1bYUea4YIIYN17p3kqtCtz1eUBnZA
+         C8fINVBZbfbGf5Cw+CTE22ybKmY20BjmWgblgzHylzpll9JN6qpq3bVKZbWk65HYGmxK
+         SWjA==
+X-Forwarded-Encrypted: i=1; AHgh+RpcM9ZhCcKR920adXa3f9ZUdcl6NsSX1ivk75rQj61dBLQWONKhzM/ao6Q/9HqMNUxRiFRwnoCOaXNgLGx8p2WC@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPr9OrbeFDsR4Jprtux8qC346s2nR6n2+hiIwYVG0n8m4JVQna
+	2Il4iXx45PsaRjpIF8KhnIuHCujlhPlFPNFeD3bLALvhMKep6rdMR81ioLnKmILaOOlNJpUwfN4
+	Vaock/q/aMQ==
+X-Received: from dld11.prod.google.com ([2002:a05:7022:30b:b0:13e:5fe8:61ef])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3391:b0:39c:126c:93b5
+ with SMTP id adf61e73a8af0-3cbc03b56b6mr19321582637.21.1786259710311; Sun, 09
+ Aug 2026 00:15:10 -0700 (PDT)
+Date: Sun,  9 Aug 2026 00:14:43 -0700
 In-Reply-To: <20260809071455.1221514-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260624051535.3584977-1-irogers@google.com> <20260809071455.1221514-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.679.g6767b8d81c-goog
-Message-ID: <20260809071455.1221514-4-irogers@google.com>
-Subject: [PATCH v3 03/15] perf tools: Fix sb_evlist leaks in top and record
+Message-ID: <20260809071455.1221514-5-irogers@google.com>
+Subject: [PATCH v3 04/15] perf python: Fix memory leak in pyrf_evlist__get_pollfd
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -70,49 +70,37 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Fix a memory leak in cmd_top() where top.sb_evlist was not freed if
-evlist__add_bpf_sb_event() fails. Note that evlist__start_sb_thread() and
-evlist__stop_sb_thread() take ownership of the evlist and free it, so
-we must only free it if we fail before starting the thread. Also set
-top.sb_evlist to NULL to prevent use-after-free bugs.
-
-Apply the same fix to builtin-record.c to avoid leaking rec->sb_evlist
-and calling pthread_join on uninitialized threads in the error path.
+Fix a Python list object leak in pyrf_evlist__get_pollfd() by adding
+a missing Py_DECREF on the error exit path.
 
 Assisted-by: Antigravity:gemini-3.1-pro
-Fixes: b38d85ef49cf ("perf bpf: Decouple creating the evlist from adding the SB event")
+Fixes: 877108e42b1b ("perf tools: Initial python binding")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-record.c | 2 ++
- tools/perf/builtin-top.c    | 2 ++
- 2 files changed, 4 insertions(+)
+ tools/perf/util/python.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index f58d7e3c7879..a57987851cf0 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -2258,6 +2258,8 @@ static int record__setup_sb_evlist(struct record *rec)
+diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
+index af85c0771c44..c7ae1f85aec6 100644
+--- a/tools/perf/util/python.c
++++ b/tools/perf/util/python.c
+@@ -2825,6 +2825,8 @@ static PyObject *pyrf_evlist__get_pollfd(struct pyrf_evlist *pevlist,
  
- 		if (evlist__add_bpf_sb_event(rec->sb_evlist, perf_session__env(rec->session))) {
- 			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
-+			evlist__put(rec->sb_evlist);
-+			rec->sb_evlist = NULL;
- 			return -1;
- 		}
- 	}
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 5933c46ee137..570410599f1b 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1881,6 +1881,8 @@ int cmd_top(int argc, const char **argv)
- 		if (evlist__add_bpf_sb_event(top.sb_evlist, &host_env)) {
- 			pr_err("Couldn't ask for PERF_RECORD_BPF_EVENT side band events.\n.");
- 			status = -EINVAL;
-+			evlist__put(top.sb_evlist);
-+			top.sb_evlist = NULL;
- 			goto out_put_evlist;
- 		}
- 	}
+ 	evlist = pevlist->evlist;
+ 	list = PyList_New(0);
++	if (!list)
++		return NULL;
+ 
+ 	for (i = 0; i < evlist__core(evlist)->pollfd.nr; ++i) {
+ 		PyObject *file;
+@@ -2843,6 +2845,7 @@ static PyObject *pyrf_evlist__get_pollfd(struct pyrf_evlist *pevlist,
+ 
+ 	return list;
+ free_list:
++	Py_XDECREF(list);
+ 	return PyErr_NoMemory();
+ }
+ 
 -- 
 2.55.0.679.g6767b8d81c-goog
 
