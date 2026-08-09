@@ -1,56 +1,56 @@
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FD063A7193
-	for <linux-perf-users@vger.kernel.org>; Sun,  9 Aug 2026 07:15:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C90CE3AB5CA
+	for <linux-perf-users@vger.kernel.org>; Sun,  9 Aug 2026 07:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786259712; cv=none; b=mIICArBtXGZNjmXQfUQI6v31W9rT6X+CdZR2iYg34y/QfC/nlMNEuBLLLnpWM+Lkyca+nXl/r24BpOFRsKzY8YjcuqWLgIn5pxyFQAAGKtX/ljoH5ACK11O0TR8agQCMfi+nrMECdy9DR5zWlsRMzAZ8mGvPa9fjcrQqWWE0G6A=
+	t=1786259714; cv=none; b=BMvahEIA7CcMB42TazDkFgRnyoHIKGFgBsk4PCIetXUytVN52zNbUJrtXd9vElLaw7Xqcs1ss3vsc/RnxO/cEhVfz3jNWpx1NG1GwpHiB2KvlKOJ/BxGEuE7A5lUPYjEE8/6U+5BA3ryu186kUaZmwkfDPaUCJEdVPfkJ4YPtZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786259712; c=relaxed/simple;
-	bh=LdRqfYW89uofR6tAJTdTGQmwf9gmFBmDRzi9+itJXKU=;
+	s=arc-20240116; t=1786259714; c=relaxed/simple;
+	bh=VjEx0Rc8kSYoI06IJ52/Wy0QYVQQ/E0WJX0p4fzuaIg=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=MCvnCBYfYKwq71MT6Ac/kxtTn7mr7k/G+n+OHesK5dynOCFmQDBSTRMheiajoMXQQzpCyLVge9bEKo3VRsoN02OuFwpCs+M5VYRWosOaMf/cfdiyojycTRjvVbr/M4x+ghgXA0Vd40UlS0BiRl/DBLCfN+BJlogT0wg/IGXU0XI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q46l23bz; arc=none smtp.client-ip=209.85.216.70
+	 To:Cc:Content-Type; b=dISVOxxvHP8uVKXUM8E9lbrHmP/NoL7xMmnHT9/ssu89VElPdDoRDYudSrXbJj93GFGEpwFpiUiMDGzS7YqCawL27af9GcrK2ZK1pXSrf4p2tsyoHbrLhFG5gRbTmGGImXeKXZI+VsrvVlQ/BuoDv/F85EyW8dWmx6KT+VIHM3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=syLDhGij; arc=none smtp.client-ip=209.85.215.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q46l23bz"
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-38ec0f510a9so2537419a91.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 09 Aug 2026 00:15:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="syLDhGij"
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cb5ea36f969so1136402a12.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 09 Aug 2026 00:15:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786259710; x=1786864510; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1786259712; x=1786864512; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=YvCKU3o2iNN7R3SZ+QP0rUsV6kh1WL0nD/UwzkIgjsg=;
-        b=q46l23bz49NMhZb2zIr7eOxK33PC1ks97x8GZNRDy5a2X/2b3kD1QCGN+QjlhDdYpa
-         5d3BzcoOGMUQmZskIQcrD9sot5CuuChDJiyYqjUOO3JEwpmEew/hVJ8B6W+HC6LHcHa8
-         k2tWqF0uPQ065U5hDlXH2xViIJRwPmRiAv/CGCXkTh0qiVVWicax6+GPUP8Rnbi+vqrx
-         kB5WTzf0vXNjtq/AsHwfhLPALRginnbmWohC+UZ1lGVlbmJ/sEraoMHL4ig6KaknL94F
-         U87xpTUgHpNznMBHXzb5VCPIPUGScGV+dMsVcFzaazscY/OP6lKiM/nzTsIZS/I75QUp
-         rsyg==
+        bh=jPYjLCjJI30RI52LUn8RaWVxhtcmVMJzJLmM3HtSGHM=;
+        b=syLDhGij3ZG8fAeSQwyV8V6Vo0mO7tjhtsMoYzTRk/Um/nlR0yUtpo9b4Qjayuh+XF
+         sPvPZi16Xe96dGJ7dGngpEuXU5iLWmqNsMdtty79OlC5PGzs5KG1yltq7DkAtGFo9wM1
+         EfMknM65YjPtbIPQGwq3v6k6WyEMSIA4/S2XXtWwnnb/Rl3cmL5pGkZC73uSGx2jUDr9
+         5cEuPrnqw727T0z5wulMYFPZ9DCzi1DYqkCRtXHSdQKRWz3620K7oaejYvRnshahr/vE
+         IXIE+LAnrxvCkS2H3NGBepOgKEjgidfjJkhGyUZ5bs3oa+8O5PcDqZzS4vvzmkMbm3AV
+         QXKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786259710; x=1786864510;
+        d=1e100.net; s=20251104; t=1786259712; x=1786864512;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=YvCKU3o2iNN7R3SZ+QP0rUsV6kh1WL0nD/UwzkIgjsg=;
-        b=amYygh3hbH4Sql8U0KXgneiB3+rznj83ceyYE9MLJM2cHPjVgZG1YQ3OycvYdiho6k
-         ukSdp4ZP7XqQd+kbY6ioDCPFF8phEtCuApzos2nHXL0P8iOkOG8hxlWeaN0O2E5n23LO
-         38fb2e7sHm+8gp3ejLSE4OCU2bCjA1rCs4W3qhKh+QFVWifwkaOiLFxM5W3UM+LuRjya
-         A01WaopEUGRAHjrbvNND+AOvmgXUbNiaSacgxhh1bYUea4YIIYN17p3kqtCtz1eUBnZA
-         C8fINVBZbfbGf5Cw+CTE22ybKmY20BjmWgblgzHylzpll9JN6qpq3bVKZbWk65HYGmxK
-         SWjA==
-X-Forwarded-Encrypted: i=1; AHgh+RpcM9ZhCcKR920adXa3f9ZUdcl6NsSX1ivk75rQj61dBLQWONKhzM/ao6Q/9HqMNUxRiFRwnoCOaXNgLGx8p2WC@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPr9OrbeFDsR4Jprtux8qC346s2nR6n2+hiIwYVG0n8m4JVQna
-	2Il4iXx45PsaRjpIF8KhnIuHCujlhPlFPNFeD3bLALvhMKep6rdMR81ioLnKmILaOOlNJpUwfN4
-	Vaock/q/aMQ==
-X-Received: from dld11.prod.google.com ([2002:a05:7022:30b:b0:13e:5fe8:61ef])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3391:b0:39c:126c:93b5
- with SMTP id adf61e73a8af0-3cbc03b56b6mr19321582637.21.1786259710311; Sun, 09
- Aug 2026 00:15:10 -0700 (PDT)
-Date: Sun,  9 Aug 2026 00:14:43 -0700
+        bh=jPYjLCjJI30RI52LUn8RaWVxhtcmVMJzJLmM3HtSGHM=;
+        b=FUPqrGzZk0GuCUfKfyqlNPJlPpsVBohiKzlfocVk6rCuz2Cx0rnzhqPa28+iYzff2H
+         W5Ah3aqEQUFYbFbCC5hbX04Ryegr3hvYl7g1zHTSLeBMpLeyzOdLH2kihUD2xBWLKhcy
+         b+RhSUjynv3uEvR0/hyfBQ6bqbnftjHXaduK+/puh0Ljmkiw8a3117NN3JMryF4JIxKd
+         seeBmBzif7V5B3CVMJQXBPrq8JaFtRbQGM6IZWQ6mDfDHyhCCsvLfqfbMzhJuf9gTbFE
+         plMDjTqqKYdHEXBwk8rW0VsWsTz6gw/9a6XUkN2EbbJTBOSyryL6IIyXdrVzXUmZWdMj
+         ZGQg==
+X-Forwarded-Encrypted: i=1; AHgh+RoBKWq0psfVVYdSiR4GZmMWOvN6tFQT42XK6t49qjV0nAkOecB9Ab0OJXR2Tk/mEtxg+rlLC6vusbl3yZPkF4S6@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1nUr3ULiysCxWw5tJ+EL3BO2J69w8LUMkWCNVAtKOEEnrsiG4
+	MPDqaKkYbeRrqfzL3OpvxTcIIholLojsEpfmA1BMpb6nPqv4DKamnEd/vd8xtVYYWxpNeefCg38
+	SmBIhRauzFw==
+X-Received: from dli20-n1.prod.google.com ([2002:a05:7022:294:10b0:13b:97f1:acba])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:164a:b0:3c3:a08d:5b44
+ with SMTP id adf61e73a8af0-3cb85ef9234mr41982540637.23.1786259711901; Sun, 09
+ Aug 2026 00:15:11 -0700 (PDT)
+Date: Sun,  9 Aug 2026 00:14:44 -0700
 In-Reply-To: <20260809071455.1221514-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260624051535.3584977-1-irogers@google.com> <20260809071455.1221514-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.679.g6767b8d81c-goog
-Message-ID: <20260809071455.1221514-5-irogers@google.com>
-Subject: [PATCH v3 04/15] perf python: Fix memory leak in pyrf_evlist__get_pollfd
+Message-ID: <20260809071455.1221514-6-irogers@google.com>
+Subject: [PATCH v3 05/15] perf synthetic-events: Fix uninitialized pthread_join
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, acme@kernel.org, namhyung@kernel.org
 Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
@@ -70,37 +70,32 @@ Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com,
 	mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 
-Fix a Python list object leak in pyrf_evlist__get_pollfd() by adding
-a missing Py_DECREF on the error exit path.
+In perf_event__synthesize_threads(), fix an uninitialized pthread_join()
+call when thread creation fails by only joining the successfully
+created threads.
 
 Assisted-by: Antigravity:gemini-3.1-pro
-Fixes: 877108e42b1b ("perf tools: Initial python binding")
+Fixes: 340b47f510bb ("perf top: Implement multithreading for perf_event__synthesize_threads")
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/python.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/synthetic-events.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index af85c0771c44..c7ae1f85aec6 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -2825,6 +2825,8 @@ static PyObject *pyrf_evlist__get_pollfd(struct pyrf_evlist *pevlist,
- 
- 	evlist = pevlist->evlist;
- 	list = PyList_New(0);
-+	if (!list)
-+		return NULL;
- 
- 	for (i = 0; i < evlist__core(evlist)->pollfd.nr; ++i) {
- 		PyObject *file;
-@@ -2843,6 +2845,7 @@ static PyObject *pyrf_evlist__get_pollfd(struct pyrf_evlist *pevlist,
- 
- 	return list;
- free_list:
-+	Py_XDECREF(list);
- 	return PyErr_NoMemory();
- }
- 
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 75a32ae8ef62..3583a60cc487 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -1221,8 +1221,8 @@ int perf_event__synthesize_threads(const struct perf_tool *tool,
+ 	}
+ 	err = 0;
+ out_join:
+-	for (i = 0; i < thread_nr; i++)
+-		pthread_join(synthesize_threads[i], NULL);
++	for (j = 0; j < i; j++)
++		pthread_join(synthesize_threads[j], NULL);
+ 	free(args);
+ free_threads:
+ 	free(synthesize_threads);
 -- 
 2.55.0.679.g6767b8d81c-goog
 
