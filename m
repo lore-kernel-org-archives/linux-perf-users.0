@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9753E0C66;
-	Mon, 10 Aug 2026 14:03:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C93B3AF66E;
+	Mon, 10 Aug 2026 14:04:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786370588; cv=none; b=qH9UmvD1puOibPTVx808M7/UwmPoWB1f+kVlM62tDegMuZ+ivuIu6r7LYCpW7TCMbPPS46PHCBiWW/XCsFRZ9wGAoM/qEE/xdQx80tSXAmP4jDdOIOwjUIJfkeAil6NSuRkIj3zBH6uAiOy6SNcfRO9SDLrkpDUXxNpG0VMbYOI=
+	t=1786370686; cv=none; b=ugSzw6XuIBZYgF/ielpLf6R+pbgrgxN42BgSa7NRLqjf1hdTzXNXiH47knNmrOcg/py+bMUZYn1KMXhjRVjZzid66o1TJ7AOvTDzMndGOmp8G6/DESq+ex0aTCVWcV15Ee8u+CgRO6Qwwi5eQBA2H5I3yJpIK00qoTCk22a9dY8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786370588; c=relaxed/simple;
-	bh=LfIdTTqg5c/Ob/ZERkYbe5RZBCzNz+U1lGkS43Ss5A8=;
+	s=arc-20240116; t=1786370686; c=relaxed/simple;
+	bh=EfA5qC3BXDimF69tKp65Bv6khfCvDWQAzu7iNI81N/k=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=U+OpMMET3BblzbK6eIK8DNnoV/2+YrlltGUYKCjVhpN7IrF14kdlTI2U5wkG4uTp1wYQAbYZ9qnLUOd5ObnnmCDvPcRzHn+qDIT+04O65U7oZL77DbVjnRUMDYpJ4DGLLJ+uPoeAJukPtRihDj2VINhhvqDBpkj/HUBiwOUwLu8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jdbpnzDS; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=lKiyVKke+1hlk6egq0bIjXgzNq9i3tAn1AacavqjwO9Ap1KSvlQJkLIcodaJ0OOxYG80/zNW1ceDCtybS8IPJPCNOV4KTRfsmuAHErOskHnjdiO0gK5AfrNgUA8HsATqEbItBswaQhfhzo/+Oj5Ss2hhHJkUyR4yVJaC7VYKJt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtCko4s4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jdbpnzDS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1D721F000E9;
-	Mon, 10 Aug 2026 14:03:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtCko4s4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D2DD1F000E9;
+	Mon, 10 Aug 2026 14:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786370587;
-	bh=C0wCGWqawOoqvyJErYnhEtp8F0veVA1BCLHQW05MDlU=;
+	s=k20260515; t=1786370685;
+	bh=uzR1DoG4lPRIqgJkpj75RSBavLd3zOTESqrzJJ3i2vA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=jdbpnzDSfgpJ2lP5FPLfSg6whNh/Hj65WNKYk+37WA90MChqGg6ZZYzK+2eFjgyvT
-	 675Rqj1Eorwke4zoiGQc2X79ncNS33Ue0CUc5EoBIVfVBIKUPgzo+KAUYEDo8USG1F
-	 4+tISCQADGCraM6oExhmQpONHaHvBjJaPTSwefD2JlP1ct0or/knab+R4594V5zHPC
-	 thcz7CtG/imc3X14m3R0bnC+0KF3NFQD8xfXC5oY05S7bfveLzKEALu4+cRJp/hgtM
-	 x020iAGLtZY+4unFQjevGYDZorXpIhMdvOMiZakCXMTZxGx+p+ANsFO6nGpICva7q+
-	 OVm+vrOaFxA1g==
+	b=VtCko4s4iwsGMsCZUyWYh5d9VHfcK+pLnl71Tg9O5zQu/t3cla6WIcBZ+fPy7jrzy
+	 DlUCTo/HBr+g0q3zMyGpcpQqHU4ud9paVXdB+aPvyAut3P7fBCPXr1uMqhYnG+H1YU
+	 9q7pqkwf53LgfMEqr4IxU5hdA2+q+KeGeM5fslpXOm88EnWcn1jg8v/4WbIMqTDN0h
+	 aBUJx07V+PUVGtdeWe3yCaaky82faw1K9XrhzAXou1ittrsNH/gZqF2w9u1hAMXsUa
+	 Wlg+XKcrxS/O8oiOgKwRH87oXiYAq6GEORnqlaS1nT86De1o3sLb2imvjI/dn06AhE
+	 3azBnvWHzE3yg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v7 1/3] perf/core: Fix NULL pmu_ctx passed to
- pmu->sched_task()
+Subject: Re: [PATCH v7 3/3] perf/core: Fill branch entries with a single
+ assignment
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Puranjay Mohan" <puranjay@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-In-Reply-To: <20260810133540.1947118-2-puranjay@kernel.org>
+Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260810133540.1947118-4-puranjay@kernel.org>
 References: <20260810133540.1947118-1-puranjay@kernel.org>
- <20260810133540.1947118-2-puranjay@kernel.org>
+ <20260810133540.1947118-4-puranjay@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 10 Aug 2026 14:03:05 +0000
-Message-Id: <20260810140306.C1D721F000E9@smtp.kernel.org>
+Date: Mon, 10 Aug 2026 14:04:44 +0000
+Message-Id: <20260810140445.0D2DD1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,75 +49,92 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] Per-CPU PMUs missing `sched_task` callbacks during context switche=
-s if a task context exists.
+- [High] The BPF branch snapshot helpers (__intel_pmu_snapshot_branch_stack=
+ and amd_pmu_v2_snapshot_branch_stack) unconditionally copy stale branch re=
+cords (LBRs) to BPF buffers, leading to cross-context information leaks.
 --
 
---- Patch [1]: [PATCH v7 1/3] perf/core: Fix NULL pmu_ctx passed to pmu->sc=
-hed_task() ---
-commit 333df3e02c2d6b54e5bd528f91779820677d118e
+--- Patch [3]: [PATCH v7 3/3] perf/core: Fill branch entries with a single =
+assignment ---
+commit f67f9ecd08216c6081d3d24e81906c232c6917fe
 Author: Puranjay Mohan <puranjay@kernel.org>
 
-perf/core: Fix NULL pmu_ctx passed to pmu->sched_task()
+perf/core: Fill branch entries with a single assignment
 
-perf_pmu_sched_task() returns early when cpuctx->task_ctx is set, and
-cpc->task_epc is only non-NULL while a task context is scheduled in on
-this CPU. This patch passes &cpc->epc instead, which is the CPU-wide
-context for this PMU, avoiding a NULL pointer dereference.
+This commit replaces the field-by-field initialization of perf_branch_entry
+with a single structure assignment. This automatically zeroes out any unnam=
+ed
+fields, removing the need to manually keep perf_clear_branch_entry_bitfields
+in sync with the structure definition.
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index ba5bd6a78fe7b..c372213ffc883 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -3907,7 +3907,7 @@ static void __perf_pmu_sched_task(struct perf_cpu_p=
-mu_context *cpc,
->  	perf_ctx_lock(cpuctx, cpuctx->task_ctx);
->  	perf_pmu_disable(pmu);
+> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+> index cae2e02fe6cc4..539e9feffa356 100644
+> --- a/arch/x86/events/intel/lbr.c
+> +++ b/arch/x86/events/intel/lbr.c
+[ ... ]
+> @@ -847,14 +847,15 @@ void intel_pmu_lbr_read_64(struct cpu_hw_events *cp=
+uc)
+>  		if (abort && x86_pmu.lbr_double_abort && out > 0)
+>  			out--;
 > =20
-> -	pmu->sched_task(cpc->task_epc, task, sched_in);
-> +	pmu->sched_task(&cpc->epc, task, sched_in);
+> -		perf_clear_branch_entry_bitfields(br+out);
+> -		br[out].from	 =3D from;
+> -		br[out].to	 =3D to;
+> -		br[out].mispred	 =3D mis;
+> -		br[out].predicted =3D pred;
+> -		br[out].in_tx	 =3D in_tx;
+> -		br[out].abort	 =3D abort;
+> -		br[out].cycles	 =3D cycles;
+> +		br[out] =3D (struct perf_branch_entry){
+> +			.from		=3D from,
+> +			.to		=3D to,
+> +			.mispred	=3D mis,
+> +			.predicted	=3D pred,
+> +			.in_tx		=3D in_tx,
+> +			.abort		=3D abort,
+> +			.cycles		=3D cycles,
+> +		};
+>  		out++;
+>  	}
+>  	cpuc->lbr_stack.nr =3D out;
 
 [Severity: High]
-This isn't a bug introduced by this patch, but does the early return in
-perf_pmu_sched_task() skip callbacks for CPU-wide PMUs?
+This is a pre-existing issue, but while reviewing how these branch entries
+are populated and tracked by cpuc->lbr_stack.nr, I noticed a potential
+information leak in the BPF branch snapshot helpers.
 
-If a system-wide PMU event is active (sched_cb_usage > 0), and a context
-switch occurs to or from a task with an active perf event (meaning
-cpuctx->task_ctx is set), perf_pmu_sched_task() returns early:
+Does __intel_pmu_snapshot_branch_stack() unconditionally copy stale
+branch records to the BPF buffer?
 
-kernel/events/core.c:perf_pmu_sched_task() {
-	...
-	/* cpuctx->task_ctx will be handled in perf_event_context_sched_in/out */
-	if (prev =3D=3D next || cpuctx->task_ctx)
-		return;
-	...
+arch/x86/events/intel/core.c:__intel_pmu_snapshot_branch_stack() {
+    ...
+    cnt =3D min_t(unsigned int, cnt, x86_pmu.lbr_nr);
+    memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * c=
+nt);
+    ...
 }
 
-It seems to rely on perf_event_context_sched_out/in() to handle the
-callbacks. However, perf_ctx_sched_task_cb() only iterates over the task's
-pmu_ctx_list:
+When the number of valid LBR entries (cpuc->lbr_stack.nr) is less than the
+hardware capacity (x86_pmu.lbr_nr), this memcpy appears to copy the trailing
+unwritten entries from cpuc->lbr_entries. This condition can happen routine=
+ly
+in call-stack mode with shallow stacks, or when Intel's double-abort erratum
+skips an entry (as seen just above in this diff).
 
-kernel/events/core.c:perf_ctx_sched_task_cb() {
-	...
-	list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
-		cpc =3D this_cpc(pmu_ctx->pmu);
+The AMD implementation seems to have the exact same logic error:
 
-		if (cpc->sched_cb_usage && pmu_ctx->pmu->sched_task)
-			pmu_ctx->pmu->sched_task(pmu_ctx, task, sched_in);
-	}
-	...
+arch/x86/events/amd/core.c:amd_pmu_v2_snapshot_branch_stack() {
+    ...
+    cnt =3D min(cnt, x86_pmu.lbr_nr);
+    memcpy(entries, cpuc->lbr_entries, sizeof(struct perf_branch_entry) * c=
+nt);
+    ...
 }
 
-If the task's perf event is for a different PMU (like a software event), the
-CPU-wide PMU won't be in ctx->pmu_ctx_list. Does this mean the CPU-wide
-PMU's sched_task() callback is completely skipped during the context switch,
-potentially corrupting hardware tracing or leaking branch records across ta=
-sks?
-
-> =20
->  	perf_pmu_enable(pmu);
->  	perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+Could this allow a BPF tracing program to read stale hardware branch records
+left over from previously executed contexts, leaking execution history from
+other tasks or the kernel?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260810133540.1947=
-118-1-puranjay@kernel.org?part=3D1
+118-1-puranjay@kernel.org?part=3D3
