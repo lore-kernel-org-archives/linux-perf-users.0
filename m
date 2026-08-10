@@ -1,224 +1,301 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAD5835C1A6;
-	Mon, 10 Aug 2026 06:46:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786344366; cv=none; b=aOkI5RfwEuxrH4BY5RonYEylSOE6qCk5nJ4Fs81S52zDVNkBJ2aUaxyNPkfCPGEVGmeK/037B4O0tDwsTZOX5uUzcuGL/WQOLzsws0dYjuYZeX8EWYSXI4XV5Px4Ff+KrMCuBFl4GRqV54NdpEhrSCjvZ4/7C+WhxZmpGq+lBYw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786344366; c=relaxed/simple;
-	bh=46c6vocBVce9Y/Apjkez7FMUK7jmFceu+6/gfgpl9AM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dPCY/YupmhqQcAbXv57O/NrpjAbB8DJ+pHIN0588486X1hVt2uetBzcPGdWrlLjypxTSSLD+6uq+mLIrYMUS7f7gez/PDZKz8PLubFRmyrP7ek+Pv76PPCkT4Fv44b/xECTvVI3zEOwb08HHnr4wV55IfHJZYmiIa0azVJ1xKVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cP2dX1rq; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3EEB37D118;
+	Mon, 10 Aug 2026 06:58:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786345085; cv=fail; b=HPOBdzVDC5ZzNwh2XxWbhkeFM6MYVsI+LWJwqg2FfclFogzs4DBT4T/O9OPnY179Ee/0G9hrIWj7u5ZUnhhBsEmxQ9QZ/he0SrJKi8pzyWqhJHbWnlFaqSOglPT2w8OC7yrnwYgvCxdOtLuXhtKcjqkajIdWEUf+RP8rrHhJQak=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786345085; c=relaxed/simple;
+	bh=GwnrPiJz9dzb3bAYq3fHazEdSkiifEMjfdSdw5EcE2A=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=gk/uz/6TUqwPZlCYT8JXGefLLE0ir7L3SHxpU2z9wuwUEZ+GkYAi0cn0LaDf/a1HX+KIZOfBiG6Wx5OgZ7KpOUq6uaGUrqP3JKW+LzJBE16WCub/6toLdGigZH1ZbGdUyE6aGRCSDMAiJi0jT9B4CuOKuk/kVjceNw2SB1wk5ks=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V0LLGxTn; arc=fail smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cP2dX1rq"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67A5VYZX3085069;
-	Mon, 10 Aug 2026 06:44:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=vVPGPVZ23NsreeExE7+jGCM0ud2bcA
-	JA4ypv1DILR34=; b=cP2dX1rqRgJGyJQPsc4KFbE1PC99K1ErC8LoPBcJX/kDVk
-	D9Jo4Iz1SXdFchU8Ko5W4WB9COXrRcti5DpxhwdI5dfEePzz5UmgRzT8EYYyBi07
-	KU36zRJaFsP0Akw7apyJ4SCl4IAb1VRGvP8L0mKhwBZnn0XUkDZ2PW7t9oviZUQq
-	bN2tmVBhSWNgiSiSi7ymdtf6iKh4gNTCCXIweHK0Tg6HF6KYslOZj/J1AEcJVHnf
-	kWNlsq5fwLgQr2DlUZF0whZYM5XqlyiEV4xJgAR6wPkWOH+OEMcVL/bVHH8IYS6D
-	MxDe73qz6EXJrcPmB5P+oxGbZoA1keo68zERDcAg==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fwvjypkqg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Aug 2026 06:44:37 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67A6ffw0026503;
-	Mon, 10 Aug 2026 06:44:36 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fxhfxueyp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 10 Aug 2026 06:44:36 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67A6iYQG34930976
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 10 Aug 2026 06:44:34 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 17B532004B;
-	Mon, 10 Aug 2026 06:44:34 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2335D20043;
-	Mon, 10 Aug 2026 06:44:31 +0000 (GMT)
-Received: from li-008a6a4c-3549-11b2-a85c-c5cc2836eea2.ibm.com (unknown [9.87.135.220])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 10 Aug 2026 06:44:31 +0000 (GMT)
-Date: Mon, 10 Aug 2026 08:44:29 +0200
-From: Alexander Gordeev <agordeev@linux.ibm.com>
-To: Muhammad Usama Anjum <usama.anjum@arm.com>
-Cc: Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Tvrtko Ursulin <tursulin@ursulin.net>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Dimitri Sivanich <dimitri.sivanich@hpe.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Muchun Song <muchun.song@linux.dev>,
-        Oscar Salvador <osalvador@suse.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Liam R. Howlett" <liam@infradead.org>,
-        Lorenzo Stoakes <ljs@kernel.org>, Will Deacon <will@kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-        Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        David Hildenbrand <david@kernel.org>,
-        Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Eduard Zingerman <eddyz87@gmail.com>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>,
-        Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Christoph Lameter <cl@gentwo.org>, Mike Rapoport <rppt@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>, ziy@nvidia.com, pfalcato@suse.de,
-        ryan.roberts@arm.com, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-mm@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-arch@vger.kernel.org, kasan-dev@googlegroups.com,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, damon@lists.linux.dev
-Subject: Re: [PATCH 6/9] mm: convert PTE table entry to pte
-Message-ID: <2599c5b3-e8ac-4865-993b-d41e6f060d52-agordeev@linux.ibm.com>
-References: <20260806083926.1807279-1-usama.anjum@arm.com>
- <20260806083926.1807279-7-usama.anjum@arm.com>
- <fab9fc78-1e1d-4d5b-a9ca-92f3ebd04108-agordeev@linux.ibm.com>
- <5c329236-7761-4e42-a549-b822e43b4358@arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V0LLGxTn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786345082; x=1817881082;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=GwnrPiJz9dzb3bAYq3fHazEdSkiifEMjfdSdw5EcE2A=;
+  b=V0LLGxTn4zI/x++7ezl28GlyeIkl38/gZD3QgUA+rN1H9xb7pKZpDslQ
+   mRpS22YFGXD6aubv2zFBpq8poXc8anpSglxHm4dUxQ/YQ9uAXFos9L7DZ
+   8IAd1Xq9YGsz7/Y3ktBzzOuEuUOTBq2hvhvqq8YyWzSqKc5g6Zbo1ZipM
+   lncIWJ6f/B1NwN4g6tQF1Z6v8swYUVmM+Cue0Bm9/iOaptoshRHEct3Jt
+   b7wsVFtvASmOy8pLv2+As6E8njouiBl9g5Il7p/zjLPKakAbNhxHucUSk
+   pxu7EbeuZteB1njqoWk2p0SDD7isd1lPtsingMA5cJq5vwqW1W15F5mS9
+   g==;
+X-CSE-ConnectionGUID: ay2aSdQyQaaxFgY1sESvAA==
+X-CSE-MsgGUID: H7Sv7XZHSwm1kfrl28TSqg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11870"; a="86926138"
+X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
+   d="scan'208";a="86926138"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2026 23:58:01 -0700
+X-CSE-ConnectionGUID: RafonWpsR4SMiiC900q1lQ==
+X-CSE-MsgGUID: ar0D1UorSG+Ccahz0/ZItQ==
+X-ExtLoop1: 1
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2026 23:58:00 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Sun, 9 Aug 2026 23:57:49 -0700
+Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45 via Frontend Transport; Sun, 9 Aug 2026 23:57:49 -0700
+Received: from PH8PR06CU001.outbound.protection.outlook.com (40.107.209.40) by
+ edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Sun, 9 Aug 2026 23:57:48 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=LGdKr9v7RBFMtVm10hFnXyELBybhKSynbZJv8BGyw5nNaGs9QVOlXksQnm3Bvyy3DpKDRwRGcHjNFPOjp/K2ZZmWF6sdf8pmteqWouqaFjvgI5s+/2aXYQNA6r88LFtcrfFmpbOx5WfTQNCdYHsTf4ks4bQiT9ks2VkG2vTsXtI6BM0YLoevnchzebk63jLP23dR6O6RW2o80YzTz3arau52w+KhhD2yOfr5UR7iVHGi+hNlsdmYlMpNco4XprJySaUsMSn8VdNFrLFOeEL7zmbdwcpLuLfHSTWZu8FH79NFOQ7WCQFNmNfNgi8VJBAVWqqrp//oJSRrwQFMLDHHsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jMxGWX4ADtkZ0GL+CeWclntiMzdHk+DnnoQutmjwHpQ=;
+ b=WXjx+uYeV06xzmtJ/3Xr8iNIUKSHISKxy/aS7kWlXtOVnjxPPb9kbdpi+C4O6TS1WFnT3XVnRloCX5G0J7zM/GeLEJKHIzFH3Svmm/o9lBkY2lLd+tM4EzTgjJsaGV9TNreMp68Hgz5G6xyr19pW0TCMsVuHbciZ7MaWDdKMXOaycCFVgSz/ziaxZAJB9H9+5Y3x+mgCP1VoOv9KJ7oGrgf/W6MrFiU+vgrxcdmE2c+tcPpya/HC26Qaw8mxrUY+T070XnkNX39VfYJlmm16n4oSLxRbPXhVKflY5FtW42uswbCOChZi/kiCxSF/4BP5zrs/Sofbe3T3kX0HeJb/Wg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
+ by IA1PR11MB9470.namprd11.prod.outlook.com (2603:10b6:208:5af::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.25; Mon, 10 Aug
+ 2026 06:57:46 +0000
+Received: from IA1PR11MB7198.namprd11.prod.outlook.com
+ ([fe80::2c4e:e92a:4fa:a456]) by IA1PR11MB7198.namprd11.prod.outlook.com
+ ([fe80::2c4e:e92a:4fa:a456%3]) with mapi id 15.21.0292.024; Mon, 10 Aug 2026
+ 06:57:46 +0000
+Message-ID: <20083f61-9724-445c-ad45-d77f9e8d2266@intel.com>
+Date: Mon, 10 Aug 2026 09:57:40 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 09/23] perf annotate: Deduplicate overlapping ARM SPE
+ events for data type profiling
+To: Tengda Wu <wutengda@huaweicloud.com>, Namhyung Kim <namhyung@kernel.org>,
+	<james.clark@linaro.org>, <xueshuai@linux.alibaba.com>, Li Huafei
+	<lihuafei1@huawei.com>
+CC: Peter Zijlstra <peterz@infradead.org>, <leo.yan@linux.dev>, Ian Rogers
+	<irogers@google.com>, Kim Phillips <kim.phillips@arm.com>, Mark Rutland
+	<mark.rutland@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, "Ingo
+ Molnar" <mingo@redhat.com>, Bill Wendling <morbo@google.com>, Nick
+ Desaulniers <nick.desaulniers+lkml@gmail.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Zecheng Li <zli94@ncsu.edu>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<llvm@lists.linux.dev>
+References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
+ <20260808122400.2961238-10-wutengda@huaweicloud.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
+ 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
+ 4, Domiciled in Helsinki
+In-Reply-To: <20260808122400.2961238-10-wutengda@huaweicloud.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DB9PR01CA0003.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:1d8::8) To IA1PR11MB7198.namprd11.prod.outlook.com
+ (2603:10b6:208:419::15)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5c329236-7761-4e42-a549-b822e43b4358@arm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODEwMDA1NCBTYWx0ZWRfXxI/cthX2D0Wc
- iHPLS8hc2Kj/zk+XaKiAAFgipdFaX6yt5ULiZYFw9cMykKZhsGzYdz8Ozez/WjJFTxNxMxdlY+Z
- xRKD8hb46fc3eq4T3zk/Ay2gFewaqBQyLERBaqjOrmguPqyfrY4V/sj3PMJQSwHxbC9gQ3JPdGp
- nwoFQng/LWfi/b2CNXX0ejbyTRbXCpU6ISkPy5ReFIqwletsdYxZQh3JZdOlQrUjBCsND1GblNt
- G/4DaSrhSqHIA4lB3PliH1JLOCq/gqtakESjF4VI9bapYhuQXt1SuBKOBQMvOtnuq4THGnpYdaA
- 9DlU8ZKdg0fttjy6cWWMXxwJNMzsJQnfWACC9mQPG3O4x/cS3d0NgAmCjmdVYfXi8XGUV9/5PxJ
- HdlkuRfRyvN/kE+SQ4EeTy+wa+g6t6URPTCSrkC11WsiBzyO9FuJFEs1QK/7K/rvQyfHrqCYbs4
- iMEVrVdUzEx5zR0r21A==
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODEwMDA1NCBTYWx0ZWRfX9Ko1NY31ilHb
- y/krrlO5A2ANnAiXusNks5NMrWI4UvS7c1Y7yzgoGS6CxTGjDGRyAu8EHxJ1ITitPdxPjbMc8pe
- lyb7xPyJDB1SIBriSbnTKYVPxMcf33w=
-X-Authority-Analysis: v=2.4 cv=RqD16imK c=1 sm=1 tr=0 ts=6a797355 cx=c_pps
- a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17
- a=kj9zAlcOel0A:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=uAbxVGIbfxUO_5tXvNgY:22 a=VwQbUJbxAAAA:8
- a=7CQSdrXTAAAA:8 a=VnNF1IyMAAAA:8 a=2hzp2EkNZNX3k9pX5ccA:9 a=CjuIK1q_8ugA:10
- a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-GUID: YbHEwP5JTLZr3QYF8zr2RkJeozrhuIz7
-X-Proofpoint-ORIG-GUID: YbHEwP5JTLZr3QYF8zr2RkJeozrhuIz7
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-10_01,2026-08-07_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 suspectscore=0 lowpriorityscore=0
- clxscore=1015 adultscore=0 bulkscore=0 malwarescore=0 impostorscore=0
- spamscore=0 classifier=typeunknown authscore=0 authtc= authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.22.0-2606150000
- definitions=main-2608100054
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|IA1PR11MB9470:EE_
+X-MS-Office365-Filtering-Correlation-Id: f2c1502e-563c-41ac-c4a0-08def6acaf0c
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|23010399003|10067099003|11063799006|4143699003|56012099006|6133799003|3023799007|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: iM/B1VhVbFdAdLXLlzXaVl2umk76Xp3ex8ByQnNKEtlgc+hb0Nlzl5E0foCkHQjrUlmI/O6q/7SMwR75W36k4kBzYp85tb/lVgT2DW/L7MQOGXMAQTYYOtuC5CbPAE1meAgEExaTcwKMLrRKphGN/wY5nSlVeEpIOSfR692KGBXiKwpswlwZeSVmmYvK7Aqz7U+IHWhhEN2wP8Kp0anZuNKexjamlBIhryY6p8kyRCBsaystUZiP7v7q3aYlQ4Y749NTTp5jiGNuw+4D3N/z9mty8k1sy9xk4PC208/nETP6qP/eTofhlNPJbSfCiC5+dxWRYXMhswPVO72CSJmtvJbwM0PWCrNjap20csk/f/jGEo6doNxe/Mh3xidhPIsk2SzoIIH3UaFf++ViKI5eYe/F3qMgoInLG93sFVfu+MlLxSYs5N2rshtA9kCkr3HyhA80+3f6WuT1RVWAazQSqCCt2xf5x5fp72Qs3sdj+vr9dAb20slP0NlXC2hg6D9L6aVM0AwaQLCcrDyyZkeCSwK5xlJQud+ZRSPgWNl43rN3lDciN9tNaIpSKCQ5aAml5me7543yGWx4SdLqIRV/RN/nB4d9gh2Y3jpocJ3vm7qzP905LFYeB+rI5NzRYYr0O8aCpnBz04cpjqBqUU6Rn9W5IUGar7Ai7xC8byzCFBU=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(23010399003)(10067099003)(11063799006)(4143699003)(56012099006)(6133799003)(3023799007)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QnpGWFVjbm9DaVdHdjhXSUQ2ZUJHejZaWm91REFwbzRxTTYxaVJtaUhwUTFP?=
+ =?utf-8?B?UXdBR0dnb3dYWmhkL1hsUmdub3ZZQnlZR0NTQlVFU1U3Q08xZklvTVV1UXds?=
+ =?utf-8?B?RkN6RkFEdWJvSHU3OWhCZjZxaXFkTWlqeCt0RzhES24xY0ZSR3lhMDRIUXNK?=
+ =?utf-8?B?ekkxL1RsYVBQVCtBQUM2dVcxcnM1UnBZaDZBMk5LSGxIYUVHY0hBZmFmSFV2?=
+ =?utf-8?B?dHkxRGlEdmtKK0x3YWFINlpUY2xFNDlwZjNvbEVCd0ZacnlJbGhQdDZQRjdi?=
+ =?utf-8?B?VStlU1VPbkpiYldGUEpyd3IzU2FUbVRpdXg1THhqOHZ6b1ptS0t1SmZMMEJl?=
+ =?utf-8?B?aVBWUEtRTGlySVgrTVgxNkZOYjIvSXY5YUlWWHppTCthQ00xN2JkRzFqUWhZ?=
+ =?utf-8?B?Q0V5SnZsd2xOdjRwdS81Ny8wU0UzaWR6WXExVWhqSjFYUWFXd01oVS9VTjFR?=
+ =?utf-8?B?V0VmZkpkTmpjTWFRM0gyWDN0NHZCaWVDbkpJN0FGNE1lTi9zTDJxb1AyRzJh?=
+ =?utf-8?B?elRSU0Q3aFlRdTVocWtBRnFLTmdQTkNJQzVzOHpQVmhDcEFZdlZ2K2doekd4?=
+ =?utf-8?B?R21ISC9BSkZkalJVYVlFMGdFS3dGZmlJZ1RUR1F0OEoyajU3QXZUeWFodURx?=
+ =?utf-8?B?OGxuZDRtYXFubHN0S3RGcVdRalJQTTRuSFhHNTNzVXZLcmVmbXJNdk1EOVlz?=
+ =?utf-8?B?dldXVFp4SHM1Q1BjVGdVS0F2c1VxTFpsVlJiUHI0OXFmMzM1emZzQTNJZHRO?=
+ =?utf-8?B?NVNQZlN3K2NMMEpGMElCN0xUYm12R3JLbk5DU0F0dnp4RGpCZGIxaWgyRE54?=
+ =?utf-8?B?T3A4MDN6S2R2Qkg4UVYranNCelhBRTBCRTgzbnhuTmhTelpuQ2RJc0lEbXNh?=
+ =?utf-8?B?Rnl2REh0MDViVVRoemdFYW5jbmJCRUY5SHA3RTMvemNPS1F1dGIvZnMycFVI?=
+ =?utf-8?B?aERkbExHbVJ3eWoyZkFPZGFoZCtNOWx5NStJc2pSaHBsZ2dnUUl6RW1ERkVB?=
+ =?utf-8?B?QmR0QTZ4OGo2MTJyaXp3aFpzb0VhKzYreFpRWVYxZ2VHZUs1K1puR3V5ZHkr?=
+ =?utf-8?B?UWpUcisxTUVFWHJPUjM3aGR4anRCZE9JSVhKcjJJeGQ2a3NtVCtpMk8xeC82?=
+ =?utf-8?B?MTdYQTQyWk9Lcmk5dHM0RnJOSHRZTUhiclgvOU9qOE82dEhvVFJ1aG04YnMz?=
+ =?utf-8?B?R09iZ2doNkhTc01nUDVnMjc0YW5oVmxjaHk0TnV1cVR3SWNFU1JtQ2lEd2pF?=
+ =?utf-8?B?RDJCUGlhQlpnNFBFNlAwVjR4ekRmYnF5Y0FoZDg1N2t4UEhSRWZjZFowT0cw?=
+ =?utf-8?B?cHVEemJNQmljTDNRekxJUU9OdGZ4S1dNMG5VdHNqZ0dhRHdnMndWRmFwSFlD?=
+ =?utf-8?B?eXdXMVdYbTBqMnVjOFFxSDhYY1E5SVlUU0xUZWtmWklidmRxZ3piRDRGUmx1?=
+ =?utf-8?B?cXFSZHZNR3NEaVJvTTRWRDBQK1huRzFjVW1sOFRLcDVkN1pibldpQ2JwUzJw?=
+ =?utf-8?B?UEtQTndoRU41N0FDc1NoMXloRkRaMVV1MWJoaU5oYmtZUTRnL2dzQWNVOXFj?=
+ =?utf-8?B?UU9rYTRTbFEzRDBHMWhvVGhNZTZ0ODJGNkd4YzZMMW9qOTcxdUc2a0xuZCsv?=
+ =?utf-8?B?SFF0aGlPaEdkRXZmVCtZVHk0VkFESHpnT1hyZGlrdlg4RHovczVTOWZLZEpC?=
+ =?utf-8?B?a29oVFhYbVVBV2tiYW95cWFQT1g4Tmx4UjliU0J3T3VqNUxSYTRwSDdOVEUw?=
+ =?utf-8?B?YXRkR3ZaTDZJdFJHcVA0aklmVE02WTNiV2VvdUdxUUV1RG9PN0NHZHREZGdY?=
+ =?utf-8?B?aEIrZGJiaXQzOGdqU3VJdDJFU1gwN1JEeU9QSHp5Qk1kYTRKVms3Tng5aCtm?=
+ =?utf-8?B?NmtndU85NXE0RTRqTVhzcC8raFVxVDdVSzN5aEVLZGFFSnZHSEJyd3JYaGV0?=
+ =?utf-8?B?b0syOWwrMzB5Y3ludDI4M2ZxQmV2cWp4YTU0T05Fa1R5VHhCcnJQUlpGMXBF?=
+ =?utf-8?B?QytMVFV0dlJxSUVEamVOSURyNUZYM3hVekpSOWNFRVBDSHJVeDhPcHRPMlcz?=
+ =?utf-8?B?bFhYbGl0THVJZkVnUXBKU3RXSkE0MzdKL1c3d0FuRFIxc2ZRU3NWRkpyOE1F?=
+ =?utf-8?B?MDY3RUJsNmErRHF0amFua3pBTW5CUURveUY4dzhaelRCUGhJN2ZKTlJ5NGxF?=
+ =?utf-8?B?emIzdm90UWZKZDFVa1JHQldXUWttbmlhVUpvZ2JNNFoxMVhwdHcvdzcrUmNZ?=
+ =?utf-8?B?dHk5OVhLVGZXeTIwdUFCU1c1L0Y4Uk84Q090SnNIOWtCODhIL1FQcWZOelF0?=
+ =?utf-8?B?cnVYVlF0WkFDNFJSNE83dVhLYUZ6NktqWkd3WE5oa3J1LzNOM04xNmhmem5X?=
+ =?utf-8?Q?rZ0uhAkkdXr7VL/U=3D?=
+X-Exchange-RoutingPolicyChecked: DZjGs+Kekzaey7x700orhj/w0VpbF6m1Ts/ZhupcXcbOlofTMBZRHyJUUevIv3bYqhRxoW4IgkixoHIl4ecWDwKVwPujlhYEpX+aUG4yNWOu5bk83yCa+eE8AhLCh5z/Qt5Z3V6JXGHwynIQf7QEIfkhldK6lkkCiGN49bgcDi79Gv6Lq3RUfU5fy1ng7W8fEEVmsLaz4IzdPTyt761vXFBrYZqSTuYK/8N33ZyLOjQcDh4SuJI5JZCmIMNo207H0ARNqG57ZQd9+QSzigVznt0mcJuO1FdODtJ+61vUbNqxQDNh+VHKtIzZ3OsteK4f52mD+GA4wHNoKNvmEPw4sw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: f2c1502e-563c-41ac-c4a0-08def6acaf0c
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7198.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2026 06:57:46.7599
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Qb/Ou4u97k2bCch95zASOoU1VN1u1NItg8VZjANnetUdy54tWVcFHkvi3+e1WGAQ+dx32bfl4+LS0q6MCLv6Cg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB9470
+X-OriginatorOrg: intel.com
 
-On Fri, Aug 07, 2026 at 05:26:04PM +0100, Muhammad Usama Anjum wrote:
-> On 07/08/2026 7:58 am, Alexander Gordeev wrote:
-> > On Thu, Aug 06, 2026 at 09:38:44AM +0100, Muhammad Usama Anjum wrote:
-> >> The non-MMU stub receives hw_pte_t but returns a logical pte_t
-> >> value. Convert the stored entry through __pte_from_hw() before
-> >> returning.
-> >>
-> >> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
-> >> ---
-> >>  include/linux/hugetlb.h | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
-> >> index bc0b9c65aa1d0..9e8b391aa4bc9 100644
-> >> --- a/include/linux/hugetlb.h
-> >> +++ b/include/linux/hugetlb.h
-> >> @@ -1283,7 +1283,7 @@ static inline pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
-> >>  #ifdef CONFIG_MMU
-> >>  	return ptep_get(ptep);
-> >>  #else
-> >> -	return *ptep;
-> >> +	return __pte_from_hw(*ptep);
-> > 
-> > But this is a direct dereferencing, which breaks the whole point, isn't it?
-> Yes, this is particular line is for non MMU. In this case, CONIFG_ARCH_HAS_HW_PTE
-> would never be defined. Hence hw_pte_t is just pte_t and direct dereference is
-> allowed. I'd thought a lot about it; is better to leave direct dereference here
-> or use some helper. Then used __pte_from_hw() was already being used in generic
-> ptep_get().
-
-But in case CONIFG_ARCH_HAS_HW_PTE=n __pte_from_hw() is still gets called.
-That looks inconsistent to me. Why not just call ptep_deref() (see below)?
-
-> There are only two users of __pte_from_hw() at this time. 
+On 08/08/2026 15:23, Tengda Wu wrote:
+> When data type profiling is enabled on ARM SPE, multiple overlapping
+> events (e.g., l1d-miss, tlb-access) are synthesized for a single sampled
+> instruction, as shown below:
 > 
-> > 
-> > What about introducing something like pte_t ptep_get_sw(hw_pte_t *ptep)
-> > to be used in exactly situations like this? With that the semantics of
-> > hw_pte_t pointers becomes straightforward and closes the still ongoing
-> > "storage vs lifetime" discussion:
-> > 
-> > hw_pte_t*     points to HW-formatted page table entries
-> > 
-> > ptep_get()    is used to obtain HW-linked/attached entries, and may wire
-> >               extra code like [1] or [2]
-> > 
-> > ptep_get_sw() is used to obtain HW-unlinked/unattached entries and in
-> >               most cases is just a direct dereference
-> ptep_get_sw() or ptep_get_deref() is better name here?
-
-ptep_deref() would be it.
-
-Do you agree to the suggested API requirements?
-
-> I thought __pte_from_hw() is ugly enough that if someone tries to use it
-> wrongly, it'll be noticed pretty easily. I'm fine with any other name.
-
-The name may be not perfect, but it is the way it is used above looks
-wrong to me.
-
-> > The caller should always know whether the entry is attached or not, so
-> > confusions like [3] are avoided.
-> > 
-> > 1. https://lore.kernel.org/linux-mm/20260526-kpkeys-v8-21-eaaacdacc67c@arm.com/
-> > 2. https://lore.kernel.org/linux-s390/650903a4-0dd9-4e6b-9d4b-3c32c5657236-agordeev@linux.ibm.com/
-> > 3. https://lore.kernel.org/linux-s390/b44e071d-7c9d-4e7e-a84d-4af3499a5a05@arm.com/
-> > 
-> >>  #endif
-> >>  }
-
-Thanks!
-
-> -- 
-> Thanks,
-> Usama
+>   Available samples
+>   0 arm_spe_0/ts_enable=1,pa_enable=1,load_filter=1,store_filter=1,min_latency=30/
+>   0 dummy:u
+>   84K l1d-miss
+>   95K l1d-access
+>   77K llc-miss
+>   58K llc-access
+>   9K tlb-miss
+>   108K tlb-access
+>   0 branch
+>   13K remote-access
+>   108K memory
+>   108K instructions
 > 
+> While 'perf report' provides an interactive menu for users to select a
+> specific event to prevent duplicate counting, 'perf annotate' lacks such
+> a mechanism. Consequently, it counts all instructions across these
+> overlapping events, which inflates the profile and distorts the data
+> type statistics.
+> 
+> Although using the '--itrace' option can work around this issue (e.g.:
+> perf annotate --data-type --stdio --itrace=i1i), it is inconvenient for
+> users to specify this explicitly every time.
+> 
+> To address this, introduce itrace_synth_opts.dont_overlap. Set this to true
+> when data type profiling is enabled and the user has not explicitly
+> specified an itrace option. Then, during arm_spe_process_auxtrace_info(),
+> adjust the synthesized event options based on the dont_overlap value to
+> only enable instruction event synthesis, thereby achieving automatic
+> deduplication.
+> 
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> ---
+>  tools/perf/builtin-annotate.c |  8 ++++++++
+>  tools/perf/util/arm-spe.c     | 17 +++++++++++++++++
+>  tools/perf/util/auxtrace.h    |  2 ++
+>  3 files changed, 27 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> index 69cb72b2082a..616f54bf4868 100644
+> --- a/tools/perf/builtin-annotate.c
+> +++ b/tools/perf/builtin-annotate.c
+> @@ -873,6 +873,14 @@ int cmd_annotate(int argc, const char **argv)
+>  	annotate.session = perf_session__new(&data, &annotate.tool);
+>  	if (IS_ERR(annotate.session))
+>  		return PTR_ERR(annotate.session);
+> +	/*
+> +	 * Hardware tracing (e.g.: ARM SPE) may generate overlapping events
+> +	 * per instruction. When data type profiling is enabled, enable
+> +	 * dont_overlap to deduplicate them to avoid skewed stats, but only
+> +	 * if user hasn't specified itrace options (respect user override).
+> +	 */
+> +	if (annotate.data_type && !itrace_synth_opts.set)
+> +		itrace_synth_opts.dont_overlap = true;
+>  
+>  	annotate.session->itrace_synth_opts = &itrace_synth_opts;
+>  
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index 401aab529309..1721882423f6 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -2033,6 +2033,9 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+>  		/* Default nanoseconds period not supported */
+>  		spe->synth_opts.period_type = PERF_ITRACE_PERIOD_INSTRUCTIONS;
+>  		spe->synth_opts.period = 1;
+> +
+> +		if (session->itrace_synth_opts)
+> +			spe->synth_opts.dont_overlap = session->itrace_synth_opts->dont_overlap;
+>  	}
+>  
+>  	if (spe->synth_opts.period_type != PERF_ITRACE_PERIOD_INSTRUCTIONS) {
+> @@ -2044,6 +2047,20 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+>  		ui__warning("Arm SPE has a hardware-based sampling period.\n\n"
+>  			    "--itrace periods > 1i downsample by an interval of n SPE samples rather than n instructions.\n");
+>  
+> +	if (spe->synth_opts.dont_overlap) {
+> +		/*
+> +		 * The 'instructions' event is the most comprehensive,
+> +		 * synthesize it exclusively.
+> +		 */
+> +		spe->synth_opts.flc = false;
+> +		spe->synth_opts.llc = false;
+> +		spe->synth_opts.tlb = false;
+> +		spe->synth_opts.branches = false;
+> +		spe->synth_opts.remote_access = false;
+> +		spe->synth_opts.mem = false;
+> +		spe->synth_opts.instructions = true;
+> +	}
+> +
+>  	err = arm_spe_synth_events(spe, session);
+>  	if (err)
+>  		goto err_free_queues;
+> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+> index 6947f3f284c0..ebb4e9e8e574 100644
+> --- a/tools/perf/util/auxtrace.h
+> +++ b/tools/perf/util/auxtrace.h
+> @@ -80,6 +80,7 @@ enum itrace_period_type {
+>   * @intr_events: whether to synthesize interrupt events
+>   * @errors: whether to synthesize decoder error events
+>   * @dont_decode: whether to skip decoding entirely
+> + * @dont_overlap: whether to deduplicate overlapping events
+
+This doesn't seem to match what you are actually doing, which
+seems to be to choose particular default itrace options for
+'perf annotate --data-type'
+
+I wonder if this should really be handled by
+itrace_synth_opts__set_default()?
+
+
+>   * @log: write a decoding log
+>   * @calls: limit branch samples to calls (can be combined with @returns)
+>   * @returns: limit branch samples to returns (can be combined with @calls)
+> @@ -128,6 +129,7 @@ struct itrace_synth_opts {
+>  	bool			intr_events;
+>  	bool			errors;
+>  	bool			dont_decode;
+> +	bool			dont_overlap;
+>  	bool			log;
+>  	bool			calls;
+>  	bool			returns;
+
