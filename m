@@ -1,106 +1,207 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8EB3644A6
-	for <linux-perf-users@vger.kernel.org>; Mon, 10 Aug 2026 16:09:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786378193; cv=none; b=Wm6MWWluD3nUQTbBIUHNXQWIcDxQalm0aA+0d/90+oGKM87wkKAPufZdnkhn/aLQquThayW8araQ7YX5lDE1YdZccICiiMxRk6+yms48/dV1qL8hrgj7Ej0y1g5dasDKhoYvG6pR4v60tkm7YzSZNKIwZb4T+topNozYJZB9gC0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786378193; c=relaxed/simple;
-	bh=+jAouv1h7mCM4iu+UDyR07NH3d3OIT8jmoiFx41rA2U=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=gkBwU1U9aYz0DCS5MDB1qHNzdmDSQ1LUeJgMrUwgkkA0myTb4tVoFudvC6bqaSGW94T5lK1PpLge7GHRk/6SGX6GU+JQHlRZm8l4cMC66jfQqbJDzuTi6NCwaGo91lLMjX1C0rmtIt0Ne9fHEy+OZPvQjFhQ818Uph+ffs83ws8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOl8gjrs; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2235041168B
+	for <linux-perf-users@vger.kernel.org>; Mon, 10 Aug 2026 16:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.175
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786379081; cv=pass; b=KmgM7pTCPBiKAA8HTW5UJ16M9+U7qMJiTZdOT8Hi5c2L9VUMxW9NvmA2dUMqe6WhzzgDD7R/iB/etj8QhKh9gsrZjHoKTcEpFMGBhs0NDQcloh66iIYtKDMXKxy23CQhwRtJmJEaY2NFaszex8QTcO4/YTrYIkSk4qKpWldTRME=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786379081; c=relaxed/simple;
+	bh=xsv3OYq+qhqNl5YPp2xtEfRcSQIlgKl80gny1Oxx4q8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UbNrSmL9gKCk3+lmDHRoinjTzQoBzzP/kdCqNwRBCal2Mqhuscv/0FYdKj/BWDwBaanqThFaNeJU/2fRbSY8xGFuX+pXs9CpAeXm9R8ozTcs43HwF46O+DVYpmXN8vbKLYUg6LMEXkW7sZ/07rA721tXBMqTP2FJfrEQYk/5ztk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CwVJn2aU; arc=pass smtp.client-ip=209.85.160.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOl8gjrs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AF821F000E9;
-	Mon, 10 Aug 2026 16:09:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786378191;
-	bh=HFsJobaA4JYhv97k08waa7Hr2bdaoI+qeeR8x7VbSlM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=oOl8gjrsttJPxaWb95vb05eVuMdliyNtWG9+2+Vp5IFoqofQPcC0nj8BuldRExOZN
-	 XQagliiuRmr1JrqrZjMLSR5Yael3tg9e/BUpqATIWPzbDGIdwxUJb4qO7s4nFHjs8o
-	 XxvnLxMeehyvdruABnnM53pvYVemwrjcDgRkP2y23Z5YWSPqubzD/+9fSGnVzgerUC
-	 PZlCp6SrIet9ilfoij4p3seU9wlqbZEDOWP+UhmWEakdCa0nuiSivcu6Fh3xXEajSD
-	 zD40l5UJT5D1GHlRHYbPwKZiAvSyXgoaDNGuyFdDhpXaNCv3aYAMwRML6edjqcHiuH
-	 hxTCRIGtH+2Dw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 7/7] perf build: install-build-deps: add RHEL family
- devel package mapping
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260810154437.15946-8-acme@kernel.org>
-References: <20260810154437.15946-1-acme@kernel.org>
- <20260810154437.15946-8-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 10 Aug 2026 16:09:50 +0000
-Message-Id: <20260810160951.7AF821F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CwVJn2aU"
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-51c10e86e52so428741cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Aug 2026 09:24:38 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786379076; cv=none;
+        d=google.com; s=arc-20260327;
+        b=UOIKnzookGmDmbUYBV7dhEqv0+HlqPlFUV+PulItYIwlsoZagz44R9x19Bdqxv9puw
+         6spgj4+jxcP978KzbOgP1SYz1VTo+mxUwvANGDMyn8Salvf2pNlzzCMKhhpVEY+iulFr
+         Lv/1qRPAt3NG9viP9V6tg/p2PLIj6M2qy0FyppwfdLc4+qQV5nuPppImmOJg+4DJItce
+         WXM9AO0g7bglD0AgU/3e+CP1yG0G95UyqVFi49FZl74rw/XmmsAHt+yiQMFTn9zglRC2
+         I4dEr01dk9xDawF14pVCmuGueJOtzIqiqSvhgQx6PBjPpqAtOQRPAmGW1it3KMXV/RkC
+         N4QA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=JnpU+yjthofc0zpgkM1QSjOc8GqltDckB0JeUB3rUkg=;
+        fh=yZVkuYHdXtN6/nNvbcKI8Ivk+OHan1f+zRaOvSlTzlM=;
+        b=H/fl8qQW7MioM4OMwFySuCOOCSB7Adc3swbKCQC9OhbYHFJfey4wl4ts5xNPaZOoFR
+         J/KLXgQ5LvrpA+3mxv6cYIXcw+pOQ7fqtKroaZmFOjiZNFdgOTAH2sHHfpSVQ0e7i/Wf
+         ZXgAXK3yfZdGNsPGB/yWV9tgjJAQ1OpZBGG1r4cEQXzSyWt/MkqiV+aypnrD51OwdXIR
+         myFG/LjEBN3OdimFog7bJC8amZSKleOfYxxiQ2wkN5yChfnF0+CiGRUJW5OF62R4N4eK
+         i9eWjxDgJaWXzGkgViA8mXvvyOwqY670rkSWbLI4Mhvzc3wL8lapDkAlNVlWcVEM0Agk
+         fFhA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786379076; x=1786983876; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=JnpU+yjthofc0zpgkM1QSjOc8GqltDckB0JeUB3rUkg=;
+        b=CwVJn2aUT+uPUxvWndznLyNgoAttgvstZNGf6IG+zWNLE0PcW9XUojG1o+LB55xczN
+         eoxS4uFpilcfMF2uGQ9vvcoKMshs03OE07DjaKlRhDxGm2YN8wF6Pz6zC94t0Ebqm6Y/
+         Jmg1TzeA6qCQJz7G6PidXwbBeZQZOElJQcKgtahyQBla3thC2s5HmQy85YM6cBds+D8C
+         Tv+j1RMaHLEQl+fxJQZph3PbguWzf/bB1D/ZMG7wc3BRdQ9EnSqvsmZG9vh+fGU6lqyC
+         qCjCDULhxVX+9MktVBl/uCczxb1m4VD/7p1X5DngHRseshP7DSlWncnCytksMbggpEzU
+         g3cw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786379076; x=1786983876;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=JnpU+yjthofc0zpgkM1QSjOc8GqltDckB0JeUB3rUkg=;
+        b=dgHQSX7kJ2FnHLMlf83Adu/LQSZdFYQ2imgjT7q+FidjxPa7/DRHQo3xA6GYBotISY
+         QPN4V6FPKgaxNXfkIhtfEheFY/B6Gr2H9KpyzhOPJVrng7dT3tcxG+uEpspM2XCgz/nU
+         SZ4Z/uSIExKLyEXaT2UZwdNw78/XnYBvaKtW+43+/Rziv/PpRBzhf4SJrAjcFKZfC6UN
+         a76AtkgyCMiWdF07VWGnSj1nE/6RgYwgJ6aFixe6uS5MOGRIuAzXNZRm8XVPrYEoRgJT
+         fogGqdKoWU6hMQ87GjShcKhc+I+dlWkxgiy44yEv82UfBwUlSg2DranevO41lRRcC8MA
+         r8BA==
+X-Forwarded-Encrypted: i=1; AHgh+RpW/1Gs2OTjwn3cKy1F5VM9BYt7gCCvbgu7NTmaQrxFEY+4n6+tzX9pyTuImkDqIWxK0Hu2cjVMp76/Ge6TTKb9@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzan8CUwzLScYzXwAEH1gxXY9JKfPLNb5XYZ12U3OcWfg7m0lbE
+	wF6L0ph8F11A7VTNeRBlo34oDEcszzm8MjseW/cE1Ibt0NEJu4HhbxEwcMN977rPc0NVF6OqTSo
+	ayGsFyQckA3sGHyQnNB54maD9QyWMY9inwpM5I6q4
+X-Gm-Gg: AR+sD12l/A5fhuvWdMbNqKMeWeFzzvwx+H+Ih5DJUylzzPgLGdhe+aUH7xjvfQnvfWJ
+	wrjmLYer7ssy8p/euln5nrKG23SAQgIEwEkp6C6qxuHV0KAX0SqVsW6ixntxMD5//LlaH2x0GQT
+	VnvJRM46j3UJoVzs14nAQ0RBQUONNA8zX22kXfdbiBwIJZZUypARSHke42TKgHvVK8/UAuAdcBV
+	ajfijkPWFpjecrTvCiRvkTxUGHzoy1J7nG1fGbZVaalRQOFBwofSJaWqYo6Ls/q3p5mxKiN0Bk1
+	QLfYPDBIY+sYJsKpIYkmzNfOpIbTh91yuBLCQP0zsho7+nLhQK3eEg==
+X-Received: by 2002:a05:622a:2b0a:b0:519:b655:235 with SMTP id
+ d75a77b69052e-52d2810222bmr38915311cf.3.1786379075203; Mon, 10 Aug 2026
+ 09:24:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org>
+ <20260806-b4-scalable-cow-virt-pgoff-v4-1-ab318a350404@kernel.org>
+ <CAJuCfpFAA1H2pOi6EOarNtrdzLQDJyhm6QOGsfZ4SFTuM5eiLQ@mail.gmail.com> <anmLnvWAyIJwjsXj@lucifer>
+In-Reply-To: <anmLnvWAyIJwjsXj@lucifer>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Mon, 10 Aug 2026 09:24:23 -0700
+X-Gm-Features: AUfX_mykce6fbL166nHsURFiLv_kMzKY9gOukzdEiVHYnjVKW8Vop-MtXqL00bE
+Message-ID: <CAJuCfpGJuf3NOuPg4+7TaWhNOv5sN7WEY2awZOpDv1VV13J-DQ@mail.gmail.com>
+Subject: Re: [PATCH v4 01/20] mm/vma: introduce VMA anon page offset field and
+ add helpers
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Lance Yang <lance.yang@linux.dev>, Kees Cook <kees@kernel.org>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Usama Arif <usama.arif@linux.dev>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
+	Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
+	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
+	Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Boris Brezillon <boris.brezillon@collabora.com>, 
+	Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>, 
+	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+	Rodrigo Vivi <rodrigo.vivi@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
+	Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	John Hubbard <jhubbard@nvidia.com>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
+	Baoquan He <baoquan.he@linux.dev>, Youngjun Park <youngjun.park@lge.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-s390@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
+	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The INT and TERM signal trap removes the temporary file but fail=
-s to exit the script, causing the script to resume execution and proceed wi=
-th an empty or partial package list after an interrupt.
---
+On Mon, Aug 10, 2026 at 1:36=E2=80=AFAM Lorenzo Stoakes (ARM) <ljs@kernel.o=
+rg> wrote:
+>
+> On Sat, Aug 08, 2026 at 05:51:10PM -0700, Suren Baghdasaryan wrote:
+> > On Thu, Aug 6, 2026 at 1:22=E2=80=AFPM Lorenzo Stoakes (ARM) <ljs@kerne=
+l.org> wrote:
+> > > diff --git a/include/linux/mm.h b/include/linux/mm.h
+> > > index 87feaa5a2b78..df78847f5f07 100644
+> > > --- a/include/linux/mm.h
+> > > +++ b/include/linux/mm.h
+> > > @@ -4393,6 +4393,65 @@ static inline pgoff_t vma_last_pgoff(const str=
+uct vm_area_struct *vma)
+> > >         return vma_end_pgoff(vma) - 1;
+> > >  }
+> > >
+> > > +/**
+> > > + * vma_start_anon_pgoff() - Get the anonymous page offset of the sta=
+rt of @vma
+> > > + * @vma: The VMA whose anonymous page offset is required.
+> > > + *
+> > > + * If unfaulted, then this is vma->vm_start >> PAGE_SHIFT, if faulte=
+d then the
+> > > + * anonymous page offset at the time of first fault.
+> > > + *
+> > > + * If the VMA is anonymous, this returns the same value as vma_start=
+_pgoff().
+> > > + *
+> > > + * This value is used for tracking MAP_PRIVATE file-backed mappings =
+by their
+> > > + * anonymous page offset.
+> >
+> > I assume this function should not be used with shared file-backed
+> > mappings, right? If so, maybe add a comment like the one you have for
+> > linear_anon_page_index(): "It is not valid to call this function for
+> > shared file-backed mappings."?
+>
+> No that's not the case, it is valid to access this for any VMA though it'=
+s only
+> meaningful for MAP_PRIVATE and anonymous VMAs (though in the latter case =
+pgoff
+> =3D=3D anon pgoff).
+>
+> The code keeps the anon pgoff values consistent even for shared mappings =
+because
+> - hey - we have the field anyway and it's easiest and safest to just keep=
+ it the
+> same.
+>
+> One alternative would be to have code that checks the flags and zeroes th=
+e field
+> otherwise , but then you have problems like - early on initialisation now
+> there's an ordering requirement which can easily go wrong.
+>
+> Another alternative is to just leave it stale, but then that seems object=
+ively
+> worse and again requires branching code on update and set.
+>
+> All-in-all it's easier to keep this working the same for any type of mapp=
+ing,
+> it's just useless to do anything with the anon pgoff for a shared mapping=
+ :)
 
---- Patch [7]: [PATCH 7/7] perf build: install-build-deps: add RHEL family =
-devel package mapping ---
-commit d7066a2ea105c214aa5807a82fc683f385da44a7
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+Makes sense. Thanks for the explanation!
 
-perf build: install-build-deps: add RHEL family devel package mapping
-
-This patch extends the Fedora package mapping in install-build-deps.sh to t=
-he
-RHEL family (RHEL, CentOS Stream, Rocky Linux, AlmaLinux, Oracle Linux). It
-adds logic to check enabled repositories via dnf repoquery to handle packag=
-es
-that are missing or located in optional repositories like CRB or EPEL.
-
-> diff --git a/tools/perf/scripts/install-build-deps.sh b/tools/perf/script=
-s/install-build-deps.sh
-> index 4a6f4bda49094..caf6d8d1e56d1 100755
-> --- a/tools/perf/scripts/install-build-deps.sh
-> +++ b/tools/perf/scripts/install-build-deps.sh
-[ ... ]
-> @@ -518,23 +518,43 @@ main() {
-[ ... ]
-> +	missing_file=3D$(mktemp) || {
-> +		echo "error: cannot create a temporary file (mktemp failed)" >&2
-> +		exit 1
-> +	}
-> +	# package_set() runs in a subshell, doing dnf repoquery loops that
-> +	# may be interrupted, so also trap the temp file then.
-> +	trap 'rm -f "$missing_file"' EXIT INT TERM
-> +	pkgs=3D$(package_set "$distro" "$srcdir" 2>"$missing_file")
-> +	missing_pkgs=3D$(cat "$missing_file")
-
-[Severity: Medium]
-Will this script continue execution if the user sends SIGINT?
-
-Since the trap removes the temporary file but doesn't explicitly exit, an
-interrupt during package_set() would delete the file and then resume execut=
-ion.
-The cat command would fail because the file is gone, and the script might
-continue on to the sudo installation phase with an incomplete package list.
-
-Should the trap call exit for INT and TERM signals?
-
-> +	rm -f "$missing_file"
-> =20
->  	case "$action" in
->  	list)
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260810154437.1594=
-6-1-acme@kernel.org?part=3D7
+>
+> --
+> Cheers, Lorenzo
