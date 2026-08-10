@@ -1,114 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D626B4248AE
-	for <linux-perf-users@vger.kernel.org>; Mon, 10 Aug 2026 18:35:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D8CE387347;
+	Mon, 10 Aug 2026 19:35:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786386912; cv=none; b=YZ7mRh56UQP94TG0J2TpxkkgHo2VKDWtqVO0qYjBG8lu4sEif8ENEV/EZt0ttyzIY+9XlSkcSSa2vUfNjEzJC3dGX4yIcM0A1iIgDs8Cj7hTrR7SELJH1Lx1wZeyeO0BE+xdJS2giUd0Ic/k8juoREAE5J+4vhcYmJOdwPf39Hg=
+	t=1786390518; cv=none; b=BaCaDqRlM8edjG1f2JctOx193kUnXT+PJ2rRCGS5P1a+0EhClYhnHXn+kFEORw0DCuRPTaV4rxtzJEWnOdsarcCtY8lqDSFjNKN5tA2lB6WhcARLgbMZQarD1NZj8cvv6kxLtjSsXPh4punJZ0R1MY++XvYKPbHw/yj4of1cAFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786386912; c=relaxed/simple;
-	bh=k96vGeBTKMRcKi73n+/lE3KAWk1JxBeZNJCtiN2Qs5Y=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=MATSWa6O4rq7ife7ZcpRyiUJSfFEg+EvfSsh+Yac0XoPVMISaRJ12TzvcrGL3lQMxqB/U9cycaMLwnW71gxoaurA8U8t/+kttacs21Mdy1U2sEk4KozeSJ8JAGv/FAPTByOos4jPCljl4xq11Oxj2N3I661cxg8UOJIqeNv6MDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h8KKlFgB; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786390518; c=relaxed/simple;
+	bh=qZe2naqUcySzC8ljgc9QhjWnSlqbUx2GD2cCUq0YNWg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H86j/O6hd1cOdL+44mCcdMEs88Jf7JUPmp5s8ZZHNz0Qz5H6yEBcmnWhjMBd/d8txS8HGJvGyjToAaQSMkyK55SOh489WOl7N5UScAFUUOE79wWH/mrjB1pniRLZ4y9MRc14zMNwXRV0d4wW2e9b6vM0yBVXkemTTg7AsvkcTBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ljcaEnQy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h8KKlFgB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BBD21F00A3E;
-	Mon, 10 Aug 2026 18:35:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ljcaEnQy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 335531F000E9;
+	Mon, 10 Aug 2026 19:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786386910;
-	bh=FJrqrQA6CSXvisyllk1hYQiKuU8XNJRMeh0ImbZ8xj8=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=h8KKlFgBcyYBTOZLX0ESEMm1qd1vT47BmfE6VVoDMWZGI38mavNMskPVCQwka0dRs
-	 dNks6tjP4Ls9NbbYSuDjny7qvcPaB8Xc4A4YHU4rKjQiFRGk9vsIFQKps8b2I6/rPY
-	 8Yu3LMnIJgid/7mFJly7sobpYn1/eB6QlnE24I5O7FqGcWIUqP6i0tDKNripCUt39W
-	 7YEpdwGbCBvLAPFgGiW061N/odpnUlC+1Csolwml3DW8A7N7+5LlaIg3VTI4kA2JC1
-	 j8ZMR5oWG4dRHHZcLRmt8VoL9e0bWOVfx+b1DyrL2NkMIW1zO6CHXd+ntK/OAG77f/
-	 3lC7do4rFgepA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 7/7] perf build: install-build-deps: add RHEL family
- devel package mapping
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260810181526.24603-8-acme@kernel.org>
-References: <20260810181526.24603-1-acme@kernel.org>
- <20260810181526.24603-8-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 10 Aug 2026 18:35:09 +0000
-Message-Id: <20260810183510.3BBD21F00A3E@smtp.kernel.org>
+	s=k20260515; t=1786390517;
+	bh=1kjrSmXFVpp9cDr/+WCANQ+0Aj6P2AgfwpRhRR4U/+c=;
+	h=From:To:Cc:Subject:Date;
+	b=ljcaEnQyVG1gG9qzXD+Kin+edyzKXOeC36srPVg7MeGm2gDlCvgw3yv+WdDRQsSUN
+	 tzW2WdSyiMYiezXAKBJB1AEVTt28QS3Gx1IteRfeND+OZ+8bKaNGWQkK9fovKs9C3I
+	 ekYSmAZ0YFlUXw7I8ZGy+xtYlHjbuXcDDJiFVvdLim5D7mjKAEzH90xUJCSe74hCgl
+	 WhXSWZKjbs//AaENBluuWKmUzoyQkJdiZfsbXZzGMJnuMlwAzU0uxtySurH3GP5wcj
+	 O87/vPLNblsue4vLBdu9sXadp5znxEa6UBTsG+KhWna/B52eqKYFbXogx4zScTFF/B
+	 G6rAxccTaUw2Q==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCHES v4 0/7] perf build: Add target to install devel packages needed to build perf
+Date: Mon, 10 Aug 2026 16:34:59 -0300
+Message-ID: <20260810193506.18949-1-acme@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The script outputs a `missing_file: unbound variable` error to s=
-tderr and alters the exit code to 1 upon successful completion due to `set =
--u` and local variable scope lifecycle.
---
+Hi,
 
---- Patch [7]: [PATCH 7/7] perf build: install-build-deps: add RHEL family =
-devel package mapping ---
-commit 5192f0f9f2879409655c946317c1f14bc8dff929
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+This series adds a 'make -C tools/perf install-build-deps' target that
+installs the development packages needed to build perf on Fedora, Ubuntu,
+Debian, and RHEL family distributions.
 
-perf build: install-build-deps: add RHEL family devel package mapping
+Building perf requires many devel packages (libelf, libdw, libunwind,
+numactl, libtraceevent, libbpf, etc.). Today users must iteratively
+install packages as each feature check fails. The new target installs the
+full set in one go.
 
-With the Fedora mapping in place, this patch extends it to the RHEL
-family (RHEL, CentOS Stream, Rocky Linux, AlmaLinux, Oracle Linux),
-which shares most Fedora package names and runs dnf (RHEL 8 and
-later).
+The first patch makes the compiler probe run at parse time only when the
+tool is installed, so a missing C++ compiler or clang no longer fails the
+feature tests prematurely. The second patch adds the framework (make
+target, distro detection, package manager drivers). The next four patches
+add distro-specific package mappings derived from the headers each
+feature test requires. The last patch removes leftover feature test
+entries for cxx and clang support removed in 56b11a2126bf2f42 ("perf
+bpf: Remove support for embedding clang for compiling BPF events
+(-e foo.c)").
 
-> diff --git a/tools/perf/scripts/install-build-deps.sh b/tools/perf/script=
-s/install-build-deps.sh
-> index 4a6f4bda49094..ef2226bd79b5f 100755
-> --- a/tools/perf/scripts/install-build-deps.sh
-> +++ b/tools/perf/scripts/install-build-deps.sh
+Supported distros (validated in containers, host never modified):
+  - Fedora 44 (dnf, 29 packages)
+  - Ubuntu 26.04 (apt, 29 packages)
+  - Debian 13 (apt, reuses Ubuntu mapping)
+  - Centos 10 (dnf, 29 packages)
 
-[ ... ]
+On all distros, a clean O= build after running the target enabled every
+feature the distro provides (excluding deliberately unmapped deprecated
+packages). Re-running the target is a no-op.
 
-> @@ -377,23 +518,46 @@ main() {
+Best regards,
 
-[ ... ]
+- Arnaldo
 
-> +	missing_file=3D$(mktemp) || {
-> +		echo "error: cannot create a temporary file (mktemp failed)" >&2
-> +		exit 1
-> +	}
-> +	# package_set() runs in a subshell, doing dnf repoquery loops that
-> +	# may be interrupted: remove the temp file on any exit and turn
-> +	# SIGINT/SIGTERM into an exit, so the script terminates instead of
-> +	# resuming after the interrupted command.
-> +	trap 'rm -f "$missing_file"' EXIT
+What changed from v3:
 
-[Severity: Medium]
-Since missing_file is declared as a local variable in main(), will this
-trap trigger an unbound variable error when the script completes?
+  - clear the EXIT/INT/TERM traps after consuming and removing the temp
+    file: missing_file is local to main(), so the EXIT trap firing after
+    main() returns hits an unbound variable under set -u, printing a
+    spurious error on the successful-install path [sashiko review of
+    PATCH 7/7].
 
-Because single quotes are used for the trap command, the missing_file
-variable is evaluated when the trap fires at the very end of the script.
-When the default install action succeeds, main() returns normally and its
-local variables go out of scope.
+What changed from v2:
 
-Will this unbound variable evaluation cause the script to exit with code 1
-on a successful run, failing the make install-build-deps target?
+  - the trap that removes the temporary file tracking missing packages
+    now exits the script when SIGINT/SIGTERM is received, instead of
+    only removing the file and letting the script resume after the
+    interrupted command [sashiko review of PATCH 7/7].
 
-[ ... ]
+What changed from v1:
 
-> @@ -410,6 +574,7 @@ main() {
->  		echo "error: the install command failed, see the output above" >&2
->  		exit 1
->  	}
-> +	note_missing "$missing_pkgs"
->  }
-> =20
->  main "$@"
+  - AlmaLinux is now detected by its actual /etc/os-release ID
+    ("almalinux" instead of "alma") in detect_distro() [sashiko review
+    of PATCH 7/7];
+  - packages that no enabled repo provides (e.g. zlib and the versioned
+    JDK/jvmti packages on the RHEL family) are no longer silently
+    omitted from the missing packages list, they are reported at the end
+    of the run, as stated in the commit message [sashiko review of
+    PATCH 7/7];
+  - the temporary file used to track those missing packages is now
+    removed by a trap, so it does not leak if the script is interrupted
+    [sashiko review of PATCH 7/7];
+  - the leftover feature test removal patch now carries the suggested
+    Fixes: tag for 56b11a2126bf2f42, with the author of that commit
+    Cc'd [Ian Rogers review of PATCH 6/7].
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260810181526.2460=
-3-1-acme@kernel.org?part=3D7
+This series was developed with assistance from Opencode
+(deepseek-v4-flash-free and glm-4-7-flash-ollama-local) for code
+analysis, patch generation, and commit message composition, and from
+Claude (Opus 4.7) for review triage and bug-fix generation.
+
+Arnaldo Carvalho de Melo (7):
+  tools build: Only probe the compiler at parse time when it is installed
+  perf build: Add install-build-deps framework to install devel packages
+  perf build: install-build-deps: add Fedora devel package mapping
+  perf build: install-build-deps: add Ubuntu devel package mapping
+  perf build: install-build-deps: add Debian devel package mapping
+  perf build: Remove leftover feature tests for removed cxx and clang support
+  perf build: install-build-deps: add RHEL family devel package mapping
+
+ tools/build/Makefile.feature             |   2 -
+ tools/build/feature/Makefile             |  14 -
+ tools/perf/Makefile.perf                 |  21 +-
+ tools/perf/scripts/install-build-deps.sh | 581 +++++++++++++++++++++++
+ tools/scripts/Makefile.arch              |   2 +-
+ tools/scripts/Makefile.include           |   2 +-
+ 6 files changed, 601 insertions(+), 21 deletions(-)
+
+base-commit: bf10e6ee2ac3034c9068e03eed418fd16961984e
+
+-- 
+2.55.0
+
