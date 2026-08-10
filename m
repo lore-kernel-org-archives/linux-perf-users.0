@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFD73905EF;
-	Mon, 10 Aug 2026 05:20:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54763563FB;
+	Mon, 10 Aug 2026 05:20:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786339242; cv=none; b=eBacktbXw1rqjKP/5lr2SdQ2wtPc74gUHLotbgejEpFMgapChjzp4RSSWSTN3p5AMpNewqmglIOSDO6C4cRJbylDs90YCua/R/bO5ka1g9DsSu7hd1VWOWomJPd34hcdigMVz6tYsdkTWFFV71Dstw9Ws7QnqAXB5vvS2ofp150=
+	t=1786339249; cv=none; b=fR/DSEfuhHkRKJPEMgTbcOMRT0I/Hr4u7IN7R9Mjl+5W6vxDk5M1MYHkXA+jdqTsjtNdLJ/3DQBbAcWw1TGzvwt+hTcyzhu3TtqJmRFpWm+JJbEyUhmTul0270UwDx33vOmu2yHa0a9tDcpdhUksVps7oxLqS5aFKjqHrhQf/G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786339242; c=relaxed/simple;
-	bh=64BmYN+TErsWqB/dcLbUyYv9KGwc0SjvUq60SLyZTi4=;
+	s=arc-20240116; t=1786339249; c=relaxed/simple;
+	bh=5gu6KnXksgO5PEx8OvCDre5nuKysswEvSLiyN/vVMKw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sox189KDEU0Ka7U/iueouCWE/U8Xi2B9XYYaXuJWcy8xA3TIRvlK1sossTVhQMvQhHoKqhcwy5UETLT7s04ApDH2KqU2G403NBMS0dImBcHv3Za3Wgom3CdDutSnPmaN3HtWfaFZkUVlpBAQAIStpqAfU6hRwmByy/HtcOv4rBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UlxBS0jA; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=W0hvBIGmkyBrqJ0BUf9W2aH29PsSGTd63n1X0NeL3T01ys6z9CBP5lYgR/khpDrBNP7eRzrUZTGVo0uwrfhW30/MeD/8wbr8E/29BhbprsoVK/E+FI5YRXLHV6enCrX6Kq+WpyyPi0ToEpITQQKNaoZRc+BNo7Y8tNbZIMFW0OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZSz0OKQg; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UlxBS0jA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZSz0OKQg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786339241; x=1817875241;
+  t=1786339248; x=1817875248;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=64BmYN+TErsWqB/dcLbUyYv9KGwc0SjvUq60SLyZTi4=;
-  b=UlxBS0jAl8JF+z06yuOjKm/UsN05kIvk6aiH+2BiRS9+oWnEZwn13JvE
-   u29IBTrJh5wpi6w0k9Tt+PgGiED7BoPGJxaoDPPnQFGHU8KfJ5VoWuDR/
-   tm2nWM17NwBy5qyxCBP9aFV8E3jIgbvh/jCz8eoyPtxXgjSO6w8p+sbWv
-   DrhJY1GrdTYOHusk6xmcD3lAvpLEAA/LbXfwQhTFx7U691+iedo1WYOJE
-   f/e3hAN66FnMjadnNv1Di8UBy5m0yxR9ClckolNuXer+OzkPuQ9dwSYz8
-   eTvhg5Y/W1mVoDtYDaAYCDI8ayO+mAL4sTQ5eJc8cpSrm8o4/O9zLmMW+
+  bh=5gu6KnXksgO5PEx8OvCDre5nuKysswEvSLiyN/vVMKw=;
+  b=ZSz0OKQgLxjtgeGQTfOjjbSZ5wgoovjYTjFS/gCz9VVKOOFyHU3kNcVo
+   6upwO68mBowIxNxSrgsfvQSdCCQM+CPcfxOUjTSbiC7ISTyt/9rGBSulQ
+   h2iQlsoncHQtEj6QEhX/7LGOYrvI3gmTp7n5Aa5SZJ/TTPR2snxN/GIuw
+   B08sgWhn3BlomN8NUehaAm5eyXLZX0DZJfYi3F+sLpojHiS81vQBAc2S/
+   euiY4Hz3H2HsiAO2W2Vvaw3IvJpCL4YqTxlKl114kpFNjganTqTg2N8SO
+   91KuphMXP7TYFFNdZ1nnnOXwRkiNYJUGHPp7WGvlKgzLvo6hdBK2VpNL6
    w==;
-X-CSE-ConnectionGUID: 5i/tG8k8SJ2lpxpSYLGEow==
-X-CSE-MsgGUID: jhk6VkshQGyHBQix8Cov1Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11870"; a="86785021"
+X-CSE-ConnectionGUID: xL2TRsxiSqOkWU4oCSH4DQ==
+X-CSE-MsgGUID: vdN1pT70Q8itBsLughkWww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11870"; a="86785049"
 X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
-   d="scan'208";a="86785021"
+   d="scan'208";a="86785049"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2026 22:20:35 -0700
-X-CSE-ConnectionGUID: 4yrGhNOPSmieqSqtZt/s5g==
-X-CSE-MsgGUID: 2kxgAS33Toy1uU576x19MA==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2026 22:20:45 -0700
+X-CSE-ConnectionGUID: JpKIikXCRomLvRy9jBaxjA==
+X-CSE-MsgGUID: zvNbsAevT5yEG0IzIkZi3w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
-   d="scan'208";a="262421474"
+   d="scan'208";a="262421485"
 Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by orviesa008.jf.intel.com with ESMTP; 09 Aug 2026 22:20:32 -0700
+  by orviesa008.jf.intel.com with ESMTP; 09 Aug 2026 22:20:41 -0700
 From: Jiebin Sun <jiebin.sun@intel.com>
 To: namhyung@kernel.org
 Cc: acme@kernel.org,
@@ -61,9 +61,9 @@ Cc: acme@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Jiebin Sun <jiebin.sun@intel.com>
-Subject: [PATCH v8 4/9] perf c2c: add HPP list parsing for function view columns
-Date: Mon, 10 Aug 2026 13:26:42 +0800
-Message-ID: <20260810052647.588867-5-jiebin.sun@intel.com>
+Subject: [PATCH v8 6/9] perf c2c: add function view hierarchy entry creation
+Date: Mon, 10 Aug 2026 13:26:44 +0800
+Message-ID: <20260810052647.588867-7-jiebin.sun@intel.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260810052647.588867-1-jiebin.sun@intel.com>
 References: <20260810052647.588867-1-jiebin.sun@intel.com>
@@ -75,16 +75,22 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the parser that builds the function view's local HPP output and
-sort lists from field strings. This includes dimension lookup, comparator
-wrappers, c2c_fmt allocation, and the initialization entry points used by
-the hierarchy builder.
+Add the entry-creation layer: owned-reference child allocation and
+insertion, and the level-1/2/3 lookup-or-create functions keyed by
+function symbol (level 1 read-side, level 2 writer) and by the source
+cacheline's existing index (level 3).
 
-The generic perf_hpp__setup_output_field() registers formats on the global
-perf_hpp_list. Using it here would leave the function view's local list
-without output columns and modify the cacheline view's list instead. Add
-c2c_function_hists__setup_output_field() to append sort keys to the local
-output list.
+Give synthetic children normal entry operations and acquire their thread
+and map-symbol references. This lets the hierarchy teardown use
+hist_entry__delete() for the common fields while the function-view free
+callback handles the private child tree and containing allocation.
+
+Reuse cacheline_idx to preserve the source entry identity without adding
+function-view-only state. The browser can later use the same index to find
+the original cacheline entry.
+
+These are driven by the hierarchy builder in the next patch and are
+__maybe_unused until then.
 
 Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -102,296 +108,337 @@ Cc: Thomas Falcon <thomas.falcon@intel.com>
 Reviewed-by: Tianyou Li <tianyou.li@intel.com>
 Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
 ---
- tools/perf/ui/browsers/c2c-function.c | 268 +++++++++++++++++++++++++-
- 1 file changed, 265 insertions(+), 3 deletions(-)
+ tools/perf/ui/browsers/c2c-function.c | 293 +++++++++++++++++++++++++-
+ 1 file changed, 282 insertions(+), 11 deletions(-)
 
 diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browsers/c2c-function.c
-index d85da2f467ed..173661c52be7 100644
+index 4bf8406fde55..4099d4c7e7b4 100644
 --- a/tools/perf/ui/browsers/c2c-function.c
 +++ b/tools/perf/ui/browsers/c2c-function.c
-@@ -135,8 +135,8 @@ static int c2c_width(struct perf_hpp_fmt *fmt,
- 			 dim->width;
+@@ -28,6 +28,7 @@
+ #include "../../util/addr_location.h"
+ #include "../../util/cacheline.h"
+ #include "../../util/debug.h"
++#include "../../util/dso.h"
+ #include "../../util/hist.h"
+ #include "../../util/map.h"
+ #include "../../util/mem-events.h"
+@@ -57,12 +58,34 @@ static inline __maybe_unused u64 c2c_hitm_count(const struct c2c_stats *stats)
+ 	return stats->tot_hitm;
  }
  
--static int __maybe_unused c2c_header(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
--				     struct hists *hists, int line, int *span)
-+static int c2c_header(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-+		      struct hists *hists, int line, int *span)
+-static inline __maybe_unused bool symbol_name_equal(struct symbol *a, struct symbol *b)
++static int64_t c2c_function_cmp(const struct map_symbol *left,
++				const struct map_symbol *right)
  {
- 	struct c2c_fmt *c2c_fmt;
- 	struct c2c_dimension *dim;
-@@ -416,13 +416,275 @@ static struct c2c_dimension dim_symbol_view = {
- 	.width		= SYMBOL_WIDTH,
- };
- 
--static struct c2c_dimension *function_view_dimensions[] __maybe_unused = {
-+static struct c2c_dimension *function_view_dimensions[] = {
- 	&dim_cycles_percent,
- 	&dim_total_stores,
- 	&dim_symbol_view,
- 	NULL,
- };
- 
-+static struct c2c_dimension *get_function_dimension(const char *name)
-+{
-+	unsigned int i;
+-	/* Two unknown symbols compare equal, matching cmp_null() in util/sort.c. */
+-	if (!a || !b)
+-		return a == b;
+-	return arch__compare_symbol_names(a->name, b->name) == 0;
++	const struct dso *left_dso = left->map ? map__dso(left->map) : NULL;
++	const struct dso *right_dso = right->map ? map__dso(right->map) : NULL;
++	int ret;
 +
-+	for (i = 0; function_view_dimensions[i]; i++) {
-+		struct c2c_dimension *dim = function_view_dimensions[i];
++	if (!left_dso || !right_dso) {
++		if (left_dso != right_dso)
++			return left_dso ? 1 : -1;
++	} else {
++		/*
++		 * Use the same DSO name as _sort__dso_cmp() (short name unless
++		 * verbose), so this matches the DSO comparison the level-1
++		 * entries are deduplicated by; otherwise same-basename DSOs
++		 * could be split or merged inconsistently across levels.
++		 */
++		const char *left_name = verbose > 0 ?
++			dso__long_name(left_dso) : dso__short_name(left_dso);
++		const char *right_name = verbose > 0 ?
++			dso__long_name(right_dso) : dso__short_name(right_dso);
 +
-+		if (!strcmp(dim->name, name))
-+			return dim;
++		ret = strcmp(left_name, right_name);
++		if (ret)
++			return ret;
 +	}
 +
++	return _sort__sym_cmp(left->sym, right->sym);
+ }
+ 
+ static inline __maybe_unused u64 hist_entry__iaddr(struct hist_entry *he)
+@@ -756,7 +779,7 @@ static void c2c_he__free_hierarchy(struct hist_entry *he);
+ /*
+  * Free a function-view histogram entry (hist_entry_ops::free).
+  */
+-static void __maybe_unused c2c_function_he_free(void *ptr)
++static void c2c_function_he_free(void *ptr)
+ {
+ 	struct hist_entry *he = ptr;
+ 	struct c2c_hist_entry *c2c_he;
+@@ -771,11 +794,6 @@ static void __maybe_unused c2c_function_he_free(void *ptr)
+ 
+ 	c2c_he__free_hierarchy(he);
+ 
+-	zfree(&c2c_he->nodeset);
+-	zfree(&c2c_he->cpuset);
+-	zfree(&c2c_he->nodestr);
+-	zfree(&c2c_he->node_stats);
+-
+ 	free(c2c_he);
+ }
+ 
+@@ -847,6 +865,259 @@ static int __maybe_unused c2c_he__prune_empty_writers(struct hist_entry *l1_he)
+ 	return surviving;
+ }
+ 
++static void *c2c_function_he_zalloc(size_t size)
++{
++	struct c2c_hist_entry *c2c_he = zalloc(sizeof(*c2c_he) + size);
++
++	if (!c2c_he)
++		return NULL;
++
++	init_stats(&c2c_he->cstats.lcl_hitm);
++	init_stats(&c2c_he->cstats.rmt_hitm);
++	init_stats(&c2c_he->cstats.lcl_peer);
++	init_stats(&c2c_he->cstats.rmt_peer);
++	init_stats(&c2c_he->cstats.load);
++
++	return &c2c_he->he;
++}
++
++/* Entry operations for function view */
++static struct hist_entry_ops c2c_function_entry_ops = {
++	.new	= c2c_function_he_zalloc,
++	.free	= c2c_function_he_free,
++};
++
++static struct c2c_hist_entry *
++c2c_child_entry__alloc(struct hist_entry *parent_he, struct hist_entry *src_he,
++		       int depth, u64 ip)
++{
++	struct c2c_hist_entry *child_c2c;
++	struct hist_entry *child_he;
++
++	/* Function-view children never own or display callchains. */
++	child_he = c2c_function_he_zalloc(0);
++	if (!child_he)
++		return NULL;
++
++	child_c2c = container_of(child_he, struct c2c_hist_entry, he);
++	child_he->ops = &c2c_function_entry_ops;
++	map_symbol__copy(&child_he->ms, &src_he->ms);
++
++	if (src_he->mem_info) {
++		child_he->mem_info = mem_info__clone(src_he->mem_info);
++		if (!child_he->mem_info)
++			goto out_free;
++	}
++
++	child_he->thread = thread__get(src_he->thread);
++	child_he->cpumode = src_he->cpumode;
++	child_he->cpu = src_he->cpu;
++	child_he->socket = src_he->socket;
++	child_he->level = src_he->level;
++	child_he->ip = ip;
++
++	child_he->parent_he = parent_he;
++	child_he->depth = depth;
++	child_he->leaf = (depth >= 2);
++	child_he->hists = &c2c_ext.function_hists.hists;
++	child_he->filtered = false;
++	child_he->unfolded = false;
++	child_he->has_children = false;
++	child_he->has_no_entry = false;
++	child_he->nr_rows = 0;
++	child_he->row_offset = 0;
++
++	memset(&child_he->stat, 0, sizeof(child_he->stat));
++	child_he->hroot_in = RB_ROOT_CACHED;
++	child_he->hroot_out = RB_ROOT_CACHED;
++	INIT_LIST_HEAD(&child_he->pairs.node);
++	child_he->hpp_list = &c2c_ext.function_hists.list;
++	if (symbol_conf.cumulate_callchain) {
++		child_he->stat_acc = calloc(1, sizeof(struct he_stat));
++		if (!child_he->stat_acc)
++			goto out_free;
++	}
++
++	return child_c2c;
++
++out_free:
++	hist_entry__delete(child_he);
 +	return NULL;
 +}
 +
-+/* Wrappers so sort_entry-backed dimensions sort/collapse via their se. */
-+static int64_t c2c_se_cmp(struct perf_hpp_fmt *fmt,
-+			  struct hist_entry *a, struct hist_entry *b)
++static void
++c2c_child_entry__insert(struct hist_entry *parent_he, struct hist_entry *child_he,
++			struct rb_node **p, struct rb_node *rb_parent, bool leftmost)
 +{
-+	struct c2c_fmt *c2c_fmt = container_of(fmt, struct c2c_fmt, fmt);
-+	struct c2c_dimension *dim = c2c_fmt->dim;
++	rb_link_node(&child_he->rb_node, rb_parent, p);
++	rb_insert_color_cached(&child_he->rb_node, &parent_he->hroot_out, leftmost);
 +
-+	return dim->se->se_cmp(a, b);
++	parent_he->has_children = true;
++	parent_he->leaf = false;
 +}
 +
-+static int64_t c2c_se_collapse(struct perf_hpp_fmt *fmt,
-+			       struct hist_entry *a, struct hist_entry *b)
++static __maybe_unused struct hist_entry *
++c2c_function_hists__level1_entry(struct symbol *sym,
++				 struct hist_entry *detail_he,
++				 struct thread *synthetic_thread)
 +{
-+	struct c2c_fmt *c2c_fmt = container_of(fmt, struct c2c_fmt, fmt);
-+	struct c2c_dimension *dim = c2c_fmt->dim;
-+	int64_t (*collapse_fn)(struct hist_entry *a, struct hist_entry *b);
++	struct addr_location al;
++	struct perf_sample sample = {};
++	struct mem_info *mi;
++	struct hist_entry *he;
++	/*
++	 * Key the level-1 entry by the function, not by a specific code
++	 * address: use the symbol start so every instruction address inside
++	 * the same function collapses into one entry. This makes level 1 a
++	 * true "function view" rather than a per-code-address view.
++	 */
++	u64 sym_start = (sym && detail_he->ms.map) ?
++			map__unmap_ip(detail_he->ms.map, sym->start) : detail_he->ip;
 +
-+	collapse_fn = dim->se->se_collapse ?: dim->se->se_cmp;
-+	return collapse_fn(a, b);
-+}
++	mi = mem_info__new();
++	if (!mi)
++		return NULL;
 +
-+static int64_t c2c_se_sort(struct perf_hpp_fmt *fmt,
-+			   struct hist_entry *a, struct hist_entry *b)
-+{
-+	struct c2c_fmt *c2c_fmt = container_of(fmt, struct c2c_fmt, fmt);
-+	struct c2c_dimension *dim = c2c_fmt->dim;
-+	int64_t (*sort_fn)(struct hist_entry *a, struct hist_entry *b);
++	mem_info__iaddr(mi)->addr = sym_start;
++	/* mem_info__put() will map_symbol__exit() these, so take refs. */
++	mem_info__iaddr(mi)->ms.thread = thread__get(detail_he->ms.thread);
++	mem_info__iaddr(mi)->ms.map = map__get(detail_he->ms.map);
++	mem_info__iaddr(mi)->ms.sym = sym;
++	mem_info__daddr(mi)->addr = 0;
 +
-+	sort_fn = dim->se->se_sort ?: dim->se->se_cmp;
-+	return sort_fn(a, b);
-+}
-+
-+/*
-+ * Build the c2c_fmt for @name. Returns:
-+ *   0        and *fmtp set     on success;
-+ *   -ENOENT  and *fmtp = NULL   if @name is not a function-view dimension;
-+ *   -ENOMEM                     if allocation failed (distinct from -ENOENT so
-+ *                               the caller does not misreport it as an
-+ *                               "invalid field").
-+ */
-+static int get_function_format(const char *name, struct c2c_fmt **fmtp)
-+{
-+	struct c2c_dimension *dim = get_function_dimension(name);
-+	struct c2c_fmt *c2c_fmt;
-+	struct perf_hpp_fmt *fmt;
-+
-+	*fmtp = NULL;
-+
-+	if (!dim)
-+		return -ENOENT;
-+
-+	c2c_fmt = zalloc(sizeof(*c2c_fmt));
-+	if (!c2c_fmt)
-+		return -ENOMEM;
-+
-+	fmt = &c2c_fmt->fmt;
-+
-+	c2c_fmt->dim = dim;
-+	INIT_LIST_HEAD(&fmt->list);
-+	INIT_LIST_HEAD(&fmt->sort_list);
-+
-+	fmt->cmp	= dim->se ? c2c_se_cmp : dim->cmp;
-+	fmt->sort	= dim->se ? c2c_se_sort : dim->cmp;
-+	fmt->color	= dim->color;
-+	fmt->entry	= dim->entry;
-+	fmt->header	= c2c_header;
-+	fmt->width	= c2c_width;
-+	fmt->collapse	= dim->se ? c2c_se_collapse : dim->cmp;
-+	fmt->equal	= c2c_fmt_equal;
-+	fmt->free	= c2c_fmt_free;
-+
-+	*fmtp = c2c_fmt;
-+	return 0;
-+}
-+
-+static int
-+c2c_function_hists__init_output(struct perf_hpp_list *hpp_list, char *name,
-+				struct perf_env *env __maybe_unused)
-+{
-+	struct c2c_fmt *c2c_fmt;
-+	int ret;
-+
-+	ret = get_function_format(name, &c2c_fmt);
-+	if (ret == -ENOMEM)
-+		return ret;
-+	/* The function view only accepts its own dimensions. */
-+	if (ret == -ENOENT)
-+		return -EINVAL;
++	addr_location__init(&al);
++	al.thread = thread__get(synthetic_thread);
++	al.map = map__get(detail_he->ms.map);
++	al.sym = sym;
++	al.addr = sym_start;
++	al.level = detail_he->level;
++	al.cpumode = detail_he->cpumode;
++	al.cpu = 0;
++	al.socket = 0;
++	al.filtered = 0;
++	al.latency = 0;
 +
 +	/*
-+	 * Mark symbol-backed columns so hists__has(hists, sym) is correct.
-+	 * Only dim_symbol_view carries a sort_entry (.se); the function
-+	 * view's field strings are fixed and always include symbol_view, so
-+	 * this single check is sufficient (unlike the user-configurable
-+	 * cacheline view, which must also test dim_iaddr).
++	 * Synthetic sample: period/weight are placeholders only. The real
++	 * c2c counters live in c2c_hist_entry::stats and are added via
++	 * hist_entry__add_c2c_stats(); no function-view column or sort key
++	 * reads he->stat.period/nr_events, so the +1 that __hists__add_entry()
++	 * accrues on each dedup hit has no effect on what is displayed.
 +	 */
-+	if (c2c_fmt->dim->se == &sort_sym)
-+		hpp_list->sym = 1;
++	sample.period = 1;
++	sample.weight = 1;
++	sample.ip = sym_start;
++	sample.pid = thread__pid(synthetic_thread);
++	sample.tid = thread__tid(synthetic_thread);
++	sample.cpu = 0;
 +
-+	perf_hpp_list__column_register(hpp_list, &c2c_fmt->fmt);
-+	return 0;
-+}
++	/* Add entry - histogram handles dedup */
++	he = hists__add_entry_ops(&c2c_ext.function_hists.hists,
++				  &c2c_function_entry_ops,
++				  &al, NULL, NULL, mi,
++				  NULL, &sample, true);
 +
-+static int
-+c2c_function_hists__init_sort(struct perf_hpp_list *hpp_list, char *name,
-+			      struct perf_env *env __maybe_unused)
-+{
-+	struct c2c_fmt *c2c_fmt;
-+	int ret;
++	addr_location__exit(&al);
++	mem_info__put(mi);
 +
-+	ret = get_function_format(name, &c2c_fmt);
-+	if (ret == -ENOMEM)
-+		return ret;
-+	/* The function view only accepts its own dimensions. */
-+	if (ret == -ENOENT)
-+		return -EINVAL;
++	if (he)
++		he->hpp_list = &c2c_ext.function_hists.list;
 +
-+	/* Mark symbol-backed sort keys so hists__has(hists, sym) is correct. */
-+	if (c2c_fmt->dim->se == &sort_sym)
-+		hpp_list->sym = 1;
-+
-+	perf_hpp_list__register_sort_field(hpp_list, &c2c_fmt->fmt);
-+	return 0;
-+}
-+
-+typedef int (*hpp_list_add_fn)(struct perf_hpp_list *hpp_list, char *name,
-+			       struct perf_env *env);
-+
-+static int function_hpp_list__add_tokens(struct perf_hpp_list *hpp_list, char *list,
-+					 struct perf_env *env, hpp_list_add_fn add)
-+{
-+	char *tok, *tmp;
-+	int ret;
-+
-+	if (!list)
-+		return 0;
-+
-+	for (tok = strtok_r(list, ", ", &tmp); tok; tok = strtok_r(NULL, ", ", &tmp)) {
-+		ret = add(hpp_list, tok, env);
-+		if (ret) {
-+			if (ret == -EINVAL || ret == -ESRCH)
-+				pr_err("Invalid c2c function-view field: %s\n", tok);
-+			return ret;
-+		}
-+	}
-+	return 0;
++	return he;
 +}
 +
 +/*
-+ * Append the function view's sort keys to its own output fields, mirroring
-+ * perf_hpp__setup_output_field() but on the local @list. The shared helper
-+ * registers onto the global perf_hpp_list, which would leave this local list
-+ * without output columns, so the function view keeps its own copy here.
++ * Level 2: a function that writes a cacheline the level-1 function reads,
++ * keyed by the DSO display name and symbol, consistently with perf's symbol
++ * sort semantics. All code addresses and cachelines for the same writer
++ * function aggregate into one row.
 + */
-+static void c2c_function_hists__setup_output_field(struct perf_hpp_list *list)
++static __maybe_unused struct c2c_hist_entry *
++c2c_function_hists__level2_entry(struct c2c_hist_entry *level1_c2c,
++				 struct symbol *sym, struct hist_entry *detail_he)
 +{
-+	struct perf_hpp_fmt *fmt;
++	struct hist_entry *level1_he = &level1_c2c->he;
++	struct rb_node **p = &level1_he->hroot_out.rb_root.rb_node;
++	struct rb_node *parent = NULL;
++	struct c2c_hist_entry *level2_c2c;
++	bool leftmost = true;
 +
-+	perf_hpp_list__for_each_sort_list(list, fmt) {
-+		struct perf_hpp_fmt *pos;
++	while (*p) {
++		struct hist_entry *iter = rb_entry(*p, struct hist_entry, rb_node);
++		struct map_symbol key = detail_he->ms;
++		int64_t cmp;
 +
-+		if (!fmt->entry && !fmt->color)
-+			continue;
++		key.sym = sym;
++		parent = *p;
++		cmp = c2c_function_cmp(&key, &iter->ms);
 +
-+		perf_hpp_list__for_each_format(list, pos) {
-+			if (c2c_fmt_equal(fmt, pos))
-+				goto next;
++		if (cmp < 0) {
++			p = &parent->rb_left;
++		} else if (cmp > 0) {
++			p = &parent->rb_right;
++			leftmost = false;
++		} else {
++			return container_of(iter, struct c2c_hist_entry, he);
 +		}
-+
-+		perf_hpp_list__column_register(list, fmt);
-+next:
-+		continue;
-+	}
-+}
-+
-+static int
-+function_hpp_list__parse(struct perf_hpp_list *hpp_list,
-+			 const char *output_str,
-+			 const char *sort_str,
-+			 struct perf_env *env)
-+{
-+	char *output = output_str ? strdup(output_str) : NULL;
-+	char *sort   = sort_str   ? strdup(sort_str)   : NULL;
-+	int ret = 0;
-+
-+	if ((output_str && !output) || (sort_str && !sort)) {
-+		ret = -ENOMEM;
-+		goto out;
 +	}
 +
-+	ret = function_hpp_list__add_tokens(hpp_list, output, env,
-+					    c2c_function_hists__init_output);
-+	if (ret)
-+		goto out;
++	/* Key by the function symbol start so all code addresses collapse. */
++	level2_c2c = c2c_child_entry__alloc(level1_he, detail_he, 1,
++					    (sym && detail_he->ms.map) ?
++						  map__unmap_ip(detail_he->ms.map, sym->start) :
++						  hist_entry__iaddr(detail_he));
++	if (!level2_c2c)
++		return NULL;
 +
-+	ret = function_hpp_list__add_tokens(hpp_list, sort, env,
-+					    c2c_function_hists__init_sort);
-+	if (ret)
-+		goto out;
++	/* Key this level by the looked-up symbol, not detail_he's. */
++	level2_c2c->he.ms.sym = sym;
++	if (level2_c2c->he.mem_info)
++		mem_info__iaddr(level2_c2c->he.mem_info)->ms.sym = sym;
 +
-+	c2c_function_hists__setup_output_field(hpp_list);
-+out:
-+	if (ret)
-+		perf_hpp__reset_output_field(hpp_list);
-+	free(output);
-+	free(sort);
-+	return ret;
++	c2c_child_entry__insert(level1_he, &level2_c2c->he, p, parent, leftmost);
++
++	return level2_c2c;
 +}
 +
-+static int __maybe_unused
-+c2c_function_hists__init(struct c2c_hists *hists,
-+			 const char *sort,
-+			 int nr_header_lines,
-+			 struct perf_env *env)
++/* Level 3: one source cacheline where the L1/L2 functions contend. */
++static __maybe_unused struct c2c_hist_entry *
++c2c_function_hists__level3_entry(struct c2c_hist_entry *level2_c2c,
++				 struct c2c_hist_entry *cacheline_src_he)
 +{
-+	__hists__init(&hists->hists, &hists->list);
++	struct hist_entry *level2_he = &level2_c2c->he;
++	struct rb_node **p = &level2_he->hroot_out.rb_root.rb_node;
++	struct rb_node *parent = NULL;
++	struct c2c_hist_entry *level3_c2c;
++	bool leftmost = true;
 +
-+	perf_hpp_list__init(&hists->list);
++	while (*p) {
++		struct hist_entry *iter = rb_entry(*p, struct hist_entry, rb_node);
++		struct c2c_hist_entry *iter_c2c;
 +
-+	hists->list.nr_header_lines = nr_header_lines;
++		iter_c2c = container_of(iter, struct c2c_hist_entry, he);
 +
-+	return function_hpp_list__parse(&hists->list, /*output=*/NULL, sort, env);
-+}
++		parent = *p;
++		if (cacheline_src_he->cacheline_idx < iter_c2c->cacheline_idx) {
++			p = &parent->rb_left;
++		} else if (cacheline_src_he->cacheline_idx > iter_c2c->cacheline_idx) {
++			p = &parent->rb_right;
++			leftmost = false;
++		} else {
++			return container_of(iter, struct c2c_hist_entry, he);
++		}
++	}
 +
-+static int __maybe_unused
-+c2c_function_hists__reinit(struct c2c_hists *c2c_hists,
-+			   const char *output,
-+			   const char *sort,
-+			   struct perf_env *env)
-+{
-+	int nr_header_lines = c2c_hists->list.nr_header_lines;
++	level3_c2c = c2c_child_entry__alloc(level2_he, &cacheline_src_he->he, 2,
++					    hist_entry__iaddr(&cacheline_src_he->he));
++	if (!level3_c2c)
++		return NULL;
++	level3_c2c->cacheline_idx = cacheline_src_he->cacheline_idx;
 +
-+	perf_hpp__reset_output_field(&c2c_hists->list);
++	c2c_child_entry__insert(level2_he, &level3_c2c->he, p, parent, leftmost);
 +
-+	/* Clear stale state flags so a different output/sort set starts fresh. */
-+	c2c_hists->list.need_collapse = 0;
-+	c2c_hists->list.parent = 0;
-+	c2c_hists->list.sym = 0;
-+	c2c_hists->list.dso = 0;
-+	c2c_hists->list.socket = 0;
-+	c2c_hists->list.thread = 0;
-+	c2c_hists->list.comm = 0;
-+	c2c_hists->list.comm_nodigit = 0;
-+	c2c_hists->list.nr_header_lines = nr_header_lines;
-+
-+	return function_hpp_list__parse(&c2c_hists->list, output, sort, env);
++	return level3_c2c;
 +}
 +
  int perf_c2c__browse_function_view(struct c2c_function_view_args *args)
