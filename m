@@ -1,252 +1,284 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7789E40F738
-	for <linux-perf-users@vger.kernel.org>; Mon, 10 Aug 2026 16:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786379131; cv=pass; b=uJaHq+MFdIDzB4pNAGZcNy3wjQ9AyAmXQg2valBN8RxjgGsZD+Jz232IidShjmXpLYP6nMkosNi4Qbk3x/2868xcLaZmKW7ODvcDzx+03eDfKjJotVqTUjW7ommkYJ2s+TFrCDCG9Tk5pWmJs1ZTPRu1CHliUQrNseR5Prbj7lU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786379131; c=relaxed/simple;
-	bh=vvgNKu9uyv9I5R9kHg2ihehIkxNH8NosNyyy4+wPpsc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dmfo1QAuAZWsgJuQq32JHaNG3eICI9kuCbXvLRL7Slc6qx8m4iX0WUDAcLl0Q8kWCHx8bx1l0n7DEDbY2VU+y0yZm5y8BE52hqkPFuiNAldRoeMp4pYZRtpIM65ZAO7MVGt1MFt0bvSG4hFSOqIjp6xvyKi/mYB+CQs/d0fzL4o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cnSX4srl; arc=pass smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B9C3E7630;
+	Mon, 10 Aug 2026 16:46:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786380413; cv=none; b=f4ym8ZmCgi6KDBt8Pn0uRRazb5gdB/O8dgS+jNrQ6+8ixY1UT/DfmVFSgu/YOVs8XVjWVu2aBNHsHcJ8nJrDQ/M8rdrAnaGde31lMw2sfPeIG7b3epk3CVY9AfKf9bFPrYiB5jey8Er3nS0tP55nUKJ8aSigQZ0BWCDBh2Zu0Ho=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786380413; c=relaxed/simple;
+	bh=jMWeY4GawSIr1Rkzmx2SUb2AGne5vFgqll8NAZ0t3Fo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S0JtWGcssv28MjG2/HC2hZJ8qFxBjrPiM68sbPpnTtyk34OUrp0G9bZbV6v8o5qSGhB17kDM6F8E0C6FKg7FnDylyQG5cFcMBCvbDu+4KMpv7ZjzILaPXFv8BVVp+kOKFrkUI0IKdKvz0Q+5LnwsWKcqQp9jE4OCeR9NtBmELKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X9O6VICh; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cnSX4srl"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-51c15a5b265so441191cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Aug 2026 09:25:29 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786379128; cv=none;
-        d=google.com; s=arc-20260327;
-        b=jvhkqVsjDV14uvcOG3nyRrKuVru47o7bS3tfJozxHeG2QPuSiIqEipspBHgsB/TIl3
-         oiUw7qTs/UgtvYOEh0z9Psmyz+Tz0rGs0P6acr+7upanaqdlKVwiaTZDvQRQ8OFxgsIa
-         Zm+qt8jBvf1hezn9rUUMic/Z96VvUBb623vkOE3ZWT4L3aSEtbXuK+szLPja1DW+O2N4
-         3ailppAoJ4vaXmff2YtlOARYWegNe+CPcROoMF95teKs0EghmZMUNi5XGp8p1j/cxs/X
-         Ne5jxBp+cN6UO41NOQe/YVKYZ96jftpylBZicle4pdiYbo3UcsewKdx81huvTfTyde/U
-         XQsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=oQBA7RZMWG8pbHKGdFOSfTUai8Qp0mhMLH3fVjxyT/A=;
-        fh=cuvX7jNB4wZ2eA6QxGNH5gRYfmosb5l8B6Z4S+gwJqk=;
-        b=s9IWFYtuR9kaeDAwdYnPmKvky0q4gmY3Ipk+MHjiyYY30T/WLlQHlvmsnQXVgo1RXR
-         39w9mw81mcTpxMJdYnref6LoLB3XELp314DcE/I5lF6Pcxfd7qkRSi46iWglihKz0hEj
-         3W2cSJnXAPGOYkZ6i6KpKkpz1hypdkR06iyJHYOrsSnmhYnmR6sGXb0kGJi/R/jrUzJz
-         CJsRgUrgf6MPLMoL/Rs+UoGvpETBLuJWE9KvttTS72oxf+Ubr62fyW06c/7OxObEmeFl
-         wdK4BOvSQYd1V0vXwE3VfYY1af7odBNH4EyigraqwwYiq72jqxjiyqQmdUaJlHuQnUjv
-         Rv0A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786379128; x=1786983928; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=oQBA7RZMWG8pbHKGdFOSfTUai8Qp0mhMLH3fVjxyT/A=;
-        b=cnSX4srljyHNxtz8+ebQsbPLVxspqfpoIqSLmsWAildeeNYgXoHZa7KGoAxUyX77W8
-         D4KguptuceXODwM8sSDS3p0s/amPy4tk+0ZFSm55MxazfgCDZe3PeT+WxElOCjKq6roJ
-         r4vSyIRR9ejNSjq49zaOp9cMSJmbiSZC3WBoxA53w7seEAZpUaGyTpMnkkdcP1xyK+wX
-         VYAwX8Auqw00xcAkHeGfaFPwoYNXnXXfhtwyP1COxg5ltXdanflWeA8lr2oOomNqfTA1
-         Hwi7+82yfHl6cT+dEZ5OgCgY09gNanMzX3aOPmbj/3VwMfiwJkmXH1dCPDhOCNdC48cZ
-         8Vpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786379128; x=1786983928;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=oQBA7RZMWG8pbHKGdFOSfTUai8Qp0mhMLH3fVjxyT/A=;
-        b=HL2fJZBMFZfax3OKlD6tf6aEjnQBJ0223Yr2YUy2ncsURAXoGlmA/epTt7hYdgKiIq
-         uGRa4+O7wLYXWI4oV0MSs3oplVtkeOAbYyY+Mx6FtjQgZIqeotLl5/yZvQH4bzXxddXD
-         FmgZIG5L8//3e2tq/uRw3yIwudbgp70suFJAlT3Ngk/gW2W/C5rAN/0b6fvP4rn271w0
-         F7Lh+Btx5/2a2HF6r1KKhylFP1HF+IbPjW7idUpXZaYZ9nQutzLnPogGLRKE8JmfwNsd
-         jNgmDr3HEmN+kA7ClxQkDNI2iZiO3AX/y82KjTWGf8pshffMtrL7gSR01fhpdLvpb+KZ
-         EzSQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rr1AJQnvWrLAMLtg5haDmZPKHrDqx3sgmmEuDiepODap2RdqVcaVvmQdg70EYwu6nilLni1ro7YP4P+UWBSy2Ct@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpbFg6PosjDLGwNvv2+UEHaKKPJtnDMkPEHdhymAISAZ5iTa+p
-	qoHaWWrIhvkFRJQPZdKqZjmsVeeFDDPdk7+M19AWIY28vDZ9yP+yhAF8gp1ZRMLtj7HJQ9FRo3p
-	ax/CL79/bG9qiSPUTgc3qdxEbMaDDHYQDMBO58mZs
-X-Gm-Gg: AR+sD13/rYr38jrq/8hntOnbvSPACg0qKOnvMVjRRM0MPgraQ+4e1ZLTHgeyyT72DLt
-	3B1ZYzjPcqdBF+vrCsm8DI6Ycz7TXIt+bxtybMh4hsiR6rbT0lCl1Mx8lTh/NFegyJyRpZMhPqP
-	fLSTuNUWFL+9P+7f4tmi4PtWpPR6lRu8XAFqP2IR91IBoFA5ftWR6ixqANS2F6C4SjlNpo/hSlR
-	pIJU2tbI1ssk4Yfut+VTtyfvqXTYY1M8Gh/+Nts0xOAymR1OAygySDlUvxfrKbXzW9+V27Q9P+o
-	YKGPGjBpQiYMnNCK8LcGzMfHap2UKOkuuCAmaAdWgps=
-X-Received: by 2002:a05:622a:1b06:b0:516:3f51:81cb with SMTP id
- d75a77b69052e-52d2817b938mr34999921cf.13.1786379127554; Mon, 10 Aug 2026
- 09:25:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X9O6VICh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0B071F000E9;
+	Mon, 10 Aug 2026 16:46:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786380412;
+	bh=rFsFgCndf80VKqU0oQDmLBTIZ1f8ThfYd5kLifor2hc=;
+	h=From:To:Cc:Subject:Date;
+	b=X9O6VIChw3jvTf/bG7i8CTNr5RHW7Gr8N0rZhB6YZfQZqnlUyVt7Eq1ibAqAUFbbO
+	 mO4Y9ONP+nz5bG6UmGUmj7yyA+KK7f8wtAwbbO+6icRJs7BCJJ58uAdXK6dPtss1kk
+	 6a/Nsi8eMXimgayca9fi+gJDKllqmukshKrK6f/d1700D3m1kQF8zd4+uwp4w9/qmm
+	 98YJrjiRZaZo4SZaESbeetUGzmykWfm4vUWxzc09CxZW0s3M89hXY5nJ8MY3FSIHiy
+	 hBlIADFwZHGVPdA4KNg7kEcVmZxtf+nak/TZxSskcoL/3GvYEQ41kn99OtdupbCEyg
+	 KbtKB+qEY1WNA==
+From: Puranjay Mohan <puranjay@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>
+Cc: Puranjay Mohan <puranjay@kernel.org>,
+	bpf@vger.kernel.org,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Puranjay Mohan <puranjay12@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	Leo Yan <leo.yan@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Shuah Khan <shuah@kernel.org>,
+	Breno Leitao <leitao@debian.org>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Stephane Eranian <eranian@google.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Usama Arif <usama.arif@linux.dev>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com
+Subject: [PATCH v6 0/3] arm64: Add BRBE support for bpf_get_branch_snapshot()
+Date: Mon, 10 Aug 2026 09:46:17 -0700
+Message-ID: <20260810164622.1829843-1-puranjay@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org>
- <20260806-b4-scalable-cow-virt-pgoff-v4-3-ab318a350404@kernel.org>
- <CAJuCfpGjE66Duhw0r8H0GKBFDExjroRar6n5MgVOOQjz4ZfTuA@mail.gmail.com> <anmNojqwGzdiLkIm@lucifer>
-In-Reply-To: <anmNojqwGzdiLkIm@lucifer>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Mon, 10 Aug 2026 09:25:16 -0700
-X-Gm-Features: AUfX_mz9WU1SPgoH6YTV3DTKwNKGMKFcURK6j4M8chTMyTH0jJu5GwZ0wv2wrtI
-Message-ID: <CAJuCfpHtaeeqn9UbnG1U0iA8uhrcQpEG8g8+G_RybVbwoOE0sA@mail.gmail.com>
-Subject: Re: [PATCH v4 03/20] mm: introduce linear_anon_page_index()
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
-	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Kees Cook <kees@kernel.org>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Usama Arif <usama.arif@linux.dev>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
-	Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
-	Ying Huang <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, 
-	Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
-	Vasily Gorbik <gor@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
-	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, Boris Brezillon <boris.brezillon@collabora.com>, 
-	Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>, 
-	=?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
-	Rodrigo Vivi <rodrigo.vivi@intel.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	John Hubbard <jhubbard@nvidia.com>, Muchun Song <muchun.song@linux.dev>, 
-	Oscar Salvador <osalvador@suse.de>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
-	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, 
-	Baoquan He <baoquan.he@linux.dev>, Youngjun Park <youngjun.park@lge.com>, linux-mm@kvack.org, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-s390@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
-	dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
-	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 10, 2026 at 1:40=E2=80=AFAM Lorenzo Stoakes (ARM) <ljs@kernel.o=
-rg> wrote:
->
-> On Sat, Aug 08, 2026 at 05:49:48PM -0700, Suren Baghdasaryan wrote:
-> > On Thu, Aug 6, 2026 at 1:23=E2=80=AFPM Lorenzo Stoakes (ARM) <ljs@kerne=
-l.org> wrote:
-> > >
-> > > This function provides the anonymous equivalent of linear_page_index(=
-),
-> > > instead offsetting based on the anonymous page offset of the VMA.
-> > >
-> > > It is valid only for anonymous or MAP_PRIVATE file-backed mappings, i=
-n
-> > > other words CoW mappings.
-> > >
-> > > For pure anon VMAs, this will be equal to linear_page_index().
-> > >
-> > > Assert that both of these invariants are true In linear_anon_page_ind=
-ex()
-> >
-> > s/In/in
->
-> Ack. I ran these patches through claude several times and it didn't get t=
-his ;)
-> the machines are not taking over just yet...
->
-> Andrew - could you change this in-place? Thanks!
->
-> > > diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
-> > > index c6fc783aaee5..0adfa6605653 100644
-> > > --- a/include/linux/pagemap.h
-> > > +++ b/include/linux/pagemap.h
-> > > @@ -1094,10 +1094,44 @@ static inline pgoff_t linear_page_delta(const=
- struct vm_area_struct *vma,
-> > >  static inline pgoff_t linear_page_index(const struct vm_area_struct =
-*vma,
-> > >                                         const unsigned long address)
-> > >  {
-> > > -       pgoff_t pgoff;
-> > > +       return linear_page_delta(vma, address) + vma_start_pgoff(vma)=
-;
-> > > +}
-> > > +
-> > > +static inline pgoff_t __linear_anon_page_index(const struct vm_area_=
-struct *vma,
-> > > +               const unsigned long address)
-> > > +{
-> > > +       return linear_page_delta(vma, address) + vma_start_anon_pgoff=
-(vma);
-> > > +}
-> > > +
-> > > +/**
-> > > + * linear_anon_page_index() - Determine the absolute anonymous page =
-offset of
-> > > + * @address within @vma.
-> > > + * @vma: An anonymous or MAP_PRIVATE file-backed VMA in which @addre=
-ss resides.
-> > > + * @address: The address whose absolute page offset is required.
-> > > + *
-> > > + * This returns the anonymous page offset of @address, which is the =
-page offset
-> > > + * the address possessed at the time the VMA was first faulted.
-> > > + *
-> > > + * For anonymous mappings, this returns the same value as linear_pag=
-e_index().
-> > > + *
-> > > + * For MAP_PRIVATE file-backed mappings, this returns the anonymous =
-page offset
-> > > + * of @address, which is the page offset the address possessed at th=
-e time the
-> > > + * VMA was first faulted.
-> > > + *
-> > > + * It is not valid to call this function for shared file-backed mapp=
-ings.
-> > > + *
-> > > + * Returns: The absolute anonymous page offset of @address within @v=
-ma.
-> > > + */
-> > > +static inline pgoff_t linear_anon_page_index(const struct vm_area_st=
-ruct *vma,
-> > > +               const unsigned long address)
-> > > +{
-> > > +       const pgoff_t pgoff =3D __linear_anon_page_index(vma, address=
-);
-> > > +
-> > > +       VM_WARN_ON_ONCE(!vma_is_cow_mapping(vma));
-> >
-> > As discussed off the list, this assertion works even for read-only
-> > anon mappings because, as you said, "there's no such thing as a pure
-> > anon mapping that is !VMA_MAYWRITE_BIT, there is no way to achieve
-> > that."
-> > It took me some time to see that after reading your discussion with
-> > David at [1] and [2], and I don't think it's very intuitive. Could you
-> > please add a comment explaining that? Maybe add a comment at
-> > vma_is_cow_mapping() definition since you are using the same assertion
-> > in another patch of this series?
->
-> Sure will do! It is very confusing stuff (and I was duly confused also at
-> first).
->
-> To save a respin (unless there's more stuff I need to address) I will pro=
-bably
-> reply to the relevant patch with a proposed new comment.
+Changelog:
+v5: https://lore.kernel.org/all/20260616155716.2631508-1-puranjay@kernel.org/
+Changes in v6:
+- Split the two perf/core patches out into their own series [3]. They
+  fix bugs of their own and do not depend on this one.
+- Add raw_local_daif_save() and raw_local_daif_restore(), so the
+  snapshot can mask exceptions without trace_hardirqs_off() evicting
+  the records it is about to read (new patch 1).
+- Rework the snapshot. Clear PMCR_EL0.E across the BRBFCR_EL1
+  read-modify-write so that a freeze cannot set PAUSED behind the saved
+  value, and unpause before restarting the counters, since a paused
+  BRBE cannot freeze for its own overflow handler (James Clark).
+- Skip the pause entirely when BRBE is disabled or already frozen, and
+  invalidate only when the snapshot was the one to pause it.
+- Run valid_brbe_version() before masking exceptions; the static call
+  is only reached from BPF programs, which run with migration disabled.
+- Fold cpu_has_brbe() into valid_brbe_version() and drop the
+  arm_brbe_ prefix from the snapshot callback (James Clark).
+- Derive the selftest skip threshold from the waste and hit limits it
+  depends on, so the two cannot drift apart.
 
-Sounds good!
+v4: https://lore.kernel.org/all/20260527121207.2312181-1-puranjay@kernel.org/
+Changes in v5:
+- Rework patch 2: drop the UAPI union. Instead rename the helper to perf_clear_branch_entry() and
+  clear the entry with a single
+  	*br = (struct perf_branch_entry){ }.
+  This stays kernel-internal, with no changes to the uapi/ or tools/ headers (James Clark).
+- Add an isb() to the BRBCR_EL1 == 0 early-exit in the snapshot, for consistency with the other
+  two exit paths (bpf-ci).
+- Add Rob Herring's Reviewed-by to patch 3
 
->
-> >
-> > [1] https://lore.kernel.org/linux-mm/anBjpdMicqaGADr-@lucifer/
-> > [2] https://lore.kernel.org/linux-mm/anLyhaI6kW-EWk13@lucifer/
->
-> --
-> Cheers, Lorenzo
+v3: https://lore.kernel.org/all/20260413185740.3286146-1-puranjay@kernel.org/
+Changes in v4:
+- Fix leaking branch records when scheduled task has an unrelated perf event (Sashiko)
+- Update tools/include/uapi/linux/perf_event.h as well for patch 2
+- Introduce cpu_has_brbe() and use it in
+  arm_brbe_snapshot_branch_stack(0 to make sure we don't run on a CPU
+  without BRBE.
+- Add explicit isb() after after writing to SYS_BRBFCR_EL1.
+- Rebase on latest arm64 tree.
+
+v2: https://lore.kernel.org/all/20260318171706.2840512-1-puranjay@kernel.org/
+Changes in v3:
+- Move NULL pmu_ctx fix from arm_pmuv3.c to perf core (Leo Yan)
+- Use union to clear branch entry bitfields instead of per-field
+  zeroing (Leo Yan)
+- Remove per-CPU brbe_active flag; check BRBCR_EL1 == 0 instead (Rob
+  Herring)
+- Remove redundant valid_brbidr() check in snapshot path (Rob Herring)
+- Introduce for_each_brbe_entry() iterator to deduplicate bank
+  iteration (Rob Herring)
+- Include perf core maintainers (Leo Yan, Rob Herring)
+
+v1: https://lore.kernel.org/all/20260313180352.3800358-1-puranjay@kernel.org/
+Changes in v2:
+- Rebased on arm64/for-next/core
+- Add per-CPU brbe_active flag to guard against UNDEFINED sysreg access
+  on non-BRBE CPUs in heterogeneous big.LITTLE systems.
+- Fix pre-existing bug in perf_clear_branch_entry_bitfields() that missed
+  zeroing new_type and priv bitfields, added as a separate patch with
+  Fixes tags (new patch 2).
+- Use architecture-specific selftest threshold (#if defined(__aarch64__))
+  instead of raising the global threshold, to preserve x86 regression
+  detection.
+
+RFC: https://lore.kernel.org/all/20260102214043.1410242-1-puranjay@kernel.org/
+Changes from RFC:
+ - Fix pre-existing NULL pointer dereference in armv8pmu_sched_task()
+   found by Leo Yan during testing (patch 1)
+ - Pause BRBE before local_daif_save() to avoid branch pollution from
+   trace_hardirqs_off()
+ - Use local_daif_save() to prevent pNMI race from counter overflow
+   (Mark Rutland)
+ - Reuse perf_entry_from_brbe_regset() instead of duplicating register
+   read logic, by making it accept NULL event (Mark Rutland)
+ - Invalidate BRBE after reading to maintain record contiguity for
+   other consumers (Mark Rutland)
+ - Adjust selftest wasted_entries threshold for ARM64 (patch 3)
+ - Tested on ARM FVP with BRBE enabled
+
+This series enables the bpf_get_branch_snapshot() BPF helper on ARM64
+by implementing the perf_snapshot_branch_stack static call for ARM's
+Branch Record Buffer Extension (BRBE).
+
+bpf_get_branch_snapshot() [1] allows BPF programs to capture hardware
+branch records on-demand from any BPF tracing context. This was
+previously only available on x86 (Intel LBR) since v5.16. With BRBE
+available on ARMv9, this series closes the gap for ARM64.
+
+Usage model
+-----------
+
+The helper works in conjunction with perf events. The userspace
+component of the BPF application opens a perf event with
+PERF_SAMPLE_BRANCH_STACK on each CPU, which configures the hardware
+to continuously record branches into BRBE (on ARM64) or LBR (on x86).
+A BPF program attached to a tracepoint, kprobe, or fentry hook can
+then call bpf_get_branch_snapshot() to snapshot the branch buffer at
+any point. Without an active perf event, BRBE is not recording and
+the buffer is empty.
+
+On-demand branch snapshots from BPF are useful for diagnosing which
+specific code path was taken inside a function. Stack traces only show
+function boundaries, but branch records reveal the exact sequence of
+jumps, calls, and returns within a function -- making it possible to
+identify which specific error check triggered a failure, or which
+callback implementation was invoked through a function pointer.
+
+For example, retsnoop [2] is a BPF-based tool for non-intrusive
+mass-tracing of kernel internals. Its LBR mode (--lbr) creates per-CPU
+perf events with PERF_SAMPLE_BRANCH_STACK and then uses
+bpf_get_branch_snapshot() in its fentry/fexit BPF programs to capture
+branch records whenever a traced function returns an error.
+
+Consider debugging a bpf() syscall that returns -EINVAL when creating
+a BPF map with invalid parameters. Running retsnoop on an ARM64 FVP
+with BRBE to trace the bpf() syscall and array_map_alloc_check():
+
+  $ retsnoop -e '*sys_bpf' -a 'array_map_alloc_check' --lbr=any \
+             -F -k vmlinux --debug full-lbr
+  $ simfail bpf-bad-map-max-entries-array  # in another terminal
+
+Output of retsnoop:
+
+  --- fentry BPF program (entries #63-#17) ---
+
+  [#63-#59] __htab_map_lookup_elem: hash table walk with memcmp        (hashtab.c)
+  [#58] __htab_map_lookup_elem+0x98  -> dump_bpf_prog+0xc850           (hashtab.c:750)
+  [#57-#55] ... dump_bpf_prog internal branches ...
+  [#54] dump_bpf_prog+0xcab8        -> bpf_get_current_pid_tgid+0x0    (helpers.c:225)
+  [#53] bpf_get_current_pid_tgid+0x1c -> dump_bpf_prog+0xcabc          (helpers.c:225)
+  [#52-#51] ... dump_bpf_prog -> __htab_map_lookup_elem ...
+  [#50-#47] __htab_map_lookup_elem: htab_map_hash (jhash2), select_bucket
+  [#46-#42] lookup_nulls_elem_raw: hash chain walk with memcmp         (hashtab.c:717)
+  [#41] __htab_map_lookup_elem+0x98  -> dump_bpf_prog+0xcaf8           (hashtab.c:750)
+  [#40-#37] ... dump_bpf_prog -> bpf_ktime_get_ns ...
+  [#36] bpf_ktime_get_ns+0x10       -> ktime_get_mono_fast_ns+0x0      (helpers.c:178)
+  [#35-#32] ktime_get_mono_fast_ns: tk_clock_read -> arch_counter_get_cntpct
+  [#31] ktime_get_mono_fast_ns+0x9c -> bpf_ktime_get_ns+0x14           (timekeeping.c:493)
+  [#30] bpf_ktime_get_ns+0x18       -> dump_bpf_prog+0xcd50            (helpers.c:178)
+  [#29-#25] ... dump_bpf_prog internal branches ...
+  [#24] dump_bpf_prog+0x11b28       -> __bpf_prog_exit_recur+0x0       (trampoline.c:1190)
+  [#23-#17] __bpf_prog_exit_recur: rcu_read_unlock, migrate_enable     (trampoline.c:1195)
+
+  --- array_map_alloc_check (entries #16-#12) ---
+
+  [#16] dump_bpf_prog+0x11b38       -> array_map_alloc_check+0x8       (arraymap.c:55)
+  [#15] array_map_alloc_check+0x18  -> array_map_alloc_check+0xb8      (arraymap.c:56)
+        . bpf_map_attr_numa_node       . bpf_map_attr_numa_node
+  [#14] array_map_alloc_check+0xbc  -> array_map_alloc_check+0x20      (arraymap.c:59)
+        . bpf_map_attr_numa_node
+  [#13] array_map_alloc_check+0x24  -> array_map_alloc_check+0x94      (arraymap.c:64)
+  [#12] array_map_alloc_check+0x98  -> dump_bpf_prog+0x11b3c           (arraymap.c:82)
+
+  --- fexit trampoline overhead (entries #11-#00) ---
+
+  [#11] dump_bpf_prog+0x11b5c       -> __bpf_prog_enter_recur+0x0      (trampoline.c:1145)
+  [#10-#03] __bpf_prog_enter_recur: rcu_read_lock, migrate_disable     (trampoline.c:1146)
+  [#02] __bpf_prog_enter_recur+0x114 -> dump_bpf_prog+0x11b60          (trampoline.c:1157)
+  [#01] dump_bpf_prog+0x11b6c       -> dump_bpf_prog+0xd230
+  [#00] dump_bpf_prog+0xd340        -> brbe_snapshot_branch_stack+0x0     (arm_brbe.c:814)
+
+                   el0t_64_sync+0x168
+                   el0t_64_sync_handler+0x98
+                   el0_svc+0x28
+                   do_el0_svc+0x4c
+                   invoke_syscall.constprop.0+0x54
+    373us [-EINVAL] __arm64_sys_bpf+0x8
+                    __sys_bpf+0x87c
+                    map_create+0x120
+     95us [-EINVAL] array_map_alloc_check+0x8
+
+The FVP's BRBE buffer has 64 entries (BRBE supports 8, 16, 32, or
+64). Of these, entries #63-#17 (47) are consumed by the fentry BPF
+trampoline that ran before the function, and entries #11-#00 (12)
+are consumed by the fexit trampoline that runs after. Entry #00
+shows the very last branch recorded before BRBE is paused: the call
+into brbe_snapshot_branch_stack().
+
+The 5 useful entries (#16-#12) show the exact path taken inside
+array_map_alloc_check(). Record #14 shows a jump from line 56
+(bpf_map_attr_numa_node) to line 59 (the if-condition), and #13
+shows an immediate jump from line 59 (attr->max_entries == 0) to
+line 64 (return -EINVAL), skipping lines 60-63. This pinpoints
+max_entries==0 as the cause -- a diagnosis impossible with stack
+traces alone.
+
+[1] 856c02dbce4f ("bpf: Introduce helper bpf_get_branch_snapshot")
+[2] https://github.com/anakryiko/retsnoop
+[3] https://lore.kernel.org/all/20260810133540.1947118-1-puranjay@kernel.org/
+
+Puranjay Mohan (3):
+  arm64: Add raw variants of local_daif_save() and local_daif_restore()
+  perf/arm64: Add BRBE support for bpf_get_branch_snapshot()
+  selftests/bpf: Adjust entry thresholds for ARM64 BRBE
+
+ arch/arm64/include/asm/daifflags.h            |  41 +++++-
+ arch/arm64/kernel/suspend.c                   |   7 +-
+ drivers/perf/arm_brbe.c                       | 135 ++++++++++++++----
+ drivers/perf/arm_brbe.h                       |   9 ++
+ drivers/perf/arm_pmuv3.c                      |   5 +-
+ .../bpf/prog_tests/get_branch_snapshot.c      |  28 ++--
+ 6 files changed, 175 insertions(+), 50 deletions(-)
+
+
+base-commit: 03a2e393994ca27567fe060e066806589c547fbc
+-- 
+2.53.0-Meta
+
