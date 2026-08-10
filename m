@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B9C3E7630;
-	Mon, 10 Aug 2026 16:46:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2981742B736;
+	Mon, 10 Aug 2026 16:46:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786380413; cv=none; b=f4ym8ZmCgi6KDBt8Pn0uRRazb5gdB/O8dgS+jNrQ6+8ixY1UT/DfmVFSgu/YOVs8XVjWVu2aBNHsHcJ8nJrDQ/M8rdrAnaGde31lMw2sfPeIG7b3epk3CVY9AfKf9bFPrYiB5jey8Er3nS0tP55nUKJ8aSigQZ0BWCDBh2Zu0Ho=
+	t=1786380417; cv=none; b=FYGMZJindK+T/sqZAsrAGZQKtDsWWrWa3MaFFcUI84qsvCiCu/3OvTjolqdMg/Tr9gYySrKTNpuditYpewJoDKH+hRhRz+LdzN4kpoZVtIHRMHeLmFLDb4mDKMAembfgjopt6dvU5058/RLmyGa8Z5hcd82j9bifyqcuX3nqmfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786380413; c=relaxed/simple;
-	bh=jMWeY4GawSIr1Rkzmx2SUb2AGne5vFgqll8NAZ0t3Fo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S0JtWGcssv28MjG2/HC2hZJ8qFxBjrPiM68sbPpnTtyk34OUrp0G9bZbV6v8o5qSGhB17kDM6F8E0C6FKg7FnDylyQG5cFcMBCvbDu+4KMpv7ZjzILaPXFv8BVVp+kOKFrkUI0IKdKvz0Q+5LnwsWKcqQp9jE4OCeR9NtBmELKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X9O6VICh; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786380417; c=relaxed/simple;
+	bh=rlVkEnZhSJm2h0cc27O1cWgfHaeRA7zb7QQnYshho+A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MpdUYEi+xrljntNcwV8FH//4FZ5O05pIsjwXTUMbVI+frJzHUAD0dTLnu80bGz76CUl4fFmOlguEghCL0lHwAOy4JvR/wvGwor8z8vzefs78C25poVYjcB2OMCYU95TOGQGS7k6gXsiZAAp6p0p5zo5TfZQWgbL9y/+Rtzap0CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UVBZJ4LB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X9O6VICh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0B071F000E9;
-	Mon, 10 Aug 2026 16:46:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UVBZJ4LB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C8BD1F00A3D;
+	Mon, 10 Aug 2026 16:46:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786380412;
-	bh=rFsFgCndf80VKqU0oQDmLBTIZ1f8ThfYd5kLifor2hc=;
-	h=From:To:Cc:Subject:Date;
-	b=X9O6VIChw3jvTf/bG7i8CTNr5RHW7Gr8N0rZhB6YZfQZqnlUyVt7Eq1ibAqAUFbbO
-	 mO4Y9ONP+nz5bG6UmGUmj7yyA+KK7f8wtAwbbO+6icRJs7BCJJ58uAdXK6dPtss1kk
-	 6a/Nsi8eMXimgayca9fi+gJDKllqmukshKrK6f/d1700D3m1kQF8zd4+uwp4w9/qmm
-	 98YJrjiRZaZo4SZaESbeetUGzmykWfm4vUWxzc09CxZW0s3M89hXY5nJ8MY3FSIHiy
-	 hBlIADFwZHGVPdA4KNg7kEcVmZxtf+nak/TZxSskcoL/3GvYEQ41kn99OtdupbCEyg
-	 KbtKB+qEY1WNA==
+	s=k20260515; t=1786380415;
+	bh=BJm1Z9xZ0d8T/x30s5rEX7Wpd/wxL/yzuR113JZ+N2k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=UVBZJ4LBmAqMcuNy4QTwNkP9Hd82xX+auqNQuNoTeezY1tYQ6cfYnTUmI+Mq9wduN
+	 ULOi3Gb6t0hTHlZduxRAdRJXwzAwAxiVDb4UzbzqzmU8FO9vD74lyTmK1iBcMhj0wB
+	 p0aGX91KeSBMcGaS5PD8+Dq1cZmGdhvGqZUbZkF8eiL5Oz6O9whHrDsk9vZ5wkupMM
+	 pl3Ug3FH+DhuWbHCDKfRIpIzkgbBN4oQKlyhf3fy58BFaj8FkY7r0vflR725lzkUdj
+	 ja2d9QNXhC3KKLwZW1NNNtIfhQ2mUM/rTQPYMXDED8pQl62jMqmU4glbL8ivd/Lubr
+	 u7FTv1WcGzxYw==
 From: Puranjay Mohan <puranjay@kernel.org>
 To: Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>,
@@ -61,10 +62,12 @@ Cc: Puranjay Mohan <puranjay@kernel.org>,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	kernel-team@meta.com
-Subject: [PATCH v6 0/3] arm64: Add BRBE support for bpf_get_branch_snapshot()
-Date: Mon, 10 Aug 2026 09:46:17 -0700
-Message-ID: <20260810164622.1829843-1-puranjay@kernel.org>
+Subject: [PATCH v6 1/3] arm64: Add raw variants of local_daif_save() and local_daif_restore()
+Date: Mon, 10 Aug 2026 09:46:18 -0700
+Message-ID: <20260810164622.1829843-2-puranjay@kernel.org>
 X-Mailer: git-send-email 2.53.0
+In-Reply-To: <20260810164622.1829843-1-puranjay@kernel.org>
+References: <20260810164622.1829843-1-puranjay@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -73,212 +76,141 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changelog:
-v5: https://lore.kernel.org/all/20260616155716.2631508-1-puranjay@kernel.org/
-Changes in v6:
-- Split the two perf/core patches out into their own series [3]. They
-  fix bugs of their own and do not depend on this one.
-- Add raw_local_daif_save() and raw_local_daif_restore(), so the
-  snapshot can mask exceptions without trace_hardirqs_off() evicting
-  the records it is about to read (new patch 1).
-- Rework the snapshot. Clear PMCR_EL0.E across the BRBFCR_EL1
-  read-modify-write so that a freeze cannot set PAUSED behind the saved
-  value, and unpause before restarting the counters, since a paused
-  BRBE cannot freeze for its own overflow handler (James Clark).
-- Skip the pause entirely when BRBE is disabled or already frozen, and
-  invalidate only when the snapshot was the one to pause it.
-- Run valid_brbe_version() before masking exceptions; the static call
-  is only reached from BPF programs, which run with migration disabled.
-- Fold cpu_has_brbe() into valid_brbe_version() and drop the
-  arm_brbe_ prefix from the snapshot callback (James Clark).
-- Derive the selftest skip threshold from the waste and hit limits it
-  depends on, so the two cannot drift apart.
+local_daif_save() unconditionally calls trace_hardirqs_off(), and
+local_daif_restore() the matching trace_hardirqs_on(). A caller already
+in a hardirqs-off context, or one that must not run tracing code between
+masking exceptions and its next step, has no way to opt out.
 
-v4: https://lore.kernel.org/all/20260527121207.2312181-1-puranjay@kernel.org/
-Changes in v5:
-- Rework patch 2: drop the UAPI union. Instead rename the helper to perf_clear_branch_entry() and
-  clear the entry with a single
-  	*br = (struct perf_branch_entry){ }.
-  This stays kernel-internal, with no changes to the uapi/ or tools/ headers (James Clark).
-- Add an isb() to the BRBCR_EL1 == 0 early-exit in the snapshot, for consistency with the other
-  two exit paths (bpf-ci).
-- Add Rob Herring's Reviewed-by to patch 3
+cpu_suspend() is one such caller and already carries a comment asking for
+this. Sampling the BRBE branch record buffer is another: the tracing
+calls generate branches that evict the records about to be read.
 
-v3: https://lore.kernel.org/all/20260413185740.3286146-1-puranjay@kernel.org/
-Changes in v4:
-- Fix leaking branch records when scheduled task has an unrelated perf event (Sashiko)
-- Update tools/include/uapi/linux/perf_event.h as well for patch 2
-- Introduce cpu_has_brbe() and use it in
-  arm_brbe_snapshot_branch_stack(0 to make sure we don't run on a CPU
-  without BRBE.
-- Add explicit isb() after after writing to SYS_BRBFCR_EL1.
-- Rebase on latest arm64 tree.
+Split the tracing out into raw_local_daif_save() and
+raw_local_daif_restore(), and convert cpu_suspend() to the raw save with
+a lockdep_assert_irqs_disabled() for the precondition it now relies on.
+Its restore stays traced, to re-arm the irqsoff tracer for the resume
+path. The PMR unmasking cpu_suspend() needs is in raw_local_daif_mask(),
+so it is unaffected.
 
-v2: https://lore.kernel.org/all/20260318171706.2840512-1-puranjay@kernel.org/
-Changes in v3:
-- Move NULL pmu_ctx fix from arm_pmuv3.c to perf core (Leo Yan)
-- Use union to clear branch entry bitfields instead of per-field
-  zeroing (Leo Yan)
-- Remove per-CPU brbe_active flag; check BRBCR_EL1 == 0 instead (Rob
-  Herring)
-- Remove redundant valid_brbidr() check in snapshot path (Rob Herring)
-- Introduce for_each_brbe_entry() iterator to deduplicate bank
-  iteration (Rob Herring)
-- Include perf core maintainers (Leo Yan, Rob Herring)
+Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
+---
+ arch/arm64/include/asm/daifflags.h | 41 +++++++++++++++++++++++++-----
+ arch/arm64/kernel/suspend.c        |  7 ++---
+ 2 files changed, 36 insertions(+), 12 deletions(-)
 
-v1: https://lore.kernel.org/all/20260313180352.3800358-1-puranjay@kernel.org/
-Changes in v2:
-- Rebased on arm64/for-next/core
-- Add per-CPU brbe_active flag to guard against UNDEFINED sysreg access
-  on non-BRBE CPUs in heterogeneous big.LITTLE systems.
-- Fix pre-existing bug in perf_clear_branch_entry_bitfields() that missed
-  zeroing new_type and priv bitfields, added as a separate patch with
-  Fixes tags (new patch 2).
-- Use architecture-specific selftest threshold (#if defined(__aarch64__))
-  instead of raising the global threshold, to preserve x86 regression
-  detection.
-
-RFC: https://lore.kernel.org/all/20260102214043.1410242-1-puranjay@kernel.org/
-Changes from RFC:
- - Fix pre-existing NULL pointer dereference in armv8pmu_sched_task()
-   found by Leo Yan during testing (patch 1)
- - Pause BRBE before local_daif_save() to avoid branch pollution from
-   trace_hardirqs_off()
- - Use local_daif_save() to prevent pNMI race from counter overflow
-   (Mark Rutland)
- - Reuse perf_entry_from_brbe_regset() instead of duplicating register
-   read logic, by making it accept NULL event (Mark Rutland)
- - Invalidate BRBE after reading to maintain record contiguity for
-   other consumers (Mark Rutland)
- - Adjust selftest wasted_entries threshold for ARM64 (patch 3)
- - Tested on ARM FVP with BRBE enabled
-
-This series enables the bpf_get_branch_snapshot() BPF helper on ARM64
-by implementing the perf_snapshot_branch_stack static call for ARM's
-Branch Record Buffer Extension (BRBE).
-
-bpf_get_branch_snapshot() [1] allows BPF programs to capture hardware
-branch records on-demand from any BPF tracing context. This was
-previously only available on x86 (Intel LBR) since v5.16. With BRBE
-available on ARMv9, this series closes the gap for ARM64.
-
-Usage model
------------
-
-The helper works in conjunction with perf events. The userspace
-component of the BPF application opens a perf event with
-PERF_SAMPLE_BRANCH_STACK on each CPU, which configures the hardware
-to continuously record branches into BRBE (on ARM64) or LBR (on x86).
-A BPF program attached to a tracepoint, kprobe, or fentry hook can
-then call bpf_get_branch_snapshot() to snapshot the branch buffer at
-any point. Without an active perf event, BRBE is not recording and
-the buffer is empty.
-
-On-demand branch snapshots from BPF are useful for diagnosing which
-specific code path was taken inside a function. Stack traces only show
-function boundaries, but branch records reveal the exact sequence of
-jumps, calls, and returns within a function -- making it possible to
-identify which specific error check triggered a failure, or which
-callback implementation was invoked through a function pointer.
-
-For example, retsnoop [2] is a BPF-based tool for non-intrusive
-mass-tracing of kernel internals. Its LBR mode (--lbr) creates per-CPU
-perf events with PERF_SAMPLE_BRANCH_STACK and then uses
-bpf_get_branch_snapshot() in its fentry/fexit BPF programs to capture
-branch records whenever a traced function returns an error.
-
-Consider debugging a bpf() syscall that returns -EINVAL when creating
-a BPF map with invalid parameters. Running retsnoop on an ARM64 FVP
-with BRBE to trace the bpf() syscall and array_map_alloc_check():
-
-  $ retsnoop -e '*sys_bpf' -a 'array_map_alloc_check' --lbr=any \
-             -F -k vmlinux --debug full-lbr
-  $ simfail bpf-bad-map-max-entries-array  # in another terminal
-
-Output of retsnoop:
-
-  --- fentry BPF program (entries #63-#17) ---
-
-  [#63-#59] __htab_map_lookup_elem: hash table walk with memcmp        (hashtab.c)
-  [#58] __htab_map_lookup_elem+0x98  -> dump_bpf_prog+0xc850           (hashtab.c:750)
-  [#57-#55] ... dump_bpf_prog internal branches ...
-  [#54] dump_bpf_prog+0xcab8        -> bpf_get_current_pid_tgid+0x0    (helpers.c:225)
-  [#53] bpf_get_current_pid_tgid+0x1c -> dump_bpf_prog+0xcabc          (helpers.c:225)
-  [#52-#51] ... dump_bpf_prog -> __htab_map_lookup_elem ...
-  [#50-#47] __htab_map_lookup_elem: htab_map_hash (jhash2), select_bucket
-  [#46-#42] lookup_nulls_elem_raw: hash chain walk with memcmp         (hashtab.c:717)
-  [#41] __htab_map_lookup_elem+0x98  -> dump_bpf_prog+0xcaf8           (hashtab.c:750)
-  [#40-#37] ... dump_bpf_prog -> bpf_ktime_get_ns ...
-  [#36] bpf_ktime_get_ns+0x10       -> ktime_get_mono_fast_ns+0x0      (helpers.c:178)
-  [#35-#32] ktime_get_mono_fast_ns: tk_clock_read -> arch_counter_get_cntpct
-  [#31] ktime_get_mono_fast_ns+0x9c -> bpf_ktime_get_ns+0x14           (timekeeping.c:493)
-  [#30] bpf_ktime_get_ns+0x18       -> dump_bpf_prog+0xcd50            (helpers.c:178)
-  [#29-#25] ... dump_bpf_prog internal branches ...
-  [#24] dump_bpf_prog+0x11b28       -> __bpf_prog_exit_recur+0x0       (trampoline.c:1190)
-  [#23-#17] __bpf_prog_exit_recur: rcu_read_unlock, migrate_enable     (trampoline.c:1195)
-
-  --- array_map_alloc_check (entries #16-#12) ---
-
-  [#16] dump_bpf_prog+0x11b38       -> array_map_alloc_check+0x8       (arraymap.c:55)
-  [#15] array_map_alloc_check+0x18  -> array_map_alloc_check+0xb8      (arraymap.c:56)
-        . bpf_map_attr_numa_node       . bpf_map_attr_numa_node
-  [#14] array_map_alloc_check+0xbc  -> array_map_alloc_check+0x20      (arraymap.c:59)
-        . bpf_map_attr_numa_node
-  [#13] array_map_alloc_check+0x24  -> array_map_alloc_check+0x94      (arraymap.c:64)
-  [#12] array_map_alloc_check+0x98  -> dump_bpf_prog+0x11b3c           (arraymap.c:82)
-
-  --- fexit trampoline overhead (entries #11-#00) ---
-
-  [#11] dump_bpf_prog+0x11b5c       -> __bpf_prog_enter_recur+0x0      (trampoline.c:1145)
-  [#10-#03] __bpf_prog_enter_recur: rcu_read_lock, migrate_disable     (trampoline.c:1146)
-  [#02] __bpf_prog_enter_recur+0x114 -> dump_bpf_prog+0x11b60          (trampoline.c:1157)
-  [#01] dump_bpf_prog+0x11b6c       -> dump_bpf_prog+0xd230
-  [#00] dump_bpf_prog+0xd340        -> brbe_snapshot_branch_stack+0x0     (arm_brbe.c:814)
-
-                   el0t_64_sync+0x168
-                   el0t_64_sync_handler+0x98
-                   el0_svc+0x28
-                   do_el0_svc+0x4c
-                   invoke_syscall.constprop.0+0x54
-    373us [-EINVAL] __arm64_sys_bpf+0x8
-                    __sys_bpf+0x87c
-                    map_create+0x120
-     95us [-EINVAL] array_map_alloc_check+0x8
-
-The FVP's BRBE buffer has 64 entries (BRBE supports 8, 16, 32, or
-64). Of these, entries #63-#17 (47) are consumed by the fentry BPF
-trampoline that ran before the function, and entries #11-#00 (12)
-are consumed by the fexit trampoline that runs after. Entry #00
-shows the very last branch recorded before BRBE is paused: the call
-into brbe_snapshot_branch_stack().
-
-The 5 useful entries (#16-#12) show the exact path taken inside
-array_map_alloc_check(). Record #14 shows a jump from line 56
-(bpf_map_attr_numa_node) to line 59 (the if-condition), and #13
-shows an immediate jump from line 59 (attr->max_entries == 0) to
-line 64 (return -EINVAL), skipping lines 60-63. This pinpoints
-max_entries==0 as the cause -- a diagnosis impossible with stack
-traces alone.
-
-[1] 856c02dbce4f ("bpf: Introduce helper bpf_get_branch_snapshot")
-[2] https://github.com/anakryiko/retsnoop
-[3] https://lore.kernel.org/all/20260810133540.1947118-1-puranjay@kernel.org/
-
-Puranjay Mohan (3):
-  arm64: Add raw variants of local_daif_save() and local_daif_restore()
-  perf/arm64: Add BRBE support for bpf_get_branch_snapshot()
-  selftests/bpf: Adjust entry thresholds for ARM64 BRBE
-
- arch/arm64/include/asm/daifflags.h            |  41 +++++-
- arch/arm64/kernel/suspend.c                   |   7 +-
- drivers/perf/arm_brbe.c                       | 135 ++++++++++++++----
- drivers/perf/arm_brbe.h                       |   9 ++
- drivers/perf/arm_pmuv3.c                      |   5 +-
- .../bpf/prog_tests/get_branch_snapshot.c      |  28 ++--
- 6 files changed, 175 insertions(+), 50 deletions(-)
-
-
-base-commit: 03a2e393994ca27567fe060e066806589c547fbc
+diff --git a/arch/arm64/include/asm/daifflags.h b/arch/arm64/include/asm/daifflags.h
+index 795b351284673..c3adba0985bda 100644
+--- a/arch/arm64/include/asm/daifflags.h
++++ b/arch/arm64/include/asm/daifflags.h
+@@ -18,8 +18,7 @@
+ #define DAIF_MASK		(PSR_D_BIT | PSR_A_BIT | PSR_I_BIT | PSR_F_BIT)
+ 
+ 
+-/* mask/save/unmask/restore all exceptions, including interrupts. */
+-static __always_inline void local_daif_mask(void)
++static __always_inline void raw_local_daif_mask(void)
+ {
+ 	WARN_ON(system_has_prio_mask_debugging() &&
+ 		(read_sysreg_s(SYS_ICC_PMR_EL1) == (GIC_PRIO_IRQOFF |
+@@ -34,6 +33,12 @@ static __always_inline void local_daif_mask(void)
+ 	/* Don't really care for a dsb here, we don't intend to enable IRQs */
+ 	if (system_uses_irq_prio_masking())
+ 		gic_write_pmr(GIC_PRIO_IRQON | GIC_PRIO_PSR_I_SET);
++}
++
++/* mask/save/unmask/restore all exceptions, including interrupts. */
++static __always_inline void local_daif_mask(void)
++{
++	raw_local_daif_mask();
+ 
+ 	trace_hardirqs_off();
+ }
+@@ -53,18 +58,29 @@ static __always_inline unsigned long local_daif_save_flags(void)
+ 	return flags;
+ }
+ 
+-static __always_inline unsigned long local_daif_save(void)
++static __always_inline unsigned long raw_local_daif_save(void)
+ {
+ 	unsigned long flags;
+ 
+ 	flags = local_daif_save_flags();
+ 
+-	local_daif_mask();
++	raw_local_daif_mask();
+ 
+ 	return flags;
+ }
+ 
+-static __always_inline void local_daif_restore(unsigned long flags)
++static __always_inline unsigned long local_daif_save(void)
++{
++	unsigned long flags;
++
++	flags = raw_local_daif_save();
++
++	trace_hardirqs_off();
++
++	return flags;
++}
++
++static __always_inline void __local_daif_restore(unsigned long flags, bool trace)
+ {
+ 	bool irq_disabled = flags & PSR_I_BIT;
+ 
+@@ -72,7 +88,8 @@ static __always_inline void local_daif_restore(unsigned long flags)
+ 		(read_sysreg(daif) & (PSR_I_BIT | PSR_F_BIT)) != (PSR_I_BIT | PSR_F_BIT));
+ 
+ 	if (!irq_disabled) {
+-		trace_hardirqs_on();
++		if (trace)
++			trace_hardirqs_on();
+ 
+ 		if (system_uses_irq_prio_masking()) {
+ 			gic_write_pmr(GIC_PRIO_IRQON);
+@@ -116,10 +133,20 @@ static __always_inline void local_daif_restore(unsigned long flags)
+ 
+ 	write_sysreg(flags, daif);
+ 
+-	if (irq_disabled)
++	if (irq_disabled && trace)
+ 		trace_hardirqs_off();
+ }
+ 
++static __always_inline void local_daif_restore(unsigned long flags)
++{
++	__local_daif_restore(flags, true);
++}
++
++static __always_inline void raw_local_daif_restore(unsigned long flags)
++{
++	__local_daif_restore(flags, false);
++}
++
+ /*
+  * Called by synchronous exception handlers to restore the DAIF bits that were
+  * modified by taking an exception.
+diff --git a/arch/arm64/kernel/suspend.c b/arch/arm64/kernel/suspend.c
+index c41724a40b756..461948ad15ec8 100644
+--- a/arch/arm64/kernel/suspend.c
++++ b/arch/arm64/kernel/suspend.c
+@@ -117,14 +117,11 @@ int cpu_suspend(unsigned long arg, int (*fn)(unsigned long))
+ 	 * updates to mdscr register (saved and restored along with
+ 	 * general purpose registers) from kernel debuggers.
+ 	 *
+-	 * Strictly speaking the trace_hardirqs_off() here is superfluous,
+-	 * hardirqs should be firmly off by now. This really ought to use
+-	 * something like raw_local_daif_save().
+-	 *
+ 	 * This also unmasks interrupts in PMR in order to reliably
+ 	 * resume if we're using pseudo-NMIs.
+ 	 */
+-	flags = local_daif_save();
++	lockdep_assert_irqs_disabled();
++	flags = raw_local_daif_save();
+ 
+ 	/*
+ 	 * Function graph tracer state gets inconsistent when the kernel
 -- 
 2.53.0-Meta
 
