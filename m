@@ -1,76 +1,126 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B851F3F4128;
-	Mon, 10 Aug 2026 15:10:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E36F41378F;
+	Mon, 10 Aug 2026 15:44:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786374656; cv=none; b=kmMVEzT0fRNTi7NAuejHlvnFbQcJvWPcxHgzFvWgcqzBo/HGINf190B/lUinc4LdCW6sNKdOked6yvtzYKWbxGPMnDGhL+TKEHZ2e0TruW18zai7DlZEt8tyS7H7lD+/sssBWU1SBgQwUigREciaEy9tS8+1ccNz8BdQqPijQYM=
+	t=1786376691; cv=none; b=O+2qrd1UwKUbD2OlZXAMicS/Ac0EPtbkFdiL2FesVtQYxvKj4bShDSaL6N01F+j/nS56Up4L7HTipsb0CEYBjahcQ/14J5v+Hr2127KS/3TX5B9V8WuPN7nxQRai8OhUq9pO2+T1WSdgvYyVq+UzlENojxeh4OMC6cFj45KA7Ic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786374656; c=relaxed/simple;
-	bh=OOIIvQavrAI7WDVApTU74y9Gh8QynbaCFHbTh+7lwEE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EUrrefaNpxYBA8Ha6hAilixwSfg3tZqtRVTDmzoyUwNNUI4AWM9HNcKmm0+huDhz4yqlq7svN4oziz5kRA8ZST+dgKGZVIHzV+kCtzYn1m65hs2dI75B0uVyrjKWyQ7tiMvGoCh8q44d1TTnS8yx1xZyNByXqhE1GN2Zzz8P/S4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jF8fta5j; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786376691; c=relaxed/simple;
+	bh=8aJFYO9kpGumhYCAuDt5NTpT7vfDC2GlYIwigTXV0RE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bx2v5i4NG7+Fckfc2GjD/Tt8V3F8HBDQ2XnhY2Iw6IkW7Eb1Dt1QVlZL15ode1sxnUzYs+XVmxcRLi2Nfk64QndBJEcAjFnJnh46Pb+Gn0aZDeXva08GXiieZfH9W5ShKL1tb3bIZE1ByZwG+4P66o2V3bx/bbqGvDFDhg6RiEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGfk3oFB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jF8fta5j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A5DF1F000E9;
-	Mon, 10 Aug 2026 15:10:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGfk3oFB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F0B31F000E9;
+	Mon, 10 Aug 2026 15:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786374655;
-	bh=jmQRvX1k1SiKuSCh+skMmpVu8Z7eNcE8mftGlIJOuk8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jF8fta5j/+/mrM3hVm4vX69fI1bUZxljfWcwWwLlrbTYVwhzgYQLijGA8xol4fxrT
-	 ymOxLPxU0YM+Df7HzHy40vOpGPdhA2Y/+Uqrh3eDT+8ydsYYwFyvVaCPUj/58Nw6hc
-	 UrUqCb3juBU7LblPWvsqWlwTK7y1eApb69j/im0bYqVnTtHbXCJ/MHwm4aTWz4XHvA
-	 Jb+Pyq/9guNk7AV1Q4V+iXY1Scpmt8Sxu/I/+28Y7OfxNNurhcH+7iYAAod+s9++Lf
-	 L8LINXKHQre61zJW8Gi4haetO0sHYI40UNG2PWJViSF9UHnCrRbUeEU4/qhuF5vLc/
-	 p9+4ZzsbZT38A==
-Date: Mon, 10 Aug 2026 16:10:48 +0100
-From: Will Deacon <will@kernel.org>
-To: Leo Yan <leo.yan@arm.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Mike Leach <mike.leach@arm.com>,
+	s=k20260515; t=1786376689;
+	bh=pVbqaCP1O6Y46Iz1gY61tGQUGke8nZMrAcM8E+uLQiI=;
+	h=From:To:Cc:Subject:Date;
+	b=iGfk3oFBPMR8Q11jjikjx/EuOA5GrKhaTwNI3/qZ8hAerVoo6p9ys/i6C3Lftwt6C
+	 HRrPPu4VbitMRVfXfPOFOpd+sj13p/oCOOTEUui0SazfuaUaafS8IXXG7qWhV2lRvy
+	 Z3zOGq1BekZb1pB9g2GnqFEsLyGkcGxslSWavcJD5TGH5XWdunPQ24Mgg5CyqagO31
+	 RGt1lCbL33eGau8JupRIh27xanGSFiG6mUkruLjYSP0gH6u+FH3ZpnSK/T0FsHBK2h
+	 +t778YHqZFPx+KQBb6CEnsYxDPtV5P+ziOnFd3aHBXHzBfvV+gA+F/SP2A4ztc+k9W
+	 S+fx3NxdM4hpg==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
 	James Clark <james.clark@linaro.org>,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Tamas Petz <tamas.petz@arm.com>,
-	Tamas Zsoldos <tamas.zsoldos@arm.com>,
-	Michiel van Tol <michiel.vantol@arm.com>,
-	Dev Jain <dev.jain@arm.com>, David Hildenbrand <david@kernel.org>,
-	Yabin Cui <yabinc@google.com>, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf: arm_spe: Prefer large AUX mappings
-Message-ID: <annp-BdTviQoH6vy@willie-the-truck>
-References: <20260810-perf_aux_trace_large_granule-v1-0-03306c9339e3@arm.com>
- <20260810-perf_aux_trace_large_granule-v1-2-03306c9339e3@arm.com>
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCHES v2 0/7] perf build: Add target to install devel packages needed to build perf
+Date: Mon, 10 Aug 2026 12:44:30 -0300
+Message-ID: <20260810154437.15946-1-acme@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260810-perf_aux_trace_large_granule-v1-2-03306c9339e3@arm.com>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 10, 2026 at 03:44:42PM +0100, Leo Yan wrote:
-> Commit 18049c8cff9c ("perf/aux: Allocate non-contiguous AUX pages by
-> default") made the AUX allocator use order-0 pages by default unless a
-> PMU explicitly asks for contiguous allocations.
+Hi,
 
-But that commit specifically calls out SPE as benefitting from
-non-contiguous pages:
+This series adds a 'make -C tools/perf install-build-deps' target that
+installs the development packages needed to build perf on Fedora,
+Ubuntu, Debian, and RHEL family distributions.
 
-  "For instance, ARM SPE and TRBE operate with virtual pages, and
-   Coresight ETR allocates a separate buffer. For these PMUs,
-   allocating contiguous AUX pages unnecessarily exacerbates memory
-   fragmentation. This fragmentation can prevent their use on
-   long-running devices."
+Building perf requires many devel packages (libelf, libdw, libunwind,
+numactl, libtraceevent, libbpf, etc.). Today users must iteratively
+install packages as each feature check fails. The new target installs
+the full set in one go.
 
-so why doesn't passing PERF_PMU_CAP_AUX_PREFER_LARGE reintroduce the
-problems that 18049c8cff9c was trying to solve?
+The first patch makes the compiler probe run at parse time only when the
+tool is installed, so a missing C++ compiler or clang no longer fails
+the feature tests prematurely. The second patch adds the framework (make
+target, distro detection, package manager drivers). The next four
+patches add distro-specific package mappings derived from the headers
+each feature test requires. The last patch removes leftover feature test
+entries for cxx and clang support removed in 56b11a2126bf2f42 ("perf
+bpf: Remove support for embedding clang for compiling BPF events (-e
+foo.c)").
 
-Will
+Supported distros (validated in containers, host never modified):
+  - Fedora 44 (dnf, 29 packages)
+  - Ubuntu 26.04 (apt, 29 packages)
+  - Debian 13 (apt, reuses Ubuntu mapping)
+  - Centos 10 (dnf, 29 packages)
+
+On all distros, a clean O= build after running the target enabled every
+feature the distro provides (excluding deliberately unmapped deprecated
+packages). Re-running the target is a no-op.
+
+What changed from v1:
+
+  - AlmaLinux is now detected by its actual /etc/os-release ID
+    ("almalinux" instead of "alma") in detect_distro() [sashiko review
+    of PATCH 7/7];
+  - packages that no enabled repo provides (e.g. zlib and the versioned
+    JDK/jvmti packages on the RHEL family) are no longer silently
+    omitted from the missing packages list, they are reported at the end
+    of the run, as stated in the commit message [sashiko review of
+    PATCH 7/7];
+  - the temporary file used to track those missing packages is now
+    removed by a trap, so it does not leak if the script is interrupted
+    [sashiko review of PATCH 7/7];
+  - the leftover feature test removal patch now carries the suggested
+    Fixes: tag for 56b11a2126bf2f42, with the author of that commit
+    Cc'd [Ian Rogers review of PATCH 6/7].
+
+This series was developed with assistance from Opencode
+(deepseek-v4-flash-free and glm-4-7-flash-ollama-local) for code
+analysis, patch generation, and commit message composition.
+
+Regards,
+
+- Arnaldo
+
+Arnaldo Carvalho de Melo (7):
+  tools build: Only probe the compiler at parse time when it is installed
+  perf build: Add install-build-deps framework to install devel packages
+  perf build: install-build-deps: add Fedora devel package mapping
+  perf build: install-build-deps: add Ubuntu devel package mapping
+  perf build: install-build-deps: add Debian devel package mapping
+  perf build: Remove leftover feature tests for removed cxx and clang support
+  perf build: install-build-deps: add RHEL family devel package mapping
+
+ tools/build/Makefile.feature               |   2 -
+ tools/build/feature/Makefile               |  14 -
+ tools/perf/Makefile.perf                   |  21 +-
+ tools/perf/scripts/install-build-deps.sh   | 577 +++++++++++++++++++++++++++++++
+ tools/scripts/Makefile.arch                |   2 +-
+ tools/scripts/Makefile.include             |   2 +-
+ 6 files changed, 597 insertions(+), 21 deletions(-)
+
+base-commit: bf10e6ee2ac3034c9068e03eed418fd16961984e
+
