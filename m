@@ -1,178 +1,173 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08D9D3E3145
-	for <linux-perf-users@vger.kernel.org>; Mon, 10 Aug 2026 14:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786370699; cv=pass; b=NE68QKBXX3+wEho2KjMO0wIophHnZW6fPSDK/dHGGfXPqMpsF7vVw/D2LcLO3PbqVMbhIIAPbzQBZLg/Z92oYSBDLIHAdTa/Bn/0KxuYNVqM5P5bLxcevdnFKj1sZdTHZQynv5rhVi1CpFllEo21tg0qDY1E/xoBYVbI6wxzbiI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786370699; c=relaxed/simple;
-	bh=aQefb5KGUUtBew9fCgJ/HSm0at5w/RtJ4qdMArEgBms=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dln2Q3BWyqGoJumDyHSKQD8mevUkz0egVfsA9X6tyY2TOVu1OH0r0lZb2Iy1IztCBD9ahQFspS5ezpLGvnkJuCjH2HoEu5r9xWFspetvLDGigv0ntEzTOc+qq7FCw7KCv+QZxEcgWzyfJzPQ/ok2FzvMl48ftcDVCkY5rb9dC8o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A0Rdg8OL; arc=pass smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68A973FD121;
+	Mon, 10 Aug 2026 14:45:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786373121; cv=none; b=jyOiX8ZDY+v7hTJhPW21vxz/+xmnmrTYnXhcWLCZizqjwzgO6k2FR7Ubqju1fKqTac0KkVQbqIXzfr31UBIHUeiq8RM+3WLsxSRUFwKQONy+nRliU0cKg6DoADEr2yOVjT440azRpJzDwr6SByOsblt0iH0BTz68l86lQ0ujNyQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786373121; c=relaxed/simple;
+	bh=lR9RsWa9YwMGSZLK9zGUNTtHx75HhVKXKnB25jcbvgE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=d44NEGZiUNapd84PlZ9VU1JvuaVaWdmOAECNn7beu6wwqnh87lK+UtLo7y4QMmv1arVDURV+thWD7oUEqGv1E5Gp2mCp/XxshkIVaS6+vMOjFY4rGpy++NvKxXj9NGyiOmr6reCJBix76Nawq8BGMkUkn0WpbiL4ab/aTojuL5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=AxoTYWzl; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A0Rdg8OL"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6a0a4a17f91so2994254a12.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Aug 2026 07:04:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786370696; cv=none;
-        d=google.com; s=arc-20260327;
-        b=q+xwj0AGKvTMoqFw+ltnyOaL9m77fed6S0omCPd2a5OXXTHKPzQ5mR9v8CCf98W03x
-         1MQoV/StNxgJA5PKl6hkeJ7v9bsVWFx9kb8NsThMCuugEBaJt3OF2n3o1QLhBeXZhavb
-         bHio7W2X0tRrl6nez5qBhWJ9XYobWqy0PqzKkozToQnMxleBspDvZCdR8m4wQ/29Oefo
-         2vTCgdg8/ixz86P0j2XEuemrzuRI7g8tVSht1sFEGcwv9mwP4l/kal9zz7cs7tT5uytj
-         VHKuBuF7AkiP0IGGjJuITY2smIaDug7H0fhUC9FfKsWhk+q0Ul9aBkvW+mGvd2dLD1g7
-         MPzg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=rXErR0QDrrFQK5fNUe5J6pmYbKM/4pwmkmKBefRuoz0=;
-        fh=LQLdSW01h2ROUwNK2N5+UwHQ+4lE93qNu55uGrsD190=;
-        b=XEbQPnfp4UuU0IWQMWe6HHz2p2tYradIzXuwMehU3B2x/9HE4HdD0ZIYr75NMt1vXh
-         z19VZNzEW9kfdzz34LeStTwhFQ7zhJVZRQpWe0Vd+0cYRR0fPnKKseUvIJvFZjKfvjgf
-         9Go9Goj8PHLKlmzFo4lBxbxvk++7r4QqxfGTLomvI32ku2zEl50dcw64rmVFJclMttiH
-         cqYxMUyOy9FTZlbWAZ93jdic54WveB0Qv7J8XIAFJcIu6PYsvNNGazkGa+BmJEF6Vtdc
-         2bFFrfM5apwSNb0n7+/m0DOig9izgn6JNqzZTCTElAI5EGR2AMX7+WQBHXLhQYJSyV0a
-         Qguw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786370696; x=1786975496; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=rXErR0QDrrFQK5fNUe5J6pmYbKM/4pwmkmKBefRuoz0=;
-        b=A0Rdg8OLXwK8/HbarErIwN2gyK2KHHOKhgForv3iXhXBzI8GTB4QrVml67u++NHgnN
-         Wsc8x+ybChd4OFIu52k1kEZUBEjT8DyZIzQqxJxZgE9kgOqa8UQYd730rEpYjXz3tm9/
-         1OjvD96j1Zf46xQV2llqBBbOiHc0SC9e04BmpUDXVcRc/xuAs5ieV7KF8KH7XXoi7MOz
-         IydtcsnJki3ZaWiPgBGvxn4XYjJkbafAtjl+LfPRNm9IYD3eh7hF7bINeZDtb2dl/MEO
-         TqATcuehk7ljYMkIERTX8WRzbQ3FW+ueWOKZ4GKB7Ay3DP0s7DqEMmBhvy3/9/lW1EeX
-         h+Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786370696; x=1786975496;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=rXErR0QDrrFQK5fNUe5J6pmYbKM/4pwmkmKBefRuoz0=;
-        b=NkOad7kx92RAOKmWWccpIs5fAAlgoiQAQ85IRQXdjOWzLCDXCsZ0Hq0RMtuQMXJ7Qk
-         pW7L8WtyBCQhVmru2KzUbScjlSojZmreQIR6RbvOchN8ckCYFrrSpQTvgPjnWANjCawf
-         XkF8QNWScFKip5ArLK2RHA1PksQIaS3h6BxZeF2LTVftCU03wJ65TOx6I4GOggqgcGuB
-         0KNnmfeS/2iXlR6nQUQYKfuiPQUm77tBcb6VofctAeIH7FLt1kRU4pJ28nrgauwWdU81
-         ruG+YTrMyiZHt1+27EC1afo7b3vvLF1SHtIEhsJSPtFdowU9ZkiTQiUVYy6ZlnfF60Jl
-         nobA==
-X-Gm-Message-State: AOJu0YwOCxyFElISqePgFZQYYiKLL67/7ZtKkr9XbON9cY/zToDoeaKo
-	cHJOB5UoFi0PY5iFTP8bo19+6wHL2siL5nwGlluM6v+RiGUtueQcx44Bz42cH0fI40z5bObkVrt
-	NdWRP3LsR/+CcPgte/qVjxckWMHPjRPI=
-X-Gm-Gg: AR+sD102oqpYrSy8kLy4mIv7WApj107yXSc26nxEfhdVPGWEsYj3Tz6HtREgkwbE2c6
-	ERT/Eqb6+FlPtGeBSbww3mrlZww5PD1730iH7WFpv7iReYMMxOz8N1QZROiO0CzWLcsKsRQiR/6
-	u/Vu4lSmllN5twiStYungDk9Hx09PeP4eL0NpY0bGFAQ13iohZ9zF/s4l+85eOGgwBAYV4lQmdx
-	yYcK5Q7tuxsGttEPE/67wWwjsTJFW83ytXx8cgnTRvfZ7A3HrDqSxqRUEjTYoYZV5ecyzpSFaMq
-	XsW7XjL1en39l/UCr78BP95I7pzkb0P5wWKqmqMp9+V8btHdND3QeJbIcW6hPDw9DjD6tec=
-X-Received: by 2002:a17:907:8e96:b0:c12:83c9:d41 with SMTP id
- a640c23a62f3a-c20c67e6fd9mr99288466b.12.1786370696006; Mon, 10 Aug 2026
- 07:04:56 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="AxoTYWzl"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8B8A14BF;
+	Mon, 10 Aug 2026 07:45:14 -0700 (PDT)
+Received: from e132581.arm.com (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1DA73F86F;
+	Mon, 10 Aug 2026 07:45:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1786373118; bh=lR9RsWa9YwMGSZLK9zGUNTtHx75HhVKXKnB25jcbvgE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=AxoTYWzlqZ9uJ75aYFaVtYy/LyFM2LLrAz7GLETJWL8pLcew1mk1Krc7Va32Nu3Vc
+	 TUldT2lGrYc/GCzjeh2wvhR+MwR3loipooBFeh6sp/f2o6vSoVXpA6AVqiQhbClkek
+	 kXcQpYi1T6JoUmggV36KjkLdtvqR81o4uFXdlM2w=
+From: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH 0/2] perf/arm: Prefer large AUX mappings for CoreSight and
+ SPE
+Date: Mon, 10 Aug 2026 15:44:40 +0100
+Message-Id: <20260810-perf_aux_trace_large_granule-v1-0-03306c9339e3@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260810133540.1947118-1-puranjay@kernel.org> <20260810133540.1947118-2-puranjay@kernel.org>
- <20260810140306.C1D721F000E9@smtp.kernel.org>
-In-Reply-To: <20260810140306.C1D721F000E9@smtp.kernel.org>
-From: Puranjay Mohan <puranjay12@gmail.com>
-Date: Mon, 10 Aug 2026 15:04:42 +0100
-X-Gm-Features: AUfX_mzW0QQd2n7jimcEIfkUiJMD2Japtfg5KrPbI5Jksmx_wgWQIhzjSqo4ogE
-Message-ID: <CANk7y0gUp5-Rqt-CCmfh1W5o2sMHW+Z=oGrjLYXdS81ZLE-TaA@mail.gmail.com>
-Subject: Re: [PATCH v7 1/3] perf/core: Fix NULL pmu_ctx passed to pmu->sched_task()
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANjjeWoC/33NywqDMBCF4Vcps25KYlslXfU9ioRJnGjAGxMVi
+ /juTYVuu/zP4jsbROJAER6nDZiWEMPQp1DnE7gG+5pEqFJDJrNcFqoQI7E3OK9mYnRkWuSaTM3
+ Yzy2JSturdE7d7B0hESOTD+vBv8rUTYjTwO/jbVHf9Qfr//CihBTe5V5n3ha51U/k7uKGDsp93
+ z97TzZ3xgAAAA==
+X-Change-ID: 20260717-perf_aux_trace_large_granule-d9b30cc14b5a
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Will Deacon <will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+ Mike Leach <mike.leach@arm.com>, James Clark <james.clark@linaro.org>, 
+ Anshuman Khandual <anshuman.khandual@arm.com>, 
+ Mark Rutland <mark.rutland@arm.com>, Tamas Petz <tamas.petz@arm.com>, 
+ Tamas Zsoldos <tamas.zsoldos@arm.com>, 
+ Michiel van Tol <michiel.vantol@arm.com>, Dev Jain <dev.jain@arm.com>, 
+ David Hildenbrand <david@kernel.org>, Yabin Cui <yabinc@google.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1786373116; l=5308;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=lR9RsWa9YwMGSZLK9zGUNTtHx75HhVKXKnB25jcbvgE=;
+ b=KJpm1mhSgiId0zE1EwYPY8OlCcnVxqUYKBM4Qm7YQcSWrEUKPrbzGm8Ub/iZ5Ui/lO/3LmjFM
+ PF+YeIGIt4nDQCgcQfeBdhkPXfcnpiKQ8hXLAeWIrgL3ash+XJduUjp
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-On Mon, Aug 10, 2026 at 3:03=E2=80=AFPM <sashiko-bot@kernel.org> wrote:
->
-> Thank you for your contribution! Sashiko AI review found 1 potential issu=
-e(s) to consider:
->
-> Pre-existing issues:
-> - [High] Per-CPU PMUs missing `sched_task` callbacks during context switc=
-hes if a task context exists.
-> --
->
-> --- Patch [1]: [PATCH v7 1/3] perf/core: Fix NULL pmu_ctx passed to pmu->=
-sched_task() ---
-> commit 333df3e02c2d6b54e5bd528f91779820677d118e
-> Author: Puranjay Mohan <puranjay@kernel.org>
->
-> perf/core: Fix NULL pmu_ctx passed to pmu->sched_task()
->
-> perf_pmu_sched_task() returns early when cpuctx->task_ctx is set, and
-> cpc->task_epc is only non-NULL while a task context is scheduled in on
-> this CPU. This patch passes &cpc->epc instead, which is the CPU-wide
-> context for this PMU, avoiding a NULL pointer dereference.
->
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index ba5bd6a78fe7b..c372213ffc883 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -3907,7 +3907,7 @@ static void __perf_pmu_sched_task(struct perf_cpu=
-_pmu_context *cpc,
-> >       perf_ctx_lock(cpuctx, cpuctx->task_ctx);
-> >       perf_pmu_disable(pmu);
-> >
-> > -     pmu->sched_task(cpc->task_epc, task, sched_in);
-> > +     pmu->sched_task(&cpc->epc, task, sched_in);
->
-> [Severity: High]
-> This isn't a bug introduced by this patch, but does the early return in
-> perf_pmu_sched_task() skip callbacks for CPU-wide PMUs?
->
-> If a system-wide PMU event is active (sched_cb_usage > 0), and a context
-> switch occurs to or from a task with an active perf event (meaning
-> cpuctx->task_ctx is set), perf_pmu_sched_task() returns early:
->
-> kernel/events/core.c:perf_pmu_sched_task() {
->         ...
->         /* cpuctx->task_ctx will be handled in perf_event_context_sched_i=
-n/out */
->         if (prev =3D=3D next || cpuctx->task_ctx)
->                 return;
->         ...
-> }
->
-> It seems to rely on perf_event_context_sched_out/in() to handle the
-> callbacks. However, perf_ctx_sched_task_cb() only iterates over the task'=
-s
-> pmu_ctx_list:
->
-> kernel/events/core.c:perf_ctx_sched_task_cb() {
->         ...
->         list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
->                 cpc =3D this_cpc(pmu_ctx->pmu);
->
->                 if (cpc->sched_cb_usage && pmu_ctx->pmu->sched_task)
->                         pmu_ctx->pmu->sched_task(pmu_ctx, task, sched_in)=
-;
->         }
->         ...
-> }
->
-> If the task's perf event is for a different PMU (like a software event), =
-the
-> CPU-wide PMU won't be in ctx->pmu_ctx_list. Does this mean the CPU-wide
-> PMU's sched_task() callback is completely skipped during the context swit=
-ch,
-> potentially corrupting hardware tracing or leaking branch records across =
-tasks?
->
-> >
-> >       perf_pmu_enable(pmu);
-> >       perf_ctx_unlock(cpuctx, cpuctx->task_ctx);
+Since the commit:
 
+ 18049c8cff9 ("perf/aux: Allocate non-contiguous AUX pages by default")
 
-Next patch fixes this exact issue.
+it changed the AUX buffer allocator to allocate AUX pages page-by-page
+(order=0) unless a PMU explicitly asks for contiguous allocations via
+the capability flag PERF_PMU_CAP_AUX_PREFER_LARGE. The goal was to make
+AUX allocation more memory-friendly by default, because not all PMUs
+require physically contiguous AUX pages and large contiguous allocations
+can contribute to fragmentation on long-running systems.
+
+However, Arm SPE and CoreSight/TRBE rely on page-table translation when
+writing trace data to memory. With page-by-page AUX allocation, a large
+AUX buffer is mapped with many small mappings. This increases TLB
+pressure, in practice this can increase trace-buffer latency due to
+table translation walks (TTW) and contribute to trace discontinuities.
+
+This series restores large AUX allocation for Arm CoreSight and SPE by
+setting PERF_PMU_CAP_AUX_PREFER_LARGE.
+
+This is intended to work together with the mm large-mapping series [1].
+That series allows vmap() to map physically contiguous pages with
+larger granules. With this series, perf first tries larger-order AUX
+allocations, and the vmap() code can then create larger mappings for the
+contiguous chunks.
+
+The fragmentation concern from commit 18049c8cff9c should not block this
+opt-in. PERF_PMU_CAP_AUX_PREFER_LARGE is a preference, not a hard
+requirement. The AUX allocator already falls back to smaller orders when
+a high-order allocation fails. So this series gives Arm trace PMUs the
+performance benefit when large chunks are available.
+
+The comparison below uses a baseline that already includes the mm
+large-mapping series [1]. "Baseline" means that the mm series is applied
+but this Arm PMU series is not. "Large AUX" means the same kernel plus
+this series. Some configurations to mitigate noise during test:
+
+  1) The tests were run with CPU10 isolated with the kernel parameter
+     "isolcpus=10".
+  2) CPU10 was used as the traced CPU, the PMU counter CPU, and the
+     workload CPU. The perf control tasks were pinned to CPU2 so that
+     they did not add extra work on CPU10.
+  3) Each test was run for 10 iterations, and the tables report the
+     average counter values across those runs.
+
+The results show that using larger AUX mappings reduces the TLB pressure.
+This is mainly visible in the refill events: CoreSight/TRBE shows a
+large drop in l2d_tlb_refill and a smaller reduction in l1d_tlb_refill,
+while SPE also reduces l2d_tlb_refill. The dtlb_walk event also drops in
+both tests, which shows fewer data TLB walks after the AUX buffer can be
+mapped with larger granules.
+
+ETM sparse branch delay (cs_etm, AUX 1GB)
+
+  taskset -c 2 perf stat -C 10 -e cycles:u,instructions:u,dtlb_walk:u,l1d_tlb:u,l1d_tlb_refill:u,l2d_tlb_refill:u \
+    -- taskset -c 2 perf record -C 10 -m ,1G -e cs_etm// \
+    -- taskset -c 10 ./sparse_branch_delay.elf
+
+ |                | Baseline  | Large map |            |         |
+ | Metric         | Avg.      | Avg.      | Delta      | Change  |
+ |----------------+-----------+-----------+------------+---------|
+ | dtlb_walk      |      72.8 |      63.9 |       -8.9 | -12.23% |
+ | l1d_tlb        |   7,434.4 |   1,982.2 |   -5,452.2 | -73.34% |
+ | l1d_tlb_refill |     163.7 |     148.2 |      -15.5 |  -9.47% |
+ | l2d_tlb_refill | 161,884.9 |     513.1 | -161,371.8 | -99.68% |
+
+SPE dd memory copy (arm_spe, AUX 512MB)
+
+  taskset -c 2 perf stat -C 10 -e cycles:u,instructions:u,dtlb_walk:u,l1d_tlb:u,l1d_tlb_refill:u,l2d_tlb_refill:u \
+    -- taskset -c 2 perf record -C 10 -m ,512M -e arm_spe_0/ts_enable=1,pa_enable=1,period=64,min_latency=0/ \
+    -- taskset -c 10 dd if=/dev/zero of=/dev/shm/dd_mem_test bs=1M count=1024 status=progress
+
+ |                | Baseline  | Large map |            |         |
+ | Metric         | Avg.      | Avg.      | Delta      | Change  |
+ |----------------+-----------+-----------+------------+---------|
+ | dtlb_walk      |   1,760.2 |   1,387.9 |     -372.3 | -21.15% |
+ | l1d_tlb        | 257,312.4 | 251,460.9 |   -5,851.5 |  -2.27% |
+ | l1d_tlb_refill |  15,921.9 |  15,933.6 |       11.7 |  +0.07% |
+ | l2d_tlb_refill |   4,285.0 |   2,796.5 |   -1,488.5 | -34.74% |
+
+Note that after setting PREFER_LARGE for CoreSight and SPE, the existing
+AUX trace drivers either prefer large pages or, in the case of Intel
+BTS/PT, use the stronger AUX_NO_SG constraint. We can refactor this
+later by either dropping PREFER_LARGE entirely or reversing the flag if
+a driver needs discrete pages. For now, keep PREFER_LARGE to preserve
+flexibility in the allocation policy.
+
+[1] https://lore.kernel.org/linux-mm/20260715120813.3609949-1-jiangwen6@xiaomi.com/
+
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+Dev Jain (1):
+      coresight: perf: Prefer large AUX mappings
+
+Leo Yan (1):
+      perf: arm_spe: Prefer large AUX mappings
+
+ drivers/hwtracing/coresight/coresight-etm-perf.c | 3 ++-
+ drivers/perf/arm_spe_pmu.c                       | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+---
+base-commit: db2ddb87143519e20a95aa36c60b36107b736a58
+change-id: 20260717-perf_aux_trace_large_granule-d9b30cc14b5a
+
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
+
