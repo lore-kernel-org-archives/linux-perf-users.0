@@ -1,48 +1,48 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67EA3399D10;
-	Mon, 10 Aug 2026 05:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EC853264F7;
+	Mon, 10 Aug 2026 05:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786339262; cv=none; b=PgOesb7/ncMCa7vmM7Q5Jb51/0TMBgFYp4RG3ZGr2+Bs037S3WBcqL2KHbgTKHCpLwe7dyOi4w/CGkLYz1//yVBj/1MeVM4D+OatHTeToAPIPi7hPeMukm9aEa6Tg2mgncQsruuciMgq5HaJ7hkLXFFbR5lM6sUzgKH5t6BZZ4E=
+	t=1786339650; cv=none; b=BaQJxj3ntfjl39W6e0SxNb0UsHOX2f78Nu3CRmQIB8AurLvntBNqOS+Is9a5MN2WIi2w3F1wkECBWTv4lHtCGyUQrYgIqPzonP7JyUuHV1ll7SHi75Tg/oJzCUoL/0RBrAhYz28c1eFoXslLmHA/SjDQn+iJhjR2HAq6ZUjirM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786339262; c=relaxed/simple;
-	bh=2+EZDb9w/zV3Oiis8rORw9FJnmPd6QcP/OSohznCbmk=;
+	s=arc-20240116; t=1786339650; c=relaxed/simple;
+	bh=pK1ymIkZEVwFk8GRtKAsI9k5R19MbytvWuuWvsNJs0c=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ii4gglXlTTuvCPrWbez+rVTI9XzfLI48aw2NWsa4gmIawoEjyOYSSTc30UDHaci9Ii7rEyPJC3SUsKthTo25XoHcQlatwyc7IzWdf3/hzTOHXHcRpVKrQrCZXES3NObDgsi7/IipLVKULWHu8a6+SbmscYQxf6F/hgfUmWu4QLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c2THeLIh; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=WQoL110cCAyalYnVna13h67+9Sxod4tG9a5iSRtpICdjPd+5fGlI6kMqnlNvXOh7inT/M/nfKxho3RcgFTnhoI5ZEEBSEozcp3FVc/ws90mr5OXf7hscV8Gi+fqDuH+jHaKc1DsT+UXqVoQ0NJKuXy661OzPAJZdF6pcTu8x2gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bO1RPdyt; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c2THeLIh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bO1RPdyt"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786339258; x=1817875258;
+  t=1786339649; x=1817875649;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=2+EZDb9w/zV3Oiis8rORw9FJnmPd6QcP/OSohznCbmk=;
-  b=c2THeLIhZQpoqbrC83ebNC65CAQPFjZ0j5vEuRtvn2qHj4OhaGaDz3yO
-   tD+3JnabqxY1GeES4SgBoOgzgHxs+xs+4RmEt9bm+3YKKr+3i10Vjm8hO
-   0wk8L2HhBWZU1noP3hyKPwX+hG8yVm2EhkSzGuO5r23lq8x3VoCp3RDbT
-   SzP6q1tx33dJPxFNxfNWMBdXZBfZe1i3QRolp3wf9wQ9yCK8E4bmxDdEX
-   C1HFodfVbXt/YzA2wddMPhaUVj/NTbUJtZ6hek5q8zKdb3YAxiW4Ty7/c
-   BDWA7dHqI5BzwmcqFPVARHYKY4VAFTv+HN0ymHaskhLRdjfj1QAXUA+Lh
-   A==;
-X-CSE-ConnectionGUID: hMAxkEw7TeevLeYqH72hYQ==
-X-CSE-MsgGUID: VJwzB+3YRzarBrtb+Yqktw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11870"; a="86785074"
+  bh=pK1ymIkZEVwFk8GRtKAsI9k5R19MbytvWuuWvsNJs0c=;
+  b=bO1RPdytbEFYVlFsshusqkarn7FphARnZ5VlZmZVfY9JRTiJZ7Jw8dd/
+   xwak0a8ecAsZn+PaUKVjqIo8Ex9PqH2jPE4TQKYLP9A+aYGmGuHCYQV8B
+   /9fP6A8bZ0KaHRYGqSY6Tl0+S+V7wtM0rdJZta8hKK/6BHDVFs/5bVCXO
+   hT/DgHE/kmOEPEJ6wZ5yFYyxOfX4OHbzfa3gtilGG7vJyo01f6Kuf29j5
+   96ph8kbeLJ7wxg81+VZHBTvYdZXeByY2B/PqmYhiIaEiwo6IJL2zipm/s
+   Zzstw5A+jRKWuuC09VuBNCPlS51ejq52F7rzu8h5Z8ldBVrmfaNPHt7/h
+   g==;
+X-CSE-ConnectionGUID: Q98Q/3NaQwq/t203nYczsw==
+X-CSE-MsgGUID: p9iDQttKSZSunXMau2ZDEA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11870"; a="86873839"
 X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
-   d="scan'208";a="86785074"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2026 22:20:57 -0700
-X-CSE-ConnectionGUID: cBU3ctNyTL+4bq6ifPJayw==
-X-CSE-MsgGUID: cHAmxY7OS12EuprmnckjJA==
+   d="scan'208";a="86873839"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2026 22:27:28 -0700
+X-CSE-ConnectionGUID: cp+QLbBBSECbGHMUsM0VQA==
+X-CSE-MsgGUID: dvmrlgtnSRGJcm7ht+FS3A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
-   d="scan'208";a="262421494"
+   d="scan'208";a="261645875"
 Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by orviesa008.jf.intel.com with ESMTP; 09 Aug 2026 22:20:54 -0700
+  by orviesa010.jf.intel.com with ESMTP; 09 Aug 2026 22:27:25 -0700
 From: Jiebin Sun <jiebin.sun@intel.com>
 To: namhyung@kernel.org
 Cc: acme@kernel.org,
@@ -61,12 +61,12 @@ Cc: acme@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Jiebin Sun <jiebin.sun@intel.com>
-Subject: [PATCH v8 9/9] perf c2c: document function view in perf-c2c man page
-Date: Mon, 10 Aug 2026 13:26:47 +0800
-Message-ID: <20260810052647.588867-10-jiebin.sun@intel.com>
+Subject: Re: [PATCH v7 2/9] perf c2c: add function view browser skeleton
+Date: Mon, 10 Aug 2026 13:34:00 +0800
+Message-ID: <20260810053401.590185-1-jiebin.sun@intel.com>
 X-Mailer: git-send-email 2.52.0
-In-Reply-To: <20260810052647.588867-1-jiebin.sun@intel.com>
-References: <20260810052647.588867-1-jiebin.sun@intel.com>
+In-Reply-To: <anV3eQb6SzRnRksH@google.com>
+References: <20260806074217.2846596-1-jiebin.sun@intel.com> <20260806074217.2846596-3-jiebin.sun@intel.com> <anV3eQb6SzRnRksH@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -75,117 +75,24 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Describe the function view hierarchy (read-side function -> contending
-writer function -> shared cachelines), the per-level indentation, and the
-keys, with a worked example.
+Hi Namhyung,
 
-Document that reliable function attribution requires `iaddr` in
-`--coalesce`, that the reader and writer may be the same function, and why
-the coalesced function view cannot distinguish same-thread from
-different-thread accesses in that case. Also document that verbose mode
-includes code addresses in function rows.
+> I don't think it's a proper fix.  The c2c-function.o should belong to
+> libperf-ui.a.  Perhabs we can split libperf-tui.a and not link it to the
+> python module.  But still, it's better to move the common code into the
+> util directory.
 
-Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: James Clark <james.clark@linaro.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Falcon <thomas.falcon@intel.com>
-Reviewed-by: Tianyou Li <tianyou.li@intel.com>
-Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
----
- tools/perf/Documentation/perf-c2c.txt | 71 +++++++++++++++++++++++++++
- 1 file changed, 71 insertions(+)
+Thanks. I reworked this in v8 to keep c2c-function.o in libperf-ui.a and
+removed the v7 tools/perf/Build change.
 
-diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documentation/perf-c2c.txt
-index e57a122b8719..8775889bc0a3 100644
---- a/tools/perf/Documentation/perf-c2c.txt
-+++ b/tools/perf/Documentation/perf-c2c.txt
-@@ -365,6 +365,77 @@ TUI OUTPUT
- The TUI output provides interactive interface to navigate
- through cachelines list and to display offset details.
- 
-+Pressing the 'TAB' key in the cacheline view switches to the function
-+view.  The function view shows a three-level hierarchy of the symbolized
-+entries retained in the cacheline view, organized around functions rather
-+than cachelines.  Levels 1 and 2 normally show function names, while level 3
-+shows cacheline addresses.  Lower levels are indented beneath their parents.
-+Verbose mode also includes code addresses in function rows, and code addresses
-+remain available in the per-cacheline detail view ('d').
-+
-+The function view requires `iaddr` in the cacheline coalescing fields.  If
-+`--coalesce` omits it, TAB reports that the view is unavailable rather than
-+attributing already-coalesced samples to an arbitrary function.
-+
-+  Level 1: the read-side function, sorted by Cycles % (estimated load
-+           cycles: HITM, peer-snoop and other-load cycles)
-+  Level 2: the functions sampled writing the shared lines read by the
-+           level-1 function, sorted by store count.  This can be the same
-+           function when it has both read and write samples
-+  Level 3: the specific cachelines shared by the reader/writer pair
-+
-+The Cycles % value is the function's share of event-provided load
-+latency/weight estimates from cacheline-detail entries retained in the
-+current view.  It can include non-HITM and non-peer loads coalesced into
-+entries that pass the C2C filter, so it is not a pure contention-cycle
-+percentage.  The share is relative to the functions and entries retained
-+for the current report and is not comparable across recordings or different
-+`--coalesce` settings.
-+
-+The store count on a level-1 row is the number of sampled stores by writers
-+shown in the function view into the cachelines that function reads, including
-+stores from the same function.  It decomposes into the level-2 writer rows;
-+each level-2 count in turn decomposes into that writer's stores on its level-3
-+cachelines.  A level-3 count is therefore not the cacheline's total store
-+count.  The level-1 value is not the number of stores made by the reader and
-+is not additive across level-1 rows: two functions reading the same line each
-+carry the stores into that line.
-+
-+Each function aggregates all of its code addresses into a single entry,
-+and a level-2 writer aggregates all of its shared cachelines, so a
-+reader/writer pair is a single row with its total shown -- there is no
-+need to sum a writer's traffic across cachelines by hand.
-+
-+In the function view the 'd' key opens the detail view of the selected
-+level-3 cacheline, 'e'/'+' expands or collapses the current entry, and 'TAB',
-+'ESC', 'q' or Ctrl-C returns to the cacheline view.
-+
-+For example, with the first two read-side functions collapsed and
-+dequeue_pushable_task expanded to show the functions writing the lines it
-+reads -- two of which are further expanded to their individual cachelines:
-+
-+  Shared Data Functions Table     (19 entries, sorted on Cycles %)
-+     Cycles    Store
-+          %    count  Function / Contending function / Cacheline
-+  ----------------------------------------------------------------------
-+  +  35.67%      876  + [k] cpupri_set
-+  +  24.31%      424  + [k] pull_rt_task
-+  -  16.53%      555  - [k] dequeue_pushable_task
-+                 145    - [k] pull_rt_task
-+                 145        0xff2d0082809da080
-+                 139    - [k] enqueue_pushable_task
-+                  70        0xff2d00a2071f9640
-+                  69        0xff2d0082809da000
-+
-+Here dequeue_pushable_task pays 16.53% of the estimated read-side load-cycle
-+cost.  Its store count decomposes into its level-2 writers, and each writer's
-+count decomposes into its level-3 cachelines: pull_rt_task's 145 stores fall
-+on a single line, while enqueue_pushable_task's 139 stores split across two
-+lines (70 and 69).  A writer can be the same function as the reader when it
-+has both read and write samples; after cacheline coalescing and
-+function-level grouping, the view cannot distinguish same-thread accesses
-+from different threads running the same function.
-+
- For details please refer to the help window by pressing '?' key.
- 
- CREDITS
--- 
-2.52.0
+builtin-c2c.c now passes the cacheline histograms, the --coalesce field
+list, symbol_full, and the cacheline detail callback through
+struct c2c_function_view_args. The browser no longer references the
+command-private c2c instance or perf_c2c__browse_cacheline().
 
+The shared c2c types and formatter callbacks are now in util/c2c.h and
+util/c2c.c. struct perf_c2c and the command state remain private to
+builtin-c2c.c.
+
+Thanks,
+Jiebin
