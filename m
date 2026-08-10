@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B373141A55C;
-	Mon, 10 Aug 2026 15:44:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6E2B41A55C;
+	Mon, 10 Aug 2026 15:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786376694; cv=none; b=ktc1mV9pGNjVZ0b2eWM94JVaziAjrv51PsgDcV1XXOF3ic7952px7h9CzXgleUfbBO3hAZNZ25E1J79LMIpTV7MMqHsN2jkj+Z8KqjoWevEZLoG4xlaspN+t+gtjtKAQIOXnIbL8GLL0UrsBWkvxFpcLtgwj8PMrzhF+BvgxyHc=
+	t=1786376699; cv=none; b=khANAivoLmyLnArZ1sNxQtmDaoDUQtFXl0I1Q73qApaD7ckdAFu3fEApqsbYSFjL3yGEai/l6GnWIdGUTgcSHQEAvfrTtC71Ok69heRXYtKvSNKt3y/v+CXwQa0CnreJjWyEEkdFLQGiVBM3XX7Hgh8Fqe2VdixwC2nJ+gTaNlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786376694; c=relaxed/simple;
-	bh=qykzTSewci9esBlVxQBueg/DrKwmCyH/1yhDffAV0zw=;
+	s=arc-20240116; t=1786376699; c=relaxed/simple;
+	bh=NTCmI97+wHSazukTdGUBlzlpAXCdxPAPjKHTwqJXRIU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YYYe9hC73jZsMW5d/bY6zbbqIEh/wZZ3+NoIe0mzefadLm+EHRGcX2q6MnJNyIIdZl4ffEJ52JNnLt5x48P1uTwuVxZZR6m8AVx8a2/a824XqDpkK3ulZWbAQ9wdnikw4bkuSiBeqqdcitL3H33r0EwoQxL3a1XmYr8WYWt2VfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ENZkS5wL; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=rjNM6frEOblmCRFmpcXS8zI/FY3KqkHsC/DwMpVFtf/5u1SUzZm2FCwUpUOeYnkAaxseH/cwZILbxI67r7iC/k8DdJ99tUjGbvWX06ha6hpHhRDOzncD/cb9GtsstHY2QsskNhB0e2dEO9YiQy1Tx9ouJvo++aX+jSyVc/Oh23c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HOR4xOMR; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ENZkS5wL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F21E1F00A3D;
-	Mon, 10 Aug 2026 15:44:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HOR4xOMR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E87951F000E9;
+	Mon, 10 Aug 2026 15:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786376693;
-	bh=GrJ7rfAhix+7NfVhXf1iNwwqNGxcqdolfXZK+/krpY0=;
+	s=k20260515; t=1786376697;
+	bh=fmO12G687x64Ai1QEVza4hHpYkAJ8mtWAImMhRliO/E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ENZkS5wLr3VldhLcwhzWxpHLTcSnVPa/0LpxM2bJwyOKDxwjyARjr/XMTEYICX499
-	 RCudUZJGELEB9r0tkxTPN0k/xnH+GPaycxQqBASnXwuz3nNwMbip2Ve2Mwt30U7duR
-	 8dUFSamSuhxkDpOyUqU9aS8OE8vDwG9ZZYuy59QPqCmyYOjgsp0Gyg6mzVAXkdhiOY
-	 0OGTdySob95PVB0vF2+ST/67zfU2/a3wQrUsSNaxwXFn2fU40wDI0C0SNKb4vO7sN5
-	 Gku2zWFFTcTSbTRR3bOVTPBntxx8AmO4g79TDxXGJkDuIOuGAtMEGbKGnzbRWnqxXK
-	 +gYC3ka57JzOA==
+	b=HOR4xOMRI52/8Tml2II/XUveTuZ5mkUrMTc7VwL/PyXrApiGgqr6FvIwtLgXLooUt
+	 BnXHNoWdCIMtF7B+mDpBybdfXVDPYYzFk3t79Vmo6q5LWYYBPJTFmKvVKEaz+vszmb
+	 0Hf3x/EHWERuWs5q9Gevd2rg88YcAajfw2MKLZP6ICbRoKe60+Ou239lmS0j5DlL//
+	 T+GOZautEffeYe9L7fqFUwh3pSxR2GgzAuKtpvLqUj3IMtaTKPBku1kF29zxkD0E8j
+	 rug7fcAPuV6vWbFPtXwgQQfL+NUUcLqM2rcs0EoBR9oEa7vuP6Veap/698P3ClfAWR
+	 W90Fp6WnUa4Mw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 1/7] tools build: Only probe the compiler at parse time when it is installed
-Date: Mon, 10 Aug 2026 12:44:31 -0300
-Message-ID: <20260810154437.15946-2-acme@kernel.org>
+Subject: [PATCH 2/7] perf build: Add install-build-deps framework to install devel packages
+Date: Mon, 10 Aug 2026 12:44:32 -0300
+Message-ID: <20260810154437.15946-3-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260810154437.15946-1-acme@kernel.org>
 References: <20260810154437.15946-1-acme@kernel.org>
@@ -55,67 +55,290 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Two parse-time probes still invoke $(CC) unconditionally:
+Installing the development packages needed to build perf is
+error-prone on a fresh distro install: the packages are scattered
+across the feature tests in tools/build/feature/, each checking for a
+specific header/library, and the build only tells you what's missing
+after failing a check.
 
-- LP64 in tools/scripts/Makefile.arch, probing with
-  $(CC) -E -x c, pulled in twice by tools/perf/Makefile.perf;
-- CC_NO_CLANG in tools/scripts/Makefile.include, probing with
-  $(CC) -dM -E -x c /dev/null.
+This series adds a 'make -C tools/perf install-build-deps' target to
+install them in one go, deriving the package list from the feature tests
+themselves.
 
-In the corner case where gcc is not yet installed, the very setup the
-install-build-deps target, added in the next patch of this series, is
-meant for, these probes make even targets that never compile parse-time
-spew errors like:
+This commit adds the framework, on top of the parse-time compiler
+probe guard from the previous commit:
 
-    /bin/sh: 1: gcc: not found
-    /bin/sh: 1: gcc: not found
-    /bin/sh: 1: gcc: not found
+- the install-build-deps target in tools/perf/Makefile.perf, exempted
+  from the config/feature detection pass, since it must run in a fresh
+  container, before gcc or pkg-config exist, to install them;
+- the install-build-deps.sh script, with --list, --dry-run and
+  --distro options, distro detection (Fedora and Ubuntu), dnf and
+  apt-get drivers, root/passwordless-sudo handling, and the base
+  packages common to any build: compiler, C++ compiler, make, flex,
+  bison, libc and kernel headers, python3-setuptools (needed by the
+  python binding) and rust (checked by the rust feature test);
+- the parse-time probes for optional tools, like pkg-config, use
+  'command -v' with stderr discarded, so a fresh container without
+  them gets no 'which: no pkg-config in (...)' spew from make;
+- the script does not rely on 'set -e': its error paths are explicit,
+  since the make target runs it via $(SHELL), where a shebang option
+  would be ignored anyway, so direct and make-driven runs behave the
+  same.
 
-Guard both probes with 'command -v' using the first word of CC so a
-missing compiler is handled silently with the same result as a failing
-probe (CC_NO_CLANG and LP64 unset/0), and with no behavior change when
-the compiler is installed.
-
-Only the first word is consulted because CC may carry arguments such as
-'ccache gcc', and shell implementations differ in how 'command -v'
-handles multiple words (dash only checks the first, bash any of them),
-so validating the whole CC value would silently disable both probes on
-some make SHELLs.
+The per-feature mappings, from each feature test to the devel package
+providing its headers on a given distro, are added by the follow-up
+patches, one per distro, together with the validation of each mapping
+in a fresh container: until then the target installs just the base
+toolchain.
 
 Assisted-by: opencode:deepseek-v4-flash-free
 Signed-off-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/scripts/Makefile.arch    | 2 +-
- tools/scripts/Makefile.include | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/Makefile.perf                 |  20 ++-
+ tools/perf/scripts/install-build-deps.sh | 173 +++++++++++++++++++++++
+ 2 files changed, 190 insertions(+), 3 deletions(-)
+ create mode 100755 tools/perf/scripts/install-build-deps.sh
 
-diff --git a/tools/scripts/Makefile.arch b/tools/scripts/Makefile.arch
-index eabfe9f411d914b9..e0bca6808ec44ed8 100644
---- a/tools/scripts/Makefile.arch
-+++ b/tools/scripts/Makefile.arch
-@@ -38,7 +38,7 @@ ifeq ($(ARCH),loongarch64)
-        SRCARCH := loongarch
- endif
- 
--LP64 := $(shell echo __LP64__ | ${CC} ${CFLAGS} -E -x c - | tail -n 1)
-+LP64 := $(shell if command -v $(firstword ${CC}) >/dev/null 2>&1; then echo __LP64__ | ${CC} ${CFLAGS} -E -x c -; fi | tail -n 1)
- ifeq ($(LP64), 1)
-   IS_64_BIT := 1
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index acc6309a84a1eeb1..49a58d714e42dded 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -177,7 +177,7 @@ LD += $(EXTRA_LDFLAGS)
+ # Some distros provide the command $(CROSS_COMPILE)pkg-config for
+ # searching packges installed with Multiarch. Use it for cross
+ # compilation if it is existed.
+-ifneq (, $(shell which $(CROSS_COMPILE)pkg-config))
++ifneq (, $(shell command -v $(CROSS_COMPILE)pkg-config 2>/dev/null))
+   PKG_CONFIG ?= $(CROSS_COMPILE)pkg-config
  else
-diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
-index 46a3872b87624a7b..fff453aac187536e 100644
---- a/tools/scripts/Makefile.include
-+++ b/tools/scripts/Makefile.include
-@@ -98,7 +98,7 @@ else
-   $(call allow-override,LLVM_STRIP,llvm-strip)
- endif
+   PKG_CONFIG ?= pkg-config
+@@ -214,7 +214,12 @@ AWK     = awk
+ # non-config cases
+ config := 1
  
--CC_NO_CLANG := $(shell $(CC) -dM -E -x c /dev/null | grep -Fq "__clang__"; echo $$?)
-+CC_NO_CLANG := $(shell if command -v $(firstword $(CC)) >/dev/null 2>&1; then $(CC) -dM -E -x c /dev/null; fi | grep -Fq "__clang__"; echo $$?)
+-NON_CONFIG_TARGETS := clean python-clean TAGS tags cscope help
++# install-build-deps runs the install-build-deps.sh script, which
++# derives the package list from the feature test sources in
++# tools/build/feature/, so it needs neither the fixdep build nor a
++# config/feature detection pass: in a fresh container without gcc or
++# pkg-config those would fail before the script could install them.
++NON_CONFIG_TARGETS := clean python-clean TAGS tags cscope help install-build-deps
  
- # Some tools require bpftool
- SYSTEM_BPFTOOL	?= bpftool
+ ifdef MAKECMDGOALS
+ ifeq ($(filter-out $(NON_CONFIG_TARGETS),$(MAKECMDGOALS)),)
+@@ -748,6 +753,7 @@ help:
+ 	@echo '  HINT: use "prefix" or "DESTDIR" to install to a particular'
+ 	@echo '        path like "make prefix=/usr/local install install-doc"'
+ 	@echo '  install	- install compiled binaries'
++	@echo '  install-build-deps - install the development packages needed to build'
+ 	@echo '  install-doc	- install *all* documentation'
+ 	@echo '  install-man	- install manpage documentation'
+ 	@echo '  install-html	- install html documentation'
+@@ -892,6 +898,14 @@ install-bin: install-tools install-tests
+ 
+ install: install-bin try-install-man
+ 
++# Install the development packages needed to build perf, derived from the
++# feature tests in tools/build/feature/.  This first installs just the
++# base toolchain; per-distro package mappings are added by the follow-up
++# commits.  INSTALL_BUILD_DEPS_ARGS, when set, is passed to the script, so
++# extra options like --list, --dry-run or --distro can be given from make.
++install-build-deps:
++	$(Q)$(SHELL) $(srctree)/tools/perf/scripts/install-build-deps.sh $(INSTALL_BUILD_DEPS_ARGS)
++
+ install-python_ext:
+ 	$(PYTHON_WORD) util/setup.py $(python_setup_quiet) install --root='/$(DESTDIR_SQ)'
+ 
+@@ -960,7 +974,7 @@ endif
+ 
+ FORCE:
+ 
+-.PHONY: all install clean config-clean strip install-gtk
++.PHONY: all install install-build-deps clean config-clean strip install-gtk
+ .PHONY: shell_compatibility_test please_set_SHELL_PATH_to_a_more_modern_shell
+ .PHONY: .FORCE-PERF-VERSION-FILE TAGS tags cscope FORCE prepare bpf-skel-prepare
+ .PHONY: python_perf_target
+diff --git a/tools/perf/scripts/install-build-deps.sh b/tools/perf/scripts/install-build-deps.sh
+new file mode 100755
+index 0000000000000000..6b9a1142f32acf03
+--- /dev/null
++++ b/tools/perf/scripts/install-build-deps.sh
+@@ -0,0 +1,173 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++#
++# No 'set -e': the script uses explicit checks for its error paths, and
++# is also run via '$(SHELL) .../install-build-deps.sh' from the make
++# target in tools/perf/Makefile.perf, where a shebang option would be
++# ignored anyway, so direct and make-driven runs behave the same.
++#
++# Install the development packages needed to build tools/perf.
++#
++# The package set is derived from the feature tests in tools/build/feature/:
++# each feature test that perf may compile is mapped to the devel package
++# that provides the headers/libraries it checks, so that a subsequent
++# 'make -C tools/perf' build enables the corresponding perf features.
++#
++# This initial version installs the base toolchain needed by any build;
++# the per-feature package mapping is added, per supported distro, by the
++# follow-up patches in this series, which also validate each mapping in a
++# fresh container, so the host system is not modified.
++#
++# Usage: install-build-deps.sh [OPTIONS]
++#
++# Options:
++#    --list       list the packages that would be installed, then exit
++#    --dry-run    show the install command that would be run, without
++#                 running it
++#    --distro ID  force a distro: fedora, ubuntu (default: auto-detect)
++#    -h, --help   print this help message
++#
++# Requires root (or passwordless sudo) to actually install packages.
++
++set -u
++
++DISTRO=""
++
++help() {
++	cat <<EOF
++Usage: $(basename "$0") [--list] [--dry-run] [--distro ID] [-h|--help]
++
++Install the development packages needed to build tools/perf.
++
++Options:
++    --list      list the packages that would be installed, then exit
++    --dry-run   show the install command that would be run, without running it
++    --distro ID force a distro: fedora, ubuntu
++    -h, --help  print this help message
++EOF
++	exit 0
++}
++
++# ---------------------------------------------------------------------
++# Distro detection.  The install command that follows only differs in
++# the package manager, which here is keyed off the distro ID; the
++# per-feature package mapping is added per distro by the follow-up
++# patches.
++# ---------------------------------------------------------------------
++detect_distro() {
++	if [ -n "$DISTRO" ]; then
++		echo "$DISTRO"
++		return
++	fi
++	local id
++	id=$( . /etc/os-release && echo "${ID:-}" )
++	case "$id" in
++	fedora)			echo "fedora" ;;
++	ubuntu)			echo "ubuntu" ;;
++	# RHEL and its derivatives share most Fedora package names, but the
++	# mapping is only validated on Fedora, so don't auto-detect them.
++	rhel|centos|rocky|alma|ol) echo "" ;;
++	*)			echo "" ;;
++	esac
++}
++
++# Base packages needed by any perf build, regardless of feature tests:
++# compiler, libc headers, flex/bison for the parser, kernel headers
++# for UAPI headers with no in-tree copy, e.g. <linux/capability.h>, and
++# gcc-c++ (dnf) / g++ (apt) for the C++-based feature tests
++# (cxa-demangle, llvm, llvm-perf), compiled with $(CXX), and
++# pulls in libstdc++-devel / libstdc++-*-dev.
++# python3-setuptools is needed to build the python binding (perf's
++# util/setup.py uses it; without it binding is skipped with a warning).
++# rust is not a header-based feature test: test-rust.bin just checks
++# "$(RUSTC) --version" (tools/build/feature/Makefile), so it is mapped
++# here like the other toolchain packages.
++fedora_base_pkgs="gcc gcc-c++ make flex bison glibc-devel kernel-headers python3-setuptools rust"
++debian_base_pkgs="gcc g++ make flex bison libc6-dev linux-libc-dev python3-setuptools rustc"
++
++# ---------------------------------------------------------------------
++# Assemble the unique package list.  While the per-feature mapping is
++# being added per distro, only the base toolchain above is installed.
++# ---------------------------------------------------------------------
++package_set() {
++	local distro="$1" srcdir="$2"
++	case "$distro" in
++	fedora)	echo "$fedora_base_pkgs" ;;
++	ubuntu)	echo "$debian_base_pkgs" ;;
++	esac
++}
++
++# ---------------------------------------------------------------------
++# The install command proper for each supported package manager, plus
++# the command massaged for --dry-run.
++# ---------------------------------------------------------------------
++install_cmd() {
++	local distro="$1"; shift
++	case "$distro" in
++	fedora)
++		echo "dnf install -y $*"
++		;;
++	ubuntu)
++		# a fresh container has no package index, so update first.
++		echo "apt-get update && apt-get install -y $*"
++		;;
++	esac
++}
++
++main() {
++	local action="install"
++	local srcdir distro pkgs pkg cmd
++
++	while [ $# -gt 0 ]; do
++		case "$1" in
++		--list)		action="list"; shift ;;
++		--dry-run)	action="dry-run"; shift ;;
++		--distro)
++			[ $# -ge 2 ] || {
++				echo "error: --distro requires an argument (fedora, rhel, ubuntu, debian)" >&2
++				exit 1
++			}
++			DISTRO="$2"; shift 2 ;;
++		-h|--help)	help ;;
++		*)		echo "error: unknown argument: $1" >&2; exit 1 ;;
++		esac
++	done
++
++	srcdir=$(cd "$(dirname "$0")/../../.." && pwd)
++	distro=$(detect_distro)
++	case "$distro" in
++	fedora|ubuntu) ;;
++	*)
++		echo "error: unsupported distro (got '$distro'); the package mapping is not validated on other distros." >&2
++		exit 1
++		;;
++	esac
++
++	pkgs=$(package_set "$distro" "$srcdir")
++
++	case "$action" in
++	list)
++		echo "$pkgs" | tr ' ' '\n' | grep -v '^$' | sort
++		exit 0
++		;;
++	dry-run)
++		install_cmd "$distro" $pkgs
++		exit 0
++		;;
++	esac
++
++	echo "The following packages will be installed to enable perf features:"
++	echo "$pkgs" | tr ' ' '\n' | grep -v '^$' | sort | sed 's/^/  /'
++	echo
++	cmd=$(install_cmd "$distro" $pkgs)
++	if [ "$(id -u)" -eq 0 ]; then
++		sh -c "$cmd"
++	else
++		sudo sh -c "$cmd"
++	fi || {
++		echo "error: the install command failed, see the output above" >&2
++		exit 1
++	}
++}
++
++main "$@"
+\ No newline at end of file
 -- 
 2.55.0
 
