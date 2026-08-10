@@ -1,108 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F39842CAEF;
-	Mon, 10 Aug 2026 16:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 046A8431A5B;
+	Mon, 10 Aug 2026 17:42:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786380994; cv=none; b=i26CvXUrNknw4llZAzMqO95j2oAJukG7Xkwc8bHRYd09NhIBJZTDFgR+WHFi0sPPNxz5OewGBmsNkD1SYosT8rY+4AQAg/n1EojaNnKF4Q7M4xDoLP82GLFTkstvk5enZ33eMX0l8s4tF/zvCgK0McbOTxnXN9Wt75M4WYZJnyo=
+	t=1786383727; cv=none; b=qaJbV9SH9+D/gk6Or9rM97g2NRpJC1XuC16A6wZNqXScLzHaa4l499wMyrTLqRO2+hUdtb0ARQD4JscpRz60guF7QJegIfVDPlwNslbN2Oua0nFE555nXuEymBxMt7vDsADrmS/BTz8sIrm/k8/nflkRR67TOAkPjUN5dNtTr/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786380994; c=relaxed/simple;
-	bh=P4plBPhNTorj9RfVvO/yv1t8DXIcUFz1/WdCiHovbZQ=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=D5tl0pQ8NIqTDVW5iMSXdrdNSNS6upLmQ5PHmxcVc7q40SFFn9S+fyeh2kp3OdniTlGi4FKb9yJ3lnZlsDhNh++LG2PjR+bpmn/WWxC+vX0ZQGYDmE6ejA+VlK62ZWvh2pKROp8K5o5We2BLJ6d0P4B9iIsRRCOgtYLsoo2iWr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RTeyjm5N; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786383727; c=relaxed/simple;
+	bh=tOAcovZJNoPu8/+gOWGWNHqThToUKRwIs/Az9hkC42k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IzyEtlCVc7x4957aheO6JljX7zwjiQTrDk3gfG6G08rLV3GSHQVbXTrAsWO8qXkbvCgN18aLFSIfcIAK26jJAaRoNuwDasKz8dop+sHEVNCQix8jVQkxltTRRndjIg3Z1GdPzZwiVJnqQdeassLXkCNFFNhX0CCK740dqg6hat4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=jenvaetT; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RTeyjm5N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE96A1F000E9;
-	Mon, 10 Aug 2026 16:56:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786380992;
-	bh=Wo6nzazVGPIFcDs5c34oGuXZxGiBOjw8dD5RD0smpIQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RTeyjm5NuoyRc6W9LdgYnVJLMzikwyudcSTRSzWfdCXjWyK1yywfoLjTZBMysZXCS
-	 iT7CJTuyn1N5c5mgXa+B3wg9evz5zyU8XlWXoO90DrJXV5pk5hxT5FovEv9XREXt5Z
-	 IYIRbfnRMuwcCbBR6jRIs7VbubhzDG9YA1bBEsTRvr75eer5m5la+J9iJt9ddsehez
-	 9dAtjNYGoKQa+LIjNyUE29nDaECpiIwep8072xDwVHwoZA7QB8FmL98dJAkAl7nVOr
-	 bq5kijndqzZNdx+TbPW8q7UqBpYZUfEa/BcPKxt1ouEhE0RZkUbIzLrwzCjcCh2Cyt
-	 XH80LTCZqtzWw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 2/3] perf/arm64: Add BRBE support for
- bpf_get_branch_snapshot()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Puranjay Mohan" <puranjay@kernel.org>
-Cc: bpf@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260810164622.1829843-3-puranjay@kernel.org>
-References: <20260810164622.1829843-1-puranjay@kernel.org>
- <20260810164622.1829843-3-puranjay@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 10 Aug 2026 16:56:31 +0000
-Message-Id: <20260810165631.DE96A1F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="jenvaetT"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 523BA14BF;
+	Mon, 10 Aug 2026 10:41:58 -0700 (PDT)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8F383F632;
+	Mon, 10 Aug 2026 10:42:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1786383722; bh=tOAcovZJNoPu8/+gOWGWNHqThToUKRwIs/Az9hkC42k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jenvaetTCb8y9ElV9WBqbIvF86p+A1Lr7bOrNM/2D4ZrBq8cLTq8c7ai11RF+7fKS
+	 g61ehm+rmSMPufAMc/glZJRy8Z48tSZOXoLlmSgxZ97Zs1Lj9iSn6a1dtxUMVzc4dG
+	 PQhr+yc3WMV/hLCxhZTnZFiXL/SIV8sSYNXWANQw=
+Date: Mon, 10 Aug 2026 18:41:59 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: Will Deacon <will@kernel.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mike Leach <mike.leach@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Tamas Petz <tamas.petz@arm.com>,
+	Tamas Zsoldos <tamas.zsoldos@arm.com>,
+	Michiel van Tol <michiel.vantol@arm.com>,
+	Dev Jain <dev.jain@arm.com>, David Hildenbrand <david@kernel.org>,
+	Yabin Cui <yabinc@google.com>, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf: arm_spe: Prefer large AUX mappings
+Message-ID: <20260810174159.GC15499@e132581.arm.com>
+References: <20260810-perf_aux_trace_large_granule-v1-0-03306c9339e3@arm.com>
+ <20260810-perf_aux_trace_large_granule-v1-2-03306c9339e3@arm.com>
+ <annp-BdTviQoH6vy@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <annp-BdTviQoH6vy@willie-the-truck>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Missing `isb()` context synchronization barrier after writing to=
- the `PMCR_EL0` system register in `brbe_snapshot_branch_stack`.
---
+On Mon, Aug 10, 2026 at 04:10:48PM +0100, Will Deacon wrote:
+> On Mon, Aug 10, 2026 at 03:44:42PM +0100, Leo Yan wrote:
+> > Commit 18049c8cff9c ("perf/aux: Allocate non-contiguous AUX pages by
+> > default") made the AUX allocator use order-0 pages by default unless a
+> > PMU explicitly asks for contiguous allocations.
+> 
+> But that commit specifically calls out SPE as benefitting from
+> non-contiguous pages:
+> 
+>   "For instance, ARM SPE and TRBE operate with virtual pages, and
+>    Coresight ETR allocates a separate buffer. For these PMUs,
+>    allocating contiguous AUX pages unnecessarily exacerbates memory
+>    fragmentation. This fragmentation can prevent their use on
+>    long-running devices."
+> 
+> so why doesn't passing PERF_PMU_CAP_AUX_PREFER_LARGE reintroduce the
+> problems that 18049c8cff9c was trying to solve?
 
---- Patch [2]: [PATCH v6 2/3] perf/arm64: Add BRBE support for bpf_get_bran=
-ch_snapshot() ---
-commit a7708fa08fe97675c17bb6e7a2098acd91d49bfb
-Author: Puranjay Mohan <puranjay@kernel.org>
+The question is how "allocating contiguous AUX pages unnecessarily
+exacerbates memory fragmentation." The relevant information I could find
+is [1]:
 
-perf/arm64: Add BRBE support for bpf_get_branch_snapshot()
+ "On Android, we collect ETM data periodically on internal user devices
+  for AutoFDO optimization (for both userspace libraries and the
+  kernel). Allocating a large chunk of contiguous AUX pages (4M for each
+  CPU) periodically is almost unbearable. The kernel may need to kill
+  many processes to fulfill the request. It affects user experience even
+  after using PMU."
 
-This commit implements the perf_snapshot_branch_stack static call for BRBE,
-allowing bpf_get_branch_snapshot() to capture hardware branch records. It
-manages BRBE state by pausing it during the snapshot, freezing the counters,
-and handling buffer invalidation to avoid data corruption.
+We might have missed chance to clarify how the fragmentation issue
+occurs in the first place. Let's say, a phone with 8 CPUs, allocating
+4MB per CPU requires 32MB in total, which is a relatively small
+portion of 4GiB or 8GiB of RAM commonly found in phones. Moreover, once
+contiguous pages are freed, the buddy allocator can coalesce them
+again into buddy list. It is not obvious to me that PREFER_LARGE
+directly causes fragmentation.
 
-> diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
-> index ba554e0c846c4..9e7e69c43b17d 100644
-> --- a/drivers/perf/arm_brbe.c
-> +++ b/drivers/perf/arm_brbe.c
+One case where AUX allocation could exacerbate fragmentation is when the
+system is already fragmented. If a high-order allocation fails and the
+allocator falls back to smaller-order blocks, those allocations may
+consume free blocks scattered across different buddy regions and make
+subsequent high-order allocations more difficult.
 
-[ ... ]
+If this is the main concern, I'd suggest using a smaller AUX buffer
+(e.g. 1MB or even 512KB) for TRBE/SPE to reduce memory pressure.
+Snapshot mode '-S' could also be considered, as it allows the buffer to
+be allocated once and reused for subsequent recordings by signals.
 
-> +int brbe_snapshot_branch_stack(struct perf_branch_entry *entries, unsign=
-ed int cnt)
-> +{
+OTOH, using only order-0 pages can significantly increase TTW overhead
+on the trace path and lead to overflows, we observe this causes huge
+trace discontinuity. In the end, we need to trace-off the fragmentation
+concern against the trace discontinuity.
 
-[ ... ]
+Thanks,
+Leo
 
-> +	if (paused_here) {
-> +		/* Branches were missed, so discard rather than leave a hole. */
-> +		brbe_invalidate();
-> +
-> +		/* Unpause first; a paused BRBE cannot freeze on overflow. */
-> +		write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
-> +		isb();
-> +		write_pmcr(pmcr);
-
-[Severity: Medium]
-Is a context synchronization barrier missing after this write to PMCR_EL0?
-
-Architecture invariants for ARM64 usually require writes to control-plane
-system registers to be immediately followed by an isb() to ensure the CPU
-pipeline observes the new configuration.
-
-Could the lack of an isb() here allow the CPU to continue operating under a
-stale PMU configuration for several cycles, potentially missing performance
-counter and BRBE branch events immediately following the unpause?
-
-> +	}
-> +
-> +	local_daif_restore(flags);
-> +
-> +	return nr_copied;
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260810164622.1829=
-843-1-puranjay@kernel.org?part=3D2
+[1] https://lore.kernel.org/lkml/CALJ9ZPNLgEBxOmDim-vztUknEETwdL-Z2gJ8K9s44TiPgKZgHg@mail.gmail.com/
