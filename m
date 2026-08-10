@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B54763563FB;
-	Mon, 10 Aug 2026 05:20:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CF031D757;
+	Mon, 10 Aug 2026 05:20:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786339249; cv=none; b=fR/DSEfuhHkRKJPEMgTbcOMRT0I/Hr4u7IN7R9Mjl+5W6vxDk5M1MYHkXA+jdqTsjtNdLJ/3DQBbAcWw1TGzvwt+hTcyzhu3TtqJmRFpWm+JJbEyUhmTul0270UwDx33vOmu2yHa0a9tDcpdhUksVps7oxLqS5aFKjqHrhQf/G0=
+	t=1786339251; cv=none; b=tocJ1PVA8AiEJDcsm335gZclvbmo572T2KJKF/MWH0o7r9c8Ltwh8KlH1rZlrZu0Gv/qj6IPO3OO+kqWXJvZUVvXBcsJteJnSXa6FQnKY9RYuE/F9/Smlo+ENLxLlPcB0f904YzLS8gqrcBZdbxMA15mUHqPTFWft79J2qcPXkQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786339249; c=relaxed/simple;
-	bh=5gu6KnXksgO5PEx8OvCDre5nuKysswEvSLiyN/vVMKw=;
+	s=arc-20240116; t=1786339251; c=relaxed/simple;
+	bh=Gg71YAOCs/mep/o6RWm0jCjruWQ2t/nVpuTOdNSBWy8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W0hvBIGmkyBrqJ0BUf9W2aH29PsSGTd63n1X0NeL3T01ys6z9CBP5lYgR/khpDrBNP7eRzrUZTGVo0uwrfhW30/MeD/8wbr8E/29BhbprsoVK/E+FI5YRXLHV6enCrX6Kq+WpyyPi0ToEpITQQKNaoZRc+BNo7Y8tNbZIMFW0OU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZSz0OKQg; arc=none smtp.client-ip=198.175.65.19
+	 MIME-Version; b=Do7OZgKERPKCCt3nmnBoZw6+405h/arWjV86SxhNpoJUn4rPxQvYweA6zurWJjgvQ8FMb9SAyW+SoLNZNkvZJdda4PWl9JQR0kgB89J9+blws7XHK5qn7HQa+UDNqFPWn2n0l1sMWVjdtTwNhwlKjipzpWGr9eX+tJPhk3L3q08=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OzE/BRRg; arc=none smtp.client-ip=198.175.65.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZSz0OKQg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OzE/BRRg"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786339248; x=1817875248;
+  t=1786339246; x=1817875246;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=5gu6KnXksgO5PEx8OvCDre5nuKysswEvSLiyN/vVMKw=;
-  b=ZSz0OKQgLxjtgeGQTfOjjbSZ5wgoovjYTjFS/gCz9VVKOOFyHU3kNcVo
-   6upwO68mBowIxNxSrgsfvQSdCCQM+CPcfxOUjTSbiC7ISTyt/9rGBSulQ
-   h2iQlsoncHQtEj6QEhX/7LGOYrvI3gmTp7n5Aa5SZJ/TTPR2snxN/GIuw
-   B08sgWhn3BlomN8NUehaAm5eyXLZX0DZJfYi3F+sLpojHiS81vQBAc2S/
-   euiY4Hz3H2HsiAO2W2Vvaw3IvJpCL4YqTxlKl114kpFNjganTqTg2N8SO
-   91KuphMXP7TYFFNdZ1nnnOXwRkiNYJUGHPp7WGvlKgzLvo6hdBK2VpNL6
-   w==;
-X-CSE-ConnectionGUID: xL2TRsxiSqOkWU4oCSH4DQ==
-X-CSE-MsgGUID: vdN1pT70Q8itBsLughkWww==
-X-IronPort-AV: E=McAfee;i="6800,10657,11870"; a="86785049"
+  bh=Gg71YAOCs/mep/o6RWm0jCjruWQ2t/nVpuTOdNSBWy8=;
+  b=OzE/BRRg/L8EgTzyC2GpcLLTb2BeRJkLBLBnNxlCyTKjWkW1I51xXbOm
+   DNW5gf8qF2qESL05Rps+lSQC+egRzSN3nDFNW0a60nPFLBSKJctoBtNrZ
+   +CXRhvigDl27M+iwLcwcc2Cm0ujwf/thQ0aLpaNKc6vacMfE0KwJ/paoJ
+   8/EbSOkuy/7CdPpnpE1X/Pq3xyDVOG5qqPOVqqDWZDpVIsJefCn+RlBKx
+   rML5MAJ8uaRoRLSHw8pIS1ykLL6Q1L8LkrF20G/2PzpB7pk0tyDZ1v7ZQ
+   SPRQdc3rB3j0bSAO3q3TBdb2aXdzqllIg40Mh+QH9ZT58gyhb6jJw0FL2
+   Q==;
+X-CSE-ConnectionGUID: 9xgLiW2QT+OlFVCDgN1E+Q==
+X-CSE-MsgGUID: mOnUgT5DT56llhE9y7ZnCA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11870"; a="86785040"
 X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
-   d="scan'208";a="86785049"
+   d="scan'208";a="86785040"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2026 22:20:45 -0700
-X-CSE-ConnectionGUID: JpKIikXCRomLvRy9jBaxjA==
-X-CSE-MsgGUID: zvNbsAevT5yEG0IzIkZi3w==
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2026 22:20:40 -0700
+X-CSE-ConnectionGUID: mhxUFrpsQPmJ495lexE+9w==
+X-CSE-MsgGUID: 0UkCtu0qQ9iCKHgACGI9GA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
-   d="scan'208";a="262421485"
+   d="scan'208";a="262421479"
 Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by orviesa008.jf.intel.com with ESMTP; 09 Aug 2026 22:20:41 -0700
+  by orviesa008.jf.intel.com with ESMTP; 09 Aug 2026 22:20:36 -0700
 From: Jiebin Sun <jiebin.sun@intel.com>
 To: namhyung@kernel.org
 Cc: acme@kernel.org,
@@ -61,9 +61,9 @@ Cc: acme@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Jiebin Sun <jiebin.sun@intel.com>
-Subject: [PATCH v8 6/9] perf c2c: add function view hierarchy entry creation
-Date: Mon, 10 Aug 2026 13:26:44 +0800
-Message-ID: <20260810052647.588867-7-jiebin.sun@intel.com>
+Subject: [PATCH v8 5/9] perf c2c: add function view stats merge and memory management
+Date: Mon, 10 Aug 2026 13:26:43 +0800
+Message-ID: <20260810052647.588867-6-jiebin.sun@intel.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260810052647.588867-1-jiebin.sun@intel.com>
 References: <20260810052647.588867-1-jiebin.sun@intel.com>
@@ -75,22 +75,14 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the entry-creation layer: owned-reference child allocation and
-insertion, and the level-1/2/3 lookup-or-create functions keyed by
-function symbol (level 1 read-side, level 2 writer) and by the source
-cacheline's existing index (level 3).
+Add the per-entry stats/cstats aggregation helpers and hierarchy teardown.
+Child common fields are released through hist_entry__delete(), while the
+function-view free callback handles the private child tree and containing
+allocation. Also add a helper for pruning writer entries with no stores or
+cacheline children.
 
-Give synthetic children normal entry operations and acquire their thread
-and map-symbol references. This lets the hierarchy teardown use
-hist_entry__delete() for the common fields while the function-view free
-callback handles the private child tree and containing allocation.
-
-Reuse cacheline_idx to preserve the source entry identity without adding
-function-view-only state. The browser can later use the same index to find
-the original cacheline entry.
-
-These are driven by the hierarchy builder in the next patch and are
-__maybe_unused until then.
+These are used by the entry-creation and builder patches that follow and
+are __maybe_unused until then.
 
 Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -108,337 +100,177 @@ Cc: Thomas Falcon <thomas.falcon@intel.com>
 Reviewed-by: Tianyou Li <tianyou.li@intel.com>
 Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
 ---
- tools/perf/ui/browsers/c2c-function.c | 293 +++++++++++++++++++++++++-
- 1 file changed, 282 insertions(+), 11 deletions(-)
+ tools/perf/ui/browsers/c2c-function.c | 162 ++++++++++++++++++++++++++
+ 1 file changed, 162 insertions(+)
 
 diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browsers/c2c-function.c
-index 4bf8406fde55..4099d4c7e7b4 100644
+index 173661c52be7..4bf8406fde55 100644
 --- a/tools/perf/ui/browsers/c2c-function.c
 +++ b/tools/perf/ui/browsers/c2c-function.c
-@@ -28,6 +28,7 @@
- #include "../../util/addr_location.h"
- #include "../../util/cacheline.h"
- #include "../../util/debug.h"
-+#include "../../util/dso.h"
- #include "../../util/hist.h"
- #include "../../util/map.h"
- #include "../../util/mem-events.h"
-@@ -57,12 +58,34 @@ static inline __maybe_unused u64 c2c_hitm_count(const struct c2c_stats *stats)
- 	return stats->tot_hitm;
+@@ -685,6 +685,168 @@ c2c_function_hists__reinit(struct c2c_hists *c2c_hists,
+ 	return function_hpp_list__parse(&c2c_hists->list, output, sort, env);
  }
  
--static inline __maybe_unused bool symbol_name_equal(struct symbol *a, struct symbol *b)
-+static int64_t c2c_function_cmp(const struct map_symbol *left,
-+				const struct map_symbol *right)
- {
--	/* Two unknown symbols compare equal, matching cmp_null() in util/sort.c. */
--	if (!a || !b)
--		return a == b;
--	return arch__compare_symbol_names(a->name, b->name) == 0;
-+	const struct dso *left_dso = left->map ? map__dso(left->map) : NULL;
-+	const struct dso *right_dso = right->map ? map__dso(right->map) : NULL;
-+	int ret;
++static void c2c_stats_merge(struct stats *dest, const struct stats *src)
++{
++	double delta;
 +
-+	if (!left_dso || !right_dso) {
-+		if (left_dso != right_dso)
-+			return left_dso ? 1 : -1;
-+	} else {
-+		/*
-+		 * Use the same DSO name as _sort__dso_cmp() (short name unless
-+		 * verbose), so this matches the DSO comparison the level-1
-+		 * entries are deduplicated by; otherwise same-basename DSOs
-+		 * could be split or merged inconsistently across levels.
-+		 */
-+		const char *left_name = verbose > 0 ?
-+			dso__long_name(left_dso) : dso__short_name(left_dso);
-+		const char *right_name = verbose > 0 ?
-+			dso__long_name(right_dso) : dso__short_name(right_dso);
++	if (src->n == 0)
++		return;
 +
-+		ret = strcmp(left_name, right_name);
-+		if (ret)
-+			return ret;
++	if (dest->n == 0) {
++		*dest = *src;
++		return;
 +	}
 +
-+	return _sort__sym_cmp(left->sym, right->sym);
- }
- 
- static inline __maybe_unused u64 hist_entry__iaddr(struct hist_entry *he)
-@@ -756,7 +779,7 @@ static void c2c_he__free_hierarchy(struct hist_entry *he);
- /*
-  * Free a function-view histogram entry (hist_entry_ops::free).
-  */
--static void __maybe_unused c2c_function_he_free(void *ptr)
-+static void c2c_function_he_free(void *ptr)
- {
- 	struct hist_entry *he = ptr;
- 	struct c2c_hist_entry *c2c_he;
-@@ -771,11 +794,6 @@ static void __maybe_unused c2c_function_he_free(void *ptr)
- 
- 	c2c_he__free_hierarchy(he);
- 
--	zfree(&c2c_he->nodeset);
--	zfree(&c2c_he->cpuset);
--	zfree(&c2c_he->nodestr);
--	zfree(&c2c_he->node_stats);
--
- 	free(c2c_he);
- }
- 
-@@ -847,6 +865,259 @@ static int __maybe_unused c2c_he__prune_empty_writers(struct hist_entry *l1_he)
- 	return surviving;
- }
- 
-+static void *c2c_function_he_zalloc(size_t size)
-+{
-+	struct c2c_hist_entry *c2c_he = zalloc(sizeof(*c2c_he) + size);
++	delta = src->mean - dest->mean;
++	dest->M2 += src->M2 + delta * delta * dest->n * src->n / (dest->n + src->n);
++	dest->mean = (dest->mean * dest->n + src->mean * src->n) / (dest->n + src->n);
++	dest->n += src->n;
 +
-+	if (!c2c_he)
-+		return NULL;
-+
-+	init_stats(&c2c_he->cstats.lcl_hitm);
-+	init_stats(&c2c_he->cstats.rmt_hitm);
-+	init_stats(&c2c_he->cstats.lcl_peer);
-+	init_stats(&c2c_he->cstats.rmt_peer);
-+	init_stats(&c2c_he->cstats.load);
-+
-+	return &c2c_he->he;
++	/* Update min/max */
++	if (src->max > dest->max)
++		dest->max = src->max;
++	if (src->min < dest->min)
++		dest->min = src->min;
 +}
 +
-+/* Entry operations for function view */
-+static struct hist_entry_ops c2c_function_entry_ops = {
-+	.new	= c2c_function_he_zalloc,
-+	.free	= c2c_function_he_free,
-+};
-+
-+static struct c2c_hist_entry *
-+c2c_child_entry__alloc(struct hist_entry *parent_he, struct hist_entry *src_he,
-+		       int depth, u64 ip)
++/* Merge compute_stats during function aggregation. */
++static void __maybe_unused c2c_add_cstats(struct compute_stats *dest,
++					  const struct compute_stats *src)
 +{
-+	struct c2c_hist_entry *child_c2c;
++	c2c_stats_merge(&dest->rmt_hitm, &src->rmt_hitm);
++	c2c_stats_merge(&dest->lcl_hitm, &src->lcl_hitm);
++	c2c_stats_merge(&dest->rmt_peer, &src->rmt_peer);
++	c2c_stats_merge(&dest->lcl_peer, &src->lcl_peer);
++	c2c_stats_merge(&dest->load, &src->load);
++}
++
++static bool __maybe_unused hist_entry__add_c2c_stats(struct hist_entry *he,
++						     const struct c2c_stats *stats)
++{
++	u64 nr_events = c2c_hitm_count(stats) + stats->rmt_peer + stats->lcl_peer;
++	u64 weight1 = c2c_hitm_count(stats);
++
++	/*
++	 * Allocate before touching he->stat, so a failure here leaves the
++	 * entry unmodified and the caller can bail out without having
++	 * half-updated the statistics.
++	 */
++	if (symbol_conf.cumulate_callchain && !he->stat_acc) {
++		he->stat_acc = calloc(1, sizeof(struct he_stat));
++		if (!he->stat_acc)
++			return false;
++	}
++
++	he->stat.nr_events += nr_events;
++	he->stat.period += nr_events;
++	he->stat.weight1 += weight1;
++
++	if (!symbol_conf.cumulate_callchain)
++		return true;
++
++	he->stat_acc->nr_events += nr_events;
++	he->stat_acc->period += nr_events;
++	he->stat_acc->weight1 += weight1;
++
++	return true;
++}
++
++static void c2c_he__free_hierarchy(struct hist_entry *he);
++
++/*
++ * Free a function-view histogram entry (hist_entry_ops::free).
++ */
++static void __maybe_unused c2c_function_he_free(void *ptr)
++{
++	struct hist_entry *he = ptr;
++	struct c2c_hist_entry *c2c_he;
++
++	c2c_he = container_of(he, struct c2c_hist_entry, he);
++
++	if (c2c_he->hists) {
++		perf_hpp__reset_output_field(&c2c_he->hists->list);
++		hists__delete_all_entries(&c2c_he->hists->hists);
++		zfree(&c2c_he->hists);
++	}
++
++	c2c_he__free_hierarchy(he);
++
++	zfree(&c2c_he->nodeset);
++	zfree(&c2c_he->cpuset);
++	zfree(&c2c_he->nodestr);
++	zfree(&c2c_he->node_stats);
++
++	free(c2c_he);
++}
++
++static void c2c_he__free_hierarchy(struct hist_entry *he)
++{
++	struct rb_node *nd;
 +	struct hist_entry *child_he;
 +
-+	/* Function-view children never own or display callchains. */
-+	child_he = c2c_function_he_zalloc(0);
-+	if (!child_he)
-+		return NULL;
++	/*
++	 * A leaf entry stores its callchains in the sorted_chain member, which
++	 * shares a union with the hroot_in/hroot_out child trees, so its
++	 * hroot_out is not a valid subtree to walk. Leaf entries never have a
++	 * child hierarchy here, so stop before touching hroot_out.
++	 */
++	if (he->leaf)
++		return;
 +
-+	child_c2c = container_of(child_he, struct c2c_hist_entry, he);
-+	child_he->ops = &c2c_function_entry_ops;
-+	map_symbol__copy(&child_he->ms, &src_he->ms);
++	if (RB_EMPTY_ROOT(&he->hroot_out.rb_root))
++		return;
 +
-+	if (src_he->mem_info) {
-+		child_he->mem_info = mem_info__clone(src_he->mem_info);
-+		if (!child_he->mem_info)
-+			goto out_free;
++	nd = rb_first_cached(&he->hroot_out);
++	while (nd) {
++		struct rb_node *next = rb_next(nd);
++
++		child_he = rb_entry(nd, struct hist_entry, rb_node);
++		rb_erase_cached(&child_he->rb_node, &he->hroot_out);
++		hist_entry__delete(child_he);
++
++		nd = next;
 +	}
 +
-+	child_he->thread = thread__get(src_he->thread);
-+	child_he->cpumode = src_he->cpumode;
-+	child_he->cpu = src_he->cpu;
-+	child_he->socket = src_he->socket;
-+	child_he->level = src_he->level;
-+	child_he->ip = ip;
-+
-+	child_he->parent_he = parent_he;
-+	child_he->depth = depth;
-+	child_he->leaf = (depth >= 2);
-+	child_he->hists = &c2c_ext.function_hists.hists;
-+	child_he->filtered = false;
-+	child_he->unfolded = false;
-+	child_he->has_children = false;
-+	child_he->has_no_entry = false;
-+	child_he->nr_rows = 0;
-+	child_he->row_offset = 0;
-+
-+	memset(&child_he->stat, 0, sizeof(child_he->stat));
-+	child_he->hroot_in = RB_ROOT_CACHED;
-+	child_he->hroot_out = RB_ROOT_CACHED;
-+	INIT_LIST_HEAD(&child_he->pairs.node);
-+	child_he->hpp_list = &c2c_ext.function_hists.list;
-+	if (symbol_conf.cumulate_callchain) {
-+		child_he->stat_acc = calloc(1, sizeof(struct he_stat));
-+		if (!child_he->stat_acc)
-+			goto out_free;
-+	}
-+
-+	return child_c2c;
-+
-+out_free:
-+	hist_entry__delete(child_he);
-+	return NULL;
-+}
-+
-+static void
-+c2c_child_entry__insert(struct hist_entry *parent_he, struct hist_entry *child_he,
-+			struct rb_node **p, struct rb_node *rb_parent, bool leftmost)
-+{
-+	rb_link_node(&child_he->rb_node, rb_parent, p);
-+	rb_insert_color_cached(&child_he->rb_node, &parent_he->hroot_out, leftmost);
-+
-+	parent_he->has_children = true;
-+	parent_he->leaf = false;
-+}
-+
-+static __maybe_unused struct hist_entry *
-+c2c_function_hists__level1_entry(struct symbol *sym,
-+				 struct hist_entry *detail_he,
-+				 struct thread *synthetic_thread)
-+{
-+	struct addr_location al;
-+	struct perf_sample sample = {};
-+	struct mem_info *mi;
-+	struct hist_entry *he;
-+	/*
-+	 * Key the level-1 entry by the function, not by a specific code
-+	 * address: use the symbol start so every instruction address inside
-+	 * the same function collapses into one entry. This makes level 1 a
-+	 * true "function view" rather than a per-code-address view.
-+	 */
-+	u64 sym_start = (sym && detail_he->ms.map) ?
-+			map__unmap_ip(detail_he->ms.map, sym->start) : detail_he->ip;
-+
-+	mi = mem_info__new();
-+	if (!mi)
-+		return NULL;
-+
-+	mem_info__iaddr(mi)->addr = sym_start;
-+	/* mem_info__put() will map_symbol__exit() these, so take refs. */
-+	mem_info__iaddr(mi)->ms.thread = thread__get(detail_he->ms.thread);
-+	mem_info__iaddr(mi)->ms.map = map__get(detail_he->ms.map);
-+	mem_info__iaddr(mi)->ms.sym = sym;
-+	mem_info__daddr(mi)->addr = 0;
-+
-+	addr_location__init(&al);
-+	al.thread = thread__get(synthetic_thread);
-+	al.map = map__get(detail_he->ms.map);
-+	al.sym = sym;
-+	al.addr = sym_start;
-+	al.level = detail_he->level;
-+	al.cpumode = detail_he->cpumode;
-+	al.cpu = 0;
-+	al.socket = 0;
-+	al.filtered = 0;
-+	al.latency = 0;
-+
-+	/*
-+	 * Synthetic sample: period/weight are placeholders only. The real
-+	 * c2c counters live in c2c_hist_entry::stats and are added via
-+	 * hist_entry__add_c2c_stats(); no function-view column or sort key
-+	 * reads he->stat.period/nr_events, so the +1 that __hists__add_entry()
-+	 * accrues on each dedup hit has no effect on what is displayed.
-+	 */
-+	sample.period = 1;
-+	sample.weight = 1;
-+	sample.ip = sym_start;
-+	sample.pid = thread__pid(synthetic_thread);
-+	sample.tid = thread__tid(synthetic_thread);
-+	sample.cpu = 0;
-+
-+	/* Add entry - histogram handles dedup */
-+	he = hists__add_entry_ops(&c2c_ext.function_hists.hists,
-+				  &c2c_function_entry_ops,
-+				  &al, NULL, NULL, mi,
-+				  NULL, &sample, true);
-+
-+	addr_location__exit(&al);
-+	mem_info__put(mi);
-+
-+	if (he)
-+		he->hpp_list = &c2c_ext.function_hists.list;
-+
-+	return he;
++	/* All children erased; clear the tree (and its cached leftmost). */
++	he->hroot_out = RB_ROOT_CACHED;
 +}
 +
 +/*
-+ * Level 2: a function that writes a cacheline the level-1 function reads,
-+ * keyed by the DSO display name and symbol, consistently with perf's symbol
-+ * sort semantics. All code addresses and cachelines for the same writer
-+ * function aggregate into one row.
++ * Drop level-2 writing functions that carry no stores or
++ * no cacheline children. Writers are only added when they store into a shared
++ * line, so this is mainly a safety net. Returns the number of surviving
++ * writers.
 + */
-+static __maybe_unused struct c2c_hist_entry *
-+c2c_function_hists__level2_entry(struct c2c_hist_entry *level1_c2c,
-+				 struct symbol *sym, struct hist_entry *detail_he)
++static int __maybe_unused c2c_he__prune_empty_writers(struct hist_entry *l1_he)
 +{
-+	struct hist_entry *level1_he = &level1_c2c->he;
-+	struct rb_node **p = &level1_he->hroot_out.rb_root.rb_node;
-+	struct rb_node *parent = NULL;
-+	struct c2c_hist_entry *level2_c2c;
-+	bool leftmost = true;
++	struct rb_node *nd;
++	int surviving = 0;
 +
-+	while (*p) {
-+		struct hist_entry *iter = rb_entry(*p, struct hist_entry, rb_node);
-+		struct map_symbol key = detail_he->ms;
-+		int64_t cmp;
++	if (!l1_he->has_children)
++		return 0;
 +
-+		key.sym = sym;
-+		parent = *p;
-+		cmp = c2c_function_cmp(&key, &iter->ms);
++	nd = rb_first_cached(&l1_he->hroot_out);
++	while (nd) {
++		struct rb_node *next = rb_next(nd);
++		struct hist_entry *l2_he = rb_entry(nd, struct hist_entry, rb_node);
 +
-+		if (cmp < 0) {
-+			p = &parent->rb_left;
-+		} else if (cmp > 0) {
-+			p = &parent->rb_right;
-+			leftmost = false;
++		if (l2_he->has_children && hist_entry__displayed_stores(l2_he) > 0) {
++			surviving++;
 +		} else {
-+			return container_of(iter, struct c2c_hist_entry, he);
++			rb_erase_cached(&l2_he->rb_node, &l1_he->hroot_out);
++			hist_entry__delete(l2_he);
 +		}
++		nd = next;
 +	}
 +
-+	/* Key by the function symbol start so all code addresses collapse. */
-+	level2_c2c = c2c_child_entry__alloc(level1_he, detail_he, 1,
-+					    (sym && detail_he->ms.map) ?
-+						  map__unmap_ip(detail_he->ms.map, sym->start) :
-+						  hist_entry__iaddr(detail_he));
-+	if (!level2_c2c)
-+		return NULL;
-+
-+	/* Key this level by the looked-up symbol, not detail_he's. */
-+	level2_c2c->he.ms.sym = sym;
-+	if (level2_c2c->he.mem_info)
-+		mem_info__iaddr(level2_c2c->he.mem_info)->ms.sym = sym;
-+
-+	c2c_child_entry__insert(level1_he, &level2_c2c->he, p, parent, leftmost);
-+
-+	return level2_c2c;
-+}
-+
-+/* Level 3: one source cacheline where the L1/L2 functions contend. */
-+static __maybe_unused struct c2c_hist_entry *
-+c2c_function_hists__level3_entry(struct c2c_hist_entry *level2_c2c,
-+				 struct c2c_hist_entry *cacheline_src_he)
-+{
-+	struct hist_entry *level2_he = &level2_c2c->he;
-+	struct rb_node **p = &level2_he->hroot_out.rb_root.rb_node;
-+	struct rb_node *parent = NULL;
-+	struct c2c_hist_entry *level3_c2c;
-+	bool leftmost = true;
-+
-+	while (*p) {
-+		struct hist_entry *iter = rb_entry(*p, struct hist_entry, rb_node);
-+		struct c2c_hist_entry *iter_c2c;
-+
-+		iter_c2c = container_of(iter, struct c2c_hist_entry, he);
-+
-+		parent = *p;
-+		if (cacheline_src_he->cacheline_idx < iter_c2c->cacheline_idx) {
-+			p = &parent->rb_left;
-+		} else if (cacheline_src_he->cacheline_idx > iter_c2c->cacheline_idx) {
-+			p = &parent->rb_right;
-+			leftmost = false;
-+		} else {
-+			return container_of(iter, struct c2c_hist_entry, he);
-+		}
++	if (!surviving) {
++		l1_he->hroot_out = RB_ROOT_CACHED;
++		l1_he->has_children = false;
++		l1_he->unfolded = false;
 +	}
-+
-+	level3_c2c = c2c_child_entry__alloc(level2_he, &cacheline_src_he->he, 2,
-+					    hist_entry__iaddr(&cacheline_src_he->he));
-+	if (!level3_c2c)
-+		return NULL;
-+	level3_c2c->cacheline_idx = cacheline_src_he->cacheline_idx;
-+
-+	c2c_child_entry__insert(level2_he, &level3_c2c->he, p, parent, leftmost);
-+
-+	return level3_c2c;
++	return surviving;
 +}
 +
  int perf_c2c__browse_function_view(struct c2c_function_view_args *args)
