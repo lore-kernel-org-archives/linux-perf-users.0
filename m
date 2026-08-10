@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2981742B736;
-	Mon, 10 Aug 2026 16:46:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41AA42BEBB;
+	Mon, 10 Aug 2026 16:46:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786380417; cv=none; b=FYGMZJindK+T/sqZAsrAGZQKtDsWWrWa3MaFFcUI84qsvCiCu/3OvTjolqdMg/Tr9gYySrKTNpuditYpewJoDKH+hRhRz+LdzN4kpoZVtIHRMHeLmFLDb4mDKMAembfgjopt6dvU5058/RLmyGa8Z5hcd82j9bifyqcuX3nqmfg=
+	t=1786380422; cv=none; b=QVtgZN5HCEJOnJ0GwYx6IhvGzlvq+9LehMGf48g7fTRxwFyQN5xBu/i6sfVw1vPOa9jkOqkRFaZ8AdmLjSsH8GJ7OdPaerfrcI4XsRGHkQwdZbUpnuRI5rWTBv8wX9jGTU2f/AFfUheuj4ufLaWjeBHWDQo530zNNXnhXjfLOqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786380417; c=relaxed/simple;
-	bh=rlVkEnZhSJm2h0cc27O1cWgfHaeRA7zb7QQnYshho+A=;
+	s=arc-20240116; t=1786380422; c=relaxed/simple;
+	bh=DOqTQMe/qhfgQ+qVcqEesyQdEhUaY2PTRd0GkKlC7Xk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MpdUYEi+xrljntNcwV8FH//4FZ5O05pIsjwXTUMbVI+frJzHUAD0dTLnu80bGz76CUl4fFmOlguEghCL0lHwAOy4JvR/wvGwor8z8vzefs78C25poVYjcB2OMCYU95TOGQGS7k6gXsiZAAp6p0p5zo5TfZQWgbL9y/+Rtzap0CM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UVBZJ4LB; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=J4hy/DiD25fvfLNkouBo0GSXKO4bl+0SzOoaNlchW9HFAEG6duPwiOIwvYKkc9f80Srgp/r5DO/WLsFRQpcdbve8cg10sUH+bULuz97e+WZeT3GLn9sAJGYrGqOlxnESaUmSfq/+ufw6gvu6Rjt6QYLQQlrY7bLbMTY+bcmrZNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n/C2h29y; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UVBZJ4LB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C8BD1F00A3D;
-	Mon, 10 Aug 2026 16:46:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n/C2h29y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FAA51F00A3D;
+	Mon, 10 Aug 2026 16:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786380415;
-	bh=BJm1Z9xZ0d8T/x30s5rEX7Wpd/wxL/yzuR113JZ+N2k=;
+	s=k20260515; t=1786380419;
+	bh=lXRCN/qYZW99d3FlFsEXKteX6xTS2JbUH2gWTWpXWFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=UVBZJ4LBmAqMcuNy4QTwNkP9Hd82xX+auqNQuNoTeezY1tYQ6cfYnTUmI+Mq9wduN
-	 ULOi3Gb6t0hTHlZduxRAdRJXwzAwAxiVDb4UzbzqzmU8FO9vD74lyTmK1iBcMhj0wB
-	 p0aGX91KeSBMcGaS5PD8+Dq1cZmGdhvGqZUbZkF8eiL5Oz6O9whHrDsk9vZ5wkupMM
-	 pl3Ug3FH+DhuWbHCDKfRIpIzkgbBN4oQKlyhf3fy58BFaj8FkY7r0vflR725lzkUdj
-	 ja2d9QNXhC3KKLwZW1NNNtIfhQ2mUM/rTQPYMXDED8pQl62jMqmU4glbL8ivd/Lubr
-	 u7FTv1WcGzxYw==
+	b=n/C2h29y/UAVYyqoIvkDbqqEvGJ1HVcB141+KOkPsOmi0AcuGMqp23Mn74bdwqj8M
+	 6KUaNNHIQYinALlzy6qrmFmEMayQ8eANVEHpjDObcNDJYY/S6AENvT46+YSJogT/yY
+	 gq3SecBIXhAqzIvXesJ9BneBe0GDTHr540w7mJhEyoAIwB4kLMqgtQ8CYpYKxqZ/Wm
+	 L3H1tyvHCKdZyhpqP7p3wvT+6qsRkxsMphDXEeMdhcI5x9ICdVlwpjQqXes322CF/d
+	 r9tj5oJIN831Vnc4p13QOEVbub3VPSQNv99TSaOfH+xd8nWvS2in8L36srg3gVKdAi
+	 W4QtAG3/4jIKw==
 From: Puranjay Mohan <puranjay@kernel.org>
 To: Catalin Marinas <catalin.marinas@arm.com>,
 	Will Deacon <will@kernel.org>,
@@ -62,9 +62,9 @@ Cc: Puranjay Mohan <puranjay@kernel.org>,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	kernel-team@meta.com
-Subject: [PATCH v6 1/3] arm64: Add raw variants of local_daif_save() and local_daif_restore()
-Date: Mon, 10 Aug 2026 09:46:18 -0700
-Message-ID: <20260810164622.1829843-2-puranjay@kernel.org>
+Subject: [PATCH v6 2/3] perf/arm64: Add BRBE support for bpf_get_branch_snapshot()
+Date: Mon, 10 Aug 2026 09:46:19 -0700
+Message-ID: <20260810164622.1829843-3-puranjay@kernel.org>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <20260810164622.1829843-1-puranjay@kernel.org>
 References: <20260810164622.1829843-1-puranjay@kernel.org>
@@ -76,141 +76,327 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-local_daif_save() unconditionally calls trace_hardirqs_off(), and
-local_daif_restore() the matching trace_hardirqs_on(). A caller already
-in a hardirqs-off context, or one that must not run tracing code between
-masking exceptions and its next step, has no way to opt out.
+Implement the perf_snapshot_branch_stack static call for BRBE.
 
-cpu_suspend() is one such caller and already carries a comment asking for
-this. Sampling the BRBE branch record buffer is another: the tracing
-calls generate branches that evict the records about to be read.
+brbe_enable() and brbe_disable() run from the overflow interrupt and the
+add/remove IPIs, so the snapshot masks exceptions before sampling BRBE
+state. It pauses BRBE next, with trace_hardirqs_off() and the read after
+that so neither evicts a record. valid_brbe_version() runs before the
+mask; the static call is only reached from BPF programs, which run with
+migration disabled.
 
-Split the tracing out into raw_local_daif_save() and
-raw_local_daif_restore(), and convert cpu_suspend() to the raw save with
-a lockdep_assert_irqs_disabled() for the precondition it now relies on.
-Its restore stays traced, to re-arm the irqsoff tracer for the resume
-path. The PMR unmasking cpu_suspend() needs is in raw_local_daif_mask(),
-so it is unaffected.
+BRBFCR_EL1 is read before the pause and written back after the read, and
+a freeze in between would set PAUSED behind the saved value. PMCR_EL0.E
+is cleared across that window: the overflow driven conditions of Arm ARM
+(DDI 0487 M.a) D19.3 need a bit in PMOVSCLR_EL0, which a stopped counter
+cannot set, and RLBQZR needs BRBCR_EL1.FZPSS, which brbe_enable() leaves
+clear. The counters restart only after the unpause, since a paused BRBE
+cannot freeze for its own overflow handler.
+
+Branches are missed while paused, so the buffer is invalidated before
+recording resumes rather than left with a hole, and a concurrent branch
+stack event loses what it had collected. BRBE that arrived frozen is left
+alone; it stopped before the snapshot ran, so its records are intact and
+belong to whoever froze it.
+
+Records are read with a NULL event, which skips the per-event software
+filter. The hardware filters still apply, so the caller sees the union of
+the privilege and branch type filters of all active events. That matches
+x86 and is acceptable because bpf_get_branch_snapshot() is only reachable
+from program types already requiring CAP_BPF and CAP_PERFMON.
+
+bpf_get_branch_snapshot() returns -ENOENT when called from a BPF program
+attached to the CPU PMU's own overflow handler, since armv8pmu_stop()
+zeroes BRBCR_EL1 before the handler runs.
+
+Introduce for_each_brbe_entry() to share bank iteration between
+brbe_read_filtered_entries() and the snapshot.
 
 Signed-off-by: Puranjay Mohan <puranjay@kernel.org>
 ---
- arch/arm64/include/asm/daifflags.h | 41 +++++++++++++++++++++++++-----
- arch/arm64/kernel/suspend.c        |  7 ++---
- 2 files changed, 36 insertions(+), 12 deletions(-)
+ drivers/perf/arm_brbe.c  | 135 +++++++++++++++++++++++++++++++--------
+ drivers/perf/arm_brbe.h  |   9 +++
+ drivers/perf/arm_pmuv3.c |   5 +-
+ 3 files changed, 121 insertions(+), 28 deletions(-)
 
-diff --git a/arch/arm64/include/asm/daifflags.h b/arch/arm64/include/asm/daifflags.h
-index 795b351284673..c3adba0985bda 100644
---- a/arch/arm64/include/asm/daifflags.h
-+++ b/arch/arm64/include/asm/daifflags.h
-@@ -18,8 +18,7 @@
- #define DAIF_MASK		(PSR_D_BIT | PSR_A_BIT | PSR_I_BIT | PSR_F_BIT)
+diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
+index ba554e0c846c4..9e7e69c43b17d 100644
+--- a/drivers/perf/arm_brbe.c
++++ b/drivers/perf/arm_brbe.c
+@@ -9,6 +9,8 @@
+ #include <linux/types.h>
+ #include <linux/bitmap.h>
+ #include <linux/perf/arm_pmu.h>
++#include <linux/perf/arm_pmuv3.h>
++#include <asm/daifflags.h>
+ #include "arm_brbe.h"
  
+ #define BRBFCR_EL1_BRANCH_FILTERS (BRBFCR_EL1_DIRECT   | \
+@@ -250,10 +252,13 @@ static bool valid_brbidr(u64 brbidr)
+ 	return valid_brbe_format(brbe_format) && valid_brbe_cc(brbe_cc) && valid_brbe_nr(brbe_nr);
+ }
  
--/* mask/save/unmask/restore all exceptions, including interrupts. */
--static __always_inline void local_daif_mask(void)
-+static __always_inline void raw_local_daif_mask(void)
+-static bool valid_brbe_version(int brbe_version)
++static __always_inline bool valid_brbe_version(void)
  {
- 	WARN_ON(system_has_prio_mask_debugging() &&
- 		(read_sysreg_s(SYS_ICC_PMR_EL1) == (GIC_PRIO_IRQOFF |
-@@ -34,6 +33,12 @@ static __always_inline void local_daif_mask(void)
- 	/* Don't really care for a dsb here, we don't intend to enable IRQs */
- 	if (system_uses_irq_prio_masking())
- 		gic_write_pmr(GIC_PRIO_IRQON | GIC_PRIO_PSR_I_SET);
+-	return brbe_version == ID_AA64DFR0_EL1_BRBE_IMP ||
+-	       brbe_version == ID_AA64DFR0_EL1_BRBE_BRBE_V1P1;
++	u64 aa64dfr0 = read_sysreg_s(SYS_ID_AA64DFR0_EL1);
++	int brbe = cpuid_feature_extract_unsigned_field(aa64dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT);
++
++	return brbe == ID_AA64DFR0_EL1_BRBE_IMP ||
++	       brbe == ID_AA64DFR0_EL1_BRBE_BRBE_V1P1;
+ }
+ 
+ static void select_brbe_bank(int bank)
+@@ -271,6 +276,20 @@ static void select_brbe_bank(int bank)
+ 	isb();
+ }
+ 
++static inline void __brbe_advance(int *bank, int *idx, int nr_hw)
++{
++	if (++(*idx) >= BRBE_BANK_MAX_ENTRIES &&
++	    *bank * BRBE_BANK_MAX_ENTRIES + *idx < nr_hw) {
++		*idx = 0;
++		select_brbe_bank(++(*bank));
++	}
 +}
 +
-+/* mask/save/unmask/restore all exceptions, including interrupts. */
-+static __always_inline void local_daif_mask(void)
-+{
-+	raw_local_daif_mask();
- 
- 	trace_hardirqs_off();
- }
-@@ -53,18 +58,29 @@ static __always_inline unsigned long local_daif_save_flags(void)
- 	return flags;
- }
- 
--static __always_inline unsigned long local_daif_save(void)
-+static __always_inline unsigned long raw_local_daif_save(void)
++#define for_each_brbe_entry(idx, nr_hw)					\
++	for (int __bank = (select_brbe_bank(0), 0), idx = 0;		\
++	     __bank * BRBE_BANK_MAX_ENTRIES + idx < (nr_hw);		\
++	     __brbe_advance(&__bank, &idx, (nr_hw)))
++
+ static bool __read_brbe_regset(struct brbe_regset *entry, int idx)
  {
- 	unsigned long flags;
+ 	entry->brbinf = get_brbinf_reg(idx);
+@@ -474,11 +493,9 @@ unsigned int brbe_num_branch_records(const struct arm_pmu *armpmu)
  
- 	flags = local_daif_save_flags();
+ void brbe_probe(struct arm_pmu *armpmu)
+ {
+-	u64 brbidr, aa64dfr0 = read_sysreg_s(SYS_ID_AA64DFR0_EL1);
+-	u32 brbe;
++	u64 brbidr;
  
--	local_daif_mask();
-+	raw_local_daif_mask();
+-	brbe = cpuid_feature_extract_unsigned_field(aa64dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT);
+-	if (!valid_brbe_version(brbe))
++	if (!valid_brbe_version())
+ 		return;
  
- 	return flags;
+ 	brbidr = read_sysreg_s(SYS_BRBIDR0_EL1);
+@@ -575,7 +592,7 @@ static void brbe_set_perf_entry_type(struct perf_branch_entry *entry, u64 brbinf
+ 	}
  }
  
--static __always_inline void local_daif_restore(unsigned long flags)
-+static __always_inline unsigned long local_daif_save(void)
+-static int brbinf_get_perf_priv(u64 brbinf)
++static int brbinf_get_perf_priv(u64 brbinf, const struct perf_event *event)
+ {
+ 	int brbe_el = brbinf_get_el(brbinf);
+ 
+@@ -589,11 +606,13 @@ static int brbinf_get_perf_priv(u64 brbinf)
+ 			return PERF_BR_PRIV_KERNEL;
+ 		return PERF_BR_PRIV_HV;
+ 	default:
+-		pr_warn_once("%d - unknown branch privilege captured\n", brbe_el);
++		if (event)
++			pr_warn_once("%d - unknown branch privilege captured\n", brbe_el);
+ 		return PERF_BR_PRIV_UNKNOWN;
+ 	}
+ }
+ 
++/* @event is NULL for the snapshot: no software filter, and no printing. */
+ static bool perf_entry_from_brbe_regset(int index, struct perf_branch_entry *entry,
+ 					const struct perf_event *event)
+ {
+@@ -618,10 +637,10 @@ static bool perf_entry_from_brbe_regset(int index, struct perf_branch_entry *ent
+ 
+ 	brbe_set_perf_entry_type(entry, brbinf);
+ 
+-	if (!branch_sample_no_cycles(event))
++	if (!event || !branch_sample_no_cycles(event))
+ 		entry->cycles = brbinf_get_cycles(brbinf);
+ 
+-	if (!branch_sample_no_flags(event)) {
++	if (!event || !branch_sample_no_flags(event)) {
+ 		/* Mispredict info is available for source only and complete branch records. */
+ 		if (!brbe_record_is_target_only(brbinf)) {
+ 			entry->mispred = brbinf_get_mispredict(brbinf);
+@@ -633,7 +652,7 @@ static bool perf_entry_from_brbe_regset(int index, struct perf_branch_entry *ent
+ 		 * nor it is being supported in the kernel. Just warn here once
+ 		 * if TME related information shows up rather unexpectedly.
+ 		 */
+-		if (brbinf_get_lastfailed(brbinf) || brbinf_get_in_tx(brbinf))
++		if (event && (brbinf_get_lastfailed(brbinf) || brbinf_get_in_tx(brbinf)))
+ 			pr_warn_once("Unknown transaction states\n");
+ 	}
+ 
+@@ -642,7 +661,7 @@ static bool perf_entry_from_brbe_regset(int index, struct perf_branch_entry *ent
+ 	 * branch records.
+ 	 */
+ 	if (!brbe_record_is_source_only(brbinf))
+-		entry->priv = brbinf_get_perf_priv(brbinf);
++		entry->priv = brbinf_get_perf_priv(brbinf, event);
+ 
+ 	return true;
+ }
+@@ -774,32 +793,94 @@ void brbe_read_filtered_entries(struct perf_branch_stack *branch_stack,
+ {
+ 	struct arm_pmu *cpu_pmu = to_arm_pmu(event->pmu);
+ 	int nr_hw = brbe_num_branch_records(cpu_pmu);
+-	int nr_banks = DIV_ROUND_UP(nr_hw, BRBE_BANK_MAX_ENTRIES);
+ 	int nr_filtered = 0;
+ 	u64 branch_sample_type = event->attr.branch_sample_type;
+ 	DECLARE_BITMAP(event_type_mask, PERF_BR_ARM64_MAX);
+ 
+ 	prepare_event_branch_type_mask(branch_sample_type, event_type_mask);
+ 
+-	for (int bank = 0; bank < nr_banks; bank++) {
+-		int nr_remaining = nr_hw - (bank * BRBE_BANK_MAX_ENTRIES);
+-		int nr_this_bank = min(nr_remaining, BRBE_BANK_MAX_ENTRIES);
++	for_each_brbe_entry(i, nr_hw) {
++		struct perf_branch_entry *pbe = &branch_stack->entries[nr_filtered];
+ 
+-		select_brbe_bank(bank);
++		if (!perf_entry_from_brbe_regset(i, pbe, event))
++			break;
+ 
+-		for (int i = 0; i < nr_this_bank; i++) {
+-			struct perf_branch_entry *pbe = &branch_stack->entries[nr_filtered];
++		if (!filter_branch_record(pbe, branch_sample_type, event_type_mask))
++			continue;
+ 
+-			if (!perf_entry_from_brbe_regset(i, pbe, event))
+-				goto done;
++		nr_filtered++;
++	}
+ 
+-			if (!filter_branch_record(pbe, branch_sample_type, event_type_mask))
+-				continue;
++	branch_stack->nr = nr_filtered;
++}
+ 
+-			nr_filtered++;
++int brbe_snapshot_branch_stack(struct perf_branch_entry *entries, unsigned int cnt)
 +{
++	u64 brbidr, brbfcr, brbcr, pmcr;
++	int nr_hw, nr_copied = 0;
++	bool paused_here = false;
 +	unsigned long flags;
 +
++	/* Called with migration disabled, so this is the CPU read below. */
++	if (!valid_brbe_version())
++		return 0;
++
 +	flags = raw_local_daif_save();
++
++	brbcr = read_sysreg_s(SYS_BRBCR_EL1);
++	brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
++
++	/*
++	 * PAUSED is only ever set behind our back, so finding it set is final.
++	 * likely() keeps this inline; a taken branch costs a record.
++	 */
++	if (likely(brbcr && !(brbfcr & BRBFCR_EL1_PAUSED))) {
++		/*
++		 * Stop the counters so a freeze cannot set PAUSED behind the
++		 * value read below; the D19.3 conditions need a PMOVSCLR_EL0
++		 * bit, which a stopped counter cannot set.
++		 */
++		pmcr = read_pmcr();
++		write_pmcr(pmcr & ~ARMV8_PMU_PMCR_E);
++		isb();
++
++		brbfcr = read_sysreg_s(SYS_BRBFCR_EL1);
++		paused_here = !(brbfcr & BRBFCR_EL1_PAUSED);
++
++		write_sysreg_s(brbfcr | BRBFCR_EL1_PAUSED, SYS_BRBFCR_EL1);
++		isb();
++	}
 +
 +	trace_hardirqs_off();
 +
-+	return flags;
-+}
++	/* Records outlive brbe_disable(). */
++	if (brbcr) {
++		brbidr = read_sysreg_s(SYS_BRBIDR0_EL1);
++		nr_hw = min_t(int, FIELD_GET(BRBIDR0_EL1_NUMREC_MASK, brbidr),
++			      BRBIDR0_EL1_NUMREC_64);
 +
-+static __always_inline void __local_daif_restore(unsigned long flags, bool trace)
- {
- 	bool irq_disabled = flags & PSR_I_BIT;
++		for_each_brbe_entry(i, nr_hw) {
++			if (nr_copied >= cnt)
++				break;
++
++			if (!perf_entry_from_brbe_regset(i, &entries[nr_copied], NULL))
++				break;
++
++			nr_copied++;
+ 		}
+ 	}
  
-@@ -72,7 +88,8 @@ static __always_inline void local_daif_restore(unsigned long flags)
- 		(read_sysreg(daif) & (PSR_I_BIT | PSR_F_BIT)) != (PSR_I_BIT | PSR_F_BIT));
- 
- 	if (!irq_disabled) {
--		trace_hardirqs_on();
-+		if (trace)
-+			trace_hardirqs_on();
- 
- 		if (system_uses_irq_prio_masking()) {
- 			gic_write_pmr(GIC_PRIO_IRQON);
-@@ -116,10 +133,20 @@ static __always_inline void local_daif_restore(unsigned long flags)
- 
- 	write_sysreg(flags, daif);
- 
--	if (irq_disabled)
-+	if (irq_disabled && trace)
- 		trace_hardirqs_off();
+-done:
+-	branch_stack->nr = nr_filtered;
++	if (paused_here) {
++		/* Branches were missed, so discard rather than leave a hole. */
++		brbe_invalidate();
++
++		/* Unpause first; a paused BRBE cannot freeze on overflow. */
++		write_sysreg_s(brbfcr, SYS_BRBFCR_EL1);
++		isb();
++		write_pmcr(pmcr);
++	}
++
++	local_daif_restore(flags);
++
++	return nr_copied;
  }
+diff --git a/drivers/perf/arm_brbe.h b/drivers/perf/arm_brbe.h
+index b7c7d8796c86f..0cc25737e5d49 100644
+--- a/drivers/perf/arm_brbe.h
++++ b/drivers/perf/arm_brbe.h
+@@ -10,6 +10,7 @@
+ struct arm_pmu;
+ struct perf_branch_stack;
+ struct perf_event;
++struct perf_branch_entry;
  
-+static __always_inline void local_daif_restore(unsigned long flags)
-+{
-+	__local_daif_restore(flags, true);
-+}
+ #ifdef CONFIG_ARM64_BRBE
+ void brbe_probe(struct arm_pmu *arm_pmu);
+@@ -22,6 +23,8 @@ void brbe_disable(void);
+ bool brbe_branch_attr_valid(struct perf_event *event);
+ void brbe_read_filtered_entries(struct perf_branch_stack *branch_stack,
+ 				const struct perf_event *event);
++int brbe_snapshot_branch_stack(struct perf_branch_entry *entries,
++			       unsigned int cnt);
+ #else
+ static inline void brbe_probe(struct arm_pmu *arm_pmu) { }
+ static inline unsigned int brbe_num_branch_records(const struct arm_pmu *armpmu)
+@@ -44,4 +47,10 @@ static void brbe_read_filtered_entries(struct perf_branch_stack *branch_stack,
+ 				       const struct perf_event *event)
+ {
+ }
 +
-+static __always_inline void raw_local_daif_restore(unsigned long flags)
++static inline int brbe_snapshot_branch_stack(struct perf_branch_entry *entries,
++					     unsigned int cnt)
 +{
-+	__local_daif_restore(flags, false);
++	return 0;
 +}
-+
- /*
-  * Called by synchronous exception handlers to restore the DAIF bits that were
-  * modified by taking an exception.
-diff --git a/arch/arm64/kernel/suspend.c b/arch/arm64/kernel/suspend.c
-index c41724a40b756..461948ad15ec8 100644
---- a/arch/arm64/kernel/suspend.c
-+++ b/arch/arm64/kernel/suspend.c
-@@ -117,14 +117,11 @@ int cpu_suspend(unsigned long arg, int (*fn)(unsigned long))
- 	 * updates to mdscr register (saved and restored along with
- 	 * general purpose registers) from kernel debuggers.
- 	 *
--	 * Strictly speaking the trace_hardirqs_off() here is superfluous,
--	 * hardirqs should be firmly off by now. This really ought to use
--	 * something like raw_local_daif_save().
--	 *
- 	 * This also unmasks interrupts in PMR in order to reliably
- 	 * resume if we're using pseudo-NMIs.
- 	 */
--	flags = local_daif_save();
-+	lockdep_assert_irqs_disabled();
-+	flags = raw_local_daif_save();
+ #endif
+diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+index 03359e078301f..c1afc1c5b4bc7 100644
+--- a/drivers/perf/arm_pmuv3.c
++++ b/drivers/perf/arm_pmuv3.c
+@@ -1495,8 +1495,11 @@ static int armv8_pmu_init(struct arm_pmu *cpu_pmu, char *name,
+ 	cpu_pmu->set_event_filter	= armv8pmu_set_event_filter;
  
- 	/*
- 	 * Function graph tracer state gets inconsistent when the kernel
+ 	cpu_pmu->pmu.event_idx		= armv8pmu_user_event_idx;
+-	if (brbe_num_branch_records(cpu_pmu))
++	if (brbe_num_branch_records(cpu_pmu)) {
+ 		cpu_pmu->pmu.sched_task		= armv8pmu_sched_task;
++		static_call_update(perf_snapshot_branch_stack,
++				   brbe_snapshot_branch_stack);
++	}
+ 
+ 	cpu_pmu->name			= name;
+ 	cpu_pmu->map_event		= map_event;
 -- 
 2.53.0-Meta
 
