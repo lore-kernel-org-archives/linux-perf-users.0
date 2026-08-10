@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206F22D7DEF;
-	Mon, 10 Aug 2026 00:52:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A192D12EE;
+	Mon, 10 Aug 2026 00:52:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786323123; cv=none; b=lBKf3MOYt9/2561GBh2LXPcgPPF9cPl6x082FRvcqCbE6G8sF+D+6yIYZOcJJRSTyC5zVXvnmRgNLmq2dwq1bsIB8UESu+UMjxmV0kYmxdTN6sZjk84fmnYryqB7uP15XW4aLt1iGt/qngrgIpjDmGtA6bNb0qqrI0/6av6kPX8=
+	t=1786323127; cv=none; b=Q9zdKK1egRHyBRKNc+yX8OCJ5QFshDUwfqXVSkGSlAgnZDv5WvD9YOeyVfalR299lVk6VqHQFCoPUtafbFLdnrVfFVeaMB20WN3DHKlzNDcE8opuyAFiXx+1ir1U1bxcu5T8ZgiBUjDMZSol92SEMOeBQfYw28y/eIwM27nvJeo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786323123; c=relaxed/simple;
-	bh=nM2dMoC9G/pD2s7bbLvfTjVD9XNa6phamr5kt0s8TO0=;
+	s=arc-20240116; t=1786323127; c=relaxed/simple;
+	bh=4wR4F0OFmlsfpGokrpYYm5HjjSOPWTG1QoTKFfm8sgM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b0GHDDY+pKZgRhuqgtCFi3cfBtVIR8YIdnZWoqZdV8QxT6Purr4uFinrj14GRwX17CGEqiyjQbYwo3pbdTx3zzLWeTQaPaVmrviQODFmYhPqLoQ19NbUOU7yP5w+z1T7k7deMSUjuBRRK++zKIEqoIdSTkfQ8Hb3hSHBZnA8/J4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uivn1LVq; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=CX9ZOFLJcCZ0ERdJqokhNjPEJ6sDt1QecBXcSBFcKMDDuuYsjE/5tAPBJRGZG3cIOCbW1IVU9u+5mia6LYADB4BUk8uQFAGxwcnc9Zv+d32HcBuHClKNpvx1hsGgObnv/FNGk5V6dlN0amLf+3CWSCM0TXgKlqHNmoQCT1/xxt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ysf3RBi/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uivn1LVq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D01A1F00A3A;
-	Mon, 10 Aug 2026 00:51:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ysf3RBi/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32ED61F000E9;
+	Mon, 10 Aug 2026 00:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786323121;
-	bh=ggrRAYvGehoJSzUMdpv5Zfy46CgOMVvvVvxZY+Y/wn8=;
+	s=k20260515; t=1786323126;
+	bh=OiIZwh9HocWID+UeC+WB+GoYrvpDWUsDzcF5lLeyy8k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Uivn1LVqV0nKvIelx0soK77LrOPcYt5jJ9Swfddt9uZR7A8ObOvQZhdh20rUyPDy8
-	 qKGURV1q+schDHtP25+JhVws0Ywm2h3k8Ewcagz8mZ/CYYxMeuDmwdsf/Ixfjl5sBK
-	 c7Rtq1Y4OOAJVsX8gSl+tOoE7/Xj6EV/+ufzyvXM20i+EeXh/agh4wl1/cGQLl2pa/
-	 Nq/yMUZE2+mzU10KAxzlt0zeUmd1RS9zGl2Zu84S+/2R4akH/w2qvT/YBB9T5RATaS
-	 MJms++yF1peI4QLW/oYfyl51jqOMss4fRCtnkWy8aNDEEeEFUPSZV4/jnod1+UU12r
-	 57QH2k2jvVP6A==
+	b=Ysf3RBi/q8+3QHiKh+t/EUAPbbBaPVIgfS/0a3mchQ0Q5sgmJzQgDv07QZj/cuJzC
+	 s+BLvlpBtV8nK2zVdVYZYNHLN0sS0atshrRXw0pV/SrRUIgU60q0lpqOYDY0hTfpIV
+	 l4X94YwNSPO/19kX+j//Zm7fsPEO5SAJVbcq/3jkRPPlQT2ZAnsVdHfqoB617XuHdo
+	 ZFtVvf9oYpVCm8SmWqRx5aObKNuYdhYiXd2kcxFlxvOF67P7rCARmdlR7lGCk8odo3
+	 cuKWiNpuSLddnNSHYOTeUmGh+jYV9s3Y4rBA6OVsr7LGiUr2Ql4R9W7PwomF/jMALP
+	 qbTD4ap4Z9F6A==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 5/7] perf build: install-build-deps: add Debian devel package mapping
-Date: Sun,  9 Aug 2026 21:51:25 -0300
-Message-ID: <20260810005127.289896-6-acme@kernel.org>
+Subject: [PATCH 6/7] perf build: Remove leftover feature tests for removed cxx and clang support
+Date: Sun,  9 Aug 2026 21:51:26 -0300
+Message-ID: <20260810005127.289896-7-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260810005127.289896-1-acme@kernel.org>
 References: <20260810005127.289896-1-acme@kernel.org>
@@ -55,159 +55,85 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-With the Fedora and Ubuntu mappings in place, this patch adds Debian
-support: Debian installs the same devel packages, under the same
-names, as the Ubuntu mapping, so it reuses debian_pkg_for() and
-debian_base_pkgs as-is, with only auto-detection in detect_distro()
-(and the shared apt-get install path) added, keeping the script's
-per-distro dispatch ready for distros with their own package names.
+56b11a2126bf2f42 ("perf bpf: Remove support for embedding clang for
+compiling BPF events (-e foo.c)") removed the test-cxx.cpp and
+test-clang.cpp sources, but left behind their entries in the feature
+test FILES list, the build rules and the cxx and clang entries in
+FEATURE_TESTS_EXTRA.
 
-Validated on a fresh Debian 13 (trixie) container so the host system
-is not modified:
-
-    distrobox create --image debian:trixie
-    distrobox enter debian-trixie
-    make -C tools/perf install-build-deps
-
-which installed the 29 mapped packages; re-running the target is a
-no-op (apt-get reports "0 newly installed").  A subsequent clean build
-enabled the same feature set as Ubuntu: 'perf version --build-options'
-shows every feature with an external dependency Debian has a package
-for [on], including the BPF skeletons compiled with clang/llvm
-(libLLVM), the python binding and the C++-based features, with only
-the deliberately unmapped libbfd family, libperl, libunwind and the
-CoreSight (libopencsd) packages [OFF].
-
-RHEL, whose package mapping is largely similar to Fedora's, is the
-remaining planned distro, to be enabled once that mapping is
-validated on it.
+Since the sources no longer exist, those rules would always fail,
+making the artificial feature-cxx and feature-clang results to be
+perpetually disabled/absent, remove the leftover entries, making the
+feature test scripts list match the available sources.
 
 Assisted-by: opencode:deepseek-v4-flash-free
 Signed-off-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.perf                 |  3 +-
- tools/perf/scripts/install-build-deps.sh | 37 +++++++++++++-----------
- 2 files changed, 22 insertions(+), 18 deletions(-)
+ tools/build/Makefile.feature |  2 --
+ tools/build/feature/Makefile | 14 --------------
+ 2 files changed, 16 deletions(-)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index e1fc75b4621faed5..29cfd44c427f33ba 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -900,7 +900,8 @@ install: install-bin try-install-man
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index ed1374af31c16838..99eb0ea095375606 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -123,9 +123,7 @@ FEATURE_TESTS_EXTRA :=                  \
+          libbfd-liberty-z               \
+          libopencsd                     \
+          libperl                        \
+-         cxx                            \
+          llvm                           \
+-         clang                          \
+          libbpf                         \
+          libpfm4                        \
+          libdebuginfod			\
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 62909a9c799d3338..7d165018116a552f 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -55,7 +55,6 @@ FILES=                                          \
+          test-bpf.bin                           \
+          test-libbpf.bin                        \
+          test-sdt.bin                           \
+-         test-cxx.bin                           \
+          test-gettid.bin			\
+          test-jvmti.bin				\
+          test-jvmti-cmlr.bin			\
+@@ -63,7 +62,6 @@ FILES=                                          \
+          test-sched_getcpu.bin			\
+          test-setns.bin				\
+          test-libopencsd.bin			\
+-         test-clang.bin				\
+          test-llvm.bin				\
+          test-llvm-perf.bin   			\
+          test-libaio.bin			\
+@@ -335,9 +333,6 @@ $(OUTPUT)test-libbpf.bin:
+ $(OUTPUT)test-sdt.bin:
+ 	$(BUILD)
  
- # Install the development packages needed to build perf, derived from the
- # feature tests in tools/build/feature/.  Currently supported: the Fedora
--# (dnf) and Ubuntu (apt) package mappings, see the script.
-+# (dnf), Ubuntu (apt) and Debian (apt, reusing the Ubuntu mapping)
-+# package mappings, see the script.
- # INSTALL_BUILD_DEPS_ARGS, when set, is passed to the script, so
- # extra options like --list, --dry-run or --distro can be given from make.
- install-build-deps:
-diff --git a/tools/perf/scripts/install-build-deps.sh b/tools/perf/scripts/install-build-deps.sh
-index d725621bd7d70e7f..4a6f4bda49094696 100755
---- a/tools/perf/scripts/install-build-deps.sh
-+++ b/tools/perf/scripts/install-build-deps.sh
-@@ -26,12 +26,17 @@
- #           distrobox create --image ubuntu:26.04
- #           distrobox enter ubuntu-26-04
- #
-+#   - Debian, on apt-get, reusing the Ubuntu mapping, validated on
-+#     Debian 13 (trixie), in a distrobox container:
-+#
-+#           distrobox create --image debian:trixie
-+#           distrobox enter debian-trixie
-+#
- # Running inside a container keeps the host system unmodified.
- #
--# Debian, which shares the Ubuntu package mapping, is the next planned
--# distro to be enabled once that mapping is validated on a Debian
--# release (trixie), as is RHEL support, once its (largely similar to
--# Fedora) package mapping is validated there.
-+# RHEL support, whose package mapping is largely similar to Fedora's,
-+# is the next planned distro, to be enabled once that mapping is
-+# validated there.
- #
- # Usage: install-build-deps.sh [OPTIONS]
- #
-@@ -39,7 +44,7 @@
- #    --list       list the packages that would be installed, then exit
- #    --dry-run    show the install command that would be run, without
- #                 running it
--#    --distro ID  force a distro: fedora, ubuntu (default: auto-detect)
-+#    --distro ID  force a distro: fedora, ubuntu, debian (default: auto-detect)
- #    -h, --help   print this help message
- #
- # Requires root (or passwordless sudo) to actually install packages.
-@@ -61,12 +66,13 @@ it, so the corresponding feature gets enabled on a build.
- Options:
-     --list      list the packages that would be installed, then exit
-     --dry-run   show the install command that would be run, without running it
--    --distro ID force a distro: fedora, ubuntu
-+    --distro ID force a distro: fedora, ubuntu, debian
-     -h, --help  print this help message
+-$(OUTPUT)test-cxx.bin:
+-	$(BUILDXX) -std=gnu++11
+-
+ $(OUTPUT)test-gettid.bin:
+ 	$(BUILD)
  
- Distros supported: Fedora (dnf), validated in a toolbx container on
--Fedora 44, and Ubuntu (apt-get), validated in a distrobox container on
--Ubuntu 26.04.
-+Fedora 44, Ubuntu (apt-get), validated in a distrobox container on
-+Ubuntu 26.04, and Debian (apt-get), reusing the Ubuntu mapping,
-+validated in a distrobox container on Debian 13 (trixie).
- EOF
- 	exit 0
- }
-@@ -173,8 +179,7 @@ fedora_pkg_for() {
- # Return the Debian/Ubuntu package(s) providing the devel requirements
- # of a feature test in tools/build/feature/.  This mapping is shared by
- # Debian and Ubuntu, whose package names for these devel packages match,
--# and is validated on Ubuntu 26.04; Debian (trixie) will be enabled
--# once the same mapping is validated on it.
-+# and is validated on Ubuntu 26.04 and Debian 13 (trixie).
- # ---------------------------------------------------------------------
- debian_pkg_for() {
- 	local feat="$1"
-@@ -281,9 +286,7 @@ detect_distro() {
- 	case "$id" in
- 	fedora)			echo "fedora" ;;
- 	ubuntu)			echo "ubuntu" ;;
--	# Debian shares the Ubuntu package mapping, but it is only validated
--	# on Ubuntu so far, so don't auto-detect it yet.
--	debian)			echo "" ;;
-+	debian)			echo "debian" ;;
- 	# RHEL and its derivatives share most Fedora package names, but the
- 	# mapping is only validated on Fedora, so don't auto-detect them.
- 	rhel|centos|rocky|alma|ol) echo "" ;;
-@@ -315,7 +318,7 @@ package_set() {
- 	local feat pkg pkgs
- 	case "$distro" in
- 	fedora)	pkgs="$fedora_base_pkgs" ;;
--	ubuntu)	pkgs="$debian_base_pkgs" ;;
-+	ubuntu|debian)	pkgs="$debian_base_pkgs" ;;
- 	esac
+@@ -363,15 +358,6 @@ $(OUTPUT)test-llvm-perf.bin:
+ 		$(shell $(LLVM_CONFIG) --system-libs)		\
+ 		> $(@:.bin=.make.output) 2>&1
  
- 	for feat in $(feature_tests "$srcdir"); do
-@@ -345,7 +348,7 @@ install_cmd() {
- 	fedora)
- 		echo "dnf install -y $*"
- 		;;
--	ubuntu)
-+	ubuntu|debian)
- 		# a fresh container has no package index, so update first.
- 		echo "apt-get update && apt-get install -y $*"
- 		;;
-@@ -374,10 +377,10 @@ main() {
- 	srcdir=$(cd "$(dirname "$0")/../../.." && pwd)
- 	distro=$(detect_distro)
- 	case "$distro" in
--	fedora|ubuntu) ;;
-+	fedora|ubuntu|debian) ;;
- 	*)
- 		echo "error: unsupported distro (got '$distro'); the package mapping is not validated on other distros." >&2
--		echo "Supported and validated: Fedora 44 (toolbx container), Ubuntu 26.04 (distrobox container)." >&2
-+		echo "Supported and validated: Fedora 44 (toolbx container), Ubuntu 26.04 and Debian 13 (distrobox containers)." >&2
- 		exit 1
- 		;;
- 	esac
+-$(OUTPUT)test-clang.bin:
+-	$(BUILDXX) -std=gnu++17					\
+-		-I$(shell $(LLVM_CONFIG) --includedir) 		\
+-		-L$(shell $(LLVM_CONFIG) --libdir)		\
+-		-Wl,--start-group -lclang-cpp -Wl,--end-group	\
+-		$(shell $(LLVM_CONFIG) --libs Core option)	\
+-		$(shell $(LLVM_CONFIG) --system-libs)		\
+-		> $(@:.bin=.make.output) 2>&1
+-
+ -include $(OUTPUT)*.d
+ 
+ $(OUTPUT)test-libaio.bin:
 -- 
 2.55.0
 
