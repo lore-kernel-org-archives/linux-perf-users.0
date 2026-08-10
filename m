@@ -1,244 +1,130 @@
-Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B19B3DA5B2;
-	Mon, 10 Aug 2026 13:08:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ECFE2EB5B8;
+	Mon, 10 Aug 2026 13:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786367335; cv=none; b=JaDDPcyZCXeNeACmAMRfHRfgi2GcTTMceoi+Xrj2HJQKfzXsUNkw9BzD140CIIHD7X/me/Cm4BjvYL7pnqGh8LQBRu/DihWcaOGT9uGn+EtFbb7LQnT7qWy2o3qXVTNFO+lHze9kGh5gtBTtTLseuzqCbsDcIe25DTBc6mj/HY4=
+	t=1786368946; cv=none; b=Qietggn4f6tgDdqP+r4+LFbk3Ad/wWFJE+5BsU4bbihoaBI7fJ0pEj2XEdOYQw7h0X5a+n+LLKd0EZxG41BVD8iF7563VmACoVGPVtKoMkoepZdhJdl7sicEduYZ4EPYV/lNYk+DSpY9tIAxc62jp/iyQNJYajc0MIzTj7bt/Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786367335; c=relaxed/simple;
-	bh=9JRQbZ4gs7XyP9ZQf9smFCJiXCllT5KpJ5Zl5H0sS1I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kncr5afUXvxW6INGwUPNWfFAegs+bP1rWhLfwopJg46vD8Ze/XqzFLmabZJ3/vKkvzqSn7p4ZZpLRHkl9MusHnpUKpnaOcv2Jeyr8conkWPrxx6vpFpgb7AiSh+fUP+TK15Y6F/L+E++YBWK9EmXGlmsdeRzDUl4U51YXn1qkW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=YHgB/q5j; arc=none smtp.client-ip=115.124.30.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1786368946; c=relaxed/simple;
+	bh=sj0RrVfUhExYBdkJs39XAms88P2ltniJLgWXvjG9Rhw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PCQmmWCxrrxHZNEjnNjoeQdRapcRYV8/y+RqGO6LMgLZmpc59iL9CF+gk9ZSKNIRbC0RCOkYmUzkgPh7ki4uhp36RxPXutTNR1v9Mub0Y4zQKZP+YRGv1EaxrwjUJge8kMF7t+b5cSVrIZQbEmYGvT6MxHt7fAvwk5whq62ICIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gtgfW6K0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="YHgB/q5j"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1786367318; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=8HFpxqi50PlxPU5HPYXDlO8V5JnkJJMznTwIpCnePtE=;
-	b=YHgB/q5jG8lAC7xfBNVXiJ8QzppQTAChq35MU6pvG6udPiiseWlo3uD9QAq82fNW73z20F6HqTjcE37r3ZTgtl+OWTvV40eR7H7wQ4Yfj4Vln3uRnjLaLIQgEF2DIJTmTG9wUihzM9e91wCOvhAWd0TKDuoMFhjP5FulMH+LY1k=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X8jlzw3_1786367314;
-Received: from 30.246.161.177(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X8jlzw3_1786367314 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Mon, 10 Aug 2026 21:08:36 +0800
-Message-ID: <1b7e48ec-66a0-4727-b533-ff87f54df057@linux.alibaba.com>
-Date: Mon, 10 Aug 2026 21:08:34 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gtgfW6K0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7E831F00A3A;
+	Mon, 10 Aug 2026 13:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786368944;
+	bh=hlrl3xze0yBKa+qAzlqk+6GMfYLXuGnJHmFyd3u5Lmc=;
+	h=From:To:Cc:Subject:Date;
+	b=gtgfW6K07wfpikyLhTN0/8c62690UmSrq9xyaCeGCIVIOu/0QV4UVko/rqe1wxWgX
+	 8lLV4Z/1ZYljrZDs+r/MO28J/8XJiJscpnCMlo9byWhCCOa/rJwbRLHKoozCl9EOeh
+	 tzakhVlSC1ViGcN+Y5RtxoB5CNyMrfL5mOi//joqmO9oMbs5VuOpsAm3lg+HOMh90z
+	 mP2czSSbOuD+52OzEMkJxkcyTgMH49wJWwtzZHixS1Xfw/eyWtNlyN9Ay6r4iuf7iP
+	 9juW6iAAo0H6OZNpSosCDZUE8JMMQhEhmrLp0z9Ss5HOjC6cdpptMa3BE5QVTnJfb/
+	 AWBdx+OUpU/vQ==
+From: Puranjay Mohan <puranjay@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Puranjay Mohan <puranjay@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Usama Arif <usama.arif@linux.dev>,
+	Will Deacon <will@kernel.org>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	x86@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v7 0/3] perf/core: sched_task() dispatch and branch entry fixes
+Date: Mon, 10 Aug 2026 06:35:33 -0700
+Message-ID: <20260810133540.1947118-1-puranjay@kernel.org>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 01/23] perf capstone: Fix arm64 jump/adrp disassembly
- mismatch with objdump
-To: Tengda Wu <wutengda@huaweicloud.com>, Namhyung Kim <namhyung@kernel.org>,
- james.clark@linaro.org, Li Huafei <lihuafei1@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
- Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Bill Wendling <morbo@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-2-wutengda@huaweicloud.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20260808122400.2961238-2-wutengda@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+These three fixes were found while adding BRBE support for
+bpf_get_branch_snapshot() on arm64 and were carried in that series until
+v6 [1]. They do not depend on it, so they go on their own; the version
+number continues from that series to avoid two numbering schemes for the
+same patches.
 
+Patch 1 stops __perf_pmu_sched_task() passing a NULL pmu_ctx to
+pmu->sched_task(). armv8pmu_sched_task() is the only implementation that
+dereferences the argument, so the oops needs BRBE.
 
-On 8/8/26 8:23 PM, Tengda Wu wrote:
-> The jump and adrp instructions parsed by libcapstone currently lack
-> symbolic representation and use a '#' prefix for addresses. This
-> format is inconsistent with objdump's output, which causes subsequent
-> parsing in jump__parse() and arm64_mov__parse() to fail.
-> 
-> Example mismatch:
->    Current: b #0xffff8000800114c8
->    Fix:     b ffff8000800114c8 <el0t_64_sync+0x108>
-> 
->    Current: adrp x18, #0xffff800081f5f000
->    Fix:     adrp x18, ffff800081f5f000 <this_cpu_vector>
-> 
-> Fix this by implementing extended formatting for these arm64
-> instructions during symbol__disassemble_capstone(). This ensures
-> the output matches objdump's expected style, including the raw
-> address and the associated <symbol+offset> suffix.
-> 
-> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-> ---
->   tools/perf/util/capstone.c | 136 +++++++++++++++++++++++++++++++++----
->   tools/perf/util/disasm.c   |   5 ++
->   tools/perf/util/disasm.h   |   1 +
->   3 files changed, 130 insertions(+), 12 deletions(-)
-> 
-> diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
-> index 74213daf8786..fb8a2bc5558f 100644
-> --- a/tools/perf/util/capstone.c
-> +++ b/tools/perf/util/capstone.c
-> @@ -3,6 +3,7 @@
->   
->   #include <errno.h>
->   #include <inttypes.h>
-> +#include <stdlib.h>
->   #include <string.h>
->   
->   #include <dlfcn.h>
-> @@ -31,6 +32,10 @@
->   #define CS_MODE_RISCVC   4
->   #endif
->   
-> +#if CS_VERSION_MAJOR < 4
-> +#define ARM64_GRP_BRANCH_RELATIVE  7
+Patch 2 makes perf_pmu_sched_task() visit PMUs whose events are all
+CPU-wide. They are skipped today on every switch to a task that has a
+perf context but no event on that PMU, so branch records leak across the
+task boundary with perf record -b -a. intel_pmu_lbr_add() calls
+perf_sched_cb_inc() unconditionally, so x86 LBR is affected the same way.
 
-Please add a comment explaining where '7' comes from
-(CS_GRP_BRANCH_RELATIVE in capstone v3), otherwise it reads like an
-arbitrary magic number.
+Patch 3 has each caller fill struct perf_branch_entry in one assignment
+rather than clearing the bitfields first, and drops
+perf_clear_branch_entry_bitfields(). The helper had drifted from the
+struct: new_type and priv were never cleared, and arm_pmuv3.c allocates
+the per-CPU branch stack with kmalloc().
 
-> +#endif
-> +
->   #ifdef LIBCAPSTONE_DLOPEN
->   static void *perf_cs_dll_handle(void)
->   {
-> @@ -225,6 +230,12 @@ static int capstone_init(uint16_t e_machine, csh *cs_handle, bool is64, bool is_
->   		 * on x86 by investigating instruction details.
->   		 */
->   		perf_cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
-> +	} else if (arch == CS_ARCH_ARM64) {
-> +		/*
-> +		 * Same as x86: arm64 needs instruction details to resolve
-> +		 * symbolic addresses.
-> +		 */
-> +		perf_cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
->   	}
->   
->   	return 0;
-> @@ -299,10 +310,6 @@ static void print_capstone_detail(struct cs_insn *insn, char *buf, size_t len,
->   	struct map *map = args->ms->map;
->   	struct symbol *sym;
->   
-> -	/* TODO: support more architectures */
-> -	if (!arch__is_x86(args->arch))
-> -		return;
-> -
->   	if (insn->detail == NULL)
->   		return;
->   
-> @@ -354,6 +361,116 @@ static void print_capstone_detail(struct cs_insn *insn, char *buf, size_t len,
->   	}
->   }
->   
-> +static int print_default_format(struct cs_insn *insn, char *buf, size_t len)
-> +{
-> +	return scnprintf(buf, len, "       %-7s %s",
-> +			 insn->mnemonic, insn->op_str);
-> +}
-> +
-> +static void format_capstone_insn_x86(struct cs_insn *insn, char *buf,
-> +				     size_t len, struct annotate_args *args,
-> +				     u64 addr)
-> +{
-> +	int printed;
-> +
-> +	printed = print_default_format(insn, buf, len);
-> +	buf += printed;
-> +	len -= printed;
-> +
-> +	print_capstone_detail(insn, buf, len, args, addr);
-> +}
-> +
-> +static bool is_pc_relative_insn(struct cs_insn *insn)
-> +{
-> +	int i;
-> +
-> +	if (insn->id == ARM64_INS_ADR || insn->id == ARM64_INS_ADRP)
-> +		return true;
-> +
-> +	if (insn->detail == NULL)
-> +		return false;
-> +
-> +	for (i = 0; i < insn->detail->groups_count; i++) {
-> +		if (insn->detail->groups[i] == ARM64_GRP_JUMP ||
-> +		    insn->detail->groups[i] == ARM64_GRP_CALL ||
-> +		    insn->detail->groups[i] == ARM64_GRP_BRANCH_RELATIVE)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static void format_capstone_insn_arm64(struct cs_insn *insn, char *buf,
-> +				       size_t len, struct annotate_args *args)
-> +{
-> +	struct map *map = args->ms->map;
-> +	struct symbol *sym;
-> +	char *last_imm, *endptr;
-> +	u64 orig_addr, addr;
-> +	struct map *found_map = NULL;
-> +
-> +	print_default_format(insn, buf, len);
-> +	/*
-> +	 * Adjust instructions to keep the existing behavior with objdump.
-> +	 *
-> +	 * Example conversion:
-> +	 * From: b #0xffff8000800114c8
-> +	 * To:   b ffff8000800114c8 <el0t_64_sync+0x108>
-> +	 */
-> +	if (is_pc_relative_insn(insn)) {
-> +		/* Extract last immediate value as address */
-> +		last_imm = strrchr(buf, '#');
-> +		if (!last_imm)
-> +			return;
-> +
-> +		orig_addr = strtoull(last_imm + 1, &endptr, 16);
-> +		if (endptr == last_imm + 1)
-> +			return;
-> +
-> +		addr = map__objdump_2mem(map, orig_addr);
-> +
-> +		/* Relocate map that contains the address */
-> +		if (dso__kernel(map__dso(map))) {
-> +			found_map = maps__find(map__kmaps(map), addr);
-> +			if (found_map == NULL)
-> +				return;
-> +			map = found_map;
-> +		}
-> +
-> +		/* Convert it to map-relative address for search */
-> +		addr = map__map_ip(map, addr);
-> +
-> +		sym = map__find_symbol(map, addr);
-> +		if (sym == NULL) {
-> +			map__put(found_map);
-> +			return;
-> +		}
-> +
-> +		/* Symbolize the resolved address */
-> +		len = len - (last_imm - buf);
-> +		if (addr == sym->start) {
-> +			scnprintf(last_imm, len, "%"PRIx64" <%s>",
-> +				  orig_addr, sym->name);
-> +		} else {
-> +			scnprintf(last_imm, len, "%"PRIx64" <%s+%#"PRIx64">",
-> +				  orig_addr, sym->name, addr - sym->start);
-> +		}
-> +		map__put(found_map);
+Tested on a 128 CPU arm64 machine with BRBE. A WARN_ON_ONCE() at the gate
+patch 2 adds to perf_ctx_sched_task_cb() fires within seconds of running
+perf record -b -a alongside a task-bound event pinned to a different CPU.
+Also built for x86, which patch 3 touches.
 
+Changes in v7:
+- Patch 1: pass &cpc->epc unconditionally. cpc->task_epc is NULL there
+  both before and after patch 2, so the conditional was dead.
+- Patch 2: gate perf_pmu_sched_task() on cpc->task_epc alone. It is
+  never set without a task context scheduled in, so the cpuctx->task_ctx
+  test was redundant and the two gates are now inverses.
+- Patch 3: fill the entry at each site instead of renaming the helper,
+  as suggested by Peter.
+- Dropped the v6 review tags, all three patches changed.
 
-This whole sequence (objdump_2mem -> kmaps relocation -> map_ip ->
-find_symbol -> scnprintf the "<sym+off>" string) is almost identical to
-what print_capstone_detail() does for x86 RIP-relative operands.  Could
-you factor out a common helper so the two paths don't diverge over time?
+Changes in v6:
+- Split the sched_task() fix into patches 1 and 2; the NULL dereference
+  and the missed dispatch are separate bugs with different reachability.
+- Gate perf_ctx_sched_task_cb() on cpc->task_epc. v5 removed the early
+  return in perf_pmu_sched_task() without it, so both paths ran for a
+  task whose event for that PMU is pinned to another CPU. Caught by the
+  WARN_ON_ONCE() described above.
+- Tag patches 1 and 2 for stable.
+- Send separately from the BRBE series, rebased onto tip perf/core.
 
-Thanks.
-Shuai
+[1] https://lore.kernel.org/all/20260616155716.2631508-1-puranjay@kernel.org/
+v6: https://lore.kernel.org/bpf/20260806135224.3267890-1-puranjay@kernel.org/
+
+Puranjay Mohan (3):
+  perf/core: Fix NULL pmu_ctx passed to pmu->sched_task()
+  perf/core: Run sched_task() for PMUs with only CPU-wide events
+  perf/core: Fill branch entries with a single assignment
+
+ arch/x86/events/amd/brs.c   |  9 +++--
+ arch/x86/events/amd/lbr.c   | 16 ++++-----
+ arch/x86/events/intel/lbr.c | 65 ++++++++++++++++++++-----------------
+ drivers/perf/arm_brbe.c     |  2 +-
+ include/linux/perf_event.h  | 17 ----------
+ kernel/events/core.c        | 15 ++++++---
+ 6 files changed, 58 insertions(+), 66 deletions(-)
+
+-- 
+2.53.0-Meta
+
