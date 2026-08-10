@@ -1,117 +1,269 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3D138D3F8;
-	Mon, 10 Aug 2026 05:02:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 086A83932C2;
+	Mon, 10 Aug 2026 05:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786338155; cv=none; b=gvNkKrXvTdy5WvavQ2L7oUOrM3eheOlXVmnKLCHKnhqBObpVKreBkE2CVu9aWpBwQ60Xj8PJuRaxBXJ3oNPIv0VjAlmbkaAcNAbDUHYE0k9wOzjzxM2WzZBlnaahijnwo1oG0gSqASonzbd/POJw/FlUlwpzP3LPuemwUcgBiQs=
+	t=1786339225; cv=none; b=mPi6jP2frijK9O0e+5SjaXZWiHDPvJYyjlwft/rP5GV7IZ5A3g/KcjlEw6IqMA+s19C3jXjPQxeix9J6elUbJ+KkG0ea25YDPPUGOoazNXAPY4aDCkXNYYJKRhbhKvJNkEVSe2NmxxJayOR7/Sw7kpvr8XTGiVtDNbSiD9OG9kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786338155; c=relaxed/simple;
-	bh=ibyRR4d3DOoc37eT+mPISCWg+++t4bqXPX4LWljI/58=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hgNJzNYCj5eZo6R+ePqTAfTSttdzb/9ueKfEmVBbMRAWfqBOE8KQ6/16u910dZJ1jLkJH3eZR7UKEh9f1PEDfOb2T4BVzu/JgzNKffi0+RCoXQh75Z+G02Y0hvnY83vkhrfdOodkdzHXDZd6Dls7Rw9MEZYObYQIiQX504peZnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TsT/sLdX; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786339225; c=relaxed/simple;
+	bh=GyZJLwNV15Ksm8JEUz/wp17dzn8ceB4Cjm7yEbJWzo0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dxMIpDZkMMaLzGX7XqB92/bw+KYFCR4ab4OGSl2oC4IlFltq9YmJNzFs7YntExZt4rbcpVv3RcHXE8Q5djHNJ4sPAMn043/eVUWoiTqGk+g/RvhzBApQ5B5yj2iNFLFjRLLkKl/BiXPGLDFaYBV2i5NdJUOBQB4XC0DHBaC+fWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gqwlGZiV; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TsT/sLdX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAB6B1F000E9;
-	Mon, 10 Aug 2026 05:02:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786338153;
-	bh=HiPdiXvzch9OfSlLMBWK/qHupTt8F7XRhgVKtL19eqw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=TsT/sLdXJ13ib4pf5uI3cnu1QEUDZucOrXohgLpSAT5WX4+uAdX9VxCeJF6rWAgZ0
-	 CgiXNO9JAukGVa8ucgUlHdImUUnHl7gU9fMhDYqm/dPZ5dNV4vMB1YFZn9a5e5Pqnc
-	 +ybix6H2+DuXsb7t5NK31W/6L646NE2Ofel8krw642kuRVChKDLJwUCFV82ylCx5LZ
-	 ve2yY3WyQM78SeHy+4RYUp/Pycsyj9odJRy7aNTT762tI+a2nA9WyAQ/ZgUGD5+R3z
-	 TheepxIIZDwcaJLMAVMaIiRDxAjr02Of0lXWaihPA4bLUg5MNvolMuL2jh/S5wIdjG
-	 FHMO1/JLtEnjg==
-Date: Mon, 10 Aug 2026 14:02:30 +0900
-From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 11/15] perf python: Add thread and PMU uninitialized
- checks
-Message-ID: <anlbZhmuJIj1Wm6E@google.com>
-References: <20260624051535.3584977-1-irogers@google.com>
- <20260809071455.1221514-1-irogers@google.com>
- <20260809071455.1221514-12-irogers@google.com>
- <20260809072810.3B94F1F00ACF@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gqwlGZiV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786339222; x=1817875222;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=GyZJLwNV15Ksm8JEUz/wp17dzn8ceB4Cjm7yEbJWzo0=;
+  b=gqwlGZiV1OcYOttn8I7sm0tJwIqh792/aPZbOHLE3bKQOC3KXlbXX+KY
+   lm4BNvh8zttABvKzNAJ/WCIC+IafaRuhMb85yqRXkNBIqhA9qD62yxa8m
+   +v97cAfes2YEqdVcxlWAGHk44ZxXzpcOpnW0aDMKtL/abmDWwLiWL3ojk
+   9zPWHBG/yWmE3sWITQlPZK55w/CDO55jrQ/kJTGygLIOx69IDaPRXqwOD
+   uKUT5OPvIff0Jw3t0DJVd+tIO5kBYlqEWr0rB5BrPU3KU0cRYkroqY75A
+   9Jh1GhOFf6k72wffUKRJHepZ42E4KH8GTmKSbv9SXOsjd5nb+TA7wa5l+
+   Q==;
+X-CSE-ConnectionGUID: cMizxd9RRhauoaR/c1AfBQ==
+X-CSE-MsgGUID: 7P7JwR/ZTW2jMP5dfPunww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11870"; a="86784972"
+X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
+   d="scan'208";a="86784972"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Aug 2026 22:20:21 -0700
+X-CSE-ConnectionGUID: g9ZjxSJaRQyAd0lhxiKCiQ==
+X-CSE-MsgGUID: wKEoQze5SiOGxJCPqrBhQw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,215,1779174000"; 
+   d="scan'208";a="262421440"
+Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
+  by orviesa008.jf.intel.com with ESMTP; 09 Aug 2026 22:20:16 -0700
+From: Jiebin Sun <jiebin.sun@intel.com>
+To: namhyung@kernel.org
+Cc: acme@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	irogers@google.com,
+	james.clark@linaro.org,
+	jolsa@kernel.org,
+	mark.rutland@arm.com,
+	dapeng1.mi@linux.intel.com,
+	thomas.falcon@intel.com,
+	tianyou.li@intel.com,
+	wangyang.guo@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Jiebin Sun <jiebin.sun@intel.com>
+Subject: [PATCH v8 0/9] perf c2c: add a function view
+Date: Mon, 10 Aug 2026 13:26:38 +0800
+Message-ID: <20260810052647.588867-1-jiebin.sun@intel.com>
+X-Mailer: git-send-email 2.52.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260809072810.3B94F1F00ACF@smtp.kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hello,
+The perf c2c cacheline view identifies hot shared lines, but it can be
+difficult to see which functions account for contention across those lines.
+This series adds a function-oriented view that groups the existing data as:
 
-On Sun, Aug 09, 2026 at 07:28:09AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] The newly added `CHECK_INITIALIZED(ppmu->pmu, "pmu")` in `pyrf_pmu__events()` causes a Python object memory leak of `py_list` on the error path.
-> --
-> 
-> --- Patch [11]: [PATCH v3 11/15] perf python: Add thread and PMU uninitialized checks ---
-> commit a381b82bb0eb00b93be525bfa1c265b574c03a5a
-> Author: Ian Rogers <irogers@google.com>
-> 
-> perf python: Add thread and PMU uninitialized checks
-> 
-> This commit adds CHECK_INITIALIZED guards to thread and PMU getters to
-> prevent crashes when accessed before proper initialization.
-> 
-> > diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-> > index c70b151428f76..fe5afce173330 100644
-> > --- a/tools/perf/util/python.c
-> > +++ b/tools/perf/util/python.c
-> 
-> [ ... ]
-> 
-> > @@ -1730,6 +1731,8 @@ static PyObject *pyrf_pmu__events(PyObject *self)
-> >  	PyObject *py_list = PyList_New(0);
-> >  	int ret;
-> >  
-> > +	CHECK_INITIALIZED(ppmu->pmu, "pmu");
-> > +
-> >  	if (!py_list)
-> >  		return NULL;
-> 
-> [Severity: Medium]
-> Does this code leak py_list if CHECK_INITIALIZED fails and returns early?
-> 
-> Since py_list is allocated with PyList_New(0) just before the initialization
-> check, it appears this Python object is left orphaned if the macro evaluates
-> to true and forces an early return. 
-> 
-> Could the CHECK_INITIALIZED macro be moved to the beginning of
-> pyrf_pmu__events() before the PyList_New(0) allocation to avoid this leak?
+  read-side function -> contending writer -> shared cacheline
 
-It seems this is the only issue introduced in this series.
-As it's trivial, I'll apply the following change for Ian.
+Pressing TAB switches between the cacheline and function views. Existing
+cacheline-view data and operations remain unchanged.
 
-Thanks,
-Namhyung
+v1: https://lore.kernel.org/linux-perf-users/20260626070355.1556721-1-jiebin.sun@intel.com/
+v2: https://lore.kernel.org/linux-perf-users/20260710084247.3576706-1-jiebin.sun@intel.com/
+v3: https://lore.kernel.org/linux-perf-users/20260717020530.1645123-1-jiebin.sun@intel.com/
+v4: https://lore.kernel.org/linux-perf-users/20260724095842.995920-1-jiebin.sun@intel.com/
+v5: https://lore.kernel.org/linux-perf-users/20260730090521.2206375-1-jiebin.sun@intel.com/
+v6: https://lore.kernel.org/linux-perf-users/20260803035220.172022-1-jiebin.sun@intel.com/
+v7: https://lore.kernel.org/linux-perf-users/20260806074217.2846596-1-jiebin.sun@intel.com/
+
+Changes since v7
+================
+
+  - Keep c2c-function.o in libperf-ui.a and drop the v7 tools/perf/Build
+    change, as Namhyung suggested. builtin-c2c.c now passes the cacheline
+    histograms, coalescing fields, symbol_full flag, and cacheline detail
+    callback through struct c2c_function_view_args. The browser no longer
+    references command-private state.
+
+  - Move the shared c2c types and the two column-formatting callbacks into
+    new util/c2c.h and util/c2c.c. Keep struct perf_c2c, the command
+    instance, and perf_c2c__browse_cacheline() private to builtin-c2c.c.
+
+  - Rebase onto perf-tools-next at bf10e6ee2ac3.
+
+Changes since v6
+================
+
+  - Link c2c-function.o directly into perf under CONFIG_SLANG instead of
+    including it in libperf-ui.a. The browser depends on state and callbacks
+    provided by builtin-c2c.o, which is not linked into python/perf.so,
+    while libperf-ui.a is linked under --whole-archive. This fixes the
+    unresolved symbols seen when importing the Python module and keeps the
+    TUI-only object out of NO_SLANG builds.
+
+  - Rebase onto perf-tools-next at d74fb8c4c87f.
+
+Changes since v5
+================
+
+  - Give the function-view children their own references instead of
+    borrowing them, as suggested by Namhyung. They set ops and take refs
+    via map_symbol__copy() and thread__get(), so hist_entry__delete()
+    frees them; the custom child destructor and the
+    WARN_ON_ONCE(report_hierarchy) guard are gone.
+
+  - Add NO_SLANG stubs for the two TUI entry points declared in c2c.h,
+    matching how util/hist.h declares its own.
+
+  - Spell out in the symbol renderer why the length returned by
+    se_snprintf() cannot exceed the cell.
+
+  - Rebase onto perf-tools-next at d04ef71492fa.
+
+No intended change to the rendered output, cacheline-view data, existing
+cacheline operations, or --stdio output.
+
+Changes since v4
+================
+
+  - Rebase onto perf-tools-next at 0d40fedcd1b9.
+
+  - Require `iaddr` in --coalesce before entering the function view;
+    without it, coalesced samples cannot be reliably attributed.
+
+  - Reuse each source cacheline's existing index as the level-3 identity,
+    so same-address sources no longer merge and 'd' finds the original
+    entry, without adding fields to the shared C2C structures.
+
+  - Keep same-function reader/writer pairs, which the coalesced view cannot
+    reliably tell apart from cross-thread contention.
+
+  - Robustness and cleanup: build the hierarchy only from filtered
+    cachelines with a lightweight entry allocator; explicit
+    mem_info__new() handling; a local bound in the symbol renderer; a
+    NULL-map guard; deterministic tie-breaks; function-view-local row
+    recounting; Ctrl-C as an exit key; and expanded man-page docs.
+
+Changes since v3
+================
+
+Reworked the function view into a true function-centric hierarchy, as
+discussed with Namhyung:
+
+  - Level 1 is the read-side function itself, aggregating all of its code
+    addresses into one entry and sorting by Cycles %.
+
+  - Level 2 is the contending function that writes the shared lines,
+    aggregated across cachelines and sorted by store count. Level 3 is the
+    specific cachelines.
+
+  - Dedicated code-address and offset columns were removed from the main
+    view. Verbose function formatting can still include a representative
+    code address, and full code-address information remains available in
+    the per-cacheline detail view ('d').
+
+  - Lower-level entries are indented like the normal perf report hierarchy
+    view, and entries with no contending writer are pruned.
+
+  - Reorganized the series from 14 mechanical patches into 9 logically
+    self-contained patches.
+
+Changes since v2
+================
+
+  - Prefix helpers exported from builtin-c2c.c with c2c_, as suggested by
+    Namhyung.
+
+Changes since v1
+================
+
+  - Add a worked man-page example, as suggested by Namhyung.
+
+In the perf c2c TUI, press TAB in the cacheline view to switch to the
+function view. It presents a three-level hierarchy:
+
+  Level 1: read-side function, sorted by Cycles %
+  Level 2: functions writing the shared lines, sorted by store count
+  Level 3: cachelines where the two functions contend
+
+For example, with dequeue_pushable_task expanded to its level-2 writers and
+two of those writers expanded to their level-3 cachelines:
+
+  Shared Data Functions Table     (19 entries, sorted on Cycles %)
+     Cycles    Store
+          %    count  Function / Contending function / Cacheline
+  ----------------------------------------------------------------------
+  +  35.67%      876  + [k] cpupri_set
+  +  24.31%      424  + [k] pull_rt_task
+  -  16.53%      555  - [k] dequeue_pushable_task
+                 145    - [k] pull_rt_task
+                 145        0xff2d0082809da080
+                 139    - [k] enqueue_pushable_task
+                  70        0xff2d00a2071f9640
+                  69        0xff2d0082809da000
+
+A level-1 store count decomposes into its level-2 writers, and each writer's
+count decomposes into its level-3 cachelines (here 145 = 145, 139 = 70 + 69).
+
+Keys in the function view:
+
+  TAB/ESC/q/Ctrl-C   return to the cacheline view
+  d                  show details for the selected level-3 cacheline
+  e / +              expand / collapse the selected entry
+  ?                  help
+
+The function view is a separate hist_browser in
+tools/perf/ui/browsers/c2c-function.c. Shared types and declarations used
+by both views are factored out of builtin-c2c.c into util/c2c.h. The
+hierarchy is constructed from the existing cacheline histograms into
+dedicated hists and rendered with custom column formatters.
+
+Testing: every commit builds with and without SLANG support. In both
+configurations python/perf.so has no unresolved symbols, the Python module
+imports successfully, and the full series passes `perf test c2c` and
+`perf test 'import perf'`. The cacheline-view --stdio output is
+byte-identical to the base commit. c2c-function.o remains in libperf-ui.a
+without references to command-private symbols. Stdio support and automated
+function-view coverage remain a separate follow-up.
+
+Jiebin Sun (9):
+  perf c2c: extract shared data structures into util/c2c.h
+  perf c2c: add function view browser skeleton
+  perf c2c: add column rendering for function view
+  perf c2c: add HPP list parsing for function view columns
+  perf c2c: add function view stats merge and memory management
+  perf c2c: add function view hierarchy entry creation
+  perf c2c: build and finalize the function view hierarchy
+  perf c2c: add function view browser UI and cacheline detail
+  perf c2c: document function view in perf-c2c man page
+
+ tools/perf/Documentation/perf-c2c.txt |   71 +
+ tools/perf/builtin-c2c.c              |  115 +-
+ tools/perf/ui/browsers/Build          |    1 +
+ tools/perf/ui/browsers/c2c-function.c | 1791 +++++++++++++++++++++++++
+ tools/perf/util/Build                 |    1 +
+ tools/perf/util/c2c.c                 |   21 +
+ tools/perf/util/c2c.h                 |  131 ++
+ 7 files changed, 2029 insertions(+), 102 deletions(-)
+ create mode 100644 tools/perf/ui/browsers/c2c-function.c
+ create mode 100644 tools/perf/util/c2c.c
+ create mode 100644 tools/perf/util/c2c.h
 
 
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index fe5afce1733306be..36c5f4b0d0bb15e7 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -1728,11 +1728,12 @@ static int pyrf_pmu__events_cb(void *state, struct pmu_event_info *info)
- static PyObject *pyrf_pmu__events(PyObject *self)
- {
-        struct pyrf_pmu *ppmu = (void *)self;
--       PyObject *py_list = PyList_New(0);
-+       PyObject *py_list;
-        int ret;
- 
-        CHECK_INITIALIZED(ppmu->pmu, "pmu");
- 
-+       py_list = PyList_New(0);
-        if (!py_list)
-                return NULL;
- 
+base-commit: bf10e6ee2ac3034c9068e03eed418fd16961984e
+-- 
+2.52.0
 
