@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C9843E4B0;
-	Tue, 11 Aug 2026 16:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4843A3B0581;
+	Tue, 11 Aug 2026 16:48:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786466844; cv=none; b=mrTP0fVAnzWYb2DUXoMPYIVNHn0EgdnWAEKHnyBLSA/w6bS47uFwGtKRh1ID7HFdbLKPcuJfWFTXiTqb7dtKeMLC6JDUZ6opG4qR2nUE6OAsnVDcMPAVyxu5lhYvCL55SMgK4RCLO0DwzR/5lIVlld6cqkDE+Q2piMMdcyxhFQ4=
+	t=1786466913; cv=none; b=kSswYCOmr67swhZYSMG6JJ1UPq593K3V6CqgiaPer/+cuwZCUrwGXshYXzuLUnrXHJ6wGpRTNAebxm6Fvg/ErsHAlD75IlbQfshhUO+zWEG6dJ7uv1hkocU/t1Chjgb9zlo7swcvH/ZNhZtOak0KNqPjRxHWYE3/rVZNaCnARGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786466844; c=relaxed/simple;
-	bh=T5ws0jkFj0yK1z6okrgdIzVAd+bXQkU298DbjMvWnOc=;
+	s=arc-20240116; t=1786466913; c=relaxed/simple;
+	bh=5iM0rl4+U6JvgRl37W+gPqlyuWMmkg7MOPoyqQUMIOk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zg/SpmQTpag84NzRmhh+p5UKtexM8p0C5seDdh7aC6ID7M+itomP9joMus5/k1NoVQBB+5PYlf+vo0878NXsf75CfP5O67sVu9RFGdlZ5/KdkTEL1GiFIxXRV/D94iIp6032HlxxuWtXxH4hMfhmVgZooZUR7cd+RlKkgExLB8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WmXVFlun; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=SfA9NPGbxw/xMlKiFuB42bQEzBW3pv0ZZCsDOlXGPihExZ2Lv7nVEmWkh7mppvRAYuZ9u/ypSfcTpP4d5k4EUAO4xjIhQzg3QeHBZpCXD6y7nTdCmjE6eRpdt9OQenjV9fn4K9iSetqMlzv2h+g8L/HOnYkVuLl7UovZDft9Lmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AIZxIFAm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WmXVFlun"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73FAD1F00A3A;
-	Tue, 11 Aug 2026 16:47:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AIZxIFAm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89AC81F000E9;
+	Tue, 11 Aug 2026 16:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786466843;
-	bh=aAJmH2RZWtuo/nczs+6yqrQv07ilSQp4Hm9KiWaE9KU=;
+	s=k20260515; t=1786466912;
+	bh=9N4Q1jk4C+Off88XGaOwtGooGJBpZMvX648V30zsvDQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=WmXVFlunRxpDAll3Tg1HyKKOFpDURz7v3unAPbgW6vcpFaHuqSw91xJDoEak2/hJ6
-	 dJy9/hEr17V859sGvDWGdD2D/G3Rlhrx8qavJCmSat+jW0BWd56nTDYrxaqbaA26p9
-	 pmWmbRldbJGu+2K40KZilR1uKsAU1kdgQqfG8n67jUdg9NyBf8pz5twN7Z2NxRRmJM
-	 fv/T8znbn7zLsqbqGEyvrEz3zIncUWwNVQ0sEup0YrsOwdFallbS0jm8/z0BNBOmGr
-	 hk03RRkrYb8m+c8cyuZCmLVFAc+okHkQP0NOEqbnc2K3KFsDKXxavrI/VotHIpKC23
-	 i7SkXJnZgNsZw==
-Message-ID: <3cff4b8f-b523-4805-add9-e817e9bb6a82@kernel.org>
-Date: Tue, 11 Aug 2026 18:46:58 +0200
+	b=AIZxIFAmKurbVhT2yKjRNb4cRvhB+aLR4EE3v66FDsMcvJDyndNDawSimnPvQAVq5
+	 qzmttuzuV93lAlfyPshLQv9WnCp/gf/T/afoUa/9rA2W8cIbOzq5pgzRQv7ULKb6Xv
+	 RwXF08n3j5I564owX4uerUmLiYkuavi9CI99q5xp5NVAHLampqcAvfk+QbjXLhf9Ri
+	 J7mkamacG9CxXzFsa3mj+eOwCtMl0vCzaIwFewUqPwZgdbwNufyqjMkdEUtSqYHpmZ
+	 EE2XRNaOwl2BZeh/j8BC3xM7acgjaKgABCXDUhKs+Gas6yfxQsp1tPOtCFW0MyzZPT
+	 2tFeIuIhqH/uQ==
+Message-ID: <4382368c-d0ef-4361-957d-78bc1edf60e2@kernel.org>
+Date: Tue, 11 Aug 2026 18:48:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -35,8 +35,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 10/20] mm/rmap: track whether the page VMA mapped pgoff
- is anonymous
+Subject: Re: [PATCH v4 11/20] mm: clean up vma_address_end()
 To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
@@ -96,7 +95,7 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  intel-xe@lists.freedesktop.org, linux-perf-users@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
 References: <20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org>
- <20260806-b4-scalable-cow-virt-pgoff-v4-10-ab318a350404@kernel.org>
+ <20260806-b4-scalable-cow-virt-pgoff-v4-11-ab318a350404@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -143,29 +142,26 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260806-b4-scalable-cow-virt-pgoff-v4-10-ab318a350404@kernel.org>
+In-Reply-To: <20260806-b4-scalable-cow-virt-pgoff-v4-11-ab318a350404@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/6/26 22:21, Lorenzo Stoakes (ARM) wrote:
-> Update the page_vma_mapped_walk structure to track whether the pgoff being
-> tracked is an anonymous pgoff or not and update the comments to reflect
-> this.
+> vma_address_end() is a confusing function with a lot of moving parts so
+> clean it up prior to extending it for anon page indexed mappings.
 > 
-> This is necessary in order to determine the correct VMA page
-> offset in vma_address_end() when pvmw->nr_pages > 1.
+> Const-ify some variables and establish pgoff_vma_start and pgoff_end
+> variables to clearly identify the page offset for the start of the VMA and
+> the end of the page offset range specified by the page walk.
 > 
-> Also document that pvmw->pgoff is meaningless for pvmw->nr_pages == 1 and
-> for KSM.
-> 
-> Do not set this field where pgoff is not specified.
-> 
-> This is laying the groundwork for eventually using anonymous page offsets
-> as the index for all anonymous folios.
+> This simplifies the function significantly and lays the groundwork for a
+> future change to update this function to account for anonymously page
+> indexed folios.
 > 
 > No functional change intended.
 > 
 > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> ---
 
 Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
