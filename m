@@ -1,151 +1,208 @@
-Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022094.outbound.protection.outlook.com [52.101.96.94])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F11F442A150;
-	Tue, 11 Aug 2026 12:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.94
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786450243; cv=fail; b=X1GduCp/QCuQ6RA4xFG/Amn+/5Dj/E9RvY7u0JgjicDBGlJ1v8q0+sQ4DNKG3GJyEjWOVcRiAzmu3RE8qALuxvo2YE5UvLMZib0IFCT9pybctbSN2hzXJCD2JOD1j6QeIrXRjVUFWrsrS/g1fKI/7Qn+ApP9wnJE8nV/GiKM2do=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786450243; c=relaxed/simple;
-	bh=AYE23eMfRWreiRT7QGKE4IO40oVmZ6AteYv+0d47BUQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=V4GqWiIDJ3NAi7iERf09gm/2GkVl3hE0zg1ffQVOCIrt4TJzeSUXkcfWaA3MPiKqtT1mII7DXl2FV6jGbEfd8IU7b2uh5IjDbvNgIynKzPXAMulIMAedGfOUpYGbe5eKG7z8r/gbSfZH9U3gkFyb267LAK9XJwoskPZbX7RDfmA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.96.94
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZCD3KWvE770cn3UJ52ijCtQzN4wBBXL4S/xPm4Dufu/C9hn6O6lW1RJyplcBkxTQ4WbyU6g8xdiVo5Wv1neeS7AMNp11SQGKj1LLPRuNtGji626lpwf8FCi5RsUVqn9C1+V0mrQTy5lYShanidd8eMAkMLBJUU5YIkHJg4sgPV8Po+nrQ6wsDWcFbD++y7uG/dP8zijcSNG/rAnbcd7y4Oyudfa9Xfr9gFx/mRSmGewsILS3N1PLlvObsGz1kFRqZCjf+gm6XGkb1+Z2769z6M4QitsV1d7egQ8pNvHqi2Istuki+yWnYR2Y3ltMqcptZ1Nr9vKduiYPVI4oY27C/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=C6sqBGPDDMxfYw6NGGAsIz8hJmyE/p9Cf7qLnKg5/sU=;
- b=SXdLUBQkVYJpeyjDk33eIUpVclpfryO6VWuVyS5TVFU8m/ZevSpSHuVjv01OM9iAp+xdskZ13jBswhmJoubziCkBv3YyqnklhBAxFQR874duVBRjyUa+ClHc/KuXaidJ40LWKQRXNkmCZsw7mLAyLId8AX1WwUyWCVhCZg71cyKRvJ+co9G+XpBo6wYA8619uHwIUwsWORx/mixhA5QbSlh+cF1ZKSxEyjQXby3NCA3P9jyjwWsTSypVfP1x4krNt8wKYRxmSEv6Mn7FBlGwSSjKTIZv3J+9UBbe6nlcXdz8wiWUOa/bkRrVnftXr43nr7IYvSx/Tee+9QDMhyCsTw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by LO3P123MB3355.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:102::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.292.25; Tue, 11 Aug
- 2026 12:10:37 +0000
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0315.008; Tue, 11 Aug 2026
- 12:10:36 +0000
-Date: Tue, 11 Aug 2026 08:10:32 -0400
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org, 
-	howardchu95@gmail.com, neelx@suse.com, chjohnst@mail.com, sean@ashe.io, steve@abita.co, 
-	rishil1999@outlook.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 0/4] perf sched latency: Refine outputs, unit scaling,
- and histogram support
-Message-ID: <ot7k2ycvntbxthepc2x6zixg7cmcibi7644dkvszvcvcidiqf5@2r5omvciwj2p>
-References: <20260806153926.300499-1-atomlin@atomlin.com>
- <178614675174.2923192.12057881964440578941.b4-ty@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <178614675174.2923192.12057881964440578941.b4-ty@kernel.org>
-X-ClientProxiedBy: BLAPR05CA0039.namprd05.prod.outlook.com
- (2603:10b6:208:335::20) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:183::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A41B3B71B6;
+	Tue, 11 Aug 2026 12:11:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786450311; cv=none; b=qkf5rDq2L25ojW3JgZWbA7/eHDFNBuWyAXTUAjc5ECYnz5W89jBNCrMIN3Ub/Epn6QIsTBXkGTt2lKRgJD8xEzyPK7YNSYuP+7xuZN2CZ18bNi3z/jVn8XE7fncleGkw11E3BKH+GwJVIU+20TW7BJ9czFDWeHNGI60kVq6O23Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786450311; c=relaxed/simple;
+	bh=nInDi7/nGPIcNHx3XhP2r2B28pAKpq9pB70NVwqzbGE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gk32dfASBvrkSV3p/hImwynhbRzUr+HtWIXajxl1Ugawg3zjfRxOtkXgtyftpsFm1YpKug7I2Yav/RIeIAXkppO5Mvlv2SuAWWPyqoQC1ydgfiRE6/HOx5+hpW1LMK2rS/14o6xZNA5bnL5hTJm/v4xMD5Ec4xRzMsHk7a0/WOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oMzFJcn9; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oMzFJcn9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E88261F000E9;
+	Tue, 11 Aug 2026 12:11:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786450309;
+	bh=/fTG1Cghw/RG7+KE3x88oxH8TI74VawrjBf3qjRRniY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=oMzFJcn9VOzkFaKMEx9vCYCdx1Pq7igNm3SDyOEjzrOpDudIApIUK8tbQWGyhMTA2
+	 t05Mkqhok9RLYIMUol0cpCiu3QthaSWyzaAoYQ2iTd1AckujJZDZf2+JmOHRJ0KvP7
+	 mcsYLS8a7sO8YaLXbyWEeOK99DFlaVD5L55J3MTekojG6h3FMWYgpjeoMH//X24lZs
+	 5lfWAxjxOdrK+/s8jDuKs0rLQeM8RFflAxNY1JPwZF3i/yhkf94kLkVqbTR4mmJWjo
+	 hK2SQwlx7kI/9C/spjKPKM5IkvDG9SLQ6RAQ5o7kkbgcPTchuBQb5gh+4ZPvUgW8mp
+	 IkyibBYe3lp/w==
+Message-ID: <e9de4158-b829-471b-980c-1999959bbc48@kernel.org>
+Date: Tue, 11 Aug 2026 14:11:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO3P123MB3355:EE_
-X-MS-Office365-Filtering-Correlation-Id: 153ce5d6-391b-463c-38b1-08def7a18d30
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|7416014|23010399003|18002099003|22082099003|56012099006|3023799007|6133799003|4143699003|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	CMuQTRTLot6K9wpeejhkRs+Vn1PIKzLnlBX+9nenAZD67OnMLnPtdJC/99Q2cYRfA8lIwiInHmOk/S03kJi7vKaaojfX9JikmogXdkNQcnoRLHkIV/yjrKUzPqVtiA6fDrc8wUid05S2O9NZkqUzSa4W4sBUfQ5Cb2CQxNsjQQ+JiD2qyuQx/IU0O9NPHK+D8mPE0H/NxAhQuPbyZgjuFji4cus8yzQDx7aWy6vKuJiJmT8/M2hNt9A+liVuxHQlFV5iCZcIdc0GMpyzct0M7TWgPqQkHXvC6NI6eZ5dnWicf9NxiRB23Q2fOMGj5UmLTZ1EtoLgBn6+7RX8B2Q+ziHv4acrbzrk4Ir5Al+FsgQN8IG1gS8teo0n2hZacEbkcdSIHb7Ks41+g6msgvVlYSuzcHrsGr0dkx/+9raT+YrE2OWS2IkWn+lWAAe4qNA/mzeps1v/o3ZeXZLNmRdhqFNCdN3nF+O5a51B15iq0otcVEWh7b+fC7WRemSIEwXTJzxkOKZv+1xhzuv0W0roO/xy37He29jH4xf5tDzj/yE1QKVo5Xv7EgSkEBtgoIrPbk93qik6K5cTtIgAZy/aKLgwO1UUG9U7R6ma2t30jN6an8WMTPT4lR+w6aOpkO8ss+rVELNvAU4e2i7e/HkXGA==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014)(23010399003)(18002099003)(22082099003)(56012099006)(3023799007)(6133799003)(4143699003)(10067099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ODdEUXgzMkxYZmYrTzFUclBzNENmY2xJeTJjcTd2Q2t6aC8xUGx1TXpFaFgv?=
- =?utf-8?B?WVhEaFFZMC9ublRaNFk5c2pPckRLRWFPNFJ6MHovUGxZTU83Yzk3aGs2b25x?=
- =?utf-8?B?MVQ0cnZ4a1puWjNGTDdMS1hhS0E2TE9CRzd4YkpEaS8wQ1djbll6c0F3enF3?=
- =?utf-8?B?ZHQ3YWp0VWZoT0cycW5wckIzeXdPMkZtN3FINWc1c3BqcVNWWGZvL1JTZjl2?=
- =?utf-8?B?OENpRU5tYnpWOTFZMGNkT2w4dE1TM3JHYnJqRDQ0bVZWaDM3WWMyYzg3RkN3?=
- =?utf-8?B?Z05YR3FsUW5uVkljeUZpUEh4OGhSQWFmY2xOSDR4azl0TVB6MWFTckJDT3lG?=
- =?utf-8?B?Tm93SlNxdm1Tck9sd0Y5VmdER1RSSVpSMjk3V2ZqNTVpNitMZGJhcmxHTHN6?=
- =?utf-8?B?TndmL3o0OVhrQmR6czBDUXJwMTBMQUYvQlNrbUVydXZGa1FneXRnWUoxSEFl?=
- =?utf-8?B?bnZ2MXRTVkxwLzZBeHJKUDg4Ui9iQmRXc2p5bDdwZisrV0ovNEFubDZFSWRs?=
- =?utf-8?B?eTE3dXlkc0lyNmhTelZ1U2JCS09GdnlBUkVVWHBpbHQvSXA1Z0ErMEtZRlov?=
- =?utf-8?B?OTJaWmkybW9NSUVPT3RLYjRvN2JCSXF0Tmp1eHk2ZjdYSTZEK1haSE1zbmx3?=
- =?utf-8?B?ZTkrSzRvTU5hMjZPZExLdmxPZG00WnF4amZqcitIbFZSS3lSUWhlMHJYT3hC?=
- =?utf-8?B?eld3T01qdlZDME0xbHdTWHVTMFBrTnBNU0VhMjdERmRhTkM4dkNHUENGdWNG?=
- =?utf-8?B?NFZFTjFObzRPcTIyVlZzTEFPUlNRUUxHR25pTUlyYWRpcnRLMjA0M20rUmw0?=
- =?utf-8?B?SWdmVW8wT25zWFZYUDFNdm5PYTREWlM3VEw0emdubDJ5bDBOYjQ3RHFtRmR6?=
- =?utf-8?B?SFpaVnY4WWp1eHY2RithTXBkakNjaVhNR2Z3dDRNZ1pBNnJFQXYrQkJCVkVE?=
- =?utf-8?B?OFNYdzRZTURTS0I2NkFRc1pwcUZJTjJTNmFUWklWS1hNTEVXTDF6NUJHcUE4?=
- =?utf-8?B?N3I2NGxLLy9QYnNSVnFjaGtxeHlBWDhaeUVpNSsvZktZWURYV0ZKT0FXQkZY?=
- =?utf-8?B?dU10VWlCdjRMVVMwRzRxeEZZSHIzODlua0RmVVR2VWxZeVoyN3hrTlV0U0xI?=
- =?utf-8?B?SmRtOG9Hakg5cDNFNlhEVnp6aW93alR2NnFFNmJuMFNDc0daOFNIWUlKU0ww?=
- =?utf-8?B?R0w5TEUxYjRoV3VVRFFJVUdFKzdoS1ltKzdwZGtQb213bCs3UWxQZTh1Slkr?=
- =?utf-8?B?aFlNSk9BOXZ0cXlyQWN1NzJ6M0twcTliTUJsT2ZPUWFSbHNjMHZlNXlBL0NY?=
- =?utf-8?B?UXlLdC9kNDJTcm9MRGVNeWNVZG8vaDdZMWVnb2ViZ0poRWRGYmg5WktEOFpl?=
- =?utf-8?B?WEd4ajdGeU5ubUpUQ09WTzhIL08zTGZ5bHBCS09KNVZNa29iY29ycEgxUG9N?=
- =?utf-8?B?aHpPYTNQSG1pSnEyUGV4S1piOXdpM1hUMi9CZ2lQTWJld3hCSUl2TlV1b2hy?=
- =?utf-8?B?OTFnZVFuVjZ2TXYzRGV1SHRYMHpsdjlVamM1RjFJMUZLdFUvZjZBRTVXRGFp?=
- =?utf-8?B?bGNQT3ZxQmllMDRzeXQ0QnQ4NURla0E4V3JZSXJsMnhDQmVPUExXTlhxcmxM?=
- =?utf-8?B?TWpyOUc1RFhVckpQd0FXbXBCR2pPdnM4eW01SGxSWUl4d2V0UGxBakFCWDg1?=
- =?utf-8?B?VmZoTUNIUmNvZGhMYzNheXdPVE1OblVxYlR6TEFhdERibmQxMjFTVEtjYWJM?=
- =?utf-8?B?V3UzcmlKWGJEZ2d3M0FBVjZRdXptaUF3T2Q0bWpGa3lyQ1BlTEtQaitFWEs5?=
- =?utf-8?B?NTlYRlQxVEJBU0RYMDQrMmxGYlRBOHNuUm1TMC9rRGMyTlh2Y0RSRjdyNEQ3?=
- =?utf-8?B?a296QkhHUmZSTkdLVWxIcUdVei9OaGlwNXVGSVhKTTFNVEY0TmR3RFhpL0Fy?=
- =?utf-8?B?aE1KK1ZwbEFXb1UxMm4ydlU1MU1sajBWTXBuaUkrYlhiVVVpb2dqaloya3pa?=
- =?utf-8?B?NTJsUDhUZTNqWkJyN3VTMXozWVlrMTBkTHMzYmFwUTZ3TCtjRGwrT2lwOEFx?=
- =?utf-8?B?TndtN0RZM3JTbGxnbHdhVWVhR29oUUJvQy9YNk5lbGpyQXI3c1JJM3ZESHRL?=
- =?utf-8?B?ZmdnZUdMNG5WSDNRY3NZN1VmNXNidHVzVUlFaXV5QUhjSHVTNXEzSjQ3U1VT?=
- =?utf-8?B?MFo5UXMvQWJIZG1NVGNiZjZiaGlNM2NUbHg1QURYVVkweG02ZDl4Y2g2WGNq?=
- =?utf-8?B?cTZ6d21RdFZPQ3c5ZHAvMDFxZ0RjS1drclpsUG9mMk9pVlhQL1pNWWxzY0NY?=
- =?utf-8?B?Y2Z6eEluYzlXd2JwN0J2SldZVkt6eEliQ0pUKzUwWXhXUzFab0YyQT09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 153ce5d6-391b-463c-38b1-08def7a18d30
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Aug 2026 12:10:36.6880
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: O9ZhFT4HgtZSu2sioV6veOI6rDRGmgxAyU/1UXhoi/GeGKM++NlcaTg9zmRG8dUo/+ldWtO/MYY7vkX3PG68vw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO3P123MB3355
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/9] mm: convert PTE table entry to pte
+To: Muhammad Usama Anjum <usama.anjum@arm.com>,
+ Alexander Gordeev <agordeev@linux.ibm.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich
+ <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+ Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
+ Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+ Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrey Ryabinin <ryabinin.a.a@gmail.com>,
+ Pasha Tatashin <pasha.tatashin@soleen.com>, Chris Li <chrisl@kernel.org>,
+ Kairui Song <kasong@tencent.com>, Uladzislau Rezki <urezki@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou <dennis@kernel.org>,
+ Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
+ Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+ ziy@nvidia.com, pfalcato@suse.de, ryan.roberts@arm.com,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-parisc@vger.kernel.org,
+ xen-devel@lists.xenproject.org, linux-mm@kvack.org,
+ linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
+ kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, damon@lists.linux.dev
+References: <20260806083926.1807279-1-usama.anjum@arm.com>
+ <20260806083926.1807279-7-usama.anjum@arm.com>
+ <fab9fc78-1e1d-4d5b-a9ca-92f3ebd04108-agordeev@linux.ibm.com>
+ <5c329236-7761-4e42-a549-b822e43b4358@arm.com>
+ <2599c5b3-e8ac-4865-993b-d41e6f060d52-agordeev@linux.ibm.com>
+ <f0b0dacb-fb83-4402-b0ea-30072727dfd7@arm.com>
+From: "David Hildenbrand (Arm)" <david@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=david@kernel.org; keydata=
+ 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
+ qIws/H2t
+In-Reply-To: <f0b0dacb-fb83-4402-b0ea-30072727dfd7@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Aug 07, 2026 at 04:52:31PM -0700, Namhyung Kim wrote:
-> On Thu, 06 Aug 2026 11:39:22 -0400, Aaron Tomlin wrote:
-> > This patch series improves 'perf sched latency' by suppressing misleading
-> > empty table output, extending pipe mode stream processing, introducing
-> > dynamic unit auto-scaling for latency and runtime statistics, and adding
-> > latency histogram visualisation alongside time-span filtering.
-> > 
-> > Patch 1 addresses an issue where 'perf sched latency' fell through and
-> > returned success (0) when perf_session__has_traces() failed due to missing
-> > tracepoint events in a perf.data file. This caused empty header tables and
-> > zeroed summary statistics to be rendered. In addition,
-> > thread__get_runtime() in map_switch_event() is guarded against potential
-> > NULL pointer dereferences under memory allocation failures.
-> > 
-> > [...]
-> Applied to perf-tools-next, thanks!
+On 8/10/26 13:06, Muhammad Usama Anjum wrote:
+> On 10/08/2026 7:44 am, Alexander Gordeev wrote:
+>> On Fri, Aug 07, 2026 at 05:26:04PM +0100, Muhammad Usama Anjum wrote:
+>>> Yes, this is particular line is for non MMU. In this case, CONIFG_ARCH_HAS_HW_PTE
+>>> would never be defined. Hence hw_pte_t is just pte_t and direct dereference is
+>>> allowed. I'd thought a lot about it; is better to leave direct dereference here
+>>> or use some helper. Then used __pte_from_hw() was already being used in generic
+>>> ptep_get().
+>>
+>> But in case CONIFG_ARCH_HAS_HW_PTE=n __pte_from_hw() is still gets called.
+>> That looks inconsistent to me. Why not just call ptep_deref() (see below)?
 > 
-> Best regards,
-> Namhyung
+> Agreed. Calling __pte_from_hw() directly exposes the representation
+> conversion at the call site. I will introduce ptep_deref() and use it
+> here.
+> 
+>>
+>>> There are only two users of __pte_from_hw() at this time. 
+>>>
+>>> ptep_get_sw() or ptep_get_deref() is better name here?
+>>
+>> ptep_deref() would be it.
+>>
+>> Do you agree to the suggested API requirements?
+> 
+> Yes. hw_pte_t * identifies storage containing hardware-formatted PTEs,
+> regardless of whether it is attached. ptep_get() is used for attached
+> entries and may provide additional architecture-specific handling.
+> ptep_deref() is used for unattached entries and performs only the raw
+> storage-to-value conversion.
+> 
+> For review, this patch would become:
+> 
+> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+> index bc0b9c65aa1d0..ce900d2652d91 100644
+> --- a/include/linux/hugetlb.h
+> +++ b/include/linux/hugetlb.h
+> @@ -1283,7 +1283,7 @@ static inline pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+>  #ifdef CONFIG_MMU
+>  	return ptep_get(ptep);
+>  #else
+> -	return *ptep;
+> +	return ptep_deref(ptep);
+>  #endif
+>  }
+>  
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 1768421755a9c..08613593f3320 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -490,6 +490,13 @@ static inline int pudp_set_access_flags(struct vm_area_struct *vma,
+>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>  #endif
+>  
+> +#ifndef ptep_deref
+> +static inline pte_t ptep_deref(hw_pte_t *ptep)
+> +{
+> +	return __pte_from_hw(*ptep);
+> +}
+> +#endif
+> +
+>  #ifndef ptep_get
+>  static inline pte_t ptep_get(hw_pte_t *ptep)
+>  {
 > 
 
-Hi Namhyung,
+I mean, how many such users do we expect? 1? :)
 
-Thanks!
+Why have a helper for that then, that seems to encourage it's use, when really
+people should be using ptep_get() ?
+
 -- 
-Aaron Tomlin
+Cheers,
+
+David
