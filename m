@@ -1,30 +1,32 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DE43438B9
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Aug 2026 03:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A6BE394496;
+	Tue, 11 Aug 2026 03:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786418392; cv=none; b=osggcsn85Obq4YGEMiaKbTbjlg8PA7zLvxkE/4o81DCBuDlrVrLE9tpZRil51E+nOpsVWBqrpzKJK43juNPLldu9u32vPGK2xkRjEk5SNJ8wYi8Gv+CeiCn8gL59YDdVY9WHxFJ5Tjb06d7jkaGaIakbAcmkBRg3+9LzrazXV2A=
+	t=1786418730; cv=none; b=Y5b9Z4o/ViKw3smppKvIamGYUIVe/4ZkqbYXidlheWuQnMw6ISBc/nLpfJvWAw/3S28L5XrKAD45AkMdfJmU4n7JqXnNZCXb1zxhCTyxmTLHuKtUs+DQtGYNWk/hCvixygMtw8bWRn7KK1hnS2b1YmT3m0zQa/uVSnvJlFSP3p8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786418392; c=relaxed/simple;
-	bh=Ts+vHWukKN8sUEb+E2XiHaq0mJtw5CebvNk7YyVa2H0=;
+	s=arc-20240116; t=1786418730; c=relaxed/simple;
+	bh=9y76cQD391WO8DvvOjTCpBOH37O/MNrEfgM9DmhmTgU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lOSIL23sWUN5BYa3d83X4u0AUCSxY7NCH89DWC07OTTHk+7Z0/P4CpKrTCWeVujH+kIDavV5BjAc+aedgmCp7H0Z3lfDOsMC2Fkvc6wsY2cKuJw31Vc5ck33QSZ/eVhDCunnBA2vsLXS/7sFsts8D/EfYxM34ogvMYumg9/IPTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hJxgH6f9kzKHMQW
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Aug 2026 11:19:23 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 561F940573
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Aug 2026 11:19:39 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP4 (Coremail) with UTF8SMTPA id gCh0CgBn+R3KlHpqvgCXBw--.2755S2;
-	Tue, 11 Aug 2026 11:19:39 +0800 (CST)
-Message-ID: <6a62c820-3317-4786-823d-50c0a0349a78@huaweicloud.com>
-Date: Tue, 11 Aug 2026 11:19:38 +0800
+	 In-Reply-To:Content-Type; b=XYrpgBAZHwWsmDiFzfdTSnioqfLNj+o0C+qELgoQF/x5GVPvRKeGa56MehBEOrq/kxUyZ4CrN5E8XnBIfi+9drOuODC/4IRmJ0T7cMnRTiZDZ+ZnbCOG3EqJ6I5/nSOQc6mS4Dog7lCXGt4WPNz80xAhwY+EmrUmLEFPthnItP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=QYnArfTu; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="QYnArfTu"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1786418719; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=4XgK3imMB3NoBFeFmcCzz78TwjTfNSTHshu8BTdmpeA=;
+	b=QYnArfTuIzGxpVyqizkD6TZV8OjZ5t4ak+Xib6UuhRvmB34/iuQpDbltueFE7sCdbi+CpZYS0jGcetSaX0yYqzqJM1UwhpP09ScrXUQ3OzioT9h7RdqNWk88WNrSudIy2qGCVqusXUAXIjq5kg4weR8NB9LMXSwWJPRrdWidMyg=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X8mliJT_1786418717;
+Received: from 30.246.162.187(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X8mliJT_1786418717 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 11 Aug 2026 11:25:18 +0800
+Message-ID: <19df2aa0-4c8d-424d-a833-0c17d35a9502@linux.alibaba.com>
+Date: Tue, 11 Aug 2026 11:25:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -32,108 +34,98 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/23] perf annotate-arm64: Generalize arm64_mov__parse
- to support more instructions
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v4 01/23] perf capstone: Fix arm64 jump/adrp disassembly
+ mismatch with objdump
+To: Tengda Wu <wutengda@huaweicloud.com>, Namhyung Kim <namhyung@kernel.org>,
+ james.clark@linaro.org, Li Huafei <lihuafei1@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
+ Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Bill Wendling <morbo@google.com>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
 References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-4-wutengda@huaweicloud.com>
- <20260808130502.02EA31F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260808130502.02EA31F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgBn+R3KlHpqvgCXBw--.2755S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxuryDur4DJw47uF1rKr15urg_yoW5XF48pw
-	47Cws8GF10gr4UKwn3Zrs7XF1S9w17Ja15KFyYy3Z7KrsxCFn7AFn3tF4a9a1rWrs8Cw4j
-	vFnYvFyxXFn5CaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUgmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU1CPfJUUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+ <20260808122400.2961238-2-wutengda@huaweicloud.com>
+ <1b7e48ec-66a0-4727-b533-ff87f54df057@linux.alibaba.com>
+ <244d8775-5318-4678-a392-b1416acc78af@huaweicloud.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <244d8775-5318-4678-a392-b1416acc78af@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-On 2026/8/8 21:05, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] arch->objdump.memory_ref_char is uninitialized (0) for ARM64, causing arm64__check_multi_regs() to fail parsing memory operands and creating an out-of-bounds read risk.
-> --
+On 8/11/26 10:27 AM, Tengda Wu wrote:
+> Hi Shuai, thank you for your time.
 > 
-> --- Patch [3]: [PATCH v4 03/23] perf annotate-arm64: Generalize arm64_mov__parse to support more instructions ---
-> commit 0546b270cb844bdab4fcf529e313bb0ead4fc3f8
-> Author: Tengda Wu <wutengda@huaweicloud.com>
+> On 2026/8/10 21:08, Shuai Xue wrote:
+>>
+>>
+>> On 8/8/26 8:23 PM, Tengda Wu wrote:
+>>> The jump and adrp instructions parsed by libcapstone currently lack
+>>> symbolic representation and use a '#' prefix for addresses. This
+>>> format is inconsistent with objdump's output, which causes subsequent
+>>> parsing in jump__parse() and arm64_mov__parse() to fail.
+>>>
+>>> Example mismatch:
+>>>     Current: b #0xffff8000800114c8
+>>>     Fix:     b ffff8000800114c8 <el0t_64_sync+0x108>
+>>>
+>>>     Current: adrp x18, #0xffff800081f5f000
+>>>     Fix:     adrp x18, ffff800081f5f000 <this_cpu_vector>
+>>>
+>>> Fix this by implementing extended formatting for these arm64
+>>> instructions during symbol__disassemble_capstone(). This ensures
+>>> the output matches objdump's expected style, including the raw
+>>> address and the associated <symbol+offset> suffix.
+>>>
+>>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+>>> ---
+>>>    tools/perf/util/capstone.c | 136 +++++++++++++++++++++++++++++++++----
+>>>    tools/perf/util/disasm.c   |   5 ++
+>>>    tools/perf/util/disasm.h   |   1 +
+>>>    3 files changed, 130 insertions(+), 12 deletions(-)
+>>>
+>>> diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
+>>> index 74213daf8786..fb8a2bc5558f 100644
+>>> --- a/tools/perf/util/capstone.c
+>>> +++ b/tools/perf/util/capstone.c
+>>> @@ -3,6 +3,7 @@
+>>>      #include <errno.h>
+>>>    #include <inttypes.h>
+>>> +#include <stdlib.h>
+>>>    #include <string.h>
+>>>      #include <dlfcn.h>
+>>> @@ -31,6 +32,10 @@
+>>>    #define CS_MODE_RISCVC   4
+>>>    #endif
+>>>    +#if CS_VERSION_MAJOR < 4
+>>> +#define ARM64_GRP_BRANCH_RELATIVE  7
+>>
+>> Please add a comment explaining where '7' comes from
+>> (CS_GRP_BRANCH_RELATIVE in capstone v3), otherwise it reads like an
+>> arbitrary magic number.
+>>
 > 
-> perf annotate-arm64: Generalize arm64_mov__parse to support more instructions
->     
-> As the default parser for arm64 instructions, arm64_mov__parse()
-> currently only supports parsing instructions with the 'addr <symbol>'
-> suffix. Other instructions are not supported, causing a lack of
-> source and target information for most regular instructions.
->     
-> Generalize arm64_mov__parse to extend its parsing capabilities:
-> 1. Parse 'ops->target.raw' and 'ops->source.raw' by default.
-> 2. Utilize arm64__check_multi_regs() to identify if source and
->    target contain multiple registers.
-> 3. Maintain backward compatibility for instructions containing the
->    'addr <symbol>' suffix.
+> Um, this was done following Namhyung's approach. That said, adding a
+> comment would certainly make this definition clearer -- will add it.
 > 
->> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
->> index 33080fdca125f..5e824fd617ee5 100644
->> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
->> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+> Also, I couldn't find CS_GRP_BRANCH_RELATIVE in v3. From what I can see,
+> it was originally introduced in v4, together with ARM64_GRP_BRANCH_RELATIVE
+> (see https://github.com/capstone-engine/capstone/commit/a09a81813c83).
+> So the comment might look something like this:
 > 
-> [ ... ]
+>    #define ARM64_GRP_BRANCH_RELATIVE  7  /* = CS_GRP_BRANCH_RELATIVE */
 > 
->> +static bool arm64__check_multi_regs(const struct arch *arch, const char *op)
->> +{
->> +	const char *p = op;
->> +	int reg_count = 0;
->> +
->> +	while (p && *p) {
->> +		p = skip_spaces(p);
->> +		if (*p == arch->objdump.memory_ref_char)
->> +			p++;
-> 
-> [Severity: Medium]
-> Could this result in an out-of-bounds read?
-> 
-> Since arch->objdump.memory_ref_char is not explicitly initialized for ARM64,
-> it defaults to 0. If the operand string contains trailing spaces,
-> skip_spaces() will advance p to the null terminator. 
-> 
-> This would cause the following check to match:
-> 
->     if (*p == arch->objdump.memory_ref_char) /* 0 == 0 */
->         p++;
-> 
-> This increments p past the null terminator, and the subsequent call to
-> arm64__is_reg(p) would access unallocated memory:
-> 
->     static bool arm64__is_reg(const char *op)
->     {
->         ...
->         if ((op[0] == 'x' || op[0] == 'w') && isdigit(op[1]))
->         ...
-> 
-> Should memory_ref_char be initialized to '[' for ARM64 so that memory
-> operands are correctly parsed?
+> Is this acceptable?
 > 
 
-Agreed. I need to move the initialization of memory_ref_char earlier in this patch.
+LGTM.
 
->> +
->> +		if (arm64__is_reg(p))
->> +			reg_count++;
->> +
-> 
+Thanks.
+Shuai
 
