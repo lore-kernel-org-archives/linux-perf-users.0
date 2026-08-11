@@ -1,147 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD5945C6FA;
-	Tue, 11 Aug 2026 17:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7049D33556D;
+	Tue, 11 Aug 2026 17:51:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786469644; cv=none; b=fF7Y7Y+VxoFnyycUv2LlB7gnEFn4gVmjaQwVEfjA8Ig8xX9fxWpMIY2Uu7yVOHksNuNkA3WnFlchjWd0H/vSj7seJX98hxx/xoWsWZF/TaU1ZU2p9jev8mAsnTU1EOFKuH3hS193RwZrmKcjN7w+6rtRJP/0NAaVOx2zj1jO61k=
+	t=1786470711; cv=none; b=CjZb8OBAV1AUDYbE+Zn5Ey5LnZ8OWb12LpcYlssjNa1W9PgizSZYpxXfPyhD6//H3n4sL91sR+CKKPgI8+G/3hCC9RoFML7AZG/aN0OYOdCGrYuWMqD/N/XHU1uv480TuqX/qD2TgzcUoqPRtrXHuFr1EgKvkjXwdVBM/Sdn/mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786469644; c=relaxed/simple;
-	bh=YPtScEkaIh0cMaZGSYZbdtdCeqct0TIk/DenrQyxmLY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UoGMnXJIXU7pkpEZgZY/MHvWU5aV1CU7WVAtSRDlre3jJvILRKo4Kyjxagozncbx6iak1EYRkhzg7OlYMhG/kR+yVSBPuabfFCzugrl6exbE9kOiw4Q/vp005dj3dOyOMzct4lZyWkT6BMXVxniaEq8HciTpobUkoJdSPbm9fZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JAzO602r; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1786470711; c=relaxed/simple;
+	bh=A6vYKkUvq1CjxstdkMxQhe3Gx14ufzTvsv/4FqfnQYc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=LMsC54b/RoE6gkBlj+LezqaehWYdbFd9dgN9cZ2GIn4aFJ5r35hAhJU/3SIBBLGc6k64q2Xnesp/POvgAgoa9MUhWRCZ/whC8oZtd//ZsjfB5a0FfgH7ZLulS8j/RECWU/J5LlQWPZ8wc6EUDE7Iy+zzzxHiYTJDUmxa9doIzgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9QUHdhy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JAzO602r"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786469643; x=1818005643;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=YPtScEkaIh0cMaZGSYZbdtdCeqct0TIk/DenrQyxmLY=;
-  b=JAzO602rOWD8SBJyeXdqCnxl820OYPNn4V8a2ojjM/WkLhItdzN6iYle
-   /XLe1lNyUFWGYp3z4Fo3SnQsaA6PgA4XIio00KGov4T1nBiL+AS0itrB/
-   l5wN1isXZJF91YgRfgj33J8gYNILR2xuVl7tuwj2GG+rflxUlL29dpBpB
-   wSA309+IobrYledOv1x7tW3ALCRyNbN8qAhalt/VUl40o7Uj+dLBfFfsH
-   2C+Vt0IAbCFsZoQp9g50SXmjf4THZfO5ZPFOtzodGDIxvpztK0cgotLib
-   z9L0lv5nb5QCssv3o3Aw+IMWJGm+fjdD6dgNPiNdBvF9wlai3CUmRaY2o
-   w==;
-X-CSE-ConnectionGUID: iegJqvCnR5KXyX09dqkfjw==
-X-CSE-MsgGUID: 2VlXkw8fTVys84YvIiFieg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11872"; a="86863250"
-X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
-   d="scan'208";a="86863250"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 10:34:03 -0700
-X-CSE-ConnectionGUID: R01hN7X/QSCI7ks6cS3bVw==
-X-CSE-MsgGUID: SDmncw4aQHi9Cuy1e0pYmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
-   d="scan'208";a="261648111"
-Received: from hanvin-mobl3.amr.corp.intel.com (HELO tfalcon-desk.intel.com) ([10.124.223.16])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 10:34:01 -0700
-From: Thomas Falcon <thomas.falcon@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9QUHdhy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 100711F000E9;
+	Tue, 11 Aug 2026 17:51:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786470710;
+	bh=YGifN89FBE1oe1ywRIiVhfBrHGzzLvFRzPtl3+pEb18=;
+	h=From:To:Cc:Subject:Date;
+	b=H9QUHdhy1+2YAX0SbY8w0k2Bl7MvFch7F0x7EISPtr+gjU/ORRgsOG3OpkVpDbOCw
+	 X2LVSuFQwksqlgI6FX+KwnoN61Xx9ow4rpwWkUh7oHq4qVfAq75NiWmyds7u4e+dk0
+	 yrsWpF6G/4CA0yD4N3wqT4UeaS9WYCSDBwh7/mT+3z9Yq1lNSJzAxpn/qDsVyhuJHL
+	 O5a+E6Iu5vwu/D+AqIKGvz3QVLf4v9I8Xje8e7Qd/qSOPuZCeN1EofdIo6w9zLMzR8
+	 Zv9FDRN1ywgZIQWiXpv9VrUPUQDL39zMJOiDp4djUF/K7VK8/FMS+8iRaytZRwfrik
+	 kRksInKagPNqA==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH v4 6/6] perf c2c: print memory region data with stdio output
-Date: Tue, 11 Aug 2026 12:33:40 -0500
-Message-ID: <20260811173340.96013-7-thomas.falcon@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260811173340.96013-1-thomas.falcon@intel.com>
-References: <20260811173340.96013-1-thomas.falcon@intel.com>
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Song Liu <song@kernel.org>
+Subject: [PATCHES v3 0/5] perf DSO hardening series
+Date: Tue, 11 Aug 2026 14:51:29 -0300
+Message-ID: <20260811175140.7235-1-acme@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Print memory range data in perf-c2c subcommand. Only available in stdio
-mode currently. If memory ranges are not supported or present, print
-nothing.
+Hi,
 
-Example output of perf c2c report --stdio:
+	Please consider merging,
 
-=================================================
-                  Memory Ranges
-=================================================
-Range 0: [0x0000000000000000-0x00000000bfffffff] Node 0, local region id 0, remote region id 255
-Range 1: [0x0000000100000000-0x000000203fffffff] Node 0, local region id 0, remote region id 255
-Range 2: [0x0000008000000000-0x0000027fffffffff] Node -2, local region id 1, remote region id 255
-Range 3: [0x0000028000000000-0x0000047fffffffff] Node -2, local region id 1, remote region id 255
-Range 4: [0x0000048000000000-0x000004ffffffffff] Node -2, local region id 1, remote region id 255
+Five hardening fixes for the perf DSO data handling code path, all found
+by the sashiko-bot AI reviewer:
 
-Assisted-by: Sashiko:gemini-3.1-pro-preview
-Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
----
-v3: Included examples of memory range output in commit message
----
- tools/perf/builtin-c2c.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+  - __open_dso() can return a file descriptor of 0 (stdin) when
+    dso__get_filename() fails without setting errno, so fd = -errno = 0
+    looked like a successfully opened DSO;
 
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index 8cd90524fe49..7739023ced41 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2635,6 +2635,34 @@ static void print_c2c_info(FILE *out, struct perf_session *session)
- 	fprintf(out, "  Cacheline data grouping           : %s\n", c2c.cl_sort);
- }
- 
-+
-+static void print_memory_ranges_info(FILE *out, struct perf_session *session)
-+{
-+	struct perf_env *env = perf_session__env(session);
-+	int nr_ranges = 0;
-+
-+	if (!perf_header__has_feat(&session->header, HEADER_MEMORY_RANGES))
-+		return;
-+	nr_ranges = env->nr_memory_ranges;
-+	if (nr_ranges == 0) {
-+		pr_debug("No memory ranges found, skipping\n");
-+		return;
-+	}
-+
-+	fprintf(out, "\n");
-+	fprintf(out, "=================================================\n");
-+	fprintf(out, "                  Memory Ranges                  \n");
-+	fprintf(out, "=================================================\n");
-+
-+	for (int i = 0; i < nr_ranges; i++) {
-+		struct memory_range *r = &env->memory_ranges[i];
-+
-+		fprintf(out, "Range %d: [0x%016" PRIx64 "-0x%016" PRIx64 "] Node %d, local region id %u, remote region id %u\n",
-+			i, r->base, r->base + r->length - 1, r->node,
-+			r->local_region_id, r->remote_region_id);
-+	}
-+}
-+
- static void perf_c2c__hists_fprintf(FILE *out, struct perf_session *session)
- {
- 	setup_pager();
-@@ -2648,6 +2676,8 @@ static void perf_c2c__hists_fprintf(FILE *out, struct perf_session *session)
- 	if (c2c.stats_only)
- 		return;
- 
-+	print_memory_ranges_info(out, session);
-+
- 	fprintf(out, "\n");
- 	fprintf(out, "=================================================\n");
- 	fprintf(out, "           Shared Data Cache Line Table          \n");
--- 
-2.55.0
+  - dso__decompress_kmodule_path() calls close(fd) with fd = -1 when
+    decompression fails or the DSO is not compressed, clobbering errno
+    with EBADF on the error path;
 
+  - file_read() and file_size() read the stale global errno after
+    try_to_open_dso() fails, when by then errno has been through
+    mutex_lock(), nsinfo__mountns_enter() and several open() attempts;
+
+  - dso_cache__memcpy() underflows when cache->size is smaller than the
+    RB tree offset (short pread), computing a huge memcpy length;
+
+  - dso__read_symbol() asserts on an input-dependent condition instead
+    of doing a runtime check, keeping the BPF metadata safe from crafted
+    input.
+
+Best regards,
+
+- Arnaldo
+
+What changed from v2 (2f944ea022b6429f):
+
+  PATCH 3/5:
+  - file_size() now also uses the stored fd error instead of the stale
+    global errno on open failure; the commit was retitled to cover both
+    file_read() and file_size() [sashiko-bot review of PATCH 3/5].
+  - Comment corrected: on failure dso__data(dso)->fd is always
+    negative — -errno from __open_dso() or -1 from do_open() — never 0.
+
+  PATCH 4/5:
+  - Clarified that returning 0 for an offset past a short-read chunk
+    is EOF semantics — for a regular file a short pread only happens at
+    end-of-file, so 0 is what a direct pread() at that offset would
+    return — not a cache-miss that triggers a re-read; comment and
+    commit message updated [sashiko-bot review of PATCH 4/5].
+
+  - The lockless dso cache RB tree lookup vs. concurrent insert
+    question raised in the same review is pre-existing; it is recorded
+    in tools/perf/TODO.hardening (item 175) for follow-up work, with
+    no change to this series.
+
+What changed from v1 (20260802142022.154219-1-acme@kernel.org):
+
+  PATCH 1/5:
+  - __open_dso() now sets errno = ENOENT directly when
+    dso__get_filename() fails with errno == 0, instead of only computing
+    fd = -ENOENT.  Callers that check errno after a negative fd (e.g.
+    file_read() returning -errno) no longer get 0/EOF for an open
+    failure [sashiko-bot review of PATCH 1/5].
+
+  - Rebased onto the current perf-tools-next head (bf10e6ee2ac3034c).
+
+This series was developed with assistance from Claude (claude-opus-4.6)
+and Opencode (deepseek-v4-flash-free) for code analysis, patch
+generation, and commit message composition.  All changes were validated
+by the maintainer.
+
+Arnaldo Carvalho de Melo (5):
+  perf dso: Guard against errno==0 when dso__get_filename() returns NULL
+  perf dso: Guard close() against invalid fd in
+    dso__decompress_kmodule_path()
+  perf dso: Use stored fd error instead of stale errno in file_read()
+    and file_size()
+  perf dso: Guard against cache underflow on short reads in
+    dso_cache__memcpy()
+  perf dso: Replace assert with runtime check in dso__read_symbol()
+
+ tools/perf/util/dso.c | 39 ++++++++++++++++++++++++++++++++-------
+ 1 file changed, 32 insertions(+), 7 deletions(-)
+
+base-commit: bf10e6ee2ac3034c9068e03eed418fd16961984e
+v2-head: 2f944ea022b6429f
+v1-head: f6cb9e46c7b8949b
