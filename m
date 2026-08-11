@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A19A3546C8;
-	Tue, 11 Aug 2026 18:29:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB35737DABD;
+	Tue, 11 Aug 2026 18:29:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786472953; cv=none; b=jxZuV0lcakIZuzj6JtLCZl/WuOuafr50MTzwoHR84OkpgErftfjRe+XsaT6Axuz2J6FHeHbjR/1kCDbnc0wxlik6rZHPM0NIoVHonWE6osc8g/ZNicLZwEE/ad+FxlKIyYb549u+hmzH1+p1kkf9rom285IB/c6tI3vF1PYjBUQ=
+	t=1786472958; cv=none; b=X+MJklErAC+6xng+N7615Gr5NEs5Te3XOYOFQ7hrl4eCvgHdGd3KVrGHTI5mRzHrrw8x/kEUvAvWa+um0aAr/LinQxWPEy5P4tF05f3ZMS0kd0BsvZDrICxoh5BMvHXci4aTuise/k0KujMSD3Ds/3Zh67nA9UOLHqYzspIu90Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786472953; c=relaxed/simple;
-	bh=M0Bg4prqDSmCppqJ1c8GMX9AQEqb2EUpMiawk51QKFU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VWW8V848h0B3cu6WwPigy16BnLNMf0mXl92Vskv6DQRWOcyaVQWvAbWiDyIhuXDgGmuB0e5J19lrmJLW42aJtAgFZRRDM7C/zT551Q3Sa8rCY+9D6LKpIDIrbROSjRj0eBE9drk2kDghTG7AKqheaDvCrtnh50n+dFKrdZuc9oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZUY+bHL3; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786472958; c=relaxed/simple;
+	bh=tpGtwYZ145YqUkXgN1heb52ddn3Lp2WW7a/b2a4GalQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QIKwcrszOcsoVTu0fdLr0YfEMd/1qcySy17Cb2aUS8PGaBQvHd3uzMrj1cxu168WrFNjzcmHvgDzEH1aTBXWz8nVRLLwtNNuVGZeulS1v7OumQCutsBdnJKXtpW0DxLwq2ddZIssFX0Ix0/40ckWLlPcqRu9YwtuVONLIOwuZIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lJLrsa2S; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZUY+bHL3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FF0F1F000E9;
-	Tue, 11 Aug 2026 18:29:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lJLrsa2S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1B961F00A3A;
+	Tue, 11 Aug 2026 18:29:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786472952;
-	bh=J/5mDRbpBEYJz142hni3WZfqe0j7R5DDds9Oat2aEwk=;
-	h=From:To:Cc:Subject:Date;
-	b=ZUY+bHL3hDQluNZQAU9Y1a2en8Ot0jWUGf9kmzTSQlV987xtCMhi3CUbUq8e0E8EK
-	 ZGgHbEQb5Rx5PiHphIkhzHe0gjGn7ec8oIKfKc911SDYQJ0JftuGONTWNzx+xUQh6B
-	 fetwcuAzYMEUmjjjCq1j89CRwHuxr+Yh7UgpVnkyMGJuPCKdBjnzuMK/XjmpwMRG9X
-	 Wu263O08JBv5t8n7+rUvFPT0aPMGbAM9fZB6ZU/XAOoRh40PwHkfHPaCr1d1pB9jft
-	 ZHL36TsrVdYiojwDMo2+i5zoAE1Koj/UfuSeaN5AIhOZpmBGMFjANCjznByOL0V6RP
-	 uoIGBM5YxwN5g==
+	s=k20260515; t=1786472956;
+	bh=UxQMLD9BxGWhyYllynrzfLFDhx4GP1OBZQcL24YtVjo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=lJLrsa2SorDUsX3+IB97vf/pPyBr0yhxcvIWweC/Y2a+Cg7MFICeNsWTxZNNyTpPj
+	 aegzQfyC9HSy/lOe+jUOdhD15dNSQeDDXrzkxiCfy0ObTKEjRT0pc4HSBy+pQ0c/wx
+	 n9hXc1Seyw+zOu8iy7fZ0AChwPI9dlQq8oE5tQq7MDhl6luhtxbkpGUDOiqbzLwQMw
+	 1XpKAhrL+i9w8JJOjaGTGzUqEINw5otO/Qd4nhHr6d/4BH0+vzH42CF/iiXXGu8tZQ
+	 ldLd8XZeZVAYNajcgXIguq5/5c1u5g5xy+fnZ+VY9M98AVkJjYspS1GC5+VQGYHYur
+	 LY9gbrQphU9SQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -36,12 +37,13 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Stephane Eranian <eranian@google.com>
-Subject: [PATCHES v9 0/7] perf build: Add target to install devel packages needed to build perf
-Date: Tue, 11 Aug 2026 15:28:53 -0300
-Message-ID: <20260811182900.27063-1-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 1/7] tools build: Only probe the compiler at parse time when it is installed
+Date: Tue, 11 Aug 2026 15:28:54 -0300
+Message-ID: <20260811182900.27063-2-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
+In-Reply-To: <20260811182900.27063-1-acme@kernel.org>
+References: <20260811182900.27063-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,152 +52,80 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This series adds a 'make -C tools/perf install-build-deps' target that
-installs the development packages needed to build perf on Fedora, Ubuntu,
-Debian, and RHEL family distributions.
+Two parse-time probes still invoke $(CC) unconditionally:
 
-Building perf requires many devel packages (libelf, libdw, libunwind,
-numactl, libtraceevent, libbpf, etc.). Today users must iteratively
-install packages as each feature check fails. The new target installs the
-full set in one go.
+- LP64 in tools/scripts/Makefile.arch, probing with
+  $(CC) -E -x c, pulled in twice by tools/perf/Makefile.perf;
+- CC_NO_CLANG in tools/scripts/Makefile.include, probing with
+  $(CC) -dM -E -x c /dev/null.
 
-The first patch makes the compiler probe run at parse time only when the
-tool is installed, so a missing C++ compiler or clang no longer fails the
-feature tests prematurely. The second patch adds the framework (make
-target, distro detection, package manager drivers). The next four patches
-add distro-specific package mappings derived from the headers each
-feature test requires. The last patch removes leftover feature test
-entries for cxx and clang support removed in 56b11a2126bf2f42 ("perf
-bpf: Remove support for embedding clang for compiling BPF events
-(-e foo.c)").
+In the corner case where gcc is not yet installed, the very setup the
+install-build-deps target, added in the next patch of this series, is
+meant for, these probes make even targets that never compile parse-time
+spew errors like:
 
-Supported distros (validated in containers, host never modified):
-  - Fedora 44 (dnf, 29 packages)
-  - Ubuntu 26.04 (apt, 29 packages)
-  - Debian 13 (apt, reuses Ubuntu mapping)
-  - Centos 10 (dnf, 29 packages)
+    /bin/sh: 1: gcc: not found
+    /bin/sh: 1: gcc: not found
+    /bin/sh: 1: gcc: not found
 
-On all distros, a clean O= build after running the target enabled every
-feature the distro provides (excluding deliberately unmapped deprecated
-packages). Re-running the target is a no-op.
+Guard both probes with 'command -v' using the first word of CC so a
+missing compiler is handled silently with the same result as a failing
+probe (CC_NO_CLANG and LP64 unset/0), and with no behavior change when
+the compiler is installed.
 
-Best regards,
+Only the first word is consulted because CC may carry arguments such as
+'ccache gcc', and shell implementations differ in how 'command -v'
+handles multiple words (dash only checks the first, bash any of them),
+so validating the whole CC value would silently disable both probes on
+some make SHELLs.
 
-- Arnaldo
+Assisted-by: opencode:deepseek-v4-flash-free
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/scripts/Makefile.arch    | 8 +++++++-
+ tools/scripts/Makefile.include | 8 +++++++-
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-What changed from v8:
+diff --git a/tools/scripts/Makefile.arch b/tools/scripts/Makefile.arch
+index eabfe9f411d914b9..ed5f008d400ed238 100644
+--- a/tools/scripts/Makefile.arch
++++ b/tools/scripts/Makefile.arch
+@@ -38,7 +38,13 @@ ifeq ($(ARCH),loongarch64)
+        SRCARCH := loongarch
+ endif
+ 
+-LP64 := $(shell echo __LP64__ | ${CC} ${CFLAGS} -E -x c - | tail -n 1)
++# Probe for __LP64__ only when the compiler is installed: this runs at
++# parse time for every target, including ones that never compile, e.g.
++# install-build-deps, and would otherwise spew "gcc: not found" when the
++# compiler is not yet installed. Only the first word of CC is consulted,
++# as CC may carry arguments, e.g. 'ccache gcc'. When the guard fails it
++# prints nothing, leaving LP64 unset, as if the probe had failed.
++LP64 := $(shell if command -v $(firstword ${CC}) >/dev/null 2>&1; then echo __LP64__ | ${CC} ${CFLAGS} -E -x c -; fi | tail -n 1)
+ ifeq ($(LP64), 1)
+   IS_64_BIT := 1
+ else
+diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.include
+index 46a3872b87624a7b..378387f629603e92 100644
+--- a/tools/scripts/Makefile.include
++++ b/tools/scripts/Makefile.include
+@@ -98,7 +98,13 @@ else
+   $(call allow-override,LLVM_STRIP,llvm-strip)
+ endif
+ 
+-CC_NO_CLANG := $(shell $(CC) -dM -E -x c /dev/null | grep -Fq "__clang__"; echo $$?)
++# The CC_NO_CLANG probe also runs at parse time for targets that never
++# compile, so guard it with 'command -v': when the compiler is not yet
++# installed, e.g. the first install-build-deps run, it would otherwise
++# spew "gcc: not found". Only the first word of CC is consulted, as CC
++# may carry arguments, e.g. 'ccache gcc'. A missing compiler leaves
++# CC_NO_CLANG at 1, as if the probe had failed.
++CC_NO_CLANG := $(shell if command -v $(firstword $(CC)) >/dev/null 2>&1; then $(CC) -dM -E -x c /dev/null; fi | grep -Fq "__clang__"; echo $$?)
+ 
+ # Some tools require bpftool
+ SYSTEM_BPFTOOL	?= bpftool
+-- 
+2.55.0
 
-  - the apt-get install command now runs with
-    DEBIAN_FRONTEND=noninteractive: tzdata, pulled in by default-jdk
-    for the jvmti feature tests, would block the install prompting for
-    the timezone on a terminal, e.g. in a container shared with an
-    interactive session, as the debconf prompt is not covered by the
-    '-y' flag [sashiko review of PATCH 4/7];
-  - added comments addressing two false positives from that same
-    review: main() holds no per-feature package state, package_set()
-    and the *_pkg_for() helpers declare their own 'pkg' locals (the
-    unused one in main() was removed in v5), and an empty
-    rhel_pkg_for() result means the feature test has no external devel
-    dependency, not a silently dropped package: genuinely unavailable
-    ones reach missing_pkgs through rhel_pkg_for()'s fallback
-    candidates and the pkg_available() check [sashiko review of
-    PATCH 4/7, 7/7];
-  - the temporary file tracking missing packages is already removed on
-    SIGINT/SIGTERM by the EXIT/INT/TERM traps, with the comment making
-    the interrupt path explicit [sashiko review of PATCH 7/7].
-
-What changed from v7:
-
-  - added comments in tools/scripts/Makefile.arch and
-    tools/scripts/Makefile.include explaining the 'command -v' guarded
-    compiler probes, which are a fairly complex one-liner now [Ian
-    Rogers review of PATCH 1/7].
-
-What changed from v6:
-
-  - feature_tests() now strips the .c and .cpp suffixes with chained
-    POSIX BRE substitutions (e.g. -e 's/\.c$//' -e 's/\.cpp$//')
-    instead of \| alternation, a GNU sed extension that would fail on
-    BSD sed hosts (macOS, FreeBSD), silently dropping feature-specific
-    packages [sashiko review of PATCH 3/7].
-
-What changed from v5:
-
-  - the unused 'pkg' local declaration was removed from main(): the
-    iteration over packages happens in package_set(), which declares
-    its own 'pkg' variable [sashiko review of PATCH 3/7];
-  - sourcing /etc/os-release in detect_distro() now redirects stderr
-    with 2>/dev/null, so a missing /etc/os-release no longer prints
-    an error message [sashiko review of PATCH 2/7].
-
-What changed from v4:
-
-  - No changes from v3, just resubmitting because Sashiko restarted and
-    when back it didn't manage to apply this even with the same base
-    commit (perf-tools-next/perf-tools-next) as V3, so this probably is
-    something transient, and as I'm addressing comments for v3, worth
-    resubmitting.
-
-What changed from v3:
-
-  - clear the EXIT/INT/TERM traps after consuming and removing the temp
-    file: missing_file is local to main(), so the EXIT trap firing after
-    main() returns hits an unbound variable under set -u, printing a
-    spurious error on the successful-install path [sashiko review of
-    PATCH 7/7].
-
-What changed from v2:
-
-  - the trap that removes the temporary file tracking missing packages
-    now exits the script when SIGINT/SIGTERM is received, instead of
-    only removing the file and letting the script resume after the
-    interrupted command [sashiko review of PATCH 7/7].
-
-What changed from v1:
-
-  - AlmaLinux is now detected by its actual /etc/os-release ID
-    ("almalinux" instead of "alma") in detect_distro() [sashiko review
-    of PATCH 7/7];
-  - packages that no enabled repo provides (e.g. zlib and the versioned
-    JDK/jvmti packages on the RHEL family) are no longer silently
-    omitted from the missing packages list, they are reported at the end
-    of the run, as stated in the commit message [sashiko review of
-    PATCH 7/7];
-  - the temporary file used to track those missing packages is now
-    removed by a trap, so it does not leak if the script is interrupted
-    [sashiko review of PATCH 7/7];
-  - the leftover feature test removal patch now carries the suggested
-    Fixes: tag for 56b11a2126bf2f42, with the author of that commit
-    Cc'd [Ian Rogers review of PATCH 6/7].
-
-This series was developed with assistance from Opencode
-(deepseek-v4-flash-free and glm-4-7-flash-ollama-local) for code
-analysis, patch generation, and commit message composition, and from
-Claude (Opus 4.7) for review triage and bug-fix generation.
-
-Arnaldo Carvalho de Melo (7):
-  tools build: Only probe the compiler at parse time when it is installed
-  perf build: Add install-build-deps framework to install devel packages
-  perf build: install-build-deps: add Fedora devel package mapping
-  perf build: install-build-deps: add Ubuntu devel package mapping
-  perf build: install-build-deps: add Debian devel package mapping
-  perf build: Remove leftover feature tests for removed cxx and clang support
-  perf build: install-build-deps: add RHEL family devel package mapping
-
- tools/build/Makefile.feature             |   2 -
- tools/build/feature/Makefile             |  14 -
- tools/perf/Makefile.perf                 |  21 +-
- tools/perf/scripts/install-build-deps.sh | 603 +++++++++++++++++++++++++++++++
- tools/scripts/Makefile.arch              |   8 +-
- tools/scripts/Makefile.include           |   8 +-
- 6 files changed, 635 insertions(+), 21 deletions(-)
-
-base-commit: bf10e6ee2ac3034c9068e03eed418fd16961984e
-v8-head: a2b6e139224899db59263b8636d7b01690049eab
-v7-head: ca62b23f83ddfb8e
-v6-head: 39460c4a24830619
-v5-head: f76189ae44f2b5bc
-v3-head: 1676d9c5fe7ba0a1
-v2-head: 7eec75d1744ccf83
