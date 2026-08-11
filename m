@@ -1,194 +1,158 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB07C3314AE;
-	Mon, 10 Aug 2026 22:10:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 587CC257ACF;
+	Tue, 11 Aug 2026 00:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786399811; cv=none; b=hlSWU4gbsH9UY6A+r4gZEjgdVHnKwIupQPCa5Xz1RlDNTelu8fNA0OUlNJPLr4oSTci8wsdYTmKE3KipMuzzevgnjaaiVssYZz6NE8s607CQvuFMaBn3iUmDcYkJlDz8KO/RZSa9AfjKwjim2mQWi0KKzULYPhCWGOah0oXPKyY=
+	t=1786409233; cv=none; b=WPFbRSWPnI+w9XJAlJMeJpFs1OmsJSKGJ2Ex26CJ8/13sf0wthnfm3iQ0Y/ZskPAH5RcXI0PKzk4lQLnzdVXyuiiIJHjVCMOG0JM8iUL5+4bYBD7wdIPUy/p/0A2DHWm0ndjOF0xwTYy2igp/m2HDTWdX0Z1XsnTmwonZKz9D1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786399811; c=relaxed/simple;
-	bh=0RWpdfIzCKEiyFzszpDc1xkHvtl02bntYX24+KDlego=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=qj8jAECR6HfvLNZWPvRCGW+dv4oD+gMp3zR10Rx3dJ56Ap7Z20lAySDZXQXBEkEQjGkCE9k227c/T7ZCccvVleVy0WgkdwYU7o2cuTY9BVr/IywsO6fOyngywA8nj+tfHR2qKesA8aw3EySDSU75BrPdlm45qHmGneyxG0GT3Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=UwX/Ilov; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786409233; c=relaxed/simple;
+	bh=qgTMvpIyY8qadjeQZhsgopH/H6mCef4UbRYtX0xpYq0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oTkUmgvqArSUIu8sQBnnl5tOwSshLr6xdiGVVl44RCGxeYTyJzdZTej/gWRk2eM7EVETPQB/D2vjyIC7HKdgOmfiRETL0CLShQ4ZCyK6X64gCIk2inbbJ3Oqiuc6Oe9a3H3sP0YJdIx/UZS36fCm15ziw3ve+5nIHTz5Iv6LcYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULEZvx5l; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="UwX/Ilov"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB66F1F000E9;
-	Mon, 10 Aug 2026 22:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux-foundation.org; s=korg; t=1786399810;
-	bh=/hUK9nmdYQUfhG6ut1/QpR/T7D3LLI4jSc7+bBZ5Ofc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=UwX/Ilov0bIFii9m3iwtL8q7dWNlzT+Wx3UroPo9PylX7if0NcfH9JAavRDAn86dw
-	 JNwDAbfcVY3VRo/UBsUbAdQe6WqOiVdxquE1mb7LVSCrY0NRcx31i22SVoR5H3wZ9K
-	 Nroa/JyRqqFqLrw3hFrR5C55A7jEiwD4QPiMGP18=
-Date: Mon, 10 Aug 2026 15:10:07 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: David Hildenbrand <david@kernel.org>, "Liam R. Howlett"
- <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, Mike Rapoport
- <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
- <mhocko@suse.com>, Jann Horn <jannh@google.com>, Pedro Falcato
- <pfalcato@suse.de>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan
- Kara <jack@suse.cz>, Miaohe Lin <linmiaohe@huawei.com>, Naoya Horiguchi
- <nao.horiguchi@gmail.com>, Rik van Riel <riel@surriel.com>, Harry Yoo
- <harry@kernel.org>, Lance Yang <lance.yang@linux.dev>, Kees Cook
- <kees@kernel.org>, Zi Yan <ziy@nvidia.com>, Baolin Wang
- <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, Ryan
- Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
- <baohua@kernel.org>, Usama Arif <usama.arif@linux.dev>, Matthew Brost
- <matthew.brost@intel.com>, Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim
- <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, Gregory Price
- <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, Alistair
- Popple <apopple@nvidia.com>, Peter Xu <peterx@redhat.com>, Xu Xin
- <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, Arnd
- Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank
- <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>,
- Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer
- <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily
- Gorbik <gor@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, Alex
- Deucher <alexander.deucher@amd.com>, Christian =?ISO-8859-1?Q?K=F6nig?=
- <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann
- <tzimmermann@suse.de>, Boris Brezillon <boris.brezillon@collabora.com>,
- Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>,
- Thomas =?ISO-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Masami Hiramatsu
- <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James
- Clark <james.clark@linaro.org>, Jason Gunthorpe <jgg@ziepe.ca>, John
- Hubbard <jhubbard@nvidia.com>, Muchun Song <muchun.song@linux.dev>, Oscar
- Salvador <osalvador@suse.de>, Chris Li <chrisl@kernel.org>, Kairui Song
- <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham
- <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, Youngjun Park
- <youngjun.park@lge.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kvm@vger.kernel.org, linux-s390@vger.kernel.org,
- amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- intel-xe@lists.freedesktop.org, linux-perf-users@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 02/20] mm: provide vma_[flags_]is_cow_mapping() and
- remove is_cow_mapping()
-Message-Id: <20260810151007.c1cfbcf46d498d2f8ce566f9@linux-foundation.org>
-In-Reply-To: <ann-vS6MYT9kuXqu@lucifer>
-References: <20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org>
-	<20260806-b4-scalable-cow-virt-pgoff-v4-2-ab318a350404@kernel.org>
-	<ann-vS6MYT9kuXqu@lucifer>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULEZvx5l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F29881F000E9;
+	Tue, 11 Aug 2026 00:47:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786409231;
+	bh=ZNVsgWopaPVX8yPMUW2A05iOqzOA/W5XqK76rDaPHwk=;
+	h=From:To:Cc:Subject:Date;
+	b=ULEZvx5l2+BaBgeHodrUiOvA9gyEuCyR1ONN0WDeyWwaAIcEaGNjpLgyq0Z7Udlan
+	 wMikVQbEr9sGft+lKELhNjQq6i163l+fZkejDG7OC1HaYpG0pbV/yIYsEZN3Kggm3h
+	 7iyHqXkvofhNHhshVZAWdAfTSQUvwe0no3+5uaDC6AAg/BpTsiydNYnX/mBDNQw89P
+	 NixJN2Ej084kPTPH/SudhU8Vq2LjsW+wbIbm/Xmk2c2/7mEENYXVeEbDjGWTI9xAee
+	 z2GFth1MT72Y3t2KvxDKvpo6Dbm0Zb2ywBBeea2DFYlbo0RJ+CjEpQJ5+6nELUxm7V
+	 HAZHiuuREuE8g==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: [PATCHES v6 0/7] perf build: Add target to install devel packages needed to build perf
+Date: Mon, 10 Aug 2026 21:46:52 -0300
+Message-ID: <20260811004659.6212-1-acme@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 10 Aug 2026 18:59:34 +0100 "Lorenzo Stoakes (ARM)" <ljs@kernel.org> wrote:
+Hi,
 
-> Hi Andrew - would it be possible to insert the comments added below? Trying
-> to avoid a respin if possible :)
+This series adds a 'make -C tools/perf install-build-deps' target that
+installs the development packages needed to build perf on Fedora, Ubuntu,
+Debian, and RHEL family distributions.
 
-np, like this?
+Building perf requires many devel packages (libelf, libdw, libunwind,
+numactl, libtraceevent, libbpf, etc.). Today users must iteratively
+install packages as each feature check fails. The new target installs the
+full set in one go.
 
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: mm-provide-vma_is_cow_mapping-and-remove-is_cow_mapping-fix
-Date: Mon Aug 10 03:07:02 PM PDT 2026
+The first patch makes the compiler probe run at parse time only when the
+tool is installed, so a missing C++ compiler or clang no longer fails the
+feature tests prematurely. The second patch adds the framework (make
+target, distro detection, package manager drivers). The next four patches
+add distro-specific package mappings derived from the headers each
+feature test requires. The last patch removes leftover feature test
+entries for cxx and clang support removed in 56b11a2126bf2f42 ("perf
+bpf: Remove support for embedding clang for compiling BPF events
+(-e foo.c)").
 
-add comments, per Lorenzo
+Supported distros (validated in containers, host never modified):
+  - Fedora 44 (dnf, 29 packages)
+  - Ubuntu 26.04 (apt, 29 packages)
+  - Debian 13 (apt, reuses Ubuntu mapping)
+  - Centos 10 (dnf, 29 packages)
 
-Link: https://lore.kernel.org/ann-vS6MYT9kuXqu@lucifer
-Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
----
+On all distros, a clean O= build after running the target enabled every
+feature the distro provides (excluding deliberately unmapped deprecated
+packages). Re-running the target is a no-op.
 
- include/linux/mm.h |   57 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 57 insertions(+)
+Best regards,
 
---- a/include/linux/mm.h~mm-provide-vma_is_cow_mapping-and-remove-is_cow_mapping-fix
-+++ a/include/linux/mm.h
-@@ -2271,17 +2271,74 @@ void unpin_user_pages(struct page **page
- void unpin_user_folio(struct folio *folio, unsigned long npages);
- void unpin_folios(struct folio **folios, unsigned long nfolios);
- 
-+/**
-+ * vma_flags_is_cow_mapping() - Do these VMA flags imply a CoW mapping?
-+ * @flags: The VMA flags to check.
-+ *
-+ * Mappings which could be CoW'd (subject to Copy-On-Write faults) are
-+ * described as CoW mappings.
-+ *
-+ * All mappings backed by anonymous folios (all anonymous mappings and most
-+ * MAP_PRIVATE-file backed ranges) are CoW mappings.
-+ *
-+ * All other mappings (including all writable MAP_SHARED mappings) are
-+ * non-CoW.
-+ *
-+ * The criteria are !VMA_SHARED_BIT, VMA_MAYWRITE_BIT.
-+ *
-+ * VMA_MAYWRITE_BIT is checked instead of VMA_WRITE_BIT to account for both
-+ * future mprotect() calls which can render a read-only mapping writable, and
-+ * GUP with FOLL_FORCE (e.g. ptrace) which can CoW a read-only mapping.
-+ *
-+ * - No anonymous mapping can ever clear VMA_MAYWRITE_BIT.
-+ *
-+ * - Writes to anonymous mappings do not immediately result in CoW faults but
-+ *   may do so after the process is forked or if a read is followed by a
-+ *   write.
-+ *
-+ * - Writes to MAP_PRIVATE file-backed mappings result in CoW faults and may
-+ *   do so again after fork.
-+ *
-+ * - MAP_SHARED mappings of a file opened read-only are transformed into
-+ *   VMA_MAYSHARE_BIT, !VMA_SHARED_BIT, !VMA_MAYWRITE_BIT mappings, so remain
-+ *   non-CoW.
-+ *
-+ * - Drivers may clear VMA_MAYWRITE_BIT but do so at mmap() time and cannot
-+ *   mark themselves anonymous. Having cleared this flag it is not valid for
-+ *   them to leave the VMA_WRITE_BIT flag set.
-+ *
-+ * As a consequence, the anonymous reverse mapping only tracks CoW mappings.
-+ *
-+ * Returns: true if the flags indicate a CoW mapping, otherwise false.
-+ */
- static inline bool vma_flags_is_cow_mapping(const vma_flags_t *flags)
- {
- 	return vma_flags_test(flags, VMA_MAYWRITE_BIT) &&
- 		!vma_flags_test(flags, VMA_SHARED_BIT);
- }
- 
-+/**
-+ * vma_is_cow_mapping() - Is this VMA a CoW mapping?
-+ * @desc: The VMA to check.
-+ *
-+ * See vma_flags_is_cow_mapping() for details.
-+ *
-+ * Returns: true if the VMA is a CoW mapping, otherwise false.
-+ */
- static inline bool vma_is_cow_mapping(const struct vm_area_struct *vma)
- {
- 	return vma_flags_is_cow_mapping(&vma->flags);
- }
- 
-+/**
-+ * vma_desc_is_cow_mapping() - Is this VMA descriptor a CoW mapping?
-+ * @desc: The VMA descriptor to check.
-+ *
-+ * See vma_flags_is_cow_mapping() for details.
-+ *
-+ * Returns: true if the VMA descriptor describes a CoW mapping, otherwise
-+ * false.
-+ */
- static inline bool vma_desc_is_cow_mapping(struct vm_area_desc *desc)
- {
- 	return vma_flags_is_cow_mapping(&desc->vma_flags);
-_
+- Arnaldo
 
+What changed from v5:
+
+  - the unused 'pkg' local declaration was removed from main(): the
+    iteration over packages happens in package_set(), which declares
+    its own 'pkg' variable [sashiko review of PATCH 3/7];
+  - sourcing /etc/os-release in detect_distro() now redirects stderr
+    with 2>/dev/null, so a missing /etc/os-release no longer prints
+    an error message [sashiko review of PATCH 2/7].
+
+What changed from v4:
+
+  - No changes from v3, just resubmitting because Sashiko restarted and
+    when back it didn't manage to apply this even with the same base
+    commit (perf-tools-next/perf-tools-next) as V3, so this probably is
+    something transient, and as I'm addressing comments for v3, worth
+    resubmitting.
+
+What changed from v3:
+
+  - clear the EXIT/INT/TERM traps after consuming and removing the temp
+    file: missing_file is local to main(), so the EXIT trap firing after
+    main() returns hits an unbound variable under set -u, printing a
+    spurious error on the successful-install path [sashiko review of
+    PATCH 7/7].
+
+What changed from v2:
+
+  - the trap that removes the temporary file tracking missing packages
+    now exits the script when SIGINT/SIGTERM is received, instead of
+    only removing the file and letting the script resume after the
+    interrupted command [sashiko review of PATCH 7/7].
+
+What changed from v1:
+
+  - AlmaLinux is now detected by its actual /etc/os-release ID
+    ("almalinux" instead of "alma") in detect_distro() [sashiko review
+    of PATCH 7/7];
+  - packages that no enabled repo provides (e.g. zlib and the versioned
+    JDK/jvmti packages on the RHEL family) are no longer silently
+    omitted from the missing packages list, they are reported at the end
+    of the run, as stated in the commit message [sashiko review of
+    PATCH 7/7];
+  - the temporary file used to track those missing packages is now
+    removed by a trap, so it does not leak if the script is interrupted
+    [sashiko review of PATCH 7/7];
+  - the leftover feature test removal patch now carries the suggested
+    Fixes: tag for 56b11a2126bf2f42, with the author of that commit
+    Cc'd [Ian Rogers review of PATCH 6/7].
+
+This series was developed with assistance from Opencode
+(deepseek-v4-flash-free and glm-4-7-flash-ollama-local) for code
+analysis, patch generation, and commit message composition, and from
+Claude (Opus 4.7) for review triage and bug-fix generation.
+
+Arnaldo Carvalho de Melo (7):
+  tools build: Only probe the compiler at parse time when it is installed
+  perf build: Add install-build-deps framework to install devel packages
+  perf build: install-build-deps: add Fedora devel package mapping
+  perf build: install-build-deps: add Ubuntu devel package mapping
+  perf build: install-build-deps: add Debian devel package mapping
+  perf build: Remove leftover feature tests for removed cxx and clang support
+  perf build: install-build-deps: add RHEL family devel package mapping
+
+ tools/build/Makefile.feature             |   2 -
+ tools/build/feature/Makefile             |  14 -
+ tools/perf/Makefile.perf                 |  21 +-
+ tools/perf/scripts/install-build-deps.sh | 581 +++++++++++++++++++++++
+ tools/scripts/Makefile.arch              |   2 +-
+ tools/scripts/Makefile.include           |   2 +-
+ 6 files changed, 601 insertions(+), 21 deletions(-)
+
+base-commit: bf10e6ee2ac3034c9068e03eed418fd16961984e
