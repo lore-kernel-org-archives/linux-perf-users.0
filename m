@@ -1,30 +1,32 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE121A3A80;
-	Tue, 11 Aug 2026 08:17:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4082400995;
+	Tue, 11 Aug 2026 08:24:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786436227; cv=none; b=iAafHALwVn4k2unQYltNFIJVpjwk73zROeEUT+LLY0qk/DK04nTu19gQh+PivXaPUbczH2E4Ipi9JKtiDCgg6CXu7crKWkvBE/og492o9sY+hF+20s1kvOw40PW21tSgANrlGMKFcoCOZCcJbjwoV/G5XSe+zUKgcpWqi3MEVN4=
+	t=1786436684; cv=none; b=uJ5pPsyS2oDXKbsBFvOI0EXBG5hWXgO9Icw2WVz+M0LSLFEjoYFuS7s9bpWQzCWwMcR9XqfVcuZqpZbfOEWHmlOoptlj/XB4lGWy1o+U2tcOU9CRYWyLu7tkN4CIgVtXBMWZqV+z8CtJph/mnbCP3Xl5yfSnqlFqwse+UxQRxP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786436227; c=relaxed/simple;
-	bh=HPYuV9/y20qFcfCaewkIeB2c3K3drvIQoPWSo/TWQlE=;
+	s=arc-20240116; t=1786436684; c=relaxed/simple;
+	bh=Supicr/KHkan9PvbNOIUUQ9+RRcBVArXkdMz8sT9LLc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j/hQ7VIu9jZj513rrtyVSiApIN9MXbnLnD1J5DnBGbR9LYr/T9M08CFIQntss4nQFujklc98LKyspBATAK9C7iUfHGSeLdeXKZZAFcfINhsUSWQWmzHGoWYa0Nw1uzLOjNgKSFPAzQwtjyxKxB8k4NtnuFMcX2wsdyR08Xh9Zng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.170])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hK4GN5c3XzKHMr0;
-	Tue, 11 Aug 2026 16:16:44 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 865134056B;
-	Tue, 11 Aug 2026 16:17:00 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgCX0UB72npqT8afBw--.16426S2;
-	Tue, 11 Aug 2026 16:17:00 +0800 (CST)
-Message-ID: <923626e1-28db-42aa-a6ac-f1d1012cea82@huaweicloud.com>
-Date: Tue, 11 Aug 2026 16:16:59 +0800
+	 In-Reply-To:Content-Type; b=JSs8nIleC4qYiIP1fP2h3dwAgzM3Hmp6FgBwDrwBEhLhS34q0KxDD0sxotiMk6wrul0Ra2dH72B4KY96W4cRoTV/trbH/lY1HDkTY46Lkn79GA9THjSYSFOyObjSyUUC20hPu7+koZZhHyO4FjGv2EJKZKVHuGLgv5XA8umhnK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=KrhNOxP4; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="KrhNOxP4"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1786436677; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=7RrsrvCqKW3MQRhkDDJYC/2n6urqygYfLPAH0xl5hIQ=;
+	b=KrhNOxP43+KmNk1vlcUoLPMkqgki6RiHbHQalGmLOp1lPh77Bnl/WfEwYQi/Y9m5NodbYZXeipwJTTUM6dR99ffXoTqRrcSULADkidJbB9gOR0KShNjFX3Cua5nWwhLvF/sLoSObbQvM0Nal3yD43rS4dBizgCDTP4ULHwS8qjA=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R381e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X8niHk5_1786436674;
+Received: from 30.246.162.187(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X8niHk5_1786436674 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 11 Aug 2026 16:24:35 +0800
+Message-ID: <1dfbb930-e8ef-4289-b443-f831251d4445@linux.alibaba.com>
+Date: Tue, 11 Aug 2026 16:24:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -32,11 +34,10 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/23] perf annotate: Adapt arch__dwarf_regnum() for
- arm64
-To: Shuai Xue <xueshuai@linux.alibaba.com>, Namhyung Kim
- <namhyung@kernel.org>, james.clark@linaro.org,
- Li Huafei <lihuafei1@huawei.com>
+Subject: Re: [PATCH v4 18/23] perf annotate-arm64: Support stack variable
+ tracking
+To: Tengda Wu <wutengda@huaweicloud.com>, Namhyung Kim <namhyung@kernel.org>,
+ james.clark@linaro.org, Li Huafei <lihuafei1@huawei.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
  Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
  Mark Rutland <mark.rutland@arm.com>,
@@ -48,123 +49,269 @@ Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev
 References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-7-wutengda@huaweicloud.com>
- <1d2e807f-5ced-4af5-86c8-9cd3e89a7ba2@linux.alibaba.com>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <1d2e807f-5ced-4af5-86c8-9cd3e89a7ba2@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgCX0UB72npqT8afBw--.16426S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxArW3XrW3GFyrtF4DXr43KFg_yoW5Kw43pr
-	4kC3y5GryUCr1rtrsxta1UWFy5Gw47J3W5Zrn5Ja4DAF47ury0qF4FqF109F17Cr4kJr1U
-	tr4jqr1kZFnxAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
-	wI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
-	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
-	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
-	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
-	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxo
-	7KDUUUU
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+ <20260808122400.2961238-19-wutengda@huaweicloud.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20260808122400.2961238-19-wutengda@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
 
-On 2026/8/11 14:33, Shuai Xue wrote:
+On 8/8/26 8:23 PM, Tengda Wu wrote:
+> Extend update_insn_state() for arm64 to track data types stored on the
+> stack. This allows 'perf annotate' to maintain type information for
+> local variables that are spilled to or loaded from stack slots.
 > 
+> The implementation handles:
 > 
-> On 8/8/26 8:23 PM, Tengda Wu wrote:
->> Currently, arch__dwarf_regnum() assumes that all architectures use a
->> register prefix character (e.g., '%' for x86) defined by
->> arch->objdump.register_char, and uses it to match register names in
->> objdump output. However, this assumption does not hold for arm64,
->> where assembly syntax uses bare register names like 'x0', 'w1'
->> without any prefix.
->>
->> As a result, arm64 builds may fail to correctly recognize register
->> names from objdump disassembly, leading to incomplete or incorrect
->> annotation output.
->>
->> To address this:
->>
->> - Make the register prefix check optional, allowing architectures
->>    without a prefix character to be parsed correctly.
->>
->> - Extend the delimiter set in strpbrk() to include the closing square
->>    bracket ']'. In arm64 assembly, memory operands often use bracketed
->>    syntax such as '[x1, #16]' or '[x2]'. Adding ']' ensures clean
->>    extraction of register names like 'x2' without trailing characters.
->>
->> - Remove the 'static' qualifier from arch__dwarf_regnum() so that it
->>    can be reused by other architecture-specific profiling components
->>    in future changes.
->>
->> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
->> ---
->>   tools/perf/util/annotate.c | 14 ++++++++------
->>   tools/perf/util/annotate.h |  2 ++
->>   2 files changed, 10 insertions(+), 6 deletions(-)
->>
->> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
->> index df70e95a8470..9d8b4d6b859b 100644
->> --- a/tools/perf/util/annotate.c
->> +++ b/tools/perf/util/annotate.c
->> @@ -2472,21 +2472,23 @@ int annotate_check_args(void)
->>       return 0;
->>   }
->>   -static int arch__dwarf_regnum(const struct arch *arch, const char *str)
->> +int arch__dwarf_regnum(const struct arch *arch, const char *str)
->>   {
->> -    const char *p;
->> +    const char *p = str;
->>       char *regname, *q;
->>       int reg;
->>   -    p = strchr(str, arch->objdump.register_char);
->> -    if (p == NULL)
->> -        return -1;
->> +    if (arch->objdump.register_char) {
->> +        p = strchr(str, arch->objdump.register_char);
->> +        if (p == NULL)
->> +            return -1;
->> +    }
->>         regname = strdup(p);
->>       if (regname == NULL)
->>           return -1;
+> 1. Stack Loads (LDR): Identify when a register is loaded from a stack
+>     slot and update the register's type state based on the tracked
+>     stack content or compound member types.
 > 
+> 2. Stack Stores (STR): Update or create new stack state entries when
+>     a tracked register type is stored to the stack.
 > 
-> Keeping the early -1 return here is correct, but it exposes an
-> inconsistency in this function's failure values. This is the only path
-> that returns -1; when the lookup itself fails the tail returns whatever
-> get_dwarf_regnum() produced (-ENOENT on arm64, -EINVAL/-ENOENT on x86).
-> The callers only check
+> Similar to loads, stores also support saving one or two registers
+> (in the case of 'stp'). Therefore, propagate_store_reg_state() is
+> introduced. The overall offset calculation follows the same logic as
+> the load implementation:
 > 
->     if (op_loc->reg1 == -1)
+>    src->reg1: reg_offset = get_reg_index_offset()
+>    src->reg2: reg_offset = get_reg_index_offset() + reg_size(src->reg1)
 > 
-> so the early return is caught while a real parse failure slips through
-> with a negative reg1. Today that is harmless because every consumer
-> guards with has_reg_type(), whose unsigned compare rejects negative
-> values, but the error propagation is effectively broken and arm64 adds
-> more inputs that fail parsing (prfm ops, PC-relative addresses).
+> With these changes, the instruction tracker can now follow data types
+> as they move between registers and memory, specifically for function
+> local variables and compiler-spilled values on arm64.
 > 
-> Could you normalise the tail to keep the "success or -1" contract?
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> ---
+>   .../perf/util/annotate-arch/annotate-arm64.c  | 161 ++++++++++++++++--
+>   1 file changed, 148 insertions(+), 13 deletions(-)
 > 
->     reg = get_dwarf_regnum(regname, arch->id.e_machine,
->                    arch->id.e_flags);
->     free(regname);
->     return reg < 0 ? -1 : reg;
-> 
-> Thanks.
-> Shuai
+> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+> index ed0f0ef2877d..6e09e9707256 100644
+> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+> @@ -407,6 +407,7 @@ static void adjust_reg_index_state(struct type_state *state,
+>    * to the source struct's field offset.
+>    */
+>   static int propagate_load_reg_state(struct type_state *state,
+> +				    struct data_loc_info *dloc,
+>   				    struct disasm_line *dl, int dreg,
+>   				    struct annotated_op_loc *src,
+>   				    int reg_offset, const char *insn_name)
+> @@ -416,6 +417,8 @@ static int propagate_load_reg_state(struct type_state *state,
+>   	Dwarf_Die type_die;
+>   	u32 insn_offset = dl->al.offset;
+>   	int sreg = src->reg1;
+> +	int fbreg = dloc->fbreg;
+> +	int fboff = 0;
+>   
+>   	if (!has_reg_type(state, dreg))
+>   		return -1;
+> @@ -423,7 +426,52 @@ static int propagate_load_reg_state(struct type_state *state,
+>   	tsr = &state->regs[dreg];
+>   	tsr->copied_from = -1;
+>   
+> +	if (dloc->fb_cfa) {
+> +		u64 ip = dloc->ms->sym->start + dl->al.offset;
+> +		u64 pc = map__rip_2objdump(dloc->ms->map, ip);
+> +
+> +		if (die_get_cfa(dloc->di->dbg, pc, &fbreg, &fboff) < 0)
+> +			fbreg = -1;
+> +	}
+> +
+>   retry:
+> +	/* Check stack variables with offset */
+> +	if (sreg == fbreg || sreg == state->stack_reg) {
+> +		struct type_state_stack *stack;
+> +		int offset = sreg == fbreg ? reg_offset - fboff : reg_offset;
+> +
+> +		stack = find_stack_state(state, offset);
+> +		if (stack == NULL) {
+> +			return -1;
+> +		} else if (!stack->compound) {
+> +			tsr->type = stack->type;
+> +			tsr->kind = stack->kind;
+> +			tsr->offset = stack->ptr_offset;
+> +			tsr->imm_value = stack->imm_value;
+> +			tsr->ok = true;
+> +		} else if (die_get_member_type(&stack->type,
+> +					       offset - stack->offset,
+> +					       &type_die)) {
+> +			tsr->type = type_die;
+> +			tsr->kind = TSR_KIND_TYPE;
+> +			tsr->offset = 0;
+> +			tsr->imm_value = 0;
+> +			tsr->ok = true;
+> +		} else {
+> +			return -1;
+> +		}
+> +
+> +		if (sreg == fbreg) {
+> +			pr_debug_dtp("%s [%x] -%#x(stack) -> reg%d",
+> +				     insn_name, insn_offset, -offset, dreg);
+> +		} else {
+> +			pr_debug_dtp("%s [%x] %#x(reg%d) -> reg%d",
+> +				     insn_name, insn_offset, offset, sreg, dreg);
+> +		}
+> +		pr_debug_type_name(&tsr->type, tsr->kind);
+> +		return 0;
+> +	}
+> +
+>   	if (!has_reg_type(state, sreg) || !state->regs[sreg].ok)
+>   		return -1;
+>   
+> @@ -460,6 +508,7 @@ static int propagate_load_reg_state(struct type_state *state,
+>   }
+>   
+>   static void update_load_insn_state(struct type_state *state,
+> +				   struct data_loc_info *dloc,
+>   				   struct disasm_line *dl,
+>   				   struct annotated_op_loc *src,
+>   				   struct annotated_op_loc *dst)
+> @@ -472,7 +521,7 @@ static void update_load_insn_state(struct type_state *state,
+>   		goto out_err_adjust;
+>   
+>   	/* Handle the first destination register */
+> -	if (propagate_load_reg_state(state, dl, dst->reg1, src,
+> +	if (propagate_load_reg_state(state, dloc, dl, dst->reg1, src,
+>   				     reg_offset, insn_name))
+>   		goto out_err_adjust;
+>   
+> @@ -481,7 +530,7 @@ static void update_load_insn_state(struct type_state *state,
+>   		int reg_size = arm64__reg_size(dl->ops.target.raw);
+>   
+>   		if (reg_size < 0 ||
+> -		    propagate_load_reg_state(state, dl, dst->reg2, src,
+> +		    propagate_load_reg_state(state, dloc, dl, dst->reg2, src,
+>   					     reg_offset + reg_size, insn_name))
+>   			goto out_err_adjust;
+>   	}
+> @@ -498,6 +547,100 @@ static void update_load_insn_state(struct type_state *state,
+>   	goto out_adjust;
+>   }
+>   
+> +/*
+> + * For store insns: propagate type from @sreg to the memory location
+> + * referenced by @dreg, applying @reg_offset to the destination memory offset.
+> + */
+> +static int propagate_store_reg_state(struct type_state *state,
+> +				     struct data_loc_info *dloc,
+> +				     struct disasm_line *dl, int sreg, int dreg,
+> +				     int reg_offset, const char *insn_name)
+> +{
+> +	struct type_state_reg *tsr;
+> +	u32 insn_offset = dl->al.offset;
+> +	int fbreg = dloc->fbreg;
+> +	int fboff = 0;
+> +
+> +	if (!has_reg_type(state, sreg) || !state->regs[sreg].ok)
+> +		return -1;
 
-Sure. I'm also thinking about whether this change should be done as a
-standalone patch, since it appears to be a pre-existing issue.
+If an untracked register is stored into a stack slot that already
+has a tracked type, this leaves the stale entry in place - a later
+load from that slot picks up the old type. The sequence is easy to
+hit: store a tracked register, cross a call, then store a register
+that the call invalidated. The right behaviour would be to drop the
+stack entry when the source is unknown. I see x86 case 3 has the
+exact same pattern, so this probably wants a cross-arch fix rather
+than an arm64-only one.
 
-Thanks,
-Tengda
+Also, this function always returns 0 apart from that early check,
+and the callers ignore the return value anyway. Either make it void
+or return a real status and act on it.
 
+> +
+> +	if (dloc->fb_cfa) {
+> +		u64 ip = dloc->ms->sym->start + dl->al.offset;
+> +		u64 pc = map__rip_2objdump(dloc->ms->map, ip);
+> +
+> +		if (die_get_cfa(dloc->di->dbg, pc, &fbreg, &fboff) < 0)
+> +			fbreg = -1;
+> +	}
+> +
+> +	/* Check stack variables with offset */
+> +	if (dreg == fbreg || dreg == state->stack_reg) {
+> +		struct type_state_stack *stack;
+> +		int offset = dreg == fbreg ? reg_offset - fboff : reg_offset;
+> +
+> +		tsr = &state->regs[sreg];
+> +
+> +		stack = find_stack_state(state, offset);
+> +		if (stack) {
+> +			if (!stack->compound)
+> +				set_stack_state(stack, offset, tsr->kind, &tsr->type,
+> +						tsr->offset, tsr->imm_value);
+> +			/*
+> +			 * If it's a compound type, it means attempting to
+> +			 * write to a member value of the compound type without
+> +			 * changing the compound type itself, so do nothing.
+> +			 */
+> +		} else {
+> +			findnew_stack_state(state, offset, tsr->kind, &tsr->type,
+> +					    tsr->offset, tsr->imm_value);
+> +		}
+> +
+> +		if (dreg == fbreg) {
+> +			pr_debug_dtp("%s [%x] reg%d -> -%#x(stack)",
+> +				     insn_name, insn_offset, sreg, -offset);
+> +		} else {
+> +			pr_debug_dtp("%s [%x] reg%d -> %#x(reg%d)",
+> +				     insn_name, insn_offset, sreg, offset, dreg);
+> +		}
+> +		if (tsr->offset != 0) {
+> +			pr_debug_dtp(" reg%d offset %#x ->",
+> +				     sreg, tsr->offset);
+> +		}
+> +		pr_debug_type_name(&tsr->type, tsr->kind);
+> +	}
+> +	/*
+> +	 * Ignore other transfers since it'd set a value in a struct
+> +	 * and won't change the type.
+> +	 */
+> +
+> +	return 0;
+> +}
+> +
+> +static void update_store_insn_state(struct type_state *state,
+> +				    struct data_loc_info *dloc,
+> +				    struct disasm_line *dl,
+> +				    struct annotated_op_loc *src,
+> +				    struct annotated_op_loc *dst)
+> +{
+> +	int reg_offset = get_reg_index_offset(dst);
+> +	const char *insn_name = src->multi_regs ? "stp" : "str";
+
+This misparses the exclusive stores. For stxr w2, x1, [x0] the left
+operand is "w2, x1", so multi_regs is true and the handler treats it
+as stp: it records w2's type (the status output, possibly stale) at
+the base offset and the real data register x1 at offset + reg_size,
+and w2 - which the instruction writes - is never invalidated. stxp
+is worse since its third source register is dropped entirely.
+
+Maybe restrict the propagation to str/stp explicitly and handle the
+stxr/stlxr/stxp/stlxp family separately: their first source register
+is actually a destination and should be invalidated, with only the
+remaining register(s) propagated (or just skip propagation for them
+if that's simpler).
+
+> +	/* Handle the first source register */
+> +	propagate_store_reg_state(state, dloc, dl, src->reg1, dst->reg1,
+> +				  reg_offset, insn_name);
+> +
+> +	/* Handle the second source register (stp only) */
+> +	if (src->multi_regs) {
+> +		int reg_size = arm64__reg_size(dl->ops.source.raw);
+> +
+> +		if (reg_size >= 0)
+> +			propagate_store_reg_state(state, dloc, dl, src->reg2,
+> +						  dst->reg1, reg_offset + reg_size,
+> +						  insn_name);
+
+
+Same reg_size-from-first-register pattern as the load side, so the
+element-size caveat from that patch applies here too.
+
+Thanks.
+Shuai
