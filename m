@@ -1,434 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D9738E8A0;
-	Tue, 11 Aug 2026 15:19:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF7C30C147
+	for <linux-perf-users@vger.kernel.org>; Tue, 11 Aug 2026 15:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786461586; cv=none; b=TlT9pOEnp7xPxvDtwdv0pfi8gOkS7D+4bXQ5lXpCOJiLJVChJLgfLU0QzgAXsIecYqWnDeiuDOfW1SDzrnoKLMYLylPahLeS3iZ5InPH6jqmr0wwZkQnpGgX8qADGHO75OKTvidkbvucaNjWk9MoiK9QFb1SPy6nmQE6si/Dwb8=
+	t=1786462249; cv=none; b=ijlJqoO38MvwM3qlUrUI3f4f9Ok972ME09CJloIG0EaanT2ZXjcMxoO0IH57wBgSUPnHfkFwx8FYas/kzI5JG7gOuU2Akxg3u7B0awVWvQ1pfuLyvnI7ma59ISPPS+1NRQudSg6vcIm/NFnmNXIM/bE685vT0BhntDi3+7BCzTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786461586; c=relaxed/simple;
-	bh=MPGJBmOckZrV4hKs3wq0EttuedVozKtyAuj3nM8QR8k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BgycmIpsoiIwj8TCmPfW5NonShhI99ygGbkr6Agi14jV77GOYhp+7MO/m7uS1slf6ep8FOzeheeDUv5fUVqrBKtje6Qig/JRNhdHiBUDL7igxKZvCBTWs3uT1H8OyAWqCUllVns/MVILyY54fbhljuAC9iVR6pdwQHvmi31RgJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JwMsXv9H; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786462249; c=relaxed/simple;
+	bh=jkGm2XnEEYvI3D+wc+k8mgIXGLOkNXkPZcP/RQghtd4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jA5hfLVf/YRbHM3GuzJVL7EofVi5VvKvxkXt7JuF5STcdrJQD43l+PX7OuNQUC10EwZ2hc/i1cD8lzYi/j86bpNhtYlWo46br+pWcyClLpz7PdxVFzSyqPzKIlLjKZvsH3eZYnVed8omnvhNrrwd3q7mehU+2GMCe7k1Tsu0W/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kC3rP5hk; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JwMsXv9H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 299031F00A3D;
-	Tue, 11 Aug 2026 15:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786461584;
-	bh=PRUvX1H7H395h+20h17H4s4BfYNSyNPbyxpuU9WQtbo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=JwMsXv9HMDqtCjIsgEb4CZ0kQJzg29s5X9ioLGnEOUMFzVqPCuNTwIQtBL5BFHgJo
-	 41OlsO90eQZS+Uwad0NV0hMJFt9ASrW+DDtldgO+o9FYHFB4dcXnO3nzowlcbKe8c6
-	 HqbQgtIw92ymPk3jOHejKON4LrG5HaGvy782CQzlthlEKNOf9pRznnSg4mQxBGhurq
-	 3aGuQYqzwQL8ie16Qcy0aOzgyVzcLxMR7Tbhs1OpsT5Kf2vY83y9XpEwXbrJwwzd5C
-	 iaU53HZYWVeZK97Rn8j/mtLVB1UoiPhkP9R21dPvuSQBDCg4htgmQ9tcovomvKa9X0
-	 ntiuh7LSUmiKQ==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH 7/7] perf build: install-build-deps: add RHEL family devel package mapping
-Date: Tue, 11 Aug 2026 12:19:12 -0300
-Message-ID: <20260811151912.9294-8-acme@kernel.org>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260811151912.9294-1-acme@kernel.org>
-References: <20260811151912.9294-1-acme@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kC3rP5hk"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-49553515a8bso51310915e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Aug 2026 08:30:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1786462246; x=1787067046; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=qG1LYmIXQwJhNszNA6JSaXd2z4OF9GJH1weAVjbiHlk=;
+        b=kC3rP5hkgN4sClZg1VauGmPR2XBcWF7X+u5bcrbGwVlGzpsrj9wvr8T4qCvJqOl7dN
+         wbDMq3SlGRN3OuPrIJjAafzbeG+Tq9z9txmeNj0iW81OiXgUXy/MI0j0nSfZsm+QZSO4
+         JTnJPSb05SSv9WgCVIAA8laM3STH5hPqgu8ioje44JFSn1+ujlfCjMlu2NIOsCVHg6bR
+         jbAdQhPKa7rcJ4Chq664KDJh6YoMEl1bm9WrfsdE4YLEmWHHKFmqNel4aA2lg3k97vEf
+         XZzRZRv9fFEOkBOny9+6uQshGATyU3pjub65/FkEmeo/QQQ4690CObQgIqeeD3dOrIhM
+         bR8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786462246; x=1787067046;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=qG1LYmIXQwJhNszNA6JSaXd2z4OF9GJH1weAVjbiHlk=;
+        b=cc7xRwVcLN6JSjvt6w+Ja04iZLC+qy2X6Vgt1Q7ZyxpVO5Hkk5xuiv7GOhCQB5nU3Z
+         6cgWg+BKE9kmjXx8dfO7crXAlIdA4gHmOxK8VEbEOnrcR9gcHnwnCmDJZ0D2lYl27MeT
+         +wMs5vCJbnT8uswkPSHZVe2HMdjUZvQHwnUAG1+WoqNmUSkICu3VYavVvIAjYPQwDRqc
+         6MfzTa3siRb0jaGvfMO+OYAhd3OC/kX1c2x2A2Lrl1br3D4DKlCrY7BUdFwkENliETBW
+         UHEuESMG5DVxHJdsQCLFvCr3LR/VMJr+0p6AenTheZ85ii4asIIt5yGW2La4YqwRO93G
+         XtpQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrXDvL8KzjZU9A+yVzcWnkOaytEhgRJuqV9sQyhv99RpFNljoXPkJWCfIyxn9dIKrp9ziikb+isv+y13toAD08B@vger.kernel.org
+X-Gm-Message-State: AOJu0YznkiAePuY4ndWrI4e3q8hUaMe20cMNTgrBiRgG68w2tbAzKC+s
+	nftNEipjrHsOF1faHDZ8o2gTYHMnJrvzSRKtE4AkRK0ahTx6cBjURwPUjJBdtTNyGF0=
+X-Gm-Gg: AR+sD10w9YBIyMCDMK0JlZs8M1IWXpOt16YBiXiG8ViEP+fUkPh9DqB7xwTMD63UYmP
+	Py2eU5bH3tmutZeRhy8KDPp0eoQzuwDzPlps82pywagDB0UFC7yIi08oTbPO5qzwKLIAjNZTDgL
+	BXac+XnwWuUOFVpb488FLBhT9hGsYK+riBoA2esDMA6a7T1TwC3hMySVFG9t02Xp9iyybhGyuXG
+	bmlEol8myjkLCRbf6zi/WB9RhrpuMRr7EVe8IsFoGbS6uyULlaJnIFIm8SXxpRoNMu86i7glMdk
+	Vx0cXoQCDx3ys2NXd4tYpk5Vj+4pcpKThTTSb9UMMK82b4Z7NS76Bk/C3UVAwaihALPCVTmYLfw
+	qY8KZUy70dWr5KKboI1/YHscnR7B4aRASRa+TAQIM1YifK/TpTkZNPsg5t9Rc5ueyOpt9j6m50p
+	dTrS8eqBKQTVsWPtQ7C0UtL6VZJQM/GPkIZ3e3h1imn4wsvU9INgAgGYQG0oDL9bwz
+X-Received: by 2002:a05:600c:8595:b0:499:518d:ebd6 with SMTP id 5b1f17b1804b1-4997846c98fmr70953065e9.17.1786462245612;
+        Tue, 11 Aug 2026 08:30:45 -0700 (PDT)
+Received: from pop-os.local ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49977dfacb6sm49865395e9.1.2026.08.11.08.30.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Aug 2026 08:30:45 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Subject: [PATCH 00/14] perf cs-etm: Per-thread mode fixes and snapshot wrap
+ support
+Date: Tue, 11 Aug 2026 16:30:03 +0100
+Message-Id: <20260811-james-cs-unformatted-per-thread-fix-v1-0-90565318f5f8@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPw/e2oC/x3NQQrCMBCF4auUWTsQI23Bq4iLoZmYEZqUmViUk
+ rsbXX5v8f4DjFXY4DocoLyLSckd59MAS6L8YJTQDd75yU1uxCetbLgYvnIsulKtHHBjxZqUKWC
+ UN46OZ38hmqNj6E+bcp//ldu9O4nVop9ftLX2BR8T+p6EAAAA
+X-Change-ID: 20260605-james-cs-unformatted-per-thread-fix-50e723aa7f0e
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>, 
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Suyash Mahar <smahar@meta.com>
+Cc: Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org, 
+ coresight@lists.linaro.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+ linux-doc@vger.kernel.org, James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.15.2
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fix a few issues with per-thread mode:
+  - With TRBE, thread migrations hit a queue without a decoder assert
+  - On nVHE, everything looks like guest trace instead of host
+  - Tracing multiple threads didn't really work
 
-With the Fedora mapping in place, this patch extends it to the RHEL
-family (RHEL, CentOS Stream, Rocky Linux, AlmaLinux, Oracle Linux),
-which shares most Fedora package names and runs dnf (RHEL 8 and
-later).  The names that differ are handled by probing the enabled
-repos:
+After adding a tests for those, it turns out there were some snapshot
+bugs not picked up by the other snapshot tests. That showed that the
+different snapshot searches for Intel BTS and Arm SPE were inconsistent
+and I think all tracers can benefit from using the same pointer fixup
+logic, so that gets refactored into the common auxtrace.c. Then SPE can
+just share the Intel BTS search as it was obviously copied from it
+originally. IntelPT keeps the more advanced duplicate data search, but
+in the future that could probably be made the common one and all tracers
+would benefit from using it (except maybe BTS if it always has a very
+small buffer, but I doubt the overhead of the duplicate search would be
+an issue). For now this is more of a refactor rather than behavioral
+change so don't do that yet.
 
-  - zlib.h comes from zlib-ng-compat-devel on the RHEL 10 family,
-    zlib-devel on RHEL 9 and earlier;
-  - there is no java-latest-openjdk-devel: the JDK devel package is
-    versioned per release, java-21-openjdk-devel on the RHEL 10
-    family, java-17-openjdk-devel on RHEL 9, java-11-openjdk-devel
-    on RHEL 8;
-  - libbpf-devel and capstone-devel live in the CRB repo on RHEL and
-    CentOS Stream 10, in EPEL on RHEL 9 and earlier;
-  - libbabeltrace2-devel is not packaged on the RHEL 10 family.
-
-Packages not available on the enabled repos are skipped instead of
-aborting the dnf transaction, and are listed at the end of the run, with
-the repo that provides them pointed out in the header comment and help
-text: a distro with CRB/EPEL enabled gets the full set, one without them
-still installs what it can.
-
-This also holds for the base set: e.g.  'rust' exists only as the
-rust-toolset AppStream module on RHEL 8 and 9, where it is not
-installable as a plain package, so it is skipped and noted there instead
-of failing the whole dnf transaction.
-
-The base set lists pkgconf-pkg-config instead of pkgconfig: both
-families have been on pkgconf since Fedora 26 / RHEL 8, where
-'pkgconfig' lives only as a virtual Provides of that subpackage, and
-a minimal RHEL-family container may not have it preinstalled.
-
-Validated on a fresh CentOS Stream 10 distrobox container, with the
-CRB repo enabled, so the host system is not modified:
-
-    distrobox create --image quay.io/centos/centos:stream10
-    distrobox enter centos-stream10
-    dnf config-manager --set-enabled crb
-    make -C tools/perf install-build-deps
-
-which installed the 28 available mapped packages; libbabeltrace2-devel, the
-only mapped package with no RHEL 10 package, is reported at the end
-of the run.
-
-A subsequent 'make -C tools/perf feature-dump' enabled every feature
-with an external dependency the RHEL 10 family provides, including
-libbpf and libcapstone from the CRB repo, with only
-babeltrace2-ctf-writer left out along with the deliberately unmapped
-opt-in features.
-
-Re-running the target is a no-op (dnf reports "Nothing to do"); with the
-CRB repo disabled, the skipped packages are instead listed in the
-end-of-run note, pointing out which repo provides them.
-
-Assisted-by: opencode:deepseek-v4-flash-free
-Signed-off-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/scripts/install-build-deps.sh | 191 ++++++++++++++++++++---
- 1 file changed, 168 insertions(+), 23 deletions(-)
+James Clark (14):
+      perf cs-etm: Fix nVHE per-thread decoding
+      perf cs-etm: Warn for invalid timestamp option
+      perf cs-etm: Turn on context packet timestamps in per-thread mode
+      perf cs-etm: Use per-CPU queues for per-thread mode
+      perf cs-etm: Increase default timestamp generation period
+      perf auxtrace: Turn Intel BTS snapshot search into a generic one
+      perf arm-spe: Use generic snapshot search
+      perf auxtrace: intel-pt: Use new snapshot_has_wrapped callback
+      perf cs-etm: Queue partial AUX records
+      perf cs-etm: Don't print missing buffers in snapshot mode
+      perf auxtrace: cs-etm: Capture wrapped snapshots
+      perf test: Allow infinite named_thread loops
+      perf test: Add test for per-thread mode
+      perf cs-etm: Test multiple per-thread threads
 
-diff --git a/tools/perf/scripts/install-build-deps.sh b/tools/perf/scripts/install-build-deps.sh
-index 4a6f4bda49094696..41053053a72a5582 100755
---- a/tools/perf/scripts/install-build-deps.sh
-+++ b/tools/perf/scripts/install-build-deps.sh
-@@ -32,11 +32,33 @@
- #           distrobox create --image debian:trixie
- #           distrobox enter debian-trixie
- #
--# Running inside a container keeps the host system unmodified.
-+#   - RHEL and its variants (RHEL, CentOS Stream, Rocky Linux, AlmaLinux,
-+#     Oracle Linux), on dnf (RHEL 8 and later), validated on CentOS
-+#     Stream 10, in a distrobox container:
-+#
-+#           distrobox create --image quay.io/centos/centos:stream10
-+#           distrobox enter centos-stream10
-+#
-+#     The RHEL family reuses most Fedora package names, with these
-+#     differences, handled by probing the enabled repos:
- #
--# RHEL support, whose package mapping is largely similar to Fedora's,
--# is the next planned distro, to be enabled once that mapping is
--# validated there.
-+#       - zlib.h comes from zlib-ng-compat-devel on the RHEL 10 family,
-+#         zlib-devel on RHEL 9 and earlier;
-+#       - the JDK devel package is versioned, there is no
-+#         java-latest-openjdk-devel: java-21-openjdk-devel on the RHEL
-+#         10 family, java-17-openjdk-devel on RHEL 9, java-11-openjdk-
-+#         devel on RHEL 8;
-+#       - libbpf-devel and capstone-devel are in the CRB repo on RHEL
-+#         and CentOS Stream 10 ('dnf config-manager --set-enabled crb')
-+#         and in EPEL on RHEL 9 and earlier;
-+#       - libbabeltrace2-devel is not packaged on the RHEL 10 family.
-+#
-+#     On the RHEL family, packages not available on the enabled repos
-+#     are skipped and listed at the end of the run, so that a distro
-+#     with CRB/EPEL enabled gets the full set, and a distro without
-+#     them still installs what it can.
-+#
-+# Running inside a container keeps the host system unmodified.
- #
- # Usage: install-build-deps.sh [OPTIONS]
- #
-@@ -44,7 +66,8 @@
- #    --list       list the packages that would be installed, then exit
- #    --dry-run    show the install command that would be run, without
- #                 running it
--#    --distro ID  force a distro: fedora, ubuntu, debian (default: auto-detect)
-+#    --distro ID  force a distro: fedora, rhel, ubuntu, debian
-+#                 (default: auto-detect)
- #    -h, --help   print this help message
- #
- # Requires root (or passwordless sudo) to actually install packages.
-@@ -66,13 +89,19 @@ it, so the corresponding feature gets enabled on a build.
- Options:
-     --list      list the packages that would be installed, then exit
-     --dry-run   show the install command that would be run, without running it
--    --distro ID force a distro: fedora, ubuntu, debian
-+    --distro ID force a distro: fedora, rhel, ubuntu, debian
-     -h, --help  print this help message
- 
- Distros supported: Fedora (dnf), validated in a toolbx container on
- Fedora 44, Ubuntu (apt-get), validated in a distrobox container on
--Ubuntu 26.04, and Debian (apt-get), reusing the Ubuntu mapping,
--validated in a distrobox container on Debian 13 (trixie).
-+Ubuntu 26.04, Debian (apt-get), reusing the Ubuntu mapping, validated
-+in a distrobox container on Debian 13 (trixie), and the RHEL family
-+(dnf, RHEL 8 and later), validated on CentOS Stream 10 in a distrobox
-+container.  On the RHEL family, packages not available on the enabled
-+repos are skipped and listed at the end; some there, e.g.
-+libbpf-devel and capstone-devel, come from the CRB repo on RHEL and
-+CentOS Stream 10 ('dnf config-manager --set-enabled crb') and from
-+EPEL on RHEL 9 and earlier.
- EOF
- 	exit 0
- }
-@@ -175,6 +204,67 @@ fedora_pkg_for() {
- 	# libaio-devel provides.
- }
- 
-+# ---------------------------------------------------------------------
-+# Check whether the first argument is provided by the enabled repos, or
-+# is already installed, returning 0 if so and printing nothing.
-+#
-+# dnf repoquery exits 0 even when the pattern does not match anything,
-+# so availability is judged by the output being non-empty, not by the
-+# exit code.
-+# ---------------------------------------------------------------------
-+pkg_available() {
-+	local p out
-+	for p in "$@"; do
-+		out=$(dnf repoquery --quiet --available "$p" 2>/dev/null)
-+		[ -n "$out" ] || out=$(dnf repoquery --quiet --installed "$p" 2>/dev/null)
-+		[ -n "$out" ] && return 0
-+	done
-+	return 1
-+}
-+
-+# ---------------------------------------------------------------------
-+# Return the first of its arguments that pkg_available() accepts.
-+# ---------------------------------------------------------------------
-+pick_available() {
-+	local p
-+	for p in "$@"; do
-+		if pkg_available "$p"; then
-+			echo "$p"
-+			return 0
-+		fi
-+	done
-+	return 1
-+}
-+
-+# ---------------------------------------------------------------------
-+# Return the RHEL-family package(s) providing the devel requirements of
-+# a feature test.  This family reuses the Fedora mapping, whose names
-+# apply to it as well, except for the features whose Fedora package
-+# does not exist there, kept in the case below.
-+#
-+# Whether the resulting package is actually installable is checked in
-+# package_set(), as some of these names live in the CRB or EPEL repos,
-+# which may not be enabled: on the RHEL 10 family libbpf-devel and
-+# capstone-devel come from CRB, and libbabeltrace2-devel is not
-+# packaged at all.
-+# ---------------------------------------------------------------------
-+rhel_pkg_for() {
-+	local feat="$1"
-+	case "$feat" in
-+	zlib)
-+		pick_available zlib-devel zlib-ng-compat-devel
-+		;;
-+	jvmti|jvmti-cmlr)
-+		# No java-latest-openjdk-devel on the RHEL family: the JDK
-+		# devel package is versioned per release.
-+		pick_available java-latest-openjdk-devel java-21-openjdk-devel java-17-openjdk-devel java-11-openjdk-devel
-+		;;
-+	*)
-+		fedora_pkg_for "$feat"
-+		;;
-+	esac
-+}
-+
- # ---------------------------------------------------------------------
- # Return the Debian/Ubuntu package(s) providing the devel requirements
- # of a feature test in tools/build/feature/.  This mapping is shared by
-@@ -272,6 +362,11 @@ fedora_base_pkgs="gcc gcc-c++ make flex bison glibc-devel kernel-headers python3
- # installs by default, needed by the babeltrace2 feature test and
- # libopenssl's pkg-config checks.
- debian_base_pkgs="gcc g++ make pkg-config flex bison libc6-dev linux-libc-dev python3-setuptools rustc"
-+# pkg-config: like Fedora, on pkgconf since Fedora 26 / RHEL 8, with
-+# 'pkgconfig' live only as a virtual Provides of the pkgconf-pkg-config
-+# subpackage.  List it explicitly because, unlike Fedora, a minimal
-+# RHEL-family container may not have it preinstalled.
-+rhel_base_pkgs="gcc gcc-c++ make flex bison glibc-devel kernel-headers pkgconf-pkg-config python3-setuptools rust"
- 
- # ---------------------------------------------------------------------
- # Distro detection
-@@ -285,11 +380,12 @@ detect_distro() {
- 	id=$( . /etc/os-release && echo "${ID:-}" )
- 	case "$id" in
- 	fedora)			echo "fedora" ;;
-+	rhel|centos|rocky|alma|ol)
-+		# All share the Fedora package names (with the exceptions
-+		# handled by rhel_pkg_for()) and dnf.
-+		echo "rhel" ;;
- 	ubuntu)			echo "ubuntu" ;;
- 	debian)			echo "debian" ;;
--	# RHEL and its derivatives share most Fedora package names, but the
--	# mapping is only validated on Fedora, so don't auto-detect them.
--	rhel|centos|rocky|alma|ol) echo "" ;;
- 	*)			echo "" ;;
- 	esac
- }
-@@ -311,33 +407,73 @@ feature_tests() {
- # Assemble the unique package list.  Since the full feature set is mapped
- # unconditionally, this installs the complete devel environment; installing
- # an already-present package is a no-op for both dnf and apt-get, making
--# this idempotent.
-+# this idempotent.  On the RHEL family, packages not available on the
-+# enabled repos are skipped and echoed on stderr, reported at the end of
-+# the run by the caller (package_set() runs in a subshell, so a variable
-+# would not survive it).
- # ---------------------------------------------------------------------
- package_set() {
- 	local distro="$1" srcdir="$2"
--	local feat pkg pkgs
-+	local feat pkg pkgs base_pkgs missing_pkgs=""
- 	case "$distro" in
- 	fedora)	pkgs="$fedora_base_pkgs" ;;
-+	rhel)	pkgs="$rhel_base_pkgs" ;;
- 	ubuntu|debian)	pkgs="$debian_base_pkgs" ;;
- 	esac
- 
-+	# The base set must be checked against the enabled repos as well:
-+	# e.g. 'rust' is only shipped as the rust-toolset AppStream module
-+	# on RHEL 8 and 9, where dnf would abort the whole transaction
-+	# with "No match for argument: rust" instead of skipping it, so
-+	# unavailable base packages are skipped and noted like the mapped
-+	# ones below.
-+	if [ "$distro" = "rhel" ]; then
-+		base_pkgs="$pkgs"
-+		pkgs=""
-+		for pkg in $base_pkgs; do
-+			if pkg_available "$pkg"; then
-+				pkgs="$pkgs $pkg"
-+			else
-+				missing_pkgs="$missing_pkgs $pkg"
-+			fi
-+		done
-+	fi
-+
- 	for feat in $(feature_tests "$srcdir"); do
--		if [ "$distro" = "fedora" ]; then
--			pkg=$(fedora_pkg_for "$feat")
--		else
--			pkg=$(debian_pkg_for "$feat")
--		fi
-+		case "$distro" in
-+		fedora)		pkg=$(fedora_pkg_for "$feat") ;;
-+		rhel)		pkg=$(rhel_pkg_for "$feat") ;;
-+		*)		pkg=$(debian_pkg_for "$feat") ;;
-+		esac
- 		[ -n "$pkg" ] || continue
- 		for pkg in $pkg; do
-+			if [ "$distro" = "rhel" ] && ! pkg_available "$pkg"; then
-+				missing_pkgs="$missing_pkgs $pkg"
-+				continue
-+			fi
- 			case " $pkgs " in
- 			*" $pkg "*) ;;
- 			*) pkgs="$pkgs $pkg" ;;
- 			esac
- 		done
- 	done
-+	[ -n "$missing_pkgs" ] && echo "$missing_pkgs" >&2
- 	echo "$pkgs"
- }
- 
-+# ---------------------------------------------------------------------
-+# Report the RHEL-family packages that were skipped because the enabled
-+# repos do not provide them.
-+# ---------------------------------------------------------------------
-+note_missing() {
-+	[ -n "$1" ] || return 0
-+	echo "Note: these packages are not available on the enabled repos" >&2
-+	echo "and were not installed, so the features they enable will stay" >&2
-+	echo "off in a perf build:" >&2
-+	echo "$1" | tr ' ' '\n' | grep -v '^$' | sort -u | sed 's/^/  /' >&2
-+	echo >&2
-+}
-+
- # ---------------------------------------------------------------------
- # The install command proper for each supported package manager, plus
- # the command massaged for --dry-run.
-@@ -345,7 +481,7 @@ package_set() {
- install_cmd() {
- 	local distro="$1"; shift
- 	case "$distro" in
--	fedora)
-+	fedora|rhel)
- 		echo "dnf install -y $*"
- 		;;
- 	ubuntu|debian)
-@@ -357,7 +493,7 @@ install_cmd() {
- 
- main() {
- 	local action="install"
--	local srcdir distro pkgs pkg cmd
-+	local srcdir distro pkgs pkg cmd missing_file missing_pkgs
- 
- 	while [ $# -gt 0 ]; do
- 		case "$1" in
-@@ -377,23 +513,31 @@ main() {
- 	srcdir=$(cd "$(dirname "$0")/../../.." && pwd)
- 	distro=$(detect_distro)
- 	case "$distro" in
--	fedora|ubuntu|debian) ;;
-+	fedora|rhel|ubuntu|debian) ;;
- 	*)
- 		echo "error: unsupported distro (got '$distro'); the package mapping is not validated on other distros." >&2
--		echo "Supported and validated: Fedora 44 (toolbx container), Ubuntu 26.04 and Debian 13 (distrobox containers)." >&2
-+		echo "Supported and validated: Fedora 44 (toolbx container), Ubuntu 26.04 and Debian 13 (distrobox containers), and CentOS Stream 10 (distrobox container)." >&2
- 		exit 1
- 		;;
- 	esac
- 
--	pkgs=$(package_set "$distro" "$srcdir")
-+	missing_file=$(mktemp) || {
-+		echo "error: cannot create a temporary file (mktemp failed)" >&2
-+		exit 1
-+	}
-+	pkgs=$(package_set "$distro" "$srcdir" 2>"$missing_file")
-+	missing_pkgs=$(cat "$missing_file")
-+	rm -f "$missing_file"
- 
- 	case "$action" in
- 	list)
- 		echo "$pkgs" | tr ' ' '\n' | grep -v '^$' | sort
-+		note_missing "$missing_pkgs"
- 		exit 0
- 		;;
- 	dry-run)
- 		install_cmd "$distro" $pkgs
-+		note_missing "$missing_pkgs"
- 		exit 0
- 		;;
- 	esac
-@@ -410,6 +554,7 @@ main() {
- 		echo "error: the install command failed, see the output above" >&2
- 		exit 1
- 	}
-+	note_missing "$missing_pkgs"
- }
- 
- main "$@"
--- 
-2.55.0
+ Documentation/userspace-api/perf_ring_buffer.rst   |   6 +-
+ tools/perf/Documentation/perf-test.txt             |   2 +-
+ tools/perf/arch/arm/util/cs-etm.c                  |  30 ++++-
+ tools/perf/arch/arm64/util/arm-spe.c               | 147 +--------------------
+ tools/perf/arch/x86/util/intel-bts.c               | 115 +---------------
+ tools/perf/arch/x86/util/intel-pt.c                |  58 +++-----
+ .../perf/tests/shell/coresight/per-thread-multi.sh |  78 +++++++++++
+ tools/perf/tests/shell/coresight/per-thread.sh     |  48 +++++++
+ .../perf/tests/shell/coresight/raw_dump_stress.sh  |   5 -
+ tools/perf/tests/workloads/named_threads.c         |   7 +-
+ tools/perf/util/auxtrace.c                         | 136 +++++++++++++++++--
+ tools/perf/util/auxtrace.h                         |  20 ++-
+ tools/perf/util/cs-etm.c                           |  98 ++++++++++----
+ 13 files changed, 382 insertions(+), 368 deletions(-)
+---
+base-commit: bf10e6ee2ac3034c9068e03eed418fd16961984e
+change-id: 20260605-james-cs-unformatted-per-thread-fix-50e723aa7f0e
+
+Best regards,
+--  
+James Clark <james.clark@linaro.org>
 
