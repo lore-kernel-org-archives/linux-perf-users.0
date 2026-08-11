@@ -1,144 +1,74 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135653264F1;
-	Tue, 11 Aug 2026 06:33:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F01B1F3BA4;
+	Tue, 11 Aug 2026 06:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786430015; cv=none; b=uKZ1EtNaLGysF9OZjjXenIB5RNtU5iFhNWhvanFbHM21kxGa5r4bK0QU17X4VGHHMrbzxP9Ax1J1K4kOqfnErMqtURWh5t6G/i4yKfeH/QHc4A2TNjjywpjKO8cxIM7Xn/ETf1V71D1q9zLq76KdI2wscFNiJNiZ6+N76CN/tuI=
+	t=1786430813; cv=none; b=m5iUMZEY68NQAqhMeIh4Tp7cZyRN+P4CDJ2h+C3OTerkDUcp2eGolzND+InObdtaSGJ9Q2zNCw0x97eC8a86WNxdd2DmMkvBtp60qS0cIuD8TfaVjigJkzjpOzYgABQ9ok1jaM2euJy/LNxQjIN3fYJiNbq/E/YTQGu0/F1V9rQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786430015; c=relaxed/simple;
-	bh=m3Qbe75JbAe/WQ7pJMJF0xUrfyW1YPSMjsh1fo5KP+Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ur4r2ZJ2trI6Zwa7YGcKLvefbztjxzNZkEtEPo94ckoZBlvxgwPkc2oZaEfpPMOIcbAh+8LjIl2VHSxcSZa1VvY+LyTyMH+Go93o5F/dKj5LNmJyJ17dmHASzGQsv8JyS1SeQ1/usnguc/x6q4L2OmJT1G+OGpX+2BWsywCCPxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=bbq0H8GT; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="bbq0H8GT"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1786430004; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=SUHabi4+/mXpps0/lo/jkNYxqLlc5wUDWOEA+Q9bMOo=;
-	b=bbq0H8GTXLLSXTIQijpmCjp3Wez3atDcx+emSSjdvWYSweAAcMT9qcJMqNBsgWIDOQ5Wvwz3YA1aqPaC4U73oLhnzRQP3PNPbcUdNstbPeyvpvn32XvI9j0IjgPWCxdJQ5e5dcRm5OyKuoUs6flKWc8T/T0StX92fdznKJBkIxE=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X8nOJT3_1786430001;
-Received: from 30.246.162.187(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X8nOJT3_1786430001 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 11 Aug 2026 14:33:22 +0800
-Message-ID: <1d2e807f-5ced-4af5-86c8-9cd3e89a7ba2@linux.alibaba.com>
-Date: Tue, 11 Aug 2026 14:33:20 +0800
+	s=arc-20240116; t=1786430813; c=relaxed/simple;
+	bh=e5488UFZitb7gha26SyvCYFa0Rq+cewpWOxkL8RfvWQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mMAH+WkQifGl2hX4cFNPoe3EzyEV/rasDTk3DrNnDAq4xQwFUU/ciqlHx1D4n/ZFofJy82bUObkDsPj+l3NBGp/arZjDnhjWyeZVmBvIZ37SWzsI1IVlj92nEFeF8lc6WghhmftM5IldUlzhms+5eNG1rNjop6dO3fZVAfOrMn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 6ac332b2955011f1aa26b74ffac11d73-20260811
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.12,REQID:a73af0d5-b5ef-4b25-adfa-b9cacb7e3291,IP:0,U
+	RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:-5
+X-CID-META: VersionHash:e7bac3a,CLOUDID:fa7966228d4a12c53e14123b7712b27c,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|865|898,TC:nil,Content:0|15|50
+	,EDM:-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,O
+	SA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 6ac332b2955011f1aa26b74ffac11d73-20260811
+X-User: liuxixin@kylinos.cn
+Received: from [127.0.1.1] [(10.44.16.150)] by mailgw.kylinos.cn
+	(envelope-from <liuxixin@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 249032367; Tue, 11 Aug 2026 14:46:44 +0800
+From: Xixin Liu <liuxixin@kylinos.cn>
+To: linux-riscv@lists.infradead.org
+Cc: atish.patra@linux.dev, anup@brainfault.org, will@kernel.org, mark.rutland@arm.com, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, liuxixin@kylinos.cn
+Subject: [PATCH v2 0/1] perf: RISC-V: check cpu_hw_evt before dereference in overflow IRQ
+Date: Tue, 11 Aug 2026 11:51:00 +0800
+Message-ID: <cover.v2.1786420235.git.liuxixin@kylinos.cn>
+In-Reply-To: <prp0001riscv.1786064390.git.liuxixin@kylinos.cn>
+References: <prp0001riscv.1786064390.git.liuxixin@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/23] perf annotate: Adapt arch__dwarf_regnum() for
- arm64
-To: Tengda Wu <wutengda@huaweicloud.com>, Namhyung Kim <namhyung@kernel.org>,
- james.clark@linaro.org, Li Huafei <lihuafei1@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
- Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Bill Wendling <morbo@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-7-wutengda@huaweicloud.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20260808122400.2961238-7-wutengda@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Mailer: patches/scripts/send-local.py
 
+Hi,
 
+Thanks for the review, Paul.
 
-On 8/8/26 8:23 PM, Tengda Wu wrote:
-> Currently, arch__dwarf_regnum() assumes that all architectures use a
-> register prefix character (e.g., '%' for x86) defined by
-> arch->objdump.register_char, and uses it to match register names in
-> objdump output. However, this assumption does not hold for arm64,
-> where assembly syntax uses bare register names like 'x0', 'w1'
-> without any prefix.
-> 
-> As a result, arm64 builds may fail to correctly recognize register
-> names from objdump disassembly, leading to incomplete or incorrect
-> annotation output.
-> 
-> To address this:
-> 
-> - Make the register prefix check optional, allowing architectures
->    without a prefix character to be parsed correctly.
-> 
-> - Extend the delimiter set in strpbrk() to include the closing square
->    bracket ']'. In arm64 assembly, memory operands often use bracketed
->    syntax such as '[x1, #16]' or '[x2]'. Adding ']' ensures clean
->    extraction of register names like 'x2' without trailing characters.
-> 
-> - Remove the 'static' qualifier from arch__dwarf_regnum() so that it
->    can be reused by other architecture-specific profiling components
->    in future changes.
-> 
-> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-> ---
->   tools/perf/util/annotate.c | 14 ++++++++------
->   tools/perf/util/annotate.h |  2 ++
->   2 files changed, 10 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index df70e95a8470..9d8b4d6b859b 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -2472,21 +2472,23 @@ int annotate_check_args(void)
->   	return 0;
->   }
->   
-> -static int arch__dwarf_regnum(const struct arch *arch, const char *str)
-> +int arch__dwarf_regnum(const struct arch *arch, const char *str)
->   {
-> -	const char *p;
-> +	const char *p = str;
->   	char *regname, *q;
->   	int reg;
->   
-> -	p = strchr(str, arch->objdump.register_char);
-> -	if (p == NULL)
-> -		return -1;
-> +	if (arch->objdump.register_char) {
-> +		p = strchr(str, arch->objdump.register_char);
-> +		if (p == NULL)
-> +			return -1;
-> +	}
->   
->   	regname = strdup(p);
->   	if (regname == NULL)
->   		return -1;
+v2 adds Fixes for the snapshot commit that introduced the early load,
+and Assisted-by for DeepSeek v3 help. Code change is unchanged from v1.
 
+Thanks,
+Xixin Liu
 
-Keeping the early -1 return here is correct, but it exposes an
-inconsistency in this function's failure values. This is the only path
-that returns -1; when the lookup itself fails the tail returns whatever
-get_dwarf_regnum() produced (-ENOENT on arm64, -EINVAL/-ENOENT on x86).
-The callers only check
+---
 
-     if (op_loc->reg1 == -1)
+Xixin Liu (1):
+  perf: RISC-V: check cpu_hw_evt before dereference in overflow IRQ
 
-so the early return is caught while a real parse failure slips through
-with a negative reg1. Today that is harmless because every consumer
-guards with has_reg_type(), whose unsigned compare rejects negative
-values, but the error propagation is effectively broken and arm64 adds
-more inputs that fail parsing (prfm ops, PC-relative addresses).
+ drivers/perf/riscv_pmu_sbi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Could you normalise the tail to keep the "success or -1" contract?
+-- 
+2.43.0
 
-     reg = get_dwarf_regnum(regname, arch->id.e_machine,
-                    arch->id.e_flags);
-     free(regname);
-     return reg < 0 ? -1 : reg;
-
-Thanks.
-Shuai
