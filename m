@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339624582E6;
-	Tue, 11 Aug 2026 17:33:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B316044CAFB;
+	Tue, 11 Aug 2026 17:34:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786469642; cv=none; b=gBj4/yMpuQjWW3+6pAIpGx0GxkaDIpprWn8jIQGQf10OR98DZPKxhstyD6IxCzEba7B5QbFw9KO0MIHS5G8DFBOJrhPTzjcae70tIrOseJl6ITUIVxZPPbVYcklWUzglISxY22/uCo1jx6uUPugRievqFkABCC2hsfBbdcNpRj8=
+	t=1786469643; cv=none; b=bR1G5GVi+YMFZSexLo2Hg/EmoZoQvg3BqU/T4dRwQA/+pc6iY+wKXXY+38/cprpY0OdOYuFKHuTL39E3SxtMNsWB7u5vmE20nLA9ZkY7Yx0LMAXMIljQZVJq8/7gvO7dzxvTp0260O9W5Fnu3e9aoHQyAptmiEfoHk+fmNM8Eg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786469642; c=relaxed/simple;
-	bh=nS5xNVbtT+HEQQFOdF3dw9jJpsfb85qCACVwwNZtx5g=;
+	s=arc-20240116; t=1786469643; c=relaxed/simple;
+	bh=a0eIMF9gZ6iInZAI6Aq5FH4Ppx/5fO+YYu7HA2NaoO8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kebWOtd0+Rj5IMUpLseo8azKLYCAWbIf3OZWPrf/Lx9jdSkzvZr7g7BZjcbUmsIAdWSz+t7AyohYm1MkcuPuPT2REpwC9yXTjEHPtq6dIxhPUCGUauhLvd9Fb3z8kgzyMAHnCe3qd1e4WC4HOdJgB4Xd+12fRH1iu+l/yJ61ak8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Em9pP3Un; arc=none smtp.client-ip=198.175.65.21
+	 MIME-Version; b=jMAqMTYsWYPMpzMomlBnD9scEYjxpAwZGqW/9ZSeporByNhkLj9Re6ioLjwlWMXqYQsqeQnriHqeuhzpGXkqDB7LwXY4AEf9vewMoKOgL469NuewUCHPLCtX3rqzTygzybRtt+bTTz9EGlICVf2Mmg5HRxKd4Ihc54bAuN4jNds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jYCKZJvX; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Em9pP3Un"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jYCKZJvX"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786469638; x=1818005638;
+  t=1786469642; x=1818005642;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=nS5xNVbtT+HEQQFOdF3dw9jJpsfb85qCACVwwNZtx5g=;
-  b=Em9pP3Unzw8PUREKixMQ8hGnM7hH3Kk6Fu1NNjYv9KKmopucWwctrhfm
-   ELIof5UAXYKd/EN3hU0vBTeNoVN0UsL5sPip1Z1Mr2wjJAJZGEcpP5/4n
-   YCbZ5VpAphNYr2iBCxtZZOLxM2tikQQS2hBFAGeLjkf+sT+3ei+xKBr1c
-   GuBeJYcXGECXJ5kqc+ANuqxAMKDW4YdtBdZuXpl+AAoGn/CD4zL7a9Q9U
-   1OJ9augoY/o+TPure8rbPPxI32E7fXRs/x3uZgK3bzimMSAZdt/DYNHNc
-   hn8BtHcNYfGR173N9soBIIT0NYOgmkAwk5a0KkpGOrWuqF6elIMab8e1D
+  bh=a0eIMF9gZ6iInZAI6Aq5FH4Ppx/5fO+YYu7HA2NaoO8=;
+  b=jYCKZJvX0+hGH4RaggkcbIxqcc4EeIf5EekT97521MGlmMBMVvw3ZP0w
+   +haLhDPsMd/rcLsRFLgJHsNAJrUQ4JHNMy2xjZv9/aPRGdOvd+cao89Qm
+   Fa4LbQrkTwWQ1uKEzjtKjEI2rEdLOGD1Xectk+QG8lslDWaxpE3MdL7zY
+   hziuw7x7nPJUYIPn81/zhYMwvT0rG8Y1aIUPfJOFRd7GD+UG9yR1Mrzyv
+   2T593qr6GwmD0fIbORJaWmwMd0dpFves0JXI0ONUPyQOyLCcGkyAhXjzt
+   VMZXF4ZVhLpPAYWsfQBXyBFApGMdxcHRtDMDQDEOa3pCD+ofDMGYj+OS5
    w==;
-X-CSE-ConnectionGUID: pfVpg4g+TeykX9dcmw9U4g==
-X-CSE-MsgGUID: zaoHkkl9RgWRnMxPuOwhTQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11872"; a="86863228"
+X-CSE-ConnectionGUID: XWsc/T/DTJiY9JUblNccNg==
+X-CSE-MsgGUID: WImlYAmWT160KMcnAXWxrw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11872"; a="86863243"
 X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
-   d="scan'208";a="86863228"
+   d="scan'208";a="86863243"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 10:33:58 -0700
-X-CSE-ConnectionGUID: cXzdRV8+T1iWwNAPkXyuKg==
-X-CSE-MsgGUID: LxgRCBAcS0inzmxBn1sOuQ==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 10:34:01 -0700
+X-CSE-ConnectionGUID: /IEm7xhYRzupFr/GE1TcDQ==
+X-CSE-MsgGUID: vCKg1gIkQkqzPvqZQ7BvhA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
-   d="scan'208";a="261648055"
+   d="scan'208";a="261648091"
 Received: from hanvin-mobl3.amr.corp.intel.com (HELO tfalcon-desk.intel.com) ([10.124.223.16])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 10:33:56 -0700
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 10:34:00 -0700
 From: Thomas Falcon <thomas.falcon@intel.com>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org,
@@ -57,9 +57,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH v4 3/6] perf header: Support memory ranges
-Date: Tue, 11 Aug 2026 12:33:37 -0500
-Message-ID: <20260811173340.96013-4-thomas.falcon@intel.com>
+Subject: [PATCH v4 5/6] perf tools: Show memory region in perf-script subcommand
+Date: Tue, 11 Aug 2026 12:33:39 -0500
+Message-ID: <20260811173340.96013-6-thomas.falcon@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20260811173340.96013-1-thomas.falcon@intel.com>
 References: <20260811173340.96013-1-thomas.falcon@intel.com>
@@ -71,414 +71,242 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Memory ranges were created to track different types of memory,
-such as persistent, high bandwidth, or CXL-attached, that may
-be present on a system for performance monitoring and resource
-control purposes.
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Memory range data are parsed from the ACPI MRRM table and exposed
-to userspace tools via sysfs [1]. Memory range data is read from:
+Show the memory region in perf-script subcommand. Memory region is found
+in the mem_region field of the memory information data source. This
+field was included with the introduction of support for the Off-module
+Response facility (OMR) [1] in Intel's Diamond Rapids and Nova Lake
+Architectures.
 
-	/sys/firmware/acpi/memory_ranges/rangeX
+An example of perf-script output with the new memory region field is shown
+below:
 
-With the following attributes:
+random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2ec
+random    2411a68201042 |OP LOAD|LVL RAM hit|SNP Hit|TLB L1 or L2 hit|LCK No|BLK  N/A|Region  Mem-1                          561de7f8910a
+random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
+random      20e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  Data|Region  N/A                          7f32ae64a2d0
+random      20e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  Data|Region  N/A                          7f32ae64a2d0
+random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2ec
+random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
+random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
+random    2411a68201042 |OP LOAD|LVL RAM hit|SNP Hit|TLB L1 or L2 hit|LCK No|BLK  N/A|Region  Mem-1                          561de7f8910a
+random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2ec
+random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
 
-	u64 base;
-	u64 length;
-	int node;
-	u8  local_region_id;
-	u8  remote_region_id;
-
-Read memory range data from sysfs if present and save it in
-the header of the perf data file under a new feature bit,
-HEADER_MEMORY_RANGES (35). Memory range data can be viewed with the
---header or --header-only options of perf-report and perf-script.
-
-Example output:
- # memory ranges (nr 5):
- # range0: [0x0000000000000000-0x00000000bfffffff], node = 0, local_region_id = 0, remote_region_id = 255
- # range1: [0x0000000100000000-0x000000203fffffff], node = 0, local_region_id = 0, remote_region_id = 255
- # range2: [0x0000008000000000-0x0000027fffffffff], node = -2, local_region_id = 1, remote_region_id = 255
- # range3: [0x0000028000000000-0x0000047fffffffff], node = -2, local_region_id = 1, remote_region_id = 255
- # range4: [0x0000048000000000-0x000004ffffffffff], node = -2, local_region_id = 1, remote_region_id = 255
-
-[1]: https://lore.kernel.org/lkml/20250505173819.419271-1-tony.luck@intel.com/
+[1]: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
 
 Assisted-by: Sashiko:gemini-3.1-pro-preview
 Assisted-by: GitHub-Copilot:claude-opus-4-8
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+Link: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
 ---
-v4:
--- Fixed bounds checking for local and remote region IDs in
-   memory_range__read(), which made region "255" invalid
+v4: Drop the global show-region flag; pass perf_session to
+    perf_script__meminfo_scnprintf() and gate the Region field
+    on the feature bit, with a pipe-mode fallback
 
-v3:
--- Added missing ff->size check in process_memory_ranges()
--- used open/openat to read memory range sysfs files in memory_range__read()
--- Removed path name and file name buffers in memory_range__read(),
-   instead pass path name from as a parameter from memory_range__parse()
--- use calloc instead of zalloc in memory_range__parse() and
-   process_memory_ranges()
--- Removed redundant check for existance of memory range directory in
-   memory_range__read()
--- Included examples of memory range output in commit message
-
-v2:
--- Added check for NULL return of sysfs__mountpoint() when parsing
-   memory ranges in sysfs
--- increased MAX_MEMORY_RANGES sanity check from 64 to 256 based on
-   ACPI MRRM table implementation in Linux kernel
--- added comment for MAX_MEMORY_RANGES to clarify that it is a sanity check
-   for malformed perf.data files
--- removed a line of code was removed from util/env.h but was added back in
-   v1 due to bad rebase
+v3: make memory region reporting conditional on feature bit
 ---
+ tools/perf/builtin-script.c                   | 13 +--
+ tools/perf/util/mem-events.c                  | 86 ++++++++++++++++++-
+ tools/perf/util/mem-events.h                  |  4 +-
+ .../scripting-engines/trace-event-python.c    |  5 +-
+ 4 files changed, 98 insertions(+), 10 deletions(-)
 
- .../Documentation/perf.data-file-format.txt   |  13 ++
- tools/perf/builtin-inject.c                   |   1 +
- tools/perf/util/env.c                         |   1 +
- tools/perf/util/env.h                         |  10 +
- tools/perf/util/header.c                      | 203 ++++++++++++++++++
- tools/perf/util/header.h                      |   1 +
- 6 files changed, 229 insertions(+)
-
-diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-index b90cba9168f8..1f8e7d8e9ae2 100644
---- a/tools/perf/Documentation/perf.data-file-format.txt
-+++ b/tools/perf/Documentation/perf.data-file-format.txt
-@@ -478,6 +478,19 @@ The size of the cacheline in bytes. Format:
- 
- 	unsigned int cln_size;
- 
-+	HEADER_MEMORY_RANGES = 35,
-+
-+List of memory ranges. The format of the data is as below.
-+
-+u32 nr_memory_ranges;
-+struct memory_range {
-+	u64 base;
-+	u64 length;
-+	int node;
-+	u8 local_region_id;
-+	u8 remote_region_id;
-+}; [nr_memory_ranges]
-+
- 	other bits are reserved and should be ignored for now
- 	HEADER_FEAT_BITS	= 256,
- 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 70bbfad5653e..169617a884d3 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -2306,6 +2306,7 @@ static bool keep_feat(struct perf_inject *inject, int feat)
- 	case HEADER_PMU_CAPS:
- 	case HEADER_CPU_DOMAIN_INFO:
- 	case HEADER_CLN_SIZE:
-+	case HEADER_MEMORY_RANGES:
- 		return true;
- 	/* Information that can be updated */
- 	case HEADER_BUILD_ID:
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index c0e2b9d5f0b2..50993b0dedc5 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -297,6 +297,7 @@ void perf_env__exit(struct perf_env *env)
- 		zfree(&env->pmu_caps[i].pmu_name);
- 	}
- 	zfree(&env->pmu_caps);
-+	zfree(&env->memory_ranges);
- 	free_cpu_domain_info(env->cpu_domain, env->schedstat_version, env->nr_cpus_avail);
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index f91d8b1fbd01..410ccad56f99 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -2078,11 +2078,12 @@ static int evlist__max_name_len(struct evlist *evlist)
+ 	return max;
  }
  
-diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-index 7acca39b42ff..23d35425efe3 100644
---- a/tools/perf/util/env.h
-+++ b/tools/perf/util/env.h
-@@ -68,6 +68,14 @@ struct cpu_domain_map {
- 	struct domain_info	**domains;
- };
- 
-+struct memory_range {
-+	u64 base;
-+	u64 length;
-+	int node;
-+	u8 local_region_id;
-+	u8 remote_region_id;
-+};
-+
- struct perf_env {
- 	char			*hostname;
- 	char			*os_release;
-@@ -100,6 +108,7 @@ struct perf_env {
- 	int			nr_cpu_pmu_caps;
- 	int			nr_hybrid_nodes;
- 	int			nr_pmus_with_caps;
-+	int			nr_memory_ranges;
- 	char			*cmdline;
- 	const char		**cmdline_argv;
- 	char			*sibling_cores;
-@@ -122,6 +131,7 @@ struct perf_env {
- 	unsigned long long	 memory_bsize;
- 	struct hybrid_node	*hybrid_nodes;
- 	struct pmu_caps		*pmu_caps;
-+	struct memory_range	*memory_ranges;
- #ifdef HAVE_LIBBPF_SUPPORT
- 	/*
- 	 * bpf_info_lock protects bpf rbtrees. This is needed because the
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index e90e541f546b..1dbc83a2d798 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -92,6 +92,7 @@
- #define MAX_PMU_CAPS		512
- #define MAX_PMU_MAPPINGS	4096
- #define MAX_SCHED_DOMAINS	64
-+#define MAX_MEMORY_RANGES	256
- 
- /*
-  * magic2 = "PERFILE2"
-@@ -1891,6 +1892,132 @@ static int write_cpu_domain_info(struct feat_fd *ff,
- 	return ret;
- }
- 
-+static int memory_range__read(struct memory_range *range, const char *path)
-+{
-+	char buf[32];
-+	ssize_t n;
-+	int dfd, fd, tmp, ret = -1;
-+
-+	dfd = open(path, O_RDONLY | O_DIRECTORY);
-+	if (dfd < 0)
-+		return -1;
-+
-+#define _R(name, dst, conv)			\
-+	fd = openat(dfd, name, O_RDONLY);	\
-+	if (fd < 0)				\
-+		goto out;			\
-+	n = read(fd, buf, sizeof(buf) - 1);	\
-+	close(fd);				\
-+	if (n <= 0)				\
-+		goto out;			\
-+	buf[n] = '\0';				\
-+	dst = conv(buf, NULL, 0);
-+
-+	_R("base", range->base, strtoull);
-+	_R("length", range->length, strtoull);
-+	_R("node", range->node, strtol);
-+	_R("local_region_id", tmp, strtol);
-+	if (tmp < 0 || tmp > UINT8_MAX)
-+		goto out;
-+	range->local_region_id = tmp;
-+	_R("remote_region_id", tmp, strtol);
-+	if (tmp < 0 || tmp > UINT8_MAX)
-+		goto out;
-+	range->remote_region_id = tmp;
-+#undef _R
-+
-+	ret = 0;
-+out:
-+	close(dfd);
-+	return ret;
-+}
-+
-+static int memory_range__parse(struct memory_range **ranges)
-+{
-+	const char *sysfs = sysfs__mountpoint();
-+	int i, err, nr_memory_ranges = 0;
-+	char path[PATH_MAX];
-+	struct stat st;
-+
-+	if (!sysfs)
-+		return 0;
-+
-+	scnprintf(path, PATH_MAX, "%s/firmware/acpi/memory_ranges", sysfs);
-+	if (stat(path, &st))
-+		return 0;
-+
-+	while (1) {
-+		scnprintf(path, PATH_MAX,
-+			  "%s/firmware/acpi/memory_ranges/range%d",
-+			  sysfs, nr_memory_ranges);
-+		if (stat(path, &st))
-+			break;
-+
-+		nr_memory_ranges++;
-+	}
-+
-+	if (nr_memory_ranges == 0)
-+		return 0;
-+
-+	*ranges = calloc(nr_memory_ranges, sizeof(struct memory_range));
-+	if (!(*ranges))
-+		return -ENOMEM;
-+
-+	for (i = 0; i < nr_memory_ranges; i++) {
-+		struct memory_range range;
-+
-+		scnprintf(path, PATH_MAX,
-+			  "%s/firmware/acpi/memory_ranges/range%d", sysfs, i);
-+		err = memory_range__read(&range, path);
-+		if (err < 0)
-+			goto out_error;
-+
-+		(*ranges)[i] = range;
-+	}
-+
-+	return nr_memory_ranges;
-+
-+out_error:
-+	zfree(ranges);
-+	return -1;
-+}
-+
-+static int write_memory_ranges(struct feat_fd *ff,
-+			 struct evlist *evlist __maybe_unused)
-+{
-+	struct memory_range *ranges = NULL;
-+	int nr_memory_ranges = 0, ret;
-+
-+	nr_memory_ranges = memory_range__parse(&ranges);
-+	if (nr_memory_ranges < 0)
-+		return nr_memory_ranges;
-+
-+	ret = do_write(ff, &nr_memory_ranges, sizeof(nr_memory_ranges));
-+	if (ret < 0)
-+		goto out;
-+
-+	for (int i = 0; i < nr_memory_ranges; i++) {
-+		ret = do_write(ff, &ranges[i].base, sizeof(u64));
-+		if (ret < 0)
-+			goto out;
-+		ret = do_write(ff, &ranges[i].length, sizeof(u64));
-+		if (ret < 0)
-+			goto out;
-+		ret = do_write(ff, &ranges[i].node, sizeof(u32));
-+		if (ret < 0)
-+			goto out;
-+		ret = do_write(ff, &ranges[i].local_region_id, sizeof(u8));
-+		if (ret < 0)
-+			goto out;
-+		ret = do_write(ff, &ranges[i].remote_region_id, sizeof(u8));
-+		if (ret < 0)
-+			goto out;
-+	}
-+out:
-+	zfree(&ranges);
-+	return ret;
-+}
-+
- static void print_hostname(struct feat_fd *ff, FILE *fp)
+-static int data_src__fprintf(u64 data_src, FILE *fp)
++static int data_src__fprintf(struct perf_session *session,
++			     u64 data_src, FILE *fp)
  {
- 	fprintf(fp, "# hostname : %s\n", ff->ph->env.hostname);
-@@ -2628,6 +2755,23 @@ static void print_cpu_domain_info(struct feat_fd *ff, FILE *fp)
- 	}
+ 	struct mem_info *mi = mem_info__new();
+-	char decode[100];
+-	char out[100];
++	char decode[200];
++	char out[200];
+ 	static int maxlen;
+ 	int len;
+ 
+@@ -2090,10 +2091,10 @@ static int data_src__fprintf(u64 data_src, FILE *fp)
+ 		return -ENOMEM;
+ 
+ 	mem_info__data_src(mi)->val = data_src;
+-	perf_script__meminfo_scnprintf(decode, 100, mi);
++	perf_script__meminfo_scnprintf(decode, 200, mi, session);
+ 	mem_info__put(mi);
+ 
+-	len = scnprintf(out, 100, "%16" PRIx64 " %s", data_src, decode);
++	len = scnprintf(out, 200, "%16" PRIx64 " %s", data_src, decode);
+ 	if (maxlen < len)
+ 		maxlen = len;
+ 
+@@ -2487,7 +2488,7 @@ static void process_event(struct perf_script *script,
+ 		perf_sample__fprintf_addr(sample, thread, evsel, fp);
+ 
+ 	if (PRINT_FIELD(DATA_SRC))
+-		data_src__fprintf(sample->data_src, fp);
++		data_src__fprintf(evsel__session(evsel), sample->data_src, fp);
+ 
+ 	if (PRINT_FIELD(WEIGHT))
+ 		fprintf(fp, "%16" PRIu64, sample->weight);
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index 4fd48fd20055..8ce4996cad8d 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -604,8 +604,77 @@ int perf_mem__blk_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
+ 	return l;
  }
  
-+static void print_memory_ranges(struct feat_fd *ff, FILE *fp)
-+{
-+	struct memory_range *ranges = ff->ph->env.memory_ranges;
-+	int nr_memory_ranges = ff->ph->env.nr_memory_ranges;
-+	int i;
+-int perf_script__meminfo_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
++static int perf_mem__region_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
+ {
++	size_t l = 0;
++	u64 mem = PERF_MEM_REGION_NA;
 +
-+	fprintf(fp, "# memory ranges (nr %d):\n", nr_memory_ranges);
++	sz -= 1; /* -1 for null termination */
++	out[0] = '\0';
 +
-+	for (i = 0; i < nr_memory_ranges; i++) {
-+		fprintf(fp, "# range%u: [0x%016" PRIx64 "-0x%016" PRIx64,
-+			i, ranges[i].base, ranges[i].base + ranges[i].length - 1);
-+		fprintf(fp, "], node = %d, local_region_id = %d, remote_region_id = %d\n",
-+			ranges[i].node, ranges[i].local_region_id,
-+			ranges[i].remote_region_id);
++	if (mem_info)
++		mem = mem_info__const_data_src(mem_info)->mem_region;
++
++	switch (mem) {
++	case PERF_MEM_REGION_NA:
++	case PERF_MEM_REGION_RSVD:
++		l += scnprintf(out + l, sz - l, "N/A");
++		break;
++	case PERF_MEM_REGION_L_SHARE:
++		l += scnprintf(out + l, sz - l, "Local-shared-cache");
++		break;
++	case PERF_MEM_REGION_L_NON_SHARE:
++		l += scnprintf(out + l, sz - l, "Local-non-shared-cache");
++		break;
++	case PERF_MEM_REGION_O_IO:
++		l += scnprintf(out + l, sz - l, "Other-IO");
++		break;
++	case PERF_MEM_REGION_O_SHARE:
++		l += scnprintf(out + l, sz - l, "Other-shared-cache");
++		break;
++	case PERF_MEM_REGION_O_NON_SHARE:
++		l += scnprintf(out + l, sz - l, "Other-non-shared-cache");
++		break;
++	case PERF_MEM_REGION_MMIO:
++		l += scnprintf(out + l, sz - l, "MMIO");
++		break;
++	case PERF_MEM_REGION_MEM0:
++		l += scnprintf(out + l, sz - l, "Mem-0");
++		break;
++	case PERF_MEM_REGION_MEM1:
++		l += scnprintf(out + l, sz - l, "Mem-1");
++		break;
++	case PERF_MEM_REGION_MEM2:
++		l += scnprintf(out + l, sz - l, "Mem-2");
++		break;
++	case PERF_MEM_REGION_MEM3:
++		l += scnprintf(out + l, sz - l, "Mem-3");
++		break;
++	case PERF_MEM_REGION_MEM4:
++		l += scnprintf(out + l, sz - l, "Mem-4");
++		break;
++	case PERF_MEM_REGION_MEM5:
++		l += scnprintf(out + l, sz - l, "Mem-5");
++		break;
++	case PERF_MEM_REGION_MEM6:
++		l += scnprintf(out + l, sz - l, "Mem-6");
++		break;
++	case PERF_MEM_REGION_MEM7:
++		l += scnprintf(out + l, sz - l, "Mem-7");
++		break;
++	default:
++		l += scnprintf(out + l, sz - l, "N/A");
++		break;
 +	}
++
++	return l;
 +}
 +
- static int __event_process_build_id(struct perf_record_header_build_id *bev,
- 				    char *filename,
- 				    struct perf_session *session)
-@@ -4201,6 +4345,64 @@ static int process_cpu_domain_info(struct feat_fd *ff, void *data __maybe_unused
- 	return ret;
++int perf_script__meminfo_scnprintf(char *out, size_t sz,
++				   const struct mem_info *mem_info,
++				   struct perf_session *session)
++{
++	struct perf_env *env;
+ 	int i = 0;
+ 
+ 	i += scnprintf(out, sz, "|OP ");
+@@ -620,6 +689,21 @@ int perf_script__meminfo_scnprintf(char *out, size_t sz, const struct mem_info *
+ 	i += perf_mem__lck_scnprintf(out + i, sz - i, mem_info);
+ 	i += scnprintf(out + i, sz - i, "|BLK ");
+ 	i += perf_mem__blk_scnprintf(out + i, sz - i, mem_info);
++	if (session) {
++		/*
++		 * In case the feature bits are not available, as in
++		 * pipe mode, fallback to checking for the existence of
++		 * memory ranges
++		 */
++		env = perf_session__env(session);
++		if ((env && session->data->is_pipe && env->nr_memory_ranges) ||
++		    perf_header__has_feat(&session->header,
++					  HEADER_MEMORY_RANGES)) {
++			i += scnprintf(out + i, sz - i, "|Region ");
++			i += perf_mem__region_scnprintf(out + i, sz - i,
++							mem_info);
++		}
++	}
+ 
+ 	return i;
  }
+diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
+index daa22748f9fe..4ebb8109fc3c 100644
+--- a/tools/perf/util/mem-events.h
++++ b/tools/perf/util/mem-events.h
+@@ -4,6 +4,7 @@
  
-+static int process_memory_ranges(struct feat_fd *ff, void *data __maybe_unused)
-+{
-+	struct perf_env *env = &ff->ph->env;
-+	struct memory_range *ranges, *r;
-+	u32 nr_memory_ranges, i;
-+
-+	if (do_read_u32(ff, &nr_memory_ranges))
-+		return -1;
-+
-+	if (!nr_memory_ranges) {
-+		pr_debug("memory ranges not available\n");
-+		return 0;
-+	}
-+
-+	/* According to version 1.1 of the ACPI MRRM table, the maximum
-+	 * number of memory regions can be at most 255. Do a sanity check
-+	 * here to guard against a malformed perf.data file.
-+	 */
-+	if (nr_memory_ranges >= MAX_MEMORY_RANGES) {
-+		pr_err("Invalid memory_ranges: nr_memory_ranges (%u) > %u\n",
-+		       nr_memory_ranges, MAX_MEMORY_RANGES);
-+		return -1;
-+	}
-+
-+	if (ff->size < sizeof(u32) + nr_memory_ranges * (2 * sizeof(u64) + sizeof(u32) + 2 * sizeof(u8))) {
-+		pr_err("Invalid HEADER_MEMORY_RANGES: section too small (%zu) for %u range entries\n",
-+		       ff->size, nr_memory_ranges);
-+		return -1;
-+	}
-+
-+	ranges = calloc(nr_memory_ranges, sizeof(*ranges));
-+	if (!ranges)
-+		return -1;
-+
-+	for (i = 0; i < nr_memory_ranges; i++) {
-+		r = &ranges[i];
-+
-+		if (do_read_u64(ff, &r->base))
-+			goto error;
-+		if (do_read_u64(ff, &r->length))
-+			goto error;
-+		if (do_read_u32(ff, (u32 *) &r->node))
-+			goto error;
-+		if (__do_read(ff, &r->local_region_id, sizeof(u8)))
-+			goto error;
-+		if (__do_read(ff, &r->remote_region_id, sizeof(u8)))
-+			goto error;
-+	}
-+
-+	env->memory_ranges = ranges;
-+	env->nr_memory_ranges = nr_memory_ranges;
-+
-+	return 0;
-+error:
-+	zfree(&ranges);
-+	return -1;
-+}
-+
- #define FEAT_OPR(n, func, __full_only) \
- 	[HEADER_##n] = {					\
- 		.name	    = __stringify(n),			\
-@@ -4265,6 +4467,7 @@ const struct perf_header_feature_ops feat_ops[HEADER_LAST_FEATURE] = {
- 	FEAT_OPR(CPU_DOMAIN_INFO,	cpu_domain_info,	true),
- 	FEAT_OPR(E_MACHINE,	e_machine,	false),
- 	FEAT_OPR(CLN_SIZE,	cln_size,	false),
-+	FEAT_OPR(MEMORY_RANGES,	memory_ranges,	false),
- };
+ #include <stdbool.h>
+ #include <linux/types.h>
++#include "session.h"
  
- struct header_print_data {
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index 5e03f884b7cc..765037762758 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -56,6 +56,7 @@ enum {
- 	HEADER_CPU_DOMAIN_INFO,
- 	HEADER_E_MACHINE,
- 	HEADER_CLN_SIZE,
-+	HEADER_MEMORY_RANGES,
- 	HEADER_LAST_FEATURE,
- 	HEADER_FEAT_BITS	= 256,
- };
+ struct perf_mem_event {
+ 	bool		supported;
+@@ -47,7 +48,8 @@ int perf_mem__snp_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
+ int perf_mem__lck_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
+ int perf_mem__blk_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
+ 
+-int perf_script__meminfo_scnprintf(char *bf, size_t size, const struct mem_info *mem_info);
++int perf_script__meminfo_scnprintf(char *bf, size_t size, const struct mem_info *mem_info,
++				   struct perf_session *session);
+ 
+ struct c2c_stats {
+ 	u32	nr_entries;
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 8f832ae316ca..e359fe529586 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -694,8 +694,9 @@ static void set_sample_read_in_dict(PyObject *dict_sample, struct perf_sample *s
+ static void set_sample_datasrc_in_dict(PyObject *dict,
+ 				      struct perf_sample *sample)
+ {
++	struct perf_session *session = evsel__session(sample->evsel);
+ 	struct mem_info *mi = mem_info__new();
+-	char decode[100];
++	char decode[200];
+ 
+ 	if (!mi)
+ 		Py_FatalError("couldn't create mem-info");
+@@ -704,7 +705,7 @@ static void set_sample_datasrc_in_dict(PyObject *dict,
+ 			PyLong_FromUnsignedLongLong(sample->data_src));
+ 
+ 	mem_info__data_src(mi)->val = sample->data_src;
+-	perf_script__meminfo_scnprintf(decode, 100, mi);
++	perf_script__meminfo_scnprintf(decode, 200, mi, session);
+ 	mem_info__put(mi);
+ 
+ 	pydict_set_item_string_decref(dict, "datasrc_decode",
 -- 
 2.55.0
 
