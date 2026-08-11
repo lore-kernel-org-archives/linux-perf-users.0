@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A9F3B14CD;
-	Tue, 11 Aug 2026 16:19:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 039C53F9F22;
+	Tue, 11 Aug 2026 16:44:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786465200; cv=none; b=f3OpRtTqxuub4JtUAHsdHk3fEguu3csxq+21tLrZbd3aP27U/1CPd9nwlB2V+LzIwf/J9gjk9UqH7ECu9vfYRKAgfnqUSkNiYPBs6qTJsaq70eQ00OEvYbDUiM1Tq+mLU3IoDmbqPzSX7L9zdUTeoim+Uu25mQDipR7xET0XG7w=
+	t=1786466674; cv=none; b=F+cNrLMz6xzT206tQ7lF3delsl9b6VSCxZ10Y2pAiG+/A9t4qzyVdTzNtcjfufxN+HxIEeNgnHMQeQIbu1ksHwzG/eJBYWSBfvckkqn2/e9euxOdvVxdoWGiV7PLCQzvKVoSNmyveGBlwWKzqf25j8sPN5Sy+RhSjt+u9hNvMVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786465200; c=relaxed/simple;
-	bh=EgPlDPoB7az0Uv1m/TPt2TlTfcV5y6OPXkHnh19meog=;
+	s=arc-20240116; t=1786466674; c=relaxed/simple;
+	bh=0jMyZZEBWeHJFGWFY7uMvVyDeU/qet406ZJAsDX8aaU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TAbBKe2GQrRBCsFdohuKCe56Pv0qZ+/E2YkmVvZQsPtLHpcvzoEUKIRMg640q9DtLGMIu2rg8NJXujMq+gRmQpL6atiEVN7WaGC/JyGQlKgcQalQA99mbzVUezkkb1WNpxoE9ePZGdwOdFYs2gCdEYr20rajq/QQJU8TMJ19Cy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D9zlC8Ue; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=sBZncrobQUPIl3Syky6uRJBHkqU1jdm+m/L/Fk8eiZrXOeKc/XAzClTh3fZc39vUjRpeCSxGtfDKZxYaj3neDyMM/WAx5M8xHSlELVcQimygC+IwI4YIAHDfku3q9X3kDwbGsfMhPe2juwJoRSy8Vq4sPzSXIJiqXZZL4LIcMHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hHVkB6GY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D9zlC8Ue"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D44F91F000E9;
-	Tue, 11 Aug 2026 16:19:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHVkB6GY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 955941F000E9;
+	Tue, 11 Aug 2026 16:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786465198;
-	bh=D7CISCZNOUacwFken/zE3V4XA36dbwptL0r4v8Me1CY=;
+	s=k20260515; t=1786466664;
+	bh=2nDP2yo4Z7/8hyrcK4LHPjnUI6OonoDg03U38JzRLms=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=D9zlC8Ue7xyoRzrsbwUuTAn1JU7oiR5DVZid6WO7JwmYfxYK7juv4wK4YWA3jvPG9
-	 fMNh6tkMCQAiV+0Zo803pEDObPx++QRzDbMTeqC8FVs213MQc6MHYwYbGM82/YGtMG
-	 tumFrAoC8OmH0ntJar3oMIJddzwnBWGwpC3au/UO2THkmABUJaTyb0scTymw68IjPu
-	 kkzGIAx14f0Jo7Xj9f/5/MjJGsLzrZgyFQOhYEJ9un76PSAbLqN1pq7gCZuqWWpzIm
-	 6wtuElC4RxaAl6cqVD+qTUPqAZdGhDYxOoD/cQsukiy/qeg4CvEDax1X263j94k9PW
-	 qvRYNgLu9hing==
-Message-ID: <1d8cd29b-8a4d-454c-8dce-121b97e9d52b@kernel.org>
-Date: Tue, 11 Aug 2026 18:19:31 +0200
+	b=hHVkB6GYhX+6ZWhhsgZFxKzOnkGl2RYOjzFptgt0LCOOUol9ozVzcavLD6CvDQydn
+	 dD7uSwc6jau6XFfSmk+IKexK6u8o6CeKGHkCuKXrrZ5ZTjQpBaNq7q2BAxRoNZpfbB
+	 DFn7OzDXW1vNtKFqNmrCGSpgV8QZYUsLSUd8vGpNzrrwVHH9yLjObobUtS5Znirks1
+	 g0F47R8DNocE+LgLop8peVMqvNZ90+CL5I6DyccMXHmwf3Ag+Y2iz6YFiIln1mRPt7
+	 UdIgWjZ1qv52eMMvDlYKcast9now6cuY+C80b4nyZpyoCm5Lw8Zk1YHCZaDr08uci1
+	 VSMkUMM/zhr7g==
+Message-ID: <3a0a9aaf-20f5-4f92-b848-00ab702e8fe2@kernel.org>
+Date: Tue, 11 Aug 2026 18:44:01 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -35,7 +35,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 03/20] mm: introduce linear_anon_page_index()
+Subject: Re: [PATCH v4 07/20] mm/vma: fix self-merge check in copy_vma()
 To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>,
@@ -95,7 +95,7 @@ Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
  intel-xe@lists.freedesktop.org, linux-perf-users@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org
 References: <20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org>
- <20260806-b4-scalable-cow-virt-pgoff-v4-3-ab318a350404@kernel.org>
+ <20260806-b4-scalable-cow-virt-pgoff-v4-7-ab318a350404@kernel.org>
 From: "David Hildenbrand (Arm)" <david@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=david@kernel.org; keydata=
@@ -142,40 +142,40 @@ Autocrypt: addr=david@kernel.org; keydata=
  3iyY2Nsd7JxfKu1PRhCGwXzRw5TlfEsoRI7V9A8isUCoqE2Dzh3FvYHVeX4Us+bRL/oqareJ
  CIFqgYMyvHj7Q06kTKmauOe4Nf0l0qEkIuIzfoLJ3qr5UyXc2hLtWyT9Ir+lYlX9efqh7mOY
  qIws/H2t
-In-Reply-To: <20260806-b4-scalable-cow-virt-pgoff-v4-3-ab318a350404@kernel.org>
+In-Reply-To: <20260806-b4-scalable-cow-virt-pgoff-v4-7-ab318a350404@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 8/6/26 22:21, Lorenzo Stoakes (ARM) wrote:
-> This function provides the anonymous equivalent of linear_page_index(),
-> instead offsetting based on the anonymous page offset of the VMA.
 > 
-> It is valid only for anonymous or MAP_PRIVATE file-backed mappings, in
-> other words CoW mappings.
+> Since copy_vma_and_data() which calls copy_vma() intends to reference the
+> old VMA after the merge, it must have this pointer updated.
 > 
-> For pure anon VMAs, this will be equal to linear_page_index().
+> This kind of self-merge is not possible with a succeeding merge, as the
+> merge always prefers to expand the preceding VMA if possible.
 > 
-> Assert that both of these invariants are true In linear_anon_page_index()
-> and implement the algorithm in __linear_anon_page_index().
+> copy_vma() accounts for this by explicitly checking to see if a self-merge
+> occurred and updating the vmap pointer if so. However it incorrect did so
+> even for a subsequent merge (this is simply a noop so it had no impact).
+
+Took me longer than it should to find out that this is no real fix ;)
+
 > 
-> Note that MAP_PRIVATE-/dev/zero mappings will satisfy vma_is_anonymous()
-> but not fulfill this invariant, so when asserting this we check
-> vma->vm_file to account for this.
+> So change this to only check for the case which matters - a backwards
+> merge - and rearrange the parameters to make it clearer we're doing that -
+> i.e. check new_vma->vm_start < old_vma_start (having already renamed
+> vma_start to old_vma_start to make it clear this is the previous VMA).
 > 
-> We do not update callsites yet, so no functional change intended.
+> Also update the existing wall-of-text comment to be a lot clearer.
 > 
-> Also const-ify vma_is_anonymous() to make it compatible with the
-> const-ified linear_anon_page_index().
+> While we're here, replace the VM_BUG_ON_VMA() with a VM_WARN_ON_ONCE_VMA()
+> and update the VMA userland tests accordingly.
 > 
-> While we're here, update linear_page_index() to be more succinct.
+> No functional change intended.
 > 
-> VMA userland tests are also updated accordingly.
-> 
-> Reviewed-by: Gregory Price (Meta) <gourry@gourry.net>
 > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 > ---
-
-Acked-by: David Hildenbrand (Arm) <david@kernel.org>
+I skimmed over it, looks correct, but the merging stuff is way over my head to
+confidentially give a RB tag her :)
 
 -- 
 Cheers,
