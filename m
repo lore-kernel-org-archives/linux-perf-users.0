@@ -1,32 +1,30 @@
-Received: from out30-133.freemail.mail.aliyun.com (out30-133.freemail.mail.aliyun.com [115.124.30.133])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 981D2407CCF;
-	Tue, 11 Aug 2026 08:16:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CE121A3A80;
+	Tue, 11 Aug 2026 08:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786436171; cv=none; b=FzbRAEZs8FwK2q5kuP+aKqrTvd2I3AJhSZMYj9DcTXIGQEzKh58Vcj5Hf7yWtk7dJIHgxD1DWX3CJc2pDIQHgT8ioNCeVCtEO4rT/SQuMRgGmr2SLo403iGL53Jwb7D736vZfavHEG4FIRWMeA1lU7MRp8ojz7zXOpDG/2YrIsY=
+	t=1786436227; cv=none; b=iAafHALwVn4k2unQYltNFIJVpjwk73zROeEUT+LLY0qk/DK04nTu19gQh+PivXaPUbczH2E4Ipi9JKtiDCgg6CXu7crKWkvBE/og492o9sY+hF+20s1kvOw40PW21tSgANrlGMKFcoCOZCcJbjwoV/G5XSe+zUKgcpWqi3MEVN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786436171; c=relaxed/simple;
-	bh=RgtUv4fH7brGCg7Om6rrPQZs2AUg+s2gH/HI8v02yJM=;
+	s=arc-20240116; t=1786436227; c=relaxed/simple;
+	bh=HPYuV9/y20qFcfCaewkIeB2c3K3drvIQoPWSo/TWQlE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZD9s1t0BfG4KmMJ6X/wwNy3mtWqqdp/YMG7ZZZblZ+SqvXUCLC06fm4k6qCWdOFg9IA1oZ9iXE6/IgbWKJRScEw7DQTStnmSfByHSemIEIFgJl3X4aTkSm1Eq0Bl9DKJJJBrIVeRXnADtK1ypffbuT77LyCIMcbXIqg89iTtUTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=pC1JI9Ay; arc=none smtp.client-ip=115.124.30.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="pC1JI9Ay"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1786436165; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=eP3m0HTYV+unjAOWZeJIknn2a8XQLBdPGdXKRx+SfjI=;
-	b=pC1JI9AyWTa6w7LvocLqbi1BkqBsYC8a21g16F2rE+2QQdlztf3ODIxwKPvaq8kqr8rGrviBoOU8oW8LLzpAfjEEtd+7DC3RlQuIOMmvMQwvy8JoHWY1ydg7VWaLKzv1sf2dpk3A8kOuk5HJfwFc1UWeoZWZE6+8APbb9Ol1IlQ=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X8ndp3v_1786436162;
-Received: from 30.246.162.187(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X8ndp3v_1786436162 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 11 Aug 2026 16:16:03 +0800
-Message-ID: <8bdc13c7-5277-4489-a5d1-9cae14f88beb@linux.alibaba.com>
-Date: Tue, 11 Aug 2026 16:16:01 +0800
+	 In-Reply-To:Content-Type; b=j/hQ7VIu9jZj513rrtyVSiApIN9MXbnLnD1J5DnBGbR9LYr/T9M08CFIQntss4nQFujklc98LKyspBATAK9C7iUfHGSeLdeXKZZAFcfINhsUSWQWmzHGoWYa0Nw1uzLOjNgKSFPAzQwtjyxKxB8k4NtnuFMcX2wsdyR08Xh9Zng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hK4GN5c3XzKHMr0;
+	Tue, 11 Aug 2026 16:16:44 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 865134056B;
+	Tue, 11 Aug 2026 16:17:00 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgCX0UB72npqT8afBw--.16426S2;
+	Tue, 11 Aug 2026 16:17:00 +0800 (CST)
+Message-ID: <923626e1-28db-42aa-a6ac-f1d1012cea82@huaweicloud.com>
+Date: Tue, 11 Aug 2026 16:16:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -34,10 +32,11 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 17/23] perf annotate-data: Track imm_value for stack
- variables
-To: Tengda Wu <wutengda@huaweicloud.com>, Namhyung Kim <namhyung@kernel.org>,
- james.clark@linaro.org, Li Huafei <lihuafei1@huawei.com>
+Subject: Re: [PATCH v4 06/23] perf annotate: Adapt arch__dwarf_regnum() for
+ arm64
+To: Shuai Xue <xueshuai@linux.alibaba.com>, Namhyung Kim
+ <namhyung@kernel.org>, james.clark@linaro.org,
+ Li Huafei <lihuafei1@huawei.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
  Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
  Mark Rutland <mark.rutland@arm.com>,
@@ -49,152 +48,123 @@ Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  llvm@lists.linux.dev
 References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-18-wutengda@huaweicloud.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20260808122400.2961238-18-wutengda@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <20260808122400.2961238-7-wutengda@huaweicloud.com>
+ <1d2e807f-5ced-4af5-86c8-9cd3e89a7ba2@linux.alibaba.com>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <1d2e807f-5ced-4af5-86c8-9cd3e89a7ba2@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgCX0UB72npqT8afBw--.16426S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxArW3XrW3GFyrtF4DXr43KFg_yoW5Kw43pr
+	4kC3y5GryUCr1rtrsxta1UWFy5Gw47J3W5Zrn5Ja4DAF47ury0qF4FqF109F17Cr4kJr1U
+	tr4jqr1kZFnxAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvjb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAaw2AF
+	wI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4
+	xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5
+	MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I
+	0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWU
+	JVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUxo
+	7KDUUUU
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
 
-On 8/8/26 8:23 PM, Tengda Wu wrote:
-> Currently, imm_value are tracked in registers but dropped when values
-
-Nit: s/imm_value are tracked/imm_value is tracked/ in the changelog.
-
-> are saved to or loaded from stack variables during type profiling.
-> If a register of type TSR_KIND_CONST is stored to the stack, its value
-> will be lost.
+On 2026/8/11 14:33, Shuai Xue wrote:
 > 
-> Add an imm_value field to struct type_state_stack and update
-> set_stack_state() and findnew_stack_state() to accept and preserve the
-> immediate value when updating stack state.
 > 
-> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-> ---
->   tools/perf/util/annotate-arch/annotate-x86.c |  8 ++++++--
->   tools/perf/util/annotate-data.c              | 13 +++++++------
->   tools/perf/util/annotate-data.h              |  5 +++--
->   3 files changed, 16 insertions(+), 10 deletions(-)
+> On 8/8/26 8:23 PM, Tengda Wu wrote:
+>> Currently, arch__dwarf_regnum() assumes that all architectures use a
+>> register prefix character (e.g., '%' for x86) defined by
+>> arch->objdump.register_char, and uses it to match register names in
+>> objdump output. However, this assumption does not hold for arm64,
+>> where assembly syntax uses bare register names like 'x0', 'w1'
+>> without any prefix.
+>>
+>> As a result, arm64 builds may fail to correctly recognize register
+>> names from objdump disassembly, leading to incomplete or incorrect
+>> annotation output.
+>>
+>> To address this:
+>>
+>> - Make the register prefix check optional, allowing architectures
+>>    without a prefix character to be parsed correctly.
+>>
+>> - Extend the delimiter set in strpbrk() to include the closing square
+>>    bracket ']'. In arm64 assembly, memory operands often use bracketed
+>>    syntax such as '[x1, #16]' or '[x2]'. Adding ']' ensures clean
+>>    extraction of register names like 'x2' without trailing characters.
+>>
+>> - Remove the 'static' qualifier from arch__dwarf_regnum() so that it
+>>    can be reused by other architecture-specific profiling components
+>>    in future changes.
+>>
+>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+>> ---
+>>   tools/perf/util/annotate.c | 14 ++++++++------
+>>   tools/perf/util/annotate.h |  2 ++
+>>   2 files changed, 10 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+>> index df70e95a8470..9d8b4d6b859b 100644
+>> --- a/tools/perf/util/annotate.c
+>> +++ b/tools/perf/util/annotate.c
+>> @@ -2472,21 +2472,23 @@ int annotate_check_args(void)
+>>       return 0;
+>>   }
+>>   -static int arch__dwarf_regnum(const struct arch *arch, const char *str)
+>> +int arch__dwarf_regnum(const struct arch *arch, const char *str)
+>>   {
+>> -    const char *p;
+>> +    const char *p = str;
+>>       char *regname, *q;
+>>       int reg;
+>>   -    p = strchr(str, arch->objdump.register_char);
+>> -    if (p == NULL)
+>> -        return -1;
+>> +    if (arch->objdump.register_char) {
+>> +        p = strchr(str, arch->objdump.register_char);
+>> +        if (p == NULL)
+>> +            return -1;
+>> +    }
+>>         regname = strdup(p);
+>>       if (regname == NULL)
+>>           return -1;
 > 
-> diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
-> index eec3d8ce00b8..995117525e7d 100644
-> --- a/tools/perf/util/annotate-arch/annotate-x86.c
-> +++ b/tools/perf/util/annotate-arch/annotate-x86.c
-> @@ -591,6 +591,7 @@ static void update_insn_state_x86(struct type_state *state,
->   				tsr->type = stack->type;
->   				tsr->kind = stack->kind;
->   				tsr->offset = stack->ptr_offset;
-> +				tsr->imm_value = stack->imm_value;
->   				tsr->ok = true;
->   			} else if (die_get_member_type(&stack->type,
->   						       offset - stack->offset,
-> @@ -598,6 +599,7 @@ static void update_insn_state_x86(struct type_state *state,
->   				tsr->type = type_die;
->   				tsr->kind = TSR_KIND_TYPE;
->   				tsr->offset = 0;
-> +				tsr->imm_value = 0;
->   				tsr->ok = true;
->   			} else {
->   				invalidate_reg_state(tsr);
-> @@ -773,10 +775,12 @@ static void update_insn_state_x86(struct type_state *state,
->   				 */
->   				if (!stack->compound)
->   					set_stack_state(stack, offset, tsr->kind,
-> -							&tsr->type, tsr->offset);
-> +							&tsr->type, tsr->offset,
-> +							tsr->imm_value);
->   			} else {
->   				findnew_stack_state(state, offset, tsr->kind,
-> -						    &tsr->type, tsr->offset);
-> +						    &tsr->type, tsr->offset,
-> +						    tsr->imm_value);
->   			}
->   
->   			if (dst->reg1 == fbreg) {
-> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> index c51b20a7af9b..9dcdc3c7e688 100644
-> --- a/tools/perf/util/annotate-data.c
-> +++ b/tools/perf/util/annotate-data.c
-> @@ -590,7 +590,7 @@ struct type_state_stack *find_stack_state(struct type_state *state,
->   }
->   
->   void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
-> -			    Dwarf_Die *type_die, int ptr_offset)
-> +			    Dwarf_Die *type_die, int ptr_offset, u64 imm_value)
->   {
->   	int tag;
->   	Dwarf_Word size;
-> @@ -607,8 +607,9 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
->   	stack->offset = offset;
->   	stack->ptr_offset = ptr_offset;
->   	stack->kind = kind;
-> +	stack->imm_value = imm_value;
->   
-> -	if (kind == TSR_KIND_POINTER) {
-> +	if (kind == TSR_KIND_POINTER || kind == TSR_KIND_CONST) {
->   		stack->compound = false;
->   		return;
->   	}
-> @@ -629,18 +630,18 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
->   struct type_state_stack *findnew_stack_state(struct type_state *state,
->   						    int offset, u8 kind,
->   						    Dwarf_Die *type_die,
-> -						    int ptr_offset)
-> +						    int ptr_offset, u64 imm_value)
->   {
->   	struct type_state_stack *stack = find_stack_state(state, offset);
->   
->   	if (stack) {
-> -		set_stack_state(stack, offset, kind, type_die, ptr_offset);
-> +		set_stack_state(stack, offset, kind, type_die, ptr_offset, imm_value);
->   		return stack;
->   	}
->   
->   	stack = malloc(sizeof(*stack));
->   	if (stack) {
-> -		set_stack_state(stack, offset, kind, type_die, ptr_offset);
-> +		set_stack_state(stack, offset, kind, type_die, ptr_offset, imm_value);
->   		list_add(&stack->list, &state->stack_vars);
->   	}
->   	return stack;
-> @@ -935,7 +936,7 @@ static void update_var_state(struct type_state *state, struct data_loc_info *dlo
->   				continue;
->   
->   			findnew_stack_state(state, offset, TSR_KIND_TYPE,
-> -					    &mem_die, /*ptr_offset=*/0);
-> +					    &mem_die, /*ptr_offset=*/0, /*imm_value=*/0);
->   
->   			if (var->reg == state->stack_reg) {
->   				pr_debug_dtp("var [%"PRIx64"] %#x(reg%d)",
-> diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-> index 91b83e94c51b..06fc4dbfb35c 100644
-> --- a/tools/perf/util/annotate-data.h
-> +++ b/tools/perf/util/annotate-data.h
-> @@ -199,6 +199,7 @@ struct type_state_stack {
->   	int size;
->   	bool compound;
->   	u8 kind;
-> +	u64 imm_value;
->   };
->   
->   /*
-> @@ -253,9 +254,9 @@ bool has_reg_type(struct type_state *state, int reg);
->   struct type_state_stack *findnew_stack_state(struct type_state *state,
->   						int offset, u8 kind,
->   						Dwarf_Die *type_die,
-> -						int ptr_offset);
-> +						int ptr_offset, u64 imm_value);
->   void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
-> -				Dwarf_Die *type_die, int ptr_offset);
-> +				Dwarf_Die *type_die, int ptr_offset, u64 imm_value);
->   struct type_state_stack *find_stack_state(struct type_state *state,
->   						int offset);
->   void invalidate_reg_state(struct type_state_reg *reg);
+> 
+> Keeping the early -1 return here is correct, but it exposes an
+> inconsistency in this function's failure values. This is the only path
+> that returns -1; when the lookup itself fails the tail returns whatever
+> get_dwarf_regnum() produced (-ENOENT on arm64, -EINVAL/-ENOENT on x86).
+> The callers only check
+> 
+>     if (op_loc->reg1 == -1)
+> 
+> so the early return is caught while a real parse failure slips through
+> with a negative reg1. Today that is harmless because every consumer
+> guards with has_reg_type(), whose unsigned compare rejects negative
+> values, but the error propagation is effectively broken and arm64 adds
+> more inputs that fail parsing (prfm ops, PC-relative addresses).
+> 
+> Could you normalise the tail to keep the "success or -1" contract?
+> 
+>     reg = get_dwarf_regnum(regname, arch->id.e_machine,
+>                    arch->id.e_flags);
+>     free(regname);
+>     return reg < 0 ? -1 : reg;
+> 
+> Thanks.
+> Shuai
 
+Sure. I'm also thinking about whether this change should be done as a
+standalone patch, since it appears to be a pre-existing issue.
 
-Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-
-Thanks.
-Shuai
+Thanks,
+Tengda
 
