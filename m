@@ -1,201 +1,144 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DB831B80D
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Aug 2026 05:00:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 135653264F1;
+	Tue, 11 Aug 2026 06:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786424456; cv=none; b=FPBBSOShd5wteXC36iOU42j4bcNMk1PohRdkdJetkltQ/8wOVBUSypWOjon2K5vIhMLt85Ovi9C9yBHf6jOMQD7uTCw86uvonO93+DBWAPIIQZ6P2ZpzOFvDMpsoD7TqtF8KwL4Hn65tzIcqUlm7guJOM7UPf59M8DtxNX7Ouc0=
+	t=1786430015; cv=none; b=uKZ1EtNaLGysF9OZjjXenIB5RNtU5iFhNWhvanFbHM21kxGa5r4bK0QU17X4VGHHMrbzxP9Ax1J1K4kOqfnErMqtURWh5t6G/i4yKfeH/QHc4A2TNjjywpjKO8cxIM7Xn/ETf1V71D1q9zLq76KdI2wscFNiJNiZ6+N76CN/tuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786424456; c=relaxed/simple;
-	bh=yuyBDXtIkxCZCrvgPb35PsZlLUmaE55ZmbM1gHuukS4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Vu/aGBfkjumKaT6ZNbZ8O/jNGfko3QLBkmkf2UuLEacvvcUkz8BzAEJf7bbUjSvmAFFht642+DawiG+kyfHzP+M6WAcncNdKAXJDYsIg1A4zpjXPn1sR4/WyhT3lp+9kF1/2AgdvmYQPoAhKUGldJ/hgEW4793tuIDCeaacCfn8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bzvJKUaF; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786430015; c=relaxed/simple;
+	bh=m3Qbe75JbAe/WQ7pJMJF0xUrfyW1YPSMjsh1fo5KP+Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ur4r2ZJ2trI6Zwa7YGcKLvefbztjxzNZkEtEPo94ckoZBlvxgwPkc2oZaEfpPMOIcbAh+8LjIl2VHSxcSZa1VvY+LyTyMH+Go93o5F/dKj5LNmJyJ17dmHASzGQsv8JyS1SeQ1/usnguc/x6q4L2OmJT1G+OGpX+2BWsywCCPxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=bbq0H8GT; arc=none smtp.client-ip=115.124.30.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzvJKUaF"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-c9e0b89e228so1354528a12.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 10 Aug 2026 22:00:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786424454; x=1787029254; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=DmyneajZ/FvgDHMSIizhnr+cBuZtaX9gxd+v2rQ+Hv0=;
-        b=bzvJKUaFJ2/x/FGa6k1j78KDPhWrFlRXuFxTe6yK0piO+JmNrHcAq+oh0Vf40OcJkw
-         3x1nPmkn6qG2Xo4zZZotOaOn46R/eCG7qacW7f0p62TuZwG/nfm4nxn1PzjUGPlCgL75
-         1PzdfA20x+XmHP09ttQEbU4pJNdXuOZZEFk62DoYWXHVBaXsAD3KTLz6Cb5nZw11JP8b
-         ieKKhM+fVDHX0W5Ehk3r9ZrAZoa9idX2n6ZLYrOHv6rEW6PpjhjuZ/YVflXEWLzQwt9P
-         kONpLtSVV4yaoexAo5+ybqTlrSzhwKy9prCrhJDRhWTBUz54DPidQkAp2e3Lflp/zzMB
-         AHPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786424454; x=1787029254;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=DmyneajZ/FvgDHMSIizhnr+cBuZtaX9gxd+v2rQ+Hv0=;
-        b=WVDJBHz8A19KR6cYXet2xmfQGSLZa3H8GjS1uak5P7ONrTHNmzowsq5QUvWsKaanAq
-         rMn2+ELinajC1R8GKmE2DU8acUlbwz8tXyfGcoYU6Td0PWyIt3IS8kY6N6TZ31Qucovy
-         SyZ80AHEOqP74LlVIDFvSmSj40FY5Vimen7ZxhpBn9dr8G1+7rlJAIuVXIB95WBi1IkS
-         NICbBmuJMo39BJXNMszBzqMPung2ZFPmzU/5NhKK6AWt3fZ6lZZPY2WyJ2/YvrVeGdO+
-         XebxlyCfifSYv9jQ1GIIs2vEPAah08aX2PgYUlHld7o1KztsCNEZwOkeBcyD8XftkRvW
-         MT+w==
-X-Forwarded-Encrypted: i=1; AHgh+Rr99xZVWt2rcnn87cFfiSZWxoYt2Ttuz6Yl6gbuaVkJN4/yeCisYY1bZ+I+eldSydK6aH2gOkQ4spfVmyU7VJAd@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+BIJ6ZsLHLFsEZWfRRPecLSXyCKf+ZhDgB0zzLE5YH4hPocwy
-	nm6ViWIdjPI5NammEiF+YWGmQb5w4ZZc6at7y6hS9mRnzT3q9B56AwIN
-X-Gm-Gg: AR+sD112vOMjQQWkXa4y6ah4SgIEvhFxr4lmU8QvI4aZFfTEPCKuV/0nU3VYiAknCdH
-	S+cOZRCZrtttKmm5rdhXiEz3ygh94wZz+OYgJRlUYmHXacO6f4b6puXOGuzXaNJrwUCA4UvOLrT
-	YV3u2aOtLolLMOdVgEGmFBWdxmjGce3qTiuh6Se3N+DvQrEHmrgoWGIY52ZQlz81xFBArKW4nEH
-	pH3BuKN18Z0DrwhO+Lmji/echDladVGGmSesv2n321R6TOXXO7c9CK2cVYNR5xb9Mj/esSqrlmz
-	KG4mrrUtBa5tcSAIk27ia5ucJzyoodlE4TtpqaDzVaXkQChmX7kRWiZ58uqvScLjTnnYbmCBYlg
-	R9PekH+CJGosdMVO3/sG1UPjgi+SuezIWfiYHbIbRF1m9KKIY1Ojb4YJatVouUTQbNNyjlnfzIC
-	ZcxZ0p2CEF5tPcsdMZI3qntgbuxwtd9Ws1lWTZo48oN/eOszOlljFQZS3d7/vkvoO6YDNGeDMV
-X-Received: by 2002:a17:90b:2689:b0:37f:e1b6:4c7d with SMTP id 98e67ed59e1d1-392ec37c01cmr741842a91.6.1786424454506;
-        Mon, 10 Aug 2026 22:00:54 -0700 (PDT)
-Received: from osman.mioffice.cn ([43.224.245.178])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-392ee3eab1esm147563a91.9.2026.08.10.22.00.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Aug 2026 22:00:54 -0700 (PDT)
-From: Zhan Xusheng <zhanxusheng1024@gmail.com>
-X-Google-Original-From: Zhan Xusheng <zhanxusheng@xiaomi.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>
-Cc: Changbin Du <changbin.du@huawei.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	zhanxusheng@xiaomi.com
-Subject: [PATCH] perf symbols: Don't apply the symfs layout to synthesised paths
-Date: Tue, 11 Aug 2026 13:00:46 +0800
-Message-ID: <20260811050046.4019578-1-zhanxusheng@xiaomi.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="bbq0H8GT"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1786430004; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=SUHabi4+/mXpps0/lo/jkNYxqLlc5wUDWOEA+Q9bMOo=;
+	b=bbq0H8GTXLLSXTIQijpmCjp3Wez3atDcx+emSSjdvWYSweAAcMT9qcJMqNBsgWIDOQ5Wvwz3YA1aqPaC4U73oLhnzRQP3PNPbcUdNstbPeyvpvn32XvI9j0IjgPWCxdJQ5e5dcRm5OyKuoUs6flKWc8T/T0StX92fdznKJBkIxE=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R531e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037009110;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X8nOJT3_1786430001;
+Received: from 30.246.162.187(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X8nOJT3_1786430001 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 11 Aug 2026 14:33:22 +0800
+Message-ID: <1d2e807f-5ced-4af5-86c8-9cd3e89a7ba2@linux.alibaba.com>
+Date: Tue, 11 Aug 2026 14:33:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 06/23] perf annotate: Adapt arch__dwarf_regnum() for
+ arm64
+To: Tengda Wu <wutengda@huaweicloud.com>, Namhyung Kim <namhyung@kernel.org>,
+ james.clark@linaro.org, Li Huafei <lihuafei1@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
+ Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Bill Wendling <morbo@google.com>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
+ <20260808122400.2961238-7-wutengda@huaweicloud.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20260808122400.2961238-7-wutengda@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The flat symfs layout was implemented inside __symbol__join_symfs() alone,
-which went from
 
-	return path__join(bf, size, symbol_conf.symfs, path);
 
-to taking perf_basename(path) first.  No caller was changed, so all of them
-got it.  Most pass dso__long_name(), which is what the option is about, but
-some pass a path perf built itself:
+On 8/8/26 8:23 PM, Tengda Wu wrote:
+> Currently, arch__dwarf_regnum() assumes that all architectures use a
+> register prefix character (e.g., '%' for x86) defined by
+> arch->objdump.register_char, and uses it to match register names in
+> objdump output. However, this assumption does not hold for arm64,
+> where assembly syntax uses bare register names like 'x0', 'w1'
+> without any prefix.
+> 
+> As a result, arm64 builds may fail to correctly recognize register
+> names from objdump disassembly, leading to incomplete or incorrect
+> annotation output.
+> 
+> To address this:
+> 
+> - Make the register prefix check optional, allowing architectures
+>    without a prefix character to be parsed correctly.
+> 
+> - Extend the delimiter set in strpbrk() to include the closing square
+>    bracket ']'. In arm64 assembly, memory operands often use bracketed
+>    syntax such as '[x1, #16]' or '[x2]'. Adding ']' ensures clean
+>    extraction of register names like 'x2' without trailing characters.
+> 
+> - Remove the 'static' qualifier from arch__dwarf_regnum() so that it
+>    can be reused by other architecture-specific profiling components
+>    in future changes.
+> 
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+> ---
+>   tools/perf/util/annotate.c | 14 ++++++++------
+>   tools/perf/util/annotate.h |  2 ++
+>   2 files changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index df70e95a8470..9d8b4d6b859b 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+> @@ -2472,21 +2472,23 @@ int annotate_check_args(void)
+>   	return 0;
+>   }
+>   
+> -static int arch__dwarf_regnum(const struct arch *arch, const char *str)
+> +int arch__dwarf_regnum(const struct arch *arch, const char *str)
+>   {
+> -	const char *p;
+> +	const char *p = str;
+>   	char *regname, *q;
+>   	int reg;
+>   
+> -	p = strchr(str, arch->objdump.register_char);
+> -	if (p == NULL)
+> -		return -1;
+> +	if (arch->objdump.register_char) {
+> +		p = strchr(str, arch->objdump.register_char);
+> +		if (p == NULL)
+> +			return -1;
+> +	}
+>   
+>   	regname = strdup(p);
+>   	if (regname == NULL)
+>   		return -1;
 
-  dso.c        "/usr/lib/debug"             -> "debug"
-  dso.c        "/usr/lib/debug/.build-id/"  -> ""
-  build-id.c   "/usr/lib/debug/.build-id/"  -> ""
-  disasm.c     <file under buildid_dir>     -> last component
 
-perf_basename() yields "" for a path ending in '/'.  So with --symfs
-DIR,flat the FEDORA, UBUNTU and MIXEDUP_UBUNTU debuginfo lookups land in
-<symfs>/debug/, the two build-id ones in <symfs> itself, and disasm.c
-flattens a path under perf's own build-id cache.
+Keeping the early -1 return here is correct, but it exposes an
+inconsistency in this function's failure values. This is the only path
+that returns -1; when the lookup itself fails the tail returns whatever
+get_dwarf_regnum() produced (-ENOENT on arm64, -EINVAL/-ENOENT on x86).
+The callers only check
 
-Use path__join() at those sites, which is what the helper did for them
-before.  A hierarchy layout is unaffected, being that same call.  The
-OPENEMBEDDED site passes "", where perf_basename() is already a no-op;
-it is converted for uniformity.  Every remaining __symbol__join_symfs()
-caller passes a path from the profiled system.
+     if (op_loc->reg1 == -1)
 
-Fixes: f182573e06ab ("perf tools: Add layout support for --symfs option")
-Signed-off-by: Zhan Xusheng <zhanxusheng@xiaomi.com>
----
- tools/perf/util/build-id.c |  2 +-
- tools/perf/util/disasm.c   |  4 +++-
- tools/perf/util/dso.c      | 11 ++++++-----
- 3 files changed, 10 insertions(+), 7 deletions(-)
+so the early return is caught while a real parse failure slips through
+with a negative reg1. Today that is harmless because every consumer
+guards with has_reg_type(), whose unsigned compare rejects negative
+values, but the error propagation is effectively broken and arm64 adds
+more inputs that fail parsing (prfm ops, PC-relative addresses).
 
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index eb95ab90f974..0c89fe75a650 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -599,7 +599,7 @@ static char *build_id_cache__find_debug(const char *sbuild_id,
- 		dirname = dirbuf;
- 	}
- 
--	len = __symbol__join_symfs(debugfile, PATH_MAX, dirname);
-+	len = path__join(debugfile, PATH_MAX, symbol_conf.symfs, dirname);
- 	snprintf(debugfile + len, PATH_MAX - len, "%.2s/%s.debug", sbuild_id,
- 		 sbuild_id + 2);
- 
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 0a1a7e9cf3ef..decf9348d735 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -31,6 +31,7 @@
- #include "map.h"
- #include "maps.h"
- #include "namespaces.h"
-+#include "path.h"
- #include "srcline.h"
- #include "symbol.h"
- #include "thread.h"
-@@ -1173,7 +1174,8 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
- 
- 	build_id_filename = dso__build_id_filename(dso, NULL, 0, false);
- 	if (build_id_filename) {
--		__symbol__join_symfs(filename, filename_size, build_id_filename);
-+		path__join(filename, filename_size, symbol_conf.symfs,
-+			   build_id_filename);
- 		free(build_id_filename);
- 	} else {
- 		if (dso__has_build_id(dso))
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 2309196d8df3..314c9a0edf28 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -167,12 +167,12 @@ int dso__read_binary_type_filename(const struct dso *dso,
- 		break;
- 
- 	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
--		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
-+		len = path__join(filename, size, symbol_conf.symfs, "/usr/lib/debug");
- 		snprintf(filename + len, size - len, "%s.debug", dso__long_name(dso));
- 		break;
- 
- 	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
--		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
-+		len = path__join(filename, size, symbol_conf.symfs, "/usr/lib/debug");
- 		snprintf(filename + len, size - len, "%s", dso__long_name(dso));
- 		break;
- 
-@@ -187,7 +187,7 @@ int dso__read_binary_type_filename(const struct dso *dso,
- 			ret = -1;
- 			break;
- 		}
--		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
-+		len = path__join(filename, size, symbol_conf.symfs, "/usr/lib/debug");
- 		snprintf(filename + len, size - len, "%s", dso__long_name(dso) + 4);
- 		break;
- 
-@@ -200,7 +200,7 @@ int dso__read_binary_type_filename(const struct dso *dso,
- 		while (last_slash != dso__long_name(dso) && *last_slash != '/')
- 			last_slash--;
- 
--		len = __symbol__join_symfs(filename, size, "");
-+		len = path__join(filename, size, symbol_conf.symfs, "");
- 		dir_size = last_slash - dso__long_name(dso) + 2;
- 		if (dir_size > (size - len)) {
- 			ret = -1;
-@@ -219,7 +219,8 @@ int dso__read_binary_type_filename(const struct dso *dso,
- 		}
- 
- 		build_id__snprintf(dso__bid(dso), build_id_hex, sizeof(build_id_hex));
--		len = __symbol__join_symfs(filename, size, "/usr/lib/debug/.build-id/");
-+		len = path__join(filename, size, symbol_conf.symfs,
-+				 "/usr/lib/debug/.build-id/");
- 		snprintf(filename + len, size - len, "%.2s/%s.debug",
- 			 build_id_hex, build_id_hex + 2);
- 		break;
--- 
-2.43.0
+Could you normalise the tail to keep the "success or -1" contract?
 
+     reg = get_dwarf_regnum(regname, arch->id.e_machine,
+                    arch->id.e_flags);
+     free(regname);
+     return reg < 0 ? -1 : reg;
+
+Thanks.
+Shuai
