@@ -1,192 +1,126 @@
-Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 730C43A1A5D;
-	Tue, 11 Aug 2026 08:50:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501D63A1A5D;
+	Tue, 11 Aug 2026 08:51:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786438245; cv=none; b=Xdf+U16ABokvhv4SpSyqFzRAdvaaiquaPZFiVqyApggqEJT0HeURJOzwbZdgmKRtr/7Sd2FMLKd511OxFNewJgtW6vjdYJPyOhjpEXwoweJAtZ8pjkWtDtpiyoC3kpHmsum14ByZN++WWP4iy5XpABIiIliDlnz/SQwaQWeG8dw=
+	t=1786438265; cv=none; b=tpnJAIvnL4pK8Mi6fl2fYnHPpftviFuKuHrItuAY5wNEBQZQpLIgngVwN4B7R7TVQ7LNS8NapSSHdosWSAVMjOLboSpbYgWLjPyGdVGV+etakZKuLrpd5oUNICEsUTJoHdTXIuIztQDcZXsMsnu5YiSe45rf6PF5EO92YVtCyKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786438245; c=relaxed/simple;
-	bh=bx7SIhw/MTSVFZeJn1pNLsvNZ/cwdWcSA/jaLegIAgE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q8/rDSmsrZrtysfo5F2ZbvUUcGrj6FUZhT4bzLJMWjZLA8AydDAqB/xdI14+a7CwVyXFajkheLYjlHi3LuLUmGLsD0hHsOpOus67F4f9/CwAcS+sR/6ln0td3NcG5krCR/InoQZCFYZ4TWXtjDV1pFBtKo0ax83jAGW3EocXbik=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=x6A9/aCt; arc=none smtp.client-ip=115.124.30.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1786438265; c=relaxed/simple;
+	bh=yt33yFRJ4lU2PMob9tCirObkYylIyDKl1LbVWekeMgk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I0XailyugKW9h0S0sn8vN3s/k58dWGtNeJzt6AMaJQGAds72D/Hq0dfiIkRHDMxkVj5uoM+f/v/hsG+uMp0P9rGtrES0pmIWGOJhWS/uE/eKFGQ3t7KSujg6Fcs7/bRlNBU6L2tDWFFG4hLJdLvbln++O41p0PA7amYQoGovQ0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=i3UtyCBe; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="x6A9/aCt"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1786438239; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=O0eEOpLgH4h+JIdooWcKQDZlmONKvKL06M8Sj4nmDk0=;
-	b=x6A9/aCtsRHNrqUnrqMJqMcN2uSDjLlXs3d82NYh/fJoE+XMoNYQFgZAnZUC/hwkyJ1CSMFFFqLsJ3X3ScFPpQrmEfb/79pL2pXdE/I2E2P96KSBKraxKjovy+hLJG1HXqiAj1qZxL4gsiFD4YVbtUezN8KjEnRxPFPFD1sBTv8=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=19;SR=0;TI=SMTPD_---0X8nvQDs_1786438236;
-Received: from 30.246.162.187(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X8nvQDs_1786438236 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 11 Aug 2026 16:50:37 +0800
-Message-ID: <59b826f3-b3c9-4964-bf82-9e43913d80e2@linux.alibaba.com>
-Date: Tue, 11 Aug 2026 16:50:36 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i3UtyCBe"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=M4vFYt3QyuNRz+IDez3EN21UOjcjOJ0c3jM5PJJPZsA=; b=i3UtyCBeK/Xz+Qqcq/DEgh9I0l
+	DzEQ2cZlLFkWs4K23+1Ik9RYpNFzLOGRsqhORoFinGcnf44vPGwrA5+vJpYUxtWAC/nCl04LCSvSl
+	XG55O2YqFXFBljMH01++ujEmT7idBWmEZmQvmtC1Ll1vXfO8I7en08plp72BevhfiUfCazm3KS+qA
+	RqyxxJ/MaKcRMLR0UqXl0jkfQh0uPHDouIgXAwJYWlS0nBXXKWr5f09bwfAzD1M//qua2zNTrO0jv
+	hItJJ85LB+rtbGRQvLeZX2ZIEo+gFFnu8y9bBpwRe+o8yOT58htKXooGChVNFToCEdk2TnFLZh7HN
+	EWnTZgqg==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.99.1 #2 (Red Hat Linux))
+	id 1wthlJ-0000000EWde-3kTV;
+	Tue, 11 Aug 2026 08:23:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 820DF301127; Tue, 11 Aug 2026 10:22:56 +0200 (CEST)
+Date: Tue, 11 Aug 2026 10:22:56 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>
+Subject: Re: [Patch v3 8/8] perf/x86/intel: Prevent drain_pebs() reentry
+Message-ID: <20260811082256.GT48970@noisy.programming.kicks-ass.net>
+References: <20260717080342.1879573-1-dapeng1.mi@linux.intel.com>
+ <20260717080342.1879573-9-dapeng1.mi@linux.intel.com>
+ <20260810130130.GX776954@noisy.programming.kicks-ass.net>
+ <da08527f-642b-4f77-89a6-43f42e12d114@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 21/23] perf annotate-arm64: Support 'adrp' instruction
- to track global variables
-To: Tengda Wu <wutengda@huaweicloud.com>, Namhyung Kim <namhyung@kernel.org>,
- james.clark@linaro.org, Li Huafei <lihuafei1@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
- Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Bill Wendling <morbo@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-22-wutengda@huaweicloud.com>
-From: Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <20260808122400.2961238-22-wutengda@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <da08527f-642b-4f77-89a6-43f42e12d114@linux.intel.com>
 
+On Tue, Aug 11, 2026 at 09:39:23AM +0800, Mi, Dapeng wrote:
+> 
+> On 8/10/2026 9:01 PM, Peter Zijlstra wrote:
+> > On Fri, Jul 17, 2026 at 04:03:42PM +0800, Dapeng Mi wrote:
+> >> The PEBS buffer is shared by all events on a CPU, so drain_pebs() must
+> >> not run concurrently. If it is reentered, one instance may observe stale
+> >> buffer state and potentially access out-of-bound memory.
+> >>
+> >> Most invocations happen in NMI context, which naturally prevents reentry.
+> >> However, drain_pebs() is also reachable from process context via
+> >> intel_pmu_drain_pebs_buffer().
+> >>
+> >> In those paths, the PMU is often already disabled, but not guaranteed.
+> >> For example, __intel_pmu_pebs_disable() only disables the target counter,
+> >> so other active counters can still raise a PMI and interrupt an in-flight
+> >> drain_pebs().
+> >>
+> >> Introduce __intel_pmu_quiesce() and __intel_pmu_resume() helpers and
+> >> use them in intel_pmu_drain_pebs_buffer() to disable the full PMU
+> >> around the drain_pebs() call, preventing reentry.
+> >>
+> > It is not at all clear to me where the exact recursion happens. (The
+> > word you're looking for was recursion, not concurrent).
+> 
+> Yes, the word "concurrently" is not accurate, reentry is the more accurate
+> word.
+> 
+> Currently drain_pebs() would be called in two places, one is the in the PMI
+> handler, like handle_pmi_common(). The other place is
+> intel_pmu_drain_pebs_buffer() which is from process context.
+> 
+> So when intel_pmu_drain_pebs_buffer() is calling drain_pebs(), if there is
+> an active PEBS event triggering PMI, it would interrupt current in-flight
+> drain_pebs() and lead to drain_pebs() reentry.
 
+What is the actual callchain here?
 
-On 8/8/26 8:23 PM, Tengda Wu wrote:
-> Extend update_insn_state() for arm64 to track global variable types
-> calculated via page-relative addressing.
-> 
-> On arm64, global variables are typically accessed by first calculating
-> the page address using 'adrp', followed by an 'add' or 'ldr' to get the
-> specific symbol address. Without tracking 'adrp', the instruction
-> tracker loses the base address, making it impossible to resolve
-> global symbols and their associated DWARF types.
-> 
-> Introduce TSR_KIND_GLOBAL_ADDR to represent a partial global address
-> state. When encountering 'adrp', store the page-aligned target address
-> in the register's type state. Upon a subsequent 'add' or 'ldr'
-> instruction that references a TSR_KIND_GLOBAL_ADDR register, combine
-> the page address with the immediate offset.
-> 
-> A real-world example is shown below:
-> 
->    ffff80008032e008 <folios_put_refs>:
->    ffff80008032e048:  adrp  x24, ffff80008202f000 <nr_cpu_ids>
->    ffff80008032e050:  add   x24, x24, #0xd40
-> * ffff80008032e078:  ldr   x0, [x24]
-> 
-> Before this commit, x24 was unknown, leading to no type information:
-> 
->    chk [70] reg24 offset=0 ok=0 kind=0 cfa : no type information
->    final result: no type information
-> 
-> After this commit, the tracker correctly follows the adrp/add flow:
-> 
->    adrp [40] global addr=0xffff80008202f000 -> reg24
->    add [48] global 0xd40(reg24) -> reg24
->    chk [70] reg24 offset=0 ok=1 kind=7 global addr : Good!
->    final result: type='struct folio*'
-> 
-> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
-> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
-> ---
->   .../perf/util/annotate-arch/annotate-arm64.c  | 82 +++++++++++++++++--
->   tools/perf/util/annotate-data.c               | 25 +++++-
->   tools/perf/util/annotate-data.h               |  1 +
->   3 files changed, 98 insertions(+), 10 deletions(-)
-> 
-> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
-> index eaeb4433fc3a..7eb3bef26a64 100644
-> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
-> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-> @@ -408,7 +408,7 @@ static void adjust_reg_index_state(struct type_state *state,
->    * to the source struct's field offset.
->    */
->   static int propagate_load_reg_state(struct type_state *state,
-> -				    struct data_loc_info *dloc,
-> +				    struct data_loc_info *dloc, Dwarf_Die *cu_die,
->   				    struct disasm_line *dl, int dreg,
->   				    struct annotated_op_loc *src,
->   				    int reg_offset, const char *insn_name)
-> @@ -500,6 +500,32 @@ static int propagate_load_reg_state(struct type_state *state,
->   		pr_debug_type_name(&tsr->type, tsr->kind);
->   		return 0;
->   	}
-> +	/* Or check if it's a global variable */
-> +	else if (src_tsr.kind == TSR_KIND_GLOBAL_ADDR) {
-> +		u64 ip = dloc->ms->sym->start + dl->al.offset;
-> +		u64 addr = src_tsr.imm_value + reg_offset;
-> +		int offset;
-> +
-> +		if (!get_global_var_type(cu_die, dloc, ip, addr, &offset, &type_die) ||
-> +		    !die_get_member_type(&type_die, offset, &type_die))
-> +			return -1;
-> +
-> +		tsr->type = type_die;
-> +		tsr->kind = TSR_KIND_TYPE;
-> +		tsr->offset = 0;
-> +		tsr->imm_value = 0;
-> +		tsr->ok = true;
-> +
-> +		if (src->multi_regs) {
-> +			pr_debug_dtp("%s [%x] global (reg%d, reg%d) -> reg%d",
-> +				     insn_name, insn_offset, src->reg1, src->reg2, dreg);
-> +		} else {
-> +			pr_debug_dtp("%s [%x] global (reg%d) -> reg%d",
-> +				     insn_name, insn_offset, sreg, dreg);
-> +		}
-> +		pr_debug_type_name(&tsr->type, tsr->kind);
-> +		return 0;
-> +	}
->   	/* Or try another register if any */
->   	else if (src->multi_regs && src->reg1 != src->reg2 && sreg != src->reg2) {
->   		sreg = src->reg2;
-> @@ -510,7 +536,7 @@ static int propagate_load_reg_state(struct type_state *state,
->   }
->   
->   static void update_load_insn_state(struct type_state *state,
-> -				   struct data_loc_info *dloc,
-> +				   struct data_loc_info *dloc, Dwarf_Die *cu_die,
->   				   struct disasm_line *dl,
->   				   struct annotated_op_loc *src,
->   				   struct annotated_op_loc *dst)
-> @@ -523,7 +549,7 @@ static void update_load_insn_state(struct type_state *state,
->   		goto out_err_adjust;
->   
->   	/* Handle the first destination register */
-> -	if (propagate_load_reg_state(state, dloc, dl, dst->reg1, src,
-> +	if (propagate_load_reg_state(state, dloc, cu_die, dl, dst->reg1, src,
->   				     reg_offset, insn_name))
->   		goto out_err_adjust;
->   
-> @@ -532,7 +558,7 @@ static void update_load_insn_state(struct type_state *state,
->   		int reg_size = arm64__reg_size(dl->ops.target.raw);
->   
->   		if (reg_size < 0 ||
-> -		    propagate_load_reg_state(state, dloc, dl, dst->reg2, src,
-> +		    propagate_load_reg_state(state, dloc, cu_die, dl, dst->reg2, src,
->   					     reg_offset + reg_size, insn_name))
->   			goto out_err_adjust;
->   	}
-> @@ -735,14 +761,16 @@ static void update_add_insn_state(struct type_state *state,
->   			imm_value = state->regs[reg2].imm_value;
->   	}
->   
-> -	if (src_tsr.kind == TSR_KIND_CONST) {
-> +	if (src_tsr.kind == TSR_KIND_CONST || src_tsr.kind == TSR_KIND_GLOBAL_ADDR) {
+Because the one I'm thinking off is:
 
+  perf_ctx_disable();
+  perf_ctx_sched_task_cb()
+    x86_pmu_sched_task()
+      intel_pmu_sched_task()
+	intel_pmu_pebs_sched_task()
+	  intel_pmu_drain_pebs_buffer();
+  perf_ctx_enable();
 
-GLOBAL_ADDR inherits the two add-handler issues raised on patch 20:
-a non-constant reg2 still propagates with an implicit addend of 0
-(now producing a wrong global address), and the commutative
-add rd, const_reg, global_reg case still drops the global side.
-Fixes discussed there would cover both.
+And that one has the full pmu disabled, because of context switch etc.
+And then there is one in perf_read():
 
-Thanks.
-Shuai
+  pmu->read()
+    intel_pmu_read_event()
+      pmu_enabled = cpuc->enabled;
+      cpuc->enabled = 0;
+      if (pmu_enabled)
+        intel_pmu_disable_all();
+      intel_pmu_drain_pebs_buffer();
+      cpuc->enabled = pmu_enabled;
+      if (pmu_enabled)
+        intel_pmu_enable_all();
 
+So what specific callchain is going sideways?
