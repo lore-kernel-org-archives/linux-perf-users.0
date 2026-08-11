@@ -1,127 +1,166 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABA842C51D
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Aug 2026 23:18:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFE0426419
+	for <linux-perf-users@vger.kernel.org>; Tue, 11 Aug 2026 23:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786490300; cv=none; b=DEjB66WH0L4u9VaAQYZi5Mvg+Xdq9Hp+nCPBxkHiDkjVzs13p9IevoTi6lkLNt/iJMN34VfdT5L3I/uKUer3uMmZ8tcQMZKT7+kJUHg4QF0UELxYDx8BhtKEylrT/T3QzZg7ujShP/6PYLbjKNkw6RTIb2yGOxRaITFTjEP1Ifs=
+	t=1786492280; cv=none; b=cHCVAsbetr0dKHjjQkUJ+5qroM+kgpr+M5UejKDeCrJph+erDEjA20wVTgl8Sgygugqtyjh9ots52hq6WpiMyZvfFT6SskwApiU5N81/SGWddaw22QVJxVN1+8P0ZA+bR5PDSe8X2kTQxXhH7ovhZUVEa6DDGnVTzoUHXti7AvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786490300; c=relaxed/simple;
-	bh=T+VHsIGxwAn3jb/eO29txToRdmx9wAMZ2VlQZieQDmw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Ih7+rDQiliDr1OGgx4/uxw1DefdkTTzS8MOF4BI84FdGGXQ4zDzWXF3UXuRIMaWRVWXYCu5jxuRG7jQnQ6/l7KyLpoBTqcbHZzGoREcxcoQL6AHTtSgUgs7/D9UvncC7zx2sZwuMWeIUVG7hF06MetQjsnWBtznuZdAXc7STmuI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XNJuT/hs; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786492280; c=relaxed/simple;
+	bh=GXiBqm/G+j3Nh1AQw2KR3rMvjiFbf6Ekr+KtI+I+86Y=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=YNQSfy68FVia21kd7e6ZH4iz0d3XHBWOyEjBR75XKCCMfefNP+G1A54d1/yaf5fqfHMl7CcMYrmerhk1TJ9foH18qXzBdXI1UiHb37BdZ2hou+rRgNeKurr3FFl17oGvrbsTs5aGN3WxhOsNxQ50GwqFnZFMZRFOoE6DHvN3OnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QxvcWj3v; arc=none smtp.client-ip=209.85.216.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XNJuT/hs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BB181F000E9;
-	Tue, 11 Aug 2026 23:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786490298;
-	bh=HUGmmaF26hrSJS0plOryGN+P500IC+gwWkZcPnBOPEI=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XNJuT/hsSips7iGYjV2bBkS0Y5/0Ccxw+WH5DQLpMnqCYKFRlybFw6+KuwhrAM8QM
-	 NPKxMArBnFd0g8oX61vHGYJPQwHttSigMgLEVdKA1o441lKHoN/FwQTzhEJmU8rVnB
-	 U7TkcIqlhrd192UcTojVqNBQ8HCjW5TwfgcAOPnqgk15lgnaq7sjZYVKti8S9920oa
-	 quky+/UaWEA4fgqil+sdCPvd1GJHCHa4/Z9XRpFh+oUQM0QLdBKBsekGudxIRl3s/X
-	 98ZK2yK+h/Xf9GXcq+uV71Gy4wcmx3Cal6sQSMzT8+xRKMhxDksejAjlsuUGtMUj92
-	 rN0z3RGOfZvkg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5] perf stat: Include PMU name and split uncore events
- per PMU in metric-only JSON output
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Chun-Tse Shao" <ctshao@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260811230518.3360-2-ctshao@google.com>
-References: <20260811230518.3360-2-ctshao@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 11 Aug 2026 23:18:18 +0000
-Message-Id: <20260811231818.9BB181F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QxvcWj3v"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-38e1118e4abso627294a91.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 11 Aug 2026 16:51:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786492278; x=1787097078; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=4U5bn9fxWsfK1Zj0iZYwkOob+4cM7Ff/aHIVm3hMKJM=;
+        b=QxvcWj3vcAdJlIHSccMSk09gvVb5oghOn5B4cgov7EQMC7yQWVcaNCL76Mq/GGbBxs
+         uM19092UAc+lsbP85GWeqDLKDBZ6+3xojh/uk+XCgoUABT1zFJDHB3LPia0GIYrs3fAI
+         yos/BrFi1Ij2E1yFpzMcY9ytxqM5e9z9+dZFo9YcTiyyu2Q//mSL6WloYgcDcXN3rrzU
+         9YEG90xF2s///DSnKrbMH+l9/AT/LVTtWODoNV88ngF/6s8aIToucrshOiva0Sp2aiHI
+         I/kALmUx10mRs/GL3O7JxnoO0KlhcEuI2E+KbElBray4Ph0P48lhpdHIs+g5ese0jOOg
+         elxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786492278; x=1787097078;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=4U5bn9fxWsfK1Zj0iZYwkOob+4cM7Ff/aHIVm3hMKJM=;
+        b=hYp86bASTsJYceCjVXxPMKZqYVa/8RbHndIOj8e/yGzFpQ8VOXV2HUeL8Tqo+/WNUj
+         wK2Qm3xF0Tf78JrpD1YuGq6xO+NUiq9MjVE0VupSjYDwtPQak5tzIHx0ErHyz0sJ9dYn
+         HnUPj4e7BGlK255KxfNKq8qe+BbMnG7Iw8oAaF67yrlIHKheSWeirOpJe+Ezjj7Ie7On
+         KlCgIUdSGmH+RMwdyriWB39CwNt1nZVwBi9W5QTxv62BRgfHPfJ06qazZsqtHDpnz7Dj
+         KMpVXydYnKU9/xzTy/gJ6QH1Vo7WNoK+h6m2b19Yxb+Co2cYewb+D38kk/0bIbamuKoR
+         s0wg==
+X-Forwarded-Encrypted: i=1; AHgh+Rru54vim/ueUGl1TwFU97SHP3zK8BM7lj/gVpi0xK69sRFmETy+sdV76s0kuTTuCEpSYQu1/3P0LdY83ng++ffb@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhHJCSw2M3QgZptT25PBycbKQT/m/37JfJMaUVM2jxgmJRc3Xv
+	CC9JKGbCaOIouHoDJWm5rM3ojAOU3XEQDOb3qWgScN6vyDjyxJNvoMoE7JZlnQfLq/iPoqUur6K
+	DqUqd79ZGZA==
+X-Received: from dlbsi7.prod.google.com ([2002:a05:7022:b887:b0:13f:a0ee:666f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3b81:b0:38d:dfd1:7a8
+ with SMTP id 98e67ed59e1d1-39301285deamr718924a91.2.1786492277667; Tue, 11
+ Aug 2026 16:51:17 -0700 (PDT)
+Date: Tue, 11 Aug 2026 16:51:10 -0700
+In-Reply-To: <20260811083828.2057695-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260811083828.2057695-1-irogers@google.com>
+X-Mailer: git-send-email 2.55.0.679.g6767b8d81c-goog
+Message-ID: <20260811235112.2267241-1-irogers@google.com>
+Subject: [PATCH v2 0/2] perf: Add Raspberry Pi AXI PMU driver
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, linux-perf-users@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	mark.rutland@arm.com, will@kernel.org, 
+	"=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=" <u.kleine-koenig@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Bypassing line initialization and termination for tool events in=
- '--metric-only' mode corrupts JSON, CSV, and standard formatting when thos=
-e events evaluate to metrics.
---
+This patch series adds an uncore Performance Monitoring Unit (PMU) driver
+for Broadcom AXI system and VideoCore VPU performance monitors found on
+Raspberry Pi SoCs (BCM2835 through BCM2712 / Raspberry Pi 1 through 5).
 
---- Patch [1]: [PATCH v5] perf stat: Include PMU name and split uncore even=
-ts per PMU in metric-only JSON output ---
-commit f2dfadb52a27c2891ce164d2b06f57924949dd1d
-Author: Chun-Tse Shao <ctshao@google.com>
+Motivation & Background
+------------------------
+Currently, Linux lacks a standard perf-API compatible driver for the
+Broadcom AXI performance counter blocks on Raspberry Pi platforms. Prior
+out-of-tree vendor solutions relied on custom debugfs nodes and ad-hoc
+kthreads, preventing integration with standard Linux perf tooling (`perf stat`,
+`perf list`, etc.).
 
-perf stat: Include PMU name and split uncore events per PMU in metric-only =
-JSON output
+This driver implements standard `struct pmu` hardware uncore callbacks
+under `drivers/perf/`, exposing human-readable sysfs event aliases, unit
+scaling (`Bytes`), and bus filtering directly to user space.
 
-This commit updates perf stat JSON output to include the PMU name for uncore
-events in metric-only mode and split output lines when transitioning between
-PMUs. It bypasses line initialization for tool events to avoid creating
-spurious empty JSON objects.
+Key Architectural Improvements & Features
+------------------------------------------
+1. Standard Linux Perf Integration:
+   - Exposes uncore AXI interconnect events via `/sys/bus/event_source/devices/rpi_axi_pmu/`.
+   - Supports event sampling and hardware counter accumulation (`local64_add`),
+     automatically managing 31-bit hardware counter wraparound across high-bandwidth
+     interconnect transfers.
 
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
-y.c
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
+2. CPU Hotplug Support (`cpuhp`):
+   - Registers dynamic CPU hotplug notifiers (`CPUHP_AP_ONLINE_DYN`).
+   - Automatically migrates PMU context (`perf_pmu_migrate_context`) to an online
+     CPU core when a designated CPU goes offline, avoiding stale uncore state.
 
-[ ... ]
+3. Hybrid Memory-Mapped & Mailbox Work Queue Architecture:
+   - System Monitor (MMIO): Performs fast atomic-safe memory reads (~15ns)
+     directly mapped over ARM physical memory space (`MON__SYSTEM`).
+   - VPU Monitor (Mailbox IPC): For Broadcom BCM2835-BCM2711 platforms (RPi 1-4),
+     VideoCore VPU monitor IPC calls are offloaded to process context via a dedicated
+     workqueue (`vpu_work`) and serialized under `vpu_mutex`. This avoids atomic
+     sleeps or blocking in timer/interrupt context.
 
-> @@ -1146,12 +1151,42 @@ static void print_no_aggr_metric(struct perf_stat=
-_config *config,
->  				if (config->aggr_map->map[aggr_idx].cpu.cpu =3D=3D cpu.cpu)
->  					break;
->  			}
-> +			if (aggr_idx >=3D config->aggr_map->nr)
-> +				continue;
-> =20
->  			os->evsel =3D counter;
->  			os->id =3D aggr_cpu_id__cpu(cpu, /*data=3D*/NULL);
-> -			if (first) {
-> -				print_metric_begin(config, evlist, os, aggr_idx);
-> -				first =3D false;
-> +
-> +			if (config->metric_only) {
-> +				struct perf_pmu *pmu =3D counter->pmu;
-> +				bool is_tool =3D evsel__is_tool(counter);
-> +
-> +				if (!is_tool && pmu) {
+4. SoC Generation Support:
+   - Patch 1 adds core driver support for Broadcom BCM2835-BCM2711 (RPi 1-4).
+   - Patch 2 expands support for Broadcom BCM2712 (Raspberry Pi 5), adding PCIe RP1
+     Southbridge links, HEVC decoder, HVS display engine, and Cortex-A76 DSU L3
+     interconnect monitoring.
 
-[Severity: Medium]
-Does bypassing line initialization for tool events corrupt the output
-formatting if the tool event evaluates to a metric?
+Hardware Validation
+-------------------
+The driver has been validated on real hardware across multiple SoC generations:
+- Raspberry Pi 400 (BCM2711): Validated System L2, ARM CPU, and VideoCore VPU
+  firmware mailbox IPC performance counters.
+- Raspberry Pi 5 (BCM2712): Validated live byte throughput across HVS display
+  refresh cycles, Cortex-A76 DSU L3 interconnect memory traffic, and PCIe RP1
+  Southbridge transfers.
 
-If a tool event has an associated metric (e.g., from a custom metric using
-duration_time), it will fail the !is_tool check and skip calling
-print_metric_begin().
+Changes in v2
+-------------
+- Match Data Initialization: In rpi_axi_pmu__init(), set pmu->chip via
+  of_device_get_match_data(dev) to ensure BCM2712 match data is correctly parsed.
+- Sysfs Event Visibility Filtering: Updated rpi_axi_pmu_events_is_visible() to
+  properly filter all 7 BCM2712 master filtered event aliases (arm_, pcie0_,
+  hvs_filtered, emmc0_) on BCM2835-BCM2711 systems, and hide legacy RPi 1-4
+  aliases on BCM2712 systems.
+- Unmapped Monitor Check: Added monitor base_address and initialization check to
+  config_is_valid(). Events targeting uninitialized or unmapped monitors (e.g. missing
+  memory resource or monitor=1 on BCM2712) are properly rejected with -EINVAL.
+- CPU Affinity Enforcement: Restrict uncore events in event_init() to event->cpu == pmu->cpu
+  to prevent orphaned uncore events when a non-PMU CPU goes offline.
+- 31-bit Counter Wrap Delta: Mask counter accumulation with delta = (new_count - prev_count) & 0x7FFFFFFF
+  in read(), timer_handler(), and vpu_work_handler() to prevent 2B+ event spikes on counter overflow.
+- Stopped Event Guard: Return early in rpi_axi_pmu_read() if event->hw.state & PERF_HES_STOPPED.
+- Lockless Race Fix: Pass bus and filter explicitly to rpi_axi_pmu_enable_bus_watcher()
+  under spinlock to prevent lockless read races in vpu_work_handler().
+- Slot Reuse Clean: Set enabled[idx] = false in rpi_axi_pmu_del() when refcount[idx] == 0 so
+  re-allocated watcher slots properly enable hardware watchers.
+- Events Array Bounds: Return -ENOSPC in rpi_axi_pmu_add() if pmu->events array is full.
+- Timer Cancel Race Fix: Re-acquire pmu->lock after hrtimer_cancel() in rpi_axi_pmu_del()
+  and re-verify active_events > 0 before returning.
+- Hotplug Timer Migration: Cancel and re-pin pmu->hrtimer to target CPU in rpi_axi_pmu_offline_cpu().
+- Registration Order: Call perf_pmu_register() before cpuhp_state_add_instance() in probe,
+  and cancel hrtimer before cancel_work_sync() and unregister in exit teardown.
+- Header & Style Cleanups: Removed <linux/mod_devicetable.h> and <linux/version.h>,
+  updated rpi_axi_pmu_match[] terminator to { }, and fixed C variable declaration style.
 
-The event still proceeds to printout() down below:
+Ian Rogers (2):
+  perf: Add Raspberry Pi BCM2835 AXI PMU driver
+  perf: Add Raspberry Pi 5 (BCM2712) AXI PMU support
 
-        uval =3D val * counter->scale;
-        printout(config, os, uval, run, ena, 1.0, aggr_idx);
+ drivers/perf/Kconfig       |   10 +
+ drivers/perf/Makefile      |    1 +
+ drivers/perf/rpi_axi_pmu.c | 2001 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 2012 insertions(+)
+ create mode 100644 drivers/perf/rpi_axi_pmu.c
 
-If printout() outputs the metric directly, won't this lack the necessary JS=
-ON
-or CSV preamble (such as { "interval"... ) because print_metric_begin() was
-skipped?
+-- 
+2.55.0.679.g6767b8d81c-goog
 
-Furthermore, since line_open remains false, print_metric_end() is also
-bypassed at the end of the loop, leaving the JSON object unclosed.
-
-> +					bool pmu_changed =3D false;
-> +
-> +					if (line_open && last_pmu) {
-> +						bool non_core =3D !pmu->is_core ||
-> +								evsel__is_hybrid(counter) ||
-> +								!last_pmu->is_core ||
-> +								evsel__is_hybrid(last_evsel);
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260811230518.3360=
--2-ctshao@google.com?part=3D1
