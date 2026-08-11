@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9EA23EAB4;
-	Tue, 11 Aug 2026 01:29:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44804388887;
+	Tue, 11 Aug 2026 01:29:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786411772; cv=none; b=YD89AmVZKIcJ3WiMmfh+S2UIqWr7bCCcqbF/L+XpC1x1pKf07YyO1ilegwT0xyKsEzwkcmEKW16AtsC8elL+S08mJ7Y7ArGHvzsHxAPjn2wxHSLbezHPV8rJeaPOO6NRlHALwncUecNf22pn3vWcABlG4JSb/11kINu6TzpuryU=
+	t=1786411776; cv=none; b=gV1gBkYU1le0PKkKjzpNDwG+lwI/l8XgrcMTnIECWa/RUSZz3pHtRLIGDkdkRrribtHaEhPKKZpX8jtYIybu4QbDDGZX28jvsKSt1JEybOMS4SuapEQ4VSwj3tek2lo1139SrH1Lx9OXAvuU3xKBuQsLc14I2soRx2J8is9Tg4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786411772; c=relaxed/simple;
-	bh=cVztOs2uMIratdU9wIDk+3gEJqvY66z10g704Q5TGp0=;
+	s=arc-20240116; t=1786411776; c=relaxed/simple;
+	bh=55XaTrcAu1mpsGRtiSf97/xE1HjoREOJnXix49nn7u0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AnamvZGAQ0hK/Z3iRMvYG42/WtwiKRrMkzqXI5aZPmvBOv+crF66KVnjOHbb+OBLdFvYXoy4Vf1oLH2PWCDQZuoliJZVqq4vrRI3gKnPGldjKqs2zIY1erOShmWmhW5MFN/iQUc+ktiLkrQG9oOi7jUJiJfmQekyrlmT6YP5bF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h2r78v1G; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=bvSke5trJK5gi1eRBE5uygkr043A0liPz3gpwLbwv6tLLsZQFo68iYkUBO9LPhNhPl98rpFEZOJP6QLHRuOVNEV0QR1snaDfnJIUqABO9mYfiff9U9RBgEhMTRvJ5VPC7yJktvliL+7yDW1tPXaZSA109zx1hK59eUG8vvYPEY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OvBqGx0w; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h2r78v1G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E296B1F00A3A;
-	Tue, 11 Aug 2026 01:29:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OvBqGx0w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF1771F000E9;
+	Tue, 11 Aug 2026 01:29:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786411770;
-	bh=iy4HTc6c4mJ99MFrZeUThnyT7uVU0GQ8QkuNGFhEfGM=;
+	s=k20260515; t=1786411774;
+	bh=CNmWVX0bOGHZotLTEe8gHGDsgxCDhUi5b9NHsQhbh44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=h2r78v1Gd8GRSOUGZTpZfXpd1VBNjkzG0otWR1cSJPizBRz2jVakHqbXnY5RiiN2n
-	 3l4IoEshy+FGICnNWXkx76roXaUo8QKdt3J5kW8i8kICC6Knajfohhzo5yCsrxMPDf
-	 dPLDZ8z8vt4A6vuHYiVE58TiQlXRXaiEL/IRPWumcZ59lvVegI0/RivIICbFbCoXJ3
-	 HNQp2M2rYGMy/SPT4rP5eoXkPk7M+swyDM25mkQAN4nVqZ9w6nRaKJu5HHgu1784pQ
-	 Vwen2N4QvAiijqgtHQQWHlH32GWczaan92LGeWWcYdEpFDgbOcUBhzHca+Fig/El79
-	 7/eatUIafYKow==
+	b=OvBqGx0wHaImZ0gexy2YNFMEYe7RFehIsXLwhqWhn5lqgQEb1eaezsdiUDZkELuE5
+	 Btqqfsidsf7s6Wtbdku8YO5e54jLv3b5jvRno6M+SXqNgQ+zTfvosStaH4KJ1U31Zw
+	 IE6vTtP7mqiEtVkUH32o/DQpVkIUi4GwdgGmddS9KAMl4IH65jOn0/f7Mpx/sUJQon
+	 zHjL+h6fJ/a1dnn0ivCn8Bt4HMFrdB1MN2yJwak5EgX1CcuDHx/amQ+QCF3VlSAc7i
+	 mUgXQ2FbFIH25FJteJ3Q9++wCIgJSHK7M5TiVHC4xVS3WPlD4X7sLRbOIiNZDaKwiD
+	 B1GhZsCHCbnTg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 2/7] perf build: Add install-build-deps framework to install devel packages
-Date: Mon, 10 Aug 2026 22:29:00 -0300
-Message-ID: <20260811012905.14742-3-acme@kernel.org>
+Subject: [PATCH 3/7] perf build: install-build-deps: add Fedora devel package mapping
+Date: Mon, 10 Aug 2026 22:29:01 -0300
+Message-ID: <20260811012905.14742-4-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260811012905.14742-1-acme@kernel.org>
 References: <20260811012905.14742-1-acme@kernel.org>
@@ -54,289 +54,325 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Installing the development packages needed to build perf is
-error-prone on a fresh distro install: the packages are scattered
-across the feature tests in tools/build/feature/, each checking for a
-specific header/library, and the build only tells you what's missing
-after failing a check.
+With the framework from the previous commit in place, this patch adds
+the per-feature mapping for Fedora/dnf: for each feature test in
+tools/build/feature/, the Fedora devel package providing the headers
+or library the test compiles against, kept explicit in the script
+next to the test that requires it.
 
-This series adds a 'make -C tools/perf install-build-deps' target to
-install them in one go, deriving the package list from the feature tests
-themselves.
+Special cases:
 
-This commit adds the framework, on top of the parse-time compiler
-probe guard from the previous commit:
+  - test-libdebuginfod.c includes <elfutils/debuginfod.h>, provided
+    by elfutils-debuginfod-client-devel, not elfutils-devel;
+  - the cxa-demangle test links against libstdc++'s builtin demangler,
+    pulling in libstdc++-devel;
+  - the BPF-oriented features (bpf, clang-bpf-co-re) get their headers
+    from the base packages and clang-devel.
 
-- the install-build-deps target in tools/perf/Makefile.perf, exempted
-  from the config/feature detection pass, since it must run in a fresh
-  container, before gcc or pkg-config exist, to install them;
-- the install-build-deps.sh script, with --list, --dry-run and
-  --distro options, distro detection (Fedora and Ubuntu), dnf and
-  apt-get drivers, root/passwordless-sudo handling, and the base
-  packages common to any build: compiler, C++ compiler, make, flex,
-  bison, libc and kernel headers, python3-setuptools (needed by the
-  python binding) and rust (checked by the rust feature test);
-- the parse-time probes for optional tools, like pkg-config, use
-  'command -v' with stderr discarded, so a fresh container without
-  them gets no 'which: no pkg-config in (...)' spew from make;
-- the script does not rely on 'set -e': its error paths are explicit,
-  since the make target runs it via $(SHELL), where a shebang option
-  would be ignored anyway, so direct and make-driven runs behave the
-  same.
+Tests with no Fedora equivalent (bionic, compile-32, compile-x32) and
+the opt-in/deprecated ones (libbfd disassembler family, GTK2, LIBPERL,
+LIBUNWIND, CoreSight, and the tests perf itself doesn't check, like
+libcpupower) are deliberately not mapped.
 
-The per-feature mappings, from each feature test to the devel package
-providing its headers on a given distro, are added by the follow-up
-patches, one per distro, together with the validation of each mapping
-in a fresh container: until then the target installs just the base
-toolchain.
+Validated on a fresh Fedora 44 toolbx container, so the host OS is not
+modified:
+
+    toolbox create fedora:44
+    toolbox enter fedora:44
+    make -C tools/perf install-build-deps
+
+which installed the 29 mapped packages; a subsequent clean O= build
+enabled every feature with an external dependency Fedora provides
+(feature tests went to 1, except bionic/compile-32/compile-x32, which
+have no Fedora equivalent, and the libunwind-debug-frame tests, whose
+symbols Fedora's libunwind does not export), linking libpfm,
+libbabeltrace2-ctf-writer, libcapstone, libtraceevent, libslang and
+libnuma, as well as building the BPF skeletons requiring clang/llvm.
+Re-running the target is a no-op (dnf reports "Nothing to do").
+
+RHEL and its derivatives share most Fedora package names but are
+refused by the script until this mapping is validated on them.
+
+Example of its --list option:
+
+  $ grep PRETTY_NAME /etc/os-release
+  PRETTY_NAME="Fedora Linux 44 (Toolbx Container Image)"
+  $ tools/perf/scripts/install-build-deps.sh --list
+  bison
+  capstone-devel
+  clang-devel
+  elfutils-debuginfod-client-devel
+  elfutils-devel
+  elfutils-libelf-devel
+  flex
+  gcc
+  gcc-c++
+  glibc-devel
+  java-latest-openjdk-devel
+  kernel-headers
+  libbabeltrace2-devel
+  libbpf-devel
+  libpfm-devel
+  libstdc++-devel
+  libtraceevent-devel
+  libzstd-devel
+  llvm-devel
+  make
+  numactl-devel
+  openssl-devel
+  python3-devel
+  python3-setuptools
+  rust
+  slang-devel
+  systemtap-sdt-devel
+  xz-devel
+  zlib-devel
+  $
 
 Assisted-by: opencode:deepseek-v4-flash-free
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Makefile.perf                 |  20 ++-
- tools/perf/scripts/install-build-deps.sh | 173 +++++++++++++++++++++++
- 2 files changed, 190 insertions(+), 3 deletions(-)
- create mode 100755 tools/perf/scripts/install-build-deps.sh
+ tools/perf/scripts/install-build-deps.sh | 179 ++++++++++++++++++++---
+ 1 file changed, 156 insertions(+), 23 deletions(-)
 
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index acc6309a84a1eeb1..49a58d714e42dded 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -177,7 +177,7 @@ LD += $(EXTRA_LDFLAGS)
- # Some distros provide the command $(CROSS_COMPILE)pkg-config for
- # searching packges installed with Multiarch. Use it for cross
- # compilation if it is existed.
--ifneq (, $(shell which $(CROSS_COMPILE)pkg-config))
-+ifneq (, $(shell command -v $(CROSS_COMPILE)pkg-config 2>/dev/null))
-   PKG_CONFIG ?= $(CROSS_COMPILE)pkg-config
- else
-   PKG_CONFIG ?= pkg-config
-@@ -214,7 +214,12 @@ AWK     = awk
- # non-config cases
- config := 1
- 
--NON_CONFIG_TARGETS := clean python-clean TAGS tags cscope help
-+# install-build-deps runs the install-build-deps.sh script, which
-+# derives the package list from the feature test sources in
-+# tools/build/feature/, so it needs neither the fixdep build nor a
-+# config/feature detection pass: in a fresh container without gcc or
-+# pkg-config those would fail before the script could install them.
-+NON_CONFIG_TARGETS := clean python-clean TAGS tags cscope help install-build-deps
- 
- ifdef MAKECMDGOALS
- ifeq ($(filter-out $(NON_CONFIG_TARGETS),$(MAKECMDGOALS)),)
-@@ -748,6 +753,7 @@ help:
- 	@echo '  HINT: use "prefix" or "DESTDIR" to install to a particular'
- 	@echo '        path like "make prefix=/usr/local install install-doc"'
- 	@echo '  install	- install compiled binaries'
-+	@echo '  install-build-deps - install the development packages needed to build'
- 	@echo '  install-doc	- install *all* documentation'
- 	@echo '  install-man	- install manpage documentation'
- 	@echo '  install-html	- install html documentation'
-@@ -892,6 +898,14 @@ install-bin: install-tools install-tests
- 
- install: install-bin try-install-man
- 
-+# Install the development packages needed to build perf, derived from the
-+# feature tests in tools/build/feature/.  This first installs just the
-+# base toolchain; per-distro package mappings are added by the follow-up
-+# commits.  INSTALL_BUILD_DEPS_ARGS, when set, is passed to the script, so
-+# extra options like --list, --dry-run or --distro can be given from make.
-+install-build-deps:
-+	$(Q)$(SHELL) $(srctree)/tools/perf/scripts/install-build-deps.sh $(INSTALL_BUILD_DEPS_ARGS)
-+
- install-python_ext:
- 	$(PYTHON_WORD) util/setup.py $(python_setup_quiet) install --root='/$(DESTDIR_SQ)'
- 
-@@ -960,7 +974,7 @@ endif
- 
- FORCE:
- 
--.PHONY: all install clean config-clean strip install-gtk
-+.PHONY: all install install-build-deps clean config-clean strip install-gtk
- .PHONY: shell_compatibility_test please_set_SHELL_PATH_to_a_more_modern_shell
- .PHONY: .FORCE-PERF-VERSION-FILE TAGS tags cscope FORCE prepare bpf-skel-prepare
- .PHONY: python_perf_target
 diff --git a/tools/perf/scripts/install-build-deps.sh b/tools/perf/scripts/install-build-deps.sh
-new file mode 100755
-index 0000000000000000..351fdd581e56dd7c
---- /dev/null
+index 351fdd581e56dd7c..a0ec73cb4fcdffbd 100755
+--- a/tools/perf/scripts/install-build-deps.sh
 +++ b/tools/perf/scripts/install-build-deps.sh
-@@ -0,0 +1,173 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
+@@ -13,10 +13,13 @@
+ # that provides the headers/libraries it checks, so that a subsequent
+ # 'make -C tools/perf' build enables the corresponding perf features.
+ #
+-# This initial version installs the base toolchain needed by any build;
+-# the per-feature package mapping is added, per supported distro, by the
+-# follow-up patches in this series, which also validate each mapping in a
+-# fresh container, so the host system is not modified.
++# Supported distros, each mapping validated in a fresh container, so the
++# host system is not modified:
 +#
-+# No 'set -e': the script uses explicit checks for its error paths, and
-+# is also run via '$(SHELL) .../install-build-deps.sh' from the make
-+# target in tools/perf/Makefile.perf, where a shebang option would be
-+# ignored anyway, so direct and make-driven runs behave the same.
++#   - Fedora, on dnf, validated on Fedora 44, in a toolbx container:
 +#
-+# Install the development packages needed to build tools/perf.
-+#
-+# The package set is derived from the feature tests in tools/build/feature/:
-+# each feature test that perf may compile is mapped to the devel package
-+# that provides the headers/libraries it checks, so that a subsequent
-+# 'make -C tools/perf' build enables the corresponding perf features.
-+#
-+# This initial version installs the base toolchain needed by any build;
-+# the per-feature package mapping is added, per supported distro, by the
-+# follow-up patches in this series, which also validate each mapping in a
-+# fresh container, so the host system is not modified.
-+#
-+# Usage: install-build-deps.sh [OPTIONS]
-+#
-+# Options:
-+#    --list       list the packages that would be installed, then exit
-+#    --dry-run    show the install command that would be run, without
-+#                 running it
-+#    --distro ID  force a distro: fedora, ubuntu (default: auto-detect)
-+#    -h, --help   print this help message
-+#
-+# Requires root (or passwordless sudo) to actually install packages.
++#           toolbox create fedora:44
++#           toolbox enter fedora:44
+ #
+ # Usage: install-build-deps.sh [OPTIONS]
+ #
+@@ -24,7 +27,7 @@
+ #    --list       list the packages that would be installed, then exit
+ #    --dry-run    show the install command that would be run, without
+ #                 running it
+-#    --distro ID  force a distro: fedora, ubuntu (default: auto-detect)
++#    --distro ID  force a distro: fedora (default: auto-detect)
+ #    -h, --help   print this help message
+ #
+ # Requires root (or passwordless sudo) to actually install packages.
+@@ -39,20 +42,121 @@ Usage: $(basename "$0") [--list] [--dry-run] [--distro ID] [-h|--help]
+ 
+ Install the development packages needed to build tools/perf.
+ 
++The package set is derived from the feature tests in tools/build/feature/,
++mapping each one with an external dependency to the devel package providing
++it, so the corresponding feature gets enabled on a build.
 +
-+set -u
+ Options:
+     --list      list the packages that would be installed, then exit
+     --dry-run   show the install command that would be run, without running it
+-    --distro ID force a distro: fedora, ubuntu
++    --distro ID force a distro: fedora
+     -h, --help  print this help message
 +
-+DISTRO=""
-+
-+help() {
-+	cat <<EOF
-+Usage: $(basename "$0") [--list] [--dry-run] [--distro ID] [-h|--help]
-+
-+Install the development packages needed to build tools/perf.
-+
-+Options:
-+    --list      list the packages that would be installed, then exit
-+    --dry-run   show the install command that would be run, without running it
-+    --distro ID force a distro: fedora, ubuntu
-+    -h, --help  print this help message
-+EOF
-+	exit 0
-+}
-+
++Distro supported: Fedora (dnf), validated on a fresh Fedora 44 toolbx
++container.
+ EOF
+ 	exit 0
+ }
+ 
+ # ---------------------------------------------------------------------
+-# Distro detection.  The install command that follows only differs in
+-# the package manager, which here is keyed off the distro ID; the
+-# per-feature package mapping is added per distro by the follow-up
+-# patches.
++# Return the Fedora package(s) providing the devel requirements of a
++# feature test in tools/build/feature/.  Multiple packages are separated
++# by spaces; an empty result means the test has no external devel
++# dependency (pure toolchain/glibc, or no equivalent Fedora package).
++#
++# The mapping was built by checking, for each feature test, which Fedora
++# devel package provides the headers the test compiles against.
 +# ---------------------------------------------------------------------
-+# Distro detection.  The install command that follows only differs in
-+# the package manager, which here is keyed off the distro ID; the
-+# per-feature package mapping is added per distro by the follow-up
-+# patches.
-+# ---------------------------------------------------------------------
-+detect_distro() {
-+	if [ -n "$DISTRO" ]; then
-+		echo "$DISTRO"
-+		return
-+	fi
-+	local id
-+	id=$( . /etc/os-release 2>/dev/null && echo "${ID:-}" )
-+	case "$id" in
-+	fedora)			echo "fedora" ;;
-+	ubuntu)			echo "ubuntu" ;;
-+	# RHEL and its derivatives share most Fedora package names, but the
-+	# mapping is only validated on Fedora, so don't auto-detect them.
-+	rhel|centos|rocky|alma|ol) echo "" ;;
-+	*)			echo "" ;;
-+	esac
-+}
-+
-+# Base packages needed by any perf build, regardless of feature tests:
-+# compiler, libc headers, flex/bison for the parser, kernel headers
-+# for UAPI headers with no in-tree copy, e.g. <linux/capability.h>, and
-+# gcc-c++ (dnf) / g++ (apt) for the C++-based feature tests
-+# (cxa-demangle, llvm, llvm-perf), compiled with $(CXX), and
-+# pulls in libstdc++-devel / libstdc++-*-dev.
-+# python3-setuptools is needed to build the python binding (perf's
-+# util/setup.py uses it; without it binding is skipped with a warning).
-+# rust is not a header-based feature test: test-rust.bin just checks
-+# "$(RUSTC) --version" (tools/build/feature/Makefile), so it is mapped
-+# here like the other toolchain packages.
-+fedora_base_pkgs="gcc gcc-c++ make flex bison glibc-devel kernel-headers python3-setuptools rust"
-+debian_base_pkgs="gcc g++ make flex bison libc6-dev linux-libc-dev python3-setuptools rustc"
-+
-+# ---------------------------------------------------------------------
-+# Assemble the unique package list.  While the per-feature mapping is
-+# being added per distro, only the base toolchain above is installed.
-+# ---------------------------------------------------------------------
-+package_set() {
-+	local distro="$1" srcdir="$2"
-+	case "$distro" in
-+	fedora)	echo "$fedora_base_pkgs" ;;
-+	ubuntu)	echo "$debian_base_pkgs" ;;
-+	esac
-+}
-+
-+# ---------------------------------------------------------------------
-+# The install command proper for each supported package manager, plus
-+# the command massaged for --dry-run.
-+# ---------------------------------------------------------------------
-+install_cmd() {
-+	local distro="$1"; shift
-+	case "$distro" in
-+	fedora)
-+		echo "dnf install -y $*"
++fedora_pkg_for() {
++	local feat="$1"
++	case "$feat" in
++	libelf|libelf-getphdrnum|libelf-gelf_getnote|libelf-getshdrstrndx)
++		echo "elfutils-libelf-devel"
 +		;;
-+	ubuntu)
-+		# a fresh container has no package index, so update first.
-+		echo "apt-get update && apt-get install -y $*"
++	libelf-zstd)
++		echo "elfutils-libelf-devel libzstd-devel"
++		;;
++	libdw)
++		echo "elfutils-devel"
++		;;
++	# test-libdebuginfod.c includes <elfutils/debuginfod.h>, which is
++	# provided by elfutils-debuginfod-client-devel, not elfutils-devel.
++	libdebuginfod)
++		echo "elfutils-debuginfod-client-devel"
++		;;
++	libnuma|numa_num_possible_cpus)
++		echo "numactl-devel"
++		;;
++	libzstd)
++		echo "libzstd-devel"
++		;;
++	zlib)
++		echo "zlib-devel"
++		;;
++	lzma)
++		echo "xz-devel"
++		;;
++	libslang)
++		echo "slang-devel"
++		;;
++	libcapstone)
++		echo "capstone-devel"
++		;;
++	libpython)
++		echo "python3-devel"
++		;;
++	libtraceevent)
++		echo "libtraceevent-devel"
++		;;
++	cxa-demangle)
++		echo "libstdc++-devel"
++		;;
++	libbpf)
++		echo "libbpf-devel"
++		;;
++	babeltrace2-ctf-writer)
++		echo "libbabeltrace2-devel"
++		;;
++	libopenssl)
++		echo "openssl-devel"
++		;;
++	libpfm4)
++		echo "libpfm-devel"
++		;;
++	sdt)
++		echo "systemtap-sdt-devel"
++		;;
++	clang-bpf-co-re)
++		echo "clang-devel"
++		;;
++	llvm|llvm-perf)
++		echo "llvm-devel"
++		;;
++	jvmti|jvmti-cmlr)
++		echo "java-latest-openjdk-devel"
 +		;;
 +	esac
++	# Pure toolchain/libc features (backtrace, eventfd, fortify-source,
++	# gettid, glibc, hello, reallocarray, pthread-*, stackprotector-all,
++	# timerfd, scandirat, sched_getcpu, setns, file-handle,
++	# bionic...) need no external package: their
++	# requirements are covered by the base packages below.  Features that
++	# perf's own build does not check (libcap, libcheck, libcpupower,
++	# libtracefs, whose feature tests exist for rtla/bpftool/rv) and the
++	# opt-in features, which a default build does not enable: the libbfd
++	# disassembler family (libbfd, libbfd-threadsafe, libbfd-liberty,
++	# disassembler-*, cplus-demangle), only linked on BUILD_NONDISTRO
++	# builds and deprecated in favor of capstone, GTK2, LIBPERL and
++	# LIBUNWIND support (ifdef GTK2 / ifdef LIBPERL / LIBUNWIND=1),
++	# and CoreSight (ifdef CORESIGHT), are deliberately not mapped.
++	# libaio is not mapped either: its
++	# test uses the POSIX AIO API (aio.h, aio_*, -lrt), provided by
++	# glibc headers (pulled in by the glibc-devel base package), not
++	# the native libaio.h/io_submit API that libaio-devel provides.
 +}
 +
-+main() {
-+	local action="install"
-+	local srcdir distro pkgs cmd
-+
-+	while [ $# -gt 0 ]; do
-+		case "$1" in
-+		--list)		action="list"; shift ;;
-+		--dry-run)	action="dry-run"; shift ;;
-+		--distro)
-+			[ $# -ge 2 ] || {
-+				echo "error: --distro requires an argument (fedora, rhel, ubuntu, debian)" >&2
-+				exit 1
-+			}
-+			DISTRO="$2"; shift 2 ;;
-+		-h|--help)	help ;;
-+		*)		echo "error: unknown argument: $1" >&2; exit 1 ;;
-+		esac
++# ---------------------------------------------------------------------
++# Distro detection
+ # ---------------------------------------------------------------------
+ detect_distro() {
+ 	if [ -n "$DISTRO" ]; then
+@@ -71,30 +175,58 @@ detect_distro() {
+ 	esac
+ }
+ 
+-# Base packages needed by any perf build, regardless of feature tests:
++# ---------------------------------------------------------------------
++# Feature test enumeration: mirror of the tests checked during a build,
++# from the actual test-*.c / test-*.cpp sources in tools/build/feature/.
++# ---------------------------------------------------------------------
++feature_tests() {
++	local srcdir="$1"
++	local f
++	for f in "$srcdir"/tools/build/feature/test-*.c "$srcdir"/tools/build/feature/test-*.cpp; do
++		[ -e "$f" ] || continue
++		basename "$f" | sed -e 's/^test-//' -e 's/\.c$//' -e 's/\.cpp$//'
 +	done
-+
-+	srcdir=$(cd "$(dirname "$0")/../../.." && pwd)
-+	distro=$(detect_distro)
-+	case "$distro" in
-+	fedora|ubuntu) ;;
-+	*)
-+		echo "error: unsupported distro (got '$distro'); the package mapping is not validated on other distros." >&2
-+		exit 1
-+		;;
-+	esac
-+
-+	pkgs=$(package_set "$distro" "$srcdir")
-+
-+	case "$action" in
-+	list)
-+		echo "$pkgs" | tr ' ' '\n' | grep -v '^$' | sort
-+		exit 0
-+		;;
-+	dry-run)
-+		install_cmd "$distro" $pkgs
-+		exit 0
-+		;;
-+	esac
-+
-+	echo "The following packages will be installed to enable perf features:"
-+	echo "$pkgs" | tr ' ' '\n' | grep -v '^$' | sort | sed 's/^/  /'
-+	echo
-+	cmd=$(install_cmd "$distro" $pkgs)
-+	if [ "$(id -u)" -eq 0 ]; then
-+		sh -c "$cmd"
-+	else
-+		sudo sh -c "$cmd"
-+	fi || {
-+		echo "error: the install command failed, see the output above" >&2
-+		exit 1
-+	}
 +}
 +
-+main "$@"
-\ No newline at end of file
++# Base packages needed by any build, regardless of feature tests:
+ # compiler, libc headers, flex/bison for the parser, kernel headers
+ # for UAPI headers with no in-tree copy, e.g. <linux/capability.h>, and
+-# gcc-c++ (dnf) / g++ (apt) for the C++-based feature tests
+-# (cxa-demangle, llvm, llvm-perf), compiled with $(CXX), and
+-# pulls in libstdc++-devel / libstdc++-*-dev.
+-# python3-setuptools is needed to build the python binding (perf's
+-# util/setup.py uses it; without it binding is skipped with a warning).
+-# rust is not a header-based feature test: test-rust.bin just checks
+-# "$(RUSTC) --version" (tools/build/feature/Makefile), so it is mapped
+-# here like the other toolchain packages.
++# gcc-c++ is needed by the C++-based feature tests (cxa-demangle, llvm,
++# llvm-perf), which are compiled with $(CXX), pulling in
++# libstdc++-devel.  python3-setuptools is needed to build the python
++# (perf's util/setup.py uses it); rust is checked by the rust feature
++# test (test-rust.bin just runs "$(RUSTC) --version").
++
+ fedora_base_pkgs="gcc gcc-c++ make flex bison glibc-devel kernel-headers python3-setuptools rust"
+ debian_base_pkgs="gcc g++ make flex bison libc6-dev linux-libc-dev python3-setuptools rustc"
+ 
+ # ---------------------------------------------------------------------
+-# Assemble the unique package list.  While the per-feature mapping is
+-# being added per distro, only the base toolchain above is installed.
++# Assemble the unique package list: the base toolchain plus, for each
++# feature test the distro's package mapping knows about, its package(s).
++# Installing an already-present package is a no-op for both dnf and
++# apt-get, making this idempotent.
+ # ---------------------------------------------------------------------
+ package_set() {
+ 	local distro="$1" srcdir="$2"
++	local feat pkg pkgs
++
+ 	case "$distro" in
+-	fedora)	echo "$fedora_base_pkgs" ;;
+-	ubuntu)	echo "$debian_base_pkgs" ;;
++	fedora)	pkgs="$fedora_base_pkgs" ;;
++	ubuntu)	pkgs="$debian_base_pkgs" ;;
+ 	esac
++
++	if [ "$distro" = "fedora" ]; then
++		for feat in $(feature_tests "$srcdir"); do
++			pkg=$(fedora_pkg_for "$feat")
++			for pkg in $pkg; do
++				case " $pkgs " in
++				*" $pkg "*) ;;
++				*) pkgs="$pkgs $pkg" ;;
++				esac
++			done
++		done
++	fi
++	echo "$pkgs"
+ }
+ 
+ # ---------------------------------------------------------------------
+@@ -139,6 +271,7 @@ main() {
+ 	fedora|ubuntu) ;;
+ 	*)
+ 		echo "error: unsupported distro (got '$distro'); the package mapping is not validated on other distros." >&2
++		echo "Supported and validated: Fedora 44 (fresh toolbx container)." >&2
+ 		exit 1
+ 		;;
+ 	esac
 -- 
 2.55.0
 
