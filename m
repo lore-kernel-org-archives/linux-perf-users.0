@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DF6456E17;
-	Tue, 11 Aug 2026 17:12:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA193431A4C;
+	Tue, 11 Aug 2026 17:12:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786468344; cv=none; b=WgdJdeKXADvMNHObBVRjCLQ3QrXoKWZm4kcVq+8d0ZvXn8OkcX49aNDolICIKX8BTRTl/3oGPWbauWHxPwqC5bSKnXLVjBcA2LtXiVbPIrX0jRFvRhakEB3PSWieNRZUpgTcp7q0BU3hq4uxrhvVgPNDqB/73Fx1AC2XXqg70/A=
+	t=1786468348; cv=none; b=LNYFhkweozzkJIk1gkBuJ8XpzTiqTvv+4xUaoN+jRkxTjJY7sZNKXQwx1LnVjBgGTpsCVq46L16BJbX1M2qn01O6zd9oD59QKLuw9ErAkSHeJc38iQpJwuVP5WgSSYU1fY9GsWzY1veiEDHgUTcVakYyevPKEBzdx77OYHyhHos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786468344; c=relaxed/simple;
-	bh=mZZC7s2C29BbJPGOfHLgVI5BZY4Pb9KhphfBeyw98ZE=;
+	s=arc-20240116; t=1786468348; c=relaxed/simple;
+	bh=nRAE/J1F4RjeaIp94T6DfvFbqHH9zBfwF3h8QR0oGfs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Sv/AMWPYpyqFDiVaWjlqBcn5mBpYJs78tocyWVyZJPd2XlqN61LFVneqSa24IPjGYIUdq5knXtxiIsT1JvL4IBDEdZmENKgnYpqeJ7uE0ca/91fMCQTgGW8eqykix+wmyTML5BogmQuZJgAtT9g/mS5PutJAykgaWggWKD/XONw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dgvpeqsI; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=N43fPPaZHkirh1Ec8tmj6efq+qwKtFpqk6LMb24LKecpoxASuJC5XOLWevkedIlmwiLAOnforGJiylaYQiCLfNwDWDMiF/uQV03qk50YPEyqUq+31ZJRMtvkSYdXCPkdg5NVgv4HOIZbD6SYbbV4NjwEnNb/KwySoOb/vENTut0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mluJTESM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dgvpeqsI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E9371F00A3A;
-	Tue, 11 Aug 2026 17:12:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mluJTESM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56D5D1F000E9;
+	Tue, 11 Aug 2026 17:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786468342;
-	bh=ddvN6mzZQPpjb1j9jQPuMJz+025tgjfM+zZlsoNai0U=;
+	s=k20260515; t=1786468346;
+	bh=edC2gXtMicewaQ3Uim/RZ0IU6TrcKLdQqTeAwo9ObVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=dgvpeqsIp42S9n7rMPgGI7wDetYDvq4HLF88M8clh9fm9+oOWGgfPxJhcnZwBjEs6
-	 mkcu1LUX4kJl7PJIu/8q68CLginJPOWSpW6uSWJv2cp+4MpT9UdEKY7QLJBqzrKKhP
-	 5xfeJQFGKgnNurkvqpw+yA4sQr168+Zcz/woyzZ5ILt5yjjrTS8DeA+48xRvNUdZ1u
-	 0o8zGRkuR8Jk3jmh5hsVBwqu3eMQlJ1+NhTD1bo7looCip3sIBsSntff5DzXqIn3if
-	 cxDxhWbqe46Cpc3dnLUaxYr956QP8fVFCuxrA6q9F/YSvr0NEqh9GJd4a1BXj3AzRE
-	 2J2XtW0FvZJZA==
+	b=mluJTESMT0KIFk7TF4VwtVvbrTVXckNkxFdyjG+8PmntKbQM8EYBYXVcmP8tHuEea
+	 kRY0pMLSP+dfkinTvCRgdRa9FzyCzE15J+1XXXubCm4MiRihwwAW+D9z9NIRtlpHgV
+	 sxm/36MLvW0p2zmPC/AkAaZdukayE9Kzn7ET8Vp5hQspdXT9hVfoPpK9Ei2qIPkOi5
+	 hTLs6ZvWtQ2oFmSAGvlVyuKkOyR3ptanjahkXxxzwkui3/jWaJBqWU3svMIo46MpUx
+	 PT5MkwhQ0fsD4cjCSc4mu0eC6COQRHFcKCZ6XcEbBi9Hb7DCcWdtN7rD5Vg/KxGb5l
+	 wzxGphUWO6hjA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -39,9 +39,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	sashiko-bot <sashiko-bot@kernel.org>
-Subject: [PATCH 3/5] perf dso: Use stored fd error instead of stale errno in file_read()
-Date: Tue, 11 Aug 2026 14:11:58 -0300
-Message-ID: <20260811171200.30096-4-acme@kernel.org>
+Subject: [PATCH 4/5] perf dso: Guard against cache underflow on short reads in dso_cache__memcpy()
+Date: Tue, 11 Aug 2026 14:11:59 -0300
+Message-ID: <20260811171200.30096-5-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260811171200.30096-1-acme@kernel.org>
 References: <20260811171200.30096-1-acme@kernel.org>
@@ -51,45 +51,59 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-file_read() uses ret = -errno when dso__data(dso)->fd is negative after
-try_to_open_dso() fails.  By this point errno has been through
-mutex_lock(), nsinfo__mountns_enter(), and multiple open() attempts
-inside try_to_open_dso() — it no longer reflects the actual open
-failure.  If errno happens to be 0, ret = 0 looks like EOF rather than
-an error.
+dso_cache__memcpy() computes cache_offset = offset - cache->offset,
+then cache_size = min(cache->size - cache_offset, size).  The RB tree
+lookup in __dso_cache__find() matches using the full
+DSO__DATA_CACHE_SIZE window, but cache->size reflects the actual pread
+return value from dso_cache__populate().
 
-The fd field already carries the negated errno from __open_dso()
-(e.g. -EINVAL, -ENOENT), so use it directly instead of reading the
-stale global errno.
+A short pread (e.g. near end-of-file) makes cache->size smaller than
+DSO__DATA_CACHE_SIZE.  If a subsequent access targets an offset past
+cache->offset + cache->size but within the DSO__DATA_CACHE_SIZE
+window, the cache entry is found but cache_offset exceeds cache->size.
+Since both are u64, the subtraction cache->size - cache_offset wraps
+to a large value, min() selects the caller's size, and memcpy reads
+out of bounds.
 
-Fixes: 33bdedcea2d7 ("perf tools: Protect dso cache fd with a mutex")
+Return 0 (cache miss) when cache_offset falls outside the valid cached
+range, so the caller re-reads from the backing file.
+
+Fixes: 366df72657e0 ("perf dso: Refactor dso_cache__read()")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Assisted-by: Claude:claude-opus-4.6
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/dso.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/dso.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 124193453675ca18..845a384a4d56779b 100644
+index 845a384a4d56779b..2cf9f44a87903d7d 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -1029,7 +1029,8 @@ static ssize_t file_read(struct dso *dso, struct machine *machine,
+@@ -1005,7 +1005,17 @@ static ssize_t dso_cache__memcpy(struct dso_cache *cache, u64 offset, u8 *data,
+ 				 u64 size, bool out)
+ {
+ 	u64 cache_offset = offset - cache->offset;
+-	u64 cache_size   = min(cache->size - cache_offset, size);
++	u64 cache_size;
++
++	/*
++	 * The RB tree matches using DSO__DATA_CACHE_SIZE, but a short
++	 * pread may leave cache->size smaller.  Treat an offset past
++	 * the valid data as a cache miss so the caller re-reads.
++	 */
++	if (cache_offset >= cache->size)
++		return 0;
++
++	cache_size = min(cache->size - cache_offset, size);
  
- 	if (dso__data(dso)->fd < 0) {
- 		dso__data(dso)->status = DSO_DATA_STATUS_ERROR;
--		ret = -errno;
-+		/* fd already carries the negated errno from __open_dso() */
-+		ret = dso__data(dso)->fd;
- 		goto out;
- 	}
- 
+ 	if (out)
+ 		memcpy(data, cache->data + cache_offset, cache_size);
 -- 
 2.55.0
 
