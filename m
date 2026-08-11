@@ -1,137 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 632BB2777FC;
-	Tue, 11 Aug 2026 01:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376ED23A9BD
+	for <linux-perf-users@vger.kernel.org>; Tue, 11 Aug 2026 01:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786412372; cv=none; b=NLxO8WwE4SvEyOLc+FkMwRdIHOIRGLBjDBfh52vyBiuUzBGOr0prlFhFNTVSc99utlWlYwZoXTD0Am2Qg+Bx6Dv6PhXHQMQ7SNXajQ68UlWFBhgGmCBW2DGDkAwlkSFmPxqrb99zfSvKUAUDiJg7axgu0UBp3bD0If7uL/JVI0I=
+	t=1786413025; cv=none; b=KA5+cSBlACdGyuSaFhSnOxVffwTQ5d3Hnn+09nu7ufvigZthO7Ybr85/bV9B2Bnokzhrdvddj1//rDMGOQ8MDliwv8j90bAJUnz6yuuMzjCXVWJ/Uzg6d3vAfdntN90Q6TYpCRW+Cg1k1sHaAs8AqDYmaNTzNkL0mXvEx5Tn5fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786412372; c=relaxed/simple;
-	bh=pLlGowFccIUBAjhK1ul+E9LDkRzw09LPAz8jHeg0SUU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ibhz9hjsTfa4UCYWIOHPXsNRFZmmUAEi16BruljQhoFpSkY8ruqRNFI7PKrD5rYaCpsD92Ssp9l5Ee+xS46/xsqwQ3WMyFCk5Ddar6wPcGe5+aH71SIChIr7f6wyuJdRetIHgqiwelXb6wW23Xx3zHfkolzjMkZHUi2XGiYFSJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=agC8AKdd; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1786413025; c=relaxed/simple;
+	bh=JRYFXHFQnEQVkut46pK6KEbM+8WY2joXd4r98Hh9guc=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k8MNKiCeoKloiLHhvj58OqWucesRdBP/PaOx5JEPqzgYRDmHhYH+qPkdmhtKT4RLSCvHPipPhRyrXJVgbeXAzc/m+gIhqnBqxyVzV2/boxtaUufzfPYYM1+E5h0Y2/x38cR/2B29Sez78r7FsbChGv1ZRKgACIJ13j01vZ3t9BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PewjN6PE; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="agC8AKdd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786412371; x=1817948371;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=pLlGowFccIUBAjhK1ul+E9LDkRzw09LPAz8jHeg0SUU=;
-  b=agC8AKddVl66I9YyOtlk3CDpvvtonRFc0/28a0OaY5lBfPASwGInFXJA
-   y5FhKKTSAJORnD1jTWddUQYtkXTkhgC3Q7VLA3t07rZu5GcmZg5EILVjU
-   COQTDh0ARBOzliB0fCAuxbNMfz3ZDGPE3oUaIrqrWFw2zEDoZ+AwJva5p
-   Q4S6FNKVLn+dEb/I4Zz/lkcwEON6Y1jnHKCl6mj74+2mXUNaAX4RALyhZ
-   /kIBk2XCyaLepw5p0fvenbm2tBcgFNDeFdSF66UOpJOUOlBDyqsNSMhy0
-   HpQ16SMR7KhUulI0DDInfru7LbHVT17kRd+1jFOYbQgior72Flncj5REv
-   A==;
-X-CSE-ConnectionGUID: QjBpyTm2Snm2II2/KhcbzA==
-X-CSE-MsgGUID: IhVS56tMQOuvZ/WDOcH3VA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11871"; a="90752164"
-X-IronPort-AV: E=Sophos;i="6.25,216,1779174000"; 
-   d="scan'208";a="90752164"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 18:39:30 -0700
-X-CSE-ConnectionGUID: FKLApZNkTsm1gT3BrVXuVg==
-X-CSE-MsgGUID: l+X8GTsCTyOEM0B7GUvfaA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,216,1779174000"; 
-   d="scan'208";a="293136670"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Aug 2026 18:39:27 -0700
-Message-ID: <da08527f-642b-4f77-89a6-43f42e12d114@linux.intel.com>
-Date: Tue, 11 Aug 2026 09:39:23 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PewjN6PE"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2cf6d65d8a7so36626085ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 10 Aug 2026 18:50:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786413023; x=1787017823; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=8P9luPmYGY2IMgGbaRGWkOi9tDtMbjeSt2sylzpzEZY=;
+        b=PewjN6PEVZO4jMul9UOZS07igQ+qj4inDJYglcwHgTjdCLqlca0wu5tFhL02gATxW5
+         0zC+rMJdyfVVMOt3oOvR+5DeQnVyYzACHy9gMTtzG7xMpn9nhfmfIvA9cUv+eVWgsQUb
+         TwwEY6qbpGaA9gAW+ta/F3EUsU7x+Lgbk9VxeR/tEj2tQ7BNYTaR76Fkx4i5+pgstJD8
+         r4A2RlL8J22sPtEqdSmS53D96Kxw/+GdFvi/WM49VWISeI1F3yRh5MdcmTwZcurL91au
+         8OG4bX0Y2f/fJf0FFxkkpM1BgoNdpKbZKM8I4Z4aPCWPiZjRC60r9HQ7kwJ0jzCU3ROh
+         nQHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786413023; x=1787017823;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=8P9luPmYGY2IMgGbaRGWkOi9tDtMbjeSt2sylzpzEZY=;
+        b=on1GE2AIoFFo0yYlYXdhl93ZrWb/VIa3tBmP24GRtNtoG2IJcsFZzJcMybIu3NcIIa
+         yM5q9Mib0SobAFHJLJhUI7yhPUtUcLUeQm7hhaAmA7Twt8APbT3Lksxi8D2aWKo/s3I+
+         uEFqvawVpHoqn23Z0EMDI1XCB4sEvsItVTOuiRFP3zJ9BUx5IhlMO4Om+ZNoYFX8i1eU
+         EouN16cONMbY5zLN3FzzicLR/PvOjMMdMv2/Z+6Jesvuf8kGptqHq/nrysFyCZlYwxa+
+         LZ7fmY8gDfkWCb6srn6x2dy/BvYIoywEzR5m4a32Ba+hfkk/BW5/CBJlBze81PUKGxun
+         K/Tw==
+X-Forwarded-Encrypted: i=1; AHgh+RovcF427MfuEebiEeBCdxZcsKxltXqKTGezKrJlGPgxlaB/VNryt+i86B4l1frZXshZXJeQ/04cXRWIouLHnJD8@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAeOjvyyh9u02XPA+vdOxtfgJOjyRqp5sJAUwISrY/xzfluVI/
+	XQRuhGJguvKOY5HXOUf/EMrb7QpuVlQUSJEo7hPl/WBGEIeUUEeU9TdV
+X-Gm-Gg: AR+sD132LassMUXsX2XpQUzUpqiNHcteLGZnblsKSkpiE5qMJXUJEq8orYYp1ilgYPK
+	H6aJXdbLP7v1BqKlQ+c4qSYncYc+D0B2MoB4ikXWc8THc24SAmzKUUHH//P+y26zEoI//NAGBvO
+	9ydQQjqJFnEiChDy5tDYpQFP5sa/Q5G6r8ydcjXnbzfbJt4x/uXc4nEKBxyOJbRNAze7Wd8Q3DH
+	6yJyF5yp6tCXc/srKmLWAPhUJsjBfT54IzR1ojT9TAK0Yy8J3aWqU8LzTAkkYKMFlAYGyAt/sQL
+	Gj7iIT7t/VPqXnRBOOIc6l0kPKwURKoH+XJpUKGXp89Bv+fFe9gLqGXcHXw8wkCvlNs6GxRXvrh
+	roFibkBj7G6RCJ9/u71h3fl61wM0qgvUXCpkLFF92eRF9F1MRewPVXGRc9ewsO93ND8JUg9Krw5
+	yThoe9HiCpUyvcBFN/H/j9vESm8lZzAVpVW1QBAG8C/rSQ04VhTuBZp14/bSRn3kQC
+X-Received: by 2002:a05:6a20:568e:b0:3c4:3321:4ffd with SMTP id adf61e73a8af0-3cc2ba30e3fmr148565637.20.1786413023483;
+        Mon, 10 Aug 2026 18:50:23 -0700 (PDT)
+Received: from localhost ([2804:2bf0:60e7:ae00:4889:4c7a:30ef:52f7])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-315bec68468sm51389624eec.31.2026.08.10.18.50.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Aug 2026 18:50:22 -0700 (PDT)
+From: Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Date: Mon, 10 Aug 2026 22:50:18 -0300
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCHES v7 0/7] perf build: Add target to install devel
+ packages needed to build perf
+Message-ID: <anp_2l7RLb8UT8Kx@localhost>
+References: <20260811012905.14742-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 8/8] perf/x86/intel: Prevent drain_pebs() reentry
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo
- <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>
-References: <20260717080342.1879573-1-dapeng1.mi@linux.intel.com>
- <20260717080342.1879573-9-dapeng1.mi@linux.intel.com>
- <20260810130130.GX776954@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260810130130.GX776954@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260811012905.14742-1-acme@kernel.org>
 
+On Mon, Aug 10, 2026 at 10:28:58PM -0300, Arnaldo Carvalho de Melo wrote:
+> Hi,
+> 
+> This series adds a 'make -C tools/perf install-build-deps' target that
+> installs the development packages needed to build perf on Fedora, Ubuntu,
+> Debian, and RHEL family distributions.
 
-On 8/10/2026 9:01 PM, Peter Zijlstra wrote:
-> On Fri, Jul 17, 2026 at 04:03:42PM +0800, Dapeng Mi wrote:
->> The PEBS buffer is shared by all events on a CPU, so drain_pebs() must
->> not run concurrently. If it is reentered, one instance may observe stale
->> buffer state and potentially access out-of-bound memory.
->>
->> Most invocations happen in NMI context, which naturally prevents reentry.
->> However, drain_pebs() is also reachable from process context via
->> intel_pmu_drain_pebs_buffer().
->>
->> In those paths, the PMU is often already disabled, but not guaranteed.
->> For example, __intel_pmu_pebs_disable() only disables the target counter,
->> so other active counters can still raise a PMI and interrupt an in-flight
->> drain_pebs().
->>
->> Introduce __intel_pmu_quiesce() and __intel_pmu_resume() helpers and
->> use them in intel_pmu_drain_pebs_buffer() to disable the full PMU
->> around the drain_pebs() call, preventing reentry.
->>
-> It is not at all clear to me where the exact recursion happens. (The
-> word you're looking for was recursion, not concurrent).
+As Sashiko doesn't yet send positive replies for a series when all it's
+patches pass, I'm doing it as a data point for human reviewers.
 
-Yes, the word "concurrently" is not accurate, reentry is the more accurate
-word.
+I plan to use this as leg work for comprehensive CI testing
+infrastructure like the one I'm putting in place for pahole, with
+coverage analysis that will drive lots more perf test regression tests.
 
-Currently drain_pebs() would be called in two places, one is the in the PMI
-handler, like handle_pmi_common(). The other place is
-intel_pmu_drain_pebs_buffer() which is from process context.
+Best regards,
 
-So when intel_pmu_drain_pebs_buffer() is calling drain_pebs(), if there is
-an active PEBS event triggering PMI, it would interrupt current in-flight
-drain_pebs() and lead to drain_pebs() reentry.
-
-The good news is the global pmu has been disabled in most places before
-calling intel_pmu_drain_pebs_buffer(), so no new PMI can be triggered to
-interrupt current running drain_pebs() helper, but not all places does so,
-like __intel_pmu_pebs_disable() where only the target counter has been
-disabled instead of the whole PMU. So it's still possible tjat another
-active PEBS event triggers PMI and interrupts current running drain_pebs().
-
-Take the intel_pmu_drain_arch_pebs() as an example,
-
-    base = cpuc->pebs_vaddr;
-    top = cpuc->pebs_vaddr + (index.wr << ARCH_PEBS_INDEX_WR_SHIFT);
-    ------> interrupted here ...  
-
-
-    index.wr = 0;
-    index.full = 0;
-    index.en = 1;
-    if (cpuc->n_pebs == cpuc->n_large_pebs)
-        index.thresh = ARCH_PEBS_THRESH_MULTI;
-    else
-        index.thresh = ARCH_PEBS_THRESH_SINGLE;
-    wrmsrq(MSR_IA32_PEBS_INDEX, index.whole);
-
-Assume the drain_pebs() is interrupted just after reading the top value by
-a new PEBS PMI and the PMI handler would drain all the PEBS buffer. When
-the PMI returns and the original drian_pebs() continues to execute but it
-doesn't know the PEBS buffer has been cleared and may access some stale
-data and lead to some unexpected errors.
-
-
+- Arnaldo
