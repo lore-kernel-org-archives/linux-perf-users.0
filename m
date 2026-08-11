@@ -1,504 +1,204 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95DF23876DE;
-	Tue, 11 Aug 2026 18:29:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A98E2F5A12;
+	Tue, 11 Aug 2026 19:25:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786472981; cv=none; b=HIkcUz3FrvU05EiqBIRabVn0+dQ0aWzcfR3aMMde+w2w1wR8cI0unozU0cpuj0f2N7SeCrVzAAqPe5qGkHSaDObTMX9xncDLcWju2SV2TEvIitdNybQ9PPL8Tgq77hEKUkHy2ytesEzB/Wjl6RWhfIFkqSh00uKxHRitu6Y4yFY=
+	t=1786476345; cv=none; b=jb8FUmt5TWlaunvzHqfvOqzSfL8kXFLa6Q2r2+ZBLCuHLsZznynF2S6aP4D5SP8KRaFdKTGh2ScZKYR7NtTIb3EcOK0CZLV965CoSp8Ra9zXaGz7alU0X4Vs5gPKLdGIfuH1fn5z25w62iAyWV+PrgOt2o0vb2Jdafwu3sBtGdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786472981; c=relaxed/simple;
-	bh=9FFPob6B/TWOHS5ap/mEUBqiBgNUvw5U4wPSPDKAKZM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HcbYHt+yzpuxYO1loSYzcvIFxMm3p+V84dZQ0qrVLTBu4WanKufB6mZyvJPf1ZLKQcfmVPIx7GBGDLql3ljh0/oSMudPrBOhPBEQFZbpLEHuY2lP4Im54KbAyESUrPe4FZnPxi3ilgPm+sUexpvxD9z8jpwQYXP6DY9Eb7KqRdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=At9quwVM; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786476345; c=relaxed/simple;
+	bh=/LsIYChc/MAnsTy+F0FLbPWqnINkbEE++Grc/fOfoAY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YTHn7Lg8NLX3tc/hjQtPrR36Tyrt3ueppmeI28XTBIRkSzKmikNxw7QiBcoFWA0mYys9A2h3hZmxOS9oz/ibnyGcMiN/mefmRM5mVF7ywkTu4vOCNqZdjvvVGGTG+JUOmYn36g2Pztd3yectQ3//Lgw/4B4/85+Tnbpot49IeGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QjR46Q4l; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="At9quwVM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15FF21F00A3A;
-	Tue, 11 Aug 2026 18:29:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QjR46Q4l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B2051F000E9;
+	Tue, 11 Aug 2026 19:25:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786472979;
-	bh=pMJmxAX7LFPtTnv4S/pMtci4u+72XBJaoCLzTQSMC1U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=At9quwVMAExlvxgL7UH/gUTKXgyO1nVh1hbMFWkcaAiHy1JiV7fLYa8kZBfm7+Y1T
-	 auqjJhPiw5vtLtWjEIlugn3yYpL0hAS1o15UTetnZ3RXXQUnHZf4xVF2Qxu+sRZ4Be
-	 DcT3zfUqnKU3veqMz+RbUyOLyq0TbSEUcWpe2ZdA+/YhOWijg+MyFwwvrns99twwYe
-	 B7fgqbVxbQPIXZdVb70wPgV1fyb/QmDupVXVyxI260+DMYXH4Fsp9Nx+aP+Njdjh7m
-	 9Vdsdd/wxB6gBTqSc36PEuHCbeBFaIEt9HQXBgRimWoDK+cptrOiyUAQM2S99hM0zL
-	 DgIn2x4SQMPuA==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 7/7] perf build: install-build-deps: add RHEL family devel package mapping
-Date: Tue, 11 Aug 2026 15:29:00 -0300
-Message-ID: <20260811182900.27063-8-acme@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260811182900.27063-1-acme@kernel.org>
-References: <20260811182900.27063-1-acme@kernel.org>
+	s=k20260515; t=1786476343;
+	bh=d/kFT/bPhzj3VGlufcHrxy72DzfiKj46fSUWmYSSRdY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=QjR46Q4l38ohpBPR9a3NVpyj00X97b0QAtzWD4CJusxEIHEk06ZVprfqvGEwliaFz
+	 ApBeXPVAZFUoE+1iAOYtGAf1euN2IjulS05jD3suRf8nP+UXfJAjvY23m4sDGtj2gN
+	 0iZV+swR1WmPVz6C9JwEZAJHMXnIVG0wfTVbm3960TN4McRip96oHmA0zV1PTgK4PR
+	 sMEkhML8HuqBfgHxpw5B+Vxc7jB7S5Ing8jtzB1kK0TmQkbcsUP5Z6S8nxav9KhiA5
+	 LIHxirdJ5+/7iEag07J0iZPWWUreSRXob3X4jSbGiOtkALzPRhYglSoT5SwTdh0u/I
+	 C3aXsRk4aSs+g==
+Date: Tue, 11 Aug 2026 20:25:07 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: "David Hildenbrand (Arm)" <david@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Naoya Horiguchi <nao.horiguchi@gmail.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
+	Lance Yang <lance.yang@linux.dev>, Kees Cook <kees@kernel.org>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Usama Arif <usama.arif@linux.dev>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>, 
+	Chengming Zhou <chengming.zhou@linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
+	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
+	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+	Sven Schnelle <svens@linux.ibm.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
+	Liviu Dudau <liviu.dudau@arm.com>, Huang Rui <ray.huang@amd.com>, 
+	Matthew Auld <matthew.auld@intel.com>, 
+	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, Chris Li <chrisl@kernel.org>, 
+	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+	Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
+	Youngjun Park <youngjun.park@lge.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org, kvm@vger.kernel.org, 
+	linux-s390@vger.kernel.org, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	intel-xe@lists.freedesktop.org, linux-perf-users@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 17/20] mm/vma: only permit MAP_PRIVATE /dev/zero to be
+ mapped anonymous
+Message-ID: <ant1xwiG3djtoXoe@lucifer>
+References: <20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org>
+ <20260806-b4-scalable-cow-virt-pgoff-v4-17-ab318a350404@kernel.org>
+ <c7930f14-5978-4709-bac2-54950c988883@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c7930f14-5978-4709-bac2-54950c988883@kernel.org>
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Tue, Aug 11, 2026 at 07:07:27PM +0200, David Hildenbrand (Arm) wrote:
+> On 8/6/26 22:21, Lorenzo Stoakes (ARM) wrote:
+> > In order to use mmap_prepare() with MAP_PRIVATE mappings of /dev/zero
+> > without the success_hook hack we explicitly permitted mmap_prepare handlers
+> > to set NULL vm_ops.
+>
+> The sentence is a bit hard to get as you are mixing "with" with another "without".
+>
+> >
+> > However this is dangerous and we really only want to allow this for
+> > MAP_PRIVATE-mapped /dev/zero.
+> >
+> > Make it possible to explicitly identify /dev/zero by setting a global
+> > DEVZERO_MINOR device minor number then explicitly check for this in mmap
+> > code for a MAP_PRIVATE mapping and only set the VMA anonymous if we have
+> > positively identified it.
+> >
+> > Then remove all ability for mmap_prepare or mmap hooks to set a VMA
+> > anonymous and update mmap_zero_prepare() to leave it to the core mmap code
+> > to mark the VMA anonymous.
+> >
+> > Note that this disallows nested MAP_PRIVATE-mappings of /dev/zero
+> > regions. Doing this would be broken in any case.
+>
+> What exactly do you mean by "nested MAP_PRIVATE mappings"? You mean, reusing
+> parts in other drives?
 
-With the Fedora mapping in place, this patch extends it to the RHEL
-family (RHEL, CentOS Stream, Rocky Linux, AlmaLinux, Oracle Linux),
-which shares most Fedora package names and runs dnf (RHEL 8 and
-later).  The names that differ are handled by probing the enabled
-repos:
+I should have said stacked I think.
 
-  - zlib.h comes from zlib-ng-compat-devel on the RHEL 10 family,
-    zlib-devel on RHEL 9 and earlier;
-  - there is no java-latest-openjdk-devel: the JDK devel package is
-    versioned per release, java-21-openjdk-devel on the RHEL 10
-    family, java-17-openjdk-devel on RHEL 9, java-11-openjdk-devel
-    on RHEL 8;
-  - libbpf-devel and capstone-devel live in the CRB repo on RHEL and
-    CentOS Stream 10, in EPEL on RHEL 9 and earlier;
-  - libbabeltrace2-devel is not packaged on the RHEL 10 family.
+>
+> Do you mean things like ...
+>
+> [...]
+>
+> >
+> > An example of this is drm_gem_shmem_mmap() which deliberately clears
+> > vma->vm_ops before handing the VMA to dma-buf. Cases such as this will be
+> > updated when they are converted to mmap_prepare.
+>
+> ... this?
 
-Packages not available on the enabled repos are skipped instead of
-aborting the dnf transaction, and are listed at the end of the run, with
-the repo that provides them pointed out in the header comment and help
-text: a distro with CRB/EPEL enabled gets the full set, one without them
-still installs what it can.
+Yup.
 
-This also holds for the base set: e.g.  'rust' exists only as the
-rust-toolset AppStream module on RHEL 8 and 9, where it is not
-installable as a plain package, so it is skipped and noted there instead
-of failing the whole dnf transaction.
+>
+> >
+> > Also, in order to avoid a single commit bisection hazard, add a temporary
+> > workaround to set the VMA anonymous only after vma->vm_file is assigned in
+> > __mmap_new_file_vma().
+> >
+> > This is because vma_set_range() calls vma_set_pgoff() and
+> > assert_sane_pgoff() in turn, prior to the vma->vm_file being assigned. If
+> > we set the VMA anonymous early then this assert will fail.
+> >
+> > This is removed in the subsequent commit.
+> >
+> > Also update the VMA userland tests to reflect the change.
+> >
+> > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> > ---
+>
+> [...]
+>
+> >
+> > +static bool map_is_dev_zero(const struct mmap_state *map)
+> > +{
+> > +	const struct file *file = map->file;
+> > +	struct inode *inode;
+> > +
+> > +	if (!file)
+> > +		return false;
+> > +	inode = file_inode(file);
+> > +	if (!S_ISCHR(inode->i_mode))
+> > +		return false;
+> > +	return imajor(inode) == MEM_MAJOR && iminor(inode) == DEVZERO_MINOR;
+> > +}
+>
+> My brain is a bit slow after digging through this series.
+>
+> We identify shmem, for example, through shmem_vm_ops/shmem_anon_vm_ops.
+>
+> So naturally I am wondering: couldn't we do something similar to identify that?
+> Like, checking for zero_fops?
 
-The base set lists pkgconf-pkg-config instead of pkgconfig: both
-families have been on pkgconf since Fedora 26 / RHEL 8, where
-'pkgconfig' lives only as a virtual Provides of that subpackage, and
-a minimal RHEL-family container may not have it preinstalled.
+We don't assign vm_ops for a MAP_PRIVATE-/dev/zero mapping. So that won't work.
 
-Validated on a fresh CentOS Stream 10 distrobox container, with the
-CRB repo enabled, so the host system is not modified:
+We could expose zero->f_ops but then it's literally in drivers/char/ and that's
+just weird to expose in mm.h or whatever.
 
-    distrobox create --image quay.io/centos/centos:stream10
-    distrobox enter centos-stream10
-    dnf config-manager --set-enabled crb
-    make -C tools/perf install-build-deps
+I'm giving a really minimal possible thing to export, which is the DEVZERO_MINOR
+number which avoids all kinds of weirdness like that. No driver stuff exported,
+just a number :) MEM_MAJOR is already available.
 
-which installed the 28 available mapped packages; libbabeltrace2-devel, the
-only mapped package with no RHEL 10 package, is reported at the end
-of the run.
+So I think it's the least bad choice in this one, very very specific scenario.
 
-A subsequent 'make -C tools/perf feature-dump' enabled every feature
-with an external dependency the RHEL 10 family provides, including
-libbpf and libcapstone from the CRB repo, with only
-babeltrace2-ctf-writer left out along with the deliberately unmapped
-opt-in features.
+>
+> > +
+> > +static bool map_is_private(const struct mmap_state *map)
+> > +{
+> > +	return !vma_flags_test(&map->vma_flags, VMA_SHARED_BIT);
+>
+> Can't we use the is_cow_mapping() helper instead somehow?
 
-Re-running the target is a no-op (dnf reports "Nothing to do"); with the
-CRB repo disabled, the skipped packages are instead listed in the
-end-of-run note, whose header comment and help text point out which repo
-provides them.
+Lol... yup. Let's see how the rest of the review goes and we'll see whether I
+can ask Andrew to change it or I'll change it on a respin.
 
-Members of the family without dnf (RHEL 7 and earlier, e.g. Oracle
-Linux 7, a yum-only distro) are rejected with an explicit error while
-the dnf-based members get the full mapping.
+>
+>
+>
+>
+> --
+> Cheers,
+>
+> David
 
-Example of its --list:
-
-  $ grep PRETTY_NAME /etc/os-release
-  PRETTY_NAME="Fedora Linux 44 (Toolbx Container Image)"
-  $ tools/perf/scripts/install-build-deps.sh --list --distro rhel
-  bison
-  capstone-devel
-  clang-devel
-  elfutils-debuginfod-client-devel
-  elfutils-devel
-  elfutils-libelf-devel
-  flex
-  gcc
-  gcc-c++
-  glibc-devel
-  java-latest-openjdk-devel
-  kernel-headers
-  libbabeltrace2-devel
-  libbpf-devel
-  libpfm-devel
-  libstdc++-devel
-  libtraceevent-devel
-  libzstd-devel
-  llvm-devel
-  make
-  numactl-devel
-  openssl-devel
-  pkgconf-pkg-config
-  python3-devel
-  python3-setuptools
-  rust
-  slang-devel
-  systemtap-sdt-devel
-  xz-devel
-  zlib-ng-compat-devel
-  $
-
-Assisted-by: opencode:deepseek-v4-flash-free
-Assisted-by: claude:claude-opus-4-7
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/scripts/install-build-deps.sh | 220 ++++++++++++++++++++---
- 1 file changed, 197 insertions(+), 23 deletions(-)
-
-diff --git a/tools/perf/scripts/install-build-deps.sh b/tools/perf/scripts/install-build-deps.sh
-index aaaf315516f04d4b..d003e7fab2be8a5d 100755
---- a/tools/perf/scripts/install-build-deps.sh
-+++ b/tools/perf/scripts/install-build-deps.sh
-@@ -37,11 +37,33 @@
- #           distrobox create --image debian:trixie
- #           distrobox enter debian-trixie
- #
--# Running inside a container keeps the host system unmodified.
-+#   - RHEL and its variants (RHEL, CentOS Stream, Rocky Linux, AlmaLinux,
-+#     Oracle Linux), on dnf (RHEL 8 and later), validated on CentOS
-+#     Stream 10, in a distrobox container:
-+#
-+#           distrobox create --image quay.io/centos/centos:stream10
-+#           distrobox enter centos-stream10
-+#
-+#     The RHEL family reuses most Fedora package names, with these
-+#     differences, handled by probing the enabled repos:
- #
--# RHEL support, whose package mapping is largely similar to Fedora's,
--# is the next planned distro, to be enabled once that mapping is
--# validated there.
-+#       - zlib.h comes from zlib-ng-compat-devel on the RHEL 10 family,
-+#         zlib-devel on RHEL 9 and earlier;
-+#       - the JDK devel package is versioned, there is no
-+#         java-latest-openjdk-devel: java-21-openjdk-devel on the RHEL
-+#         10 family, java-17-openjdk-devel on RHEL 9, java-11-openjdk-
-+#         devel on RHEL 8;
-+#       - libbpf-devel and capstone-devel are in the CRB repo on RHEL
-+#         and CentOS Stream 10 ('dnf config-manager --set-enabled crb')
-+#         and in EPEL on RHEL 9 and earlier;
-+#       - libbabeltrace2-devel is not packaged on the RHEL 10 family.
-+#
-+#     On the RHEL family, packages not available on the enabled repos
-+#     are skipped and listed at the end of the run, so that a distro
-+#     with CRB/EPEL enabled gets the full set, and a distro without
-+#     them still installs what it can.
-+#
-+# Running inside a container keeps the host system unmodified.
- #
- # Usage: install-build-deps.sh [OPTIONS]
- #
-@@ -49,7 +71,8 @@
- #    --list       list the packages that would be installed, then exit
- #    --dry-run    show the install command that would be run, without
- #                 running it
--#    --distro ID  force a distro: fedora, ubuntu, debian (default: auto-detect)
-+#    --distro ID  force a distro: fedora, rhel, ubuntu, debian
-+#                 (default: auto-detect)
- #    -h, --help   print this help message
- #
- # Requires root (or passwordless sudo) to actually install packages.
-@@ -71,13 +94,19 @@ it, so the corresponding feature gets enabled on a build.
- Options:
-     --list      list the packages that would be installed, then exit
-     --dry-run   show the install command that would be run, without running it
--    --distro ID force a distro: fedora, ubuntu, debian
-+    --distro ID force a distro: fedora, rhel, ubuntu, debian
-     -h, --help  print this help message
- 
- Distros supported: Fedora (dnf), validated in a toolbx container on
- Fedora 44, Ubuntu (apt-get), validated in a distrobox container on
--Ubuntu 26.04, and Debian (apt-get), reusing the Ubuntu mapping,
--validated in a distrobox container on Debian 13 (trixie).
-+Ubuntu 26.04, Debian (apt-get), reusing the Ubuntu mapping, validated
-+in a distrobox container on Debian 13 (trixie), and the RHEL family
-+(dnf, RHEL 8 and later), validated on CentOS Stream 10 in a distrobox
-+container.  On the RHEL family, packages not available on the enabled
-+repos are skipped and listed at the end; some there, e.g.
-+libbpf-devel and capstone-devel, come from the CRB repo on RHEL and
-+CentOS Stream 10 ('dnf config-manager --set-enabled crb') and from
-+EPEL on RHEL 9 and earlier.
- EOF
- 	exit 0
- }
-@@ -180,6 +209,72 @@ fedora_pkg_for() {
- 	# libaio-devel provides.
- }
- 
-+# ---------------------------------------------------------------------
-+# Check whether the first argument is provided by the enabled repos, or
-+# is already installed, returning 0 if so and printing nothing.
-+#
-+# dnf repoquery exits 0 even when the pattern does not match anything,
-+# so availability is judged by the output being non-empty, not by the
-+# exit code.
-+# ---------------------------------------------------------------------
-+pkg_available() {
-+	local p out
-+	for p in "$@"; do
-+		out=$(dnf repoquery --quiet --available "$p" 2>/dev/null)
-+		[ -n "$out" ] || out=$(dnf repoquery --quiet --installed "$p" 2>/dev/null)
-+		[ -n "$out" ] && return 0
-+	done
-+	return 1
-+}
-+
-+# ---------------------------------------------------------------------
-+# Return the first of its arguments that pkg_available() accepts.
-+# ---------------------------------------------------------------------
-+pick_available() {
-+	local p
-+	for p in "$@"; do
-+		if pkg_available "$p"; then
-+			echo "$p"
-+			return 0
-+		fi
-+	done
-+	return 1
-+}
-+
-+# ---------------------------------------------------------------------
-+# Return the RHEL-family package(s) providing the devel requirements of
-+# a feature test.  This family reuses the Fedora mapping, whose names
-+# apply to it as well, except for the features whose Fedora package
-+# does not exist there, kept in the case below.
-+#
-+# Whether the resulting package is actually installable is checked in
-+# package_set(), as some of these names live in the CRB or EPEL repos,
-+# which may not be enabled: on the RHEL 10 family libbpf-devel and
-+# capstone-devel come from CRB, and libbabeltrace2-devel is not
-+# packaged at all.
-+# ---------------------------------------------------------------------
-+rhel_pkg_for() {
-+	local feat="$1"
-+	case "$feat" in
-+	zlib)
-+		# zlib-ng-compat-devel on the RHEL 10 family, zlib-devel on
-+		# RHEL 9 and earlier.  If neither is on the enabled repos,
-+		# fall back to the first candidate so that package_set()
-+		# reports it as missing instead of silently dropping the
-+		# feature from the end-of-run note.
-+		pick_available zlib-devel zlib-ng-compat-devel || echo "zlib-devel"
-+		;;
-+	jvmti|jvmti-cmlr)
-+		# No java-latest-openjdk-devel on the RHEL family: the JDK
-+		# devel package is versioned per release.
-+		pick_available java-latest-openjdk-devel java-21-openjdk-devel java-17-openjdk-devel java-11-openjdk-devel || echo "java-latest-openjdk-devel"
-+		;;
-+	*)
-+		fedora_pkg_for "$feat"
-+		;;
-+	esac
-+}
-+
- # ---------------------------------------------------------------------
- # Return the Debian/Ubuntu package(s) providing the devel requirements
- # of a feature test in tools/build/feature/.  This mapping is shared by
-@@ -277,6 +372,11 @@ fedora_base_pkgs="gcc gcc-c++ make flex bison glibc-devel kernel-headers python3
- # installs by default, needed by the babeltrace2 feature test and
- # libopenssl's pkg-config checks.
- debian_base_pkgs="gcc g++ make pkg-config flex bison libc6-dev linux-libc-dev python3-setuptools rustc"
-+# pkg-config: like Fedora, on pkgconf since Fedora 26 / RHEL 8, with
-+# 'pkgconfig' live only as a virtual Provides of the pkgconf-pkg-config
-+# subpackage.  List it explicitly because, unlike Fedora, a minimal
-+# RHEL-family container may not have it preinstalled.
-+rhel_base_pkgs="gcc gcc-c++ make flex bison glibc-devel kernel-headers pkgconf-pkg-config python3-setuptools rust"
- 
- # ---------------------------------------------------------------------
- # Distro detection
-@@ -290,11 +390,12 @@ detect_distro() {
- 	id=$( . /etc/os-release 2>/dev/null && echo "${ID:-}" )
- 	case "$id" in
- 	fedora)			echo "fedora" ;;
-+	rhel|centos|rocky|almalinux|ol)
-+		# All share the Fedora package names (with the exceptions
-+		# handled by rhel_pkg_for()) and dnf.
-+		echo "rhel" ;;
- 	ubuntu)			echo "ubuntu" ;;
- 	debian)			echo "debian" ;;
--	# RHEL and its derivatives share most Fedora package names, but the
--	# mapping is only validated on Fedora, so don't auto-detect them.
--	rhel|centos|rocky|alma|ol) echo "" ;;
- 	*)			echo "" ;;
- 	esac
- }
-@@ -316,33 +417,80 @@ feature_tests() {
- # Assemble the unique package list.  Since the full feature set is mapped
- # unconditionally, this installs the complete devel environment; installing
- # an already-present package is a no-op for both dnf and apt-get, making
--# this idempotent.
-+# this idempotent.  On the RHEL family, packages not available on the
-+# enabled repos are skipped and echoed on stderr, reported at the end of
-+# the run by the caller (package_set() runs in a subshell, so a variable
-+# would not survive it).
- # ---------------------------------------------------------------------
- package_set() {
- 	local distro="$1" srcdir="$2"
--	local feat pkg pkgs
-+	local feat pkg pkgs base_pkgs missing_pkgs=""
- 	case "$distro" in
- 	fedora)	pkgs="$fedora_base_pkgs" ;;
-+	rhel)	pkgs="$rhel_base_pkgs" ;;
- 	ubuntu|debian)	pkgs="$debian_base_pkgs" ;;
- 	esac
- 
-+	# The base set must be checked against the enabled repos as well:
-+	# e.g. 'rust' is only shipped as the rust-toolset AppStream module
-+	# on RHEL 8 and 9, where dnf would abort the whole transaction
-+	# with "No match for argument: rust" instead of skipping it, so
-+	# unavailable base packages are skipped and noted like the mapped
-+	# ones below.
-+	if [ "$distro" = "rhel" ]; then
-+		base_pkgs="$pkgs"
-+		pkgs=""
-+		for pkg in $base_pkgs; do
-+			if pkg_available "$pkg"; then
-+				pkgs="$pkgs $pkg"
-+			else
-+				missing_pkgs="$missing_pkgs $pkg"
-+			fi
-+		done
-+	fi
-+
- 	for feat in $(feature_tests "$srcdir"); do
--		if [ "$distro" = "fedora" ]; then
--			pkg=$(fedora_pkg_for "$feat")
--		else
--			pkg=$(debian_pkg_for "$feat")
--		fi
-+		case "$distro" in
-+		fedora)		pkg=$(fedora_pkg_for "$feat") ;;
-+		rhel)		pkg=$(rhel_pkg_for "$feat") ;;
-+		*)		pkg=$(debian_pkg_for "$feat") ;;
-+		esac
-+		# An empty result means the feature test has no external devel
-+		# dependency (see the unmapped list in fedora_pkg_for()), so
-+		# there is nothing to install and nothing to report as missing:
-+		# packages that are genuinely unavailable on the RHEL family
-+		# surface through rhel_pkg_for() falling back to its first
-+		# candidate, so that the pkg_available() check below catches
-+		# them and adds them to missing_pkgs.
- 		[ -n "$pkg" ] || continue
- 		for pkg in $pkg; do
-+			if [ "$distro" = "rhel" ] && ! pkg_available "$pkg"; then
-+				missing_pkgs="$missing_pkgs $pkg"
-+				continue
-+			fi
- 			case " $pkgs " in
- 			*" $pkg "*) ;;
- 			*) pkgs="$pkgs $pkg" ;;
- 			esac
- 		done
- 	done
-+	[ -n "$missing_pkgs" ] && echo "$missing_pkgs" >&2
- 	echo "$pkgs"
- }
- 
-+# ---------------------------------------------------------------------
-+# Report the RHEL-family packages that were skipped because the enabled
-+# repos do not provide them.
-+# ---------------------------------------------------------------------
-+note_missing() {
-+	[ -n "$1" ] || return 0
-+	echo "Note: these packages are not available on the enabled repos" >&2
-+	echo "and were not installed, so the features they enable will stay" >&2
-+	echo "off in a perf build:" >&2
-+	echo "$1" | tr ' ' '\n' | grep -v '^$' | sort -u | sed 's/^/  /' >&2
-+	echo >&2
-+}
-+
- # ---------------------------------------------------------------------
- # The install command proper for each supported package manager, plus
- # the command massaged for --dry-run.
-@@ -350,7 +498,7 @@ package_set() {
- install_cmd() {
- 	local distro="$1"; shift
- 	case "$distro" in
--	fedora)
-+	fedora|rhel)
- 		echo "dnf install -y $*"
- 		;;
- 	ubuntu|debian)
-@@ -371,7 +519,7 @@ main() {
- 	# with the *_pkg_for() helpers, declares the per-feature 'pkg'
- 	# locals; main() holds no per-feature package state, just the
- 	# distro-wide list assembled by package_set().
--	local srcdir distro pkgs cmd
-+	local srcdir distro pkgs cmd missing_file missing_pkgs
- 
- 	while [ $# -gt 0 ]; do
- 		case "$1" in
-@@ -391,23 +539,48 @@ main() {
- 	srcdir=$(cd "$(dirname "$0")/../../.." && pwd)
- 	distro=$(detect_distro)
- 	case "$distro" in
--	fedora|ubuntu|debian) ;;
-+	fedora|rhel|ubuntu|debian) ;;
- 	*)
- 		echo "error: unsupported distro (got '$distro'); the package mapping is not validated on other distros." >&2
--		echo "Supported and validated: Fedora 44 (toolbx container), Ubuntu 26.04 and Debian 13 (distrobox containers)." >&2
-+		echo "Supported and validated: Fedora 44 (toolbx container), Ubuntu 26.04 and Debian 13 (distrobox containers), and CentOS Stream 10 (distrobox container)." >&2
- 		exit 1
- 		;;
- 	esac
- 
--	pkgs=$(package_set "$distro" "$srcdir")
-+	# The RHEL family mapping probes the enabled repos with dnf
-+	# repoquery and installs with dnf, so reject the yum-only members of
-+	# the family (RHEL 7 and earlier, e.g. Oracle Linux 7) with a clear
-+	# error instead of silently judging every package as unavailable.
-+	if [ "$distro" = "rhel" ] && ! command -v dnf >/dev/null 2>&1; then
-+		echo "error: dnf not found, the RHEL family package mapping requires dnf (RHEL 8 and later)." >&2
-+		exit 1
-+	fi
-+
-+	missing_file=$(mktemp) || {
-+		echo "error: cannot create a temporary file (mktemp failed)" >&2
-+		exit 1
-+	}
-+	# package_set() runs in a subshell, doing dnf repoquery loops that
-+	# may be interrupted: a Ctrl-C during those loops hits these traps,
-+	# turning SIGINT/SIGTERM into an exit that triggers the EXIT trap,
-+	# removing the temp file, so the script terminates instead of
-+	# resuming after the interrupted command, leaving no file behind.
-+	trap 'rm -f "$missing_file"' EXIT
-+	trap 'exit 1' INT TERM
-+	pkgs=$(package_set "$distro" "$srcdir" 2>"$missing_file")
-+	missing_pkgs=$(cat "$missing_file")
-+	rm -f "$missing_file"
-+	trap - EXIT INT TERM
- 
- 	case "$action" in
- 	list)
- 		echo "$pkgs" | tr ' ' '\n' | grep -v '^$' | sort
-+		note_missing "$missing_pkgs"
- 		exit 0
- 		;;
- 	dry-run)
- 		install_cmd "$distro" $pkgs
-+		note_missing "$missing_pkgs"
- 		exit 0
- 		;;
- 	esac
-@@ -424,6 +597,7 @@ main() {
- 		echo "error: the install command failed, see the output above" >&2
- 		exit 1
- 	}
-+	note_missing "$missing_pkgs"
- }
- 
- main "$@"
--- 
-2.55.0
-
+--
+Cheers, Lorenzo
