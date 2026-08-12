@@ -1,30 +1,50 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2448C21D591;
-	Wed, 12 Aug 2026 02:28:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CC4B377023;
+	Wed, 12 Aug 2026 02:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786501704; cv=none; b=JmtRBTEXKAQjnOONmd5Oe8jRGa/Yi0f4YQcFKfWli1H0KdJNdOLG2etRWy7Dzl/rl4jAmGBNyaG5UgDWLwRdJ3+W6OvrQ1QIH6hKn98VoTpbW1s18G1JPKwbqHoWbF+mEiEAfwAgjkFsONZZGxNDRvCkArQsEgoWcOeR91mgnng=
+	t=1786502251; cv=none; b=svE+cClWfA5UKUC06IfQWcQg8X6T9KX+zBRNgXU4t0FWmHzrqRzJlCFg5f2AgE0V/W0T8EMW2Cs9+PwdGijRwcDfp1ZvHW2GXlIlAVwOlI/YK1mnG0EgeutPTYfWP6i5PhD2Ff23j9ly82+y2YRJg9DrU4bKtslqDpFe4w4aIVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786501704; c=relaxed/simple;
-	bh=9R8pdrhIoX/TmxU982cTgn3RQLGnVbi8FdvSfuCwUIM=;
+	s=arc-20240116; t=1786502251; c=relaxed/simple;
+	bh=GdkPLOtjWMOa5mf8kZ+ghm6/2oIvcTPO3ovu6XzA378=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WuhrHY9TVfHkiElY2JCmZQx9JFTV0sRBHbY8r3DjUsLaOePFu6Kdyy85z/Is4l3KJl8ntj2XqcaN+LMJoDKLqZwABy3nTVRdnlsmipUpFrIJ01ppqfGTglJzUEfsiVverwwByRy5JiZB94KHx5+/HvljPvJCjSs9afExro2XN/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hKXTX5ZwrzKHMfX;
-	Wed, 12 Aug 2026 10:28:00 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id B939140539;
-	Wed, 12 Aug 2026 10:28:17 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgAnkYg_2ntqD_MHCA--.39355S2;
-	Wed, 12 Aug 2026 10:28:17 +0800 (CST)
-Message-ID: <1910f712-8ea6-4916-82ac-0c1c2eac653c@huaweicloud.com>
-Date: Wed, 12 Aug 2026 10:28:15 +0800
+	 In-Reply-To:Content-Type; b=NWI8+D8mnWoHjog504+D5eY+3xAJtI5nKQeQ2qO0/PNe2K7KChxrtInlBZWCTE0UJ1ANGenDxh0AOGZS79ktqrlZhSK9cFwPMoyUotX4+KtlKiOLpWE6y8ZTGoT8lXb1tBFHIB/3GR6KykQTiYN7tS9JgIzgo3lvd2tdwXs3CT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=imoPrOdi; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="imoPrOdi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786502249; x=1818038249;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=GdkPLOtjWMOa5mf8kZ+ghm6/2oIvcTPO3ovu6XzA378=;
+  b=imoPrOdiLlynQPhlyALQm2Oc5/djNM7ugrbn5JslabvTfCiYvY0duB32
+   ulvWZTLQ6SeYIic85tHVk7nQ52VsLdbb4disWjT5/MV/zPiBJ0YtpuI/B
+   pocegLo0yzCURRaON2lQ03M36wET81f2h+Qk5BYc2e1/tph2Ojgk2iF/z
+   CVc5W8VLCrkif4J6qTWD3vaVUwtiCmLYFiVsZnzQINqOVsiB7XeCnptVB
+   LEGF0ZSqI1Cwg8YxITCJZZLAa4D4eYaGX32jbQ0Cgqtxm9zDUaB+IDkh/
+   zkI0t46UY/K52npkIdqL9EYyrV1jTUXKl2D/lmwRaQfYY6FEO3jQceruN
+   g==;
+X-CSE-ConnectionGUID: BVH/MzCdS/CmFlnR/Thzew==
+X-CSE-MsgGUID: XdP6T8S3RGKaaypiDqQ8pA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11872"; a="112591215"
+X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
+   d="scan'208";a="112591215"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 19:37:28 -0700
+X-CSE-ConnectionGUID: j26j+WB5ShSzH0eKLs1eOw==
+X-CSE-MsgGUID: xeiBoKeNQ/6xPwQwaTcVdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,218,1779174000"; 
+   d="scan'208";a="259240812"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Aug 2026 19:37:23 -0700
+Message-ID: <7078a9e7-6493-42b0-b297-ce174effdfb3@linux.intel.com>
+Date: Wed, 12 Aug 2026 10:37:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -32,200 +52,135 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 09/23] perf annotate: Deduplicate overlapping ARM SPE
- events for data type profiling
-To: Adrian Hunter <adrian.hunter@intel.com>,
- Namhyung Kim <namhyung@kernel.org>, james.clark@linaro.org,
- xueshuai@linux.alibaba.com, Li Huafei <lihuafei1@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
- Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Bill Wendling <morbo@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+Subject: Re: [PATCH 1/3] perf/x86: Add x86_pmu::print_debug
+To: Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Zecheng Li <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-10-wutengda@huaweicloud.com>
- <20083f61-9724-445c-ad45-d77f9e8d2266@intel.com>
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+ Petr Tesarik <ptesarik@suse.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ Ananth Narayan <ananth.narayan@amd.com>
+References: <cover.1786010408.git.sandipan.das@amd.com>
+ <fc6ff612d26c2f5b0f015d9fac309cc58e913c1f.1786010408.git.sandipan.das@amd.com>
 Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20083f61-9724-445c-ad45-d77f9e8d2266@intel.com>
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <fc6ff612d26c2f5b0f015d9fac309cc58e913c1f.1786010408.git.sandipan.das@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgAnkYg_2ntqD_MHCA--.39355S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxKrW8trW7Jr15Gr4rJw4UCFg_yoWxGrWkpr
-	4a9Fn8Kwn5Xr40kw1ava15Xr1F93yfXFW3GwnFka15Awn8ur95tFyxtr15KFZxXrn8Z34S
-	vws093s8Wa45ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
-	0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
-	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
-	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kK
-	e7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_
-	WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v2
-	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07
-	jIksgUUUUU=
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
+On 8/6/2026 6:03 PM, Sandipan Das wrote:
+> perf_event_print_debug() dumps the global control and status MSRs
+> whenever x86_pmu.version >= 2, reading registers that exist only on
+> Intel-compatible PMUs. This is not safe since x86_pmu.version is not
+> Intel-specific and is now set by other vendors whose global registers
+> use different addresses.
+>
+> As a first step, split perf_event_print_debug() in two. The register
+> dump moves into a new common helper, x86_pmu_print_debug(), leaving
+> perf_event_print_debug() to handle the preamble and dispatch to an
+> optional x86_pmu::print_debug method. This lets each vendor-specific
+> PMU dump its own global state before chaining into the common helper.
+> PMUs that do not implement the method, such as those with
+> x86_pmu.version < 2, get the common helper alone.
+>
+> No functional change intended.
+>
+> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+> ---
+>  arch/x86/events/core.c       | 29 ++++++++++++++++++++++-------
+>  arch/x86/events/perf_event.h |  4 ++++
+>  2 files changed, 26 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index af0b67ffb43d..17dc53a62378 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -1557,7 +1557,7 @@ static void x86_pmu_start(struct perf_event *event, int flags)
+>  	perf_event_update_userpage(event);
+>  }
+>  
+> -void perf_event_print_debug(void)
+> +void x86_pmu_print_debug(int cpu)
+>  {
+>  	u64 ctrl, status, overflow, pmc_ctrl, pmc_count, prev_left, fixed;
+>  	unsigned long *cntr_mask, *fixed_cntr_mask;
+> @@ -1566,17 +1566,11 @@ void perf_event_print_debug(void)
+>  	u64 pebs, debugctl;
+>  	int cpu, idx;
+>  
+> -	guard(irqsave)();
+> -
+> -	cpu = smp_processor_id();
+>  	cpuc = &per_cpu(cpu_hw_events, cpu);
+>  	cntr_mask = hybrid(cpuc->pmu, cntr_mask);
+>  	fixed_cntr_mask = hybrid(cpuc->pmu, fixed_cntr_mask);
+>  	pebs_constraints = hybrid(cpuc->pmu, pebs_constraints);
+>  
+> -	if (!*(u64 *)cntr_mask)
+> -		return;
+> -
+>  	if (x86_pmu.version >= 2) {
+>  		rdmsrq(MSR_CORE_PERF_GLOBAL_CTRL, ctrl);
+>  		rdmsrq(MSR_CORE_PERF_GLOBAL_STATUS, status);
+> @@ -1622,6 +1616,27 @@ void perf_event_print_debug(void)
+>  	}
+>  }
+>  
+> +void perf_event_print_debug(void)
+> +{
+> +	struct cpu_hw_events *cpuc;
+> +	unsigned long *cntr_mask;
+> +	int cpu;
+> +
+> +	guard(irqsave)();
+> +
+> +	cpu = smp_processor_id();
+> +	cpuc = &per_cpu(cpu_hw_events, cpu);
+> +	cntr_mask = hybrid(cpuc->pmu, cntr_mask);
+> +
+> +	if (!*(u64 *)cntr_mask)
+> +		return;
+> +
+> +	if (x86_pmu.print_debug)
+> +		x86_pmu.print_debug(cpu);
+> +	else
+> +		x86_pmu_print_debug(cpu);
 
-On 2026/8/10 14:57, Adrian Hunter wrote:
-> On 08/08/2026 15:23, Tengda Wu wrote:
->> When data type profiling is enabled on ARM SPE, multiple overlapping
->> events (e.g., l1d-miss, tlb-access) are synthesized for a single sampled
->> instruction, as shown below:
->>
->>   Available samples
->>   0 arm_spe_0/ts_enable=1,pa_enable=1,load_filter=1,store_filter=1,min_latency=30/
->>   0 dummy:u
->>   84K l1d-miss
->>   95K l1d-access
->>   77K llc-miss
->>   58K llc-access
->>   9K tlb-miss
->>   108K tlb-access
->>   0 branch
->>   13K remote-access
->>   108K memory
->>   108K instructions
->>
->> While 'perf report' provides an interactive menu for users to select a
->> specific event to prevent duplicate counting, 'perf annotate' lacks such
->> a mechanism. Consequently, it counts all instructions across these
->> overlapping events, which inflates the profile and distorts the data
->> type statistics.
->>
->> Although using the '--itrace' option can work around this issue (e.g.:
->> perf annotate --data-type --stdio --itrace=i1i), it is inconvenient for
->> users to specify this explicitly every time.
->>
->> To address this, introduce itrace_synth_opts.dont_overlap. Set this to true
->> when data type profiling is enabled and the user has not explicitly
->> specified an itrace option. Then, during arm_spe_process_auxtrace_info(),
->> adjust the synthesized event options based on the dont_overlap value to
->> only enable instruction event synthesis, thereby achieving automatic
->> deduplication.
->>
->> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
->> ---
->>  tools/perf/builtin-annotate.c |  8 ++++++++
->>  tools/perf/util/arm-spe.c     | 17 +++++++++++++++++
->>  tools/perf/util/auxtrace.h    |  2 ++
->>  3 files changed, 27 insertions(+)
->>
->> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
->> index 69cb72b2082a..616f54bf4868 100644
->> --- a/tools/perf/builtin-annotate.c
->> +++ b/tools/perf/builtin-annotate.c
->> @@ -873,6 +873,14 @@ int cmd_annotate(int argc, const char **argv)
->>  	annotate.session = perf_session__new(&data, &annotate.tool);
->>  	if (IS_ERR(annotate.session))
->>  		return PTR_ERR(annotate.session);
->> +	/*
->> +	 * Hardware tracing (e.g.: ARM SPE) may generate overlapping events
->> +	 * per instruction. When data type profiling is enabled, enable
->> +	 * dont_overlap to deduplicate them to avoid skewed stats, but only
->> +	 * if user hasn't specified itrace options (respect user override).
->> +	 */
->> +	if (annotate.data_type && !itrace_synth_opts.set)
->> +		itrace_synth_opts.dont_overlap = true;
->>  
->>  	annotate.session->itrace_synth_opts = &itrace_synth_opts;
->>  
->> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
->> index 401aab529309..1721882423f6 100644
->> --- a/tools/perf/util/arm-spe.c
->> +++ b/tools/perf/util/arm-spe.c
->> @@ -2033,6 +2033,9 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
->>  		/* Default nanoseconds period not supported */
->>  		spe->synth_opts.period_type = PERF_ITRACE_PERIOD_INSTRUCTIONS;
->>  		spe->synth_opts.period = 1;
->> +
->> +		if (session->itrace_synth_opts)
->> +			spe->synth_opts.dont_overlap = session->itrace_synth_opts->dont_overlap;
->>  	}
->>  
->>  	if (spe->synth_opts.period_type != PERF_ITRACE_PERIOD_INSTRUCTIONS) {
->> @@ -2044,6 +2047,20 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
->>  		ui__warning("Arm SPE has a hardware-based sampling period.\n\n"
->>  			    "--itrace periods > 1i downsample by an interval of n SPE samples rather than n instructions.\n");
->>  
->> +	if (spe->synth_opts.dont_overlap) {
->> +		/*
->> +		 * The 'instructions' event is the most comprehensive,
->> +		 * synthesize it exclusively.
->> +		 */
->> +		spe->synth_opts.flc = false;
->> +		spe->synth_opts.llc = false;
->> +		spe->synth_opts.tlb = false;
->> +		spe->synth_opts.branches = false;
->> +		spe->synth_opts.remote_access = false;
->> +		spe->synth_opts.mem = false;
->> +		spe->synth_opts.instructions = true;
->> +	}
->> +
->>  	err = arm_spe_synth_events(spe, session);
->>  	if (err)
->>  		goto err_free_queues;
->> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
->> index 6947f3f284c0..ebb4e9e8e574 100644
->> --- a/tools/perf/util/auxtrace.h
->> +++ b/tools/perf/util/auxtrace.h
->> @@ -80,6 +80,7 @@ enum itrace_period_type {
->>   * @intr_events: whether to synthesize interrupt events
->>   * @errors: whether to synthesize decoder error events
->>   * @dont_decode: whether to skip decoding entirely
->> + * @dont_overlap: whether to deduplicate overlapping events
-> 
-> This doesn't seem to match what you are actually doing, which
-> seems to be to choose particular default itrace options for
-> 'perf annotate --data-type'
-> 
-> I wonder if this should really be handled by
-> itrace_synth_opts__set_default()?
-> 
+The logic looks good, but better change this to the static_call() just like
+other x86_pmu callbacks. It eliminates the branch prediction cost. Thanks.
 
-Placing this in itrace_synth_opts__set_default() may not be appropriate.
 
-The current approach is designed to constrain the following conditions:
-
-1. Using perf annotate
-2. With --data-type specified
-3. Based on ARM SPE
-4. Without --itrace explicitly specified
-
-When these conditions are all met, we want to enable --itrace=i1i by default,
-effectively making this option built-in.
-
-If we were to place the --itrace=i1i configuration inside
-itrace_synth_opts__set_default(), conditions 1, 2, and 3 would not be
-reachable from that context, as there's no way to propagate that information
-into the function. Configuring it directly there would take effect globally,
-impacting other commands such as perf report and perf script.
-
-Therefore, the current approach passes the dont_overlap information through
-itrace (satisfying conditions 1, 2, and 4), and then configures --itrace=i1i
-inside the ARM SPE driver (satisfying condition 3).
-
-Thanks,
-Tengda
-
-> 
->>   * @log: write a decoding log
->>   * @calls: limit branch samples to calls (can be combined with @returns)
->>   * @returns: limit branch samples to returns (can be combined with @calls)
->> @@ -128,6 +129,7 @@ struct itrace_synth_opts {
->>  	bool			intr_events;
->>  	bool			errors;
->>  	bool			dont_decode;
->> +	bool			dont_overlap;
->>  	bool			log;
->>  	bool			calls;
->>  	bool			returns;
-
+> +}
+> +
+>  void x86_pmu_stop(struct perf_event *event, int flags)
+>  {
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> index a8afea8d38f0..465bf513bb82 100644
+> --- a/arch/x86/events/perf_event.h
+> +++ b/arch/x86/events/perf_event.h
+> @@ -1052,6 +1052,8 @@ struct x86_pmu {
+>  	int				num_hybrid_pmus;
+>  	struct x86_hybrid_pmu		*hybrid_pmu;
+>  	enum intel_cpu_type (*get_hybrid_cpu_type)	(void);
+> +
+> +	void (*print_debug)(int cpu);
+>  };
+>  
+>  struct x86_perf_task_context_opt {
+> @@ -1316,6 +1318,8 @@ int x86_pmu_handle_irq(struct pt_regs *regs);
+>  
+>  void x86_pmu_show_pmu_cap(struct pmu *pmu);
+>  
+> +void x86_pmu_print_debug(int cpu);
+> +
+>  static inline int x86_pmu_num_counters(struct pmu *pmu)
+>  {
+>  	return hweight64(hybrid(pmu, cntr_mask64));
