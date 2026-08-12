@@ -1,302 +1,471 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABFF352027;
-	Wed, 12 Aug 2026 08:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786524841; cv=none; b=GAa9AAC0ED/WU4Sol/wKMSz948S26uxh1msskpMIE3kFXIKTK3vPs3arUCwX1EksDvPoDF8lQPxO82+cgKJlBuNXldbEgU49RSrW0a5zP7ixOVqTIccakGH0WlGhxSTPJJBxZNmMNGK+x/S2FY3+0E9v44I1GPW9VRm5oEpJIi4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786524841; c=relaxed/simple;
-	bh=SnZMtgxQ2/eaYkqVMvq8Rmm2soWXt7LKDLLcCfKtXZ8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fZELuTbIAcv2JM7MaJlO1sZ48imblVdN89wGTde7pWjrrTu2X5JsuiuoiS9iEGi8A+PSgaULhujGvU+4GvR0Nsi/svLmglAb/zpzz1DFXnZCns8nO4EXLweZYQnuo7y1jTxJFIjQeoTZOYGi4a5IGTAYVQxCQ82bMli5wOP25Ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hKj2h5MSqzYQv7w;
-	Wed, 12 Aug 2026 16:53:48 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 6C7914058F;
-	Wed, 12 Aug 2026 16:53:53 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP4 (Coremail) with UTF8SMTPA id gCh0CgB3VhufNHxqnQ0wCA--.36665S2;
-	Wed, 12 Aug 2026 16:53:53 +0800 (CST)
-Message-ID: <c089bc29-5b83-4723-a28b-d45c229d5ba1@huaweicloud.com>
-Date: Wed, 12 Aug 2026 16:53:51 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3F140BCDB
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 09:30:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786527031; cv=fail; b=feGd/ZiUfn1W6wCCIrXpipYPJ9k2vkrwM0AiFT+6SubKtTi6Li3aq2Ji9W7gKudLxpqb3pxpiX4odOvzWG60LrSkJ2GEboUYZQ5MwIepCkjjZNEQNORDK43GAhcs0DXefIqy7lW/r12QY0SD8xMiN2jvT4zSlPhBLvkJIm3QZtM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786527031; c=relaxed/simple;
+	bh=hQ3MfS2pAGWqjKv2hwWUGGibUSAEoF4exVm7fB4DFDA=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=nuziDr02rA1KHumKdf+ERlXUzIFhGbfapplHzkv/QTZSD87wS2bMq2hh4/WSvVHKGADEp/M9lOiPmIg8h+FoqR0+scxf4YR9N0Ai7m2MwogNUwODUg6JwtQDRB2Ggqwvg+gJ8ZBuGUY53rq+WuhvcknuelVtTkTzDs9fg0M+vKY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S/mOZ6HO; arc=fail smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S/mOZ6HO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786527029; x=1818063029;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=hQ3MfS2pAGWqjKv2hwWUGGibUSAEoF4exVm7fB4DFDA=;
+  b=S/mOZ6HO8Qtz7rbMgTonlg8LR3Vr2EURiPDJAef0dc2PEFxg8AW8pqEs
+   ASZ97KJNRL5baF6Czo4P2SFGnsHfyaWTA9gRCjLPuiU5u4sJYIbwRhaio
+   AAWHvHG2Q6+r2rrBMo8apLiMJmz9sVcBLXADSSgYWogdWiAqE7xpTDEHh
+   gobJI7s8m0ZjDTjgiMygHPke+ZUoWz+o64mvVd+Xy/gktHChEq81S4faV
+   9FOEZ9lWR9vzrljTJ/42AX+timwnhUgMKgqrnvu0iZOhmLKg2/aYGR5S7
+   UslQtP+Ocrm8bE3rTqlA0snzyvgcY3c6j/+/0gv6Ab6o5XjokvNZbxKpS
+   A==;
+X-CSE-ConnectionGUID: /n6mobpsQiqH8wYvQ/PWzA==
+X-CSE-MsgGUID: wdsdOlvLSg6qEKyCjPMwKw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11872"; a="90887515"
+X-IronPort-AV: E=Sophos;i="6.25,219,1779174000"; 
+   d="scan'208";a="90887515"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 02:30:28 -0700
+X-CSE-ConnectionGUID: PVPZnm1FQZmumDgDMx4F+Q==
+X-CSE-MsgGUID: XU/xcZ3bTKKdWyTFgpWHkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,219,1779174000"; 
+   d="scan'208";a="264185580"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 02:30:28 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Wed, 12 Aug 2026 02:30:27 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45 via Frontend Transport; Wed, 12 Aug 2026 02:30:27 -0700
+Received: from BYAPR05CU005.outbound.protection.outlook.com (52.101.85.20) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Wed, 12 Aug 2026 02:30:27 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gb/bb2aaiIJ5FNZ5CE1HCDZhS1ADdkgDWzzIQlEayyvRBt87OlFFDGVvJvUBzX/y2boLSpWgzymjNFbJSnwRMvwyYLL00XGGC9MMQpGdMU3PTlC5nbQcQgWPh8YAJFNBtceHuRJtjlCfG34014Oc59JUaRW9ZrnuB6DJbRQGPOZuR+kAt0H9miL3uGfhg0QgRgbAApimVvkYugcfaEMj4x1vbWw937E+chp0sxEMqV2Av2WJ5cER245CY+5AE7o2/ixpiLaP1KN0D3ZEDR1oWKjC6auMSp1s7jUcl5j+gtDjLDYhBIqsAqX9AtDdIPbp/ONA2cEfItkSb8Xs5dToXg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Y2MZIdADox9QdPhIT6CJItrVSQDTUW8r1pOFfsDF9lQ=;
+ b=Q+4amfiISIxKXoVIdnsPmR4Y7dfBGQF/aQX24LOINM7JkOVhWly2haGJxOOEYPUsE76ddGOKRVjBsSXJFuO2Fuoaivo+K/DXcHKfdeLLmZ6pvhaJWaDwFpgVp5+TMFuewCdqPApFMn+Rm89mo4xpSEIPzaAzoztCaeozzYcE7ufUPcegi3eIEuW/BbPQulUV5DQv92r9ivOZIOZ6mungZO1aM9IzTThWhW1yIc0mlwWptWInXaA7sHuO/15iy6vZFUZNDQIL0yznBLQs0P5uCLvEH+M0VVE9BDdVn7SrPq6T8ASYmeKdGyU0JQM1QgjMeh7QW0NTPMtnpgKD7HPaXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
+ by IA4PR11MB9419.namprd11.prod.outlook.com (2603:10b6:208:564::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.13; Wed, 12 Aug
+ 2026 09:30:24 +0000
+Received: from IA1PR11MB7198.namprd11.prod.outlook.com
+ ([fe80::2c4e:e92a:4fa:a456]) by IA1PR11MB7198.namprd11.prod.outlook.com
+ ([fe80::2c4e:e92a:4fa:a456%3]) with mapi id 15.21.0315.014; Wed, 12 Aug 2026
+ 09:30:23 +0000
+Message-ID: <9d5f7724-3b23-48b6-9441-961614294562@intel.com>
+Date: Wed, 12 Aug 2026 12:30:15 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 1/6] tools/perf: Move powerpc VPA-DTL auxtrace init
+ into a separate file
+To: Athira Rajeev <atrajeev@linux.ibm.com>, <acme@kernel.org>,
+	<jolsa@kernel.org>, <maddy@linux.ibm.com>, <irogers@google.com>,
+	<namhyung@kernel.org>
+CC: <linux-perf-users@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<hbathini@linux.vnet.ibm.com>, <tejas05@linux.ibm.com>,
+	<tshah@linux.ibm.com>, <venkat88@linux.ibm.com>, <usha.r2@ibm.com>
+References: <20260807144135.2607-1-atrajeev@linux.ibm.com>
+ <20260807144135.2607-2-atrajeev@linux.ibm.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
+ 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
+ 4, Domiciled in Helsinki
+In-Reply-To: <20260807144135.2607-2-atrajeev@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DUZPR01CA0115.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4bc::27) To DS0PR11MB7215.namprd11.prod.outlook.com
+ (2603:10b6:8:13a::13)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 09/23] perf annotate: Deduplicate overlapping ARM SPE
- events for data type profiling
-To: Adrian Hunter <adrian.hunter@intel.com>,
- Namhyung Kim <namhyung@kernel.org>, james.clark@linaro.org,
- xueshuai@linux.alibaba.com, Li Huafei <lihuafei1@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
- Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Bill Wendling <morbo@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Zecheng Li <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-10-wutengda@huaweicloud.com>
- <20083f61-9724-445c-ad45-d77f9e8d2266@intel.com>
- <1910f712-8ea6-4916-82ac-0c1c2eac653c@huaweicloud.com>
- <b9a642f7-f8a9-425b-98ad-b779f9501db8@intel.com>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <b9a642f7-f8a9-425b-98ad-b779f9501db8@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:gCh0CgB3VhufNHxqnQ0wCA--.36665S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3XFW8Zr13JryDAw43ZFWrXwb_yoWfJr4xpr
-	y3uFn8Ka1kXr4rKrnFva15Xr1Sk3yfJFW3Wr12kr45Awn09F9aqFy7tr1YkF93Xrn8Z342
-	vr4q93y3W345ZaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUkEb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2
-	j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7x
-	kEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kKe7AK
-	xVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
-	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_Wryl
-	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxV
-	AFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j
-	6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jIks
-	gUUUUU=
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|IA4PR11MB9419:EE_
+X-MS-Office365-Filtering-Correlation-Id: 27261967-3479-4557-6d81-08def85455a7
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|23010399003|376014|366016|7416014|11063799006|4143699003|56012099006|10067099003|18002099003|22082099003|6133799003;
+X-Microsoft-Antispam-Message-Info: gIAEhum5/72V3ij4aNUUDTDxindIJMEiCOqTFoExbG4bSUrbzXzXEgrHE2PZhc1JbecqNyueYT7GZHMjlvvuWs6dXE3+QWESl5XzDlfqmVW8HA/M6efGdqljtUvAb50rKuHXt7Z8Ly/u3huKntwhuaNtZ153XVGVblPdIL8CBRG2fnZ83UWYLuJNq6hgKO8UGmeDWHQSYXztKKL5ziyLsHW0zTHWrFOG7iD0lh9Juyv8e37EACsZcVcVvE7cu9rVn/92N6bh4RX6g5qOdnLxuTyyG2LZlXR7Y/GeWLZYOsSSM+3P4xWCVX/J/Yd+Vm+q+CPGFrtcdsvpt5jWFtl09TLv6r3rqm89ikzMWtcsn7MLVPis/4aXcnTUzQtcSPNzhgg5gxb+kCHc1e4tPxJxV7gAkhzQ7jEK1bjM46Tpap2cl6mbbdhzkh/YKaZ+qvR6YF4UWTuBJzGqvx33FhMtmZJJS7UoP9PDy0NzKL0tH+2EiL1iurhDud3dBkdlfITvVnmO+rYWZatXzAzJZwftoFaSY8ZCI+UMGsMCVZZ3nO/g79qMSUa8aBkWlLxR9h9f5a4RioJOw4y6SH5oHLFflB3+0WGXzvdjlglBp3GmkOT/2/ccLtalrPp9sRsOpZHuEdaM55wDSmCfkmzlf7fSOQ8kYL2wv3mh41n9WIC8HVw=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(376014)(366016)(7416014)(11063799006)(4143699003)(56012099006)(10067099003)(18002099003)(22082099003)(6133799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZlBVQVBXSmNXUHR0MVNCL1h5K0tXeEsyWjNacThwTGdzQytXNE5uS0RTQzRV?=
+ =?utf-8?B?Z0ZRTDdLck1qZDFzdWxRd0FYM3F5cW1RSVhCRDFyUUNSdGhqSUtuSEp5ZTJ1?=
+ =?utf-8?B?M1k1OWJoRDY3b2NuUVJ3RmsvbUYvbXN3SHBoMVVIQS9Wbjd6K3UwVGpTeEVP?=
+ =?utf-8?B?Zks3czdnSk1aQURvOU5FK1NOQU9tTVp3bmJNVEliNFFaZ0dUL05pMnVoa2lR?=
+ =?utf-8?B?RlVFMS9IVkcydmdLWEVlRkpkNUl6aU4wcE5XK21aa1NJMWNJRFFvMWRxQ0x2?=
+ =?utf-8?B?Q1A0aFZtK1J6K05MWitTdTA0TzVBK29nQWZheGNEbENFMTFQaWQ0M2Znc01D?=
+ =?utf-8?B?Q0psaWduTjViS25iM2VyMm5Yc2pUZWVqbk5BeFYvNytKL0E3VWhsSFdGK3pI?=
+ =?utf-8?B?THVZTTR5dXJ3a3VBcHJzaE5OYXRuZFlJTnc0ckFLR2ZpeE9SZk9mVmFyVStV?=
+ =?utf-8?B?SXdhcTNGZUhYYzZsVkk0aVk3LytaZmthU0MrQ1Vlcmo0U3J3V2pvYkdUWEhJ?=
+ =?utf-8?B?MXNJVXZkQ3BTNjR2WFA1NEpSQjFsQXNXd3N6NXBHK3dNNitZaWkzUUxpTzFU?=
+ =?utf-8?B?eS9PcStqeWFRNmxVY3VUbHo3N1J3dEJ4SWw0ZytBVWdmSndFVlpCNE8rUlNM?=
+ =?utf-8?B?N0k0TGlEUVlvdU4yM1VGVHB0RkkvSkx6cE1id3ZCb0VFdWo0S3FwK3hpSmZz?=
+ =?utf-8?B?WVpFVlJSOUtxV3JvVmJHZXN1Z3UyRnBIaXJHYnNISDRzUlh1MWxGV0FmYW50?=
+ =?utf-8?B?SmdyY2pRaGl0cnd3bTZtMm5VaTF4NzlJRjlMZ05GYzUvdmR1ZlpON01jY2ox?=
+ =?utf-8?B?K3ZBRXZuOFcxdjd2NUxveWtTQll1a3FpQ0lYS3hFZERtcTdLNytQU3k1NkFY?=
+ =?utf-8?B?dFpLa3RoSkM5MWN1bEQzWjBtOUU5a0MweGJIemxWNnN5N21wTXZBSEZscE43?=
+ =?utf-8?B?QnNiQUFRMWFIUUs2cmNsZmQyZkt5eERpdFhpaW8rWVk5NmdneHdTb2ZxQXlX?=
+ =?utf-8?B?WktRZE9FVVJWeDkwUFBuaDA0YXJjM2JGSVJ4YmU4a3o1OUlxTWFVWjEwQmhx?=
+ =?utf-8?B?dDRoQVkvaEtBQ2RXSzBIOC9vcXFTcDB4YkRsWDR1RVBJRm5XT3pRc2xiV0ZO?=
+ =?utf-8?B?RXJCR2o2NERTQ0puWVJ6OWdUV3VVaFRZTVJ4MDBSVUZkcmV5TDZPdWZ0U05r?=
+ =?utf-8?B?Y3phaytNTHBqdXFKZGFSUkszdk5CRXNIampTVXI1SVlHQ3V6d1lDcE9BaENu?=
+ =?utf-8?B?Nit6OGxsd1BwT3VqY0JMdHhCQ3ZiaTlLTHA2NmFia0tNWVk1TUxxU2IwOC85?=
+ =?utf-8?B?cWMxbHJZckhiSEJHMTZuMFBJZEt0dG50M3BmMTNGVUVJa1UweDZhLytSRTZ2?=
+ =?utf-8?B?Z1dHSzZwaGpZU1JkU0orVHlxN09mSlFJWUhlNThrdVEybmdhQnJkQ0grMUVT?=
+ =?utf-8?B?RFJMczFVbWNkZFpiWHl5QlJmczEyNHRucnBEdE5HSHBqUzNFL01KMHM2NXVu?=
+ =?utf-8?B?OFdYSVlpdU5GekpTNXhFQUVwQjFmZW1rQnVXaEo0Q2l2Rk9lbDRTWXJKUURG?=
+ =?utf-8?B?cGUxMGRQWDE5RUxXdEROV3lsTFpZSGdLWGdwUHlUUWpqdWN6R05JUHV5MXFI?=
+ =?utf-8?B?bFZhcE5BNmw5OVkrY2ZuZVA5Vkh0NVRDWUVteVMyOGxVc3RJSUhzT0pRaVVQ?=
+ =?utf-8?B?VDY1TDlkQmNETmhaNThlNFJPV21Yc0VMKzRwdFhObERCZnNzRzhEaHJxQWt0?=
+ =?utf-8?B?SVROV1F0RDN0a2hNZlVxNFYway9JeGhUR3RrQW1iaU1mR1hSTTJieHVHL09n?=
+ =?utf-8?B?ZkNnV2pNckVUUnVMSHJnZGJMSHNnZTlCUlZKNGpCQ1hZRTRjQm9QRG0rd2pS?=
+ =?utf-8?B?OUQyUFNYM1hvckc2RXU1d0taZFhVSU9TRHlxU3dxOWUyZnFNblgxSFNobHVL?=
+ =?utf-8?B?QjVKUnNVOVptbVpYZkszYkZYcWo4NkFKWkU0YXFMMDlQZVNWWTNiWTBIeDNx?=
+ =?utf-8?B?SDlVQWllL0JaV3M2WU5LYi9vaS9MbmdxbXFxRk9NblJhdFM1SXZYUlptaDNs?=
+ =?utf-8?B?RW9GQTN5VkkxL3dmSGl6TzlGUGh4NEUrRUZiZkRYd29xVUlPdHd5MnZMK0px?=
+ =?utf-8?B?MHFqeFZLaWx4Z0FSeW1hM25Zc2JrWTNweTZNK3JESlVPU3FWTjVKWHNDeU50?=
+ =?utf-8?B?R2twUHJTSDlqMExsYUplVGsrbXp1VHFkY0FYb3ZYQVg4Q21QU0F4cUJzZUJU?=
+ =?utf-8?B?WXpyODBTZzh3a0ZaNXJGREFyVTkzcDhDMVVqVEhUM2ZxM0hiUDEwbkV4VGI0?=
+ =?utf-8?B?ekhkSEMrdDVLTkh6U3Z1aVVzZ053OWNWMWN5bmc1Z0VOcndhaERpL0hhSEVs?=
+ =?utf-8?Q?BL3es7bfIBR/i8yY=3D?=
+X-Exchange-RoutingPolicyChecked: Gu+dzGcNOi7P3SkwHJItr0528WFB9nXcCyY4xKPO6NfaA0hzOD3hiLTL8IjwzzVbR1l1hdEox3fXnCWgzAgY3rcH2ztnVRe8UZWVvuHxS3WHbM/Dj/JAHARWW0MbQecDCHc/Q9DjdaGR0aNqS5xTTimKZwhleKHMylaP1V5TFsdDUGRWhQNq1TndsCTJ0D/fz2lVBUgcb94+MiMtQdR/1Bb0WDayP56aoD+sf/ar36hrNWZ/XJFPDi4wRlaiz9t3knDYDhnma69ghoVSPkySZXUW02S4EGRMdqtVpKsM724utNYRTEE9CqAwothAK1y9xrm+qQb0FlK+Z1TgxEB6yA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 27261967-3479-4557-6d81-08def85455a7
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7215.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2026 09:30:23.9009
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iniexvK2RTFvJ8AoCTunRcyY9Bp1rwN9xgAZvJ2nl/GUuYyb5I+QD+4T79pDR79yM8tbnX1EJqn5B0iotuSXYA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB9419
+X-OriginatorOrg: intel.com
 
-
-
-On 2026/8/12 14:07, Adrian Hunter wrote:
-> On 12/08/2026 05:28, Tengda Wu wrote:
->>
->>
->> On 2026/8/10 14:57, Adrian Hunter wrote:
->>> On 08/08/2026 15:23, Tengda Wu wrote:
->>>> When data type profiling is enabled on ARM SPE, multiple overlapping
->>>> events (e.g., l1d-miss, tlb-access) are synthesized for a single sampled
->>>> instruction, as shown below:
->>>>
->>>>   Available samples
->>>>   0 arm_spe_0/ts_enable=1,pa_enable=1,load_filter=1,store_filter=1,min_latency=30/
->>>>   0 dummy:u
->>>>   84K l1d-miss
->>>>   95K l1d-access
->>>>   77K llc-miss
->>>>   58K llc-access
->>>>   9K tlb-miss
->>>>   108K tlb-access
->>>>   0 branch
->>>>   13K remote-access
->>>>   108K memory
->>>>   108K instructions
->>>>
->>>> While 'perf report' provides an interactive menu for users to select a
->>>> specific event to prevent duplicate counting, 'perf annotate' lacks such
->>>> a mechanism. Consequently, it counts all instructions across these
->>>> overlapping events, which inflates the profile and distorts the data
->>>> type statistics.
->>>>
->>>> Although using the '--itrace' option can work around this issue (e.g.:
->>>> perf annotate --data-type --stdio --itrace=i1i), it is inconvenient for
->>>> users to specify this explicitly every time.
->>>>
->>>> To address this, introduce itrace_synth_opts.dont_overlap. Set this to true
->>>> when data type profiling is enabled and the user has not explicitly
->>>> specified an itrace option. Then, during arm_spe_process_auxtrace_info(),
->>>> adjust the synthesized event options based on the dont_overlap value to
->>>> only enable instruction event synthesis, thereby achieving automatic
->>>> deduplication.
->>>>
->>>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
->>>> ---
->>>>  tools/perf/builtin-annotate.c |  8 ++++++++
->>>>  tools/perf/util/arm-spe.c     | 17 +++++++++++++++++
->>>>  tools/perf/util/auxtrace.h    |  2 ++
->>>>  3 files changed, 27 insertions(+)
->>>>
->>>> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
->>>> index 69cb72b2082a..616f54bf4868 100644
->>>> --- a/tools/perf/builtin-annotate.c
->>>> +++ b/tools/perf/builtin-annotate.c
->>>> @@ -873,6 +873,14 @@ int cmd_annotate(int argc, const char **argv)
->>>>  	annotate.session = perf_session__new(&data, &annotate.tool);
->>>>  	if (IS_ERR(annotate.session))
->>>>  		return PTR_ERR(annotate.session);
->>>> +	/*
->>>> +	 * Hardware tracing (e.g.: ARM SPE) may generate overlapping events
->>>> +	 * per instruction. When data type profiling is enabled, enable
->>>> +	 * dont_overlap to deduplicate them to avoid skewed stats, but only
->>>> +	 * if user hasn't specified itrace options (respect user override).
->>>> +	 */
->>>> +	if (annotate.data_type && !itrace_synth_opts.set)
->>>> +		itrace_synth_opts.dont_overlap = true;
->>>>  
->>>>  	annotate.session->itrace_synth_opts = &itrace_synth_opts;
->>>>  
->>>> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
->>>> index 401aab529309..1721882423f6 100644
->>>> --- a/tools/perf/util/arm-spe.c
->>>> +++ b/tools/perf/util/arm-spe.c
->>>> @@ -2033,6 +2033,9 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
->>>>  		/* Default nanoseconds period not supported */
->>>>  		spe->synth_opts.period_type = PERF_ITRACE_PERIOD_INSTRUCTIONS;
->>>>  		spe->synth_opts.period = 1;
->>>> +
->>>> +		if (session->itrace_synth_opts)
->>>> +			spe->synth_opts.dont_overlap = session->itrace_synth_opts->dont_overlap;
->>>>  	}
->>>>  
->>>>  	if (spe->synth_opts.period_type != PERF_ITRACE_PERIOD_INSTRUCTIONS) {
->>>> @@ -2044,6 +2047,20 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
->>>>  		ui__warning("Arm SPE has a hardware-based sampling period.\n\n"
->>>>  			    "--itrace periods > 1i downsample by an interval of n SPE samples rather than n instructions.\n");
->>>>  
->>>> +	if (spe->synth_opts.dont_overlap) {
->>>> +		/*
->>>> +		 * The 'instructions' event is the most comprehensive,
->>>> +		 * synthesize it exclusively.
->>>> +		 */
->>>> +		spe->synth_opts.flc = false;
->>>> +		spe->synth_opts.llc = false;
->>>> +		spe->synth_opts.tlb = false;
->>>> +		spe->synth_opts.branches = false;
->>>> +		spe->synth_opts.remote_access = false;
->>>> +		spe->synth_opts.mem = false;
->>>> +		spe->synth_opts.instructions = true;
->>>> +	}
->>>> +
->>>>  	err = arm_spe_synth_events(spe, session);
->>>>  	if (err)
->>>>  		goto err_free_queues;
->>>> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
->>>> index 6947f3f284c0..ebb4e9e8e574 100644
->>>> --- a/tools/perf/util/auxtrace.h
->>>> +++ b/tools/perf/util/auxtrace.h
->>>> @@ -80,6 +80,7 @@ enum itrace_period_type {
->>>>   * @intr_events: whether to synthesize interrupt events
->>>>   * @errors: whether to synthesize decoder error events
->>>>   * @dont_decode: whether to skip decoding entirely
->>>> + * @dont_overlap: whether to deduplicate overlapping events
->>>
->>> This doesn't seem to match what you are actually doing, which
->>> seems to be to choose particular default itrace options for
->>> 'perf annotate --data-type'
->>>
->>> I wonder if this should really be handled by
->>> itrace_synth_opts__set_default()?
->>>
->>
->> Placing this in itrace_synth_opts__set_default() may not be appropriate.
+On 07/08/2026 17:41, Athira Rajeev wrote:
+> The powerpc auxtrace dispatch lives entirely in
+> arch/powerpc/util/auxtrace.c.  As new PMUs such as HTM are added, this
+> file would grow to contain the recording logic for all of them.
 > 
-> Your current approach introduces the concepts of
-> "dont_overlap" and "deduplicate" but doesn't actually
-> map them to specific functionality.  They are a mismatch
-> with what you are actually doing.
+> Factor out the VPA-DTL recording initializer into its own file,
+> arch/powerpc/util/vpa-dtl.c, and reduce auxtrace.c to a thin dispatch
+> layer.  auxtrace_record__init() now detects the PMU by name and calls
+> the appropriate per-PMU init function:
 > 
-
-Agreed.
-
->>
->> The current approach is designed to constrain the following conditions:
->>
->> 1. Using perf annotate
->> 2. With --data-type specified
->> 3. Based on ARM SPE
->> 4. Without --itrace explicitly specified
->>
->> When these conditions are all met, we want to enable --itrace=i1i by default,
->> effectively making this option built-in.
->>
->> If we were to place the --itrace=i1i configuration inside
->> itrace_synth_opts__set_default(), conditions 1, 2, and 3 would not be
->> reachable from that context, as there's no way to propagate that information
->> into the function.
+>   - vpa_dtl_recording_init() for VPA-DTL events (unchanged behaviour)
+>   - Further PMU entries will follow in subsequent patches
 > 
-> itrace_synth_opts__set_default() is only called when 4 is true.
+> This makes room in auxtrace_record__init() for the HTM recording path
+> added in the next patch without growing a single monolithic file.
 > 
-> WRT 1 and 2, you are planning to pass information via synth_opts,
-> anyway, so it is the same in that regard.
+> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+
+A couple of cosmetic / very minor comments.
+
+Nevertheless:
+
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+
+> ---
+> Changes in V5:
+> - Add forward declarations for struct evsel and struct auxtrace_record
+>   in powerpc-vpadtl.h before the vpa_dtl_recording_init() prototype.
+>   Without them, a translation unit that includes the header before the
+>   full definitions are visible may produce implicit-declaration warnings
+>   on strict compilers.
 > 
-
-Agreed.
-
->>                    Configuring it directly there would take effect globally,
->> impacting other commands such as perf report and perf script.
+> Changes in V4:
+> - No changes from V3.
 > 
-> Not if they did not pass the new information, same as your current
-> approach.
+> Changes in V3:
+> Add #include <linux/zalloc.h> to vpa-dtl.c; without it the compiler
+> treats zalloc() as implicitly returning int, truncating the upper
+> 32 bits of the returned pointer on 64-bit PowerPC.
 > 
-
-Agreed.
-
->>
->> Therefore, the current approach passes the dont_overlap information through
->> itrace (satisfying conditions 1, 2, and 4), and then configures --itrace=i1i
->> inside the ARM SPE driver (satisfying condition 3).
+> Changes in V2:
+> - Renamed the destination file from arch/powerpc/util/vpa-dtl.c (same
+>   name, unchanged) but the subject and commit message are reworded to
+>   clearly state that the goal is to make auxtrace_record__init() a thin
+>   per-PMU dispatcher, not merely to "allow multiple PMUs to use auxtrace".
+> - Handle failure from memory allocation
+> - Included stdlib and limits.h
+> - No functional change to the VPA-DTL path itself.
+> - Patch is now 1/6 instead of 1/9.
 > 
-> Why wouldn't that default be ok for other auxtrace implementations?
+>  tools/perf/arch/powerpc/util/Build      |  1 +
+>  tools/perf/arch/powerpc/util/auxtrace.c | 84 +++-------------------
+>  tools/perf/arch/powerpc/util/vpa-dtl.c  | 96 +++++++++++++++++++++++++
+>  tools/perf/util/powerpc-vpadtl.h        |  3 +
+>  4 files changed, 108 insertions(+), 76 deletions(-)
+>  create mode 100644 tools/perf/arch/powerpc/util/vpa-dtl.c
 > 
+> diff --git a/tools/perf/arch/powerpc/util/Build b/tools/perf/arch/powerpc/util/Build
+> index ae928050e07a..7819c8f5af2d 100644
+> --- a/tools/perf/arch/powerpc/util/Build
+> +++ b/tools/perf/arch/powerpc/util/Build
+> @@ -7,3 +7,4 @@ perf-util-y += evsel.o
+>  perf-util-$(CONFIG_LIBDW) += skip-callchain-idx.o
+>  
+>  perf-util-y += auxtrace.o
+> +perf-util-y += vpa-dtl.o
+> diff --git a/tools/perf/arch/powerpc/util/auxtrace.c b/tools/perf/arch/powerpc/util/auxtrace.c
+> index 4600a1661b4f..e04a0bd61755 100644
+> --- a/tools/perf/arch/powerpc/util/auxtrace.c
+> +++ b/tools/perf/arch/powerpc/util/auxtrace.c
+> @@ -13,63 +13,12 @@
+>  #include "../../util/auxtrace.h"
+>  #include "../../util/powerpc-vpadtl.h"
+>  #include "../../util/record.h"
+> -#include <internal/lib.h> // page_size
+> -
+> -#define KiB(x) ((x) * 1024)
+> -
+> -static int
+> -powerpc_vpadtl_recording_options(struct auxtrace_record *ar __maybe_unused,
+> -			struct evlist *evlist __maybe_unused,
+> -			struct record_opts *opts)
+> -{
+> -	opts->full_auxtrace = true;
+> -
+> -	/*
+> -	 * Set auxtrace_mmap_pages to minimum
+> -	 * two pages
+> -	 */
+> -	if (!opts->auxtrace_mmap_pages) {
+> -		opts->auxtrace_mmap_pages = KiB(128) / page_size;
+> -		if (opts->mmap_pages == UINT_MAX)
+> -			opts->mmap_pages = KiB(256) / page_size;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+> -static size_t powerpc_vpadtl_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+> -					struct evlist *evlist __maybe_unused)
+> -{
+> -	return VPADTL_AUXTRACE_PRIV_SIZE;
+> -}
+> -
+> -static int
+> -powerpc_vpadtl_info_fill(struct auxtrace_record *itr __maybe_unused,
+> -		struct perf_session *session __maybe_unused,
+> -		struct perf_record_auxtrace_info *auxtrace_info,
+> -		size_t priv_size __maybe_unused)
+> -{
+> -	auxtrace_info->type = PERF_AUXTRACE_VPA_DTL;
+> -
+> -	return 0;
+> -}
+> -
+> -static void powerpc_vpadtl_free(struct auxtrace_record *itr)
+> -{
+> -	free(itr);
+> -}
+> -
+> -static u64 powerpc_vpadtl_reference(struct auxtrace_record *itr __maybe_unused)
+> -{
+> -	return 0;
+> -}
+>  
+>  struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
+>  						int *err)
+>  {
+> -	struct auxtrace_record *aux;
+>  	struct evsel *pos;
+> -	int found = 0;
+> +	struct evsel *vpa_dtl_evsel = NULL;
 
-To be honest, I wasn't entirely sure about the potential impact of making
-'--itrace=i1i' the default for 'perf annotate --data-type' across all
-architectures, so I took the most conservative approach and restricted it
-to ARM SPE.
+Ordering local definitions by descending line length is nicer e.g.
 
-However, if another architecture's auxtrace backend also synthesizes multiple
-events from a single instruction, it would in principle need --itrace=i1i as
-well. I also tested this on an Intel environment for comparison, enabling
---itrace=i1i or not yielded the exact same sample count, so making it the
-default should be safe:
+	struct evsel *vpa_dtl_evsel = NULL;
+  	struct evsel *pos;
 
-  perf annotate --data-type --stdio --type-stat
-     total 880, ok 711 (80.8%), bad 169 (19.2%)
+>  
+>  	/*
+>  	 * Set err value to zero here. Any fail later
+> @@ -78,33 +27,16 @@ struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
+>  	*err = 0;
+>  
+>  	evlist__for_each_entry(evlist, pos) {
+> -		if (strstarts(pos->name, "vpa_dtl")) {
+> -			found = 1;
+> +		if (pos->name && strstarts(pos->name, "vpa_dtl")) {
+>  			pos->needs_auxtrace_mmap = true;
+> -			break;
+> +			/* Remember the first matching VPA DTL event */
+> +			if (!vpa_dtl_evsel)
+> +				vpa_dtl_evsel = pos;
+>  		}
+>  	}
+>  
+> -	if (!found)
+> -		return NULL;
+> -
+> -	/*
+> -	 * To obtain the auxtrace buffer file descriptor, the auxtrace event
+> -	 * must come first.
+> -	 */
+> -	evlist__to_front(pos->evlist, pos);
+> -
+> -	aux = zalloc(sizeof(*aux));
+> -	if (aux == NULL) {
+> -		pr_debug("aux record is NULL\n");
+> -		*err = -ENOMEM;
+> -		return NULL;
+> -	}
+> +	if (vpa_dtl_evsel)
+> +		return vpa_dtl_recording_init(vpa_dtl_evsel, err);
+>  
+> -	aux->recording_options = powerpc_vpadtl_recording_options;
+> -	aux->info_priv_size = powerpc_vpadtl_info_priv_size;
+> -	aux->info_fill = powerpc_vpadtl_info_fill;
+> -	aux->free = powerpc_vpadtl_free;
+> -	aux->reference = powerpc_vpadtl_reference;
+> -	return aux;
+> +	return NULL;
+>  }
+> diff --git a/tools/perf/arch/powerpc/util/vpa-dtl.c b/tools/perf/arch/powerpc/util/vpa-dtl.c
+> new file mode 100644
+> index 000000000000..2609b88f61d8
+> --- /dev/null
+> +++ b/tools/perf/arch/powerpc/util/vpa-dtl.c
+> @@ -0,0 +1,96 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * VPA DTL AUX tracing support
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/types.h>
+> +#include <linux/string.h>
+> +#include <linux/zalloc.h>
+> +#include <errno.h>
+> +#include <stdlib.h>
+> +#include <limits.h>
+> +#include "../../util/cpumap.h"
 
-  perf annotate --data-type --stdio --type-stat --itrace=i1i
-     total 880, ok 711 (80.8%), bad 169 (19.2%)
+Is cpumap.h needed?
 
-So I agree with your point, I'll move this configuration directly into
-itrace_synth_opts__set_default().
-
-> In any case, the problem is with the mismatch between the naming,
-> definition, and framing of "dont_overlap" and how it is actually used.
-> 
-> Perhaps instead:
-> 
-> 	default_single_event_per_ip
-> 
-> and explain the annotate data-type use-case in its kernel-doc
-> description.
-> 
-
-Yes, default_single_event_per_ip is indeed much more accurate and clear.
-I'll fix it.
-
-Thanks,
-Tengda
-
->>>
->>>>   * @log: write a decoding log
->>>>   * @calls: limit branch samples to calls (can be combined with @returns)
->>>>   * @returns: limit branch samples to returns (can be combined with @calls)
->>>> @@ -128,6 +129,7 @@ struct itrace_synth_opts {
->>>>  	bool			intr_events;
->>>>  	bool			errors;
->>>>  	bool			dont_decode;
->>>> +	bool			dont_overlap;
->>>>  	bool			log;
->>>>  	bool			calls;
->>>>  	bool			returns;
->>
-> 
+> +#include "../../util/evsel.h"
+> +#include "../../util/evlist.h"
+> +#include "../../util/session.h"
+> +#include "../../util/util.h"
+> +#include "../../util/debug.h"
+> +#include "../../util/auxtrace.h"
+> +#include "../../util/powerpc-vpadtl.h"
+> +#include "../../util/record.h"
+> +#include <internal/lib.h> // page_size
+> +
+> +#define KiB(x) ((x) * 1024)
+> +
+> +static int
+> +powerpc_vpadtl_recording_options(struct auxtrace_record *ar __maybe_unused,
+> +			struct evlist *evlist __maybe_unused,
+> +			struct record_opts *opts)
+> +{
+> +	opts->full_auxtrace = true;
+> +
+> +	/*
+> +	 * Set auxtrace_mmap_pages to minimum
+> +	 * two pages
+> +	 */
+> +	if (!opts->auxtrace_mmap_pages) {
+> +		opts->auxtrace_mmap_pages = KiB(128) / page_size;
+> +		if (opts->mmap_pages == UINT_MAX)
+> +			opts->mmap_pages = KiB(256) / page_size;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static size_t powerpc_vpadtl_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+> +					struct evlist *evlist __maybe_unused)
+> +{
+> +	return VPADTL_AUXTRACE_PRIV_SIZE;
+> +}
+> +
+> +static int
+> +powerpc_vpadtl_info_fill(struct auxtrace_record *itr __maybe_unused,
+> +		struct perf_session *session __maybe_unused,
+> +		struct perf_record_auxtrace_info *auxtrace_info,
+> +		size_t priv_size __maybe_unused)
+> +{
+> +	auxtrace_info->type = PERF_AUXTRACE_VPA_DTL;
+> +
+> +	return 0;
+> +}
+> +
+> +static void powerpc_vpadtl_free(struct auxtrace_record *itr)
+> +{
+> +	free(itr);
+> +}
+> +
+> +static u64 powerpc_vpadtl_reference(struct auxtrace_record *itr __maybe_unused)
+> +{
+> +	return 0;
+> +}
+> +
+> +struct auxtrace_record *vpa_dtl_recording_init(struct evsel *pos, int *err)
+> +{
+> +	struct auxtrace_record *aux;
+> +
+> +	/*
+> +	 * To obtain the auxtrace buffer file descriptor, the auxtrace event
+> +	 * must come first.
+> +	 */
+> +	evlist__to_front(pos->evlist, pos);
+> +
+> +	aux = zalloc(sizeof(*aux));
+> +	if (aux == NULL) {
+> +		pr_debug("aux record allocation failed (-ENOMEM)\n");
+> +		*err = -ENOMEM;
+> +		return NULL;
+> +	}
+> +
+> +	aux->recording_options = powerpc_vpadtl_recording_options;
+> +	aux->info_priv_size = powerpc_vpadtl_info_priv_size;
+> +	aux->info_fill = powerpc_vpadtl_info_fill;
+> +	aux->free = powerpc_vpadtl_free;
+> +	aux->reference = powerpc_vpadtl_reference;
+> +	return aux;
+> +}
+> diff --git a/tools/perf/util/powerpc-vpadtl.h b/tools/perf/util/powerpc-vpadtl.h
+> index ca809660b9bb..68a780c63204 100644
+> --- a/tools/perf/util/powerpc-vpadtl.h
+> +++ b/tools/perf/util/powerpc-vpadtl.h
+> @@ -20,4 +20,7 @@ struct perf_pmu;
+>  int powerpc_vpadtl_process_auxtrace_info(union perf_event *event,
+>  				  struct perf_session *session);
+>  
+> +struct evsel;
+> +struct auxtrace_record;
+> +struct auxtrace_record *vpa_dtl_recording_init(struct evsel *pos, int *err);
+>  #endif
 
