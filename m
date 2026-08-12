@@ -1,76 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D61345EBE;
-	Wed, 12 Aug 2026 00:52:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B12364927;
+	Wed, 12 Aug 2026 01:04:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786495938; cv=none; b=M2B3wWXfRD7ylpOYMvxpTi7C3UShI32S9uWjAf53KLTWeiB48xD+W0DtmJ82AS+2ROT2usUXjUpzGO/dOfQkcXkg1fj6hfK2iaznA9lEm5TTGopbsz7GUvR/uPXMyL4yfJMna946L690PIs+82dR5NOws+Ved4XCep4LFVYKx64=
+	t=1786496681; cv=none; b=MXSnYNfJrBVC7B37BNCGoL2zHkcvn1z6hM7t+rBJfy/iFlaRtT4gcz3a2gdQxTNq8RwCTN6BF/zz24yka5I3KP94bOJdT+ZqTlixNXaYGxh1FT4UNgZ+ULzApfZU4Nz5uKaKtiQ3oYUDIjrf6IhrYCD9BDQeHrwGsy0YXbA/W+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786495938; c=relaxed/simple;
-	bh=sewWrXD0s65HA6FtYR+XxkWQWxkApJ2XCKG3xfRIp3k=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=lF0vPmNWzGmaNHJXx2fJ6stlzag03eQ7rMMNM2SkE91IZjgoEe3fKnKlyNNrdDafASAB76ZwGOdoB7dU79GHxOVquK8YShxjWunrE5itRhCRT3rBFOyFOYb/kTTZ1sG7nHr/BzBd+gmvmTxp4kUBwfVU8f4jb/s9ugW0tpljwXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qxw0pSO8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786496681; c=relaxed/simple;
+	bh=R9pMwnMT0S22nQ2QreVdnq4esafNM9N3nXnYhytS4Uc=;
+	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
+	 Subject:From:To:Cc:Date; b=BFx651kimwqkHt68mVJSA0qiv6q3pcNU+YV8NDaoE2LvLJWEkvjxWdxFSaUcnJfu3z7ONRtLshELBb/wx06KKF27GMhBR8LTQGAfdCJxPTWz85DPl6U8a982w6hLLO347HWvMyG+ooFHrps6s3Davba2XsC91Ev1PH442qXEjrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a8G/l1I5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qxw0pSO8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 594E41F000E9;
-	Wed, 12 Aug 2026 00:52:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8G/l1I5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41A601F000E9;
+	Wed, 12 Aug 2026 01:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786495936;
-	bh=BH7aXxG4zDbh5bPicAaIF0trSoRWQ+VP8+pOtXb2Y2c=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=Qxw0pSO8fEZaAmLHmxhYY6cNDvTYWg6b2IjBCEZt7q2Z1XbMgiQcQ2m2ZSu5D803Z
-	 nbRCAbOMZyd0izwAtRq/3n/UeDvM8yRq+eiK22CAuV4CnAJvt7rb0fz9zx/ZOSJEit
-	 IS3YgLh2uQ6qSNEXVcBkez6hw8/I82erkSL+kYsIi1IoV8w3WBRl3VqTuSCe0eTCuQ
-	 bboJYXTUuhkuU4F+tFV8TNggH4XfJ2jWoncvz5mYBnqhAI5E/qz6NFivyqUAilM8Hi
-	 lcDdPHFI+pI7xkVRX+DSqVkfulZNEpuGUhJu9ZxJhf3PZEL+6nnsvhL0wYQfxMz59Y
-	 R+/BTSftyWKRQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: acme@kernel.org, Ian Rogers <irogers@google.com>
-Cc: adrian.hunter@intel.com, alice.mei.rogers@gmail.com, 
- dapeng1.mi@linux.intel.com, james.clark@linaro.org, leo.yan@linux.dev, 
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
- mingo@redhat.com, peterz@infradead.org, tmricht@linux.ibm.com
-In-Reply-To: <20260809071455.1221514-1-irogers@google.com>
-References: <20260624051535.3584977-1-irogers@google.com>
- <20260809071455.1221514-1-irogers@google.com>
-Subject: Re: [PATCH v3 00/15] perf python: Fix python extension bugs from
- v19 review
-Message-Id: <178649593632.2880647.4424444661810354972.b4-ty@kernel.org>
-Date: Tue, 11 Aug 2026 17:52:16 -0700
+	s=k20260515; t=1786496678;
+	bh=WKX7VNXBPgapL0AoeSRXV2Q2DGQaFFWHAmrcE1PQMK0=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date;
+	b=a8G/l1I54jJ4YhqvsH0r9O9Popdifnp0OE718wLjwRbA2OzDphwBv+qEXRteho5hA
+	 ypcPN+DhaiSnq+2z8RIfwslb9BiI0XC2tl9/UXWyzz7esaRIBy+xYdLZrZB4l/4UI/
+	 x9Uwx1jMDOud8ve2qE0yOivxfsMCcps+BZOG8sYIaCNadNYoaGRzQBauv0symDsbnP
+	 z9IksUA34pu1vjCU4JP+k9NiRyVd3M6gR0NZB+YoAcrIxou1FW2kE5KN6zU7I/VYuW
+	 JbPran9kR8xfC3vjxDbnAKK3mDgBCxhQpRdeprMtDob4Qg9eWw8C1RnZ3Q3zThexRs
+	 ImDKAp9xzzpfw==
+Content-Type: multipart/mixed; boundary="===============1302207253100925257=="
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Message-Id: <42d2df770e6e5f9134476509f690ec9b7d68f0da4cd1ffadcf3f9c1b75f0adf2@mail.kernel.org>
+In-Reply-To: <20260811235331.10044-1-kartikey406@gmail.com>
+References: <20260811235331.10044-1-kartikey406@gmail.com>
+Subject: Re: [PATCH] perf/bpf: Fix data race in __perf_event_overflow
+From: bot+bpf-ci@kernel.org
+To: kartikey406@gmail.com,peterz@infradead.org,mingo@redhat.com,acme@kernel.org,namhyung@kernel.org,mark.rutland@arm.com,alexander.shishkin@linux.intel.com,jolsa@kernel.org,irogers@google.com,adrian.hunter@intel.com,james.clark@linaro.org,song@kernel.org,ast@kernel.org,daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,yonghong.song@linux.dev,emil@etsalapatis.com,kpsingh@kernel.org,mattbobrowski@google.com,rostedt@goodmis.org,mhiramat@kernel.org,mathieu.desnoyers@efficios.com,me@kylehuey.com
+Cc: linux-perf-users@vger.kernel.org,linux-kernel@vger.kernel.org,bpf@vger.kernel.org,linux-trace-kernel@vger.kernel.org,kartikey406@gmail.com,syzbot+651d2774bd1d8395595f@syzkaller.appspotmail.com,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,clm@meta.com,ihor.solodrai@linux.dev
+Date: Wed, 12 Aug 2026 01:04:37 +0000 (UTC)
+
+--===============1302207253100925257==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
 
-On Sun, 09 Aug 2026 00:14:39 -0700, Ian Rogers wrote:
-> Phase 1 of splitting the v19 review patches into smaller fixes.
-> These patches address issues identified in the python extension during
-> the review of the v19 script porting series, as well as fixing several
-> pre-existing bugs and leaks.
-> 
-> v3:
-> - Addressed review feedback from Namhyung Kim and Sashiko AI:
->   - Dropped "perf data: Fix directory file descriptor leak in perf_data__switch"
->     to avoid Use-After-Free during directory mode file rotation.
->   - Added list == NULL check in pyrf_counts_values_set_values to safely
->     handle attribute deletion (del obj.values).
->   - Preserved errno before calling intlist__delete(skiplist) in cmd_test
->     error path to prevent clobbering the return error code.
->   - Added CHECK_INITIALIZED to pyrf_pmu__repr to prevent NULL pointer
->     dereferences on uninitialized PMU objects.
->   - Fixed duplicate patch title from v2.
-> 
-> [...]
-Applied to perf-tools-next, thanks!
+> commit ffa161d3558e4937793a0c3e98e19e4b22e58bd9
+> Author: Deepanshu Kartikey <kartikey406@gmail.com>
+> Date:   Wed Aug 12 05:23:31 2026 +0530
+>
+>     perf/bpf: Fix data race in __perf_event_overflow
+>
+>     perf_event_detach_bpf_prog() writes event->prog = NULL
+>     under bpf_event_mutex, while __perf_event_overflow() reads
+>     event->prog concurrently without any lock protection. This
+>     causes a data race detected by KCSAN.
+>
+>     __perf_event_overflow() can be called from interrupt/NMI
+>     context, so it cannot acquire bpf_event_mutex. Fix the race
+>     by using WRITE_ONCE() in perf_event_detach_bpf_prog() and
+>     READ_ONCE() in __perf_event_overflow(). Also store the result
+>     of READ_ONCE() in a local variable to avoid reading event->prog
+>     twice which could result in a NULL pointer dereference if the
+>     pointer becomes NULL between the two reads.
+>
+>     Reported-by: syzbot+651d2774bd1d8395595f@syzkaller.appspotmail.com
+>     Closes: https://syzkaller.appspot.com/bug?extid=651d2774bd1d8395595f
+>     Fixes: f11f10bfa1ca ("perf/bpf: Call BPF handler directly, not through overflow machinery")
+>     Signed-off-by: Deepanshu Kartikey <kartikey406@gmail.com>
+>     Reported-by: syzbot+651d2774bd1d8395595f@syzkaller.appspotmail.com
+>     Signed-off-by: Deepanshu Kartikey <kartikey406@gmail.com>
 
-Best regards,
-Namhyung
+The trailer block contains duplicate tags: both Reported-by: and
+Signed-off-by: appear twice. Also, the second Reported-by: is placed
+after the first Signed-off-by:, which breaks the conventional trailer
+ordering (Reported-by/Closes/Fixes should come before Signed-off-by).
+
+Should the duplicates be collapsed to one of each, in proper trailer order?
 
 
+---
+AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+
+CI run summary: https://github.com/kernel-patches/bpf/actions/runs/31550171807
+--===============1302207253100925257==--
