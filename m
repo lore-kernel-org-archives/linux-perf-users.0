@@ -1,162 +1,305 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48144334A0
-	for <linux-perf-users@vger.kernel.org>; Tue, 11 Aug 2026 23:53:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B850A27707
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 00:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786492433; cv=none; b=Q567nNZA2Ej4/7k784f9SLaefhB5MD3sQKo5Qpa0J0PyI8fK8gS+EwcR5WYX5/xtpcviGBMQRDxGsSKxAeiVs12qICHDKTve2mCbvfeuEGv8Wr57RaJ70PrsBz28iS1Ivnh0095JKFAJAZNnEQid9W5xW198GBSWGvHfovi5tEM=
+	t=1786493079; cv=none; b=dJ7U7TK3S/vxDg1ivfL+MfKTE8yvviRJoFTRTxd7vVM+dRW6olmmmxbVrkXhFvKkeZN0ii4ckQTyikZdLumZrC/JGgkI9CaW2bbRpL/rjpLWVRwilhbVYzqJkvV+oz4SfaCDbgUYE2LQ1cNYvnjJsMxabbBKVmSkTap/YJ4kMP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786492433; c=relaxed/simple;
-	bh=qpY9hwUm1VtCpfQaT9JtmZnLLzTR3oMcZSOjkRsdLB4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eVQYRgTRbaKKFHbQnP25TgENMCJGRrrIAL/rkO4g+RzfmnIFIrh5btCj7eDbijkWG5nEoygLfl1fwinUnFdVq0++zfyT1jw6kidtWIvZbNYdjCR7KWsfyBAlZlRnhO0YvQ/fUu0L8dQAygC74lgMCpc0P86QlLvfWpH3Y+95KAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wp889cmc; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786493079; c=relaxed/simple;
+	bh=nxwRa4VfIF4NYy6WYg3i4IzPKqA44rsYT/Ygyoy5zK0=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=S428QzeEFz60x7xy9At+bUklSMnidZcDPHmzh/+33bSn88YfkdNE1R/DSIRPglZv9e6g/Y3NEPzMs2OZ9hfDBE3aoeZbeB/lsBZtTGt74AQPkVGZZq5EtlpjhL8h6SbVU9X6N8AD6vDpFZJ1ZBf+Lu50JcEyJu6PtsO4xlk4FLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hgEhnwj0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wp889cmc"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-c9aea40d799so215740a12.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 11 Aug 2026 16:53:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786492430; x=1787097230; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=AY/Dp7ip8sCatNzHcOgs/oMLEEtZQxV5ZR6XyZHm6HY=;
-        b=Wp889cmcqoYlX8mUZlm58ciIBxFZxpDkuD+/G4g1QUyg6UEajlf23DztPx/y6OZ59K
-         rKDt7WdR9yxsIs5YE9lwEgsJuINzhiMXo+dD9SmGx40U5lQv8h22PyDGkKtMWlVCfvA5
-         SBLCOxlrOc5HBQ1b4dq1Cjf4nMFktyD/k852vyCF2hfGAi0UoVOXHfl1FDL9rPnAjtZR
-         miRQEkxOOiIlFaOfbdycMoeDsy0iAvnz57dGto332Qg0gYSKmdXDvpEPylv94hzozuLk
-         ZiZumgwCMOy20kWIlzFc7x7/DFjjyMMK0sKuUfnEfOu9LPOIGwlTeWn1X95LrNS16+it
-         rNww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786492430; x=1787097230;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=AY/Dp7ip8sCatNzHcOgs/oMLEEtZQxV5ZR6XyZHm6HY=;
-        b=NKVs8yB2/25LaT7DJ1oqgggXF2KNxG+lGUmATqRGf4xIgOm6nUgSQ19lfsWpRIxeJu
-         UKRaOcPl/fPECrgeAbrMzQidm0DdOxiLwP7LgumLwmCtncxp3iLqqjRVW6+olx8+sA7z
-         iIZ+606sHXzd1nrMnJ5bPg6icTfMoVWiWfZLNV515rxsDazDI2QkNbVbma1ckT72C6ew
-         DhVWipXakjUaPs96qfp8uxkQ62GiUT2CkLvnOZs75b8fmpVRPzKnlBFQ+x649x9doAnb
-         o+c4rW8KaVu4biIL2xPN7j+Ktgq+zxY2gGxybsbNGhiMwweNZ96oo9V8caMueTlqaxcm
-         glLw==
-X-Gm-Message-State: AOJu0Yx6arVAC1YnslIQqyBX39bT2dD7zbI/l+kcyazfXHW58UfDH37V
-	yhYuqGoo2JCYJKCMQQtWIq+pfq5rUhID9nrW6q8r9+ChFJJVuArkBS/C
-X-Gm-Gg: AR+sD10R+BanbKxMjOL9wFWWjesZayefFTIOeWNGVUeTOo6XSuayel3SvZWZAPUVMin
-	qyf4DouHjLw0PmwR1OBPS8MYPnNMR4FiXsixngo1a9jGnaI7u7eQDP3b+2cCVr78ri0PxSozfT0
-	JUHUoIaJLBxyqZ0BodjXH/RlOp9Q8hNxTAwvuRJBHyXkqO0cf8rGTbWZjmwy66NYTXDosweWFr9
-	kExYsWMymq0RHZPWCfeLEcJT86E6EqYkkA/r77k2X/DqUAY+B6hp4vfTrmn2XVkU9LdkPZzbjtC
-	LoBGjGB0uQVoTstS0AJZugcGQpJ8S0fbntbwhJ5iiSc3DPFtDBiShUDhsk8D/K4OF3XzxoNajZX
-	ZOvIkd/pw4Nuhryy+Q2+k/kvP39Eowr02UZYNz/JaUVbxMud4nGdA4EwAbLr7l51exKJA5QmGvU
-	zz5g3l8U8TqC6FyT2HpvA8OoLqT909RCpj/BYJwsNCLwX0oHK7RkASy0bBNTBxBuFQQ/8LqmrgZ
-	xNJq+O3K0bYKZRkTt3DIEQ/Ag1kHJrO7z8IdBgANFBI2JwukHAGIw==
-X-Received: by 2002:a05:6a20:3c8f:b0:3c3:8d4c:6673 with SMTP id adf61e73a8af0-3cc3f8ade77mr603568637.37.1786492429914;
-        Tue, 11 Aug 2026 16:53:49 -0700 (PDT)
-Received: from deepanshu-Legion-Pro-5-16AFR10.. ([2405:201:682f:383f:4531:180e:142a:c2f1])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-31cf3d0b432sm3853828eec.8.2026.08.11.16.53.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Aug 2026 16:53:48 -0700 (PDT)
-From: Deepanshu Kartikey <kartikey406@gmail.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	song@kernel.org,
-	ast@kernel.org,
-	daniel@iogearbox.net,
-	andrii@kernel.org,
-	eddyz87@gmail.com,
-	memxor@gmail.com,
-	martin.lau@linux.dev,
-	yonghong.song@linux.dev,
-	emil@etsalapatis.com,
-	kpsingh@kernel.org,
-	mattbobrowski@google.com,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	me@kylehuey.com
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	Deepanshu Kartikey <kartikey406@gmail.com>,
-	syzbot+651d2774bd1d8395595f@syzkaller.appspotmail.com
-Subject: [PATCH] perf/bpf: Fix data race in __perf_event_overflow
-Date: Wed, 12 Aug 2026 05:23:31 +0530
-Message-ID: <20260811235331.10044-1-kartikey406@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgEhnwj0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 369881F000E9;
+	Wed, 12 Aug 2026 00:04:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786493077;
+	bh=ZI28Fk1QqvALcn8VNLO3hEdYoUgK1K6cl7m7A2KQWhM=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=hgEhnwj0rne8gLgxuQ0RVDenTQVQE7mC0txEIlqqEZDi3PEOMMXx8sDfIQ73EZZ74
+	 Ve2733e57LQ2FsrV5npK/sLfzihpPojCu79llUtjzsaWSTZ/b7HeSkntwK/H/uWwjM
+	 NHS0yreJDguuu8jmshhiAbBl3TzI5WqrthtzuQYd+he/BJ1Y4L4QPWdl2TVsvfOi+a
+	 M85D9BF/f66oZ3ZPErpin8Vpm+x9iv8yRcjwgAfthHjW0TZ5kdilmAPShnklMOmKQb
+	 A9jv1G9zRH60vBHSaadewosHDwz6ft8uxP3OMd1nqZdvx7xB5PAo1qrVYanhwdriY1
+	 WZdnPZR+usSFg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 1/2] perf: Add Raspberry Pi BCM2835 AXI PMU driver
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260811235112.2267241-2-irogers@google.com>
+References: <20260811083828.2057695-1-irogers@google.com>
+ <20260811235112.2267241-1-irogers@google.com>
+ <20260811235112.2267241-2-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 12 Aug 2026 00:04:36 +0000
+Message-Id: <20260812000437.369881F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-perf_event_detach_bpf_prog() writes event->prog = NULL
-under bpf_event_mutex, while __perf_event_overflow() reads
-event->prog concurrently without any lock protection. This
-causes a data race detected by KCSAN.
+Thank you for your contribution! Sashiko AI review found 8 potential issue(=
+s) to consider:
+- [High] The probe function ignores a missing 'firmware' device tree phandl=
+e, leaving `pmu->firmware` NULL but leaving the VPU monitor enabled, causin=
+g a later NULL pointer dereference in the mailbox IPC.
+- [High] The driver fails to prevent sysfs unbinding (`.suppress_bind_attrs=
+ =3D true`), leading to a Use-After-Free if unbound while perf events are a=
+ctive.
+- [High] Incorrect manual parsing of the 'reg' property assumes fixed addre=
+ss and size cells, breaking on 64-bit platforms.
+- [High] Incorrect PMU teardown ordering in `rpi_axi_pmu__exit` and missing=
+ cleanup in probe error paths cause Use-After-Free vulnerabilities.
+- [High] The PMU driver uses a `spinlock_t` in a hardirq hrtimer callback, =
+causing lockdep splats and sleeping in atomic context on PREEMPT_RT.
+- [Medium] An unprotected write to `hw_events.enabled[idx]` creates a race =
+condition with event deletion, which can silently break hardware configurat=
+ion for recycled bus watcher slots.
+- [Medium] The CPU hotplug offline callback erroneously restarts the pollin=
+g hrtimer pinned to the dying CPU, sabotaging PMU migration.
+- [Low] Raspberry Pi 5 (BCM2712) support is partially implemented but compl=
+etely unreachable because the chip type is hardcoded to BCM2835 and the dev=
+ice tree match table lacks BCM2712.
+--
 
-__perf_event_overflow() can be called from interrupt/NMI
-context, so it cannot acquire bpf_event_mutex. Fix the race
-by using WRITE_ONCE() in perf_event_detach_bpf_prog() and
-READ_ONCE() in __perf_event_overflow(). Also store the result
-of READ_ONCE() in a local variable to avoid reading event->prog
-twice which could result in a NULL pointer dereference if the
-pointer becomes NULL between the two reads.
+--- Patch [1]: [PATCH v2 1/2] perf: Add Raspberry Pi BCM2835 AXI PMU driver=
+ ---
+commit 3567c05975da01f684191bbbfa826e0e8d8e9927
+Author: Ian Rogers <irogers@google.com>
+Subject: perf: Add Raspberry Pi BCM2835 AXI PMU driver
 
-Reported-by: syzbot+651d2774bd1d8395595f@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=651d2774bd1d8395595f
-Fixes: f11f10bfa1ca ("perf/bpf: Call BPF handler directly, not through overflow machinery")
-Signed-off-by: Deepanshu Kartikey <kartikey406@gmail.com>
----
- kernel/events/core.c     | 4 +++-
- kernel/trace/bpf_trace.c | 2 +-
- 2 files changed, 4 insertions(+), 2 deletions(-)
+This commit introduces a new uncore PMU driver for Broadcom BCM2835-BCM2711=
+=20
+AXI system monitors. It supports tracking AXI traffic via MMIO for the syst=
+em=20
+monitor and via mailbox IPC for the VPU monitor.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index ba5bd6a78fe7..9d9c5477772e 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10753,6 +10753,7 @@ static int __perf_event_overflow(struct perf_event *event,
- {
- 	int events = atomic_read(&event->event_limit);
- 	int ret = 0;
-+	struct bpf_prog *prog;
- 
- 	/*
- 	 * Non-sampling counters might still use the PMI to fold short
-@@ -10766,7 +10767,8 @@ static int __perf_event_overflow(struct perf_event *event,
- 	if (event->attr.aux_pause)
- 		perf_event_aux_pause(event->aux_event, true);
- 
--	if (event->prog && event->prog->type == BPF_PROG_TYPE_PERF_EVENT &&
-+	prog = READ_ONCE(event->prog);
-+	if (prog && prog->type == BPF_PROG_TYPE_PERF_EVENT &&
- 	    !bpf_overflow_handler(event, data, regs))
- 		goto out;
- 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 75495a5c3507..ee61dc760045 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2018,7 +2018,7 @@ void perf_event_detach_bpf_prog(struct perf_event *event)
- 
- put:
- 	prog = event->prog;
--	event->prog = NULL;
-+	WRITE_ONCE(event->prog, NULL);
- 
- unlock:
- 	mutex_unlock(&bpf_event_mutex);
--- 
-2.43.0
+> diff --git a/drivers/perf/rpi_axi_pmu.c b/drivers/perf/rpi_axi_pmu.c
+> new file mode 100644
+> index 0000000000000..cdf7d9a74f13e
+> --- /dev/null
+> +++ b/drivers/perf/rpi_axi_pmu.c
+[ ... ]
+> +static int rpi_axi_pmu__init(struct rpi_axi_pmu *pmu, struct platform_de=
+vice *pdev)
+> +{
+[ ... ]
+> +	pmu->chip =3D CHIP_BCM2835;
 
+[Severity: Low]
+Is BCM2712 hardware meant to be supported here?
+
+The chip type is unconditionally hardcoded to CHIP_BCM2835, which appears to
+make the BCM2712 definitions unreachable.
+
+> +
+> +	pmu->pmu =3D (struct pmu) {
+[ ... ]
+> +	if (pmu->chip =3D=3D CHIP_BCM2835) {
+> +		pmu->monitor[MON__SYSTEM].use_mailbox_interface =3D false;
+> +		pmu->monitor[MON__VPU].use_mailbox_interface =3D true;
+> +		fw_node =3D of_parse_phandle(dev->of_node, "firmware", 0);
+> +		if (fw_node) {
+> +			pmu->firmware =3D rpi_firmware_get(fw_node);
+> +			of_node_put(fw_node);
+> +			if (!pmu->firmware)
+> +				return -EPROBE_DEFER;
+> +		}
+
+[Severity: High]
+Can this lead to a NULL pointer dereference in the mailbox IPC?
+
+If the device tree lacks the firmware property, fw_node is NULL and
+the driver continues with pmu->firmware left as NULL.
+
+Later, set_monitor_control() will call rpi_firmware_property() using this
+NULL pointer when VPU events are started.
+
+> +	} else {
+[ ... ]
+> +	for (int i =3D 0; i < MON__MAX; i++) {
+> +		rpi_axi_hw_events__init(&pmu->monitor[i].hw_events);
+> +
+> +		if (pmu->monitor[i].use_mailbox_interface) {
+> +			ret =3D of_property_read_u32_index(dev->of_node, "reg", i * 2,
+> +							 &pmu->monitor[i].mailbox);
+
+[Severity: High]
+Does this correctly parse the reg property on 64-bit platforms?
+
+Using of_property_read_u32_index() with a fixed index of i * 2 assumes that
+address and size cells are exactly 1.
+
+On platforms with 64-bit device tree layouts, could this fetch the wrong
+word and corrupt the mailbox address?
+
+> +			if (ret) {
+[ ... ]
+> +	ret =3D cpuhp_state_add_instance(rpi_axi_pmu_cpuhp_state, &pmu->cpuhp_n=
+ode);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to add cpuhp instance %d\n", ret);
+> +		goto err_pmu_unregister;
+> +	}
+> +	return 0;
+> +
+> +err_pmu_unregister:
+> +	perf_pmu_unregister(&pmu->pmu);
+> +err_firmware_put:
+> +	if (pmu->firmware)
+> +		rpi_firmware_put(pmu->firmware);
+> +	return ret;
+> +}
+
+[Severity: High]
+Could this regression cause a use-after-free if probe fails here?
+
+If cpuhp_state_add_instance() fails, the error path unregisters the PMU but
+does not cancel the hrtimer or vpu_work.
+
+Since the PMU is briefly visible in sysfs, might userspace race to open an
+event and arm the timer before the context is freed by devres?
+
+> +static void rpi_axi_pmu__exit(struct rpi_axi_pmu *pmu)
+> +{
+> +	cpuhp_state_remove_instance(rpi_axi_pmu_cpuhp_state, &pmu->cpuhp_node);
+> +	hrtimer_cancel(&pmu->hrtimer);
+> +	cancel_work_sync(&pmu->vpu_work);
+> +	if (pmu->firmware)
+> +		rpi_firmware_put(pmu->firmware);
+> +	perf_pmu_unregister(&pmu->pmu);
+> +}
+
+[Severity: High]
+Does this teardown ordering allow new events to race with driver removal?
+
+By cancelling the timer and workqueue before unregistering the PMU, there
+appears to be a window where new events can be scheduled that restart the
+timers while the context is being torn down.
+
+[ ... ]
+> +static void rpi_axi_pmu_enable_bus_watcher(struct rpi_axi_pmu *pmu, enum=
+ monitor mon,
+> +					    int idx, int bus, int filter)
+> +{
+[ ... ]
+> +	pmu->monitor[mon].hw_events.enabled[idx] =3D true;
+> +}
+
+[Severity: Medium]
+Is this state update safe from concurrent deletion?
+
+The array element is modified without holding pmu->lock.
+
+When rpi_axi_pmu_vpu_work_handler() drops the lock to call this function:
+
+rpi_axi_pmu_vpu_work_handler()
+   spin_unlock_irq(&pmu->lock);
+   rpi_axi_pmu_enable_bus_watcher(pmu, MON__VPU, idx, bus, filter);
+   spin_lock_irq(&pmu->lock);
+
+A concurrent rpi_axi_pmu_del() could clear the slot and set enabled to fals=
+e.
+
+If a new event immediately reuses this slot, wouldn't the unlocked write to
+true overwrite the hardware configuration state for the new event?
+
+[ ... ]
+> +static enum hrtimer_restart rpi_axi_pmu_timer_handler(struct hrtimer *ti=
+mer)
+> +{
+> +	struct rpi_axi_pmu *pmu =3D container_of(timer, struct rpi_axi_pmu, hrt=
+imer);
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&pmu->lock, flags);
+
+[Severity: High]
+Will this lock acquisition panic on PREEMPT_RT kernels?
+
+The timer defaults to hardirq context, where acquiring a sleepable lock like
+spinlock_t triggers a panic on PREEMPT_RT.
+
+[ ... ]
+> +static int rpi_axi_pmu_offline_cpu(unsigned int cpu, struct hlist_node *=
+node)
+> +{
+[ ... ]
+> +	spin_lock_irqsave(&pmu->lock, spinflags);
+> +	if (pmu->active_events > 0) {
+> +		spin_unlock_irqrestore(&pmu->lock, spinflags);
+> +		hrtimer_cancel(&pmu->hrtimer);
+> +		spin_lock_irqsave(&pmu->lock, spinflags);
+> +		if (pmu->active_events > 0)
+> +			hrtimer_start(&pmu->hrtimer, RPI_AXI_PMU_TIMER_INTERVAL,
+> +				      HRTIMER_MODE_REL_PINNED);
+> +	}
+> +	spin_unlock_irqrestore(&pmu->lock, spinflags);
+> +
+> +	return 0;
+> +}
+
+[Severity: Medium]
+Does this logic unintentionally sabotage PMU migration during CPU offline?
+
+This callback runs in the context of the dying CPU.
+
+By passing HRTIMER_MODE_REL_PINNED here, the timer seems to be pinned to the
+offlining CPU instead of being successfully migrated to the target CPU.
+
+[ ... ]
+> +static int rpi_axi_pmu_probe(struct platform_device *pdev)
+> +{
+> +	struct rpi_axi_pmu *pmu;
+> +
+> +	pmu =3D devm_kzalloc(&pdev->dev, sizeof(*pmu), GFP_KERNEL);
+
+[ ... ]
+> +static const struct of_device_id rpi_axi_pmu_match[] =3D {
+> +	{
+> +		.compatible =3D "brcm,bcm2835-axiperf",
+> +		.data =3D (void *)CHIP_BCM2835,
+> +	},
+> +	{
+> +		.compatible =3D "brcm,bcm2711-axiperf",
+> +		.data =3D (void *)CHIP_BCM2835,
+> +	},
+> +	{ }
+> +};
+
+[Severity: Low]
+Could this device tree match table be missing a compatible string for
+BCM2712 hardware, preventing it from probing entirely?
+
+> +MODULE_DEVICE_TABLE(of, rpi_axi_pmu_match);
+> +
+> +static struct platform_driver rpi_axi_pmu_driver  =3D {
+> +	.probe =3D	rpi_axi_pmu_probe,
+> +	.remove =3D	rpi_axi_pmu_remove,
+> +	.driver =3D {
+> +		.name   =3D PMU_NAME,
+> +		.of_match_table =3D of_match_ptr(rpi_axi_pmu_match),
+> +	},
+> +};
+
+[Severity: High]
+Can an administrator unbinding this driver via sysfs trigger a use-after-fr=
+ee?
+
+The pmu context is allocated with devm_kzalloc(), tying its memory lifetime
+to the device bind state.
+
+Since .suppress_bind_attrs =3D true is omitted, a sysfs unbind will free the
+memory while active perf events might still exist and try to access the
+freed context.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260811235112.2267=
+241-1-irogers@google.com?part=3D1
