@@ -1,118 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FE42335081;
-	Wed, 12 Aug 2026 17:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35D2335081;
+	Wed, 12 Aug 2026 17:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786555503; cv=none; b=UuptlWrl/V3vc6dVHRjBSGEv2ibc+BqOaGva8C4cpcMA8O6KZN9LlCelsQFy2z0SoHwdVtt7pjs/jitV3igMl5rIb/lt1rVqG5L3MP5S9BsmWpeto/2mq0u6+p3OLHix+ZYZ72p8O50eSr1dVgsG2UCcnJShDjsNZ9bNUKUHDqQ=
+	t=1786555660; cv=none; b=gxSUbbtRSb8CDJw+KKtoqXpSqfgu9mGqgC/axhCMJyz20BJfi5pFIYLfuVepPP28wm1RoYbFeqmuSA+z9hMx2TWnmSBVAISzbdlFQExP2pIId5vf4zih+QyXaCfUp0PveBnwSiFbYdZntijQDR5cX3Xtt8ofg2J0A/Al4Md0jKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786555503; c=relaxed/simple;
-	bh=9krHO3kdawIY6l5ywOCNmhxFUNDM92ilYwDPpMvTJzQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QVw8uSQkI59SKQi/af/oOhuwrVODdAT6rew8sGv2vIWyIWuast4I/RWvQAnNxQmiKHheK7zXGCStym5bUxCI1cyf/ymgU3KgYgC4f468AxMnVr1bwNFwwJODeJjLwC+IdvvurQFpFBZwyZWY6sgg1ZNTVMPSwh60XlRoQ/TALb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okENkuhg; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786555660; c=relaxed/simple;
+	bh=WJPLHXt8itB/Cw880Ar8NhbyTTeEUpwQxfJvdcAm5iw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=aQLbsfilyYZC0e2GXaHUA/kOpqQ5DOi25CmNiRT5VYWMuyZ9izBUbuviAelx7dcZMBkjU1pRFgGw6Nebs+xOkm4oNRJr/gszpFeZq2KhFRSnZYWaZ64GsIpui8Q+Y0xJLpDYXsDxH4xNq7r4d4ODVNzN8oUcZfItC5NTmK1imuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jwSvUCMl; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okENkuhg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 078981F000E9;
-	Wed, 12 Aug 2026 17:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786555501;
-	bh=4oSNzFjHuzTOgbEhKYNA4ws0ltCJrHAzS2GU8pXVakw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=okENkuhgzJjXS2UaQaKvB9ybQ+m9ds7pwF4/b8z12pNVDtXC7HNFGnfr3MAVGjum9
-	 OvD/UR/LQA7302JY5sAzT40e1zQDjEK91x2GZsHTbymznhWHeWiZDz7hwLCqiSn6HJ
-	 dVm/gtD6dBtUo5Ozo/Ni81ygCihwBpcTeoM/4Oqf/oGFAhL3/gVP1qSTk3tipcc1f9
-	 u+sOr4XyXy7FN4TCvoZtjmKo0V0yvHBm/1K/pWlH7wTBTxGJ51f5FevBzvXtye5VVe
-	 yrp075F1nLy9NekTz0yx4F7BHc6yPEj13/zVnbG0vx+U8pYkCM5NqOG4MzgR1FeG48
-	 OfkGs+4EOKBuA==
-Date: Wed, 12 Aug 2026 18:24:27 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: "David Hildenbrand (Arm)" <david@kernel.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Kees Cook <kees@kernel.org>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Usama Arif <usama.arif@linux.dev>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
-	Liviu Dudau <liviu.dudau@arm.com>, Huang Rui <ray.huang@amd.com>, 
-	Matthew Auld <matthew.auld@intel.com>, 
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Youngjun Park <youngjun.park@lge.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-s390@vger.kernel.org, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	intel-xe@lists.freedesktop.org, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 16/20] tools/testing/selftests/mm: test anonymous page
- offset merge behaviour
-Message-ID: <anysQa1hC83cdX_7@lucifer>
-References: <20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org>
- <20260806-b4-scalable-cow-virt-pgoff-v4-16-ab318a350404@kernel.org>
- <cf70ce8f-cdde-43ec-a50e-796d4e390f3f@kernel.org>
- <antWw3a0iEv4l1Yd@gremlin>
- <20260811130832.3f18d4326a5ebe6eb18cfb5f@linux-foundation.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jwSvUCMl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786555659; x=1818091659;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=WJPLHXt8itB/Cw880Ar8NhbyTTeEUpwQxfJvdcAm5iw=;
+  b=jwSvUCMlc5rI50YMMFht4yNKyz9ajttHHpXEoFQOMPE4k48kCMtzqw90
+   VR7vDM1q37HJvMkkJiiaHds5/++lu2VhNe95kF8vpjjFLWKc+ZFDDBVN7
+   hyhqACzDxM9XnD5qozg5VUHOcmSc0tjmka12CWrmKWlXkKN5VXo2DYxO+
+   xm5+M/chtEhX+jkovg4pWRyPVgUMct49Wa+jf2qF9W+08FA80/KL3Ypw4
+   AUK5achkseH0292SvcjE+YfOa9x/+OlWKVM24nzNLp6bPxaEteVyFvkLH
+   vU4rgLTMe/yuCzWPZaXbbz6XfDrxo4Cmka7iEB8/oI636XlRjaKUd4pQ8
+   A==;
+X-CSE-ConnectionGUID: ruaDc2OURxK5B2R1YDNySw==
+X-CSE-MsgGUID: EJ5pb0DUTROI4ndXYoRCkA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11873"; a="90996220"
+X-IronPort-AV: E=Sophos;i="6.25,219,1779174000"; 
+   d="scan'208";a="90996220"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 10:27:38 -0700
+X-CSE-ConnectionGUID: e4SWaOEVTd+gRiS5EYjQbg==
+X-CSE-MsgGUID: Auz9Ud84QUGgNeZ3b4NBoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,219,1779174000"; 
+   d="scan'208";a="261936541"
+Received: from soc-cp83kr3.clients.intel.com (HELO [10.122.185.5]) ([10.122.185.5])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 10:27:36 -0700
+Message-ID: <16296d40-67f3-4e50-923c-5b26fc122121@intel.com>
+Date: Wed, 12 Aug 2026 12:27:35 -0500
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260811130832.3f18d4326a5ebe6eb18cfb5f@linux-foundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 14/21] KVM: arm64: Apply dynamic guest counter
+ reservations
+To: Colton Lewis <coltonlewis@google.com>, kvm@vger.kernel.org
+Cc: Alexandru Elisei <alexandru.elisei@arm.com>,
+ Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Mingwei Zhang <mizhang@google.com>, Joey Gouly <joey.gouly@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, Mark Rutland <mark.rutland@arm.com>,
+ Shuah Khan <shuah@kernel.org>,
+ Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+ James Clark <james.clark@linaro.org>, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+References: <20260612192909.1153907-1-coltonlewis@google.com>
+ <20260612192909.1153907-15-coltonlewis@google.com>
+Content-Language: en-US
+From: "Chen, Zide" <zide.chen@intel.com>
+In-Reply-To: <20260612192909.1153907-15-coltonlewis@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 11, 2026 at 01:08:32PM -0700, Andrew Morton wrote:
-> On Tue, 11 Aug 2026 18:07:36 +0100 "Lorenzo Stoakes (ARM)" <ljs@kernel.org> wrote:
->
-> > > "Fault in" is imprecise, as a read-fault won't do. "Trigger a CoW fault." might
-> > > be better.
-> >
-> > Andrew - could you fix up? Thanks :)
->
-> np.
->
-> --- a/tools/testing/selftests/mm/merge.c~tools-testing-selftests-mm-test-anonymous-page-offset-merge-behaviour-fix
-> +++ a/tools/testing/selftests/mm/merge.c
-> @@ -1324,7 +1324,7 @@ TEST_F(merge, anon_and_page_offset_misma
->  	ASSERT_NE(ptr, MAP_FAILED);
->
->  	/*
-> -	 * Map another separately, and fault in, at page offset 5:
-> +	 * Map another separately and trigger a CoW fault, at page offset 5:
->  	 *
->  	 * |-----------|           |---------|
->  	 * | unfaulted |           | faulted |
-> _
->
 
-LGTM thanks very much! :)
 
---
-Cheers, Lorenzo
+On 6/12/2026 2:29 PM, Colton Lewis wrote:
+> Apply dynamic guest counter reservations by checking if the requested
+> guest mask collides with any events the host has scheduled and calling
+> pmu_perf_resched_update() with a hook that updates the mask of
+> available counters in between schedule out and schedule in.
+> 
+> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+> ---
+>  arch/arm64/kvm/pmu-direct.c  | 69 +++++++++++++++++++++++++++++++++++-
+>  include/linux/perf/arm_pmu.h |  1 +
+>  2 files changed, 69 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/kvm/pmu-direct.c b/arch/arm64/kvm/pmu-direct.c
+> index 49f1feb5d280c..044f011c9c84b 100644
+> --- a/arch/arm64/kvm/pmu-direct.c
+> +++ b/arch/arm64/kvm/pmu-direct.c
+> @@ -87,6 +87,73 @@ u64 kvm_pmu_direct_pmcr_read(struct kvm_vcpu *vcpu)
+>  		ARMV8_PMU_PMCR_N);
+>  }
+>  
+> +/* Callback to update counter mask between perf scheduling */
+> +static void kvm_pmu_update_mask(struct pmu *pmu, void *data)
+> +{
+> +	struct arm_pmu *arm_pmu = to_arm_pmu(pmu);
+> +	unsigned long *new_mask = data;
+> +
+> +	bitmap_copy(arm_pmu->cntr_mask, new_mask, ARMPMU_MAX_HWEVENTS);
+> +}
+> +
+> +/**
+> + * kvm_pmu_set_guest_counters() - Handle dynamic counter reservations
+> + * @cpu_pmu: struct arm_pmu to potentially modify
+> + * @guest_mask: new guest mask for the pmu
+> + *
+> + * Check if guest counters will interfere with current host events and
+> + * call into perf_pmu_resched_update if a reschedule is required.
+> + */
+> +static void kvm_pmu_set_guest_counters(struct arm_pmu *cpu_pmu, u64 guest_mask)
+> +{
+> +	struct pmu_hw_events *cpuc = this_cpu_ptr(cpu_pmu->hw_events);
+> +	DECLARE_BITMAP(guest_bitmap, ARMPMU_MAX_HWEVENTS);
+> +	DECLARE_BITMAP(new_mask, ARMPMU_MAX_HWEVENTS);
+> +	bool need_resched = false;
+> +
+> +	bitmap_from_arr64(guest_bitmap, &guest_mask, ARMPMU_MAX_HWEVENTS);
+> +	bitmap_copy(new_mask, cpu_pmu->hw_cntr_impl, ARMPMU_MAX_HWEVENTS);
+> +
+> +	if (guest_mask) {
+> +		/* Subtract guest counters from available host mask */
+> +		bitmap_andnot(new_mask, new_mask, guest_bitmap, ARMPMU_MAX_HWEVENTS);
+> +
+> +		/* Did we collide with an active host event? */
+> +		if (bitmap_intersects(cpuc->used_mask, guest_bitmap, ARMPMU_MAX_HWEVENTS)) {
+> +			int idx;
+> +
+> +			need_resched = true;
+> +			cpuc->host_squeezed = true;
+> +
+> +			/* Look for pinned events that are about to be preempted */
+> +			for_each_set_bit(idx, guest_bitmap, ARMPMU_MAX_HWEVENTS) {
+> +				if (test_bit(idx, cpuc->used_mask) && cpuc->events[idx] &&
+> +				    cpuc->events[idx]->attr.pinned) {
+> +					pr_warn_once("perf: Pinned host event squeezed out by KVM guest PMU partition\n");
+> +					break;
+> +				}
+> +			}
+> +		}
+> +	} else {
+> +		/*
+> +		 * Restoring to hw_cntr_impl.
+> +		 * Only resched if we previously squeezed an event.
+> +		 */
+> +		if (cpuc->host_squeezed) {
+> +			need_resched = true;
+> +			cpuc->host_squeezed = false;
+> +		}
+> +	}
+> +
+> +	if (need_resched) {
+> +		/* Collision: run full perf reschedule */
+> +		perf_pmu_resched_update(&cpu_pmu->pmu, kvm_pmu_update_mask, new_mask);
+> +	} else {
+> +		/* Host was never using guest counters anyway */
+> +		bitmap_copy(cpu_pmu->cntr_mask, new_mask, ARMPMU_MAX_HWEVENTS);
+> +	}
+> +}
+> +
+>  /**
+>   * kvm_pmu_host_counter_mask() - Compute bitmask of host-reserved counters
+>   * @pmu: Pointer to arm_pmu struct
+> @@ -209,6 +276,7 @@ void kvm_pmu_load(struct kvm_vcpu *vcpu)
+>  
+>  	pmu = vcpu->kvm->arch.arm_pmu;
+>  	guest_counters = kvm_pmu_guest_counter_mask(pmu);
+> +	kvm_pmu_set_guest_counters(pmu, guest_counters);
+>  	kvm_pmu_apply_event_filter(vcpu);
+>  
+>  	for_each_set_bit(i, &guest_counters, ARMPMU_MAX_HWEVENTS) {
+> @@ -317,7 +385,6 @@ void kvm_pmu_put(struct kvm_vcpu *vcpu)
+>  	/* Stop guest counters and disable interrupts in hardware. */
+>  	write_sysreg(mask, pmcntenclr_el0);
+>  	write_sysreg(mask, pmintenclr_el1);
+> -
+>  	kvm_pmu_set_guest_counters(pmu, 0);
+
+I must have missed something.
+
+Here, vcpu->kvm->arch.arm_pmu->cntr_mask is restored to cntr_mask_impl.
+Is this same struct shared with the perf driver
+(to_arm_pmu(event->pmu)), and shared across other vCPUs as well?
+
+If so, if another pCPU still has a PMU-partition-enabled vcpu loaded
+with guest-owned counters (MDCR_EL2.HPMN is set), could a host event be
+scheduled onto one of those guest-owned counters, conflicting with the
+guest?
+
+>  	preempt_enable();
+>  }
+
+
