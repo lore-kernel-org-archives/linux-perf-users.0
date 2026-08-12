@@ -1,125 +1,223 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C342C42AFA2
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 23:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786577061; cv=pass; b=Pc/qts8+KlaEurcPkIV0WbE1gmaJHb/E1+TDjKcKSpKuVxR2t52U6GwlHdsyGyPrN7F0TvSPDumUz7hCHP71olA1p8zZh17uREKTm6dqxtQhlSbhm5BKwUqWSM5uUipzXz4ag43BdFZamLuQOGgfWwT8zLLD5HN8AWwhpQDrxg8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786577061; c=relaxed/simple;
-	bh=kVMuxP528UVhx8CScODWh+GxODAT8gMpn349lBnk4+I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=B5CIQY9B2kb1sczEVBxGZUAv8iNOVMYkB3CtYcisX60BX6zrlolG2wkkpeVON69L9kDl5dUXrYtmpnVjuh++OSCEkrmcmgmAMyc/7ZgeQUBsfgBuo9hcE470tJ8oK40IR1ApHb0lwUkHxAciA5ypaxftFKiSPB1WOWZ7kcGcGXc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=REzFepgL; arc=pass smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447B4305693
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 23:25:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786577135; cv=none; b=XoVmW3uZLnLGJxGA+pDti3I8aJDspVZWB0aNFbhoGaPlho6xZO3668nroMrgu5uWN+V7Wr9M79KXEijfMV2bENB8Zm88t5IuW3yXBJZSeBWwRXEVHAFJQOtVAKPE+u2hWcd7s37G7qeFiVLAqXEXcFODe4tRSa2MNGNBV30EWlk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786577135; c=relaxed/simple;
+	bh=NQ9XOFnsz8qhijakEIH1nuAJv7O+KIwDrPtvj6t4OUQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=dmg+nQK/HN4GA/nJ0Dy3fIfrhQmcINaGbOkfxPixKnsrXuYiFs72Hy2Bqkwi1x6IkE7YlE4H1tGBifTLWMYrjVv75+bS8BGGmGwJGqqhrregBG/2UsJGDBviQEjdF+isMcgmHxKLD1c3St9PVyJ6IJsn32APnR0sFP+i5VRUB9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FvIoARkN; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="REzFepgL"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-51c10ed63c0so46901cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 16:24:19 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786577058; cv=none;
-        d=google.com; s=arc-20260327;
-        b=roqP1yUboXg8drkOFsaenR/tS6RjKB9Ug03HOVGMw2S5OPQL8y94hYihCMxrM4nGUs
-         rxoFmQhmX2KOT7v0awM+1DO8YedUu1kurRybOPVBc0CajhOX7pUzZIGJMDUe2xu5G/h0
-         a/kVrW2M8aqQGa3q5ovKzNHASVoZCS/BKuihNqMx02jIENArvcQWDmtcsxE24xTI9RyJ
-         nhc5a0QAH5AOc0lyuzoOqzWL8ye9bmxMxnasTzv5UZ27v03HhWKfID+DubxElZFwIRGQ
-         Co85TAk2P6Qfl17PZoi3/AU+p9n3CLqmga48rCMqdNtr0ReyJs4xlfUqEgjv6iwfpWvA
-         0BHA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=ikGTdtrVSy8Ppvpv2+qlgO613IF25tnGTmR5lP5vLAs=;
-        fh=4U3SGnfdBkV5ZA+0rACrdkkLqPm8VrSR2UAwX/arwwg=;
-        b=kT2Ca3vMr1oHbhlKmgJ6/tIGnzImvFpeFQDeMhoZ+Wmp+fYSB0/jDylH9pMmiz250m
-         QLqFNbbPf4cxD21x/yguwIiEok9k97icwUf4b9LmHrLZ2xf2BXV8pi1H9ZdZeSOJo7NF
-         n1nlRD+f24CMSdcoqHcqnZL0l/UUDuelkRPIq9DWvDppTgKPkq848WA4p//OHy1IXBRv
-         zRhk7zZr1RsLLJSoo3EXuXTkDQ36WnMG63HfMAchG4AWo2yIE4FNtA2OYLfUyDkxhcsW
-         zwhDnBVkHZ2c0SxSlzAw2o3J/d//noQBBepRhpwPBeG5pn2rlCnqyxKZiJ++5BcA0XHs
-         hThg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786577058; x=1787181858; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=ikGTdtrVSy8Ppvpv2+qlgO613IF25tnGTmR5lP5vLAs=;
-        b=REzFepgLAEvdpAtPCoPh1HfOviTidPfqA6oRdstvXmngZbxn7ipSicKKQ+GaB6Grtb
-         nI22ERLHVgxMOcFYYanzyVTC006fLmNdF3y2M2RcDaxP5f/JO+digBxLUwnhDkuP7CD9
-         qMbZLRjCubXGMYYNkq0+1HZjxPUYd5JcZgQ+UogGJnv+1TTRYhYMTTnRpjJbWoKZzW0W
-         t7gzxD9OEt3nT6t7DpF8D1Xq7w9PoM38UNhuBLGaUJvqZjHJVGKzF5RFg2+GvUi6xAZK
-         vH3yejuztaAyiq0oHsV+6xULkcF6DgdtEDI+BlKQJ83Au2WViHF4/RRLAsLxivRpxsS9
-         0zgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786577058; x=1787181858;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=ikGTdtrVSy8Ppvpv2+qlgO613IF25tnGTmR5lP5vLAs=;
-        b=LW6oEJWhke99/xST9FlPmolXS2oe8OOoS1YA5NgQqOsJFSlqjdCTUA0g9x76D7lTvG
-         Z9l1wgwKrbgP3Tm3Lteu19evlcjuu0AkpNkD0gCzDGprpUYaGNa/6BPrr6RopGoJMgbw
-         qMf50b04vJq252WoWJ3EpW0H+cNl9fJbxuV0WxpyCx3wyAEMoBSyhdCoUOjZzIv/TNCh
-         y9gKCaBMf6qBiA/65nu05sEl7yLH/YDFmJWwu6/zMObMcCch9HuEX/+HNOUz1eYdkqeA
-         IcIP93ugSAu8PPPJypJoA6W2zVPRBDbBsF9qcD9ORdDFPX6QjDoTCeCXYJsAYHfayDmK
-         o/RA==
-X-Forwarded-Encrypted: i=1; AHgh+RrQq+NcP6LkdzffDCBd8IHkTrk1OWCGUJoMxckcfxblzxtFg3kJ1SXpY9nkoudwxgV3iIfsJ8yGpomE/hyq4oD6@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFmQazP52ao+lc7kPpHl3PvnJeAWuA8MVlUI5GWbBZzV/g5MsL
-	nR/czztHljKhUdVQ49ajBnKkOj+LgvEXc5T5ehyCQhFdICpLWK9HnTrxWl/002dxzBhJWWxI+Cx
-	R38r3dkaJ+GLplImCfiAA+RKaVLrqQHShBZukIcWA/LHpiMLRPnxDYK9G
-X-Gm-Gg: AR+sD13Uir82jQjlmjO+pb9+36In+SJQotsVon9hFTFQAZbplUM3W+ltqF7x583veFI
-	jc1E2KP/rBBJsiBbhlxIA5/oTy2Nx5e2W7evYuUXSOIqKNo7RKt81hU4dxujbs1VKECg318z9Lf
-	vj6GM5D+tS83IzJFH6NGTlc/HizwXeAhZI4egAHIeXaQ4Od/7Cqx4gXS7zhAOhY1DcWcd8vKtNM
-	E4OVy/3zJfXO0sdDWyIoJT//IkxMoAeaUzRGeqyro3CXJpYShevxRoOixEfRJ0GVu9H007Le2Nw
-	ZqNlVKtYr3ccIeNVXzop9gzDXaQQqOKU3YC6F0uKix+++wyTQTE=
-X-Received: by 2002:ac8:5894:0:b0:51c:ad5:93be with SMTP id
- d75a77b69052e-52d76909f7dmr2143601cf.8.1786577058004; Wed, 12 Aug 2026
- 16:24:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FvIoARkN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0A4F1F000E9;
+	Wed, 12 Aug 2026 23:25:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786577134;
+	bh=3zkRF63G3zm+yLdoChDCqzmjRNF1PPWya2+R0DpbevU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=FvIoARkNI1Oe6gmxk+wA/Tvy0Np7Ln9iy4GxYfoVaYD8xoI5DBlmn6dCzzEbL/4ur
+	 MJlG03RxQa7qxJ7RcEmiZJB3OmykTGnDNsY4L/lasEl+BlAeVJ6wuPBmAJLbcw0TPY
+	 PuoA6LxZEheI6OqNyG++ZDWq6e36syq0I7Qf0L7I+4Db6BgiuWd0AkqNudwBvvJqIE
+	 OBi/oFYMmXXA4giosdCS/Mrb9q8V9J9PtOAWxGTY5xz8OVgCbIk5kH4lNWIUMS6lyc
+	 NPmKt3BIuBvyDFpOQWDHaAQP3t5FupYUJsGDKn6AxnL8ZKlEpJmxTFH7yK6/aB2CQ5
+	 ftvJA6zu2nGYw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 1/2] perf: Add Raspberry Pi BCM2835 AXI PMU driver
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260812230800.2646749-2-irogers@google.com>
+References: <20260812230145.2644281-1-irogers@google.com>
+ <20260812230800.2646749-1-irogers@google.com>
+ <20260812230800.2646749-2-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 12 Aug 2026 23:25:33 +0000
+Message-Id: <20260812232533.C0A4F1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260811175140.7235-1-acme@kernel.org> <anyq-lNV-J6q5t1a@x1>
-In-Reply-To: <anyq-lNV-J6q5t1a@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 12 Aug 2026 16:24:04 -0700
-X-Gm-Features: AUfX_mzReoITYGdzEPYun8G8ehGzaaYqsRPvs_2Jzg0YIIisx5UqQKt3PZ0KZqw
-Message-ID: <CAP-5=fVSO-y7y0c5ux89STcN6jXeUtrrbf7fQCwYWq8hSKbr0w@mail.gmail.com>
-Subject: Re: [PATCHES v3 0/5] perf DSO hardening series
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 12, 2026 at 10:18=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Tue, Aug 11, 2026 at 02:51:29PM -0300, Arnaldo Carvalho de Melo wrote:
-> >       Please consider merging,
-> >
-> > Five hardening fixes for the perf DSO data handling code path, all foun=
-d
-> > by the sashiko-bot AI reviewer:
->
-> This is sashiko clean now, if there are no further human reviews can we
-> have this merged?
->
-> https://sashiko.dev/#/patchset/20260811175140.7235-1-acme%40kernel.org
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
+- [Critical] rpi_axi_pmu_del() calls hrtimer_cancel() while holding the per=
+f core's ctx->lock (a raw spinlock) and with IRQs disabled, leading to dead=
+locks.
+- [High] VPU hardware bus watchers are never disabled when their associated=
+ perf events are deleted, resulting in a permanent hardware resource leak.
+- [Medium] Final VPU event counts are lost when an event is stopped, leadin=
+g to silent under-reporting.
+- [Low] RASPBERRYPI_AXI_PMU conditionally selects RASPBERRYPI_FIRMWARE with=
+out ensuring its dependencies are met, causing Kconfig warnings.
+--
 
-2 nits about adding asserts as well as comments.
+--- Patch [1]: [PATCH v5 1/2] perf: Add Raspberry Pi BCM2835 AXI PMU driver=
+ ---
+commit cadc1bb2e8b72c5287e86258dff1cee13436365d
+Author: Ian Rogers <irogers@google.com>
+Date:   Wed Aug 12 23:07:59 2026 +0000
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+    perf: Add Raspberry Pi BCM2835 AXI PMU driver
+   =20
+    This commit adds an uncore performance monitoring unit (PMU) driver
+    for Broadcom BCM2835-BCM2711 AXI system monitors and VideoCore VPU firm=
+ware
+    mailbox monitors found on Raspberry Pi 1 through 4.
 
-Thanks,
-Ian
+> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+> index 245e7bb763b99..97c8bf34f4633 100644
+> --- a/drivers/perf/Kconfig
+> +++ b/drivers/perf/Kconfig
+> @@ -325,4 +325,14 @@ config NVIDIA_TEGRA410_C2C_PMU
+>  	  Enable perf support for counters in NVIDIA C2C interface of NVIDIA
+>  	  Tegra410 SoC.
+> =20
+> +config RASPBERRYPI_AXI_PMU
+> +	tristate "Raspberry Pi AXI PMU support"
+> +	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
+> +	select RASPBERRYPI_FIRMWARE if ARCH_BCM2835
 
-> Best regards,
->
-> - Arnaldo
+[Severity: Low]
+Does this conditionally select RASPBERRYPI_FIRMWARE without ensuring its
+dependencies are met? If a user configures ARCH_BCM2835=3Dy but MAILBOX=3Dn,
+could this cause Kconfig unmet dependency warnings and silent build failure=
+s?
+
+[ ... ]
+
+> diff --git a/drivers/perf/rpi_axi_pmu.c b/drivers/perf/rpi_axi_pmu.c
+> new file mode 100644
+> index 0000000000000..e5cc86fc78b25
+> --- /dev/null
+> +++ b/drivers/perf/rpi_axi_pmu.c
+
+[ ... ]
+
+> +static void rpi_axi_pmu_read(struct perf_event *event)
+> +{
+> +	struct rpi_axi_pmu *pmu =3D pmu_to_rpi_axi_pmu(event->pmu);
+> +	enum monitor mon =3D config_to_monitor(event->attr.config);
+> +	enum counter counter =3D config_to_counter(event->attr.config);
+> +	u64 prev_count, new_count;
+> +	unsigned long flags;
+> +	u32 delta;
+> +
+> +	/* Mailbox VPU counters are polled asynchronously in background vpu_wor=
+k.
+> +	 * MMIO monitors (System and BCM2712 VPU) are read synchronously.
+> +	 */
+> +	if (pmu->monitor[mon].use_mailbox_interface || event->hw.idx < 0)
+> +		return;
+
+[Severity: Medium]
+When a VPU event is stopped, it looks like rpi_axi_pmu_read() bails out here
+without capturing the final delta.
+
+Additionally, in rpi_axi_pmu_vpu_work_handler():
+
+        if (!event || (event->hw.state & PERF_HES_STOPPED) ||
+            config_to_monitor(event->attr.config) !=3D MON__VPU)
+                continue;
+
+The background poller skips stopped events. If rpi_axi_pmu_stop() marks the
+event as stopped, does this result in the final VPU counts being completely
+discarded? Could short-lived processes consistently report zero events beca=
+use
+of this?
+
+[ ... ]
+
+> +static void rpi_axi_pmu_del(struct perf_event *event, int flags)
+> +{
+> +	struct rpi_axi_pmu *pmu =3D pmu_to_rpi_axi_pmu(event->pmu);
+> +	enum monitor mon =3D config_to_monitor(event->attr.config);
+> +	unsigned long spinflags;
+> +	int idx =3D event->hw.idx;
+> +
+> +	if (idx < 0)
+> +		return;
+> +
+> +	rpi_axi_pmu_stop(event, PERF_EF_UPDATE);
+> +
+> +	spin_lock_irqsave(&pmu->lock, spinflags);
+> +	for (int i =3D 0; i < RPI_AXI_MAX_EVENTS; i++) {
+> +		if (pmu->events[i] =3D=3D event) {
+> +			pmu->events[i] =3D NULL;
+> +			pmu->event_gen[i]++;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (pmu->monitor[mon].hw_events.monitored_bus[idx] >=3D 0) {
+> +		pmu->monitor[mon].hw_events.refcount[idx]--;
+> +		if (pmu->monitor[mon].hw_events.refcount[idx] =3D=3D 0) {
+> +			if (mon =3D=3D MON__SYSTEM)
+> +				rpi_axi_pmu_disable_bus_watcher(pmu, mon, idx);
+> +			pmu->monitor[mon].hw_events.monitored_bus[idx] =3D -1;
+> +			pmu->monitor[mon].hw_events.filter[idx] =3D BCM2835_FLT__NONE;
+> +			pmu->monitor[mon].hw_events.enabled[idx] =3D false;
+
+[Severity: High]
+Does this cause a permanent hardware resource leak for VPU events? Since
+rpi_axi_pmu_disable_bus_watcher() is only called for MON__SYSTEM, the VPU
+bus watchers are never disabled. Furthermore, because enabled[idx] is set to
+false, the hardware is left running indefinitely with no way for any backgr=
+ound
+polling logic to track or disable it later.
+
+> +			pmu->monitor[mon].hw_events.num_monitored--;
+> +			if (mon =3D=3D MON__SYSTEM && pmu->monitor[mon].hw_events.num_monitor=
+ed =3D=3D 0) {
+> +				set_monitor_control(pmu, mon, GEN_CTL_RESET_BIT);
+> +				pmu->monitor[mon].hw_events.monitor_running =3D false;
+> +			}
+> +		}
+> +	}
+> +
+> +	event->hw.idx =3D -1;
+> +	pmu->active_events--;
+> +	if (mon =3D=3D MON__VPU)
+> +		pmu->active_vpu_events--;
+> +
+> +	if (pmu->active_events =3D=3D 0) {
+> +		spin_unlock_irqrestore(&pmu->lock, spinflags);
+> +		if (in_hardirq())
+> +			hrtimer_try_to_cancel(&pmu->hrtimer);
+> +		else
+> +			hrtimer_cancel(&pmu->hrtimer);
+
+[Severity: Critical]
+Can this lead to deadlocks or scheduling while atomic panics?=20
+
+rpi_axi_pmu_del() is called with the perf core's ctx->lock held (a raw spin=
+lock)=20
+and local IRQs disabled. If in_hardirq() is false, this branch calls=20
+hrtimer_cancel().=20
+
+Because this is a SOFT hrtimer (HRTIMER_MODE_REL_SOFT), hrtimer_cancel()=20
+can sleep on PREEMPT_RT, causing an immediate panic. Even without PREEMPT_R=
+T,=20
+if the user thread preempted ksoftirqd on the same CPU, spin-waiting for=20
+the timer to finish while preemption is disabled causes a permanent=20
+self-deadlock.
+
+> +		spin_lock_irqsave(&pmu->lock, spinflags);
+> +		if (pmu->active_events > 0)
+> +			hrtimer_start(&pmu->hrtimer, RPI_AXI_PMU_TIMER_INTERVAL,
+> +				      HRTIMER_MODE_REL_SOFT);
+> +		spin_unlock_irqrestore(&pmu->lock, spinflags);
+> +		return;
+> +	}
+> +	spin_unlock_irqrestore(&pmu->lock, spinflags);
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260812230800.2646=
+749-1-irogers@google.com?part=3D1
