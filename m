@@ -1,150 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C02477E4F;
-	Wed, 12 Aug 2026 18:09:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96D944A71E;
+	Wed, 12 Aug 2026 21:07:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786558145; cv=none; b=e7V80HsfUhUL+zIGaBEBQN0MpG/sLQOhE5YGRiq76yWFEPlZX4WhzzICcf6qBIb5Fd1uDFykZ5WP9A1Ai0SVfv4gP5jvQ2xPOyVba6iKJ2SLjKgkeLHtjk9gTZTDb3EQX4yaDajVwks9uE2vrkjN9EsYgV8Z7bHuDqm61uLsQwU=
+	t=1786568880; cv=none; b=CcyVUUG3VriUwwWto5vpc5K50VX3ELjE+kFrjH+mefkFeFKlaz/r9ENgzJ7xagp0rZYydFQJSMd/PDc6T3wvXoQe2jpvaaZ3UpFmEMQVyeyI4uKsYqeOK91FifHDgyxpeb0NIHpMD2tL/AvqW7JS08VqKf9Q5KavcR9ueODm+XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786558145; c=relaxed/simple;
-	bh=Yi5far2ZKXnrZTlfHu9Izikx3SvheQpzfjRHuGQy+xY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hhlEuUeHi6j6kJiRovbFy0NlqR6RSB1kRMmZRRtVRaBwXpW+AHcrW2tBfOw3gj4oUt1/gsitHWw54w8tP001wfo69huuM5+yFbuPIDMgvnJmF05NbZ+h+T2i1tXrRhIEaurB+xzYJ0zoLu5mENX6TJq8S1yscqhaL3+PWQixHTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FPZqAbLL; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786568880; c=relaxed/simple;
+	bh=jkISh4epTP2Jl1ZtZblGXzMLbe2O0ArNNOJumNFLOcM=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=frzF8j4AJteIEggHVdIgFNm4kpJeL/N2cKXpS7Q9XZvfl9LlbPTPUWH39nLfBgwnLIamTxW63n1DmTKLSc8OZDp6v5Lk9KoW1gH11pnthiAvREiAN6IcNxmy+rVutW5YC4LoGVletR4AMkQF/SrDQ9nmF8iOYpqeBpO5q3GVuVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h4FZtBu3; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FPZqAbLL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D7B41F000E9;
-	Wed, 12 Aug 2026 18:08:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h4FZtBu3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02DD31F000E9;
+	Wed, 12 Aug 2026 21:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786558144;
-	bh=/4wKYM9MxtqgdWEMOzwNt0V2ekWexcqa8GGAN8Nt6p8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=FPZqAbLLWRIKnNz+QQXKAqF9IVzq9IiefDRz1565tIbl/YT7GDxa0hVfpHvtuPJOv
-	 21Vj/7WrU8+huUaZKOGhGAzGzQWLjfUMZVZt2ff4LGvtC2SCdGUaGADsrWisnU+XWO
-	 beIMV93LtMwcdcrt2YjPyUDHzLIhwRqnV3IEVkVEGVWMozBMT+LElOjqy90TkkKs+N
-	 ZQx0XKNVpk1LWcEBgnepPPW8ZiW8sWwUJy3aW30MjDw6aprydwCd/wc7rmQd1wt6sB
-	 wuQg/3oKhwJjGNZDGpj090xIWx/Y23Nxl83v8P3inLlBDasM7ar0kQeBrH3IL7iRZm
-	 rzZ5tMbMJv3NQ==
-Date: Wed, 12 Aug 2026 19:08:29 +0100
-From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-To: "David Hildenbrand (Arm)" <david@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
-	Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
-	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Miaohe Lin <linmiaohe@huawei.com>, 
-	Naoya Horiguchi <nao.horiguchi@gmail.com>, Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, 
-	Lance Yang <lance.yang@linux.dev>, Kees Cook <kees@kernel.org>, Zi Yan <ziy@nvidia.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
-	Usama Arif <usama.arif@linux.dev>, Matthew Brost <matthew.brost@intel.com>, 
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
-	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
-	Alistair Popple <apopple@nvidia.com>, Peter Xu <peterx@redhat.com>, Xu Xin <xu.xin16@zte.com.cn>, 
-	Chengming Zhou <chengming.zhou@linux.dev>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Sven Schnelle <svens@linux.ibm.com>, Alex Deucher <alexander.deucher@amd.com>, 
-	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Boris Brezillon <boris.brezillon@collabora.com>, Steven Price <steven.price@arm.com>, 
-	Liviu Dudau <liviu.dudau@arm.com>, Huang Rui <ray.huang@amd.com>, 
-	Matthew Auld <matthew.auld@intel.com>, 
-	Thomas =?utf-8?Q?Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Jason Gunthorpe <jgg@ziepe.ca>, John Hubbard <jhubbard@nvidia.com>, 
-	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, Chris Li <chrisl@kernel.org>, 
-	Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
-	Youngjun Park <youngjun.park@lge.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org, kvm@vger.kernel.org, 
-	linux-s390@vger.kernel.org, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
-	intel-xe@lists.freedesktop.org, linux-perf-users@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 19/20] tools/testing/vma: add test to assert
- MAP_PRIVATE-/dev/zero is anon
-Message-ID: <any2O0nZdz7R3V-G@lucifer>
-References: <20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org>
- <20260806-b4-scalable-cow-virt-pgoff-v4-19-ab318a350404@kernel.org>
- <5d1a35d2-8541-44d5-8958-1efa9773d7bb@kernel.org>
+	s=k20260515; t=1786568879;
+	bh=ADdm3h5XUSUwintO19vKtxNZfiL20jawn4vPjKSiuZI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=h4FZtBu3j1i+CBOaab3DunB78J39DxTCv4CXZ7FDSCC7ZgRqj/3vf4skOPOmhLWhf
+	 JoiFlTxwIDt/sBDjgK1I+RUYwRq89I9G02sQfynO8GWVq4dPpAr3G0PhRGHhzxfjKz
+	 aW3XN51tSzKWs/NL0ELKbX8QBbMrCHuD/tFTJF9U2NzxCaqTnTpcQCGLHmNlFTsQTV
+	 V4HlQnfIsif9e6r2Yo4uOazLiRwnkmvAw1ai+n1JnuJpJfM6ObM14tfSTpSaDIHz3g
+	 GU2zBWLUplWjBtCqe6vs/WxiN6eUG83QoiTuJ10vGWRJGgBnIKazw94EXL7Vuf+6Ck
+	 mPD/BYR7YBDOg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, 
+ Michalis Niarchos <michael.niarchos@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20260807-perf-kvm-leaks-v1-0-7b5e2f97905a@gmail.com>
+References: <20260807-perf-kvm-leaks-v1-0-7b5e2f97905a@gmail.com>
+Subject: Re: [PATCH 0/2] perf kvm: Fix memory leaks
+Message-Id: <178656887896.4021779.4825437848306350814.b4-ty@kernel.org>
+Date: Wed, 12 Aug 2026 14:07:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5d1a35d2-8541-44d5-8958-1efa9773d7bb@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-On Wed, Aug 12, 2026 at 07:17:39PM +0200, David Hildenbrand (Arm) wrote:
-> > +static bool test_pure_anon_dev_zero(void)
-> > +{
-> > +	const vma_flags_t vma_flags = mk_vma_flags(VMA_READ_BIT, VMA_WRITE_BIT,
-> > +			VMA_MAYREAD_BIT, VMA_MAYWRITE_BIT);
-> > +	const struct file_operations f_op = {
-> > +		.mmap_prepare = dummy_mmap_prepare,
-> > +	};
-> > +	struct inode inode = {
-> > +		.i_mode = S_IFCHR,
-> > +		.i_rdev = MKDEV(MEM_MAJOR, DEVZERO_MINOR),
-> > +	};
-> > +	struct file file = {
-> > +		.f_inode = &inode,
-> > +		.f_op = &f_op,
-> > +	};
-> > +	struct mm_struct mm = {};
-> > +	struct vm_area_struct *vma;
-> > +	unsigned long addr;
-> > +	VMA_ITERATOR(vmi, &mm, 0);
-> > +
->
-> When we go with a zero_vm_ops this gets a bit simpler (see schloppedi-schlop).
+On Fri, 07 Aug 2026 17:08:34 +0200, Michalis Niarchos wrote:
+> Running ./perf kvm stat report with ASan, revealed some memory leaks:
+> 
+> ==206006==ERROR: LeakSanitizer: detected memory leaks
+> 
+> Direct leak of 72 byte(s) in 3 object(s) allocated from:
+>     #0 0x7ff86bf2bea9 in calloc (/usr/lib/libasan.so.8+0x12bea9) (BuildId: 7f2845989b820f536270e19ec47df085ae89a675)
+>     #1 0x55f42795a0d5 in zalloc ../../lib/zalloc.c:8
+>     #2 0x55f42782d7f4 in per_vcpu_record /home/mike/git/linux/tools/perf/builtin-kvm.c:929
+>     #3 0x55f42782dab7 in handle_kvm_event /home/mike/git/linux/tools/perf/builtin-kvm.c:950
+>     #4 0x55f42782fa80 in process_sample_event /home/mike/git/linux/tools/perf/builtin-kvm.c:1159
+>     ...
+>     #14 0x55f42783236c in read_events /home/mike/git/linux/tools/perf/builtin-kvm.c:1591
+>     #15 0x55f4278326f8 in kvm_events_report_vcpu /home/mike/git/linux/tools/perf/builtin-kvm.c:1636
+> 
+> [...]
+Applied to perf-tools-next, thanks!
 
-Obviously will have to replace this with something else that just sets anon in
-an mmap_prepare callback once I drop 17/20.
+Best regards,
+Namhyung
 
->
-> > +	current->mm = &mm;
-> > +
-> > +	/*
-> > +	 * Map a MAP_PRIVATE-/dev/zero mapping at address 0x300000 with a page
-> > +	 * offset of 0x10, which we expect to be reset to the anonymous page
-> > +	 * offset.
-> > +	 */
-> > +	addr = __mmap_region(&file, 0x300000, 0x3000, vma_flags, 0x10, NULL);
-> > +	ASSERT_EQ(addr, 0x300000);
-> > +
-> > +	/* Assert that it truly is an anonymous mapping. */
-> > +	vma = vma_lookup(&mm, addr);
-> > +	ASSERT_NE(vma, NULL);
-> > +	ASSERT_TRUE(vma_is_anonymous(vma));
-> > +	ASSERT_EQ(vma->vm_file, NULL);
-> > +	ASSERT_EQ(vma->vm_private_data, NULL);
-> > +	/* Expect anonymous page offsets. */
-> > +	ASSERT_EQ(vma->vm_pgoff, 0x300);
-> > +	ASSERT_EQ(vma_start_anon_pgoff(vma), 0x300);
->
-> Yes, that looks good to me.
->
-> Acked-by: David Hildenbrand (Arm) <david@kernel.org>
 
-Thanks
-
->
-> --
-> Cheers,
->
-> David
-
---
-Cheers, Lorenzo
