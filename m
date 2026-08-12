@@ -1,134 +1,226 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F7721D591
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 03:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9336E386C3F;
+	Wed, 12 Aug 2026 04:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786504190; cv=none; b=SHqSp9U1G+3zAtik/91CFSiScK75X9Vg0rNfTWeXk4rEGIiwAqeDN74fxClP5WjLpOlNZuIBzZi+r3B6pPZWh53FhDW1RiVqNiBmIQwx6DlowXrzhmGE+vD/ry67iQUKVo2ycyoCVM3smWzGlxP7WwUjdylSX3KV6xEGlp+PCF4=
+	t=1786507578; cv=none; b=JvQA9mgSjs+iVP3m6J49WxXBZUrJ5GlOawkzlnUaK5/hS0C16tf2UwHgYZtx20Ypw1TJLAN4Y383dyIK5UdCOhnptfJdBcfhy8P9Bu0kuhNRmEpARH8bqqDjJf7N1nir/WRhiuHPPG1vTvDIOuUSJ8Svlv6Q4dorE3bNr0BqVvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786504190; c=relaxed/simple;
-	bh=zLDK2FHVqgr8gJie0YetemI151sHcSgQYaHcbKkVr9A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fa5ms/cCKdxBSKjRCoYP9uroMoldxtqf6qS7TllWzPy9bBoH7h76NwQ1uukns/8W6hiyY8pHgHC3NenI7G1ZINUnMFL/7YEs78sSsAYKWRMcOxFNteCmOCKJ4yq4djNvpEewbsU8g38JoRuHZfbkwwn8jKsI7cqVMvmYuxLhRnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hKYPZ6HYLzYQtr7
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 11:09:38 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 320B540539
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 11:09:43 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgDn1UT243tqvlwACA--.17596S2;
-	Wed, 12 Aug 2026 11:09:43 +0800 (CST)
-Message-ID: <7822cf02-a1b2-488f-86ab-e3e3cc24acd9@huaweicloud.com>
-Date: Wed, 12 Aug 2026 11:09:41 +0800
+	s=arc-20240116; t=1786507578; c=relaxed/simple;
+	bh=IHjypAHsNKjpNGDu8aCRCeoUOQ9LFF7rYITg0sTzbDM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iMEU3qYwQ81aYugOdHHMotCOiJ8XFRIe8UwXUHNqEnuw3UT9Hg/hwu+m6WrKzyL7An4A5lppJQd03Q6RQEsLxkrxH+5WBBAUT8Xh5nxAXCpSDdKScGVKffIsUjr9LC2r9tLKZeM1f8Z4xIfbZvTaP4WXrxkhKRhH3cykj92sh9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Rg9GEe8O; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Rg9GEe8O"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B56A31682;
+	Tue, 11 Aug 2026 21:06:10 -0700 (PDT)
+Received: from localhost (a085714.arm.com [10.164.19.28])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 018DD3F86F;
+	Tue, 11 Aug 2026 21:06:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1786507574; bh=IHjypAHsNKjpNGDu8aCRCeoUOQ9LFF7rYITg0sTzbDM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rg9GEe8ORnIQSzAFzPE9Q3CsOniFeZz3B5DAx1vSbU2ayamMlqi+pdI/abA/SWthR
+	 JHd2kD7S7LWpcNIoT65928j5y1fwj3S00eMdlQR9LYSfVNqmGWvx2Jo8nRyP2/XrUC
+	 occW+1n2ku+jahULG28ttJSOr0S4qPMQj+wCR/cQ=
+Date: Wed, 12 Aug 2026 09:36:11 +0530
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: Muhammad Usama Anjum <usama.anjum@arm.com>
+Cc: Jani Nikula <jani.nikula@linux.intel.com>, 
+	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+	Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich <dimitri.sivanich@hpe.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>, 
+	Stefano Stabellini <sstabellini@kernel.org>, Muchun Song <muchun.song@linux.dev>, 
+	Oscar Salvador <osalvador@suse.de>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Andrey Ryabinin <ryabinin.a.a@gmail.com>, 
+	David Hildenbrand <david@kernel.org>, Pasha Tatashin <pasha.tatashin@soleen.com>, 
+	Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
+	Uladzislau Rezki <urezki@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya Dwivedi <memxor@gmail.com>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Jason Gunthorpe <jgg@ziepe.ca>, 
+	Leon Romanovsky <leon@kernel.org>, Miaohe Lin <linmiaohe@huawei.com>, 
+	Dennis Zhou <dennis@kernel.org>, Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>, 
+	Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, ziy@nvidia.com, 
+	pfalcato@suse.de, agordeev@linux.ibm.com, ryan.roberts@arm.com, 
+	linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
+	linux-parisc@vger.kernel.org, xen-devel@lists.xenproject.org, linux-mm@kvack.org, 
+	linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org, kasan-dev@googlegroups.com, 
+	linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	damon@lists.linux.dev
+Subject: Re: [PATCH 3/9] mm: name pointers to copied PTE values ptentp
+Message-ID: <hwkurkpobxysltkid5523qxndufebqqmat4qjaq6zhwno2drmh@efwoegm2huo6>
+References: <20260806083926.1807279-1-usama.anjum@arm.com>
+ <20260806083926.1807279-4-usama.anjum@arm.com>
+ <e7osakog3yvdewhdlrk3bsp27pwt2nnhroeb7zihlfxyjotarb@rwxkcb25crh3>
+ <b21c4cc9-84a3-429e-8156-0b9967b2f133@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 12/23] perf annotate-arm64: Enable instruction tracking
- support
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-13-wutengda@huaweicloud.com>
- <20260808132233.5A8D01F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260808132233.5A8D01F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgDn1UT243tqvlwACA--.17596S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF47Zw4fWrWfur4UZw47Arb_yoW5XF1Dpa
-	9Ikw45GFWUtr4DKrnrXr48X3y3uw1fX3WrCry5t3WIyr9Iyrn7tF93tFW2kFWrGr9xCw4j
-	vw4jqFZrX34DCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUgmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU1CPfJUUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b21c4cc9-84a3-429e-8156-0b9967b2f133@arm.com>
 
+On Tue, Aug 11, 2026 at 03:09:07PM +0100, Muhammad Usama Anjum wrote:
+> On 11/08/2026 11:58 am, Anshuman Khandual wrote:
+> > Subject line is very confusing. Perhaps something like the following.
+> > 
+> > mm: Rename pointers to copied PTE values as ptentp
+> > 
+> > But even 'copied PTE values' is not very clear as well.
+> 
+> Something like:
+> 
+> mm: rename pointers to logical PTE values as ptentp
+> 
+> or
+> 
+> mm: rename pointers to software PTE values as ptentp
 
+Yeah but we need to get these nomenclature right at the very beginning
+and also probably get it documented some where.
 
-On 2026/8/8 21:22, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [High] Missing bounds check on the secondary destination register (`dst->reg2`) leads to an out-of-bounds stack write in `update_insn_state_arm64()`.
-> - [Medium] Incorrect invalidation of base pointer type information during memory store instructions in `update_insn_state_arm64()`.
-> --
 > 
-> --- Patch [12]: [PATCH v4 12/23] perf annotate-arm64: Enable instruction tracking support ---
-> commit f55f5ca2b14376eae146cdb6373ed5a53a114257
-> Author: Tengda Wu <wutengda@huaweicloud.com>
+> > 
+> > On Thu, Aug 06, 2026 at 09:38:41AM +0100, Muhammad Usama Anjum wrote:
+> >> The hw_pte_t conversion must retain pte_t * for pointers to standalone PTE
+> > 
+> > We need to explain what is `standalone PTE values` first.
+> > 
+> >> values. Name the value parameters ptentp in the install_pte callback,
+> >> write_protect_page(), and guard_install_set_pte() so the later mechanical
+> >> conversion can distinguish them from pointers to PTE table storage.
+> >>
+> >> Some functions already use the ptentp name, including:
+> >> - madvise_folio_pte_batch()
+> >> - folio_pte_batch_flags()
+> >> No need to convert them.
+> >>
+> >> This is a naming-only change.
+> > 
+> > Small nit - s/naming-only/rename
 > 
-> perf annotate-arm64: Enable instruction tracking support
+> I'll fix it.
 > 
-> Enable basic instruction tracking for arm64 by implementing three
-> essential functions in the find_data_type_block() call path.
-> 
->> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
->> index 6b4f1228afa9b..44daa0176e512 100644
->> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
->> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
->> @@ -353,6 +357,65 @@ static int extract_op_location_arm64(const struct arch *arch,
-> 
-> [ ... ]
-> 
->> +	/*
->> +	 * Invalidate destination register(s) for unsupported instructions to
->> +	 * prevent stale type info from propagating to subsequent instructions.
->> +	 */
->> +	if (has_reg_type(state, dst->reg1)) {
->> +		pr_debug_dtp("%s [%x] invalidate reg%d",
->> +			     dl->ins.name, insn_offset, dst->reg1);
->> +		invalidate_reg_state(&state->regs[dst->reg1]);
-> 
-> [Severity: Medium]
-> Does this incorrectly invalidate the base pointer type information during memory
-> store instructions?
-> 
-> If dst->mem_ref is true (e.g., for a store instruction like str x1, [x0]),
-> this fallback lacks a !dst->mem_ref check. Will it incorrectly invalidate the
-> extracted base register (x0), assuming it is being overwritten?
-> 
+> > 
+> > The commit message needs rewrite clearly explaining the following details
+> > 
+> > - What are standalone PTE values
+> Logical/software PTE is correct and better name here.
 
-Agreed.
+Right but we need to define these early on and then be consistent in their usage
+afterwards in the entire series.
 
->> +		if (dst->multi_regs) {
->> +			pr_debug_dtp(" and reg%d", dst->reg2);
->> +			invalidate_reg_state(&state->regs[dst->reg2]);
 > 
-> [Severity: High]
-> Can this cause an out-of-bounds write on the stack-allocated type_state
-> structure?
+> > - How these are different from HW pgtable pointers
+> > - Change is just a rename for pointers into such 'standalone PTE'
+> > - These renamed 'ptentp' here would be used for skip or replaced during
+> >   upcoming mechanical change via a script
+> > - No functional changes intended
+> I'll update message in more elaborate way.
 > 
-> If an instruction parses with multiple registers where the second is invalid
-> (e.g., ldp x0, x99, [sp]), extract_op_location_arm64() sets op_loc->reg2
-> to a negative error code since it cannot find the register name.
+> > 
+> >>
+> >> Signed-off-by: Muhammad Usama Anjum <usama.anjum@arm.com>
+> >> ---
+> >> Changes since RFC v1:
+> >> - Update the description for the architecture opt-in conversion.
+> >> ---
+> >>  include/linux/pagewalk.h | 2 +-
+> >>  mm/ksm.c                 | 4 ++--
+> >>  mm/madvise.c             | 4 ++--
+> >>  3 files changed, 5 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/include/linux/pagewalk.h b/include/linux/pagewalk.h
+> >> index b41d7265c01bc..c34d826c5e4a2 100644
+> >> --- a/include/linux/pagewalk.h
+> >> +++ b/include/linux/pagewalk.h
+> >> @@ -89,7 +89,7 @@ struct mm_walk_ops {
+> >>  		       struct mm_walk *walk);
+> >>  	void (*post_vma)(struct mm_walk *walk);
+> >>  	int (*install_pte)(unsigned long addr, unsigned long next,
+> >> -			   pte_t *ptep, struct mm_walk *walk);
+> >> +			   pte_t *ptentp, struct mm_walk *walk);
+> >>  	enum page_walk_lock walk_lock;
+> >>  };
+> >>  
+> >> diff --git a/mm/ksm.c b/mm/ksm.c
+> >> index ad05d7791307e..11d50518d02e9 100644
+> >> --- a/mm/ksm.c
+> >> +++ b/mm/ksm.c
+> >> @@ -1292,7 +1292,7 @@ static u32 calc_checksum(struct page *page)
+> >>  }
+> >>  
+> >>  static int write_protect_page(struct vm_area_struct *vma, struct folio *folio,
+> >> -			      pte_t *orig_pte)
+> >> +			      pte_t *ptentp)
+> >>  {
+> >>  	struct mm_struct *mm = vma->vm_mm;
+> >>  	DEFINE_FOLIO_VMA_WALK(pvmw, folio, vma, 0, 0);
+> >> @@ -1371,7 +1371,7 @@ static int write_protect_page(struct vm_area_struct *vma, struct folio *folio,
+> >>  
+> >>  		set_pte_at(mm, pvmw.address, pvmw.pte, entry);
+> >>  	}
+> >> -	*orig_pte = entry;
+> >> +	*ptentp = entry;
+> >>  	err = 0;
+> >>  
+> >>  out_unlock:
+> >> diff --git a/mm/madvise.c b/mm/madvise.c
+> >> index 07a21ca31bad4..c324cc991f841 100644
+> >> --- a/mm/madvise.c
+> >> +++ b/mm/madvise.c
+> >> @@ -1101,12 +1101,12 @@ static int guard_install_pte_entry(pte_t *pte, unsigned long addr,
+> >>  }
+> >>  
+> >>  static int guard_install_set_pte(unsigned long addr, unsigned long next,
+> >> -				 pte_t *ptep, struct mm_walk *walk)
+> >> +				 pte_t *ptentp, struct mm_walk *walk)
+> >>  {
+> >>  	unsigned long *nr_pages = (unsigned long *)walk->private;
+> >>  
+> >>  	/* Simply install a PTE marker, this causes segfault on access. */
+> >> -	*ptep = make_pte_marker(PTE_MARKER_GUARD);
+> >> +	*ptentp = make_pte_marker(PTE_MARKER_GUARD);
+> >>  	(*nr_pages)++;
+> >>  
+> >>  	return 0;
+> >> -- 
+> >> 2.47.3
+> >>
+> > 
+> > How did we ensure that the above changes are comprehensive and nothing
+> > else got left in here ?
 > 
-> Because there is no check for dst->reg2 >= 0 here, does this result in a
-> negative index being used for the regs array?
+> The order of patches and even the code was found out after adding hw_pte_t
+> structure. Then everything was converted, until some pte_t pointers were left
+> which didn't require conversion.
 > 
+> If something is left, we'll get build errors when we build a converted architecture.
+> So the branch mentioned in the cover letter when built, would produce build errors.
+> (Those patches would be sent separately, after finalization of this series).
+> 
+> Whenever I'm rebasing (on mm-new), I'm rerunning Coccinelle script to see if new code
+> has arrived which requires conversion or renaming.
 
-Agreed, I need to add a has_reg_type(state, dst->reg2) check.
+But in the early patch where the manual renaming was done for the script to
+pick up 'ptentp' patterns needs to be audited again.
 
->> +		}
->> +		pr_debug_dtp("\n");
->> +		return;
->> +	}
->> +}
 > 
-
+> -- 
+> Thanks,
+> Usama
+> 
