@@ -1,169 +1,154 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BDE8350D7D
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 01:44:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B522C1586;
+	Wed, 12 Aug 2026 01:47:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786499106; cv=none; b=hw2aiq4UiBT/4DBbyJ4UGCpJOZtFEdMsO2gplKsDpbK5Ps80UDfRU5M7Py8/Jt1lclabblyG+8bPLmkDDQvkOXobY8yjBWZWQEyOLgxrQEQSaN03vQDAXmaJ8FQvCAL8r65i8lxM3hw3P+GbO8Vyldrx6FlqTdBAq3YdE1NLLHA=
+	t=1786499242; cv=none; b=cYkDvrYB6LE7Sw92neGat83DDmjm75Ml3pqBMkKzNXJyL8ASySHDpaGT8hvuj6pTSiPuvhkZ+VVSiz/Z9EjgI1WlWIcETZi9OiMpsruYSiVrsNAo/pSb0a3Umj6BJGXxaJQc/rVtOeRQoUG1nqFJHCO30gepnNJeLT38xyLMihQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786499106; c=relaxed/simple;
-	bh=UrMq7Y66WkGrtLYAG5K4sJB9H6S3tcijVZXetAdOE4E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oATM2w2/GkZ6Hw3JIDD8ApX1YFynyUvPtUpze8YF6AoFZ4YY5142yteD3E+HPasa2Gf618a5NvubW0l0gwV7ycIwY8l7/nexrTb2T3lHMFw5NjcuwW0TRSQMTlsdxFw4rNCfXMTbMKIa8ExkUSxkr2N2ev+QBCAo2mvO45Jf/I8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hKWWd2mPMzYQtlr
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 09:44:45 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 905284058D
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 09:44:49 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgDnUooQ0HtqKzYECA--.31294S2;
-	Wed, 12 Aug 2026 09:44:49 +0800 (CST)
-Message-ID: <96bfc0eb-6a4d-4d39-9501-ebb30f7ee88c@huaweicloud.com>
-Date: Wed, 12 Aug 2026 09:44:48 +0800
+	s=arc-20240116; t=1786499242; c=relaxed/simple;
+	bh=mMHuIDMm0V4K2R/ySnWRxybMaES/DK1jGZPu+ny/8wc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IeLtqPmPMA1u+uGlrXAmKSkDQfp7C8LFLOKP3SPsc4MbLiQcK+XqwpfdAQmIkC99kY19pi+ngPZf+6c3EZ3tFpfVDmAqP7HlqqRpWYvE8x2Ro71lMOIS4sptA4qi2HInY68QktjUBJmj2BrV6wXZFiJSEYAsMiA+xJhlNykQNww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PIT4qqOe; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PIT4qqOe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34D671F000E9;
+	Wed, 12 Aug 2026 01:47:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786499241;
+	bh=Nhvy96ON6rcBD0rl5Mu8B9/2HOoeIA4Mll8is12rVEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=PIT4qqOeaX8ETeGyNvvipwx2kRTngOLWrKRZpNTkwUV9VtfKxB2aWyCX/wlKSpkpO
+	 tDl+dNogfxF2wKUMHGOzreEr7dQRUBsILXUHHgf6bJ3H/YaRkntxAUwCqOUiDF77jY
+	 sAe6z268FKhsRZJZ7v9urZy0TgKSLHnWP4kV3WODlGqC/3Vo/+bjGLc/R6gZHhExUU
+	 SRBtMCl9kLCoSdNjqTbBHP/wykQyAcxxomZozL9ibkvEpgVnN9F0OEMth1lRBb73Gj
+	 lQNZrwmBP8UFG6BA2MhdVmQJ7svpNDwVqSGXBPA1UxAgYeQbbQhVjBq2TAL/4nvftr
+	 mvgoKaLHSJg0A==
+Date: Wed, 12 Aug 2026 10:47:17 +0900
+From: Namhyung Kim <namhyung@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: Jiebin Sun <jiebin.sun@intel.com>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v8 6/9] perf c2c: add function view hierarchy entry
+ creation
+Message-ID: <anvQpSM9wXgnrbSA@google.com>
+References: <20260810052647.588867-1-jiebin.sun@intel.com>
+ <20260810052647.588867-7-jiebin.sun@intel.com>
+ <20260810054945.82FFE1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 07/23] perf annotate: Introduce extract_op_location
- callback for arch-specific parsing
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-8-wutengda@huaweicloud.com>
- <20260808131116.3BE021F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260808131116.3BE021F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgDnUooQ0HtqKzYECA--.31294S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxurykKF18ur1fCw15Kr47CFg_yoWrCF43pa
-	1q934UJ3WUJr4UKwnxJayruFyS9w1xGF4rurn8K392yFnxurn5XFZ2gF4a9ayrArZxAw4j
-	vw4qqryDZw1vkaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUglb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
-	CjxVAFwI0_Cr1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02
-	F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4I
-	kC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
-	z7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
-	AF1VAY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
-	IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-	CI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVF
-	xhVjvjDU0xZFpf9x07UE-erUUUUU=
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260810054945.82FFE1F000E9@smtp.kernel.org>
 
+Hello,
 
-
-On 2026/8/8 21:11, sashiko-bot@kernel.org wrote:
+On Mon, Aug 10, 2026 at 05:49:44AM +0000, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] Propagating errors from extract_reg_offset aborts instruction state processing, breaking register invalidation, and uses a flawed condition.
+> - [Medium] Deleting a function-view child entry causes an out-of-bounds heap read in `free_callchain()` because the child entry is allocated without trailing `callchain_root` memory.
 > --
 > 
-> --- Patch [7]: [PATCH v4 07/23] perf annotate: Introduce extract_op_location callback for arch-specific parsing ---
-> commit ea4cc06c47d3d877b7277db8368241769c5b60d3
-> Author: Tengda Wu <wutengda@huaweicloud.com>
+> --- Patch [6]: [PATCH v8 6/9] perf c2c: add function view hierarchy entry creation ---
+> commit 3fbce53bcfd8d8abeda29f9eded35e05dfc305f5
+> Author: Jiebin Sun <jiebin.sun@intel.com>
 > 
-> perf annotate: Introduce extract_op_location callback for arch-specific parsing
+> perf c2c: add function view hierarchy entry creation
+>     
+> This patch adds the entry-creation layer for the function view hierarchy.
+> It implements level-1/2/3 lookup-or-create functions and synthetic child
+> allocation logic, reusing cacheline_idx to preserve source entry identity.
 > 
-> Assembly syntax for operands varies significantly across different
-> architectures, which prevents the operand location (op_loc) parsing
-> logic in annotate_get_insn_location() from being directly reused.
+> > diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browsers/c2c-function.c
+> > index 4bf8406fde556..4099d4c7e7b44 100644
+> > --- a/tools/perf/ui/browsers/c2c-function.c
+> > +++ b/tools/perf/ui/browsers/c2c-function.c
 > 
-> To simplify the core logic and improve maintainability, move the
-> operand parsing inside the for_each_insn_op_loc loop into arch-specific
-> extract_op_location callbacks.
+> [ ... ]
 > 
->> This refactoring is primarily a cleanup,
->> but includes a minor x86-specific change: errors from extract_reg_offset()
->> are now propagated, so unrecognized operands are correctly rejected
->> instead of being silently ignored, , and testing confirms no functional
->> regression from this change.
+> > @@ -847,6 +865,259 @@ static int __maybe_unused c2c_he__prune_empty_writers(struct hist_entry *l1_he)
+> >  	return surviving;
+> >  }
+> >  
+> > +static void *c2c_function_he_zalloc(size_t size)
+> > +{
+> > +	struct c2c_hist_entry *c2c_he = zalloc(sizeof(*c2c_he) + size);
+> > +
+> > +	if (!c2c_he)
+> > +		return NULL;
+> > +
+> > +	init_stats(&c2c_he->cstats.lcl_hitm);
+> > +	init_stats(&c2c_he->cstats.rmt_hitm);
+> > +	init_stats(&c2c_he->cstats.lcl_peer);
+> > +	init_stats(&c2c_he->cstats.rmt_peer);
+> > +	init_stats(&c2c_he->cstats.load);
+> > +
+> > +	return &c2c_he->he;
+> > +}
+> > +
+> > +/* Entry operations for function view */
+> > +static struct hist_entry_ops c2c_function_entry_ops = {
+> > +	.new	= c2c_function_he_zalloc,
+> > +	.free	= c2c_function_he_free,
+> > +};
+> > +
+> > +static struct c2c_hist_entry *
+> > +c2c_child_entry__alloc(struct hist_entry *parent_he, struct hist_entry *src_he,
+> > +		       int depth, u64 ip)
+> > +{
+> > +	struct c2c_hist_entry *child_c2c;
+> > +	struct hist_entry *child_he;
+> > +
+> > +	/* Function-view children never own or display callchains. */
+> > +	child_he = c2c_function_he_zalloc(0);
+> > +	if (!child_he)
+> > +		return NULL;
 > 
 > [Severity: Medium]
-> Are we certain this change does not introduce functional regressions?
+> Will this cause an out-of-bounds memory read when the entry is freed?
 > 
-> Propagating errors out of extract_reg_offset() appears to break type state
-> tracking for absolute memory references.
+> If perf c2c report is run with callchains enabled (symbol_conf.use_callchain
+> is true), this entry is allocated with 0 extra bytes for the callchain.
 > 
-
-This has been validated through local testing, and all statistical metrics
-remain unchanged.
-I noticed there are two commas in the commit message and will correct that.
-
-
->> diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
->> index 7e61365363938..6044a68966f14 100644
->> --- a/tools/perf/util/annotate-arch/annotate-x86.c
->> +++ b/tools/perf/util/annotate-arch/annotate-x86.c
-> [ ... ]
->> @@ -809,6 +811,85 @@ static void update_insn_state_x86(struct type_state *state,
-> [ ... ]
->> +static int extract_reg_offset(const struct arch *arch, const char *str,
->> +			      struct annotated_op_loc *op_loc)
->> +{
-> [ ... ]
->> +	op_loc->reg1 = arch__dwarf_regnum(arch, p);
->> +	if (op_loc->reg1 == -1)
->> +		return -1;
+> When this undersized entry is deleted on the error path below or during
+> cleanup via c2c_he__free_hierarchy(), hist_entry__delete() accesses
+> he->callchain based on the global symbol_conf.use_callchain flag:
 > 
-> [Severity: Medium]
-> Will this error check correctly identify unrecognized registers?
-> 
-> If an instruction contains an unrecognized register like '%zmm0',
-> arch__dwarf_regnum() returns -2 (-ENOENT). The check for -1 will miss
-> unrecognized registers, but it will trigger for absolute memory references
-> like 'mov (0x1234), %rax' which lack a '%' character entirely.
-> 
-
-Shuai raised this point as well. The fix will be to normalize
-arch__dwarf_regnum() to return -1.
-
->> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
->> index 9d8b4d6b859b8..20be609ebed24 100644
->> --- a/tools/perf/util/annotate.c
->> +++ b/tools/perf/util/annotate.c
-> [ ... ]
->> @@ -2572,6 +2527,7 @@ int annotate_get_insn_location(const struct arch *arch, struct disasm_line *dl,
-> [ ... ]
->> +		if (arch->extract_op_location) {
->> +			ret = arch->extract_op_location(arch, dl, insn_str, i, op_loc);
->> +			if (ret)
->> +				return ret;
->>  		}
->>  	}
-> 
-> [Severity: Medium]
-> Does propagating this failure cause issues in update_insn_state_x86()?
-> 
-> When absolute memory references return -1 and trigger this early return,
-> annotate_get_insn_location() will fail.
-> 
-> If update_insn_state_x86() bails out early because of this failure:
-> 
-> tools/perf/util/annotate-arch/annotate-x86.c:update_insn_state_x86() {
+> tools/perf/util/hist.c:hist_entry__delete() {
 >     ...
-> 	if (annotate_get_insn_location(dloc->arch, dl, &loc) < 0)
-> 		return;
+>     if (symbol_conf.use_callchain)
+>         free_callchain(he->callchain);
 >     ...
 > }
 > 
-> Won't this bypass the fallback logic that invalidates the destination register?
-> This could cause the analyzer to incorrectly assume the destination register
-> retains its previous type state, when it actually contains unknown data.
+> Could this read past the end of the c2c_hist_entry structure and dereference
+> garbage memory in free_callchain_node()?
+
+It looks like a real issue.  Can you please fix?  I'm not sure if c2c
+uses the callchains.
+
+Thanks,
+Namhyung
+
 > 
-
-Indeed, the return value should not be handled directly; instead, the op_loc
-information should be resolved as completely as possible.
-This was also the approach before the change, and I will keep it consistent
-by removing the ret value check.
-
+> > +
+> > +	child_c2c = container_of(child_he, struct c2c_hist_entry, he);
+> > +	child_he->ops = &c2c_function_entry_ops;
+> > +	map_symbol__copy(&child_he->ms, &src_he->ms);
+> 
+> [ ... ]
+> 
+> > +	return child_c2c;
+> > +
+> > +out_free:
+> > +	hist_entry__delete(child_he);
+> > +	return NULL;
+> > +}
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260810052647.588867-1-jiebin.sun@intel.com?part=6
