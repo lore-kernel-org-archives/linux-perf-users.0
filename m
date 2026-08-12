@@ -1,446 +1,234 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05584582CC
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 15:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786549299; cv=none; b=oeFxtEjjVmETjv71mrSWZ4fT5UjkUE7Igmb61fVbr+ShLE1GOxlhzSZJoP0GuO9ZpRuDPkaVC16sGMNj+xjnYZs1hJv78uNA5UbPxfQpewT3rNwcRRQiJqZaa9EJgEUbMTvu72NQOMS4Q71xF4B7W+haKlA0y0yhS2xMFy+tTzw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786549299; c=relaxed/simple;
-	bh=69JHdMjSlWqOKhAeGHagFh1quGfUYijLEX6d5d4T4uo=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=neGnXUyvhleKZpdWMpzeDkncAZ2ceSBduIhU6CGxr0nHHN1/iIc5R0RFSXxU9x6olZ+mhRfFIJl0wxZuHb3c4EXnbGT5KmYwK41mJlYVSDM9AJoLLcfoGFkQ30fc0pf+xrLpiF9RNn1uo7agH0OzkV0L36PGAyQM1L0yoicgZQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=OSbsse+7; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 687933644A2;
+	Wed, 12 Aug 2026 15:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786549730; cv=fail; b=npaomnDYVvc/YA2ZmNdCM1UvuvaUJj/+nTy60zqpRTcjxpAKMzjy2MavHrOvdQ1dFu9u7QZMdBnPi3mcNe2dH+TM3Ui41DK4wcLCu4y8xiM6rrzL502jQGRf4E79ya4uekvbzv5JnFRhKptrNG4pzgUeZ9Nsy30MWH1aS2iUk7M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786549730; c=relaxed/simple;
+	bh=fPECpg3/O5gQc3lffLefiNqb9z5lAZKjot63xp64jQA=;
+	h=Message-ID:Date:Subject:From:To:CC:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=Y5iubw2T5IUtTNhFqBJfi+DA6OT7wDHr7y4rXFRbxWMBSLWcTu49oSlkjJMncEVGXa+qbBWRtz9GDxaZi6Hl1TA2h9TMUrJP7J6qJjAdr+uyx+lxd02Iaov1nXrw9E28fjMxGRKjXChqeZLvS8t0ePiTGv7cyObozpyCuQLiiLA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MZf9ItrK; arc=fail smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="OSbsse+7"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67CE1d7B3717255;
-	Wed, 12 Aug 2026 15:41:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=73Dl7m
-	1PzClFoGxHfQ5sqhL21Q1t+CRne+viE4IY1/c=; b=OSbsse+70AkVwu7S7J1TOf
-	IiOMV85aaKGDx50r7MKzbXkUCR+19MWmt+C0UcX/+hZZLBblbISSHxMrja0AjXcw
-	HPgqtnW9DFn+2r4GO17P+ORjn76Got0x0b+Y4hjX/v4qK2vvb090bzXVplUlXc+w
-	IvlXHlXypP+Xk3TF3L1hr+N350X/Iqa+OM3VhItaRre/aBGoIOk6zClOUTWZxvKH
-	ctBwGXHIT6F+F0FtIk1ulz1OHRct4h1iGJOZgwlxm3x9DV4GNT2oKOQ4+uNvdVVu
-	8Bt4aBe+2RbEkJU51fNbU8K9pH04sJsl1KqNVHlGMuS0Iv1+WTympA4q3O9gsLMw
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fwvnwaem3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Aug 2026 15:41:28 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67CFfFQ2010357;
-	Wed, 12 Aug 2026 15:41:27 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 4fxh0gek75-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 12 Aug 2026 15:41:27 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67CFfOea49938780
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 12 Aug 2026 15:41:24 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 223472004B;
-	Wed, 12 Aug 2026 15:41:24 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 465D220043;
-	Wed, 12 Aug 2026 15:41:21 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.39.26.206])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 12 Aug 2026 15:41:21 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MZf9ItrK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786549727; x=1818085727;
+  h=message-id:date:subject:from:to:cc:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=fPECpg3/O5gQc3lffLefiNqb9z5lAZKjot63xp64jQA=;
+  b=MZf9ItrKcnjoOnghp0ZZs7s8CSrqL9yFI19IMUYlMRtjZc8fqKH/v0AT
+   4ekbnZle/RiqDS12wRZWwaZmU9iyn2spXdwKhnJbuyGYTDlHFcMOIOLV3
+   fUO/msRAVZ/JE1gzebTjdqV86wi/okTTrP8eefprZ6pJ4/CsrGa/p+DEx
+   WaNw+Be7hKQBeYHxBmTB5vS3fs8CAgQA+s5FVzg3chdR4H7VNyiOVoY2V
+   4W8Laai6eUKB12tJdWPyUVn3Hlm9zshcGD5L/HxyhSfaNwgpcyodGNV55
+   th8nPHW44Iwe4sNzCek33dgHbK3rSCsIQ/bM8LY1n7/IuaBQDiG0CgqtL
+   g==;
+X-CSE-ConnectionGUID: iqqi1dWuSfWJpzcRw8JPgQ==
+X-CSE-MsgGUID: fpzJR/ozRPKm2W0B0yCxDg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11873"; a="104644306"
+X-IronPort-AV: E=Sophos;i="6.25,219,1779174000"; 
+   d="scan'208";a="104644306"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 08:48:46 -0700
+X-CSE-ConnectionGUID: ryH6zu/GS5GzgqhTTL2MFg==
+X-CSE-MsgGUID: sXOh/iIVRA+Cy4J2vNzt6A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,219,1779174000"; 
+   d="scan'208";a="267537713"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 08:48:47 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Wed, 12 Aug 2026 08:48:45 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45 via Frontend Transport; Wed, 12 Aug 2026 08:48:45 -0700
+Received: from MW6PR02CU001.outbound.protection.outlook.com (52.101.48.62) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Wed, 12 Aug 2026 08:48:45 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nX3VzmSa6qyBd8TqT8NKbS9XvWgU/vL9hmcm0hv+1lq0u7HnTi31tdqsPqxxjRFiYmN7QfotMy+g1gZ//67Dw9u8ykBprW59GeSSRIBzbLFcOS5wzZSSh+av4hlG5MrVOg+EH/wVD9aVRwgo9bRLuySsO6lC7H3YeTSrK1AXi69Il4yEvjsdLOYWfO92eatd1Lya/yEQ8aMkBClyHBVzQ6LFFkw4JHttOT9ww4IVLW3/VdEb84vIyBOQg88XRciv5pvT/UWDG50BH831BTnwjtETN+ACZXxJmfdzEY/gRZ/Tx4Yltk3tdfS1eW3ARA4XxylzcfJHRAmRUS598cPRrw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aZFmpyPpDQD//k4LJcCUPkHRgovlyg+YxWdNPRxrWzw=;
+ b=DerdLbj7FffRyh62rzWyFfrpu4RqfE1GjMHFxDoa7UYifGJNEIJg0EdAOCcbfy6T7e64gzuue584Mg57l/pWaBDlZEm9TVKuOKwxA6PdJNRH8gpUa5nuaL2KMBttowXlGJh5j1w1eVn4pHuExG91684D9+1LOVxjHZGJDXoquWOF3AvCa1OtVIN9Je/GuvR7crHjB5WDYD/TcbOjEJb0kDe64Lsrd8trfNk4rQHgYplRo+nq28qjTs3StIbniSvKZTaxbEe8+W4sMDotKNZsKLT9QZIkLByF+1Xjb7L7ySnQOQoByGkmjWT0BIPXcWjk4Kcx/ucpF2/hlmSADG+rKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
+ by SA1PR11MB8373.namprd11.prod.outlook.com (2603:10b6:806:38d::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.13; Wed, 12 Aug
+ 2026 15:48:31 +0000
+Received: from IA1PR11MB7198.namprd11.prod.outlook.com
+ ([fe80::2c4e:e92a:4fa:a456]) by IA1PR11MB7198.namprd11.prod.outlook.com
+ ([fe80::2c4e:e92a:4fa:a456%3]) with mapi id 15.21.0315.014; Wed, 12 Aug 2026
+ 15:48:31 +0000
+Message-ID: <83378be0-1e89-4e31-94a4-ba083f0f7c8c@intel.com>
+Date: Wed, 12 Aug 2026 18:48:24 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/9] perf thread-stack: Report branch stack hw_idx as not
+ available
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Amir Ayupov <aaupov@fb.com>, <linux-perf-users@vger.kernel.org>,
+	<coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>, "Suzuki
+ K Poulose" <suzuki.poulose@arm.com>, James Clark <james.clark@linaro.org>,
+	"Leo Yan" <leo.yan@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ingo
+ Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	"Alexander Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa
+	<jolsa@kernel.org>, Ian Rogers <irogers@google.com>, John Garry
+	<john.g.garry@oracle.com>, "Will Deacon" <will@kernel.org>
+CC: <linux-doc@vger.kernel.org>, Mike Leach <mike.leach@arm.com>, "Jonathan
+ Corbet" <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, "Swapnil
+ Sapkal" <swapnil.sapkal@amd.com>
+References: <20260803090640.2412336-1-aaupov@fb.com>
+ <20260803090640.2412336-2-aaupov@fb.com>
+ <544211a6-29c5-49ab-b9f9-543f199b9533@intel.com>
+Content-Language: en-US
+Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
+ 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
+ 4, Domiciled in Helsinki
+In-Reply-To: <544211a6-29c5-49ab-b9f9-543f199b9533@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DUZPR01CA0091.eurprd01.prod.exchangelabs.com
+ (2603:10a6:10:4bb::26) To IA1PR11MB7198.namprd11.prod.outlook.com
+ (2603:10b6:208:419::15)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCH V5 1/6] tools/perf: Move powerpc VPA-DTL auxtrace init
- into a separate file
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-In-Reply-To: <9d5f7724-3b23-48b6-9441-961614294562@intel.com>
-Date: Wed, 12 Aug 2026 21:11:09 +0530
-Cc: acme@kernel.org, jolsa@kernel.org, maddy@linux.ibm.com, irogers@google.com,
-        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com,
-        tejas05@linux.ibm.com, tshah@linux.ibm.com, venkat88@linux.ibm.com,
-        usha.r2@ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <AA14195C-0C72-4FA3-9236-BE6A45E6D3A5@linux.ibm.com>
-References: <20260807144135.2607-1-atrajeev@linux.ibm.com>
- <20260807144135.2607-2-atrajeev@linux.ibm.com>
- <9d5f7724-3b23-48b6-9441-961614294562@intel.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-X-Mailer: Apple Mail (2.3864.300.41.1.7)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=RsP16imK c=1 sm=1 tr=0 ts=6a7c9429 cx=c_pps
- a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17
- a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=RzCfie-kr_QcCd8fBx8p:22 a=QyXUC8HyAAAA:8
- a=VnNF1IyMAAAA:8 a=0bHTlfCrMkzSXunxx7MA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: xLVZhJh5vY66oW2ut9oF5CKYZkIHzCnW
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODEyMDEyNiBTYWx0ZWRfX6wRVirT5M3Lw
- mOu+qYMp25fJ+iHiFjVbochF7hi6f4y9ATxi2Fu6bxgkJdxX8julYH8jOBZPD9OO1GJBQZu5cYh
- 8YVoZvUAfLM+R84VlkOkCJtugPGl/29siFgtp90KzetJAteSaQ7mbin5X86I0E2zseXHSgj+8EC
- pCr+aN5N+RQrs1YZkHT/aBhs9oSnKilq17cSVII308DppskF/qZgEppgBLzhGHywIVLDQ3HuAhA
- jKK7QcLLaCN1lk0gbjNFAA7F2pShGB96e54i6sEoAjw7Es8RiXaDXw3rX/xJUaCmP0n9DqPdHdy
- 5bOKrqErecUmfJTd25r7CWETaayuZlyggABKJkKL13osM0ahxR5eiQAx6HLpabB4NPbhgnod12F
- o5nsEIS8Z1PGSHAayWM4+jYBtI/kKyuWaAYWzBLfntJQmebMVzJoFjSbIqBbEaiA4fraps6Do6x
- LlNionGupZmRs/cAwtQ==
-X-Proofpoint-ORIG-GUID: B3lxL_-kqgIH6KLRWtZ9CvBH5uReUMZC
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODEyMDEyNiBTYWx0ZWRfX1zWmUj2WJJ7j
- KGyWaTwOwl24lCLz1pO/9xZrZAvwbRzYLDR+i2s4vxaWoRLmfLx/XVXTAnrQVqUjS+HxGJSDbIt
- 3n8e/pKpIP5l8WsDICUqsauuUA5IfMg=
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-12_04,2026-08-12_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 impostorscore=0 suspectscore=0 clxscore=1015 malwarescore=0
- phishscore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501 bulkscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608120126
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|SA1PR11MB8373:EE_
+X-MS-Office365-Filtering-Correlation-Id: f966c1bc-84f1-408d-0214-08def8892882
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|23010399003|7416014|376014|1800799024|366016|921020|6133799003|56012099006|11063799006|10067099003|4143699003|3023799007|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: l8feSCMIwDHElz/HblEktV0Qse3zofAR5Y/WhrkqGz71dQkcVlmmkgAwt9B3eIwIfcRy4LfHT0okQKk0B4Kz+TKGyE4vF6BIPGVZWC+KzJDzm0bP2G3VMAW+1KHmZiyN/a4pVh6d/V8yazJkAilWrV09OHFl59bWdUxzX+WME6TP4UlhsJDeMFaE/zOKAqZDhO5COgMsQs7EU8kiqtlqoeHqySiNmDRX9WXRb5smJFAj4WouWDzjdcffGyFIQBM4kv4YnlExhGoZZI7rWavHq2+iHtk04RXq9TpZc4v4Y/Ch5y4PyV+IAMnRvRGlxNV9AsZcFr6LbY0jfloE2a6O/3gKOxf+NmCRb7M6JQS8ZD3GvP1jfIXZhE/xSHCoJyawZcfYf0MB206WpGn7+psRtcNOEesH+wwn9HKtgO1ecjTqSYyTl6EXlyGD/FI7ypc4RNUxVUabLrP01JxxOgfEUDJ8Qr5nNS3J48PX3p/2rBFSVA2y+YZsGPd3BaU9wSUQjLdyTnPAHf9/mmscdeamk/W249kxUQ5oW7T5JqyExs2w+zP9PuJ72Yf2puef1FT5XCrMwVhoAU0VYJIsY1lHyecgiOdQxlJwP5VkWMngsZaHs8HNHJdVytuu/9TiIGLrao7yVU3JasVJz+7TrG5XTcKhySKT9EsSyNCnNBc1QPuTspsPxHv72/k5/6MiwdSqq+UEPe04fE+xWOPJlfdcAA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(376014)(1800799024)(366016)(921020)(6133799003)(56012099006)(11063799006)(10067099003)(4143699003)(3023799007)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?RnljSFlua3RReGdiQi8vMnBZWHRtVzZaV1ZpTURQRW9wN2pEZWdOWnNtazZU?=
+ =?utf-8?B?akEvb216cGJWUWwxSU93NnpZWWdvZWpGNHc4eFQ2SVM0N2RJODl4VkNIQVFo?=
+ =?utf-8?B?NHAzYU8ya2NYS0RLbEo3b3pNTEJsMjdsZHpZQUxjV1pGUXFickl6VnNDbC9C?=
+ =?utf-8?B?bjhPN1Y0QTExT1lUWnBYRjdXd2tGR3FOQ0M4TTRuVDMvU094NUV1cXZ5UWQ1?=
+ =?utf-8?B?WVp4WkJZWlVReHpVTXp5ZTUwaUlmd29KWDlpeUJCaDBnejBlZ1lQVUNhN1lL?=
+ =?utf-8?B?ckFCbTVzb1BFZUlDVzhjV3RQQ3JjTzg1aWFYK0RoUytTRDRlMElHb013eDkw?=
+ =?utf-8?B?MlZmL0ZLSitjay8yR3Y2dlBsQXEwS2duME4vS1cwampySEgvYitwVVdmclJ5?=
+ =?utf-8?B?ZWZpU0JBc3lpckpVVmM5NFJHWjhqelVWaFg2VmhtUS9URzdDeUFRbFk5NWJy?=
+ =?utf-8?B?TVAwdlpGcTN4eXlqUUF4S1N5VE9rQ3pBVkN3ang5TS9DOUZPd1huWFRSQ2Jx?=
+ =?utf-8?B?WmNsNWxBUUVWUTlzTXdpS3J0K0FDUEt3Qlp0NEJWaFFEakM1NklBbDFIMkpi?=
+ =?utf-8?B?VWhpWkhvdUtrcGU4VWExVTZtU01PZGJnL0ZyallyR3FTZmFBVncrRGVSSHl3?=
+ =?utf-8?B?SGRVdEdPblVwWlkyRXhtK2tTNXF3SFM4cTFZaFdVUk5OUmpCNzl0QjAvdS8w?=
+ =?utf-8?B?TmoxV1hDdGxiYkJUVXdjM3dKeXhjQysvcTQxbzU4NXBCZzU5ZGJHVFRTN3Jv?=
+ =?utf-8?B?VDJ3bVo4R3AxaFZKMndVSk5jYTN1OWhRdUU5dS9hSkNhcHJ3R1BqaDNMRVds?=
+ =?utf-8?B?bnI3M0xtQ2ZyK2NrekFLVW9vY09MOVRlcDZUczFxNzUzVk1pSTZlb1ZRWEov?=
+ =?utf-8?B?cHNhQ21VWGowYnZ1QldrL095TmFnb2VjODdlR0hoSGtxMExHVytSa08wUW9a?=
+ =?utf-8?B?Q3dSUGt0ZXdSZE55c0Qwd0hnc2Q2bXV5OW9IOVc2SW8yRjFhWVQ2VzFZL2th?=
+ =?utf-8?B?bDJFV1pMYlArc2E3U1Y0bTA4TmNrTm1MWE1NZ2JLSVVLc1pmVlptWnVWaDBK?=
+ =?utf-8?B?cmIxQU1GVFFUOE85aUk4NUpTUE8wQjJDUTIrOEcvWGttcEpPUmltdnY0SE15?=
+ =?utf-8?B?YVVaOEdEV1dFYWZXd2ZIYWphcVhqK3dhcWlnUWcwSzcrNWtMVkVZTnl3SWNm?=
+ =?utf-8?B?UnNCdkhXbW5pQzhlR3NWMVRzVmdLZDdaSzFsS2NWcGFQMkRYMU1yTXMyUVBM?=
+ =?utf-8?B?Qk1rRXJvVEIyazB4MGVLN3QxUkdGTnRGRDBlYVhBWk5Cb0Y0eXdCdmpndUo2?=
+ =?utf-8?B?d1lTSmphU3NRU1ZQTEl1YVUwdmFyeDlWVlY5QmJVMnI4STVwQ2VkYXJaWFd3?=
+ =?utf-8?B?RjRMU3UrdlcyaUJFTHBRcXJ3SVMrRXl1VmQwL2ZJNUxYUE5qeUhRUC9wSmJG?=
+ =?utf-8?B?YmcvaG5uRGhqNDQvU0dJWFZNQ2J0cTdzWXFmenVxWnlVZ0xJMUV6cEVvbWJ2?=
+ =?utf-8?B?a2c2bjhvWjFXQWw5amlnNmpGY1p0NUVCVWd1cVh2cTBHQWZUQTR1cFIwQUNO?=
+ =?utf-8?B?MWhDWUJ5aHBjM2Z1Y3Z6Skl0ellJRFVKVFBkZFNnMmlKZ1BjcmUwNGFkK28y?=
+ =?utf-8?B?R2tNZGdDK253S2E1d2hMN3hibGd1NFZRNjBBc2lWei96S1AvbHRWenl3SnZx?=
+ =?utf-8?B?U1FpVGdURy9iNDY4QXBYVmZoeHVqL1c4ZFdNdTZ1R3ZlRk56akhBR05zbE5k?=
+ =?utf-8?B?aFdLL2VyWnpBL3hmNzl1bTVLR09CaUNNMzF6OHlVR0JQN3Q3M3orb3VIM0cy?=
+ =?utf-8?B?VG5EWDJlZnprNGVpaUJVUkNHZVFrSi95VnJiWU4ySzkxaTdHQTJzRDJhRHQ5?=
+ =?utf-8?B?V05QSndJRkNVUjhSM2NqbzliQUN0dkJLNXZuMFcxdjBzeVhkY2ErbkhtNnZp?=
+ =?utf-8?B?UTRYalhaeGlkTTJwVlZ0dk1aRkNJRGpsRmJyZVhUeVovd1FBN2hIVE03Rkpa?=
+ =?utf-8?B?QmUwTVJ6WXM2WEVqWnBBc0d4eGpJVTJGVSs4OEFVLzIrVG8wdnBNcFRDQzVI?=
+ =?utf-8?B?VXZXN0phc0ljc2xPMjNnSy81dU5FdXgzaE9tOEJGQ0V0N25ZZ2JieTl2NDQ1?=
+ =?utf-8?B?UWgzdmFiTjg1OFN0K1EyV3VDZWdLNWh4M29xSG9jOVNmUDZOM2JSTjBES2xo?=
+ =?utf-8?B?STdpZVYzaXFlZElSQXkyQlNtUG1SYkNuMWFQV1UyOUQ2ZEYzNkRlK3hxOFBM?=
+ =?utf-8?B?TWVNT0ZqUTIzRzExZmkrYVlJWXVqbUE0NnErMDNaaXdOeWxuRjI4VnhKTzI5?=
+ =?utf-8?B?bGRxTzJYdGY5bVYyaTFvajFpRFIzREV0SGh1WDhCWEJDKzFEYkJZc2NxWGRP?=
+ =?utf-8?Q?cHs/zmuu1mKAesAk=3D?=
+X-Exchange-RoutingPolicyChecked: oclmatifLjXUDnd6OlAOG6JCFQawF0pbqgk/76B5Ks1bcb4Y/Km1CcOtqHqXAfPLebSS2XeL/fGLL0NzYHKu+3xrOTi2sidSfc9OkyBF/yGjhfFpTCzXVWMkeq6GqcS0mYErRpNFq4XT9J+GZMT86RND89NMVFUEuRJ3jeB6LSBtiOLDjldDqyP7jeHie4kRa5jCJYNDpuvi5L5cSBYyR5gTieJy2BIg4etY22Phs0b7mwNhmMvqDl7LFqrv2OoNIr3j+elAV3neugHS/XBv2m0jbCo25upWK2rGPxNOzFXnwRxlJd4iOhqc/dYeoGxOR8fgnD6hb9w9mX4B1/CCBg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: f966c1bc-84f1-408d-0214-08def8892882
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7198.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Aug 2026 15:48:31.0222
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6Sh2SWidjXM4pzWOLq5SjNUs9giDpbnrS2W12NDFCxDLkYQ+3pHmPLUTmzC8ALzB9y1tcC1DMSZzKJg1aQviMg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8373
+X-OriginatorOrg: intel.com
 
-
-
-> On 12 Aug 2026, at 3:00=E2=80=AFPM, Adrian Hunter =
-<adrian.hunter@intel.com> wrote:
->=20
-> On 07/08/2026 17:41, Athira Rajeev wrote:
->> The powerpc auxtrace dispatch lives entirely in
->> arch/powerpc/util/auxtrace.c.  As new PMUs such as HTM are added, =
-this
->> file would grow to contain the recording logic for all of them.
->>=20
->> Factor out the VPA-DTL recording initializer into its own file,
->> arch/powerpc/util/vpa-dtl.c, and reduce auxtrace.c to a thin dispatch
->> layer.  auxtrace_record__init() now detects the PMU by name and calls
->> the appropriate per-PMU init function:
->>=20
->>  - vpa_dtl_recording_init() for VPA-DTL events (unchanged behaviour)
->>  - Further PMU entries will follow in subsequent patches
->>=20
->> This makes room in auxtrace_record__init() for the HTM recording path
->> added in the next patch without growing a single monolithic file.
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
->=20
-> A couple of cosmetic / very minor comments.
->=20
-> Nevertheless:
->=20
+On 11/08/2026 18:58, Adrian Hunter wrote:
+> On 03/08/2026 12:06, Amir Ayupov wrote:
+>> thread_stack__br_sample() and thread_stack__br_sample_late() fill a
+>> caller-supplied branch_stack that is typically allocated with zalloc(),
+>> leaving hw_idx as 0. Zero is a valid hardware index, so consumers that
+>> honour PERF_SAMPLE_BRANCH_HW_INDEX see a reconstructed branch stack
+>> claiming to start at LBR TOS entry 0.
+>>
+>> These branch stacks are reconstructed from instruction trace and have no
+>> hardware index at all. Set hw_idx to -1ULL, which is the established way
+>> to say "not available" and matches what intel-pt and cs-etm already put
+>> in the branch stacks they synthesise directly.
+>>
+>> Signed-off-by: Amir Ayupov <aaupov@fb.com>
+> 
+> Fixes tag?
+> 
+> Otherwise:
+> 
 > Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
->=20
+
+On second thoughts, it seems that hw_idx is only used for stitching
+LBRs which is anyway disabled by default and only enabled by --stitch-lbr.
+
+Setting -1ULL will prevent has_stitched_lbr() making a match, but we can
+rely on the user to decide that for themselves via --stitch-lbr.
+
+So, in fact, it doesn't look like this change should be needed?
+
+> 
 >> ---
->> Changes in V5:
->> - Add forward declarations for struct evsel and struct =
-auxtrace_record
->>  in powerpc-vpadtl.h before the vpa_dtl_recording_init() prototype.
->>  Without them, a translation unit that includes the header before the
->>  full definitions are visible may produce implicit-declaration =
-warnings
->>  on strict compilers.
->>=20
->> Changes in V4:
->> - No changes from V3.
->>=20
->> Changes in V3:
->> Add #include <linux/zalloc.h> to vpa-dtl.c; without it the compiler
->> treats zalloc() as implicitly returning int, truncating the upper
->> 32 bits of the returned pointer on 64-bit PowerPC.
->>=20
->> Changes in V2:
->> - Renamed the destination file from arch/powerpc/util/vpa-dtl.c (same
->>  name, unchanged) but the subject and commit message are reworded to
->>  clearly state that the goal is to make auxtrace_record__init() a =
-thin
->>  per-PMU dispatcher, not merely to "allow multiple PMUs to use =
-auxtrace".
->> - Handle failure from memory allocation
->> - Included stdlib and limits.h
->> - No functional change to the VPA-DTL path itself.
->> - Patch is now 1/6 instead of 1/9.
->>=20
->> tools/perf/arch/powerpc/util/Build      |  1 +
->> tools/perf/arch/powerpc/util/auxtrace.c | 84 +++-------------------
->> tools/perf/arch/powerpc/util/vpa-dtl.c  | 96 =
-+++++++++++++++++++++++++
->> tools/perf/util/powerpc-vpadtl.h        |  3 +
->> 4 files changed, 108 insertions(+), 76 deletions(-)
->> create mode 100644 tools/perf/arch/powerpc/util/vpa-dtl.c
->>=20
->> diff --git a/tools/perf/arch/powerpc/util/Build =
-b/tools/perf/arch/powerpc/util/Build
->> index ae928050e07a..7819c8f5af2d 100644
->> --- a/tools/perf/arch/powerpc/util/Build
->> +++ b/tools/perf/arch/powerpc/util/Build
->> @@ -7,3 +7,4 @@ perf-util-y +=3D evsel.o
->> perf-util-$(CONFIG_LIBDW) +=3D skip-callchain-idx.o
->>=20
->> perf-util-y +=3D auxtrace.o
->> +perf-util-y +=3D vpa-dtl.o
->> diff --git a/tools/perf/arch/powerpc/util/auxtrace.c =
-b/tools/perf/arch/powerpc/util/auxtrace.c
->> index 4600a1661b4f..e04a0bd61755 100644
->> --- a/tools/perf/arch/powerpc/util/auxtrace.c
->> +++ b/tools/perf/arch/powerpc/util/auxtrace.c
->> @@ -13,63 +13,12 @@
->> #include "../../util/auxtrace.h"
->> #include "../../util/powerpc-vpadtl.h"
->> #include "../../util/record.h"
->> -#include <internal/lib.h> // page_size
->> -
->> -#define KiB(x) ((x) * 1024)
->> -
->> -static int
->> -powerpc_vpadtl_recording_options(struct auxtrace_record *ar =
-__maybe_unused,
->> - struct evlist *evlist __maybe_unused,
->> - struct record_opts *opts)
->> -{
->> - opts->full_auxtrace =3D true;
->> -
->> - /*
->> -  * Set auxtrace_mmap_pages to minimum
->> -  * two pages
->> -  */
->> - if (!opts->auxtrace_mmap_pages) {
->> - opts->auxtrace_mmap_pages =3D KiB(128) / page_size;
->> - if (opts->mmap_pages =3D=3D UINT_MAX)
->> - opts->mmap_pages =3D KiB(256) / page_size;
->> - }
->> -
->> - return 0;
->> -}
->> -
->> -static size_t powerpc_vpadtl_info_priv_size(struct auxtrace_record =
-*itr __maybe_unused,
->> - struct evlist *evlist __maybe_unused)
->> -{
->> - return VPADTL_AUXTRACE_PRIV_SIZE;
->> -}
->> -
->> -static int
->> -powerpc_vpadtl_info_fill(struct auxtrace_record *itr __maybe_unused,
->> - struct perf_session *session __maybe_unused,
->> - struct perf_record_auxtrace_info *auxtrace_info,
->> - size_t priv_size __maybe_unused)
->> -{
->> - auxtrace_info->type =3D PERF_AUXTRACE_VPA_DTL;
->> -
->> - return 0;
->> -}
->> -
->> -static void powerpc_vpadtl_free(struct auxtrace_record *itr)
->> -{
->> - free(itr);
->> -}
->> -
->> -static u64 powerpc_vpadtl_reference(struct auxtrace_record *itr =
-__maybe_unused)
->> -{
->> - return 0;
->> -}
->>=20
->> struct auxtrace_record *auxtrace_record__init(struct evlist *evlist,
->> int *err)
->> {
->> - struct auxtrace_record *aux;
->> struct evsel *pos;
->> - int found =3D 0;
->> + struct evsel *vpa_dtl_evsel =3D NULL;
->=20
-> Ordering local definitions by descending line length is nicer e.g.
->=20
-> struct evsel *vpa_dtl_evsel =3D NULL;
->   struct evsel *pos;
-
-Sure, I will address this in next version
-
-Thanks for review Adrian.
-I will wait for feedback on the remaining patches and post a v6 =
-incorporating all the changes together.
-
-Athira
-
->=20
->>=20
->> /*
->>  * Set err value to zero here. Any fail later
->> @@ -78,33 +27,16 @@ struct auxtrace_record =
-*auxtrace_record__init(struct evlist *evlist,
->> *err =3D 0;
->>=20
->> evlist__for_each_entry(evlist, pos) {
->> - if (strstarts(pos->name, "vpa_dtl")) {
->> - found =3D 1;
->> + if (pos->name && strstarts(pos->name, "vpa_dtl")) {
->> pos->needs_auxtrace_mmap =3D true;
->> - break;
->> + /* Remember the first matching VPA DTL event */
->> + if (!vpa_dtl_evsel)
->> + vpa_dtl_evsel =3D pos;
->> }
->> }
->>=20
->> - if (!found)
->> - return NULL;
->> -
->> - /*
->> -  * To obtain the auxtrace buffer file descriptor, the auxtrace =
-event
->> -  * must come first.
->> -  */
->> - evlist__to_front(pos->evlist, pos);
->> -
->> - aux =3D zalloc(sizeof(*aux));
->> - if (aux =3D=3D NULL) {
->> - pr_debug("aux record is NULL\n");
->> - *err =3D -ENOMEM;
->> - return NULL;
->> - }
->> + if (vpa_dtl_evsel)
->> + return vpa_dtl_recording_init(vpa_dtl_evsel, err);
->>=20
->> - aux->recording_options =3D powerpc_vpadtl_recording_options;
->> - aux->info_priv_size =3D powerpc_vpadtl_info_priv_size;
->> - aux->info_fill =3D powerpc_vpadtl_info_fill;
->> - aux->free =3D powerpc_vpadtl_free;
->> - aux->reference =3D powerpc_vpadtl_reference;
->> - return aux;
->> + return NULL;
->> }
->> diff --git a/tools/perf/arch/powerpc/util/vpa-dtl.c =
-b/tools/perf/arch/powerpc/util/vpa-dtl.c
->> new file mode 100644
->> index 000000000000..2609b88f61d8
->> --- /dev/null
->> +++ b/tools/perf/arch/powerpc/util/vpa-dtl.c
->> @@ -0,0 +1,96 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * VPA DTL AUX tracing support
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/types.h>
->> +#include <linux/string.h>
->> +#include <linux/zalloc.h>
->> +#include <errno.h>
->> +#include <stdlib.h>
->> +#include <limits.h>
->> +#include "../../util/cpumap.h"
->=20
-> Is cpumap.h needed?
-Ok, I will check this
->=20
->> +#include "../../util/evsel.h"
->> +#include "../../util/evlist.h"
->> +#include "../../util/session.h"
->> +#include "../../util/util.h"
->> +#include "../../util/debug.h"
->> +#include "../../util/auxtrace.h"
->> +#include "../../util/powerpc-vpadtl.h"
->> +#include "../../util/record.h"
->> +#include <internal/lib.h> // page_size
->> +
->> +#define KiB(x) ((x) * 1024)
->> +
->> +static int
->> +powerpc_vpadtl_recording_options(struct auxtrace_record *ar =
-__maybe_unused,
->> + struct evlist *evlist __maybe_unused,
->> + struct record_opts *opts)
->> +{
->> + opts->full_auxtrace =3D true;
->> +
->> + /*
->> +  * Set auxtrace_mmap_pages to minimum
->> +  * two pages
->> +  */
->> + if (!opts->auxtrace_mmap_pages) {
->> + opts->auxtrace_mmap_pages =3D KiB(128) / page_size;
->> + if (opts->mmap_pages =3D=3D UINT_MAX)
->> + opts->mmap_pages =3D KiB(256) / page_size;
->> + }
->> +
->> + return 0;
->> +}
->> +
->> +static size_t powerpc_vpadtl_info_priv_size(struct auxtrace_record =
-*itr __maybe_unused,
->> + struct evlist *evlist __maybe_unused)
->> +{
->> + return VPADTL_AUXTRACE_PRIV_SIZE;
->> +}
->> +
->> +static int
->> +powerpc_vpadtl_info_fill(struct auxtrace_record *itr __maybe_unused,
->> + struct perf_session *session __maybe_unused,
->> + struct perf_record_auxtrace_info *auxtrace_info,
->> + size_t priv_size __maybe_unused)
->> +{
->> + auxtrace_info->type =3D PERF_AUXTRACE_VPA_DTL;
->> +
->> + return 0;
->> +}
->> +
->> +static void powerpc_vpadtl_free(struct auxtrace_record *itr)
->> +{
->> + free(itr);
->> +}
->> +
->> +static u64 powerpc_vpadtl_reference(struct auxtrace_record *itr =
-__maybe_unused)
->> +{
->> + return 0;
->> +}
->> +
->> +struct auxtrace_record *vpa_dtl_recording_init(struct evsel *pos, =
-int *err)
->> +{
->> + struct auxtrace_record *aux;
->> +
->> + /*
->> +  * To obtain the auxtrace buffer file descriptor, the auxtrace =
-event
->> +  * must come first.
->> +  */
->> + evlist__to_front(pos->evlist, pos);
->> +
->> + aux =3D zalloc(sizeof(*aux));
->> + if (aux =3D=3D NULL) {
->> + pr_debug("aux record allocation failed (-ENOMEM)\n");
->> + *err =3D -ENOMEM;
->> + return NULL;
->> + }
->> +
->> + aux->recording_options =3D powerpc_vpadtl_recording_options;
->> + aux->info_priv_size =3D powerpc_vpadtl_info_priv_size;
->> + aux->info_fill =3D powerpc_vpadtl_info_fill;
->> + aux->free =3D powerpc_vpadtl_free;
->> + aux->reference =3D powerpc_vpadtl_reference;
->> + return aux;
->> +}
->> diff --git a/tools/perf/util/powerpc-vpadtl.h =
-b/tools/perf/util/powerpc-vpadtl.h
->> index ca809660b9bb..68a780c63204 100644
->> --- a/tools/perf/util/powerpc-vpadtl.h
->> +++ b/tools/perf/util/powerpc-vpadtl.h
->> @@ -20,4 +20,7 @@ struct perf_pmu;
->> int powerpc_vpadtl_process_auxtrace_info(union perf_event *event,
->>   struct perf_session *session);
->>=20
->> +struct evsel;
->> +struct auxtrace_record;
->> +struct auxtrace_record *vpa_dtl_recording_init(struct evsel *pos, =
-int *err);
->> #endif
-
+>>  tools/perf/util/thread-stack.c | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
+>> index c5ce741b07446..1a3dffa83bde2 100644
+>> --- a/tools/perf/util/thread-stack.c
+>> +++ b/tools/perf/util/thread-stack.c
+>> @@ -624,6 +624,7 @@ void thread_stack__br_sample(struct thread *thread, int cpu,
+>>  	unsigned int nr;
+>>  
+>>  	dst->nr = 0;
+>> +	dst->hw_idx = -1ULL;
+>>  
+>>  	if (!ts)
+>>  		return;
+>> @@ -686,6 +687,7 @@ void thread_stack__br_sample_late(struct thread *thread, int cpu,
+>>  	bool start = false;
+>>  
+>>  	dst->nr = 0;
+>> +	dst->hw_idx = -1ULL;
+>>  
+>>  	if (!ts)
+>>  		return;
+> 
 
