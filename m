@@ -1,211 +1,140 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B359D426EB9
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 10:35:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D1C2F7EFC;
+	Wed, 12 Aug 2026 13:01:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786530914; cv=none; b=UZcl6qZHu42BbvWZJDsDtDTr0wn4NPDldwBASOiigINyahPNExeOxOot4jY674c/wshCoCMKLS6JK5M/U1m6yzSFiPbrY+Xz1kKLNvWT9XbV4+DG9GrpzBT4E2SB4eiDX3ybkPgpgx/ZlQn64UTc0YsjkrKzRg4xqoAYROwMBMs=
+	t=1786539711; cv=none; b=sLKBUUD3J4psjB5Uhbju9c9+F+Ai+KVk6mFgchCfjr4p33EXIDi+snjN5Xxrgb9kf4w1i+NzyOMph6718XHQY84QTdrfcocckU6/zSJKO04SmY2Vmue0WhWKbbXdmyVJTofSvc3jCF1RjRWfrei/HYN9xgDvTtw7Q7ZWlrRQxUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786530914; c=relaxed/simple;
-	bh=F8DUy8234kAgoD9DGMyKqrWBOur2Vit+0eofYS+10W4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZMmLRZxf9wjZNeqSS3p3WEDhENdskgtxgqnKqfk2wrAp9MNs9mmuBOd8xwTO5gk+wGe015h3a3mZhL8ZrF8+o38EvJkF7IyvFOeATsusQ4WyUeuEat7s0AuOM5cyfJjMbCpT5MNmfPhIKV6I1Rl0IuoCGcd+cokOsQXcpDSJHcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=pfC8xZLs; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786539711; c=relaxed/simple;
+	bh=oAio7SaX+DKJEm58p4011mb4b07usAsY/fvtGvneJgs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RGkyXB7qLfyec9dcP3mR/MS8kgYYg0mGIdAbgs1/WBceWpo4+sSsgLqotRoMZAwBzvTViU9aS047jGoZkvIwnQxryK8ETaDrUJmbR77XxqQLNFbXSCxQvGpS6zGPGYKvIAIGOm/7IRZK2N/2AADK1tQJSaKpJvk48OdTFOpGJiY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hx0vAFXq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pfC8xZLs"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-47f84023916so646100f8f.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 03:35:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786530911; x=1787135711; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:date
-         :from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=o3+xm+C1lqkauiE9SqCgUxPet+r2BY3i5/9ftLHHYjI=;
-        b=pfC8xZLsgFuPDcxwiY0zjMQDmdVPcgC8O42+3PB+gSvW88WyA7qwMaXnk+qgFPWGbO
-         wR+8+KtRrq2UXdGz+UShPT9qsVyQJjgcb7enLSodOEn2zTMcRLX3w7TpWuIJLDdI2sG8
-         exQTERoCk6jIkSwI7L4O8eMz9alI6r5SUrWwAW12wVy88/iVZl7RY2OB6WDfXbhqaC0T
-         BWdAlC9O23bBl8NB7nY3LjqvARWAB1U3nDpa/dJWJwbzxYUQKjQsYM1uE+6Qp7s2gOo6
-         KQDQo93VnSfDmQdwUedZJzmPSK8gMY0+s8IecXPZ8d0OVWNSBgmo7E+fmopb/dp1vThr
-         WtqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786530911; x=1787135711;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :content-type:mime-version:references:message-id:subject:cc:to:date
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=o3+xm+C1lqkauiE9SqCgUxPet+r2BY3i5/9ftLHHYjI=;
-        b=Jh5QA/973w1B/lh/YXiMzRdYEEpw1hitG18EDiOSwOJsRg0ohkvyLb1/DwBm//ZKIS
-         46AlnCyix7jupV6pIkImOkUp/EmXtYU2pk+fbsMBuUB0n2JQrHnTg5cqsygvU/4+Niw5
-         RdApszhb7TvB6Z6NH1V8Y7vNwCYcfQ9ZqBOFDpA6iJXES80LVdbd9p1vRH4PhOu9uKWY
-         lbM/9BX9UfvSxE7j43sDlLh7nCka0w8g5jPrDNppAfZ96vz+ERkxAkZ4SMEV6jZa384t
-         W45ZtXEKPPJAggMb5MWQLNpL2s2pv2vCz8jCQDkLvO3ej8qzREKQCd2Te7+B0yGpQp4k
-         eREQ==
-X-Forwarded-Encrypted: i=1; AHgh+RpvpBefxV4GtLSdcZ16g2YIIOwbDLNJxDEeoK9IQugs8HhUDInkQr7S9VEpsiFMD0V108EfQgxcDWItruFkBTNK@vger.kernel.org
-X-Gm-Message-State: AOJu0YxAPIfi2/huURWv6xTaZyVnglTYIFVwLJtySmJDJIxSdARatHta
-	g4kSBJLmD3KraRAyOu4wk5AHlHCTkdHj1LugQZx/FRlAcWE+Um6pVxAI
-X-Gm-Gg: AR+sD12WN7NNMVdVjjXqP1FR26mjffYW8qDWbYc+dSguNOgBdXUdJi4pbIh2Ia1nqkA
-	LgiZTQUOrx3EWCgycS5/gldyzByBNtTRJIO3Fez8/oL2w2i7CrAntMV14EBxDdLdLYDTX41KeyL
-	zRcz71oIyApJqup09CixQ7rIp5fDAFBLWAmPpG/jCmMnCH9epWEzTZvr6pt6uyHthzthxOhOkcX
-	LlddgoC7eTnOcJ6YQHZ8KVew0PpMh3Li08T1CjX42DlvL/uAnVVspj64/nGpPvhjSPeBkfDg78l
-	0JFtrLoy+K4U1YVJqzoUcwEgCTrbSXHxAd0GojznVpAC0/ne/Q+qj7B0yIPtBd+cA62a3/eAKV1
-	REbQzRk9lBcAh1Xtje6mMyCsYxVtD21xlpREdhhck86pAXE3vQcPY/7lMWnMnau+OullJHWAFwq
-	fqggi5V9RvSCa0znxkbE6MyWKUDfkuIxrd54ciKfFf4XAzE3uB
-X-Received: by 2002:a05:6000:2405:b0:47f:f3fe:1ebf with SMTP id ffacd0b85a97d-481529012f0mr4963683f8f.20.1786530910808;
-        Wed, 12 Aug 2026 03:35:10 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48150bf5f0esm6004421f8f.4.2026.08.12.03.35.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2026 03:35:10 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 12 Aug 2026 12:35:08 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hx0vAFXq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6189B1F000E9;
+	Wed, 12 Aug 2026 13:01:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786539709;
+	bh=3mTWZ2A5uVTMEYK/8FxrEdOAhaPVuayMpkK8JjoS38A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=hx0vAFXqDxFep7R8Lt1orkQa9QQfbVDwnLbm2IG7PU+zwLbye+bWCtclJK39QaMe9
+	 b9AeC1pM5AyNvz/ZXXDGfRB9PxVziw/BWHfmQ79uceGx+p4y2lKQK0Sd8NV8A+juKn
+	 t1pqnsVOWx8glFMsTW+3wtiwOlCNFtPeQSkfAJHjxOOTPTfUHJUziqc4xkbTGCJltr
+	 9sLVVRRDMOHNiytrYectFmsIdN911jlpwMHopszAGXV1BPtzTJJhOYIGgofXpvdK7t
+	 B5WeKfksH/9OeSbNQZ3CQiO7jS2iZ0xyCK3Ormfqj5ee2XA07EXkXt7WiuMa4xiIZm
+	 91JnaWl0t1tQA==
+Date: Wed, 12 Aug 2026 22:01:45 +0900
+From: Namhyung Kim <namhyung@kernel.org>
 To: sashiko-reviews@lists.linux.dev
-Cc: Deepanshu Kartikey <kartikey406@gmail.com>, bpf@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf/bpf: Fix data race in __perf_event_overflow
-Message-ID: <anxMXBwCX0HCYgxr@krava>
-References: <20260811235331.10044-1-kartikey406@gmail.com>
- <20260812000859.654FC1F00A3A@smtp.kernel.org>
+Cc: Jiebin Sun <jiebin.sun@intel.com>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v8 6/9] perf c2c: add function view hierarchy entry
+ creation
+Message-ID: <anxuuXWGv-S73bXG@google.com>
+References: <20260810052647.588867-1-jiebin.sun@intel.com>
+ <20260810052647.588867-7-jiebin.sun@intel.com>
+ <20260810054945.82FFE1F000E9@smtp.kernel.org>
+ <anvQpSM9wXgnrbSA@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260812000859.654FC1F00A3A@smtp.kernel.org>
+In-Reply-To: <anvQpSM9wXgnrbSA@google.com>
 
-On Wed, Aug 12, 2026 at 12:08:58AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+On Wed, Aug 12, 2026 at 10:47:17AM +0900, Namhyung Kim wrote:
+> Hello,
 > 
-> Pre-existing issues:
-> - [High] Lockless TOCTOU race in perf_event_alloc() causes NULL pointer dereference or Use-After-Free during BPF program inheritance.
-> - [Medium] Incomplete fix for data races and missing memory barriers in BPF attach/detach paths.
-> - [Medium] Time-of-Check to Time-of-Use (TOCTOU) race drops valid perf events during concurrent BPF detach.
-> --
+> On Mon, Aug 10, 2026 at 05:49:44AM +0000, sashiko-bot@kernel.org wrote:
+> > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> > - [Medium] Deleting a function-view child entry causes an out-of-bounds heap read in `free_callchain()` because the child entry is allocated without trailing `callchain_root` memory.
+> > --
+> > 
+> > --- Patch [6]: [PATCH v8 6/9] perf c2c: add function view hierarchy entry creation ---
+> > commit 3fbce53bcfd8d8abeda29f9eded35e05dfc305f5
+> > Author: Jiebin Sun <jiebin.sun@intel.com>
+> > 
+> > perf c2c: add function view hierarchy entry creation
+> >     
+> > This patch adds the entry-creation layer for the function view hierarchy.
+> > It implements level-1/2/3 lookup-or-create functions and synthetic child
+> > allocation logic, reusing cacheline_idx to preserve source entry identity.
+> > 
+> > > diff --git a/tools/perf/ui/browsers/c2c-function.c b/tools/perf/ui/browsers/c2c-function.c
+> > > index 4bf8406fde556..4099d4c7e7b44 100644
+> > > --- a/tools/perf/ui/browsers/c2c-function.c
+> > > +++ b/tools/perf/ui/browsers/c2c-function.c
+> > 
+> > [ ... ]
+> > 
+> > > @@ -847,6 +865,259 @@ static int __maybe_unused c2c_he__prune_empty_writers(struct hist_entry *l1_he)
+> > >  	return surviving;
+> > >  }
+> > >  
+> > > +static void *c2c_function_he_zalloc(size_t size)
+> > > +{
+> > > +	struct c2c_hist_entry *c2c_he = zalloc(sizeof(*c2c_he) + size);
+> > > +
+> > > +	if (!c2c_he)
+> > > +		return NULL;
+> > > +
+> > > +	init_stats(&c2c_he->cstats.lcl_hitm);
+> > > +	init_stats(&c2c_he->cstats.rmt_hitm);
+> > > +	init_stats(&c2c_he->cstats.lcl_peer);
+> > > +	init_stats(&c2c_he->cstats.rmt_peer);
+> > > +	init_stats(&c2c_he->cstats.load);
+> > > +
+> > > +	return &c2c_he->he;
+> > > +}
+> > > +
+> > > +/* Entry operations for function view */
+> > > +static struct hist_entry_ops c2c_function_entry_ops = {
+> > > +	.new	= c2c_function_he_zalloc,
+> > > +	.free	= c2c_function_he_free,
+> > > +};
+> > > +
+> > > +static struct c2c_hist_entry *
+> > > +c2c_child_entry__alloc(struct hist_entry *parent_he, struct hist_entry *src_he,
+> > > +		       int depth, u64 ip)
+> > > +{
+> > > +	struct c2c_hist_entry *child_c2c;
+> > > +	struct hist_entry *child_he;
+> > > +
+> > > +	/* Function-view children never own or display callchains. */
+> > > +	child_he = c2c_function_he_zalloc(0);
+> > > +	if (!child_he)
+> > > +		return NULL;
+> > 
+> > [Severity: Medium]
+> > Will this cause an out-of-bounds memory read when the entry is freed?
+> > 
+> > If perf c2c report is run with callchains enabled (symbol_conf.use_callchain
+> > is true), this entry is allocated with 0 extra bytes for the callchain.
+> > 
+> > When this undersized entry is deleted on the error path below or during
+> > cleanup via c2c_he__free_hierarchy(), hist_entry__delete() accesses
+> > he->callchain based on the global symbol_conf.use_callchain flag:
+> > 
+> > tools/perf/util/hist.c:hist_entry__delete() {
+> >     ...
+> >     if (symbol_conf.use_callchain)
+> >         free_callchain(he->callchain);
+> >     ...
+> > }
+> > 
+> > Could this read past the end of the c2c_hist_entry structure and dereference
+> > garbage memory in free_callchain_node()?
 > 
-> --- Patch [1]: [PATCH] perf/bpf: Fix data race in __perf_event_overflow ---
-> commit f63a2be5ceb79a2a8bb0263ba6723f7bf4ae763d
-> Author: Deepanshu Kartikey <kartikey406@gmail.com>
-> 
-> perf/bpf: Fix data race in __perf_event_overflow
-> 
-> This patch addresses a data race where __perf_event_overflow() concurrently
-> reads event->prog without lock protection while perf_event_detach_bpf_prog()
-> writes it to NULL. It fixes the race by introducing READ_ONCE() and
-> WRITE_ONCE() in the respective read and write paths.
-> 
-> Reported-by: syzbot+651d2774bd1d8395595f@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=651d2774bd1d8395595f
-> Fixes: f11f10bfa1ca ("perf/bpf: Call BPF handler directly, not through overflow machinery")
-> Signed-off-by: Deepanshu Kartikey <kartikey406@gmail.com>
-> 
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> 
-> [ ... ]
-> 
-> > @@ -10766,7 +10767,8 @@ static int __perf_event_overflow(struct perf_event *event,
-> >  	if (event->attr.aux_pause)
-> >  		perf_event_aux_pause(event->aux_event, true);
-> >  
-> > -	if (event->prog && event->prog->type == BPF_PROG_TYPE_PERF_EVENT &&
-> > +	prog = READ_ONCE(event->prog);
-> > +	if (prog && prog->type == BPF_PROG_TYPE_PERF_EVENT &&
-> >  	    !bpf_overflow_handler(event, data, regs))
-> >  		goto out;
-> 
-> [Severity: Medium]
-> This isn't a bug introduced by this patch, but does the independent second
-> read in bpf_overflow_handler() create a time-of-check to time-of-use race?
-> 
-> If a concurrent detach sets event->prog to NULL between the READ_ONCE() here
-> in __perf_event_overflow() and the second READ_ONCE() inside
-> bpf_overflow_handler():
-> 
-> bpf_overflow_handler() {
->     prog = READ_ONCE(event->prog);
->     if (prog) {
->         ...
->     }
->     return 0;
-> }
-> 
-> Wouldn't bpf_overflow_handler() evaluate prog as NULL and return 0? The
-> caller __perf_event_overflow() evaluates !0 as true and executes goto out,
-> which unconditionally drops the perf sample.
-> 
-> Should the already-validated prog pointer be passed directly to
-> bpf_overflow_handler()?
+> It looks like a real issue.  Can you please fix?  I'm not sure if c2c
+> uses the callchains.
 
-seems legit
+Oh, I saw it's handled in the patch 8.
 
-> 
-> 
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -2018,7 +2018,7 @@ void perf_event_detach_bpf_prog(struct perf_event *event)
-> >  
-> >  put:
-> >  	prog = event->prog;
-> > -	event->prog = NULL;
-> > +	WRITE_ONCE(event->prog, NULL);
-> >  
-> >  unlock:
-> 
-> [Severity: Medium]
-> This is a pre-existing issue, but does this incomplete fix leave other data
-> races in the attach and detach paths?
-> 
-> Other functions like perf_event_set_bpf_handler(),
-> perf_event_free_bpf_handler(), and perf_event_attach_bpf_prog() still
-> perform plain writes to event->prog without WRITE_ONCE().
+Thanks,
+Namhyung
 
-was wondering the same, the perf_event_detach_bpf_prog is called for
-tracing events (tracepoint/kprobe/uprobe) the perf event release goes
-through perf_event_free_bpf_handler, check perf_event_free_bpf_prog
-
-jirka
-
-> 
-> Additionally, does this need release and acquire semantics? If the writes to
-> event->prog and event->bpf_cookie in the attach paths are reordered by the
-> CPU, could the NMI handler read a valid event->prog but a stale or
-> uninitialized event->bpf_cookie?
-> 
-> [Severity: High]
-> This is also a pre-existing issue, but does the lockless access in
-> perf_event_alloc() create a use-after-free or NULL pointer dereference
-> during BPF program inheritance?
-> 
-> During fork, perf_event_alloc() inherits the BPF program:
-> 
-> perf_event_alloc() {
->     ...
->     if (parent_event->prog) {
->         struct bpf_prog *prog = parent_event->prog;
->         bpf_prog_inc(prog);
->         ...
->     }
-> }
-> 
-> Since this accesses parent_event->prog locklessly, can a concurrent
-> bpf_perf_link_release() clear the pointer? If the compiler reloads the
-> pointer after the check, bpf_prog_inc() would dereference NULL.
-> 
-> Even if it is optimized to a single read, perf_event_alloc() is not inside
-> an RCU read-side critical section. Could a concurrent detach finish its RCU
-> grace period and free the BPF program, causing bpf_prog_inc() to write to
-> freed memory?
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260811235331.10044-1-kartikey406@gmail.com?part=1
-> 
