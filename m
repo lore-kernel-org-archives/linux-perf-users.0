@@ -1,147 +1,111 @@
-Received: from mail-pz2-f0.google.com (mail-pz2-f0.google.com [74.125.228.0])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8873290B1
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 07:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2635E399357;
+	Wed, 12 Aug 2026 07:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786518762; cv=none; b=bqpDbfZrm4qEFY8HsiLFHb0kNd1wliC8NnlAGy5zi1UBag3L+TL8Gw1e+RLc6mzXI/Ux8Jxh9BqLIP3MdUXwXoLv7/tXAfTXkhGk3qqJvBB+e2OiEchOGQdh/XgdlB2Tp0jK7bVe5HbRnIxj95v0Kg/Lr8Pts2A2CnywO3UuLXg=
+	t=1786520517; cv=none; b=YgC7Iu6JPHNchnB3SsCJwMTigg2pHjNGMLREbbTbScjLTNP0FzA+zqOfFaVzwSg42XAjSboTgra8DealNmY7lw6Aik9Yhq0qNJiUD8uq0SkKnl4CKBK3Gpfh9fipnSkXPPZsu6R3Cbxx815PuPLBkfOS9lnZJd6si1sygjkavOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786518762; c=relaxed/simple;
-	bh=WYFI/yXArUZr1Bf5IOK7mBBFES9i/VWIMEpbANuxMi0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Fot/lHI2clH9aoimeVxYoQvwsYxp/DAjgVYLv+dc/WAzTUjoGvjJHiocqnQ0DWOTw7metoudiP4zlPOvFfam0cEysNltwXba9CTBQffEILMFnbQB5KFVlCQ7lRMclP/iiKpsb73A2YlqXOSroIlCWRyo5O2p4JOMmCdvWUWif+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D2ngl/oH; arc=none smtp.client-ip=74.125.228.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1786520517; c=relaxed/simple;
+	bh=z5qP7X/99hM2T0Rk4TFjMNkRIxbz4CezaFktS/HAFtk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wv8WUDjiQvWi6t0eSonOLjkvN9Uc8nUTbfCMq8gDLWXTz/kgQEyzhOaNYtjYmH2ZNfLZQfEaHyVaN4l6swh/wEPve2Rbh1yjXJu1PXmMeHsyFKnRgxfSdCYcO0MEGOS9LeO9YsBBRlIIdGOmZOk2yhDUd0uDJMyChb309FdD8D0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4xJGKvF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D2ngl/oH"
-Received: by mail-pz2-f0.google.com with SMTP id 41be03b00d2f7-ca7fcfe1669so199713a12.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 00:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786518760; x=1787123560; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=tyBO8NC8dL/S3ecgA93K7mZkSYmsUhdwIIKYrIDqlDU=;
-        b=D2ngl/oHD02ZVKkGodrBPMFDVJA7LursCCaeddHC/C7bBXGAYBuZomTAHN5RuW6+/i
-         0uiXuVZuh4kQmMPJ5xHDUKBpge3Z9di4ujPS8274cAlXrRDaaApfT5xuZ7KAOkk2Cp/j
-         ynYXmscmF7bdBAy4igotptV9Pbmxu/TQR78cCk8BABEZtWo2SHOgukUps/t05AShVYms
-         3E7PTl8t/Uq5HL6QQyVW/opYJ8Vq2c31ilU/2tVC0/z8cL5bUNQtEbBBjpD/7KjUlR+I
-         4VqsyNrTfz3J0DZjyq7t6W5wMOHmJ7dZZhuwborVwC2zs7UFeN1rzXDLrO12WHknd6F/
-         xW7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786518760; x=1787123560;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=tyBO8NC8dL/S3ecgA93K7mZkSYmsUhdwIIKYrIDqlDU=;
-        b=baAK0fdT4ARPbUh2NLLmzQHGCiHejls4xsAI/KCkt/Eckz7SqlZ0mYNlRmFeNJJrpM
-         Kz0UmI1ZTgH6sXoLer/00cmxFpX4uQvnCmlZxhlcV46n9gyJY12yr+LuhdsFOFKsEkCp
-         2EN/+5B1tgZExH1vaKMTF9E5gVncnnChvWrEnxgIhJzrpsdapC0gVvg4NYPcPtHcWTnX
-         wCRfSAsjdd/uEJBduQ0YdiOMKnrPqlANbsAC3MoRj9VoacRBfre1T1tczDpJEXyDM64/
-         cNsFs2QVH5Emd8l0BNp+of3QcOzM2mm8NC4yx3oczYZZbmzhov4EAEpXB6YI94qSi0ZX
-         VuVA==
-X-Forwarded-Encrypted: i=1; AHgh+Rrcf8D0kySdlua/I1P0DRTgd44Esj0wjf7ensYgssm9T4fWsghexzPhNVuhX+r7On5k1MNQq6K1vxR6k7WKE1rY@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpvhjNUokVfxJilq6W0nzRKS5aja0/1EkfMCGG7i9CRS8eYOmO
-	9D1Quq4ckAS5BHxa6jBTrQJ0Q8Q1vOGC3jgf3HQaVxCLp9x+RFa66xNm
-X-Gm-Gg: AR+sD10A5FPN9fv3XYo+kOzpkd52fs1KErwhErCPilLrqtvwbi1guoLEtpkG3GI/eEu
-	AcTD573m7IZXYADfGHJYu9ll5ck9/I+tKOLaPv5zR71ZWdqbXqUQr/lDPVcbJye2iAxYfJAaSwe
-	jG8drTXULPwpVGv2VvKplth95fxzAXzmWaKb9sKNDJKvkFMmazxSHv7ZWChtDHKVADMHIgB4ZLA
-	dJ7sJBRvKz23Ki9SWShmXyA9dSS8JsdkqidoUjTfXck7ltyjuEwm6MIYBoCv0r24txj6CTW8qmh
-	dL5SzjB2jsMq2FLNRUq7s8LeIApSy2VHnd9ox62mpKLYL3P1seTH32puCX5ZS45TR6Hx0YKKPXX
-	jkAFztGcg+imNpgMRhB+KdLMtKLKDUcVKdjL0ySeVtklpsG/+5GWpxIw14ZPOO8orTZA49fjUq0
-	T377xTitCUD9Nef6TfvW9baIcPeO9SXXjF6H3Oa7og1ab/wnmH74PZNcVGDMWRwKYhb50MhKCSA
-	2r0w1XEkSelHK1nZVT9knjvN5v65Oo=
-X-Received: by 2002:a05:6a00:14cd:b0:848:19f4:3b52 with SMTP id d2e1a72fcca58-84fb55b1778mr3104529b3a.38.1786518760560;
-        Wed, 12 Aug 2026 00:12:40 -0700 (PDT)
-Received: from lima-ubuntu.hz.ali.com ([47.246.98.208])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-cbee7d16673sm258313a12.16.2026.08.12.00.12.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Aug 2026 00:12:39 -0700 (PDT)
-From: Qing Wang <wangqing7171@gmail.com>
-To: syzbot+72a43cdb78469f7fbad1@syzkaller.appspotmail.com
-Cc: acme@kernel.org,
-	adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com,
-	irogers@google.com,
-	jolsa@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	mark.rutland@arm.com,
-	mingo@redhat.com,
-	namhyung@kernel.org,
-	peterz@infradead.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [perf?] WARNING: suspicious RCU usage in get_callchain_entry
-Date: Wed, 12 Aug 2026 15:12:31 +0800
-Message-Id: <20260812071231.201931-1-wangqing7171@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <000000000000fe324606174e1f9e@google.com>
-References: <000000000000fe324606174e1f9e@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4xJGKvF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90F871F000E9;
+	Wed, 12 Aug 2026 07:41:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786520514;
+	bh=UbQDo+98M71b04siZ4bnvhOa1s3ZN5qToN8bhnVCZXk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=X4xJGKvFdAGyIqoBS4BJQll75JYuBYz0bJ07+t8gshUqpVe8Yw+5H+TJ7kT0PVvlh
+	 0nhRKD2OPfh0NhQEHW61JGCkDk7WFmrsjqQ+rPjoeaEZaGo0P6mnIeqxZsE58n6lVz
+	 24BNF465DEXNWuRyxPZXZXWe2ITzG1grNr4LAtnDscgNGPcXz/YK8O38IT8sKdbwQw
+	 /zMnPzJdRWN7bFDm4lyRS19AY3ED2/uqJvXO+UZYESRo1VBmlg/Oamja9hC/Ced533
+	 n7gkW8XGl/hwd6YFdfuXdEOu83pcyW+HBC7PJA3RtWLapTZKbm1e9ifq0wLoYGAu/B
+	 PLgZi4dFpYtqA==
+Date: Wed, 12 Aug 2026 16:41:50 +0900
+From: Namhyung Kim <namhyung@kernel.org>
+To: michael.niarchos@gmail.com
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] perf kvm: Fix memory leak in process_sample_event()
+Message-ID: <anwjvuglUFEOld5F@google.com>
+References: <20260807-perf-kvm-leaks-v1-0-7b5e2f97905a@gmail.com>
+ <20260807-perf-kvm-leaks-v1-1-7b5e2f97905a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260807-perf-kvm-leaks-v1-1-7b5e2f97905a@gmail.com>
 
-#syz test
+Hello,
 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 75495a5c3507..ee3d8ed11699 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -84,6 +84,7 @@ static struct bpf_raw_event_map *bpf_get_raw_tracepoint_module(const char *name)
- 
- u64 bpf_get_stackid(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
- u64 bpf_get_stack(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
-+u64 bpf_get_stack_sleepable(u64 r1, u64 r2, u64 r3, u64 r4, u64 r5);
- 
- static int bpf_btf_printf_prepare(struct btf_ptr *ptr, u32 btf_ptr_size,
- 				  u64 flags, const struct btf **btf,
-@@ -1705,6 +1706,32 @@ static const struct bpf_func_proto bpf_get_stack_proto_raw_tp = {
- 	.arg4_type	= ARG_ANYTHING,
- };
- 
-+BPF_CALL_4(bpf_get_stack_sleepable_raw_tp, struct bpf_raw_tracepoint_args *, args,
-+	   void *, buf, u32, size, u64, flags)
-+{
-+	struct pt_regs *regs = get_bpf_raw_tp_regs();
-+	int ret;
-+
-+	if (IS_ERR(regs))
-+		return PTR_ERR(regs);
-+
-+	perf_fetch_caller_regs(regs);
-+	ret = bpf_get_stack_sleepable((unsigned long) regs, (unsigned long) buf,
-+				     (unsigned long) size, flags, 0);
-+	put_bpf_raw_tp_regs();
-+	return ret;
-+}
-+
-+static const struct bpf_func_proto bpf_get_stack_sleepable_proto_raw_tp = {
-+	.func		= bpf_get_stack_sleepable_raw_tp,
-+	.gpl_only	= true,
-+	.ret_type	= RET_INTEGER,
-+	.arg1_type	= ARG_PTR_TO_CTX,
-+	.arg2_type	= ARG_PTR_TO_UNINIT_MEM,
-+	.arg3_type	= ARG_CONST_SIZE_OR_ZERO,
-+	.arg4_type	= ARG_ANYTHING,
-+};
-+
- static const struct bpf_func_proto *
- raw_tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- {
-@@ -1714,7 +1741,8 @@ raw_tp_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_get_stackid:
- 		return &bpf_get_stackid_proto_raw_tp;
- 	case BPF_FUNC_get_stack:
--		return &bpf_get_stack_proto_raw_tp;
-+		return prog->sleepable ? &bpf_get_stack_sleepable_proto_raw_tp
-+				       : &bpf_get_stack_proto_raw_tp;
- 	case BPF_FUNC_get_attach_cookie:
- 		return &bpf_get_attach_cookie_proto_tracing;
- 	default:
+On Fri, Aug 07, 2026 at 05:08:35PM +0200, Michalis Niarchos via B4 Relay wrote:
+> From: Michalis Niarchos <michael.niarchos@gmail.com>
+> 
+> machine__resolve() indirectly acquires a thread reference via
+> machine__findnew_thread(). Release it, as suggested by the documentation
+> of the former.
+> 
+> Signed-off-by: Michalis Niarchos <michael.niarchos@gmail.com>
+> ---
+>  tools/perf/builtin-kvm.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+> index 00baafb05603..8e7bc7b2db18 100644
+> --- a/tools/perf/builtin-kvm.c
+> +++ b/tools/perf/builtin-kvm.c
+> @@ -1145,7 +1145,7 @@ static int process_sample_event(const struct perf_tool *tool,
+>  	if (machine__resolve(machine, &kvm->al, sample) < 0) {
+>  		pr_warning("WARNING: at offset %#" PRIx64 ": fail to resolve address location, skipping sample\n",
+>  			   sample->file_offset);
+> -		return 0;
+> +		goto out;
 
+I think it's ok to return here when machine__resolve() returns -1.
+I'll remove this hunk.
+
+Thanks,
+Namhyung
+
+
+>  	}
+>  
+>  	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
+> @@ -1153,13 +1153,16 @@ static int process_sample_event(const struct perf_tool *tool,
+>  		pr_debug("problem processing %s (%u) event at offset %#" PRIx64 ", skipping it.\n",
+>  			 perf_event__name(event->header.type), event->header.type,
+>  			 sample->file_offset);
+> -		return -1;
+> +		err = -1;
+> +		goto out;
+>  	}
+>  
+>  	if (!handle_kvm_event(kvm, thread, sample))
+>  		err = -1;
+>  
+>  	thread__put(thread);
+> +out:
+> +	addr_location__exit(&kvm->al);
+>  	return err;
+>  }
+>  
+> 
+> -- 
+> 2.55.0
+> 
+> 
