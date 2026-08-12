@@ -1,206 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C08740B0F9
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 23:24:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786577058; cv=none; b=FNc/XIHcIb1352Wwc+NNAaz8pqV4QE/pyUzRYuayXfaPr5b5Z4pOhA918LTvQjoGgBaNX8ERXHA8raIqxOlmPCMOCdrn1prAbBplOovZeiiaWCpYK3xkv/XoH4xea4UOk5iOGPzRm5KhaWD3qAcANR6OXV3in46wmI5Lx8PBcxs=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786577058; c=relaxed/simple;
-	bh=2Qm487nXs1i5NEwiLw36DAq2Q5gBgC+XJgYZHn4+5CA=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UXmr4N+37KKiXJ6hfb6fECAZDtOVc91SKe2xTmEZAPW11c0gk98+ePkIkWm2CT755+2fPsVY7ILSXkuY9hb5fLIGFYXFAZW3onYPuNloN4gN3/3/CotzQxvqTNykj+iBJJbbRMkKSPpG7BcLcy47Ih0BAVPNo/LxSYaA50Eiia4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JbD8zmoO; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C342C42AFA2
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 23:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.176
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786577061; cv=pass; b=Pc/qts8+KlaEurcPkIV0WbE1gmaJHb/E1+TDjKcKSpKuVxR2t52U6GwlHdsyGyPrN7F0TvSPDumUz7hCHP71olA1p8zZh17uREKTm6dqxtQhlSbhm5BKwUqWSM5uUipzXz4ag43BdFZamLuQOGgfWwT8zLLD5HN8AWwhpQDrxg8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786577061; c=relaxed/simple;
+	bh=kVMuxP528UVhx8CScODWh+GxODAT8gMpn349lBnk4+I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B5CIQY9B2kb1sczEVBxGZUAv8iNOVMYkB3CtYcisX60BX6zrlolG2wkkpeVON69L9kDl5dUXrYtmpnVjuh++OSCEkrmcmgmAMyc/7ZgeQUBsfgBuo9hcE470tJ8oK40IR1ApHb0lwUkHxAciA5ypaxftFKiSPB1WOWZ7kcGcGXc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=REzFepgL; arc=pass smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JbD8zmoO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A458A1F000E9;
-	Wed, 12 Aug 2026 23:24:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786577056;
-	bh=vK+Kf3hoALWpMKI9M+Bl0VjSas6pdtfI59eWedFCgrU=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=JbD8zmoOZwt38Z76FoAJFM1YT38UJZPVavGqHWEoPgn21WpGGNvPHl4t9kcwZBkF3
-	 ZEJna20RkKeEL33LNIsBuUXZiavorzYIkKN+CzYt5k05S3StZZIMavKZqWN5bKq3Ox
-	 BFOSVxzaZFzNT1H28qSW+5w4ce7HSolA3rBeiy+w1ryhYyDpU/nqTEPWKnwcipWjZn
-	 JT/eUx6KS7lkAkPclwqqxAa89fd/ZE2eIHCFUjarwYTHeKSxV03BnvSPC5PnbpmqzE
-	 q3WCSWNGFsIrW16ml/46V+wOh0J0em/2KPsNlUMTsMELgkTXyIBWVfDhw3ouHuHP4K
-	 SDg7wsPtQGVVw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 2/2] perf: Add Raspberry Pi 5 (BCM2712) AXI PMU
- support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260812230800.2646749-3-irogers@google.com>
-References: <20260812230145.2644281-1-irogers@google.com>
- <20260812230800.2646749-1-irogers@google.com>
- <20260812230800.2646749-3-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 12 Aug 2026 23:24:16 +0000
-Message-Id: <20260812232416.A458A1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="REzFepgL"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-51c10ed63c0so46901cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 16:24:19 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786577058; cv=none;
+        d=google.com; s=arc-20260327;
+        b=roqP1yUboXg8drkOFsaenR/tS6RjKB9Ug03HOVGMw2S5OPQL8y94hYihCMxrM4nGUs
+         rxoFmQhmX2KOT7v0awM+1DO8YedUu1kurRybOPVBc0CajhOX7pUzZIGJMDUe2xu5G/h0
+         a/kVrW2M8aqQGa3q5ovKzNHASVoZCS/BKuihNqMx02jIENArvcQWDmtcsxE24xTI9RyJ
+         nhc5a0QAH5AOc0lyuzoOqzWL8ye9bmxMxnasTzv5UZ27v03HhWKfID+DubxElZFwIRGQ
+         Co85TAk2P6Qfl17PZoi3/AU+p9n3CLqmga48rCMqdNtr0ReyJs4xlfUqEgjv6iwfpWvA
+         0BHA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ikGTdtrVSy8Ppvpv2+qlgO613IF25tnGTmR5lP5vLAs=;
+        fh=4U3SGnfdBkV5ZA+0rACrdkkLqPm8VrSR2UAwX/arwwg=;
+        b=kT2Ca3vMr1oHbhlKmgJ6/tIGnzImvFpeFQDeMhoZ+Wmp+fYSB0/jDylH9pMmiz250m
+         QLqFNbbPf4cxD21x/yguwIiEok9k97icwUf4b9LmHrLZ2xf2BXV8pi1H9ZdZeSOJo7NF
+         n1nlRD+f24CMSdcoqHcqnZL0l/UUDuelkRPIq9DWvDppTgKPkq848WA4p//OHy1IXBRv
+         zRhk7zZr1RsLLJSoo3EXuXTkDQ36WnMG63HfMAchG4AWo2yIE4FNtA2OYLfUyDkxhcsW
+         zwhDnBVkHZ2c0SxSlzAw2o3J/d//noQBBepRhpwPBeG5pn2rlCnqyxKZiJ++5BcA0XHs
+         hThg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786577058; x=1787181858; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=ikGTdtrVSy8Ppvpv2+qlgO613IF25tnGTmR5lP5vLAs=;
+        b=REzFepgLAEvdpAtPCoPh1HfOviTidPfqA6oRdstvXmngZbxn7ipSicKKQ+GaB6Grtb
+         nI22ERLHVgxMOcFYYanzyVTC006fLmNdF3y2M2RcDaxP5f/JO+digBxLUwnhDkuP7CD9
+         qMbZLRjCubXGMYYNkq0+1HZjxPUYd5JcZgQ+UogGJnv+1TTRYhYMTTnRpjJbWoKZzW0W
+         t7gzxD9OEt3nT6t7DpF8D1Xq7w9PoM38UNhuBLGaUJvqZjHJVGKzF5RFg2+GvUi6xAZK
+         vH3yejuztaAyiq0oHsV+6xULkcF6DgdtEDI+BlKQJ83Au2WViHF4/RRLAsLxivRpxsS9
+         0zgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786577058; x=1787181858;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=ikGTdtrVSy8Ppvpv2+qlgO613IF25tnGTmR5lP5vLAs=;
+        b=LW6oEJWhke99/xST9FlPmolXS2oe8OOoS1YA5NgQqOsJFSlqjdCTUA0g9x76D7lTvG
+         Z9l1wgwKrbgP3Tm3Lteu19evlcjuu0AkpNkD0gCzDGprpUYaGNa/6BPrr6RopGoJMgbw
+         qMf50b04vJq252WoWJ3EpW0H+cNl9fJbxuV0WxpyCx3wyAEMoBSyhdCoUOjZzIv/TNCh
+         y9gKCaBMf6qBiA/65nu05sEl7yLH/YDFmJWwu6/zMObMcCch9HuEX/+HNOUz1eYdkqeA
+         IcIP93ugSAu8PPPJypJoA6W2zVPRBDbBsF9qcD9ORdDFPX6QjDoTCeCXYJsAYHfayDmK
+         o/RA==
+X-Forwarded-Encrypted: i=1; AHgh+RrQq+NcP6LkdzffDCBd8IHkTrk1OWCGUJoMxckcfxblzxtFg3kJ1SXpY9nkoudwxgV3iIfsJ8yGpomE/hyq4oD6@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFmQazP52ao+lc7kPpHl3PvnJeAWuA8MVlUI5GWbBZzV/g5MsL
+	nR/czztHljKhUdVQ49ajBnKkOj+LgvEXc5T5ehyCQhFdICpLWK9HnTrxWl/002dxzBhJWWxI+Cx
+	R38r3dkaJ+GLplImCfiAA+RKaVLrqQHShBZukIcWA/LHpiMLRPnxDYK9G
+X-Gm-Gg: AR+sD13Uir82jQjlmjO+pb9+36In+SJQotsVon9hFTFQAZbplUM3W+ltqF7x583veFI
+	jc1E2KP/rBBJsiBbhlxIA5/oTy2Nx5e2W7evYuUXSOIqKNo7RKt81hU4dxujbs1VKECg318z9Lf
+	vj6GM5D+tS83IzJFH6NGTlc/HizwXeAhZI4egAHIeXaQ4Od/7Cqx4gXS7zhAOhY1DcWcd8vKtNM
+	E4OVy/3zJfXO0sdDWyIoJT//IkxMoAeaUzRGeqyro3CXJpYShevxRoOixEfRJ0GVu9H007Le2Nw
+	ZqNlVKtYr3ccIeNVXzop9gzDXaQQqOKU3YC6F0uKix+++wyTQTE=
+X-Received: by 2002:ac8:5894:0:b0:51c:ad5:93be with SMTP id
+ d75a77b69052e-52d76909f7dmr2143601cf.8.1786577058004; Wed, 12 Aug 2026
+ 16:24:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260811175140.7235-1-acme@kernel.org> <anyq-lNV-J6q5t1a@x1>
+In-Reply-To: <anyq-lNV-J6q5t1a@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 12 Aug 2026 16:24:04 -0700
+X-Gm-Features: AUfX_mzReoITYGdzEPYun8G8ehGzaaYqsRPvs_2Jzg0YIIisx5UqQKt3PZ0KZqw
+Message-ID: <CAP-5=fVSO-y7y0c5ux89STcN6jXeUtrrbf7fQCwYWq8hSKbr0w@mail.gmail.com>
+Subject: Re: [PATCHES v3 0/5] perf DSO hardening series
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] VPU bus watcher reconfiguration is skipped if a watcher slot is re=
-allocated before asynchronous vpu_work executes, causing silent data corrup=
-tion.
-- [Medium] Broad substring matching in `rpi_axi_pmu_events_is_visible()` un=
-intentionally hides newly added BCM2712-specific event aliases on the BCM27=
-12 platform.
---
+On Wed, Aug 12, 2026 at 10:18=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Tue, Aug 11, 2026 at 02:51:29PM -0300, Arnaldo Carvalho de Melo wrote:
+> >       Please consider merging,
+> >
+> > Five hardening fixes for the perf DSO data handling code path, all foun=
+d
+> > by the sashiko-bot AI reviewer:
+>
+> This is sashiko clean now, if there are no further human reviews can we
+> have this merged?
+>
+> https://sashiko.dev/#/patchset/20260811175140.7235-1-acme%40kernel.org
 
---- Patch [2]: [PATCH v5 2/2] perf: Add Raspberry Pi 5 (BCM2712) AXI PMU su=
-pport ---
-commit f428ceab1c23265b486b6b953b78aae6ae47a096
-Author: Ian Rogers <irogers@google.com>
+2 nits about adding asserts as well as comments.
 
-perf: Add Raspberry Pi 5 (BCM2712) AXI PMU support
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-Expand the Raspberry Pi AXI PMU driver to support Broadcom BCM2712
-(Raspberry Pi 5) system monitors, PCIe RP1 Southbridge links, HEVC decoder,
-and Cortex-A76 DSU L3 interconnects.
+Thanks,
+Ian
 
-> diff --git a/drivers/perf/rpi_axi_pmu.c b/drivers/perf/rpi_axi_pmu.c
-> --- a/drivers/perf/rpi_axi_pmu.c
-> +++ b/drivers/perf/rpi_axi_pmu.c
-
-[ ... ]
-
-> @@ -880,12 +1062,111 @@ static struct attribute *rpi_axi_pmu_events_attrs=
-[] =3D {
-
-[ ... ]
-
-> +static umode_t rpi_axi_pmu_events_is_visible(struct kobject *kobj,
-> +					      struct attribute *attr, int unused)
-> +{
-> +	struct device *dev =3D kobj_to_dev(kobj);
-> +	struct pmu *pmu =3D dev_get_drvdata(dev);
-> +	struct rpi_axi_pmu *rpi_pmu =3D pmu_to_rpi_axi_pmu(pmu);
-> +	struct perf_pmu_events_attr *pmu_attr;
-> +
-> +	pmu_attr =3D container_of(attr, struct perf_pmu_events_attr, attr.attr);
-> +
-> +	if (rpi_pmu->chip =3D=3D CHIP_BCM2712) {
-> +		/*
-> +		 * On RPi 5 (BCM2712), hide legacy VPU Mailbox IPC events (monitor=3D1)
-> +		 * and legacy RPi 1-4 System Monitor aliases
-> +		 */
-> +		if (strstr(pmu_attr->event_str, "monitor=3D1") ||
-> +		    strstr(attr->name, "cpu0_") ||
-> +		    strstr(attr->name, "cpu1_") ||
-> +		    strstr(attr->name, "dma0_") ||
-> +		    strstr(attr->name, "dma1_") ||
-> +		    strstr(attr->name, "v3d0_") ||
-> +		    strstr(attr->name, "v3d1_") ||
-> +		    strstr(attr->name, "hvs_system") ||
-> +		    strstr(attr->name, "isp_system") ||
-> +		    strstr(attr->name, "usb_system") ||
-> +		    strstr(attr->name, "ccp2tx_") ||
-> +		    strstr(attr->name, "mphi_") ||
-> +		    strstr(attr->name, "h264_") ||
-> +		    strstr(attr->name, "v3d_") ||
-> +		    strstr(attr->name, "peripheral_") ||
-> +		    strstr(attr->name, "cpu_uc_") ||
-
-[Severity: Medium]
-Does this broad substring matching unintentionally hide the newly added
-bcm2712_peripheral_* and bcm2712_cpu_uc_* event aliases on the BCM2712
-platform?
-
-Since the new aliases are named bcm2712_peripheral_rtrans and
-bcm2712_cpu_uc_rtrans, they contain the exact substrings "peripheral_" and
-"cpu_uc_". It looks like they might be incorrectly filtered out here, making
-them unavailable in sysfs.
-
-> +		    strstr(attr->name, "cpu_l2_") ||
-> +		    strstr(attr->name, "l2_control_") ||
-> +		    strstr(attr->name, "system_control_") ||
-> +		    strstr(attr->name, "direct_control_") ||
-> +		    strstr(attr->name, "direct_data_"))
-> +			return 0;
-> +	} else {
-
-[ ... ]
-
-> @@ -1507,15 +1831,17 @@ static void rpi_axi_pmu_del(struct perf_event *ev=
-ent, int flags)
->  	if (pmu->monitor[mon].hw_events.monitored_bus[idx] >=3D 0) {
->  		pmu->monitor[mon].hw_events.refcount[idx]--;
->  		if (pmu->monitor[mon].hw_events.refcount[idx] =3D=3D 0) {
-> -			if (mon =3D=3D MON__SYSTEM)
-> -				rpi_axi_pmu_disable_bus_watcher(pmu, mon, idx);
->  			pmu->monitor[mon].hw_events.monitored_bus[idx] =3D -1;
->  			pmu->monitor[mon].hw_events.filter[idx] =3D BCM2835_FLT__NONE;
-> -			pmu->monitor[mon].hw_events.enabled[idx] =3D false;
->  			pmu->monitor[mon].hw_events.num_monitored--;
-
-[Severity: High]
-Could removing this synchronous clear of enabled[idx] cause a race condition
-leading to silent data corruption?
-
-If a VPU monitor event is deleted here, refcount[idx] drops to 0,
-monitored_bus[idx] becomes -1 (freeing the slot), and we schedule
-pmu->vpu_work.
-
-If a new VPU event is added before rpi_axi_pmu_vpu_work_handler() runs,
-it will reuse this empty slot and increment refcount[idx] to 1.
-
-Then when rpi_axi_pmu_vpu_work_handler() finally runs:
-
-drivers/perf/rpi_axi_pmu.c:rpi_axi_pmu_vpu_work_handler() {
-    ...
-    /* If VPU bus watcher is not enabled on hardware, enable it... */
-    if (!pmu->monitor[MON__VPU].hw_events.enabled[idx]) {
-        ...
-    }
-    ...
-}
-
-It appears the worker will skip configuring the new hardware because
-enabled[idx] remained true from the old event.
-
-Furthermore, the teardown of the old hardware is also skipped later in the
-handler:
-
-drivers/perf/rpi_axi_pmu.c:rpi_axi_pmu_vpu_work_handler() {
-    ...
-    for (int idx =3D 0; idx < NUM_BUS_WATCHERS_PER_MONITOR; idx++) {
-        if (pmu->monitor[MON__VPU].hw_events.refcount[idx] =3D=3D 0 &&
-            pmu->monitor[MON__VPU].hw_events.enabled[idx]) {
-            ...
-        }
-    }
-}
-
-Since the new event already incremented refcount[idx], this block won't
-execute, potentially leaving the hardware misconfigured and causing userspa=
-ce
-to receive PMU counts for a completely different AXI bus.
-
-> -			if (mon =3D=3D MON__SYSTEM && pmu->monitor[mon].hw_events.num_monitor=
-ed =3D=3D 0) {
-> -				set_monitor_control(pmu, mon, GEN_CTL_RESET_BIT);
-> -				pmu->monitor[mon].hw_events.monitor_running =3D false;
-> +			if (mon =3D=3D MON__SYSTEM) {
-> +				rpi_axi_pmu_disable_bus_watcher(pmu, mon, idx);
-> +				if (pmu->monitor[mon].hw_events.num_monitored =3D=3D 0) {
-> +					set_monitor_control(pmu, mon, GEN_CTL_RESET_BIT);
-> +					pmu->monitor[mon].hw_events.monitor_running =3D false;
-> +				}
-> +			} else if (mon =3D=3D MON__VPU) {
-> +				schedule_work(&pmu->vpu_work);
->  			}
->  		}
->  	}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260812230800.2646=
-749-1-irogers@google.com?part=3D2
+> Best regards,
+>
+> - Arnaldo
