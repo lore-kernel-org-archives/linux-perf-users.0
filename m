@@ -1,149 +1,133 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BC344DB6D
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 13:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786540607; cv=none; b=s54Jq3xAXqhgE901MiEWOt8nUqIX/VNgmhB+EhupoWcc1NsNQH3G0zP4eo7Ea9Zg/ls91UBGhnDGYm6FPQieV1H7lypgBK6C7TjgoetB+5MYs5F6nowrKll0s3D1jW6TCUsGmXSU1LBla4BDW4woO2e9NlMnRjOl9/g+Hav5wJQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786540607; c=relaxed/simple;
-	bh=HJFYkb4Hajh/GcjJG40WCp0AlZL1NY+eEFakOOHDEAY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LOJm53TB/zigh+VHqiQwor0TJCxLsGS9hjZzfQJ6ZMEMIsL61FbptQfFhFJbbry6G79QEgnkQaCW4KnnFfx5ahCu5zft3G1cMOiiOx4tIybwqgMIXk1XosrKgvGVjhHda58i42e5/vDLTpdMSTETKNY1JDtG3iVCh9PPMHLXsYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QvNA2YWu; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23AA744CF52
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 13:38:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.171
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786541920; cv=pass; b=DNMQT18kk2lm50zX5sY+1ogZwxbULgIBLEQH9UAkgZj//QxMpo2XB3RnZxLOlpcpZoaylBa/vEr4s/oxY/aHnlacjPTI7lV1hcTagwliTRgqJy0n17g1xKz9hdlGZDIuQQXr7X5W27HEBeodRQuhSfJeeyMncvL0p8hELDQBkNI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786541920; c=relaxed/simple;
+	bh=huenUMl5uc0M2LnoWQjZXPUhYAeUlpsSxjwMFpT+H8c=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BZeaySaLEtSvmW8ane+LUjUfRsgJ3waLLBhQWJHEcK3AoBpCWscPp7UMK/NefUWL320du19p+V5mHRFYXEESpqrp+eMdzQyu2Xu6LfTMYdf4pZXO95GodN950cLJN2+DGUQTfz1hoENs7tBDLfJ91BjH0o1bz6DXJAOERZxr1jA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cHg3QkIi; arc=pass smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QvNA2YWu"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-47fe2d179e2so529163f8f.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 06:16:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cHg3QkIi"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-51c10ed63c0so236731cf.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 06:38:39 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786541918; cv=none;
+        d=google.com; s=arc-20260327;
+        b=lRGdlg71WG63fKGDXt8l5OVY9kZB96UTYNAz/uNi2mDwsM+3K5+SJwBXbIvOGzcWUf
+         BUWYwPJOlmvgKNBuGezD/PTNnZLxErd3kOF6yqwxMLejSiCEShkV+uE2hGbf55qKrm96
+         1Kd+JNk4L14TWRMA3RmDUUfVeDDvI2ec486+SQsvyhrKyw5y56HWffmZLpidgRSJMoNo
+         iW7b+KBbzNYCr9EtVYZciTQkZBMAsZsPKVKT2U8m3S9mFpFIjzVp4IqVIjN21psbUJ2B
+         /50a42SUUKsm2KYC2vDpFFPQVRz50pNizGKoQMl1Km/v4C9cTMq3b0UWKXcjky35NeiE
+         gl8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=huenUMl5uc0M2LnoWQjZXPUhYAeUlpsSxjwMFpT+H8c=;
+        fh=wXi+XmK/w2n/Sg+31EmPpXSp/Y8afBzk8dK2vSBSjro=;
+        b=l521UEjkLAGLstJQ3Y3Ou5Y/5Qyxf9a0Aam6kjQ/I6GB7byXtgw78omWRDV8bd3iXZ
+         qoNIX8Afysy100mXlvZVQP+yEGkOivAgkSRrtGd5YCPrm/rS2HP8WMOeI7Ye2Ksb9Iqc
+         D9ByEiHVaqOPUnobleM04lL8HBm+2CM7JVVef7ZsMZHIX4WEJBHRt1z1iYvc+eHDrGl+
+         Lv2cl9U1uzlBKyJ1RR0yC0z06r4KuvlJyvxyc9Mn1SyieSaplR4DoWad4GTKBFVZ6t2h
+         5XJkyB4ZQEpO9PzHirlNHet8q9Yfb2gqYpjjgPKuBPgCIp5kLGii2S1Wdta1pLNX9V5b
+         bC/g==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1786540603; x=1787145403; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=DsZokZ/iedv/wv6L1wEU+vbKd+fdKYrALL/Ray13yqY=;
-        b=QvNA2YWu4ROjz/uLpNVL3aT0aAB1tRbgjj4pRNzSkMms5tgYnAcobdi2ML8Di6F7dy
-         qMtG1fGfGHQGz1gO1inKoM6vc9hn8Ld8x7azM4LWP2kjkdf4Tm7jW5BUAUk4sBUK8M72
-         Puwku7nfgcDOaBMNLpFPwsuBL4Q7WrA2ulKhCxWaUnLpLgEarFD9KK0s84+ndarBgsBf
-         QHIIZayFkuyui22edNa+4yNc28vyppywDGLqOvq0kCOkBvVvrdyRbDYePBwipVsQWd5J
-         LbYk1E6iXFFKVaQeJVzEb5czYeLpuUqgoB9um7YFmA3FEsnptZNY217cWmswfgNG/aFK
-         xe7w==
+        d=google.com; s=20251104; t=1786541918; x=1787146718; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=huenUMl5uc0M2LnoWQjZXPUhYAeUlpsSxjwMFpT+H8c=;
+        b=cHg3QkIiqc+EawtGUbWsARYJ5+pL8KmpVsJ6SEiOQWFqe+nJj9yIDzC06GiER1NiR0
+         tB3nDlJSQzp5pmXqWOOGNVLdRXshNHg1S+DiDjW1OVEsiZi1hKeLSf8A4LUCp8bNVaNj
+         p8rOdEB1PogrO6BLjX8D4t2hw8xE2xWBavnGvdiNhDYX1WIu2wEVcOWaudehHHo13eZ4
+         r4kFdAU0VP1cIZhaI4FZpB01PxozAGOZwOmSPLFz3tRNuUlPFd9adHnW1IaQ0o4l93Mo
+         dSoEU37NtPEJzJGF2L8LgtUPHq9896dsjyh6aqnO0aeIiD3L1q+BOWEhFrVCINGBsPtQ
+         WEVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786540603; x=1787145403;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=DsZokZ/iedv/wv6L1wEU+vbKd+fdKYrALL/Ray13yqY=;
-        b=pLZurVgg/Pw0jfZu1caoJ24iSfhd7xLnpFWa05mItXWZn8FahC5RyI3jORwgy1EiU9
-         Jb6fAQMcHGoi4rRPnK7Ej94AjT/kMjhtK/ZTjxMczl0URVw/FPJS1Mp0t89K4wh9UmMU
-         S7zzsngWCE0wtNpZMVCcKPSZwHA/epo3PP3aoOgZgHq9d8+9zhZRxbDvAbQSqyMBMB0Y
-         oXAevq68KfMx7uSi+LY2WDe6xOVd0FwNDN8b+ojGAZZisYLxxFMcAQRvzWN83onR1/FL
-         +dJzPrx5njMP1aoUTUjmURYWEWJBKaTxcMfWGkvVVkeP2vMeh0qZ6k6p6gOWH/6TjpiF
-         EOUQ==
-X-Forwarded-Encrypted: i=1; AHgh+RrEKsK6ai93h/pQXMyxCfTaBMXY0hX45madr68ke48IL6Nv2hRlyILOoTc6JJS02y/awbdBlyMoMDHPYlAU5S2Z@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy39km1pW64T9O16fzA7MZ9xg0LQQ+hAeR3sUQZehljN26IQFcM
-	8Y7XK3Yr1LKSap+Hbbzav8drKEvx04YgAkk+5qz9m4JNVzxDnIxcvy0wtODiSFcqFYs=
-X-Gm-Gg: AR+sD11nowMqTWd9GbkcVKOdkJMlIDxgN0Hk6u/eF9YWJLgf5bWr8LhKdRpA9GfUuvv
-	ep0AlGA5XKFOhhMRPc1R9h/4OY0V7KA8dyNd9CJc3fGu/N7lSQNxOrRn3pfn9qNAujLiV1c02Ok
-	dT6B0wTlb2slHFM3wVX9CXJTc+YdC/JdeWTzvNrelMYK2GlSm09+ocjkaK7kFoBLQFITFQbXYxt
-	kRlwdJuIi7nrEYYmd+x6RLUUPW8/DNTPhQJPle2iExC5SW6vriAV2nr0F9m6Z6AmS6roY6OWngE
-	my7xpmkbPXvELIktvkfO5otGABpKOaMMSVx92a4mkhoxe6ACB8AKoRAX4/8qGkUUl84aWZQv1mW
-	fN3xxJwgbgFHh77zp05fc3jgU6FO9WYhDgfbjpYWJ7AOEOesCIurcltqNRrCNcvhlJEkPF9IWtF
-	2qBr0pcEVY0N3OEeSOPNH60HPMlEMuhuLUn3cmxH+hrv49205AfQRfy6jG+SlbIdIt9Q==
-X-Received: by 2002:a05:600c:4504:b0:495:737a:7afe with SMTP id 5b1f17b1804b1-4997c12592cmr68779655e9.15.1786540602720;
-        Wed, 12 Aug 2026 06:16:42 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4997b34afe3sm57791515e9.2.2026.08.12.06.16.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Aug 2026 06:16:42 -0700 (PDT)
-Message-ID: <274fdcb1-70fa-4976-8f13-bdf6568e12af@linaro.org>
-Date: Wed, 12 Aug 2026 14:16:41 +0100
+        d=1e100.net; s=20251104; t=1786541918; x=1787146718;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=huenUMl5uc0M2LnoWQjZXPUhYAeUlpsSxjwMFpT+H8c=;
+        b=cSa5Q5Tdv83aGY9VaFHDqI95ZEAxJyRbNxLGe1waRWgvuhR7BK4K3gGf2GHVm7YXDq
+         zFUalVyeBhRtset78U5hx33yRppNGDqST1mVLdAi0baVowdlS7Hal7uKzACnZT8mQZzS
+         PumgB6tXPJ2L77vgj26dKAEaw0SNL00p9U4opjNQnC0bwKbw94axw7oI50C5mX6TvTs/
+         vrQbI3GI/8BiDaOZ3GfQ2THeOcYBpSKEFsk/39WdDx8yd3ZlE89WbpePRNMoVn+2zT7r
+         mbcS6j8S2EFETLh5pJ1khCNfzYdXuRcbBJcnylpq8BlqLrwXp9xKnicDVOItIWWAoeq2
+         hsXw==
+X-Gm-Message-State: AOJu0YziwxKNAe2y0Um3XjSBEwYlgTFZ+5zNas9eS1kVDJNZKWgaRstG
+	wjA8mWU+eAZ5S53UeWc735mMRruTe8vbnkjIA00l/LzFkQiV5HnvSkEkq8vxwYvrmzBwW5Q72+Z
+	Hl/a7aC8Y1UqJZv3wdA8Tx7g+bIEHWzTgdLVTDmk5ej7GRcOGWHVBNtFA
+X-Gm-Gg: AR+sD12Vth4y+KLnAaL3tZzIwZM8tA9q80XYyFFglU+GqjsMT1LQOodO53Cw6CJDjhc
+	nGyuPJg/Jhc6bsxi6cN6CPutl9Lnc1YwsOxZGCcpHVmXYdtm4UKvcEeEMCFEGwSTZbvRQ8liWpx
+	4fs28vst9op4WooYZH6jTGiJV/nKipSafiS9T9BhfvLnV/HMIuALEP3APYRXT6y/TodEeWw6L9I
+	W/LHtm6HMV4XPuUDVTZmok07yMAgKry5EDGgM8b3T/9l/Mr7DXnTZT4YsFPstDiOQIELITOLyE1
+	v4J2mK0y+z4VGJX5cXZzMh0eY1roF2jygJC3KCxFeE4t0w==
+X-Received: by 2002:a05:622a:1e17:b0:51c:ca9:3d15 with SMTP id
+ d75a77b69052e-52d61fa3c57mr18485041cf.12.1786541917310; Wed, 12 Aug 2026
+ 06:38:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/9] perf thread-stack: Report branch stack hw_idx as not
- available
-To: Amir Ayupov <aaupov@fb.com>
-Cc: linux-doc@vger.kernel.org, Mike Leach <mike.leach@arm.com>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- Swapnil Sapkal <swapnil.sapkal@amd.com>, linux-perf-users@vger.kernel.org,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, John Garry
- <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>
-References: <20260803090640.2412336-1-aaupov@fb.com>
- <20260803090640.2412336-2-aaupov@fb.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20260803090640.2412336-2-aaupov@fb.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20260812002728.2283079-1-irogers@google.com> <20260812052417.2361040-1-irogers@google.com>
+ <anwuYYxLFbtDmmHx@willie-the-truck>
+In-Reply-To: <anwuYYxLFbtDmmHx@willie-the-truck>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 12 Aug 2026 06:38:24 -0700
+X-Gm-Features: AUfX_mzhVvdWEb4aciWXtp2N8iHPEM1EXkzAp_fI5yNdeyk-XCZ5nCpn7hjB-nM
+Message-ID: <CAP-5=fW9bH_yd2VF+X1jnem91+dOHPjP53uNQ8x69xFmjLbt4g@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] perf: Add Raspberry Pi AXI PMU driver
+To: Will Deacon <will@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	mark.rutland@arm.com, u.kleine-koenig@baylibre.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Aug 12, 2026 at 1:27=E2=80=AFAM Will Deacon <will@kernel.org> wrote=
+:
+>
+> On Tue, Aug 11, 2026 at 10:24:15PM -0700, Ian Rogers wrote:
+> > This patch series adds an uncore Performance Monitoring Unit (PMU) driv=
+er
+> > for Broadcom AXI system and VideoCore VPU performance monitors found on
+> > Raspberry Pi SoCs (BCM2835 through BCM2712 / Raspberry Pi 1 through 5).
+>
+> Why are you sending four versions of this patch series, at -rc7, each in
+> reply to the previous one? Nobody is going to review that.
 
+See the cover letter for changes. They address the sashiko reviews,
+you may not see these reviews as they are only sent to me and
+linux-perf-users, which is somewhat customary in the sashiko setup.
 
-On 03/08/2026 10:06, Amir Ayupov wrote:
-> thread_stack__br_sample() and thread_stack__br_sample_late() fill a
-> caller-supplied branch_stack that is typically allocated with zalloc(),
-> leaving hw_idx as 0. Zero is a valid hardware index, so consumers that
-> honour PERF_SAMPLE_BRANCH_HW_INDEX see a reconstructed branch stack
-> claiming to start at LBR TOS entry 0.
-> 
-> These branch stacks are reconstructed from instruction trace and have no
-> hardware index at all. Set hw_idx to -1ULL, which is the established way
-> to say "not available" and matches what intel-pt and cs-etm already put
-> in the branch stacks they synthesise directly.
-> 
+I don't see any relevance in rc7, I'm just mailing out a new driver
+now that I have the opportunity to look at it. Whether and when it
+gets pulled upstream is up to a maintainer. Another useful series to
+pull would be (imo):
+https://lore.kernel.org/linux-perf-users/20260101-apple-cpmu-v10-0-48812c52=
+9ffc@gmail.com/
 
-This fix makes sense in case someone doesn't overwrite it, but I think 
-"matches what cs-etm already puts in the branch stacks" isn't quite 
-right. Based on the hw_id docs, cs-etm should be setting 0 shouldn't it?
+The changes are sent in reply to each other because the entire series
+is visible in one mailbox (b4 mbox), which I find easier to work with
+and provides me better context. Others use semcode to do something
+similar, but I've not explored that.
 
-  * For the architectures whose raw branch records are
-  * already stored in age order, the hw_idx should be 0.
+Let me know if I should drop you from the cc, I placed you there as
+Mark and you were the only suggested reviewers from
+scripts/get_maintainer.pl but I don't want to spam uninterested
+people.
 
--1 "unknown" isn't accurate as we do know what the order is because we 
-generate them in order. If anyone is reading the field 0 is much more 
-useful than -1.
-
-Can we change cs_etm__synth_branch_sample() to 0 and update this commit 
-message to not say that -1 is right for cs-etm?
-
-> Signed-off-by: Amir Ayupov <aaupov@fb.com>
-> ---
->   tools/perf/util/thread-stack.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-> index c5ce741b07446..1a3dffa83bde2 100644
-> --- a/tools/perf/util/thread-stack.c
-> +++ b/tools/perf/util/thread-stack.c
-> @@ -624,6 +624,7 @@ void thread_stack__br_sample(struct thread *thread, int cpu,
->   	unsigned int nr;
->   
->   	dst->nr = 0;
-> +	dst->hw_idx = -1ULL;
->   
->   	if (!ts)
->   		return;
-> @@ -686,6 +687,7 @@ void thread_stack__br_sample_late(struct thread *thread, int cpu,
->   	bool start = false;
->   
->   	dst->nr = 0;
-> +	dst->hw_idx = -1ULL;
->   
->   	if (!ts)
->   		return;
-
+Thanks,
+Ian
