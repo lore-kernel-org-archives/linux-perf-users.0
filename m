@@ -1,170 +1,225 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA1E47012F
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 23:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.177
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786576387; cv=pass; b=XHeWD9QWRXEJHdIiSQWxgDsfpRrcv9I6vpkQabjyEKYJdBs8mL4pU/UYgQh2MrYvAa9QFAOwVTlrzjqmTGBljLnseOIRl1TM+M8VFdO+w0j9tZDpm8aIL9pyuGrkPyIjp9MmMhi3XCJRPeY0evfcP75hEWyB92w8t92ee3soJGE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786576387; c=relaxed/simple;
-	bh=o7slRniLKEyAO8yGpAKSkO0PrB/ngEwhVavcAmaRvms=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bNWosleSaLNg5od3A3iHAT8NAVQd5uMOxG3pox0+6j1XviR+sAR8pYUxdvOWDbW5IWnCAUgV4Px82/NUadO2T6fsuxrt9VJZc12/0hk5uFywhpNukomkVwZnQXwWiA4RB+8z1WKW9Xz3H/vp6o87t8B5S1hvqTK+5HZnGiR/K5M=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BEgnl0L7; arc=pass smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B716D420488
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 23:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786576509; cv=none; b=AUk3Ls2tTg0bWhA+kX5ah4GsFqJ3V+KzyzOww6vVHYSZEkMEeWdYiEvh7nYpWXGdEpwA7hvQKLn+OeyhZwmM+CrLVB4/EHljbzzW4+99BGuHsHqTQS6VlHWV20sMKjNlt+j4eJyPG9tnQId62c84NLzVAOB7yxxajP+/uk8PKpY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786576509; c=relaxed/simple;
+	bh=97jdPaY8AAHefaYs1uvMcX7niZF3/GfLecroR7LwMwM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=PqqI2cswHwwqJ3IMk6DxWTL+6DtToE6LmOQkP0BnHy7XkHs//jEUp6tHmO15UboENxiHFzdm372m0EM7uQjOeafNh+P0q9H9ku1sGcLfjhPPcxYSA5BW4sQR13yO5Poe2Hr5C8pSGiItHPpSurb8Ab0ft+GRjRrE+jSA8HkUwxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b755vf8o; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BEgnl0L7"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-51c01c79467so51211cf.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 16:13:05 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786576384; cv=none;
-        d=google.com; s=arc-20260327;
-        b=QEDAiOgC66w8alILn97IB8ZujcFscAjKoV4j81drglnVxYA2ayZAo+1/tYzHGHXd0A
-         UD9WketYftQrFYq6gc3PrXjbWn/82vsWipL4SFEc2U1gqWPcj/GXB85N4qG+5DZKThQ0
-         EShlQI8KNAH7BLyX5qjtnBU9EYUnfR7pxBiScpkqjQdtxUYOrGHT2CavndOkk3lvAdk2
-         u+1deJ1j06SD59CpFT0y8Tk5Bd3VMVPV7CBTascSLhiF/IOc3jk/h3Pa8gyWMnTO1Wwm
-         WIPDMgoJB/B8F6aLif4n0VUE5EWfdmf7JTf7Ua6Lt3lpJ0VM0ivS2R6KuMZERB4PWEGC
-         zFOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=pD7t0ccRRKNEw04l51/UHY2puNvOgxNTJRwXDkqoThA=;
-        fh=Vs8XN3BMO5qrzU/CtaFLMYp4QDuZ5GMXgsfVxQ4+r9A=;
-        b=aMphRETxeW/dEsSaa/KBbBo+/ekkwFQZ9zkOX41xcY6vAzZfzpQB+9EJR6kZHT/5dT
-         lvSpgqcOQSbLD60JyqUuMZVsGPaH7xdN51vbm9dmVUIuFMiZd5cXUOEz1aO6it/ouNC8
-         K8qeDa5qQ5jvOaeVpnyZ8+qWuGPkg6GG29+tP+mWjimQuEopp1upTfCQvyFRb0eL45TZ
-         dQsdpa/AbN27uOoOEG9lARSwQemWZZoK30yRSd56dgYIH38mWAZY6wJBlqJ80wOg7LV+
-         lqSuMcKck6u80cu9Jr2bSHJqXSgd7CD3LQfDOnbPKDZb5Fguo9kuJd5+l7iadIeTR5MX
-         JzIg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786576384; x=1787181184; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=pD7t0ccRRKNEw04l51/UHY2puNvOgxNTJRwXDkqoThA=;
-        b=BEgnl0L7fj1i9IHKnFJ5eUb20LkhAB7MXGyfMRoGYCJC/I43GM2g/mJfcbTo9W18Kz
-         Y8Q+UdpoyHBJxVzs9Ve+D/1r+RJHB1J3XgubW6BsTY3i62Cd/8mAsfX7kehmFhVzdJBm
-         o6gQu5jNjf+dajodwixNrfOKS44ilxo7IXg9MXJ9gRjVRNInGoVSFn8nCKrznkNVaE8O
-         veLEgQYam8MF50HECYn++jgO9EuwCVanZU+r/iquTSXaEaIywSC4h27qwAMMQBR2VO5t
-         LwHrX7jlX4PxUYWzTO/knS/WYWtWRirPdBfWo21HyxMUkA4m3CAekNUhROYCWsekfZ/2
-         7bgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786576384; x=1787181184;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=pD7t0ccRRKNEw04l51/UHY2puNvOgxNTJRwXDkqoThA=;
-        b=KuFYfIC2G6/6qa/MUfSFZEkkFNTaUaR1xQaoRTSAFrIEjcoVVD3fwSFyjKxroJ/t3V
-         AnQR/RN2lnnediPfVJFBG+4RtY5H8Umfj2WHf8JchpYSiPfC854GYY9AE7+VGfY3PMfu
-         dEHlRy61U2ytVd8SO2TFKnXXoV49cqW5W2qN6LkrYvhVAAnA4ogiZ9iDwFm0tLWGVto6
-         Oz5h4zWtSZaIusWBYIUxs3LrL7ZEeq/WM84Qiy9fRpj8fzDgXi25Xo48paeMd6YMP3ry
-         ynp8kPSUILihzLCyJ2t4+pIPaWH+G5LXg/i5qnqWSk4P/MWHpzYN8f97glMqBUp+uZSY
-         Pzxw==
-X-Forwarded-Encrypted: i=1; AHgh+RonK7smQJHFslaOXwnksyUkBm6Uv6rqLmibZ4JScxBmqwM1kBtQGpVP0fbbBT1R1vkP/v1sFV4QkiEBCL5zjTb/@vger.kernel.org
-X-Gm-Message-State: AOJu0YzM4fn260OxBsZZtmxLnVMqtFl5sN2xD1Q8UCXmRUhfLMyxoWrx
-	E6l5K/eNTmgVj7pK3qAjyh3ssYsXxYrhJKAbNrMt9hqixn26yTPkpkWfEfCY+UC/0G7no01jUxq
-	Xf4tQiaMcnHuQvVO1fjD8p8QiJD3LeVJbUP/84Rb7
-X-Gm-Gg: AR+sD12U9wGvc+AlPO8fgYXe707Nb4kJM85GtE7hndG1pL/Y8gV0RYyeIHX+n5IgzIc
-	srYvW44VHLDhZk/oAAIwDqmtzvUt4ccVS9Uq3BA8oSHWavXXbRDzjnzzzc/ZiGPQXHNyQjsdNgj
-	mrcWlUwKNii4BWkrjfTr5e1nL4Vp9/WI4aghMNz6DNKBDoRKSkgik0XaV7/gcoyu3vzagwuzUS2
-	mf1fOag1D5tV/EhEgCNSdOFF3PSPHCeQm4a2+ksG54jcj1T8EEEe0FbwXMdwPy2Sxrvk6ACjw3i
-	Wus3U2dwZCghtBXdIWZMh7a/ziAK05OAjqWLpX8rQzY5nw==
-X-Received: by 2002:a05:622a:1c1b:b0:51c:104c:100c with SMTP id
- d75a77b69052e-52d75b69ba7mr2829811cf.2.1786576383797; Wed, 12 Aug 2026
- 16:13:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b755vf8o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A0821F00A3A;
+	Wed, 12 Aug 2026 23:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786576507;
+	bh=5KJC0ntaveiaKSATJEm4rbqF5Rr4QS+/QwKq06f6Vco=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=b755vf8omAKM4Y1KFUVpIBPoR4fw7owc8hTBrMs/AZmqv7SMKx5rZimQZ4b+E0e7V
+	 0eQ48WQgb1+F7xh4DXVsFXwiD9pX8Jhe5Dax+wqRsaEa1gd87lTs4iZ4qIPycrg07g
+	 x4kaefmpKC+WxshMQlRR/bapP3CRXomQ5y7GY1pX1xVRD0uid29308UyXh6iEAr2oi
+	 EaknOD+8Mc8O6EeSX6jodF3Zmkgpidu1QJTExOy7cryWUwLC8UytMC6vbk/8WgCZNe
+	 y2ZhV7cLi0GE/SxIRsvMz88+xVWHuZW5EX64/4wY13oqO8bJ0wgYPMauLX00ZfZUxU
+	 9lztoufzRqleA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v5 1/2] perf: Add Raspberry Pi BCM2835 AXI PMU driver
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260812230145.2644281-2-irogers@google.com>
+References: <20260812052417.2361040-1-irogers@google.com>
+ <20260812230145.2644281-1-irogers@google.com>
+ <20260812230145.2644281-2-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 12 Aug 2026 23:15:06 +0000
+Message-Id: <20260812231507.1A0821F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260811175140.7235-1-acme@kernel.org> <20260811175140.7235-4-acme@kernel.org>
-In-Reply-To: <20260811175140.7235-4-acme@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 12 Aug 2026 16:12:52 -0700
-X-Gm-Features: AUfX_mzrvFU0XUFGxL7fYROQBEJ8cZ2GzdriMvFLL6bCc3cA_p_haJE8fWDDgwU
-Message-ID: <CAP-5=fX4AC7yPa_6xXoVmAswhUetnvth59mtPpHmX8Qp4bdf5w@mail.gmail.com>
-Subject: Re: [PATCH 3/5] perf dso: Use stored fd error instead of stale errno
- in file_read() and file_size()
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Ingo Molnar <mingo@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, James Clark <james.clark@linaro.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	sashiko-bot <sashiko-bot@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 11, 2026 at 10:52=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->
-> file_read() and file_size() use ret =3D -errno when
-> dso__data(dso)->fd is negative after try_to_open_dso() fails.  By this
-> point errno has been through mutex_lock(), nsinfo__mountns_enter(), and
-> multiple open() attempts inside try_to_open_dso() =E2=80=94 it no longer
-> reflects the actual open failure.  If errno happens to be 0, ret =3D 0
-> looks like EOF rather than an error, and file_size() callers like
-> dso__data_size() would then report a zero-sized file instead of
-> failing.
->
-> dso__data(dso)->fd is always negative on failure =E2=80=94 -errno from
-> __open_dso() when no filename could be built (e.g. -EINVAL, -ENOENT),
-> or -1 when do_open() itself failed =E2=80=94 and never 0, so use it direc=
-tly
-> instead of reading the stale global errno.
->
-> Fixes: 33bdedcea2d7 ("perf tools: Protect dso cache fd with a mutex")
-> Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Assisted-by: Claude:claude-opus-4.6
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/util/dso.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index 124193453675ca18..32ae5c78cdb906e6 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -1029,7 +1029,8 @@ static ssize_t file_read(struct dso *dso, struct ma=
-chine *machine,
->
->         if (dso__data(dso)->fd < 0) {
->                 dso__data(dso)->status =3D DSO_DATA_STATUS_ERROR;
-> -               ret =3D -errno;
-> +               /* fd is always negative here: -errno or -1, never 0 */
-> +               ret =3D dso__data(dso)->fd;
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
+- [High] Use-After-Free during CPU context migration because cpuhp instance=
+ is removed after PMU unregistration.
+- [Medium] Hardware VPU bus watchers are never disabled due to dead code in=
+ the deferred teardown logic.
+- [Low] Compilation error due to undeclared 'monitor_running' field in 'str=
+uct rpi_axi_hw_events'.
+--
 
-nit: we can "assert(ret < 0);" to verify the comment.
+--- Patch [1]: [PATCH v5 1/2] perf: Add Raspberry Pi BCM2835 AXI PMU driver=
+ ---
+commit 5c4597457ab7a1a4ae244f1e321c00bd28692a8a
+Author: Ian Rogers <irogers@google.com>
+Date:   Wed Aug 12 23:01:44 2026 +0000
 
->                 goto out;
->         }
->
-> @@ -1151,8 +1152,9 @@ static int file_size(struct dso *dso, struct machin=
-e *machine)
->         try_to_open_dso(dso, machine);
->
->         if (dso__data(dso)->fd < 0) {
-> -               ret =3D -errno;
->                 dso__data(dso)->status =3D DSO_DATA_STATUS_ERROR;
-> +               /* fd is always negative here: -errno or -1, never 0 */
-> +               ret =3D dso__data(dso)->fd;
+    perf: Add Raspberry Pi BCM2835 AXI PMU driver
 
-nit: we can "assert(ret < 0);" to verify the comment.
+    This commit adds an uncore performance monitoring unit (PMU) driver
+    for Broadcom BCM2835-BCM2711 AXI system monitors and VideoCore VPU firm=
+ware
+    mailbox monitors found on Raspberry Pi 1 through 4.
 
-Thanks,
-Ian
+> diff --git a/drivers/perf/rpi_axi_pmu.c b/drivers/perf/rpi_axi_pmu.c
+> new file mode 100644
+> index 0000000000000..e5cc86fc78b25
+> --- /dev/null
+> +++ b/drivers/perf/rpi_axi_pmu.c
+[ ... ]
+> +struct rpi_axi_hw_events {
+> +	int monitored_bus[NUM_BUS_WATCHERS_PER_MONITOR];
+> +	int filter[NUM_BUS_WATCHERS_PER_MONITOR];
+> +	int refcount[NUM_BUS_WATCHERS_PER_MONITOR];
+> +	int num_monitored;
+> +	int num_started;
+> +	bool enabled[NUM_BUS_WATCHERS_PER_MONITOR];
+> +};
 
->                 goto out;
->         }
->
-> --
-> 2.55.0
->
+[Severity: Low]
+Does this code fail to compile? It looks like the monitor_running field is
+accessed in rpi_axi_hw_events__init() and rpi_axi_pmu_enable_bus_watcher(),
+but it is missing from the definition of struct rpi_axi_hw_events here.
+
+> +
+> +static void rpi_axi_hw_events__init(struct rpi_axi_hw_events *hw_events)
+> +{
+> +	hw_events->num_monitored =3D 0;
+> +	hw_events->num_started =3D 0;
+> +	hw_events->monitor_running =3D false;
+
+[ ... ]
+> +static void rpi_axi_pmu_del(struct perf_event *event, int flags)
+> +{
+> +	struct rpi_axi_pmu *pmu =3D pmu_to_rpi_axi_pmu(event->pmu);
+> +	enum monitor mon =3D config_to_monitor(event->attr.config);
+> +	unsigned long spinflags;
+> +	int idx =3D event->hw.idx;
+> +
+> +	if (idx < 0)
+> +		return;
+> +
+> +	rpi_axi_pmu_stop(event, PERF_EF_UPDATE);
+> +
+> +	spin_lock_irqsave(&pmu->lock, spinflags);
+> +	for (int i =3D 0; i < RPI_AXI_MAX_EVENTS; i++) {
+> +		if (pmu->events[i] =3D=3D event) {
+> +			pmu->events[i] =3D NULL;
+> +			pmu->event_gen[i]++;
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (pmu->monitor[mon].hw_events.monitored_bus[idx] >=3D 0) {
+> +		pmu->monitor[mon].hw_events.refcount[idx]--;
+> +		if (pmu->monitor[mon].hw_events.refcount[idx] =3D=3D 0) {
+> +			if (mon =3D=3D MON__SYSTEM)
+> +				rpi_axi_pmu_disable_bus_watcher(pmu, mon, idx);
+> +			pmu->monitor[mon].hw_events.monitored_bus[idx] =3D -1;
+> +			pmu->monitor[mon].hw_events.filter[idx] =3D BCM2835_FLT__NONE;
+> +			pmu->monitor[mon].hw_events.enabled[idx] =3D false;
+
+[Severity: Medium]
+Will this leave hardware VPU bus watchers running indefinitely?
+
+When a VPU perf event is deleted, rpi_axi_pmu_del() synchronously sets
+enabled[idx] =3D false. The background rpi_axi_pmu_vpu_work_handler() relie=
+s on
+checking both refcount[idx] =3D=3D 0 and enabled[idx] to perform the actual=
+=20
+hardware teardown over the mailbox.
+
+Because enabled[idx] is cleared here first, that condition becomes impossib=
+le
+to satisfy in the work handler. Could this lead to the VPU monitor being le=
+ft=20
+running when no events are active, wasting power and bus bandwidth?
+
+> +			pmu->monitor[mon].hw_events.num_monitored--;
+> +			if (mon =3D=3D MON__SYSTEM && pmu->monitor[mon].hw_events.num_monitor=
+ed =3D=3D 0) {
+> +				set_monitor_control(pmu, mon, GEN_CTL_RESET_BIT);
+> +				pmu->monitor[mon].hw_events.monitor_running =3D false;
+> +			}
+> +		}
+> +	}
+[ ... ]
+> +static int rpi_axi_pmu__init(struct rpi_axi_pmu *pmu, struct platform_de=
+vice *pdev)
+> +{
+[ ... ]
+> +	ret =3D cpuhp_state_add_instance(rpi_axi_pmu_cpuhp_state, &pmu->cpuhp_n=
+ode);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to add cpuhp instance %d\n", ret);
+> +		goto err_teardown;
+> +	}
+> +
+> +	ret =3D perf_pmu_register(&pmu->pmu, PMU_NAME, /*type=3D*/-1);
+> +	if (ret) {
+> +		dev_err(dev, "PMU register failed %d\n", ret);
+> +		goto err_cpuhp_remove;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_cpuhp_remove:
+> +	cpuhp_state_remove_instance(rpi_axi_pmu_cpuhp_state, &pmu->cpuhp_node);
+
+[Severity: High]
+Does this error path trigger a use-after-free or panic during CPU context
+migration?
+
+If perf_pmu_register() fails, calling cpuhp_state_remove_instance() will
+trigger the rpi_axi_pmu_offline_cpu() callback for online CPUs. That
+callback executes perf_pmu_migrate_context(), which will attempt to migrate
+a PMU that was never successfully registered and has a NULL context pointer.
+
+> +err_teardown:
+> +	hrtimer_cancel(&pmu->hrtimer);
+> +	cancel_work_sync(&pmu->vpu_work);
+> +err_firmware_put:
+> +	if (pmu->firmware)
+> +		rpi_firmware_put(pmu->firmware);
+> +	return ret;
+> +}
+> +
+> +/**
+> + * rpi_axi_pmu__exit() - Internal PMU teardown called during remove
+> + * @pmu: Pointer to PMU context
+> + */
+> +static void rpi_axi_pmu__exit(struct rpi_axi_pmu *pmu)
+> +{
+> +	perf_pmu_unregister(&pmu->pmu);
+> +	cpuhp_state_remove_instance(rpi_axi_pmu_cpuhp_state, &pmu->cpuhp_node);
+
+[Severity: High]
+Can unregistering the PMU before removing the cpuhp instance cause a
+use-after-free?
+
+perf_pmu_unregister() frees the PMU's CPU context allocations. The subseque=
+nt
+call to cpuhp_state_remove_instance() triggers the rpi_axi_pmu_offline_cpu()
+callback for online CPUs.
+
+This callback will then call perf_pmu_migrate_context(), which dereferences
+the now-freed cpu_pmu_context, leading to a UAF. Should
+cpuhp_state_remove_instance() be called before perf_pmu_unregister() to
+ensure the PMU context remains valid during migration?
+
+> +	hrtimer_cancel(&pmu->hrtimer);
+> +	cancel_work_sync(&pmu->vpu_work);
+> +	if (pmu->firmware)
+> +		rpi_firmware_put(pmu->firmware);
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260812230145.2644=
+281-1-irogers@google.com?part=3D1
