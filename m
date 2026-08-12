@@ -1,305 +1,252 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B850A27707
-	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 00:04:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A4E72617
+	for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 00:05:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786493079; cv=none; b=dJ7U7TK3S/vxDg1ivfL+MfKTE8yvviRJoFTRTxd7vVM+dRW6olmmmxbVrkXhFvKkeZN0ii4ckQTyikZdLumZrC/JGgkI9CaW2bbRpL/rjpLWVRwilhbVYzqJkvV+oz4SfaCDbgUYE2LQ1cNYvnjJsMxabbBKVmSkTap/YJ4kMP0=
+	t=1786493134; cv=none; b=foEME1ESuJVeaj2/YV0KJGF5V/m8FNjgtIOR7C+j2iG+qoORYrT1Xs+pZgNSD4l0ieRkMGWGfsNMizaMRbnOWjsNLswLyAnlDXKIGiDZnBxYSi58pzE5NPw1WZa/5dpkZ27NL2CgodDPOEYSqbJr61Yy9/c1t+iJNuu3wSTnpRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786493079; c=relaxed/simple;
-	bh=nxwRa4VfIF4NYy6WYg3i4IzPKqA44rsYT/Ygyoy5zK0=;
+	s=arc-20240116; t=1786493134; c=relaxed/simple;
+	bh=UkMC3k+SgOH2h/C5QvKcFg2lGyMdq5DQSbJcVMr8cRA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=S428QzeEFz60x7xy9At+bUklSMnidZcDPHmzh/+33bSn88YfkdNE1R/DSIRPglZv9e6g/Y3NEPzMs2OZ9hfDBE3aoeZbeB/lsBZtTGt74AQPkVGZZq5EtlpjhL8h6SbVU9X6N8AD6vDpFZJ1ZBf+Lu50JcEyJu6PtsO4xlk4FLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hgEhnwj0; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=aZDFVmG8db1gPz5dUHuMDjy9OXb5ca5BcoA37dcIT8UqL7J1V6jeIA91XYy4FF0M0rKLgJSUQaQWHu8wsbsQWpFWAg5M7M4j96FQhC2qYQgTxTb3qPiEsqAWvc382C3gv7oWanTlKExovbZHi/Y4yQcFtn0ukx1WKRA5cneETDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvuvWkEG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgEhnwj0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 369881F000E9;
-	Wed, 12 Aug 2026 00:04:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvuvWkEG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 230D01F000E9;
+	Wed, 12 Aug 2026 00:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786493077;
-	bh=ZI28Fk1QqvALcn8VNLO3hEdYoUgK1K6cl7m7A2KQWhM=;
+	s=k20260515; t=1786493133;
+	bh=jqzLsnrcBfjBknORbkjSHyHBS327O/VyS416V/NrLe4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hgEhnwj0rne8gLgxuQ0RVDenTQVQE7mC0txEIlqqEZDi3PEOMMXx8sDfIQ73EZZ74
-	 Ve2733e57LQ2FsrV5npK/sLfzihpPojCu79llUtjzsaWSTZ/b7HeSkntwK/H/uWwjM
-	 NHS0yreJDguuu8jmshhiAbBl3TzI5WqrthtzuQYd+he/BJ1Y4L4QPWdl2TVsvfOi+a
-	 M85D9BF/f66oZ3ZPErpin8Vpm+x9iv8yRcjwgAfthHjW0TZ5kdilmAPShnklMOmKQb
-	 A9jv1G9zRH60vBHSaadewosHDwz6ft8uxP3OMd1nqZdvx7xB5PAo1qrVYanhwdriY1
-	 WZdnPZR+usSFg==
+	b=AvuvWkEGKvyIB00J7rSh81rb/tMYXO/7aOeM8lphhOnLRpo9Ug25c9lklngoAnIpE
+	 iFb2X9EY5p1ko7xbnhtSOufbu4Yi80yZDMvCPOipiKxyrRJYAlYNQQjueza6mG8730
+	 voi7sLQ4/p6qvbt4Is6QtKumCco4nXy+mzpYa0HefJ9uf1cLB0JYQggjSlSF6WSIgZ
+	 H2Y1ll16MwIHJXaNlibRDf3TEJyzoPOXPBlCA4lWwyliAagoXOf5kS/S7L2k15rN0l
+	 DVq6+CBU68MpBmdsezn3rYCc4WVqFfIfJJbQ75QnkHwQlG8oYiuGkKqcEEHPpBrwam
+	 VIeVU4x1GrpqA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/2] perf: Add Raspberry Pi BCM2835 AXI PMU driver
+Subject: Re: [PATCH v2 2/2] perf: Add Raspberry Pi 5 (BCM2712) AXI PMU
+ support
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260811235112.2267241-2-irogers@google.com>
+In-Reply-To: <20260811235112.2267241-3-irogers@google.com>
 References: <20260811083828.2057695-1-irogers@google.com>
  <20260811235112.2267241-1-irogers@google.com>
- <20260811235112.2267241-2-irogers@google.com>
+ <20260811235112.2267241-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 12 Aug 2026 00:04:36 +0000
-Message-Id: <20260812000437.369881F000E9@smtp.kernel.org>
+Date: Wed, 12 Aug 2026 00:05:32 +0000
+Message-Id: <20260812000533.230D01F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 8 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-- [High] The probe function ignores a missing 'firmware' device tree phandl=
-e, leaving `pmu->firmware` NULL but leaving the VPU monitor enabled, causin=
-g a later NULL pointer dereference in the mailbox IPC.
-- [High] The driver fails to prevent sysfs unbinding (`.suppress_bind_attrs=
- =3D true`), leading to a Use-After-Free if unbound while perf events are a=
-ctive.
-- [High] Incorrect manual parsing of the 'reg' property assumes fixed addre=
-ss and size cells, breaking on 64-bit platforms.
-- [High] Incorrect PMU teardown ordering in `rpi_axi_pmu__exit` and missing=
- cleanup in probe error paths cause Use-After-Free vulnerabilities.
-- [High] The PMU driver uses a `spinlock_t` in a hardirq hrtimer callback, =
-causing lockdep splats and sleeping in atomic context on PREEMPT_RT.
-- [Medium] An unprotected write to `hw_events.enabled[idx]` creates a race =
-condition with event deletion, which can silently break hardware configurat=
-ion for recycled bus watcher slots.
-- [Medium] The CPU hotplug offline callback erroneously restarts the pollin=
-g hrtimer pinned to the dying CPU, sabotaging PMU migration.
-- [Low] Raspberry Pi 5 (BCM2712) support is partially implemented but compl=
-etely unreachable because the chip type is hardcoded to BCM2835 and the dev=
-ice tree match table lacks BCM2712.
+- [High] Incorrect subsystem teardown ordering in both the exit and init er=
+ror paths fails to cancel background tasks, leading to Use-After-Free.
+- [Medium] Incomplete hiding of legacy BCM2835-specific sysfs event aliases=
+ on BCM2712.
+- [Medium] Dropping the spinlock in the VPU work handler causes a TOCTOU ra=
+ce that corrupts hardware configurations.
+- [Low] Invalid Kconfig dependency on non-existent symbol `ARCH_BCM2712`.
 --
 
---- Patch [1]: [PATCH v2 1/2] perf: Add Raspberry Pi BCM2835 AXI PMU driver=
- ---
-commit 3567c05975da01f684191bbbfa826e0e8d8e9927
+--- Patch [2]: [PATCH v2 2/2] perf: Add Raspberry Pi 5 (BCM2712) AXI PMU su=
+pport ---
+commit c6c37f9c3fb56c6bdbc0982c7918061dbe1d45cb
 Author: Ian Rogers <irogers@google.com>
-Subject: perf: Add Raspberry Pi BCM2835 AXI PMU driver
 
-This commit introduces a new uncore PMU driver for Broadcom BCM2835-BCM2711=
-=20
-AXI system monitors. It supports tracking AXI traffic via MMIO for the syst=
-em=20
-monitor and via mailbox IPC for the VPU monitor.
+perf: Add Raspberry Pi 5 (BCM2712) AXI PMU support
 
+Expand the Raspberry Pi AXI PMU driver to support Broadcom BCM2712
+(Raspberry Pi 5) system monitors, PCIe RP1 Southbridge links, HEVC decoder,
+and Cortex-A76 DSU L3 interconnects.
+
+> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
+> index 97c8bf34f4633..b0c4eb0748dd3 100644
+> --- a/drivers/perf/Kconfig
+> +++ b/drivers/perf/Kconfig
+> @@ -327,11 +327,11 @@ config NVIDIA_TEGRA410_C2C_PMU
+> =20
+>  config RASPBERRYPI_AXI_PMU
+>  	tristate "Raspberry Pi AXI PMU support"
+> -	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
+> +	depends on ARCH_BCM2835 || ARCH_BCM2712 || ARCH_BRCMSTB || COMPILE_TEST
+
+[Severity: Low]
+Does this code add a dependency on an undefined symbol?
+
+ARCH_BCM2712 does not appear to be defined anywhere in the kernel tree.
+
+>  	select RASPBERRYPI_FIRMWARE if ARCH_BCM2835
+>  	help
+>  	  Support for the AXI Performance Monitoring Unit (PMU) found on Broadc=
+om
+> -	  SoCs used in Raspberry Pi platforms (BCM2835, BCM2836, BCM2837, BCM27=
+11).
+> +	  SoCs used in Raspberry Pi platforms (BCM2835, BCM2836, BCM2837, BCM27=
+11, BCM2712).
+> =20
+>  	  If compiled as a module, it will be called rpi_axi_pmu.
+> =20
 > diff --git a/drivers/perf/rpi_axi_pmu.c b/drivers/perf/rpi_axi_pmu.c
-> new file mode 100644
-> index 0000000000000..cdf7d9a74f13e
-> --- /dev/null
+> index cdf7d9a74f13e..b13632fa8f84c 100644
+> --- a/drivers/perf/rpi_axi_pmu.c
 > +++ b/drivers/perf/rpi_axi_pmu.c
 [ ... ]
-> +static int rpi_axi_pmu__init(struct rpi_axi_pmu *pmu, struct platform_de=
-vice *pdev)
+> @@ -867,12 +1043,94 @@ static struct attribute *rpi_axi_pmu_events_attrs[=
+] =3D {
+[ ... ]
+> +static umode_t rpi_axi_pmu_events_is_visible(struct kobject *kobj,
+> +					      struct attribute *attr, int unused)
 > +{
-[ ... ]
-> +	pmu->chip =3D CHIP_BCM2835;
-
-[Severity: Low]
-Is BCM2712 hardware meant to be supported here?
-
-The chip type is unconditionally hardcoded to CHIP_BCM2835, which appears to
-make the BCM2712 definitions unreachable.
-
+> +	struct device *dev =3D kobj_to_dev(kobj);
+> +	struct rpi_axi_pmu *pmu =3D dev_get_drvdata(dev);
+> +	struct perf_pmu_events_attr *pmu_attr;
 > +
-> +	pmu->pmu =3D (struct pmu) {
-[ ... ]
-> +	if (pmu->chip =3D=3D CHIP_BCM2835) {
-> +		pmu->monitor[MON__SYSTEM].use_mailbox_interface =3D false;
-> +		pmu->monitor[MON__VPU].use_mailbox_interface =3D true;
-> +		fw_node =3D of_parse_phandle(dev->of_node, "firmware", 0);
-> +		if (fw_node) {
-> +			pmu->firmware =3D rpi_firmware_get(fw_node);
-> +			of_node_put(fw_node);
-> +			if (!pmu->firmware)
-> +				return -EPROBE_DEFER;
-> +		}
+> +	pmu_attr =3D container_of(attr, struct perf_pmu_events_attr, attr.attr);
+> +
+> +	if (pmu->chip =3D=3D CHIP_BCM2712) {
+> +		/*
+> +		 * On RPi 5 (BCM2712), hide legacy VPU Mailbox IPC events (monitor=3D1)
+> +		 * and RPi 1-4 aliases
+> +		 */
+> +		if (strstr(pmu_attr->event_str, "monitor=3D1") ||
+> +		    strstr(attr->name, "cpu0_") ||
+> +		    strstr(attr->name, "cpu1_") ||
+> +		    strstr(attr->name, "dma0_") ||
+> +		    strstr(attr->name, "dma1_") ||
+> +		    strstr(attr->name, "v3d0_") ||
+> +		    strstr(attr->name, "v3d1_") ||
+> +		    strstr(attr->name, "hvs_system") ||
+> +		    strstr(attr->name, "isp_system") ||
+> +		    strstr(attr->name, "usb_system"))
+> +			return 0;
 
-[Severity: High]
-Can this lead to a NULL pointer dereference in the mailbox IPC?
+[Severity: Medium]
+Are there missing legacy aliases that should be hidden here?
 
-If the device tree lacks the firmware property, fw_node is NULL and
-the driver continues with pmu->firmware left as NULL.
+This hides VPU IPC events on RPi 5, but it looks like several legacy System
+Monitor aliases for diverged buses (such as ccp2tx, mphi_rx, h264, v3d,=20
+peripheral, cpu_uc, cpu_l2) are not included in this check.
 
-Later, set_monitor_control() will call rpi_firmware_property() using this
-NULL pointer when VPU events are started.
+Opening them might measure the wrong hardware unit or fail with -EINVAL sin=
+ce=20
+their hardcoded bus indices exceed BCM2712_SB__MAX.
 
 > +	} else {
-[ ... ]
-> +	for (int i =3D 0; i < MON__MAX; i++) {
-> +		rpi_axi_hw_events__init(&pmu->monitor[i].hw_events);
-> +
-> +		if (pmu->monitor[i].use_mailbox_interface) {
-> +			ret =3D of_property_read_u32_index(dev->of_node, "reg", i * 2,
-> +							 &pmu->monitor[i].mailbox);
-
-[Severity: High]
-Does this correctly parse the reg property on 64-bit platforms?
-
-Using of_property_read_u32_index() with a fixed index of i * 2 assumes that
-address and size cells are exactly 1.
-
-On platforms with 64-bit device tree layouts, could this fetch the wrong
-word and corrupt the mailbox address?
-
-> +			if (ret) {
-[ ... ]
-> +	ret =3D cpuhp_state_add_instance(rpi_axi_pmu_cpuhp_state, &pmu->cpuhp_n=
-ode);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to add cpuhp instance %d\n", ret);
-> +		goto err_pmu_unregister;
+> +		/* On RPi 1-4 (BCM2835-BCM2711), hide RPi 5 specific events */
+> +		if (strstr(attr->name, "pcie_rp1") ||
+> +		    strstr(attr->name, "a76_") ||
+> +		    strstr(attr->name, "v3d7_") ||
+> +		    strstr(attr->name, "hevc_dec") ||
+> +		    strstr(attr->name, "arm_") ||
+> +		    strstr(attr->name, "pcie0_") ||
+> +		    strstr(attr->name, "hvs_filtered") ||
+> +		    strstr(attr->name, "emmc0_"))
+> +			return 0;
 > +	}
-> +	return 0;
 > +
-> +err_pmu_unregister:
-> +	perf_pmu_unregister(&pmu->pmu);
-> +err_firmware_put:
-> +	if (pmu->firmware)
-> +		rpi_firmware_put(pmu->firmware);
-> +	return ret;
+> +	return attr->mode;
 > +}
+[ ... ]
+> @@ -1549,7 +1807,7 @@ static int rpi_axi_pmu__init(struct rpi_axi_pmu *pm=
+u, struct platform_device *pd
+>  	spin_lock_init(&pmu->lock);
+>  	mutex_init(&pmu->vpu_mutex);
+> =20
+> -	pmu->chip =3D CHIP_BCM2835;
+> +	pmu->chip =3D (enum rpi_axi_chip)(uintptr_t)of_device_get_match_data(de=
+v);
+> =20
+>  	pmu->pmu =3D (struct pmu) {
+>  		.module =3D THIS_MODULE,
 
 [Severity: High]
-Could this regression cause a use-after-free if probe fails here?
+Can the error paths in rpi_axi_pmu__init() and the teardown in=20
+rpi_axi_pmu__exit() lead to a use-after-free?
 
-If cpuhp_state_add_instance() fails, the error path unregisters the PMU but
-does not cancel the hrtimer or vpu_work.
+If cpuhp_state_add_instance() fails in rpi_axi_pmu__init(), the driver call=
+s=20
+perf_pmu_unregister() but doesn't cancel the background tasks:
 
-Since the PMU is briefly visible in sysfs, might userspace race to open an
-event and arm the timer before the context is freed by devres?
+rpi_axi_pmu__init() {
+    ...
+err_pmu_unregister:
+	perf_pmu_unregister(&pmu->pmu);
+err_firmware_put:
+	if (pmu->firmware)
+		rpi_firmware_put(pmu->firmware);
+	return ret;
+}
 
-> +static void rpi_axi_pmu__exit(struct rpi_axi_pmu *pmu)
-> +{
-> +	cpuhp_state_remove_instance(rpi_axi_pmu_cpuhp_state, &pmu->cpuhp_node);
-> +	hrtimer_cancel(&pmu->hrtimer);
-> +	cancel_work_sync(&pmu->vpu_work);
-> +	if (pmu->firmware)
-> +		rpi_firmware_put(pmu->firmware);
-> +	perf_pmu_unregister(&pmu->pmu);
-> +}
+Since PMU memory is freed via devres upon returning the error, an active ti=
+mer
+or workqueue (started by an event opened during the registration window) co=
+uld=20
+fire and access freed memory.=20
 
-[Severity: High]
-Does this teardown ordering allow new events to race with driver removal?
+Similarly, in rpi_axi_pmu__exit(), the background tasks are cancelled befor=
+e=20
+unregistering the PMU subsystem:
 
-By cancelling the timer and workqueue before unregistering the PMU, there
-appears to be a window where new events can be scheduled that restart the
-timers while the context is being torn down.
+rpi_axi_pmu__exit() {
+	cpuhp_state_remove_instance(rpi_axi_pmu_cpuhp_state, &pmu->cpuhp_node);
+	hrtimer_cancel(&pmu->hrtimer);
+	cancel_work_sync(&pmu->vpu_work);
+    ...
+	perf_pmu_unregister(&pmu->pmu);
+}
 
-[ ... ]
-> +static void rpi_axi_pmu_enable_bus_watcher(struct rpi_axi_pmu *pmu, enum=
- monitor mon,
-> +					    int idx, int bus, int filter)
-> +{
-[ ... ]
-> +	pmu->monitor[mon].hw_events.enabled[idx] =3D true;
-> +}
+A concurrent userspace action could start a new event in this window,
+restarting the timer and causing a use-after-free when the memory is
+subsequently freed.
 
 [Severity: Medium]
-Is this state update safe from concurrent deletion?
+Is there a time-of-check to time-of-use race condition in=20
+rpi_axi_pmu_vpu_work_handler()?
 
-The array element is modified without holding pmu->lock.
+When the lock is dropped, a concurrent event deletion and addition could=20
+potentially misconfigure the PMU watcher:
 
-When rpi_axi_pmu_vpu_work_handler() drops the lock to call this function:
+rpi_axi_pmu_vpu_work_handler() {
+    ...
+		if (!pmu->monitor[MON__VPU].hw_events.enabled[idx]) {
+			int bus =3D pmu->monitor[MON__VPU].hw_events.monitored_bus[idx];
+			int filter =3D pmu->monitor[MON__VPU].hw_events.filter[idx];
 
-rpi_axi_pmu_vpu_work_handler()
-   spin_unlock_irq(&pmu->lock);
-   rpi_axi_pmu_enable_bus_watcher(pmu, MON__VPU, idx, bus, filter);
-   spin_lock_irq(&pmu->lock);
+			spin_unlock_irq(&pmu->lock);
+			rpi_axi_pmu_enable_bus_watcher(pmu, MON__VPU, idx, bus, filter);
+			spin_lock_irq(&pmu->lock);
+		}
+    ...
+}
 
-A concurrent rpi_axi_pmu_del() could clear the slot and set enabled to fals=
-e.
+Concurrently, rpi_axi_pmu_del() can delete the event and free the idx slot,=
+=20
+which rpi_axi_pmu_add() can then reuse for a new event with different=20
+configurations.=20
 
-If a new event immediately reuses this slot, wouldn't the unlocked write to
-true overwrite the hardware configuration state for the new event?
+Because the old values were cached before dropping the lock, they might be=
+=20
+forcefully written to the hardware, and enabled[idx] is modified outside th=
+e=20
+lock:
 
-[ ... ]
-> +static enum hrtimer_restart rpi_axi_pmu_timer_handler(struct hrtimer *ti=
-mer)
-> +{
-> +	struct rpi_axi_pmu *pmu =3D container_of(timer, struct rpi_axi_pmu, hrt=
-imer);
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&pmu->lock, flags);
+rpi_axi_pmu_enable_bus_watcher() {
+    ...
+	pmu->monitor[mon].hw_events.enabled[idx] =3D true;
+    ...
+}
 
-[Severity: High]
-Will this lock acquisition panic on PREEMPT_RT kernels?
-
-The timer defaults to hardirq context, where acquiring a sleepable lock like
-spinlock_t triggers a panic on PREEMPT_RT.
-
-[ ... ]
-> +static int rpi_axi_pmu_offline_cpu(unsigned int cpu, struct hlist_node *=
-node)
-> +{
-[ ... ]
-> +	spin_lock_irqsave(&pmu->lock, spinflags);
-> +	if (pmu->active_events > 0) {
-> +		spin_unlock_irqrestore(&pmu->lock, spinflags);
-> +		hrtimer_cancel(&pmu->hrtimer);
-> +		spin_lock_irqsave(&pmu->lock, spinflags);
-> +		if (pmu->active_events > 0)
-> +			hrtimer_start(&pmu->hrtimer, RPI_AXI_PMU_TIMER_INTERVAL,
-> +				      HRTIMER_MODE_REL_PINNED);
-> +	}
-> +	spin_unlock_irqrestore(&pmu->lock, spinflags);
-> +
-> +	return 0;
-> +}
-
-[Severity: Medium]
-Does this logic unintentionally sabotage PMU migration during CPU offline?
-
-This callback runs in the context of the dying CPU.
-
-By passing HRTIMER_MODE_REL_PINNED here, the timer seems to be pinned to the
-offlining CPU instead of being successfully migrated to the target CPU.
-
-[ ... ]
-> +static int rpi_axi_pmu_probe(struct platform_device *pdev)
-> +{
-> +	struct rpi_axi_pmu *pmu;
-> +
-> +	pmu =3D devm_kzalloc(&pdev->dev, sizeof(*pmu), GFP_KERNEL);
-
-[ ... ]
-> +static const struct of_device_id rpi_axi_pmu_match[] =3D {
-> +	{
-> +		.compatible =3D "brcm,bcm2835-axiperf",
-> +		.data =3D (void *)CHIP_BCM2835,
-> +	},
-> +	{
-> +		.compatible =3D "brcm,bcm2711-axiperf",
-> +		.data =3D (void *)CHIP_BCM2835,
-> +	},
-> +	{ }
-> +};
-
-[Severity: Low]
-Could this device tree match table be missing a compatible string for
-BCM2712 hardware, preventing it from probing entirely?
-
-> +MODULE_DEVICE_TABLE(of, rpi_axi_pmu_match);
-> +
-> +static struct platform_driver rpi_axi_pmu_driver  =3D {
-> +	.probe =3D	rpi_axi_pmu_probe,
-> +	.remove =3D	rpi_axi_pmu_remove,
-> +	.driver =3D {
-> +		.name   =3D PMU_NAME,
-> +		.of_match_table =3D of_match_ptr(rpi_axi_pmu_match),
-> +	},
-> +};
-
-[Severity: High]
-Can an administrator unbinding this driver via sysfs trigger a use-after-fr=
-ee?
-
-The pmu context is allocated with devm_kzalloc(), tying its memory lifetime
-to the device bind state.
-
-Since .suppress_bind_attrs =3D true is omitted, a sysfs unbind will free the
-memory while active perf events might still exist and try to access the
-freed context.
+Could this silently misconfigure the PMU watcher for the new event?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260811235112.2267=
-241-1-irogers@google.com?part=3D1
+241-1-irogers@google.com?part=3D2
