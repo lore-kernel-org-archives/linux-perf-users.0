@@ -1,166 +1,140 @@
-Received: from mail-yw1-f227.google.com (mail-yw1-f227.google.com [209.85.128.227])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010068.outbound.protection.outlook.com [52.101.56.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F26B49551A
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 16:34:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.227
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786638875; cv=none; b=j/Q3LdGyAQwbSeFN7WQrZtV1qiVmDK3Fp/WgvkNQxc47+rJu18iN2dNUoD/fO1d9jE5B7ZFnPZGQlItW0kxSoKaXK2R6VbEWaHAvOqKTv2z7IUIzl/NmY8OWDhUV5CxPl74jTuLU+be6C+46nFWB6XJd/lcz63DKUIPKGnVSPo8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786638875; c=relaxed/simple;
-	bh=VHjE+CvqvCycM8vZo5suwfivOiQA3PhZb6EWX5kH6O8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u5Fp3tvEPoTZsbRTLqMk5dZKiNbP2vQKhnin6LkPhjzCIvbNgYm7+r8ZzC4N3H18zswETK8veopBc7bDVc+7QsGpNGv81W1LKXkWpfjDY6YsW4hxNaFZXC2Vw70pX+ZED/ixdtX3zLyMXGzOKBW81/BfMAu+vIG2PpraCsM1b6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=VeNPbwy+; arc=none smtp.client-ip=209.85.128.227
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B057E4963CE;
+	Thu, 13 Aug 2026 17:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786640542; cv=fail; b=bby1BAjh0D3KkLzuLyZWzghmJb044uAHK7TcEARUQksPBIl7ju1NrUMfebAs757A5rWwH9jYWNLWyu4gSkqHaSXFk3HTbPiKZ3fqaCosVUm6NSBFfR9+lInyo2wahnBHbAzJ7aALt53AGFyErqi5HqfsljRO7I8TplTMMQ2KSPk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786640542; c=relaxed/simple;
+	bh=bBJIMHMQpSsCX2E8ENEmd8SAPP64s/qx2A59kb1G77U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=C1MDN3O2JBP5BDcsX5kT5fSunnrNORbkpgtJA52hQxNwRKlPMF3Q74dg4g3CLdEx6KNPc+1uBSkZZZFPGA5iW2jauoX9l2mVMkytynYCb9y2Y1ePel7DgZ4H0293eG5oR7OYLL1i6hx0aRB13JzxbDGzJ1piXyNj8LarLcaUpKo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=hCuPFy0j; arc=fail smtp.client-ip=52.101.56.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="VeNPbwy+"
-Received: by mail-yw1-f227.google.com with SMTP id 00721157ae682-821106b5b64so21818857b3.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 09:34:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786638873; x=1787243673;
-        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:dkim-signature:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=er5DRGv9RBWWCyOmoSI2svQn2A2+M6brn7eWG6JBVlI=;
-        b=S8zyjU88Msl4L4cQrXB037g5wL3ZeRlCUcnQajAC7nJLptWCG1KyfMlb4ep6/c14gd
-         QFuPaOUn7jZ78yQ1LUfAYngEq9kQlm4CnhkDVZ8Vk/3o1lin6qJtGZdUw7pq5/NML7B6
-         8PTA+k0eSqGg9WDNdaaayTDxRfvGhfh4EsgvL6BckEUIs2mGOm1Yy33+mu85pm8Ys0MJ
-         aKYNbEtU7Qrf5u9zpl6bfJ07mFuvydOSk5UnsbwkbKz0RM+I5S5H3nVAG2OfbqU2jagb
-         x8QCqzdfjKzeyI5oZBYfKLO3FaYjJ09jxtqV2PFcvK814n32U55a1FQ/uBYYz+rNFLeD
-         2pcg==
-X-Gm-Message-State: AOJu0Yw+N8jjq6XFfMCz9rGxd8LRIRuDIeiPdYkiC8W3B9YFhZeGa1zZ
-	4eF8VeC2Ryr+XlrhsbjCLifv8JtaVTiuFS/uBXD+qJd8Di5sWJEecNivRY04gX3/2kuaJQU+kq/
-	TQGUS6mefVfwFEnEupeJPDaKzmV8a9oPieIRsg+r9ywYgL26MDwTq+1EJ1wzjKLSeqxTqdL6IWP
-	VKVWEnCeONgklw2GPoKfWvup/3l/mX7TC/WtSFKlleEG6/c0zSsDQRiK1vcGsdLL8fvazkT5sAm
-	ecQWbeVdispT995YPNcIraQJO4rGQ==
-X-Gm-Gg: AR+sD10RfK91lR9hwYEcLOX6X4s+NOqXrRiL9+JhaAWYT1aXMkvjFI/EQtYvAxYymTX
-	cMVeVnJd9JMIqwGqStFGMEaROe7yv2O2A3FIBP1U1BlBkje3Lh1Z+7EOY4AYEobrpSFKc5Ulm4f
-	25XzEf2zaclcDMVhzjzSJchhEZ60P97OdQJA5BMkL3PeYddCm1op9Nf35cx7WXlR7Xu4WAhoPXP
-	cURaqbbWjTSg9r75g+UiLnet7f1TsF3B9Sd+rAhIe5+IfDJJMB/i0ZpSnRej+9Z3Q+Jxp5WXvf5
-	43qJ7gQGwQyAWXpOx+aBRpheYuPSQ2OXzeetDWoyoB1vJsqZW7RjQ9glFOy4aEUV8uL9iLUPbML
-	mJASqCqcan/xGPsLGtcO35LsLG2UJ83Acq3uTDOQeGED7yShQL3Lk3w4E9EnTZfF76f+iSmIk4i
-	4vskVbjW3lorfMVfOSKmZ66pjQ/tDi4CiU/m9CKmdY
-X-Received: by 2002:a05:690c:30c:b0:80c:16ad:2f16 with SMTP id 00721157ae682-834932f695amr34089177b3.8.1786638872962;
-        Thu, 13 Aug 2026 09:34:32 -0700 (PDT)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-20.dlp.protect.broadcom.com. [144.49.247.20])
-        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-836baf07381sm121277b3.5.2026.08.13.09.34.32
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Aug 2026 09:34:32 -0700 (PDT)
-X-Relaying-Domain: broadcom.com
-X-CFilter-Loop: Reflected
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-930b571432fso115492285a.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 09:34:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1786638872; x=1787243672; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=er5DRGv9RBWWCyOmoSI2svQn2A2+M6brn7eWG6JBVlI=;
-        b=VeNPbwy+cWnJGcBMaCWEmUDteaG3J/3m7VcIquF645Bvi7jRR3KFfQJAQfaR9FX6n4
-         9P3CCf0VDo53Wj6x4znkxqHNLxGr7+nvVI9EataDtpbiZLNctJSRVhO1+K6xj/GZlgKJ
-         AIVnnmMoEnanag+NJZ2wfaULMLh82YTQ2sSKw=
-X-Received: by 2002:a05:620a:3726:b0:936:a184:3cf3 with SMTP id af79cd13be357-936c064fb1fmr644759685a.10.1786638872145;
-        Thu, 13 Aug 2026 09:34:32 -0700 (PDT)
-X-Received: by 2002:a05:620a:3726:b0:936:a184:3cf3 with SMTP id af79cd13be357-936c064fb1fmr644752585a.10.1786638871669;
-        Thu, 13 Aug 2026 09:34:31 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-936cdf54ce8sm21460285a.4.2026.08.13.09.34.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2026 09:34:31 -0700 (PDT)
-Message-ID: <4fc52c7d-85eb-40ec-9e90-2a20f194c64f@broadcom.com>
-Date: Thu, 13 Aug 2026 09:34:29 -0700
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="hCuPFy0j"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CpkOsOvst5JvLmhL+c+672Q0x5DG50CETf3zvgSmc+aFDuJzu80Th416YVCAbwkA5kQaJUrQxTI4abS4LUrgbAypipZGJBvzg443jDOhMB+q3sAyo+BMs09/6ljPp2k+Opf5Avfv2GiFroOPBJBRoWnbVyT6BZtQLjyO3mDykFEbh1pFAahq6BvSdM61gAcbnWKpjLsvf4C1NRX3bLWjTadXAd1RzeYwlxklaHB5D6MRm3IfWGQCbGeRPleJj9N14xg01dQLaA3vqevIzEe3sGubzQFMpZlwRF3q/tAtejcQ2pG8l7JanHg7aNaSfrh7Ho8YfgwLh2n8Zb2VuOJjyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=X844hANN/nq4cZrXn8srmcUygu9fU94wsVrZNfaNruM=;
+ b=GLaPk+QIl1LROIodMSjN63PdaXm8A87Kra9krhiDgwo1qlpSvvNMwSTpqOaR/0FZtjfoTh9Ade8QzEROyU4GCyOd+k6md7hq9LzcuSj5wy18TocFgZROBUwri0F3FcZyQYOerByP9YyCXVTtQnYHm2Io7uVVbwQDzz5AowVWgxLjvZOWeAi7q4ccvimAU9oKQN6zTC2fR54y6YzDvW9HV2+O63sxyfUuDp/ewjxabFbOCsxITN1CMjUbwuakP3wonnrjLF4rvhEqNwKYcqUA1yM+lfUaKbTtBVdRi4OUoRr4AWSOxqtjsr1Q9NEro0GF97sCeJMuHsI23lBKw0evBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=oracle.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=X844hANN/nq4cZrXn8srmcUygu9fU94wsVrZNfaNruM=;
+ b=hCuPFy0jQ2kFqIn1NhMdPOYuvpooPAgqadeiN/qkqngMZVuTyVlX5WeTgIYhKdImZZum/YAC8HBbNgBRKYdnMpmj8zNf+VQtPj1Sa2h1gEL02dPbYZlikTf3ezlnqjRMq1hyN/oTd26qCvk2lkCl2ueox8x1FB9PIoyggBvBK1f4pElebgGJsP4aVrROCd4x+2/+AaLoVuFHGwAGbMLIi+AacYqH20Mic9RoFyp2GrCidMj379eeVCro4RAcmcv0qRx0yEcInzbP+o6KhROMPwnp+UE8vF+nWur7TfBcbt6vo99RCQ7HpJJaN+u4yMiV/YVqzJRjn2234YRbeVSA9g==
+Received: from SJ0PR03CA0137.namprd03.prod.outlook.com (2603:10b6:a03:33c::22)
+ by SA1PR12MB6728.namprd12.prod.outlook.com (2603:10b6:806:257::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.13; Thu, 13 Aug
+ 2026 17:02:13 +0000
+Received: from SJ1PEPF00001CE9.namprd03.prod.outlook.com
+ (2603:10b6:a03:33c:cafe::81) by SJ0PR03CA0137.outlook.office365.com
+ (2603:10b6:a03:33c::22) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.315.14 via Frontend Transport; Thu,
+ 13 Aug 2026 17:02:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ SJ1PEPF00001CE9.mail.protection.outlook.com (10.167.242.25) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.339.3 via Frontend Transport; Thu, 13 Aug 2026 17:02:13 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.46; Thu, 13 Aug
+ 2026 10:02:00 -0700
+Received: from drhqmail202.nvidia.com (10.126.190.181) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.46; Thu, 13 Aug 2026 10:02:00 -0700
+Received: from build-bwicaksono-noble-20260804.internal (10.127.8.11) by
+ mail.nvidia.com (10.126.190.181) with Microsoft SMTP Server id 15.2.2562.46
+ via Frontend Transport; Thu, 13 Aug 2026 10:01:59 -0700
+From: Besar Wicaksono <bwicaksono@nvidia.com>
+To: <john.g.garry@oracle.com>, <will@kernel.org>, <james.clark@linaro.org>,
+	<mike.leach@linaro.org>, <leo.yan@linux.dev>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <peterz@infradead.org>,
+	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>
+CC: <linux-tegra@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<tmakin@nvidia.com>, <vsethi@nvidia.com>, <rwiley@nvidia.com>,
+	<skelley@nvidia.com>, <rajjoshi@nvidia.com>, <treding@nvidia.com>,
+	<jonathanh@nvidia.com>, <mochs@nvidia.com>, <sauravsc@amazon.com>, "Besar
+ Wicaksono" <bwicaksono@nvidia.com>
+Subject: [PATCH 0/2] perf vendor events arm64: Fix Tegra410 Olympus PMU events
+Date: Thu, 13 Aug 2026 17:01:53 +0000
+Message-ID: <20260813170155.1156593-1-bwicaksono@nvidia.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] perf: Add Raspberry Pi AXI PMU driver
-To: Ian Rogers <irogers@google.com>, Peter Robinson <pbrobinson@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- mark.rutland@arm.com, Peter Robinson <pbrobinson@gmail.com>,
- u.kleine-koenig@baylibre.com
-References: <20260812002728.2283079-1-irogers@google.com>
- <20260812052417.2361040-1-irogers@google.com>
- <anwuYYxLFbtDmmHx@willie-the-truck>
- <CALeDE9P1xZonVnZDExR_hMafd4mxahkjBVTDLJenQ6DKW5MSHA@mail.gmail.com>
- <CAP-5=fXd2HETe-484Pe5wMTGPiXbLheMaW6ZDpdD+YCtKoBHVg@mail.gmail.com>
-Content-Language: en-US, fr-FR
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <CAP-5=fXd2HETe-484Pe5wMTGPiXbLheMaW6ZDpdD+YCtKoBHVg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+Content-Type: text/plain
+X-NV-OnPremToCloud: ExternallySecured
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE9:EE_|SA1PR12MB6728:EE_
+X-MS-Office365-Filtering-Correlation-Id: 449fa327-0f1f-4e2f-a333-08def95c9ee6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|82310400026|1800799024|36860700016|23010399003|11063799006|56012099006|3023799007|18002099003|10067099003|921020;
+X-Microsoft-Antispam-Message-Info:
+	mW2Qq5BLX8JSrzEdofLhuT/sSZ53xxjxWavdvegJguOYI8l490VuPSRVF7mmUxtirrTl5LgcyiNnhkyqKu+RgXCMnsyGJne6EhOSvJG4QVEzsEQ8KsjldT3leKi3WO9+UgELKlDUUSzB0PmX9kiCptSVIems1mor7E6THfYD0XZ68nrcK/R/Wi47AGGgJPjO1HsjRIaG7HQ7ZUROCBgsAz70PuIqLFNGOjZDXLC3KsZZ8WsXqF7Oo3kp4KsTZTlDM9PMEqQgIvntSblQwHK1QeJvkg/EJll6zupMWpKLCM9re/nBcajyq03OXTeUy1lCrFJG7QihfHSkA2nN5t3/+dp6zqsevP4OflLG7uUvCt4KwObaUWaxnzMxBHG1F9+QvjO/FLstFwn3/nDZHyizYhm1Br8LSaQKCfWo7Kfjirn3etD50mt6G4PGigloG9iYdtNpoP/OfElbFMM9mhIjoLCI/HZmeSak73NUdDuVBIToqMSHe+0UMz/++VTZwi7ttmZMX1J44pczpzymzm3T5wAtiwUOm8FXYVJWjsOEtIUSAUWeoksnI1ZAICECU5STMnGSedbU6jJpuTjezQkSEn92+SQQ3Mp+IKoPp/ZzivT3f6EGIZBswo3mjySq7yrtwKy8ZsZTkQdWRrWhbL6o1bL1xa+gODTTOyqlqDA4vMPzblCtvzebT0BGhNR2YxnZItpD6JvFJdZwqso7ciVImxFYzr+5qZ0BxQNZpLmi0DzPgubc9eiDUwJ/NBT4hBrg
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(82310400026)(1800799024)(36860700016)(23010399003)(11063799006)(56012099006)(3023799007)(18002099003)(10067099003)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	3b4TWKwQpsraS0OGpI6jcDlGYBrORwJlIV/+qb6U2I21gILKJtjRDtW1jProSmODc3gsKRBj4212RuSjsCSdQ64Uk+SUwYYjs18sZ89+NQ1CTn5WLymyNIwhtIJBlS3h/b47pdSIWz907sGZMDqwi2jjZvSU21YFb/oW32QnO9oFaxpn1cg00F4mXnxML7eOTDvFOPCN7fhrPQ4wqHxGQ5YlxcYOGbGvQgFEAe/AT/amD/731Ix9bBsbnZ0CMd8bboK2py/nVXFxZIS+ThzCidLfEH6MsS0paEpFAxhm1vv6LTUwQkgm0jN5SEAgu9D8MKFJejv5ea8vKehNAODPIsM5ubIhliKZdhbAo1T0O/evGdoD1s2tcRPOSMgFb4/zbTwmJJo32/1ZkyZGrC4Ck1PEJy/2FVPwXZ8MlDS932JiBfpBQ7eQ7yhVI93rxGx2
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Aug 2026 17:02:13.1258
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 449fa327-0f1f-4e2f-a333-08def95c9ee6
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CE9.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6728
 
-On 8/13/26 06:48, Ian Rogers wrote:
-> On Thu, Aug 13, 2026 at 2:08 AM Peter Robinson <pbrobinson@gmail.com> wrote:
->>
->> On Wed, 12 Aug 2026 at 09:28, Will Deacon <will@kernel.org> wrote:
->>>
->>> On Tue, Aug 11, 2026 at 10:24:15PM -0700, Ian Rogers wrote:
->>>> This patch series adds an uncore Performance Monitoring Unit (PMU) driver
->>>> for Broadcom AXI system and VideoCore VPU performance monitors found on
->>>> Raspberry Pi SoCs (BCM2835 through BCM2712 / Raspberry Pi 1 through 5).
->>>
->>> Why are you sending four versions of this patch series, at -rc7, each in
->>> reply to the previous one? Nobody is going to review that.
->>
->> I'm also wondering why this is called rpi_axi_pmu where it very much
->> looks like Broadcom IP, and is possibly used in other Broadcom SoCs,
->> Florian can you confirm what this driver should be called?
-> 
-> I'm somewhat agnostic regarding the naming, and having a more general
-> driver strikes me as a good thing. Fwiw, I based the name on a
-> somewhat similarly named non-perf-compliant driver:
-> https://github.com/raspberrypi/linux/blob/rpi-6.18.y/drivers/perf/raspberrypi_axi_monitor.c
+Fix two issues in the NVIDIA Tegra410 Olympus PMU event definitions:
 
-Given this uses the Raspberry Pi firmware interface, having 
-rpi/rasbperrypi in the name is sensible IMHO, but the IP is technically 
-from Broadcom AFAICT, so using a bcm2835 prefix wouldn't be far off.
+  - Correct the swapped MetricGroup assignments for the L1 data and
+    instruction prefetcher metrics.
+  - Correct the name and description of implementation-defined event
+    0x0197.
 
-Ian, I am really having a hard time following all of your frequent 
-submissions, would you mind waiting for feedback before spinning new 
-versions?
+Patch 1 resends the original patch from Saurav:
+  https://patchwork.kernel.org/project/linux-arm-kernel/patch/20260511210832.91408-1-sauravsc@amazon.com/
 
-Thanks!
+Besar Wicaksono (1):
+  perf vendor events arm64: Fix Tegra410 Olympus event 0x0197
+
+Saurav Sachidanand (1):
+  perf vendor events arm64: fix swapped MetricGroup for Tegra410 L1
+    prefetcher metrics
+
+ .../arch/arm64/nvidia/t410/metrics.json       | 28 +++++++++----------
+ .../arch/arm64/nvidia/t410/misc.json          |  6 ++--
+ 2 files changed, 17 insertions(+), 17 deletions(-)
+
 -- 
-Florian
+2.43.0
+
