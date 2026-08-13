@@ -1,227 +1,411 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25FE3EBF14
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 17:56:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.179
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786643796; cv=pass; b=DI37clvOlKv8wh78Ak65NbNeuwOxqrwh1xk2cd8UrTbVQHVTbCTPcA4Mw+foR1wqg8Yl+YmFMhCwARAxzuxpTjUcGR+8agNjNH62nZo/et02ze+QbSF7ZHvy3HrKHYrcN4Azc3OtO0dWS1SCZPFxaqVlDffJMn24qUHoXQlk6V0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786643796; c=relaxed/simple;
-	bh=oGxJ52G0965+naj8sthJZ/JUdTvHZgUdBTpUQ5K5ulc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e0bs3M/mmX8wVLITTmeH2PXnUX1zIyZfVxa1PxPEsRVi6xjvZtzJe3d0yStJaHXK0wCIPt++zhEn7PXVhospMC7efgBEnyWGlNP4NCeL9BeELgabg5bdvjNk9kvsdECHtDKc/A4YqSDUr9VTiqraUKUzJJJioI350Ly3+GbMsKA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G6gaVk6X; arc=pass smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270043438A7
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 18:41:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786646477; cv=none; b=fTKCt+QE1eGSVy8SYGCZg4w69W+VmwqcIFgAfT+ddq7SCo7peFAyrYAb5Mba6N0FHEnZSqK1AXQjGO7uck06++3fWEs7n+Zvygu+OKxZ4StaQV1L7EfWjc2NVCty7JRyAxvoAF8qbiYrD3dvKzbFryndYyeF7U1LQETBbaDam/A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786646477; c=relaxed/simple;
+	bh=+eQcDQro21UZz0fU7XppiX0kX5oUTbmtS3llDqbgJ8A=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=rw5psCeCjv6xbEG5/12NN7CCkQcVIly1HWyPclGQMTJhFbzwZUk0q+BlV+CAJihbsy79WvEC4mAzDbxXA3meHnJ18SaNd53ff9IoBy1iATWZEXRdMTAHLKSu6+X0Gz+8xNrByNERMjLEgrzzMF7hFbqQ/rTuscggyPiIPBbsMts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PnKIlUck; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G6gaVk6X"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2cab97c86bdso10035ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 10:56:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786643781; cv=none;
-        d=google.com; s=arc-20260327;
-        b=UaKtbfpae9VxS8yB0Iy5J29uGBUFBgvpsOyQVtPNJmKE4Vz0d9ImP1zKWaAThfgn96
-         KkJpGbMXMuhHsadibKUhfzljkPLYnN8Eb2fq1cYjn85WRzBNEtqxvG1w1rHwCRQJmwWw
-         JaanrLpe6qQS0UspDoWG328K8syDiqlAhFKX6GGC/tFhiGfL0rv3Vrq/izDwCyygKNWS
-         FhJo7z2vGuyWrIIpIWJTC1lfw123BM2hHMdXfiuO0s51RyUBUV8eSTq7bro1+poT2An2
-         nRB12xXAzz56G4eak8RJk6/e4V6hYyVvysRzB5kQW3NJTb+LXLA4vf/PtIhH0+EJfgNg
-         BL8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=oGxJ52G0965+naj8sthJZ/JUdTvHZgUdBTpUQ5K5ulc=;
-        fh=VrAcEuDF5Sw05xJzcxz9M8S4yjI48LA3KSEqy8oxTYk=;
-        b=YMY8sswHcdWLupb6ibWE5On44M10rYl3BI3FyifGNp2FvJmK24kvrBFhA5J/WwVQnN
-         pE/PcDv7wxXFPP9en7To5Ya/SB+cfijPo55CN1rsSRZSZAn9MP6+Iq6Y3ntXwlxBqteq
-         zEtPsBiZLQmJvKUO+8gXsoCcUIKPv7QOY/xYSvSu8/zbcARM4i9EaTypvHyqyIa8QXCe
-         o33X3S9tr9PXWaiWWepNsghMe7THoBL60QqyxakC7OwQhq5yJKgYRM9oNixiq9rEQo/T
-         JH6yPMmiCou/ibL8zT1hXtn9K5zQPqJX5kOfvu4ADCz3BhiSrNSzzJKjfN9DENu0tPK4
-         L1tg==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786643781; x=1787248581; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=oGxJ52G0965+naj8sthJZ/JUdTvHZgUdBTpUQ5K5ulc=;
-        b=G6gaVk6XzuDh3RS5e1FSNEtaCCHWh4JwXsnW49AdG1bLw6cJK6vASVdn/zfP+v6FG4
-         W9Di6Ed6h1TzW+krUsaGizkgfcavM3e3U9gHiH/iY1U2gtf6gcZHjVZgF2Qu3v3weK92
-         Hf14S4Fo4BaatTUdn1AQxNYklPrdrNEkK06vFvZ+UQdVoFUjYDddCu4ag1BBvTXkw6V9
-         D3MnzJr2t1O1VKuGcGJMZAdybgXY91YW0u/2Ddvwg20+Z2VgbYrdjp6O2AdgPxbXvO4+
-         F8mNudiBX1MlDr866JT1PDNpI7smGUVGComjFvylDVr5jD7j/qA/CTuYYjHWgdFDQOH5
-         hgyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786643781; x=1787248581;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=oGxJ52G0965+naj8sthJZ/JUdTvHZgUdBTpUQ5K5ulc=;
-        b=XWEo5miCgU4Y9KuxOXaiPiCU3dwpNdGXjQDdmdrXZXm6epFdghxb6LQfeH1I+kq3mp
-         OmGj+CWd60f90iQpIC+SidzRPIeLyhwGfTtu/Sn/PfOrsURfhVVOEdjhYy82F49QB6eC
-         rIJMaMk/mdReJ7pevJcgOWKHT2vHn+4T26+5EXt7nyKfbnuHgpX/JIVaY1nA3Qmnm0c6
-         86F0fcaFbVQM3bng7NhiktvRapHHyQHsgOSTrq3fAC+6Vo/CcTGuz9/I+wo6LBR7bzp5
-         9wvsdwNZRg/CXnbqoj1bSOlsUMiiNxpgEzK4azVan3C49jA/MIdGuNW2FnGRtCHgDP1N
-         zU9g==
-X-Gm-Message-State: AOJu0YxHiytBQc5y1y2oVUqfCPs0FjeiRjpMg5U71Kiu1Bnus4Ua7/E+
-	Gady+TurOzhZgYtIipgi1ARKXTCkwNSKp074GxYpHWELqL3r0v30534u3sUqj7dE6ZyXsAC5Qkg
-	H4wqqNp1//JgXek6yPg/xRhzrSvPkULUZ9MwxN7RLnbpQJTE5MeBNexY6Gp8=
-X-Gm-Gg: AR+sD12Uh10ye/PJdCqmLSxWCzh75txV+3/SjzNjNJ0GzNoap7XOraACkMgZjfvuh8T
-	TxosYH2h6maZssx/IzBS4cFMXeXK8cfEVT0egQquoixVl8IsJYi2/k2uuj15kmD6PwzVpXQ+n3F
-	367bRqOM25YNCFiDoFmLByNQRGSLac5xuBfYUcuR8mI+sCzxsrftUwXzHYP9IVc3UElJZM8g9Cl
-	q65OO7jZr0nP8oOImzsWdyj0q/B8SRTr6il18Wsd43AinlQWwRsWgG1exGr+UK/ryIaCoD89BQT
-	t8SKtjpj7WRwtEyQ+X+D5Lk/6Z+S4Bdx8nk179Sarbf2WA==
-X-Received: by 2002:a17:903:22cb:b0:2c0:defb:557e with SMTP id
- d9443c01a7336-2d3af569557mr618275ad.1.1786643780745; Thu, 13 Aug 2026
- 10:56:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PnKIlUck"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67DFXK7C1630953;
+	Thu, 13 Aug 2026 18:41:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=UOyfNQ
+	tEIMOf3FPpUb2NV1Iy+qUg33zY+KwTr0rHqiQ=; b=PnKIlUckzAGHeBRyhuyokn
+	RA5WzNpVWXBdVJypYSCMhosz9IJuvkIidSUg9w1AX64XiJp79px7LK3dVXAlZtQ7
+	kUkCQlZRahxGHZZz+5aM+WCice5maAlmUEaweUMUBbnt5/TIAvtf6gpRe9YCCaRM
+	ZxC3ju/Mz2eL7/gHNOCM1xm29oTppQnipnbU72vKmb9Hb+DKQHGK6s7eW4Kn789a
+	x5zbuQeZEzGjZVVEXmlgRoTqQYdAxcQnToqiFbxp1Vet4mA5Xcv+iCpShbumkfd/
+	H2Jsxitkfj56aC11rB5ZlhP8UmzSlLe0jSsOVYbU6HG1SGnjcwa+1UACLvy1bvJA
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4fyb241rdg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Aug 2026 18:41:04 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67DIQMGN014424;
+	Thu, 13 Aug 2026 18:41:04 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4fxg9hc5jk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 13 Aug 2026 18:41:03 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67DIexdb14156188
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 13 Aug 2026 18:40:59 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4D00420040;
+	Thu, 13 Aug 2026 18:40:59 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 80F5E20043;
+	Thu, 13 Aug 2026 18:40:56 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.124.209.240])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 13 Aug 2026 18:40:56 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260812002728.2283079-1-irogers@google.com> <20260812052417.2361040-1-irogers@google.com>
- <anwuYYxLFbtDmmHx@willie-the-truck> <CALeDE9P1xZonVnZDExR_hMafd4mxahkjBVTDLJenQ6DKW5MSHA@mail.gmail.com>
- <CAP-5=fXd2HETe-484Pe5wMTGPiXbLheMaW6ZDpdD+YCtKoBHVg@mail.gmail.com> <4fc52c7d-85eb-40ec-9e90-2a20f194c64f@broadcom.com>
-In-Reply-To: <4fc52c7d-85eb-40ec-9e90-2a20f194c64f@broadcom.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 13 Aug 2026 10:56:06 -0700
-X-Gm-Features: AUfX_mwatuYIj4f9Cb7rMpohs4H2M2BSR-5YKqD8oWMTtc2hMKt-hXpbQb43pAE
-Message-ID: <CAP-5=fU1y=NqqpRWTDyhvr1KEBnGNA8=b9XQvJLVie1AF-Ke0w@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] perf: Add Raspberry Pi AXI PMU driver
-To: Florian Fainelli <florian.fainelli@broadcom.com>, Peter Robinson <pbrobinson@gmail.com>
-Cc: linux-perf-users@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
+Subject: Re: [PATCH V5 4/6] tools/perf: Add powerpc callback support for
+ arch_perf_record__need_read
+From: Athira Rajeev <atrajeev@linux.ibm.com>
+In-Reply-To: <ecbfbe14-5202-4efe-b829-1eb2590cceaf@intel.com>
+Date: Fri, 14 Aug 2026 00:10:44 +0530
+Cc: acme@kernel.org, jolsa@kernel.org, maddy@linux.ibm.com, irogers@google.com,
+        namhyung@kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com,
+        tejas05@linux.ibm.com, tshah@linux.ibm.com, venkat88@linux.ibm.com,
+        usha.r2@ibm.com
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <04E662EC-0CC0-47C1-91B9-A96BA93496A7@linux.ibm.com>
+References: <20260807144135.2607-1-atrajeev@linux.ibm.com>
+ <20260807144135.2607-5-atrajeev@linux.ibm.com>
+ <a6424439-d42e-4f62-92ee-525c7f2d4277@intel.com>
+ <00D2E602-E43D-4D23-9304-133263424B3B@linux.ibm.com>
+ <ecbfbe14-5202-4efe-b829-1eb2590cceaf@intel.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+X-Mailer: Apple Mail (2.3864.300.41.1.7)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Reinject: loops=2 maxloops=12
+X-Authority-Analysis: v=2.4 cv=XqfK/1F9 c=1 sm=1 tr=0 ts=6a7e0fc1 cx=c_pps
+ a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
+ a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VwQbUJbxAAAA:8
+ a=VnNF1IyMAAAA:8 a=QyXUC8HyAAAA:8 a=YqXEhictXvq-jaN3TSsA:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODEzMDEzNCBTYWx0ZWRfXxp2PltBwTypM
+ 5DpAjPSPbjU3KKWniuu7789f8k1bfb3/dzYiQ1vJUHok7Ro/5saJTnbgqujbqvpA7qsSzPhzvjw
+ I3OwSWQU/lyegb21+kWkOcu7eGJF+WF8zWebEE54Hv5ytG0jRusVptgxa9ChioO7JQaw39OcJQI
+ 3yJ2feodY/ShfR4Lz+D9zXCGpRCjOFUH6jrgNoS3s8XGAv7Vd0Wf4bYl6oQTmNYOHKL0SZUIefz
+ XQIM0NvfiIdzG29ndTtWSRyVJWydj4lLRJSPu+Yq/yCaboF9rvyw7mnK+iejeeRqQ7F2DSMPrTV
+ nZOx70CVJmoTZlq7oCyaOVfg4iS3C69R2B11QPg0QIEpmJlW6ArMD517I7ukDfLpLjydSNgG91e
+ v17gzf70vXeoEnzqU11vBNj36blNV17v6Dik0ff6KF/y3sVZnmXva1XtYJpBLRfYd0U5b3QkQL6
+ 7J0ckOdJefTXiu04h0Q==
+X-Proofpoint-ORIG-GUID: eksx-qXFT87AT60x2F9Gi-tRo6lp_x64
+X-Proofpoint-GUID: wGcWRztVTVfsf79tVCcPOl_j_j-dHSQK
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODEzMDEzNCBTYWx0ZWRfX7MXF6FtndAEf
+ cOm3A0LhNEMrSkrJzqORYlOB/IFxL1oaiIlcrvXeAEZJIbc9AsrE4Q0wJoGc2NkzGvjzBtg6r6P
+ 2LrrhPZvDM+AfKz9jZOR2130sOi/OUs=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-13_05,2026-08-12_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 spamscore=0 adultscore=0 malwarescore=0 clxscore=1015
+ suspectscore=0 priorityscore=1501 impostorscore=0 phishscore=0 bulkscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608130134
 
-On Thu, Aug 13, 2026 at 9:34=E2=80=AFAM Florian Fainelli
-<florian.fainelli@broadcom.com> wrote:
->
-> On 8/13/26 06:48, Ian Rogers wrote:
-> > On Thu, Aug 13, 2026 at 2:08=E2=80=AFAM Peter Robinson <pbrobinson@gmai=
-l.com> wrote:
-> >>
-> >> On Wed, 12 Aug 2026 at 09:28, Will Deacon <will@kernel.org> wrote:
-> >>>
-> >>> On Tue, Aug 11, 2026 at 10:24:15PM -0700, Ian Rogers wrote:
-> >>>> This patch series adds an uncore Performance Monitoring Unit (PMU) d=
-river
-> >>>> for Broadcom AXI system and VideoCore VPU performance monitors found=
- on
-> >>>> Raspberry Pi SoCs (BCM2835 through BCM2712 / Raspberry Pi 1 through =
-5).
-> >>>
-> >>> Why are you sending four versions of this patch series, at -rc7, each=
- in
-> >>> reply to the previous one? Nobody is going to review that.
-> >>
-> >> I'm also wondering why this is called rpi_axi_pmu where it very much
-> >> looks like Broadcom IP, and is possibly used in other Broadcom SoCs,
-> >> Florian can you confirm what this driver should be called?
-> >
-> > I'm somewhat agnostic regarding the naming, and having a more general
-> > driver strikes me as a good thing. Fwiw, I based the name on a
-> > somewhat similarly named non-perf-compliant driver:
-> > https://github.com/raspberrypi/linux/blob/rpi-6.18.y/drivers/perf/raspb=
-errypi_axi_monitor.c
->
-> Given this uses the Raspberry Pi firmware interface, having
-> rpi/rasbperrypi in the name is sensible IMHO, but the IP is technically
-> from Broadcom AFAICT, so using a bcm2835 prefix wouldn't be far off.
->
-> Ian, I am really having a hard time following all of your frequent
-> submissions, would you mind waiting for feedback before spinning new
-> versions?
 
-Hi Florian,
 
-I'm very happy someone from Broadcom is engaging with my driver :-) So
-on linux-perf-users the norm is to address Sashiko's feedback, and
-once that is down to an effective zero for humans to come in. For the
-majority of the patches what Sashiko is complaining about are races
-during teardown, potential hot plugging races, etc. Note that this
-driver is more advanced than ARM's main PMU driver because it supports
-hot plugging, thereby not breaking the perf tool were someone to hot
-plug a CPU. Anyway, between versions, things are about 98% the same
-and I explain the differences in the cover letter. For the v11 patches
-Sashiko has 1 medium issue left regarding hot plugging:
-https://sashiko.dev/#/patchset/20260813142608.2954099-1-irogers%40google.co=
-m
-This is a substantial reduction from the v1 patch that had 13 issues
-with 1 being critical:
-https://sashiko.dev/#/patchset/20260811083828.2057695-1-irogers%40google.co=
-m
-For the v11 review, since the boot CPU and the CPU hosting the PMU are
-both CPU 0 and I don't believe it is hot-pluggable, this issue doesn't
-really matter. However, having a robust driver in all respects is
-still desirable, and I plan to address the feedback. I need to spend
-most of today not having fun at the hospital, so I can hold off fixing
-this and sending out a v12. My point is that v11 and v12 would be 98%
-the same but v12 would likely include an "if" statement to address
-Sashiko's feedback: "Does this early return leave the PMU permanently
-bound to an offline CPU if a hotplug event occurs during probe?". I
-suspect your review wouldn't focus on hot plugging races, I am much
-more concerned that the counter reading logic is valid.
+> On 13 Aug 2026, at 1:17=E2=80=AFPM, Adrian Hunter =
+<adrian.hunter@intel.com> wrote:
+>=20
+> On 13/08/2026 10:36, Athira Rajeev wrote:
+>>=20
+>>=20
+>>> On 13 Aug 2026, at 11:52=E2=80=AFAM, Adrian Hunter =
+<adrian.hunter@intel.com> wrote:
+>>>=20
+>>> On 07/08/2026 17:41, Athira Rajeev wrote:
+>>>> Implement the arch_perf_record__need_read() architecture-specific =
+hook
+>>>> for powerpc in arch/powerpc/util/evsel.c.
+>>>>=20
+>>>> The HTM kernel driver sets event->count to the number of records =
+still
+>>>> staged in its internal buffers (total_size / record_size), and to 0
+>>>> once the stream is exhausted.  This hook reads that count for every =
+open
+>>>> htm evsel via perf_evsel__read() and accumulates the values into
+>>>> total_pending_records.  A non-zero total means at least one HTM =
+target
+>>>> still has records pending; the recording loop added in the previous
+>>>> patch will perform another mmap-read pass.
+>>>>=20
+>>>> The drain uses a two-layer safety check: event->count detects =
+records
+>>>> staged by the driver, and record__bytes_written() in the drain loop
+>>>> confirms data was actually moved into perf.data.  This combination
+>>>> handles the case where the driver count is briefly stale while =
+hardware
+>>>> is still flushing.
+>>>>=20
+>>>> The implementation scans the evlist using evsel__pmu_name() to =
+identify
+>>>> HTM events by their kernel-assigned PMU name rather than the
+>>>> user-visible event name, preventing false matches.  It iterates the =
+fd/
+>>>> sample-id xyarray, and skips any evsel whose fd and sample-id =
+arrays are
+>>>> mismatched to avoid reading stale state.  When the accumulated =
+record
+>>>> count reaches zero the hook returns 0 and the recording loop =
+proceeds to
+>>>> disable and close the events.
+>>>=20
+>>> This looks like the proposed driver:
+>>>=20
+>>> =
+https://lore.kernel.org/all/20260701083806.79358-1-atrajeev@linux.ibm.com/=
 
-I'm on some sick leave and this work isn't part of my job. I am trying
-to finish it before someone might misconstrue my sending Raspberry Pi
-patches as me thinking this is a part of my job. While the mailing
-list you are coming from may experience low volume, it is much more
-the norm on linux-perf-users
-(https://lore.kernel.org/linux-perf-users/), where I am a significant
-contributor and Linux MAINTAINERS file reviewer. I do my best to avoid
-Sashiko catching issues (bisect builds, hardware testing, scrutinizing
-code, Chris Mason's review prompt analysis and local Sashiko runs) but
-I think with the way models are the churn is something of a feature of
-the moment. I expect that when the next level of AI agents (which I'm
-using to assist in writing the code) emerges, the number of versions
-and churn will reduce dramatically. I don't think we should ignore
-Sashiko's points, and my own time constraints mean I want to send
-things out ASAP in order for there to be the best driver I can see to
-on the mailing list. Suggesting a week-long reply delay is so silly
-that I was amazed it was made in this thread. I can only apologize for
-the distress receiving an email is causing people. Please print out my
-picture and abuse it. Come to Linux Plumbers in Prague and use one of
-the 3 talks I'm giving as an opportunity to throw a microphone at the
-back of my head and never issue an apology (fwiw, this happened to me
-while hosting a perf related mini conference at LPC in Vienna and so
-the abuse isn't just verbal).
+>>=20
+>> Hi Adrian,
+>> Thank you for the review.
+>>=20
+>> Could you please help clarify which specific aspect of the driver =
+breaks the perf ABI? Is it the sysfs format ABI where encoding raw =
+hardware topology identifiers (nodeindex, nodalchipindex, =
+coreindexonchip) are used as perf_event_attr.config bit fields?
+>> I am trying to confirm so that I get your feedback correctly for =
+reworking on changes.
+>=20
+> This "draining" and "read" usage looked unusual, so I asked AI:
+>=20
+>  I have just applied the patches for powerpc htm kernel driver - they =
+are now the last 5 patches committed. Examine the design in
+>  comparison to how other PMU drivers are implemented. Does it violate =
+the kernel API for PMUs?=20
+>=20
+> It said yes.
 
-Wrt will the code be merged, etc. You can bring a horse to water but
-you can't make it drink. I believe there is significant enthusiasm for
-the driver:
-https://www.phoronix.com/news/Raspberry-Pi-AXI-PMU-Linux
-But the number 1 refurbished laptop is a MacBook M1, which one would
-think is an excellent candidate to run Linux, yet its PMU driver
-appears to have little maintainer effort applied to help it land:
-https://lore.kernel.org/linux-perf-users/20260101-apple-cpmu-v10-0-48812c52=
-9ffc@gmail.com/
-Everyone is busy and I hope to be respectful of that, but this is work
-I'm giving away for free that I genuinely think will improve things.
-If you want to read the patch or email tomorrow I don't mind, it is
-just an email. If you hate me and want all my emails in /dev/null,
-that's your choice. Maybe the patch only ever ends up in the Raspberry
-Pi's flavor of Linux, that's fine with me. Maybe it is just a driver
-people have to pull from an email thread like for the Apple M1. I'm
-genuinely trying to be helpful while doing my best to smile at the
-"you don't know how to use email" and whitespace vigilantes*. I do try
-to privately escalate issues with more senior members of the Linux
-community when I think the goodness of Linux for users is being
-impacted, such as drivers for popular hardware being ignored. I can
-only do my best, but people I work with avoid engaging with LKML and
-the "reviews" so far on this patch series are a good example of why.
+Hi Adrian,
+Thanks for taking the time to check this.
+
+I agree with the assessment. The core problems I understand are:
+- pmu->read() issues hcalls that stop the hardware trace and dump the =
+data, so any read() call ends up
+silently draining and stopping the trace =E2=80=94 which isn't what =
+read() is for.
+- event->count is being used to signal "more data pending" which breaks =
+the expected semantics.
+
+I'm going to rework this rather than continue posting on top of it.
+Here is my rework plan for your review:
+
+Kernel side: workqueue-based approach:
+-  pmu->read() becomes a no-op. No hcalls, no side effects.
+-  pmu->stop() issues hypervisor call to freeze the hardware buffer, =
+then schedules a
+     work_struct (htm_drain_work_fn()) that runs in process context and =
+drains the frozen buffer
+     chunk by chunk into the AUX ring via perf_aux_output_end(), backing =
+off on -ENOSPC to let
+     userspace consume between chunks. event->count is no longer used as =
+a flow-control signal.
+
+Tools side:
+-  arch_perf_record__need_read() hook and record__final_aux_data() are =
+dropped entirely =E2=80=94 no changes to builtin-record.c.
+-  =E2=80=9Cread_finish" callback is implemented in the HTM =
+auxtrace_record:
+      During normal recording (evsel->disabled =3D=3D false) it returns =
+immediately.=20
+      At session teardown, evlist__disable() sets evsel->disabled =3D =
+true before the=20
+      final record__mmap_read_all() call.=20
+      The read_finish callback detects this and polls aux_head (via =
+perf_mmap__read_head())
+      in a loop, yielding delay between polls, until the AUX head stops =
+advancing =E2=80=94 signalling the
+      workqueue drain is complete.=20
+     This gives the kernel workqueue time to finish copying chunks =
+before evlist__close() frees the mmaps.
+     The wait has a bounded maximum, so a stalled drain can't hang perf =
+record indefinitely.
+- snapshot_finish returns -EINVAL since HTM does not support snapshot =
+mode.
+
+HTM has no interrupt and trace data is consumed after pmu stop .  Hence =
+making this read_finish callback for
+auxtrace_record to consume data.
+
+With this, data collection is moved of from .read() entirely and uses =
+work queue based approach.
+Can you please review , Does this approach look acceptable before I send =
+the updated series?
 
 Thanks,
-Ian
+Athira
 
-* If you are upset by whitespace, why not add it to the Chris Mason
-review prompts that Sashiko builds from and automate the process (you
-can see my PRs doing similar things for things like musl libc):
-https://github.com/masoncl/review-prompts/tree/main/kernel
 
-> Thanks!
+>=20
+>>=20
+>> Thanks,
+>> Athira
+>>=20
+>>>=20
+>>> breaks the perf ABI.
+>>>=20
+>>> I am not going to review any more tools patches for now.
+>>>=20
+>>>>=20
+>>>> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+>>>> ---
+>>>> Changes in V5:
+>>>> - When an HTM evsel is a group sibling (evsel->core.leader !=3D
+>>>> &evsel->core), read through its group leader's struct perf_evsel
+>>>> instead of the sibling directly.  perf_evsel__read_size() uses
+>>>> evsel->nr_members to compute the read buffer size; nr_members is 0
+>>>> for siblings, so size=3D0 is passed to readn(), which returns <=3D0 =
+and
+>>>> leaves count.val=3D0, causing the drain loop to terminate =
+prematurely.
+>>>> Reading through the leader avoids the zero-size buffer and =
+correctly
+>>>> accumulates the leader's pending count.  HTM events are always
+>>>> standalone or per-target leaders in practice; the leader redirect
+>>>> handles any grouped configuration without losing counts.
+>>>>=20
+>>>> Changes in V4:
+>>>> - No changes from V3.
+>>>>=20
+>>>> Changes in V3:
+>>>> - Use evsel__pmu_name(evsel) instead of strstarts(evsel->name, =
+"htm")
+>>>> to identify HTM events, matching by kernel-assigned PMU name rather
+>>>> than user-visible event name.
+>>>> - Remove the redundant two-pass loop (first pass to set found_htm,
+>>>> second to accumulate counts); a single pass with evsel__pmu_name()
+>>>> is sufficient. if no HTM event exists total_pending_records stays 0
+>>>> and the function returns 0.
+>>>> - Remove the dead !strcmp(evsel->name, "dummy:u") check;
+>>>> - evsel__pmu_name() will never return "htm" for a dummy:u software
+>>>> event.
+>>>> - Rename total_pending_bytes -> total_pending_records to match what
+>>>> the driver actually reports (event->count =3D total_size / =
+record_size,
+>>>> a record count, not a byte count).
+>>>> - Add #include <string.h> for musl compatibility (strcmp() without
+>>>> it warns on some toolchains).
+>>>>=20
+>>>> Changes in V2:
+>>>> - Implements the renamed arch_perf_record__need_read() hook (V1
+>>>> implemented arch_record__collect_final_data()).
+>>>> - Skips evsels whose fd and sample-id xyarrays are mismatched, =
+avoiding
+>>>> stale-state reads.  V1 had no such guard.
+>>>> - evlist__enable cycling is removed; that responsibility now =
+belongs to
+>>>> the drain loop in builtin-record.c added in patch 3.
+>>>> - File location changed to arch/powerpc/util/evsel.c (V1 used
+>>>> arch/powerpc/util/powerpc-htm.c).
+>>>> - Patch is now 4/6 instead of 4/9.
+>>>>=20
+>>>> tools/perf/arch/powerpc/util/evsel.c | 77 =
+++++++++++++++++++++++++++++
+>>>> 1 file changed, 77 insertions(+)
+>>>>=20
+>>>> diff --git a/tools/perf/arch/powerpc/util/evsel.c =
+b/tools/perf/arch/powerpc/util/evsel.c
+>>>> index 2f733cdc8dbb..2b7851c70677 100644
+>>>> --- a/tools/perf/arch/powerpc/util/evsel.c
+>>>> +++ b/tools/perf/arch/powerpc/util/evsel.c
+>>>> @@ -1,8 +1,85 @@
+>>>> // SPDX-License-Identifier: GPL-2.0
+>>>> #include <stdio.h>
+>>>> +#include <string.h>
+>>>> +#include <unistd.h>
+>>>> +#include <linux/string.h>
+>>>> #include "util/evsel.h"
+>>>> +#include "util/record.h"
+>>>> +#include "util/evlist.h"
+>>>> +#include "util/debug.h"
+>>>> +#include <internal/xyarray.h>
+>>>> +#include <internal/lib.h>
+>>>>=20
+>>>> void arch_evsel__set_sample_weight(struct evsel *evsel)
+>>>> {
+>>>> evsel__set_sample_bit(evsel, WEIGHT_STRUCT);
+>>>> }
+>>>> +
+>>>> +/*
+>>>> + * powerpc implementation of arch_perf_record__need_read().
+>>>> + *
+>>>> + * Reads event->count for every open HTM evsel by issuing a direct
+>>>> + * read() on the event fd with a plain u64 buffer, bypassing the
+>>>> + * PERF_FORMAT_GROUP path in perf_evsel__read().  When an HTM =
+evsel is
+>>>> + * a group sibling, evsel__config() sets PERF_FORMAT_GROUP on its =
+attr;
+>>>> + * perf_evsel__read() would then call perf_evsel__read_group() =
+which
+>>>> + * sizes the buffer by evsel->nr_members (0 for siblings), causing =
+the
+>>>> + * kernel to return -ENOSPC.  Reading the fd directly with =
+sizeof(u64)
+>>>> + * retrieves the HTM driver's plain pending-record count =
+regardless of
+>>>> + * group membership.
+>>>> + *
+>>>> + * Returns: 1 if more data exists, 0 if collection is complete
+>>>> + */
+>>>> +int arch_perf_record__need_read(struct evlist *evlist)
+>>>> +{
+>>>> + struct evsel *evsel;
+>>>> + u64 total_pending_records =3D 0;
+>>>> + int x, y;
+>>>> +
+>>>> + /* there was an error during record__open */
+>>>> + if (!evlist)
+>>>> + return 0;
+>>>> +
+>>>> + /* Read HTM event counts to check if more data is available */
+>>>> + evlist__for_each_entry(evlist, evsel) {
+>>>> + struct perf_evsel *rd_evsel;
+>>>> + struct xyarray *xy;
+>>>> +
+>>>> + if (strcmp(evsel__pmu_name(evsel), "htm"))
+>>>> + continue;
+>>>> +
+>>>> + /*
+>>>> + * For group siblings nr_members =3D=3D 0, which makes
+>>>> + * perf_evsel__read_size() return 0 and readn() fail.
+>>>> + * Read through the leader instead; perf_evsel__read_group()
+>>>> + * extracts the leader's own count from the group buffer.
+>>>> + */
+>>>> + if (evsel->core.leader !=3D &evsel->core)
+>>>> + rd_evsel =3D evsel->core.leader;
+>>>> + else
+>>>> + rd_evsel =3D &evsel->core;
+>>>> +
+>>>> + xy =3D rd_evsel->sample_id;
+>>>> +
+>>>> + if (xy =3D=3D NULL || rd_evsel->fd =3D=3D NULL)
+>>>> + continue;
+>>>> +
+>>>> + if (xyarray__max_x(rd_evsel->fd) !=3D xyarray__max_x(xy) ||
+>>>> +    xyarray__max_y(rd_evsel->fd) !=3D xyarray__max_y(xy)) {
+>>>> + pr_debug("Unmatched FD vs sample ID array for HTM event\n");
+>>>> + continue;
+>>>> + }
+>>>> +
+>>>> + for (x =3D 0; x < xyarray__max_x(xy); x++) {
+>>>> + for (y =3D 0; y < xyarray__max_y(xy); y++) {
+>>>> + struct perf_counts_values count =3D { .val =3D 0 };
+>>>> +
+>>>> + if (perf_evsel__read(rd_evsel, x, y, &count) =3D=3D 0)
+>>>> + total_pending_records +=3D count.val;
+>>>> + }
+>>>> + }
+>>>> + }
+>>>> +
+>>>> + /* Collection is complete only when ALL hardware queues have no =
+pending records */
+>>>> + return (total_pending_records > 0) ? 1 : 0;
+>>>> +}
 
-> --
-> Florian
+
