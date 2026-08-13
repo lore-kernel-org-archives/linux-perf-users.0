@@ -1,206 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55663344D9B
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 04:48:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04730390CB4
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 05:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786596499; cv=none; b=IqKJ4ZhqBts1c9RfXbqtELw6yfxv6+bI0oUwT2hum3RwCNl1G3VXzsTb7XJGcdOppIpzpMU48Iy+4WTMujnDGZH08pK1fuqOP+3+jbT/eCnIdGdwHZzjvCptFNGT2wuieq8fKyXoBuTHVJnMLVplTTMwskDgV85u0t/+oz/xhiI=
+	t=1786598674; cv=none; b=fNPXChFA+XAh+Zv5xbY6y70We5wH6yobzzNx+M9gtP0FmngdwU7WtUoCHB73cFkQ5CKbytmFNVMHeCpVla4MzIGUWa3tnMaEAD3vX3h21soWEUCOgumx146YwytuBV4WYDKVJGtZUCZZAMSkbH0opg71rEIZDBcTp+kt2qeyhRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786596499; c=relaxed/simple;
-	bh=IV88KldfdoYPspuFO6dRHbgov5BAM8L52hDt2R+GgBI=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=d5LmYpdFqVTKIX1N7uqMpPp1w2MMaPyd80EMlPkwVM1a7voUEDDnEUmVAdpniuCOzBeShcoAFanH8T/pew3+BQUBUy5V+sbbz+fTR66/+S0MsQmfVwErnkH4Qem6uqc/idiikaFq4R+RkRz4X0kPnfOhZOQBgZJ+VJik8nJCJY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=At/3k6V1; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786598674; c=relaxed/simple;
+	bh=fUG/SkjmiMBvNkPUVbl9K005ftLXhnOEk72C7MegrPw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=Dz/OFwAIxdeNOf9yS0u/xE1pS0v6ifOrFmEpWUF3X+Sq5xNNJ57reXHAUEBa8k2WzDcO9ISihHgl9CHB04D3OBbEBfOiqZJxfverTye6G8kVAwsqGvukVy4ASS03VHgwUxUKzKcUxUvNenZmq0kawXftaYjMy8CLTDVyqW3DiuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bxalJ+mT; arc=none smtp.client-ip=209.85.210.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="At/3k6V1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD8A21F000E9;
-	Thu, 13 Aug 2026 04:48:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786596497;
-	bh=bKVexhaLmbi6d3gMvMCHcGHkaCa17TfUB177r94E7Xw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=At/3k6V1sWiITcUPEVg3GwGiLy4yr+2kyPqOHh9ZHuO7/OvBjZRAYVMb55cf+tTWA
-	 dxxYY36YA2jxKqKrLKnGjglxOcOlN/NyHcGOHy1/mJaVnfqU70NI2WT2pQmwPiLA58
-	 rkQbJsitfOGhsa4KwclS0rgLaDejf7LHjEi6iHWimpjyrbG8uspJmo/j/fR+L5G5wd
-	 SFROCBZqLHLOQUiJ5/mxxwls9zeA1/xNiVWaw0JtxVQiLYyN0Ut5mNnE+GoVW75Y0I
-	 GmnGM7iU0X2DgCsRbaUrZZRy8s6jcEmqCSISFLX0zx49q4eo+NqTV56ATLOtQxYOmb
-	 z8LyIoUHiI5zQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 1/2] perf: Add Raspberry Pi BCM2835 AXI PMU driver
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260813043533.2744442-2-irogers@google.com>
-References: <20260812230145.2644281-1-irogers@google.com>
- <20260813043533.2744442-1-irogers@google.com>
- <20260813043533.2744442-2-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 13 Aug 2026 04:48:17 +0000
-Message-Id: <20260813044817.BD8A21F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bxalJ+mT"
+Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-84865f326efso431672b3a.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 12 Aug 2026 22:24:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786598662; x=1787203462; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=TWsMFBensQDbYfWMzAcPvH6Sa8JYBw+s1a4q7hk79CU=;
+        b=bxalJ+mTVc3Pz8zak6sM1JLe8lH6lAws8VMP9MULe53eUass7nQmuG/nNl2nyHQK/u
+         1E92bHN5YlqzR1tip/d6JIimORxMlSRcnXOT47ZHLYCT8t/Rj6w62s77ulpLNPWBHp1e
+         yMXVPG38Fb/o2yfqjry1WpNUSYnozIcmqu9KivasjgctkgSQua4kIMqLDOSymSUaQGfY
+         fPdR7LZOG++42J+0osVZ071LbQJ0KL8lPA+oe23E0UuB6ZQv4PIZ53UEoLkK69D5MBC1
+         fNoT0zP/MQB0/e4mXPrZvPHwKd5lX+b4fBMrY0lI0YrXgUSiU0gDwpFemWY6WLQu+nnu
+         AHKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786598662; x=1787203462;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=TWsMFBensQDbYfWMzAcPvH6Sa8JYBw+s1a4q7hk79CU=;
+        b=HHPUYTUPM3/0YJtXE6Ek8EDQhfu3f4rOAoBeIg/j35tqXc6Byz8qBjNg2XS4nxZ/Wm
+         XPJ8fQ4yJYFJNBhONYQ8aX3eK3vsh/6kaTAbeGeAXTuxZPxZ9LmYAHNL5kv29l4KnP/e
+         W5kxhi3zeXwAVMv9Fya9QjBQyGqODPeJVWm6ioaWfpHk0xS+wjhriD4K/jn/eFoMv9+H
+         mnaLuyYWrBcoBx3bfKEIXTukT2lELFjkGGR6BOZsMCKWDBcS03MjmWME/qp7fCb7b/Yw
+         iu3zQOTv5yXbE/ITo7bO/SNQO61WjEeYPsW/4wIPsnHPZ2JJQF3EVj04aENHR0K/HoXy
+         QNbQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpduCTtj5EdGJnlj6AS0i22CkQWBm6bJMbaDYIeXu3f3GlZQlFcirEN6zzR2bqq0tFSJtZKI//TZXhO0xUnjPb4@vger.kernel.org
+X-Gm-Message-State: AOJu0YyY2nSVjdvl/xExUXQsLzCayvdBBCg7w2X6PxrbpxtYwrPh+VXy
+	CBr7JetP+IVik2a8oIXJTIlvnSobBpXIxi+y0gAqve73cFjErbHPBZOmqMH7uSJl8X8xBTOa3BO
+	iSgkearE9dQ==
+X-Received: from dlbts18-n2.prod.google.com ([2002:a05:7022:b052:20b0:140:f2bb:6f2b])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:329d:b0:3c3:66c5:68cc
+ with SMTP id adf61e73a8af0-3cc552c381amr4077224637.21.1786598661970; Wed, 12
+ Aug 2026 22:24:21 -0700 (PDT)
+Date: Wed, 12 Aug 2026 22:24:16 -0700
+In-Reply-To: <20260813043533.2744442-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260813043533.2744442-1-irogers@google.com>
+X-Mailer: git-send-email 2.55.0.691.gc56d675ccc-goog
+Message-ID: <20260813052419.2770841-1-irogers@google.com>
+Subject: [PATCH v7 0/2] perf: Add Raspberry Pi AXI PMU driver
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, linux-perf-users@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	mark.rutland@arm.com, u.kleine-koenig@baylibre.com, will@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] Concurrent execution of `rpi_axi_pmu_del()`, `rpi_axi_pmu_add()`=
-, and the background workqueue can leave a VPU hardware bus watcher permane=
-ntly disabled due to unprotected mutation of the `vpu_disable_pending` flag.
-- [Low] The BCM2712 (Raspberry Pi 5) specific event aliases referenced in t=
-he `rpi_axi_pmu_events_attrs` array are missing their macro definitions, ca=
-using compilation to fail.
-- [Low] Usage of LINUX_VERSION_CODE check for out-of-tree backward compatib=
-ility in a mainline patch.
---
+This patch series adds an uncore Performance Monitoring Unit (PMU) driver
+for Broadcom AXI system and VideoCore VPU performance monitors found on
+Raspberry Pi SoCs (BCM2835 through BCM2712 / Raspberry Pi 1 through 5).
 
---- Patch [1]: [PATCH v6 1/2] perf: Add Raspberry Pi BCM2835 AXI PMU driver=
- ---
-commit cb96f82b55ab634031075f8a381cb2d336d091c7
-Author: Ian Rogers <irogers@google.com>
+Motivation & Background
+=======================
+Currently, Linux lacks a standard perf-API compatible driver for the
+Broadcom AXI performance counter blocks on Raspberry Pi platforms. Prior
+out-of-tree vendor solutions relied on custom debugfs nodes and ad-hoc
+kthreads, preventing integration with standard Linux perf tooling.
 
-perf: Add Raspberry Pi BCM2835 AXI PMU driver
+This driver implements standard `struct pmu` hardware uncore callbacks
+under `drivers/perf/`, exposing human-readable sysfs event aliases, unit
+scaling (`Bytes`), and bus filtering directly to user space.
 
-This commit adds an uncore performance monitoring unit (PMU) driver
-for Broadcom BCM2835-BCM2711 AXI system monitors and VideoCore VPU firmware
-mailbox monitors found on Raspberry Pi 1 through 4.
+Key Architectural Improvements & Features
+=======================
+1. Standard Linux Perf Integration:
+   - Exposes uncore AXI interconnect events via sysfs boundaries.
+   - Supports event sampling and hardware counter accumulation,
+     automatically managing 31-bit hardware counter wraparound.
 
-> diff --git a/drivers/perf/rpi_axi_pmu.c b/drivers/perf/rpi_axi_pmu.c
-> new file mode 100644
-> index 0000000000000..f7e5520d02eb9
-> --- /dev/null
-> +++ b/drivers/perf/rpi_axi_pmu.c
-> @@ -0,0 +1,2009 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +/**
-> + * DOC: Raspberry Pi AXI Bus Performance Monitoring Unit (PMU) Driver
-> + *
-> + * This driver exposes the performance monitoring hardware on Raspberry =
-Pi
+2. CPU Hotplug Support (`cpuhp`):
+   - Registers dynamic CPU hotplug notifiers (`CPUHP_AP_ONLINE_DYN`).
+   - Automatically migrates PMU context to an online CPU core when a
+     designated CPU goes offline, avoiding stale uncore state.
 
-[ ... ]
+3. Hybrid Memory-Mapped & Mailbox Work Queue Architecture:
+   - System Monitor (MMIO): Performs fast atomic-safe memory reads
+     directly mapped over ARM physical memory space.
+   - VPU Monitor (Mailbox IPC): For Broadcom BCM2835-BCM2711 platforms,
+     VideoCore VPU monitor IPC calls are offloaded to process context via
+     a dedicated workqueue (`vpu_work`) and serialized.
 
-> +#include <linux/version.h>
-> +
-> +#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 13, 0)
-> +static inline void rpi_hrtimer_setup(struct hrtimer *timer,
-> +				     enum hrtimer_restart (*function)(struct hrtimer *),
-> +				     clockid_t clock_id, enum hrtimer_mode mode)
-> +{
+4. PREEMPT_RT & Safety Hardening:
+   - Uses HRTIMER_MODE_REL_SOFT for timer callbacks to execute in softirq
+     context, ensuring spinlock acquisitions are PREEMPT_RT safe.
 
-[Severity: Low]
-Should this out-of-tree backward compatibility check using LINUX_VERSION_CO=
-DE
-be included in a mainline patch? Typically, mainline submissions only target
-the current kernel version and avoid legacy version checks.
+5. SoC Generation Support:
+   - Patch 1 adds core driver support for Broadcom BCM2835-BCM2711.
+   - Patch 2 expands support for Broadcom BCM2712 (Raspberry Pi 5).
 
-> +	hrtimer_init(timer, clock_id, mode);
-> +	timer->function =3D function;
-> +}
-> +#define hrtimer_setup rpi_hrtimer_setup
-> +#endif
+Changes in v7
+=======================
+- Mathematically scrubbed Patch 1 to explicitly isolate ALL 'bcm2712'
+  constants, comments, and logic strictly into Patch 2.
+- Explicitly initialized 'vpu_disable_pending' to false during bus
+  watcher allocation to prevent orphaned hardware disables from stale
+  recycled pointers (Patch 1).
+- Maintained the out-of-tree LTS backward compatibility block exactly
+  to preserve simultaneous compilation against Raspberry Pi Foundation
+  downstream kernels.
 
-[ ... ]
+Ian Rogers (2):
+  perf: Add Raspberry Pi BCM2835 AXI PMU driver
+  perf: Add Raspberry Pi 5 (BCM2712) AXI PMU support
 
-> +static int rpi_axi_hw_events__get_alloc_event_idx(struct rpi_axi_hw_even=
-ts *hw_events,
-> +						  const struct perf_event *event)
-> +{
-> +	int bus =3D config_to_bus(event->attr.config);
-> +	int filter =3D config_to_filter(event->attr.config);
-> +
-> +	for (int i =3D 0; i < NUM_BUS_WATCHERS_PER_MONITOR; i++) {
-> +		if (hw_events->monitored_bus[i] =3D=3D bus && hw_events->filter[i] =3D=
-=3D filter) {
-> +			hw_events->refcount[i]++;
-> +			return i;
-> +		}
-> +	}
-> +	if (hw_events->num_monitored =3D=3D NUM_BUS_WATCHERS_PER_MONITOR)
-> +		return -1;
-> +
-> +	for (int i =3D 0; i < NUM_BUS_WATCHERS_PER_MONITOR; i++) {
-> +		if (hw_events->monitored_bus[i] =3D=3D -1) {
-> +			hw_events->monitored_bus[i] =3D bus;
-> +			hw_events->filter[i] =3D filter;
-> +			hw_events->refcount[i] =3D 1;
+ drivers/perf/rpi_axi_pmu.c | 2285 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 2285 insertions(+)
+ create mode 100644 drivers/perf/rpi_axi_pmu.c
 
-[Severity: Medium]
-Can a newly allocated VPU watcher be immediately and permanently disabled d=
-ue
-to a stale vpu_disable_pending flag?
-
-If a concurrent rpi_axi_pmu_del() frees a watcher and sets:
-   vpu_disable_pending[idx] =3D true;
-   enabled[idx] =3D false;
-   schedule_work(&pmu->vpu_work);
-
-And then rpi_axi_hw_events__get_alloc_event_idx() reuses this idx for a new
-event before the workqueue runs, it does not clear vpu_disable_pending here.
-
-When rpi_axi_pmu_vpu_work_handler() later processes the new event, it will
-enable it in hardware and set enabled[idx] =3D true. However, on the next r=
-un,
-the handler will see the stale vpu_disable_pending =3D=3D true, disable the
-hardware, but skip re-enabling it because enabled[idx] is already true,
-leaving the hardware counter silently stopped.
-
-> +			hw_events->num_monitored++;
-> +			return i;
-> +		}
-> +	}
-> +	return -1;
-> +}
-
-[ ... ]
-
-> +	/* Filtered Event Aliases (RPi 1-4) */
-> +	&rpi_axi_pmu_event_cpu0_icache_rtrans.attr.attr,
-> +	&rpi_axi_pmu_event_cpu0_dcache_rtrans.attr.attr,
-> +	&rpi_axi_pmu_event_cpu0_dcache_wtrans.attr.attr,
-> +	&rpi_axi_pmu_event_cpu1_icache_rtrans.attr.attr,
-> +	&rpi_axi_pmu_event_cpu1_dcache_rtrans.attr.attr,
-> +	&rpi_axi_pmu_event_cpu1_dcache_wtrans.attr.attr,
-> +	&rpi_axi_pmu_event_dma0_l2_rtrans.attr.attr,
-> +	&rpi_axi_pmu_event_dma0_l2_wtrans.attr.attr,
-> +	&rpi_axi_pmu_event_dma1_l2_rtrans.attr.attr,
-> +	&rpi_axi_pmu_event_dma1_l2_wtrans.attr.attr,
-> +	&rpi_axi_pmu_event_v3d0_system_l2_rtrans.attr.attr,
-> +	&rpi_axi_pmu_event_v3d0_system_l2_wtrans.attr.attr,
-> +	&rpi_axi_pmu_event_v3d1_system_l2_rtrans.attr.attr,
-> +	&rpi_axi_pmu_event_v3d1_system_l2_wtrans.attr.attr,
-> +	&rpi_axi_pmu_event_hvs_system_l2_rtrans.attr.attr,
-> +	&rpi_axi_pmu_event_hvs_system_l2_wtrans.attr.attr,
-> +	&rpi_axi_pmu_event_isp_system_l2_rtrans.attr.attr,
-> +	&rpi_axi_pmu_event_isp_system_l2_wtrans.attr.attr,
-> +	&rpi_axi_pmu_event_usb_system_l2_rtrans.attr.attr,
-> +	&rpi_axi_pmu_event_usb_system_l2_wtrans.attr.attr,
-> +
-> +	/* RPi 5 (BCM2712) Expanded Event Aliases */
-> +	&rpi_axi_pmu_event_pcie_rp1_atrans.attr.attr,
-> +	&rpi_axi_pmu_event_pcie_rp1_atwait.attr.attr,
-
-[Severity: Low]
-Are these BCM2712 event aliases missing their corresponding macro definitio=
-ns?
-It looks like the array references variables like
-rpi_axi_pmu_event_pcie_rp1_atrans that were never declared with
-PMU_EVENT_ATTR_STRING, which would cause a compiler error for undefined
-identifiers when building the driver.
-
-> +	&rpi_axi_pmu_event_pcie_rp1_wtrans.attr.attr,
-> +	&rpi_axi_pmu_event_pcie_rp1_wtwait.attr.attr,
-> +	&rpi_axi_pmu_event_pcie_rp1_rtrans.attr.attr,
-> +	&rpi_axi_pmu_event_pcie_rp1_rtwait.attr.attr,
-> +
-> +	&rpi_axi_pmu_event_hevc_dec_atrans.attr.attr,
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260813043533.2744=
-442-1-irogers@google.com?part=3D1
+-- 
+2.47.0
