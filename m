@@ -1,30 +1,30 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90861481AAD
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 14:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C934440DB56;
+	Thu, 13 Aug 2026 14:54:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786632272; cv=none; b=a2W1zOSh3MsnbibiWPB5j+cPK5gtaui1dwBud99plwRT5kQaYtnGMF/GlI8tQrMd6WhKEMtNKx6WJoo3CLBX+cKQ1yUhWaJsL6lpbmzLaDECj2l3Cb+gUSdzc0pBOb6Vb21+PHmpv6clojW/z8BdmhpEnKWazMyP4/yK7sFcl38=
+	t=1786632863; cv=none; b=KlKziudf70ImAZmwQ9PMQX2aTU4nMiXunsv9gGDRjiUT/VoD6yObhtJ77/ar6kMTGrErcz/nBHtvRkpDrI0vCXOQr6/PdZ+UIfGudoYCNIVbnV546DLxGKzlEMhjVNX0W1Q6/DRAv8MPiw1pRVU9lhiBghLIVE7ELsCRDb1fnVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786632272; c=relaxed/simple;
-	bh=OAYqWj4gRrCLy7ak9V72r7VrOAlGFn0jjLe4KezteLQ=;
+	s=arc-20240116; t=1786632863; c=relaxed/simple;
+	bh=H4phoMYbLJxfSFfiH94/7usUsHy+rq8pXCChjbnVRhU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C9LV4ibK66jxcz0Jj7S3Vom2zw12DQ7hHkG5cN+Wo9uqW48HZZgO4JWjWP1fxTSKogKnvGK15J4yg65GElrQ8rz0ej3dcPrKlC88GfliOUt462+uPdR7eekYCz/TO9GPM/FwOTGkX3HKhHFmmVKLBfI0k2g6uHFKeN5E7NNlUtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 In-Reply-To:Content-Type; b=DNv6r4+iYrarLMsIFsnz39e1BnRrdliE89Dq28eyrE+0h741X8sXlBIcVxmFLXaEh27k+1MafqfNmEtxXb7xEe9KS4frcFkZ2iCUZUy2mDg4HzohUuEXVRKfKGovIsbUuk4pzNecSvMt8rAml+AdcQxO3jEIaLTRLMU9jbXavlQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hLSmY5b8nzYQtp7
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 22:44:13 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id A170D4058C
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 22:44:20 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hLSzT4bF8zKHMgd;
+	Thu, 13 Aug 2026 22:53:41 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 1E83D40574;
+	Thu, 13 Aug 2026 22:54:01 +0800 (CST)
 Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgC3IYlD2H1q6DLDCA--.32881S2;
-	Thu, 13 Aug 2026 22:44:20 +0800 (CST)
-Message-ID: <1be21704-c1bd-46de-8dc8-935a792e6402@huaweicloud.com>
-Date: Thu, 13 Aug 2026 22:44:19 +0800
+	by APP1 (Coremail) with UTF8SMTPA id cCh0CgDHt9OI2n1qpde1CA--.25781S2;
+	Thu, 13 Aug 2026 22:54:00 +0800 (CST)
+Message-ID: <d3bce9bc-80c9-418a-b3a9-3e49dd82dd34@huaweicloud.com>
+Date: Thu, 13 Aug 2026 22:54:00 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -34,213 +34,310 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v4 14/23] perf annotate-arm64: Support load instruction
  tracking
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
+To: Shuai Xue <xueshuai@linux.alibaba.com>, Namhyung Kim
+ <namhyung@kernel.org>, james.clark@linaro.org,
+ Li Huafei <lihuafei1@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
+ Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Bill Wendling <morbo@google.com>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
 References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
  <20260808122400.2961238-15-wutengda@huaweicloud.com>
- <20260808130849.500291F000E9@smtp.kernel.org>
+ <d61a0cbb-373f-4bc6-8493-889a76e27e87@linux.alibaba.com>
 Content-Language: en-US
 From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260808130849.500291F000E9@smtp.kernel.org>
+In-Reply-To: <d61a0cbb-373f-4bc6-8493-889a76e27e87@linux.alibaba.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgC3IYlD2H1q6DLDCA--.32881S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3XFWrWr13KryrXr43ur13CFg_yoW3Gw4rpa
-	98Kw45GF40qr4Fgrs7XF47trya9a1fGF45uryUA3WfKrnIyr1kKFs3KFW3uFW5CrZ5Zw4Y
-	qr4jv3yDZFWUAaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUgvb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgDHt9OI2n1qpde1CA--.25781S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3ur1xAw43XrWxWr17Xr1kKrg_yoWkWr17pr
+	4kJrWUGryUJrn3Xr12qr1UJFyUCw1UJ3WUCry8X3W7tF42yr1FgF4UWr9FgF4UJr48Ar45
+	Jr1UXrnrZr17JrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
 	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
 	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x
 	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
-	6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17
-	CEb7AF67AKxVWUXVWUAwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF
-	0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIx
-	AIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIev
-	Ja73UjIFyTuYvjxUzsqWUUUUU
+	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	bAw3UUUUU==
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
 
-On 2026/8/8 21:08, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 5 potential issue(s) to consider:
-> - [Medium] `update_load_insn_state` incorrectly uses the newly loaded type as the base pointer for the second register in `ldp` instructions when the base register overlaps with the first destination register (e.g., `ldp x0, x1, [x0]`).
-> - [Medium] `update_insn_state_arm64` blindly invalidates the base pointer type state for store instructions because it fails to check `!dst->mem_ref` before invalidating `dst->reg1` for non-load instructions.
-> - [Medium] Incorrect memory offset calculation for the second register in `LDPSW` (Load Pair of Signed Words) instructions due to reliance on the destination register prefix for size calculation.
-> - [Medium] Incomplete register recognition in `arm64__is_reg()` prevents processing or defensive invalidation of the second destination register in `ldp` instructions involving zero registers (`xzr`) or SIMD registers.
-> - [Medium] `arm64_ldst__parse` incorrectly parses PC-relative memory loads if an end-of-line comment contains a bracket (`[`), improperly interpreting the comment as the memory operand.
-> --
+On 2026/8/11 15:36, Shuai Xue wrote:
 > 
-> --- Patch [14]: [PATCH v4 14/23] perf annotate-arm64: Support load instruction tracking ---
-> commit d3c58ddf95c5da043aecdd1f99723182e79fd318
-> Author: Tengda Wu <wutengda@huaweicloud.com>
-> Subject: perf annotate-arm64: Support load instruction tracking
 > 
-> This commit extends update_insn_state_arm64() to handle LDR and LDP
-> instructions. It tracks register state changes when data is loaded from
-> memory into registers by propagating the data type of the base register
-> to the destination register, handling various addressing modes.
-> 
+> On 8/8/26 8:23 PM, Tengda Wu wrote:
+>> Extend update_insn_state_arm64() to handle LDR instructions, tracking
+>> register state changes when data is loaded from memory to registers.
+>>
+>> The implementation handles the three primary arm64 addressing modes:
+>> 1. Signed offset: [base, #imm|reg]
+>> 2. Pre-index: [base, #imm]!
+>> 3. Post-index: [base], #imm
+>>
+>> Before updating, check the addressing mode via get_reg_index_offset() to
+>> obtain the actual source's reg_offset, and then propagate the type.
+>>
+>> Since a load instruction may have two destination registers (in ldp cases),
+>> introduce propagate_load_reg_state() to propagate the type for a specified
+>> destination register using a given reg_offset. The respective reg_offset
+>> values for the two registers are as follows:
+>>
+>>    dst->reg1: reg_offset = get_reg_index_offset()
+>>    dst->reg2: reg_offset = get_reg_index_offset() + reg_size(dst->reg1)
+>>
+>> Finally, handle the side effects of pre-index and post-index addressing
+>> via adjust_reg_index_state().
+>>
+>> A real-world example is shown below:
+>>
+>>    ffff80008011f5b0 <pick_task_stop>:
+>>    ffff80008011f5b8:  ldr  x0, [x0, #2712] // x0: struct rq* -> task_struct*
+>> * ffff80008011f5c0:  ldr  w1, [x0, #104]
+>>
+>> Before this commit, the type of x0 was incorrectly inferred as 'struct rq':
+>>
+>>    find data type for 0x68(reg0) at pick_task_stop+0x10
+>>    var [8] reg0 offset 0 type='struct rq*'
+>>    chk [10] reg0 offset=0x68 ok=1 kind=1 (struct rq*) : Good!
+>>    final result:  type='struct rq'
+>>
+>> After this commit, the type of x0 is correctly inferred as 'struct task_struct':
+>>
+>>    find data type for 0x68(reg0) at pick_task_stop+0x10
+>>    var [8] reg0 offset 0 type='struct rq*'
+>>    ldr [8] 0xa98(reg0) -> reg0 type='struct task_struct*'
+>>    chk [10] reg0 offset=0x68 ok=1 kind=1 (struct task_struct*) : Good!
+>>    final result: type='struct task_struct'
+>>
+>> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+>> ---
+>>   .../perf/util/annotate-arch/annotate-arm64.c  | 148 +++++++++++++++++-
+>>   1 file changed, 147 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+>> index acff14ca01e0..6557c0ad11b2 100644
 >> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
 >> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
 >> @@ -358,11 +358,152 @@ static int extract_op_location_arm64(const struct arch *arch,
->>  }
->>  
->>  #ifdef HAVE_LIBDW_SUPPORT
+>>   }
+>>     #ifdef HAVE_LIBDW_SUPPORT
 >> +static int arm64__reg_size(const char *reg)
 >> +{
->> +	if (!reg || !*reg || !arm64__is_reg(reg))
+>> +    if (!reg || !*reg || !arm64__is_reg(reg))
+>> +        return -1;
 > 
-> [Severity: Medium]
-> Since arm64__is_reg() does not recognize zero registers like xzr or SIMD
-> registers, can this cause us to incorrectly skip processing the second
-> destination register in ldp instructions?
-> 
-> If the first register is unrecognized (for example, in ldp xzr, x19, [sp]),
-> arm64__check_multi_regs() might evaluate multi_regs to false. This would
-> cause update_load_insn_state() to skip the second register entirely, leaving
-> its stale type state intact.
-> 
->> +		return -1;
+> Since arm64__is_reg() rejects xzr and SIMD registers, something like
+> ldp xzr, x19, [sp] ends up with multi_regs = false and x19 never
+> invalidated or tracked. Admittedly a corner case - but maybe worth
+> handling if extending the register set is cheap.
 > 
 
-Agreed. I will add xzr/wzr register recognition to arm64__is_reg(). SIMD registers
-are not supported for now.
+Agreed. But I'd propose that we first support recognizing xzr/wzr only,
+and leave SIMD registers for a future extension when we properly add SIMD support.
 
+There shouldn't be a case where SIMD registers and general-purpose registers
+appear together within the same operands, right? If so, then skipping SIMD
+support for now should be fine.
 
-> [ ... ]
 > 
->> +static void update_load_insn_state(struct type_state *state,
->> +				   struct disasm_line *dl,
->> +				   struct annotated_op_loc *src,
->> +				   struct annotated_op_loc *dst)
+>> +    if (reg[0] == 'w')
+>> +        return 4;
+>> +
+>> +    if (reg[0] == 'x' || !strncmp(reg, "sp", 2))
+>> +        return 8;
+>> +
+>> +    return -1;
+>> +}
+>> +
+>> +static int get_reg_index_offset(struct annotated_op_loc *op_loc)
 >> +{
->> +	int reg_offset = get_reg_index_offset(src);
->> +	const char *insn_name = dst->multi_regs ? "ldp" : "ldr";
+>> +    return op_loc->addr_mode == PERF_ADDR_MODE_POST_INDEX ? 0 : op_loc->offset;
+>> +}
 >> +
->> +	if (!has_reg_type(state, dst->reg1) ||
->> +	    (dst->multi_regs && !has_reg_type(state, dst->reg2)))
->> +		goto out_err_adjust;
+>> +/* Apply addressing mode (pre-index, post-index) to register state */
+>> +static void adjust_reg_index_state(struct type_state *state,
+>> +                   struct annotated_op_loc *op_loc,
+>> +                   const char *insn_name, u32 insn_offset)
+>> +{
+>> +    struct type_state_reg *tsr;
+>> +    int reg = op_loc->reg1;
 >> +
->> +	/* Handle the first destination register */
->> +	if (propagate_load_reg_state(state, dl, dst->reg1, src,
->> +				     reg_offset, insn_name))
->> +		goto out_err_adjust;
+>> +    if (op_loc->addr_mode != PERF_ADDR_MODE_PRE_INDEX &&
+>> +        op_loc->addr_mode != PERF_ADDR_MODE_POST_INDEX)
+>> +        return;
+>> +
+>> +    if (!has_reg_type(state, reg) || !state->regs[reg].ok)
+>> +        return;
+>> +
+>> +    tsr = &state->regs[reg];
+>> +    tsr->copied_from = -1;
+>> +    tsr->offset = op_loc->offset + tsr->offset;
+>> +
+>> +    pr_debug_dtp("%s [%x] %s-index %#x(reg%d) -> reg%d", insn_name,
+>> +             insn_offset, op_loc->addr_mode == PERF_ADDR_MODE_PRE_INDEX ?
+>> +             "pre" : "post", op_loc->offset, reg, reg);
+>> +    pr_debug_type_name(&tsr->type, tsr->kind);
+>> +}
+>> +
+>> +/*
+>> + * For load insns: propagate type from @src to @dreg, applying @reg_offset
+>> + * to the source struct's field offset.
+>> + */
+>> +static int propagate_load_reg_state(struct type_state *state,
+>> +                    struct disasm_line *dl, int dreg,
+>> +                    struct annotated_op_loc *src,
+>> +                    int reg_offset, const char *insn_name)
+>> +{
+>> +    struct type_state_reg *tsr;
+>> +    struct type_state_reg src_tsr;
+>> +    Dwarf_Die type_die;
+>> +    u32 insn_offset = dl->al.offset;
+>> +    int sreg = src->reg1;
+>> +
+>> +    if (!has_reg_type(state, dreg))
+>> +        return -1;
+>> +
+>> +    tsr = &state->regs[dreg];
+>> +    tsr->copied_from = -1;
+>> +
+>> +retry:
+>> +    if (!has_reg_type(state, sreg) || !state->regs[sreg].ok)
+>> +        return -1;
+>> +
+>> +    src_tsr = state->regs[sreg];
+>> +
+>> +    /* Dereference the pointer if it has one */
+>> +    if (src_tsr.kind == TSR_KIND_TYPE &&
+>> +        die_deref_ptr_type(&src_tsr.type,
+>> +                   src_tsr.offset + reg_offset, &type_die)) {
+>> +        tsr->type = type_die;
+>> +        tsr->kind = TSR_KIND_TYPE;
+>> +        tsr->offset = 0;
+>> +        tsr->ok = true;
+>> +
+>> +        if (src->multi_regs) {
+>> +            pr_debug_dtp("%s [%x] %#x(reg%d, reg%d) -> reg%d",
+>> +                     insn_name, insn_offset, reg_offset,
+>> +                     src->reg1, src->reg2, dreg);
+>> +        } else {
+>> +            pr_debug_dtp("%s [%x] %#x(reg%d) -> reg%d",
+>> +                     insn_name, insn_offset, reg_offset,
+>> +                     sreg, dreg);
+>> +        }
+>> +        pr_debug_type_name(&tsr->type, tsr->kind);
+>> +        return 0;
+>> +    }
+>> +    /* Or try another register if any */
+>> +    else if (src->multi_regs && src->reg1 != src->reg2 && sreg != src->reg2) {
+>> +        sreg = src->reg2;
+>> +        goto retry;
+>> +    }
+>> +
+>> +    return -1;
+>> +}
+>> +
+>> +static void update_load_insn_state(struct type_state *state,
+>> +                   struct disasm_line *dl,
+>> +                   struct annotated_op_loc *src,
+>> +                   struct annotated_op_loc *dst)
+>> +{
+>> +    int reg_offset = get_reg_index_offset(src);
+>> +    const char *insn_name = dst->multi_regs ? "ldp" : "ldr";
+>> +
+>> +    if (!has_reg_type(state, dst->reg1) ||
+>> +        (dst->multi_regs && !has_reg_type(state, dst->reg2)))
+>> +        goto out_err_adjust;
+>> +
+>> +    /* Handle the first destination register */
+>> +    if (propagate_load_reg_state(state, dl, dst->reg1, src,
+>> +                     reg_offset, insn_name))
+>> +        goto out_err_adjust;
+>> +
+>> +    /* Handle the second destination register (ldp only) */
+>> +    if (dst->multi_regs) {
+>> +        int reg_size = arm64__reg_size(dl->ops.target.raw);
 > 
-> [Severity: Medium]
-> Can this inadvertently corrupt the type tracking state when the base register
-> and the first destination register overlap?
+> Two issues here:
 > 
-> If we process an instruction like ldp x0, x1, [x0], the first call to
-> propagate_load_reg_state() updates state->regs[dst->reg1] (which is x0).
-> 
-> When the second call to propagate_load_reg_state() runs for the second
-> destination register:
-> 
-> 	if (dst->multi_regs) {
-> 		int reg_size = arm64__reg_size(dl->ops.target.raw);
-> 		...
-> 		propagate_load_reg_state(state, dl, dst->reg2, src,
-> 
-> it will read from src->reg1 (which is also x0). Because the state for x0
-> was already overwritten in the first call, the second call would use the
-> newly loaded type as the base pointer instead of the original base pointer
-> type.
+> First, propagate_load_reg_state() snapshots state->regs[sreg] at call
+> time. For an aliased pair like ldp x0, x1, [x0], the first call
+> overwrites x0, and the second call then reads the freshly loaded type
+> as the base instead of the original one. Better snapshot the source
+> state once in update_load_insn_state() and pass it down.
 > 
 
-Agreed. I need to snapshot the source register state beforehand.
+Yeah, should snapshot first.
 
->> +
->> +	/* Handle the second destination register (ldp only) */
->> +	if (dst->multi_regs) {
->> +		int reg_size = arm64__reg_size(dl->ops.target.raw);
-> 
-> [Severity: Medium]
-> Does arm64__reg_size() return the correct memory offset for ldpsw
-> instructions?
-> 
-> For a Load Pair of Signed Words (ldpsw), the instruction loads two 32-bit
-> values from memory into 64-bit registers. Using arm64__reg_size() on the
-> destination register (which starts with 'x') returns 8, but the memory
-> spacing should be 4 bytes. 
-> 
-> This would result in passing reg_offset + 8 instead of reg_offset + 4 to
-> propagate_load_reg_state() for the second register, leading to an incorrect
-> struct field offset lookup.
-> 
-
-Agreed. I missed ldpsw (from the architecture reference manual, it appears to
-be the only special case among load-pair instructions).
-
->> +
->> +		if (reg_size < 0 ||
->> +		    propagate_load_reg_state(state, dl, dst->reg2, src,
->> +					     reg_offset + reg_size, insn_name))
->> +			goto out_err_adjust;
->> +	}
-> 
-> [ ... ]
-> 
->> @@ -418,7 +559,8 @@ static void update_insn_state_arm64(struct type_state *state,
->>  	 * Invalidate destination register(s) for unsupported instructions to
->>  	 * prevent stale type info from propagating to subsequent instructions.
->>  	 */
->> -	if (has_reg_type(state, dst->reg1)) {
->> +	if (has_reg_type(state, dst->reg1) &&
->> +	    strncmp(dl->ins.name, "ld", 2)) {
-> 
-> [Severity: Medium]
-> Should we check if the destination is actually a memory reference before
-> invalidating the register?
-> 
-> For store instructions (like str x0, [x1, #16]), arm64_ldst__parse() reverses
-> the operands so that dst becomes the memory operand and dst->reg1 is the
-> base pointer (x1). 
-> 
-> By unconditionally invalidating dst->reg1 for any instruction that doesn't
-> start with "ld", we would erroneously destroy the type state of the base
-> pointer used in the store.
+> Second, ldpsw loads two 32-bit words from memory (sign-extended into
+> x-registers), so the element spacing is 4, not the 8 that
+> arm64__reg_size() derives from the destination register. The element
+> size needs to come from the mnemonic.
 > 
 
 Agreed.
 
->>  		pr_debug_dtp("%s [%x] invalidate reg%d",
->>  			     dl->ins.name, insn_offset, dst->reg1);
->>  		invalidate_reg_state(&state->regs[dst->reg1]);
 > 
-> [ ... ]
+>> +
+>> +        if (reg_size < 0 ||
+>> +            propagate_load_reg_state(state, dl, dst->reg2, src,
+>> +                         reg_offset + reg_size, insn_name))
+>> +            goto out_err_adjust;
+>> +    }
+>> +
+>> +out_adjust:
+>> +    adjust_reg_index_state(state, src, insn_name, dl->al.offset);
+>> +    return;
+>> +
+>> +out_err_adjust:
+>> +    if (has_reg_type(state, dst->reg1))
+>> +        invalidate_reg_state(&state->regs[dst->reg1]);
+>> +    if (dst->multi_regs && has_reg_type(state, dst->reg2))
+>> +        invalidate_reg_state(&state->regs[dst->reg2]);
+>> +    goto out_adjust;
+>> +}
+>> +
+>>   static void update_insn_state_arm64(struct type_state *state,
+>>                       struct data_loc_info *dloc, Dwarf_Die *cu_die,
+>>                       struct disasm_line *dl)
+>>   {
+>>       struct annotated_insn_loc loc;
+>> +    struct annotated_op_loc *src = &loc.ops[INSN_OP_SOURCE];
+>>       struct annotated_op_loc *dst = &loc.ops[INSN_OP_TARGET];
+>>       u32 insn_offset = dl->al.offset;
+>>   @@ -418,7 +559,8 @@ static void update_insn_state_arm64(struct type_state *state,
+>>        * Invalidate destination register(s) for unsupported instructions to
+>>        * prevent stale type info from propagating to subsequent instructions.
+>>        */
+>> -    if (has_reg_type(state, dst->reg1)) {
+>> +    if (has_reg_type(state, dst->reg1) &&
+>> +        strncmp(dl->ins.name, "ld", 2)) {
 > 
->> +	/* Memory to register transfers */
->> +	if (!strncmp(dl->ins.name, "ld", 2))
->> +		update_load_insn_state(state, dl, src, dst);
->>  }
->>  #endif
+> For stores the operands are reversed, so dst is the memory operand
+> and dst->reg1 is the base register. This then invalidates the base
+> pointer on every store, which is exactly the state we need to resolve
+> the memory access type. The x86 version guards this with
+> !dst->mem_ref; arm64 should too:
 > 
-> [Severity: Medium]
-> Could PC-relative memory loads end up with missing operands here if their
-> end-of-line comments contain a bracket?
-> 
-> In arm64_ldst__parse(), which runs before we reach this point, strchr()
-> searches for a bracket. If a PC-relative load lacks brackets in its operands
-> but contains one in the comment (for example, ldr x0, 1234 <sym> // [foo]),
-> the parser matches the comment bracket and parses backwards.
-> 
-> This drops the actual PC-relative target entirely, which would prevent
-> update_load_insn_state() from successfully tracking the type when evaluated
-> here.
+>     if (has_reg_type(state, dst->reg1) && !dst->mem_ref &&
+>         strncmp(dl->ins.name, "ld", 2)) {
 > 
 
-The comment issue in arm64_ldst__parse() has already been mentioned previously
-and will be fixed. PC-relative loads (ldr) themselves generally do not
-carry type information; they are typically used to load a label address
-for branching:
-
-  ffff800081d0c0a4: 58000068 ldr x8, ffff800081d0c0b0 <cpu_resume+0x28>
-  ffff800081d0c0a8: d61f0100 br x8
-
-So I think this case can be ignored.
+Agreed.
 
 Thanks,
 Tengda
