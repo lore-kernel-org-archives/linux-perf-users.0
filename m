@@ -1,201 +1,191 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6337B38D686
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 23:29:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 711C31A6838
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 23:43:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786663787; cv=none; b=Tc+awG0jn9rJEYdZNlXGRhsEGyOqH5QW6wONOvuLUxb/FD9Nar3jI6CI82QFrleIoihoRUefyb2rjxRs6gDsnfbKieLozBP0G1U2sOniqXkq01N+K30dup1+hGF0w8slhmdR73kUQeOHpHFv5n9gSigRzNjSM+QNoLsDBCTbpaQ=
+	t=1786664623; cv=none; b=iPAJb31t2ipOahLJpBydQzwP6bmqzKY+EEhQgFFix2/kcOCmvBUqobR0c/SkNcoeF3IYTbdO1Cc8uiJwrPs0uzWX1/+ixd0jgS1dp3+oJWjMT6mdPv2IZyPNuRGcHWMho6eEWmwIm0OxjYe8p93FZhQHkTq0LMw3SKmASWDo5n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786663787; c=relaxed/simple;
-	bh=EimwxpZWCrMyHmuWID1qz5fHpS27DJsIcCFWuTGVJ1A=;
+	s=arc-20240116; t=1786664623; c=relaxed/simple;
+	bh=QG6c2pN0w32emXsrXfdE7q0HeSRcbPRa+3boFS2ahHM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hERVlOqTWIBgPi5v5Rdzlp+PwiKpJmeSju5H2XHD6byUp/As1Bkqmg3ZyBRaI3uAjFSwdtL6f1u5ognrC5GM/EXrF/bf4VMEMtfqOhjS5cjB5X4PPshVgEq2zd/dnePYRLxp4nS3Ua35TgV5HTJd7UWcWaxiGJigqk4BYMopdgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EgdwMsRe; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=YSxeF2B57I6m+w7/QboJIoFTjUa/FsMIxD3+gaViOQxGnHrm4/cGgmDOg4yyjZQHE2ytVY7wog0OEnxnSND7h52kH9G3Z/NN+j87KctpP6wTFUJpCtuQSZvWq2h/yM8qjxp8yxNlRpmZHmZxZzKsH1cEyCgXsaIg42/eLbmB8SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYhQvyIv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EgdwMsRe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08E801F00A3D;
-	Thu, 13 Aug 2026 23:29:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYhQvyIv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3D6D1F000E9;
+	Thu, 13 Aug 2026 23:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786663786;
-	bh=2JQIj9LL3/G8xImLidRcYuSV6008+A9PfiFsG184bvk=;
+	s=k20260515; t=1786664622;
+	bh=4RqaDV6srC2w02pPaGPWvbKCAlfMDujWiO1oW5suZD4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EgdwMsRe71gAxdfzrGxvYE5uAY1iXkicJe4XXaUh7Y5i29lwVLTO6MeWXlBL2l82F
-	 GRISySGoXKa+lqv1BCDSprJjNjddmJX0ywZHdBmZsyImW9N/yGAENPDEU+HSSCnuT2
-	 dvZ/G026XPl4SFM/BAUx7YntWZIcjl7WKUqEVevy4smYPczQeVTlZh09P/mMvi/OZR
-	 Q9r1Ci/894mermZfwd1dI2dLxD8beODyB6CAXfBH5Twlx28bPSeS9orpBt+aUHW9zP
-	 J5/gz1LRqSvCHz3bBfqOpkRLSOIUXs6iKNr1UtMtivfdB38pyUauAPLP2LnDaASy6t
-	 4HOrZpC27D3/w==
+	b=gYhQvyIvv8UcvyDyt5miIFTv71U0XWhzhRR+QlfWyoxG0A73WAYBL762lQToVSEM7
+	 dGZInhsO3gsLbDyihCXEVG7NwnRwtsG8vaM82bJZFkNZ88uzMR3n2R2Q0KSfY7ZLU7
+	 lFWkvadg8J1rTSGzxVwJN0FgSGI3nVOb51H6i6w0mJu9teogZVG81c3TV/y0A3zRYb
+	 rR4cPMcs9pAbFYaUdl76dZMCMVE1FQuZ42Q848QU1zojZArGOoBh4myBVNnHtLrwa3
+	 YRsP1MEH5UAYx1Z0mADukRZ+QrNHtExrjyFrIZcKd+1XBaW0XYNOjTUv7X9gt/lCLC
+	 C7QJu0S3R9jmg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 3/8] perf header: Properly warn/print when
- libtraceevent/libbpf support is missing
+Subject: Re: [PATCH v5 02/25] perf sample: Make sure perf_sample__init/exit
+ are used
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260401161324.332356-4-irogers@google.com>
-References: <20260401161324.332356-4-irogers@google.com>
+In-Reply-To: <20260403204017.2919994-3-irogers@google.com>
+References: <20260403204017.2919994-3-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 13 Aug 2026 23:29:45 +0000
-Message-Id: <20260813232946.08E801F00A3D@smtp.kernel.org>
+Date: Thu, 13 Aug 2026 23:43:36 +0000
+Message-Id: <20260813234337.B3D6D1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
 s) to consider:
-- [High] Returning -1 for unsupported features in `process_*` callbacks cau=
-ses `perf_header__process_sections()` to abort prematurely, silently skippi=
-ng all subsequent header features.
-- [Medium] `perf record` unconditionally prints errors for BPF features whe=
-n compiled without `libbpf`.
+
+New issues:
+- [Medium] The return value of `perf_evsel__parse_id_sample` is silently ig=
+nored for non-`PERF_RECORD_SAMPLE` events.
+
+Pre-existing issues:
+- [High] In the Python bindings, if `evlist__event2evsel` fails during even=
+t parsing, an uninitialized `struct perf_sample` is passed to `perf_sample_=
+_exit()`, resulting in a free of garbage pointers.
+- [High] Missing check for `deferred_callchain` allows a malformed event to=
+ crash the tool by dereferencing a NULL callchain.
+- [High] Missing bounds check on `event->callchain_deferred.nr` leads to ma=
+ssive out-of-bounds read and potential heap overflow.
 --
 
---- Patch [3]: [PATCH v4 3/8] perf header: Properly warn/print when libtrac=
-eevent/libbpf support is missing ---
-commit e5ac8f49aacee07fccb1639de8607d4e1627acf5
+--- Patch [2]: [PATCH v5 02/25] perf sample: Make sure perf_sample__init/ex=
+it are used ---
+commit 24e922c277122af1d6e4cb75082ba12f77262a00
 Author: Ian Rogers <irogers@google.com>
 
-perf header: Properly warn/print when libtraceevent/libbpf support is missi=
-ng
+perf sample: Make sure perf_sample__init/exit are used
+   =20
+The deferred stack trace code wasn't using perf_sample__init/exit. Add
+the deferred stack trace clean up to perf_sample__exit which requires
+proper NULL initialization in perf_sample__init. Make the
+perf_sample__exit robust to being called more than once by using
+zfree.
 
-By removing the features from feat_ops with ifdefs the previous logic
-would print "# (null)" when perf processed a feature that lacked
-builtin support. Remove the ifdefs from feat_ops and in the relevant
-functions print errors/messages about the lack of support.
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> index f879b84f8ff99..f031cbbeeba8b 100644
+> --- a/tools/perf/util/callchain.c
+> +++ b/tools/perf/util/callchain.c
+> @@ -1919,6 +1922,7 @@ int sample__merge_deferred_callchain(struct perf_sa=
+mple *sample_orig,
+>  	memcpy(&callchain->ips[nr_orig], sample_callchain->callchain->ips,
+>  	       nr_deferred * sizeof(u64));
 
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-[ ... ]
-> -#ifdef HAVE_LIBBPF_SUPPORT
-> -static int write_bpf_prog_info(struct feat_fd *ff,
-> +static int write_bpf_prog_info(struct feat_fd *ff  __maybe_unused,
->  			       struct evlist *evlist __maybe_unused)
->  {
-> +#ifdef HAVE_LIBBPF_SUPPORT
->  	struct perf_env *env =3D &ff->ph->env;
->  	struct rb_root *root;
->  	struct rb_node *next;
-[ ... ]
-> @@ -1067,11 +1070,16 @@ static int write_bpf_prog_info(struct feat_fd *ff,
->  out:
->  	up_read(&env->bpf_progs.lock);
->  	return ret;
-> +#else
-> +	pr_err("ERROR: Trying to write bpf_prog_info without libbpf support.\n"=
-);
-> +	return -1;
-> +#endif // HAVE_LIBBPF_SUPPORT
->  }
+[Severity: High]
+This is a pre-existing issue, but does this lack a bounds check on
+event->callchain_deferred.nr before copying from the event buffer?
 
-[Severity: Medium]
-Will this cause spurious error messages and failures on every invocation of
-perf record when compiled without libbpf?
+In tools/perf/util/evsel.c:evsel__parse_sample(), data->callchain->nr is
+checked against UINT64_MAX / sizeof(u64) rather than being bounded by the
+actual event->header.size.
 
-Previously, when HAVE_LIBBPF_SUPPORT was absent, the feature was missing fr=
-om
-feat_ops and silently skipped. Because record__init_features() unconditiona=
-lly
-sets HEADER_BPF_PROG_INFO, won't perf_header__adds_write() now call this
-function, print the error, and return -1 on every run?
+When sample__merge_deferred_callchain() is called, nr_deferred * sizeof(u64)
+can integer-overflow on 32-bit systems (causing a small heap allocation and=
+ a
+subsequent buffer overwrite) or cause a massive out-of-bounds read on 64-bit
+systems.
 
-[ ... ]
-> -static int write_bpf_btf(struct feat_fd *ff,
-> +static int write_bpf_btf(struct feat_fd *ff __maybe_unused,
->  			 struct evlist *evlist __maybe_unused)
->  {
-> +#ifdef HAVE_LIBBPF_SUPPORT
->  	struct perf_env *env =3D &ff->ph->env;
->  	struct rb_root *root;
->  	struct rb_node *next;
-[ ... ]
-> @@ -1100,8 +1108,11 @@ static int write_bpf_btf(struct feat_fd *ff,
->  out:
->  	up_read(&env->bpf_progs.lock);
->  	return ret;
-> -}
-> +#else
-> +	pr_err("ERROR: Trying to write btf data without libbpf support.\n");
-> +	return -1;
->  #endif // HAVE_LIBBPF_SUPPORT
-> +}
+Could we validate the nr field against the actual event size?
 
-[Severity: Medium]
-Similar to the issue above, won't this unconditionally print an error and
-fail perf record if libbpf is not supported, since HEADER_BPF_BTF is also
-unconditionally set in record__init_features()?
-
-[ ... ]
-> -#ifdef HAVE_LIBTRACEEVENT
-> -static int process_tracing_data(struct feat_fd *ff, void *data)
-> +static int process_tracing_data(struct feat_fd *ff __maybe_unused, void =
-*data __maybe_unused)
->  {
-> +#ifdef HAVE_LIBTRACEEVENT
->  	ssize_t ret =3D trace_report(ff->fd, data, false);
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index c702741a91738..f46e1d40bad73 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -1632,8 +1632,11 @@ int evlist__parse_sample(struct evlist *evlist, un=
+ion perf_event *event, struct
+>  	struct evsel *evsel =3D evlist__event2evsel(evlist, event);
+>  	int ret;
 > =20
->  	return ret < 0 ? -1 : 0;
-> -}
-> +#else
-> +	pr_err("ERROR: Trying to read tracing data without libtraceevent suppor=
-t.\n");
-> +	return -1;
->  #endif
-> +}
+> -	if (!evsel)
+> +	if (!evsel) {
+> +		/* Ensure the sample is okay for perf_sample__exit. */
+> +		perf_sample__init(sample, /*all=3D*/false);
+>  		return -EFAULT;
+> +	}
 
 [Severity: High]
-Does returning -1 here cause perf_header__process_sections() to abort
-prematurely and silently skip all remaining header features?
+This isn't a bug introduced by this patch, but does the Python binding
+code have a similar issue where an uninitialized sample is cleaned up on
+error?
 
-When processing features, perf_header__process_sections() iterates over the
-added features:
+In tools/perf/util/python.c:pyrf_event__new(), the pyrf_event is allocated
+via PyObject_New without zeroing the memory, meaning the sample member is
+uninitialized.=20
 
-    for_each_set_bit(feat, header->adds_features, HEADER_LAST_FEATURE) {
-        err =3D process(sec++, header, feat, fd, data);
-        if (err < 0)
-            goto out_free;
-    }
+If evlist__event2evsel() fails during event parsing in
+pyrf_evlist__read_on_cpu(), Py_DECREF triggers the destructor
+pyrf_sample_event__delete(), which calls perf_sample__exit(&pevent->sample).
+This passes uninitialized garbage pointers to zfree(), which can corrupt
+memory.
 
-If perf encounters a perf.data file containing HEADER_TRACING_DATA but lacks
-libtraceevent support, it looks like it will break out of the loop and skip
-any features that appear after it in the bitmask (such as COMPRESSED or
-CPU_PMU_CAPS), which could cause downstream failures like missing
-decompression metadata.
-
-Should this return 0 instead of -1 so that processing can continue?
-
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index 5a294595a6776..4d3615d7b8859 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
 [ ... ]
-> -#ifdef HAVE_LIBBPF_SUPPORT
-> -static int process_bpf_prog_info(struct feat_fd *ff, void *data __maybe_=
-unused)
-> +static int process_bpf_prog_info(struct feat_fd *ff __maybe_unused, void=
- *data __maybe_unused)
->  {
-> +#ifdef HAVE_LIBBPF_SUPPORT
->  	struct bpf_prog_info_node *info_node;
->  	struct perf_env *env =3D &ff->ph->env;
->  	struct perf_bpil *info_linear;
+> @@ -3236,25 +3238,26 @@ int evsel__parse_sample(struct evsel *evsel, unio=
+n perf_event *event,
 [ ... ]
-> @@ -3402,10 +3422,15 @@ static int process_bpf_prog_info(struct feat_fd *=
-ff, void *data __maybe_unused)
->  	free(info_node);
->  	up_write(&env->bpf_progs.lock);
->  	return err;
-> +#else
-> +	pr_err("ERROR: Trying to read bpf_prog_info without libbpf support.\n");
-> +	return -1;
-> +#endif // HAVE_LIBBPF_SUPPORT
->  }
+>  	if (event->header.type !=3D PERF_RECORD_SAMPLE) {
+> -		if (!evsel->core.attr.sample_id_all)
+> -			return 0;
+> -		return perf_evsel__parse_id_sample(evsel, event, data);
+> +		if (evsel->core.attr.sample_id_all)
+> +			perf_evsel__parse_id_sample(evsel, event, data);
+> +		return 0;
+>  	}
+
+[Severity: Medium]
+Is it intentional that the return value from perf_evsel__parse_id_sample()
+is now silently ignored for non-PERF_RECORD_SAMPLE events?
+
+If perf_evsel__parse_id_sample() fails on a malformed or truncated event,
+returning 0 instead of propagating the error or taking the out_efault path
+might leave perf_sample fields uninitialized or zeroed, potentially leading
+to incorrect downstream analysis.
+
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 09de5288f9e15..6fb481fda4926 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1367,14 +1367,18 @@ static int evlist__deliver_deferred_callchain(str=
+uct evlist *evlist,
+[ ... ]
+> -		if (sample->tid !=3D orig_sample.tid)
+> +		if (sample->tid !=3D orig_sample.tid) {
+> +			perf_sample__exit(&orig_sample);
+>  			continue;
+> +		}
+> =20
+>  		if (event->callchain_deferred.cookie =3D=3D orig_sample.deferred_cooki=
+e)
+>  			sample__merge_deferred_callchain(&orig_sample, sample);
 
 [Severity: High]
-Like process_tracing_data() above, won't returning -1 here abort
-perf_header__process_sections() and skip the rest of the features in the fi=
-le
-if libbpf is not supported?
+This is a pre-existing issue, but could this comparison succeed improperly
+and cause a crash?
+
+Since orig_sample is zero-initialized by perf_sample__init(), if it has no
+callchain, its cookie is 0 and its callchain pointer is NULL.=20
+
+If the incoming event also has a cookie of 0, this equality check passes and
+we call sample__merge_deferred_callchain(), which then dereferences
+sample_orig->callchain->nr without a NULL check.
+
+Should this verify that orig_sample.deferred_callchain is actually true?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260401161324.3323=
-56-1-irogers@google.com?part=3D3
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260403204017.2919=
+994-1-irogers@google.com?part=3D2
