@@ -1,59 +1,55 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 702AB47142E
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 21:11:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5542625771
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 21:41:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786655483; cv=none; b=EOdQvgiCT2ZkGa6x0TxEp4MD5XcxCgGXg+IgukaoSB95wR9BLPDKDgjYhTDSd+z53ZboxUFzNDwxuDHNciXhPjIQBNYAB+H9P1OhL/QI7BMhzE05bANO/Y9oxqmg0nKXv2eI8YQseostnCDlKdNGSDpqlzuLEyxQFDMuhfuBi08=
+	t=1786657312; cv=none; b=VfaMLL1S1klRO9lsgXxiu0o/5EAQ2tFiTMjculH6CTrMWRNmPVnpiXbBdOvbN3uhChKHQ8ARCAzwR8AIJtQKc0ZDc65bygRJ3aqCzDlwj86Q7IEtCxjA+PVS5hcnu/5kXXWHZaJH7zbTIxIX7jT5cilPHH9Ec4SpLo0YtFYW+gs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786655483; c=relaxed/simple;
-	bh=DrLm05uQYf9SigOs+2FvTWUMJmNw0vqGNkpwdwF4t/g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KaRc/AYrQD8MgWW3TmFZu9mk3Y5NBrOveIUo9flD/V1IOBIPg6UQ97zSa59YA4porjHnC74VP+4N7apzyuygFviDbQYZPtkHlbbbjpRN7AUqEIPblHskpA0yZ3R2B/zADDosqzJNJS7LqmMse6VfrXgpGCCRsViEd1wbPnFukXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SWB1WBbj; arc=none smtp.client-ip=192.198.163.13
+	s=arc-20240116; t=1786657312; c=relaxed/simple;
+	bh=5FOiFSoRjIG66sJDeoIwAe7VOsGaiB1dIXDliP9CuHc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KdRU9YPKS/y3MZNjQb8YcL1X7DK5o/kbFxJzw6WtlUkthAqSvH+PmhE807Z7LJ7sLKq3Tr/Xk+96/RcKDXA785jtkfjdTeTSMZ76EJOCjpjYeWGwE7yt2Otbu16oICEAVoq7C0neqXVD5RWfJP3GzlbvwTHf+1dRliSMHvkWvkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QpdzCCS2; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SWB1WBbj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QpdzCCS2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786655481; x=1818191481;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=DrLm05uQYf9SigOs+2FvTWUMJmNw0vqGNkpwdwF4t/g=;
-  b=SWB1WBbjMPDr/1l9w79UBL1zxXplmHROrzp4D/LUyUT4Ndz0FxR/wqO6
-   WdOVqsWCqgOtE8RVNL9YVW+muhJPby1C2I4Y8+hVjiXFWBw8xXvMB07M7
-   UwNEIeNa43XwYvCajGOR7/Uirq7Phap7w7KQgOB3tQqA/mhmljvW0h3JA
-   2eMFacKvWjVgN3pmVo/rNb9PEm+mMD7Wt5nugAVDBA4J/VBty2dZjr1Z0
-   A9fgAbU1zKb1glSKb4JSqcppH0uviNqGPonO93TtodmTeJWQKUWI6bEf9
-   0p4UKt1J5eFG/aZn1gOWAWuIEU/TZWD4YgGoib47tnDxUmY6raijRhfnf
-   w==;
-X-CSE-ConnectionGUID: mBcZxXRZTDqi3SwflS0cjQ==
-X-CSE-MsgGUID: h9rXukC5TOaSmgSDEcTpFw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11874"; a="89760250"
+  t=1786657310; x=1818193310;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5FOiFSoRjIG66sJDeoIwAe7VOsGaiB1dIXDliP9CuHc=;
+  b=QpdzCCS2NpS7H4Bwy2EVZDuzk5RmRuCCB2ORzutiVsI5BETT6+Ib9Urn
+   43JnxMzO6u3SAexIpf2WWSOWuV8O8mHAH7684y53xDG32S4eZDHBwoF+i
+   dgq+cFdmIC5x1R8fWHumIM5nfR0U+H9ij4NhaIA2uq46g1ihW7vfGWmw0
+   v7qzfUi60IK3lBzMex5teNq9+K3rA0jSAHnkG0egxlegA3MDLi/GxtFek
+   hWXd7Y8tubeiIGq6Fe7zUiV+ahUAtFguMI2sewKV0IYQeE9sD2fLJGbYB
+   9ZG8kO/ov/hW6DsYRiJlE0C+oj1d8AphmYy+jyxIrkmYJXk6oN8TPoP3Z
+   Q==;
+X-CSE-ConnectionGUID: IK5ekk0DTDW8DDaQjF3hQw==
+X-CSE-MsgGUID: mYm6HdcaTbesigaeq8KaPw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11874"; a="89761869"
 X-IronPort-AV: E=Sophos;i="6.25,222,1779174000"; 
-   d="scan'208";a="89760250"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 14:11:17 -0700
-X-CSE-ConnectionGUID: 3iOpJnFeRC+tSI6ArddE8g==
-X-CSE-MsgGUID: sgEY0HZdS9mOHo8EAHXxtQ==
+   d="scan'208";a="89761869"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 14:41:49 -0700
+X-CSE-ConnectionGUID: EpgzvgiQSm+DKm/TjUmv+g==
+X-CSE-MsgGUID: 13QRFpTMSNieyJI5bcb7Uw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,222,1779174000"; 
-   d="scan'208";a="260773092"
+   d="scan'208";a="267909908"
 Received: from tassilo.jf.intel.com ([10.54.38.190])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 14:11:17 -0700
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 14:41:50 -0700
 From: Andi Kleen <ak@linux.intel.com>
 To: namhyung@kernel.org
 Cc: acme@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v2 4/4] perf tools: Add test for weight annotation
-Date: Thu, 13 Aug 2026 14:10:10 -0700
-Message-ID: <20260813211109.240689-5-ak@linux.intel.com>
+	linux-perf-users@vger.kernel.org
+Subject: Another perf annotate weight patchkit
+Date: Thu, 13 Aug 2026 14:40:55 -0700
+Message-ID: <20260813214143.253418-1-ak@linux.intel.com>
 X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260813211109.240689-1-ak@linux.intel.com>
-References: <20260813211109.240689-1-ak@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,84 +58,6 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a test case to check if --stdio weight annotation works
-
-Assisted-by: omp:GPT-5.6-Luna
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/tests/shell/annotate_weight.sh | 63 +++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100755 tools/perf/tests/shell/annotate_weight.sh
-
-diff --git a/tools/perf/tests/shell/annotate_weight.sh b/tools/perf/tests/shell/annotate_weight.sh
-new file mode 100755
-index 000000000000..6b8c105c048b
---- /dev/null
-+++ b/tools/perf/tests/shell/annotate_weight.sh
-@@ -0,0 +1,63 @@
-+#!/bin/bash
-+# perf annotate weight regression test
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+shelldir=$(dirname "$0")
-+# shellcheck source=tools/perf/tests/shell/lib/perf_has_symbol.sh
-+. "${shelldir}"/lib/perf_has_symbol.sh
-+
-+testsym="test_loop"
-+skip_test_missing_symbol "${testsym}"
-+
-+perfdata=$(mktemp /tmp/__perf_test.annotate_weight.XXXXX)
-+record_log=$(mktemp /tmp/__perf_test.annotate_weight.XXXXX.log)
-+report_out=$(mktemp /tmp/__perf_test.annotate_weight.XXXXX.report)
-+annotate_out=$(mktemp /tmp/__perf_test.annotate_weight.XXXXX.annotate)
-+
-+cleanup() {
-+	rm -f "${perfdata}" "${record_log}" "${report_out}" "${annotate_out}"
-+	trap - EXIT TERM INT
-+}
-+
-+trap 'cleanup; exit 1' TERM INT
-+trap cleanup EXIT
-+
-+# mem-loads:pu requests a precise user PEBS event whose sample weight should
-+# be populated by -W. Unsupported PEBS/weight PMUs are skipped below.
-+if ! perf record -W -e mem-loads:pu -o "${perfdata}" -- perf test -w thloop \
-+	> /dev/null 2> "${record_log}"; then
-+	echo "[SKIP] precise PEBS weight sampling is unavailable"
-+	exit 2
-+fi
-+
-+# Confirm the PMU actually produced nonzero weights. A successful record alone
-+# is insufficient: some PMUs accept the event but provide no weight payload.
-+if ! perf report --stdio -i "${perfdata}" --fields=weight1,weight2,weight3,symbol --percent-limit 0 \
-+	> "${report_out}" 2> "${record_log}"; then
-+	echo "[SKIP] weighted samples cannot be decoded"
-+	exit 2
-+fi
-+
-+if ! awk '$1 ~ /^[0-9]/ && ($1 + 0) > 0 { found = 1 } END { exit !found }' \
-+	"${report_out}"; then
-+	echo "[SKIP] PEBS weight sampling produced no nonzero weights"
-+	exit 2
-+fi
-+
-+perf annotate --stdio -i "${perfdata}" --symbol "${testsym}" \
-+	> "${annotate_out}" 2> "${record_log}"
-+
-+grep -q 'Percent Weight' "${annotate_out}"
-+
-+# The second numeric column is the rendered average weight. This assertion
-+# fails on the original regression because calc_percent() left it at zero.
-+if ! awk '$1 ~ /^[0-9]/ && $2 ~ /^[0-9]/ && ($2 + 0) > 0 { found = 1 } END { exit !found }' \
-+	"${annotate_out}"; then
-+	echo "Annotation output contained no nonzero weight"
-+	cat "${annotate_out}"
-+	exit 1
-+fi
-+
-+echo "PEBS annotation weights: PASS"
--- 
-2.55.0
+The v2 version had some bogus white space changes included. Now cleaned
+up. This version is ready for review. Sorry for the quick repost.
 
