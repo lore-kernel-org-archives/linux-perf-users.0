@@ -1,195 +1,168 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3887D483BE3
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 15:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 953E5320CD1;
+	Thu, 13 Aug 2026 15:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786633314; cv=none; b=aQd4p2wY6lsdU0Om+sWhtplmR5UNqImDgQRjsGeNT1FRqDJTTKrOYb+KCfrKAjoSThieMoMFPGd3qoMr5RUpcsBKX0ThkHElsmbYPS6zD29hVGtBoi+Ip7wRfBdDBdoELz0k17JjUF5thMrNUxEPiQjVv1Ql/lzlbKfUnNxmIP4=
+	t=1786633915; cv=none; b=jAty6e1Yn/BKBCzlKQQn9tK7nbZ0fRhOfa5K82U0a6O91NwQAiQke0cOmKF8N1fMAaSb+eWIlvw/OGL7djSWckcwruGBh6LBUslmO1JTaacnBxRkYVw9iR9mrzU5IdjU3Y1NjXcFdd3mtbmKdQTeQFr6z/RycKw7J2nFDJexdrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786633314; c=relaxed/simple;
-	bh=OC9IutyT//BkuJs77h0zfNijPHzUCo052/ql5WQ3jBU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j2MVUxq9QhhPPI/9axjtjtuVL5tm6JkBU4N8vRNwLw+3QCIWF+TibJ+Svg7eDLM/ClRLfxVOWu2iw6tYsVQeUItSIUVBV3Ibp6liBT719L1pQaDAXjN0J38WewdfYcwxykOyRshtFpOWHDFKuBCb1hJbgxDSCfmhpNqvh10Vh58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=FS90yvGw; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1786633915; c=relaxed/simple;
+	bh=jQ8YktkY5zNRJxfk9+Grzx3ZSKFytA/m/HuOk1aYUo8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ee7zi9xA37ohC8tH3Vw1n+xx2vyTr7DNF5/gsl9AQbzH7dJ41MavRYAgjsjOgXTc6v5wQoHJi1YCaTFzxBX9tI9Og7VwFGaBIL9aBNu4mWDkFALn9qKeaGrufWpkfvhpm+qxu1Qhtf8qiP1sywhj+PnMDnt777yc8ijCAoc3rro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEFVjJK7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="FS90yvGw"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4954dff6536so213075e9.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 08:01:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1786633310; x=1787238110; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=7k8Ok3ovsH8z7i16wZyB/9R4mVj0xRZGgmoWoCE0MIY=;
-        b=FS90yvGwGhSZ0H0dri15DlTmoCPdKKldeArg8bkQMVBthG1RVs4P7TuL3iIFYvpzhM
-         /uRz1jNWJwgCZrNXcWduXslxklw5rV/BhpVtiGUroTA4NG/b+moXSiNhMZL+IGqMZxYf
-         FxB5RC8xJD0PJ06rsWzDMwYEtnNU7NdzpyfPxnQtmWETxirRCVI4+/h1ZNn2e39i/A+x
-         6Uf0MnekG15hhqG6VpJR86RL0znqbVn0jKveG0ckL1T8FsdOgL4y6md9mM5GTDqQYojn
-         iv2/yUE97pNjORQpck8+b5Pu1UzZTsr63e67zIyfYGaSovlNPH44XwTXzNfjVrw8ibHO
-         AzdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786633310; x=1787238110;
-        h=in-reply-to:content-disposition:content-type:mime-version
-         :references:message-id:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=7k8Ok3ovsH8z7i16wZyB/9R4mVj0xRZGgmoWoCE0MIY=;
-        b=IDk5iNPgEOLLzwJb9CV+vFehCr1FxqHq9FkJieImWTC4kv4ZgDZMUc53MP6hP9W9Ak
-         06wXMTx8uce1sPLDKtcXxB/azwaXPnDVn3QcU+Ffr1PjyaKWfNVAGJGiArYo+ZpaTP9V
-         D/o+bYI6OhLALpTBqSyNi4Sh1TlAovbewZNp69XLCKkIfyN4M2BvfYx6+Jmu6f0hgsAA
-         f1RMMlfskRSEOCyBKQ3Bbp+YLiSQL/vkVIOoaM2zroRxh5vzbodzusJbh7p3j3Lg0laR
-         I9D/zoPVYIogJyTP+9ET08i5+3sp+tyj3ozODgQSlQ+A6DXAIQTrFMYp8PhSxOUZMQ/O
-         462A==
-X-Forwarded-Encrypted: i=1; AHgh+Rq/bOt627jVtLGqmiFmVl7zDcbK2R0wLAbsKcUASErD2Nlg1cTmdqqo72sJyWq+COZXd4GFcGH1bCRulRgRlzGt@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjZSTKJW0InsyCjunM0wpaY+qGxmSH4SWFOigqt3iN39w3Ra3J
-	1UeM/UHBHaiEVs+gK8wxJIj+lcIOGYkVZ05+I+fqjNE0hJkUieYq5GxZ6XV15UeTaOg=
-X-Gm-Gg: AR+sD12AuVW6bh+aTBzi14IicBIfslTFk/jM84vb9LxtQKtW+WAp2uyvo/i96ZAXt4Y
-	9X4UeFEv6HnmPnBMgIW/tCf4/MHQSlsdfrQPBui9vkz2KKr3pI+pR0urLvG4AXNilLXofJ65NEQ
-	hWAPhYVI7rpU4xmJw5k5jbQwSNuUJ4laVLMSWFJL71f3EqBim73lBkcnjpRlc5/KHVc22WPmdKG
-	KSSt5rGPMEhMwIwBmJMFaojLWNjNipR2hD9GOizH5E+cmEXdaDhpkfzQIQUIwvEOzySHqoZOXtn
-	qxZPWe7pAg4t74CHkep3rEooiOQS/yiI+3KsvJTBIsGQH+ADrPl33GaYPZROOZ+8On01v6dgDe3
-	jb1HReVZpFYjH01QvSEPPgpIFl+3z9TDshPwx35QC1zrWNldlsobv1IHcS0vM2+EXti6450qliM
-	cbMmrjd2vG0A44i6bFazey9USWDG1hxJuGQ6cos7BNkdfP/dmYrAngpOJ7qRyMWEHxsVikMa4Hw
-	AmmfQUeLKp5QFy6L+EgbBJv8aBugKnxzkTEksi8j6K6nFS1hMYCze9tmSBNn9h7
-X-Received: by 2002:a05:600c:45d5:b0:496:ca1f:a428 with SMTP id 5b1f17b1804b1-499821d26demr65530185e9.19.1786633310090;
-        Thu, 13 Aug 2026 08:01:50 -0700 (PDT)
-Received: from localhost (p200300f65f017104a224b5246b1e216d.dip0.t-ipconnect.de. [2003:f6:5f01:7104:a224:b524:6b1e:216d])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-49981b03cd0sm75972075e9.1.2026.08.13.08.01.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Aug 2026 08:01:49 -0700 (PDT)
-Date: Thu, 13 Aug 2026 17:01:46 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Will Deacon <will@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, mark.rutland@arm.com
-Subject: Re: [PATCH v4 0/2] perf: Add Raspberry Pi AXI PMU driver
-Message-ID: <an3YAEn7Q0GwiaUG@monoceros>
-References: <20260812002728.2283079-1-irogers@google.com>
- <20260812052417.2361040-1-irogers@google.com>
- <anwuYYxLFbtDmmHx@willie-the-truck>
- <CAP-5=fW9bH_yd2VF+X1jnem91+dOHPjP53uNQ8x69xFmjLbt4g@mail.gmail.com>
- <an2DHgfQsQ6TOF44@willie-the-truck>
- <CAP-5=fVOzmzxO2X4+r9goRxtwtWqdR15kPBP9ApSjuP2u6p7Cw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEFVjJK7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7507B1F00A3A;
+	Thu, 13 Aug 2026 15:11:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786633914;
+	bh=gNcZHIKN/IEQlini10YBe8Fxy1gNh75xXuVSYjAv+VU=;
+	h=From:To:Cc:Subject:Date;
+	b=CEFVjJK71Zbk/OQ1lpGFvkIxU/883H+GhsUbz/V7ZP08lBN8dEH4biuXlyn3evLpH
+	 sRfkVJRngfuqHweVf8BDXS/6nV9aCGgjCTAE0qzJqG2bfCbSjsO2ZQqQ73zvaOynon
+	 4FqC2UgwAmB53sT/lvnBiJdAV4Hdh8d+jgEYPGvgap2F7KBkN4dCNbH9mZMLnCXZvy
+	 T8QeG0mhPmpMkrc76OqyECyC38fpSaJBLotiHGzOCiIMZJZxKipaOoo8TIuu9raOR5
+	 XyBoxBRwlNi6B41RnxWJcAzpw12YzQ/P0+wLgpsSSgT/MwXXrIj/cq9qAh4kI7Y6vs
+	 3QCTTFLzKxwSg==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Song Liu <song@kernel.org>
+Subject: [PATCHES v5 0/5] perf DSO hardening series
+Date: Thu, 13 Aug 2026 12:11:41 -0300
+Message-ID: <20260813151148.23169-1-acme@kernel.org>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bhv5kdfh36fwppu4"
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fVOzmzxO2X4+r9goRxtwtWqdR15kPBP9ApSjuP2u6p7Cw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+Hi,
 
---bhv5kdfh36fwppu4
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4 0/2] perf: Add Raspberry Pi AXI PMU driver
-MIME-Version: 1.0
+	Please consider merging,
 
-On Thu, Aug 13, 2026 at 06:44:48AM -0700, Ian Rogers wrote:
-> On Thu, Aug 13, 2026 at 1:41=E2=80=AFAM Will Deacon <will@kernel.org> wro=
-te:
-> >
-> > On Wed, Aug 12, 2026 at 06:38:24AM -0700, Ian Rogers wrote:
-> > > On Wed, Aug 12, 2026 at 1:27=E2=80=AFAM Will Deacon <will@kernel.org>=
- wrote:
-> > > >
-> > > > On Tue, Aug 11, 2026 at 10:24:15PM -0700, Ian Rogers wrote:
-> > > > > This patch series adds an uncore Performance Monitoring Unit (PMU=
-) driver
-> > > > > for Broadcom AXI system and VideoCore VPU performance monitors fo=
-und on
-> > > > > Raspberry Pi SoCs (BCM2835 through BCM2712 / Raspberry Pi 1 throu=
-gh 5).
-> > > >
-> > > > Why are you sending four versions of this patch series, at -rc7, ea=
-ch in
-> > > > reply to the previous one? Nobody is going to review that.
-> > >
-> > > See the cover letter for changes. They address the sashiko reviews,
-> > > you may not see these reviews as they are only sent to me and
-> > > linux-perf-users, which is somewhat customary in the sashiko setup.
-> >
-> > Have you considered running Sashiko locally given that you work at Goog=
-le?
->=20
-> Yes I do. If you look at the changes you will notice that more issues
-> are being resolved per version than the issues raised by Sashiko.
-> Unfortunately, factors like the model, context window and just the
-> inherent non-determinism of AI mean that AI reviews generate a
-> firehose of suggestions that you can't reproduce either remotely or
-> locally.
->=20
-> > > I don't see any relevance in rc7, I'm just mailing out a new driver
-> > > now that I have the opportunity to look at it. Whether and when it
-> > > gets pulled upstream is up to a maintainer.
-> >
-> > Right, as the maintainer for drivers/perf/ and I'm just asking you to
-> > slow down a bit. I don't need 10 versions of a patch series in two days
-> > when I'm focussed almost entirely on the upcoming merge window, which
-> > this is too late for. You should read
-> > Documentation/process/submitting-patches.rst which states:
-> >
-> >   | Wait for a minimum of one week before resubmitting
->=20
-> That's not what it says:
-> https://www.kernel.org/doc/Documentation/process/submitting-patches.rst
-> """
-> Once upon a time, patches used to disappear into the void without comment,
-> but the development process works more smoothly than that now.  You should
-> receive comments within a few weeks (typically 2-3); if that does not
-> happen, make sure that you have sent your patches to the right place.
-> Wait for a minimum of one week before resubmitting or pinging reviewers
-> - possibly longer during busy times like merge windows.
-> """
+Five hardening fixes for the perf DSO data handling code path, all found
+by the sashiko-bot AI reviewer:
 
-I didn't care enough to check if respining a series more than once a
-week is explicitly mentioned, but let me interpret the paragraph for
-you:
+  - __open_dso() can return a file descriptor of 0 (stdin) when
+    dso__get_filename() fails without setting errno, so fd = -errno = 0
+    looked like a successfully opened DSO;
 
-Maintainers are busy people. Patch submitters who increase their inbox
-size considerably without adding much value easily annoy them (and I can
-read Will's annoyance between his lines). A maintainer being annoyed by
-you isn't a good situation to get your patches merged, so better
-consider to follow their advice. Once you made it to a procmail rule
-that routes all your mail to /dev/null, it's hard to recover.
+  - dso__decompress_kmodule_path() calls close(fd) with fd = -1 when
+    decompression fails or the DSO is not compressed, clobbering errno
+    with EBADF on the error path;
 
-Are you aware that it's Will who judges your perf patches in the end and
-picks them up for mainline inclusion (or doesn't)?
+  - file_read() and file_size() read the stale global errno after
+    try_to_open_dso() fails, when by then errno has been through
+    mutex_lock(), nsinfo__mountns_enter() and several open() attempts;
 
-So yes, the documentation about sending patch revisions might be
-incomplete, but if you're asked to slow down, practise some patience and
-do slow down.
+  - dso_cache__memcpy() underflows when cache->size is smaller than the
+    RB tree offset (short pread), computing a huge memcpy length;
 
-Also if Sashiko still finds relevant issues after 9 iterations, it might
-be better to seek internal human(!) feedback by experienced people in
-your company first. I recommend you to reach out to them, before they
-reach out to you about annoying upstream folks and thus damaging your
-reputation and Google's with it.
+  - dso__read_symbol() asserts on an input-dependent condition instead
+    of doing a runtime check, keeping the BPF metadata safe from crafted
+    input.
 
-Best regards
-Uwe
+Best regards,
 
---bhv5kdfh36fwppu4
-Content-Type: application/pgp-signature; name="signature.asc"
+- Arnaldo
 
------BEGIN PGP SIGNATURE-----
+What changed from v4 (6b06155e7794e6af):
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmp93FgACgkQj4D7WH0S
-/k5Kpgf5ATTmyu6kJCS0955udpxpXmTJ7JxCYhgN+G1BAAu7jp/u/KY2XWN8bQQS
-uEQVZjMCMedQIoONcztXt+cY0IkAASER0CWkgLVDt+QnRjEyZg2QSHg+tkJNJAm2
-tTVNZkrOCZsFU4+MIyBhPcySLotLA9mJsCguyI3XL+EKmoYbvQUYi7SKEooq4g34
-nYmbCPL311rCBRe88Eb/oBMexpUQdCwzIf33DfApU2ASTxYBtxYJOic77El4uzjK
-za8AV7iEavsb6xJFvzam6s9pSenpQCQg3w6J9VJJxtlTRybRytrKHjd8f5D5rJg7
-53BVklIR3Y+A+Zz6cPPuo1Yevq7StA==
-=tysB
------END PGP SIGNATURE-----
+  PATCH 1/5:
+  - Kept errno = ENOENT for the callers that check it after a negative
+    fd, but dso__get_filename()'s chroot fallback now re-stats() and
+    only takes the chroot path when stat() actually failed with ENOENT:
+    a successful stat() on a non-regular file (e.g. a directory) leaves
+    a stale errno, which the try_to_open_dso() fallback loop could
+    inherit from the forced ENOENT and wrongly send down the chroot
+    path [sashiko-bot review of PATCH 1/5].
 
---bhv5kdfh36fwppu4--
+  PATCH 3/5:
+  - Dropped the assert(ret < 0) calls and the "fd is always negative"
+    comments added in v3: the enclosing if (dso__data(dso)->fd < 0)
+    already guarantees ret < 0, so they — and the <assert.h> include
+    the asserts required — are gone [Namhyung Kim review].
+
+  - All 5 patches: moved Reviewed-by: Ian Rogers above the
+    Assisted-by/Signed-off-by trailers with no blank line, fixing the
+    trailer layout issue seen on the last submission.
+
+What changed from v3 (41ed39bf2dac1d80):
+
+  PATCH 3/5:
+  - Added assert(ret < 0) after ret = dso__data(dso)->fd in both
+    file_read() and file_size() to verify the comment that fd is always
+    negative, never 0 [Ian Rogers review nit].
+
+  - All 5 patches carry Reviewed-by: Ian Rogers.
+
+What changed from v2 (2f944ea022b6429f):
+
+  PATCH 3/5:
+  - file_size() now also uses the stored fd error instead of the stale
+    global errno on open failure; the commit was retitled to cover both
+    file_read() and file_size() [sashiko-bot review of PATCH 3/5].
+  - Comment corrected: on failure dso__data(dso)->fd is always
+    negative — -errno from __open_dso() or -1 from do_open() — never 0.
+
+  PATCH 4/5:
+  - Clarified that returning 0 for an offset past a short-read chunk
+    is EOF semantics — for a regular file a short pread only happens at
+    end-of-file, so 0 is what a direct pread() at that offset would
+    return — not a cache-miss that triggers a re-read; comment and
+    commit message updated [sashiko-bot review of PATCH 4/5].
+
+  - The lockless dso cache RB tree lookup vs. concurrent insert
+    question raised in the same review is pre-existing; it is recorded
+    in tools/perf/TODO.hardening (item 175) for follow-up work, with
+    no change to this series.
+
+What changed from v1 (20260802142022.154219-1-acme@kernel.org):
+
+  PATCH 1/5:
+  - __open_dso() now sets errno = ENOENT directly when
+    dso__get_filename() fails with errno == 0, instead of only computing
+    fd = -ENOENT.  Callers that check errno after a negative fd (e.g.
+    file_read() returning -errno) no longer get 0/EOF for an open
+    failure [sashiko-bot review of PATCH 1/5].
+
+  - Rebased onto the current perf-tools-next head (bf10e6ee2ac3034c).
+
+This series was developed with assistance from Claude (claude-opus-4.6)
+and Opencode (deepseek-v4-flash-free) for code analysis, patch
+generation, and commit message composition.  All changes were validated
+by the maintainer.
+
+Arnaldo Carvalho de Melo (5):
+  perf dso: Guard against errno==0 when dso__get_filename() returns NULL
+  perf dso: Guard close() against invalid fd in
+    dso__decompress_kmodule_path()
+  perf dso: Use stored fd error instead of stale errno in file_read()
+    and file_size()
+  perf dso: Guard against cache underflow on short reads in
+    dso_cache__memcpy()
+  perf dso: Replace assert with runtime check in dso__read_symbol()
+
+ tools/perf/util/dso.c | 48 ++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 40 insertions(+), 8 deletions(-)
+
+base-commit: bf10e6ee2ac3034c9068e03eed418fd16961984e
+v4-head: 6b06155e7794e6af7d2f0901d75a8d8a8607f030
+v3-head: 41ed39bf2dac1d80
+v2-head: 2f944ea022b6429f
+v1-head: f6cb9e46c7b8949b
