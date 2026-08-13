@@ -1,250 +1,345 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE54A263F5D;
-	Thu, 13 Aug 2026 06:22:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786602139; cv=none; b=XVNoOgZ8L2pctJNE8PKH0m/KfLFCjt+qG85tuc4I1e/eUks70ZUR/E/Ap64L1dWF1J5Og16Dab471/7mGF8Yhpp8K2ENB026ULgXLtUh5UE4iNehPF41AfsfE0xnWxv2X+X4jUTywQ+gkye4wFjDqs54lJSHCCI2UQZAsR+csMw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786602139; c=relaxed/simple;
-	bh=+5D3p7sScaegm1VIyeqCpLf42CdpIop97jVtqGW3CuU=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=R8IBjyIs9/rSjEMHTWNsgJcLN36hcJi4VPgAiBFLNUUrwj/kWrsOfAlhsvoQHix0jxD/buSHYVq7BVyxSM8d7qLLAHtJZY12SU9xB0fhvzSnOT0OumVrd2w2WqPX4TvLp+GybeEfwiapjh636aJzEuo17Ql9JBixv9RqtuXw7PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W6wiVsus; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC301AAE17
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 06:23:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.11
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786602224; cv=fail; b=KgNf9eASQ9xbnLEqu92Hw5lbiL0Okrk5XfkeQlmQxBpBHs2Q1Yes6PI+cK7CqFjHvA4EB5JSXv+cfXkClMfrUb3iGWYHbw24T3LomQTUYtzc6LKU+OoAYeBCod0jofI+1LAyJbFhilGw2HOQi7n1vZ06t0X+DItVi/R6idtasJk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786602224; c=relaxed/simple;
+	bh=wVOzRDg7p0WmwzeKeyGo7tXJv3EEJ3AZHYM9x/w+Bnk=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=a/fkuhTX9cFD1HSZV5szW61tUHtRQ8s2McLhewXlTkqAH7PDsYusYxoWh5OHiVBqqRAwy7DWdLrijavDtoHnhBAVr9j8qw3VrC6pqrEkSExApxhSrukCXzl2Hx45UI2zRvyyX/KQP9YCtIjuhPtd+r0LARBggV06enWqYPk08dA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eMDA/q7b; arc=fail smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W6wiVsus"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279721F000E9;
-	Thu, 13 Aug 2026 06:22:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786602137;
-	bh=Rlj1vBayaDgp+9Da8eEHI6cd9R9vw9wihbVfkn1bs7k=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=W6wiVsusoSR1wDQPEvTaTVdyDoIazlFyoA9h4w1trf8gj08kgGvoahxYZrnOUdxWg
-	 Diqg+RW3Mc0GkhQpkkDilFEyatnLAFn2+seZ4b7WqUYlXPIzZicaWQ+lhb/NAIup4y
-	 nOf5+FcdSO3QbRDpAFDcWigtDKd/dc2xghF9w8FDmch8YjrGv7jGKRr6p15+e5IXgx
-	 qBbLRmHcIos0IpTVyhNs40SnzJL845WsNK/eo/wUaiGbQxHq9AldgUq/t06GJ/KK5E
-	 IuhbKsqn8TSCcX3VlsFb5mAQyQT9fT3vW/95FCy9AMGk8gm2v3l/rOTZx5pDGVbSC2
-	 RUTyCLwBGKokA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf/bpf: Fix data races in BPF perf event handling
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Deepanshu Kartikey" <kartikey406@gmail.com>
-Cc: bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260813060528.365959-1-kartikey406@gmail.com>
-References: <20260813060528.365959-1-kartikey406@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 13 Aug 2026 06:22:16 +0000
-Message-Id: <20260813062217.279721F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eMDA/q7b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1786602222; x=1818138222;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=wVOzRDg7p0WmwzeKeyGo7tXJv3EEJ3AZHYM9x/w+Bnk=;
+  b=eMDA/q7bSDpZS8P459ZPkZMaz6fYm2ZgmfPHGKPD+9t+K4KbyiWYoBBX
+   WqSAAT1O8Dlv8ZD2n2Xt9QTGLDUNktjAW5zR3skZ2X6aYY6J9s/LmO0qz
+   VBt19JRgjpthp3OTEDuP6xnUhqpOmC/Y14rdcJw23eI3ldMcZ2ggLLhfV
+   SO3G51sdEVB7K4ngc3GM0XfGPq+l6avabs7RBYlkfkruv2ZIEVlLbwO6i
+   27iR8sHso1SqufnUIvtL5o2SMGGaG4lbPMv89MAsAWATOau6G4s6grdHh
+   mO9WeqZ2vkO2Z0Ogp+G2YEUT8U4VX532g35Xnk+E7mSd1OCfp/B6hOODx
+   A==;
+X-CSE-ConnectionGUID: pDjbEcsJR8GaH5kv5Vl3Ew==
+X-CSE-MsgGUID: K30cHKpqTFyMxz/IzuZ7fg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11873"; a="97757685"
+X-IronPort-AV: E=Sophos;i="6.25,220,1779174000"; 
+   d="scan'208";a="97757685"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 23:23:41 -0700
+X-CSE-ConnectionGUID: D3gvUxRORK2Z2nWUPeckoA==
+X-CSE-MsgGUID: UpXRooNUQ9a9Zeo0thEPIQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,220,1779174000"; 
+   d="scan'208";a="260558305"
+Received: from fmsmsx901.amr.corp.intel.com ([10.18.126.90])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2026 23:23:40 -0700
+Received: from FMSMSX902.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Wed, 12 Aug 2026 23:23:40 -0700
+Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
+ FMSMSX902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45 via Frontend Transport; Wed, 12 Aug 2026 23:23:40 -0700
+Received: from BYAPR05CU005.outbound.protection.outlook.com (52.101.85.14) by
+ edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Wed, 12 Aug 2026 23:22:54 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=vluAEjFHRlavh71M3oPsrv2G6lF7Jxmo9i2Iw+iIvIzIvFowro/Z5J3/QRvDX4DwQVev8cOT/gpua0SSjzvGcT+i2Zd++wwJWJlw7296ExLTObTvNgbeD9bdhSJHt9Mho5rqZ3901L7QRNcmXB65PqcHoJHoJOVkmNQ8Rp/N+TJp/s1UmCr2n63IUDdVfhc7mAiyXixBaRjqnh7pVAe7jzNOz4Ai9BS6P51iSq3wLBmWEBzWMxREVpo4keaW6VEDt3/gbIykPuMpcMk0G4qD1vfQBrDAAltbUgjfeaPyj+HvhQTACRbs/1wI1gfnGiboLOlrV9Q6jWbzuH3cnSAQdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wfcjnI9CBbyWZHEI7tud3D8TdoZJwyUIiF7C8TxPF64=;
+ b=Y19M7K6qdSiKLCM6uhwQyKtTQpiTuE0XDZYMIMmPWSf/dgsBJx6KWRgp1p+7CY66nGkQ/0E0vr3d0ZFPFi8J4dc4lS/jWx2vbTNAtmYKmNAt/6gCjkADor5bLw/U0zwZb5h8r9f9sh4ve5A30D9rKSDB6ZqkL3Hl2Kz9NV6W+UH0TCU5P25kJzL7cQCR+/ppGIFM7iZDcaASrqLRCGpj7TDphmUPcZAgukwtC8U/nhepmc13R03EgA6Zmd1TgeCw43PR5HAtxfL70yfeWBQy1VjPc63fMJaaYncY8P9zTFx3qh3BuaH4DIioF2Nhoy7E9OijSRpOAPK8Vk5Wz3tbUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
+ by SJ0PR11MB5021.namprd11.prod.outlook.com (2603:10b6:a03:2dc::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.14; Thu, 13 Aug
+ 2026 06:22:21 +0000
+Received: from IA1PR11MB7198.namprd11.prod.outlook.com
+ ([fe80::2c4e:e92a:4fa:a456]) by IA1PR11MB7198.namprd11.prod.outlook.com
+ ([fe80::2c4e:e92a:4fa:a456%3]) with mapi id 15.21.0315.014; Thu, 13 Aug 2026
+ 06:22:20 +0000
+Message-ID: <a6424439-d42e-4f62-92ee-525c7f2d4277@intel.com>
+Date: Thu, 13 Aug 2026 09:22:14 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V5 4/6] tools/perf: Add powerpc callback support for
+ arch_perf_record__need_read
+To: Athira Rajeev <atrajeev@linux.ibm.com>, <acme@kernel.org>,
+	<jolsa@kernel.org>, <maddy@linux.ibm.com>, <irogers@google.com>,
+	<namhyung@kernel.org>
+CC: <linux-perf-users@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<hbathini@linux.vnet.ibm.com>, <tejas05@linux.ibm.com>,
+	<tshah@linux.ibm.com>, <venkat88@linux.ibm.com>, <usha.r2@ibm.com>
+References: <20260807144135.2607-1-atrajeev@linux.ibm.com>
+ <20260807144135.2607-5-atrajeev@linux.ibm.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
+ 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
+ 4, Domiciled in Helsinki
+In-Reply-To: <20260807144135.2607-5-atrajeev@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DU6P191CA0008.EURP191.PROD.OUTLOOK.COM
+ (2603:10a6:10:540::20) To IA1PR11MB7198.namprd11.prod.outlook.com
+ (2603:10b6:208:419::15)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|SJ0PR11MB5021:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0faf1401-9601-4d2d-2693-08def9033afc
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|23010399003|22082099003|18002099003|56012099006|6133799003|11063799006|4143699003|10067099003;
+X-Microsoft-Antispam-Message-Info: QhmuY/JJ0RnnzWMhjeVH8bN5cHF5EsAaNmX+04W5sddS6DTpSh3ma4pPeVRRQp0pXBAL+aXo97TSbPV9L4op+MoxA97qqq3hT/740QjZdM5pcAZRFHBEQTgcCE2yyl4T189X24y/g5YHu4Cb+s6452CxiSE5pkUs0+sQNq6tziZXgetPos7jeATboZ6yEsIeucKWXc1Rav3wLjIHq0URcOQOv9Ib3ongargqAF1kgPV5WvR70r8SZx716jb0MYx/3mYrGYqgi1Ou6sjKot9qyXcSb4DAJWCMHhJuA2Dw4XYtMdwKpyADI3zZoOKVlyd3fsw1Hcur6simIyoSvDs/aSM2mAxwGravF+k0Yha4CHxjWhTddhQzXR8nuaIj4KQPw3SBhKvDiRMit6RHAmYXn1iffwWDAte4CUtg0ymPq3UcjdagPzj0hZ20SHNbM0ZkEcm6MYQsKo+Pf3fnJkjXflO5hQLQlValO4mY1Qf2rZWtgZJc1GWCAQoUc5X5nE03LwpiKg10p0ze1J+uBgYRaPCf4po04mWHxzgnXviA4shGhvFOufWE1LcdU2fshmXspLEfbCagTOZtimXsbRT2GBCsKk94a0hZgmuBHuySnYbtkI0/Ow/Xs80mvIvnf9PyA56CX3gf/yaAATyiWl3X+DTArEdL0COJgCSDhFUw5cQ=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(23010399003)(22082099003)(18002099003)(56012099006)(6133799003)(11063799006)(4143699003)(10067099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SDJwS2ZzV29BTm1FVHBpZ0dLOXJGc2ZKQlpXeUsvTWw2bU5VK1RVZGhqYVMv?=
+ =?utf-8?B?MEo3cGFKUSs1dXRqNEJJNmV5RW11cm1OMkJsUVBFYzZSeVkwT3RtRzdTTmlE?=
+ =?utf-8?B?cjA2bElrRlJSNURBTzUvL0tjejhUZEhrSWxBcTY2VldTZng2RjZJc0tzWVVI?=
+ =?utf-8?B?cU0zeE93UmRIYVVVMmtPR3JySDBTS3ZUUWM4WFhGWGprcGpQKzNiWFVGWFBr?=
+ =?utf-8?B?YVpxNVpmbnpobzVSQlF0aDdvdVp2N1pOS0VTdFNNdkkyajlhWThJSjNmanpI?=
+ =?utf-8?B?YlY3ajVJMkNhdjBoejdrdDdqMm5HVWErWUFjVFllRHBlR2ZERlRyWE1KUGJS?=
+ =?utf-8?B?SzlWZGl3aXM2Mmk2KzB3c2sxUXVKL0NMMDE1YmVLdFJ1cnFtTDNBOERwdGdh?=
+ =?utf-8?B?VFg0MTEwOENRamtkc3BGT0RtaThBUVJTMlFVYThWYXJNRHhjTVJOMDFWclFs?=
+ =?utf-8?B?Q0EvUDBmbzlhK2ZTaUVYSnhoajJPUFprMGczb3dJc0dPZzlTb24ybDdOUkFF?=
+ =?utf-8?B?bnloVXdNQm9NZys3bTZoRi9KVGJaYnhmV0M1NEFNZllOM0F5eVRtS0FMM3Vk?=
+ =?utf-8?B?eWNNRGN1UHJLYjhmdWFvWlIxQlhCOVFQU0NINUROK1htN3FrS20zQm1aeFVU?=
+ =?utf-8?B?K0M0YklkaXIyUDFaTjMyMUlDTk0rVERWZXNQK2kwcHMzNWhyRW9KMDJxRERX?=
+ =?utf-8?B?R2tNTlRHUjJ5a1Z2MTZLVENFYXVVa0FyQTRwTm82SGd0Nk5vdWpFK1paZ28x?=
+ =?utf-8?B?T3pXa21jZFZNamE1MXFObUdoSTBoT05qMzN6Y2VDanB3OWZVK2VEMTJaY0tU?=
+ =?utf-8?B?NXp6MEVyRFh3U1FUczkwQVVST0p1U00rYTROcnQ5VWdkVFBldkZSUXlENzRS?=
+ =?utf-8?B?eUVVc0hTNGY5SUJ5Sno1RUNMbFhnTmpPd1QzeVdXR0x2dFNqTFBkbUM4RitZ?=
+ =?utf-8?B?aDdLVHkycStnMnhQbVNBWGlWaTRCL0I2blFSTmQ5V09EUWVTaDBuYzE4b3o4?=
+ =?utf-8?B?M0F4QUZZMDM2ZEFzYTFGV2JXSFF6MVdFaG9Xc0gwZFF1Sjh2ZS9WQ0ROOHpU?=
+ =?utf-8?B?Mk1tenBqb2NhaU11eW5iSkhWdlZmTG01V1BYeTVTZmtnWlFnNmtkYWZhZnM3?=
+ =?utf-8?B?UHpSQWhvOENKNWRoYlBhMDVDVGZKNytLcUxyM0gzVSs5Tk1VaWdHWlFRTEpO?=
+ =?utf-8?B?Qk0wK1hOMkg5Wk9ESlJLWSsyTTRtMkR1RjVqeEJLQnZrekZJL0JYZHFmOG53?=
+ =?utf-8?B?SW9QdHBJRjg2MC9xYkR1TnlEOXRyMW5qdzlYMUpBR25rMlFIVk92RW1sZHBM?=
+ =?utf-8?B?d3NnSU9hR3p1MERMRXVRMUVlTjRJcjh2aWFEOStyejF1MStKWlNNaFdybEpC?=
+ =?utf-8?B?dHhRajJPY1FRWmhFK1ZmaFhyd3JvaUYzaU5DeVN2STlkcElBT05rWmd3clQz?=
+ =?utf-8?B?MTN4UERIa0llbUpMUXB1THpKcjZ2SDZvZUQ2TlZuZXBNWCt6cGMxMUZuMUY2?=
+ =?utf-8?B?bzdBUHB0N0lyQnMyV0wxUkZwNmRMdVFJWmxQZTdBZGN4OXNJdFlSc0ZDMHF1?=
+ =?utf-8?B?VzRIeXIwd1dZcUE1bUJQRzVmS0Y5STZVM1VRUWg3ek9KaTJaeWQ3bUZCZmMw?=
+ =?utf-8?B?YW82RnJhTzkrRVp2eXN4bW9JYkRoTlBJOExTbTVLV21lT2FrOVdwMlZsWVJ3?=
+ =?utf-8?B?RUJDUlNoaXB5OUhSWTYzU3pNM2VHQ3IxemxUVTM1ZTB5c2dTZVJMWlBmN1lE?=
+ =?utf-8?B?RllHenZqdG1JU3A3NnlwQkoxL09kb2gxSkxQaFVGdzBEc01tR2hUVTlPeDBn?=
+ =?utf-8?B?QzZONTVpMHBKWjVJWlVISTJhaXpZTUZBRk1KVlhxNkZHcnVodWlsQVhCTFVU?=
+ =?utf-8?B?Z3FQZ2ZEVk5rNzdiazh5UmtjQ1JSWmdDNzdsWHJJemd1dnJPRGhxN004R0Zo?=
+ =?utf-8?B?eHJPOTlhaGwxTzJiQ091bllKWCt6MEtzU3RkejVRL3J3eEMvRUxKZGtrYmhr?=
+ =?utf-8?B?TkpTZzc1b0haaDBLNi9HNUY0MGRob3hZYWhud25lcXVuaWVsdWFESUx4M0lu?=
+ =?utf-8?B?LzdTWWxMZ1FESVNnTjN5Tjc0a2dNZXlETFYrWXZSRVB4NUkzYTVITEJYdXpk?=
+ =?utf-8?B?QXV6cDhhbFRxRVZ1Q09WeWJrcW94R3F3NVg5Qk9Lb2U4LzdVU2UvQkdsYi8z?=
+ =?utf-8?B?QkRMQTJwVVZkQUYyY0hqRHhzWGxuZDNpYXA3L2w2SXJsVFNzTU9jWjBUWXZy?=
+ =?utf-8?B?ZTdXTEFsQjhwMDZwRTY4dlA5emFOWkpzOVJjWVBGSWFGWHpjYUFhNnpmenpE?=
+ =?utf-8?B?WXpWUkZEdVNESVlCS0lySzFycEsrTXJJeEphOVJVdk9RYmIyKzBwZFZUQ2wx?=
+ =?utf-8?Q?Tr4+Ul5TbNT23xKg=3D?=
+X-Exchange-RoutingPolicyChecked: PeS0osAx3aPHtSjNiKN6eGWkL+grjA2z3NgGBlMGx2AOTjqItDxJNcCC9wdKcoFodwLa50V5G60KlzC/3szSxuD85EGRRhbwzVfkKoUJ1Cun/7pwcGaX1iRSaucn3Fo9/jtBiwPM5bUhVAQRc1Jo8v6fBWVEAI1d+nylQFvaYjaaCRTKp4ALUySKKng+ExYHxFZmU4MD8evnSpgdZFHepL4018wKn8jT3dNZBHmgP/U7Fz3w4dtxU8wdodoRUr1+XZbTLiJ7uG0KwAxhgFpdgrEhDgWObVE1UydVvk6e4iwyLahQVMb7sl/UMVhN7CeUx06tcwUkYD2bf65km15ETA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0faf1401-9601-4d2d-2693-08def9033afc
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7198.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Aug 2026 06:22:20.6673
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: o4k2bbqDm7+7cMNuxKoF2ZInDkaQTTs6+4p9MkasZAnyPwDkS2o/QkQ6VSR16CuqEbUtINhiVBneVtoawpJ7Ag==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR11MB5021
+X-OriginatorOrg: intel.com
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
-s) to consider:
+On 07/08/2026 17:41, Athira Rajeev wrote:
+> Implement the arch_perf_record__need_read() architecture-specific hook
+> for powerpc in arch/powerpc/util/evsel.c.
+> 
+> The HTM kernel driver sets event->count to the number of records still
+> staged in its internal buffers (total_size / record_size), and to 0
+> once the stream is exhausted.  This hook reads that count for every open
+> htm evsel via perf_evsel__read() and accumulates the values into
+> total_pending_records.  A non-zero total means at least one HTM target
+> still has records pending; the recording loop added in the previous
+> patch will perform another mmap-read pass.
+> 
+> The drain uses a two-layer safety check: event->count detects records
+> staged by the driver, and record__bytes_written() in the drain loop
+> confirms data was actually moved into perf.data.  This combination
+> handles the case where the driver count is briefly stale while hardware
+> is still flushing.
+> 
+> The implementation scans the evlist using evsel__pmu_name() to identify
+> HTM events by their kernel-assigned PMU name rather than the
+> user-visible event name, preventing false matches.  It iterates the fd/
+> sample-id xyarray, and skips any evsel whose fd and sample-id arrays are
+> mismatched to avoid reading stale state.  When the accumulated record
+> count reaches zero the hook returns 0 and the recording loop proceeds to
+> disable and close the events.
 
-New issues:
-- [High] Unconditional use of `bpf_event_mutex` in `kernel/events/core.c` c=
-auses a linker error in valid Kconfig combinations where `CONFIG_BPF_EVENTS=
-` is disabled.
+This looks like the proposed driver:
 
-Pre-existing issues:
-- [High] The fix for the data race in `perf_event_alloc()` is incomplete be=
-cause `bpf_event_mutex` is not held during the detachment of non-tracing BP=
-F programs, leaving the use-after-free race unfixed.
-- [High] Dereferencing prog->type without rcu_read_lock_trace() exposes sle=
-epable BPF programs to Use-After-Free.
-- [Medium] The patch misses a plain write to event->prog in perf_event_atta=
-ch_bpf_prog(), leaving a data race with READ_ONCE(event->prog) unfixed.
-- [Medium] `perf_event_free_bpf_handler()` still contains a plain read of `=
-event->prog` which can race with a concurrent `WRITE_ONCE()` in `perf_event=
-_set_bpf_handler()`.
-- [Medium] Missing release barrier in perf_event_set_bpf_handler() allows B=
-PF programs to observe uninitialized or stale bpf_cookie values.
---
+	https://lore.kernel.org/all/20260701083806.79358-1-atrajeev@linux.ibm.com/
 
---- Patch [1]: [PATCH v2] perf/bpf: Fix data races in BPF perf event handli=
-ng ---
-commit f4518a73c55a1297eca26073838ec515d34cb05a
-Author: Deepanshu Kartikey <kartikey406@gmail.com>
-perf/bpf: Fix data races in BPF perf event handling
+breaks the perf ABI.
 
-This commit attempts to fix data races around the event->prog field
-by introducing READ_ONCE and WRITE_ONCE in various handlers, and acquiring
-bpf_event_mutex during fork() in perf_event_alloc().
+I am not going to review any more tools patches for now.
 
-Link: https://lore.kernel.org/all/20260811235331.10044-1-kartikey406@gmail.=
-com/T/
-
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 48d851fbd8ea5..5c6dabb6dccb1 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -2136,4 +2136,6 @@ static inline void perf_lopwr_cb(bool mode)
->  }
->  #endif
-> =20
-> +extern struct mutex bpf_event_mutex;
-> +
-
-[Severity: High]
-Will this extern declaration lead to a linker error in valid Kconfig
-combinations where CONFIG_BPF_EVENTS is disabled?
-
-The bpf_event_mutex is defined in kernel/trace/bpf_trace.c, which is
-only compiled when CONFIG_BPF_EVENTS=3Dy. If a kernel is configured with
-CONFIG_BPF_SYSCALL=3Dy and CONFIG_EVENT_TRACING=3Dy, but kprobe and uprobe
-events are disabled, this might result in an unresolved external symbol.
-
->  #endif /* _LINUX_PERF_EVENT_H */
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index ba5bd6a78fe7b..1416066ef460e 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-
-[ ... ]
-
-> @@ -10708,7 +10707,7 @@ static inline int perf_event_set_bpf_handler(stru=
-ct perf_event *event,
->  		return -EPROTO;
->  	}
-> =20
-> -	event->prog =3D prog;
-> +	WRITE_ONCE(event->prog, prog);
->  	event->bpf_cookie =3D bpf_cookie;
->  	return 0;
->  }
-
-[Severity: Medium]
-This is a pre-existing issue, but does publishing event->prog without a
-release barrier allow concurrent readers in __perf_event_overflow() to
-observe an uninitialized or stale bpf_cookie?
-
-Without smp_store_release() or similar ordering, the CPU can reorder the
-event->prog write and the plain store to event->bpf_cookie. Since the reader
-uses READ_ONCE(), which lacks acquire semantics, a BPF program might read
-the uninitialized cookie.
-
-> @@ -10720,7 +10719,7 @@ static inline void perf_event_free_bpf_handler(st=
-ruct perf_event *event)
->  	if (!prog)
->  		return;
-> =20
-> -	event->prog =3D NULL;
-> +	WRITE_ONCE(event->prog, NULL);
->  	bpf_prog_put(prog);
->  }
-
-[Severity: Medium]
-This is a pre-existing issue, but does perf_event_free_bpf_handler() still
-contain a plain read of event->prog?
-
-At the beginning of this function:
-	struct bpf_prog *prog =3D event->prog;
-
-Could this read race with a concurrent WRITE_ONCE() from
-perf_event_set_bpf_handler() during ioctl(PERF_EVENT_IOC_SET_BPF)?
-
-[Severity: High]
-This is a pre-existing issue, but does perf_event_free_bpf_handler() need to
-acquire bpf_event_mutex to safely detach non-tracing BPF programs?
-
-Because this function clears event->prog and drops the program reference
-locklessly, a concurrent fork() calling perf_event_alloc() could acquire the
-mutex, read the program, and increment a zero-refcount object.
-
->  #else
-> @@ -10753,6 +10752,7 @@ static int __perf_event_overflow(struct perf_even=
-t *event,
+> 
+> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
+> ---
+> Changes in V5:
+> - When an HTM evsel is a group sibling (evsel->core.leader !=
+>   &evsel->core), read through its group leader's struct perf_evsel
+>   instead of the sibling directly.  perf_evsel__read_size() uses
+>   evsel->nr_members to compute the read buffer size; nr_members is 0
+>   for siblings, so size=0 is passed to readn(), which returns <=0 and
+>   leaves count.val=0, causing the drain loop to terminate prematurely.
+>   Reading through the leader avoids the zero-size buffer and correctly
+>   accumulates the leader's pending count.  HTM events are always
+>   standalone or per-target leaders in practice; the leader redirect
+>   handles any grouped configuration without losing counts.
+> 
+> Changes in V4:
+> - No changes from V3.
+> 
+> Changes in V3:
+> - Use evsel__pmu_name(evsel) instead of strstarts(evsel->name, "htm")
+> to identify HTM events, matching by kernel-assigned PMU name rather
+> than user-visible event name.
+> - Remove the redundant two-pass loop (first pass to set found_htm,
+> second to accumulate counts); a single pass with evsel__pmu_name()
+> is sufficient. if no HTM event exists total_pending_records stays 0
+> and the function returns 0.
+> - Remove the dead !strcmp(evsel->name, "dummy:u") check;
+> - evsel__pmu_name() will never return "htm" for a dummy:u software
+> event.
+> - Rename total_pending_bytes -> total_pending_records to match what
+> the driver actually reports (event->count = total_size / record_size,
+> a record count, not a byte count).
+> - Add #include <string.h> for musl compatibility (strcmp() without
+> it warns on some toolchains).
+> 
+> Changes in V2:
+> - Implements the renamed arch_perf_record__need_read() hook (V1
+>   implemented arch_record__collect_final_data()).
+> - Skips evsels whose fd and sample-id xyarrays are mismatched, avoiding
+>   stale-state reads.  V1 had no such guard.
+> - evlist__enable cycling is removed; that responsibility now belongs to
+>   the drain loop in builtin-record.c added in patch 3.
+> - File location changed to arch/powerpc/util/evsel.c (V1 used
+>   arch/powerpc/util/powerpc-htm.c).
+> - Patch is now 4/6 instead of 4/9.
+> 
+>  tools/perf/arch/powerpc/util/evsel.c | 77 ++++++++++++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+> 
+> diff --git a/tools/perf/arch/powerpc/util/evsel.c b/tools/perf/arch/powerpc/util/evsel.c
+> index 2f733cdc8dbb..2b7851c70677 100644
+> --- a/tools/perf/arch/powerpc/util/evsel.c
+> +++ b/tools/perf/arch/powerpc/util/evsel.c
+> @@ -1,8 +1,85 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <stdio.h>
+> +#include <string.h>
+> +#include <unistd.h>
+> +#include <linux/string.h>
+>  #include "util/evsel.h"
+> +#include "util/record.h"
+> +#include "util/evlist.h"
+> +#include "util/debug.h"
+> +#include <internal/xyarray.h>
+> +#include <internal/lib.h>
+>  
+>  void arch_evsel__set_sample_weight(struct evsel *evsel)
 >  {
->  	int events =3D atomic_read(&event->event_limit);
->  	int ret =3D 0;
-> +	struct bpf_prog *prog;
-> =20
->  	/*
->  	 * Non-sampling counters might still use the PMI to fold short
-> @@ -10766,8 +10766,9 @@ static int __perf_event_overflow(struct perf_even=
-t *event,
->  	if (event->attr.aux_pause)
->  		perf_event_aux_pause(event->aux_event, true);
-> =20
-> -	if (event->prog && event->prog->type =3D=3D BPF_PROG_TYPE_PERF_EVENT &&
-> -	    !bpf_overflow_handler(event, data, regs))
-> +	prog =3D READ_ONCE(event->prog);
-> +	if (prog && prog->type =3D=3D BPF_PROG_TYPE_PERF_EVENT &&
-> +	    !bpf_overflow_handler(event, data, regs, prog))
+>  	evsel__set_sample_bit(evsel, WEIGHT_STRUCT);
+>  }
+> +
+> +/*
+> + * powerpc implementation of arch_perf_record__need_read().
+> + *
+> + * Reads event->count for every open HTM evsel by issuing a direct
+> + * read() on the event fd with a plain u64 buffer, bypassing the
+> + * PERF_FORMAT_GROUP path in perf_evsel__read().  When an HTM evsel is
+> + * a group sibling, evsel__config() sets PERF_FORMAT_GROUP on its attr;
+> + * perf_evsel__read() would then call perf_evsel__read_group() which
+> + * sizes the buffer by evsel->nr_members (0 for siblings), causing the
+> + * kernel to return -ENOSPC.  Reading the fd directly with sizeof(u64)
+> + * retrieves the HTM driver's plain pending-record count regardless of
+> + * group membership.
+> + *
+> + * Returns: 1 if more data exists, 0 if collection is complete
+> + */
+> +int arch_perf_record__need_read(struct evlist *evlist)
+> +{
+> +	struct evsel *evsel;
+> +	u64 total_pending_records = 0;
+> +	int x, y;
+> +
+> +	/* there was an error during record__open */
+> +	if (!evlist)
+> +		return 0;
+> +
+> +	/* Read HTM event counts to check if more data is available */
+> +	evlist__for_each_entry(evlist, evsel) {
+> +		struct perf_evsel *rd_evsel;
+> +		struct xyarray *xy;
+> +
+> +		if (strcmp(evsel__pmu_name(evsel), "htm"))
+> +			continue;
+> +
+> +		/*
+> +		 * For group siblings nr_members == 0, which makes
+> +		 * perf_evsel__read_size() return 0 and readn() fail.
+> +		 * Read through the leader instead; perf_evsel__read_group()
+> +		 * extracts the leader's own count from the group buffer.
+> +		 */
+> +		if (evsel->core.leader != &evsel->core)
+> +			rd_evsel = evsel->core.leader;
+> +		else
+> +			rd_evsel = &evsel->core;
+> +
+> +		xy = rd_evsel->sample_id;
+> +
+> +		if (xy == NULL || rd_evsel->fd == NULL)
+> +			continue;
+> +
+> +		if (xyarray__max_x(rd_evsel->fd) != xyarray__max_x(xy) ||
+> +		    xyarray__max_y(rd_evsel->fd) != xyarray__max_y(xy)) {
+> +			pr_debug("Unmatched FD vs sample ID array for HTM event\n");
+> +			continue;
+> +		}
+> +
+> +		for (x = 0; x < xyarray__max_x(xy); x++) {
+> +			for (y = 0; y < xyarray__max_y(xy); y++) {
+> +				struct perf_counts_values count = { .val = 0 };
+> +
+> +				if (perf_evsel__read(rd_evsel, x, y, &count) == 0)
+> +					total_pending_records += count.val;
+> +			}
+> +		}
+> +	}
+> +
+> +	/* Collection is complete only when ALL hardware queues have no pending records */
+> +	return (total_pending_records > 0) ? 1 : 0;
+> +}
 
-[Severity: High]
-This is a pre-existing issue, but does dereferencing prog->type here
-without rcu_read_lock_trace() expose sleepable BPF programs to a
-use-after-free?
-
-RCU Tasks Trace grace periods do not wait for NMIs or preemption-disabled
-sections (Classic RCU context). If a sleepable program is detached and freed
-via call_rcu_tasks_trace(), couldn't it be freed while __perf_event_overflo=
-w()
-is still executing and evaluating prog->type?
-
->  		goto out;
-> =20
->  	/*
-> @@ -13433,12 +13434,15 @@ perf_event_alloc(struct perf_event_attr *attr, =
-int cpu,
->  		overflow_handler =3D parent_event->overflow_handler;
->  		context =3D parent_event->overflow_handler_context;
->  #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_EVENT_TRACING)
-> -		if (parent_event->prog) {
-> -			struct bpf_prog *prog =3D parent_event->prog;
-> =20
-> +		struct bpf_prog *prog;
-> =20
-> +		mutex_lock(&bpf_event_mutex);
-> +		prog =3D parent_event->prog;
-> +		if (prog) {
->  			bpf_prog_inc(prog);
->  			event->prog =3D prog;
->  		}
-> +		mutex_unlock(&bpf_event_mutex);
->  #endif
-
-[Severity: High]
-As mentioned above, since bpf_event_mutex is only compiled when
-CONFIG_BPF_EVENTS=3Dy, will unconditionally locking it here cause a build
-failure on kernels where that configuration is disabled?
-
->  	}
-> =20
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 75495a5c35079..026b5c4921158 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-
-[ ... ]
-
-> @@ -2018,7 +2018,7 @@ void perf_event_detach_bpf_prog(struct perf_event *=
-event)
-> =20
->  put:
->  	prog =3D event->prog;
-> -	event->prog =3D NULL;
-> +	WRITE_ONCE(event->prog, NULL);
-> =20
->  unlock:
->  	mutex_unlock(&bpf_event_mutex);
-
-[Severity: Medium]
-This isn't a bug introduced by this patch, but doesn't
-perf_event_attach_bpf_prog() still contain a plain write to event->prog?
-
-Since this patch fixes data races against the READ_ONCE() in the fast
-path, should the plain write:
-    event->prog =3D prog;
-
-in the attach path also be converted to a WRITE_ONCE()?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260813060528.3659=
-59-1-kartikey406@gmail.com?part=3D1
