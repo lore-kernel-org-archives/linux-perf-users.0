@@ -1,56 +1,56 @@
-Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDC0843B6E2
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 08:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B72C44161B
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 08:03:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786608196; cv=none; b=Pa2gwItjokPEmJFYUuxAKI3eR0ji/xMD9ger1RUMT88RbgFmfu4m7EkXJrVW4JzRw9zjC9H1aU4j+CjNbeKr0Scrx+XH+QDWe6mZhDnYMHPsUhJEBzWnnDLDQsGheFSUIGY7+HBkKx1Ov2nVz6C8kIY8OtX26XNdABv3AsaPWiM=
+	t=1786608203; cv=none; b=i2pCV3EjLq82jzgocBrz16GRN7ynZHOT6A4yPXYfTj8WzLIBi8LkDYOv2PWMgHvd5lx5/38uoVI5iZvlw79K1oyxAiqMRKo2B8PTbj6oG+ydGB4apu0f7X36wzDGNlpV/hrOf2gTuXpLv0RMhznNReh8ZrzR2UJ/IUUxmzm9wZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786608196; c=relaxed/simple;
-	bh=X81WrY4V3MgQCFMUv6BvP5J7Q2iluyhQv2PaSObpQYU=;
+	s=arc-20240116; t=1786608203; c=relaxed/simple;
+	bh=vEpQrvBUs8CXhWagraTILpAco5/EHFCpBDO3LTltrnk=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=aaLS07MG6z8Q79owfUEdhs3ZZFABY+TjTE0wY5Ld0fkJ55G4W39/gAysBlrUp75FOJ4sYuBfOZLhtlEUA7pfarXBsV+Z5FEE+LgfytavJBV4XoFl+U5tW3YsW5YfoGe4DT87C68sgffCpY/Aq2FaMSHNXdjf16vrucWrcNEgNPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Awd73/Yg; arc=none smtp.client-ip=209.85.215.199
+	 To:Cc:Content-Type; b=a/zaWnB1dWqLOH3sOmacyHTISG+HNPF+U6x2mrrGZ0RYS8JLra5IENdR+wHHcpgWCeOTLBWYFBwZ5E8tO3KfuKQd/HigCuNSMCduI2FnKUR84NNeUvCUetlwbubF+B5HIX3OP/bSZ2weU3g8b7+fqc2DXO+9RQMb2BYQtTqrjZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=b8Uh7EBM; arc=none smtp.client-ip=209.85.216.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Awd73/Yg"
-Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-cb6cf425e86so706147a12.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 01:03:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b8Uh7EBM"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-38e475f83a2so2938355a91.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 01:03:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786608194; x=1787212994; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1786608198; x=1787212998; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=DgD/Qr6ThMB9P0bXoLiCRwMAEs2jUFNRi7uUt5JWbEM=;
-        b=Awd73/YgMaTK4aEc9qKLtDjVj8ooONqifSwUzKZGE5REyJ55+ecQMsG5QL+w7v8Gmp
-         IAvONTHeeGq2ANaSlPdMw7q/MZEC3NcpC85kHpp5C7dO7mH7Dt643fXJvcRx9kT1sKhN
-         Quc0QMDwLVZp/GJestFum/kkIh6CscbNUS8ZUft/4WOJBS/BE4n7nxRJKaQxfEFZoR0V
-         vhX0JJKEda5wiRBe5dCG3rrXZKn+WirIB/SRVWtGxvqcL5NrlgOmmQRqVUb5mdzeMr2P
-         cWdNhYVBJBK582GlyGHg8VhgSc9HNo99huixzp4EWUmLI9p+5sra46VegqhAmxKb0k37
-         BOog==
+        bh=QUNRVIRhlRFw76F968v4yqemIhFtdDrnNXbSqEHrcys=;
+        b=b8Uh7EBMz+0n8geCBqzL7tc7COEj3/LdkEzynmf0qcF1lI9EnOG8wjMQACK+V/jGsz
+         fJqKoOlxzWw7W/SmyjlJ6igjmBgDkkANPXBv5stlxf4pyNkirI9YQfhDVWYIg9TzsaHs
+         cywNVTIh2gk0uzqwrshrlCUzZPxCnm7GEhnNSILK+BA4ImKMMAgJK+CBbBhJWPKlb6lr
+         Vp1L/DYzaiUQWK0laIeT79Ays4XSCrXkQ3bIyt8/BS+Pg+h5pzNKr4fVzhgPTtCpJxMO
+         bunVznE1ObElf9BCu82GtFxBndLo8q2es29KyCrAK1xLAhrvDsBgBc5zjB3pg+t6A0Pa
+         OiHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786608194; x=1787212994;
+        d=1e100.net; s=20251104; t=1786608198; x=1787212998;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=DgD/Qr6ThMB9P0bXoLiCRwMAEs2jUFNRi7uUt5JWbEM=;
-        b=kp4WDjHxeSIqY66kr66p7AvzXsV+gTxzttAi7hRjXVnosEu9KiEDMv2y17Tnpwb6mY
-         Oi6LBT18XVf0llJiyVh8oek7HZulUbe1Jf06iA4qi6t/CjrHFrHlWUzMziJrg0Nnp5DV
-         hGRuuZTaLuHsAy1ywqb0ZzE4bcgzrCrZ2pDi5mNOR2f/GU748DkHotIu1L7FbvzHtS03
-         u+3X7hX0mMLfF1BUK6SQUvbHYwSpLKDbAthBOxuE46XascCMxAoir6d+bmSS02qyFCLa
-         Z06CnfiqCJ53VLDBRRVuvJVq+HgknM9bw3V6vFnlnP7TCnI9sDPFM8Ali9Zl6ZmBxrZO
-         S63Q==
-X-Forwarded-Encrypted: i=1; AHgh+Rp35B+lHfNaVv3VrOgzNL0UREiN4X7xa8bAFvxWgVSwUlWtst5Z7o4HxJdDhLxsajye//jbQ9rMmTb1jHhaeTsV@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSW+9v6cAF2h+L67xO44NqMU7z5hCOOvVLu/VN61mjwlU8X4N5
-	lD+xyXGtUfXxj4g4kONdws+w9BoJ50VBTjRIhIxmcYzePjPfEPWv3CY74naRkOFnm66Gvkt/9i6
-	38n0dED+gvQ==
-X-Received: from dlbpy9.prod.google.com ([2002:a05:7022:e989:b0:13d:311a:396b])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:3ca7:b0:3c3:b226:f165
- with SMTP id adf61e73a8af0-3cc553a59a7mr5906268637.35.1786608193966; Thu, 13
- Aug 2026 01:03:13 -0700 (PDT)
-Date: Thu, 13 Aug 2026 01:03:07 -0700
+        bh=QUNRVIRhlRFw76F968v4yqemIhFtdDrnNXbSqEHrcys=;
+        b=isS0C1K2wWw7hRhz29XELi5kqtuaW+PXROnkQX2oFncU7eFUDIfBgIlKUzwpJNiYTC
+         BSxRGLUtlNDsLCT/VdII1UjODXpxoALmaBoeW2Qj3HuazyMDz7qS/BMbVphOfEU/vRPT
+         tfx4F4utprVzs0mqILnejR1SxZgoWcQ8hk6GKjbcQikRrrVHmrKaX1AvApHvHptsB5/E
+         d8sguYxPvc99Zs/K0e8i86nzkcoYyc5o4euYglvQ3emYcqH3qDuI+kkL6QsHgXoebBqB
+         ix2dsTG6eNgtFUOs9I4xX+Z6JA1PRqIFZYcoEdBKZQYlyAkeoBa39d5187kqIOjWvAdC
+         faJA==
+X-Forwarded-Encrypted: i=1; AHgh+RoV+ufVp6VUtgcWXBXrivEB7ovEEYg9qDX9/smFO1A52sGUD78gYCHA4ox1ez4msvX5A3peGsoeP940L/rgt2Ff@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQxKSWpnIS9aNfL6i0ikYEBicEhjbxMtM/9WHQZqPq4BhXXN/+
+	wRYMn6s5x7duPsMvfKMRmszB4Vgeo4ZBcac5K5RBG3Ix1slbn7tppOt47QXDoFxBeSV9/Q6TPIz
+	EihlzfY/GMg==
+X-Received: from dlc8.prod.google.com ([2002:a05:7022:388:b0:13e:6c87:9564])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3843:b0:38e:1497:af5b
+ with SMTP id 98e67ed59e1d1-3931dffc226mr4525151a91.1.1786608197566; Thu, 13
+ Aug 2026 01:03:17 -0700 (PDT)
+Date: Thu, 13 Aug 2026 01:03:09 -0700
 In-Reply-To: <cover.1691900000.git.irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -58,100 +58,564 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <cover.1691900000.git.irogers@google.com>
+References: <cover.1691900000.git.irogers@google.com> <cover.1691900000.git.irogers@google.com>
 X-Mailer: git-send-email 2.55.0.691.gc56d675ccc-goog
-Message-ID: <cover.1691900000.git.irogers@google.com>
-Subject: [PATCH v10 0/2] perf: Add Raspberry Pi AXI PMU driver
+Message-ID: <20260813080314.2836027-2-irogers@google.com>
+Subject: perf: Add Raspberry Pi 5 (BCM2712) AXI PMU support
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, linux-perf-users@vger.kernel.org, 
 	linux-rpi-kernel@lists.infradead.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
 	mark.rutland@arm.com, will@kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Message-ID: <20260813080307.qnUuB-qX2ytxIKTn2jaei_1s4wkYhYplFE1IFmQBA7k@z>
 
-This patch series adds an uncore Performance Monitoring Unit (PMU) driver
-for Broadcom AXI system and VideoCore VPU performance monitors found on
-Raspberry Pi SoCs (BCM2835 through BCM2712 / Raspberry Pi 1 through 5).
+This patch introduces AXI PMU support for the Broadcom BCM2712 SoC used
+in the Raspberry Pi 5. It expands the driver with BCM2712-specific
+buses, hardware filters, and sysfs events, while ensuring compatibility
+with prior generations.
 
-Motivation & Background
-==============================
-Currently, Linux lacks a standard perf-API compatible driver for the
-Broadcom AXI performance counter blocks on Raspberry Pi platforms. Prior
-out-of-tree vendor solutions relied on custom debugfs nodes and ad-hoc
-kthreads, preventing integration with standard Linux perf tooling (`perf stat`,
-`perf list`, etc.).
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ drivers/perf/rpi_axi_pmu.c | 429 ++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 421 insertions(+), 8 deletions(-)
 
-This driver implements standard `struct pmu` hardware uncore callbacks
-under `drivers/perf/`, exposing human-readable sysfs event aliases, unit
-scaling (`Bytes`), and bus filtering directly to user space.
-
-Key Architectural Improvements & Features
-==============================
-1. Standard Linux Perf Integration:
-   - Exposes uncore AXI interconnect events via `/sys/bus/event_source/devices/rpi_axi_pmu/`.
-   - Supports event sampling and hardware counter accumulation (`local64_add`),
-     automatically managing 31-bit hardware counter wraparound across high-bandwidth
-     interconnect transfers.
-
-2. CPU Hotplug Support (`cpuhp`):
-   - Registers dynamic CPU hotplug notifiers (`CPUHP_AP_ONLINE_DYN`).
-   - Automatically migrates PMU context (`perf_pmu_migrate_context`) to an online
-     CPU core when a designated CPU goes offline, safely guarding memory teardown boundaries.
-
-3. Hybrid Memory-Mapped & Mailbox Work Queue Architecture:
-   - System Monitor (MMIO): Performs fast atomic-safe memory reads (~15ns)
-     directly mapped over ARM physical memory space (`MON__SYSTEM`).
-   - VPU Monitor (Mailbox IPC): For Broadcom BCM2835-BCM2711 platforms (RPi 1-4),
-     VideoCore VPU monitor IPC calls are offloaded to process context via a dedicated
-     workqueue (`vpu_work`) and serialized under `vpu_mutex`. This avoids atomic
-     sleeps or blocking in timer/interrupt context.
-
-4. SoC Generation Support:
-   - Patch 1 adds core driver support for Broadcom BCM2835-BCM2711 (RPi 1-4).
-   - Patch 2 expands support for Broadcom BCM2712 (Raspberry Pi 5), adding PCIe RP1
-     Southbridge links, HEVC decoder, HVS display engine, and Cortex-A76 DSU L3
-     interconnect monitoring.
-
-Hardware Validation
-==============================
-The driver has been rigorously validated on real hardware:
-- Raspberry Pi 400 (BCM2711): Validated System L2, ARM CPU, and VideoCore VPU
-  firmware mailbox IPC performance counters organically spanning multi-slice multiplexing boundaries.
-- Raspberry Pi 5 (BCM2712): Validated live byte throughput across HVS display
-  refresh cycles, Cortex-A76 DSU L3 interconnect memory traffic, and PCIe RP1
-  Southbridge transfers independently configuring `bcm2712_` filters.
-
-Changes in v10 (Addressing upstream integration feedback)
-==============================
-- Removed the unused `num_started` state tracking variable from `struct rpi_axi_hw_events`
-  and its associated start/stop increments, cleanly addressing a reviewer's note on dead code.
-- Replaced `flush_work()` with `cancel_work_sync()` in the `rpi_axi_pmu__exit` 
-  and initialization error paths, rigorously ensuring no asynchronous VPU worker
-  threads continue executing after PMU subsystem termination.
-- Inverted PMU and CPU hotplug initialization sequence in `probe()` 
-  to cleanly eliminate a theoretical `devm_kzalloc` memory UAF race.
-- Embedded a robust boolean initialization guard physically into the 
-  hotplug event handler, definitively securing offline context callbacks
-  from concurrent access panics during concurrent failures.
-- Architecturally radically simplified BCM2712 sysfs generation loops 
-  by switching to an explicit inverse `bcm2712_` whitelist. This 
-  mathematically prevents ghost suffix parameters (`.unit` and `.scale`) 
-  from orphaned legacy VPU transactions bleeding into userspace dynamically.
-- Explicitly appended documentation notes organically defending the inclusion 
-  of the `#if LINUX_VERSION_CODE` legacy shim surrounding `hrtimer_setup` 
-  for seamlessly preserving downstream compatibility with Raspberry Pi LTS
-  kernel deployments natively.
-
-Ian Rogers (2):
-  perf: Add Raspberry Pi BCM2835 AXI PMU driver
-  perf: Add Raspberry Pi 5 (BCM2712) AXI PMU support
-
- drivers/perf/Kconfig       |   10 +
- drivers/perf/Makefile      |    1 +
- drivers/perf/rpi_axi_pmu.c | 2877 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 2888 insertions(+)
- create mode 100644 drivers/perf/rpi_axi_pmu.c
-
+diff --git a/drivers/perf/rpi_axi_pmu.c b/drivers/perf/rpi_axi_pmu.c
+index 676e8f873163..f6c5c6788a08 100644
+--- a/drivers/perf/rpi_axi_pmu.c
++++ b/drivers/perf/rpi_axi_pmu.c
+@@ -6,6 +6,7 @@
+  * This driver exposes the performance monitoring hardware on Raspberry Pi
+  * System-on-Chips to the Linux perf subsystem:
+  * - Raspberry Pi 1, 2, 3, 4, Compute Modules 1-4, Zero, Zero W (SoCs BCM2835/2836/2837/2711).
++ * - Raspberry Pi 5, Compute Module 5 (SoC BCM2712).
+  *
+  * Architecture Overview:
+  * ----------------------
+@@ -19,6 +20,7 @@
+  *    Monitors VideoCore VPU buses (VPU0/1 Data/Instruction L2/UC, SDRAM, etc.).
+  *    Accessible through VideoCore firmware mailbox IPC (RPI_FIRMWARE_SET/GET_PERIPH_REG).
+  *    Read latency: ~10-100 microseconds (IPC over VPU mailbox).
++ *    On BCM2712 (RPi 5), VPU Mailbox IPC is replaced by direct PCIe and MMIO mapping.
+  *
+  * Synchronization & Concurrency Model:
+  * ------------------------------------
+@@ -72,9 +74,11 @@ static inline void rpi_hrtimer_setup(struct hrtimer *timer,
+ /**
+  * enum rpi_axi_chip - Supported Broadcom SoC generations
+  * @CHIP_BCM2835: BCM2835 / BCM2836 / BCM2837 / BCM2711 (RPi 1-4, CM 1-4, Zero/W)
++ * @CHIP_BCM2712: BCM2712 (RPi 5, CM 5)
+  */
+ enum rpi_axi_chip {
+ 	CHIP_BCM2835 = 0,
++	CHIP_BCM2712,
+ };
+ 
+ enum monitor {
+@@ -126,6 +130,43 @@ enum bcm2835_system_bus {
+ 	BCM2835_SB__MAX
+ };
+ 
++/**
++ * enum bcm2712_system_bus - AXI buses monitored by System Monitor on BCM2712 (RPi 5)
++ * @BCM2712_SB__DMA_L2: DMA engine L2 cache interconnect bus
++ * @BCM2712_SB__TRANS: Transposer engine bus
++ * @BCM2712_SB__JPEG: Hardware JPEG codec acceleration bus
++ * @BCM2712_SB__SYSTEM_UC: System Uncached memory bus
++ * @BCM2712_SB__DMA_UC: DMA Uncached memory bus
++ * @BCM2712_SB__SYSTEM_L2: System main L2 cache bus
++ * @BCM2712_SB__PCIE_RP1: PCIe 2.0 x4 RP1 Southbridge link bus (USB 3.0, Ethernet, I/O)
++ * @BCM2712_SB__HEVC_DEC: HEVC (H.265) hardware video decoder bus
++ * @BCM2712_SB__A76_DSU_L3: Quad-core Arm Cortex-A76 DynamIQ Shared Unit (DSU) L3 bus
++ * @BCM2712_SB__HVS: Hardware Video Scaler (HVS) display composition engine bus
++ * @BCM2712_SB__V3D7: VideoCore VII 3D graphics hardware pipeline bus
++ * @BCM2712_SB__ISP: Image Sensor Processor (ISP) camera pipeline bus
++ * @BCM2712_SB__PERIPHERAL: System peripherals bus
++ * @BCM2712_SB__CPU_UC: CPU Uncached memory bus
++ * @BCM2712_SB__CPU_L2: CPU L2 cache bus
++ * @BCM2712_SB__MAX: Total count of monitored system buses on BCM2712
++ */
++enum bcm2712_system_bus {
++	BCM2712_SB__DMA_L2 = 0,
++	BCM2712_SB__TRANS,
++	BCM2712_SB__JPEG,
++	BCM2712_SB__SYSTEM_UC,
++	BCM2712_SB__DMA_UC,
++	BCM2712_SB__SYSTEM_L2,
++	BCM2712_SB__PCIE_RP1,
++	BCM2712_SB__HEVC_DEC,
++	BCM2712_SB__A76_DSU_L3,
++	BCM2712_SB__HVS,
++	BCM2712_SB__V3D7,
++	BCM2712_SB__ISP,
++	BCM2712_SB__PERIPHERAL,
++	BCM2712_SB__CPU_UC,
++	BCM2712_SB__CPU_L2,
++	BCM2712_SB__MAX
++};
+ 
+ /**
+  * enum vpu_bus - AXI buses monitored by VPU Monitor on BCM2835-BCM2711 (RPi 1-4)
+@@ -259,6 +300,93 @@ enum bcm2835_filter {
+ 	BCM2835_FLT__MAX
+ };
+ 
++/**
++ * enum bcm2712_filter - AXI master ID filter options for BCM2712 (RPi 5)
++ * @BCM2712_FLT__NONE: Disable master ID filtering (monitor all traffic on bus)
++ * @BCM2712_FLT__VPU_UC0: VPU Uncached 0 master ID
++ * @BCM2712_FLT__VPU_IC0: VPU I-Cache 0 master ID
++ * @BCM2712_FLT__VPU_DC0: VPU D-Cache 0 master ID
++ * @BCM2712_FLT__VPU_UC1: VPU Uncached 1 master ID
++ * @BCM2712_FLT__VPU_IC1: VPU I-Cache 1 master ID
++ * @BCM2712_FLT__VPU_DC1: VPU D-Cache 1 master ID
++ * @BCM2712_FLT__VPU_L2: VPU L2 Cache master ID
++ * @BCM2712_FLT__DMA2: DMA2 master ID
++ * @BCM2712_FLT__VPU_DEBUG: VPU Debug master ID
++ * @BCM2712_FLT__ARM: Arm Quad-Core CPU Cluster master ID
++ * @BCM2712_FLT__DMA0: DMA0 master ID
++ * @BCM2712_FLT__DMA1: DMA1 master ID
++ * @BCM2712_FLT__RAAGA: RAAGA Audio Engine master ID
++ * @BCM2712_FLT__BBSI: BBSI master ID
++ * @BCM2712_FLT__PCIE0: RP1 PCIe Southbridge 0 master ID
++ * @BCM2712_FLT__PCIE1: PCIe 1 master ID
++ * @BCM2712_FLT__PCIE2: PCIe 2 master ID
++ * @BCM2712_FLT__UMR: UMR master ID
++ * @BCM2712_FLT__SAGE: SAGE master ID
++ * @BCM2712_FLT__HVDP: HVDP master ID
++ * @BCM2712_FLT__BSP: BSP master ID
++ * @BCM2712_FLT__HVS: Hardware Video Scaler (HVS) display engine master ID
++ * @BCM2712_FLT__HVS_WMK: HVS Watermark master ID
++ * @BCM2712_FLT__MOP0: MOP0 master ID
++ * @BCM2712_FLT__MOP1: MOP1 master ID
++ * @BCM2712_FLT__MBVN: MBVN master ID
++ * @BCM2712_FLT__DSI: DSI Display Interface master ID
++ * @BCM2712_FLT__XPT: XPT master ID
++ * @BCM2712_FLT__EMMC0: SD/eMMC Controller 0 master ID
++ * @BCM2712_FLT__GENET: Gigabit Ethernet Controller master ID
++ * @BCM2712_FLT__USB: USB Controller master ID
++ * @BCM2712_FLT__MAX: Maximum filter ID count for BCM2712
++ */
++enum bcm2712_filter {
++	BCM2712_FLT__NONE = 0,
++	BCM2712_FLT__VPU_UC0 = 1,
++	BCM2712_FLT__VPU_IC0 = 2,
++	BCM2712_FLT__VPU_DC0 = 3,
++	BCM2712_FLT__VPU_UC1 = 4,
++	BCM2712_FLT__VPU_IC1 = 5,
++	BCM2712_FLT__VPU_DC1 = 6,
++	BCM2712_FLT__VPU_L2 = 7,
++	BCM2712_FLT__DMA2 = 8,
++	BCM2712_FLT__VPU_DEBUG = 9,
++	BCM2712_FLT__ARM = 10,
++	BCM2712_FLT__DMA0 = 11,
++	BCM2712_FLT__DMA1 = 12,
++	BCM2712_FLT__RAAGA = 13,
++	BCM2712_FLT__BBSI = 14,
++	BCM2712_FLT__PCIE0 = 15,
++	BCM2712_FLT__PCIE1 = 16,
++	BCM2712_FLT__PCIE2 = 17,
++	BCM2712_FLT__UMR = 18,
++	BCM2712_FLT__SAGE = 19,
++	BCM2712_FLT__HVDP = 20,
++	BCM2712_FLT__BSP = 21,
++	BCM2712_FLT__HVS = 22,
++	BCM2712_FLT__HVS_WMK = 23,
++	BCM2712_FLT__MOP0 = 24,
++	BCM2712_FLT__MOP1 = 25,
++	BCM2712_FLT__MBVN = 26,
++	BCM2712_FLT__DSI = 27,
++	BCM2712_FLT__XPT = 28,
++	BCM2712_FLT__EMMC0 = 29,
++	BCM2712_FLT__GENET = 30,
++	BCM2712_FLT__USB = 31,
++	BCM2712_FLT__MAX = 32
++};
++
++/* Compile-time static assertions verifying cross-generation enum equivalence */
++static_assert((int)BCM2835_FLT__NONE == (int)BCM2712_FLT__NONE,
++	      "Filter NONE enum value mismatch across BCM2835 and BCM2712");
++static_assert((int)BCM2835_SB__DMA_L2 == (int)BCM2712_SB__DMA_L2,
++	      "DMA_L2 bus enum value mismatch across BCM2835 and BCM2712");
++static_assert((int)BCM2835_SB__TRANS == (int)BCM2712_SB__TRANS,
++	      "TRANS bus enum value mismatch across BCM2835 and BCM2712");
++static_assert((int)BCM2835_SB__JPEG == (int)BCM2712_SB__JPEG,
++	      "JPEG bus enum value mismatch across BCM2835 and BCM2712");
++static_assert((int)BCM2835_SB__SYSTEM_UC == (int)BCM2712_SB__SYSTEM_UC,
++	      "SYSTEM_UC bus enum value mismatch across BCM2835 and BCM2712");
++static_assert((int)BCM2835_SB__DMA_UC == (int)BCM2712_SB__DMA_UC,
++	      "DMA_UC bus enum value mismatch across BCM2835 and BCM2712");
++static_assert((int)BCM2835_SB__SYSTEM_L2 == (int)BCM2712_SB__SYSTEM_L2,
++	      "SYSTEM_L2 bus enum value mismatch across BCM2835 and BCM2712");
+ 
+ /* Hardware register offsets & control bitwise constants */
+ #define GEN_CTRL			0x00
+@@ -445,7 +573,7 @@ static int rpi_axi_hw_events__get_alloc_event_idx(struct rpi_axi_hw_events *hw_e
+  * struct rpi_axi_pmu - Root PMU driver context
+  * @pmu: Core Linux perf PMU structure
+  * @pdev: Owning platform_device pointer
+- * @chip: Detected Broadcom SoC generation
++ * @chip: Detected Broadcom SoC generation (CHIP_BCM2835 or CHIP_BCM2712)
+  * @firmware: Raspberry Pi firmware handle for VideoCore mailbox calls (BCM2835-BCM2711)
+  * @cpu: CPU core assigned to process uncore PMU events
+  * @cpuhp_node: Dynamic CPU hotplug instance node
+@@ -507,15 +635,24 @@ static bool config_is_valid(struct rpi_axi_pmu *pmu, __u64 config)
+ 	if (!pmu->monitor[mon].use_mailbox_interface && !pmu->monitor[mon].base_address)
+ 		return false;
+ 
+-	if (mon == MON__SYSTEM) {
+-		if (bus >= BCM2835_SB__MAX)
++	if (pmu->chip == CHIP_BCM2712) {
++		if (mon != MON__SYSTEM)
++			return false;
++		if (bus >= BCM2712_SB__MAX)
++			return false;
++		if (filter >= BCM2712_FLT__MAX)
+ 			return false;
+ 	} else {
+-		if (bus >= VPU__MAX)
++		if (mon == MON__SYSTEM) {
++			if (bus >= BCM2835_SB__MAX)
++				return false;
++		} else {
++			if (bus >= VPU__MAX)
++				return false;
++		}
++		if (filter >= BCM2835_FLT__MAX)
+ 			return false;
+ 	}
+-	if (filter >= BCM2835_FLT__MAX)
+-		return false;
+ 	return counter < CNT__MAX;
+ }
+ 
+@@ -541,7 +678,7 @@ static const struct attribute_group rpi_axi_pmu_format_group = {
+  * Event Attribute Scaling & Unit Definitions:
+  *
+  * Uncore AXI bus transaction events (_rtrans, _wtrans, _atrans) report hardware
+- * transaction beats. On Broadcom BCM2835 AXI interconnects, single-beat
++ * transaction beats. On Broadcom BCM2835-BCM2712 AXI interconnects, single-beat
+  * transactions transfer 32 bytes per beat, while contiguous DMA page bursts may
+  * use 64-byte double-beats. Setting .scale="32" and .unit="Bytes" provides a
+  * close (~95%) byte throughput approximation in perf stat output (accounting for
+@@ -1175,6 +1312,171 @@ PMU_EVENT_ATTR_STRING(usb_system_l2_wtrans.scale, rpi_axi_pmu_event_usb_system_l
+ PMU_EVENT_ATTR_STRING(usb_system_l2_wtrans.unit, rpi_axi_pmu_event_usb_system_l2_wtrans_unit,
+ 		      "Bytes");
+ 
++/* --- RASPBERRY PI 5 (BCM2712) EXPANDED EVENT ALIASES ---------------------- */
++
++/* PCIe 2.0 x4 RP1 Southbridge Link Bus Events & Stall Wait Cycles (bus=6, BCM2712_SB__PCIE_RP1) */
++PMU_EVENT_ATTR_STRING(pcie_rp1_atrans, rpi_axi_pmu_event_pcie_rp1_atrans,
++		      "monitor=0,bus=6,counter=0");
++PMU_EVENT_ATTR_STRING(pcie_rp1_atrans.scale, rpi_axi_pmu_event_pcie_rp1_atrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(pcie_rp1_atrans.unit, rpi_axi_pmu_event_pcie_rp1_atrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(pcie_rp1_atwait, rpi_axi_pmu_event_pcie_rp1_atwait,
++		      "monitor=0,bus=6,counter=1");
++PMU_EVENT_ATTR_STRING(pcie_rp1_wtrans, rpi_axi_pmu_event_pcie_rp1_wtrans,
++		      "monitor=0,bus=6,counter=2");
++PMU_EVENT_ATTR_STRING(pcie_rp1_wtrans.scale, rpi_axi_pmu_event_pcie_rp1_wtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(pcie_rp1_wtrans.unit, rpi_axi_pmu_event_pcie_rp1_wtrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(pcie_rp1_wtwait, rpi_axi_pmu_event_pcie_rp1_wtwait,
++		      "monitor=0,bus=6,counter=3");
++PMU_EVENT_ATTR_STRING(pcie_rp1_rtrans, rpi_axi_pmu_event_pcie_rp1_rtrans,
++		      "monitor=0,bus=6,counter=4");
++PMU_EVENT_ATTR_STRING(pcie_rp1_rtrans.scale, rpi_axi_pmu_event_pcie_rp1_rtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(pcie_rp1_rtrans.unit, rpi_axi_pmu_event_pcie_rp1_rtrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(pcie_rp1_rtwait, rpi_axi_pmu_event_pcie_rp1_rtwait,
++		      "monitor=0,bus=6,counter=5");
++
++/* HEVC (H.265) Hardware Video Decoder Bus Events (bus=7, BCM2712_SB__HEVC_DEC) */
++PMU_EVENT_ATTR_STRING(hevc_dec_atrans, rpi_axi_pmu_event_hevc_dec_atrans,
++		      "monitor=0,bus=7,counter=0");
++PMU_EVENT_ATTR_STRING(hevc_dec_atrans.scale, rpi_axi_pmu_event_hevc_dec_atrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(hevc_dec_atrans.unit, rpi_axi_pmu_event_hevc_dec_atrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(hevc_dec_wtrans, rpi_axi_pmu_event_hevc_dec_wtrans,
++		      "monitor=0,bus=7,counter=2");
++PMU_EVENT_ATTR_STRING(hevc_dec_wtrans.scale, rpi_axi_pmu_event_hevc_dec_wtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(hevc_dec_wtrans.unit, rpi_axi_pmu_event_hevc_dec_wtrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(hevc_dec_rtrans, rpi_axi_pmu_event_hevc_dec_rtrans,
++		      "monitor=0,bus=7,counter=4");
++PMU_EVENT_ATTR_STRING(hevc_dec_rtrans.scale, rpi_axi_pmu_event_hevc_dec_rtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(hevc_dec_rtrans.unit, rpi_axi_pmu_event_hevc_dec_rtrans_unit,
++		      "Bytes");
++
++/* Arm Cortex-A76 DSU L3 Interconnect Bus Events (bus=8, BCM2712_SB__A76_DSU_L3) */
++PMU_EVENT_ATTR_STRING(a76_dsu_l3_atrans, rpi_axi_pmu_event_a76_dsu_l3_atrans,
++		      "monitor=0,bus=8,counter=0");
++PMU_EVENT_ATTR_STRING(a76_dsu_l3_atrans.scale, rpi_axi_pmu_event_a76_dsu_l3_atrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(a76_dsu_l3_atrans.unit, rpi_axi_pmu_event_a76_dsu_l3_atrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(a76_dsu_l3_wtrans, rpi_axi_pmu_event_a76_dsu_l3_wtrans,
++		      "monitor=0,bus=8,counter=2");
++PMU_EVENT_ATTR_STRING(a76_dsu_l3_wtrans.scale, rpi_axi_pmu_event_a76_dsu_l3_wtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(a76_dsu_l3_wtrans.unit, rpi_axi_pmu_event_a76_dsu_l3_wtrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(a76_dsu_l3_rtrans, rpi_axi_pmu_event_a76_dsu_l3_rtrans,
++		      "monitor=0,bus=8,counter=4");
++PMU_EVENT_ATTR_STRING(a76_dsu_l3_rtrans.scale, rpi_axi_pmu_event_a76_dsu_l3_rtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(a76_dsu_l3_rtrans.unit, rpi_axi_pmu_event_a76_dsu_l3_rtrans_unit,
++		      "Bytes");
++
++/* VideoCore VII 3D Graphics Pipeline Bus Events (bus=10, BCM2712_SB__V3D7) */
++PMU_EVENT_ATTR_STRING(v3d7_atrans, rpi_axi_pmu_event_v3d7_atrans,
++		      "monitor=0,bus=10,counter=0");
++PMU_EVENT_ATTR_STRING(v3d7_atrans.scale, rpi_axi_pmu_event_v3d7_atrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(v3d7_atrans.unit, rpi_axi_pmu_event_v3d7_atrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(v3d7_wtrans, rpi_axi_pmu_event_v3d7_wtrans,
++		      "monitor=0,bus=10,counter=2");
++PMU_EVENT_ATTR_STRING(v3d7_wtrans.scale, rpi_axi_pmu_event_v3d7_wtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(v3d7_wtrans.unit, rpi_axi_pmu_event_v3d7_wtrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(v3d7_rtrans, rpi_axi_pmu_event_v3d7_rtrans,
++		      "monitor=0,bus=10,counter=4");
++PMU_EVENT_ATTR_STRING(v3d7_rtrans.scale, rpi_axi_pmu_event_v3d7_rtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(v3d7_rtrans.unit, rpi_axi_pmu_event_v3d7_rtrans_unit,
++		      "Bytes");
++
++/*
++ * Quad-Core Arm Cortex-A76 Cores 0-3 I-Cache & D-Cache Filtered Events
++ * (bus=14, BCM2712_SB__CPU_L2)
++ */
++PMU_EVENT_ATTR_STRING(bcm2712_peripheral_rtrans, rpi_axi_pmu_event_bcm2712_peripheral_rtrans,
++		      "monitor=0,bus=12,counter=4");
++PMU_EVENT_ATTR_STRING(bcm2712_peripheral_rtrans.scale,
++		      rpi_axi_pmu_event_bcm2712_peripheral_rtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(bcm2712_peripheral_rtrans.unit,
++		      rpi_axi_pmu_event_bcm2712_peripheral_rtrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(bcm2712_peripheral_wtrans, rpi_axi_pmu_event_bcm2712_peripheral_wtrans,
++		      "monitor=0,bus=12,counter=2");
++PMU_EVENT_ATTR_STRING(bcm2712_peripheral_wtrans.scale,
++		      rpi_axi_pmu_event_bcm2712_peripheral_wtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(bcm2712_peripheral_wtrans.unit,
++		      rpi_axi_pmu_event_bcm2712_peripheral_wtrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(bcm2712_cpu_uc_rtrans, rpi_axi_pmu_event_bcm2712_cpu_uc_rtrans,
++		      "monitor=0,bus=13,counter=4");
++PMU_EVENT_ATTR_STRING(bcm2712_cpu_uc_rtrans.scale, rpi_axi_pmu_event_bcm2712_cpu_uc_rtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(bcm2712_cpu_uc_rtrans.unit, rpi_axi_pmu_event_bcm2712_cpu_uc_rtrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(bcm2712_cpu_uc_wtrans, rpi_axi_pmu_event_bcm2712_cpu_uc_wtrans,
++		      "monitor=0,bus=13,counter=2");
++PMU_EVENT_ATTR_STRING(bcm2712_cpu_uc_wtrans.scale, rpi_axi_pmu_event_bcm2712_cpu_uc_wtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(bcm2712_cpu_uc_wtrans.unit, rpi_axi_pmu_event_bcm2712_cpu_uc_wtrans_unit,
++		      "Bytes");
++
++/* BCM2712 Master ID Filtered Events */
++PMU_EVENT_ATTR_STRING(arm_rtrans, rpi_axi_pmu_event_arm_rtrans,
++		      "monitor=0,bus=14,counter=4,filter=10");
++PMU_EVENT_ATTR_STRING(arm_rtrans.scale, rpi_axi_pmu_event_arm_rtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(arm_rtrans.unit, rpi_axi_pmu_event_arm_rtrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(arm_wtrans, rpi_axi_pmu_event_arm_wtrans,
++		      "monitor=0,bus=14,counter=2,filter=10");
++PMU_EVENT_ATTR_STRING(arm_wtrans.scale, rpi_axi_pmu_event_arm_wtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(arm_wtrans.unit, rpi_axi_pmu_event_arm_wtrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(pcie0_rtrans, rpi_axi_pmu_event_pcie0_rtrans,
++		      "monitor=0,bus=6,counter=4,filter=15");
++PMU_EVENT_ATTR_STRING(pcie0_rtrans.scale, rpi_axi_pmu_event_pcie0_rtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(pcie0_rtrans.unit, rpi_axi_pmu_event_pcie0_rtrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(pcie0_wtrans, rpi_axi_pmu_event_pcie0_wtrans,
++		      "monitor=0,bus=6,counter=2,filter=15");
++PMU_EVENT_ATTR_STRING(pcie0_wtrans.scale, rpi_axi_pmu_event_pcie0_wtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(pcie0_wtrans.unit, rpi_axi_pmu_event_pcie0_wtrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(hvs_filtered_rtrans, rpi_axi_pmu_event_hvs_filtered_rtrans,
++		      "monitor=0,bus=9,counter=4,filter=22");
++PMU_EVENT_ATTR_STRING(hvs_filtered_rtrans.scale, rpi_axi_pmu_event_hvs_filtered_rtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(hvs_filtered_rtrans.unit, rpi_axi_pmu_event_hvs_filtered_rtrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(emmc0_rtrans, rpi_axi_pmu_event_emmc0_rtrans,
++		      "monitor=0,bus=5,counter=4,filter=29");
++PMU_EVENT_ATTR_STRING(emmc0_rtrans.scale, rpi_axi_pmu_event_emmc0_rtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(emmc0_rtrans.unit, rpi_axi_pmu_event_emmc0_rtrans_unit,
++		      "Bytes");
++PMU_EVENT_ATTR_STRING(emmc0_wtrans, rpi_axi_pmu_event_emmc0_wtrans,
++		      "monitor=0,bus=5,counter=2,filter=29");
++PMU_EVENT_ATTR_STRING(emmc0_wtrans.scale, rpi_axi_pmu_event_emmc0_wtrans_scale,
++		      "32");
++PMU_EVENT_ATTR_STRING(emmc0_wtrans.unit, rpi_axi_pmu_event_emmc0_wtrans_unit,
++		      "Bytes");
++
+ static struct attribute *rpi_axi_pmu_events_attrs[] = {
+ 	/* System Monitor events */
+ 	&rpi_axi_pmu_event_dma_l2_atrans.attr.attr,
+@@ -1480,6 +1782,84 @@ static struct attribute *rpi_axi_pmu_events_attrs[] = {
+ 	&rpi_axi_pmu_event_usb_system_l2_wtrans_scale.attr.attr,
+ 	&rpi_axi_pmu_event_usb_system_l2_wtrans_unit.attr.attr,
+ 
++	/* RPi 5 (BCM2712) Expanded Event Aliases */
++	&rpi_axi_pmu_event_pcie_rp1_atrans.attr.attr,
++	&rpi_axi_pmu_event_pcie_rp1_atrans_scale.attr.attr,
++	&rpi_axi_pmu_event_pcie_rp1_atrans_unit.attr.attr,
++	&rpi_axi_pmu_event_pcie_rp1_atwait.attr.attr,
++	&rpi_axi_pmu_event_pcie_rp1_wtrans.attr.attr,
++	&rpi_axi_pmu_event_pcie_rp1_wtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_pcie_rp1_wtrans_unit.attr.attr,
++	&rpi_axi_pmu_event_pcie_rp1_wtwait.attr.attr,
++	&rpi_axi_pmu_event_pcie_rp1_rtrans.attr.attr,
++	&rpi_axi_pmu_event_pcie_rp1_rtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_pcie_rp1_rtrans_unit.attr.attr,
++	&rpi_axi_pmu_event_pcie_rp1_rtwait.attr.attr,
++
++	&rpi_axi_pmu_event_hevc_dec_atrans.attr.attr,
++	&rpi_axi_pmu_event_hevc_dec_atrans_scale.attr.attr,
++	&rpi_axi_pmu_event_hevc_dec_atrans_unit.attr.attr,
++	&rpi_axi_pmu_event_hevc_dec_wtrans.attr.attr,
++	&rpi_axi_pmu_event_hevc_dec_wtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_hevc_dec_wtrans_unit.attr.attr,
++	&rpi_axi_pmu_event_hevc_dec_rtrans.attr.attr,
++	&rpi_axi_pmu_event_hevc_dec_rtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_hevc_dec_rtrans_unit.attr.attr,
++
++	&rpi_axi_pmu_event_a76_dsu_l3_atrans.attr.attr,
++	&rpi_axi_pmu_event_a76_dsu_l3_atrans_scale.attr.attr,
++	&rpi_axi_pmu_event_a76_dsu_l3_atrans_unit.attr.attr,
++	&rpi_axi_pmu_event_a76_dsu_l3_wtrans.attr.attr,
++	&rpi_axi_pmu_event_a76_dsu_l3_wtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_a76_dsu_l3_wtrans_unit.attr.attr,
++	&rpi_axi_pmu_event_a76_dsu_l3_rtrans.attr.attr,
++	&rpi_axi_pmu_event_a76_dsu_l3_rtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_a76_dsu_l3_rtrans_unit.attr.attr,
++
++	&rpi_axi_pmu_event_v3d7_atrans.attr.attr,
++	&rpi_axi_pmu_event_v3d7_atrans_scale.attr.attr,
++	&rpi_axi_pmu_event_v3d7_atrans_unit.attr.attr,
++	&rpi_axi_pmu_event_v3d7_wtrans.attr.attr,
++	&rpi_axi_pmu_event_v3d7_wtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_v3d7_wtrans_unit.attr.attr,
++	&rpi_axi_pmu_event_v3d7_rtrans.attr.attr,
++	&rpi_axi_pmu_event_v3d7_rtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_v3d7_rtrans_unit.attr.attr,
++
++	&rpi_axi_pmu_event_bcm2712_peripheral_rtrans.attr.attr,
++	&rpi_axi_pmu_event_bcm2712_peripheral_rtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_bcm2712_peripheral_rtrans_unit.attr.attr,
++	&rpi_axi_pmu_event_bcm2712_peripheral_wtrans.attr.attr,
++	&rpi_axi_pmu_event_bcm2712_peripheral_wtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_bcm2712_peripheral_wtrans_unit.attr.attr,
++	&rpi_axi_pmu_event_bcm2712_cpu_uc_rtrans.attr.attr,
++	&rpi_axi_pmu_event_bcm2712_cpu_uc_rtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_bcm2712_cpu_uc_rtrans_unit.attr.attr,
++	&rpi_axi_pmu_event_bcm2712_cpu_uc_wtrans.attr.attr,
++	&rpi_axi_pmu_event_bcm2712_cpu_uc_wtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_bcm2712_cpu_uc_wtrans_unit.attr.attr,
++
++	&rpi_axi_pmu_event_arm_rtrans.attr.attr,
++	&rpi_axi_pmu_event_arm_rtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_arm_rtrans_unit.attr.attr,
++	&rpi_axi_pmu_event_arm_wtrans.attr.attr,
++	&rpi_axi_pmu_event_arm_wtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_arm_wtrans_unit.attr.attr,
++	&rpi_axi_pmu_event_pcie0_rtrans.attr.attr,
++	&rpi_axi_pmu_event_pcie0_rtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_pcie0_rtrans_unit.attr.attr,
++	&rpi_axi_pmu_event_pcie0_wtrans.attr.attr,
++	&rpi_axi_pmu_event_pcie0_wtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_pcie0_wtrans_unit.attr.attr,
++	&rpi_axi_pmu_event_hvs_filtered_rtrans.attr.attr,
++	&rpi_axi_pmu_event_hvs_filtered_rtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_hvs_filtered_rtrans_unit.attr.attr,
++	&rpi_axi_pmu_event_emmc0_rtrans.attr.attr,
++	&rpi_axi_pmu_event_emmc0_rtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_emmc0_rtrans_unit.attr.attr,
++	&rpi_axi_pmu_event_emmc0_wtrans.attr.attr,
++	&rpi_axi_pmu_event_emmc0_wtrans_scale.attr.attr,
++	&rpi_axi_pmu_event_emmc0_wtrans_unit.attr.attr,
+ 	NULL,
+ };
+ 
+@@ -1490,12 +1870,41 @@ static struct attribute *rpi_axi_pmu_events_attrs[] = {
+  * @unused: Index (unused)
+  *
+  * Dynamically filters sysfs event aliases based on the detected Broadcom SoC generation:
++ * - On BCM2712 (RPi 5): Hides VideoCore VPU Mailbox IPC events (monitor=1).
++ * - On BCM2835-BCM2711 (RPi 1-4): Hides Cortex-A76 and RP1 PCIe specific events.
+  *
+  * Return: attr->mode (0444) if visible on current SoC, 0 to hide.
+  */
+ static umode_t rpi_axi_pmu_events_is_visible(struct kobject *kobj,
+ 					      struct attribute *attr, int unused)
+ {
++	struct device *dev = kobj_to_dev(kobj);
++	struct pmu *pmu = dev_get_drvdata(dev);
++	struct rpi_axi_pmu *rpi_pmu = pmu_to_rpi_axi_pmu(pmu);
++
++
++	if (rpi_pmu->chip == CHIP_BCM2712) {
++		/*
++		 * On RPi 5 (BCM2712), aggressively filter out any legacy events,
++		 * including ghost scaling parameters by exclusively matching the
++		 * bcm2712 prefix.
++		 */
++		if (!strstr(attr->name, "bcm2712_"))
++			return 0;
++	} else {
++		/* On RPi 1-4 (BCM2835-BCM2711), hide RPi 5 specific events */
++		if (strstr(attr->name, "pcie_rp1") ||
++		    strstr(attr->name, "a76_") ||
++		    strstr(attr->name, "v3d7_") ||
++		    strstr(attr->name, "hevc_dec") ||
++		    strstr(attr->name, "arm_") ||
++		    strstr(attr->name, "pcie0_") ||
++		    strstr(attr->name, "hvs_filtered") ||
++		    strstr(attr->name, "emmc0_") ||
++		    strstr(attr->name, "bcm2712_"))
++			return 0;
++	}
++
+ 	return attr->mode;
+ }
+ 
+@@ -1826,7 +2235,7 @@ static void rpi_axi_pmu_read(struct perf_event *event)
+ 	u32 delta;
+ 
+ 	/* Mailbox VPU counters are polled asynchronously in background vpu_work.
+-	 * MMIO monitors (System) are read synchronously.
++	 * MMIO monitors (System and BCM2712 VPU) are read synchronously.
+ 	 */
+ 	if (event->hw.idx < 0)
+ 		return;
+@@ -2395,6 +2804,10 @@ static const struct of_device_id rpi_axi_pmu_match[] = {
+ 		.compatible = "brcm,bcm2711-axiperf",
+ 		.data = (void *)CHIP_BCM2835,
+ 	},
++	{
++		.compatible = "brcm,bcm2712-axiperf",
++		.data = (void *)CHIP_BCM2712,
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, rpi_axi_pmu_match);
 -- 
-2.41.0
+2.55.0.691.gc56d675ccc-goog
+
