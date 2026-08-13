@@ -1,344 +1,195 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C934440DB56;
-	Thu, 13 Aug 2026 14:54:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3887D483BE3
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 15:01:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786632863; cv=none; b=KlKziudf70ImAZmwQ9PMQX2aTU4nMiXunsv9gGDRjiUT/VoD6yObhtJ77/ar6kMTGrErcz/nBHtvRkpDrI0vCXOQr6/PdZ+UIfGudoYCNIVbnV546DLxGKzlEMhjVNX0W1Q6/DRAv8MPiw1pRVU9lhiBghLIVE7ELsCRDb1fnVo=
+	t=1786633314; cv=none; b=aQd4p2wY6lsdU0Om+sWhtplmR5UNqImDgQRjsGeNT1FRqDJTTKrOYb+KCfrKAjoSThieMoMFPGd3qoMr5RUpcsBKX0ThkHElsmbYPS6zD29hVGtBoi+Ip7wRfBdDBdoELz0k17JjUF5thMrNUxEPiQjVv1Ql/lzlbKfUnNxmIP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786632863; c=relaxed/simple;
-	bh=H4phoMYbLJxfSFfiH94/7usUsHy+rq8pXCChjbnVRhU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DNv6r4+iYrarLMsIFsnz39e1BnRrdliE89Dq28eyrE+0h741X8sXlBIcVxmFLXaEh27k+1MafqfNmEtxXb7xEe9KS4frcFkZ2iCUZUy2mDg4HzohUuEXVRKfKGovIsbUuk4pzNecSvMt8rAml+AdcQxO3jEIaLTRLMU9jbXavlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hLSzT4bF8zKHMgd;
-	Thu, 13 Aug 2026 22:53:41 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 1E83D40574;
-	Thu, 13 Aug 2026 22:54:01 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP1 (Coremail) with UTF8SMTPA id cCh0CgDHt9OI2n1qpde1CA--.25781S2;
-	Thu, 13 Aug 2026 22:54:00 +0800 (CST)
-Message-ID: <d3bce9bc-80c9-418a-b3a9-3e49dd82dd34@huaweicloud.com>
-Date: Thu, 13 Aug 2026 22:54:00 +0800
+	s=arc-20240116; t=1786633314; c=relaxed/simple;
+	bh=OC9IutyT//BkuJs77h0zfNijPHzUCo052/ql5WQ3jBU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j2MVUxq9QhhPPI/9axjtjtuVL5tm6JkBU4N8vRNwLw+3QCIWF+TibJ+Svg7eDLM/ClRLfxVOWu2iw6tYsVQeUItSIUVBV3Ibp6liBT719L1pQaDAXjN0J38WewdfYcwxykOyRshtFpOWHDFKuBCb1hJbgxDSCfmhpNqvh10Vh58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=FS90yvGw; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="FS90yvGw"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4954dff6536so213075e9.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 08:01:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1786633310; x=1787238110; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=7k8Ok3ovsH8z7i16wZyB/9R4mVj0xRZGgmoWoCE0MIY=;
+        b=FS90yvGwGhSZ0H0dri15DlTmoCPdKKldeArg8bkQMVBthG1RVs4P7TuL3iIFYvpzhM
+         /uRz1jNWJwgCZrNXcWduXslxklw5rV/BhpVtiGUroTA4NG/b+moXSiNhMZL+IGqMZxYf
+         FxB5RC8xJD0PJ06rsWzDMwYEtnNU7NdzpyfPxnQtmWETxirRCVI4+/h1ZNn2e39i/A+x
+         6Uf0MnekG15hhqG6VpJR86RL0znqbVn0jKveG0ckL1T8FsdOgL4y6md9mM5GTDqQYojn
+         iv2/yUE97pNjORQpck8+b5Pu1UzZTsr63e67zIyfYGaSovlNPH44XwTXzNfjVrw8ibHO
+         AzdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786633310; x=1787238110;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=7k8Ok3ovsH8z7i16wZyB/9R4mVj0xRZGgmoWoCE0MIY=;
+        b=IDk5iNPgEOLLzwJb9CV+vFehCr1FxqHq9FkJieImWTC4kv4ZgDZMUc53MP6hP9W9Ak
+         06wXMTx8uce1sPLDKtcXxB/azwaXPnDVn3QcU+Ffr1PjyaKWfNVAGJGiArYo+ZpaTP9V
+         D/o+bYI6OhLALpTBqSyNi4Sh1TlAovbewZNp69XLCKkIfyN4M2BvfYx6+Jmu6f0hgsAA
+         f1RMMlfskRSEOCyBKQ3Bbp+YLiSQL/vkVIOoaM2zroRxh5vzbodzusJbh7p3j3Lg0laR
+         I9D/zoPVYIogJyTP+9ET08i5+3sp+tyj3ozODgQSlQ+A6DXAIQTrFMYp8PhSxOUZMQ/O
+         462A==
+X-Forwarded-Encrypted: i=1; AHgh+Rq/bOt627jVtLGqmiFmVl7zDcbK2R0wLAbsKcUASErD2Nlg1cTmdqqo72sJyWq+COZXd4GFcGH1bCRulRgRlzGt@vger.kernel.org
+X-Gm-Message-State: AOJu0YxjZSTKJW0InsyCjunM0wpaY+qGxmSH4SWFOigqt3iN39w3Ra3J
+	1UeM/UHBHaiEVs+gK8wxJIj+lcIOGYkVZ05+I+fqjNE0hJkUieYq5GxZ6XV15UeTaOg=
+X-Gm-Gg: AR+sD12AuVW6bh+aTBzi14IicBIfslTFk/jM84vb9LxtQKtW+WAp2uyvo/i96ZAXt4Y
+	9X4UeFEv6HnmPnBMgIW/tCf4/MHQSlsdfrQPBui9vkz2KKr3pI+pR0urLvG4AXNilLXofJ65NEQ
+	hWAPhYVI7rpU4xmJw5k5jbQwSNuUJ4laVLMSWFJL71f3EqBim73lBkcnjpRlc5/KHVc22WPmdKG
+	KSSt5rGPMEhMwIwBmJMFaojLWNjNipR2hD9GOizH5E+cmEXdaDhpkfzQIQUIwvEOzySHqoZOXtn
+	qxZPWe7pAg4t74CHkep3rEooiOQS/yiI+3KsvJTBIsGQH+ADrPl33GaYPZROOZ+8On01v6dgDe3
+	jb1HReVZpFYjH01QvSEPPgpIFl+3z9TDshPwx35QC1zrWNldlsobv1IHcS0vM2+EXti6450qliM
+	cbMmrjd2vG0A44i6bFazey9USWDG1hxJuGQ6cos7BNkdfP/dmYrAngpOJ7qRyMWEHxsVikMa4Hw
+	AmmfQUeLKp5QFy6L+EgbBJv8aBugKnxzkTEksi8j6K6nFS1hMYCze9tmSBNn9h7
+X-Received: by 2002:a05:600c:45d5:b0:496:ca1f:a428 with SMTP id 5b1f17b1804b1-499821d26demr65530185e9.19.1786633310090;
+        Thu, 13 Aug 2026 08:01:50 -0700 (PDT)
+Received: from localhost (p200300f65f017104a224b5246b1e216d.dip0.t-ipconnect.de. [2003:f6:5f01:7104:a224:b524:6b1e:216d])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-49981b03cd0sm75972075e9.1.2026.08.13.08.01.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Aug 2026 08:01:49 -0700 (PDT)
+Date: Thu, 13 Aug 2026 17:01:46 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Will Deacon <will@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, mark.rutland@arm.com
+Subject: Re: [PATCH v4 0/2] perf: Add Raspberry Pi AXI PMU driver
+Message-ID: <an3YAEn7Q0GwiaUG@monoceros>
+References: <20260812002728.2283079-1-irogers@google.com>
+ <20260812052417.2361040-1-irogers@google.com>
+ <anwuYYxLFbtDmmHx@willie-the-truck>
+ <CAP-5=fW9bH_yd2VF+X1jnem91+dOHPjP53uNQ8x69xFmjLbt4g@mail.gmail.com>
+ <an2DHgfQsQ6TOF44@willie-the-truck>
+ <CAP-5=fVOzmzxO2X4+r9goRxtwtWqdR15kPBP9ApSjuP2u6p7Cw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 14/23] perf annotate-arm64: Support load instruction
- tracking
-To: Shuai Xue <xueshuai@linux.alibaba.com>, Namhyung Kim
- <namhyung@kernel.org>, james.clark@linaro.org,
- Li Huafei <lihuafei1@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
- Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Bill Wendling <morbo@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-15-wutengda@huaweicloud.com>
- <d61a0cbb-373f-4bc6-8493-889a76e27e87@linux.alibaba.com>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <d61a0cbb-373f-4bc6-8493-889a76e27e87@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:cCh0CgDHt9OI2n1qpde1CA--.25781S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3ur1xAw43XrWxWr17Xr1kKrg_yoWkWr17pr
-	4kJrWUGryUJrn3Xr12qr1UJFyUCw1UJ3WUCry8X3W7tF42yr1FgF4UWr9FgF4UJr48Ar45
-	Jr1UXrnrZr17JrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	bAw3UUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="bhv5kdfh36fwppu4"
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVOzmzxO2X4+r9goRxtwtWqdR15kPBP9ApSjuP2u6p7Cw@mail.gmail.com>
 
 
+--bhv5kdfh36fwppu4
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v4 0/2] perf: Add Raspberry Pi AXI PMU driver
+MIME-Version: 1.0
 
-On 2026/8/11 15:36, Shuai Xue wrote:
-> 
-> 
-> On 8/8/26 8:23 PM, Tengda Wu wrote:
->> Extend update_insn_state_arm64() to handle LDR instructions, tracking
->> register state changes when data is loaded from memory to registers.
->>
->> The implementation handles the three primary arm64 addressing modes:
->> 1. Signed offset: [base, #imm|reg]
->> 2. Pre-index: [base, #imm]!
->> 3. Post-index: [base], #imm
->>
->> Before updating, check the addressing mode via get_reg_index_offset() to
->> obtain the actual source's reg_offset, and then propagate the type.
->>
->> Since a load instruction may have two destination registers (in ldp cases),
->> introduce propagate_load_reg_state() to propagate the type for a specified
->> destination register using a given reg_offset. The respective reg_offset
->> values for the two registers are as follows:
->>
->>    dst->reg1: reg_offset = get_reg_index_offset()
->>    dst->reg2: reg_offset = get_reg_index_offset() + reg_size(dst->reg1)
->>
->> Finally, handle the side effects of pre-index and post-index addressing
->> via adjust_reg_index_state().
->>
->> A real-world example is shown below:
->>
->>    ffff80008011f5b0 <pick_task_stop>:
->>    ffff80008011f5b8:  ldr  x0, [x0, #2712] // x0: struct rq* -> task_struct*
->> * ffff80008011f5c0:  ldr  w1, [x0, #104]
->>
->> Before this commit, the type of x0 was incorrectly inferred as 'struct rq':
->>
->>    find data type for 0x68(reg0) at pick_task_stop+0x10
->>    var [8] reg0 offset 0 type='struct rq*'
->>    chk [10] reg0 offset=0x68 ok=1 kind=1 (struct rq*) : Good!
->>    final result:  type='struct rq'
->>
->> After this commit, the type of x0 is correctly inferred as 'struct task_struct':
->>
->>    find data type for 0x68(reg0) at pick_task_stop+0x10
->>    var [8] reg0 offset 0 type='struct rq*'
->>    ldr [8] 0xa98(reg0) -> reg0 type='struct task_struct*'
->>    chk [10] reg0 offset=0x68 ok=1 kind=1 (struct task_struct*) : Good!
->>    final result: type='struct task_struct'
->>
->> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
->> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
->> ---
->>   .../perf/util/annotate-arch/annotate-arm64.c  | 148 +++++++++++++++++-
->>   1 file changed, 147 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
->> index acff14ca01e0..6557c0ad11b2 100644
->> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
->> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
->> @@ -358,11 +358,152 @@ static int extract_op_location_arm64(const struct arch *arch,
->>   }
->>     #ifdef HAVE_LIBDW_SUPPORT
->> +static int arm64__reg_size(const char *reg)
->> +{
->> +    if (!reg || !*reg || !arm64__is_reg(reg))
->> +        return -1;
-> 
-> Since arm64__is_reg() rejects xzr and SIMD registers, something like
-> ldp xzr, x19, [sp] ends up with multi_regs = false and x19 never
-> invalidated or tracked. Admittedly a corner case - but maybe worth
-> handling if extending the register set is cheap.
-> 
+On Thu, Aug 13, 2026 at 06:44:48AM -0700, Ian Rogers wrote:
+> On Thu, Aug 13, 2026 at 1:41=E2=80=AFAM Will Deacon <will@kernel.org> wro=
+te:
+> >
+> > On Wed, Aug 12, 2026 at 06:38:24AM -0700, Ian Rogers wrote:
+> > > On Wed, Aug 12, 2026 at 1:27=E2=80=AFAM Will Deacon <will@kernel.org>=
+ wrote:
+> > > >
+> > > > On Tue, Aug 11, 2026 at 10:24:15PM -0700, Ian Rogers wrote:
+> > > > > This patch series adds an uncore Performance Monitoring Unit (PMU=
+) driver
+> > > > > for Broadcom AXI system and VideoCore VPU performance monitors fo=
+und on
+> > > > > Raspberry Pi SoCs (BCM2835 through BCM2712 / Raspberry Pi 1 throu=
+gh 5).
+> > > >
+> > > > Why are you sending four versions of this patch series, at -rc7, ea=
+ch in
+> > > > reply to the previous one? Nobody is going to review that.
+> > >
+> > > See the cover letter for changes. They address the sashiko reviews,
+> > > you may not see these reviews as they are only sent to me and
+> > > linux-perf-users, which is somewhat customary in the sashiko setup.
+> >
+> > Have you considered running Sashiko locally given that you work at Goog=
+le?
+>=20
+> Yes I do. If you look at the changes you will notice that more issues
+> are being resolved per version than the issues raised by Sashiko.
+> Unfortunately, factors like the model, context window and just the
+> inherent non-determinism of AI mean that AI reviews generate a
+> firehose of suggestions that you can't reproduce either remotely or
+> locally.
+>=20
+> > > I don't see any relevance in rc7, I'm just mailing out a new driver
+> > > now that I have the opportunity to look at it. Whether and when it
+> > > gets pulled upstream is up to a maintainer.
+> >
+> > Right, as the maintainer for drivers/perf/ and I'm just asking you to
+> > slow down a bit. I don't need 10 versions of a patch series in two days
+> > when I'm focussed almost entirely on the upcoming merge window, which
+> > this is too late for. You should read
+> > Documentation/process/submitting-patches.rst which states:
+> >
+> >   | Wait for a minimum of one week before resubmitting
+>=20
+> That's not what it says:
+> https://www.kernel.org/doc/Documentation/process/submitting-patches.rst
+> """
+> Once upon a time, patches used to disappear into the void without comment,
+> but the development process works more smoothly than that now.  You should
+> receive comments within a few weeks (typically 2-3); if that does not
+> happen, make sure that you have sent your patches to the right place.
+> Wait for a minimum of one week before resubmitting or pinging reviewers
+> - possibly longer during busy times like merge windows.
+> """
 
-Agreed. But I'd propose that we first support recognizing xzr/wzr only,
-and leave SIMD registers for a future extension when we properly add SIMD support.
+I didn't care enough to check if respining a series more than once a
+week is explicitly mentioned, but let me interpret the paragraph for
+you:
 
-There shouldn't be a case where SIMD registers and general-purpose registers
-appear together within the same operands, right? If so, then skipping SIMD
-support for now should be fine.
+Maintainers are busy people. Patch submitters who increase their inbox
+size considerably without adding much value easily annoy them (and I can
+read Will's annoyance between his lines). A maintainer being annoyed by
+you isn't a good situation to get your patches merged, so better
+consider to follow their advice. Once you made it to a procmail rule
+that routes all your mail to /dev/null, it's hard to recover.
 
-> 
->> +    if (reg[0] == 'w')
->> +        return 4;
->> +
->> +    if (reg[0] == 'x' || !strncmp(reg, "sp", 2))
->> +        return 8;
->> +
->> +    return -1;
->> +}
->> +
->> +static int get_reg_index_offset(struct annotated_op_loc *op_loc)
->> +{
->> +    return op_loc->addr_mode == PERF_ADDR_MODE_POST_INDEX ? 0 : op_loc->offset;
->> +}
->> +
->> +/* Apply addressing mode (pre-index, post-index) to register state */
->> +static void adjust_reg_index_state(struct type_state *state,
->> +                   struct annotated_op_loc *op_loc,
->> +                   const char *insn_name, u32 insn_offset)
->> +{
->> +    struct type_state_reg *tsr;
->> +    int reg = op_loc->reg1;
->> +
->> +    if (op_loc->addr_mode != PERF_ADDR_MODE_PRE_INDEX &&
->> +        op_loc->addr_mode != PERF_ADDR_MODE_POST_INDEX)
->> +        return;
->> +
->> +    if (!has_reg_type(state, reg) || !state->regs[reg].ok)
->> +        return;
->> +
->> +    tsr = &state->regs[reg];
->> +    tsr->copied_from = -1;
->> +    tsr->offset = op_loc->offset + tsr->offset;
->> +
->> +    pr_debug_dtp("%s [%x] %s-index %#x(reg%d) -> reg%d", insn_name,
->> +             insn_offset, op_loc->addr_mode == PERF_ADDR_MODE_PRE_INDEX ?
->> +             "pre" : "post", op_loc->offset, reg, reg);
->> +    pr_debug_type_name(&tsr->type, tsr->kind);
->> +}
->> +
->> +/*
->> + * For load insns: propagate type from @src to @dreg, applying @reg_offset
->> + * to the source struct's field offset.
->> + */
->> +static int propagate_load_reg_state(struct type_state *state,
->> +                    struct disasm_line *dl, int dreg,
->> +                    struct annotated_op_loc *src,
->> +                    int reg_offset, const char *insn_name)
->> +{
->> +    struct type_state_reg *tsr;
->> +    struct type_state_reg src_tsr;
->> +    Dwarf_Die type_die;
->> +    u32 insn_offset = dl->al.offset;
->> +    int sreg = src->reg1;
->> +
->> +    if (!has_reg_type(state, dreg))
->> +        return -1;
->> +
->> +    tsr = &state->regs[dreg];
->> +    tsr->copied_from = -1;
->> +
->> +retry:
->> +    if (!has_reg_type(state, sreg) || !state->regs[sreg].ok)
->> +        return -1;
->> +
->> +    src_tsr = state->regs[sreg];
->> +
->> +    /* Dereference the pointer if it has one */
->> +    if (src_tsr.kind == TSR_KIND_TYPE &&
->> +        die_deref_ptr_type(&src_tsr.type,
->> +                   src_tsr.offset + reg_offset, &type_die)) {
->> +        tsr->type = type_die;
->> +        tsr->kind = TSR_KIND_TYPE;
->> +        tsr->offset = 0;
->> +        tsr->ok = true;
->> +
->> +        if (src->multi_regs) {
->> +            pr_debug_dtp("%s [%x] %#x(reg%d, reg%d) -> reg%d",
->> +                     insn_name, insn_offset, reg_offset,
->> +                     src->reg1, src->reg2, dreg);
->> +        } else {
->> +            pr_debug_dtp("%s [%x] %#x(reg%d) -> reg%d",
->> +                     insn_name, insn_offset, reg_offset,
->> +                     sreg, dreg);
->> +        }
->> +        pr_debug_type_name(&tsr->type, tsr->kind);
->> +        return 0;
->> +    }
->> +    /* Or try another register if any */
->> +    else if (src->multi_regs && src->reg1 != src->reg2 && sreg != src->reg2) {
->> +        sreg = src->reg2;
->> +        goto retry;
->> +    }
->> +
->> +    return -1;
->> +}
->> +
->> +static void update_load_insn_state(struct type_state *state,
->> +                   struct disasm_line *dl,
->> +                   struct annotated_op_loc *src,
->> +                   struct annotated_op_loc *dst)
->> +{
->> +    int reg_offset = get_reg_index_offset(src);
->> +    const char *insn_name = dst->multi_regs ? "ldp" : "ldr";
->> +
->> +    if (!has_reg_type(state, dst->reg1) ||
->> +        (dst->multi_regs && !has_reg_type(state, dst->reg2)))
->> +        goto out_err_adjust;
->> +
->> +    /* Handle the first destination register */
->> +    if (propagate_load_reg_state(state, dl, dst->reg1, src,
->> +                     reg_offset, insn_name))
->> +        goto out_err_adjust;
->> +
->> +    /* Handle the second destination register (ldp only) */
->> +    if (dst->multi_regs) {
->> +        int reg_size = arm64__reg_size(dl->ops.target.raw);
-> 
-> Two issues here:
-> 
-> First, propagate_load_reg_state() snapshots state->regs[sreg] at call
-> time. For an aliased pair like ldp x0, x1, [x0], the first call
-> overwrites x0, and the second call then reads the freshly loaded type
-> as the base instead of the original one. Better snapshot the source
-> state once in update_load_insn_state() and pass it down.
-> 
+Are you aware that it's Will who judges your perf patches in the end and
+picks them up for mainline inclusion (or doesn't)?
 
-Yeah, should snapshot first.
+So yes, the documentation about sending patch revisions might be
+incomplete, but if you're asked to slow down, practise some patience and
+do slow down.
 
-> Second, ldpsw loads two 32-bit words from memory (sign-extended into
-> x-registers), so the element spacing is 4, not the 8 that
-> arm64__reg_size() derives from the destination register. The element
-> size needs to come from the mnemonic.
-> 
+Also if Sashiko still finds relevant issues after 9 iterations, it might
+be better to seek internal human(!) feedback by experienced people in
+your company first. I recommend you to reach out to them, before they
+reach out to you about annoying upstream folks and thus damaging your
+reputation and Google's with it.
 
-Agreed.
+Best regards
+Uwe
 
-> 
->> +
->> +        if (reg_size < 0 ||
->> +            propagate_load_reg_state(state, dl, dst->reg2, src,
->> +                         reg_offset + reg_size, insn_name))
->> +            goto out_err_adjust;
->> +    }
->> +
->> +out_adjust:
->> +    adjust_reg_index_state(state, src, insn_name, dl->al.offset);
->> +    return;
->> +
->> +out_err_adjust:
->> +    if (has_reg_type(state, dst->reg1))
->> +        invalidate_reg_state(&state->regs[dst->reg1]);
->> +    if (dst->multi_regs && has_reg_type(state, dst->reg2))
->> +        invalidate_reg_state(&state->regs[dst->reg2]);
->> +    goto out_adjust;
->> +}
->> +
->>   static void update_insn_state_arm64(struct type_state *state,
->>                       struct data_loc_info *dloc, Dwarf_Die *cu_die,
->>                       struct disasm_line *dl)
->>   {
->>       struct annotated_insn_loc loc;
->> +    struct annotated_op_loc *src = &loc.ops[INSN_OP_SOURCE];
->>       struct annotated_op_loc *dst = &loc.ops[INSN_OP_TARGET];
->>       u32 insn_offset = dl->al.offset;
->>   @@ -418,7 +559,8 @@ static void update_insn_state_arm64(struct type_state *state,
->>        * Invalidate destination register(s) for unsupported instructions to
->>        * prevent stale type info from propagating to subsequent instructions.
->>        */
->> -    if (has_reg_type(state, dst->reg1)) {
->> +    if (has_reg_type(state, dst->reg1) &&
->> +        strncmp(dl->ins.name, "ld", 2)) {
-> 
-> For stores the operands are reversed, so dst is the memory operand
-> and dst->reg1 is the base register. This then invalidates the base
-> pointer on every store, which is exactly the state we need to resolve
-> the memory access type. The x86 version guards this with
-> !dst->mem_ref; arm64 should too:
-> 
->     if (has_reg_type(state, dst->reg1) && !dst->mem_ref &&
->         strncmp(dl->ins.name, "ld", 2)) {
-> 
+--bhv5kdfh36fwppu4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Agreed.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Tengda
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmp93FgACgkQj4D7WH0S
+/k5Kpgf5ATTmyu6kJCS0955udpxpXmTJ7JxCYhgN+G1BAAu7jp/u/KY2XWN8bQQS
+uEQVZjMCMedQIoONcztXt+cY0IkAASER0CWkgLVDt+QnRjEyZg2QSHg+tkJNJAm2
+tTVNZkrOCZsFU4+MIyBhPcySLotLA9mJsCguyI3XL+EKmoYbvQUYi7SKEooq4g34
+nYmbCPL311rCBRe88Eb/oBMexpUQdCwzIf33DfApU2ASTxYBtxYJOic77El4uzjK
+za8AV7iEavsb6xJFvzam6s9pSenpQCQg3w6J9VJJxtlTRybRytrKHjd8f5D5rJg7
+53BVklIR3Y+A+Zz6cPPuo1Yevq7StA==
+=tysB
+-----END PGP SIGNATURE-----
 
+--bhv5kdfh36fwppu4--
