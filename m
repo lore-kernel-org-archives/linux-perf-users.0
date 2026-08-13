@@ -1,107 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 083A2481250;
-	Thu, 13 Aug 2026 14:09:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEECA481FAF
+	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 14:18:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786630180; cv=none; b=hxpTebiNtaW3aZIc/hm0gVSNUrqkRbBlG5qOZy37wW66T76IS9MGV98uYDSstb3yvlwezcakmFW5fBxssd22SC/6TwhbRUHsXxrXwcEVg68QDQSL6PKUuRCXCp+PoUmQCLLcTcnmNh64lXKo4LMSfdJb0DBYq0u1X6FzXBvICxM=
+	t=1786630736; cv=none; b=OHorfxFpEIUR4WksBNLJ/WEOx6sOQZKSu/YCnZDZSbEzSGUZUrvWp8XkHTrq53H4k0/RymHaiT964cjM2TnOC0h/secc+QPEwYSeg2R/diJWTrLO1U2YIdZxqi6FVYmRSOGoj0sl66/b0HMHfGxhaQhlE+6D1SAHyBTl6lcd8Pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786630180; c=relaxed/simple;
-	bh=HC0okGR3wepZYPJ8CpLkHOn12dCTgIrIhk9BAd9SJ+M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aWFDxAaoovDn/BQshZK+IOoYgJjAJl8KxEAeKrhpjoyHgXRYuJgDJ86hjV8JnWz2SRPBxd3y7O9kzNs8UMsX1u4gdYUaSGXla3FcYvBfZzCoRHW/U8W6qwHc1IwhEgyiwqJ3rzEI4UdVswlk0hzWj1ox3sE5bdfbn+f+CXn09NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YtbnIR9c; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786630736; c=relaxed/simple;
+	bh=w/Gevw3a0yvKVZs7ny88eF2tIq2TbSgBWBpVPzlEgHI=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=W1bFWoJUKlmDtaIXS6++PMwfqrRbIg1iJubREPLXMAqk1p3j7xFhtS+M1qaM7sZ3FyYoumADB+cTUGl6H3766OfDY61b0z7xSxt0jdZ3lczzyY9LeHmPNILWUdkufdd1FSkdfKOD1G6D0DJiLLhsHamv93NLafHbLpUJNZPNYdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HcYiCzdn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YtbnIR9c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B806C1F000E9;
-	Thu, 13 Aug 2026 14:09:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HcYiCzdn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 463931F000E9;
+	Thu, 13 Aug 2026 14:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786630178;
-	bh=lmnAjFynEBxd/k6luR2UPnuGBHOE3tGKXoYxs21fjiE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YtbnIR9cbqenuziJOnglbkSy20cjMPJfWeIWd91HVRNLNVUuoeyWqURo3wlkQZ4Yc
-	 UDrXMN6K0KwJ4jZltcgDPMsJ517Hb0iTPiNKOCSGcpOVEJ7pu2+eqD5TbAXvK+erm4
-	 8oH6pj1E2sO4btKpPaddTrq/BiTYCFO+bUdghDa6c60XU5FXY6D3Xx3QnriGqzg1uf
-	 BfgQbGzyv6oYucyU4IX9v4AaZtw9Obmfud4H08FeZK1gqGs4vM3MU2cZ9glZyhPsu1
-	 lZ22tg2dsnnmdwJ7MAINgzH8me1JPgD19IoVU4/ULvRWca9xjoe6M3lPMXwjK/LmFY
-	 /F30f2V8PWZVw==
-Date: Thu, 13 Aug 2026 11:09:34 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	sashiko-bot <sashiko-bot@kernel.org>
-Subject: Re: [PATCH 3/5] perf dso: Use stored fd error instead of stale errno
- in file_read() and file_size()
-Message-ID: <an3QHqKMwtO8ijw5@x1>
-References: <20260811175140.7235-1-acme@kernel.org>
- <20260811175140.7235-4-acme@kernel.org>
- <CAP-5=fX4AC7yPa_6xXoVmAswhUetnvth59mtPpHmX8Qp4bdf5w@mail.gmail.com>
- <an0rMidlKOX1LrgV@google.com>
+	s=k20260515; t=1786630734;
+	bh=2mSDHM6YqCpeB0oJPiVgRfCl6CiTNzF8VW4JsyEhp8A=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=HcYiCzdnTEsbEqQLK+yUF5tQlCs3B1I8WCs3/16ahBQfZgUW/gidHyUIANrgXrmX7
+	 P19cUpldx0Fs0v3wB7nL9am4kGtiBZoRSk4dr1+tMCVYqobPjjUR3kJjalH0HN7w8i
+	 D5G4LMBE6Wa8O+srDhOVszbKsp7iozk8F+Er8cfVzzAAo5DU8V8WdoQnRtNGDXwa2s
+	 BgQzvLm0sB/VMG2cHOWcHS29XID+rgTKj/qffm694Nx8UZHyYx1L2SJ3W2nJCsXPrE
+	 RmhZNjGXaU8/VSoMIK0bdrCkClzYuGb/RtDzGeAYYlSNl/SkYqKFwPf8QEIEbPZvaS
+	 9aMK5yOz6RtsQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 4/4] perf tools: Add test for weight annotation
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Andi Kleen" <ak@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260813132907.50738-4-ak@linux.intel.com>
+References: <20260813132907.50738-1-ak@linux.intel.com>
+ <20260813132907.50738-4-ak@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 13 Aug 2026 14:18:53 +0000
+Message-Id: <20260813141854.463931F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <an0rMidlKOX1LrgV@google.com>
 
-On Thu, Aug 13, 2026 at 11:25:54AM +0900, Namhyung Kim wrote:
-> On Wed, Aug 12, 2026 at 04:12:52PM -0700, Ian Rogers wrote:
-> > On Tue, Aug 11, 2026 at 10:52 AM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > >
-> > > file_read() and file_size() use ret = -errno when
-> > > dso__data(dso)->fd is negative after try_to_open_dso() fails.  By this
-> > > point errno has been through mutex_lock(), nsinfo__mountns_enter(), and
-> > > multiple open() attempts inside try_to_open_dso() — it no longer
-> > > reflects the actual open failure.  If errno happens to be 0, ret = 0
-> > > looks like EOF rather than an error, and file_size() callers like
-> > > dso__data_size() would then report a zero-sized file instead of
-> > > failing.
-> > >
-> > > dso__data(dso)->fd is always negative on failure — -errno from
-> > > __open_dso() when no filename could be built (e.g. -EINVAL, -ENOENT),
-> > > or -1 when do_open() itself failed — and never 0, so use it directly
-> > > instead of reading the stale global errno.
-> > >
-> > > Fixes: 33bdedcea2d7 ("perf tools: Protect dso cache fd with a mutex")
-> > > Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-> > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > Assisted-by: Claude:claude-opus-4.6
-> > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > ---
-> > >  tools/perf/util/dso.c | 6 ++++--
-> > >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > >
-> > > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> > > index 124193453675ca18..32ae5c78cdb906e6 100644
-> > > --- a/tools/perf/util/dso.c
-> > > +++ b/tools/perf/util/dso.c
-> > > @@ -1029,7 +1029,8 @@ static ssize_t file_read(struct dso *dso, struct machine *machine,
-> > >
-> > >         if (dso__data(dso)->fd < 0) {
-> > >                 dso__data(dso)->status = DSO_DATA_STATUS_ERROR;
-> > > -               ret = -errno;
-> > > +               /* fd is always negative here: -errno or -1, never 0 */
-> > > +               ret = dso__data(dso)->fd;
-> > 
-> > nit: we can "assert(ret < 0);" to verify the comment.
-> 
-> It's already checked in the above if statement.  I'm not sure the
-> comment or assert is necessary.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Background thread in perf top continually overwrites the TUI use=
+r preference for displaying weight columns due to an unprotected data race.
+--
 
-You're right, I'm dropping both the comment and the assert, my bad.
+--- Patch [4]: [PATCH v1 4/4] perf tools: Add test for weight annotation ---
+commit 7947c9d694355b6721ccd7944dc41891a9968db4
+Author: Andi Kleen <ak@linux.intel.com>
 
-- Arnaldo
+perf tools: Add support for displaying weights in annotate
+
+Add support for showing all the three possible per IP weights in
+annotate. The weights are shown by defaults if any are non zero. This
+is useful, especially with the new insn lat statistics, but also
+for all the existing weights.
+
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index 2888ac3b7b926..32bd6e23f6fdd 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -827,6 +827,7 @@ static void perf_event__process_sample(const struct p=
+erf_tool *tool,
+>  			top->vmlinux_warned =3D true;
+>  		}
+>  	}
+> +	symbol_conf__set_weight_mode(&symbol_conf, sample);
+
+[Severity: Medium]
+Will this background sample processing thread concurrently overwrite the TUI
+user preference for displaying weight columns?
+
+The TUI thread modifies the global symbol_conf structure when the user atte=
+mpts
+to hide the weight columns. If the background thread is continually calling
+symbol_conf__set_weight_mode() on every sample without locking, it appears =
+the
+user's preference could get immediately overridden, causing the TUI to flic=
+ker
+or misalign columns.
+
+[ ... ]
+
+> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/a=
+nnotate.c
+> index e47a467750890..dada5fa6d29f2 100644
+> --- a/tools/perf/ui/browsers/annotate.c
+> +++ b/tools/perf/ui/browsers/annotate.c
+[ ... ]
+> @@ -1091,6 +1092,14 @@ static int annotate_browser__run(struct annotate_b=
+rowser *browser,
+>  				symbol_conf.show_total_period =3D true;
+>  			annotation__update_column_widths(notes);
+>  			continue;
+> +		case 'w':
+> +			symbol_conf.hide_weight =3D !symbol_conf.hide_weight;
+> +			symbol_conf.weight_mask =3D symbol_conf.hide_weight ? 0 :
+> +				annotation__histogram(notes, evsel)->weight_mask;
+
+[Severity: Medium]
+Could this unprotected update to the global symbol_conf.weight_mask race wi=
+th
+the background thread's read-modify-write operations?
+
+[ ... ]
+
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 94f9c8faeddab..4b04320e35ecb 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+[ ... ]
+> +void symbol_conf__set_weight_mode(struct symbol_conf *c,
+> +				  struct perf_sample *sample)
+> +{
+> +	if (sample->weight)
+> +		c->weight_mask |=3D BIT(WEIGHT_WEIGHT);
+
+[Severity: Medium]
+Does this unprotected read-modify-write on the global symbol_conf structure
+corrupt the state when called concurrently with the TUI thread?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260813132907.5073=
+8-1-ak@linux.intel.com?part=3D4
