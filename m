@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671E546EF65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4AF0376A07
 	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 21:11:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786655480; cv=none; b=Zm7556BQPOCK+2VEHYWhw0XNTQ9ca9OPdNUwcCx6naycDfeBqEH5sFhOt9e1JfdNn0iKrRsHBoWhOsiOZo9LsaXzXkTaRSavMLMig7DoKfBcH56QJbR9twD5m19WNPT7lBfNuJU2kSI58f5qb00krvRRt3eSuL7bMedVg68lA/8=
+	t=1786655481; cv=none; b=LlCqOG5Xugww6fmCrfLA3S7OBsSjU+Qi3+hJu8lSYnlbIQEurHK6Wt0qt1cQR8o3ltyjwY9R8wJdOSjJQc7p/4oVFWnlVyhByvfR4tA0mr25/LaMarSl0HyfS6Ha2/DzFeJ8JmnWhrkdjpZXgx+mm7OomDUMIAM5i2cK799r1lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786655480; c=relaxed/simple;
-	bh=fEgXKovIZOW4WfqZh+snAL8qnNOxXFUCVlAbVCbteOk=;
+	s=arc-20240116; t=1786655481; c=relaxed/simple;
+	bh=Wgz9ttw+P9cRA8Csd2hTJOvx98uIuT5zF8yBYalng/Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AbWrZhvJZASCmSzZwM9GT0EQY+jY3ot5+2GK1ltECHctNVzxK9gPdyQShDMU4bM82BxJB4YyNcxWZNLggG00mwswvBYWFp41P0jLYiXmGuyxi/ugyKyTEmO787Lpnz/jN26czf+HlDmGkYrHmjr+yWpRcZ60ijBG0UMT5aCTpbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hl2XrQ7A; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version; b=SL/eqSLS92D5VBAELUUopfqtgW2ZUpDMhjHJErSDnxl2stFesLLmJnc0L7YKaGPmWLYgSfeYX5Q+WubKUzF4H+FEAxMRrMZX36nfb+J9XjfVvv9z62K9dy80zeXsjclAhluEEf0uJ7tVvCLF+7SwSUfDqy17EgW0bPUAa2IZ/UY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H21kGkKu; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hl2XrQ7A"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H21kGkKu"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786655479; x=1818191479;
+  t=1786655480; x=1818191480;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=fEgXKovIZOW4WfqZh+snAL8qnNOxXFUCVlAbVCbteOk=;
-  b=Hl2XrQ7AX4rcSLO/H9k3em3PB1LsPcxl6jKapYOl+NxUTXNeCKr+UL2P
-   q66Sekgwg+ZYq9N/uZC0QA7wcY35bxMJm4bvrkgKM3xm2by2/NRf6WJSD
-   ZqgJYql2MjkAdYUiR32OxHxjjI03NDjOOe2b4al6vlqEURqB/7wHmpHQI
-   8sA4BAti4ECtVspvbV7Un1/DrRgVWiI0nlP94UOLylkVuCXxavXf4hEIK
-   n/PJ4tUFt7vyHqaNvCVdMjyTpsfGPkOmd77ssKI+zs+kYVapYIvaX0iU9
-   jGVl+O3cnh/bSseW1iamOTxZCekjtDOVrY4gadC3v8TBz7uJ6FFzLwId/
+  bh=Wgz9ttw+P9cRA8Csd2hTJOvx98uIuT5zF8yBYalng/Q=;
+  b=H21kGkKu7eM8h61glDTTxwH05DcWdA7rfHBsbLSR6Es4VMHHm+s9FhI4
+   5lUpD6kFuZY8VFr7nJQ6EFhLVc0IcTVimzU7dksXcXO7i6hsX1OPiwDT3
+   82gMEgKKDoBxQ2cHF9+9JIQGHxcYEA+XAtWs05xEWNTyQ8um+d+8kf/5f
+   SVzHG1Ib9EW2e/LnkolRNEkWuhWmB+K7Hwf6Dvi448JvkajgiTHcx1fAD
+   FbXsVzKn4Y2C/Qmqr34JO59UfhowUOJC4WJKmgofVW3I49voFsy+5xHsx
+   LBkleOHD7sWf2jLMiusB+Bkb4BqDl3+ZmtHNlGq3wAOXaRgXZwCIeW2GH
    w==;
-X-CSE-ConnectionGUID: A5jKuPJxQ9GkEzRO6xiPXA==
-X-CSE-MsgGUID: 4C5SuOTvTV2SNz6vzihKSQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11874"; a="89760243"
+X-CSE-ConnectionGUID: zpfPCXsuS+iQv5EhNWIaIA==
+X-CSE-MsgGUID: GF3k+MckTJ2Xdulebygsog==
+X-IronPort-AV: E=McAfee;i="6800,10657,11874"; a="89760245"
 X-IronPort-AV: E=Sophos;i="6.25,222,1779174000"; 
-   d="scan'208";a="89760243"
+   d="scan'208";a="89760245"
 Received: from fmviesa007.fm.intel.com ([10.60.135.147])
   by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 14:11:17 -0700
-X-CSE-ConnectionGUID: uPd4gap1SRqDBtcFGdyYaA==
-X-CSE-MsgGUID: +nIqKM0xQpiTSMwCWsWz1A==
+X-CSE-ConnectionGUID: O516wzk+Q96fs8ZgdKkqxA==
+X-CSE-MsgGUID: 0VXn+z/tRYqPVDGwQja96A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,222,1779174000"; 
-   d="scan'208";a="260773087"
+   d="scan'208";a="260773089"
 Received: from tassilo.jf.intel.com ([10.54.38.190])
   by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 14:11:16 -0700
 From: Andi Kleen <ak@linux.intel.com>
@@ -48,9 +48,9 @@ To: namhyung@kernel.org
 Cc: acme@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v2 1/4] perf tools record: Modernize -W man page
-Date: Thu, 13 Aug 2026 14:10:07 -0700
-Message-ID: <20260813211109.240689-2-ak@linux.intel.com>
+Subject: [PATCH v2 2/4] perf tools top: Add --weight option
+Date: Thu, 13 Aug 2026 14:10:08 -0700
+Message-ID: <20260813211109.240689-3-ak@linux.intel.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260813211109.240689-1-ak@linux.intel.com>
 References: <20260813211109.240689-1-ak@linux.intel.com>
@@ -62,33 +62,46 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Modernize the -W / --weight description in the manpage to cover more
-cases that are supported now.
+Add a -W/--weight option to perf top to collect weights too. Useful with
+follow on patches.
 
+Assisted-by: omp:GPT-5.6-Luna
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/Documentation/perf-record.txt | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ tools/perf/Documentation/perf-top.txt | 6 ++++++
+ tools/perf/builtin-top.c              | 2 ++
+ 2 files changed, 8 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 178f483140ed..2c6510c5a87b 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -480,9 +480,11 @@ Note that this feature may not be available on all processors.
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index af3e4230c72f..2da2a16bbf26 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -25,6 +25,12 @@ OPTIONS
+ --count=<count>::
+ 	Event period to sample.
  
- -W::
- --weight::
--Enable weightened sampling. An additional weight is recorded per sample and can be
--displayed with the weight and local_weight sort keys.  This currently works for TSX
--abort events and some memory events in precise mode on modern Intel CPUs.
++-W::
++--weight::
 +Enable weighted sampling. One or more additional weights can be recorded per sample
 +and can be displayed with the weight, weight2, weight3 and local_weight sort keys.
 +Possible uses for weights are memory or instruction retirement latencies.
-+Support depends on the PMU and the event, as well as its configuration. Typically
-+it requires use of 'p'.
- 
- --namespaces::
- Record events of type PERF_RECORD_NAMESPACES.  This enables 'cgroup_id' sort key.
++
+ -C <cpu-list>::
+ --cpu=<cpu>::
+ Monitor only on the list of CPUs provided. Multiple CPUs can be provided as a
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 570410599f1b..2888ac3b7b92 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1493,6 +1493,8 @@ int cmd_top(int argc, const char **argv)
+ 	OPT_CALLBACK(0, "filter", &top.evlist, "filter",
+ 		     "event filter", parse_filter),
+ 	OPT_U64('c', "count", &opts->user_interval, "event period to sample"),
++	OPT_BOOLEAN('W', "weight", &opts->sample_weight,
++		    "sample by weight (on special events only)"),
+ 	OPT_STRING('p', "pid", &target->pid, "pid",
+ 		    "profile events on existing process id"),
+ 	OPT_STRING('t', "tid", &target->tid, "tid",
 -- 
 2.55.0
 
