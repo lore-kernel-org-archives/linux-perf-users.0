@@ -1,405 +1,497 @@
-Received: from mail-pj1-f100.google.com (mail-pj1-f100.google.com [209.85.216.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE35935AC07
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 17:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDAE5388385;
+	Thu, 13 Aug 2026 17:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786642279; cv=none; b=c4znVQA9FD3g6gvC7gYZ4P80YvXuTqr1Lgf38TJb7htwQCvU2ZLDJzjRTgz1kgVMUMDHohF78OhiEzYV+C89Sg08OjYJJV5PHgwOzlaoHlwQJF5xnv7icwj4wUg/zHD6ZvJuwsCwvj7w3zE9ogNW/wOXIAzEKzQeXL1JFOtWGVg=
+	t=1786642386; cv=none; b=dhx+kSPoO+xUruJBwpcdjhp6//p4nTm9EUXj780vnalI5aQy7sJevUD8b0zQj6NFt/7W4EQ7wsoV2BCWK9qFiNewl/IHqUdmaL2Okwcf2CD17xwCEF+WhxcvIX4vx/2dHjpQMXsIXxoLz72NI7vK++ejXMTlzrwuyIxonKEVh1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786642279; c=relaxed/simple;
-	bh=UNibe3dsugq/b764iVqlTYzaBRKDAAaO3vu/vmOJEw4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cOkoa9O9n/Wm0IQZhFlMIbzPjt3J0yEghxvwdbm1Vjff8iBFBImuK2ZCA71wCcgXPvz2eDiTBq1McnRsOM/cENWKe+uXtL/EvWx4+1YtdssN3FR2KSjFnpc78PX8ukUJBm9rL+KvUjoVJcLzbZyzXdsq8eAnftfBCTtCzx/z8V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=ZEGOv2rb; arc=none smtp.client-ip=209.85.216.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1786642386; c=relaxed/simple;
+	bh=I8nvhkifFuzM+dzqc8VyZ2gykJFKxYtFhzKUvlMRyb4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=i+Dk9rnEQqcXmQOU8ORDzTvMif15tltq4jx2CnfE2WKjGY2AD3ETSVRbhBC3flGPQ6r7kThf4FNITv0Rqsc72DqlWb6bWoJhim0vXHHzYJ66RCZyCplXl9stpE6gaMq4Xi9/iomeTnQc0b6VIdvf0gQPoalzYpq1SDk5bKUwzCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MnH57lFP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZEGOv2rb"
-Received: by mail-pj1-f100.google.com with SMTP id 98e67ed59e1d1-383cb94f742so91238a91.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 10:31:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786642277; x=1787247077;
-        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:dkim-signature:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=6LzPtIIW390IfDZsFUle5+Dt63UP/YsqHxRNSLptijc=;
-        b=hpdq0p2oHTORn6SincUy36ISk9TEbw+POUK0KENAo5AVFzqLQ3h+7U1zrxehOw/NaX
-         Q+gOG/qrPnXLMjPPjLYR2Pzfm28JLw+Gy+6VMvkh79nQLdcBRPMo4cs/QhMYh3wJe4+Y
-         aSn2QDq5VY1jf5nTdIckQeXo0y6rdajJn5vrivv02QlFsdv9OxoZRCjDJLV/tfyvXP3U
-         r4sRtQYBAJp4ZzGgVHiq6h4QgSbxPfCgjH80Dbi3haRQC+kK/VGjr/13BxKlUCFeQUzE
-         8SqqCQzhlfCzedHVeaLxZmHQLfalR+Oql9dTRJ2Cleo/Os5ukLAHIigDRp8yjIR7sm/D
-         pmIA==
-X-Forwarded-Encrypted: i=1; AHgh+Rryatn0WA29Q2iGi4ioP2NGAz8AzJTi1Rm40zmvKZNFslhNSlcRVcz9ilupjAAcU6wgdYjcWT90Y1F63NDX9cFh@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw00Sy8Dp1YG/KNCBOWTbZYvrJ7hKE28Q5EXvXSEq5qY35skyVv
-	FOfBsUH4sm6jaO8bSj968Gf8XoM8c6q+JckBzxS57qcCnr6e3y0ue5N3eklp1LpvoOru9UfUxQK
-	kvAztiLsl8WuMu2AizZkSUH5icYXF2eFQyoBVqFtBk3x6qvTOz/ayw77SEo0m25/WH9028sWt+w
-	GVijMgEGFJphYc7BqB2vJSyM21A97OIhlEg1xYBRAy0O+kaf/C9uA6zXPyCQXhenPf753fl5+v4
-	mHCz2lkqWzv3Q/7GysY2s8SJrH5ug==
-X-Gm-Gg: AR+sD10yZYJ44qddqWZw1KeUbKrivW3VRdL5ONLjS5QlYjRccei5TqTBb66UYPggiUs
-	DomTYFo2srUo6ZQ1V4O2hw8NFJwK0URylHzxGyuaabaZ/ZfNdWfJHJZVgP5KGeb5E/HakIzU5v0
-	5sLib5DYUfpyufAaeJg8OzMd09bWIWdz6TuCzA9xWybkqP3H03G1cCWG0DRK/Pqv6ar6izP8B/i
-	C4ssQ9ATrIQvfBadwVJFDDKwdAQR5DWJy1gclP2TCQWqii+oeiEsmSBPtJyq2WVexXkKEUz7BHo
-	K4NCVYQwtq8ayh0/gSeeT0cmKGa/7cRo6dZQNMhCneQVPGk+McWlVV1P/a8JnE2/UgNzGvXyveR
-	dxNJafEtGMVvej5Orguv3IJu4D8opGz1DWlEOS3hbXl6OgjUvbQ2DWnFRKuC1fmxECpvrmpufO7
-	cJ5rxibT157s2eNY0HP0vP5ZlCcCfpCImbmjVK13oo
-X-Received: by 2002:a17:90b:3e4b:b0:385:393e:7124 with SMTP id 98e67ed59e1d1-3931e29b439mr8649751a91.14.1786642276868;
-        Thu, 13 Aug 2026 10:31:16 -0700 (PDT)
-Received: from smtp-us-east1-p01-i01-si01.dlp.protect.broadcom.com (address-144-49-247-16.dlp.protect.broadcom.com. [144.49.247.16])
-        by smtp-relay.gmail.com with ESMTPS id 98e67ed59e1d1-3931ca6c44esm1502686a91.0.2026.08.13.10.31.16
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Aug 2026 10:31:16 -0700 (PDT)
-X-Relaying-Domain: broadcom.com
-X-CFilter-Loop: Reflected
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-930dda91cbdso25727085a.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Aug 2026 10:31:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1786642275; x=1787247075; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=6LzPtIIW390IfDZsFUle5+Dt63UP/YsqHxRNSLptijc=;
-        b=ZEGOv2rbjSRtX3ESWIaUxvGJi59jyR4TpAIaGpIw4RB0rlYTMrLOrmseUU7a95e1Vy
-         CHrwvh0Q4+dVEZEQAK3HP2vGpgNdFwn6Jxk1SOFDc7crOydT8VKTlujhK3x+ygG2+Mpq
-         +3eoDZgJ0mz37+gKYOgZmN6ht+VAB6eI//wxQ=
-X-Forwarded-Encrypted: i=1; AHgh+RpJbb/S5K6IDriCyWyIpsx+foAQh05q94D7tkL2Sy1zJ98fZeV1yDHcvJ4UwQ+HCJ+lZadzoP3jf6RAnAW7ZoQy@vger.kernel.org
-X-Received: by 2002:a05:620a:3903:b0:92e:4470:f6a7 with SMTP id af79cd13be357-936bf8c6615mr787253885a.10.1786642275091;
-        Thu, 13 Aug 2026 10:31:15 -0700 (PDT)
-X-Received: by 2002:a05:620a:3903:b0:92e:4470:f6a7 with SMTP id af79cd13be357-936bf8c6615mr787243585a.10.1786642274455;
-        Thu, 13 Aug 2026 10:31:14 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-936ce1e694fsm30634585a.28.2026.08.13.10.31.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Aug 2026 10:31:13 -0700 (PDT)
-Message-ID: <700339f2-765f-4b2d-a80d-bd0a6822f91b@broadcom.com>
-Date: Thu, 13 Aug 2026 10:31:11 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MnH57lFP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24A2D1F000E9;
+	Thu, 13 Aug 2026 17:32:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786642383;
+	bh=8RH4X65GrcOStx5k2qJG9rtw4kTKZnFMRsh/QcJAqJ4=;
+	h=From:Subject:Date:To:Cc;
+	b=MnH57lFP93+xSdu/gTRBJQrkrD0IiTywTYN+RKwOpv6idf2cg3mFB8EXfoKXcxNo2
+	 PYFhl3lTvwildblP0XGg6sfZEpkHzcZe2rkyqSrFAkqk1SUcpCu7nA1sepWGf6S6Zc
+	 mZWLM1xLvzQwyfznp6l1ynUPQTVUrUE4kkGIC4HcsquTFREEMnpV3+hAv+dpLumCs0
+	 X7oHDjU54jfLo3rkoUKgK4R6mfzWZEyPLtFly3ulG7qbhfzIIi7U4wdmyjlVtBFI1s
+	 E/fGPkj/3GqRJ0ojInPzuVY1V+5YOKquk7UsInbYfxZiUhcgVYNxcIANTA6L5l05em
+	 6VmYMSG2ZxarA==
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Subject: [PATCH v5 00/16] mm/rmap: index MAP_PRIVATE file-backed folios by
+ anonymous pgoff
+Date: Thu, 13 Aug 2026 18:32:17 +0100
+Message-Id: <20260813-b4-scalable-cow-virt-pgoff-v5-0-c21581c0c3c8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: perf: Add Raspberry Pi BCM2835 AXI PMU driver
-To: Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org,
- linux-rpi-kernel@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- mark.rutland@arm.com, u.kleine-koenig@baylibre.com, will@kernel.org
-References: <20260813064228.2799872-1-irogers@google.com>
- <cover.1691900000.git.irogers@google.com>
- <20260813073050.2823657-1-irogers@google.com>
-Content-Language: en-US, fr-FR
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20260813073050.2823657-1-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-DetectorID-Processed: b00c1d49-9d2e-4205-b15f-d015386d3d5e
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAKH/fWoC/33PTU7DMBAF4KtUXuNo/BcnrLgHYmG749Qliis7G
+ FCVu+OkSBRVyvJJM9+8uZKMKWAmz4crSVhCDnGqQT0diDuZaUAajjUTDrwFzRi1kmZnRmNHpC5
+ +0hLSTC9D9J4acA7QMmldSypwSejD14a/vt1y/rBndPMqrhOnkOeYvrfrha1zxMWCqWG641oqp
+ kQzhLkZz/nlHdOEYxPTsG7+9tF7fQqjQJ3nsmeAHnp5b6yFCt9O3iwOuxavFj8q2WuljW79gyX
+ urX7XEtXCDp1Hj6Zj/MGSf1YH7a4lq2WsYJ0RCiT8/3FZlh94SJuq4gEAAA==
+X-Change-ID: 20260711-b4-scalable-cow-virt-pgoff-a0cc0eb14bc6
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ David Hildenbrand <david@kernel.org>, 
+ "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+ Pedro Falcato <pfalcato@suse.de>, 
+ "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+ Miaohe Lin <linmiaohe@huawei.com>, 
+ Naoya Horiguchi <nao.horiguchi@gmail.com>, Rik van Riel <riel@surriel.com>, 
+ Harry Yoo <harry@kernel.org>, Lance Yang <lance.yang@linux.dev>, 
+ Kees Cook <kees@kernel.org>, Zi Yan <ziy@nvidia.com>, 
+ Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>, 
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+ Barry Song <baohua@kernel.org>, Usama Arif <usama.arif@linux.dev>, 
+ Matthew Brost <matthew.brost@intel.com>, 
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, 
+ Byungchul Park <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, 
+ Ying Huang <ying.huang@linux.alibaba.com>, 
+ Alistair Popple <apopple@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+ Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
+ Arnd Bergmann <arnd@arndb.de>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ Christian Borntraeger <borntraeger@linux.ibm.com>, 
+ Janosch Frank <frankja@linux.ibm.com>, 
+ Claudio Imbrenda <imbrenda@linux.ibm.com>, 
+ Alexander Gordeev <agordeev@linux.ibm.com>, 
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, 
+ Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
+ Sven Schnelle <svens@linux.ibm.com>, 
+ Alex Deucher <alexander.deucher@amd.com>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Boris Brezillon <boris.brezillon@collabora.com>, 
+ Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, 
+ Huang Rui <ray.huang@amd.com>, Matthew Auld <matthew.auld@intel.com>, 
+ =?utf-8?q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>, 
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+ Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
+ John Hubbard <jhubbard@nvidia.com>, Muchun Song <muchun.song@linux.dev>, 
+ Oscar Salvador <osalvador@suse.de>, Chris Li <chrisl@kernel.org>, 
+ Kairui Song <kasong@tencent.com>, Kemeng Shi <shikemeng@huaweicloud.com>, 
+ Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
+ Youngjun Park <youngjun.park@lge.com>
+Cc: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>, linux-mm@kvack.org, 
+ linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, kvm@vger.kernel.org, 
+ linux-s390@vger.kernel.org, amd-gfx@lists.freedesktop.org, 
+ dri-devel@lists.freedesktop.org, intel-xe@lists.freedesktop.org, 
+ linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+ syzbot@syzkaller.appspotmail.com
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=18697; i=ljs@kernel.org;
+ h=from:subject:message-id; bh=I8nvhkifFuzM+dzqc8VyZ2gykJFKxYtFhzKUvlMRyb4=;
+ b=owGbwMvMwCV2fu7ZrsZH9SKMp9WSGLJq/68W9lD4o77nwYFA7px5j6aU+q50FfsS9fjGsnU8f
+ wXW/uUJ6ChlYRDjYpAVU2R5/kV8f5BI2LzOC/5uMHNYmUCGMHBxCsBEjscw/LN4xyq3qVv5YK2V
+ iNBDbS2heafVHhRN3X5eJNTsTebM5zwM/z0rzNLub1k180LGvIcSAuJO5v0pzmIyrn8f3/Wcdv7
+ iLXYA
+X-Developer-Key: i=ljs@kernel.org; a=openpgp;
+ fpr=E7F417BF5214569E89D04F46CF9DCD8A81E27F14
 
-On 8/13/26 00:30, Ian Rogers wrote:
-> This commit adds a new performance monitoring driver for the Raspberry Pi
-> AXI bus (BCM2835/2711), exposing system-level and VideoCore PMU hardware to
-> the Linux perf subsystem.
-> 
-> Note on out-of-tree macro compatibility:
-> The inclusion of #if LINUX_VERSION_CODE < KERNEL_VERSION(6, 13, 0)
-> surrounding hrtimer_setup is intentionally maintained alongside
-> this patch to guarantee seamless out-of-tree compilation fallback
-> compatibility for Raspberry Pi Long Term Support (LTS) kernel variants.
+In memory management we've managed to manufacture a great deal of confusion
+around the concept of anonymous memory. We have:
 
-Upstream does not care about that, I appreciate the thought and mention, 
-but that's a backporting job to ensure it works.
+1. 'Pure anon' memory - anonymous VMAs whose folios are anonymous and
+   swap-backed (thus for reclaim purposes, treated as anonymous). These are
+   simple enough.
 
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->   drivers/perf/rpi_axi_pmu.c | 2456 ++++++++++++++++++++++++++++++++++++
->   1 file changed, 2456 insertions(+)
->   create mode 100644 drivers/perf/rpi_axi_pmu.c
-> 
-> diff --git a/drivers/perf/rpi_axi_pmu.c b/drivers/perf/rpi_axi_pmu.c
-> new file mode 100644
-> index 000000000000..d8efc8bb205f
-> --- /dev/null
-> +++ b/drivers/perf/rpi_axi_pmu.c
-> @@ -0,0 +1,2456 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +/**
-> + * DOC: Raspberry Pi AXI Bus Performance Monitoring Unit (PMU) Driver
-> + *
-> + * This driver exposes the performance monitoring hardware on Raspberry Pi
-> + * System-on-Chips to the Linux perf subsystem:
-> + * - Raspberry Pi 1, 2, 3, 4, Compute Modules 1-4, Zero, Zero W (SoCs BCM2835/2836/2837/2711).
-> + *
-> + * Architecture Overview:
-> + * ----------------------
-> + * The Broadcom AXI performance hardware provides up to two independent monitors:
-> + * 1. System Monitor (MON__SYSTEM = 0):
-> + *    Monitors system-level AXI traffic (ARM CPU L2/UC, DMA, V3D, ISP, HVS, PCIe/RP1).
-> + *    Directly memory-mapped via ARM physical IO memory space (MMIO).
-> + *    Read latency: ~10-20 nanoseconds (fast, atomic-safe, non-blocking).
-> + *
-> + * 2. VPU Monitor (MON__VPU = 1):
-> + *    Monitors VideoCore VPU buses (VPU0/1 Data/Instruction L2/UC, SDRAM, etc.).
-> + *    Accessible through VideoCore firmware mailbox IPC (RPI_FIRMWARE_SET/GET_PERIPH_REG).
-> + *    Read latency: ~10-100 microseconds (IPC over VPU mailbox).
-> + *
-> + * Synchronization & Concurrency Model:
-> + * ------------------------------------
-> + * - Spinlock (pmu->lock):
-> + *   Protects active event array (events[]), event generation sequence counters (event_gen[]),
-> + *   bus watcher allocation/refcounting, active_vpu_events counter, and MMIO register updates
-> + *   (MON__SYSTEM) against SMP race conditions and ABA pointer recycling races.
-> + *
-> + * - Mutex (pmu->vpu_mutex):
-> + *   Serializes VideoCore Mailbox IPC transactions (MON__VPU) in process context,
-> + *   preventing concurrent mailbox buffer corruption across multiple CPUs.
-> + *
-> + * - Cached Async VPU Reads & Multiplexing (MON__VPU):
-> + *   Polled periodically in process context by vpu_work when active_vpu_events > 0.
-> + *   Uses PERF_HES_UPTODATE state flag to safely establish counter baselines during
-> + *   event rotation / multiplexing. User read() syscalls return cached cumulative event counter
-> + *   instantly without blocking.
-> + */
+2. shmem - file-backed VMAs, file-backed folios (from rmap perspective) so
+   present in the page cache and mapped by an address_space object, but
+   whose folios are also swap-backed (thus treated as anonymous for reclaim
+   purposes).
 
-The patch description needs to go into details as to why both the MMIO 
-and firmware interfaces are supported. The firmware interface requires 
-you to play games with sleeping/non-sleeping context, I would really 
-want to avoid that and just support the MMIO path exclusively, is that 
-practical? If that means ditching support for Pi 1&2, that would be 
-reasonable IMHO.
+3. MAP_PRIVATE-mapped /dev/zero - a strange beast whose VMAs have
+   vma->vm_file set, but which clears vma->vm_ops to satisfy
+   vma_is_anonymous(), resulting in VMAs that were mmap()'d referencing a
+   file, but are in every other sense anonymous, including the folios.
 
-> +
-> +#include <linux/cpuhotplug.h>
-> +#include <linux/cpumask.h>
-> +#include <linux/hrtimer.h>
-> +#include <linux/io.h>
-> +#include <linux/version.h>
-> +
-> +#if LINUX_VERSION_CODE < KERNEL_VERSION(6, 13, 0)
-> +static inline void rpi_hrtimer_setup(struct hrtimer *timer,
-> +				     enum hrtimer_restart (*function)(struct hrtimer *),
-> +				     clockid_t clock_id, enum hrtimer_mode mode)
-> +{
-> +	hrtimer_init(timer, clock_id, mode);
-> +	timer->function = function;
-> +}
-> +#define hrtimer_setup rpi_hrtimer_setup
- > +#endif> +#include <linux/lockdep.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/of.h>
-> +#include <linux/perf_event.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/sysfs.h>
-> +#include <linux/vmalloc.h>
-> +#include <linux/workqueue.h>
-> +
-> +#include <soc/bcm2835/raspberrypi-firmware.h>
-> +
-> +/* --- PLATFORM CONSTANTS & ENUMERATIONS --------------------------- */
-> +
-> +/**
-> + * enum rpi_axi_chip - Supported Broadcom SoC generations
-> + * @CHIP_BCM2835: BCM2835 / BCM2836 / BCM2837 / BCM2711 (RPi 1-4, CM 1-4, Zero/W)
-> + */
-> +enum rpi_axi_chip {
-> +	CHIP_BCM2835 = 0,
-> +};
-> +
-> +enum monitor {
-> +	MON__SYSTEM = 0,
-> +	MON__VPU,
-> +	MON__MAX
-> +};
-> +
-> +/* Number of hardware bus watcher units per monitor */
-> +#define NUM_BUS_WATCHERS_PER_MONITOR 3
-> +
-> +/**
-> + * enum bcm2835_system_bus - AXI buses monitored by System Monitor on BCM2835-BCM2711 (RPi 1-4)
-> + * @BCM2835_SB__DMA_L2: DMA engine L2 cache interconnect bus
+4. Other MAP_PRIVATE-file backed mappings - These possess file-backed VMAs
+   and have file-backed folios until CoW'd, at which point those CoW'd
+   folios are anonymous.
 
-Why the double underscore in the naming convention?
+This series fixes issue 3.
 
-[snip]
+In order for us to traverse VMAs using the reverse mapping, we require two
+fields - folio->mapping and folio->index. The first tells the rmap code
+where to look for VMAs, and the second tells it at which offset the folio
+starts within the referenced object.
 
-> +
-> +/* Hardware register offsets & control bitwise constants */
-> +#define GEN_CTRL			0x00
-> +#define GEN_CTL_ENABLE_BIT		BIT(0)
-> +#define GEN_CTL_RESET_BIT		BIT(1)
-> +#define GEN_CTL_WATCH_BIT		BIT(2)
-> +
-> +#define BW_PITCH			0x40
+For anonymous folios, folio->mapping points at an anon_vma object. For
+file-backed folios, it points at an address_space. And:
 
-Rather than pitch, maybe stride?
+* For file-backed folios folio->index is simply the page offset of the start
+  of the folio within the file.
 
-> +#define BW0_CTRL			0x40
-> +#define BW1_CTRL			0x80
-> +#define BW2_CTRL			0xc0
-> +
-> +#define BW_ATRANS_OFFSET		0x04
+* For anonymous folios belonging to pure anon mappings, folio->index is
+  equal to the anonymous page offset of the folio.
 
-That's confusing, so you are offsetting from the base of BW0_CTRL, that 
-needs a comment to explain that offset choice.
+* For anonymous folios belonging to file-backed mappings (i.e. CoW'd folios
+  of a MAP_PRIVATE file-backed mapping), folio->index is equal to the file
+  page offset.
 
-> +#define BW_ATWAIT_OFFSET		0x08
-> +#define BW_AMAX_OFFSET			0x0c
-> +#define BW_WTRANS_OFFSET		0x10
-> +#define BW_WTWAIT_OFFSET		0x14
-> +#define BW_WMAX_OFFSET			0x18
-> +#define BW_RTRANS_OFFSET		0x1c
-> +#define BW_RTWAIT_OFFSET		0x20
-> +#define BW_RMAX_OFFSET			0x24
-> +
-> +#define BW_CTRL_RESET_BIT		BIT(31)
-> +#define BW_CTRL_ENABLE_BIT		BIT(30)
-> +#define BW_CTRL_ENABLE_ID_FILTER_BIT	BIT(29)
-> +#define BW_CTRL_LIMIT_HALT_BIT		BIT(28)
-> +
-> +#define BW_CTRL_BUS_WATCH_SHIFT		0
-> +#define BW_CTRL_BUS_WATCH_MASK		GENMASK(5, 0)
-> +#define BW_CTRL_BUS_FILTER_SHIFT	8
-> +#define BW_CTRL_BUS_FILTER_MASK		GENMASK(12, 8)
-> +
-> +/*
-> + * RPI_AXI_PMU_TIMER_INTERVAL determines the background polling frequency
-> + * for VideoCore VPU Mailbox IPC counters.
-> + *
-> + * A balance is required:
-> + * - IPC Overhead: Polling overly fast (e.g., 10ms) generates excessive CPU
-> + *   wakeups and VideoCore IPC interrupts on older CPUs (Pi 1/2).
-> + * - Accuracy: Polling overly slow (e.g., 2000ms) causes short time-multiplexed
-> + *   profiling sessions (under the interval) to mathematically strand residual
-> + *   counts since the mailbox cannot be queried synchronously inside pmu->read().
-> + *
-> + * 100ms (10 Hz) provides reasonably accurate profiling without heavy overhead.
-> + */
-> +#define RPI_AXI_PMU_TIMER_INTERVAL ms_to_ktime(100)
-> +
-> +static enum cpuhp_state rpi_axi_pmu_cpuhp_state;
-> +
-> +/* --- PMU API & CONFIG DECODING ---------------------------------- */
-> +
-> +#define PMU_NAME "rpi_axi_pmu"
-> +
-> +/**
-> + * config_to_filter() - Extracts AXI filter ID from perf event config
-> + * @config: 64-bit config value from struct perf_event_attr
-> + *
-> + * Return: Filter ID value (bits 10-14).
-> + */
-> +static int config_to_filter(__u64 config)
-> +{
-> +	return (config >> 10) & 0x1F;
+This series establishes a new anonymous page offset property of VMAs to
+allow us to map anonymous folios at their anonymous page offset, consistent
+with pure anon.
 
-Can we have a definition for the shift and mask here?
+The purpose of doing so is to lay the foundations for the scalable CoW
+work. This is necessary because scalable CoW looks in the maple tree for
+the VMA located at folio->index << PAGE_SHIFT, before falling back to
+looking up tracked remaps if necessary.
 
-> +}
-> +
-> +/**
-> + * config_to_monitor() - Extracts Monitor ID from perf event config
-> + * @config: 64-bit config value from struct perf_event_attr
-> + *
-> + * Return: Monitor enum (bit 9: 0 = System, 1 = VPU).
-> + */
-> +static enum monitor config_to_monitor(__u64 config)
-> +{
-> +	return (config >> 9) & 1;
+The MAP_PRIVATE file-backed case means that folio indices will very often
+conflict with one another and this remap tracking becomes substantially
+more contended, and of course the fast path can never be used.
 
-Likewise.
+This also makes it possible, in future, to unshare anonymously mapped
+folios with deep fork hierarchies on remap, eliminating the need for remap
+tracking in the vast majority of cases.
 
-> +}
-> +
-> +/**
-> + * config_to_bus() - Extracts bus index from perf event config
-> + * @config: 64-bit config value from struct perf_event_attr
-> + *
-> + * Return: Bus index (bits 4-8).
-> + */
-> +static int config_to_bus(__u64 config)
-> +{
-> +	return (config >> 4) & 0x1F;
+Similar to page offset of pure anonymous VMAs, we update the anonymous page
+offset of unfaulted file-backed VMAs on remap, but do not once
+CoW'd (i.e. vma->anon_vma is non-NULL).
 
-Likewise
+Overall, there is little impact on mergeability, which remains exactly the same
+for pure anonymous and shared file-backed mappings, with the only impact being
+on MAP_PRIVATE-mapped file-backed mappings, which must now match on anonymous
+page offset as well as file page offset to be merged.
 
-> +}
-> +
-> +/**
-> + * config_to_counter() - Extracts metric counter type from perf event config
-> + * @config: 64-bit config value from struct perf_event_attr
-> + *
-> + * Return: Counter enum (bits 0-3).
-> + */
-> +static enum counter config_to_counter(__u64 config)
-> +{
-> +	return config & 0xF;
+To fail to merge like this would require CoW'ing the mapping, then finding
+another VMA with identical file and compatible page offset to remap next
+to.
 
-And here as well.
+This is therefore very much an edge case that should have very little
+impact (and which scalable CoW may very well address in any case).
 
-[snip]
+Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+---
+v5:
+* Accumulated tags (thanks everybody!)
+* Removed the final 4 patches to be handled later as there are nuances with
+  the /dev/zero stuff we need to figure out, as discussed with David.
+* Updated the cover letter to reflect this.
+* Added comments to vma_flags_is_cow_mapping(),
+  vma_[desc_]is_cow_mapping() as per Suren.
+* Correct typo as per Suren.
+* Reworded test comment in patch 16 from 'fault in' to 'trigger a CoW
+  fault' as per David.
+* Fix -> 75 char limit in patch 12's commit msg.
 
-> +	for (int i = 0; i < MON__MAX; i++) {
-> +		rpi_axi_hw_events__init(&pmu->monitor[i].hw_events);
-> +
-> +		if (pmu->monitor[i].use_mailbox_interface) {
-> +			struct resource *resource = platform_get_resource(pdev, IORESOURCE_MEM, i);
-> +
-> +			if (!resource) {
-> +				dev_err(dev, "Error reading mailbox resource %d\n", i);
-> +				ret = -EINVAL;
-> +				goto err_firmware_put;
-> +			}
-> +			pmu->monitor[i].mailbox = (u32)resource->start;
-> +		} else {
-> +			struct resource *resource = platform_get_resource(pdev, IORESOURCE_MEM, i);
+v4:
+- Updated tags (thanks everyone!)
+- Adjusted some prose as per David.
+- Adjusted whitespace to 2 tabs in 2/15 as per David.
+- Improved linear_page_index(), __linear_anon_page_index() to be more
+  succinct in 2/15 as per David and updated commit message to reflect it.
+- Added commit to provide vma_[flags_]is_cow_mapping() - nearly all callers
+  are calling is_cow_mapping() as is_cow_mapping(vma->vm_flags) so just
+  provide a helper to do this for them.
+- In the same commit update all is_cow_mapping() callers and remove the
+  now-unused function.
+- Change linear_anon_page_index() to assert on !CoW mapping using
+  vma_is_cow_mapping() in 2/15 as per David.
+- Updated 4/15 to output index differently depending on whether the VMA is
+  a CoW mapping or not or whether the file index differs from the anon
+  index as per Gregory.
+- Updated 6/15 to change the 'update page offset' logic in copy_vma() to
+  not be gated on CoW or VMA_SHARED_BIT as discussed with David.
+- Updated 6/15 to improve the 'faulted in anon vma' assert stuff. It was
+  very unclear so rename the variable sensibly and update the comment.
+- Added a separate commit to fix the mess that is the faulted_in_anon_vma
+  and the VM_WARN_ON_ONCE_VMA() assert in copy_vma() - make it actually
+  only update the vmap in cases where the VMA was replaced (backwards
+  remap), update the checks to reflect this in a way that's actually
+  understandable and improve the comment.
+- Updated needs_adjacent_anon_gpoff() in 9/15 to use
+  vma_flags_is_cow_mapping() as per David. Updated the comment to reflect
+  it.
+- Broke out changes to vma_address_end() into a separate patch as per David.
+- Eliminated pgoff in vma_address_end() as it adds confusion - just use
+  pgoff_end, which was what pgoff used to be (confusingly).
+- Placed more variables in vma_address_end() as constants at the start of
+  the function.
+- Dropped KSM comment in 9/15 as per David.
+- Dropped linear_folio_page_index() patch altogether as per
+  David.
+- Realised all off uffd is only anon so use linear_anon_page_index()
+  throughout there and also the huge memory case for the same reason.
+- Added a patch to make remove_migration_pmd() accept a folio instead of a
+  page.
+- Added a patch to calculate large folio index using PFN as suggested by
+  David, eliminating the need for linear page index lookup at all.
+- Added a patch to add self merge VMA userland tests.
+https://patch.msgid.link/20260806-b4-scalable-cow-virt-pgoff-v4-0-ab318a350404@kernel.org
 
-Well you are fetching MMIO resources here, so you need a Device Tree 
-description and you need to submit the Device Tree changes that describe 
-these register ranges. Is it fair to assume only the RPi firmware path 
-has been tested or did you also test with MMIO?
+v3:
+- Renamed virtual page offset to anonymous page offset across the series as
+  per David and adjusted prose to reflect it.
+- As part of the rename, eliminated  vma_anon_pgoff_addr() and the
+  conflicting vma_[start, end]_anon_pgoff() functions by passing anon pgoff
+  to the merge logic and having that figure out which page offset to use,
+  significantly simplifying things.
+- Introduced needs_adjacent_anon_pgoff() to be really clear about what the
+  merge logic is doing.
+- Passing through the anon pgoff fixes the issue Sashiko raised with shared
+  file-backed mappings having incorrect anon pgoff (inconsequential but a
+  wrinkle nonetheless).
+- Dropped unnecessary needs_rmap_locks change in 9/15 - this checks to see
+  if rmap locks need to be taken due to the range being moved
+  backwards. Since both file-backed and anon page offset are updated on
+  such a move, it suffices to check only the former. Updated commit message
+  to reflect it.
+- Sashiko complained about a couple missing .is_anon_walk entries in
+  pvmw's - page_mapped_in_vma() and migrate_vma_collect_huge_pmd() -
+  however neither impact anything - the field is only meaningful for
+  vma_address_end() if nr_pages > 1 and neither site is impacted. Moreover,
+  neither site sets pgoff either. Update the commit message to explain
+  this.
+- Renamed is_anon_walk to pgoff_is_anon and document that pvmw->pgoff is
+  only meaningful if pvmw->nr_pages > 1.
+- Highlighted the user-visible changes to /dev/zero being true-anon in the
+  relevant commit message as per Yang.
+- Fixed a bug in the proc-self-map-files-00[1,2].c procfs selftests - the
+  code was trying to MAP_PRIVATE 'an arbitrary file' then asserts that
+  file-backed procfs entries exist, but happened to choose
+  /dev/zero. Updated to the guaranteed-available /proc/self/exe, as
+  reported by Mark.
+- Fixed an issue with drivers that intentionally mark vma->vm_ops as NULL
+  (using the legacy ->mmap callback). If they do this set dummy ops, which
+  is what they meant. The mmap_prepare case is fine as nobody does this
+  there and this will be fixed when all drivers are finally converted to
+  mmap_prepare. As reported by Sashiko.
+- Added some missed VMA selftest vma_start_[anon]_pgoff() conversions in
+  the merge test commit as per Sashiko.
+- Various small prose/comment fixups.
+https://patch.msgid.link/20260729-b4-scalable-cow-virt-pgoff-v3-0-e8ecfefea812@kernel.org
 
-[snip]
-> +
-> +MODULE_LICENSE("GPL");
-Missing MODULE_AUTHOR() and MODULE_DESCRIPTION().
+v2:
+- Removed incorrect assert on always-NULL folio from 7/15, as per syzbot.
+- Updated 2/15 so linear_virt_page_index() checks for vma_is_anonymous() as
+  well to be cautious about 'special' (VDSO, VVAR, etc.) VMAs accidentally
+  being asserted when CONFIG_DEBUG_VM is set, as per Sashiko.
+- Updated commit message of 9/15 to mention the subtle change in NUMA
+  interleaving behaviour, as per Sashiko.
+- Updated 10/15 to assert virtual page offset for adjacent VMAs for various
+  VMA userland tests, as per Sashiko.
+- Updated 13/15 to remove the !vma->vm_file check altogether after
+  MAP_PRIVATE-/dev/zero is made pure anon in vma_start_virt_pgoff().
+- Updated 12/15 to check that the /dev/zero device is a character device
+  since it turns out that block and character devices have their own
+  separate major/minor device number namespaces... :) as per Sashiko.
+- Updated 12/15 to fix a bisection hazard where vma->vm_ops would be
+  overwritten by vma_dummy_vm_ops for MAP_PRIVATE-/dev/zero, as per
+  Sashiko.
+- Updated 12/15 to fix another bisection hazard (...!) due to
+  ordering of vma_set_anonymous(). Removed in 13/15.
+- Added comments to __vm_virt_pgoff[lo, hi] fields referencing
+  vma_start_virt_pgoff()'s comment to be clearer what these are as per
+  Xu Xin in 1/15.
+- Various typo fixes + cleanups in prose.
+- Updated the cover letter to point out that the MAP_PRIVATE-/dev/zero
+  issue is addressed in this series too.
+https://patch.msgid.link/20260720-b4-scalable-cow-virt-pgoff-v2-0-2d549757a76f@kernel.org
+
+v1:
+- Rebased onto mm-new.
+- Dependent series heavily reviewed and looks highly likely to land, so
+  un-RFC.
+- Added explicit check for /dev/zero and removed ability for arbitrary
+  mmap/mmap_prepare hooks to make themselves anonymous.
+- Made MAP_PRIVATE-/dev/zero mappings truly anonymous.
+- Added MAP_PRIVATE file-backed mapping merge test to selftests.
+- Added a MAP_PRIVATE-/dev/zero VMA userland test to assert that the VMA
+  really is made anonymous.
+- Added MAP_PRIVATE-/dev/zero merge tests to selftests.
+- Fixed missed virtual page index site in try_to_merge_with_ksm_page().
+- Updated folio_within_range() to use virtual page offset for anon
+  folio. This had no impact as it is only called for large folios at the
+  moment (and MAP_PRIVATE-file backed mappings can't currently be backed by
+  a large folio) but making the change now protects us for the future.
+- Fixed typos etc.
+https://patch.msgid.link/20260717-b4-scalable-cow-virt-pgoff-v1-0-cf24910ef094@kernel.org
+
+RFC:
+https://patch.msgid.link/cover.1782745153.git.ljs@kernel.org
+
+To: Andrew Morton <akpm@linux-foundation.org>
+To: David Hildenbrand <david@kernel.org>
+To: "Liam R. Howlett" <liam@infradead.org>
+To: Vlastimil Babka <vbabka@kernel.org>
+To: Mike Rapoport <rppt@kernel.org>
+To: Suren Baghdasaryan <surenb@google.com>
+To: Michal Hocko <mhocko@suse.com>
+To: Jann Horn <jannh@google.com>
+To: Pedro Falcato <pfalcato@suse.de>
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To: Jan Kara <jack@suse.cz>
+To: Miaohe Lin <linmiaohe@huawei.com>
+To: Naoya Horiguchi <nao.horiguchi@gmail.com>
+To: Rik van Riel <riel@surriel.com>
+To: Harry Yoo <harry@kernel.org>
+To: Lance Yang <lance.yang@linux.dev>
+To: Kees Cook <kees@kernel.org>
+To: Zi Yan <ziy@nvidia.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: Nico Pache <npache@redhat.com>
+To: Ryan Roberts <ryan.roberts@arm.com>
+To: Dev Jain <dev.jain@arm.com>
+To: Barry Song <baohua@kernel.org>
+To: Usama Arif <usama.arif@linux.dev>
+To: Matthew Brost <matthew.brost@intel.com>
+To: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Rakie Kim <rakie.kim@sk.com>
+To: Byungchul Park <byungchul@sk.com>
+To: Gregory Price <gourry@gourry.net>
+To: Ying Huang <ying.huang@linux.alibaba.com>
+To: Alistair Popple <apopple@nvidia.com>
+To: Peter Xu <peterx@redhat.com>
+To: Xu Xin <xu.xin16@zte.com.cn>
+To: Chengming Zhou <chengming.zhou@linux.dev>
+To: Arnd Bergmann <arnd@arndb.de>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Christian Borntraeger <borntraeger@linux.ibm.com>
+To: Janosch Frank <frankja@linux.ibm.com>
+To: Claudio Imbrenda <imbrenda@linux.ibm.com>
+To: Alexander Gordeev <agordeev@linux.ibm.com>
+To: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To: Heiko Carstens <hca@linux.ibm.com>
+To: Vasily Gorbik <gor@linux.ibm.com>
+To: Sven Schnelle <svens@linux.ibm.com>
+To: Alex Deucher <alexander.deucher@amd.com>
+To: Christian König <christian.koenig@amd.com>
+To: David Airlie <airlied@gmail.com>
+To: Simona Vetter <simona@ffwll.ch>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+To: Maxime Ripard <mripard@kernel.org>
+To: Thomas Zimmermann <tzimmermann@suse.de>
+To: Boris Brezillon <boris.brezillon@collabora.com>
+To: Steven Price <steven.price@arm.com>
+To: Liviu Dudau <liviu.dudau@arm.com>
+To: Huang Rui <ray.huang@amd.com>
+To: Matthew Auld <matthew.auld@intel.com>
+To: Thomas Hellström <thomas.hellstrom@linux.intel.com>
+To: Rodrigo Vivi <rodrigo.vivi@intel.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>
+To: Ingo Molnar <mingo@redhat.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+To: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+To: Jiri Olsa <jolsa@kernel.org>
+To: Ian Rogers <irogers@google.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+To: James Clark <james.clark@linaro.org>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+To: John Hubbard <jhubbard@nvidia.com>
+To: Muchun Song <muchun.song@linux.dev>
+To: Oscar Salvador <osalvador@suse.de>
+To: Chris Li <chrisl@kernel.org>
+To: Kairui Song <kasong@tencent.com>
+To: Kemeng Shi <shikemeng@huaweicloud.com>
+To: Nhat Pham <nphamcs@gmail.com>
+To: Baoquan He <baoquan.he@linux.dev>
+To: Youngjun Park <youngjun.park@lge.com>
+Cc: ljs@kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-kselftest@vger.kernel.org
+Cc: kvm@vger.kernel.org
+Cc: linux-s390@vger.kernel.org
+Cc: amd-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: intel-xe@lists.freedesktop.org
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+
+---
+Lorenzo Stoakes (ARM) (16):
+      mm/vma: introduce VMA anon page offset field and add helpers
+      mm: provide vma_[flags_]is_cow_mapping() and remove is_cow_mapping()
+      mm: introduce linear_anon_page_index()
+      mm: abstract vma_address() and introduce vma_anon_address()
+      mm: update print_bad_page_map() to show anon index if appropriate
+      mm: introduce and use vma_filebacked_address()
+      mm/vma: fix self-merge check in copy_vma()
+      tools/testing/vma: add tests for copy_vma() self-merge
+      mm: propagate VMA anonymous page offset on map, remap, split + merge
+      mm/rmap: track whether the page VMA mapped pgoff is anonymous
+      mm: clean up vma_address_end()
+      mm/huge_memory: update remove_migration_pmd() to accept a folio
+      mm/migrate: calculate large folio page index using PFN
+      mm/rmap: use anon pgoff to track MAP_PRIVATE file-backed anon folios
+      tools/testing/vma: expand VMA merge tests to assert anon pgoff
+      tools/testing/selftests/mm: test anonymous page offset merge behaviour
+
+ arch/s390/mm/gmap_helpers.c             |   2 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_gem.c |   4 +-
+ drivers/gpu/drm/drm_gem_shmem_helper.c  |   2 +-
+ drivers/gpu/drm/panthor/panthor_gem.c   |   2 +-
+ drivers/gpu/drm/ttm/ttm_bo_vm.c         |   2 +-
+ drivers/gpu/drm/xe/xe_device.c          |   2 +-
+ fs/proc/task_mmu.c                      |   2 +-
+ include/linux/mm.h                      | 132 ++++++++++++++++++++++++++++++--
+ include/linux/mm_types.h                |  12 +++
+ include/linux/pagemap.h                 |  40 +++++++++-
+ include/linux/rmap.h                    |   4 +-
+ include/linux/swapops.h                 |   6 +-
+ kernel/events/uprobes.c                 |   2 +-
+ mm/gup.c                                |   2 +-
+ mm/huge_memory.c                        |  26 +++----
+ mm/hugetlb.c                            |   2 +-
+ mm/internal.h                           |  72 ++++++++++++-----
+ mm/interval_tree.c                      |   4 +-
+ mm/ksm.c                                |   6 +-
+ mm/memory-failure.c                     |   4 +-
+ mm/memory.c                             |  38 +++++----
+ mm/mempolicy.c                          |   2 +-
+ mm/migrate.c                            |  21 +++--
+ mm/mremap.c                             |   6 +-
+ mm/page_vma_mapped.c                    |   6 +-
+ mm/rmap.c                               |  22 +++---
+ mm/userfaultfd.c                        |   4 +-
+ mm/vma.c                                | 113 +++++++++++++++++++--------
+ mm/vma.h                                |  89 +++++++++++++--------
+ mm/vma_exec.c                           |   2 +-
+ mm/vma_init.c                           |   1 +
+ tools/testing/selftests/mm/merge.c      |  57 ++++++++++++++
+ tools/testing/vma/include/dup.h         |  62 ++++++++++++++-
+ tools/testing/vma/shared.c              |   3 +-
+ tools/testing/vma/tests/merge.c         |  49 +++++++++---
+ tools/testing/vma/tests/vma.c           |  50 +++++++++++-
+ tools/testing/vma/vma_internal.h        |   1 +
+ 37 files changed, 667 insertions(+), 187 deletions(-)
+---
+base-commit: 5093dba1014c1d7f7e247fd118f0fa8f22136046
+change-id: 20260711-b4-scalable-cow-virt-pgoff-a0cc0eb14bc6
+
+Cheers,
 -- 
-Florian
+Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
