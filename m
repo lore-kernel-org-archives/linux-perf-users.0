@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C252405EB
-	for <linux-perf-users@vger.kernel.org>; Fri, 14 Aug 2026 00:29:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A9F11C8604
+	for <linux-perf-users@vger.kernel.org>; Fri, 14 Aug 2026 00:38:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786667380; cv=none; b=oyhsXBwKJbJh4Y0P0+4+bT5by0S2/f0tiU3QnJJmI/Blktnyc6ypM0B/LE4aRkiYa9do6Gi0Uze9aF6HG6tJlz0+ddWf2Ap9Llrg6ShfC/oqc/ECblllycgY/+HCBUSbCBRxnMwho32a8ZXiTl6dUnP2Lis/TOzfFJm3fvf4ZTQ=
+	t=1786667936; cv=none; b=MkpmR6temrqcOlU6LBtlVB/sx+HPfoVUWQ9ttIqgBQ9x/PCmifrA2whxntJQRsr4+GQtGggkb7Aq9pIDaQb4/gpvjgzYs5CXLQiRIM2GJkuSnMLrLMFCdogVBaWgGDFpk9kVCNYMQGNOBebJku3EGCXVp8hKwHiEahCk32/rP24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786667380; c=relaxed/simple;
-	bh=gYHMJbl1IiSrAvFGOGomw4eVzsZPLXEHB0Jiu39eKG8=;
+	s=arc-20240116; t=1786667936; c=relaxed/simple;
+	bh=Q1jku/v/krqK0BjBxZGvjSVxFh/2P6rdgQRBSsEf1jI=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hpcw41WtYqmNbk8LuMouCdP7IF7CKCgu4z3GANyR4y4781aEMm6/pO3TVIwLpKQiFkoek/LEDMkgYktNayIQdGCBDtrJxAGzt05SzN3ThOsoHAnG1L1mgbdX3He6z3oF2s5pMAnPBtdxvb8LDCdhiMDSXI5rP9drfJzqtsPcSl4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERvulkn4; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=TLbapoP9PderoG8ktSM0kpZIXsjYv0XXw7eg6Ff3GYQsXHaxTudS2bvwOua+f0vGX9Y9dsiib7YiIPhC3jcMhIwjlMX4+2W9anwszKO4dxiJLrNf5Id+Uj/H9P6XZ24964npm/HRjtJwnPJXUeWMNmOuVP5XNsfcKy7McA1/Uhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TtpEMfI+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERvulkn4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0309E1F000E9;
-	Fri, 14 Aug 2026 00:29:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TtpEMfI+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87DEE1F000E9;
+	Fri, 14 Aug 2026 00:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786667379;
-	bh=V1rtvqH3etpWU4CyXAbl26scw5euxwD0uR1926sroNE=;
+	s=k20260515; t=1786667934;
+	bh=xRlauGIyyyY7bK4xnOOuosrfTdSfKQLcdfwL1/Xf2n4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=ERvulkn4tTC0GgatIFvwduukHzVQmKYSjHwz3hOeAd560E/amdHtGgF7cNBkA2+YE
-	 EyO4qA8kkXX4iZkUSarzzgnlQrp1ji0t3/HMKuY2TEDoBFitMMCKRrpFwrXLFyY32r
-	 TaOTl2m1stK63SsSd0pAx+vyyF1nquVHKx32DEi/h90lggSIgccBKpMC5qbpdH5UQN
-	 0srZGz0EwQx6OfYvTZszEupbc+v1fhQEcm8kuNmlh1YOTgx0gRLdBHWYcrESPzGg6R
-	 brRTeLWpyLlLlhpzEvxmGuaw+1ckvo+T2PRRQyzZLqHo+Nf3Zxy7RhL6fzhthFH02t
-	 nQq5TaSvVEqcg==
+	b=TtpEMfI+g0bLeiGu4Fglypz9WWkUwLblo4G9sKBJHJObWO6bqhh7w+lgxIg3/cb61
+	 cZUzzzKvgiPVaLPYuiJ70tOM6AI+JHn1EnWuhsdZozeKgk2H6K+dj5yLilFglmUx3n
+	 aolCSrlUWBBATafAQEVROyxmfMu3QUgSbj2poh+5Vh0c6fDUWHVqkNlLWOrZpm2tao
+	 DMWc1HsoWKMe3F3nQ7qYIBNr4JsDciC57CPCjgDkksL23Zw9lCEXirLUb9sc1zX1yM
+	 L5kMDMV9ii+f1/ePMJq55nAOY7DsuIaH3mvi8S8ZKdywQ/h5ACCuphh8MhLHIjQykH
+	 msrd280/SVcbA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v11 13/33] perf inject: Don't pass evsel with sample
+Subject: Re: [PATCH v12 06/33] perf callchain: Don't pass evsel and sample
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260413012227.1089445-14-irogers@google.com>
-References: <20260413012227.1089445-14-irogers@google.com>
+In-Reply-To: <20260413041143.1736055-7-irogers@google.com>
+References: <20260413041143.1736055-7-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 14 Aug 2026 00:29:38 +0000
-Message-Id: <20260814002939.0309E1F000E9@smtp.kernel.org>
+Date: Fri, 14 Aug 2026 00:38:54 +0000
+Message-Id: <20260814003854.87DEE1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,90 +47,82 @@ Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
 
 Pre-existing issues:
-- [High] In `perf_inject__sched_stat`, a mismatch between the `sample_type`=
- of the `sched:sched_switch` event and the `sched:sched_stat_*` event cause=
-s a heap out-of-bounds write.
+- [High] Unchecked dereference of `sample->evsel` in callchain resolution t=
+riggered by synthesized samples from `jitdump`, leading to a segmentation f=
+ault.
 --
 
---- Patch [13]: [PATCH v11 13/33] perf inject: Don't pass evsel with sample=
- ---
-commit 5a323f56faef1c75c44630fb2ace9d44a71d43aa
+--- Patch [6]: [PATCH v12 06/33] perf callchain: Don't pass evsel and sampl=
+e ---
+commit 27ec660b6457cfb9bcb1b7bd6fcdf72bb85c9ee4
 Author: Ian Rogers <irogers@google.com>
 
-perf inject: Don't pass evsel with sample
+perf callchain: Don't pass evsel and sample
 
-This commit removes the explicit evsel parameter from several functions sin=
-ce
-it is already contained within the sample structure. This cleans up the
-handling of sample and mmap_evsel when synthesizing build id events and mma=
-p2
-events with build ids.
+Change callchain resolve code to not pass an evsel with the sample,
+instead just read the evsel from the sample.
 
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-
-[ ... ]
-
-> @@ -1049,13 +1053,12 @@ static int perf_inject__sched_process_exit(const =
-struct perf_tool *tool,
->  static int perf_inject__sched_switch(const struct perf_tool *tool,
->  				     union perf_event *event,
->  				     struct perf_sample *sample,
-> -				     struct evsel *evsel,
->  				     struct machine *machine)
->  {
->  	struct perf_inject *inject =3D container_of(tool, struct perf_inject, t=
-ool);
->  	struct event_entry *ent;
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index e76f8c86e62a6..c2e0a99efe97d 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -2778,13 +2778,13 @@ static u64 get_leaf_frame_caller(struct perf_samp=
+le *sample,
 > =20
-> -	perf_inject__sched_process_exit(tool, event, sample, evsel, machine);
-> +	perf_inject__sched_process_exit(tool, event, sample, machine);
-> =20
->  	ent =3D malloc(event->header.size + sizeof(struct event_entry));
-
-[ ... ]
-
-> @@ -1074,13 +1077,13 @@ static int perf_inject__sched_switch(const struct=
- perf_tool *tool,
->  static int perf_inject__sched_stat(const struct perf_tool *tool,
->  				   union perf_event *event __maybe_unused,
->  				   struct perf_sample *sample,
-> -				   struct evsel *evsel,
->  				   struct machine *machine)
+>  static int thread__resolve_callchain_sample(struct thread *thread,
+>  					    struct callchain_cursor *cursor,
+> -					    struct evsel *evsel,
+>  					    struct perf_sample *sample,
+>  					    struct symbol **parent,
+>  					    struct addr_location *root_al,
+>  					    int max_stack,
+>  					    bool symbols)
 >  {
->  	struct event_entry *ent;
->  	union perf_event *event_sw;
->  	struct perf_sample sample_sw;
->  	struct perf_inject *inject =3D container_of(tool, struct perf_inject, t=
-ool);
 > +	struct evsel *evsel =3D sample->evsel;
 
 [Severity: High]
-This is a pre-existing issue, but can this allocation and synthesis mismatc=
-h=20
-result in a heap out-of-bounds write?
+This is a pre-existing issue, but could this lead to a NULL pointer
+dereference when processing synthesized samples from jitdump?
 
-When perf_inject__sched_switch() allocates the ent buffer, it sizes it
-precisely for the sched_switch event:
+When processing a JIT_CODE_MOVE record, jit_repipe_mmap() in
+tools/perf/util/jitdump.c synthesizes a perf_sample using
+perf_sample__init(), which leaves sample.evsel as NULL. It then calls
+build_id__mark_dso_hit(), which unconditionally passes the sample to
+sample__for_each_callchain_node().
 
-ent =3D malloc(event->header.size + sizeof(struct event_entry));
+The sample is propagated here, where sample->evsel is extracted and
+subsequently dereferenced in evsel__has_branch_callstack(evsel) without
+a NULL check. This issue existed before this patch, as jit_repipe_mmap()
+previously passed a NULL evsel argument directly.
 
-However, when perf_inject__sched_stat() later repopulates this buffer, it c=
-alls
-perf_event__synthesize_sample() using the sample_type bitmask of the sched_=
-stat
-event:
+>  	struct branch_stack *branch =3D sample->branch_stack;
+>  	struct branch_entry *entries =3D perf_sample__branch_entries(sample);
+>  	struct ip_callchain *chain =3D sample->callchain;
+[ ... ]
+> @@ -2986,10 +2986,11 @@ static int unwind_entry(struct unwind_entry *entr=
+y, void *arg)
+> =20
+>  static int thread__resolve_callchain_unwind(struct thread *thread,
+>  					    struct callchain_cursor *cursor,
+> -					    struct evsel *evsel,
+>  					    struct perf_sample *sample,
+>  					    int max_stack, bool symbols)
+>  {
+> +	struct evsel *evsel =3D sample->evsel;
+> +
 
-perf_event__synthesize_sample(event_sw, evsel->core.attr.sample_type,
-                              evsel->core.attr.read_format, &sample_sw);
+[Severity: High]
+This isn't a bug introduced by this patch, but does this share the same
+risk as thread__resolve_callchain_sample() above?
 
-If the sched_stat event was configured with a larger sample_type payload th=
-an
-the sched_switch event (such as callchains or raw data), could
-perf_event__synthesize_sample() write sequentially out-of-bounds and
-overflow the ent buffer?
+The extracted evsel is blindly dereferenced immediately on the next line
+to access evsel->core.attr.sample_type. A synthesized sample from jitdump
+without a set evsel would cause a segmentation fault here as well.
+
+>  	/* Can we do dwarf post unwind? */
+>  	if (!((evsel->core.attr.sample_type & PERF_SAMPLE_REGS_USER) &&
+>  	      (evsel->core.attr.sample_type & PERF_SAMPLE_STACK_USER)))
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260413012227.1089=
-445-1-irogers@google.com?part=3D13
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260413041143.1736=
+055-1-irogers@google.com?part=3D6
