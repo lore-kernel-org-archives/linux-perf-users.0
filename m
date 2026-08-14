@@ -1,164 +1,183 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671D830B529;
-	Fri, 14 Aug 2026 01:26:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8DF1D8E01
+	for <linux-perf-users@vger.kernel.org>; Fri, 14 Aug 2026 01:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786670816; cv=none; b=uzJdN1kkIrnjxl9vLDLOcuIFBRu0r2D0xbdy/GuQ+hwkUzPFS4gNCRTkwZJsqWiGQcgKniLt1yjSJJp6pN4lu81kte1Be7aFuloqq5V//nTdHx+joB9JK3ojnmYNaVs0l6l1WKlnJk4yPWNhoM+4vcCbrWWxYonIPzoLfOi5GI4=
+	t=1786670937; cv=none; b=SQpGF2Y7YVuoFyZxs/87I/J38VN6MLBgRrCxizFXYTL8eEGBqegBykyFts6Y6xDATYZ9jBP8we5g8w758bT2hTGZWjThTLb6ru0BjWuERnv9jt3xSkeHf9kXWv9RhQTctf0APdMTLiQjY//Iwwhid5nrErfB/afBPWNSTJyzqMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786670816; c=relaxed/simple;
-	bh=V3rWI9jA0wMM8U1vUnTXGa5YoYwqLQySxK32mZpgqOo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cY+9LDcA844TBMGDYAGDe0JXgqx+Pnicm6NF+dMhldXmbTgs3DxZe0JqtCgH4xU5Us4vv/eA1qFDlexoJLPqYTWC2Du6Fa1kFKmsNiOd6Iy4rJrKcd4bkX2o/mAWRkBkZLIjbf3xzpLdpqo+zVHSEs5ZTPRNbUwnF2+acuzVc1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hLl1b2F7dzKHMVf;
-	Fri, 14 Aug 2026 09:26:27 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 7882A4058F;
-	Fri, 14 Aug 2026 09:26:47 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgDnUYnVbn5q0SL6CA--.26171S2;
-	Fri, 14 Aug 2026 09:26:47 +0800 (CST)
-Message-ID: <10c30d77-9104-4825-b581-6514a0ec5010@huaweicloud.com>
-Date: Fri, 14 Aug 2026 09:26:45 +0800
+	s=arc-20240116; t=1786670937; c=relaxed/simple;
+	bh=ho0nDnWgdzHpbGwgsDV3oqsMqJu2wH5ytJNtMDMMwWQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=TOsUAbDyh03zMlr84FziWfasOeoGfeBanwZTf8Eh16V7w4wgUYxLb7oRj4bUJrfMameyjizWtS+192zGETAmfeIJkc80hKKUTPxjgDVFrysrdKwLrLb8ZOAU5eO8Ziby7dObBtlOQ7v//J35Envwm1F7k4O/ZL0qfgUE5625yUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DKCR4R4z; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DKCR4R4z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89D9E1F000E9;
+	Fri, 14 Aug 2026 01:28:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786670935;
+	bh=tLae4tQMx+SOgPz7lITNcP800CfjdMDxuTRp79DJKMA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=DKCR4R4zZ6gpPg3la+yH+4ID7l6WrSMxQqwU0laA5SONibZaPS8NGp15im0cDVFYF
+	 P5ll+AS+q9Vk+n4lwGo59M1BXvPiwODbPA9C1x1wcBZsSVPeiGL0LZweZY4RzsgJNj
+	 BnAWN4ttLHpwE5SfeaAknoNsZpNWBrT9PDTWdKPW3O0H1DdJBA/5pJCc8dX3QsplwY
+	 i3+t+kr3jDXcIfbteCXr4oBZ5WRSt66umYdbezSwNO5SnG0dtVGPldtpJRvnPFvqQz
+	 BWAzQVbV8f3A/nFnKLo6mnoBjVqlqxmE4nxZVwdjn4xdRDJF/NSQeMyoc8CBKNkvzP
+	 ahymzIM6gZk4A==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 3/4] perf tools: Add support for displaying weights
+ in annotate
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Andi Kleen" <ak@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260813211109.240689-4-ak@linux.intel.com>
+References: <20260813211109.240689-1-ak@linux.intel.com>
+ <20260813211109.240689-4-ak@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 14 Aug 2026 01:28:51 +0000
+Message-Id: <20260814012855.89D9E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 15/23] perf annotate-arm64: Support store instruction
- tracking
-To: Shuai Xue <xueshuai@linux.alibaba.com>, Namhyung Kim
- <namhyung@kernel.org>, james.clark@linaro.org,
- Li Huafei <lihuafei1@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
- Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Bill Wendling <morbo@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-16-wutengda@huaweicloud.com>
- <0b47de5a-b46a-4904-93a1-f6d315336a30@linux.alibaba.com>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <0b47de5a-b46a-4904-93a1-f6d315336a30@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgDnUYnVbn5q0SL6CA--.26171S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxGrW8KFW5AFWkWw43ArW8WFg_yoWrWw1xpF
-	Wvk3y5tFWjyr4kKrnxGF4UXFyakw1xJw1DGr18ta1UArW7trnYgF4qgF4jgFW3JrWxCr1U
-	tr4qgr1DZr4UAw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
-	0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
-	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
-	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xKxwCY1x0262kK
-	e7AKxVW8ZVWrXwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_
-	WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v2
-	6r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07
-	jIksgUUUUU=
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
+New issues:
+- [Medium] Toggling the 'w' hotkey caches the current event's weight mask g=
+lobally, corrupting weight column display for all subsequent symbols and ev=
+ents.
 
-On 2026/8/11 16:00, Shuai Xue wrote:
-> 
-> 
-> On 8/8/26 8:23 PM, Tengda Wu wrote:
->> Extend update_insn_state() for arm64 to handle store (STR) instructions.
->>
->> Unlike load instructions, a store instruction sets a value in the struct
->> within the memory where the destination register resides, and does not
->> alter its type. Therefore, no processing is required for the transfer.
->>
->> The only point to note is that store instructions support pre-index and
->> post-index addressing modes, so calling adjust_reg_index_state() is still
->> necessary to handle their addressing.
->>
->> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
->> ---
->>   tools/perf/util/annotate-arch/annotate-arm64.c | 13 ++++++++++++-
->>   1 file changed, 12 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
->> index 6557c0ad11b2..ed0f0ef2877d 100644
->> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
->> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
->> @@ -560,7 +560,7 @@ static void update_insn_state_arm64(struct type_state *state,
->>        * prevent stale type info from propagating to subsequent instructions.
->>        */
->>       if (has_reg_type(state, dst->reg1) &&
->> -        strncmp(dl->ins.name, "ld", 2)) {
->> +        strncmp(dl->ins.name, "ld", 2) && strncmp(dl->ins.name, "st", 2)) {
->>           pr_debug_dtp("%s [%x] invalidate reg%d",
->>                    dl->ins.name, insn_offset, dst->reg1);
->>           invalidate_reg_state(&state->regs[dst->reg1]);
->> @@ -575,6 +575,17 @@ static void update_insn_state_arm64(struct type_state *state,
->>       /* Memory to register transfers */
->>       if (!strncmp(dl->ins.name, "ld", 2))
->>           update_load_insn_state(state, dl, src, dst);
->> +    /* Register to memory transfers */
->> +    else if (!strncmp(dl->ins.name, "st", 2)) {
->> +        /*
->> +         * Ignore transfers since it'd set a value in a struct
->> +         * and won't change the type.
->> +         *
->> +         * Needs to update the pre-index and post-index addressing
->> +         * modes for the destination register.
->> +         */
->> +        adjust_reg_index_state(state, dst, "str", insn_offset);
->> +    }
-> Two points on this call:
-> 
-> First, adjust_reg_index_state() gets post-index with a register
-> writeback amount wrong, e.g. str x1, [x0], x2. There the memory
-> operand has multi_regs set (x0 and x2), so reg2 gets the offset
-> register and op_loc->offset stays 0. The adjustment then degenerates
-> to offset += 0, and the base keeps its old type and offset while in
-> reality it moved by an unknown amount - every later access through it
-> resolves to the wrong struct field. Pre-index is fine since
-> [base, reg]! isn't a valid encoding, but the post-index register form
-> should fall back to invalidating the base:
-> 
->     if (op_loc->multi_regs) {
->         invalidate_reg_state(tsr);
->         return;
->     }
-> 
+Pre-existing issues:
+- [High] This problem wasn't introduced by this patch, but there is an out-=
+of-bounds heap memory write in `symbol__annotate_zero_histogram()` when zer=
+oing an event's histogram.
+--
 
-The manual says that "[base], reg" is only used in SIMD instructions,
-and since SIMD is not currently supported, the impact is limited.
-However, for the sake of accuracy, I will add this check. Thank you.
+--- Patch [3]: [PATCH v2 3/4] perf tools: Add support for displaying weight=
+s in annotate ---
+commit 89fdbcaac6998b08ac6d1c7549a509183b024849
+Author: Andi Kleen <ak@linux.intel.com>
 
-> This applies to the load path too since it shares
-> adjust_reg_index_state().
-> 
-> Second, a nit: the insn name is hardcoded to "str", so stp/stlr and
-> pre/post-indexed variants all print as "str" in the debug output.
-> Pass dl->ins.name instead.
-> 
+perf tools: Add support for displaying weights in annotate
 
-I referred to the x86 approach here (x86 also does not distinguish specific
-instruction names; for example, all mov* variants are printed as "mov").
-Originally, I only intended to distinguish between the two categories, ldr
-and str. Of course, using the specific instruction name is not a problem,
-and I will fix it accordingly.
+Add support for showing all the three possible per IP weights in
+annotate. The weights are shown by defaults if any are non zero. This
+is useful, especially with the new insn lat statistics, but also
+for all the existing weights.
 
-Thanks,
-Tengda
+> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/a=
+nnotate.c
+> index e47a467750890..d6126a7d51e4a 100644
+> --- a/tools/perf/ui/browsers/annotate.c
+> +++ b/tools/perf/ui/browsers/annotate.c
 
+[ ... ]
+
+> @@ -1091,6 +1093,15 @@ static int annotate_browser__run(struct annotate_b=
+rowser *browser,
+>  				symbol_conf.show_total_period =3D true;
+>  			annotation__update_column_widths(notes);
+>  			continue;
+> +		case 'w':
+> +			symbol_conf.hide_weight =3D !symbol_conf.hide_weight;
+> +			symbol_conf.weight_mask_user =3D true;
+> +			symbol_conf.weight_mask =3D symbol_conf.hide_weight ?
+> +				0 : sym_hist__weight_mask(annotation__histogram(notes, evsel));
+> +			browser->b.width =3D notes->src->widths.max_line_len +
+> +					   annotation__pcnt_width(notes, evsel);
+> +			ui_browser__refresh_dimensions(&browser->b);
+> +			continue;
+
+[ ... ]
+
+> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> index fa08d09b80f76..63bce7a920f32 100644
+> --- a/tools/perf/util/annotate.h
+> +++ b/tools/perf/util/annotate.h
+
+[ ... ]
+
+> @@ -376,9 +391,22 @@ static inline int annotation__cycles_width(struct an=
+notation *notes)
+>  	return notes->branch ? ANNOTATION__IPC_WIDTH + ANNOTATION__CYCLES_WIDTH=
+ : 0;
+>  }
+> =20
+> -static inline int annotation__pcnt_width(struct annotation *notes)
+> +static inline u8 annotation__weight_mask(struct annotation *notes,
+> +					 const struct evsel *evsel)
+> +{
+> +	if (symbol_conf.weight_mask_user)
+> +		return symbol_conf.weight_mask;
+
+[Severity: Medium]
+Will this globally cache the current event's dynamically generated weight m=
+ask?
+
+In annotate_browser__run(), pressing 'w' sets symbol_conf.weight_mask_user =
+to
+true and saves the mask. Returning that cached mask here seems to force all
+subsequently viewed symbols and events to use this exact column layout.
+
+If a different event has different weight types, or if in perf top new weig=
+ht
+types arrive after 'w' is pressed, would the UI incorrectly hide valid weig=
+ht
+columns or display empty zero-filled columns for missing weights?
+
+> +	if (symbol_conf.hide_weight)
+> +		return 0;
+> +	return sym_hist__weight_mask(&notes->src->histograms[evsel->core.idx]);
+> +}
+
+[ ... ]
+
+> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> index df70e95a84704..b636f54675a1e 100644
+> --- a/tools/perf/util/annotate.c
+> +++ b/tools/perf/util/annotate.c
+
+[ ... ]
+
+> @@ -1448,7 +1523,8 @@ int map_symbol__annotation_dump(struct map_symbol *=
+ms, struct evsel *evsel,
+>  	return err;
+>  }
+> =20
+> -void symbol__annotate_zero_histogram(struct symbol *sym, struct evsel *e=
+vsel)
+> +void symbol__annotate_zero_histogram(struct symbol *sym,
+> +				     struct evsel *evsel)
+>  {
+>  	struct annotation *notes =3D symbol__annotation(sym);
+>  	struct sym_hist *h =3D annotation__histogram(notes, evsel);
+
+[Severity: High]
+This is a pre-existing issue, but does the memset in this function cause an
+out-of-bounds heap memory write?
+
+When profiling multiple events (e.g. perf top -e cycles,instructions) and
+zeroing the histogram (e.g. pressing 'z'), this gets called for top->sym_ev=
+sel:
+
+void symbol__annotate_zero_histogram(...)
+{
+	...
+	struct sym_hist *h =3D annotation__histogram(notes, evsel);
+
+	memset(h, 0, sizeof(*notes->src->histograms) * notes->src->nr_histograms);
+}
+
+The pointer h is offset to the specific event's index, but the memset zeroes
+an area equal to the size of the entire histograms array. Could this write
+past the end of the heap allocation?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260813211109.2406=
+89-1-ak@linux.intel.com?part=3D3
