@@ -1,174 +1,136 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90DC823183F;
-	Fri, 14 Aug 2026 00:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C252405EB
+	for <linux-perf-users@vger.kernel.org>; Fri, 14 Aug 2026 00:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786666847; cv=none; b=VffIc/TTYyym4AmD/tB8CPmECpmEgzeoZMsK8scm1lAJvgc4C8jWtuFXyjIJERQGAFwO+FxoUxtKIt3RD/aFPfc2Dn8m/U9notj3iIDyBvM2xYhB3Ex8jmHwESkAunnSYXmeFRD9ujh0mtG6r3cLOAfimYDppItNxTZTTEImC3s=
+	t=1786667380; cv=none; b=oyhsXBwKJbJh4Y0P0+4+bT5by0S2/f0tiU3QnJJmI/Blktnyc6ypM0B/LE4aRkiYa9do6Gi0Uze9aF6HG6tJlz0+ddWf2Ap9Llrg6ShfC/oqc/ECblllycgY/+HCBUSbCBRxnMwho32a8ZXiTl6dUnP2Lis/TOzfFJm3fvf4ZTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786666847; c=relaxed/simple;
-	bh=vN2f2oWXYERczNxt97fHM8Y6YOSTAOZUAqLDwIeUdl4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mvHYQktjk44ppGXNtAh9WtbbzdavSB8ZmbO9Q4KnrndhLg62Q7MdsfpJIO7+tn+A073dAt28EsfF08tT2mrzklZv4SXMudqlJSivsWuqJjwTs59mLtsVbxi/Rji3y7mVBFAjXsu4t7egFmk6fJNeNBqZzw1lxQFvtLQDrxHEQxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ben54wi4; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1786667380; c=relaxed/simple;
+	bh=gYHMJbl1IiSrAvFGOGomw4eVzsZPLXEHB0Jiu39eKG8=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=hpcw41WtYqmNbk8LuMouCdP7IF7CKCgu4z3GANyR4y4781aEMm6/pO3TVIwLpKQiFkoek/LEDMkgYktNayIQdGCBDtrJxAGzt05SzN3ThOsoHAnG1L1mgbdX3He6z3oF2s5pMAnPBtdxvb8LDCdhiMDSXI5rP9drfJzqtsPcSl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERvulkn4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ben54wi4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786666843; x=1818202843;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vN2f2oWXYERczNxt97fHM8Y6YOSTAOZUAqLDwIeUdl4=;
-  b=Ben54wi4KDJLkIzLB2cX8VILQkzxTS7U/imaJI+t88auvQYXjs8MF6Ei
-   al4FPJmQnMRMSPZi8OwwixyvKgMK7I7xoSAQz1/alB+3O88JB/bW1iFpe
-   jG3hi9m57usIapL1JLvKFYFrO71I12Q4Cdzv8+ecIO0cgxAFNxfK7uNy/
-   9Qlp5G9Gd8E5bK8AFBtsemDNhSy0tiYZ8W0lodoB0kJohqvvGkg+le92C
-   JwKcPjJ/V1kpKrSZOvu4Fe1uxJmW5YI0GWnL3ot6zTOmg3lvYLqOuIknn
-   EnknWFdqBATD3ysAJXME8Tq4DrqzHv5rJVJJPV/Wq34dd/nCR44XSlju1
-   A==;
-X-CSE-ConnectionGUID: n43EM5FrR76gtZhFc1zNvQ==
-X-CSE-MsgGUID: z+en1MAeQLax/BKseKXysQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11874"; a="104635418"
-X-IronPort-AV: E=Sophos;i="6.25,222,1779174000"; 
-   d="scan'208";a="104635418"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 17:20:41 -0700
-X-CSE-ConnectionGUID: YmIUyZ0ATbCLZejQHyI6Qg==
-X-CSE-MsgGUID: Ldby9IJ6RdqsUwFMcPiaqg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,222,1779174000"; 
-   d="scan'208";a="260285408"
-Received: from unknown (HELO [10.238.3.58]) ([10.238.3.58])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2026 17:20:37 -0700
-Message-ID: <8dc153c7-b21b-4fe3-8d14-3bd13c1ee6b5@linux.intel.com>
-Date: Fri, 14 Aug 2026 08:20:35 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERvulkn4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0309E1F000E9;
+	Fri, 14 Aug 2026 00:29:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786667379;
+	bh=V1rtvqH3etpWU4CyXAbl26scw5euxwD0uR1926sroNE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ERvulkn4tTC0GgatIFvwduukHzVQmKYSjHwz3hOeAd560E/amdHtGgF7cNBkA2+YE
+	 EyO4qA8kkXX4iZkUSarzzgnlQrp1ji0t3/HMKuY2TEDoBFitMMCKRrpFwrXLFyY32r
+	 TaOTl2m1stK63SsSd0pAx+vyyF1nquVHKx32DEi/h90lggSIgccBKpMC5qbpdH5UQN
+	 0srZGz0EwQx6OfYvTZszEupbc+v1fhQEcm8kuNmlh1YOTgx0gRLdBHWYcrESPzGg6R
+	 brRTeLWpyLlLlhpzEvxmGuaw+1ckvo+T2PRRQyzZLqHo+Nf3Zxy7RhL6fzhthFH02t
+	 nQq5TaSvVEqcg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v11 13/33] perf inject: Don't pass evsel with sample
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260413012227.1089445-14-irogers@google.com>
+References: <20260413012227.1089445-14-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 14 Aug 2026 00:29:38 +0000
+Message-Id: <20260814002939.0309E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] perf/x86: Add x86_pmu::print_debug
-To: Petr Tesarik <ptesarik@suse.com>
-Cc: Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark
- <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
- Ravi Bangoria <ravi.bangoria@amd.com>,
- Ananth Narayan <ananth.narayan@amd.com>
-References: <cover.1786010408.git.sandipan.das@amd.com>
- <fc6ff612d26c2f5b0f015d9fac309cc58e913c1f.1786010408.git.sandipan.das@amd.com>
- <7078a9e7-6493-42b0-b297-ce174effdfb3@linux.intel.com>
- <20260813145725.22f21719@mordecai>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260813145725.22f21719@mordecai>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-On 8/13/2026 8:57 PM, Petr Tesarik wrote:
-> On Wed, 12 Aug 2026 10:37:20 +0800
-> "Mi, Dapeng" <dapeng1.mi@linux.intel.com> wrote:
->
->> On 8/6/2026 6:03 PM, Sandipan Das wrote:
->>> perf_event_print_debug() dumps the global control and status MSRs
->>> whenever x86_pmu.version >= 2, reading registers that exist only on
->>> Intel-compatible PMUs. This is not safe since x86_pmu.version is not
->>> Intel-specific and is now set by other vendors whose global registers
->>> use different addresses.
->>>
->>> As a first step, split perf_event_print_debug() in two. The register
->>> dump moves into a new common helper, x86_pmu_print_debug(), leaving
->>> perf_event_print_debug() to handle the preamble and dispatch to an
->>> optional x86_pmu::print_debug method. This lets each vendor-specific
->>> PMU dump its own global state before chaining into the common helper.
->>> PMUs that do not implement the method, such as those with
->>> x86_pmu.version < 2, get the common helper alone.
->>>
->>> No functional change intended.
->>>
->>> Signed-off-by: Sandipan Das <sandipan.das@amd.com>
->>> ---
->>>  arch/x86/events/core.c       | 29 ++++++++++++++++++++++-------
->>>  arch/x86/events/perf_event.h |  4 ++++
->>>  2 files changed, 26 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->>> index af0b67ffb43d..17dc53a62378 100644
->>> --- a/arch/x86/events/core.c
->>> +++ b/arch/x86/events/core.c
->>> @@ -1557,7 +1557,7 @@ static void x86_pmu_start(struct perf_event *event, int flags)
->>>  	perf_event_update_userpage(event);
->>>  }
->>>  
->>> -void perf_event_print_debug(void)
->>> +void x86_pmu_print_debug(int cpu)
->>>  {
->>>  	u64 ctrl, status, overflow, pmc_ctrl, pmc_count, prev_left, fixed;
->>>  	unsigned long *cntr_mask, *fixed_cntr_mask;
->>> @@ -1566,17 +1566,11 @@ void perf_event_print_debug(void)
->>>  	u64 pebs, debugctl;
->>>  	int cpu, idx;
->>>  
->>> -	guard(irqsave)();
->>> -
->>> -	cpu = smp_processor_id();
->>>  	cpuc = &per_cpu(cpu_hw_events, cpu);
->>>  	cntr_mask = hybrid(cpuc->pmu, cntr_mask);
->>>  	fixed_cntr_mask = hybrid(cpuc->pmu, fixed_cntr_mask);
->>>  	pebs_constraints = hybrid(cpuc->pmu, pebs_constraints);
->>>  
->>> -	if (!*(u64 *)cntr_mask)
->>> -		return;
->>> -
->>>  	if (x86_pmu.version >= 2) {
->>>  		rdmsrq(MSR_CORE_PERF_GLOBAL_CTRL, ctrl);
->>>  		rdmsrq(MSR_CORE_PERF_GLOBAL_STATUS, status);
->>> @@ -1622,6 +1616,27 @@ void perf_event_print_debug(void)
->>>  	}
->>>  }
->>>  
->>> +void perf_event_print_debug(void)
->>> +{
->>> +	struct cpu_hw_events *cpuc;
->>> +	unsigned long *cntr_mask;
->>> +	int cpu;
->>> +
->>> +	guard(irqsave)();
->>> +
->>> +	cpu = smp_processor_id();
->>> +	cpuc = &per_cpu(cpu_hw_events, cpu);
->>> +	cntr_mask = hybrid(cpuc->pmu, cntr_mask);
->>> +
->>> +	if (!*(u64 *)cntr_mask)
->>> +		return;
->>> +
->>> +	if (x86_pmu.print_debug)
->>> +		x86_pmu.print_debug(cpu);
->>> +	else
->>> +		x86_pmu_print_debug(cpu);  
->> The logic looks good, but better change this to the static_call() just like
->> other x86_pmu callbacks. It eliminates the branch prediction cost. Thanks.
-> Is it worth the extra complexity for code that is used only by SysRq
-> debugging?
+Pre-existing issues:
+- [High] In `perf_inject__sched_stat`, a mismatch between the `sample_type`=
+ of the `sched:sched_switch` event and the `sched:sched_stat_*` event cause=
+s a heap out-of-bounds write.
+--
 
-perf_event_print_debug() is not just called in sysrq debugging, it's also
-called by intel_pmu_handle_irq() which is a NMI handler. Any code in NMI
-handler should be as simple as possible. Thanks.
+--- Patch [13]: [PATCH v11 13/33] perf inject: Don't pass evsel with sample=
+ ---
+commit 5a323f56faef1c75c44630fb2ace9d44a71d43aa
+Author: Ian Rogers <irogers@google.com>
 
+perf inject: Don't pass evsel with sample
 
->
-> Of course, if it's trivial, let's do it anyway.
->
-> Petr T
+This commit removes the explicit evsel parameter from several functions sin=
+ce
+it is already contained within the sample structure. This cleans up the
+handling of sample and mmap_evsel when synthesizing build id events and mma=
+p2
+events with build ids.
+
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+
+[ ... ]
+
+> @@ -1049,13 +1053,12 @@ static int perf_inject__sched_process_exit(const =
+struct perf_tool *tool,
+>  static int perf_inject__sched_switch(const struct perf_tool *tool,
+>  				     union perf_event *event,
+>  				     struct perf_sample *sample,
+> -				     struct evsel *evsel,
+>  				     struct machine *machine)
+>  {
+>  	struct perf_inject *inject =3D container_of(tool, struct perf_inject, t=
+ool);
+>  	struct event_entry *ent;
+> =20
+> -	perf_inject__sched_process_exit(tool, event, sample, evsel, machine);
+> +	perf_inject__sched_process_exit(tool, event, sample, machine);
+> =20
+>  	ent =3D malloc(event->header.size + sizeof(struct event_entry));
+
+[ ... ]
+
+> @@ -1074,13 +1077,13 @@ static int perf_inject__sched_switch(const struct=
+ perf_tool *tool,
+>  static int perf_inject__sched_stat(const struct perf_tool *tool,
+>  				   union perf_event *event __maybe_unused,
+>  				   struct perf_sample *sample,
+> -				   struct evsel *evsel,
+>  				   struct machine *machine)
+>  {
+>  	struct event_entry *ent;
+>  	union perf_event *event_sw;
+>  	struct perf_sample sample_sw;
+>  	struct perf_inject *inject =3D container_of(tool, struct perf_inject, t=
+ool);
+> +	struct evsel *evsel =3D sample->evsel;
+
+[Severity: High]
+This is a pre-existing issue, but can this allocation and synthesis mismatc=
+h=20
+result in a heap out-of-bounds write?
+
+When perf_inject__sched_switch() allocates the ent buffer, it sizes it
+precisely for the sched_switch event:
+
+ent =3D malloc(event->header.size + sizeof(struct event_entry));
+
+However, when perf_inject__sched_stat() later repopulates this buffer, it c=
+alls
+perf_event__synthesize_sample() using the sample_type bitmask of the sched_=
+stat
+event:
+
+perf_event__synthesize_sample(event_sw, evsel->core.attr.sample_type,
+                              evsel->core.attr.read_format, &sample_sw);
+
+If the sched_stat event was configured with a larger sample_type payload th=
+an
+the sched_switch event (such as callchains or raw data), could
+perf_event__synthesize_sample() write sequentially out-of-bounds and
+overflow the ent buffer?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260413012227.1089=
+445-1-irogers@google.com?part=3D13
