@@ -1,46 +1,46 @@
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010053.outbound.protection.outlook.com [52.101.46.53])
+Received: from SN4PR0501CU005.outbound.protection.outlook.com (mail-southcentralusazon11011030.outbound.protection.outlook.com [40.93.194.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17993477E31;
-	Fri, 14 Aug 2026 17:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E79D489894;
+	Fri, 14 Aug 2026 17:49:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.194.30
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786729779; cv=fail; b=cd05eats/Wxx5rsAJ0H8jS34OQunFdwS72fSYv0fKluIDdoXGORZQH8DlxerFdCFtVmwXlV8obmFMWQmo36bNDaqDG0tvbPMD1RmDhAspiX3tIqJCKosxVVb3LJ1JRmlzHHolVLUteukC3rVNxgh/D5Doeg2dZQtRxfDyiI3Xp0=
+	t=1786729798; cv=fail; b=QIjEXm7mxMFwO3a/+2BSscxGJzmmXhxEUQdPeAiQRRwOEh1G94xJPRIn1n7PsdQEOZwwFiutuKh12VNBfejImMHrgkgNEi5xtGmJVZg4ZVdRofrXtP3ozwZeiqjHWojkOT1d/YXmZXK25rT4SKNG6WiGDKhbaCjmINpI95gss+s=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786729779; c=relaxed/simple;
-	bh=9QsXzy5aZCBS7cUTPchNDnyTw98vEsVX5HYn3+YN8Z0=;
+	s=arc-20240116; t=1786729798; c=relaxed/simple;
+	bh=7hiWpmxLEpRzryTa+y1Yc4FXCABftTKIC79kFKB345k=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ILjRdpaMvH39b4PQPDFBSvsQpLngVJd+tved9tq1D+k+4CIiFTtzmOR2M09wUjFZVu09Ixdv3ezWxvcqQC/K/1OSuu3bbiHu5Gk5lxxFaVi5SKovlab6KV3q9b7Lxnf+SJL3FwoY8J7hSrf65zLzN12VFCyE8/EKP2LAS7XuRCE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GYL84HLZ; arc=fail smtp.client-ip=52.101.46.53
+	 MIME-Version:Content-Type; b=fwytAEh+RAOG5+7S94393fDYTmJvO75TyLG6OInx2Mh9SZXA2yRpQyDWH9kChAQwQzEWRUnEpy8m8esfBbhkbYZ3/x1TScfQmM/iiXcBYjJvxAdBEAxxfaIDyt4d/8wNFKR1JEeFecLF6vGtWpzHOErYMa0t3ld04eIFURt2yAM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ji1oK8pd; arc=fail smtp.client-ip=40.93.194.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GYL84HLZ"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ji1oK8pd"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wSGaBOs2Q6GpahGNAn9CRs5bmetw9DcbqhKi7X6yC3nZ/h0C4014I2KUJ9EVytpixCQHnoBtiWbu1nqfopLPs5MQ8R/mpkZawxKtcS9UG1QBny4foFmnuKJEW+o+UKNs/O2j7CENVIrtzGtdwNq0xwdNMfIlOXutf4HgLZ2bv7FuAAIA2gC6U2CFMmCAl29Ed0AAcSHOC9auvoJn603hlsyH0e7l+zr87JUfLv67PGBKce7ijZ8RiHYdw0piWmnpl+UCsvn9hfDlkQbCwc1clP1twzcIH/52gwMHsXrfwzLsuibuo5Mx+fAHt9tmMhtqG/RLXmrxK9tvDHhpVtD+cA==
+ b=XYgSnYh/sZzc6u2V2zzBGRcVZHIMlrwMTeBBHBmNjBeDHyhWCPELI/XxFpGthPivFKt5Px/zArY8hzi9y2G3IGHyWjL4ymY6dMN1gCqML5r2U+iUfh2XGiMh/DN0bpXFipXO+m+6AEQq6EGVeVP/9Jrj/M2KJUiQGj+2VlN13dqQnw/VzlNd5aN8BAf5dtVaDTECTLH8ghQYfDBaQRDtB4gCfxlbDSphUgJOAz5TgJ9tboWnazjHVz/9MK2nBVO5RWyjWY0kl9UwIYv2CX7TiPb5BO1BWlM5i+EgivMmGaXOjia7CCps8w0VQ5//wQWODCbHnk4OGCe7ZF9Nyl65mg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=F1pn/O16GGuJ7kdQ3aHFoDU97mEYhaDyJxOJQRDijcQ=;
- b=ZFCop6xoHYt/5KcSJtLTLa1VbWyrlQ/7fZWAJBkl0a9r1kpWJZjrPnz5YClx/S51TtaWf7akDzQrIRtKrMu48sFc/gKjHsUb9lJg5p5IsI1J/YuT8bpZ+/sD1B+4q9rzEBpLV6YOEgpMO6Gp9B8z3xql45YBklPttab5qxpb9YwGExgvaHzwUWMLMRYo9eW3X8upEmhf6UiiTbKdWtzEj+lu9ph0IYpk1I3bHujEW+YR1vD8aGlYsK5Q8kr5U35CZK5ZCRqS5zOeebgjoKCmHglgosSvMPgUpPSSUTZz0BlGjG6dDxHca7nw7i0L3jqnS2bgwr5894fnBzffnzX//g==
+ bh=hcwL7q30kVUDpUK8MmIP9skD/RaOel6rO6UeebnHPsQ=;
+ b=VhBSJ7iAKIalSAk5Wg6sJM50+k6IEw/PXdvjQyujzqjqMqvT6BNkDd0nTEQIPBDOwyXARv63AtbvLqt5V+7DNZmajVW0/Ao5VXcC6q+KPfhMKlm8wgDTdK0SgQYyeBpxmUpSFrI3GcEdPrv/z9pk0ypuHugDRr/NIZru3osvly6DTK7jl5w/HrBQ2/mwWVohFUy0Qf3MNiwp6m17yxyyArDZ1ltL7ckyL5lC5fYwXwwt1O8n2lRYUv+9FJ4CH8EBYmruo3AHgBrDAYco5Dcn79aypMDTRKRjEOIV4C6zj1YlEY6GRXa0Tww8YBXaPvTj6nIBZafvIqoowpMvuyvYUg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F1pn/O16GGuJ7kdQ3aHFoDU97mEYhaDyJxOJQRDijcQ=;
- b=GYL84HLZhACq2AQMnbkXSib6RORlShmqGOqKPwfMqjP648nIHN0b4W2N1fw4/60dmuFECPE0z4nWH/xlX4qDWbPGI30G/j2KzL+t275pHAEdDqG1g1JOeD82UXpUoLC64PLWrOzllls96kSAJq7qWWPKbP1bRjOF4D578wE2Pqg=
-Received: from SA1PR04CA0016.namprd04.prod.outlook.com (2603:10b6:806:2ce::21)
- by PH8PR12MB7231.namprd12.prod.outlook.com (2603:10b6:510:225::9) with
+ bh=hcwL7q30kVUDpUK8MmIP9skD/RaOel6rO6UeebnHPsQ=;
+ b=Ji1oK8pdBU0MP3J8Av8/IYiuyoZu/MeSAu9dMX2qg/c6OZ2lh+I6V0r24S5Yak04pzOy7t33Y6nNF5ghjcmjotPII659HOh0mBrwVSznlsvaahLmn1R+jpqJob3meAtHqq1FWZN9XE4EhoYGEOgtL7CeQ8mMOqHT7kbEZYTaAlk=
+Received: from DS1PR04CA0009.namprd04.prod.outlook.com (2603:10b6:8:44f::11)
+ by SA1PR12MB7341.namprd12.prod.outlook.com (2603:10b6:806:2ba::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.15; Fri, 14 Aug
- 2026 17:49:31 +0000
-Received: from SA2PEPF000015C8.namprd03.prod.outlook.com
- (2603:10b6:806:2ce:cafe::f) by SA1PR04CA0016.outlook.office365.com
- (2603:10b6:806:2ce::21) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.16; Fri, 14 Aug
+ 2026 17:49:50 +0000
+Received: from SA2PEPF000015C7.namprd03.prod.outlook.com
+ (2603:10b6:8:44f:cafe::56) by DS1PR04CA0009.outlook.office365.com
+ (2603:10b6:8:44f::11) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.21.315.16 via Frontend Transport; Fri,
- 14 Aug 2026 17:49:31 +0000
+ 14 Aug 2026 17:49:50 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
 Received: from satlexmb07.amd.com (165.204.84.17) by
- SA2PEPF000015C8.mail.protection.outlook.com (10.167.241.198) with Microsoft
+ SA2PEPF000015C7.mail.protection.outlook.com (10.167.241.197) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.339.3 via Frontend Transport; Fri, 14 Aug 2026 17:49:31 +0000
+ 15.21.339.3 via Frontend Transport; Fri, 14 Aug 2026 17:49:50 +0000
 Received: from sindhu.amdval.net (10.180.168.240) by satlexmb07.amd.com
  (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Fri, 14 Aug
- 2026 12:49:24 -0500
+ 2026 12:49:43 -0500
 From: Sandipan Das <sandipan.das@amd.com>
 To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
@@ -67,10 +67,11 @@ CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	<x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Petr Tesarik
 	<ptesarik@suse.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, Zide Chen
 	<zide.chen@intel.com>, Ravi Bangoria <ravi.bangoria@amd.com>, Ananth Narayan
-	<ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Subject: [PATCH v2 1/3] perf/x86: Add x86_pmu::print_debug
-Date: Fri, 14 Aug 2026 23:18:06 +0530
-Message-ID: <36cb7f0289adf8a186e6107ae3f6f5286857fd00.1786728929.git.sandipan.das@amd.com>
+	<ananth.narayan@amd.com>, Sandipan Das <sandipan.das@amd.com>,
+	<stable@vger.kernel.org>
+Subject: [PATCH v2 2/3] perf/x86: Move MSR_CORE_PERF_GLOBAL_* dump to vendor code
+Date: Fri, 14 Aug 2026 23:18:07 +0530
+Message-ID: <d83896ecfd6e98424c2053298fbb10a3d91592f9.1786728929.git.sandipan.das@amd.com>
 X-Mailer: git-send-email 2.53.0
 In-Reply-To: <cover.1786728929.git.sandipan.das@amd.com>
 References: <cover.1786728929.git.sandipan.das@amd.com>
@@ -86,161 +87,193 @@ X-ClientProxiedBy: satlexmb08.amd.com (10.181.42.217) To satlexmb07.amd.com
  (10.181.42.216)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF000015C8:EE_|PH8PR12MB7231:EE_
-X-MS-Office365-Filtering-Correlation-Id: 20bde1d7-fda0-4197-0d86-08defa2c64ec
+X-MS-TrafficTypeDiagnostic: SA2PEPF000015C7:EE_|SA1PR12MB7341:EE_
+X-MS-Office365-Filtering-Correlation-Id: d7e522ab-4ba1-42d7-e64b-08defa2c704d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700016|7416014|376014|23010399003|82310400026|1800799024|6133799003|3023799007|56012099006|10067099003|11063799006|22082099003|18002099003;
+	BCL:0;ARA:13230040|82310400026|23010399003|36860700016|1800799024|376014|7416014|13003099007|6133799003|3023799007|56012099006|10067099003|11063799006|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	siFaJdRVw0BkrNzalYN5yy4iPvAnWwYSZggFSLLoy5W1ycLdoTnmA/x64SVqrRq1X5a7CDM4zTSghVravQwHKAs0HpraWOMtxfnIFkFunnGrSIYMpjWrB7J6gX+e7U600Ug6HfMkggkuiYH3dCkgHINkj3/BMdpw3+Ya6p05YZt/3yGfrSbo2uhFHyiUoVbrrbojULZeoeVcFFSUARDZ9XcnKduGASOC7ib8RUcG5l334sIpXKoLR2pQ71pODZwTPG5w+2DjJ6VY3PFDTDqAI1ctgIEUVlkP0IJsBfNBrctHoQXwAntXs4QsJeWhEcnGlyAZUseoYE+Q/C3HLI0R6t8y70uUAlmq5ewwICegfRW94zET0VmH1qXbuyHkhhJhD9xgZQSh1KSeuVhwCF0kvlFxdT2RbZLtp4K6IAWR23CHqQGmMx8/c/H8ZtkL8CFx7xQXuMyCoiyLmTot0lP6FwbOcDJUUlWEbgikSXlQ3oJUzmTxb+4MNuAaKhj6j97WCDDn+0XQiWiAIFkCwXi09McAsUpdvbvCY3rIe1/8tKK9f7VBPK2zQaf16WI5XoTPZto3w9mg5lh0WIjgTfcNKcAIDzZs5nsAu2z4melImEHLLHpaky6TGerBkdiicndgn1Jbk1eWAm0NtJrv8jHp1lVQR6Dj2JYas20ULlVFcQcn5whrtcIkYNsVT4NluRAy
+	Qxg607hA86g8XTWZXS81GtoCfK5MDJ/uSDOLgrxT3Bmm0b149gYd/E0O2VYopubjzTe5lNwFBqt+MgVn7b/ptRltaDhu9oJ8NK4tTY77JgYhapO2AllIzgwCPNPapkf67jjsefvMX2KZdsxEJ81DFitNDigOuIAaTqq3j7o5AvhGL/1b1lGBH9R1TPWa3+locNU6d3Br/EbN1zTg8VDVPAROzo4c3XuQYMhWmS7Y2+1gwFYd6D9TcXf46wfwzxFo5lnhm6Ott8ESJKhUoEeh1JtyyySKYnNJF7jRx9bgVJKPQLieUOhFHjZuA+q3+5e7XuWtd006jDYVuzY++v29HBkpJ2IxPuVfDP40ShRevWBn3IHl06WEfwscjCPS3I+4wboSa8/N1/axRbLwdCyDR4UYz4p8hx5bmfH308yedw/LuPmFhMvUo4OQkH38zBoZTSh4vlXwYu7i1LDqNorysc0j4bdCrli+yKJ/NkO2tlxdU5rhP1sBXxyMtQEr1Y2hJvMSHXKTaTa6zrQ15VM/RGiO2KWUeJIySDnCdBUhi1MTnFs5uUcDyA4ey8Ninn5IeGgqUw6LlabZso8sdrmgIPiYgZoUsnVrF4YWRVOXHkrIz+hxSGmbiFIVp+z1pGUIVqxiWfF6RSKvd5+Jn5GxCXe2ZCOrql2vzYN1lWvnJaBswmqYArF+ch+OEjFTKblp3+Sj0xAQohsn0P2mJk5Lvg==
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(7416014)(376014)(23010399003)(82310400026)(1800799024)(6133799003)(3023799007)(56012099006)(10067099003)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(23010399003)(36860700016)(1800799024)(376014)(7416014)(13003099007)(6133799003)(3023799007)(56012099006)(10067099003)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	aJnXRqkioVz+TXBeqCloGqKNMe0bKVbD8cbAhG9tcutQe2MIJ06kDurn6anvl2d/4C1gDBovE+ih0L3dPWFsoVh4nrfgeLOlNvvXYzKPcyZSErTLR2CiLO95t7xoQppb4jIrf+xLevsHk7/w4X2unwxCzPWjboTLeC/QoithB4gqQ3Q3gTcju2TC74w2tNCWJ6zl/JViV5Vtzs53O672ga29zQV4am+Whm8RlHYLiomG/XHxLBqkU13FJs1le8SNJwkxNmW/Noofc9hmn5DoSJcLKxvixWLESIFAenxijaqgQyFKK/OaX8s6p6dSEKli83xlijPNt3zgaAPISzYOICpy16pwuw14U2S6Fs2Bn15iDAl6Ao6opyXro8ryq7gGJ+iCeJLiB+sbeQWutCEZlfMiO0oeCSUN03Z+lYlqfdGqcXChEh96F06fFSlYTIlt
+	LNj46fmfjBRW/03GnuSWnfuVhN+G57qlwDsTgdsroyEQpgdRHeKHZI6/ARDTUeRAr/Fh/6ebhOx3zyzk21lMze4YwajIfrKy3jbXGxYPnpGdQ4sFRcVIZ/hWUn0A1wtPlxMwp3Sqp29RLlBI7TY73razyTzY6jdJaNjO0Kmc4UgwcqyYhCcPCQgYkG76MNNf3v74QLfgzqjp9ilEDdn1Rf9DbGeUJuNYcnQ6/j8VlIguZ1meAd5wXl3ceF46P3GMKy5wWgbzx6yuJTOkLcSaJP/QP82DwMGsDYO3unuAFwB6Y/uP5RavRRv7+rFnlid7YndK8Z+c4l3EmiScCxoXEv4By3YaUm8dyT58/sJ80yM8MwguTXzH4nISMZOzOVJAkIow8rfqiGlogG7X+3ObSYnrS5Eecz65qHaIZRQyA2BVHtIT4+kTnwRpz7HtnxlR
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2026 17:49:31.1220
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2026 17:49:50.2199
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 20bde1d7-fda0-4197-0d86-08defa2c64ec
+X-MS-Exchange-CrossTenant-Network-Message-Id: d7e522ab-4ba1-42d7-e64b-08defa2c704d
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF000015C8.namprd03.prod.outlook.com
+	SA2PEPF000015C7.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7231
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7341
 
-perf_event_print_debug() dumps the global control and status MSRs
-whenever x86_pmu.version >= 2, reading registers that exist only on
-Intel-compatible PMUs. This is not safe since x86_pmu.version is not
-Intel-specific and is now set by other vendors whose global registers
-use different addresses.
+MSR_CORE_PERF_GLOBAL_{CTRL,STATUS} and MSR_ARCH_PERFMON_FIXED_CTR_CTRL
+are Intel Architectural PerfMon registers that are not available on AMD
+processors.
 
-As a first step, split perf_event_print_debug() in two. The register
-dump moves into a new common helper, x86_pmu_print_debug(), leaving
-perf_event_print_debug() to handle the preamble and dispatch to an
-optional x86_pmu::print_debug method. This lets each vendor-specific
-PMU dump its own global state before chaining into the common helper.
-PMUs that do not implement the method, such as those with
-x86_pmu.version < 2, get the common helper alone.
+Since commit 21d59e3e2c40 ("perf/x86/amd/core: Detect PerfMonV2
+support"), x86_pmu.version is also set to 2 on AMD processors that
+support PerfMonV2, which makes perf_event_print_debug() attempt to read
+these non-existent MSRs. The resulting #GP is caught by the exception
+fixup, but as the reads are unchecked, SysRq-P logs an "unchecked MSR
+access error" for each one and then prints zeroes as if they were valid
+register contents.
 
-No functional change intended.
+Implement x86_pmu::print_debug for the Intel and Zhaoxin PMUs, which do
+have these registers, and drop the reads from common code. Both are
+wired up through PMU descriptors that are selected only when the PMU
+version is at least 2, so the version check is no longer needed.
 
+MSR_CORE_PERF_GLOBAL_OVF_CTRL is also dropped from the dump since it is
+write-to-clear and does not read back the overflow state.
+
+Fixes: 21d59e3e2c40 ("perf/x86/amd/core: Detect PerfMonV2 support")
+Reported-by: Petr Tesarik <ptesarik@suse.com>
+Closes: https://lore.kernel.org/all/20260717150315.2868314-1-ptesarik@suse.com/
+Cc: stable@vger.kernel.org
 Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 ---
- arch/x86/events/core.c       | 35 +++++++++++++++++++++++++++--------
- arch/x86/events/perf_event.h |  4 ++++
- 2 files changed, 31 insertions(+), 8 deletions(-)
+ arch/x86/events/core.c         | 27 ++-------------------------
+ arch/x86/events/intel/core.c   | 32 ++++++++++++++++++++++++++++++++
+ arch/x86/events/zhaoxin/core.c | 18 ++++++++++++++++++
+ 3 files changed, 52 insertions(+), 25 deletions(-)
 
 diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 8b3ea0adb965..364a4c83f677 100644
+index 364a4c83f677..1b5af204cf64 100644
 --- a/arch/x86/events/core.c
 +++ b/arch/x86/events/core.c
-@@ -105,6 +105,8 @@ DEFINE_STATIC_CALL_NULL(x86_pmu_pebs_disable, *x86_pmu.pebs_disable);
- DEFINE_STATIC_CALL_NULL(x86_pmu_pebs_enable_all, *x86_pmu.pebs_enable_all);
- DEFINE_STATIC_CALL_NULL(x86_pmu_pebs_disable_all, *x86_pmu.pebs_disable_all);
+@@ -1575,38 +1575,15 @@ static void x86_pmu_start(struct perf_event *event, int flags)
  
-+DEFINE_STATIC_CALL_NULL(x86_pmu_print_debug, *x86_pmu.print_debug);
-+
- /*
-  * This one is magic, it will get called even when PMU init fails (because
-  * there is no PMU), in which case it should simply return NULL.
-@@ -1571,26 +1573,20 @@ static void x86_pmu_start(struct perf_event *event, int flags)
- 	perf_event_update_userpage(event);
- }
- 
--void perf_event_print_debug(void)
-+void x86_pmu_print_debug(int cpu)
+ void x86_pmu_print_debug(int cpu)
  {
- 	u64 ctrl, status, overflow, pmc_ctrl, pmc_count, prev_left, fixed;
+-	u64 ctrl, status, overflow, pmc_ctrl, pmc_count, prev_left, fixed;
  	unsigned long *cntr_mask, *fixed_cntr_mask;
- 	struct event_constraint *pebs_constraints;
+-	struct event_constraint *pebs_constraints;
++	u64 pmc_ctrl, pmc_count, prev_left;
  	struct cpu_hw_events *cpuc;
- 	u64 pebs, debugctl;
--	int cpu, idx;
--
--	guard(irqsave)();
-+	int idx;
+-	u64 pebs, debugctl;
+ 	int idx;
  
--	cpu = smp_processor_id();
  	cpuc = &per_cpu(cpu_hw_events, cpu);
  	cntr_mask = hybrid(cpuc->pmu, cntr_mask);
  	fixed_cntr_mask = hybrid(cpuc->pmu, fixed_cntr_mask);
- 	pebs_constraints = hybrid(cpuc->pmu, pebs_constraints);
- 
--	if (!*(u64 *)cntr_mask)
--		return;
+-	pebs_constraints = hybrid(cpuc->pmu, pebs_constraints);
 -
- 	if (x86_pmu.version >= 2) {
- 		rdmsrq(MSR_CORE_PERF_GLOBAL_CTRL, ctrl);
- 		rdmsrq(MSR_CORE_PERF_GLOBAL_STATUS, status);
-@@ -1634,6 +1630,24 @@ void perf_event_print_debug(void)
- 	}
+-	if (x86_pmu.version >= 2) {
+-		rdmsrq(MSR_CORE_PERF_GLOBAL_CTRL, ctrl);
+-		rdmsrq(MSR_CORE_PERF_GLOBAL_STATUS, status);
+-		rdmsrq(MSR_CORE_PERF_GLOBAL_OVF_CTRL, overflow);
+-		rdmsrq(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, fixed);
+-
+-		pr_info("\n");
+-		pr_info("CPU#%d: ctrl:       %016llx\n", cpu, ctrl);
+-		pr_info("CPU#%d: status:     %016llx\n", cpu, status);
+-		pr_info("CPU#%d: overflow:   %016llx\n", cpu, overflow);
+-		pr_info("CPU#%d: fixed:      %016llx\n", cpu, fixed);
+-		if (pebs_constraints) {
+-			rdmsrq(MSR_IA32_PEBS_ENABLE, pebs);
+-			pr_info("CPU#%d: pebs:       %016llx\n", cpu, pebs);
+-		}
+-		if (x86_pmu.lbr_nr) {
+-			rdmsrq(MSR_IA32_DEBUGCTLMSR, debugctl);
+-			pr_info("CPU#%d: debugctl:   %016llx\n", cpu, debugctl);
+-		}
+-	}
++
+ 	pr_info("CPU#%d: active:     %016llx\n", cpu, *(u64 *)cpuc->active_mask);
+ 
+ 	for_each_set_bit(idx, cntr_mask, X86_PMC_IDX_MAX) {
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index f6ee1819864e..10f2f8f49340 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3734,6 +3734,36 @@ static void intel_pmu_reset(void)
+ 	local_irq_restore(flags);
  }
  
-+void perf_event_print_debug(void)
++static void intel_pmu_print_debug(int cpu)
 +{
++	struct event_constraint *pebs_constraints;
 +	struct cpu_hw_events *cpuc;
-+	unsigned long *cntr_mask;
-+	int cpu;
++	u64 ctrl, status, fixed;
++	u64 pebs, debugctl;
 +
-+	guard(irqsave)();
-+
-+	cpu = smp_processor_id();
 +	cpuc = &per_cpu(cpu_hw_events, cpu);
-+	cntr_mask = hybrid(cpuc->pmu, cntr_mask);
++	pebs_constraints = hybrid(cpuc->pmu, pebs_constraints);
 +
-+	if (!*(u64 *)cntr_mask)
-+		return;
++	rdmsrq(MSR_CORE_PERF_GLOBAL_CTRL, ctrl);
++	rdmsrq(MSR_CORE_PERF_GLOBAL_STATUS, status);
++	rdmsrq(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, fixed);
 +
-+	static_call(x86_pmu_print_debug)(cpu);
++	pr_info("\n");
++	pr_info("CPU#%d: ctrl:       %016llx\n", cpu, ctrl);
++	pr_info("CPU#%d: status:     %016llx\n", cpu, status);
++	pr_info("CPU#%d: fixed:      %016llx\n", cpu, fixed);
++	if (pebs_constraints) {
++		rdmsrq(MSR_IA32_PEBS_ENABLE, pebs);
++		pr_info("CPU#%d: pebs:       %016llx\n", cpu, pebs);
++	}
++	if (x86_pmu.lbr_nr) {
++		rdmsrq(MSR_IA32_DEBUGCTLMSR, debugctl);
++		pr_info("CPU#%d: debugctl:   %016llx\n", cpu, debugctl);
++	}
++
++	x86_pmu_print_debug(cpu);
 +}
 +
- void x86_pmu_stop(struct perf_event *event, int flags)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-@@ -2122,6 +2136,8 @@ static void x86_pmu_static_call_update(void)
- 	static_call_update(x86_pmu_pebs_disable, x86_pmu.pebs_disable);
- 	static_call_update(x86_pmu_pebs_enable_all, x86_pmu.pebs_enable_all);
- 	static_call_update(x86_pmu_pebs_disable_all, x86_pmu.pebs_disable_all);
+ /*
+  * We may be running with guest PEBS events created by KVM, and the
+  * PEBS records are logged into the guest's DS and invisible to host.
+@@ -6706,6 +6736,8 @@ static __initconst const struct x86_pmu intel_pmu = {
+ 	 * counting SMM by default.
+ 	 */
+ 	.attr_freeze_on_smi	= 1,
 +
-+	static_call_update(x86_pmu_print_debug, x86_pmu.print_debug);
- }
- 
- static void _x86_pmu_read(struct perf_event *event)
-@@ -2233,6 +2249,9 @@ static int __init init_hw_perf_events(void)
- 	if (!x86_pmu.update)
- 		x86_pmu.update = x86_perf_event_update;
- 
-+	if (!x86_pmu.print_debug)
-+		x86_pmu.print_debug = x86_pmu_print_debug;
-+
- 	x86_pmu_static_call_update();
- 
- 	/*
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index fa381110f7a7..a5d15ff50a2d 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -1052,6 +1052,8 @@ struct x86_pmu {
- 	int				num_hybrid_pmus;
- 	struct x86_hybrid_pmu		*hybrid_pmu;
- 	enum intel_cpu_type (*get_hybrid_cpu_type)	(void);
-+
-+	void (*print_debug)(int cpu);
++	.print_debug		= intel_pmu_print_debug,
  };
  
- struct x86_perf_task_context_opt {
-@@ -1317,6 +1319,8 @@ int x86_pmu_handle_irq(struct pt_regs *regs);
+ static __init void intel_clovertown_quirk(void)
+diff --git a/arch/x86/events/zhaoxin/core.c b/arch/x86/events/zhaoxin/core.c
+index e506f677db57..cc447e228efb 100644
+--- a/arch/x86/events/zhaoxin/core.c
++++ b/arch/x86/events/zhaoxin/core.c
+@@ -288,6 +288,22 @@ static inline void zxc_pmu_ack_status(u64 ack)
+ 	zhaoxin_pmu_disable_all();
+ }
  
- void x86_pmu_show_pmu_cap(struct pmu *pmu);
- 
-+void x86_pmu_print_debug(int cpu);
++static void zhaoxin_pmu_print_debug(int cpu)
++{
++	u64 ctrl, status, fixed;
 +
- static inline int x86_pmu_num_counters(struct pmu *pmu)
++	rdmsrq(MSR_CORE_PERF_GLOBAL_CTRL, ctrl);
++	rdmsrq(MSR_CORE_PERF_GLOBAL_STATUS, status);
++	rdmsrq(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, fixed);
++
++	pr_info("\n");
++	pr_info("CPU#%d: ctrl:       %016llx\n", cpu, ctrl);
++	pr_info("CPU#%d: status:     %016llx\n", cpu, status);
++	pr_info("CPU#%d: fixed:      %016llx\n", cpu, fixed);
++
++	x86_pmu_print_debug(cpu);
++}
++
+ static void zhaoxin_pmu_disable_fixed(struct hw_perf_event *hwc)
  {
- 	return hweight64(hybrid(pmu, cntr_mask64));
+ 	int idx = hwc->idx - INTEL_PMC_IDX_FIXED;
+@@ -479,6 +495,8 @@ static const struct x86_pmu zhaoxin_pmu __initconst = {
+ 
+ 	.format_attrs		= zx_arch_formats_attr,
+ 	.events_sysfs_show	= zhaoxin_event_sysfs_show,
++
++	.print_debug		= zhaoxin_pmu_print_debug,
+ };
+ 
+ static const struct { int id; char *name; } zx_arch_events_map[] __initconst = {
 -- 
 2.53.0
 
