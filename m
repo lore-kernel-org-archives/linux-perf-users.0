@@ -1,279 +1,166 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80F59349CDD
-	for <linux-perf-users@vger.kernel.org>; Fri, 14 Aug 2026 15:02:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9AF349CDD
+	for <linux-perf-users@vger.kernel.org>; Fri, 14 Aug 2026 15:04:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786719778; cv=none; b=FiM8CmNUYeW01c+yQOiS9Q9APax1MX0lpvAWxUKHiK07aTMXktHX6S9Ny6T1vgseLcxKJfei0QyqK6pIMD2Aa+mZ9kXz1erNTpv66E1YTHYewcrWOyJ1zT0KJLzuXTN9k/lfZZlZOMaHpW4Y/kcsXIe2x8yo0IGHjqQlTubEcOQ=
+	t=1786719859; cv=none; b=D+qrZNdj5I0JevgNBX3dWbnEzL6TqJfWdxFoN+8XRw9BJX98BF65R4y6d/ZPJeST1F6x1x2FhufhcYhPtQyTuRdEUCqtuOrfeYo0DSpIuc2BHR7N6PmgGhtIU3twvCZ+Z8hTE6AZa1sJaS8so2eSG9Teeg6SwNUs29fN3AOyDEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786719778; c=relaxed/simple;
-	bh=ftf0PMKfdHCNX1Jm8KL3k6A72HhWpiua3ZLhFVVKgQo=;
+	s=arc-20240116; t=1786719859; c=relaxed/simple;
+	bh=JOW9odBs21uPtEhJJ89YchffQQmHlxTGjaEiNkXZDDA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QtYAXiVvaDv7NkRCMDO7I1AEkD+kEcfBcsDOGm/b29jscgBnfQuaM2PNYMkWDtOEhr+nEmqHi39b+41VPmoLCWcnF9bWSdnprCXCeFBT/SjOchmg8OOxo2oh3cWTcnmm9mmCaIhBFKEdN143jxUKJ46vJu8ZI6IbDd0aWNT71wU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LF/7hq5q; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=BET4V8g6msVql0ZU7Tc7o4mBYxceEDnWBuYcRlsXprOoz06uI2MiKergxG5+Mo0R/CNv0g88R/qfrl9Eb6OTaufSvRUvDyAXTFzqvjDO3xlPyDOyz8S35sdp9OS0++BwoLxF4GcYs1R1kd16QC/RNahZn59Zd+xlVSkrWPryLAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fczokZBm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LF/7hq5q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECA3E1F000E9;
-	Fri, 14 Aug 2026 15:02:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fczokZBm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D14E1F000E9;
+	Fri, 14 Aug 2026 15:04:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786719777;
-	bh=CDDvOUtvmjkXuhQkqyhiimZQ3shgmJ05CLcQa1LeV4g=;
+	s=k20260515; t=1786719858;
+	bh=RGGZ81d/d4rv/OcoQtGTnVJGRgXfRSHaXiwIE3ohccE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LF/7hq5qQBLMJx+gp3oFaJ6DDaXjwzmPjAUqJbrKn0BJclgE2K1688Rc80loqXgaL
-	 uTJKKyjh3FzI0JPk7eHKXhShnuezyvG+5uoKkyS/6n/IfN/Ba14rrudeWpdRAM3yn4
-	 fWUc+5EqyJ6yUJEEZRPQh0tbWH5BjDcVJWoS9XKK9PnqCE4wFWHhQG+jJ4SM+3b//4
-	 lsi7aqt9im7p8UznKdqIfiUS+bKRWOuihmc3Ck7GM08eeGGMZ3sj36YtvekSBWEx2j
-	 LNO2kMrog++eD+o7XIGF47eLYq++wpp0FN2Gw1mkHGYPKbOlxH8TK8i8viM92YWxA8
-	 gLdUSPrHasEIg==
+	b=fczokZBmjcl4Iai6Z9zCfmP+18Sf9ZZ2e3cWsQZeedEWAZlSZlv5j39E3Lu5PYDxf
+	 IOBi6qd0vlmNdVi5GCCaHejUm7kuReOA6cuzhtgwTRH8clxbOiAHGrs4ObiweXUBhU
+	 0lNNZ6xzsbgp3ahQB93YVq928YxbEMZymGf2npttwbcYWqqMgwUJiEtR3iKQpC3bmn
+	 hwOj7Og8cWgVxSpyAIfSIqwRZ+/+3axbFHDpI7YYv1YQvOVn40TzXgdgotFDsY2XUg
+	 D0SlJ/EpM2ybaSlByaWfTaXJlAFe89e6peCfpMtTVFaLH2A6fWpddyZMp9LqGko+iO
+	 IOb8FbTB4uP6Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 3/5] perf/core: add KUnit tests for AUX
- kernel-consumer API
+Subject: Re: [RFC PATCH 1/5] perf/core: add AUX buffer ownership for kernel
+ events
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Kunwu Chan" <kunwu.chan@gmail.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260814144927.489172-4-kunwu.chan@linux.dev>
+In-Reply-To: <20260814144927.489172-2-kunwu.chan@linux.dev>
 References: <20260814144927.489172-1-kunwu.chan@linux.dev>
- <20260814144927.489172-4-kunwu.chan@linux.dev>
+ <20260814144927.489172-2-kunwu.chan@linux.dev>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 14 Aug 2026 15:02:56 +0000
-Message-Id: <20260814150256.ECA3E1F000E9@smtp.kernel.org>
+Date: Fri, 14 Aug 2026 15:04:17 +0000
+Message-Id: <20260814150418.4D14E1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] KUnit assertions (`KUNIT_ASSERT_*`) and `kunit_skip()` abort tests=
- immediately, leaking resources and causing stack Use-After-Free.
-- [High] Race between `atomic_dec_and_test()` and lockless `wait_event()` c=
-auses a stack Use-After-Free in `test_concurrent_release()`.
-- [High] Test cases use non-fatal `KUNIT_EXPECT_*` macros for critical setu=
-p steps, resulting in uninitialized stack usage and NULL pointer dereferenc=
-es.
-- [High] `test_concurrent_release` triggers a `refcount_t` underflow kernel=
- WARNING via concurrent `perf_event_release_aux()` calls.
-- [High] Error path in `test_concurrent_release` calls `kthread_stop()` on =
-natively exiting threads, leading to Use-After-Free.
-- [Medium] Dead code in `test_buffer_full_stops_producer` masks actual API =
-behavior and fails to enforce expected outcomes.
+- [High] Double `ring_buffer_put()` in `perf_event_release_aux()` leads to =
+refcount underflow and use-after-free of the ring buffer.
+- [High] Concurrent detach of `event->rb` causes a NULL pointer dereference=
+ inside `perf_pmu_output_stop()`.
 --
 
---- Patch [3]: [RFC PATCH 3/5] perf/core: add KUnit tests for AUX kernel-co=
-nsumer API ---
-commit 7ac72ec86c4a7abdecf89cc4cddc373879a7f3b2
-Author: Lian Wang <lianux.mm@gmail.com>
+--- Patch [1]: [RFC PATCH 1/5] perf/core: add AUX buffer ownership for kern=
+el events ---
+commit 34b60be57b99a06be2e537e647853e4c5c20c8c2
+Author: Kunwu Chan <kunwu.chan@gmail.com>
 
-perf/core: add KUnit tests for AUX kernel-consumer API
+perf/core: add AUX buffer ownership for kernel events
 
-Adds a KUnit test suite (perf_aux_kernel) for the perf_event_setup_aux() and
-related functions. Registers a self-contained dummy AUX PMU to run tests
-deterministically without hardware. Includes 39 test cases covering lifecyc=
-le,
-writers, ring buffer accessors, and concurrency.
+This commit adds an in-kernel AUX owner reference and setup/release helpers
+for kernel-created perf events. It introduces perf_event_setup_aux() and
+perf_event_release_aux() to handle AUX buffer lifecycle without requiring a
+userspace mmap.
 
-> diff --git a/kernel/events/aux_kernel_test.c b/kernel/events/aux_kernel_t=
-est.c
-> new file mode 100644
-> index 0000000000000..0b5f787c59799
-> --- /dev/null
-> +++ b/kernel/events/aux_kernel_test.c
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+
 [ ... ]
-> +static void test_copy_full_window(struct kunit *test)
+
+> +void perf_event_release_aux(struct perf_event *event)
 > +{
-> +	struct perf_event *event =3D aux_test_create_event();
-[ ... ]
-> +	ret =3D perf_event_setup_aux(event, 1, 0);
-> +	KUNIT_EXPECT_EQ(test, 0, ret);
+> +	struct perf_buffer *rb;
 > +
-> +	head =3D aux_test_produce(event, buf_size / 2);
-> +	KUNIT_EXPECT_GT(test, head, 0);
+> +	if (!is_kernel_event(event) || event->parent)
+> +		return;
 > +
-> +	buf =3D kunit_kmalloc(test, head, GFP_KERNEL);
-> +	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, buf);
+> +	rb =3D ring_buffer_get(event);
+> +	if (!rb)
+> +		return;
+> +
+> +	/* Do not detach a ring buffer that this API does not own. */
+> +	if (!rb_has_aux(rb) || !refcount_read(&rb->aux_kernel_count))
+> +		goto out_put;
+> +
+> +	if (refcount_dec_and_mutex_lock(&rb->aux_kernel_count, &rb->aux_mutex))=
+ {
+> +		/*
+> +		 * Stop all AUX events writing to this buffer so the pages
+> +		 * can be freed; after aux_kernel_count drops to zero they
+> +		 * won't start any more (see perf_aux_output_begin()).
+> +		 */
+> +		perf_pmu_output_stop(event);
 
 [Severity: High]
-Does this assertion leak the perf_event structure?
+Is there a race condition here if multiple threads call this concurrently?
 
-KUnit assertions like KUNIT_ASSERT_NOT_ERR_OR_NULL abort the test immediate=
-ly
-by throwing a KUnit exception. If this allocation fails after
-aux_test_create_event() succeeds, the test will abort without calling
-perf_event_release_kernel(), causing a permanent resource leak.
+If Thread 1 enters this block and calls perf_pmu_output_stop(), it accesses
+event->rb directly:
 
-[ ... ]
-> +static void test_buffer_full_stops_producer(struct kunit *test)
-> +{
-[ ... ]
-> +	head =3D aux_test_produce(event, buf_size);
-> +	KUNIT_EXPECT_GT(test, head, 0);
+static void perf_pmu_output_stop(struct perf_event *event)
+{
+        ...
+        list_for_each_entry_rcu(iter, &event->rb->event_list, rb_entry) {
+
+Meanwhile, Thread 2 could fail the aux_kernel_count decrement, skip the
+block, and immediately detach the buffer:
+
+        if (event->rb =3D=3D rb) {
+                ring_buffer_attach(event, NULL);
+
+Since ring_buffer_attach(event, NULL) sets event->rb to NULL, could Thread 1
+dereference a NULL pointer inside perf_pmu_output_stop()?
+
 > +
-> +	addr =3D perf_aux_output_begin(&handle, event);
-> +	if (addr) {
-> +		KUNIT_EXPECT_EQ(test, 0, handle.size);
-> +		perf_aux_output_end(&handle, 0);
+> +		rb_free_aux(rb);
+> +		WARN_ON_ONCE(refcount_read(&rb->aux_refcount));
+> +		mutex_unlock(&rb->aux_mutex);
 > +	}
-
-[Severity: Medium]
-Does this block fail to verify the expected behavior?
-
-When the buffer is full, perf_aux_output_begin() correctly returns NULL.
-Because addr is NULL, this conditional block is skipped entirely, turning t=
-he
-core validation into dead code. This allows the test to silently pass even =
-if
-perf_aux_output_begin() incorrectly returns a non-NULL pointer with an
-arbitrary size.
-
-Would it be better to explicitly assert KUNIT_EXPECT_NULL(test, addr)?
-
-[ ... ]
-> +static void test_user_kernel_coexistence(struct kunit *test)
-> +{
-[ ... ]
-> +	/* Event B: start with kernel setup, then simulate userspace */
-> +	ret =3D perf_event_setup_aux(ev_b, 1, 0);
-> +	KUNIT_EXPECT_EQ(test, 0, ret);
 > +
-> +	/* Simulate userspace ownership: swap refcounts on B's rb.
-> +	 * perf_mmap() would set aux_mmap_count=3D1 for a userspace event.
+> +	/*
+> +	 * Detach the ring buffer from the event.  This runs even if the
+> +	 * refcount_dec_and_mutex_lock above lost the race to another
+> +	 * concurrent release caller; the mmap_mutex serialisation and the
+> +	 * event->rb =3D=3D rb check ensure only one caller performs the detach.
 > +	 */
-> +	refcount_set(&ev_b->rb->aux_mmap_count, 1);
+> +	mutex_lock(&event->mmap_mutex);
+> +	if (event->rb =3D=3D rb) {
+> +		ring_buffer_attach(event, NULL);
+> +		ring_buffer_put(rb); /* drop the event->rb reference */
 
 [Severity: High]
-Can this result in a NULL pointer dereference?
+Does this result in a double-free?
 
-The KUNIT_EXPECT_EQ macro logs failures but allows execution to continue.
-If perf_event_setup_aux() fails, ev_b->rb will be NULL. The test then proce=
-eds
-to evaluate refcount_set(&ev_b->rb->aux_mmap_count, 1), which dereferences =
-it.
+Looking at ring_buffer_attach(), it already drops the reference to the old
+buffer when it is replaced:
 
-Should KUNIT_ASSERT_EQ be used for critical setup steps?
+static void ring_buffer_attach(struct perf_event *event,
+                               struct perf_buffer *rb)
+{
+        ...
+        rcu_assign_pointer(event->rb, rb);
 
-[ ... ]
-> +	/* Produce on A =E2=80=94 B's head stays 0 */
-> +	addr =3D perf_aux_output_begin(&handle_a, ev_a);
-> +	KUNIT_EXPECT_NOT_NULL(test, addr);
-> +	perf_aux_output_end(&handle_a, 512);
+        if (old_rb) {
+                ring_buffer_put(old_rb);
+        ...
+}
 
-[Severity: High]
-Can this sequence cause a kernel panic?
+If ring_buffer_attach(event, NULL) already calls ring_buffer_put() on the
+detached buffer, will calling ring_buffer_put(rb) again immediately after
+cause the refcount to underflow and prematurely free the ring buffer?
 
-Similar to the previous setup step, if perf_aux_output_begin() fails and
-returns NULL, handle_a remains uninitialized since KUNIT_EXPECT_NOT_NULL do=
-es
-not halt the test.
-
-Continuing past the failure passes this uninitialized handle to
-perf_aux_output_end(), which will dereference garbage data from handle_a.rb.
-
-[ ... ]
-> +struct concurrent_release_ctx {
-> +	struct perf_event *event;
-> +	atomic_t count;
-> +	wait_queue_head_t wq;
-> +};
-> +
-> +static int concurrent_release_thread(void *data)
-> +{
-> +	struct concurrent_release_ctx *ctx =3D data;
-> +
-> +	perf_event_release_aux(ctx->event);
-> +
-> +	if (atomic_dec_and_test(&ctx->count))
-> +		wake_up(&ctx->wq);
-> +	return 0;
-> +}
-
-[Severity: High]
-Can decoupling the atomic decrement and the wake_up() call create a stack
-use-after-free window?
-
-The main thread waits for worker threads using wait_event(), which evaluates
-its condition locklessly. If the last worker thread executes
-atomic_dec_and_test(&ctx->count), setting it to 0, the main thread can obse=
-rve
-the 0, break out of wait_event(), and return from the function before the
-worker executes wake_up(&ctx->wq).
-
-Returning from test_concurrent_release() destroys the ctx struct on the sta=
-ck,
-meaning the worker thread will then call wake_up() on a destroyed stack fra=
-me.
-
-Could this be avoided by using the struct completion API, which is explicit=
-ly
-designed to prevent this race for on-stack waiters?
-
-[ ... ]
-> +static void test_concurrent_release(struct kunit *test)
-> +{
-> +	struct perf_event *event =3D aux_test_create_event();
-> +	struct concurrent_release_ctx ctx;
-> +	struct task_struct *threads[2];
-> +	int ret, i;
-[ ... ]
-> +	for (i =3D 0; i < ARRAY_SIZE(threads); i++) {
-> +		threads[i] =3D kthread_run(concurrent_release_thread, &ctx,
-> +					 "aux_crel_%d", i);
-
-[Severity: High]
-Does intentionally launching concurrent releases here trigger a refcount_t
-underflow warning?
-
-In perf_event_release_aux() in core.c, the check
-!refcount_read(&rb->aux_kernel_count) is performed locklessly. Both worker
-threads can read aux_kernel_count as 1 and proceed to call
-refcount_dec_and_mutex_lock().
-
-The first thread successfully decrements the count from 1 to 0. The second
-thread subsequently calls refcount_dec_and_mutex_lock() on a count of 0,
-which triggers a REFCOUNT_WARN("underflow; use-after-free.") inside
-__refcount_dec_and_test().
-
-Is it intended for a KUnit test to trigger kernel warnings on a successful
-path?
-
-> +		if (IS_ERR_OR_NULL(threads[i])) {
-> +			kunit_skip(test, "failed to create kthread");
-
-[Severity: High]
-Can kunit_skip() cause a stack use-after-free if a thread is already runnin=
-g?
-
-kunit_skip() terminates the test immediately by throwing a KUnit exception,
-bypassing any subsequent cleanup code. This means the test function returns
-instantly, destroying the ctx struct allocated on the main thread's stack.
-
-If an earlier thread was successfully spawned and is still running, it will
-access ctx->event and ctx->count on the destroyed stack frame.
-
-> +			while (--i >=3D 0)
-> +				kthread_stop(threads[i]);
-
-[Severity: High]
-Does kthread_stop() cause a use-after-free on natively exiting threads?
-
-The concurrent_release_thread function does not check kthread_should_stop();
-it simply executes and naturally returns 0. When a thread naturally exits, =
-its
-task_struct is reaped.
-
-Calling kthread_stop() here on a potentially reaped task_struct will access
-freed memory inside get_task_struct(). While currently masked as dead code =
-due
-to kunit_skip() aborting execution above, this cleanup logic appears unsafe.
-
-> +			perf_event_release_aux(event);
-> +			perf_event_release_kernel(event);
-> +			return;
-> +		}
 > +	}
+> +	mutex_unlock(&event->mmap_mutex);
+> +
+> +out_put:
+> +	ring_buffer_put(rb); /* the temporary reference from ring_buffer_get() =
+*/
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260814144927.4891=
-72-1-kunwu.chan@linux.dev?part=3D3
+72-1-kunwu.chan@linux.dev?part=3D1
