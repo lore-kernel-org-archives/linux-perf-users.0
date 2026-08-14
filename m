@@ -1,269 +1,351 @@
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013000.outbound.protection.outlook.com [52.101.72.0])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B8942EEAB;
-	Fri, 14 Aug 2026 10:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.0
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786702037; cv=fail; b=NuELOnAfT0BoKwQjBstIh7ZPGARs6Nu2+3HVIbn1C9aAWVJECQVoj7KhQt0UJbOI/6DIbag26t4FcLyn19Lz9ZesnNVbyj2nAgBSwBQtTvT1UQvK1YJmhf89wUsxfNlH/UnmFdF0qiWLNaKieExNBgyI2uWYdcnV8ma3BBxpFNY=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786702037; c=relaxed/simple;
-	bh=nfStK3Pe70ZRRblEKj4btcPP/SQp5rNphn0OaMy4bbg=;
-	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=snS20mYqdWRu1nyvD+CD27QdnCMMn6pE2vW/RcVfkmviEWLb8bqpeRU5ae3cVWtMkB9BQShSBhoA5onRdVqwA2v9dfUf7VxjT8tdTgL1oIA91vCQqilAZ+p0GThlCiskZOQnFSWBMK4TIqpym9+DcHnAc5AzuxtGzWA2KHiXnn0=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Xa73x8VO; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Xa73x8VO; arc=fail smtp.client-ip=52.101.72.0
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Xa73x8VO";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Xa73x8VO"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=xDBuWPymd45tbtSJsM5zIQ7ovzGXD+AGiS6ED8icHhxGxVT76M6DstGxkVHkqZFrKZ985/4ylndA6OkpO7KApT4x8A9VoWXIUF7ol+hnVj8p9InHzAwMyVHfnKoHZOy0STBUIWB2yo7sa+gulPrTLvj9KR5/g+JJ0LaFg4m2WMV0GZnLHXfdLtAkTv04NadcewuXeVcvS9PxpcizH7DD2JNdWOxdpz8AUK4jC8UjZjjx2jVcWfCBmRMksbO7bq08/ZKY22a5fuJ7oHkIKekVik6zDgN9xwDX6CwML+4n1YKATCfnob9SNIv4bmxK1dOzh93tLos5zLU3l1hYIdSSUw==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=T3KhvsxEoEP9z6JNj1aBx70Nx6X3XBZOUekklW3rbtQ=;
- b=PyqtN1JNJudVv4ZYrE1LAlvnCEJ9YizG8w2qpKARDgPno8P2z0qNluL59nw8K5h/EdPXXJbXfFM/fB8OTlRfbZl7GjRfyLD6A6TdNZOQSwunFyleIE1EpEkPcnVlUPybP0ZBxym/muZ7y1YnawaISEyunpHgL/KMMxwVE/c/1d/3m7cvTVqn1k2gjKXmUxoBejgFo/9KsetJjU27CUNrxDZ07lPKBtsGPSO/GGCkeNfCp4CT3XjBatR91gj25FKk9Bi9EADX8XUESx98U1/UZTUbc6MxXnJOSU0IbmcgLWItKlGVQFta2tayKA7kP9UXLCivv/rRKRUIo2Rt01oiPQ==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=kernel.org smtp.mailfrom=arm.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
- (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T3KhvsxEoEP9z6JNj1aBx70Nx6X3XBZOUekklW3rbtQ=;
- b=Xa73x8VOqP9SORkdx0HmJjWkb3uz57kANXUAB9hdYEYAtYJmLeE2YabwJREVIDuEv1ACZhPpSmNzQNZDThV0g18zfFCpkViSg2f9AxMSAyzqyY06lO8Q2enl3N0PSPGUuhiDSwh7mZg8yBwj6DT6IUdeWHq5TOnreBTaN+Uj0Dg=
-Received: from DU7P250CA0018.EURP250.PROD.OUTLOOK.COM (2603:10a6:10:54f::31)
- by DU0PR08MB9420.eurprd08.prod.outlook.com (2603:10a6:10:423::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.13; Fri, 14 Aug
- 2026 10:06:56 +0000
-Received: from DB1PEPF00050A00.eurprd03.prod.outlook.com
- (2603:10a6:10:54f:cafe::5d) by DU7P250CA0018.outlook.office365.com
- (2603:10a6:10:54f::31) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.315.15 via Frontend Transport; Fri,
- 14 Aug 2026 10:06:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DB1PEPF00050A00.mail.protection.outlook.com (10.167.242.42) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.21.339.3
- via Frontend Transport; Fri, 14 Aug 2026 10:06:56 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PHmEnvHlnGBw4IwdJs7esLlclPRGZD2862Rk8b9wsf+poJ2rYvaUBfHOPunvQWGY5sYkl8wYrAn/QYbHHAtQyGPCTEJkGD2TJ4WhFQsPsx33YtXlw1LwXYRwVz3fOWwJiquTf1z6MxUiF5BgTZHG98PEkygMOeAHsS1rt199eD6O+gDgJTLzIHiZPgDkLFGccCmeryNn/dgQ7ZvlIPEKY9Hak1474QAC75YTnYzI50qA4wALw96kqICvycaCYHRE7Z/nP5nk8K3GeAC9f+/2oCuJaTM0OlcH7BBFyvc9cJ9DlaqACd/QE3coMzFmhKVnDfFiUHlD5oT+MsOS2gJLgg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=T3KhvsxEoEP9z6JNj1aBx70Nx6X3XBZOUekklW3rbtQ=;
- b=HTDEjnorGVlYrFORYmJdgvFchCM37g7vDTzt/byP84USaAURmmENe49RTl34SlC1zzHl6D2b+A7QmIrit+m8GN3JvghoHHjvQor0ke8o0TdXvyBSlm9HFG2tZkamq4qtJb1+n5TSDY0Pl0Ufjg7M/usWMZGI68M2+vhuGQD+KDPyWTY4vuDbimg4VR9OHJH8h5o7vpz2F5ilzIcp3fP0qqbBtmqN81mvB9WWkMPMg0McxLex/XZ4Xx9Lw3JTJ9aehR62XBuqz0omqE/zj00Fvtc5jtGUquybb5+N2V/NwDpoZwFWI3zGsjUH34t+FLowH8NNpN8wIoaj+G0ZCKR0fg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=T3KhvsxEoEP9z6JNj1aBx70Nx6X3XBZOUekklW3rbtQ=;
- b=Xa73x8VOqP9SORkdx0HmJjWkb3uz57kANXUAB9hdYEYAtYJmLeE2YabwJREVIDuEv1ACZhPpSmNzQNZDThV0g18zfFCpkViSg2f9AxMSAyzqyY06lO8Q2enl3N0PSPGUuhiDSwh7mZg8yBwj6DT6IUdeWHq5TOnreBTaN+Uj0Dg=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from AM6PR08MB3414.eurprd08.prod.outlook.com (2603:10a6:20b:49::10)
- by AS2PR08MB10111.eurprd08.prod.outlook.com (2603:10a6:20b:62d::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.15; Fri, 14 Aug
- 2026 10:06:22 +0000
-Received: from AM6PR08MB3414.eurprd08.prod.outlook.com
- ([fe80::dde8:bf0b:1dc:2a2]) by AM6PR08MB3414.eurprd08.prod.outlook.com
- ([fe80::dde8:bf0b:1dc:2a2%2]) with mapi id 15.21.0315.014; Fri, 14 Aug 2026
- 10:06:22 +0000
-Message-ID: <99eac5ca-d5c6-4777-b16c-5a20fae95f5d@arm.com>
-Date: Fri, 14 Aug 2026 11:06:20 +0100
-User-Agent: Mozilla Thunderbird
-Cc: usama.anjum@arm.com, Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Dimitri Sivanich
- <dimitri.sivanich@hpe.com>, Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
- Helge Deller <deller@gmx.de>, Juergen Gross <jgross@suse.com>,
- Stefano Stabellini <sstabellini@kernel.org>,
- Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <liam@infradead.org>, Lorenzo Stoakes <ljs@kernel.org>,
- Will Deacon <will@kernel.org>, "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
- Nick Piggin <npiggin@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>,
- Pasha Tatashin <pasha.tatashin@soleen.com>, Chris Li <chrisl@kernel.org>,
- Kairui Song <kasong@tencent.com>, Uladzislau Rezki <urezki@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>,
- Kumar Kartikeya Dwivedi <memxor@gmail.com>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, SJ Park <sj@kernel.org>,
- "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>,
- Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
- Miaohe Lin <linmiaohe@huawei.com>, Dennis Zhou <dennis@kernel.org>,
- Tejun Heo <tj@kernel.org>, Christoph Lameter <cl@gentwo.org>,
- Mike Rapoport <rppt@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
- ziy@nvidia.com, pfalcato@suse.de, ryan.roberts@arm.com,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-parisc@vger.kernel.org,
- xen-devel@lists.xenproject.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
- kasan-dev@googlegroups.com, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, linux-perf-users@vger.kernel.org, damon@lists.linux.dev
-Subject: Re: [PATCH 6/9] mm: convert PTE table entry to pte
-To: "David Hildenbrand (Arm)" <david@kernel.org>,
- Alexander Gordeev <agordeev@linux.ibm.com>
-References: <20260806083926.1807279-1-usama.anjum@arm.com>
- <20260806083926.1807279-7-usama.anjum@arm.com>
- <fab9fc78-1e1d-4d5b-a9ca-92f3ebd04108-agordeev@linux.ibm.com>
- <5c329236-7761-4e42-a549-b822e43b4358@arm.com>
- <2599c5b3-e8ac-4865-993b-d41e6f060d52-agordeev@linux.ibm.com>
- <f0b0dacb-fb83-4402-b0ea-30072727dfd7@arm.com>
- <e9de4158-b829-471b-980c-1999959bbc48@kernel.org>
-From: Muhammad Usama Anjum <usama.anjum@arm.com>
-Content-Language: en-US
-In-Reply-To: <e9de4158-b829-471b-980c-1999959bbc48@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0374.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:18e::19) To AM6PR08MB3414.eurprd08.prod.outlook.com
- (2603:10a6:20b:49::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD9A33C2B95;
+	Fri, 14 Aug 2026 11:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786707898; cv=none; b=gbHCGIijBK3due1hvR27AdAl6fUdO2n3SSvEkxc+5mLuQIXKQNBRigy076bMGsC7RpN3mGf8pUWgGMRmHgk9rAXCIsGBmVFpxqZ+s8s4JoQwvjTqIPGpKErqFdBCta7shAgApmMK/thQZyg2UAPEVEVG+wF1y+qfuAXhqAyBYms=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786707898; c=relaxed/simple;
+	bh=cAOaa7R6N0tgk62TkTbDm4cndnyZWSC3PIB+HrGx2g8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=R/P5IoqHEu0mmCUCAbNcYhqzWgG7iTYz0N1Kgjut+ojxfsM1t4hGh8W9l/rKW+K+t0JqmBacecuJbLniX3bq6tl+7fsXf3lzAQVnz9GH6lzIdj12TDgRcNYyoDS+Vg72vzS/fXEQjnhbMj2F3Gl3Vz5zgaAUmdJCsoyC9zzxO9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hM0kk1WCWzKHMj8;
+	Fri, 14 Aug 2026 19:44:30 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 166674058F;
+	Fri, 14 Aug 2026 19:44:51 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgA3oYix_35qYE0vCQ--.4471S2;
+	Fri, 14 Aug 2026 19:44:50 +0800 (CST)
+Message-ID: <13dba899-4ff6-45a8-a360-0fcffdb1ac89@huaweicloud.com>
+Date: Fri, 14 Aug 2026 19:44:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	AM6PR08MB3414:EE_|AS2PR08MB10111:EE_|DB1PEPF00050A00:EE_|DU0PR08MB9420:EE_
-X-MS-Office365-Filtering-Correlation-Id: 63e47786-f4fc-4bc2-1a14-08def9ebc5eb
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|366016|23010399003|7416014|376014|18002099003|22082099003|56012099006|3023799007|6133799003|10067099003|4143699003|11063799006;
-X-Microsoft-Antispam-Message-Info-Original:
- FdM+vYM//Rs5TUwEEHIcmgNLmFMgPcbIWudfucKOtLwbQHuQH4LsRsLWhZbhUHVwlsUZ2MW/QlqZEBRFZOotGFq9ElB1fBk0T2wDM9eJxSONOc0eBnNbJCrYXcdL413Ax+OyfkfEoxy+7p6xfO/Gp0ULezU0rryPMHDxdW+WSS5rUULaD/qtxpsaexe4gAKKlRwpoKiMYC0kk6mOSF6nV//6DKRqnn8jaUxss4Jb7rpTjNrDntvBromiOXkyH+u738mcKX2mQvUwgMLXPwSoUcHl2FYCYlRXOtzbXYvxFs4S2yuivsokOQ+SAGvWRCMRzXK/QnoVKcb0xUY8+gZ88apENk0piPBxngMRBECCAR61rRcrJLUNQtlEB8HBbq/YpCmGNjePl8g7rSF97nWWZn5uqDznbnx9lhon+2zPAyx5mE7R4B8g1+I/ayLySqAwyOQtrDcO7Utgw3QJ5V1LabHy5H4Zq+RZu+yoYeVUyWvQxqZvBXrOzp8rjCTsZcVr6KY7JAdQq4tl5Ps/qB9tRiPALRaFbOG7P370QXOXENe/wCCzLSQ1wcD8BOuVSU5Yk2Obd7lxvCHq2207TdfFyw6gpkOv+e49mmqVZhxXI356CRSby/7mB6IuGiTs4sLL6Lcof90Lpfy9gfrzTaZ12kmtz9OQ0y9Jt1KAXQnZMIU=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3414.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(7416014)(376014)(18002099003)(22082099003)(56012099006)(3023799007)(6133799003)(10067099003)(4143699003)(11063799006);DIR:OUT;SFP:1101;
-X-Exchange-RoutingPolicyChecked:
- hg0VAWoj1GcWWsk+NJy5Vc8BjrpZSBqh8S30aINiN6NxTNaP4iTTkJ91o6iF1/+Zwjb+/AU1X6UV8XTM3bUxU3Q8BCdzlOCy7kOyF2/QY5swJ6ur7BBbFXmGFS6NpT/ac5AA3biozKgSIVWQ+BMglFcO2/q00U6bDY7FjrezA7vmmaMQsVLMPQbt67FGkKdB2XVwe9vKRY6AHj6SJA5C8LJnCN/kIC4nQUKWP63TP6aMafYf/b5odoc4YiM9oEHhWuIHKuJJWkzrwup6r5XiD7ifQ667mLFzrHqBBcKWLla6YAbKP70dp40wmHUcEMJMSgsfMU8tyCfetML6h6+siw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS2PR08MB10111
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DB1PEPF00050A00.eurprd03.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	330ecdb8-6c41-4eca-4e97-08def9ebb11e
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|36860700016|35042699022|14060799003|1800799024|23010399003|82310400026|6133799003|4143699003|10067099003|11063799006|22082099003|18002099003|56012099006|3023799007;
-X-Microsoft-Antispam-Message-Info:
-	VjS2yHJRJ6FIIV5VKfG/RwNRqdqbt3Pw64Il+TSsQGYNJXdp7YbLVWSVHkDcN2Te0SodvhigFS0HUT6l/N+WF/VM69XgCun7ZWE5XvidEFCSmujGCh99x+s19goBj1LtThgEcHLltVEzVBAbA8a2qghQ5UbPjLZ44PJ1xqUu23wBz0wqTb8Axr4boImcWSCfUcvUav0HEwqkvKauBpWHGPIiwyxfB0y7TegHzWNbyVim5M7bkh68zoD/iXLJtn4r43vg2f7dSOHK4cfcCiLrA801zYhzAeRz7Rc4tfr5QNHdS43R6dQUZdKtzCyh2E3K09xHkaulD+pYhLi+JNGpNSQW31hV2HdAo7IrrejyTAkZXxrzkkv96tBOjZg1YD5xUj8cZ0UfG5oFSJUSCEMe/8MvRZBQT0tZztt40vP1eHgQJm1iufXi7qdatBrOu9RbHszUSbXrdutpLIdIE5l9zHhM3KQ9WMFXrktOuVW21AXgnz0oD4iEsVeh1SMGUl8U2pEIv01AsGyf2/ZS43Tez5ahziTbYoN5cLgwTyw66AIPPr6cG37TeG6HgK0IaRZlYnzqGHHMmR0fOdJWRCDPKzcuZqOe5zfLLL+OgRNQOl4GbgukmSyfZx/XWVRQclsPXRxxAVRh7CKFo8KKdCziEvaFeR+12MumIMvkJKrLf925bD5emz55ZgRWNJ7FDxyKDyVmMBJDeM4ilL+UWM7iAw==
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700016)(35042699022)(14060799003)(1800799024)(23010399003)(82310400026)(6133799003)(4143699003)(10067099003)(11063799006)(22082099003)(18002099003)(56012099006)(3023799007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	pvMM/dJiD/B/1LdIJH1K8JbPFKXwEhVh9l8eVP26ZwENbQXm6ngpU4Rk/Ns4b3guGJ9Ivy86+rD/m4sStrCfxLyVcStcdW1pEMK2s5aLAyp3fn9xco2MbDSJqcAvvsvb1QZ4iiH048VUfUHvrclD1oVmg/CzcrAFnajPe8PToT6sJ61rWJdiYyi/vZNajaHBOfZAQeKx7dCJBHhLdm91fQ5+8DlZgBqyfxw4iAbVxkX0hpAylYE4/LSVaLMwPi0RRDg5i0liPY/VVuqNnL+DkB0KUp0zc+y/qtSu1z/okjH9xHPS2hFuB5+86KHOYYoemfOSDysVkP3fDshHDZ8RhJ/fvIsydMSzU0isAHIY5ZgtVINWQ73F6SrL1tpO8wqizQZ+ns4pFVtccu9gwAFH5rTwScC/HayBRHU0PAjukOwNT3Xhow54yht9ACpYav6T
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Aug 2026 10:06:56.5509
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63e47786-f4fc-4bc2-1a14-08def9ebc5eb
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DB1PEPF00050A00.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB9420
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 18/23] perf annotate-arm64: Support stack variable
+ tracking
+To: Shuai Xue <xueshuai@linux.alibaba.com>, Namhyung Kim
+ <namhyung@kernel.org>, james.clark@linaro.org,
+ Li Huafei <lihuafei1@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
+ Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Bill Wendling <morbo@google.com>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
+ <20260808122400.2961238-19-wutengda@huaweicloud.com>
+ <1dfbb930-e8ef-4289-b443-f831251d4445@linux.alibaba.com>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <1dfbb930-e8ef-4289-b443-f831251d4445@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgA3oYix_35qYE0vCQ--.4471S2
+X-Coremail-Antispam: 1UD129KBjvAXoW3Cw48ZF15Zw4fWFy8ZrWDArb_yoW8Gr4kZo
+	WUKr1rJr15Ar1jgr1UJr1UJr13JF1UtrnrtF4UGry7Aw1UAF1UJ3yxJry5t3y7Jr18GF1U
+	Jr1UJryjyFyUAr1rn29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
+	AaLaJ3UjIYCTnIWjp_UUUY77kC6x804xWl14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK
+	8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4
+	AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On 11/08/2026 1:11 pm, David Hildenbrand (Arm) wrote:
-> On 8/10/26 13:06, Muhammad Usama Anjum wrote:
->> On 10/08/2026 7:44 am, Alexander Gordeev wrote:
->>> On Fri, Aug 07, 2026 at 05:26:04PM +0100, Muhammad Usama Anjum wrote:
->>>> Yes, this is particular line is for non MMU. In this case, CONIFG_ARCH_HAS_HW_PTE
->>>> would never be defined. Hence hw_pte_t is just pte_t and direct dereference is
->>>> allowed. I'd thought a lot about it; is better to leave direct dereference here
->>>> or use some helper. Then used __pte_from_hw() was already being used in generic
->>>> ptep_get().
->>>
->>> But in case CONIFG_ARCH_HAS_HW_PTE=n __pte_from_hw() is still gets called.
->>> That looks inconsistent to me. Why not just call ptep_deref() (see below)?
+
+
+On 2026/8/11 16:24, Shuai Xue wrote:
+> 
+> 
+> On 8/8/26 8:23 PM, Tengda Wu wrote:
+>> Extend update_insn_state() for arm64 to track data types stored on the
+>> stack. This allows 'perf annotate' to maintain type information for
+>> local variables that are spilled to or loaded from stack slots.
 >>
->> Agreed. Calling __pte_from_hw() directly exposes the representation
->> conversion at the call site. I will introduce ptep_deref() and use it
->> here.
+>> The implementation handles:
 >>
->>>
->>>> There are only two users of __pte_from_hw() at this time. 
->>>>
->>>> ptep_get_sw() or ptep_get_deref() is better name here?
->>>
->>> ptep_deref() would be it.
->>>
->>> Do you agree to the suggested API requirements?
+>> 1. Stack Loads (LDR): Identify when a register is loaded from a stack
+>>     slot and update the register's type state based on the tracked
+>>     stack content or compound member types.
 >>
->> Yes. hw_pte_t * identifies storage containing hardware-formatted PTEs,
->> regardless of whether it is attached. ptep_get() is used for attached
->> entries and may provide additional architecture-specific handling.
->> ptep_deref() is used for unattached entries and performs only the raw
->> storage-to-value conversion.
+>> 2. Stack Stores (STR): Update or create new stack state entries when
+>>     a tracked register type is stored to the stack.
 >>
->> For review, this patch would become:
+>> Similar to loads, stores also support saving one or two registers
+>> (in the case of 'stp'). Therefore, propagate_store_reg_state() is
+>> introduced. The overall offset calculation follows the same logic as
+>> the load implementation:
 >>
->> diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
->> index bc0b9c65aa1d0..ce900d2652d91 100644
->> --- a/include/linux/hugetlb.h
->> +++ b/include/linux/hugetlb.h
->> @@ -1283,7 +1283,7 @@ static inline pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
->>  #ifdef CONFIG_MMU
->>  	return ptep_get(ptep);
->>  #else
->> -	return *ptep;
->> +	return ptep_deref(ptep);
->>  #endif
->>  }
->>  
->> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
->> index 1768421755a9c..08613593f3320 100644
->> --- a/include/linux/pgtable.h
->> +++ b/include/linux/pgtable.h
->> @@ -490,6 +490,13 @@ static inline int pudp_set_access_flags(struct vm_area_struct *vma,
->>  #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
->>  #endif
->>  
->> +#ifndef ptep_deref
->> +static inline pte_t ptep_deref(hw_pte_t *ptep)
->> +{
->> +	return __pte_from_hw(*ptep);
->> +}
->> +#endif
+>>    src->reg1: reg_offset = get_reg_index_offset()
+>>    src->reg2: reg_offset = get_reg_index_offset() + reg_size(src->reg1)
+>>
+>> With these changes, the instruction tracker can now follow data types
+>> as they move between registers and memory, specifically for function
+>> local variables and compiler-spilled values on arm64.
+>>
+>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+>> ---
+>>   .../perf/util/annotate-arch/annotate-arm64.c  | 161 ++++++++++++++++--
+>>   1 file changed, 148 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+>> index ed0f0ef2877d..6e09e9707256 100644
+>> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+>> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+>> @@ -407,6 +407,7 @@ static void adjust_reg_index_state(struct type_state *state,
+>>    * to the source struct's field offset.
+>>    */
+>>   static int propagate_load_reg_state(struct type_state *state,
+>> +                    struct data_loc_info *dloc,
+>>                       struct disasm_line *dl, int dreg,
+>>                       struct annotated_op_loc *src,
+>>                       int reg_offset, const char *insn_name)
+>> @@ -416,6 +417,8 @@ static int propagate_load_reg_state(struct type_state *state,
+>>       Dwarf_Die type_die;
+>>       u32 insn_offset = dl->al.offset;
+>>       int sreg = src->reg1;
+>> +    int fbreg = dloc->fbreg;
+>> +    int fboff = 0;
+>>         if (!has_reg_type(state, dreg))
+>>           return -1;
+>> @@ -423,7 +426,52 @@ static int propagate_load_reg_state(struct type_state *state,
+>>       tsr = &state->regs[dreg];
+>>       tsr->copied_from = -1;
+>>   +    if (dloc->fb_cfa) {
+>> +        u64 ip = dloc->ms->sym->start + dl->al.offset;
+>> +        u64 pc = map__rip_2objdump(dloc->ms->map, ip);
 >> +
->>  #ifndef ptep_get
->>  static inline pte_t ptep_get(hw_pte_t *ptep)
->>  {
->>
+>> +        if (die_get_cfa(dloc->di->dbg, pc, &fbreg, &fboff) < 0)
+>> +            fbreg = -1;
+>> +    }
+>> +
+>>   retry:
+>> +    /* Check stack variables with offset */
+>> +    if (sreg == fbreg || sreg == state->stack_reg) {
+>> +        struct type_state_stack *stack;
+>> +        int offset = sreg == fbreg ? reg_offset - fboff : reg_offset;
+>> +
+>> +        stack = find_stack_state(state, offset);
+>> +        if (stack == NULL) {
+>> +            return -1;
+>> +        } else if (!stack->compound) {
+>> +            tsr->type = stack->type;
+>> +            tsr->kind = stack->kind;
+>> +            tsr->offset = stack->ptr_offset;
+>> +            tsr->imm_value = stack->imm_value;
+>> +            tsr->ok = true;
+>> +        } else if (die_get_member_type(&stack->type,
+>> +                           offset - stack->offset,
+>> +                           &type_die)) {
+>> +            tsr->type = type_die;
+>> +            tsr->kind = TSR_KIND_TYPE;
+>> +            tsr->offset = 0;
+>> +            tsr->imm_value = 0;
+>> +            tsr->ok = true;
+>> +        } else {
+>> +            return -1;
+>> +        }
+>> +
+>> +        if (sreg == fbreg) {
+>> +            pr_debug_dtp("%s [%x] -%#x(stack) -> reg%d",
+>> +                     insn_name, insn_offset, -offset, dreg);
+>> +        } else {
+>> +            pr_debug_dtp("%s [%x] %#x(reg%d) -> reg%d",
+>> +                     insn_name, insn_offset, offset, sreg, dreg);
+>> +        }
+>> +        pr_debug_type_name(&tsr->type, tsr->kind);
+>> +        return 0;
+>> +    }
+>> +
+>>       if (!has_reg_type(state, sreg) || !state->regs[sreg].ok)
+>>           return -1;
+>>   @@ -460,6 +508,7 @@ static int propagate_load_reg_state(struct type_state *state,
+>>   }
+>>     static void update_load_insn_state(struct type_state *state,
+>> +                   struct data_loc_info *dloc,
+>>                      struct disasm_line *dl,
+>>                      struct annotated_op_loc *src,
+>>                      struct annotated_op_loc *dst)
+>> @@ -472,7 +521,7 @@ static void update_load_insn_state(struct type_state *state,
+>>           goto out_err_adjust;
+>>         /* Handle the first destination register */
+>> -    if (propagate_load_reg_state(state, dl, dst->reg1, src,
+>> +    if (propagate_load_reg_state(state, dloc, dl, dst->reg1, src,
+>>                        reg_offset, insn_name))
+>>           goto out_err_adjust;
+>>   @@ -481,7 +530,7 @@ static void update_load_insn_state(struct type_state *state,
+>>           int reg_size = arm64__reg_size(dl->ops.target.raw);
+>>             if (reg_size < 0 ||
+>> -            propagate_load_reg_state(state, dl, dst->reg2, src,
+>> +            propagate_load_reg_state(state, dloc, dl, dst->reg2, src,
+>>                            reg_offset + reg_size, insn_name))
+>>               goto out_err_adjust;
+>>       }
+>> @@ -498,6 +547,100 @@ static void update_load_insn_state(struct type_state *state,
+>>       goto out_adjust;
+>>   }
+>>   +/*
+>> + * For store insns: propagate type from @sreg to the memory location
+>> + * referenced by @dreg, applying @reg_offset to the destination memory offset.
+>> + */
+>> +static int propagate_store_reg_state(struct type_state *state,
+>> +                     struct data_loc_info *dloc,
+>> +                     struct disasm_line *dl, int sreg, int dreg,
+>> +                     int reg_offset, const char *insn_name)
+>> +{
+>> +    struct type_state_reg *tsr;
+>> +    u32 insn_offset = dl->al.offset;
+>> +    int fbreg = dloc->fbreg;
+>> +    int fboff = 0;
+>> +
+>> +    if (!has_reg_type(state, sreg) || !state->regs[sreg].ok)
+>> +        return -1;
 > 
-> I mean, how many such users do we expect? 1? :)
+> If an untracked register is stored into a stack slot that already
+> has a tracked type, this leaves the stale entry in place - a later
+> load from that slot picks up the old type. The sequence is easy to
+> hit: store a tracked register, cross a call, then store a register
+> that the call invalidated. The right behaviour would be to drop the
+> stack entry when the source is unknown. I see x86 case 3 has the
+> exact same pattern, so this probably wants a cross-arch fix rather
+> than an arm64-only one.
 > 
-> Why have a helper for that then, that seems to encourage it's use, when really
-> people should be using ptep_get() ?
 
-There is only 1 direct dereference case and even that is for non-MMU case.
-That's really good point. I'll keep using __pte_from_hw() and put a comment
-in huge_ptep_clear_flush() that use of this must be avoided at all cost. An
-API can be introduced in case more users arrive.
+Agreed. We may need to introduce a delete_stack_state() helper to drop
+the stack entry when the source register is unknown.
 
--- 
+> Also, this function always returns 0 apart from that early check,
+> and the callers ignore the return value anyway. Either make it void
+> or return a real status and act on it.
+> 
+
+Will do.
+
+>> +
+>> +    if (dloc->fb_cfa) {
+>> +        u64 ip = dloc->ms->sym->start + dl->al.offset;
+>> +        u64 pc = map__rip_2objdump(dloc->ms->map, ip);
+>> +
+>> +        if (die_get_cfa(dloc->di->dbg, pc, &fbreg, &fboff) < 0)
+>> +            fbreg = -1;
+>> +    }
+>> +
+>> +    /* Check stack variables with offset */
+>> +    if (dreg == fbreg || dreg == state->stack_reg) {
+>> +        struct type_state_stack *stack;
+>> +        int offset = dreg == fbreg ? reg_offset - fboff : reg_offset;
+>> +
+>> +        tsr = &state->regs[sreg];
+>> +
+>> +        stack = find_stack_state(state, offset);
+>> +        if (stack) {
+>> +            if (!stack->compound)
+>> +                set_stack_state(stack, offset, tsr->kind, &tsr->type,
+>> +                        tsr->offset, tsr->imm_value);
+>> +            /*
+>> +             * If it's a compound type, it means attempting to
+>> +             * write to a member value of the compound type without
+>> +             * changing the compound type itself, so do nothing.
+>> +             */
+>> +        } else {
+>> +            findnew_stack_state(state, offset, tsr->kind, &tsr->type,
+>> +                        tsr->offset, tsr->imm_value);
+>> +        }
+>> +
+>> +        if (dreg == fbreg) {
+>> +            pr_debug_dtp("%s [%x] reg%d -> -%#x(stack)",
+>> +                     insn_name, insn_offset, sreg, -offset);
+>> +        } else {
+>> +            pr_debug_dtp("%s [%x] reg%d -> %#x(reg%d)",
+>> +                     insn_name, insn_offset, sreg, offset, dreg);
+>> +        }
+>> +        if (tsr->offset != 0) {
+>> +            pr_debug_dtp(" reg%d offset %#x ->",
+>> +                     sreg, tsr->offset);
+>> +        }
+>> +        pr_debug_type_name(&tsr->type, tsr->kind);
+>> +    }
+>> +    /*
+>> +     * Ignore other transfers since it'd set a value in a struct
+>> +     * and won't change the type.
+>> +     */
+>> +
+>> +    return 0;
+>> +}
+>> +
+>> +static void update_store_insn_state(struct type_state *state,
+>> +                    struct data_loc_info *dloc,
+>> +                    struct disasm_line *dl,
+>> +                    struct annotated_op_loc *src,
+>> +                    struct annotated_op_loc *dst)
+>> +{
+>> +    int reg_offset = get_reg_index_offset(dst);
+>> +    const char *insn_name = src->multi_regs ? "stp" : "str";
+> 
+> This misparses the exclusive stores. For stxr w2, x1, [x0] the left
+> operand is "w2, x1", so multi_regs is true and the handler treats it
+> as stp: it records w2's type (the status output, possibly stale) at
+> the base offset and the real data register x1 at offset + reg_size,
+> and w2 - which the instruction writes - is never invalidated. stxp
+> is worse since its third source register is dropped entirely.
+> 
+> Maybe restrict the propagation to str/stp explicitly and handle the
+> stxr/stlxr/stxp/stlxp family separately: their first source register
+> is actually a destination and should be invalidated, with only the
+> remaining register(s) propagated (or just skip propagation for them
+> if that's simpler).
+> 
+
+Agreed. For now, we should restrict the propagation to only apply to
+regular store instructions like str/stp. I'll strengthen the instruction
+matching to ensure exclusive stores are excluded.
+
+>> +    /* Handle the first source register */
+>> +    propagate_store_reg_state(state, dloc, dl, src->reg1, dst->reg1,
+>> +                  reg_offset, insn_name);
+>> +
+>> +    /* Handle the second source register (stp only) */
+>> +    if (src->multi_regs) {
+>> +        int reg_size = arm64__reg_size(dl->ops.source.raw);
+>> +
+>> +        if (reg_size >= 0)
+>> +            propagate_store_reg_state(state, dloc, dl, src->reg2,
+>> +                          dst->reg1, reg_offset + reg_size,
+>> +                          insn_name);
+> 
+> 
+> Same reg_size-from-first-register pattern as the load side, so the
+> element-size caveat from that patch applies here too.
+> 
+
+For store instructions, there doesn't seem to be a special element-size
+instruction like ldpsw on the load side, so using the register size
+should be sufficient here (please correct me if I'm wrong). That said,
+I agree that renaming "reg_size" to "elem_size" would make the code
+more accurate and self-explanatory. I'll update it accordingly.
+
 Thanks,
-Usama
+Tengda
 
