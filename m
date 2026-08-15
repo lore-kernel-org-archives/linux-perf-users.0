@@ -1,67 +1,67 @@
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BCE29898F
-	for <linux-perf-users@vger.kernel.org>; Sat, 15 Aug 2026 08:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAC5D29898F
+	for <linux-perf-users@vger.kernel.org>; Sat, 15 Aug 2026 08:20:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786782054; cv=none; b=Yg+mTvrjdDuqlvtapFIyktxvJhovAyRhfPF6pZ4sAzEf3fiEb6dKUoMxH3KO8wxMhpcaA5pW36LPwf8CY1aM4deDlM9NQjAH2KZZd3EGXnKurZOWLGqJhF7BbQPyjZqgharmuMfmLsv82LrlxG+EaR4kDfFI4wIb3+ByKZbh1lM=
+	t=1786782056; cv=none; b=F/IwqKj4Gw9y1/sQAx2lFSMWLNds8UYb3x0jFQKzQtkPLf3wWnGs2qLEGkDTrTrEHUf0UkBcxXZjExKCjq87MwFWf7OO9xWmHZQ6Qm9nqkLoBCRbQad/d/hoAWABve4NZoMxE7xFHesvK+PKZeBmJr1bmKeiSoDJaNqcvuAL6Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786782054; c=relaxed/simple;
-	bh=joZPwUMBZq1OY427gZuemf1gCy+iSzbkz3Hq1yQr0Gk=;
+	s=arc-20240116; t=1786782056; c=relaxed/simple;
+	bh=vrI40E/Ms/vPd/wWV7KFBBB0zzHgTqy9wJtZ/LzBk3w=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Lr//I1xJ1uyBqfDfEBRWrDXelFZvUmim/GoCzGU3SIh5ga4tr88xEMbdBHlTj1/wWJmACzEPv+A6cUNRMI952zE35oxo6Xzppuq+/dvNPweWCb3wVwDc2QcFzp+Ois3rnOY9y1jDMdvpiWkn+1tGZOT9tL65QcSxeY23KJMBHIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jFudVHjw; arc=none smtp.client-ip=209.85.214.197
+	 To:Cc:Content-Type; b=mXOLHpHaGboS+KuylVO61Ocd+bZH86Gejw31TsfiM9aiWFoqS++CGl4FkJH6RDjdAP74tynsjRATOQ9bhaAwKlpSOTu2rS04wG0Q2dw8IxFb8Otqh8KrE3qN0Cj+7b6aFv0ihZmP4zH/G7cPD4lxWiEWFaWIwKFnj2LXh1RkhvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dMTfcKyK; arc=none smtp.client-ip=209.85.215.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jFudVHjw"
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2cca3673560so28269895ad.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 15 Aug 2026 01:20:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dMTfcKyK"
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cbedbd182f5so1230871a12.1
+        for <linux-perf-users@vger.kernel.org>; Sat, 15 Aug 2026 01:20:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786782052; x=1787386852; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1786782054; x=1787386854; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=OdsGJg3/bnI8gejy/gpQo+aRW64eJvTmzTGE3VoGfbc=;
-        b=jFudVHjwBNZtFcgJ9WQ8RrN/lQuo4UFG4q6g2bw8jOK64DN4Kho3YtdDzwn/TGbZks
-         L5cMBqrAOfqbyzPULxkgESPOfd5Ln88GWBfI/QLFurv/PJ+5ulQykUrsb+VrSRbasC0P
-         CviiqTZe14ZaWzg3oqtTdVtZaYAcp6wuasKKS9ikK22UzGC0TTf/vSWz9oEhlllM+ybT
-         iVPLLWo529gZCwtS+SZdgYC4FoR4yod3YRE7mOXBki0Q5l9Yo9r27aWcvGZkfB9lClQI
-         /DZfeNzAn/WXpoXf7747GWROjlVH6mjP/WgDmUN63XluunUCivoNqglG+U+Ux3rnbDhh
-         9a9g==
+        bh=q6KgjyY8PrTJFFkciS7ilG7nrDbtEQyBC0oLhg67UQQ=;
+        b=dMTfcKyKV+JUOcaRr2TAboZ18Pj+R/01XrqsRc85/VX+k5gDT00YWyFgu1PpzQRe+e
+         wfn6AfTAVQcgvjIqVrvz7vM2y8CbIebl5gJrjBCkDYanebn+hmOk3rfnN5ylpoHLN38S
+         cd6ethK6dJjMl8lUHdMwHRWRoNqwnaUK9+tLl7+25kVf2eVoK4sSQ1OfRrCPaPbwcyRF
+         Jx5DP3T/lBXwGiEobLrqNvSQ1kREdqfA1zLPkLPypuQMso57iDQNR6qKuyMZ6+yI65+N
+         Ek5Ll3oBP3rpxzekIrgNilET8x2SJQG5QoLhzcXk/WeZ4qJ8miiXtE4pPYj2k5RQtAL4
+         gZIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786782052; x=1787386852;
+        d=1e100.net; s=20251104; t=1786782054; x=1787386854;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=OdsGJg3/bnI8gejy/gpQo+aRW64eJvTmzTGE3VoGfbc=;
-        b=YSCNadh5/xfEn3FalVDCGb+rZNORPHW8zYQSzLTnVeLkvmiWNoptQzCQqfF5HUjDFf
-         HvkUHwRAigq9FOFjL5eGY6A+o0iLCfobBliaoEQJ0Ve2qF2PZ4BABc5L0/mlQxBXzOH1
-         DaXeCRwhTpHhCUERuc3VlKbrZX+9BZcbr9/7+ZuE+UthRPLsy99NucfGlpM0u531TSOp
-         8O4kz8yukuJE68vljF2LIrMF1hiu4TVWPyDaD5uqLBH/fLtt1PxZzB+37cPgy2JqcgYf
-         zp1QXY03kU/UWF/UWWd8+gQP4rgC+gPTnXj8SgKE/CwmGw03WGKWHw3PLjjG6A6OzPat
-         anGw==
-X-Forwarded-Encrypted: i=1; AHgh+RpCFvv2blmHjrejhuvCWX92HF37SR5p5UFCS1AyS3PdwHTJajLvY/Im0W7w7Kyc3++mPVJ5HZr+h1t7ZJDBDEvG@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOhSy1YW4cuDWCwg0wOlwujEqZb8BNSeYZt1FdN1TsNdmkmPmm
-	MNnRc95S6Q2+P2AMgcZ6O47Ck9bcsoMQ9DDdOQnZP9CA0HP4NPU3SuzI46dlqrXA3fd4GYanFW1
-	khEHZYyENLg==
-X-Received: from dybmx7.prod.google.com ([2002:a05:7300:d407:b0:315:3174:2b9])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:26c7:b0:2ba:6518:a6d4
- with SMTP id d9443c01a7336-2d3b0cb5ceemr140411845ad.20.1786782051879; Sat, 15
- Aug 2026 01:20:51 -0700 (PDT)
-Date: Sat, 15 Aug 2026 01:20:45 -0700
-In-Reply-To: <cover.1691900000.git.irogers@google.com>
+        bh=q6KgjyY8PrTJFFkciS7ilG7nrDbtEQyBC0oLhg67UQQ=;
+        b=FT5knxCpDRmtKOqVYZg20aOMD/jrNT+9I1O0Ei4R3V61WT6RJnc/Hdos/pI2vLGpom
+         b8kfbQZlR0Rb/euPREpiVA/2BxJN0WGzZeVsqosp9k0OuW0SeDmBS5f/B+GtgxthVqI6
+         EQ00zQbi6tKVAjDODhUJtIVMFykMK8o+PekF/Sh98dKjz6RhcI6phlb5kBGQzLjmgVXV
+         wT4+3Z29IDb5KEKH0nqXTi73YGr3f3Ooi+wHDYGj5vkyZNJ+Ap6Ti0ILVyl7AzFO21S8
+         EPpvfQoXCIIec3DFLP2EZzHuaP4pCcC8spEEpnubYhkWTCccn2iutT90UncOOP2b6Ux6
+         bOVg==
+X-Forwarded-Encrypted: i=1; AHgh+RqWEVqWABai4vlrHck4OcHTP/QkkNjMySuw0+hyephn+/xtmlKmASdli7AIadINr2gQ0ZM0/Sj7iy9lr3l3z1Mz@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlrA6djePr0VDESXByYCzn/KML7aDaXEUMsK+Qty24Tc46aWcv
+	kZyoSHJKPO2annsLiTx0k8ixWVdFUdrZ3sZXM76bDkTlgHURDMRmUx4y8rS/T6DN1ttQBR2TV56
+	SZwJJoP75lQ==
+X-Received: from dlj31.prod.google.com ([2002:a05:7022:51f:b0:13b:848c:abaf])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:54c3:b0:387:d9cc:7dc3
+ with SMTP id 98e67ed59e1d1-3931f61cca5mr15778918a91.21.1786782053769; Sat, 15
+ Aug 2026 01:20:53 -0700 (PDT)
+Date: Sat, 15 Aug 2026 01:20:46 -0700
+In-Reply-To: <20260815082048.4043217-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <cover.1691900000.git.irogers@google.com>
+References: <cover.1691900000.git.irogers@google.com> <20260815082048.4043217-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.691.gc56d675ccc-goog
-Message-ID: <20260815082048.4043217-1-irogers@google.com>
-Subject: [PATCH v12 0/3] perf: Add Raspberry Pi AXI PMU driver
+Message-ID: <20260815082048.4043217-2-irogers@google.com>
+Subject: [PATCH v12 1/3] dt-bindings: perf: Add Broadcom Raspberry Pi AXI PMU definition
 From: Ian Rogers <irogers@google.com>
 To: irogers@google.com, linux-perf-users@vger.kernel.org, 
 	linux-rpi-kernel@lists.infradead.org, 
@@ -69,91 +69,90 @@ To: irogers@google.com, linux-perf-users@vger.kernel.org,
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Motivation & Background
-==============================
-Currently, Linux lacks a standard perf-API compatible driver for the
-Broadcom AXI performance counter blocks on Raspberry Pi platforms. Prior
-out-of-tree vendor solutions relied on custom debugfs nodes and ad-hoc
-kthreads, preventing integration with standard Linux perf tooling (`perf stat`,
-`perf list`, etc.).
+Add Device Tree bindings for the Broadcom AXI PMU hardware blocks present
+in the Raspberry Pi SoC line (BCM2835, BCM2711, BCM2712).
 
-This driver implements standard `struct pmu` hardware uncore callbacks
-under `drivers/perf/`, exposing human-readable sysfs event aliases, unit
-scaling (`Bytes`), and bus filtering directly to user space.
+Depending on the SoC and security configuration, these PMUs support either
+direct MMIO access or routing via the Raspberry Pi firmware Mailbox IPC.
+The bindings support defining 1 or 2 backing MMIO regions natively map
+the system and VPU control surfaces.
 
-Key Architectural Improvements & Features
-==============================
-1. Standard Linux Perf Integration:
-   - Exposes uncore AXI interconnect events via `/sys/bus/event_source/devices/rpi_axi_pmu/`.
-   - Supports event sampling and hardware counter accumulation (`local64_add`),
-     automatically managing 31-bit hardware counter wraparound across high-bandwidth
-     interconnect transfers.
-
-2. CPU Hotplug Support (`cpuhp`):
-   - Registers dynamic CPU hotplug notifiers (`CPUHP_AP_ONLINE_DYN`).
-   - Automatically migrates PMU context (`perf_pmu_migrate_context`) to an online
-     CPU core when a designated CPU goes offline, safely guarding memory teardown boundaries.
-
-3. Hybrid Memory-Mapped & Mailbox Work Queue Architecture:
-   - System Monitor (MMIO): Performs fast atomic-safe memory reads (~15ns)
-     directly mapped over ARM physical memory space (`MON_SYSTEM`).
-   - VPU Monitor (Mailbox IPC): For Broadcom BCM2835-BCM2711 platforms (RPi 1-4),
-     VideoCore VPU monitor IPC calls are offloaded to process context via a dedicated
-     workqueue (`vpu_work`) and serialized under `vpu_mutex`. This avoids atomic
-     sleeps or blocking in timer/interrupt context.
-
-4. SoC Generation Support:
-   - Patch 1 documents device bindings for Broadcom.
-   - Patch 2 adds core driver support for Broadcom BCM2835-BCM2711 (RPi 1-4).
-   - Patch 3 expands support for Broadcom BCM2712 (Raspberry Pi 5), adding PCIe RP1
-     Southbridge links, HEVC decoder, HVS display engine, and Cortex-A76 DSU L3
-     interconnect monitoring dynamically via native MMIO readouts.
-
-Hardware Validation
-==============================
-The driver has been rigorously validated on real hardware:
-- Raspberry Pi 400 (BCM2711): Validated System L2, ARM CPU, and VideoCore
-  VPU firmware mailbox IPC performance counters organically spanning
-  multi-slice multiplexing boundaries.
-- Raspberry Pi 5 (BCM2712): Validated live byte throughput across HVS
-  display refresh cycles, Cortex-A76 DSU L3 interconnect memory traffic,
-  and PCIe RP1 Southbridge transfers independently configuring `bcm2712_`
-  filters.
-
-Changes since v11
-==============================
-- Decoupled sysfs attribute groups into distinct bcm2835
-  (`rpi_axi_pmu_bcm2835_attr_groups`) and BCM2712
-  (`rpi_axi_pmu_bcm2712_attr_groups`) arrays dynamically assigned
-  during probe based on `.chip`. This officially completely
-  eradicates the runtime penalty of scraping string prefixes in
-  `.is_visible`.
-- Discovered and mitigated a CPU hotplug TOCTOU race vulnerability
-  during `rpi_axi_pmu__init` initialization boundaries by introducing
-  precise `cpus_read_lock()` atomic block wrapping around the pmu
-  registration logic.
-- Resolved transient probe dependencies by returning -EPROBE_DEFER
-  natively when the mailbox firmware surface has not yet booted,
-  preventing silent MMIO fallback.
-- Addressed multiple stylistic and naming feedback nits (renamed
-  variables using 'pitch' to 'stride', replaced invalid leading
-  underscores in function prototypes, and formally introduced the
-  MODULE_AUTHOR tag).
-- Maintained strict patch separation between BCM2835 Mailbox proxy
-  interfaces and BCM2712 native MMIO hardware extensions to streamline
-  architectural review parsing.
-
-Ian Rogers (3):
-  dt-bindings: perf: Add Broadcom Raspberry Pi AXI PMU definition
-  perf: Add Raspberry Pi BCM2835 AXI PMU driver
-  perf: Add Raspberry Pi 5 (BCM2712) AXI PMU support
-
- .../bindings/perf/brcm,bcm2835-axiperf.yaml   |   64 +
- drivers/perf/rpi_axi_pmu.c                    | 2890 +++++++++++++++++
- 2 files changed, 2954 insertions(+)
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ .../bindings/perf/brcm,bcm2835-axiperf.yaml   | 64 +++++++++++++++++++
+ 1 file changed, 64 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml
- create mode 100644 drivers/perf/rpi_axi_pmu.c
 
+diff --git a/Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml b/Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml
+new file mode 100644
+index 000000000000..8f8686f67337
+--- /dev/null
++++ b/Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/perf/brcm,bcm2835-axiperf.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Broadcom BCM2835/2711/2712 AXI Performance Monitor
++
++maintainers:
++  - Ian Rogers <irogers@google.com>
++
++description: |
++  The Broadcom BCM2835 series (including BCM2711 and BCM2712) features hardware
++  performance monitors on the AXI bus for evaluating memory bandwidth and
++  system traffic. Depending on the SoC architecture, multiple monitors exist.
++  The primary
++  monitor evaluates the System fabric, while the secondary monitor evaluates the
++  VideoCore VPU hardware.
++
++  Older silicon generally restricts direct MMIO access to the VPU endpoints,
++  requiring them to be accessed over the Raspberry Pi firmware mailbox
++  interface. If the VPU endpoints are memory-mapped, they are supplied as
++  secondary resources.
++
++properties:
++  compatible:
++    enum:
++      - brcm,bcm2835-axiperf
++      - brcm,bcm2711-axiperf
++      - brcm,bcm2712-axiperf
++
++  reg:
++    minItems: 1
++    maxItems: 2
++    description: |
++      Memory-mapped I/O resource regions for the AXI PMU endpoints.
++      Typically ordered as System monitor, followed by VPU monitor if directly
++      mapped.
++
++  firmware:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      Phandle to the Raspberry Pi firmware node. Required on older silicon
++      (BCM2835-BCM2711) where VideoCore VPU endpoints are exclusively accessed
++      via firmware mailbox IPC.
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    pmu@7e00a000 {
++        compatible = "brcm,bcm2835-axiperf";
++        reg = <0x7e00a000 0x100>;
++    };
++  - |
++    pmu@7d620000 {
++        compatible = "brcm,bcm2712-axiperf";
++        reg = <0x7d620000 0x100>,
++              <0x7d630000 0x100>;
++    };
 -- 
 2.55.0.691.gc56d675ccc-goog
 
