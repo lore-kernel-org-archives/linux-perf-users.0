@@ -1,114 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1766230F958
-	for <linux-perf-users@vger.kernel.org>; Sat, 15 Aug 2026 08:33:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A8128150F
+	for <linux-perf-users@vger.kernel.org>; Sat, 15 Aug 2026 13:06:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786782811; cv=none; b=IcdQu/B4wfV9R8mbcoWXcXbXtQX/Zc1CY2dnWYsoGgXpMuGB2GcDU7sGcvhe2TfN6Gwko1Q53peuqQpwcccGG1ZbmPrZI1z0agJoGOseNTFKIvO15Lyidx7YyzVtEzlaXxgtBz3OLC0C4yBsZ9aZmb+SjpUto+B0seuSdFk792w=
+	t=1786799225; cv=none; b=PLnm4FF4t8pDNEBBJJlKbLYLWucrToCveoO9tqR9XElD1noHmkJiIHiFpia8ukWWmu635Z1B7sUg6pNgq9d5gTZNhWi7w58dPVAjtApsOWahaEa/LJSfbbfo8fVVUSr4KGijoreRqwLR/JXRBcSTC7VRRiy0t6JHw4zDrzPopLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786782811; c=relaxed/simple;
-	bh=V/eXk4IUtNq90e7QRL148PQkzy4hlY1ZyzdmZYRu53Q=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=P+U3Pj4t1jH9uOwPOayb8F1pleWhazRpwNt+7LFg4YhhSgODJxr8dhmq4jqbvKczZYMht9eP2MgpStDDWYCmWPB9U29s5/qz59l0Jq1Oy7P9lXkeRYdjJuUBT3Gc4Qh2B69AWPgu+Dj67LZXCuxkd0/seniiulbiGMdD7ca16vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQw/tcSA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786799225; c=relaxed/simple;
+	bh=GSch8juP5e4LArReeeyVhaNfw3KQo3wjbP+UHRep3ic=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sjC+UAjssnckaFtUSYkraldK6hp8rX68aPDA+dBBH9Wr0gJBbz2d18TlrpsfBq90CbQ6HnQpl9ugxjr6FuLnPRVMCHN2jMCSsLYXAd0fxiNZiEnADqGseKJNYUQvwiOrxm422TExIniohsK7eps407ZF/9B4bYyU2ENCohldwPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ldTfBf2H; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQw/tcSA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 986B51F000E9;
-	Sat, 15 Aug 2026 08:33:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ldTfBf2H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E1281F000E9;
+	Sat, 15 Aug 2026 13:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786782809;
-	bh=RI6fDVeTuBWJ6i/Xhnb6sXfMlPbXatVoqf7+SPgjeKA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iQw/tcSACjonTtl+kbGQPxBv0sTf7vZQwlqM9NoYccnFjQVoa6fytNW86thFlyQ6n
-	 srgPezkpn4ge6vhRXwd8BFjgMUO5b/3YNW15j/iqGWen9XcRaeUhIl3C9ybHaRAyxw
-	 jLagxUq8p4/LHs2XYOtWTxjqx1vfytWN8Sj1TWdA0ZjDASHueUmRkvB0ZpW1V2Czmf
-	 EAfgZen1b4xKmfFu9PhcqSBHKByfFTSvaeh7bXxH3Ev8lNciDnYa2tyeL8IchLgplF
-	 yIiZfhhVMCWl/jRuQWqYE4E+lZCe3u1JbnlyS4JzF3a8kkUEtOTAUGoDQwvSXFLMPH
-	 JLU8dog4GWdQQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v12 3/3] perf: Add Raspberry Pi 5 (BCM2712) AXI PMU
- support
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260815082048.4043217-4-irogers@google.com>
-References: <cover.1691900000.git.irogers@google.com>
- <20260815082048.4043217-1-irogers@google.com>
- <20260815082048.4043217-4-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 15 Aug 2026 08:33:29 +0000
-Message-Id: <20260815083329.986B51F000E9@smtp.kernel.org>
+	s=k20260515; t=1786799217;
+	bh=zo039R+BXbMpPTTeWrfY2cZis3zctBWfW3buv4PURhY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=ldTfBf2HoQolQUnsZoN+RPAgGSF0iRD6I8DTZRX7Q1cq/zBUlbUjuCDkRFqGnDE0+
+	 LgIdKEC3QMCnvx2ChpYy4Bdv5jJEvKWwuVXVT0CRwq1toNyTMhVa/q2GUn+DxlnCK6
+	 Ev1xzqoJsxfNG0mFi+P9obDPO2NTM/P0nDW7QIguucOVSADJIIF33HzjZUr/cTJNi3
+	 IGe0qDbtq0cUHj/DEvjqG1ywvN0+nUWvzQB6ZAXunVx28xo9HwMQsHwe/NAVwbrkEd
+	 21KrHpdwTiYkkMsg60bezanvulQniX0HYv5h6JLDxKGWLobtOiAlrAZvbBW9DNM3Ei
+	 Mgdn99nfhPVYg==
+Date: Sat, 15 Aug 2026 22:06:54 +0900
+From: Namhyung Kim <namhyung@kernel.org>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: acme@kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] perf tools: Add support for displaying weights in
+ annotate
+Message-ID: <aoBkboxcdvAEBAHx@google.com>
+References: <20260813211109.240689-1-ak@linux.intel.com>
+ <20260813211109.240689-4-ak@linux.intel.com>
+ <an6zgXlyzPZ_2pI-@google.com>
+ <an8p-1D0jNgE8P4T@tassilo>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <an8p-1D0jNgE8P4T@tassilo>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The patch omits the actual sysfs string definitions and array en=
-tries for BCM2712 CPU L2 events (bus 14) and all BCM2712 Master ID Filtered=
- events, despite adding block comments explicitly advertising them.
---
+On Fri, Aug 14, 2026 at 07:45:15AM -0700, Andi Kleen wrote:
+> On Fri, Aug 14, 2026 at 03:19:45PM +0900, Namhyung Kim wrote:
+> > >  	 * symbol and are missed.
+> > > @@ -719,6 +720,8 @@ int cmd_annotate(int argc, const char **argv)
+> > >  	OPT_BOOLEAN(0, "tui", &annotate.use_tui, "Use the TUI interface"),
+> > >  #endif
+> > >  	OPT_BOOLEAN(0, "stdio", &annotate.use_stdio, "Use the stdio interface"),
+> > > +	OPT_BOOLEAN(0, "no-weights", &symbol_conf.hide_weight,
+> > > +		    "Hide weight columns in annotation"),
+> > 
+> > Can it be just "weights"?  Then we would get --no-weights for free. :)
+> > Of course, the help message needs to say differently.
+> 
+> Sure I can rename it.
+> 
+> BTW this was the v2 with the broken white space hunks, please ignore or look at v3.
 
---- Patch [3]: [PATCH v12 3/3] perf: Add Raspberry Pi 5 (BCM2712) AXI PMU s=
-upport ---
-commit 98bc0717543a8bd621987519c302f6eacbe4544d
-Author: Ian Rogers <irogers@google.com>
-perf: Add Raspberry Pi 5 (BCM2712) AXI PMU support
+Ok, will do.
 
-This commit introduces native MMIO-based AXI Performance Counters support
-for the BCM2712 architecture (Raspberry Pi 5). It bypasses the legacy VPU
-Mailbox IPC layer and defines the mapping arrays for the new endpoints.
+Thanks,
+Namhyung
 
-> diff --git a/drivers/perf/rpi_axi_pmu.c b/drivers/perf/rpi_axi_pmu.c
-> index eda831d66056f..a7e832df49d39 100644
-> --- a/drivers/perf/rpi_axi_pmu.c
-> +++ b/drivers/perf/rpi_axi_pmu.c
-
-[ ... ]
-
-> +PMU_EVENT_ATTR_STRING(cpu_uc_wtrans.scale, rpi_axi_pmu_event_bcm2712_cpu=
-_uc_wtrans_scale,
-> +		      "32");
-> +PMU_EVENT_ATTR_STRING(cpu_uc_wtrans.unit, rpi_axi_pmu_event_bcm2712_cpu_=
-uc_wtrans_unit,
-> +		      "Bytes");
-> +
-> +/* BCM2712 Master ID Filtered Events */
-> +
-> -static struct attribute *rpi_axi_pmu_events_attrs[] =3D {
-> -	/* System Monitor events */
-> +static struct attribute *rpi_axi_pmu_bcm2835_events[] =3D {
-
-[Severity: Medium]
-Are the actual sysfs string definitions for the BCM2712 Master ID filtered
-events and CPU L2 events (bus 14) missing here? The block comment advertises
-the Master ID filtered events, but the code immediately transitions into the
-rpi_axi_pmu_bcm2835_events array. Without these definitions, they will not
-be exported for use by the perf tool.
-
-[ ... ]
-
-> +	&rpi_axi_pmu_event_bcm2712_cpu_uc_rtrans.attr.attr,
-> +	&rpi_axi_pmu_event_bcm2712_cpu_uc_rtrans_scale.attr.attr,
-> +	&rpi_axi_pmu_event_bcm2712_cpu_uc_rtrans_unit.attr.attr,
-> +	&rpi_axi_pmu_event_bcm2712_cpu_uc_wtrans.attr.attr,
-> +	&rpi_axi_pmu_event_bcm2712_cpu_uc_wtrans_scale.attr.attr,
-> +	&rpi_axi_pmu_event_bcm2712_cpu_uc_wtrans_unit.attr.attr,
-> +	NULL,
-> +};
-
-[Severity: Medium]
-Does the rpi_axi_pmu_bcm2712_events pointer array end prematurely? It appea=
-rs
-to stop after configuring the cpu_uc events (bus 13) and entirely lacks
-pointers for the CPU L2 (bus 14) and Master ID filtered features, meaning t=
-hey
-won't be exposed via sysfs.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260815082048.4043=
-217-1-irogers@google.com?part=3D3
