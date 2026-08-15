@@ -1,507 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47902AEF5
-	for <linux-perf-users@vger.kernel.org>; Sat, 15 Aug 2026 13:16:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B8C31F9A5
+	for <linux-perf-users@vger.kernel.org>; Sat, 15 Aug 2026 17:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786799768; cv=none; b=MKhWwFEgBinVjtcYFJNamFC8I/anV8HhzTdt+HF2ZwiQExzkOp5eTguSHN2H5u/FLsVQXU5WilYCslkZccc20hghG2rP2SquKGZ+qnuqqbaLg+HxDj04wPIs9WCWY6RHHUFL/qBzsSgJxth1XFDK5zh4puMN2j8mLJtutJHLw7g=
+	t=1786814855; cv=none; b=de6TKXD/8VmOlIZG/gmqWg7A+grvbUKf0DnuoqFn/Dusx3It3GvSyQ9CzlgVEl3sA/qAn4i3QM16RPPW18hSQzmqhj4aVS+k8zG7DRzy/kxCxhRq+lOxBFkEOomQ4n5uANyNUbOmv9PIv1fO4uBwGhEbBueXASgdODVHY3B5n2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786799768; c=relaxed/simple;
-	bh=BB6NxHnAdOBiC//vVIGWAGX/UMUu6cR4HKhRA+o9nwk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TxZCeb4yUdFn0DyEXoyXfPX6vkTVpnYBgzKOJa1npTAwIbYpZppOC+uOpo7+nl6CzqYk6rB4Tp9w2gbKluA4JgekQ7myqW5G/AgPRKnUFCGPkXN0RYV+mKKDD2TrJvXPigQDqCIk2eNAhKS3gZIH5KxiyTVVNDDyTqJSOOrDavk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KA59gVDB; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786814855; c=relaxed/simple;
+	bh=BT5cfBMLz4ljJRS5Hk3JROHyAarInN3gTbVUQkbqnKM=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=mnk+LbsTIUJsBj7MnIvyR8xCyud4HMUhq4N1lvqtylpNGq8U6e0XqmXuf1aZVfUA44M0RPp02d6hHTHKSPIqq0qiryyObm23SpTbVHsMplGwvrWkalEbEXP3T0Wp6kmbMKloz1/0rmkFK+LDVAsxrVOpU1yE+k39STkqSEEa75Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vRaw3bRp; arc=none smtp.client-ip=209.85.215.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KA59gVDB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D29241F000E9;
-	Sat, 15 Aug 2026 13:16:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786799765;
-	bh=UTeNNjkIWrT/wWirImPLBsqUbfzLPnpAXcBc1Z7Q+iA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=KA59gVDBwdRomSRUZ3NIYImeZ65meeD6h5mFyOgW1y0iIWipOxmD+UnToW8Nd81V8
-	 ei+ZRghStDDckUeQO1QXOyEfSwh/e0fpmfwhdozMOwcng+NZkthAIoLS/Rp+5flJtB
-	 pq8Vk3Pn6t0pa6tpEwZsgpYKk+59PJnBd/yt0qnAh5ZLz3TvFqUivXOXpr1cUR1ASg
-	 +uRd9+J4S0Ou0QaD1oUTICKRESYB9PnIqfogXCCDkylt42vEw8oKfk/1pzX7QjwEso
-	 ZFrIYv6VthwLAWjTZXzFfhKcy1ykFvWA4TZyM/QyRrFYUoR1nqXzQCG1ngfA+mByAh
-	 5ar9uebNZLDvw==
-Date: Sat, 15 Aug 2026 22:16:02 +0900
-From: Namhyung Kim <namhyung@kernel.org>
-To: Andi Kleen <ak@linux.intel.com>
-Cc: acme@kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 3/4] perf tools: Add support for displaying weights in
- annotate
-Message-ID: <aoBmkvP8il1TI9V-@google.com>
-References: <20260813214143.253418-1-ak@linux.intel.com>
- <20260813214143.253418-4-ak@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vRaw3bRp"
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-cbedc1899f7so1217072a12.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 15 Aug 2026 10:27:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786814852; x=1787419652; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=zRir0jKcwf5JyTfl0WhTdOqzrrIy+7c+DcZ//dpq500=;
+        b=vRaw3bRpPhKkfUQJJtKdS/tIYtHOtcc2MQ5aJG1ZbdGbH1OK001gFbMISol38jCGOT
+         oqHuizhBEZNw2afisnv6DH02cmNcDW7jlxFpcjA5D0HLLEAonXOGzVS2DwbgnhWkh6BH
+         HEvWRECHer4vD8KtVLu5eu8JcygyFhIiF7Qu7c0UVMJis72g3jbtNibeSWvzPgmpLYMD
+         bDFHAACbz2cHAZfYixZbcwuOjOuS4UImDNHYKlwyT7C6f3xkHHVSrjFmFliR1DoTPHFx
+         hHJH8119Nz+z0HLOgddGk8/Awm0FkFd1aWBbmSuLjFhPsTxELUtU3XMF/7wdw+z6wFYN
+         XPGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786814852; x=1787419652;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=zRir0jKcwf5JyTfl0WhTdOqzrrIy+7c+DcZ//dpq500=;
+        b=Zcu6paX0U1zMda62JIJi1rO3gLDLRUcINlptE/P+J7IfF4nxz/kobH5UijRm7NEwHz
+         iT7JocVowdqjVLtp+m2B7jbLCrP57jfoinDckAkU535VvoBT98tvcDo6Q+kYsSypHa5+
+         6eVpBlwn9JEufIW4o43JRxaqDoawVthQR04zwatEOOxDgP0ZDKSaq7hUcV4MagopUn+4
+         kzzuKDrAA7Gjs92LNLM3MzT3IrfVFCqKoadVl3xuuLKLCoVxUTb0be9F+D/GW57CzY8S
+         sCM4rGVzbgltye8vaom8aaklsyeppzNrDCila5WhlIsc7DwD+XZFGc9Gxpy3GwIiMTQj
+         Xm0Q==
+X-Forwarded-Encrypted: i=1; AHgh+RoQHW02OgwQcoGXSX2g8jmiWRiTrTwL+oIBocc/tFdt1IC+l5e9GEoqAu8azORQeLKs/RdLh/C1KXVOTxBihnNe@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjTMwf2RYVwrgT8Oh9WNLnphX7kgq1vZI77Q5SCKMha9s+PYXr
+	rj3Y1zEtxcRvWL4zq+6DaJZdyvOmjq6bhkUvcgVfm31buJltNTndmsDDqLUc9MByfIyJyuClwj5
+	J7smQ2lGKMw==
+X-Received: from dlbpy7.prod.google.com ([2002:a05:7022:e987:b0:13b:92c7:dcf7])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:7f92:b0:3cc:9618:f51a
+ with SMTP id adf61e73a8af0-3cc9619062cmr2665890637.8.1786814852070; Sat, 15
+ Aug 2026 10:27:32 -0700 (PDT)
+Date: Sat, 15 Aug 2026 10:27:09 -0700
+In-Reply-To: <20260815082048.4043217-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260813214143.253418-4-ak@linux.intel.com>
+Mime-Version: 1.0
+References: <20260815082048.4043217-1-irogers@google.com>
+X-Mailer: git-send-email 2.55.0.691.gc56d675ccc-goog
+Message-ID: <20260815172712.50119-1-irogers@google.com>
+Subject: [PATCH v13 0/3] perf: Add Raspberry Pi AXI PMU driver
+From: Ian Rogers <irogers@google.com>
+To: irogers@google.com, florian.fainelli@broadcom.com, 
+	linux-perf-users@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	pbrobinson@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Motivation & Background
+==============================
+Currently, Linux lacks a standard perf-API compatible driver for the
+Broadcom AXI performance counter blocks on Raspberry Pi platforms. Prior
+out-of-tree vendor solutions relied on custom debugfs nodes and ad-hoc
+kthreads, preventing integration with standard Linux perf tooling (`perf stat`,
+`perf list`, etc.).
 
-On Thu, Aug 13, 2026 at 02:40:58PM -0700, Andi Kleen wrote:
-> Add support for showing all the three possible per IP weights in
-> annotate. The weights are shown by defaults if any are non zero. This
-> is useful, especially with the new insn lat statistics, but also
-> for all the existing weights.
-> 
-> Add a hotkey to the interactive browser to turn them off (w), as well
-> as a perf annotate command line option.
-> 
-> The weights are stored unconditionally in the sym_hist_entry, which
-> will increase memory consumption somewhat.
-> 
-> Assisted-by: omp:GPT-5.6-Luna
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> ---
->  tools/perf/Documentation/perf-annotate.txt |   3 +
->  tools/perf/builtin-annotate.c              |   2 +
->  tools/perf/ui/browsers/annotate.c          |  17 +++-
->  tools/perf/util/annotate.c                 | 110 ++++++++++++++++++---
->  tools/perf/util/annotate.h                 |  32 +++++-
->  tools/perf/util/symbol_conf.h              |  15 ++-
->  6 files changed, 161 insertions(+), 18 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-annotate.txt b/tools/perf/Documentation/perf-annotate.txt
-> index a688738809c4..50c6ea680d0d 100644
-> --- a/tools/perf/Documentation/perf-annotate.txt
-> +++ b/tools/perf/Documentation/perf-annotate.txt
-> @@ -79,6 +79,9 @@ include::itrace.txt[]
->  
->  --stdio:: Use the stdio interface.
->  
-> +--no-weights:: Hide weight columns in annotation output. By default, weight columns
-> +	are shown when samples contain non-zero weights.
-> +
->  --stdio2:: Use the stdio2 interface, non-interactive, uses the TUI formatting.
->  
->  --stdio-color=<mode>::
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> index 69cb72b2082a..7f489e2af333 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -719,6 +719,8 @@ int cmd_annotate(int argc, const char **argv)
->  	OPT_BOOLEAN(0, "tui", &annotate.use_tui, "Use the TUI interface"),
->  #endif
->  	OPT_BOOLEAN(0, "stdio", &annotate.use_stdio, "Use the stdio interface"),
-> +	OPT_BOOLEAN(0, "no-weights", &symbol_conf.hide_weight,
-> +		    "Hide weight columns in annotation"),
+This driver implements standard `struct pmu` hardware uncore callbacks
+under `drivers/perf/`, exposing human-readable sysfs event aliases, unit
+scaling (`Bytes`), and bus filtering directly to user space.
 
-You didn't change this.
+Key Architectural Improvements & Features
+==============================
+1. Standard Linux Perf Integration:
+   - Exposes uncore AXI interconnect events via `/sys/bus/event_source/devices/rpi_axi_pmu/`.
+   - Supports event sampling and hardware counter accumulation (`local64_add`),
+     automatically managing 31-bit hardware counter wraparound across high-bandwidth
+     interconnect transfers.
 
+2. CPU Hotplug Support (`cpuhp`):
+   - Registers dynamic CPU hotplug notifiers (`CPUHP_AP_ONLINE_DYN`).
+   - Automatically migrates PMU context (`perf_pmu_migrate_context`) to an online
+     CPU core when a designated CPU goes offline, safely guarding memory teardown boundaries.
 
->  	OPT_BOOLEAN(0, "stdio2", &annotate.use_stdio2, "Use the stdio interface"),
->  	OPT_BOOLEAN(0, "ignore-vmlinux", &symbol_conf.ignore_vmlinux,
->                      "don't load vmlinux even if found"),
-> diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-> index e47a46775089..d6126a7d51e4 100644
-> --- a/tools/perf/ui/browsers/annotate.c
-> +++ b/tools/perf/ui/browsers/annotate.c
-> @@ -189,7 +189,7 @@ static void annotate_browser__draw_current_jump(struct ui_browser *browser)
->  	struct map_symbol *ms = ab->b.priv;
->  	struct symbol *sym = ms->sym;
->  	struct annotation *notes = symbol__annotation(sym);
-> -	u8 pcnt_width = annotation__pcnt_width(notes);
-> +	u8 pcnt_width = annotation__pcnt_width(notes, ab->evsel);
->  	u8 cntr_width = annotation__br_cntr_width();
->  	int width;
->  	int diff = 0;
-> @@ -255,7 +255,8 @@ static unsigned int annotate_browser__refresh(struct ui_browser *browser)
->  {
->  	struct annotation *notes = browser__annotation(browser);
->  	int ret = ui_browser__list_head_refresh(browser);
-> -	int pcnt_width = annotation__pcnt_width(notes);
-> +	int pcnt_width = annotation__pcnt_width(notes,
-> +		container_of(browser, struct annotate_browser, b)->evsel);
->  
->  	if (annotate_opts.jump_arrows)
->  		annotate_browser__draw_current_jump(browser);
-> @@ -972,6 +973,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
->  		"O             Bump offset level (jump targets -> +call -> all -> cycle thru)\n"
->  		"s             Toggle source code view\n"
->  		"t             Circulate percent, total period, samples view\n"
-> +		"w             Toggle weight columns\n"
->  		"c             Show min/max cycle\n"
->  		"/             Search string\n"
->  		"k             Toggle line numbers\n"
-> @@ -1091,6 +1093,15 @@ static int annotate_browser__run(struct annotate_browser *browser,
->  				symbol_conf.show_total_period = true;
->  			annotation__update_column_widths(notes);
->  			continue;
-> +		case 'w':
-> +			symbol_conf.hide_weight = !symbol_conf.hide_weight;
-> +			symbol_conf.weight_mask_user = true;
-> +			symbol_conf.weight_mask = symbol_conf.hide_weight ?
-> +				0 : sym_hist__weight_mask(annotation__histogram(notes, evsel));
-> +			browser->b.width = notes->src->widths.max_line_len +
-> +					   annotation__pcnt_width(notes, evsel);
-> +			ui_browser__refresh_dimensions(&browser->b);
-> +			continue;
->  		case 'c':
->  			if (annotate_opts.show_minmax_cycle)
->  				annotate_opts.show_minmax_cycle = false;
-> @@ -1228,7 +1239,7 @@ int __hist_entry__tui_annotate(struct hist_entry *he, struct map_symbol *ms,
->  	browser.b.width = notes->src->widths.max_line_len;
->  	browser.b.nr_entries = notes->src->nr_entries;
->  	browser.b.entries = &notes->src->source;
-> -	browser.b.width += 18; /* Percentage */
-> +	browser.b.width += annotation__pcnt_width(notes, evsel);
->  
->  	if (annotate_opts.hide_src_code)
->  		ui_browser__init_asm_mode(&browser.b);
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index df70e95a8470..d1b691a61253 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -222,6 +222,7 @@ static int __symbol__inc_addr_samples(struct map_symbol *ms,
->  	u64 offset;
->  	struct sym_hist *h;
->  	struct sym_hist_entry *entry;
-> +	u64 weight = sample->weight ?: sample->ins_lat ?: sample->weight3;
->  
->  	pr_debug3("%s: addr=%#" PRIx64 "\n", __func__, map__unmap_ip(ms->map, addr));
->  
-> @@ -256,10 +257,28 @@ static int __symbol__inc_addr_samples(struct map_symbol *ms,
->  	entry->nr_samples++;
->  	entry->period += sample->period;
->  
-> +	if (sample->evsel->core.attr.sample_type & PERF_SAMPLE_WEIGHT_TYPE) {
-> +		entry->weight_sum[WEIGHT_WEIGHT] += sample->weight;
-> +		entry->weight_num[WEIGHT_WEIGHT]++;
-> +		if (sample->weight)
-> +			sym_hist__set_weight_mask(h, BIT(WEIGHT_WEIGHT));
-> +	}
-> +	if (sample->evsel->core.attr.sample_type & PERF_SAMPLE_WEIGHT_STRUCT) {
-> +		entry->weight_sum[WEIGHT_INSNLAT] += sample->ins_lat;
-> +		entry->weight_num[WEIGHT_INSNLAT]++;
-> +		entry->weight_sum[WEIGHT_WEIGHT3] += sample->weight3;
-> +		entry->weight_num[WEIGHT_WEIGHT3]++;
-> +		if (sample->ins_lat)
-> +			sym_hist__set_weight_mask(h, BIT(WEIGHT_INSNLAT));
-> +		if (sample->weight3)
-> +			sym_hist__set_weight_mask(h, BIT(WEIGHT_WEIGHT3));
-> +	}
-> +
->  	pr_debug3("%#" PRIx64 " %s: period++ [addr: %#" PRIx64 ", %#" PRIx64
-> -		  ", evidx=%d] => nr_samples: %" PRIu64 ", period: %" PRIu64 "\n",
-> +		  ", evidx=%d] => nr_samples: %" PRIu64 ", period: %" PRIu64
-> +		  " weight %" PRIu64 "\n",
->  		  sym->start, sym->name, addr, addr - sym->start, evsel->core.idx,
-> -		  entry->nr_samples, entry->period);
-> +		  entry->nr_samples, entry->period, weight);
->  	return 0;
->  }
->  
-> @@ -778,6 +797,41 @@ static bool needs_type_info(struct annotated_data_type *data_type)
->  	return (data_type != &stackop_type) && (data_type != &canary_type);
->  }
->  
-> +static const char *annotation__weight_mode_str(enum symbol__weight_mode mode)
-> +{
-> +	switch (mode) {
-> +	case WEIGHT_NONE:
-> +		return "";
-> +	case WEIGHT_WEIGHT:
-> +		return "Weight";
-> +	case WEIGHT_INSNLAT:
-> +		return "InsnLat";
-> +	case WEIGHT_WEIGHT3:
-> +		return "Weight3";
+3. Hybrid Memory-Mapped & Mailbox Work Queue Architecture:
+   - System Monitor (MMIO): Performs fast atomic-safe memory reads (~15ns)
+     directly mapped over ARM physical memory space (`MON_SYSTEM`).
+   - VPU Monitor (Mailbox IPC): For Broadcom BCM2835-BCM2711 platforms (RPi 1-4),
+     VideoCore VPU monitor IPC calls are offloaded to process context via a dedicated
+     workqueue (`vpu_work`) and serialized under `vpu_mutex`. This avoids atomic
+     sleeps or blocking in timer/interrupt context.
 
-Should be "PCycleLat" (on PPC) or "RetireLat" (on x86).
+4. SoC Generation Support:
+   - Patch 1 documents device bindings for Broadcom.
+   - Patch 2 adds core driver support for Broadcom BCM2835-BCM2711 (RPi 1-4).
+   - Patch 3 expands support for Broadcom BCM2712 (Raspberry Pi 5), adding PCIe RP1
+     Southbridge links, HEVC decoder, HVS display engine, and Cortex-A76 DSU L3
+     interconnect monitoring dynamically via native MMIO readouts.
 
+Hardware Validation
+==============================
+The driver has been rigorously validated on real hardware:
+- Raspberry Pi 400 (BCM2711): Validated System L2, ARM CPU, and VideoCore
+  VPU firmware mailbox IPC performance counters organically spanning
+  multi-slice multiplexing boundaries.
+- Raspberry Pi 5 (BCM2712): Validated live byte throughput across HVS
+  display refresh cycles, Cortex-A76 DSU L3 interconnect memory traffic,
+  and PCIe RP1 Southbridge transfers independently configuring `bcm2712_`
+  filters.
 
-> +	default:
-> +		return "";
-> +	}
-> +}
-> +
-> +static void annotation__column_title(char *buf, size_t size,
-> +					     struct annotation *notes,
-> +					     const struct evsel *evsel)
-> +{
-> +	const char *base = symbol_conf.show_total_period ? "Period" :
-> +			symbol_conf.show_nr_samples ? "Samples" : "Percent";
-> +	int weight;
-> +	u8 weight_mask = annotation__weight_mask(notes, evsel);
-> +
-> +	scnprintf(buf, size, "%s", base);
-> +	for_each_weight(weight) {
-> +		if (weight_mask & BIT(weight))
-> +			scnprintf(buf + strlen(buf),
-> +				  size - strlen(buf),
-> +				  " %s",
-> +				  annotation__weight_mode_str(weight));
-> +	}
-> +}
-> +
->  static int
->  annotation_line__print(struct annotation_line *al, struct annotation_print_data *apd,
->  		       struct annotation_options *opts, int printed,
-> @@ -833,6 +887,8 @@ annotation_line__print(struct annotation_line *al, struct annotation_print_data
->  		for (i = 0; i < nr_percent; i++) {
->  			struct annotation_data *data = &al->data[i];
->  			double percent;
-> +			int weight;
-> +			u8 weight_mask = annotation__weight_mask(notes, apd->evsel);
->  
->  			percent = annotation_data__percent(data, percent_type);
->  			color = get_percent_color(percent);
-> @@ -845,6 +901,13 @@ annotation_line__print(struct annotation_line *al, struct annotation_print_data
->  					      data->he.nr_samples);
->  			else
->  				color_fprintf(stdout, color, " %7.2f", percent);
-> +			for_each_weight(weight) {
-> +				if (weight_mask & BIT(weight))
-> +					color_fprintf(stdout, color, " %7" PRIu64,
-> +						      data->he.weight_num[weight] ?
-> +						      data->he.weight_sum[weight] / data->he.weight_num[weight]
+Changes since v12
+==============================
+- Schema Enforcement: Added an `allOf` / `if` block to
+  `brcm,bcm2835-axiperf.yaml` to mandate the `firmware` property when
+  compiling dtbs against older silicon (`brcm,bcm2835-axiperf` and
+  `brcm,bcm2711-axiperf`). Validated the documentation example to
+  securely meet this constraint.
+- Sysfs Arrays: Rehydrated the missing dynamic PMU Sysfs string
+  definitions (`PMU_EVENT_ATTR_STRING`) and memory pointers for the
+  BCM2712 CPU L2 and Master ID filtered events, ensuring they are
+  cleanly exported to Userspace.
+- Whitespace formatting: Purged excess consecutive vertical blank
+  lines inadvertently dropped into the sysfs definitions across
+  boundaries in Patch 2 and Patch 3.
+- Documentation nits: Rectified and clarified a misleading comment
+  regarding synchronous reads for the BCM2712 VPU explicitly isolated
+  from native runtime monitoring.
 
-This line is too long.
+Ian Rogers (3):
+  dt-bindings: perf: Add Broadcom Raspberry Pi AXI PMU definition
+  perf: Add Raspberry Pi BCM2835 AXI PMU driver
+  perf: Add Raspberry Pi 5 (BCM2712) AXI PMU support
 
+ .../bindings/perf/brcm,bcm2835-axiperf.yaml   |   77 +
+ drivers/perf/rpi_axi_pmu.c                    | 2903 +++++++++++++++++
+ 2 files changed, 2980 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml
+ create mode 100644 drivers/perf/rpi_axi_pmu.c
 
-> +						      : 0);
-> +			}
->  		}
->  
->  		printf(" : ");
-> @@ -891,7 +954,7 @@ annotation_line__print(struct annotation_line *al, struct annotation_print_data
->  	} else if (max_lines && printed >= max_lines)
->  		return 1;
->  	else {
-> -		int width = annotation__pcnt_width(notes);
-> +		int width = annotation__pcnt_width(notes, apd->evsel);
->  
->  		if (queue)
->  			return -1;
-> @@ -915,6 +978,9 @@ static void calc_percent(struct annotation *notes,
->  	struct sym_hist *sym_hist = annotation__histogram(notes, evsel);
->  	unsigned int hits = 0;
->  	u64 period = 0;
-> +	int i;
-> +	u64 weight_sum[WEIGHT_WEIGHT3 + 1] = { 0 };
-> +	u64 weight_num[WEIGHT_WEIGHT3 + 1] = { 0 };
->  
->  	while (offset < end) {
->  		struct sym_hist_entry *entry;
-> @@ -923,6 +989,10 @@ static void calc_percent(struct annotation *notes,
->  		if (entry) {
->  			hits   += entry->nr_samples;
->  			period += entry->period;
-> +			for_each_weight(i) {
-> +				weight_sum[i] += entry->weight_sum[i];
-> +				weight_num[i] += entry->weight_num[i];
-> +			}
->  		}
->  		++offset;
->  	}
-> @@ -930,6 +1000,10 @@ static void calc_percent(struct annotation *notes,
->  	if (sym_hist->nr_samples) {
->  		data->he.period     = period;
->  		data->he.nr_samples = hits;
-> +		for_each_weight(i) {
-> +			data->he.weight_sum[i] = weight_sum[i];
-> +			data->he.weight_num[i] = weight_num[i];
-> +		}
->  		data->percent[PERCENT_HITS_LOCAL] = 100.0 * hits / sym_hist->nr_samples;
->  	}
->  
-> @@ -1252,8 +1326,9 @@ int hist_entry__annotate_printf(struct hist_entry *he, struct evsel *evsel)
->  	int printed = 2, queue_len = 0;
->  	int more = 0;
->  	bool context = opts->context;
-> -	int width = annotation__pcnt_width(notes);
-> +	int width = annotation__pcnt_width(notes, evsel);
->  	int graph_dotted_len;
-> +	char title[64];
->  	char buf[512];
->  
->  	filename = strdup(dso__long_name(dso));
-> @@ -1275,10 +1350,10 @@ int hist_entry__annotate_printf(struct hist_entry *he, struct evsel *evsel)
->  		return ENOTSUP;
->  	}
->  
-> -	graph_dotted_len = printf(" %-*.*s|	Source code & Disassembly of %s for %s (%" PRIu64 " samples, "
-> +	annotation__column_title(title, sizeof(title), notes, evsel);
-> +	graph_dotted_len = printf(" %-*.*s|\tSource code & Disassembly of %s for %s (%" PRIu64 " samples, "
->  				  "percent: %s)\n",
-> -				  width, width, symbol_conf.show_total_period ? "Period" :
-> -				  symbol_conf.show_nr_samples ? "Samples" : "Percent",
-> +				  width, width, title,
->  				  d_filename, evsel_name, h->nr_samples,
->  				  percent_type_str(opts->percent_type));
->  
-> @@ -2029,7 +2104,8 @@ static int disasm_line__snprint_type_info(struct disasm_line *dl,
->  	return printed;
->  }
->  
-> -void annotation_line__write(struct annotation_line *al, struct annotation *notes,
-> +void annotation_line__write(struct annotation_line *al,
-> +			    struct annotation *notes,
->  			    const struct annotation_write_ops *wops,
->  			    struct annotation_print_data *apd)
->  {
-> @@ -2037,7 +2113,8 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
->  	bool change_color = wops->change_color;
->  	double percent_max = annotation_line__max_percent(al, annotate_opts.percent_type);
->  	int width = wops->width;
-> -	int pcnt_width = annotation__pcnt_width(notes);
-> +	int pcnt_width = annotation__pcnt_width(notes, apd->evsel);
-> +	u8 weight_mask = annotation__weight_mask(notes, apd->evsel);
->  	int cycles_width = annotation__cycles_width(notes);
->  	bool show_title = false;
->  	char bf[256];
-> @@ -2062,6 +2139,7 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
->  
->  		for (i = 0; i < al->data_nr; i++) {
->  			double percent;
-> +			int weight;
->  
->  			percent = annotation_data__percent(&al->data[i],
->  							   annotate_opts.percent_type);
-> @@ -2075,6 +2153,14 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
->  			} else {
->  				obj__printf(obj, "%7.2f ", percent);
->  			}
-> +
-> +			for_each_weight(weight) {
-> +				if (weight_mask & BIT(weight))
-> +					obj__printf(obj, "%7" PRIu64 " ",
-> +						    al->data[i].he.weight_num[weight] ?
-> +						    al->data[i].he.weight_sum[weight] /	al->data[i].he.weight_num[weight] :
+-- 
+2.55.0.691.gc56d675ccc-goog
 
-And this too.
-
-Thanks,
-Namhyung
-
-
-> +						    0);
-> +			}
->  		}
->  	} else {
->  		obj__set_percent_color(obj, 0, current_entry);
-> @@ -2082,9 +2168,9 @@ void annotation_line__write(struct annotation_line *al, struct annotation *notes
->  		if (!show_title)
->  			obj__printf(obj, "%-*s", pcnt_width, " ");
->  		else {
-> -			obj__printf(obj, "%-*s", pcnt_width,
-> -					   symbol_conf.show_total_period ? "Period" :
-> -					   symbol_conf.show_nr_samples ? "Samples" : "Percent");
-> +			char buf[64];
-> +			annotation__column_title(buf, sizeof(buf), notes, apd->evsel);
-> +			obj__printf(obj, "%-*s", pcnt_width, buf);
->  		}
->  	}
->  	width -= pcnt_width;
-> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-> index fa08d09b80f7..63bce7a920f3 100644
-> --- a/tools/perf/util/annotate.h
-> +++ b/tools/perf/util/annotate.h
-> @@ -6,6 +6,7 @@
->  #include <stdint.h>
->  #include <stdio.h>
->  #include <linux/types.h>
-> +#include <linux/bitops.h>
->  #include <linux/list.h>
->  #include <linux/rbtree.h>
->  #include <asm/bug.h>
-> @@ -86,6 +87,8 @@ struct annotation;
->  struct sym_hist_entry {
->  	u64		nr_samples;
->  	u64		period;
-> +	u64		weight_sum[WEIGHT_WEIGHT3 + 1];
-> +	u64		weight_num[WEIGHT_WEIGHT3 + 1];
->  };
->  
->  enum {
-> @@ -231,8 +234,20 @@ void symbol__calc_percent(struct symbol *sym, struct evsel *evsel);
->  struct sym_hist {
->  	u64		      nr_samples;
->  	u64		      period;
-> +	u8		      weight_mask;
->  };
->  
-> +/* Can be set asynchronously by top. */
-> +static inline u8 sym_hist__weight_mask(const struct sym_hist *hist)
-> +{
-> +	return __atomic_load_n(&hist->weight_mask, __ATOMIC_RELAXED);
-> +}
-> +
-> +static inline void sym_hist__set_weight_mask(struct sym_hist *hist, u8 mask)
-> +{
-> +	__atomic_fetch_or(&hist->weight_mask, mask, __ATOMIC_RELAXED);
-> +}
-> +
->  /**
->   * struct cyc_hist - (CPU) cycle histogram for a basic block
->   *
-> @@ -376,9 +391,22 @@ static inline int annotation__cycles_width(struct annotation *notes)
->  	return notes->branch ? ANNOTATION__IPC_WIDTH + ANNOTATION__CYCLES_WIDTH : 0;
->  }
->  
-> -static inline int annotation__pcnt_width(struct annotation *notes)
-> +static inline u8 annotation__weight_mask(struct annotation *notes,
-> +					 const struct evsel *evsel)
-> +{
-> +	if (symbol_conf.weight_mask_user)
-> +		return symbol_conf.weight_mask;
-> +	if (symbol_conf.hide_weight)
-> +		return 0;
-> +	return sym_hist__weight_mask(&notes->src->histograms[evsel->core.idx]);
-> +}
-> +
-> +static inline int annotation__pcnt_width(struct annotation *notes,
-> +					 const struct evsel *evsel)
->  {
-> -	return (symbol_conf.show_total_period ? 12 : 8) * notes->src->nr_events;
-> +	int extra = hweight8(annotation__weight_mask(notes, evsel)) * 8;
-> +	return ((symbol_conf.show_total_period ? 12 : 8) + extra) *
-> +	       notes->src->nr_events;
->  }
->  
->  static inline bool annotation_line__filter(struct annotation_line *al)
-> diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-> index 0dee5aa6a534..6931fa014255 100644
-> --- a/tools/perf/util/symbol_conf.h
-> +++ b/tools/perf/util/symbol_conf.h
-> @@ -27,6 +27,16 @@ enum a2l_style {
->  };
->  #define MAX_A2L_STYLE (A2L_STYLE_CMD + 1)
->  
-> +enum symbol__weight_mode {
-> +	WEIGHT_NONE = 0,
-> +	WEIGHT_WEIGHT,
-> +	WEIGHT_INSNLAT,
-> +	WEIGHT_WEIGHT3,
-> +};
-> +
-> +#define for_each_weight(_weight) \
-> +	for ((_weight) = WEIGHT_WEIGHT; (_weight) <= WEIGHT_WEIGHT3; (_weight)++)
-> +
->  struct symbol_conf {
->  	bool		nanosecs;
->  	unsigned short	priv_size;
-> @@ -69,7 +79,10 @@ struct symbol_conf {
->  			annotate_data_sample,
->  			skip_empty,
->  			enable_latency,
-> -			prefer_latency;
-> +			prefer_latency,
-> +			hide_weight,
-> +			weight_mask_user;
-> +	u8		weight_mask;
->  	const char	*vmlinux_name,
->  			*kallsyms_name,
->  			*source_prefix,
-> -- 
-> 2.55.0
-> 
