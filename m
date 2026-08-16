@@ -1,65 +1,94 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from out30-124.freemail.mail.aliyun.com (out30-124.freemail.mail.aliyun.com [115.124.30.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81B0C388E68;
-	Sat, 15 Aug 2026 23:54:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1FA81EB19B;
+	Sun, 16 Aug 2026 01:42:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786838084; cv=none; b=Pyer2ylyb2kmawWw6c2YXJhalDjbkOghpFJw6kS415PYLAIf8fypJncjumPqV/M69eCQF/LcxGaF1dm2TGE8xK3k4eXTfuplURYxYSB7B3o6rr83dOiNClxSmGfoqzjgNdYVjvWo2oLFpXvEOtjdcrMzVA/JuCFWuEgBfS0a+8s=
+	t=1786844579; cv=none; b=AQGPitgjPNnrX8HWodyE8Lfv7Y7N2XiJFOIY9o9AwZozcgHYhkTegjdeZQYiK4G2xJOlKgMqv0d2X7qdXi/E++SqenjI0Cs1sEdcGQsdtpSndnjQIMXW8kDiozoFdwL6O14V9QQKOQuCX5u/AzhHiWh9HKzLvdWDXucHdh1MB10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786838084; c=relaxed/simple;
-	bh=Vvr7n53lfGqeX1TNDO/BGs55aBx27cBL44oR88eSBvs=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=jEdylh/MiV9wA4un9ZaYAlUdC6ZPbiCYNXc6BGwUjbwg0OB0Kol1LhMKPjwoqOZTVGrOZpmDGHL0BYv7V2f8VobXkzsFXm8dvlgZSy3lpuctV+jjC3yqACo3c2SWVqWRj+UVxLQ05CwvAu/3g1F47CWz0vh/atDX3jPRl2pqEX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xzq0WueU; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1786844579; c=relaxed/simple;
+	bh=tzMlVKDnnNIZ3PjsUydIbCEt5Zad93HvcVzkLXcR16I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uVlusJNSrUFG17FPiV3gs8goWDjpq7fFDApzbklVsyNoU7XKj6Z48P/yZ2k5j4qnWCmHcGx5z6AR8pXKSLRGkcqEG/HKPc5ofVjw3j07wkUg9ckDR8i7znM/Wt8sVlpsrc3GJKxLSEv6/rijNrFx78CO/sIxdnCE7NvX/GxZ4yI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=DgWl2RNZ; arc=none smtp.client-ip=115.124.30.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xzq0WueU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 309B61F00ACA;
-	Sat, 15 Aug 2026 23:54:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786838083;
-	bh=vZ1sosfYWZn5XqFy0thm9ZDfZrn9PZjryymCA/128Jc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date;
-	b=Xzq0WueUAWv4Y/D1VyG0B3yfy2uNLG8l0Wd+gQj014HLzssIn4YiynEi9uIXJJ1MA
-	 DoYzHkqy8Wv+RBx/X98siMJaYnmeTngaqhOVNUIHQk77/SRLkORnHWN6DnLft03fi+
-	 QIJBFoUTSrjPcueDMrgFR7384/r3wx/KP4Y7HLj1jcGQFNU6cHmkKC6lI7XdCs9Ib8
-	 n67Rcj8tUR0M1sxJvoocPtFMmE+vscrMRkGHr1HGeUQhe2PK5kCOmCqgwRScIDmqNN
-	 qAVeRlEPxbXJWmHovGgpoTABSl/DlyOVG328QAFuYPn1QEkBAat6Eq7YRE0qF3+uwq
-	 GRIMsksS92PCQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: linux-perf-users@vger.kernel.org, 
- PVS Narasimha Rao <venkatasuryapala@gmail.com>
-Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org, 
- mingo@redhat.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20260810061925.32498-1-venkatasuryapala@gmail.com>
-References: <20260725084704.15463-1-venkatasuryapala@gmail.com>
- <20260810061925.32498-1-venkatasuryapala@gmail.com>
-Subject: Re: [PATCH v2] perf test sample-parsing: Validate
- PERF_FORMAT_GROUP values without LOST
-Message-Id: <178683808316.3302182.2276194460332343634.b4-ty@kernel.org>
-Date: Sat, 15 Aug 2026 16:54:43 -0700
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="DgWl2RNZ"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1786844567; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=dVBzPFe0whP78lsDOkJAtpx+rXVWYaUG5slZsC0Fb64=;
+	b=DgWl2RNZx6ty/p7bifOi6GHSQr53K97G142QSbwmSo+EX8O8n/xAPbCgDXCuU9cltYuVxbp3mWo4o6uuQRvHcZlyxK7pzyz5z7ov7tMeD+StBCnlVLudgm9WGkxSlVGC15ReIznQK1eVPWHtFIxRpcxO7cs/TdunOVRlfCGItwk=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045098064;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0X9-u0h6_1786844565;
+Received: from 30.28.192.31(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0X9-u0h6_1786844565 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Sun, 16 Aug 2026 09:42:46 +0800
+Message-ID: <7321c855-08b7-4270-9d98-297a872ad47d@linux.alibaba.com>
+Date: Sun, 16 Aug 2026 09:42:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/dwc_pcie: Fix PCI device reference leak in probe
+To: Ruoyu Wang <ruoyuw560@gmail.com>, Jing Zhang
+ <renyu.zj@linux.alibaba.com>, Will Deacon <will@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Yunhui Cui <cuiyunhui@bytedance.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20260814133925.1385687-1-ruoyuw560@gmail.com>
+From: Shuai Xue <xueshuai@linux.alibaba.com>
+In-Reply-To: <20260814133925.1385687-1-ruoyuw560@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
 
-On Mon, 10 Aug 2026 11:49:25 +0530, PVS Narasimha Rao wrote:
-> The sample parsing test only validates grouped read values when
-> PERF_FORMAT_LOST is present.
+
+
+On 8/14/26 9:39 PM, Ruoyu Wang wrote:
+> pci_get_domain_bus_and_slot() returns a referenced PCI device. When the
+> subsequent RAS DES capability lookup fails, dwc_pcie_pmu_probe() returns
+> -ENODEV without releasing that reference. Repeated failed probes can
+> therefore keep the PCI device allocated after removal.
 > 
-> For PERF_FORMAT_GROUP without PERF_FORMAT_LOST, the contents of
-> read.group.values[] are not validated, allowing corruption of the parsed
-> value and id fields to go undetected.
+> Move the existing pci_dev_put() immediately after capability discovery
+> so the temporary lookup reference is released on both success and
+> failure paths.
 > 
-> [...]
-Applied to perf-tools-next, thanks!
+> This issue was found by a static analysis checker and confirmed by
+> manual source review.
+> 
+> Fixes: 7f35b429802a ("perf/dwc_pcie: fix duplicate pci_dev devices")
+> Signed-off-by: Ruoyu Wang <ruoyuw560@gmail.com>
+> ---
+>   drivers/perf/dwc_pcie_pmu.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
+> index 5385401fa9cf6..baa736fd9a6ef 100644
+> --- a/drivers/perf/dwc_pcie_pmu.c
+> +++ b/drivers/perf/dwc_pcie_pmu.c
+> @@ -710,10 +710,10 @@ static int dwc_pcie_pmu_probe(struct platform_device *plat_dev)
+>   	}
+>   
+>   	vsec = dwc_pcie_des_cap(pdev);
+> +	pci_dev_put(pdev);
+>   	if (!vsec)
+>   		return -ENODEV;
+>   
+> -	pci_dev_put(pdev);
+>   	name = devm_kasprintf(&plat_dev->dev, GFP_KERNEL, "dwc_rootport_%x", sbdf);
+>   	if (!name)
+>   		return -ENOMEM;
 
-Best regards,
-Namhyung
 
+Good catch.
+
+Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+
+Thanks.
+Shuai
 
