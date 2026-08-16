@@ -1,183 +1,161 @@
-Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020115.outbound.protection.outlook.com [52.101.196.115])
+Received: from mout.web.de (mout.web.de [212.227.15.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F6B1B87C9
-	for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 01:50:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.115
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786845047; cv=fail; b=T2rJiKkxJ6Z3fCiZoKSN0Z5QXRJ2S/SW0afWuV/87W1UZYUO16srIfClboV5aZ9JjaH9shAe8buldg4X3gyKW2TQ7PJiGAhh72p/8cCulEppWipp9ppA/q1WgyocVHHbRk6mop9bzlv1GOcUtWIHw3gEeAR76pY5dNixX05c8m0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786845047; c=relaxed/simple;
-	bh=LJANeOQUsIpcs/oQR43m147Keqnlyq4b5pxw7KEe1Z4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=J+90rpb8H0dO7COPorb3w6w/uKGZU+SCG3FiEoHrE2L30ca8aPBDbvegHT/zE6MnF3MD362UHIXq8hO3jIfcz92jyTIyEZbc+Kysu94EgPSb5gf1Mj78j+3FiFKr3EsQUC+a73XvrIfB8Ar+mIzrmgQpVkh7WyXjOWwwguL86PU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.196.115
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iXspwS7HauSUP7t6S9xKv3jNDxFNS2Pzg5Z4xTZn9/mrk/8CbXDQFuPl9tayC+TeUbAoqJVZ0F0PqvmtBFaDAo39dtrDPqePdD9YYKxUZwVjDvk76rkxot5WOz3cB8RBay8iT+/wHhk85AoK8dNxRaHQTIfzlbsxSQydmrq0x3XmtZDOOAJx9VXr1YBuuuJXGrmzyXbomT5PGsSPQgMxzs4tZ2dBQc8QVZjm4R+ZrJhYmizRoytZzruvK0C6FhDaa2vwl69jjhVNIntA44DKPxlOfHgLuK5N4zBPlyiUm766lC110hLb6nc/QgIMcJAt3YLJF9h2TaaFeWNf6N/quQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=ZAsRrb+NdCy/rpdR49KUrQUJDrPC/CbTzdeOTmAR0kQ=;
- b=AXJU92DTUkmzU/ZIZqHxOgJ5EkeGE51TcwINS3W1fRkwLkFWa9xEQ9i8CiQM8AJkv5pwGOZjaH8mE0D2fX5EXf4uzmJAIWJ/aWMNrzRXVnzFW6UXiFRY44OcrqUI70yQsEhEedA8YzrZME0S4HjvABCgPbEKC8HhKkdKiNp2RrRipLglklceno4NaydZpEErNf0zDenDR6AvImUzTDDgbt8RJRmqM4Xt5DDJOALFxh7roPCCbocZD1WkO41EC0unTHUPy6UmpKnAjFEHY6tlOGS6DLtsgXCfCEZVUc/TdI8LnSsPcliSEcIV4meXYdm/I6Klb+8SpMEKxz5fbyXFlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by LOYP123MB3582.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:11d::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.14; Sun, 16 Aug
- 2026 01:50:41 +0000
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0315.016; Sun, 16 Aug 2026
- 01:50:41 +0000
-Date: Sat, 15 Aug 2026 21:50:36 -0400
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: namhyung@kernel.org, acme@kernel.org, irogers@google.com
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH perf-tools-next 1/3] perf trace: Introduce kernel symbol
- beautifier for virtual addresses
-Message-ID: <lu6kmbwozimfbpndj7vvfhihqxmblqowwgs67vkdvqp7wp62is@bj6hfyskc2fv>
-References: <20260815233651.527936-1-atomlin@atomlin.com>
- <20260815233651.527936-2-atomlin@atomlin.com>
- <20260815234446.84F6D1F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260815234446.84F6D1F000E9@smtp.kernel.org>
-X-ClientProxiedBy: BN9PR03CA0928.namprd03.prod.outlook.com
- (2603:10b6:408:107::33) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:183::5)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEC6189B84;
+	Sun, 16 Aug 2026 08:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786868846; cv=none; b=MZjYr8dKUwPXSt3V7PAne5RbOhplBx7rMO0vq4L3jb7sXx5tnWK+xgO2pB9pDwti2M5YXEuH9R+0T+y15yZ580ACUxFcLgV2+AkBAhP12KuQyGQuLlJNT6PfBfKrCVLgI6RjQiIWWBOjU71XA6W6MIyypjHwa6OKmCbrtIVwR24=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786868846; c=relaxed/simple;
+	bh=9+vPTjH1obZclMWELJOWZqt0EDF9+G4mhLL+jRsCQSs=;
+	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
+	 In-Reply-To:Content-Type; b=X2dsxSzUnr9r6pxc+TlfbevNQrCAYe+PtpQEfNd0zx4Jcg4eZtet+jqmSbi/+puNRg7/QB0Cx2QIjNmzFs3R7nhdlcyFg9GpSR9ww/YvgZKOgIK3DrKQOmRvJu/dD/Ip0jYLjWXxtk8vJySfj2kXba+r18GdiO7FZhT2C4UUQpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=PRCYFGJR; arc=none smtp.client-ip=212.227.15.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="PRCYFGJR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1786868815; x=1787473615; i=markus.elfring@web.de;
+	bh=9+vPTjH1obZclMWELJOWZqt0EDF9+G4mhLL+jRsCQSs=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
+	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
+	 cc:content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=PRCYFGJR6o3y9Zr1Le9tU0IwBcpNPter7jgcS0ApF+N3vV++v/uOeJUno6axuutp
+	 zxikOGlY83t1iC+d09p2iAMwbI1mJORvoruf7tQofQZiv49JDYll/btkySUCd9fZk
+	 pUAa2bhv8w/Lbv7E3kmKeOQjAohaSwPw0XskVB1/+GM5VSnIFemrwew/7Rpg1HCQQ
+	 sKqm4v7U2979huqGf8zWiIpMZ9CduHM07GFLW8h/LRnS7T3N3+38mp/kV0ZJJ7a8r
+	 +ISXPUOrFyCKvQvnOSM8wQk08j7s8ZqazRKaLCqNxLHm1asedbkYu/3yrei339siS
+	 fMIuhg9Q7h89KROnxQ==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from client.hidden.invalid by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MMY1D-1xEQES1E8d-00XDVO; Sun, 16
+ Aug 2026 10:26:55 +0200
+Message-ID: <0abb2aab-4752-478d-bb53-c5a84fd6ba2d@web.de>
+Date: Sun, 16 Aug 2026 10:26:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LOYP123MB3582:EE_
-X-MS-Office365-Filtering-Correlation-Id: aac38a15-d0b6-4a47-27c0-08defb38c6e4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|1800799024|366016|23010399003|3023799007|4143699003|6133799003|10067099003|56012099006|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	kEOjDObbR4fSmmpa20WS0kzI4nKOjXLJOj9QWEnKNz3Nu6l2fpvDbV/eXi29qm5DLloL0KPIx7xC0GiBmkPnIdqUZCEIkhQP5WMmRat9HrjJ7au7PiztH7D6Zel7+g9ldWxzAGXY20VLPzV6ep6thUVH4B+80Y7Kv9iAVSOHkJOWDHuw3h7JPH0CL6MuEKquq2Qudl87bVryyXC2lWYNHRxocAPOSa72P0CByO1cfOwLTkR7dJPua4QVJ18R1j1V1xcfFIcIOBG5H3HS4NIg/UDB39W4Mwa1MEcIZApXkbbqDXicHve4cmgqin5LYTHwFzXyNaFjUHHln6qqF5MSRLVXMDNe/wsaMACQodo/sr75JGwUqIK3ZlqpNGfXqOwFHehrutEVhDQ/g53q3grS5cigSA/d2LT9+DJCK6x47z/c+xWXfba61eGglFM0kIxyPqD06Jgfx0Hxx9xyERA/lsfKQdG7EsodPSQzyp6Jdpcs8YKPD5Xe5FuLhw2/GBv6n+Wps31Lfv6G0iA78HoqsDsOqCa5V51KAnmUkWFI0SUJWjIyyolYX+lFGPiwJGmcJXCd09rT8SJooSKF2nPSeUN/iYq3yvHyYt6elLmqTL9kdhVUzEbFaDMApy+mEuWGVRDpoMzBAgX/d0rmgoLUabAIlXvS5tL5zvVGMMmwRJg=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(23010399003)(3023799007)(4143699003)(6133799003)(10067099003)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZmlVckd6UWlZbE0yd1NVbjJNeVNNd1R4ajRUWlpydExLMjM0M3BYelVPank5?=
- =?utf-8?B?cWhaekFpdkpXb0V1cjNwTlR0QzFhT0pYQXdzZ242Nzk3S2d5TFFjcG5BQlRp?=
- =?utf-8?B?WER4Y3NPdy9vRVA2QmRhTk9DWTkrL1JEanlGL0F1ZjRvYUlZbHIrVjlEN1Z0?=
- =?utf-8?B?eCtDRHpZVjZQYnA3UTQwdFNJVjBSVmZwU3NibzB5WDBvVUl4Z3JhcVR2S2R3?=
- =?utf-8?B?a2pLblB1c21td291K1l3bkk4SkptWFQ1MW9xZ3hDUklXM0JTN0h6SnJ1OW16?=
- =?utf-8?B?VUtLeWg4dE9rcmMyalhpQ3BrOG1qd0tZaU5nQUtiRFFJNkpzUGpJVk9rNmRr?=
- =?utf-8?B?T1R4dHB1SXBLV3ltSDUvZEgvZEZCcGxLcUFQL0wyK004THA4N2FFa3R3Z254?=
- =?utf-8?B?K0xtajYxMnFkK3BtV2hoejNmcUFQeWlLbjZJQk1ZNW4wKy9UZFJpSnkvVVZr?=
- =?utf-8?B?N2w0SXhlNUQrdTVyWXpmODgvWTExdmowTkxaampIY3FmK2dGS1hVWWJHUUJH?=
- =?utf-8?B?ejI1MGRwLzZtWFZaaTJVV20xRktSV1dQRXZJcThUWVNpZHpOUVNRZC9NVzhq?=
- =?utf-8?B?R2JKOFN2ajFrNmNyRzNBTFhTRzNCTXU3QXRXb1NhZUxvNjZ6NENKQW02REZl?=
- =?utf-8?B?Mm1uSW1kYzlhbjMzN1VNZ3NoRVhEUmFHTTd0NUN0WDRVWmYvVjgzeEZJQXIz?=
- =?utf-8?B?ZzZUcm1ld3JTV2JYUFQ5bVpPa1R4Uy9oVWs5VW5xMjJ2ekFvd1pBSGU3MzU3?=
- =?utf-8?B?aExwQmNkR0VZelh4Qm5YR3BBQUpkR3F0OU16T3QrcW5keG1kcnZ0SEVoT0Mx?=
- =?utf-8?B?NWhLK2F0N1pmZjZRb1NmNWMrbjNvR1VZL24xTklsMHJWUWNGWGFoZlVROUFy?=
- =?utf-8?B?UUIyaVJyRktadGtWVk0rcnZDQi83ZUQyNENyR0ZWVHBybkh3UGRzZDY4S2pi?=
- =?utf-8?B?YkxBazJYdVpvRHVhSEIwZTBVNndrUjFZZDdKOGJYMXdaOTg2UU9WVjhsNlJC?=
- =?utf-8?B?N3RoRVkrWGNranFObG8ybHR1QVZCNzhacGxieXpadEJURG9kU21JWm44a2FM?=
- =?utf-8?B?YmxiV2Z3NFQ0TXJmNXZ4Y2JQc2Z1a1RrcmxDOEhTVkZLTmlKZEsxMk9HaFdR?=
- =?utf-8?B?UVQwOGVaNStuYzZLaHZzczg3cnk1dEF5ak5lQ2djaDhvR2VHRUZDS04va0xY?=
- =?utf-8?B?OEp5Sk9uTnk1WCtaUWVndmhFaDNLWGQyRURETzc3ZDlqZ01QTEcvTXhhQzFQ?=
- =?utf-8?B?ZzZLTFE2Y1VoeUhCVGZuaE9IMStteTJpVlhiNEk2bzFwbGVsWWxrM3kzUVZm?=
- =?utf-8?B?WkxQOFE0ZjBwNlViaUdpN3B0L3FjVGNhZVN4NzFTc3NGc0dsOVJJcmNDejdu?=
- =?utf-8?B?dWtQVEVvdnRFUFNDV3VtVVhuWXNWYXRXc0JxQWQxeFgxUlhxd3pyU2ttSldT?=
- =?utf-8?B?ZEMyVXY5cUpLUHVLUzk5WTdsZ2dpRnQ1L1pRK1JmSC9zUmRRaXdmUjYrbjJp?=
- =?utf-8?B?cFF6L0t0NElzZTRYOGdySnBvL1FoTjdKeTlMeS96aVp1N0JCekVXWnVBbkVJ?=
- =?utf-8?B?T1RXWThScExnSWNTMUt6OHhYQW5PM3J0Q2VsSi9zSzBnb3pCVSt1UjlvcHdN?=
- =?utf-8?B?VFdwWkVDUG1tSEoyOHF5b2d1SDU4cTJZc252SEpvMmRyTHhsMVgrbjJ3MmU0?=
- =?utf-8?B?Y29ycnp4RlRMUnFCTnFHbjI4ci9CYWJCT1BOdGZ2SXZvLzlZVXpZOEZVSDZG?=
- =?utf-8?B?YXhyMTRuUWFqQ0hLeEFhVXdtYW9HbHFGVG41NGFxaTIxeDRqNWlzMklOa1BQ?=
- =?utf-8?B?cmt0QWhzVGFFRHlZVGV4Rkk3WFBWYjN5dE1EcTEwWnd3dDdlY2FFQjJTUStk?=
- =?utf-8?B?T09vbWUxUHgzSDhvQ04ySFlvWHhEV2J4ZURzYzQwdTl2YTM4TEM2ZXowYWxv?=
- =?utf-8?B?MFM4dm81MUVZRGRoazFYeDVncUY3S29PUlR0S2FWUkQyeDNka3I1MGtPYito?=
- =?utf-8?B?ZkMxUENaM2lQUGlyVExlNUMwWFVGUFlWd1haZkhYdnZ5SFhwRDBUWFpqbmIx?=
- =?utf-8?B?NHJIRnZuaUYrak1qU1VBemt1dllPMGZtUDhWaVIxQkcyYlphVU0yZEx5LzhN?=
- =?utf-8?B?VWt4TS8yM3h3L0p3VU1LM0RWSGdmcjhYYW16TTZCVjg4aVlaZFdBdHFtVW5p?=
- =?utf-8?B?eEZqemt1WGJUV3ZaNWRPOFNrUzg2KzRuY0RuYlMvaGNWVUFNTC94akQzb1M0?=
- =?utf-8?B?TGtEeFNzU1U4cjZUTExBNnRMZjRmb3A3VGtFc1BSRytxWFNSZk8rT05SdEJC?=
- =?utf-8?B?ajdtZU5rWGpZMU9TakhZVXFpeThUOXlsL1VidWQwTnEwWFBOTGUrQT09?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aac38a15-d0b6-4a47-27c0-08defb38c6e4
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2026 01:50:40.9149
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mnj5CFXWBTUlBLXJS3WKkTz8sBzvIvz7wQJFcBzh0yRdibfhbFO6oS8pNiiEep/eElrgslv6B5uvExPimmKr4A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOYP123MB3582
+User-Agent: Mozilla Thunderbird
+To: Ruoyu Wang <ruoyuw560@gmail.com>, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, Jing Zhang
+ <renyu.zj@linux.alibaba.com>, Mark Rutland <mark.rutland@arm.com>,
+ Shuai Xue <xueshuai@linux.alibaba.com>, Will Deacon <will@kernel.org>,
+ Yunhui Cui <cuiyunhui@bytedance.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
+References: <20260814133925.1385687-1-ruoyuw560@gmail.com>
+Subject: Re: [PATCH] perf/dwc_pcie: Fix PCI device reference leak in probe
+Content-Language: en-GB, de-DE
+From: Markus Elfring <Markus.Elfring@web.de>
+In-Reply-To: <20260814133925.1385687-1-ruoyuw560@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:AN9KRgw7WBdzhd4V1Yts84ypyr8SzdQBkP8+Zmg8KKnfhYg7NUx
+ oVRyV55S/wXlRRvgzDkR9HnBKgU04+7rd7K66rH4fb0BThRIS3u3EEsvHIPpMafzK97X42s
+ 4+Hb+quNAI7Tva/MiQV1jBn+1i7Q6TgvxD4oy07TVwriGxLtWCkdZQz54fA6CKOJociv/dr
+ u80CJgi5i+bEBsB8SFPnQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:41aGIEboJ+4=;rM22lVxXhlCCUJrairY+GoBsWpe
+ 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
+ U+O11Vw==
 
-On Sat, Aug 15, 2026 at 11:44:46PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [High] Memory leak of reference-counted `struct map` handle in `syscall_arg__scnprintf_ksym`.
-> --
-> 
-> --- Patch [1]: [PATCH perf-tools-next 1/3] perf trace: Introduce kernel symbol beautifier for virtual addresses ---
-> commit 0ff39d14d9508d5e3c586057a78b07cbcda7f7fb
-> Author: Aaron Tomlin <atomlin@atomlin.com>
-> 
-> perf trace: Introduce kernel symbol beautifier for virtual addresses
-> 
-> This commit adds a kernel symbol beautifier for perf trace to translate
-> raw kernel virtual addresses into human-readable symbol names and offsets.
-> It uses machine__find_kernel_symbol() to look up the symbols dynamically.
-> 
-> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> > index c3c7f1f85c530..102221b301a54 100644
-> > --- a/tools/perf/builtin-trace.c
-> > +++ b/tools/perf/builtin-trace.c
-> 
-> [ ... ]
-> 
-> > @@ -750,6 +750,30 @@ size_t syscall_arg__scnprintf_ptr(char *bf, size_t size, struct syscall_arg *arg
-> >  	return syscall_arg__scnprintf_hex(bf, size, arg);
-> >  }
-> >  
-> > +size_t syscall_arg__scnprintf_ksym(char *bf, size_t size, struct syscall_arg *arg)
-> > +{
-> > +	if (arg->val == 0)
-> > +		return scnprintf(bf, size, "NULL");
-> > +
-> > +	if (arg->trace && arg->trace->host) {
-> > +		struct map *map;
-> > +		struct symbol *sym = machine__find_kernel_symbol(arg->trace->host,
-> > +								 arg->val, &map);
-> > +
-> > +		if (sym) {
-> > +			u64 start = map__unmap_ip(map, sym->start);
-> > +			u64 offset = arg->val - start;
-> > +
-> > +			if (offset == 0)
-> > +				return scnprintf(bf, size, "%s", sym->name);
-> > +			return scnprintf(bf, size, "%s+0x%" PRIx64,
-> > +					 sym->name, offset);
-> 
-> [Severity: High]
-> Does this code leak the struct map reference?
-> 
-> When machine__find_kernel_symbol() populates the map pointer, it acquires a
-> reference that the caller takes ownership of.
-> 
-> However, this function returns directly on both success paths and the fallback
-> path without calling map__put(map). This will cause a memory leak for every
-> formatted event that resolves to a valid map, which can quickly lead to memory
-> exhaustion or LSAN crashes when running perf trace.
+=E2=80=A6
+> Move the existing pci_dev_put() immediately after capability discovery
+> so the temporary lookup reference is released on both success and
+> failure paths.
+=E2=80=A6
 
-Yes, the code feedback is completely accurate. The implementation leaks a
-reference to struct map.
+How do you think about to apply the attribute =E2=80=9C__free(pci_dev_put)=
+=E2=80=9D?
+https://elixir.bootlin.com/linux/v7.2-rc7/source/include/linux/pci.h#L1269
 
--- 
-Aaron Tomlin
+Regards,
+Markus
