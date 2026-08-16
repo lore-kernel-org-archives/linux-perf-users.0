@@ -1,62 +1,64 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12FF395DAA
-	for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 14:22:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B7CB3B0AF8
+	for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 14:22:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786890161; cv=none; b=C0MFr7IAV7VVWJ8ZVcHqDX5UhVWiVflHEJF/ZuP/FDpFuJhZxvy9FyoM5bqx2d4Oa/QwrCROHUwNV4mB2h175CJHMrCBUkjUS7c6Syc9I39AGwPZV0NpTs3t0OnoyWWJ3B5ewfNsIXyrAzhcRLDwROX+NxmexMk7HJ/4yixf5PA=
+	t=1786890168; cv=none; b=f6qzFPPAV/b81wJwtlbyjH3r8/K9QDhqhFZuQSP5PhFGXESNgVSh9kWLtPJjfTo+CStYNNqNcQc2vFl8BTPNZCD5EAr5YC4TbmxCOWGTX3CsLUZLMajmNPnGPIpRCdu35ATl/w+PuMOh3WRqLJQz2C9jku2CDL5qI4AvrPo0urY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786890161; c=relaxed/simple;
-	bh=4X804/qrz0myQkryLvzzCj1bLMSszCuQ0/f+xd3bVww=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=USKsR8h0oJSDvoFtuGeP0FV8kA/8L7ht+CplzWboIy54cZ99U2238cRgwgfd18PvcIVRWoutTpUWJ07IUwX2WUhHT9I3R12GndojxFGzv4R54vw7WCIuEY6bSrHjQaZik1cfpXT9hXHrmDDoiTl9qXGIjqDg8QQZBU4kO5rJz+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hj1lW7LI; arc=none smtp.client-ip=209.85.214.169
+	s=arc-20240116; t=1786890168; c=relaxed/simple;
+	bh=zEbOdsYLmiABDyfXCev+B7XhB/QfOxcoi0kPMyjH2LQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=s/Fi9YaUvfVP4Tl/HvFkitnNAbNUoUFeEABn6yYMv4qhSR7zH4EWD8z7bv8HX07WNE0nLpuWInTA71MZSJ82O0z+yk/UFcCBjS9axZSbAGV3Mo4naYU59mbCo24Gn46tj8pCp8GLBIcK5bSzZsvLfumTfQ8sj6dtxVd8moeHf38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cpyJ930B; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hj1lW7LI"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2cc7e86e7aeso27727895ad.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 07:22:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cpyJ930B"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2cf50c6f235so31010185ad.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 07:22:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786890158; x=1787494958; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=XsGCXFozT69ITA4eF1crVo3PlInrHxlGF6a27uOAn/o=;
-        b=hj1lW7LI26I64h6ti9xd1KxaqgRuJ3V+8p6z9KvdfsfU1PbBwS0dDtBg+6++O9uj6V
-         2hOqU06ByT/97M62gIQ83klCbfcIXibVN18qMBE78sQqkyznoHhdSiuhwFoegOhOJ8TS
-         ZoncY1jDJ5e8ck/RVFC9k4C9jB962K2KkKjVq3VXzhBFDDsPphB+1JTi3gDcrdajLKj8
-         cslMfo4f2e4z6WwxL6JIJFMRMP3mGTa6xWyAbW2JHAy+bx4N2jAau2seo7wNbvSePJEk
-         hUQA42qs6iVtYGHiL3DqvKPWOAYis/PfGzc1pDFaLgx4IIYJX3zjk6RVmiMkNsOv15gZ
-         M1yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786890158; x=1787494958;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1786890166; x=1787494966; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=XsGCXFozT69ITA4eF1crVo3PlInrHxlGF6a27uOAn/o=;
-        b=jWZNhguAPXs1zlhAAPLEeinKcwgmswPFrCeC2VLGBPrkSRdYcViVnsysi7vgIwQ/kF
-         u79uyAOk9AeswRQWlfBJSH45QI69jPEq5Rn7IKzH/lxaPrB8E/oFgm7Jc4HIatxyQviz
-         py79I2HoXrmu/E5sNse0yaR7Yr358bGa7jhOkwcenWRknHlOEEuEW6hKxipXRrRqCV4k
-         wdODgXB1ex0tMcbKcFlXwVgwRvkAD4ApSQkb6LipCGALXspLNtmULsBnzynQzC2e379G
-         1+uwe9JRXyFTKztwjWk5G9Vi/kuuv8/Q1FM/jjRgl0QC0F46B8vW1Z9hXSgWPw8jcztP
-         CQiQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rq+n8v7sg1wLQAa4UdDbOJxbPuCREqgI86yyOEd9ySJJ/rMsc/bFnywyIF2ep4QfaoTz+hbV4ZG1y5a4sgurwip@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5bRbt4hiQsfjlf95U7Ew3nwQYuQCliqBKBkD6i1EQIb3RszTQ
-	2G44JqT7XMn9bvZtHIfHBU2xaChGDUeTK84cg5DgkjDkc2pbVKvm8gRH
-X-Gm-Gg: AR+sD1140hTHqf6dXNUUZiy58qCXT1HMP1NI3AEmSbR1uS+KV9hLhmnpHPJEltxYolI
-	CS94vBnLPqgtFmDSOcH9PlchO7xQlgXW6lqMNh0TGLSTYtLV4mX5nxCXLN2EChHbyu0+AVuqORf
-	wDa4fNEbA5DnCqr57JmhmxbY0pOHWecoq/71TPvHttrz0GyuO7UTheuQGr0eTkQM/CLgh2x6fGV
-	rvJJm9SFt/g3ZR5nAWSCRmVHU0wI2usHdHVieaTQqMfbDrkQZcL7XRc/kcKblmRt/lrIoAiE+8n
-	CqqIAwvSpSHulQZ8zZIXKpTfKKWmNss8R54CM1AFeLFQqi4rk7T94ZOj3D3qZG1pL2OWv21cAYh
-	jN8WIN0MhcQmhYPpb/R/nkCNe2MaTRPQjVoW5UgBT4UGbrJcQvSVQkItVwLZCtllmNypEHvtnv6
-	dw2s9SwnHrp0ZvkQ84edwxXFraCKy+32vnEEIOn+vlBAxCVclfakM9CEc8Cu+TNcszMPhV6W9wX
-	nIDdGUG53ibycy2MzY=
-X-Received: by 2002:a17:902:da82:b0:2cc:777f:d67c with SMTP id d9443c01a7336-2d3b0d5ed01mr190367395ad.13.1786890157697;
-        Sun, 16 Aug 2026 07:22:37 -0700 (PDT)
+        bh=m31MQUkSQS2jVChso5vZVbxBylBeL+g3s9FxURuBxhg=;
+        b=cpyJ930BSxhcCWkTSZ69W2ejP6gLdp9VSu7Qrh5xl0rLdfHH5doU1VjjSs5u60WiVv
+         CGdMJkmd67X/dw1RmTGmoJZh1D73pFYtNz7PH7wYgppNjlIHG8WVtgZO1Pd6pJz/fkCP
+         2UJbirjrtzGTzecUxTCld856mX5JX1IjOnaYboWwM94THXWNH5AZgD33SpQHLsDV1SLa
+         t4CxhOLJrZR+rpCv7PQsBua4v3TGlZVkrBmcO3RpaNhaQZhKw5JzENdKdsCgZ4p8WJcx
+         Sbws5b1WitLnPDycNW/J0cFPgyhStH+qLR1Oboa2NBuh4lNoeKoWzoG1AIBylGEqzZQK
+         lMIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786890166; x=1787494966;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=m31MQUkSQS2jVChso5vZVbxBylBeL+g3s9FxURuBxhg=;
+        b=QRhk1V/o5bgLGAOkRsx7IsbwIld/iwCs/Q0tfLY6oZztU2ezNwRcavzOAKTeBwi8/a
+         oDmd3xU5aXwCPbKZn5EGG1l1uEoZM6ITvg/sxDzW67f/x6Zn4JbOws90d0HSAQoBVEjE
+         27yVO0KnbXFdtku1L+ju2hUvnf0PC93Ls/76MIIy5rsC1Y+aF1M4eGM1Fk+r8NVyHbsi
+         xJ5AiwVjOGxS6SwF1M7ve4oDi8h7wEynUchPgTx99+2BVmKqME0lo2Yjm0FZXcDdvo+I
+         A94nsrVKHPx19QDYegGyO/luLOWDY7j7wEjU9WMCN9E2YZExdzlq3sVKJL+rKKT+ouV0
+         LBxw==
+X-Forwarded-Encrypted: i=1; AHgh+Rqt2GIvGqYTB3IbXpbvsfxLp9d04ert3Oq1KBQxHWjdrRO20fDWPC5ApN3YrY3YF6LijV6LRzmKa+uKKK7oiuUx@vger.kernel.org
+X-Gm-Message-State: AOJu0YzeQDOhw5ck68ny1Z9jDmqksZJ9OYStB+Y7b8slgLUxvB5rF1EQ
+	NQ1NN9vgMEvi37NdAdf/u6GYWr/WihVAT162HO3Lpq+oHnuH/LaCBDRt
+X-Gm-Gg: AR+sD11d13i7HRjCwcHt91RwNdu8slwL3gX+Dal06nEun2TLvFhEtwUhe5V6S7BxR29
+	/YrGUKjrXR8vrzXno3SxjGXrFYsxW5vjRxBSH597q9hXVACJPZCjGFtQ+EA7dVQy4DzOLSaEIWx
+	201Tw7nphOsD1YvCYMMDEb836genfSptuj0PVIi24RBkHpcWp69ShpYiBqhHrJWP0qQdxlFWlwB
+	3qvoecXHhUBihkSV1JU9eW04gsozx/+qh8cJaaIR1D2tsYKvinPGVN2EY9Mw0Dx2Q1Egb+qaxeZ
+	ZWnTiHH7A+KSOkPaQI1hfXNIDoinN7tv24BY/YWJBWjm+91hwOhBEQWF1liQgOj3dkca74rpJcD
+	rEXqciGZrato5Xy+nDbCm7sSYkdVR0bDAccVcnc/76DVKIMqpfSTE/WfMEopYJ4S1Zcu//4ktEl
+	61uCeotMhba/aAe+zoZ8gZOZAaiS+Bn0air/WLwKXuuQBIBdZz8X0OSriDiVpGxcDrnNUW08CwY
+	nUOUDg=
+X-Received: by 2002:a17:902:e80b:b0:2c9:fb11:1bf4 with SMTP id d9443c01a7336-2d3b08825e1mr196775075ad.7.1786890166204;
+        Sun, 16 Aug 2026 07:22:46 -0700 (PDT)
 Received: from kernel.tail6741c6.ts.net ([116.128.244.169])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d3aebc8199sm26102365ad.74.2026.08.16.07.22.29
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d3aebc8199sm26102365ad.74.2026.08.16.07.22.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2026 07:22:36 -0700 (PDT)
+        Sun, 16 Aug 2026 07:22:44 -0700 (PDT)
 From: Kunwu Chan <kunwu.chan@gmail.com>
 X-Google-Original-From: Kunwu Chan <kunwu.chan@linux.dev>
 To: will@kernel.org,
@@ -71,11 +73,14 @@ Cc: linux-kernel@vger.kernel.org,
 	damon@lists.linux.dev,
 	linux-mm@kvack.org,
 	linux-kselftest@vger.kernel.org,
-	Kunwu Chan <kunwu.chan@gmail.com>
-Subject: [RFC PATCH 0/4] mm/damon/perf: add ARM SPE AUX backend
-Date: Sun, 16 Aug 2026 22:22:17 +0800
-Message-ID: <20260816142222.689624-1-kunwu.chan@linux.dev>
+	Kunwu Chan <kunwu.chan@gmail.com>,
+	Lian Wang <lianux.mm@gmail.com>
+Subject: [RFC PATCH 1/4] mm/damon/perf: introduce AUX backend interface and Kconfig
+Date: Sun, 16 Aug 2026 22:22:18 +0800
+Message-ID: <20260816142222.689624-2-kunwu.chan@linux.dev>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260816142222.689624-1-kunwu.chan@linux.dev>
+References: <20260816142222.689624-1-kunwu.chan@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -86,148 +91,176 @@ Content-Transfer-Encoding: 8bit
 
 From: Kunwu Chan <kunwu.chan@gmail.com>
 
-This series adds an AUX trace-buffer backend to the DAMON perf
-observability framework, enabling ARM SPE (Statistical Profiling
-Extension) to deliver hardware-sampled access reports into DAMON's
-existing SPSC report ring.
+Add the backend operations used by AUX trace-buffer PMUs, backend state
+to damon_perf_event, and stubs for configurations without AUX support.
 
-Patch 2 touches drivers/perf/arm_spe_pmu.c to expose the PMU matcher.
-This change is tightly coupled with the DAMON AUX backend.  ARM SPE
-PMU driver maintainers only need to review patch 2.
+Add CONFIG_DAMON_PERF_AUX for the ARM SPE transport and a separate
+CONFIG_DAMON_PERF_SPE_KUNIT_TEST option.  The current transport requires
+ARM SPE to be built into the kernel; it remains independent of the
+optional observability counters and tracepoints.
 
-This series is based on the Ravi's hardware-sampled access reports 
-branch [1], and depends on the perf AUX kernel-consumer RFC series [2].
-The dependencies is not upstream yet, so this series remains RFC.
-
-Why a dedicated AUX backend
----------------------------
-ARM SPE and similar PMUs do not deliver samples through the standard
-perf overflow callback.  Instead, they write trace data into an AUX
-buffer managed by the perf core.  The AUX buffer is consumed from
-process context (kdamond) rather than from NMI, so the existing
-overflow-callback path in DAMON cannot be reused.
-
-The backend model adds three operations to the damon_perf_event
-lifecycle: init (allocate the AUX buffer), arm (position the consumer
-cursor), and drain (parse the SPE packet stream and publish reports).
-The backend is selected at event creation time by matching the PMU
-object via its event_init callback.
-
-What the series adds
---------------------
-Patch 1 introduces the backend operations table, the backend state
-fields in damon_perf_event, and the Kconfig options.  ARM SPE must be
-built into the kernel; the KUnit test option is separate.
-
-Patch 2 is the ARM SPE backend.  It owns a per-CPU AUX buffer,
-decodes the SPE packet stream (the same encoding that perf's
-userspace arm-spe-decoder handles), resolves sampled
-CONTEXTIDR_EL1 values to tgids under RCU, and publishes synthesized
-access reports.  The drain runs before the SPSC ring consumer on
-each monitoring interval, and a final drain after event disable
-ensures no records are lost.  The backend also modifies the ARM SPE
-PMU driver to expose arm_spe_pmu_match() for PMU object matching.
-
-Patch 3 adds byte-exact KUnit tests for the SPE record parser.  The
-tests cover load and store records, timestamp terminators, multiple
-records in one window, PAD and ALIGNMENT packets at both odd and
-aligned positions, extended addresses, bad-packet resynchronization,
-truncated records, and records without a virtual address.  A split-
-record test verifies that a record spanning two AUX snapshots leaves
-the tail unchanged until the terminating packet arrives.
-
-Patch 4 adds a DAMON selftest for the AUX backend.  It checks the
-backend integration, the required AUX-before-ring lifecycle ordering,
-runs the parser KUnit suite through debugfs, and on an ARM SPE system
-creates a live DAMON session with a controlled userspace target,
-verifying positive end-to-end pipeline counters and final
-enqueue/dequeue closure.
-
-Testing
-=======
-Tested on Kunpeng 920 (256 CPUs, ARM SPE, kernel 7.1.0-rc5-mm-new-damon+):
-
-  ARM SPE KUnit (spe_parse_one_record):
-    16 passed, 0 failed, 0 skipped
-    (store record, load record with timestamp, two records, pad-wrapped,
-     alignment at odd/aligned positions, bad packet resync, record without
-     address, events/source/counter, truncated record retained, truncated
-     packet retained, extended address, invalid extended header, pad-only,
-     empty window, split record across two snapshots)
-
-  AUX selftest (damon_perf_aux_test.sh arm_spe_0):
-    SUMMARY: 52 passed, 0 failed, 0 skipped (Overall PASS)
-    callback=58318, valid=58318, enqueue=43390, dequeue=43390,
-    match=34049, update=564
-    final ring closure: enqueue=43390 dequeue=43390
-
-Known limitations
-=================
-- AUX_BACKEND_MAX=4: the AUX backend registration table holds at most 4
-  backend types.  This is a framework limit, not a per-PMU-instance cap.
-
-- ARM SPE must be built into the kernel (ARM_SPE_PMU=y), not as a
-  module, because the backend calls arm_spe_pmu_match() at initcall
-  time.
-
-- The AUX buffer is 2 pages (8 KiB).  The SPE hardware pauses when the
-  non-overwrite ring is full; the drain frees space and re-enables
-  the event.
-
-- CONTEXTIDR_EL1 carries the sampled task's pid, resolved to tgid
-  under RCU.  Records without a valid tgid are dropped.
-
-- This series requires the perf AUX kernel API patches [2] to be applied
-  first.  These patches are not yet upstream and must be reviewed by the
-  perf subsystem maintainers.
-
-References
-==========
-Link [1]: https://github.com/damonitor/linux.git
-          branch: ravi_hw_sampled_access_reports_rfc_v1
-          commit: fd968106e5bf
-
-Link [2]: https://lore.kernel.org/all/20260814144927.489172-1-kunwu.chan@linux.dev/
-          perf AUX kernel API PATCH Series:
-          - perf/core: add AUX buffer ownership for kernel events
-          - perf/core: add AUX ring accessors for kernel consumers
-          - perf/core: add KUnit tests for AUX kernel-consumer API
-          - selftests/perf_events: add userspace AUX regression test
-          - selftests/perf_events: add AUX kernel API selftest script
-
-
-Kunwu Chan (2):
-  mm/damon/perf: introduce AUX backend interface and Kconfig
-  mm/damon/perf: add AUX trace-buffer PMU backend for ARM SPE
-
-Lian Wang (ProcessMission) (2):
-  mm/damon/perf: add KUnit tests for the SPE record parser
-  selftests/damon: add DAMON perf AUX backend test
-
- drivers/perf/arm_spe_pmu.c                    |   8 +
- include/linux/damon.h                         |   5 +
- include/linux/perf/arm_spe_pmu.h              |  11 +
- mm/damon/Kconfig                              |  28 +
- mm/damon/core.c                               |  22 +-
- mm/damon/ops-common.h                         |   6 +-
- mm/damon/perf/Makefile                        |   5 +
- mm/damon/perf/aux_backend.c                   | 121 +++++
- mm/damon/perf/aux_backend.h                   |  72 +++
- mm/damon/perf/spe_backend.c                   | 479 ++++++++++++++++++
- mm/damon/perf/spe_parser.h                    | 109 ++++
- mm/damon/perf/spe_parser_test.c               | 365 +++++++++++++
- mm/damon/vaddr.c                              |  68 ++-
- tools/testing/selftests/damon/Makefile        |   1 +
- .../selftests/damon/damon_perf_aux_test.sh    | 414 +++++++++++++++
- 15 files changed, 1704 insertions(+), 10 deletions(-)
- create mode 100644 include/linux/perf/arm_spe_pmu.h
- create mode 100644 mm/damon/perf/aux_backend.c
+Co-developed-by: Lian Wang (ProcessMission) <lianux.mm@gmail.com>
+Signed-off-by: Lian Wang (ProcessMission) <lianux.mm@gmail.com>
+Signed-off-by: Kunwu Chan <kunwu.chan@gmail.com>
+---
+ include/linux/damon.h       |  5 +++
+ mm/damon/Kconfig            | 28 +++++++++++++++
+ mm/damon/perf/aux_backend.h | 72 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 105 insertions(+)
  create mode 100644 mm/damon/perf/aux_backend.h
- create mode 100644 mm/damon/perf/spe_backend.c
- create mode 100644 mm/damon/perf/spe_parser.h
- create mode 100644 mm/damon/perf/spe_parser_test.c
- create mode 100755 tools/testing/selftests/damon/damon_perf_aux_test.sh
 
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+index c191c065b0e4..a27c5f6c459b 100644
+--- a/include/linux/damon.h
++++ b/include/linux/damon.h
+@@ -8,6 +8,7 @@
+ #ifndef _DAMON_H_
+ #define _DAMON_H_
+ 
++#include <linux/cpumask.h>
+ #include <linux/math64.h>
+ #include <linux/memcontrol.h>
+ #include <linux/mutex.h>
+@@ -127,6 +128,7 @@ struct damon_target {
+ enum damon_report_source {
+ 	DAMON_REPORT_SRC_PERF_OVERFLOW = 0,  /* overflow_handler (IBS, PEBS) */
+ 	DAMON_REPORT_SRC_PAGE_FAULT,         /* damon_report_page_fault() */
++	DAMON_REPORT_SRC_PERF_AUX,           /* AUX trace-buffer backend */
+ };
+ 
+ /**
+@@ -538,6 +540,7 @@ struct damos_filter {
+ struct damon_ctx;
+ struct damon_target_lookup;
+ struct damos;
++struct damon_perf_backend_ops;
+ 
+ /**
+  * struct damos_walk_control - Control damos_walk().
+@@ -1056,6 +1059,8 @@ struct damon_perf_event_attr {
+ struct damon_perf_event {
+ 	struct damon_perf_event_attr attr;
+ 	void *priv;
++	const struct damon_perf_backend_ops *ops;
++	cpumask_t aux_cpumask;
+ 	struct list_head list;
+ 	struct hlist_node hlist_node;
+ 	bool init_complete;
+diff --git a/mm/damon/Kconfig b/mm/damon/Kconfig
+index 9fac286df124..e9fb62ec186f 100644
+--- a/mm/damon/Kconfig
++++ b/mm/damon/Kconfig
+@@ -149,4 +149,32 @@ config DAMON_PERF_OBSERVE
+ 
+ 	  If unsure, say N.
+ 
++
++config DAMON_PERF_AUX
++	bool "DAMON AUX trace-buffer backend support"
++	depends on DAMON
++	depends on PERF_EVENTS
++	depends on ARM_SPE_PMU=y
++	default n
++	help
++	  Enable the functional AUX trace-buffer transport for DAMON perf
++	  events.  This provides backend selection and drain scheduling for
++	  ARM SPE, which does not deliver samples through an overflow
++	  callback.  ARM SPE must be built into the kernel.
++
++	  This transport is independent of CONFIG_DAMON_PERF_OBSERVE.
++
++	  If unsure, say N.
++
++config DAMON_PERF_SPE_KUNIT_TEST
++	bool "Test the DAMON perf SPE parser" if !KUNIT_ALL_TESTS
++	depends on DAMON_PERF_AUX && KUNIT=y
++	default KUNIT_ALL_TESTS
++	help
++	  Test the ARM SPE parser with byte-exact packet streams.  The cases
++	  cover valid records, truncation, alignment, error resynchronization
++	  and consumed-length accounting.  Results can be exposed through
++	  debugfs when CONFIG_KUNIT_DEBUGFS is enabled.
++
++	  If unsure, say N.
+ endmenu
+diff --git a/mm/damon/perf/aux_backend.h b/mm/damon/perf/aux_backend.h
+new file mode 100644
+index 000000000000..70e6ac6771bc
+--- /dev/null
++++ b/mm/damon/perf/aux_backend.h
+@@ -0,0 +1,72 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _DAMON_PERF_AUX_BACKEND_H
++#define _DAMON_PERF_AUX_BACKEND_H
++
++#include <linux/bits.h>
++#include <linux/errno.h>
++#include <linux/perf_event.h>
++#include <linux/types.h>
++
++struct damon_ctx;
++struct damon_perf_event;
++
++/**
++ * struct damon_perf_backend_ops - PMU-specific AUX backend operations
++ * @name: Human-readable backend name.
++ * @flags: Bitmask of DAMON_PERF_BACKEND_* flags.
++ * @match_pmu: Return true when this backend claims @perf_event.
++ * @init: Allocate per-event, per-CPU resources.
++ * @cleanup: Release resources initialized for one CPU.
++ * @arm: Prepare the AUX producer before perf_event_enable().
++ * @disarm: Quiesce backend state after perf_event_disable().
++ * @drain: Parse pending AUX data into DAMON access reports.
++ *
++ * All callbacks run in process context.  The caller serializes resource
++ * lifetime against CPU hotplug and invokes @drain only for CPUs recorded
++ * in damon_perf_event::aux_cpumask.
++ */
++struct damon_perf_backend_ops {
++	const char *name;
++	u32 flags;
++	bool (*match_pmu)(struct perf_event *perf_event);
++	int (*init)(struct damon_perf_event *event, int cpu,
++		    struct perf_event *perf_event);
++	void (*cleanup)(struct damon_perf_event *event, int cpu);
++	int (*arm)(struct damon_perf_event *event, int cpu);
++	void (*disarm)(struct damon_perf_event *event, int cpu);
++	unsigned int (*drain)(struct damon_perf_event *event, int cpu);
++};
++
++#define DAMON_PERF_BACKEND_AUX	BIT(0)
++
++#ifdef CONFIG_DAMON_PERF_AUX
++void damon_perf_aux_drain(struct damon_ctx *ctx);
++int damon_perf_aux_register_backend(const struct damon_perf_backend_ops *ops);
++const struct damon_perf_backend_ops *
++damon_perf_aux_find_backend(struct perf_event *perf_event);
++void damon_perf_aux_select(struct damon_perf_event *event,
++			   struct perf_event *perf_event);
++#else
++static inline void damon_perf_aux_drain(struct damon_ctx *ctx)
++{
++}
++
++static inline int
++damon_perf_aux_register_backend(const struct damon_perf_backend_ops *ops)
++{
++	return -EOPNOTSUPP;
++}
++
++static inline const struct damon_perf_backend_ops *
++damon_perf_aux_find_backend(struct perf_event *perf_event)
++{
++	return NULL;
++}
++
++static inline void damon_perf_aux_select(struct damon_perf_event *event,
++					 struct perf_event *perf_event)
++{
++}
++#endif
++
++#endif /* _DAMON_PERF_AUX_BACKEND_H */
 -- 
 2.43.0
 
