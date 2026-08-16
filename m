@@ -1,72 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255453DCDA7
-	for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 21:04:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F353D6CC5
+	for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 21:04:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786914275; cv=none; b=os/+6I1UlvsvwVZkDEgeQVHy0yfEodF0PIsCa09lBQJ8ZdOsB7uVjnC2tQz/01XzCYAPh/XCodncPr4xbWnGkmPKUjlMnkSLYEENB/Bg91ZA3mDxsMcV8prbLjx4Zt2By6VSFikCEbAZMjtznjZB1qA6sCwdvxkx//g+bqKX9W4=
+	t=1786914292; cv=none; b=V9nfDGaqU4WsZrrateE4AVIj+KRNYn4PzYKJDLfZ86gDH4pTac5UrYxOOsYlvIZ238L+zcWhbCEAMqEqgWRQ5cGHy88RfHrALr6nBRVo34GWi+eJo8ADYbb997IFKeAZPvKzw4UsRbtRd+dB1Z+dsMjFKzcRQzVFeLSZ7LmmUPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786914275; c=relaxed/simple;
-	bh=dnlRt2PeQanz0t/5qfRKBdJruozQQdh70OLcq5JRzJ4=;
+	s=arc-20240116; t=1786914292; c=relaxed/simple;
+	bh=tttAY3E3GeRuy/eChkhhbIyJP4jXdybu/OWBIanpSMA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=kaMb6ONnvqp69hDDGAQvAGgs5MnKp28jmjhAxUVm7SpWcKdj9UEInO1Ju06TXWu6QVeM2q5Y3+9RfDYjGbc6owyEQZ+YKgmJCOe4PN1bYGMwdfq0GI2vRyOFJV6dJ3A0LbuOBYgddMb9IyJq1PzowduR0HrbD8I4G+HbpY+r/H8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fP1aMBmD; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Bn2SpMpE10FDMVDPfML6EMec9Y5pUw/QXJC2LAxGrwweAvcCueV9t4gOtlX1SuyM6LSmQaGWOuj3I4GSQO/wV6rTvgjZb/XLVfAACt7Zdt8yYAf9rsI5dpGWMqlnXF1Z14tHaXNOtMyxL0YhfD/eXW4/h0oImUeyHGAhB9pAAeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=euf4+h+I; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fP1aMBmD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B38391F000E9;
-	Sun, 16 Aug 2026 21:04:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="euf4+h+I"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F6E11F000E9;
+	Sun, 16 Aug 2026 21:04:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786914268;
-	bh=dnlRt2PeQanz0t/5qfRKBdJruozQQdh70OLcq5JRzJ4=;
+	s=k20260515; t=1786914289;
+	bh=aknqlNOW03i4PkLJxbC/Oe5cWdluzeez/a1VV6z5rIY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=fP1aMBmD290QQfev7uXkmDDwaACZmpAC8v6ABxdpY/8WAMnjbw36P91YrkH17HKOI
-	 9wskxWO+UbNx9s/uP4+ltYVD5mTDCOG+2epuiBNyp+WPOHtLisImCGuV9wbNd3M6Z/
-	 1da6CI+MBc3fIkd1tK4pNdakCPj+zfChnQBhNf2Ym9fdEEE6j8VlRVDF+O8vvrQDmX
-	 JTVWo1f/BQymaOwabXk46hLgJATDl4KRaP5dZ2/Uz8CnjGFKVOopnpikX+UpeuqpgZ
-	 Q44erJQyhdxGovBSRMwx54YqDO6av0OseHISp2A35ad1TYDvxk/fo1xMkoIoPoUP2U
-	 xUfsQWSItT8Eg==
+	b=euf4+h+Ia4sB34By0aa1NMtF8jvBM+CBr8jVl+uyfFBtrIxeC/Rdjl7QDYYQm/vBf
+	 nRLB8STEFPCqbOXOJcjaBaa4w/NXY0v20CEKgzCnWx721BnKEQE7JZhqJRlPwb49Fa
+	 FIwTGK+gSLiRTgkG7+u8bOq9BQunhptVG2DDOB12kuye5U1a6Mh0GYvGZMhOTWBfmv
+	 HOlS0ci0KAbRL71FvbpWi1UK/Rb/xUUq7YV1wK+QLLwIueLAXArj+SeMtyywKqNQ4C
+	 RsT6lXuWMCBGP0fFsA6vT4VvW65X5ANlxSgKPQgqkrC6qrbJ9kW/IR6im6Dt8xLS8n
+	 FMoWoXnQBSGrw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v2 1/4] perf trace: Introduce kernel
- symbol beautifier for virtual addresses
+Subject: Re: [PATCH perf-tools-next v2 4/4] perf tests: Add shell test for
+ kernel symbol beautifier
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260816205921.576365-2-atomlin@atomlin.com>
+In-Reply-To: <20260816205921.576365-5-atomlin@atomlin.com>
 References: <20260816205921.576365-1-atomlin@atomlin.com>
- <20260816205921.576365-2-atomlin@atomlin.com>
+ <20260816205921.576365-5-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 16 Aug 2026 21:04:28 +0000
-Message-Id: <20260816210428.B38391F000E9@smtp.kernel.org>
+Date: Sun, 16 Aug 2026 21:04:49 +0000
+Message-Id: <20260816210449.5F6E11F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Currently, when 'perf trace' formats tracepoint payloads or system call
-> arguments containing raw kernel virtual addresses (e.g., a work item
-> function pointer work_func_t in workqueue:workqueue_execute_start),
-> it prints them as raw hexadecimal values (e.g., 0xffffffff81234567).
-> This impairs readability when tracing kernel execution flows.
->=20
-> Introduce a dedicated kernel symbol beautifier,
-> syscall_arg__scnprintf_ksym (i.e., SCA_KSYM), to resolve kernel
-> virtual addresses to human-readable symbol names and offsets
-> (e.g., "flush_to_ldisc").
->=20
-> The beautifier looks up the virtual address in the machine kernel maps via
-> machine__find_kernel_symbol(). If a valid kernel symbol is found, the
-> symbol name and offset are printed without requiring --libtraceevent; if
-> the address is zero, "NULL" is rendered; otherwise, it gracefully falls
-> back to hexadecimal formatting.
->=20
-> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
+- [Medium] The regular expression used to verify kernel symbol beautificati=
+on incorrectly matches raw hexadecimal addresses, causing the test to false=
+ly pass even if symbolization fails.
+- [Medium] Temporary file created by `mktemp` is leaked on early exits.
+- [Low] Unquoted `$0` in `dirname` command substitution can cause the scrip=
+t to fail if the execution path contains spaces.
+- [Low] Command output is directly interpolated into a `printf` format stri=
+ng, which will mangle output containing `%` or `\` characters.
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+--- Patch [4]: [PATCH perf-tools-next v2 4/4] perf tests: Add shell test fo=
+r kernel symbol beautifier ---
+commit 3b67c2553760890642357a39f8d2c206545b9020
+Author: Aaron Tomlin <atomlin@atomlin.com>
+
+perf tests: Add shell test for kernel symbol beautifier
+
+Add a dedicated shell test script, trace_ksym_beautifier.sh, to verify
+that 'perf trace' properly symbolises kernel virtual addresses and
+function pointers using both the default kallsyms beautifier (SCA_KSYM)
+and BTF type routing i.e., --force-btf.
+
+> diff --git a/tools/perf/tests/shell/trace_ksym_beautifier.sh b/tools/perf=
+/tests/shell/trace_ksym_beautifier.sh
+> new file mode 100755
+> index 0000000000000..2916f78503f71
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/trace_ksym_beautifier.sh
+> @@ -0,0 +1,52 @@
+> +#!/bin/bash
+> +# perf trace kernel symbol beautifier tests
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +err=3D0
+> +OUTPUT=3D$(mktemp /tmp/perf_trace_test.XXXXX)
+> +
+> +# shellcheck source=3Dlib/probe.sh
+> +. "$(dirname $0)"/lib/probe.sh
+
+[Severity: Low]
+Does the unquoted $0 in this dirname substitution cause the script to fail =
+if
+the execution path contains spaces?
+
+> +skip_if_no_perf_trace || exit 2
+> +[ "$(id -u)" =3D 0 ] || exit 2
+
+[Severity: Medium]
+Since OUTPUT is created via mktemp before these early exit checks, and the
+cleanup trap isn't registered until later, do these exits leak the temporary
+file in /tmp?
+
+> +
+> +cleanup() {
+> +  rm -f ${OUTPUT}
+> +}
+> +
+> +trap cleanup EXIT TERM INT HUP
+> +
+> +test_ksym_kallsyms() {
+> +  echo "Testing perf trace kernel symbol beautifier (default kallsyms)"
+> +  perf trace -e kmem:kmalloc --max-events=3D1 > ${OUTPUT} 2>&1
+> +  if ! grep -q -E "call_site: [a-zA-Z0-9_]+" ${OUTPUT}
+
+[Severity: Medium]
+Does this regular expression inadvertently match raw hexadecimal addresses?
+Because the character x and hex digits fall within the [a-zA-Z0-9_]+
+character class, it appears this could falsely pass if symbolization fails
+and perf trace outputs un-symbolized addresses like 0xffffffff12345678.
+
+> +  then
+> +    printf "Default kallsyms function symbolization failed, output:\n$(c=
+at ${OUTPUT})\n"
+
+[Severity: Low]
+Could directly interpolating the command output into the printf format stri=
+ng
+cause issues? If the output contains % or \ characters, printf might
+interpret them as format specifiers or escape sequences.
+
+> +    err=3D1
+> +  fi
+> +}
+> +
+> +test_ksym_btf() {
+> +  echo "Testing perf trace kernel symbol beautifier (BTF)"
+> +  if [ ! -f /sys/kernel/btf/vmlinux ]; then
+> +    echo "Skipping BTF test due to missing vmlinux BTF"
+> +    return
+> +  fi
+> +
+> +  perf trace -e kmem:kmalloc --force-btf --max-events=3D1 > ${OUTPUT} 2>=
+&1
+> +  if ! grep -q -E "call_site: [a-zA-Z0-9_]+" ${OUTPUT}
+
+[Severity: Medium]
+Similar to the kallsyms test above, does this regex incorrectly match raw h=
+ex
+addresses when BTF symbolization fails?
+
+> +  then
+> +    printf "BTF function symbolization failed, output:\n$(cat ${OUTPUT})=
+\n"
+
+[Severity: Low]
+As with the previous printf, does embedding the output directly into the
+format string risk mangling the output if it contains format specifiers?
+
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260816205921.5763=
-65-1-atomlin@atomlin.com?part=3D1
-
+65-1-atomlin@atomlin.com?part=3D4
