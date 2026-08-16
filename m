@@ -1,25 +1,25 @@
-Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020086.outbound.protection.outlook.com [52.101.196.86])
+Received: from LO2P265CU024.outbound.protection.outlook.com (mail-uksouthazon11021113.outbound.protection.outlook.com [52.101.95.113])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1420C3D16F8;
-	Sun, 16 Aug 2026 20:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.86
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 057A43D300F;
+	Sun, 16 Aug 2026 20:59:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.95.113
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786913973; cv=fail; b=hxItzYSRU068PZI5KUBMCAjkKlFTj+6XFPGrmX6y1uuw8UOVYhAS4zyUVtXPonCzW3C7/Xu7Rc0zXXui0gvExjaIg/2sb9vp0IgAJ43GyHG8YOXZhD3eMv38Tp5TRJnTyI5xkY1nhUcQEhhBaxkFC3/+p6ctkDLLw3GNceRZZbc=
+	t=1786913977; cv=fail; b=s7a0xCJhAQYcQPq+TgLLBmwMkFr/3PBgryxXTm/5WVV2vDYJkdF6oBchOuAgJf3Og43/mx4+MRPvfpoTKSSJAhERhdkWVbTDrYLR5Lb3lQC+TIUb8MEQ8hKsIhoJDp4xSry8YnJmunDiu44ROLE29Ud6BaMV4WZHkvJ/WOIdLMo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786913973; c=relaxed/simple;
-	bh=/dT15EN5BtXqC/Kc+JIYw1DdFsMy6ur+RmiE+0tyCcI=;
+	s=arc-20240116; t=1786913977; c=relaxed/simple;
+	bh=GVgKO3P6BpaGDNnLxbWKGuDzUbD6phg67vMg29khpy4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=B1YCho8b9JHKFJzAVCJN32EleS87DjFXjUTcqzpG29s+N0x98HM6JytextJ9+CEM6O7iMQOcf5sPg2elywts+bp3mL1s6LBMDHQ5ViMIN4ycxxWLmVRXT4drCP9wksPUGUeNdYSYdTuZF/bcArfmxAbwfNwvNyGQdoCFVXm58Rs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.196.86
+	 Content-Type:MIME-Version; b=OpRb57aL1Tza747QrLSIUYT+8oRIqGHg4NVmcdS1i8emgbTUWHGzreKUqoW7OhPEkXO2rVBQlwq1Ik/6J1NtAg7AYxxmITtP3FBGG8UZSjs/5ZrkxnkU0RwZHshjyqDR71HJ+JpnqTj3mRCNAJtqF9AHO/IXkypqorOpVbHPOz4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.95.113
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OgbYfNvhKYhVwuwO8CT6bihl7qhniDLgZxAAgrP+ae0b8T3cHaxPoi6MRBOcanfhJMDNz9IkZ8smR2S/oUcmoZOptoiAhn9iF1pe0OFZ5OlQUh/6C1f3QqSXn+GXpry56Dya8tzohEIOB1yMQ0qgSaiV0fyLG8pShMCXjpN7eX453naH0LB2RjYkyxyYLsc1PFL0HyLxfc0r0itDE2yPTwr5uzwZyC2IuyUJNAHREMBpRwqrH7nJswcELtqUeOSKLi7HdhwIaCLtOI9K38cIlKMWsO+noKlzuYEO9RHF8jpSHi+ysDj77dcBrob/bSgtUZyRnhOkFrpuo4NZXFzCvw==
+ b=XmtMo22gv33e3dIx+nddcGWi6e55ri5kgH4GX8TC2af3BdQqj69OEkdSPPs3FoejMh+eSiOFy86zOAXOLOnfHWH/GIJnOmFJVtMXoi/GBDUNHFYuxFqcmmiU3ObDngLWHo8cVJ5ox/lezDdViy2Dk+zsmHb3lt/gVVfQJRLHu+RI4dOGNkpKrRR76wlNXihWfsn9rnetKcOWXvJJVY0rktmX5kARdmIDLbyM2lXXUl6RMw+4b/U6o74qLNSrSiYSW7p5gUnVs8IUxin+oBP4GsHTuvvgvO/vAOT4RurgHEdCr8IGe+o5sqK2w5bkwQjZhXAAaSeuLOFYDI+1hoLSog==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=+LY40U8azJZOZVX5dkyDjbVu9cZgdNS5hWk4U+zDsEQ=;
- b=Q3Qxt+CUPnmeGNxucSeJf02ER2dBWLnxTl/WcwYMnJgOUoXei+/OYdyURxdpPSNP4KR4SEcyU1hCPPK7YWwHHKVgYJGqkU/8NHsav2Quxd1FbB7aiEuk9Vqk8HeW3LnuHdSZZCq9MCNKBtL1RR2VSPX55g55jzj1t2b2hx6VKUZsx05L0KWT8SRvBNtO9bnxZ9K+lIiFLIDuE4z1Zs8Ct27iqTo++xaOYabj3zTtVkvwL8gS1FgQOPJpeFQ/tSVEQREpaYsYy7CBjwK/0Cbd4lU3+c62P5ALZjzJA1st18A6xF+YHTGQ4i6pjQidWLkYNUAI7Tq74Y1Tgz38OWaTmQ==
+ bh=MlnSBGjxPrFqwflqDgOltvRSK3YSTPL1JmdjVEwN/tE=;
+ b=NFYjLWWLwyt22lkmDFWMTtvmDzz7CTry8FSVKelL1HHUkvsqxc/wZ7jEqsQdzGKtcdfNO297meK/zPKpnUyUb9rK2reQlOpZ37leuGOcEsTFblOUlQrmpZ+xaIX/9dhq6oHziLuRhQ9Bx+ILvbEY8iWu1gUUFa95lcfjjntEDGCgxtm58/sWnqNlNDWSOFRb8hUu9FR+V6f6qM7KDRi+tkk2ADWNUSOVzoh/okJvTKY6dv6yZ0OZWfPJwyGBlkMBC8n4vtlqWko5sSQLD/4W4HRPLgOvbYZM8hpUiH0emb5zhPYY0HpialQbdPz8wtM45eP7OBnLQp2YDdHF6iX7XA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
@@ -29,11 +29,11 @@ Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
  by LO3P123MB2682.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:fd::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.16; Sun, 16 Aug
- 2026 20:59:29 +0000
+ 2026 20:59:32 +0000
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0315.016; Sun, 16 Aug 2026
- 20:59:29 +0000
+ 20:59:32 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -54,16 +54,16 @@ Cc: mark.rutland@arm.com,
 	rishil1999@outlook.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH perf-tools-next v2 1/4] perf trace: Introduce kernel symbol beautifier for virtual addresses
-Date: Sun, 16 Aug 2026 16:59:18 -0400
-Message-ID: <20260816205921.576365-2-atomlin@atomlin.com>
+Subject: [PATCH perf-tools-next v2 2/4] perf trace: Auto-assign kernel symbol beautifier to function pointer fields
+Date: Sun, 16 Aug 2026 16:59:19 -0400
+Message-ID: <20260816205921.576365-3-atomlin@atomlin.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260816205921.576365-1-atomlin@atomlin.com>
 References: <20260816205921.576365-1-atomlin@atomlin.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BN9PR03CA0271.namprd03.prod.outlook.com
- (2603:10b6:408:f5::6) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-ClientProxiedBy: BN9PR03CA0273.namprd03.prod.outlook.com
+ (2603:10b6:408:f5::8) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -73,136 +73,112 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO3P123MB2682:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3b996971-6f11-41ef-ee4b-08defbd9435b
+X-MS-Office365-Filtering-Correlation-Id: 57975589-771f-4369-7306-08defbd94567
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|23010399003|366016|6133799003|56012099006|10067099003|18002099003|22082099003;
+	BCL:0;ARA:13230040|376014|7416014|1800799024|23010399003|366016|6133799003|3023799007|56012099006|10067099003|18002099003|22082099003;
 X-Microsoft-Antispam-Message-Info:
-	3mq/bn9hS1VUTK6dxPEwE0Du+Ypuf9mBU7l1Mcz6Gva/A82O9gAK0IJ/7mz1nreGojt6ViS32sZjIiHYmZ0Igb+oh46jRjxVOmoLa7Z+8ffADPiHy45HLooJr8vgIrJjnSE/gVz30V8nUsUG6s2h4IvlkbYeUTMjvfEE6LRFMtYjaFgHH/cOYmQwxJ5j1WnYHe3FU/1unBxFgCgabmOlZz/3zbJbqho4h6F/ax7K7FAgZwseZFJeDCcySWspydR4xCVszXYp+I31mkYGpzm1V0dK0rCt1zyMWChjr6EM1HTq34zVkPj+65wj7YQjDzlcZcI84EZkiS/oeL/pF2h0sFePJ0glb9Ivtm/7ERA+/mlmnChiuSryqw+V7loRWJWbASppxENwYeQz93BzCrKAgIr1eX7uQOQGVlIHBWGjMS1ZMaZOf3xkNt0caYuu3y2+/H1vC2wSpVooZ+QRXtjLNWZ0vlP4LMl3fD1vlLEXJjH4Sq9XyzI77s28XU7txtQ6DkMMI/i/0RGTnin+P1A3HTz1qWlvQlsOdL+RTejPob+RHoUFK9JEpAssY51HqIlnxb/P3t1gFzsFoS21mxcE2f7tJY87qGzGFCsAPTGYIHH7Hi/2NxAxSa5XvLk5eAhYxujPxmQpJ06es2+BxIQSyyrzWhI9JMnGB0saqqLOWnE=
+	QDZMpEJ4Htn+Se5+wqf5p1GnvQwGEGBHJLUKxkSw+iGh5ubsCPrKe6JC9rRlY4XNbUMYAK75JCMa97wZ5NKamP0atvpwMc121LVgvYa8ATx9Cm9M7zf7Kr+5EDEIv1fLpnnF1fUouINV5z2OEajqDtCKK3Y8qUHTudveZTA+MhfdyXcyNf0MKBeFmMYPH9a9OS/k2vrHJX9KIP3saI2+mRHjDY0Rk1pJzZq8SQMPfD9uehnLfPmyskOtCe3nlC0DHM6WgiKI8UtK5bupsPh3P2yivgOt5CxLZqhJ7uBB5L1ABmCzgNPVkunSMP73wwVv7eRrQUSQq29CYHNDcETuKO9mbRGLSNE6Ol29qJZfaNJfuLN1+Yd4T0oHO2u49truHX1wbpOt9iZHjwGYHTKIWD+hHdwNnxK5xUuy05ajmqsJn1v05kyFx+n9WIVGh9WzNdQ+Jzhf4KgrFqBVbgTlFqzgHYEPTWz3uE+P0D0KVB0dA7dcgGqPAM/8mCGxx4VlKQ0QJrekLsBo6FTMjNT/Bs4hdXV/P5nGVcDlw+JTpstrAIwKOnqCMajt8xwF/5zh4CDsCXlevhrfz5iBTFpzPXHn7Tf51+Z5PnTYVIWPj8kAYdRQ8rKkdNMkM5HfZjFxs5Fabts/HnCp8r8kySfssLopDZC0MJ3LTsQ6gBLUa50=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(23010399003)(366016)(6133799003)(56012099006)(10067099003)(18002099003)(22082099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(23010399003)(366016)(6133799003)(3023799007)(56012099006)(10067099003)(18002099003)(22082099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?vJdKrK+y+sFGcX8y6gFiSzkn+at0FiBG+LFV1Cwcm+dfUj6nySVCJvTCDvot?=
- =?us-ascii?Q?GUKgQCEXU2XflniTqJ/sihKO3wz0gbJSCWKt7Ex5/LRMsVHo9iSDncyzMmMT?=
- =?us-ascii?Q?L9Pb85FDgFbywAGdVFyuxAjOroV68h5xs36+Gnz4l3zUynUxL7MzhQIKFM6/?=
- =?us-ascii?Q?VRM08pDsQwN9IuDcpKuaiBTyFTey26GaYXlzWHT9rY7/AVR05Cp5PGmwL5VE?=
- =?us-ascii?Q?sZe6Owd1cvYwdZ6X14kHJ9BdIFu7ekczbGHjGi5TlWXq3UlwozziJYM72HjM?=
- =?us-ascii?Q?/dTbaMTeoQGUBbSnymlcLbfjBzpgG91StSSkHJ2Da0YJbmEhUOk66eW7IPjf?=
- =?us-ascii?Q?qsN5RUr2LCnIzG5w7VsCtIpeokcAkwvd7A59xAGmu4Nr1ykYZMekB+52KffE?=
- =?us-ascii?Q?VN7hILiSjWZnq4DegrESkcRZ1hF/yYUaFGP9eg98Rv2EZ/0tNGZBV5W3joaJ?=
- =?us-ascii?Q?Wpsv8zx8Fqpyuwy6MQHTq4nVCI9r2h4jiipV3bQhDeK1QlgkaPDRnwX9YvZ0?=
- =?us-ascii?Q?8wwdqQwu3VtQW1UVSKbW8dZJqWMTB+Qkh8j09pHOw+Pv/aeHSdfH2bnR1ul2?=
- =?us-ascii?Q?uwKdi4GMAAOKV6Y+3zy83wvpJi/QHGekAq2VdLFOQ5GoOTxM+llfK0irnarT?=
- =?us-ascii?Q?pQcDC6G83/0IhGur/HtrLKpa+ug64IJby7wWzhcSJV9P7d10GdkXfndclryS?=
- =?us-ascii?Q?Y/nE6XFipuumi+1R8tTJO0jK5Qrxv8fGHsG2uwg2ZHrOcVgstPnJZTIWiR4A?=
- =?us-ascii?Q?+V+56E6Dy9l1cfFMOFtjaDuzi+Az1jC1Ry20CxGWkESUFa1afk91YDRh3D4P?=
- =?us-ascii?Q?xf0xeDhBrbmnBc6OKhBlrXLWAEbQlIXx9mgKWv2AutGrFNMmkP+YhawztmD4?=
- =?us-ascii?Q?omcEf4r5FVzOEnHPdy0bTDORiTtssqmbQYg5bCdgZWEbVNJqBRzuNKttUb11?=
- =?us-ascii?Q?D0Qxp5UTWEvIR2R6k79zjHUNaUs8fJ6632TX4sa0Dng2j9iLKQ4lLxU++kid?=
- =?us-ascii?Q?yk9BKKF7/fotYQXO9ve3Px2VIN7/oX2VGwgToOgPAHgVpeK+VkUgx+yd+tqX?=
- =?us-ascii?Q?hFR6e4cMIycnQC5TYUYoXWHZDWWav2BBvWcqM+J5NZoB5N5aj3T9iE9aBTId?=
- =?us-ascii?Q?3NzN0xkseVPupsYoGIDJu0EDfhzi2gNSq+mR7lGvkszBA138/TGoMvW2y4k9?=
- =?us-ascii?Q?/5FPUX7SNs9IWuX2030xiPDx65Za4nz7E6tWIiUbyI/RQ8wZb94/MfqzL4vG?=
- =?us-ascii?Q?mVjovypox+ew96ILpiKwTeW8DURO3vLp8dYuuAEhn8SxihHVoimpNmQmlyby?=
- =?us-ascii?Q?v5tm9wKi4JKUCamiyYIMWlbH2jortnr7wTPTBxtenFzHwayTlGpmEjKBYD4r?=
- =?us-ascii?Q?183EC8fraR65vC5lR3xqd5vbbVseTdP83rqBdUNz1jRn1q27LBaFTFPF+4jv?=
- =?us-ascii?Q?g/0cPfVWkHHYIL7jPAlk5zw1g1i+3WcP+2q8BSRk+Vr/7EnMvDZ9LC031zLs?=
- =?us-ascii?Q?7Sc1ImnyrrSJdwfNXvm/afGNdMrHagAEgzcKqLJp0FEF77C4aOBSAlMC3f1C?=
- =?us-ascii?Q?HGsHiECJDw2zfyUYzaEp0iIYfUPsVmCYyAvcqsF9xw1xmJZUOh7UYkyRrj+h?=
- =?us-ascii?Q?uoLToP0XY6uE75iEnhGR95udWmEq4VY3ziji7W72AkiFo6/tS7p/z0afXDpA?=
- =?us-ascii?Q?HlY3hqK9rJKgrCWfSG3lg4MP7qTxtFlBx0VK2z2nyKCoXGtHVcbX1ye+bU81?=
- =?us-ascii?Q?euZWCFWeqA=3D=3D?=
+	=?utf-8?B?STgvTzIrRm9HczRLWWt4NWY4d3pTMXhscUlzeWJsc1dHdGdBd0RGZlF6WU4r?=
+ =?utf-8?B?Sk1mT1BSTG0weFVpbExNemZZTmEyTEEzUSsxSGhhRlNUenRLTmU4WEJocllz?=
+ =?utf-8?B?dUl6OGJTbGU4MGI2eWdIT2hxWVNMZGpOY2lLMXdHQW10S1ozbmxUYitFQ2FX?=
+ =?utf-8?B?c2lmbWEzV2lSa3AwQUh6cW9SY29VanowL3FteEkvWWZJelp5eXJqNHJkS0U4?=
+ =?utf-8?B?ZWNSRXdBOXdNT2VuendCeldzd0VGMjZRUGpKbjZmN0ZXNjAxaGRxbzJ2MmpG?=
+ =?utf-8?B?TFpXZUltVnMxODZkNXZZSFFLczQ1Zndncys5TnlEbk9aQjQ1d1ZlRDRSdzlm?=
+ =?utf-8?B?ckZXaFJxZm9NSmdWbkNVcGlyL3V6Wms1dW55RDMxb1I4V0VHQTRKbVdkb2ht?=
+ =?utf-8?B?Y1NYNDNQUWlOdnR1SE1vSFNsKzhkVnNMMTh1SU9NZVBiWDZYNTRKS1JBMVBj?=
+ =?utf-8?B?NjI3RFRzZ1MyMDhhemV3MTNWc3pxTnBrelVaTjVGWDZQa3c2SlNOU3VDWTRr?=
+ =?utf-8?B?U3FJZERVZ1VzMzV6WnZjcU9NWHI1aUpNMUN5TGtLQ3o2QkVNS2NQTWVpbXVD?=
+ =?utf-8?B?bU41MW9iOE5zWXN2bVQzMEloODEzcmdDQlVKTWNpclRwT1REYmVSa0Y5dm9t?=
+ =?utf-8?B?d2FwUkwrUURqdkdSWnE0RlF1MkRYQUY5L0h1L2d1aWZvZ1UwMUlseEZ3aEdC?=
+ =?utf-8?B?MVNOOGZaS1hQNC9zSXpHQkM3R2dPZFhpTmoyRk9OdURJSld1djA2MmV2OVgv?=
+ =?utf-8?B?ckc2dkF5ZXNCcUVESUlJNjk2bWgzSmprck1DZmlaa2crampWeDNGZTNJMlBs?=
+ =?utf-8?B?aS9vMVhHc0U5OHRRM0t4R241M1l6cVhLUS9lb3haUWp0VGM5TWpRRmJ6MTZn?=
+ =?utf-8?B?bXNoNUxFNUpDWGo3WStwR0RZUnBLakdIYTdmY2V6SXZUUmNzRC9lT3o4Qkd3?=
+ =?utf-8?B?K3gva0pzTWFMbjNCZUhkalJWYWc1KzJnK25nVGozNXlVTXBKM3BibHZaZWhM?=
+ =?utf-8?B?SnZIZyt4MVFjWXdYMVY5elRnbEo4aDFRR0NHSzdWSGhESkZKbWtMWFdEN2d6?=
+ =?utf-8?B?SzAwRFloZlUwM0h3UXJuY1hIelUyQjR4OE9TeE5nbUJOK2tjRXFmVXhMNmUx?=
+ =?utf-8?B?UG9WOHViUkpRc3F5TFBLaUI4UFpsTXVlQUZwbGNSVDhFdU1sRzZWMFA4WFBB?=
+ =?utf-8?B?VU43cEZxWHpzQmhtbkpTYXI0bExCS1JQZDBWVUpIRE5kaWIyS0hGRkFSdndr?=
+ =?utf-8?B?QkMxaUR5NUNaQkdNUm16OWtZSDBlREtUYWVFeHhXYjdYQjlmejJKaDYzdVRS?=
+ =?utf-8?B?dmY1L2ZTbDQ2Z1pPL3ROSkN3MTR0Rk1XS3l4dktIeUtSVHZpUmpCcm83Vnpk?=
+ =?utf-8?B?Q3F6MTZ3SVYyZUo5eUp3eGtXMDUvK09nM3RRbDM5NzZrZFlFYzNsQTE0em44?=
+ =?utf-8?B?UHVWYlgvY1VHZS9oNXZIK2czWVJoV3FZUWJmSTA1bUVPckwzUXdpSS9qNWxK?=
+ =?utf-8?B?b0p6bkdpWEJTb05KYW1oWUhYTW5ZNDEvck9FYWFjR2ZqQnhZTmtFQ0dFQlhJ?=
+ =?utf-8?B?T3I0b3RzQkcweEg0T2dwK2NPZkFmOHU3aG56Wk91TFM4d0VVd0xvU3Fzd3hx?=
+ =?utf-8?B?V2FoMjJsY0ErT0VNMjdTd1pQaUZwTzNiM2YwKzBydFNoQXY4T2tPdDBDMmY2?=
+ =?utf-8?B?cFJFVG5nTnFGQXE1NzBrcjhQNXRkeFVmV1RNUUllRUE4QkxtRFBZdU5FRFlF?=
+ =?utf-8?B?NDlnaCt1Z3RwQ2xUZ2pMSkdqMlZNOGZxcDI0OE95V21rbUNodUhyYmpHR2E3?=
+ =?utf-8?B?Nlg0Q1p4bXF0ZlpXbnF2S3RWMWtOVFNBVlFQU3hMcVcxVVN0eTB0Q3lSNTFL?=
+ =?utf-8?B?aWFSU1g3K1NaL2gzdWFiMkEyTlpCd3dnVVo4WnBUaVovZHNoSDU3WTloNUl5?=
+ =?utf-8?B?SHVOQisrVGVCVml0em1KQWE2dUY5Z01HTGNsZi94bEpDZkZUeGd0MTR2WDVp?=
+ =?utf-8?B?dW5JaktNY1c5TVRlWG9jZXdCRnFKWDYwZDZUL0puckd5R3ppNllUQjlYNWJ1?=
+ =?utf-8?B?Ylp0RzBIRWxsTi9YeENoZkY4SGhJaTM1aG5WNnZTbjdBNWtuZm5WeXFPZGtz?=
+ =?utf-8?B?SG9kSGVCYytLMHFHbDJrdXZpTFFwUUl3WWxwRW9oalFxTnVDL2planNnWXN1?=
+ =?utf-8?B?TFNVRldya2huME5yRDdZandnNDk1U0V3cjI2c1l5QkhhdXRKNkhDYUFDU1JT?=
+ =?utf-8?B?RWh4QlpTSjlybVZaYm9EdmV1ZE5oTmg0QktFRUd4dDlsYVhzeS93Q1dRSWlj?=
+ =?utf-8?B?RFdOTXRQWCtVZkZNMDZZUUltUXhkQUZTV0MwSmdZZ0t1SERTeTc2QT09?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b996971-6f11-41ef-ee4b-08defbd9435b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57975589-771f-4369-7306-08defbd94567
 X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2026 20:59:29.1457
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2026 20:59:32.5187
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MddJF7uNFi0IQm4zjqEewJm1Aeu+job+AYPffPUw5tmA3xapLcBaf9Kt86j0fCQkw014TO6DK4uSd5E2xE7Msw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: /pCkTh4Hq+RyMKy8HQIy22KYxjRYab7KdCYRjbsO32yuBku69rCtrlMo2jweQUkRCD79F/04wwru5QggRQrrqg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO3P123MB2682
 
-Currently, when 'perf trace' formats tracepoint payloads or system call
-arguments containing raw kernel virtual addresses (e.g., a work item
-function pointer work_func_t in workqueue:workqueue_execute_start),
-it prints them as raw hexadecimal values (e.g., 0xffffffff81234567).
-This impairs readability when tracing kernel execution flows.
+Tracepoint fields that convey kernel function pointers, such as "function",
+"fn", "work", "action", and "callsite" are currently formatted as generic
+hexadecimal pointers by default.
 
-Introduce a dedicated kernel symbol beautifier,
-syscall_arg__scnprintf_ksym (i.e., SCA_KSYM), to resolve kernel
-virtual addresses to human-readable symbol names and offsets
-(e.g., "flush_to_ldisc").
+Enhance syscall_arg_fmt__init_array() to automatically detect these
+fields by name and type signature (e.g., typedefs ending with "_func_t"
+or "_fn", or C function pointer types containing "(*)") and assign
+SCA_KSYM as their default beautifier.
 
-The beautifier looks up the virtual address in the machine kernel maps via
-machine__find_kernel_symbol(). If a valid kernel symbol is found, the
-symbol name and offset are printed without requiring --libtraceevent; if
-the address is zero, "NULL" is rendered; otherwise, it gracefully falls
-back to hexadecimal formatting.
+Additionally, register common function pointer field names within the
+sorted syscall_arg_fmts__by_name lookup table. This ensures tracepoint
+arguments such as workqueue:workqueue_execute_start.function are
+symbolised automatically without requiring explicit per-event
+configuration. For example:
+
+    ❯ sudo tools/perf/perf trace --event workqueue:workqueue_execute_end --max-events 2 --show-cpu
+         0.000 [000] kworker/u32:15/236682 workqueue:workqueue_execute_end(work: 0xffffffffab2f1420, function: toggle_allocation_gate)
+         0.132 [000] kworker/u32:15/236682 workqueue:workqueue_execute_end(work: 0xffff8ac2c1adc010, function: flush_to_ldisc)
 
 Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 ---
- tools/perf/builtin-trace.c       | 29 +++++++++++++++++++++++++++++
- tools/perf/trace/beauty/beauty.h |  3 +++
- 2 files changed, 32 insertions(+)
+ tools/perf/builtin-trace.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index c3c7f1f85c53..003048946503 100644
+index 003048946503..85abae09d328 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -750,6 +750,35 @@ size_t syscall_arg__scnprintf_ptr(char *bf, size_t size, struct syscall_arg *arg
- 	return syscall_arg__scnprintf_hex(bf, size, arg);
- }
- 
-+size_t syscall_arg__scnprintf_ksym(char *bf, size_t size, struct syscall_arg *arg)
-+{
-+	if (arg->val == 0)
-+		return scnprintf(bf, size, "NULL");
-+
-+	if (arg->trace && arg->trace->host) {
-+		struct map *map = NULL;
-+		struct symbol *sym = machine__find_kernel_symbol(arg->trace->host,
-+								 arg->val, &map);
-+
-+		if (sym) {
-+			u64 start = map__unmap_ip(map, sym->start);
-+			u64 offset = arg->val - start;
-+			size_t printed;
-+
-+			if (offset == 0)
-+				printed = scnprintf(bf, size, "%s", sym->name);
-+			else
-+				printed = scnprintf(bf, size, "%s+0x%" PRIx64,
-+						    sym->name, offset);
-+			map__put(map);
-+			return printed;
-+		}
-+		map__put(map);
-+	}
-+
-+	return syscall_arg__scnprintf_hex(bf, size, arg);
-+}
-+
- size_t syscall_arg__scnprintf_int(char *bf, size_t size, struct syscall_arg *arg)
- {
- 	return scnprintf(bf, size, "%d", arg->val);
-diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index 58a3206481ae..0f4801c61a5b 100644
---- a/tools/perf/trace/beauty/beauty.h
-+++ b/tools/perf/trace/beauty/beauty.h
-@@ -160,6 +160,9 @@ size_t syscall_arg__scnprintf_hex(char *bf, size_t size, struct syscall_arg *arg
- size_t syscall_arg__scnprintf_ptr(char *bf, size_t size, struct syscall_arg *arg);
- #define SCA_PTR syscall_arg__scnprintf_ptr
- 
-+size_t syscall_arg__scnprintf_ksym(char *bf, size_t size, struct syscall_arg *arg);
-+#define SCA_KSYM syscall_arg__scnprintf_ksym
-+
- size_t syscall_arg__scnprintf_int(char *bf, size_t size, struct syscall_arg *arg);
- #define SCA_INT syscall_arg__scnprintf_int
- 
+@@ -2198,6 +2198,15 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+ 		    ((len >= 4 && strcmp(field->name + len - 4, "name") == 0) ||
+ 		     strstr(field->name, "path") != NULL)) {
+ 			arg->scnprintf = SCA_FILENAME;
++		} else if ((field->type && (strstr(field->type, "(*)") != NULL ||
++					    strstr(field->type, "_func_t") != NULL ||
++					    strstr(field->type, "_fn") != NULL)) ||
++			   (((field->flags & TEP_FIELD_IS_POINTER) || field->size == sizeof(u64)) &&
++			    (strcmp(field->name, "fn") == 0 ||
++			     strcmp(field->name, "function") == 0 ||
++			     strcmp(field->name, "callsite") == 0 ||
++			     strcmp(field->name, "call_site") == 0))) {
++			arg->scnprintf = SCA_KSYM;
+ 		} else if ((field->flags & TEP_FIELD_IS_POINTER) || strstr(field->name, "addr") ||
+ 			   field_has_hex_fmt(field, len))
+ 			arg->scnprintf = SCA_PTR;
 -- 
 2.55.0
 
