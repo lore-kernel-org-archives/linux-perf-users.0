@@ -1,549 +1,239 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020082.outbound.protection.outlook.com [52.101.195.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A763C182D6
-	for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 14:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786890195; cv=none; b=S55qvvcpQ5xe6OU76dBa0DqjtMeEzJQYyF8Ya1/WIIRd45TS+7dJo+nnmj8tJgagaw49sDLTw5i8hjfZ4P+3ZjrcNxS1BWio7tdUvFR5cjmzSczRG9j/TRo2c6jFwDBhgVpqDGnuJqtbwX+vrkkTrMJjp+GaEUCbRYB8wCPKFYc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786890195; c=relaxed/simple;
-	bh=1SMO3jUvVdF+0ZsnAaZeuLRBqr2AGnWazoTU4AFxdcs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=D79aAsP6MosDCH6uqyPUfxo+xnEWuCh/sAVq4jjQEXeuzWi7TFnokkWzyuMZrbMQD70E+qEU7+X9IuD6D0ZqRjGtDvs8hwIlPIZs1Pq1kBKRjd2XqiRSfe3TiMrPwZUKRD9H8tgqJhGXRJXz16vN3B4iYpenhrrba3K3/BLgpgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H6ndfzXk; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H6ndfzXk"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2cca0c5799eso23060805ad.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 07:23:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786890193; x=1787494993; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=VZh5CgmasB3FNwZhE5a0RmyqcaBUm5A+ddeEPpNzaA4=;
-        b=H6ndfzXkM25PxJf+61CsdEftdWn1QolgXXX//LABwIFN/00He1bcWNIIWNaMA+CIMF
-         laXlfJ/kPs4F4fK+1jA2PcQ+imwM6CL+bmG0gOF6ceoGrX7/r8KXcB60+j+1UAIQ8o2l
-         /wlEdPKEDMNiui/tDUhi+Fy1murrhbg+So4gnLxuaczVYZkIcN1vIj1z4LmxuVIU0WrE
-         Un4gYg5L9zZXUKdC1B8qBC3JPJ1w+yYE8uqThF1yZ1ssxImIdffPxSWApQW7nKOqXhh4
-         3a6+ApGnp18UQF7pfwFvpxACGg2NQDda1u+viwMKI8YwhKzs6BpHoZaofafJTpwZMi8q
-         E91A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786890193; x=1787494993;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=VZh5CgmasB3FNwZhE5a0RmyqcaBUm5A+ddeEPpNzaA4=;
-        b=Qkq+1/WgWzLUka9GI5137vZMRAro9zm3SkT2ne6JzKmF0AU8L8Q3/uip9jrqV9fSTC
-         7j5+Hju8gJT6Iilks5NXJsnWvkNBKEqlMycbwpVuSPu06d+gsr0dYGqjZnESzaI+Drfz
-         WWqSNrvYiXA+dXHu78v4UChao/T7yE9nXuE2KSPoESRUbRujP7vDKvASBXYoQQlq39bw
-         Kt8Rlb0q6Rmulkk5+oPCPsiUt+V7uZ8Kudywx4fGXd8LbZDOJV6ICARuqx+BgWv0oPXd
-         /T7FZMTdUXxl6N3SdHBlF5Kr2bwsDOI0RP+Loou+RBXBH/os75qkQ6eYm0QerC7RNnJh
-         80LA==
-X-Forwarded-Encrypted: i=1; AHgh+Ro9Mm7gCpR9gfs/q2Bq0hzeOTf7Orp1caRlpQXIBok/s6JeNQ/wC9Q+AuJbuTBcKU4PLXWDsAu7BaoMp0tWXUa5@vger.kernel.org
-X-Gm-Message-State: AOJu0YyGo8ra9FA3AkkN1pWkypUUzYePpHIrtCi+Akxfvc+DfKC5ZKY3
-	AIy2QUrRC6APz96u4wqbh8AMa6jE7kKa4DvH6xEwKpUxLiUSreA9xAph
-X-Gm-Gg: AR+sD12jPDZ5dMyxy8tcfmz3vesyz5A3ZDv9Ok5XVdZk/pGJxCExAvw6bW58UkrN3jJ
-	75O6oskk22HYkh7ZcQczuTRImbKvn5B/BxyfjjGUsC+lYtypZblcmwQlJfOdqVzdH6B87dwva3A
-	Krp0BWq4co68QaraQaOlxxoWBmZMr2u+2hoPeXKAhmN07Tjij3IlfFwoI9pbeGcyLxPPqK2CMm/
-	Bvcl8sqVXPv4ShPFUPHPpbC9mg6osiBoAF5xGz8YtZoMsxryDNKwuLem/7gET5wUupl513PH8ih
-	GaE7yTy7HmwUqcYhWN1h3N3TEivPGxywMalH4H4UsUcHuQ6UykmEnH6wpW09Gr4/cdQFSTVlHyN
-	utMnsw9rLT27x08icJ5S4ano6QbAyaRYx+KpusdsqqMHBLGTefS3C3CiAkTZgYov1mzCqnSUJm6
-	YJhFWhI3TxqRP+RuzgfzPS2N9lk7nVNGrSvoQrd0RLhvWwIVFC2luYZSy1pdWANmDJltWC5u0/B
-	f1gZkw=
-X-Received: by 2002:a17:903:8d0:b0:2cc:aa36:c04c with SMTP id d9443c01a7336-2d3b0ad0fa1mr214403475ad.1.1786890192602;
-        Sun, 16 Aug 2026 07:23:12 -0700 (PDT)
-Received: from kernel.tail6741c6.ts.net ([116.128.244.169])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d3aebc8199sm26102365ad.74.2026.08.16.07.23.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Aug 2026 07:23:12 -0700 (PDT)
-From: Kunwu Chan <kunwu.chan@gmail.com>
-X-Google-Original-From: Kunwu Chan <kunwu.chan@linux.dev>
-To: will@kernel.org,
-	mark.rutland@arm.com,
-	sj@kernel.org,
-	akpm@linux-foundation.org,
-	shuah@kernel.org,
-	kunwu.chan@linux.dev
-Cc: linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kselftest@vger.kernel.org,
-	"Lian Wang (ProcessMission)" <lianux.mm@gmail.com>,
-	Kunwu Chan <kunwu.chan@gmail.com>
-Subject: [RFC PATCH 4/4] selftests/damon: add DAMON perf AUX backend test
-Date: Sun, 16 Aug 2026 22:22:21 +0800
-Message-ID: <20260816142222.689624-5-kunwu.chan@linux.dev>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260816142222.689624-1-kunwu.chan@linux.dev>
-References: <20260816142222.689624-1-kunwu.chan@linux.dev>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D71A11EB1AA
+	for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 16:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.195.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786896026; cv=fail; b=mnr5beVSRhoHuzikhljgM8IMVlEn4FmjBWLteT8dvZ4EoDCJx614WA6S5+PY63XALc3EQ3LlQEoRqO/rD+CR5hZPs7bHu6Jgn82ntJqAoXoFL7E1t9wSZN8ji6akF3GBiT+7xqnDmWseAf3vkuxtWv6XquoEej42fHtk6T928Ak=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786896026; c=relaxed/simple;
+	bh=0yGKJ+kPJKbPEsw+cUGIPXMwrlHsqc8SWXpGxmZViYU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=odxykAQvEa+k+M0+SV8E61pZDh6xNcI0pT9LbvDdhBwU4y9Ac+swlXuQ2HjA7w9piM6yT25xsuC6LpEXQ3m34nvvmMPmb5olhpTTClYNGbJK8RKLBADJYXtYlevl/f5LMlAqPJ+6j5dD5VWVu6uplrURsfVdyTqFlPE7umtIDFA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.195.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EDctsT+puQmzpI4by+sQIQ9fW3kNNFmOAkBeZgx0fvrJ9p6tUyCto+Tkfxdb8ou8G4J7yupFjyp+4I7As0LhIeiduv2ZctiqbYn5lUYAsDFBoFUBJyA0wRsTbzum61L5gs9AEZye0TovoVUlEOTKdLHFP+a6RsFTpSM15Jzsbt0cC1OAdVofupEH/yVdPY1oL4k36+VBxgA3WfZHo+tf60e5kNpLZ5rYYGdo7tDoPD8Ftmj2hjPTgoq4kOf00oCAqtFO9yHjbjIgq9z4SDwWkdRuaWDW0unvL4/3XofXLTqW0nC0/uldOwtY+J/VKLK/HyHZFMAWojF0wpNydi4ZiA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=FfGtpLjpbF7yNTUBtkH1LDSoKVKwAAfSjJcDJdW36cs=;
+ b=yD7hNQpJmt6woXg4TKefpSHmxlBf2FhFUmPb2bfpk5Hw37q+S03vCRb66jtJt5hL7wwJHcSW7QBoic6X/5oqBu7oWm4UyciOOvjf+MT3jToVWt7abVFm9nTP82tBM9L4T8BpMt8BxIa58F+FSqa+uK4c6UHvkz6M1sg9vjmjmurGU8d+AFbayfObcvfeYw8MJE0lpt1aK/7h5xp/9Efmo82NHTTownSNRjXAPnkV+pC+5mToLuQb9ghQhB3iRmRbNLcmN3Yrzeen6wxTugkcy1TV8RkiuReCKBzR+LY/ZT+1IkmKlWxx0K1KbxWC2i++kDbjbDBchmmOeRw7PaYsPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
+ by LO2P123MB3808.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:128::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.16; Sun, 16 Aug
+ 2026 16:00:20 +0000
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0315.016; Sun, 16 Aug 2026
+ 16:00:19 +0000
+Date: Sun, 16 Aug 2026 12:00:15 -0400
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: namhyung@kernel.org, acme@kernel.org, irogers@google.com
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH perf-tools-next 2/3] perf trace: Auto-assign kernel
+ symbol beautifier to function pointer fields
+Message-ID: <ef5ursm2di54vzof2vcoystaxo6cmueztdazyrf7dffx3fi7xo@fl7iuid32fmk>
+References: <20260815233651.527936-1-atomlin@atomlin.com>
+ <20260815233651.527936-3-atomlin@atomlin.com>
+ <20260815234738.393B21F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260815234738.393B21F000E9@smtp.kernel.org>
+X-ClientProxiedBy: BN0PR07CA0002.namprd07.prod.outlook.com
+ (2603:10b6:408:141::17) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO2P123MB3808:EE_
+X-MS-Office365-Filtering-Correlation-Id: d020234c-2d66-457d-c5d2-08defbaf7879
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|23010399003|1800799024|366016|3023799007|6133799003|56012099006|10067099003|4143699003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	fo4yKfiZK7cYbSSMZKyNHf9W4gy6bmm4CHQIns3TbkosN6CFgtx3HI++Y6PCgZ8pLIi19BHjnGfjuvThgHdWpAKfUWTXrWNxKmavkx9um36Ov7bIYa0CUTQXDiPNoPF95w5AZlCWyz5C+nXX0EqHrv9yNVKGVXVe2eGnKekj3vAvybH10xklGFxzs4hnZJ0t2qAyDIzREUo19n0FWAtUd4A5+WBYFXULNTcps39gVqivuYuudvM8l7kiwsoGnIqNHMHRQP5enOOlnpVdDhFIQiXhtoyzqUy6PCOV2yf9opdzYvngnSQiP/h/9hS1pnxK7tTmYzFPVXWFwtlBhUJcScYy2JXMqzzVSTeS0xxV8OOBOjoOCT7Z/0Y5icCTBIfxJephcNOx92F3J3L5ehxUjRWKn4/2IN6w9aRKLcZyV/v9ALlSxFMXvDBR9621djxyYjwXMFec1pcHcC9kj6O1cd/T9s1Kvxc8yvlFqbgdJuzCcGmIZ0ytXkCHEuauu38BdcaMzGWzqB0+TeWGxzvJ5V1glob/sm6+KEarxfHA4CGvUtgUQP3geb7IV0T5zBXQPsp5oRbSju3D92y0/3MEyzzvEzZf6U2B3bf9mA99+ps=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(1800799024)(366016)(3023799007)(6133799003)(56012099006)(10067099003)(4143699003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QUxEUWVFUXhoQlJnWjNQRGQzMFBKT1BXbjAraXBoU3QwM3BOQkRJbWJXeHRm?=
+ =?utf-8?B?UUtqZGtLWXZWTTY0ZWhJOXBoL2NoclZaaHlwR3kzOVFnOW5xclJSTWphZjEw?=
+ =?utf-8?B?TnQybE9lWGlFcDdMNE01TTk0dEhrV2JvYUNGWVpUMzAzOGRnYXNzRVZ3aW5O?=
+ =?utf-8?B?eWlLNzRnMEFmT3dVQW0yVEk4QzJVYkxNbzNxVnFmVEgrcWl6TTc3T1pFdjBj?=
+ =?utf-8?B?NHBBY3JyQVc0bHRHanZnRU02WlFMb0pYa0J1S0VVUU9GS3EzbENRbFY0ZjF3?=
+ =?utf-8?B?VXppdWw1Zm9xU2FmcFIwVXJWNkpxanRJOWlSR2FxT2lUYUVKTXoxalJkMk4x?=
+ =?utf-8?B?SkxFZjlkcU1rUExLMTQwVkEycnl4dkhWMEJpcEsxai9INFN4YUhWOFp6T2VH?=
+ =?utf-8?B?UUtGL2sxL0pzNGYrQkpuSUl4dHhhUUlBb2dCMTYxVFp3TGNmUnVDOWg3Zy9M?=
+ =?utf-8?B?QTY4K2ZBUzduZHRrZllHTDBmR1N2WUJrcXZKUmZLZVN5UyszVWxKWnR6YWl6?=
+ =?utf-8?B?YUp4RW5zaG9CWEtRN0NWZ0xZWjVJQ3BJS3JlOFFaWUI4c3M5WHlxM1pCa0Qz?=
+ =?utf-8?B?N1JxOGxDTGtwUm00VlZnc3lpSTFiaVhaQVRvRmR6ZHJmY25WaVFyUHkra0VJ?=
+ =?utf-8?B?dHYyOGlVdU9Ea0FWZG52MGpnTlU4RThvcnA2Nzl4MTU4YVBSZUJ6Qm5jZFUv?=
+ =?utf-8?B?ZUo0M2xzVnkraUp4aVJCczN3M01hekhaaTNxd0lQcWQ4dWEwb0RTUGZVenE5?=
+ =?utf-8?B?OGxhcHVUUklYbFhOR1pEZVFWZDN0UVJ2Qi9rVXIvZXBaK1ZYS3dCV1dGMzlT?=
+ =?utf-8?B?ZmcyWThPTXcvakJZajY2S1I4Nk5QSmFlUFRadFUvdnBYUm93NWptbUFJS0U1?=
+ =?utf-8?B?QkJqbk0wNDA3RUZLYnVkTHE2ekxoUEpWazExQ2NPOFozQm1TN0lPTDkzYzB2?=
+ =?utf-8?B?MlVhVXJZL2VMSzQ3YU1FQ0dmeVVtb2Z0TzRZMTE3KzlocDRvb1RPNjdHNW43?=
+ =?utf-8?B?ZDZIdkpoTmRjMXVCZ0VYSHJDak90c3VUcHE5RXJnaTF1STczekVkdlpyV3Jn?=
+ =?utf-8?B?MlNnbjNTVktrNEtaT3lnV0dHOGdyUitNcUtOM2lVTTQxRGxDRXB2Ty9RaFRl?=
+ =?utf-8?B?VVAyMFBhSTBPbCtJeUg0MG9XYWNNNDRXN2RycTFQc3FLKzIxY0hlYjA4b0JL?=
+ =?utf-8?B?USt0bXdVeUpDN2phbTVQTDJOS083dnMyQjhvK1NoaUhpbnFxVWVsVitHSWti?=
+ =?utf-8?B?UC95TkhkK2ZFdWx2bkVaL3plaW9HTFBCSkE5dkVqVFB4aFphUGR5SGZLNWNn?=
+ =?utf-8?B?amFFWDBabko4b2NMVkRhRHJrNkhGZFAxUWJPRFZvb2NsSjFLbGdPMUFPa0FX?=
+ =?utf-8?B?VjA5M2tyeGlUS1pBS0x6dVlpTlczQ2JTSlZSUldpcnpFSFJQc2JCSERmM0FG?=
+ =?utf-8?B?SzZ3SWllM3RvL1Z6bDFBVlhmWkxNWXhYRW5SVll0aGptay9aV2hVNmlpK0xK?=
+ =?utf-8?B?UzZGS2wzSmdXVEZLVFM3eXVHNm1jckd4NTRDbUhKVmROeFhKR0IxT09pOCtE?=
+ =?utf-8?B?V1hvSUFBRW1RUmMxTW9LMjA0ektyNDJOL0VjSy83QjFad1NGalc1K3UrblhE?=
+ =?utf-8?B?QVVqU2RobEpiT2xCYzhjRy9XKzlyNWtJNWJPZmp0MTQ4clNtVTZ0cVM5YkdS?=
+ =?utf-8?B?Q0FzRCtwQyszRGtWaTB3Q1JhZEh4Ri85M09wSElOTk55eGxUVVFyVmlISzFu?=
+ =?utf-8?B?VEVwMjViRXZEN0w3QTluaUFhdE9uWDZPS0NkTWVoZktiTjJYc0VDQklsMi9I?=
+ =?utf-8?B?bVh1WnF5R0hac0NpRVkyZW83dWlWN2hHamh0d05aMmJVTHFiaTVNTWtmeG85?=
+ =?utf-8?B?UDJoOWVRZnZHTHZ3dW93Z2cxbjJsSG9CZ2dTRGRmSnBkeE9HdzAwaXlTdmhl?=
+ =?utf-8?B?b0lJT1FzNld6SWE0QUhiQlFqUE9EV0VDVTZ5cXdoc0tROTdnckptbVlsMkQ0?=
+ =?utf-8?B?Z0YxaFJvRXgreVI4UWtUVUdIZkwwTmdQbU1CT3o0UGV4K2ovd2NuMGZqdlJt?=
+ =?utf-8?B?SzFrSnJxQ0M1ak9KZkJJd0sxVHFBUG5XWkQrYjRMYk5BNXpqNFdTTWZ2Z0lE?=
+ =?utf-8?B?RjZiQmpvdGpNWFU1b1dsVDR0SlpBY0lHVVRPaDU1REFlNjh2NXNmVTlvR25H?=
+ =?utf-8?B?REN5djlHbUpoUzdUYXBkOTdkWXorUXpHWlZ0elJaeGo4NUZsd25RZXRLT25U?=
+ =?utf-8?B?d0RQT2NEaGkyazJpZjhyalQwSVVnWTFCVStRVURObUxvcSszdkMycXgrY0dp?=
+ =?utf-8?B?TSsyanFoYUFLOW9GbXNxdmZaemo4VVFyT0M5UE1NSG1XRXltekFHdz09?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d020234c-2d66-457d-c5d2-08defbaf7879
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2026 16:00:19.4788
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: j/SNIMaE7413zXQVIGrzGSwwfaVsLx83RBY6+UpmxNgrguuYrz8QXjZ4cPMubfFtaujOYgrw7krpJZPHWSe/CQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO2P123MB3808
 
-From: "Lian Wang (ProcessMission)" <lianux.mm@gmail.com>
+On Sat, Aug 15, 2026 at 11:47:37PM +0000, sashiko-bot@kernel.org wrote:
+> --- Patch [2]: [PATCH perf-tools-next 2/3] perf trace: Auto-assign kernel symbol beautifier to function pointer fields ---
+> commit e41ca802a20df2b74611c38302bea036b4cc9f1f
+> Author: Aaron Tomlin <atomlin@atomlin.com>
+> 
+> perf trace: Auto-assign kernel symbol beautifier to function pointer fields
+> 
+> This patch enhances syscall_arg_fmt__init_array() to detect kernel function
+> pointers and assign SCA_KSYM as their default beautifier. It also registers
+> common function pointer field names in the syscall_arg_fmts__by_name lookup
+> table to automatically symbolize them.
+> 
+> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > index 102221b301a54..825b16581581b 100644
+> > --- a/tools/perf/builtin-trace.c
+> > +++ b/tools/perf/builtin-trace.c
+> > @@ -2091,8 +2091,13 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+> >  }
+> >  
+> >  static const struct syscall_arg_fmt syscall_arg_fmts__by_name[] = {
+> > +	{ .name = "action",	.scnprintf = SCA_KSYM, },
+> > +	{ .name = "callsite",	.scnprintf = SCA_KSYM, },
+> > +	{ .name = "fn",		.scnprintf = SCA_KSYM, },
+> > +	{ .name = "function",	.scnprintf = SCA_KSYM, },
+> 
+> [Severity: Low]
+> Are these lookup table entries reachable? 
+> 
+> In syscall_arg_fmt__init_array(), there is an else-if block added by this
+> patch that explicitly intercepts these exact field names. It appears these
+> lookup table entries would never be evaluated for these strings.
 
-Register a DAMON kselftest for the ARM SPE AUX backend.  When kernel
-sources are available, check the backend integration and the required
-AUX-before-ring lifecycle ordering.  Independently run the SPE parser
-KUnit suite through debugfs when it is built.
+Indeed syscall_arg_fmt__init_array() intercepts these field names in an
+earlier else-if branch, these entries in syscall_arg_fmts__by_name[] were
+dead code and never evaluated. I'll remove the redundant entries
+(i.e., "action", "callsite", "fn", "function") from
+syscall_arg_fmts__by_name[] for v2.
 
-On an ARM SPE system with no pre-existing kdamond, create one controlled
-userspace target and collect counter deltas from a five-second session.
-Stop the session explicitly, then verify positive end-to-end pipeline
-counters and final enqueue/dequeue closure.  Use a private mktemp result
-directory and restore only the DAMON state created by this test.
 
-This is a smoke and lifecycle test; full-ring pause/resume validation
-remains a separate hardware stress test.
+> >  	{ .name = "msr",	.scnprintf = SCA_X86_MSR,	  .strtoul = STUL_X86_MSR,	   },
+> >  	{ .name = "vector",	.scnprintf = SCA_X86_IRQ_VECTORS, .strtoul = STUL_X86_IRQ_VECTORS, },
+> > +	{ .name = "work",	.scnprintf = SCA_KSYM, },
+> 
+> [Severity: Medium]
+> Does this correctly symbolize work pointers, and could it inadvertently
+> corrupt unrelated non-pointer integer fields?
+> 
+> For workqueue tracepoints where the work field is a pointer, it appears it
+> will be intercepted earlier in syscall_arg_fmt__init_array() by the
+> (field->flags & TEP_FIELD_IS_POINTER) check. That check assigns SCA_PTR 
+> instead of allowing the field to reach this lookup table.
+> 
+> Conversely, for tracepoints like napi_poll that have a non-pointer integer
+> field named "work", the pointer check is skipped, allowing it to hit this
+> lookup table. Wouldn't this assign SCA_KSYM to the integer, causing it to
+> erroneously print as a hex pointer or NULL instead of a decimal number?
 
-Co-developed-by: Kunwu Chan <kunwu.chan@gmail.com>
-Signed-off-by: Kunwu Chan <kunwu.chan@gmail.com>
-Signed-off-by: Lian Wang (ProcessMission) <lianux.mm@gmail.com>
----
- tools/testing/selftests/damon/Makefile        |   1 +
- .../selftests/damon/damon_perf_aux_test.sh    | 414 ++++++++++++++++++
- 2 files changed, 415 insertions(+)
- create mode 100755 tools/testing/selftests/damon/damon_perf_aux_test.sh
+For workqueue events, work is a struct work_struct * data structure pointer
+(formatted via SCA_PTR), whereas function (work_func_t) is the actual
+function pointer.
 
-diff --git a/tools/testing/selftests/damon/Makefile b/tools/testing/selftests/damon/Makefile
-index 1db8fa95ba2d..204a0b60d84a 100644
---- a/tools/testing/selftests/damon/Makefile
-+++ b/tools/testing/selftests/damon/Makefile
-@@ -24,4 +24,5 @@ TEST_PROGS += sysfs_no_op_commit_break.py
- EXTRA_CLEAN = __pycache__
- 
- TEST_PROGS += damon_perf_obs_test.sh
-+TEST_PROGS += damon_perf_aux_test.sh
- include ../lib.mk
-diff --git a/tools/testing/selftests/damon/damon_perf_aux_test.sh b/tools/testing/selftests/damon/damon_perf_aux_test.sh
-new file mode 100755
-index 000000000000..86ccaca6310c
---- /dev/null
-+++ b/tools/testing/selftests/damon/damon_perf_aux_test.sh
-@@ -0,0 +1,414 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# DAMON Perf AUX Backend - Automated Test
-+#
-+# Validates the AUX trace-buffer backend framework and the ARM SPE
-+# backend:
-+#   1. Source-level structure checks (files, Makefile, ops interface)
-+#   2. SPE parser: runs the KUnit suite against byte-exact binary
-+#      fixtures (mm/damon/perf/spe_parser_test.c) through debugfs
-+#   3. Architecture checks (exact PMU match, SPSC ring contract,
-+#      lifecycle ordering)
-+#   4. Runtime smoke test: live DAMON session configured with an ARM
-+#      SPE event.  Only runs when no kdamonds exist; the pre-test
-+#      sysfs state is restored on exit.
-+#
-+# Usage:  sudo ./damon_perf_aux_test.sh [pmu-name]
-+#
-+# Requirements:
-+#   - CONFIG_DAMON_PERF_OBSERVE=y
-+#   - CONFIG_DAMON_PERF_SPE_KUNIT_TEST=y and CONFIG_KUNIT_DEBUGFS=y
-+#     for section 2 (skipped otherwise)
-+#   - CONFIG_ARM_SPE_PMU=y for section 4 (skipped otherwise)
-+#   - Root privileges
-+
-+set -e
-+PASSED=0; FAILED=0; SKIPPED=0
-+pass() { echo "  [PASS] $1"; PASSED=$((PASSED + 1)); }
-+fail() { echo "  [FAIL] $1"; FAILED=$((FAILED + 1)); }
-+skip() { echo "  [SKIP] $*"; SKIPPED=$((SKIPPED + 1)); }
-+
-+PMU_NAME="${1:-arm_spe_0}"
-+RESULTS_DIR=$(mktemp -d "${TMPDIR:-/tmp}/damon_aux_test.XXXXXX") || exit 1
-+exec > >(tee "$RESULTS_DIR/output.log") 2>&1
-+
-+ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
-+if [[ -z "$ROOT" ]]; then
-+    ROOT="/usr/src/linux"
-+fi
-+SRC_DIR="$ROOT/mm/damon/perf"
-+
-+ADMIN="/sys/kernel/mm/damon/admin"
-+
-+echo "=========================================="
-+echo " DAMON Perf AUX Backend Test"
-+echo "=========================================="
-+
-+# ---- Section 1: Source structure ----
-+if [[ -d "$SRC_DIR" && -f "$ROOT/mm/damon/core.c" ]]; then
-+echo ""
-+echo "--- 1. Backend Source Files ---"
-+for f in aux_backend.h aux_backend.c spe_parser.h spe_backend.c spe_parser_test.c; do
-+    if [[ -f "$SRC_DIR/$f" ]]; then
-+        pass "Source file: $f"
-+    else
-+        fail "Source file: $f"
-+    fi
-+done
-+
-+echo ""
-+echo "--- 2. Makefile Registration ---"
-+for obj in aux_backend.o spe_backend.o spe_parser_test.o; do
-+    if grep -q "$obj" "$SRC_DIR/Makefile" 2>/dev/null; then
-+        pass "Makefile registers: $obj"
-+    else
-+        fail "Makefile registers: $obj"
-+    fi
-+done
-+
-+echo ""
-+echo "--- 3. Backend Ops Interface ---"
-+OPS_COUNT=$(grep -c '(\*match_pmu)\|(\*init)\|(\*cleanup)\|(\*arm)\|(\*disarm)\|(\*drain)' \
-+    "$SRC_DIR/aux_backend.h" 2>/dev/null || echo 0)
-+if [[ "$OPS_COUNT" -ge 6 ]]; then
-+    pass "Backend ops interface: 6 ops defined ($OPS_COUNT found)"
-+else
-+    fail "Backend ops interface: expected 6 ops, found $OPS_COUNT"
-+fi
-+if grep -q 'DAMON_PERF_BACKEND_AUX' "$SRC_DIR/aux_backend.h" 2>/dev/null; then
-+    pass "DAMON_PERF_BACKEND_AUX flag defined"
-+else
-+    fail "DAMON_PERF_BACKEND_AUX flag"
-+fi
-+
-+echo ""
-+echo "--- 4. SPE Parser Constants ---"
-+for c in SPE_BUFFER_MIN_PAGES SPE_BUFFER_MAX_RECORDS SPE_HDR_MASK1 SPE_HDR_PAD \
-+    SPE_HDR_END SPE_HDR_TIMESTAMP SPE_HDR_EXTENDED SPE_ADDR_DATA_VIRT \
-+    SPE_OP_CLASS_LDST; do
-+    if grep -q "$c" "$SRC_DIR/spe_parser.h" 2>/dev/null; then
-+        pass "Parser constant: $c"
-+    else
-+        fail "Parser constant: $c"
-+    fi
-+done
-+else
-+    skip "source structure" "kernel source tree not available"
-+fi
-+
-+# ---- Section 2: Parser correctness (KUnit, binary fixtures) ----
-+echo ""
-+echo "--- 5. SPE Parser: KUnit suite (binary fixtures) ---"
-+KUNIT_DIR="/sys/kernel/debug/kunit/damon_perf_spe_parser"
-+if [[ -d "$KUNIT_DIR" ]]; then
-+    # Writing to "run" triggers a fresh run; "results" then holds the
-+    # TAP output of the byte-exact fixture cases.
-+    if [[ -f "$KUNIT_DIR/run" ]]; then
-+        echo run > "$KUNIT_DIR/run" 2>/dev/null || true
-+    fi
-+    RES="$KUNIT_DIR/results"
-+    if [[ -f "$RES" ]]; then
-+        if grep -Eq "^[[:space:]]*not ok" "$RES"; then
-+            fail "KUnit parser suite has failing cases"
-+            grep -E "^[[:space:]]*not ok" "$RES" | sed 's/^/    /'
-+        elif grep -Eq "^[[:space:]]*ok " "$RES"; then
-+            pass "KUnit parser suite: all cases pass"
-+        else
-+            fail "KUnit parser suite produced no completed cases"
-+        fi
-+        echo "    $(grep '# Totals:' "$RES" | tail -1)"
-+        # Spot-check the fixtures that cover the review-critical paths:
-+        # record content, consumed-length accounting, truncation,
-+        # alignment, extended packets, and error resync.
-+        for c in "store record" "bad packet resync" \
-+            "alignment packet at odd position" \
-+            "alignment packet at aligned position" \
-+            "extended address packet" \
-+            "invalid extended header resync" \
-+            "truncated trailing record retained" \
-+            "truncated packet retained" \
-+            "pad-only window"; do
-+            if grep -Eq "^[[:space:]]*ok .*$c" "$RES"; then
-+                pass "fixture: $c"
-+            else
-+                fail "fixture: $c"
-+            fi
-+        done
-+    else
-+        skip "KUnit results" "no results file (suite did not run)"
-+    fi
-+else
-+    skip "KUnit parser suite" "CONFIG_KUNIT_DEBUGFS missing or suite not built"
-+fi
-+
-+# ---- Section 3: Architecture checks ----
-+echo ""
-+echo "--- 6. Architecture Correctness ---"
-+
-+if [[ ! -d "$SRC_DIR" || ! -f "$ROOT/mm/damon/core.c" ]]; then
-+    skip "architecture source checks" "kernel source tree not available"
-+else
-+
-+# Exact PMU match by pmu object, not by name-prefix matching.
-+if grep -q 'arm_spe_pmu_match' "$SRC_DIR/spe_backend.c" 2>/dev/null; then
-+    pass "PMU match: exact match via arm_spe_pmu_match()"
-+else
-+    fail "PMU match: arm_spe_pmu_match() missing"
-+fi
-+if grep -q 'strncmp.*arm_spe' "$SRC_DIR/spe_backend.c" 2>/dev/null; then
-+    fail "PMU match: strncmp name-prefix matching must not be used"
-+else
-+    pass "PMU match: no strncmp name-prefix matching"
-+fi
-+
-+# Backend selection: gated on the ITRACE capability, then matched by PMU.
-+if grep -q 'PERF_PMU_CAP_ITRACE' "$SRC_DIR/aux_backend.c" 2>/dev/null; then
-+    pass "PMU selection: gated by PERF_PMU_CAP_ITRACE"
-+else
-+    fail "PMU selection: ITRACE gate missing"
-+fi
-+
-+# Lifecycle ordering: arm() before perf_event_enable(), disarm() after
-+# perf_event_disable().
-+ARM_LINE=$(awk '/^int damon_perf_event_arm\(/ { in_fn=1 } \
-+    in_fn && /ops->arm/ { print NR; exit }' "$ROOT/mm/damon/vaddr.c")
-+ENABLE_LINE=$(awk '/^int damon_perf_event_arm\(/ { in_fn=1 } \
-+    in_fn && /perf_event_enable/ { print NR; exit }' "$ROOT/mm/damon/vaddr.c")
-+if [[ -n "$ARM_LINE" && -n "$ENABLE_LINE" && "$ARM_LINE" -lt "$ENABLE_LINE" ]]; then
-+    pass "Lifecycle: ops->arm() before perf_event_enable()"
-+else
-+    fail "Lifecycle: arm() must precede perf_event_enable()"
-+fi
-+
-+DISABLE_LINE=$(awk '/^void damon_perf_event_disarm\(/ { in_fn=1 } \
-+    in_fn && /perf_event_disable/ { print NR; exit }' "$ROOT/mm/damon/vaddr.c")
-+DISARM_LINE=$(awk '/^void damon_perf_event_disarm\(/ { in_fn=1 } \
-+    in_fn && /ops->disarm/ { print NR; exit }' "$ROOT/mm/damon/vaddr.c")
-+if [[ -n "$DISABLE_LINE" && -n "$DISARM_LINE" && "$DISABLE_LINE" -lt "$DISARM_LINE" ]]; then
-+    pass "Lifecycle: ops->disarm() after perf_event_disable()"
-+else
-+    fail "Lifecycle: disarm() must follow perf_event_disable()"
-+fi
-+
-+# The stop path calls the common check after disarming.  That common check
-+# must drain AUX before it starts consuming the SPSC rings.
-+DISARM_LOOP=$(grep -n 'damon_perf_event_disarm' "$ROOT/mm/damon/core.c" 2>/dev/null | \
-+	tail -1 | cut -d: -f1)
-+FINAL_CHECK=$(awk -v start="$DISARM_LOOP" 'NR > start && \
-+    /kdamond_check_reported_accesses\(ctx\)/ { print NR; exit }' \
-+    "$ROOT/mm/damon/core.c")
-+if [[ -n "$DISARM_LOOP" && -n "$FINAL_CHECK" && \
-+      "$DISARM_LOOP" -lt "$FINAL_CHECK" ]]; then
-+    pass "Lifecycle: final common drain after disarm"
-+else
-+    fail "Lifecycle: final common drain must follow disarm"
-+fi
-+
-+# Per-tick and final: AUX must publish before the SPSC loop reads rings.
-+CHECK_FN=$(grep -n '^static unsigned int kdamond_check_reported_accesses' \
-+    "$ROOT/mm/damon/core.c" | cut -d: -f1)
-+DRAIN_TICK=$(awk -v start="$CHECK_FN" 'NR > start && \
-+    /damon_perf_aux_drain\(ctx\)/ { print NR; exit }' "$ROOT/mm/damon/core.c")
-+RING_DRAIN=$(awk -v start="$CHECK_FN" 'NR > start && \
-+    /for_each_online_cpu\(cpu\)/ { print NR; exit }' "$ROOT/mm/damon/core.c")
-+if [[ -n "$DRAIN_TICK" && -n "$RING_DRAIN" && \
-+      "$DRAIN_TICK" -lt "$RING_DRAIN" ]]; then
-+    pass "Tick: AUX drain before SPSC ring drain"
-+else
-+    fail "Tick: AUX drain must precede the ring drain"
-+fi
-+
-+# Per-(event,cpu) parser state scoped via aux_priv.
-+if grep -q 'aux_priv' "$ROOT/mm/damon/ops-common.h" 2>/dev/null; then
-+    pass "State scoping: per-(event,cpu) via aux_priv"
-+else
-+    fail "State scoping: aux_priv in ops-common.h"
-+fi
-+
-+# SPSC ring contract: kdamond is the only process-context producer and
-+# writes only to its own CPU's ring.  A remote-write helper must not
-+# exist.
-+if grep -q 'damon_report_access_on_cpu' "$ROOT/mm/damon/core.c" 2>/dev/null; then
-+    fail "SPSC: damon_report_access_on_cpu() must not exist"
-+else
-+    pass "SPSC: no remote-writer helper (current-CPU NMI-safe enqueue only)"
-+fi
-+if grep -q '^void damon_report_access' "$ROOT/mm/damon/core.c" 2>/dev/null; then
-+    pass "SPSC: damon_report_access() present"
-+else
-+    fail "SPSC: damon_report_access() missing"
-+fi
-+fi
-+
-+# ---- Section 4: Runtime smoke test ----
-+echo ""
-+echo "--- 7. Runtime Smoke Test (live DAMON + SPE) ---"
-+
-+CREATED=0
-+WORK_PID=""
-+NR_SAVED=""
-+if [[ -f "$ADMIN/kdamonds/nr_kdamonds" ]]; then
-+    NR_SAVED=$(cat "$ADMIN/kdamonds/nr_kdamonds")
-+fi
-+
-+restore_damon_state() {
-+    # Tear down only what this test created, then restore the saved
-+    # number of kdamonds.  A kdamond that was running before the test
-+    # is never touched (section 7 skips in that case).
-+    if [[ "$CREATED" == "1" ]]; then
-+        echo off > "$ADMIN/kdamonds/0/state" 2>/dev/null || true
-+        echo 0 > "$ADMIN/kdamonds/nr_kdamonds" 2>/dev/null || true
-+        if [[ -n "$NR_SAVED" && "$NR_SAVED" -gt 0 ]]; then
-+            echo "$NR_SAVED" > "$ADMIN/kdamonds/nr_kdamonds" 2>/dev/null || true
-+        fi
-+    fi
-+    if [[ -n "$WORK_PID" ]]; then
-+        kill "$WORK_PID" 2>/dev/null || true
-+        wait "$WORK_PID" 2>/dev/null || true
-+        WORK_PID=""
-+    fi
-+}
-+trap restore_damon_state EXIT
-+
-+if [[ -z "$NR_SAVED" ]]; then
-+    skip "runtime smoke" "DAMON admin interface not available"
-+elif [[ "$NR_SAVED" -gt 0 ]]; then
-+    skip "runtime smoke" "existing kdamonds present (nr_kdamonds=$NR_SAVED);" \
-+        "refusing to disturb them"
-+elif [[ ! -d "/sys/bus/event_source/devices/$PMU_NAME" ]]; then
-+    skip "runtime smoke" "no $PMU_NAME PMU (kernel without ARM SPE or not booted with it)"
-+else
-+    SPE_TYPE=$(cat "/sys/bus/event_source/devices/$PMU_NAME/type")
-+    pass "SPE PMU $PMU_NAME present (type=$SPE_TYPE)"
-+    DMESG_LINES_BEFORE=$(dmesg 2>/dev/null | wc -l)
-+
-+    # Keep a userspace memory workload alive as both the DAMON target and
-+    # an SPE data source.  The EXIT trap owns and terminates only this PID.
-+    dd if=/dev/zero of=/dev/null bs=1M 2>/dev/null &
-+    WORK_PID=$!
-+
-+    # arm_spe_pmu_event_init() rejects freq mode, so the event must be
-+    # configured in period mode.
-+    echo 1 > "$ADMIN/kdamonds/nr_kdamonds"
-+    CREATED=1
-+    echo 1 > "$ADMIN/kdamonds/0/contexts/nr_contexts"
-+    echo 1 > "$ADMIN/kdamonds/0/contexts/0/targets/nr_targets"
-+    echo "$WORK_PID" > "$ADMIN/kdamonds/0/contexts/0/targets/0/pid_target"
-+    echo 1 > "$ADMIN/kdamonds/0/contexts/0/monitoring_attrs/sample/perf_events/nr_perf_events"
-+    echo "$SPE_TYPE" > "$ADMIN/kdamonds/0/contexts/0/monitoring_attrs/sample/perf_events/0/type"
-+    echo 0 > "$ADMIN/kdamonds/0/contexts/0/monitoring_attrs/sample/perf_events/0/freq"
-+    echo 256 > "$ADMIN/kdamonds/0/contexts/0/monitoring_attrs/sample/perf_events/0/sample_period"
-+    echo 3 > "$ADMIN/kdamonds/0/contexts/0/monitoring_attrs/sample/perf_events/0/config"
-+    PE="$ADMIN/kdamonds/0/contexts/0/monitoring_attrs/sample/perf_events"
-+    FREQ_VAL=$(cat "$PE/0/freq" 2>/dev/null || true)
-+    if [[ "$FREQ_VAL" == "0" ]]; then
-+        pass "SPE event in period mode (freq=0, period=256)"
-+    else
-+        fail "SPE event must use period mode (freq=0), read back $FREQ_VAL"
-+    fi
-+
-+    STATS="/sys/kernel/debug/damon/perf_stats"
-+    if [[ -r "$STATS" ]]; then
-+        cp "$STATS" "$RESULTS_DIR/perf_stats-before.log"
-+    fi
-+
-+    echo on > "$ADMIN/kdamonds/0/state"
-+    sleep 5
-+
-+    STATE_NOW=$(cat "$ADMIN/kdamonds/0/state" 2>/dev/null || true)
-+    if [[ "$STATE_NOW" == "on" ]]; then
-+        pass "kdamond with SPE event is running"
-+    else
-+        fail "kdamond with SPE event failed to start (state=$STATE_NOW)"
-+    fi
-+
-+    if [[ -r "$STATS" && -f "$RESULTS_DIR/perf_stats-before.log" ]]; then
-+        cp "$STATS" "$RESULTS_DIR/perf_stats-running.log"
-+    fi
-+
-+    # Stop explicitly so the final snapshot covers disable -> AUX drain ->
-+    # SPSC ring drain, rather than leaving that path to the EXIT trap.
-+    echo off > "$ADMIN/kdamonds/0/state"
-+    for _ in $(seq 1 50); do
-+        [[ "$(cat "$ADMIN/kdamonds/0/state" 2>/dev/null || true)" == "off" ]] && break
-+        sleep 0.1
-+    done
-+    STATE_NOW=$(cat "$ADMIN/kdamonds/0/state" 2>/dev/null || true)
-+    if [[ "$STATE_NOW" == "off" ]]; then
-+        pass "kdamond stopped after final drain"
-+    else
-+        fail "kdamond did not stop (state=$STATE_NOW)"
-+    fi
-+
-+    # Check only messages added during this run, not stale boot history.
-+    DMESG_AFTER="$RESULTS_DIR/dmesg-after.log"
-+    dmesg 2>/dev/null > "$DMESG_AFTER" || true
-+    DMESG_LINES_AFTER=$(wc -l < "$DMESG_AFTER")
-+    if [[ "$DMESG_LINES_AFTER" -ge "$DMESG_LINES_BEFORE" ]]; then
-+        NEW_DMESG=$(tail -n "+$((DMESG_LINES_BEFORE + 1))" "$DMESG_AFTER")
-+    else
-+        NEW_DMESG=$(cat "$DMESG_AFTER")
-+    fi
-+    FAIL_LINES=$(printf '%s\n' "$NEW_DMESG" | \
-+        grep -Ei "damon-perf.*(fail|warn|error)|WARNING:|BUG:|Oops:|lockdep" || true)
-+    if [[ -n "$FAIL_LINES" ]]; then
-+        fail "no damon-perf failures in dmesg"
-+        echo "$FAIL_LINES" | sed 's/^/    /'
-+    else
-+        pass "no damon-perf failures in dmesg"
-+    fi
-+
-+    if [[ -r "$STATS" && -f "$RESULTS_DIR/perf_stats-before.log" ]]; then
-+        cp "$STATS" "$RESULTS_DIR/perf_stats-final.log"
-+        pass "debugfs perf_stats readable"
-+
-+        stat_value() {
-+            awk -v name="$2" '$1 == name { print $2; exit }' "$1"
-+        }
-+        for counter in callback valid enqueue dequeue match update; do
-+            before=$(stat_value "$RESULTS_DIR/perf_stats-before.log" "$counter")
-+            after=$(stat_value "$RESULTS_DIR/perf_stats-final.log" "$counter")
-+            if [[ "$before" =~ ^[0-9]+$ && "$after" =~ ^[0-9]+$ ]]; then
-+                delta=$((after - before))
-+            else
-+                delta=""
-+            fi
-+            if [[ "$delta" =~ ^[0-9]+$ && "$delta" -gt 0 ]]; then
-+                pass "AUX pipeline: $counter delta=$delta"
-+            else
-+                fail "AUX pipeline: expected positive $counter delta, got ${delta:-missing}"
-+            fi
-+        done
-+
-+        enqueue_before=$(stat_value "$RESULTS_DIR/perf_stats-before.log" enqueue)
-+        enqueue_final=$(stat_value "$RESULTS_DIR/perf_stats-final.log" enqueue)
-+        dequeue_before=$(stat_value "$RESULTS_DIR/perf_stats-before.log" dequeue)
-+        dequeue_final=$(stat_value "$RESULTS_DIR/perf_stats-final.log" dequeue)
-+        enqueue_delta=$((enqueue_final - enqueue_before))
-+        dequeue_delta=$((dequeue_final - dequeue_before))
-+        if [[ "$enqueue_delta" -eq "$dequeue_delta" ]]; then
-+            pass "final ring closure: enqueue=$enqueue_delta dequeue=$dequeue_delta"
-+        else
-+            fail "final ring closure: enqueue=$enqueue_delta dequeue=$dequeue_delta"
-+        fi
-+    else
-+        fail "debugfs perf_stats unavailable; cannot validate AUX data path"
-+    fi
-+    # Cleanup happens in the EXIT trap (restore_damon_state).
-+fi
-+
-+# ---- Summary ----
-+echo ""
-+echo "=========================================="
-+echo " SUMMARY: $PASSED passed, $FAILED failed, $SKIPPED skipped"
-+echo "=========================================="
-+echo "Results saved to: $RESULTS_DIR"
-+
-+if [[ "$FAILED" -gt 0 ]]; then
-+    echo "Overall: FAIL"
-+    exit 1
-+else
-+    echo "Overall: PASS"
-+    exit 0
-+fi
+Adding "work" to syscall_arg_fmts__by_name[] had no effect on workqueue
+pointers (which hit TEP_FIELD_IS_POINTER first), but it incorrectly forced
+non-pointer integer fields named "work" (such as napi_poll.work) to be
+formatted via SCA_KSYM.
+
+I'll remove "work" from the lookup table for v2 so integer fields continue
+to be formatted as decimal numbers.
+
+
+> > @@ -2193,6 +2198,14 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+> >  		    ((len >= 4 && strcmp(field->name + len - 4, "name") == 0) ||
+> >  		     strstr(field->name, "path") != NULL)) {
+> >  			arg->scnprintf = SCA_FILENAME;
+> > +		} else if (strcmp(field->name, "fn") == 0 ||
+> > +			   strcmp(field->name, "function") == 0 ||
+> > +			   strcmp(field->name, "callsite") == 0 ||
+> > +			   strcmp(field->name, "action") == 0 ||
+> > +			   (field->type && (strstr(field->type, "(*)") != NULL ||
+> > +					    strstr(field->type, "_func_t") != NULL ||
+> > +					    strstr(field->type, "_fn") != NULL))) {
+> > +			arg->scnprintf = SCA_KSYM;
+> 
+> [Severity: Medium]
+> Does this unconditional name matching affect non-pointer integer fields
+> that happen to share these generic names? 
+> 
+> If a tracepoint has an integer field named "action" or "function" (which
+> can occur in subsystems like btrfs, power, or xfs), wouldn't this assign
+> SCA_KSYM to it regardless of its actual type? 
+> 
+> This might cause perf trace to treat simple integers as kernel addresses,
+> failing to resolve a symbol and formatting them incorrectly.
+
+Agreed. Matching field names unconditionally without checking field flags
+or size caused non-pointer integer/enum fields like int action or u32
+function to be misassigned SCA_KSYM.
+
+In v2, I'll update syscall_arg_fmt__init_array() to restrict name-based
+SCA_KSYM assignment so that it only applies if the field is actually a
+pointer (TEP_FIELD_IS_POINTER) or a 64-bit address (field->size ==
+sizeof(u64)), alongside type signature matching.
+
+
+> 
+> >  		} else if ((field->flags & TEP_FIELD_IS_POINTER) || strstr(field->name, "addr") ||
+> >  			   field_has_hex_fmt(field, len))
+> >  			arg->scnprintf = SCA_PTR;
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260815233651.527936-1-atomlin@atomlin.com?part=2
+
+
+Kind regards,
 -- 
-2.43.0
-
+Aaron Tomlin
