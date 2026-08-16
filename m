@@ -1,161 +1,233 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EEC6189B84;
-	Sun, 16 Aug 2026 08:27:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12FF395DAA
+	for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 14:22:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786868846; cv=none; b=MZjYr8dKUwPXSt3V7PAne5RbOhplBx7rMO0vq4L3jb7sXx5tnWK+xgO2pB9pDwti2M5YXEuH9R+0T+y15yZ580ACUxFcLgV2+AkBAhP12KuQyGQuLlJNT6PfBfKrCVLgI6RjQiIWWBOjU71XA6W6MIyypjHwa6OKmCbrtIVwR24=
+	t=1786890161; cv=none; b=C0MFr7IAV7VVWJ8ZVcHqDX5UhVWiVflHEJF/ZuP/FDpFuJhZxvy9FyoM5bqx2d4Oa/QwrCROHUwNV4mB2h175CJHMrCBUkjUS7c6Syc9I39AGwPZV0NpTs3t0OnoyWWJ3B5ewfNsIXyrAzhcRLDwROX+NxmexMk7HJ/4yixf5PA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786868846; c=relaxed/simple;
-	bh=9+vPTjH1obZclMWELJOWZqt0EDF9+G4mhLL+jRsCQSs=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=X2dsxSzUnr9r6pxc+TlfbevNQrCAYe+PtpQEfNd0zx4Jcg4eZtet+jqmSbi/+puNRg7/QB0Cx2QIjNmzFs3R7nhdlcyFg9GpSR9ww/YvgZKOgIK3DrKQOmRvJu/dD/Ip0jYLjWXxtk8vJySfj2kXba+r18GdiO7FZhT2C4UUQpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=PRCYFGJR; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1786890161; c=relaxed/simple;
+	bh=4X804/qrz0myQkryLvzzCj1bLMSszCuQ0/f+xd3bVww=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=USKsR8h0oJSDvoFtuGeP0FV8kA/8L7ht+CplzWboIy54cZ99U2238cRgwgfd18PvcIVRWoutTpUWJ07IUwX2WUhHT9I3R12GndojxFGzv4R54vw7WCIuEY6bSrHjQaZik1cfpXT9hXHrmDDoiTl9qXGIjqDg8QQZBU4kO5rJz+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hj1lW7LI; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="PRCYFGJR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1786868815; x=1787473615; i=markus.elfring@web.de;
-	bh=9+vPTjH1obZclMWELJOWZqt0EDF9+G4mhLL+jRsCQSs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=PRCYFGJR6o3y9Zr1Le9tU0IwBcpNPter7jgcS0ApF+N3vV++v/uOeJUno6axuutp
-	 zxikOGlY83t1iC+d09p2iAMwbI1mJORvoruf7tQofQZiv49JDYll/btkySUCd9fZk
-	 pUAa2bhv8w/Lbv7E3kmKeOQjAohaSwPw0XskVB1/+GM5VSnIFemrwew/7Rpg1HCQQ
-	 sKqm4v7U2979huqGf8zWiIpMZ9CduHM07GFLW8h/LRnS7T3N3+38mp/kV0ZJJ7a8r
-	 +ISXPUOrFyCKvQvnOSM8wQk08j7s8ZqazRKaLCqNxLHm1asedbkYu/3yrei339siS
-	 fMIuhg9Q7h89KROnxQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from client.hidden.invalid by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MMY1D-1xEQES1E8d-00XDVO; Sun, 16
- Aug 2026 10:26:55 +0200
-Message-ID: <0abb2aab-4752-478d-bb53-c5a84fd6ba2d@web.de>
-Date: Sun, 16 Aug 2026 10:26:39 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hj1lW7LI"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2cc7e86e7aeso27727895ad.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 07:22:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1786890158; x=1787494958; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=XsGCXFozT69ITA4eF1crVo3PlInrHxlGF6a27uOAn/o=;
+        b=hj1lW7LI26I64h6ti9xd1KxaqgRuJ3V+8p6z9KvdfsfU1PbBwS0dDtBg+6++O9uj6V
+         2hOqU06ByT/97M62gIQ83klCbfcIXibVN18qMBE78sQqkyznoHhdSiuhwFoegOhOJ8TS
+         ZoncY1jDJ5e8ck/RVFC9k4C9jB962K2KkKjVq3VXzhBFDDsPphB+1JTi3gDcrdajLKj8
+         cslMfo4f2e4z6WwxL6JIJFMRMP3mGTa6xWyAbW2JHAy+bx4N2jAau2seo7wNbvSePJEk
+         hUQA42qs6iVtYGHiL3DqvKPWOAYis/PfGzc1pDFaLgx4IIYJX3zjk6RVmiMkNsOv15gZ
+         M1yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786890158; x=1787494958;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=XsGCXFozT69ITA4eF1crVo3PlInrHxlGF6a27uOAn/o=;
+        b=jWZNhguAPXs1zlhAAPLEeinKcwgmswPFrCeC2VLGBPrkSRdYcViVnsysi7vgIwQ/kF
+         u79uyAOk9AeswRQWlfBJSH45QI69jPEq5Rn7IKzH/lxaPrB8E/oFgm7Jc4HIatxyQviz
+         py79I2HoXrmu/E5sNse0yaR7Yr358bGa7jhOkwcenWRknHlOEEuEW6hKxipXRrRqCV4k
+         wdODgXB1ex0tMcbKcFlXwVgwRvkAD4ApSQkb6LipCGALXspLNtmULsBnzynQzC2e379G
+         1+uwe9JRXyFTKztwjWk5G9Vi/kuuv8/Q1FM/jjRgl0QC0F46B8vW1Z9hXSgWPw8jcztP
+         CQiQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rq+n8v7sg1wLQAa4UdDbOJxbPuCREqgI86yyOEd9ySJJ/rMsc/bFnywyIF2ep4QfaoTz+hbV4ZG1y5a4sgurwip@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5bRbt4hiQsfjlf95U7Ew3nwQYuQCliqBKBkD6i1EQIb3RszTQ
+	2G44JqT7XMn9bvZtHIfHBU2xaChGDUeTK84cg5DgkjDkc2pbVKvm8gRH
+X-Gm-Gg: AR+sD1140hTHqf6dXNUUZiy58qCXT1HMP1NI3AEmSbR1uS+KV9hLhmnpHPJEltxYolI
+	CS94vBnLPqgtFmDSOcH9PlchO7xQlgXW6lqMNh0TGLSTYtLV4mX5nxCXLN2EChHbyu0+AVuqORf
+	wDa4fNEbA5DnCqr57JmhmxbY0pOHWecoq/71TPvHttrz0GyuO7UTheuQGr0eTkQM/CLgh2x6fGV
+	rvJJm9SFt/g3ZR5nAWSCRmVHU0wI2usHdHVieaTQqMfbDrkQZcL7XRc/kcKblmRt/lrIoAiE+8n
+	CqqIAwvSpSHulQZ8zZIXKpTfKKWmNss8R54CM1AFeLFQqi4rk7T94ZOj3D3qZG1pL2OWv21cAYh
+	jN8WIN0MhcQmhYPpb/R/nkCNe2MaTRPQjVoW5UgBT4UGbrJcQvSVQkItVwLZCtllmNypEHvtnv6
+	dw2s9SwnHrp0ZvkQ84edwxXFraCKy+32vnEEIOn+vlBAxCVclfakM9CEc8Cu+TNcszMPhV6W9wX
+	nIDdGUG53ibycy2MzY=
+X-Received: by 2002:a17:902:da82:b0:2cc:777f:d67c with SMTP id d9443c01a7336-2d3b0d5ed01mr190367395ad.13.1786890157697;
+        Sun, 16 Aug 2026 07:22:37 -0700 (PDT)
+Received: from kernel.tail6741c6.ts.net ([116.128.244.169])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2d3aebc8199sm26102365ad.74.2026.08.16.07.22.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 16 Aug 2026 07:22:36 -0700 (PDT)
+From: Kunwu Chan <kunwu.chan@gmail.com>
+X-Google-Original-From: Kunwu Chan <kunwu.chan@linux.dev>
+To: will@kernel.org,
+	mark.rutland@arm.com,
+	sj@kernel.org,
+	akpm@linux-foundation.org,
+	shuah@kernel.org,
+	kunwu.chan@linux.dev
+Cc: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	damon@lists.linux.dev,
+	linux-mm@kvack.org,
+	linux-kselftest@vger.kernel.org,
+	Kunwu Chan <kunwu.chan@gmail.com>
+Subject: [RFC PATCH 0/4] mm/damon/perf: add ARM SPE AUX backend
+Date: Sun, 16 Aug 2026 22:22:17 +0800
+Message-ID: <20260816142222.689624-1-kunwu.chan@linux.dev>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Ruoyu Wang <ruoyuw560@gmail.com>, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, Jing Zhang
- <renyu.zj@linux.alibaba.com>, Mark Rutland <mark.rutland@arm.com>,
- Shuai Xue <xueshuai@linux.alibaba.com>, Will Deacon <will@kernel.org>,
- Yunhui Cui <cuiyunhui@bytedance.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org
-References: <20260814133925.1385687-1-ruoyuw560@gmail.com>
-Subject: Re: [PATCH] perf/dwc_pcie: Fix PCI device reference leak in probe
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20260814133925.1385687-1-ruoyuw560@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:AN9KRgw7WBdzhd4V1Yts84ypyr8SzdQBkP8+Zmg8KKnfhYg7NUx
- oVRyV55S/wXlRRvgzDkR9HnBKgU04+7rd7K66rH4fb0BThRIS3u3EEsvHIPpMafzK97X42s
- 4+Hb+quNAI7Tva/MiQV1jBn+1i7Q6TgvxD4oy07TVwriGxLtWCkdZQz54fA6CKOJociv/dr
- u80CJgi5i+bEBsB8SFPnQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:41aGIEboJ+4=;rM22lVxXhlCCUJrairY+GoBsWpe
- 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
- U+O11Vw==
+Content-Transfer-Encoding: 8bit
 
-=E2=80=A6
-> Move the existing pci_dev_put() immediately after capability discovery
-> so the temporary lookup reference is released on both success and
-> failure paths.
-=E2=80=A6
+From: Kunwu Chan <kunwu.chan@gmail.com>
 
-How do you think about to apply the attribute =E2=80=9C__free(pci_dev_put)=
-=E2=80=9D?
-https://elixir.bootlin.com/linux/v7.2-rc7/source/include/linux/pci.h#L1269
+This series adds an AUX trace-buffer backend to the DAMON perf
+observability framework, enabling ARM SPE (Statistical Profiling
+Extension) to deliver hardware-sampled access reports into DAMON's
+existing SPSC report ring.
 
-Regards,
-Markus
+Patch 2 touches drivers/perf/arm_spe_pmu.c to expose the PMU matcher.
+This change is tightly coupled with the DAMON AUX backend.  ARM SPE
+PMU driver maintainers only need to review patch 2.
+
+This series is based on the Ravi's hardware-sampled access reports 
+branch [1], and depends on the perf AUX kernel-consumer RFC series [2].
+The dependencies is not upstream yet, so this series remains RFC.
+
+Why a dedicated AUX backend
+---------------------------
+ARM SPE and similar PMUs do not deliver samples through the standard
+perf overflow callback.  Instead, they write trace data into an AUX
+buffer managed by the perf core.  The AUX buffer is consumed from
+process context (kdamond) rather than from NMI, so the existing
+overflow-callback path in DAMON cannot be reused.
+
+The backend model adds three operations to the damon_perf_event
+lifecycle: init (allocate the AUX buffer), arm (position the consumer
+cursor), and drain (parse the SPE packet stream and publish reports).
+The backend is selected at event creation time by matching the PMU
+object via its event_init callback.
+
+What the series adds
+--------------------
+Patch 1 introduces the backend operations table, the backend state
+fields in damon_perf_event, and the Kconfig options.  ARM SPE must be
+built into the kernel; the KUnit test option is separate.
+
+Patch 2 is the ARM SPE backend.  It owns a per-CPU AUX buffer,
+decodes the SPE packet stream (the same encoding that perf's
+userspace arm-spe-decoder handles), resolves sampled
+CONTEXTIDR_EL1 values to tgids under RCU, and publishes synthesized
+access reports.  The drain runs before the SPSC ring consumer on
+each monitoring interval, and a final drain after event disable
+ensures no records are lost.  The backend also modifies the ARM SPE
+PMU driver to expose arm_spe_pmu_match() for PMU object matching.
+
+Patch 3 adds byte-exact KUnit tests for the SPE record parser.  The
+tests cover load and store records, timestamp terminators, multiple
+records in one window, PAD and ALIGNMENT packets at both odd and
+aligned positions, extended addresses, bad-packet resynchronization,
+truncated records, and records without a virtual address.  A split-
+record test verifies that a record spanning two AUX snapshots leaves
+the tail unchanged until the terminating packet arrives.
+
+Patch 4 adds a DAMON selftest for the AUX backend.  It checks the
+backend integration, the required AUX-before-ring lifecycle ordering,
+runs the parser KUnit suite through debugfs, and on an ARM SPE system
+creates a live DAMON session with a controlled userspace target,
+verifying positive end-to-end pipeline counters and final
+enqueue/dequeue closure.
+
+Testing
+=======
+Tested on Kunpeng 920 (256 CPUs, ARM SPE, kernel 7.1.0-rc5-mm-new-damon+):
+
+  ARM SPE KUnit (spe_parse_one_record):
+    16 passed, 0 failed, 0 skipped
+    (store record, load record with timestamp, two records, pad-wrapped,
+     alignment at odd/aligned positions, bad packet resync, record without
+     address, events/source/counter, truncated record retained, truncated
+     packet retained, extended address, invalid extended header, pad-only,
+     empty window, split record across two snapshots)
+
+  AUX selftest (damon_perf_aux_test.sh arm_spe_0):
+    SUMMARY: 52 passed, 0 failed, 0 skipped (Overall PASS)
+    callback=58318, valid=58318, enqueue=43390, dequeue=43390,
+    match=34049, update=564
+    final ring closure: enqueue=43390 dequeue=43390
+
+Known limitations
+=================
+- AUX_BACKEND_MAX=4: the AUX backend registration table holds at most 4
+  backend types.  This is a framework limit, not a per-PMU-instance cap.
+
+- ARM SPE must be built into the kernel (ARM_SPE_PMU=y), not as a
+  module, because the backend calls arm_spe_pmu_match() at initcall
+  time.
+
+- The AUX buffer is 2 pages (8 KiB).  The SPE hardware pauses when the
+  non-overwrite ring is full; the drain frees space and re-enables
+  the event.
+
+- CONTEXTIDR_EL1 carries the sampled task's pid, resolved to tgid
+  under RCU.  Records without a valid tgid are dropped.
+
+- This series requires the perf AUX kernel API patches [2] to be applied
+  first.  These patches are not yet upstream and must be reviewed by the
+  perf subsystem maintainers.
+
+References
+==========
+Link [1]: https://github.com/damonitor/linux.git
+          branch: ravi_hw_sampled_access_reports_rfc_v1
+          commit: fd968106e5bf
+
+Link [2]: https://lore.kernel.org/all/20260814144927.489172-1-kunwu.chan@linux.dev/
+          perf AUX kernel API PATCH Series:
+          - perf/core: add AUX buffer ownership for kernel events
+          - perf/core: add AUX ring accessors for kernel consumers
+          - perf/core: add KUnit tests for AUX kernel-consumer API
+          - selftests/perf_events: add userspace AUX regression test
+          - selftests/perf_events: add AUX kernel API selftest script
+
+
+Kunwu Chan (2):
+  mm/damon/perf: introduce AUX backend interface and Kconfig
+  mm/damon/perf: add AUX trace-buffer PMU backend for ARM SPE
+
+Lian Wang (ProcessMission) (2):
+  mm/damon/perf: add KUnit tests for the SPE record parser
+  selftests/damon: add DAMON perf AUX backend test
+
+ drivers/perf/arm_spe_pmu.c                    |   8 +
+ include/linux/damon.h                         |   5 +
+ include/linux/perf/arm_spe_pmu.h              |  11 +
+ mm/damon/Kconfig                              |  28 +
+ mm/damon/core.c                               |  22 +-
+ mm/damon/ops-common.h                         |   6 +-
+ mm/damon/perf/Makefile                        |   5 +
+ mm/damon/perf/aux_backend.c                   | 121 +++++
+ mm/damon/perf/aux_backend.h                   |  72 +++
+ mm/damon/perf/spe_backend.c                   | 479 ++++++++++++++++++
+ mm/damon/perf/spe_parser.h                    | 109 ++++
+ mm/damon/perf/spe_parser_test.c               | 365 +++++++++++++
+ mm/damon/vaddr.c                              |  68 ++-
+ tools/testing/selftests/damon/Makefile        |   1 +
+ .../selftests/damon/damon_perf_aux_test.sh    | 414 +++++++++++++++
+ 15 files changed, 1704 insertions(+), 10 deletions(-)
+ create mode 100644 include/linux/perf/arm_spe_pmu.h
+ create mode 100644 mm/damon/perf/aux_backend.c
+ create mode 100644 mm/damon/perf/aux_backend.h
+ create mode 100644 mm/damon/perf/spe_backend.c
+ create mode 100644 mm/damon/perf/spe_parser.h
+ create mode 100644 mm/damon/perf/spe_parser_test.c
+ create mode 100755 tools/testing/selftests/damon/damon_perf_aux_test.sh
+
+-- 
+2.43.0
+
