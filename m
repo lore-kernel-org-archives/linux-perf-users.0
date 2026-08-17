@@ -1,89 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344253EB80E;
-	Mon, 17 Aug 2026 23:17:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F18E03EDAC1
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 23:28:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787008650; cv=none; b=rS/icCWyt+URrnogwnZ2Ff0VF/D+ADV4gDEeTmxNQMT5XhHXQpfqGvHrG+p+GdElPkNqMHyedljzUOH7RD3evoTd0RNEkYnvaoVboLAJWPM2Lvq9jb5n3AjHNiSonc0tK5Lg2gA5ZCOtf1W7BWHHK7l9ytTukt4pSkNgcZx2sTM=
+	t=1787009293; cv=none; b=tKHxVi3ilHXVAmNeT9zRn+y26pgOwXDdJwNWGrEOHfiiaWbx+tRhJ1+YMfiMyKrega4GTIe6I1IJcb46k6HdYM3vhhizlMAbv2ZyMTdqokjkW09sQ4tTkkjQaVOXJTfHgfCBN/xOGDXDGJUIWcv+LbdogDkUGgRbN839JclOzzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787008650; c=relaxed/simple;
-	bh=/lBOkp7Jzkz4Z9Ofm0G8WRXkRefnMJ6gbOQmdZXWjCw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aaVAB39CEm1WIEcVW1cN9akzN1M2Q7VC7YFWIAa96cR+lu/B8RIZFQj1V2ucGFrWRpY8In/asonBrnzEbdhbxQsMga+5wzzjHOwcH0RcKy86upAkksmVrnk4nT019vqcJ8d3xUfc2RGp1tP2h82qHIIiimXBAewohEukpraIc7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jk2nrL3d; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787009293; c=relaxed/simple;
+	bh=ovQxwxhLk3T9WvHqIQGKahXxafZhEq8WNUK/TsZVShE=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Cmjy9/zIaw1XVgMdrRoNPGOf/e2nnBPUKQt0l4DH4k6Hd0jTiMBJKKcZsQzWa98hFC7IoW+zkAP6C8V1aRzistXkt5mYs+XEig2BaYjQB4GVgnK5CuGcChlkNnx/jn4W25oRZ7tgL+kT7Hg2gkKQEbC/505NjUdiLFIRhXE88NI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4ycAAx/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jk2nrL3d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B47B1F000E9;
-	Mon, 17 Aug 2026 23:17:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4ycAAx/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58DB11F000E9;
+	Mon, 17 Aug 2026 23:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787008648;
-	bh=HGFofkwksGTTvQhdIrOz5sfJoOEECrVnlSYAziwG4c8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jk2nrL3dBcSvRPRaIv9YK/QF8aZR2DdUUqk+Se5q5EPJEoFoihFLEWgNaGLa1JOLz
-	 vC6pXY16dquy1t/RpjUyv6JsjTWnow6Fi2dCwSxa2Gj79CQEJZydmDvPHXavUNLyPu
-	 Toq16oSTDfNWy4gWnhz7DSyyi9PGucS5wiRkYiZ15YXrrp+QqeT7Gp2vMWw7DJ2KhJ
-	 N5NVU80sFCfKudVSUrWGptrPbgkQZLs2lKziCbCe4C3Qr9lL9ACTgWtVaEJWJjwTEG
-	 Mz3BAdlX/KsZkoJHWd/vsSmu5cZooIhoYE/LknU6k+ujfB9L9+CoJEuL2Bb6hSOvNI
-	 HZSOcWprwYAyw==
-Date: Tue, 18 Aug 2026 08:17:27 +0900
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, abyssmystery@gmail.com, adrian.hunter@intel.com,
-	james.clark@linaro.org, jolsa@kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mingo@redhat.com, peterz@infradead.org
+	s=k20260515; t=1787009291;
+	bh=qqN4NCXzZgZnIMXSRD0js9ieZGV0Ui4CrUlIoJWuaJg=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=a4ycAAx/yIDxF6gY3+AOU3Om5MIZdX5OBzUiLLjgVDSPJvIPgkF3QvLt889vf3YXk
+	 Sft1M3nZFrc/fibZOSyk3Ii8EucIZa6bKG7/EvH9GY8RQ56gMspBwTsk4V/CKLjX71
+	 L2cKeuHb+b5UiS2rZsH+HVm11N8QdwNlpIu4DsKM3rKU/tiWsRlV/jrnpsLyxF/WU+
+	 6RgK2zbmmwMDCPXCOCsN9MjQh4ew+WI9L/mqYzFZdLRtrtLwWn3zZgvBQj+xjy3Ewz
+	 kMZ07/mDQiIdMgp8p9dY3mLzRLaaXBzWRFz4UtpMZCPfLr2Sd5RcgEKZ/D2HCuvM5u
+	 XJ2KliOuXBMog==
+From: sashiko-bot@kernel.org
 Subject: Re: [PATCH v4] perf fdarray: Fix destructor invocation and event
  counting in fdarray__filter
-Message-ID: <aoOWh-e5BR2PX27Q@google.com>
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260817230431.424646-1-irogers@google.com>
 References: <20260723050409.991665-1-irogers@google.com>
  <20260817230431.424646-1-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 17 Aug 2026 23:28:10 +0000
+Message-Id: <20260817232811.58DB11F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260817230431.424646-1-irogers@google.com>
 
-On Mon, Aug 17, 2026 at 04:04:31PM -0700, Ian Rogers wrote:
-> When processing POLLHUP or POLLERR for an event in fdarray__filter, the
-> function invokes its destructor callback. However, the exact behavior
-> around unhandled POLLHUP events on control pipe descriptors caused
-> premature termination due to thread and evlist pollfd index mismatches.
-> This occurred because they were skipped by the early nonfilterable continue.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] The refinement to fdarray__filter causes an immediate 'pollfd inde=
+x mismatch' error and premature termination on control descriptor POLLHUP b=
+y prematurely clearing fd and revents.
+--
 
-Do you have a concrete scenario to check this behavior so that we can
-verify the fix?  It'd be great if we can add a test case.
+--- Patch [1]: [PATCH v4] perf fdarray: Fix destructor invocation and event=
+ counting in fdarray__filter ---
+commit 495f184eb7be01a8af2c7157e4d7f142c89228b0
+Author: Ian Rogers <irogers@google.com>
 
-Thanks,
-Namhyung
+perf fdarray: Fix destructor invocation and event counting in fdarray__filt=
+er
 
-> 
-> Address this by refining the early continue filter to only skip system-wide
-> perf events (which are nonfilterable but not non_perf_event). Control
-> descriptors (non_perf_event) now fall through to appropriately have their
-> fd value unset to -1 on POLLHUP while avoiding their destructors. Finally,
-> maintain the invariant that the active event counter (nr) increments strictly
-> and only for completely filterable events.
-> 
-> Fixes: fb4751e79c45 ("perf record: Fix teardown hang on system-wide multi-threaded sessions")
-> Assisted-by: Gemini:gemini-3.1-pro
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/lib/api/fd/array.c | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
-> 
+This commit refines the early continue filter in fdarray__filter to only sk=
+ip
+system-wide perf events. Control descriptors now fall through to have their=
+ fd
+values unset to -1 on POLLHUP while avoiding their destructors. It also ens=
+ures
+the active event counter increments strictly for completely filterable even=
+ts.
+
 > diff --git a/tools/lib/api/fd/array.c b/tools/lib/api/fd/array.c
-> index 67b73481df27..3681ad7c6527 100644
+> index 67b73481df27e..3681ad7c65278 100644
 > --- a/tools/lib/api/fd/array.c
 > +++ b/tools/lib/api/fd/array.c
-> @@ -116,14 +116,23 @@ int fdarray__filter(struct fdarray *fda, short revents,
+> @@ -116,14 +116,23 @@ int fdarray__filter(struct fdarray *fda, short reve=
+nts,
 >  		return 0;
->  
->  	for (fd = 0; fd < fda->nr; ++fd) {
+> =20
+>  	for (fd =3D 0; fd < fda->nr; ++fd) {
 > -		if (fda->priv[fd].flags & fdarray_flag__nonfilterable)
 > +		/*
 > +		 * System-wide perf events are nonfilterable but not non_perf_event.
@@ -92,30 +86,75 @@ Namhyung
 > +		if ((fda->priv[fd].flags & fdarray_flag__nonfilterable) &&
 > +		    !(fda->priv[fd].flags & fdarray_flag__non_perf_event))
 >  			continue;
->  
+> =20
 >  		if (!fda->entries[fd].events)
 >  			continue;
->  
+> =20
 >  		if (fda->entries[fd].revents & revents) {
 > -			if (entry_destructor)
 > +			/*
 > +			 * Control descriptors are non_perf_event and don't need
 > +			 * their perf-specific destructors triggered.
 > +			 */
-> +			if (entry_destructor && !(fda->priv[fd].flags & fdarray_flag__non_perf_event))
+> +			if (entry_destructor && !(fda->priv[fd].flags & fdarray_flag__non_per=
+f_event))
 >  				entry_destructor(fda, fd, arg);
->  
+> =20
 >  			/*
-> @@ -136,7 +145,8 @@ int fdarray__filter(struct fdarray *fda, short revents,
+>  			 * Set fd to -1 so poll() ignores this entry; otherwise
+>  			 * POLLHUP/POLLERR are still reported for events=3D0 fds
+>  			 * (POSIX: always checked), causing a poll storm.
+>  			 */
+>  			fda->entries[fd].fd =3D -1;
+>  			fda->entries[fd].revents =3D fda->entries[fd].events =3D 0;
+
+[Severity: High]
+Does unsetting the file descriptor to -1 and clearing revents for control
+descriptors cause a pollfd index mismatch error during teardown?
+
+When __cmd_record() handles a POLLHUP on the control pipe, it calls
+fdarray__filter() which now mutates the thread's control descriptor:
+
+tools/perf/builtin-record.c:__cmd_record() {
+    ...
+    if (fdarray__filter(&thread->pollfd, POLLERR | POLLHUP,
+                        record__thread_munmap_filtered, NULL) =3D=3D 0)
+        draining =3D true;
+
+    err =3D record__update_evlist_pollfd_from_thread(rec, rec->evlist, thre=
+ad);
+    ...
+}
+
+Immediately after, record__update_evlist_pollfd_from_thread() compares the
+mutated thread array against evlist->pollfd, which retains the original
+valid file descriptor. This strict check fails and returns -EINVAL, causing
+an early ungraceful abort:
+
+tools/perf/builtin-record.c:record__update_evlist_pollfd_from_thread() {
+    ...
+    if (e_entries[e_pos].fd !=3D t_entries[t_pos].fd ||
+        e_entries[e_pos].events !=3D t_entries[t_pos].events) {
+        pr_err("Thread and evlist pollfd index mismatch\n");
+        err =3D -EINVAL;
+        continue;
+    }
+}
+
+Furthermore, does clearing revents to 0 here ensure evlist__ctlfd_process()
+will never see the POLLHUP to perform a clean teardown via
+evlist__finalize_ctlfd()?
+
 >  			continue;
 >  		}
->  
+> =20
 > -		++nr;
 > +		if (!(fda->priv[fd].flags & fdarray_flag__nonfilterable))
 > +			++nr;
 >  	}
->  
+> =20
 >  	return nr;
-> -- 
-> 2.55.0.699.gb54405d56f-goog
-> 
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260817230431.4246=
+46-1-irogers@google.com?part=3D1
