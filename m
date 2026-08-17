@@ -1,42 +1,40 @@
 Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5E438330E;
-	Mon, 17 Aug 2026 22:22:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196E33B14B7;
+	Mon, 17 Aug 2026 22:22:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787005376; cv=none; b=e7GUGlLaZ9ELfljTZ1pvxDC29Z02gFFTz26y3r3ur3xx6nItinFgUYOigoUhTFmGuPhcA6M9bZz3YTnZekpq8Hznn9KHeFoNUcJ5M3Da+Z8cPFZim5zNONRRRh60g3WXrUgZyDHiH44m4m8MLLIxnK20wSGgjYu4FnNAPsUtgOM=
+	t=1787005377; cv=none; b=tNXOFCZuNG15LQcimT7T6o8lWTHMzmqKlh66sFHmG8f2hhy4nbm7+UaZn/H1n7R11YRP/42Nvv1mYgUGz6uBU9VYySFJEtP43AOTuMYtyy7iXjSec06VTP+Q1n/77WL+6LAdYF4xrYWaG7l/Z5P9zz5ri4VjlIu7FrDusVpMpe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787005376; c=relaxed/simple;
-	bh=9V08/jLW/+xQsav7GTmEGCSVs3fzdjRBEv++z+uFQX8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JM+UkJiy5+GisGOQSo0Z9LM17z5OBe0CV2b8BadloCoT/dW0NRpVfsK45erVB0bjVAAav6OH8KUc00bGuWj0MQgXRJDC3T3//2Mxw5NpSo6gqZblHQ1SdQ7dspYuc5iO6sYWIei1i+GcUqmQdw2+wajSAvuWXYDAllonFNSL5sY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b=hWZ/ppc/; arc=none smtp.client-ip=67.231.153.30
+	s=arc-20240116; t=1787005377; c=relaxed/simple;
+	bh=/UonA36qq5127v7rFdobRVcHasguuePtQbt6Or8tC1o=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=THWwYfHfobJqAn2v0ZIKJKApMFtmdBAFRWaJI2Go7b641TGFYdc3cYkjJ0HMEI+oLLxe8s9ob6rBFIuFsQ8wLzjxM6sAagVd/ZEYP2i8gAeyDsvqnjEwv8QmoGfmAfBs8afj4KXv+DzyYNXcZ5N/XZ0Z8+l4RuTaMwdRv1JX9es=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b=BkxE38P1; arc=none smtp.client-ip=67.231.153.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b="hWZ/ppc/"
+	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b="BkxE38P1"
 Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67HLoAXP1515142;
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67HLoAXO1515142;
 	Mon, 17 Aug 2026 15:22:23 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	pps82601-s2048-2026-q3; bh=XF8cb9U+V+GSAfsXb/sFGag3v7S7sIUwnt8Qr
-	au/Dp4=; b=hWZ/ppc/qnLublOcFUDb9uvAhRk6NctJr4scv9JUp+wCb0KP8gpWS
-	U5C/FHbGInOYydSgs6ZV/NrBxHh7R3x8o2W7oUFHXeSv1FWZ3ixRBRVXjZ7EbSvi
-	ngPRqnER7Lo/73cohKpM7QkD1MyANMznhxLx29vWdC3yRT8Sl5B0tNQ6NoiqHz1K
-	hFps5hxvv+2ljAISDBaEOqoQ2LeyR3TTU0uOQb56ISLuBAyPm7NzbsvV8Z6UdR1N
-	7mx+NWwuR1MebGQzGZ0FjNCqm1lnDhJKVvX23ZHmYJxUl+CpFOGwvteEv5guyPqC
-	xv5s0BUZSzTkG8BdLhddpc9JpqbAxfnLQ==
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pps82601-s2048-2026-q3; bh=whCVtKu77
+	+eGcZ4xirsoqc32IORWXPzEmNIchbxCDv0=; b=BkxE38P1pskgo29x3ELk4XZUU
+	nbd/CZngMmrR47HgkrnmoCEqXqGTZbbYQHSraeMz0UFFSTKeKg68rgSHGsO6AuoW
+	+BHYLI9191rfXW4UHbOQyqEcoKcZ2Q4OpNlIAgKRcVmInqjDbHJUb7xHOKv600xZ
+	4XsYJt+jxItWYluPIjyFvvwYRHA6ElJOrdas6P51K68L/4jSO6NhDkFP3C19M2vb
+	WDNZKjAcESXTpeCy1qSQ16kOH8gha/AO4CNsJR+vIbvE3wIxfYbAxbm681Q33F+E
+	wCQeFGcDGOpyJhQTIIMDhaHzk87CRKi0NYLAHe5BKDtGyEwULOqOpXNCWw79A==
 Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4g2nx9v064-2
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4g2nx9v064-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 17 Aug 2026 15:22:23 -0700 (PDT)
-Received: from localhost (2620:10d:c085:108::150d) by mail.thefacebook.com
+	Mon, 17 Aug 2026 15:22:22 -0700 (PDT)
+Received: from localhost (2620:10d:c085:208::f) by mail.thefacebook.com
  (2620:10d:c08b:78::c78f) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.45; Mon, 17 Aug
- 2026 22:22:22 +0000
+ 2026 22:22:21 +0000
 From: Amir Ayupov <aaupov@fb.com>
 To: <linux-perf-users@vger.kernel.org>, <coresight@lists.linaro.org>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -61,12 +59,10 @@ CC: <linux-doc@vger.kernel.org>, Mike Leach <mike.leach@arm.com>,
         Shuah Khan <skhan@linuxfoundation.org>,
         Swapnil
  Sapkal <swapnil.sapkal@amd.com>
-Subject: [PATCH v2 2/5] perf cs-etm: Split up cs_etm__process_timestamped_queues()
-Date: Mon, 17 Aug 2026 15:22:17 -0700
-Message-ID: <ac33d12949419373516ca02f2972c7e0af01c069.1787005265.git.aaupov@fb.com>
+Subject: [PATCH v2 0/5] perf: Add CoreSight branch history to existing samples
+Date: Mon, 17 Aug 2026 15:22:15 -0700
+Message-ID: <cover.1787005265.git.aaupov@fb.com>
 X-Mailer: git-send-email 2.52.0
-In-Reply-To: <cover.1787005265.git.aaupov@fb.com>
-References: <cover.1787005265.git.aaupov@fb.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -75,206 +71,86 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODE3MDE3MSBTYWx0ZWRfXwqbQqbh7N9vZ
- kMG6KYAFSXSGf13LoBU3Ty6R+7tQJQtHTnSGBV6pxlHt1VrTyGnIZl4lOu+upps60aBRfgeDx8J
- oZXbO3N+fJRSCu1vHpfc+2ojQBS0zPA=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODE3MDE3MSBTYWx0ZWRfX7VaFG2YT19Zt
- 3SdWi9HPY7QKv+TOR4UKiy5gROgiiqPsVmhzFdl5MvPeBr/WTMR8pN4uOPr4x/dw4+el3hC2ymm
- YCm/+Unt77vY/GYIxeNSa59kU9FvgwPEjGfpFn4NM863ri/v7RUky52qvVh9pHfljU+uh4aY+gu
- 39aBu9EgISNsB3VtddJzVDrkfvTYrj3T0QsrmE/jO5pexg9Bnwpr/TYruln2nTVskEkTNTu9mjR
- NLmJ7pkIh6bQJHNo0nRbtZtd1XVNJUgNQT7PFhrT7DLfNZT4N3HM3iqdg1T+t3v59+2cx3YqFWu
- QaLtYalATUwlVYx4pXgXwhT6ZU/omZMArYfdoV2jy7+69PVm1poFztbQKTvXzCIPflZ1Ah5kN6l
- GZA9nLFmPLL6fvv9zwlJT16p/+hsWb1vmeOn4bxpbbgDMg3cITpZKWKkochSilIJRej+C3YdHPp
- UzFkshhdoMvqQ1ET1AQ==
-X-Proofpoint-GUID: -NVO-2kNuPnbpx6GVH61LRminefBMhDz
-X-Proofpoint-ORIG-GUID: -NVO-2kNuPnbpx6GVH61LRminefBMhDz
-X-Authority-Analysis: v=2.4 cv=D7t37PRj c=1 sm=1 tr=0 ts=6a83899f cx=c_pps
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODE3MDE3MSBTYWx0ZWRfX8mcnyvDiIv4f
+ uAenopX6+2IsUPkSUhNaI7Mv22DTvY2kXga0njQkb6A8bXLDHUttPRWG4x0aA/Z87dqCuAUiwKN
+ JJZrM7LiHOZk0Dltf5rXvo7eO3MAS7k=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODE3MDE3MSBTYWx0ZWRfX/9dLQMBZQ1Cb
+ EU/QHuEIVMgRlHgLySirX82ESTxV5YU65nuoTDvChsn8sTLWAevZaGqNu2PezuiqGMqyf1B24eF
+ uelGg2ksc46yFWyHVOl1RdN7A8i9oqKHG4ux4jhePVB10QrYDJH8EyLKwL56BFZd9pYE61W8Sep
+ Y0Y/r91NAEc1KAwK3AIgPLHjDiNZdvkqOZX13nCg477CW6jzuLiK+EV1yuGZj2UmffKJuA5O8aO
+ eWCy1wmPWZxvYM4s01On+QVNBoqlaEJ4zvChjVbEpB1qwWssUFcg0dyOX0vZaOsMgT+yf0dzmtY
+ Icfl5kCgLvLm8Xq4cz6aANCP1bwOGovvMy3sUZL+eVnwdaX/4JDaP1n9W+FK+sHSRrLzhd8gWhc
+ 6/CeoX1NQcPV1dAaSDhyEeoQaz7okarngEMKRvB0C4pV/tI2E6wlLMrrmE06hWUvh1ED4Cx7Yb7
+ GcOl1esnW0m6wxLrh/w==
+X-Proofpoint-GUID: QSz51B02sM2_jhmilQg7PkO43w7IvplE
+X-Proofpoint-ORIG-GUID: QSz51B02sM2_jhmilQg7PkO43w7IvplE
+X-Authority-Analysis: v=2.4 cv=D7t37PRj c=1 sm=1 tr=0 ts=6a83899e cx=c_pps
  a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
  a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=7x6HtfJdh03M6CCDgxCd:22
- a=wpfVPzegXHpEFt3DAXn9:22 a=FOH2dFAWAAAA:8 a=nEhC7NrZ7_LQuKocUF8A:9
+ a=wpfVPzegXHpEFt3DAXn9:22 a=MiVhCCOMtV7kWwbjXwoA:9
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-08-17_04,2026-08-12_01,2025-10-01_01
 
-cs_etm__process_timestamped_queues() currently does three things: it seeds
-the auxtrace heap with one entry per queue, it decodes until the heap is
-empty, and it then walks every traceID queue to flush whatever is left in
-the branch stacks. That is fine while the only caller is
-cs_etm__flush_events(), which runs once, but it does not survive the
-function being called repeatedly.
+CoreSight ETM can synthesize branch samples from an instruction trace, but
+context-sensitive PGO needs the branch history leading to an existing PMU
+sample together with that sample's event identity and callchain. This series
+implements that mode as --itrace=L, following the corresponding Intel PT
+behavior.
 
-Seeding cannot be repeated because a queue that still holds a heap slot
-would be seeded again, adding duplicate entries and growing the heap
-without bound. Flushing cannot be repeated either, because ending a block
-finalises state that later trace still needs.
+The series first separates timestamped queue setup and teardown from the ETM
+decode loop so decoding can stop at an existing sample's timestamp. It then
+reconstructs branch history in the thread stack and attaches it to eligible
+samples without replacing their IP, event, or callchain. The attached history
+is consumed after use so a later sample cannot reuse an earlier trace window.
 
-Move both out. Seeding becomes cs_etm__update_queues(), gated on
-queues.new_data so it only runs when new AUX data has been queued, with
-etmq->on_heap tracking whether a queue currently occupies a heap slot;
-this mirrors intel_pt_update_queues() and intel_pt_queue::on_heap.
-Flushing becomes cs_etm__flush_timestamped_queues(). What remains is the
-decode loop on its own, which a later patch can then drive incrementally.
+This enables a context-sensitive PGO workflow where a cycles event supplies a
+frame-pointer callchain while duty-cycled ETM supplies the path leading to the
+sample. A dlfilter removes samples for which no ETM history was available, and
+the documentation describes the complete recording and decoding workflow.
 
-No functional change: the sole caller performs the same three steps in the
-same order.
+Changes since v1:
 
-Assisted-by: Devmate:GPT-5.6
-Signed-off-by: Amir Ayupov <aaupov@fb.com>
----
- tools/perf/util/cs-etm.c | 71 ++++++++++++++++++++++++++++++++++------
- 1 file changed, 61 insertions(+), 10 deletions(-)
+  - Rebased onto perf-tools-next at d17c5b770972.
+  - Dropped the HEADER_GROUP_DESC reader workaround. The issue is in the writer
+    and should be fixed separately.
+  - Dropped the branch-stack hw_idx patch after review established that zero is
+    appropriate for age-ordered CoreSight branch stacks.
+  - Dropped the local wrapped branch-stack copy fix in favor of upstream commit
+    ab9c84d1cd59 ("perf thread-stack: Fix heap buffer overflow on branch stack
+    wrap copy").
+  - Added James Clark's Reviewed-by tag to the dlfilter patch.
+  - Consume branch history after attaching it so samples with no newly decoded
+    trace cannot reuse a window from before an untraced AUX pause interval.
+  - Flush all trace-ID frontend thread stacks when their physical ETM queue is
+    exhausted, preventing stale history from surviving a trace gap.
+  - Check every matching CoreSight event when deciding whether kernel trace is
+    enabled.
+  - Reworked the shell test to use FIFO recording control, removed the invalid
+    bare timestamp option, reduced the workload to 10000 iterations, and check
+    proc1 and proc2 callchains independently with bounded failure diagnostics.
+  - Renamed decoded test outputs to script-L4 and script-L64.
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 114b3cd2da495..4d895f11deb7f 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -136,9 +136,13 @@ struct cs_etm_queue {
- 	 */
- 	struct intlist *own_traceid_list;
- 	u32 sink_id;
-+	/* Whether this queue currently occupies a slot in etm->heap */
-+	bool on_heap;
- };
- 
-+static int cs_etm__update_queues(struct cs_etm_auxtrace *etm);
- static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm);
-+static int cs_etm__flush_timestamped_queues(struct cs_etm_auxtrace *etm);
- static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
- 					   pid_t tid);
- static int cs_etm__get_data_block(struct cs_etm_queue *etmq);
-@@ -939,6 +943,8 @@ static int cs_etm__flush_events(struct perf_session *session,
- 	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
- 						   struct cs_etm_auxtrace,
- 						   auxtrace);
-+	int ret;
-+
- 	if (dump_trace)
- 		return 0;
- 
-@@ -953,7 +959,15 @@ static int cs_etm__flush_events(struct perf_session *session,
- 		return cs_etm__process_timeless_queues(etm, -1);
- 	}
- 
--	return cs_etm__process_timestamped_queues(etm);
-+	ret = cs_etm__update_queues(etm);
-+	if (ret)
-+		return ret;
-+
-+	ret = cs_etm__process_timestamped_queues(etm);
-+	if (ret)
-+		return ret;
-+
-+	return cs_etm__flush_timestamped_queues(etm);
- }
- 
- static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
-@@ -1330,6 +1344,8 @@ static int cs_etm__queue_first_cs_timestamp(struct cs_etm_auxtrace *etm,
- 	 */
- 	cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_chan_id);
- 	ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, cs_timestamp);
-+	if (!ret)
-+		etmq->on_heap = true;
- out:
- 	return ret;
- }
-@@ -2767,23 +2783,30 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
- 	return 0;
- }
- 
--static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
-+/*
-+ * Seed the heap with one entry from each queue that is not already
-+ * represented in it, so that decoding proceeds in time order across all
-+ * queues. Only queues that have newly queued data need to be considered.
-+ */
-+static int cs_etm__update_queues(struct cs_etm_auxtrace *etm)
- {
- 	int ret = 0;
--	unsigned int cs_queue_nr, queue_nr, i;
--	u8 trace_chan_id;
--	u64 cs_timestamp;
--	struct auxtrace_queue *queue;
-+	unsigned int i;
- 	struct cs_etm_queue *etmq;
--	struct cs_etm_traceid_queue *tidq;
-+
-+	if (!etm->queues.new_data)
-+		return 0;
-+
-+	etm->queues.new_data = false;
- 
- 	/*
- 	 * Pre-populate the heap with one entry from each queue so that we can
--	 * start processing in time order across all queues.
-+	 * start processing in time order across all queues. Skip queues that
-+	 * already occupy a heap slot, otherwise they would be added twice.
- 	 */
- 	for (i = 0; i < etm->queues.nr_queues; i++) {
- 		etmq = etm->queues.queue_array[i].priv;
--		if (!etmq)
-+		if (!etmq || etmq->on_heap)
- 			continue;
- 
- 		ret = cs_etm__queue_first_cs_timestamp(etm, etmq, i);
-@@ -2791,6 +2814,19 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
- 			return ret;
- 	}
- 
-+	return ret;
-+}
-+
-+static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
-+{
-+	int ret = 0;
-+	unsigned int cs_queue_nr, queue_nr;
-+	u8 trace_chan_id;
-+	u64 cs_timestamp;
-+	struct auxtrace_queue *queue;
-+	struct cs_etm_queue *etmq;
-+	struct cs_etm_traceid_queue *tidq;
-+
- 	while (1) {
- 		if (!etm->heap.heap_cnt)
- 			break;
-@@ -2807,6 +2843,7 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
- 		 * to process it.
- 		 */
- 		auxtrace_heap__pop(&etm->heap);
-+		etmq->on_heap = false;
- 
- 		tidq  = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
- 		if (!tidq) {
-@@ -2874,7 +2911,21 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
- 		 */
- 		cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_chan_id);
- 		ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, cs_timestamp);
-+		if (ret)
-+			goto out;
-+		etmq->on_heap = true;
- 	}
-+out:
-+	return ret;
-+}
-+
-+/* Flush any branch stack entries left over once all trace is decoded */
-+static int cs_etm__flush_timestamped_queues(struct cs_etm_auxtrace *etm)
-+{
-+	int ret = 0;
-+	unsigned int i;
-+	struct cs_etm_queue *etmq;
-+	struct cs_etm_traceid_queue *tidq;
- 
- 	for (i = 0; i < etm->queues.nr_queues; i++) {
- 		struct int_node *inode;
-@@ -2893,7 +2944,7 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
- 				return ret;
- 		}
- 	}
--out:
-+
- 	return ret;
- }
- 
+Amir Ayupov (5):
+  perf dlfilter: Add non-empty branch stack filter
+  perf cs-etm: Split up cs_etm__process_timestamped_queues()
+  perf cs-etm: Add branch history to existing samples
+  perf test cs-etm: Test branch history on existing samples
+  Documentation: coresight: Document context-sensitive PGO workflow
+
+ .../trace/coresight/coresight-perf.rst        |  62 +++++
+ tools/perf/Makefile.perf                      |   1 +
+ .../dlfilters/dlfilter-nonempty-brstack.c     |  26 ++
+ .../tests/shell/coresight/add_last_branch.sh  | 203 ++++++++++++++
+ tools/perf/util/cs-etm.c                      | 252 ++++++++++++++++--
+ tools/perf/util/thread-stack.c                |  17 ++
+ tools/perf/util/thread-stack.h                |   1 +
+ 7 files changed, 546 insertions(+), 16 deletions(-)
+ create mode 100644 tools/perf/dlfilters/dlfilter-nonempty-brstack.c
+ create mode 100755 tools/perf/tests/shell/coresight/add_last_branch.sh
+
+
+base-commit: d17c5b770972854a4fe4cf5cc22e17eb21cdc787
 -- 
 2.52.0
 
