@@ -1,395 +1,448 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2838449B2D
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 19:40:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB8F3BB135
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 20:35:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.170
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786995651; cv=pass; b=AxRuX+5+w2keqmcJj/HQ5vtTVEcXNrdRqawGSr/X6Xard7bXqE7H4xHoqQPJiu2sdmweAQG18F1jQgVVSaZ3cAZY5VSjtdpzKB7dVj3BXCrv2dHH5fLIUYmAis7BtdNc9YodSE2p/FWVj0vH9ReU+JHkk7RMGmTvQtub4Ebw87g=
+	t=1786998916; cv=pass; b=ahYhz8j05Ps5yYBllcB/oQR9XOPA4myQyTCwZnS0lGJtYHPQ7NoIcj+FSjnF2g0sETYDH18lf4OXuzt29UIKaMnK6lLyb5KivIK3kG6k17BE8UgFVG1EOpMw+iH82hXONZUCaUzEefe5pS04G3tWRJpdEzomenXSaJmzUjzgAP8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786995651; c=relaxed/simple;
-	bh=g5IVsB4QXereC1HgQlLtE+OhGwCaDPgyL+9o+C+d+ew=;
+	s=arc-20240116; t=1786998916; c=relaxed/simple;
+	bh=nCi1m6WIPhHrwME+sfuX9hjuvy2z/B+f/zJGMkZ3vcQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nKU0HaA2U6SfLoq0BiIXXewhcYmAYlg5lpa6u7oNzNMnd7K8v4G/RZU8iMxzExUFj0ZUaFimRcPzGF/gcutWINca3hT3OPaSSGFIaeL80/bXmbyc0Xdgn7oHZB+fGWeyK0em5lJcME+RnrGYmLm4M4u174wcexMNvTD0lEQjLzE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kdr9LcRb; arc=pass smtp.client-ip=209.85.214.181
+	 To:Cc:Content-Type; b=eb/ybNO05mzhvO4LV/9RNhmOKxZCx8IECf1g+MJCXIN1McxdTiT7CXB3WhJnVBpixP2fh0efmPVD5gQN2BUOXfYR4cvoQMXk1kupeqbcTxjM28jKgTYK8unPNviGJ34qWKerpFp6YQzu1NBuo629T6e7Fwyrd8kQTU841tMJtvQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gQXTboxf; arc=pass smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kdr9LcRb"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2cede6375caso24225ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 12:40:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786995649; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gQXTboxf"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-51c10ed63c0so17311cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 13:35:14 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786998914; cv=none;
         d=google.com; s=arc-20260327;
-        b=U5N/74u1ElWNfDEkWoXL0JL6VUxGyw4sZAyNRCFHhOmVbJSN+2NgtcW+aosKsy1pfy
-         O4DgYcNo9FDpdepgKmxfVTZAifzqBVFIG3uNOVhdGPyRo+SUtGF1fvTtREjqMS8IruXQ
-         T0H3F21IBFn95F0hlJ97sqgC9RMNup7IpXIlliHtajxEe97Q+Ss8wt88PyqehS59tjxz
-         BY+rTP2UryRXQArE5IdU5O7GyZAu+d9AQoVf3Jfrrp23X7GzJmda4+N73fBKC3ZoRJgv
-         wglGR3vIUUqTsEpC+SFPMv9xbYJ24BgobhBZouYalPBM6/dUtwXdaEKk5dJ8/iD2augQ
-         K+fQ==
+        b=E3nBH+Ce8bXo07PJeDLu/Vhp9HnXemCsltqfHVf8Tyc6ddF9UKpLdsO1U8Tf80jm4s
+         7TI8VIuR0TnZ96aGR4L3YXdw8Q49aV7jDHExm6cYl9nqX4Z7gMPM+VZa5kAnXJEDCXmR
+         3yq4+4ZMkdMINrzK+esfH/FtkHRrTRhn+BNe+1kjIbgfAhu7TwID/0WBQM0OOGJ8z08d
+         crGC9GXlyGUbBbSn7Lbxx7b6I9FQeQ88LLxWcnJtblny7gTWCsyCjajA76xygmHJs2J3
+         BRTn7AcqMETQmZ2FUe9LSSdtAI3pZGRTKmugE3aAZlq4UKloJmY7vIK3qHCqIdPIoDMW
+         0kPw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=jjWSURDRdGCJdNZ46NVW9aEIflRWQPuT5fdrLLdxz08=;
-        fh=f8Fs7FU2rnNJgAFQ9oyGr3wBnGmjycUsAkOkuze9p/Q=;
-        b=haqeukbmyqf6ITNFeVRhv6yZE7m6MzPyZgNwj84XbHScWmgX/8VZQi25LpMjv+JhWr
-         A26zuOe5s45ryBIJC+b3qIF511v4fjpDHNpBQTtSqbYwC89XbqjX6BvUzWMj99GVi07s
-         6ksPmaHlYwK8FF2KSAYxCFfsraNfDbH1WtexGHFEfZuTPT8cKyEb3OXRQlZdp7XXQVRV
-         mZaL0BukzYk58SLDk2TjZ4nspCAET6uEi1B46ZgfrCTZlLbTOiss/joD3JWFctTBU2bM
-         Vg6PtN0vi3zKGogKMKXJhsjL0RWgNrzoPPmuTaswRBj39Xn2OxyeFgzDcqZbI4Xc8aWB
-         WF5g==;
+        bh=XuaJu0hYzvtLZSK9Ysg8c3/fblfPKc2Iada2jS/hK3k=;
+        fh=aCMGHlswr0mk6x0ZzQkr4/tBtyIOGfSCBGWODHTX9ok=;
+        b=AUhS1ezhFQhjZrtVboDYEMTuLLpW3jyWWjPA9NYWF6euGSKypxzHcLhjB0ay9JkJbN
+         pawSOm4vPSD8q+crLTX/th3KVzdVoOp9ZDn9HNDDA7y46NJiT9QEDsY8j4lj9F2TiV8I
+         rhXoQol9STluAetGx9ilL+OQLvbqneqODjaEqyepIElU2AIW6yzar9nmNjOUHPXor/mC
+         X45qu0jbfLaMeh/WcRExECdcVPm0cjV1kAh9TkiFK0uPTVV6pgAHJktdpvYzTxelRxvN
+         fOPX1dLprmbq9eeIx9nTe/AIQ8ud6+uMFNCKHgGQFJRqiEYd3heAilMMzpsVMRew8ghP
+         0Sew==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786995649; x=1787600449; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1786998914; x=1787603714; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=jjWSURDRdGCJdNZ46NVW9aEIflRWQPuT5fdrLLdxz08=;
-        b=kdr9LcRbD/usIzTTxfl6gnMHV4mtW9W055v5Yr79REqh7RuDISKdc1HadCN5bt+x/y
-         u6ONXxXMHDoXNA3fopYF0vswymEvGxUiphGE4aIumIRvFcw2iCmBbYMspWjY3poik7CA
-         VdY+VVxfxvy/zMW1KuLjXbkiB9Oyu8pHwIqRWIcPgkXUNRgtv8j5y2Xur6KTYAReY1Co
-         9e8MVgC5G+GXBZSK6NkBQwUYmNjCxCl0x8NS3X/l0QinPYP3FlEvwNx0IVtc4Iq0GU8x
-         enI1wScB14ag5WmW65I0g3Y7YUWaA9c9bPgQiGOat1g1PLyiVlEZSrJ6rfmtskb+Uweh
-         0jNA==
+        bh=XuaJu0hYzvtLZSK9Ysg8c3/fblfPKc2Iada2jS/hK3k=;
+        b=gQXTboxfmf1zBM93EPq1IqTsPhlMY7jw8SzqRsJHYA4ZPDtcJKCZbSbB67GyQjmkCc
+         R9Kp/bs9ScceVksKYvmK4J7NxddS3YzI0k8D5+tk8JTGMfjKUahQVuk84ucxa0kBzGkw
+         LFBok+F2oNiy0hmOuYPUmf1z3IL+f+jGOF9F4xNiZ/aRynBtAZL0hG28RRXDs/rgGqo7
+         W8UnlMeTi6xkHszv9ModhJMLOmgIqoR+cJfxXpczGjyMxHugQmF1YSSRYP/UeDJSMbCf
+         Xlb7a468Qgs2dLfeofT/4GYYyQdTvuNdWy2gByYaUFqVjz0RB2vmT7P0/njj5L30YOFX
+         06nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786995649; x=1787600449;
+        d=1e100.net; s=20251104; t=1786998914; x=1787603714;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=jjWSURDRdGCJdNZ46NVW9aEIflRWQPuT5fdrLLdxz08=;
-        b=NgrLdGP1GuF+Okjh2xD2ENi+BhCwZWgz2+35iMrqwFP8c2Kz2rcvnffRSCTbbbifET
-         CFvHAYY1GY8ml7/MKpIvwcgTKuTUbti+X+5QGPgFY7UBx+AwEdsgY3cia9CK5fQd/9lf
-         IqbU7xN2CbBWVNaXqBdf3JiN6OieLSQL+N21t+KYnaRUaohrOrVYEiUnjd48A7nG8b1O
-         s4AWnJvlG4CcThMCCAUVXgGyvyJA7iv3bPCdrCNdtNirE0qmFhMLJ6qXgwhlwWb2Nifp
-         hANuk4R3ZcQQba7SZlcL45pxfNvp/e3YKrjEhXYvfddBCE16kAmUi0hd9pJxjnD8wdMc
-         aa0w==
-X-Forwarded-Encrypted: i=1; AHgh+Rq79TXFaiZ/08bdHX8fM1Bkq/3e9c2pkyABjb1t4L/pY715V3FBYLRpRRs/Psk86yWNWgn7DVKwrGhdSEpJ8PRf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx7EWudxQvgmQVtyeBhSPphCc82jluTH2ZeinRjATHWVuFLVaW9
-	B2HDqtyXIWV7MbEKui0FW2tAbyIZVx9AJpZICvEy/xHB+ifk1M5t+z948e1mvC1Jp9PHwhrCbkH
-	d81vSYTD37Vh9tuw/NV3ciLQo0leiAYZUQOTTbcsQ
-X-Gm-Gg: AR+sD12iw78rbo/U07fNK4zenB7b74qqs1ONGKyVHbUs21yBirGgjquv/OVnc+5+O/v
-	mSe+66Q2fr5boo5S93NF4Ooa+5dfUkdrVij8nCAosmqOuy/zG0WceYdsB3sN7CAORZwsNOBEYK7
-	0AlI+CQN65aCfKIpP8lJKQxolnmHWksqWA41Ijf1nwMvC8YoDa/yAulKA3hVrHv+OrzqiFQxxvq
-	Lv3O8k2wJHzVP+dftHKdxnkx5HLVGnqJqlJQ+KsRC+mdJxnva6veGoFT1W+VV3M3cG6VI/aCWoK
-	9w75fRDZhE2gfslehbU7ejs6+4JrQycSflmm+8tQU6qxMp4uuejzQjS8RQvHAIAgsIMho/4nXsE
-	=
-X-Received: by 2002:a17:903:22c2:b0:2c7:a13a:7fe6 with SMTP id
- d9443c01a7336-2d5cca06e5fmr2273125ad.10.1786995648180; Mon, 17 Aug 2026
- 12:40:48 -0700 (PDT)
+        bh=XuaJu0hYzvtLZSK9Ysg8c3/fblfPKc2Iada2jS/hK3k=;
+        b=EyH9W9HJtUDOlR8RvvQttcVmK6cvm2dlsPI9ekkQKuOwdTLlNa7aXEiQ3L8XC73Pa9
+         EtMUd82KJ774GWqG0UStWbppuJOHGV4+hXPN1VuVVLEvIgrcuFjDZpKvH6HTUhAWZKkz
+         Lfa1aUUU8WEHA8vSEA2TTbNEE7A4NU1lE1xsQTLBFSAvE7YMSfKuRxcism61/3ACcsap
+         +lb9c4gpdtEBc9pg3FHycsk1q13PdBeL8Q79jgwfcCL9h2v/ZKmQsA1PCpJi1StqGEFU
+         V6/PsIKdGv8wyo/gq4aIT87lm/5rTZH810e20thlNmS7gn0vKaLhQjxDc6pB6Yy8IUiG
+         31KQ==
+X-Forwarded-Encrypted: i=1; AHgh+RrYpHugy8EG3DzXtOmz6kyXfeXTjKH+mYgkCfj4/EV1ZdGqQtbHARAj+Foo+yl1zGSEjBMwxOQFXbFWDtYn67nz@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzK7DFGXk8XS0Sr99Ki70GBi2yFGH1FFWtAyzTOdKYsrgx2tGK
+	ghkt62CeinemdcRtGd5y3TcoRiZuQDN3V/GPC+Bikhe0s13cfNOeb0jzQgYvxEm+HWCWWaG1tbs
+	/1NVsWzlkqfgdqbB3y4aLpeEQ/Z0uITEanQbnbHkq
+X-Gm-Gg: AR+sD11vyfBzwFVxV4/vqQhZ0Pk9mzyxXzW0en2mfgSxZNxTpeRXZqJmkSZn1RCvrnK
+	0L4bOeOj2QTh6plFGpXIjp7MTiPjXnPtD8n3izu4Cy28h2rO0JvNzc5EcgyXxdzq7gtyPNtICiB
+	OunefH1NrgKYIhTsAqr8txtJbj6PBW9rvX8C1zF/EidxQqfZdeSe5UbwyS4Edz0/35wPZ+IUUKw
+	nXwg7qfsVzgMiLlU4WZy/DDFPsupBl660GbQ+i8GDmxL3L9GbMz7Rhej75RI5N+AtZHJcDiweRN
+	xHBaM3Y3Oq1lNcVsvQxzxDY9wDnbfnB5vnHFVcBWzDo+vsasyiF5LQ4zAmARCbe2T2WzTC9Ln3i
+	zVjGG9Sd4Ig==
+X-Received: by 2002:a05:622a:1189:b0:51c:6b7:d3de with SMTP id
+ d75a77b69052e-52dc0aeeb66mr3906661cf.5.1786998912763; Mon, 17 Aug 2026
+ 13:35:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260813132519.4099508-1-andi@firstfloor.org>
-In-Reply-To: <20260813132519.4099508-1-andi@firstfloor.org>
+References: <20260817094623.3288456-1-jiebin.sun@intel.com> <20260817094623.3288456-2-jiebin.sun@intel.com>
+In-Reply-To: <20260817094623.3288456-2-jiebin.sun@intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 17 Aug 2026 12:40:35 -0700
-X-Gm-Features: AcwNN1XNUAbdN4T1rdOlLqYsYC10tASmwnQezQb4jzc5_J38l9s9TxYus5rHfpY
-Message-ID: <CAP-5=fW112qVVdZGNpdRH0n-B2at4ENDjjNv4Hdehn5bEB9BSA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf top: Merge hybrid common events
-To: Andi Kleen <andi@firstfloor.org>
-Cc: namhyung@kernel.org, acme@kernel.org, linux-perf-users@vger.kernel.org, 
-	Andi Kleen <ak@kernel.org>, Andi Kleen <ak@linux.intel.com>
+Date: Mon, 17 Aug 2026 13:34:59 -0700
+X-Gm-Features: AcwNN1Ua2a2G9aHeOK4_A5WREgOjQs42ANKhM9mxXZm2a8t-4u86lm0UUPVvICI
+Message-ID: <CAP-5=fVCRBrjPXxWSmqf+vFbhhiFsWNp8TrDLCMT-XiSYHcZ=g@mail.gmail.com>
+Subject: Re: [PATCH v9 1/9] perf c2c: extract shared data structures into util/c2c.h
+To: Jiebin Sun <jiebin.sun@intel.com>
+Cc: namhyung@kernel.org, acme@kernel.org, mingo@redhat.com, 
+	peterz@infradead.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, james.clark@linaro.org, jolsa@kernel.org, 
+	mark.rutland@arm.com, dapeng1.mi@linux.intel.com, thomas.falcon@intel.com, 
+	tianyou.li@intel.com, wangyang.guo@intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 13, 2026 at 6:33=E2=80=AFAM Andi Kleen <andi@firstfloor.org> wr=
-ote:
+On Mon, Aug 17, 2026 at 2:40=E2=80=AFAM Jiebin Sun <jiebin.sun@intel.com> w=
+rote:
 >
-> From: Andi Kleen <ak@kernel.org>
+> The function browser belongs in libperf-ui.a, but that archive is also
+> linked into python/perf.so, where builtin command objects are unavailable=
+.
+> The browser therefore cannot depend on types or callbacks owned by
+> builtin-c2c.c.
 >
-> One annoyance with perf top on a hybrid system is that it requires to
-> chose which hybrid PMU to sample on. Normally I want to sample the whole
-> system and don't know on which cores my workload ends up.
+> Move c2c_hists, compute_stats, c2c_hist_entry, and the shared column
+> formatting definitions from builtin-c2c.c to a new util/c2c.h. Move
+> c2c_fmt_free() and c2c_fmt_equal() to a new util/c2c.c.
 >
-> This patch automatically merges the two PMUs when the event is present
-> in both PMUs. For now it only handles simple TYPE_HARDWARE cases, like
-> cycles
-> (could be later extended for TYPE_RAW too by checking the json name is th=
-e same)
-> The behavior can be disabled with --no-hybrid-merge
+> Keep struct perf_c2c, the command instance, and
+> perf_c2c__browse_cacheline() private to builtin-c2c.c.
+>
+> No functional change.
+>
+> Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: James Clark <james.clark@linaro.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Falcon <thomas.falcon@intel.com>
+> Reviewed-by: Tianyou Li <tianyou.li@intel.com>
+> Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
 
-Thanks Andi, I agree with the frustration. For an event like
-instructions I would like things merged. Does merging make sense for
-cycles given the different clock frequencies of p-cores and e-cores?
-Should the e-core cycles be scaled for this reason as there are fewer
-cycles within a second compared to a p-core?
-
-Perhaps we need a new json field to describe the hybrid merge-ability
-of events, say enabled on events like instructions or cache misses.
-Note the legacy events now have JSON descriptions:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/pmu-events/arch/common/common/legacy-hardware.json?h=3Dpe=
-rf-tools-next
-
-It would be nice if this were a generic feature and not just for perf top.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> Assisted-by: omp:GLM-5.2
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
 > ---
->  tools/perf/Documentation/perf-top.txt |  6 ++++
->  tools/perf/builtin-top.c              | 16 ++++++++++
->  tools/perf/ui/hist.c                  | 19 ++++++++++++
->  tools/perf/util/evlist.c              | 43 +++++++++++++++++++++++++++
->  tools/perf/util/evlist.h              |  1 +
->  tools/perf/util/hist.h                | 15 +++++++++-
->  tools/perf/util/top.c                 |  8 ++++-
->  tools/perf/util/top.h                 |  1 +
->  8 files changed, 107 insertions(+), 2 deletions(-)
+>  tools/perf/builtin-c2c.c | 105 ++-------------------------------------
+>  tools/perf/util/Build    |   1 +
+>  tools/perf/util/c2c.c    |  21 ++++++++
+>  tools/perf/util/c2c.h    | 101 +++++++++++++++++++++++++++++++++++++
+>  4 files changed, 126 insertions(+), 102 deletions(-)
+>  create mode 100644 tools/perf/util/c2c.c
+>  create mode 100644 tools/perf/util/c2c.h
 >
-> diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documenta=
-tion/perf-top.txt
-> index af3e4230c72f4..e560d6b1634d8 100644
-> --- a/tools/perf/Documentation/perf-top.txt
-> +++ b/tools/perf/Documentation/perf-top.txt
-> @@ -43,6 +43,12 @@ Default is to monitor all CPUS.
->         encoding with the layout of the event control registers as descri=
-bed
->         by entries in /sys/bus/event_source/devices/cpu/format/*.
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index bc16a57e0927..16b00a36fdfc 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -52,46 +52,10 @@
+>  #include "ui/progress.h"
+>  #include "ui/ui.h"
+>  #include "util/annotate.h"
+> +#include "util/c2c.h"
+>  #include "util/symbol.h"
+>  #include "util/util.h"
 >
-> +--hybrid-merge::
-> +    Merge matching legacy hardware events from all hybrid core PMUs into=
- one
-> +    display. This is enabled by default when the same event is available=
- on
-> +    each core PMU. Use `--no-hybrid-merge` to display the existing per-e=
-vent
-> +    selection menu instead.
-> +
->  --filter=3D<filter>::
->         Event filter.  This option should follow an event selector (-e). =
-For
->         syntax see linkperf:perf-record[1].
-> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-> index 1211401616ee3..19dec094683b3 100644
-> --- a/tools/perf/builtin-top.c
-> +++ b/tools/perf/builtin-top.c
-> @@ -1334,6 +1334,19 @@ static int __cmd_top(struct perf_top *top)
->          */
->          if (!target__none(&opts->target))
->                 evlist__enable(top->evlist);
-> +       if (top->hybrid_merge && !symbol_conf.report_hierarchy &&
-> +           evlist__can_merge_hybrid(top->evlist)) {
-> +               struct evsel *leader =3D evlist__first(top->evlist);
-> +
-> +               /*
-> +                * Merged events are not true groups, but can use
-> +                * the existing group display code to display them
-> +                * anyways.
-> +                */
-> +               __perf_evlist__set_leader(&top->evlist->core.entries, &le=
-ader->core);
-> +               evsel__hists(leader)->merge_entries =3D true;
-> +               symbol_conf.event_group =3D true;
-> +       }
+> -struct c2c_hists {
+> -       struct hists            hists;
+> -       struct perf_hpp_list    list;
+> -       struct c2c_stats        stats;
+> -};
+> -
+> -struct compute_stats {
+> -       struct stats             lcl_hitm;
+> -       struct stats             rmt_hitm;
+> -       struct stats             lcl_peer;
+> -       struct stats             rmt_peer;
+> -       struct stats             load;
+> -};
+> -
+> -struct c2c_hist_entry {
+> -       struct c2c_hists        *hists;
+> -       struct evsel            *evsel;
+> -       struct c2c_stats         stats;
+> -       unsigned long           *cpuset;
+> -       unsigned long           *nodeset;
+> -       struct c2c_stats        *node_stats;
+> -       unsigned int             cacheline_idx;
+> -
+> -       struct compute_stats     cstats;
+> -
+> -       unsigned long            paddr;
+> -       unsigned long            paddr_cnt;
+> -       bool                     paddr_zero;
+> -       char                    *nodestr;
+> -
+> -       /*
+> -        * must be at the end,
+> -        * because of its callchain dynamic entry
+> -        */
+> -       struct hist_entry       he;
+> -};
+> -
+>  static char const *coalesce_default =3D "iaddr";
 >
->         ret =3D -1;
->         if (pthread_create(&thread_process, NULL, process_thread, top)) {
-> @@ -1457,6 +1470,7 @@ int cmd_top(int argc, const char **argv)
->         struct perf_top top =3D {
->                 .count_filter        =3D 5,
->                 .delay_secs          =3D 2,
-> +               .hybrid_merge        =3D true,
->                 .record_opts =3D {
->                         .mmap_pages     =3D UINT_MAX,
->                         .user_freq      =3D UINT_MAX,
-> @@ -1490,6 +1504,8 @@ int cmd_top(int argc, const char **argv)
->         OPT_CALLBACK('e', "event", &parse_events_option_args, "event",
->                      "event selector. use 'perf list' to list available e=
-vents",
->                      parse_events_option),
-> +       OPT_BOOLEAN(0, "hybrid-merge", &top.hybrid_merge,
-> +                   "merge the same event across hybrid core PMUs"),
->         OPT_CALLBACK(0, "filter", &top.evlist, "filter",
->                      "event filter", parse_filter),
->         OPT_U64('c', "count", &opts->user_interval, "event period to samp=
-le"),
-> diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-> index e58327595d37d..aee43b33e4e1e 100644
-> --- a/tools/perf/ui/hist.c
-> +++ b/tools/perf/ui/hist.c
-> @@ -287,6 +287,25 @@ static int __hpp__sort(struct hist_entry *a, struct =
-hist_entry *b,
->                 return __hpp__group_sort_idx(a, b, get_field,
->                                              symbol_conf.group_sort_idx);
->         }
-> +       /*
-> +        * Relies on merge_entries being only enabled if there are
-> +        * only matching events. If that is ever relaxed will need
-> +        * more logic here.
-> +        */
-> +       if (a->hists->merge_entries && b->hists->merge_entries) {
-> +               u64 val_a =3D get_field(a), val_b =3D get_field(b);
-> +               struct hist_entry *pair;
-> +
-> +               list_for_each_entry(pair, &a->pairs.head, pairs.node)
-> +                       val_a +=3D get_field(pair);
-> +               list_for_each_entry(pair, &b->pairs.head, pairs.node)
-> +                       val_b +=3D get_field(pair);
-> +
-> +               ret =3D field_cmp(val_a, val_b);
-> +               if (ret)
-> +                       return ret;
-> +               /* fall through to per-member tiebreaker */
-> +       }
+>  struct perf_c2c {
+> @@ -460,36 +424,6 @@ static const char * const __usage_report[] =3D {
 >
->         ret =3D field_cmp(get_field(a), get_field(b));
->         if (ret || !symbol_conf.event_group)
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 1a238b245b3a0..4140f998e8a9b 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -142,6 +142,49 @@ struct evlist *evlist__new_default(const struct targ=
-et *target, bool sample_call
->         return NULL;
+>  static const char * const *report_c2c_usage =3D __usage_report;
+>
+> -#define C2C_HEADER_MAX 2
+> -
+> -struct c2c_header {
+> -       struct {
+> -               const char *text;
+> -               int         span;
+> -       } line[C2C_HEADER_MAX];
+> -};
+> -
+> -struct c2c_dimension {
+> -       struct c2c_header        header;
+> -       const char              *name;
+> -       int                      width;
+> -       struct sort_entry       *se;
+> -
+> -       int64_t (*cmp)(struct perf_hpp_fmt *fmt,
+> -                      struct hist_entry *, struct hist_entry *);
+> -       int   (*entry)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+> -                      struct hist_entry *he);
+> -       int   (*color)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+> -                      struct hist_entry *he);
+> -};
+> -
+> -struct c2c_fmt {
+> -       struct perf_hpp_fmt      fmt;
+> -       struct c2c_dimension    *dim;
+> -};
+> -
+> -#define SYMBOL_WIDTH 30
+> -
+>  static struct c2c_dimension dim_symbol;
+>  static struct c2c_dimension dim_srcline;
+>
+> @@ -1391,23 +1325,6 @@ cl_idx_empty_entry(struct perf_hpp_fmt *fmt, struc=
+t perf_hpp *hpp,
+>         return scnprintf(hpp->buf, hpp->size, "%*s", width, "");
 >  }
 >
-> +bool evlist__can_merge_hybrid(struct evlist *evlist)
+> -#define HEADER_LOW(__h)                        \
+> -       {                               \
+> -               .line[1] =3D {            \
+> -                       .text =3D __h,    \
+> -               },                      \
+> -       }
+> -
+> -#define HEADER_BOTH(__h0, __h1)                \
+> -       {                               \
+> -               .line[0] =3D {            \
+> -                       .text =3D __h0,   \
+> -               },                      \
+> -               .line[1] =3D {            \
+> -                       .text =3D __h1,   \
+> -               },                      \
+> -       }
+> -
+>  #define HEADER_SPAN(__h0, __h1, __s)   \
+>         {                               \
+>                 .line[0] =3D {            \
+> @@ -1930,22 +1847,6 @@ static struct c2c_dimension *dimensions[] =3D {
+>         NULL,
+>  };
+>
+> -static void fmt_free(struct perf_hpp_fmt *fmt)
+> -{
+> -       struct c2c_fmt *c2c_fmt;
+> -
+> -       c2c_fmt =3D container_of(fmt, struct c2c_fmt, fmt);
+> -       free(c2c_fmt);
+> -}
+> -
+> -static bool fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
+> -{
+> -       struct c2c_fmt *c2c_a =3D container_of(a, struct c2c_fmt, fmt);
+> -       struct c2c_fmt *c2c_b =3D container_of(b, struct c2c_fmt, fmt);
+> -
+> -       return c2c_a->dim =3D=3D c2c_b->dim;
+> -}
+> -
+>  static struct c2c_dimension *get_dimension(const char *name)
+>  {
+>         unsigned int i;
+> @@ -2023,8 +1924,8 @@ static struct c2c_fmt *get_format(const char *name)
+>         fmt->header     =3D c2c_header;
+>         fmt->width      =3D c2c_width;
+>         fmt->collapse   =3D dim->se ? c2c_se_collapse : dim->cmp;
+> -       fmt->equal      =3D fmt_equal;
+> -       fmt->free       =3D fmt_free;
+> +       fmt->equal      =3D c2c_fmt_equal;
+> +       fmt->free       =3D c2c_fmt_free;
+>
+>         return c2c_fmt;
+>  }
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 330311cac550..1dfd92cbe3b7 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -11,6 +11,7 @@ perf-util-y +=3D blake2s.o
+>  perf-util-y +=3D block-info.o
+>  perf-util-y +=3D block-range.o
+>  perf-util-y +=3D build-id.o
+> +perf-util-y +=3D c2c.o
+>  perf-util-y +=3D cacheline.o
+>  perf-util-$(CONFIG_LIBCAPSTONE) +=3D capstone.o
+>  perf-util-y +=3D config.o
+> diff --git a/tools/perf/util/c2c.c b/tools/perf/util/c2c.c
+> new file mode 100644
+> index 000000000000..58c7342dff46
+> --- /dev/null
+> +++ b/tools/perf/util/c2c.c
+> @@ -0,0 +1,21 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include <stdlib.h>
+> +#include <linux/kernel.h>
+> +#include "hist.h"
+> +#include "c2c.h"
+> +
+> +void c2c_fmt_free(struct perf_hpp_fmt *fmt)
 > +{
-> +       struct evsel *pos, *other;
-> +       u64 config =3D 0;
-> +       unsigned int nr =3D 0;
-> +       bool first =3D true;
-> +       int nr_core_pmus;
+> +       struct c2c_fmt *c2c_fmt;
 > +
-> +       nr_core_pmus =3D perf_pmus__num_core_pmus();
-> +       if (nr_core_pmus <=3D 1)
-> +               return false;
-> +
-> +       evlist__for_each_entry(evlist, pos) {
-> +               if (evsel__is_dummy_event(pos))
-> +                       continue;
-> +
-> +               /* Initial support is for legacy hardware events, such as=
- cycles. */
-> +               if (!pos->pmu || !pos->pmu->is_core ||
-> +                   pos->core.attr.type !=3D PERF_TYPE_HARDWARE)
-> +                       return false;
-> +
-> +               if (first) {
-> +                       /*
-> +                        * Filter out the PMU bits. May need something el=
-se
-> +                        * for other types.
-> +                        */
-> +                       config =3D pos->core.attr.config & UINT32_MAX;
-> +                       first =3D false;
-> +               } else if ((pos->core.attr.config & UINT32_MAX) !=3D conf=
-ig) {
-> +                       return false;
-> +               }
-> +
-> +               evlist__for_each_entry(evlist, other) {
-> +                       if (other !=3D pos && !evsel__is_dummy_event(othe=
-r) &&
-> +                           other->pmu =3D=3D pos->pmu)
-> +                               return false;
-> +               }
-> +
-> +               nr++;
-> +       }
-> +       return !first && nr =3D=3D (unsigned int)nr_core_pmus;
+> +       c2c_fmt =3D container_of(fmt, struct c2c_fmt, fmt);
+> +       free(c2c_fmt);
 > +}
 > +
->  struct evlist *evlist__new_dummy(void)
->  {
->         struct evlist *evlist =3D evlist__new();
-> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> index e507f5f20ef61..ad0e6e7399d2a 100644
-> --- a/tools/perf/util/evlist.h
-> +++ b/tools/perf/util/evlist.h
-> @@ -105,6 +105,7 @@ struct evsel_str_handler {
->
->  struct evlist *evlist__new(void);
->  struct evlist *evlist__new_default(const struct target *target, bool sam=
-ple_callchains);
-> +bool evlist__can_merge_hybrid(struct evlist *evlist);
->  struct evlist *evlist__new_dummy(void);
->  void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
->                   struct perf_thread_map *threads);
-> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-> index b830cbe7f95bf..a9dd423ded5e1 100644
-> --- a/tools/perf/util/hist.h
-> +++ b/tools/perf/util/hist.h
-> @@ -130,6 +130,7 @@ struct hists {
->         struct hists_stats      stats;
->         u64                     event_stream;
->         u16                     col_len[HISTC_NR_COLS];
-> +       bool                    merge_entries;
->         bool                    has_callchains;
->         int                     socket_filter;
->         struct perf_hpp_list    *hpp_list;
-> @@ -435,14 +436,26 @@ int hists__unlink(struct hists *hists);
->
->  static inline float hist_entry__get_percent_limit(struct hist_entry *he)
->  {
-> +       struct hist_entry *pair;
->         u64 period =3D he->stat.period;
->         u64 total_period =3D hists__total_period(he->hists);
->
-> +       if (he->hists->merge_entries) {
-> +               list_for_each_entry(pair, &he->pairs.head, pairs.node) {
-> +                       period +=3D pair->stat.period;
-> +                       total_period +=3D hists__total_period(pair->hists=
-);
-> +               }
+> +bool c2c_fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b)
+> +{
+> +       struct c2c_fmt *c2c_a =3D container_of(a, struct c2c_fmt, fmt);
+> +       struct c2c_fmt *c2c_b =3D container_of(b, struct c2c_fmt, fmt);
+> +
+> +       return c2c_a->dim =3D=3D c2c_b->dim;
+> +}
+> diff --git a/tools/perf/util/c2c.h b/tools/perf/util/c2c.h
+> new file mode 100644
+> index 000000000000..bd0c9d1c9a1a
+> --- /dev/null
+> +++ b/tools/perf/util/c2c.h
+> @@ -0,0 +1,101 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __PERF_UTIL_C2C_H
+> +#define __PERF_UTIL_C2C_H
+> +
+> +#include <stdbool.h>
+> +#include <stdint.h>
+> +#include <linux/types.h>
+> +#include "hist.h"
+> +#include "mem-events.h"
+> +#include "stat.h"
+> +
+> +struct sort_entry;
+> +
+> +struct c2c_hists {
+> +       struct hists            hists;
+> +       struct perf_hpp_list    list;
+> +       struct c2c_stats        stats;
+> +};
+> +
+> +struct compute_stats {
+> +       struct stats             lcl_hitm;
+> +       struct stats             rmt_hitm;
+> +       struct stats             lcl_peer;
+> +       struct stats             rmt_peer;
+> +       struct stats             load;
+> +};
+> +
+> +struct c2c_hist_entry {
+> +       struct c2c_hists        *hists;
+> +       struct evsel            *evsel;
+> +       struct c2c_stats         stats;
+> +       unsigned long           *cpuset;
+> +       unsigned long           *nodeset;
+> +       struct c2c_stats        *node_stats;
+> +       unsigned int             cacheline_idx;
+> +
+> +       struct compute_stats     cstats;
+> +
+> +       unsigned long            paddr;
+> +       unsigned long            paddr_cnt;
+> +       bool                     paddr_zero;
+> +       char                    *nodestr;
+> +
+> +       /*
+> +        * must be at the end,
+> +        * because of its callchain dynamic entry
+> +        */
+> +       struct hist_entry       he;
+> +};
+> +
+> +#define C2C_HEADER_MAX 2
+> +
+> +struct c2c_header {
+> +       struct {
+> +               const char *text;
+> +               int         span;
+> +       } line[C2C_HEADER_MAX];
+> +};
+> +
+> +struct c2c_dimension {
+> +       struct c2c_header        header;
+> +       const char              *name;
+> +       int                      width;
+> +       struct sort_entry       *se;
+> +
+> +       int64_t (*cmp)(struct perf_hpp_fmt *fmt,
+> +                      struct hist_entry *left, struct hist_entry *right)=
+;
+> +       int   (*entry)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+> +                      struct hist_entry *he);
+> +       int   (*color)(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+> +                      struct hist_entry *he);
+> +};
+> +
+> +struct c2c_fmt {
+> +       struct perf_hpp_fmt      fmt;
+> +       struct c2c_dimension    *dim;
+> +};
+> +
+> +#define SYMBOL_WIDTH 30
+> +
+> +#define HEADER_LOW(__h)                        \
+> +       {                               \
+> +               .line[1] =3D {            \
+> +                       .text =3D __h,    \
+> +               },                      \
 > +       }
 > +
->         if (unlikely(total_period =3D=3D 0))
->                 return 0;
->
-> -       if (symbol_conf.cumulate_callchain)
-> +       if (symbol_conf.cumulate_callchain) {
->                 period =3D he->stat_acc->period;
-> +               if (he->hists->merge_entries)
-> +                       list_for_each_entry(pair, &he->pairs.head, pairs.=
-node)
-> +                               period +=3D pair->stat_acc->period;
+> +#define HEADER_BOTH(__h0, __h1)                \
+> +       {                               \
+> +               .line[0] =3D {            \
+> +                       .text =3D __h0,   \
+> +               },                      \
+> +               .line[1] =3D {            \
+> +                       .text =3D __h1,   \
+> +               },                      \
 > +       }
->
->         return period * 100.0 / total_period;
->  }
-> diff --git a/tools/perf/util/top.c b/tools/perf/util/top.c
-> index b06e10a116bb3..b7ae51fbc9541 100644
-> --- a/tools/perf/util/top.c
-> +++ b/tools/perf/util/top.c
-> @@ -78,7 +78,13 @@ size_t perf_top__header_snprintf(struct perf_top *top,=
- char *bf, size_t size)
->                                 opts->freq ? "Hz" : "");
->         }
->
-> -       ret +=3D SNPRINTF(bf + ret, size - ret, "%s", evsel__name(top->sy=
-m_evsel));
-> +       if (evsel__is_group_event(top->sym_evsel)) {
-> +               char buf[256];
-> +               evsel__group_desc(top->sym_evsel, buf, sizeof(buf));
-> +               ret +=3D SNPRINTF(bf + ret, size - ret, "%s", buf);
-> +       } else {
-> +               ret +=3D SNPRINTF(bf + ret, size - ret, "%s", evsel__name=
-(top->sym_evsel));
-> +       }
->
->         ret +=3D SNPRINTF(bf + ret, size - ret, "], ");
->
-> diff --git a/tools/perf/util/top.h b/tools/perf/util/top.h
-> index 04ff926846be0..b42e23066fc0d 100644
-> --- a/tools/perf/util/top.h
-> +++ b/tools/perf/util/top.h
-> @@ -32,6 +32,7 @@ struct perf_top {
->         u64                guest_us_samples, guest_kernel_samples;
->         int                print_entries, count_filter, delay_secs;
->         int                max_stack;
-> +       bool               hybrid_merge;
->         bool               hide_kernel_symbols, hide_user_symbols, zero;
->  #ifdef HAVE_SLANG_SUPPORT
->         bool               use_tui;
+> +
+> +void c2c_fmt_free(struct perf_hpp_fmt *fmt);
+> +bool c2c_fmt_equal(struct perf_hpp_fmt *a, struct perf_hpp_fmt *b);
+> +
+> +#endif /* __PERF_UTIL_C2C_H */
 > --
-> 2.54.0
->
+> 2.52.0
 >
