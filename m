@@ -1,216 +1,136 @@
-Received: from BN8PR05CU002.outbound.protection.outlook.com (mail-eastus2azon11011071.outbound.protection.outlook.com [52.101.57.71])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90E512517A5
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 05:15:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.57.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786943757; cv=fail; b=gIVnxqgNJPmONl9KFk2E69bXyygwTc4WuvMMISJPcf6xR5095JvUD10/IWdRSnF7/JE2D9z/07y4AtKE7YeQOY/fLuP7r2u+GkaHaVcFSeZUmFtTqP3Rgj9Hk7FLU56wRZNol6N1o0ZBNp04UtO5M34i4U8QpZ21ZQTBTV4wWkQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786943757; c=relaxed/simple;
-	bh=OssFUOWWkNFcqoGRAc5cP5J8Z6VeiYE4zYIQrFgzvlo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=lGGhaM/yhgFtZfuQY6p+WgA4C9B+GOHny11Evj+cYc3LUFNrQCOPQ/dAr1yoeWovbt0p5V31iLFcaq5BV8LFUt5ImRZr39mP6o48Lgqyy9iADukqu4Fd6OAsxd02fhnD0NXTNrhgml8wnSg9qDQpaXGbmvMt2Pvjp8Sq4jNYqzA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=UinOmaDE; arc=fail smtp.client-ip=52.101.57.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654EA3AD52A;
+	Mon, 17 Aug 2026 06:19:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786947575; cv=none; b=mNXW0HVDbBoy2lCkoot1bM4+I8XEPcens1kQEc4DqIoTvruqJWuvXRuhDkfwom/+fLfRjC1tylSjQqDwUjl+O2N7jdhQoQKPgfZlV+WcSWgYYA+hUS0C7bkkXY6Vwu4ydYvKL3Y9Bt28M7NVsdQ9UcB/7xTfA5JKqyBZ+IxnKfI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786947575; c=relaxed/simple;
+	bh=WxX/XDhW3+B0y2ELgLI4cUvXR80gUs23jPXtc3FrgrY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OOm+LIP4JE+yPa5G2XbXRa9cZ34TSLlBeYRvVsKrRh0Vl1P6efBgYqRNCBQbHm6Vrb2SpFxHenEEKr0tcVYu3Um6HCoUbO2nXKTWCHsnb9V+OsoUZVHA7LCVQ4N7BsSDFDGxPpU39PJywMo0nQwed0zvUoZ+1ZT38ba7Kev+kgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWZf1veV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="UinOmaDE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=bzTUwqx45kyHxeZlIM5w7Zml5nBJmcPhTYRlkwnv4xGV/+Y3l81UCKSZMjIi7nHCBkB98w3Sm1uVI1WXl+iRZeZOGCRl7tyAJlbk3VfhylDNgzOiCMOi7Ekd2AcYKhZA2d0e742yUFIIwDsHwKtopC5QWiWxuQ/3fpZKVlosLY2fxzuVnuBht0SNpfm+b/nRLrdtkvT0HAwWFpfRwjWUQOGs4tbYVpOXX8olar/z0MvwLoFSbg0om2CnI9HcJPeMOC1x95gknnm0Ety8NA14VIB/foior1sfNH/kz5AIuhG761X8RLCGPaPoVF7wwjan4Bj2hywp1KO+Il4IIqAd1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CGoJSKD75I76dfXMcdz3HFAKa8Vt6YcnsVy+zfslb2w=;
- b=aTfeEFcpIMkNEm1FwzVcwQtml3xVWaEgRQ3WF8HW6VsyTuDUoDcivtHmbC+aNOj9LBj7tN3qxVpCff4G+Tm47EvrwmSiQIf8Q8wfoVFTL0AJqzNdGFYTWbND3fLftrT9tZHIWcZIp+LSkwRZfRZQ9wgVbAYizNLw1x1f1hiGUxAr0bLV3AqQUeSTqFbNUclCZ1vhfqaOZddEnuFRg06VcrZ0yQbyPXDQVjldqReqza/AW0LC4CFdjI8T7lOG47OpXvNZvxDQyXewiu/jfthzNwBRK71s3gfQrAE9qF7BMO6AQG+shJQJsKDUFFbdL/Xo8WKsnkxdwP69MbEBBhMFig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CGoJSKD75I76dfXMcdz3HFAKa8Vt6YcnsVy+zfslb2w=;
- b=UinOmaDEG1UFnlMa21gjDwJl2MMpv7I/eDwNsxH5UVKptqJGFay6CC/hiVfr7ZkGIGWgBY5VpLicoI+INGsdJ+Hhti5V9IxOhRA71LIb+SNppaaicW8Vj5LZaxHz4SlX/0jqhO4O/QMTuk91bL+EjmibHcJlKp6RqoQ4/Otz6vM=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
- by MW3PR12MB4345.namprd12.prod.outlook.com (2603:10b6:303:59::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.15; Mon, 17 Aug
- 2026 05:15:52 +0000
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7]) by PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7%4]) with mapi id 15.21.0315.016; Mon, 17 Aug 2026
- 05:15:52 +0000
-Message-ID: <86d5a3e9-4002-4f67-a1b0-6596fb58a68a@amd.com>
-Date: Mon, 17 Aug 2026 10:45:46 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] perf/x86: Move MSR_CORE_PERF_GLOBAL_* dump to
- vendor code
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <cover.1786728929.git.sandipan.das@amd.com>
- <d83896ecfd6e98424c2053298fbb10a3d91592f9.1786728929.git.sandipan.das@amd.com>
- <20260814180140.5F9BB1F00A3A@smtp.kernel.org>
-Content-Language: en-US
-From: Sandipan Das <sandipan.das@amd.com>
-In-Reply-To: <20260814180140.5F9BB1F00A3A@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN2PR01CA0006.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:25::11) To PH7PR12MB5712.namprd12.prod.outlook.com
- (2603:10b6:510:1e3::13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWZf1veV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92DFC1F000E9;
+	Mon, 17 Aug 2026 06:19:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1786947574;
+	bh=POGKE8+LRB9ANrHeL700hx5oCB9hZ3MzNcwPwGAW6kA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=iWZf1veV0oiTZoKDh1jgp9v3u9+kUoaAXwT1XOFbavImhRAQrxSR6n96uSzDFwXeo
+	 t1OesDV1pybYvGFDPQ2cTgAeaAtmLjCMH3kB2vVFIjxUTE/68F+9qQhMjwdkmP0drL
+	 Iiq9dWiiGKthpqwLHe3bGz8A8eKcgWokLl0pIdUZNu3f0WQMLoanHje1RS1u1iA9ZQ
+	 7+JxKUj28NsbgQ8CtS79porhoE1bT6H2YtKh2fJ6sE/gEFp3yWvPrM1zjul0SaNlob
+	 QYc8gdRtgM+mNOGz3kEGxxmCumAd9EVXwFyJn3AGI88MmBMQE7D2NvD2NLET3tcZu5
+	 Zd8W+5M2GnxsA==
+Message-ID: <641880ef-3ba5-4b84-afd5-57f21d8f9805@kernel.org>
+Date: Mon, 17 Aug 2026 08:19:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|MW3PR12MB4345:EE_
-X-MS-Office365-Filtering-Correlation-Id: 84bddb6c-2cba-49b0-eefb-08defc1e9b84
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|376014|366016|1800799024|6133799003|10067099003|4143699003|11063799006|56012099006|22082099003|18002099003|3023799007;
-X-Microsoft-Antispam-Message-Info:
-	OAJUHo8QOVhT92IYCVh1usZNnYIPfbCvSg7pdMCoGE8aHhB5lji52hgwVQbcqh9E7eF6XdCosXmK/pZI0cMD2Rx4RBzYSsRy4vTpMXE7Gyk5jLtsnYnXAuFPuze5sf/8hIOUoZ5Ct2FsQIvE2W7Yvb4qcqBZ1L14qrLhooG1CvKFgfNWtgZvRzwYUjXT+jUjpaGmwDEEbjeKSsA7gQaxoGCN3IVOH5b6KfqFHBcEsYxy3eUyX9xk42d7acflafWqWP3KlXCQceJjeo1q24rm5dXep3bpi6Pn6hJBvj6yBoij7CrmLD00eO3IkpCozb0bKUXUlDQXN+tCDQ746xkI8VEMEDySPpKpi3s/5I/fdGgiZPODCnVED++dDEJrH8fEjFy0alGTKPrCfU5FOg8eoot+bA0zEoT3kUCJ38qmELgWgUmTr01ei1ULe2hD61f6SFTQmGFXaXnDw3py49ine5mQHsKHQB0pF16+0AfjOZm80WdzBKHAzn6QzORu8KeW1XzCHdQHzteaFVYruE+WRdTdGPa+L40Edh3gAGm23yHL/NLGVHOBt7e2od5NEagT3AEJIXZ4JThG0PxCsRdqT4NA6mvdvJnQ0N1koIwD/wuBrGMTIxuFZ8gneZaW53fvRiXuUNnSR/ldd4hoj2xkXFL0igUKaUHW7cAs4Sleblw=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(366016)(1800799024)(6133799003)(10067099003)(4143699003)(11063799006)(56012099006)(22082099003)(18002099003)(3023799007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bXJNOE9RaFVxOEppZjB4bnZSSStxM2xOTXl0SHg4cHQzMzFCbTIwc1l1SlVS?=
- =?utf-8?B?MWNOWVpQdHh0ZFdDWlRPYjZiUTZFWFRUVkFrZ0xVZVNTeGM5dHl4SnpLeTZw?=
- =?utf-8?B?OHZabktRbS85ZHAwVWxMUFRsTlMxclA4cUFZQlFFR2VIQi9VVlkyV0ZpY0E3?=
- =?utf-8?B?QUxCVjhrekY3ckNNNFFXQy92UnlNRXlRSVhLSTNRa2JxSVkyM1BpdjZIckpr?=
- =?utf-8?B?bVVKZytYNzNER1dUT1lPYzdRQVQwdnlRd0R5M2d3enFmazBWQzQ4VDBvc0p4?=
- =?utf-8?B?cUVPQlhmT2x2U3lBdWVrTTh0dHkxV3BsYzhZMGljeE1yYWF4MjJsYW4vaTVV?=
- =?utf-8?B?U2dZZlUyZEtuVWNhV1NmbkVTdDhLU0Y4SWJJTWt1eFMrNUdBZWZ0V1dDUHRI?=
- =?utf-8?B?d2cvVXJjVGJCYk43U2E0Y2JwOFJrTEJrK29JbWFBS1ZjdWowWXVSc3FLUVJa?=
- =?utf-8?B?YXJLOGJweEl6d0k5NVYwM0RubjR5NXJuSCs2VUhRd1N3R09BdXVkQWNpRXNz?=
- =?utf-8?B?Y3pURDNYVlVVMHljT0lVL0toOVBDaUFWMmE1bm5OZFl6SXpZQ1J3UmxaVVUx?=
- =?utf-8?B?V3BUdmVLempvSGlwTFZkQnZQcmgxdldEMXhyQkF4NkRmNUs1SnNZVlFVUDZs?=
- =?utf-8?B?eE5uWFBqdDBBeVNqWkVuVEQvVlowSjFFSXE0Vzk4VkZiUEk1N0xpR0lMOGdu?=
- =?utf-8?B?NktHUWJTajNIb3NUdzBQMmZyR3FTZTQrOWJkMFozSFNSSGFSdEpFb0VzMlVP?=
- =?utf-8?B?Q2plWEFaMFF6ZmtCejY1c0VHYThlZWJHLzhsdkFDQzV3QXh5bWxraDAweENl?=
- =?utf-8?B?cnZKNzFnUVh5K2ZXb09Gb0hTOHRrMnBwaXJHOWJzVTV3di8rSkNrYTJoVlZY?=
- =?utf-8?B?L1ZYMGFTU2JVZ1dWNUIzUm4wRllHSW1ZbDVtMnRWVDY0cWhZQ1hvMFliUDdS?=
- =?utf-8?B?VmRvVVY1TkpUTS96MklyWWt2OWQ2aXVDMWQxaU9pYnNNSXg4aEg2M242NjBQ?=
- =?utf-8?B?M0NyeUVKOVMyTGpCK2M3Y3VhczFhUXM0SS8xVmVmTEhOS2Zwc3RncE1DTUth?=
- =?utf-8?B?cnNRWitheU5TUmR2TmlVWDFoRFBBQzViTGtMbS9WUWRTVDJwZ0llLy9vNzZa?=
- =?utf-8?B?VUdxWnZ3UFdUdUtPT1ZNdDM0RHBhdy8rdlVaUTRmM0JPWDAzWlMrMEdqY0tr?=
- =?utf-8?B?TzZKOGJKSkZyV1oyS3EvVEhMZXRORG9ESUNZNXZSNGNYRVFlKzhqVEo2MWxH?=
- =?utf-8?B?S0dxZEphSEIyYTd4QUpBMW1JUTNCYVhDQlJVNHZZQnVsNE42REpOa09mT0lQ?=
- =?utf-8?B?KzZGeXVpbXluRUNWUjNPZEZaMyt0QlliazdWMVdZTkw2VEVkVURkK3VxLytL?=
- =?utf-8?B?RThVbXlBemY4ZTFhMlUvWXdkOVg0M2RJZFdKOGpXMHVVbENHdnF2M1FmT3dx?=
- =?utf-8?B?dlRxRUxycW13aXJ5cUxXOGR4OTk4bE1EclVOaVg0d3MwRnZXN0ExMHNEbXQ1?=
- =?utf-8?B?UzRucFM2ZHBzM1BqUEV5dEdDaENRUVNCVUJraG55eWVHMkFYNVhrM2pZQVZW?=
- =?utf-8?B?T0hrTzNTa0RSY0ZRZEJFWjR2RUhlRXpiclhWMnV5alIySzZOSTFRNk0xMllH?=
- =?utf-8?B?R2R3K01TaE9lb3JvUVBGUGcvbENTdlZRY1RmTmxrTUo3SDFta0hrSkpsbElt?=
- =?utf-8?B?Q2paQ0RzU0tmK00wWkV2WURIYm11TDJEbjJVRkRKM3BJSlJEU0l2ZTZ5UUhq?=
- =?utf-8?B?VEJpbDlHVmtsVWpqekxlOVhQM0Jhc1QrV2tpbEhnbUhqdGl3QVFMY21MNnFF?=
- =?utf-8?B?OUgxSEU3ZFdCdms2S09IR0tnbDQ3d0tSc1Z2Y0NXcUU2QVRTMkZoZ044bFNX?=
- =?utf-8?B?WXg3dnFhUThGdDJPWFJmUTdLdVY2d2NPUjFrRmcxYlZIR0I0SXdzdGo1aU5U?=
- =?utf-8?B?NmgzZ054REtxamRkYzFGWUpyR1FNamJEWFFJS0I2WFUwdVp4Yzd6VDRWQTd2?=
- =?utf-8?B?QmFPZ2dmS1lBM3lHOStQeERlNmFibzlKMS83VWlNalQvc3BKdFJ5c2h4QzNK?=
- =?utf-8?B?b3RST20yb3Z5R1VpaTIwV1VvZk15a3Y0OENaQk9ycXg2WGhETHBvTXBrUTlx?=
- =?utf-8?B?V0orZ3dnTDZuUDdDT1ZNaThQaUx6bHRNN1VUbU5aQk5pdWpCa21YOEJhMXR0?=
- =?utf-8?B?K2xrWnplRjR5VG5HcE9rSEg5S1F1Tk53RVVXWkkzQ1M3bDgycGxrMFpJaFdi?=
- =?utf-8?B?cGZyRk5HSStXd0paSDkxNTlwK1RyUzJtTmQxOVUya2wvckU4bzhHT2xmZ1pl?=
- =?utf-8?B?Mm53enlVdFZxNFlHTFV0aHYzekRkdkhPelNXbnN2TEErUTdBZ3g1Zz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 84bddb6c-2cba-49b0-eefb-08defc1e9b84
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5712.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Aug 2026 05:15:52.3511
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KnjHFmGohOyJdY9yooMWmK0eMXmeBfzp24yPk471a5SZ1j1F6zWee3M9eszVVzDSk/97aZoEMkHtQ/dcMKxzmQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4345
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 1/3] dt-bindings: perf: Add Broadcom Raspberry Pi AXI
+ PMU definition
+To: Ian Rogers <irogers@google.com>, florian.fainelli@broadcom.com,
+ linux-perf-users@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ pbrobinson@gmail.com
+References: <20260815082048.4043217-1-irogers@google.com>
+ <20260815172712.50119-1-irogers@google.com>
+ <20260815172712.50119-2-irogers@google.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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
+In-Reply-To: <20260815172712.50119-2-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 14-08-2026 23:31, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] Unintended removal of MSR_IA32_DEBUGCTLMSR from AMD PMU debug dump.
-> --
+On 15/08/2026 19:27, Ian Rogers wrote:
+> Add Device Tree bindings for the Broadcom AXI PMU hardware blocks present
+> in the Raspberry Pi SoC line (BCM2835, BCM2711, BCM2712).
 > 
-> --- Patch [2]: [PATCH v2 2/3] perf/x86: Move MSR_CORE_PERF_GLOBAL_* dump to vendor code ---
-> commit 9c3227849508af744eb4359d394119d9f9ee749a
-> Author: Sandipan Das <sandipan.das@amd.com>
+> Depending on the SoC and security configuration, these PMUs support either
+> direct MMIO access or routing via the Raspberry Pi firmware Mailbox IPC.
+> The bindings support defining 1 or 2 backing MMIO regions natively map
+> the system and VPU control surfaces.
 > 
-> perf/x86: Move MSR_CORE_PERF_GLOBAL_* dump to vendor code
-> 
-> This commit moves the dumping of MSR_CORE_PERF_GLOBAL_* and
-> MSR_ARCH_PERFMON_FIXED_CTR_CTRL registers from common code to vendor-specific
-> code. This prevents unchecked MSR access errors on AMD processors that report
-> PerfMonV2 support but lack these Intel Architectural PerfMon registers.
-> 
-> Closes: https://lore.kernel.org/all/20260717150315.2868314-1-ptesarik@suse.com/
-> 
->> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
->> index ae773f8d55c39..4c70cb0148716 100644
->> --- a/arch/x86/events/core.c
->> +++ b/arch/x86/events/core.c
-> 
-> [ ... ]
-> 
->> @@ -1561,38 +1561,15 @@ static void x86_pmu_start(struct perf_event *event, int flags)
->>  
->>  void x86_pmu_print_debug(int cpu)
->>  {
->> -	u64 ctrl, status, overflow, pmc_ctrl, pmc_count, prev_left, fixed;
->>  	unsigned long *cntr_mask, *fixed_cntr_mask;
->> -	struct event_constraint *pebs_constraints;
->> +	u64 pmc_ctrl, pmc_count, prev_left;
->>  	struct cpu_hw_events *cpuc;
->> -	u64 pebs, debugctl;
->>  	int idx;
->>  
->>  	cpuc = &per_cpu(cpu_hw_events, cpu);
->>  	cntr_mask = hybrid(cpuc->pmu, cntr_mask);
->>  	fixed_cntr_mask = hybrid(cpuc->pmu, fixed_cntr_mask);
->> -	pebs_constraints = hybrid(cpuc->pmu, pebs_constraints);
->> -
->> -	if (x86_pmu.version >= 2) {
->> -		rdmsrq(MSR_CORE_PERF_GLOBAL_CTRL, ctrl);
->> -		rdmsrq(MSR_CORE_PERF_GLOBAL_STATUS, status);
->> -		rdmsrq(MSR_CORE_PERF_GLOBAL_OVF_CTRL, overflow);
->> -		rdmsrq(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, fixed);
->> -
->> -		pr_info("\n");
->> -		pr_info("CPU#%d: ctrl:       %016llx\n", cpu, ctrl);
->> -		pr_info("CPU#%d: status:     %016llx\n", cpu, status);
->> -		pr_info("CPU#%d: overflow:   %016llx\n", cpu, overflow);
->> -		pr_info("CPU#%d: fixed:      %016llx\n", cpu, fixed);
->> -		if (pebs_constraints) {
->> -			rdmsrq(MSR_IA32_PEBS_ENABLE, pebs);
->> -			pr_info("CPU#%d: pebs:       %016llx\n", cpu, pebs);
->> -		}
->> -		if (x86_pmu.lbr_nr) {
->> -			rdmsrq(MSR_IA32_DEBUGCTLMSR, debugctl);
->> -			pr_info("CPU#%d: debugctl:   %016llx\n", cpu, debugctl);
->> -		}
-> 
-> [Severity: Medium]
-> Will this unintentionally drop the MSR_IA32_DEBUGCTLMSR dump for AMD CPUs?
-> 
-> AMD processors with LBR support use MSR_IA32_DEBUGCTLMSR for LBR freezing, but
-> since this read was moved entirely to the Intel-specific intel_pmu_print_debug(),
-> SysRq-P will no longer dump this register for AMD processors relying on the
-> common x86_pmu_print_debug() function.
-> 
-> Should the debugctl dump be preserved in common code, or added to an AMD-specific
-> print_debug function?
-> 
+> Assisted-by: Antigravity:gemini-3.6-flash
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-If the intent is to just see if LBR is enabled, then amd_pmu_v2_print_debug()
-already does that by dumping MSR_AMD_DBG_EXTN_CFG. I am not sure it matters
-here whether freeze is enabled as well.
+What is this mess thread of 13 versions tied together? And still none of
+them are actually sent to maintainers?
 
->> -	}
->> +
->>  	pr_info("CPU#%d: active:     %016llx\n", cpu, *(u64 *)cpuc->active_mask);
->>  
->>  	for_each_set_bit(idx, cntr_mask, X86_PMC_IDX_MAX) {
-> 
 
+Do not attach (thread) your patchsets to some other threads (unrelated
+or older versions). This buries them deep in the mailbox and might
+interfere with applying entire sets. See also:
+https://elixir.bootlin.com/linux/v6.16-rc2/source/Documentation/process/submitting-patches.rst#L830
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC. It might happen, that command when run on an older
+kernel, gives you outdated entries. Therefore please be sure you base
+your patches on recent Linux kernel.
+
+Tools like b4 or scripts/get_maintainer.pl provide you proper list of
+people, so fix your workflow. Tools might also fail if you work on some
+ancient tree (don't, instead use mainline) or work on fork of kernel
+(don't, instead use mainline). Just use b4 and everything should be
+fine, although remember about `b4 prep --auto-to-cc` if you added new
+patches to the patchset.
+
+You missed at least devicetree list (maybe more), so this won't be
+tested by automated tooling. Performing review on untested code might be
+a waste of time.
+
+Please kindly resend and include all necessary To/Cc entries.
+
+
+Best regards,
+Krzysztof
