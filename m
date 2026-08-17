@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654EA3AD52A;
-	Mon, 17 Aug 2026 06:19:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D363AEB39;
+	Mon, 17 Aug 2026 06:20:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786947575; cv=none; b=mNXW0HVDbBoy2lCkoot1bM4+I8XEPcens1kQEc4DqIoTvruqJWuvXRuhDkfwom/+fLfRjC1tylSjQqDwUjl+O2N7jdhQoQKPgfZlV+WcSWgYYA+hUS0C7bkkXY6Vwu4ydYvKL3Y9Bt28M7NVsdQ9UcB/7xTfA5JKqyBZ+IxnKfI=
+	t=1786947642; cv=none; b=NPeRftHPYMEbwKLPlFlnirP1hmnBkxsQjBNI8IuGj1/ygz/g1UXt2VHzuHxQAgmbnCzUKXc8245N09HQ2gRGaWxgkrnONqAg2cV8SHfoedQZ1WxmIq/SYtWdoflj65p1tw9U0rthVDDKb8rq9j24vLC0vx/MJm0NS28Xbm3PMOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786947575; c=relaxed/simple;
-	bh=WxX/XDhW3+B0y2ELgLI4cUvXR80gUs23jPXtc3FrgrY=;
+	s=arc-20240116; t=1786947642; c=relaxed/simple;
+	bh=HQSal9UWsJGdmKshVIFO3pe2sncFvdP5UKvE1e52zNM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OOm+LIP4JE+yPa5G2XbXRa9cZ34TSLlBeYRvVsKrRh0Vl1P6efBgYqRNCBQbHm6Vrb2SpFxHenEEKr0tcVYu3Um6HCoUbO2nXKTWCHsnb9V+OsoUZVHA7LCVQ4N7BsSDFDGxPpU39PJywMo0nQwed0zvUoZ+1ZT38ba7Kev+kgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWZf1veV; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=JlT3chHfIHK0jQcZWx/2wI8jBkkZYHC6fapf1BHQqoCBTldliYn/pG5QRK4TzNO83PHkrfYDgWN6/dt/egie8RHZvtpsBLHU5FV8W5d7XJRtm5kXhgcfaGSTwibNQinpV2RLmwu4OCOFI+F2dcr8VaummPSUhYJMg34OwHWlHOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j397Yc+h; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWZf1veV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92DFC1F000E9;
-	Mon, 17 Aug 2026 06:19:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j397Yc+h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E857D1F000E9;
+	Mon, 17 Aug 2026 06:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786947574;
-	bh=POGKE8+LRB9ANrHeL700hx5oCB9hZ3MzNcwPwGAW6kA=;
+	s=k20260515; t=1786947640;
+	bh=7bgBGN7+/ozSfdokjzvflhFj0ToHa1vgIl1PXuNzLXE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=iWZf1veV0oiTZoKDh1jgp9v3u9+kUoaAXwT1XOFbavImhRAQrxSR6n96uSzDFwXeo
-	 t1OesDV1pybYvGFDPQ2cTgAeaAtmLjCMH3kB2vVFIjxUTE/68F+9qQhMjwdkmP0drL
-	 Iiq9dWiiGKthpqwLHe3bGz8A8eKcgWokLl0pIdUZNu3f0WQMLoanHje1RS1u1iA9ZQ
-	 7+JxKUj28NsbgQ8CtS79porhoE1bT6H2YtKh2fJ6sE/gEFp3yWvPrM1zjul0SaNlob
-	 QYc8gdRtgM+mNOGz3kEGxxmCumAd9EVXwFyJn3AGI88MmBMQE7D2NvD2NLET3tcZu5
-	 Zd8W+5M2GnxsA==
-Message-ID: <641880ef-3ba5-4b84-afd5-57f21d8f9805@kernel.org>
-Date: Mon, 17 Aug 2026 08:19:28 +0200
+	b=j397Yc+hZ1l8JyoyiSLUABxsCy1ya63BYN+M/fDZtMYvYUxuKJLMKwmXt0KrNNxAd
+	 8XA6YcfDGmUrwb3mlVarBaxOlXRtri+BVjBLuIC4oscNFwMYz9o+vb+HtlhvS84rB5
+	 ja8S9D1/at+oK2Q3cdanPN3y3G0qYvDFhlKDDM0xQFWn4uU6PMAEZ0Tren/bm/jwhe
+	 Ns6fmzevNpTWneUGJEdbVW+ZVkyUqH2vnLWaSb7ir7ptsaqwdsC0MaA9WW9b4y1nKn
+	 6fu3B76Swuqr23Sp83lSNGqh9m7z75k2gYdC02iavZ0IwYf3tNa7Biv4HZ89pFkXem
+	 kSkGfMmgA/abQ==
+Message-ID: <4998d0ca-eeb0-4b04-b3ac-a1f97c1829f2@kernel.org>
+Date: Mon, 17 Aug 2026 08:20:35 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -35,15 +35,13 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 1/3] dt-bindings: perf: Add Broadcom Raspberry Pi AXI
- PMU definition
+Subject: Re: [PATCH v13 0/3] perf: Add Raspberry Pi AXI PMU driver
 To: Ian Rogers <irogers@google.com>, florian.fainelli@broadcom.com,
  linux-perf-users@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  pbrobinson@gmail.com
 References: <20260815082048.4043217-1-irogers@google.com>
  <20260815172712.50119-1-irogers@google.com>
- <20260815172712.50119-2-irogers@google.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -89,48 +87,24 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  K9bCVaboTA2T77QYkRcRJYSsO1alGX0ome/hMLD1daXlkrNUp1HWa3K4iytLRXjCSIorWiGs
  n+q3krnpXu3TFkA8qtOFZMdnIiFuiq1yLT8hptsV5xh1TA2nsVvSYiaCr3q4s4BKjS/KrLDb
  qoxzw8ISjdUp4pA85vb6YLCmb39NgidD+7PmAr65lBNveIFynTgsja1rRQ4=
-In-Reply-To: <20260815172712.50119-2-irogers@google.com>
+In-Reply-To: <20260815172712.50119-1-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 15/08/2026 19:27, Ian Rogers wrote:
-> Add Device Tree bindings for the Broadcom AXI PMU hardware blocks present
-> in the Raspberry Pi SoC line (BCM2835, BCM2711, BCM2712).
+> Motivation & Background
+> ==============================
+> Currently, Linux lacks a standard perf-API compatible driver for the
+> Broadcom AXI performance counter blocks on Raspberry Pi platforms. Prior
+> out-of-tree vendor solutions relied on custom debugfs nodes and ad-hoc
+> kthreads, preventing integration with standard Linux perf tooling (`perf stat`,
+> `perf list`, etc.).
 > 
-> Depending on the SoC and security configuration, these PMUs support either
-> direct MMIO access or routing via the Raspberry Pi firmware Mailbox IPC.
-> The bindings support defining 1 or 2 backing MMIO regions natively map
-> the system and VPU control surfaces.
-> 
-> Assisted-by: Antigravity:gemini-3.6-flash
-> Signed-off-by: Ian Rogers <irogers@google.com>
 
-What is this mess thread of 13 versions tied together? And still none of
-them are actually sent to maintainers?
+Slow down!
 
-
-Do not attach (thread) your patchsets to some other threads (unrelated
-or older versions). This buries them deep in the mailbox and might
-interfere with applying entire sets. See also:
-https://elixir.bootlin.com/linux/v6.16-rc2/source/Documentation/process/submitting-patches.rst#L830
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
-
-Tools like b4 or scripts/get_maintainer.pl provide you proper list of
-people, so fix your workflow. Tools might also fail if you work on some
-ancient tree (don't, instead use mainline) or work on fork of kernel
-(don't, instead use mainline). Just use b4 and everything should be
-fine, although remember about `b4 prep --auto-to-cc` if you added new
-patches to the patchset.
-
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time.
-
-Please kindly resend and include all necessary To/Cc entries.
-
+One version per 24h in normal cycle, not 13 patchsets in two days! (and
+even rarer during the merge window)
 
 Best regards,
 Krzysztof
