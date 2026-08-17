@@ -1,134 +1,118 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16AA44839E
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 21:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A22653A782D
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 21:24:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.179
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787001409; cv=pass; b=DcF+12IKP0gJZWwhNMdrroncAJ25KQ/WiknfOePVUAXLAxQtHO4yIkY9nrES4U6Ujmuzp/cJw1gZIqe1JH3Q+xvEU17rpIJiCJ60pS0S8VKo3ZX43AM4g/Bjj06mINL/fmLjYX1GqeeA6+mm8/ByERf9UL6XwXwzCQysIdL/p+A=
+	t=1787001881; cv=pass; b=NXGGulMnKzF0mw2JF02/wlusDjeuMLZk8rf59c7dQTgqK//hFEg0GLJpniXazVZNCa4gOzUne3bEvDjdCMNGSyBXgdCmdNHLpAq7JpfhpjgX5J+00lFaoOxiecpcl81p5GKwpE9Zs/WdPnDwxuoDDcFATwZl/ULxaygTpHn6smc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787001409; c=relaxed/simple;
-	bh=OMUZXSaG8O7luPLGbGO/JcjBr+VAX4xosDd9akuhlH4=;
+	s=arc-20240116; t=1787001881; c=relaxed/simple;
+	bh=hUNx1xp5xNrpt5Cuvi18NXUA33NKwpI5g3iSFEDb6Gs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LP4+jyPIz45nhZWmlx8PXL70HF46XEK1DDSvrBHQUt8vweRIXbWqaycrstIJY657GVsRms8x1M8J+x5x58PDVzwGNPwD5OH/oU9B3brDupb6+uLje69ZzFcQNbEFXi/g83O/mRpo40/NiWbwRcegXCxpOlxtHablqw5pVdlbmL8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jcR9kvuP; arc=pass smtp.client-ip=209.85.160.177
+	 To:Cc:Content-Type; b=BT0GbnAy8hpKiRQPpHgFmjmlb94oDaQ5NteHk7WVPIzIDZF6Tg/7rM1v3MN8Zkgv6d+B1rYZDq6LawGsYIhb/NtJFFikql608EeaVhdQt31B/uzbY1lc9Xu4topQqqXlK50C2HpIHsX0vqq+Oll8CDTBonwdJGh58vK7oEzrRYM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EqGMdyd3; arc=pass smtp.client-ip=209.85.160.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jcR9kvuP"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-51c15a5b265so85231cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 14:16:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787001406; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EqGMdyd3"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-51c01c79467so92751cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 14:24:38 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787001877; cv=none;
         d=google.com; s=arc-20260327;
-        b=qIbM6PZiCZUtq7Fbh5Ze3obkyT11Hw24wQiANwfZnWmAZyNZMuMgmkbGfo67/T9GLe
-         jWEDemolMWzU6dgxkSTLbdrpQF7pqv+f3TrLXecPnsiIMOA41WuIPVO4rx0uXXzGznYh
-         56x5lUr2/Fr5fc0NtLV65ybZJo78gLlDia/Pfrjokr7QnGIsd1Xqj31CLCMf/IdFTwxz
-         DuhjXu/eUvHOmwQ0+/ZYAxkyTW0cS9scjRc+dRJvE1VVpSbnIur7gN0MF8ruw5lgol0u
-         dvk+3R7Pqy/jxJHi96E+T12WVUvEkYMEjnv9tK3stfpfgut0ryCZf8KOpTWl/4pzFUiE
-         bO0g==
+        b=M7MmdE8PWOvMp+qicNIOqLh2uMXgJw/qGeG98ROUu7cGZbFMLTQApNfpuP+VRVxB1z
+         bW5d5G3I97GB+O6KbikOmRSCEgNRDc3ipr8T6oZ3AmEDOVbvcBQQgIgfbNe1rQQzlHyo
+         44vuKCcHMWHMh6BFJHGrYEnNiUMaRwntHMWZ10RTlWH+Jr2RbpxuMRvodaJfqXpIZGWY
+         GEFeleH7C21p8WlhiiMTLKUjuMVnHvkFwukA+1TxhLpMqlGrN8ka1h2/gN6qs+MDt6N/
+         Fo1S6YLacGg78YnER2Fmss7sYxuqL1MOApkoutA6Do5/NGlTl5Io+8NnXLJvji08/lvw
+         8fbw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=AwS+DcBLVWO86z+dijbbJo1WgXcQ+0udYFNcLFCHyac=;
-        fh=6dueO/pn4mwP44eGZwFJVXnUMkdpeZYpoFqEB/RX5O4=;
-        b=TCBqSfMp6h+6/oKgfRXdoVrF5fpDzHGc72ww8Z2p50VxO3C3pjDnuVUWVhq5dcvvYb
-         Vqs8OlroT2ZXna6d9pJ4KdxUHJ8DWe0HNBEtS3hwThQQJdTN6+R6YctdObjNo6SAr4Zq
-         vbAYB0ew98z/C1sXrM0c9eiUtdnSboz5nVeDxBD0ohdKAbtol+JCgVEyRYOLyhrA6S+7
-         PB4DzS7Os//KqIe/Qhq1K8dtfPdCKJuy/YfVpXRg6oVqbAYcUBjZ+kG1PLF5hEmH5jKH
-         byn1OdWF8pXtAxeMtWdtNpk9P6NpImZIX/2a04TxuzliWhFZWaD5gu52Gi59pmkdb0Un
-         9blQ==;
+        bh=1AtlkQsWpD0HNfP15aHmIslFycbm66FyPMjzRdcH37g=;
+        fh=ibETsmvSSxOWW4enplhKXGlYpux9EMz7KKg/MqaWdc4=;
+        b=lGy+fhXR7uXpXNcSIyj/uvvclYSc7rio+8lbJb6VCUeD54GfywUTz1R600TjJBLwqH
+         c0PylwfZB83WLi6CTAyzS0GgkT6HieXZiwdyV+IpofNE1BvwuzhWFlmYn4RcUD6eN2ac
+         XL6j3NjX4h2Zo0doc4A4E/bENd9loTezUKUfQR96SiFkHW8SYJxc/h/Zdj1uYX/9NBZ1
+         b7XXghXLAJcVIW6qzcq0N0e0xkohoVUtBi9XsaK5Bqvlwn78WLZxmXIdpWy5zHg6m/AL
+         tV/8z32rZvZkPXjJlxM7yQdNt5jWe2G+/2T+biFokIUXzftmOVT5kqywfAMOmHZ8DLhW
+         5uqA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787001406; x=1787606206; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1787001877; x=1787606677; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=AwS+DcBLVWO86z+dijbbJo1WgXcQ+0udYFNcLFCHyac=;
-        b=jcR9kvuPLh0+1BpwCy5/DVhupFnQYKXytA2WNtRZu+07/aVjVsuAZNsV+QsMEA3+4g
-         wcphscOCyx0xpXCk9QRRia19lIsR9RAFnk3ltO3a+1zSHEFVS3fIWfhAG20hdNi1yIfs
-         B02GsIH3M5zeEReOX+EO5Jyz4qt5Dsku38oO6ZNBdZGInx7tG7oScC7I0mlLnrsdduXL
-         dGIOLEMFzKwPpIukT5xg1GcvhOI+lArEXs8lyZHMgGG9Mj1Is+Rfo0Bh2lVryO3KgDzE
-         3jdbofmnNRJvEFrJMy3gvneNUcI0QSOdiRwPgG33zrDlytSqWKrO3w6ruulUBVfNVCSg
-         jcJw==
+        bh=1AtlkQsWpD0HNfP15aHmIslFycbm66FyPMjzRdcH37g=;
+        b=EqGMdyd3hebAReygVz4c6DLoGsj19fYS6NoPDEQfcexUK5TbbqBmuNunmdTr7Lfz+j
+         QkXQ1kBmn2xtk5W/pm2e+8L9uF9UOvIjDuEqhUwKhwbHLPnQgY9xbd9eHnw9T7DiI2hb
+         69KOxBymjxk66QUwG+Pf1P5bzeLHhTg7hwiPbjRa9mT28kK2v10SqJ62uE5UGme9r2BX
+         Z8eNnTUYfTT5/pzFofy3ZarSfZFWaZoeA792C/zMaabD2HeyciEvbcD4ZudweI+VmZM2
+         cED4mIo478g+Cf0HzEDrVOwTluRxKeL3MSf6hcbS/QR31ZK3XT14IB4j0NEJ3a4P4eZP
+         sT1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787001406; x=1787606206;
+        d=1e100.net; s=20251104; t=1787001877; x=1787606677;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=AwS+DcBLVWO86z+dijbbJo1WgXcQ+0udYFNcLFCHyac=;
-        b=Txn0FhuAuw8e2b50/IXA0S+lm1RBnVRfQWItcaCwuUuZ5da6N7bhhfBRPb+DnCl0di
-         EnZ4XCxPNngzN9FnWhhdHceyo8AFq7/QdrW+Zom4+1X8XWL7TvvHYysbUUQBEaAy2FHu
-         lG9lQCLOdqKcQlUras36eQyBumWlVE3yO+tYT1ZQCTPHvTvGUsZyHBCS0CB1yQJwGmTQ
-         09g4qOr8aMB1iwlKeZ49nriazrh0xt65U4wD+XBaNGOoU5Py5D7fpqYvuoYnwUDICDFq
-         ZJJYBAW89ppl0lFi6QfJBCgkxPMvDBsBNGVqTh1gaMRTpSiJTgdyDuAjj8mdwKio6Nrp
-         cQZw==
-X-Forwarded-Encrypted: i=1; AHgh+RpbTvVhBLCch6HenUKh/R1dFtRA1DciZC/bZoTdi1+Wpj8rE77+W/VAcWlg4k5Cobd7EK78Nbuu7owMRfxn015l@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdOxc9/+3pOvqNQDRJj5+H+uhSTWa/u2PanY7SMOOwstfa4DBC
-	3yN1xLXbrX5a9zNypmvz9sqn0dtsjU/+zIaXfFzPNxvqUh8hZbg0Kq6D85eZybd2sadExMY9vuL
-	8K6QI2cJu6M3Tq1w324qq71o2dh1+HvIY73BpbScK
-X-Gm-Gg: AR+sD12tWWpOtLMyiXaYyoSWKw+b8OYUGcrs5d/W11PT92vz1E95nPxX15ZSydR9l2D
-	nuECWlAHGI09Sqpb0fg5CKk0qeqDHQKbd1PFGbekecfX8UgLnBB1Tw8sAXNRB8OBCkAUHuMXJ/V
-	BnHwe1OIA/QBHHwLYwvvnY0ZBu3H2oIE8fO8EHso2Oh/VOcyYe+ZNorDnAAN2yCynCj1q16OmfM
-	uK/Z2GgolDAK/ACBU+T597ek0cvsd/Eo19EnvcXcv96uXOS6WG6TNzizoZC2IxDcoRotUqqkzLx
-	uyxv40aj1SlXdh5J/FRWiKTiYKCn9oc41CKz7yMsuKprEJrMA+cjG4ZzvkKsJRCOSy3rsNfw3wk
+        bh=1AtlkQsWpD0HNfP15aHmIslFycbm66FyPMjzRdcH37g=;
+        b=PbXqfIJ/4/EAuBzVo/Ic0DHOUeUVlDE81uG0RfGy74jgqhKtUCy3a/bI/WmR/ZXE+b
+         PbmkfFA/Sp0qMeffn1N70L6R0fJ7OlQ5jR3fbh1qEHE6uqmfmwc+p7yiK9gLOEQLjkMs
+         aEVI2xPOrqk5McqJ4JpaO0FcgTQZFWpSLemoxFNO/WTDTkIVVyLcSIL9etkY6NTj/GGB
+         6Ms+bQI2RBi7QLeEcXCfdoFCrCIsZjhdwfmEyrbYTeT4+1mTKB5x1V7UOv4MzMYOBlye
+         Sg9mEQNh194l2AZGCZ5UlOLrDxo8Gr11j+5x1rOctBM9DozT5N5yZ3I8OUsxIMmjZrt5
+         Acrw==
+X-Forwarded-Encrypted: i=1; AHgh+RqlQ2QXiuEn/AQLtZ2AiXJv9Gs8vEy5fVDnrJ9L1jwp6ZtHbyDJA5ayRHHoSDf5DYQcptAk+3/4SHc3WqEI6xnO@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb9T3lW9ayEB7wgvMlWaMFgu2gzi7Oh4Tb+vH51HB+l3VsX5XN
+	mJOR7VFJbY+0qK4Lqj8LbEH4rRyPbcZDamQbPF8aNli/Oja/2RNkIFIhXD6xH77qG/d5KUcu2fK
+	TTiFHq2ZJwEeKu6EMsL6ZIGgV4Fz3NjbNHUGFVDQt
+X-Gm-Gg: AR+sD11j+moqG9CWHMrkjG3MQtX6s9sI/y0BBSNo2KPHJsdvJ9dmBgp9Mphww6ewBoS
+	/1uinmNi4KUx7H+afIbuv74r7HFcg+ePvH0tpOgSYjwJRf9ahIBttv+DnWA0leUPy5i9Xh1GNP6
+	fbqC9P2bivxuDbRz9m/0yxNgpR4auDezacgCdtvUaEg+yrKBLC+b55SCVVZOEHXBbim9bUpo7MC
+	4pL/NMcnBrqLbySPqNWy9GQASsZiSv4h7Q0ibEj95h1HIhCNeWJwOpAztiaS8Dv+8aL8xUUOai6
+	db6j3Tk+rMK1z2yWJ6dIdhbRb2yrpPTCn4oaEaCbc4T36m0EqJhzY7aTtIAQ8AVNe+DIY4rh3OI
 	=
-X-Received: by 2002:ac8:7dcc:0:b0:519:b655:235 with SMTP id
- d75a77b69052e-52dc0aef867mr5277581cf.3.1787001405125; Mon, 17 Aug 2026
- 14:16:45 -0700 (PDT)
+X-Received: by 2002:a05:622a:4107:b0:52b:806e:2633 with SMTP id
+ d75a77b69052e-52dc4707fa9mr65951cf.1.1787001876802; Mon, 17 Aug 2026 14:24:36
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260817094623.3288456-1-jiebin.sun@intel.com> <20260817094623.3288456-10-jiebin.sun@intel.com>
-In-Reply-To: <20260817094623.3288456-10-jiebin.sun@intel.com>
+References: <20260811173340.96013-1-thomas.falcon@intel.com> <20260811173340.96013-2-thomas.falcon@intel.com>
+In-Reply-To: <20260811173340.96013-2-thomas.falcon@intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 17 Aug 2026 14:16:33 -0700
-X-Gm-Features: AcwNN1XdvAaRrtDmFu9eB30K5Oz9KR_6aE1DNoMBQhB96akPRVmT_UZwWhw7SAA
-Message-ID: <CAP-5=fVgRoudLw-AY_k9g71_ttq52pXtfM+OAxXppVoV8Z3xbw@mail.gmail.com>
-Subject: Re: [PATCH v9 9/9] perf c2c: document function view in perf-c2c man page
-To: Jiebin Sun <jiebin.sun@intel.com>
-Cc: namhyung@kernel.org, acme@kernel.org, mingo@redhat.com, 
-	peterz@infradead.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, james.clark@linaro.org, jolsa@kernel.org, 
-	mark.rutland@arm.com, dapeng1.mi@linux.intel.com, thomas.falcon@intel.com, 
-	tianyou.li@intel.com, wangyang.guo@intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Mon, 17 Aug 2026 14:24:25 -0700
+X-Gm-Features: AcwNN1XsOa8yk1nfr1DOaKCnCIer7hz8NYO8ZDOHs4KHocMbo0cA77eoSvQgygU
+Message-ID: <CAP-5=fVbwxLMryUOd=HOqZapJF4c6HCSMSh+VTVppAfwk36myw@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] perf mem: Fix size tracking for mem_lvl's in perf_script__meminfo_scnprintf()
+To: Thomas Falcon <thomas.falcon@intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 17, 2026 at 2:40=E2=80=AFAM Jiebin Sun <jiebin.sun@intel.com> w=
-rote:
+On Tue, Aug 11, 2026 at 10:33=E2=80=AFAM Thomas Falcon <thomas.falcon@intel=
+.com> wrote:
 >
-> Describe the function view hierarchy (read-side function -> contending
-> writer function -> shared cachelines), the per-level indentation, and the
-> keys, with a worked example.
+> When printing memory info in perf script, the entire size of the
+> buffer is passed to perf_mem__lvl_scnprintf() instead of the remaining
+> size. Pass the remaining buffer size instead.
 >
-> Document that reliable function attribution requires `iaddr` in
-> `--coalesce`, that the reader and writer may be the same function, and wh=
-y
-> the coalesced function view cannot distinguish same-thread from
-> different-thread accesses in that case. Also document that verbose mode
-> includes code addresses in function rows.
+> This issue was detected by sashiko during an internal code review.
 >
-> Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: James Clark <james.clark@linaro.org>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Falcon <thomas.falcon@intel.com>
-> Reviewed-by: Tianyou Li <tianyou.li@intel.com>
-> Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
+> Assisted-by: Sashiko:gemini-3.1-pro-preview
+> Fixes: fdefc3750e847 ("perf mem: Print memory operation type")
+> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
@@ -136,116 +120,23 @@ Thanks,
 Ian
 
 > ---
->  tools/perf/Documentation/perf-c2c.txt | 71 +++++++++++++++++++++++++++
->  1 file changed, 71 insertions(+)
+>  tools/perf/util/mem-events.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/tools/perf/Documentation/perf-c2c.txt b/tools/perf/Documenta=
-tion/perf-c2c.txt
-> index e57a122b8719..8775889bc0a3 100644
-> --- a/tools/perf/Documentation/perf-c2c.txt
-> +++ b/tools/perf/Documentation/perf-c2c.txt
-> @@ -365,6 +365,77 @@ TUI OUTPUT
->  The TUI output provides interactive interface to navigate
->  through cachelines list and to display offset details.
->
-> +Pressing the 'TAB' key in the cacheline view switches to the function
-> +view.  The function view shows a three-level hierarchy of the symbolized
-> +entries retained in the cacheline view, organized around functions rathe=
-r
-> +than cachelines.  Levels 1 and 2 normally show function names, while lev=
-el 3
-> +shows cacheline addresses.  Lower levels are indented beneath their pare=
-nts.
-> +Verbose mode also includes code addresses in function rows, and code add=
-resses
-> +remain available in the per-cacheline detail view ('d').
-> +
-> +The function view requires `iaddr` in the cacheline coalescing fields.  =
-If
-> +`--coalesce` omits it, TAB reports that the view is unavailable rather t=
-han
-> +attributing already-coalesced samples to an arbitrary function.
-> +
-> +  Level 1: the read-side function, sorted by Cycles % (estimated load
-> +           cycles: HITM, peer-snoop and other-load cycles)
-> +  Level 2: the functions sampled writing the shared lines read by the
-> +           level-1 function, sorted by store count.  This can be the sam=
-e
-> +           function when it has both read and write samples
-> +  Level 3: the specific cachelines shared by the reader/writer pair
-> +
-> +The Cycles % value is the function's share of event-provided load
-> +latency/weight estimates from cacheline-detail entries retained in the
-> +current view.  It can include non-HITM and non-peer loads coalesced into
-> +entries that pass the C2C filter, so it is not a pure contention-cycle
-> +percentage.  The share is relative to the functions and entries retained
-> +for the current report and is not comparable across recordings or differ=
-ent
-> +`--coalesce` settings.
-> +
-> +The store count on a level-1 row is the number of sampled stores by writ=
-ers
-> +shown in the function view into the cachelines that function reads, incl=
-uding
-> +stores from the same function.  It decomposes into the level-2 writer ro=
-ws;
-> +each level-2 count in turn decomposes into that writer's stores on its l=
-evel-3
-> +cachelines.  A level-3 count is therefore not the cacheline's total stor=
-e
-> +count.  The level-1 value is not the number of stores made by the reader=
- and
-> +is not additive across level-1 rows: two functions reading the same line=
- each
-> +carry the stores into that line.
-> +
-> +Each function aggregates all of its code addresses into a single entry,
-> +and a level-2 writer aggregates all of its shared cachelines, so a
-> +reader/writer pair is a single row with its total shown -- there is no
-> +need to sum a writer's traffic across cachelines by hand.
-> +
-> +In the function view the 'd' key opens the detail view of the selected
-> +level-3 cacheline, 'e'/'+' expands or collapses the current entry, and '=
-TAB',
-> +'ESC', 'q' or Ctrl-C returns to the cacheline view.
-> +
-> +For example, with the first two read-side functions collapsed and
-> +dequeue_pushable_task expanded to show the functions writing the lines i=
-t
-> +reads -- two of which are further expanded to their individual cacheline=
-s:
-> +
-> +  Shared Data Functions Table     (19 entries, sorted on Cycles %)
-> +     Cycles    Store
-> +          %    count  Function / Contending function / Cacheline
-> +  ----------------------------------------------------------------------
-> +  +  35.67%      876  + [k] cpupri_set
-> +  +  24.31%      424  + [k] pull_rt_task
-> +  -  16.53%      555  - [k] dequeue_pushable_task
-> +                 145    - [k] pull_rt_task
-> +                 145        0xff2d0082809da080
-> +                 139    - [k] enqueue_pushable_task
-> +                  70        0xff2d00a2071f9640
-> +                  69        0xff2d0082809da000
-> +
-> +Here dequeue_pushable_task pays 16.53% of the estimated read-side load-c=
-ycle
-> +cost.  Its store count decomposes into its level-2 writers, and each wri=
-ter's
-> +count decomposes into its level-3 cachelines: pull_rt_task's 145 stores =
-fall
-> +on a single line, while enqueue_pushable_task's 139 stores split across =
-two
-> +lines (70 and 69).  A writer can be the same function as the reader when=
- it
-> +has both read and write samples; after cacheline coalescing and
-> +function-level grouping, the view cannot distinguish same-thread accesse=
-s
-> +from different threads running the same function.
-> +
->  For details please refer to the help window by pressing '?' key.
->
->  CREDITS
+> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+> index 0b49fce251fc..4e490f9cd348 100644
+> --- a/tools/perf/util/mem-events.c
+> +++ b/tools/perf/util/mem-events.c
+> @@ -610,7 +610,7 @@ int perf_script__meminfo_scnprintf(char *out, size_t =
+sz, const struct mem_info *
+>         i +=3D scnprintf(out, sz, "|OP ");
+>         i +=3D perf_mem__op_scnprintf(out + i, sz - i, mem_info);
+>         i +=3D scnprintf(out + i, sz - i, "|LVL ");
+> -       i +=3D perf_mem__lvl_scnprintf(out + i, sz, mem_info);
+> +       i +=3D perf_mem__lvl_scnprintf(out + i, sz - i, mem_info);
+>         i +=3D scnprintf(out + i, sz - i, "|SNP ");
+>         i +=3D perf_mem__snp_scnprintf(out + i, sz - i, mem_info);
+>         i +=3D scnprintf(out + i, sz - i, "|TLB ");
 > --
-> 2.52.0
+> 2.55.0
 >
