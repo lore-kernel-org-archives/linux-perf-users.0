@@ -1,95 +1,95 @@
 Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 290803C1D79
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 20:58:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E96D3BB9F7
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 21:04:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.176
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787000332; cv=pass; b=HnPaYprsxqZvir/tGIDEJ592oYMP7Ya2ZuXFWim8qoiE8lvb8WSqruEKr9rBWTCmbVgcGJehaX4pCJZ7XjLF1ahWQvB4Lwv27KHVca1+/g5mURq8mUHxtVv5hhuCBIOZtCgGDfhoQFyNgBupRr8mN8HFBqjMkqKZt5fYpvF7wWo=
+	t=1787000664; cv=pass; b=jKhatDdTP8PQ49GKsSff1O+XVuEWjemrmkyFn/8LWTHkDrm7u5Cf5pKH46xWoWTFi17hmD7HL0iUXvaXctJbDxXFTx1eE8D1kcNDn7okMLBo3UpGYzY8wLx6T674xRhfSxoU0K2d9s6FT9+trbxIx6HnisGtghL3L9rIphKKDtk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787000332; c=relaxed/simple;
-	bh=L2Z/fH4WgsqACdOtAAR3T1hVHaetIe/zZiBIFez3ayE=;
+	s=arc-20240116; t=1787000664; c=relaxed/simple;
+	bh=PAhYrtdx5NLi9ue+tN+M0wnwk+MU3zyevPugDDdlLkw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=T/hpl0RCJzMJvBHIdxnXasgkjoMdr3zA4ngt84yLEZfNH9gVv+Sd1E2UoMHiMGCynDWZUbQYahIaLrsL41F/MbbMldXXIbDc3TZVAz+85Riw+vsLp+bBIRpAlwY5gCNI+cw+NXiBUWcj1ZCbaElsWR3+GinK9ue00+Wx7I2fIhY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z8NWFCI0; arc=pass smtp.client-ip=209.85.160.176
+	 To:Cc:Content-Type; b=Xbc2lnHve4CK1GX6Weof2ox13RmOq/zim6/B/SAF/T0+ZYlKnRpFOHJz301vTzALs9T5hLaZW7XZKMZGyDGncQvSuotSA8pO1kLEaMMkUMHtxEAfctn7kPt/Nt9AxnIru/Uh48uGDsbnMyzRwMwijKNaJQm3XkP9zSvDvhptRy4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ig7UDwhk; arc=pass smtp.client-ip=209.85.160.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z8NWFCI0"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-51c10ed63c0so22721cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 13:58:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787000329; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ig7UDwhk"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-51c15a5b265so81571cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 14:04:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787000660; cv=none;
         d=google.com; s=arc-20260327;
-        b=DZuVXSQ3u2u0ZPy+aBpc8SxvrDEOePjvpJcqdM/1s8m1PLZBvWzMoP6PtX8lyNrCxx
-         XeRbU38X+Tudd8SYTR1rLV81IiQdkZRz7MaaT77nESkY8SweTSifQWwa8YjyUHgewF5B
-         yUChaTxYcNCHb5C9HB3fBkDL3fJIGAVu/nzGLz0p4slwEcnAbSpTgRfAV4bPPEvXMqEM
-         DyZ6egDjW7j3R+vWwYORsLCB3k3DShDBCBjtt7n8CCiUBDP7xnDc8J4RXEoJ6VRzVKfO
-         Ojxf1pwdumc9XjIWR8y4VtuoJHbM1+6C/KZDQxAVLC2CZWov5ypllFr+VIU1EpyNuDg6
-         FFtw==
+        b=e7T6uIBUnvMOZO4GkbDTcN+uEDNJ3cgz+cp/gnQm+nsdujCHhOQN3f9MqP8WVZuGQL
+         iBq8X8m2Kq1n0hEPdp+ZbQQzA0yxrAFxc/F/sV2G7Flh2yVm4xw3PMtFhIeHM0KvN7nY
+         kGw3II/Ns4UxYuKulFPRmBgUiJDWdLAprqs9vDbEd/q+DicecBd+JQdstyrvU39G5InQ
+         yddm0n43EIEzfSX5w1XjbFEzMpGzKrvhXVBkp7Um1dg6SfXWktYbdDkIm4JvXwah/Mfv
+         TlKQV34y8f06lNbw+mJT3mvhvg0uqYOzlYl4JuAKDPqtqjZloaYZlXJX/+Ef/L1cLSuT
+         nZPA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=zqh8KABVB1Wzl8EEFH4DyBwWJb1uFIsNtrxl4RBbXqk=;
-        fh=WgHLqDsRyxZ43bo+bE0PovZ34DWHO4dcy/bvlD/ET74=;
-        b=NuHsZz24384ZYDg8b1ivOQxUqDs6vUBImbmEjuRY4UQxKJDEsI3pbjUWdt3RRXKcgM
-         McG4T88Dbvgtc6+Z4Z1zCyCSB3TqlT2aXxjCROX8/RxXx9yd6cDy+fqwDZcvo/AWYBw8
-         64qEEyGTcztOzvKx8hfkgbP96dE7bhAEjg26z5FLd0Cr/g/cYnPgZU9TgQYKb0QIjriI
-         U+7Y4L1Uq70kIDKJZpzg5HPtJSzGGelyoN2lSx+/XRvJ03A5ZwkFqbkbwQyi7CVHL08j
-         Vg8c+eGp2Ucm9Z4KeekbXyjvySAqVScJPKPEayeDOlzs1TnrCuruhkRFDHPf9XHcQtaf
-         Sp3Q==;
+        bh=MFs0YWkwzJt66DrRW5vFjSvfLaQPmpKfDuAqAvyXZvg=;
+        fh=VS6EbT00eojF4HfcgEe80LgJY5u/bsNwbh1mU7q/VTQ=;
+        b=dXtXh1VkGD4hRnMGNdWW+mIB+ogXzk0DeolYrhZJ8fBA1/B4cRaf6jUtdrJ2+1sXsS
+         MWjCSY3jWnFNdRA0PIAhZC1hzyZe3twv0IfZw2ASct7jxNdUOCmRvV8CxoHfZN+1RkOc
+         fMjt7v4JHHvwYY1ZtGp365ni7l6zwNPBf9va5gSKcPoxLeStxdTLroCaX2ObQyP6V/7a
+         EE1cp2hzD1Dp0pwAwjvOEtPMXkGtd2NSn4xFUrt6BHi6py2EX5nz1zhF6bD6hH7Xnhwt
+         /8L6Ci7yIW1OoW3c7G+DZ1qB3Yj0YZz/Wk72KxrmUIixN6GJ6258OdV0FT8eP5Owie1C
+         ooUQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787000329; x=1787605129; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1787000660; x=1787605460; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=zqh8KABVB1Wzl8EEFH4DyBwWJb1uFIsNtrxl4RBbXqk=;
-        b=Z8NWFCI0YPEhJxyOkEc8stdRv69ORDt0xtYh9lyJ+02wxcvZPKcZEtWP3W+HlwfBT+
-         4Sgw5T6GD+iYUm/pH2NJg9mCBEvkalu65YBglPPDw4ThaYSS3AXKcRQVjDkYwDOJDf5t
-         KF85p2KBNSMwY4HcLqiJcIDEixqIhfheJdG6v6sE2T9hK5AUO2rsbfjc7mLJ/6mycFdn
-         e5zgLW8l4j4/TdRtUcg/rSazO5+WpRVmfnain1NwNBSjit9WkgGY5PAFGRrSa/Wah54k
-         FzO2dIp07cgj5mpg5+7Hhfn/zVFPP+02FJ8Bq1Dwv/nFtCZXDyrfJRWma39jGvHELfF0
-         gpeg==
+        bh=MFs0YWkwzJt66DrRW5vFjSvfLaQPmpKfDuAqAvyXZvg=;
+        b=Ig7UDwhkvEMDUbOa0/7wBZTeTkh7hkobZZBdsdgxegpV05CycmsXd/3KL8ZmaO/56k
+         eY0SSw4BG64GPJdKJ1DG8IyxaJCI+S853h54If5qwHmtGqhivDQgTH+9tghLzc8zabb4
+         mcRELts220nIIk/RW9rrdC1TKbxe3xegVa1WWfKsl5n24H90cXL4DRk+xbYrtz04yDUM
+         jB2xhl5kzmpdOr1C7d4adpfjn0s59hO9kdG9G1mJZo+/gDNyEMANm/DdySSK0opOBjPq
+         HyuVRQHtpeVuXD4E/xYzNj6QNR0L9Uq2MYzIQqwLyllL33qoBEmI+k5gtBlP5a3wOcKU
+         xG+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787000329; x=1787605129;
+        d=1e100.net; s=20251104; t=1787000660; x=1787605460;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=zqh8KABVB1Wzl8EEFH4DyBwWJb1uFIsNtrxl4RBbXqk=;
-        b=C2MlUEciiBBMSGJMM8raAk5LOeHiPTvdxNItAH8RX4yRWWytw2mskDUnsXA7aecgoO
-         cx+mqOPWkJw6M95zX8hOVRWU4Z1z3Efst2NmpwO4oYm5AY+LdfghWS1Knm8404/ZpSNw
-         VkkqdzLyXLFgJQ0xBKAwkeEmL0R8KrKnIytoUTCx/vqiI0iDl5sc1CLnynze6CzlPfHB
-         DiZviFkVAAOC4RiL+2J/UufdY2cO+90MjCXFZ8VqIsfwLRigWkYE5gkeue87eQ6NmBla
-         RMPGLfQhNL6rvThyVxNzxzQ3SeMT7ca4FrnwcN9T7njjlZokflay1ZkPRRx+6MvHcty7
-         phkw==
-X-Forwarded-Encrypted: i=1; AHgh+Rqejz8+yi9Fq9L42EfpP12yQEIb11L08Ap19fB7SsLk74k4AJ42JYWi6IjAPH7Ngdj+CAqIxW5JXM7VV/S6I1//@vger.kernel.org
-X-Gm-Message-State: AOJu0YzzAOx8oVluBEoqku5K8C74SAS3CcpelA2mwiW0X0uEagkaC8j6
-	NmwAEiCOh7hEze6F36WYIbW/SGBBzZO2dADeMghqlbwF+1c37j1V7VbuZ7m0XitPirvRFgGrvMK
-	j5hxmka1sxhw0sax1XntxZSyFcm+JRPnSLz8wzFzBW5GVpd0S/e0ePC7r
-X-Gm-Gg: AR+sD13rh+vV28wy+PnfMS9BEeOmTLjFvHrAPyJLkBH1nIJ2hS/wnwyvuAWbYs0XGMc
-	DY8EVHmNw5IP3vGkJ/FHNn32g2JfG/BnxAgI1168HNGrLLHEcS4F5RXG9GB1Smyzm9O5Bzb+mHu
-	LsLEl1/S1v5J1Uih3Ax51i39m8kEP6PkM34xXL/3URQNOupPzD4HKRefMy0u1lPm1ImFL1RV2MZ
-	PsMeUtqCk9ZSDbd56EvS6evX8QyraTJw4/O0CUnfBWZLZqLfy5mawSjPIqSBwXH6M4n2XnKwcjY
-	QgLqdcE46z45AOb/MWGDg3cWH8MyWvem2heKmJ1V4OSTWgWsry+VvZGAsLMTyyVtDM0Bwq1dq40
+        bh=MFs0YWkwzJt66DrRW5vFjSvfLaQPmpKfDuAqAvyXZvg=;
+        b=pLgix/iV/0ER17p8xyViaruquedWn22hfWzj65F2cbnrUYGnUw9gK0IIljK/vN7N5K
+         uTbT1amINXIb3SwT1Vi4KcYTCJSGV4FcjAmADx14XlhJeyzr5YhD+EW58SJWo+8+ripc
+         RN0PYokqDGve35cECLUzkL8lzcHqB8A9FhZlfHSDGgIiqr1jyyd2TgI2RWiI3WRYmyo2
+         iONK7w+im/xymiaSodX0TWH+S6ID3av9LX8KcUd6YKYO8ND42K+mnLyX4075+NaffiYR
+         6rYAUg0qxUdlVxDSVnL74YVGUGNfG7jYgV8o3dG0DZUpR+1yNXbB64UzUpVwNUrC9gWW
+         Q4Xw==
+X-Forwarded-Encrypted: i=1; AHgh+Ro7c13H60hy7j1TVzCVm6eho7NsaaKyG3Hrw8k/mRSNK/nHVP+sKU0x9H2chaJT1AKbuCdqcUL3MsDsrpZ0R7a3@vger.kernel.org
+X-Gm-Message-State: AOJu0YzDRGhT7S6/elR7QuxkNydM8aDzQV4rzQI4W6wNsQsz9FGXKofa
+	JoZ7M62X1X5jn4WFpqa/WlAKe7LcYFKzxKk4HT9LVgQ4b0YL/1IB/KBG1ZeWzVpY+WUjR/mHjwh
+	TIzK+O3n+A2+ZAukchdMB+XDKomi5Q1QkARuYjQgD
+X-Gm-Gg: AR+sD13VKjuNzr68FHGHEhHgmdzGretevHUxBpG+iX7sEKO2RQ9nn5BU28AqwqXapRF
+	S3l7fA1bNQD6VsjsaOS0oM3QzgkeIq2lgFgybVlFhp3mrNc3zOyVIEhhJMxotesCnGJRvlNNNHb
+	+1iGKO/o4LeHbDE8ASTNyXYTrD6O5CKTH1JNulAkoCvGXefsfixpOvRYIslgUxVfi5sTH0GQuug
+	XzV5wAvIedt16NyFhKlbwRWKonHyiGj4w26gOJjqKrs4RvFP/8yyXmu/CpkpGSAU/Wx75Ze94yA
+	bmSe/73ItiUjE/iNANbjhY1+ohKv08XmguLwTq+3kawupNg3oGFUWdLo6v3WtUEI93s7SupnR6A
 	=
-X-Received: by 2002:a05:622a:1ccc:b0:517:5e32:2d14 with SMTP id
- d75a77b69052e-52dc09dbb5amr5229181cf.10.1787000328315; Mon, 17 Aug 2026
- 13:58:48 -0700 (PDT)
+X-Received: by 2002:a05:622a:1928:b0:516:3f51:81cb with SMTP id
+ d75a77b69052e-52dc0b86f81mr4217921cf.13.1787000659643; Mon, 17 Aug 2026
+ 14:04:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260817094623.3288456-1-jiebin.sun@intel.com> <20260817094623.3288456-4-jiebin.sun@intel.com>
-In-Reply-To: <20260817094623.3288456-4-jiebin.sun@intel.com>
+References: <20260817094623.3288456-1-jiebin.sun@intel.com> <20260817094623.3288456-5-jiebin.sun@intel.com>
+In-Reply-To: <20260817094623.3288456-5-jiebin.sun@intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 17 Aug 2026 13:58:36 -0700
-X-Gm-Features: AcwNN1WxdTLWW3EjPbT3ILW6ICkMw68hiT8H1FtPyHEaJro-PJd39EyHRzU9BLM
-Message-ID: <CAP-5=fUPqnTVDJACAhkj1JWEE=YNcDoPfKe0sq=YX__MnBpf5g@mail.gmail.com>
-Subject: Re: [PATCH v9 3/9] perf c2c: add column rendering for function view
+Date: Mon, 17 Aug 2026 14:04:06 -0700
+X-Gm-Features: AcwNN1W6JPUdoJLK-e1TzdEkU6bM0FwqOG92zFnKDf4Z78H81oOFWV7Kms8f6SQ
+Message-ID: <CAP-5=fUDH2mimHTKU+kgwxTq_wqoxwmoTbak43VaCkfPg=XEGw@mail.gmail.com>
+Subject: Re: [PATCH v9 4/9] perf c2c: add HPP list parsing for function view columns
 To: Jiebin Sun <jiebin.sun@intel.com>
 Cc: namhyung@kernel.org, acme@kernel.org, mingo@redhat.com, 
 	peterz@infradead.org, adrian.hunter@intel.com, 
@@ -103,20 +103,17 @@ Content-Transfer-Encoding: quoted-printable
 On Mon, Aug 17, 2026 at 2:40=E2=80=AFAM Jiebin Sun <jiebin.sun@intel.com> w=
 rote:
 >
-> Add renderers for the function view's Cycles %, Store count, and
-> hierarchy identity columns. The identity column renders the read-side
-> function, contending writer, or cacheline, with indentation for the
-> hierarchy level. Also add width and header helpers, estimated-cycle
-> calculation, comparators, and the dimension table that ties them together=
-.
+> Add the parser that builds the function view's local HPP output and
+> sort lists from field strings. This includes dimension lookup, comparator
+> wrappers, c2c_fmt allocation, and the initialization entry points used by
+> the hierarchy builder.
 >
-> Clamp the identity renderer's returned length to its local buffer before
-> using it for pointer and padding calculations. This handles snprintf-styl=
-e
-> would-have-been lengths without changing normal output.
->
-> The next patch connects these dimensions to the view's HPP lists, so the
-> symbols used only there are temporarily marked __maybe_unused.
+> The generic perf_hpp__setup_output_field() registers formats on the globa=
+l
+> perf_hpp_list. Using it here would leave the function view's local list
+> without output columns and modify the cacheline view's list instead. Add
+> c2c_function_hists__setup_output_field() to append sort keys to the local
+> output list.
 >
 > Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
 > Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -136,430 +133,341 @@ e
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
-> ---
->  tools/perf/util/c2c-function.c | 353 +++++++++++++++++++++++++++++++++
->  1 file changed, 353 insertions(+)
->
-> diff --git a/tools/perf/util/c2c-function.c b/tools/perf/util/c2c-functio=
-n.c
-> index ca82425a28dc..7fce415c0f07 100644
-> --- a/tools/perf/util/c2c-function.c
-> +++ b/tools/perf/util/c2c-function.c
-> @@ -64,3 +64,356 @@ static inline __maybe_unused u64 hist_entry__iaddr(st=
-ruct hist_entry *he)
->                 return mem_info__iaddr(he->mem_info)->addr;
->         return he->ip;
->  }
-> +
-> +/*
-> + * Hierarchy levels (by depth): L1 =3D read-side function, L2 =3D the wr=
-iting
-> + * function it contends with, L3 =3D the specific shared cacheline.
-> + */
-> +static inline bool hist_entry__is_cacheline(struct hist_entry *he)
-
-nit: I think the inline here is to make things compile/link in the
-partial state. In general it shouldn't be necessary to have "inline"
-in a .c file.
-
 Thanks,
 Ian
 
+> ---
+>  tools/perf/util/c2c-function.c | 269 ++++++++++++++++++++++++++++++++-
+>  1 file changed, 266 insertions(+), 3 deletions(-)
+>
+> diff --git a/tools/perf/util/c2c-function.c b/tools/perf/util/c2c-functio=
+n.c
+> index 7fce415c0f07..d27544016660 100644
+> --- a/tools/perf/util/c2c-function.c
+> +++ b/tools/perf/util/c2c-function.c
+> @@ -23,6 +23,7 @@
+>  #include "addr_location.h"
+>  #include "c2c.h"
+>  #include "cacheline.h"
+> +#include "debug.h"
+>  #include "hist.h"
+>  #include "map.h"
+>  #include "mem-events.h"
+> @@ -132,8 +133,8 @@ static int c2c_width(struct perf_hpp_fmt *fmt,
+>                          dim->width;
+>  }
+>
+> -static int __maybe_unused c2c_header(struct perf_hpp_fmt *fmt, struct pe=
+rf_hpp *hpp,
+> -                                    struct hists *hists, int line, int *=
+span)
+> +static int c2c_header(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
+> +                     struct hists *hists, int line, int *span)
+>  {
+>         struct c2c_fmt *c2c_fmt;
+>         struct c2c_dimension *dim;
+> @@ -411,9 +412,271 @@ static struct c2c_dimension dim_symbol_view =3D {
+>         .width          =3D SYMBOL_WIDTH,
+>  };
+>
+> -static struct c2c_dimension *function_view_dimensions[] __maybe_unused =
+=3D {
+> +static struct c2c_dimension *function_view_dimensions[] =3D {
+>         &dim_cycles_percent,
+>         &dim_total_stores,
+>         &dim_symbol_view,
+>         NULL,
+>  };
+> +
+> +static struct c2c_dimension *get_function_dimension(const char *name)
 > +{
-> +       return he->parent_he && he->parent_he->parent_he;       /* level =
-3: cacheline */
+> +       unsigned int i;
+> +
+> +       for (i =3D 0; function_view_dimensions[i]; i++) {
+> +               struct c2c_dimension *dim =3D function_view_dimensions[i]=
+;
+> +
+> +               if (!strcmp(dim->name, name))
+> +                       return dim;
+> +       }
+> +
+> +       return NULL;
 > +}
 > +
-> +/* Spaces of indent per hierarchy level, like the normal report view. */
-> +#define C2C_FUNC_INDENT 2
+> +/* Wrappers so sort_entry-backed dimensions sort/collapse via their se. =
+*/
+> +static int64_t c2c_se_cmp(struct perf_hpp_fmt *fmt,
+> +                         struct hist_entry *a, struct hist_entry *b)
+> +{
+> +       struct c2c_fmt *c2c_fmt =3D container_of(fmt, struct c2c_fmt, fmt=
+);
+> +       struct c2c_dimension *dim =3D c2c_fmt->dim;
 > +
-> +/* Width of the folded-sign prefix ("%c ") each identity cell emits. */
-> +#define C2C_FUNC_FOLD_WIDTH 2
+> +       return dim->se->se_cmp(a, b);
+> +}
+> +
+> +static int64_t c2c_se_collapse(struct perf_hpp_fmt *fmt,
+> +                              struct hist_entry *a, struct hist_entry *b=
+)
+> +{
+> +       struct c2c_fmt *c2c_fmt =3D container_of(fmt, struct c2c_fmt, fmt=
+);
+> +       struct c2c_dimension *dim =3D c2c_fmt->dim;
+> +       int64_t (*collapse_fn)(struct hist_entry *a, struct hist_entry *b=
+);
+> +
+> +       collapse_fn =3D dim->se->se_collapse ?: dim->se->se_cmp;
+> +       return collapse_fn(a, b);
+> +}
+> +
+> +static int64_t c2c_se_sort(struct perf_hpp_fmt *fmt,
+> +                          struct hist_entry *a, struct hist_entry *b)
+> +{
+> +       struct c2c_fmt *c2c_fmt =3D container_of(fmt, struct c2c_fmt, fmt=
+);
+> +       struct c2c_dimension *dim =3D c2c_fmt->dim;
+> +       int64_t (*sort_fn)(struct hist_entry *a, struct hist_entry *b);
+> +
+> +       sort_fn =3D dim->se->se_sort ?: dim->se->se_cmp;
+> +       return sort_fn(a, b);
+> +}
 > +
 > +/*
-> + * Write he->depth levels of leading indentation into @buf, so lower-lev=
-el
-> + * entries are visually nested under their parent. Returns bytes written=
-.
+> + * Build the c2c_fmt for @name. Returns:
+> + *   0        and *fmtp set     on success;
+> + *   -ENOENT  and *fmtp =3D NULL   if @name is not a function-view dimen=
+sion;
+> + *   -ENOMEM                     if allocation failed (distinct from -EN=
+OENT so
+> + *                               the caller does not misreport it as an
+> + *                               "invalid field").
 > + */
-> +static int hist_entry__indent(struct hist_entry *he, char *buf, size_t s=
-ize)
+> +static int get_function_format(const char *name, struct c2c_fmt **fmtp)
 > +{
-> +       int indent =3D he->depth * C2C_FUNC_INDENT;
+> +       struct c2c_dimension *dim =3D get_function_dimension(name);
+> +       struct c2c_fmt *c2c_fmt;
+> +       struct perf_hpp_fmt *fmt;
 > +
-> +       if (indent <=3D 0 || (size_t)indent >=3D size)
-> +               return 0;
+> +       *fmtp =3D NULL;
 > +
-> +       return scnprintf(buf, size, "%*s", indent, "");
+> +       if (!dim)
+> +               return -ENOENT;
+> +
+> +       c2c_fmt =3D zalloc(sizeof(*c2c_fmt));
+> +       if (!c2c_fmt)
+> +               return -ENOMEM;
+> +
+> +       fmt =3D &c2c_fmt->fmt;
+> +
+> +       c2c_fmt->dim =3D dim;
+> +       INIT_LIST_HEAD(&fmt->list);
+> +       INIT_LIST_HEAD(&fmt->sort_list);
+> +
+> +       fmt->cmp        =3D dim->se ? c2c_se_cmp : dim->cmp;
+> +       fmt->sort       =3D dim->se ? c2c_se_sort : dim->cmp;
+> +       fmt->color      =3D dim->color;
+> +       fmt->entry      =3D dim->entry;
+> +       fmt->header     =3D c2c_header;
+> +       fmt->width      =3D c2c_width;
+> +       fmt->collapse   =3D dim->se ? c2c_se_collapse : dim->cmp;
+> +       fmt->equal      =3D c2c_fmt_equal;
+> +       fmt->free       =3D c2c_fmt_free;
+> +
+> +       *fmtp =3D c2c_fmt;
+> +       return 0;
 > +}
 > +
-> +static int symbol_width(struct hists *hists, struct sort_entry *se)
+> +static int
+> +c2c_function_hists__init_output(struct perf_hpp_list *hpp_list, char *na=
+me,
+> +                               struct perf_env *env __maybe_unused)
 > +{
-> +       int width =3D hists__col_len(hists, se->se_width_idx);
+> +       struct c2c_fmt *c2c_fmt;
+> +       int ret;
+> +
+> +       ret =3D get_function_format(name, &c2c_fmt);
+> +       if (ret =3D=3D -ENOMEM)
+> +               return ret;
+> +       /* The function view only accepts its own dimensions. */
+> +       if (ret =3D=3D -ENOENT)
+> +               return -EINVAL;
 > +
 > +       /*
-> +        * Cap long symbol names as the cacheline view does. The stored c=
-olumn
-> +        * length is grown up front to fit the deepest, longest identity =
-cell
-> +        * (including a level-3 cacheline address), so this cap never shr=
-inks the
-> +        * column below what the cacheline address needs.
+> +        * Mark symbol-backed columns so hists__has(hists, sym) is correc=
+t.
+> +        * Only dim_symbol_view carries a sort_entry (.se); the function
+> +        * view's field strings are fixed and always include symbol_view,=
+ so
+> +        * this single check is sufficient (unlike the user-configurable
+> +        * cacheline view, which must also test dim_iaddr).
 > +        */
-> +       if (!c2c_ext.symbol_full && width > SYMBOL_WIDTH)
-> +               width =3D SYMBOL_WIDTH;
+> +       if (c2c_fmt->dim->se =3D=3D &sort_sym)
+> +               hpp_list->sym =3D 1;
 > +
-> +       return width;
+> +       perf_hpp_list__column_register(hpp_list, &c2c_fmt->fmt);
+> +       return 0;
 > +}
 > +
-> +static struct c2c_dimension dim_symbol_view;
-> +
-> +/*
-> + * c2c_width - Calculate width for a C2C column in function view
-> + */
-> +static int c2c_width(struct perf_hpp_fmt *fmt,
-> +                    struct perf_hpp *hpp __maybe_unused,
-> +                    struct hists *hists)
+> +static int
+> +c2c_function_hists__init_sort(struct perf_hpp_list *hpp_list, char *name=
+,
+> +                             struct perf_env *env __maybe_unused)
 > +{
 > +       struct c2c_fmt *c2c_fmt;
-> +       struct c2c_dimension *dim;
+> +       int ret;
 > +
-> +       c2c_fmt =3D container_of(fmt, struct c2c_fmt, fmt);
-> +       dim =3D c2c_fmt->dim;
+> +       ret =3D get_function_format(name, &c2c_fmt);
+> +       if (ret =3D=3D -ENOMEM)
+> +               return ret;
+> +       /* The function view only accepts its own dimensions. */
+> +       if (ret =3D=3D -ENOENT)
+> +               return -EINVAL;
 > +
-> +       if (dim =3D=3D &dim_symbol_view)
-> +               return symbol_width(hists, dim->se);
+> +       /* Mark symbol-backed sort keys so hists__has(hists, sym) is corr=
+ect. */
+> +       if (c2c_fmt->dim->se =3D=3D &sort_sym)
+> +               hpp_list->sym =3D 1;
 > +
-> +       return dim->se ? hists__col_len(hists, dim->se->se_width_idx) :
-> +                        dim->width;
+> +       perf_hpp_list__register_sort_field(hpp_list, &c2c_fmt->fmt);
+> +       return 0;
 > +}
 > +
-> +static int __maybe_unused c2c_header(struct perf_hpp_fmt *fmt, struct pe=
-rf_hpp *hpp,
-> +                                    struct hists *hists, int line, int *=
-span)
+> +typedef int (*hpp_list_add_fn)(struct perf_hpp_list *hpp_list, char *nam=
+e,
+> +                              struct perf_env *env);
+> +
+> +static int function_hpp_list__add_tokens(struct perf_hpp_list *hpp_list,=
+ char *list,
+> +                                        struct perf_env *env, hpp_list_a=
+dd_fn add)
 > +{
-> +       struct c2c_fmt *c2c_fmt;
-> +       struct c2c_dimension *dim;
-> +       const char *text =3D NULL;
-> +       int width =3D c2c_width(fmt, hpp, hists);
+> +       char *tok, *tmp;
+> +       int ret;
 > +
-> +       c2c_fmt =3D container_of(fmt, struct c2c_fmt, fmt);
-> +       dim =3D c2c_fmt->dim;
+> +       if (!list)
+> +               return 0;
 > +
-> +       if (dim->se) {
-> +               text =3D dim->header.line[line].text;
-> +               /* Use the last line from sort_entry if not defined. */
-> +               if (!text && line =3D=3D hists->hpp_list->nr_header_lines=
- - 1)
-> +                       text =3D dim->se->se_header;
-> +       } else {
-> +               text =3D dim->header.line[line].text;
-> +
-> +               if (span) {
-> +                       if (*span) {
-> +                               (*span)--;
-> +                               return 0;
-> +                       }
-> +
-> +                       *span =3D dim->header.line[line].span;
+> +       for (tok =3D strtok_r(list, ", ", &tmp); tok; tok =3D strtok_r(NU=
+LL, ", ", &tmp)) {
+> +               ret =3D add(hpp_list, tok, env);
+> +               if (ret) {
+> +                       if (ret =3D=3D -EINVAL || ret =3D=3D -ESRCH)
+> +                               pr_err("Invalid c2c function-view field: =
+%s\n", tok);
+> +                       return ret;
 > +               }
 > +       }
-> +
-> +       if (!text)
-> +               text =3D "";
-> +
-> +       return scnprintf(hpp->buf, hpp->size, "%*s", width, text);
+> +       return 0;
 > +}
 > +
 > +/*
-> + * Return the estimated total cycles for a c2c_hist_entry
-> + * (rmt_hitm + lcl_hitm + rmt_peer + lcl_peer + other loads).
+> + * Append the function view's sort keys to its own output fields, mirror=
+ing
+> + * perf_hpp__setup_output_field() but on the local @list. The shared hel=
+per
+> + * registers onto the global perf_hpp_list, which would leave this local=
+ list
+> + * without output columns, so the function view keeps its own copy here.
 > + */
-> +static u64 c2c_hist_entry__cycles(struct c2c_hist_entry *c2c_he)
+> +static void c2c_function_hists__setup_output_field(struct perf_hpp_list =
+*list)
 > +{
-> +       struct compute_stats *cs =3D &c2c_he->cstats;
-> +       double cycles =3D 0;
+> +       struct perf_hpp_fmt *fmt;
 > +
-> +       /*
-> +        * compute_stats() in builtin-c2c.c routes each load sample into =
-exactly
-> +        * one cstats bucket (rmt_hitm, lcl_hitm, rmt_peer, lcl_peer or p=
-lain
-> +        * load), so each bucket's cycle total is its mean times its own =
-sample
-> +        * count. Summing the per-bucket totals avoids both dropping peer=
--snoop
-> +        * cycles and double counting a sample that carries several data-=
-source
-> +        * flags (e.g. Arm SPE sets HITM and PEER on the same load), whic=
-h would
-> +        * happen if the mean were multiplied by the non-exclusive stats =
-counts.
-> +        */
-> +       cycles +=3D avg_stats(&cs->rmt_hitm) * cs->rmt_hitm.n;
-> +       cycles +=3D avg_stats(&cs->lcl_hitm) * cs->lcl_hitm.n;
-> +       cycles +=3D avg_stats(&cs->rmt_peer) * cs->rmt_peer.n;
-> +       cycles +=3D avg_stats(&cs->lcl_peer) * cs->lcl_peer.n;
-> +       cycles +=3D avg_stats(&cs->load)     * cs->load.n;
+> +       perf_hpp_list__for_each_sort_list(list, fmt) {
+> +               struct perf_hpp_fmt *pos;
 > +
-> +       return (u64)cycles;
-> +}
+> +               if (!fmt->entry && !fmt->color)
+> +                       continue;
 > +
-> +/* Sum c2c_hist_entry__cycles() across all level-1 entries. */
-> +static u64 __maybe_unused c2c_ext__total_cycles(void)
-> +{
-> +       struct rb_node *nd;
-> +       u64 total =3D 0;
+> +               perf_hpp_list__for_each_format(list, pos) {
+> +                       if (c2c_fmt_equal(fmt, pos))
+> +                               goto next;
+> +               }
 > +
-> +       for (nd =3D rb_first_cached(&c2c_ext.function_hists.hists.entries=
-); nd;
-> +            nd =3D rb_next(nd)) {
-> +               struct c2c_hist_entry *c2c_he =3D
-> +                       rb_entry(nd, struct c2c_hist_entry, he.rb_node);
-> +
-> +               total +=3D c2c_hist_entry__cycles(c2c_he);
+> +               perf_hpp_list__column_register(list, fmt);
+> +next:
+> +               continue;
 > +       }
-> +       return total;
-> +}
-> +
-> +/*
-> + * Store count shown in the column: a level-3 cacheline leaf shows its p=
-arent
-> + * level-2 writer's stores on that line, not all stores on the line. A l=
-evel-2
-> + * writer shows the sum across its level-3 cachelines. A level-1 reader =
-shows
-> + * the sum across all included writers on the cachelines it reads; this =
-is not
-> + * the reader function's own store count and is not additive across read=
-ers.
-> + */
-> +static u64 hist_entry__displayed_stores(struct hist_entry *he)
-> +{
-> +       struct c2c_hist_entry *c2c_he =3D container_of(he, struct c2c_his=
-t_entry, he);
-> +       struct rb_node *nd;
-> +       u64 stores =3D 0;
-> +
-> +       /* Level-2/3 entries already aggregate the stores they represent.=
- */
-> +       if (he->parent_he)
-> +               return c2c_he->stats.store;
-> +
-> +       for (nd =3D rb_first_cached(&he->hroot_out); nd; nd =3D rb_next(n=
-d)) {
-> +               struct c2c_hist_entry *child_c2c =3D
-> +                       rb_entry(nd, struct c2c_hist_entry, he.rb_node);
-> +               stores +=3D child_c2c->stats.store;
-> +       }
-> +       return stores;
 > +}
 > +
 > +static int
-> +total_stores_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-> +                  struct hist_entry *he)
+> +function_hpp_list__parse(struct perf_hpp_list *hpp_list,
+> +                        const char *output_str,
+> +                        const char *sort_str,
+> +                        struct perf_env *env)
 > +{
-> +       int width =3D c2c_width(fmt, hpp, he->hists);
-> +       u64 total =3D hist_entry__displayed_stores(he);
+> +       char *output =3D output_str ? strdup(output_str) : NULL;
+> +       char *sort   =3D sort_str   ? strdup(sort_str)   : NULL;
+> +       int ret =3D 0;
 > +
-> +       return scnprintf(hpp->buf, hpp->size, "%*" PRIu64, width, total);
-> +}
-> +
-> +/*
-> + * symbol_view_entry - Render the unified, indented identity column.
-> + *
-> + * All three levels share this single column so the hierarchy reads top-=
-down
-> + * with progressive indentation, like the normal report hierarchy view. =
-It is
-> + * a function-centric view with no dedicated code-address column. Verbos=
-e
-> + * function rows can still include a representative address:
-> + *   L1 read-side function: "- [k] cpupri_set"
-> + *   L2 writing function:   "  - [k] pull_rt_task"
-> + *   L3 shared cacheline:   "      0xff2d0082809da080"
-> + */
-> +static int
-> +symbol_view_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-> +                 struct hist_entry *he)
-> +{
-> +       int width =3D c2c_width(fmt, hpp, he->hists);
-> +       int text_width;
-> +       int ret;
-> +       char folded_sign;
-> +
-> +       ret =3D hist_entry__indent(he, hpp->buf, hpp->size);
-> +
-> +       folded_sign =3D he->has_children ? (he->unfolded ? '-' : '+') : '=
- ';
-> +       ret +=3D scnprintf(hpp->buf + ret, hpp->size - ret, "%c ", folded=
-_sign);
-> +
-> +       text_width =3D width - ret;
-> +       if (text_width <=3D 0)
-> +               return ret;
-> +
-> +       if (hist_entry__is_cacheline(he)) {
-> +               /* Level 3: the shared cacheline address. */
-> +               u64 addr =3D he->mem_info ?
-> +                       cl_address(mem_info__daddr(he->mem_info)->addr, c=
-hk_double_cl) : 0;
-> +               char symbuf[32];
-> +
-> +               scnprintf(symbuf, sizeof(symbuf), "0x%" PRIx64, addr);
-> +               ret +=3D scnprintf(hpp->buf + ret, hpp->size - ret, "%-*.=
-*s",
-> +                                text_width, text_width, symbuf);
-> +       } else {
-> +               /* Level 1 and level 2 are both functions. */
-> +               size_t cell_size;
-> +               int len;
-> +
-> +               if ((size_t)ret >=3D hpp->size)
-> +                       return ret;
-> +
-> +               cell_size =3D min_t(size_t, hpp->size - ret,
-> +                                 (size_t)text_width + 1);
-> +               len =3D sort_sym.se_snprintf(he, hpp->buf + ret, cell_siz=
-e,
-> +                                          text_width);
-> +               /*
-> +                * se_snprintf() accumulates repsep_snprintf() calls, whi=
-ch cap
-> +                * their return at the remaining size - 1 rather than rep=
-orting
-> +                * what the format would have needed, so len stays below
-> +                * cell_size. Clamp anyway so ret cannot leave hpp->buf.
-> +                */
-> +               if (len < 0)
-> +                       len =3D 0;
-> +               else
-> +                       len =3D min_t(size_t, len, cell_size - 1);
-> +
-> +               ret +=3D len;
-> +               if (len < text_width)
-> +                       ret +=3D scnprintf(hpp->buf + ret, hpp->size - re=
-t, "%*s",
-> +                                        text_width - len, "");
+> +       if ((output_str && !output) || (sort_str && !sort)) {
+> +               ret =3D -ENOMEM;
+> +               goto out;
 > +       }
 > +
-> +       return ret;
-> +}
+> +       ret =3D function_hpp_list__add_tokens(hpp_list, output, env,
+> +                                           c2c_function_hists__init_outp=
+ut);
+> +       if (ret)
+> +               goto out;
 > +
-> +/*
-> + * cycles_percent_entry - Render cycles percentage column
-> + */
-> +static int
-> +cycles_percent_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-> +                    struct hist_entry *he)
-> +{
-> +       struct c2c_hist_entry *c2c_he;
-> +       int width =3D c2c_width(fmt, hpp, he->hists);
-> +       u64 fn_cycles, total_cycles;
-> +       char folded_sign;
-> +       double pct;
-> +       int ret, pct_width;
-> +
-> +       /* Hide Cycles Percent for child functions and cachelines. */
-> +       if (he->parent_he)
-> +               return scnprintf(hpp->buf, hpp->size, "%*s", width, "");
-> +
-> +       c2c_he =3D container_of(he, struct c2c_hist_entry, he);
-> +       fn_cycles =3D c2c_hist_entry__cycles(c2c_he);
-> +       /* Populated by build_function_view_hierarchy() once the L1 tree =
-is built. */
-> +       total_cycles =3D c2c_ext.total_cycles;
-> +       pct =3D total_cycles > 0 ? (double)fn_cycles / total_cycles * 100=
-.0 : 0.0;
-> +
-> +       /* Add folded sign only for level-1 entries */
-> +       folded_sign =3D he->has_children ? (he->unfolded ? '-' : '+') : '=
- ';
-> +       ret =3D scnprintf(hpp->buf, hpp->size, "%c ", folded_sign);
-> +
-> +       pct_width =3D width - ret;
-> +       if (pct_width <=3D 0)
-> +               return ret;
-> +       ret +=3D scnprintf(hpp->buf + ret, hpp->size - ret, "%*.2f%%", pc=
-t_width - 1, pct);
-> +       return ret;
-> +}
-> +
-> +/*
-> + * cycles_percent_cmp - Comparison function for cycles percentage sortin=
-g
-> + */
-> +static int64_t
-> +cycles_percent_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-> +                  struct hist_entry *left, struct hist_entry *right)
-> +{
-> +       struct c2c_hist_entry *c2c_left =3D container_of(left, struct c2c=
-_hist_entry, he);
-> +       struct c2c_hist_entry *c2c_right =3D container_of(right, struct c=
-2c_hist_entry, he);
-> +       u64 cycles_left, cycles_right;
-> +
-> +       /* Cycles Percent is only shown for level-1 entries; others compa=
-re equal. */
-> +       if (left->parent_he || right->parent_he)
-> +               return 0;
-> +
-> +       cycles_left =3D c2c_hist_entry__cycles(c2c_left);
-> +       cycles_right =3D c2c_hist_entry__cycles(c2c_right);
-> +
-> +       return (cycles_left > cycles_right) - (cycles_left < cycles_right=
+> +       ret =3D function_hpp_list__add_tokens(hpp_list, sort, env,
+> +                                           c2c_function_hists__init_sort=
 );
+> +       if (ret)
+> +               goto out;
+> +
+> +       c2c_function_hists__setup_output_field(hpp_list);
+> +out:
+> +       if (ret)
+> +               perf_hpp__reset_output_field(hpp_list);
+> +       free(output);
+> +       free(sort);
+> +       return ret;
 > +}
 > +
-> +/*
-> + * total_stores_cmp - Comparison function for total stores sorting
-> + */
-> +static int64_t
-> +total_stores_cmp(struct perf_hpp_fmt *fmt __maybe_unused,
-> +                struct hist_entry *left, struct hist_entry *right)
+> +static int __maybe_unused
+> +c2c_function_hists__init(struct c2c_hists *hists,
+> +                        const char *sort,
+> +                        int nr_header_lines,
+> +                        struct perf_env *env)
 > +{
-> +       u64 left_store =3D hist_entry__displayed_stores(left);
-> +       u64 right_store =3D hist_entry__displayed_stores(right);
+> +       __hists__init(&hists->hists, &hists->list);
 > +
-> +       return (left_store > right_store) - (left_store < right_store);
+> +       perf_hpp_list__init(&hists->list);
+> +
+> +       hists->list.nr_header_lines =3D nr_header_lines;
+> +
+> +       return function_hpp_list__parse(&hists->list, /*output=3D*/NULL, =
+sort, env);
 > +}
 > +
-> +/*
-> + * Function view dimensions
-> + */
-> +static struct c2c_dimension dim_cycles_percent =3D {
-> +       .header         =3D HEADER_BOTH("Cycles", "%"),
-> +       .name           =3D "cycles_percent",
-> +       .cmp            =3D cycles_percent_cmp,
-> +       .entry          =3D cycles_percent_entry,
-> +       .width          =3D 9,
-> +};
+> +static int __maybe_unused
+> +c2c_function_hists__reinit(struct c2c_hists *c2c_hists,
+> +                          const char *output,
+> +                          const char *sort,
+> +                          struct perf_env *env)
+> +{
+> +       int nr_header_lines =3D c2c_hists->list.nr_header_lines;
 > +
-> +static struct c2c_dimension dim_total_stores =3D {
-> +       .header         =3D HEADER_BOTH("Store", "count"),
-> +       .name           =3D "total_stores",
-> +       .cmp            =3D total_stores_cmp,
-> +       .entry          =3D total_stores_entry,
-> +       .width          =3D 7,
-> +};
+> +       perf_hpp__reset_output_field(&c2c_hists->list);
 > +
-> +static struct c2c_dimension dim_symbol_view =3D {
-> +       .header         =3D HEADER_LOW("Function / Contending function / =
-Cacheline"),
-> +       .name           =3D "symbol_view",
-> +       .se             =3D &sort_sym,
-> +       .entry          =3D symbol_view_entry,
-> +       .width          =3D SYMBOL_WIDTH,
-> +};
+> +       /* Clear stale state flags so a different output/sort set starts =
+fresh. */
+> +       c2c_hists->list.need_collapse =3D 0;
+> +       c2c_hists->list.parent =3D 0;
+> +       c2c_hists->list.sym =3D 0;
+> +       c2c_hists->list.dso =3D 0;
+> +       c2c_hists->list.socket =3D 0;
+> +       c2c_hists->list.thread =3D 0;
+> +       c2c_hists->list.comm =3D 0;
+> +       c2c_hists->list.comm_nodigit =3D 0;
+> +       c2c_hists->list.nr_header_lines =3D nr_header_lines;
 > +
-> +static struct c2c_dimension *function_view_dimensions[] __maybe_unused =
-=3D {
-> +       &dim_cycles_percent,
-> +       &dim_total_stores,
-> +       &dim_symbol_view,
-> +       NULL,
-> +};
+> +       return function_hpp_list__parse(&c2c_hists->list, output, sort, e=
+nv);
+> +}
 > --
 > 2.52.0
 >
