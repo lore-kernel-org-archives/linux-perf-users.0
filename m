@@ -1,290 +1,395 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B875442368
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 19:28:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2838449B2D
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 19:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.181
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786994926; cv=pass; b=Pq158osA0DxPgHP+wl7rEqqGfLq7VgdQWGLlwwtWFqVYlql7FU9gJ6R5IyrWTk2/ysr8sq1ci7OY0b6Xx36s1v18VjDQUiR/RoUOYCQpyJEv5bDE64FZxsoCwlbw9VobHoNEasQPuepdP5qSW3aUXTiKFHOW+pDwxby5QWDFox8=
+	t=1786995651; cv=pass; b=AxRuX+5+w2keqmcJj/HQ5vtTVEcXNrdRqawGSr/X6Xard7bXqE7H4xHoqQPJiu2sdmweAQG18F1jQgVVSaZ3cAZY5VSjtdpzKB7dVj3BXCrv2dHH5fLIUYmAis7BtdNc9YodSE2p/FWVj0vH9ReU+JHkk7RMGmTvQtub4Ebw87g=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786994926; c=relaxed/simple;
-	bh=E+9p4Ktw7qIb6r4awUhnddYeMOmpqbe0oyhzt0QuIYg=;
+	s=arc-20240116; t=1786995651; c=relaxed/simple;
+	bh=g5IVsB4QXereC1HgQlLtE+OhGwCaDPgyL+9o+C+d+ew=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Zes6Q0Gn1LfC51SOTfxU85XdNqjk1thQo/gy64GRm5StfhZ373S78l/FqozdVGQk/GgXCRzYBde06SWqNK37pKxdkQknXNZH7Ec44yQUOQIum2X55qpZOy9NnoP7g8cKhFQJocFFF+Jd50jTacgQaTSe0GKj2d715vqkC8v7Lxc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IaVdFpfI; arc=pass smtp.client-ip=209.85.214.182
+	 To:Cc:Content-Type; b=nKU0HaA2U6SfLoq0BiIXXewhcYmAYlg5lpa6u7oNzNMnd7K8v4G/RZU8iMxzExUFj0ZUaFimRcPzGF/gcutWINca3hT3OPaSSGFIaeL80/bXmbyc0Xdgn7oHZB+fGWeyK0em5lJcME+RnrGYmLm4M4u174wcexMNvTD0lEQjLzE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kdr9LcRb; arc=pass smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IaVdFpfI"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2ccdf36f63dso18995ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 12:28:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786994924; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kdr9LcRb"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2cede6375caso24225ad.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 12:40:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786995649; cv=none;
         d=google.com; s=arc-20260327;
-        b=LZsd1kP4VKjc10x6XAckCGVaF4PzkE53j69ajsDFyjQXSKvcAq1aOZ9CeikwsPhBYQ
-         WGNdjJgcA/SuiJ8BIuqmB3u4fRYf+1Iam9yfXn5xBwlHM/MJ1oqCjB9Hxdonob62MTnz
-         hkQThr2jwPutIuZT+dvRDk2D2zQbQqi8Iuko6kL7WDR9jrQB3o0YtNZc5Wfvc3rsoLFq
-         gfCr+MUXNnFpVBOsHdCUux/ZZWzIjXpfNZD6h65FPk3Qk8TSg9LX4i2Hf3e9qeAfPSW/
-         Q/NMpLG4eimh/YHvWJBJ4yOawr1OltwtFdkIf900QPgUdd7mzBlddQmm7izseKkO1CIq
-         5tyA==
+        b=U5N/74u1ElWNfDEkWoXL0JL6VUxGyw4sZAyNRCFHhOmVbJSN+2NgtcW+aosKsy1pfy
+         O4DgYcNo9FDpdepgKmxfVTZAifzqBVFIG3uNOVhdGPyRo+SUtGF1fvTtREjqMS8IruXQ
+         T0H3F21IBFn95F0hlJ97sqgC9RMNup7IpXIlliHtajxEe97Q+Ss8wt88PyqehS59tjxz
+         BY+rTP2UryRXQArE5IdU5O7GyZAu+d9AQoVf3Jfrrp23X7GzJmda4+N73fBKC3ZoRJgv
+         wglGR3vIUUqTsEpC+SFPMv9xbYJ24BgobhBZouYalPBM6/dUtwXdaEKk5dJ8/iD2augQ
+         K+fQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=LGn/SQWAyejOHOhqPphro3ssVKqrTOZCaI0vJa05Uyc=;
-        fh=cZYUM4lsM+8BpXcZ0cpQZwiq47BJxkwKGfvLAN/Xyvk=;
-        b=PnKpORtiKtbBJuplZ0hT4OzmR5rxc//l54qSDFkRb+dddnQ8p9pe5PvTqo2PIyhCrt
-         nPcEJ04Z+QZCeMl4KyDHsgTu7eWuOC4qPRqPT9HRo04i1IQVgoMAROVyzUtrsnCK5k5C
-         fWP80v7LYyAPG5yGcjUx2ZsPSmk9VXVOYLiHa3mvfKJ2B5EkQGOJdlkD/N7ckX2X0Ix1
-         FXWGLf78GLEMZpwYnYvafGIYSgP0jeIy7Vregpta8shrPa/w8SbbbRNeOaZIdSk+ZaXZ
-         81Drv6tJGvFqHaxY2HJT97Q2iUCWG4plHuMOz3UQS4vPYNuuDPJeB1vZU2xgeW+ztp4+
-         uhyw==;
+        bh=jjWSURDRdGCJdNZ46NVW9aEIflRWQPuT5fdrLLdxz08=;
+        fh=f8Fs7FU2rnNJgAFQ9oyGr3wBnGmjycUsAkOkuze9p/Q=;
+        b=haqeukbmyqf6ITNFeVRhv6yZE7m6MzPyZgNwj84XbHScWmgX/8VZQi25LpMjv+JhWr
+         A26zuOe5s45ryBIJC+b3qIF511v4fjpDHNpBQTtSqbYwC89XbqjX6BvUzWMj99GVi07s
+         6ksPmaHlYwK8FF2KSAYxCFfsraNfDbH1WtexGHFEfZuTPT8cKyEb3OXRQlZdp7XXQVRV
+         mZaL0BukzYk58SLDk2TjZ4nspCAET6uEi1B46ZgfrCTZlLbTOiss/joD3JWFctTBU2bM
+         Vg6PtN0vi3zKGogKMKXJhsjL0RWgNrzoPPmuTaswRBj39Xn2OxyeFgzDcqZbI4Xc8aWB
+         WF5g==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1786994924; x=1787599724; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1786995649; x=1787600449; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=LGn/SQWAyejOHOhqPphro3ssVKqrTOZCaI0vJa05Uyc=;
-        b=IaVdFpfI8Ex+JTQ0lE6CFhQ2uu7L++Zixy3pnL3mgC8FLwsTjpM5apiZ8zIvAvg7oq
-         O9/wVhxVIf0azpQBuWnHNjMfeAScxX2PyHAB2fQktnoTRN9Iv0Qwy4zYqZHn5Tdx1gHF
-         lL8Xo29HSZKdU8lCDJDcI7fzysYUOabbKSvv7keeuQPa73BTsBSw2j5wDb+2d1EAen3n
-         +ScR7O2I31bfdC5C/gUvOErtbX6Xq9CRNIFdQMWYNE0Qfi61etMw+X0rT0xFAm8Sgt5U
-         eIt423cS2ISV8DOYlJIarI3v5vvkc93JlFWY+F/ziwhaDIMqXwGwtBfveK6WUQBGpZqI
-         pOjA==
+        bh=jjWSURDRdGCJdNZ46NVW9aEIflRWQPuT5fdrLLdxz08=;
+        b=kdr9LcRbD/usIzTTxfl6gnMHV4mtW9W055v5Yr79REqh7RuDISKdc1HadCN5bt+x/y
+         u6ONXxXMHDoXNA3fopYF0vswymEvGxUiphGE4aIumIRvFcw2iCmBbYMspWjY3poik7CA
+         VdY+VVxfxvy/zMW1KuLjXbkiB9Oyu8pHwIqRWIcPgkXUNRgtv8j5y2Xur6KTYAReY1Co
+         9e8MVgC5G+GXBZSK6NkBQwUYmNjCxCl0x8NS3X/l0QinPYP3FlEvwNx0IVtc4Iq0GU8x
+         enI1wScB14ag5WmW65I0g3Y7YUWaA9c9bPgQiGOat1g1PLyiVlEZSrJ6rfmtskb+Uweh
+         0jNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786994924; x=1787599724;
+        d=1e100.net; s=20251104; t=1786995649; x=1787600449;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=LGn/SQWAyejOHOhqPphro3ssVKqrTOZCaI0vJa05Uyc=;
-        b=F0Cx5kyq3e+nttbCd2wTMP4Bb74ZpTRhPzRiZfBGdF9z2be90mys9hOEJwY3Le/V8Y
-         dAwwKidcHmil/lWstCFbQnmZ3rr3xFsDIFndL8nRDMUjGmUcOTQtbPVKVOtrD0XX0yi+
-         kyrUgE4V79iB7wepVOzn6W/nKGUw35jdYSBGjHS6wBgeDKp5UKxqNsRONNlMtrKvH9j9
-         /7yvy0vSn1Lr5BG+1PFpCG01J/WEswJXgqGgANZCb4RvCnpQX40qzN1ETKue0bc0oGs9
-         +6kCct55doF/wAnRWbh9nIxkA0Q+S0JJUTmHYL/w2EOV2bw17M9kyCKnVh3vnFf4xaOY
-         lESg==
-X-Forwarded-Encrypted: i=1; AHgh+RrrwbyNPrBlpOLvW4NpWYbGcrqyZZwcZAEygw7QxByTDVsC6ABYUA/wIkae0OXYvlYjPpOMZ35FRDCgQMtdoLCx@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywfb7GNtyNK1J2j+sqUGWqBapIzPUEjdJKudbCL8UwTSy9GHglb
-	QBX1uFXlzWAeAakam9u2vihFRLrocJY72n+WeGeigLV0PO0lQ76ZFUd/0r59xRhpp9wSynAX2uQ
-	WxSUg/J/eY7U/ugPnl1YnOqemAECf7dQ/q8d993g4
-X-Gm-Gg: AR+sD11HQgFa3UiV0tSO0l0n4bbRy8a1kg1JFB7XayRJ2qR4k4aDsFSvWuj55fpauz4
-	6iFvaH5E0jz8h0pBUxsgQiOpaN5Ahs0GGDZeskhDdfZOLD36RpR8neHJR1nP+qdLhFS6iRODTlp
-	o4/tcb1olbNuyxk+xcv/SP3aizdUT/JfXtROchtoxahrrHsNHlzG+BipLYJeloCOHLfbS/hCHGw
-	8ZdnNcC0R5UDmiTG8bgDEfdB+1O00Grhl83QYtTADpIFHES9rhDf3j8qff/773G7Rd7tH+DKN+s
-	R5dDH/C86Dzz11y/emCMkf0uUQBIN0miHzXR8ckNwb3EFHtLDQJUOIHO3aujF2T12CatxHGv96g
+        bh=jjWSURDRdGCJdNZ46NVW9aEIflRWQPuT5fdrLLdxz08=;
+        b=NgrLdGP1GuF+Okjh2xD2ENi+BhCwZWgz2+35iMrqwFP8c2Kz2rcvnffRSCTbbbifET
+         CFvHAYY1GY8ml7/MKpIvwcgTKuTUbti+X+5QGPgFY7UBx+AwEdsgY3cia9CK5fQd/9lf
+         IqbU7xN2CbBWVNaXqBdf3JiN6OieLSQL+N21t+KYnaRUaohrOrVYEiUnjd48A7nG8b1O
+         s4AWnJvlG4CcThMCCAUVXgGyvyJA7iv3bPCdrCNdtNirE0qmFhMLJ6qXgwhlwWb2Nifp
+         hANuk4R3ZcQQba7SZlcL45pxfNvp/e3YKrjEhXYvfddBCE16kAmUi0hd9pJxjnD8wdMc
+         aa0w==
+X-Forwarded-Encrypted: i=1; AHgh+Rq79TXFaiZ/08bdHX8fM1Bkq/3e9c2pkyABjb1t4L/pY715V3FBYLRpRRs/Psk86yWNWgn7DVKwrGhdSEpJ8PRf@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7EWudxQvgmQVtyeBhSPphCc82jluTH2ZeinRjATHWVuFLVaW9
+	B2HDqtyXIWV7MbEKui0FW2tAbyIZVx9AJpZICvEy/xHB+ifk1M5t+z948e1mvC1Jp9PHwhrCbkH
+	d81vSYTD37Vh9tuw/NV3ciLQo0leiAYZUQOTTbcsQ
+X-Gm-Gg: AR+sD12iw78rbo/U07fNK4zenB7b74qqs1ONGKyVHbUs21yBirGgjquv/OVnc+5+O/v
+	mSe+66Q2fr5boo5S93NF4Ooa+5dfUkdrVij8nCAosmqOuy/zG0WceYdsB3sN7CAORZwsNOBEYK7
+	0AlI+CQN65aCfKIpP8lJKQxolnmHWksqWA41Ijf1nwMvC8YoDa/yAulKA3hVrHv+OrzqiFQxxvq
+	Lv3O8k2wJHzVP+dftHKdxnkx5HLVGnqJqlJQ+KsRC+mdJxnva6veGoFT1W+VV3M3cG6VI/aCWoK
+	9w75fRDZhE2gfslehbU7ejs6+4JrQycSflmm+8tQU6qxMp4uuejzQjS8RQvHAIAgsIMho/4nXsE
 	=
-X-Received: by 2002:a17:903:3d0f:b0:2bf:3579:cdaa with SMTP id
- d9443c01a7336-2d5cca0821emr2319405ad.10.1786994918429; Mon, 17 Aug 2026
- 12:28:38 -0700 (PDT)
+X-Received: by 2002:a17:903:22c2:b0:2c7:a13a:7fe6 with SMTP id
+ d9443c01a7336-2d5cca06e5fmr2273125ad.10.1786995648180; Mon, 17 Aug 2026
+ 12:40:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260813064346.335458-1-dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260813064346.335458-1-dapeng1.mi@linux.intel.com>
+References: <20260813132519.4099508-1-andi@firstfloor.org>
+In-Reply-To: <20260813132519.4099508-1-andi@firstfloor.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 17 Aug 2026 12:28:25 -0700
-X-Gm-Features: AcwNN1XPoKedeOFjVpACYc2oIYoNQK185S4RJmCshFaQqSbANvs_yg9Q4eoSaT4
-Message-ID: <CAP-5=fWqqAFLwdRKeTN8q_GiCdvUx81bQT+=6KpWitV7uECM9w@mail.gmail.com>
-Subject: Re: [Patch v2] perf/x86/intel: Prevent drain_pebs() reentry
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>, 
-	Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>, 
-	Xudong Hao <xudong.hao@intel.com>
+Date: Mon, 17 Aug 2026 12:40:35 -0700
+X-Gm-Features: AcwNN1XNUAbdN4T1rdOlLqYsYC10tASmwnQezQb4jzc5_J38l9s9TxYus5rHfpY
+Message-ID: <CAP-5=fW112qVVdZGNpdRH0n-B2at4ENDjjNv4Hdehn5bEB9BSA@mail.gmail.com>
+Subject: Re: [PATCH v1] perf top: Merge hybrid common events
+To: Andi Kleen <andi@firstfloor.org>
+Cc: namhyung@kernel.org, acme@kernel.org, linux-perf-users@vger.kernel.org, 
+	Andi Kleen <ak@kernel.org>, Andi Kleen <ak@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 12, 2026 at 11:50=E2=80=AFPM Dapeng Mi <dapeng1.mi@linux.intel.=
-com> wrote:
+On Thu, Aug 13, 2026 at 6:33=E2=80=AFAM Andi Kleen <andi@firstfloor.org> wr=
+ote:
 >
-> The PEBS buffer is shared by all events on a CPU, so drain_pebs() must
-> not be reentered. If so, one instance may observe stale buffer state and
-> potentially access out-of-bound memory.
+> From: Andi Kleen <ak@kernel.org>
 >
-> Most invocations happen in NMI context, which naturally prevents reentry.
-> However, drain_pebs() is also reachable from process context via
-> intel_pmu_drain_pebs_buffer().
+> One annoyance with perf top on a hybrid system is that it requires to
+> chose which hybrid PMU to sample on. Normally I want to sample the whole
+> system and don't know on which cores my workload ends up.
 >
-> In those paths, the PMU is often already disabled, but not guaranteed.
-> For example, __intel_pmu_pebs_disable() only disables the target counter,
-> so other active counters can still raise a PMI and interrupt an in-flight
-> drain_pebs(). Here is an example,
->
-> __perf_addr_filters_adjust()
->   perf_event_stop()
->     __perf_event_stop()
->       x86_pmu_stop() (event->pmu->stop)
->         intel_pmu_disable_event()
->           intel_pmu_pebs_disable()
->             __intel_pmu_pebs_disable()
->               intel_pmu_drain_large_pebs()
->                 intel_pmu_drain_pebs_buffer()
->
-> Introduce __intel_pmu_quiesce() and __intel_pmu_resume() helpers and
-> use them in intel_pmu_drain_large_pebs() to disable the full PMU
-> around the intel_pmu_drain_pebs_buffer() call, preventing reentry.
->
-> Also add a warning in intel_pmu_drain_pebs_buffer() when the full PMU is
-> not disabled.
->
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
->
-> v2: Move __intel_pmu_quiesce()/__intel_pmu_resume() pair into
-> intel_pmu_drain_large_pebs() instead of guarding all drain_pebs()
-> callbacks. (Peter)
->
-> v1: https://lore.kernel.org/all/20260717080342.1879573-9-dapeng1.mi@linux=
-.intel.com/
->
->  arch/x86/events/intel/core.c | 33 ++++++++++++++++++++++++---------
->  arch/x86/events/intel/ds.c   |  8 +++++++-
->  arch/x86/events/perf_event.h |  3 +++
->  3 files changed, 34 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index f6ee1819864e..1cdb52c0aad5 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -3125,6 +3125,27 @@ static void intel_pmu_del_event(struct perf_event =
-*event)
->                 this_cpu_ptr(&cpu_hw_events)->n_late_setup--;
->  }
->
-> +int __intel_pmu_quiesce(void)
+> This patch automatically merges the two PMUs when the event is present
+> in both PMUs. For now it only handles simple TYPE_HARDWARE cases, like
+> cycles
+> (could be later extended for TYPE_RAW too by checking the json name is th=
+e same)
+> The behavior can be disabled with --no-hybrid-merge
 
-Thanks Dapeng. Rather than quiesce would
-__intel_pmu_disable_if_enabled be a more intention revealing name?
+Thanks Andi, I agree with the frustration. For an event like
+instructions I would like things merged. Does merging make sense for
+cycles given the different clock frequencies of p-cores and e-cores?
+Should the e-core cycles be scaled for this reason as there are fewer
+cycles within a second compared to a p-core?
 
-> +{
-> +       struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_events);
-> +       int pmu_enabled =3D cpuc->enabled;
-> +
-> +       cpuc->enabled =3D 0;
+Perhaps we need a new json field to describe the hybrid merge-ability
+of events, say enabled on events like instructions or cache misses.
+Note the legacy events now have JSON descriptions:
+https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
+t/tree/tools/perf/pmu-events/arch/common/common/legacy-hardware.json?h=3Dpe=
+rf-tools-next
 
-Presumably the line above could also be inside the if.
-
-> +       if (pmu_enabled)
-> +               intel_pmu_disable_all();
-> +
-> +       return pmu_enabled;
-> +}
-> +
-> +void __intel_pmu_resume(int pmu_enabled)
-> +{
-> +       struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_events);
-> +
-> +       cpuc->enabled =3D pmu_enabled;
-> +       if (pmu_enabled)
-> +               intel_pmu_enable_all(0);
-> +}
-> +
->  static int icl_set_topdown_event_period(struct perf_event *event)
->  {
->         struct hw_perf_event *hwc =3D &event->hw;
-> @@ -3316,16 +3337,13 @@ static void intel_pmu_read_event(struct perf_even=
-t *event)
->         if (event->hw.flags & (PERF_X86_EVENT_AUTO_RELOAD | PERF_X86_EVEN=
-T_TOPDOWN) ||
->             is_pebs_counter_event_group(event)) {
->                 struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_event=
-s);
-> -               bool pmu_enabled =3D cpuc->enabled;
-> +               int pmu_enabled;
-
-nit: Maybe pmu_enabled would be better as pmu_was_enabled or pmu_reenable?
-
->
->                 /* Only need to call update_topdown_event() once for grou=
-p read. */
->                 if (is_metric_event(event) && (cpuc->txn_flags & PERF_PMU=
-_TXN_READ))
->                         return;
->
-> -               cpuc->enabled =3D 0;
-> -               if (pmu_enabled)
-> -                       intel_pmu_disable_all();
-> -
-> +               pmu_enabled =3D __intel_pmu_quiesce();
->                 /*
->                  * If the PEBS counters snapshotting is enabled,
->                  * the topdown event is available in PEBS records.
-> @@ -3334,10 +3352,7 @@ static void intel_pmu_read_event(struct perf_event=
- *event)
->                         static_call(intel_pmu_update_topdown_event)(event=
-, NULL);
->                 else
->                         intel_pmu_drain_pebs_buffer();
-> -
-> -               cpuc->enabled =3D pmu_enabled;
-> -               if (pmu_enabled)
-> -                       intel_pmu_enable_all(0);
-> +               __intel_pmu_resume(pmu_enabled);
->
->                 return;
->         }
-> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-> index e86e4ba91e1b..54890dda0589 100644
-> --- a/arch/x86/events/intel/ds.c
-> +++ b/arch/x86/events/intel/ds.c
-> @@ -1242,8 +1242,11 @@ int intel_pmu_drain_bts_buffer(void)
->
->  void intel_pmu_drain_pebs_buffer(void)
->  {
-> +       struct cpu_hw_events *cpuc =3D this_cpu_ptr(&cpu_hw_events);
->         struct perf_sample_data data;
->
-> +       WARN_ON_ONCE(cpuc->enabled);
-> +
->         static_call(x86_pmu_drain_pebs)(NULL, &data);
->  }
->
-> @@ -1864,8 +1867,11 @@ static void intel_pmu_pebs_via_pt_enable(struct pe=
-rf_event *event)
->  static inline void intel_pmu_drain_large_pebs(struct cpu_hw_events *cpuc=
-)
->  {
->         if (cpuc->n_pebs =3D=3D cpuc->n_large_pebs &&
-> -           cpuc->n_pebs !=3D cpuc->n_pebs_via_pt)
-> +           cpuc->n_pebs !=3D cpuc->n_pebs_via_pt) {
-> +               int enabled =3D __intel_pmu_quiesce();
-
-Similarly, may be was_enabled rather than enabled.
+It would be nice if this were a generic feature and not just for perf top.
 
 Thanks,
 Ian
 
->                 intel_pmu_drain_pebs_buffer();
-> +               __intel_pmu_resume(enabled);
-> +       }
->  }
+> Assisted-by: omp:GLM-5.2
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> ---
+>  tools/perf/Documentation/perf-top.txt |  6 ++++
+>  tools/perf/builtin-top.c              | 16 ++++++++++
+>  tools/perf/ui/hist.c                  | 19 ++++++++++++
+>  tools/perf/util/evlist.c              | 43 +++++++++++++++++++++++++++
+>  tools/perf/util/evlist.h              |  1 +
+>  tools/perf/util/hist.h                | 15 +++++++++-
+>  tools/perf/util/top.c                 |  8 ++++-
+>  tools/perf/util/top.h                 |  1 +
+>  8 files changed, 107 insertions(+), 2 deletions(-)
 >
->  static void __intel_pmu_pebs_enable(struct perf_event *event)
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index fa381110f7a7..84495279079a 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -1638,6 +1638,9 @@ static __always_inline void __intel_pmu_lbr_disable=
-(void)
->         wrmsrq(MSR_IA32_DEBUGCTLMSR, debugctl);
->  }
+> diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documenta=
+tion/perf-top.txt
+> index af3e4230c72f4..e560d6b1634d8 100644
+> --- a/tools/perf/Documentation/perf-top.txt
+> +++ b/tools/perf/Documentation/perf-top.txt
+> @@ -43,6 +43,12 @@ Default is to monitor all CPUS.
+>         encoding with the layout of the event control registers as descri=
+bed
+>         by entries in /sys/bus/event_source/devices/cpu/format/*.
 >
-> +extern int __intel_pmu_quiesce(void);
-> +extern void __intel_pmu_resume(int pmu_enabled);
+> +--hybrid-merge::
+> +    Merge matching legacy hardware events from all hybrid core PMUs into=
+ one
+> +    display. This is enabled by default when the same event is available=
+ on
+> +    each core PMU. Use `--no-hybrid-merge` to display the existing per-e=
+vent
+> +    selection menu instead.
 > +
->  int intel_pmu_save_and_restart(struct perf_event *event);
+>  --filter=3D<filter>::
+>         Event filter.  This option should follow an event selector (-e). =
+For
+>         syntax see linkperf:perf-record[1].
+> diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+> index 1211401616ee3..19dec094683b3 100644
+> --- a/tools/perf/builtin-top.c
+> +++ b/tools/perf/builtin-top.c
+> @@ -1334,6 +1334,19 @@ static int __cmd_top(struct perf_top *top)
+>          */
+>          if (!target__none(&opts->target))
+>                 evlist__enable(top->evlist);
+> +       if (top->hybrid_merge && !symbol_conf.report_hierarchy &&
+> +           evlist__can_merge_hybrid(top->evlist)) {
+> +               struct evsel *leader =3D evlist__first(top->evlist);
+> +
+> +               /*
+> +                * Merged events are not true groups, but can use
+> +                * the existing group display code to display them
+> +                * anyways.
+> +                */
+> +               __perf_evlist__set_leader(&top->evlist->core.entries, &le=
+ader->core);
+> +               evsel__hists(leader)->merge_entries =3D true;
+> +               symbol_conf.event_group =3D true;
+> +       }
 >
->  struct event_constraint *
+>         ret =3D -1;
+>         if (pthread_create(&thread_process, NULL, process_thread, top)) {
+> @@ -1457,6 +1470,7 @@ int cmd_top(int argc, const char **argv)
+>         struct perf_top top =3D {
+>                 .count_filter        =3D 5,
+>                 .delay_secs          =3D 2,
+> +               .hybrid_merge        =3D true,
+>                 .record_opts =3D {
+>                         .mmap_pages     =3D UINT_MAX,
+>                         .user_freq      =3D UINT_MAX,
+> @@ -1490,6 +1504,8 @@ int cmd_top(int argc, const char **argv)
+>         OPT_CALLBACK('e', "event", &parse_events_option_args, "event",
+>                      "event selector. use 'perf list' to list available e=
+vents",
+>                      parse_events_option),
+> +       OPT_BOOLEAN(0, "hybrid-merge", &top.hybrid_merge,
+> +                   "merge the same event across hybrid core PMUs"),
+>         OPT_CALLBACK(0, "filter", &top.evlist, "filter",
+>                      "event filter", parse_filter),
+>         OPT_U64('c', "count", &opts->user_interval, "event period to samp=
+le"),
+> diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+> index e58327595d37d..aee43b33e4e1e 100644
+> --- a/tools/perf/ui/hist.c
+> +++ b/tools/perf/ui/hist.c
+> @@ -287,6 +287,25 @@ static int __hpp__sort(struct hist_entry *a, struct =
+hist_entry *b,
+>                 return __hpp__group_sort_idx(a, b, get_field,
+>                                              symbol_conf.group_sort_idx);
+>         }
+> +       /*
+> +        * Relies on merge_entries being only enabled if there are
+> +        * only matching events. If that is ever relaxed will need
+> +        * more logic here.
+> +        */
+> +       if (a->hists->merge_entries && b->hists->merge_entries) {
+> +               u64 val_a =3D get_field(a), val_b =3D get_field(b);
+> +               struct hist_entry *pair;
+> +
+> +               list_for_each_entry(pair, &a->pairs.head, pairs.node)
+> +                       val_a +=3D get_field(pair);
+> +               list_for_each_entry(pair, &b->pairs.head, pairs.node)
+> +                       val_b +=3D get_field(pair);
+> +
+> +               ret =3D field_cmp(val_a, val_b);
+> +               if (ret)
+> +                       return ret;
+> +               /* fall through to per-member tiebreaker */
+> +       }
 >
-> base-commit: 917d558b151cad5b05991e5eaee22efab33525ca
+>         ret =3D field_cmp(get_field(a), get_field(b));
+>         if (ret || !symbol_conf.event_group)
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index 1a238b245b3a0..4140f998e8a9b 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -142,6 +142,49 @@ struct evlist *evlist__new_default(const struct targ=
+et *target, bool sample_call
+>         return NULL;
+>  }
+>
+> +bool evlist__can_merge_hybrid(struct evlist *evlist)
+> +{
+> +       struct evsel *pos, *other;
+> +       u64 config =3D 0;
+> +       unsigned int nr =3D 0;
+> +       bool first =3D true;
+> +       int nr_core_pmus;
+> +
+> +       nr_core_pmus =3D perf_pmus__num_core_pmus();
+> +       if (nr_core_pmus <=3D 1)
+> +               return false;
+> +
+> +       evlist__for_each_entry(evlist, pos) {
+> +               if (evsel__is_dummy_event(pos))
+> +                       continue;
+> +
+> +               /* Initial support is for legacy hardware events, such as=
+ cycles. */
+> +               if (!pos->pmu || !pos->pmu->is_core ||
+> +                   pos->core.attr.type !=3D PERF_TYPE_HARDWARE)
+> +                       return false;
+> +
+> +               if (first) {
+> +                       /*
+> +                        * Filter out the PMU bits. May need something el=
+se
+> +                        * for other types.
+> +                        */
+> +                       config =3D pos->core.attr.config & UINT32_MAX;
+> +                       first =3D false;
+> +               } else if ((pos->core.attr.config & UINT32_MAX) !=3D conf=
+ig) {
+> +                       return false;
+> +               }
+> +
+> +               evlist__for_each_entry(evlist, other) {
+> +                       if (other !=3D pos && !evsel__is_dummy_event(othe=
+r) &&
+> +                           other->pmu =3D=3D pos->pmu)
+> +                               return false;
+> +               }
+> +
+> +               nr++;
+> +       }
+> +       return !first && nr =3D=3D (unsigned int)nr_core_pmus;
+> +}
+> +
+>  struct evlist *evlist__new_dummy(void)
+>  {
+>         struct evlist *evlist =3D evlist__new();
+> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+> index e507f5f20ef61..ad0e6e7399d2a 100644
+> --- a/tools/perf/util/evlist.h
+> +++ b/tools/perf/util/evlist.h
+> @@ -105,6 +105,7 @@ struct evsel_str_handler {
+>
+>  struct evlist *evlist__new(void);
+>  struct evlist *evlist__new_default(const struct target *target, bool sam=
+ple_callchains);
+> +bool evlist__can_merge_hybrid(struct evlist *evlist);
+>  struct evlist *evlist__new_dummy(void);
+>  void evlist__init(struct evlist *evlist, struct perf_cpu_map *cpus,
+>                   struct perf_thread_map *threads);
+> diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
+> index b830cbe7f95bf..a9dd423ded5e1 100644
+> --- a/tools/perf/util/hist.h
+> +++ b/tools/perf/util/hist.h
+> @@ -130,6 +130,7 @@ struct hists {
+>         struct hists_stats      stats;
+>         u64                     event_stream;
+>         u16                     col_len[HISTC_NR_COLS];
+> +       bool                    merge_entries;
+>         bool                    has_callchains;
+>         int                     socket_filter;
+>         struct perf_hpp_list    *hpp_list;
+> @@ -435,14 +436,26 @@ int hists__unlink(struct hists *hists);
+>
+>  static inline float hist_entry__get_percent_limit(struct hist_entry *he)
+>  {
+> +       struct hist_entry *pair;
+>         u64 period =3D he->stat.period;
+>         u64 total_period =3D hists__total_period(he->hists);
+>
+> +       if (he->hists->merge_entries) {
+> +               list_for_each_entry(pair, &he->pairs.head, pairs.node) {
+> +                       period +=3D pair->stat.period;
+> +                       total_period +=3D hists__total_period(pair->hists=
+);
+> +               }
+> +       }
+> +
+>         if (unlikely(total_period =3D=3D 0))
+>                 return 0;
+>
+> -       if (symbol_conf.cumulate_callchain)
+> +       if (symbol_conf.cumulate_callchain) {
+>                 period =3D he->stat_acc->period;
+> +               if (he->hists->merge_entries)
+> +                       list_for_each_entry(pair, &he->pairs.head, pairs.=
+node)
+> +                               period +=3D pair->stat_acc->period;
+> +       }
+>
+>         return period * 100.0 / total_period;
+>  }
+> diff --git a/tools/perf/util/top.c b/tools/perf/util/top.c
+> index b06e10a116bb3..b7ae51fbc9541 100644
+> --- a/tools/perf/util/top.c
+> +++ b/tools/perf/util/top.c
+> @@ -78,7 +78,13 @@ size_t perf_top__header_snprintf(struct perf_top *top,=
+ char *bf, size_t size)
+>                                 opts->freq ? "Hz" : "");
+>         }
+>
+> -       ret +=3D SNPRINTF(bf + ret, size - ret, "%s", evsel__name(top->sy=
+m_evsel));
+> +       if (evsel__is_group_event(top->sym_evsel)) {
+> +               char buf[256];
+> +               evsel__group_desc(top->sym_evsel, buf, sizeof(buf));
+> +               ret +=3D SNPRINTF(bf + ret, size - ret, "%s", buf);
+> +       } else {
+> +               ret +=3D SNPRINTF(bf + ret, size - ret, "%s", evsel__name=
+(top->sym_evsel));
+> +       }
+>
+>         ret +=3D SNPRINTF(bf + ret, size - ret, "], ");
+>
+> diff --git a/tools/perf/util/top.h b/tools/perf/util/top.h
+> index 04ff926846be0..b42e23066fc0d 100644
+> --- a/tools/perf/util/top.h
+> +++ b/tools/perf/util/top.h
+> @@ -32,6 +32,7 @@ struct perf_top {
+>         u64                guest_us_samples, guest_kernel_samples;
+>         int                print_entries, count_filter, delay_secs;
+>         int                max_stack;
+> +       bool               hybrid_merge;
+>         bool               hide_kernel_symbols, hide_user_symbols, zero;
+>  #ifdef HAVE_SLANG_SUPPORT
+>         bool               use_tui;
 > --
-> 2.34.1
+> 2.54.0
+>
 >
