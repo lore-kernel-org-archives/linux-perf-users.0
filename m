@@ -1,171 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC9E30568B;
-	Mon, 17 Aug 2026 06:23:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786947799; cv=none; b=ICX//oinKzUaO5j2eO0UbA4n+ZBhUEqI9RQJYXACKPVLLQyUaFn5ZJ0sz9/FmOGfjMOCHmU49qYI59xAWIVhjmj06UMezN86Q4476I6cyWPUHl9Tnypu8Nc1mDtVZf2jQMmxwfYH342k2QIDHxwM6Zq6+ejXOutMBpGkoZdIJYg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786947799; c=relaxed/simple;
-	bh=sIyThNWYWnlWHpUxaSlXTe6JeQIRE+fhcjoMqfYf4xg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=avA7/o9qC3myvA9zx/VM0f5Gcezeg7HR6N7aRAsaqdcOBF7K4OZMxDZBkZnjfJVzqapxOuqP5ni2a39x7pk5ouL5ModooS7iLksuB3aBMs5ITKowdC4hvl/BYhUDTUm42ZH19LjmhiY+cUGWAFSqv/NBXTwsesmfjoIa9Qqk/Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNwPL6Qm; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912413AEB35
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 06:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.172
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1786949879; cv=pass; b=jp9LjWFOLl3nLmIcXmv249JFO/QF3NndwaZAuCy5qHXUFkS1BnZClLpAUuXEWje1a0/BkUGpqOgp3ASrMM123Wk8apFxqk+8aWO/efXK4IPANzPg9xC3L7UdzbzaAgleCdh9u8rpGqeTaAj71ztK4YoS+3FPTTQ4H+CFk1yUUHY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1786949879; c=relaxed/simple;
+	bh=yeI5MCV3/YEvQ/g6wzqsSCMXaseFn+RX0ROFnasM4K8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W25xqEmFcLixDKWaZBUtiRMpFA4rS0rqX3+OlbcIWmBrwy1j4PgMkkASBtaKTcHgOcoZfDjwAYK4Gcm0sQRPt7ecsgVfQcVAsfAw4l7RNsrwOSpFplNth2rvwMxcCI6XSJu2XpXjx1w35lryeYIw9l+t72ByfNeQuYo2DwTNwwk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GNsdo4nK; arc=pass smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNwPL6Qm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 999F31F000E9;
-	Mon, 17 Aug 2026 06:23:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786947797;
-	bh=jOw+j1q+Tq+Mexz//qGGI8SqaRBLcQGBThbcAl9p1Go=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=YNwPL6QmU5C3HJm060nzfgtL+xf0UOxLnRJdelGugZbuMDrb5lip493qGL9lQgExP
-	 tl2Ti6fXt1XPb8c2fg2Z12VDvqf+cGwYZuKa0JcBTHt9LGDSV2LPM5EgXacy+7/Opr
-	 NjeuGrnxORsx2Ibg0lLhpjAJnfoK+6sVs3zMvxxwYcD3lbFkPYJOwsM9k0kt4iP71N
-	 U9r6/fCJ4ZMPQfRHmFe9MFHN0Q4QZ35hgVGsHdVP8GhPrlrcam0o3yqMQ1hAZvVYuF
-	 vt26w5nKTwR0coqYQj2p/aDjPnqWOnPGnJ6C9qhniNQBQxj2UYkiHFa/TduuYW5Jf6
-	 nvydrMdKvWwww==
-Message-ID: <bca067e2-bbd7-43cf-9198-32bf4de35a7a@kernel.org>
-Date: Mon, 17 Aug 2026 08:23:13 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GNsdo4nK"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-51c10ed63c0so559451cf.1
+        for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 23:57:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786949876; cv=none;
+        d=google.com; s=arc-20260327;
+        b=If/ccokNMIytxwRdD0rysUMwe0aA+xTIOouh0v2ahKET9rqfHb18FbwQbeFzKuY2aP
+         ZTRVRzZOHNpt3pZ+L+5kIm1/8Ap0md6uKBnWi/gqw6bRYFzKRAmFTnXuW8gI4xB0TbV0
+         JF4fKBfdK01XII+BOmEnIZ9rFZinHNpMgReEWPA2bm4vhIj9SwyO2zKl2gkbseOWqF7t
+         KgBYecidvehk2Kw3whkWYqhHSZKwyD1oVQSiSBajEsewEvgAgvA+b6QZxlna+39Z2e02
+         jnU9Em0sATFxCWQALHMWrx1sZ2b+o4vAGL58rVtKXvQthLnaMs/Jk6qqic0jYnZEAHA9
+         ooXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=yeI5MCV3/YEvQ/g6wzqsSCMXaseFn+RX0ROFnasM4K8=;
+        fh=E3k+vHVf3BMWeCuvxqYJQNVnGiDOL/7WU1IK5W1PC/Y=;
+        b=SDQh2f8Dco+E4HZ5z5RIJ/fI/YcGJ8bI0N22RiJPZuGYzcSWSiOINDEHkJx8CWraVR
+         aJh63Nsy6v/l0JvrEEQnAHAIkUGpNsJuBNvQozlfYpkVto2plbPZKBopWhtqnAEAVBss
+         IQZ4QOSjbm6w9TJdZEaRm7RW+KTdMW2eOFLfB/DbrbgcHBbUFAP2tnYt3zXYpVtFo3Jt
+         0iu1Ez+SaPBQZymS3NuTH4jLukTegx49dL+MMvtxAy72rA586lFkmFqVaoVWWMnT3aDJ
+         ObLQTVJrUGEjwG+MqRG6ThaNMMOuRZzu0HnhXYs4O37HHGUo+vkJ/4I5ZnmZNCHayfSl
+         qIrQ==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1786949876; x=1787554676; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=yeI5MCV3/YEvQ/g6wzqsSCMXaseFn+RX0ROFnasM4K8=;
+        b=GNsdo4nKF6seb8YjR55OXB+JK1II6EDe/vsbe5Cxqgz+Wtm/3kezhGmnWv8VGaoOsL
+         GGPB/oA0/C1NC2PAOKlPTWj6uvPH5AD9TCA2smjSCRjLWAPCzHDbMApkPOKfrWv1FrHC
+         +D7dZHTH588M33qx9FlzdWAvLcTqK5Br7DOakY/JsMocHA0vmDr9Pv4DPZGfql0Gc9A7
+         f3JZjjw592TGEpNemPymJ7qX9ciUsar6+YRHhJ+AK5oqTOXt3TLtkJ0t6vkMZVPzSIsq
+         j9tI4gmrteedASqH83r+z1Udt9JwHjvjNTj4HcHUga9NzgGFh90GyIFp3xXkPnl5rjnI
+         JdTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1786949876; x=1787554676;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=yeI5MCV3/YEvQ/g6wzqsSCMXaseFn+RX0ROFnasM4K8=;
+        b=iEyUmrCGUykzDiX/TDGqyw7w3N5I1OfWAxyaHvbUVLW8XD/VMG6KXUf9CV8IVIB8nC
+         vkq6lOmgHbUgo3osvEMzrghyM/DHWMVXmD59c6E3TVIv083i/GdLTlw//GoBFdRZSye+
+         tmYoWm9PUo/gM01ijGk9QKsvNfmTsFknNvGtQCM8lobhk/biDDeA8VyeVdZ1gxi2FZuF
+         mSplPJThHI7XvxSdRnWQm3EaW8S0XCoSyQ8zrZoSSctx4MeFFewAmkWehON9Ej72oKz9
+         tIqPz4KbEfTbchz5FeKp2J5nOtJaXflskrV8r1p8deFH+jXbLD3PEaq9SD+fKvQ8nwcz
+         MbeA==
+X-Forwarded-Encrypted: i=1; AHgh+Rr3B4h/gXq1Drx5r2SRdkf1B8aouScIxeOAwb0XW9UrakTw0uqxWGPoioEG6XXmF7Xh0ie0SkHwnfceQn6y4sn6@vger.kernel.org
+X-Gm-Message-State: AOJu0YzGUTV9SrUQufLXqCY2GNtt9AnPydZeTEIXuGSyYX7Iy8pMl1mE
+	wCrJQ5sOPhKQwf2heKJJmScObrMJor0Q7APFTC5zPzHym/xOPeZI/sll951RgyOJpGbMqZ4ovg0
+	1lAKIoUvNcc3AeWR7XEvksrgTTyKGtYaZoceDg6hP
+X-Gm-Gg: AR+sD13LhU7lDOMQG/qaRIxs5SICv3T3J95vxt7USFMmgHNNUtowyeqprXh6YqGfd39
+	WHonuoi+5hysuN2wrk6ZA7J7UkY+SJ/UO5WHUzJCDNxpQCn8fwU8+t07jsN9osT5Mni1aVyXz0a
+	7BUA1RhgciHB99V1i/DOYNoidMvMCsrzOBw1I5A9kwCFOkxIJLHpUMBbKfN8DVD9SgqsdgQeGiH
+	UdJqMaOrie+RKkPcu/nuhhMNYqF7tVHMzJs8U8wLhhB+SxBF6gxSwIF0Af2EhzIL6rdqID7CDjq
+	vPXacqUOcM4JQ26KBLHK2s2GObJerRx4qv4/lQeY3YOt/Ai7N3ZzMtWX
+X-Received: by 2002:a05:622a:1b1e:b0:517:5ac7:332e with SMTP id
+ d75a77b69052e-52db08d8f71mr7532771cf.6.1786949875662; Sun, 16 Aug 2026
+ 23:57:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 1/3] dt-bindings: perf: Add Broadcom Raspberry Pi AXI
- PMU definition
-To: Ian Rogers <irogers@google.com>, florian.fainelli@broadcom.com,
- linux-perf-users@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- pbrobinson@gmail.com
-References: <20260815082048.4043217-1-irogers@google.com>
- <20260815172712.50119-1-irogers@google.com>
- <20260815172712.50119-2-irogers@google.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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
-In-Reply-To: <20260815172712.50119-2-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260815082048.4043217-1-irogers@google.com> <20260815172712.50119-1-irogers@google.com>
+ <4998d0ca-eeb0-4b04-b3ac-a1f97c1829f2@kernel.org>
+In-Reply-To: <4998d0ca-eeb0-4b04-b3ac-a1f97c1829f2@kernel.org>
+From: Ian Rogers <irogers@google.com>
+Date: Sun, 16 Aug 2026 23:57:44 -0700
+X-Gm-Features: AcwNN1WIDwcRG9rKkdw20Ao8jDTswAL0Iln7nq_5f4EldOGZnTb7gA-VYM25BGg
+Message-ID: <CAP-5=fVffrRgO4OM6u=JTEUwBY0np+fUExqOpbiYU1JgyMr7Rw@mail.gmail.com>
+Subject: Re: [PATCH v13 0/3] perf: Add Raspberry Pi AXI PMU driver
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: florian.fainelli@broadcom.com, linux-perf-users@vger.kernel.org, 
+	linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, pbrobinson@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 15/08/2026 19:27, Ian Rogers wrote:
-> Add Device Tree bindings for the Broadcom AXI PMU hardware blocks present
-> in the Raspberry Pi SoC line (BCM2835, BCM2711, BCM2712).
-> 
-> Depending on the SoC and security configuration, these PMUs support either
-> direct MMIO access or routing via the Raspberry Pi firmware Mailbox IPC.
-> The bindings support defining 1 or 2 backing MMIO regions natively map
-> the system and VPU control surfaces.
-> 
-> Assisted-by: Antigravity:gemini-3.6-flash
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  .../bindings/perf/brcm,bcm2835-axiperf.yaml   | 77 +++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml b/Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml
-> new file mode 100644
-> index 000000000000..8a4857aa448c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml
-> @@ -0,0 +1,77 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/perf/brcm,bcm2835-axiperf.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Broadcom BCM2835/2711/2712 AXI Performance Monitor
-> +
-> +maintainers:
-> +  - Ian Rogers <irogers@google.com>
-> +
-> +description: |
-> +  The Broadcom BCM2835 series (including BCM2711 and BCM2712) features hardware
-> +  performance monitors on the AXI bus for evaluating memory bandwidth and
-> +  system traffic. Depending on the SoC architecture, multiple monitors exist.
-> +  The primary
-> +  monitor evaluates the System fabric, while the secondary monitor evaluates the
-> +  VideoCore VPU hardware.
-> +
-> +  Older silicon generally restricts direct MMIO access to the VPU endpoints,
-> +  requiring them to be accessed over the Raspberry Pi firmware mailbox
-> +  interface. If the VPU endpoints are memory-mapped, they are supplied as
-> +  secondary resources.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - brcm,bcm2835-axiperf
-> +      - brcm,bcm2711-axiperf
-> +      - brcm,bcm2712-axiperf
-> +
-> +  reg:
-> +    minItems: 1
-> +    maxItems: 2
-> +    description: |
-> +      Memory-mapped I/O resource regions for the AXI PMU endpoints.
-> +      Typically ordered as System monitor, followed by VPU monitor if directly
-> +      mapped.
-> +
-> +  firmware:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
+On Sun, Aug 16, 2026 at 11:20=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
+>
+> On 15/08/2026 19:27, Ian Rogers wrote:
+> > Motivation & Background
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D
+> > Currently, Linux lacks a standard perf-API compatible driver for the
+> > Broadcom AXI performance counter blocks on Raspberry Pi platforms. Prio=
+r
+> > out-of-tree vendor solutions relied on custom debugfs nodes and ad-hoc
+> > kthreads, preventing integration with standard Linux perf tooling (`per=
+f stat`,
+> > `perf list`, etc.).
+> >
+>
+> Slow down!
+>
+> One version per 24h in normal cycle, not 13 patchsets in two days! (and
+> even rarer during the merge window)
 
-This was already rejected.
+I'm familiar with perf-tools which was set up to follow BPF's example,
+both have -next repos. The -next repos merge into linux-next for
+testing. I agree that cherry-picking shouldn't be done straight into a
+pull request to Linus. Is there a principle against using -next and
+linux-next?
 
-https://lore.kernel.org/all/?q=broadcom+firmware
+13 patch sets resulted from Sashiko reviews and subsequent addressing
+of those comments. Yes, Sashiko was run internally before mailing the
+changes. No, waiting a week between versions (a proposal on this
+thread) doesn't make sense as addressing the feedback would take 3+
+months. As already mentioned, the current churn simply reflects where
+we are with the tooling. I apologize; I did what I could to reduce it
+and you can see in the changes per version in the cover letter that
+this addresses more than just the mailing list Sashiko review. Fwiw,
+if you're not familiar with Sashiko's reviews it seems you should get
+it enabled for your mailing list - Linus is positive on it and it
+generally improves reviews and reduces reviewer/maintainer burden.
 
-> +    description: |
-> +      Phandle to the Raspberry Pi firmware node. Required on older silicon
-> +      (BCM2835-BCM2711) where VideoCore VPU endpoints are exclusively accessed
-> +      via firmware mailbox IPC.
+b4 handles reply-to git send-emails with `b4 am`, each reply-to gets a
+fresh message-id and that's all the tools care about. I forgot to run
+get-maintainers.pl for the Documentation change, sorry. Since more
+important drivers (in particular Apple M1) are currently unaddressed
+in drivers/perf, I don't hold out much hope of this driver landing or
+receiving maintainer attention. I sent the patches merely to help the
+ecosystem and encourage vendors to interface with perf. So far the
+only constructive human review feedback I've addressed is from
+Florian.
 
+Thanks,
+Ian
 
-Best regards,
-Krzysztof
+> Best regards,
+> Krzysztof
