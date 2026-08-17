@@ -1,265 +1,187 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D34449992
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 15:58:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9AF442385
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 16:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786982283; cv=none; b=syQJgmJPzWgCMj3o4Z/3Oi61+8zVzgwza0dw6AdBp96fEVpKrM9iw3Job+5iZM9yiT5Rvw48kXIFdvB1J8iriOh/R3sq7gQbim+k0NmPR1ybHHJ0yvtcuRL8KAklv3OAw/URa7ama1FR6zqcguZROm8wPJO1tEj0CHrU4ZMdE2M=
+	t=1786982563; cv=none; b=c5qcWVmsYUe7YK9+PPcwRgb1RL8afg+qlbiGjxC88kCwQW4W8MRJNLpzEla5wzLk2dimJR1YHHXPlaXDohN/JtUyXb5WbzzTB9RNR3sT3wlT0nTuH8+3sZgeREUuilsDX+wYTwxDREwIdZPRZZxig+p7AmSoEoKwO3LVpuQ7myc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786982283; c=relaxed/simple;
-	bh=n/fHe03KdJDf8h9CK7pfXeHrlRpg6VLPvk/IjXsxbEk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o7RB1WGZXutOZYjXk5hoOX3eItEtQivV2B2xCX7l7YjjcynFUfQ2F+2qzjn2YAzgGGkYx2ZpXxo4thiw8aHWl842PrroS/6dOv+Ziw7N9VZyw8P9Bi/2lDfgkDK37Hyk7iemjhpWUXc0nOkKwPOr7Q/Yvit2xokBX05bhYoYzGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WIeuAQFi; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1786982563; c=relaxed/simple;
+	bh=eKbgGx3jlC870GvaTOCcW9Jj9cJ5SYGFymmxeWq3AV8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cgbQsOuHDqmJljAPIqWE8lP/L2GdvJDk+HIvU6lV81dd3h8vxxSieXEvj2FoBHkmtXJ5kQt7PcE7/v6QyIz2AX1dcCmmqceQlBqjLkPGa1PXorILzELVboWAfjenrltDdETGEjjoIzhmcFnoMmwuckU6qZ2jh5B7H4GCx/5tDZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PosSKHKv; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=bKncAh/t; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WIeuAQFi"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-47f71156e1aso1531878f8f.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 08:58:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PosSKHKv";
+	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="bKncAh/t"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67HFYvOa1530551
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 16:02:40 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=F1ydbwCOJHJXHm4fbFBs3uDl9Dggh/0McdK
+	z5MjuJng=; b=PosSKHKv5Wk14m5PM6r3+D+7nUkYhx8jJ8e9DVlT6gx8JSle5Mk
+	LGVFcaraXw4j/vw8ezxa4tFzbdA8gxMczUe8gqGTt/D1Dmf+d+eEzd4JfGSgJA9d
+	cA+gIMqf/XbtebnBfHODSLV2XS7zsaSFKGemeQuSBEAiFEoWGj/Ww7g2ZIw87VKv
+	E9LMKF9lPg8Vd46HHHaw31rpt6mT7ats6te6hFV7CcdDOqiMv1AcJwESaBvVA2My
+	iFbp8wt3aF8B8CmMYws57xwSAGd5xtWbrokw4xLi5TDvrSRAp8VlUvoygFGeIB7Y
+	yU1g6aV4nVt8+MBtUtiClIwN3gJV+jiGLWw==
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4g3wke2528-1
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 16:02:40 +0000 (GMT)
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-84e1da97175so4537457b3a.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 09:02:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1786982279; x=1787587079; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=hjMDqxlK+BRn8Js0eyrOoPLsp9IBlPLG3MAMIL5r6gQ=;
-        b=WIeuAQFiiO8FIYem7l0Dn9TLsTyfwG9h3OnPGxC75pdLOUMnXxB/LtAKwse6UT03bq
-         4JYK7aQGeweJ6xqPQvS9P3gajMO5jCCQ6J1GtFGgs2m3hbBpyhVrfejQs5AKJcard5oj
-         AqVdCK7HNt5gk+tXngNQs52Ktn2uKO30ifTgtKEK3TzEtTZZtv8e4OG9iV9PNZWP4iao
-         I1am8A+Vu9EPrE3Q2xxCe2Qlkp6S9g/4YICj6Cb7kWcNlje50+SIgblLPeicLTMYrYCH
-         uQQQhFcTSKxK/+uJXM+FK+a4KxFuzzk13SsGZhF+qLRQfpJc2RAVNy1SuVK/YQD6+bmK
-         OS3g==
+        d=oss.qualcomm.com; s=google; t=1786982559; x=1787587359; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=F1ydbwCOJHJXHm4fbFBs3uDl9Dggh/0McdKz5MjuJng=;
+        b=bKncAh/tY1tLEKk0+9RqnsmKW4tEI8A6WMeljFjetRmkZPsaAtU75dQ+6QynMfFjXs
+         m1ktmHySekeSN5hvVyPxYC3Rgkv5mqF3cBGXoXtkG/qHmGF2fMBSG1GfxD2LqeFlUymz
+         Y4sMJf2bpb+TlYgAQzHTQ3gRT5JzhINkK73pU/Mj5BAczZNKQiGKlqTV5BFzzL3PZYtl
+         laaCvdZv0NhU7nFeDU7fojEsK9oivihJv6C7EaA/rHdxPVYbchqnkrZk8AMn6FehEP12
+         PlnaT9khn9yMnEpwJaNbpyJGN0nMx3qQwqniox51Kin5Wsc6qONEkdqiPgpmz55fmDbk
+         xBJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786982279; x=1787587079;
-        h=content-transfer-encoding:content-type:in-reply-to:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20251104; t=1786982559; x=1787587359;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=hjMDqxlK+BRn8Js0eyrOoPLsp9IBlPLG3MAMIL5r6gQ=;
-        b=EBFt6KtAh7F9bsljSCDUEdp7B39XkoUHupzAn82LqbCDs8TBoi7iwf7BstMqiEqYM3
-         Z49AefK7tPLG+7OJ60yUYfdDzNd0L1URZJVrGvotU2D25Y5zW/QwcnUtUYXaV4q7Zh8v
-         tGjm8mByty4YT8eDY5tPBzuN2+MzZH1MbeqSXprpB0PEQe1AUQ5fkfx1OPeOQcEGnDn+
-         XqiIw0peXr/LWMJ8zZTqOCR+ggqnqLr/pwDYDgZde6MFu707TxRRUTqvW02GGUSSCmmx
-         YM4K2bJduQnZV3pl4wk3KdszQv3JwI/Hs07GcbbQjK/NU6jFX6sOuYN0xzOulPjC5znH
-         WGvg==
-X-Forwarded-Encrypted: i=1; AHgh+RrC8F2IDEvOCMtExYcAMQMtWbgbBHc/A+U93KKLbRpUygGElobtd+XopSXH32AnS7WHld8dlpP9nVvz6NSUOWTL@vger.kernel.org
-X-Gm-Message-State: AOJu0YzADSYIf/IeVubxXNlXzYJ/V4B3t7V77T/todxgKA8KrEYLqWhM
-	YQqf9COImi2rN+c8lIRTpbj112YhmwZsubMydf5g36HYvQb9fSGB+sKcqju9YgEn1d0=
-X-Gm-Gg: AR+sD11vhzNAbdxzCYQNt4lfyB/M3FidOeW/MNPT0LV3rgBBvSOZQnCP9XUAKxRk47r
-	c/O5lyLbM6Tam6o3RBT4HQzFdMnDYVWpbgexg1JoBPWwXB7FQM13b6eksuc28O73lKKA30RY2C+
-	uC6///WxrlcY2255km4H7D7uuVwRGubm+K10pltwVPKjqaQsbY87pOfJWQJQB5ax1Wx3RSDDqmd
-	R0kP7oc3NrK4yykP8q35Do9hdYP4cRT/dZjCfrWmt1JSwIXkRsZWYYF4kwGNELjA2gELOVbcAlx
-	EEQjLQwnwfqyBNSpXbtyGQjsBCHN/xGm71H0+mskymbn4FLHnNGcZttWJkmtZHqVko/8sEb85mt
-	tNBqiuoMKy5hjz6eeA6yjr7NUkC9CWtZZErguRTtl5MjaZvREGOPG7YzyacOArbFIUTMMQwO7C0
-	Y2mgB0TCgNzTY+tfyt4VTe+obwIv3HlKxOj3xrSNEO8vKK9f6mJsmKfhdNBee+tGcmGQ==
-X-Received: by 2002:a05:6000:41ed:b0:482:a9d6:a803 with SMTP id ffacd0b85a97d-482a9d6a821mr545065f8f.30.1786982279197;
-        Mon, 17 Aug 2026 08:57:59 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482a5a7bc6esm5505157f8f.19.2026.08.17.08.57.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Aug 2026 08:57:58 -0700 (PDT)
-Message-ID: <6177272a-e9a0-4f82-9e0b-17e60fb49ca1@linaro.org>
-Date: Mon, 17 Aug 2026 16:57:57 +0100
+        bh=F1ydbwCOJHJXHm4fbFBs3uDl9Dggh/0McdKz5MjuJng=;
+        b=hFgs6B0MLjHm2sSjAvcnt3/X5E0G0u4h3E63n7fnbMstQOIz1mq3m74HZMg6TPjgvY
+         VmwoEk99TgoNpRQiLr3ItGF6OjV2TCVsOGTYzE5Mv69cpxWEcO0ULl6LoDwtCrdJg5IG
+         lEwztPoIoX+DhAZhRYgYyi+KwnK3cVSuu8xa/70Ptj2d2X1N0uJR9dQQfDXCUXyljGRk
+         2l2RuVZlS/cQ8i9ckTJqnRa5WE+aV+/SykkXSw7g6/WlsFvC94CHaB+ACP/eNnii9wFf
+         i/o36FsjtPsJrFsfCk0m8EnyTjvwi3lCe7O2DyWJ+ARFZ/nM/v2sshH6q8EOy1MRWsai
+         VQ0A==
+X-Forwarded-Encrypted: i=1; AHgh+RqVcK0hELktFTTGF4POIVFdEZ6RIpoppHReZyV9BPAIh+cwxPqJaQ+vc4uTrzuHLQOdvugrdOlW41Dfjaghaoto@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKoH89JRk5dveHidUb9VLOlvd/Dr+D0RnEAuEw1bGlVp9K2vzC
+	twGnTsPYAUuBlPZj28h6WPkSnDZgTQt/1ydObQ7VKVemnIKk/OEMMkXh4aRJZUOZ8MIZy+jEkdC
+	C7NGiJjwTrTOGGnmpIXkFK9/6WSGplq76xUtLzRiK31bqjAKkpZvlO+wEaT9i5Y7OVznRYBbr
+X-Gm-Gg: AR+sD11/Nt7eDhJEXM1sUt0EEjEvSGgC7594PwwlJgp3mkskZY0acBKSyyhZPHMwWxG
+	MSwpSiksarL8CU9gv1ayszSD+ebb2/Dg0Ve60Sm8a2JQtz8TNRLJKbDQR3sfRco5JZUAH9YCVL2
+	bv0IrRr2R3UYnl25wCl0sAGDwoKYtlmq7dqZD+kseKI/DBjaV3HvSTLzbbdvzPrMmUuBIVWvDL9
+	jKgUZWSaoipGXSX+fCFpNQA5teIDqJP/JWjLNgd1p25sGGJs5VkYb0zggE+Tl+k0vLozl9DAEcY
+	BLyEhuANSGF6kSHaRMitxzWk4cQmvCugTTfkRlz6wJWkM+9vWrJbV+LPS6qtPDgahBR4TcZDi6q
+	Kk/DE6LMX8hbTRnOfQczr9oJwaIN5cILs8gCn88WcpHcv8k9mXp50GCTT4qw5AB1Mco25LjPtwz
+	WK9s1JXKEGEC6mtM0jq/lnr/kHFg==
+X-Received: by 2002:a05:6a00:a219:b0:848:4c0c:9482 with SMTP id d2e1a72fcca58-84fde2bb2camr25464877b3a.35.1786982559201;
+        Mon, 17 Aug 2026 09:02:39 -0700 (PDT)
+X-Received: by 2002:a05:6a00:a219:b0:848:4c0c:9482 with SMTP id d2e1a72fcca58-84fde2bb2camr25464810b3a.35.1786982558539;
+        Mon, 17 Aug 2026 09:02:38 -0700 (PDT)
+Received: from hu-mchitale-blr.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com. [103.229.18.19])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-851b6f8b189sm562883b3a.34.2026.08.17.09.02.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2026 09:02:37 -0700 (PDT)
+From: Mayuresh Chitale <mayuresh.chitale@oss.qualcomm.com>
+To: Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+        Andrew Jones <ajones@ventanamicro.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Chiu <andybnac@gmail.com>, Anup Patel <anup@brainfault.org>,
+        Atish Patra <atish.patra@linux.dev>,
+        Charlie Jenkins <charlie@rivosinc.com>,
+        Chunyan Zhang <zhangchunyan@iscas.ac.cn>,
+        =?UTF-8?q?Cl=C3=A9ment=20L=C3=A9ger?= <cleger@rivosinc.com>,
+        Conor Dooley <conor+dt@kernel.org>, Deepak Gupta <debug@rivosinc.com>,
+        Guodong Xu <docular.xu@gmail.com>, Guodong Xu <guodong@riscstar.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mayuresh Chitale <mayuresh.chitale@oss.qualcomm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <pjw@kernel.org>,
+        Pincheng Wang <pincheng.plct@isrc.iscas.ac.cn>,
+        Rob Herring <robh@kernel.org>, Sergey Matyukevich <geomatsi@gmail.com>,
+        Thomas Huth <thuth@redhat.com>, Will Deacon <will@kernel.org>,
+        Xu Lu <luxu.kernel@bytedance.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: [RFC PATCH 0/3] RISC-V Sspesa: Linux perf precise sample attribution
+Date: Mon, 17 Aug 2026 21:32:16 +0530
+Message-ID: <20260817160222.3313295-1-mayuresh.chitale@oss.qualcomm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] perf tests: mmap-basic: fix user rdpmc detection logic
-To: Michael Petlan <mpetlan@redhat.com>, Qiao Zhao <qzhao@redhat.com>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org, leo.yan@linux.dev,
- namhyung@kernel.org, acme@kernel.org
-References: <20260302055557.3708296-1-qzhao@redhat.com>
- <CAATMXfmK73HSM=DZMBHGcoqu=79ftqhYNNtcpUGF-76Ydp9KMA@mail.gmail.com>
- <CAATMXfnDxRdLJRo9LEiM6iGXooQGUFWrj+2=rd8=KL7GUK9Rbw@mail.gmail.com>
- <4181fd3b-1e22-4884-c349-63c5abfb814d@redhat.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <4181fd3b-1e22-4884-c349-63c5abfb814d@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODE3MDEyMyBTYWx0ZWRfX+LVqz68fBSQu
+ /tTVwCOwDjtkV5rho+0guEbDfCahM5asyOgNmaVi1WPEQR9tC3rID4JiOtsNVGtCEWuQpnqPfxu
+ rkSexBqvjmwZARd+L0VPjUZKfk1TPuLqGHsx6ao94+ng1wTZHwx3BJHSam4iiORFEjlPpTQ8qD4
+ jo63ppHyrVlZgN5y49alayowEV19T78VKHfJS3WXLYpQCqIb0f/OfELG4YqkYGwJ4zlljEpfGhp
+ rDXnn/i6N9OcW5EIHxlrK+tnngai8MCgQtjgLSUop3eJcci47fQsF5ZT70SICheBJj8a1dBbG2k
+ AlHZyf4PIiL/tJziC3WZVHPv2a3grbPvVTBjL4FoKVCNhg7utA2RJ1dP8wr29a0L45F2FvgAWK/
+ 0SEXy2qe2NOrP5rsNiU605sPSejzPkUVNM72RjUg7/mQaOc5q16l69ZRO9YAXJALVNC19vaLnOD
+ hvbmsgVp1r+/q9zJiaQ==
+X-Authority-Analysis: v=2.4 cv=QetWeMbv c=1 sm=1 tr=0 ts=6a8330a0 cx=c_pps
+ a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=Sv0fKeRqtYgA:10 a=s4-Qcg_JpJYA:10 a=VkNPw1HP01LnGYTKEx00:22
+ a=u7WPNUs3qKkmUXheDGA7:22 a=_glEPmIy2e8OvE2BGh3C:22 a=NEAV23lmAAAA:8
+ a=8ilw5EQWc8m46JC1U7oA:9 a=IoOABgeZipijB_acs4fv:22
+X-Proofpoint-ORIG-GUID: 2wA7C4A7pqokAOgdn58nfAj9deNpX-xD
+X-Proofpoint-GUID: 2wA7C4A7pqokAOgdn58nfAj9deNpX-xD
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODE3MDEyMyBTYWx0ZWRfX/dZnKk+M3I8g
+ I1Y7RHD3s75fB5rlNG1JUApppm3p1Oz1VEEpAPByZy4F61NvJ+4a9wcAXQbp4Z1/+C15VFF/fZH
+ hI4OuK4apg2zTIwUF7hds+LS7GIctyQ=
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
+ definitions=2026-08-17_02,2026-08-12_01,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 adultscore=0 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 phishscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608170123
 
+This Linux series adds kernel support for the RISC-V Performance Event
+Sampling extensions Sspesa (Precise Event Sample Attribution) and
+Ssplcofi (Precise Local Counter Overflow Interrupt).
 
+The first two patches add the DT binding and ISA-extension detection
+(Ssplcofi depends on Sspesa). The third patch uses shpmspc to report the
+sample PC via PERF_SAMPLE_IP in the SBI PMU overflow handler, and
+exports shpmsdata as PERF_SAMPLE_RAW.
 
-On 05/08/2026 11:43, Michael Petlan wrote:
-> Hi James and Ian,
-> 
-> what do you think about the v3? Can we get it merged? Thanks.
-> 
-> Regards,
-> Michael
-> 
+Reproducing the full setup:
 
-Hi Michael,
+Sspesa support requires three projects: OpenSBI, Linux and QEMU. The
+matching branches are:
 
-I left comments on the V3 resend and Qiao said he would send another 
-version but I didn't see one.
+  OpenSBI: https://github.com/mdchitale/opensbi/tree/riscv_sspesa_rfc_v1
+  Linux:   https://github.com/mdchitale/linux/tree/riscv_sspesa_rfc_v1
+  QEMU:    https://github.com/mdchitale/qemu/tree/riscv_sspesa_rfc_v1
 
-Upon testing I saw a few more bugs so I just sent a V4 myself, if you or 
-Qiao could take a look.
+To test Sspesa, build OpenSBI, Linux and QEMU from the branches above,
+then boot Linux with:
 
-Thanks
-James
+  qemu-system-riscv64 -nographic -machine virt -smp 2 -m 2G \
+    -cpu rv64,sscofpmf=on,sspesa=on \
+    -bios /path/to/fw_dynamic.bin -kernel /path/to/Image \
+    -drive file=/path/to/rootfs.img,id=hd0,format=raw,if=none \
+    -device virtio-blk-device,drive=hd0 \
+    -append "root=/dev/vda rw console=ttyS0 earlycon=sbi"
 
-> On Wed, 11 Mar 2026, Qiao Zhao wrote:
->> Hi James, Ian,
->>
->> Just a gentle ping on this patch.
->> Could you take a look when convenient?
->>
->> Thanks,
->> Qiao
->>
->> On Thu, Mar 5, 2026 at 11:08 AM Qiao Zhao <qzhao@redhat.com> wrote:
->>>
->>> Hi James, Ian,
->>>
->>> Do you mind reviewing this v3 change?  Thanks a lot!
->>>
->>> - Qiao
->>>
->>> On Mon, Mar 2, 2026 at 1:56 PM Qiao Zhao <qzhao@redhat.com> wrote:
->>>>
->>>> The mmap-basic test incorrectly determined rdpmc availability in
->>>> several environments, leading to unexpected failures on arm64 and
->>>> other architectures.
->>>>
->>>> Previously the rdpmc capability decision lived in test_stat_user_read(),
->>>> which caused inconsistent behaviour when:
->>>>   - perf_user_access sysctl state is unknown
->>>>   - architectures expose cap_user_rdpmc differently
->>>>   - arm64 platforms where rdpmc semantics differ from x86
->>>>
->>>> As suggested during review, move the rdpmc capability decision into
->>>> set_user_read() so that the user_read state and expected behavior
->>>> are decided in a single place.
->>>>
->>>> Changes in v3:
->>>>   - Moves perf_user_access handling into set_user_read()
->>>>   - Simplify test_stat_user_read() expectation logic
->>>>   - Use unified rdpmc_supported calculation
->>>>   - Handle USER_READ_UNKNOWN consistently
->>>>
->>>> v2:
->>>> https://lore.kernel.org/linux-perf-users/20260203141608.14128-1-qzhao@redhat.com/
->>>>
->>>> Note:
->>>> A potential cleanup around perf_event.h mentioned during review is
->>>> intentionally deferred and will be handled in a follow-up change
->>>> to keep this fix minimal and focused.
->>>>
->>>> Tested on:
->>>>   - ARM64 (armv8_pmuv3): all mmap-basic user-space counter tests pass
->>>>   - X86(include hybrid): all mmap-basic tests pass
->>>>   - IBM Power9: all mmap-basic tests pass
->>>>
->>>> Signed-off-by: Qiao Zhao <qzhao@redhat.com>
->>>> ---
->>>>   tools/perf/tests/mmap-basic.c | 55 +++++++++++++++++++++++++----------
->>>>   1 file changed, 39 insertions(+), 16 deletions(-)
->>>>
->>>> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
->>>> index 3313c236104e..3633e7c87dc1 100644
->>>> --- a/tools/perf/tests/mmap-basic.c
->>>> +++ b/tools/perf/tests/mmap-basic.c
->>>> @@ -185,38 +185,57 @@ static enum user_read_state set_user_read(struct perf_pmu *pmu, enum user_read_s
->>>>   {
->>>>          char buf[2] = {0, '\n'};
->>>>          ssize_t len;
->>>> -       int events_fd, rdpmc_fd;
->>>> +       int events_fd, fd;
->>>>          enum user_read_state old_user_read = USER_READ_UNKNOWN;
->>>>
->>>>          if (enabled == USER_READ_UNKNOWN)
->>>>                  return USER_READ_UNKNOWN;
->>>>
->>>> +       // Try the PMU rdpmc sysfs interface or similar
->>>>          events_fd = perf_pmu__event_source_devices_fd();
->>>> -       if (events_fd < 0)
->>>> -               return USER_READ_UNKNOWN;
->>>> -
->>>> -       rdpmc_fd = perf_pmu__pathname_fd(events_fd, pmu->name, "rdpmc", O_RDWR);
->>>> -       if (rdpmc_fd < 0) {
->>>> +       if (events_fd >= 0) {
->>>> +               fd = perf_pmu__pathname_fd(events_fd, pmu->name, "rdpmc", O_RDWR);
->>>> +               if (fd >= 0) {
->>>> +                       len = read(fd, buf, sizeof(buf));
->>>> +                       if (len == sizeof(buf))
->>>> +                               old_user_read = (buf[0] == '1') ?
->>>> +                                       USER_READ_ENABLED :
->>>> +                                       USER_READ_DISABLED;
->>>> +
->>>> +                       if (enabled != old_user_read) {
->>>> +                               buf[0] = (enabled == USER_READ_ENABLED) ? '1' : '0';
->>>> +                               len = write(fd, buf, sizeof(buf));
->>>> +                               if (len != sizeof(buf))
->>>> +                                       pr_debug("%s write failed\n", __func__);
->>>> +                       }
->>>> +                       close(fd);
->>>> +                       close(events_fd);
->>>> +                       return old_user_read;
->>>> +               }
->>>>                  close(events_fd);
->>>> -               return USER_READ_UNKNOWN;
->>>>          }
->>>>
->>>> -       len = read(rdpmc_fd, buf, sizeof(buf));
->>>> -       if (len != sizeof(buf))
->>>> -               pr_debug("%s read failed\n", __func__);
->>>> +       // Fallback: perf_user_access interface (arm64, riscv, or similar)
->>>> +       fd = open("/proc/sys/kernel/perf_user_access", O_RDWR);
->>>> +       if (fd < 0)
->>>> +               return USER_READ_UNKNOWN;
->>>>
->>>>          // Note, on Intel hybrid disabling on 1 PMU will implicitly disable on
->>>>          // all the core PMUs.
->>>> -       old_user_read = (buf[0] == '1') ? USER_READ_ENABLED : USER_READ_DISABLED;
->>>> +       len = read(fd, buf, sizeof(buf));
->>>> +       if (len == sizeof(buf))
->>>> +               old_user_read = (buf[0] == '1') ?
->>>> +                       USER_READ_ENABLED :
->>>> +                       USER_READ_DISABLED;
->>>>
->>>>          if (enabled != old_user_read) {
->>>>                  buf[0] = (enabled == USER_READ_ENABLED) ? '1' : '0';
->>>> -               len = write(rdpmc_fd, buf, sizeof(buf));
->>>> +               len = write(fd, buf, sizeof(buf));
->>>>                  if (len != sizeof(buf))
->>>>                          pr_debug("%s write failed\n", __func__);
->>>>          }
->>>> -       close(rdpmc_fd);
->>>> -       close(events_fd);
->>>> +
->>>> +       close(fd);
->>>>          return old_user_read;
->>>>   }
->>>>
->>>> @@ -295,12 +314,16 @@ static int test_stat_user_read(u64 event, enum user_read_state enabled)
->>>>                          goto cleanup;
->>>>                  }
->>>>
->>>> +#if defined(__aarch64__) || defined(__riscv)
->>>> +               rdpmc_supported = pc->cap_user_rdpmc;
->>>> +#else
->>>>                  if (saved_user_read_state == USER_READ_UNKNOWN)
->>>> -                       rdpmc_supported = pc->cap_user_rdpmc && pc->index;
->>>> +                       rdpmc_supported = pc->cap_user_rdpmc;
->>>>                  else
->>>>                          rdpmc_supported = (enabled == USER_READ_ENABLED);
->>>> +#endif
->>>>
->>>> -               if (rdpmc_supported && (!pc->cap_user_rdpmc || !pc->index)) {
->>>> +               if (rdpmc_supported && !pc->cap_user_rdpmc) {
->>>>                          pr_err("User space counter reading for PMU %s [Failed unexpected supported counter access %d %d]\n",
->>>>                                  pmu->name, pc->cap_user_rdpmc, pc->index);
->>>>                          ret = TEST_FAIL;
->>>> --
->>>> 2.49.0
->>>>
->>
->>
+With all three in place, a counter overflow (e.g. 'perf record -e
+cycles -c 1000000 -- <workload>') is attributed using the
+hardware-provided sample PC (shpmspc) and counter ID (shpmsdata)
+instead of falling back to epc.
+
+Mayuresh Chitale (3):
+  dt-bindings: riscv: Add Sspesa and Ssplcofi extensions
+  riscv: Add detection for Sspesa and Ssplcofi extensions
+  perf/riscv: Use Sspesa for precise sample attribution
+
+ .../devicetree/bindings/riscv/extensions.yaml | 19 ++++++++++++
+ arch/riscv/include/asm/csr.h                  |  7 +++++
+ arch/riscv/include/asm/hwcap.h                |  2 ++
+ arch/riscv/kernel/cpufeature.c                | 12 ++++++++
+ drivers/perf/riscv_pmu_sbi.c                  | 29 +++++++++++++++++++
+ 5 files changed, 69 insertions(+)
+
+-- 
+2.43.0
 
