@@ -1,190 +1,139 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 063A9272E6D
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 02:57:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD4320125F
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 04:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.176
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786935444; cv=pass; b=hSGSGfLk8pgb9kM4xmf8+B24wqsiTqRGPtnvOPWaplWnWVvz68Kj7+uj+tWPBsUkWK3Ch1pruUEAWgyGfNBCRQjr+dqD3Ub0V6v5lRxVaYCd+bUfr3fts6YIWZ5LqkV6i49rTDlL7C8opk65zyU/IVcz9Q53GWfiFWSQAFKOcl0=
+	t=1786940015; cv=pass; b=aUBEIoWFFK8i88K5yh71OF11a8V3hRj+COOz8QLuAMt1o6KIi5Jp4ruX8Pmrkotg2i3B80b38vBCrknceRJUVjp1drxsxAaiZMe4+x7MTcunIws5M0fkbKTiMqDQUZdNUzCvQLZBium3+jHxsXsvX30QECO8Ggay7Sd6tzm7bqk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786935444; c=relaxed/simple;
-	bh=vmgaJ2oHIS6H0NlQkGJmiNI7EQuyKaNPclzqHGoDO5U=;
+	s=arc-20240116; t=1786940015; c=relaxed/simple;
+	bh=5Blta1wT0z6cp3scoqrFYSVq0hVhmY3Q87T2OMyervA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SSu8pQq583p6IyGgHjadcTa7VWoHni7aGOmip/EtQrDiH9Pfg9m1RSRJ2i8kq/fmDH2DR/d6pyRn3duCRpxza7mKwGCZPo7Px61sfoi7vN8XBhm4YewWfbyHQWTZXF/2bKMOtMPx52T/08SvZJraC+eV30m1AHKcSNxtOhF4Gmw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PwhP3eaW; arc=pass smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=Sr7ywLJinsvq2t9Mas7z82zIKtHqFPLpl0iPIjlt+nPDAgVDeHQNRlbKBwDsMtIQgfM/4A6CWZ3r25vNhXBO2bvR7wEVdJHNZst3wgHnO36idKOAof0AajCVuvhbXVgnIPTAXMPHZ4iFKB+sJ3J2ziixlEoGcdY3EyFXN6buJlk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KTfDUxee; arc=pass smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PwhP3eaW"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4998590d392so30454385e9.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 19:57:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1786935441; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KTfDUxee"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-51c01c79467so640231cf.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 16 Aug 2026 21:13:33 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1786940013; cv=none;
         d=google.com; s=arc-20260327;
-        b=dpZ9iNKNaWqPjg36QxY9xwASZWYCzK0ovF1ncivBZdCcgTl9Woj43OrDxuf9uF17j1
-         lIDmPrgQv2mkCqD7OfaSIJtwbOrceYkKMKOt7/cv95I0swFy0CcSR7G0NQEOVhAXyKqc
-         2yx7G45FRHO845oONUYsTKJRC1bh2wML19eByL9jYvaafLrdZ4OCfB68VXfFmJf5ICZ3
-         FcOY7xyiTN9omZqZ9H1m9kTD1orYHxqwWhUHK4CEd6pCuVrNd5o1MXYFfkxDxpM/PEsP
-         svrbQQE9XWzRGqu0i+TmbHP/nVNgmIfTy26kf5C5geA7A5YL/BvvZHPYiNYYEufQhTYo
-         F5Nw==
+        b=nzFG2BZlC+KCghV1efMfvJlzWp8NswYIo9tjEi0Ou/UqyvrbM0MxTLTXxwR6ZX/XFl
+         f/8mVHilUJznevFWlONijAayXCrjI1tUMKvVMP+T8KQrNYJI1u9rsYLDgGCGWf4ZJu/u
+         P7Os2Rf75oS/shNYEtfejvj+Z3pr5HJg6TkbuOoMs6OIQlwR37FNzVxdcnAAak/4vqFo
+         DVfvu6+U7MOvbsNjlngUHkzTt2iSlLrjwPBLDiLfX9Ae3yV1Oytrc021Su7AeAHqelLo
+         PH85vLNP9BLJKVPCk4tQ+W7crhj89CQvtRTVbiaT9w8lCGWwPD9r076viY3CtNqqYlL8
+         pXMQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=3E9pfv5IoCCsu+3HPCYQctwF4eS0EkJccI7K/G2Hrfc=;
-        fh=2M0egXrhboZDHNSM6sW/T+j3FHFSBBDLb2oNfv9eZQU=;
-        b=cRc9kUmivv3vETPdfPW18CSMW7r2TjaflbaptFKg/HpppRcBsr/gRSKrgwIaIzegYI
-         WQ3hMTeU+gw3iBMYJEoKjqZVPOFYkvsLXY60LzKAf+agn89GarMbQ50h4rdo/tyH39dz
-         0pg6mSDurQCmLIZTgD0re6hjBWvuMaMgQCAyp+5BiEReXF40W2WvTuzI8urO0VB4fQf7
-         ybNHi0MpCyDCVTxAnfAx9P5bpqttOxJ+/esHyXdhepzEbhG7lpbxOLIWlRh8Pb4q5JKz
-         Pwr30cVXQRxzqEgBkyd0DVcfZyJjkYW7VZl2dZAVvMXgKX46hu6XNBS1gh5cO/exvHzv
-         7Fhg==;
+        bh=m6ws6hhoYl9pEf/rI1rxibuzyydRkmy7kW/80lYzhYw=;
+        fh=5uAbr7OHeF8fTVnxbwY5wIAXFIqv5NFFccFyy2VHKxQ=;
+        b=JxFSXc2Te2AXhhOVSgIIBEn2IcQ7lvrTH/ZLraBJOfNn/uq3i1DKdEbPR9ALz00Wxm
+         NroCUl1WEfXgc6sgND5QYyzB1L+jTVrH1INCKBHUZALo739me3CtAihUBONRqOKLsxOg
+         9ppxsYfaghvhLIyhKP7fQQuj0pI78x7G7Cl6B7fD9FfQSIH2kFv4h03q+ud9FJ/Q+iE6
+         N6bDgqIWtxjLmooFTA2550JXFcefqy5qYmONRklVNScnNMfjBNkV5h2SLoTJEAridkkP
+         Uquysg3ghwqBBd3+XFCT9A4MOGrMJvcYGvCTUR9VPPOQIJ9ChygSOjkvcZwMC1uKtgNJ
+         4NEA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1786935441; x=1787540241; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1786940013; x=1787544813; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=3E9pfv5IoCCsu+3HPCYQctwF4eS0EkJccI7K/G2Hrfc=;
-        b=PwhP3eaW/CT3/s6iZWAUqWd39gwB3IvRRQlTpowUlQFqVJGqWATe35Ruq+5yps8ia8
-         aJB6m++qE5VuqniGmClr+LHRipHztRdbCVFjhFHye/itPHbsL3P1CUa/lMGSQ9HClM8O
-         0sAGEsvO1o5xHM4IGNbprpbDNQTAWPzRR+6BvbNB6Lx4o6HK4zvJTiFLpIiUxJXuJYLx
-         Xe4Ppg9H7g0RQIL2rh5yMxtn+cp/puqfexCRU2g4KT/Vbtv+EpiEf9ilJ5KTVLIbw4DN
-         1wTdJK/AwJZSmosrkY//XrRiV12E/6jDd/wug0Bjnn7VXZcOxXCmB/UpmhS++mYKnp1q
-         dJ1w==
+        bh=m6ws6hhoYl9pEf/rI1rxibuzyydRkmy7kW/80lYzhYw=;
+        b=KTfDUxeexBcLCHFpTTYXPSd1OJyA2bJ6IMmj15y58ADXJrd86ewmB8eG59UAwfWB7K
+         WYZW2fojwclS/7bpFJ9iVFPyTsAydKKS5eansvK789v56Q6FaAPmAP2jLrQ4zTLlKxOG
+         ZmyUti3XOmMacKpMXNLIo7ZTRf5XMO+Ix76xHm7t8y5ienS6Uz+EojVvgMBnve2+a4Tn
+         7sOfYcQl8dmmQqgcckmIXWujKxA3+Xe9rOQ81QO0PHeVUTCczbByzYk0zmy0keb9xfnG
+         IEALccVDlpMBvEY8GSFpLLXFfy2IarPinI73I9jqgCHaFOSgKLo10sPVMfxzPttl7zLb
+         s1vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1786935441; x=1787540241;
+        d=1e100.net; s=20251104; t=1786940013; x=1787544813;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=3E9pfv5IoCCsu+3HPCYQctwF4eS0EkJccI7K/G2Hrfc=;
-        b=TNnsCQm4I31Ef7NruWQMh1GOaJwGmXZtkEUeVvfsDY/eJ+OfC6MFhXMQYfVJ65uIVT
-         G0ET8huTVoNuh49CGJey4IrrvLJsd6B11MWoSvrjT1vmT6TmoOFXcx2q8S0NsRu5BSET
-         Q0kT866aTF3BVU0d61iIrMflr0zmijXfkKUxFLf90eb/ydecFMula1qFpLbOG5T0zkL/
-         3BmXaKszlbmaQxkkQF2S7Llv8cD1PD+h/rI1AZuTIevKM5e/1NgZbZradKJTzDq6OiEn
-         5BatXBXm9OrWDygxxrgMzRDzpPttTuSgrKQvFpO4XBZjNUfyvo9oWiyjqRmqCxUIwWl0
-         OeIw==
-X-Forwarded-Encrypted: i=1; AHgh+Ro85Q3jB3vjm2SjbsRtufL5guvbzrsZ4f9KVHnMX01jbNExXx7gkknLLH4tWKsXpuJFRJsjunNt3a9MZl48VfQ4@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1It2H8caUzM6kNPcNWFEC4l/c7GpaNvEEtLQNLAtnXJZasRMk
-	L8S/cIFivvaxlX0qRVJCH+yuwd4h21reln4/d+2rdKaBx+Wv09fv5DS1bt32vKp8qP9slI1VeM4
-	Di0bLrXj36YgcD2YsayoC9WIC2VT4jL8=
-X-Gm-Gg: AR+sD117W8SxmXtzxxIVBmRqaas5JXN7AdzrlIY6nHBsDGNik6Rt5+vmSKnqztlF6L0
-	+EU2T9L/Lj4arlwnuypmzTY2kJ6HtT3ZL/XEOUT7TKDKtfeBRvM6W1TnGG7GQfO09o0NMZ5Wlwi
-	x7AlazTHtwjkLm9EXfxanOv6pXiX2AnZwZ0QQOmcpJI6OHMj/fjmVVWvoqvc68gboT5EvQnJW6d
-	fub1zO7RNV2PFWO3xyDTNRW1aGVlLycJG0Y16UPH8lancHQRF6keDb32tF/7Qvpjn+C2I4uNFqt
-	zR1+75tK+9ylIKlcx5RE+LOn3A9NZ99jFXb5Ta6sQSwpwjDs2xTFQdByFnp14ZMOSeoiziqNBVW
-	oRA==
-X-Received: by 2002:a05:600c:4e13:b0:498:11b5:3ff7 with SMTP id
- 5b1f17b1804b1-499879bd2e1mr332951265e9.18.1786935440695; Sun, 16 Aug 2026
- 19:57:20 -0700 (PDT)
+        bh=m6ws6hhoYl9pEf/rI1rxibuzyydRkmy7kW/80lYzhYw=;
+        b=Q4Q9E8I8b6SxRPiN5mGZllbzQSwdZ/LuknA63qcDJJ50p5yBMBQbP33o9VbopRx76c
+         DXzxkv4Hvso9GdzpxfQlQBIAMJRTlwTqwdqIbBeeHcnz5erD3w2hXh7a06MQWky1Hhf5
+         dXX469uvtKrOJ7dN9/3RkHPBoKJ8SztCOk6FIeqcABclIE0D57ylMqvS4vwHtVDxeBDZ
+         CDm805ImL33BWIZG8PVVvv+t3hBtViFFcE1kNZRQiJckY9WpWBqAQNgQKLlcfCXatxRD
+         zFdacajhul+byxsP2z8h1J89dg13sY4CDFzX2CYV9YG2mLVOBsNJZ0tchFpXLxapLQnQ
+         iHzQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rq2IwnZ/Yu2UOmsoStDtXoue4mVbAVeNS4FYy2eTzfbbDz3lcphsEA3lBeaGpcVLOhdxF2aE3eIPjQrxosPiXw2@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKa4VYLk8EUzVC4rwNAHYasyixVNRiNuSoYPGDh2eyZivqCUrJ
+	umkjG53QATKJQAmfYuvygous/DTZ3vTMAI7k4ssSSjR78ZvFfKyPQ8sN94DTOsuoy5D0LcM2v1v
+	+fmmL7+Fwp020JVwtQ934Ntmc5lPOPnQs9SVmJkQQ
+X-Gm-Gg: AR+sD121ym42GMv6EDFP6yHFd7Z+ec9VOhJsUdPgJ+LGbMpKONbCImluO7+csT0klk2
+	zFkS4PcV6wVsLTZlCpLM6rXzAoI8TvvEyCpl5tT1tXxwPV62g3BRoUsR/pk/ENY6CjRUZp7e2rx
+	U+i2fJS085F+65S7qcFy42t5opZn4JGU1OsjB719Yon6fOVnzk9R2dJglm0d087g5p3fm/Qu8l5
+	fHuYObx+XHBlkNcX76oPstz88/1thIxuMr+D2Pc6dkIA51XtO5dBXwVdpiq4XNb3L7Nt5qDw6Zf
+	KkHLHONQyZL93WERDQ09AulRS13TgNoq/8V2gdE5JG2t3A==
+X-Received: by 2002:a05:622a:258b:b0:528:38d6:71b4 with SMTP id
+ d75a77b69052e-52db1f07d0cmr5546611cf.11.1786940012189; Sun, 16 Aug 2026
+ 21:13:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260816142222.689624-1-kunwu.chan@linux.dev> <20260816165630.84808-1-sj@kernel.org>
-In-Reply-To: <20260816165630.84808-1-sj@kernel.org>
-From: KunWu Chan <kunwu.chan@gmail.com>
-Date: Mon, 17 Aug 2026 10:57:09 +0800
-X-Gm-Features: AcwNN1Wv4FilngBM7zb7KtysHXMyaR6NdUjrcCRsxZOtSQWQVLsk7gEZuLi0ywA
-Message-ID: <CAN_Opa-aEvmx7Y0xPXHvhaOurt2-nnDMxLjGaHCdMXDsQC=2Xw@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] mm/damon/perf: add ARM SPE AUX backend
-To: SJ Park <sj@kernel.org>
-Cc: will@kernel.org, mark.rutland@arm.com, akpm@linux-foundation.org, 
-	shuah@kernel.org, kunwu.chan@linux.dev, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	damon@lists.linux.dev, linux-mm@kvack.org, linux-kselftest@vger.kernel.org, 
-	lianux.mm@gmail.com
+References: <20260813170155.1156593-1-bwicaksono@nvidia.com>
+In-Reply-To: <20260813170155.1156593-1-bwicaksono@nvidia.com>
+From: Ian Rogers <irogers@google.com>
+Date: Sun, 16 Aug 2026 21:13:20 -0700
+X-Gm-Features: AcwNN1VNLEZmh2YCuKGehmfZoT5-qHlv3AMCfSLe-X8oH-pX3c8TxAnfrF0rZHw
+Message-ID: <CAP-5=fURdj7hsk50k-KyiNQD_23KQtAYcNTvKfC93uGEsM0e7w@mail.gmail.com>
+Subject: Re: [PATCH 0/2] perf vendor events arm64: Fix Tegra410 Olympus PMU events
+To: Besar Wicaksono <bwicaksono@nvidia.com>
+Cc: john.g.garry@oracle.com, will@kernel.org, james.clark@linaro.org, 
+	mike.leach@linaro.org, leo.yan@linux.dev, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	tmakin@nvidia.com, vsethi@nvidia.com, rwiley@nvidia.com, skelley@nvidia.com, 
+	rajjoshi@nvidia.com, treding@nvidia.com, jonathanh@nvidia.com, 
+	mochs@nvidia.com, sauravsc@amazon.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello SJ,
-
-On Mon, Aug 17, 2026 at 12:56=E2=80=AFAM SJ Park <sj@kernel.org> wrote:
+On Thu, Aug 13, 2026 at 10:02=E2=80=AFAM Besar Wicaksono <bwicaksono@nvidia=
+.com> wrote:
 >
-> Hello Kunwu,
+> Fix two issues in the NVIDIA Tegra410 Olympus PMU event definitions:
 >
-> On Sun, 16 Aug 2026 22:22:17 +0800 Kunwu Chan <kunwu.chan@gmail.com> wrot=
-e:
+>   - Correct the swapped MetricGroup assignments for the L1 data and
+>     instruction prefetcher metrics.
+>   - Correct the name and description of implementation-defined event
+>     0x0197.
 >
-> > From: Kunwu Chan <kunwu.chan@gmail.com>
-> >
-> > This series adds an AUX trace-buffer backend to the DAMON perf
-> > observability framework, enabling ARM SPE (Statistical Profiling
-> > Extension) to deliver hardware-sampled access reports into DAMON's
-> > existing SPSC report ring.
->
-> Awesome.  Thank you for making this.  This will make DAMON be more useful=
- on
-> ARM machines.
+> Patch 1 resends the original patch from Saurav:
+>   https://patchwork.kernel.org/project/linux-arm-kernel/patch/20260511210=
+832.91408-1-sauravsc@amazon.com/
 
-Thanks for the feedback.
+For the series:
 
->
-> >
-> > Patch 2 touches drivers/perf/arm_spe_pmu.c to expose the PMU matcher.
-> > This change is tightly coupled with the DAMON AUX backend.  ARM SPE
-> > PMU driver maintainers only need to review patch 2.
-> >
-> > This series is based on the Ravi's hardware-sampled access reports
-> > branch [1], and depends on the perf AUX kernel-consumer RFC series [2].
-> > The dependencies is not upstream yet, so this series remains RFC.
->
-> Unfortunately I haven't had a time to thoroughly read the dependent patch=
-es.  I
-> believe the basic idea of this patch series is aligned with the ongoing D=
-AMON
-> extension roadmap [1], though.  That is, this series is supposed to be a =
-part
-> of the milestone 3.  We are currently at the near end of milestone 1, and=
- aim
-> to complete milestone 2 by the time around next year's LSFMMBPF.
-
-One clarification on the architecture: the AUX backend is intended as a
-transport/front-end for damon_report_access(), rather than a separate
-reporting path. spe_submit() ultimately calls
-damon_report_access(&report), and the AUX path shares the same SPSC
-report ring and kdamond_check_reported_accesses() consumer with the
-existing overflow-callback path. The main difference is the producer
-context: the overflow path enqueues from NMI context, while the AUX path
-enqueues from kdamond process context.
-
-The perf AUX kernel-consumer API is still an upstream dependency, so there
-is no specific part that needs your review right now. The implementation is
-already functional and tested on Kunpeng 920, and I can rebase and resend
-once the dependency chain is ready and the relevant DAMON infrastructure
-has landed.
-
-Separately, the DAMON perf observability framework
-(CONFIG_DAMON_PERF_OBSERVE) was developed in parallel with the AUX backend
-and is already implemented. It provides the observability infrastructure
-used by both the existing overflow path and the new AUX path, including
-per-CPU pipeline counters, debugfs statistics, and tracepoints. This work i=
-s
-independent of the AUX transport, and I will post it shortly as a standalon=
-e
-series.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
-Kunwu
+Ian
 
+> Besar Wicaksono (1):
+>   perf vendor events arm64: Fix Tegra410 Olympus event 0x0197
 >
-> I will hold review of this series for now, and take more time on making
-> milestones 1 and 2 for thier planned delivery timeline.  Sorry for being =
-a
-> bottleneck of your work, and thanks in advance for your patience.
+> Saurav Sachidanand (1):
+>   perf vendor events arm64: fix swapped MetricGroup for Tegra410 L1
+>     prefetcher metrics
 >
-> Please feel free to let me know if you have specific parts that need my r=
-eview
-> right now, though.  Otherwise, please make sure this is aligned with the
-> roadmap until we finish the milestone 2.  I do want ARM SPE support of DA=
-MON.
+>  .../arch/arm64/nvidia/t410/metrics.json       | 28 +++++++++----------
+>  .../arch/arm64/nvidia/t410/misc.json          |  6 ++--
+>  2 files changed, 17 insertions(+), 17 deletions(-)
 >
-> [1] https://lore.kernel.org/all/20260525225208.1179-1-sj@kernel.org/
+> --
+> 2.43.0
 >
->
-> Thanks,
-> SJ
->
-> [...]
