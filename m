@@ -1,42 +1,42 @@
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from mx0b-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C65F12D9EFF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5E438330E;
 	Mon, 17 Aug 2026 22:22:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.153.30
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787005376; cv=none; b=NSBDhw3u5lT5c++CBU6dRZ3Rp/DkustiatVXItB6Kf/f/pVauAPbEvoupEjty+LU/X5RR5vjjMSZN52rl3q8oA+0HDTAJWDiRyiih53rESp++1AlXWmxlk7uwVPXT0CuaJ9A9vIxTRCJpyUH+Zq5EyTQBSd8Kf+aB74XqUKxRFY=
+	t=1787005376; cv=none; b=e7GUGlLaZ9ELfljTZ1pvxDC29Z02gFFTz26y3r3ur3xx6nItinFgUYOigoUhTFmGuPhcA6M9bZz3YTnZekpq8Hznn9KHeFoNUcJ5M3Da+Z8cPFZim5zNONRRRh60g3WXrUgZyDHiH44m4m8MLLIxnK20wSGgjYu4FnNAPsUtgOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1787005376; c=relaxed/simple;
-	bh=QETZxygJiVaVczGTUmxrvvzHpl3GQGlrCvPV97zh9X0=;
+	bh=9V08/jLW/+xQsav7GTmEGCSVs3fzdjRBEv++z+uFQX8=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CjVWd+q2jsTARRVR1g4zCHuOIL+oj/NL4kaaO2Xwp39dtXeqJjMBGUFXv1PbLP5D/0WHFoNwz/E5R9cQeEZThNNxFWwBSxPpmNAi1KCKXFgiZP4glx/6KnsMuLrM+8QqPmVLp75bS0Z/cRrt6ihlpaHAPiKJ+QQiyXlXP6d5oCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b=S3tumvlC; arc=none smtp.client-ip=67.231.145.42
+	 MIME-Version:Content-Type; b=JM+UkJiy5+GisGOQSo0Z9LM17z5OBe0CV2b8BadloCoT/dW0NRpVfsK45erVB0bjVAAav6OH8KUc00bGuWj0MQgXRJDC3T3//2Mxw5NpSo6gqZblHQ1SdQ7dspYuc5iO6sYWIei1i+GcUqmQdw2+wajSAvuWXYDAllonFNSL5sY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b=hWZ/ppc/; arc=none smtp.client-ip=67.231.153.30
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b="S3tumvlC"
-Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67HLo6JW1568585;
-	Mon, 17 Aug 2026 15:22:25 -0700
+	dkim=pass (2048-bit key) header.d=fb.com header.i=@fb.com header.b="hWZ/ppc/"
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67HLoAXP1515142;
+	Mon, 17 Aug 2026 15:22:23 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
 	:content-transfer-encoding:content-type:date:from:in-reply-to
 	:message-id:mime-version:references:subject:to; s=
-	pps82601-s2048-2026-q3; bh=QA3sfzUpR36V83Sktub5Y8E5Bqm2HmxtE56t6
-	ViakSo=; b=S3tumvlCcRJM9mRtBsAbdgm9S3Iq+Rm9NHqh9GYrAMAvg8fiLyRt1
-	1BM66TZ19TWiY3sr14Twa6BQJfOwEuRxEai6EnyDzGtTNcfD7rMIs8MQ1tCJDgEe
-	emEzbQWgFDONdUPrQWPgnqJG4zeMKd+VTULYeHW5YIp9aDAV2wP/SnR7VdNu/TF7
-	H5FcNy9ighxK7D0jnl8dcWEZr+a9ZhmUFWDjxHH/5zPm4EKpZfAQL4nS3F0wNjCv
-	Nm5Nh2b8QG5SpVNMJVWV+JCmrhKQTTl/YUuoCmfEST5WPFkpsGNZYti+3l8aZ1LE
-	Bij5ko/ZGXT1jQ13NB66ATo67qm+Krviw==
+	pps82601-s2048-2026-q3; bh=XF8cb9U+V+GSAfsXb/sFGag3v7S7sIUwnt8Qr
+	au/Dp4=; b=hWZ/ppc/qnLublOcFUDb9uvAhRk6NctJr4scv9JUp+wCb0KP8gpWS
+	U5C/FHbGInOYydSgs6ZV/NrBxHh7R3x8o2W7oUFHXeSv1FWZ3ixRBRVXjZ7EbSvi
+	ngPRqnER7Lo/73cohKpM7QkD1MyANMznhxLx29vWdC3yRT8Sl5B0tNQ6NoiqHz1K
+	hFps5hxvv+2ljAISDBaEOqoQ2LeyR3TTU0uOQb56ISLuBAyPm7NzbsvV8Z6UdR1N
+	7mx+NWwuR1MebGQzGZ0FjNCqm1lnDhJKVvX23ZHmYJxUl+CpFOGwvteEv5guyPqC
+	xv5s0BUZSzTkG8BdLhddpc9JpqbAxfnLQ==
 Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4g2m516h9c-2
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 4g2nx9v064-2
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 17 Aug 2026 15:22:25 -0700 (PDT)
+	Mon, 17 Aug 2026 15:22:23 -0700 (PDT)
 Received: from localhost (2620:10d:c085:108::150d) by mail.thefacebook.com
  (2620:10d:c08b:78::c78f) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.2.2562.45; Mon, 17 Aug
- 2026 22:22:24 +0000
+ 2026 22:22:22 +0000
 From: Amir Ayupov <aaupov@fb.com>
 To: <linux-perf-users@vger.kernel.org>, <coresight@lists.linaro.org>,
         <linux-arm-kernel@lists.infradead.org>,
@@ -61,9 +61,9 @@ CC: <linux-doc@vger.kernel.org>, Mike Leach <mike.leach@arm.com>,
         Shuah Khan <skhan@linuxfoundation.org>,
         Swapnil
  Sapkal <swapnil.sapkal@amd.com>
-Subject: [PATCH v2 5/5] Documentation: coresight: Document context-sensitive PGO workflow
-Date: Mon, 17 Aug 2026 15:22:20 -0700
-Message-ID: <9c4b59cac4a2cb21ab552398e3deda9e5067fe32.1787005265.git.aaupov@fb.com>
+Subject: [PATCH v2 2/5] perf cs-etm: Split up cs_etm__process_timestamped_queues()
+Date: Mon, 17 Aug 2026 15:22:17 -0700
+Message-ID: <ac33d12949419373516ca02f2972c7e0af01c069.1787005265.git.aaupov@fb.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <cover.1787005265.git.aaupov@fb.com>
 References: <cover.1787005265.git.aaupov@fb.com>
@@ -75,110 +75,205 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODE3MDE3MSBTYWx0ZWRfX86pegc5PAdDS
- oWEyRoxq7fivVx5qZIwUz0sRmNAqBcSoF4RCDS5J2GcXf1RYNcFMtlhyy9fkQvHP3WuxQ4c+8t0
- WgUE4RGDtzwhYWzElzmGqntKNd8eQt4=
-X-Authority-Analysis: v=2.4 cv=W9cIkxWk c=1 sm=1 tr=0 ts=6a8389a1 cx=c_pps
+X-Proofpoint-Spam-Info: AW1haW4tMjYwODE3MDE3MSBTYWx0ZWRfXwqbQqbh7N9vZ
+ kMG6KYAFSXSGf13LoBU3Ty6R+7tQJQtHTnSGBV6pxlHt1VrTyGnIZl4lOu+upps60aBRfgeDx8J
+ oZXbO3N+fJRSCu1vHpfc+2ojQBS0zPA=
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODE3MDE3MSBTYWx0ZWRfX7VaFG2YT19Zt
+ 3SdWi9HPY7QKv+TOR4UKiy5gROgiiqPsVmhzFdl5MvPeBr/WTMR8pN4uOPr4x/dw4+el3hC2ymm
+ YCm/+Unt77vY/GYIxeNSa59kU9FvgwPEjGfpFn4NM863ri/v7RUky52qvVh9pHfljU+uh4aY+gu
+ 39aBu9EgISNsB3VtddJzVDrkfvTYrj3T0QsrmE/jO5pexg9Bnwpr/TYruln2nTVskEkTNTu9mjR
+ NLmJ7pkIh6bQJHNo0nRbtZtd1XVNJUgNQT7PFhrT7DLfNZT4N3HM3iqdg1T+t3v59+2cx3YqFWu
+ QaLtYalATUwlVYx4pXgXwhT6ZU/omZMArYfdoV2jy7+69PVm1poFztbQKTvXzCIPflZ1Ah5kN6l
+ GZA9nLFmPLL6fvv9zwlJT16p/+hsWb1vmeOn4bxpbbgDMg3cITpZKWKkochSilIJRej+C3YdHPp
+ UzFkshhdoMvqQ1ET1AQ==
+X-Proofpoint-GUID: -NVO-2kNuPnbpx6GVH61LRminefBMhDz
+X-Proofpoint-ORIG-GUID: -NVO-2kNuPnbpx6GVH61LRminefBMhDz
+X-Authority-Analysis: v=2.4 cv=D7t37PRj c=1 sm=1 tr=0 ts=6a83899f cx=c_pps
  a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17
  a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22 a=7x6HtfJdh03M6CCDgxCd:22
- a=tpM8CJlwf7uhpglF1g9U:22 a=FOH2dFAWAAAA:8 a=QDGUGMRHXpoeSueRYaEA:9
-X-Proofpoint-GUID: fTOAckTrz00MqZBg9mhMlcohR2Y3XDRT
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODE3MDE3MSBTYWx0ZWRfX8/GrdqnvpG2x
- AiuyLYuERMlADDlBReLE46quACr8JAFy8iL9RbdISgn3ph+gfPuN15d7pv4K++6QfZHlgPDs3I7
- 4n4FLVPm97LrZwUgIyYuPL9EdOcusAHH9BZ+YbWudOKG1bhU67X2EaaV8K0dv7IF0Bdx0r/mRhI
- muPpGgvDPEXbClEzAOznouw1mMWevk/k0KXISBVCFYZoG1Up/XxUFOjHfbMzfLTc3/x298Dzjhs
- Uox60eX3lDKfWge5Wqts9Ey4dSAJBv1jngRuJUoHmORCx9zg73TDNSVZFxlk1bjWrpEQgrH8l+y
- GMBlz6U1f3t+xLHbzIbw8+j79vMDE077PDrWrSiBl39Q3Ne3eH4WS6l/Dl4tQe26tLpvGiUVLcm
- ezX+o++X9274EolkeQbn4umZDzxrLjz7b48a8qj3VuetcuQ3h4cJ7vYqH2+tMLsG64irBKv1ySX
- n+fnNgL6EtrN2PMQgsA==
-X-Proofpoint-ORIG-GUID: fTOAckTrz00MqZBg9mhMlcohR2Y3XDRT
+ a=wpfVPzegXHpEFt3DAXn9:22 a=FOH2dFAWAAAA:8 a=nEhC7NrZ7_LQuKocUF8A:9
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
  definitions=2026-08-17_04,2026-08-12_01,2025-10-01_01
 
-Document combining callchain-bearing AUX pause samples with the ETM
-branch history that precedes them, which is the pairing that
-context-sensitive PGO tools consume, and the --itrace=L64 decode with the
-non-empty branch-stack dlfilter.
+cs_etm__process_timestamped_queues() currently does three things: it seeds
+the auxtrace heap with one entry per queue, it decodes until the heap is
+empty, and it then walks every traceID queue to flush whatever is left in
+the branch stacks. That is fine while the only caller is
+cs_etm__flush_events(), which runs once, but it does not survive the
+function being called repeatedly.
+
+Seeding cannot be repeated because a queue that still holds a heap slot
+would be seeded again, adding duplicate entries and growing the heap
+without bound. Flushing cannot be repeated either, because ending a block
+finalises state that later trace still needs.
+
+Move both out. Seeding becomes cs_etm__update_queues(), gated on
+queues.new_data so it only runs when new AUX data has been queued, with
+etmq->on_heap tracking whether a queue currently occupies a heap slot;
+this mirrors intel_pt_update_queues() and intel_pt_queue::on_heap.
+Flushing becomes cs_etm__flush_timestamped_queues(). What remains is the
+decode loop on its own, which a later patch can then drive incrementally.
+
+No functional change: the sole caller performs the same three steps in the
+same order.
 
 Assisted-by: Devmate:GPT-5.6
 Signed-off-by: Amir Ayupov <aaupov@fb.com>
 ---
- .../trace/coresight/coresight-perf.rst        | 62 +++++++++++++++++++
- 1 file changed, 62 insertions(+)
+ tools/perf/util/cs-etm.c | 71 ++++++++++++++++++++++++++++++++++------
+ 1 file changed, 61 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/trace/coresight/coresight-perf.rst b/Documentation/trace/coresight/coresight-perf.rst
-index 0a77741a431ef..c0c82b3d26ea8 100644
---- a/Documentation/trace/coresight/coresight-perf.rst
-+++ b/Documentation/trace/coresight/coresight-perf.rst
-@@ -109,6 +109,68 @@ Example for triggering AUX pause and resume with PMU event::
-         -e cycles/aux-action=pause,period=10000000/ \
-         -e cycles/aux-action=resume,period=1050000/ -- sleep 1
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 114b3cd2da495..4d895f11deb7f 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -136,9 +136,13 @@ struct cs_etm_queue {
+ 	 */
+ 	struct intlist *own_traceid_list;
+ 	u32 sink_id;
++	/* Whether this queue currently occupies a slot in etm->heap */
++	bool on_heap;
+ };
  
-+Context-sensitive sampled PGO (CSSPGO) profiling
-+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++static int cs_etm__update_queues(struct cs_etm_auxtrace *etm);
+ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm);
++static int cs_etm__flush_timestamped_queues(struct cs_etm_auxtrace *etm);
+ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
+ 					   pid_t tid);
+ static int cs_etm__get_data_block(struct cs_etm_queue *etmq);
+@@ -939,6 +943,8 @@ static int cs_etm__flush_events(struct perf_session *session,
+ 	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
+ 						   struct cs_etm_auxtrace,
+ 						   auxtrace);
++	int ret;
 +
-+A callchain-bearing pause event can be combined with the branch history from
-+its preceding ETM trace window. This provides the synchronized callchain and
-+branch stack consumed by context-sensitive PGO tools without continuously
-+recording ETM trace for a long-running process.
+ 	if (dump_trace)
+ 		return 0;
+ 
+@@ -953,7 +959,15 @@ static int cs_etm__flush_events(struct perf_session *session,
+ 		return cs_etm__process_timeless_queues(etm, -1);
+ 	}
+ 
+-	return cs_etm__process_timestamped_queues(etm);
++	ret = cs_etm__update_queues(etm);
++	if (ret)
++		return ret;
 +
-+For example, record user-space ETM trace, resume it periodically, and pause it
-+with a cycle event that also captures a frame-pointer callchain::
++	ret = cs_etm__process_timestamped_queues(etm);
++	if (ret)
++		return ret;
 +
-+  perf record -T \
-+        -e cs_etm/aux-action=start-paused,timestamp/u \
-+        -e cycles/aux-action=resume,period=8350251/u \
-+        -e cycles/aux-action=pause,period=100003,call-graph=fp/u \
-+        -- ./workload
++	return cs_etm__flush_timestamped_queues(etm);
+ }
+ 
+ static void cs_etm__free_traceid_queues(struct cs_etm_queue *etmq)
+@@ -1330,6 +1344,8 @@ static int cs_etm__queue_first_cs_timestamp(struct cs_etm_auxtrace *etm,
+ 	 */
+ 	cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_chan_id);
+ 	ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, cs_timestamp);
++	if (!ret)
++		etmq->on_heap = true;
+ out:
+ 	return ret;
+ }
+@@ -2767,23 +2783,30 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
+ 	return 0;
+ }
+ 
+-static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
++/*
++ * Seed the heap with one entry from each queue that is not already
++ * represented in it, so that decoding proceeds in time order across all
++ * queues. Only queues that have newly queued data need to be considered.
++ */
++static int cs_etm__update_queues(struct cs_etm_auxtrace *etm)
+ {
+ 	int ret = 0;
+-	unsigned int cs_queue_nr, queue_nr, i;
+-	u8 trace_chan_id;
+-	u64 cs_timestamp;
+-	struct auxtrace_queue *queue;
++	unsigned int i;
+ 	struct cs_etm_queue *etmq;
+-	struct cs_etm_traceid_queue *tidq;
 +
-+The two cycle events count independently. With pause period ``P`` and resume
-+period ``R``, each trace window is approximately 0 to ``P`` cycles long, so the
-+average duty cycle is ``P / (2 * R)``. The periods above give about 0.6% duty.
++	if (!etm->queues.new_data)
++		return 0;
 +
-+Do not make ``R`` an integer multiple of ``P``: coincident pause and resume
-+interrupts can produce zero-length windows. Choosing ``R`` near
-+``(k + 1/2) * P``, as above, moves the resume phase across the pause interval.
-+Pause events that fire while ETM is already paused have no branch history; the
-+dlfilter below removes those samples.
++	etm->queues.new_data = false;
+ 
+ 	/*
+ 	 * Pre-populate the heap with one entry from each queue so that we can
+-	 * start processing in time order across all queues.
++	 * start processing in time order across all queues. Skip queues that
++	 * already occupy a heap slot, otherwise they would be added twice.
+ 	 */
+ 	for (i = 0; i < etm->queues.nr_queues; i++) {
+ 		etmq = etm->queues.queue_array[i].priv;
+-		if (!etmq)
++		if (!etmq || etmq->on_heap)
+ 			continue;
+ 
+ 		ret = cs_etm__queue_first_cs_timestamp(etm, etmq, i);
+@@ -2791,6 +2814,19 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
+ 			return ret;
+ 	}
+ 
++	return ret;
++}
 +
-+The ``-T`` option timestamps the pause samples, while ``timestamp`` enables
-+ETM timestamp packets. Both are required to correlate the sample with ETM
-+trace. This mode also requires virtual ETM timestamps correlated to perf time
-+and a callchain on the pause event. Use ``call-graph=dwarf`` instead of
-+``call-graph=fp`` when the workload does not preserve frame pointers.
++static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
++{
++	int ret = 0;
++	unsigned int cs_queue_nr, queue_nr;
++	u8 trace_chan_id;
++	u64 cs_timestamp;
++	struct auxtrace_queue *queue;
++	struct cs_etm_queue *etmq;
++	struct cs_etm_traceid_queue *tidq;
 +
-+Tuning duty cycle
-+^^^^^^^^^^^^^^^^^
+ 	while (1) {
+ 		if (!etm->heap.heap_cnt)
+ 			break;
+@@ -2807,6 +2843,7 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
+ 		 * to process it.
+ 		 */
+ 		auxtrace_heap__pop(&etm->heap);
++		etmq->on_heap = false;
+ 
+ 		tidq  = cs_etm__etmq_get_traceid_queue(etmq, trace_chan_id);
+ 		if (!tidq) {
+@@ -2874,7 +2911,21 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
+ 		 */
+ 		cs_queue_nr = TO_CS_QUEUE_NR(queue_nr, trace_chan_id);
+ 		ret = auxtrace_heap__add(&etm->heap, cs_queue_nr, cs_timestamp);
++		if (ret)
++			goto out;
++		etmq->on_heap = true;
+ 	}
++out:
++	return ret;
++}
 +
-+The example above favors low recording overhead for fleet collection. With
-+independent counters, ``P / R`` is the nominal window ratio while
-+``P / (2 * R)`` is the expected average ETM-on duty. For ``P = 100003``, two
-+measured Neoverse V2 operating points are:
++/* Flush any branch stack entries left over once all trace is decoded */
++static int cs_etm__flush_timestamped_queues(struct cs_etm_auxtrace *etm)
++{
++	int ret = 0;
++	unsigned int i;
++	struct cs_etm_queue *etmq;
++	struct cs_etm_traceid_queue *tidq;
+ 
+ 	for (i = 0; i < etm->queues.nr_queues; i++) {
+ 		struct int_node *inode;
+@@ -2893,7 +2944,7 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
+ 				return ret;
+ 		}
+ 	}
+-out:
 +
-+- Fleet collection: ``R = 8350251``, 1.2% nominal ratio and 0.6% average duty.
-+- Targeted profiling: ``R = 1050031``, 9.5% nominal ratio and 4.8% average duty.
-+
-+AUX buffer size must also scale with trace volume. A 128 KiB AUX buffer worked
-+at 0.6% duty but was unstable at some higher-duty points, where it increased
-+output size or overran and reduced useful-sample yield. Use 4 MiB as a
-+conservative starting point around ``R/P = 6.7`` to ``12.5``. These values are
-+workload and platform dependent; verify useful samples per MiB and lost AUX
-+records when tuning another system.
-+
-+Add up to 64 decoded ETM branches to each existing pause sample and emit the
-+hybrid samples in the regular perf-script format::
-+
-+  perf script -i perf.data --itrace=L64 \
-+        --dlfilter=dlfilter-nonempty-brstack.so > perf.script
-+
-+The ``dlfilter-nonempty-brstack.so`` filter drops samples that ended up with
-+no branch history at all, for example samples from a thread that was never
-+traced, or samples recorded before the first or after the last trace window.
-+It is built and installed with perf's other dlfilters.
-+
- Perf test - Verify kernel and userspace perf CoreSight work
- -----------------------------------------------------------
+ 	return ret;
+ }
  
 -- 
 2.52.0
