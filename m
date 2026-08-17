@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40B243C768B;
-	Mon, 17 Aug 2026 09:40:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05783ED5A1;
+	Mon, 17 Aug 2026 09:40:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786959631; cv=none; b=EWw8JWf6Ts1WPNUS7xlvBq4pdUc9CSqA4Jfnx2BMbzCmQVBe293Da6NpsKXdO3rb/5AI+YR3+NgeT/W2bFmM7BgkXmO8Gm0Zgbr/VkHk39pQDXv3cO4clbePDllAWWMunMvQxhydC0KhQiDgk+VgW8blg8QQDm7B2faKUMLPwiE=
+	t=1786959634; cv=none; b=JsBHpUfJBMVcTtS97WVajJ2rJC/3WBNaRcWtrs3nrJFBCRMeC73CY29azjgYl87HrAClH52t4Fh0AxxxHAlt3nx6w5/4Y405VRK19eMgmkcqLZ9zUA9QCHY/Lc7FN52L9a9j2vn5c/qBp+4lxTfGwA1lBRPH4EVGkExSACJ1pRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786959631; c=relaxed/simple;
-	bh=tDQL1x+PuUdqZORjZvn6PX+jjWRTZb1Czg44Bf5fbTY=;
+	s=arc-20240116; t=1786959634; c=relaxed/simple;
+	bh=GT/8fHibs6AmaIZogwUwCSblkeJnPVW970lta4f2JIc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FPvkdZw+YLXAzG+rbqGdFlAG0rTPk8THI3jsGeJxmvDIZ2ATwoO9+aJztAV8AgkKHX9rZzR7uyBaLoX3xOJuY+s4TlBS3VZz//Az+0sf/Ua9JwCSGWK7ErSNAd+P5ypmb/zNTJRma28kMCSQe7SlmoSOfOJsDJPYefjuaAeaoDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YdDbteSn; arc=none smtp.client-ip=198.175.65.12
+	 MIME-Version; b=KS6GQy/4+9NijBVBNU3zyMbQar4r9RFfoWw8NkGER4DifnWy1T4IrkYqdXXtDTPV/4YpcwNLu6Z3ZzThTLDwuV864NWLoElxhhbeNnGr27zl7Q5IF3F6DpfJSEm+2FhAdybX5qO4IlTuwRRYlm3CcnMUWhW63drroCAri1m0fas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XuWAFozN; arc=none smtp.client-ip=198.175.65.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YdDbteSn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XuWAFozN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1786959627; x=1818495627;
+  t=1786959629; x=1818495629;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=tDQL1x+PuUdqZORjZvn6PX+jjWRTZb1Czg44Bf5fbTY=;
-  b=YdDbteSn+Hd6ohl/ZhHiyFE+y5Gvt/HLEONlmC2rp4X/4A5lu4Tej8I7
-   Gk0sHhd08vBcRP8m8U2HhetOFuEq/OAQb8uhHPKa8Vwks/uyaFE3tNN1R
-   +gw0W5FXdUfu2aY69nJYs+mqckiZueVIl1Yb4w4fRtUGLbTirKy2FNV77
-   KFOZUpcXk5TV821S9llabd5tJeZp96Ts39vVmE0J/Jo38DQVswQv/A3/j
-   yPLe1MhUySK25ZBin9HsDC0FCFg+G+zFiNnS5/oK2TZGAuWuLTT4zEblr
-   xRRddyPcigvfy+SlCff4hoskFduksjszffZ1NwnLqN7dd15N1wvr65AKo
+  bh=GT/8fHibs6AmaIZogwUwCSblkeJnPVW970lta4f2JIc=;
+  b=XuWAFozN7xyRfmiZ1lLWxxfd1Cz41ycPVgTl7sO3aaK+/qBVEUsEJxjf
+   ST/RmQ88z35jwCG3t96eBqhBApeKd01LJQDPw6xhfNg0u1t9mrKKhXQyR
+   6YiPRXCdxfZPIAE7IRYrtsbSS2BDF5aELML3a9JUEwxvxIcJve9uhUvU8
+   vcIGBYG+GHuWfiyiNKVuqrIpK+mEfpq+799wEnnjVPwDdJsOiNajaP2Kr
+   DI7NieOhmSnJnNrX6dfBtXxMz23BRKIbXhkeXpP+AO6OqPYsiGidm46b8
+   mnMx12FRQFlBRDoFdIWX2G5bRum9neFu1BftkBJ+cweKa5v9+KCeW1Jyh
    Q==;
-X-CSE-ConnectionGUID: lb94rx6PR+WEYyKoSuftBA==
-X-CSE-MsgGUID: OVgICMMjTZakPkly+jD9nQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11877"; a="98948180"
+X-CSE-ConnectionGUID: kmg1nBimQo2BBUFwJBO2cQ==
+X-CSE-MsgGUID: +2/LiHeCTvmjgmbL+V+Yzw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11877"; a="98948188"
 X-IronPort-AV: E=Sophos;i="6.25,228,1779174000"; 
-   d="scan'208";a="98948180"
+   d="scan'208";a="98948188"
 Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2026 02:40:24 -0700
-X-CSE-ConnectionGUID: caCgAeZlRvmaneGJckNHtQ==
-X-CSE-MsgGUID: AgUUxtHMR9i5a0CC97Rt2Q==
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2026 02:40:28 -0700
+X-CSE-ConnectionGUID: 3nL1zNn4QIigilsXNfvvZw==
+X-CSE-MsgGUID: l4ve1HVhSUiAj+vAZ/G7jg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,228,1779174000"; 
-   d="scan'208";a="288337192"
+   d="scan'208";a="288337226"
 Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by fmviesa002.fm.intel.com with ESMTP; 17 Aug 2026 02:40:19 -0700
+  by fmviesa002.fm.intel.com with ESMTP; 17 Aug 2026 02:40:23 -0700
 From: Jiebin Sun <jiebin.sun@intel.com>
 To: namhyung@kernel.org
 Cc: acme@kernel.org,
@@ -61,9 +61,9 @@ Cc: acme@kernel.org,
 	jiebin.sun@intel.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v9 4/9] perf c2c: add HPP list parsing for function view columns
-Date: Mon, 17 Aug 2026 17:46:18 +0800
-Message-ID: <20260817094623.3288456-5-jiebin.sun@intel.com>
+Subject: [PATCH v9 5/9] perf c2c: add function view stats merge and memory management
+Date: Mon, 17 Aug 2026 17:46:19 +0800
+Message-ID: <20260817094623.3288456-6-jiebin.sun@intel.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260817094623.3288456-1-jiebin.sun@intel.com>
 References: <20260817094623.3288456-1-jiebin.sun@intel.com>
@@ -75,16 +75,14 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the parser that builds the function view's local HPP output and
-sort lists from field strings. This includes dimension lookup, comparator
-wrappers, c2c_fmt allocation, and the initialization entry points used by
-the hierarchy builder.
+Add the per-entry stats/cstats aggregation helpers and hierarchy teardown.
+Child common fields are released through hist_entry__delete(), while the
+function-view free callback handles the private child tree and containing
+allocation. Also add a helper for pruning writer entries with no stores or
+cacheline children.
 
-The generic perf_hpp__setup_output_field() registers formats on the global
-perf_hpp_list. Using it here would leave the function view's local list
-without output columns and modify the cacheline view's list instead. Add
-c2c_function_hists__setup_output_field() to append sort keys to the local
-output list.
+These are used by the entry-creation and builder patches that follow and
+are __maybe_unused until then.
 
 Signed-off-by: Jiebin Sun <jiebin.sun@intel.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
@@ -102,304 +100,179 @@ Cc: Thomas Falcon <thomas.falcon@intel.com>
 Reviewed-by: Tianyou Li <tianyou.li@intel.com>
 Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
 ---
- tools/perf/util/c2c-function.c | 269 ++++++++++++++++++++++++++++++++-
- 1 file changed, 266 insertions(+), 3 deletions(-)
+ tools/perf/util/c2c-function.c | 163 +++++++++++++++++++++++++++++++++
+ 1 file changed, 163 insertions(+)
 
 diff --git a/tools/perf/util/c2c-function.c b/tools/perf/util/c2c-function.c
-index 7fce415c0f07..d27544016660 100644
+index d27544016660..aa6be7c72977 100644
 --- a/tools/perf/util/c2c-function.c
 +++ b/tools/perf/util/c2c-function.c
-@@ -23,6 +23,7 @@
- #include "addr_location.h"
- #include "c2c.h"
- #include "cacheline.h"
-+#include "debug.h"
- #include "hist.h"
- #include "map.h"
- #include "mem-events.h"
-@@ -132,8 +133,8 @@ static int c2c_width(struct perf_hpp_fmt *fmt,
- 			 dim->width;
+@@ -680,3 +680,166 @@ c2c_function_hists__reinit(struct c2c_hists *c2c_hists,
+ 
+ 	return function_hpp_list__parse(&c2c_hists->list, output, sort, env);
  }
- 
--static int __maybe_unused c2c_header(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
--				     struct hists *hists, int line, int *span)
-+static int c2c_header(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
-+		      struct hists *hists, int line, int *span)
- {
- 	struct c2c_fmt *c2c_fmt;
- 	struct c2c_dimension *dim;
-@@ -411,9 +412,271 @@ static struct c2c_dimension dim_symbol_view = {
- 	.width		= SYMBOL_WIDTH,
- };
- 
--static struct c2c_dimension *function_view_dimensions[] __maybe_unused = {
-+static struct c2c_dimension *function_view_dimensions[] = {
- 	&dim_cycles_percent,
- 	&dim_total_stores,
- 	&dim_symbol_view,
- 	NULL,
- };
 +
-+static struct c2c_dimension *get_function_dimension(const char *name)
++/* Welford online merge of two "stats" (from util/stat.h) accumulators. */
++static void c2c_stats_merge(struct stats *dest, const struct stats *src)
 +{
-+	unsigned int i;
++	double delta;
 +
-+	for (i = 0; function_view_dimensions[i]; i++) {
-+		struct c2c_dimension *dim = function_view_dimensions[i];
++	if (src->n == 0)
++		return;
 +
-+		if (!strcmp(dim->name, name))
-+			return dim;
++	if (dest->n == 0) {
++		*dest = *src;
++		return;
 +	}
 +
-+	return NULL;
++	delta = src->mean - dest->mean;
++	dest->M2 += src->M2 + delta * delta * dest->n * src->n / (dest->n + src->n);
++	dest->mean = (dest->mean * dest->n + src->mean * src->n) / (dest->n + src->n);
++	dest->n += src->n;
++
++	/* Update min/max */
++	if (src->max > dest->max)
++		dest->max = src->max;
++	if (src->min < dest->min)
++		dest->min = src->min;
 +}
 +
-+/* Wrappers so sort_entry-backed dimensions sort/collapse via their se. */
-+static int64_t c2c_se_cmp(struct perf_hpp_fmt *fmt,
-+			  struct hist_entry *a, struct hist_entry *b)
++/* Merge compute_stats during function aggregation. */
++static void __maybe_unused c2c_add_cstats(struct compute_stats *dest,
++					  const struct compute_stats *src)
 +{
-+	struct c2c_fmt *c2c_fmt = container_of(fmt, struct c2c_fmt, fmt);
-+	struct c2c_dimension *dim = c2c_fmt->dim;
-+
-+	return dim->se->se_cmp(a, b);
++	c2c_stats_merge(&dest->rmt_hitm, &src->rmt_hitm);
++	c2c_stats_merge(&dest->lcl_hitm, &src->lcl_hitm);
++	c2c_stats_merge(&dest->rmt_peer, &src->rmt_peer);
++	c2c_stats_merge(&dest->lcl_peer, &src->lcl_peer);
++	c2c_stats_merge(&dest->load, &src->load);
 +}
 +
-+static int64_t c2c_se_collapse(struct perf_hpp_fmt *fmt,
-+			       struct hist_entry *a, struct hist_entry *b)
++static bool __maybe_unused hist_entry__add_c2c_stats(struct hist_entry *he,
++						     const struct c2c_stats *stats)
 +{
-+	struct c2c_fmt *c2c_fmt = container_of(fmt, struct c2c_fmt, fmt);
-+	struct c2c_dimension *dim = c2c_fmt->dim;
-+	int64_t (*collapse_fn)(struct hist_entry *a, struct hist_entry *b);
-+
-+	collapse_fn = dim->se->se_collapse ?: dim->se->se_cmp;
-+	return collapse_fn(a, b);
-+}
-+
-+static int64_t c2c_se_sort(struct perf_hpp_fmt *fmt,
-+			   struct hist_entry *a, struct hist_entry *b)
-+{
-+	struct c2c_fmt *c2c_fmt = container_of(fmt, struct c2c_fmt, fmt);
-+	struct c2c_dimension *dim = c2c_fmt->dim;
-+	int64_t (*sort_fn)(struct hist_entry *a, struct hist_entry *b);
-+
-+	sort_fn = dim->se->se_sort ?: dim->se->se_cmp;
-+	return sort_fn(a, b);
-+}
-+
-+/*
-+ * Build the c2c_fmt for @name. Returns:
-+ *   0        and *fmtp set     on success;
-+ *   -ENOENT  and *fmtp = NULL   if @name is not a function-view dimension;
-+ *   -ENOMEM                     if allocation failed (distinct from -ENOENT so
-+ *                               the caller does not misreport it as an
-+ *                               "invalid field").
-+ */
-+static int get_function_format(const char *name, struct c2c_fmt **fmtp)
-+{
-+	struct c2c_dimension *dim = get_function_dimension(name);
-+	struct c2c_fmt *c2c_fmt;
-+	struct perf_hpp_fmt *fmt;
-+
-+	*fmtp = NULL;
-+
-+	if (!dim)
-+		return -ENOENT;
-+
-+	c2c_fmt = zalloc(sizeof(*c2c_fmt));
-+	if (!c2c_fmt)
-+		return -ENOMEM;
-+
-+	fmt = &c2c_fmt->fmt;
-+
-+	c2c_fmt->dim = dim;
-+	INIT_LIST_HEAD(&fmt->list);
-+	INIT_LIST_HEAD(&fmt->sort_list);
-+
-+	fmt->cmp	= dim->se ? c2c_se_cmp : dim->cmp;
-+	fmt->sort	= dim->se ? c2c_se_sort : dim->cmp;
-+	fmt->color	= dim->color;
-+	fmt->entry	= dim->entry;
-+	fmt->header	= c2c_header;
-+	fmt->width	= c2c_width;
-+	fmt->collapse	= dim->se ? c2c_se_collapse : dim->cmp;
-+	fmt->equal	= c2c_fmt_equal;
-+	fmt->free	= c2c_fmt_free;
-+
-+	*fmtp = c2c_fmt;
-+	return 0;
-+}
-+
-+static int
-+c2c_function_hists__init_output(struct perf_hpp_list *hpp_list, char *name,
-+				struct perf_env *env __maybe_unused)
-+{
-+	struct c2c_fmt *c2c_fmt;
-+	int ret;
-+
-+	ret = get_function_format(name, &c2c_fmt);
-+	if (ret == -ENOMEM)
-+		return ret;
-+	/* The function view only accepts its own dimensions. */
-+	if (ret == -ENOENT)
-+		return -EINVAL;
++	u64 nr_events = c2c_hitm_count(stats) + stats->rmt_peer + stats->lcl_peer;
++	u64 weight1 = c2c_hitm_count(stats);
 +
 +	/*
-+	 * Mark symbol-backed columns so hists__has(hists, sym) is correct.
-+	 * Only dim_symbol_view carries a sort_entry (.se); the function
-+	 * view's field strings are fixed and always include symbol_view, so
-+	 * this single check is sufficient (unlike the user-configurable
-+	 * cacheline view, which must also test dim_iaddr).
++	 * Allocate before touching he->stat, so a failure here leaves the
++	 * entry unmodified and the caller can bail out without having
++	 * half-updated the statistics.
 +	 */
-+	if (c2c_fmt->dim->se == &sort_sym)
-+		hpp_list->sym = 1;
-+
-+	perf_hpp_list__column_register(hpp_list, &c2c_fmt->fmt);
-+	return 0;
-+}
-+
-+static int
-+c2c_function_hists__init_sort(struct perf_hpp_list *hpp_list, char *name,
-+			      struct perf_env *env __maybe_unused)
-+{
-+	struct c2c_fmt *c2c_fmt;
-+	int ret;
-+
-+	ret = get_function_format(name, &c2c_fmt);
-+	if (ret == -ENOMEM)
-+		return ret;
-+	/* The function view only accepts its own dimensions. */
-+	if (ret == -ENOENT)
-+		return -EINVAL;
-+
-+	/* Mark symbol-backed sort keys so hists__has(hists, sym) is correct. */
-+	if (c2c_fmt->dim->se == &sort_sym)
-+		hpp_list->sym = 1;
-+
-+	perf_hpp_list__register_sort_field(hpp_list, &c2c_fmt->fmt);
-+	return 0;
-+}
-+
-+typedef int (*hpp_list_add_fn)(struct perf_hpp_list *hpp_list, char *name,
-+			       struct perf_env *env);
-+
-+static int function_hpp_list__add_tokens(struct perf_hpp_list *hpp_list, char *list,
-+					 struct perf_env *env, hpp_list_add_fn add)
-+{
-+	char *tok, *tmp;
-+	int ret;
-+
-+	if (!list)
-+		return 0;
-+
-+	for (tok = strtok_r(list, ", ", &tmp); tok; tok = strtok_r(NULL, ", ", &tmp)) {
-+		ret = add(hpp_list, tok, env);
-+		if (ret) {
-+			if (ret == -EINVAL || ret == -ESRCH)
-+				pr_err("Invalid c2c function-view field: %s\n", tok);
-+			return ret;
-+		}
++	if (symbol_conf.cumulate_callchain && !he->stat_acc) {
++		he->stat_acc = calloc(1, sizeof(struct he_stat));
++		if (!he->stat_acc)
++			return false;
 +	}
-+	return 0;
++
++	he->stat.nr_events += nr_events;
++	he->stat.period += nr_events;
++	he->stat.weight1 += weight1;
++
++	if (!symbol_conf.cumulate_callchain)
++		return true;
++
++	he->stat_acc->nr_events += nr_events;
++	he->stat_acc->period += nr_events;
++	he->stat_acc->weight1 += weight1;
++
++	return true;
++}
++
++static void c2c_he__free_hierarchy(struct hist_entry *he);
++
++/*
++ * Free a function-view histogram entry (hist_entry_ops::free).
++ */
++static void __maybe_unused c2c_function_he_free(void *ptr)
++{
++	struct hist_entry *he = ptr;
++	struct c2c_hist_entry *c2c_he;
++
++	c2c_he = container_of(he, struct c2c_hist_entry, he);
++
++	if (c2c_he->hists) {
++		perf_hpp__reset_output_field(&c2c_he->hists->list);
++		hists__delete_all_entries(&c2c_he->hists->hists);
++		zfree(&c2c_he->hists);
++	}
++
++	c2c_he__free_hierarchy(he);
++
++	zfree(&c2c_he->nodeset);
++	zfree(&c2c_he->cpuset);
++	zfree(&c2c_he->nodestr);
++	zfree(&c2c_he->node_stats);
++
++	free(c2c_he);
++}
++
++static void c2c_he__free_hierarchy(struct hist_entry *he)
++{
++	struct rb_node *nd;
++	struct hist_entry *child_he;
++
++	/*
++	 * A leaf entry stores its callchains in the sorted_chain member, which
++	 * shares a union with the hroot_in/hroot_out child trees, so its
++	 * hroot_out is not a valid subtree to walk. Leaf entries never have a
++	 * child hierarchy here, so stop before touching hroot_out.
++	 */
++	if (he->leaf)
++		return;
++
++	if (RB_EMPTY_ROOT(&he->hroot_out.rb_root))
++		return;
++
++	nd = rb_first_cached(&he->hroot_out);
++	while (nd) {
++		struct rb_node *next = rb_next(nd);
++
++		child_he = rb_entry(nd, struct hist_entry, rb_node);
++		rb_erase_cached(&child_he->rb_node, &he->hroot_out);
++		hist_entry__delete(child_he);
++
++		nd = next;
++	}
++
++	/* All children erased; clear the tree (and its cached leftmost). */
++	he->hroot_out = RB_ROOT_CACHED;
 +}
 +
 +/*
-+ * Append the function view's sort keys to its own output fields, mirroring
-+ * perf_hpp__setup_output_field() but on the local @list. The shared helper
-+ * registers onto the global perf_hpp_list, which would leave this local list
-+ * without output columns, so the function view keeps its own copy here.
++ * Drop level-2 writing functions that carry no stores or
++ * no cacheline children. Writers are only added when they store into a shared
++ * line, so this is mainly a safety net. Returns the number of surviving
++ * writers.
 + */
-+static void c2c_function_hists__setup_output_field(struct perf_hpp_list *list)
++static int __maybe_unused c2c_he__prune_empty_writers(struct hist_entry *l1_he)
 +{
-+	struct perf_hpp_fmt *fmt;
++	struct rb_node *nd;
++	int surviving = 0;
 +
-+	perf_hpp_list__for_each_sort_list(list, fmt) {
-+		struct perf_hpp_fmt *pos;
++	if (!l1_he->has_children)
++		return 0;
 +
-+		if (!fmt->entry && !fmt->color)
-+			continue;
++	nd = rb_first_cached(&l1_he->hroot_out);
++	while (nd) {
++		struct rb_node *next = rb_next(nd);
++		struct hist_entry *l2_he = rb_entry(nd, struct hist_entry, rb_node);
 +
-+		perf_hpp_list__for_each_format(list, pos) {
-+			if (c2c_fmt_equal(fmt, pos))
-+				goto next;
++		if (l2_he->has_children && hist_entry__displayed_stores(l2_he) > 0) {
++			surviving++;
++		} else {
++			rb_erase_cached(&l2_he->rb_node, &l1_he->hroot_out);
++			hist_entry__delete(l2_he);
 +		}
-+
-+		perf_hpp_list__column_register(list, fmt);
-+next:
-+		continue;
-+	}
-+}
-+
-+static int
-+function_hpp_list__parse(struct perf_hpp_list *hpp_list,
-+			 const char *output_str,
-+			 const char *sort_str,
-+			 struct perf_env *env)
-+{
-+	char *output = output_str ? strdup(output_str) : NULL;
-+	char *sort   = sort_str   ? strdup(sort_str)   : NULL;
-+	int ret = 0;
-+
-+	if ((output_str && !output) || (sort_str && !sort)) {
-+		ret = -ENOMEM;
-+		goto out;
++		nd = next;
 +	}
 +
-+	ret = function_hpp_list__add_tokens(hpp_list, output, env,
-+					    c2c_function_hists__init_output);
-+	if (ret)
-+		goto out;
-+
-+	ret = function_hpp_list__add_tokens(hpp_list, sort, env,
-+					    c2c_function_hists__init_sort);
-+	if (ret)
-+		goto out;
-+
-+	c2c_function_hists__setup_output_field(hpp_list);
-+out:
-+	if (ret)
-+		perf_hpp__reset_output_field(hpp_list);
-+	free(output);
-+	free(sort);
-+	return ret;
-+}
-+
-+static int __maybe_unused
-+c2c_function_hists__init(struct c2c_hists *hists,
-+			 const char *sort,
-+			 int nr_header_lines,
-+			 struct perf_env *env)
-+{
-+	__hists__init(&hists->hists, &hists->list);
-+
-+	perf_hpp_list__init(&hists->list);
-+
-+	hists->list.nr_header_lines = nr_header_lines;
-+
-+	return function_hpp_list__parse(&hists->list, /*output=*/NULL, sort, env);
-+}
-+
-+static int __maybe_unused
-+c2c_function_hists__reinit(struct c2c_hists *c2c_hists,
-+			   const char *output,
-+			   const char *sort,
-+			   struct perf_env *env)
-+{
-+	int nr_header_lines = c2c_hists->list.nr_header_lines;
-+
-+	perf_hpp__reset_output_field(&c2c_hists->list);
-+
-+	/* Clear stale state flags so a different output/sort set starts fresh. */
-+	c2c_hists->list.need_collapse = 0;
-+	c2c_hists->list.parent = 0;
-+	c2c_hists->list.sym = 0;
-+	c2c_hists->list.dso = 0;
-+	c2c_hists->list.socket = 0;
-+	c2c_hists->list.thread = 0;
-+	c2c_hists->list.comm = 0;
-+	c2c_hists->list.comm_nodigit = 0;
-+	c2c_hists->list.nr_header_lines = nr_header_lines;
-+
-+	return function_hpp_list__parse(&c2c_hists->list, output, sort, env);
++	if (!surviving) {
++		l1_he->hroot_out = RB_ROOT_CACHED;
++		l1_he->has_children = false;
++		l1_he->unfolded = false;
++	}
++	return surviving;
 +}
 -- 
 2.52.0
