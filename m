@@ -1,95 +1,95 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC135383993
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 21:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C853CE083
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 21:36:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.182
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787002559; cv=pass; b=VH8pKM5NufAJDH13aYO0fAvNioh0uPPeHLCCGfl1grsJ1mRkqQqX8NvAMJadwGaJ41Sy1fjNKwdptISmIGg5jqBqAWCKg2Zou/Yhbky2WyPiiwIfA9ADBr97+iPbqu8W25a5/SbQ2mCDoDmJMVL92kLx73Gl0bBdpGGOfmHyrWE=
+	t=1787002603; cv=pass; b=lnr8mFMAb730OnYSGmlJPp7z9SIxbphtt4AaZTqAa9v0Mo+tG8fwb4ZflVyP8lCSuJIIUxDJO6l0Fl0WimwjyZspPd3eWt63HuGOHLF3ZrLvmsqRbfywG2X3MN3O49O7eQlxo+sQq2PNcSC5TycEwSKt1Yi8WG9wM+lH6MdQ6rE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787002559; c=relaxed/simple;
-	bh=WC58p4IPqj0+vZWIHolWQ11EZJmZTl3ABsnPOPSnO3Y=;
+	s=arc-20240116; t=1787002603; c=relaxed/simple;
+	bh=HhgELZydx3RmtYThTIS526zk+pxdnfWHCPqeMC9E4V0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bV2McyePN5vHwUJVkmnw6orAs9fESJgGI9rB1C/MLKQIk8c88un/zOogpOO9yxV1GFGfvFhpkQc1IZ5HOS/btksiEby19+tx6SaSMoVvJGqF5UMXgcdhkHhO+dix3Y4d5rxE0kfga2TbM9VzlWj5TFrF1qk2VtntA/XxL18xL8E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JY4NhrY1; arc=pass smtp.client-ip=209.85.160.179
+	 To:Cc:Content-Type; b=YNOjWVRM/zQRvdSDFepMI9bB3tkTV8Ya3rqCNQXAP05dNpcsUiQptg1irACYKGwY7oo5wiQrsYrh7cRFI7IQcAJmo6EjtkMZ4PbxfvCaYtFVKFP/aCk+h/3AVZ4nhKRTnm1wPYV79XvFn6UuY2KnLSxOsDu9SeJQ7qIOMYuJUpc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PcC+V3Pp; arc=pass smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JY4NhrY1"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-51c15a5b265so90521cf.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 14:35:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787002557; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PcC+V3Pp"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-51c15a5b265so90721cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 14:36:42 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787002601; cv=none;
         d=google.com; s=arc-20260327;
-        b=rQY7OKto8wwItp5aEkE9XKh8Usr7WWysNSmxbQpaI4j3ormLjiQjh4ahdcl4MaMKmL
-         xOMvbaexfRjkDsB3cziGr76plSZAoq4rFzOgDsiFDHwLPdwly3J80XttRZ/PQU5BxU3P
-         MrqQMoikAWpd/C99EvR83YdNByKKCFt3rws186ASxrX9VqyXoFHkNRNhLagLXRYqpnHa
-         3KUc+aPaqJmQRU8/jKZ3aXqQGnSKas4EP0uDfyKBuDMkdB2piFQVGTyrl2Ti5bCvLjoE
-         AsSM7BbHsvp3ttinPOWCr0s2QXb2N0DiM2+RGLdapK7W7mvvNABgoIjgvKNAOCxy/gTS
-         wK1A==
+        b=dRbX9j/9KTsUctN0aCODcxnLq49OavLW2SbOoEM+ba1TntRXOam6PgjakH08koEZMD
+         ikaz3GZOV7xlaekMbtpbd+0A66+eX9DWnXi3Vrx6qWL+qwBx4XNxyWJVjqGSHsqHYpcI
+         sIrCE+wliKe6M/ZxMfIoV19t7pjMY/qpT2BKriQS3CqiMBaTEurPjHzVMImEyskk13w8
+         QE3XQZl6Zz3+h9Xx0QepEx8KNRhR2Q1i5IebbLDpBKospHrHH1H27OQzgcjpyFvRlc/r
+         I7DllRGFcMuMBpswauNrw4w+Xk4/9BAb8cDrJAdL7NH2b9z+JZ3Rb4JkFELZfhmkOOCX
+         Z1zQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=AhCV5MCDRiANiY7+toBixnkAMI2Q+FnanhCshjd69yg=;
-        fh=eHswFpmvd/0MhjeGeNKGce0JYQCk5BXB8E/GFqIMwUU=;
-        b=dZJli4kRSw7jffksSIizc2xMe3dLqJNm8rAVIVV/KmI3ppJT6s993xrPOSLGoCfQK4
-         LSoyVohNHFEpnFVy/s6UkWGqRYCyUXGF7mz+sPXS7/38F3LMmIRWwmkl21KyUTC6/FKh
-         TZQWTTFCaeUORG8H195OuCcu6IyMOY7P+QG+73s8xt2twqgEy6awj7kpB+CMgQ5fdtFU
-         HUe3FI4Bluuhc+6gDKMze1SATaZDrdUwPd4fQ26B4WoT4zDNKtUAX+QgcOhrOWccQO/4
-         CBWsVnz9DHYD2QfpoNQFTqYl27SPN2rKP3MfxusWEEf7vEcgTv1CLqj+od2xF41GJ+LR
-         uzBA==;
+        bh=mXawS8Mpb2sawnDq/jbFYbQWGi/tLbw+pkfiSSzGahs=;
+        fh=7bwbERsnYF+rvfPqKztL51HTqC1Qik0GFCQfztKeSA4=;
+        b=o/L2KpUJ4DBPokWCzckBuxMD0frRJHrxaB5/HuwDKs2xYr4UZg70zKwKViHuXcYW6P
+         tcqkyWUvmeKneirDUxxF7F16IZDQPax9oi6tVc0KGhPi+ogyokXY84hRxrRa8aLjNvs/
+         ZP9TCEDryISP4uV4ACxwegBtXzM/3Ql6fOU+4po9lYRPeVWYCiB0pDyi5svGQKFlVwPF
+         uIZFRQdwN2XHnMFtPptSuKawik/7IZHkXpwmA3QRVRhacuy2vJWc94qBjJbvnQbxa3Ad
+         YIATe9/jAiTFmeBgfpp+vEy6Nkgff+Avn2RLjkiRw9cZYWZUl/23JDLjQHOMiGOpywvQ
+         Gmmg==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787002557; x=1787607357; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1787002601; x=1787607401; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=AhCV5MCDRiANiY7+toBixnkAMI2Q+FnanhCshjd69yg=;
-        b=JY4NhrY1WfqaR2XFUEzbEbh2zL6v47XPH98mUwyMQOzJxZ8FqG3bVMoNpadZujP+zr
-         Yj+7+2BLP4jowCQ/RPDr58qJ312V4bFS2TT/jH1ERIFdnyCf3Bkm9KsziIKrZ4dL56rB
-         f7lBZilSWRAtOtcczmDDJvEobD2b/gO6IIZcZ6SGoBiC1R+A6CUIYBp+BJFuQS/hE2y5
-         +C1mN9Yih1IgTeu1N50fOAkh8LWXAqy/kiA0KU9QOsfR8CcVRSxhuijNOACUdevngCGg
-         VX7vYk5zr5Pgf7p0ZBzYBKLHvU1vbuBqCjgCiLNQRJ+26nl1zS6YkOG8LC0Rot18qXP2
-         qKsA==
+        bh=mXawS8Mpb2sawnDq/jbFYbQWGi/tLbw+pkfiSSzGahs=;
+        b=PcC+V3PplfGoIqSrXBtMdIuokCarto6UdkC8XGhEDfkFp0yEjRqwFNgVqBYi69uZgW
+         yccd2qCe7+3/INZC460T75wUgeRhmkMp5xwhYPCnbo6G1Zu6oia1KHCtI/mUHPNBJmP9
+         Fv2+8EAy6ALnPKpagkFgJIaAAbAY1RC0Dx1CaMRC50uN6J2Jh4elNDMdD/NuRD7RnGu/
+         9PSdO8DDe9Md4OGr6fWicdFdLUlLgJyL5lD0tKrDA21wdmn1iFfFPaspsce341IuZYT0
+         Fzq+crfGFvwOMlD0C1+JPL2eCDvaHdDXe3S6gSVFIbFbdFPMSHMn7Ih3ze388BfnvUXr
+         x0Rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787002557; x=1787607357;
+        d=1e100.net; s=20251104; t=1787002601; x=1787607401;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=AhCV5MCDRiANiY7+toBixnkAMI2Q+FnanhCshjd69yg=;
-        b=IkEHyHyU9n2VZMsQauBhwXfnUtOBL2f/9+FMIMcx1qNntPdWj7Gf5s6hKHMOmfC0mC
-         aOjueC/0TbeG3Kf/5Ri2Kn4x1E6kBju7VdPvskQGso0H5rYCCGapJqyZS3Rbu91uIlSc
-         DH8oAwkMK5AmuShxdR9V/W6LeEnXHioMvKts+vMT62yjLUcWwXkhLwVaKmTo/FTY5YwX
-         v6VnEMLG0hRmP4HsAB6nFZblHKVrIXmqha4l7qAVW2OMC4zVUozxnW2OHF+2VvZUpsrk
-         Y+pbmo+Glh5g8LmxVlxGlT6fJ60b7tM0rop4aZquqWSPKouAOiOByv5qcuGf8w76J8mA
-         nPWw==
-X-Forwarded-Encrypted: i=1; AHgh+RrPpE8KjcTVikNHNsIwHh3IJRMhpV751hLKQIl+dC2N4/fUMY+4sV1uab+XANCARxXkxAeS9T8He9r9AKrLV6iu@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMCIQ9mEFLTb5A1LOcMbkHIqQC2zxkaUQCPsXMqLzB17QHUr1v
-	9G1JJazd2wQa2vZnmd0ykyf4Vj5Pb7RFwV8BEdo+XCaGC5O4u1mw4QHl4eivD+gcgpwTTbKVeFG
-	IBndCkTOwnOr3QBm2A7Cx/xq0E/KzS7PLEKBfUU4s
-X-Gm-Gg: AR+sD10Ee6s55nQk469JPQHggmPKtcnIr9DJFOWxx9etXAnN13QPLBVO2P0PuFF5enr
-	Qup5BaEEAhVRXtZHMTp3PLJfCvDtXf+EiXol8d49rRC+SE2inocHueWXGzz/IRFR0OPHkQoKJgc
-	eT8iV5onhGGT9kUuNpxO9dH9vM4PO1bzp/J6VVubYbL6JM3u1sDFbeylwL3fW5nlC6Kge1Y4CNJ
-	NQl8mUIzndahXALJDxREQeuzQeeVHDMY13I/D4b76Lb+zceG4MHHtb+V20DP3+fmxe8rwg7VnJ3
-	xkOkEfavUvdU9GIj59FFMNQWjPGy5o+a7erQGyWUW6oe7DQMi9UG/8Bfk9OckSkOCXk2qcwrUvm
-	3MCjQf5/3pQ==
-X-Received: by 2002:a05:622a:2b07:b0:519:b82d:fe62 with SMTP id
- d75a77b69052e-52dc47ed5d5mr213451cf.7.1787002555962; Mon, 17 Aug 2026
- 14:35:55 -0700 (PDT)
+        bh=mXawS8Mpb2sawnDq/jbFYbQWGi/tLbw+pkfiSSzGahs=;
+        b=VyEVu5jWthIe4w9USYKjgcYSp6/wyj60eoGLMgpDkBigs5hf2RO+KIEC35kNqckC9e
+         8Y5+GZwY2ShLTObmX/FTRWZxYRPh6EWpwxlIME6Vr/TJ3eRl8Zbf127OifYSO+9UtB24
+         OXb5DROtpruusNefDF5WZ8NdK5Zz5AqqHqg3m5JRSdnsKggu4yvsUWfsPdAUDpcYyxAh
+         yhs+X3Q9NeRDBbTgUS9eNOqv6tjHa/CtclW0s++Bzp2MDpvj8YBq/04FY9UE6sB24q5E
+         FbzXoiyu73AbQ6mUjNRc3+HeOZ7l5iErMoqVurYleF9jslCtl7P7p19nvImOFX3AkCYY
+         49Pg==
+X-Forwarded-Encrypted: i=1; AHgh+Rr3OZc76KYWv4jeVMN9jHK842+RxcPhOWv9eYEUENlhdCci57zuJy8ptKV7g57qBhvv/6yISXC0RiM8lecCGW49@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhAsnOR6viyzdNvmVMMdR7lTKyyOy01+UMWdpZOHaGSTj0D0Y9
+	87mvANZWuqK/hyEEXDuMRjpz9w4egkH8dbz+YTBuzCG928QOmyC7fNLnCgvvWxuaYoCIuwZa3/4
+	g0soHhrZSVN6+S56tc80Gug0dI4ZtfbGgk2Jgz073
+X-Gm-Gg: AR+sD11AQEdTnBvIezA3vb2Ji+XHSCdC8wsmwkvIGmylWDQiGP3FmYBvqNXwsCVR1kG
+	/OR9zqB8NiwM5tJUpvZlxiXD5HeFRmYMKbShVzimx0CuK6efvtoxsqEWD8moWh5ILOZ60/39O4g
+	yjPLFSJAEbcuuDDDbKdE0xLXUvye4KPA7kpghOc/Z1zbS9SlbEARybhND4V02tmgADmkSyqJ0ZN
+	iW1P1KYhh7xmuISWyBUNLTCaMebg9GPpccpo9+SK6aqu2DB+39+6MCypM96XpRGmKXmvhpZEu7h
+	CnSbBOj/o2jvNucpgyjpbbKGa7UaEGLiS2438S2jgUSVNhUolpzEWkvYWgL1/DcUo/PU5aUJcuM
+	=
+X-Received: by 2002:a05:622a:2610:b0:50f:af60:3496 with SMTP id
+ d75a77b69052e-52dc470e82cmr283731cf.1.1787002600273; Mon, 17 Aug 2026
+ 14:36:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260811173340.96013-1-thomas.falcon@intel.com> <20260811173340.96013-5-thomas.falcon@intel.com>
-In-Reply-To: <20260811173340.96013-5-thomas.falcon@intel.com>
+References: <20260811173340.96013-1-thomas.falcon@intel.com> <20260811173340.96013-6-thomas.falcon@intel.com>
+In-Reply-To: <20260811173340.96013-6-thomas.falcon@intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 17 Aug 2026 14:35:44 -0700
-X-Gm-Features: AcwNN1WsyJ9ilqPJn8oOgY2EoM3yLNAfX92IsEk_DNng9TUKSIGypUFz5qkaavw
-Message-ID: <CAP-5=fX8fG6LUZUjHWKYqFeAhRW3XWmwuBUc=jqpAxde5mC2fQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/6] perf tools: Show memory region in perf-c2c subcommand
+Date: Mon, 17 Aug 2026 14:36:28 -0700
+X-Gm-Features: AcwNN1Vpdk-6ihBcjv1rdkMdZUfeg9Gobzr7N28xzX4hcNlqWsU2RUZUre3MXHw
+Message-ID: <CAP-5=fVu02rzde-U2uoXiWa2Sbfp5X5fA8VKL+isA260t8aLew@mail.gmail.com>
+Subject: Re: [PATCH v4 5/6] perf tools: Show memory region in perf-script subcommand
 To: Thomas Falcon <thomas.falcon@intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
@@ -105,55 +105,38 @@ On Tue, Aug 11, 2026 at 10:34=E2=80=AFAM Thomas Falcon <thomas.falcon@intel=
 >
 > From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 >
-> Add memory region field to the cacheline list view to help users
-> identify the memory region to which the cacheline belongs. The memory
-> region field was included with the introduction of support for the
-> Off-module Response facility (OMR) [1] in Intel's Diamond Rapids and
-> Nova Lake architectures.
+> Show the memory region in perf-script subcommand. Memory region is found
+> in the mem_region field of the memory information data source. This
+> field was included with the introduction of support for the Off-module
+> Response facility (OMR) [1] in Intel's Diamond Rapids and Nova Lake
+> Architectures.
 >
-> An example of the new perf c2c output including the memory region
-> field is shown below:
+> An example of perf-script output with the new memory region field is show=
+n
+> below:
 >
-> Shared Data Cache Line Table     (112 entries, sorted on Total HITMs)
->        --------------- Cacheline --------------      Tot  ------- Load Hi=
-tm -------    Total    Total    Total
-> Index             Address  Region  Node  PA cnt     Hitm    Total  LclHit=
-m  RmtHitm  records    Loads   Stores
->     0  0xff1b7032a1e8c5c0  N/A        1      47    2.25%       50       4=
-4        6     1024     1023        1
->     1  0xff1b6ff3255bb880  N/A        0      11    1.62%       36       3=
-4        2       96       93        4
->     2  0xff1b70328e3b9880  N/A        1      13    1.49%       33       3=
-3        0      100       91        9
->     3  0xff1b70328b023800  N/A        1       1    1.40%       31       1=
-4       17       52       48        4
->     4  0xff1b70328e3b9c00  N/A        1       1    1.31%       29       2=
-7        2       67       33       34
->     5  0xff1b70328b0237c0  N/A        1       1    1.26%       28       1=
-0       18      154      150        4
->     6  0xff1b6ff3255bbc00  N/A        0       1    1.13%       25       2=
-5        0       48       25       23
->     7  0xff1b6ff3255bba40  N/A        0       1    0.99%       22       2=
-2        0       46       23       23
->     8  0xff3ab9ba50255c80  N/A      N/A       0    0.77%       17       1=
-5        2       35       35        0
->     9  0xff3ab9ba503e3040  N/A      N/A       0    0.77%       17       1=
-1        6       37       37        1
->    10  0xff1b703289e88f40  N/A        1      33    0.72%       16        =
-9        7       69       63        6
->    11  0xff1b70328e3b9a40  N/A        1       1    0.68%       15       1=
-5        0       43       17       26
->    12  0xff1b7032c9fd6a40  N/A        1      15    0.68%       15       1=
-5        0       57       54        4
->    13  0xff1b7032a1e8c980  N/A        1      27    0.54%       12       1=
-1        1      761      761        0
->    14  0xff1b70727ffd57c0  N/A        1       7    0.54%       12       1=
-2        0      219      218        1
->    15  0xffffffffaefe2380  N/A        1       1    0.50%       11        =
-8        3       14       14        0
->
-> Note: DMR simics does not support memory regions. Since the output is
-> captured on SPR, the memory region field shows "N/A" for all cachelines.
+> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK=
+ Yes|BLK  N/A|Region  N/A                           7f32ae64a2ec
+> random    2411a68201042 |OP LOAD|LVL RAM hit|SNP Hit|TLB L1 or L2 hit|LCK=
+ No|BLK  N/A|Region  Mem-1                          561de7f8910a
+> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK=
+ Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
+> random      20e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK=
+ Yes|BLK  Data|Region  N/A                          7f32ae64a2d0
+> random      20e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK=
+ Yes|BLK  Data|Region  N/A                          7f32ae64a2d0
+> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK=
+ Yes|BLK  N/A|Region  N/A                           7f32ae64a2ec
+> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK=
+ Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
+> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK=
+ Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
+> random    2411a68201042 |OP LOAD|LVL RAM hit|SNP Hit|TLB L1 or L2 hit|LCK=
+ No|BLK  N/A|Region  Mem-1                          561de7f8910a
+> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK=
+ Yes|BLK  N/A|Region  N/A                           7f32ae64a2ec
+> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK=
+ Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
 >
 > [1]: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux=
 .intel.com/
@@ -171,249 +154,233 @@ Thanks,
 Ian
 
 > ---
-> v4: correctly handle output_str memory allocation failure
+> v4: Drop the global show-region flag; pass perf_session to
+>     perf_script__meminfo_scnprintf() and gate the Region field
+>     on the feature bit, with a pipe-mode fallback
 >
 > v3: make memory region reporting conditional on feature bit
 > ---
->  tools/perf/builtin-c2c.c | 93 +++++++++++++++++++++++++++++++++++-----
->  1 file changed, 83 insertions(+), 10 deletions(-)
+>  tools/perf/builtin-script.c                   | 13 +--
+>  tools/perf/util/mem-events.c                  | 86 ++++++++++++++++++-
+>  tools/perf/util/mem-events.h                  |  4 +-
+>  .../scripting-engines/trace-event-python.c    |  5 +-
+>  4 files changed, 98 insertions(+), 10 deletions(-)
 >
-> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> index c9584dbedf77..8cd90524fe49 100644
-> --- a/tools/perf/builtin-c2c.c
-> +++ b/tools/perf/builtin-c2c.c
-> @@ -74,6 +74,7 @@ struct c2c_hist_entry {
->         unsigned long           *nodeset;
->         struct c2c_stats        *node_stats;
->         unsigned int             cacheline_idx;
-> +       unsigned int             mem_region;
->
->         struct compute_stats     cstats;
->
-> @@ -281,6 +282,18 @@ static void c2c_he__set_node(struct c2c_hist_entry *=
-c2c_he,
->         }
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index f91d8b1fbd01..410ccad56f99 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -2078,11 +2078,12 @@ static int evlist__max_name_len(struct evlist *ev=
+list)
+>         return max;
 >  }
 >
-> +static void c2c_he__set_mem_region(struct c2c_hist_entry *c2c_he,
-> +                                  unsigned int mem_region)
-> +{
-> +       if (WARN_ONCE(mem_region > PERF_MEM_REGION_MEM7,
-> +                     "WARNING: invalid memory region ID\n"))
-> +               return;
-> +
-> +       /* Update mem_region only if it really accesses memory */
-> +       if (mem_region >=3D PERF_MEM_REGION_MMIO)
-> +               c2c_he->mem_region =3D mem_region;
-> +}
-> +
->  static void compute_stats(struct c2c_hist_entry *c2c_he,
->                           struct c2c_stats *stats,
->                           u64 weight)
-> @@ -339,6 +352,7 @@ static int process_sample_event(const struct perf_too=
-l *tool __maybe_unused,
->         struct addr_location al;
->         struct mem_info *mi =3D NULL;
->         struct callchain_cursor *cursor;
-> +       unsigned int mem_region;
->         int ret;
->
->         addr_location__init(&al);
-> @@ -366,6 +380,7 @@ static int process_sample_event(const struct perf_too=
-l *tool __maybe_unused,
->         }
->
->         c2c_decode_stats(&stats, mi);
-> +       mem_region =3D mem_info__data_src(mi)->mem_region;
->
->         he =3D hists__add_entry_ops(&c2c_hists->hists, &c2c_entry_ops,
->                                   &al, NULL, NULL, mi, NULL,
-> @@ -382,6 +397,7 @@ static int process_sample_event(const struct perf_too=
-l *tool __maybe_unused,
->         c2c_he__set_cpu(c2c_he, sample);
->         c2c_he__set_node(c2c_he, sample);
->         c2c_he__set_evsel(c2c_he, evsel);
-> +       c2c_he__set_mem_region(c2c_he, mem_region);
->
->         hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
->
-> @@ -435,6 +451,7 @@ static int process_sample_event(const struct perf_too=
-l *tool __maybe_unused,
->                 c2c_he__set_cpu(c2c_he, sample);
->                 c2c_he__set_node(c2c_he, sample);
->                 c2c_he__set_evsel(c2c_he, evsel);
-> +               c2c_he__set_mem_region(c2c_he, mem_region);
->
->                 hists__inc_nr_samples(&c2c_hists->hists, he->filtered);
->                 ret =3D hist_entry__append_callchain(he, sample);
-> @@ -603,6 +620,30 @@ dcacheline_node_count(struct perf_hpp_fmt *fmt, stru=
-ct perf_hpp *hpp,
->         return scnprintf(hpp->buf, hpp->size, "%*lu", width, c2c_he->padd=
-r_cnt);
->  }
->
-> +static int
-> +dcacheline_node_mem_region(struct perf_hpp_fmt *fmt, struct perf_hpp *hp=
-p,
-> +                          struct hist_entry *he)
-> +{
-> +       int width =3D c2c_width(fmt, hpp, he->hists);
-> +       struct c2c_hist_entry *c2c_he;
-> +       unsigned int mem_region;
-> +       char buf[20];
-> +
-> +       c2c_he =3D container_of(he, struct c2c_hist_entry, he);
-> +       mem_region =3D c2c_he->mem_region;
-> +
-> +       if (mem_region =3D=3D PERF_MEM_REGION_NA)
-> +               scnprintf(buf, sizeof(buf),  "N/A");
-> +       /* mem_region could only be >=3D PERF_MEM_REGION_MMIO */
-> +       else if (mem_region =3D=3D PERF_MEM_REGION_MMIO)
-> +               scnprintf(buf, sizeof(buf), "MMIO");
-> +       else
-> +               scnprintf(buf, sizeof(buf), "0x%x",
-> +                         mem_region - PERF_MEM_REGION_MEM0);
-> +
-> +       return scnprintf(hpp->buf, hpp->size, "%*s", width, buf);
-> +}
-> +
->  static int offset_entry(struct perf_hpp_fmt *fmt, struct perf_hpp *hpp,
->                         struct hist_entry *he)
+> -static int data_src__fprintf(u64 data_src, FILE *fp)
+> +static int data_src__fprintf(struct perf_session *session,
+> +                            u64 data_src, FILE *fp)
 >  {
-> @@ -1425,7 +1466,7 @@ cl_idx_empty_entry(struct perf_hpp_fmt *fmt, struct=
- perf_hpp *hpp,
->         }
+>         struct mem_info *mi =3D mem_info__new();
+> -       char decode[100];
+> -       char out[100];
+> +       char decode[200];
+> +       char out[200];
+>         static int maxlen;
+>         int len;
 >
->  static struct c2c_dimension dim_dcacheline =3D {
-> -       .header         =3D HEADER_SPAN("--- Cacheline ----", "Address", =
-2),
-> +       .header         =3D HEADER_SPAN("--- Cacheline ----", "Address", =
-3),
->         .name           =3D "dcacheline",
->         .cmp            =3D dcacheline_cmp,
->         .entry          =3D dcacheline_entry,
-> @@ -1440,6 +1481,14 @@ static struct c2c_dimension dim_dcacheline_node =
-=3D {
->         .width          =3D 4,
->  };
->
-> +static struct c2c_dimension dim_dcacheline_mem_region =3D {
-> +       .header         =3D HEADER_LOW("Region"),
-> +       .name           =3D "dcacheline_mem_region",
-> +       .cmp            =3D empty_cmp,
-> +       .entry          =3D dcacheline_node_mem_region,
-> +       .width          =3D 6,
-> +};
-> +
->  static struct c2c_dimension dim_dcacheline_count =3D {
->         .header         =3D HEADER_LOW("PA cnt"),
->         .name           =3D "dcacheline_count",
-> @@ -1871,6 +1920,7 @@ static struct c2c_dimension dim_dcacheline_num_empt=
-y =3D {
->
->  static struct c2c_dimension *dimensions[] =3D {
->         &dim_dcacheline,
-> +       &dim_dcacheline_mem_region,
->         &dim_dcacheline_node,
->         &dim_dcacheline_count,
->         &dim_offset,
-> @@ -2898,8 +2948,9 @@ static int ui_quirks(void)
->         /* Fix the zero line for dcacheline column. */
->         buf =3D fill_line(chk_double_cl ? "Double-Cacheline" : "Cacheline=
-",
->                                 dim_dcacheline.width +
-> +                               dim_dcacheline_mem_region.width +
->                                 dim_dcacheline_node.width +
-> -                               dim_dcacheline_count.width + 4);
-> +                               dim_dcacheline_count.width + 6);
->         if (!buf)
+> @@ -2090,10 +2091,10 @@ static int data_src__fprintf(u64 data_src, FILE *=
+fp)
 >                 return -ENOMEM;
 >
-> @@ -3151,8 +3202,10 @@ static int perf_c2c__report(int argc, const char *=
-*argv)
->         OPT_END()
->         };
->         int err =3D 0;
-> -       const char *output_str, *sort_str =3D NULL;
-> +       const char *sort_str =3D NULL;
-> +       char *output_str =3D NULL;
->         struct perf_env *env;
-> +       bool has_mem_regions;
+>         mem_info__data_src(mi)->val =3D data_src;
+> -       perf_script__meminfo_scnprintf(decode, 100, mi);
+> +       perf_script__meminfo_scnprintf(decode, 200, mi, session);
+>         mem_info__put(mi);
 >
->         annotation_options__init();
+> -       len =3D scnprintf(out, 100, "%16" PRIx64 " %s", data_src, decode)=
+;
+> +       len =3D scnprintf(out, 200, "%16" PRIx64 " %s", data_src, decode)=
+;
+>         if (maxlen < len)
+>                 maxlen =3D len;
 >
-> @@ -3316,9 +3369,14 @@ static int perf_c2c__report(int argc, const char *=
-*argv)
->                 goto out_mem2node;
->         }
+> @@ -2487,7 +2488,7 @@ static void process_event(struct perf_script *scrip=
+t,
+>                 perf_sample__fprintf_addr(sample, thread, evsel, fp);
 >
-> -       if (c2c.display !=3D DISPLAY_SNP_PEER)
-> -               output_str =3D "cl_idx,"
-> +       has_mem_regions =3D perf_header__has_feat(&session->header,
-> +                                               HEADER_MEMORY_RANGES);
+>         if (PRINT_FIELD(DATA_SRC))
+> -               data_src__fprintf(sample->data_src, fp);
+> +               data_src__fprintf(evsel__session(evsel), sample->data_src=
+, fp);
+>
+>         if (PRINT_FIELD(WEIGHT))
+>                 fprintf(fp, "%16" PRIu64, sample->weight);
+> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+> index 4fd48fd20055..8ce4996cad8d 100644
+> --- a/tools/perf/util/mem-events.c
+> +++ b/tools/perf/util/mem-events.c
+> @@ -604,8 +604,77 @@ int perf_mem__blk_scnprintf(char *out, size_t sz, co=
+nst struct mem_info *mem_inf
+>         return l;
+>  }
+>
+> -int perf_script__meminfo_scnprintf(char *out, size_t sz, const struct me=
+m_info *mem_info)
+> +static int perf_mem__region_scnprintf(char *out, size_t sz, const struct=
+ mem_info *mem_info)
+>  {
+> +       size_t l =3D 0;
+> +       u64 mem =3D PERF_MEM_REGION_NA;
 > +
-> +       if (c2c.display !=3D DISPLAY_SNP_PEER) {
-> +               if (asprintf(&output_str,
-> +                            "cl_idx,"
->                              "dcacheline,"
-> +                            "%s"
->                              "dcacheline_node,"
->                              "dcacheline_count,"
->                              "percent_costly_snoop,"
-> @@ -3330,10 +3388,17 @@ static int perf_c2c__report(int argc, const char =
-**argv)
->                              "ld_fbhit,ld_l1hit,ld_l2hit,"
->                              "ld_lclhit,lcl_hitm,"
->                              "ld_rmthit,rmt_hitm,"
-> -                            "dram_lcl,dram_rmt";
-> -       else
-> -               output_str =3D "cl_idx,"
-> +                            "dram_lcl,dram_rmt",
-> +                            has_mem_regions ?
-> +                            "dcacheline_mem_region," : "") < 0) {
-> +                       err =3D -ENOMEM;
-> +                       goto out_mem2node;
-> +               }
-> +       } else {
-> +               if (asprintf(&output_str,
-> +                            "cl_idx,"
->                              "dcacheline,"
-> +                            "%s"
->                              "dcacheline_node,"
->                              "dcacheline_count,"
->                              "percent_costly_snoop,"
-> @@ -3345,7 +3410,13 @@ static int perf_c2c__report(int argc, const char *=
-*argv)
->                              "ld_fbhit,ld_l1hit,ld_l2hit,"
->                              "ld_lclhit,lcl_hitm,"
->                              "ld_rmthit,rmt_hitm,"
-> -                            "dram_lcl,dram_rmt";
-> +                            "dram_lcl,dram_rmt",
-> +                            has_mem_regions ?
-> +                            "dcacheline_mem_region," : "") < 0) {
-> +                       err =3D -ENOMEM;
-> +                       goto out_mem2node;
+> +       sz -=3D 1; /* -1 for null termination */
+> +       out[0] =3D '\0';
+> +
+> +       if (mem_info)
+> +               mem =3D mem_info__const_data_src(mem_info)->mem_region;
+> +
+> +       switch (mem) {
+> +       case PERF_MEM_REGION_NA:
+> +       case PERF_MEM_REGION_RSVD:
+> +               l +=3D scnprintf(out + l, sz - l, "N/A");
+> +               break;
+> +       case PERF_MEM_REGION_L_SHARE:
+> +               l +=3D scnprintf(out + l, sz - l, "Local-shared-cache");
+> +               break;
+> +       case PERF_MEM_REGION_L_NON_SHARE:
+> +               l +=3D scnprintf(out + l, sz - l, "Local-non-shared-cache=
+");
+> +               break;
+> +       case PERF_MEM_REGION_O_IO:
+> +               l +=3D scnprintf(out + l, sz - l, "Other-IO");
+> +               break;
+> +       case PERF_MEM_REGION_O_SHARE:
+> +               l +=3D scnprintf(out + l, sz - l, "Other-shared-cache");
+> +               break;
+> +       case PERF_MEM_REGION_O_NON_SHARE:
+> +               l +=3D scnprintf(out + l, sz - l, "Other-non-shared-cache=
+");
+> +               break;
+> +       case PERF_MEM_REGION_MMIO:
+> +               l +=3D scnprintf(out + l, sz - l, "MMIO");
+> +               break;
+> +       case PERF_MEM_REGION_MEM0:
+> +               l +=3D scnprintf(out + l, sz - l, "Mem-0");
+> +               break;
+> +       case PERF_MEM_REGION_MEM1:
+> +               l +=3D scnprintf(out + l, sz - l, "Mem-1");
+> +               break;
+> +       case PERF_MEM_REGION_MEM2:
+> +               l +=3D scnprintf(out + l, sz - l, "Mem-2");
+> +               break;
+> +       case PERF_MEM_REGION_MEM3:
+> +               l +=3D scnprintf(out + l, sz - l, "Mem-3");
+> +               break;
+> +       case PERF_MEM_REGION_MEM4:
+> +               l +=3D scnprintf(out + l, sz - l, "Mem-4");
+> +               break;
+> +       case PERF_MEM_REGION_MEM5:
+> +               l +=3D scnprintf(out + l, sz - l, "Mem-5");
+> +               break;
+> +       case PERF_MEM_REGION_MEM6:
+> +               l +=3D scnprintf(out + l, sz - l, "Mem-6");
+> +               break;
+> +       case PERF_MEM_REGION_MEM7:
+> +               l +=3D scnprintf(out + l, sz - l, "Mem-7");
+> +               break;
+> +       default:
+> +               l +=3D scnprintf(out + l, sz - l, "N/A");
+> +               break;
+> +       }
+> +
+> +       return l;
+> +}
+> +
+> +int perf_script__meminfo_scnprintf(char *out, size_t sz,
+> +                                  const struct mem_info *mem_info,
+> +                                  struct perf_session *session)
+> +{
+> +       struct perf_env *env;
+>         int i =3D 0;
+>
+>         i +=3D scnprintf(out, sz, "|OP ");
+> @@ -620,6 +689,21 @@ int perf_script__meminfo_scnprintf(char *out, size_t=
+ sz, const struct mem_info *
+>         i +=3D perf_mem__lck_scnprintf(out + i, sz - i, mem_info);
+>         i +=3D scnprintf(out + i, sz - i, "|BLK ");
+>         i +=3D perf_mem__blk_scnprintf(out + i, sz - i, mem_info);
+> +       if (session) {
+> +               /*
+> +                * In case the feature bits are not available, as in
+> +                * pipe mode, fallback to checking for the existence of
+> +                * memory ranges
+> +                */
+> +               env =3D perf_session__env(session);
+> +               if ((env && session->data->is_pipe && env->nr_memory_rang=
+es) ||
+> +                   perf_header__has_feat(&session->header,
+> +                                         HEADER_MEMORY_RANGES)) {
+> +                       i +=3D scnprintf(out + i, sz - i, "|Region ");
+> +                       i +=3D perf_mem__region_scnprintf(out + i, sz - i=
+,
+> +                                                       mem_info);
 > +               }
 > +       }
 >
->         if (c2c.display =3D=3D DISPLAY_TOT_HITM)
->                 sort_str =3D "tot_hitm";
-> @@ -3368,11 +3439,13 @@ static int perf_c2c__report(int argc, const char =
-**argv)
+>         return i;
+>  }
+> diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
+> index daa22748f9fe..4ebb8109fc3c 100644
+> --- a/tools/perf/util/mem-events.h
+> +++ b/tools/perf/util/mem-events.h
+> @@ -4,6 +4,7 @@
 >
->         if (ui_quirks()) {
->                 pr_err("failed to setup UI\n");
-> -               goto out_mem2node;
-> +               goto out_str;
->         }
+>  #include <stdbool.h>
+>  #include <linux/types.h>
+> +#include "session.h"
 >
->         perf_c2c_display(session);
+>  struct perf_mem_event {
+>         bool            supported;
+> @@ -47,7 +48,8 @@ int perf_mem__snp_scnprintf(char *out, size_t sz, const=
+ struct mem_info *mem_inf
+>  int perf_mem__lck_scnprintf(char *out, size_t sz, const struct mem_info =
+*mem_info);
+>  int perf_mem__blk_scnprintf(char *out, size_t sz, const struct mem_info =
+*mem_info);
 >
-> +out_str:
-> +       free(output_str);
->  out_mem2node:
->         mem2node__exit(&c2c.mem2node);
->  out_session:
+> -int perf_script__meminfo_scnprintf(char *bf, size_t size, const struct m=
+em_info *mem_info);
+> +int perf_script__meminfo_scnprintf(char *bf, size_t size, const struct m=
+em_info *mem_info,
+> +                                  struct perf_session *session);
+>
+>  struct c2c_stats {
+>         u32     nr_entries;
+> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/too=
+ls/perf/util/scripting-engines/trace-event-python.c
+> index 8f832ae316ca..e359fe529586 100644
+> --- a/tools/perf/util/scripting-engines/trace-event-python.c
+> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+> @@ -694,8 +694,9 @@ static void set_sample_read_in_dict(PyObject *dict_sa=
+mple, struct perf_sample *s
+>  static void set_sample_datasrc_in_dict(PyObject *dict,
+>                                       struct perf_sample *sample)
+>  {
+> +       struct perf_session *session =3D evsel__session(sample->evsel);
+>         struct mem_info *mi =3D mem_info__new();
+> -       char decode[100];
+> +       char decode[200];
+>
+>         if (!mi)
+>                 Py_FatalError("couldn't create mem-info");
+> @@ -704,7 +705,7 @@ static void set_sample_datasrc_in_dict(PyObject *dict=
+,
+>                         PyLong_FromUnsignedLongLong(sample->data_src));
+>
+>         mem_info__data_src(mi)->val =3D sample->data_src;
+> -       perf_script__meminfo_scnprintf(decode, 100, mi);
+> +       perf_script__meminfo_scnprintf(decode, 200, mi, session);
+>         mem_info__put(mi);
+>
+>         pydict_set_item_string_decref(dict, "datasrc_decode",
 > --
 > 2.55.0
 >
