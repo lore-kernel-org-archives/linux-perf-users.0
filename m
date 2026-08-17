@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D363AEB39;
-	Mon, 17 Aug 2026 06:20:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC9E30568B;
+	Mon, 17 Aug 2026 06:23:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1786947642; cv=none; b=NPeRftHPYMEbwKLPlFlnirP1hmnBkxsQjBNI8IuGj1/ygz/g1UXt2VHzuHxQAgmbnCzUKXc8245N09HQ2gRGaWxgkrnONqAg2cV8SHfoedQZ1WxmIq/SYtWdoflj65p1tw9U0rthVDDKb8rq9j24vLC0vx/MJm0NS28Xbm3PMOw=
+	t=1786947799; cv=none; b=ICX//oinKzUaO5j2eO0UbA4n+ZBhUEqI9RQJYXACKPVLLQyUaFn5ZJ0sz9/FmOGfjMOCHmU49qYI59xAWIVhjmj06UMezN86Q4476I6cyWPUHl9Tnypu8Nc1mDtVZf2jQMmxwfYH342k2QIDHxwM6Zq6+ejXOutMBpGkoZdIJYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1786947642; c=relaxed/simple;
-	bh=HQSal9UWsJGdmKshVIFO3pe2sncFvdP5UKvE1e52zNM=;
+	s=arc-20240116; t=1786947799; c=relaxed/simple;
+	bh=sIyThNWYWnlWHpUxaSlXTe6JeQIRE+fhcjoMqfYf4xg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JlT3chHfIHK0jQcZWx/2wI8jBkkZYHC6fapf1BHQqoCBTldliYn/pG5QRK4TzNO83PHkrfYDgWN6/dt/egie8RHZvtpsBLHU5FV8W5d7XJRtm5kXhgcfaGSTwibNQinpV2RLmwu4OCOFI+F2dcr8VaummPSUhYJMg34OwHWlHOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j397Yc+h; arc=none smtp.client-ip=100.103.45.18
+	 In-Reply-To:Content-Type; b=avA7/o9qC3myvA9zx/VM0f5Gcezeg7HR6N7aRAsaqdcOBF7K4OZMxDZBkZnjfJVzqapxOuqP5ni2a39x7pk5ouL5ModooS7iLksuB3aBMs5ITKowdC4hvl/BYhUDTUm42ZH19LjmhiY+cUGWAFSqv/NBXTwsesmfjoIa9Qqk/Ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNwPL6Qm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j397Yc+h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E857D1F000E9;
-	Mon, 17 Aug 2026 06:20:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNwPL6Qm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 999F31F000E9;
+	Mon, 17 Aug 2026 06:23:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1786947640;
-	bh=7bgBGN7+/ozSfdokjzvflhFj0ToHa1vgIl1PXuNzLXE=;
+	s=k20260515; t=1786947797;
+	bh=jOw+j1q+Tq+Mexz//qGGI8SqaRBLcQGBThbcAl9p1Go=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=j397Yc+hZ1l8JyoyiSLUABxsCy1ya63BYN+M/fDZtMYvYUxuKJLMKwmXt0KrNNxAd
-	 8XA6YcfDGmUrwb3mlVarBaxOlXRtri+BVjBLuIC4oscNFwMYz9o+vb+HtlhvS84rB5
-	 ja8S9D1/at+oK2Q3cdanPN3y3G0qYvDFhlKDDM0xQFWn4uU6PMAEZ0Tren/bm/jwhe
-	 Ns6fmzevNpTWneUGJEdbVW+ZVkyUqH2vnLWaSb7ir7ptsaqwdsC0MaA9WW9b4y1nKn
-	 6fu3B76Swuqr23Sp83lSNGqh9m7z75k2gYdC02iavZ0IwYf3tNa7Biv4HZ89pFkXem
-	 kSkGfMmgA/abQ==
-Message-ID: <4998d0ca-eeb0-4b04-b3ac-a1f97c1829f2@kernel.org>
-Date: Mon, 17 Aug 2026 08:20:35 +0200
+	b=YNwPL6QmU5C3HJm060nzfgtL+xf0UOxLnRJdelGugZbuMDrb5lip493qGL9lQgExP
+	 tl2Ti6fXt1XPb8c2fg2Z12VDvqf+cGwYZuKa0JcBTHt9LGDSV2LPM5EgXacy+7/Opr
+	 NjeuGrnxORsx2Ibg0lLhpjAJnfoK+6sVs3zMvxxwYcD3lbFkPYJOwsM9k0kt4iP71N
+	 U9r6/fCJ4ZMPQfRHmFe9MFHN0Q4QZ35hgVGsHdVP8GhPrlrcam0o3yqMQ1hAZvVYuF
+	 vt26w5nKTwR0coqYQj2p/aDjPnqWOnPGnJ6C9qhniNQBQxj2UYkiHFa/TduuYW5Jf6
+	 nvydrMdKvWwww==
+Message-ID: <bca067e2-bbd7-43cf-9198-32bf4de35a7a@kernel.org>
+Date: Mon, 17 Aug 2026 08:23:13 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -35,13 +35,15 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 0/3] perf: Add Raspberry Pi AXI PMU driver
+Subject: Re: [PATCH v13 1/3] dt-bindings: perf: Add Broadcom Raspberry Pi AXI
+ PMU definition
 To: Ian Rogers <irogers@google.com>, florian.fainelli@broadcom.com,
  linux-perf-users@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
  pbrobinson@gmail.com
 References: <20260815082048.4043217-1-irogers@google.com>
  <20260815172712.50119-1-irogers@google.com>
+ <20260815172712.50119-2-irogers@google.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -87,24 +89,83 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  K9bCVaboTA2T77QYkRcRJYSsO1alGX0ome/hMLD1daXlkrNUp1HWa3K4iytLRXjCSIorWiGs
  n+q3krnpXu3TFkA8qtOFZMdnIiFuiq1yLT8hptsV5xh1TA2nsVvSYiaCr3q4s4BKjS/KrLDb
  qoxzw8ISjdUp4pA85vb6YLCmb39NgidD+7PmAr65lBNveIFynTgsja1rRQ4=
-In-Reply-To: <20260815172712.50119-1-irogers@google.com>
+In-Reply-To: <20260815172712.50119-2-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 15/08/2026 19:27, Ian Rogers wrote:
-> Motivation & Background
-> ==============================
-> Currently, Linux lacks a standard perf-API compatible driver for the
-> Broadcom AXI performance counter blocks on Raspberry Pi platforms. Prior
-> out-of-tree vendor solutions relied on custom debugfs nodes and ad-hoc
-> kthreads, preventing integration with standard Linux perf tooling (`perf stat`,
-> `perf list`, etc.).
+> Add Device Tree bindings for the Broadcom AXI PMU hardware blocks present
+> in the Raspberry Pi SoC line (BCM2835, BCM2711, BCM2712).
 > 
+> Depending on the SoC and security configuration, these PMUs support either
+> direct MMIO access or routing via the Raspberry Pi firmware Mailbox IPC.
+> The bindings support defining 1 or 2 backing MMIO regions natively map
+> the system and VPU control surfaces.
+> 
+> Assisted-by: Antigravity:gemini-3.6-flash
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  .../bindings/perf/brcm,bcm2835-axiperf.yaml   | 77 +++++++++++++++++++
+>  1 file changed, 77 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml b/Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml
+> new file mode 100644
+> index 000000000000..8a4857aa448c
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/perf/brcm,bcm2835-axiperf.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/perf/brcm,bcm2835-axiperf.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Broadcom BCM2835/2711/2712 AXI Performance Monitor
+> +
+> +maintainers:
+> +  - Ian Rogers <irogers@google.com>
+> +
+> +description: |
+> +  The Broadcom BCM2835 series (including BCM2711 and BCM2712) features hardware
+> +  performance monitors on the AXI bus for evaluating memory bandwidth and
+> +  system traffic. Depending on the SoC architecture, multiple monitors exist.
+> +  The primary
+> +  monitor evaluates the System fabric, while the secondary monitor evaluates the
+> +  VideoCore VPU hardware.
+> +
+> +  Older silicon generally restricts direct MMIO access to the VPU endpoints,
+> +  requiring them to be accessed over the Raspberry Pi firmware mailbox
+> +  interface. If the VPU endpoints are memory-mapped, they are supplied as
+> +  secondary resources.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - brcm,bcm2835-axiperf
+> +      - brcm,bcm2711-axiperf
+> +      - brcm,bcm2712-axiperf
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 2
+> +    description: |
+> +      Memory-mapped I/O resource regions for the AXI PMU endpoints.
+> +      Typically ordered as System monitor, followed by VPU monitor if directly
+> +      mapped.
+> +
+> +  firmware:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
 
-Slow down!
+This was already rejected.
 
-One version per 24h in normal cycle, not 13 patchsets in two days! (and
-even rarer during the merge window)
+https://lore.kernel.org/all/?q=broadcom+firmware
+
+> +    description: |
+> +      Phandle to the Raspberry Pi firmware node. Required on older silicon
+> +      (BCM2835-BCM2711) where VideoCore VPU endpoints are exclusively accessed
+> +      via firmware mailbox IPC.
+
 
 Best regards,
 Krzysztof
