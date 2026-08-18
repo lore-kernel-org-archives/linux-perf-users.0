@@ -1,1106 +1,483 @@
-Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF16126158B;
-	Tue, 18 Aug 2026 10:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD902EEE85
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Aug 2026 10:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787047319; cv=none; b=dXTY0BIRab12wXU8HC2Awu/+ncsXQc+6/2STbJ5YfC71r/j+Owx6027B+AnRmRCk/5Ru/tASTlORCQMTvkKGzCq5NQaEBmN7a5UZdEgmZVLIEOch+3BRQgq7ry//MXxknH+qmOpk458S3FGo8VYO0Q0CGGGMWNmUH9vJ31VDya8=
+	t=1787047480; cv=none; b=Ua61sTP3iIFQA0WoV5CgmEaI0gkrqkqiJOMKyjruUuRnVgxi+882lgsXgXdakCGD3zGQbCC0Oio2W3SdSAkLNj9PsKwM+AyLzL0kW459fALycZ8zRdF7Rtfw6sBggDTtDrpCS5u2RO62aKEIR8QDfXBIShZcqe4FpdpQ+Gs4UTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787047319; c=relaxed/simple;
-	bh=aC8jxNkG0sgpCFjQQ6fMvhVMD2WVYXA/runDYs61u+E=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D8b6T+2gmIoqJ5rq0l3SsGg01VU0MPgbpHclLxeSrBSD0wBRba8iK2n2VNTEeRA2gz+vnnJDZdkbmYNuNBml4oa5x89FabLf0crXT9LKxg4oSXiSpSRAGWKsJuiPCyWpHItcGykTdioVTRQkiCzbErllXknekt/A3ctKlylT+u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
-Received: from maildlp1.hygon.cn (unknown [127.0.0.1])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4hPQGD02ytz18tXg;
-	Tue, 18 Aug 2026 18:01:40 +0800 (CST)
-Received: from maildlp1.hygon.cn (unknown [172.23.18.60])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4hPQG96MMVz18tWX;
-	Tue, 18 Aug 2026 18:01:37 +0800 (CST)
-Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
-	by maildlp1.hygon.cn (Postfix) with ESMTPS id 89C7278AD;
-	Tue, 18 Aug 2026 18:01:32 +0800 (CST)
-Received: from neptune.hygon.cn (172.22.228.106) by cncheex04.Hygon.cn
- (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Tue, 18 Aug
- 2026 18:01:37 +0800
-From: Qi Liu <liuqi@hygon.cn>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<sandipan.das@amd.com>, <ravi.bangoria@amd.com>, <irogers@google.com>,
-	<x86@kernel.org>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<lijing@hygon.cn>, <liuqi@hygon.cn>, Zhenglang Hu <huzhenglang@hygon.cn>
-Subject: [PATCH v5 1/2] perf/x86/amd/uncore: Add Hygon uncore PMU support
-Date: Tue, 18 Aug 2026 10:01:17 +0000
-Message-ID: <20260818100118.12944-2-liuqi@hygon.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260818100118.12944-1-liuqi@hygon.cn>
-References: <20260818100118.12944-1-liuqi@hygon.cn>
+	s=arc-20240116; t=1787047480; c=relaxed/simple;
+	bh=VlPPQHp/MYTzELak8+O+u2gluyrthPViFM78wGV0AEE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J/qY/D3rsvXAALIUFxZuHt6zUv8G+gIbnYcWn9lyGH60aNPvyYbGhGdmpMfvF8k4Sl4VxFrXu+0SGmnkLvMHSpkDXs0ONmyGkIlpZ1kq7OTn7gmOYnLTwNcycCJ2YHvRUjao4pNCrhIkmN0/uj8zQwTR1Daat6OEmV1gJoG2nnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VZ0oI9za; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VZ0oI9za"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-499a4d1d7f1so3462125e9.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Aug 2026 03:04:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1787047476; x=1787652276; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=FsFa9e1COyIPBcpmydRj4KWmYb2/dMT6GIMQOmAVfjI=;
+        b=VZ0oI9zaQ6ntwQX7ug/Jk2zwlt+H8UjFD7ahp7qKgnXQgt5M6Ledai+bBVkjI4lApT
+         olSWG1tx39T8urBUcyXC1/wN3HAVG9THIL1TZZItaVm3X8bWsugh25Y9TR/OoIi4tfd2
+         ASjdPUtMwLxFmwBq9WbofWkNafl/Cc62LcHRiHxkLQ9loUkrEqskXmJIFFrLfWuRh6pV
+         Op1yMWmofQzRtzFXu1+mirDEtgQ1LAnXIszFUwNuxuMAMugHzr3N+cNYaAyXuuljddbx
+         EOaUrK0GTaVWi3c5Wn0Kngw379a6K8kDi+HbOfXT170V1y5YqMow93hGQEYOpUauijFh
+         E4cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787047476; x=1787652276;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=FsFa9e1COyIPBcpmydRj4KWmYb2/dMT6GIMQOmAVfjI=;
+        b=mzSqVuvpNegVNaojSk/a90o893Z7cnk8/qRtfdDnS43TkpXlh1ekQlDLv+rYD/4wBI
+         LVnDtkn5gV5TyvbYBBF2HO4MPJfT6W2j6iQBcIkItJF4V+9jgxqEGg2pgbnC1SLn3bRC
+         FXf/XCPG2Q59yJ7NSBxDXT8IfBvNiIg6LceTB7IoQdUOJayjpus+9+I9O+8nBYy/uMTM
+         +M6kEfkF6KfVRkUVAzmBdlBPYP0Oto3Suf2njWXOhjkjHQKNea4kCpAX8VrpwmCMvQNo
+         tLbziTqniI9TUcAcRjEJsXV3ttbmmAA8C2Px7dHSWJe+tnr5U8ukdevRzPPHMHOGRRUz
+         b0lw==
+X-Forwarded-Encrypted: i=1; AHgh+RqXAyQFflZ1nm3oumZr217DSY0hrF6q3X+ZDkBE7XAiFkdvVR3hePl3ppkYG3zi+esl5AkFZ1BJ79jXCmDcVqLg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzisGxcHTYfDT60XODUwJhFj4+HVxVldWYkVehHW6EUJXCeNXSL
+	w0T63j1xAa6uj9mfgWZI/3PCiJsLw5gPLN+bA0CH3C9P0frD4a/HRxRxuyIHUCHzTNY=
+X-Gm-Gg: AR+sD12vaoeYv9jPEVtd7brS6uIeAq+bYpUObS0DGPvOVtq/yg4mAT+Y7jvR9sHi4TB
+	B8ncqX5CMp+x3bHdgmfl9QQ2+du4aUKu4AOeJaAS8DdQ2HvZEJhcA8KFgVrn4XhZpOYX+jV+5cD
+	+1xuMV2e/LswH1PrnCiq1LEZPlVnot5QTAjNh1ZbUiH/PdA2OB+TG7fKy1ilN+USdGMoqQBetIX
+	MNp5tyRsmwpbhC2/Snqo1C2i7X4WXaMePioT+z3ccK7Md6/mUGK0ALeE/gXhHeqXHzHV3Rdpewx
+	Hj70iPaSx8lx3Oh08O5c5oE8FFQmOoGpBu1ROYT+hbn0HlRaOwv3i7ZEwHVhpkvVYfj2I7v7qD2
+	wF8dYpphd9GZZ0g20aFZTqiCntTt6ubgKPXY0FhvETvd6TRg5Bh6n4F4aLAk2jjNx4lobIC6903
+	oC3zPJ/hKjuWel2FuLMuvA7V2vw+4GYzkB93jtrrgDWQZ3ri15iBJ3TI7rDOZgF9JDyD5i8F32R
+	AoO
+X-Received: by 2002:a05:600c:3f10:b0:495:6e68:5df2 with SMTP id 5b1f17b1804b1-4999fb3c2d6mr130200395e9.12.1787047475965;
+        Tue, 18 Aug 2026 03:04:35 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482a5b783c6sm11439647f8f.31.2026.08.18.03.04.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2026 03:04:35 -0700 (PDT)
+Message-ID: <066f843e-0b87-4860-bb8c-c6714a5f57c8@linaro.org>
+Date: Tue, 18 Aug 2026 11:04:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4] perf tests: mmap-basic: fix user rdpmc detection logic
+To: Ian Rogers <irogers@google.com>
+Cc: Michael Petlan <mpetlan@redhat.com>, Qiao Zhao <qzhao@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Leo Yan <leo.yan@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Paul Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org
+References: <20260817-rdpmc-detection-logic-v4-1-c22074578f6a@linaro.org>
+ <CAP-5=fWw6-NsAOjSUSNFgnA0vNg1pbE=Yf=QwF54y97WTdjXyQ@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAP-5=fWw6-NsAOjSUSNFgnA0vNg1pbE=Yf=QwF54y97WTdjXyQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: cncheex05.Hygon.cn (172.23.18.115) To cncheex04.Hygon.cn
- (172.23.18.114)
 
-Add uncore PMU driver for Hygon Family 18h processors, supporting two
-PMU types:
 
-  - hygon_df:     Data Fabric counters shared across CPUs within the
-                  same DF instance, identified via Node ID.
 
-  - hygon_df_iod: Data Fabric counters on the IO Die (IOD) for
-                  monitoring memory access metrics.
+On 17/08/2026 20:13, Ian Rogers wrote:
+> On Mon, Aug 17, 2026 at 8:54 AM James Clark <james.clark@linaro.org> wrote:
+>>
+>> From: Qiao Zhao <qzhao@redhat.com>
+>>
+>> RISC-V and Arm control userspace counter access through
+>> /proc/sys/kernel/perf_user_access. Add that as a fallback to
+>> set_user_read() so the test can test both the enabled and disabled
+>> states on those platforms. RISC-V also uses a '2' value rather than just
+>> 0 or 1 so add support for restoring arbitrary values.
+>>
+>> On Arm, cap_user_rdpmc will always be set when requested, even if the
+>> global setting is disabled. This is so that the feature can be enabled
+>> or revoked while events are live. Skip checking it on Arm for the
+>> "expected disabled" case, otherwise the test will fail.
+>>
+>> Add comments, more meaningful variable names and improve the error
+>> messages so that it's clearer what this part of the test is doing.
+>>
+>> Signed-off-by: Qiao Zhao <qzhao@redhat.com>
+>> [Test pc->index, fix bugs in set_user_read(), and simplify commit msg]
+>> Assisted-by: Codex:GPT-5.6
+>> Signed-off-by: James Clark <james.clark@linaro.org>
+>> ---
+>> I'm sending this to fix the comments that I left on the "V3 resend"
+>> because I don't think Qiao sent a V4 and it's been quite a while.
+>>
+>> There were also some unreported bugs that I found during testing.
+>>
+>> Changes in V4:
+>>   - Don't remove pc->index check. Without it Perf can silently fall back
+>>     to the read() syscall and the test is useless.
+>>   - Test the 'expected disabled' case for Arm in an ifdef to workaround
+>>     platform differences.
+>>   - lseek() before writing to perf_user_access otherwise it's ignored.
+>>   - Support restoring arbitrary values to perf_user_access because RISC-V
+>>     uses '2' for legacy mode.
+> 
+> What does that mean? Should there be corresponding "legacy" support in libperf?
+> 
 
-A per-context hrtimer periodically reads the counters since uncore
-PMUs do not generate interrupts. CPU hotplug callbacks handle context
-creation, migration, and teardown.
+I don't think so, it looks like more of a security thing and 'legacy' 
+isn't really supposed to be used. It was only added in case someone 
+wants to go back to the original insecure behavior:
 
-Keeping Hygon support in a separate driver avoids accumulating vendor
-checks in uncore.c as more Hygon-specific features are introduced.
-Remove the now-unnecessary Hygon checks from the AMD uncore driver.
+   "We used to unconditionnally expose the cycle and instret csrs to
+    userspace, which gives rise to security concerns. So now we only
+    allow access to hw counters from userspace through the perf
+    framework which will handle context switches, per-task events...etc.
+    A sysctl allows to revert the behaviour to the legacy mode so that
+    userspace applications which are not ready for this change do not
+    break."
 
-Signed-off-by: Qi Liu <liuqi@hygon.cn>
-Tested-by: Zhenglang Hu <huzhenglang@hygon.cn>
----
- arch/x86/events/Kconfig            |  11 +
- arch/x86/events/amd/Makefile       |   2 +
- arch/x86/events/amd/hygon_uncore.c | 872 +++++++++++++++++++++++++++++
- arch/x86/events/amd/uncore.c       |  11 +-
- arch/x86/include/asm/msr-index.h   |   2 +
- arch/x86/include/asm/perf_event.h  |  20 +
- include/linux/cpuhotplug.h         |   3 +
- 7 files changed, 913 insertions(+), 8 deletions(-)
- create mode 100644 arch/x86/events/amd/hygon_uncore.c
+   drivers/perf/riscv_pmu_sbi.c:
 
-diff --git a/arch/x86/events/Kconfig b/arch/x86/events/Kconfig
-index dabdf3d7bf84..cc8387236b95 100644
---- a/arch/x86/events/Kconfig
-+++ b/arch/x86/events/Kconfig
-@@ -45,6 +45,17 @@ config PERF_EVENTS_AMD_UNCORE
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called 'amd-uncore'.
- 
-+config PERF_EVENTS_HYGON_UNCORE
-+	tristate "Hygon Uncore performance events"
-+	depends on PERF_EVENTS && CPU_SUP_HYGON
-+	default y
-+	help
-+	  Include support for Hygon uncore performance events for use with
-+	  e.g., perf stat -e hygon_df/.../.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called 'hygon-uncore'.
-+
- config PERF_EVENTS_AMD_BRS
- 	depends on PERF_EVENTS && CPU_SUP_AMD
- 	bool "AMD Zen3 Branch Sampling support"
-diff --git a/arch/x86/events/amd/Makefile b/arch/x86/events/amd/Makefile
-index 527d947eb76b..c373fd1d1525 100644
---- a/arch/x86/events/amd/Makefile
-+++ b/arch/x86/events/amd/Makefile
-@@ -5,6 +5,8 @@ obj-$(CONFIG_PERF_EVENTS_AMD_POWER)	+= power.o
- obj-$(CONFIG_X86_LOCAL_APIC)		+= ibs.o
- obj-$(CONFIG_PERF_EVENTS_AMD_UNCORE)	+= amd-uncore.o
- amd-uncore-objs				:= uncore.o
-+obj-$(CONFIG_PERF_EVENTS_HYGON_UNCORE)	+= hygon-uncore.o
-+hygon-uncore-objs			:= hygon_uncore.o
- ifdef CONFIG_AMD_IOMMU
- obj-$(CONFIG_CPU_SUP_AMD)		+= iommu.o
- endif
-diff --git a/arch/x86/events/amd/hygon_uncore.c b/arch/x86/events/amd/hygon_uncore.c
-new file mode 100644
-index 000000000000..471955d6fc28
---- /dev/null
-+++ b/arch/x86/events/amd/hygon_uncore.c
-@@ -0,0 +1,872 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2026 Chengdu Haiguang IC Design Co., Ltd.
-+ *
-+ */
-+
-+#include <linux/cpu.h>
-+#include <linux/cpumask.h>
-+#include <linux/cpufeature.h>
-+#include <linux/hrtimer.h>
-+#include <linux/init.h>
-+#include <linux/perf_event.h>
-+#include <linux/percpu.h>
-+#include <linux/slab.h>
-+#include <linux/smp.h>
-+#include <linux/types.h>
-+
-+#include <asm/amd/nb.h>
-+#include <asm/cpuid/api.h>
-+#include <asm/perf_event.h>
-+#include <asm/msr.h>
-+
-+#define HYGON_UNCORE_NUM_COUNTERS_DF	4
-+#define HYGON_UNCORE_NUM_COUNTERS_MAX	8
-+
-+#define HYGON_UNCORE_NAME_LEN		16
-+#define HYGON_UNCORE_COUNTER_SHIFT	16
-+
-+#undef pr_fmt
-+#define pr_fmt(fmt)	"hygon_uncore: " fmt
-+
-+struct hygon_uncore_ctx {
-+	int refcnt;
-+	int cpu;
-+	struct perf_event **events;
-+	unsigned long active_mask[BITS_TO_LONGS(HYGON_UNCORE_NUM_COUNTERS_MAX)];
-+	int nr_active;
-+	struct hrtimer hrtimer;
-+	u64 hrtimer_duration;
-+};
-+
-+struct hygon_uncore_pmu {
-+	char name[HYGON_UNCORE_NAME_LEN];
-+	int type;
-+	int num_counters;
-+	u32 msr_base;
-+	cpumask_t active_mask;
-+	struct pmu pmu;
-+	struct hygon_uncore_ctx * __percpu *ctx;
-+};
-+
-+enum {
-+	HYGON_UNCORE_TYPE_DF,
-+	HYGON_UNCORE_TYPE_DF_IOD,
-+	HYGON_UNCORE_TYPE_MAX
-+};
-+
-+union hygon_uncore_info {
-+	struct {
-+		u64	num_iods:8;	/* number of iods of each package */
-+		u64	num_pmcs:8;	/* number of counters */
-+		u64	cid:8;		/* context id */
-+	} split;
-+	u64		full;
-+};
-+
-+struct hygon_uncore {
-+	union hygon_uncore_info  __percpu *info;
-+	struct hygon_uncore_pmu pmu;
-+	bool pmu_registered;
-+	bool init_done;
-+	void (*scan)(struct hygon_uncore *uncore, unsigned int cpu);
-+	int  (*init)(struct hygon_uncore *uncore, unsigned int cpu);
-+	void (*move)(struct hygon_uncore *uncore, unsigned int cpu);
-+	void (*free)(struct hygon_uncore *uncore, unsigned int cpu);
-+};
-+static struct hygon_uncore uncores[];
-+
-+static unsigned int update_interval = 60 * MSEC_PER_SEC;
-+module_param(update_interval, uint, 0444);
-+
-+static struct hygon_uncore_pmu *event_to_hygon_uncore_pmu(struct perf_event *event)
-+{
-+	return container_of(event->pmu, struct hygon_uncore_pmu, pmu);
-+}
-+
-+static __always_inline bool is_uncore_df_iod_event(struct hygon_uncore_pmu *pmu)
-+{
-+	return pmu->type == HYGON_UNCORE_TYPE_DF_IOD;
-+}
-+
-+static __always_inline int hygon_uncore_ctx_num_pmcs(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	union hygon_uncore_info *info = per_cpu_ptr(uncore->info, cpu);
-+
-+	return info->split.num_pmcs;
-+}
-+
-+static __always_inline int hygon_uncore_ctx_cid(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	union hygon_uncore_info *info = per_cpu_ptr(uncore->info, cpu);
-+
-+	return info->split.cid;
-+}
-+
-+static __always_inline int hygon_uncore_ctx_num_iods(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	union hygon_uncore_info *info = per_cpu_ptr(uncore->info, cpu);
-+
-+	return info->split.num_iods;
-+}
-+
-+static enum hrtimer_restart hygon_uncore_hrtimer(struct hrtimer *hrtimer)
-+{
-+	struct hygon_uncore_ctx *ctx;
-+	struct perf_event *event;
-+	int bit;
-+
-+	ctx = container_of(hrtimer, struct hygon_uncore_ctx, hrtimer);
-+
-+	if (!ctx->nr_active || ctx->cpu != smp_processor_id())
-+		return HRTIMER_NORESTART;
-+
-+	for_each_set_bit(bit, ctx->active_mask, HYGON_UNCORE_NUM_COUNTERS_MAX) {
-+		event = ctx->events[bit];
-+		event->pmu->read(event);
-+	}
-+
-+	hrtimer_forward_now(hrtimer, ns_to_ktime(ctx->hrtimer_duration));
-+	return HRTIMER_RESTART;
-+}
-+
-+static void hygon_uncore_start_hrtimer(struct hygon_uncore_ctx *ctx)
-+{
-+	hrtimer_start(&ctx->hrtimer, ns_to_ktime(ctx->hrtimer_duration),
-+		      HRTIMER_MODE_REL_PINNED_HARD);
-+}
-+
-+static void hygon_uncore_cancel_hrtimer(struct hygon_uncore_ctx *ctx)
-+{
-+	hrtimer_cancel(&ctx->hrtimer);
-+}
-+
-+static void hygon_uncore_init_hrtimer(struct hygon_uncore_ctx *ctx)
-+{
-+	hrtimer_setup(&ctx->hrtimer, hygon_uncore_hrtimer, CLOCK_MONOTONIC,
-+		      HRTIMER_MODE_REL_HARD);
-+}
-+
-+static void hygon_uncore_read(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	u64 prev, cur;
-+	s64 delta;
-+
-+	do {
-+		prev = local64_read(&hwc->prev_count);
-+		rdmsrq(hwc->event_base, cur);
-+	} while (local64_cmpxchg(&hwc->prev_count, prev, cur) != prev);
-+	delta = (cur << HYGON_UNCORE_COUNTER_SHIFT) -
-+		(prev << HYGON_UNCORE_COUNTER_SHIFT);
-+	delta >>= HYGON_UNCORE_COUNTER_SHIFT;
-+	local64_add(delta, &event->count);
-+}
-+
-+static void hygon_uncore_start(struct perf_event *event, int flags)
-+{
-+	struct hygon_uncore_pmu *pmu = event_to_hygon_uncore_pmu(event);
-+	struct hygon_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	if (!ctx->nr_active++)
-+		hygon_uncore_start_hrtimer(ctx);
-+
-+	if (flags & PERF_EF_RELOAD)
-+		wrmsrq(hwc->event_base, (u64)local64_read(&hwc->prev_count));
-+
-+	hwc->state = 0;
-+	__set_bit(hwc->idx, ctx->active_mask);
-+	wrmsrq(hwc->config_base, (hwc->config | ARCH_PERFMON_EVENTSEL_ENABLE));
-+	perf_event_update_userpage(event);
-+}
-+
-+static void hygon_uncore_stop(struct perf_event *event, int flags)
-+{
-+	struct hygon_uncore_pmu *pmu = event_to_hygon_uncore_pmu(event);
-+	struct hygon_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	struct hw_perf_event *hwc = &event->hw;
-+
-+	wrmsrq(hwc->config_base, hwc->config);
-+	hwc->state |= PERF_HES_STOPPED;
-+
-+	if ((flags & PERF_EF_UPDATE) && !(hwc->state & PERF_HES_UPTODATE)) {
-+		event->pmu->read(event);
-+		hwc->state |= PERF_HES_UPTODATE;
-+	}
-+
-+	if (!--ctx->nr_active)
-+		hygon_uncore_cancel_hrtimer(ctx);
-+
-+	__clear_bit(hwc->idx, ctx->active_mask);
-+}
-+
-+static int hygon_uncore_add(struct perf_event *event, int flags)
-+{
-+	struct hygon_uncore_pmu *pmu = event_to_hygon_uncore_pmu(event);
-+	struct hygon_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	int i, iod_idx;
-+
-+	if (!ctx)
-+		return -ENODEV;
-+
-+	if (hwc->idx != -1 && ctx->events[hwc->idx] == event)
-+		goto out;
-+
-+	for (i = 0; i < pmu->num_counters; i++) {
-+		if (ctx->events[i] == event) {
-+			hwc->idx = i;
-+			goto out;
-+		}
-+	}
-+
-+	hwc->idx = -1;
-+	if (is_uncore_df_iod_event(pmu)) {
-+		iod_idx = event->attr.config1;
-+		for (i = iod_idx * HYGON_UNCORE_NUM_COUNTERS_DF;
-+		     i < (iod_idx + 1) * HYGON_UNCORE_NUM_COUNTERS_DF;
-+		     i++) {
-+			struct perf_event *tmp = NULL;
-+
-+			if (try_cmpxchg(&ctx->events[i], &tmp, event)) {
-+				hwc->idx = i;
-+				break;
-+			}
-+		}
-+	} else {
-+		for (i = 0; i < pmu->num_counters; i++) {
-+			struct perf_event *tmp = NULL;
-+
-+			if (try_cmpxchg(&ctx->events[i], &tmp, event)) {
-+				hwc->idx = i;
-+				break;
-+			}
-+		}
-+	}
-+out:
-+	if (hwc->idx == -1)
-+		return -EBUSY;
-+
-+	hwc->config_base = pmu->msr_base + (2 * hwc->idx);
-+	hwc->event_base = pmu->msr_base + 1 + (2 * hwc->idx);
-+	hwc->state = PERF_HES_UPTODATE | PERF_HES_STOPPED;
-+	if (flags & PERF_EF_START)
-+		event->pmu->start(event, PERF_EF_RELOAD);
-+
-+	return 0;
-+}
-+
-+static void hygon_uncore_del(struct perf_event *event, int flags)
-+{
-+	struct hygon_uncore_pmu *pmu = event_to_hygon_uncore_pmu(event);
-+	struct hygon_uncore_ctx *ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	struct hw_perf_event *hwc = &event->hw;
-+	int i;
-+
-+	if (!ctx)
-+		return;
-+
-+	event->pmu->stop(event, PERF_EF_UPDATE);
-+	for (i = 0; i < pmu->num_counters; i++) {
-+		struct perf_event *tmp = event;
-+
-+		if (try_cmpxchg(&ctx->events[i], &tmp, NULL))
-+			break;
-+	}
-+
-+	hwc->idx = -1;
-+}
-+
-+static int hygon_uncore_event_init(struct perf_event *event)
-+{
-+	struct hw_perf_event *hwc = &event->hw;
-+	struct hygon_uncore_pmu *pmu;
-+	struct hygon_uncore_ctx *ctx;
-+
-+	if (event->attr.type != event->pmu->type)
-+		return -ENOENT;
-+
-+	if (event->cpu < 0)
-+		return -EINVAL;
-+
-+	pmu = event_to_hygon_uncore_pmu(event);
-+	ctx = *per_cpu_ptr(pmu->ctx, event->cpu);
-+	if (!ctx)
-+		return -ENODEV;
-+
-+	event->cpu = ctx->cpu;
-+	hwc->config = event->attr.config;
-+	hwc->idx = -1;
-+
-+	return 0;
-+}
-+
-+static int hygon_uncore_df_event_init(struct perf_event *event)
-+{
-+	int ret = hygon_uncore_event_init(event);
-+	struct hw_perf_event *hwc = &event->hw;
-+	struct hygon_uncore_pmu *pmu;
-+	struct hygon_uncore *uncore;
-+	u64 event_mask = HYGON_F18H_RAW_EVENT_MASK_DF;
-+
-+	if (ret)
-+		return ret;
-+
-+	pmu = event_to_hygon_uncore_pmu(event);
-+	uncore = &uncores[pmu->type];
-+	if (is_uncore_df_iod_event(pmu) &&
-+	    (event->attr.config1 >= hygon_uncore_ctx_num_iods(uncore, event->cpu)))
-+		return -EINVAL;
-+
-+	if (boot_cpu_data.x86_model == 0x4 ||
-+	    boot_cpu_data.x86_model == 0x5)
-+		event_mask = HYGON_F18H_M4H_RAW_EVENT_MASK_DF;
-+	else if (boot_cpu_data.x86_model >= 0x6 &&
-+		 boot_cpu_data.x86_model <= 0x18)
-+		event_mask = HYGON_F18H_M6H_RAW_EVENT_MASK_DF;
-+
-+	hwc->config = event->attr.config & event_mask;
-+	return 0;
-+}
-+
-+static ssize_t cpumask_show(struct device *dev,
-+			    struct device_attribute *attr,
-+			    char *buf)
-+{
-+	struct pmu *ptr = dev_get_drvdata(dev);
-+	struct hygon_uncore_pmu *pmu = container_of(ptr, struct hygon_uncore_pmu, pmu);
-+
-+	return cpumap_print_to_pagebuf(true, buf, &pmu->active_mask);
-+}
-+static DEVICE_ATTR_RO(cpumask);
-+
-+static struct attribute *hygon_uncore_attrs[] = {
-+	&dev_attr_cpumask.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group hygon_uncore_attr_group = {
-+	.attrs = hygon_uncore_attrs,
-+};
-+
-+#define DEFINE_UNCORE_FORMAT_ATTR(_var, _name, _format)			\
-+static ssize_t __uncore_##_var##_show(struct device *dev,		\
-+				struct device_attribute *attr,		\
-+				char *page)				\
-+{									\
-+	BUILD_BUG_ON(sizeof(_format) >= PAGE_SIZE);			\
-+	return sprintf(page, _format "\n");				\
-+}									\
-+static struct device_attribute format_attr_##_var =			\
-+	__ATTR(_name, 0444, __uncore_##_var##_show, NULL)
-+
-+DEFINE_UNCORE_FORMAT_ATTR(event,	event,		"config:0-5");
-+DEFINE_UNCORE_FORMAT_ATTR(umask8,	umask,		"config:8-15");
-+DEFINE_UNCORE_FORMAT_ATTR(umask10,	umask,		"config:8-17");		/* F18h M4h DF */
-+DEFINE_UNCORE_FORMAT_ATTR(umask12,	umask,		"config:8-19");		/* F18h M6h DF */
-+DEFINE_UNCORE_FORMAT_ATTR(compid,	compid,	"config:6-7,32-35,61-62");
-+DEFINE_UNCORE_FORMAT_ATTR(iod,		iod,		"config1:0-1");
-+
-+static struct attribute *hygon_uncore_df_umask_attr(void)
-+{
-+	if (boot_cpu_data.x86_model == 0x4 ||
-+	    boot_cpu_data.x86_model == 0x5)
-+		return &format_attr_umask10.attr;
-+
-+	if (boot_cpu_data.x86_model >= 0x6 &&
-+	    boot_cpu_data.x86_model <= 0x18)
-+		return &format_attr_umask12.attr;
-+
-+	return &format_attr_umask8.attr;
-+}
-+
-+static struct attribute *hygon_uncore_df_format_attr[] = {
-+	&format_attr_event.attr,	/* event */
-+	&format_attr_umask8.attr,	/* umask */
-+	&format_attr_compid.attr,	/* compid */
-+	NULL,
-+};
-+
-+static struct attribute_group hygon_uncore_df_format_group = {
-+	.name = "format",
-+	.attrs = hygon_uncore_df_format_attr,
-+};
-+
-+static const struct attribute_group *hygon_uncore_df_attr_groups[] = {
-+	&hygon_uncore_attr_group,
-+	&hygon_uncore_df_format_group,
-+	NULL,
-+};
-+
-+static struct attribute *hygon_uncore_df_iod_format_attr[] = {
-+	&format_attr_event.attr,	/* event */
-+	&format_attr_umask10.attr,	/* umask */
-+	&format_attr_compid.attr,	/* compid */
-+	&format_attr_iod.attr,		/* iod */
-+	NULL,
-+};
-+
-+static struct attribute_group hygon_uncore_df_iod_format_group = {
-+	.name = "format",
-+	.attrs = hygon_uncore_df_iod_format_attr,
-+};
-+
-+static const struct attribute_group *hygon_uncore_df_iod_attr_groups[] = {
-+	&hygon_uncore_attr_group,
-+	&hygon_uncore_df_iod_format_group,
-+	NULL,
-+};
-+
-+static int hygon_uncore_cpu_starting(unsigned int cpu)
-+{
-+	struct hygon_uncore *uncore;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &uncores[i];
-+		uncore->scan(uncore, cpu);
-+	}
-+
-+	return 0;
-+}
-+
-+static int hygon_uncore_cpu_dead(unsigned int cpu)
-+{
-+	struct hygon_uncore *uncore;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &uncores[i];
-+		uncore->free(uncore, cpu);
-+	}
-+
-+	return 0;
-+}
-+
-+static int hygon_uncore_cpu_online(unsigned int cpu)
-+{
-+	struct hygon_uncore *uncore;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &uncores[i];
-+		if (uncore->init(uncore, cpu))
-+			continue;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hygon_uncore_cpu_down_prepare(unsigned int cpu)
-+{
-+	struct hygon_uncore *uncore;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &uncores[i];
-+		uncore->move(uncore, cpu);
-+	}
-+
-+	return 0;
-+}
-+
-+static void hygon_uncore_ctx_free(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	struct hygon_uncore_pmu *pmu = &uncore->pmu;
-+	struct hygon_uncore_ctx *ctx;
-+
-+	if (!uncore->init_done || !uncore->pmu_registered)
-+		return;
-+
-+	if (!pmu->ctx)
-+		return;
-+
-+	ctx = *per_cpu_ptr(pmu->ctx, cpu);
-+	if (!ctx)
-+		return;
-+
-+	if (cpu == ctx->cpu)
-+		cpumask_clear_cpu(cpu, &pmu->active_mask);
-+
-+	if (!--ctx->refcnt) {
-+		hygon_uncore_cancel_hrtimer(ctx);
-+		kfree(ctx->events);
-+		kfree(ctx);
-+	}
-+
-+	*per_cpu_ptr(pmu->ctx, cpu) = NULL;
-+}
-+
-+static void hygon_uncore_ctx_move(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	struct hygon_uncore_pmu *pmu = &uncore->pmu;
-+	struct hygon_uncore_ctx *curr, *next;
-+	int i;
-+
-+	if (!uncore->init_done || !uncore->pmu_registered)
-+		return;
-+
-+	if (!pmu->ctx)
-+		return;
-+
-+	curr = *per_cpu_ptr(pmu->ctx, cpu);
-+	if (!curr)
-+		return;
-+
-+	for_each_online_cpu(i) {
-+		next = *per_cpu_ptr(pmu->ctx, i);
-+		if (!next || cpu == i)
-+			continue;
-+
-+		if (curr == next) {
-+			perf_pmu_migrate_context(&pmu->pmu, cpu, i);
-+			cpumask_clear_cpu(cpu, &pmu->active_mask);
-+			cpumask_set_cpu(i, &pmu->active_mask);
-+			next->cpu = i;
-+			break;
-+		}
-+	}
-+}
-+
-+static int hygon_uncore_ctx_init(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	struct hygon_uncore_ctx *curr, *prev;
-+	struct hygon_uncore_pmu *pmu = &uncore->pmu;
-+	int node, cid, i;
-+
-+	if (!uncore->init_done || !uncore->pmu_registered)
-+		return 0;
-+
-+	if (!pmu->ctx)
-+		return 0;
-+
-+	cid = hygon_uncore_ctx_cid(uncore, cpu);
-+	*per_cpu_ptr(pmu->ctx, cpu) = NULL;
-+	curr = NULL;
-+
-+	for_each_online_cpu(i) {
-+		if (cpu == i)
-+			continue;
-+
-+		prev = *per_cpu_ptr(pmu->ctx, i);
-+		if (!prev)
-+			continue;
-+		if (cid == hygon_uncore_ctx_cid(uncore, i)) {
-+			curr = prev;
-+			break;
-+		}
-+	}
-+
-+	if (!curr) {
-+		node = cpu_to_node(cpu);
-+		curr = kzalloc_node(sizeof(*curr), GFP_KERNEL, node);
-+		if (!curr)
-+			goto fail;
-+
-+		curr->cpu = cpu;
-+		curr->events = kzalloc_node(sizeof(*curr->events) *
-+					    pmu->num_counters,
-+					    GFP_KERNEL, node);
-+		if (!curr->events) {
-+			kfree(curr);
-+			goto fail;
-+		}
-+
-+		cpumask_set_cpu(cpu, &pmu->active_mask);
-+
-+		hygon_uncore_init_hrtimer(curr);
-+		curr->hrtimer_duration = (u64)update_interval * NSEC_PER_MSEC;
-+	}
-+
-+	curr->refcnt++;
-+	*per_cpu_ptr(pmu->ctx, cpu) = curr;
-+
-+	return 0;
-+
-+fail:
-+	hygon_uncore_ctx_free(uncore, cpu);
-+
-+	return -ENOMEM;
-+}
-+
-+static void hygon_uncore_df_ctx_scan(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	union hygon_uncore_info info = {};
-+
-+	if (!boot_cpu_has(X86_FEATURE_PERFCTR_NB))
-+		return;
-+
-+	info.split.num_iods = 0;
-+	info.split.num_pmcs = HYGON_UNCORE_NUM_COUNTERS_DF;
-+	info.split.cid = topology_amd_node_id(cpu);
-+
-+	*per_cpu_ptr(uncore->info, cpu) = info;
-+}
-+
-+static
-+int hygon_uncore_df_ctx_init(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	struct hygon_uncore_pmu *pmu = &uncore->pmu;
-+	int num_counters;
-+
-+	if (uncore->init_done)
-+		return hygon_uncore_ctx_init(uncore, cpu);
-+
-+	num_counters = hygon_uncore_ctx_num_pmcs(uncore, cpu);
-+	if (!num_counters)
-+		goto done;
-+
-+	strscpy(pmu->name, "hygon_df", sizeof(pmu->name));
-+	pmu->num_counters = num_counters;
-+	pmu->msr_base = MSR_HYGON_F18H_DF_CTL;
-+	pmu->type = HYGON_UNCORE_TYPE_DF;
-+
-+	hygon_uncore_df_format_attr[1] = hygon_uncore_df_umask_attr();
-+
-+	pmu->ctx = alloc_percpu(struct hygon_uncore_ctx *);
-+	if (!pmu->ctx)
-+		goto done;
-+
-+	pmu->pmu = (struct pmu) {
-+		.task_ctx_nr	= perf_invalid_context,
-+		.attr_groups	= hygon_uncore_df_attr_groups,
-+		.name		= pmu->name,
-+		.event_init	= hygon_uncore_df_event_init,
-+		.add		= hygon_uncore_add,
-+		.del		= hygon_uncore_del,
-+		.start		= hygon_uncore_start,
-+		.stop		= hygon_uncore_stop,
-+		.read		= hygon_uncore_read,
-+		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
-+		.module		= THIS_MODULE,
-+	};
-+
-+	if (perf_pmu_register(&pmu->pmu, pmu->pmu.name, -1)) {
-+		free_percpu(pmu->ctx);
-+		pmu->ctx = NULL;
-+		goto done;
-+	}
-+	uncore->pmu_registered = true;
-+
-+done:
-+	uncore->init_done = true;
-+	return hygon_uncore_ctx_init(uncore, cpu);
-+}
-+
-+static
-+void hygon_uncore_df_iod_ctx_scan(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	union hygon_uncore_info info = {};
-+	int num_packages, num_cdds, iods_per_package;
-+
-+	if (!boot_cpu_has(X86_FEATURE_PERFCTR_NB))
-+		return;
-+
-+	if (boot_cpu_data.x86_model < 0x4 || boot_cpu_data.x86_model == 0x6)
-+		return;
-+
-+	num_packages = topology_max_packages();
-+	num_cdds = topology_max_dies_per_package() * num_packages;
-+	iods_per_package = (amd_nb_num() - num_cdds) / num_packages;
-+
-+	/* Hardware does not support more than 2 IODs per package. */
-+	if (iods_per_package <= 0 || iods_per_package > 2)
-+		return;
-+
-+	info.split.cid = topology_physical_package_id(cpu);
-+	info.split.num_iods = iods_per_package;
-+	info.split.num_pmcs = HYGON_UNCORE_NUM_COUNTERS_DF * iods_per_package;
-+
-+	*per_cpu_ptr(uncore->info, cpu) = info;
-+}
-+
-+static
-+int hygon_uncore_df_iod_ctx_init(struct hygon_uncore *uncore, unsigned int cpu)
-+{
-+	struct hygon_uncore_pmu *pmu = &uncore->pmu;
-+	int num_counters;
-+
-+	if (uncore->init_done)
-+		return hygon_uncore_ctx_init(uncore, cpu);
-+
-+	num_counters = hygon_uncore_ctx_num_pmcs(uncore, cpu);
-+	if (!num_counters)
-+		goto done;
-+
-+	strscpy(pmu->name, "hygon_df_iod", sizeof(pmu->name));
-+	pmu->num_counters = num_counters;
-+	pmu->msr_base = MSR_HYGON_F18H_DF_IOD_CTL;
-+	pmu->type = HYGON_UNCORE_TYPE_DF_IOD;
-+
-+	hygon_uncore_df_iod_format_attr[1] = hygon_uncore_df_umask_attr();
-+
-+	pmu->ctx = alloc_percpu(struct hygon_uncore_ctx *);
-+	if (!pmu->ctx)
-+		goto done;
-+
-+	pmu->pmu = (struct pmu) {
-+		.task_ctx_nr	= perf_invalid_context,
-+		.attr_groups	= hygon_uncore_df_iod_attr_groups,
-+		.name		= pmu->name,
-+		.event_init	= hygon_uncore_df_event_init,
-+		.add		= hygon_uncore_add,
-+		.del		= hygon_uncore_del,
-+		.start		= hygon_uncore_start,
-+		.stop		= hygon_uncore_stop,
-+		.read		= hygon_uncore_read,
-+		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE | PERF_PMU_CAP_NO_INTERRUPT,
-+		.module		= THIS_MODULE,
-+	};
-+
-+	if (perf_pmu_register(&pmu->pmu, pmu->pmu.name, -1)) {
-+		free_percpu(pmu->ctx);
-+		pmu->ctx = NULL;
-+		goto done;
-+	}
-+	uncore->pmu_registered = true;
-+done:
-+	uncore->init_done = true;
-+	return hygon_uncore_ctx_init(uncore, cpu);
-+}
-+
-+static struct hygon_uncore uncores[HYGON_UNCORE_TYPE_MAX] = {
-+	/* HYGON DF */
-+	{
-+		.scan = hygon_uncore_df_ctx_scan,
-+		.init = hygon_uncore_df_ctx_init,
-+		.move = hygon_uncore_ctx_move,
-+		.free = hygon_uncore_ctx_free,
-+	},
-+	/* HYGON DF IOD */
-+	{
-+		.scan = hygon_uncore_df_iod_ctx_scan,
-+		.init = hygon_uncore_df_iod_ctx_init,
-+		.move = hygon_uncore_ctx_move,
-+		.free = hygon_uncore_ctx_free,
-+	}
-+};
-+
-+static void hygon_uncore_pmu_cleanup(void)
-+{
-+	struct hygon_uncore_ctx *ctx;
-+	struct hygon_uncore *uncore;
-+	int i, cpu;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &uncores[i];
-+
-+		/* Unregister PMU before freeing its contexts. */
-+		if (uncore->pmu_registered) {
-+			perf_pmu_unregister(&uncore->pmu.pmu);
-+			uncore->pmu_registered = false;
-+		}
-+
-+		if (!uncore->pmu.ctx)
-+			continue;
-+
-+		/* Shared ctx objects are released through their refcnt. */
-+		for_each_possible_cpu(cpu) {
-+			ctx = *per_cpu_ptr(uncore->pmu.ctx, cpu);
-+			if (!ctx)
-+				continue;
-+
-+			if (!--ctx->refcnt) {
-+				hygon_uncore_cancel_hrtimer(ctx);
-+				kfree(ctx->events);
-+				kfree(ctx);
-+			}
-+			*per_cpu_ptr(uncore->pmu.ctx, cpu) = NULL;
-+		}
-+
-+		free_percpu(uncore->pmu.ctx);
-+		uncore->pmu.ctx = NULL;
-+	}
-+}
-+
-+static void hygon_uncore_info_cleanup(void)
-+{
-+	struct hygon_uncore *uncore;
-+	int i;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &uncores[i];
-+		if (uncore->info) {
-+			free_percpu(uncore->info);
-+			uncore->info = NULL;
-+		}
-+	}
-+}
-+
-+static int __init hygon_uncore_init(void)
-+{
-+	struct hygon_uncore *uncore;
-+	int ret = -ENODEV;
-+	int i;
-+
-+
-+	if (!update_interval) {
-+		pr_err("update_interval must be greater than 0 ms\n");
-+		return -EINVAL;
-+	}
-+
-+	if (boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
-+		return -ENODEV;
-+
-+	if (!boot_cpu_has(X86_FEATURE_TOPOEXT))
-+		return -ENODEV;
-+
-+	for (i = 0; i < HYGON_UNCORE_TYPE_MAX; i++) {
-+		uncore = &uncores[i];
-+
-+		uncore->info = alloc_percpu(union hygon_uncore_info);
-+		if (!uncore->info) {
-+			ret = -ENOMEM;
-+			goto fail;
-+		}
-+	}
-+
-+	ret = cpuhp_setup_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP,
-+				"perf/x86/hygon/uncore:prepare",
-+				NULL, hygon_uncore_cpu_dead);
-+	if (ret)
-+		goto fail;
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING,
-+				"perf/x86/hygon/uncore:starting",
-+				hygon_uncore_cpu_starting, NULL);
-+	if (ret)
-+		goto fail_prep;
-+
-+	ret = cpuhp_setup_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_ONLINE,
-+				"perf/x86/hygon/uncore:online",
-+				hygon_uncore_cpu_online,
-+				hygon_uncore_cpu_down_prepare);
-+	if (ret)
-+		goto fail_start;
-+
-+	return 0;
-+
-+fail_start:
-+	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING);
-+fail_prep:
-+	cpuhp_remove_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP);
-+fail:
-+	hygon_uncore_info_cleanup();
-+	return ret;
-+}
-+
-+static void __exit hygon_uncore_exit(void)
-+{
-+	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_ONLINE);
-+	cpuhp_remove_state(CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING);
-+	cpuhp_remove_state(CPUHP_PERF_X86_HYGON_UNCORE_PREP);
-+
-+	hygon_uncore_pmu_cleanup();
-+	hygon_uncore_info_cleanup();
-+}
-+module_init(hygon_uncore_init);
-+module_exit(hygon_uncore_exit);
-+
-+MODULE_DESCRIPTION("Hygon Uncore Driver");
-+MODULE_LICENSE("GPL");
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index dbc00b6dd69e..6c486e1ab001 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -775,9 +775,7 @@ int amd_uncore_df_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
- 		goto done;
- 	}
- 
--	pr_info("%d %s%s counters detected\n", pmu->num_counters,
--		boot_cpu_data.x86_vendor == X86_VENDOR_HYGON ?  "HYGON " : "",
--		pmu->pmu.name);
-+	pr_info("%d %s counters detected\n", pmu->num_counters, pmu->pmu.name);
- 
- 	uncore->num_pmus = 1;
- 
-@@ -911,9 +909,7 @@ int amd_uncore_l3_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
- 		goto done;
- 	}
- 
--	pr_info("%d %s%s counters detected\n", pmu->num_counters,
--		boot_cpu_data.x86_vendor == X86_VENDOR_HYGON ?  "HYGON " : "",
--		pmu->pmu.name);
-+	pr_info("%d %s counters detected\n", pmu->num_counters, pmu->pmu.name);
- 
- 	uncore->num_pmus = 1;
- 
-@@ -1120,8 +1116,7 @@ static int __init amd_uncore_init(void)
- 	int ret = -ENODEV;
- 	int i;
- 
--	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD &&
--	    boot_cpu_data.x86_vendor != X86_VENDOR_HYGON)
-+	if (boot_cpu_data.x86_vendor != X86_VENDOR_AMD)
- 		return -ENODEV;
- 
- 	if (!boot_cpu_has(X86_FEATURE_TOPOEXT))
-diff --git a/arch/x86/include/asm/msr-index.h b/arch/x86/include/asm/msr-index.h
-index 18c4be75e927..d20338f0b2b2 100644
---- a/arch/x86/include/asm/msr-index.h
-+++ b/arch/x86/include/asm/msr-index.h
-@@ -851,6 +851,8 @@
- #define MSR_F15H_PTSC			0xc0010280
- #define MSR_F15H_IC_CFG			0xc0011021
- #define MSR_F15H_EX_CFG			0xc001102c
-+#define MSR_HYGON_F18H_DF_CTL		0xc0010240
-+#define MSR_HYGON_F18H_DF_IOD_CTL	0xc0010250
- 
- /* Fam 10h MSRs */
- #define MSR_FAM10H_MMIO_CONF_BASE	0xc0010058
-diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
-index 1eb13673e889..7c8c00ad56e9 100644
---- a/arch/x86/include/asm/perf_event.h
-+++ b/arch/x86/include/asm/perf_event.h
-@@ -124,6 +124,26 @@
- 	(AMD64_PERFMON_V2_EVENTSEL_EVENT_NB	|	\
- 	 AMD64_PERFMON_V2_EVENTSEL_UMASK_NB)
- 
-+#define HYGON_F18H_EVENTSEL_EVENT_DF		0x0000003FULL
-+#define HYGON_F18H_EVENTSEL_UMASK_DF		0x0000FF00ULL
-+#define HYGON_F18H_M4H_EVENTSEL_UMASK_DF	0x0003FF00ULL
-+#define HYGON_F18H_M6H_EVENTSEL_UMASK_DF	0x000FFF00ULL
-+#define HYGON_F18H_EVENTSEL_CONSTID_DF			\
-+	(0x000000C0ULL | GENMASK_ULL(35, 32) | GENMASK_ULL(62, 61))
-+
-+#define HYGON_F18H_RAW_EVENT_MASK_DF			\
-+	(HYGON_F18H_EVENTSEL_EVENT_DF		|	\
-+	 HYGON_F18H_EVENTSEL_UMASK_DF		|	\
-+	 HYGON_F18H_EVENTSEL_CONSTID_DF)
-+#define HYGON_F18H_M4H_RAW_EVENT_MASK_DF		\
-+	(HYGON_F18H_EVENTSEL_EVENT_DF		|	\
-+	 HYGON_F18H_M4H_EVENTSEL_UMASK_DF	|	\
-+	 HYGON_F18H_EVENTSEL_CONSTID_DF)
-+#define HYGON_F18H_M6H_RAW_EVENT_MASK_DF		\
-+	(HYGON_F18H_EVENTSEL_EVENT_DF		|	\
-+	 HYGON_F18H_M6H_EVENTSEL_UMASK_DF	|	\
-+	 HYGON_F18H_EVENTSEL_CONSTID_DF)
-+
- #define AMD64_PERFMON_V2_ENABLE_UMC			BIT_ULL(31)
- #define AMD64_PERFMON_V2_EVENTSEL_EVENT_UMC		GENMASK_ULL(7, 0)
- #define AMD64_PERFMON_V2_EVENTSEL_RDWRMASK_UMC		GENMASK_ULL(9, 8)
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 0fb3a2a62eb0..bccdb87a0c05 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -62,6 +62,7 @@ enum cpuhp_state {
- 	CPUHP_CREATE_THREADS,
- 	CPUHP_PERF_X86_PREPARE,
- 	CPUHP_PERF_X86_AMD_UNCORE_PREP,
-+	CPUHP_PERF_X86_HYGON_UNCORE_PREP,
- 	CPUHP_PERF_POWER,
- 	CPUHP_PERF_SUPERH,
- 	CPUHP_X86_HPET_DEAD,
-@@ -148,6 +149,7 @@ enum cpuhp_state {
- 	CPUHP_AP_IRQ_RISCV_SBI_IPI_STARTING,
- 	CPUHP_AP_ARM_MVEBU_COHERENCY,
- 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
-+	CPUHP_AP_PERF_X86_HYGON_UNCORE_STARTING,
- 	CPUHP_AP_PERF_X86_STARTING,
- 	CPUHP_AP_PERF_X86_AMD_IBS_STARTING,
- 	CPUHP_AP_PERF_XTENSA_STARTING,
-@@ -205,6 +207,7 @@ enum cpuhp_state {
- 	CPUHP_AP_PERF_X86_ONLINE,
- 	CPUHP_AP_PERF_X86_UNCORE_ONLINE,
- 	CPUHP_AP_PERF_X86_AMD_UNCORE_ONLINE,
-+	CPUHP_AP_PERF_X86_HYGON_UNCORE_ONLINE,
- 	CPUHP_AP_PERF_X86_AMD_POWER_ONLINE,
- 	CPUHP_AP_PERF_S390_CF_ONLINE,
- 	CPUHP_AP_PERF_S390_SF_ONLINE,
--- 
-2.34.1
+   #define SYSCTL_NO_USER_ACCESS	0
+   #define SYSCTL_USER_ACCESS	1
+   #define SYSCTL_LEGACY		2
 
+I added this so that the test doesn't overwrite an existing legacy value 
+and then not restore it which could break their system after running the 
+Perf tests.
+
+>>   - Rename rdpmc_supported to rdpmc_expected as this is what the test
+>>     expects, not what the system does.
+> 
+> Can you explain the distinction here? The test expects that if
+> userspace reading is enabled, it should be supported. Imo this makes a
+> line like:
+> ```
+> if (rdpmc_supported && counts.val == 0) {
+> ```
+> easy to read. The same line with rdpmc_expected, well I need to then
+> go and figure out what expected should mean and it seems to just mean
+
+rdpmc_supported was already defined somewhere else, I only renamed it so 
+I'm not sure having to go and figure anything out is a strong argument.
+
+> supported, so the code was more readable before.
+> 
+
+I don't think it does mean supported, the default case is this one:
+
+   rdpmc_expected = (enabled == USER_READ_ENABLED);
+
+That's not whether the system supports it or has enabled it or not, it's 
+what the test attempted to write into sysfs and what is expected for 
+that invocation of the function. The system might not actually support 
+it or have enabled it, and in that case the test should fail because 
+expected != active. If writing into the sysfs file was silently not 
+accepted then you can't assume enabled == supported (unless you read 
+back the file which the test doesn't do, it just blindly writes and then 
+assumes it worked, i.e. "expects").
+
+I was trying to separate the concepts of what the system has done vs 
+what the test expects. I thought "expected" is quite a common term in 
+testing for test derived variables, but it's just a variable name so I'm 
+not too set on it, but I do think it's an improvement.
+
+>>   - Label pc->index as rdpmc_event_active for clarity.
+>>   - Add comments and simplify the commit message.
+>> ---
+>>   tools/perf/tests/mmap-basic.c | 137 ++++++++++++++++++++++++++++++------------
+>>   1 file changed, 98 insertions(+), 39 deletions(-)
+>>
+>> diff --git a/tools/perf/tests/mmap-basic.c b/tools/perf/tests/mmap-basic.c
+>> index 5cec7644952c..4433a5df3d77 100644
+>> --- a/tools/perf/tests/mmap-basic.c
+>> +++ b/tools/perf/tests/mmap-basic.c
+>> @@ -1,6 +1,7 @@
+>>   // SPDX-License-Identifier: GPL-2.0
+>>   #include <errno.h>
+>>   #include <inttypes.h>
+>> +#include <limits.h>
+>>   #include <stdlib.h>
+>>
+>>   #include <fcntl.h>
+>> @@ -182,47 +183,77 @@ static int test__basic_mmap(struct test_suite *test __maybe_unused, int subtest
+>>   }
+>>
+>>   enum user_read_state {
+>> -       USER_READ_ENABLED,
+>> -       USER_READ_DISABLED,
+>> -       USER_READ_UNKNOWN,
+>> +       USER_READ_UNKNOWN = -1,
+>> +       USER_READ_DISABLED = 0,
+>> +       USER_READ_ENABLED = 1,
+>>   };
+>>
+>> -static enum user_read_state set_user_read(struct perf_pmu *pmu, enum user_read_state enabled)
+>> +static int set_user_read_fd(int fd, int enabled)
+> 
+> Why change this to an int rather than adding "legacy" to the
+> user_read_state enum? An int gives far more potential values than the
+> enum and so appears inherently less intention-revealing.
+> 
+
+I did consider it but I didn't think it was very future proof. This 
+would then break a system when someone adds a 3. If we weren't restoring 
+whatever value is read then I would agree just using the enum would make 
+sense, but I think it should handle any integer. Wouldn't this just 
+trade functionality for style?
+
+>>   {
+>> -       char buf[2] = {0, '\n'};
+>> +       char buf[32], *endptr;
+>> +       long value;
+>>          ssize_t len;
+>> -       int events_fd, rdpmc_fd;
+>> -       enum user_read_state old_user_read = USER_READ_UNKNOWN;
+>> +       int old_user_read;
+>>
+>> -       if (enabled == USER_READ_UNKNOWN)
+>> +       len = read(fd, buf, sizeof(buf) - 1);
+>> +       if (len <= 0) {
+>> +               pr_debug("%s read failed\n", __func__);
+>>                  return USER_READ_UNKNOWN;
+>> +       }
+>> +       buf[len] = '\0';
+>>
+>> -       events_fd = perf_pmu__event_source_devices_fd();
+>> -       if (events_fd < 0)
+>> +       errno = 0;
+>> +       value = strtol(buf, &endptr, 10);
+>> +       if (errno || endptr == buf || value < 0 || value > INT_MAX) {
+> 
+> Given we're range checking the read value, can the upper bound be "> 2" ?
+> 
+
+Is there a particular reason to? Similarly to above, I only think this 
+will cause issues when new values are added. At the moment the test is 
+immune to it.
+
+>> +               pr_debug("%s invalid value: %s\n", __func__, buf);
+>>                  return USER_READ_UNKNOWN;
+>> +       }
+>> +       old_user_read = value;
+>>
+>> -       rdpmc_fd = perf_pmu__pathname_fd(events_fd, pmu->name, "rdpmc", O_RDWR);
+>> -       if (rdpmc_fd < 0) {
+>> -               close(events_fd);
+>> -               return USER_READ_UNKNOWN;
+>> +       if (enabled == old_user_read)
+>> +               return old_user_read;
+>> +
+>> +       len = scnprintf(buf, sizeof(buf), "%d\n", enabled);
+>> +       if (lseek(fd, 0, SEEK_SET) < 0) {
+>> +               pr_debug("%s seek failed\n", __func__);
+>> +               return old_user_read;
+>>          }
+>> +       if (write(fd, buf, len) != len)
+>> +               pr_debug("%s write failed\n", __func__);
+>>
+>> -       len = read(rdpmc_fd, buf, sizeof(buf));
+>> -       if (len != sizeof(buf))
+>> -               pr_debug("%s read failed\n", __func__);
+>> +       return old_user_read;
+>> +}
+>> +
+>> +static int set_user_read(struct perf_pmu *pmu, int enabled)
+>> +{
+>> +       int events_fd, fd, old_user_read;
+>>
+>> -       // Note, on Intel hybrid disabling on 1 PMU will implicitly disable on
+>> -       // all the core PMUs.
+>> -       old_user_read = (buf[0] == '1') ? USER_READ_ENABLED : USER_READ_DISABLED;
+>> +       if (enabled == USER_READ_UNKNOWN)
+>> +               return USER_READ_UNKNOWN;
+>>
+>> -       if (enabled != old_user_read) {
+>> -               buf[0] = (enabled == USER_READ_ENABLED) ? '1' : '0';
+>> -               len = write(rdpmc_fd, buf, sizeof(buf));
+>> -               if (len != sizeof(buf))
+>> -                       pr_debug("%s write failed\n", __func__);
+>> +       events_fd = perf_pmu__event_source_devices_fd();
+>> +       if (events_fd >= 0) {
+>> +               fd = perf_pmu__pathname_fd(events_fd, pmu->name, "rdpmc", O_RDWR);
+>> +               if (fd >= 0) {
+>> +                       /*
+>> +                        * Note, on Intel hybrid disabling on 1 PMU will
+>> +                        * implicitly disable on all the core PMUs.
+>> +                        */
+>> +                       old_user_read = set_user_read_fd(fd, enabled);
+>> +                       close(fd);
+>> +                       close(events_fd);
+>> +                       return old_user_read;
+>> +               }
+>> +               close(events_fd);
+>>          }
+>> -       close(rdpmc_fd);
+>> -       close(events_fd);
+>> +
+>> +       /* Fallback: perf_user_access interface (arm64, riscv, or similar) */
+>> +       fd = open("/proc/sys/kernel/perf_user_access", O_RDWR);
+>> +       if (fd < 0)
+>> +               return USER_READ_UNKNOWN;
+>> +
+>> +       old_user_read = set_user_read_fd(fd, enabled);
+>> +       close(fd);
+>>          return old_user_read;
+>>   }
+>>
+>> @@ -240,7 +271,7 @@ static int test_stat_user_read(u64 event, enum user_read_state enabled)
+>>          perf_thread_map__set_pid(threads, 0, 0);
+>>
+>>          while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
+>> -               enum user_read_state saved_user_read_state = set_user_read(pmu, enabled);
+>> +               int saved_user_read_state = set_user_read(pmu, enabled);
+>>                  struct perf_event_attr attr = {
+>>                          .type   = PERF_TYPE_HARDWARE,
+>>                          .config = perf_pmus__supports_extended_type()
+>> @@ -253,7 +284,8 @@ static int test_stat_user_read(u64 event, enum user_read_state enabled)
+>>                  struct perf_evsel *evsel = NULL;
+>>                  int err;
+>>                  struct perf_event_mmap_page *pc;
+>> -               bool mapped = false, opened = false, rdpmc_supported;
+>> +               bool mapped = false, opened = false, rdpmc_expected;
+>> +               bool rdpmc_event_active;
+>>                  struct perf_counts_values counts = { .val = 0 };
+>>
+>>
+>> @@ -301,26 +333,53 @@ static int test_stat_user_read(u64 event, enum user_read_state enabled)
+>>                          goto cleanup;
+>>                  }
+>>
+>> +               /*
+>> +                * When pc->index == 0, userspace access is disabled and Perf
+>> +                * will silently use the read() syscall instead. Test this to
+>> +                * make sure we're not doing that.
+>> +                */
+>> +               rdpmc_event_active = pc->index;
+>> +
+>> +               /*
+>> +                * If we couldn't set the state, test that whatever state we're
+>> +                * already in is the expected one.
+>> +                */
+>>                  if (saved_user_read_state == USER_READ_UNKNOWN)
+>> -                       rdpmc_supported = pc->cap_user_rdpmc && pc->index;
+>> +                       rdpmc_expected = pc->cap_user_rdpmc && rdpmc_event_active;
+>>                  else
+>> -                       rdpmc_supported = (enabled == USER_READ_ENABLED);
+>> +                       rdpmc_expected = (enabled == USER_READ_ENABLED);
+>>
+>> -               if (rdpmc_supported && (!pc->cap_user_rdpmc || !pc->index)) {
+>> -                       pr_err("User space counter reading for PMU %s [Failed unexpected supported counter access %d %d]\n",
+>> -                               pmu->name, pc->cap_user_rdpmc, pc->index);
+>> +               if (rdpmc_expected && (!pc->cap_user_rdpmc || !rdpmc_event_active)) {
+>> +                       pr_err("User space counter reading for PMU %s [Failed. rdpmc event should be both enabled and active %d %d]\n",
+>> +                               pmu->name, pc->cap_user_rdpmc, rdpmc_event_active);
+>>                          ret = TEST_FAIL;
+>>                          goto cleanup;
+>>                  }
+>>
+>> -               if (!rdpmc_supported && pc->cap_user_rdpmc) {
+>> -                       pr_err("User space counter reading for PMU %s [Failed unexpected unsupported counter access %d]\n",
+>> -                               pmu->name, pc->cap_user_rdpmc);
+>> +#ifdef __aarch64__
+>> +               /*
+>> +                * On Arm, pc->cap_user_rdpmc is set when the event is opened
+>> +                * with userspace counter access, regardless of whether rdpmc is
+>> +                * enabled or not via sysfs. The event is always opened with it
+>> +                * in this test, so don't check it in the expected disabled
+>> +                * case.
+>> +                */
+> 
+> It seems uapi/linux/perf_event.h should be amended with this meaning.
+> Currently it says:
+> ```
+> cap_user_rdpmc          : 1, /* The RDPMC instruction can be used to
+> read counts */
+> ```
+> and that lacks the sysfs nuance particular to ARM.
+> 
+
+Do we need to mention sysfs here? The other platforms have the PMU rdpmc 
+file which isn't mentioned.
+
+I can change it to this which would apply to all platforms:
+
+/* The RDPMC instruction can be used to read counts if pc->index is set */
+
+The examples in that file already check pc->index, so I suppose there 
+isn't really anything Arm specific if it's phrased that way. If 
+cap_user_rdpmc was already enough to gate reading, then the examples 
+wouldn't have included the pc->index check as well.
+
+>> +               if (!rdpmc_expected && rdpmc_event_active) {
+>> +                       pr_err("User space counter reading for PMU %s [Failed. rdpmc event should be inactive %d]\n",
+>> +                               pmu->name, rdpmc_event_active);
+>> +                       ret = TEST_FAIL;
+>> +                       goto cleanup;
+>> +               }
+>> +#else
+>> +               if (!rdpmc_expected && pc->cap_user_rdpmc) {
+>> +                       pr_err("User space counter reading for PMU %s [Failed. rdpmc event should be disabled and inactive %d %d]\n",
+>> +                               pmu->name, pc->cap_user_rdpmc, rdpmc_event_active);
+>>                          ret = TEST_FAIL;
+>>                          goto cleanup;
+>>                  }
+>> +#endif
+> 
+> So in the general (non-ARM) case should there be two prints? One for
+> "disabled" from pc->cap_user_rdpmc and one for "inactive" from
+> rdpmc_event_active?
+
+I assumed that myself and tried adding it so it was symmetrical to the 
+"expected enabled" case. But there is another platform difference, 
+PowerPC seems to set pc->index (rdpmc_event_active) even when the cap is 
+disabled. So you have to check both the cap and index are set for the 
+enabled case but only check the cap for the disabled case (everywhere 
+execpt Arm). I assume that's why index is missing or was removed from 
+this test in the first place.
+
+Honestly it is quite a bit of a mess, but I think getting away with only 
+one platform conditional and not weakening any of the existing tests is 
+quite a good outcome.
+
+> In that case the cap_user_rdpmc can be skipped on
+> ARM due to it not adhering to the common behavior.
+> 
+> Thanks,
+> Ian
+> 
+>>
+>> -               if (rdpmc_supported && pc->pmc_width < 32) {
+>> +               if (rdpmc_expected && pc->pmc_width < 32) {
+>>                          pr_err("User space counter reading for PMU %s [Failed width not set %d]\n",
+>>                                  pmu->name, pc->pmc_width);
+>>                          ret = TEST_FAIL;
+>> @@ -328,7 +387,7 @@ static int test_stat_user_read(u64 event, enum user_read_state enabled)
+>>                  }
+>>
+>>                  perf_evsel__read(evsel, 0, 0, &counts);
+>> -               if (rdpmc_supported && counts.val == 0) {
+>> +               if (rdpmc_expected && counts.val == 0) {
+>>                          pr_err("User space counter reading for PMU %s [Failed read]\n", pmu->name);
+>>                          ret = TEST_FAIL;
+>>                          goto cleanup;
+>>
+>> ---
+>> base-commit: 6ae6fb96ccd48032b00a38d5f8e0e0a2cce4972b
+>> change-id: 20260817-rdpmc-detection-logic-d3f7a49cfb46
+>>
+>> Best regards,
+>> --
+>> James Clark <james.clark@linaro.org>
+>>
 
