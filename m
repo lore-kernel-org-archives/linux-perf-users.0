@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27604330B15;
-	Tue, 18 Aug 2026 22:33:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3279F5474F;
+	Tue, 18 Aug 2026 22:36:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787092432; cv=none; b=WxsFaIRmcI0e/hafnufxx0Sf6XMgBWZiKtI35JievP3fMlk/529aEznxh7uw3v9CJPr09h8zf4JEWXL++ZF1SuOKDGuN+/AQyslPAV4qywL+NZ52197bAZzFOkOXzWP05MzXu15+sbSEnPo5O2/Fh33S8bJLDoHUJ1iwq9FEATA=
+	t=1787092563; cv=none; b=saUBUNQTNy0ug0ZqpWOrUdVvFlEWYwI88d1paO5BVNuKUhpCHt84p20v2SyKdolM5UJn3KDld/sBir7PbLShZ0OTNOvf05e7Xh0OF5gzB0qQCcOwT9LC58LQXl/WYFB5XO5q6JS26JIvi5g0Lmo8SIoN5tfQAeCp7BvxsYonSWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787092432; c=relaxed/simple;
-	bh=qHM3US8HLZMePSvpntPPPleLs8FIxKov3WGCuqjIgSc=;
+	s=arc-20240116; t=1787092563; c=relaxed/simple;
+	bh=p0pVl4RHAFDtpkAW8ycW1qAwl5+UQE7YH/xyNFog7yc=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=auYFcvb40wvDqJMmjN+aB7l99hlx/m2NA70ZZswl9HbXll22ExAM3DRmGjcCvy2OsupTMQP37C4vhVlTeGBJzO4QjLR61AtPD+lwzP0oQcB1xx+214/qaCyfRbVFzZvwC4lcbgAqsiDDnvema3Z84/fhN373XjbTtbUeQhQXpKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LI5VW90j; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=Izgf0QW+uZUxQgHXVwSIUxC83bfhkUEwMpYeLSKviHAdgtgRfh4a2oZqC8z0hvvAIAgDBNGHqjA67yt7aT5TjN7FUcEcwgabuabVxSESNrbuEPniUOE5JOU9n6thJvrkqSbebBrs6SlyyJ7rHYmMC68uwwvpLF2YUO8DoVFgArc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TviWhsMe; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LI5VW90j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED9ED1F000E9;
-	Tue, 18 Aug 2026 22:33:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TviWhsMe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D91E1F000E9;
+	Tue, 18 Aug 2026 22:35:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787092430;
-	bh=CAXtEoG3ZwN55od8cpcTzNd778E3/hW958EsDeZAns0=;
+	s=k20260515; t=1787092561;
+	bh=mooCpwdivODcsxjJtipvJTFeDrXeFUytmXSLwgTfTDQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=LI5VW90jbLQkNNtgxrvKtfhLWB36VMH6i3x6koR2aUuIK4go2sf51lfLN02i6iBi1
-	 6kB0cArrti0nz6OPXwTx5++xQNTeo2HF8xJ8gVxXzGpLxfrSPjECijM5AcRELK7iRx
-	 t4XFgrFAyAioQYkuTJM4cIUFvrsK5dJljb3rNosUOErqMRz6xaykOACYuZI6w1bkZQ
-	 tv0sZgLHMy3LZs4qEK94JnBFyaYVsItZzyNiLKm2Tw2uZ9cxGy7/89lsGrotWE1dRy
-	 1Kw2dA8VTr0ZuMu8A+BIJVpRHpGGVl9T4UdIyIJn800eYbX76T4hVsbjsJMfsa+VN6
-	 XU16f9HRncNhA==
-Date: Wed, 19 Aug 2026 07:33:44 +0900
+	b=TviWhsMezOQw/PtdIqDrJUXONka84O/XnmU8/JEhhILJrGlzGgsqzREWBk2LTB8oc
+	 9ZXQhPtu/RPDbNrje6+abU73dU/J4kHiBY9xfivmSUwIUuMTDQne00MtJNDRD2NHQV
+	 wgm5TE2YhGerTizRNYJ9Ppc3kuka+PeilWpqkscLOm+oio1Zw95V3sr4pqKV8QevVN
+	 D8ybdRS4PsX/VLX63pFl87LnLuwiyBHziy+j1dseMl98eZ4MvU5MIBcBp83RWSRerT
+	 zO9h6VnuME5iM295zcPhtxjRrGInCEytdTcbQ+UUwDRVFeEP9Ifcm2g7001G+UzdvS
+	 /s/iqpIOGkgaw==
+Date: Wed, 19 Aug 2026 07:35:55 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: Jinchao Wang <wangjinchao600@gmail.com>
 Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
@@ -38,13 +38,13 @@ Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
  <irogers@google.com>, linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
  linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v12 08/11] tracing/wprobe: Add set_wprobe and
- clear_wprobe event triggers
-Message-Id: <20260819073344.50eb99b94932df2a193d6cbc@kernel.org>
-In-Reply-To: <d833b191-ced9-4cf6-ac37-fc593d06191b@gmail.com>
+Subject: Re: [PATCH v12 04/11] tracing/wprobe: Add wprobe (watchpoint probe)
+ trace event support
+Message-Id: <20260819073555.751f8d6a0772c84cfb21044c@kernel.org>
+In-Reply-To: <77a90576-7142-4537-9e24-6fcefb0c6dde@gmail.com>
 References: <178611679753.237811.10190793347982785419.stgit@devnote2>
-	<178611688737.237811.17143803996766057381.stgit@devnote2>
-	<d833b191-ced9-4cf6-ac37-fc593d06191b@gmail.com>
+	<178611684231.237811.7919346786503289720.stgit@devnote2>
+	<77a90576-7142-4537-9e24-6fcefb0c6dde@gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -55,246 +55,171 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 18 Aug 2026 17:22:27 +0800
+On Mon, 17 Aug 2026 19:51:22 +0800
 Jinchao Wang <wangjinchao600@gmail.com> wrote:
 
-> On 8/7/2026 11:34 PM, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Add set_wprobe and clear_wprobe event triggers to dynamically attach
-> > and detach hardware breakpoint address monitoring based on event field
-> > contents.
-> > 
-> 
-> This patch does not build with wprobe enabled.
-
-Oops, thanks for testing! Let me fix it.
-
-> 
-> > Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> > Changes in v12:
-> >  - Decrement trigger data->count only when watchpoint state is actually changed.
-> >  - Remove dyn_event_ops_mutex to fix lockdep circular dependency deadlock.
-> >  - Add event_trigger_init() call to prevent premature freeing of trigger_data.
-> >  - Use WRITE_ONCE() when modifying tw->addr to pair with READ_ONCE().
-> >  - Add missing braces to else-block in wprobe_trigger_print().
-> >  - Initialize tw->addr only after trace_event_enable_disable() succeeds.
-> >  - Counter counts only if the trigger is actually working.
-> > Changes in v11:
-> >  - Soft-enable (register) wprobe event on WPROBE_DEFAULT_CLEAR_ADDRESS.
-> >  - Add work_pending check before updating tw->addr.
-> > ---
-> >  Documentation/trace/wprobetrace.rst |   98 +++++++
-> >  include/linux/trace_events.h        |    1 
-> >  kernel/trace/Kconfig                |   10 +
-> >  kernel/trace/trace.h                |    1 
-> >  kernel/trace/trace_dynevent.h       |    1 
-> >  kernel/trace/trace_events_trigger.c |    2 
-> >  kernel/trace/trace_probe.c          |    2 
-> >  kernel/trace/trace_probe.h          |    9 +
-> >  kernel/trace/trace_wprobe.c         |  527 +++++++++++++++++++++++++++++++++++
-> >  9 files changed, 648 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/Documentation/trace/wprobetrace.rst b/Documentation/trace/wprobetrace.rst
-> > index ad5f089b5ef5..a579347735d2 100644
-> > --- a/Documentation/trace/wprobetrace.rst
-> > +++ b/Documentation/trace/wprobetrace.rst
-> > @@ -68,3 +68,101 @@ Here is an example to add a wprobe event on a variable `jiffies`.
-> >             <idle>-0       [000] d.Z1.  717.026373: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
-> >  
-> >  You can see the code which writes to `jiffies` is `tick_do_update_jiffies64()`.
+[...]
+> > +Synopsis of wprobe-events
+> > +-------------------------
+> > +::
 > > +
-> > +Combination with trigger action
-> > +-------------------------------
-> > +The event trigger action can extend the utilization of this wprobe.
+> > +  w:[GRP/][EVENT] SPEC [FETCHARGS]                       : Probe on data access
 > > +
-> > +- set_wprobe:WPEVENT:FIELD[+|-ADJUST]
-> > +- clear_wprobe:WPEVENT[:FIELD[+|-]ADJUST]
+> > + GRP            : Group name for wprobe. If omitted, use "wprobes" for it.
+> > + EVENT          : Event name for wprobe. If omitted, an event name is
+> > +                  generated based on the address or symbol.
+> > + SPEC           : Breakpoint specification.
+> > +                  [r|w|rw]@<ADDRESS|SYMBOL[[+|-]OFFS]>[:LENGTH]
+> > +
+> > +   r|w|rw       : Access type, r for read, w for write, and rw for both.
+> > +                  Default is rw if omitted.
+> > +   ADDRESS      : Address to trace (hexadecimal). MUST be in kernel space.
+> > +   SYMBOL       : Symbol name to trace.
+> > +   LENGTH       : Length of the data to trace in bytes. (1, 2, 4, or 8)
 > 
-> Both forms accept an optional [:COUNT] which is not documented here.
+> Should it show default value 4?
 
-Ah, indeed.
+Ah, good catch!
+
+> > +
+> > +  FETCHARGS      : Arguments. Each probe can have up to 128 args.
+> > +   $addr         : Fetch the accessing address.
+> > +   $value        : Fetch the memory value at the accessing address (same as +0($addr)).
+> > +   @ADDR         : Fetch memory at ADDR (ADDR should be in kernel)
+> > +  @SYM[+|-offs] : Fetch memory at SYM +|- offs (SYM should be a data symbol)
+> > +  +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*1)(\*2)
+> > +  \IMM          : Store an immediate value to the argument.
+> > +  NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
+> > +  FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
+> > +                  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
+> > +                  (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
+> > +                  and bitfield are supported.
+> 
+> FETCHARGS block is not aligned.
+
+OK.
 
 > 
 > > +
-> > +Set these triggers to the target event, then the WPROBE event will be
-> > +setup to trace the memory access at FIELD[+|-ADJUST] address.
-> > +When clear_wprobe is hit, if FIELD is NOT specified, the WPEVENT is
-> > +forcibly cleared. If FIELD[[+|-]ADJUST] is set, it clears WPEVENT only
-> > +if its watching address is the same as the FIELD[[+|-]ADJUST] value.
-> 
-> Two forms of adjust:
-> [+|-ADJUST]
-> [+|-]ADJUST
-
-OK. [+ADJUST|-ADJUST] is correct form.
-
-> 
-> 
+> > +  (\*1) this is useful for fetching a field of data structures.
+> > +  (\*2) "u" means user-space dereference.
 > > +
-> > +Notes:
-> > +The set_wprobe trigger does not change the type and length, these
-> > +must be set when creating a new wprobe.
+> > +For the details of TYPE, see :ref:`kprobetrace documentation <kprobetrace_types>`.
 > > +
-> > +The WPROBE event must be disabled when setting the new trigger
-> > +and it will be busy afterwards. Recommended usage is to add a new
-> > +wprobe at NULL address and keep disabled.
+> > +Usage examples
+> > +--------------
+> > +Here is an example to add a wprobe event on a variable `jiffies`.
+> > +::
 > > +
-> 
+> > +  # echo 'w:my_jiffies w@jiffies' >> dynamic_events
+> > +  # cat dynamic_events
+> > +  w:wprobes/my_jiffies w@jiffies
+> > +  # echo 1 > events/wprobes/enable
+> > +  # cat trace | head
+> > +  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> > +  #              | |         |   |||||     |         |
+> > +           <idle>-0       [000] d.Z1.  717.026259: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+> > +           <idle>-0       [000] d.Z1.  717.026373: my_jiffies: (tick_do_update_jiffies64+0xbe/0x130)
+> > +
+> > +You can see the code which writes to `jiffies` is `tick_do_update_jiffies64()`.
+> > diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> > index 5cbd09c8be8d..43ffd9a76d88 100644
+> > --- a/include/linux/trace_events.h
+> > +++ b/include/linux/trace_events.h
+> > @@ -337,6 +337,7 @@ enum {
+> >  	TRACE_EVENT_FL_UPROBE_BIT,
+> >  	TRACE_EVENT_FL_EPROBE_BIT,
+> >  	TRACE_EVENT_FL_FPROBE_BIT,
+> > +	TRACE_EVENT_FL_WPROBE_BIT,
+> >  	TRACE_EVENT_FL_CUSTOM_BIT,
+> >  	TRACE_EVENT_FL_TEST_STR_BIT,
+> >  };
+> > @@ -367,6 +368,7 @@ enum {
+> >  	TRACE_EVENT_FL_UPROBE		= (1 << TRACE_EVENT_FL_UPROBE_BIT),
+> >  	TRACE_EVENT_FL_EPROBE		= (1 << TRACE_EVENT_FL_EPROBE_BIT),
+> >  	TRACE_EVENT_FL_FPROBE		= (1 << TRACE_EVENT_FL_FPROBE_BIT),
+> > +	TRACE_EVENT_FL_WPROBE		= (1 << TRACE_EVENT_FL_WPROBE_BIT),
+> >  	TRACE_EVENT_FL_CUSTOM		= (1 << TRACE_EVENT_FL_CUSTOM_BIT),
+> >  	TRACE_EVENT_FL_TEST_STR		= (1 << TRACE_EVENT_FL_TEST_STR_BIT),
+> >  };
 > > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> > index d9b6fa5c35d9..5fd8ed63c516 100644
+> > index 0ab5916575a9..b58c2565024f 100644
 > > --- a/kernel/trace/Kconfig
 > > +++ b/kernel/trace/Kconfig
-> > @@ -876,6 +876,16 @@ config WPROBE_EVENTS
-> >  	  Those events can be inserted wherever hardware breakpoints can be
-> >  	  set, and record accessed memory address and values.
+> > @@ -862,6 +862,19 @@ config EPROBE_EVENTS
+> >  	  convert the type of an event field. For example, turn an
+> >  	  address into a string.
 > >  
-> > +config WPROBE_TRIGGERS
-> > +	depends on WPROBE_EVENTS
-> > +	depends on HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR
-> > +	bool
-> > +	default y
+> > +config WPROBE_EVENTS
+> > +	bool "Enable wprobe-based dynamic events"
+> > +	depends on TRACING
+> > +	depends on HAVE_HW_BREAKPOINT
+> > +	select PROBE_EVENTS
+> > +	select DYNAMIC_EVENTS
 > > +	help
-> > +	  This adds an event trigger which will set the wprobe on a specific
-> > +	  field of an event. This allows user to trace the memory access of
-> > +	  an address pointed by the event field.
+> > +	  This allows the user to add watchpoint tracing events based on
+> > +	  hardware breakpoints on the fly via the ftrace interface.
+> > +
+> > +	  Those events can be inserted wherever hardware breakpoints can be
+> > +	  set, and record accessed memory address and values.
 > > +
 > >  config BPF_EVENTS
 > >  	depends on BPF_SYSCALL
 > >  	depends on (KPROBE_EVENTS || UPROBE_EVENTS) && PERF_EVENTS
-> > diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-> > index 64851a8d021f..a789a722bc8b 100644
-> > --- a/kernel/trace/trace.h
-> > +++ b/kernel/trace/trace.h
-> > @@ -1983,6 +1983,7 @@ trigger_data_alloc(struct event_command *cmd_ops, char *cmd, char *param,
-> >  		   void *private_data);
-> >  extern void trigger_data_free(struct event_trigger_data *data);
-> >  extern int event_trigger_init(struct event_trigger_data *data);
-> > +extern void event_trigger_free(struct event_trigger_data *data);
-> >  extern int trace_event_trigger_enable_disable(struct trace_event_file *file,
-> >  					      int trigger_enable);
-> >  extern void update_cond_flag(struct trace_event_file *file);
-> > diff --git a/kernel/trace/trace_dynevent.h b/kernel/trace/trace_dynevent.h
-> > index beee3f8d7544..77c2c84dcdb5 100644
-> > --- a/kernel/trace/trace_dynevent.h
-> > +++ b/kernel/trace/trace_dynevent.h
-> > @@ -64,6 +64,7 @@ struct dyn_event {
-> >  };
+> > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> > index f934ff586bd4..141c8323de20 100644
+> > --- a/kernel/trace/Makefile
+> > +++ b/kernel/trace/Makefile
+> > @@ -126,6 +126,7 @@ obj-$(CONFIG_FTRACE_RECORD_RECURSION) += trace_recursion_record.o
+> >  obj-$(CONFIG_FPROBE) += fprobe.o
+> >  obj-$(CONFIG_RETHOOK) += rethook.o
+> >  obj-$(CONFIG_FPROBE_EVENTS) += trace_fprobe.o
+> > +obj-$(CONFIG_WPROBE_EVENTS) += trace_wprobe.o
 > >  
-> >  extern struct list_head dyn_event_list;
-> > +extern struct mutex dyn_event_ops_mutex;
+> >  obj-$(CONFIG_TRACEPOINT_BENCHMARK) += trace_benchmark.o
+> >  obj-$(CONFIG_RV) += rv/
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index 19cc07360005..4ebece96d8b7 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -4294,8 +4294,12 @@ static const char readme_msg[] =
+> >  	"  uprobe_events\t\t- Create/append/remove/show the userspace dynamic events\n"
+> >  	"\t\t\t  Write into this file to define/undefine new trace events.\n"
+> >  #endif
+> > +#ifdef CONFIG_WPROBE_EVENTS
+> > +	"  wprobe_events\t\t- Create/append/remove/show the hardware breakpoint dynamic events\n"
+> > +	"\t\t\t  Write into this file to define/undefine new trace events.\n"
+> > +#endif
+> >  #if defined(CONFIG_KPROBE_EVENTS) || defined(CONFIG_UPROBE_EVENTS) || \
+> > -    defined(CONFIG_FPROBE_EVENTS)
+> > +    defined(CONFIG_FPROBE_EVENTS) || defined(CONFIG_WPROBE_EVENTS)
+> >  	"\t  accepts: event-definitions (one definition per line)\n"
+> >  #if defined(CONFIG_KPROBE_EVENTS) || defined(CONFIG_UPROBE_EVENTS)
+> >  	"\t   Format: p[:[<group>/][<event>]] <place> [<args>]\n"
+> > @@ -4305,6 +4309,9 @@ static const char readme_msg[] =
+> >  	"\t           f[:[<group>/][<event>]] <func-name>[%return] [<args>]\n"
+> >  	"\t           t[:[<group>/][<event>]] <tracepoint> [<args>]\n"
+> >  #endif
+> > +#ifdef CONFIG_WPROBE_EVENTS
+> > +	"\t           w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]\n"
 > 
-> dyn_event_ops_mutex is not needed anymore.
+> missing [<args>]
 
-Ah, good catch!
+Oops, let me fix it.
+
+Thanks!
 
 > 
-> >  
-> >  static inline
-> >  int dyn_event_init(struct dyn_event *ev, struct dyn_event_operations *ops)
-> > diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-> > index ad83419cb420..fa409ebd73c2 100644
-> > --- a/kernel/trace/trace_events_trigger.c
-> > +++ b/kernel/trace/trace_events_trigger.c
-> > @@ -589,7 +589,7 @@ int event_trigger_init(struct event_trigger_data *data)
-> >   * Usually used directly as the @free method in event trigger
-> >   * implementations.
-> >   */
-> > -static void
-> > +void
-> >  event_trigger_free(struct event_trigger_data *data)
-> >  {
-> >  	if (WARN_ON_ONCE(data->ref <= 0))
-> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> > index 9f4cad18977a..36e07275a04d 100644
-> > --- a/kernel/trace/trace_probe.c
-> > +++ b/kernel/trace/trace_probe.c
-> > @@ -20,7 +20,7 @@
-> >  #undef C
-> >  #define C(a, b)		b
-> >  
-> > -static const char *trace_probe_err_text[] = { ERRORS };
-> > +const char *trace_probe_err_text[] = { ERRORS };
-> >  
-> >  static const char *reserved_field_names[] = {
-> >  	"common_type",
-> > diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> > index 6543d4c2cda5..e08f17c99138 100644
-> > --- a/kernel/trace/trace_probe.h
-> > +++ b/kernel/trace/trace_probe.h
-> > @@ -634,7 +634,12 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
-> >  	C(TYPECAST_SYM_OFFSET,	"@SYM+/-OFFSET with typecast needs parentheses"),	\
-> >  	C(USED_ARG_NAME,	"This argument name is already used"),		\
-> >  	C(WPROBE_NO_MAXACT,	"Watchpoint probe does not support maxactive"),	\
-> > -	C(WPROBE_NO_SIBLING,	"Watchpoint probe does not support sibling probes"),
-> > +	C(WPROBE_NO_SIBLING,	"Watchpoint probe does not support sibling probes"), \
-> > +	C(WPROBE_ON_KPROBE,	"Wprobe trigger is not supported on kprobe event"), \
-> > +	C(WPROBE_NOT_FOUND,	"Target wprobe event is not found"),		\
-> > +	C(WPROBE_BUSY,		"Target wprobe event is already enabled"),	\
-> > +	C(WPROBE_NEED_FIELD,	"Wprobe trigger requires a target field"),	\
-> > +	C(WPROBE_BAD_FIELD,	"Target field must be pointer size"),
-> >  
-> >  #undef C
-> >  #define C(a, b)		TP_ERR_##a
-> > @@ -658,6 +663,8 @@ void __trace_probe_log_err(int offset, int err);
-> >  
-> >  DEFINE_FREE(trace_probe_log_clear, const char *, if (_T) trace_probe_log_clear())
-> >  
-> > +extern const char *trace_probe_err_text[];
-> > +
-> >  #define trace_probe_log_err(offs, err)	\
-> >  	__trace_probe_log_err(offs, TP_ERR_##err)
-> >  
-> > diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-> > index df592d9280a4..c64bbdc90a40 100644
-> > --- a/kernel/trace/trace_wprobe.c
-> > +++ b/kernel/trace/trace_wprobe.c
-> > @@ -6,7 +6,9 @@
-> >   */
-> >  #define pr_fmt(fmt)	"trace_wprobe: " fmt
-> >  
-> > +#include <linux/atomic.h>
-> >  #include <linux/compiler.h>
-> > +#include <linux/errno.h>
-> >  #include <linux/hw_breakpoint.h>
-> >  #include <linux/kallsyms.h>
-> >  #include <linux/list.h>
-> > @@ -15,11 +17,16 @@
-> >  #include <linux/perf_event.h>
-> >  #include <linux/rculist.h>
-> >  #include <linux/security.h>
-> > +#include <linux/spinlock.h>
-> >  #include <linux/tracepoint.h>
-> >  #include <linux/uaccess.h>
-> > +#include <linux/workqueue.h>
-> > +#include <linux/irq_work.h>
-> > +#include <linux/preempt.h>
-> >  
-> >  #include <asm/ptrace.h>
-> >  
-> > +#include "trace.h"
-> >  #include "trace_dynevent.h"
-> >  #include "trace_probe.h"
-> >  #include "trace_probe_kernel.h"
-> > @@ -50,6 +57,17 @@ struct trace_wprobe {
-> >  	int			len;
-> >  	int			type;
-> >  	const char		*symbol;
-> > +	raw_spinlock_t		lock;
-> > +	struct irq_work		irq_work;
-> > +	struct work_struct	work;
-> > +	atomic_t		missed;
+> > +#endif
+> >  #ifdef CONFIG_HIST_TRIGGERS
+> >  	"\t           s:[synthetic/]<event> <field> [<field>]\n"
+> >  #endif
 > 
-> Is `missed`  read somewhere?
-> I searched this file, only found set and inc.
+> Thanks,
+> Jinchao
+> 
+> 
 
-No, it just count the missed. I'm considering to expose it via
-new `wprobe_profile`.
-
-Thanks,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
