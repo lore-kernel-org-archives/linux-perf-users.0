@@ -1,30 +1,69 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012059.outbound.protection.outlook.com [40.107.200.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 452DC43CE52;
-	Tue, 18 Aug 2026 08:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787043551; cv=none; b=BgSnDH/5xURDcH3EnFV0aIcLbaHw4Rhel7m6Bo0OZwXDy2VGcxq8UkUTeGoYWwd/vQYmEPFVPzWFHC0kEYurWFCtmfL0ZU99rNpRW8DozAGOnGpyiVXs25WtHgh8NlrJAoZUaCcQlBRtW7PsuJTvxfJmI0yWxnjPvt0A5FjmUJU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787043551; c=relaxed/simple;
-	bh=9ZXcpc5AMOQ2M5KgGoTzMH841o9B2VbYuzxmRYkb3xo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dDy3dSgCb7+ibO9myapwhzeOAwQE/X2Rrv24OhqVaG4K9JIOUuZ6/fC1VQZbu6hjiplrCIpPFbfDUAoVLIzcUt6IDJM0bDn0gefSRrBMFsNFJslVM7c02VFn+wzseMg6TYJzQLnzPzEKHrgTYyq3kz8Wb8Nmwuqrx76OOZ3g+Mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hPNsj162czYQv5y;
-	Tue, 18 Aug 2026 16:58:49 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 34E5C4058C;
-	Tue, 18 Aug 2026 16:59:04 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgDHAUHWHoRqb30BCw--.26985S2;
-	Tue, 18 Aug 2026 16:59:03 +0800 (CST)
-Message-ID: <d53b15a6-e735-45fc-b9cd-4815b7484f6f@huaweicloud.com>
-Date: Tue, 18 Aug 2026 16:59:02 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 282BC3C10A0;
+	Tue, 18 Aug 2026 09:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787043882; cv=fail; b=mmYOdvBpz0StAyOQ28/lNf1GmsuoBcl4FmEKF1T2TkO/CgOApg/6pmciRS1PXVt74l7xtUjAAzc5GWbkGfzTeB4x/fa0Amf70sGchZPWMPdydLcKISMFyBn/uI1ALV0KWn8PeUW+aHvzrTV8SGCxCvMZM9u6rSGhfzg1HdH7HN8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787043882; c=relaxed/simple;
+	bh=xH9d4tAZaCLR8dZPADfDrmcRxPBJcqAVUyMal61bzns=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=KvrxyAegBuJLfPLxKE50gXqj/BrpKu4jMHA3iK68ikGSQW7urWHdQ2GSIZpE7r0O0dvFnJ5GKCRfnyO6pxLzPzAS8MnOEoZ+Ko6RS3/0My7Px4tgx7BrFswcLsgqO8yGr/mUUYVqZWblwogmngCtc63rgJl0nd3rTElPj6R8zBY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=e7WGXxFg; arc=fail smtp.client-ip=40.107.200.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="e7WGXxFg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GVwRoFzGvX+N/eoFvsy9/nU4cPttU7mL5V4LpIw8GcyHhPYxfEkUsNMadHmX2HeXtSIXvaDkm2bNhqWiiRDaTIhHugZlQ3lCHSOPdYkpKPHMq/SG9sST5KLMb1dgqD6cx9tp9rEHEYqQrRHPnEIzeoPS9m2uCuXc5/JU1wlW+mMmPLgBXXB6DXFiKV+K7DaPHr0IkbYqTOhAGq1t92azpfgV2NusSt2Vp+5NEITAvLXkC6tvmOFxLo3sWaV/k1Q956zZaqKq9nDYAYM6fxcFq+H1OHOYdztpp4Fu4hWPioftvgTP8alG5DmnvF4U9g7Hxw7cb+vSJJQkcMbQwvTFcw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=E/EpnXKq7AMmGbxGr10u1NFTQzajAaR1a5y5hMCyp38=;
+ b=EhsZZyBZEDGaOlgDH9wqNi8mrLawqbKn6nZxDBe+nTMiGldSewbtRczeTxbY/PLrBFWqLJ+bG0IW2SU/1pBjvYQtSJVQQEww93APuIahPNJI6o/ODEnrqtRpFfmn/2W3xcTseQ6ffvHyUFOUtBAzQhrAAQR06JQqs9uf2G+Ap4qzPJR/Eebf+NiG0tScONF40EeE1wyh9BlZxzZYX5u/J118nbwTx+jcgkXT8YfJITNZR/6TptexWIUK2TSzZxwsnJ1bQSjXiDmy/jAjl3KDmv6lRRCAmX/BUttMQok8DLHoxNqhOt4a/H1kXz6KRbkIvWNfDE6KjkEi0Rt8GC/TjQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=E/EpnXKq7AMmGbxGr10u1NFTQzajAaR1a5y5hMCyp38=;
+ b=e7WGXxFgqr4udXSQVLUWiW2MjkL0gdYccy9mJY8qpKxVZ6i4OqUNAxIYW9+AK8M7Z1lsG1yIZVW4BhhOfBcS4EIzidxTazoDvRjNswJ1ZsV3q+z0hdT5CcRdX9BiAQ0IO9ET5TNC4pH65ZgnAa0VWQVDJFDctPfHXkEuqw8WeBM=
+Received: from SJ0PR13CA0161.namprd13.prod.outlook.com (2603:10b6:a03:2c7::16)
+ by PH8PR12MB6745.namprd12.prod.outlook.com (2603:10b6:510:1c0::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.12; Tue, 18 Aug
+ 2026 09:04:35 +0000
+Received: from SJ5PEPF00000207.namprd05.prod.outlook.com
+ (2603:10b6:a03:2c7:cafe::4e) by SJ0PR13CA0161.outlook.office365.com
+ (2603:10b6:a03:2c7::16) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.339.8 via Frontend Transport; Tue, 18
+ Aug 2026 09:04:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
+Received: from satlexmb08.amd.com (165.204.84.17) by
+ SJ5PEPF00000207.mail.protection.outlook.com (10.167.244.40) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.339.3 via Frontend Transport; Tue, 18 Aug 2026 09:04:33 +0000
+Received: from satlexmb10.amd.com (10.181.42.219) by satlexmb08.amd.com
+ (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Tue, 18 Aug
+ 2026 04:04:33 -0500
+Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb10.amd.com
+ (10.181.42.219) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Tue, 18 Aug
+ 2026 04:04:33 -0500
+Received: from [10.136.43.11] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.45 via Frontend
+ Transport; Tue, 18 Aug 2026 04:04:27 -0500
+Message-ID: <638cf844-8422-4706-b028-60d8722ce487@amd.com>
+Date: Tue, 18 Aug 2026 14:34:26 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -32,255 +71,80 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 19/23] perf annotate-arm64: Support 'mov' instruction
- tracking
-To: Shuai Xue <xueshuai@linux.alibaba.com>, Namhyung Kim
- <namhyung@kernel.org>, james.clark@linaro.org,
- Li Huafei <lihuafei1@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
- Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Bill Wendling <morbo@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-20-wutengda@huaweicloud.com>
- <960b490f-42da-4a9e-8734-62f9c3773b2d@linux.alibaba.com>
+Subject: Re: [RFC PATCH] perf/amd/ibs: Report physical address for IBS fetch
+ samples
+To: Peter Zijlstra <peterz@infradead.org>
+CC: Huang Shijie <huangsj@hygon.cn>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <zhongyuan@hygon.cn>, <fangbaoshun@hygon.cn>,
+	<yingzhiwei@hygon.cn>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <james.clark@linaro.org>,
+	<tglx@kernel.org>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <hpa@zytor.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <liuqi@hygon.cn>, <lijing@hygon.cn>, "Ravi
+ Bangoria" <ravi.bangoria@amd.com>
+References: <20260817073323.2504767-1-huangsj@hygon.cn>
+ <9a39e681-3184-4841-9e19-7fc40956e917@amd.com>
+ <20260818080024.GB1247881@noisy.programming.kicks-ass.net>
 Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <960b490f-42da-4a9e-8734-62f9c3773b2d@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgDHAUHWHoRqb30BCw--.26985S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3Xr4DZrW8Cw4UJFWrCrWDCFg_yoWfur47pF
-	Z5C3yUGrW7Grs7WrnxtrWDJF95Cr1xt3WDCry0q3WayF43Kr1FgF42qrW29Fy5Jr4rAr17
-	Jr1jqr9rZw17A3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	s2-5UUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20260818080024.GB1247881@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ5PEPF00000207:EE_|PH8PR12MB6745:EE_
+X-MS-Office365-Filtering-Correlation-Id: a4ba2a90-047d-4ee6-aced-08defd07b8a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|36860700016|7416014|23010399003|1800799024|82310400026|10067099003|56012099006|3023799007|18002099003|22082099003|4143699003|11063799006;
+X-Microsoft-Antispam-Message-Info:
+	81QMLS/O9NgR+S47d2/MjCKYg05xx45KsJ+/lQH+++RGQGY5Jf08otUf+NQ5Tx/tUAdQ3y5fsIRIh4nP5Hk8KScp5PxczTZqNYL8O3bH1APY1M7/9D4pBOAw3Q5v8/sl8sNibVOPTaKsf1Zyf985LZFlBjo1A5Jk2PI/oPVX9ItrIFnR8bZYthZ8VhG4RAWAnMxL/UZxH3/GZNVLCC47YyLW7Lk+bcYyRwka15Wf7Tt0KsL+Dg2Q0E5MGM2e0q2emjJInxXsitagH5mY3S6iTaVr3tXmne8i+gbS3LLoOTf+4SVgZu30Zj+Xkwbn5fd59Su24x5D4u+SAGS7wdKvKeyk9CQh7QsKNaHjA1TIaVMmhybwv6914wNe8RlOEkDONt/dDw3418w68ogkOOM/eA3VA2umSXEdgNPozc50mUbLUzs8egRu/1K37iFCCMh6SH8B9CdHu/KMWFohEYTcfKmJZur72If0C1/t5jr9qBIBgXnQuOHEYDqomEpwLXhhrU9TqZEz4V7aErWAxNzG31Ur0shyAjD4Va8dmtttqrOPaGD8x7BbjozlCrvM43Elx3dhzkAGZxQgzWHZCM25bha3wnNvhdt2+O0B/V6Xj1oC/auOy8f5GnesxAEsax00WMncjCCk0j34l5FQC6eCM8+LAdmOW89wRyqeQRBlMpYhgk1m16ZTq7Wow2uxOjL71jgc73Afn2N4PUH2BIJmyA==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(36860700016)(7416014)(23010399003)(1800799024)(82310400026)(10067099003)(56012099006)(3023799007)(18002099003)(22082099003)(4143699003)(11063799006);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	YVwDJOMr0LsJTRPewXBD5ysgulU502Odxyz5bBmWbxS4qpvIgFlLbHLSzXe+xf0VOg5rsEg6tsIBTxsdOokLp2wxUqMPkyAVHKEoEeNlM1k3tYx/jEghCLAdLy4/mUbzz3g3C6KJFMSbONfuYwDQV67N43Gb90LrVKVc9UFuSqEdeAO4etlxdHWQ9BJbB9oolTdyDTDQlAX3Nm/bPKOaNIJXMwwv5hV4ytmEZ25ai7c1iOVvTEDekNi7wntqfjRvT7+cot1UpVK5MoCeujmil6RN5su1hosed/j6wA2YcbM5I4y2+GUr0do22qZHlf/wQhHRV/oXi9QoQpetRO8vtq7H/DkX2pYzq+PnOwdoMY76vx7Eg+WUWnOEP3K1i+lecUZZWNMpMQHgkmg9PUC4F5uUJMuBkEyxFIW6R+Cf0gUSc6YI5xToE4WYstpNac0n
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2026 09:04:33.6391
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a4ba2a90-047d-4ee6-aced-08defd07b8a1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: SJ5PEPF00000207.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB6745
 
-
-
-On 2026/8/11 16:37, Shuai Xue wrote:
-> 
-> 
-> On 8/8/26 8:23 PM, Tengda Wu wrote:
->> Extend update_insn_state() for arm64 to support register-to-register and
->> immediate-to-register 'mov' instructions.
+On 18-Aug-26 1:30 PM, Peter Zijlstra wrote:
+> On Tue, Aug 18, 2026 at 10:29:08AM +0530, Ravi Bangoria wrote:
+>> On 17-Aug-26 1:03 PM, Huang Shijie wrote:
+>>> The IBS Fetch sampling does not report the physical address of the
+>>> fetched instruction even when PERF_SAMPLE_PHYS_ADDR is requested,
+>>> while IBS Op sampling does.
+>>>
+>>> This patch reports physical address for IBS fetch samples which can be
+>>> used for profiling the running program.
 >>
->> For register-to-register 'mov' (e.g., mov dreg, sreg), propagate data type
->> information from the source register to the destination register.
+>> PERF_SAMPLE_PHYS_ADDR is meant to capture the _data_ physical address, which
+>> IBS Fetch doesn't provide. So, repurposing semantics of PERF_SAMPLE_PHYS_ADDR
+>> for IBS Fetch seems reasonable.
 >>
->> For immediate-to-register 'mov' (e.g., mov dreg, #imm), store the immediate
->> value in the destination register's imm_value field and set its kind to
->> TSR_KIND_CONST, allowing subsequent instructions to resolve it as a
->> constant.
->>
->> A real-world example is shown below:
->>
->>    ffff8000803eebf8 <get_vma_policy>:
->>    ffff8000803eec20:  mov  x21, x0          // x0 (struct vm_area_struct*) -> x21
->>    ffff8000803eec28:  ldr  x2, [x0, #112]
->>    ffff8000803eec2c:  cbz  x2, ffff8000803eec94 <get_vma_policy+0x9c>
->> * ffff8000803eec94:  ldr  x0, [x21, #152]
->>
->> Before this commit, the type of x21 was unknown, causing the subsequent
->> inference to fail:
->>
->>    var [0] reg0 offset 0 type='struct vm_area_struct*' size=0x8
->>    chk [9c] reg21 offset=0x98 ok=0 kind=0 cfa : no type information
->>    final result: no type information
->>
->> After this commit, the type of x21 is correctly inferred as 'vm_area_struct':
->>
->>    var [0] reg0 offset 0 type='struct vm_area_struct*' size=0x8
->>    mov [28] reg0 -> reg21 type='struct vm_area_struct*' size=0x8
->>    chk [9c] reg21 offset=0x98 ok=1 kind=1 (struct vm_area_struct*) : Good!
->>    found by insn track: 0x98(reg21) type-offset=0x98
->>    final result:  type='struct vm_area_struct' size=0xb0
->>
->> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
->> ---
->>   .../perf/util/annotate-arch/annotate-arm64.c  | 53 ++++++++++++++++++-
->>   1 file changed, 52 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
->> index 6e09e9707256..7b780bad8c07 100644
->> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
->> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
->> @@ -1,6 +1,7 @@
->>   // SPDX-License-Identifier: GPL-2.0
->>   #include <linux/compiler.h>
->>   #include <errno.h>
->> +#include <inttypes.h>
->>   #include <stdlib.h>
->>   #include <string.h>
->>   #include <linux/ctype.h>
->> @@ -484,6 +485,7 @@ static int propagate_load_reg_state(struct type_state *state,
->>           tsr->type = type_die;
->>           tsr->kind = TSR_KIND_TYPE;
->>           tsr->offset = 0;
->> +        tsr->imm_value = 0;
->>           tsr->ok = true;
->>             if (src->multi_regs) {
->> @@ -641,6 +643,51 @@ static void update_store_insn_state(struct type_state *state,
->>       adjust_reg_index_state(state, dst, insn_name, dl->al.offset);
->>   }
->>   +static void update_mov_insn_state(struct type_state *state,
->> +                  struct disasm_line *dl,
->> +                  struct annotated_op_loc *src,
->> +                  struct annotated_op_loc *dst)
->> +{
->> +    struct type_state_reg *tsr;
->> +    u32 insn_offset = dl->al.offset;
->> +    int sreg = src->reg1;
->> +    int dreg = dst->reg1;
->> +
->> +    if (!has_reg_type(state, dreg))
->> +        return;
->> +
->> +    tsr = &state->regs[dreg];
->> +    tsr->copied_from = -1;
->> +
->> +    if (src->imm) {
->> +        tsr->kind = TSR_KIND_CONST;
->> +        tsr->imm_value = src->offset;
->> +        tsr->offset = 0;
->> +        tsr->ok = true;
+>> Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
 > 
-> This overwrites only part of the register state: if the destination
-> previously held a variable with an active DWARF lifetime, the stale
-> lifetime_active/lifetime_end survive, and the call-invalidation
-> exemption then protects a plain constant across calls. Same gap as
-> the return-type block discussed earlier - clearing the register state
-> (invalidate_reg_state()) before filling it in would cover both.
+> Well, why confuse things?
 > 
-
-Agreed.
-
+> As you say, PHYS_ADDR is for ADDR, which is the *data* address, and
+> FETCH is an instruction address, which we find in IP, not DATA.
 > 
->> +
->> +        pr_debug_dtp("mov [%x] imm=%#"PRIx64" -> reg%d\n",
->> +                 insn_offset, tsr->imm_value, dreg);
->> +        return;
->> +    }
->> +
->> +    if (!has_reg_type(state, sreg) || !state->regs[sreg].ok) {
->> +        invalidate_reg_state(tsr);
->> +        return;
->> +    }
->> +
->> +    tsr->type = state->regs[sreg].type;
->> +    tsr->kind = state->regs[sreg].kind;
->> +    tsr->imm_value = state->regs[sreg].imm_value;
->> +    tsr->offset = state->regs[sreg].offset;
->> +    tsr->ok = state->regs[sreg].ok;
-> 
-> onversely, the register-to-register path drops the lifetime fields
-> that the x86 handler explicitly copies. Not copying is arguably more
-> correct - the DWARF location range describes the variable living in
-> the source register - but it also means a value moved into a
-> callee-saved register gets invalidated by the first call, losing the
-> tracking. Is the omission intentional? If so, a comment would help;
-> either way the two archs should probably converge on one behaviour.
-> 
+> What would be the purpose of confusing things and making PHYS_ADDR
+> relate to IP?
 
-The lifetime field is only meaningful within the context of the DWARF
-information it was parsed from, and it specifically describes the source
-register itself. Therefore, it __cannot__ be blindly copied over to the
-destination register. Here is an example to illustrate this:
+Agreed, that would create confusion.
 
-find data type for 0(reg19) at flush_ptrace_hw_breakpoint+0x28
-CU for arch/arm64/kernel/ptrace.c (die:0x1026b9)
-frame base: cfa=1 fbreg=31
-scope: [1/1] (die:125362) [function] flush_ptrace_hw_breakpoint
-bb: [0 - 28]
-var [0] reg0 offset 0 type='struct task_struct*' size=0x8 (die:0x1042d6)
-mov [18] reg0 -> reg20 type='struct task_struct*' size=0x8 (die:0x1042d6)
-
-0x001253a6:   DW_TAG_variable
-                DW_AT_name	("t")
-                DW_AT_decl_file	("debian/build/build_arm64_none_arm64/arch/arm64/kernel/ptrace.c")
-                DW_AT_decl_line	(209)
-                DW_AT_decl_column	(24)
-                DW_AT_type	(0x001253d3 "thread_struct *")
-                DW_AT_location	(0x000237ff: 
-                   [0xffff80008001c9b0, 0xffff80008001c9d0): DW_OP_breg0 W0+3024, DW_OP_stack_value
-
-ffff80008001c9a8 <flush_ptrace_hw_breakpoint>:
-ffff80008001c9a8:       d503201f        nop
-ffff80008001c9ac:       d503201f        nop
-ffff80008001c9b0:       d503233f        paciasp  // lifetime_active
-ffff80008001c9b4:       a9bd7bfd        stp     x29, x30, [sp, #-48]!
-ffff80008001c9b8:       910003fd        mov     x29, sp
-ffff80008001c9bc:       a90153f3        stp     x19, x20, [sp, #16]
-ffff80008001c9c0:       aa0003f4        mov     x20, x0
-ffff80008001c9c4:       913ae013        add     x19, x0, #0xeb8
-ffff80008001c9c8:       f90013f5        str     x21, [sp, #32]
-ffff80008001c9cc:       913ce015        add     x21, x0, #0xf38
-ffff80008001c9d0:       f9400260        ldr     x0, [x19]  // lifetime_end
-ffff80008001c9d4:       b4000060        cbz     x0, ffff80008001c9e0 <flush_ptrace_hw_breakpoint+0x38>
-ffff80008001c9d8:       940bbd6c        bl      ffff80008030bf88 <unregister_hw_breakpoint>
-// x0's lifetime expires here and becomes invalid, but x20 is callee-saved
-// and should NOT be invalidated
-...
-ffff80008001c9ec:       913ee294        add     x20, x20, #0xfb8
-
-I agree with your point. I will add a comment here to explain the rationale.
-
->> +
->> +    if (tsr->kind == TSR_KIND_TYPE || tsr->kind == TSR_KIND_POINTER)
->> +        tsr->copied_from = sreg;
->> +
->> +    pr_debug_dtp("mov [%x] reg%d -> reg%d", insn_offset, sreg, dreg);
->> +    pr_debug_type_name(&tsr->type, tsr->kind);
->> +}
->> +
->>   static void update_insn_state_arm64(struct type_state *state,
->>                       struct data_loc_info *dloc, Dwarf_Die *cu_die,
->>                       struct disasm_line *dl)
->> @@ -703,6 +750,7 @@ static void update_insn_state_arm64(struct type_state *state,
->>        * prevent stale type info from propagating to subsequent instructions.
->>        */
->>       if (has_reg_type(state, dst->reg1) &&
->> +        strcmp(dl->ins.name, "mov") &&
->>           strncmp(dl->ins.name, "ld", 2) && strncmp(dl->ins.name, "st", 2)) {
-> 
-> Comparison and test instructions get killed by this: for cmp x5, x6
-> the first operand ends up as the target (reg1 = x5), and since cmp
-> matches none of the exemptions above, a read-only register is
-> invalidated. Same for cmn and tst, and for the tested register of
-> cbz/cbnz/tbz/tbnz. Since comparisons sit between the tracked load and
-> the sampled access in almost every hot path, this silently drops a
-> lot of type resolution.
-> 
-> The x86 side avoids this by using a whitelist of instructions that
-> actually clobber pointer registers; here an exemption for the
-> read-only compares/tests would do:
-> 
->     if (has_reg_type(state, dst->reg1) && !dst->mem_ref &&
->         strcmp(dl->ins.name, "mov") && strcmp(dl->ins.name, "cmp") &&
->         strcmp(dl->ins.name, "cmn") && strcmp(dl->ins.name, "tst") &&
->         ...)
-> 
-
-Yes, I missed these instructions. I will add them.
+Do you think we should introduce a new type PERF_SAMPLE_IP_PHYS_ADDR?
+I didn't suggest it earlier because I thought it would be overkill.
 
 Thanks,
-Tengda
-
+Ravi
