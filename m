@@ -1,111 +1,176 @@
-Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3725F33C1AD;
-	Tue, 18 Aug 2026 11:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C57442360
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Aug 2026 13:56:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787054372; cv=none; b=a1AUecI6Obxoe/Xil9DOc+QG2TgpUKCLuW6O6jk24rsJYXB9zwu5vSqjizPdhG5BEYTnCNrDHze0sFKCvBWH2JElZ/NAlEaS75Kn8GC0WpBi3gYCnAQmxlNXGd0JYITpo8NV1uR1WyAltAPyZVpJvLi+RnYQjAEEemphiAHDi4w=
+	t=1787061385; cv=none; b=kAaB900agu3fWx+VtrqGERN9k+YUMbmuSI/vLxl8O/zaoFKSiWlKnVXsuTUzeQrB6C/mYJVSPkxtHovXWkYMY/Hhzw7Bw84BL7i619Dj2d1/jYq7ruXhlZEc31VF/eWJreST/YRLlJ3ICkv+fI0urLkQ7/1FdomebJvBtYDBmds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787054372; c=relaxed/simple;
-	bh=JpDeRrgw5QaNr2U+fHyn49CPLQpIxSkHvMPkLh1wkGg=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I50w4M7czSiWRazZtu3H1IphFCK06JzwDvVuL0N88O28s4HnaC1MDl3nkdZ4kbRE9L46832bv7/zx1BkP6hS0/5yI1mQ0UvBJEcsX8ANA3lPwc52WHp+Fm2LFnZ5MkaCA6i/nTx4DdnakPrB3Qk+JB4lB9JfTZzE0Lw6C5nR2a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
-Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4hPSsn4PCPzVkYW;
-	Tue, 18 Aug 2026 19:59:09 +0800 (CST)
-Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4hPSsm3xVczVkY8;
-	Tue, 18 Aug 2026 19:59:08 +0800 (CST)
-Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
-	by maildlp2.hygon.cn (Postfix) with ESMTPS id 788FD300D1E7;
-	Tue, 18 Aug 2026 19:55:42 +0800 (CST)
-Received: from hsj-2U-Workstation (172.19.24.226) by cncheex04.Hygon.cn
- (172.23.18.114) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.36; Tue, 18 Aug
- 2026 19:59:07 +0800
-Date: Tue, 18 Aug 2026 19:59:05 +0800
-From: Huang Shijie <huangsj@hygon.cn>
-To: Peter Zijlstra <peterz@infradead.org>
-CC: Ravi Bangoria <ravi.bangoria@amd.com>, <mingo@redhat.com>,
-	<acme@kernel.org>, <namhyung@kernel.org>, <zhongyuan@hygon.cn>,
-	<fangbaoshun@hygon.cn>, <yingzhiwei@hygon.cn>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <james.clark@linaro.org>,
-	<tglx@kernel.org>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <hpa@zytor.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <liuqi@hygon.cn>, <lijing@hygon.cn>
-Subject: Re: [RFC PATCH] perf/amd/ibs: Report physical address for IBS fetch
- samples
-Message-ID: <aoRJCX44xhZ9D4EW@hsj-2U-Workstation>
-References: <20260817073323.2504767-1-huangsj@hygon.cn>
- <9a39e681-3184-4841-9e19-7fc40956e917@amd.com>
- <20260818080024.GB1247881@noisy.programming.kicks-ass.net>
- <638cf844-8422-4706-b028-60d8722ce487@amd.com>
- <20260818091913.GD1247881@noisy.programming.kicks-ass.net>
- <aoQ8P8MN8XN4JQIo@hsj-2U-Workstation>
- <20260818113048.GD687043@noisy.programming.kicks-ass.net>
+	s=arc-20240116; t=1787061385; c=relaxed/simple;
+	bh=UAFW1DzG8QNfOFMxCJEWJworEouQUSKkS4nGttLn4hw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lOgDUc+TMBTr6/yhyld2JyCukMBoiTptDq2R6XGdqvy5HdygP9vdxDwDZxgG2COeCVuku9VN+IC+mIPLyqqnRMRfN8V/opUa7U3dfG6kEDBn0fxfzqN4sYfN+lRXnhhub/uzfVx3M6FVy7vDpwM9jWtBCe6yI3lQIS19+43Iy7Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S8P7NRlZ; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S8P7NRlZ"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6a0a4a28cbdso7863905a12.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 18 Aug 2026 06:56:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1787061381; x=1787666181; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=BfVwBRBTF0jPp/yG8QTZc+4bKOm0do5X3TsF0PgtG70=;
+        b=S8P7NRlZZocDiLDMPUD56qQuDj5hZQBhbTjcqoWGiNNeAejYcolQEIoxCxEBRei/nP
+         Xq2d8cTTjeKdsu5Uy6zGFD+vdhpaRhhzG3ksBuZCzztxwKIt9VDdQnxWUOGPSQRWrvmF
+         tbAAtVpy8vCgQquS0XwqWIKJvnmXsA6B8de4ddCqHcyOIA5Digi1A9DmVa6v4rQL1hQu
+         I9z7kpLsMcY8/eJr7H1fn0ZwTHFeolabLz6s7y5ZK736yw3L9dVrXMlhmBBdjXVAgB7K
+         7inPz6ySX4G+eHIDAWhHZzarv8HK7MygcT9ZdSuFGvGx61YAyWUhiG2mZzoWnnV+nluG
+         cOKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787061381; x=1787666181;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=BfVwBRBTF0jPp/yG8QTZc+4bKOm0do5X3TsF0PgtG70=;
+        b=hOlQ/GEsERqi+pOR0rS21f0sk9Qlv1ai55DY16cLtObLF4ggk+CnFcU89ay6Vy/UN1
+         GlU3rkqNU2yNd+69/ME7Ymgk70uwHJQIKmfyeeMHmzGUx8O6WPIPf3Ul4qZa29tvtDiG
+         h448N51OC6+kc/bzDAtswR+eAA3AhmufIKur0sl+s6gtlCJa39lJbDRYrJ7aa834poOl
+         j2wuUc0eATAmi/Pl0xpFUvlbVZmowvhFIUuFT7XW7d4/J5B2hJ/xxE000dpI9rfu8iN3
+         0edC85+q4vYYs/DNAMp2Q98oo43OC9mRstin7BIoGDSPvhzc329/u90kPpxGS1Xwld7s
+         zIBg==
+X-Forwarded-Encrypted: i=1; AHgh+RrABuntkR1jwiMoqWEpx/Tqgkj3ObQLoQDR2IOne+BR5TDCsUKCjVnZXZDmoLKJtxR5Njq2/Nk4s13bQA2C1C32@vger.kernel.org
+X-Gm-Message-State: AOJu0YxGmi6HLLseA7zJL04622a4YtBDATqu43Kz2iW2nd1a8DIMx6XY
+	aA8Y+CMzHtpgLb32bAA5RDdPO6ftb8XLeqSJwmk4/F6qw3ftweoPs6qd56PBw8gh1rA=
+X-Gm-Gg: AR+sD12Rol4auv7ZXkVxAO7SPwxGeGsa3NIcRjo8yeAaP2pAGh418JxxI4F/sZ8CQ4K
+	qdi7hyUF71pkuRvtxYs3MBdNETeG2zQfyqbGRHYYICUQu8pKK7W7KvlfvyQj/TpoExdaJz3xKzU
+	HvbdTS5TSK9Lc0TU0xSlbL6hJkhNzkhswnU16H2QTzGPoZmcIikMRToCKJpHt2xZDcUSYIk2LzY
+	7GertwojIFQ8aavYbn6dt2E5+lw8N4jMCYvkFX2CdpVIt/ZMP7r31LXdNH0cWbTpqQY6CyW2TXD
+	J0LseVCh6a9wlsPDFfHxK6KzuVgKxWWRCm1M+a23rNFtOV1Ze53njPA7ypQJLq2y4x8oxs9V1qs
+	cPkD6tykEapwS/k2WaaaxXGqaSdDfTbqndLU7kKX1AJacskRe6F9JwF+MPbb6xXCQk4pqkiEGQX
+	Urfq4aaaz7lycmCRbclQkGd2jTKM8t2RVkXZMnRDBK+yoBu/6I/EkmwgFh0UErJ4R/tg==
+X-Received: by 2002:a17:907:3cc2:b0:c12:3059:4071 with SMTP id a640c23a62f3a-c212a2b2dd8mr1933707366b.15.1787061381408;
+        Tue, 18 Aug 2026 06:56:21 -0700 (PDT)
+Received: from [192.168.1.3] ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-c2185bc66bdsm163356166b.58.2026.08.18.06.56.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Aug 2026 06:56:20 -0700 (PDT)
+Message-ID: <eecfa618-6bc8-451f-ac9e-9ae5b08e865b@linaro.org>
+Date: Tue, 18 Aug 2026 14:56:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20260818113048.GD687043@noisy.programming.kicks-ass.net>
-X-ClientProxiedBy: cncheex05.Hygon.cn (172.23.18.115) To cncheex04.Hygon.cn
- (172.23.18.114)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/5] perf: Add CoreSight branch history to existing
+ samples
+To: Amir Ayupov <aaupov@fb.com>
+Cc: linux-doc@vger.kernel.org, Mike Leach <mike.leach@arm.com>,
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
+ Swapnil Sapkal <swapnil.sapkal@amd.com>, linux-perf-users@vger.kernel.org,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, John Garry
+ <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>
+References: <cover.1787005265.git.aaupov@fb.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <cover.1787005265.git.aaupov@fb.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 18, 2026 at 01:30:48PM +0200, Peter Zijlstra wrote:
-> On Tue, Aug 18, 2026 at 07:04:31PM +0800, Huang Shijie wrote:
-> > On Tue, Aug 18, 2026 at 11:19:13AM +0200, Peter Zijlstra wrote:
-> > > > >>
-> > > > >> PERF_SAMPLE_PHYS_ADDR is meant to capture the _data_ physical address, which
-> > > > >> IBS Fetch doesn't provide. So, repurposing semantics of PERF_SAMPLE_PHYS_ADDR
-> > > > >> for IBS Fetch seems reasonable.
-> > > > >>
-> > > > >> Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> > > > > 
-> > > > > Well, why confuse things?
-> > > > > 
-> > > > > As you say, PHYS_ADDR is for ADDR, which is the *data* address, and
-> > > > > FETCH is an instruction address, which we find in IP, not DATA.
-> > > > > 
-> > > > > What would be the purpose of confusing things and making PHYS_ADDR
-> > > > > relate to IP?
-> > > > 
-> > > > Agreed, that would create confusion.
-> > > > 
-> > > > Do you think we should introduce a new type PERF_SAMPLE_IP_PHYS_ADDR?
-> > > > I didn't suggest it earlier because I thought it would be overkill.
-> > > 
-> > > Well, that all depends on how useful this data is. As is, I see very
-> > > little words on the benefit of having this data.
-> > 
-> > I just use this patch to track a program's memory footprint, including
-> > the front-end(Fetch samples) and back-end(Op samples) in NUMA server.
-> > 
-> > So I also think there is no need to add a PERF_SAMPLE_IP_PHYS_ADDR for this.
+
+
+On 17/08/2026 23:22, Amir Ayupov wrote:
+> CoreSight ETM can synthesize branch samples from an instruction trace, but
+> context-sensitive PGO needs the branch history leading to an existing PMU
+> sample together with that sample's event identity and callchain. This series
+> implements that mode as --itrace=L, following the corresponding Intel PT
+> behavior.
 > 
-> Ah, so I think me asking about the use of PHYS_ADDR previously, resulted
-> in the two PAGE_SIZE numbers. I suppose what you're looking for is
-> PAGE_NODE.
+> The series first separates timestamped queue setup and teardown from the ETM
+> decode loop so decoding can stop at an existing sample's timestamp. It then
+> reconstructs branch history in the thread stack and attaches it to eligible
+> samples without replacing their IP, event, or callchain. The attached history
+> is consumed after use so a later sample cannot reuse an earlier trace window.
 > 
-> The trouble with physical addresses is that it is very hard for
-> userspace to do anything useful with them. At least the node mapping is
-It is not trouble for us. :)
+> This enables a context-sensitive PGO workflow where a cycles event supplies a
+> frame-pointer callchain while duty-cycled ETM supplies the path leading to the
+> sample. A dlfilter removes samples for which no ETM history was available, and
+> the documentation describes the complete recording and decoding workflow.
+> 
+> Changes since v1:
+> 
+>    - Rebased onto perf-tools-next at d17c5b770972.
+>    - Dropped the HEADER_GROUP_DESC reader workaround. The issue is in the writer
+>      and should be fixed separately.
 
-1.) We can get the physical address ranges in NUMA by parsing the "/sys/devices/system/memeory".
-2.) With IBS samples, we can get the physical memory access records.
+Doesn't it still need to be part of this patchset regardless of where 
+the issue is? Running the new test is blocked on this. Also is this a 
+regression? I noticed there was no fixes: tag on V1 for this commit.
 
-With 1 & 2, we can draw a detail picture for the memory footprint.
-And we can use the result to improve the performance in NUMA.
+>    - Dropped the branch-stack hw_idx patch after review established that zero is
+>      appropriate for age-ordered CoreSight branch stacks.
 
-Thanks
-Huang Shijie
+This doesn't seem to match what happened. The original patch initialized 
+all branch stacks to hw_idx = -1, which I think was a good fix so 
+shouldn't have been dropped.
 
+Coresight still sets -1 which I said should be changed to 0, but there 
+doesn't seem to be a change for that in V2. So now we're missing both 
+changes.
 
+>    - Dropped the local wrapped branch-stack copy fix in favor of upstream commit
+>      ab9c84d1cd59 ("perf thread-stack: Fix heap buffer overflow on branch stack
+>      wrap copy").
+>    - Added James Clark's Reviewed-by tag to the dlfilter patch.
 
+>    - Consume branch history after attaching it so samples with no newly decoded
+>      trace cannot reuse a window from before an untraced AUX pause interval.
+>    - Flush all trace-ID frontend thread stacks when their physical ETM queue is
+>      exhausted, preventing stale history from surviving a trace gap.
+>    - Check every matching CoreSight event when deciding whether kernel trace is
+>      enabled.
+
+Were these changes due to my comment about the test not working? Might 
+be worth some discussion about what the issue was on the V1 thread so 
+it's easier to follow along with why these changes were made to V2.
+
+>    - Reworked the shell test to use FIFO recording control, removed the invalid
+>      bare timestamp option, reduced the workload to 10000 iterations, and check
+>      proc1 and proc2 callchains independently with bounded failure diagnostics.
+>    - Renamed decoded test outputs to script-L4 and script-L64.
+> 
+> Amir Ayupov (5):
+>    perf dlfilter: Add non-empty branch stack filter
+>    perf cs-etm: Split up cs_etm__process_timestamped_queues()
+>    perf cs-etm: Add branch history to existing samples
+>    perf test cs-etm: Test branch history on existing samples
+>    Documentation: coresight: Document context-sensitive PGO workflow
+> 
+>   .../trace/coresight/coresight-perf.rst        |  62 +++++
+>   tools/perf/Makefile.perf                      |   1 +
+>   .../dlfilters/dlfilter-nonempty-brstack.c     |  26 ++
+>   .../tests/shell/coresight/add_last_branch.sh  | 203 ++++++++++++++
+>   tools/perf/util/cs-etm.c                      | 252 ++++++++++++++++--
+>   tools/perf/util/thread-stack.c                |  17 ++
+>   tools/perf/util/thread-stack.h                |   1 +
+>   7 files changed, 546 insertions(+), 16 deletions(-)
+>   create mode 100644 tools/perf/dlfilters/dlfilter-nonempty-brstack.c
+>   create mode 100755 tools/perf/tests/shell/coresight/add_last_branch.sh
+> 
+> 
+> base-commit: d17c5b770972854a4fe4cf5cc22e17eb21cdc787
 
