@@ -1,274 +1,166 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012027.outbound.protection.outlook.com [52.101.48.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11368448B9A;
-	Tue, 18 Aug 2026 09:44:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787046266; cv=none; b=AcXj/5pfxOyeDv08df1ojsjGIP1jDGUg5ldRUeia4eLFXJ7wmB9n9QB8zwAaYgqFbtbKycE2vWL/PQydXa1qTSYuCgOyRLssBH8DyNNnXTZxvkvb2khaX5ZsJz+WPCU8Vy25nfuaqpyEHlMMKP7dJfdscIMxEwOsamwq8aSNjgE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787046266; c=relaxed/simple;
-	bh=+NlAcR9Xot/qrtblrGS2ZXJqxEpstEcu6m44vnGnB7Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XMLj4dG4nq2gBC+VMUfo4fc9AYj0c7wBeYlyhqP315yZs8684jitsL8WNYvEK7kWZgdKx5sY649U4mfHQRQHU/ZjcaJ1DnxyYOOP7EbQ2WyQJuojr8yh694qcOSnd8ghdKYl0Qt+sWYCCDoFcT3dsEf9sP+tKKmAOjZ68BDTaZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 60c2f81c9ae911f19a56ed5b684f684d-20260818
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.19,REQID:10c2699f-1ac5-4ebe-9e77-cd577d86eece,IP:0,U
-	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:0
-X-CID-META: VersionHash:7db8b62,CLOUDID:fa69c7c4ded2daf118ea4f197c639993,BulkI
-	D:nil,BulkQuantity:0,SF:81|82|102|865|898,TC:nil,Content:0|15|50,EDM:-3,IP
-	:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,
-	LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 60c2f81c9ae911f19a56ed5b684f684d-20260818
-X-User: liuxixin@kylinos.cn
-Received: from [127.0.1.1] [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <liuxixin@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1797780881; Tue, 18 Aug 2026 17:44:16 +0800
-From: Xixin Liu <liuxixin@kylinos.cn>
-To: linux-riscv@lists.infradead.org
-Cc: atish.patra@linux.dev, anup@brainfault.org, will@kernel.org, mark.rutland@arm.com, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr, linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, liuxixin@kylinos.cn
-Subject: [PATCH v2 2/2] perf: RISC-V: store available counter mask as bitmap
-Date: Tue, 18 Aug 2026 17:10:00 +0800
-Message-ID: <prpmask02cmap.v2.1786434000.git.liuxixin@kylinos.cn>
-In-Reply-To: <cover.v2.1786434000.git.liuxixin@kylinos.cn>
-References: <cover.1786092600.git.liuxixin@kylinos.cn> <cover.v2.1786434000.git.liuxixin@kylinos.cn>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3289743F0B8;
+	Tue, 18 Aug 2026 09:49:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.48.27
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787046601; cv=fail; b=Sgb2aA8SBY16g4zojfJF4coeSMQz9yhdT9xblSfQCoRWtxpw380fsibXfSx5psDpd4BdSdqNeSBYdS+bCG5dHlxFzDplLY9NXuAFAMqgDIS9zHxF9KiiT7s5SeiG75phrlpuE/TSy1ondPywRTzAU+WTriUaBd7Mj7E9nGdfEts=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787046601; c=relaxed/simple;
+	bh=Yq29NGlpDC/Rx19iz9XEkr1Yi5JqCTHg+HpSTfmSaNI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ssWgkvvJhXKHpjg+6Vp6pOBRWJaEA6PKYVIvWQlw+xNaM8HPNdXuTU1Tf2tfu7fISIbiStvDuptJ3a9GCIMTPgPCfVjOmNiOtljcYdrwGovYUnmmDFWwRMH8Md+SezZGjClEY4wPjr6MsFCprHPLXEAcMI78bVpz5rCnDhAGszU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=a9DaWBAI; arc=fail smtp.client-ip=52.101.48.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="a9DaWBAI"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zHR7rm5hBG7JrupQhSOzZ5BzbZcK6teGFb5cA8CQKXeoN24dJJt8XubYSUmQnu8kBaDMU5uubJrFVrMJgt1BUKOUiUpmOUSbZD3PNpqzrE2L5BbETxQc6l2iYjYKwe+thutG3K1TqLWU1NQRgaGM05Jbs28aejqHgtC+xsoCeR1ewoF30piKOuYKGALsDyQlSAifyB6BUfzrEglkyACoxWrciPZnP8Sl7NpapjnSxf1+carW/nW3jL4CZb06+bpYiYp27N+E/RFEcoprcuM0aR69AiR0/8bZDFQdHUdWd+bPi0UclV7QC1pb8lkzJEMjItKpcvOyyNI2rp+Vc0bkIg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=crnHvsYyz0tqIYomI2pH98GakL4h/WMLMXyY23uaNbE=;
+ b=Dou32C+Ys5zP9dwzRExyg6tgsr/YdlC/kwLR/GRCnpqzML6wduViD5LaXdwcIeo40AYJYaIhS51XCZ57/j8XvJW/gtjEAsKLIKEAlPoTNJbJIU/nUG9Tp3Jmwigpg7Nl/4lV13uM6FzW6kMm4mhF/88xZRXAE92UjfEN8YET+orIn8GiKcgmaG/+EAd9JpWJ5qNkz1PgESC2GjlNMyx7KJlMEvohOE++zOcLlUcHgjbx7vK2EwJjGoNUm5MnZwheIObjxR7MK8F4NARsHOIQpFjbuHGJq5JMSqmnNGLguTyllDCHv1LH68kRXZexU8iOKq0i07GnCQTZ65/PkyKQ6g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=crnHvsYyz0tqIYomI2pH98GakL4h/WMLMXyY23uaNbE=;
+ b=a9DaWBAIJCgy3XPwEIPsXNVgz5GM8NwKjGuLITtVrXye/vJBpvKXqVqsUNFxLtIRR7BQ+ptnJ2JXejxno1FtrkFrCUO2ptOOg5AzLgzbgCZJ8piU3eV4D8VFz0pGme+qchBnxfSj+xnsMeOvIMaNDt7tTIi0JevtfxvpaFXXnGE=
+Received: from CH0PR03CA0235.namprd03.prod.outlook.com (2603:10b6:610:e7::30)
+ by MW4PR12MB6873.namprd12.prod.outlook.com (2603:10b6:303:20c::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.315.14; Tue, 18 Aug
+ 2026 09:49:56 +0000
+Received: from CH1PEPF0000A346.namprd04.prod.outlook.com
+ (2603:10b6:610:e7:cafe::5e) by CH0PR03CA0235.outlook.office365.com
+ (2603:10b6:610:e7::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.21.339.8 via Frontend Transport; Tue, 18
+ Aug 2026 09:49:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
+Received: from satlexmb07.amd.com (165.204.84.17) by
+ CH1PEPF0000A346.mail.protection.outlook.com (10.167.244.11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.339.3 via Frontend Transport; Tue, 18 Aug 2026 09:49:56 +0000
+Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Tue, 18 Aug
+ 2026 04:49:55 -0500
+Received: from [10.136.43.11] (10.180.168.240) by satlexmb07.amd.com
+ (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.45 via Frontend
+ Transport; Tue, 18 Aug 2026 04:49:49 -0500
+Message-ID: <8ad9240e-71a6-400d-9d64-6b3dc1261433@amd.com>
+Date: Tue, 18 Aug 2026 15:19:43 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Mailer: patches/scripts/send-local.py
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH] perf/amd/ibs: Report physical address for IBS fetch
+ samples
+To: Peter Zijlstra <peterz@infradead.org>
+CC: Huang Shijie <huangsj@hygon.cn>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <zhongyuan@hygon.cn>, <fangbaoshun@hygon.cn>,
+	<yingzhiwei@hygon.cn>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <james.clark@linaro.org>,
+	<tglx@kernel.org>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <hpa@zytor.com>, <linux-perf-users@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <liuqi@hygon.cn>, <lijing@hygon.cn>, "Ravi
+ Bangoria" <ravi.bangoria@amd.com>
+References: <20260817073323.2504767-1-huangsj@hygon.cn>
+ <9a39e681-3184-4841-9e19-7fc40956e917@amd.com>
+ <20260818080024.GB1247881@noisy.programming.kicks-ass.net>
+ <638cf844-8422-4706-b028-60d8722ce487@amd.com>
+ <20260818091913.GD1247881@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: Ravi Bangoria <ravi.bangoria@amd.com>
+In-Reply-To: <20260818091913.GD1247881@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH1PEPF0000A346:EE_|MW4PR12MB6873:EE_
+X-MS-Office365-Filtering-Correlation-Id: c564fac2-f39b-4de5-f7cb-08defd0e0f53
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700016|82310400026|7416014|376014|23010399003|22082099003|18002099003|56012099006|6133799003|4143699003|11063799006|3023799007|10067099003;
+X-Microsoft-Antispam-Message-Info:
+	0ZQZGydETOhGa4RRUbCDcYSKJEQJJ9V2DfamQ1JXYg4mEFMuCbygsWjlfVEfb9IVICpvkF8EjpL19SSlBrbGoOCG722aolXKWCUDorn2v8aJD7x6iuMWfgZLZ6l/Cq90HSMGMtnfoJtXFecQqX7UGKKuAAdyRIRjg2y4AVWZwxquCSubXnpxM3SLIbOeNHFoDCzMRgAOQ5ZqEfeDLz+mFq9kESjS/csJdFyuyHZ4DQf3In+58wB/1x1XJjXeisSe3uZ3EuS4/y8ggOQ4QHPlBHG9sRZlpFuSSHpfOpffNytp3yBClnrC1brX1pKWN+anUnCsYwgetK30726HZ4OzlyvNnioE/Y71BT7jJsf0T9aE+yHQP3dRZcXx/n6uxLDmJ4X74xmS0u4y5fXRt9e3f6DABaeciuKSI9uorodjHvTAMPSsAFYOX+xbGMBTqfbXkzLG5ZnUoxKE3Ldok0VhyUv0GvcappHRivFCYJxpoGhXetQJ4R49GQv182tQYOyzaO56Bdmu5ogAfFqVEIr+lBy3nc7wrOwuYy4MPILgSs0TcdeA6Un37QhDwla86iZiBQigxYSvOkjPRcv4+1OXr7JR6gygCMeDG2B3cJHwMDbcKQBno3QlezHLBXxXtVUDpgzkk2aNsxF1Xf5PLW5C7q7mjWKKjuoENyroIWPbejUEuyOPv6sBxYmlcQBHurcAd+5nl6rabP+LE3nb8V8T2Q==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700016)(82310400026)(7416014)(376014)(23010399003)(22082099003)(18002099003)(56012099006)(6133799003)(4143699003)(11063799006)(3023799007)(10067099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	lLz8dgWq+AxS6cSClqEWAG/CYoYpenHnS6N5jizPYpDBQvYJpyBcDKJ4qxfUIgAe434RzjG8TOQQtmThBlC3cguTWS5ix0Slvy9hCQPlFTpjyAkYP8kWU1mb6EFjHqRV7b9/tGliQMB1+U/9XA0DPEaV45jT1MZTS3GsrfvON8/DFcV8zJkEPoSx26TfuDDSyUSJObaUN0iA+iWdhQfJm1S0W+FuTeBYInm6W0YSEF4iYjeHy91j0zKQnqPeZFwM186fOHbrrzTw/Fp4KNwd6wlcZUgEmZDxOB8C5hBIdlaGaFPo1dhiHtFMsz7a2jYPVQyti7VXk1vZ1oPr+cMAIV9CCPWIIg7OK5nvwXQWThO/8ZPsASKrOwAm3i13rVdZSuRxtFmCoCLmA24nqIby7v5GXr2Uaxsic5YQlgLVOwGbgTa7KEvf15fb/2oX/ZMc
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Aug 2026 09:49:56.1173
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c564fac2-f39b-4de5-f7cb-08defd0e0f53
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: CH1PEPF0000A346.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6873
 
-The available-counter mask was a single unsigned long, but iteration
-uses RISCV_MAX_COUNTERS, which is 64. On RV32 that reads past the object.
-Filling with an unsigned-long bit at index 32 and above is also wrong.
+On 18-Aug-26 2:49 PM, Peter Zijlstra wrote:
+> On Tue, Aug 18, 2026 at 02:34:26PM +0530, Ravi Bangoria wrote:
+>> On 18-Aug-26 1:30 PM, Peter Zijlstra wrote:
+>>> On Tue, Aug 18, 2026 at 10:29:08AM +0530, Ravi Bangoria wrote:
+>>>> On 17-Aug-26 1:03 PM, Huang Shijie wrote:
+>>>>> The IBS Fetch sampling does not report the physical address of the
+>>>>> fetched instruction even when PERF_SAMPLE_PHYS_ADDR is requested,
+>>>>> while IBS Op sampling does.
+>>>>>
+>>>>> This patch reports physical address for IBS fetch samples which can be
+>>>>> used for profiling the running program.
+>>>>
+>>>> PERF_SAMPLE_PHYS_ADDR is meant to capture the _data_ physical address, which
+>>>> IBS Fetch doesn't provide. So, repurposing semantics of PERF_SAMPLE_PHYS_ADDR
+>>>> for IBS Fetch seems reasonable.
+>>>>
+>>>> Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
+>>>
+>>> Well, why confuse things?
+>>>
+>>> As you say, PHYS_ADDR is for ADDR, which is the *data* address, and
+>>> FETCH is an instruction address, which we find in IP, not DATA.
+>>>
+>>> What would be the purpose of confusing things and making PHYS_ADDR
+>>> relate to IP?
+>>
+>> Agreed, that would create confusion.
+>>
+>> Do you think we should introduce a new type PERF_SAMPLE_IP_PHYS_ADDR?
+>> I didn't suggest it earlier because I thought it would be overkill.
+> 
+> Well, that all depends on how useful this data is. As is, I see very
+> little words on the benefit of having this data.
+> 
+> In fact, I'm not really sure what PHYS_ADDR is good for, so clearly I'm
+> missing a bit to begin with.
+> 
+> That is; if there is a very convincing argument to actually have this
+> data, that might help justifying either accepting this 'hack' or perhaps
+> introducing more fields.
 
-Use DECLARE_BITMAP and set_bit/bitmap helpers. Walk each bitmap word
-into CFG_MATCH when checking events, when allocating an index, and when
-stopping all counters. Set the counter base to i times BITS_PER_LONG.
-Share the CFG_MATCH ecall through a small helper so the 32-bit argument
-split is not duplicated. On qemu-system-riscv32 the probe bitmap has bits
-above XLEN set, so the first word alone is not enough.
+I don't have a compelling use case either.
 
-Fixes: e9991434596f ("RISC-V: Add perf platform driver based on SBI PMU extension")
-Assisted-by: DeepSeek:deepseek-v3
-Signed-off-by: Xixin Liu <liuxixin@kylinos.cn>
----
- drivers/perf/riscv_pmu_legacy.c         | 5 +-
- drivers/perf/riscv_pmu_sbi.c            | 88 ++++++++++++++++++++++++++++------------
- include/linux/perf/riscv_pmu.h          | 2
- 3 files changed, 66 insertions(+), 29 deletions(-)
+fwiw, IBS PMUs already dump this metadata (including the physical address)
+through PERF_SAMPLE_RAW, so this information isn't completely unavailable
+to userspace today.
 
-diff --git a/drivers/perf/riscv_pmu_legacy.c b/drivers/perf/riscv_pmu_legacy.c
---- a/drivers/perf/riscv_pmu_legacy.c
-+++ b/drivers/perf/riscv_pmu_legacy.c
-@@ -111,8 +111,9 @@ static void pmu_legacy_init(struct riscv_pmu *pmu)
- {
- 	pr_info("Legacy PMU implementation is available\n");
- 
--	pmu->cmask = BIT(RISCV_PMU_LEGACY_CYCLE) |
--		BIT(RISCV_PMU_LEGACY_INSTRET);
-+	bitmap_zero(pmu->cmask, RISCV_MAX_COUNTERS);
-+	set_bit(RISCV_PMU_LEGACY_CYCLE, pmu->cmask);
-+	set_bit(RISCV_PMU_LEGACY_INSTRET, pmu->cmask);
- 	pmu->ctr_start = pmu_legacy_ctr_start;
- 	pmu->ctr_stop = NULL;
- 	pmu->event_map = pmu_legacy_event_map;
-diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
---- a/drivers/perf/riscv_pmu_sbi.c
-+++ b/drivers/perf/riscv_pmu_sbi.c
-@@ -97,7 +97,7 @@ static unsigned int riscv_pmu_irq_mask;
- static unsigned int riscv_pmu_irq;
- 
- /* Cache the available counters in a bitmask */
--static unsigned long cmask;
-+static DECLARE_BITMAP(cmask, RISCV_MAX_COUNTERS);
- 
- struct sbi_pmu_event_data {
- 	union {
-@@ -298,16 +298,38 @@ static struct sbi_pmu_event_data pmu_cache_event_map[PERF_COUNT_HW_CACHE_MAX]
- 	},
- };
- 
-+static struct sbiret pmu_sbi_ctr_cfg_match(unsigned long cbase,
-+					    unsigned long ctr_mask,
-+					    unsigned long cflags,
-+					    unsigned long event_idx,
-+					    u64 config)
-+{
-+#if defined(CONFIG_32BIT)
-+	return sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH, cbase,
-+			 ctr_mask, cflags, event_idx, config, config >> 32);
-+#else
-+	return sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH, cbase,
-+			 ctr_mask, cflags, event_idx, config, 0);
-+#endif
-+}
-+
- static void pmu_sbi_check_event(struct sbi_pmu_event_data *edata)
- {
--	struct sbiret ret;
-+	struct sbiret ret = { .error = SBI_ERR_NOT_SUPPORTED };
-+	int i;
- 
--	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH,
--			0, cmask, 0, edata->event_idx, 0, 0);
--	if (!ret.error) {
--		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
--			  ret.value, 0x1, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
--	} else if (ret.error == SBI_ERR_NOT_SUPPORTED) {
-+	for (i = 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
-+		if (!cmask[i])
-+			continue;
-+		ret = pmu_sbi_ctr_cfg_match(i * BITS_PER_LONG, cmask[i], 0,
-+					    edata->event_idx, 0);
-+		if (!ret.error) {
-+			sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
-+				  ret.value, 0x1, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
-+			return;
-+		}
-+	}
-+	if (ret.error == SBI_ERR_NOT_SUPPORTED) {
- 		/* This event cannot be monitored by any counter */
- 		edata->event_idx = -ENOENT;
- 	}
-@@ -353,10 +375,10 @@ int riscv_pmu_get_hpm_info(u32 *hw_ctr_width, u32 *num_hw_ctr)
- 	union sbi_pmu_ctr_info *info;
- 	u32 hpm_width = 0, hpm_count = 0;
- 
--	if (!cmask)
-+	if (bitmap_empty(cmask, RISCV_MAX_COUNTERS))
- 		return -EINVAL;
- 
--	for_each_set_bit(i, &cmask, RISCV_MAX_COUNTERS) {
-+	for_each_set_bit(i, cmask, RISCV_MAX_COUNTERS) {
- 		info = &pmu_ctr_list[i];
- 		if (!info)
- 			continue;
-@@ -405,8 +427,8 @@ static int pmu_sbi_ctr_get_idx(struct perf_event *event)
- 	struct riscv_pmu *rvpmu = to_riscv_pmu(event->pmu);
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(rvpmu->hw_events);
- 	struct sbiret ret;
--	int idx;
--	uint64_t cbase = 0, cmask = rvpmu->cmask;
-+	int idx, i;
-+	uint64_t cbase = 0, cmask = 0;
- 	unsigned long cflags = 0;
- 
- 	cflags = pmu_sbi_get_filter_flags(event);
-@@ -427,14 +449,21 @@ static int pmu_sbi_ctr_get_idx(struct perf_event *event)
- 	}
- 
- 	/* retrieve the available counter index */
--#if defined(CONFIG_32BIT)
--	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH, cbase,
--			cmask, cflags, hwc->event_base, hwc->config,
--			hwc->config >> 32);
--#else
--	ret = sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_CFG_MATCH, cbase,
--			cmask, cflags, hwc->event_base, hwc->config, 0);
--#endif
-+	if (cmask) {
-+		ret = pmu_sbi_ctr_cfg_match(cbase, cmask, cflags, hwc->event_base,
-+					   hwc->config);
-+	} else {
-+		ret.error = SBI_ERR_NOT_SUPPORTED;
-+		for (i = 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
-+			if (!rvpmu->cmask[i])
-+				continue;
-+			cbase = i * BITS_PER_LONG;
-+			ret = pmu_sbi_ctr_cfg_match(cbase, rvpmu->cmask[i], cflags,
-+						   hwc->event_base, hwc->config);
-+			if (!ret.error)
-+				break;
-+		}
-+	}
- 	if (ret.error) {
- 		pr_debug("Not able to find a counter for event %lx config %llx\n",
- 			hwc->event_base, hwc->config);
-@@ -442,7 +471,7 @@ static int pmu_sbi_ctr_get_idx(struct perf_event *event)
- 	}
- 
- 	idx = ret.value;
--	if (!test_bit(idx, &rvpmu->cmask) || !pmu_ctr_list[idx].value)
-+	if (!test_bit(idx, rvpmu->cmask) || !pmu_ctr_list[idx].value)
- 		return -ENOENT;
- 
- 	/* Additional sanity check for the counter id */
-@@ -794,7 +823,7 @@ static int pmu_sbi_get_ctrinfo(int nctr, unsigned long *mask)
- 			/* The logical counter ids are not expected to be contiguous */
- 			continue;
- 
--		*mask |= BIT(i);
-+		set_bit(i, mask);
- 
- 		cinfo.value = ret.value;
- 		if (cinfo.type == SBI_PMU_CTR_TYPE_FW)
-@@ -811,12 +840,19 @@ static int pmu_sbi_get_ctrinfo(int nctr, unsigned long *mask)
- 
- static inline void pmu_sbi_stop_all(struct riscv_pmu *pmu)
- {
-+	int i;
-+
- 	/*
- 	 * No need to check the error because we are disabling all the counters
- 	 * which may include counters that are not enabled yet.
- 	 */
--	sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
--		  0, pmu->cmask, SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
-+	for (i = 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
-+		if (!pmu->cmask[i])
-+			continue;
-+		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_STOP,
-+			  i * BITS_PER_LONG, pmu->cmask[i],
-+			  SBI_PMU_STOP_FLAG_RESET, 0, 0, 0);
-+	}
- }
- 
- static inline void pmu_sbi_stop_hw_ctrs(struct riscv_pmu *pmu)
-@@ -1353,7 +1389,7 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
- 	}
- 
- 	/* cache all the information about counters now */
--	if (pmu_sbi_get_ctrinfo(num_counters, &cmask))
-+	if (pmu_sbi_get_ctrinfo(num_counters, cmask))
- 		goto out_free;
- 
- 	ret = pmu_sbi_setup_irqs(pmu, pdev);
-@@ -1365,7 +1401,7 @@ static int pmu_sbi_device_probe(struct platform_device *pdev)
- 
- 	pmu->pmu.attr_groups = riscv_pmu_attr_groups;
- 	pmu->pmu.parent = &pdev->dev;
--	pmu->cmask = cmask;
-+	bitmap_copy(pmu->cmask, cmask, RISCV_MAX_COUNTERS);
- 	pmu->ctr_start = pmu_sbi_ctr_start;
- 	pmu->ctr_stop = pmu_sbi_ctr_stop;
- 	pmu->event_map = pmu_sbi_event_map;
-diff --git a/include/linux/perf/riscv_pmu.h b/include/linux/perf/riscv_pmu.h
---- a/include/linux/perf/riscv_pmu.h
-+++ b/include/linux/perf/riscv_pmu.h
-@@ -55,7 +55,7 @@ struct riscv_pmu {
- 
- 	irqreturn_t	(*handle_irq)(int irq_num, void *dev);
- 
--	unsigned long	cmask;
-+	DECLARE_BITMAP(cmask, RISCV_MAX_COUNTERS);
- 	u64		(*ctr_read)(struct perf_event *event);
- 	int		(*ctr_get_idx)(struct perf_event *event);
- 	int		(*ctr_get_width)(int idx);
-
--- 
-2.43.0
-
+Thanks,
+Ravi
