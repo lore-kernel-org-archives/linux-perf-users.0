@@ -1,260 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA3B4B04AC;
-	Tue, 18 Aug 2026 01:35:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B2C379971
+	for <linux-perf-users@vger.kernel.org>; Tue, 18 Aug 2026 02:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787016944; cv=none; b=STysYM0SOotCKT7SHmvDSyIL59dzaLNIM1LSmi/lmej+S0VFVe3Cd4ojs6CZ9fW8N5md672lcb0rsRxanSTuTXkg0nHzPYV2eRpW+4I89d0bV9PFN/3k+SXMok3bc8IXmnuffcirceLc9E3+2E/hrBtTKjN6w7ePEGHj4tAQaRs=
+	t=1787018930; cv=none; b=HOvQym2/ZYqUVTaG8l8WzYo8MlXBWLMKkrlnFuCZE6pBaBJnguoNFv8xE6guGsCJhyY9PyqQdZhm+Bg3g5+pYpZY3CW9uVvXDtauL6ziJvMSeZkqvuELrFHAn3Z0jBIJPX4Ys40wwJc2V6+iNqd9YJ2LsGodDgFdUPhS0vWnXR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787016944; c=relaxed/simple;
-	bh=rbbV1g3t36RtHpC46x8E69U4mGJUS/Wx5RAs/Hzz0TI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cguOQvMZ240u2f/q2Z89Ab7s0Mo9GiF628Sd0x2Y3zljI7NBmhKUnj8s5fuzg+/fjCnkGFjVI7AMWQk9MQ2fez3/A6HRDBywBY68lHeAraowEmH4bWNQ8OGYQcUdTXb5pnYHpV8QfPM1NzW5YVj4aRaklur5BumIKKsoQRp3ULo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dOvKKC3H; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1787018930; c=relaxed/simple;
+	bh=0+3TpIP9W6OJAW8md/fqGRGsABtzg7Bvl8LSFl05BTU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Az67bphxStrYFaXt4RJpdWzM7iHYkDn3nNOoSkr6g4w0ZNUymU+vQma8LOTEEzHgO8JLrcERgvkwsXiC04osDmYjGOXtgGawU46fIMeQj0gpD5zb3Wrr64ucpi+QsVaC/2Er6DIyJSzP8LQEgZERhE6NltDzBsr6eVrlp/3blP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W80XRoan; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dOvKKC3H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787016943; x=1818552943;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=rbbV1g3t36RtHpC46x8E69U4mGJUS/Wx5RAs/Hzz0TI=;
-  b=dOvKKC3HmIoMVeaG11B1O+vV96/y8xZ0AkUW7OaXHAlv6PsKjKkOM31R
-   YsItMxxQc0BFUVMNscFHcFocEG2ieeE4EYqztUNzkoJVT+RGpaEjQ5ThY
-   WACVMB/oo9sJJaazJqhNESPKHHJuMiKPqAdibE8ZwS7YpKqH0b+LyMfn8
-   0Doh21b3+kADocQwV6ClVVKGH3sRqaNILwLyeOEdV5RTNLVLguYL91iSh
-   oWr6hcECF6fyBnIjcXy+fslRWqNgEYi7RPdQgvPLR/qbaQ+X5glzoKXCZ
-   QMr9yHdF0Bk+S8EYhObC7Pzo4+7dNawcRqAc4JGOd3RRCpskwClWzRhuu
-   A==;
-X-CSE-ConnectionGUID: tYbg3THhSpi3lMKzq3IKwA==
-X-CSE-MsgGUID: H67h4yATQI+nWohUVDN1kg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11878"; a="98862451"
-X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="98862451"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2026 18:35:42 -0700
-X-CSE-ConnectionGUID: NvKBHyQ5Tl+INdKwRTXZtA==
-X-CSE-MsgGUID: 1YNtyilQQgOKq163mPrR2w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,230,1779174000"; 
-   d="scan'208";a="289884702"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2026 18:35:37 -0700
-Message-ID: <67f69a50-6643-4bcd-9ba3-a6d137e10791@linux.intel.com>
-Date: Tue, 18 Aug 2026 09:35:35 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W80XRoan"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-84862b0d5aeso3385480b3a.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Aug 2026 19:08:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787018928; x=1787623728; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=u5wmrIQ8d/D4bIJXHdHl7S0yAKn1Zat0Tny3LAFduno=;
+        b=W80XRoancL3eQB9HGTwIu9T1AJ20JwLELXQUoO9MNMagLBZBwxBr1uIYrB6hyHiQ5B
+         HZ/TXDgkJgYmqfaNsMD7H+urmJM6B/P86s6Vs/sG90BfRjuNQ1K77hxDaedmh3Yd5k6y
+         4k8My+8dwVYNCV5e/27p62/OlyVpJq/1AuX6lAiaDaRRCxJ4OugArlnYR3Cg8WPs6kuR
+         t5xRovXlh6bDnEiqQMvciBmtW9ZXhUrxsOhEkBhXnRKc+IVBgxdNVkBHkqbeqQS73xxd
+         5dqbRoJFvUsl4lLemTGYcJ5nuxeyClGpV+7aWPsR8kVmX4UEH2t1eHbKImzdjIAp/jzu
+         WYVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787018928; x=1787623728;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=u5wmrIQ8d/D4bIJXHdHl7S0yAKn1Zat0Tny3LAFduno=;
+        b=N3vmZEzr31jhT/0aaLZtA0fg0aaGPtiDjl1zHZF5nAGzM/mv+Pxdzq3kdL444ndk7Y
+         Ak7rjSMthbov4/hdfR/P3X4lx7JSsWR3XSDVEaBz7yS06oejRjfIglTe3UP82ugezLeZ
+         G0gJobCRLw8O+s4cQ0HDZhf2y4pw2jdL4Ajwxsvpcte9P23kqFDj9Y1nwhNib9V6+pht
+         PlvrhpOnH7YoSs9dfdzdx0pKSCAAVlu9yyq3YyDbPvPamda6+a1xBfW6T97dQ68A1Oe9
+         GCdsnlpDsIma3kJkAGYyezelN1Hf7VKqljHhtlBE7dXH2PbswRimppFX6C4HMAvWbaAA
+         oARA==
+X-Forwarded-Encrypted: i=1; AHgh+RpWPww9jzriS4Lt9bK1h7unC0Lpf1fKiQ0IKvnkARhVpF9rK/xFQnyUUA4Y5vWjXwEMn0bpyMq8KUASNponSQBf@vger.kernel.org
+X-Gm-Message-State: AOJu0YzrUkjjwmvWwvHQIin/Bd9eEGWkw1Z0UsPpQx7ZDCCVEWiSi6R+
+	ntJFwj1pg1OrAnZOCJPvnPP1iOoXIdu1bIvXRMeyJdlV9IpPojtDsS/B
+X-Gm-Gg: AR+sD130P79ZBFViunYqHmYGjmaF3DXNr3OaqsoA4kBVfX7uGhUbanVvSL4vJp8mRPq
+	V+cPEvIAEyDkUR4OB93tzjhepOhnxr9abSCDBP71kd/K4u1h95tstwSkVs4rUcE8ZlogPhnQov6
+	hYA1w1VGYbQiYzQzkA7Jq+A3IrPfwExeP+sh7jm+0i2YyFePAuNOzGvMPnTcKItp7FlEbk8wCPs
+	+KgajsP/KiRsrJXGpqtaRFMD8JnpZz5PqNjBZvrjV6OCgRUm5GdZkfcscjVbpivwqilPShgwGEh
+	aoFzetqCAKvp1lZfCyHPZe0FfybjLpUY52ZStpTm1uybhMm1IofRoVKKPbdVRyNttiUkgd7HXZ2
+	x/D1u6C/o+5u4fEb8SQjA8nbKO6zNyzFEZDCOLlYz5KfpghAWIg0FQ2AYxw+w4muLeoSqqELaCL
+	3JvGhnia86eLr6LoocO4UAOzf+ADwG9nQPdAn/bZ2v7+8W29HdSV0p8YLIGuzW+ptf6e9MQMtsX
+	Q==
+X-Received: by 2002:a05:6a00:ccf:b0:84e:2382:f4f0 with SMTP id d2e1a72fcca58-851b87a36cdmr5479823b3a.4.1787018928462;
+        Mon, 17 Aug 2026 19:08:48 -0700 (PDT)
+Received: from osman.mioffice.cn ([43.224.245.178])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-851b404944bsm1216138b3a.23.2026.08.17.19.08.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Aug 2026 19:08:47 -0700 (PDT)
+From: Zhan Xusheng <zhanxusheng1024@gmail.com>
+X-Google-Original-From: Zhan Xusheng <zhanxusheng@xiaomi.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Zhan Xusheng <zhanxusheng@xiaomi.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Changbin Du <changbin.du@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf symbols: Don't apply the symfs layout to synthesised paths
+Date: Tue, 18 Aug 2026 10:08:39 +0800
+Message-ID: <20260818020840.56874-1-zhanxusheng@xiaomi.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <CAP-5=fV0sqh1cVc1kxSPNV0mBS7V0oTLQDvybE3MZCnpQ7N0RQ@mail.gmail.com>
+References: <20260811050046.4019578-1-zhanxusheng@xiaomi.com> <CAP-5=fV0sqh1cVc1kxSPNV0mBS7V0oTLQDvybE3MZCnpQ7N0RQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2] perf/x86/intel: Prevent drain_pebs() reentry
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>, Zide Chen <zide.chen@intel.com>,
- Falcon Thomas <thomas.falcon@intel.com>, Xudong Hao <xudong.hao@intel.com>
-References: <20260813064346.335458-1-dapeng1.mi@linux.intel.com>
- <CAP-5=fWqqAFLwdRKeTN8q_GiCdvUx81bQT+=6KpWitV7uECM9w@mail.gmail.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAP-5=fWqqAFLwdRKeTN8q_GiCdvUx81bQT+=6KpWitV7uECM9w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+On Mon, 17 Aug 2026 14:42:26 -0700, Ian Rogers wrote:
+> Would it be possible to provide a before and after the
+> patch so we can better appreciate the issue you are fixing?
 
-On 8/18/2026 3:28 AM, Ian Rogers wrote:
-> On Wed, Aug 12, 2026 at 11:50 PM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
->> The PEBS buffer is shared by all events on a CPU, so drain_pebs() must
->> not be reentered. If so, one instance may observe stale buffer state and
->> potentially access out-of-bound memory.
->>
->> Most invocations happen in NMI context, which naturally prevents reentry.
->> However, drain_pebs() is also reachable from process context via
->> intel_pmu_drain_pebs_buffer().
->>
->> In those paths, the PMU is often already disabled, but not guaranteed.
->> For example, __intel_pmu_pebs_disable() only disables the target counter,
->> so other active counters can still raise a PMI and interrupt an in-flight
->> drain_pebs(). Here is an example,
->>
->> __perf_addr_filters_adjust()
->>   perf_event_stop()
->>     __perf_event_stop()
->>       x86_pmu_stop() (event->pmu->stop)
->>         intel_pmu_disable_event()
->>           intel_pmu_pebs_disable()
->>             __intel_pmu_pebs_disable()
->>               intel_pmu_drain_large_pebs()
->>                 intel_pmu_drain_pebs_buffer()
->>
->> Introduce __intel_pmu_quiesce() and __intel_pmu_resume() helpers and
->> use them in intel_pmu_drain_large_pebs() to disable the full PMU
->> around the intel_pmu_drain_pebs_buffer() call, preventing reentry.
->>
->> Also add a warning in intel_pmu_drain_pebs_buffer() when the full PMU is
->> not disabled.
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>
->> v2: Move __intel_pmu_quiesce()/__intel_pmu_resume() pair into
->> intel_pmu_drain_large_pebs() instead of guarding all drain_pebs()
->> callbacks. (Peter)
->>
->> v1: https://lore.kernel.org/all/20260717080342.1879573-9-dapeng1.mi@linux.intel.com/
->>
->>  arch/x86/events/intel/core.c | 33 ++++++++++++++++++++++++---------
->>  arch/x86/events/intel/ds.c   |  8 +++++++-
->>  arch/x86/events/perf_event.h |  3 +++
->>  3 files changed, 34 insertions(+), 10 deletions(-)
->>
->> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
->> index f6ee1819864e..1cdb52c0aad5 100644
->> --- a/arch/x86/events/intel/core.c
->> +++ b/arch/x86/events/intel/core.c
->> @@ -3125,6 +3125,27 @@ static void intel_pmu_del_event(struct perf_event *event)
->>                 this_cpu_ptr(&cpu_hw_events)->n_late_setup--;
->>  }
->>
->> +int __intel_pmu_quiesce(void)
-> Thanks Dapeng. Rather than quiesce would
-> __intel_pmu_disable_if_enabled be a more intention revealing name?
+Two builds of 8d3ae59288f1 differing only by the patch, empty /tmp/s:
 
-Thanks Ian for reviewing this patch. 
+  perf record -o pd.data -- sleep 0.3
+  strace -f -e trace=openat,newfstatat \
+      perf report -i pd.data --symfs /tmp/s,flat --stdio
 
-Yeah, I was hesitated about the name for a while. Currently I still prefer
-the name __intel_pmu_quiesce() which is simplified enough than other names. 
+15 paths get tried under /tmp/s.  Four of them differ.  Before:
 
+  /tmp/s/debug/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+  /tmp/s/debug/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+  /tmp/s/debug/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2.debug
+  /tmp/s/f5/8808c9c8a388055b126492a1706d732761f86e.debug
 
->
->> +{
->> +       struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->> +       int pmu_enabled = cpuc->enabled;
->> +
->> +       cpuc->enabled = 0;
-> Presumably the line above could also be inside the if.
+After:
 
-Yes. I'm not sure if it's worthy to post a new version for this minor
-change. But If there is a new version, I would change it.
+  /tmp/s//usr/lib/debug/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+  /tmp/s//usr/lib/debug/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+  /tmp/s//usr/lib/debug/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2.debug
+  /tmp/s//usr/lib/debug/.build-id/f5/8808c9c8a388055b126492a1706d732761f86e.debug
 
+The first three are FEDORA, UBUNTU and MIXEDUP_UBUNTU, the fourth
+BUILDID_DEBUGINFO.  What the old ones have in common is the shape: the
+prefix perf supplied is flattened while dso__long_name() is still appended
+whole, so they follow neither 'flat' nor 'hierarchy'.
 
->
->> +       if (pmu_enabled)
->> +               intel_pmu_disable_all();
->> +
->> +       return pmu_enabled;
->> +}
->> +
->> +void __intel_pmu_resume(int pmu_enabled)
->> +{
->> +       struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->> +
->> +       cpuc->enabled = pmu_enabled;
->> +       if (pmu_enabled)
->> +               intel_pmu_enable_all(0);
->> +}
->> +
->>  static int icl_set_topdown_event_period(struct perf_event *event)
->>  {
->>         struct hw_perf_event *hwc = &event->hw;
->> @@ -3316,16 +3337,13 @@ static void intel_pmu_read_event(struct perf_event *event)
->>         if (event->hw.flags & (PERF_X86_EVENT_AUTO_RELOAD | PERF_X86_EVENT_TOPDOWN) ||
->>             is_pebs_counter_event_group(event)) {
->>                 struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->> -               bool pmu_enabled = cpuc->enabled;
->> +               int pmu_enabled;
-> nit: Maybe pmu_enabled would be better as pmu_was_enabled or pmu_reenable?
+Among the 11 unchanged paths are the basename lookups the option exists
+for, so it keeps working:
 
-pmu_enabled seems better for me. pmu_enabled is simplified enough comparing
-with other names. 
+  /tmp/s/ld-linux-x86-64.so.2
+  /tmp/s/sleep
+  /tmp/s/vmlinux
 
-Thanks.
+The same trace with ,hierarchy is identical between the two builds.  The
+doubled slash is path__join() on a component starting with '/', present
+without the patch too, in 7 of the 15.
 
+I will add this to the changelog in v2.
 
->
->>                 /* Only need to call update_topdown_event() once for group read. */
->>                 if (is_metric_event(event) && (cpuc->txn_flags & PERF_PMU_TXN_READ))
->>                         return;
->>
->> -               cpuc->enabled = 0;
->> -               if (pmu_enabled)
->> -                       intel_pmu_disable_all();
->> -
->> +               pmu_enabled = __intel_pmu_quiesce();
->>                 /*
->>                  * If the PEBS counters snapshotting is enabled,
->>                  * the topdown event is available in PEBS records.
->> @@ -3334,10 +3352,7 @@ static void intel_pmu_read_event(struct perf_event *event)
->>                         static_call(intel_pmu_update_topdown_event)(event, NULL);
->>                 else
->>                         intel_pmu_drain_pebs_buffer();
->> -
->> -               cpuc->enabled = pmu_enabled;
->> -               if (pmu_enabled)
->> -                       intel_pmu_enable_all(0);
->> +               __intel_pmu_resume(pmu_enabled);
->>
->>                 return;
->>         }
->> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->> index e86e4ba91e1b..54890dda0589 100644
->> --- a/arch/x86/events/intel/ds.c
->> +++ b/arch/x86/events/intel/ds.c
->> @@ -1242,8 +1242,11 @@ int intel_pmu_drain_bts_buffer(void)
->>
->>  void intel_pmu_drain_pebs_buffer(void)
->>  {
->> +       struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
->>         struct perf_sample_data data;
->>
->> +       WARN_ON_ONCE(cpuc->enabled);
->> +
->>         static_call(x86_pmu_drain_pebs)(NULL, &data);
->>  }
->>
->> @@ -1864,8 +1867,11 @@ static void intel_pmu_pebs_via_pt_enable(struct perf_event *event)
->>  static inline void intel_pmu_drain_large_pebs(struct cpu_hw_events *cpuc)
->>  {
->>         if (cpuc->n_pebs == cpuc->n_large_pebs &&
->> -           cpuc->n_pebs != cpuc->n_pebs_via_pt)
->> +           cpuc->n_pebs != cpuc->n_pebs_via_pt) {
->> +               int enabled = __intel_pmu_quiesce();
-> Similarly, may be was_enabled rather than enabled.
->
-> Thanks,
-> Ian
->
->>                 intel_pmu_drain_pebs_buffer();
->> +               __intel_pmu_resume(enabled);
->> +       }
->>  }
->>
->>  static void __intel_pmu_pebs_enable(struct perf_event *event)
->> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
->> index fa381110f7a7..84495279079a 100644
->> --- a/arch/x86/events/perf_event.h
->> +++ b/arch/x86/events/perf_event.h
->> @@ -1638,6 +1638,9 @@ static __always_inline void __intel_pmu_lbr_disable(void)
->>         wrmsrq(MSR_IA32_DEBUGCTLMSR, debugctl);
->>  }
->>
->> +extern int __intel_pmu_quiesce(void);
->> +extern void __intel_pmu_resume(int pmu_enabled);
->> +
->>  int intel_pmu_save_and_restart(struct perf_event *event);
->>
->>  struct event_constraint *
->>
->> base-commit: 917d558b151cad5b05991e5eaee22efab33525ca
->> --
->> 2.34.1
->>
+Thanks,
+Zhan Xusheng
