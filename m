@@ -1,130 +1,156 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBA06440631
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Aug 2026 22:18:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.176
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787177924; cv=pass; b=ZA/suMoN1gPdcCYubipyrg9OgEziFVfBRccmRdSeX4NZ3uSp90AXtpJsXV/Mpo0Y+hX/sE/AVPQBBBWByQ06ji2lDxNuElK0aKjWYhUFS+Gl6Xzcwaj89jJyLrjsbLiXCdl4cTnnPnFPSRnkA9h9gYaQRoTmtNMgSUg7gTHEB7s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787177924; c=relaxed/simple;
-	bh=7vDOf7xZu8sb5mcUwjB49djvSyUxUNxmjuy7MJD5oiY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kmzu8xAUZNaEOVDy2J6zFurvwtEsVwZtN/hrUVQI98V+MSkM1Nig23GWtVEkklIYlP5/V5SiDzq9BFlbkwJ0ncsK8LezO+AusW9o90+z2Ym9it1OJOwHUAhxaPlE5vy5V8Hn5oZ/NkPh51scZFh/kz1fJ4sAeXSkpgmuXLqx4mI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Nx4ud9qM; arc=pass smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21FFB379966;
+	Wed, 19 Aug 2026 23:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787183701; cv=none; b=NAFyHHN47VPtORi2SM3gfZBaBC94laaplPM0tY5u0oErBkfcvBIfdvGl49bww9Hay7NuDs7OT93FOjbsXZkkkgcchw1j6emf3C3ecb4dt3jefbQGgbhUydezkzA05U9wzvjRb4cSh+YactAIZUQft3SiFdZ5WhtVnOpQgOMsUpQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787183701; c=relaxed/simple;
+	bh=gs9hvltnsfszTrvLTk7QgFw8EQK8T2X6k/hezkhhHlg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=P6iy3NAsMRgvWPwsfzDdZKu8GhjasuAD7cMzcR+Ry/q1RLZVebSd2lyeYQ5slrDLse52DwLuF6MWGCbknDlCXRc/Ts3LNUMQVEPYKdqr5iCVuU1sejz/bbN7PVt/3hy/mJlahD/9uhCGFJIL3xmLGq0lHDdxCIdiZh0Qt8Mw05s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W9S4S5ul; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Nx4ud9qM"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-51c10ed63c0so51101cf.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Aug 2026 15:18:42 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787177922; cv=none;
-        d=google.com; s=arc-20260327;
-        b=OYpexZ5h8MMgzwTJ3xMS891WAbc1A536HmX+6CoewhYA2+cWE2Q9tirK7Ce/CMJO+q
-         FewcfiY2qGkqpFOg+MWyqElobaBD8G9Ps6YTltEiuFhScqJTr8MGABKDkudgyjHGGYoS
-         zNPSibOtFluJJ6jHOTKrnObH3BKDtILs6LP0wftLNzqVBglgVO4cahduu+KiZnVjHqiE
-         hhlN71/FPQPSUotl8sKnNTuDKw+IhAhWSeb27qnhFg1ZiolUJIm2poghPZEzreA40CJK
-         Y+k85m4VsR13jF/zP3o1seliTnaSMO7E2RNSm0oT/G7jW+QPhAItqXO/Igt6MWgstZC5
-         JzLw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=7vDOf7xZu8sb5mcUwjB49djvSyUxUNxmjuy7MJD5oiY=;
-        fh=stLtHN+9HrnX066H2LNGCXblvkQnQD/mwi0B9xWKhPc=;
-        b=icPnD5P7GoCOxo5PQEw+3CFIx9neYqh02vJsx5hfpDZ580mIq5nurTbeXzinRIYEs4
-         mGxPZ/45O0Rm9gIa1bNQBIyE378vL5EMaej1T9Ws9pT8Rmnfab++rZ9T9esbg6wX1qDA
-         W78eeyBLXL5xTFajdhpxM/bDALDfFBOjtR+ZAFWxMfY3V5floqZIqgT5iPKhd+nxAgz1
-         3fUBAovJi8HXV2rji1rx4RYVd1lhc+fMYk2XOfFuxHldMucdDbZl/RsuTx4kWgZJQ+pZ
-         7MHhST7TZ1mF2tg4XBTwMtBFLe8k4Xdv/MfDEhdsN38rKiouRYtO584ryuLDbDyhC6+f
-         Bf5g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787177922; x=1787782722; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=7vDOf7xZu8sb5mcUwjB49djvSyUxUNxmjuy7MJD5oiY=;
-        b=Nx4ud9qM7kUVhCNLBo4SQAgIiVRgkmat0pbUeYCJtSXQBtZKPfdpauhRTEMmlPXkB3
-         EcEGvn2N1NoVritIuOW0+8acAIKkUrpvjSgBnQo9gVU8FNdZSnEMNSnTQbBnI0AeOZ1n
-         0zBlHX9y37qsHkDETZO3avsmnKpTsBmB7g8qmuXxnJW7E9iypmkl0KKwgK8zUrhScJBd
-         udZ1SxlxicNV2DdcFDKYFUpX7s49bKIZNFNCyMETgITOXyftPkG8Zewo9f0PrbIKAD+m
-         CYvg+o1SsEISwNQGrCseVkmdqKZu3nSq27+tn4SMwk6d2sRM0RlXXiUL+gFDEdBl4XdI
-         NlcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787177922; x=1787782722;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=7vDOf7xZu8sb5mcUwjB49djvSyUxUNxmjuy7MJD5oiY=;
-        b=pr9jVMGr5h61/SdhqBDAWjDgqHhu04E+HRoYo9ATA6yBIPlrBPI9Hjx/ovzElY/YDG
-         dvV+BJOxNRD2b+fF2OfvJ35rxCPP2qvtNZKcRV8WTcEh1V+htRxk/mwXS0oAssXoryxb
-         jB056abyin7qsAMgt2ON1Hde5kKb3XenYvVH+dj81B3iCDyq8Tm3vv9AqkwbzDy6VW9o
-         eD1cfmI1su/2at5oigvSuR2csldWgtzhINgdj2NjaPhHCl+jYDo7nk1ko2WBHAbvhtLQ
-         PFekpjQWJ85eXfELIY7qs77PEXKEiBwXm4um6zt58gCKeMazL3cuol/LPHEsreuMRD/J
-         ASNw==
-X-Forwarded-Encrypted: i=1; AHgh+RoIESCPZoWnYmPLfYo0TYxdHpE5U972LwRt0T3nwsHMsgl0wKPK4q3XLn1SUSiHwDFcE0HJCiJjhnEOTLBRnP4d@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZkLCcAhQR/ZQ0aR6OYfHcK6DWJs3ZLiE5tJGanZgTnqNDQuwU
-	80cSf2doBhAQ8PP/mHOtLl1FfH9aX8T9WgwR17O2tVXSv7iIJTKBaEh3weP2bBc9ah9QmOBUR/a
-	tLteNMGk3HOfsxURCXPC0CzYD56JZHbuiWQje6HqU
-X-Gm-Gg: AR+sD11DVGJwQtLBnw5KXSGyMb1YZCz9m/qbSnjomi1+eeUCv7lM5jQhQQSFQ51Ytdk
-	IpIKE1irzIirKhYv00Lk11wVO9URjcrD0cAcnJSVzu510SKYSaj3iSELWtuERnF/tr/gr5F/H+v
-	EJuFxdcSStfix0tA5+17tE5m10IDDZZBAm3BRIKXeuSC6K4quFvJW4w6+X1DzZ3BdWHStva2v4m
-	JxQn2yMWYOZfiIFCPQPdpZrqDDt8siwOAvEPzBDDvO0iaRYf/AQZ8h1+lERd4CO/pn01lPWG1DS
-	EsCJYSHe5Ilrg4hvHMcituNTcLj0JnNaBTBDfWj0XtIaQ3thkWgpLyD6bgvVolibvUGFKo56TSY
-	=
-X-Received: by 2002:ac8:5cd6:0:b0:517:5e32:2d14 with SMTP id
- d75a77b69052e-52de42ee25bmr5878701cf.10.1787177920934; Wed, 19 Aug 2026
- 15:18:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W9S4S5ul"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A777F1F000E9;
+	Wed, 19 Aug 2026 23:54:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787183699;
+	bh=B0ytyDnWFNUv0OEEnTR1U8wLe6Cq77wdZFOAEOYvuTg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=W9S4S5ulezMkDW3twRMJ6dVHmet+74EZ0y64hXJqtZjXzbyvsaLmeloiBNuLV/sF5
+	 7isx1slQBEj+7YRD4LUQRT9lgZaN1JQpkSP/H743NllLAqP686sH6WocrqiWJLGBip
+	 8WkykqwQJn5pHh+GW9MfPoVTWZsOtChXKA6j9fIWpGER34E/asNya9egph7jBKNtxi
+	 p2KTRQcinD3gSacmemoolPUK7qtsmUdI1uaGMWNaHFQcdE1iKrD+qoCMyvTbrvWrz6
+	 6g18H39P62BlXTgDA2z+1YKAz1MO/HVk8phqXlg0KQewAjaQaQ5Ga1vdXeqFqM4+yc
+	 zNDMQ2q9OXXPg==
+Date: Thu, 20 Aug 2026 08:54:56 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: sashiko-bot@kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v12 02/11] x86/hw_breakpoints: Add
+ arch_modify_local_hw_breakpoint_addr() API
+Message-Id: <20260820085456.c9f2f51135d03093692feace@kernel.org>
+In-Reply-To: <20260807155051.528FB1F000E9@smtp.kernel.org>
+References: <178611679753.237811.10190793347982785419.stgit@devnote2>
+	<178611682030.237811.16459191503595231339.stgit@devnote2>
+	<20260807155051.528FB1F000E9@smtp.kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260813132519.4099508-1-andi@firstfloor.org> <CAP-5=fW112qVVdZGNpdRH0n-B2at4ENDjjNv4Hdehn5bEB9BSA@mail.gmail.com>
- <aoSWkMjxuz3hYr7C@tassilo> <CAP-5=fXYPdVcdVQP0LW+ueLSWY11vFJq9GNVLA_yE=P_1_7giA@mail.gmail.com>
- <7f5ae51dea8c7b6770716dedc46ee1b3@firstfloor.org> <CAP-5=fXLe9tqR7wHh9auRxqX82Fw6zYh1EoTOXjPhOXcRXB92A@mail.gmail.com>
- <aoXVrD-Qbhi5qd2D@tassilo> <CAP-5=fW6a4MQurwVeL16WWFnO0VQPRm992M==DP9zVza3wgdfw@mail.gmail.com>
- <aoX1F_V1pS9VCMjF@firstfloor.org>
-In-Reply-To: <aoX1F_V1pS9VCMjF@firstfloor.org>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 19 Aug 2026 15:18:29 -0700
-X-Gm-Features: AcwNN1Xa5xa82vGd4vzjyrNPh3jLTPJHDZN1GD1Cwk9ddVn1IHO-xXL5s_jWM7s
-Message-ID: <CAP-5=fX547ve-LuFXca2QxtRiR7_P8EgnxzPm_pH8N+2xBjZzA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf top: Merge hybrid common events
-To: Andi Kleen <andi@firstfloor.org>
-Cc: Andi Kleen <ak@linux.intel.com>, namhyung@kernel.org, acme@kernel.org, 
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 19, 2026 at 11:25=E2=80=AFAM Andi Kleen <andi@firstfloor.org> w=
-rote:
->
-> > So I think we can add a json field to indicate mergeability and set it
-> > on legacy instructions, perhaps things like branches and
-> > branch-misses
->
-> But the current simple check already works fine for them?
->
-> >. We can also detect a hybrid system and switch from
-> > cycles to instructions as the default event when merging is desired
-> > (like in perf top).
->
-> instructions rarely gives you an accurate breakdown because
-> the IPC varies so much in practice. cycles is a much
-> better default.
+On Fri, 07 Aug 2026 15:50:50 +0000
+sashiko-bot@kernel.org wrote:
 
-So maybe sample on cycles for the leader and get instruction counts.
-Then we could multiply the period by the rolling average CPI for the
-PMU type?
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [High] arch_modify_local_hw_breakpoint_addr updates the hardware and shadow registers but fails to update the perf_event's canonical software state, leading to silent hardware reverts and incorrect event samples.
+> --
+> 
+> --- Patch [2]: [PATCH v12 02/11] x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API ---
+> commit bbc277e839d1fd31bb4bfa9d695721e5b6899bf6
+> Author: Jinchao Wang <wangjinchao600@gmail.com>
+> 
+> x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
+>     
+> Wprobe needs to move an active per-CPU watchpoint without releasing and
+> reserving its hardware slot.
+>     
+> Add arch_modify_local_hw_breakpoint_addr() to find the installed local
+> slot and update only its address shadow and hardware debug address
+> register. Publish the shadow first so hw_breakpoint_restore() observes
+> the new address if an NMI interrupts the update.
+> 
+> Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
+> 
+> > diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+> > index 9ef24b55737f8..c89f6e71c3a91 100644
+> > --- a/arch/x86/kernel/hw_breakpoint.c
+> > +++ b/arch/x86/kernel/hw_breakpoint.c
+> 
+> [ ... ]
+> 
+> > @@ -128,6 +128,39 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
+> >  	return 0;
+> >  }
+> >  
+> > +int arch_modify_local_hw_breakpoint_addr(struct perf_event *bp,
+> > +					  unsigned long addr)
+> > +{
+> > +	struct arch_hw_breakpoint hw;
+> > +	struct perf_event_attr attr = bp->attr;
+> > +	unsigned int seq;
+> > +	int i, ret;
+> > +
+> > +	lockdep_assert_irqs_disabled();
+> > +
+> > +	attr.bp_addr = addr;
+> > +	ret = hw_breakpoint_arch_parse(bp, &attr, &hw);
+> > +	if (ret)
+> > +		return ret;
+> 
+> [Severity: High]
+> Does this discard the validated software state?
+> 
+> The new address configuration is successfully validated into the local 'hw'
+> struct, but neither the architecture-specific state (counter_arch_bp(bp))
+> nor the core attribute (bp->attr.bp_addr) are updated.
+
+Yes, if it is sololy used. But in the 3rd patch, this function is only
+called from modify_local_hw_breakpoint_addr(), which updates
+counter_arch_bp(bp)->address. I will add this as a comment.
+
+> 
+> If the breakpoint is later re-installed (e.g., during CPU offline/online or
+> PMU scheduling), arch_install_hw_breakpoint() will read the stale address:
+> 
+>     struct arch_hw_breakpoint *info = counter_arch_bp(bp);
+>     ...
+>     this_cpu_write(cpu_debugreg[i], info->address);
+>     barrier();
+>     set_debugreg(info->address, i);
+> 
+> Could this silently revert the hardware register back to the old address?
+> 
+> Also, if a watchpoint fires, perf_bp_event() initializes the sample record
+> using the unmodified bp->attr.bp_addr. Could this result in reporting
+> incorrect addresses in the trace output?
+
+trace_wprobe ensures the hit address and modified bp->attr.bp_addr are the
+same. So there should be no problem.
 
 Thanks,
-Ian
 
-> The other things are reasonable I guess, but all not really
-> needed initially.
->
-> -Andi
+> 
+> > +
+> > +	for (i = 0; i < HBP_NUM; i++) {
+> > +		if (this_cpu_read(bp_per_reg[i]) == bp)
+> > +			break;
+> > +	}
+> > +
+> > +	if (WARN_ONCE(i == HBP_NUM, "Can't find any breakpoint slot"))
+> > +		return -ENOENT;
+> > +
+> > +	do {
+> > +		seq = this_cpu_inc_return(cpu_dr7_seq);
+> > +		this_cpu_write(cpu_debugreg[i], addr);
+> > +		barrier();
+> > +		set_debugreg(addr, i);
+> > +	} while (seq != this_cpu_read(cpu_dr7_seq));
+> > +
+> > +	return 0;
+> > +}
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/178611679753.237811.10190793347982785419.stgit@devnote2?part=2
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
