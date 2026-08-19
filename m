@@ -1,173 +1,625 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012003.outbound.protection.outlook.com [52.101.53.3])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39FE22083
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Aug 2026 04:16:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCC02264C0;
+	Wed, 19 Aug 2026 05:12:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.3
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787113008; cv=pass; b=uwCbqeomplv+Gr3L0frCa/O6FbRegGSZCyB/zQphFp5s1roHv3l7Qgeaob7LyqbGcZXXY0Whky3E7EAYDzdzvjpulfStXNohcAG5uPSEf7iTWY7SeJd7Naf7BnXp4+q5D1cj6p1HrkuQlp4LnwEPQo97lgkrc5coF1vq02NVC2Y=
+	t=1787116336; cv=fail; b=q7mQtMZ7pq5U9L2DQZQFJp6tZBtWewU2hkpsV/3S+BALzHzZ6NfX6bOsEDRtARZTRbKzKiI4elIl4SV9raQjrX0epZr1K05pfhNaXZ2occ0ZwgXbknQN3ZZUBst71B+f1HSxyzvEPfoybV4STZl7yEsgActvX7CY3zJbTBuS9go=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787113008; c=relaxed/simple;
-	bh=nNCO/RnzImKIQbbh4Dy0dbwXvbg9ERPf6qACYsdxwzQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uDYmxoHv9tKVGyMGt+/x8uNJoAx2h7mnCABdW7+e+nNdJ/uyP7M7WEsyCS6l6Jf5Z4SHq5i4MBXF3Ws2EjSS+HV0AWS+a0O+LnvKgKYRfiSgdWaeFFc5YqwRiERZiM8D68A6g1nHM5a8JC/hD2rdyFXNnb5bmK4BDKTjiSfzMmE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SI8XrPeU; arc=pass smtp.client-ip=209.85.160.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1787116336; c=relaxed/simple;
+	bh=R/422OOPlN/NvbmqzBy0Ben94OGZPtt6QLLbQshLM5s=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=jfephQS5R7HtLdmI6hse1FtMbQqg1LFNbgAIL41ptMr54Hx7rVF/f4VWCPuH64vuwKa3G6mFPc6uCduAsW0j+KErpqaAMni78UcG++0lybg1JhbPE5Dgj4765gVpMx51kYOT5SieeIerdlaNJ05d5SpfqIrdmE6Pi/2Ys4w4vQQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MbDeyXg1; arc=fail smtp.client-ip=52.101.53.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SI8XrPeU"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-51c15a5b265so129951cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Aug 2026 21:16:46 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787113006; cv=none;
-        d=google.com; s=arc-20260327;
-        b=eu0S6WEKn4a8IG7JxZufOIEFMPdsV6VgawCR9vC9GSS5xuAqHaVttLJW6a9Pmamutv
-         hk52dsTGszagoPm1PbTWuY3HpQMZs3LHd5L8Rg/bSPkDeI1MddNO6pAnov6KZl8YDqST
-         zHld/L+XO2ewrq1ARTb75dHFIXHt38p4Y22PiDafXXrz1x/GmF7hJl058EDhtIv5T6Ic
-         HKhoVzKNclx2DJWEj+1ox0j4pZw6w3NEcAPByzmzYMt5ElJdDDvY6keRuloKc+PAVBRl
-         lpMaXeysRLTH6COe1/JFhgD1t0AoRpRNOf3W5+4o1tyu5SV45CJYH82eEl5ZIBflsp0Q
-         kXIQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=UAKKouoUBeuvxqVoZyLbYA3g6AB5nMN9wGalOwQu9WY=;
-        fh=zcrbJdCPhhqjm1PsSrqFC6J/gNAxrAE+pNthBSBDBcw=;
-        b=BrrPZjtKPqiEl09DpqPPDjaCdpBSOUDVqtwvCJgyvXtlu7d9Nto7sAuOI2cieBBi8a
-         gxNszF7a2R5LqVhix3dKuf1se0GJSb0ZJxhlABkDkcqHcdtwD/Y1RBgQQCbSmSbKfXSe
-         HSc/HTBFeIc56MGDQu9bB1zlhejbSApSAyokrLH5wajnJVrgKWX5a1+yIknJYlDEQQDa
-         kpvec3c5fJxq/2t+/ntR59tdO0sXd2UDVYT5fRzWbfAfSB2REFa9v1UhPskalqurt45q
-         q/jSKoU5hWGPvAYYpx7rvkr0lXh3plY3QDPgBnAC6gfG7+FFH83WXpE5tS24KYmiEhYO
-         qHUQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787113006; x=1787717806; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=UAKKouoUBeuvxqVoZyLbYA3g6AB5nMN9wGalOwQu9WY=;
-        b=SI8XrPeUOoxjb7TGZmNYnDN05QSif5jXZlNEdYMlKhxY5L+92vJiH+9yeoE3V6r9RS
-         VsWRldMd/43MMsSTgOn3XGSJOIPAMkoMFCakdDl1XUw/Ctak9bHmD7fhIA284Q9guAlc
-         YfhOyNsXgtlzZ6KLBtP4FSaF346DoCs3eLZXCKb7HWV7taDUlPJETiTMObUDU/e2S/hs
-         RH9Y9RpZ6l2H/AsqACcwkF5eVtGkhY4EB99iIKilKwu5VXWjOHPPIfeJMWEi+9aYToQt
-         pGkXy7Vgeui/k22FHuwl+89wIDse0mJNlbOfqYgRS7THQXOMDEGbmrEwWeRJT6nOOIQH
-         KE1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787113006; x=1787717806;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=UAKKouoUBeuvxqVoZyLbYA3g6AB5nMN9wGalOwQu9WY=;
-        b=ltwp4QkVrjzKU44nQsksfCJgLCECOdKmM8w31YPqJGCBxRzfrQAf89FWxSIr3MbmQD
-         IaO2wEs1okICrLbpLd2eXzuUIzxPwCv6oECa/Nfqup6mkQYGniU4o4fenFTYRDpPj4Id
-         LqYQZ6ZblQedoPp2s6KRdCPeadqcmz3mA0DgeNsABd0maZUWBM+4yqRyG3rOexD1+t01
-         ZvrtCa468PcEWY6fqzXPWhdkY9fXoh38HuxmSaLdS0fEBq1J5uL32SGVmlmmQLxwFTqV
-         i5kQzHHktTrbzlfRqMl/UWXWpaNg0MtMKQNZ8tcsH0965HFlKnB3w3JH2dWOZJL1Tmmj
-         NHqQ==
-X-Forwarded-Encrypted: i=1; AHgh+Rqk+z7gXv2lyPulaExdKxEb1uQyDwr4UrBqafF5QQpuTtsdhkcFIdaeuIKKTKcBR0fLCUgGX5aSSwtJbBODna7y@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUgGV+mO1Yz74SQpwowE6ygQ39PKjn+vx6KmDr8ZdNrERRPwS1
-	VuLM0O5CLDL6nUYRE4M/+BG435vTOJGnrKPcKu0kb/l5L1IoV7d12ILZv7Qlg6tg2me2E6Y0OpY
-	KBeEaE3uXsDgcFLq1deGsmZM3QO9XT+JeRJvBk1Lx
-X-Gm-Gg: AR+sD10d9THMiB2P1sXtGOEg3+/mF7epPQB53uNmG/JBKgUp2KHQoPoLS1K1ebTD7d4
-	lbVrEzmrmSblG3JY29Wq/ByLwbQoOrmLil1GXzxv8cqGBHzBtfYmzKGoUKV18MR+p0axH+3NVUW
-	0o5YTfYLG6KLEKbvIEG8b8Pz2e5l+Ahb6YKSyEaWpUMVzKYkPMBM4B8M12TlqsTPsCjeBX5sQOT
-	n6LdJmbijvq+Fv9RyBBXVQVk7jtyvLx3F8j0DAo0O3QSfwHQYFx0Dty+GLeoC23odoV0aVcsTWN
-	G24DvIQDKmUiK5gtEO7DFSPP+sO5PqbtPoh7JvL2SZ0+zw==
-X-Received: by 2002:ac8:5a81:0:b0:519:b655:235 with SMTP id
- d75a77b69052e-52dd909dd1bmr2783011cf.3.1787113002202; Tue, 18 Aug 2026
- 21:16:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MbDeyXg1"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=jHf3zHeg4E0JOMSbDC6HviPfSVZQ5XQtCP4UIGNy3Ihj3ZbmFwWQPOjrCQ95sgeFXnzijGAQND99OGUngwf6H5t8/91IPp1ESe+TRNWS6oORiY4Mm1waSPvB2T2JyldddnjYfjxsHrITDAHqOK0JqHfh8r9MU0NWNhf61UyqU+c65/wNMczR/uE2zrFEUC1nv11N+nzBYhLGqy6CgZvM/7ZK+YQz+1wRCZKup40+34wIeQpWOWSyqN8v+Wd8PmXu1ZuqETuQrr09Oh2vPUFfAUKtbgwAjDljdKNSlkB5YYYFrngGEqM24sFZ8acWfSrsrEGE9PNsDQ9rdywcqLKmCA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0dNmWpePDfuNb01y9iofe57V/jgxmBkgl7ZZHb1GrhQ=;
+ b=JYR5D/9nvN9H97h2XKRURKPI2oC1s0zBd5Kr6W+lf6bSaymNX92wM9Z+hB0mZGQLxomTjVpxagZbH42Lyg3zSxDNWzOQBKK0lXc026VD1+jlR2oLqz20FYxpTf8lEuNOPbO7vwdxBJDv9s9W78p6BKy6YCbVKxpH6tlVuJM6ywsxWA8xvSuycwyc2cvPWPT6w9fvvQw7IhS5GBc/Sc4LJdNzP051zgtqwOohCuBZnZ2to9tzg37FBedKZlQO1ax/jb+D024uAk6Vbp3JBMhRKQSAvkM0WSQeoX8f+MQY2Pw+XRJyYQJxMnf0eCojeBcqx+O7cXjbEd4Cg0huEKTmGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0dNmWpePDfuNb01y9iofe57V/jgxmBkgl7ZZHb1GrhQ=;
+ b=MbDeyXg1PWcIx4NBlAACYkH3rQuG2r/cuJ7tYhyG9pgu8FAO1NoGjGVOnwZ/bUP5zPGvQioqnTqe/vWpe2fvdlt6sBDzthveGfZIvo13NmIV5Rc+BLghFkXzB903Vh9ssuOgFhLPpo0AEHbFE7wdM2j6ro4uzdX2IGHOA8VZznA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
+ by MN0PR12MB6102.namprd12.prod.outlook.com (2603:10b6:208:3ca::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.8; Wed, 19 Aug
+ 2026 05:12:08 +0000
+Received: from PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::afe1:7dd0:ea71:b7e7]) by PH7PR12MB5712.namprd12.prod.outlook.com
+ ([fe80::afe1:7dd0:ea71:b7e7%4]) with mapi id 15.21.0339.007; Wed, 19 Aug 2026
+ 05:12:08 +0000
+Message-ID: <79ff1562-d910-418c-b5b5-92d217cdc568@amd.com>
+Date: Wed, 19 Aug 2026 10:41:58 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/2] perf vendor events hygon: Add Hygon Data Fabric
+ PMU events and metrics
+To: Qi Liu <liuqi@hygon.cn>, peterz@infradead.org, mingo@redhat.com,
+ namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ ravi.bangoria@amd.com, irogers@google.com, x86@kernel.org
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ lijing@hygon.cn
+References: <20260818100118.12944-1-liuqi@hygon.cn>
+ <20260818100118.12944-3-liuqi@hygon.cn>
+Content-Language: en-US
+From: Sandipan Das <sandipan.das@amd.com>
+In-Reply-To: <20260818100118.12944-3-liuqi@hygon.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA5P287CA0293.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a01:221::7) To MN0PR12MB5713.namprd12.prod.outlook.com
+ (2603:10b6:208:370::18)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260813132519.4099508-1-andi@firstfloor.org> <CAP-5=fW112qVVdZGNpdRH0n-B2at4ENDjjNv4Hdehn5bEB9BSA@mail.gmail.com>
- <aoSWkMjxuz3hYr7C@tassilo> <CAP-5=fXYPdVcdVQP0LW+ueLSWY11vFJq9GNVLA_yE=P_1_7giA@mail.gmail.com>
- <7f5ae51dea8c7b6770716dedc46ee1b3@firstfloor.org>
-In-Reply-To: <7f5ae51dea8c7b6770716dedc46ee1b3@firstfloor.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 18 Aug 2026 21:16:30 -0700
-X-Gm-Features: AcwNN1Ws9LEvadRcPcpLXEW_fXytqUrds9tZN-uCjmJBrPsotHLMRHKJTtxIHGo
-Message-ID: <CAP-5=fXLe9tqR7wHh9auRxqX82Fw6zYh1EoTOXjPhOXcRXB92A@mail.gmail.com>
-Subject: Re: [PATCH v1] perf top: Merge hybrid common events
-To: Andi Kleen <andi@firstfloor.org>
-Cc: Andi Kleen <ak@linux.intel.com>, namhyung@kernel.org, acme@kernel.org, 
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|MN0PR12MB6102:EE_
+X-MS-Office365-Filtering-Correlation-Id: 92612ac0-964e-44f4-2cea-08defdb06969
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|376014|366016|1800799024|6133799003|22082099003|18002099003|11063799006|4143699003|3023799007|56012099006|10067099003;
+X-Microsoft-Antispam-Message-Info:
+	dtQSnQc8FrMvUwGtE42OKDpy8OXyNq7hV7U9GScydLzDyjw7rzKVZpkfMIVL1Gr17dvKrTZM6qaRq03PzpL0RcOvdmCJqhsNs//IYJFg/CPe8uPW9bnLJVMxoBcTYWrKIwzKMyHb3lLxtCwK7LTLspgPTejxOHwtoupQ3VWXEKOdlIkIWC/VV6VOfSV6ySVMrZhhEezcZHg7qkhWoqQWn9KMdnsgKzfSPdlI74Ty5Q+vRboOGkhi/kjtFED0glcU6QUkYBtiecvaP28OreKLTtD0mySwXDSNNVXouVGQUU7eUlKFs//sM0GGKWtDHFtaLzXizt8cnx8xEdUVGagt1bkX5LKof/px/yTuVVlnGDDvwy6slfDiL8yksw1iqDTcqQ8zvfOHXnBL+UnOcTa/jYysLQTiGC80KvgKZt/NGghpmUY+HCvYXd8giXn2izhj3zDWKMsCF5jCbMBg3GuVzcsXau4qmwFG1hXA9lLdqJAbebgg7Vdu4ytugSh1u/1EN3gVAJDgDSN0FLCaDfXEWpf3yEgpTvqd9xGHw57+KoSqGd/FHtNb8weKVLgk19W0Tfyx/55DcW96Aw4amjnQq2qW8CCXb6aNwNcYwwlMbwn7jXQ5fQgLA0YTXZBuIMdA8rInguLHGR61DEN5bpV4H3yh71vo8uZSNDxvvc4hBBI=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(366016)(1800799024)(6133799003)(22082099003)(18002099003)(11063799006)(4143699003)(3023799007)(56012099006)(10067099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TTczSFFzTmtzNjBtQkhpVSt6YjFva1FKNytlQ1NiUUh1Wkk1b3dCVHQzbFF4?=
+ =?utf-8?B?VlZVaGIzSGYvb1NwbmRGQ3NjUTZhbjdEdTVjRDZ1ekd5eGZaUURxeHd4Qkhr?=
+ =?utf-8?B?b3FqNTVvN0RIeVBmVkFQeW1HSWxxMnBsSGVKbnhZa0RCM29zbXJVMGU4K1B1?=
+ =?utf-8?B?M3BBeElYWFRsV2UrdGpuMXU4b3NXU1NKT09Fc3FEcWYxMDhiNkthWk55TDdp?=
+ =?utf-8?B?ZW9ST1JtOGlDL3gvMlhwakNSUVptM2hGdjl4R1FvK2RoWGNhZTlyWTR5NXFY?=
+ =?utf-8?B?cGUxNmtYd0lua0NJcDhablhWSmFSS01tZC93K2dlcytQL2lEZVg0Z25tTzNR?=
+ =?utf-8?B?cUxaOXhGb1hYTWg3ek1jRWM1OTlCZCtFMlRvckxuMWtvajcvdFYySXBGZXht?=
+ =?utf-8?B?Z3lLdVZEVnB2dkRBeDdZMzVVS1JpZ242YnN1bGc3amlWMG5zdnpSZHNkbkJz?=
+ =?utf-8?B?OFJpSUZwWjY0cW9EbzRnNk5qTzFPN2RSd0RsOVVPaTRTRTZQTzRodmc2OUNu?=
+ =?utf-8?B?Rlo1clc0MzNkZTFFVEhRVlA0aktEOG1TNXJBZFVYNXNWaDE1amFOblJwWmo4?=
+ =?utf-8?B?R2hLUW5PczNpdHlvckpUbHhRbk5Sc2xjUFNMbjNwVWh5eC92NHZwTnVOUStM?=
+ =?utf-8?B?d0VDcUVLZkxIejN4TzJudGNEK3JJQVBoTm5jZTlhQ015bzVURThHRVJMUito?=
+ =?utf-8?B?clNLekVDYTJSdGR3THhFQ3dXYUt1UjhZSTRweDRNWmxuWnp0QUVUb1EycThv?=
+ =?utf-8?B?bGN1cEVMeVp4NWxlcVdaMTI3YVI3ejdYMkNxU2tOSk1vVVhEa2ZIQW5hS3Y3?=
+ =?utf-8?B?aVYyZTdzMTBabmJ3R1JLYkhheWdFM1FhcEYrTlAzTWVNWCtsdnFtNUgzT0lO?=
+ =?utf-8?B?VXcrZXBpQjZJVFMxeVJOYkY3TW1ZRWU5WnlSU083cTBPcDBXREtjdE5BUW1X?=
+ =?utf-8?B?QnU4TEFkZXZ3RGNJZVk2eUxGRk1iSHJJcHF4K3ViNkdPajI4VEpxamNNY3Q0?=
+ =?utf-8?B?ZjV4bTJxYm1jOG9wYUdqOVRjcGdRbkpiK1U5MUpoVm0rc056MUZTYUVoZHdl?=
+ =?utf-8?B?Q1JSRXZPd1ZPQm1XU0czWFZpLzZYaWJLZm9zZHNTdWRZQzN3UVBIdW9yREY0?=
+ =?utf-8?B?ZE5naTNIOUwwVVdPNVFhUFpGNENmT0JwSmJpcWhyaDJrSjV3dDJJb3Z5LzNo?=
+ =?utf-8?B?SC9xcThXcHg2QzNIQ0dPampoeUozQjlJak9WcExMUFFOUFBRM1dNZVdxNk5P?=
+ =?utf-8?B?aW9NajR2djFXRTAvdkVNZW1jbUJmY1FIdnByQkp0b2Y0UHB1dmpmOHVxWk5r?=
+ =?utf-8?B?K1ZpWDRvRS85SDA0Szk1LyticXZQVzA1OFovdjdkQVFzZUxNSlZWZFJDUWgz?=
+ =?utf-8?B?UUNrUEdleFQ5SEhYMFNrZFljODJYczV0dE85RXdZVU03RmpkUlh6L2h4ajFx?=
+ =?utf-8?B?WTNOcGN5RVNabTlIajlPL2IwVmNwV0g4Z3FPS1ViYmJIQ2J6TmJzNVlKemhE?=
+ =?utf-8?B?ZmNyTDFEaGVNa3BtdEdDelltNGI2bXRUL3lGTnJ1MElieDh1bGxKNWRDakFZ?=
+ =?utf-8?B?V0MvaktKN1FlQnJpTWthKzV2ek1Na2h5dnhOZmU4eDh4bHZxZExqSmdDRTgy?=
+ =?utf-8?B?dnJzNm9EaUpzeWVBS0JyVnVpQ0Z2eDZKRXVqRmJySmRqZENyT05yNTh2VEZI?=
+ =?utf-8?B?S2RsajlhbWo2VnZ6S0thS3R5c1N5aUJrZTd0cWtoU2g5VlBHOVd4cHVEazlw?=
+ =?utf-8?B?dnZpMnV2YWhkbC9Cd1FCV0JhT1VhNHdQRS9RdUR5dE0vUHVzUlYwQVliOFBv?=
+ =?utf-8?B?K1IxenNsNzlBbGZCKy81N2hGMmFBcGx3TUZuRUl4QkNSeVJHaGRDSnpjemox?=
+ =?utf-8?B?ZkUzU2JrdGRRNTNZTm5zU3VaK21tVUNOL1JrMTZ6OGNSUVhVTUZ5bFVXRHB6?=
+ =?utf-8?B?VUNWa0pFZktrZVpFdkNNR09jRWNlWHFiT3RXbGhXMjQ3VlFUa1MvV0JlK2RH?=
+ =?utf-8?B?Q2FWbkJkRUJXeW05SlVnZjhhM252OVJQSnkrRUxHMzluSG4vdVFOR2xjMXNO?=
+ =?utf-8?B?UWRySVMvejk1ZFBQNUdUVXl5ejZTRXV2U1RoVVBmVFVzZzN0UGhDbW1lL3Jk?=
+ =?utf-8?B?K1dMK0ZKbi8zaE96VllNVDduQTlNdXI2NnE1blBtbTlJSmV4OS9tVmRJdk1H?=
+ =?utf-8?B?UkQ4NGsxN0o3MHVOVkJtZzFkejdyT3d2UTZKNm9hTDNCMDRJVXpFckNOS0R3?=
+ =?utf-8?B?QzJ1clVneitDOElURzdpVGE4WXZJYXExSU1zVUlTMVBCODlJUDJrdVNJeHkr?=
+ =?utf-8?B?VDYvcENYOTVETEpEOENVV0t2WW9UYW56NE05RzRaN1RlLzRTaExCdz09?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 92612ac0-964e-44f4-2cea-08defdb06969
+X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5713.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2026 05:12:08.0843
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4t7isxj73SSfoOMdvQwgs8I54dmNgmD8rVR1DYBurIlOzndcvyao839mqG+XqbnLrJCpfg8fQ+Gn6LuVekp72A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6102
 
-On Tue, Aug 18, 2026 at 8:34=E2=80=AFPM Andi Kleen <andi@firstfloor.org> wr=
-ote:
->
-> On 2026-08-18 19:58, Ian Rogers wrote:
->
-> > Since we have frequency mode on events and the periods are aggregated,
-> > I find it hard to fully think about the ramifications. Consider this
-> > example: I have two identical loops, one loop runs on a p-core and the
-> > other on an e-core, both accessing identical data that fits in the L1
-> > cache. Since the IPC on the e-core is lower, the number of cycles it
-> > spends in its loop should be higher. A user might mistakenly conclude
-> > from the higher cycle count in one loop that cache/memory issues exist
-> > in the e-core's loop, rather than realizing a scheduler issue caused
-> > that loop to run on an e-core. If we detect a hybrid system we could
-> > switch the default event to for all perf tools to instructions, as
-> > instructions don't suffer from this problem.
->
-> You already have this problem in any other system from the last 20 years
-> or
-> so which has frequency scaling. There is nothing special here about
-> hybrid.
+On 18-08-2026 15:31, Qi Liu wrote:
+> Add perf JSON event definitions and metrics for the Hygon Data Fabric (DF)
+> uncore PMU.
+> 
+> Signed-off-by: Qi Liu <liuqi@hygon.cn>
+> ---
+>  tools/perf/pmu-events/Build                   |   2 +-
+>  .../arch/x86/hygonm1/data-fabric.json         |  95 ++++++++++
+>  .../arch/x86/hygonm4/data-fabric.json         | 134 ++++++++++++++
+>  .../arch/x86/hygonm6/data-fabric.json         | 170 ++++++++++++++++++
+>  tools/perf/pmu-events/arch/x86/mapfile.csv    |   3 +
+>  tools/perf/pmu-events/jevents.py              |   2 +
+>  6 files changed, 405 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/perf/pmu-events/arch/x86/hygonm1/data-fabric.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/hygonm4/data-fabric.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/hygonm6/data-fabric.json
+> 
+> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+> index 372773b998e4..79a9b4cad202 100644
+> --- a/tools/perf/pmu-events/Build
+> +++ b/tools/perf/pmu-events/Build
+> @@ -95,7 +95,7 @@ endif
+>  
+>  ifeq ($(JEVENTS_ARCH),$(filter $(JEVENTS_ARCH),x86 all))
+>  # Generate Intel Json
+> -INTELS := $(shell ls -d pmu-events/arch/x86/*|grep -v amdzen|grep -v mapfile.csv)
+> +INTELS := $(shell ls -d pmu-events/arch/x86/*|grep -v amdzen|grep -v hygon|grep -v mapfile.csv)
+>  INTEL_METRICS = $(foreach x,$(INTELS),$(OUTPUT)$(x)/extra-metrics.json)
+>  INTEL_METRICGROUPS = $(foreach x,$(INTELS),$(OUTPUT)$(x)/extra-metricgroups.json)
+>  GEN_JSON += $(INTEL_METRICS) $(INTEL_METRICGROUPS)
+> diff --git a/tools/perf/pmu-events/arch/x86/hygonm1/data-fabric.json b/tools/perf/pmu-events/arch/x86/hygonm1/data-fabric.json
+> new file mode 100644
+> index 000000000000..8c6a8e9ba9a5
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/x86/hygonm1/data-fabric.json
+> @@ -0,0 +1,95 @@
+> +[
+> +  {
+> +    "EventName": "cpu_read_requests_cs_0",
+> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 0 (CS0).",
 
-With frequency scaling, doesn't IPC remain relatively constant with
-frequency when ignoring external factors like memory? The IPC on an
-e-core is expected to be lower than on a p-core.
+Coherent Station is the correct term, if you go by the terminology in AMD
+PPRs. Since CSes are the interfaces between the data fabric and the memory
+controllers (UMCs), it may be better to rephrase the descriptions as read
+or write requests to DRAM channel 0..N which are backed by UMC 0..N and
+CS 0..N.
 
-> The scheduler has some internal magic to handle problems like this, but
-> it's probably not directly applicable to user presented views.
->
-> In perf there is also frequency mode (which is usually used with top)
-> which
-> kind of mitigates it anyways because it evens out the number of samples
-> (at the cost of some terrible statistical properties, but that's a
-> different chapter)
->
-> Also in general people don't look at cycle counts, they look at
-> percentages
-> which scale per CPU.
+> +    "EventCode": "0x2",
+> +    "UMask": "0x07",
+> +    "CompId": "0x0",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
 
-So I was in a presentation today where someone claimed that larger
-cycle counts translated to memory system overhead, but they could be
-unique :-) In my two loop example the lower IPC core's loop would show
-a greater number of cycles than the higher-IPC core's loop. This would
-make it appear higher in `perf top`, leading the user to drill into it
-assuming more time was spent there due to issues with the code. As I'm
-hypothesizing the code is identical then the higher `perf top` is down
-to being scheduled on the e-core and its lower IPC. Having identical
-code where by default in perf one appears worse than the other doesn't
-strike me as desirable as the same behavior wouldn't happen on a
-non-hybrid system.
+As the naming suggests, my understanding is that these events count the
+number of requests and each request carries a 64-byte payload. Perhaps
+the ScaleUnit needs to be factored into the bandwidth metrics instead of
+the individual events.
 
-> > How can we merge non-legacy events? On ARM there is no PMU with a type
-> > number file with TYPE_HARDWARE.
->
-> Very few people use top with anything other than cycles, so it's
-> probably
-> not a very urgent problem.  I suppose you could push the problem to
-> the user with some configuration file.
+> +  },
+> +  {
+> +    "EventName": "cpu_read_requests_cs_1",
+> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 1 (CS1).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x07",
+> +    "CompId": "0x1",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "cpu_write_requests_cs_0",
+> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 0 (CS0).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x08",
+> +    "CompId": "0x0",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "cpu_write_requests_cs_1",
+> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 1 (CS1).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x08",
+> +    "CompId": "0x1",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_read_requests_cs_0",
+> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 0 (CS0). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x0F",
+> +    "CompId": "0x0",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_read_requests_cs_1",
+> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 1 (CS1). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x0F",
+> +    "CompId": "0x1",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_write_requests_cs_0",
+> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 0 (CS0). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x70",
+> +    "CompId": "0x0",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_write_requests_cs_1",
+> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 1 (CS1). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x70",
+> +    "CompId": "0x1",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "MetricName": "cpu_memory_bandwidth",
+> +    "MetricExpr": "(cpu_read_requests_cs_0 + cpu_read_requests_cs_1 + cpu_write_requests_cs_0 + cpu_write_requests_cs_1) * 64 / (duration_time * 1e6)",
+> +    "BriefDescription": "Total CPU memory access bandwidth",
+> +    "MetricGroup": "DF_Memory_BW",
+> +    "ScaleUnit": "1MB/s"
+> +  },
+> +  {
+> +    "MetricName": "io_memory_max_bandwidth",
+> +    "MetricExpr": "(io_read_requests_cs_0 + io_read_requests_cs_1 + io_write_requests_cs_0 + io_write_requests_cs_1) * 64 / (duration_time * 1e6)",
+> +    "BriefDescription": "Maximum inbound I/O memory access bandwidth (upper bound, assuming 64B per request. Actual inbound I/O requests may be 32B or 64B)",
+> +    "MetricGroup": "DF_Memory_BW",
+> +    "ScaleUnit": "1MB/s"
+> +  },
+> +  {
+> +    "MetricName": "io_memory_min_bandwidth",
+> +    "MetricExpr": "(io_read_requests_cs_0 + io_read_requests_cs_1 + io_write_requests_cs_0 + io_write_requests_cs_1) * 32 / (duration_time * 1e6)",
+> +    "BriefDescription": "Minimum inbound I/O memory access bandwidth (lower bound, assuming 32B per request. Actual inbound I/O requests may be 32B or 64B)",
+> +    "MetricGroup": "DF_Memory_BW",
+> +    "ScaleUnit": "1MB/s"
+> +  }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/x86/hygonm4/data-fabric.json b/tools/perf/pmu-events/arch/x86/hygonm4/data-fabric.json
+> new file mode 100644
+> index 000000000000..41932a1a3d6d
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/x86/hygonm4/data-fabric.json
+> @@ -0,0 +1,134 @@
+> +[
+> +  {
+> +    "EventName": "cpu_read_requests_cs_0",
+> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 0 (CS0).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x07",
+> +    "CompId": "0x0",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "cpu_read_requests_cs_1",
+> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 1 (CS1).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x07",
+> +    "CompId": "0x1",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "cpu_read_requests_cs_2",
+> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 2 (CS2).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x07",
+> +    "CompId": "0x2",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "cpu_write_requests_cs_0",
+> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 0 (CS0).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x08",
+> +    "CompId": "0x0",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "cpu_write_requests_cs_1",
+> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 1 (CS1).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x08",
+> +    "CompId": "0x1",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "cpu_write_requests_cs_2",
+> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 2 (CS2).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x08",
+> +    "CompId": "0x2",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_read_requests_cs_0",
+> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 0 (CS0). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x0F",
+> +    "CompId": "0x0",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_read_requests_cs_1",
+> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 1 (CS1). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x0F",
+> +    "CompId": "0x1",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_read_requests_cs_2",
+> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 2 (CS2). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x0F",
+> +    "CompId": "0x2",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_write_requests_cs_0",
+> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 0 (CS0). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x70",
+> +    "CompId": "0x0",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_write_requests_cs_1",
+> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 1 (CS1). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x70",
+> +    "CompId": "0x1",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_write_requests_cs_2",
+> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 2 (CS2). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x70",
+> +    "CompId": "0x2",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "MetricName": "cpu_memory_bandwidth",
+> +    "MetricExpr": "(cpu_read_requests_cs_0 + cpu_read_requests_cs_1 + cpu_read_requests_cs_2 + cpu_write_requests_cs_0 + cpu_write_requests_cs_1 + cpu_write_requests_cs_2) * 64 / (duration_time * 1e6)",
+> +    "MetricConstraint": "NO_GROUP_EVENTS",
+> +    "BriefDescription": "Total CPU memory access bandwidth",
+> +    "MetricGroup": "DF_Memory_BW",
+> +    "ScaleUnit": "1MB/s"
+> +  },
+> +  {
+> +    "MetricName": "io_memory_max_bandwidth",
+> +    "MetricExpr": "(io_read_requests_cs_0 + io_read_requests_cs_1 + io_read_requests_cs_2 + io_write_requests_cs_0 + io_write_requests_cs_1 + io_write_requests_cs_2) * 64 / (duration_time * 1e6)",
+> +    "MetricConstraint": "NO_GROUP_EVENTS",
+> +    "BriefDescription": "Maximum inbound I/O memory access bandwidth (upper bound, assuming 64B per request. Actual inbound I/O requests may be 32B or 64B)",
+> +    "MetricGroup": "DF_Memory_BW",
+> +    "ScaleUnit": "1MB/s"
+> +  },
+> +  {
+> +    "MetricName": "io_memory_min_bandwidth",
+> +    "MetricExpr": "(io_read_requests_cs_0 + io_read_requests_cs_1 + io_read_requests_cs_2 + io_write_requests_cs_0 + io_write_requests_cs_1 + io_write_requests_cs_2) * 32 / (duration_time * 1e6)",
+> +    "MetricConstraint": "NO_GROUP_EVENTS",
+> +    "BriefDescription": "Minimum inbound I/O memory access bandwidth (lower bound, assuming 32B per request. Actual inbound I/O requests may be 32B or 64B)",
+> +    "MetricGroup": "DF_Memory_BW",
+> +    "ScaleUnit": "1MB/s"
+> +  }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/x86/hygonm6/data-fabric.json b/tools/perf/pmu-events/arch/x86/hygonm6/data-fabric.json
+> new file mode 100644
+> index 000000000000..ee81e35dc6f3
+> --- /dev/null
+> +++ b/tools/perf/pmu-events/arch/x86/hygonm6/data-fabric.json
+> @@ -0,0 +1,170 @@
+> +[
+> +  {
+> +    "EventName": "cpu_read_requests_cs_0",
+> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 0 (CS0).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x07",
+> +    "CompId": "0x0",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "cpu_read_requests_cs_1",
+> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 1 (CS1).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x07",
+> +    "CompId": "0x1",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "cpu_read_requests_cs_2",
+> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 2 (CS2).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x07",
+> +    "CompId": "0x2",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "cpu_read_requests_cs_3",
+> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 3 (CS3).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x07",
+> +    "CompId": "0x3",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "cpu_write_requests_cs_0",
+> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 0 (CS0).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x08",
+> +    "CompId": "0x0",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "cpu_write_requests_cs_1",
+> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 1 (CS1).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x08",
+> +    "CompId": "0x1",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "cpu_write_requests_cs_2",
+> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 2 (CS2).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x08",
+> +    "CompId": "0x2",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "cpu_write_requests_cs_3",
+> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 3 (CS3).",
+> +    "EventCode": "0x2",
+> +    "UMask": "0x08",
+> +    "CompId": "0x3",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_read_requests_cs_0",
+> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 0 (CS0). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x0F",
+> +    "CompId": "0x0",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_read_requests_cs_1",
+> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 1 (CS1). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x0F",
+> +    "CompId": "0x1",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_read_requests_cs_2",
+> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 2 (CS2). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x0F",
+> +    "CompId": "0x2",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_read_requests_cs_3",
+> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 3 (CS3). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x0F",
+> +    "CompId": "0x3",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_write_requests_cs_0",
+> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 0 (CS0). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x70",
+> +    "CompId": "0x0",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_write_requests_cs_1",
+> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 1 (CS1). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x70",
+> +    "CompId": "0x1",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_write_requests_cs_2",
+> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 2 (CS2). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x70",
+> +    "CompId": "0x2",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "EventName": "io_write_requests_cs_3",
+> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 3 (CS3). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
+> +    "EventCode": "0x3",
+> +    "UMask": "0x70",
+> +    "CompId": "0x3",
+> +    "Unit": "HYGON_DF",
+> +    "ScaleUnit": "64Bytes"
+> +  },
+> +  {
+> +    "MetricName": "cpu_memory_bandwidth",
+> +    "MetricExpr": "(cpu_read_requests_cs_0 + cpu_read_requests_cs_1 + cpu_read_requests_cs_2 + cpu_read_requests_cs_3 + cpu_write_requests_cs_0 + cpu_write_requests_cs_1 + cpu_write_requests_cs_2 + cpu_write_requests_cs_3) * 64 / (duration_time * 1e6)",
+> +    "MetricConstraint": "NO_GROUP_EVENTS",
+> +    "BriefDescription": "Total CPU memory access bandwidth",
+> +    "MetricGroup": "DF_Memory_BW",
+> +    "ScaleUnit": "1MB/s"
+> +  },
+> +  {
+> +    "MetricName": "io_memory_max_bandwidth",
+> +    "MetricExpr": "(io_read_requests_cs_0 + io_read_requests_cs_1 + io_read_requests_cs_2 + io_read_requests_cs_3 + io_write_requests_cs_0 + io_write_requests_cs_1 + io_write_requests_cs_2 + io_write_requests_cs_3) * 64 / (duration_time * 1e6)",
+> +    "MetricConstraint": "NO_GROUP_EVENTS",
+> +    "BriefDescription": "Maximum inbound I/O memory access bandwidth (upper bound, assuming 64B per request. Actual inbound I/O requests may be 32B or 64B)",
+> +    "MetricGroup": "DF_Memory_BW",
+> +    "ScaleUnit": "1MB/s"
+> +  },
+> +  {
+> +    "MetricName": "io_memory_min_bandwidth",
+> +    "MetricExpr": "(io_read_requests_cs_0 + io_read_requests_cs_1 + io_read_requests_cs_2 + io_read_requests_cs_3 + io_write_requests_cs_0 + io_write_requests_cs_1 + io_write_requests_cs_2 + io_write_requests_cs_3) * 32 / (duration_time * 1e6)",
+> +    "MetricConstraint": "NO_GROUP_EVENTS",
+> +    "BriefDescription": "Minimum inbound I/O memory access bandwidth (lower bound, assuming 32B per request. Actual inbound I/O requests may be 32B or 64B)",
+> +    "MetricGroup": "DF_Memory_BW",
+> +    "ScaleUnit": "1MB/s"
+> +  }
+> +]
+> diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+> index 50a403b429b1..ba17117245d1 100644
+> --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
+> +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+> @@ -45,3 +45,6 @@ AuthenticAMD-25-([245][[:xdigit:]]|[[:xdigit:]]),v1,amdzen3,core
+>  AuthenticAMD-25-[[:xdigit:]]+,v1,amdzen4,core
+>  AuthenticAMD-26-([12467][[:xdigit:]]|[[:xdigit:]]),v1,amdzen5,core
+>  AuthenticAMD-26-[[:xdigit:]]+,v1,amdzen6,core
+> +HygonGenuine-24-[0123],v1,hygonm1,core
+> +HygonGenuine-24-[45],v1,hygonm4,core
+> +HygonGenuine-24-(1[012345678]|[6789ABCDEF]),v1,hygonm6,core
+> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+> index 376dc2d24162..07a843d92483 100755
+> --- a/tools/perf/pmu-events/jevents.py
+> +++ b/tools/perf/pmu-events/jevents.py
+> @@ -294,6 +294,7 @@ class JsonEvent:
+>            'L3PMC': 'amd_l3',
+>            'DFPMC': 'amd_df',
+>            'UMCPMC': 'amd_umc',
+> +          'HYGON_DF': 'hygon_df',
+>            'cpu_core': 'cpu_core',
+>            'cpu_atom': 'cpu_atom',
+>            'ali_drw': 'ali_drw',
+> @@ -390,6 +391,7 @@ class JsonEvent:
+>          ('Invert', 'inv='),
+>          ('SampleAfterValue', 'period='),
+>          ('UMask', 'umask='),
+> +        ('CompId', 'compid='),
+>          ('NodeType', 'type='),
+>          ('RdWrMask', 'rdwrmask='),
+>          ('EnAllCores', 'enallcores='),
 
-So I think users (and me) don't like the choose your event thing at
-the beginning of `perf top`. I think the work in the histogram code to
-combine hybrid events is valuable. I feel that cycle counts are open
-to misinterpretation, so instructions should be used to avoid this.
-Maybe we should just ask the user to select between merged, cpu_core
-or cpu_atom at perf top startup, then misattributing cycles aggregated
-on different cores was their selection. Maybe we should just warn
-about cycle aggregation on hybrid in tips.txt:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/Documentation/tips.txt
-
-Thanks,
-Ian
-
-> -Andi
