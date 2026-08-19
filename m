@@ -1,625 +1,233 @@
-Received: from BL0PR03CU003.outbound.protection.outlook.com (mail-eastusazon11012003.outbound.protection.outlook.com [52.101.53.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDCC02264C0;
-	Wed, 19 Aug 2026 05:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.53.3
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787116336; cv=fail; b=q7mQtMZ7pq5U9L2DQZQFJp6tZBtWewU2hkpsV/3S+BALzHzZ6NfX6bOsEDRtARZTRbKzKiI4elIl4SV9raQjrX0epZr1K05pfhNaXZ2occ0ZwgXbknQN3ZZUBst71B+f1HSxyzvEPfoybV4STZl7yEsgActvX7CY3zJbTBuS9go=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787116336; c=relaxed/simple;
-	bh=R/422OOPlN/NvbmqzBy0Ben94OGZPtt6QLLbQshLM5s=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=jfephQS5R7HtLdmI6hse1FtMbQqg1LFNbgAIL41ptMr54Hx7rVF/f4VWCPuH64vuwKa3G6mFPc6uCduAsW0j+KErpqaAMni78UcG++0lybg1JhbPE5Dgj4765gVpMx51kYOT5SieeIerdlaNJ05d5SpfqIrdmE6Pi/2Ys4w4vQQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=MbDeyXg1; arc=fail smtp.client-ip=52.101.53.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E938E375F7B
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Aug 2026 09:46:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787132793; cv=none; b=b2yv085ZsH6hG8c7hC6XXQKVC7aneDN3cfMYpYzUY7qwZdgQBzNanJCU/vtv5exOQKFvYQN0k+NlCxZBgWU4OKrl8r7fP10FukysZYaK/a3Hqm+Xe+XPLCPOt/kcQmXmDn2emlzMkqywXvgcwEHNN/sDooMcJYQJY7U1zcGlKx8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787132793; c=relaxed/simple;
+	bh=W7aykjoyBbylMpYRDhNpVy4JaXYOTxDSysjIdWEphu8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W2tQqLHrAdhIiWZxuxCJBXttBjO2Uglo8XVPWSMn1txb65zTubafGSjU6W9N93uPqUutWEoWTsNvLOkyHVWqTSdvPGJNssxQwEe+SjV9cFSfBfkil3fv/1wuWDHKU6EBHrWbPdbxWeTN1faxpMzUECvFutZoyUogoNA42nsUWnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=csjrr8Nu; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="MbDeyXg1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jHf3zHeg4E0JOMSbDC6HviPfSVZQ5XQtCP4UIGNy3Ihj3ZbmFwWQPOjrCQ95sgeFXnzijGAQND99OGUngwf6H5t8/91IPp1ESe+TRNWS6oORiY4Mm1waSPvB2T2JyldddnjYfjxsHrITDAHqOK0JqHfh8r9MU0NWNhf61UyqU+c65/wNMczR/uE2zrFEUC1nv11N+nzBYhLGqy6CgZvM/7ZK+YQz+1wRCZKup40+34wIeQpWOWSyqN8v+Wd8PmXu1ZuqETuQrr09Oh2vPUFfAUKtbgwAjDljdKNSlkB5YYYFrngGEqM24sFZ8acWfSrsrEGE9PNsDQ9rdywcqLKmCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=0dNmWpePDfuNb01y9iofe57V/jgxmBkgl7ZZHb1GrhQ=;
- b=JYR5D/9nvN9H97h2XKRURKPI2oC1s0zBd5Kr6W+lf6bSaymNX92wM9Z+hB0mZGQLxomTjVpxagZbH42Lyg3zSxDNWzOQBKK0lXc026VD1+jlR2oLqz20FYxpTf8lEuNOPbO7vwdxBJDv9s9W78p6BKy6YCbVKxpH6tlVuJM6ywsxWA8xvSuycwyc2cvPWPT6w9fvvQw7IhS5GBc/Sc4LJdNzP051zgtqwOohCuBZnZ2to9tzg37FBedKZlQO1ax/jb+D024uAk6Vbp3JBMhRKQSAvkM0WSQeoX8f+MQY2Pw+XRJyYQJxMnf0eCojeBcqx+O7cXjbEd4Cg0huEKTmGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0dNmWpePDfuNb01y9iofe57V/jgxmBkgl7ZZHb1GrhQ=;
- b=MbDeyXg1PWcIx4NBlAACYkH3rQuG2r/cuJ7tYhyG9pgu8FAO1NoGjGVOnwZ/bUP5zPGvQioqnTqe/vWpe2fvdlt6sBDzthveGfZIvo13NmIV5Rc+BLghFkXzB903Vh9ssuOgFhLPpo0AEHbFE7wdM2j6ro4uzdX2IGHOA8VZznA=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com (2603:10b6:510:1e3::13)
- by MN0PR12MB6102.namprd12.prod.outlook.com (2603:10b6:208:3ca::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.8; Wed, 19 Aug
- 2026 05:12:08 +0000
-Received: from PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7]) by PH7PR12MB5712.namprd12.prod.outlook.com
- ([fe80::afe1:7dd0:ea71:b7e7%4]) with mapi id 15.21.0339.007; Wed, 19 Aug 2026
- 05:12:08 +0000
-Message-ID: <79ff1562-d910-418c-b5b5-92d217cdc568@amd.com>
-Date: Wed, 19 Aug 2026 10:41:58 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/2] perf vendor events hygon: Add Hygon Data Fabric
- PMU events and metrics
-To: Qi Liu <liuqi@hygon.cn>, peterz@infradead.org, mingo@redhat.com,
- namhyung@kernel.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- ravi.bangoria@amd.com, irogers@google.com, x86@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- lijing@hygon.cn
-References: <20260818100118.12944-1-liuqi@hygon.cn>
- <20260818100118.12944-3-liuqi@hygon.cn>
-Content-Language: en-US
-From: Sandipan Das <sandipan.das@amd.com>
-In-Reply-To: <20260818100118.12944-3-liuqi@hygon.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA5P287CA0293.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a01:221::7) To MN0PR12MB5713.namprd12.prod.outlook.com
- (2603:10b6:208:370::18)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="csjrr8Nu"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-38101f85591so1730918a91.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 19 Aug 2026 02:46:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787132790; x=1787737590; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=LTPJgMacEEKmZpqtZ6rnhlmPI98eKwXOy18WSdJ9udI=;
+        b=csjrr8Nuk3RLul/xKLLpIX0mzriZdU+UfdX2qqy6v8erBx7ASq6Auws/BdiSoqtsuj
+         lbHwXYhnwAbejVJui9/syExr4+PIHDgzmYcEEa4a6i0PipcL4Zw/3j/y5q28pg6JCpBG
+         3hCOMVD5vb0wsv8ABk1zx9bMX+LcX9Mm0meanKqn/QnwthNYeG+c2+d3M3oHlCy0hKhk
+         AXKw76IjfXvNzHrimWx62UtmcgxCyH1pKVsJign1+6s6P/JsTKu9wfjCaUQJXkjC2o0U
+         wy+dhNjkeRNvgpnHQo1QEsWx7IxhHaxeiunzC4DQvSNuc/JI5f+NMNuZ8GhQClVV0r2p
+         LinQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787132790; x=1787737590;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=LTPJgMacEEKmZpqtZ6rnhlmPI98eKwXOy18WSdJ9udI=;
+        b=rAk5LgqmA7gMPpBI2Lg3cppqJutH/FNOWrdV7AEixMsfF6AKeJJMbziJllqzsUHnl6
+         BQJmx/Xqv0OOg+rno4kta+Try1kObu2Pzk9qLcXA3+x/+zuL5sVrAK/2BzFr9X95IV3c
+         4yejWLy1fVPNfudIDeLIiUfSxku6EJ1czgN+GJvRL3MVeiRzx4IsN9SAwpoahRGgzir1
+         HinVlfmpXUuXSraDr2I8i123Rfk2TiZeIKaK/dvuGQw0iXx5xVRrZxmvekm8iXbbx3SF
+         0v26HIJKaOVdKwU2XXBV9RAh4qVTOb679O9si0JKWLRTxvOn28atHWXFOSR9mVihvAxk
+         0awA==
+X-Forwarded-Encrypted: i=1; AHgh+Rrt14j6T+bMp39LE+yJ/xYB5vz7y6NL09oCPAyFqS/ZBTa8MCUdwT+aBnpJZcEBFc4Xo+q5EGBXjquWFwrWk8lD@vger.kernel.org
+X-Gm-Message-State: AFuF++nfxcIaOW7GdLmVzes+JuAExTXYYN6jCxAMmCpKVYNN4wMSuYsW
+	tUYZNSIY76DW8A3NGa6/lQSl3RMSyEntPpMV816vYCwtJcUxazlnuUrZ
+X-Gm-Gg: AR+sD10USEznX0tAErSf4pswRNpTyKNitbeHyIuwEWxpJUarnEj3RvxaXZSfI7f+igw
+	IYN5vlc1Mcm0+SVo3lF5cW9bD0Gh1fDxTMcQs0mG+0gTL1FBiL5vEWkkBd8MmjAnj0GHgf40yjr
+	XXz3fFJv2N01h7cpYHD0mZpH2pwz5Kb4do55fANjZ3OVgfLumWGgowpSbh1BmcUklenWPCTw/mp
+	UDLRZClxIeYyjCZA/44jpCCKeWW2sDtE67+oV9vHVdyTufm+NoqM3xHQAhrdPF8rqMo91w/1CMA
+	9DRanLzsRYzh6t43WZe0jzBbC/yaogR323Ju1Wbysg4e6SxYYMT4uauZfG7mdntxIuFDliTEg5e
+	5DpxBssC7qUGlqanSNi863arKPv6+SRi8XUBwSBMP8L+gTeerXF2ofwPfjBI67g586cMPsFpQ6F
+	Hp37EGJA+CZpAFbs1D6GyDpMpdQHWy9sdEmJjp5WFj2l3gBcIfRINboMyimo024EdfsHuIjCDU
+X-Received: by 2002:a17:90b:1d0d:b0:38e:9ca8:e99 with SMTP id 98e67ed59e1d1-3957f8f8c35mr3586642a91.5.1787132790157;
+        Wed, 19 Aug 2026 02:46:30 -0700 (PDT)
+Received: from osman.mioffice.cn ([43.224.245.178])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3957fb17eb5sm2460684a91.3.2026.08.19.02.46.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Aug 2026 02:46:29 -0700 (PDT)
+From: Zhan Xusheng <zhanxusheng1024@gmail.com>
+X-Google-Original-From: Zhan Xusheng <zhanxusheng@xiaomi.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Changbin Du <changbin.du@huawei.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	zhanxusheng@xiaomi.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Zhan Xusheng <zhanxusheng1024@gmail.com>
+Subject: [PATCH v2] perf symbols: Don't apply the symfs layout to synthesised paths
+Date: Wed, 19 Aug 2026 17:46:21 +0800
+Message-ID: <20260819094621.844115-1-zhanxusheng@xiaomi.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB5712:EE_|MN0PR12MB6102:EE_
-X-MS-Office365-Filtering-Correlation-Id: 92612ac0-964e-44f4-2cea-08defdb06969
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|376014|366016|1800799024|6133799003|22082099003|18002099003|11063799006|4143699003|3023799007|56012099006|10067099003;
-X-Microsoft-Antispam-Message-Info:
-	dtQSnQc8FrMvUwGtE42OKDpy8OXyNq7hV7U9GScydLzDyjw7rzKVZpkfMIVL1Gr17dvKrTZM6qaRq03PzpL0RcOvdmCJqhsNs//IYJFg/CPe8uPW9bnLJVMxoBcTYWrKIwzKMyHb3lLxtCwK7LTLspgPTejxOHwtoupQ3VWXEKOdlIkIWC/VV6VOfSV6ySVMrZhhEezcZHg7qkhWoqQWn9KMdnsgKzfSPdlI74Ty5Q+vRboOGkhi/kjtFED0glcU6QUkYBtiecvaP28OreKLTtD0mySwXDSNNVXouVGQUU7eUlKFs//sM0GGKWtDHFtaLzXizt8cnx8xEdUVGagt1bkX5LKof/px/yTuVVlnGDDvwy6slfDiL8yksw1iqDTcqQ8zvfOHXnBL+UnOcTa/jYysLQTiGC80KvgKZt/NGghpmUY+HCvYXd8giXn2izhj3zDWKMsCF5jCbMBg3GuVzcsXau4qmwFG1hXA9lLdqJAbebgg7Vdu4ytugSh1u/1EN3gVAJDgDSN0FLCaDfXEWpf3yEgpTvqd9xGHw57+KoSqGd/FHtNb8weKVLgk19W0Tfyx/55DcW96Aw4amjnQq2qW8CCXb6aNwNcYwwlMbwn7jXQ5fQgLA0YTXZBuIMdA8rInguLHGR61DEN5bpV4H3yh71vo8uZSNDxvvc4hBBI=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5712.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(366016)(1800799024)(6133799003)(22082099003)(18002099003)(11063799006)(4143699003)(3023799007)(56012099006)(10067099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TTczSFFzTmtzNjBtQkhpVSt6YjFva1FKNytlQ1NiUUh1Wkk1b3dCVHQzbFF4?=
- =?utf-8?B?VlZVaGIzSGYvb1NwbmRGQ3NjUTZhbjdEdTVjRDZ1ekd5eGZaUURxeHd4Qkhr?=
- =?utf-8?B?b3FqNTVvN0RIeVBmVkFQeW1HSWxxMnBsSGVKbnhZa0RCM29zbXJVMGU4K1B1?=
- =?utf-8?B?M3BBeElYWFRsV2UrdGpuMXU4b3NXU1NKT09Fc3FEcWYxMDhiNkthWk55TDdp?=
- =?utf-8?B?ZW9ST1JtOGlDL3gvMlhwakNSUVptM2hGdjl4R1FvK2RoWGNhZTlyWTR5NXFY?=
- =?utf-8?B?cGUxNmtYd0lua0NJcDhablhWSmFSS01tZC93K2dlcytQL2lEZVg0Z25tTzNR?=
- =?utf-8?B?cUxaOXhGb1hYTWg3ek1jRWM1OTlCZCtFMlRvckxuMWtvajcvdFYySXBGZXht?=
- =?utf-8?B?Z3lLdVZEVnB2dkRBeDdZMzVVS1JpZ242YnN1bGc3amlWMG5zdnpSZHNkbkJz?=
- =?utf-8?B?OFJpSUZwWjY0cW9EbzRnNk5qTzFPN2RSd0RsOVVPaTRTRTZQTzRodmc2OUNu?=
- =?utf-8?B?Rlo1clc0MzNkZTFFVEhRVlA0aktEOG1TNXJBZFVYNXNWaDE1amFOblJwWmo4?=
- =?utf-8?B?R2hLUW5PczNpdHlvckpUbHhRbk5Sc2xjUFNMbjNwVWh5eC92NHZwTnVOUStM?=
- =?utf-8?B?d0VDcUVLZkxIejN4TzJudGNEK3JJQVBoTm5jZTlhQ015bzVURThHRVJMUito?=
- =?utf-8?B?clNLekVDYTJSdGR3THhFQ3dXYUt1UjhZSTRweDRNWmxuWnp0QUVUb1EycThv?=
- =?utf-8?B?bGN1cEVMeVp4NWxlcVdaMTI3YVI3ejdYMkNxU2tOSk1vVVhEa2ZIQW5hS3Y3?=
- =?utf-8?B?aVYyZTdzMTBabmJ3R1JLYkhheWdFM1FhcEYrTlAzTWVNWCtsdnFtNUgzT0lO?=
- =?utf-8?B?VXcrZXBpQjZJVFMxeVJOYkY3TW1ZRWU5WnlSU083cTBPcDBXREtjdE5BUW1X?=
- =?utf-8?B?QnU4TEFkZXZ3RGNJZVk2eUxGRk1iSHJJcHF4K3ViNkdPajI4VEpxamNNY3Q0?=
- =?utf-8?B?ZjV4bTJxYm1jOG9wYUdqOVRjcGdRbkpiK1U5MUpoVm0rc056MUZTYUVoZHdl?=
- =?utf-8?B?Q1JSRXZPd1ZPQm1XU0czWFZpLzZYaWJLZm9zZHNTdWRZQzN3UVBIdW9yREY0?=
- =?utf-8?B?ZE5naTNIOUwwVVdPNVFhUFpGNENmT0JwSmJpcWhyaDJrSjV3dDJJb3Z5LzNo?=
- =?utf-8?B?SC9xcThXcHg2QzNIQ0dPampoeUozQjlJak9WcExMUFFOUFBRM1dNZVdxNk5P?=
- =?utf-8?B?aW9NajR2djFXRTAvdkVNZW1jbUJmY1FIdnByQkp0b2Y0UHB1dmpmOHVxWk5r?=
- =?utf-8?B?K1ZpWDRvRS85SDA0Szk1LyticXZQVzA1OFovdjdkQVFzZUxNSlZWZFJDUWgz?=
- =?utf-8?B?UUNrUEdleFQ5SEhYMFNrZFljODJYczV0dE85RXdZVU03RmpkUlh6L2h4ajFx?=
- =?utf-8?B?WTNOcGN5RVNabTlIajlPL2IwVmNwV0g4Z3FPS1ViYmJIQ2J6TmJzNVlKemhE?=
- =?utf-8?B?ZmNyTDFEaGVNa3BtdEdDelltNGI2bXRUL3lGTnJ1MElieDh1bGxKNWRDakFZ?=
- =?utf-8?B?V0MvaktKN1FlQnJpTWthKzV2ek1Na2h5dnhOZmU4eDh4bHZxZExqSmdDRTgy?=
- =?utf-8?B?dnJzNm9EaUpzeWVBS0JyVnVpQ0Z2eDZKRXVqRmJySmRqZENyT05yNTh2VEZI?=
- =?utf-8?B?S2RsajlhbWo2VnZ6S0thS3R5c1N5aUJrZTd0cWtoU2g5VlBHOVd4cHVEazlw?=
- =?utf-8?B?dnZpMnV2YWhkbC9Cd1FCV0JhT1VhNHdQRS9RdUR5dE0vUHVzUlYwQVliOFBv?=
- =?utf-8?B?K1IxenNsNzlBbGZCKy81N2hGMmFBcGx3TUZuRUl4QkNSeVJHaGRDSnpjemox?=
- =?utf-8?B?ZkUzU2JrdGRRNTNZTm5zU3VaK21tVUNOL1JrMTZ6OGNSUVhVTUZ5bFVXRHB6?=
- =?utf-8?B?VUNWa0pFZktrZVpFdkNNR09jRWNlWHFiT3RXbGhXMjQ3VlFUa1MvV0JlK2RH?=
- =?utf-8?B?Q2FWbkJkRUJXeW05SlVnZjhhM252OVJQSnkrRUxHMzluSG4vdVFOR2xjMXNO?=
- =?utf-8?B?UWRySVMvejk1ZFBQNUdUVXl5ejZTRXV2U1RoVVBmVFVzZzN0UGhDbW1lL3Jk?=
- =?utf-8?B?K1dMK0ZKbi8zaE96VllNVDduQTlNdXI2NnE1blBtbTlJSmV4OS9tVmRJdk1H?=
- =?utf-8?B?UkQ4NGsxN0o3MHVOVkJtZzFkejdyT3d2UTZKNm9hTDNCMDRJVXpFckNOS0R3?=
- =?utf-8?B?QzJ1clVneitDOElURzdpVGE4WXZJYXExSU1zVUlTMVBCODlJUDJrdVNJeHkr?=
- =?utf-8?B?VDYvcENYOTVETEpEOENVV0t2WW9UYW56NE05RzRaN1RlLzRTaExCdz09?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92612ac0-964e-44f4-2cea-08defdb06969
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5713.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Aug 2026 05:12:08.0843
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4t7isxj73SSfoOMdvQwgs8I54dmNgmD8rVR1DYBurIlOzndcvyao839mqG+XqbnLrJCpfg8fQ+Gn6LuVekp72A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6102
+Content-Transfer-Encoding: 8bit
 
-On 18-08-2026 15:31, Qi Liu wrote:
-> Add perf JSON event definitions and metrics for the Hygon Data Fabric (DF)
-> uncore PMU.
-> 
-> Signed-off-by: Qi Liu <liuqi@hygon.cn>
-> ---
->  tools/perf/pmu-events/Build                   |   2 +-
->  .../arch/x86/hygonm1/data-fabric.json         |  95 ++++++++++
->  .../arch/x86/hygonm4/data-fabric.json         | 134 ++++++++++++++
->  .../arch/x86/hygonm6/data-fabric.json         | 170 ++++++++++++++++++
->  tools/perf/pmu-events/arch/x86/mapfile.csv    |   3 +
->  tools/perf/pmu-events/jevents.py              |   2 +
->  6 files changed, 405 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/pmu-events/arch/x86/hygonm1/data-fabric.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/hygonm4/data-fabric.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/hygonm6/data-fabric.json
-> 
-> diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
-> index 372773b998e4..79a9b4cad202 100644
-> --- a/tools/perf/pmu-events/Build
-> +++ b/tools/perf/pmu-events/Build
-> @@ -95,7 +95,7 @@ endif
->  
->  ifeq ($(JEVENTS_ARCH),$(filter $(JEVENTS_ARCH),x86 all))
->  # Generate Intel Json
-> -INTELS := $(shell ls -d pmu-events/arch/x86/*|grep -v amdzen|grep -v mapfile.csv)
-> +INTELS := $(shell ls -d pmu-events/arch/x86/*|grep -v amdzen|grep -v hygon|grep -v mapfile.csv)
->  INTEL_METRICS = $(foreach x,$(INTELS),$(OUTPUT)$(x)/extra-metrics.json)
->  INTEL_METRICGROUPS = $(foreach x,$(INTELS),$(OUTPUT)$(x)/extra-metricgroups.json)
->  GEN_JSON += $(INTEL_METRICS) $(INTEL_METRICGROUPS)
-> diff --git a/tools/perf/pmu-events/arch/x86/hygonm1/data-fabric.json b/tools/perf/pmu-events/arch/x86/hygonm1/data-fabric.json
-> new file mode 100644
-> index 000000000000..8c6a8e9ba9a5
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/x86/hygonm1/data-fabric.json
-> @@ -0,0 +1,95 @@
-> +[
-> +  {
-> +    "EventName": "cpu_read_requests_cs_0",
-> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 0 (CS0).",
+From: Zhan Xusheng <zhanxusheng1024@gmail.com>
 
-Coherent Station is the correct term, if you go by the terminology in AMD
-PPRs. Since CSes are the interfaces between the data fabric and the memory
-controllers (UMCs), it may be better to rephrase the descriptions as read
-or write requests to DRAM channel 0..N which are backed by UMC 0..N and
-CS 0..N.
+From: Zhan Xusheng <zhanxusheng@xiaomi.com>
 
-> +    "EventCode": "0x2",
-> +    "UMask": "0x07",
-> +    "CompId": "0x0",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
+The flat symfs layout was implemented inside __symbol__join_symfs() alone,
+which went from
 
-As the naming suggests, my understanding is that these events count the
-number of requests and each request carries a 64-byte payload. Perhaps
-the ScaleUnit needs to be factored into the bandwidth metrics instead of
-the individual events.
+        return path__join(bf, size, symbol_conf.symfs, path);
 
-> +  },
-> +  {
-> +    "EventName": "cpu_read_requests_cs_1",
-> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 1 (CS1).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x07",
-> +    "CompId": "0x1",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "cpu_write_requests_cs_0",
-> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 0 (CS0).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x08",
-> +    "CompId": "0x0",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "cpu_write_requests_cs_1",
-> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 1 (CS1).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x08",
-> +    "CompId": "0x1",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_read_requests_cs_0",
-> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 0 (CS0). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x0F",
-> +    "CompId": "0x0",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_read_requests_cs_1",
-> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 1 (CS1). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x0F",
-> +    "CompId": "0x1",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_write_requests_cs_0",
-> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 0 (CS0). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x70",
-> +    "CompId": "0x0",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_write_requests_cs_1",
-> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 1 (CS1). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x70",
-> +    "CompId": "0x1",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "MetricName": "cpu_memory_bandwidth",
-> +    "MetricExpr": "(cpu_read_requests_cs_0 + cpu_read_requests_cs_1 + cpu_write_requests_cs_0 + cpu_write_requests_cs_1) * 64 / (duration_time * 1e6)",
-> +    "BriefDescription": "Total CPU memory access bandwidth",
-> +    "MetricGroup": "DF_Memory_BW",
-> +    "ScaleUnit": "1MB/s"
-> +  },
-> +  {
-> +    "MetricName": "io_memory_max_bandwidth",
-> +    "MetricExpr": "(io_read_requests_cs_0 + io_read_requests_cs_1 + io_write_requests_cs_0 + io_write_requests_cs_1) * 64 / (duration_time * 1e6)",
-> +    "BriefDescription": "Maximum inbound I/O memory access bandwidth (upper bound, assuming 64B per request. Actual inbound I/O requests may be 32B or 64B)",
-> +    "MetricGroup": "DF_Memory_BW",
-> +    "ScaleUnit": "1MB/s"
-> +  },
-> +  {
-> +    "MetricName": "io_memory_min_bandwidth",
-> +    "MetricExpr": "(io_read_requests_cs_0 + io_read_requests_cs_1 + io_write_requests_cs_0 + io_write_requests_cs_1) * 32 / (duration_time * 1e6)",
-> +    "BriefDescription": "Minimum inbound I/O memory access bandwidth (lower bound, assuming 32B per request. Actual inbound I/O requests may be 32B or 64B)",
-> +    "MetricGroup": "DF_Memory_BW",
-> +    "ScaleUnit": "1MB/s"
-> +  }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/x86/hygonm4/data-fabric.json b/tools/perf/pmu-events/arch/x86/hygonm4/data-fabric.json
-> new file mode 100644
-> index 000000000000..41932a1a3d6d
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/x86/hygonm4/data-fabric.json
-> @@ -0,0 +1,134 @@
-> +[
-> +  {
-> +    "EventName": "cpu_read_requests_cs_0",
-> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 0 (CS0).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x07",
-> +    "CompId": "0x0",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "cpu_read_requests_cs_1",
-> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 1 (CS1).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x07",
-> +    "CompId": "0x1",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "cpu_read_requests_cs_2",
-> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 2 (CS2).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x07",
-> +    "CompId": "0x2",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "cpu_write_requests_cs_0",
-> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 0 (CS0).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x08",
-> +    "CompId": "0x0",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "cpu_write_requests_cs_1",
-> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 1 (CS1).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x08",
-> +    "CompId": "0x1",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "cpu_write_requests_cs_2",
-> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 2 (CS2).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x08",
-> +    "CompId": "0x2",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_read_requests_cs_0",
-> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 0 (CS0). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x0F",
-> +    "CompId": "0x0",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_read_requests_cs_1",
-> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 1 (CS1). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x0F",
-> +    "CompId": "0x1",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_read_requests_cs_2",
-> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 2 (CS2). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x0F",
-> +    "CompId": "0x2",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_write_requests_cs_0",
-> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 0 (CS0). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x70",
-> +    "CompId": "0x0",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_write_requests_cs_1",
-> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 1 (CS1). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x70",
-> +    "CompId": "0x1",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_write_requests_cs_2",
-> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 2 (CS2). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x70",
-> +    "CompId": "0x2",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "MetricName": "cpu_memory_bandwidth",
-> +    "MetricExpr": "(cpu_read_requests_cs_0 + cpu_read_requests_cs_1 + cpu_read_requests_cs_2 + cpu_write_requests_cs_0 + cpu_write_requests_cs_1 + cpu_write_requests_cs_2) * 64 / (duration_time * 1e6)",
-> +    "MetricConstraint": "NO_GROUP_EVENTS",
-> +    "BriefDescription": "Total CPU memory access bandwidth",
-> +    "MetricGroup": "DF_Memory_BW",
-> +    "ScaleUnit": "1MB/s"
-> +  },
-> +  {
-> +    "MetricName": "io_memory_max_bandwidth",
-> +    "MetricExpr": "(io_read_requests_cs_0 + io_read_requests_cs_1 + io_read_requests_cs_2 + io_write_requests_cs_0 + io_write_requests_cs_1 + io_write_requests_cs_2) * 64 / (duration_time * 1e6)",
-> +    "MetricConstraint": "NO_GROUP_EVENTS",
-> +    "BriefDescription": "Maximum inbound I/O memory access bandwidth (upper bound, assuming 64B per request. Actual inbound I/O requests may be 32B or 64B)",
-> +    "MetricGroup": "DF_Memory_BW",
-> +    "ScaleUnit": "1MB/s"
-> +  },
-> +  {
-> +    "MetricName": "io_memory_min_bandwidth",
-> +    "MetricExpr": "(io_read_requests_cs_0 + io_read_requests_cs_1 + io_read_requests_cs_2 + io_write_requests_cs_0 + io_write_requests_cs_1 + io_write_requests_cs_2) * 32 / (duration_time * 1e6)",
-> +    "MetricConstraint": "NO_GROUP_EVENTS",
-> +    "BriefDescription": "Minimum inbound I/O memory access bandwidth (lower bound, assuming 32B per request. Actual inbound I/O requests may be 32B or 64B)",
-> +    "MetricGroup": "DF_Memory_BW",
-> +    "ScaleUnit": "1MB/s"
-> +  }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/x86/hygonm6/data-fabric.json b/tools/perf/pmu-events/arch/x86/hygonm6/data-fabric.json
-> new file mode 100644
-> index 000000000000..ee81e35dc6f3
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/x86/hygonm6/data-fabric.json
-> @@ -0,0 +1,170 @@
-> +[
-> +  {
-> +    "EventName": "cpu_read_requests_cs_0",
-> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 0 (CS0).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x07",
-> +    "CompId": "0x0",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "cpu_read_requests_cs_1",
-> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 1 (CS1).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x07",
-> +    "CompId": "0x1",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "cpu_read_requests_cs_2",
-> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 2 (CS2).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x07",
-> +    "CompId": "0x2",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "cpu_read_requests_cs_3",
-> +    "BriefDescription": "Number of CPU read requests to memory in 64-byte units for Coherent Subordinate 3 (CS3).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x07",
-> +    "CompId": "0x3",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "cpu_write_requests_cs_0",
-> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 0 (CS0).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x08",
-> +    "CompId": "0x0",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "cpu_write_requests_cs_1",
-> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 1 (CS1).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x08",
-> +    "CompId": "0x1",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "cpu_write_requests_cs_2",
-> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 2 (CS2).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x08",
-> +    "CompId": "0x2",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "cpu_write_requests_cs_3",
-> +    "BriefDescription": "Number of CPU write requests to memory in 64-byte units for Coherent Subordinate 3 (CS3).",
-> +    "EventCode": "0x2",
-> +    "UMask": "0x08",
-> +    "CompId": "0x3",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_read_requests_cs_0",
-> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 0 (CS0). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x0F",
-> +    "CompId": "0x0",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_read_requests_cs_1",
-> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 1 (CS1). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x0F",
-> +    "CompId": "0x1",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_read_requests_cs_2",
-> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 2 (CS2). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x0F",
-> +    "CompId": "0x2",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_read_requests_cs_3",
-> +    "BriefDescription": "Number of inbound I/O read requests to memory in 64-byte units for Coherent Subordinate 3 (CS3). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x0F",
-> +    "CompId": "0x3",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_write_requests_cs_0",
-> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 0 (CS0). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x70",
-> +    "CompId": "0x0",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_write_requests_cs_1",
-> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 1 (CS1). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x70",
-> +    "CompId": "0x1",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_write_requests_cs_2",
-> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 2 (CS2). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x70",
-> +    "CompId": "0x2",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "EventName": "io_write_requests_cs_3",
-> +    "BriefDescription": "Number of inbound I/O write requests to memory in 64-byte units for Coherent Subordinate 3 (CS3). Some requests may be 32B, so the reported byte count may overestimate the actual data.",
-> +    "EventCode": "0x3",
-> +    "UMask": "0x70",
-> +    "CompId": "0x3",
-> +    "Unit": "HYGON_DF",
-> +    "ScaleUnit": "64Bytes"
-> +  },
-> +  {
-> +    "MetricName": "cpu_memory_bandwidth",
-> +    "MetricExpr": "(cpu_read_requests_cs_0 + cpu_read_requests_cs_1 + cpu_read_requests_cs_2 + cpu_read_requests_cs_3 + cpu_write_requests_cs_0 + cpu_write_requests_cs_1 + cpu_write_requests_cs_2 + cpu_write_requests_cs_3) * 64 / (duration_time * 1e6)",
-> +    "MetricConstraint": "NO_GROUP_EVENTS",
-> +    "BriefDescription": "Total CPU memory access bandwidth",
-> +    "MetricGroup": "DF_Memory_BW",
-> +    "ScaleUnit": "1MB/s"
-> +  },
-> +  {
-> +    "MetricName": "io_memory_max_bandwidth",
-> +    "MetricExpr": "(io_read_requests_cs_0 + io_read_requests_cs_1 + io_read_requests_cs_2 + io_read_requests_cs_3 + io_write_requests_cs_0 + io_write_requests_cs_1 + io_write_requests_cs_2 + io_write_requests_cs_3) * 64 / (duration_time * 1e6)",
-> +    "MetricConstraint": "NO_GROUP_EVENTS",
-> +    "BriefDescription": "Maximum inbound I/O memory access bandwidth (upper bound, assuming 64B per request. Actual inbound I/O requests may be 32B or 64B)",
-> +    "MetricGroup": "DF_Memory_BW",
-> +    "ScaleUnit": "1MB/s"
-> +  },
-> +  {
-> +    "MetricName": "io_memory_min_bandwidth",
-> +    "MetricExpr": "(io_read_requests_cs_0 + io_read_requests_cs_1 + io_read_requests_cs_2 + io_read_requests_cs_3 + io_write_requests_cs_0 + io_write_requests_cs_1 + io_write_requests_cs_2 + io_write_requests_cs_3) * 32 / (duration_time * 1e6)",
-> +    "MetricConstraint": "NO_GROUP_EVENTS",
-> +    "BriefDescription": "Minimum inbound I/O memory access bandwidth (lower bound, assuming 32B per request. Actual inbound I/O requests may be 32B or 64B)",
-> +    "MetricGroup": "DF_Memory_BW",
-> +    "ScaleUnit": "1MB/s"
-> +  }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> index 50a403b429b1..ba17117245d1 100644
-> --- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-> +++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-> @@ -45,3 +45,6 @@ AuthenticAMD-25-([245][[:xdigit:]]|[[:xdigit:]]),v1,amdzen3,core
->  AuthenticAMD-25-[[:xdigit:]]+,v1,amdzen4,core
->  AuthenticAMD-26-([12467][[:xdigit:]]|[[:xdigit:]]),v1,amdzen5,core
->  AuthenticAMD-26-[[:xdigit:]]+,v1,amdzen6,core
-> +HygonGenuine-24-[0123],v1,hygonm1,core
-> +HygonGenuine-24-[45],v1,hygonm4,core
-> +HygonGenuine-24-(1[012345678]|[6789ABCDEF]),v1,hygonm6,core
-> diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
-> index 376dc2d24162..07a843d92483 100755
-> --- a/tools/perf/pmu-events/jevents.py
-> +++ b/tools/perf/pmu-events/jevents.py
-> @@ -294,6 +294,7 @@ class JsonEvent:
->            'L3PMC': 'amd_l3',
->            'DFPMC': 'amd_df',
->            'UMCPMC': 'amd_umc',
-> +          'HYGON_DF': 'hygon_df',
->            'cpu_core': 'cpu_core',
->            'cpu_atom': 'cpu_atom',
->            'ali_drw': 'ali_drw',
-> @@ -390,6 +391,7 @@ class JsonEvent:
->          ('Invert', 'inv='),
->          ('SampleAfterValue', 'period='),
->          ('UMask', 'umask='),
-> +        ('CompId', 'compid='),
->          ('NodeType', 'type='),
->          ('RdWrMask', 'rdwrmask='),
->          ('EnAllCores', 'enallcores='),
+to taking perf_basename(path) first.  No caller was changed, so all of them
+got it.  Most pass dso__long_name(), which is what the option is about, but
+some pass a path perf built itself:
+
+  dso.c        "/usr/lib/debug"             -> "debug"
+  dso.c        "/usr/lib/debug/.build-id/"  -> ""
+  build-id.c   "/usr/lib/debug/.build-id/"  -> ""
+  disasm.c     <file under buildid_dir>     -> last component
+
+perf_basename() yields "" for a path ending in '/'.
+
+Tracing the lookups against an empty symfs,
+
+  perf record -o pd.data -- sleep 0.3
+  strace -f -e trace=openat,newfstatat \
+      perf report -i pd.data --symfs <symfs>,flat --stdio
+
+15 paths get tried.  Four of them differ, in every case only in the
+prefix, which the patch restores:
+
+  FEDORA, UBUNTU, MIXEDUP_UBUNTU
+    <symfs>/debug/  ->  <symfs>//usr/lib/debug/
+  BUILDID_DEBUGINFO
+    <symfs>/        ->  <symfs>//usr/lib/debug/.build-id/
+
+The tail is dso__long_name() for the first three and the build-id file for
+the fourth, the same either way, so the build-id file was being looked for
+in the symfs root and the distro debuginfo under <symfs>/debug/.  Those
+prefixes follow neither layout: perf's own prefix is flattened while
+dso__long_name() is still appended whole.
+
+Among the 11 paths that do not change are the basename lookups the option
+is for, <symfs>/sleep and <symfs>/vmlinux.  The same trace with
+,hierarchy is identical between the two builds.
+
+Use path__join() at those sites, which is what the helper did for them
+before.  A hierarchy layout is unaffected, being that same call.  The
+OPENEMBEDDED site passes "", where perf_basename() is already a no-op;
+it is converted for uniformity.  Every remaining __symbol__join_symfs()
+caller passes a path from the profiled system.
+
+Fixes: f182573e06ab ("perf tools: Add layout support for --symfs option")
+Signed-off-by: Zhan Xusheng <zhanxusheng@xiaomi.com>
+---
+v1->v2:
+- Added the traced before/after to the changelog, as asked by Ian Rogers.
+  No code change.
+
+v1: https://lore.kernel.org/r/20260811050046.4019578-1-zhanxusheng@xiaomi.com
+
+ tools/perf/util/build-id.c |  2 +-
+ tools/perf/util/disasm.c   |  4 +++-
+ tools/perf/util/dso.c      | 11 ++++++-----
+ 3 files changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+index eb95ab90f974..0c89fe75a650 100644
+--- a/tools/perf/util/build-id.c
++++ b/tools/perf/util/build-id.c
+@@ -599,7 +599,7 @@ static char *build_id_cache__find_debug(const char *sbuild_id,
+ 		dirname = dirbuf;
+ 	}
+ 
+-	len = __symbol__join_symfs(debugfile, PATH_MAX, dirname);
++	len = path__join(debugfile, PATH_MAX, symbol_conf.symfs, dirname);
+ 	snprintf(debugfile + len, PATH_MAX - len, "%.2s/%s.debug", sbuild_id,
+ 		 sbuild_id + 2);
+ 
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 0a1a7e9cf3ef..decf9348d735 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -31,6 +31,7 @@
+ #include "map.h"
+ #include "maps.h"
+ #include "namespaces.h"
++#include "path.h"
+ #include "srcline.h"
+ #include "symbol.h"
+ #include "thread.h"
+@@ -1173,7 +1174,8 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
+ 
+ 	build_id_filename = dso__build_id_filename(dso, NULL, 0, false);
+ 	if (build_id_filename) {
+-		__symbol__join_symfs(filename, filename_size, build_id_filename);
++		path__join(filename, filename_size, symbol_conf.symfs,
++			   build_id_filename);
+ 		free(build_id_filename);
+ 	} else {
+ 		if (dso__has_build_id(dso))
+diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+index 2309196d8df3..314c9a0edf28 100644
+--- a/tools/perf/util/dso.c
++++ b/tools/perf/util/dso.c
+@@ -167,12 +167,12 @@ int dso__read_binary_type_filename(const struct dso *dso,
+ 		break;
+ 
+ 	case DSO_BINARY_TYPE__FEDORA_DEBUGINFO:
+-		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
++		len = path__join(filename, size, symbol_conf.symfs, "/usr/lib/debug");
+ 		snprintf(filename + len, size - len, "%s.debug", dso__long_name(dso));
+ 		break;
+ 
+ 	case DSO_BINARY_TYPE__UBUNTU_DEBUGINFO:
+-		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
++		len = path__join(filename, size, symbol_conf.symfs, "/usr/lib/debug");
+ 		snprintf(filename + len, size - len, "%s", dso__long_name(dso));
+ 		break;
+ 
+@@ -187,7 +187,7 @@ int dso__read_binary_type_filename(const struct dso *dso,
+ 			ret = -1;
+ 			break;
+ 		}
+-		len = __symbol__join_symfs(filename, size, "/usr/lib/debug");
++		len = path__join(filename, size, symbol_conf.symfs, "/usr/lib/debug");
+ 		snprintf(filename + len, size - len, "%s", dso__long_name(dso) + 4);
+ 		break;
+ 
+@@ -200,7 +200,7 @@ int dso__read_binary_type_filename(const struct dso *dso,
+ 		while (last_slash != dso__long_name(dso) && *last_slash != '/')
+ 			last_slash--;
+ 
+-		len = __symbol__join_symfs(filename, size, "");
++		len = path__join(filename, size, symbol_conf.symfs, "");
+ 		dir_size = last_slash - dso__long_name(dso) + 2;
+ 		if (dir_size > (size - len)) {
+ 			ret = -1;
+@@ -219,7 +219,8 @@ int dso__read_binary_type_filename(const struct dso *dso,
+ 		}
+ 
+ 		build_id__snprintf(dso__bid(dso), build_id_hex, sizeof(build_id_hex));
+-		len = __symbol__join_symfs(filename, size, "/usr/lib/debug/.build-id/");
++		len = path__join(filename, size, symbol_conf.symfs,
++				 "/usr/lib/debug/.build-id/");
+ 		snprintf(filename + len, size - len, "%.2s/%s.debug",
+ 			 build_id_hex, build_id_hex + 2);
+ 		break;
+-- 
+2.43.0
 
