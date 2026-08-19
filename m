@@ -1,136 +1,109 @@
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com [209.85.210.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530C944A412
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Aug 2026 15:33:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2A3218EBA
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Aug 2026 16:11:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787153631; cv=none; b=mmX2CEEbUnQZVrLQD71fqupo7O58NGJqypDNkKQjDjOzCyfzGC81lSrhtZHT4qmtWdSvOQ3l+8XIUUgBcUpAQYNjcJl77U9QZ19Tqf8ofzVYX3QCub5dRFRuPcoyRWVZgvke+6wNhjh5n9B7qkxLaEIfSqu5yHR/2DRaUAd5kuk=
+	t=1787155891; cv=none; b=QzRAREmm3PN6ks9zLmiEU3ldzhT/sISM3LyxIhPB4ZnKYr7a3CPSZZ02eeOwwz6Y+MefoN7GmMZ4EZFv4l5k7Nwvx/AchFnHkE6nhmubK3atzgVqeeNECf2X5shxAvDNOACRkhNuOXiho9O63Fm+8m+Fw0JNaE5sAZrg6IJi2bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787153631; c=relaxed/simple;
-	bh=4Yli6tecyJEHplZwFU9XXAL6o7x1WGOP/NVWujBjOgo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=hC/YoepcLTIhSlsdcQCNnxmQHBhhV94napcPwgctH1uuZ6DOfJJGx2QggcVSbZ2OkTYlrw74dWmprS8yGaoDVs5qR6xTVtb8mFEBghk4+r3rwDb3ylyu56x1/c2ilEs5TxytjGXORiqmT08PthBr6lEvXwJlci5/Ugg4Ny59AsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XU/cVw0+; arc=none smtp.client-ip=209.85.210.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1787155891; c=relaxed/simple;
+	bh=dP0nitOCRz7KUQJXwgR3E7OsZ+KbistS+AH8BWrxyzM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Su+KeKYVr2JVgeL2tp+voD206ObD30g36VO917s74TME/Zvz+oECrRs9p0StwsnubFyUZIP6f8Ow1bjFZoco9KZX6MFlrDdladUqW/hpyG4xnATSuwX+BG6ckeOJPefzbf4epHFk+d6tEdirDRBwZf/ghj13dcSs6CU97qhjJNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VHdmkn0h; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XU/cVw0+"
-Received: by mail-pf1-f197.google.com with SMTP id d2e1a72fcca58-84c4cd31b51so15774b3a.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 19 Aug 2026 08:33:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787153627; x=1787758427; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=c2FvzDQHxVaueg4hvKJpjDuB27Njlxwegg3SIxYd2Fg=;
-        b=XU/cVw0+p9kAqaFFKwNtFk5zq0mOExFboyZMXzRqehxsK9WIfnOCnZxYAx+4Wja0eO
-         jALKjzpL9AQ2UaqtpGbejqQfbePzO+q+jc4LYfucU3awBgHzWGILbkmSswwY+VAm1pi2
-         UKGgkkcpSRYp8GQotWZUdF8iJeMFfwPYy1uaBpIvbtBkcMlacNxcO+Zo3yoYJ2b+sOZY
-         jHtIoadd+n/Fh1q7zG4wZkFxmqMW50IjuVPPaoEZ1nhnUGcL9GnWueT8Ir3SzKuhkSXK
-         yfyjsZJxqyA5ar+VOfZRzNPZLBgOKY7GvvTrrJ8jE2iLPZY7R0jBRGj2qpfq3Cpe9UCN
-         x93A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787153627; x=1787758427;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=c2FvzDQHxVaueg4hvKJpjDuB27Njlxwegg3SIxYd2Fg=;
-        b=aRLkW+YZCOn4fhRZlXGIM3lYG2O/K61J5kMithpfYlZmrOPc+xJkAgpBiuvTkx9nhw
-         V7nwzpJZzkTcF2r5SYquAayxhsz0PuU2tSBko7agDViw7L0WISgTwtcJYRWhmJA43vpA
-         m/lLwTVupBanMlHe0/qWi+luUlitsYEFTE4GoSsEl8ZU+uLR3kEuzRcn4yOzyGuIBeKl
-         wasXzDFFsIoKRTuO0hUsBlVRgObpcOwx0HDmuTuOh5IOkeII3QIApYVJJ0kvY6mTb4BR
-         t20qiXVsMzauySIWcLRnwklxo+xsMSIRuKknYi6V7EES4NgkjvLs8jXFtxCEvQasAVit
-         vMag==
-X-Forwarded-Encrypted: i=1; AHgh+RoKnazmpRo/OZxZFO3CbfETDHDRuqEpOV9HzpK8zzTTXM6yf+2VoOerLCpj8mwlVEMtVPKj1Px07tW75nGdEinP@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHEy9hAcpqlOsjhY+2aSLyW9ldZUf9EmtdxffyyqAUQRFYIGRi
-	0SZoFKFQJ0/3Lg7Hr98HdecvjWMs1Kfs8R6/1GBId3F2mLjweLtO/TYq6YzAF0yW1uYRwCj5qtv
-	eRAjF0g==
-X-Received: from pfoo3.prod.google.com ([2002:a05:6a00:1a03:b0:84f:df8f:5a90])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:2913:b0:84b:9a69:156d
- with SMTP id d2e1a72fcca58-851df6dc419mr109732b3a.0.1787153626373; Wed, 19
- Aug 2026 08:33:46 -0700 (PDT)
-Date: Wed, 19 Aug 2026 08:33:45 -0700
-In-Reply-To: <bd9e5b6e-07f2-459d-bca6-e290585060aa@intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VHdmkn0h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787155888; x=1818691888;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dP0nitOCRz7KUQJXwgR3E7OsZ+KbistS+AH8BWrxyzM=;
+  b=VHdmkn0hv5/rhqC7GKUqlN2NXRBB8WOO/eILCMhwN+fQQrNdzhx0oWme
+   Nts6kkP7Z5XxIFI9qGPxowxBu097S2VRCJCB3xpqUQRFORJHTbrDg8L71
+   jja2W1KD4ligxQzAS0Q2MvWlANn4/OXyj4upmNSwA/aYAaAvL/kTREVOu
+   mAm1efLFAThwIIASTSlsv4H6uKk4DThtQIl45Sb29dh9ntPEqzRdM0R5U
+   4/2t8QpH10bQau7jLoh+Ky5gEX0Ez+we32igipzZXN8uJiCtpFdLcDRBm
+   a1dID9i9ok3o3Ot7ke1nKvpUCm6A9UEMEICTYx6upc7jykc/x42hhvlRy
+   g==;
+X-CSE-ConnectionGUID: lWUV0v0fQ3qE6DXJOMacdA==
+X-CSE-MsgGUID: P/RDlEdxSuuq1dimbN2i1A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11880"; a="99203555"
+X-IronPort-AV: E=Sophos;i="6.25,231,1779174000"; 
+   d="scan'208";a="99203555"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2026 09:11:27 -0700
+X-CSE-ConnectionGUID: lEw3p8C2R92kdAgtw8c/XQ==
+X-CSE-MsgGUID: tIQahMYrSPKoXBlHr59AeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,231,1779174000"; 
+   d="scan'208";a="289101332"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2026 09:11:26 -0700
+Date: Wed, 19 Aug 2026 09:11:24 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Andi Kleen <andi@firstfloor.org>, namhyung@kernel.org, acme@kernel.org,
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@kernel.org>
+Subject: Re: [PATCH v1] perf top: Merge hybrid common events
+Message-ID: <aoXVrD-Qbhi5qd2D@tassilo>
+References: <20260813132519.4099508-1-andi@firstfloor.org>
+ <CAP-5=fW112qVVdZGNpdRH0n-B2at4ENDjjNv4Hdehn5bEB9BSA@mail.gmail.com>
+ <aoSWkMjxuz3hYr7C@tassilo>
+ <CAP-5=fXYPdVcdVQP0LW+ueLSWY11vFJq9GNVLA_yE=P_1_7giA@mail.gmail.com>
+ <7f5ae51dea8c7b6770716dedc46ee1b3@firstfloor.org>
+ <CAP-5=fXLe9tqR7wHh9auRxqX82Fw6zYh1EoTOXjPhOXcRXB92A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260819102314.1499258-1-jgross@suse.com> <bd9e5b6e-07f2-459d-bca6-e290585060aa@intel.com>
-Message-ID: <aoXM2f1YTwgVj8KL@google.com>
-Subject: Re: [PATCH v2 00/13] x86/msr: Drop 32-bit MSR interfaces
-From: Sean Christopherson <seanjc@google.com>
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org, x86@kernel.org, 
-	virtualization@lists.linux.dev, linux-ide@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, 
-	linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-edac@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-coco@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Ajay Kaher <ajay.kaher@broadcom.com>, Alexey Makhalov <alexey.makhalov@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	Niklas Cassel <cassel@kernel.org>, David Airlie <airlied@redhat.com>, Helge Deller <deller@gmx.de>, 
-	linux-geode@lists.infradead.org, Olivia Mackall <olivia@selenic.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Linus Walleij <linusw@kernel.org>, 
-	Bartosz Golaszewski <brgl@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Pu Wen <puwen@hygon.cn>, 
-	Tony Luck <tony.luck@intel.com>, Reinette Chatre <reinette.chatre@intel.com>, 
-	Dave Martin <Dave.Martin@arm.com>, James Morse <james.morse@arm.com>, 
-	Babu Moger <babu.moger@amd.com>, Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>, 
-	Vitaly Kuznetsov <vkuznets@redhat.com>, Andy Lutomirski <luto@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>, 
-	Kiryl Shutsemau <kas@kernel.org>, Rick Edgecombe <rick.p.edgecombe@intel.com>, 
-	Boris Ostrovsky <boris.ostrovsky@oracle.com>, Len Brown <lenb@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Huang Rui <ray.huang@amd.com>, 
-	Mario Limonciello <mario.limonciello@amd.com>, Perry Yuan <perry.yuan@amd.com>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Yazen Ghannam <yazen.ghannam@amd.com>, 
-	Guenter Roeck <linux@roeck-us.net>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, 
-	Artem Bityutskiy <dedekind1@gmail.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, Ashok Raj <ashok.raj.linux@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, 
-	"Ilpo =?utf-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>, 
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, David E Box <david.e.box@intel.com>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, xen-devel@lists.xenproject.org
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fXLe9tqR7wHh9auRxqX82Fw6zYh1EoTOXjPhOXcRXB92A@mail.gmail.com>
 
-On Wed, Aug 19, 2026, Dave Hansen wrote:
-> Hey Juergen,
-> 
-> These look great. Thanks for doing it!
-> 
-> The only wonky thing is how we're going to actually merge it. We
-> obviously can't do patches 10-11 until all the "stop using" patches have
-> been applied.
-> 
-> I obviously 100% realize that it's during the merge window, but any acks
-> that the maintainers of 5-9 provide in the next few weeks would be super
-> helpful. Or, if any of those maintainers want to cherry pick their
-> subsystem's stuff out of this series and apply it, that would be great too.
-> 
-> But, the last time we did some MSR function munging, the tip tree
-> carried most of the patches. I would expect we'll have a repeat of that
-> here too. I'll pencil in the idea of just merging the lot around -rc1 time.
+> With frequency scaling, doesn't IPC remain relatively constant with
+> frequency when ignoring external factors like memory? The IPC on an
+> e-core is expected to be lower than on a p-core.
 
-Note, patch 12 "treewide: convert rdmsrq() from a macro to an inline function"
-is going to conflict with the KVM changes for 7.3; kvm_access_xstate_msr() is
-getting moved from x86.c to msrs.c.  Somewhat surprisingly, AFAICT that's the
-only conflict with KVM's code movement, so it's probably not strictly required
-to send a new version after the KVM pull request?
+For most workloads you cannot ignore memory.
+
+Also the e-core IPC is often not lower than p-core, it's 
+actually quite competitive in many things. It just has
+a much lower frequency ceiling.
+
+> So I was in a presentation today where someone claimed that larger
+> cycle counts translated to memory system overhead, but they could be
+> unique :-) In my two loop example the lower IPC core's loop would show
+> a greater number of cycles than the higher-IPC core's loop. This would
+> make it appear higher in `perf top`, leading the user to drill into it
+> assuming more time was spent there due to issues with the code. As I'm
+> hypothesizing the code is identical then the higher `perf top` is down
+> to being scheduled on the e-core and its lower IPC. Having identical
+> code where by default in perf one appears worse than the other doesn't
+> strike me as desirable as the same behavior wouldn't happen on a
+> non-hybrid system.
+
+Yes performance analysis is hard and a lot of people get it wrong.
+
+> 
+> > > How can we merge non-legacy events? On ARM there is no PMU with a type
+> > > number file with TYPE_HARDWARE.
+> >
+> > Very few people use top with anything other than cycles, so it's
+> > probably
+> > not a very urgent problem.  I suppose you could push the problem to
+> > the user with some configuration file.
+> 
+> So I think users (and me) don't like the choose your event thing at
+> the beginning of `perf top`. I think the work in the histogram code to
+
+I'm not sure what you're proposing here. You want to make 
+merging default to off?
+
+
+-Andi
