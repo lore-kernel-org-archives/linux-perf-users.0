@@ -1,162 +1,269 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6FA43B9931
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Aug 2026 02:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.169
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787108333; cv=pass; b=TEd8zcgi0cW42SP0tBFnMQrDu0EKmr5/9MiW8wj4TQdl6InA+xb5y+sYTkd/Be6sXoAy6RxZafv+YdJlzonPDST8le41YyQVA7+f/o7kq3vlaYHO4pYRN/JIG+ZSytMtnGtQXTSuadaREtQbJlD4Ihcsy2A0dPKW09cSIRpOd90=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787108333; c=relaxed/simple;
-	bh=wFWAbd/yzlBnfV8KE4nnKxK+fwi+Hj6jWRnneO8eGZw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BE2B72uj9CuU2uMBieHijsreCdO2U8l19VAwAXeFR7SMBfd/ICEoUSYA50LdhT33z1sP33FTQE7msU3M23RCb8vQ158xVOcH6yzZbDuYd617Y9B+mBu5mmbI4JBFrk6OhOkFccLcZSmsRvNIPNWOmfjsblZybSsb0aam7SSs5Xo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IBm4u+M1; arc=pass smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IBm4u+M1"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-51c01c79467so123801cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 18 Aug 2026 19:58:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787108321; cv=none;
-        d=google.com; s=arc-20260327;
-        b=gch0Ca4qtwKfowB3LsmXjLS2PXFPxtQdj6UCWeBacUugwI70roamOyqRn1X+fxLq6R
-         rBTiVQLxaW6T40iDtSGSUuj/IB5R6vSVr1aZpig+Yy/U3erLCxeBOlhM7F1RMUoDyni8
-         kwfp7TZDgAKehzSQxrvnpgee9C1z47qn7Z2WjeBggG2mh2qeSsQ0ZhflqBAWLYBGdC5u
-         ztOvaxCGuJuFzmJ1XdcabYIMWTxmukkZhtz05ol/oTQpZohtinPrpPi7exUzk1C6n9B4
-         21YswNfsRSSxVx864QsHg5iQkLHK0Wp97Mt3TVZbJvoT8n9lwAJxu+ZlGE3yjmIk9+cN
-         0VBw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=wFWAbd/yzlBnfV8KE4nnKxK+fwi+Hj6jWRnneO8eGZw=;
-        fh=GPQL0iDfyVRVY7WtPmhE5DHWj6jnrBzm/LRph0t0TZs=;
-        b=galTLHX5G4pL6oSqZqwSIbOZrs8S4JnW1xLWKcUclP5QOgT169mgzb2YvgTxJO7wrz
-         1U9c4knra5pJ3PfhYjrCb3URDfbQqFKIiPx7zWK8qMfdIRHwT/stvO/qUdxnj50Ln2nK
-         om3AbpdWwT+KXeRx/SFfW74OUeWFHZwZDupXQ48edRd8x9j1xFbYPdhyt24sPGVVcBoG
-         f5Geg/QUDlJd5lB1D/Gk6aL+LJAAE0DaBpMXsMrtgVMwsNz9n1C2OlWyBFdFmzfuTeyK
-         sUPwNdBMEK9rBiuf1Fqmk/8//Ms2DTCI/D4+aW1/B/tz5/hWxBw4PvBfk+gjfhxwjnl2
-         1ggw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787108321; x=1787713121; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=wFWAbd/yzlBnfV8KE4nnKxK+fwi+Hj6jWRnneO8eGZw=;
-        b=IBm4u+M1SK3ncwLOYuy1dDQAoSxuidU5ZOjXM4MDSfXnKknykuZOJgygrw0Nx/G5ko
-         n44CgAbGVZ80z5gk41+xt9nG8JGu9wgxVKGDCtOGdijGhbj/Q2jZTYiMi3HEVMpPy2tC
-         XnYJLLvE24CRG0vZlBET71OuC3h2ikOLfSesGpKN7e2iB4HWuAaeuJbNvhHIQmg2pbrd
-         qA29k9PPX8ZycwGItnnhfZrLWKyRfju/iLME14xazW2oFB6SMVBjI41poiOx2gVdxeCn
-         y3gBE1+gxDo0tJMk7RyYtDOVRMxU4owNuK0xzg98Yhwy3Fw1TuqospHQXZPk+X/TY4W7
-         W/mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787108321; x=1787713121;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=wFWAbd/yzlBnfV8KE4nnKxK+fwi+Hj6jWRnneO8eGZw=;
-        b=X3d/LAx/cmkhJsebdvzUDPSebmcd8oUmIP57ZsuYs3g8MsOFr8s7xP47DkT+yFUy3Q
-         wwyvy4uVv8ppMqZLliwDEBoGue/yfZ++a0mgc1p6LP4dpXqeqvE/md7fVSt9ScfSrHEu
-         h6mF5TpUYYBmK4YW/twD7H6T49xvZuPQoCSPybKl0XrQjpLB44vmJjDsoAs7UFm3BoJB
-         PXbs2MGsFzZDuzt0qNl/KS1kAx0yizgmuG7GFCT6Zp6HuhSdryKv3KxfJmEDXaxrOrBD
-         kNl/wE4TY8ybMB8zfvqm+PUbKU4tIcWyjnVgXofnPoSpKVbZUhB2UqSDRofDlJdbw0Iv
-         qpag==
-X-Forwarded-Encrypted: i=1; AHgh+RoPXH4yiY0N0A0suSLBc8MYD+mQl0uKTo71wGIshJRNmP3jfmGMoI+IeegK4hKXi+VE9g/f05DL24OtX0YaDivf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz/y6XWFORp6Z4T/GDZ4qP7NDU5lnSvf1Z+2cAnOM3dgQMgKLlg
-	iRpUgkHpnzaWquiQJ0KnGczl3ukgXXBbs2dr0DY1nIJ0yeEnZGdgcGYoSsihQ8NHHjHNbpdMS4M
-	yJOKZoVbHD8bzah1l0mL7iBjjaDJTdIzHxkIHunRvpHYIsNMApCGFh552lzQ=
-X-Gm-Gg: AR+sD10NjhpCd4XxL1jbEuq7HSGYQE7Xasr13z+XqKw+LKZMBojBSQSmsbaCEiv2fyv
-	x3gdJjmQKN5eChtyQTf1RRCl2u0x9smV/nBFIWRxnADmOTk4Ti/cHp3psyOA5dlzKK3FiEtJneH
-	EVFNiXwmeZMu8gHvGqhdrSaETjzwE5ogHPFPCgprhmuaYNg2/IaWfdneDRKWAS7P/86O+NKcycx
-	HNNGMXezxS2JnzoiuOHRImBtnsgIVE7df4eW1ECGSGjXl6vkji8Ea8SCQG+gkE+0zgvf75DOERG
-	HQbXN/xtkT9N3UyUX8Hl0MdrverHRgZPAdPtbzMerpAPqw==
-X-Received: by 2002:a05:622a:8c5:b0:517:64f6:3365 with SMTP id
- d75a77b69052e-52dd6473c47mr5741351cf.4.1787108320794; Tue, 18 Aug 2026
- 19:58:40 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089EC35B62F;
+	Wed, 19 Aug 2026 03:04:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787108693; cv=none; b=dQoZA7PC8n9QcqF5db9WPRuIWGP0mR0RP0M8ZLR2bvcZIDh5EAYm+52GkvjjiI6uHoLPmFSXdSuiUOWiDKlc6fRNAmLvxHYGTdcUzmZR8KzeaXbX2abDWkAg4Z/MQ7/xLJDASsHMJvjtrR/cfnTz70p3azS2TNT03UTSxp/eD18=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787108693; c=relaxed/simple;
+	bh=oFXt+KPb6+jAhaVlKCIH5PJmOEfJ9SVUxGJM/q2dNP4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oUgL1M8UEsNh1Z4Dz6Z6yAqpTKjUzQkQc8XSJO/Re4uGvXOBzHfcHZD2ufwbllz3aQxpcsD+NmI90cELXB+ESOTMYn8d7XME0FJvakF3a9mEamhuZsQ1Fbt/qOb+guVB8KYdjcV9smuwD5Se7iglxiSPHc2Zyiu3EPHct1kn1Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hPryF5qnpzYQtHN;
+	Wed, 19 Aug 2026 11:04:21 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 2515E4058C;
+	Wed, 19 Aug 2026 11:04:38 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgDHtUREHYVqihVeCw--.32590S2;
+	Wed, 19 Aug 2026 11:04:37 +0800 (CST)
+Message-ID: <b5e4ef0d-cb11-45de-987a-226340b576ed@huaweicloud.com>
+Date: Wed, 19 Aug 2026 11:04:36 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260813132519.4099508-1-andi@firstfloor.org> <CAP-5=fW112qVVdZGNpdRH0n-B2at4ENDjjNv4Hdehn5bEB9BSA@mail.gmail.com>
- <aoSWkMjxuz3hYr7C@tassilo>
-In-Reply-To: <aoSWkMjxuz3hYr7C@tassilo>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 18 Aug 2026 19:58:28 -0700
-X-Gm-Features: AcwNN1XA7iSueAsdpqJ2vujUI_i_dlaOV4daQ8ACeIh8LX59ZBK8O29NwTgxl_4
-Message-ID: <CAP-5=fXYPdVcdVQP0LW+ueLSWY11vFJq9GNVLA_yE=P_1_7giA@mail.gmail.com>
-Subject: Re: [PATCH v1] perf top: Merge hybrid common events
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Andi Kleen <andi@firstfloor.org>, namhyung@kernel.org, acme@kernel.org, 
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 20/23] perf annotate-arm64: Support 'add' instruction
+ tracking
+To: Shuai Xue <xueshuai@linux.alibaba.com>, Namhyung Kim
+ <namhyung@kernel.org>, james.clark@linaro.org,
+ Li Huafei <lihuafei1@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
+ Ian Rogers <irogers@google.com>, Kim Phillips <kim.phillips@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Bill Wendling <morbo@google.com>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
+ <20260808122400.2961238-21-wutengda@huaweicloud.com>
+ <89e66d40-5f9f-4147-beda-00623797cd04@linux.alibaba.com>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <89e66d40-5f9f-4147-beda-00623797cd04@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgDHtUREHYVqihVeCw--.32590S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxKFyfGF4xXw1Duw45JFy7Jrb_yoW3XFW8pr
+	4kGrWUGry7JrnYgr13tr4UJFyrCr1xJ3WDCryFq3WayF4avr10gF12qr9F9FW5Jr4rJr17
+	Jr1jqrsxZrnrGFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-On Tue, Aug 18, 2026 at 10:29=E2=80=AFAM Andi Kleen <ak@linux.intel.com> wr=
-ote:
+
+
+On 2026/8/11 16:45, Shuai Xue wrote:
+> 
+> 
+> On 8/8/26 8:23 PM, Tengda Wu wrote:
+>> Extend update_insn_state() for arm64 to track 'add' instructions for
+>> structure member address calculation, which commonly appear as:
+>>
+>>    add  dreg, base, #offset
+>>    add  dreg, base, reg2     (reg2 holds a constant)
+>>
+>> Unlike x86, the arm64 'add' instruction has an extra base register among
+>> its source operands. Therefore, in terms of propagating the data type,
+>> it is essentially performing a 'mov', except that before the 'mov', it
+>> first needs to be updated by adding the offset or reg2.
+>>
+>> A real-world example is shown below:
+>>
+>>    ffff80008001c9a8 <flush_ptrace_hw_breakpoint>:
+>>    ffff80008001c9c4:  add  x19, x0, #0xeb8   // x0 (task_struct*) + 0xeb8 -> x19
+>> * ffff80008001c9d0:  ldr  x0, [x19]
+>>
+>> Before this commit, the type flow broke at the 'add' instruction,
+>> leaving the subsequent load with no type information:
+>>
+>>    chk [28] reg19 offset=0 ok=0 kind=0 cfa : no type information
+>>    final result: no type information
+>>
+>> After this commit, the tracker correctly follows the member address
+>> calculation:
+>>
+>>    var [0] reg0 offset 0 type='struct task_struct*'
+>>    add [1c] address of 0xeb8(reg0) -> reg19 type='struct task_struct*'
+>>    chk [28] reg19 offset=0 ok=1 kind=1 (struct task_struct*) : Good!
+>>    found by insn track: 0(reg19) type-offset=0xeb8
+>>    final result: type='struct task_struct'
+>>
+>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+>> ---
+>>   .../perf/util/annotate-arch/annotate-arm64.c  | 87 ++++++++++++++++++-
+>>   1 file changed, 85 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+>> index 7b780bad8c07..eaeb4433fc3a 100644
+>> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+>> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+>> @@ -688,6 +688,87 @@ static void update_mov_insn_state(struct type_state *state,
+>>       pr_debug_type_name(&tsr->type, tsr->kind);
+>>   }
+>>   +static void update_add_insn_state(struct type_state *state,
+>> +                  struct disasm_line *dl,
+>> +                  struct annotated_op_loc *src,
+>> +                  struct annotated_op_loc *dst)
+>> +{
+>> +    struct type_state_reg *tsr;
+>> +    struct type_state_reg src_tsr;
+>> +    u32 insn_offset = dl->al.offset;
+>> +    int sreg = src->reg1;
+>> +    int dreg = dst->reg1;
+>> +    u64 imm_value;
+>> +
+>> +    if (!has_reg_type(state, dreg))
+>> +        return;
+>> +
+>> +    tsr = &state->regs[dreg];
+>> +    tsr->copied_from = -1;
+>> +
+>> +retry:
+>> +    if (!has_reg_type(state, sreg) || !state->regs[sreg].ok) {
+>> +        invalidate_reg_state(tsr);
+>> +        return;
+>> +    }
+>> +
+>> +    src_tsr = state->regs[sreg];
+>> +
+>> +    /*
+>> +     * Handle 'add' instructions of the form:
+>> +     *   add  dreg, base, #offset     (immediate offset)
+>> +     *   add  dreg, base, reg2        (reg2 holds a constant)
+>> +     *
+>> +     * For case 2, retrieve the constant value from reg2
+>> +     * and use it as the offset.
+>> +     */
+>> +    imm_value = src->offset;
+>> +    if (src->multi_regs) {
+>> +        int reg2 = (sreg == src->reg1) ? src->reg2 : src->reg1;
+>> +
+>> +        if (!has_reg_type(state, reg2) || !state->regs[reg2].ok) {
+>> +            /* Unable to resolve type for dst, bail out */
+>> +            invalidate_reg_state(tsr);
+>> +            return;
+>> +        }
+>> +        if (state->regs[reg2].kind == TSR_KIND_CONST)
+>> +            imm_value = state->regs[reg2].imm_value;
+> 
+> First, when reg2 is valid but not TSR_KIND_CONST - say a pointer
+> freshly loaded from memory - the addend is unknown at analysis time,
+> yet imm_value silently stays 0 and propagation continues, tracking
+> the destination as base + 0. Note the asymmetry: no state at all
+> invalidates, but state that doesn't yield a value pretends the
+> addend is zero. Unknown addend should invalidate as well:
+> 
+>         if (state->regs[reg2].kind != TSR_KIND_CONST) {
+>             invalidate_reg_state(tsr);
+>             return;
+>         }
+> 
+
+It might not be a direct invalidation, but rather swapping reg1/reg2 and
+then retrying.
+
+> Second, the shifted/extended forms still break even with a constant
+> reg2: extract_op_location_arm64() drops the "lsl #3" (or uxtw/sxtw)
+> modifier, so add x0, x1, x2, lsl #3 contributes the unshifted value
+> and maps later accesses to the wrong field. Maybe flag such operands
+> during extraction (or fail the reg2 extraction) so the handler can
+> skip them.
 >
-> > Thanks Andi, I agree with the frustration. For an event like
-> > instructions I would like things merged. Does merging make sense for
-> > cycles given the different clock frequencies of p-cores and e-cores?
->
-> Frequencies are always per core anyways, even on non hybrid systems.
->
-> > Should the e-core cycles be scaled for this reason as there are fewer
-> > cycles within a second compared to a p-core?
->
-> No.
 
-Since we have frequency mode on events and the periods are aggregated,
-I find it hard to fully think about the ramifications. Consider this
-example: I have two identical loops, one loop runs on a p-core and the
-other on an e-core, both accessing identical data that fits in the L1
-cache. Since the IPC on the e-core is lower, the number of cycles it
-spends in its loop should be higher. A user might mistakenly conclude
-from the higher cycle count in one loop that cache/memory issues exist
-in the e-core's loop, rather than realizing a scheduler issue caused
-that loop to run on an e-core. If we detect a hybrid system we could
-switch the default event to for all perf tools to instructions, as
-instructions don't suffer from this problem.
+Okay, so it seems shifted/extended forms are unavoidable. We may need to
+introduce more fields into annotated_op_loc to record them, like this:
 
-> >
-> > Perhaps we need a new json field to describe the hybrid merge-ability
-> > of events, say enabled on events like instructions or cache misses.
-> > Note the legacy events now have JSON descriptions:
-> > https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-nex=
-t.git/tree/tools/perf/pmu-events/arch/common/common/legacy-hardware.json?h=
-=3Dperf-tools-next
->
-> Makes sense. At least for architectural events it's easy.
-> But I'll also defer it for now.
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 138d9258281c..b00e0ad96023 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -501,6 +501,8 @@ int arch__dwarf_regnum(const struct arch *arch, const char *str);
+  * @offset: Memory access offset in the operand
+  * @segment: Segment selector register
+  * @addr_mode: Addressing mode, only valid if @mem_ref is true
++ * @extend_type: ARM64 register extend specifier (enum annotated_ext_type)
++ * @shift: ARM64 shift amount (e.g., 0 to 4)
+  * @mem_ref: Whether the operand accesses memory
+  * @multi_regs: Whether the second register is used
+  * @imm: Whether the operand is an immediate value (in offset)
+@@ -511,6 +513,8 @@ struct annotated_op_loc {
+ 	int offset;
+ 	u8 segment;
+ 	u8 addr_mode;
++	u8 extend_type;
++	u8 shift;
+ 	bool mem_ref;
+ 	bool multi_regs;
+ 	bool imm;
+@@ -542,6 +546,19 @@ enum annotated_addr_mode {
+ 	PERF_ADDR_MODE_POST_INDEX,
+ };
+ 
++enum annotated_ext_type {
++	PERF_EXT_NONE = 0,
++
++	PERF_EXT_UXTB,
++	PERF_EXT_SXTB,
++	PERF_EXT_UXTH,
++	PERF_EXT_SXTH,
++	PERF_EXT_UXTW,
++	PERF_EXT_SXTW,
++	PERF_EXT_UXTX,  /* LSL is equivalent to UXTX */
++	PERF_EXT_SXTX,
++};
++
+ /**
+  * struct annotated_insn_loc - Location info of instruction
+  * @ops: Array of location info for source and target operands
 
-How can we merge non-legacy events? On ARM there is no PMU with a type
-number file with TYPE_HARDWARE. It's not clear to me how legacy event
-merging works outside of x86, although the issue is worse on Intel
-given the lack of architectural event encodings that exist on
-platforms like ARM - so the e-core and p-core perf_event_attr have
-quite different config values.
 
-> >
-> > It would be nice if this were a generic feature and not just for perf t=
-op.
->
-> Makes sense, but I would also defer that to a future version.
-> The utility code is already partly factored out for reuse.
+>> +    }
+>> +
+>> +    if (src_tsr.kind == TSR_KIND_CONST) {
+>> +        tsr->kind = src_tsr.kind;
+>> +        tsr->imm_value = src_tsr.imm_value + imm_value;
+>> +        tsr->offset = 0;
+>> +        tsr->ok = src_tsr.ok;
+>> +
+>> +        pr_debug_dtp("add [%x] imm %#"PRIx64"(reg%d) -> reg%d\n",
+>> +                 insn_offset, imm_value, sreg, dreg);
+> 
+> And since add is commutative, this early return drops the pointer
+> side for add rd, const_reg, ptr_reg: sreg starts as reg1, hits the
+> CONST case and returns before the goto retry at the bottom ever gets
+> a chance to evaluate the pointer register. The result should be the
+> pointer with the constant applied as an offset, not a plain constant.
+> Maybe check the other register for a pointer type before falling into
+> the CONST case (or move the CONST handling after the retry).
+> 
 
-I think perf report should be easy given the overlap in code with perf
-top. What about perf stat?
-
-That reminds me: the enabled/running times are wrong with perf stat
-and hybrid anyway. I posted this RFC that deserves more of my
-attention:
-https://lore.kernel.org/linux-perf-users/20250716223924.825772-1-irogers@go=
-ogle.com/
+Yeah, this issue is a side effect of the previous incomplete handling and
+will be fixed together.
 
 Thanks,
-Ian
+Tengda
 
-> -Andi
