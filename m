@@ -1,109 +1,70 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2A3218EBA
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Aug 2026 16:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A07F3BF660;
+	Wed, 19 Aug 2026 17:08:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787155891; cv=none; b=QzRAREmm3PN6ks9zLmiEU3ldzhT/sISM3LyxIhPB4ZnKYr7a3CPSZZ02eeOwwz6Y+MefoN7GmMZ4EZFv4l5k7Nwvx/AchFnHkE6nhmubK3atzgVqeeNECf2X5shxAvDNOACRkhNuOXiho9O63Fm+8m+Fw0JNaE5sAZrg6IJi2bA=
+	t=1787159313; cv=none; b=HDqv650diRE9xc54P2X1ERD4MkbL3c0GCj6kuHDrVUOclDIPhE5RxbuidYm/qkIImKjkXzcswBszLN45tRigyEIj07iYEHgVUMXI0zs+3bXF3NarJgV+CyTJUduRXKDkE4q3J3RHri5PpG8gYsdVZRMWvENIPIcPhVvAwJO2Q48=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787155891; c=relaxed/simple;
-	bh=dP0nitOCRz7KUQJXwgR3E7OsZ+KbistS+AH8BWrxyzM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Su+KeKYVr2JVgeL2tp+voD206ObD30g36VO917s74TME/Zvz+oECrRs9p0StwsnubFyUZIP6f8Ow1bjFZoco9KZX6MFlrDdladUqW/hpyG4xnATSuwX+BG6ckeOJPefzbf4epHFk+d6tEdirDRBwZf/ghj13dcSs6CU97qhjJNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VHdmkn0h; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1787159313; c=relaxed/simple;
+	bh=AxbX295FHSnS2pkV7sAx1m8/YNLXz/RNUcY+AVXIzM4=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=JoIAI9aPkQDO9YPZQSMAzWe+6qPnT/hvwTEEnl5VC2Npta9tLLcKJEVmuY8xc0im9JOuqh6WiDakwegoC90vN855vOMUtHpYIBFSBQoZpOiDnDADbdHsuq9rs2nJsbRR+rSO0oIjeFYzLSUx7CHoVkW+L7dt7jLViJG1cmeNxDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kMfIT/cJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VHdmkn0h"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787155888; x=1818691888;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=dP0nitOCRz7KUQJXwgR3E7OsZ+KbistS+AH8BWrxyzM=;
-  b=VHdmkn0hv5/rhqC7GKUqlN2NXRBB8WOO/eILCMhwN+fQQrNdzhx0oWme
-   Nts6kkP7Z5XxIFI9qGPxowxBu097S2VRCJCB3xpqUQRFORJHTbrDg8L71
-   jja2W1KD4ligxQzAS0Q2MvWlANn4/OXyj4upmNSwA/aYAaAvL/kTREVOu
-   mAm1efLFAThwIIASTSlsv4H6uKk4DThtQIl45Sb29dh9ntPEqzRdM0R5U
-   4/2t8QpH10bQau7jLoh+Ky5gEX0Ez+we32igipzZXN8uJiCtpFdLcDRBm
-   a1dID9i9ok3o3Ot7ke1nKvpUCm6A9UEMEICTYx6upc7jykc/x42hhvlRy
-   g==;
-X-CSE-ConnectionGUID: lWUV0v0fQ3qE6DXJOMacdA==
-X-CSE-MsgGUID: P/RDlEdxSuuq1dimbN2i1A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11880"; a="99203555"
-X-IronPort-AV: E=Sophos;i="6.25,231,1779174000"; 
-   d="scan'208";a="99203555"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2026 09:11:27 -0700
-X-CSE-ConnectionGUID: lEw3p8C2R92kdAgtw8c/XQ==
-X-CSE-MsgGUID: tIQahMYrSPKoXBlHr59AeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,231,1779174000"; 
-   d="scan'208";a="289101332"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2026 09:11:26 -0700
-Date: Wed, 19 Aug 2026 09:11:24 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Ian Rogers <irogers@google.com>
-Cc: Andi Kleen <andi@firstfloor.org>, namhyung@kernel.org, acme@kernel.org,
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@kernel.org>
-Subject: Re: [PATCH v1] perf top: Merge hybrid common events
-Message-ID: <aoXVrD-Qbhi5qd2D@tassilo>
-References: <20260813132519.4099508-1-andi@firstfloor.org>
- <CAP-5=fW112qVVdZGNpdRH0n-B2at4ENDjjNv4Hdehn5bEB9BSA@mail.gmail.com>
- <aoSWkMjxuz3hYr7C@tassilo>
- <CAP-5=fXYPdVcdVQP0LW+ueLSWY11vFJq9GNVLA_yE=P_1_7giA@mail.gmail.com>
- <7f5ae51dea8c7b6770716dedc46ee1b3@firstfloor.org>
- <CAP-5=fXLe9tqR7wHh9auRxqX82Fw6zYh1EoTOXjPhOXcRXB92A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kMfIT/cJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF9A81F000E9;
+	Wed, 19 Aug 2026 17:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787159311;
+	bh=21smCt5veLbVqe+S+GWthbuG/xZam00DYMCOlQBhZRg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date;
+	b=kMfIT/cJ4WIwWWFk0uWjh8XUTnAx8W8OWI7C2tf1xlp6Bt7171PRN75/ukSbF5crC
+	 cVvtB8C6y7A02XV1Q6YetGHEjc8JI/OUBUjnCkP8Nb5b6etn72KfjadjgJzIo8GQbS
+	 LinXBkpHfvE98Mzez05ZYALDu3PFVk7NqyzjF8fkwLfJH/TrcnlOmeX/tSSEnQScDT
+	 rusv05dECaChlQP5tGfM7yRh5VLEn4n5R5rPQftWLV3lgYLE1Zz6Z9X7IrQNqnIZWW
+	 getDqBkttWaAz41wl2vy1ihm0bVaJ6tHceoTlwTEgRMo8hbnjW4ztGCmfc38133Pg7
+	 dNcnMV4y7UYpw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: john.g.garry@oracle.com, will@kernel.org, james.clark@linaro.org, 
+ leo.yan@linux.dev, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+ jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
+ peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+ Mike Leach <mike.leach@arm.com>, Besar Wicaksono <bwicaksono@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ tmakin@nvidia.com, vsethi@nvidia.com, rwiley@nvidia.com, skelley@nvidia.com, 
+ rajjoshi@nvidia.com, treding@nvidia.com, jonathanh@nvidia.com, 
+ mochs@nvidia.com, sauravsc@amazon.com
+In-Reply-To: <20260813170155.1156593-1-bwicaksono@nvidia.com>
+References: <20260813170155.1156593-1-bwicaksono@nvidia.com>
+Subject: Re: [PATCH 0/2] perf vendor events arm64: Fix Tegra410 Olympus PMU
+ events
+Message-Id: <178715931078.2811574.8141825092501896684.b4-ty@kernel.org>
+Date: Wed, 19 Aug 2026 10:08:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fXLe9tqR7wHh9auRxqX82Fw6zYh1EoTOXjPhOXcRXB92A@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-> With frequency scaling, doesn't IPC remain relatively constant with
-> frequency when ignoring external factors like memory? The IPC on an
-> e-core is expected to be lower than on a p-core.
-
-For most workloads you cannot ignore memory.
-
-Also the e-core IPC is often not lower than p-core, it's 
-actually quite competitive in many things. It just has
-a much lower frequency ceiling.
-
-> So I was in a presentation today where someone claimed that larger
-> cycle counts translated to memory system overhead, but they could be
-> unique :-) In my two loop example the lower IPC core's loop would show
-> a greater number of cycles than the higher-IPC core's loop. This would
-> make it appear higher in `perf top`, leading the user to drill into it
-> assuming more time was spent there due to issues with the code. As I'm
-> hypothesizing the code is identical then the higher `perf top` is down
-> to being scheduled on the e-core and its lower IPC. Having identical
-> code where by default in perf one appears worse than the other doesn't
-> strike me as desirable as the same behavior wouldn't happen on a
-> non-hybrid system.
-
-Yes performance analysis is hard and a lot of people get it wrong.
-
+On Thu, 13 Aug 2026 17:01:53 +0000, Besar Wicaksono wrote:
+> Fix two issues in the NVIDIA Tegra410 Olympus PMU event definitions:
 > 
-> > > How can we merge non-legacy events? On ARM there is no PMU with a type
-> > > number file with TYPE_HARDWARE.
-> >
-> > Very few people use top with anything other than cycles, so it's
-> > probably
-> > not a very urgent problem.  I suppose you could push the problem to
-> > the user with some configuration file.
+>   - Correct the swapped MetricGroup assignments for the L1 data and
+>     instruction prefetcher metrics.
+>   - Correct the name and description of implementation-defined event
+>     0x0197.
 > 
-> So I think users (and me) don't like the choose your event thing at
-> the beginning of `perf top`. I think the work in the histogram code to
+> [...]
+Applied to perf-tools-next, thanks!
 
-I'm not sure what you're proposing here. You want to make 
-merging default to off?
+Best regards,
+Namhyung
 
 
--Andi
