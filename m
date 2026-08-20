@@ -1,187 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BCB564A8C;
-	Thu, 20 Aug 2026 00:14:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 917F11FECCD;
+	Thu, 20 Aug 2026 02:03:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787184887; cv=none; b=nAJBwbYiN8IpmO5JAY+gH1eIDs2pe3UP9ZJhRirQfLbYoFRPBWIqT749iJ1HYoGeU8/0vKANHH6NYIYm4k/MOgp09G/+eDlKeE7QwXbx1s5pLpfr88BdN+OlEGNRBxBKi5Vy0e4NMXPtZfp2Tc5tbc44UkLFKv4enG1Jmd4fDjA=
+	t=1787191404; cv=none; b=XycuL3t5AEcK2d7YlxUm6LZogPU1ZZW/3dxW76xTbMIebya80N8E0zCn/VOiChh5ddOegv7DT5WRGDsQkHxVgxDgQsYnJX60d/ujXM47ak1EumTTECATC7yGiaGV/GsHu+9qyPcducdqYVuxu9mds3I1LRJWDQQgSj2XBp+tShM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787184887; c=relaxed/simple;
-	bh=uF+4W7ihf4QY4qxmMVgCFnBo4A4pgmWvyKa93QT5OjA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=prpQ0Zu92J7vG4E/h8DEHQ06WUXPmUque6oZ9wM6xoWc2CyoQSI4vAjGbiBRW7QxGNHnFTo245tTI0BdWzPZj+dCw60dkkSvQl3oU6O15FIgwZu9KD6RFDG2oDRuC/eOPtQnXOSNlJ8oiQMndB+f5O35oto5aq7cwcH4yH2GuEU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FWqO/2ie; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787191404; c=relaxed/simple;
+	bh=uye3Jti2C9W8t3LYD0ExUgdSxqjLCBbWJSQzsfU+4II=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=SgMSTkUNwm9nvwnPHSzBW3SvNvpj3M2p0n/8xS8EmOKaxtThm23tHfcIs1aVjYN25v6X41oirdj2AcfDU3ZbKq2EIKwgK3SN8Y57XJKF8YzMrl68M71HP3xRbhLPp/MpB+9Q2njs1mEfgYCjcOxZ1kC2q3UVBQRfAUKXromVynE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TVFgQNRB; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWqO/2ie"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48FDD1F00A3A;
-	Thu, 20 Aug 2026 00:14:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787184886;
-	bh=W92QFFwro4YYwgtNSKtCKIiG4RzKCdA0G761pKY35d4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=FWqO/2ieDeAq6V5Gd+kV61JA33qDj16RSHvWlswI8nu9vwXFJDNtEK57twGh0b21N
-	 SV2sChM8FJHNCsVw37HegnJ/clD4vfjphaJqGdsK9GeUEKYIX2fYOPL8gLt2LD3z5u
-	 bWe+PmkwDEZktMU+AodQ++XHcwvlxVw+Ia7Ql842PnLdYV93QU0eKxDO3+hAHplCC+
-	 XrbRKWQrZEpy0sT5+qHgHYLW5mBc2iC23cJhKEBa4/CwgdBRqXs2HsSsPqUdeBkOim
-	 AJfGZk1oA18HG2lvdfpdMFI/2kLKOkkpS75FGrbz00fGACaMnS3bqB6JifW2FT3Hu/
-	 89WLlPmblmdUA==
-Date: Thu, 20 Aug 2026 09:14:43 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: sashiko-bot@kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v12 03/11] HWBP: Add modify_local_hw_breakpoint_addr()
- API
-Message-Id: <20260820091443.f839ba0d307a810714ea8f27@kernel.org>
-In-Reply-To: <20260807155802.F06041F000E9@smtp.kernel.org>
-References: <178611679753.237811.10190793347982785419.stgit@devnote2>
-	<178611683120.237811.15904891776099424430.stgit@devnote2>
-	<20260807155802.F06041F000E9@smtp.kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TVFgQNRB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787191404; x=1818727404;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=uye3Jti2C9W8t3LYD0ExUgdSxqjLCBbWJSQzsfU+4II=;
+  b=TVFgQNRBMAaem40l87Uwrw4e9gfIaJuA1Sd9qi1l+/FZPiTPzCRwXlJc
+   JwjFoQnv5jix8WuUDmRL/+oFEdYvZIrwsa0XjTQleLlkpM84aBT/Rc8Wo
+   gTDuvqlnu2SfRQUXnMJ+5i6QktfsAI0LPXk0AT++vCcPGOKNJrJHzJbzc
+   gCV40msIy3e6NOCsCiz2tICNiAnbqBLIKPYEQ2JLgLouy0L8zKatFgBum
+   LSASKrnBt9vuxH/qAoKHd3fcPvRN8b5jHePZ1L+57/dhe/TtGZ6qmq6nB
+   z0I5mHmeygdWdochmxbvHm25IQ3VdwIFjjhw2jjk+XP0OcW/PdgJ/osbH
+   A==;
+X-CSE-ConnectionGUID: L8nhUmrjQ72KYUvjX3Jd4g==
+X-CSE-MsgGUID: k392Vp3WTfyVlWzPjrk5Qg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11880"; a="105252692"
+X-IronPort-AV: E=Sophos;i="6.25,232,1779174000"; 
+   d="scan'208";a="105252692"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Aug 2026 19:03:23 -0700
+X-CSE-ConnectionGUID: xdvQ/DxgR9eZOV2I7yKfyg==
+X-CSE-MsgGUID: QuRIf6J1S9+zbKnu8esApA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,232,1779174000"; 
+   d="scan'208";a="303967164"
+Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
+  by orviesa001.jf.intel.com with ESMTP; 19 Aug 2026 19:03:19 -0700
+From: Jiebin Sun <jiebin.sun@intel.com>
+To: namhyung@kernel.org
+Cc: acme@kernel.org,
+	mingo@redhat.com,
+	peterz@infradead.org,
+	adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com,
+	irogers@google.com,
+	james.clark@linaro.org,
+	jolsa@kernel.org,
+	mark.rutland@arm.com,
+	dapeng1.mi@linux.intel.com,
+	thomas.falcon@intel.com,
+	tianyou.li@intel.com,
+	wangyang.guo@intel.com,
+	jiebin.sun@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 0/9] perf c2c: add a function view
+Date: Thu, 20 Aug 2026 10:10:13 +0800
+Message-ID: <20260820021013.238577-1-jiebin.sun@intel.com>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <178708820285.2068376.4445054053733143306.b4-ty@kernel.org>
+References: <20260817094623.3288456-1-jiebin.sun@intel.com> <178708820285.2068376.4445054053733143306.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Fri, 07 Aug 2026 15:58:01 +0000
-sashiko-bot@kernel.org wrote:
+Hi Namhyung,
 
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
-> 
-> New issues:
-> - [High] Modifying hardware debug address registers (DR0-DR3) while they are still enabled in DR7 violates the x86 architectural guidelines and can cause unpredictable hardware behavior.
+Thanks for applying the series.
 
-It uses local_db_save/restore() to atomically update it. So it should be safe.
+I will prepare a follow-up for stdio support and automated function-view
+coverage on top of perf-tools-next and send it as a separate series.
 
-> - [Medium] Temporary invalid software state in `bp->attr.bp_addr` before validation causes incorrect perf samples if interrupted by an NMI.
-
-Note that this is only used from wprobe, which checks the address is correct.
-Anyway, I will add a comment about that.
-
-> 
-> Pre-existing issues:
-> - [High] Lockless traversal of `kprobe_blacklist` can lead to Use-After-Free during module unload.
-
-This seems a funny hallucination... why have you pointed unrelated kprobe things??
-
-> --
-> 
-> --- Patch [3]: [PATCH v12 03/11] HWBP: Add modify_local_hw_breakpoint_addr() API ---
-> commit 894126e474a8f66ca7e12e6c727a417646ec68a9
-> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> HWBP: Add modify_local_hw_breakpoint_addr() API
-> 
-> This adds modify_local_hw_breakpoint_addr() to update the watched address
-> of an installed hardware breakpoint on the local CPU without releasing and
-> reserving its hardware slot. It is available when architectures select
-> HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR.
-> 
-> Link: https://lore.kernel.org/all/f9c49dfa49bdc57ba8c0574bc9981c1e581acf92.1785067572.git.wangjinchao600@gmail.com/
-> 
-> > diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
-> > index 789add0c185a0..7d3a7bc050a40 100644
-> > --- a/kernel/events/hw_breakpoint.c
-> > +++ b/kernel/events/hw_breakpoint.c
-> 
-> [ ... ]
-> 
-> > @@ -888,6 +888,46 @@ void unregister_wide_hw_breakpoint(struct perf_event * __percpu *cpu_events)
-> >  }
-> >  EXPORT_SYMBOL_GPL(unregister_wide_hw_breakpoint);
-> >  
-> > +/**
-> > + * modify_local_hw_breakpoint_addr - update a local breakpoint address
-> > + * @bp: the hwbp perf event for this CPU
-> > + * @addr: the new address for @bp
-> > + *
-> > + * Update only the address of an installed breakpoint on the local CPU without
-> > + * releasing and reserving its hardware slot. The caller must update other CPUs.
-> > + * Return 0, or -EOPNOTSUPP if the architecture does not support this operation.
-> > + */
-> > +#ifdef CONFIG_HAVE_MODIFY_LOCAL_HW_BREAKPOINT_ADDR
-> > +int modify_local_hw_breakpoint_addr(struct perf_event *bp,
-> > +				    unsigned long addr)
-> > +{
-> > +	unsigned long old_addr;
-> > +	int ret;
-> > +
-> > +	lockdep_assert_irqs_disabled();
-> > +
-> > +	old_addr = bp->attr.bp_addr;
-> > +	counter_arch_bp(bp)->address = addr;
-> > +	bp->attr.bp_addr = addr;
-> 
-> [Severity: Medium]
-> Could this early update of bp->attr.bp_addr lead to incorrect perf samples?
-> 
-> If an NMI triggers the hardware breakpoint on the old address before the
-> hardware registers are updated and validated, the NMI handler might locklessly
-> read the temporarily overwritten bp->attr.bp_addr. Would this attribute the
-> sample to the new, potentially invalid address instead of the old one?
-> 
-> > +
-> > +	ret = arch_modify_local_hw_breakpoint_addr(bp, addr);
-> 
-> [Severity: High]
-> Does modifying the hardware debug address register without clearing the DR7
-> enable bits violate x86 architectural guidelines?
-> 
-> When arch_modify_local_hw_breakpoint_addr() is called for x86:
-> 
-> arch/x86/kernel/hw_breakpoint.c:arch_modify_local_hw_breakpoint_addr() {
->     ...
->     do {
->         seq = this_cpu_inc_return(cpu_dr7_seq);
->         this_cpu_write(cpu_debugreg[i], addr);
->         barrier();
->         set_debugreg(addr, i);
->     } while (seq != this_cpu_read(cpu_dr7_seq));
->     ...
-> }
-> 
-> Could this cause unpredictable hardware behavior since the Intel manual
-> dictates that DR0-DR3 should only be modified when their corresponding
-> enable bits in DR7 are clear?
-> 
-> [Severity: High]
-> This is a pre-existing issue, but can the lockless traversal in the
-> blacklist check lead to a use-after-free during module unload?
-> 
-> When parsing the breakpoint, the call chain goes through:
-> arch_modify_local_hw_breakpoint_addr() -> hw_breakpoint_arch_parse() ->
-> arch_build_bp_info() -> within_kprobe_blacklist()
-> 
-> kernel/kprobes.c:__within_kprobe_blacklist() {
->     ...
->     list_for_each_entry(ent, &kprobe_blacklist, list) {
->         if (addr >= ent->start_addr && addr < ent->end_addr)
->             return true;
->     }
->     ...
-> }
-> 
-> If a module is unloaded concurrently, kprobe_remove_area_blacklist() deletes
-> entries and immediately frees them with kfree(). Would a concurrent hardware
-> breakpoint modification dereference freed memory here since kprobe_mutex
-> is not held and RCU protection is not used?
-> 
-> > +	if (ret) {
-> > +		counter_arch_bp(bp)->address = old_addr;
-> > +		bp->attr.bp_addr = old_addr;
-> > +		return ret;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/178611679753.237811.10190793347982785419.stgit@devnote2?part=3
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Best regards,
+Jiebin
