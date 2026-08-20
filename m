@@ -1,25 +1,25 @@
-Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020122.outbound.protection.outlook.com [52.101.195.122])
+Received: from LO2P265CU024.outbound.protection.outlook.com (mail-uksouthazon11021140.outbound.protection.outlook.com [52.101.95.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68CED47CA9C;
-	Thu, 20 Aug 2026 21:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.195.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10AE480DC0;
+	Thu, 20 Aug 2026 21:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.95.140
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787260274; cv=fail; b=Y4CAdyf0xhUCzfRBjwuLQ+G5egVoptvnHEs+04qfSYHLOQgUjf9msbUtj42UO0O7Lxb9Ks4iBw8I6FQXCEcOLwRgwi+bKPDO5fTQLUR+15XoxrUvW+bVPljw3IKg0viIWHM5Yu9HZvHjtyRH79LGu7xpzV+DT8WEuQH189GXDtA=
+	t=1787260278; cv=fail; b=S8CEDu3NHLKwyB2W6djOz6UPxb0RmTJ/+mmn/1T3yD2YUiQNoknntaI3Awe33/cgCcdc6/GzGm8IiAJ9L1i63f+4F9wwedQq/IH6SZqcd8V3kCAs5au4vfTgI2H0WsyTtCi5zNEMGjoMWR9ax0SAejjZPAH/0IL8NDHyPFRKKNw=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787260274; c=relaxed/simple;
-	bh=M4mPYrkIC2N4OLNgMKvuW8ms2ukzoNyhoWPcutMiwRY=;
+	s=arc-20240116; t=1787260278; c=relaxed/simple;
+	bh=ii77AeT6m0X2UvU/nzwocbrlY5Lyo4Ow0u+o0h9HOH8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Vh65o4a/qfy4RTW/5Q79I4nM/QygCHGgKv7Z5T8/LSWlKM9Mb74rIAWWcdC3X9snkcHjrXYfbT6zx17OOiLE+Q4tZ/tSGs7tSj9AVqlSJCF7F58pKDqCX1Uwjk5gJWCm63eYyC2Xt4FnTkZmfWJWhbwr0eOo/YL7oaxKme8VP/g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.195.122
+	 Content-Type:MIME-Version; b=pUyPvANR8KXmk0qwFAxaWgmp4HL7z2PgsFhX/n6oXjjH30w6gQMUWK1DPMEuGe8HmZPqbOhJwl22Isjk0Iyba7M39o+opS3Yf/wRvhZQ2PWRTy6Vm6uHXSq+7i2uLrDHF+YEdVkJuSKM2RbZWGxylGbeADpNbkjbuIIzo+H7TGo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.95.140
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fVj9P4cWl53Ox9UWEz2kqOZLjISYld6Hk1vvxKUZKgmSv+NEqBX5jAuzGOvYuDrcasuwLV/n/pd/nhaDBUgFwklqF3VgnOSsh4ZeJgrOPA3dH0x9WyjVOz9Ja3FCfbqgy345RSfIjljGISzZKNqANgtAAMeO/2v0YEtPjxZwURl0AEoM6sdG6HJJ8GNWJ4eSv480qnKKPoQ555GBBuJrfrSMSpuoPmmRfv1hOPuQu0MhXkmN3DwrIa3r/sqtwKvvR5VEGBSqPtP6H1GQYs0b/fyQms2lSrd+uQZl3MTly+wHGjCP1M6D/lHX7K0MKx3a0n4/1Vd/nyEBTiPvV/F1cg==
+ b=c34PQ63fvQ/ITbeiuoDphWhWZEF3cqVHfPVBosM3s+oNaD7kLqyMA0H9qv6iZe+iAEYda+jo8luejhOpeHNgoSw4diiC/0qFsPp4UmbHQOVgoMciELhD5Bbjdy00EAlGcJ7ePAK2+kPB31NRHsCq4pgdK5Gd+9W3Rq7G5sQgUlfNEZjpO6/XptHzv9fzuZEYJ1Z5Y4Oy2QOjFHmv/d+Hfn+eCJ5hhInE5Z7tjqqCoRXNYoEsIBr2ToaTDHDPT2eal1PZqQDu6Vuvv8056PiVvMSw98Kpjn9ANHf2pL69imxM+SsEPNdySVHquM0vy44NlDeUfYfgeLqht9SzhoO99w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=pOtkPXe0ydO/epUPw9RM4qpO7f6Ta6VAM0/d6I4UDRk=;
- b=taoJUL/52HKgmL9dd9FbRK6ISizRXFG5a+BQh8fHqlWeFmh3zV1UXtFxLvne35E6j6syAwg3kbymXf5b2FyCb0qXZX5tX29LEWwgK2qtTRdCd6Fh9gEybijVFWLbovTEZSM705YfnftSCendABambuWiZ1khMKJXu+FRRtmECZ8DdKSHuGPgOqMuxWsxr1ahGY+0SXHCFQNtvlaUXUwbkt3OaC9rUItnMLEGHpLcbP3Uu1pawWbvnAhuWZkl77pZPEMuN8WwVKYxm7XeA5q3mIfAEXTgl0OHIZ+Ox+ky7kEJEteTsHhbEubZ7lmteJypJkTRL4S4S0dqtW5i7CrtRw==
+ bh=IP+BfKsbnmazkXAfqpmSc//26rL2Y8B9m1qHD2Mhp3g=;
+ b=N+O3cVnEjMFqj8Vwn1Y4FP5P/mqhjnGQKqL8SckJDW+Sg2oFKChN/yMOZt2KzT1PkxdeLApQ9n1rRfQY77LRPYLa6X0I/LdsIC1Sjbc07SK5E5/nnw2PLDRuhvDhQMMMUUsTuig74p2An4uK7jWxMWvKdpoE24WDZPyWKN+EO9d8gMzvItHxqCVEDRruAhe+NGh9KfgtZBBBurqfxLEFT2bYFT2ItrEeLUUWWSj50JEyuyVSQZFFD6gMmF+lythkDJMaFPR2rUDoc3dFhHwygV6N5QuOsi1YobsAa468lqs+MC9J9H8/ayfho6HzhXLmckk1g6m+7bGjBwHDpwurog==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
@@ -29,11 +29,11 @@ Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
  by LOBP123MB9004.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:4c0::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.10; Thu, 20 Aug
- 2026 21:11:10 +0000
+ 2026 21:11:14 +0000
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0339.008; Thu, 20 Aug 2026
- 21:11:10 +0000
+ 21:11:14 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -54,16 +54,16 @@ Cc: mark.rutland@arm.com,
 	rishil1999@outlook.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH perf-tools-next v3 2/4] perf trace: Auto-assign kernel symbol beautifier to function pointer fields
-Date: Thu, 20 Aug 2026 17:10:58 -0400
-Message-ID: <20260820211100.649142-3-atomlin@atomlin.com>
+Subject: [PATCH perf-tools-next v3 3/4] perf trace: Enhance BTF type formatting to symbolise kernel function pointers
+Date: Thu, 20 Aug 2026 17:10:59 -0400
+Message-ID: <20260820211100.649142-4-atomlin@atomlin.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260820211100.649142-1-atomlin@atomlin.com>
 References: <20260820211100.649142-1-atomlin@atomlin.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BN9PR03CA0494.namprd03.prod.outlook.com
- (2603:10b6:408:130::19) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+Content-Type: text/plain
+X-ClientProxiedBy: BN9PR03CA0782.namprd03.prod.outlook.com
+ (2603:10b6:408:13f::7) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -73,206 +73,268 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LOBP123MB9004:EE_
-X-MS-Office365-Filtering-Correlation-Id: 247e8e83-7dd2-4e69-c67a-08defeff8f3d
+X-MS-Office365-Filtering-Correlation-Id: f41b27ce-7fc2-4c1f-f588-08defeff9151
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|23010399003|1800799024|366016|376014|7416014|56012099006|10067099003|3023799007|6133799003|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	F9BWKHmw/bVl2qYfRYWH+QqwoH6+OYFHrY1fbyPZIktXf/3+8R/2g2SvCExpwrLsK66ckl/eF6DYGpmI61Lf2Vqp+hc3vrFsfvKBWdvivfXvTIGs/IaSvTCMBKqRzEjV6mp0c4vvjMW4VJUtPsA77nIf4x9iaLbHJQmcvSJXZYToIyPq+yxUQiSRMMr9iuccgtBnaIkeVrduNRZM5SjRArpnvwId+MmMR1+eZHQAebojmkblaFB3Fxzm3G9ET5BjSWBr5IKM0xhM7Wvb/v5CbJhDOkbuytJBSQkIY4twJem3bLGikxr8M2cs1nYLJbbrrn0T8kzFai+TW51PR7YB170K+BPzTr/aJVjFi5noaAgGqejpiSETwSciyMNyUc/+0xsqi4+0+FqO1Nv6UZ8anQNiUUJrlKJAaE5tQkafOaUeA73oWXw3Zy8HJ8Wkh3lqIbZ272asrYM5/wT/2+5ccT1cFMuugvgAhBmceWFHO/UD7i0oMZmwu0bZFJkq9s64aXoRLjq6VOdxSbPqPa078Losmr+zdUi3VK+P3iz9i7Y+wREto6zKGhaYdM5MeDAAx6U/GVIZBBIsbhtkyS9JoM1AFWXH1zqGZnzvR5MEWfWvTbEut71c1NWjZNO60LtnqEtp/wmMn3qfumgeRw+pe4vv1KNYRJOGJMy4BwNeh9Q=
+	LztfRybjuUkTc7J8klVRYN/popB7xaWbJefZBRWO+xnoJFPaWUQqbI+hOBTd6dnrLScakmdXdFB+eKU+Tn27k7l/+XqQNicUZRTKob7mbZwRQLxrT0/dUjS1os/lK+ursxU1LuMKehJ717uWSjtMOfWIeHdyWLKUNnrFz/EpmI6b9qdL1xzx0un6219IN8nzUUzW4JRvzVyD82BlrVZvUrHAMQlV+F8wD5l+TKaVcxf9z8B6jZICf0hU8J1BtON76z/cjaT5ebbvWIWu4u17z5Soduav/Q9h/rbtUBXJ495L8ShTA8FTWkTWRou5nyhG6MZwPjLEob7A1DQeLfzJ/HkksQXtmfBCKvz1dnF9R81BVvYHKplHemRt9sz2xMz4+qNlOsz6XXrlnUC83Kb0q2ew32YfQihBSDZ3n2IhvjKGhUWJAuTDgjVTSznQLxXosteotrvqFALgv24NaAUaG5pBKdTXBbFQIni532X9AuRsP4mNbCQjadko8qXFAFkEYWKpKkWLXiizWx74CLMWnP3Q0OnuUZrRS+4raZ1pTq0zQ/8dx6J1cji/ZTO6ZXnjx2gHG/3CgSZpUGD/jOk/xS1Q91dlDa0JZJ4IxTJgmkvtXaFC76deV06B9HJOoxikuh2GueXutbNQzlkcAvn2NQTZrjMr3Y7u3gJDoXROpwc=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(1800799024)(366016)(376014)(7416014)(56012099006)(10067099003)(3023799007)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?RDdzdWZGaHNPMU9jd05GQTFDcXU2bDNmTUVFcGRUYmRIVjZVdVZFWTdKeWNl?=
- =?utf-8?B?SzVEeFY0ekI3RGJLK2t2T0x4WWRzVk4vMXE2WjlSVUVIdzEwQWJaZXZMdjVN?=
- =?utf-8?B?MzBoRlRqTEpUQWxsczUza0sreXBHWThyRG9CeityUVFuamx4TXQ1MDVncSsx?=
- =?utf-8?B?akdNMUR2d1VKMldvd0c4U3U3ZENTQVl1dFNLeWg0MGtwSXhCaEtBZ1dOcGdI?=
- =?utf-8?B?ejVZSlN3Vm5RK285bXFNY0RlUlFxVHdmWktsSUU2Y0p4dnNnUHVKY04xY1Vs?=
- =?utf-8?B?ZFVSOTJxOW92SGxHNVhIOGFDQXZBdzcwaTNKOGFDZ0NKb0czTTBndzZiOTRj?=
- =?utf-8?B?amZDLzJFbFNVUi9lbHBKT0NjY01xMHZUYlozY3VSSHdaeVpicWJwMElVeWxa?=
- =?utf-8?B?N3dReXF2WjRzbHZZbCsvQ2M5RmlCVTFJSm1QeGZGeDZmQ3BXVThQelJnemV3?=
- =?utf-8?B?Rlg2WFhSeGtHdDhINGlIc1RwaEQycWk4Q2hHelFTQVY4RGJZTmk4Y2lDOVV4?=
- =?utf-8?B?MFZ6b2dTeFlmR1FSVHpaajRzNit1amZhdFZxL0xZd25IbUlhS205bGNDQm1i?=
- =?utf-8?B?eWxPcmJtYVl1NEJHckJGWEtwTTJJRXVwRnp2empWazRjZnpkSTVtSHEyNFBX?=
- =?utf-8?B?MDJmSnBFT2tuTkdqTHlIcTdhWU15bTRVa2V2UklUZ2pPQnQ2WElZZ09jNVlo?=
- =?utf-8?B?cmFMd3N3OXcwYVdUSkE2T2k5b1RSNnRiVHJWRjdUQWU3U01aenk3MFBmSWRV?=
- =?utf-8?B?dGZyRzE1QXdLTlZhWEZJSWIrYTJ0TnlnemNnNFkwZWhjMUd3MWZGU2JmS2p6?=
- =?utf-8?B?dU9TenhqZGUvYVliMTNMclR1ayt4RlFvL2U1b3pwSGxhVGE2cGkwbmRFTVdw?=
- =?utf-8?B?L0MvNjJWK2ZjakdtSUc0ZXJBZzhSYy90VDRuU2taVndhejVGZ1cxUFQ4bGdS?=
- =?utf-8?B?MzdIVEQ4RS9jTEFwRUV3REhxUlNuWFhiWDNCdHoxNmFlWmxaRTVYZG5DSXZO?=
- =?utf-8?B?OUJSdVlsQUhrT2VFWWt2eUV2LzdLa25sOEhzVWpKZjRVVkZxM1RKMjlYdnR2?=
- =?utf-8?B?ZzFhRG1UZWlISmxsYkltM0FpZXhNNGJNbkNQWGU4VjFDMmkxUGNGbWFINDky?=
- =?utf-8?B?eXloMkc0TjU2WCt6amtra21VdzdYV0ZUckQwbFhqcW9MQ3dvSmUxZ2lOL2k5?=
- =?utf-8?B?dHJJS3F1MGZjRi9XeWRQd1BWbkdyUGhMTmE5Mzh2cjBORS9ERWM0b3pzYVRG?=
- =?utf-8?B?WUpHR1JFOVBMbXYxb2xSdTJWVFJ5S1RUSkNxcHo5OVBtbUx6WU02UUhjV2dS?=
- =?utf-8?B?S3RDWFdLQ2wvbGRoOHBaTlBEaVorTzhlbDc2bnZYYkxEZUZlcVE2UFh4TXA2?=
- =?utf-8?B?eHFnOFBOUll3NFpMUEo0amZQWUdtc2ZBOTk5U3hXdlVBRzNCbXhMOWhhNGpI?=
- =?utf-8?B?WVZXNlU2aENaa2owaWVUUWVzV1BJMFlwSzhBSzN5bmtKb0FqT0llNWJaa0d5?=
- =?utf-8?B?ejJ0bzlSd3drR3ZqS0FkZlVreFpyNzM2cVY1a0hLMWdZazgrMlR5RkRDUC9D?=
- =?utf-8?B?MVRCczlMZno3VS9wc284RUZTeFdRVGhuNHQyS25GSUxkODVoaHlpclpKWnhZ?=
- =?utf-8?B?ckUvNkd2ZFQ5Tit1ME9oN3BUSTZ0ZGNMbCtqK3F0eUttUTFlWTY5UE5GbUF1?=
- =?utf-8?B?SDZUT2pGQnpFTktyNG5WZDVxNVBQTWdNRDcvSVkyRTlJNUZXMG8zWUpvUll5?=
- =?utf-8?B?cS9OSDhuK2ZIU0VLSUk3MTIyMUF6SEsxek02VmZZREJHZEYxVzhSeDVGOGNG?=
- =?utf-8?B?UmZGYXFMQjJvN2Q0ZzFOVnVFRDZKYW9TeHBDdkI5eXYwYm9EdDVGM2FlTEtG?=
- =?utf-8?B?S2QwVnQzQzBRdC91TlpIZjFvYXlOODhlVml3S1M5ek5uc1NTMzYwNXpmNkFO?=
- =?utf-8?B?ZUNod1dsYjhCZndpMnA0WTJtM3BUdVhNZFhyVlN6N09obVR0YmNyd3BVdDQr?=
- =?utf-8?B?UTlTd0MrZW1tbWxrQ0lPaHU1SHVoK0pjM3VzOGUxTlVzdXd5VVNCdGpFYWxm?=
- =?utf-8?B?OExHSnAyd21sU1l0bGFJcnlwYXFWQWs5SzhDTjVvQnhRdGFpOGFQZVorWTMy?=
- =?utf-8?B?STVPUzJKZlc0eGxCUld3WmdYdkdCN0pHOWNUakdhcDdWdDBmVGtCYjFUTWJ3?=
- =?utf-8?B?WTA2S0N1R1QxRFZzNVh0b0RsRFV3OURKVXMydmtIakNSMksrcGUrTGJQTjJM?=
- =?utf-8?B?Q2NtdXZFb09NRytNd1lyRXY3dThOZlVRVHZKTXB2RnQwMkdVMUZ1TWQyQms4?=
- =?utf-8?B?MzlBUXpLd2Rmc1o5Qkk2M2RZMDExdkNPQnZ3OW56WnFZYjV2eE5xdz09?=
+	=?us-ascii?Q?/fC7Emr4igAAG6I3T+avDREY5cXB1bahnbIcO141Q2UcwbJc3++LjlRSiblk?=
+ =?us-ascii?Q?e09MMKclMUV0PRNRT1pzlW1buW73zkNpSLtcNvwlHWmSVmqe/tJpKoNV3GoJ?=
+ =?us-ascii?Q?sVEvjVfHEslv3WxqdHDD0WwPW4BV893yE2nem6C5Sgi4l/r5lRQtkYv3Z71C?=
+ =?us-ascii?Q?XI1jTQI3Yh178wnT/Oo79AM+ghbJeMG6pWBDga8gpYdisGAgwXrRle0D1T1S?=
+ =?us-ascii?Q?8r0nP1wLXT8IKZB4RrkYl9m2THZxd2KGqesozVX8w20w0s0izjXTF/POmOTN?=
+ =?us-ascii?Q?T4oPrafDAqp+XkHzT4GJ+qsLsubvVV2YV68ciIsr+fqqkArJqLSht7OwXuqu?=
+ =?us-ascii?Q?Lex6AXrcB/J2kfx2i+l2wcq25ldwwbjiwwKO7ALupFpSB2+jWYyllMuQwLQ8?=
+ =?us-ascii?Q?vqHRAh5YZRVOTHpuVTc6ZcPG4UYiEeZxo5LHgRtTnUnhHcYasVg/RTTLmXDJ?=
+ =?us-ascii?Q?z9VHvjVDA7gKRSDBsfHOAYsVyZVM6BWXzil1LDYXVQe3+DKT2Y/r2T2Wf0CU?=
+ =?us-ascii?Q?ctmyi7Z38OVqEjqVQ/LfxuUQ2/AAymEC82F7xduODQBByDsFFdfzPpUyqYCu?=
+ =?us-ascii?Q?wszyI3iQ03euBO3xVW/Ie/5lTIB27ZDzZDxjVA0rOVLLrKa592WvGPzGikJR?=
+ =?us-ascii?Q?posWhq9iWjK9U+KmpjtTfK4cFWAl0c1keRYcOzNhcBpEYdlmD4sZYAd5tlo0?=
+ =?us-ascii?Q?Unz9b7eGV8TZipaq/nsUsYb9rHkQan59Acy4jF65cN+qdX0vv4L7JoDFE1U2?=
+ =?us-ascii?Q?sYn/cefJiale/KCem0BiZzNBBZpHkcXZBDhRxwezr+V0jQjSTC9aZl4xOchk?=
+ =?us-ascii?Q?+irYFCg7rMTAuCypeZ4mfuGtc0rjsIGWL0MEQe6ATewVI7YeVdJKMFXbnwkG?=
+ =?us-ascii?Q?0TyXaY8MJrI3IsudSoZ7tkAR7XHM1mMD9HfPS/skUm1YyKjsP3GZqbBE5ACU?=
+ =?us-ascii?Q?8FPOVLPg02gxGV4eKt1qSh3Id2hdHybDK0C/UuEwqQkTgNDvFStJXJakSy+k?=
+ =?us-ascii?Q?52WxDpMtaslyhChhTRroJdUMAB8Y4pTGTNLYDynRK4r0ndcTqjBtZg0TdmBc?=
+ =?us-ascii?Q?QbMceg+sqBGKvWQzWvMsloRmD0WI2HLJDlPyfktcLRzVRxxe7s2wlP75kg0z?=
+ =?us-ascii?Q?PORb6MNCcEwEo54mVmjwk22EI944Px0prq0wJZymGo4ZcVBnt2tkPZaur914?=
+ =?us-ascii?Q?9HYb5il5oADEkV61Ef3pnf3OGoEK1PIZxPpwa2tvoBMkkoB+eiP9QSvyb5Fc?=
+ =?us-ascii?Q?TakEuhSOraB53ksMGYOkOBRLytvcLFLycbV2aHdrubcOX9jjyWhcWhabf3+N?=
+ =?us-ascii?Q?gtoCMGVnwHNmXrBc6mSrt1pB1j+ql3aj839iiaRsGTR+ofnIetGGfrPX7d5H?=
+ =?us-ascii?Q?ZqeXrh7WgjS+ZuPh54oLSk4PQqz6cSaSWpL78eqPvcUW7Ld+VsqcMJITzfUc?=
+ =?us-ascii?Q?mODz3ZP0Y9SBDkwav2blR9duyM6UtkGDfbN8iBN8yZVkap6ymvJUWhqIGY/F?=
+ =?us-ascii?Q?TnprINwND3WgjjCrHPAAe5OwxMnk3N2Lg/HQ5gEXNTCTIkMx8NHB0CqVwVIG?=
+ =?us-ascii?Q?Nv5yoAItla9HMKlXE1e4KGQTMl+bACkW81kRpG2XOIVclA3TAnRF1KxSpNNl?=
+ =?us-ascii?Q?hnotZy94r76fsXO4zlN2qiqEo+KKXyNUYHzw9hntEgsLj91qZSbE5Fbn9Vsb?=
+ =?us-ascii?Q?P/4ENa85XQSHhYnGNG+36HTqpkZ5aT2SRmhf7rdqy4mglHbOqQK0iS7b3T80?=
+ =?us-ascii?Q?IBy5+6woUQ=3D=3D?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 247e8e83-7dd2-4e69-c67a-08defeff8f3d
+X-MS-Exchange-CrossTenant-Network-Message-Id: f41b27ce-7fc2-4c1f-f588-08defeff9151
 X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2026 21:11:10.8153
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2026 21:11:14.2742
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: hCXNZshinbpj8SANQZi4tYhksIZXuvvJF0jBAVE33wlxcQxUAJhI7aTp2Ie20azaqppbc5FJEJEHLvqdgj9ZUw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9wIE9Wz+RBFlcFcXOkLJhVI4df9P4FwhqZMQA9GI2NbDS/Tn4mshmp6TVnGA1zfQBgZAWDeS+d1MT+fcLEg+3Q==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOBP123MB9004
 
-Tracepoint fields that convey kernel function pointers, callbacks, and
-call sites, such as "function", "func", "fn", "callback", "action",
-"handler", "caller", "location", "callsite", and "call_site" are
-currently formatted as generic hexadecimal pointers by default.
+When BTF (BPF Type Format) metadata is loaded from vmlinux, 'perf trace'
+can inspect the precise C types of tracepoint and system call parameters.
+However, function pointer arguments are currently not recognised during
+BTF pretty-printing and default to hexadecimal output.
 
-Enhance syscall_arg_fmt__init_array() to automatically detect function
-pointer fields by type signature (e.g., typedefs ending with "_func_t"
-or "_fn", or C function pointer types containing "(*)") and assign
-SCA_KSYM as their default beautifier.
+Introduce btf_is_func_ptr() to inspect BTF type hierarchies
+(i.e., traversing pointers, typedefs, and type modifiers) to determine
+whether a parameter resolves to a function prototype
+(BTF_KIND_FUNC_PROTO).
 
-Additionally, register common function pointer and callback field names
-within the sorted syscall_arg_fmts__by_name lookup table. This ensures
-tracepoint arguments such as workqueue:workqueue_execute_start.function
-and csd:csd_function.func are symbolised automatically without requiring
-explicit per-event configuration. For example:
-
-    ❯ sudo tools/perf/perf trace --event workqueue:workqueue_execute_end --max-events 2 --show-cpu
-         0.000 [000] kworker/u32:15/236682 workqueue:workqueue_execute_end(work: 0xffffffffab2f1420, function: toggle_allocation_gate)
-         0.132 [000] kworker/u32:15/236682 workqueue:workqueue_execute_end(work: 0xffff8ac2c1adc010, function: flush_to_ldisc)
+Generalise BTF type caching via syscall_arg_fmt__cache_btf_type() to
+handle structs, unions, enums, and function pointers alike. When a field
+is identified as a kernel function pointer, trace__btf_scnprintf()
+routes its value to syscall_arg__scnprintf_ksym(), enabling automatic
+zero-config symbolisation of kernel function pointers whenever BTF is
+available.
 
 Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 ---
- tools/perf/builtin-trace.c | 71 +++++++++++++++++++-------------------
- 1 file changed, 35 insertions(+), 36 deletions(-)
+ tools/perf/builtin-trace.c                  | 87 ++++++++++++++++-----
+ tools/perf/tests/shell/trace_btf_general.sh |  2 +-
+ 2 files changed, 68 insertions(+), 21 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 003048946503..bb8f4fd9ba24 100644
+index bb8f4fd9ba24..4182906449a9 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -2096,6 +2096,17 @@ static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
- }
- 
- static const struct syscall_arg_fmt syscall_arg_fmts__by_name[] = {
-+	{ .name = "action",	.scnprintf = SCA_KSYM, },
-+	{ .name = "call_site",	.scnprintf = SCA_KSYM, },
-+	{ .name = "callback",	.scnprintf = SCA_KSYM, },
-+	{ .name = "caller",	.scnprintf = SCA_KSYM, },
-+	{ .name = "callsite",	.scnprintf = SCA_KSYM, },
-+	{ .name = "cb",		.scnprintf = SCA_KSYM, },
-+	{ .name = "fn",		.scnprintf = SCA_KSYM, },
-+	{ .name = "func",	.scnprintf = SCA_KSYM, },
-+	{ .name = "function",	.scnprintf = SCA_KSYM, },
-+	{ .name = "handler",	.scnprintf = SCA_KSYM, },
-+	{ .name = "location",	.scnprintf = SCA_KSYM, },
- 	{ .name = "msr",	.scnprintf = SCA_X86_MSR,	  .strtoul = STUL_X86_MSR,	   },
- 	{ .name = "vector",	.scnprintf = SCA_X86_IRQ_VECTORS, .strtoul = STUL_X86_IRQ_VECTORS, },
+@@ -122,6 +122,7 @@ struct syscall_arg_fmt {
+ #ifdef HAVE_LIBBPF_SUPPORT
+ 	const struct btf_type *type;
+ 	int	   type_id; /* used in btf_dump */
++	bool	   btf_type_cached;
+ #endif
  };
-@@ -2198,31 +2209,10 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
- 		    ((len >= 4 && strcmp(field->name + len - 4, "name") == 0) ||
- 		     strstr(field->name, "path") != NULL)) {
- 			arg->scnprintf = SCA_FILENAME;
--		} else if ((field->flags & TEP_FIELD_IS_POINTER) || strstr(field->name, "addr") ||
--			   field_has_hex_fmt(field, len))
--			arg->scnprintf = SCA_PTR;
--		else if (strcmp(field->type, "pid_t") == 0)
--			arg->scnprintf = SCA_PID;
--		else if (strcmp(field->type, "umode_t") == 0)
--			arg->scnprintf = SCA_MODE_T;
--		else if ((field->flags & TEP_FIELD_IS_ARRAY) && strstr(field->type, "char")) {
--			arg->scnprintf = SCA_CHAR_ARRAY;
--			arg->nr_entries = field->arraylen;
--		} else if ((strcmp(field->type, "int") == 0 ||
--			  strcmp(field->type, "unsigned int") == 0 ||
--			  strcmp(field->type, "long") == 0) &&
--			 len >= 2 && strcmp(field->name + len - 2, "fd") == 0) {
--			/*
--			 * /sys/kernel/tracing/events/syscalls/sys_enter*
--			 * grep -E 'field:.*fd;' .../format|sed -r 's/.*field:([a-z ]+) [a-z_]*fd.+/\1/g'|sort|uniq -c
--			 * 65 int
--			 * 23 unsigned int
--			 * 7 unsigned long
--			 */
--			arg->scnprintf = SCA_FD;
--		} else if (strstr(field->type, "enum") && use_btf != NULL) {
--			*use_btf = true;
--			arg->strtoul = STUL_BTF_TYPE;
-+		} else if (field->type && (strstr(field->type, "(*)") != NULL ||
-+					   strstr(field->type, "_func_t") != NULL ||
-+					   strstr(field->type, "_fn") != NULL)) {
-+			arg->scnprintf = SCA_KSYM;
- 		} else {
- 			const struct syscall_arg_fmt *fmt =
- 				syscall_arg_fmt__find_by_name(field->name);
-@@ -2230,6 +2220,24 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
- 			if (fmt) {
- 				arg->scnprintf = fmt->scnprintf;
- 				arg->strtoul   = fmt->strtoul;
-+			} else if ((field->flags & TEP_FIELD_IS_POINTER) || strstr(field->name, "addr") ||
-+				   field_has_hex_fmt(field, len)) {
-+				arg->scnprintf = SCA_PTR;
-+			} else if (strcmp(field->type, "pid_t") == 0) {
-+				arg->scnprintf = SCA_PID;
-+			} else if (strcmp(field->type, "umode_t") == 0) {
-+				arg->scnprintf = SCA_MODE_T;
-+			} else if ((field->flags & TEP_FIELD_IS_ARRAY) && strstr(field->type, "char")) {
-+				arg->scnprintf = SCA_CHAR_ARRAY;
-+				arg->nr_entries = field->arraylen;
-+			} else if ((strcmp(field->type, "int") == 0 ||
-+				    strcmp(field->type, "unsigned int") == 0 ||
-+				    strcmp(field->type, "long") == 0) &&
-+				   len >= 2 && strcmp(field->name + len - 2, "fd") == 0) {
-+				arg->scnprintf = SCA_FD;
-+			} else if (strstr(field->type, "enum") && use_btf != NULL) {
-+				*use_btf = true;
-+				arg->strtoul = STUL_BTF_TYPE;
- 			}
- 		}
- 	}
-@@ -3297,12 +3305,6 @@ static unsigned char bitmap_byte(const unsigned long *mask, int byte_idx)
- 	return b_val;
+ 
+@@ -979,21 +980,61 @@ static size_t syscall_arg__scnprintf_getrandom_flags(char *bf, size_t size,
+ #define SCA_GETRANDOM_FLAGS syscall_arg__scnprintf_getrandom_flags
+ 
+ #ifdef HAVE_LIBBPF_SUPPORT
+-static void syscall_arg_fmt__cache_btf_enum(struct syscall_arg_fmt *arg_fmt, struct btf *btf, char *type)
++static bool btf_is_func_ptr(const struct btf *btf, const struct btf_type *type)
+ {
++	while (type) {
++		if (btf_is_ptr(type) || btf_is_typedef(type) || btf_is_mod(type))
++			type = btf__type_by_id(btf, type->type);
++		else
++			break;
++	}
++	return type && btf_is_func_proto(type);
++}
++
++static void syscall_arg_fmt__cache_btf_type(struct syscall_arg_fmt *arg_fmt,
++					    struct btf *btf, const char *type)
++{
++	char name[128];
++	const char *pos;
++	size_t len = 0;
+ 	int id;
+ 
+-	type = strstr(type, "enum ");
++	arg_fmt->btf_type_cached = true;
++
+ 	if (type == NULL)
+ 		return;
+ 
+-	type += 5; // skip "enum " to get the enumeration name
++	/* Pointers to enums are memory addresses, not scalar enums */
++	if (strstr(type, "enum ") && strchr(type, '*'))
++		return;
++
++	if ((pos = strstr(type, "enum ")) != NULL)
++		pos += 5;
++	else if ((pos = strstr(type, "struct ")) != NULL)
++		pos += 7;
++	else if ((pos = strstr(type, "union ")) != NULL)
++		pos += 6;
++	else
++		pos = type;
++
++	while (isspace(*pos))
++		pos++;
+ 
+-	id = btf__find_by_name(btf, type);
++	while ((isalnum(pos[len]) || pos[len] == '_') && len < sizeof(name) - 1) {
++		name[len] = pos[len];
++		len++;
++	}
++	name[len] = '\0';
++
++	if (len == 0)
++		return;
++
++	id = btf__find_by_name(btf, name);
+ 	if (id < 0)
+ 		return;
+ 
+ 	arg_fmt->type = btf__type_by_id(btf, id);
++	arg_fmt->type_id = id;
  }
  
--static bool trace__field_is_ip(const char *name)
--{
--	return !strcmp(name, "__probe_ip") ||
--	       !strcmp(name, "caller_ip") ||
--	       !strcmp(name, "call_site");
--}
+ static bool syscall_arg__strtoul_btf_enum(char *bf, size_t size, struct syscall_arg *arg, u64 *val)
+@@ -1027,10 +1068,8 @@ static bool syscall_arg__strtoul_btf_type(char *bf, size_t size, struct syscall_
+ 	if (btf == NULL)
+ 		return false;
  
- static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *sample,
- 				       struct thread *thread, void *augmented_args, int augmented_args_size)
-@@ -3404,14 +3406,11 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct perf_sample *
- 		 * Suppress it by default to avoid cluttering the output.
- 		 * If verbose mode is enabled, ensure it is formatted as a
- 		 * hexadecimal memory address rather than a signed integer.
--		 *
--		 * caller_ip and call_site are also expected to be instruction
--		 * pointers and should always be represented in hexadecimal.
- 		 */
- 		is_probe_ip = evsel__is_probe(evsel) && !strcmp(field->name, "__probe_ip");
+-	if (arg->fmt->type == NULL) {
+-		// See if this is an enum
+-		syscall_arg_fmt__cache_btf_enum(arg->fmt, btf, type);
+-	}
++	if (!arg->fmt->btf_type_cached)
++		syscall_arg_fmt__cache_btf_type(arg->fmt, btf, type);
  
--		if (is_probe_ip || trace__field_is_ip(field->name)) {
--			if (is_probe_ip && !verbose)
-+		if (is_probe_ip) {
-+			if (!verbose)
- 				continue;
+ 	// Now let's see if we have a BTF type resolved
+ 	bt = arg->fmt->type;
+@@ -1038,19 +1077,22 @@ static bool syscall_arg__strtoul_btf_type(char *bf, size_t size, struct syscall_
+ 		return false;
  
- 			printed += scnprintf(bf + printed, size - printed,
+ 	// If it is an enum:
+-	if (btf_is_enum(arg->fmt->type))
++	if (btf_is_enum(arg->fmt->type)) {
++		if (type && strchr(type, '*'))
++			return false;
+ 		return syscall_arg__strtoul_btf_enum(bf, size, arg, val);
++	}
+ 
+ 	return false;
+ }
+ 
+-static size_t btf_enum_scnprintf(const struct btf_type *type, struct btf *btf, char *bf, size_t size, int val)
++static size_t btf_enum_scnprintf(const struct btf_type *type, struct btf *btf, char *bf, size_t size, unsigned long val)
+ {
+ 	struct btf_enum *be = btf_enum(type);
+ 	const unsigned int nr_entries = btf_vlen(type);
+ 
+ 	for (unsigned int i = 0; i < nr_entries; ++i, ++be) {
+-		if (be->val == val) {
++		if ((unsigned long)(__u32)be->val == val || (unsigned long)be->val == val) {
+ 			return scnprintf(bf, size, "%s",
+ 					 btf__name_by_offset(btf, be->name_off));
+ 		}
+@@ -1108,33 +1150,37 @@ static size_t btf_struct_scnprintf(const struct btf_type *type, struct btf *btf,
+ }
+ 
+ static size_t trace__btf_scnprintf(struct trace *trace, struct syscall_arg *arg, char *bf,
+-				   size_t size, int val, char *type)
++				   size_t size, unsigned long val, char *type)
+ {
+ 	struct syscall_arg_fmt *arg_fmt = arg->fmt;
+ 
+ 	if (trace->btf == NULL)
+ 		return 0;
+ 
+-	if (arg_fmt->type == NULL) {
+-		// Check if this is an enum and if we have the BTF type for it.
+-		syscall_arg_fmt__cache_btf_enum(arg_fmt, trace->btf, type);
+-	}
++	if (!arg_fmt->btf_type_cached)
++		syscall_arg_fmt__cache_btf_type(arg_fmt, trace->btf, type);
+ 
+ 	// Did we manage to find a BTF type for the syscall/tracepoint argument?
+ 	if (arg_fmt->type == NULL)
+ 		return 0;
+ 
+-	if (btf_is_enum(arg_fmt->type))
++	if (btf_is_enum(arg_fmt->type)) {
++		if (type && strchr(type, '*'))
++			return 0;
+ 		return btf_enum_scnprintf(arg_fmt->type, trace->btf, bf, size, val);
+-	else if (btf_is_struct(arg_fmt->type) || btf_is_union(arg_fmt->type))
++	} else if (btf_is_struct(arg_fmt->type) || btf_is_union(arg_fmt->type))
+ 		return btf_struct_scnprintf(arg_fmt->type, trace->btf, bf, size, arg);
++	else if (btf_is_func_ptr(trace->btf, arg_fmt->type)) {
++		arg->val = val;
++		return syscall_arg__scnprintf_ksym(bf, size, arg);
++	}
+ 
+ 	return 0;
+ }
+ 
+ #else // HAVE_LIBBPF_SUPPORT
+ static size_t trace__btf_scnprintf(struct trace *trace __maybe_unused, struct syscall_arg *arg __maybe_unused,
+-				   char *bf __maybe_unused, size_t size __maybe_unused, int val __maybe_unused,
++				   char *bf __maybe_unused, size_t size __maybe_unused, unsigned long val __maybe_unused,
+ 				   char *type __maybe_unused)
+ {
+ 	return 0;
+@@ -2566,7 +2612,8 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 
+ 			default_scnprintf = sc->arg_fmt[arg.idx].scnprintf;
+ 
+-			if (trace->force_btf || default_scnprintf == NULL || default_scnprintf == SCA_PTR) {
++			if (trace->force_btf || default_scnprintf == NULL ||
++			    default_scnprintf == SCA_PTR || default_scnprintf == SCA_KSYM) {
+ 				btf_printed = trace__btf_scnprintf(trace, &arg, bf + printed,
+ 								   size - printed, val, field->type);
+ 				if (btf_printed) {
+diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
+index 7a94a5743924..255468eff128 100755
+--- a/tools/perf/tests/shell/trace_btf_general.sh
++++ b/tools/perf/tests/shell/trace_btf_general.sh
+@@ -49,7 +49,7 @@ trace_test_buffer() {
+ trace_test_struct_btf() {
+   echo "Testing perf trace's struct augmentation"
+   output="$(perf trace --sort-events -e clock_nanosleep --force-btf --max-events=1 -- sleep 1 2>&1)"
+-  if ! echo "$output" | grep -q -E "^sleep/[0-9]+ clock_nanosleep\(0, 0, \{1,.*\}, 0x[0-9a-f]+\) += +[0-9]+$"
++  if ! echo "$output" | grep -q -E "sleep/[0-9]+ clock_nanosleep\(.*(struct __kernel_timespec|\{1,).*\) = [0-9]+"
+   then
+ 	printf "BTF struct augmentation test failed, output:\n$output\n"
+     err=1
 -- 
 2.55.0
 
