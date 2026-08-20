@@ -1,181 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from CWXP265CU010.outbound.protection.outlook.com (mail-ukwestazon11022094.outbound.protection.outlook.com [52.101.101.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93C0A358373
-	for <linux-perf-users@vger.kernel.org>; Thu, 20 Aug 2026 17:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787245223; cv=none; b=sQXz5Xco8uV4FbzcehhmOWekzgUM89iyuXGGNVY5KJO8Lv1A8brkwNg4thFPBNlRVuLjTrgvn2fM1lhTreHm1HF0+sBHxT/g0SfY9oORjfdK51K7je+ozgulqse5HL2pwt8/sE5xOzbXqSR8x9aHFOdTlcj09XcEq8h7euOR0+w=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787245223; c=relaxed/simple;
-	bh=lY+gW9CX7a4UzgtmaEBTiNjqZJBTfWITIhL5GVe6elo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=pHTnBX3mwHYHo1cZPCdtoyBjeVO88nzXERlggk0hB83a0dEsMLriiYoe0olHJbGDKYv2PEfTR05aq/kLedKiyVG5aFSD5R2U/WYwW726ZBfJtDQUdva7Fi4crYE2uAiDyAEfmY+7h5N7tAmoQMGewq2tf0Na0kGrH660p5VBFNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EAC9mpPC; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EAC9mpPC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 151081F000E9;
-	Thu, 20 Aug 2026 17:00:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787245222;
-	bh=xbD/tZlE2H5AfffB1MbyHDQwVvPZNdyvXZHWR/z7Dck=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EAC9mpPCrkhAcr0jIOmxD9n3/bxcIvHUCRytzvg4uPxSkJjLAJjB5zTSP98/SHLW9
-	 qjiL2juLX0LTdan0STfI40kZ202xIjg3Mrb1aIGlMkrje2SVT9EEu+qeWu771ZubQA
-	 cWPeFmlTC7LgzzF0kbLGBIR2giiR0HOt3EgnmrPWlt8AtI+OGp+/RaCRwC+w93VnEl
-	 /X8+NzmbWUqHc3dg8vNr9lvwHuYfBPOdZOyRtI6GSZ0tQZUZcHKDVewpZZ9v69J+M4
-	 I6g5sgXrdQqjNYkWvLWrYJkDaG2UaXbF5Ib4sNd9THMSXpG9D0rNRo8dr5lSc0P+jm
-	 GSQ/rJ+GgEEmg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6] perf record: Fix unhandled POLLHUP on non_perf_event
- descriptors
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260820164937.2734066-1-irogers@google.com>
-References: <20260818003101.520874-1-irogers@google.com>
- <20260820164937.2734066-1-irogers@google.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021573803E8;
+	Thu, 20 Aug 2026 17:16:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.101.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787246167; cv=fail; b=nza0jIQ/DCMJwthMOGpKrPC373nWpGEPxsc8hzm5O/QIn/9wb6CuvEMzj13tYbW0kMBzKePisOuZetE7SHU8Vw4JJqnzh/iTKucsXNWGBL/GYP53Gsa1WcdaYxmyrnn2+Ik7eodHgKjrfUh6g1WHhf1hZcI1mPPyZHXUVLLHVb8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787246167; c=relaxed/simple;
+	bh=K4iJZ2E46jjSbHnAJC9dZBgRvzwbiCAulNbi4bSS2TU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=G5JIcEMv3K8nU3xkbO+QiiTpEMvGGQaLVYdhmh2YmZVEiG6Ftk8BIMQcOqQ9xm2pQCVkMKVCXskdnPRH93EjXMJ8e03DBVTSZVRNRHDEa7sorp5bU0W4PzawA4dnyvneaju7oXcMJAIvMIyJyy8A7eYTxFGN4n3zwCbgXlNZqR8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.101.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=iYZG6emXHRygkvzeiopv3wwYasFn0UuPH7O2Mxm+wY3hkn30oWl0U5YczbeBoV7fd8W1JyYcmY3xNGSNacGdIYssrs7OhQiu1c4iw1nXbv+70YZds3NiET0e3HYmb7QwXRLJTKpWFfYEOSQeXUraVzBc0F/WTRNbzpmM8PnFTxhHcCqwn01RaCbyR0Eg5qVMuF/wTyosc939H1UOAjxdBjoD+gRbtDE2UK06ex3N+Uyvtr9aJtHmYimnxZ3kulxo1o3vHLXlEYYNR3/OSRtS+AnEF3wnACpHnvkEiI1DgN1euM4gsXoSn+RlYTsHiB/237dGx6RL+PqDms49E3hdhw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=0+1W/MDs14HCQ3pQJaBz4FJf85tMswfnQCqi6lLxQwg=;
+ b=jiLqcQL9W5eKZpJGAFmxHPF026tc4Z7ODPIHP4WFnCUtoUspGY4Jf1bpQIhy6rSDRqn3E3YbXRjv2K7Sz2GqYZZ/V52+XPqmJ+wcdkmtUCtGlLPqQtZeJRpJcUD5iXzwTK3hqyZjixLAQmnl4eNJBwjBATid5ZC2tMY7yS35LMToYx3hDMwkdoogSJxMdZ3dOLpUmwgj5jO/TBCNPb4L0DBU8pK+xAx2862KTggv2WsLWu/ULCbhljaT+2BcHVMBUJJp2yFuZYzv1aymvqAT22lhM8GVioYQDqwbGD1m80c/EhZ5DsXDQMfi9HuOBPDSar5LWDuK0CG/Wf+Uj81/4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
+ by LO0P123MB4203.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:155::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.10; Thu, 20 Aug
+ 2026 17:16:02 +0000
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0339.007; Thu, 20 Aug 2026
+ 17:16:01 +0000
+Date: Thu, 20 Aug 2026 13:15:56 -0400
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: Ian Rogers <irogers@google.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
+	howardchu95@gmail.com, neelx@suse.com, chjohnst@mail.com, sean@ashe.io, steve@abita.co, 
+	rishil1999@outlook.com, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH perf-tools-next v2 0/4] perf trace: Symbolise kernel
+ virtual addresses and function pointers
+Message-ID: <kq4m6kjetnnkkgpxd6zypalu7rlov3xwruswk5camvvq5nmomw@opml2baj2upg>
+References: <20260816205921.576365-1-atomlin@atomlin.com>
+ <CAP-5=fXfpP_GN=DqeOMrrLUyy6xJ6GEcVo0TVkej9f0KTPfK+Q@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 20 Aug 2026 17:00:21 +0000
-Message-Id: <20260820170022.151081F000E9@smtp.kernel.org>
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXfpP_GN=DqeOMrrLUyy6xJ6GEcVo0TVkej9f0KTPfK+Q@mail.gmail.com>
+X-ClientProxiedBy: CH2PR18CA0031.namprd18.prod.outlook.com
+ (2603:10b6:610:55::11) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO0P123MB4203:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8d25d0c2-4dd3-48e8-85db-08defedeb55f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|23010399003|7416014|366016|1800799024|6133799003|10067099003|4143699003|56012099006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	0bAZIw2JiDGIIsvprr9Z2U29ZFFppPv24tNujtId0iJ3WorkyKxCFZc5TE/twhnqJ5yz7UmEqxXGe4h0MrFr7jtTUpzljRY2GvhsFyjCq2K9SbVlpjKXAmWTfaW65EEiE+2RqELy0QuY+a3v24ONS34hVVHifh4yf4TXmWfNabUgg4CC4uVYiZitCEETq4C0UDXjhEFh9KkoNysgmz+KZi9qW9QYfWNInSI9DrmNqhyEgHsaFLKWf8VLVaq2JarH5XZwGqX4Sw9Mh4NgmN+hakgkXe2r0LdZIi/BOoYJnti/l3BQvmZ0JGWGT/NZsGuwDq3kGGfnf1IJNOsubbDoBvr7PlSsnIr1UMHVXuwEgKI6MZBm67P6ICBK69lO+tML1hehVKsaPzh1LFIke3elOpEubtRKHpkubmj+usW5wocpx1paD1KOwWN+BSxRqP0amzwy4Fvbc3kTQnZRzDM0IZ5WSTQWMhsFe1cRzoyb5BHAaMQXovyoccqEtFpkB1wmcr3MUhJrdtRCV5hENXpIhlfMr/Wby0ZkR0268tA1IwPF5Tz4hE1uD4Ku/RFQ80CG7GUihVj3itFsl1d9G9IFGnvMIsK8qY0aXlYcmlZFG3MNyUklsqyp6SvlhTsstpuDwnaxXXDWD0AySxnEQE9OdSodiDwGHIk5bLXHj7oo88M=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(7416014)(366016)(1800799024)(6133799003)(10067099003)(4143699003)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YVNzR0VGMEM4My9XR1hHVWJWZWY2bkZ4QVVkbGYxZ1kwc3ZjYUJqVjlJa05W?=
+ =?utf-8?B?MG5ad3RjczY3NGpIUzFaTld1U25HRGJQS0RjREdQWUw3U2wyWEt5V1Z6MnNC?=
+ =?utf-8?B?SndkckdhUDUzZjVDS094UDEzbHc2dXR0eEFMNzY1UGRQTzgwM1MwM3h2R2sw?=
+ =?utf-8?B?aUZ0MmV5UlR1ZGZoNHdqZTAvblNvdW5KSkpTMGtiUDFlUlY2SE5MS1g1akRa?=
+ =?utf-8?B?ekdvc296N2J4QmtWWWZOdXkvem5rRmFad0gvVHFOc1F1RHJQaWoxemxVWlgy?=
+ =?utf-8?B?eHRjczNwRkxUbE1mOCtDaUZvTjQrRHpVWjNNZ3dkUEdCRWcvdlhRelViU1JU?=
+ =?utf-8?B?dW1WK2VBYVVDWnFZNWh2dEJocGpJM2VuRmgxSW5tRGZlRmR0b0YrTGkxUTBa?=
+ =?utf-8?B?L0ZObHVUSWt6RXFVNmFMQXFFL2NPTmEwWHZ0cC9DcTlLYXpoUml1a0F2ckx2?=
+ =?utf-8?B?Ui96K204OHBPU01rQXNVeVRlNnJRL2p4NnhtSnNUUHhVZzdRUXN6R1RUVXlV?=
+ =?utf-8?B?QlNVaEVXZjIxd0tUYzR6ejdCL0NPWCtpS3VHTTh1UzJML3lCQzJoQkw3ZWgz?=
+ =?utf-8?B?dmMzS21QRHNSOUJHTVpMQjdCWEtxT3R0UmhXbDFaSEdyc3Y0T0pkWGRSZXF2?=
+ =?utf-8?B?dXk2bnFqdnYxTGdiYmJlL2gvcU0rOS80STFqUG9hUVdTb25ZQzdZZXR1WENC?=
+ =?utf-8?B?QUlNWmJXajJveU44YzBpZ1JsajdzQ2x5YWluQXNMYTdyS2IxQXZLV3hSdXA4?=
+ =?utf-8?B?YXV0c2ZqenQ4TVhnUlJFeTJybUJ4WEcwLzNlV3EyaTZGdGc5aU5rYUFFOGtr?=
+ =?utf-8?B?NnlvQUJzUTdHRzdBeHhTNFBvQkI1eTFjZjhDSzdCNHZrTVVDUHowRE10RUtM?=
+ =?utf-8?B?amxqazBpN2dFWVBpL2cxcEErSkhrQU5HT09HbXJ6YkpKUG9DdWtFSkhlMFAw?=
+ =?utf-8?B?UmdaMTd1bmU3aVlKUi8zTnc5WGZ6N2owRVpod2xGb0FUWXFoaHJuZXpNb3Ay?=
+ =?utf-8?B?TUkvS05BSkxReXphU0pNTUJ3MmhINUE4Y1JaUmx0TDFXeWFQaEE0Y0xjazEx?=
+ =?utf-8?B?Wmx2UnNYMnVJVHRiWGVxYWZ2WVhDWGpVWm8wOXFXUXJRdzRxVlJFTHFieFRy?=
+ =?utf-8?B?NnNwRlppeVZ2dFhsdDcxY3hyYmtoaXhwWWZ0UUZQdXNiN3ZNUUxaVUZXWXBI?=
+ =?utf-8?B?dkJYRVdkM1kwb3JNQm5JZUx0QUZLNGp5cERWSUh3MTJ5NmRmaFFvWDJMKzM1?=
+ =?utf-8?B?SWRhTUR4b1QraFRtdVlCREE0eVBWaTRJWUpiY2JjZDVoRDdyMml4ZTZ0cytP?=
+ =?utf-8?B?VnJqZDl4Z2ZnS0pERXorNENWY2lvbW96RHhZWEp5TDZFUzdJNnY0QnZSaXRZ?=
+ =?utf-8?B?Nk1ZSWp1b1VydmJjWWNkZEZkRk9ocWRjeDBnRGx5NFN3QTgzaE5waTVOTzlL?=
+ =?utf-8?B?c2tRT1RlUk1FQkJVa1prZlBqaHMydzdvbWpmaG55VEVDRTRsTEtoN0NGWFJD?=
+ =?utf-8?B?NFNVTDRlMDJhc3lJalBHclY0d3d4ZFpROVdrWldiRHFaTlZKdEhOZjNxaHVO?=
+ =?utf-8?B?cmZBZzhxQWozY2NuYmxqZzJzSlhpTDE1VklSSWtwOGJ0VU9GSWx2Sys3Y1Fy?=
+ =?utf-8?B?V09FMWRwUGIwenc0bi9saVZnK085SlQxOS9GMlg2N1daV25TbVBJcVcya2RM?=
+ =?utf-8?B?TU5OUk16bUhyTDlCN3Q5eisrTnpqc0tMNkZ5ZUMvaUZPc2FBS0ZlYmUrc3I1?=
+ =?utf-8?B?WWJudnd2OVNjeTNaTGFyRDc2UUlkanV2R09xQUJvSVJJS3dWL3RndTNNUmhG?=
+ =?utf-8?B?NnZkUzIxd210SFcwUGttOVQrU3FOaWMwVm50RE9DcU9PRzl3OEZuNEpWb2JB?=
+ =?utf-8?B?WDF2YlZUQWljK0pJa2wrTW50aldKYlJVNmFsMGNqdWhQdjJNU0hhNWNnVmwx?=
+ =?utf-8?B?S2s2RjV1NU9xb1BEdkdZSWZnTlkzYUpCTHFoaHN2Vnc2WXY3MElRaCt0bEtL?=
+ =?utf-8?B?ZW14b05NWkxGUW56VyswTjRacTFCaUFyU1hkVm5DdSs0M1FRZUxWaUc5NnJS?=
+ =?utf-8?B?ME5aYTBwWVpXcU9JM3ZGays0YXpMRG1BZFlQUGtLd3JJOThjZmpRUjFjLzNz?=
+ =?utf-8?B?Njg4TWJSRC92TUJ1K2pQWTRDUFpjdlpBQnlReUh1NWFnTVlhbGVGaGt2STBG?=
+ =?utf-8?B?TTRFQlNFanB3S2Y4SWxkNEZoQnpHcFZSWHQzVFBjSkMvSjdJY3QrYjBEOFhE?=
+ =?utf-8?B?NFBVQmR3b3loeExjM2lXZGFQUUJZSEVNWVp6ejlaVWtoR3FBZFhKRGNwdFAx?=
+ =?utf-8?B?Z0huM0EwVG9qU3V3cDNxQmxDVENESFRNWWpJVEIwclY3Z2hTYW9uZz09?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8d25d0c2-4dd3-48e8-85db-08defedeb55f
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Aug 2026 17:16:01.4663
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: T4sJhVDZio6+8DOBA/QvCz1BE424nr8f81V7sxFak44g7RMGRA5ZruYy99/CjsTRNXkotQ0zICPgwNjJpLaIrw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P123MB4203
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] The synchronization logic added to `record__update_evlist_pollfd_f=
-rom_thread` is flawed and fails to prevent the `-EINVAL` index mismatch abo=
-rt on `POLLHUP`.
-- [Medium] The newly added unit test `test__fdarray__filter` fails uncondit=
-ionally, breaking the perf test suite.
---
+On Mon, Aug 17, 2026 at 03:52:07PM -0700, Ian Rogers wrote:
+> On Sun, Aug 16, 2026 at 1:59 PM Aaron Tomlin <atomlin@atomlin.com> wrote:
+> >
+> > When inspecting kernel execution flows using perf trace (e.g., when
+> > monitoring workqueues delayed work items, timer callbacks, etc.),
+> > tracepoint payload arguments containing raw kernel virtual addresses are
+> > currently rendered as hexadecimal values (e.g., 0xffffffff81234567).
+> >
+> > This requires manual symbol lookups against /proc/kallsyms or vmlinux to
+> > identify the underlying kernel function being executed.
+> >
+> > This patch series enhances perf trace by introducing kernel virtual
+> > address and function pointer symbolisation using perfs native symbol
+> > engine (i.e., machine__find_kernel_symbol()).
+> >
+> >     Before:
+> >       workqueue:workqueue_execute_end(work: 0xffffffffab2f1420, function: 0xffffffffa8046b50)
+> >
+> >     After:
+> >       workqueue:workqueue_execute_end(work: 0xffff8ac2c420f270, function: wb_update_bandwidth_workfn)
+> 
+> This looks great and a test! I noticed Sashiko feedback on patches 2,
+> 3 and 4. It looked appropriate and actionable. I'm looking forward to
+> the next version and testing!
+> 
+> Thanks,
+> Ian
 
---- Patch [1]: [PATCH v6] perf record: Fix unhandled POLLHUP on non_perf_ev=
-ent descriptors ---
-commit a78a902826b55b27b98ff151dcb9dd5753ba4611
-Author: Ian Rogers <irogers@google.com>
+Hi Ian,
 
-perf record: Fix unhandled POLLHUP on non_perf_event descriptors
+Thank you!
 
-This patch attempts to fix a premature teardown during recording sessions b=
-y=20
-propagating the finalized teardown status (-1) from the core evlist back to=
-=20
-the thread's local pollfd array when a POLLHUP is received. It also adds a=
-=20
-unit test to verify that fdarray__filter() properly preserves items marked=
-=20
-as nonfilterable.
-
-> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-> index e915390556752..719869efdde59 100644
-> --- a/tools/perf/builtin-record.c
-> +++ b/tools/perf/builtin-record.c
-> @@ -1180,6 +1180,16 @@ static int record__update_evlist_pollfd_from_threa=
-d(struct record *rec,
->  		int e_pos =3D rec->index_map[i].evlist_pollfd_index;
->  		int t_pos =3D rec->index_map[i].thread_pollfd_index;
-> =20
-> +		if (e_entries[e_pos].fd =3D=3D -1 || e_entries[e_pos].events =3D=3D 0)=
- {
-> +			/*
-> +			 * e_entries might have been finalized by evlist__finalize_ctlfd().
-> +			 * We must propagate it to t_entries to avoid index mismatches
-> +			 * and to prevent a poll storm on the next iteration.
-> +			 */
-> +			t_entries[t_pos].fd =3D -1;
-> +			t_entries[t_pos].events =3D 0;
-> +		}
-
-[Severity: High]
-Does this synchronization logic happen in the correct order to prevent the
--EINVAL index mismatch?
-
-Looking at the main loop in __cmd_record(), fdarray__filter() mutates the
-thread's local pollfd array (zeroing events) before
-record__update_evlist_pollfd_from_thread() is called:
-
-tools/perf/builtin-record.c:__cmd_record() {
-    ...
-    if (fdarray__filter(&thread->pollfd, POLLERR | POLLHUP, ...) =3D=3D 0)
-        draining =3D true;
-
-    err =3D record__update_evlist_pollfd_from_thread(rec, rec->evlist, thre=
-ad);
-    if (err)
-        goto out_child;
-    }
-
-    if (evlist__ctlfd_process(rec->evlist, &cmd) > 0) {
-    ...
-}
-
-Because evlist__ctlfd_process() hasn't finalized the core evlist's array
-yet, e_entries[e_pos].events will still be POLLIN, bypassing this new check.
-
-Since the thread's events field was just zeroed by fdarray__filter(),
-the strict equivalence check below (POLLIN !=3D 0) will still fail and abort
-the session with -EINVAL.
-
-> +
->  		if (e_entries[e_pos].fd !=3D t_entries[t_pos].fd ||
->  		    e_entries[e_pos].events !=3D t_entries[t_pos].events) {
->  			pr_err("Thread and evlist pollfd index mismatch\n");
-
-[ ... ]
-
-> diff --git a/tools/perf/tests/fdarray.c b/tools/perf/tests/fdarray.c
-> index 40983c3574b12..2d3db7b754a17 100644
-> --- a/tools/perf/tests/fdarray.c
-> +++ b/tools/perf/tests/fdarray.c
-> @@ -80,6 +80,30 @@ static int test__fdarray__filter(struct test_suite *te=
-st __maybe_unused, int sub
-
-[ ... ]
-
-> +	if (fda->entries[2].fd =3D=3D -1) {
-> +		pr_debug("\nfdarray__filter() illegally modified nonfilterable fd!");
-> +		goto out_delete;
-> +	}
-> +	if (fda->entries[2].revents !=3D POLLHUP) {
-> +		pr_debug("\nfdarray__filter() illegally modified nonfilterable revents=
-!");
-> +		goto out_delete;
-> +	}
-
-[Severity: Medium]
-Will this test fail unconditionally?
-
-Looking at fdarray__filter() in tools/lib/api/fd/array.c, it appears to
-unconditionally clear the events and revents fields for any entry matching
-the filter mask before the nonfilterable flag is ever evaluated:
-
-tools/lib/api/fd/array.c:fdarray__filter() {
-    ...
-    if (fda->entries[fd].revents & revents) {
-        if (entry_destructor)
-            entry_destructor(fda, fd, arg);
-
-        fda->entries[fd].revents =3D fda->entries[fd].events =3D 0;
-        continue;
-    }
-    ...
-}
-
-Because revents is unconditionally zeroed, won't this check always evaluate
-to true and cause the perf test suite to fail?
-
-> +
-> +	fda->priv[2].flags =3D 0; /* reset flags */
-> +
->  	pr_debug("\n");
-> =20
->  	err =3D 0;
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260820164937.2734=
-066-1-irogers@google.com?part=3D1
+Kind regards,
+-- 
+Aaron Tomlin
