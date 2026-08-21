@@ -1,50 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16821474255
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 09:56:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0FD46C833
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 09:57:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787306185; cv=none; b=dWFeWjAorDfrcFoW8YVpbMdcAoKWkXfNfRgduG1Xl9vo6xp1+hFy5quFdg25xfTZqWRGJexbBECSTBs32gqWOZ7+cXJ05m6YTgsjlqjhBYO1y3Ibl9uMODrDDkBRWuFKdamS5EwNONQ4AyNDBHeBHrkHtbXxQ70jYESr2PP+muo=
+	t=1787306284; cv=none; b=tYQWCjNxoOTSVf07d/5SgmTU2M4hlDIHM4nWQWEbE2fyN17BwphquQMrUV+7PQbhON/gUbisoCdyb3t/8CPWVa7hqHySKrPtpLDsyqQJ7b27bONtURA+BxWxhAnpQpMOxyC0IaVfN7lsfpIVhY+wmGPNXL2hJnn7xh2jm/bZVVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787306185; c=relaxed/simple;
-	bh=iM0dms7u1kDs07KxrBML6R8449KUq6QV2UnfwEDi48g=;
+	s=arc-20240116; t=1787306284; c=relaxed/simple;
+	bh=EJIha4Z9pvZ/7dQ0EB35K/ZfgSkWdpbhipgs+QroFWQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=FmqIXbEKPI9DkrspSdRT7djqD4zi9/POp8AOkreNhera9Mmh5Sr7Ib9UPB0xvdrCpZ2tIxAdtNfuooiEbG3t9CcI7SxrN/4AXGsY7WmUK+j4Giz39FCFwM4cuWMnBuQh+a2XRgwm70K8RpijVr/3rSQYBFlwb8C6L1g+Owx/4L4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LfJadK3/; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=dQ3A9Z+eFUF5ZrHQNfjsERzxAppGZGfe1WP/QTLadK/pZy28qXiCsXJT55PttJpbXOKs5K32zLEqVeXbVXZVXejOn7TI0G4KKLKkX7tQv2Cl9yiBM9v2yoTT1UABuvtMdUXgsCt4RXpeHMaNm7/yuG7UuBUHjaQEXvX4EsG5BG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dz2Qvdng; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LfJadK3/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E52C1F00A3A;
-	Fri, 21 Aug 2026 09:56:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dz2Qvdng"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 319B31F000E9;
+	Fri, 21 Aug 2026 09:57:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787306174;
-	bh=iM0dms7u1kDs07KxrBML6R8449KUq6QV2UnfwEDi48g=;
+	s=k20260515; t=1787306275;
+	bh=tR6M2NNtb9v5myUe+oUQnoJQFR4ffBtkGbu94cvo970=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LfJadK3/oz4ejtY2j7FP4eRvw0+OTDbxgo1gEc2MsBIkCNfgrbrHjA2V0sXGEecKN
-	 HLWscZjU912GSGiZ7jmit0kh9QS9pCc+TUMPE9IDN2AA2u7iq1taU/VuQ39Xxew3vK
-	 dLXVyxLHcNhtHLweer5paWxoB4FphEB1EAAhDitqIcxoccAE6gFjDSbYYUpYTG2uM2
-	 velsiCxwN4IeYwj2JooxLruotOZqIsETRSWSxHVsmBs+iDnQCXFDvyRwJSkAUsYVqI
-	 SIH2f1TXGHYapy0VLhGGOG34CLLTZ478QnUZz4ZHlViYMUWqyy90maQtk401IDG2I9
-	 buQuDi6jkxeqw==
+	b=dz2QvdngB6umJHhfpgX00rjUL50okJNoNiVSQYvaq0C5IEiSModdd4Gj6BHKl7Kt4
+	 5lc0id2Jxq06NU50d6ZYmDqA8ISPdR0t8+fr0sUlxu+/jDxxb58Mt5YRPtjRB6qVlt
+	 uIsz9KNkymW+QEv1oOHTd95By9fgaX8j+1KKZ9a0p5symuawVAmP5O/dgppM3kTMd2
+	 4M/BpEbCofO6JDfVsQPa+EYxdObZPEIBbShYqoS5+64/ZTfR6PnWYFGYBmskOyS/Zh
+	 pm6BpQ3KCSlDZyj8tJCBCKUgaa7bYshDw45gZ0FTxVqSLt8uGPcId1Y3sc5vFmMuN4
+	 EMaqBgAPTxtZw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 02/14] perf cs-etm: Warn for invalid timestamp option
+Subject: Re: [PATCH v2 07/14] perf arm-spe: Use generic snapshot search
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Clark" <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260821-james-cs-unformatted-per-thread-fix-v2-2-00c4fd0701b4@linaro.org>
+In-Reply-To: <20260821-james-cs-unformatted-per-thread-fix-v2-7-00c4fd0701b4@linaro.org>
 References: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
- <20260821-james-cs-unformatted-per-thread-fix-v2-2-00c4fd0701b4@linaro.org>
+ <20260821-james-cs-unformatted-per-thread-fix-v2-7-00c4fd0701b4@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 21 Aug 2026 09:56:13 +0000
-Message-Id: <20260821095614.5E52C1F00A3A@smtp.kernel.org>
+Date: Fri, 21 Aug 2026 09:57:54 +0000
+Message-Id: <20260821095755.319B31F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Instead of silently returning an error, print a useful warning.
+> The new generic snapshot search gives a similar result as the
+> reimplemented version of it here. One slight difference is in the
+> pointer fixup. SPE has:
+>=20
+>   *head +=3D mm->len;
+>   *old =3D *head - mm->len;
+>=20
+> Which gives exactly the same result but written in reverse order to the
+> generic one:
+>=20
+>   *old =3D *head;
+>   *head +=3D mm->len;
+>=20
+> SPE also had a special fixup case for head pointers greater than the
+> buffer length, which is not needed because the SPE driver always wraps
+> them, and __auxtrace_mmap__read() handles that anyway. It also didn't
+> have the special case for old > head for when the wrap heuristic fails
+> but the pointers showed a wrap had happened.
+>=20
+> The other feature lost is that this search only looked from head to the
+> end of the buffer, rather than always at the last 512 bytes. This was
+> flawed because once head is close to the end, it's likely it could
+> contain zero padding from actual SPE data and a wrap would be missed.
+> It's better to err on the side of caution and mark as a wrap, rather
+> than trying to optimize by limiting the search from head onwards.
 >=20
 > Signed-off-by: James Clark <james.clark@linaro.org>
 
@@ -52,5 +76,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260821-james-cs-u=
-nformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org?part=3D2
+nformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org?part=3D7
 
