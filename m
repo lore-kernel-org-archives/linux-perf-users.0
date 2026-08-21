@@ -1,68 +1,68 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 447493DA5DC
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 09:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE3E46985F
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 09:49:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787305781; cv=none; b=Q0npT+of17bY0IgX7RMf4rpf60YACt9wLXHostut7uRASGeQ6xkZ0REt+qmpslOOjKGDc/tLr/xrS96LTGWrID5FEkHZFOuCEXwSgGvsHw7OtMMvGXu7jdOnaQaz30oPE0+C5EbeVZYVhNFIugGvOV3JujWh1lg6L5CcZ/gKIeY=
+	t=1787305784; cv=none; b=ARXXbr6AaNpUyHG+hzyozvv8na+oCcaO/s2M+NKnmToGFZp8xgpEeAvl6GsWt96FEv6IufuQbSkeqt/na9jPGw2o+qVCxJsDH7qckgwXGMwiDhHNGgaJN3xM99ByLeLXdwGCJ2dlvUFCrcrT0TkaKx6tFoRUrLUnf1AjWrnGFzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787305781; c=relaxed/simple;
-	bh=BvEhtMEa1nXBKNc/TSdOjljZ3zSi1XnO2c5vq2aQM0o=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jMRp6dOyXnkGMMpXtGUzUveHY+9Ir+n0+sHC030VPDcqSSKl11Qxp/hmRzrP7xz7l9M+scA2DPe7Dsw52UWcRux63NcgmDCWZR7vyYrolysOhDAvN0cW/rIpv5dOdvLDN03n2AKzORv12+TRIL8V5axkWZlCFHcBdvTCjmbsvHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=X3LOmKJI; arc=none smtp.client-ip=209.85.221.41
+	s=arc-20240116; t=1787305784; c=relaxed/simple;
+	bh=RecoXOCNMxrMx0zkiKfC1PDkmODYasriw0nUGDxsh8Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=WrlRE8s7aZjIsqLUjrz0Q33AWXW33nDR87YZnkH/uIuCS9y9hl3KMH/3B2Rq2HLl9yfpts4YXz4nrAfRv16LucWgktauLlZ1sryYq3Ec46oTWpWkbCfO96Bdk1aMHAvKXrKxYs1kW08v6EOThGoH21Mn7LVyjiKOy4W8l/FZ6k4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KsjdWvMe; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X3LOmKJI"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-4815bce4652so504380f8f.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 02:49:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KsjdWvMe"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-47fd66a094eso272878f8f.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 02:49:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1787305765; x=1787910565; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:content-type:mime-version
-         :message-id:date:subject:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=nglHA7/3MMjKEoG2M+lIJ5S7PK5gm+FyJaV8ZvyaR0k=;
-        b=X3LOmKJIC78BcFEKnTSnvPaM2hb+Kg73ZgSuWuz58TyGh0K75z03kKbhCARg6YvpAq
-         Oww9ty699No9IVdTvlHv6LnPmbG0OExAgu8juE3cQ8IPrgyDojEN4GqpWKgXM3yg0jmz
-         ab257/4vxHfJoe7P45KwzPgbKaYT4crGrRypql1VrAsir1HCVJSLf86Gk/vLoVqIZjCm
-         OmGiss61Smc6l030GTuCMVIHOzUwLBfY729tE4toCdShtTFIDtM10fCIJJJJoe56luLW
-         2PpL3wsHkp+iGViTv2Bt4InEZTk5kStyA6FqktjhWwElVq7q5DKGAQjV7gAFMAybPpAb
-         VNAQ==
+        d=linaro.org; s=google; t=1787305771; x=1787910571; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=bcFhjwes9A89zvUuGgSpPmP9VQvVv75EU6Q8BfuMsS4=;
+        b=KsjdWvMeIFX9sdU1ll+27diRGYXannmkx1oxidLQLoYhsgYdunjdNaxra7hwrjW1qj
+         +YKlKQ35w3SCe9ArSPkhm6Hq1sAUXwSGyqerHyGmR/EC9v8zvpytCyXRtpDWnL5gAtcj
+         i4YN0rjCRpFzc0//qYFdd+B0xjD06AS49SU+ZZzWpOOywKeBdqguGGRQ1cg2j9H9IDYe
+         587n6KTZofTlYW3oIfoWC/svyFe0jTNqX63YkGtwn2xHscRLlA9FairwTegYMtmN1YaX
+         HtjtVshcrw+CTdKTxBQNzhuYA9idqwUZ6c+au4PxpUpeNrkrOioh5u8cmu6kNTHh6vhB
+         AS/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787305765; x=1787910565;
-        h=cc:to:content-transfer-encoding:content-type:mime-version
-         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to:content-type;
-        bh=nglHA7/3MMjKEoG2M+lIJ5S7PK5gm+FyJaV8ZvyaR0k=;
-        b=I2vQCvTGloPVuTvj2ML1qg1k6JCd+a+WYLRY0qdondWlBtNPcGMWqfbw+ABotBKQrS
-         PDCCQCjdidgoVKaoNpwQxqQiYqRMkmlGywSxeUfE8IGqa4y6IudFndQZzVnt+sS9Dej/
-         WHDUya/DD53bEwdVgpcz4oH0f0l1OaNamzmptGlszgau4y7jg+hgUkVnnE7gDZa27Us6
-         Rc8+EqsaOS9GzxMa0863LLkTNJGJcD5YOSIj6o772I/3CnP2PiCxySWnDqMERKJGS1rI
-         KDwQ6V3Yex5zBCEE4xOgm9zps1dHZTgYWO2aHq4oQpWWPiOSe9qm3+jIGhFV11ll6eKl
-         gqJA==
-X-Forwarded-Encrypted: i=1; AHgh+Rqi7DRQravCeaPoM71qiPae1RiihjZK03+GoA0IsO1C/e2QGbs1k8P7H3rBnKTg16TFOebH7TYXu9eYINlfSr9W@vger.kernel.org
-X-Gm-Message-State: AFuF++k3l0lrlPqJ8HwIEv8DvYZIeupm/tcH63hX2CDv1mtn5gUfRYpi
-	n+UZ+NCpnA16H7r32xXynfbFe7aodmsb4+ruNo0TvsYIm52jFYilMTCo1K6BU2xPKhg=
-X-Gm-Gg: AR+sD119UjPjXM0Q1tsqTwIn3i8+F9sgwQt7I8tPsiXXaHDSFUeEuWWZeZnbsF4M0VF
-	Utf3Wtl9pPaIzZcRbmit3gWpNQwo34yzYDYd540IBPjXw0ww5FBg6fmtYFurCGadP9HdIl45h8J
-	eQh4xi04ptfuY4sSF5gmDe6+78YFYSwumMLjoKbuIZz3pz2rq4LwvZMEOXvb4RCVFI3l1euSW8O
-	kpFMuBivuf2hcetnjyzv1PyUD5IO5UN00tw7+vGjha2H1FS1AeipBruOeTkG5VzPZhyQfxx3XmD
-	AsJHCqrachCQPruCFRdLfs8iByY7KrsM7FImrR1yaYk1gOAEuG1HDx0jb5kQN2pLNq512PxvvsO
-	j/wc1LORWZVoe9zb5ahpcQa1Fczw0658LVdgLGFHhC6rPTp0C90gaZNEAhSeizS1nXUZlDZWnGl
-	yRM+2vJSXCCZNshW43CVVrNB9R8NUhWUgvCc1D4BcjHp4K4wvEGrh+fdk0hEGySa8vC26h6zkMN
-	x0=
-X-Received: by 2002:a5d:59a7:0:b0:47f:93e4:5389 with SMTP id ffacd0b85a97d-482c0bb3a9fmr7556210f8f.20.1787305764643;
-        Fri, 21 Aug 2026 02:49:24 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1787305771; x=1787910571;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=bcFhjwes9A89zvUuGgSpPmP9VQvVv75EU6Q8BfuMsS4=;
+        b=fYj1vLHnw1I1jqEIrVAXlPEyPUJn/8rQSZkZyH0Au8ONAh1G7PD4Vm+Bi1j/EAuS6+
+         jLfgpzg56EVv3A3h5nOxwejKSuPWlce7dvayfW+6cEH7EZewsBTblbaIrpd8l7PFiXV6
+         VAwJUL5uUKFR0RfOtJzlIbGCcGXHdllgpfQ+wYFaPUK2CSd7dvl9VFSRepm0oqORVNPD
+         rF5Taz63KEAdb+ZoXepJz5yCNNVdpTGGpknRK/Rq7x4e8Y/7GhqMXiQI2pZU9MQQ744S
+         tAUis5F7qlxn8xDbEk1M3EJJoax4JfFDwGnhUPdRSGLw8RFfrGrxhWVXIF0x8s0PcYt0
+         nL5A==
+X-Forwarded-Encrypted: i=1; AHgh+Rq8bWVzO8c+gVfIz8AMyamw7S1Xw0dOWd/H9SBNVdote0eMHEnUQX/tlnhJANyK1qRq/gJ46T5C00bEBuvSW6R3@vger.kernel.org
+X-Gm-Message-State: AFuF++l4y7+3s4py2Ppk8ppAg6hiCMZYqLBqSh5JeY42rYlaz2Tcpg7w
+	w0U9dDzxHLyjq+XM0dE+PM2a7gMHAqMHU1z03ytzIOdb90jcfY1qas7I3JxyFerScXI=
+X-Gm-Gg: AR+sD13nP4rh/Uiano6GbL4StiNTWu/R2OwvY+PXRHqdthFLgrUo9qaIcoX53la+PQI
+	rwir5THLfGih5mPDoiUeFIxbZ2JQnUUiuzig2rou4XhcCTcelh+Js0vpNFRR+VbrNPC2Dv1n4d0
+	m8Id97Rptrn5hqxkJUIHxNw4CgurNvUb4NzsKaCkNx1Yt3hWMKDfPFrGysQZAgokdSdjbEiAl5x
+	3N3YBZKTdTEaiAGTDlWX71YYC5bdwOf1WrtzuivTyA5LmJAvTn/KL/COy5hw0L3YPdd6fUKccvm
+	MBPMHJkr7NWDPV4agEoAZ4AIxZkJXbOXKzAgyTTz64o6giNff1zFxPaBblGwnO54mrhLKy0pLWZ
+	BmW1Ekbuy0QpANeOxhM/nPEptfsARenHWCKqqAZqW6mlsfM3ZkcPPEiq0/QNsgWxwjG12J+MTHx
+	rePLXb6gdsZyGgesNRBCQNAfglM9M5SN6nxU0nrHadbjocBoyIJu3qboouLW9jlTgV
+X-Received: by 2002:a05:6000:461c:b0:47f:86d5:d1d7 with SMTP id ffacd0b85a97d-482c0b63396mr7979910f8f.6.1787305771015;
+        Fri, 21 Aug 2026 02:49:31 -0700 (PDT)
 Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b14d05a6sm17683479f8f.35.2026.08.21.02.49.23
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b14d05a6sm17683479f8f.35.2026.08.21.02.49.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 02:49:24 -0700 (PDT)
+        Fri, 21 Aug 2026 02:49:30 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Subject: [PATCH v2 00/14] perf cs-etm: Per-thread mode fixes and snapshot
- wrap support
-Date: Fri, 21 Aug 2026 10:48:58 +0100
-Message-Id: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
+Date: Fri, 21 Aug 2026 10:49:03 +0100
+Subject: [PATCH v2 05/14] perf cs-etm: Increase default timestamp
+ generation period
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -71,11 +71,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAofiGoC/42NQQ6CMBAAv0J6dk1bUkBP/MNwaGALa6Ql20o0h
- L9b8QMeZw4zm4jIhFFci00wrhQp+Az6VIh+sn5EoCGz0FJXspIG7nbGCH2Ep3eBZ5sSDrAgQ5o
- Y7QCOXmAk1rq0tnYSRS4tjFkfl1uXeaKYAr+P6aq+9tdvlPqrvyqQcJGmMqVqnHFN+yBvOZwDj
- 6Lb9/0DwG6C0tcAAAA=
-X-Change-ID: 20260605-james-cs-unformatted-per-thread-fix-50e723aa7f0e
+Message-Id: <20260821-james-cs-unformatted-per-thread-fix-v2-5-00c4fd0701b4@linaro.org>
+References: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
+In-Reply-To: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
  Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>, 
  John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
@@ -94,68 +92,54 @@ Cc: Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
  linux-doc@vger.kernel.org, James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.15.2
 
-Fix a few issues with per-thread mode:
-  - With TRBE, thread migrations hit a queue without a decoder assert
-  - On nVHE, everything looks like guest trace instead of host
-  - Tracing multiple threads didn't really work
+The original purpose of timestamps in per-CPU mode was to roughly emit
+samples in the order they occurred across multiple CPUs, rather than
+emit all the trace from CPU 1 followed by all from CPU 2 etc.
+Previously there was no way to change the interval from the minimum of 1
+cycle, but custom intervals are now supported by the driver.
 
-After adding a tests for those, it turns out there were some snapshot
-bugs not picked up by the other snapshot tests. That showed that the
-different snapshot searches for Intel BTS and Arm SPE were inconsistent
-and I think all tracers can benefit from using the same pointer fixup
-logic, so that gets refactored into the common auxtrace.c. Then SPE can
-just share the Intel BTS search as it was obviously copied from it
-originally. IntelPT keeps the more advanced duplicate data search, but
-in the future that could probably be made the common one and all tracers
-would benefit from using it (except maybe BTS if it always has a very
-small buffer, but I doubt the overhead of the duplicate search would be
-an issue). For now this is more of a refactor rather than behavioral
-change so don't do that yet.
+Drastically reduce the number of timestamps emitted by increasing the
+interval, which is more than enough to interleave sample generation.
+This reduces the size of the trace generated.
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
-Changes in v2:
-- Remove stale "may be reset to -1 in per-thread mode" comment
-- Set CPU when queueing auxtrace fragments otherwise
-  auxtrace_queues__add_event() overwrites the queue's CPU
-- Link to v1: https://patch.msgid.link/20260811-james-cs-unformatted-per-thread-fix-v1-0-90565318f5f8@linaro.org
+ tools/perf/arch/arm/util/cs-etm.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
----
-James Clark (14):
-      perf cs-etm: Fix nVHE per-thread decoding
-      perf cs-etm: Warn for invalid timestamp option
-      perf cs-etm: Turn on context packet timestamps in per-thread mode
-      perf cs-etm: Use per-CPU queues for per-thread mode
-      perf cs-etm: Increase default timestamp generation period
-      perf auxtrace: Turn Intel BTS snapshot search into a generic one
-      perf arm-spe: Use generic snapshot search
-      perf auxtrace: intel-pt: Use new snapshot_has_wrapped callback
-      perf cs-etm: Queue partial AUX records
-      perf cs-etm: Don't print missing buffers in snapshot mode
-      perf auxtrace: cs-etm: Capture wrapped snapshots
-      perf test: Allow infinite named_thread loops
-      perf test: Add test for per-thread mode
-      perf cs-etm: Test multiple per-thread threads
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index d0486a164a70..d36b7e41399b 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -70,6 +70,9 @@ static const char * const metadata_ete_ro[] = {
+ 
+ enum cs_etm_version { CS_NOT_PRESENT, CS_ETMV3, CS_ETMV4, CS_ETE };
+ 
++/* Default timestamp period of 256 cycles (2 ^ (9 - 1) = 256). */
++#define DEFAULT_TS	9
++
+ static bool cs_etm_is_ete(struct perf_pmu *cs_etm_pmu, struct perf_cpu cpu);
+ static int cs_etm_get_ro(struct perf_pmu *pmu, struct perf_cpu cpu, const char *path, __u64 *val);
+ static bool cs_etm_pmu_path_exists(struct perf_pmu *pmu, struct perf_cpu cpu, const char *path);
+@@ -458,7 +461,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+ 		 * Timestamps are required to interleave samples from different
+ 		 * CPUs.
+ 		 */
+-		evsel__set_config_if_unset(cs_etm_evsel, "timestamp", 1);
++		evsel__set_config_if_unset(cs_etm_evsel, "timestamp", DEFAULT_TS);
+ 		/* Context IDs are required to associate trace to a process */
+ 		evsel__set_config_if_unset(cs_etm_evsel, "contextid", 1);
+ 	} else {
+@@ -477,7 +480,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+ 	 * timestamp tracing.
+ 	 */
+ 	if (opts->sample_time_set)
+-		evsel__set_config_if_unset(cs_etm_evsel, "timestamp", 1);
++		evsel__set_config_if_unset(cs_etm_evsel, "timestamp", DEFAULT_TS);
+ 
+ 	/* Add dummy event to keep tracking */
+ 	err = parse_event(evlist, "dummy:u");
 
- Documentation/userspace-api/perf_ring_buffer.rst   |   6 +-
- tools/perf/Documentation/perf-test.txt             |   2 +-
- tools/perf/arch/arm/util/cs-etm.c                  |  30 ++++-
- tools/perf/arch/arm64/util/arm-spe.c               | 147 +--------------------
- tools/perf/arch/x86/util/intel-bts.c               | 115 +---------------
- tools/perf/arch/x86/util/intel-pt.c                |  58 +++-----
- .../perf/tests/shell/coresight/per-thread-multi.sh |  78 +++++++++++
- tools/perf/tests/shell/coresight/per-thread.sh     |  48 +++++++
- .../perf/tests/shell/coresight/raw_dump_stress.sh  |   5 -
- tools/perf/tests/workloads/named_threads.c         |   7 +-
- tools/perf/util/auxtrace.c                         | 136 +++++++++++++++++--
- tools/perf/util/auxtrace.h                         |  20 ++-
- tools/perf/util/cs-etm.c                           | 101 ++++++++++----
- 13 files changed, 384 insertions(+), 369 deletions(-)
----
-base-commit: 9453bc6a69ef43755f1c28d5688cacdd69fa16bd
-change-id: 20260605-james-cs-unformatted-per-thread-fix-50e723aa7f0e
-
-Best regards,
---  
-James Clark <james.clark@linaro.org>
+-- 
+2.43.0
 
