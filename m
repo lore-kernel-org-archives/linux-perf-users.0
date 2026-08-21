@@ -1,188 +1,273 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022077.outbound.protection.outlook.com [52.101.96.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FEA1F8723
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 18:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FCD35B63C;
+	Fri, 21 Aug 2026 20:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.77
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787337250; cv=pass; b=dThX63VO2klDoa9qAFW5mcgOTUgz3RG0eE9rDv3uH9U/ByOgjLtHYrdwLXTWljf1qSvnp5o7mA5dufKYpHsHjMiBS/leZt0h12KswOVer/5ZRwBr5irOfFhcc16flijx/1a7WPqJI5fdobjoNsLu1p2OH3W+KC6VA5NMRXKFWH8=
+	t=1787345380; cv=fail; b=pJxTskCZAKOpaIwqMMaFpDhhfEbUpDfOhrorMdQOpqDt4kOrmFlfXzc//QEE/QBnwwCMAsYsGysSEUEPfSpUnU0BWAhmYrgXbamZhPr3SUxtI+fpeNfQUqdqIAYTkKedHkjrDfDfRu5BlSO4Ngit5zm11zBVhgVXVuzj9H9orF0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787337250; c=relaxed/simple;
-	bh=2A92KqKoCJmcZ56ZasJV/t7WaDXgH6qSgLNOV+CEQaQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k8wlAuCkPOKIdztIAuivGEC2BvDgw7ycLsyIupZdBp4kW9MHkkugv15s9uQjlwOuDwiNkHuSPUyTSn6i66TKTZZ2XOunB2D1M1IiGIitKUrabYuy0zguTmYkMSV63/YeLQQs8BqrioetPSezmsp1WOn6khn+TxQextZbll5i4ts=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rUeypJUo; arc=pass smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rUeypJUo"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-c966b9ee9cbso951985a12.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 11:34:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787337248; cv=none;
-        d=google.com; s=arc-20260327;
-        b=dIUTyIGV7BUBdV40S+xof2ZCiYF1Y8pqoJQ8H9fi1vErp9mWCq4seqYTbXXibrlrDd
-         NxGPnPAwty1aqN4wC9PT8ukNSnuOERdIkVmfOUXR8YLIhmm21Pa4MwW7E6kGhOIGSmAo
-         Y0YWeq+iaytJwsxHWNgN2dJSoRjOYeuvbgBI0YDpnd7SFK2KLe/sZs92mS+z3JoiBW6I
-         ZY0n635bIDhbSuK0QmjZ1GuV75inMbjnRcQ502gmPC1gwClIaCHUkEx7x9wCWvwpappt
-         SQpHmXVFfU9ofQ/VpmCay8YIaP2qGfGBQH0nmps/qYKYT+sPn1k9LkdvVEDpso8LqaV9
-         3n/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Y0Ukbw5yEgIofWImq0KqMRHmw7+kGVu41QRqHiQ2DTo=;
-        fh=Gy0WA4i3gCVvRd6pBXQiyjPn0sa2o9QCPzSsFUGu1SA=;
-        b=n7zixbGGX+fPv0dbINv0ajuK0mT1M41cZI89CCxqECGQT9hvwNtTwFWE6VM+HDVSin
-         mHVYomIltJ9ZeOGMdS8AOahikNezUza784vs9PEgMz60znrUgjVoKY1zpXCtTtzxXJof
-         IEQg2ciew0dHK6xAVRupprQPgS/VPQ7PtPV/8XnDuRy32T4ClOFyMJKZNRU9v48CdSXz
-         w3x0sXUTM1OzOwLZ8unfSLk9shk4HO/UhEIFiGyafswSIx6gWOvNIFBxFflfvfAzfdgK
-         KTV4jlUN6yxNRcI7A5W2i4W/oJLSx5TkejvV3voOVm8ZMpQ3JGNbLO4oYr0kKimqn0qS
-         9jDw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787337248; x=1787942048; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Y0Ukbw5yEgIofWImq0KqMRHmw7+kGVu41QRqHiQ2DTo=;
-        b=rUeypJUoO2uLmKZLOE7GfBMYob3PTQ79N2DcnLL/LhJC9mDO3pnAKaNL6TNfaECykp
-         CcamObRLnWx4MkSQST827fTRgvOgLogbCnIX2KEEb09oBCGGzv4lgmL/m5O2GLzPftsQ
-         qY3DXd/vAAzAVewNLOE69Kt1QpZb++e+P/jcjl6iotOmTmpoM3mGMankC5y8lfISy00Y
-         7UZ+bDBD/BaS5AyeE8fWo13zbjIA3PWepTsJ9JRnGSveeGHu4NTpPQBJEAPmWUvpwtc3
-         jmeef3xFBzApf3iKM4ztzTGKpD2ywjEc2b5AqP/xFc6RLEIfryNNrSqzG93pknqk0a19
-         obww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787337248; x=1787942048;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Y0Ukbw5yEgIofWImq0KqMRHmw7+kGVu41QRqHiQ2DTo=;
-        b=GgYeNiHXHkPa1+riIFTORK3XjJOo74ww6J/SZXKgvq1bDv0whZq+OPMqNIaSP72oRu
-         J+eqynND5Cs+UfJWCZT0TkAOoZd3wqPG1x3MK9z2Kt+LTR7tlvWn/yBHeueuxGWi/v9R
-         gu+oFtMzTrIqIwJecg1+cm4OrN0xr6+Fb2HEKGVVyevlcDenZUwi+XWw642hAmNuuweW
-         4iHfrGN7DPakaBvzHg1BS1jzhgXay8F1NCB2Uyldb2Yxtlya9mzHi/LVSLJK2YDndreg
-         Gb0aIK4yn725UXXISubjqul4loguJI2GNoupTCwbqkgvu4AMjUcSnJ3MgSEZq8Lt/dEP
-         XTqg==
-X-Forwarded-Encrypted: i=1; AHgh+Rr+pgHULcAIGp2nHvUgQQo8vO/ce9dVjLCA0VSOuOR0l2iDdemzQPtckndz6B/DeiEY5XjalFiafriH0cD+jAZI@vger.kernel.org
-X-Gm-Message-State: AFuF++kzLlKvxu1eWs7CKj0oq23/A6xJs4QTsfvqraoIaFJHgYUjkRan
-	j2uIVp4967GjI9gOJ5CeaaGafeorTOPsh4qSa2zW6JMsA+r4plir4nCD3rA/NEzlK5hxUiprY6W
-	gc74wU8kr7r15VvT/2FlZEnBr803R3YU=
-X-Gm-Gg: AR+sD13y3KP8wWYOJ0Jri8zYsschaEtTxXl6JVk3WBAOgc787TtH2Bo01rZngSQrfuG
-	KjzpoPnGi+jw6ggRSFLhkaJOseruyUUeUjfJcehs5w6l8Nw3s21TBoi0j465/Lz7o5T3VLAzx8m
-	TXd34St3lTi3I1hqUWojEMILq6NJ0jJuYScXL+C+hcvJw+9hh5TA6sIeggZJ7HrlQYYuXjTcdF0
-	5lJJS7iWfw21YnNL/h5R4t6E5SfNfzcYH16Lqfs+7GM2vDNfDLBOzfGgsXO8eQfo/nkE6fjWMuc
-	9uCQtPLwt3ObIWwjDgMqtN87yW/7KBV6lsh90Jeus+oX1oDV56V5Bn9UdHl3vvP/ZjmAQDPi0S9
-	tDp9vzgC2MOrEnoGt7Kfm9NwYoVQKJZ9exiq3
-X-Received: by 2002:a05:6a21:3a45:b0:3cc:fb7d:a9ab with SMTP id
- adf61e73a8af0-3cd4b9ea5famr1632166637.2.1787337248227; Fri, 21 Aug 2026
- 11:34:08 -0700 (PDT)
+	s=arc-20240116; t=1787345380; c=relaxed/simple;
+	bh=JZt+lX4JXLkF7evOt6MiOdH/SV9gZ4sxHt0pR6/dpW4=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=UneauPqtL7wq1w4rkyODQMwFHDCiNv0TeFgvEnUwhN73jbgnrwWLgQ/J2C43z5aUBcWaiBYwPJa2zrNc2aL0kz0zUA/PaIV/X0+GdLDvwNFITki4Xqd5J/o2o2CwjmHpHQBhACqiKRvk5P07R0nJceV8bJ6aI2dvzT+jMFT0T+A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.96.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=wpIXmUMNf1wzJhnsnXS4O6wHwv5wjicdQu+R5sGayJCI6YJtl+nIRQ9c0SDY5QdcTtfl3gD5RxMXCOpKLJf0MkeO9t65zXht2/VE7jHvu87RaOVF0gw/dnE1gCYConGn0OXxQeZJwUXLxXD1EixXBqQqF0GkIkP3GgcnxdXvnMm3CKpbHcJgVQfhyBU7Lbevqr6s78IbJQ4yefDQfU1Hca1QBUChyNdFs5h56O1XYWAMzcYknwTn298AS9m1o6uPASgMiqQubYrTJb/Kc19fHVNxk1zUsNfrEd9F+14LfrZDq1qiYneLmzQNkO8HSGcpQ2D6kEsajebEAAehFALqaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=jdEIIGuUXAFCeDjKfI3m9H2qcmlcz5+yybgyZxVMoJY=;
+ b=ZKhlp6NCqZb2M3vJjY0N+XtaxjyEzMPn3kRhUfjiCAEFa3AZ19Z+xt+K6XuXUk6E+tQ0UUIX7EKWWlMOkY4PdrfSJTTLRDQjaucHrWHKufmo8+45PwDHKWoydXNfM1lJIj8UtIr6jsVYntjtY311hl/iP0RV3inVf/qII0p7Kv2/zZy1froFPsNPqymkWP1UVXtiQ15WMyYLO1jMPE9I8AMdhZ/z0FmGWI9hdhKg8P4G00H80BbDmAAdvgw7t6ZCzVbbX3Ik8B4KryASuJKKlTD3gXqjr9sJhim++Sz/1zhmTPPb7GExOLOx/lRoHw0ZrwYqiumihlbW08ITmMVTXw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
+ by LO2P123MB6104.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:25b::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.10; Fri, 21 Aug
+ 2026 20:49:34 +0000
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0339.010; Fri, 21 Aug 2026
+ 20:49:34 +0000
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	howardchu95@gmail.com,
+	atomlin@atomlin.com,
+	neelx@suse.com,
+	chjohnst@mail.com,
+	sean@ashe.io,
+	steve@abita.co,
+	rishil1999@outlook.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH perf-tools-next v4 0/4] perf trace: Symbolise kernel virtual addresses and function pointers
+Date: Fri, 21 Aug 2026 16:49:26 -0400
+Message-ID: <20260821204930.679027-1-atomlin@atomlin.com>
+X-Mailer: git-send-email 2.55.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BN9PR03CA0040.namprd03.prod.outlook.com
+ (2603:10b6:408:fb::15) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260821014210.18681-1-kartikey406@gmail.com>
-In-Reply-To: <20260821014210.18681-1-kartikey406@gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Fri, 21 Aug 2026 11:33:54 -0700
-X-Gm-Features: AcwNN1UMxCVEBEK7W_zIG4V60WyE6AsN7ajAZMnJmYaQz6_nFKVc9evdZTs2M6Q
-Message-ID: <CAEf4BzazKkRiOCAAERt6YueeVYnnYeNEPmxH+EW3F4CR_YVjsQ@mail.gmail.com>
-Subject: Re: [PATCH] perf/bpf: Fix lockless access to parent_event->prog in perf_event_alloc()
-To: Deepanshu Kartikey <kartikey406@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, olsajiri@gmail.com, irogers@google.com, 
-	adrian.hunter@intel.com, james.clark@linaro.org, kpsingh@kernel.org, 
-	matt@bobrowski.net, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	eddyz87@gmail.com, memxor@gmail.com, martin.lau@linux.dev, song@kernel.org, 
-	yonghong.song@linux.dev, emil@etsalapatis.com, ihor.solodrai@linux.dev, 
-	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO2P123MB6104:EE_
+X-MS-Office365-Filtering-Correlation-Id: e25d81bc-8cc9-49fb-5903-08deffc5b4e1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|366016|7416014|376014|1800799024|56012099006|10067099003|3023799007|6133799003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	mrkpYmTC72CXLHrG/cyBgr7Y1k/vmfsrhVqzOro3PPWwevVJ0k3tIltBQhDN5uSrXxq2Ytzl42BiaPkUVrV/gX+5itwqnswNVJkq6IcjvF/7Hk8vDrXAwUEAikbQ7OVyCIK/uH5BmETr4QtkvCrhPlWJ5n8Fe9Z4bjmNWEfdjXAqWjcRXo6SG777yVOVhDgKp40z2V4gZpxFe4fBblhCkS6B4YRVQZ8uU3npuTZ3WMeATdwhAmuaje/A5s1cvQ3F+OSH2d4c0Ggoy9NLoyXGmPTX3RJP9YwMwxcHLRwMUWlWwZ8oAVkVIbW9Wzz7nawj9LaA7Cmi8XyWFgZsi6bYdbR5QY9kwYU2uJ7aI+d9MpZ8tB6Wl2z6EY4KF+22+m7KwmqfQn+UW4Y3Ki0wj5hhGok3PzuCbNtr1IyFFOdY0U/SAWpoOQwKthf8B+5/iNYottVUOhPk5S1MnDWVugPwulyT6qAvCWJztzfUpItMtpElo7EeA6PQZrdNlaMBehZeNALfx49ZmH8/nGDw0D5UMMEi7DYo5gW8IUb0ivoesweljbqCG5BMmR/k5LQEJ1UjdzfstarjRBqw7MTc/n2H8H4yf+iEsJiBNsMFpAjLhpD4tTAThEtuxRa+HNzfDUEg9v8ZPxFSD7ghadZMFupPfB4K1GUSyflDCqiJPnSRuWo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(7416014)(376014)(1800799024)(56012099006)(10067099003)(3023799007)(6133799003)(18002099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?YuPhKc7RN5A7bflij9kSpG2dUyA9X/36f1wpoDnB5ZYVXFEY89u+u32BamUf?=
+ =?us-ascii?Q?w6b3wSW8AWG7otDKpQhvScMd/EEbjU6AkIbI0sqwAmi7iOOwDrwtnLSUcRaU?=
+ =?us-ascii?Q?On8YA/NALd0/hg8tnZ4oYx9jX5SWGWttEhbMduuGND5xB2G6wrauWueLZ50I?=
+ =?us-ascii?Q?oN9tU8Yhnv0GC+Hygl2lG5+lzh0cErqPAIQGWXqajww4h8kqL7MGgUunI5sa?=
+ =?us-ascii?Q?re3NOIAN6zJHZ/tqXJ3vvoQGLa6rt3Ped4DftVeqnrJxgUSWGg8EGwuBhfn4?=
+ =?us-ascii?Q?YkFYgDDRYYh/IxIvjR42K0rmVhjbuhvYqMHh1rvAcEDcqLiLewYEHhEZE1ZL?=
+ =?us-ascii?Q?vl61mHdm60S9nssP26Ct8W+q8r7zUH5ehoFDp0iIDbYPfhkiUtGFkpdAjfhR?=
+ =?us-ascii?Q?C3J+pZ7znycQnvuoLUmmvFu5o+gdboQ5WFcPdK1AV9Qn7Hh0AHG5LO2WH7IV?=
+ =?us-ascii?Q?aAT0wYHAOR1hhaMx1U0hU+BwJ2hj6sShxzA4aMq1PeaYDYqKehS0FsVdaUu5?=
+ =?us-ascii?Q?0Ed100BYJpSiM2EPQ22TUEn435SZuyHYxP9NTTnD3J6fqtZGI1x2s4FF8C9p?=
+ =?us-ascii?Q?cMmdy1KFnJojINeZ0W493HV2tK2SUXOcHWpoAnndR3nfyeOtp6WXPmffK4v/?=
+ =?us-ascii?Q?zDXncW4DcJituLOnVmHol+a9fix/uq61EoDGnS8DshWQ4erpR7ge4Puy9t0W?=
+ =?us-ascii?Q?LFiXu0Ivct0wJrXOZo/ASQ9IiYkQLmqz51Ku02dgguU8m18ppalU66/f4KwC?=
+ =?us-ascii?Q?swnDIEpbVtZnBrusiqqgRbQFHNnDK3rEW9G5GpVSejSx88uLMPUUGFlkPHSq?=
+ =?us-ascii?Q?Xe5JwFjk4OLGxIqS1vaviV1WxSuHkf9Pf64gxD4nIF1d9X3d9YFyZpD1Xj1d?=
+ =?us-ascii?Q?Mx1vFXcc4DdGWxLK3H6QZRUV5t4tvsLuc2ESJuAsOPmN5CTsMP1wUVoM5nHr?=
+ =?us-ascii?Q?SpMD/8IkYEM85trpfp+gZBal8uL2Fq2Tr1v9TOTkXD3BHtKwaTuAELK3zAsB?=
+ =?us-ascii?Q?5QaLi8txAP7nMU3svTJaCWjZSw44+SS+uf6XSlCSs+hZlAlizBf7SbkrgV6L?=
+ =?us-ascii?Q?SiRrdt+/Zk1bhBzmZgVc9TcCRQF5g2elOI16geB3QVJePMQaLKHLVGvGQMbs?=
+ =?us-ascii?Q?7um28kYOjIvPYyun+Gt5p9AM/aGpzHe6LJXqm4hiuWUgUV92OKF8B7kQOBhX?=
+ =?us-ascii?Q?xa7j9IUClBO2bHzKee9UwLapJAYc/jyI1YfVlELrwA9Go5/TMJUWeuh91831?=
+ =?us-ascii?Q?PAZa4uGgYfd9hrPHW3DTVmnsOT8/XrU0fBtnWesd8vm0CgsCNY9XRHClOpOi?=
+ =?us-ascii?Q?LomxV5F03eqENgBEd3lR/5roLG/msKSxlYqXfEWvlOTCbE/cswPYG5b89dlu?=
+ =?us-ascii?Q?+L7QRODVaX4GFZg3u2qGHX+hW8Y9l/pxfwDE4nr1Q63Z1SGVmiUo6ZOiAili?=
+ =?us-ascii?Q?jv5vGeInXUZrU4e+zFnRmEkCtRLfegEbvpQMPUHTJinAuTIQelXShaA6Uq9O?=
+ =?us-ascii?Q?+FBBcRKPTZ/UxgwZCPgZld0A9KpG5gsAfg6BtuX+Zdiv535iXOL7H6NEVXtu?=
+ =?us-ascii?Q?nDqQyxMa8+y54BOg+tbw0fmNdpQJ1CPK4yL9KbKJMsA8CIMx6Ik4tHweL4kV?=
+ =?us-ascii?Q?aJSpNX8Cgiw8T4fr9JOZHvW4qNwTrKbuJN5cixkpHvZzSBh56BGUSRvXI6P+?=
+ =?us-ascii?Q?JUPifnItOl/xPAIiJ1eIDAZNNIvYG7sPFdnm27dBaOx1joD6hEwDe0bZbpgL?=
+ =?us-ascii?Q?oKS5QBpNJg=3D=3D?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e25d81bc-8cc9-49fb-5903-08deffc5b4e1
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2026 20:49:34.3433
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 9gKRAyzKyTBbDLS0seGIcZa8X1WxR7+wQ9i7qxioBL8laOoNSvmmIyfzV43QQzS0TmobJkoxlGIdG316l40VKQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO2P123MB6104
 
-On Thu, Aug 20, 2026 at 6:42=E2=80=AFPM Deepanshu Kartikey
-<kartikey406@gmail.com> wrote:
->
-> During fork(), perf_event_alloc() reads parent_event->prog locklessly
-> which can race with a concurrent bpf_perf_link_release() clearing and
-> freeing the prog via perf_event_detach_bpf_prog(). This can result in
-> a NULL pointer dereference or use-after-free in bpf_prog_inc().
->
-> Fix by holding bpf_event_mutex when inheriting the BPF program during
-> fork(). Make bpf_event_mutex non-static and declare it extern in
-> perf_event.h so it is accessible from kernel/events/core.c.
->
-> Fixes: 85192dbf4de0 ("bpf: Convert bpf_prog refcnt to atomic64_t")
-> Signed-off-by: Deepanshu Kartikey <kartikey406@gmail.com>
-> ---
->  include/linux/perf_event.h | 2 ++
->  kernel/events/core.c       | 8 +++++---
->  kernel/trace/bpf_trace.c   | 2 +-
->  3 files changed, 8 insertions(+), 4 deletions(-)
->
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 48d851fbd8ea..5c6dabb6dccb 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -2136,4 +2136,6 @@ static inline void perf_lopwr_cb(bool mode)
->  }
->  #endif
->
-> +extern struct mutex bpf_event_mutex;
-> +
+When inspecting kernel execution flows using perf trace (e.g., when
+monitoring workqueues, delayed work items, timer callbacks, etc.),
+tracepoint payload arguments containing raw kernel virtual addresses are
+currently rendered as hexadecimal values (e.g., 0xffffffff81234567).
 
-exposing this mutex like that is definitely a smell.
+This requires manual symbol lookups against /proc/kallsyms or vmlinux to
+identify the underlying kernel function being executed.
 
-AI tells me that this perf event inheritance case can happen for
-non-tracing (i.e., BPF_PROG_TYPE_PERF_EVENT) events, which are
-attached while holding perf_event_ctx_lock, not the bpf_event_mutex
-(this one is held for tracepoint/kprobe/uprobe programs).
+This patch series enhances perf trace by introducing kernel virtual address
+and function pointer symbolisation using perf's native symbol engine
+(i.e., machine__find_kernel_symbol()).
 
-Please validate and adjust the fix.
+    Before:
+      workqueue:workqueue_execute_end(work: 0xffffffffab2f1420, function: 0xffffffffa8046b50)
 
->  #endif /* _LINUX_PERF_EVENT_H */
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index ba5bd6a78fe7..a89e33c47073 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -13433,12 +13433,15 @@ perf_event_alloc(struct perf_event_attr *attr, =
-int cpu,
->                 overflow_handler =3D parent_event->overflow_handler;
->                 context =3D parent_event->overflow_handler_context;
->  #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_EVENT_TRACING)
-> -               if (parent_event->prog) {
-> -                       struct bpf_prog *prog =3D parent_event->prog;
-> -
-> +               struct bpf_prog *prog;
-> +
-> +               mutex_lock(&bpf_event_mutex);
-> +               prog =3D parent_event->prog;
-> +               if (prog) {
->                         bpf_prog_inc(prog);
->                         event->prog =3D prog;
->                 }
-> +               mutex_unlock(&bpf_event_mutex);
->  #endif
->         }
->
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 75495a5c3507..730fc22a9daa 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1944,7 +1944,7 @@ const struct bpf_verifier_ops perf_event_verifier_o=
-ps =3D {
->  const struct bpf_prog_ops perf_event_prog_ops =3D {
->  };
->
-> -static DEFINE_MUTEX(bpf_event_mutex);
-> +DEFINE_MUTEX(bpf_event_mutex);
->
->  #define BPF_TRACE_MAX_PROGS 64
->
-> --
-> 2.43.0
->
+    After:
+      workqueue:workqueue_execute_end(work: 0xffff8ac2c420f270, function: wb_update_bandwidth_workfn)
+
+Patch 1 introduces the syscall_arg__scnprintf_ksym() (SCA_KSYM) beautifier,
+which resolves virtual addresses via machine__find_kernel_symbol(),
+formatting them as symbol_name+offset (or "NULL", with a graceful
+hexadecimal fallback upon lookup failure).
+
+Patch 2 updates event format initialisation in
+syscall_arg_fmt__init_array() to automatically assign SCA_KSYM to
+tracepoint fields typed as function pointers (such as typedefs ending in
+"_func_t" or "_fn", or function prototypes matching "(*)"). It also
+registers common function pointer, callback, and callsite field names
+(e.g., "action", "call_site", "callback", "caller", "caller_ip",
+"callsite", "cb", "fn", "func", "function", "handler", "location") in
+syscall_arg_fmts__by_name[], guards SCA_KSYM to pointer fields and
+pointer-sized non-array scalars, and removes the legacy
+trace__field_is_ip() hex override in trace__fprintf_tp_fields().
+
+Patch 3 extends BTF pretty-printing in trace__btf_scnprintf() with
+btf_is_func_ptr() to automatically traverse BTF type hierarchies (including
+nested typedefs and qualifiers) and route kernel function pointer arguments
+to SCA_KSYM when BTF metadata is available, with negative caching to
+prevent redundant BTF scans.
+
+Patch 4 adds an automated regression test script, trace_ksym_beautifier.sh,
+under tools/perf/tests/shell/ to verify symbolisation across both default
+kallsyms and BTF routing paths.
+
+Changes since v3:
+
+ - Added "caller_ip" to syscall_arg_fmts__by_name[] in alphabetical order
+   to symbolise instruction pointer fields
+
+ - Guarded SCA_KSYM auto-assignment in syscall_arg_fmt__init_array() to
+   only match actual pointer fields or pointer-sized non-array scalars,
+   allowing unmatched fields to fall through to subsequent type checks
+
+ - Fixed btf_struct_scnprintf() to only dump struct data for augmented
+   input parameters, preventing un-augmented output pointers from dumping
+   empty "{}" instead of falling back to hexadecimal pointer addresses.
+   Also ensured btf_dump is properly freed on error exits
+
+ - Updated test_ksym_btf() to trace csd:csd_function_entry with --force-btf
+   instead of call_site, directly verifying function pointer symbolisation
+
+ - Link to v3: https://lore.kernel.org/lkml/20260820211100.649142-1-atomlin@atomlin.com/
+
+Changes since v2:
+
+ - Populated syscall_arg_fmts__by_name[] with common function pointer,
+   callback, handler, and callsite field names ("action", "call_site",
+   "callback", "caller", "callsite", "cb", "fn", "func", "function",
+   "handler", "location")
+
+ - Checked syscall_arg_fmt__find_by_name() prior to generic pointer
+   fallbacks in syscall_arg_fmt__init_array(), and dropped the inline
+   64-bit size check to ensure 32-bit and cross-platform compatibility
+
+ - Removed legacy trace__field_is_ip() in trace__fprintf_tp_fields() to
+   allow "call_site" and "caller_ip" to be beautified with SCA_KSYM rather
+   than being forced to raw hexadecimal
+
+ - Simplified btf_is_func_ptr() to remove the internal pointer requirement,
+   correctly identifying bare prototype typedefs as function pointers
+
+ - Prevented pointer enums (e.g., "enum foo *") from being misclassified
+   and formatted as scalar enum values in
+   syscall_arg_fmt__cache_btf_type(), trace__btf_scnprintf(), and
+   syscall_arg__strtoul_btf_type()
+
+ - Added negative caching (btf_type_cached) to struct syscall_arg_fmt to
+   avoid repeated BTF searches on every event for unresolvable or primitive
+   types
+
+ - Widened btf_enum_scnprintf() to accept unsigned long val, eliminating
+   narrowing truncation of 64-bit values to 32-bit signed integers
+
+ - Fixed trace_ksym_beautifier.sh:
+    - Quoted "$0" to support directory paths containing spaces
+    - Captured output in memory to eliminate temporary file leaks on early
+      skip
+    - Hardened regex validation to require valid C symbol identifiers and
+      reject raw hexadecimal addresses
+    - Used '%s' format specifiers in printf to prevent format string
+      injection
+
+ - Link to v2: https://lore.kernel.org/lkml/20260816205921.576365-1-atomlin@atomlin.com/
+
+Changes since v1:
+
+ - Fixed reference leak of struct map in syscall_arg__scnprintf_ksym() by
+   calling map__put() prior to returning Removed unreachable and erroneous
+   entries ("action", "callsite", "call_site", "fn", "function", "work")
+   from syscall_arg_fmts__by_name[]
+
+ - Restricted name-based SCA_KSYM auto-assignment in
+   syscall_arg_fmt__init_array() to pointer or 64-bit address fields,
+   preventing misclassification of non-pointer integer fields
+
+ - Updated btf_is_func_ptr() to fully unwrap typedefs and type modifiers
+   below pointer targets
+
+ - Fixed BTF type name matching in syscall_arg_fmt__cache_btf_type() to
+   handle leading modifiers and strip trailing pointer asterisks before
+   lookup
+
+ - Synchronised arg->val with val in trace__btf_scnprintf() and widened val
+   to unsigned long, fixing erroneous "NULL" output
+
+ - Added shell test script,
+   tools/perf/tests/shell/trace_ksym_beautifier.sh, to verify kernel symbol
+   beautification for both default kallsyms and BTF routing
+
+ - Link to v1: https://lore.kernel.org/lkml/20260815233651.527936-1-atomlin@atomlin.com/
+
+Aaron Tomlin (4):
+  perf trace: Introduce kernel symbol beautifier for virtual addresses
+  perf trace: Auto-assign kernel symbol beautifier to function pointer
+    fields
+  perf trace: Enhance BTF type formatting to symbolise kernel function
+    pointers
+  perf tests: Add shell test for kernel symbol beautifier
+
+ tools/perf/builtin-trace.c                    | 217 +++++++++++++-----
+ .../perf/tests/shell/trace_ksym_beautifier.sh |  43 ++++
+ tools/perf/trace/beauty/beauty.h              |   3 +
+ 3 files changed, 202 insertions(+), 61 deletions(-)
+ create mode 100755 tools/perf/tests/shell/trace_ksym_beautifier.sh
+
+-- 
+2.55.0
+
