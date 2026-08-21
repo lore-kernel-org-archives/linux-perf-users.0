@@ -1,67 +1,67 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB59471D1D
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 09:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6036841A56B
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 09:49:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787305788; cv=none; b=PHH2KeZJyg8fmp9ia2MjmGPgM4hpOxqQ7mYqesBWYp6yPI294ghZe0jtti9jILJu+P1H/P+hZyBz27yZ0WfCyHqoYfMJuhiKCV5fq9TtWlMbrNphqwBIpSalzFmPGfMUP4n5qHhkSUI0OnfAIFLDPnD/OgYF3fEKlKUCTnfsdnU=
+	t=1787305792; cv=none; b=S8a1l6np3/IAmAfRs2cuTNBfi9N0a2xsdpFOHWlVaZTa92kwOIR/THZtNPb1MEcYURcjNi1W2nd+imEl09pk6QyhK29DGU2SjMIzyfaqeQp5EedLZSj1HNrow2VijexaLqzi4wmc27+tjdmHiyUOw+ql0zm0OZwdnQ58YgUB+6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787305788; c=relaxed/simple;
-	bh=fm7817PJXD9fz4lHXUyEY4UubPN/xPMUymDFvW6lWqY=;
+	s=arc-20240116; t=1787305792; c=relaxed/simple;
+	bh=kA5LbSGzSFt0yV/2KASUph8Bp02kP3gLVrrUuWxXR3I=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S2PEhPjuySVoq0Qz5dWhaK1sGtcTlzX1eahI/nPlyvns+k0fVyFHvU9MWg+2/QYkE3ZkzVg83FBUBA/a+G/i3Y7C3+DOt4eHipebmJqfzwijQygnn7mc7vovtjpu+kwvPlwvS255rnYL9FP0le4nIGyxDeO7BRVs1ODa2/60e/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JVhcc9pq; arc=none smtp.client-ip=209.85.221.51
+	 In-Reply-To:To:Cc; b=uN8dq4yTKVOzNls0za1+AgdRdxA7TnmC9KbUYwdDr+7aaAZPylYJ8yR2U2v5kajEnqlA3A1P+aV1XQ8gaSBetAT4fN/cyUpe/5Yr8fMdY/2LzYylodqaIyfFX4z6k58PD5LWsNe/PwVuoirIbvM1M1zhMvpca5arjdKT0kytfUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Xfahit8L; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JVhcc9pq"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-47de008b020so413665f8f.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 02:49:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Xfahit8L"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-47f3b39f2a1so673714f8f.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 02:49:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1787305781; x=1787910581; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1787305775; x=1787910575; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=iIEqHB2kupPj+LJwStZlpRLPHkBGU+WfDNFf0olHiVQ=;
-        b=JVhcc9pqaZ0WA2wp4EnI/h8w79w81W97i0uEjWPNB7PyJgFpg+kr2ao0eBB+S9A1dE
-         r2S09lxllcMUoXC15kgeumusX4ZS4YsY8x16fxeDPa+rJXEULCj1vQS1NB8w7Crcagsw
-         T/TOwEHVdA5G7gvTxqil/rNXJ05ZHBWgRYrGWvWekw8pXoocQgSXtRV2Y0YEou2uAvj8
-         GQ7mWQLHBkR8qjeaxswGsfJtlPtowH2sas1Um+An8EEX7JAewT9uJOIwsZb9k3Gnz8bG
-         to1auudUx/skWt0mHQoJSWGaoZBZ0glaP8RSHXq15gkiB93FmzIb0snVgbK4iNqbxfGK
-         1wTA==
+        bh=CbdOfomTAI7oLSknzQNqLoWXfzHYXHRHempsJBX4UAA=;
+        b=Xfahit8Lf3i3U+ZaKl0gRkU7HGroGJSv/7iuto/dbzfrweQqE4TcS9VkLcG49knPiK
+         D0Yi3bhThTEYqNdwl+Ld4zQC0s1QuZWaloAiGmoOKMQwH20fvaUQtQXsfk/J9Ax1yXk+
+         Q4q3jHwvyJjbBOBzCPvOplz0gGHsu+PqcsvBQgj3Ifi/IzEUOK40LwrtS7LvAiobDq72
+         cMZM/ZJOUL2VLhzLMnNbgbcwXGYZnjmJlTeIhLV4qmv52btIrDZTZlotZsM9+e3IoYQB
+         Fyl2auc0gTCOM4GUcf/vrth0msDLeKS0XgqdA4KNwMEZq0+vjTPfP6xcfWxfU36kzd9c
+         xhaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787305781; x=1787910581;
+        d=1e100.net; s=20251104; t=1787305775; x=1787910575;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=iIEqHB2kupPj+LJwStZlpRLPHkBGU+WfDNFf0olHiVQ=;
-        b=iDs7O4Mk4hmRU9FYbyuvdIBHQowtb3t4hWJq46G+a2CTmphpmsSIAvLx8hpSiBtDsJ
-         iv5GRudHipq1XE5p+pfX2J8xxuskWtDnBbnUAKOr+qflm0+WZwIT7fc+R23lL+mAu1wU
-         EF0YOJCNKDt0IzjBfPUyBcEJdG4CHgcURYRYD4oMWVo6tvzLhevBoTpnoyhdbVtQ/rVU
-         +aaH7llBcw/rA3+2xWn6OqLIGKSOdlnwTdJlooXQBX5xAUECGRLMuBmHSr0NIgobdR97
-         +qxE8jrYzIK4JcG5xogaS0nr/8Mu6BvcDGISuuKb8GeW2Asde19e8G39w3ZXgpLgn4rS
-         enbg==
-X-Forwarded-Encrypted: i=1; AHgh+RrHmcYMfnHJGAFDJGNq3OfCu2ia1Hvd7+xcrnpPPV3nq/I7amTX/tYPZokTzDZ2aV6VrCk/m5zXewrH3tIH/XtL@vger.kernel.org
-X-Gm-Message-State: AFuF++k11AaBrewR5ZyKW6br6zgid2RnDFZdBiT64zoU6VOWbkhmjAYm
-	QeASdkDrOfcfNgg9EG1rfyRymU+3qx/7DZAKd4PDTWUI9f6pywtMAikdUclzjLvPiwY=
-X-Gm-Gg: AR+sD10ORVlgOYRKpeSzCK+bEY4wm9G7gZZVwAo3FXVazQYtYLZfMc5Ba5t1JrEdCZs
-	WImMIS8LoR1WaAp1lxsbFge+fen5uM1afvKt+PVfuQjMFGRVyPgTDvUEuziKX7dSWFjoXbXIbuL
-	iXTUBJUdnYBJDbfuYHqAViZoqZHKqfvM1wy7M7duHekURCjVXj1mFTA3MQoYsM0OtqlB/WCNYZT
-	cR8ozJqoh1cMqLkRfFbhDiuocCZc11SQybC8MXrviaQydHNAOpuUcMSAgfflBIvx0/UTXyWtf2Q
-	gizWGaz1CZkFxuC2qMfXGgBCpLZ5g+pQ9XdO8WWjFa19rBhdo7+aLAfS2jej1rLGdj9/iSvgYjr
-	dcsm6SsrDdl+O2ohdky07Z6oTStIs1siJDRxeATkTkfiru6KRr7vJqMU/C13whAxPucM5WVPKtE
-	gx0aILO/6zYdkpTTEtmubbiLd081gqyhltEy9dDDgvyli5P/C6dqvIPkSqOpU1fr7T
-X-Received: by 2002:a5d:6f06:0:b0:475:da0e:744d with SMTP id ffacd0b85a97d-482c117267emr5590675f8f.8.1787305780785;
-        Fri, 21 Aug 2026 02:49:40 -0700 (PDT)
+        bh=CbdOfomTAI7oLSknzQNqLoWXfzHYXHRHempsJBX4UAA=;
+        b=K/M0+gdbpy0kDaxiWofCl6/6i9uHl6tGu8Ds/6T9rMAm5+pldKJBAWqlE2n3JCaYIf
+         r8R1X/zv6nn9vje73lUagtWLqFGZAjFsCdXe4pIJQN2f+oqyrutDX4L2Hs4bpiiBl1k9
+         QxrHm0pN/LlnqAqGXmcCl69jxgOLxlGAHXpZGG/vUHo5NOI1HowD6eMCvX5Ud0z2yO4j
+         grHlye+Wb92kbShzoMQSA4lufPO/YUCXXiZuOrte76UMwKPUEmXJ5KXoQNg9iKovxJ1l
+         pgUGiCpuTQaQTFH9fVPm+UnzAj0ctIhES/6naHdOUWbejDAND0X7HFEE+r6ailNixUBZ
+         CN1A==
+X-Forwarded-Encrypted: i=1; AHgh+RolYNM2/0jeo7jI6QjsGJM4cDh3SfsiafWyzoHTRoxxw6xkkE3w7mqhJz7CP/oMs5TQK5lmwAzdQ7w76SedPr/l@vger.kernel.org
+X-Gm-Message-State: AFuF++nFHb75DW3EJe5wVsVSWLEdu4eAqKyUfzUz/d1NjmvKHKtphezx
+	mShioL8rb6RqSXeRmg5BsW5go+RYo4DO0m81UaLn77BpK1adPXO+OT62KEuskoA9cyY=
+X-Gm-Gg: AR+sD11C+8ap2b9f9OmuLeDi61k7blUX0mF/ouIa5NyBQb/JKvPme0ThDOIro6OkPJ5
+	T6XO+3dTH23nZYYiQmWLKJQEQaTX4e1Iob4nVmnyUyiWRwtsnfYbjk9mzoq/ujk7hVFA5TfH2Rl
+	KXyBuoNwmYcL7CaTFRBbqdn3j5X58a+ylUmgh9SlLvYWnR3dSYWAa/ehUobtDB5mHsew8hjMLWT
+	aiaS0iYYt0XJHGpHVYehhRHBlSplYehpHOYFpZPpHc4voHyF2/xfiKGlvsz9Hveln2872EoWHkv
+	Fo2LzkEOqiJazTWk48tdJHDHY3bbDJsGhMd6MC2WMw1L1YBjBsUSjvIsJKqhfmeUs994CsaXC+s
+	NrER3zbVJiwrIZBKmEir6Qn4YsngMwIdM35UjajsDmpdX/fv6zlrXHPGiXfD3ibnhbPFrkUBdvS
+	X4NogrlpeSNwyDbXHThP9X/+lF9XXDPjr1smN5cUiVE3tvc2jzgUFl7Qllx+UM68/o
+X-Received: by 2002:a05:6000:2305:b0:481:573d:9d29 with SMTP id ffacd0b85a97d-482c0b96bf7mr7076525f8f.14.1787305774666;
+        Fri, 21 Aug 2026 02:49:34 -0700 (PDT)
 Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b14d05a6sm17683479f8f.35.2026.08.21.02.49.39
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b14d05a6sm17683479f8f.35.2026.08.21.02.49.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 02:49:40 -0700 (PDT)
+        Fri, 21 Aug 2026 02:49:33 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Fri, 21 Aug 2026 10:49:09 +0100
-Subject: [PATCH v2 11/14] perf auxtrace: cs-etm: Capture wrapped snapshots
+Date: Fri, 21 Aug 2026 10:49:05 +0100
+Subject: [PATCH v2 07/14] perf arm-spe: Use generic snapshot search
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260821-james-cs-unformatted-per-thread-fix-v2-11-00c4fd0701b4@linaro.org>
+Message-Id: <20260821-james-cs-unformatted-per-thread-fix-v2-7-00c4fd0701b4@linaro.org>
 References: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
 In-Reply-To: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -91,124 +91,223 @@ Cc: Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
  linux-doc@vger.kernel.org, James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.15.2
 
-snapshot_has_wrapped() isn't implemented for Coresight, so when a wrap
-occurs we only save from offset 0 to current head, modulo buffer size,
-rather than capturing the whole buffer. Coresight drivers currently use
-a monotonic head pointer even in snapshot mode, which gives a lot more
-information for taking snapshots than a wrapped pointer. It means we
-don't need to search for data at the end of the buffer to guess if a
-wrap has occurred, and we can go back to saving partial buffers after a
-wrap by checking if the next size to take is less than the buffer
-size.
+The new generic snapshot search gives a similar result as the
+reimplemented version of it here. One slight difference is in the
+pointer fixup. SPE has:
 
-The drivers will always be able to generate a monotonic head because
-TRBE has a bytes written counter, so even if we stop generating an AUX
-record on every overflow, we can check if the counter indicated an
-overwrite and offset head by a whole buffer size if it wrapped. This
-forces userspace to read the whole buffer rather than between last and
-current head. ETR and other sinks use software double buffering, so can
-continue as they are.
+  *head += mm->len;
+  *old = *head - mm->len;
 
-Add a much simpler 'monotonic_snapshot_head' path for tracers to use,
-and use it for Coresight.
+Which gives exactly the same result but written in reverse order to the
+generic one:
+
+  *old = *head;
+  *head += mm->len;
+
+SPE also had a special fixup case for head pointers greater than the
+buffer length, which is not needed because the SPE driver always wraps
+them, and __auxtrace_mmap__read() handles that anyway. It also didn't
+have the special case for old > head for when the wrap heuristic fails
+but the pointers showed a wrap had happened.
+
+The other feature lost is that this search only looked from head to the
+end of the buffer, rather than always at the last 512 bytes. This was
+flawed because once head is close to the end, it's likely it could
+contain zero padding from actual SPE data and a wrap would be missed.
+It's better to err on the side of caution and mark as a wrap, rather
+than trying to optimize by limiting the search from head onwards.
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/arch/arm/util/cs-etm.c                  |  1 +
- .../perf/tests/shell/coresight/raw_dump_stress.sh  |  5 -----
- tools/perf/util/auxtrace.c                         | 22 ++++++++++++++++------
- tools/perf/util/auxtrace.h                         |  2 ++
- 4 files changed, 19 insertions(+), 11 deletions(-)
+ tools/perf/arch/arm64/util/arm-spe.c | 147 +----------------------------------
+ 1 file changed, 2 insertions(+), 145 deletions(-)
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index d36b7e41399b..dbf76dd3349e 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -918,6 +918,7 @@ struct auxtrace_record *cs_etm_record_init(int *err)
- 	ptr->itr.info_fill		= cs_etm_info_fill;
- 	ptr->itr.snapshot_start		= cs_etm_snapshot_start;
- 	ptr->itr.snapshot_finish	= cs_etm_snapshot_finish;
-+	ptr->itr.monotonic_snapshot_head = true;
- 	ptr->itr.reference		= cs_etm_reference;
- 	ptr->itr.free			= cs_etm_recording_free;
- 	ptr->itr.read_finish		= auxtrace_record__read_finish;
-diff --git a/tools/perf/tests/shell/coresight/raw_dump_stress.sh b/tools/perf/tests/shell/coresight/raw_dump_stress.sh
-index bea70d825596..c9459ded4cbe 100755
---- a/tools/perf/tests/shell/coresight/raw_dump_stress.sh
-+++ b/tools/perf/tests/shell/coresight/raw_dump_stress.sh
-@@ -48,11 +48,6 @@ read -r size offset last_idx <<< "$(awk '
- # everything was dumped. Allow 48 bytes difference to cover 3 frames: current
- # frame length, a partial frame and a final empty one, all of which aren't
- # dumped.
--#
--# TODO: for a single snapshot, offset should always be zero. However, we
--# currently output AUX records in snapshot mode when we shouldn't, which
--# increments the offset. Allow for that until it's fixed so we can test raw
--# dumping.
- decode_size=$((1 + last_idx - offset))
- if [ "$decode_size" -gt "$((size - 48))" ] && [ "$decode_size" -le "$((size))" ]; then
- 	echo "PASS: AUXTRACE buffer length matches dumped packet index"
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 8ca872e6d465..e3c770b46e94 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -2051,9 +2051,9 @@ static int __auxtrace_mmap__read(struct mmap *map,
- 				 bool snapshot, size_t snapshot_size)
- {
- 	struct auxtrace_mmap *mm = &map->auxtrace_mmap;
--	u64 head, old = mm->prev, offset, ref;
-+	u64 head, old = mm->prev, offset, ref, size;
- 	unsigned char *data = mm->base;
--	size_t size, head_off, old_off, len1, len2, padding;
-+	size_t head_off, old_off, len1, len2, padding;
- 	union perf_event ev;
- 	void *data1, *data2;
- 	int kernel_is_64_bit = perf_env__kernel_is_64_bit(env);
-@@ -2061,10 +2061,20 @@ static int __auxtrace_mmap__read(struct mmap *map,
+diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+index 1ba803a8d9b4..d8c4a1d6c621 100644
+--- a/tools/perf/arch/arm64/util/arm-spe.c
++++ b/tools/perf/arch/arm64/util/arm-spe.c
+@@ -26,7 +26,6 @@
+ #include "../../../util/record.h"
+ #include "../../../util/header.h"
+ #include "../../../util/arm-spe.h"
+-#include <tools/libc_compat.h> // reallocarray
  
- 	head = auxtrace_mmap__read_head(mm, kernel_is_64_bit);
+ #define ARM_SPE_CPU_MAGIC		0x1010101010101010ULL
  
--	if (snapshot && itr->snapshot_has_wrapped) {
--		err = auxtrace_find_snapshot(itr, mm->idx, mm, data, &head, &old);
--		if (err)
--			return err;
-+	if (snapshot) {
-+		if (itr->snapshot_has_wrapped) {
-+			err = auxtrace_find_snapshot(itr, mm->idx, mm, data, &head, &old);
-+			if (err)
-+				return err;
-+		} else if (itr->monotonic_snapshot_head) {
-+			size = head - old;
-+			/* Force a full buffer read if a wrap has occurred */
-+			if (size > mm->len) {
-+				pr_debug3("%s: wrap detected, adjusting old from 0x%"PRIx64" to 0x%"PRIx64"\n",
-+					  __func__, old, head - mm->len);
-+				old = head - mm->len;
-+			}
-+		}
- 	}
- 
- 	if (old == head)
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index a9d0c84184c5..971b817d3396 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -385,6 +385,7 @@ struct auxtrace_mmap_params {
-  * @evlist: selected events list
-  * @snapshot_wrapped_len: number of bits in @snapshot_wrapped
-  * @snapshot_wrapped: bitmap indicating if each aux buffer has wrapped
-+ * @monotonic_snapshot_head: driver doesn't wrap head pointer on overflow
-  */
- struct auxtrace_record {
- 	int (*recording_options)(struct auxtrace_record *itr,
-@@ -412,6 +413,7 @@ struct auxtrace_record {
- 	int snapshot_wrapped_len;
- 	unsigned long *snapshot_wrapped;
- 	int snapshot_search_bytes;
-+	bool monotonic_snapshot_head;
+@@ -37,8 +36,6 @@ struct arm_spe_recording {
+ 	struct auxtrace_record		itr;
+ 	struct perf_pmu			*arm_spe_pmu;
+ 	struct evlist		*evlist;
+-	int			wrapped_cnt;
+-	bool			*wrapped;
  };
  
- /**
+ /* Iterate config list to detect if the "freq" parameter is set */
+@@ -497,146 +494,6 @@ static int arm_spe_snapshot_finish(struct auxtrace_record *itr)
+ 	return ret;
+ }
+ 
+-static int arm_spe_alloc_wrapped_array(struct arm_spe_recording *ptr, int idx)
+-{
+-	bool *wrapped;
+-	int cnt = ptr->wrapped_cnt, new_cnt, i;
+-
+-	/*
+-	 * No need to allocate, so return early.
+-	 */
+-	if (idx < cnt)
+-		return 0;
+-
+-	/*
+-	 * Make ptr->wrapped as big as idx.
+-	 */
+-	new_cnt = idx + 1;
+-
+-	/*
+-	 * Free'ed in arm_spe_recording_free().
+-	 */
+-	wrapped = reallocarray(ptr->wrapped, new_cnt, sizeof(bool));
+-	if (!wrapped)
+-		return -ENOMEM;
+-
+-	/*
+-	 * init new allocated values.
+-	 */
+-	for (i = cnt; i < new_cnt; i++)
+-		wrapped[i] = false;
+-
+-	ptr->wrapped_cnt = new_cnt;
+-	ptr->wrapped = wrapped;
+-
+-	return 0;
+-}
+-
+-static bool arm_spe_buffer_has_wrapped(unsigned char *buffer,
+-				      size_t buffer_size, u64 head)
+-{
+-	u64 i, watermark;
+-	u64 *buf = (u64 *)buffer;
+-	size_t buf_size = buffer_size;
+-
+-	/*
+-	 * Defensively handle the case where head might be continually increasing - if its value is
+-	 * equal or greater than the size of the ring buffer, then we can safely determine it has
+-	 * wrapped around. Otherwise, continue to detect if head might have wrapped.
+-	 */
+-	if (head >= buffer_size)
+-		return true;
+-
+-	/*
+-	 * We want to look the very last 512 byte (chosen arbitrarily) in the ring buffer.
+-	 */
+-	watermark = buf_size - 512;
+-
+-	/*
+-	 * The value of head is somewhere within the size of the ring buffer. This can be that there
+-	 * hasn't been enough data to fill the ring buffer yet or the trace time was so long that
+-	 * head has numerically wrapped around.  To find we need to check if we have data at the
+-	 * very end of the ring buffer.  We can reliably do this because mmap'ed pages are zeroed
+-	 * out and there is a fresh mapping with every new session.
+-	 */
+-
+-	/*
+-	 * head is less than 512 byte from the end of the ring buffer.
+-	 */
+-	if (head > watermark)
+-		watermark = head;
+-
+-	/*
+-	 * Speed things up by using 64 bit transactions (see "u64 *buf" above)
+-	 */
+-	watermark /= sizeof(u64);
+-	buf_size /= sizeof(u64);
+-
+-	/*
+-	 * If we find trace data at the end of the ring buffer, head has been there and has
+-	 * numerically wrapped around at least once.
+-	 */
+-	for (i = watermark; i < buf_size; i++)
+-		if (buf[i])
+-			return true;
+-
+-	return false;
+-}
+-
+-static int arm_spe_find_snapshot(struct auxtrace_record *itr, int idx,
+-				  struct auxtrace_mmap *mm, unsigned char *data,
+-				  u64 *head, u64 *old)
+-{
+-	int err;
+-	bool wrapped;
+-	struct arm_spe_recording *ptr =
+-			container_of(itr, struct arm_spe_recording, itr);
+-
+-	/*
+-	 * Allocate memory to keep track of wrapping if this is the first
+-	 * time we deal with this *mm.
+-	 */
+-	if (idx >= ptr->wrapped_cnt) {
+-		err = arm_spe_alloc_wrapped_array(ptr, idx);
+-		if (err)
+-			return err;
+-	}
+-
+-	/*
+-	 * Check to see if *head has wrapped around.  If it hasn't only the
+-	 * amount of data between *head and *old is snapshot'ed to avoid
+-	 * bloating the perf.data file with zeros.  But as soon as *head has
+-	 * wrapped around the entire size of the AUX ring buffer it taken.
+-	 */
+-	wrapped = ptr->wrapped[idx];
+-	if (!wrapped && arm_spe_buffer_has_wrapped(data, mm->len, *head)) {
+-		wrapped = true;
+-		ptr->wrapped[idx] = true;
+-	}
+-
+-	pr_debug3("%s: mmap index %d old head %zu new head %zu size %zu\n",
+-		  __func__, idx, (size_t)*old, (size_t)*head, mm->len);
+-
+-	/*
+-	 * No wrap has occurred, we can just use *head and *old.
+-	 */
+-	if (!wrapped)
+-		return 0;
+-
+-	/*
+-	 * *head has wrapped around - adjust *head and *old to pickup the
+-	 * entire content of the AUX buffer.
+-	 */
+-	if (*head >= mm->len) {
+-		*old = *head - mm->len;
+-	} else {
+-		*head += mm->len;
+-		*old = *head - mm->len;
+-	}
+-
+-	return 0;
+-}
+-
+ static u64 arm_spe_reference(struct auxtrace_record *itr __maybe_unused)
+ {
+ 	struct timespec ts;
+@@ -651,7 +508,6 @@ static void arm_spe_recording_free(struct auxtrace_record *itr)
+ 	struct arm_spe_recording *sper =
+ 			container_of(itr, struct arm_spe_recording, itr);
+ 
+-	zfree(&sper->wrapped);
+ 	free(sper);
+ }
+ 
+@@ -674,7 +530,8 @@ struct auxtrace_record *arm_spe_recording_init(int *err,
+ 	sper->arm_spe_pmu = arm_spe_pmu;
+ 	sper->itr.snapshot_start = arm_spe_snapshot_start;
+ 	sper->itr.snapshot_finish = arm_spe_snapshot_finish;
+-	sper->itr.find_snapshot = arm_spe_find_snapshot;
++	sper->itr.snapshot_has_wrapped = auxtrace_record__has_wrapped;
++	sper->itr.snapshot_search_bytes = 512;
+ 	sper->itr.parse_snapshot_options = arm_spe_parse_snapshot_options;
+ 	sper->itr.recording_options = arm_spe_recording_options;
+ 	sper->itr.info_priv_size = arm_spe_info_priv_size;
 
 -- 
 2.43.0
