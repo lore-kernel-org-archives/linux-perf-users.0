@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C6F3F7873
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 05:58:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94A7314D1A
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 05:58:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787291885; cv=none; b=nV1PQvwd6KuJ4vA0CDeJDB+KIqv/TgtBCFuAHsSwqnk2BCbEZI6Lf4TIUyByOM14eRS5ZzHGsZmKudD/bBGaT/j3CXXL052buP47FbWnrAKv9puVCji89uRFOnfwcuEbF3Rv9cet2yKNby7L4YSGtBmidMD0GIqnuePlINYVLUk=
+	t=1787291925; cv=none; b=JXCFyb0Y77B0fDoqfntSPbk5X5cpLt7ugwOMBgxi4Rc7r/QbhEN5E6sygFnOrehtvUKh81x8GTRsRdz9lvDdJOkiRXm5ZvPtrx4GzU+JaYrU7qDPUWY7oYFHaW6N58YHb9Vt6lGJ6ctiQLBvppwg2OoAqdLKNCjK6iPLVIH9E8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787291885; c=relaxed/simple;
-	bh=DjaJ4XGso3e93jfg0DQ3rsiqNF5aT0CTXd3sruScg7Y=;
+	s=arc-20240116; t=1787291925; c=relaxed/simple;
+	bh=eIWqwG7OQuYdr8I4nQUQDpRdhuRnHAGmaBRgqHra2Wg=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QarI2kaOEBAuQ29Dq5w6EwQCWH51Dv51J3meNi1qF6rYxU7zuExlJAS1rBqgEPJJsLUwHYLO41jyGKVoOy08GyvDqsHIxTrl7FrF5ThCNWfufe/8UqyZjyP0fHVwZPQue3K4kKiNopXF7nkV2BMmdAImstVOmqyC7pnCVYAk/PM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TACHLyND; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=NJLn9+yD9bHl4wiUghXlnlsLw3vZ4xy78/qnNqm3RbYajpKzp5HSLyAMG744+I7vqAXuYXrHI6HEZ1akoQwqNAVugQPNnYX7zqQzVI341ICIvWHXnlRj+T4oktIHNc2K5Zk9qV/gtXKqW14qhoZ8lHjDbBvb+HY9bdjwR7n56TI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E9s5qN4s; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TACHLyND"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74B191F00A3A;
-	Fri, 21 Aug 2026 05:58:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E9s5qN4s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 389E41F000E9;
+	Fri, 21 Aug 2026 05:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787291883;
-	bh=Zicduwo+PcZiP9XvE6WaUsbHgMciOUbzGatEdqDZgh4=;
+	s=k20260515; t=1787291924;
+	bh=P0hM0M1lDwZFlKKyrMbMHrS+wGXQVj62J0snVp25hiY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TACHLyND3WIw15Y7Sc3Qo75NQG4EXTXXgVWpvLSpNGNsSMJeVs35gX8hTXkBRYby1
-	 4I/V/+maIUfuJx4Oso1m2sbzA91XXCI0GbjiLdi3hQK6DjhTFbqmlP1o7d//H9I5eC
-	 kQSvXHtSq2LperB/iQPJGYB5Jk+I7BQOPi5wEaMYz00ZitlVDRAvf68jMw2AMe5d1z
-	 cI1ptYRESh4l3jffRdyg7S/QlCCFccKC7FfcoG+m+JQN5S3caQuio3uFcDBSXTD1OM
-	 jGCCHWPGvng/hkOWPGO9Pyv+2nJ0jyfrFtNI1QLCIUFzvNH53CGZd6w4b/uqUP9jJ/
-	 Zq/BepyWJZbUg==
+	b=E9s5qN4siJkU4Oi1bawp+0WnzfgJfOYTWLz1jYRau3TZZfFAso3WuKYCLEMfEpEe5
+	 hQN/VYVT/iYu5dGIL7nfczuor4PDuRmkqnpgqPs6yYFSzLVhPaTRmQtyD3mWbECgfG
+	 teeO5xljmmrhiw7R9/Q8ed0CChYksqY4mxM+YPDw3SklNC/jRm9gzDzNC+ozE0UhU1
+	 xzuQVr7Zw2V2rdSRRxyMRPCorB+DxBq7QA7LcUH33XIId4j1RHu4m4+AOXmQcYSypb
+	 xqaZ8YSsOM9c8Gkij4fJYJtuceZYtMuO3+xBoLtTTRSP0EcryIuBq1u/BK5WYz2v4l
+	 UVwz70i8tozOA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 4/4] perf tests c2c: Add function view stdio coverage
+Subject: Re: [PATCH 3/4] perf c2c: Add stdio support for the function view
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Jiebin Sun" <jiebin.sun@intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <9bd7a313c9c1d71058e857c320c6d5c30cf4cbfa.1787283281.git.jiebin.sun@intel.com>
+In-Reply-To: <c53d3eb3a036c250702af363b6e7ce3307aa1571.1787283281.git.jiebin.sun@intel.com>
 References: <cover.1787283281.git.jiebin.sun@intel.com>
- <9bd7a313c9c1d71058e857c320c6d5c30cf4cbfa.1787283281.git.jiebin.sun@intel.com>
+ <c53d3eb3a036c250702af363b6e7ce3307aa1571.1787283281.git.jiebin.sun@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 21 Aug 2026 05:58:03 +0000
-Message-Id: <20260821055803.74B191F00A3A@smtp.kernel.org>
+Date: Fri, 21 Aug 2026 05:58:43 +0000
+Message-Id: <20260821055844.389E41F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,69 +46,62 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] The newly added `test_c2c_function_report` test fails spuriously=
- because it incorrectly assumes `perfdata` is valid when `err` is 0. If the=
- workload in `test_c2c_record_report` fails, it returns early but leaves `e=
-rr=3D0`. This causes `test_c2c_function_report` to process an invalid or mi=
-ssing `perfdata` file, failing its diagnostic checks and setting `err=3D1` =
-(test failure).
+
+Pre-existing issues:
+- [Medium] Memory leak: L2 and L3 function-view child entries are not freed=
+ on cleanup because `perf c2c` does not set `symbol_conf.report_hierarchy`,=
+ bypassing the recursive deletion in `hist_entry__delete()`.
 --
 
---- Patch [4]: [PATCH 4/4] perf tests c2c: Add function view stdio coverage=
- ---
-commit 32c977aa30c2c6186f39077056298ef3b53307dd
+--- Patch [3]: [PATCH 3/4] perf c2c: Add stdio support for the function vie=
+w ---
+commit e1f0ed49bafb9da749fbfa14e02ab8497ae9d5d4
 Author: Jiebin Sun <jiebin.sun@intel.com>
 
-perf tests c2c: Add function view stdio coverage
+perf c2c: Add stdio support for the function view
 
-Exercise the function view without driving a terminal now that it has
-a stdio path. Keep the existing datasym record/report coverage and make a
-separate recording of the contended locks used by the futex hash benchmark.
+This commit adds a --function option to perf c2c to print the fully expanded
+three-level hierarchy to stdout, allowing its use without SLANG support,
+when piped, or in scripts. It reuses the common function-view model while
+preserving the boundary between utilities and the UI.
 
-> diff --git a/tools/perf/tests/shell/c2c.sh b/tools/perf/tests/shell/c2c.sh
-> index f5f223cbf9cc7..cf76359d19ccd 100755
-> --- a/tools/perf/tests/shell/c2c.sh
-> +++ b/tools/perf/tests/shell/c2c.sh
+> diff --git a/tools/perf/util/c2c-function.c b/tools/perf/util/c2c-functio=
+n.c
+> --- a/tools/perf/util/c2c-function.c
+> +++ b/tools/perf/util/c2c-function.c
+
 [ ... ]
-> @@ -58,6 +63,114 @@ test_c2c_record_report() {
->  	echo "c2c record and report test [Success]"
+
+> @@ -1519,7 +1516,7 @@ void c2c_function__reset(void)
+>  	symbol_conf.use_callchain =3D saved_use_callchain;
 >  }
-> =20
-> +test_c2c_function_report() {
-> +	echo "c2c function stdio report test"
-> +
-> +	if perf c2c report -i "${perfdata}" --function -c pid > "${perfout}" 2>=
-&1 ; then
-> +		echo "c2c function stdio report test [Failed: report accepted missing =
-iaddr]"
-> +		err=3D1
-> +		return
-> +	fi
-[ ... ]
->  test_c2c_record_report
-> +if [ "${err}" -eq 0 ]; then
-> +	test_c2c_function_report
-> +fi
->  cleanup
->  exit $err
 
 [Severity: Medium]
-Will this lead to a spurious test failure if the record workload fails?
+This is a pre-existing issue, but does this teardown logic in
+c2c_function__reset() leak the L2 and L3 function-view child entries?
 
-In test_c2c_record_report(), if the 'perf test -w datasym 1' workload fails,
-it returns early without modifying err, leaving err=3D0:
+When cleaning up the hierarchy, hists__delete_all_entries() relies on
+hist_entry__delete() for each node. However, in tools/perf/util/hist.c,
+hist_entry__delete() only recursively deletes the child entries in hroot_out
+if the hierarchy flag is set:
 
-	if ! perf c2c record -o "${perfdata}" -- perf test -w datasym 1 > /dev/nul=
-l 2>&1 ; then
-		echo "c2c record and report test [Skipped: perf c2c record failed during =
-workload]"
-		return
-	fi
+tools/perf/util/hist.c:hist_entry__delete() {
+    ...
+    if (symbol_conf.report_hierarchy) {
+        struct rb_root *root =3D &he->hroot_out.rb_root;
+        struct hist_entry *child, *tmp;
 
-Because err remains 0, test_c2c_function_report() will conditionally execute
-and attempt to use the missing or invalid perfdata file. This will cause
-test_c2c_function_report() to fail its diagnostic checks and set err=3D1.
+        rbtree_postorder_for_each_entry_safe(child, tmp, root, rb_node)
+            hist_entry__delete(child);
+
+        *root =3D RB_ROOT;
+    }
+    ...
+}
+
+Since perf c2c does not appear to set symbol_conf.report_hierarchy, won't
+these child entries be orphaned and skipped during cleanup?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1787283281.gi=
-t.jiebin.sun@intel.com?part=3D4
+t.jiebin.sun@intel.com?part=3D3
