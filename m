@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939031DDFE
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 00:28:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C89B28505E
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 00:28:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787272083; cv=none; b=Ccqdd7syYQq/eq/I5TzAHJYur/YFNCfzZdLo2Q54BUO9NUZbDsP447XMKlJFKafHGlM7wsdOVOoejmFJjsyX7j6ziX/tlZUQNhS1Q7/YVjROGznYCr9T9bcmQOF5rZuxHUyp8iflD1q6GvPAVu0VkXF6y48xDb13CMX5QEU+MtI=
+	t=1787272114; cv=none; b=ehvNhYhRxnU/K1lo9y7j1LcWeTD9jNicK+TOBVTOvX2UrYWRuS0LH3z5Pe/cGfpmKqzovePZMtDMKTjiDEleJMXQypqUxOPAS6Mk931RDrLtl4NpKSBl2Fs8jBpvPoUc8WQnzKygey63TaAWaPEOSGRq2DeAF0kyev96fZYZ6nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787272083; c=relaxed/simple;
-	bh=pgixI+fIpFrX4LEednJFcxkiaXuC/+o2a9/7ymBEEmU=;
+	s=arc-20240116; t=1787272114; c=relaxed/simple;
+	bh=PVeHwDs3AG9JKDlKO7oXgXFh4F+t6EbVlKtFXuzFeks=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=iCGuTf3u00BFmHNBsUV03XK9/aOsJELc+49JIy3SiPMBUtRgRP+MQD9rCePy4Mc0VvH1QrTiFtz+ImC+PowNMIyMEtoajeUSBeq8mGVFXPr22MrODI+ay5J1BjnuY7mihgQXM6Ia355zsicvZttkxqe5aTOH8fIYq8yvdAziN8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OXzP4AHU; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ZLSMVzEqwAxWQVqxGIbBdV0qbYSNFGHd1Mv1d0508q3D3FI8GskYWg3GGF9mk6QkTdTyZ34SH4A8/L+JyOe32jDhfmPumLuwwlbZfVKJEwxO/n8Yx7uPPKAhh9fXLnZ0MpVfmXqOkh2cUyLa4Y8HE59bcFkMO3pgsXTIUCF2YHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TcKszcEU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OXzP4AHU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1483F1F000E9;
-	Fri, 21 Aug 2026 00:28:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TcKszcEU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD55B1F000E9;
+	Fri, 21 Aug 2026 00:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787272082;
-	bh=KtdtRqPKRm7UnmhsXtyfO+to9RqB/Cvc40r2po1VLbE=;
+	s=k20260515; t=1787272112;
+	bh=06pskmQzPWa1lHv34ApiyZ/a4/4KQLzfA4K88SMRoAE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=OXzP4AHUfxx3JMxmFDwQ2YZ3fyj7yWqZiMUx7WWTvoT779YPcwfXbU+e9nN+QA7fl
-	 5ECAZSiMaLII4ehUkAL/HLbH95OpkjYPG0exMqZUtwI76qzaeP4iUFJfVBRGNOxlGw
-	 gWEwWvakMbhuy98fvrmXR5/BHEF7nQKRDkZuYog2+wkWxDs2Ptnsl47l/3Kuw3qPlA
-	 E6oojcv4B6F/NqfVzHyhg22/LIK1ILcaUAQ7ETj+4HAc/w8XZ764mpcP+pFlPi9ZP7
-	 5ZUkIgWETUi+cZ2Lfk4NbBAaTRAucN7RE0C98Ehsw9xqvUCHGAMwzS5dVHw8LjbCqF
-	 6dN+jgr9LMofQ==
+	b=TcKszcEUIM1GR1fnWjUCRSbR9HUcO9h8he6UgdmMVZ8u5U3ooqVACVvC5GJF7YtZ7
+	 HRYPFRa7HwLZx3d0wkyvyJlSROsWxwbV9jIhGX6CDZNbaTqn10Inl0gqQQ7HilJim4
+	 eXozfAE4n4H+nJvVqvOO58b0tTsDjIL5lBPKl/U6uzlrmIM7l1xELFjQqgkK9aAJNX
+	 e4O9lMjwzRjYU7rQzHQj8zYJWBmsA+GG4JBWA6tufOuc5aszgmGDBl4rN+vngcjCqE
+	 ceRj3c5hyyYJqRlhWBpodI9XkdbiRJXKyjpjw6yRzLVOCEXbCTQiPZjYgqxGSgzvIC
+	 E8F5xI5XytrOA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 3/6] perf header: Support memory ranges
+Subject: Re: [PATCH v5 6/6] perf c2c: print memory region data with stdio
+ output
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Thomas Falcon" <thomas.falcon@intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260821001819.162277-4-thomas.falcon@intel.com>
+In-Reply-To: <20260821001819.162277-7-thomas.falcon@intel.com>
 References: <20260821001819.162277-1-thomas.falcon@intel.com>
- <20260821001819.162277-4-thomas.falcon@intel.com>
+ <20260821001819.162277-7-thomas.falcon@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 21 Aug 2026 00:28:01 +0000
-Message-Id: <20260821002802.1483F1F000E9@smtp.kernel.org>
+Date: Fri, 21 Aug 2026 00:28:32 +0000
+Message-Id: <20260821002832.BD55B1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,60 +47,58 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Missing explicit header inclusion for <fcntl.h> when using POSIX=
- constants (O_RDONLY, O_DIRECTORY) and functions (open, openat) in tools/pe=
-rf/util/header.c.
+- [Low] Missing explicit inclusion of `<stdio.h>` for `FILE` and `fprintf` =
+usage, violating strict musl libc compilation guide.
 --
 
---- Patch [3]: [PATCH v5 3/6] perf header: Support memory ranges ---
-commit 3413492c0a2a11d41de6c16475e806b307c1b825
+--- Patch [6]: [PATCH v5 6/6] perf c2c: print memory region data with stdio=
+ output ---
+commit f16f316fde0a57c797db59281b9604cd432a9c29
 Author: Thomas Falcon <thomas.falcon@intel.com>
 
-perf header: Support memory ranges
+perf c2c: print memory region data with stdio output
 
-This commit adds support for reading memory range data from the ACPI MRRM
-table exposed via sysfs. It saves this data in the perf data file header
-under a new feature bit, HEADER_MEMORY_RANGES, and adds support to print it.
+This commit adds functionality to print memory range data in the perf-c2c
+subcommand when running in stdio mode. If memory ranges are not present
+or supported, it skips printing them.
 
-Link: https://lore.kernel.org/lkml/20250505173819.419271-1-tony.luck@intel.=
-com/
-
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 091d8f7f6bd2c..a81a0f42bb0f9 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-[ ... ]
-> @@ -1891,6 +1892,132 @@ static int write_cpu_domain_info(struct feat_fd *=
-ff,
->  	return ret;
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index 653b195f3c376..e774967052cca 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
+> @@ -2636,6 +2636,34 @@ static void print_c2c_info(FILE *out, struct perf_=
+session *session)
+>  	fprintf(out, "  Cacheline data grouping           : %s\n", c2c.cl_sort);
 >  }
 > =20
-> +static int memory_range__read(struct memory_range *range, const char *pa=
-th)
+> +
+> +static void print_memory_ranges_info(FILE *out, struct perf_session *ses=
+sion)
 > +{
-> +	char buf[32];
-> +	ssize_t n;
-> +	int dfd, fd, tmp, ret =3D -1;
+> +	struct perf_env *env =3D perf_session__env(session);
+> +	int nr_ranges =3D 0;
 > +
-> +	dfd =3D open(path, O_RDONLY | O_DIRECTORY);
-> +	if (dfd < 0)
-> +		return -1;
+> +	if (!perf_header__has_feat(&session->header, HEADER_MEMORY_RANGES))
+> +		return;
+> +	nr_ranges =3D env->nr_memory_ranges;
+> +	if (nr_ranges =3D=3D 0) {
+> +		pr_debug("No memory ranges found, skipping\n");
+> +		return;
+> +	}
 > +
-> +#define _R(name, dst, conv)			\
-> +	fd =3D openat(dfd, name, O_RDONLY);	\
+> +	fprintf(out, "\n");
 
-[Severity: Medium]
-Will this compile successfully on systems using musl libc?
+[Severity: Low]
+Does this file need an explicit include for <stdio.h>?
 
-The code introduces usage of POSIX functions and constants such as open,
-openat, O_RDONLY, and O_DIRECTORY without explicitly including <fcntl.h>.
+The new print_memory_ranges_info() function uses FILE and fprintf(). The pe=
+rf
+subsystem guidelines note that files using libc types or functions should
+directly include the POSIX headers declaring them to prevent build failures
+on musl libc systems due to strict namespace separation.
 
-While glibc often implicitly includes these dependencies through other head=
-ers,
-musl strictly separates declarations. This missing include could lead to bu=
-ild
-failures in musl environments.
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260821001819.1622=
-77-1-thomas.falcon@intel.com?part=3D3
+77-1-thomas.falcon@intel.com?part=3D6
