@@ -1,68 +1,67 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E569F470EA8
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 09:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A68E24BBF0
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 09:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787305784; cv=none; b=iXh8mywGreMfpPcb2G71zhYBf4iS/H5L9+GOcFybWcD9AJ4EdVsE7rkoCHSM+Qz76YoYPMohHl41idvsAaDhK+G4zp8Xlkc5M85vVKoAokJxtvjmGPKdOGTSLjXCpVSZ8Aicx8GIxMgakCJVFObiIZDZL459vJx0gKhdYw0jC7c=
+	t=1787305788; cv=none; b=tmNmkaWcEjkSseTuUlqJmf1HignP2ckqDrstp7heir4m+Kk/bP851IQQ6ZauAvlciFtFaIgf5uTWHQbw2xXwY5uLRjabUCeiCoSbYEYx5TgIvlQGrnkblhvPWdoFvAqPUkPYzWzr/rho6z2SQJ1joqAyUnI7U0tzFe6cYEcoJMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787305784; c=relaxed/simple;
-	bh=GmFPf0hS6ejuPSWWrOe80fbWivZhcfucDIR0UYfgWe4=;
+	s=arc-20240116; t=1787305788; c=relaxed/simple;
+	bh=VHbTeSJfXkNdpa7GWemni8wgMespqnXWXrv3pQGnqWo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mMlYYqTcpt3wFEhl+K3zQijUhTE9KBfsML/d4k2WpKaXMUPqNXutY2i1aEkN3S+xgp7YhPdeJ9Hmc9ym1Vq839xVqNVTjOqJMEOk7WBKRg7yDo0q7fcagfTS+3J7QsORIP/XhDkAd/tQQfL10FQ3imQWrhPP3C+4JSp1usOMmAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JanPLl/h; arc=none smtp.client-ip=209.85.128.47
+	 In-Reply-To:To:Cc; b=TD/hRmAR3UEUPIFXrUUCaF4fu0OKAuVHUz+5F/boteQq/4zNVW9BXer7Iv2h0aKlSakd6ohnc3q2Hq3c+lZCZwYAVbz7lVvhD42268Owj9A/gVSL5S1gsyUnmT4nYyFsGOM7kEkwUHbsxvcTSvQ5+2YkZ5MysANvQwo/4DLl1W4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aTVRvQmc; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JanPLl/h"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-498028b3d5eso8828545e9.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 02:49:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aTVRvQmc"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-4815bce4652so504477f8f.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 02:49:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1787305770; x=1787910570; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1787305779; x=1787910579; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=tvr/xW0gPJp55FsCc7tSxN43AAHHoShgvkJBQUdWPcc=;
-        b=JanPLl/h1RfBcg1aCSM8G6aHLcVTL9ArM5LbozpK0IssaXyhiDCETUff8+ZvvypPmN
-         G+ip8Iyl6EPyLljVCBrU0VnTeouagxc5FwrFXDwEWatkotuue+xqLS1TlJuKQVdDVnB1
-         RgEi7nm6VyMEa1Y71tzLBW0CUFIqh0GZep7Tn2dfRK3NpBDW4BBuCcN8nhlNAc3m4cV8
-         2orbSG7rz0h1SnZtPWvsCbdJ0UUPZnXQ4C1eulciVyybzoYqR5Iy7PucolUm4b5yJOeV
-         lWm7d6U4U/3l2zN4B61Ydg9L+2d5KzIJf+/dILsMTWgHm9fg0U1GXsHFtMKWGc/wI5on
-         Hn8w==
+        bh=FLPGCt4Z2rnGiWCr3RwF/7TLVu4WTyiGBE7+q4fWYws=;
+        b=aTVRvQmcDOKOQbm+FsJqrmVuxXxD5zOzPq2TM8Aiu9qyrY0ZooKc4gLhRp2r2dZVIk
+         PcvbMS4tjLGy9uSuAsACkDg8GTJAiN9oA26bkaLp0Z8ejpQ/PDTffablPBDEdYdvqL9d
+         qeq9vcOUXdFAo+627E73sjorEEQK8HDvnDXU9T0I4xuRgDbNh8erahalB5FgjWPM2HXn
+         D11VS83QwU4JGbZe7gkcqqIizzyqpzqSTtipskvDcrHTqufleChdIGIvnOPq7QLD8v2u
+         qUbwt4k3rTEMiZsn1rDGTuH82wVvHGANJnRm8Fo2m6x3klxclfD1K40ibhoWgTa52v4X
+         WwtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787305770; x=1787910570;
+        d=1e100.net; s=20251104; t=1787305779; x=1787910579;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=tvr/xW0gPJp55FsCc7tSxN43AAHHoShgvkJBQUdWPcc=;
-        b=mEAHNEpVlse2X5jOh9gkuq2ACzogExE7LuhF/n1ltLR1sp8AOEroGDlw56laXDfgbg
-         dvLz59xfadzor8di5HZ4zn/KVUJy2vUE+xfMUHIiScAH1iKWBle9vbChu8PQBE/RyCL/
-         KvvjWlPcpvlouKxoChpkkwP4Unmp4tl2Cl2X/KQbaK0NnElwdlzgB214iQA3NiwQfRmw
-         og3QM6hisVqSIb2H8Ik2cy1iqTUkU5FvcICxDtnjsA/GLCIR5pc1lphRr2GQjZ7Cb7P0
-         Y4nmurGCUB75j+PA8llwCJFqBzXkNadoMZqqwN2FgSt1BNibn70OpKFh+OGmTABUFhiY
-         DOvQ==
-X-Forwarded-Encrypted: i=1; AHgh+RolvE0YemnXsuD0Tfve2CiP33mV0QiBOe8RqIr3tprq97bqM+0vV/K6wefUEpIEo7uNqUOO+mir4Lz+v9v23ixo@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLEKAku5/RMtHBN1ZOzD7zfMx1TYHw5iSDZf/bjyA1STnTWSCp
-	OJZ1JeV3IumsGnD9AMTK241mKDyqMOcC2OUj6QaoRntkyz99mpFnVsPPse4SlPFDp+s=
-X-Gm-Gg: AR+sD12AiFQ2kZnZ+jwH9lGzlDaAohx+eAyQbTYbgsYn13aR7oaLajK9IckrAoi8z1L
-	CJwb6oUeRABTWMig7EPQ1Jp7F5YZs/nZWSUKUxwWOsVZEt1FKS4L45kWEKnODsaVbIyrmw6KFjT
-	GW71p9qz0hjLK6lF6iD5aZyO8FBKGVlg5CgAPNn0iKE5gje2AGdAf4byo6BWKV9qE4cpDMptl1H
-	MynND8B9O0BuRE1o/Q+cpgPK72DRqvWTbWkTBek3/BsMPGfKz+tWYKMFjXxzAmJoKlY5+Ag7rgq
-	rYycYrOmN6/pCNfOlEuVk4il9Q2RhcWS6givj+8VBBt4XkH95m9cagXW+Pt2gRs75rRIHDaJ2oU
-	AJeDJtSKJfrg0t+qo7fEn2NPI7hU+4RTP0/09SotiudV26/2lO+2kqzdCmDTMHOZyWSXyvOU4jP
-	EWw5m0xj0DqC9Wwn3LgLn6Qhv7jruGg39rDa80DBCdSJkFQEuW/98NUFmKrADXryRK
-X-Received: by 2002:a05:600c:8b0f:b0:496:c379:b2a1 with SMTP id 5b1f17b1804b1-499b82e8e92mr80267695e9.2.1787305769809;
-        Fri, 21 Aug 2026 02:49:29 -0700 (PDT)
+        bh=FLPGCt4Z2rnGiWCr3RwF/7TLVu4WTyiGBE7+q4fWYws=;
+        b=HhBBw5eM7A52DJEC8Hp9UqRh7cE7Ng4djc8wtD5G/qKTGSFw4mloBOcpBcELtYWonY
+         +WiN8zJbED0f+O5JrcKDtt2JkOwuJaG0YqqM4yF2u28WnjBzORPDe6ylJh4+4KbMl72W
+         L0zNK2/VvCLCOY2+SxRd9r4a6p/jk95zH1S7kufNw7g12D9yfBC97P4Q8DfqxMZZgJ45
+         aL4QOga+WfkyqA9P4eCcEEtydyurfXDm88hR80YU2yA1dOJWlkOHAL2a/k+hQPDXodF0
+         WcZ8K0scvOf7dursAcGpiEEllG+p7aD7u9YaTTw+lX6nONGxUu+NxwpKYUxa9eMSYEdF
+         JtPA==
+X-Forwarded-Encrypted: i=1; AHgh+RoD26MJI0CfdTeT9b2VY7cCjVd3UVUXRKXo0H5lZkoiI64Kg+SBqw6poNo7ThjFHjrVhd0FfQd7sG0VsNIxVpF8@vger.kernel.org
+X-Gm-Message-State: AFuF++ku9XPfR7LrAXvcCvHmeCcWgh5shMnHZdtJIwNSnT/EZi9O81cm
+	e0FhweVMKpyNOxnyJivu4kO714DoFX5V4h8XqJ54w6h88DcO1DUhzDUWDo2VWlqpiag=
+X-Gm-Gg: AR+sD10DoMxFkTrabRlaeVQICYgkoE3/Zts3NJKvbc932Ck2+k6hevQ7o2Akvqcdmv2
+	GUDJmpVAMEjlet6Ohw6QCNcEjuSJdikG4P42OG5BWB25hQ1tI084PZiHmy64KkY80ma9I2495Qa
+	t0LENSPDXazC4QL3GwEZM6l8LYOjdWbDiVGSM+6KTw6ICpDAJ87wUdn4O5kjeKitodIUkXwVVOu
+	/WaDJYYna8EhakiveksKgpq3Gj1fiAI/K69/q/wfU7+r3S5xlLWJxJIH6zzLo0boFKHF230Yw1Y
+	qajqQehHe7cXDPwEFcyj0/g48tMCKCHHdRZen/gr9vH08MuXb/tjw/CXns//Jww19Dq1YhYG82u
+	k0ADl5RaulYXDCYqt8CbAkzzwtaViZ3q64+mB//3N5l/fOQawe3eQLIvZUqWUG6w3hTwu6pDG19
+	sC957zHwt3NhwUo05rko0CPsO38A7pHotoueDBiTNwACgrYZi+Lfs7Dghgt+CAw8SI
+X-Received: by 2002:a05:6000:4b1b:b0:482:bb55:8bda with SMTP id ffacd0b85a97d-482c0b5bf64mr7702886f8f.5.1787305778190;
+        Fri, 21 Aug 2026 02:49:38 -0700 (PDT)
 Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b14d05a6sm17683479f8f.35.2026.08.21.02.49.28
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b14d05a6sm17683479f8f.35.2026.08.21.02.49.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 02:49:29 -0700 (PDT)
+        Fri, 21 Aug 2026 02:49:37 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Fri, 21 Aug 2026 10:49:02 +0100
-Subject: [PATCH v2 04/14] perf cs-etm: Use per-CPU queues for per-thread
- mode
+Date: Fri, 21 Aug 2026 10:49:07 +0100
+Subject: [PATCH v2 09/14] perf cs-etm: Queue partial AUX records
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -71,7 +70,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260821-james-cs-unformatted-per-thread-fix-v2-4-00c4fd0701b4@linaro.org>
+Message-Id: <20260821-james-cs-unformatted-per-thread-fix-v2-9-00c4fd0701b4@linaro.org>
 References: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
 In-Reply-To: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -92,107 +91,131 @@ Cc: Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
  linux-doc@vger.kernel.org, James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.15.2
 
-This fixes two problems, firstly per-thread mode didn't support multiple
-threads well or at all because we always use queue 0 and assumed it was
-for a single thread. However, Perf attaches to all child threads of one
-process or allows multiple threads to be specified on the commandline.
-This meant that trace before a context packet could use the wrong MMAP
-for decoding, and threads running concurrently wouldn't be interleaved
-properly.
+In snapshot mode AUX records may straddle the boundary of multiple trace
+buffers. Currently we only queue AUX records whose range is contained
+wholly within a single buffer.
 
-The second problem is that we'd put all HW_IDs into queue 0, so if a
-thread runs on multiple CPUs then it would receive multiple HW_IDs and
-trigger the assert that unformatted trace should only have 1 decoder
-per-CPU:
+Fix it by queuing any partial AUX range that overlaps any buffer.
 
-  $ perf record --per-thread -e cs_etm//u -- taskset --cpu-list 0 \
-     taskset --cpu-list 1 true
-  $ perf script
-
-  perf: util/cs-etm.c:3381: cs_etm__create_queue_decoders: Assertion `decoders == 1' failed.
-
-Fixes: 9182f04a85b2 ("perf cs-etm: Pass unformatted flag to decoder")
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/cs-etm.c | 30 +++++++++++++++++++++++++-----
- 1 file changed, 25 insertions(+), 5 deletions(-)
+ tools/perf/util/cs-etm.c | 54 +++++++++++++++++++++++++++---------------------
+ 1 file changed, 30 insertions(+), 24 deletions(-)
 
 diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index d423f1cb408f..ccf886efff95 100644
+index ccf886efff95..d1eb4ec17bbd 100644
 --- a/tools/perf/util/cs-etm.c
 +++ b/tools/perf/util/cs-etm.c
-@@ -295,9 +295,6 @@ static int cs_etm__insert_trace_id_node(struct cs_etm_queue *etmq,
+@@ -3197,7 +3197,8 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+ 	union perf_event *auxtrace_event_union;
+ 	struct perf_record_auxtrace *auxtrace_event;
+ 	union perf_event auxtrace_fragment;
+-	__u64 aux_offset, aux_size;
++	__u64 aux_start, aux_end, auxtrace_start, auxtrace_end;
++	__u64 frag_start, frag_end, frag_size;
+ 	enum cs_etm_format format;
  
- static struct cs_etm_queue *cs_etm__get_queue(struct cs_etm_auxtrace *etm, int cpu)
- {
--	if (etm->per_thread_decoding)
--		return etm->queues.queue_array[0].priv;
+ 	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
+@@ -3245,43 +3246,42 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+ 	}
+ 
+ 	if (aux_event->flags & PERF_AUX_FLAG_OVERWRITE) {
+-		/*
+-		 * Clamp size in snapshot mode. The buffer size is clamped in
+-		 * __auxtrace_mmap__read() for snapshots, so the aux record size doesn't reflect
+-		 * the buffer size.
+-		 */
+-		aux_size = min(aux_event->aux_size, auxtrace_event->size);
 -
- 	if (cpu < 0 || cpu >= (int)etm->queues.nr_queues)
- 		return NULL;
+ 		/*
+ 		 * In this mode, the head also points to the end of the buffer so aux_offset
+ 		 * needs to have the size subtracted so it points to the beginning as in normal mode
+ 		 */
+-		aux_offset = aux_event->aux_offset - aux_size;
++		aux_start = aux_event->aux_offset - aux_event->aux_size;
++		aux_end = aux_event->aux_offset;
+ 	} else {
+-		aux_size = aux_event->aux_size;
+-		aux_offset = aux_event->aux_offset;
++		aux_start = aux_event->aux_offset;
++		aux_end = aux_event->aux_offset + aux_event->aux_size;
+ 	}
  
-@@ -1268,7 +1265,7 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 	queue->priv = etmq;
- 	etmq->etm = etm;
- 	etmq->queue_nr = queue_nr;
--	queue->cpu = queue_nr; /* Placeholder, may be reset to -1 in per-thread mode */
-+	queue->cpu = queue_nr;
- 	etmq->offset = 0;
- 	etmq->sink_id = SINK_UNSET;
- 
-@@ -2160,6 +2157,7 @@ static void cs_etm__flush_all_stack(struct cs_etm_queue *etmq)
-  */
- static int cs_etm__get_data_block(struct cs_etm_queue *etmq)
- {
-+	struct cs_etm_auxtrace *etm = etmq->etm;
- 	int ret;
- 
- 	/* The current block is not finished */
-@@ -2188,6 +2186,27 @@ static int cs_etm__get_data_block(struct cs_etm_queue *etmq)
- 	 */
- 	cs_etm__flush_all_stack(etmq);
- 
-+	/*
-+	 * Per-thread mode still uses a queue for each CPU, but that CPU can run
-+	 * different threads. When the TID from the AUX record on a CPU changes,
-+	 * re-initialize the thread using the AUX record/buffer fragment TID so
-+	 * we can start decoding even if the context ID packet was cropped or
-+	 * they're disabled.
-+	 */
-+	if (etm->per_thread_decoding) {
-+		struct cs_etm_traceid_queue *tidq = cs_etm__etmq_get_traceid_queue(etmq,
-+							CS_ETM_PER_THREAD_TRACEID);
+-	if (aux_offset >= auxtrace_event->offset &&
+-	    aux_offset + aux_size <= auxtrace_event->offset + auxtrace_event->size) {
++	auxtrace_start = auxtrace_event->offset;
++	auxtrace_end = auxtrace_start + auxtrace_event->size;
++	frag_start = max(aux_start, auxtrace_start);
++	frag_end = min(aux_end, auxtrace_end);
 +
-+		if (thread__tid(tidq->decode_thread) != etmq->buffer->tid) {
-+			thread__zput(tidq->frontend_thread);
-+			thread__zput(tidq->decode_thread);
-+			tidq->frontend_thread = machine__findnew_thread(&etm->session->machines.host,
-+									-1, etmq->buffer->tid);
-+			tidq->decode_thread = machine__findnew_thread(&etm->session->machines.host,
-+								      -1, etmq->buffer->tid);
-+		}
-+	}
-+
- 	return 1;
- }
- 
-@@ -3245,7 +3264,7 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
- 
- 	if (aux_offset >= auxtrace_event->offset &&
- 	    aux_offset + aux_size <= auxtrace_event->offset + auxtrace_event->size) {
--		struct cs_etm_queue *etmq = cs_etm__get_queue(etm, auxtrace_event->cpu);
-+		struct cs_etm_queue *etmq = cs_etm__get_queue(etm, sample->cpu);
++	if (frag_start < frag_end) {
+ 		struct cs_etm_queue *etmq = cs_etm__get_queue(etm, sample->cpu);
  
  		if (!etmq)
  			return -EINVAL;
-@@ -3258,6 +3277,7 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
- 		auxtrace_fragment.auxtrace.size = aux_size;
- 		auxtrace_fragment.auxtrace.offset = aux_offset;
+ 
+ 		/*
+-		 * If this AUX event was inside this buffer somewhere, create a new auxtrace event
+-		 * based on the sizes of the aux event, and queue that fragment.
++		 * If this AUX event overlaps this buffer, create a new auxtrace event
++		 * for the overlapping range and queue that fragment.
+ 		 */
++		frag_size = frag_end - frag_start;
+ 		auxtrace_fragment.auxtrace = *auxtrace_event;
+-		auxtrace_fragment.auxtrace.size = aux_size;
+-		auxtrace_fragment.auxtrace.offset = aux_offset;
++		auxtrace_fragment.auxtrace.size = frag_size;
++		auxtrace_fragment.auxtrace.offset = frag_start;
  		auxtrace_fragment.auxtrace.idx = etmq->queue_nr;
-+		auxtrace_fragment.auxtrace.cpu = etmq->queue_nr;
- 		file_offset += aux_offset - auxtrace_event->offset + auxtrace_event->header.size;
+ 		auxtrace_fragment.auxtrace.cpu = etmq->queue_nr;
+-		file_offset += aux_offset - auxtrace_event->offset + auxtrace_event->header.size;
++		file_offset += frag_start - auxtrace_start + auxtrace_event->header.size;
  
  		pr_debug3("CS ETM: Queue buffer size: %#"PRI_lx64" offset: %#"PRI_lx64
+-			  " tid: %d cpu: %d\n", aux_size, aux_offset, sample->tid, sample->cpu);
++			  " tid: %d cpu: %d\n", frag_size, frag_start, sample->tid, sample->cpu);
+ 		err = auxtrace_queues__add_event(&etm->queues, session, &auxtrace_fragment,
+ 						 file_offset, NULL);
+ 		if (err)
+@@ -3321,6 +3321,7 @@ static int cs_etm__queue_aux_records_cb(struct perf_session *session, union perf
+ 	struct auxtrace_index *auxtrace_index;
+ 	struct evsel *evsel;
+ 	size_t i;
++	bool found = false;
+ 
+ 	/* Don't care about any other events, we're only queuing buffers for AUX events */
+ 	if (event->header.type != PERF_RECORD_AUX)
+@@ -3354,11 +3355,14 @@ static int cs_etm__queue_aux_records_cb(struct perf_session *session, union perf
+ 			ret = cs_etm__queue_aux_fragment(session, ent->file_offset,
+ 							 ent->sz, &event->aux, &sample);
+ 			/*
+-			 * Stop search on error or successful values. Continue search on
+-			 * 1 ('not found')
++			 * Stop search on error values. Continue search on
++			 * 1 ('not found') or 0 ('queued')
+ 			 */
+-			if (ret != 1)
++			if (ret < 0)
+ 				goto out;
++
++			if (!ret)
++				found = true;
+ 		}
+ 	}
+ 
+@@ -3366,8 +3370,10 @@ static int cs_etm__queue_aux_records_cb(struct perf_session *session, union perf
+ 	 * Couldn't find the buffer corresponding to this aux record, something went wrong. Warn but
+ 	 * don't exit with an error because it will still be possible to decode other aux records.
+ 	 */
+-	pr_err("CS ETM: Couldn't find auxtrace buffer for aux_offset: %#"PRI_lx64
+-	       " tid: %d cpu: %d\n", event->aux.aux_offset, sample.tid, sample.cpu);
++	if (!found) {
++		pr_err("CS ETM: Couldn't find auxtrace buffer for aux_offset: %#"PRI_lx64
++		       " tid: %d cpu: %d\n", event->aux.aux_offset, sample.tid, sample.cpu);
++	}
+ 	ret = 0;
+ out:
+ 	perf_sample__exit(&sample);
 
 -- 
 2.43.0
