@@ -1,64 +1,64 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9584E3F4856
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 05:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9283F39C8
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 05:02:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787288558; cv=none; b=FST9T1pBxWzHMfUhkEEUbkb9iaNu0sWphx/bCmXlDme5P1zePb/exqqFrJAT8Zjp8veMPcGjyovTnYCMa0L1AS1IbjXDiMSgcuZ0l6ZVyUyWCJtzEohw3whaS2eRAu7nmr3uh46MMLtq9WjB0rDqA40YyufWz3NuJfhhWDJVkq0=
+	t=1787288559; cv=none; b=s2NDLgW/DESn+dC/anHA/VH7V1W/TVVtFCjzjqOy7rQ93BJEjDcbOYAPvBh8SV+S5llUalbfU/Z2rqvhBBm/1lV55Xgl5DAkZqdcq+ZqpXsGOjX5qm3Tb0aaxMVyHYAe9TlaCUHFMPdd2Z5KEbP/MRJ+S0h+FMM5w501I9vvqIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787288558; c=relaxed/simple;
-	bh=D/tw0w8eAa3nSDuVMYf/sW/Q8H627uckPE9TlM6qwqM=;
+	s=arc-20240116; t=1787288559; c=relaxed/simple;
+	bh=8JI029aHHVd4hzfZslrLMNIc0yKFwbk2r2Yl5nBhqZQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Px8aJpbxqWri0J/H46bgBWe1j3ekeVH/WOPY7/SdsGVTB0/zEZKnkmazdaOIqLxp2LDpNlIBNdcilTifHGN5m9c+3kUotqRqo9eJPRFXHkjJ7JT43GfpUMuYSSAEY+g10zMVmZ6Fd/vAa5TPX3MrEanBO8Mxv89l+3xsMImzoCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=If27CtRH; arc=none smtp.client-ip=209.85.219.44
+	 MIME-Version; b=qDH3GoF0O30Cby0s5U3gYJSpXPS4hsSj59gc5ovepM5LuAjsjKI0sUQgQX0YxGhUvg1+44yIFYPRs2the1c5swXWN4k9A2kMfungZIWD+NMAO3OJX5ISgx+gPJ+HHx9A9cVxKjw6N8hgwDW6VPfYnQpfr1i8+fbEI7EJEmFHlM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=Qnu+ekyl; arc=none smtp.client-ip=209.85.160.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="If27CtRH"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-8f0e5e36912so3803456d6.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Aug 2026 22:02:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="Qnu+ekyl"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-52de178a66aso3624421cf.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Aug 2026 22:02:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ncsu.edu; s=google; t=1787288555; x=1787893355; darn=vger.kernel.org;
+        d=ncsu.edu; s=google; t=1787288556; x=1787893356; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=OzB1aNn1o04f40kFNNF+EY0tTOWmlsfUCuB6g5UoRcM=;
-        b=If27CtRHZF8OX3cWBs/mmaNyu7MaFc6NlQf1Edgt/pwXj72K0WPbRd/FoZq3ekfa4r
-         YpFcfs2Jkq1vJcTdbJB44dLZP+mipGqT6yC9mM+SNwERZbjuOs6lTXlAvNaHr7vs8r77
-         qE4kidgKNkfUrtVoQz3Ho4zTScUOds/Kw0h8ktdjOYcQ6OaXxQae86oLza9NeC2+UUGg
-         yksNXOmV69znZsWukkt4XmD6wpGn9h5/QPJuzwrAieg3mdKt29ok/0JhUBL+IwCGmPHT
-         ZwnS5mlTpuYd4ZRCDqOwwvWKary/bf2mpow73mijhh2AC7MB8GncIGS6nQ4MojBQ59ct
-         3LYg==
+        bh=wPbluY6yf1PyMOHReNPfj1WTJm+vQ4UBgCAO3CQP2eE=;
+        b=Qnu+ekylt6PGtIVMUl1w2UAPs6kXzOPHHvwG3npk3y9wlxRipB9EGFmaJf1hXBmV0c
+         CrsFK/LmqBO8zEZKicW/i0l5XTk/+GMRVD61HZGQrw1aMRknKRVjkcYT4g+3i7V8oGLJ
+         GUO3QMrPWr/KQElJdc4zUJ+DksGYYR7iz1fcVw3d94zPC0kD0vNyV7AG4aG2nv9PlonO
+         xgIfhC2J0HF2H2ar+3Io097+04DyeV9G3aPpYb2U5qYJoj2fcHn7xXpQfj19xYu4/YQT
+         w3NTuE1Ha/mGE6KjX37UpbZJiBElsoRdB+nM6uzLWjxJBB1sojC3k0N2vuyy3va2XC5W
+         puBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787288555; x=1787893355;
+        d=1e100.net; s=20251104; t=1787288556; x=1787893356;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=OzB1aNn1o04f40kFNNF+EY0tTOWmlsfUCuB6g5UoRcM=;
-        b=ADjilZ5aDaWTRzH9Cp/6MVvqNnzlmpBrYsJzynUfvh11puQDBE3WJB2z25G+KGCp5v
-         ULkTA4J8NjByvUeATX4qNOH64oXYBfr9BhN5a7ZhVyCnm9kyD+I8Rotyy79MUJfgpzMy
-         5Xlsi/FSVMyVu5j90FHXMVQpXv6diMSY7zdNMkG692T9CW5wsu5chXYRO56lVvxgv78A
-         MhXtRW0OBoV0y5EtIcQnBUUAswz1JgV/+i7mYLw2pwhYQ3Q/FvsEI9GLvHJC6oHSBFiv
-         /RNemg38mVntnkT1otGvbrhsK/5LnYscjU9y5YtSXAMWhET+YRVtOqONcVG/3mPZXUKF
-         C9sA==
-X-Forwarded-Encrypted: i=1; AHgh+Rr2Apr+AHMEOkBcV5TpzkHy2mpnJGqvgot3dm6maGR2zNGgMkB0rDpTif8zHqsRxmfmrMT74wlVrH38QvPDRwuI@vger.kernel.org
-X-Gm-Message-State: AFuF++k39qA5KItJbhgnqaG4hcRoZJcDmyDn1ZmlE5u8HNe8lRxgnbIb
-	5K/7PiOx3En2SFxHHCj+m0nOyDlZvdZXcweKs5efjR5BXSUy04+uoS4TcBSgjmpfhg==
-X-Gm-Gg: AR+sD11Gb9vhDdrCZS8G1T5pTzwoOLe/JdoD65vOTPpsNcD+6AN4tGcYtugCU6ttbkD
-	Aincxd7hUeQ5roOOdGN6xvMZf3ggK4FL5ycT+ryFoUe4F/7oBGOgInS2qtdD1aNpdT23clCL4cu
-	WrXTK349cXiutV51vStThgaDfiKbyZIzkJA8xU4v0mavZa3io28URLq/+ypiiIFdGDMwkF7Zg50
-	Uk6nV9WqVyP7M117wxO3oSX8Ww0jtlUK/UQ6kaWl3nT6nCZWAr+DbEaTYNX+OysT6Afs9WgLMZf
-	Ft/IY4BzaVUK8ShxjH7qusCa1QjEperO0b08NSzDhCDr8kwDNvTlTSs/c7S2UfL16dCQkNQNP/j
-	qXLerjtwkjlgcbs7t1Lq8Uvr1rI6PsQrgjMfhMf/LVtvNGo2Sn1mGSsTJtVQx6XvcVRISrV+swb
-	W+MY5ouD9bALaL28VjWRJsuL74AfW0Safet3dk5b8Ul1ZW0CyxxrM6yKnZdRSLqCAKGxCxvvwz5
-	BFH6W4V4clFwknj4ejr
-X-Received: by 2002:a05:6214:124d:b0:8ee:5e59:7b04 with SMTP id 6a1803df08f44-90c80e00b57mr32278996d6.18.1787288555148;
-        Thu, 20 Aug 2026 22:02:35 -0700 (PDT)
+        bh=wPbluY6yf1PyMOHReNPfj1WTJm+vQ4UBgCAO3CQP2eE=;
+        b=a2zLTokpnR6N4mvowrPRLuwwVvEWkYDaULQ1cOQ+2YfrP6S/E5OW8SiMkSJcXuPq11
+         x1cxcVQS9ZuVLMKoQ+6WOVYAKUognd+w0HsqMgS+MpZWo0UvfDyKxoIb71IkOk82djZ5
+         9n/bLIDw/VjlXZrHhXFzwtdpu3nFlFTPULOwUu/RvF0PCztq+Y6obrIkrgHVdZfg/u+H
+         uR9Wo57MHi+E8yAB5GhbSdVK21EbEBVL4dgWl9vxKIDLoqr8AE1foebr7Mj2A1qFr7WZ
+         RWAfSaubKv8eoqIlBB9JUvMLinWO6wESsfpcTqbIRay66oiDvsf6XD4L2JTKg7ylyHtg
+         Ssfg==
+X-Forwarded-Encrypted: i=1; AHgh+RqFANKehjQ4zRr/urC9WA+l2tH/2ZvcR5NVNibYMrcSH/0wsn8wkYF821YQgBCIubaD66TZpbbO405BmhyCuWKd@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgZeMVQ/mStX4E8HclB05R6mlls+hwnxEX4twyD5iW8QzJ+MPW
+	9sjSAp87wwQ31XpO/tp5rUEOCP39eFyo6WxLyxUMvXiEOkUAlMPiO6Rd21Jgw9pPTQ==
+X-Gm-Gg: AR+sD11GBtMcuTJrGsGjmwRJbBuZ1lsixvAVFVc+wp+Am65MX5zZtGDfRLr0nZAp/PV
+	lvU3g4CTP4fkZYsMjilV4+BySZ+RbGr5tCZPe2934GBZTFgPbJsHF5EXNulQTVMl8zqTNn1GNu9
+	HqMjIOU8o3YvEQa7aPXuQuGNwNZubcsuE+Or2B4MEvFnuysuLW/2VVmGfEoFyNjX6cHzPyzub05
+	IfW+2igUnk5co7MDkueyEPPAjSqcL1FFMLeOCY011oxSEeKuII5DKnaqvyuffXmuwAgiuWKied7
+	xHyxSiYphLrUEImeEwmsHQrzz9Gfp5qxmw0GyhZfqrRXJq+RgSLCEGvo0ZAJMYar1MHhCic3FMJ
+	7U2yjxgg+8ddgzNJoZLnhIDsM9Vlre2FSzeMpeWue2O3bkTAFi+Gzt+Ssv3gIYqOMdXeSMAU+l8
+	wcl/atnBo7KUyTzXpJudz0O8AIT6QYo08LaqoisuDaEbCRG+Z1d4nPCml8xA57aHL5KFHr6d+di
+	RTRE7iLCZ9i270Gdd6mLw==
+X-Received: by 2002:a05:622a:1485:b0:52d:c1a:797a with SMTP id d75a77b69052e-52df56e48f6mr35689151cf.8.1787288556178;
+        Thu, 20 Aug 2026 22:02:36 -0700 (PDT)
 Received: from home.localdomain ([136.61.118.42])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90c5eec1e7fsm54368116d6.12.2026.08.20.22.02.34
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90c5eec1e7fsm54368116d6.12.2026.08.20.22.02.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2026 22:02:34 -0700 (PDT)
+        Thu, 20 Aug 2026 22:02:35 -0700 (PDT)
 From: Yanbo Zhao <yzhao62@ncsu.edu>
 To: Namhyung Kim <namhyung@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -75,9 +75,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yanbo Zhao <yzhao62@ncsu.edu>
-Subject: [PATCH 2/3] perf dwarf-aux: Add C++ class, inheritance and vtable helpers
-Date: Fri, 21 Aug 2026 01:02:06 -0400
-Message-Id: <20260821050207.4517-3-yzhao62@ncsu.edu>
+Subject: [PATCH 3/3] perf disasm & annotate x86: Track C++ vptr and resolve virtual function calls
+Date: Fri, 21 Aug 2026 01:02:07 -0400
+Message-Id: <20260821050207.4517-4-yzhao62@ncsu.edu>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20260821050207.4517-1-yzhao62@ncsu.edu>
 References: <20260821050207.4517-1-yzhao62@ncsu.edu>
@@ -89,285 +89,273 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add DWARF helper functions for C++ virtual function support:
-- cu_get_language() and cu_is_cplusplus() to detect source language.
-- die_get_base_class() and die_get_vtable_index() for virtual table
-  inspection.
-- die_get_parent() to retrieve enclosing scopes.
-- die_find_member_by_offset() and die_find_virtual_func() to locate
-  class members and virtual function DIEs.
-- die_is_vptr_member() to check if a member is a virtual table pointer.
-- Define DW_AT_vtable_elem_index and DW_LANG_C_plus_plus_17/20
-  fallbacks for older elfutils that lack these DWARF 5 constants.
+Implement disassembler and x86 type profiling support for C++ virtual
+dispatch and indirect call resolution:
+- In call__parse() for indirect calls, duplicate and store ops->raw into
+  ops->target.raw so instruction location extraction can retrieve target
+  operand registers and offsets.
+- In extract_reg_offset(), skip any leading '*' prefix (e.g. *%rax).
+- Add TSR_KIND_VTABLE_PTR to enum type_state_kind and handle it in
+  pr_debug_type_name().
+- In update_insn_state_x86() for mov instructions, inspect member
+  name and identify '_vptr' access, setting register kind to
+  TSR_KIND_VTABLE_PTR via die_is_vptr_member() helper.
+- For call instructions targeting virtual function tables, look up
+  the virtual function DIE via die_find_virtual_func() before
+  register state invalidation.  Only the primary vtable is handled
+  for now (TODO: multiple inheritance).
+- Update the receiver ('this' pointer) register to the C++ class DIE
+  upon virtual call resolution when CU is C++.  The register number
+  comes from the new type_state::arg0_reg field initialized per arch
+  like ret_reg, instead of being hardcoded.
+- Move caller-saved register invalidation after reading target
+  operands to prevent losing state required for virtual call
+  resolution.
 
 Signed-off-by: Yanbo Zhao <yzhao62@ncsu.edu>
 ---
- tools/perf/util/dwarf-aux.c | 192 ++++++++++++++++++++++++++++++++++++
- tools/perf/util/dwarf-aux.h |  24 +++++
- 2 files changed, 216 insertions(+)
+ tools/perf/util/annotate-arch/annotate-x86.c | 103 ++++++++++++++++---
+ tools/perf/util/annotate-data.c              |   7 ++
+ tools/perf/util/annotate-data.h              |   3 +
+ tools/perf/util/annotate.c                   |   4 +
+ tools/perf/util/disasm.c                     |   1 +
+ 5 files changed, 105 insertions(+), 13 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 88ba0ec23a68..e991eed963a8 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -12,6 +12,19 @@
- #include "dwarf-regs.h"
- #include "strbuf.h"
- #include "string2.h"
-+#include "symbol.h"
-+
-+#ifndef DW_AT_vtable_elem_index
-+#define DW_AT_vtable_elem_index 0x8c
-+#endif
-+
-+/* Added in DWARF 5, may be missing in older elfutils */
-+#ifndef DW_LANG_C_plus_plus_17
-+#define DW_LANG_C_plus_plus_17 0x2a
-+#endif
-+#ifndef DW_LANG_C_plus_plus_20
-+#define DW_LANG_C_plus_plus_20 0x2b
-+#endif
+diff --git a/tools/perf/util/annotate-arch/annotate-x86.c b/tools/perf/util/annotate-arch/annotate-x86.c
+index 7e6136536393..cfb37a6130ba 100644
+--- a/tools/perf/util/annotate-arch/annotate-x86.c
++++ b/tools/perf/util/annotate-arch/annotate-x86.c
+@@ -11,6 +11,8 @@
+ #include "../map.h"
+ #include "../string2.h" // strstarts
+ #include "../symbol.h"
++#include "../hist.h"
++#include "../dwarf-aux.h"
  
- /**
-  * cu_find_realpath - Find the realpath of the target file
-@@ -60,6 +73,37 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die)
- 	return dwarf_formstring(&attr);
- }
+ /*
+  * x86 instruction nmemonic table to parse disasm lines for annotate.
+@@ -234,6 +236,11 @@ static void update_insn_state_x86(struct type_state *state,
+ 		struct symbol *func = dl->ops.target.sym;
+ 		const char *call_name;
+ 		u64 call_addr;
++		Dwarf_Die target_func_die;
++		bool resolved_statically = false;
++		Dwarf_Die class_die;
++		bool has_class_die = false;
++		struct annotated_op_loc *target_op;
  
-+Dwarf_Word cu_get_language(Dwarf_Die *cu_die)
-+{
-+	Dwarf_Attribute attr;
-+	Dwarf_Word lang;
-+
-+	if (dwarf_attr(cu_die, DW_AT_language, &attr) == NULL)
-+		return 0;
-+
-+	if (dwarf_formudata(&attr, &lang) != 0)
-+		return 0;
-+
-+	return lang;
-+}
-+
-+bool cu_is_cplusplus(Dwarf_Die *cu_die)
-+{
-+	Dwarf_Word lang = cu_get_language(cu_die);
-+
-+	switch (lang) {
-+	case DW_LANG_C_plus_plus:
-+	case DW_LANG_C_plus_plus_03:
-+	case DW_LANG_C_plus_plus_11:
-+	case DW_LANG_C_plus_plus_14:
-+	case DW_LANG_C_plus_plus_17:
-+	case DW_LANG_C_plus_plus_20:
-+		return true;
-+	default:
-+		return false;
-+	}
-+}
-+
- bool die_is_compound_type(Dwarf_Die *type_die)
- {
- 	int tag = dwarf_tag(type_die);
-@@ -68,6 +112,90 @@ bool die_is_compound_type(Dwarf_Die *type_die)
- 	       tag == DW_TAG_class_type;
- }
+ 		/* Try to resolve the call target name */
+ 		if (func)
+@@ -245,12 +252,42 @@ static void update_insn_state_x86(struct type_state *state,
+ 		if (call_name && !strcmp(call_name, "__fentry__"))
+ 			return;
  
-+static int __die_find_inheritance_cb(Dwarf_Die *die_mem, void *arg)
-+{
-+	int tag = dwarf_tag(die_mem);
++		/*
++		 * 1. Resolve target statically (virtual call fallback) FIRST
++		 * (before invalidation)
++		 */
++		target_op = &loc.ops[INSN_OP_TARGET];
 +
-+	if (tag == DW_TAG_inheritance) {
-+		*(Dwarf_Die *)arg = *die_mem;
-+		return DIE_FIND_CB_END;
-+	}
++		if (target_op->mem_ref && has_reg_type(state, target_op->reg1)) {
++			struct type_state_reg *reg = &state->regs[target_op->reg1];
 +
-+	return DIE_FIND_CB_SIBLING;
-+}
++			if (reg->ok && reg->kind == TSR_KIND_VTABLE_PTR) {
++				/* TODO: handle multiple inheritance (non-primary vtables) */
++				int vtable_index = target_op->offset / 8;
++				Dwarf_Die target_class_die = reg->type;
 +
-+Dwarf_Die *die_get_base_class(Dwarf_Die *class_die, Dwarf_Die *base_die, int *offset)
-+{
-+	Dwarf_Die inherit_die;
-+	Dwarf_Attribute attr;
-+	Dwarf_Word loc;
-+
-+	if (die_find_child(class_die, __die_find_inheritance_cb,
-+			   &inherit_die, &inherit_die) == NULL)
-+		return NULL;
-+
-+	if (__die_get_real_type(&inherit_die, base_die) == NULL)
-+		return NULL;
-+
-+	if (dwarf_attr_integrate(&inherit_die, DW_AT_data_member_location, &attr) &&
-+	    dwarf_formudata(&attr, &loc) == 0) {
-+		*offset = loc;
-+	} else {
-+		*offset = 0;
-+	}
-+
-+	return base_die;
-+}
-+
-+int die_get_vtable_index(Dwarf_Die *func_die, int *index)
-+{
-+	Dwarf_Attribute attr;
-+	Dwarf_Word idx;
-+
-+	/* Try DW_AT_vtable_elem_index first (DWARF 5+) */
-+	if (dwarf_attr(func_die, DW_AT_vtable_elem_index, &attr) &&
-+	    dwarf_formudata(&attr, &idx) == 0) {
-+		*index = idx;
-+		return 0;
-+	}
-+
-+	/* Fallback to DW_AT_vtable_elem_location (older DWARF) */
-+	if (dwarf_attr(func_die, DW_AT_vtable_elem_location, &attr)) {
-+		Dwarf_Op *expr;
-+		size_t expr_len;
-+
-+		/* Compile often emits it as a simple constant expression or block */
-+		if (dwarf_getlocation(&attr, &expr, &expr_len) == 0 && expr_len > 0) {
-+			if (expr[0].atom == DW_OP_constu) {
-+				*index = expr[0].number;
-+				return 0;
-+			}
-+			if (expr[0].atom >= DW_OP_lit0 && expr[0].atom <= DW_OP_lit31) {
-+				*index = expr[0].atom - DW_OP_lit0;
-+				return 0;
++				if (die_find_virtual_func(&target_class_die, vtable_index,
++							  &target_func_die) &&
++				    die_get_type(&target_func_die, &type_die)) {
++					resolved_statically = true;
++					class_die = target_class_die;
++					has_class_die = true;
++				}
 +			}
 +		}
-+	}
 +
-+	return -1;
-+}
++		/* Fallback to name-based resolution for direct calls */
++		if (!resolved_statically && call_name) {
++			if (die_find_func_rettype(cu_die, call_name, &type_die))
++				resolved_statically = true;
++		}
 +
-+Dwarf_Die *die_get_parent(Dwarf_Die *die, Dwarf_Die *parent_die)
-+{
-+	Dwarf_Die *scopes = NULL;
-+	int n = dwarf_getscopes_die(die, &scopes);
+ 		if (call_name)
+ 			pr_debug_dtp("call [%x] %s\n", insn_offset, call_name);
+ 		else
+ 			pr_debug_dtp("call [%x] <unknown>\n", insn_offset);
+ 
+-		/* Invalidate caller-saved registers after call */
++		/* 2. Invalidate caller-saved registers after we read them for resolution */
+ 		call_addr = map__rip_2objdump(dloc->ms->map,
+ 					      dloc->ms->sym->start + dl->al.offset);
+ 		for (unsigned i = 0; i < ARRAY_SIZE(state->regs); i++) {
+@@ -264,8 +301,8 @@ static void update_insn_state_x86(struct type_state *state,
+ 			invalidate_reg_state(reg);
+ 		}
+ 
+-		/* Update register with the return type (if any) */
+-		if (call_name && die_find_func_rettype(cu_die, call_name, &type_die)) {
++		/* 3. Apply resolved types to registers */
++		if (resolved_statically) {
+ 			tsr = &state->regs[state->ret_reg];
+ 			tsr->type = type_die;
+ 			tsr->kind = TSR_KIND_TYPE;
+@@ -275,6 +312,20 @@ static void update_insn_state_x86(struct type_state *state,
+ 			pr_debug_dtp("call [%x] return -> reg%d",
+ 				     insn_offset, state->ret_reg);
+ 			pr_debug_type_name(&type_die, tsr->kind);
 +
-+	if (n <= 1) {
-+		free(scopes);
-+		return NULL;
-+	}
++			/* Update receiver ('this' pointer) register if C++ */
++			if (has_class_die && cu_is_cplusplus(cu_die)) {
++				struct type_state_reg *recv_tsr = &state->regs[state->arg0_reg];
 +
-+	/* scopes[0] is the DIE itself, scopes[1] is the parent */
-+	*parent_die = scopes[1];
-+	free(scopes);
-+	return parent_die;
-+}
++				if (recv_tsr->ok &&
++				    (recv_tsr->kind == TSR_KIND_TYPE ||
++				     recv_tsr->kind == TSR_KIND_POINTER)) {
++					recv_tsr->type = class_die;
++					pr_debug_dtp("call [%x] update receiver reg%d to C++ class",
++						     insn_offset, state->arg0_reg);
++					pr_debug_type_name(&class_die, recv_tsr->kind);
++				}
++			}
+ 		}
+ 		return;
+ 	}
+@@ -622,17 +673,43 @@ static void update_insn_state_x86(struct type_state *state,
+ 		}
+ 		/* And then dereference the pointer if it has one */
+ 		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
+-			 state->regs[sreg].kind == TSR_KIND_TYPE &&
+-			 die_deref_ptr_type(&state->regs[sreg].type,
+-					    src->offset + state->regs[sreg].offset, &type_die)) {
+-			tsr->type = type_die;
+-			tsr->kind = TSR_KIND_TYPE;
+-			tsr->offset = 0;
+-			tsr->ok = true;
++			 state->regs[sreg].kind == TSR_KIND_TYPE) {
++			Dwarf_Die class_type;
++			Dwarf_Die member;
++			int total_offset = src->offset + state->regs[sreg].offset;
++			bool is_vptr = false;
 +
- /* Unlike dwarf_getsrc_die(), cu_getsrc_die() only returns statement line */
- static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr)
- {
-@@ -2164,6 +2292,70 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
- 	return die_mem;
++			if (die_get_real_type(&state->regs[sreg].type, &class_type) &&
++			    die_is_compound_type(&class_type) &&
++			    die_find_member_by_offset(&class_type, total_offset, &member) &&
++			    die_is_vptr_member(&member)) {
++				tsr->type = class_type;
++				tsr->kind = TSR_KIND_VTABLE_PTR;
++				tsr->offset = 0;
++				tsr->ok = true;
+ 
+-			pr_debug_dtp("mov [%x] %#x(reg%d) -> reg%d",
+-				     insn_offset, src->offset, sreg, dst->reg1);
+-			pr_debug_type_name(&tsr->type, tsr->kind);
++				pr_debug_dtp("mov [%x] %#x(reg%d) -> reg%d (vptr)",
++					     insn_offset, src->offset,
++					     sreg, dst->reg1);
++				pr_debug_type_name(&class_type, tsr->kind);
++				is_vptr = true;
++			}
++
++			if (!is_vptr) {
++				if (die_deref_ptr_type(&state->regs[sreg].type,
++						       total_offset, &type_die)) {
++					tsr->type = type_die;
++					tsr->kind = TSR_KIND_TYPE;
++					tsr->offset = 0;
++					tsr->ok = true;
++
++					pr_debug_dtp("mov [%x] %#x(reg%d) -> reg%d",
++						     insn_offset, src->offset, sreg, dst->reg1);
++					pr_debug_type_name(&tsr->type, tsr->kind);
++				} else {
++					invalidate_reg_state(tsr);
++				}
++			}
+ 		}
+ 		/* Handle dereference of TSR_KIND_POINTER registers */
+ 		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index ee6bd2d0012d..875e5ba2fe9f 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -28,6 +28,8 @@
+ 
+ /* register number of the stack pointer */
+ #define X86_REG_SP 7
++/* register number of the first integer argument (%rdi) */
++#define X86_REG_DI 5
+ 
+ static void delete_var_types(struct die_var_type *var_types);
+ 
+@@ -66,6 +68,10 @@ void pr_debug_type_name(Dwarf_Die *die, enum type_state_kind kind)
+ 		pr_info(" pointer");
+ 		/* it also prints the type info */
+ 		break;
++	case TSR_KIND_VTABLE_PTR:
++		pr_info(" C++ vtable pointer");
++		/* it also prints the type info */
++		break;
+ 	case TSR_KIND_CANARY:
+ 		pr_info(" stack canary\n");
+ 		return;
+@@ -177,6 +183,7 @@ static void init_type_state(struct type_state *state, const struct arch *arch)
+ 		state->regs[10].caller_saved = true;
+ 		state->regs[11].caller_saved = true;
+ 		state->ret_reg = 0;
++		state->arg0_reg = X86_REG_DI;
+ 		state->stack_reg = X86_REG_SP;
+ 	}
  }
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index c26130744260..785e1d1777ce 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -36,6 +36,7 @@ enum type_state_kind {
+ 	TSR_KIND_CONST,
+ 	TSR_KIND_PERCPU_POINTER,
+ 	TSR_KIND_POINTER,
++	TSR_KIND_VTABLE_PTR,
+ 	TSR_KIND_CANARY,
+ };
  
-+Dwarf_Die *die_find_member_by_offset(Dwarf_Die *type_die, int offset, Dwarf_Die *member_die)
-+{
-+	if (!die_is_compound_type(type_die))
-+		return NULL;
-+
-+	return die_find_child(type_die, __die_find_member_offset_cb,
-+			      (void *)(long)offset, member_die);
-+}
-+
-+struct find_virtual_func_data {
-+	int index;
-+	Dwarf_Die func_die;
-+	bool found;
-+};
-+
-+static int __die_find_virtual_func_cb(Dwarf_Die *die_mem, void *arg)
-+{
-+	struct find_virtual_func_data *ad = arg;
-+	int tag = dwarf_tag(die_mem);
-+
-+	if (tag == DW_TAG_subprogram) {
-+		int idx;
-+
-+		if (die_get_vtable_index(die_mem, &idx) == 0 && idx == ad->index) {
-+			ad->func_die = *die_mem;
-+			ad->found = true;
-+			return DIE_FIND_CB_END;
-+		}
-+	}
-+
-+	if (tag == DW_TAG_inheritance) {
-+		Dwarf_Die base_type;
-+
-+		if (__die_get_real_type(die_mem, &base_type)) {
-+			if (die_find_child(&base_type,
-+					   __die_find_virtual_func_cb,
-+					   ad, &ad->func_die))
-+				return DIE_FIND_CB_END;
-+		}
-+	}
-+
-+	return DIE_FIND_CB_SIBLING;
-+}
-+
-+Dwarf_Die *die_find_virtual_func(Dwarf_Die *class_die, int index, Dwarf_Die *die_mem)
-+{
-+	struct find_virtual_func_data ad = {
-+		.index = index,
-+		.found = false,
-+	};
-+
-+	if (die_find_child(class_die, __die_find_virtual_func_cb, &ad, die_mem))
-+		return die_mem;
-+
-+	return NULL;
-+}
-+
-+bool die_is_vptr_member(Dwarf_Die *die)
-+{
-+	const char *name = dwarf_diename(die);
-+
-+	return name && strstarts(name, "_vptr");
-+}
-+
- /**
-  * die_deref_ptr_type - Return type info for pointer access
-  * @ptr_die: a pointer type DIE
-diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index 855c45fec5bb..0f30f44ad863 100644
---- a/tools/perf/util/dwarf-aux.h
-+++ b/tools/perf/util/dwarf-aux.h
-@@ -23,9 +23,33 @@ const char *cu_find_realpath(Dwarf_Die *cu_die, const char *fname);
- /* Get DW_AT_comp_dir (should be NULL with older gcc) */
- const char *cu_get_comp_dir(Dwarf_Die *cu_die);
+@@ -224,6 +225,8 @@ struct type_state {
+ 	struct list_head stack_vars;
+ 	/* return value register */
+ 	int ret_reg;
++	/* first integer argument register (holds 'this' for C++ methods) */
++	int arg0_reg;
+ 	/* stack pointer register */
+ 	int stack_reg;
+ };
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index df70e95a8470..b4c6b45b4da3 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2509,6 +2509,10 @@ static int extract_reg_offset(const struct arch *arch, const char *str,
+ 	if (arch->objdump.register_char == 0)
+ 		return -1;
  
-+/* Get source language of CU */
-+Dwarf_Word cu_get_language(Dwarf_Die *cu_die);
++	/* Skip leading '*' for indirect call/jmp operands (e.g. *%rax) */
++	if (*str == '*')
++		str++;
 +
-+/* Check if CU is C++ */
-+bool cu_is_cplusplus(Dwarf_Die *cu_die);
-+
- /* Check if DIE is a compound type (structure, union, or class) */
- bool die_is_compound_type(Dwarf_Die *type_die);
+ 	/*
+ 	 * It should start from offset, but it's possible to skip 0
+ 	 * in the asm.  So 0(%rax) should be same as (%rax).
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 6cfdbabbb8c7..01266eeddbb4 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -279,6 +279,7 @@ static int call__parse(const struct arch *arch, struct ins_operands *ops, struct
+ 	return 0;
  
-+/* Get base class of a class DIE */
-+Dwarf_Die *die_get_base_class(Dwarf_Die *class_die, Dwarf_Die *base_die, int *offset);
-+
-+/* Get vtable index of a virtual function */
-+int die_get_vtable_index(Dwarf_Die *func_die, int *index);
-+
-+/* Get parent DIE */
-+Dwarf_Die *die_get_parent(Dwarf_Die *die, Dwarf_Die *parent_die);
-+
-+/* Find member DIE by offset */
-+Dwarf_Die *die_find_member_by_offset(Dwarf_Die *type_die, int offset, Dwarf_Die *member_die);
-+
-+/* Find virtual function by vtable index */
-+Dwarf_Die *die_find_virtual_func(Dwarf_Die *class_die, int index, Dwarf_Die *die_mem);
-+
-+/* Check if member DIE is a vtable pointer (_vptr) */
-+bool die_is_vptr_member(Dwarf_Die *die);
-+
- /* Get a line number and file name for given address */
- int cu_find_lineinfo(Dwarf_Die *cudie, Dwarf_Addr addr,
- 		     const char **fname, int *lineno);
+ indirect_call:
++	ops->target.raw = strdup(ops->raw);
+ 	tok = strchr(endptr, '*');
+ 	if (tok != NULL) {
+ 		endptr++;
 -- 
 2.25.1
 
