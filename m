@@ -1,64 +1,64 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E23C3F485D
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 05:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9584E3F4856
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 05:02:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787288557; cv=none; b=S6kYzRQViEyQsPkkLHQjJBgffMbJJ2lNeSR9aXgfPjE42D0MVJCy+40nxpS1pCSLhdZeuxaAvYbN23R/3n/HLpPc0DFOHtimBOdyXG/mgTNTk2/H+nEE7X/oIWxnTDE/xg/7xADpc08ZsB09LftZUy8Zt9KP6FjVt+PleHudR0Y=
+	t=1787288558; cv=none; b=FST9T1pBxWzHMfUhkEEUbkb9iaNu0sWphx/bCmXlDme5P1zePb/exqqFrJAT8Zjp8veMPcGjyovTnYCMa0L1AS1IbjXDiMSgcuZ0l6ZVyUyWCJtzEohw3whaS2eRAu7nmr3uh46MMLtq9WjB0rDqA40YyufWz3NuJfhhWDJVkq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787288557; c=relaxed/simple;
-	bh=bZbm6XOK98Prr6KSnd5pF4eIfpTE8UabYOUOPHg+Lq8=;
+	s=arc-20240116; t=1787288558; c=relaxed/simple;
+	bh=D/tw0w8eAa3nSDuVMYf/sW/Q8H627uckPE9TlM6qwqM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LDaPEMqc3xuGbmupiI5OB/f6gbSF2IpNsDylf+JHU8skuaISevybJKWsjipKf2yBevTl2/6vGxoasnQY8d3kY9Hxx+m7p4rUoKO/qTtRgQ31LjlU9ruQFpFzjTJbZA4k4tUmeTSKra94qjRtAJY1NrXqKIKS/OIPqEsWd2Y2dGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=FyvsO/Op; arc=none smtp.client-ip=209.85.219.46
+	 MIME-Version; b=Px8aJpbxqWri0J/H46bgBWe1j3ekeVH/WOPY7/SdsGVTB0/zEZKnkmazdaOIqLxp2LDpNlIBNdcilTifHGN5m9c+3kUotqRqo9eJPRFXHkjJ7JT43GfpUMuYSSAEY+g10zMVmZ6Fd/vAa5TPX3MrEanBO8Mxv89l+3xsMImzoCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=If27CtRH; arc=none smtp.client-ip=209.85.219.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="FyvsO/Op"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-90c776f6c13so6191216d6.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Aug 2026 22:02:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="If27CtRH"
+Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-8f0e5e36912so3803456d6.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Aug 2026 22:02:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ncsu.edu; s=google; t=1787288554; x=1787893354; darn=vger.kernel.org;
+        d=ncsu.edu; s=google; t=1787288555; x=1787893355; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=JgYq+HSuWV0wHdSKUb0LnpK8mur76MdWfMhpvbEJMks=;
-        b=FyvsO/OpA+CIsh3iVjrOw8boeSCt+/JbFoaqfStxl6pKjelP2mD54rzhWRGCDr8rQF
-         490Ecae5a7ZS9Xxy+mFCcoLS7yNKm36qXEtYfLBdi80GTMjhFVsPSCDSs+8OtjpgyS1M
-         rNxEg1CgNzqXcgAz48WpPFtjMZmTnSX030yqsVY7/3xfBnh5h/10yvcJCO+UqThqFBkO
-         LubgHABHbJqfSyAPJYzYJ83nIavT5LkmEBP1/2NF0Utislaf4Iovu8yD2ueLx7r+ra+k
-         wTZBzWD7UWZREA2YO8ki244divT8Rg3P5M8XGbmVpK5tlE0w+Oa7XtWriVdXvz1PvEjN
-         vg3A==
+        bh=OzB1aNn1o04f40kFNNF+EY0tTOWmlsfUCuB6g5UoRcM=;
+        b=If27CtRHZF8OX3cWBs/mmaNyu7MaFc6NlQf1Edgt/pwXj72K0WPbRd/FoZq3ekfa4r
+         YpFcfs2Jkq1vJcTdbJB44dLZP+mipGqT6yC9mM+SNwERZbjuOs6lTXlAvNaHr7vs8r77
+         qE4kidgKNkfUrtVoQz3Ho4zTScUOds/Kw0h8ktdjOYcQ6OaXxQae86oLza9NeC2+UUGg
+         yksNXOmV69znZsWukkt4XmD6wpGn9h5/QPJuzwrAieg3mdKt29ok/0JhUBL+IwCGmPHT
+         ZwnS5mlTpuYd4ZRCDqOwwvWKary/bf2mpow73mijhh2AC7MB8GncIGS6nQ4MojBQ59ct
+         3LYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787288554; x=1787893354;
+        d=1e100.net; s=20251104; t=1787288555; x=1787893355;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=JgYq+HSuWV0wHdSKUb0LnpK8mur76MdWfMhpvbEJMks=;
-        b=YH+Dv8OcEJRz/xovuo1qga/jYJ+5dz4RiwKpVkseS5hwSz5zJgaQ8i6ayQlJh1/MNW
-         C/p2u6uAVUy7a0U+pxlJvp9ectYS27brMw3JdgzLFIzxbzm+XSTk6g5UYyKUzOgPJC53
-         CTRwEPJiFiOSXDKfsREfTIQX5RJHFf7io3rNCEjVr3YVKLAqRV2KMv4P9BVeu7wpUqM0
-         ja1TMiXaapmLg4luE76avrMbJY66gOwOAq7VQQKU3G1Dg5YPX0yegyglBen51awMe+Ys
-         AbC4AjzYM1EfJMOJQ1KgIxk1Ol/t/WJmJzYpZZvvAt/yCG2+WIpgji1m1PZMWEwaGpx+
-         R26A==
-X-Forwarded-Encrypted: i=1; AHgh+RoH2lENxSM+nyGKdJLKM2TidP1Jy8XPOAagf6nNBMRWcPm4tOU+DxoobBUz2e65N0isYcIpVf/Fu3E4WCBpdQKH@vger.kernel.org
-X-Gm-Message-State: AFuF++kmToq1dW9X/dCThNql5tEurerxc1S2PNmZkvNRIcmJJPuoKpYi
-	r3Bpeda8mI/TlcMRNP9n/rGQjHYnkD3meSOZFdQOeHOPgdcJDAYH63zcS1SCFOx7Ww==
-X-Gm-Gg: AR+sD13UpQBttLjNNo8/KRsC35dNdF35VT6mX46F/4eKrd8BkNFt10yO7FaZiu0h9Ej
-	osIDaB1EyayDFNdF8nFs4XD+45w04ril07URUOLRZKENBYt+MP8LWSJE1qktGtNIBie6eMliu5X
-	fDIFaURrzN2Nc6H6sgp4dl2nYizDES35iq0RtlOeMjxek0Ojs7O2XtyooQPMlkExgI2Mo9PnRUv
-	C9FPiHv5kVVXHnO2RSyR6QCWJvGQpdIuN230GImDqSAazPaA2qfgZ4WMXdcTEpVVbiPe1mkPKXx
-	qxbvyfjUrB6yiBYJRF52Z9WRmF/8TkP/NOxEVKj/GSoUgQEbWHYRxn+adkYmZlGpLJ4tLy8ghqk
-	uoSLQzCLOcQWsxAHK9gSPVGaytwiyUM3h23VdCml+YIIn1YZkWnhwghvOIuZ5umC3ditRF3drCT
-	ydnUGkw37p5Hmn7CX3Lv4xk381UR+1kdHpcXtigJOR3V3dDDk4A5BwUg4GxphryQWXnyem05kac
-	u+P1FAApFNpYs6yXz+a
-X-Received: by 2002:ad4:5749:0:b0:90c:4e70:e5e0 with SMTP id 6a1803df08f44-90c80943eebmr34589566d6.6.1787288554166;
-        Thu, 20 Aug 2026 22:02:34 -0700 (PDT)
+        bh=OzB1aNn1o04f40kFNNF+EY0tTOWmlsfUCuB6g5UoRcM=;
+        b=ADjilZ5aDaWTRzH9Cp/6MVvqNnzlmpBrYsJzynUfvh11puQDBE3WJB2z25G+KGCp5v
+         ULkTA4J8NjByvUeATX4qNOH64oXYBfr9BhN5a7ZhVyCnm9kyD+I8Rotyy79MUJfgpzMy
+         5Xlsi/FSVMyVu5j90FHXMVQpXv6diMSY7zdNMkG692T9CW5wsu5chXYRO56lVvxgv78A
+         MhXtRW0OBoV0y5EtIcQnBUUAswz1JgV/+i7mYLw2pwhYQ3Q/FvsEI9GLvHJC6oHSBFiv
+         /RNemg38mVntnkT1otGvbrhsK/5LnYscjU9y5YtSXAMWhET+YRVtOqONcVG/3mPZXUKF
+         C9sA==
+X-Forwarded-Encrypted: i=1; AHgh+Rr2Apr+AHMEOkBcV5TpzkHy2mpnJGqvgot3dm6maGR2zNGgMkB0rDpTif8zHqsRxmfmrMT74wlVrH38QvPDRwuI@vger.kernel.org
+X-Gm-Message-State: AFuF++k39qA5KItJbhgnqaG4hcRoZJcDmyDn1ZmlE5u8HNe8lRxgnbIb
+	5K/7PiOx3En2SFxHHCj+m0nOyDlZvdZXcweKs5efjR5BXSUy04+uoS4TcBSgjmpfhg==
+X-Gm-Gg: AR+sD11Gb9vhDdrCZS8G1T5pTzwoOLe/JdoD65vOTPpsNcD+6AN4tGcYtugCU6ttbkD
+	Aincxd7hUeQ5roOOdGN6xvMZf3ggK4FL5ycT+ryFoUe4F/7oBGOgInS2qtdD1aNpdT23clCL4cu
+	WrXTK349cXiutV51vStThgaDfiKbyZIzkJA8xU4v0mavZa3io28URLq/+ypiiIFdGDMwkF7Zg50
+	Uk6nV9WqVyP7M117wxO3oSX8Ww0jtlUK/UQ6kaWl3nT6nCZWAr+DbEaTYNX+OysT6Afs9WgLMZf
+	Ft/IY4BzaVUK8ShxjH7qusCa1QjEperO0b08NSzDhCDr8kwDNvTlTSs/c7S2UfL16dCQkNQNP/j
+	qXLerjtwkjlgcbs7t1Lq8Uvr1rI6PsQrgjMfhMf/LVtvNGo2Sn1mGSsTJtVQx6XvcVRISrV+swb
+	W+MY5ouD9bALaL28VjWRJsuL74AfW0Safet3dk5b8Ul1ZW0CyxxrM6yKnZdRSLqCAKGxCxvvwz5
+	BFH6W4V4clFwknj4ejr
+X-Received: by 2002:a05:6214:124d:b0:8ee:5e59:7b04 with SMTP id 6a1803df08f44-90c80e00b57mr32278996d6.18.1787288555148;
+        Thu, 20 Aug 2026 22:02:35 -0700 (PDT)
 Received: from home.localdomain ([136.61.118.42])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90c5eec1e7fsm54368116d6.12.2026.08.20.22.02.33
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90c5eec1e7fsm54368116d6.12.2026.08.20.22.02.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Aug 2026 22:02:33 -0700 (PDT)
+        Thu, 20 Aug 2026 22:02:34 -0700 (PDT)
 From: Yanbo Zhao <yzhao62@ncsu.edu>
 To: Namhyung Kim <namhyung@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -75,9 +75,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yanbo Zhao <yzhao62@ncsu.edu>
-Subject: [PATCH 1/3] perf dwarf-aux: Add die_is_compound_type() to handle C++ class types
-Date: Fri, 21 Aug 2026 01:02:05 -0400
-Message-Id: <20260821050207.4517-2-yzhao62@ncsu.edu>
+Subject: [PATCH 2/3] perf dwarf-aux: Add C++ class, inheritance and vtable helpers
+Date: Fri, 21 Aug 2026 01:02:06 -0400
+Message-Id: <20260821050207.4517-3-yzhao62@ncsu.edu>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20260821050207.4517-1-yzhao62@ncsu.edu>
 References: <20260821050207.4517-1-yzhao62@ncsu.edu>
@@ -89,166 +89,281 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Introduce the die_is_compound_type() helper which checks for
-DW_TAG_structure_type, DW_TAG_union_type, and DW_TAG_class_type, and
-convert all the existing open-coded struct/union tag checks to use it:
-- die_get_member_type() in dwarf-aux.c.
-- __add_member_cb(), is_compound_type(), and set_stack_state() in
-  annotate-data.c.
-
-Also accept DW_TAG_inheritance in the member lookup callbacks
-(__die_find_member_offset_cb() and __add_member_cb()) so that member
-lookup by offset descends into C++ base class subobjects.
-
-This extends the existing member type resolution and data type
-profiling state handling to C++ classes with inheritance without
-changing behavior for C struct/union types.
+Add DWARF helper functions for C++ virtual function support:
+- cu_get_language() and cu_is_cplusplus() to detect source language.
+- die_get_base_class() and die_get_vtable_index() for virtual table
+  inspection.
+- die_get_parent() to retrieve enclosing scopes.
+- die_find_member_by_offset() and die_find_virtual_func() to locate
+  class members and virtual function DIEs.
+- die_is_vptr_member() to check if a member is a virtual table pointer.
+- Define DW_AT_vtable_elem_index and DW_LANG_C_plus_plus_17/20
+  fallbacks for older elfutils that lack these DWARF 5 constants.
 
 Signed-off-by: Yanbo Zhao <yzhao62@ncsu.edu>
 ---
- tools/perf/util/annotate-data.c | 29 ++++++-----------------------
- tools/perf/util/dwarf-aux.c     | 17 ++++++++++++-----
- tools/perf/util/dwarf-aux.h     |  3 +++
- 3 files changed, 21 insertions(+), 28 deletions(-)
+ tools/perf/util/dwarf-aux.c | 192 ++++++++++++++++++++++++++++++++++++
+ tools/perf/util/dwarf-aux.h |  24 +++++
+ 2 files changed, 216 insertions(+)
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 4e4c58764082..ee6bd2d0012d 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -230,9 +230,9 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 	Dwarf_Word size, loc, bit_size = 0;
- 	Dwarf_Attribute attr;
- 	struct strbuf sb;
--	int tag;
-+	int tag = dwarf_tag(die);
- 
--	if (dwarf_tag(die) != DW_TAG_member)
-+	if (tag != DW_TAG_member && tag != DW_TAG_inheritance)
- 		return DIE_FIND_CB_SIBLING;
- 
- 	member = zalloc(sizeof(*member));
-@@ -292,15 +292,8 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 	INIT_LIST_HEAD(&member->children);
- 	list_add_tail(&member->node, &parent->children);
- 
--	tag = dwarf_tag(&die_mem);
--	switch (tag) {
--	case DW_TAG_structure_type:
--	case DW_TAG_union_type:
-+	if (die_is_compound_type(&die_mem))
- 		die_find_child(&die_mem, __add_member_cb, member, &die_mem);
--		break;
--	default:
--		break;
--	}
- 	return DIE_FIND_CB_SIBLING;
- }
- 
-@@ -464,9 +457,7 @@ static const char *match_result_str(enum type_match_result tmr)
- 
- static bool is_compound_type(Dwarf_Die *type_die)
- {
--	int tag = dwarf_tag(type_die);
--
--	return tag == DW_TAG_structure_type || tag == DW_TAG_union_type;
-+	return die_is_compound_type(type_die);
- }
- 
- /* returns if Type B has better information than Type A */
-@@ -584,7 +575,6 @@ struct type_state_stack *find_stack_state(struct type_state *state,
- void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
- 			    Dwarf_Die *type_die, int ptr_offset)
- {
--	int tag;
- 	Dwarf_Word size;
- 
- 	if (kind == TSR_KIND_POINTER) {
-@@ -605,17 +595,10 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
- 		return;
- 	}
- 
--	tag = dwarf_tag(type_die);
--
--	switch (tag) {
--	case DW_TAG_structure_type:
--	case DW_TAG_union_type:
-+	if (die_is_compound_type(type_die))
- 		stack->compound = (kind != TSR_KIND_PERCPU_POINTER);
--		break;
--	default:
-+	else
- 		stack->compound = false;
--		break;
--	}
- }
- 
- struct type_state_stack *findnew_stack_state(struct type_state *state,
 diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index d7160f87ac7d..88ba0ec23a68 100644
+index 88ba0ec23a68..e991eed963a8 100644
 --- a/tools/perf/util/dwarf-aux.c
 +++ b/tools/perf/util/dwarf-aux.c
-@@ -60,6 +60,14 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die)
+@@ -12,6 +12,19 @@
+ #include "dwarf-regs.h"
+ #include "strbuf.h"
+ #include "string2.h"
++#include "symbol.h"
++
++#ifndef DW_AT_vtable_elem_index
++#define DW_AT_vtable_elem_index 0x8c
++#endif
++
++/* Added in DWARF 5, may be missing in older elfutils */
++#ifndef DW_LANG_C_plus_plus_17
++#define DW_LANG_C_plus_plus_17 0x2a
++#endif
++#ifndef DW_LANG_C_plus_plus_20
++#define DW_LANG_C_plus_plus_20 0x2b
++#endif
+ 
+ /**
+  * cu_find_realpath - Find the realpath of the target file
+@@ -60,6 +73,37 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die)
  	return dwarf_formstring(&attr);
  }
  
-+bool die_is_compound_type(Dwarf_Die *type_die)
++Dwarf_Word cu_get_language(Dwarf_Die *cu_die)
 +{
-+	int tag = dwarf_tag(type_die);
++	Dwarf_Attribute attr;
++	Dwarf_Word lang;
 +
-+	return tag == DW_TAG_structure_type || tag == DW_TAG_union_type ||
-+	       tag == DW_TAG_class_type;
++	if (dwarf_attr(cu_die, DW_AT_language, &attr) == NULL)
++		return 0;
++
++	if (dwarf_formudata(&attr, &lang) != 0)
++		return 0;
++
++	return lang;
++}
++
++bool cu_is_cplusplus(Dwarf_Die *cu_die)
++{
++	Dwarf_Word lang = cu_get_language(cu_die);
++
++	switch (lang) {
++	case DW_LANG_C_plus_plus:
++	case DW_LANG_C_plus_plus_03:
++	case DW_LANG_C_plus_plus_11:
++	case DW_LANG_C_plus_plus_14:
++	case DW_LANG_C_plus_plus_17:
++	case DW_LANG_C_plus_plus_20:
++		return true;
++	default:
++		return false;
++	}
++}
++
+ bool die_is_compound_type(Dwarf_Die *type_die)
+ {
+ 	int tag = dwarf_tag(type_die);
+@@ -68,6 +112,90 @@ bool die_is_compound_type(Dwarf_Die *type_die)
+ 	       tag == DW_TAG_class_type;
+ }
+ 
++static int __die_find_inheritance_cb(Dwarf_Die *die_mem, void *arg)
++{
++	int tag = dwarf_tag(die_mem);
++
++	if (tag == DW_TAG_inheritance) {
++		*(Dwarf_Die *)arg = *die_mem;
++		return DIE_FIND_CB_END;
++	}
++
++	return DIE_FIND_CB_SIBLING;
++}
++
++Dwarf_Die *die_get_base_class(Dwarf_Die *class_die, Dwarf_Die *base_die, int *offset)
++{
++	Dwarf_Die inherit_die;
++	Dwarf_Attribute attr;
++	Dwarf_Word loc;
++
++	if (die_find_child(class_die, __die_find_inheritance_cb,
++			   &inherit_die, &inherit_die) == NULL)
++		return NULL;
++
++	if (__die_get_real_type(&inherit_die, base_die) == NULL)
++		return NULL;
++
++	if (dwarf_attr_integrate(&inherit_die, DW_AT_data_member_location, &attr) &&
++	    dwarf_formudata(&attr, &loc) == 0) {
++		*offset = loc;
++	} else {
++		*offset = 0;
++	}
++
++	return base_die;
++}
++
++int die_get_vtable_index(Dwarf_Die *func_die, int *index)
++{
++	Dwarf_Attribute attr;
++	Dwarf_Word idx;
++
++	/* Try DW_AT_vtable_elem_index first (DWARF 5+) */
++	if (dwarf_attr(func_die, DW_AT_vtable_elem_index, &attr) &&
++	    dwarf_formudata(&attr, &idx) == 0) {
++		*index = idx;
++		return 0;
++	}
++
++	/* Fallback to DW_AT_vtable_elem_location (older DWARF) */
++	if (dwarf_attr(func_die, DW_AT_vtable_elem_location, &attr)) {
++		Dwarf_Op *expr;
++		size_t expr_len;
++
++		/* Compile often emits it as a simple constant expression or block */
++		if (dwarf_getlocation(&attr, &expr, &expr_len) == 0 && expr_len > 0) {
++			if (expr[0].atom == DW_OP_constu) {
++				*index = expr[0].number;
++				return 0;
++			}
++			if (expr[0].atom >= DW_OP_lit0 && expr[0].atom <= DW_OP_lit31) {
++				*index = expr[0].atom - DW_OP_lit0;
++				return 0;
++			}
++		}
++	}
++
++	return -1;
++}
++
++Dwarf_Die *die_get_parent(Dwarf_Die *die, Dwarf_Die *parent_die)
++{
++	Dwarf_Die *scopes = NULL;
++	int n = dwarf_getscopes_die(die, &scopes);
++
++	if (n <= 1) {
++		free(scopes);
++		return NULL;
++	}
++
++	/* scopes[0] is the DIE itself, scopes[1] is the parent */
++	*parent_die = scopes[1];
++	free(scopes);
++	return parent_die;
 +}
 +
  /* Unlike dwarf_getsrc_die(), cu_getsrc_die() only returns statement line */
  static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr)
  {
-@@ -2053,7 +2061,7 @@ static int __die_find_member_offset_cb(Dwarf_Die *die_mem, void *arg)
- 	Dwarf_Word offset = (long)arg;
- 	int tag = dwarf_tag(die_mem);
+@@ -2164,6 +2292,70 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
+ 	return die_mem;
+ }
  
--	if (tag != DW_TAG_member)
-+	if (tag != DW_TAG_member && tag != DW_TAG_inheritance)
- 		return DIE_FIND_CB_SIBLING;
- 
- 	/* Unions might not have location */
-@@ -2104,7 +2112,7 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
- 
- 	tag = dwarf_tag(type_die);
- 	/* If it's not a compound type, return the type directly */
--	if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
-+	if (!die_is_compound_type(type_die)) {
- 		Dwarf_Word size;
- 
- 		if (dwarf_aggregate_size(type_die, &size) < 0)
-@@ -2119,7 +2127,7 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
- 
- 	mb_type = *type_die;
- 	/* TODO: Handle union types better? */
--	while (tag == DW_TAG_structure_type || tag == DW_TAG_union_type) {
-+	while (die_is_compound_type(&mb_type)) {
- 		member = die_find_child(&mb_type, __die_find_member_offset_cb,
- 					(void *)(long)offset, die_mem);
- 		if (member == NULL)
-@@ -2130,8 +2138,7 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
- 
- 		tag = dwarf_tag(&mb_type);
- 
--		if (tag == DW_TAG_structure_type || tag == DW_TAG_union_type ||
--		    tag == DW_TAG_array_type) {
-+		if (die_is_compound_type(&mb_type) || tag == DW_TAG_array_type) {
- 			Dwarf_Word loc;
- 
- 			/* Update offset for the start of the member struct */
++Dwarf_Die *die_find_member_by_offset(Dwarf_Die *type_die, int offset, Dwarf_Die *member_die)
++{
++	if (!die_is_compound_type(type_die))
++		return NULL;
++
++	return die_find_child(type_die, __die_find_member_offset_cb,
++			      (void *)(long)offset, member_die);
++}
++
++struct find_virtual_func_data {
++	int index;
++	Dwarf_Die func_die;
++	bool found;
++};
++
++static int __die_find_virtual_func_cb(Dwarf_Die *die_mem, void *arg)
++{
++	struct find_virtual_func_data *ad = arg;
++	int tag = dwarf_tag(die_mem);
++
++	if (tag == DW_TAG_subprogram) {
++		int idx;
++
++		if (die_get_vtable_index(die_mem, &idx) == 0 && idx == ad->index) {
++			ad->func_die = *die_mem;
++			ad->found = true;
++			return DIE_FIND_CB_END;
++		}
++	}
++
++	if (tag == DW_TAG_inheritance) {
++		Dwarf_Die base_type;
++
++		if (__die_get_real_type(die_mem, &base_type)) {
++			if (die_find_child(&base_type,
++					   __die_find_virtual_func_cb,
++					   ad, &ad->func_die))
++				return DIE_FIND_CB_END;
++		}
++	}
++
++	return DIE_FIND_CB_SIBLING;
++}
++
++Dwarf_Die *die_find_virtual_func(Dwarf_Die *class_die, int index, Dwarf_Die *die_mem)
++{
++	struct find_virtual_func_data ad = {
++		.index = index,
++		.found = false,
++	};
++
++	if (die_find_child(class_die, __die_find_virtual_func_cb, &ad, die_mem))
++		return die_mem;
++
++	return NULL;
++}
++
++bool die_is_vptr_member(Dwarf_Die *die)
++{
++	const char *name = dwarf_diename(die);
++
++	return name && strstarts(name, "_vptr");
++}
++
+ /**
+  * die_deref_ptr_type - Return type info for pointer access
+  * @ptr_die: a pointer type DIE
 diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index 161f0bf980b6..855c45fec5bb 100644
+index 855c45fec5bb..0f30f44ad863 100644
 --- a/tools/perf/util/dwarf-aux.h
 +++ b/tools/perf/util/dwarf-aux.h
-@@ -23,6 +23,9 @@ const char *cu_find_realpath(Dwarf_Die *cu_die, const char *fname);
+@@ -23,9 +23,33 @@ const char *cu_find_realpath(Dwarf_Die *cu_die, const char *fname);
  /* Get DW_AT_comp_dir (should be NULL with older gcc) */
  const char *cu_get_comp_dir(Dwarf_Die *cu_die);
  
-+/* Check if DIE is a compound type (structure, union, or class) */
-+bool die_is_compound_type(Dwarf_Die *type_die);
++/* Get source language of CU */
++Dwarf_Word cu_get_language(Dwarf_Die *cu_die);
++
++/* Check if CU is C++ */
++bool cu_is_cplusplus(Dwarf_Die *cu_die);
++
+ /* Check if DIE is a compound type (structure, union, or class) */
+ bool die_is_compound_type(Dwarf_Die *type_die);
+ 
++/* Get base class of a class DIE */
++Dwarf_Die *die_get_base_class(Dwarf_Die *class_die, Dwarf_Die *base_die, int *offset);
++
++/* Get vtable index of a virtual function */
++int die_get_vtable_index(Dwarf_Die *func_die, int *index);
++
++/* Get parent DIE */
++Dwarf_Die *die_get_parent(Dwarf_Die *die, Dwarf_Die *parent_die);
++
++/* Find member DIE by offset */
++Dwarf_Die *die_find_member_by_offset(Dwarf_Die *type_die, int offset, Dwarf_Die *member_die);
++
++/* Find virtual function by vtable index */
++Dwarf_Die *die_find_virtual_func(Dwarf_Die *class_die, int index, Dwarf_Die *die_mem);
++
++/* Check if member DIE is a vtable pointer (_vptr) */
++bool die_is_vptr_member(Dwarf_Die *die);
 +
  /* Get a line number and file name for given address */
  int cu_find_lineinfo(Dwarf_Die *cudie, Dwarf_Addr addr,
