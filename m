@@ -1,187 +1,149 @@
-Received: from BL2PR02CU003.outbound.protection.outlook.com (mail-eastusazolkn19011008.outbound.protection.outlook.com [52.103.1.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E007037CD42;
-	Fri, 21 Aug 2026 04:13:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.1.8
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787285599; cv=fail; b=Vdns+DBt7/3mulnIWC7tIjfYOIop8lS3yJIgWSqQm+sZRXpe890YJxiCGL6p1MiRTAfnFVBtdPTQC4ZG9E88/acbVYzf3zx75jSrTgb7fFOOE6eWt5MEIUfef7tR4mpFUofLnw/Si4vz31Y3mgVEJs1AXb5q9ZI//Vek4SQKUyw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787285599; c=relaxed/simple;
-	bh=fmHzrWpLdbDAQBwNvkwXV7Cj760epn4TIgFQH/KVjMs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=RAOllgUD0FxygmcJ2uKZKbebuArBZIWFVR5IxoPhlu67gQakF2gYbh7NGPDsIBqqs6QJCC1NB+adbeFEbopjVNPdqgCNLdEZQDl+1Po7n5zbbbV8gDTQ3L+uyF2ELbuOUuySaAVPeqOQj/G2Fq4OezRag88KBCDCJxpnburbhrY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=gpmox+Os; arc=fail smtp.client-ip=52.103.1.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FCAD337BAB
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 05:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787288552; cv=none; b=pHs2uHlwSQCVtBUHCIo7qHOBIHPMQFKhfI0QR4e20MFbhXJjcoeNKOexj7PYjtdncSUUcRB82csinYGEQKhd23sGDHM2CbaIZkecNOBOxO3KYhNYLdwu8HSby4bFjH7ZkSJwi+Ai66FOAxf/RA5uZeOay5NcPH/6W9HQtWf/X6M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787288552; c=relaxed/simple;
+	bh=hEUzDFLxpFzoS2ZgCC3toI+S3yIMas9EPrNtbAPyapU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iKNavxxK/fU7hCNh8oKwcEzy8JlCqKSScr8q1lJ36TOAGKQ5KdLTfCkdL19gQ4O1PODZcqlH2Xqa6uEF2yX0foUYzVtYUpLyFcbRNcYQW5aWjTPnaBrxl2U9xMs5QN6mL2GD8OkcXrR/o2ulyPZP8pJ/OHXQKaEussEd5YaaWr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu; spf=pass smtp.mailfrom=ncsu.edu; dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b=OZLAZTQJ; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ncsu.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ncsu.edu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="gpmox+Os"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=DeJ5Ie0yhNhkGc1dLNyoJyARLXiXuwU/Y0sN3L89pgqqXs2gC3tCpc7ilPxKSNUvOBmepP54wv8Uhzj4uZ9Xki0gNgSCZNu0juYQGzoWM+1XM8AZrv9U19rTDqMLFVfPcDVKGUoYCyLvUac1mudyO4cbxgm+J0aAeT15zVgxMazF1pKGrSXiRRHnE82nI9pkLxX2bs3SkcCMO/BPBvQw6ZfgLyE8/aV4UDVIDwCkvg1Py3t/wmp2sPdm7jd2qVSBIhUmP4HHQor9GbyGdBZVmNtKTj7aPLVvDIxeKRlkR02Ht/as7/Dfj0O2SVB8Xhn13+t2Elu+G97IMyJe9wwmSw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=A9ziS7zOJcd+PCqe9TTsQa8KzQL3U23C2yqp8kJYC0Y=;
- b=IJy6Gd3utyQG2sqFj0pt41tm7HiPXuTaBvOiFmcg3NQInNw+acceCjSQ/CqMHTqqrNbc7+YgPpL2ExdG7++HDbf4DUFpqHHxn8ri5Vn2/aTt4b+3hw9bAlPFzSFhvhFMgLTc0rZkGdwUgOobgFpOzGkjvVUq8Wbpm8muu+SkpWka8m0T0TayZPq+AlKlPJ7DxosLm6N6koi6uqFlhIl7g4zTNMc9xlDqdMuPD2WgRn2bKTdxAEK3G7eXoxKlRCvVdxcKuV526niUm/mBNBXCoLCNRtsKNFDfKGJcqqO77qrgIKMk4ctNtalRavcIGBejqprjmb/OMTR79cE0BJLdZw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A9ziS7zOJcd+PCqe9TTsQa8KzQL3U23C2yqp8kJYC0Y=;
- b=gpmox+OsBBOAZqFCDUxn21YW0wggdD7adld6m2Bm8eU3CCLNcK+2dUFeOcS0gXDQqxcvDoXvIPE0AWYHeVJyARFRlbnXVeoJgcWymgk3xwLH9yuv3dAs5PliMIORhtt0zpC3bzSl3Rebn8C82VNkJaNc7bWoaZRKn/hms9vQ4HXLF3oPD5v28nP1Qy4CuEkK9APHOk7syXDR9AStPOjNByqn8ZyEoLvjwa5xDbvV1IOYK/PnMR0bnZ7Z2l9ABs/2HAKGf4p+EDVJ7JO9abBc3gFvciUFQAfFsAFZ/b4ztplJAAJbJ4J91pddNuFcqok9NgleeYCXoqrlJN/0omTW1A==
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com (2603:10b6:805:33::23)
- by SA1PR02MB9758.namprd02.prod.outlook.com (2603:10b6:806:373::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.8; Fri, 21 Aug
- 2026 04:13:15 +0000
-Received: from SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6]) by SN6PR02MB4157.namprd02.prod.outlook.com
- ([fe80::900:1ccf:2b1e:52b6%3]) with mapi id 15.21.0339.008; Fri, 21 Aug 2026
- 04:13:15 +0000
-From: Michael Kelley <mhklinux@outlook.com>
-To: Juergen Gross <jgross@suse.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
- Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>,
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan
- Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, Sean
- Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Subject: RE: [PATCH v2 13/13] x86/msr: Simplify some rdmsrq() use cases
-Thread-Topic: [PATCH v2 13/13] x86/msr: Simplify some rdmsrq() use cases
-Thread-Index: AQINTp4TPtSs6ebCNDDLlaH1nXSnpAKWjN/ntjJFFsA=
-Date: Fri, 21 Aug 2026 04:13:15 +0000
-Message-ID:
- <SN6PR02MB41573E35611668E830B82A7BD4A32@SN6PR02MB4157.namprd02.prod.outlook.com>
-References: <20260819102314.1499258-1-jgross@suse.com>
- <20260819102314.1499258-14-jgross@suse.com>
-In-Reply-To: <20260819102314.1499258-14-jgross@suse.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN6PR02MB4157:EE_|SA1PR02MB9758:EE_
-x-ms-office365-filtering-correlation-id: ce65df62-7e61-443a-826d-08deff3a85c8
-x-microsoft-antispam:
- BCL:0;ARA:14566002|41001999006|25010399006|8062599012|31061999003|24021099003|8060799015|51005399006|37011999003|19110799012|15080799012|55001999006|16051099003|13091999003|440099028|3412199025|102099032|40105399003|2607281247196008;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?AagXRPsrzvY35uKMPpXrixbIwNE6M0TfQ4cks0HmdQ3fvv33UybohQMj02Zk?=
- =?us-ascii?Q?HaZTRfuf66Q6l/n8jvJnSfZ+YQCWE9uCWtNe3s2ryH5xI1wL1jsNj/HFpZb8?=
- =?us-ascii?Q?ZunlSRuLmBnxKhwwRhjxFe4jNkamujo1Ihu/avrtXFwezy6FPZwwO2eJSaq6?=
- =?us-ascii?Q?b44MmWKReKl+eSS1fxAi+KtXqM4ZMADFz59xOfMhdDS4WiyFdx/XtvL6hzqw?=
- =?us-ascii?Q?zUgsySog05YyimlpP1Kz6DfSIKQ760oBf+L2XEHjv2+xYTnXfNuGLGd0EsIA?=
- =?us-ascii?Q?nsAyaj+WmxCjv8gnYvCui235PbwpR6DneoeTHp+4G8H7Sjhdqn+iNKM4Huui?=
- =?us-ascii?Q?KT9u0dUHsMyTevtCKULLfV7w0vsSIsnvGaMdgeRxcOdmZiBoFxNe+yRS3UO/?=
- =?us-ascii?Q?cHYfvKyfNBaTItGMLA9k+pKem1ZcUT5HUv6AOzCgqQ1Hz9Bp9Emh3iwUCB88?=
- =?us-ascii?Q?WFROZntbY1Py+LS44ajy2Zt41lEqeknegqcdYHZxtyeNeV++eB0+EM4aNErh?=
- =?us-ascii?Q?DUvvSMolOeKxolkifEIIVXt5VlKy9sEswp76aPmg9HtHLg94hXXjHRZAjQvq?=
- =?us-ascii?Q?tHGcV7OUu5PQEpMBI/sY9AccNBTWX9Nejm+GIl71OOc6/IMSlLpf+1i+ZPZR?=
- =?us-ascii?Q?9g0Hft2P4Dff6YyrVdEvFBwtEp05aglU5g6cXd8/pEh8b4IOt1PZP/Y6w5J+?=
- =?us-ascii?Q?o4SA/XuSvNkT5t2YV4Uxk47+c+faP5z2xgi8fEPTmCLFbgvTNO5EwSddXJ2r?=
- =?us-ascii?Q?CPOQOCBSyKp3Xm8cfn7mQmcjg0gRfd1mHbJVQB55WiZHOqfIGbKeQimsM3RH?=
- =?us-ascii?Q?njTZvmVGpn2FnvCQXkC/zK4V2EpKXJ8FYyVg/vkV6MzO3aaoezpEpt76ycZl?=
- =?us-ascii?Q?7+Kl6qia29fKCPWpnCdWYTVe/ZnKPsvoM8UNqga3Vz+9eF9HyWstmaBSPAH2?=
- =?us-ascii?Q?0brqRmM0SS6vL1Gfy4bqXyVKCYElrWUtI80MUotKqzuRIj/f1IX1HYqun+PF?=
- =?us-ascii?Q?x7Vv00hY1OENn6bViwWhMHVCj1w+JlEuxd1TIYX6KYrhvoXGCmZHE4/HuHo3?=
- =?us-ascii?Q?9VBDFgH+5Pdfoe9VdL9ZVJAVQi78Hubln18ccLovjRf6vo6yP4s=3D?=
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?Rp4Vami0Ii0lEaDta26hJSl8/dp1+968UlgHYLWiJKUaKMY8IR0JGfwX01ad?=
- =?us-ascii?Q?jv9CE4t5ao0hwu5e/mXJvS2zrRWwmeWYlR96KLhiRziKU5K9aaW7TAm9Brqb?=
- =?us-ascii?Q?B0sXWezhJdW6YfhFm9l9oH8OfYakIPt38e7K20Q5CPwrInXX+lqhsnf/TdUw?=
- =?us-ascii?Q?ON2rifdM9YHB+YeDiRaE7fa0uww5ai5pe0jrFbBYzsiIRR1RyyVCShDwUwG7?=
- =?us-ascii?Q?8wnIR8KKqT8RbAAgFThQ8mMhAwwlBGMSwiKgu/gkhRfA+BjutLGNzE/f0mrC?=
- =?us-ascii?Q?VOHqY6kYlBO+RH3ldqC0zlQz1kN31kNvmFFSPmfPXt6ETFd3IMD+Kjut+3OT?=
- =?us-ascii?Q?DDGWudjvUNtOL1mZMvv8sUXhdFEtolekE2GcgpJEYs8g0N/pJCJYwvn58TK/?=
- =?us-ascii?Q?JUWaeLNtgMcVccGo3F8FDavRaSICxXOSSumDwhSTxm9PONxO7+6K4I+x1jub?=
- =?us-ascii?Q?9lS82/L9XFBahIq/rD2ZVXlaX2nLVjfC7ZsdwoZ8qz2bqh6zrjKJ5O7/mn1g?=
- =?us-ascii?Q?N7H8Fhnm6JJrmKAbYeIBMOEBQ1RG98kdZdHYPll+LIb8u48s55+LPd4/ecEh?=
- =?us-ascii?Q?bJLTb1W+ktO0pv9BJiEZkgswSagFG9nhoNrC1TRv2UM84CqbQSoAwQkSd9Ev?=
- =?us-ascii?Q?PRuiWjVycpE5dJkXrNUkeoohlHpx8B3T4BLxDUoSyukxGvW387YelfJHft1D?=
- =?us-ascii?Q?XdxKlm7Z+XBQS8MpuBg6ecmoHgoeb/oDszMF57QM93vfWTL5B0rVFhaXue0V?=
- =?us-ascii?Q?M/6/RE0BstZ8u8mIPnZQM4aS7818cnCSFP3BOj9lREEFY2BwhgwxdI169P4K?=
- =?us-ascii?Q?ndntnYtUz2YoorBgw6SrsOkcl8op3CvEXYJmSqqb6FpbR6YadND3IO1SJWNH?=
- =?us-ascii?Q?5P/YyrObUjSKJ6CdnvlS28hCain6mPZJ+vgRyaxdRTq5//pTFkCJJCeEyWu0?=
- =?us-ascii?Q?D/2tcOSeNJHLFjv83eQEn8iADfl8W54ZLn2QwDbEsDfYtx7Ir5SscHl0gfSj?=
- =?us-ascii?Q?GbZqT9ed4IALkGEwv9V0ugRk4CYjvffVnMR00TXD+2sNNZ/0IyP0E0FbP2tv?=
- =?us-ascii?Q?0SiU+WEqT7C9TLFQN4zgjjSuwiNoNWAs1kEXHzFdEpNKcWl5Gad0CfczLQO9?=
- =?us-ascii?Q?A7CPXFLNkBSZLuy/ol0iRKz4HfvpYsbdyFLJDtHgztnuAA4kAqxMBC4dzAJ7?=
- =?us-ascii?Q?qszrzNiVEIxdLQ5V6or+im5J+IVnRI04pbUCbRgmeES952opKJgpV9jgwanL?=
- =?us-ascii?Q?d4aK1is4FMPfystR8V9Oz7eB91NgdAgpk9Lb1/sppVlATFpMyKay8IfiAb1q?=
- =?us-ascii?Q?sNWRoZ9lJBYmbn8nt853z/rK7z0c2jmu9h69QbdVJvwAHbL4Qqy6cSLdyqU0?=
- =?us-ascii?Q?bf2vCjE=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=ncsu.edu header.i=@ncsu.edu header.b="OZLAZTQJ"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-51c08df8513so3479371cf.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Aug 2026 22:02:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ncsu.edu; s=google; t=1787288549; x=1787893349; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=F1M/+Grf+rkfSTbenrOF9B1LHPq+jzZ2PC91gwKO1G4=;
+        b=OZLAZTQJJrG396Wh2ODPLKgUekwsVEDP3fVb1Z+3mfva+gdXrvAEyOMFGAzx8TCRQN
+         7DKFIxje+zyoSu940CEAqFqnOBe6IIHRou0rTB2XMi1a+6xd6sp1MxnitjZQf66swlOF
+         wb0+7qLz5ZK84W16L+4Zhrve5d6L7Rx2UYSLirFz3jPjo+nT5y5w6sn+2DKX2elhQtKO
+         pcwpl2pzSlj22uHu6ii8Vbo7SkdvAAL5zi5Ff4tQ9nno5Sshm6aEo9ETs446pFcYr3IQ
+         R7okZmKGm/b99Ofo20ESpzmSxz/rUrvP1UPhACFOW7t6UUAKSPkpEP2hjp41HMj3SUeF
+         9bdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787288549; x=1787893349;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=F1M/+Grf+rkfSTbenrOF9B1LHPq+jzZ2PC91gwKO1G4=;
+        b=Bu79RAocRWXWtlaKUAX3YhSwqd+ZdoyRct2ml6a1UpKpCjocsDDeLlA3/TJjflYE6C
+         tKZHO7SAnHZcj7C36BuEHLv6wm8a7W4BRhwWGzYneIFrqz0bFoa0zEIuPdSIpfW4OxVY
+         Dha20I9eJJ16+6kYq3Es3wKbxnYvEjoheoTxY1Ns54mGjUX5NnYWIi7Ik+geMSDpq+pB
+         EGqhgoIzd+7F+rAgJix9NzDRhPggp90nQBRxeddvP9WXWEkr86svzJjk1UqirefOhpV1
+         0IlQWmrJDJUpninEmKL6Szx7CNqh6RgGqVA7v4EryHOEpglkf85W1Rob/4BCQRYbiqbr
+         Z8CQ==
+X-Forwarded-Encrypted: i=1; AHgh+Rp1sc6oQfPS34hzILrwCVl2SrxvUGbXe2K8aBuMPto6nLWpa/KWLy6WrSoHtFY8ePJb7FbXCOeSNPuGa2Du3pAL@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyn78n8iSKMTYWhdwSq4S5OHyTRTGT57QKZwAyjxWTUn/C+gGYj
+	6koq/4X+t60eeBKzRQvzqja6NL96aHNLw0onKw5ecS1oTkO3dwiPcnc3KuA8VCtKGA==
+X-Gm-Gg: AR+sD10DvjQrsPZFRpxolJZePHcNUeGxDgjeJsAqIzBAY8ARq7mwqMamgQqSZbaoTNc
+	TFohK+UfcM0G3UwOLCnNKTJwrYWwqIKAxl5RW0EiKMRNsaf2vjheWerh/5PTozjwUH0aR8d2nao
+	U1yysMbYVieX5eyvCOR5M4Xyv9M4iyjTJb5/mRKAx6fQGlsZrpQcaeF9m5+b3vhcgQtZ+AvJYKs
+	P9GaHa7MHmd6zIM9qOpQoxftx1mNA7v3vEMY9xYaVduBi+tkWng+gbRofIF6m1BLcRFh9Gn8DDL
+	TsG6nvtytI2j0lG/68tiQy7ksj+8F7RZnn+9qSuKf79lkc5gIAYjJHjJeTbTwXMxdI3h4B1s8b8
+	o9qWjUMo/e+w18hBUgTtFyCk/acXMIgdGYaOwjs5D1ISHvq6gbOYk/mtGIidG/3AjCjspPbMduZ
+	P+8c3ktMxVsdL4O+ws+yyt0a5vzjWNePoL+p/RJAj/pLUCvUvD26QpA9Zmh7d8KK/ETcrO4NXnu
+	o4Mp3729G+TE/mgDaGU
+X-Received: by 2002:a05:622a:4c0a:b0:52d:f4fb:8baa with SMTP id d75a77b69052e-52df5a57d2amr32611581cf.35.1787288549038;
+        Thu, 20 Aug 2026 22:02:29 -0700 (PDT)
+Received: from home.localdomain ([136.61.118.42])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-90c5eec1e7fsm54368116d6.12.2026.08.20.22.02.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2026 22:02:28 -0700 (PDT)
+From: Yanbo Zhao <yzhao62@ncsu.edu>
+To: Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Zecheng Li <zli94@ncsu.edu>,
+	Xu Liu <xliuprof@google.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yanbo Zhao <yzhao62@ncsu.edu>
+Subject: [PATCH 0/3] perf annotate: Data type profiling support for C++ classes and virtual calls
+Date: Fri, 21 Aug 2026 01:02:04 -0400
+Message-Id: <20260821050207.4517-1-yzhao62@ncsu.edu>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR02MB4157.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce65df62-7e61-443a-826d-08deff3a85c8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Aug 2026 04:13:15.0481
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR02MB9758
+Content-Transfer-Encoding: 8bit
 
-From: Juergen Gross <jgross@suse.com> Sent: Wednesday, August 19, 2026 3:23=
- AM
->=20
-> After the conversion of rdmsrq() to an inline function some use cases
-> can be simplified by dropping an intermediate variable.
->=20
-> Signed-off-by: Juergen Gross <jgross@suse.com>
-> ---
->  arch/x86/events/amd/core.c      |  6 +-----
->  arch/x86/events/amd/lbr.c       | 12 ++----------
->  arch/x86/events/intel/core.c    |  6 +-----
->  arch/x86/events/intel/cstate.c  |  5 +----
->  arch/x86/events/intel/knc.c     |  6 +-----
->  arch/x86/events/intel/lbr.c     | 17 +++--------------
->  arch/x86/events/intel/uncore.c  |  6 +-----
->  arch/x86/events/rapl.c          |  4 +---
->  arch/x86/events/zhaoxin/core.c  |  6 +-----
->  arch/x86/hyperv/hv_apic.c       |  5 +----
->  arch/x86/include/asm/apic.h     |  5 +----
->  arch/x86/include/asm/debugreg.h |  6 +-----
->  arch/x86/include/asm/kvm_host.h |  5 +----
->  13 files changed, 16 insertions(+), 73 deletions(-)
->
+Data type profiling currently only understands C struct/union types.
+For C++ workloads, member accesses on classes cannot be resolved, and
+virtual function calls (indirect calls through the vtable) break the
+instruction type tracking entirely: the call target is unknown, so the
+return type is lost and register states get invalidated.
 
-[snip]
-=20
-> diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
-> index 4e30f9a11bc4..52ee8c237c2c 100644
-> --- a/arch/x86/hyperv/hv_apic.c
-> +++ b/arch/x86/hyperv/hv_apic.c
-> @@ -36,10 +36,7 @@ static struct apic orig_apic;
->=20
->  static u64 hv_apic_icr_read(void)
->  {
-> -	u64 reg_val;
-> -
-> -	reg_val =3D rdmsrq(HV_X64_MSR_ICR);
-> -	return reg_val;
-> +	return rdmsrq(HV_X64_MSR_ICR);
->  }
->=20
+This series extends data type profiling to C++:
 
-For this Hyper-V specific code,
+Patch 1 introduces die_is_compound_type() covering
+DW_TAG_structure_type, DW_TAG_union_type and DW_TAG_class_type, and
+converts all existing open-coded struct/union checks in dwarf-aux.c
+and annotate-data.c to use it.  It also accepts DW_TAG_inheritance in
+the member lookup callbacks so offset-based lookup descends into base
+class subobjects.
 
-Reviewed-by: Michael Kelley <mhklinux@outlook.com>
+Patch 2 adds the C++-specific DWARF helpers: CU language detection,
+base class and vtable index inspection, virtual function lookup by
+vtable index (recursing into base classes), and vtable pointer
+(_vptr) member identification.  Fallback definitions are provided for
+DW_AT_vtable_elem_index and DW_LANG_C_plus_plus_17/20 so the code
+builds against older elfutils.
+
+Patch 3 wires it up in the disassembler and the x86 instruction
+tracking: a load of a '_vptr' member marks the destination register
+as TSR_KIND_VTABLE_PTR, and an indirect call through such a register
+is resolved statically via the vtable index, recovering the return
+type and updating the receiver ('this' pointer) register to the class
+type.  The receiver register number comes from the new
+type_state::arg0_reg field initialized per arch like ret_reg.
+Caller-saved register invalidation is moved after the target operands
+are read so the state needed for resolution is not lost.
+
+Only the primary vtable is handled for now; multiple inheritance is
+left as a TODO.  Updating the receiver register for any method call
+that passes a 'this' pointer (not only resolved virtual calls) needs
+a callee DIE lookup by linkage name and is planned as a follow-up on
+top of this series.
+
+Verified on an x86-64 C++ workload with virtual calls in a hot loop
+(built with -O2 -g): the vptr loads are tracked, the indirect calls
+are resolved, and 'perf report -s type,typeoff' attributes the
+samples to 'struct Base +0 (_vptr.Base)'.  Also passed 'perf test'
+annotate basic tests and checkpatch on all three patches.
+
+Yanbo Zhao (3):
+  perf dwarf-aux: Add die_is_compound_type() to handle C++ class types
+  perf dwarf-aux: Add C++ class, inheritance and vtable helpers
+  perf disasm & annotate x86: Track C++ vptr and resolve virtual
+    function calls
+
+ tools/perf/util/annotate-arch/annotate-x86.c | 103 +++++++--
+ tools/perf/util/annotate-data.c              |  36 ++--
+ tools/perf/util/annotate-data.h              |   3 +
+ tools/perf/util/annotate.c                   |   4 +
+ tools/perf/util/disasm.c                     |   1 +
+ tools/perf/util/dwarf-aux.c                  | 209 ++++++++++++++++++-
+ tools/perf/util/dwarf-aux.h                  |  27 +++
+ 7 files changed, 342 insertions(+), 41 deletions(-)
+
+-- 
+2.25.1
+
