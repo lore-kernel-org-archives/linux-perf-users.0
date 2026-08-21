@@ -1,144 +1,188 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30A6E3A6F00;
-	Fri, 21 Aug 2026 13:03:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787317409; cv=none; b=FtxgpkcI3NaX3P4blOZaz+fqb42RPYiI2MRoJLXKYmXfxkxWdcnP65KxOuUQGjDOoxIMJa/fgRKXs8nQZfbawLKv3pXigkdmA8pYRsdeIFIke25Jnk4MZPDkF+eoc5j1WznZdXxhfXqF0qPKk+2bwf7QsWyA07Zac9LC3W6XtqY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787317409; c=relaxed/simple;
-	bh=XcxbcfIfqBY7DCgZWLfmaxtYrCCLex52s9UYhhdI2u0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LGLXNpmKjKvN7nCVwcqkIjEP+j9s2hZLdQVzi17McXRix9v/uPiMVL+yB80kj7VBVxdFOv5ye8oMhJum4el2n3UD9IKf7M6HJ6NSxV+ZGO6VpZR8groRRkp37/dh/sFIm92pfoSb3Rx4iBTQQ/yuFoKqArqxXxUnCw2mF72vf9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cB0k1PK5; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7FEA1F8723
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 18:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.215.175
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787337250; cv=pass; b=dThX63VO2klDoa9qAFW5mcgOTUgz3RG0eE9rDv3uH9U/ByOgjLtHYrdwLXTWljf1qSvnp5o7mA5dufKYpHsHjMiBS/leZt0h12KswOVer/5ZRwBr5irOfFhcc16flijx/1a7WPqJI5fdobjoNsLu1p2OH3W+KC6VA5NMRXKFWH8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787337250; c=relaxed/simple;
+	bh=2A92KqKoCJmcZ56ZasJV/t7WaDXgH6qSgLNOV+CEQaQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=k8wlAuCkPOKIdztIAuivGEC2BvDgw7ycLsyIupZdBp4kW9MHkkugv15s9uQjlwOuDwiNkHuSPUyTSn6i66TKTZZ2XOunB2D1M1IiGIitKUrabYuy0zguTmYkMSV63/YeLQQs8BqrioetPSezmsp1WOn6khn+TxQextZbll5i4ts=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=rUeypJUo; arc=pass smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cB0k1PK5"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67LD1mnt1586053;
-	Fri, 21 Aug 2026 13:03:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Yg/Nzv
-	fk/ncbyS3QORi/QhRlElzDhW+xXXf/YPaNtVk=; b=cB0k1PK5Tw/ytbni9fZGhw
-	vamSf91jRz4d1TUKzqZOFQOpv18NyqNsafJOchsgL8jiAIt+WF5Y29knGNxSFeSj
-	jPCQuBbn+EQBeNGpQrl1abjVll1I2Qk0QGs8Lwkr+z7GNJfer1uXALz/L+3tNucF
-	BoCAfQHDXmk4QsrW/likx73+SKm6e+egpt31ZwbDhTMk6V4h872TUn56fiVbso/P
-	lUpFDjoz6+g1lPtY3whwdynI9bnGiloeIxdeopJCV3MLYztrwy2zjkLNpoYlt1Re
-	6iXd2N/GJNxQ31tqyPkThnNdZqC9OEvM+jjAXTTzuVoZ0uxj3AmGEqs83zDCkoMw
-	==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4g4yu0sna8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Aug 2026 13:03:24 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67LCv0qq010346;
-	Fri, 21 Aug 2026 13:03:23 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4g33ekmr9v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Aug 2026 13:03:23 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67LD3J0H52101418
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Aug 2026 13:03:19 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7CCA22004D;
-	Fri, 21 Aug 2026 13:03:19 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9044B20043;
-	Fri, 21 Aug 2026 13:03:18 +0000 (GMT)
-Received: from [9.111.132.152] (unknown [9.111.132.152])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 21 Aug 2026 13:03:18 +0000 (GMT)
-Message-ID: <ba75c436-ae41-4754-8a73-80e2e5df76e7@linux.ibm.com>
-Date: Fri, 21 Aug 2026 15:03:18 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rUeypJUo"
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-c966b9ee9cbso951985a12.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 11:34:08 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787337248; cv=none;
+        d=google.com; s=arc-20260327;
+        b=dIUTyIGV7BUBdV40S+xof2ZCiYF1Y8pqoJQ8H9fi1vErp9mWCq4seqYTbXXibrlrDd
+         NxGPnPAwty1aqN4wC9PT8ukNSnuOERdIkVmfOUXR8YLIhmm21Pa4MwW7E6kGhOIGSmAo
+         Y0YWeq+iaytJwsxHWNgN2dJSoRjOYeuvbgBI0YDpnd7SFK2KLe/sZs92mS+z3JoiBW6I
+         ZY0n635bIDhbSuK0QmjZ1GuV75inMbjnRcQ502gmPC1gwClIaCHUkEx7x9wCWvwpappt
+         SQpHmXVFfU9ofQ/VpmCay8YIaP2qGfGBQH0nmps/qYKYT+sPn1k9LkdvVEDpso8LqaV9
+         3n/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=Y0Ukbw5yEgIofWImq0KqMRHmw7+kGVu41QRqHiQ2DTo=;
+        fh=Gy0WA4i3gCVvRd6pBXQiyjPn0sa2o9QCPzSsFUGu1SA=;
+        b=n7zixbGGX+fPv0dbINv0ajuK0mT1M41cZI89CCxqECGQT9hvwNtTwFWE6VM+HDVSin
+         mHVYomIltJ9ZeOGMdS8AOahikNezUza784vs9PEgMz60znrUgjVoKY1zpXCtTtzxXJof
+         IEQg2ciew0dHK6xAVRupprQPgS/VPQ7PtPV/8XnDuRy32T4ClOFyMJKZNRU9v48CdSXz
+         w3x0sXUTM1OzOwLZ8unfSLk9shk4HO/UhEIFiGyafswSIx6gWOvNIFBxFflfvfAzfdgK
+         KTV4jlUN6yxNRcI7A5W2i4W/oJLSx5TkejvV3voOVm8ZMpQ3JGNbLO4oYr0kKimqn0qS
+         9jDw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787337248; x=1787942048; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=Y0Ukbw5yEgIofWImq0KqMRHmw7+kGVu41QRqHiQ2DTo=;
+        b=rUeypJUoO2uLmKZLOE7GfBMYob3PTQ79N2DcnLL/LhJC9mDO3pnAKaNL6TNfaECykp
+         CcamObRLnWx4MkSQST827fTRgvOgLogbCnIX2KEEb09oBCGGzv4lgmL/m5O2GLzPftsQ
+         qY3DXd/vAAzAVewNLOE69Kt1QpZb++e+P/jcjl6iotOmTmpoM3mGMankC5y8lfISy00Y
+         7UZ+bDBD/BaS5AyeE8fWo13zbjIA3PWepTsJ9JRnGSveeGHu4NTpPQBJEAPmWUvpwtc3
+         jmeef3xFBzApf3iKM4ztzTGKpD2ywjEc2b5AqP/xFc6RLEIfryNNrSqzG93pknqk0a19
+         obww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787337248; x=1787942048;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=Y0Ukbw5yEgIofWImq0KqMRHmw7+kGVu41QRqHiQ2DTo=;
+        b=GgYeNiHXHkPa1+riIFTORK3XjJOo74ww6J/SZXKgvq1bDv0whZq+OPMqNIaSP72oRu
+         J+eqynND5Cs+UfJWCZT0TkAOoZd3wqPG1x3MK9z2Kt+LTR7tlvWn/yBHeueuxGWi/v9R
+         gu+oFtMzTrIqIwJecg1+cm4OrN0xr6+Fb2HEKGVVyevlcDenZUwi+XWw642hAmNuuweW
+         4iHfrGN7DPakaBvzHg1BS1jzhgXay8F1NCB2Uyldb2Yxtlya9mzHi/LVSLJK2YDndreg
+         Gb0aIK4yn725UXXISubjqul4loguJI2GNoupTCwbqkgvu4AMjUcSnJ3MgSEZq8Lt/dEP
+         XTqg==
+X-Forwarded-Encrypted: i=1; AHgh+Rr+pgHULcAIGp2nHvUgQQo8vO/ce9dVjLCA0VSOuOR0l2iDdemzQPtckndz6B/DeiEY5XjalFiafriH0cD+jAZI@vger.kernel.org
+X-Gm-Message-State: AFuF++kzLlKvxu1eWs7CKj0oq23/A6xJs4QTsfvqraoIaFJHgYUjkRan
+	j2uIVp4967GjI9gOJ5CeaaGafeorTOPsh4qSa2zW6JMsA+r4plir4nCD3rA/NEzlK5hxUiprY6W
+	gc74wU8kr7r15VvT/2FlZEnBr803R3YU=
+X-Gm-Gg: AR+sD13y3KP8wWYOJ0Jri8zYsschaEtTxXl6JVk3WBAOgc787TtH2Bo01rZngSQrfuG
+	KjzpoPnGi+jw6ggRSFLhkaJOseruyUUeUjfJcehs5w6l8Nw3s21TBoi0j465/Lz7o5T3VLAzx8m
+	TXd34St3lTi3I1hqUWojEMILq6NJ0jJuYScXL+C+hcvJw+9hh5TA6sIeggZJ7HrlQYYuXjTcdF0
+	5lJJS7iWfw21YnNL/h5R4t6E5SfNfzcYH16Lqfs+7GM2vDNfDLBOzfGgsXO8eQfo/nkE6fjWMuc
+	9uCQtPLwt3ObIWwjDgMqtN87yW/7KBV6lsh90Jeus+oX1oDV56V5Bn9UdHl3vvP/ZjmAQDPi0S9
+	tDp9vzgC2MOrEnoGt7Kfm9NwYoVQKJZ9exiq3
+X-Received: by 2002:a05:6a21:3a45:b0:3cc:fb7d:a9ab with SMTP id
+ adf61e73a8af0-3cd4b9ea5famr1632166637.2.1787337248227; Fri, 21 Aug 2026
+ 11:34:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf evsel: Improve callchain warning for s390
-To: Jan Polensky <japo@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>
-Cc: Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>
-References: <20260821125538.3721169-1-jremus@linux.ibm.com>
-Content-Language: en-US
-From: Jens Remus <jremus@linux.ibm.com>
-Organization: IBM Deutschland Research & Development GmbH
-In-Reply-To: <20260821125538.3721169-1-jremus@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=MthiLWae c=1 sm=1 tr=0 ts=6a884c9d cx=c_pps
- a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17
- a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=U7nrCbtTmkRpXpFmAIza:22 a=VnNF1IyMAAAA:8
- a=vbp_ZNB3HVLcW2xkOEsA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: fQtVoxtMkHcAzoqUCDjy1wY5-Ser8JRG
-X-Proofpoint-GUID: SqtHRN2ay7uTkgByVe1SVAcpgclKaqRa
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODIxMDEwMCBTYWx0ZWRfXxdcl1ZjHdoa9
- xK9gcBJSdzlYKrWfH7z9ynjEPsXOuLyZ5MZA4+kjxE0cALCmZmdi/jA18ycEt4c2xd7jd9GHYVf
- k3i+U+uKWGBvw59JEqW0uaMTQ7lybqE=
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODIxMDEwMCBTYWx0ZWRfX0TzDL5IVQX8H
- Hg9C03vFkhYqqutOawpmls/LGq70HDzJq/v5Biw2E+GkMqQqX7riaIDYNfddMypn7JHTf1GYl7N
- EvUI5MigAm+7JV/VFwiTZu7TDCxl3YyyypKYOQ/1M2t5FFW+6D9qceRLWDOgcsb1eQtetoawqCv
- Bd3wj49MIBq0OAtDMHBCOZHlO06jwzwEhtopkV/3Soq94SN+mSGgM9M4HmpVQVfcqrO3MrZLGCb
- l7Jx9zUry8mO4Pdn+NgRPhtc+2QogxiGUHs4KR7P4QRNwf0sL9OY+PWaw02nDN0yygbzKfvp557
- A08Xofqp8wyIsHEYo5tgUXWjTUyzc3blohCdlzn9AmONyjBHZNi1ee560fgPJAo0IQmduwSfkEh
- UNfAWgAs/+Mq4mtvc3uRGmHN+pogfjIet/wMzDxvy4NNpgRAF8SGPBrAkGMT8hQE2WfjZC/hZq3
- N0mfZOBoGkSmrZZbsGQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-21_04,2026-08-21_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 impostorscore=0 bulkscore=0 phishscore=0 clxscore=1015
- spamscore=0 adultscore=0 lowpriorityscore=0 priorityscore=1501 suspectscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608210100
+References: <20260821014210.18681-1-kartikey406@gmail.com>
+In-Reply-To: <20260821014210.18681-1-kartikey406@gmail.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 21 Aug 2026 11:33:54 -0700
+X-Gm-Features: AcwNN1UMxCVEBEK7W_zIG4V60WyE6AsN7ajAZMnJmYaQz6_nFKVc9evdZTs2M6Q
+Message-ID: <CAEf4BzazKkRiOCAAERt6YueeVYnnYeNEPmxH+EW3F4CR_YVjsQ@mail.gmail.com>
+Subject: Re: [PATCH] perf/bpf: Fix lockless access to parent_event->prog in perf_event_alloc()
+To: Deepanshu Kartikey <kartikey406@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, olsajiri@gmail.com, irogers@google.com, 
+	adrian.hunter@intel.com, james.clark@linaro.org, kpsingh@kernel.org, 
+	matt@bobrowski.net, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
+	eddyz87@gmail.com, memxor@gmail.com, martin.lau@linux.dev, song@kernel.org, 
+	yonghong.song@linux.dev, emil@etsalapatis.com, ihor.solodrai@linux.dev, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 8/21/2026 2:55 PM, Jens Remus wrote:
+On Thu, Aug 20, 2026 at 6:42=E2=80=AFPM Deepanshu Kartikey
+<kartikey406@gmail.com> wrote:
+>
+> During fork(), perf_event_alloc() reads parent_event->prog locklessly
+> which can race with a concurrent bpf_perf_link_release() clearing and
+> freeing the prog via perf_event_detach_bpf_prog(). This can result in
+> a NULL pointer dereference or use-after-free in bpf_prog_inc().
+>
+> Fix by holding bpf_event_mutex when inheriting the BPF program during
+> fork(). Make bpf_event_mutex non-static and declare it extern in
+> perf_event.h so it is accessible from kernel/events/core.c.
+>
+> Fixes: 85192dbf4de0 ("bpf: Convert bpf_prog refcnt to atomic64_t")
+> Signed-off-by: Deepanshu Kartikey <kartikey406@gmail.com>
+> ---
+>  include/linux/perf_event.h | 2 ++
+>  kernel/events/core.c       | 8 +++++---
+>  kernel/trace/bpf_trace.c   | 2 +-
+>  3 files changed, 8 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 48d851fbd8ea..5c6dabb6dccb 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -2136,4 +2136,6 @@ static inline void perf_lopwr_cb(bool mode)
+>  }
+>  #endif
+>
+> +extern struct mutex bpf_event_mutex;
+> +
 
-> Instead, warn on s390 when callchain sampling is requested with an event
-> provided by the CPUMSF hardware PMU, because that combination is not
-> supported.
+exposing this mutex like that is definitely a smell.
 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+AI tells me that this perf event inheritance case can happen for
+non-tracing (i.e., BPF_PROG_TYPE_PERF_EVENT) events, which are
+attached while holding perf_event_ctx_lock, not the bpf_event_mutex
+(this one is held for tracepoint/kprobe/uprobe programs).
 
-> @@ -1078,9 +1078,8 @@ static void __evsel__config_callchain(struct evsel *evsel, const struct record_o
->  	bool function = evsel__is_function_event(evsel);
->  	struct perf_event_attr *attr = &evsel->core.attr;
->  
-> -	if (EM_HOST == EM_S390 && param->record_mode == CALLCHAIN_FP) {
-> -		pr_warning_once(
-> -			"Framepointer unwinding lacks kernel support. Use '--call-graph dwarf'\n");
-> +	if (EM_HOST == EM_S390 && evsel->pmu && !perf_pmu__is_software(evsel->pmu)) {
-> +		pr_warning_once("Cannot use hardware CPUMSF event with -g and --call-graph.\n");
+Please validate and adjust the fix.
 
-Jan, Thomas, could you please do me a favor and test whether this works
-as expected on LPAR with CPUMSF?  Time was running out before I leave on
-vacation.
-
->  	}
->  
->  	evsel__set_sample_bit(evsel, CALLCHAIN);
-Thanks and regards,
-Jens
--- 
-Jens Remus
-Linux on Z Development (D3303)
-jremus@de.ibm.com / jremus@linux.ibm.com
-
-IBM Deutschland Research & Development GmbH; Vorsitzender des Aufsichtsrats: Wolfgang Wendt; Geschäftsführung: David Faller; Sitz der Gesellschaft: Ehningen; Registergericht: Amtsgericht Stuttgart, HRB 243294
-IBM Data Privacy Statement: https://www.ibm.com/privacy/
-
+>  #endif /* _LINUX_PERF_EVENT_H */
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index ba5bd6a78fe7..a89e33c47073 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -13433,12 +13433,15 @@ perf_event_alloc(struct perf_event_attr *attr, =
+int cpu,
+>                 overflow_handler =3D parent_event->overflow_handler;
+>                 context =3D parent_event->overflow_handler_context;
+>  #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_EVENT_TRACING)
+> -               if (parent_event->prog) {
+> -                       struct bpf_prog *prog =3D parent_event->prog;
+> -
+> +               struct bpf_prog *prog;
+> +
+> +               mutex_lock(&bpf_event_mutex);
+> +               prog =3D parent_event->prog;
+> +               if (prog) {
+>                         bpf_prog_inc(prog);
+>                         event->prog =3D prog;
+>                 }
+> +               mutex_unlock(&bpf_event_mutex);
+>  #endif
+>         }
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 75495a5c3507..730fc22a9daa 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -1944,7 +1944,7 @@ const struct bpf_verifier_ops perf_event_verifier_o=
+ps =3D {
+>  const struct bpf_prog_ops perf_event_prog_ops =3D {
+>  };
+>
+> -static DEFINE_MUTEX(bpf_event_mutex);
+> +DEFINE_MUTEX(bpf_event_mutex);
+>
+>  #define BPF_TRACE_MAX_PROGS 64
+>
+> --
+> 2.43.0
+>
