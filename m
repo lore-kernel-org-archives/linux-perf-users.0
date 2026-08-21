@@ -1,137 +1,169 @@
-Received: from mail-yx1-f50.google.com (mail-yx1-f50.google.com [74.125.224.50])
+Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C5903264F2
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 01:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787275226; cv=pass; b=FEGTNXTRHS68X+HfAozTyYeZrdjRbn0+54oek0XyZ7/Mm8Jvkh2A7P/SY3TSZ8xpQWDma7L4aGS4tOqQURRzBr5M6eV6j6SqESg+QyAZBvgWSefTn852UzRBVewS7AKqBhP4phugocqcFdnNHr1Xj53t/kxgpEAb3JRx8rt0MGc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787275226; c=relaxed/simple;
-	bh=beEVlsUuL9o5hYoikgcqc1vZjOkeGxTIGhmngv+9k8M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=odHTURrfa2y3tEVRyRlxEeduudWmfUY7sjRaPvUGkKcz++5jw2VrBkBrh5QkqH2mr97LoPLWe8lgikBqAVrK5tCimFT8HndC9bH41zbMEyJFyoN2P9YpivSuALe0M/5zYN2vS76xz6TBUu9GeDyeU8/Z32jBk+/DtQ8auq5+C38=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=StO3cSkM; arc=pass smtp.client-ip=74.125.224.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33B8D1F3BA4
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 01:42:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787276550; cv=none; b=G+5RuqElOqWUqF10A24kCjGpv0+1+593RkNuWwY8yeQb+wmG9Bit0EpqWJoQCpeLxGdF6uLEAd69xZTm6z97Bi1Yp0KA/0xkzSFJ6wEnI/oEDuWqCtamxx2UyQN5hjFbdoz7KOr2jVFnvz6mdKhTBYI1bWGXputFgOKVhJJn6wM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787276550; c=relaxed/simple;
+	bh=cnGO77SZwM6ztR2iXPrLT1hQRzW3joCybwJahJ7pjaQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KDhPzWedvAOKjW2fy0wJEd+Za9AolPkeyhPApZDWRx/ImQ055gPXV7iB7GQ1+73i23qAhxiJfJZJvUVtN+ezBe7uTQJir90/QgH0A0DRNdGVlazTDPbCuBqU8doKWYGaUeAGEpFAxfkzztphaOxOtQn9ClwNQFK+/2RbXQjjLzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=tCS+sxW1; arc=none smtp.client-ip=209.85.215.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StO3cSkM"
-Received: by mail-yx1-f50.google.com with SMTP id 956f58d0204a3-66b32bb75beso711828d50.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Aug 2026 18:20:22 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787275221; cv=none;
-        d=google.com; s=arc-20260327;
-        b=ae5naQCRtbyz59oz8Sja+77ydj7MgIbmLjbQnOgrlnDBo9zoX5l1kWAuxQyLT/csEP
-         iWAAPbG7d+0i5JuFKW8GT0bVaqKf1b/Bll9fegVybhFJpLcZlgihgrBfpkssmcRBezK7
-         qWcuPcXm9kaUCWpjimkbUNrlMbmu8/dfn7VDeI8qd6k2sqH9PWzdfi4qLLCLDRS30KVB
-         mO2hX1IfMTRl3tgfw4a91UOaRhiC99fpVThT+WjyEpe6/k7SCMZBEsG8hlNiZ2A1jLSE
-         Qvio6zDqbkwCcgLRqOO+Nx+qf4G0qiaW0Ymo0Z4xBEnNuHDLSHTZPdunc+1yp2GfTiI+
-         lAIw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Cc/ydSvi4LcaS7pHjzjdCQH2bbW529bELwQ3mNa36YE=;
-        fh=K2es/XnvKLA0Rzr7PW3qUr9/Ja/YePw2m+OVR5cad7A=;
-        b=DbGoKsLOIfAALrwCpTP+TRuuwgz3mXbESaYH4qyfpql7+YfeGEaHoDA9r9pxC0W/t6
-         SfrLGgJgvkoyclaFbfCJc06dEPMj66Gde2jiqLBrwKPRQborJUCvPBdZLprr8lgLFoJX
-         Zy7s1zPp2A63xWUAjw8fXKMiiGu++Vioiv0MWHEgNq1sd5e6u3m2dEJvn3m3NhHR8alK
-         h4fnXqpSVIsGZ3Uy7GZbMw03I5iSQjIqT7zrjXdYdMXH48Ir6edjTQlRFe3GF5d3kvV4
-         Cws/F2w02quQVNso1CUaEAZSRikoXDKhJ6VuVCkBWNTzrw3On6GX9QJLxO9TPeGsgmo6
-         iLAA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tCS+sxW1"
+Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-cb5b8572b70so620638a12.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Aug 2026 18:42:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787275221; x=1787880021; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Cc/ydSvi4LcaS7pHjzjdCQH2bbW529bELwQ3mNa36YE=;
-        b=StO3cSkMRrkerKklAjGzm32z470HVenfFB21qn/HFzuepkklYWB0MvZhgKynrNdpUC
-         OmlGZdFXpNj2LptWUYYRuMGmD+T7UgvEnYMSH8Ibj4XMYCdd5h12zqCU9gBuxkyGeqzS
-         PF3aja90ZJvyr7a87wja02sZTiOZUnG2msi81cXlXKFKekGHsNTv3CSGZCLPxNQZ9f4/
-         jaWAgjPrpMs1bMUdz7ArUsClK38d1ycA3vGG7JMQgM1i/UrJdvQokQPaFcuuuxVC5XqS
-         zkrlywmyZE8/vYyIN2n5ZSD0DboWn9+a0cm0MjbY1SNAJFTyaN1H9EGBmD5WU07lH7KQ
-         R8rQ==
+        d=gmail.com; s=20251104; t=1787276549; x=1787881349; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=IPPlPTzVw1FwO75QG0O3qCtpPyGRlfV8iguadoA9NEM=;
+        b=tCS+sxW1mFfpp8fg+Fv9HH1hdnzpHYIPw/KdCo0C+o0FPJdevpsMQGKLQA9WUjphCE
+         TW47o6/oVvqAPBwKmQocey6+oyuvvdKECUo8+w7+7ahKyjz9CJin0aPe+R1y9qNzKWDM
+         u4n8kObdctDV2kFtVf2fedJfWLVPbXDXkCeVN4bq0WQQlU5GpAbGPc3J0zEqAdvKFYL+
+         nMLeKB8+qfTvfJaSKpnSg9FBfNc+Xdm4vOeBOm8komiiTBgvDiOdJLKRN/xIKZhsa2WJ
+         NnmhRPn9DvBWmsOlhi/nJRlqXe92By4XY4CMV6e0jOlgccqoXMMdzyv9RsakfRIvmuTn
+         L3OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787275221; x=1787880021;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Cc/ydSvi4LcaS7pHjzjdCQH2bbW529bELwQ3mNa36YE=;
-        b=cEiOKOCprBeWERP4C5SLJpJ5TAkD4DFthG+yxVhVID2KK9utlf2UuziMDJxnXE9Ezg
-         AoDW/BV1dI+OQq3eO5J0aI0wRIXC/w60KLBqP+wOX94oAQoLTKS/7fLgyko2MVkEEmzg
-         W8YTM1BrzsWEa9Y7XtCl4yBfBsgty/YQO+HxQgw2pZFp8vt1EoNMten59D2/bVZa6ley
-         EQR58CLSzCP0hD8c67l+OuG8lPtZZGyBT66zfOVxTU+FhYpvsNRTubG2WE/V/BU6Tdls
-         rDuJqQ3o06k4XsvDzCuLxPWUTWJltEV+fM9PHQJVi7JwBYUkzF/xWH7QsboVeGoDphtW
-         30iw==
-X-Forwarded-Encrypted: i=1; AHgh+Rob2vLeJMCw+s0snn7mQr6I2EIno68i64hHQYLI/zC+oBP/ADxIeBCdoT0PijmT4xw5O+er4liTMlu8Yb+KLX5k@vger.kernel.org
-X-Gm-Message-State: AFuF++m+Rg6B/Buq9y9FaxhTU3h9v8ASURAxXH7lw4IupGaiUH/a1DAW
-	0VAkd7m+gqjhgsTCOsOSrj1zEAY3N7og9dFUzAMOOI3O/M0ZJj42DaSrXLoeZ5zNhvyrHTNRNkh
-	FOBSHHKtRUH+y17ydNNTO4e00mTFyHe4=
-X-Gm-Gg: AR+sD133qMdDUxZNrPDrgGm08xe/ttZiz1BSG8GkayFATFt8+WyWeLWntfyeU/8+HgO
-	Twr+Ug4XBLOYnMobj5FplZeIZjArcXUBRNMzbZhpI/QqYW9zlMwgiJBOcIwr2M+ZCjIOOtS3QuA
-	5duQvJfd9ucSM4cQdXsFU4/kzn/RIjNcmVHfG3w5VW+zJGlZWCl3lOxy8Iv0rNh1x2o08r9xpQo
-	11YuZZsxuLBjGxrjnTTced2gjQLwvKPCDlaj1upcYzdA9iokwmMZKmwmWpphlmsZmV3eQGsjJMR
-	/HCFAPTn+WRp7xAZEmnulFL+tYVNoFA7OwCpiqpRmf92KO9k4RWc5mWHwMAoOCO0itaoCzxZUsb
-	yBEBVJTqxJZWHkxQjlSWiwoNdLZ1Nxb4APJs=
-X-Received: by 2002:a05:690e:6ca:b0:66c:9d32:46f2 with SMTP id
- 956f58d0204a3-66ce4b91cc5mr837296d50.54.1787275220801; Thu, 20 Aug 2026
- 18:20:20 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1787276549; x=1787881349;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=IPPlPTzVw1FwO75QG0O3qCtpPyGRlfV8iguadoA9NEM=;
+        b=nge3iqp+Z3t1m0eAsfQYG/FT2sSIYcPvTdWUXQ2ATeHEAFnMODCkthAri9ypLhb4p9
+         t0asMLfhKfrWqYPEab7Sy0z/b2sXGqBFE01EkjKVCTetGxQyWS8dB7+kzkWINccaB0bo
+         fjkDSA7LJLTYUTtM50dmO9N3Z8N7HSGU5QieCPDVA9K6/+nv3c8owN2dvKhrZrsfm2b9
+         hsKnufw/UC1aoZVREnshEwNky7QJ+PZ24mdMVo5cVOOlwqpCDBGZCvFk0Gosr5snScZm
+         UGFea63SZs3XDrGsW4wDEwOBLupoUzEdxnGm6/+mgFN4IcASxEmpNSFP6Vv4gOFPy2Pk
+         4pDA==
+X-Gm-Message-State: AOJu0Yys0XfZ83wWJTQMS3xQ5CdZvKqatrsNjVjKRkPaf4GjL+g1htmK
+	vZ64BEMo4b9rn/Vwt2P3v2TGlUoPzc4A6JzWPT5FdlbxcjOqsyiqwkou
+X-Gm-Gg: AR+sD1203L3xwNtqJnX0WcAnyzGAaAyN+Ls+HT6F+6a3/w9ZSvSDCk9CD0PuKIZL1HJ
+	1K8L5QACvNb0Q2hoGvDpm+OurhJgEUxGNHTQ7ycs1aj+k51pqf0lF6Aem5XyaGH1TNHKJ6XslrV
+	rQSuFJkAfMFXj+ODQJbO33ZdiPbY3qKIStBDQbIOm5aTCeko5//X+QWdX3o3FtZ1Pwk8zOhE/Ye
+	PtC5wi37fHDAd7svNmQOh3InqBEFg+wVHU14N+pOCdNJXSfA8PsCjTSLoO3s5ZyIT+s5z40Kxh3
+	3JnV+kTikTN01zL/nqCDhhvuyMpNKtHToeeLoy2oZEUs6njz04cCz5er5ajwz3wqnR5qO0xAAcC
+	BPbvZmM9aVpFSaEQWVkD1FRnciHFJlD7WCKPG1jLfwKjDbpytf0XErpdetHnMhoosTGJ/FZOivH
+	aqEFZ+Yfxi+Bkr6vF+isACXZGEVXmbC/MitRyPlL9jQNpvpT0qVa6YKjhEXlkx4AGDmNm6fObjG
+	dY3gbyqoP69qlkDKdsfZFu/MJWkDRSPPzrp1m0AaEDxeP9W7bSv9A==
+X-Received: by 2002:a05:6a20:c90c:b0:3cc:22bb:8911 with SMTP id adf61e73a8af0-3cd2fe7a2cdmr5359717637.6.1787276548650;
+        Thu, 20 Aug 2026 18:42:28 -0700 (PDT)
+Received: from deepanshu-Legion-Pro-5-16AFR10.. ([2405:201:682f:383f:707f:3e47:3c20:b84e])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1416ad53874sm32078704c88.4.2026.08.20.18.42.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Aug 2026 18:42:27 -0700 (PDT)
+From: Deepanshu Kartikey <kartikey406@gmail.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	olsajiri@gmail.com,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	kpsingh@kernel.org,
+	matt@bobrowski.net,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	andrii@kernel.org,
+	eddyz87@gmail.com,
+	memxor@gmail.com,
+	martin.lau@linux.dev,
+	song@kernel.org,
+	yonghong.song@linux.dev,
+	emil@etsalapatis.com,
+	ihor.solodrai@linux.dev,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	Deepanshu Kartikey <kartikey406@gmail.com>
+Subject: [PATCH] perf/bpf: Fix lockless access to parent_event->prog in perf_event_alloc()
+Date: Fri, 21 Aug 2026 07:12:10 +0530
+Message-ID: <20260821014210.18681-1-kartikey406@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260813060528.365959-1-kartikey406@gmail.com> <20260813110522.GD1246887@noisy.programming.kicks-ass.net>
-In-Reply-To: <20260813110522.GD1246887@noisy.programming.kicks-ass.net>
-From: Deepanshu Kartikey <kartikey406@gmail.com>
-Date: Fri, 21 Aug 2026 06:50:09 +0530
-X-Gm-Features: AcwNN1Xq-0u97UfSOxijlYn8NWJaauIW_R8xaQQaZYfAs9qafwmGEF-mflXoBV8
-Message-ID: <CADhLXY783QR01JkL8C1sJh1tBrud-6d=fmovg8wzTqzDzE_PEw@mail.gmail.com>
-Subject: Re: [PATCH v2] perf/bpf: Fix data races in BPF perf event handling
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	olsajiri@gmail.com, irogers@google.com, adrian.hunter@intel.com, 
-	james.clark@linaro.org, song@kernel.org, kpsingh@kernel.org, 
-	mattbobrowski@google.com, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com, martin.lau@linux.dev, 
-	yonghong.song@linux.dev, emil@etsalapatis.com, rostedt@goodmis.org, 
-	mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	syzbot+651d2774bd1d8395595f@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Aug 13, 2026 at 4:35=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
+During fork(), perf_event_alloc() reads parent_event->prog locklessly
+which can race with a concurrent bpf_perf_link_release() clearing and
+freeing the prog via perf_event_detach_bpf_prog(). This can result in
+a NULL pointer dereference or use-after-free in bpf_prog_inc().
 
-> As I said yesterday, how can perf_event_detach_bpf_prog() run
-> concurrently with __perf_event_overflow()? Unless you answer that, this
-> patch ain't moving nowhere.
->
+Fix by holding bpf_event_mutex when inheriting the BPF program during
+fork(). Make bpf_event_mutex non-static and declare it extern in
+perf_event.h so it is accessible from kernel/events/core.c.
 
+Fixes: 85192dbf4de0 ("bpf: Convert bpf_prog refcnt to atomic64_t")
+Signed-off-by: Deepanshu Kartikey <kartikey406@gmail.com>
+---
+ include/linux/perf_event.h | 2 ++
+ kernel/events/core.c       | 8 +++++---
+ kernel/trace/bpf_trace.c   | 2 +-
+ 3 files changed, 8 insertions(+), 4 deletions(-)
 
-You are right to question this. The KCSAN report from syzbot shows the
-race was detected at runtime:
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 48d851fbd8ea..5c6dabb6dccb 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -2136,4 +2136,6 @@ static inline void perf_lopwr_cb(bool mode)
+ }
+ #endif
+ 
++extern struct mutex bpf_event_mutex;
++
+ #endif /* _LINUX_PERF_EVENT_H */
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index ba5bd6a78fe7..a89e33c47073 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -13433,12 +13433,15 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 		overflow_handler = parent_event->overflow_handler;
+ 		context = parent_event->overflow_handler_context;
+ #if defined(CONFIG_BPF_SYSCALL) && defined(CONFIG_EVENT_TRACING)
+-		if (parent_event->prog) {
+-			struct bpf_prog *prog = parent_event->prog;
+-
++		struct bpf_prog *prog;
++
++		mutex_lock(&bpf_event_mutex);
++		prog = parent_event->prog;
++		if (prog) {
+ 			bpf_prog_inc(prog);
+ 			event->prog = prog;
+ 		}
++		mutex_unlock(&bpf_event_mutex);
+ #endif
+ 	}
+ 
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 75495a5c3507..730fc22a9daa 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1944,7 +1944,7 @@ const struct bpf_verifier_ops perf_event_verifier_ops = {
+ const struct bpf_prog_ops perf_event_prog_ops = {
+ };
+ 
+-static DEFINE_MUTEX(bpf_event_mutex);
++DEFINE_MUTEX(bpf_event_mutex);
+ 
+ #define BPF_TRACE_MAX_PROGS 64
+ 
+-- 
+2.43.0
 
-I don't have evidence to prove this race condition.
-
-> > 3. perf_event_alloc() reads parent_event->prog locklessly during
-> >    fork() which can race with a concurrent detach clearing and freeing
-> >    the prog, potentially causing a NULL pointer dereference or
-> >    use-after-free in bpf_prog_inc(). Fix by holding bpf_event_mutex
-> >    when inheriting the BPF program. Make bpf_event_mutex non-static
-> >    and declare it extern in perf_event.h so it is accessible from
-> >    kernel/events/core.c.
->
-> This seems like a separate issue and should thus be a separate patch.
-
-Agreed. I will split the perf_event_alloc() fix into a separate patch.
-
-Thanks
-
-Deepanshu
