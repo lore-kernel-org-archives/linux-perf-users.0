@@ -1,67 +1,68 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E7445FFA5
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 09:49:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0D2C472F87
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 09:49:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787305802; cv=none; b=SbFgtvaz9K6Usws7ANaOphk4NKuR7fip4uk3ZckEAhGiiKw4IJLBflyhTRF3/dSuzQYttExpn7aGGfg6mdm2x2plrLndCw/lf548vYsr6o3l8GlZjX+nKzcvqZxbtCf5uR2T5XBTT9sbnVSHeNaV/q+Y9X/ZydmW4STT5HHj/Ow=
+	t=1787305802; cv=none; b=tEPEiJXNhQmJe7qlTPFQ2WZlehUKWo920Q+WqCivEM/gPphX75qrG6JyCgolQk0I3Tg4kjAGu/ZTlslFrFZ50OaiqMdzRMNPbvMXd6L98ACQmX77TWIFcAXUqEhBXt4yZsOSe/2PH68HMz3HWF/OOXHCmZpr9N0eL0Qo3u+YVJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1787305802; c=relaxed/simple;
-	bh=rTMPj/k3Q/u75BzRf3kKvE+NUom8emDrF383KCKzh/Q=;
+	bh=45ewM2dvFaY12LY151swUHBTvievnc3sust8Ep02uoY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Eh5Dh2AvldafwR3U4hfN26YQMrLAsJfHjUq2lX4FA9qsYORL3o8YjQh+QH6XZ2T+ZOQaY3kELvhHkNG5HaYJpGDuRl8BpY9SWsf64GWxvzIo9lWyMmfJhX/1qK5Zu+ScdTpXsWqnwg9F0ujbXZyC2pg2ujDX1KnEmUOpE4ZhV7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xPBBt1HV; arc=none smtp.client-ip=209.85.221.53
+	 In-Reply-To:To:Cc; b=mWAsqSkTGX0zDiIrVUwVzJ6XismzeHEKyxxw9q9QosPKQkI34egOCudGeVAKfzR5jr7bZzs0EyY/5xyjsdIn3ZtDr3wQ8Ak5SEtvmekr9su5FlHcBW+p+SDZ7ltATk0mbET4Q/O1lkMtsR2lIgEATZ0AcpcWJ0ta1Qoj/6n4EAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RfttxknL; arc=none smtp.client-ip=209.85.221.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xPBBt1HV"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-47362928f65so742046f8f.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 02:49:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RfttxknL"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-47f93b2fe4cso399080f8f.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 02:49:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1787305782; x=1787910582; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1787305785; x=1787910585; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=8Jf25htTTjahKWtoEfo2hIZORvEQKfVJc2fvPx9rUTY=;
-        b=xPBBt1HVtSCicig+auSHVMXi1J8mXZZWwff8aEJ660lfuZBAPxM9RXgPA1dzd7PZTz
-         ByE2Qo6pEGk1zMCio/8zEJfVpxG9WT+VPPbhIqXICcs2iWF+fz7vvORgymjkULYtMkpy
-         r+J0r03K0f5sY8OHd2uZcQCWNbeBsV5vdIvXZWQ79OOZrew10CuvmoYlwYUjXVmdK1nz
-         ocKl0pBglFrOTNZaIbS6tEKKdXMDRcKIrq7A/Lp+uH2Jykue/uJUlcv9YSwAewyuFUVj
-         /UhOrZgn1zhoXejPoq9cf+6ZYRbaMQyxCNL8O+PV5zE1YY3398/GZcqhheqDCu+K82NX
-         dyZw==
+        bh=ghssS34122+SF9JGQaRPjJsmiH0qvioNjK1NWp3olSk=;
+        b=RfttxknLuTZt2Qr2BtWUT3atEqCHAqw/Kv7RKtHnY/+qIU84Zu5F5Dh80192T7cCVL
+         2pxI1RM+McHyqNi2AAJbuESxWxi8cO7LcyLZfqrjgDZ7j5/s5q0M/SW8vNJm23o0eSFd
+         0bM5WO76hYjOHcaeVznou36UFTGx9dxW5sNYPFpF8pLR/kPjzUJWB7PcBQTv6xVy1e/o
+         oos/aItt3jG7nDxA+RPrMJSCt5Jg9IgFjsisZ7iUx78ZbLSVVeCRvu9Y+T/fr0ssYOoJ
+         hM6hULoeJsruVz9ebMTSkfH6iyQm/9OuBDA2mLnAm/BfChtDIC6gCme69mNqh8K2X+jw
+         UmwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787305782; x=1787910582;
+        d=1e100.net; s=20251104; t=1787305785; x=1787910585;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=8Jf25htTTjahKWtoEfo2hIZORvEQKfVJc2fvPx9rUTY=;
-        b=nYGYhehHNLA2qoT0QlVeLq4ukICxHFZs/Z827BqH6D/+rWRDL2gxrJ7KQgbuKHlvBK
-         fMc2GumpPSjlc1HJa2YsXnRjQpFPnNUYtGZR2O6zD0JOEJHjaUbaMGi7HmdiuEyaxjWr
-         SNnyQo8q1UcOffox2SeR/xz6oO5OySyKTwb58NI422XKPCh8RSfEP9I/ewFlbwesjnfc
-         Txa8wydPfW/yzjePL7i7anKVSPsi5xIk9015GHhSd582oarQOwV9ZHsdGRevHm/97Qcz
-         rIW1Y2dYmBjHD1vy1dU4tCF1u5JFpqVvRQX6BfeH/dc7MDVo+ZNSrqp6jfwbxoXOkeHu
-         qeVg==
-X-Forwarded-Encrypted: i=1; AHgh+Rqq+nwXHANseH9gqVL7shY725sWtsk34PSzVFXTFclJd5or+6Xx4/5aiqChCGtbqyTZGWxxwkCL1GVGp4CMTASA@vger.kernel.org
-X-Gm-Message-State: AFuF++kqXIB3ehkic6rngfsPZF8Mm0WnVtV15H0rlKMFn/0gMue6DiGk
-	+bLk6g0OrpdapduqW/YBCinp1MrTw7jVGdaT3fNSL298Q/uEfJw7f+ICHai85J7ZExw=
-X-Gm-Gg: AR+sD13eSYkbHGt5sZmcvC33m3T+lGvrJ44LHOx5dOd1Wmd9VW1Z1p8N3ZzT5TV3MuA
-	B8E5sx1xGptXxIf7O6/LiiOSYgMMvhLI25QTIVaNwx7gM/56FyylPibKPddF/swW3BVtmzikb6W
-	HoFGSCH2DGzLMXTDR3md4dsRJ64AbCqUEKwqtgq85gfgGEIM/Tppqa3uG6EU86Q8xOJM+4SPPQt
-	7A5tTcNLelbUDKME9hvEaFPQADqTjrOCBphwt4auqRHQhCI/viymMNIrb66UxMn5+eK86EHfr3T
-	5AKxBAFO6Io/Qt2bH7vhmO8y7mNow4aJ79xoFNg4KHKy5EjkNt+ecT4+EXMEMU9cXtYFr6jWSls
-	QIpVVv/2i6PBeDt6vHOjtO1kzGnHg4pDLeT5IPYDKloXiPn+lRvKjiZ21kcvJXoO1bvtClVKbyX
-	h/WC6Ch92MCYVBX4P0lGPyz0x8vcDlXbqQyM/h8WF/+qb96skGCyjgtfJLU2SoTi+E
-X-Received: by 2002:a05:6000:2589:b0:482:bf17:e685 with SMTP id ffacd0b85a97d-482c0b88f19mr8390069f8f.11.1787305782104;
-        Fri, 21 Aug 2026 02:49:42 -0700 (PDT)
+        bh=ghssS34122+SF9JGQaRPjJsmiH0qvioNjK1NWp3olSk=;
+        b=i65wVijefk3tWh9PfuogDGjkkeV9zpqO7GazVrha2lLUAYf4+H2jDJ+XSFAFKop00L
+         TQa9UNdGJDZKto/BVxED02Z9RnZFWB60Ann6+bzP8eCk/UJyrHeCI0j6Nd1n3vNDApnH
+         4gHB2H3jym0Qb5mx8ntppQvkV9qfdVFNX7z3n0lJjbeDZE7IoAV8JJBHihtiSK0arDY8
+         Dty/Vnidexp5BH64EMfyjttIKK507FED6e+17me00HVyz1QuTX2MruIyJgR438djm8nV
+         8Mg4cNJ7aTSZZzDNN518TvMR972kBzXza5aXe0hZAeM9STTFj5InR9XpTXlWwDk6GnHz
+         r3Fw==
+X-Forwarded-Encrypted: i=1; AHgh+RodhslDR+AFjLYo7fl1VD22ilR7nQ2AR5iH7CuQJ/jWIs7jsAE0W8JSZ6KahvTGmyaYUO0h/4ZFmihgK2fFh38D@vger.kernel.org
+X-Gm-Message-State: AFuF++lyv2ABjFQoccOW78deMYTG9R58CP/93/QvJxjnCO/d1fxwdRhn
+	Fy/6DfEB+TdqDCqjon52pnHKHqx/ZgbTGYwkW8MVd0mBprqDTgBX8JII7Y+iaf79twg=
+X-Gm-Gg: AR+sD120tn+Ua4cvjGJMgVwAOkC7l30fq42S8KYXkCWIZU0Q9vPDwBFbW1rDPIcvwqu
+	+TPODoHAES2rj+aGjoCwVKBWhaKNcJX3bupXrS754WxHPAEcOI2eFHj9x2NRTfdYa7sG5TrIJnr
+	7gLBPSqyotaCmR4qi/0xChT59N+/R1c/bMFrw7HdFrwQ7iqaNOsFdF5bap06oCPuz+Lw9k1oZ1L
+	CK1otH16DkCZ9v24zYEkCDAg/jfa+LFBfJrAOap6zW/OnipBFs95ZRPnTrlaGIt3mHQ5IJkP48/
+	QUxuTky2B6Al1vIbDzgXtWx9mIB6ymgRqFhXV0aNQXK/WmjDaPrIK4V3FmO//4ZkX4ZGpsDpCk/
+	/2/bH/Y35Gzb1l3IwNDvF06zpG3WMBil8A62deina7vxrXYjZdFkl0NQBwVvbNCsCYZ1y/20ilc
+	oIgTqJopczai/gjVogLi0WOqug0if37iUuC/joFyP6vqb91QMZQ7RCjW+jvHhgbunLjKCQOZ3ts
+	8s=
+X-Received: by 2002:a5d:5846:0:b0:481:3124:c71f with SMTP id ffacd0b85a97d-482c0b907camr6412779f8f.17.1787305784814;
+        Fri, 21 Aug 2026 02:49:44 -0700 (PDT)
 Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b14d05a6sm17683479f8f.35.2026.08.21.02.49.40
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b14d05a6sm17683479f8f.35.2026.08.21.02.49.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 02:49:41 -0700 (PDT)
+        Fri, 21 Aug 2026 02:49:44 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Fri, 21 Aug 2026 10:49:10 +0100
-Subject: [PATCH v2 12/14] perf test: Allow infinite named_thread loops
+Date: Fri, 21 Aug 2026 10:49:12 +0100
+Subject: [PATCH v2 14/14] perf cs-etm: Test multiple per-thread threads
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -70,7 +71,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260821-james-cs-unformatted-per-thread-fix-v2-12-00c4fd0701b4@linaro.org>
+Message-Id: <20260821-james-cs-unformatted-per-thread-fix-v2-14-00c4fd0701b4@linaro.org>
 References: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
 In-Reply-To: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -91,63 +92,98 @@ Cc: Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
  linux-doc@vger.kernel.org, James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.15.2
 
-The following test will want this to run forever, so add support by
-treating 0 loops as infinite.
-
-Convert i and named_threads_work to be unsigned to avoid undefined
-signed overflow behavior in infinite loop mode.
+Launch something that has multiple child threads, attach to it and
+make sure that all child threads are present in the samples
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/Documentation/perf-test.txt     | 2 +-
- tools/perf/tests/workloads/named_threads.c | 7 ++++---
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ .../perf/tests/shell/coresight/per-thread-multi.sh | 78 ++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
-diff --git a/tools/perf/Documentation/perf-test.txt b/tools/perf/Documentation/perf-test.txt
-index 859df74e62ef..dca8972fec8d 100644
---- a/tools/perf/Documentation/perf-test.txt
-+++ b/tools/perf/Documentation/perf-test.txt
-@@ -68,7 +68,7 @@ OPTIONS
- 		nrloops: brstack, context_switch_loop
- 
- 	'named_threads' accepts the number of threads and the number of loops to
--	do in each thread.
-+	do in each thread. Use 0 for an infinite loop.
- 
- 	The datasym, landlock, deterministic and callchain workloads don't accept
- 	any.
-diff --git a/tools/perf/tests/workloads/named_threads.c b/tools/perf/tests/workloads/named_threads.c
-index d051d41a3cfe..6672c2f77684 100644
---- a/tools/perf/tests/workloads/named_threads.c
-+++ b/tools/perf/tests/workloads/named_threads.c
-@@ -11,7 +11,7 @@
- #define MAX_THREADS 25
- 
- static int iterations = 500;
--int named_threads_work = 1234;
-+unsigned int named_threads_work = 1234;
- 
- typedef void *(*thread_fn_t)(void *);
- 
-@@ -19,7 +19,8 @@ typedef void *(*thread_fn_t)(void *);
- noinline void *named_threads_thread##n(void *arg __maybe_unused)	\
- {									\
- 	pthread_setname_np(pthread_self(), "thread" #n);		\
--	for (int i = 0; i < iterations; i++)				\
-+	for (unsigned int i = 0;					\
-+	     i < (unsigned int) iterations || iterations == 0; i++)	\
- 		named_threads_work += 3;				\
- 									\
- 	return NULL;							\
-@@ -65,7 +66,7 @@ static thread_fn_t thread_fns[MAX_THREADS] = {
- 
- /*
-  * Creates argv[0] threads that run a unique function named "thread[x]" which performs
-- * a multiplication in a loop for argv[1] loops.
-+ * a multiplication in a loop for argv[1] loops (use 0 for infinite loop).
-  */
- static int named_threads(int argc, const char **argv)
- {
+diff --git a/tools/perf/tests/shell/coresight/per-thread-multi.sh b/tools/perf/tests/shell/coresight/per-thread-multi.sh
+new file mode 100755
+index 000000000000..ea525ed5e18b
+--- /dev/null
++++ b/tools/perf/tests/shell/coresight/per-thread-multi.sh
+@@ -0,0 +1,78 @@
++#!/bin/bash -e
++# CoreSight per-thread multiple threads (exclusive)
++
++# SPDX-License-Identifier: GPL-2.0
++
++# If CoreSight is not available, skip the test
++perf list pmu | grep -q cs_etm || exit 2
++
++if ! tmpdir=$(mktemp -d /tmp/perf-cs-callchain-test.XXXXXX); then
++	echo "mktemp failed"
++	exit 1
++fi
++
++cleanup_files()
++{
++	if [[ $parent ]]; then
++		kill -9 $parent
++		wait $parent || true
++	fi
++	if [[ $perf ]]; then
++		kill -9 $perf
++		wait $perf || true
++	fi
++	rm -rf "$tmpdir"
++	trap - EXIT TERM INT
++}
++
++trap cleanup_files EXIT
++trap 'cleanup_files; exit 1' TERM INT
++
++# Launch 2 threads to run indefinitely
++nthreads=2
++perf test -w named_threads $nthreads 0 &
++parent=$!
++
++# While parent still exists, wait for the 2 children to spawn
++while kill -0 "$parent" 2>/dev/null; do
++  threads=(/proc/"$parent"/task/*)
++
++  if (( ${#threads[@]} >= $(($nthreads + 1)))); then
++    break
++  fi
++
++  sleep 0.1
++done
++
++echo "Recording..."
++perf record -o "$tmpdir/data" -e cs_etm//u --per-thread -Se -m,64K --pid $parent > /dev/null 2>&1 &
++perf=$!
++
++sleep 1
++
++kill $parent
++wait $parent || true
++unset parent
++wait $perf
++unset perf
++
++echo "Decoding..."
++perf script -i "$tmpdir/data" > "$tmpdir/script" 2>/dev/null
++
++# Exit early unless there is a dedicated sink per core which only TRBE
++# guarantees. This is because shared sinks will report BUSY if two threads try
++# to use them at the same time
++if ! ls /sys/bus/coresight/devices/trbe* > /dev/null 2>&1; then
++	echo "No TRBE sinks, skipping output validation"
++	exit 0
++fi
++
++# Check all threads were traced and they have the correct thread name and symbol
++for i in $(seq 1 $nthreads); do
++	if ! grep -q "thread${i} .* named_threads_thread${i}" "$tmpdir/script"; then
++		echo "Error: thread${i} missing" >&2
++		exit 1
++	fi
++done
++
++exit 0
 
 -- 
 2.43.0
