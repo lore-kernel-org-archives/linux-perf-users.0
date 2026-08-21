@@ -1,202 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4115472F7D
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 09:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FF12DC32C
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 09:49:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787303163; cv=none; b=Tx5DoFTEJj809804A/KIqS37JD/e9uyC+Rna9WrJ2JCdguA4PfOanvbu8FrccyUHXyAthBpaDc0skzT89effdg3Ye/CPeu2pbWmV8k4NBDE41rwr+vo0EfF+oA45S/vZTNnhf4Dv+/KBtA8zSm/uh1qEy7+x0desvtgviRhleQE=
+	t=1787305776; cv=none; b=gJxsr1lL5OupKiYdu8Feoz0DZeva1ImlNL+Uqh4He3G+VQG+Mf2XfwinUxnHCf1gcbe6s3DidZT/sEoRKW56vYcxbuufMUjXUbMSWEQ4xOI5/gHvr48t003R9Rv13Owr2eOt9C6RzrV9llOj4pw/L9JTFe1qtfzRwKTD3EaTKJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787303163; c=relaxed/simple;
-	bh=2afvxsteTJHtLsZVzMM0CLYcWbZ/WUtrGsoR2g/fnkY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hs7pQKahSdfouxgAjfm4IbbjbfDSzqb4M1zE0CPMHdvKgSSQFMBmt/PCMgi42/tSwR3g6gkFtkLTKSCdi26BazVoaMLSQdU9kgvfyDFnpNkn8lmZj0EIQ+rHiJtEKPdT71wfg8UieWq4Z5EP6j2qKMvhYO4GVMUhZemZmecmKhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m415Srcz; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787305776; c=relaxed/simple;
+	bh=Zl8zJhePqsl4XxqWo/nMyVaX7NU6Mei8MsQZ1ECwbYM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=fSA0d4YtLkZsYG8p0bliMD1Q2slD0hL5fmXRwt3BLVBEo1/ds3esiUWCkT19DY0uIfQ6gIsAJZ6yBEErGkl1uS7xtqgHq94iLtim7UJbePmNZpdPYesIiE5n4h1CHfqJv2Z1fX4aVc3qJWLMDi9HQudkyhnZP+JlTNjXt7Ejtkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Tty1qgR3; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m415Srcz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B6DC1F000E9;
-	Fri, 21 Aug 2026 09:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787303155;
-	bh=ZqU3TJ07YmZdoJy2uFTRlHn3IPhbtlSZ2XDve+0uVec=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=m415Srczq8L0xA6eReo60Kqh/VV79uRm4I5TswsuI+0t82b4AbclxCt01LnIbYXh7
-	 VjeyB7KCa+00X9WY7IYtJMIcfBfxSoIsU9YJE9lSCLyE3qRSUQyRGCkZrKIu1OYGSN
-	 0d4SrTlwcre/q0vuKSskW9JwEaEWLrvdlcNLXEsXj9LBDqjULwADz6cCFn+ghV9wnt
-	 ikkBWpqtOeNxwSFselJQTu6QfsGz76/JeEGaAoHjxNIwXDHKmyer43uoFpN1mLoC8g
-	 qWuqzGNfE8dTPFoDmja+8XtWS/J0l9CXEQ0WAKpMZ7aKExFCIdCmrBvfFeynr+AHF8
-	 GI6ckTQvi+NIQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH 1/1] perf scripts flamegraph: Add --asm option
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Tudor-Stefan Magirescu" <tudor.magirescu@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260821085044.982835-2-tudor.magirescu@gmail.com>
-References: <20260821085044.982835-1-tudor.magirescu@gmail.com>
- <20260821085044.982835-2-tudor.magirescu@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 21 Aug 2026 09:05:54 +0000
-Message-Id: <20260821090555.1B6DC1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tty1qgR3"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-47f84023916so659166f8f.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 02:49:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1787305766; x=1787910566; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=8eAS2yWgoyXdx0wzQOuU1GOQ+foCx6winuzdwJ7kHsY=;
+        b=Tty1qgR35pkmgsE8YoRqwfUBbbp3yjlXpd8IcF5RJWQ+zGOlG/dsOCBTPCCqG2ClPr
+         RxQ1SzYDALOs0KadEnvJM320jcnlkK2wbHI/dEm6SsFQTmn5hjmhPOxNjrFoTiY+DnsY
+         HHC/ZZdt3NnNTxXL69mseUzfOV4/ndWNAdjJ1i5Q5n9G07ASbCzx0bLADwU5viMf1XFL
+         nRMefWvjDjiQlMWTzkVeJKmE5gtoUSGMzr7MJcc7xqfkR3Jwdvhx7EPOEMP4bU2vLxWu
+         Fc9U4AUt4FbNoohRnQ9Zy2UFjbh1wyZ/unO2LjVQvEhh+2314ZIys2sJkxJMDITQvYU1
+         x8rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787305766; x=1787910566;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :content-type:mime-version:subject:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=8eAS2yWgoyXdx0wzQOuU1GOQ+foCx6winuzdwJ7kHsY=;
+        b=QpIIWO0Lm+K/er//mJB66GfZILgUKfOr5n8q0RyFznYGIhgisYtRgOXF+e167ii0L8
+         q0rPLTg5wboYf5DqOODN55aymx0zSrmzAUI4JomXb7QOoz51CW6zuOf3mtJmP1LXAR4D
+         kD7Drnj2qbwxbSHARLjwMci8ZgfBXjmzuqcNuGzOP5qr71Qvoo6g6yI30ZL5JwlShkBL
+         G3HJcxIvBqpJ0gk8E3fk7SdYO4oi3pODiD99e7ARj8ffR2ncv/TBTaK+K3kfMI29Rqwq
+         R5IPxBxFIzKHsTJvhagct7s+QJiIM0R1ef2ZfexMR18DXJCgRl7Hjgle87oCG0npMcmD
+         MUsg==
+X-Forwarded-Encrypted: i=1; AHgh+Rocz/4Rti+euFyN0N1JFlVeBVeW61pAU5Z5Iru3Ktw/0WFWTx9tlevntVnjHetbJEYFp5uEu9NVDqLFS0XFqbwQ@vger.kernel.org
+X-Gm-Message-State: AFuF++l3MrLfdUgIvS2wDlWCI3cBzDexqT3JQp2NiMCvoJZKYYFnrEO1
+	kwTtecVEP7UbsvehzDxLHd7XMsOznktHv+3OqOONpklsRI/Vimd5h4+FKnQjg8Sa0Ysfhm5/RnR
+	EyIOi53s=
+X-Gm-Gg: AR+sD10uBKh9ZqYoMyKCAQjXK2BO1jpBHmqOLgDq5H/wOQwfhTAAOqBjbY1zmG16AHV
+	t6Q9zHWANcRn+eqePD4lfShsFhAfV0lrYgBbiqz+EJ+xeGNVgB6e7u7GVKeOe15qZ/s5rp5rWqn
+	0/S0A6j3uHT2KMR8Q1Uv9gPGEHVlQKiTOTaPTbJaVrU053m1MvAqg9djVxmrPNHEX/+zs/gdIb0
+	4iirK5ETumt7EynlBq5Z2cWUy9TJ64zZ4LuOCBf5KvcYFSFxbrYuN7lDAwzyYqdYB6r18BWG1Tt
+	nnUfX+vQb5F2xUsiSQCfx7iEJkGTrwDtUQber77n3vFEJ2lP7FLzVjoV3Bmkf7ofGkSoVRPVLpK
+	URc5JHDauRdGWlQdx4W5LTh3uzAQr3+ITUGiYvSL0w+tgb+PHxHCJv8K7YyZf8UaYH7Z8eDrDcK
+	DDyuwKyW1W46YKnQFcmUvI5o+EIQU2rb3vnXmh+i6wLzS54bdrfa8y4rs20d8GYRUbCpqc2gsBo
+	ZlG
+X-Received: by 2002:a05:6000:26c6:b0:482:a36c:a5e1 with SMTP id ffacd0b85a97d-482c0b44b1fmr7088817f8f.1.1787305766006;
+        Fri, 21 Aug 2026 02:49:26 -0700 (PDT)
+Received: from pop-os.local ([37.18.141.193])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b14d05a6sm17683479f8f.35.2026.08.21.02.49.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Aug 2026 02:49:25 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+Date: Fri, 21 Aug 2026 10:48:59 +0100
+Subject: [PATCH v2 01/14] perf cs-etm: Fix nVHE per-thread decoding
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260821-james-cs-unformatted-per-thread-fix-v2-1-00c4fd0701b4@linaro.org>
+References: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
+In-Reply-To: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>, 
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Mathieu Poirier <mathieu.poirier@linaro.org>, 
+ Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, 
+ Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>
+Cc: Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org, 
+ coresight@lists.linaro.org, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+ linux-doc@vger.kernel.org, James Clark <james.clark@linaro.org>
+X-Mailer: b4 0.15.2
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] The `--asm` option directly opens unverified `dso` paths on the =
-host filesystem, bypassing perf's build-id cache.
-- [Medium] The script invokes a new `objdump` process via `subprocess.run` =
-for every unique sampled function, creating a severe performance bottleneck.
-- [Medium] The script crashes with a raw `FileNotFoundError` if the configu=
-red or default `objdump` executable is missing.
---
+pid_fmt is unset in per-thread mode because we don't need PIDs, so we
+can't use it as a hint to determine which EL the host is running at.
+That results in falling though to the next part where EL1 is treated as
+guest, which is wrong for nVHE.
 
---- Patch [1]: [RFC PATCH 1/1] perf scripts flamegraph: Add --asm option ---
-commit e7196726e4cd528492356aed32496e94223294a5
-Author: Tudor-Stefan Magirescu <tudor.magirescu@gmail.com>
+Fix it by only returning a guest machine when run from perf kvm where a
+guest image would be provided, which matches existing behavior in other
+parts of Perf.
 
-perf scripts flamegraph: Add --asm option
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ tools/perf/util/cs-etm.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-The flamegraph script reports samples at function granularity, so a wide
-frame shows which function is hot but not which part of it. This patch
-adds an --asm option to emit more fine-grained flame graphs by including
-instruction-level information.
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 114b3cd2da49..d423f1cb408f 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1071,6 +1071,18 @@ static struct machine *cs_etm__get_machine(struct cs_etm_queue *etmq,
+ 	if (pid_fmt == CS_ETM_PIDFMT_CTXTID)
+ 		return &etmq->etm->session->machines.host;
+ 
++	/*
++	 * If guest processing hasn't been enabled, also assume everything is
++	 * the host.
++	 *
++	 * This matches Perf's guest handling in machines__find_for_cpumode()
++	 * etc where guest machines are only created and used when perf_guest is
++	 * set. This also guards against accidentally using guest machines when
++	 * pid_fmt can't be used as a hint (per-thread mode).
++	 */
++	if (!perf_guest)
++		return &etmq->etm->session->machines.host;
++
+ 	/*
+ 	 * Not perfect, but otherwise assume anything in EL1 is the default
+ 	 * guest, and everything else is the host. Distinguishing between guest
 
-> diff --git a/tools/perf/scripts/python/flamegraph.py b/tools/perf/scripts=
-/python/flamegraph.py
-> index ad735990c5bec..424919e24aed7 100755
-> --- a/tools/perf/scripts/python/flamegraph.py
-> +++ b/tools/perf/scripts/python/flamegraph.py
-[ ... ]
-> @@ -67,10 +76,101 @@ class Node:
->          }
-> =20
-> =20
-> +@dataclass
-> +class Symbol:
-> +    start: int
-> +    size: int
-> +
-> +
-> +class Instructions:
-> +    def __init__(self):
-> +        self.symbols:      dict[str, dict[str, Symbol]] =3D {}
-> +        self.instructions: dict[tuple[str, str], dict[int, str]] =3D {}
-> +        self.objdump_line: re.Pattern =3D re.compile(r"^\s+([0-9a-f]+):\=
-s+(.*)")
-> +        self.symbol_line: re.Pattern =3D re.compile(
-> +            r"^([0-9a-f]+) (.{7})\s+\S+\s+([0-9a-f]+)\s+(.*)$")
-> +        self.objdump:      str =3D default_objdump()
-> +
-> +    def load_symbols(self, dso: str) -> dict[str, Symbol]:
-> +        result =3D subprocess.run(
-> +            [self.objdump, "--demangle", "-t", dso],
-> +            capture_output=3DTrue, text=3DTrue, check=3DFalse
-> +        )
+-- 
+2.43.0
 
-[Severity: Medium]
-Does this code bypass perf's build-id cache by opening the dso path directl=
-y on
-the host filesystem?
-
-The objdump command attempts to open the dso string directly on the host
-filesystem.
-
-This can fail for kernel symbols like [kernel.kallsyms] or read incorrect h=
-ost
-binaries when analyzing cross-platform or container perf.data files.
-
-[Severity: Medium]
-Will this crash with a raw FileNotFoundError if the objdump executable is
-missing?
-
-Without an exception handler, if the configured or default objdump executab=
-le is
-missing, the script will abruptly crash with a Python traceback.
-
-It might be better to gracefully fall back to function-level nodes or displ=
-ay a
-helpful error.
-
-[ ... ]
-> +    def load_instructions(self, dso: str, sym: Symbol) -> dict[int, str]:
-> +        result =3D subprocess.run(
-> +            [
-> +                self.objdump, "-d",
-> +                "--no-show-raw-insn",
-> +                f"--start-address=3D0x{sym.start:x}",
-> +                f"--stop-address=3D0x{sym.start + sym.size:x}",
-> +                dso,
-> +            ],
-> +            capture_output=3DTrue, text=3DTrue, check=3DFalse
-> +        )
-
-[Severity: Medium]
-Will this also crash with a raw FileNotFoundError if the objdump executable=
- is
-missing?
-
-Like load_symbols(), this subprocess.run() call lacks an exception handler =
-for
-when objdump cannot be found on the system path.
-
-[ ... ]
-> +    def lookup_instruction(self, dso: str, func: str,
-> +                           off: int) -> Optional[tuple[int, Optional[str=
-]]]:
-> +        if dso not in self.symbols:
-> +            self.symbols[dso] =3D self.load_symbols(dso)
-> +
-> +        sym =3D self.symbols[dso].get(func)
-> +        if sym is None:
-> +            return None
-> +
-> +        if (dso, func) not in self.instructions:
-> +            self.instructions[(dso, func)] =3D self.load_instructions(ds=
-o, sym)
-
-[Severity: Medium]
-Does this create a severe performance bottleneck by invoking a new objdump
-process for every unique sampled function?
-
-Profiling an application with many unique functions causes thousands of obj=
-dump
-processes to be spawned sequentially, resulting in a severe performance
-bottleneck and drastically increasing execution time.
-
-[ ... ]
-> @@ -119,6 +219,22 @@ class FlameGraphCLI:
->              name =3D event.get("symbol", "[unknown]")
->              libtype =3D self.get_libtype_from_dso(event.get("dso"))
->              node =3D self.find_or_create_node(node, name, libtype)
-> +
-> +        if self.args.asm:
-> +            # use the sample IP directly rather than callchain[0], since=
- with
-> +            # precise event recording (i.e. :pp) the top callchain entry=
- may
-> +            # point to the next instruction rather than the sampled IP
-> +            sym_name =3D event.get("symbol")
-> +            sym_off  =3D event.get("symoff")
-> +            dso      =3D event.get("dso")
-> +
-> +            if sym_name and sym_off is not None and dso:
-> +                found =3D self.instructions.lookup_instruction(dso, sym_=
-name, sym_off)
-
-[Severity: Medium]
-Does this pass the target's unresolved dso path directly to the instruction
-lookup logic?
-
-When analyzing perf.data files from other architectures, containers, or ker=
-nel
-space, using the dso string directly on the host filesystem will lead to mi=
-ssing
-or incorrect instruction mappings because it bypasses the build-id cache.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260821085044.9828=
-35-2-tudor.magirescu@gmail.com?part=3D1
