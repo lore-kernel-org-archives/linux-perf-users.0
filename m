@@ -1,765 +1,672 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FD35493649;
-	Fri, 21 Aug 2026 21:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787348248; cv=none; b=uCp+l+k2nShMShWRocN3g6RjjyA5kBfe8kPJ/eVrFFwpOP26XlACj4zMSRU0IvXYbG2iOvyeSgynBWlKGyK+seCiyK9y4/O/7PJtx687ExCsSa84LD0MCNNNTw0Dhjd2oAabd1ybaGyq2jP+2XZA2KwpDmI0EEN3dx1Hd1Bx11k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787348248; c=relaxed/simple;
-	bh=soOu7PXjAEUX6m6qiPTkCsj9R0asv88pfYIATmgToFk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iI4CxrYWgNY28dGrQPpAWzRFGMQMwWAKJrl/VxaRI3i7BhMyYGz0lBzeXTvp00TsuuLjzTkdTMEPt806jcyW+i7+yxO/GE2RteO85amqHQYaqeoez9Io0IWm8MSzBdA9aTHwzULOOc2GpWyeSyW3fMr43QDym9DrYxgtQN2TgIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k5yPPIoI; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32E5134D4E9
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 21:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.217.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787349015; cv=pass; b=khoCn3bAuNazvtTdK8aWmaM8F6skuUNjAAjCAKm20fkNQ5unVA+m9/sIQjWV2DWh5kTNDAkVpt0Yviecgbz0YchGQmjjjkKuBPEAIjEYU4OtDqgN6GCsNbqeVXtey7Dancsb+0pjMP2x2tzGaBsO4EEHqTeDBwpQuPUhawnf18Y=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787349015; c=relaxed/simple;
+	bh=1pLAwWyq6b48NBYz7fHR3XtxzYdps3YoHud1pBkvOsM=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=Y6KmGDonQNGFgHhmn3Ok8rIKNslVSe7SCjLHBgA6MJ91GTWvESNJeLx5LnN9kqXQeo1RDMiG67cgxF2BrzUN1tvOk0lmjeTT9/mJMowg0CrxQBeoUuBFTy4UMtfslsjH1k258/BhX+BA2wMpKHWeUviWNh05QU41LjfXrTUKTyM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lyk7vwwY; arc=pass smtp.client-ip=209.85.217.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k5yPPIoI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E386D1F000E9;
-	Fri, 21 Aug 2026 21:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787348246;
-	bh=/XB2HdMQHfsbqEN0RoiA/usDlsdsIKFFEs1pX2wK8CI=;
-	h=From:To:Cc:Subject:Date;
-	b=k5yPPIoIqsUi60aZBC0dno5zccMQVLYizlXbXCzYZjsRiaF2lbZlUCQPl0vpXxYQm
-	 tv7dhZg+E/q3XJ48atGlIbU7VcqmJufv5VdIT9slJ/PlmRdHEryu7SuPATCl6DBTxL
-	 oP1ZdX0/M36iv1SsEZJaBA4Jk7rAVthniFBZwEodTED/Ll0CX/5ApW16L87wccH11d
-	 mRxuCPel5Q2XngZubAO5NelFMJIwskrfI+cf9SFDMMDk+0rvesSB0Qac8twb+QwBNQ
-	 +Nz/NTnRCp8jDC9LCf+SHkFDIWWKGuSdigy3ObjKgNDSeCCE++kbThqrqvIcclRKA4
-	 UaXpUDLryBi9g==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [GIT PULL] perf-tools changes for v7.3
-Date: Fri, 21 Aug 2026 14:37:24 -0700
-Message-ID: <20260821213724.1315605-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.55.0.860.g4b6b3295ed-goog
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lyk7vwwY"
+Received: by mail-vs1-f46.google.com with SMTP id ada2fe7eead31-74ac3ea9c60so470646137.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 14:50:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787349012; cv=none;
+        d=google.com; s=arc-20260327;
+        b=F5EebVhzYwUZ5bJeXcanYxqX9tobVgzPA1klzpa5XshEIFjU7fKb1CXUbpIQ93Lgmh
+         yQNbpVNK+EkkOiNaelhBU+bfDPA9wKHO87X17F6BE/s4XVYmnppSAG3MsB/HWARsG6YV
+         fvx0hz1Qq/XJau6+/xLXwgn5EoaYK/hOdmzPQLXVaXDlBFHPDR68ZlnxXY5qc1UDAoiu
+         VxDeFe7mssi5nxyn4pp6g0AIy2zr8WP0aQH03ZhMgvTg64xOBwM03CHG4vlm1Snw+bif
+         DcpwHBspgZuWVZLLIlpDT1tHMfBz2nRQeve/tcu0jXnDViy+CIwAiZZxDJ2LlY/c3BKs
+         8xJg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=cc:to:subject:message-id:date:from:mime-version:dkim-signature;
+        bh=4rnRE4yh16NWTqAWZtWQvdw/lABV9SYDUJyTVE6yIOg=;
+        fh=EM2sGyPsvFBTCp5QmGLbfOIPnL+NwbNzbt7jVIMMnT8=;
+        b=Hn/Lj6CEEZGGpeBDjVdZegxFp2qA3t9iOTiC0ivwtLeaVtaKQ6Ro3wXpVqOjWS+8eM
+         oCGDHMYW/VBNh324tdVVWqDp3OEN52JwOZvDL3vAuuvaGeCUsx1DT6j6aV0kkPU0ApQL
+         idje4aDonpr0VxIRDrXZCKTXMuDdY8Ar87D2YtCvRVxaP1/KQIdqfjr76Lv0Tvaw7E4E
+         JcSQWF59uo8UgGdpIUFZmFauX75CoGHP9OWyuvpNI8MWR6AIAex+QejiFmsK3XOajyvO
+         e83eFIJHHFJrRXvR396MNt1nrwSfKd9s1glTgrFxtcA28x6qkG4dTFuZad/6HALO5LT7
+         GyWA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787349012; x=1787953812; darn=vger.kernel.org;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=4rnRE4yh16NWTqAWZtWQvdw/lABV9SYDUJyTVE6yIOg=;
+        b=lyk7vwwYpW6+gDzqhO9r9Q0qd/n4KLtVF129GFQqOfFOpXGBieDwcyW6s7ZLC2LWEx
+         llYJgIBnZkx0RwjVBpCwl+1XYvVt2GDPMkT52aPE2Kd+4E7Ol4SdmjG8g6o/HPOSjIm9
+         ratiGOF/3zMBpcBG8OVy1zzXqyBqUyD7MROmOwYp16ux5CbUcs2PiClaxZ+jWEniRazF
+         AERQQO9R8BxKAq2CG1GujhFJ4nUQCzNpCZ3YBEvBkjB1beFC4f7hkIHSm1S3mdpQ+KSO
+         bxuuaOQ9kJegKpksE33T8EcWs8fAubEvBxBaHm61tqgvB7ssvMDLjK6gCoa8qyjbkf3C
+         cqNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787349012; x=1787953812;
+        h=content-type:cc:to:subject:message-id:date:from:mime-version
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=4rnRE4yh16NWTqAWZtWQvdw/lABV9SYDUJyTVE6yIOg=;
+        b=MPg3ikU9F4ckMCbjIYyMfCaAmW/Oga1MTHDqtz+fBrooCvP/CM2aFDIYtOf/dD4RY8
+         LcAoa8UOf09TyemeA85pC1pxq5FnX1ysbMdPUYxA+bKVWT7BbyoqOMQUHqpOUh4d7Ogn
+         DSNSrfTNPWcvE6JYeFLG/npMpnPuFqkZSTBr44PZGXMAw78qpvvE53Fv7BnDkJsQV9a2
+         BO1KqmyGOIN+38btQJPAWA45TGohb7OHyG/l16Xw1nAugrVk3GTvykd4KegNfOsrsyHY
+         +EH8q1A+TdLSudyD+AigoBOkrNMHTnej/iT7TK1i+OcqoOC951bi+vnEP2927waQ4dCX
+         crwQ==
+X-Gm-Message-State: AFuF++muICJQO9qU3PU0tSHH5BA+3D/te+U3RWm7ZKn+KwQGEn9GgJ2c
+	z9uFqpbChoRk4kw1zJc6aIT2m2dSCXAs/jHFAzFGUA8wcMOQhVYKB8UrLgHck8Nd3tNC9ZuOGAV
+	tAiShhiaC2dDi0B9Ndud6SgnrOZmWDqZ55Zao
+X-Gm-Gg: AR+sD11/yXaewZ0zwnEoqDE7NMnpATIR0YmGsPZrwVZkx1++f8QrDOtr//IOpnmaaxG
+	MqWC2fYZ2nw8Kabut0+s29pzBIzAbVSzqHYn0yyNMhCWNQwCVRcAK09ItNCkbvZUbFxiOoAwMwr
+	wxzuSaRTQxJA5RJudD+TEYAfsXIGDlkylXsBgFkpAqYkBplprKdTG18JEszzXyy1Jkn6sFK4Y7i
+	9H5wU7dSOYvwrME7vPYdvNSsvDksIp7p10k8MYMhaB+qw28eaQZR/OE/aE9ALoFwCrWfGxgLVsG
+	o2DSUk0f6URZ9tQWtJ6auHPcODGqxxjikzYm0QHTajJw7v08ZAlAAPzw9POtxwuZ6BGY6Ihw7/c
+	VJVQohL5CNK+qcolcN2D7Sy87N3BW3gj5ZzPiCNvCT1sweg==
+X-Received: by 2002:a05:6102:3fa8:b0:777:4e99:6f84 with SMTP id
+ ada2fe7eead31-77a620270e7mr2798718137.1.1787349011680; Fri, 21 Aug 2026
+ 14:50:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Gennady Kupava <gennady.kupava@gmail.com>
+Date: Fri, 21 Aug 2026 22:49:59 +0100
+X-Gm-Features: AcwNN1XbQwXcJ8RIP1rLEpIZkn4gWfI_l212RrrDv8wQqtkmrtk3NASGmO_yKNs
+Message-ID: <CAPu-DQqF0aF6=GS8Z6KKWeeX_V5LiXeKU_rJQZC+uGg8zuTPNw@mail.gmail.com>
+Subject: [DISCUSSION] Three problems behind broken "perf --call-graph dwarf"
+ on AMD: IP and stack dump mismatch, libdw fails on lld's layout, and the
+ unwinder fallback never runs
+To: linux-perf-users@vger.kernel.org
+Cc: Gennady Kupava <gennady.kupava@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
 
-Hi Linus,
+I decided to share a sort of horror adventure: my attempt to use a recent
+perf with call graphs on recent hardware.  I think this story is useful both
+to the developers of the tool - there are small bugs to fix here, and a
+user experience worth assessing - and to users, who I am pretty sure could
+face the same issues.  Other than that, I have a feeling this might qualify
+as an interesting adventure to follow.
+
+So my idea was to work on optimization of an open-source mapping project
+(OsmAnd), for which I am trying to prepare a series of patches - some of
+them have landed already, others are still in my head.
+
+I have 15 years of experience using perf-like tools periodically; it was
+oprofile before perf, and the first tool of this kind that impressed me a
+lot.
+
+So the task here was to take OsmAnd's core library, which is typically built
+for Android, build it for amd64, and measure its performance with call
+graphs.  I am on Debian unstable, very up to date.  The idea of this mail is
+to explain the pile of problems I faced during this adventure.
 
-Please consider pulling the following changes in perf tools for v7.3.
+The Linux distribution is important, as Debian did not enable frame
+pointers - so it is not possible to "just enable FP", call stacks have
+to be done using stack dumps.
 
-Thanks,
-Namhyung
+So I got everything built and ran it, and tried to run perf on it, which
+succeeded, but... it quickly turned out that the stack frames were not
+complete at all: there was only 2% of callgraphs with deep chain...
 
+And so, together with an AI, I started figuring out what was going on - and
+this is where the adventure begins.
 
-The following changes since commit fac520e43a60230b24026f462a2b63e4d170566e:
+Attempt number 1: kernel paranoid. The first suspicious thing found was
+kernel.perf_event_paranoid, which is 1 on Debian.  I set it to -1, and the
+profile did seem to improve a lot - the share of samples carrying a deep
+chain went from under 2% to around 44%, which felt like the answer.  It was
+not. Later it turned out this change did not change anything.
+
+Attempt number 2: the lld issue.  Claude found a mail thread on this very
+list - "Call graph dwarf unwinding fails with lld", May 2022,
+https://www.spinics.net/lists/linux-perf-users/msg19574.html - where it
+seemed clear that lld builds are worse than ld ones, so that was the next
+candidate to try.  So I tried, and indeed, using ld as the linker made the
+situation better, but... somehow it still did not work.  A few hours of
+AI-augmented debugging later there were fewer frames lost, but they were
+still lost.
+
+Identified problem number 1: it turned out that the default counters on my
+AMD CPU make it impossible to dump the stack and the IP from the same place.
+
+Identified problem number 2: even if the stack dump is correct, libdw cannot
+process it, only libunwind can.
 
-  tools headers: Sync KVM headers with the kernel sources (2026-07-21 21:00:10 -0300)
+Identified problem number 3: even if I compile perf with libunwind, it still
+tries to use libdw - and that fails while perf thinks it succeeded.
 
-are available in the Git repository at:
+After identifying all 3 problems, I was able to generate quality stack
+traces.
+
+However, it took me half of the day to reach that point, and it is hard to
+imagine how people in general are able to use perf - this was way too much
+effort just to record call graphs...
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-for-v7.3-2026-08-21
+From this point I will let the AI explain each of the problems I faced, with
+precise technical details (i reviewed it all and it makes sense to me):
+
 
-for you to fetch changes up to 9453bc6a69ef43755f1c28d5688cacdd69fa16bd:
+The setup
+=========
+
+    CPU     AMD Ryzen 9 9950X3D, family 0x1a, model 0x44, stepping 0,
+            microcode 0xb404038; ibs_op and ibs_fetch PMUs present
+    kernel  6.18.5+deb14-amd64 (Debian 6.18.5-1) - all measurements
+    source  linux-source 7.1.8, used for the quotes below; the code there is
+            unchanged, so none of this is fixed in a newer tree
+    perf    7.1.8, both the Debian build and a local build
 
-  perf vendor events arm64: Fix Tegra410 Olympus event 0x0197 (2026-08-18 14:31:18 -0700)
+Two workloads appear below.  One is a self-contained C reproducer, given at
+the end.  The other is the real thing: a map tile rasterizer built on Qt5 and
+Skia, with deep chains crossing several shared libraries.
+
+The metric throughout is the share of samples whose call chain came back with
+a single frame, plus the average chain depth.  The counting script is at the
+end too.  All recordings use --call-graph dwarf,65528.
+
+
+Problem 1: IP and stack dump mismatch
+=====================================
+
+The IP and the stack in one sample describe different moments.
 
-----------------------------------------------------------------
-perf tools updates for v7.3
+perf record's default event carries the P modifier, so on AMD it is served by
+IBS.  How one gets there without asking is covered further down.
+
+perf_ibs_handle_irq() copies the whole register set from the NMI frame and
+then overrides only the instruction pointer with the one recorded by IBS:
 
-perf c2c:
+    arch/x86/events/amd/ibs.c, perf_ibs_handle_irq()
 
- - Add 'function view' in perf c2c report TUI (switched by pressing 'TAB'
-   in the cacheline view) to organize samples around functions rather than
-   cachelines in 3-level hierarchy:
+        regs = *iregs;
+        if (check_rip && (ibs_data.regs[2] & IBS_RIP_INVALID)) {
+                regs.flags &= ~PERF_EFLAGS_EXACT;
+        } else {
+                ...
+                set_linear_ip(&regs, ibs_data.regs[1]);   /* IbsOpRip */
+                regs.flags |= PERF_EFLAGS_EXACT;
+        }
 
-     Level 1: Read-side function (sorted by estimated Cycles %)
-     Level 2:   Contending writer functions (sorted by Store count)
-     Level 3:     Shared cacheline addresses
+That same pt_regs is what both PERF_SAMPLE_REGS_USER and
+PERF_SAMPLE_STACK_USER are derived from:
 
-   Users can navigate the entries and fold/unfold using 'e' key.  An example
-   output would look like below:
+    kernel/events/core.c, perf_sample_regs_user()
 
-    Shared Data Functions Table     (19 entries, sorted on Cycles %)
-       Cycles    Store
-            %    count  Function / Contending function / Cacheline
-    ----------------------------------------------------------------------
-    +  35.67%      876  + [k] cpupri_set
-    +  24.31%      424  + [k] pull_rt_task
-    -  16.53%      555  - [k] dequeue_pushable_task
-                   145    - [k] pull_rt_task
-                   145        0xff2d0082809da080
-                   139    - [k] enqueue_pushable_task
-                    70        0xff2d00a2071f9640
-                    69        0xff2d0082809da000
-
-python module support:
-
- - Extend "perf" python module so that it can be fully functional.  The goal
-   is to run scripts directly, not by 'perf script' command.  This would give
-   better performance as well as more control to build standalone programs
-   with UI.
-
- - Add LiveSession helper (perf_live.py) to enable live event collection
-   directly from Python using perf.evlist and perf.parse_events.
-
-perf stat:
-
- - Add --hide-zero-events option to suppress zero-count events.
- - Reject conflicting --field-separator and --json-output options.
- - Fix duplicate event output with --for-each-cgroup.
-
-perf sched latency:
-
- - Add -H/--histogram and --hist-mode (log|linear) options to show scheduler
-   wait latency histograms.
- - Add --time option to filter analysis by time span in 'perf sched latency'.
-
-ARM CoreSight:
-
- - Synthesize callchains for instruction samples from CoreSight trace
-   using thread stack ('--itrace=g...').
- - Support call indentation ('perf script -F +callindent') to display call
-   depth hierarchy on branch samples.
- - Decode ETE (Embedded Trace Extension) exception packets.
-
-Build system:
-
- - Add 'make install-build-deps' target to install required packages.
- - Parallelize JSON and metric pre-computation in jevents.py for faster builds.
-
-Vendor event/metric updates:
-
- - Add Intel Nova Lake events and update tables for existing models.
- - Update AMD Zen 5 and Zen 6 core events.
- - Update Arm64 Tegra410 metrics and PowerPC hcalls.
-
-Internal changes and fixes:
-
- - Harden trace-event and synthetic event parsing against corrupted data.
- - Fix unwinding of multi-threaded processes in libdw unwinder.
- - Fix memory leaks in various commands and python bindings.
- - Speed up 'perf test' shell tests.
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-
-----------------------------------------------------------------
-Aaron Tomlin (9):
-      perf stat: Add --hide-zero-events option to suppress zero-count events
-      perf trace: Correct default cpumask formatting to hexadecimal
-      perf trace: Add --bitmask-list command-line option
-      perf trace: Format instruction pointer fields as hexadecimal
-      perf trace: Format fields with hex specifiers in print_fmt as hexadecimal
-      perf sched: Suppress latency table output when trace samples are missing
-      perf sched: Handle missing trace samples in pipe mode
-      perf sched latency: Auto-scale latency and runtime display units
-      perf sched latency: Add histogram and time interval options
-
-Alessio Podda (1):
-      perf unwind-libdw: Fix unwinding of multi-threaded processes
-
-Arnaldo Carvalho de Melo (31):
-      perf machine: Fix fd leak on bounds check in maps__set_modules_path_dir()
-      perf machine: Fix NULL parent dereference in fork event processing
-      perf machine: Guard against NULL strlist in machines__findnew()
-      perf machine: Check snprintf truncation in machines__findnew()
-      perf machine: Don't abort guest map creation on first inaccessible dir
-      perf machine: Reset errno before strtol in guest kernel map creation
-      perf machine: Free scandir entries in guest kernel map creation
-      perf machine: Check snprintf truncation for guest kallsyms path
-      perf thread-stack: Fix heap buffer overflow on branch stack wrap copy
-      perf auxtrace: Fix queue grow overflow and old array leak
-      perf intel-pt: Fix off-by-one in auxtrace_info minimum size check
-      perf intel-bts: Fix off-by-one in auxtrace_info minimum size check
-      perf arm-spe: Reject zero nr_cpu in metadata to prevent division by zero
-      perf libbfd: Validate BPF prog info arrays before pointer cast
-      perf header: Use write lock when translating BPF prog info pointers
-      perf bpf: Add PROG_TAGS to required arrays in __bpf_event__print_bpf_prog_info()
-      perf libbfd: Fix memory leaks and NULL fclose in BPF disassembly
-      perf c2c: Fix error masking, OOM, and unchecked caller errors in hpp_list__parse()
-      perf c2c: Clean up registered formats on c2c_hists__init() and c2c_hists__reinit() failure
-      tools build: Only probe the compiler at parse time when it is installed
-      perf build: Add install-build-deps framework to install devel packages
-      perf build: install-build-deps: add Fedora devel package mapping
-      perf build: install-build-deps: add Ubuntu devel package mapping
-      perf build: install-build-deps: add Debian devel package mapping
-      perf build: Remove leftover feature tests for removed cxx and clang support
-      perf build: install-build-deps: add RHEL family devel package mapping
-      perf dso: Guard against errno==0 when dso__get_filename() returns NULL
-      perf dso: Guard close() against invalid fd in dso__decompress_kmodule_path()
-      perf dso: Use stored fd error instead of stale errno in file_read() and file_size()
-      perf dso: Guard against cache underflow on short reads in dso_cache__memcpy()
-      perf dso: Replace assert with runtime check in dso__read_symbol()
-
-Athira Rajeev (1):
-      tools/perf/sched: Update process names of processes in zombie state for both -s and -S options
-
-Besar Wicaksono (1):
-      perf vendor events arm64: Fix Tegra410 Olympus event 0x0197
-
-Chen Ni (1):
-      perf test: Remove duplicate include of util/term.h
-
-Chun-Tse Shao (19):
-      perf vendor events intel: Update arrowlake events from 1.17 to 1.19
-      perf vendor events intel: Update emeraldrapids events from 1.23 to 1.24
-      perf vendor events intel: Update graniterapids events from 1.18 to 1.19
-      perf vendor events intel: Update lunarlake events from 1.22 to 1.25
-      perf vendor events intel: Update pantherlake events from 1.05 to 1.06
-      perf vendor events intel: Update tigerlake events from 1.18 to 1.19
-      perf vendor events intel: Update alderlake events from 1.39 to 1.40
-      perf vendor events intel: Update alderlaken events from 1.39 to 1.40
-      perf vendor events intel: Update arrowlake events from 1.19 to 1.20
-      perf vendor events intel: Update clearwaterforest events from 1.02 to 1.04
-      perf vendor events intel: Update grandridge events from 1.12 to 1.13
-      perf vendor events intel: Update graniterapids events from 1.19 to 1.20
-      perf vendor events intel: Update lunarlake events from 1.25 to 1.26
-      perf vendor events intel: Update meteorlake events from 1.21 to 1.22
-      perf vendor events intel: Add novalake v1.00 events
-      perf vendor events intel: Update pantherlake events from 1.06 to 1.07
-      perf vendor events intel: Update sierraforest events from 1.17 to 1.18
-      perf vendor events intel: Update emeraldrapids metrics
-      perf vendor events intel: Fix Novalake CPUID regex in mapfile.csv
-
-Dapeng Mi (2):
-      perf tests: Add auto counter reload (ACR) sampling test
-      perf jevents: Add Intel OMR MSR mappings
-
-Dmitry Ilvokhin (2):
-      perf record: Return the written size from process_comp_header()
-      perf record: Fix multiple PERF_RECORD_COMPRESSED2 records per push
-
-Gautam Menghani (3):
-      perf script powerpc: Update the hcall list with new hcalls
-      perf script powerpc: Fix a typo in the name of H_DISABLE_AND_GET
-      perf kvm stat: Add missing mappings for PPC kvm exit reasons
-
-Hongfu Li (1):
-      perf doc: Fix mmap failure checks in topdown example
-
-Hongling Zeng (1):
-      perf: evsel: Fix error handling in tp_format lookup
-
-Ian Rogers (76):
-      perf util: Sort includes and add missed explicit dependencies
-      perf python: Add missed explicit dependencies
-      perf evsel/evlist: Avoid unnecessary #includes
-      perf data: Add open flag
-      perf evlist: Add reference count
-      perf evsel: Add reference count
-      perf evlist: Add reference count checking
-      perf python: Use evsel in sample in pyrf_event
-      perf python: Add wrapper for perf_data file abstraction
-      perf python: Add python session abstraction wrapping perf's session
-      perf python: Refactor and add accessors to sample event
-      perf python: Add mmap2 event
-      perf python: Add callchain support
-      perf python: Extend API for stat events in python.c
-      perf python: Expose brstack in sample event
-      perf python: Add syscall name/id to convert syscall number and name
-      perf python: Add config file access
-      perf python: Handle Py_None for thread and cpu maps
-      perf python: Add type checking for parse_events/parse_metrics
-      perf python: Add perf.pyi stubs file
-      perf python: Add LiveSession helper
-      perf pmu: Recognize default_core as a core PMU in more places
-      perf parse-events: Restrict core PMU bypass to --cputype option
-      perf test: Truncate test description to fit terminal width
-      perf tests workloads: Support sub-second durations in noploop and thloop
-      perf tests: Add robust record retry helper and use subsecond workloads
-      perf tests: Skip metrics validation if system-wide recording lacks permission
-      perf tests: Fix Python JIT dump profiling test failure
-      perf tests: Fix flakiness in trace record and replay test
-      perf tests: Fix flakiness in BPF counters test on hybrid systems
-      perf tests: Fix flakiness in branch stack sampling tests
-      perf tests: Speed up off-cpu profiling tests
-      perf tests: Speed up lock contention analysis shell test
-      perf tests: Speed up metrics checking shell tests
-      perf tests: Include error output for skipped tests in JUnit XML
-      perf tests: Restore -p flag to lock contention test
-      perf record: Fix teardown hang on system-wide multi-threaded sessions
-      perf clang-format: Prioritize Python.h and expand other categories
-      perf jevents: Add more components to the metric sorting order
-      perf jevents: Add python type annotations
-      perf jevents metric: Add python type annotations
-      perf hists browser: Increase MAX_OPTIONS to prevent stack buffer overflow
-      perf ui hists: Fix uninitialized stack memory free on pstack allocation failure
-      perf ui hists: Include limits.h for PATH_MAX definition
-      perf disasm: Fix potential NULL pointer dereference and use-after-free in arch__find()
-      perf ui hists: Fix NULL pointer array gap in add_script_opt()
-      perf cap: Remove used_root parameter and simplify capability checks
-      perf python: Clean up and restructure setup.py
-      perf pmu-events: Parallelize JSON and metric pre-computation in jevents.py
-      perf ui hists: Fix stack use-after-return in symbol_filter_str
-      perf ui hists: Guard against NULL hist_entry in add_script_opt()
-      perf ui hists: In report UI ensure thread is set with reference counting
-      perf ui hists: Fix dso_filter reference leak and exit zoom cleanup
-      perf annotate: Be robust to annotating without a thread
-      perf ui hists: Remove duplicated thread in popup_action
-      perf find-map: Remove PATH_MAX 128-byte stack array restriction
-      perf synthetic-events: Fix line synchronization, bounds, and truncation bugs in proc maps reader
-      perf synthetic-events: Fix stack buffer overflow and bounds in cgroup synthesis
-      perf synthetic-events: Fix bounds, stale state, and misc flags in kernel module synthesis
-      perf synthetic-events: Fix bounds and union member access in mmap2 build_id synthesis
-      perf script: Fix metric_evlist leak in script_find_metrics
-      perf stat: Fix evsel_list leak in cmd_stat
-      perf tools: Fix sb_evlist leaks in top and record
-      perf python: Fix memory leak in pyrf_evlist__get_pollfd
-      perf synthetic-events: Fix uninitialized pthread_join
-      perf test: Fix skiplist leak in cmd_test
-      perf python: Check counts_values size in set_values
-      perf python: Validate CPU and thread maps in pyrf_evsel__open
-      perf python: Validate attribute setters in pyrf_evsel
-      perf python: Zero initialize perf_data in pyrf_data__init
-      perf python: Add thread and PMU uninitialized checks
-      perf python: Fix MetricGroup return type in perf.pyi
-      perf python: Fix count_values memory leak in pyrf_evsel__read
-      perf python: Fix memory leak in pyrf__metrics_cb
-      perf synthetic-events: Fix divide by zero in perf_event__synthesize_threads
-      perf evlist: Warn when 'sleep' workload is used without system-wide (-a) option
-
-Ivan Lazaric (1):
-      perf stat: reject --field-separator and --json-output combination
-
-James Clark (4):
-      tools/build: Allow versioning of all LLVM tools defined in Makefile.include
-      tools/build: Indent if else blocks
-      tools/build: Allow versioning LLVM readelf
-      tools/build: selftests: Remove some duplicate toolchain definitions
-
-Jiawei Sun (1):
-      perf record: fix poll storm when monitored threads exit
-
-Jiebin Sun (9):
-      perf c2c: extract shared data structures into util/c2c.h
-      perf c2c: add function view model skeleton
-      perf c2c: add column rendering for function view
-      perf c2c: add HPP list parsing for function view columns
-      perf c2c: add function view stats merge and memory management
-      perf c2c: add function view hierarchy entry creation
-      perf c2c: build and finalize the function view hierarchy
-      perf c2c: add function view browser UI and cacheline detail
-      perf c2c: document function view in perf-c2c man page
-
-Joe Lawrence (2):
-      perf symbols: skip livepatch symbols when loading kallsyms
-      perf symbols: skip livepatch symbols in kcore_copy kallsyms processing
-
-Leo Yan (10):
-      perf cs-etm: Fix thread leaks on trace queue init failure
-      perf cs-etm: Filter synthesized branch samples
-      perf cs-etm: Decode ETE exception packets
-      perf cs-etm: Refactor instruction size handling
-      perf cs-etm: Use thread-stack for last branch entries
-      perf cs-etm: Flush thread stacks after decoder reset
-      perf cs-etm: Support call indentation
-      perf cs-etm: Synthesize callchains for instruction samples
-      perf test: Add Arm CoreSight callchain test
-      perf cs-etm: Avoid truncating AUX buffer sizes to int
-
-Masami Hiramatsu (Google) (1):
-      perf/probe: Ignore comment lines in dynamic_events/kprobe_events file
-
-Michael Liang (1):
-      perf libdw: Fix outer-frame name resolution and spurious "(inlined)" tag
-
-Michail Tatas (1):
-      perf ftrace: Fix leak in parse_filter_event
-
-Michalis Niarchos (2):
-      perf kvm: Fix memory leak in process_sample_event()
-      perf kvm: Fix memory leak in cmd_kvm()
-
-Namhyung Kim (28):
-      perf timechart: Don't pass @event to cat_backtrace()
-      perf timechart: Generate backtrace only if needed
-      perf timechart: Remove unused backtrace in trace_handler
-      perf timechart: Remove unnecessary copy of backtrace
-      perf timechart: Release event samples at the end
-      perf timechart: Fix memory leaks during record
-      perf timechart: Fix memory leaks in draw_wakeups()
-      perf test: Update perf timechart test
-      perf kvm: Factor out kvm_need_default_arch_event()
-      perf kvm: Check kvm_need_default_arch_event() early
-      perf kvm: Kill STRDUP_FAIL_EXIT()
-      perf kvm: Do not copy filename string
-      perf kvm: Fix a memory leak in the usage string
-      perf test: Extend perf kvm tests to check default event
-      perf build: Do not pass -static to dlfilters
-      perf sched: Add missing perf_session__delete()
-      perf sched: Fix memory leaks in perf sched stats report
-      perf sched: Free subcommand string after perf sched stats
-      tools/lib/api: Fix potential double-free from fdarray__grow()
-      perf stat: Do not open cgroups for BPF counters
-      perf stat: Fix duplicate output with --for-each-cgroup
-      perf evsel: Remove unused BPF related fields
-      perf evsel: Arrange some fields that should be cloned
-      perf test: Update test for --for-each-cgroup option
-      perf build: Fix a compiler error in util/libbfd.c
-      perf build: Fix compiler errors with old capstone
-      Merge tag 'perf-tools-fixes-for-v7.2-1-2026-07-25' into perf-tools-next
-      perf build: Fix a build error on 32-bit x86
-
-Ondrej Mosnacek (1):
-      perf test amd ibs: avoid using executable heap
-
-PVS Narasimha Rao (1):
-      perf test sample-parsing: Validate PERF_FORMAT_GROUP values without LOST
-
-Pu Hu (1):
-      perf pmu-events: Fix typo in idle-cycles-frontend description
-
-Sandipan Das (3):
-      perf vendor events amd: Update Zen 5 core events
-      perf vendor events amd: Update Zen 6 core events
-      perf vendor events amd: Reintroduce deprecated Zen 5 core events
-
-Saurav Sachidanand (1):
-      perf vendor events arm64: fix swapped MetricGroup for Tegra410 L1 prefetcher metrics
-
-Shivani Nittor (1):
-      perf scripts: Add configurable sorting option to powerpc-hcalls
-
-Sizhe Liu (3):
-      perf hisi-ptt: Fix PTT trace TLP header parsing
-      perf hisi-ptt: Strengthen auxtrace event handling and packet type detection
-      perf hisi-ptt: Fix spelling and abbreviation errors
-
-Tanushree Shah (7):
-      perf data convert json: Fix trace_seq memory leak in process_sample_event()
-      perf dso: Fix kallsyms DSO detection with fallback logic
-      perf trace-event: Fix buffer overflow in read_string()
-      perf trace-event: Fix integer truncation in do_read() and skip()
-      perf trace-event: Avoid double free and leak in trace_event__cleanup()/trace_event__init()
-      perf trace-event: Fix heap overflows in read_ftrace_printk()/read_saved_cmdline()
-      perf trace-event: Fix infinite loop in skip()
-
-Tengda Wu (1):
-      perf capstone: Fix kernel map reference count leak
-
-Thomas Richter (1):
-      perf test: Skip failing 'perf test aslr' test case
-
-Trevor Allison (1):
-      perf build: Add LDFLAGS to dlfilters .so link
-
-Viktor Malik (2):
-      perf trace: Factor out BPF loop body
-      perf trace: Refactor augmented_raw_syscalls using bpf_for
-
-Yu Peng (1):
-      perf metricgroup: Fix metric expression copy leaks
-
-Zhanpeng Zhang (1):
-      perf symbols: Skip dynamic symbols with invalid section indexes
-
- Documentation/trace/hisi-ptt.rst                   |   28 +-
- tools/bpf/resolve_btfids/Makefile                  |    3 -
- tools/build/Makefile.feature                       |    2 -
- tools/build/feature/Makefile                       |   14 -
- tools/lib/api/Makefile                             |    4 -
- tools/lib/api/fd/array.c                           |   17 +-
- tools/lib/bpf/Makefile                             |    8 +-
- tools/lib/subcmd/Makefile                          |    4 -
- tools/lib/symbol/Makefile                          |    4 -
- tools/perf/.clang-format                           |    9 +-
- tools/perf/Documentation/perf-c2c.txt              |   71 +
- tools/perf/Documentation/perf-sched.txt            |    6 +
- tools/perf/Documentation/perf-stat.txt             |    3 +
- tools/perf/Documentation/perf-test.txt             |    6 +-
- tools/perf/Documentation/perf-trace.txt            |    4 +
- tools/perf/Documentation/topdown.txt               |    4 +-
- tools/perf/Makefile.perf                           |   37 +-
- tools/perf/arch/arm/util/cs-etm.c                  |   10 +-
- tools/perf/arch/arm64/util/arm-spe.c               |    8 +-
- tools/perf/arch/arm64/util/hisi-ptt.c              |    2 +-
- tools/perf/arch/x86/tests/amd-ibs-period.c         |   20 +-
- tools/perf/arch/x86/tests/hybrid.c                 |   22 +-
- tools/perf/arch/x86/tests/topdown.c                |    4 +-
- tools/perf/arch/x86/util/auxtrace.c                |    2 +-
- tools/perf/arch/x86/util/intel-bts.c               |    6 +-
- tools/perf/arch/x86/util/intel-pt.c                |    9 +-
- tools/perf/arch/x86/util/iostat.c                  |   14 +-
- tools/perf/bench/evlist-open-close.c               |   29 +-
- tools/perf/builtin-annotate.c                      |    7 +-
- tools/perf/builtin-c2c.c                           |  221 +-
- tools/perf/builtin-ftrace.c                        |   32 +-
- tools/perf/builtin-inject.c                        |    9 +-
- tools/perf/builtin-kvm.c                           |  130 +-
- tools/perf/builtin-kwork.c                         |    8 +-
- tools/perf/builtin-lock.c                          |    4 +-
- tools/perf/builtin-record.c                        |  148 +-
- tools/perf/builtin-report.c                        |   13 +-
- tools/perf/builtin-sched.c                         |  402 ++-
- tools/perf/builtin-script.c                        |   16 +-
- tools/perf/builtin-stat.c                          |  124 +-
- tools/perf/builtin-timechart.c                     |  212 +-
- tools/perf/builtin-top.c                           |  106 +-
- tools/perf/builtin-trace.c                         |  204 +-
- .../pmu-events/arch/arm64/nvidia/t410/metrics.json |   28 +-
- .../pmu-events/arch/arm64/nvidia/t410/misc.json    |    6 +-
- .../arch/common/common/legacy-hardware.json        |    2 +-
- .../pmu-events/arch/x86/alderlake/adl-metrics.json |   80 +-
- .../perf/pmu-events/arch/x86/alderlake/cache.json  |   36 +
- .../arch/x86/alderlake/metricgroups.json           |    2 +-
- .../pmu-events/arch/x86/alderlake/pipeline.json    |    6 +-
- .../perf/pmu-events/arch/x86/alderlaken/cache.json |   32 +
- .../arch/x86/amdzen5/floating-point.json           |  160 +-
- .../pmu-events/arch/x86/amdzen5/load-store.json    |    8 +-
- .../arch/x86/amdzen6/floating-point.json           |   34 +-
- .../pmu-events/arch/x86/arrowlake/arl-metrics.json |  152 +-
- .../perf/pmu-events/arch/x86/arrowlake/cache.json  |   30 +-
- .../arch/x86/arrowlake/floating-point.json         |   45 +
- .../perf/pmu-events/arch/x86/arrowlake/memory.json |   18 +
- .../arch/x86/arrowlake/metricgroups.json           |    2 +-
- .../pmu-events/arch/x86/arrowlake/pipeline.json    |  131 +-
- .../arch/x86/arrowlake/uncore-memory.json          |   84 +-
- .../arch/x86/clearwaterforest/memory.json          |   33 +
- .../arch/x86/clearwaterforest/pipeline.json        |   19 +
- .../x86/clearwaterforest/uncore-interconnect.json  |   10 +
- .../arch/x86/clearwaterforest/uncore-memory.json   |    2 +-
- .../pmu-events/arch/x86/emeraldrapids/cache.json   |    9 +
- .../arch/x86/emeraldrapids/emr-metrics.json        |  135 +-
- .../arch/x86/emeraldrapids/metricgroups.json       |    2 +-
- .../perf/pmu-events/arch/x86/grandridge/cache.json |   25 +
- .../pmu-events/arch/x86/grandridge/counter.json    |   42 -
- .../arch/x86/grandridge/floating-point.json        |   56 +
- .../pmu-events/arch/x86/grandridge/memory.json     |   57 +
- .../pmu-events/arch/x86/grandridge/pipeline.json   |  140 +
- .../arch/x86/grandridge/uncore-memory.json         |    2 +-
- .../arch/x86/grandridge/virtual-memory.json        |    8 +
- .../arch/x86/graniterapids/gnr-metrics.json        |  102 +-
- .../arch/x86/graniterapids/metricgroups.json       |    2 +-
- .../arch/x86/graniterapids/pipeline.json           |    2 +-
- .../x86/graniterapids/uncore-interconnect.json     |   10 +
- .../arch/x86/graniterapids/uncore-memory.json      |    2 +-
- .../perf/pmu-events/arch/x86/lunarlake/cache.json  |    2 +-
- .../pmu-events/arch/x86/lunarlake/lnl-metrics.json |  142 +-
- .../arch/x86/lunarlake/metricgroups.json           |    2 +-
- .../pmu-events/arch/x86/lunarlake/pipeline.json    |   29 +-
- .../arch/x86/lunarlake/uncore-memory.json          |  208 +-
- tools/perf/pmu-events/arch/x86/mapfile.csv         |   25 +-
- .../perf/pmu-events/arch/x86/meteorlake/cache.json |   11 +-
- .../arch/x86/meteorlake/metricgroups.json          |    2 +-
- .../arch/x86/meteorlake/mtl-metrics.json           |   88 +-
- .../pmu-events/arch/x86/meteorlake/pipeline.json   |    4 +-
- .../arch/x86/meteorlake/uncore-memory.json         |   84 +-
- tools/perf/pmu-events/arch/x86/novalake/cache.json |  749 +++++
- .../perf/pmu-events/arch/x86/novalake/counter.json |   17 +
- .../arch/x86/novalake/floating-point.json          |  452 +++
- .../pmu-events/arch/x86/novalake/frontend.json     |  600 ++++
- .../perf/pmu-events/arch/x86/novalake/memory.json  |  299 ++
- tools/perf/pmu-events/arch/x86/novalake/other.json |  144 +
- .../pmu-events/arch/x86/novalake/pipeline.json     | 1976 +++++++++++++
- .../arch/x86/novalake/uncore-memory.json           |   42 +
- .../arch/x86/novalake/virtual-memory.json          |  338 +++
- .../pmu-events/arch/x86/pantherlake/counter.json   |    5 +
- .../pmu-events/arch/x86/pantherlake/pipeline.json  |   31 +-
- .../arch/x86/pantherlake/uncore-interconnect.json  |   10 +
- .../arch/x86/pantherlake/uncore-memory.json        |  221 +-
- .../pmu-events/arch/x86/sierraforest/counter.json  |   77 -
- .../arch/x86/sierraforest/uncore-interconnect.json |   10 +
- .../arch/x86/sierraforest/uncore-memory.json       |    2 +-
- tools/perf/pmu-events/empty-pmu-events.c           |  362 +--
- tools/perf/pmu-events/jevents.py                   |  122 +-
- tools/perf/pmu-events/metric.py                    |   23 +-
- tools/perf/python/perf.pyi                         |  672 +++++
- tools/perf/python/perf_live.py                     |   59 +
- tools/perf/scripts/install-build-deps.sh           |  603 ++++
- tools/perf/scripts/python/arm-cs-trace-disasm.py   |    9 +-
- tools/perf/scripts/python/powerpc-hcalls.py        |  137 +-
- tools/perf/tests/backward-ring-buffer.c            |   26 +-
- tools/perf/tests/builtin-test.c                    |  182 +-
- tools/perf/tests/code-reading.c                    |   14 +-
- tools/perf/tests/event-times.c                     |    6 +-
- tools/perf/tests/event_update.c                    |    4 +-
- tools/perf/tests/evsel-roundtrip-name.c            |    8 +-
- tools/perf/tests/evsel-tp-sched.c                  |    4 +-
- tools/perf/tests/expand-cgroup.c                   |   15 +-
- tools/perf/tests/hists_cumulate.c                  |    2 +-
- tools/perf/tests/hists_filter.c                    |    2 +-
- tools/perf/tests/hists_link.c                      |    2 +-
- tools/perf/tests/hists_output.c                    |    2 +-
- tools/perf/tests/hwmon_pmu.c                       |    7 +-
- tools/perf/tests/keep-tracking.c                   |   10 +-
- tools/perf/tests/mmap-basic.c                      |   24 +-
- tools/perf/tests/openat-syscall-all-cpus.c         |    6 +-
- tools/perf/tests/openat-syscall-tp-fields.c        |   26 +-
- tools/perf/tests/openat-syscall.c                  |    6 +-
- tools/perf/tests/parse-events.c                    |  150 +-
- tools/perf/tests/parse-metric.c                    |   11 +-
- tools/perf/tests/parse-no-sample-id-all.c          |    2 +-
- tools/perf/tests/perf-record.c                     |   38 +-
- tools/perf/tests/perf-time-to-tsc.c                |   12 +-
- tools/perf/tests/pfm.c                             |   12 +-
- tools/perf/tests/pmu-events.c                      |   21 +-
- tools/perf/tests/pmu.c                             |    4 +-
- tools/perf/tests/sample-parsing.c                  |   84 +-
- tools/perf/tests/shell/coresight/callchain.sh      |  172 ++
- .../shell/coresight/test_arm_coresight_disasm.sh   |    4 +-
- tools/perf/tests/shell/inject_aslr.sh              |   10 +-
- tools/perf/tests/shell/jitdump-python.sh           |   79 +-
- tools/perf/tests/shell/kvm.sh                      |   71 +-
- .../perf/tests/shell/lib/perf_metric_validation.py |   11 +-
- tools/perf/tests/shell/lib/perf_record.sh          |   58 +
- tools/perf/tests/shell/lib/setup_python.sh         |   13 +
- tools/perf/tests/shell/lock_contention.sh          |   33 +-
- tools/perf/tests/shell/pipe_test.sh                |    4 +-
- .../shell/record+zstd_comp_decomp_multi_record.sh  |   63 +
- tools/perf/tests/shell/record.sh                   |  216 +-
- tools/perf/tests/shell/record_lbr.sh               |   50 +-
- tools/perf/tests/shell/record_offcpu.sh            |   14 +-
- tools/perf/tests/shell/sched.sh                    |   29 +
- tools/perf/tests/shell/stat.sh                     |   58 +
- tools/perf/tests/shell/stat_all_metrics.sh         |   77 +-
- tools/perf/tests/shell/stat_bpf_counters.sh        |   28 +-
- tools/perf/tests/shell/stat_bpf_counters_cgrp.sh   |   15 +
- tools/perf/tests/shell/stat_metrics_values.sh      |    9 +-
- tools/perf/tests/shell/test_brstack.sh             |  107 +-
- .../tests/shell/test_dwarf_unwind_multithreaded.sh |   65 +
- tools/perf/tests/shell/timechart.sh                |   24 +-
- tools/perf/tests/shell/trace_record_replay.sh      |   38 +-
- tools/perf/tests/sw-clock.c                        |   20 +-
- tools/perf/tests/switch-tracking.c                 |   11 +-
- tools/perf/tests/task-exit.c                       |   20 +-
- tools/perf/tests/tests.h                           |    1 +
- tools/perf/tests/time-utils-test.c                 |   14 +-
- tools/perf/tests/tool_pmu.c                        |    7 +-
- tools/perf/tests/topology.c                        |    4 +-
- tools/perf/tests/uncore-event-sorting.c            |    6 +-
- tools/perf/tests/workloads/Build                   |    2 +
- tools/perf/tests/workloads/callchain.c             |   33 +
- tools/perf/tests/workloads/noploop.c               |   17 +-
- tools/perf/tests/workloads/thloop.c                |   16 +-
- tools/perf/ui/browsers/Build                       |    1 +
- tools/perf/ui/browsers/annotate.c                  |    4 +-
- tools/perf/ui/browsers/c2c-function.c              |  209 ++
- tools/perf/ui/browsers/hists.c                     |  201 +-
- tools/perf/util/Build                              |    3 +-
- tools/perf/util/amd-sample-raw.c                   |    2 +-
- tools/perf/util/annotate-data.c                    |    2 +-
- tools/perf/util/annotate.c                         |   61 +-
- tools/perf/util/annotate.h                         |    3 +-
- tools/perf/util/arm-spe.c                          |    4 +
- tools/perf/util/aslr.c                             |    1 +
- tools/perf/util/auxtrace.c                         |   29 +-
- tools/perf/util/block-info.c                       |    4 +-
- tools/perf/util/bpf-event.c                        |    3 +-
- tools/perf/util/bpf-filter.c                       |   22 +-
- tools/perf/util/bpf_counter.c                      |    2 +-
- tools/perf/util/bpf_counter_cgroup.c               |   14 +-
- tools/perf/util/bpf_ftrace.c                       |    9 +-
- tools/perf/util/bpf_lock_contention.c              |   12 +-
- tools/perf/util/bpf_off_cpu.c                      |   44 +-
- .../util/bpf_skel/augmented_raw_syscalls.bpf.c     |  155 +-
- tools/perf/util/bpf_trace_augment.c                |    8 +-
- tools/perf/util/c2c-function.c                     | 1642 +++++++++++
- tools/perf/util/c2c.c                              |   21 +
- tools/perf/util/c2c.h                              |  135 +
- tools/perf/util/cap.c                              |    4 +-
- tools/perf/util/cap.h                              |    3 +-
- tools/perf/util/capstone.c                         |   62 +-
- tools/perf/util/cgroup.c                           |   26 +-
- tools/perf/util/compress.h                         |    6 +-
- tools/perf/util/cs-etm.c                           |  418 +--
- tools/perf/util/data-convert-bt.c                  |    2 +-
- tools/perf/util/data-convert-json.c                |    1 +
- tools/perf/util/data.c                             |   27 +-
- tools/perf/util/data.h                             |    4 +-
- tools/perf/util/disasm.c                           |    8 +-
- tools/perf/util/dso.c                              |   48 +-
- tools/perf/util/dso.h                              |   57 +-
- tools/perf/util/evlist.c                           |  511 ++--
- tools/perf/util/evlist.h                           |  273 +-
- tools/perf/util/evsel.c                            |  163 +-
- tools/perf/util/evsel.h                            |   59 +-
- tools/perf/util/expr.c                             |    2 +-
- tools/perf/util/find-map.c                         |   10 +-
- tools/perf/util/header.c                           |   74 +-
- tools/perf/util/header.h                           |    2 +-
- .../util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   |   63 +-
- .../util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   |   14 +-
- tools/perf/util/hisi-ptt.c                         |   24 +-
- tools/perf/util/hist.c                             |    1 +
- tools/perf/util/intel-bts.c                        |    2 +-
- tools/perf/util/intel-pt.c                         |   10 +-
- tools/perf/util/intel-tpebs.c                      |    7 +-
- tools/perf/util/iostat.c                           |    2 +-
- tools/perf/util/iostat.h                           |    2 +-
- tools/perf/util/kvm-stat-arch/book3s_hv_exits.h    |    4 +-
- tools/perf/util/kvm-stat-arch/kvm-stat-powerpc.c   |   31 +-
- tools/perf/util/kvm-stat-arch/kvm-stat-x86.c       |   37 +-
- tools/perf/util/kvm-stat.c                         |   41 +
- tools/perf/util/kvm-stat.h                         |   20 +-
- tools/perf/util/libbfd.c                           |   27 +-
- tools/perf/util/libdw.c                            |   34 +-
- tools/perf/util/machine.c                          |   43 +-
- tools/perf/util/map.h                              |    9 +-
- tools/perf/util/metricgroup.c                      |   45 +-
- tools/perf/util/metricgroup.h                      |    4 +-
- tools/perf/util/parse-events.c                     |   40 +-
- tools/perf/util/parse-events.h                     |   17 +-
- tools/perf/util/parse-events.y                     |    2 +-
- tools/perf/util/perf_api_probe.c                   |   20 +-
- tools/perf/util/pfm.c                              |    4 +-
- tools/perf/util/pmu.c                              |    6 +-
- tools/perf/util/pmus.c                             |    2 +
- tools/perf/util/print-events.c                     |    2 +-
- tools/perf/util/probe-file.c                       |    2 +
- tools/perf/util/python.c                           | 2988 ++++++++++++++++----
- tools/perf/util/record.c                           |   11 +-
- tools/perf/util/s390-sample-raw.c                  |   20 +-
- tools/perf/util/sample-raw.c                       |    4 +-
- tools/perf/util/sample.c                           |   17 +-
- tools/perf/util/session.c                          |   69 +-
- tools/perf/util/session.h                          |    2 +
- tools/perf/util/setup.py                           |  259 +-
- tools/perf/util/sideband_evlist.c                  |   54 +-
- tools/perf/util/sort.c                             |   78 +-
- tools/perf/util/stat-display.c                     |    9 +-
- tools/perf/util/stat-shadow.c                      |   24 +-
- tools/perf/util/stat.c                             |   20 +-
- tools/perf/util/stat.h                             |    1 +
- tools/perf/util/stream.c                           |    4 +-
- tools/perf/util/symbol-elf.c                       |   11 +-
- tools/perf/util/symbol.c                           |    7 +-
- tools/perf/util/symbol.h                           |   12 +
- tools/perf/util/synthetic-events.c                 |  326 ++-
- tools/perf/util/thread-stack.c                     |    2 +-
- tools/perf/util/time-utils.c                       |   12 +-
- tools/perf/util/top.c                              |    4 +-
- tools/perf/util/trace-event-read.c                 |   54 +-
- tools/perf/util/trace-event.c                      |   11 +-
- tools/perf/util/unwind-libdw.c                     |   24 +-
- tools/perf/util/util.c                             |   12 +-
- tools/perf/util/zstd.c                             |   25 +-
- tools/scripts/Makefile.arch                        |    8 +-
- tools/scripts/Makefile.include                     |   85 +-
- tools/testing/selftests/bpf/Makefile               |    1 -
- 283 files changed, 18172 insertions(+), 3984 deletions(-)
- delete mode 100644 tools/perf/pmu-events/arch/x86/grandridge/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/novalake/cache.json
- create mode 100644 tools/perf/pmu-events/arch/x86/novalake/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/novalake/floating-point.json
- create mode 100644 tools/perf/pmu-events/arch/x86/novalake/frontend.json
- create mode 100644 tools/perf/pmu-events/arch/x86/novalake/memory.json
- create mode 100644 tools/perf/pmu-events/arch/x86/novalake/other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/novalake/pipeline.json
- create mode 100644 tools/perf/pmu-events/arch/x86/novalake/uncore-memory.json
- create mode 100644 tools/perf/pmu-events/arch/x86/novalake/virtual-memory.json
- create mode 100644 tools/perf/pmu-events/arch/x86/pantherlake/uncore-interconnect.json
- delete mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/counter.json
- create mode 100644 tools/perf/python/perf.pyi
- create mode 100755 tools/perf/python/perf_live.py
- create mode 100755 tools/perf/scripts/install-build-deps.sh
- create mode 100755 tools/perf/tests/shell/coresight/callchain.sh
- create mode 100644 tools/perf/tests/shell/lib/perf_record.sh
- create mode 100755 tools/perf/tests/shell/record+zstd_comp_decomp_multi_record.sh
- create mode 100755 tools/perf/tests/shell/test_dwarf_unwind_multithreaded.sh
- create mode 100644 tools/perf/tests/workloads/callchain.c
- create mode 100644 tools/perf/ui/browsers/c2c-function.c
- create mode 100644 tools/perf/util/c2c-function.c
- create mode 100644 tools/perf/util/c2c.c
- create mode 100644 tools/perf/util/c2c.h
+        if (user_mode(regs)) {
+                regs_user->abi = perf_reg_abi(current);
+                regs_user->regs = regs;
+
+    kernel/events/core.c, perf_output_sample()
+
+        perf_output_sample_ustack(handle, data->stack_user_size,
+                                  data->regs_user.regs);
+
+    kernel/events/core.c, perf_output_sample_ustack()
+
+        sp = perf_user_stack_pointer(regs);
+
+So the IP names the instruction IBS tagged, while SP - and therefore every
+byte of the dumped stack - describes wherever the CPU was when the NMI
+finally arrived.  These are not the same place: in between, the tagged call
+has been taken and the callee has built its frame.
+
+Frame-pointer unwinding barely notices.  It still returns a full chain, only
+with a top frame from a slightly different moment.  DWARF unwinding cannot
+survive it, because the CFA rule is chosen by IP and then applied to a stack
+belonging to somebody else's frame.  This is also why the damage concentrates
+in the allocator: malloc() and free() are where a lot of cycles are spent
+immediately after a call instruction, so that is where the skid lands.
+
+The driver knows about this.  A few lines further down, in the same
+function, sits this:
+
+    /*
+     * rip recorded by IbsOpRip will not be consistent with rsp and rbp
+     * recorded as part of interrupt regs. Thus we need to use rip from
+     * interrupt regs while unwinding call stack.
+     */
+    perf_sample_save_callchain(&data, event, iregs);
+
+    throttle = perf_event_overflow(event, &data, &regs);
+
+The kernel-side call chain is deliberately built from iregs - the untouched
+interrupt registers - precisely so that the IP agrees with rsp and rbp.  The
+sample itself, however, is handed &regs, the modified copy - which is
+where the user registers and the stack dump come from, as quoted above.
+
+So the inconsistency is known, it is documented in a comment, and it has been
+fixed for one of the two consumers.  The DWARF path appears to have been
+missed.
+
+What the unwinder is actually handed
+------------------------------------
+
+I instrumented get_entries() in tools/perf/util/unwind-libunwind-local.c to
+print the result of every unw_step() together with the first words of the
+recorded stack dump:
+
+    DBG init  ip=0x...d1d9 sp=0x7ffcc53ff420
+    DBG   [sp+0x18] = 0x40                  <- the malloc() argument
+    DBG   [sp+0x28] = 0x55f55cbbd010        <- return address slot: heap
+    DBG step#1 sret=1 ip=0x55f55cbbd010     <- "returned" into the heap
+    DBG step#2 sret=-22
+
+and here is the code at the sampled IP:
+
+    00000000000011a0 <inner>:
+      11a0:  sub    $0x28,%rsp
+      ...
+      11d0:  mov    $0x40,%edi
+      11d5:  add    $0x8,%rbp
+      11d9:  call   1050 <malloc@plt>       <- the IP reported by IBS
+      11de:  mov    %rax,-0x8(%rbp)
+
+inner() opens with "sub $0x28,%rsp", so the CFA is rsp+0x30 and the return
+address sits at rsp+0x28.  The unwinder computed exactly that (0x420 ->
+0x450) and read exactly that slot.  What it found there is a heap pointer,
+because the stack was captured after the call had been taken, and by then the
+slot belongs to malloc()'s frame - note malloc()'s own argument, 0x40,
+sitting right next to it at [sp+0x18].
+
+I checked the obvious suspects before concluding this: the CFI for that
+address is correct, the stack dump is complete (3040 bytes of it), the sample
+is a user-mode one, and libdw and libunwind fail on it identically.  The
+unwinder is not at fault.  Its input contradicts itself.
+
+Numbers
+-------
+
+Same binary, same run, only the event changes; unwound by libunwind:
+
+    event            precise_ip   single-frame chains   avg depth
+    cpu/cycles/       0             0.0%                 8.0
+    cpu/cycles/p      1            13.2%                 5.1
+    cpu/cycles/pp     2            15.1%                 3.7
+    cpu/cycles/ppp    3            not available
+
+On the real workload:
+
+    cpu/cycles/P                   32.1%                 4.1
+    cpu/cycles/                    16.1%                 8.8
+    cpu-clock                      16.9%                 8.6
+
+(The residue there is Problem 3.)
+
+Why this does not happen on Intel
+---------------------------------
+
+setup_pebs_fixed_sample_data() copies the entire GPR set out of the PEBS
+record, sp and bp included:
+
+    arch/x86/events/intel/ds.c
+
+        regs->bp = pebs->bp;
+        regs->sp = pebs->sp;
+
+so IP and stack agree.  IBS records only IbsOpRip; there is no register file
+in the record for the driver to copy.  The mismatch is therefore rooted in
+what the hardware can provide - but, as the comment quoted above shows, the
+driver already has an answer for it, and applies that answer to the
+kernel-side call chain.
+
+In fairness to IBS, Intel is not flawless here either.  The registers come
+from the PEBS record, but the stack memory is still copied later, when the
+NMI runs, so a sample can be spoiled if the thread returned above the
+recorded SP and reused that memory in the meantime.  The difference is that
+the starting pair is consistent, so the first CFA computation lands on the
+right slot; and everything still live on the stack - the frames of callers
+that have not returned - cannot have been overwritten, which bounds the
+damage to the shallowest frame or two.  With IBS the very first step is
+already wrong.  (That paragraph is reasoning from the code; I have no Intel
+machine to check it on.)
+
+How one ends up on IBS without asking for precision
+---------------------------------------------------
+
+The default event of perf record is built with the P modifier:
+
+    tools/perf/util/evlist.c
+
+        while ((pmu = perf_pmus__scan_core(pmu)) != NULL) {
+                snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
+                        can_profile_kernel ? "P" : "Pu");
+
+P sets precise_max (tools/perf/util/parse-events.c), which becomes
+precise_ip = 3 (tools/perf/util/evsel.c), and evsel__precise_ip_fallback()
+then walks it down one step at a time until the kernel agrees:
+
+    $ perf record -vv -g -o /tmp/x.data /bin/true
+    Attempt to add: cpu/cycles/
+      precise_ip                       3
+    decreasing precise_ip by one (2)
+      precise_ip                       2
+
+precise_ip=2 is accepted here and routed to IBS.  In other words, a plain
+
+    perf record -g --call-graph dwarf ./prog
+
+on any recent AMD box produces broken call graphs out of the box, silently,
+for a user who never asked for precise sampling.
+
+There is already a precedent for special-casing this a few lines up in the
+same function: on s390, when call chains are requested, the default event is
+a software clock rather than a precise hardware one.
+
+What the workaround costs
+-------------------------
+
+Dropping the P is not free, and it should be said plainly.  With a
+non-precise event the whole sample is taken at one moment, in the interrupt
+handler, so the IP and the stack agree and the chain is right - but the leaf
+address now carries the usual skid: it names the instruction the CPU happened
+to be on when the interrupt arrived, not the one that overflowed the counter.
+
+    event            leaf instruction address    call chain
+    cycles:P (IBS)   exact                       garbage
+    cycles           skewed by skid              correct
+
+On this hardware the two cannot be had at once, unless everything in sight is
+built with frame pointers - which on Debian it is not, and which is where
+this whole story started.  For "where does the time go, by function and by
+call path" the trade is the right way round.  For perf annotate on a hot loop
+it is not, and then there are no call chains at all.  That is the part I
+would like to see acknowledged somewhere the user can find it.
+
+
+Problem 2: libdw cannot unwind through lld's default segment layout
+===================================================================
+
+This is the one that sent me chasing the linker early on, and it deserves
+to be stated carefully, because the linker is not the culprit.
+
+Take a program with a deep call chain - twelve nested noinline functions
+around a malloc/free loop, source at the end - and link the same
+translation unit twice:
+
+    clang -O2 -g -fuse-ld=bfd -o deep_bfd deep-stack.c
+    clang -O2 -g -fuse-ld=lld -o deep_lld deep-stack.c
+
+Recorded identically with cpu/cycles/, so that Problem 1 is out of the way.
+Share of chains with 13 frames or more, and average depth:
+
+    binary                     libdw            libunwind
+    deep_bfd                 97.8%  (16.7)   97.8%  (16.7)
+    deep_lld                  0.3%  ( 2.1)   93.9%  (16.2)
+
+Same recording, two unwinders, opposite outcomes.  And the trigger can be
+switched off from the link line, which pins it down:
+
+    variant                    libdw            libunwind
+    lld, as is                0.3%  ( 2.1)   93.9%  (16.2)
+    lld -Wl,--no-rosegment   97.7%  (16.7)   97.7%  (16.7)
+    lld -Wl,-z,separate-code 95.5%  (16.5)   95.5%  (16.5)
+
+As far as readelf is concerned nothing is missing from the default lld
+output: it has a PT_GNU_EH_FRAME segment and a complete set of FDEs, and
+neither binary has .debug_frame.
+
+This is the same ground as llvm-project issue 53156, "perf record
+--call-graph dwarf does not support ld.lld's default --rosegment
+-z noseparate-code layout" (closed), and the linux-perf-users thread "Call
+graph dwarf unwinding fails with lld" from May 2022, where the reporter
+wrote plainly "I don't know if this is a bug in lld, perf, or libunwind, only
+that it doesn't happen with ld".
+
+What seems to be new here is the missing half of that sentence: libunwind
+handles the layout perfectly well.  So this is a gap in libdw, not in lld -
+and, because of Problem 3 below, a perf built with both unwinders will not
+use the one that works.
+
+The practical reach of this is larger than a synthetic test.  Every Android
+NDK build is linked with lld, and lld is the default in a growing number of
+clang configurations.
+
+
+Problem 3: a one-frame chain counts as success, so the fallback never runs
+==========================================================================
+
+tools/perf/util/unwind.c walks a hardcoded list of unwinders, libdw first:
+
+    #ifdef HAVE_LIBDW_SUPPORT
+            symbol_conf.unwind_style[i++] = UNWIND_STYLE_LIBDW;
+    #endif
+    #ifdef HAVE_LIBUNWIND_SUPPORT
+            symbol_conf.unwind_style[i++] = UNWIND_STYLE_LIBUNWIND;
+    #endif
+
+and stops at the first one that returns anything at all:
+
+            if (ret > 0) {
+                    ret = 0;
+                    break;
+            }
+
+A chain consisting of the leaf frame alone satisfies ret > 0.  So whenever
+libdw manages to emit the sampled IP and nothing else, libunwind is never
+consulted and the user is handed a one-frame "call graph" - which is exactly
+what building perf with LIBUNWIND=1 does not fix, and exactly what made this
+problem so confusing to chase.
+
+There is no way to influence the choice from the outside: no command line
+option, no environment variable, no config knob.  To measure the two
+unwinders separately I had to add a switch to my own build.
+
+On the real workload, same recording, only the unwinder changes:
+
+    event         unwinder     single-frame   avg depth
+    cycles:P      libdw           53.9%        2.2
+    cycles:P      libunwind        7.0%        6.3
+    cpu-clock     libdw           45.6%        2.4
+    cpu-clock     libunwind        0.0%       12.6
+    cpu-clock     default         16.9%        8.6
+
+The last row decomposes as follows: of 2432 samples, libdw returned something
+for 904 of them, and 412 of those were a single frame.  Those 412 are the
+entire residue - for the other 1528 libdw returned nothing at all, the
+fallback did run, and libunwind unwound them in full.
+
+One more thing worth mentioning: Debian's perf ships without libunwind at
+all.
+
+    $ perf version --build-options
+                dwarf-unwind: [ on  ]  # HAVE_DWARF_UNWIND_SUPPORT
+          libdw-dwarf-unwind: [ on  ]  # HAVE_LIBDW_SUPPORT
+                   libunwind: [ OFF ]  # HAVE_LIBUNWIND_SUPPORT
+                              ( tip: Deprecated, use LIBUNWIND=1 ... )
+
+So the distribution user has only the weaker unwinder and nothing to fall
+back to.  Building perf with LIBUNWIND=1 also fails without WERROR=0 (mixed
+declarations and code), and the build system calls that path deprecated.  On
+these workloads the deprecated unwinder is the one that works.
+
+
+The net effect
+==============
+
+Starting point, on a stock Debian perf with the default event: of 2361
+samples, 47.6% came back with no frames at all, 28.3% with the leaf frame and
+nothing else, and 24.2% with two frames or more.  Average depth 2.2.  Roughly
+three quarters of the profile carried no call path.
+
+Building perf with libunwind but leaving everything else alone gets that to
+32.1% single-frame chains at an average depth of 4.1 - better, but the
+libdw-first rule is still throwing away the working unwinder's answer.
+
+After switching to a non-precise event and forcing libunwind: 0.0%
+single-frame chains, average depth 12.6, every sample carrying a chain.
+
+No frame pointers, no rebuilt system libraries, no debug symbols were needed
+to get there - all three of which we tried and measured along the way, and
+none of which was the answer.  What was needed was knowing about three
+unrelated behaviours, none of which is documented and none of which produces
+a diagnostic.
+
+
+Suggestions and questions
+=========================
+
+1. Kernel: the fix that was applied to the kernel-side call chain -
+   passing iregs rather than the modified regs - looks like it applies
+   verbatim to PERF_SAMPLE_REGS_USER and PERF_SAMPLE_STACK_USER.  Should
+   those be derived from iregs too when the event requests a user stack
+   dump?  If the precise IP is worth keeping in the sample regardless,
+   should such samples carry a flag, so that userspace knows the IP and the
+   stack do not belong together?  Today nothing distinguishes them.
+
+2. perf: precise events and DWARF call graphs are mutually exclusive on this
+   hardware, so arguably perf should simply not let the two be combined.  I
+   would suggest two rules rather than one, because a blanket refusal would
+   make the common case worse:
+
+   - for the default event, drop the P when --call-graph dwarf is requested,
+     silently and on PMUs where precision means IBS.  Otherwise a plain
+     "perf record -g --call-graph dwarf" starts failing outright on every AMD
+     box, which is worse than today.  The s390 case in evlist.c suggests this
+     kind of substitution is considered acceptable;
+
+   - if the user asked for a precise event explicitly and also asked for
+     DWARF call chains, refuse with a message that says why and what to do,
+     instead of quietly producing a useless result.
+
+   Note that this should be scoped to IBS.  On Intel, PEBS records the whole
+   register set, so precise events and DWARF unwinding work together there
+   and nothing needs restricting.  Frame-pointer call graphs are also fine
+   with precise events - only the leaf frame is off.
+
+3. perf: a single-frame result should probably not count as unwinder success
+   and suppress the fallback.  This one looks like a small, contained fix.
+
+4. perf: a way to choose the unwinder explicitly - an option or an
+   environment variable - would have saved most of this investigation.
+
+5. libdw: the lld layout case is worth fixing, or at least worth recording
+   somewhere, given how much clang output it covers.
+
+6. Documentation: perf-amd-ibs(1) and perf-record(1) could say that precise
+   events on AMD are incompatible with --call-graph dwarf.  A single sentence
+   would have saved a day here.
+
+
+Reproducers
+===========
+
+Problem 1, the allocator case:
+
+    /* gcc -O2 -g -o ibs-repro ibs-repro.c */
+    #include <stdlib.h>
+    #include <stdio.h>
+
+    static void *keep[200000];
+
+    __attribute__((noinline)) static long inner(int n)
+    {
+            long c = 0;
+            int i;
+
+            for (i = 0; i < n; i++) {
+                    keep[i] = malloc(64);
+                    c += (long)keep[i];
+            }
+            for (i = 0; i < n; i++)
+                    free(keep[i]);
+            return c;
+    }
+
+    __attribute__((noinline)) static long outer(int n)
+    {
+            return inner(n) + 1;
+    }
+
+    int main(void)
+    {
+            long s = 0;
+            int i;
+
+            for (i = 0; i < 300; i++)
+                    s += outer(200000);
+            printf("%ld\n", s);
+            return 0;
+    }
+
+    perf record -e cpu/cycles/P -F 300 --call-graph dwarf,65528 \
+        -o p.data ./ibs-repro
+    perf record -e cpu/cycles/  -F 300 --call-graph dwarf,65528 \
+        -o n.data ./ibs-repro
+
+Problems 2 and 3, the linker case:
+
+    /* clang -O2 -g -fuse-ld=bfd -o deep_bfd deep-stack.c
+       clang -O2 -g -fuse-ld=lld -o deep_lld deep-stack.c */
+    #include <stdlib.h>
+    #include <stdio.h>
+
+    static void *keep[4096];
+
+    __attribute__((noinline)) static long f12(int n)
+    {
+            long c = 0;
+            for (int i = 0; i < n; i++) {
+                    int k = i & 4095;
+                    free(keep[k]);
+                    keep[k] = malloc(64);
+                    c += (long)keep[k];
+            }
+            return c;
+    }
+    __attribute__((noinline)) static long f11(int n){ return f12(n)+1; }
+    __attribute__((noinline)) static long f10(int n){ return f11(n)+2; }
+    __attribute__((noinline)) static long f9 (int n){ return f10(n)+3; }
+    __attribute__((noinline)) static long f8 (int n){ return f9 (n)+4; }
+    __attribute__((noinline)) static long f7 (int n){ return f8 (n)+5; }
+    __attribute__((noinline)) static long f6 (int n){ return f7 (n)+6; }
+    __attribute__((noinline)) static long f5 (int n){ return f6 (n)+7; }
+    __attribute__((noinline)) static long f4 (int n){ return f5 (n)+8; }
+    __attribute__((noinline)) static long f3 (int n){ return f4 (n)+9; }
+    __attribute__((noinline)) static long f2 (int n){ return f3 (n)+10; }
+    __attribute__((noinline)) static long f1 (int n){ return f2 (n)+11; }
+
+    int main(void)
+    {
+            long s = 0;
+            for (int i = 0; i < 200; i++)
+                    s += f1(200000);
+            printf("%ld\n", s);
+            return 0;
+    }
+
+    perf record -e cpu/cycles/ -F 2000 --call-graph dwarf,65528 \
+        -o bfd.data ./deep_bfd
+    perf record -e cpu/cycles/ -F 2000 --call-graph dwarf,65528 \
+        -o lld.data ./deep_lld
+
+Counting single-frame chains and average depth:
+
+    count() { perf script -i "$1" | awk '
+        /^[^ \t]/ {if (n) {t++; if (n==1) o++; s+=n} n=0; next}
+        /^[ \t]*[0-9a-f]+ / {n++}
+        END {printf "%d of %d single-frame (%.1f%%), avg depth %.1f\n",
+             o, t, 100*o/t, s/t}'; }
+
+To see Problem 1 in isolation a perf built with libunwind is needed, and
+Problem 3 has to be worked around; with a libdw-only build all three add up
+and the picture is very hard to read.  Which, in a sense, is the whole point
+of this message.
+
+== end of AI description
+
+I hope it was an interesting read!
+Let me know if I could do anything here, I will be happy to help fixing
+these problems.  Hope this would help anybody, and looking for the feedback.
+
+Regards, Gennady Kupava
