@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDF8225403
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 20:58:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14F436B93E
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 21:01:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787345896; cv=none; b=crBa5FKgoLZcbaLkinEiegg4Wk9uAqrcbLcpZx5B73S9t2x9qI+Pkhp14nLcGWpqVLc6E/9fZdJhEUpIjIrzI9g3Pa5gU4Dg9i+R6qMjddN6kO/h0IkDq7VlS0z+51lJpJfuSdqotdhkxWYEKdG6FCCMiMT+o2tJqMdpykxxs6E=
+	t=1787346119; cv=none; b=q0bO2e5qpjqu+9Mtf1Qg6ostDtScaWgzAqjRzUWM8U+38EBJshRxh+16/p+f4bqEoOEini6cfnXMt6W7em82PUPtrik8QQHjYQRH6Hb+HPKIZfLrbYzcPuVppEKaAp5p6NTvuvh8DN7Q8TP5pa3g5f7ltzjtvYv2zNlJHCSF2u0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787345896; c=relaxed/simple;
-	bh=RkQ5uYDiieY+k36NAaLVDmvAb+oq1VMQiCoQ5mUCu9s=;
+	s=arc-20240116; t=1787346119; c=relaxed/simple;
+	bh=y+lycF8+fdUijlziBaoeKNc5IgcsjJg7IYdVDyaQo/o=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=r5Q8qpMo1jIV/CHslbJluxi3gIxpuOMSGSpXxJWsDHZA/SerTrrPTGsDhF6Sk7MluSahqWdeWNtAtGM8x6bGDTruelnqr24bTkuRpvCqDy2HXWRZ/NpOHdnpRJ+GzGvQo8Nf5BcZGTpWH7vKVomnTO10UGydPuu4ps6Euo3q21I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P1VgyGKL; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=SlPMPAc+ZJAZ68yH5bT2BSTerSbXO2Bd167H0VyQipa/M7z9eUGmhGnpl8hE0bu/tdrgicmCgJ8gIZ3sP7RQzjZI/y43EAQOLe+bwhERonTpVCVWKx4IaPkFaJ1dJUir5FhTkD5g/uIi35VNeSUqLJrWBiVAbOyezOFPe2Oip3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xzzwju4B; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1VgyGKL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60DD61F000E9;
-	Fri, 21 Aug 2026 20:58:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xzzwju4B"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E243F1F000E9;
+	Fri, 21 Aug 2026 21:01:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787345894;
-	bh=ZpPTLwFmWnogI6wmJVrnNwECA4LBie45EmT+pkhmdPg=;
+	s=k20260515; t=1787346116;
+	bh=yZyDXwmFhXPzwAiZOvXiUC7VOQGYwXEvY+TvLgm04qE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=P1VgyGKLXe7VtR1j2uv0ubhe2IPxyuaSZsgUkiBm1zRMtxee2TE7HWTSl45x7IdSp
-	 L57qBoICNI5W78EHx0BnotyMs4w7E6pILxFLKaacqWukmf+36C92BbigWg7mYzYfX5
-	 dvQvqveaJ5JM3inGxVtpJL93ULfND3iMea7cXr58TT5zctjNP4CEgsg0IhW3actHcA
-	 iF5s9eh2lZuD0VGhxNVZ8fmbQcE+q0lOkcEBCgPptgM4SLer0m0fYiQIZCDERmThTb
-	 LgsxFChh4YgCqkuH1Yo1E0v3TxjUqmf+B4zWXRi+a1WxLCfRzLqe7An1m8n2d45tC+
-	 3dvwzSCmm/3Sg==
+	b=Xzzwju4BVNHcccbQapm9liSyO5vc6BthM+C0Jnm2cwYM8khEZFux9IZjloQlBCcXU
+	 SAzjZ+zjhs+Sps1uM12b8WNZ0opJJbbA2PJRDCtxQl0qis9nroPWWnsrVlLQGsIyjW
+	 psY/3cgoAF91K55Yq4NFtD0yt2SchfjMfH+xef+pfxXPx5lEeHtnsId11miG5e9ARW
+	 4MYv2qbzMfBbZPqWSa34Fm4nx5iopc/Fb1XGtXQy/YKrMCiesbrPlp9RtRGVNdAHVp
+	 yj/L7LQT1hB1pJykDMx9eHBI11CHirKZYQRyqrg4MYeIXgIbh6ZgDmhHsNb/Jik4EN
+	 LEkO5K3S+IBbQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v4 2/4] perf trace: Auto-assign kernel
- symbol beautifier to function pointer fields
+Subject: Re: [PATCH perf-tools-next v4 4/4] perf tests: Add shell test for
+ kernel symbol beautifier
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260821204930.679027-3-atomlin@atomlin.com>
+In-Reply-To: <20260821204930.679027-5-atomlin@atomlin.com>
 References: <20260821204930.679027-1-atomlin@atomlin.com>
- <20260821204930.679027-3-atomlin@atomlin.com>
+ <20260821204930.679027-5-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 21 Aug 2026 20:58:14 +0000
-Message-Id: <20260821205814.60DD61F000E9@smtp.kernel.org>
+Date: Fri, 21 Aug 2026 21:01:55 +0000
+Message-Id: <20260821210155.E243F1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,96 +47,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] Using the host's `sizeof(void *)` to validate tracepoint field s=
-izes breaks cross-architecture analysis.
-- [Medium] The type-based heuristic for function pointers assigns `SCA_KSYM=
-` without array safety guards, which can lead to misinterpretation of data =
-and leaking of perf's internal heap addresses.
+- [Medium] The test script erroneously fails on uniprocessor (UP) kernels d=
+ue to a missing SMP-only tracepoint.
+- [Medium] The test script can hang the test suite indefinitely on quiescen=
+t systems due to unbounded system-wide waits.
 --
 
---- Patch [2]: [PATCH perf-tools-next v4 2/4] perf trace: Auto-assign kerne=
-l symbol beautifier to function pointer fields ---
-commit 5464cb16d3d8a0ba80bef02f5451353ddbb24637
+--- Patch [4]: [PATCH perf-tools-next v4 4/4] perf tests: Add shell test fo=
+r kernel symbol beautifier ---
+commit c9c4a1b0dcd918dc4702b41032200c74d4363a15
 Author: Aaron Tomlin <atomlin@atomlin.com>
 
-perf trace: Auto-assign kernel symbol beautifier to function pointer fields
+perf tests: Add shell test for kernel symbol beautifier
 
-This commit enhances perf trace to automatically assign the SCA_KSYM
-beautifier to tracepoint fields conveying function pointers. It uses
-heuristics based on both type signatures and field names to detect these
-pointers.
+This commit adds a dedicated shell test script to verify that perf trace
+properly symbolises kernel virtual addresses and function pointers using
+both the default kallsyms beautifier and BTF type routing.
 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 0030489465032..0a12d7b37d8d4 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
+> diff --git a/tools/perf/tests/shell/trace_ksym_beautifier.sh b/tools/perf=
+/tests/shell/trace_ksym_beautifier.sh
+> new file mode 100755
+> index 0000000000000..c030b03e2b662
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/trace_ksym_beautifier.sh
+> @@ -0,0 +1,43 @@
 [ ... ]
-> @@ -2198,38 +2210,47 @@ syscall_arg_fmt__init_array(struct syscall_arg_fm=
-t *arg, struct tep_format_field
->  		    ((len >=3D 4 && strcmp(field->name + len - 4, "name") =3D=3D 0) ||
->  		     strstr(field->name, "path") !=3D NULL)) {
->  			arg->scnprintf =3D SCA_FILENAME;
-[ ... ]
-> +		} else if (field->type && (strstr(field->type, "(*)") !=3D NULL ||
-> +					   strstr(field->type, "_func_t") !=3D NULL ||
-> +					   strstr(field->type, "_fn") !=3D NULL)) {
-> +			arg->scnprintf =3D SCA_KSYM;
+> +test_ksym_kallsyms() {
+> +  echo "Testing perf trace kernel symbol beautifier (default kallsyms)"
+> +  output=3D"$(perf trace -e kmem:kmalloc --max-events=3D1 2>&1)"
 
 [Severity: Medium]
-Will this unconditionally assign SCA_KSYM for matching types without checki=
-ng
-if the field is an array?
+Could this wait indefinitely on a completely quiescent system?
 
-If this encounters a tracepoint with an array field whose type matches
-the heuristic (like an array of function pointer typedefs),
-trace__fprintf_tp_fields() will assign a pointer to the tool's raw heap buf=
-fer
-to the value.
+Because it waits system-wide for the kmem:kmalloc event without a timeout or
+a deterministic workload to trigger it, it might stall the test suite if the
+event takes too long to fire.
 
-Since SCA_KSYM is applied without an array guard, it might attempt to resol=
-ve
-this user-space heap pointer as a kernel symbol, leaking the tool's memory
-address in hex instead of printing the trace data.
-
-Could we add a check for !(field->flags & TEP_FIELD_IS_ARRAY) here as well?
-
->  		} else {
->  			const struct syscall_arg_fmt *fmt =3D
->  				syscall_arg_fmt__find_by_name(field->name);
-> =20
->  			if (fmt) {
-> -				arg->scnprintf =3D fmt->scnprintf;
-> -				arg->strtoul   =3D fmt->strtoul;
-> +				if (fmt->scnprintf =3D=3D SCA_KSYM) {
-> +					if ((field->flags & TEP_FIELD_IS_POINTER) ||
-> +					    (field->size =3D=3D sizeof(void *) && !(field->flags & TEP_FIEL=
-D_IS_ARRAY))) {
+> +  if ! echo "$output" | grep -q -E "call_site: [a-zA-Z_][a-zA-Z0-9_]*" |=
+| echo "$output" | grep -q -E "call_site: 0x[0-9a-fA-F]+"
+> +  then
+> +    printf "Default kallsyms function symbolization failed, output:\n%s\=
+n" "$output"
+> +    err=3D1
+> +  fi
+> +}
+> +
+> +test_ksym_btf() {
+> +  echo "Testing perf trace kernel symbol beautifier (BTF)"
+> +  if [ ! -f /sys/kernel/btf/vmlinux ]; then
+> +    echo "Skipping BTF test due to missing vmlinux BTF"
+> +    return
+> +  fi
+> +
+> +  output=3D"$(perf trace -e csd:csd_function_entry --force-btf --max-eve=
+nts=3D1 2>&1)"
 
 [Severity: Medium]
-Does using sizeof(void *) here break cross-architecture analysis?
+Will this test fail erroneously on uniprocessor (UP) kernels?
 
-When using perf trace on a 64-bit host to process a 32-bit perf.data file f=
+The csd:csd_function_entry tracepoint is defined in kernel/smp.c, which is
+only available when CONFIG_SMP is enabled. On a UP kernel, perf trace will
+fail with an unknown tracepoint error, which the script would parse as a
+symbolization failure.
+
+[Severity: Medium]
+Additionally, can this cause an indefinite hang on idle SMP systems?
+
+The csd:csd_function_entry event relies on SMP cross-calls (IPIs). On an id=
+le
+or isolated test VM, this event might not occur organically for extended
+periods, potentially causing perf trace to block forever without a timeout =
 or
-events that use unsigned long for instruction pointer fields (like caller_i=
-p in
-XFS tracepoints), field->size in the trace will be 4.
+a triggering workload.
 
-This fails the sizeof(void *) check, which evaluates to 8 on the 64-bit hos=
-t,
-preventing the expected symbol resolution.=20
-
-Can we rely on the trace data's pointer size instead of the host's, or use a
-different heuristic?
-
-> +						arg->scnprintf =3D fmt->scnprintf;
-> +						arg->strtoul   =3D fmt->strtoul;
-> +					}
-> +				} else {
-> +					arg->scnprintf =3D fmt->scnprintf;
-> +					arg->strtoul   =3D fmt->strtoul;
-> +				}
-> +			}
+> +  if ! echo "$output" | grep -q -E "func: [a-zA-Z_][a-zA-Z0-9_]*" || ech=
+o "$output" | grep -q -E "func: 0x[0-9a-fA-F]+"
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260821204930.6790=
-27-1-atomlin@atomlin.com?part=3D2
+27-1-atomlin@atomlin.com?part=3D4
