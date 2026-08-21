@@ -1,68 +1,68 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE3E46985F
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 09:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC7D5471D10
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 09:49:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787305784; cv=none; b=ARXXbr6AaNpUyHG+hzyozvv8na+oCcaO/s2M+NKnmToGFZp8xgpEeAvl6GsWt96FEv6IufuQbSkeqt/na9jPGw2o+qVCxJsDH7qckgwXGMwiDhHNGgaJN3xM99ByLeLXdwGCJ2dlvUFCrcrT0TkaKx6tFoRUrLUnf1AjWrnGFzU=
+	t=1787305785; cv=none; b=L8tRMGRj3XJUHy52uhoLMQagZYObEvEGgMIdGlAywon9bc3rx/YPjweR1SVAkeYwnnN/maJzF6AvhokFChzy2mNcgycj//rdH8+8yUWNW/KSpjFJl3oPGq25IeR7KeTBIGQ+1kOcRc2n7ntEpuC6PVAeKRYflUkXylvL1kQmfYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787305784; c=relaxed/simple;
-	bh=RecoXOCNMxrMx0zkiKfC1PDkmODYasriw0nUGDxsh8Y=;
+	s=arc-20240116; t=1787305785; c=relaxed/simple;
+	bh=X5HTnmIevEAgh65VlSf446/RisR1ZaaOWZenKgokv10=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WrlRE8s7aZjIsqLUjrz0Q33AWXW33nDR87YZnkH/uIuCS9y9hl3KMH/3B2Rq2HLl9yfpts4YXz4nrAfRv16LucWgktauLlZ1sryYq3Ec46oTWpWkbCfO96Bdk1aMHAvKXrKxYs1kW08v6EOThGoH21Mn7LVyjiKOy4W8l/FZ6k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KsjdWvMe; arc=none smtp.client-ip=209.85.221.42
+	 In-Reply-To:To:Cc; b=Vt53kNrgl5+97+IzR6OcW4mkhR7VsCytWAYElthjUP0oGYJUcl1+ur7S0M2iiHdDVv1AXuyQjCAVPA1fKV8B/dcqiGzoNq568N7giSPB+DegS0MvHH8ekKZZfGEI49lWI4sz9S3aua5lcqKctGf/EtE4K1qey6Xz77f618o4fUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Zd2SGbiT; arc=none smtp.client-ip=209.85.221.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KsjdWvMe"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-47fd66a094eso272878f8f.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 02:49:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Zd2SGbiT"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-480001972b8so241012f8f.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 02:49:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1787305771; x=1787910571; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1787305779; x=1787910579; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=bcFhjwes9A89zvUuGgSpPmP9VQvVv75EU6Q8BfuMsS4=;
-        b=KsjdWvMeIFX9sdU1ll+27diRGYXannmkx1oxidLQLoYhsgYdunjdNaxra7hwrjW1qj
-         +YKlKQ35w3SCe9ArSPkhm6Hq1sAUXwSGyqerHyGmR/EC9v8zvpytCyXRtpDWnL5gAtcj
-         i4YN0rjCRpFzc0//qYFdd+B0xjD06AS49SU+ZZzWpOOywKeBdqguGGRQ1cg2j9H9IDYe
-         587n6KTZofTlYW3oIfoWC/svyFe0jTNqX63YkGtwn2xHscRLlA9FairwTegYMtmN1YaX
-         HtjtVshcrw+CTdKTxBQNzhuYA9idqwUZ6c+au4PxpUpeNrkrOioh5u8cmu6kNTHh6vhB
-         AS/w==
+        bh=g282Hfq1E3bRiinvQDdFnK2jPyq4jjgh08sJOHY2A+s=;
+        b=Zd2SGbiT/L/ZYqaljm8dE28XLrWdMSCZZuW9zBGHFxPtucjNYDEo0uZMhE2udnoTRr
+         mwh9/tGdMMeXq7mjuzKbEGdmzIm63JdmnksEWrRAOHUsaeAt6HWg92PDHqam313cFqr0
+         +beVeLSw7w4vp9M1+yQMXIG8AB69rfN0qnsicrALwG8p1b97eFXKyljqGsp5ymbFBU/a
+         ZIdxQaI1Q8lwZcMrbzRfzd86fRE1XLHIdp+RpZ9L8Dnzv74MVSE2gPk7Pl0xF3DjKTEI
+         i5pGLQjUaN+/TkUWcqDJuUyKW+vNr7Hn/yJS3zRkonzhd/O+XAlFj+GrKUBBW6ef1H+o
+         cBHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787305771; x=1787910571;
+        d=1e100.net; s=20251104; t=1787305779; x=1787910579;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=bcFhjwes9A89zvUuGgSpPmP9VQvVv75EU6Q8BfuMsS4=;
-        b=fYj1vLHnw1I1jqEIrVAXlPEyPUJn/8rQSZkZyH0Au8ONAh1G7PD4Vm+Bi1j/EAuS6+
-         jLfgpzg56EVv3A3h5nOxwejKSuPWlce7dvayfW+6cEH7EZewsBTblbaIrpd8l7PFiXV6
-         VAwJUL5uUKFR0RfOtJzlIbGCcGXHdllgpfQ+wYFaPUK2CSd7dvl9VFSRepm0oqORVNPD
-         rF5Taz63KEAdb+ZoXepJz5yCNNVdpTGGpknRK/Rq7x4e8Y/7GhqMXiQI2pZU9MQQ744S
-         tAUis5F7qlxn8xDbEk1M3EJJoax4JfFDwGnhUPdRSGLw8RFfrGrxhWVXIF0x8s0PcYt0
-         nL5A==
-X-Forwarded-Encrypted: i=1; AHgh+Rq8bWVzO8c+gVfIz8AMyamw7S1Xw0dOWd/H9SBNVdote0eMHEnUQX/tlnhJANyK1qRq/gJ46T5C00bEBuvSW6R3@vger.kernel.org
-X-Gm-Message-State: AFuF++l4y7+3s4py2Ppk8ppAg6hiCMZYqLBqSh5JeY42rYlaz2Tcpg7w
-	w0U9dDzxHLyjq+XM0dE+PM2a7gMHAqMHU1z03ytzIOdb90jcfY1qas7I3JxyFerScXI=
-X-Gm-Gg: AR+sD13nP4rh/Uiano6GbL4StiNTWu/R2OwvY+PXRHqdthFLgrUo9qaIcoX53la+PQI
-	rwir5THLfGih5mPDoiUeFIxbZ2JQnUUiuzig2rou4XhcCTcelh+Js0vpNFRR+VbrNPC2Dv1n4d0
-	m8Id97Rptrn5hqxkJUIHxNw4CgurNvUb4NzsKaCkNx1Yt3hWMKDfPFrGysQZAgokdSdjbEiAl5x
-	3N3YBZKTdTEaiAGTDlWX71YYC5bdwOf1WrtzuivTyA5LmJAvTn/KL/COy5hw0L3YPdd6fUKccvm
-	MBPMHJkr7NWDPV4agEoAZ4AIxZkJXbOXKzAgyTTz64o6giNff1zFxPaBblGwnO54mrhLKy0pLWZ
-	BmW1Ekbuy0QpANeOxhM/nPEptfsARenHWCKqqAZqW6mlsfM3ZkcPPEiq0/QNsgWxwjG12J+MTHx
-	rePLXb6gdsZyGgesNRBCQNAfglM9M5SN6nxU0nrHadbjocBoyIJu3qboouLW9jlTgV
-X-Received: by 2002:a05:6000:461c:b0:47f:86d5:d1d7 with SMTP id ffacd0b85a97d-482c0b63396mr7979910f8f.6.1787305771015;
-        Fri, 21 Aug 2026 02:49:31 -0700 (PDT)
+        bh=g282Hfq1E3bRiinvQDdFnK2jPyq4jjgh08sJOHY2A+s=;
+        b=ijE32UIjj2kvn9hh/brgvy0IgiopZjEujBZIBp9MsSAnVJ6JFrc2tVrdPqIPtEw7gq
+         0ibFK7KZhyileBj24q1sqMgRpMtGj3u59d3rorAN8CgvMfA/lcW8Kdg4F9CVl5fNcs66
+         GeyXFdKaf8IHoDJDLXQOHpPrwy4QG/dzAMU3AThONI4awdg4GfsKCPrL/uUle7V/wFsw
+         4XzDvBnoh6gKbP1oyPQfBbFVixCRj+71vqJaCNyndXpRIh3WZMzq6Rba1Coz/XlJxXMD
+         oVLaSyuGSrKYrAz+MDOEAfYKlHb9IsDMKaMaUr9MjXLBG2fdnFxv1yd9WnCYvcGuVG+W
+         b9sg==
+X-Forwarded-Encrypted: i=1; AHgh+RpPzP169Cp034Tcuy9dhcLBaBS5/QAv1GgHz4Maz/4gc55IbhJzgWzENHKg4Vol1lk/ssVXsLwWGoKANTM9ABdz@vger.kernel.org
+X-Gm-Message-State: AFuF++kffoqr5RA0ZFlgeG9xjLM+980+4I9s4H/vepV/xiFdIrErcJx1
+	xhF4ds488H4QHqb50tmBJZyZIPaVkE2cgHISqkhsxBF5mvV5ERQII7Q1h5lSpppYs3E=
+X-Gm-Gg: AR+sD103WAhMqk+8t4OzDSqHLgApz5IYrox1b+JmeH62hr0VwOycxQz4kx8V+uUZqDo
+	+gX3ebM1xMgTH/O6FjUbHp0Ruk6OJSMJ9uwl3hojJhREeFaNzlWA+b8/ZQHpZwuUZCmSN4qPkuS
+	DyczdRmQLDuJ87o4HldoT9/LknC9huVcVpEZXTn6LgmSEg9cJFZcatIzC1Ay98v/qeweGF4i5FA
+	CXEBrBRBqtoYO6IN8b3EAQ9b+bbcIrv4bxvuNJL/Aayio5SKyJ9ezwQJUJu7px9OpPHYN5vTCNg
+	tJbP+B/r2JYpKOm4QBeHV9NtR7lRGY/Ow0F1BMvecG5pBIuZ7DiFE5yoc6D72AooUkTMOeV5rKC
+	AcA4XJjhGUcGnUP7aBeXoQyG5m3uezNZFuUKkuXEm1UYFC1CxGXi5FlPv4yXqDwnfTUQXOobb3t
+	aX/CGojBa3YpuGDqXzNTwZrxmgxgYPLuKDAAlq+XCmdA1JbF8REZIgGxXcf6y5k8xo
+X-Received: by 2002:a05:6000:4310:b0:46e:7f72:b6fe with SMTP id ffacd0b85a97d-482c0b9dbf7mr7147239f8f.19.1787305779425;
+        Fri, 21 Aug 2026 02:49:39 -0700 (PDT)
 Received: from pop-os.local ([37.18.141.193])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b14d05a6sm17683479f8f.35.2026.08.21.02.49.29
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-482b14d05a6sm17683479f8f.35.2026.08.21.02.49.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Aug 2026 02:49:30 -0700 (PDT)
+        Fri, 21 Aug 2026 02:49:39 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Date: Fri, 21 Aug 2026 10:49:03 +0100
-Subject: [PATCH v2 05/14] perf cs-etm: Increase default timestamp
- generation period
+Date: Fri, 21 Aug 2026 10:49:08 +0100
+Subject: [PATCH v2 10/14] perf cs-etm: Don't print missing buffers in
+ snapshot mode
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -71,7 +71,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260821-james-cs-unformatted-per-thread-fix-v2-5-00c4fd0701b4@linaro.org>
+Message-Id: <20260821-james-cs-unformatted-per-thread-fix-v2-10-00c4fd0701b4@linaro.org>
 References: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
 In-Reply-To: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
 To: Suzuki K Poulose <suzuki.poulose@arm.com>, 
@@ -92,53 +92,42 @@ Cc: Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
  linux-doc@vger.kernel.org, James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.15.2
 
-The original purpose of timestamps in per-CPU mode was to roughly emit
-samples in the order they occurred across multiple CPUs, rather than
-emit all the trace from CPU 1 followed by all from CPU 2 etc.
-Previously there was no way to change the interval from the minimum of 1
-cycle, but custom intervals are now supported by the driver.
-
-Drastically reduce the number of timestamps emitted by increasing the
-interval, which is more than enough to interleave sample generation.
-This reduces the size of the trace generated.
+The driver produces lots of AUX records for trace data that was never
+captured in snapshot mode. Downgrade this to a pr_debug3 message as it's
+only an error in normal mode.
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/arch/arm/util/cs-etm.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ tools/perf/util/cs-etm.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index d0486a164a70..d36b7e41399b 100644
---- a/tools/perf/arch/arm/util/cs-etm.c
-+++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -70,6 +70,9 @@ static const char * const metadata_ete_ro[] = {
- 
- enum cs_etm_version { CS_NOT_PRESENT, CS_ETMV3, CS_ETMV4, CS_ETE };
- 
-+/* Default timestamp period of 256 cycles (2 ^ (9 - 1) = 256). */
-+#define DEFAULT_TS	9
-+
- static bool cs_etm_is_ete(struct perf_pmu *cs_etm_pmu, struct perf_cpu cpu);
- static int cs_etm_get_ro(struct perf_pmu *pmu, struct perf_cpu cpu, const char *path, __u64 *val);
- static bool cs_etm_pmu_path_exists(struct perf_pmu *pmu, struct perf_cpu cpu, const char *path);
-@@ -458,7 +461,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
- 		 * Timestamps are required to interleave samples from different
- 		 * CPUs.
- 		 */
--		evsel__set_config_if_unset(cs_etm_evsel, "timestamp", 1);
-+		evsel__set_config_if_unset(cs_etm_evsel, "timestamp", DEFAULT_TS);
- 		/* Context IDs are required to associate trace to a process */
- 		evsel__set_config_if_unset(cs_etm_evsel, "contextid", 1);
- 	} else {
-@@ -477,7 +480,7 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
- 	 * timestamp tracing.
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index d1eb4ec17bbd..6e04602ec204 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -3318,6 +3318,9 @@ static int cs_etm__queue_aux_records_cb(struct perf_session *session, union perf
+ 	struct perf_sample sample;
+ 	int ret;
+ 	struct auxtrace_index_entry *ent;
++	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
++						   struct cs_etm_auxtrace,
++						   auxtrace);
+ 	struct auxtrace_index *auxtrace_index;
+ 	struct evsel *evsel;
+ 	size_t i;
+@@ -3371,8 +3374,10 @@ static int cs_etm__queue_aux_records_cb(struct perf_session *session, union perf
+ 	 * don't exit with an error because it will still be possible to decode other aux records.
  	 */
- 	if (opts->sample_time_set)
--		evsel__set_config_if_unset(cs_etm_evsel, "timestamp", 1);
-+		evsel__set_config_if_unset(cs_etm_evsel, "timestamp", DEFAULT_TS);
- 
- 	/* Add dummy event to keep tracking */
- 	err = parse_event(evlist, "dummy:u");
+ 	if (!found) {
+-		pr_err("CS ETM: Couldn't find auxtrace buffer for aux_offset: %#"PRI_lx64
+-		       " tid: %d cpu: %d\n", event->aux.aux_offset, sample.tid, sample.cpu);
++		int level = etm->snapshot_mode ? 3 : 0;
++
++		pr_debugN(level, "CS ETM: Couldn't find auxtrace buffer for aux_offset: %#"PRI_lx64
++			  " tid: %d cpu: %d\n", event->aux.aux_offset, sample.tid, sample.cpu);
+ 	}
+ 	ret = 0;
+ out:
 
 -- 
 2.43.0
