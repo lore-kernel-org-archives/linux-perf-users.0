@@ -1,99 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3313B71D2
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 10:03:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9682440A2D
+	for <linux-perf-users@vger.kernel.org>; Fri, 21 Aug 2026 10:04:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787306638; cv=none; b=RPtGOV5ywCASF0mgmGTFlDxIAC6rDliQi6NTRpE7cCGHclLqcarkwFPtj4G2D8UqoxayC3eqRBuhGhuXuYlMTXJH4WDAxd8y7p5lOVXseyuxmJzxdQraBqJt88xI4wPxVcbS45I+9itglV8whxYlmloh7fZfmGmosNNbLUv/ADM=
+	t=1787306655; cv=none; b=A+VuxQ6NyjnBe2ef6pEI98wWyG36lDysagfhK91+dZTJ1U2nQMwjk/tZLh8NCXgMgs3nJ2ovTFfogHzMpK7v1FHQm3XEqaaMFpKPCOYzg+n/s+Ao+G2QmaBkD20QTfQ386ufqAnXx/9+SZrURaa0PP1VzesVb6IFrTsKms0iymM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787306638; c=relaxed/simple;
-	bh=DptXHC0SOhG0sKiuHi3Ur+78kIAAvL9NsmJ8hRY4s60=;
+	s=arc-20240116; t=1787306655; c=relaxed/simple;
+	bh=qZGdyp6RQp7Qhduk53OiU0Xl82uMdWfEEFWdYrml0No=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=eFeBqzG7mipf0gjmBBtC5NbcqtY5FNA/waiPagILWi/ArPmlXDIjPkHRVNwwAX4YnVV+L7BaHlAlgx/n309rYalGD7+MkXyCHpkJwofX/CWEOKa3TmGAHBzMfjPfWFt+EQyESaiNWxO+y3Pd1npi/i1BQot+CJ1Nsf/GKOSes2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gxmza5io; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=OOOHNxuDI1R9IhMd3fpaf0m2nUiI0LMPFeFPTt0aM2muYbuaXV3wRChTiB6+t314sdnLmKgkSro58dSx2+xyrQX5J5iuAaOiwYYB++tZqcloRDnBwXmlzEthnmm8o73N/ZVhOFyHP8y25+FtgbIY/9MxH8lj+iQ7uvJ42S8rg1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dzpKzP++; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gxmza5io"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C42DC1F00A3A;
-	Fri, 21 Aug 2026 10:03:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dzpKzP++"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 846BE1F000E9;
+	Fri, 21 Aug 2026 10:04:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787306623;
-	bh=w8PWYeE6LSmutXq56y0NI+Hwm1pLyfrWChZNZrIyurM=;
+	s=k20260515; t=1787306644;
+	bh=xe0wO3IIc6zU9hxbrXNfamfolYqLsk9ibE3WbYRfEiQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Gxmza5ioIo/muGBBH+xkTW34S+NgxNXVT/MYoxheO7b/J5j/gjncuqMqYamq+fE1o
-	 64cvfKsszsZRHOB3vVW/mjHWIt+KvfG3IsDZteSgPN9wvStYLfd0HMGYlTJlnj+vSQ
-	 GJQuF0wxYvEA7MRAnItX4qvd7axbTIagOg0Ddg9q28rGtrdWoQTSbWBzhhR9iGGGNh
-	 qtX5v/0vNtNuvCcJIi2B8m2UXgzrSyMDqIkSWQzmWvkakGqMyDcgWwhhg2jLNSRSCl
-	 Pg5vzxe0iq7AxE+zaTBRu9NOyDpJS4R0JJc5r2N9AMHQKfEXhfWD6XcYp1phXVi6WX
-	 ZHguYt96AoL0g==
+	b=dzpKzP++G7k7lBNtVHasDCm5GkJoqyuHJL+Bla9mjgcGjKtFzsKJ4MnAdzbAyS3OZ
+	 xaNe7gyVn9SBS68NhogtFFl1cTTGk50OstyVprVOLBD+ZkSkBplxnwUXeCw5bs5esS
+	 k/lG+G2wAvirs5KOCw3y1Cm7Nbpuo5Khokui8CFoa5LPaBnoCdCTSmo18y8mCGwemX
+	 0x0bjlbJ4ZEcTnY5lLC7tQSr+24ophtWiMCY4wPnc5eA/7EBB6jwlCJvH4EssdxOMu
+	 8yDZ58f1NUNcr6EwpgG8/Wlm0sLHraIySz9IgU6wzKjUgjJ+e7EoLpbotY2HsmkI/Q
+	 u83OSZGddB0aw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 12/14] perf test: Allow infinite named_thread loops
+Subject: Re: [PATCH v2 13/14] perf test: Add test for per-thread mode
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "James Clark" <james.clark@linaro.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260821-james-cs-unformatted-per-thread-fix-v2-12-00c4fd0701b4@linaro.org>
+In-Reply-To: <20260821-james-cs-unformatted-per-thread-fix-v2-13-00c4fd0701b4@linaro.org>
 References: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
- <20260821-james-cs-unformatted-per-thread-fix-v2-12-00c4fd0701b4@linaro.org>
+ <20260821-james-cs-unformatted-per-thread-fix-v2-13-00c4fd0701b4@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 21 Aug 2026 10:03:43 +0000
-Message-Id: <20260821100343.C42DC1F00A3A@smtp.kernel.org>
+Date: Fri, 21 Aug 2026 10:04:04 +0000
+Message-Id: <20260821100404.846BE1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [Medium] The intentional infinite loop in test threads can be optimized a=
-way by the compiler, violating the requirement that they run forever.
+- [Medium] The test unconditionally hardcodes execution on CPUs 0, 1, and 2=
+, which will cause spurious test failures on environments with fewer than 3=
+ CPUs, isolated cgroups, or asymmetric architectures lacking CoreSight ETM =
+capabilities on those specific cores.
+- [Medium] The test hardcodes assertions against a known incorrect perf dec=
+oding behavior, which guarantees a test failure when the underlying `perf` =
+decode bug is fixed.
 --
 
---- Patch [12]: [PATCH v2 12/14] perf test: Allow infinite named_thread loo=
-ps ---
-commit 53c8a5e547e7365781e369ccbc9c9f225381027d
+--- Patch [13]: [PATCH v2 13/14] perf test: Add test for per-thread mode ---
+commit 5b1cfaf160332a1a985ebf60b00fdda5fa16efd7
 Author: James Clark <james.clark@linaro.org>
 
-perf test: Allow infinite named_thread loops
+perf test: Add test for per-thread mode
 
-This commit modifies the named_threads workload in perf tests to run
-infinitely when 0 is passed for the loop count. It also converts the loop
-counter and work variable to unsigned integers to prevent undefined behavior
-from signed overflow.
+This commit introduces a new shell script test to verify that per-thread
+mode works correctly when a process migrates across CPUs, and that the
+decode happens in the correct order.
 
-> diff --git a/tools/perf/tests/workloads/named_threads.c b/tools/perf/test=
-s/workloads/named_threads.c
-> index d051d41a3cfe4..6672c2f776840 100644
-> --- a/tools/perf/tests/workloads/named_threads.c
-> +++ b/tools/perf/tests/workloads/named_threads.c
+> diff --git a/tools/perf/tests/shell/coresight/per-thread.sh b/tools/perf/=
+tests/shell/coresight/per-thread.sh
+> new file mode 100755
+> index 0000000000000..77d1ed3405a9d
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/coresight/per-thread.sh
+> @@ -0,0 +1,48 @@
 [ ... ]
-> @@ -19,7 +19,8 @@ typedef void *(*thread_fn_t)(void *);
->  noinline void *named_threads_thread##n(void *arg __maybe_unused)	\
->  {									\
->  	pthread_setname_np(pthread_self(), "thread" #n);		\
-> -	for (int i =3D 0; i < iterations; i++)				\
-> +	for (unsigned int i =3D 0;					\
-> +	     i < (unsigned int) iterations || iterations =3D=3D 0; i++)	\
->  		named_threads_work +=3D 3;				\
+> +echo "Recording..."
+> +perf record -o "$tmpdir/data" -e cs_etm//u --per-thread -- \
+> +	taskset --cpu-list 0 taskset --cpu-list 1 taskset --cpu-list 2 true > /=
+dev/null 2>&1
 
 [Severity: Medium]
-Will this loop in DEFINE_THREAD() be optimized away by the compiler when
-iterations =3D=3D 0?
+Will this unconditionally hardcode execution on CPUs 0, 1, and 2?
 
-Because named_threads_work is not volatile and the loop lacks a compiler ba=
-rrier
-or cpu_relax(), the compiler might assume the loop terminates and eliminate=
- it
-entirely.
+Running this on a system with fewer than 3 CPUs (such as typical 2-core CI
+environments) might cause the taskset command to fail. Since the script
+runs under set -e, could this fail the test spuriously instead of properly
+skipping it?
 
-Could this cause the test threads to exit immediately instead of generating
-continuous CPU cycles as intended?
+Additionally, on architectures where these specific CPUs exist but lack ETM
+capabilities, this could fail to capture trace data.
 
->  									\
->  	return NULL;							\
->  }
+> +
+> +echo "Decoding..."
+> +perf script -i "$tmpdir/data" --itrace=3Db -F comm,cpu 2> /dev/null | \
+> +	grep -Eo '(taskset|true).*(\[[0-9]+\])' | \
+> +	uniq | tail -n 3 > "$tmpdir/script" 2>/dev/null
+> +
+> +# Check that the decode says it ran on CPU 0, 1, 2, in that order. TODO:=
+ The
+> +# correct result should be "taskset [0,1,2], true 2" but we don't decode=
+ trace
+> +# in order of the Perf events yet, so everything is associated with the =
+last
+> +# exec.
+> +cat > "$tmpdir/expected" << EOF
+> +true [000]
+> +true [001]
+> +true [002]
+> +EOF
+
+[Severity: Medium]
+Does asserting this known broken behavior make the test unnecessarily fragi=
+le?
+
+The expected output strictly asserts the current incorrect decoding behavio=
+r.
+When perf is later fixed to properly associate the events with the earlier
+taskset commands, the diff will fail, guaranteeing a test failure.
+
+Since the test's goal is to verify per-thread CPU attribution, would it be
+better to assert the CPU sequence rather than the broken comm string?
+
+> +
+> +if ! diff -q "$tmpdir/script" "$tmpdir/expected"; then
+> +	echo "FAIL: per-thread output doesn't match expected:"
+> +	cat "$tmpdir/script"
+> +	exit 1
+> +fi
+> +
+> +exit 0
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260821-james-cs-u=
-nformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org?part=3D12
+nformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org?part=3D13
