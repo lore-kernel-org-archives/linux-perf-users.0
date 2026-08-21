@@ -1,148 +1,106 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC6A330569B;
-	Fri, 21 Aug 2026 00:18:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1939F2F8EB0;
+	Fri, 21 Aug 2026 00:21:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787271525; cv=none; b=SIhSLPS+jHeqqnOnfnU9k+XYuRye/jxZIO4iFENVkFVoLXHkvB7ySBgsCKvpkMwiSx59dD+9w9pBXy3eYZ9eaPvocBSUPEf7kauU+OlphJoTPgA7SbudeNwwoz3OjG9K43bDSXsVbc0Ps3o/4gotWsOHFGV5g6Avj7dGpu3VcJs=
+	t=1787271717; cv=none; b=o8x+r/Fl6W28kwDVMRs5iyj/wsLeVKGuJwMz2O9Fgo7Nb9NsKbTYV73YzKuhVTs7/wFp3KaR5nZsW2sVDzdzhlPy5r2HGEjHGdkC/4jqf84a5X0iQIlQbfMAli1mIL4nmCo/ZTx1YmeF0IbOi3Hex4zoaNTUU14wg12+EfB6gj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787271525; c=relaxed/simple;
-	bh=dgjAtpsguz6t8FmJhf7uhm4kiIcO049XKVV50vAysIU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UBvKYO1h0zPa6iZRtzEbB8gfRcNGI+RjrofjlG+jN3N7qFVqgs6VCVlOpWAwmsbY7qgzSK3ckQ7BZ6xDqxiUFOPXXt3LdhZZgTnAoOGl67JnLeXyG6oEwTycEioCces7hj2m6xpbdQVAw9coyd0u4B/RxrEiRyEpIpdqxx6ykjc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P/aF+zwm; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1787271717; c=relaxed/simple;
+	bh=Jcz+0BWZDNWBQVICYjCSYnSxeHc4575FMCArO56Ha7I=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=vBLagPmI3lu2xfjlfaQbM0e6LAOeflpIfdTo2Z8sUE2Kw/eo0RGtZ0R+u/agDr3TxocRz3dDETEjswRCa4Ecn+cI7Lcc3y7ORH+GwXXw0s2d3PnoxVcrWKPfCY0hqWpRD897vGlRIToGNu6ymnTqzRl2dnMCqLiYaoW07pvhEJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CWOtq9XV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P/aF+zwm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787271516; x=1818807516;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=dgjAtpsguz6t8FmJhf7uhm4kiIcO049XKVV50vAysIU=;
-  b=P/aF+zwmMDXF8+U0AxXQOPIOINqWkZy/T+5s21ZFeJKTk4SHRiQ/qeli
-   bVGijKxIRwXAeByYC0AwyK6AwV6R4bVq9/SFG/c8JsLhUXliv8rsn4rqO
-   yL4N+HnMdaa6pKKWf6uvmdcKchcuhzCc1dWCZWFQxmqBS4iAagf7s352t
-   bUki81DFcDWaJhDsYyrULVe8LnmHZc6XmuupVJelSQ98e07TZh4AjpUhv
-   KYIxPzyQmx/etwPVxqj6ZQ3yMwgDirGVlJZr0T5Y+SLfUR36dQpxj1W/3
-   lQfrgW4H9ezZt0T0+tD4XYlz1ljpn5lALt7XeBN4hGJZ44MtWMmatx4i8
-   g==;
-X-CSE-ConnectionGUID: YHvURKnySDuKpn7rKWyfkg==
-X-CSE-MsgGUID: DQm/EgvRTY+0dGuXtvHRCw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11881"; a="87839505"
-X-IronPort-AV: E=Sophos;i="6.25,234,1779174000"; 
-   d="scan'208";a="87839505"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 17:18:34 -0700
-X-CSE-ConnectionGUID: /vLtCw1PQB+dTrkiLCQfCg==
-X-CSE-MsgGUID: 9QtBiomfTkq3mVY2/QGGIA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,234,1779174000"; 
-   d="scan'208";a="261915000"
-Received: from rodrigoa-mobl1.amr.corp.intel.com (HELO tfalcon-desk.intel.com) ([10.124.221.152])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2026 17:18:33 -0700
-From: Thomas Falcon <thomas.falcon@intel.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [PATCH v5 6/6] perf c2c: print memory region data with stdio output
-Date: Thu, 20 Aug 2026 19:18:19 -0500
-Message-ID: <20260821001819.162277-7-thomas.falcon@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260821001819.162277-1-thomas.falcon@intel.com>
-References: <20260821001819.162277-1-thomas.falcon@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CWOtq9XV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD5121F000E9;
+	Fri, 21 Aug 2026 00:21:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787271715;
+	bh=exIqFMU7xCz5g9CvaeiP3JATBiFjTVCCue3XWsLnc2Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=CWOtq9XV+zL/Vy7zPqmHyxNq0Q78zHkaNe646R8Y1Q6hdakWyrWNHOPhlEreUcMjx
+	 nIYXfSTgptxsLsLPx6g2JAJXPpqYsUZKnzZtTSMF1tt/8193jkTFzhm+AjjnmBvf/L
+	 u18zPXgvhBO6cwwt6GqDdYb5ZbMeky1A2VwwrUNC6Am2y7zHbYtGo2OaXmwqAQ0xkp
+	 ZSiMDTn3HBf3WuxmrtOnmVpT2HMGLgC/ZZQut8P61tyvCaEp0xaNkpJze44Hf+ThAF
+	 T1PFXJ/3rWpIU0fg7AGx9CkQ1aht1FWrCtD1lly3I7zpapmKhOC8Z0hsFT2RzNhysJ
+	 67hk48Zahou7w==
+Date: Fri, 21 Aug 2026 09:21:52 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: sashiko-bot@kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v12 04/11] tracing/wprobe: Add wprobe (watchpoint probe)
+ trace event support
+Message-Id: <20260821092152.7277764586f275edcd7bf09d@kernel.org>
+In-Reply-To: <20260807155914.DDAD21F000E9@smtp.kernel.org>
+References: <178611679753.237811.10190793347982785419.stgit@devnote2>
+	<178611684231.237811.7919346786503289720.stgit@devnote2>
+	<20260807155914.DDAD21F000E9@smtp.kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Print memory range data in perf-c2c subcommand. Only available in stdio
-mode currently. If memory ranges are not supported or present, print
-nothing.
+On Fri, 07 Aug 2026 15:59:14 +0000
+sashiko-bot@kernel.org wrote:
 
-Example output of perf c2c report --stdio:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] Hardware breakpoints are not synchronized with module unloads, leading to dangling breakpoints on reallocated memory.
+> --
+> 
+> --- Patch [4]: [PATCH v12 04/11] tracing/wprobe: Add wprobe (watchpoint probe) trace event support ---
+> commit 6f99af1ed7b9527ff7af700fbd99ed2a3d0632d9
+> Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> tracing/wprobe: Add wprobe (watchpoint probe) trace event support
+> 
+> This commit adds wprobe, a hardware-breakpoint-based dynamic trace event.
+> It allows users to monitor memory accesses by setting hardware breakpoints
+> on specified addresses or symbols and logging the access context.
+> 
+> Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
+> 
+> > diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+> > new file mode 100644
+> > index 0000000000000..df592d9280a47
+> > --- /dev/null
+> > +++ b/kernel/trace/trace_wprobe.c
+> [ ... ]
+> > +static int __register_trace_wprobe(struct trace_wprobe *tw)
+> > +{
+> > +	struct perf_event_attr attr;
+> > +	int i, ret;
+> [ ... ]
+> > +	hw_breakpoint_init(&attr);
+> > +	attr.bp_addr = tw->addr;
+> > +	attr.bp_len = tw->len;
+> > +	attr.bp_type = tw->type;
+> > +
+> > +	tw->bp_event = register_wide_hw_breakpoint(&attr, wprobe_perf_handler, tw);
+>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+> [Severity: Medium]
+> When a watchpoint probe is created for a module symbol, does this leave a
+> dangling hardware breakpoint if the module is later unloaded?
+> 
+> Since the wprobe subsystem doesn't seem to register a module notifier
+> (unlike kprobes) to clean up when modules are unloaded, the breakpoint stays
+> active on the raw virtual address. If that memory is freed and subsequently
+> reallocated for a different module or vmalloc allocation, could this lead
+> to spurious trace events and unintended performance overhead on the reused
+> memory?
 
-=================================================
-                  Memory Ranges
-=================================================
-Range 0: [0x0000000000000000-0x00000000bfffffff] Node 0, local region id 0, remote region id 255
-Range 1: [0x0000000100000000-0x000000203fffffff] Node 0, local region id 0, remote region id 255
-Range 2: [0x0000008000000000-0x0000027fffffffff] Node -2, local region id 1, remote region id 255
-Range 3: [0x0000028000000000-0x0000047fffffffff] Node -2, local region id 1, remote region id 255
-Range 4: [0x0000048000000000-0x000004ffffffffff] Node -2, local region id 1, remote region id 255
+Yeah, but this wprobe is for debugging feature, so it will be used for
+tracking UAF too. Thus I would like to keep this as it is now.
+We can add module symbol support (e.g. :mod:sym instead of sym) but that
+should be done as a different improvement.
 
-Assisted-by: Sashiko:gemini-3.1-pro-preview
-Reviewed-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
----
-v3: Included examples of memory range output in commit message
----
- tools/perf/builtin-c2c.c | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
-
-diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-index ce324fc59947..4cac63e843c9 100644
---- a/tools/perf/builtin-c2c.c
-+++ b/tools/perf/builtin-c2c.c
-@@ -2680,6 +2680,34 @@ static void print_c2c_info(FILE *out, struct perf_session *session)
- 	fprintf(out, "  Cacheline data grouping           : %s\n", c2c.cl_sort);
- }
- 
-+
-+static void print_memory_ranges_info(FILE *out, struct perf_session *session)
-+{
-+	struct perf_env *env = perf_session__env(session);
-+	int nr_ranges = 0;
-+
-+	if (!perf_header__has_feat(&session->header, HEADER_MEMORY_RANGES))
-+		return;
-+	nr_ranges = env->nr_memory_ranges;
-+	if (nr_ranges == 0) {
-+		pr_debug("No memory ranges found, skipping\n");
-+		return;
-+	}
-+
-+	fprintf(out, "\n");
-+	fprintf(out, "=================================================\n");
-+	fprintf(out, "                  Memory Ranges                  \n");
-+	fprintf(out, "=================================================\n");
-+
-+	for (int i = 0; i < nr_ranges; i++) {
-+		struct memory_range *r = &env->memory_ranges[i];
-+
-+		fprintf(out, "Range %d: [0x%016" PRIx64 "-0x%016" PRIx64 "] Node %d, local region id %u, remote region id %u\n",
-+			i, r->base, r->base + r->length - 1, r->node,
-+			r->local_region_id, r->remote_region_id);
-+	}
-+}
-+
- static void perf_c2c__hists_fprintf(FILE *out, struct perf_session *session)
- {
- 	setup_pager();
-@@ -2693,6 +2721,8 @@ static void perf_c2c__hists_fprintf(FILE *out, struct perf_session *session)
- 	if (c2c.stats_only)
- 		return;
- 
-+	print_memory_ranges_info(out, session);
-+
- 	fprintf(out, "\n");
- 	fprintf(out, "=================================================\n");
- 	fprintf(out, "           Shared Data Cache Line Table          \n");
+Thanks,
 -- 
-2.55.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
