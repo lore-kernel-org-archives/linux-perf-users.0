@@ -1,151 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EACE493644
-	for <linux-perf-users@vger.kernel.org>; Sat, 22 Aug 2026 06:38:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905E4279DAD
+	for <linux-perf-users@vger.kernel.org>; Sat, 22 Aug 2026 06:40:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787380724; cv=none; b=EDtPvskjF30oKHbtIn3gDtdNSJIP0A3dgaly4CYgYgr7qORJyhNkzxDVq84FgJSkGzQGGmCSfYFgFpWWGMw2wm+ZRQlN5fQm+iz8aZlFLPE3N4qk3cV3sGrmfHANSmY/IB6iLmTZo65DzCrqM3f0MXD330DcDoPq3ZjSINaTB/8=
+	t=1787380814; cv=none; b=Eq4IJD+tpT5uUgjFS4vQ62/ybpeAC2LtJnzbEsdENWsdSuLRWamITA/aibUPmsqKRvJr0n4/10gBBZDrve6SuOcR2w5wL+/QPTPTYd4DH6AiBAlQhup/swm5mfsFwCxAGp4HJ8GXCxDsVusgqIe0mYox5JDk/g7XAxUqtXMhE0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787380724; c=relaxed/simple;
-	bh=BdY1dExn2MH6ztPiP/s3sMRXA/pM2mXBxAXHmYTHCRw=;
+	s=arc-20240116; t=1787380814; c=relaxed/simple;
+	bh=MUAljldqPX9jJ3lOFXznFv8Z4VTrYuxsX1HxG/1KlyY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Dpj1uex4DQ5y9jit6TCgOZC4r6U1ugDNNyDG3KqtX6fJWUvlDlvKueky+mvcOUi0Xgyoyx1uGsGtPP/r0hBmNtqu0rT3ib25JWjrt5333yhKY3RH1CmMNxcqTINngSLbsnCdJdZ9WyDbF7y5BP7si9FFbgA1FHffhD2L23kgXr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KYvVm1ju; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ASO3Ge/Ily1qH2i0rMyph7PxRqqXkMOQPDbjL/Rn2thCo97FUNCV4wMMlSE8IBAxWD+gQnJzlYppwlPKTTqlsbPxXC3AiRf8vvnuQJIVUhC56BAiO8zPsZ0y+Y2LIIuK0llFtAxrvyTJVxxNYV4xLZhhgKK3KvolkpTgnFnNGs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lp66u6/J; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KYvVm1ju"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 640C51F000E9;
-	Sat, 22 Aug 2026 06:38:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lp66u6/J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 333121F00A3A;
+	Sat, 22 Aug 2026 06:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787380722;
-	bh=HLiwGpRG1R0WlXoWFeKhUrjTdKj0n1WsQrkD6pyUAJ4=;
+	s=k20260515; t=1787380813;
+	bh=ACzyUi7wAKxg/BRKMXVSqY3Ll69Xdfadw6I705vhyzo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=KYvVm1juGdP80spIVlhvuFn5aIVC/AlMm28oL283CYiVPRaAzIdRTSpmZwO533sx4
-	 FzGSu4wd4+C9TFqvzD5zpboCY1+dXX9raV+5JnG4syVyiK7gpc3+n0ep4t9EXhaTrB
-	 0xlE8y8XWVS3Pv0+DzPb1kpMmsmU4CYSuXmB5OI4MGiczaO7QrLzMUbqpemcmOrK8t
-	 EqI+uvDgbZwQtPx2mGu8kTnkov0L8MRnY84RCyD7kselxsbpFWTOx9z5G+8/Jd35aG
-	 /3KfMluGgok/VV52WIpHr/7Qch4D3v32ZpyXPjJLGYuKr/1lt7GFxB/kIrjY7AFx+g
-	 ZlDnk6TAGDVUA==
+	b=lp66u6/JpFLgYUbsuMRJiWzW4ySrbHw5bFS89ful+eywg7ZryOJfsZ1e7YVscL1kD
+	 6hJ5zXKxj8d9tPs3uGBWnU7xMmRQkMRnWFsvYqX3Fu99W6H89ybZ9QorBMrWiYP2HX
+	 3MJUutiq/ENVW/tigQvCSu4/399VBlYjTR9Gd1vaOFJCdHG6zEO+lD893oO/VXE/U5
+	 rxqsR0o0BTAHVYVJGSnhkx9BR4DmiYPsS/X8M1PW0PwTSIK215hNXSXd0remvx1y5c
+	 JHAhc+cmibuGL+bhVocZ97foH/9Tc1caNxbHoFY5Z4MI/VSoLs2GfP0rmoJP3D2Mqr
+	 RTfACiX8H91qw==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v4 3/5] perf data-convert: Add perf.data to
- trace.dat conversion backend
+Subject: Re: [RFC PATCH v4 1/5] perf/trace-dat: Add trace.dat export
+ infrastructure
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tanushree Shah" <tshah@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260822062729.882005-4-tshah@linux.ibm.com>
+In-Reply-To: <20260822062729.882005-2-tshah@linux.ibm.com>
 References: <20260822062729.882005-1-tshah@linux.ibm.com>
- <20260822062729.882005-4-tshah@linux.ibm.com>
+ <20260822062729.882005-2-tshah@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 22 Aug 2026 06:38:42 +0000
-Message-Id: <20260822063842.640C51F000E9@smtp.kernel.org>
+Date: Sat, 22 Aug 2026 06:40:12 +0000
+Message-Id: <20260822064013.333121F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] Arbitrary file truncation and TOCTOU vulnerability via symlink in =
-the `--force` path.
-- [Medium] Directly accessing `perf_env` field without verifying initializa=
-tion.
-- [Low] Missing feature fallback stub for `trace_convert__perf2dat` in `dat=
-a-convert.h`.
-- [Low] Lost error code when `fopen()` fails in the `--force` path.
+- [Medium] Large trace events encode their payload length incorrectly, caus=
+ing alignment errors and event truncation.
+- [Medium] Querying the local host system's `tracefs` for the `trace_clock`=
+ during file conversion leaks host environment state into the converted tra=
+ce.
 --
 
---- Patch [3]: [RFC PATCH v4 3/5] perf data-convert: Add perf.data to trace=
-.dat conversion backend ---
-commit aaf748bbf23e74fad4be33c3834c0413e8def0f8
+--- Patch [1]: [RFC PATCH v4 1/5] perf/trace-dat: Add trace.dat export infr=
+astructure ---
+commit 162f3240dcf1a2672aa00440674197558e8f2cec
 Author: Tanushree Shah <tshah@linux.ibm.com>
 
-perf data-convert: Add perf.data to trace.dat conversion backend
+perf/trace-dat: Add trace.dat export infrastructure
 
-This commit adds a new conversion backend to perf to translate tracepoint
-events from perf.data into trace.dat format. It leverages a new per-CPU
-buffering mechanism and implements required callbacks for pipe mode.
+Add new utility files util/trace-dat.c and util/trace-dat.h implementing
+the infrastructure for exporting perf.data tracepoints to trace.dat format
+compatible with trace-cmd and KernelShark.
 
-> diff --git a/tools/perf/util/data-convert-trace.c b/tools/perf/util/data-=
-convert-trace.c
-> new file mode 100644
-> index 0000000000000..445479fae8884
+> diff --git a/tools/perf/util/trace-dat.c b/tools/perf/util/trace-dat.c
+> index 0000000000000..55a7bd982c6f8
 > --- /dev/null
-> +++ b/tools/perf/util/data-convert-trace.c
-
+> +++ b/tools/perf/util/trace-dat.c
 [ ... ]
-
-> +	/*
-> +	 * In pipe mode, CPU count and page size arrive via feature/tracing_data
-> +	 * records before the first sample; initialize buffers lazily on first =
-sample.
-> +	 */
-> +	if (!cpu_buffers_initialized) {
-> +		int nr_cpus =3D trace_dat_session->header.env.nr_cpus_online;
+> +static int trace_dat__write_cpu_dat(FILE *fp, int cpu, unsigned long lon=
+g *file_offset_out)
+> +{
+[ ... ]
+> +		memcpy(data_rec, &hdr_word, TRACE_DAT_WORD_SIZE);
+> +
+> +		/* Large events: write actual byte length after header */
+> +		if (type_len =3D=3D 0)
+> +			memcpy(data_rec + TRACE_DAT_WORD_SIZE, &data_len, TRACE_DAT_WORD_SIZE=
+);
 
 [Severity: Medium]
-Is it safe to access nr_cpus_online directly here without first verifying t=
-he
-environment is initialized?
-
-The perf subsystem guidelines suggest that accessing perf_env fields without
-first verifying those fields are populated can lead to bugs.=20
-
-[ ... ]
-
-> +	if (!opts->force) {
-> +		int fd =3D open(to_trace, O_WRONLY | O_CREAT | O_EXCL, 0644);
+When writing large events (where type_len =3D=3D 0), is `data_len` the corr=
+ect
+value to write here? Ftrace ring buffer parsers typically expect this field
+to contain the size of the payload plus the 4-byte size field itself,
+properly padded to 4-byte alignment, rather than just the raw event size.
+Could this lead to event truncation or alignment errors when parsing?
 
 [ ... ]
-
+> +int trace_dat__write_options_section1(void)
+> +{
+[ ... ]
+> +	/* TRACECLOCK option */
+> +	opt_id =3D TRACE_DAT_OPTION_TRACECLOCK;
+> +
+> +	path =3D get_tracing_file("trace_clock");
+> +	if (path) {
+> +		clock_file =3D fopen(path, "r");
+> +		put_tracing_file(path);
 > +	} else {
-> +		trace_dat_fp =3D fopen(to_trace, "wb");
-
-[Severity: High]
-Could this fopen() in the --force path be susceptible to an arbitrary file
-truncation symlink attack?
-
-If an attacker creates a symlink at the destination path, fopen() with "wb"
-will follow it and truncate the target file. If the conversion subsequently
-fails, the cleanup routine calls unlink(to_trace), which removes the symlink
-itself. This leaves the target file truncated while hiding the attacker's
-symlink from discovery.
-
-> +		if (!trace_dat_fp) {
-> +			pr_err("Failed to open output file: %s\n", to_trace);
-> +			return -EINVAL;
-
-[Severity: Low]
-Should this return the actual -errno from fopen() instead of a hardcoded
--EINVAL so the exact filesystem error is not lost?
-
-> +		}
+> +		clock_file =3D NULL;
 > +	}
 
-[ ... ]
-
-> diff --git a/tools/perf/util/data-convert.h b/tools/perf/util/data-conver=
-t.h
-> index a96240f156712..f041c23252263 100644
-> --- a/tools/perf/util/data-convert.h
-> +++ b/tools/perf/util/data-convert.h
-
-[ ... ]
-
-> +#ifdef HAVE_LIBTRACEEVENT
-> +int trace_convert__perf2dat(const char *input, const char *to_trace,
-> +			   struct perf_data_convert_opts *opts);
-> +#endif /* HAVE_LIBTRACEEVENT */
-
-[Severity: Low]
-Does this declaration need an #else block with a compatible dummy inline st=
-ub?
-
-Without a fallback stub when HAVE_LIBTRACEEVENT is absent, callers might
-be forced to clutter their code with preprocessor blocks to prevent build
-failures.
+[Severity: Medium]
+Does querying the host system's tracefs mount here break cross-platform
+analysis? Since this is an offline conversion of a perf.data file, the host
+machine's current trace clock might not match the clock used when the trace
+was originally recorded. Should this extract the clock from the perf_env
+instead?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260822062729.8820=
-05-1-tshah@linux.ibm.com?part=3D3
+05-1-tshah@linux.ibm.com?part=3D1
