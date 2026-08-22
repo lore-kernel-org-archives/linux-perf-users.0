@@ -1,224 +1,221 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B41773016F2
-	for <linux-perf-users@vger.kernel.org>; Sat, 22 Aug 2026 06:44:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1849431ED80
+	for <linux-perf-users@vger.kernel.org>; Sat, 22 Aug 2026 06:44:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787381083; cv=none; b=JA1bAldvxf545FMNfhCY026CA1o4nnxM/ydCdI0fqnxwW0mv3CPakmramk/MpO0fKpE+IVEnoNBHG0Qy/xUD58Fqiy7gN4WfwoVdNqTPjndQ/jlXR3IbUGMpHAVGgnIHpFdY1UHRSJLa+34BQXAnymqhmbcSblFcgkU1JAssRoY=
+	t=1787381088; cv=none; b=rLxVCW+TxR2qV/PBk5K0kU4s4OtzkGdaYTaT7X3OPIn4LOlpFvPRBD377Qg9PZ0PbjBBbAZALSLfX7meLes7+Own89IezxJv7hi2zUiYa/Og/25Vr4e2HCHpojNsY1xvRn5fBHhwWI3UPJidbIu5OUM2Xeo4X5R0ml5PLOWkcKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787381083; c=relaxed/simple;
-	bh=JiHqOZ0JFhS4jSjXLaZ1pP/Xw0uApDjvk7i0ZdIodUk=;
+	s=arc-20240116; t=1787381088; c=relaxed/simple;
+	bh=wlFCUXFFqiuet4Z3TSfXWkpXMRDXxvoMnCm/Y4VznPw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=fzeEVGAqjBgvjoqNTu1OUSZbih1OUEsgW8S+1qva8ieMV5h/hQNd29FNuzafoDiPvYI/IETakOX9sHEWuyhzcVSfPmx4xBRvo8D58sLRjJpXK3f/tjEKjxCZ6l57/gTPPMnjOqZ43ENe/0lsKst2o0cX9SoFApHk+Z1b3HqSQ2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g3Ob86ik; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=o7KMQT//wdP3rBb9duwfcn5JQ8v9azbFM3vvatq5kH9QqZDd8oORGs119fU83RSjqTFx7E4LXRQDBGqR0CadY301GA/dLiHXOa3nPC7G6RHIw4tRD7pkzqq/0alTMvA3lNX3+SVrUR5TT/e1lZcub4Vp9LbLev7vPYVmhhrf1+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TX99aYVt; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g3Ob86ik"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40CBB1F000E9;
-	Sat, 22 Aug 2026 06:44:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TX99aYVt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D24B41F000E9;
+	Sat, 22 Aug 2026 06:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787381081;
-	bh=wA4fPxx84vvjuZL5uEqwiUAuRFKC513akg6b31IdJ24=;
+	s=k20260515; t=1787381087;
+	bh=r87N7p2u6g/PYlcoo8zCWDT0Zfuttdfo2vV1P2NPNVw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=g3Ob86ikgzo8MTonEHL4Iu5o7mfvxXo+Xs89ThYLPEuFxIk4JKminHqA4LBGjaSmV
-	 KeABT45PP7TOIKzJAaz2vPYR3RlDdLIhNaWErIisTFK0AKeGu0rCehDzHw7JE2FF3w
-	 R3FlvosX/2hd8j2uHNnd0W2Q6nWDWk9c7dlSZjpEfraI3MUfx+DQgiQ+DgdRfTva0P
-	 leZscocBLm57TBXEy8BBb/I3iB7XLVUn8NzlPW9OoKmXjgTB/kOvCl9Rdrnn4+O4/s
-	 gsX/nQEvpjNd4p1wPFnKsUMz/8259oMC8Kp2z8CLYPSMOfdcP8BDFDxjwRSe7JEz9E
-	 4qu1E16ADKxjQ==
+	b=TX99aYVtcUw6SR3/m0w8CiIU//0Md+Lct0MKv7IMugFdua3uo7s9xyCH8LzaIGbnF
+	 nwUdqsYcx8j5JZMx19CSUCjhkNlVzDPpGMVZwdNosQTXfnVXiH9VF45jXB15eeJ2VS
+	 T1bQaSkCQkc51x/ZFUMD1UHeyUR0fHRyAISRztFSAAb9+Bog97pKmsrf6yPR+W0q6y
+	 8C6fMDr7YZNpSkaDU72WxrdTZldUhlzEoXuLKW5aucWyIQ5KX9awI8KSKNX8Pps2by
+	 LkSzATYcrG13QTp6ZHMPjiAesV/6XfLB1EyuZxsghttQlrcan10DVsja+vK9bmtze3
+	 qP4J6BoocAdTg==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v4 4/5] perf data: Add --to-trace-dat option for
- converting perf.data tracepoint events into trace.dat format
+Subject: Re: [RFC PATCH v4 2/5] perf/trace-event: Write trace.dat metadata
+ sections during parsing
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tanushree Shah" <tshah@linux.ibm.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260822062729.882005-5-tshah@linux.ibm.com>
+In-Reply-To: <20260822062729.882005-3-tshah@linux.ibm.com>
 References: <20260822062729.882005-1-tshah@linux.ibm.com>
- <20260822062729.882005-5-tshah@linux.ibm.com>
+ <20260822062729.882005-3-tshah@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 22 Aug 2026 06:44:40 +0000
-Message-Id: <20260822064441.40CBB1F000E9@smtp.kernel.org>
+Date: Sat, 22 Aug 2026 06:44:46 +0000
+Message-Id: <20260822064446.D24B41F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 6 potential issue(=
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
 s) to consider:
-- [High] Trace parser desynchronization: Large event array lengths must be =
-encoded as the fully padded size minus the length word.
-- [High] Out of bounds rejection: CPU array limits must be scoped to `nr_cp=
-us_avail` rather than `nr_cpus_online`.
-- [High] Silent I/O truncation: Stream checks must explicitly assert identi=
-cal element counts instead of binary negation.
-- [High] Architecture violation: Page header offsets must dynamically query=
- the ftrace event format to accommodate 32-bit `local_t` structures.
-- [Low] Build architecture violation: The `data-convert.h` header must incl=
-ude a dummy inline fallback stub for `trace_convert__perf2dat`.
-- [Low] Dead code elimination: The `skipped` sample counter is incremented =
-but structurally isolated and unread.
+
+New issues:
+- [Critical] Missing bounds check on `raw_size` leads to massive out-of-bou=
+nds read and heap buffer overflow.
+- [High] Hardcoded 16-byte page header breaks parsing of trace data recorde=
+d on 32-bit architectures.
+- [Medium] Host state leakage / Cross-platform analysis violation when embe=
+dding the TRACECLOCK option.
+- [Medium] Signed integer overflow causing undefined behavior in TIME_EXTEN=
+D bitshift.
+
+Pre-existing issues:
+- [Critical] Integer overflow in `read_saved_cmdline` size calculation lead=
+s to a heap buffer overflow on 32-bit systems.
 --
 
---- Patch [4]: [RFC PATCH v4 4/5] perf data: Add --to-trace-dat option for =
-converting perf.data tracepoint events into trace.dat format ---
-commit 9a258038767861211db47cd6d942b553034516f1
+--- Patch [2]: [RFC PATCH v4 2/5] perf/trace-event: Write trace.dat metadat=
+a sections during parsing ---
+commit 75d79e7a5c5c4a1484c389705c19fc30dbdd1deb
 Author: Tanushree Shah <tshah@linux.ibm.com>
 
-perf data: Add --to-trace-dat option for converting perf.data tracepoint ev=
-ents into trace.dat format
+perf/trace-event: Write trace.dat metadata sections during parsing
 
-Add new command-line option to perf data convert for generating
-trace.dat output files.
+Perf already captures the tracing metadata as a part of
+data section in perf.data
 
-> diff --git a/tools/perf/builtin-data.c b/tools/perf/builtin-data.c
-> index 1dd73ed6bdcb8..c9c863197d02c 100644
-> --- a/tools/perf/builtin-data.c
-> +++ b/tools/perf/builtin-data.c
-[ ... ]
-> @@ -63,10 +72,44 @@ static int cmd_data_convert(int argc, const char **ar=
-gv)
-[ ... ]
-> +#ifdef HAVE_LIBTRACEEVENT
-> +	if (trace_dat_output)
-> +		return trace_convert__perf2dat(input_name ? input_name : "perf.data",
-> +					       trace_dat_output, &opts);
-> +#endif
-
-[Severity: Low]
-Does the data-convert.h header need a dummy inline fallback stub for
-trace_convert__perf2dat()?
-
-Without an #else block providing an inline dummy stub, could this cause a
-build failure when compiling without HAVE_LIBTRACEEVENT?
-
-> diff --git a/tools/perf/util/data-convert-trace.c b/tools/perf/util/data-=
-convert-trace.c
-> index 445479fae8884..425b3aaa3f026 100644
-> --- a/tools/perf/util/data-convert-trace.c
-> +++ b/tools/perf/util/data-convert-trace.c
-> @@ -31,6 +32,10 @@
->  struct trace_convert {
->  	struct perf_tool tool;
->  	u64 events_count;
-> +	struct perf_time_interval *ptime_range;
-> +	int range_size;
-> +	int range_num;
-> +	u64 skipped;
->  };
-
-[Severity: Low]
-Is this skipped counter ever read?
-
-It is incremented when events are outside the specified time range, but
-appears to be structurally isolated and never emitted in the final
-conversion summary.
-
-> @@ -86,6 +91,11 @@ static int process_sample_event(const struct perf_tool=
- *tool,
->  		cpu_buffers_initialized =3D true;
->  	}
-> =20
-> +	if (perf_time__ranges_skip_sample(tc->ptime_range, tc->range_num, sampl=
-e->time)) {
-> +		tc->skipped++;
-> +		return 0;
-> +	}
-> +
-
-[Severity: High]
-Are valid samples from sparse CPU topologies rejected here?
-
-In process_sample_event(), the CPU buffers are initialized using
-nr_cpus_online:
-    int nr_cpus =3D trace_dat_session->header.env.nr_cpus_online;
-
-But trace_dat__collect_cpu_event() rejects samples if the CPU index is >=3D
-trace_dat_nr_cpus:
-    if (!trace_cpu_data || cpu < 0 || cpu >=3D trace_dat_nr_cpus)
-        return -EINVAL;
-
-If a system has hotplugged CPUs (e.g. CPUs 0 and 127 are online, making
-nr_cpus_online 2), a valid sample from CPU 127 will be evaluated against
-cpu >=3D 2. This causes trace_dat__collect_cpu_event() to return -EINVAL,
-aborting the conversion.
-
-Should this use nr_cpus_avail instead of nr_cpus_online?
+When trace_dat_fp is set, write trace.dat compatible metadata
+sections using the perf provided raw buffers.
 
 > diff --git a/tools/perf/util/trace-dat.c b/tools/perf/util/trace-dat.c
-> index f71e03716e27e..1b236745bcacc 100644
 > --- a/tools/perf/util/trace-dat.c
 > +++ b/tools/perf/util/trace-dat.c
 [ ... ]
-> @@ -288,7 +292,7 @@ static int trace_dat__write_cpu_dat(FILE *fp, struct =
-tep_handle *pevent,
->  		/* Check page fit BEFORE allocating data record */
->  		if (page_size_used + needed_size >
->  			trace_dat_page_size - TRACE_DAT_RECORD_HEADER_SIZE) {
-> -			ret =3D trace_dat__write_page(fp, pevent, base_ts,
-> +			ret =3D trace_dat__write_page(fp, pevent, page_base_ts,
->  					page_records, page_rec_sizes,
->  					nr_page_recs);
+> @@ -161,8 +164,12 @@ static int trace_dat__write_page(FILE *fp, unsigned =
+long long base_ts,
+>  		commit +=3D rec_sizes[i];
+>  	}
+> =20
+> -	memcpy(page, &base_ts, sizeof(base_ts));
+> -	memcpy(page + sizeof(base_ts), &commit, sizeof(commit));
+> +	/* Byte-swap page header for cross-arch compatibility */
+> +	ts_out =3D to_file_u64(pevent, base_ts);
+> +	commit_out =3D to_file_u64(pevent, commit);
+> +
+> +	memcpy(page, &ts_out, sizeof(ts_out));
+> +	memcpy(page + sizeof(ts_out), &commit_out, sizeof(commit_out));
 
 [Severity: High]
-Could the length word for large trace events be miscalculated?
+Does this hardcode a 16-byte page header regardless of the original
+architecture's commit size?
 
-Later in trace_dat__write_cpu_dat(), the array length is encoded:
+If the original trace was recorded on a 32-bit machine, its header_page
+metadata usually specifies the commit field as a 4-byte local_t. Writing a
+hardcoded 8-byte commit field here might cause parsers to misalign by 4
+bytes, potentially interpreting the upper half of the 8-byte commit as
+the first event record's header and breaking parsing.
 
-    /* Large events: write actual byte length after header */
-    if (type_len =3D=3D 0) {
-        unsigned int data_len_out =3D to_file_u32(pevent, data_len);
-        memcpy(data_rec + TRACE_DAT_WORD_SIZE, &data_len_out, TRACE_DAT_WOR=
-D_SIZE);
-    }
+[ ... ]
+> @@ -229,11 +237,18 @@ static int trace_dat__write_cpu_dat(FILE *fp, int c=
+pu, unsigned long long *file_
+>  			if (!extend)
+>  				return -ENOMEM;
+> =20
+> -			extend_hdr =3D
+> -				((time_delta & TRACE_DAT_RECORD_TIME_MASK) <<
+> -				 TRACE_DAT_RECORD_TIME_SHIFT) |
+> -				TRACE_DAT_RECORD_TYPE_TIME_EXTEND;
+> -			delta_upper =3D time_delta >> TRACE_DAT_RECORD_TIME_SHIFT;
+> +			if (tep_is_file_bigendian(pevent)) {
+> +				extend_hdr =3D (time_delta & TRACE_DAT_RECORD_TIME_MASK) |
+> +				     (TRACE_DAT_RECORD_TYPE_TIME_EXTEND << 27);
+> +				delta_upper =3D time_delta >> 27;
 
-For large events (>=3D29 words), the ftrace ring buffer format dictates that
-the first word of the payload contains the length of the data plus the
-length word itself (data_len + 4).
+[Severity: Medium]
+Could this left shift result in undefined behavior?
 
-By writing just data_len, might this cause downstream tools like trace-cmd
-to compute the event size incorrectly and lose parser synchronization?
+Assuming TRACE_DAT_RECORD_TYPE_TIME_EXTEND is defined as 30 (a 32-bit signed
+integer literal), shifting it left by 27 bits yields 4026531840. This excee=
+ds
+the maximum representable value of a 32-bit signed integer, which can cause
+undefined behavior in C.
 
-[Severity: High]
-Can a short write silently corrupt the trace.dat file?
+[ ... ]
+> @@ -311,8 +332,11 @@ static int trace_dat__write_cpu_dat(FILE *fp, int cp=
+u, unsigned long long *file_
+>  		memcpy(data_rec, &hdr_word, TRACE_DAT_WORD_SIZE);
+> =20
+>  		/* Large events: write actual byte length after header */
+> -		if (type_len =3D=3D 0)
+> -			memcpy(data_rec + TRACE_DAT_WORD_SIZE, &data_len, TRACE_DAT_WORD_SIZE=
+);
+> +		if (type_len =3D=3D 0) {
+> +			unsigned int data_len_out =3D to_file_u32(pevent, data_len);
+> +
+> +			memcpy(data_rec + TRACE_DAT_WORD_SIZE, &data_len_out, TRACE_DAT_WORD_=
+SIZE);
+> +		}
+> =20
+>  		memcpy(data_rec + payload_offset, event->raw, data_len);
 
-In trace_dat__write_page(), the file write checks for a boolean false:
+[Severity: Critical]
+Is it possible for a crafted perf.data file to cause an out-of-bounds read
+and heap buffer overflow here?
 
-    if (!fwrite(page, 1, trace_dat_page_size, fp)) {
-        free(page);
-        return -EIO;
-    }
+If the original sample's raw_size is maliciously set near UINT_MAX
+(e.g., 0xFFFFFFFF), the data_rec_size calculation in
+trace_dat__write_cpu_dat() calculates data_rec_size =3D 8 + data_len, which
+wraps around to 7. This bypasses the page size check and allocates an 8-byte
+heap buffer. The memcpy() here then attempts to copy gigabytes of data into
+that small buffer.=20
 
-Since fwrite() returns the number of elements written, a short write (e.g.
-512 out of 4096 bytes) evaluates to true.
+Similarly, earlier in trace_dat__collect_cpu_event(), malloc(0xFFFFFFFF)
+could succeed on a 64-bit host, causing the subsequent memcpy() to read
+gigabytes out-of-bounds.
 
-Will this silently drop data without reporting an error to the user if the
-disk runs out of space? Should the stream check explicitly assert
-fwrite(...) =3D=3D trace_dat_page_size?
+[ ... ]
+> @@ -464,16 +500,17 @@ int trace_dat__write_options_section1(void)
+>  	payload_start =3D ftell(trace_dat_fp);
+> =20
+>  	/* CPUCOUNT option */
+[ ... ]
+>  	/* TRACECLOCK option */
+> -	opt_id =3D TRACE_DAT_OPTION_TRACECLOCK;
+> +	opt_id =3D to_file_u16(pevent, TRACE_DAT_OPTION_TRACECLOCK);
+> =20
+>  	path =3D get_tracing_file("trace_clock");
+>  	if (path) {
+>  		clock_file =3D fopen(path, "r");
 
-[Severity: High]
-Will this hardcoded page header size break parsing for trace data recorded
-on 32-bit architectures?
+[Severity: Medium]
+Does this inadvertently leak the conversion host's state into the
+converted trace data?
 
-In trace_dat__write_page(), the page header offsets are hardcoded:
+Since this dynamically queries the local host's trace_clock via
+get_tracing_file(), it embeds the local machine's unparsed clock file conte=
+nts
+(such as "[local] global...") instead of preserving the original recorded
+machine's clock metadata, potentially breaking cross-platform reproducibili=
+ty.
 
-    /* Byte-swap page header for cross-arch compatibility */
-    ts_out =3D to_file_u64(pevent, base_ts);
-    commit_out =3D to_file_u64(pevent, commit);
-    memcpy(page, &ts_out, sizeof(ts_out));
-    memcpy(page + sizeof(ts_out), &commit_out, sizeof(commit_out));
+[ ... ]
+> diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-e=
+vent-read.c
+> --- a/tools/perf/util/trace-event-read.c
+> +++ b/tools/perf/util/trace-event-read.c
+> @@ -383,6 +615,27 @@ static int read_saved_cmdline(struct tep_handle *pev=
+ent)
+>  		pr_debug("error reading saved cmdlines\n");
+>  		goto out;
+>  	}
+> +	/* Write cmdlines section with data */
+> +	if (trace_dat_fp && !trace_dat_write_failed) {
+> +		unsigned short section_id =3D to_file_u16(pevent, TRACE_DAT_SECTION_CM=
+DLINE);
+> +		unsigned short flags =3D to_file_u16(pevent, 0);
 
-The ftrace page header includes a local_t commit field, which is 8 bytes on
-64-bit systems but 4 bytes on 32-bit systems (making the header 12 bytes).
-Because this unconditionally assumes a 16-byte header and writes 8 bytes for
-commit_out, trace-cmd reading 32-bit metadata will likely parse the remaini=
-ng
-4 bytes as the first trace event.
+[Severity: Critical]
+This is a pre-existing issue, but does the size calculation for the
+saved command line buffer overflow on 32-bit systems?
 
-Should the page header offsets and sizing be dynamically queried from the
-ftrace event format?
+Looking at read_saved_cmdline(), when size is read as a 64-bit value, if it
+is 0xFFFFFFFF, the allocation calculation of size + 1 overflows to
+0x100000000.
+
+On 32-bit architectures, this is truncated to 0, causing malloc(0) to return
+a small valid pointer. The subsequent do_read(buf, size) then passes
+0xFFFFFFFF to the read() syscall, which can overwrite the heap and
+potentially cause a denial of service or arbitrary code execution.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260822062729.8820=
-05-1-tshah@linux.ibm.com?part=3D4
+05-1-tshah@linux.ibm.com?part=3D2
