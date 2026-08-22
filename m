@@ -1,183 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE4E3A380F;
-	Sat, 22 Aug 2026 09:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B12E3E7BCC
+	for <linux-perf-users@vger.kernel.org>; Sat, 22 Aug 2026 15:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787392271; cv=none; b=fGRp97KIbVgdCInOjS/rACYWaN+4xXOO3hqDTt4Wt17UNxWMl8IIp/RQTpbyUIjsHVSTbuZZZabZBAo73bmSyr7rxD8ZpLIdpFfrKGBKl16GecZ5mYWPmZd6oeESzWYvk5b7CkrcarWNAu7fj/Y2b6DB5oQrOC6HYHKePx2rIQA=
+	t=1787411369; cv=none; b=qxqvimKeNOTtm+nOTGQRl908ELmKkBDAQfmJ7Gyf8h6r5lXqoSCTiAnnBtzv5XZBYLn4bWfvd11IlMQZfZOr0P421uXGqL22Zpt/da8D4yB2OMJOEVmjkayKSQmIoHwrQQoPtTgMyFeoiASQif7AsHfpk51D6fTvBgjQcng+ZC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787392271; c=relaxed/simple;
-	bh=4FsIAbiCUY6ZkgqXWKMmj+i/hoHHef5lvtXzj0fOu/k=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=PIn4YB9Yf7KD5Ek6l+IeK7gnnhziaN7r8Tgxekvdj9+7X4CjSKNQ9W6UM/oWbFjaoWVWkIYJ9pDgza7vYA7BbPWkVKgqRUgz00F+opu+2Egn87uk/6ummTFqp0p22uDjKmOnXZMSLOtXx+5QNmRBs1BI22JLne9aK9dZi7b0BBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hF7JvL9n; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787411369; c=relaxed/simple;
+	bh=IGYS9/MJmi0crQrMqbiomdqqv5fS8S+rJ101ghPw26E=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Nrtdl+dbmmbxtrUBv92mPzVotMyu1EiQIqxUpDjBIpklh2y+LDiDgq1ObdAikGJwDDyj6KNy1duD4JTyHLjXg2WJOPvi61OAmSjKL45MjOV3kyQquABaZWoVSnUBNfWXwkZPcEiMALenJjZZ3B6JTlq07yD2kxCA7y6wRzXIlHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YM7SrUrt; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hF7JvL9n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0772E1F000E9;
-	Sat, 22 Aug 2026 09:51:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787392270;
-	bh=MUpcs4p4Kuzy9+neYbRaGt6BANtDkKQzYdyCssXXv4A=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hF7JvL9nmimzXo5rPMIpqcv2fdVLg9j0p7Wr95bPO/m2IszKt9ftLj4D1U0Li846t
-	 iZMj2bSFz1U/y1vdcUXZU1XSPoTl44k4MWFx4AexEOhWdpQ9wD6VufTJczrEWdPaw/
-	 mERYCcrtStz6db7hujiVMi/3JZjMXDnS2r54rCqwIemA0Ud66LwCSHPbIvz2McjDHj
-	 erHlUuXL4vUi94ejgd0+bvywXVdBGNtMLlHDGFL4obMe9BpLCga2ZhpB/zQqnrL+So
-	 cM9UixSfAVD9o8d9alDAOvz/R7wxaySwTGJ7xNq0OgNCYNxlD/lP5tZ3nnYfYab5ec
-	 Bx/DkBX2HS1zw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v13 12/12] tracing/wprobe: Support BTF struct offset
- resolution in set_wprobe trigger
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <178739072694.1520941.18132159339101776117.stgit@devnote2>
-References: <178739053919.1520941.17662338993878200834.stgit@devnote2>
- <178739072694.1520941.18132159339101776117.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 22 Aug 2026 09:51:09 +0000
-Message-Id: <20260822095110.0772E1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YM7SrUrt"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-384930ca5e2so1963068a91.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 22 Aug 2026 08:09:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1787411367; x=1788016167; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=xN4hXMOwbHYw8YYoHSGskBU1Hru9hAdLN66h2VVXOns=;
+        b=YM7SrUrtYAnhHYAaeIsAdACdKCoehgVqosn8VSUcPiYv7S5UXVIE6/f/GWmYdyLSSg
+         olfwtyOA0EzuPMwWoMVN0TpOMYvpey2qY18eUwO/6fSPYe4Ni5bjfMZYwMRRGjoTJj7e
+         obec/wGWWF5/P0/9Qx3eOxU/6pVaixqytZbrsKtf9VFK1DPC+ekED/+tjgU1NZbW8hhP
+         NZR7cWUdjp2Qx46Hzqcl7rk340Nc6xoQRYOQDf7FkN1wqTOeElXbu9j+Z2KsBjB002If
+         11ybhfHXz3RpfqT9LnZVryktLlPdV7qsRhvlC/EDjEUhy8oKJiNB4Jxa5o6sRnshBEgP
+         lFsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787411367; x=1788016167;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=xN4hXMOwbHYw8YYoHSGskBU1Hru9hAdLN66h2VVXOns=;
+        b=I8K0pVocLH9C/FzeIN2aY9cojwiFwCMzARRBxji2weyqhyB1Kdcxy7PdBXNdSyOira
+         97afOn2CMDSbG8/ynCaL0651WG3aenSt9Ed8sIzH4Px5NQrR3b4BPbmMkQlgedxhcJAg
+         qvEbTXUpuWqcg71PeTktQmqAhIgG1SRSGSlpBkINOr+x+W5fCH7onj9EOO5Xjin1m87v
+         WodqyR8AIr3S68IZOZB6cJtSw5qqITT3mViPuyHWjRfOgvEkOgv0C90ctSerrZ9fuuPa
+         YwlEtHeOvDcJmDc4AZQqbytz5L9a0mMAKwhMxlh1Fyay8VsQcj1QRsVFsmOowhYvSkQz
+         QtCQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpS/h7b34B77leK2liXxpcgr9+28hYyf2Q683ThZHcWGZZNekyjPXz8B09oDglpVTHgNaC43Hx7g1gln72R2NEf@vger.kernel.org
+X-Gm-Message-State: AFuF++l8Qn9Hsjxqm+Bv9GRbN0AeWho8EDkH32Jk6v/LkMuN9VKUjzZ7
+	onwRTWL96dcUxDYKQPeWsD7yYihtz+5y8ucdtfz7z1cedi4ew4sjbmjE1G5CcjVuLsE=
+X-Gm-Gg: AR+sD13BkV5iohsPyPUMEHGGbTqBamrgECE5Yo11Agc5HCGQYavZn4BumbrQtpQnRm5
+	P71RTWAFq815/kuOlsUZfWTv3ZxWyodm0fVhG8LMjKUxrevpoXsNg0g2XQ804TSyn3QuTBdwGW3
+	YwK8o9Fm9Jl1e1ypw78gGbeU6E2fhQHc818BvSycu0IFjMgK1jYR+kjms58J2G2Ll06xsY/yWbS
+	nl32TIK839lNLvNG50tpHvrlHgg9D4ujsOlzkyp7pwfJyJf80ZslataEglgCk2SmIkVByASnu+v
+	PtrwsIV8IQizv7qWXYYeo+Eah+yqxVtDZ1K5hPPemi+NqHElD+llD9wfyB8rVoqfCnNWHeZOjKg
+	NUWpwN2BwS5VQrFMPivqDXnvDOzcqqYGV7Es/HO50v6bOtZFXtJPkxmj13FcZLkQN8mDf6Khh7X
+	kJrcwQQBp2nNLPducVx6htLiwRsz7TqN7HVNOGt45oK4pi3KYVq3ZZCEzgHA6FAMOHAzJkOBlTQ
+	NeSOgi2RZE63vyA6NZpdMAB+w==
+X-Received: by 2002:a17:90b:2cc3:b0:392:e5b1:d833 with SMTP id 98e67ed59e1d1-395df29666cmr11845108a91.13.1787411366593;
+        Sat, 22 Aug 2026 08:09:26 -0700 (PDT)
+Received: from jvle-ThinkPad-X1-Carbon-Gen-8.. ([117.172.228.137])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1418619d6ecsm8057043c88.14.2026.08.22.08.09.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Aug 2026 08:09:25 -0700 (PDT)
+From: Keke Ming <ming.jvle@gmail.com>
+To: Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Keke Ming <ming.jvle@gmail.com>
+Subject: [PATCH v2] uprobes: Free utask on dup_return_instance() failure
+Date: Sat, 22 Aug 2026 23:09:06 +0800
+Message-ID: <20260822150906.528208-1-ming.jvle@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260822054620.452262-1-ming.jvle@gmail.com>
+References: <20260822054620.452262-1-ming.jvle@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] get_offset_of_field() incorrectly evaluates the BTF kflag of the p=
-arent struct instead of the nested anonymous struct containing the field, l=
-eading to massively inflated offset calculations and bypassing bitfield val=
-idation.
-- [Low] wprobe_trigger_log_err receives a truncated `glob` string, causing =
-syntax error logs to place the caret out-of-bounds and hide the user's inpu=
-t.
---
+dup_utask() installs the new uprobe_task in t->utask before copying
+return_instances. If dup_return_instance() fails, the partially copied
+utask is left attached to the child task.
 
---- Patch [12]: [PATCH v13 12/12] tracing/wprobe: Support BTF struct offset=
- resolution in set_wprobe trigger ---
-commit 1da976d66d95af47e154412d3c1b912f8a6b4018
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Free the partially copied utask before returning -ENOMEM.
 
-tracing/wprobe: Support BTF struct offset resolution in set_wprobe trigger
-   =20
-Allow set_wprobe trigger to use BTF struct offset resolution to specify
-the target address field.
+Also, dup_return_instance() copies the return_instance before fixing
+up extra_consumers.
 
-Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.=
-1785067572.git.wangjinchao600@gmail.com/
+Here, if no deep copy is needed, clear the copied extra_consumers
+pointer.
 
-> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-> index acb15fd018e80..b513561005dc6 100644
-> --- a/kernel/trace/trace_wprobe.c
-> +++ b/kernel/trace/trace_wprobe.c
+Signed-off-by: Keke Ming <ming.jvle@gmail.com>
+---
+v2 changes:
+- Clear ri->extra_consumers = NULL when old->cons_cnt <= 1 in
+  dup_return_instance(), fixing a potential double free during
+  cleanup.
+- Keep the dup_utask() error cleanup from v1.
 
-[ ... ]
+ kernel/events/uprobes.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-> @@ -990,6 +992,181 @@ static void wprobe_trigger_free(struct event_trigge=
-r_data *data)
->  	}
->  }
-> =20
-> +#ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
-> +
-> +static int get_offset_of_field(struct btf *btf, const struct btf_type *t=
-ype, char *field_name)
-> +{
-> +	const struct btf_member *field;
-> +	int bitoffs =3D 0;
-> +	u32 anon_offs;
-> +	char *next;
-> +
-> +	do {
-> +		next =3D strchr(field_name, '.');
-> +		if (next)
-> +			*next++ =3D '\0';
-> +
-> +		field =3D btf_find_struct_member(btf, type, field_name, &anon_offs);
-> +		if (IS_ERR_OR_NULL(field))
-> +			return -ENOENT;
-> +
-> +		if (btf_type_kflag(type)) {
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index b25531331902..73a6620c5701 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2118,6 +2118,8 @@ static struct return_instance *dup_return_instance(struct return_instance *old)
+ 			kfree(ri);
+ 			return NULL;
+ 		}
++	} else {
++		ri->extra_consumers = NULL;
+ 	}
+ 
+ 	return ri;
+@@ -2140,8 +2142,10 @@ static int dup_utask(struct task_struct *t, struct uprobe_task *o_utask)
+ 	p = &n_utask->return_instances;
+ 	for (o = o_utask->return_instances; o; o = o->next) {
+ 		n = dup_return_instance(o);
+-		if (!n)
++		if (!n) {
++			uprobe_free_utask(t);
+ 			return -ENOMEM;
++		}
+ 
+ 		/* if uprobe is non-NULL, we'll have an extra refcount for uprobe */
+ 		uprobe = hprobe_expire(&o->hprobe, true);
+-- 
+2.43.0
 
-[Severity: High]
-Does this code check the kflag of the original parent type instead of the
-anonymous struct that actually contains the field?
-
-btf_find_struct_member() can return a field from a nested anonymous struct,
-but if the parent struct and the anonymous struct have mismatched BTF kflags
-(for example, the parent has kflag=3D0 while the anonymous struct has kflag=
-=3D1
-because it contains bitfields), using the parent's kflag here will cause
-the bitfield size encoded in the upper 8 bits of the offset to be
-misinterpreted as part of the byte offset.
-
-This can add a massively inflated value to bitoffs and result in a wild
-pointer dereference when the wprobe triggers.
-
-> +			/* Reject bitfield member access */
-> +			if (BTF_MEMBER_BITFIELD_SIZE(field->offset))
-> +				return -EINVAL;
-> +			bitoffs +=3D anon_offs + BTF_MEMBER_BIT_OFFSET(field->offset);
-> +		} else {
-> +			bitoffs +=3D anon_offs + field->offset;
-> +		}
-> +
-> +		field_name =3D next;
-> +		if (next) {
-> +			type =3D btf_type_skip_modifiers(btf, field->type, NULL);
-> +			if (!type)
-> +				return -ENOENT;
-> +		}
-> +	} while (next);
-> +	return bitoffs / BITS_PER_BYTE;
-> +}
-
-[ ... ]
-
-> +static int wprobe_trigger_typecast_parse(char **field_str_ptr,
-> +					 struct trace_event_file *file,
-> +					 struct wprobe_trigger_data *wprobe_data,
-> +					 const char *glob)
-> +{
-> +	struct btf *btf __free(btf_put) =3D NULL;
-> +	const struct btf_type *type;
-> +	char *assign_field;
-> +	char *event_field;
-> +	char *type_field;
-> +	char *type_name;
-> +	char *offs;
-> +	long val =3D 0;
-> +	int id;
-> +	int adjust;
-> +
-> +	type_name =3D *field_str_ptr + 1;
-> +	event_field =3D strchr(type_name, ')');
-> +	if (!event_field) {
-> +		wprobe_trigger_log_err(file, glob, type_name - glob, DEREF_OPEN_BRACE);
-
-[Severity: Low]
-Will this log message place the caret out of bounds and hide the user's
-input?
-
-The glob string passed into wprobe_trigger_log_err() seems to be truncated
-by an earlier strsep() call replacing the delimiter with a null terminator:
-
-kernel/trace/trace_events_trigger.c:trigger_process_regex() {
-    ...
-    command =3D strsep(&next, ": \t");
-    ...
-}
-
-Since glob is truncated to just the command name, calculating the offset as
-type_name - glob can point far past the end of the printed text, making the
-syntax error logs illegible.
-
-> +		return -EINVAL;
-> +	}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178739053919.152094=
-1.17662338993878200834.stgit@devnote2?part=3D12
