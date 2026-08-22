@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6133876C1;
-	Sat, 22 Aug 2026 09:24:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37538373BE8;
+	Sat, 22 Aug 2026 09:24:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787390676; cv=none; b=DFPvGbplcabTw4ap+PrsVI8+fUXUI5kvSTEkXcbLjWeoQArzB5gJUTfpZ9IW1IKjuO+5rkN+1RZP1f5ooHiiDi2pNur55hTC0I07gS7FXYuw9/Jj2SBga3JGV6UbfzmnVkqY9AC/kPLxrawlUCwnJAlbNgrALRq3QkkqXDnTSWg=
+	t=1787390689; cv=none; b=cDfIakp1XWm13QXVfweOzyAIVsyX4QMJk0+Sp/Y7NwTqzx/30Wy9kkvJep9o0/0JaoA/Q+KZSod3tI2rNixWD5WX23AbQmv8KSTF0T6cZVZCsxolz1n9whUR6msR0ChI0rkxrofvenfYIUXvtgqdZs0UyGbYMmNHPZXSUnZ0I04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787390676; c=relaxed/simple;
-	bh=7WwAsjXAm72C3N+aWoYKuzBUFcwI27R/LA/82emnZ6M=;
+	s=arc-20240116; t=1787390689; c=relaxed/simple;
+	bh=I7keiJZxhcvIqTtelDYJ8wxvYd490JzlGO3twFAP748=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q8jH2O+Of42qD02Y0VbbictVQOxDOjnXQviUHPd8+2xgl34ExcYu20/13uESideIMylIYViC5upzq3eCmQ2bu7ESfT3la2h7m2wjDZHmxlcJkCXIzzAiP97CUjOACOvwb2nMmIJYBb+RX5VjzsAoQ+O2cZaDI4ewvMfHId4iHv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UECY0AvY; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=DJ5+4ADQPQuz64eGGPsb8AlcBZD5H4gsOaZgfz8bYZigGUc8hJ5lzI3SGwNDs55AhPJ9Yir/5UOGxZIzYmg/l8fWQsBH/3/tzaxP2hSDxClQ4hTm2ZlCBnduIPX0n/aLMGj0HECWF7+SjpI2U0VH/+RDacBvmreWHfw/1d/pXrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FuF2DCpf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UECY0AvY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0514C1F000E9;
-	Sat, 22 Aug 2026 09:24:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FuF2DCpf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CBE71F000E9;
+	Sat, 22 Aug 2026 09:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787390675;
-	bh=lcnl1Kiyu2/Ws5GS/yrGcGPFrteWWVQg5IT2n1yE1q0=;
+	s=k20260515; t=1787390687;
+	bh=icx33MI5IDl0NsRVCwveXp/YypYWce4cJoFEH1DIJLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=UECY0AvYc513NgSGBHfNKhp5egIJC8vcgyFGNk+ObiKo+SpRgKPrtY8wccbatx9Yu
-	 3MNPw/YxPjy7PGNiF+CuetZHHN5zm76XSZ8T+4/NxGBAws9zNaEb+7GtkLFhtMjQTS
-	 FQXZftlaiNrSrAZoO+UFfl07c/dkhFmg+YZly5IIQ2+bjmnRUA6gKB3yJXA6PRcogP
-	 r2sMT1IPkci+aqwEH4EqRR4CO/9ec0qHBU4Jl2j8i5aXJ6/2wHNE012lRF3l+PBG0O
-	 OfmnCYU6/xPzNuJav4ix5Xk3w10ClquhTqlPL44fPQ5Mp1YMomFwXO+YG8FklSuXht
-	 EfGWd2vXjeyhQ==
+	b=FuF2DCpf1IZ5t4VifEyyqhnOBBUYdoNm0bYrMc11gR8kbV6FdYJbATnuOyh1csP3y
+	 dqYVtZngk+yIEHrGxYxRdGXd3wgg0KWR5SKgDlB/LrS1BOJci9ZYsf/FDAUWX2hHvw
+	 2OCpjG9gfutNU9gX8pkpGeE+03GyNkUzl1gj9En76gQ3UDD0joonvPgl3uHfFGT7kx
+	 Oszv3fnjCI7xtraTElJTxywyZnaD9mCu7DYmM8x85KVC5GVjak+L59WbhjXXuZJekJ
+	 Q8hjfRYK3rgpBfYK8wD2vuyoB2+kRgWWhrrolhA8YDB+5YGlGoFLJAm1cvpUVOnnxU
+	 i8a1+LNmkIZyw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -44,9 +44,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v13 07/12] selftests: tracing: Add a basic testcase for wprobe
-Date: Sat, 22 Aug 2026 18:24:29 +0900
-Message-ID: <178739066970.1520941.12929870364050962005.stgit@devnote2>
+Subject: [PATCH v13 08/12] selftests: tracing: Add syntax testcase for wprobe
+Date: Sat, 22 Aug 2026 18:24:41 +0900
+Message-ID: <178739068097.1520941.17014781036682940369.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178739053919.1520941.17662338993878200834.stgit@devnote2>
 References: <178739053919.1520941.17662338993878200834.stgit@devnote2>
@@ -62,99 +62,46 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add 'add_remove_wprobe.tc' testcase for testing wprobe event that
-tests adding and removing operations of the wprobe event.
+Add "wprobe_syntax_errors.tc" testcase for testing syntax errors
+of the watch probe events.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- Changes in v9:
-  - Fix command check logic to prevent early exit under 'set -e'
-    (errexit) when grep or test fails.
-  - Simplify enable/disable status checks by removing cat pipes.
- Changes in v8:
-  - Fixed silently test failure path.
+ Changes in v12:
+  - Add NO_ARG_BODY error case.
+ Changes in v11:
+  - Add WPROBE_NO_MAXACT syntax error case.
 ---
- tools/testing/selftests/ftrace/config              |    1 
- .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   63 ++++++++++++++++++++
- 2 files changed, 64 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+ .../test.d/dynevent/wprobes_syntax_errors.tc       |   22 ++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
 
-diff --git a/tools/testing/selftests/ftrace/config b/tools/testing/selftests/ftrace/config
-index 544de0db5f58..d2f503722020 100644
---- a/tools/testing/selftests/ftrace/config
-+++ b/tools/testing/selftests/ftrace/config
-@@ -27,3 +27,4 @@ CONFIG_STACK_TRACER=y
- CONFIG_TRACER_SNAPSHOT=y
- CONFIG_UPROBES=y
- CONFIG_UPROBE_EVENTS=y
-+CONFIG_WPROBE_EVENTS=y
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
 new file mode 100644
-index 000000000000..647c37d5e4c8
+index 000000000000..c279bea8d8b9
 --- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
-@@ -0,0 +1,63 @@
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+@@ -0,0 +1,22 @@
 +#!/bin/sh
 +# SPDX-License-Identifier: GPL-2.0
-+# description: Generic dynamic event - add/remove wprobe events
++# description: Watch probe event parser error log check
 +# requires: dynamic_events "w[:[<group>/][<event>]] [r|w|rw]@<addr>[:<len>]":README
 +
-+echo 0 > events/enable
-+echo > dynamic_events
++check_error() { # command-with-error-pos-by-^
++    ftrace_errlog_check 'wprobe' "$1" 'dynamic_events'
++}
 +
-+# Use jiffies as a variable that is frequently written to.
-+TARGET=jiffies
-+
-+echo "w:my_wprobe w@$TARGET" >> dynamic_events
-+
-+if ! grep -q my_wprobe dynamic_events; then
-+    echo "Failed to create wprobe event"
-+    exit_fail
-+fi
-+
-+if [ ! -d events/wprobes/my_wprobe ]; then
-+    echo "Failed to create wprobe event directory"
-+    exit_fail
-+fi
-+
-+echo 1 > events/wprobes/my_wprobe/enable
-+
-+# Check if the event is enabled
-+if ! grep -q 1 events/wprobes/my_wprobe/enable; then
-+    echo "Failed to enable wprobe event"
-+    exit_fail
-+fi
-+
-+# Let some time pass to trigger the breakpoint
-+sleep 1
-+
-+# Check if we got any trace output
-+if ! grep -q my_wprobe trace; then
-+    echo "wprobe event was not triggered"
-+    exit_fail
-+fi
-+
-+echo 0 > events/wprobes/my_wprobe/enable
-+
-+# Check if the event is disabled
-+if ! grep -q 0 events/wprobes/my_wprobe/enable; then
-+    echo "Failed to disable wprobe event"
-+    exit_fail
-+fi
-+
-+echo "-:my_wprobe" >> dynamic_events
-+
-+if grep -q my_wprobe dynamic_events; then
-+    echo "Failed to remove wprobe event"
-+    exit_fail
-+fi
-+
-+if [ -d events/wprobes/my_wprobe ]; then
-+    echo "Failed to remove wprobe event directory"
-+    exit_fail
-+fi
-+
-+clear_trace
++check_error '^w'			# NO_ARG_BODY
++check_error 'w^10 w@jiffies'		# WPROBE_NO_MAXACT
++check_error 'w ^symbol'			# BAD_ACCESS_FMT
++check_error 'w ^a@symbol'		# BAD_ACCESS_TYPE
++check_error 'w w@^symbol'		# BAD_ACCESS_ADDR
++check_error 'w w@jiffies^+offset'	# BAD_ACCESS_ADDR
++check_error 'w w@jiffies:^100'		# BAD_ACCESS_LEN
++check_error 'w w@jiffies ^$arg1'	# BAD_VAR
++check_error 'w w@jiffies ^$retval'	# BAD_VAR
++check_error 'w w@jiffies ^$stack'	# BAD_VAR
++check_error 'w w@jiffies ^%ax'		# BAD_VAR
 +
 +exit 0
 
