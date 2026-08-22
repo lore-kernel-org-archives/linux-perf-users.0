@@ -1,72 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E91D536D9E9
-	for <linux-perf-users@vger.kernel.org>; Sat, 22 Aug 2026 21:45:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315B9355F57
+	for <linux-perf-users@vger.kernel.org>; Sat, 22 Aug 2026 21:48:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787435108; cv=none; b=E4Ill98R9fS+AuhL8GVF/D90tz6fMQtCAzIyEYrwL+mgNisPYPpmUCDjtCzPm/Lw+aRKjiD/1YRxdACoK7YvIA+jzwvu0O5aBeJTOP4HXBvTcMBPfzfQHImLxGkkaDNDq8WcQgpNgNv0k8w5RTGueG3b11jhbFMWw6DfupI++a8=
+	t=1787435284; cv=none; b=orSjd+3DcbQAlWuycSUGGWLlIuMXY4XLHZoBkbMJzOF8dN8nFu9wgCQ6udcFdSqrqSNLVi5ZCM/1eNyt1DbZ+NnwXZ6Eb6sD1LDq3Quym2WYVyTmhLpkGQxWk4r5yD5HhLm+VRTPID4RY25NhT79RqYbhVeoUY53PCXGdPJM2dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787435108; c=relaxed/simple;
-	bh=/M91FiZc42tNZLeoK3LPkJydm9UjBJuCCOAbK6Pwt1o=;
+	s=arc-20240116; t=1787435284; c=relaxed/simple;
+	bh=jkoGWuzjsyj8He5BEi/m9Q/UIMXmomp+2gA1F56NnNY=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=oFhth+kx0Vq8zSxspDRdOV601D12agdpJrXOx9b2/rL6ps3R0KvMqHtwIHOjLX1uQNIkN04kDiX1tL+hKZrYKwxczr8c3IDr3rhSSc0zjZRRukvo7iOaDJ28/0BbLqY4wRzeEhrnmQCc010Md5madLa2b9uqyf4Mz9FC9VFblEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YUDR8mEC; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Sod2mme2V+pxtsA0CaCwDs+1HZvggwnjUpoN8bV8HNLEX4i6kEIIFScA2f+Q0X774hgpNvL6XqcFTt/WnPHwXH3GFPL11Y0PcEO4irac9BBHg0+YitkaBNtC3SsLq3yq9L87RELAEMGpIbokGc3lYZdVOrwrj5Wu9vhCuHnb4YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FinHYxUl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YUDR8mEC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5054D1F000E9;
-	Sat, 22 Aug 2026 21:45:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FinHYxUl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B22261F000E9;
+	Sat, 22 Aug 2026 21:48:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787435106;
-	bh=/M91FiZc42tNZLeoK3LPkJydm9UjBJuCCOAbK6Pwt1o=;
+	s=k20260515; t=1787435282;
+	bh=Zek8F11y1z4tyi7XVcuAFLgSjUa28GCxznMok/hfaQA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=YUDR8mECiHiYSibAr574L0G1GH232//nxXBNnXSu2ACDnenlQ4cJXsL1q6SkbXsti
-	 TuIuFld7QJ+zC3axJmQiyDu407fOF1f9J9R/hw+dExyWMUWZMMslXrIXJRmKwSWnrS
-	 cEy0DANI9mQxkmIr5zX80i8I1xByNCkQBf54x0H6FQbxnCXiL7j1UfWRjWk61PtL0a
-	 mnytQlcG7RkDyzhWF7NHzLAxuS07om7wRvzneBwaE/iJI8AucFdt4SDXA3KRBo7VKO
-	 GtPTzIg0Snzg1f7tZh6+tOmer69rAYqIPW0I5nDpReNMune7eAKy0UWMxaRngsDyYh
-	 n+Uk8Gf+ODXgA==
+	b=FinHYxUlQTqTsYolCCTTBF/j1V4uSXlsH41M9BLsRwJw2qaSXUNI079Pl8LyTXLF4
+	 SL/48kk/RXSYEb5AiW/itOJtJwPSYYQWFfvEpBQw045SzggAWOSo+OIROm9k1A2MbC
+	 3QpB/bqf2HHWKNTM94B0qrzPbclIVk3HPmRJPBTQJydsb0brrBN2z9R2uLrJNucwft
+	 oYScEsdQ85DMkIOiTWYrRuCL707JNjMg/Dv8js4KSsdX+zFK/MNtzLlL3Ghrdq67bq
+	 YtnoJClpRIYbOtuJV6UYRQniKR6oVJnLfWcz+FTFcEtKgNk8e9FBfiprRBYHAifAtZ
+	 E5P1hU3VadIpQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH perf-tools-next v5 1/4] perf trace: Introduce kernel
- symbol beautifier for virtual addresses
+Subject: Re: [PATCH perf-tools-next v5 4/4] perf tests: Add shell test for
+ kernel symbol beautifier
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Aaron Tomlin" <atomlin@atomlin.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260822213558.704018-2-atomlin@atomlin.com>
+In-Reply-To: <20260822213558.704018-5-atomlin@atomlin.com>
 References: <20260822213558.704018-1-atomlin@atomlin.com>
- <20260822213558.704018-2-atomlin@atomlin.com>
+ <20260822213558.704018-5-atomlin@atomlin.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 22 Aug 2026 21:45:05 +0000
-Message-Id: <20260822214506.5054D1F000E9@smtp.kernel.org>
+Date: Sat, 22 Aug 2026 21:48:02 +0000
+Message-Id: <20260822214802.B22261F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Currently, when 'perf trace' formats tracepoint payloads or system call
-> arguments containing raw kernel virtual addresses (e.g., a work item
-> function pointer work_func_t in workqueue:workqueue_execute_start),
-> it prints them as raw hexadecimal values (e.g., 0xffffffff81234567).
-> This impairs readability when tracing kernel execution flows.
->=20
-> Introduce a dedicated kernel symbol beautifier,
-> syscall_arg__scnprintf_ksym (i.e., SCA_KSYM), to resolve kernel
-> virtual addresses to human-readable symbol names and offsets
-> (e.g., "flush_to_ldisc").
->=20
-> The beautifier looks up the virtual address in the machine kernel maps via
-> machine__find_kernel_symbol(). If a valid kernel symbol is found, the
-> symbol name and offset are printed without requiring --libtraceevent; if
-> the address is zero, "NULL" is rendered; otherwise, it gracefully falls
-> back to hexadecimal formatting.
->=20
-> Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] The test script `trace_ksym_beautifier.sh` intends to verify BTF=
+ type routing for function pointers using the `timer:hrtimer_start` tracepo=
+int, but this tracepoint's `function` field is of type `void *`, which bypa=
+sses the BTF function pointer routing logic. The test only passes due to a =
+hardcoded fallback for arguments named 'function'.
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+--- Patch [4]: [PATCH perf-tools-next v5 4/4] perf tests: Add shell test fo=
+r kernel symbol beautifier ---
+commit e969790d116081081634b0e3ece5c71834b3fe8f
+Author: Aaron Tomlin <atomlin@atomlin.com>
+
+perf tests: Add shell test for kernel symbol beautifier
+
+This commit introduces a shell test script to verify that perf trace proper=
+ly
+symbolizes kernel virtual addresses and function pointers. It checks both
+the default kallsyms beautifier and BTF type routing.
+
+> diff --git a/tools/perf/tests/shell/trace_ksym_beautifier.sh b/tools/perf=
+/tests/shell/trace_ksym_beautifier.sh
+> new file mode 100755
+> index 0000000000000..45c803338d4ca
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/trace_ksym_beautifier.sh
+
+[ ... ]
+
+> +test_ksym_btf() {
+> +  echo "Testing perf trace kernel symbol beautifier (BTF)"
+> +  if [ ! -f /sys/kernel/btf/vmlinux ]; then
+> +    echo "Skipping BTF test due to missing vmlinux BTF"
+> +    return
+> +  fi
+> +
+> +  output=3D"$(perf trace -e timer:hrtimer_start --force-btf --max-events=
+=3D1 -- sleep 0.01 2>&1)"
+
+[Severity: Medium]
+Does this test actually verify BTF type routing?
+
+For the timer:hrtimer_start tracepoint, the function field is declared as
+a void pointer in both BTF and tracefs. This means btf_is_func_ptr()
+will evaluate to false, and trace__btf_scnprintf() will return 0.
+
+The output is successfully symbolized here only because builtin-trace.c
+contains a hardcoded fallback array, syscall_arg_fmts__by_name, that maps
+any field named function to SCA_KSYM.
+
+Could a different tracepoint be used here that has an actual function
+pointer type in BTF, to ensure the BTF type routing logic is being properly
+exercised instead of the hardcoded fallback?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260822213558.7040=
-18-1-atomlin@atomlin.com?part=3D1
-
+18-1-atomlin@atomlin.com?part=3D4
