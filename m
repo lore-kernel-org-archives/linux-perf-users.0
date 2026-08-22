@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5772D7DD7;
-	Sat, 22 Aug 2026 09:22:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23CDD36EA98;
+	Sat, 22 Aug 2026 09:22:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787390547; cv=none; b=M54ZTrq9HDo4BfEQ6Swdzzqo/a0eI5hscnPbVN8pI0dyIe8zeEvvjbwQZQ+9UM1AFhIw/yCe7XRS9jl33WRO8X4vSpr9cwmhk17pDsGkigrr+O+aL8HSfh+R7Yk2N3x8/OugLzm6UJwU5Hn+gzOKsi7DKylmK4ynpYPdNTA8EkU=
+	t=1787390558; cv=none; b=BR3OWl7zp030gzub5J4jxrScGWMXsuWMsyR9rg9JdWG1olZ1SqKGGTSKskfCZQG0rO19JGi0RK94PNvfgzsnBGRtd0i9ekRYXDCFgihtvLe/m6tTKWbMaLXlA92BqfnvEbp68Ln36/KCcA20B2G1zPSBjZl0nH+D4FQ1a7mb+tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787390547; c=relaxed/simple;
-	bh=qE+Ho9KhJORbCY3/v7BGmZV9s0YocMsMAlvP5gwmZkY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=u/LKVdWw8x0A+IwAE7EDnhGVWMOv1x7ScxcOMif/bCHXGpfKfET+t6FX7dRRC0fTLdLiraIhtJJtpjFIlVmdLoppFMp72Ln6lxmGHaQJk1NV7vZHneH75Huevr9azxZZTLHFAm2QFe4RtYC+ggieDFhOlsPIiJPJQYP8kdbpDic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFKtstz5; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787390558; c=relaxed/simple;
+	bh=iNBqkjGw9boBKwGqswIgHukU35tiaVG/4H9oKlMlaBI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=geCWC9cml/ycrRkZt6TqnXvMfkkolvuySlrJcV8ow9jgbfKnfteEbiRdi0GUFlCZ5T3mIex2vOTw0/TVjrPl6p3xLzE+fkCd7el2z0hs26R5Rv/Ga2vYlljq7mBmb1sOoHRV7pIdXTSv/Ur9uxeZ21t1sXv8OetzNyJRZz2Povs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mxysqClV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFKtstz5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED3321F000E9;
-	Sat, 22 Aug 2026 09:22:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mxysqClV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39BAD1F000E9;
+	Sat, 22 Aug 2026 09:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787390545;
-	bh=svN9mnflLu3LtTjrG+3wbnaBOpoQ5909yGvkQVBe+EU=;
-	h=From:To:Cc:Subject:Date;
-	b=gFKtstz5tqM6NhxBRYdEPb3jNQ99hLjcfOBGmWbpf9AWITP5r15bRjAspomnVt6Qu
-	 vfj6Pfy2ojh4FGv+MJr0xaDZwMLwoWTRYsw7YppXG8vJF/PM3+RVBkltkt62h0KfDC
-	 z94NccrOpofrzwDaG2V0tZwkEEPE+XDGX9ehv3j2/Eq28gZQqQzHzSte11ZoOlLWer
-	 Q+La4cvUbM3AEqY6qTjBQ9LWKgWoVH7hQ2HGtRr2QQiOYmIrr5tIP39BIXyw556vow
-	 8DkjCXSihykDT/a87SYb5mUsBrEQMwZ+UOFmv7zyWssXHZ+U7jfbLoz+egOqoqkQsh
-	 Rcn7bXbuJN2mg==
+	s=k20260515; t=1787390556;
+	bh=He2O1Sn0+2lOx9gKR6SPUaj6ovVNGVeXwdkqK1WC+QY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=mxysqClVUwg6mEDNbT05XJ6ot2xX4Vt2YVQmDggKDD560jKiNcKd02HidN6yLUvYm
+	 rVkrFjfand4Wr6SfVdAeCP9KhfjrHebSLo/9Cnh0jcLwjD2ht6nGRICi3nLIDBaLVe
+	 5v+cgJCdopbiYOlieZlhllO8PCkh2QPvawS9/YuHR2pO24xP64R7wxmTHvqQRXHmot
+	 0fNnGTSNTwP9bqvb5livqU8hTD1dxAy1jACTBxFTkhcI8tPOgLsqOY6VxwSzC+eTg3
+	 HKn0cwoj07x3tHgMtTQdgeaSDrrb+Tf8SBdj5ChgovB6R9jro0f8pmsFrKBF6Yg9JC
+	 hUmX6t5/WlyGA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -43,10 +44,12 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v13 00/12] tracing: wprobe: x86: Add wprobe for watchpoint
-Date: Sat, 22 Aug 2026 18:22:19 +0900
-Message-ID: <178739053919.1520941.17662338993878200834.stgit@devnote2>
+Subject: [PATCH v13 01/12] kprobes: Protect kprobe_blacklist with RCU
+Date: Sat, 22 Aug 2026 18:22:31 +0900
+Message-ID: <178739055104.1520941.17729343305722017231.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <178739053919.1520941.17662338993878200834.stgit@devnote2>
+References: <178739053919.1520941.17662338993878200834.stgit@devnote2>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -57,204 +60,82 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Here is the 13th version of the series for adding new wprobe (watch probe)
-which provides memory access tracing event. Moreover, this can be used
-via event trigger. Thus it can trace memory access on dynamically
-allocated objects too.
-The previous version is here:
+__within_kprobe_blacklist() traverses kprobe_blacklist without holding
+kprobe_mutex. When a module is unloaded, kprobe_remove_area_blacklist()
+removes blacklist entries and immediately frees them with kfree().
+A concurrent call to within_kprobe_blacklist() can therefore dereference
+freed memory.
 
-  https://lore.kernel.org/all/178611679753.237811.10190793347982785419.stgit@devnote2/
+Furthermore, within_kprobe_blacklist() can be called in atomic or
+non-preemptible contexts where the sleeping kprobe_mutex cannot be taken.
 
-This version adds RCU protection for kprobe_blacklist, fixes trigger
-reference counting and error paths, eliminates race conditions in selftests,
-and addresses review comments. See below for more details.
+Protect kprobe_blacklist with RCU. Use guard(rcu)() and
+list_for_each_entry_rcu() for traversal, list_add_tail_rcu() for
+insertions, list_del_rcu() for deletions, and kfree_rcu() to reclaim
+entries safely after a grace period.
 
-Changes in v13:
- - kprobes: Protect kprobe_blacklist with RCU to allow safe lockless
-   traversals from atomic/NMI sections.
- - tracing/wprobe: Use %pS to format symbol and offset in trace_wprobe_show().
- - tracing/wprobe: Align WPROBE_DEFAULT_CLEAR_ADDRESS to 8 bytes using a
-   dedicated u64 variable.
- - tracing/wprobe: Remove manual trigger count decrement to rely on core
-   event_trigger_count().
- - tracing/wprobe: Check for field tokens before field parsing in clear_wprobe
-   to avoid spurious error logs on numeric counts and avoid masking syntax
-   errors.
- - tracing/wprobe: Fix trigger reference count leak and error cleanup paths
-   in wprobe_trigger_cmd_parse().
- - x86/hw_breakpoints: Add compiler barrier() before checking cpu_dr7_seq.
- - HWBP: Add comments to modify_local_hw_breakpoint_addr() clarifying
-   the early bp->attr.bp_addr update behavior during the NMI race window.
- - selftests/ftrace: Look up target functions dynamically in
-   trigger-wprobe-syntax-errors.tc.
- - selftests/ftrace: Disable set_wprobe trigger before verifying clear_wprobe
-   in trigger-wprobe.tc to prevent sample_timer_cb race conditions.
- - Documentation/trace: Add [:COUNT] to trigger syntax synopsis.
-
-Public branch
--------------
-I will push this branch as topic/wprobe-v2 to my tree so that it
-can be easily tested.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/wprobe-v2
-
-This is based on linux-trace tree's linux-trace/for-next.
-
-Usage
------
-
-The basic usage of this wprobe is similar to other probes;
-
-  w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+|-OFFS]>[:LEN] [FETCHARGS]
-
-This defines a new wprobe event. For example, to trace jiffies update,
-you can do;
-
- echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
- echo 1 > events/wprobes/my_jiffies/enable
-
-Moreover, this can be combined with event trigger to trace the memory
-access on slab objects. The trigger syntax is;
-
-  set_wprobe:WPROBE_EVENT:FIELD[+|-OFFSET][:COUNT] [if FILTER]
-  clear_wprobe:WPROBE_EVENT[:FIELD[+|-OFFSET][:COUNT]] [if FILTER]
-
-set_wprobe sets WPROBE_EVENT's watch address on FIELD[+|-OFFSET].
-clear_wprobe clears WPROBE_EVENT's watch address if it is set to
-FIELD[+|-OFFSET]. If FIELD is omitted, forcibly clear the watch address
-when trigger event is hit.
-
-For example, trace the first 8 byte of the dentry data structure passed
-to do_truncate() until it is deleted by dentry_kill().
-(Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
-
-  # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
-
-  # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
-  # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
-
-  # echo 'f:dentry_kill dentry_kill dentry=$arg1' >> dynamic_events
-  # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
-
-  # echo 1 >> events/fprobes/truncate/enable
-  # echo 1 >> events/fprobes/dentry_kill/enable
-
-  # echo aaa > /tmp/hoge
-  # echo bbb > /tmp/hoge
-  # echo ccc > /tmp/hoge
-  # rm /tmp/hoge
-
-Then, the trace data will show;
-
- # tracer: nop
- #
- # entries-in-buffer/entries-written: 32/32   #P:8
- #
- #                                _-----=> irqs-off/BH-disabled
- #                               / _----=> need-resched
- #                              | / _---=> hardirq/softirq
- #                              || / _--=> preempt-depth
- #                              ||| / _-=> migrate-disable
- #                              |||| /     delay
- #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
- #              | |         |   |||||     |         |
-               sh-107     [004] ...1.     9.990418: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
-               sh-107     [004] ...1.     9.990914: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b3de78
-               sh-107     [004] ...1.     9.993175: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049ddd40
-               sh-107     [004] .....     9.995198: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
-               sh-107     [004] ...1.     9.995389: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db998
-               sh-107     [004] ..Zff     9.997503: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] ..Zff     9.997509: watch: (path_openat+0x211/0xda0) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] ..Zff     9.997514: watch: (path_openat+0xa56/0xda0) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] ..Zff     9.997518: watch: (path_openat+0xae2/0xda0) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] .....     9.997521: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
-               sh-107     [004] ...1.     9.997582: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004808270
-               sh-107     [004] ...1.     9.999365: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db728
-               sh-107     [004] ...1.     9.999388: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b1c000
-               rm-113     [005] ..Zff    10.000965: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.000971: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.000984: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.000988: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001010: watch: (lookup_one_qstr_excl+0x28/0x140) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001014: watch: (lookup_one_qstr_excl+0xd1/0x140) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001018: watch: (may_delete_dentry+0x1c/0x200) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001021: watch: (may_delete_dentry+0x195/0x200) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001031: watch: (vfs_unlink+0x5e/0x260) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] d.Z..    10.001067: watch: (d_make_discardable+0x1b/0x40) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] d.Z..    10.001071: watch: (d_make_discardable+0x29/0x40) address=0xffff8880048083a8 value=0x200080
-               rm-113     [005] ...1.    10.001072: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
-               rm-113     [005] ...1.    10.001218: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
-               sh-107     [004] ...1.    10.001416: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db110
-               sh-107     [004] ...1.    10.001444: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db248
-               sh-107     [004] ...1.    10.001500: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
-               sh-107     [004] ...1.    10.002067: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
-               sh-107     [004] ...1.    10.904920: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
-               sh-107     [004] ...1.    10.905129: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
-
-
-Thank you,
-
+Assisted-by: Antigravity:gemini-3.7-flash
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-base-commit: 54f133c6178d06b169dceae18cc92c4945933b8c
+Changes in v13:
+ - Newly added.
+---
+ include/linux/kprobes.h |    1 +
+ kernel/kprobes.c        |   14 ++++++++++----
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-Jinchao Wang (2):
-      x86/hw_breakpoints: Make DR7 updates NMI safe
-      x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 8c4f3bb24429..e6de7ae55bda 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -181,6 +181,7 @@ struct kprobe_blacklist_entry {
+ 	struct list_head list;
+ 	unsigned long start_addr;
+ 	unsigned long end_addr;
++	struct rcu_head rcu;
+ };
+ 
+ #ifdef CONFIG_KPROBES
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index bfc89083daa9..6337da5cab9e 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -1447,8 +1447,14 @@ static bool __within_kprobe_blacklist(unsigned long addr)
+ 	/*
+ 	 * If 'kprobe_blacklist' is defined, check the address and
+ 	 * reject any probe registration in the prohibited area.
++	 * Note: this can return true during transition period where
++	 * (start_addr, end_addr) in the black list is shrinking
++	 * but old entry has not been removed yet. This is acceptable
++	 * because the worst case is that we reject more probes than
++	 * we should.
+ 	 */
+-	list_for_each_entry(ent, &kprobe_blacklist, list) {
++	guard(rcu)();
++	list_for_each_entry_rcu(ent, &kprobe_blacklist, list) {
+ 		if (addr >= ent->start_addr && addr < ent->end_addr)
+ 			return true;
+ 	}
+@@ -2509,7 +2515,7 @@ int kprobe_add_ksym_blacklist(unsigned long entry)
+ 	ent->start_addr = entry;
+ 	ent->end_addr = entry + size;
+ 	INIT_LIST_HEAD(&ent->list);
+-	list_add_tail(&ent->list, &kprobe_blacklist);
++	list_add_tail_rcu(&ent->list, &kprobe_blacklist);
+ 
+ 	return (int)size;
+ }
+@@ -2603,8 +2609,8 @@ static void kprobe_remove_area_blacklist(unsigned long start, unsigned long end)
+ 	list_for_each_entry_safe(ent, n, &kprobe_blacklist, list) {
+ 		if (ent->start_addr < start || ent->start_addr >= end)
+ 			continue;
+-		list_del(&ent->list);
+-		kfree(ent);
++		list_del_rcu(&ent->list);
++		kfree_rcu(ent, rcu);
+ 	}
+ }
+ 
 
-Masami Hiramatsu (Google) (10):
-      kprobes: Protect kprobe_blacklist with RCU
-      HWBP: Add modify_local_hw_breakpoint_addr() API
-      tracing/wprobe: Add wprobe (watchpoint probe) trace event support
-      x86: hw_breakpoint: Add a kconfig to clarify when a breakpoint fires
-      selftests: tracing: Add a basic testcase for wprobe
-      selftests: tracing: Add syntax testcase for wprobe
-      tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
-      selftests: ftrace: Add wprobe trigger testcase
-      tracing/wprobe: Support BTF typecast in fetchargs
-      tracing/wprobe: Support BTF struct offset resolution in set_wprobe trigger
-
-
- Documentation/trace/index.rst                      |    1 
- Documentation/trace/wprobetrace.rst                |  185 +++
- arch/Kconfig                                       |   18 
- arch/x86/Kconfig                                   |    2 
- arch/x86/include/asm/debugreg.h                    |   37 -
- arch/x86/include/asm/hw_breakpoint.h               |    2 
- arch/x86/kernel/cpu/mce/core.c                     |   20 
- arch/x86/kernel/hw_breakpoint.c                    |  139 +-
- arch/x86/kernel/nmi.c                              |    7 
- arch/x86/kernel/traps.c                            |   10 
- include/linux/hw_breakpoint.h                      |    6 
- include/linux/kprobes.h                            |    1 
- include/linux/trace_events.h                       |    3 
- kernel/events/hw_breakpoint.c                      |   48 +
- kernel/kprobes.c                                   |   14 
- kernel/trace/Kconfig                               |   24 
- kernel/trace/Makefile                              |    1 
- kernel/trace/trace.c                               |    9 
- kernel/trace/trace.h                               |    6 
- kernel/trace/trace_events_trigger.c                |    2 
- kernel/trace/trace_probe.c                         |   36 -
- kernel/trace/trace_probe.h                         |   22 
- kernel/trace/trace_wprobe.c                        | 1440 ++++++++++++++++++++
- tools/testing/selftests/ftrace/config              |    3 
- .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   63 +
- .../test.d/dynevent/wprobes_syntax_errors.tc       |   22 
- .../test.d/trigger/trigger-wprobe-btf-offset.tc    |   74 +
- .../test.d/trigger/trigger-wprobe-btf-typecast.tc  |   72 +
- .../test.d/trigger/trigger-wprobe-syntax-errors.tc |   37 +
- .../ftrace/test.d/trigger/trigger-wprobe.tc        |   87 +
- 30 files changed, 2309 insertions(+), 82 deletions(-)
- create mode 100644 Documentation/trace/wprobetrace.rst
- create mode 100644 kernel/trace/trace_wprobe.c
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-syntax-errors.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
-
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
