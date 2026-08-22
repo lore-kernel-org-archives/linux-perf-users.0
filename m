@@ -1,221 +1,260 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1849431ED80
-	for <linux-perf-users@vger.kernel.org>; Sat, 22 Aug 2026 06:44:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5772D7DD7;
+	Sat, 22 Aug 2026 09:22:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787381088; cv=none; b=rLxVCW+TxR2qV/PBk5K0kU4s4OtzkGdaYTaT7X3OPIn4LOlpFvPRBD377Qg9PZ0PbjBBbAZALSLfX7meLes7+Own89IezxJv7hi2zUiYa/Og/25Vr4e2HCHpojNsY1xvRn5fBHhwWI3UPJidbIu5OUM2Xeo4X5R0ml5PLOWkcKo=
+	t=1787390547; cv=none; b=M54ZTrq9HDo4BfEQ6Swdzzqo/a0eI5hscnPbVN8pI0dyIe8zeEvvjbwQZQ+9UM1AFhIw/yCe7XRS9jl33WRO8X4vSpr9cwmhk17pDsGkigrr+O+aL8HSfh+R7Yk2N3x8/OugLzm6UJwU5Hn+gzOKsi7DKylmK4ynpYPdNTA8EkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787381088; c=relaxed/simple;
-	bh=wlFCUXFFqiuet4Z3TSfXWkpXMRDXxvoMnCm/Y4VznPw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=o7KMQT//wdP3rBb9duwfcn5JQ8v9azbFM3vvatq5kH9QqZDd8oORGs119fU83RSjqTFx7E4LXRQDBGqR0CadY301GA/dLiHXOa3nPC7G6RHIw4tRD7pkzqq/0alTMvA3lNX3+SVrUR5TT/e1lZcub4Vp9LbLev7vPYVmhhrf1+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TX99aYVt; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787390547; c=relaxed/simple;
+	bh=qE+Ho9KhJORbCY3/v7BGmZV9s0YocMsMAlvP5gwmZkY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=u/LKVdWw8x0A+IwAE7EDnhGVWMOv1x7ScxcOMif/bCHXGpfKfET+t6FX7dRRC0fTLdLiraIhtJJtpjFIlVmdLoppFMp72Ln6lxmGHaQJk1NV7vZHneH75Huevr9azxZZTLHFAm2QFe4RtYC+ggieDFhOlsPIiJPJQYP8kdbpDic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gFKtstz5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TX99aYVt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D24B41F000E9;
-	Sat, 22 Aug 2026 06:44:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gFKtstz5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED3321F000E9;
+	Sat, 22 Aug 2026 09:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787381087;
-	bh=r87N7p2u6g/PYlcoo8zCWDT0Zfuttdfo2vV1P2NPNVw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=TX99aYVtcUw6SR3/m0w8CiIU//0Md+Lct0MKv7IMugFdua3uo7s9xyCH8LzaIGbnF
-	 nwUdqsYcx8j5JZMx19CSUCjhkNlVzDPpGMVZwdNosQTXfnVXiH9VF45jXB15eeJ2VS
-	 T1bQaSkCQkc51x/ZFUMD1UHeyUR0fHRyAISRztFSAAb9+Bog97pKmsrf6yPR+W0q6y
-	 8C6fMDr7YZNpSkaDU72WxrdTZldUhlzEoXuLKW5aucWyIQ5KX9awI8KSKNX8Pps2by
-	 LkSzATYcrG13QTp6ZHMPjiAesV/6XfLB1EyuZxsghttQlrcan10DVsja+vK9bmtze3
-	 qP4J6BoocAdTg==
-From: sashiko-bot@kernel.org
-Subject: Re: [RFC PATCH v4 2/5] perf/trace-event: Write trace.dat metadata
- sections during parsing
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Tanushree Shah" <tshah@linux.ibm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260822062729.882005-3-tshah@linux.ibm.com>
-References: <20260822062729.882005-1-tshah@linux.ibm.com>
- <20260822062729.882005-3-tshah@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 22 Aug 2026 06:44:46 +0000
-Message-Id: <20260822064446.D24B41F000E9@smtp.kernel.org>
+	s=k20260515; t=1787390545;
+	bh=svN9mnflLu3LtTjrG+3wbnaBOpoQ5909yGvkQVBe+EU=;
+	h=From:To:Cc:Subject:Date;
+	b=gFKtstz5tqM6NhxBRYdEPb3jNQ99hLjcfOBGmWbpf9AWITP5r15bRjAspomnVt6Qu
+	 vfj6Pfy2ojh4FGv+MJr0xaDZwMLwoWTRYsw7YppXG8vJF/PM3+RVBkltkt62h0KfDC
+	 z94NccrOpofrzwDaG2V0tZwkEEPE+XDGX9ehv3j2/Eq28gZQqQzHzSte11ZoOlLWer
+	 Q+La4cvUbM3AEqY6qTjBQ9LWKgWoVH7hQ2HGtRr2QQiOYmIrr5tIP39BIXyw556vow
+	 8DkjCXSihykDT/a87SYb5mUsBrEQMwZ+UOFmv7zyWssXHZ+U7jfbLoz+egOqoqkQsh
+	 Rcn7bXbuJN2mg==
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	x86@kernel.org
+Cc: Jinchao Wang <wangjinchao600@gmail.com>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH v13 00/12] tracing: wprobe: x86: Add wprobe for watchpoint
+Date: Sat, 22 Aug 2026 18:22:19 +0900
+Message-ID: <178739053919.1520941.17662338993878200834.stgit@devnote2>
+X-Mailer: git-send-email 2.43.0
+User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
-s) to consider:
+Hi,
 
-New issues:
-- [Critical] Missing bounds check on `raw_size` leads to massive out-of-bou=
-nds read and heap buffer overflow.
-- [High] Hardcoded 16-byte page header breaks parsing of trace data recorde=
-d on 32-bit architectures.
-- [Medium] Host state leakage / Cross-platform analysis violation when embe=
-dding the TRACECLOCK option.
-- [Medium] Signed integer overflow causing undefined behavior in TIME_EXTEN=
-D bitshift.
+Here is the 13th version of the series for adding new wprobe (watch probe)
+which provides memory access tracing event. Moreover, this can be used
+via event trigger. Thus it can trace memory access on dynamically
+allocated objects too.
+The previous version is here:
 
-Pre-existing issues:
-- [Critical] Integer overflow in `read_saved_cmdline` size calculation lead=
-s to a heap buffer overflow on 32-bit systems.
+  https://lore.kernel.org/all/178611679753.237811.10190793347982785419.stgit@devnote2/
+
+This version adds RCU protection for kprobe_blacklist, fixes trigger
+reference counting and error paths, eliminates race conditions in selftests,
+and addresses review comments. See below for more details.
+
+Changes in v13:
+ - kprobes: Protect kprobe_blacklist with RCU to allow safe lockless
+   traversals from atomic/NMI sections.
+ - tracing/wprobe: Use %pS to format symbol and offset in trace_wprobe_show().
+ - tracing/wprobe: Align WPROBE_DEFAULT_CLEAR_ADDRESS to 8 bytes using a
+   dedicated u64 variable.
+ - tracing/wprobe: Remove manual trigger count decrement to rely on core
+   event_trigger_count().
+ - tracing/wprobe: Check for field tokens before field parsing in clear_wprobe
+   to avoid spurious error logs on numeric counts and avoid masking syntax
+   errors.
+ - tracing/wprobe: Fix trigger reference count leak and error cleanup paths
+   in wprobe_trigger_cmd_parse().
+ - x86/hw_breakpoints: Add compiler barrier() before checking cpu_dr7_seq.
+ - HWBP: Add comments to modify_local_hw_breakpoint_addr() clarifying
+   the early bp->attr.bp_addr update behavior during the NMI race window.
+ - selftests/ftrace: Look up target functions dynamically in
+   trigger-wprobe-syntax-errors.tc.
+ - selftests/ftrace: Disable set_wprobe trigger before verifying clear_wprobe
+   in trigger-wprobe.tc to prevent sample_timer_cb race conditions.
+ - Documentation/trace: Add [:COUNT] to trigger syntax synopsis.
+
+Public branch
+-------------
+I will push this branch as topic/wprobe-v2 to my tree so that it
+can be easily tested.
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/wprobe-v2
+
+This is based on linux-trace tree's linux-trace/for-next.
+
+Usage
+-----
+
+The basic usage of this wprobe is similar to other probes;
+
+  w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+|-OFFS]>[:LEN] [FETCHARGS]
+
+This defines a new wprobe event. For example, to trace jiffies update,
+you can do;
+
+ echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
+ echo 1 > events/wprobes/my_jiffies/enable
+
+Moreover, this can be combined with event trigger to trace the memory
+access on slab objects. The trigger syntax is;
+
+  set_wprobe:WPROBE_EVENT:FIELD[+|-OFFSET][:COUNT] [if FILTER]
+  clear_wprobe:WPROBE_EVENT[:FIELD[+|-OFFSET][:COUNT]] [if FILTER]
+
+set_wprobe sets WPROBE_EVENT's watch address on FIELD[+|-OFFSET].
+clear_wprobe clears WPROBE_EVENT's watch address if it is set to
+FIELD[+|-OFFSET]. If FIELD is omitted, forcibly clear the watch address
+when trigger event is hit.
+
+For example, trace the first 8 byte of the dentry data structure passed
+to do_truncate() until it is deleted by dentry_kill().
+(Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
+
+  # echo 'w:watch rw@0:8 address=$addr value=+0($addr)' > dynamic_events
+
+  # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
+  # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
+
+  # echo 'f:dentry_kill dentry_kill dentry=$arg1' >> dynamic_events
+  # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
+
+  # echo 1 >> events/fprobes/truncate/enable
+  # echo 1 >> events/fprobes/dentry_kill/enable
+
+  # echo aaa > /tmp/hoge
+  # echo bbb > /tmp/hoge
+  # echo ccc > /tmp/hoge
+  # rm /tmp/hoge
+
+Then, the trace data will show;
+
+ # tracer: nop
+ #
+ # entries-in-buffer/entries-written: 32/32   #P:8
+ #
+ #                                _-----=> irqs-off/BH-disabled
+ #                               / _----=> need-resched
+ #                              | / _---=> hardirq/softirq
+ #                              || / _--=> preempt-depth
+ #                              ||| / _-=> migrate-disable
+ #                              |||| /     delay
+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+ #              | |         |   |||||     |         |
+               sh-107     [004] ...1.     9.990418: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+               sh-107     [004] ...1.     9.990914: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b3de78
+               sh-107     [004] ...1.     9.993175: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049ddd40
+               sh-107     [004] .....     9.995198: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.     9.995389: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db998
+               sh-107     [004] ..Zff     9.997503: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997509: watch: (path_openat+0x211/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997514: watch: (path_openat+0xa56/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] ..Zff     9.997518: watch: (path_openat+0xae2/0xda0) address=0xffff8880048083a8 value=0x8200080
+               sh-107     [004] .....     9.997521: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.     9.997582: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004808270
+               sh-107     [004] ...1.     9.999365: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db728
+               sh-107     [004] ...1.     9.999388: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b1c000
+               rm-113     [005] ..Zff    10.000965: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000971: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000984: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.000988: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001010: watch: (lookup_one_qstr_excl+0x28/0x140) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001014: watch: (lookup_one_qstr_excl+0xd1/0x140) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001018: watch: (may_delete_dentry+0x1c/0x200) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001021: watch: (may_delete_dentry+0x195/0x200) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] ..Zff    10.001031: watch: (vfs_unlink+0x5e/0x260) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] d.Z..    10.001067: watch: (d_make_discardable+0x1b/0x40) address=0xffff8880048083a8 value=0x8200080
+               rm-113     [005] d.Z..    10.001071: watch: (d_make_discardable+0x29/0x40) address=0xffff8880048083a8 value=0x200080
+               rm-113     [005] ...1.    10.001072: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
+               rm-113     [005] ...1.    10.001218: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
+               sh-107     [004] ...1.    10.001416: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db110
+               sh-107     [004] ...1.    10.001444: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db248
+               sh-107     [004] ...1.    10.001500: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+               sh-107     [004] ...1.    10.002067: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
+               sh-107     [004] ...1.    10.904920: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
+               sh-107     [004] ...1.    10.905129: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
+
+
+Thank you,
+
+---
+base-commit: 54f133c6178d06b169dceae18cc92c4945933b8c
+
+Jinchao Wang (2):
+      x86/hw_breakpoints: Make DR7 updates NMI safe
+      x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
+
+Masami Hiramatsu (Google) (10):
+      kprobes: Protect kprobe_blacklist with RCU
+      HWBP: Add modify_local_hw_breakpoint_addr() API
+      tracing/wprobe: Add wprobe (watchpoint probe) trace event support
+      x86: hw_breakpoint: Add a kconfig to clarify when a breakpoint fires
+      selftests: tracing: Add a basic testcase for wprobe
+      selftests: tracing: Add syntax testcase for wprobe
+      tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
+      selftests: ftrace: Add wprobe trigger testcase
+      tracing/wprobe: Support BTF typecast in fetchargs
+      tracing/wprobe: Support BTF struct offset resolution in set_wprobe trigger
+
+
+ Documentation/trace/index.rst                      |    1 
+ Documentation/trace/wprobetrace.rst                |  185 +++
+ arch/Kconfig                                       |   18 
+ arch/x86/Kconfig                                   |    2 
+ arch/x86/include/asm/debugreg.h                    |   37 -
+ arch/x86/include/asm/hw_breakpoint.h               |    2 
+ arch/x86/kernel/cpu/mce/core.c                     |   20 
+ arch/x86/kernel/hw_breakpoint.c                    |  139 +-
+ arch/x86/kernel/nmi.c                              |    7 
+ arch/x86/kernel/traps.c                            |   10 
+ include/linux/hw_breakpoint.h                      |    6 
+ include/linux/kprobes.h                            |    1 
+ include/linux/trace_events.h                       |    3 
+ kernel/events/hw_breakpoint.c                      |   48 +
+ kernel/kprobes.c                                   |   14 
+ kernel/trace/Kconfig                               |   24 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/trace.c                               |    9 
+ kernel/trace/trace.h                               |    6 
+ kernel/trace/trace_events_trigger.c                |    2 
+ kernel/trace/trace_probe.c                         |   36 -
+ kernel/trace/trace_probe.h                         |   22 
+ kernel/trace/trace_wprobe.c                        | 1440 ++++++++++++++++++++
+ tools/testing/selftests/ftrace/config              |    3 
+ .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   63 +
+ .../test.d/dynevent/wprobes_syntax_errors.tc       |   22 
+ .../test.d/trigger/trigger-wprobe-btf-offset.tc    |   74 +
+ .../test.d/trigger/trigger-wprobe-btf-typecast.tc  |   72 +
+ .../test.d/trigger/trigger-wprobe-syntax-errors.tc |   37 +
+ .../ftrace/test.d/trigger/trigger-wprobe.tc        |   87 +
+ 30 files changed, 2309 insertions(+), 82 deletions(-)
+ create mode 100644 Documentation/trace/wprobetrace.rst
+ create mode 100644 kernel/trace/trace_wprobe.c
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-syntax-errors.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+
 --
-
---- Patch [2]: [RFC PATCH v4 2/5] perf/trace-event: Write trace.dat metadat=
-a sections during parsing ---
-commit 75d79e7a5c5c4a1484c389705c19fc30dbdd1deb
-Author: Tanushree Shah <tshah@linux.ibm.com>
-
-perf/trace-event: Write trace.dat metadata sections during parsing
-
-Perf already captures the tracing metadata as a part of
-data section in perf.data
-
-When trace_dat_fp is set, write trace.dat compatible metadata
-sections using the perf provided raw buffers.
-
-> diff --git a/tools/perf/util/trace-dat.c b/tools/perf/util/trace-dat.c
-> --- a/tools/perf/util/trace-dat.c
-> +++ b/tools/perf/util/trace-dat.c
-[ ... ]
-> @@ -161,8 +164,12 @@ static int trace_dat__write_page(FILE *fp, unsigned =
-long long base_ts,
->  		commit +=3D rec_sizes[i];
->  	}
-> =20
-> -	memcpy(page, &base_ts, sizeof(base_ts));
-> -	memcpy(page + sizeof(base_ts), &commit, sizeof(commit));
-> +	/* Byte-swap page header for cross-arch compatibility */
-> +	ts_out =3D to_file_u64(pevent, base_ts);
-> +	commit_out =3D to_file_u64(pevent, commit);
-> +
-> +	memcpy(page, &ts_out, sizeof(ts_out));
-> +	memcpy(page + sizeof(ts_out), &commit_out, sizeof(commit_out));
-
-[Severity: High]
-Does this hardcode a 16-byte page header regardless of the original
-architecture's commit size?
-
-If the original trace was recorded on a 32-bit machine, its header_page
-metadata usually specifies the commit field as a 4-byte local_t. Writing a
-hardcoded 8-byte commit field here might cause parsers to misalign by 4
-bytes, potentially interpreting the upper half of the 8-byte commit as
-the first event record's header and breaking parsing.
-
-[ ... ]
-> @@ -229,11 +237,18 @@ static int trace_dat__write_cpu_dat(FILE *fp, int c=
-pu, unsigned long long *file_
->  			if (!extend)
->  				return -ENOMEM;
-> =20
-> -			extend_hdr =3D
-> -				((time_delta & TRACE_DAT_RECORD_TIME_MASK) <<
-> -				 TRACE_DAT_RECORD_TIME_SHIFT) |
-> -				TRACE_DAT_RECORD_TYPE_TIME_EXTEND;
-> -			delta_upper =3D time_delta >> TRACE_DAT_RECORD_TIME_SHIFT;
-> +			if (tep_is_file_bigendian(pevent)) {
-> +				extend_hdr =3D (time_delta & TRACE_DAT_RECORD_TIME_MASK) |
-> +				     (TRACE_DAT_RECORD_TYPE_TIME_EXTEND << 27);
-> +				delta_upper =3D time_delta >> 27;
-
-[Severity: Medium]
-Could this left shift result in undefined behavior?
-
-Assuming TRACE_DAT_RECORD_TYPE_TIME_EXTEND is defined as 30 (a 32-bit signed
-integer literal), shifting it left by 27 bits yields 4026531840. This excee=
-ds
-the maximum representable value of a 32-bit signed integer, which can cause
-undefined behavior in C.
-
-[ ... ]
-> @@ -311,8 +332,11 @@ static int trace_dat__write_cpu_dat(FILE *fp, int cp=
-u, unsigned long long *file_
->  		memcpy(data_rec, &hdr_word, TRACE_DAT_WORD_SIZE);
-> =20
->  		/* Large events: write actual byte length after header */
-> -		if (type_len =3D=3D 0)
-> -			memcpy(data_rec + TRACE_DAT_WORD_SIZE, &data_len, TRACE_DAT_WORD_SIZE=
-);
-> +		if (type_len =3D=3D 0) {
-> +			unsigned int data_len_out =3D to_file_u32(pevent, data_len);
-> +
-> +			memcpy(data_rec + TRACE_DAT_WORD_SIZE, &data_len_out, TRACE_DAT_WORD_=
-SIZE);
-> +		}
-> =20
->  		memcpy(data_rec + payload_offset, event->raw, data_len);
-
-[Severity: Critical]
-Is it possible for a crafted perf.data file to cause an out-of-bounds read
-and heap buffer overflow here?
-
-If the original sample's raw_size is maliciously set near UINT_MAX
-(e.g., 0xFFFFFFFF), the data_rec_size calculation in
-trace_dat__write_cpu_dat() calculates data_rec_size =3D 8 + data_len, which
-wraps around to 7. This bypasses the page size check and allocates an 8-byte
-heap buffer. The memcpy() here then attempts to copy gigabytes of data into
-that small buffer.=20
-
-Similarly, earlier in trace_dat__collect_cpu_event(), malloc(0xFFFFFFFF)
-could succeed on a 64-bit host, causing the subsequent memcpy() to read
-gigabytes out-of-bounds.
-
-[ ... ]
-> @@ -464,16 +500,17 @@ int trace_dat__write_options_section1(void)
->  	payload_start =3D ftell(trace_dat_fp);
-> =20
->  	/* CPUCOUNT option */
-[ ... ]
->  	/* TRACECLOCK option */
-> -	opt_id =3D TRACE_DAT_OPTION_TRACECLOCK;
-> +	opt_id =3D to_file_u16(pevent, TRACE_DAT_OPTION_TRACECLOCK);
-> =20
->  	path =3D get_tracing_file("trace_clock");
->  	if (path) {
->  		clock_file =3D fopen(path, "r");
-
-[Severity: Medium]
-Does this inadvertently leak the conversion host's state into the
-converted trace data?
-
-Since this dynamically queries the local host's trace_clock via
-get_tracing_file(), it embeds the local machine's unparsed clock file conte=
-nts
-(such as "[local] global...") instead of preserving the original recorded
-machine's clock metadata, potentially breaking cross-platform reproducibili=
-ty.
-
-[ ... ]
-> diff --git a/tools/perf/util/trace-event-read.c b/tools/perf/util/trace-e=
-vent-read.c
-> --- a/tools/perf/util/trace-event-read.c
-> +++ b/tools/perf/util/trace-event-read.c
-> @@ -383,6 +615,27 @@ static int read_saved_cmdline(struct tep_handle *pev=
-ent)
->  		pr_debug("error reading saved cmdlines\n");
->  		goto out;
->  	}
-> +	/* Write cmdlines section with data */
-> +	if (trace_dat_fp && !trace_dat_write_failed) {
-> +		unsigned short section_id =3D to_file_u16(pevent, TRACE_DAT_SECTION_CM=
-DLINE);
-> +		unsigned short flags =3D to_file_u16(pevent, 0);
-
-[Severity: Critical]
-This is a pre-existing issue, but does the size calculation for the
-saved command line buffer overflow on 32-bit systems?
-
-Looking at read_saved_cmdline(), when size is read as a 64-bit value, if it
-is 0xFFFFFFFF, the allocation calculation of size + 1 overflows to
-0x100000000.
-
-On 32-bit architectures, this is truncated to 0, causing malloc(0) to return
-a small valid pointer. The subsequent do_read(buf, size) then passes
-0xFFFFFFFF to the read() syscall, which can overwrite the heap and
-potentially cause a denial of service or arbitrary code execution.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260822062729.8820=
-05-1-tshah@linux.ibm.com?part=3D2
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
