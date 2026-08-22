@@ -1,219 +1,179 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6419366DD3;
-	Sat, 22 Aug 2026 09:41:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890113BAD9B;
+	Sat, 22 Aug 2026 09:42:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787391668; cv=none; b=HOclSKLt45JOzSsJb7ruUxEV70mMb0rM85TyVWjkI+yPCWzG5s+K7VCfgKDmTNchi7fqifuy/QHYM4vS4D6YQwTnKlOJRNFt2akkv6a6GH67mLV5EHKhOz9rsPu3MAP0sNXYrEBVz5YCGDjzCOY3zqHzqxvlaf/EDQUQHRkNg2U=
+	t=1787391739; cv=none; b=K8C9woztPa5aS1dzi6E5S2GAXlrZruHOsp11sFv/m7enhqIlEocbmg4tsbtp8TO843UkrNL43vSE9C8vTpKFUISGjDLLu8RluCZRmWqSyZdUG6U3zSOg9v1ilEfz0jHC+Qjd+NWNWVPpaQvNA1vjTtYtCBTJNWYL6aC7pzjjZtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787391668; c=relaxed/simple;
-	bh=nzfAB6Nczenc82Id71ay4eKCQfGiMVpMHNHaPW3ju4s=;
+	s=arc-20240116; t=1787391739; c=relaxed/simple;
+	bh=zOhtWSV6G1UH9BHtX+1dKyQazfBA0CyP5pOvE9FPgBA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=qwnjSU1cC8JaESJTc1AVThFWrsY1nTTCny96pERN5/bK+OnXcxuLBijkyEx4+0WroQ0P4dyKrIUDs5Lq4n3zuAa3RLRymItPwkh39VtEj9PLdF6EVgawOm06gpKZ79mFOaSdTpUENU8198AJG+tPhp/XUIH3s2cUq2v3XmNvyWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X43qK6kq; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Oe95Gqil5KeA9jFCzUEk8wr4o6t7RggqNg0vcqix3PCGLYyt1LNBGlW0gncoAIajig0HfXYTm5iML2Q6eqW5OEvNIuFFeADzrySDR4+TksAro/w1pE8sAkiJAoehDUkCdDyYmOKbgLYfaDH5IDmI5h5bwufImxFlvlNhkuiiVE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YpkGitHw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X43qK6kq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 349031F00A3A;
-	Sat, 22 Aug 2026 09:41:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YpkGitHw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C4491F000E9;
+	Sat, 22 Aug 2026 09:42:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787391667;
-	bh=1pyUjjMbx0WlyUH1hICkro2FSdzKZ7E0078lpH9Apgw=;
+	s=k20260515; t=1787391738;
+	bh=MxFp+i6yA4R1eaGXAxdupbju7yBi0GNzU+jZYYfQyN4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=X43qK6kqiTqBkF07ztgoavOxqlSUeWsMHYLDmBL+ugs395y2C5SrIPsl68CuiRAm0
-	 68A28tTAiSRQn8tz1V5oAmnEEDtIbUU+leCOWBBUH9/UgoWcIwPnojt8zwufo5qMy0
-	 d7feNkZuVU+6EdI8EJnwaUuBJwkxhH0DBHwRhmwFx7zQ1qkLU+n9UI4su0sMt56+yq
-	 7SSlka5Q78FRQel2dlcE9oPRrEuxDwqWGLGIkdsXM4WetxmVMbV6dS5L7FfYbYrFVX
-	 B4nA1f0H/dmZc3BI+xw6Xw2VK6milLczCHhmL4HiJfbuaLCjPqeeviIv3g4nCk7Z2y
-	 4bFvvQBse9qqg==
+	b=YpkGitHwh9Bhvd095U84a6dpr0NV6jLodgujMuj5wHxTR4K9GlY6SF4YyYfym9sV0
+	 QqEMaSvv8f3cD15UCKAQbOQ6NlU1GLIv14unA3kPW0qsyll4nOEV20dgvKusd6Qr8f
+	 ALY6izNM4SrdUPSPGhewyeE1K6Ww5oxdyxdV9sG7nCsaP2PWh7wH4XKmiOHwen1XVh
+	 io7aNuq0wJAAFfgtuUXt9EwrMUiY6SZB9S4psdqWW+THQnA0RvFUH4SfMgQ7k2DnsJ
+	 cbNAA9GHMtbm8QISjEbif86pqV0ob2yLcgXAXF7zoXGm8bhOLYYul0x6YCIvu88pa/
+	 lBNk634Z2xVmw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v13 02/12] x86/hw_breakpoints: Make DR7 updates NMI safe
+Subject: Re: [PATCH v13 09/12] tracing/wprobe: Add set_wprobe and
+ clear_wprobe event triggers
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <178739056219.1520941.16843776326995549779.stgit@devnote2>
+In-Reply-To: <178739069325.1520941.16954545333706545613.stgit@devnote2>
 References: <178739053919.1520941.17662338993878200834.stgit@devnote2>
- <178739056219.1520941.16843776326995549779.stgit@devnote2>
+ <178739069325.1520941.16954545333706545613.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sat, 22 Aug 2026 09:41:06 +0000
-Message-Id: <20260822094107.349031F00A3A@smtp.kernel.org>
+Date: Sat, 22 Aug 2026 09:42:17 +0000
+Message-Id: <20260822094218.0C4491F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-
-New issues:
-- [High] local_db_restore overwrites an intentionally cleared hardware DR7 =
-state (e.g., KVM VMENTER) with the host's shadow cpu_dr7 if an NMI modifies=
- the sequence counter.
-
-Pre-existing issues:
-- [High] Task migration during user-mode machine check exceptions corrupts =
-hardware debug registers on the new CPU.
+- [Medium] Leaked `trigger_data` and `wprobe_data` when trigger registratio=
+n fails due to unbalanced reference counts.
+- [Medium] Hardware breakpoints are inadvertently left monitoring the initi=
+al wprobe address (unparked) instead of the parked dummy address upon enabl=
+ement.
+- [Low] The `clear_wprobe` trigger cannot be removed by echoing its exact p=
+rinted output if a trigger count is specified.
 --
 
---- Patch [2]: [PATCH v13 02/12] x86/hw_breakpoints: Make DR7 updates NMI s=
-afe ---
-commit 0d8b774ae86048690b3378737c33f417379e85de
-Author: Jinchao Wang <wangjinchao600@gmail.com>
+--- Patch [9]: [PATCH v13 09/12] tracing/wprobe: Add set_wprobe and clear_w=
+probe event triggers ---
+commit e794ff7412c73348b335e9a50aceecbbd82d9a0c
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-x86/hw_breakpoints: Make DR7 updates NMI safe
-   =20
-Hardware breakpoint installation and removal run with IRQs disabled, but
-an NMI can still enter the same code through KGDB. The interrupted
-operation and the NMI can consequently claim the same slot or overwrite
-each other's DR7 state.
-   =20
-Claim and release per-CPU slots with cmpxchg. Update cpu_dr7 with
-single-instruction per-CPU operations, and preserve hardware-first
-disable and hardware-last enable ordering. Add a per-CPU sequence number
-so interrupted DR7 writers and restore paths detect an NMI update and
-retry from the latest shadow state.
+tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
 
-Link: https://lore.kernel.org/all/4ee0a2efc9e8387af83286b8495b7d490247e165.=
+Add set_wprobe and clear_wprobe event triggers to dynamically attach
+and detach hardware breakpoint address monitoring based on event field
+contents.
+
+Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.=
 1785067572.git.wangjinchao600@gmail.com/
 
-> diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debug=
-reg.h
-> index a2c1f2d24b645..c41ee981c2303 100644
-> --- a/arch/x86/include/asm/debugreg.h
-> +++ b/arch/x86/include/asm/debugreg.h
+> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+> index a8543766a245b..acb15fd018e80 100644
+> --- a/kernel/trace/trace_wprobe.c
+> +++ b/kernel/trace/trace_wprobe.c
+
 [ ... ]
-> @@ -145,20 +148,34 @@ static __always_inline unsigned long local_db_save(=
-void)
->  	 * be good.
->  	 */
->  	barrier();
-> -
-> -	return dr7;
->  }
-> =20
-> -static __always_inline void local_db_restore(unsigned long dr7)
-> +static __always_inline void local_db_restore(unsigned long dr7,
-> +					     unsigned int dr7_seq)
->  {
-> +	unsigned int seq;
-> +
->  	/*
->  	 * Ensure the compiler doesn't raise this statement into
->  	 * the critical section; enabling breakpoints early would
->  	 * not be good.
->  	 */
->  	barrier();
-> -	if (dr7)
-> +
-> +	do {
-> +		seq =3D this_cpu_read(cpu_dr7_seq);
-> +		if (seq =3D=3D dr7_seq) {
-> +			if (!dr7)
-> +				return;
-> +		} else {
-> +			dr7 =3D this_cpu_read(cpu_dr7);
-> +			if (!dr7)
-> +				dr7 =3D DR7_FIXED_1;
-> +		}
-> +
->  		set_debugreg(dr7, 7);
-> +		barrier();
-> +	} while (unlikely(seq !=3D this_cpu_read(cpu_dr7_seq)));
->  }
 
-[Severity: High]
-If KVM intentionally clears the hardware DR7 state to isolate the guest from
-host breakpoints before VMENTER without modifying the host's cpu_dr7 shadow
-state:
+> @@ -756,3 +827,501 @@ static __init int init_wprobe_trace(void)
 
-arch/x86/kvm/x86.c:vcpu_enter_guest() {
-    ...
-    if (unlikely(vcpu->arch.switch_db_regs &&
-                 !(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH))) {
-        set_debugreg(DR7_FIXED_1, 7);
-    ...
-    } else if (unlikely(hw_breakpoint_active())) {
-        set_debugreg(DR7_FIXED_1, 7);
-    }
-    ...
+[ ... ]
+
+> +static int wprobe_trigger_cmd_parse(struct event_command *cmd_ops,
+> +				    struct trace_event_file *file,
+> +				    char *glob, char *cmd,
+> +				    char *param_and_filter)
+> +{
+
+[ ... ]
+
+> +	} else if (param && (isalpha(param[0]) || param[0] =3D=3D '_')) {
+> +		char *offs;
+> +
+> +		field_str =3D strsep(&param, ":");
+
+[Severity: Low]
+Does this code prevent removing the clear_wprobe trigger if it has a count
+but no field?
+
+If the user sets a count on a clear_wprobe trigger, wprobe_trigger_print()
+outputs the trigger as ending with ":count=3DN". When attempting to remove =
+it
+by writing the exact string prepended with '!', this parser checks if the
+parameter starts with a letter.
+
+Since "count=3DN" starts with a letter ('c'), it treats it as an event field
+name, and fails with -ENOENT in wprobe_trigger_field_parse(), preventing the
+trigger from being unregistered.
+
+[ ... ]
+
+> +	/* Soft-enable (register) wprobe event on WPROBE_DEFAULT_CLEAR_ADDRESS =
+*/
+> +	if (!trace_event_try_get_ref(wprobe_file->event_call)) {
+> +		ret =3D -ENODEV;
+> +		goto out_free_trigger;
+> +	}
+> +
+> +	ret =3D trace_event_enable_disable(wprobe_file, 1, 1);
+> +	if (ret < 0)
+> +		goto out_put;
+> +
+> +	if (!clear)
+> +		WRITE_ONCE(tw->addr, WPROBE_DEFAULT_CLEAR_ADDRESS);
+
+[Severity: Medium]
+Should we update the target address before soft-enabling the event?
+
+The documentation suggests initializing a new wprobe at address 0 and keepi=
+ng
+it disabled. When we call trace_event_enable_disable(wprobe_file, 1, 1) her=
+e,
+it installs hardware breakpoints monitoring the current address (e.g., 0).
+
+The parked dummy address WPROBE_DEFAULT_CLEAR_ADDRESS is only assigned to
+tw->addr afterwards, which means the hardware breakpoints are left actively
+monitoring address 0 and could generate spurious debug exceptions.
+
+[ ... ]
+
+> +out_disable:
+> +	trace_event_enable_disable(wprobe_file, 0, 1);
+> +out_put:
+> +	trace_event_put_ref(wprobe_file->event_call);
+> +out_free_trigger:
+> +	event_trigger_reset_filter(cmd_ops, trigger_data);
+> +	event_trigger_free(trigger_data);
+> +	return ret;
+
+[Severity: Medium]
+Can this leak trigger_data and wprobe_data on the error path?
+
+When wprobe_trigger_cmd_parse() executes, it increments the trigger_data
+refcount to 1 via event_trigger_init().
+
+It then calls event_trigger_register() which calls wprobe_register_trigger()
+and increments the refcount to 2 via data->cmd_ops->init(data).
+
+If trace_event_trigger_enable_disable() fails inside wprobe_register_trigge=
+r(),
+it returns an error without balancing the reference count:
+
+kernel/trace/trace_wprobe.c:wprobe_register_trigger() {
+	...
+	ret =3D trace_event_trigger_enable_disable(file, 1);
+	if (ret < 0) {
+		list_del_rcu(&data->list);
+		update_cond_flag(file);
+	}
+	return ret;
 }
 
-Could an NMI firing shortly after this permanently undo this isolation
-upon return?
-
-If an NMI (such as a perf event) fires before vmlaunch/vmresume, exc_nmi
-calls local_db_save, saving dr7=3D0. If the NMI modifies a breakpoint,
-cpu_dr7_seq increments.
-
-When exc_nmi calls local_db_restore, the sequence mismatch causes it to
-discard the saved dr7=3D0 state and instead unconditionally restore the hos=
-t's
-active breakpoints (this_cpu_read(cpu_dr7)) to the hardware DR7. This could
-leak host hardware breakpoints into a KVM guest and cause unexpected #DB
-exceptions.
-
-[ ... ]
-> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/cor=
-e.c
-> index 9bba1e2f03af7..8dba9cd04bfa5 100644
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-[ ... ]
-> @@ -2139,20 +2139,22 @@ static __always_inline void exc_machine_check_use=
-r(struct pt_regs *regs)
->  DEFINE_IDTENTRY_MCE(exc_machine_check)
->  {
->  	unsigned long dr7;
-> +	unsigned int dr7_seq;
-> =20
-> -	dr7 =3D local_db_save();
-> +	local_db_save(&dr7, &dr7_seq);
->  	exc_machine_check_kernel(regs);
-> -	local_db_restore(dr7);
-> +	local_db_restore(dr7, dr7_seq);
->  }
-> =20
->  /* The user mode variant. */
->  DEFINE_IDTENTRY_MCE_USER(exc_machine_check)
->  {
->  	unsigned long dr7;
-> +	unsigned int dr7_seq;
-> =20
-> -	dr7 =3D local_db_save();
-> +	local_db_save(&dr7, &dr7_seq);
->  	exc_machine_check_user(regs);
-> -	local_db_restore(dr7);
-> +	local_db_restore(dr7, dr7_seq);
->  }
-
-[Severity: High]
-This is a pre-existing issue, but does task migration during user-mode
-machine check exceptions corrupt hardware debug registers on the new CPU?
-
-exc_machine_check_user invokes irqentry_exit_to_user_mode, which processes
-pending thread work (like TIF_NEED_RESCHED), enabling interrupts and allowi=
-ng
-the task to be scheduled out and migrate to a new CPU:
-
-CPU1
-exc_machine_check()
-    local_db_save(&dr7, &dr7_seq);
-    exc_machine_check_user(regs)
-        irqentry_exit_to_user_mode(regs)
-            // Task migrates to CPU2
-
-CPU2
-    local_db_restore(dr7, dr7_seq);
-
-When it resumes on the new CPU, local_db_restore is executed with the dr7
-and dr7_seq values saved from the old CPU. If the new CPU's cpu_dr7_seq
-matches the old CPU's saved dr7_seq, it would erroneously write the old CPU=
-'s
-hardware DR7 state to the new CPU's hardware DR7 register. Could this cause
-spurious #DB exceptions or break hardware breakpoints on the new CPU?
+The error path here then calls event_trigger_free(trigger_data), which only
+decrements the refcount from 2 to 1 and skips freeing the objects.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178739053919.152094=
-1.17662338993878200834.stgit@devnote2?part=3D2
+1.17662338993878200834.stgit@devnote2?part=3D9
