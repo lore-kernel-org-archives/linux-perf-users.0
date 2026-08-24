@@ -1,46 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78A2331ED2
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 20:18:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BDC38E8A9;
+	Mon, 24 Aug 2026 20:35:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787602682; cv=none; b=IMebiqAKVKmEZ1Dj/eMfSpYgvVgKwt3EtynkkEA++ofzVn9R6QxwbFkUr9mlUknSsCwJea/sGBYQ1LjCiy+VccX5qaErmFwfLdgDmTEhUWJABAzwF9uh/HL8l5ALc2zgyLp3HQvT6zhTpTxV5kPZSkUItkR/tbW12bhVijbxjCA=
+	t=1787603745; cv=none; b=aHYVpI/CFHLv2TB3tQISFGGyosKCjit2kUXS3Lilr4C5t/x0LGTo3uUkdMkdrWhsfokVC8t1IUEpSoHDve2R5OW1SKqw6FphqhvMlVrpiO/4iOsuXxkfIVdxX7unVRuWsejJC4OFMIAjpaaA/WGr58QYeY8s/pKMr0gUxuMQUJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787602682; c=relaxed/simple;
-	bh=URsi7e4OR0JmX7pm3tlKz1+Fyzyx3DYb2+A8/wrbErk=;
+	s=arc-20240116; t=1787603745; c=relaxed/simple;
+	bh=rWngIgQzNaE9lYMrIM6syp3jYqhxZpN4l4I0A0pMK54=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nO2+3v8nW5A3PERJOtdp7WeTQgMhnuFhaI+sIrfMAQyXa/cCnPDzFW+e2rUb7jprzS9DJFjCuO/w0OVUsfbaCn6vFRmpyI0dTMarPMMKJuwqEpiDnuPss5PJEKqPid/EYxo2cWHSZnfcs5/P/+OzW0JfI8e1weUXrF378v0J1ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VejiYxAm; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=rOLsvHrVXC13b5sF5RzxDPsKryctTELw531VReOqTG9Wa99eeBP4rqAm5SNURDhKBSLez7Wv+BFJW9akIN2ceSoG6Bav52KqUgbHaKQTmo80hu5nQpmeAEPpXv+MDlFCa9A7ALrcij+8d+1B88GYhzfyQ+8xLwpf1TAFMlvB++8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EJnofquH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VejiYxAm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5128E1F000E9;
-	Mon, 24 Aug 2026 20:18:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EJnofquH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BE7B1F000E9;
+	Mon, 24 Aug 2026 20:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787602680;
-	bh=7DfdJ6xuOTaxcsu0S0gIuc2F531lao+Uit7lhn9aNs0=;
+	s=k20260515; t=1787603742;
+	bh=1uvfcipTeywuwBvWG7fWjuh1CocA+I14rRFF3OXycMs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=VejiYxAm7CZFstsBusK0rHtlObcR1D+/t3B/4H0XKgve/vU2BjxaskaG472T7e+v9
-	 mzrLNQRemQ8Gu08ID3kufHLWtO8TnF3e23IYJOcomZK6hd73+T1GC2EdLAgAsmU2N6
-	 k6p6qKSnKEB4qhoovzWWqqf3egSsAegZXan35JdYUBHoIJUfWF5CZFiq0XPyQniDxc
-	 myvWV6HGScKKQCeO22D1KOu/R3NK2U3Y74F2pw45S5zaoNfbSY57MakgMlCZDwys5i
-	 uUEKclz79q6A471qWHGe/BCbW/oGKcGw/qWAs5SODHn2cGhp76PRS2ArTzQD2tk21A
-	 8avpR0o1JswMw==
-Date: Mon, 24 Aug 2026 13:17:58 -0700
+	b=EJnofquHqS8Sx0Qz1NFrGWP6ykpiZIIxDSW56I+Qwyt0wuuiKOkjbc0QX2EX9HRJ/
+	 XUYNNzMVhwW9bAjiAqetKidP9l49uIj0kG3MeR6liHpbHkDSxUfXSnnV0MtY0WG17S
+	 NneS5h/eo3kIgJ2I/AfaLU8WhU4Jn+u92VlNhx24K+gUJ9k1G4DhpK5oB6HWdNy0/4
+	 2ymMHe5fvLs9+bATjZ2bPeLcfLnrQqN6memJxZLkKdm0Idmbv2Rg3L5AiH0SIgZT2+
+	 W08be9kYbBk2IzhJbLG2/I7TCy9d8m5dAPuOa0dE+WmM/Wnb9MCcdpi6P0+3Lp2caK
+	 URo/Q5rn6n+0Q==
+Date: Mon, 24 Aug 2026 13:35:41 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Todd Lipcon <tlipcon@google.com>, Stephane Eranian <eranian@google.com>,
-	"Mi, Dapeng1" <dapeng1.mi@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: perf script intel_pt decoding reading instructions from wrong
- shared lib
-Message-ID: <aoym9nq77PimB3fz@google.com>
-References: <CAGH6UiG=RJLqBU3kLu9XJciPyPO1HZkbAPERguVUMRuWQgqf=A@mail.gmail.com>
- <c45fea55-b03d-40ac-a89f-8882b057fe5b@intel.com>
- <ajw8r2Y2shs6sBJW@google.com>
- <3a317e20-da30-484f-a3e0-a2e12ba5bcf0@intel.com>
+To: Yanbo Zhao <yzhao62@ncsu.edu>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, Zecheng Li <zli94@ncsu.edu>,
+	Xu Liu <xliuprof@google.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] perf dwarf-aux: Add die_is_compound_type() to handle
+ C++ class types
+Message-ID: <aoyrHe2MBOf4ocqn@google.com>
+References: <20260821050207.4517-1-yzhao62@ncsu.edu>
+ <20260821050207.4517-2-yzhao62@ncsu.edu>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,60 +51,186 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <3a317e20-da30-484f-a3e0-a2e12ba5bcf0@intel.com>
+In-Reply-To: <20260821050207.4517-2-yzhao62@ncsu.edu>
 
-On Mon, Aug 24, 2026 at 08:26:37AM +0300, Adrian Hunter wrote:
-> On 24/06/2026 23:23, Namhyung Kim wrote:
-> > Hello,
-> > 
-> > On Tue, Jun 02, 2026 at 10:32:02PM +0300, Adrian Hunter wrote:
-> >> On 15/04/2025 00:59, Todd Lipcon wrote:
-> >>> Hi folks,
-> >>>
-> >>> It seems there may be a bug in perf-script when processing intel_pt.
-> >>> Specifically, in order to reconstruct the instructions, it maps
-> >>> instruction pointers back to DSO-relative addresses, and then reads
-> >>> from the associated ELF files to find the actual instructions that
-> >>> were traced.
-> >>>
-> >>> In the case that the ELF file has an associated separate-debug ELF
-> >>> file linked via `.gnu-debuglink` (common in some Linux distros), it
-> >>> appears to be reading the debuginfo file instead of the shared library
-> >>> that actually contains the code.
-> >>>
-> >>> I've posted a simple repro here:
-> >>> https://github.com/toddlipcon/perf-debuglink-bug/blob/main/repro.sh
-> >>>
-> >>> I haven't dug into the code yet enough to see where it's going wrong,
-> >>> but figured I would report to the users list first.
-> >>
-> >> Seems to be caused by commit 5363c306787c8 - see further below.
-> >> Reverting that makes the issue go away.
-> > 
-> > Sorry for the trouble.
-> > 
-> >>
-> >> With that commit, dso__load() sets the binary_type to the first symbol
-> >> source file type, which is DSO_BINARY_TYPE__DEBUGLINK in this case.
-> >> That causes dso__get_filename() to get the file name of the debug file,
-> >> not the file actually executed.
-> >>
-> >> Leaving the binary_type as DSO_BINARY_TYPE__NOT_FOUND will result in
-> >> try_to_open_dso() using either DSO_BINARY_TYPE__BUILD_ID_CACHE or
-> >> DSO_BINARY_TYPE__SYSTEM_PATH_DSO.
-> > 
-> > Ok, I feel like we should split the dso access for the binary file (for
-> > annotate or intel-pt) and debug symbols (symbol table or DWARF).
-> > Probably we can use the binary_type and symtab_type respectively.
-> > 
-> > I'll take a look.
+Hello,
+
+On Fri, Aug 21, 2026 at 01:02:05AM -0400, Yanbo Zhao wrote:
+> Introduce the die_is_compound_type() helper which checks for
+> DW_TAG_structure_type, DW_TAG_union_type, and DW_TAG_class_type, and
+> convert all the existing open-coded struct/union tag checks to use it:
+> - die_get_member_type() in dwarf-aux.c.
+> - __add_member_cb(), is_compound_type(), and set_stack_state() in
+>   annotate-data.c.
+
+I think this part is fine.
+
 > 
-> Would it make sense to apply the workaround in the meantime?
+> Also accept DW_TAG_inheritance in the member lookup callbacks
+> (__die_find_member_offset_cb() and __add_member_cb()) so that member
+> lookup by offset descends into C++ base class subobjects.
+> 
+> This extends the existing member type resolution and data type
+> profiling state handling to C++ classes with inheritance without
+> changing behavior for C struct/union types.
 
-Right, I couldn't find time for it so far. :(
-
-Can you please send a formal patch?
+But this part is a little unclear.  Can you please share an example
+DWARF of a class that has inherited members?  It'd be helpful for others
+to understand why it needs to handle the tag in the same way.
 
 Thanks,
 Namhyung
 
+> 
+> Signed-off-by: Yanbo Zhao <yzhao62@ncsu.edu>
+> ---
+>  tools/perf/util/annotate-data.c | 29 ++++++-----------------------
+>  tools/perf/util/dwarf-aux.c     | 17 ++++++++++++-----
+>  tools/perf/util/dwarf-aux.h     |  3 +++
+>  3 files changed, 21 insertions(+), 28 deletions(-)
+> 
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> index 4e4c58764082..ee6bd2d0012d 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -230,9 +230,9 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+>  	Dwarf_Word size, loc, bit_size = 0;
+>  	Dwarf_Attribute attr;
+>  	struct strbuf sb;
+> -	int tag;
+> +	int tag = dwarf_tag(die);
+>  
+> -	if (dwarf_tag(die) != DW_TAG_member)
+> +	if (tag != DW_TAG_member && tag != DW_TAG_inheritance)
+>  		return DIE_FIND_CB_SIBLING;
+>  
+>  	member = zalloc(sizeof(*member));
+> @@ -292,15 +292,8 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+>  	INIT_LIST_HEAD(&member->children);
+>  	list_add_tail(&member->node, &parent->children);
+>  
+> -	tag = dwarf_tag(&die_mem);
+> -	switch (tag) {
+> -	case DW_TAG_structure_type:
+> -	case DW_TAG_union_type:
+> +	if (die_is_compound_type(&die_mem))
+>  		die_find_child(&die_mem, __add_member_cb, member, &die_mem);
+> -		break;
+> -	default:
+> -		break;
+> -	}
+>  	return DIE_FIND_CB_SIBLING;
+>  }
+>  
+> @@ -464,9 +457,7 @@ static const char *match_result_str(enum type_match_result tmr)
+>  
+>  static bool is_compound_type(Dwarf_Die *type_die)
+>  {
+> -	int tag = dwarf_tag(type_die);
+> -
+> -	return tag == DW_TAG_structure_type || tag == DW_TAG_union_type;
+> +	return die_is_compound_type(type_die);
+>  }
+>  
+>  /* returns if Type B has better information than Type A */
+> @@ -584,7 +575,6 @@ struct type_state_stack *find_stack_state(struct type_state *state,
+>  void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
+>  			    Dwarf_Die *type_die, int ptr_offset)
+>  {
+> -	int tag;
+>  	Dwarf_Word size;
+>  
+>  	if (kind == TSR_KIND_POINTER) {
+> @@ -605,17 +595,10 @@ void set_stack_state(struct type_state_stack *stack, int offset, u8 kind,
+>  		return;
+>  	}
+>  
+> -	tag = dwarf_tag(type_die);
+> -
+> -	switch (tag) {
+> -	case DW_TAG_structure_type:
+> -	case DW_TAG_union_type:
+> +	if (die_is_compound_type(type_die))
+>  		stack->compound = (kind != TSR_KIND_PERCPU_POINTER);
+> -		break;
+> -	default:
+> +	else
+>  		stack->compound = false;
+> -		break;
+> -	}
+>  }
+>  
+>  struct type_state_stack *findnew_stack_state(struct type_state *state,
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index d7160f87ac7d..88ba0ec23a68 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -60,6 +60,14 @@ const char *cu_get_comp_dir(Dwarf_Die *cu_die)
+>  	return dwarf_formstring(&attr);
+>  }
+>  
+> +bool die_is_compound_type(Dwarf_Die *type_die)
+> +{
+> +	int tag = dwarf_tag(type_die);
+> +
+> +	return tag == DW_TAG_structure_type || tag == DW_TAG_union_type ||
+> +	       tag == DW_TAG_class_type;
+> +}
+> +
+>  /* Unlike dwarf_getsrc_die(), cu_getsrc_die() only returns statement line */
+>  static Dwarf_Line *cu_getsrc_die(Dwarf_Die *cu_die, Dwarf_Addr addr)
+>  {
+> @@ -2053,7 +2061,7 @@ static int __die_find_member_offset_cb(Dwarf_Die *die_mem, void *arg)
+>  	Dwarf_Word offset = (long)arg;
+>  	int tag = dwarf_tag(die_mem);
+>  
+> -	if (tag != DW_TAG_member)
+> +	if (tag != DW_TAG_member && tag != DW_TAG_inheritance)
+>  		return DIE_FIND_CB_SIBLING;
+>  
+>  	/* Unions might not have location */
+> @@ -2104,7 +2112,7 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
+>  
+>  	tag = dwarf_tag(type_die);
+>  	/* If it's not a compound type, return the type directly */
+> -	if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type) {
+> +	if (!die_is_compound_type(type_die)) {
+>  		Dwarf_Word size;
+>  
+>  		if (dwarf_aggregate_size(type_die, &size) < 0)
+> @@ -2119,7 +2127,7 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
+>  
+>  	mb_type = *type_die;
+>  	/* TODO: Handle union types better? */
+> -	while (tag == DW_TAG_structure_type || tag == DW_TAG_union_type) {
+> +	while (die_is_compound_type(&mb_type)) {
+>  		member = die_find_child(&mb_type, __die_find_member_offset_cb,
+>  					(void *)(long)offset, die_mem);
+>  		if (member == NULL)
+> @@ -2130,8 +2138,7 @@ Dwarf_Die *die_get_member_type(Dwarf_Die *type_die, int offset,
+>  
+>  		tag = dwarf_tag(&mb_type);
+>  
+> -		if (tag == DW_TAG_structure_type || tag == DW_TAG_union_type ||
+> -		    tag == DW_TAG_array_type) {
+> +		if (die_is_compound_type(&mb_type) || tag == DW_TAG_array_type) {
+>  			Dwarf_Word loc;
+>  
+>  			/* Update offset for the start of the member struct */
+> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+> index 161f0bf980b6..855c45fec5bb 100644
+> --- a/tools/perf/util/dwarf-aux.h
+> +++ b/tools/perf/util/dwarf-aux.h
+> @@ -23,6 +23,9 @@ const char *cu_find_realpath(Dwarf_Die *cu_die, const char *fname);
+>  /* Get DW_AT_comp_dir (should be NULL with older gcc) */
+>  const char *cu_get_comp_dir(Dwarf_Die *cu_die);
+>  
+> +/* Check if DIE is a compound type (structure, union, or class) */
+> +bool die_is_compound_type(Dwarf_Die *type_die);
+> +
+>  /* Get a line number and file name for given address */
+>  int cu_find_lineinfo(Dwarf_Die *cudie, Dwarf_Addr addr,
+>  		     const char **fname, int *lineno);
+> -- 
+> 2.25.1
+> 
