@@ -1,113 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020115.outbound.protection.outlook.com [52.101.195.115])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E803B3264DF;
-	Mon, 24 Aug 2026 12:22:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3D4311977;
+	Mon, 24 Aug 2026 13:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.195.115
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787574128; cv=fail; b=P/TZv8T+r2Ifg5ZSvSVL39mgObuE7tKdnNo1MkZ7gxZQ79yrHg5YZw8nOdy8W6xZcXcZqVHFROdPzdvUJQ7qyao3/29p81Rn6znuDzT3WC9e6QvgpStluC69RvC5o4MeOpvNCOw3GRfX3YS34sm+FHoDSSxk1mjMBtA7D4TuidI=
+	t=1787578294; cv=fail; b=IPsSR6Z2J5f5oOhtyISKus6twTsijm4TV3FzTrOMw08ZS+o3MXXNfEA6u9tsUlhuYqskEWerX0dPUh98KPEBar4ZdJHA5jqrZiTKz5dUiGjlgx7uZ1ah844X244eD4OQTHPPb+6WI/N0AjvXY2FtqB7N8bWuDmfSC4O+cQkRoj0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787574128; c=relaxed/simple;
-	bh=fhBuZVnkPIyfvwBdeK9Fhxo4/sc5WQL0V7svBzW3uIc=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=RZ0gwaLF6CX5Inrr9Bh1sVg/QWJ/WjhtLjkb9K8bcg5ng0SqvUJcJJVwSvmw1Diuf7PWTeWmx54oH0QojkMa/XJ0s5AFtwG+Tl89YWaDnIVOweWxjMhrRRWywtSniYrdQFcHlP/KZRDzBorzbT6bTdQcA4x7bbA/jYCEM+ZilOo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=irx8yWrB; arc=fail smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="irx8yWrB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787574127; x=1819110127;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=fhBuZVnkPIyfvwBdeK9Fhxo4/sc5WQL0V7svBzW3uIc=;
-  b=irx8yWrBJhsDoYfqngN5Tgi3VbxOK297/uclKKmwaAoBVXcGR2fVSba1
-   OnA1WzVE8WBZBi16wUzjgOWL9EwnYNY9WYViaqMZiGxBsG8uGc9QHlnsB
-   LkJppwVjieriUYNUhIiR2V+5Y4KUouxrDBJf3ou9a2qRVzUtMizeiU9ez
-   mG0AhTLOWjktBfs3z0wQ8XNgfcrkQAckFg8A8QVHkA/MFM8YUDMIV0A6u
-   TqNx73S8aJJRiUdyFQ8qJe2FkvUY324a+A5LKIBNrV2CK941MQ14LaLlY
-   nPv6E2iZsxnerO8Da02wifw4oE+c8V4jTdeP78UyRSIYoNg3rSx15Qdmu
-   g==;
-X-CSE-ConnectionGUID: aPlWD/QFTsWfFTx4tInUjA==
-X-CSE-MsgGUID: VALaqaRzR56fYVjx8bfqAQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11884"; a="105558668"
-X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
-   d="scan'208";a="105558668"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 05:22:06 -0700
-X-CSE-ConnectionGUID: s3o8qChoT7au9YoupuenQg==
-X-CSE-MsgGUID: o3GyjSVBRlSk7hkjm2qhpg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
-   d="scan'208";a="271203058"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 05:22:06 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Mon, 24 Aug 2026 05:22:05 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45 via Frontend Transport; Mon, 24 Aug 2026 05:22:05 -0700
-Received: from BN1PR04CU002.outbound.protection.outlook.com (52.101.56.57) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Mon, 24 Aug 2026 05:22:05 -0700
+	s=arc-20240116; t=1787578294; c=relaxed/simple;
+	bh=JN/W1z7FRAJjtZ7X+x/q5clLAsNcV6KO7XKsQBrV0fc=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=nyi70tOD6dy3NNbljZjOOOTdQAukhK6TEehjXJgJcH68MgVoz9/w4kAhL7WCcbyjqwL/Jzc4AqHKXGDcoQMSo7v9y41YKsC0I0TUaxt6FQ4IZo3nJwMQJnxbuFU2tR5xugt27NQiW0vzBaEv/WnPT/6E5CE0DH45zOZVzOkQcmw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.195.115
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Ip3T767XSH/wlkDfQajC3YvmwN1P5EGg1DSES5lkNcDj2XOPJpwYiX0YMz5wK4AEY1NjaOTwGJYOB/0861xRent8E0dTi2nH9VgMRVZ0f77gyo2E8AyPuBSZ+r5OUjzUQMwqeJsunGkMEu5plUVPoA/tTJukMOZojQxitFAIq+BAyZKcWuiSpL4RbOWmxPMZtK+uHm/vlnRHptqepacBpf0+pBRUySiJJAqqoB38QYauRDEfmOIcgwcAN1N2HKlCTa3cS+rZ4KfI2jXDb40NCpbqIpfsWJ7MAodpFwoV4uoNTBPaMY3EX36UZzCxrtE/D3UWAvoTYw+93fwDvFmyaQ==
+ b=oWrjohsK3VbTf6aqlNghvJluNPK930l47ciXfiz8vCPylgirWFk0sJ1a5PJYrmE7qOkKvegWLvJGlaKK3NWSiUCPu5Om407mUPTqpq+DmFH8oIHrghqn/vUdOlbBL1WbHcmz8hgiqTeN8mZ92jebTcLnagNevvlLPRxhm8WTJYg4MNZGoTk/3hXK3Rg+XfWqVTEYx+twKqfNPU3b8GGCEYd/d3cIi+yDxjBGNeqs/jhNdyn8WOT2TG+QPzuAQfUrCEITvv213gmyd6GEqPqkBEfhGuYIUdaZj/liOjLrKZjvzwzHUOFX5u+iXsU9uQ0ytiaxsACwJwi9vQ/GlrDK9Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=biyJ57TW8vLfmWG7Fxr40eDDr84g1j3VDSYyx358FXU=;
- b=AGuv4V/tIla37w0pHfwDuWqz55/++wLCBSz9XOC9DkIzEvX2WiHtgvd7aJQICx7RlakCOXdmMy20/E7qqJGoYX9u/ZVkIi72gYXGV7ilxaHMeTY2jlKh5UFH3WbfIChn4zas3yrw5nat6JwEt89sG03OpgZCql3oGoiFk5BknJOeLsNqV0ozJuRH3vbrGxHlG0Vq1Ltu6SLvhIvVtrZvNPRIOoVUQDsVNlIj7H3jV3EgpBtCaswPU1utlhlroy5/NN8vLgB8s1QRIQGbzoxkPuiZOFQjZW4EENo5maKZKEFZdXR06etxDLI1FkzW7Qv7aBR+ceC5iPWmXv1VMVsczA==
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=BIeUNn5jyJDqXaIemwOPwS3eGibpoxaY+3/EtZaummc=;
+ b=H7lX7URfQZmlGvcZEjb0P2+wknLPFbLAQ3bKJlZBcCG6xS77QdFYRNqPRrn6sUPcXNGUUFlUuVsWq90V1XuCJf/tGxKN19PxwwDNBlwJwrbJHbxv8dMdq2wB7cypefMWOrEQfnAKezxZeP8kb1kCfUxoNFouI8kdeUxiKfkftCca9Idk2HRmcZLjXEpqAS3Yic9BBzbILsCZZpjOzWEF8V3wGKjFBENnbZoY3rj58CtHOwA4XUpjbOcViY7qX13KxrvJewIk2GCIuH09OXB9Rcm7LRFPZ2X+BEojHjAlOtKoRlrHUiQWUlAbJJu0Fmot1gbB2swRFhnTPMx8DPDvxA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
- by SJ5PPF9FBA0498D.namprd11.prod.outlook.com (2603:10b6:a0f:fc02::848) with
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
+ by CW1P123MB8950.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:271::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.12; Mon, 24 Aug
- 2026 12:22:02 +0000
-Received: from IA1PR11MB7198.namprd11.prod.outlook.com
- ([fe80::2c4e:e92a:4fa:a456]) by IA1PR11MB7198.namprd11.prod.outlook.com
- ([fe80::2c4e:e92a:4fa:a456%3]) with mapi id 15.21.0339.012; Mon, 24 Aug 2026
- 12:22:02 +0000
-Message-ID: <568a14ed-161d-4f67-842a-c671e7f4c409@intel.com>
-Date: Mon, 24 Aug 2026 15:21:54 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 11/14] perf auxtrace: cs-etm: Capture wrapped snapshots
-To: James Clark <james.clark@linaro.org>, Suzuki K Poulose
-	<suzuki.poulose@arm.com>, Mike Leach <mike.leach@arm.com>, Leo Yan
-	<leo.yan@arm.com>, John Garry <john.g.garry@oracle.com>, Will Deacon
-	<will@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
-	<mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>, Mathieu Poirier
-	<mathieu.poirier@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
-	<skhan@linuxfoundation.org>, Suyash Mahar <smahar@meta.com>, Amir Ayupov
-	<aaupov@fb.com>
-CC: Leo Yan <leo.yan@linux.dev>, <linux-arm-kernel@lists.infradead.org>,
-	<coresight@lists.linaro.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Arnaldo Carvalho de Melo <acme@redhat.com>,
-	<linux-doc@vger.kernel.org>
-References: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
- <20260821-james-cs-unformatted-per-thread-fix-v2-11-00c4fd0701b4@linaro.org>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
- 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
- 4, Domiciled in Helsinki
-In-Reply-To: <20260821-james-cs-unformatted-per-thread-fix-v2-11-00c4fd0701b4@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DUZPR01CA0086.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:46a::13) To IA1PR11MB7198.namprd11.prod.outlook.com
- (2603:10b6:208:419::15)
+ 2026 13:31:24 +0000
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0339.012; Mon, 24 Aug 2026
+ 13:31:24 +0000
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	howardchu95@gmail.com,
+	atomlin@atomlin.com,
+	neelx@suse.com,
+	chjohnst@mail.com,
+	sean@ashe.io,
+	steve@abita.co,
+	rishil1999@outlook.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH perf-tools-next v6 0/5] perf trace: Symbolise kernel virtual addresses and function pointers
+Date: Mon, 24 Aug 2026 09:31:17 -0400
+Message-ID: <20260824133122.751733-1-atomlin@atomlin.com>
+X-Mailer: git-send-email 2.55.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P123CA0108.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:191::23) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -115,195 +69,255 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|SJ5PPF9FBA0498D:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7707c62d-d3ab-4974-82d8-08df01da4d22
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|CW1P123MB8950:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0b9b1cdd-a900-47e1-d4c8-08df01e3fe0a
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|23010399003|921020|6133799003|3023799007|10067099003|56012099006|11063799006|4143699003|18002099003|22082099003;
-X-Microsoft-Antispam-Message-Info: JH2+CMqWVgVDtEZrOIRiu+950rKRgk+DK1vKkfog2EbaMqRkOEB6SigJEbnBC/iVo2ws4BjmXZR6S7e7xJStmGDIUKLPozAupzkL+E4HNBAtVaNC80GwDIWtHqqZPSzRBlxrsh8eAmVx8JXXwd/SXzjOYVUn6BgHVEBuQZ+WsI8RxoaRA48Y63kstwacft2qWCz7uJZjjK1w8biKft7pS7xt77+AxF2CK3MdZUroQV6kt/3eHN2c+Yfuuv4N+4NXFyIj6tCpEKhBJzDfgfMmE3VhSgOH9oJhSxt0sJ0OIPcdo1SLuHwn4F/SfdL/VztkEvg2JpfUSMLiRP+nzFCm2JgkK+9/v0lehsnfLZkfbDgmCAOJFcI0tL1l5873Mc/CZeoT6DQ+/+pFambPfDgW2o8os9Zac1MRW20C9mMLEKXT4Ey7xggX8fQ+NN17y1F5WNRCgZoQswAAyVbsOAh+rHQSMzlRKPXX5+IDDvdeeu5atBjE0rF/4LCfk4jzHtGZbqz0oZ35f3ppyRAJ0jeEovOsuUCKN3vsV3ghJqz/Xx8BHvVWkxLgwLSYZreT+tuhnanPm8bca19E2yJebm5nKGZFdFRzQKuGH0jwaPgDIqT8x8q9yhquur7vLHAC3pC4AH/4AVSeDrqZkJbyGstZdF+JbfNcs78czzjre0xqMSikMXT3M4kDG929Z3rBJIyqUomSam8959wmZmFweT+6hg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(23010399003)(921020)(6133799003)(3023799007)(10067099003)(56012099006)(11063799006)(4143699003)(18002099003)(22082099003);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|23010399003|366016|1800799024|7416014|376014|56012099006|10067099003|6133799003|3023799007|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	kXEA8IOCNdi0BO6X/HmoHrHpxicljW4RcT16RRMqSmgWapEhQNkldZ8fGhrJgUVslixDtra464LB1Z5/+hwTN7ujlSu9leWphtYWjBtTOinN2WimzIWT9QCV/GMmkcHo8jDCHQavC1Xn/TwdxiBPcwUGVCt1NlIM3kXGVecbKyvLVcISByzmxBfI61EkpyFXKj7QGCATc70euWt7kSQeMjr1zwRd8gJhEIuInjscpQbBkIizZigKISVqBQ1WD7u5yKTmIInxohGiB8/N7A0kSOFkHQwMOI0kvh41t4piay3mt6cwjE6yuW7Dzn3hGJpLJ4Rql180CoA3r74QX+BNXK2w8VD9n+DoEN2KHyrWPNCqY3KhzUvyrxNNVqyQ/QBPAw5AjvPdagUe0HliMCeXDFRKQlr/fnkBHR0G5NBaVyT6hYFVYOiPQrzkPYVU8W+e6PDfRk3Ia8VufRfBdbTSGVKVJHCL8gxh3aiLJ5kwS5sijX7hGFen87qar3f1r7uIdpmoOd1+X+NuwGWF3WalJD/Uagcm1imXbYTLvBXgTpNGJhtVlQSZS1J9kjDXph7hVfDZgzbO1CnMO+iD0qqz6fpBXNd3cb3pInBdsR2W3Z/6Cjh+byMyf/GHNhOIJFnVyBfhSZJTHClzyGInl5bQphD5MAKvo1Pi8N10fwDMmJE=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(1800799024)(7416014)(376014)(56012099006)(10067099003)(6133799003)(3023799007)(18002099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VGVOK0E4VWs5M2swVDFGS3d5VTY5aThDMWxucGIzQTNjVWY2anJVRGkwbFkw?=
- =?utf-8?B?d0c4QlhEMGtyUWdrbUZydUYxekJaYUZ4UnVmd2QvcGZ0WFZOd2hNb0ZyUjNT?=
- =?utf-8?B?L3BtSkhMbUhNVkJlQk5wMFZNSVVtNHJVMXEyOWIwRjNLQVhyWmE0S0ZVaWk5?=
- =?utf-8?B?WHRCWHpvbUlCS1Q1SkJSeEZzdXl4RUpteityRzNVNmFISUZBWkd5dHhQaWZQ?=
- =?utf-8?B?Vlg3blM0MmVjOVVSb1hFVTAxNHg5S0dtK1BrWFVadmlPdUVxb2UyYnFUcGZa?=
- =?utf-8?B?RWY4clhJdGNEY2ltZmNXQmtyVzMvSzZ1M0taUFVhcGE3aE1EV3MyMjg4c0ZJ?=
- =?utf-8?B?SmMvc3o4VGRuRzZOTnkzaGtvZXFic0ExOXhWSWswaXU1T05uTmp0aHE1R0pO?=
- =?utf-8?B?d2xwRk04VFErcXMzOVJxVmpxdGNSbVZ1R01pYXY5S2N4ZTR0cU9vNUp4N3Ju?=
- =?utf-8?B?S01jWDZpbElLRkRwQ2ZPcFJaMm04K2lNQkdEeXVydzFDY2JLTDVOOXBWajVo?=
- =?utf-8?B?V2VlVUJXbE5wMVFnWDhMazZnMFQwanNzUUNCTVhUSEZON0dJWVd0TGhqMm4w?=
- =?utf-8?B?RWc3aFhnSzNsUUx5Q2Z0OVI1UjVjWVF1Z1o5U29Da2Z4YmhmcnBtYmlrRHF0?=
- =?utf-8?B?L1JYaXh5ZllUa09yRUowVHdqdjZoRHhWMXZKUEdJZThEcit6VEEySDE1VDdo?=
- =?utf-8?B?NzYrNUNYRERKUW92M3ZvK3orZVdUcHRtNG4vN25DSDVjT1ZrK3U1SHdMUUlM?=
- =?utf-8?B?Rkl4WW4zbFloZXpwaTN5UCs2QlZvcUlVRWE1UVBYMEdYTzVFemJNTFR6QXF3?=
- =?utf-8?B?UjE2TUREVDQvcitGYmdnaEg4ejcxc2NRV0lNQmJoOHF5U2dqYlIyYW5WclBB?=
- =?utf-8?B?TnA0WjVkWk4zZlc3WGFRUGxjUmRlK21LK0RmU3htQUVWak52OW8wckFQL0RS?=
- =?utf-8?B?aWZsU2dtcFFOQndKYS9wcC9zdTlhTE9IOUp4aTRndmxUanQ2UHdTRjRhTG55?=
- =?utf-8?B?Q1NZS2ZQallQdDNDd3hwajRIdzZXMzBXcGgrdkFaVUN6dkcrbEJUbmJQZUl4?=
- =?utf-8?B?bndGRzBzTmxwbG12ZGpHeVE1Qm9yZS9ZS1JIRFVPL2xycjR5b0hMVnVEWWVI?=
- =?utf-8?B?Z3NoWThpREhiOSt3ejNmUkFOQU5FRnRPWFJPSHlzaVB4dzA0NzlNREh5WE1Z?=
- =?utf-8?B?QUdHOHZmZENSNlRObGlwTVNrRUlaZ3VZdlRyYkdaWmIrNTNEWTZaQThTSU95?=
- =?utf-8?B?Z3BxOHN1U3hRbkFmWldORmxBSmVPMlVkRFgvT2UwWFpJbjNnWTVCT241TnFR?=
- =?utf-8?B?NUNJRGVTc1BFeDh1RWdQM1cxZmtudXA5Zk45Mm1qYm54YUFOUlNvVjc2TXRp?=
- =?utf-8?B?ZTdEM1VqSEY4dHZZS2RyVFNLeWgwSk1QamlIbmdxem13TG16UjFONS82OEtK?=
- =?utf-8?B?LzFnOUNYbktMUTVyT2U5ZmZoaDZiRmdqdUYyUGVlM2t3dEpmZzhhTlU0c2NC?=
- =?utf-8?B?MkRoS2xTQ1RrTlZjeFZ5R2lQNVlRdjJIMysxUWcxMlBXQVF6RGtxaWlrdFVj?=
- =?utf-8?B?cy94bEtyY21lT3ZkdkdiQjRvVm9vY3pxYnFoOEc3N0ZmSm1lQzNQdHdnL1dz?=
- =?utf-8?B?NlZrRmFoamlGYTlnbGE0RngyK0VzUklkcHFiRDRvaGE5OGdEcEdMdHBPcmQ4?=
- =?utf-8?B?UkxGaFRsWElLNGVnaTErTjJBSkVFVDYzU1lnUGJCeC9SVllSQVN3dGw1Wm0r?=
- =?utf-8?B?M3ZjS3RTbzJmL0o0SUVjdWs3VTJmVG5USWVnenFoL0pnMzk0WldWSVY3M3Zq?=
- =?utf-8?B?bFNnYUdmOWxZYURXbTVqM1ZjaVVFcHpTaCs4VzYrTmh6NEtZTDdBVDNodDda?=
- =?utf-8?B?VXRrTzVtZnN1c2wzdmZWUFhPc0o3c1pxblZZSkU0RnlPSGNhODJpeDU1OWdW?=
- =?utf-8?B?N3loQy83K3lWb1AvT1pDNGJxMTJmL3AvZ1doaGFTWXJ4ZWFHTzRjbHlZY3FI?=
- =?utf-8?B?ZFJhRTAvNU96QjFUQ0Zld3d5cHBRTGdhYitDZFUza3pMU2sxVnZJVkxPMW5W?=
- =?utf-8?B?Q3dSdC9ZcER0U3VGUDBpZ3ppUnRYL0RiT3BQdEhXQ0lmOWwzdEgzS1U5eXJm?=
- =?utf-8?B?RUlKMVFtYmdaaXJtNFg3TUM2czJoOEpia1RtbHYxMGdlZENTMW9nbk1HZWNR?=
- =?utf-8?B?b3E2ejlIQUw5Q2dsdTF4SnQwWEtVOGpLTEZMMEZSYUdvZSt2VllDS1BmQVZ2?=
- =?utf-8?B?WWM1aU5CTlBQWGR3T043WG1VczR5bGtMeHhBZ1dudWJ4Sm5KMzVNVmNNVEk1?=
- =?utf-8?B?aExRb0ppL2tOT3VyOEVHMllKUDZmZk1Oait3RnY1MXNKdlZ2MzFsMG9DV0RK?=
- =?utf-8?Q?rteJiuu3Y8r8gtXc=3D?=
-X-Exchange-RoutingPolicyChecked: cQtjQJGtyFl8G9IgK4YaKipXZOMliTqNOezXtkRlu7KsSVSD7/Aq39Xjq/1CsbwYu7ITuad5p2vYpzruNdJC7a+siE/+NK6UjzW0/SRN0ykyeHLXEwPWpyOYpJuRLlLA1vIHBtzUijd0/3XnCjoKwWuvZIM3q8drC6Tz3LWbykTIDjJTpUQebymkq+nBC6zZwVgpBvSQUgSbvcDK1OTsjP4mCVRBURGgiKde0/XxCPwIcblzfq8n8fwxVeQWOi3iw7zzBhKm52654R/NvQoWiGZvAG9CRQOzfKZ2nP8oPsXNTnHhyScyts7mzsLe/dmEBM/msSYK+NDJit9MGaBxtg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7707c62d-d3ab-4974-82d8-08df01da4d22
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7198.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?jZNO6ZoRaq1/1AdXeJz6HX9w9vKCRQ5SuU7BH5WxHle0A4Ekh6wItrYUJ7yD?=
+ =?us-ascii?Q?V6GB5uhZr3rdR9zzEV83+WCG1+TxIrVZNQPsmaZF+J/uedWCHagRZrK2GIEr?=
+ =?us-ascii?Q?giKDQNHLWEz/eJWhmA2krYqtejxoCXujVBiYSVV/MhcgXbIJAhNnrQAPbNEq?=
+ =?us-ascii?Q?H/vosDzCZVsqs2LNCtrY6Ssdd3Op7PS9cYwGaATr9Gdm+sSPcoN62N/KPvyk?=
+ =?us-ascii?Q?nnnPYMolsIc+VnPeUesBodoQUGa0VP/xJ1DrX7FTmI6sdNZ60AsMGeeI6SG4?=
+ =?us-ascii?Q?EeRWZQY4mr96c8gDEd8/7Ukm06K1/LDWa1SiEpAjm+tBnAJpCjqzStTQyDPG?=
+ =?us-ascii?Q?64f39RpnYw+roswG9wtumXQcJnLJ2y440MSRmcqkQwFGsC+LzqonTGm4+Fqp?=
+ =?us-ascii?Q?wUNo3LWAAOpWshsx2a9dlt9ssOcCyVB04FLoqbUKaIDfhZvRkEf9p4mbRWZS?=
+ =?us-ascii?Q?c04HD9GhjyYbevHCyt0Ba2adY31awjnIOininKA0hFv1SlKHCF95A5JZGaPY?=
+ =?us-ascii?Q?tG6YDxuTDH+bTULirBSiS3LUYnkVr8lYP2ojmATwhBgQMllaP7PsKP2ljN7c?=
+ =?us-ascii?Q?nSgkpQowLnLgQqHCkDheZYJzq5hygFPFaIBEZKS4Xnuuq67yVjawXlpwI8Ka?=
+ =?us-ascii?Q?wwsUSQcNCBeoS2avgd3TROZm0qSWTfQvwwI8I1/v9d4ZqR1LfxRUlP7IVAw2?=
+ =?us-ascii?Q?OaU1kx/MAvu3YisbsSHw/HPazFvAfZUSUMhyFSEvKUZawCMhOMBkTB2fMWzq?=
+ =?us-ascii?Q?YnZ7qJiwjckvhZ0usJDfyYbmyx5HNcmzi81OqT2cdnEHQkhSBKJB6KejdxLB?=
+ =?us-ascii?Q?v5rVgEVGxlH9IVZnLrMZabQmBr/2HPf51qcIWzSIZnF8mRKO0C9hFqoL/nIX?=
+ =?us-ascii?Q?LNm0j/cy/hrhekcnNPPCemxYcD54P0Ci2Ox2E0+ChLVGixjw4kKnAhtriZz2?=
+ =?us-ascii?Q?jAXQPSgSkc82AQCdgvUO+FrPrur7IKbLjJ0ti/wuA2snoJmLLkdJ1dq3EN+V?=
+ =?us-ascii?Q?conUKJIvjyT/XcB+xlqjLxqz/lPHM+dK0+SyZJPEa6fbC7jbLe3s9Z/Lozru?=
+ =?us-ascii?Q?0Yp+CV4/3pKxbYqwU4I0CNP6QjHi2I7KiaIVweMkHNBKi0zGf2qqWF1ZM4yO?=
+ =?us-ascii?Q?RgwiwOznh8o+EmLpsXXv8Dt/ZE6VGVKkkZvJR1cvptCwHU36/B8TG/bZFyC3?=
+ =?us-ascii?Q?qooyh8sj+6V8mHEhGENbAJQg56tYwwt3InFbyKPFa6Uf0RWacQJmgC1sBchw?=
+ =?us-ascii?Q?EwVB4Vd5fO/4OMIzT1Cda/F3u21sVnn55jGp+W171pU2/60Uh9lD1W9JREO5?=
+ =?us-ascii?Q?SX8D7WhWq7kwEY6QXBuUlxNZEJ6hXRRft0PvVXFE4EDMsg1MfPmjMV2ue47s?=
+ =?us-ascii?Q?rIPf6Jc9E13+tIYr63SKKBA2el2KGM72GuAfRw1fsrbY1jZGNp31rD/g2HVS?=
+ =?us-ascii?Q?zMK62y2APJcaplcxihsmeq/mkJqQ/CeOnYctSuwRw/gFe+Asy9hCg5ma4fPf?=
+ =?us-ascii?Q?9SwESph5d0I6mgs6WI6F0jYx3PeH11nofcgX54yNwu3fgvVfhBEyUEQKlZft?=
+ =?us-ascii?Q?Owsx/EiplT3Gy23RM/eO6CcPwIM8xqLMAGrDhD7V+coTvd1r/PzYaWGIRyO8?=
+ =?us-ascii?Q?b9dCZi7RTmYVLJ3ApyRELZxmBIU7LZEQjoHEDKhqwZLB+BLxSuSSAlFmnG9k?=
+ =?us-ascii?Q?vahYF57tLKYhr1pl0/MIn9qdcnutdIn8sZFuGMUmiXfAdWxz?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0b9b1cdd-a900-47e1-d4c8-08df01e3fe0a
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2026 12:22:02.1666
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2026 13:31:24.2730
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FFoWn6cjf05bvFSdojOrikrIfOApKuoqTwiKaCWnaLro/m/DRvw/Q/v6yUsU2WZFSLd/Vv7sVbxYj74c8xKWUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF9FBA0498D
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: Jud/8G8CdWR5MqEeTc2sOK1KDDBF+aBYT0oQ8aaTkI0sj0GDJV1Q+CmYQeEMm4UWqDHdIRth6xiOT+4aqpm57w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CW1P123MB8950
 
-On 21/08/2026 12:49, James Clark wrote:
-> snapshot_has_wrapped() isn't implemented for Coresight, so when a wrap
-> occurs we only save from offset 0 to current head, modulo buffer size,
-> rather than capturing the whole buffer. Coresight drivers currently use
-> a monotonic head pointer even in snapshot mode, which gives a lot more
-> information for taking snapshots than a wrapped pointer. It means we
-> don't need to search for data at the end of the buffer to guess if a
-> wrap has occurred, and we can go back to saving partial buffers after a
-> wrap by checking if the next size to take is less than the buffer
-> size.
-> 
-> The drivers will always be able to generate a monotonic head because
-> TRBE has a bytes written counter, so even if we stop generating an AUX
-> record on every overflow, we can check if the counter indicated an
-> overwrite and offset head by a whole buffer size if it wrapped. This
-> forces userspace to read the whole buffer rather than between last and
-> current head. ETR and other sinks use software double buffering, so can
-> continue as they are.
-> 
-> Add a much simpler 'monotonic_snapshot_head' path for tracers to use,
-> and use it for Coresight.
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  tools/perf/arch/arm/util/cs-etm.c                  |  1 +
->  .../perf/tests/shell/coresight/raw_dump_stress.sh  |  5 -----
->  tools/perf/util/auxtrace.c                         | 22 ++++++++++++++++------
->  tools/perf/util/auxtrace.h                         |  2 ++
->  4 files changed, 19 insertions(+), 11 deletions(-)
-> 
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-> index d36b7e41399b..dbf76dd3349e 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -918,6 +918,7 @@ struct auxtrace_record *cs_etm_record_init(int *err)
->  	ptr->itr.info_fill		= cs_etm_info_fill;
->  	ptr->itr.snapshot_start		= cs_etm_snapshot_start;
->  	ptr->itr.snapshot_finish	= cs_etm_snapshot_finish;
-> +	ptr->itr.monotonic_snapshot_head = true;
->  	ptr->itr.reference		= cs_etm_reference;
->  	ptr->itr.free			= cs_etm_recording_free;
->  	ptr->itr.read_finish		= auxtrace_record__read_finish;
-> diff --git a/tools/perf/tests/shell/coresight/raw_dump_stress.sh b/tools/perf/tests/shell/coresight/raw_dump_stress.sh
-> index bea70d825596..c9459ded4cbe 100755
-> --- a/tools/perf/tests/shell/coresight/raw_dump_stress.sh
-> +++ b/tools/perf/tests/shell/coresight/raw_dump_stress.sh
-> @@ -48,11 +48,6 @@ read -r size offset last_idx <<< "$(awk '
->  # everything was dumped. Allow 48 bytes difference to cover 3 frames: current
->  # frame length, a partial frame and a final empty one, all of which aren't
->  # dumped.
-> -#
-> -# TODO: for a single snapshot, offset should always be zero. However, we
-> -# currently output AUX records in snapshot mode when we shouldn't, which
-> -# increments the offset. Allow for that until it's fixed so we can test raw
-> -# dumping.
->  decode_size=$((1 + last_idx - offset))
->  if [ "$decode_size" -gt "$((size - 48))" ] && [ "$decode_size" -le "$((size))" ]; then
->  	echo "PASS: AUXTRACE buffer length matches dumped packet index"
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index 8ca872e6d465..e3c770b46e94 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -2051,9 +2051,9 @@ static int __auxtrace_mmap__read(struct mmap *map,
->  				 bool snapshot, size_t snapshot_size)
->  {
->  	struct auxtrace_mmap *mm = &map->auxtrace_mmap;
-> -	u64 head, old = mm->prev, offset, ref;
-> +	u64 head, old = mm->prev, offset, ref, size;
->  	unsigned char *data = mm->base;
-> -	size_t size, head_off, old_off, len1, len2, padding;
-> +	size_t head_off, old_off, len1, len2, padding;
->  	union perf_event ev;
->  	void *data1, *data2;
->  	int kernel_is_64_bit = perf_env__kernel_is_64_bit(env);
-> @@ -2061,10 +2061,20 @@ static int __auxtrace_mmap__read(struct mmap *map,
->  
->  	head = auxtrace_mmap__read_head(mm, kernel_is_64_bit);
->  
-> -	if (snapshot && itr->snapshot_has_wrapped) {
-> -		err = auxtrace_find_snapshot(itr, mm->idx, mm, data, &head, &old);
-> -		if (err)
-> -			return err;
-> +	if (snapshot) {
-> +		if (itr->snapshot_has_wrapped) {
-> +			err = auxtrace_find_snapshot(itr, mm->idx, mm, data, &head, &old);
-> +			if (err)
-> +				return err;
-> +		} else if (itr->monotonic_snapshot_head) {
-> +			size = head - old;
-> +			/* Force a full buffer read if a wrap has occurred */
-> +			if (size > mm->len) {
-> +				pr_debug3("%s: wrap detected, adjusting old from 0x%"PRIx64" to 0x%"PRIx64"\n",
-> +					  __func__, old, head - mm->len);
-> +				old = head - mm->len;
-> +			}
-> +		}
+When inspecting kernel execution flows using perf trace (e.g., when
+monitoring workqueues, delayed work items, timer callbacks, etc.),
+tracepoint payload arguments containing raw kernel virtual addresses are
+currently rendered as hexadecimal values (e.g., 0xffffffff81234567).
 
-I feel like this is asking to keep the ->find_snapshot() callback.
-i.e. basically the same thing, but add a helper that BTS and SPE
-can call directly, like auxtrace_record__default_find_snapshot().
-For PT, add/use auxtrace_record__snapshot_fixup() that does the
-common old/head adjustment.
+This requires manual symbol lookups against /proc/kallsyms or vmlinux to
+identify the underlying kernel function being executed.
 
-Then ->monotonic_snapshot_head is not needed.
+This patch series enhances perf trace by introducing kernel virtual address
+and function pointer symbolisation using perf's native symbol engine
+(i.e., machine__find_kernel_symbol()).
 
->  	}
->  
->  	if (old == head)
-> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-> index a9d0c84184c5..971b817d3396 100644
-> --- a/tools/perf/util/auxtrace.h
-> +++ b/tools/perf/util/auxtrace.h
-> @@ -385,6 +385,7 @@ struct auxtrace_mmap_params {
->   * @evlist: selected events list
->   * @snapshot_wrapped_len: number of bits in @snapshot_wrapped
->   * @snapshot_wrapped: bitmap indicating if each aux buffer has wrapped
-> + * @monotonic_snapshot_head: driver doesn't wrap head pointer on overflow
->   */
->  struct auxtrace_record {
->  	int (*recording_options)(struct auxtrace_record *itr,
-> @@ -412,6 +413,7 @@ struct auxtrace_record {
->  	int snapshot_wrapped_len;
->  	unsigned long *snapshot_wrapped;
->  	int snapshot_search_bytes;
-> +	bool monotonic_snapshot_head;
->  };
->  
->  /**
-> 
+    Before:
+      workqueue:workqueue_execute_end(work: 0xffffffffab2f1420, function: 0xffffffffa8046b50)
+
+    After:
+      workqueue:workqueue_execute_end(work: 0xffff8ac2c420f270, function: wb_update_bandwidth_workfn)
+
+Patch 1 fixes a pre-existing error handling issue in btf_struct_scnprintf()
+where negative error return codes from btf_dump__dump_type_data() bypassed
+the error check and erroneously advanced the augmented arguments buffer.
+
+Patch 2 introduces the syscall_arg__scnprintf_ksym() (SCA_KSYM) beautifier,
+which resolves virtual addresses via machine__find_kernel_symbol(),
+formatting them as symbol_name+offset (or "NULL", with a graceful
+hexadecimal fallback upon lookup failure).
+
+Patch 3 updates event format initialisation in
+syscall_arg_fmt__init_array() to automatically assign SCA_KSYM to non-array
+tracepoint fields typed as function pointers (such as typedefs ending in
+"_func_t" or "_fn", or function prototypes matching "(*)"). It also
+registers common function pointer, callback, and callsite field names
+(e.g., "action", "call_site", "callback", "caller", "caller_ip",
+"callsite", "cb", "fn", "func", "function", "handler", "location") in
+syscall_arg_fmts__by_name[]. To prevent misclassifying enums or 32-bit
+integers on 32-bit architectures, helper guards (field_is_ptr_sized(),
+field_is_enum(), and field_is_plain_int()) ensure SCA_KSYM is strictly
+assigned to pointer-sized fields and 64-bit scalars while allowing enums to
+fall through to BTF pretty-printing. It also removes the legacy
+trace__field_is_ip() hex override in trace__fprintf_tp_fields().
+
+Patch 4 extends BTF pretty-printing in trace__btf_scnprintf() with
+btf_is_func_ptr() to automatically traverse BTF type hierarchies (including
+nested typedefs and qualifiers) and route kernel function pointer arguments
+to SCA_KSYM when BTF metadata is available. It strictly enforces a single
+pointer indirection limit and validates type signatures against extra
+pointer asterisks to prevent multi-level pointers from being
+mis-symbolised.
+
+Patch 5 adds an automated regression test script, trace_ksym_beautifier.sh,
+to verify kernel symbol beautification across both virtual address fields
+and function pointer fields.
+
+Changes since v5:
+
+ - Introduced patch to correct error-checking in btf_struct_scnprintf() to
+   prevent erroneously advancing arg->augmented.args on negative error
+   returns
+
+ - Added helper functions field_is_enum(), field_is_plain_int(), and
+   field_is_ptr_sized() in Patch 3 to guard SCA_KSYM assignment from
+   colliding with 4-byte enum or integer fields on 32-bit architectures
+   while supporting 64-bit scalar addresses (e.g., u64 caller_ip)
+
+ - Updated btf_is_func_ptr() in Patch 4 to enforce a strict single-pointer
+   limit (nr_ptrs == 1) with early termination on multi-level pointers,
+   and added a type-string pointer check in trace__btf_scnprintf() to reject
+   function pointer typedefs with extra pointer indirections
+
+ - Removed test_ksym_btf() from trace_ksym_beautifier.sh in Patch 5,
+   refocusing the test on verifying SCA_KSYM symbolisation across both
+   virtual address and function pointer fields
+
+ - Link to v5: https://lore.kernel.org/lkml/20260822213558.704018-1-atomlin@atomlin.com/
+
+Changes since v4:
+
+ - Added a non-array guard (!(field->flags & TEP_FIELD_IS_ARRAY)) to the
+   type-signature heuristic in syscall_arg_fmt__init_array(), preventing
+   array fields matching "(*)", "_func_t", or "_fn" from erroneously
+   receiving SCA_KSYM
+
+ - Replaced host sizeof(void *) check with tep_get_long_size() to support
+   cross-architecture analysis of 32-bit trace data on 64-bit hosts
+
+ - Added deterministic workloads to trace_ksym_beautifier.sh to prevent
+   indefinite hangs on quiescent systems
+
+ - Replaced csd:csd_function_entry in test_ksym_btf() with
+   timer:hrtimer_start to ensure test reliability on both SMP and
+   uniprocessor (CONFIG_SMP=n) systems
+
+ - Link to v4: https://lore.kernel.org/lkml/20260821204930.679027-1-atomlin@atomlin.com/
+
+Changes since v3:
+
+ - Added "caller_ip" to syscall_arg_fmts__by_name[] in alphabetical order
+   to symbolise instruction pointer fields
+
+ - Guarded SCA_KSYM auto-assignment in syscall_arg_fmt__init_array() to
+   only match actual pointer fields or pointer-sized non-array scalars,
+   allowing unmatched fields to fall through to subsequent type checks
+
+ - Fixed btf_struct_scnprintf() to only dump struct data for augmented
+   input parameters, preventing un-augmented output pointers from dumping
+   empty "{}" instead of falling back to hexadecimal pointer addresses.
+   Also ensured btf_dump is properly freed on error exits
+
+ - Updated test_ksym_btf() to trace csd:csd_function_entry with --force-btf
+   instead of call_site, directly verifying function pointer symbolisation
+
+ - Link to v3: https://lore.kernel.org/lkml/20260820211100.649142-1-atomlin@atomlin.com/
+
+Changes since v2:
+
+ - Populated syscall_arg_fmts__by_name[] with common function pointer,
+   callback, handler, and callsite field names ("action", "call_site",
+   "callback", "caller", "callsite", "cb", "fn", "func", "function",
+   "handler", "location")
+
+ - Checked syscall_arg_fmt__find_by_name() prior to generic pointer
+   fallbacks in syscall_arg_fmt__init_array(), and dropped the inline
+   64-bit size check to ensure 32-bit and cross-platform compatibility
+
+ - Removed legacy trace__field_is_ip() in trace__fprintf_tp_fields() to
+   allow "call_site" and "caller_ip" to be beautified with SCA_KSYM rather
+   than being forced to raw hexadecimal
+
+ - Simplified btf_is_func_ptr() to remove the internal pointer requirement,
+   correctly identifying bare prototype typedefs as function pointers
+
+ - Prevented pointer enums (e.g., "enum foo *") from being misclassified
+   and formatted as scalar enum values in
+   syscall_arg_fmt__cache_btf_type(), trace__btf_scnprintf(), and
+   syscall_arg__strtoul_btf_type()
+
+ - Added negative caching (btf_type_cached) to struct syscall_arg_fmt to
+   avoid repeated BTF searches on every event for unresolvable or primitive
+   types
+
+ - Widened btf_enum_scnprintf() to accept unsigned long val, eliminating
+   narrowing truncation of 64-bit values to 32-bit signed integers
+
+ - Fixed trace_ksym_beautifier.sh:
+    - Quoted "$0" to support directory paths containing spaces
+    - Captured output in memory to eliminate temporary file leaks on early
+      skip
+    - Hardened regex validation to require valid C symbol identifiers and
+      reject raw hexadecimal addresses
+    - Used '%s' format specifiers in printf to prevent format string
+      injection
+
+ - Link to v2: https://lore.kernel.org/lkml/20260816205921.576365-1-atomlin@atomlin.com/
+
+Changes since v1:
+
+ - Fixed reference leak of struct map in syscall_arg__scnprintf_ksym() by
+   calling map__put() prior to returning Removed unreachable and erroneous
+   entries ("action", "callsite", "call_site", "fn", "function", "work")
+   from syscall_arg_fmts__by_name[]
+
+ - Restricted name-based SCA_KSYM auto-assignment in
+   syscall_arg_fmt__init_array() to pointer or 64-bit address fields,
+   preventing misclassification of non-pointer integer fields
+
+ - Updated btf_is_func_ptr() to fully unwrap typedefs and type modifiers
+   below pointer targets
+
+ - Fixed BTF type name matching in syscall_arg_fmt__cache_btf_type() to
+   handle leading modifiers and strip trailing pointer asterisks before
+   lookup
+
+ - Synchronised arg->val with val in trace__btf_scnprintf() and widened val
+   to unsigned long, fixing erroneous "NULL" output
+
+ - Added shell test script,
+   tools/perf/tests/shell/trace_ksym_beautifier.sh, to verify kernel symbol
+   beautification for both default kallsyms and BTF routing
+
+ - Link to v1: https://lore.kernel.org/lkml/20260815233651.527936-1-atomlin@atomlin.com/
+
+Aaron Tomlin (5):
+  perf trace: Fix error checking in btf_struct_scnprintf()
+  perf trace: Introduce kernel symbol beautifier for virtual addresses
+  perf trace: Auto-assign kernel symbol beautifier to function pointer
+    fields
+  perf trace: Enhance BTF type formatting to symbolise kernel function
+    pointers
+  perf tests: Add shell test for kernel symbol beautifier
+
+ tools/perf/builtin-trace.c                    | 250 +++++++++++++-----
+ .../perf/tests/shell/trace_ksym_beautifier.sh |  38 +++
+ tools/perf/trace/beauty/beauty.h              |   3 +
+ 3 files changed, 232 insertions(+), 59 deletions(-)
+ create mode 100755 tools/perf/tests/shell/trace_ksym_beautifier.sh
+
+-- 
+2.55.0
 
