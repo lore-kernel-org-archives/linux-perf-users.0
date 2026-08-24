@@ -1,56 +1,56 @@
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCCC3E5A1F
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 06:38:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4C43E5A1F
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 06:38:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787553482; cv=none; b=mgfcOiLRTlyafeTOxvUIEYz2zQx1Wjt0K/6hA6xF1xb9DNQc5zjrroz8pWIdp6V7zmL3NA/hAF9cz54FjnOjgGpcCwNO8eFWDgBTo8eiOaSX5JC2XKj4Ej7goBu5xLEq+wbprKr56r+g2qSE4ws8AqUVtzhdTIp0fMvIe2cK+08=
+	t=1787553484; cv=none; b=foSKx5eY6PK7DRawpaDnFaW9fl3ywKPUKE3ph2+jxTRpLzT1ROW1LS6pKPTerfECCqE1+hLepD1vTm0xXYDZfJUJLoc4eXOqBvAybVGBHY8lmh3bT0yH6GhVvCn1Uh7wd+69uxF/98uPICquyzwLmEsVpOTYVCEKqzMtHpDz53U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787553482; c=relaxed/simple;
-	bh=zWUWQW1KXSfEix/aFMakAv10iRhdux349llom5of3M8=;
+	s=arc-20240116; t=1787553484; c=relaxed/simple;
+	bh=NmUqxPumcCU/Ku7XFBQ2CbB8PZz9hr8FapMXvTDw1vo=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=R/Sfgk1xQh/8kPm0tkoWaBuoVWWpuGGGBXpmKTeVyQpGtLqWfl/14jEtAmS4EFIhBEwjeTwE5E1j43HayB4WUQP/8wBpsncn1k8GOfUrquY28NZhEEBgiGYZumjPQqLXXJQ/qqz01ol6Y+JfCIok+wqMEAAcRCLOW3RLr7eXuQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fZRKnifL; arc=none smtp.client-ip=209.85.216.70
+	 To:Cc:Content-Type; b=jEMK+GbNP3tUkCWI0Gfk8JKuGXF/YkdsrECkkPtulnCc2kRzRTn7sjMm1U9TI9GmlU4AzDMtrFJ1GKv7S2filPADKWrEP/lZXxNcU9roiQ/3io5G3tISKg7R6y4Usd95rNT+h4iJmGSTlBd6ajCu8pPrEXRRgmoMHXEmh9ZjX+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FMPFemMs; arc=none smtp.client-ip=209.85.216.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fZRKnifL"
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-3950b1371a7so4768750a91.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 23 Aug 2026 23:38:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FMPFemMs"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-3950b1371a7so4768831a91.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 23 Aug 2026 23:38:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787553480; x=1788158280; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1787553481; x=1788158281; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=sce91W/fnERmny3wSBPa7HIZa1Vfdn40QbIPGip5K3M=;
-        b=fZRKnifLUnoWi7TXeYC07CAcbNol/yOCU8rhl2siKev0oEI7vo9BrwlRwofy9OpOwu
-         Pqg1Zab0y2rMVXtE3C8tpb0tJsGsYFHXh0qjOICoaq6KgDhVKiV5TqPw8dwH7DIxrYIN
-         SR9gv2qIy4Ee1MBA1bTsctIATd2pXzXejVp5WqnOk9QSkdT6u/kZpDVHNsLyedOZqv7n
-         Jjl9d4QsKIY3vFuV66koOd6by8O6+TK3w0oI7L5x9VnnhMqdSdVgjBBadi2q7o8jqpGK
-         hsQNwbhrfMQ2rqg53wXdktiWfY4qC9cFwB9+iF9q+Tjqenm6pdw9cZJTjzNMgN+DLXJh
-         XFTA==
+        bh=/MF9jC0mP/Qm5YIccy+Ss2T7drb/vabI/FTHPUV5+zk=;
+        b=FMPFemMs+X1kkimmQ1DTHupL1N3lABJBlrGjyTR65G7W/uNijqrakvc9czmDtUZs8T
+         Ax6etzwBBfrxUkwky6gnRijPK5/3AkmVZDaaxjpSAh3pd4x+oj0X1VFW4044Qw1y0TMk
+         0G86dhaQHijGAtJ/jAYyPp6Wv6ef4JRQ2o7hC6sjzmEHoiQdBiOZMNWPEJdC7Kt17tfh
+         MgdjsykXZUYxfzT14flGDT88Ri10J0hGkBsMpuLIrD0VM1Puj6AcZ20dbr8/gffb7YVf
+         llVDRxlJUits94txx05Z+Vp6FkaR36TInzS2Rq/0FwwqHcXFx9IkpjuqkwSWIdhVAnlS
+         Mdlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787553480; x=1788158280;
+        d=1e100.net; s=20251104; t=1787553481; x=1788158281;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=sce91W/fnERmny3wSBPa7HIZa1Vfdn40QbIPGip5K3M=;
-        b=Qwh3HrRGVq8m7trKjwQhUUYdJ4Nkh7BJ66V2t6Z8lGphBjY0/WCO8vnAFwDZ5m7rtN
-         Y99HWLAGN51lVESqbWQZIV/9Ybm8V8IJP5w0pNHMAJwnSHS7mqoaVWQt+tKgEbMFeQge
-         s5PTddZfv/L1SQDjdNd1Cx72jflxMeUU0tWKv6qstOT5c1PT9LyS4ocBjxfooej8VHYq
-         6gjPpnCAKhREojCWY9jb4RFFYAxcm7TLz0uDY1l2xiiMR5k3cPC1LODlw33dyV+RudFb
-         k0Aj0jHFEUw2l10su1k6H6R428Vjlr++iE5819kJhgjrkdTnbS2zD5vZSIql2rdqJ00l
-         MrXw==
-X-Forwarded-Encrypted: i=1; AHgh+RpNn1sXXxdIRshoOdKaVl087bSg7xbrkXRTpWnuQhUK4M70N17uSHG7Db3PceeerEkGN6JyR+b4Qoi+NsF+n2c+@vger.kernel.org
-X-Gm-Message-State: AFuF++kiV4PMTNaIUAAmeTEs31zuHmxNddfQXA8bsGCpzPIWRmZg5Xua
-	KRjl+wiwRtdJq+kecDHgYwAJSnbNOXeP2AfwcpZtKTcg9rRcFkehPl+AdPbM+sEf8dCytzEza9C
-	eE6DWNeeS7A==
-X-Received: from dlbtz19.prod.google.com ([2002:a05:7022:ead3:b0:141:2cc0:fb15])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:520c:b0:37f:ed7e:7e42
- with SMTP id 98e67ed59e1d1-395c3867ac5mr45318661a91.14.1787553479614; Sun, 23
- Aug 2026 23:37:59 -0700 (PDT)
-Date: Sun, 23 Aug 2026 23:37:39 -0700
+        bh=/MF9jC0mP/Qm5YIccy+Ss2T7drb/vabI/FTHPUV5+zk=;
+        b=oPlqB3zQly8WTzrNGKmv9AruU81dS0iF84YUWV4WBumm5wnPyaXzXWTN81ruy3hNj7
+         Y2mko8n4fUiuHC+OQWxeMwosBVtwYD3PB5GgPTgayhluZ70xuPEiwW7x7Rki4OqZYMm0
+         i3B18TF6wk0y9bHT9Aay0Dd7fcqusdsww0WyuGZryGHeuG93B/5mbkbinQiMJjTnd7k+
+         nxkj8WqQduZn1QlYTenggPbeG/x0rLmRJ+lnRr8UST10c3DFXjECnIpP5hXa+vhU3BqH
+         h6RVTu0ubq1TgIva51FIv1TODf6pn/49LM7K7suiNLd8zYf/6hmMzb8Vs/DFQQBUS7lv
+         6O6A==
+X-Forwarded-Encrypted: i=1; AHgh+RpHill8YUkwZPsDrZP/RCPcrLDHFDper/dGZvsGpC7FMmBK6/BRrJzFmb5RzfVEL24JXg7YPqO+UXRedSM7LBTg@vger.kernel.org
+X-Gm-Message-State: AFuF++loyGhENdJ48+TSFFgCqmyqNU2unHFmlJNFOIjOEqaSRpv+untu
+	OQLW8HMb5eJdXSIDcTZ7awgTUvgy5FeqaBvF40f12LuRtmelxBTKES/GEiS1JkantbcK5n3F2X/
+	zY5VqDQcJ9Q==
+X-Received: from dlbou15.prod.google.com ([2002:a05:7022:110f:b0:13b:9778:570])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1c90:b0:393:19a3:4f1
+ with SMTP id 98e67ed59e1d1-395c351d788mr41956359a91.6.1787553481245; Sun, 23
+ Aug 2026 23:38:01 -0700 (PDT)
+Date: Sun, 23 Aug 2026 23:37:40 -0700
 In-Reply-To: <20260824063744.1533837-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260813132519.4099508-1-andi@firstfloor.org> <20260824063744.1533837-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.766.g2966f0265a-goog
-Message-ID: <20260824063744.1533837-3-irogers@google.com>
-Subject: [PATCH v1 2/7] perf ui hist: Add support for aggregated total_period
- and merging entries cleanly
+Message-ID: <20260824063744.1533837-4-irogers@google.com>
+Subject: [PATCH v1 3/7] perf ui browsers: Implement interactive 'M' keystroke
+ to toggle hybrid event merging
 From: Ian Rogers <irogers@google.com>
 To: andi@firstfloor.org
 Cc: acme@kernel.org, ak@kernel.org, ak@linux.intel.com, 
@@ -70,104 +70,167 @@ Cc: acme@kernel.org, ak@kernel.org, ak@linux.intel.com,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Implement cross-PMU histogram sorting logic and properly scale the
-global total_period for symmetric percentage ceilings across differing
-core types, resolving issues with --percent-limit.
+Map the 'M' keystroke globally across the interface to toggle boolean state
+dynamically rebuilding hybrid core groups independently.
+This allows cleanly separating or aggregating hybrid core histograms.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Assisted-by: Antigravity:gemini-3.1-pro
 ---
- tools/perf/ui/hist.c   | 49 ++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/hist.h |  5 +++++
- 2 files changed, 54 insertions(+)
+ tools/perf/ui/browsers/hists.c | 48 +++++++++++++++++++++++++++++-----
+ tools/perf/util/evsel.c        | 12 +++++++++
+ tools/perf/util/evsel.h        |  2 ++
+ 3 files changed, 56 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index e58327595d37..09f0baa808e0 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -287,6 +287,24 @@ static int __hpp__sort(struct hist_entry *a, struct hist_entry *b,
- 		return __hpp__group_sort_idx(a, b, get_field,
- 					     symbol_conf.group_sort_idx);
- 	}
-+	/*
-+	 * Relies on merge_entries being only enabled if there are
-+	 * only matching events. If that is ever relaxed will need
-+	 * more logic here.
-+	 */
-+	if (a->hists->merge_entries && b->hists->merge_entries) {
-+		u64 val_a = get_field(a), val_b = get_field(b);
-+		struct hist_entry *pair;
-+
-+		list_for_each_entry(pair, &a->pairs.head, pairs.node)
-+			val_a += get_field(pair);
-+		list_for_each_entry(pair, &b->pairs.head, pairs.node)
-+			val_b += get_field(pair);
-+
-+		ret = field_cmp(val_a, val_b);
-+		if (ret)
-+			return ret;
-+	}
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index c15874a491b4..07cb06834d0f 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -2840,10 +2840,10 @@ add_script_opt(struct hist_browser *browser,
+ 			return n;
+ 		j = sprintf(tstr, " in ");
+ 		j += timestamp__scnprintf_usec(he->time, tstr + j,
+-					       sizeof tstr - j);
++						   sizeof(tstr) - j);
+ 		j += sprintf(tstr + j, "-");
+ 		timestamp__scnprintf_usec(he->time + symbol_conf.time_quantum,
+-				          tstr + j, sizeof tstr - j);
++					  tstr + j, sizeof(tstr) - j);
+ 		ret = add_script_opt_2(time_act, time_optstr, thread, sym, tstr);
+ 		if (ret > 0) {
+ 			time_act->time = he->time;
+@@ -3580,8 +3580,11 @@ static int perf_evsel_menu__run(struct evsel_menu *menu,
+ 	int delay_secs = hbt ? hbt->refresh : 0;
+ 	int key;
  
- 	ret = field_cmp(get_field(a), get_field(b));
- 	if (ret || !symbol_conf.event_group)
-@@ -1271,3 +1289,34 @@ int perf_hpp__alloc_mem_stats(struct perf_hpp_list *list, struct evlist *evlist)
- 	}
- 	return 0;
- }
+-	if (ui_browser__show(&menu->b, title,
+-			     "ESC: exit, ENTER|->: Browse histograms") < 0)
++	const char *help_msg = evlist__can_merge_hybrid(evlist) ?
++			       "ESC: exit, ENTER|->: Browse histograms, M: Merge hybrid events" :
++			       "ESC: exit, ENTER|->: Browse histograms";
 +
-+float hist_entry__get_percent_limit_merged(struct hist_entry *he)
-+{
-+	struct hist_entry *pair;
-+	u64 period = he->stat.period;
-+	u64 total_period = hists__total_period(he->hists);
-+	struct evsel *evsel = hists_to_evsel(he->hists);
-+	struct evsel *pos;
-+
-+	/* Accumulate global total_period across all merged hists */
-+	for_each_group_member(pos, evsel) {
-+		total_period += hists__total_period(evsel__hists(pos));
-+	}
-+
-+	/* Accumulate symbol specific period across pairs */
-+	list_for_each_entry(pair, &he->pairs.head, pairs.node) {
-+		period += pair->stat.period;
-+	}
-+
-+	if (unlikely(total_period == 0))
-+		return 0;
-+
-+	if (symbol_conf.cumulate_callchain) {
-+		period = he->stat_acc->period;
-+		list_for_each_entry(pair, &he->pairs.head, pairs.node) {
-+			period += pair->stat_acc->period;
-+		}
-+	}
-+
-+	return period * 100.0 / total_period;
-+}
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index ea79628bbc6b..6cb7059e8405 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -434,6 +434,8 @@ void hists__match(struct hists *leader, struct hists *other);
- int hists__link(struct hists *leader, struct hists *other);
- int hists__unlink(struct hists *hists);
++	if (ui_browser__show(&menu->b, title, help_msg) < 0)
+ 		return -1;
  
-+float hist_entry__get_percent_limit_merged(struct hist_entry *he);
-+
- static inline float hist_entry__get_percent_limit(struct hist_entry *he)
+ 	while (1) {
+@@ -3636,6 +3639,16 @@ static int perf_evsel_menu__run(struct evsel_menu *menu,
+ 				goto out;
+ 			case K_ESC:
+ 			default:
++				if (key == 'M') {
++					if (evlist__can_merge_hybrid(evlist)) {
++						if (!symbol_conf.hybrid_merge)
++							evlist__merge_hybrid(evlist, true);
++						symbol_conf.hybrid_merge =
++							!symbol_conf.hybrid_merge;
++						ui_browser__hide(&menu->b);
++						return K_RELOAD;
++					}
++				}
+ 				continue;
+ 			}
+ 		case K_LEFT:
+@@ -3649,6 +3662,15 @@ static int perf_evsel_menu__run(struct evsel_menu *menu,
+ 		case CTRL('c'):
+ 			goto out;
+ 		default:
++			if (key == 'M') {
++				if (evlist__can_merge_hybrid(evlist)) {
++					if (!symbol_conf.hybrid_merge)
++						evlist__merge_hybrid(evlist, true);
++					symbol_conf.hybrid_merge = !symbol_conf.hybrid_merge;
++					ui_browser__hide(&menu->b);
++					return K_RELOAD;
++				}
++			}
+ 			ui_browser__warn_unhandled_hotkey(&menu->b, key, delay_secs, NULL);
+ 			continue;
+ 		}
+@@ -3675,6 +3697,8 @@ static int __evlist__tui_browse_hists(struct evlist *evlist, int nr_entries, con
+ 				      bool warn_lost_event)
  {
- 	u64 period = he->stat.period;
-@@ -445,6 +447,9 @@ static inline float hist_entry__get_percent_limit(struct hist_entry *he)
- 	if (symbol_conf.cumulate_callchain)
- 		period = he->stat_acc->period;
- 
-+	if (he->hists->merge_entries)
-+		return hist_entry__get_percent_limit_merged(he);
+ 	struct evsel *pos;
++	int ret;
 +
- 	return period * 100.0 / total_period;
+ 	struct evsel_menu menu = {
+ 		.b = {
+ 			.entries    = &evlist__core(evlist)->entries,
+@@ -3699,8 +3723,11 @@ static int __evlist__tui_browse_hists(struct evlist *evlist, int nr_entries, con
+ 			menu.b.width = line_len;
+ 	}
+ 
+-	return perf_evsel_menu__run(&menu, nr_entries, help,
++	ret = perf_evsel_menu__run(&menu, nr_entries, help,
+ 				    hbt, warn_lost_event);
++
++
++	return ret;
  }
  
+ static bool evlist__single_entry(struct evlist *evlist)
+@@ -3720,10 +3747,14 @@ static bool evlist__single_entry(struct evlist *evlist)
+ 	return false;
+ }
+ 
++
+ int evlist__tui_browse_hists(struct evlist *evlist, const char *help, struct hist_browser_timer *hbt,
+ 			     float min_pcnt, struct perf_env *env, bool warn_lost_event)
+ {
+ 	int nr_entries = evlist__nr_entries(evlist);
++	int ret;
++
++retry:
+ 
+ 	if (evlist__single_entry(evlist)) {
+ single_entry: {
+@@ -3747,8 +3778,13 @@ single_entry: {
+ 			goto single_entry;
+ 	}
+ 
+-	return __evlist__tui_browse_hists(evlist, nr_entries, help, hbt, min_pcnt, env,
++	ret = __evlist__tui_browse_hists(evlist, nr_entries, help, hbt, min_pcnt, env,
+ 					  warn_lost_event);
++	if (ret == K_RELOAD) {
++		nr_entries = evlist__nr_entries(evlist);
++		goto retry;
++	}
++	return ret;
+ }
+ 
+ static int block_hists_browser__title(struct hist_browser *browser, char *bf,
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 3f56a0e6f9d6..a4760cfb7582 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -4758,3 +4758,15 @@ void evsel__warn_user_requested_cpus(struct evsel *evsel, struct perf_cpu_map *u
+ 	perf_cpu_map__put(intersect);
+ 	perf_cpu_map__put(online);
+ }
++
++struct evsel *evsel__new_dummy(void)
++{
++	struct perf_event_attr attr = {
++		.type	= PERF_TYPE_SOFTWARE,
++		.config = PERF_COUNT_SW_DUMMY,
++		.size	= sizeof(attr),
++		.freq = 0,
++		.sample_period = 1,
++	};
++	return evsel__new(&attr);
++}
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index d9ecc6628217..6cf07120da9f 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -15,6 +15,8 @@
+ 
+ #include "symbol_conf.h"
+ 
++struct evsel *evsel__new_dummy(void);
++
+ struct bperf_follower_bpf;
+ struct bperf_leader_bpf;
+ struct bpf_counter_ops;
 -- 
 2.55.0.766.g2966f0265a-goog
 
