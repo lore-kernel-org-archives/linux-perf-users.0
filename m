@@ -1,341 +1,182 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D2E346C4AC
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 16:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6972C2BD022
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 19:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.182
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787589057; cv=pass; b=Pr6eIxpHwYGLSaTdb8Cj/kxKyvxbmPDORWNiuQy3A2bgnazZtoi8mRRlgM69QEphhuObLJNpiS3SstZQDw5BfN/qnCx3owj50nqqPj+k1KQI/pW/w3GwU0+R98ayvXO5kBGCy1MnT7LGButBLo0dcPW4E2KI2PtkvvfG/7gMrxc=
+	t=1787601262; cv=pass; b=uW17SInHX3I/9LpsrWbzFlMbpPgiWp4iDozT09WUMkHtkZ6dxHaJcnY/F+l6MtK897oi3hZvg/dWq4/fjkAS9Jk4fOVxIG80DIRNhZFcq3hr507tTAGdwYaciv0TtaSs3YqPmvCUnhFGebO8odzNddG2rTwirEScki9dm6hU62c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787589057; c=relaxed/simple;
-	bh=dYu9SBdDrcnxf73R+BtKZ0OVoKbKLSarMfHvw3XyWtE=;
+	s=arc-20240116; t=1787601262; c=relaxed/simple;
+	bh=7uEPvNkh0wPywyUSpf8tg+GQKzcygTjCuvJr9dww0+c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CDQ/NuyBviMe/G++tOYUhUK0KdkYG7jvrmRSRQE5y5tVNjHK833Y40QqsXLoh6A3JogYNaqNqKwvrKPp71H8mGkfMFPPkluql+2OfWk83V9Or5LozaAERJFdZ4vHo99PtFC94v9FjqujS/MddhZrmja649gdG0J3ASt2qTr0Ol4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EY/VYjxc; arc=pass smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=LP2NkTGwHjgY7Y3puss4PkBHk/A7SvhrlyVt8AQwimE9IhbF3aF4r1yzTR2fdGi9gGG4ox74uIQ1km4Jk+v7gqXHmUDKb+iN3KY6NdLYnwOLuoXh6Tj2hF6VdYIIttRks2Hb1wALs5AUrYPBYxZ3j128GVrTT5kpb3D42r/9BTk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GIxu89K5; arc=pass smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EY/VYjxc"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2ccdf36f63dso189105ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 09:30:55 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787589055; cv=none;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GIxu89K5"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-84867f07d63so4223972b3a.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 12:54:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787601261; cv=none;
         d=google.com; s=arc-20260327;
-        b=BUhB0/pcxF/qXoRgKHpjQ9HzZSoUTxPg0edrrUf0f9GV8G0Zt/mvlfP/8fuvYNTVl5
-         TcFYNU17skSuGBcv3y1e9LD5hWiClOFoZlKkGH8HYaxwEQRcSfwZORaRQmitCOnhexAS
-         6Np/Oe/WzmmpTQ1bILyKRbpdqqzh8SghHlGXYBDM1CjIeExQyCLfk+I2nHX22dNV4iu3
-         QtamyH8OIm3T+eXzKlm2uhbfg/ayHb7yEoKv5UpMb9tsamyEUxD2Kj7Y9+foiP3Tybn7
-         pgJg6pzAY3+/Pjt8FenSudDPvDYU+nXdSFiSY1W2mgDUt//jH1LZrov6aIAyw5FmCB0r
-         33Qg==
+        b=ExfQCwYzxpyp1cnMDe1suUo0LYlq0Fk+qfvA/wQX9b4Jf2c85jOEk9eTjlfGcZIHlR
+         SsMw7EpV7uLqNRgVjGrn+L9Fp3Lkrmv+XDwCwB6wyNyhXVvi144V6tB4hFoDyNOh+mmR
+         eACgV9XpydzBr5wnE9+zx4wHoYdA4zm8a8YPsR3CG1R8+dNJOYiaVCPg16LUXqVaSP3V
+         Btdkr1Fsux9bemyN4jDeosJxoLQKXSZ5CzYmKcpGmeNIz9OvAyxr0x9VdUgBZf37/Oal
+         j+kElryOiM9q8rSo9dqV2AoFfYB4066A9c4CGzrMxBN3j0zA6/deDfvjJ5NooE8QshfA
+         idmA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=g8sIn5dDA2ALRE5s4ggYKNqu9r9+1brBE+BSFW226aQ=;
-        fh=yBHsqrVVtmccdpkst1+arEE8mtXeXQA/Y+iNLaz7Dig=;
-        b=UBni/EIqDFppxQ3qy4yrhGHOXHYcG5TyGkkH3ceFs6IrrgUYwsY2FjBdgCN3fO9YJe
-         PlxQ1kvhL+G++mbVJRpgmzmDqwoTR6NiYBtfYfP57pXEsmratFVP5Z6VMXerDaDWkwnR
-         Yb9Bus4VM5wzSGUOWuERLflAKVJhrLybzHXIZVSlN2DunHDd3JhuVYh9mDso9DN0CqaG
-         LrjWhe+4EvRQWTakkOsRFAlYsYg8evJ0NJ6Wbmd8YAvL5miY5Ip2M5l10sBruPhr4dnm
-         uJxRcdfVoYefbzyrVP78kdhbCgcyhlKJr1x4TmvguF5aX23jRDGcn0Bi33/O0sVdx76d
-         Ys/A==;
+        bh=b+Q50ekDC9b+VMm0CXhjeVN+dTm/g3kpzzvFfKOXcMA=;
+        fh=hEQicaorjazLhjRmDUr0lU9379A9kaiOO2z2hQU6omM=;
+        b=bYuMmx92XuZHB+wMXXEG2zFbtctm5ECP/OiRV7yeDH4BYwzMZKoO167R3x9WwTH3M9
+         5rlMTucA04FZ4aZ67XxnG++ez1dgCVMNhjvkIHHgf7+ZJ5P33E7N+gLtAGDlcXzcXI4x
+         BOQ/MEHgh40pxPXy0RjEduPlnLgw9iTxVKSaf7QfzxhNIcInvNqLjJeQXlGA9jT8MSvA
+         v5iE9LFkVZtx3ozJSJVNQXeyHEVzUBP+XuxqrAqcnqo11fbROLfVrzN0vCoyof+H0T8l
+         AX2F/udMJ3BIODhdlG1myBEmaHMvGhBfPy85nMhl8E3xYCMjVkDTXwIdkzQz7eo8CSvG
+         EypA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787589055; x=1788193855; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1787601261; x=1788206061; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=g8sIn5dDA2ALRE5s4ggYKNqu9r9+1brBE+BSFW226aQ=;
-        b=EY/VYjxcSVMpdE1n1goeg9IL9KjwIM0bnBqbQ0ia8AmhvnkAKFH8U6NOpy+biClnuC
-         4XFlKO15pVmL3iZvEg8FX+H7SmE8BTEfhdggXPW05yrI8QuagPKeRRoKXHZscxAWPyhE
-         QFhOtpI4BOWDJkncjAmM02mkyhZdANB7BzD3tdg9poAcPDPmcvHeXJ0/icSt9tJuOPro
-         vfGrSmo6lJn+6ovNQVobGfL3z/d6I3RQ8fViMs3u4p4CSabXOX7m1oF4PCaAhJ0q1QlG
-         tyzxvmToSyja9iXuwDccou1Dhe8CK1b3rLxkDMDcigDmyLGekVToMu2qf2UOVKi3ELD6
-         tnMg==
+        bh=b+Q50ekDC9b+VMm0CXhjeVN+dTm/g3kpzzvFfKOXcMA=;
+        b=GIxu89K5zRaFr4r/t0Qp6nlWfhp9Hq/iRzRLmUZmC8J9uJmB61qsHgQDMnrRdaTpb3
+         Nap4qzPZc9EffIhvGbHUkhUI2dvcA4mNpr20w2KvN/wCd2i9STVRzNBdbR221ZNcfbIP
+         +JsBjgnfaUwN+2Y4rj9D7iPJ7wPIpCI/yqfNle5GHGakyxbQJgzCucxJWIa4gBkpk+Bo
+         7LywM9aUxoNQonoENDeRRhZ8qo7R/0isETw/d30XdlOGemgdNoDzluSQCtRgwyUrs/Eu
+         MmKfbflmsckFgKBNSCdREpD6J9g1U/DbM+4rsJAEpzbRISMiOdighQt02yU8qRLqK+Gg
+         pT9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787589055; x=1788193855;
+        d=1e100.net; s=20251104; t=1787601261; x=1788206061;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=g8sIn5dDA2ALRE5s4ggYKNqu9r9+1brBE+BSFW226aQ=;
-        b=QBmLwuK1+gwzjyPaeYKSCvT/p1GqL6o97NSziyUuP7k+rPCvu7kKR0GllJzQR1Rfkh
-         J5vdDgRbU5w8X4xiQvZ+OxlYrgIlCgaC3KcbYCdvWmYw3IoOjzrNvX+RBxVdbd6frXsO
-         uOw9d6S+qeKmhL3bY+BLjVV2XgZVhODy4qZrThSCLfqX+qwES6wzzg9ua63RoEYvqPDS
-         z59zWInEZhiE2tof30YpLpr+e2Ki959LuHkuitfDiKKbgrsYV+XKsDRd6DG1F9AL4Y83
-         SXQbo5HRar/c2yI/hPZtkdRCzY9rdCHNf7t46dEW3J4CKfpidPU+lzwQlv48KAwlfn/S
-         WQng==
-X-Forwarded-Encrypted: i=1; AHgh+RoVIGtkLk047VQUXw/fXRYYM1t8isQcAg/zeE0lUCDrZLfkm+l3+voebsVKqyHtb/A5zXe8MG9nuJdow/0qdAEh@vger.kernel.org
-X-Gm-Message-State: AFuF++k/vfiSg/W8iyMj4hWUTmS9Y81A3t9OUTlhdYueTZR++qzPzbg2
-	S1nJ9h5lNeI2kaJNxDEcpVNcvDL/7gwAQqYu6Ra5YbCUgAbWbcBvuVvtE1q0wjYCedJMQ5DryqB
-	7UlrVQvmKGP7gVHh9oqXsCzKU9bc3kuiJ5K7Q5vuL
-X-Gm-Gg: AR+sD13YGD70jp0aabc8XVIa03oFhnba45tKPL7rFcKMJhaBvmxujIOsU8M1wf5mJfU
-	X5y5nmJexwVwPislsIBJfrnnpwv55yzOZCFXprwsCUkO0g3sByrf8PV4N7jQpBUZlnaqtDsTnt+
-	B7khA1gqnRE8KqeiSB4EeV1criRDGCOP9+wEw1Q5ojGrMp2ohrP75ITcWgyQbrT3hZwFC6I2oGh
-	IxQQwzLeTzw15R2zyP9Bjf8FQs7kgO0T/OP2aPUeAyDXUbbncauHNK85C9czY3+qCOw4/CubGnx
-	cXK4goUMZcYQmYlp0r2xsukL6GJRSl5NVUVEXWV8t1IdvNc/GPs=
-X-Received: by 2002:a17:903:3c24:b0:2c9:d89f:fd98 with SMTP id
- d9443c01a7336-2d673aa8408mr10888335ad.1.1787589054124; Mon, 24 Aug 2026
- 09:30:54 -0700 (PDT)
+        bh=b+Q50ekDC9b+VMm0CXhjeVN+dTm/g3kpzzvFfKOXcMA=;
+        b=SsmW8Q229XaFxokpupehhf8KmMzQWCoCwgd1rt5UDqGkdir3U94IBLF1TGHdMz3S6H
+         bqi43rhwLZSyyE4KxHiTNZgbSPo3ro5Id09yJZr12E9hcQY2nxjgbtAmZbHJd6suQboz
+         icvn7XD3rDlc0MUDBTzYiLUnrIAlkqZdCpbUNH4CRCpL/rbX7pZoZNAYgV0Q9XWYQ7SP
+         rUlJYbavNjNp6sNU+bwyU9FOqWt8XD+kcH8mwayu8EQ84du6lk8CvPMVr7p5IMBEEYDE
+         G9W/IfViuc+2vdW2OL7H2cL7MhtX5RjO0UtO7E/DWg6ob+XNZPRaDD7gVeguYlFpzP0x
+         7TyQ==
+X-Forwarded-Encrypted: i=1; AHgh+RoCn8r6vyCIER2hVzPgzDu27mwC9BbXLvTUG26TdkZgiMt8hI7lMEilzWrfIPfLjqDV5KdKBmOGhtkoCBByUXN4@vger.kernel.org
+X-Gm-Message-State: AFuF++ln09tqeJy4+llB/W5xkHcHxM7hINWwUWKiGM9wPgFYIPnfQqtM
+	Tx3lgiiO+EEbqri7j5cSyjxNouLq1VlY3mrITyXSDjEqgZAwTu4dXTh1bX7oN3rdr+C6NptUr7g
+	vaCXwxwGHlQfXmzZnQviBFUn3ciGOVjY=
+X-Gm-Gg: AR+sD12v1hPW9IXgyh5WXHv+4nMkwVu9uRPlsPnzbXl6DrDoeobJeUGN1HR7xH8Eson
+	wdTf9dr2xYCb8sVhUYHZDPCI8DyruaXTxcJIPyzTV5n31bwm51zWLJxXt7XBZthhz7abeaSDKiD
+	gY2B3eee52PY+JB0xPCZYEQTcQJf3hYoVAmXhkvhDGbH/uZAvIVfRxJLApxrK4dy/wYhlqglRxQ
+	48NGHyuwB4qqmEQ3dwakniPCs1xHziX1G94QZ4tXaaSSQz8XDPXaWhzkIPja7gd3c3Io59O3muV
+	gXrtSzPJFpv2WUa++7DSiMMq3vyB5H7siMNu/D9uNlEPJrShrX5YLNUov9NxRzlKTfuEabnmKAw
+	AM+Yt2SlkYv4hCvQ8sKWHIGGG3J0Kt+wGjbnBxLpOMQ==
+X-Received: by 2002:a05:6a00:f08:b0:84f:37c1:f887 with SMTP id
+ d2e1a72fcca58-8520ba2ea2fmr38445574b3a.12.1787601260681; Mon, 24 Aug 2026
+ 12:54:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260824133122.751733-1-atomlin@atomlin.com>
-In-Reply-To: <20260824133122.751733-1-atomlin@atomlin.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 24 Aug 2026 09:30:41 -0700
-X-Gm-Features: AcwNN1VjtTWsTSfQwbcZ-B1SviZO868xDRDMm8bpYRC0kwmCpfMtovrDmL94PMU
-Message-ID: <CAP-5=fVnDY11NF5ziaQ3SQgUJq-WGmcX9GPWriN9a9sPYnC3gw@mail.gmail.com>
-Subject: Re: [PATCH perf-tools-next v6 0/5] perf trace: Symbolise kernel
- virtual addresses and function pointers
-To: Aaron Tomlin <atomlin@atomlin.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, james.clark@linaro.org, 
-	howardchu95@gmail.com, neelx@suse.com, chjohnst@mail.com, sean@ashe.io, 
-	steve@abita.co, rishil1999@outlook.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20260822054620.452262-1-ming.jvle@gmail.com> <aosT4H14zcowzU_7@redhat.com>
+ <CABbwK50esft7xj6cPWXN7iHnqW6E30w1Cg5FMmE97gJ34SqtfA@mail.gmail.com>
+ <aotM6tRUHI9Bo7gW@redhat.com> <CABbwK50istUW_xnFsjCA+MMgFCuBbY-Zs3QmJU=Fg7heqKdF6A@mail.gmail.com>
+ <aoxp3Rcbp3fUuqS8@redhat.com>
+In-Reply-To: <aoxp3Rcbp3fUuqS8@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 24 Aug 2026 12:54:06 -0700
+X-Gm-Features: AcwNN1UPgMEuZCxen7PbKRMigTGKjiHrc98UZ0KYRuGhhLnIXTDbxzsARdQVrl4
+Message-ID: <CAEf4BzbUQWAB0JuEdXu32v4S_zMuv4de+kYv0mcY4tDPu8CA2Q@mail.gmail.com>
+Subject: Re: [PATCH] uprobes: Free utask on dup_return_instance() failure
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Keke Ming <ming.jvle@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 24, 2026 at 6:31=E2=80=AFAM Aaron Tomlin <atomlin@atomlin.com> =
-wrote:
+On Mon, Aug 24, 2026 at 8:57=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
 >
-> When inspecting kernel execution flows using perf trace (e.g., when
-> monitoring workqueues, delayed work items, timer callbacks, etc.),
-> tracepoint payload arguments containing raw kernel virtual addresses are
-> currently rendered as hexadecimal values (e.g., 0xffffffff81234567).
+> On 08/24, Keke Ming wrote:
+> >
+> > On 08/24, Oleg Nesterov wrote:
+> >
+> > > Hmm. It is not that I think "it is not enough", I think this is point=
+less
+> > > whatever we do.
+> >
+> > Well, I didn't mean to insist on the cleanup, I also think it may
+> > be redundant. If the child is bound to exit, manually calling
+> > uprobe_free_utask(t) in dup_utask() is pointless, as the normal
+> > exit path will handle it.
 >
-> This requires manual symbol lookups against /proc/kallsyms or vmlinux to
-> identify the underlying kernel function being executed.
+> Yes, but the same is true if the child is not bound to exit... IOW,
+> I still can't understand your motivation for this patch...
 >
-> This patch series enhances perf trace by introducing kernel virtual addre=
-ss
-> and function pointer symbolisation using perf's native symbol engine
-> (i.e., machine__find_kernel_symbol()).
+> > > But this is only the first step to cleanup
+> > > this logic. I'll try to write another email tomorrow.
+> >
+> > Of course, I'm all ears.
 >
->     Before:
->       workqueue:workqueue_execute_end(work: 0xffffffffab2f1420, function:=
- 0xffffffffa8046b50)
+> You have already mentioned "Option B" below ;) that is what I meant.
 >
->     After:
->       workqueue:workqueue_execute_end(work: 0xffff8ac2c420f270, function:=
- wb_update_bandwidth_workfn)
+> > Here is my current understanding. One thing I am not sure about
+> > is the signal semantics. If the copied uprobe state is incomplete,
+> > the child should not return to user mode with that state.
 >
-> Patch 1 fixes a pre-existing error handling issue in btf_struct_scnprintf=
-()
-> where negative error return codes from btf_dump__dump_type_data() bypasse=
-d
-> the error check and erroneously advanced the augmented arguments buffer.
+> Perhaps... But consider
 >
-> Patch 2 introduces the syscall_arg__scnprintf_ksym() (SCA_KSYM) beautifie=
-r,
-> which resolves virtual addresses via machine__find_kernel_symbol(),
-> formatting them as symbol_name+offset (or "NULL", with a graceful
-> hexadecimal fallback upon lookup failure).
+>         func_which_can_be_ret_probed(void)
+>         {
+>                 if (!fork) {
+>                         printf("CHILD\n");
+>                         exit(0);
+>                 }
+>         }
 >
-> Patch 3 updates event format initialisation in
-> syscall_arg_fmt__init_array() to automatically assign SCA_KSYM to non-arr=
-ay
-> tracepoint fields typed as function pointers (such as typedefs ending in
-> "_func_t" or "_fn", or function prototypes matching "(*)"). It also
-> registers common function pointer, callback, and callsite field names
-> (e.g., "action", "call_site", "callback", "caller", "caller_ip",
-> "callsite", "cb", "fn", "func", "function", "handler", "location") in
-> syscall_arg_fmts__by_name[]. To prevent misclassifying enums or 32-bit
-> integers on 32-bit architectures, helper guards (field_is_ptr_sized(),
-> field_is_enum(), and field_is_plain_int()) ensure SCA_KSYM is strictly
-> assigned to pointer-sized fields and 64-bit scalars while allowing enums =
-to
-> fall through to BTF pretty-printing. It also removes the legacy
-> trace__field_is_ip() hex override in trace__fprintf_tp_fields().
+> > Option A:
+> ...
+> > ...
+> > kill_child:
+> >   // I was thinking about SIGKILL here because it cannot be ignored
+> >   // Of course, you can correct me
+> >   send_sig(SIGKILL, t, 1);
 >
-> Patch 4 extends BTF pretty-printing in trace__btf_scnprintf() with
-> btf_is_func_ptr() to automatically traverse BTF type hierarchies (includi=
-ng
-> nested typedefs and qualifiers) and route kernel function pointer argumen=
-ts
-> to SCA_KSYM when BTF metadata is available. It strictly enforces a single
-> pointer indirection limit and validates type signatures against extra
-> pointer asterisks to prevent multi-level pointers from being
-> mis-symbolised.
->
-> Patch 5 adds an automated regression test script, trace_ksym_beautifier.s=
-h,
-> to verify kernel symbol beautification across both virtual address fields
-> and function pointer fields.
->
-> Changes since v5:
->
->  - Introduced patch to correct error-checking in btf_struct_scnprintf() t=
-o
->    prevent erroneously advancing arg->augmented.args on negative error
->    returns
->
->  - Added helper functions field_is_enum(), field_is_plain_int(), and
->    field_is_ptr_sized() in Patch 3 to guard SCA_KSYM assignment from
->    colliding with 4-byte enum or integer fields on 32-bit architectures
->    while supporting 64-bit scalar addresses (e.g., u64 caller_ip)
->
->  - Updated btf_is_func_ptr() in Patch 4 to enforce a strict single-pointe=
-r
->    limit (nr_ptrs =3D=3D 1) with early termination on multi-level pointer=
-s,
->    and added a type-string pointer check in trace__btf_scnprintf() to rej=
-ect
->    function pointer typedefs with extra pointer indirections
->
->  - Removed test_ksym_btf() from trace_ksym_beautifier.sh in Patch 5,
->    refocusing the test on verifying SCA_KSYM symbolisation across both
->    virtual address and function pointer fields
->
->  - Link to v5: https://lore.kernel.org/lkml/20260822213558.704018-1-atoml=
-in@atomlin.com/
->
-> Changes since v4:
->
->  - Added a non-array guard (!(field->flags & TEP_FIELD_IS_ARRAY)) to the
->    type-signature heuristic in syscall_arg_fmt__init_array(), preventing
->    array fields matching "(*)", "_func_t", or "_fn" from erroneously
->    receiving SCA_KSYM
->
->  - Replaced host sizeof(void *) check with tep_get_long_size() to support
->    cross-architecture analysis of 32-bit trace data on 64-bit hosts
->
->  - Added deterministic workloads to trace_ksym_beautifier.sh to prevent
->    indefinite hangs on quiescent systems
->
->  - Replaced csd:csd_function_entry in test_ksym_btf() with
->    timer:hrtimer_start to ensure test reliability on both SMP and
->    uniprocessor (CONFIG_SMP=3Dn) systems
->
->  - Link to v4: https://lore.kernel.org/lkml/20260821204930.679027-1-atoml=
-in@atomlin.com/
->
-> Changes since v3:
->
->  - Added "caller_ip" to syscall_arg_fmts__by_name[] in alphabetical order
->    to symbolise instruction pointer fields
->
->  - Guarded SCA_KSYM auto-assignment in syscall_arg_fmt__init_array() to
->    only match actual pointer fields or pointer-sized non-array scalars,
->    allowing unmatched fields to fall through to subsequent type checks
->
->  - Fixed btf_struct_scnprintf() to only dump struct data for augmented
->    input parameters, preventing un-augmented output pointers from dumping
->    empty "{}" instead of falling back to hexadecimal pointer addresses.
->    Also ensured btf_dump is properly freed on error exits
->
->  - Updated test_ksym_btf() to trace csd:csd_function_entry with --force-b=
-tf
->    instead of call_site, directly verifying function pointer symbolisatio=
-n
->
->  - Link to v3: https://lore.kernel.org/lkml/20260820211100.649142-1-atoml=
-in@atomlin.com/
->
-> Changes since v2:
->
->  - Populated syscall_arg_fmts__by_name[] with common function pointer,
->    callback, handler, and callsite field names ("action", "call_site",
->    "callback", "caller", "callsite", "cb", "fn", "func", "function",
->    "handler", "location")
->
->  - Checked syscall_arg_fmt__find_by_name() prior to generic pointer
->    fallbacks in syscall_arg_fmt__init_array(), and dropped the inline
->    64-bit size check to ensure 32-bit and cross-platform compatibility
->
->  - Removed legacy trace__field_is_ip() in trace__fprintf_tp_fields() to
->    allow "call_site" and "caller_ip" to be beautified with SCA_KSYM rathe=
-r
->    than being forced to raw hexadecimal
->
->  - Simplified btf_is_func_ptr() to remove the internal pointer requiremen=
-t,
->    correctly identifying bare prototype typedefs as function pointers
->
->  - Prevented pointer enums (e.g., "enum foo *") from being misclassified
->    and formatted as scalar enum values in
->    syscall_arg_fmt__cache_btf_type(), trace__btf_scnprintf(), and
->    syscall_arg__strtoul_btf_type()
->
->  - Added negative caching (btf_type_cached) to struct syscall_arg_fmt to
->    avoid repeated BTF searches on every event for unresolvable or primiti=
-ve
->    types
->
->  - Widened btf_enum_scnprintf() to accept unsigned long val, eliminating
->    narrowing truncation of 64-bit values to 32-bit signed integers
->
->  - Fixed trace_ksym_beautifier.sh:
->     - Quoted "$0" to support directory paths containing spaces
->     - Captured output in memory to eliminate temporary file leaks on earl=
-y
->       skip
->     - Hardened regex validation to require valid C symbol identifiers and
->       reject raw hexadecimal addresses
->     - Used '%s' format specifiers in printf to prevent format string
->       injection
->
->  - Link to v2: https://lore.kernel.org/lkml/20260816205921.576365-1-atoml=
-in@atomlin.com/
->
-> Changes since v1:
->
->  - Fixed reference leak of struct map in syscall_arg__scnprintf_ksym() by
->    calling map__put() prior to returning Removed unreachable and erroneou=
-s
->    entries ("action", "callsite", "call_site", "fn", "function", "work")
->    from syscall_arg_fmts__by_name[]
->
->  - Restricted name-based SCA_KSYM auto-assignment in
->    syscall_arg_fmt__init_array() to pointer or 64-bit address fields,
->    preventing misclassification of non-pointer integer fields
->
->  - Updated btf_is_func_ptr() to fully unwrap typedefs and type modifiers
->    below pointer targets
->
->  - Fixed BTF type name matching in syscall_arg_fmt__cache_btf_type() to
->    handle leading modifiers and strip trailing pointer asterisks before
->    lookup
->
->  - Synchronised arg->val with val in trace__btf_scnprintf() and widened v=
-al
->    to unsigned long, fixing erroneous "NULL" output
->
->  - Added shell test script,
->    tools/perf/tests/shell/trace_ksym_beautifier.sh, to verify kernel symb=
-ol
->    beautification for both default kallsyms and BTF routing
->
->  - Link to v1: https://lore.kernel.org/lkml/20260815233651.527936-1-atoml=
-in@atomlin.com/
->
-> Aaron Tomlin (5):
->   perf trace: Fix error checking in btf_struct_scnprintf()
->   perf trace: Introduce kernel symbol beautifier for virtual addresses
->   perf trace: Auto-assign kernel symbol beautifier to function pointer
->     fields
->   perf trace: Enhance BTF type formatting to symbolise kernel function
->     pointers
->   perf tests: Add shell test for kernel symbol beautifier
+> force_exit_sig(SIGILL) can't be ignored too. But I am fine either way.
 
-For the series:
+Current SIGILL sending is already pretty bad behavior that bites us
+periodically, instead of doubling down on killing the user space
+process because something about installing uprobe goes wrong, let's
+think about a bit less destructive way to do this. Mark uprobe for a
+particular process as defunct or "detaching it", or something along
+those lines. But not just kill innocent processes.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
-Tested-by: Ian Rogers <irogers@google.com>
-
-Thanks,
-Ian
-
->  tools/perf/builtin-trace.c                    | 250 +++++++++++++-----
->  .../perf/tests/shell/trace_ksym_beautifier.sh |  38 +++
->  tools/perf/trace/beauty/beauty.h              |   3 +
->  3 files changed, 232 insertions(+), 59 deletions(-)
->  create mode 100755 tools/perf/tests/shell/trace_ksym_beautifier.sh
 >
-> --
-> 2.55.0
+> So yes, perhaps this makes sense. Although IMO this all is not that
+> important; GFP_KERNEL shouldn't fail "in practice" and at least
+> uprobe_copy_process() warns in this case...
+>
+> > Option B:
+> >
+> > > Note that uprobe_copy_process() warns but returns "void", too late
+> > > to abort copy_process().
+> >
+> > Looking at copy_process(), uprobe_copy_process() is currently called
+> > after the "No more failure paths" point and after the child has already
+> > been made visible through the task list and pid links.
+> >
+> > Would the longer term fix be to move the uprobe state copy earlier,
+> > before the "No more failure paths" point, and then add the needed
+> > bad_fork cleanup for  p->utask?
+>
+> Agreed, pronably better than Option A. But in therory dup_xol_work()
+> can still fail after fork().
+>
+> Oleg.
 >
