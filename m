@@ -1,131 +1,111 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 184643E5A0E
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 06:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 885863E6DCF
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 06:37:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787553437; cv=none; b=jYsvonu79t6qqtWJ7Oo4Gvabnbg3j/KWB/5DwXrbKhXjVYyFInIRnZIG89Bk/nfS+yaE0e8252KQCBWQOJiWdaJnWhdDuMbCpGVQ+HV/NEojgVkSKI7vbZIMGocM9/mauKFoz1FrxrOfyb1Lvk5/14YmLedfqWaWtFDQsIthBjQ=
+	t=1787553479; cv=none; b=NZkRi0iBDgVytmljZnoDWwA5xEMjaTFjZk0u3OJ/c18iEvJ8JbGm8ur5O/K+0Dz/KnwaxyPxiqXfKzFCVrMLrI/KyT09akdUZPmrQbLSgGwEvoDLGWb70wl7rgUPvO37v51BJ4lT7ZyCfSfLfpfnP6ivi9Syl3qCE0bBhY9MoZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787553437; c=relaxed/simple;
-	bh=Y4CkpkQ1f/o6zX59BMY7m23OJrfO9fCZ8DXPrNoGmJg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QsbyJ2LSbMs1qe9BJoNulOwsVgZn70XfoaIRQC+AXxzfzHVaK1vafbLYgT7ONWpKAJXVL0r9XCRaZ7EjRor0d9Ev/FVn6f0GekI14ZDh836Ngex2xRIyInFDKLRODl9p0vFYgnODROnFEkcpYTldi7OhAwroTckrxR4pli6o4MA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EjxuJ/gQ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787553479; c=relaxed/simple;
+	bh=GCSxuvvpW+AQjsFTxOzF7FRcEmqzSou5HDDAmwaKbZ4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=hbTZuue22OT5H9JoOfjYWdvUZwqBaYINpBaBcwKe6rys9waYVfV/zVKaEH58Yl8qj205HZD4gZtZ5t4kII+vnx7iipjUKK01CZI4bbQWdUGnS1ng8v/Z/bWN7Co8YoWT4/A+gXqvpvFVnTWCs84A1PhfU2DzGFdTbrqjslxeXOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=BuW+Kx8b; arc=none smtp.client-ip=209.85.216.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EjxuJ/gQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 685B31F000E9;
-	Mon, 24 Aug 2026 06:37:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787553434;
-	bh=mmT8uKgFvoKCrwtVLVlpgi6Ak58S2LJTNU+PU61IkfA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EjxuJ/gQ29cmB60tl5X5mJs3SE+fH8A9QLoRMdlS7BQWZBwGtSeWkXALRsXZe3/+8
-	 PkrKIWF3OpjLwpBY+qOcb+Y4NLcH24uedzwwZ0mKBWTq/R8Msp4MuR+173a9UUqM3k
-	 +j5/05jTPh0/Du1TTEdIfzGkfI4hYJZidHc81+LIK5/cmk5aNPpXTTGs0omDqD56fk
-	 M5HvNmCZVbrBnthx73xSJUKfJGP0agevA4uFMCSSy6B5XuGRvQ+vPb2tmDEOmsR/IR
-	 2JFXiFpe78dkbJnNYcDwXUdQMXLGDAS6e+8suJHDd5eb/SM1j5GGqtU6fonh13qUdi
-	 US9VJaPovNKBQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 1/2] perf libdw: Pass dso_name explicitly to properly
- anchor split-debug builds
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260824062841.1529489-2-irogers@google.com>
-References: <20260824062841.1529489-1-irogers@google.com>
- <20260824062841.1529489-2-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 24 Aug 2026 06:37:13 +0000
-Message-Id: <20260824063714.685B31F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BuW+Kx8b"
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3823dcc1647so674288a91.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 23 Aug 2026 23:37:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1787553477; x=1788158277; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=zqe/SWEf592noLHVSYIELu6Va0G8zwq5y0ATE8PMvvk=;
+        b=BuW+Kx8bnejd1maNNO4bpTSLVuxzCngRFuZrl2fA+AbByNKc8MIK54apID8BnZZeYl
+         XjgsG70AS+9DqUSpwKevNz9Ydz3BN3fwS8xYaYZHBUHvw2oLnq9WgKVVkhaseX26dOTB
+         JTTq7g1yJwi6VtXNMtEq592LSKC7V9GsZOWBcqlAYVUymUuDQ3hx2ERX27w2rO4ZRdWI
+         BejN1BqWPlkg5I0QbpywxwDUzDxy4BrlhBb/2fAIbwnUYjbzfLikuOp+7H3Ze8tGZR7B
+         D6QLXar0rh4MphOUIUpkIOzFL1eSLZ9NCGSy55E3CkJiH17XAfr4cp2hMZNeBA1c8eIK
+         pXDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787553477; x=1788158277;
+        h=content-type:cc:to:from:subject:message-id:references:mime-version
+         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=zqe/SWEf592noLHVSYIELu6Va0G8zwq5y0ATE8PMvvk=;
+        b=hgxuUvW/Hys8wpEkIeLQSsmZm515/dYHDmn7kTuNJVLOtHZ21FMEhGF3f3eXE1bDsu
+         EWKvmTDXjzUHhKlHVuGEiudpk+68pX4V4u20yjZs6kZeeiSTq8EZRll8L8WijFjtB8Pt
+         HlUOO3zDdlsXxda2dK1TIpz0pQOAq1Sic3+cfalQEbkJvYnQM82n51TsLDRbDEzOk2/V
+         uDQdtikyZVeWsvE4FrDbQRawViVR2BQAm4ceSQWYHpM6Wj7ipoLFEtXm2WtHPmpDnvUb
+         vxw4Bwm6Uw6xcCVNpAjYT+2daFpgXrX3AlsqilywnYnl/qhqk4ATMtHJtVQNMWScrF10
+         rFzQ==
+X-Forwarded-Encrypted: i=1; AHgh+RpLKOl2w6OsvhbtmeLJzT54g1l2/sMrQzK0rlWnNbK29gpmWvdVCA0+2OFAPH+My2bGuNrw9v4vY7lim3CM5rV4@vger.kernel.org
+X-Gm-Message-State: AFuF++lQ+agOdRQ0xHpXZsgA/2uZt/pV76cjE1xfUjgD6Vx1YQoOlQWb
+	yjGdhaCiz0HbLD29V52koIerI32ub6NT6E/7xrxv9WDY6LHrqLBysfMIjRe8wVw2rgfk8cCMlV3
+	SJWmgMq6Vtw==
+X-Received: from dlbov5.prod.google.com ([2002:a05:7022:1185:b0:13d:1fe2:b775])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b89:b0:38e:67e1:15b
+ with SMTP id 98e67ed59e1d1-395deeae6e3mr27928401a91.6.1787553473990; Sun, 23
+ Aug 2026 23:37:53 -0700 (PDT)
+Date: Sun, 23 Aug 2026 23:37:37 -0700
+In-Reply-To: <20260813132519.4099508-1-andi@firstfloor.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+References: <20260813132519.4099508-1-andi@firstfloor.org>
+X-Mailer: git-send-email 2.55.0.766.g2966f0265a-goog
+Message-ID: <20260824063744.1533837-1-irogers@google.com>
+Subject: [PATCH v1 0/7] perf ui: Implement hybrid event merging for
+ heterogeneous systems
+From: Ian Rogers <irogers@google.com>
+To: andi@firstfloor.org
+Cc: acme@kernel.org, ak@kernel.org, ak@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, namhyung@kernel.org, 
+	Ian Rogers <irogers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [Medium] State caching bug in dso__libdw_dwfl ignores dso_name and breaks=
- split-debug resolution.
-- [Low] Missing __maybe_unused attribute on the dso_name parameter in the l=
-ibdw__addr2line() fallback stub.
---
+This series implements hybrid event merging internally inside the perf TUI 
+and explicitly configures support for --hybrid-merge for both `perf top` 
+and `perf report`. Introduce a `--hybrid-merge` command line flag (with a 
+dynamic `'M'` hotkey mapped natively inside the `hists` browser) that 
+collapses hybrid events visually together natively during histogram 
+generation and sorts by the total. Add columns for each event.
 
---- Patch [1]: [PATCH v1 1/2] perf libdw: Pass dso_name explicitly to prope=
-rly anchor split-debug builds ---
-commit d6c05f5d9fb09508b13daaab6b752a240e96edf3
-Author: Ian Rogers <irogers@google.com>
+Ian Rogers (7):
+  perf evlist: Implement evlist__can_merge_hybrid using
+    first_wildcard_match
+  perf ui hist: Add support for aggregated total_period and merging
+    entries cleanly
+  perf ui browsers: Implement interactive 'M' keystroke to toggle hybrid
+    event merging
+  perf tools: Expose opt-in --hybrid-merge
+  perf Documentation: Add tip for hybrid event merging
+  perf ui hist: Format group headers iteratively based on proportional
+    visual allocations
+  perf test: Expand top tests for --hybrid-merge
 
-perf libdw: Pass dso_name explicitly to properly anchor split-debug builds
+ tools/perf/Documentation/perf-report.txt |   5 +
+ tools/perf/Documentation/perf-top.txt    |   5 +
+ tools/perf/Documentation/tips.txt        |   1 +
+ tools/perf/builtin-report.c              |   6 +
+ tools/perf/builtin-top.c                 |   9 +-
+ tools/perf/tests/shell/top.sh            |  65 +++++--
+ tools/perf/ui/browsers/hists.c           |  48 +++++-
+ tools/perf/ui/hist.c                     | 135 +++++++++++++--
+ tools/perf/util/evlist.c                 | 209 +++++++++++++++++++++++
+ tools/perf/util/evlist.h                 |   2 +
+ tools/perf/util/evsel.c                  |  14 ++
+ tools/perf/util/evsel.h                  |   2 +
+ tools/perf/util/hist.h                   |  14 +-
+ tools/perf/util/symbol.c                 |   1 +
+ tools/perf/util/symbol_conf.h            |   1 +
+ 15 files changed, 482 insertions(+), 35 deletions(-)
 
-This commit modifies libdw__addr2line and dso__libdw_dwfl to accept an expl=
-icit
-dso_name parameter. It aims to accurately anchor libdw to the dynamically
-discovered split-debug file instead of the stripped executable.
-
-> diff --git a/tools/perf/util/libdw.c b/tools/perf/util/libdw.c
-> index 4ca7e7e4fbe93..f53caee980b0b 100644
-> --- a/tools/perf/util/libdw.c
-> +++ b/tools/perf/util/libdw.c
-> @@ -25,17 +25,17 @@ void dso__free_libdw(struct dso *dso)
->  	}
->  }
-> =20
-> -struct Dwfl *dso__libdw_dwfl(struct dso *dso)
-> +struct Dwfl *dso__libdw_dwfl(struct dso *dso, const char *dso_name)
->  {
->  	Dwfl *dwfl =3D dso__libdw(dso);
-> -	const char *dso_name;
->  	Dwfl_Module *mod;
->  	int fd;
-> =20
->  	if (dwfl)
->  		return dwfl;
-
-[Severity: Medium]
-Does this early return prevent the newly passed dso_name from being used if=
- a
-Dwfl object is already cached?
-
-For example, in tools/perf/arch/powerpc/util/skip-callchain-idx.c,
-check_return_addr() calls:
-
-    dwfl =3D dso__libdw_dwfl(dso, NULL);
-
-This early call passes NULL for dso_name, which caches the stripped executa=
-ble's
-Dwfl. When get_srcline() later calls libdw__addr2line() with the newly
-discovered split-debug file, won't this early return just provide the alrea=
-dy
-cached stripped executable's Dwfl and ignore the passed split-debug dso_nam=
-e?
-
-[ ... ]
-> diff --git a/tools/perf/util/libdw.h b/tools/perf/util/libdw.h
-> index b120947374159..4bdd28d44e25e 100644
-> --- a/tools/perf/util/libdw.h
-> +++ b/tools/perf/util/libdw.h
-[ ... ]
-> @@ -40,7 +40,8 @@ void dso__free_libdw(struct dso *dso);
-> =20
->  #else /* HAVE_LIBDW_SUPPORT */
-> =20
-> -static inline int libdw__addr2line(u64 addr __maybe_unused, char **file =
-__maybe_unused,
-> +static inline int libdw__addr2line(const char *dso_name, u64 addr __mayb=
-e_unused,
-> +				   char **file __maybe_unused,
-
-[Severity: Low]
-Will this cause a build failure when compiling with HAVE_LIBDW_SUPPORT disa=
-bled
-(e.g., NO_LIBDW=3D1)? The fallback stub introduces the dso_name parameter b=
-ut
-doesn't use it, and lacks the __maybe_unused attribute present on the other
-unused parameters in the same signature.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260824062841.1529=
-489-1-irogers@google.com?part=3D1
+-- 
+2.55.0.766.g2966f0265a-goog
