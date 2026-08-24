@@ -1,110 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from CWXP265CU008.outbound.protection.outlook.com (mail-ukwestazon11020118.outbound.protection.outlook.com [52.101.195.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3BA82EEE79;
-	Mon, 24 Aug 2026 09:53:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84431372B2B
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 10:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.195.118
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787565210; cv=fail; b=mnXaXhvEjxGgwz5ZNyrWe4iqnigRXIouYr8pq0MBExnec+AAhvgngaijsFrBzxqW5pRmCKL4UvSlei/ZCrHxveBf+Mv7RpGUzyBOWgDlZWlBrS2drWmlT1D2DoskpJCRshlslTj3sNZpe2PUa7fae0AshRVlDJ9CM8C/0vSSlwk=
+	t=1787565757; cv=fail; b=DENK0/cXfWoCrx7j242unGkvQzlaBRgmkxHBxSVMiK6jhN7FIk/WR6TuCBgPAtDdBkd6au2Jf0hnsAFwcjzT4BKcLr9yte8lWuO+3VusW+kwyE+Z5u0SlEddyAmQo2kC4siMjr34K30PQihkoRm7gK9eZc0c5cdy27MxIZbXLU0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787565210; c=relaxed/simple;
-	bh=96UEPupwbgUO9Sab7bRQnQM5cB2QJ2kBVuwJXjsXGw0=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ORQUFXLvhR/9+4JJTTKIlYQ0vgBbP0YDDz5O3zxe5OSA3D8nDPGQghM7fdYXeFeBSnh9T/ihCxQPy+l2Zv9CdC+EKd880CqfUc/kBkYi8FUDeshrmZOrGrG4zlgdSQCPsGTdYeGE3+WuhC54TTsJ5TiiDFKkwgkKKl/FcuEy0sI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FJIupLB4; arc=fail smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FJIupLB4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787565209; x=1819101209;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=96UEPupwbgUO9Sab7bRQnQM5cB2QJ2kBVuwJXjsXGw0=;
-  b=FJIupLB4zj/O8JidZSfT7N3gDDvZsKYtSC6u0law5sY6LfpjIG+9N+Gp
-   MlUG7eNmDajZP54SMfFfijG2cEkw0NYpleKspErle4tz0N4Ildtj9hsYm
-   Pe72FH+jdiATSNMJuIJb1KDgxHsS2XoISkHuV+NXrkneOVrOqfrv6IDE2
-   iBmdJoAFfSbDAn0aV4BG9hKAXLzZqsaS555uMvybPKM1ZZhyXXBvmuZcZ
-   fyYlvqaALzm0zIAx+Zva/UCyk3qocVugMfnOElTFxMB8AKs6amHvwDKNE
-   YBCsIIFFGy+3Onidefp1muukUGwWahizNYrQQhghvJ06m8yKxovqoTjii
-   A==;
-X-CSE-ConnectionGUID: ma+99e8sQj2XLVb89gwmdA==
-X-CSE-MsgGUID: 8IT18KtFTq2omje9jR5gVw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11884"; a="90530488"
-X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
-   d="scan'208";a="90530488"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 02:53:28 -0700
-X-CSE-ConnectionGUID: uueokSdWTJe7E5g8bh1ibQ==
-X-CSE-MsgGUID: 9J6X2NWkRbCja2qZcUV2Dg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
-   d="scan'208";a="265654598"
-Received: from fmsmsx903.amr.corp.intel.com ([10.18.126.92])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 02:53:27 -0700
-Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
- fmsmsx903.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Mon, 24 Aug 2026 02:53:26 -0700
-Received: from fmsedg903.ED.cps.intel.com (10.1.192.145) by
- FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45 via Frontend Transport; Mon, 24 Aug 2026 02:53:26 -0700
-Received: from BL0PR03CU003.outbound.protection.outlook.com (52.101.53.34) by
- edgegateway.intel.com (192.55.55.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Mon, 24 Aug 2026 02:53:26 -0700
+	s=arc-20240116; t=1787565757; c=relaxed/simple;
+	bh=iAWFxd/ScaSSfgeec1RBD8VHJ42THJtgjr51qyzzxLY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=galU9t5p/xl1hfzuYaDfY5flwRu+bT2dcwwh9CAw3+fIYyMEjj9Mej5gMjsXTCuZ03/RqMN8wy8QznXq2q24QSPclNVFf0q6B45JbgV8NyUgOJ3kp0Qa7nHLMOJEZIubfX4TlVdvbKSTgQeZ2YEQWrjKORjJCCLydkh9ZsfIzPE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.195.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=faP1q+ylLQGR9AW1/fMVGIFVP1aSPAmia7mZ69ACy/Y9lv2eMz7nNusVqXiNQYvA1skOyuEBv3UybRwgj4WuqvvSu5aWLvNFZAmuz2dUe4FImO7XGc1Uw17S9JC/+uVI76bWPMR8Xasw0XIh75P6iPyZ5a0guCZGVan5vBedSY5skdwT+NxyKS7Z9xBuiI8/AMj3GJwrSDLbECn+nkd6THlWzgmcTqL/gpqZ4RvBnESXdQ3dWJpNRtjSI/hw3zbo7BN+JhaTkULv5wyfZlhhSYM/pp6ugY1EqXXMta6VYODp6kZwnG3eM3OYhLtUw75YXy8R6jYmi1sXm+yYGVs6FQ==
+ b=EMGJTGL+rhjMQE+EiY3LVXTA+YkF37jc9/Q4vEu+trzZFUeOdowCyoZGB9xQeGFqGS/U7LgIXBuOKiDVNVFSeeNa7jabf3yhDfOAvEeFnQhBh89KbRZ6QD0c7sM5sKGO8V/pvuHZaKUemd9vLPmCcYNX76V3Qg95F0P9+haaf+tNVHH6Xsoa4NmTafnMnhKebM8JYFvdDycttPYUXd8411SOPgpZaS+s6VQqAcvzx2NgepJPRBjlzhFLjYV/SH/vUEJoHKsOMFvRSIWas8SjmZIqhBS2szEhHJnNFEVluz9u0HkRNYgFzwqE742y64lc5ssAj0xdwNE/GwwYP5jbxg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zw+SGBh4p80Ih+lCPwDXib1HV0at2Q7LbWRY0Tlz2v4=;
- b=grzRnMa04kzLWyENvU4YPfLQ21gPuMcQItDaR1+/SbTU0v7IU7M4L8ddSOTtd6gTJ6uNwhp2Ev6kLnylbkraRZXePJLKgB/qtmaSySU6w40CPlzVs6518qGQ4fVltoqVshphTqYmci2NH2NTsvv2YSg53BS1uzjWaRfn/jlN8Ca5CzR/nUbdWWSFwQOPAM91T7pBPS7ztTHIHrNIklrZHBVVKJbbS9l1Sig1YGUiHL7df9X7jtpXgXAb1bUgn3zyO3JrDx9MytF3l7nH4lGulw2ne5TkNYnULHbsT1C7hYapMx46mkYFjMgw7BLY+cVDjv1qbEDvFc+LgLwjcW8dug==
+ s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
+ bh=une4qxUS0YCuJEgR0WEPph9IrWGAcVN2RhA527BP6xo=;
+ b=aMXhnLel11qqh3s9LizZExVmMAwnHqSoodYzV7whP201HVXk28i2lraHAhxlpsaui8Wj5ITwICrGCzfbWQAbbh+6zeGd4BEAciSuhbmZ86mKrFneTw9otcKS0D9DzVPgPQjGk3B8i6bgrnqc+5suPBhM+eYJFjWQ7yj0JdYuS/S//sgFVqUVUA1KFm6YCU0bl0mxZDObVhmrydoZPJMOBDZZUN6NzV1CjEeKAPEg10H/WPuXs5g4+elwzWxVHQOM6c7sgA4AQwBboVKFSZYjl7nBDPV1r6fvshekUrkaz2boKHH5StKMbaH4VNZIlJ4AFJPm/qQOaEi7mA7CSW8Tfw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
+ smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
+ dkim=pass header.d=atomlin.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
- by LVUPR11MB9859.namprd11.prod.outlook.com (2603:10b6:408:38b::21) with
+ header.d=none;dmarc=none action=none header.from=atomlin.com;
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
+ by LOAP123MB8927.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:494::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.12; Mon, 24 Aug
- 2026 09:53:23 +0000
-Received: from IA1PR11MB7198.namprd11.prod.outlook.com
- ([fe80::2c4e:e92a:4fa:a456]) by IA1PR11MB7198.namprd11.prod.outlook.com
- ([fe80::2c4e:e92a:4fa:a456%3]) with mapi id 15.21.0339.012; Mon, 24 Aug 2026
- 09:53:23 +0000
-Message-ID: <1986a53d-9167-4f7a-8b1b-2c09f962a9e2@intel.com>
-Date: Mon, 24 Aug 2026 12:53:16 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/6] perf: cs-etm: Respect --no-itrace option
-To: James Clark <james.clark@linaro.org>, John Garry
-	<john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, Mike Leach
-	<mike.leach@arm.com>, Leo Yan <leo.yan@linux.dev>, Suzuki K Poulose
-	<suzuki.poulose@arm.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
-	<mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Alexander
- Shishkin" <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@arm.com>, Suyash Mahar
-	<smahar@meta.com>, Amir Ayupov <aaupov@fb.com>
-CC: Arnaldo Carvalho de Melo <acme@redhat.com>,
-	<linux-arm-kernel@lists.infradead.org>, <coresight@lists.linaro.org>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20260821-james-cs-hw_id-output-failure-v1-0-9d532ddabcc3@linaro.org>
- <20260821-james-cs-hw_id-output-failure-v1-4-9d532ddabcc3@linaro.org>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
- 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
- 4, Domiciled in Helsinki
-In-Reply-To: <20260821-james-cs-hw_id-output-failure-v1-4-9d532ddabcc3@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DU6P191CA0032.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:10:53f::19) To IA1PR11MB7198.namprd11.prod.outlook.com
- (2603:10b6:208:419::15)
+ 2026 10:02:31 +0000
+Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0339.012; Mon, 24 Aug 2026
+ 10:02:31 +0000
+Date: Mon, 24 Aug 2026 06:02:29 -0400
+From: Aaron Tomlin <atomlin@atomlin.com>
+To: sashiko-reviews@lists.linux.dev, namhyung@kernel.org, 
+	irogers@google.com, acme@kernel.org
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH perf-tools-next v5 3/4] perf trace: Enhance BTF type
+ formatting to symbolise kernel function pointers
+Message-ID: <yqxazca2etvvyh54xf3xhuqxhtortjvjc2cuoqogvf57b6jfww@qmqu27slkdxv>
+References: <20260822213558.704018-1-atomlin@atomlin.com>
+ <20260822213558.704018-4-atomlin@atomlin.com>
+ <20260822215124.353251F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260822215124.353251F000E9@smtp.kernel.org>
+X-ClientProxiedBy: LO4P302CA0021.GBRP302.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c1::12) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -112,256 +58,192 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|LVUPR11MB9859:EE_
-X-MS-Office365-Filtering-Correlation-Id: e52fd74f-56e0-48ad-2f53-08df01c58932
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LOAP123MB8927:EE_
+X-MS-Office365-Filtering-Correlation-Id: 75267987-d74d-4542-225b-08df01c6cfdd
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|23010399003|7416014|376014|10067099003|56012099006|6133799003|3023799007|18002099003|22082099003|11063799006|4143699003|921020;
-X-Microsoft-Antispam-Message-Info: JDXAQyTyEZsIa3QJkuWZ7yVjI23ro/ikfKUzjxtpz1t00nZcXodtXvHYsJ54hFrUotjihX3JyT8piE/elpZ7SeLBRBZ4sWHTGoEmzdJFea+RRF8wr+AQuuj3aGLrNiOg/uofm6B2Min1bH6WotdCMKKUq9+QWUUp3yPOKrKvth7cirmOasL3ULNc1j5urbViG2oquinqA8wlZLDdNH0SVsTlv9CNIQddkldUqZCNvfB4Jzk7h0l8OF/rfz0BW1u+QmWHT1r6Oog2b2jsdc7bzEGz4uU65j7fceALycQc6vQW2E2G/SSh7lyaPL1XChIhVJCuhaIpU7ApAH3ZN8Q3n+ujh61QKlUvGnzoy9MDekjjxr8nrLgmDWDLnys9ZNMly460IYNhOMf/V2gqkCT6tq55tJCCdAGgi9XcEgl653BYjnr/dkSM4ihkoBr+6tMDVZYomeWLoDhKzumN3Iwlez2J2m85ESto7A14sCPXBSgVxc+BrYgHo6070ejjRI6M81R3GOINFELr7Xgh6sRkbvf4suowx4QahedHPiKefjLHqrdnsmiZoIbUzxMzbAzOP12AMsBTZB1MBDj1jiwCbvPCQUMUKOF54la09UQNI75yTPX5GU/T4qwK1D74EcdWnzTJhXbqRw53T1iTUsnCXKVPoN+ZelmUl+FyQOd/t2OcHrs19R9Cb4zq6pwaDm9+/xbs4k/CmFvccoFcjLNHFg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(7416014)(376014)(10067099003)(56012099006)(6133799003)(3023799007)(18002099003)(22082099003)(11063799006)(4143699003)(921020);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|23010399003|376014|10067099003|56012099006|6133799003|3023799007|22082099003|18002099003|4143699003;
+X-Microsoft-Antispam-Message-Info:
+	URvsaTCMf7IBjlAcFwxL4tSgkOwTZYeIrvMN6JlpxpgZMU3HD8L33QKwX86gNCOrISK467+/xCUEn+ed9pWI4WPrBmxarOR8laGeF3ayAEXR0jOYLaEe1HCFcRr5o5XhzdgiSMSkMLr4z2EbXJLjmNdeW8LOhZqE/gfPyJ7ned1TGlwW5DYQ4jtYN7YHfdiIyCySkAym9kdx7UxwcS3keZr7JRDzTQmHl9EkaVUB27Jv3oHsvqjshsuU36CyCTZpZfnGi98p2KCX10n2zWDF6EFOb5ILcM3OYudMGOgO2XleqDW/lQUIWH09to+21Cr2W4d9eYRM4ZMpPviuKOu2IlOsJhufGIU9egUzAEESKWuDrR/1qKTPZjZhjVh/8vokvIHWJ/jdOSRn68zBdF47Ukyssq1sRqnu+dbCMYTZp39Qwb2DwvVafJs936W/4iihVgoRx5dUfrN1KLbVwDWSSz2R6dvwLvMSYFRacyN8gUu78tONVaHhwWk1qxBhNoauDvSjds1r3zPMx8GwzqZX8MozafFZbVoqtOdhKZV4fuTcLFp/qI8JwdzlOisyMjsK+2kiWeCozOTYn69T+VoXDNxmO465g4fekVRHvIwr9F60azN6RcQT8eOTtVHwbG3P988AsHeV6eXTSB0fnhYA6eqnlWm0/jE9bdtXXSIHlBI=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(23010399003)(376014)(10067099003)(56012099006)(6133799003)(3023799007)(22082099003)(18002099003)(4143699003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MGlXRDNmVlVvdktiUzYycFFzdTRnMG5ZTnI3Q05tVnJMRUk0TW92UDgrb2VM?=
- =?utf-8?B?RWpMbEo2TmFZdWNVbFBiZ29jbDFTcVBlTTNNVm1lZjVFcVFGSFJzclJLK1lL?=
- =?utf-8?B?WmxSS2pSNGJ3RHhtT1VCQWVtdEJHOEVWRnpVSjRnSUwvaGRuNnJaODBWbHFD?=
- =?utf-8?B?UFN2b0l3ZGU2bTdLV2pjV042ejdBZGVyUEtkZDQ3bjdnVmszaGwyU0R1T3JB?=
- =?utf-8?B?cUxDczNXeW4rMGJsa2ZQS2VoM2RoeWF5clp3S2ljK3VSekZUdlBqTzBGZ1ZL?=
- =?utf-8?B?OXkwdzl1T0Q1cXplMWs2aEpHR3JkSlB2SnZyeW1XeEh5UGpvTU81RmgyejBR?=
- =?utf-8?B?Nm1ZOUlCT2NBMTVBMkVjVVdFSk9pV1hiQklMZi9lVU84a2RDZXNjOUNyRktr?=
- =?utf-8?B?bVlzTHN3U2hvZjl0NDdPcFNuYlE1L3FVVFpVWmU1YXRGencrYm9zYXFGSlNm?=
- =?utf-8?B?bEhLRHNZdy9kNmVqcnF5NlRaNE5PV2tjaDhXcHo2NjFjVWNRUnZHY2hHMDVq?=
- =?utf-8?B?alFaYzdsUThqVWRhU1YzMUtPMm1QZkQ2bncxMDZENm5mcUMrZkVTeTdEZFJB?=
- =?utf-8?B?eDAvcHdkTHVNc05EWXhQUTRxbE1HMHM2TkpoNExsSC83clhrUWIxOENrWHY2?=
- =?utf-8?B?UjN5Mi9YNGxPOFB0ZWpYWVpWRFlqckpWWG9xSWZoeW5GOXp1WkQrT0NiaHhr?=
- =?utf-8?B?M1VFRVZJckl1QjI3NHZxd2o4T2JMU3lWVUQ0NzBOVCtld1JPN1luTzQwV1Bj?=
- =?utf-8?B?R3JCSXBXS1pxWG80ZTZ4Yi8vaStpYUxTVUZTRGlYL2x6cUJLNmtYSm5uQm1t?=
- =?utf-8?B?NGtIZjNJWDFXd3RCVXNLVktZeUdRY1AzaitBUE1ZdDBLZW9GYVgyaWJkYzNF?=
- =?utf-8?B?K01JVi9aRE5yQVhXM09LMmMwajVWMEI5NTUyclpEUmRMRGdINmZxWFhJOEZl?=
- =?utf-8?B?NmNMeDByMmVlbDRoREtDVVdCS2lPcFBzem1lL3AraFVHaXQyWEVuYWhtRjVJ?=
- =?utf-8?B?RytTcjV6QUhXM0svY1V6aFVjZzM3TFprYkM1SDR1ZlBBakN2V1FlVXJKeUVJ?=
- =?utf-8?B?eXcwYWFVUldRN3czdG5wM2dXNVExL0xXZVB6V1ZyWHhTWEJwU2JDL1J3aURz?=
- =?utf-8?B?MXl2aHErS0NRMVdKaG9zcnJZSXFPOHNac1VZQnVWWXB1dStXRkhLK0xRNzZp?=
- =?utf-8?B?dG1wRkZVUG10L1dKUzlLZFVzZnhCT2lud2Nxdk02cEhQZ1dlUHB2VjRKNzNG?=
- =?utf-8?B?UEp2Y1liL3luend5NC9SUlBhYVZQb2Z6NHBKL3k4N0wrL3RFUjNrQm82OGNB?=
- =?utf-8?B?SG5FekJZZmt3eFBnNTA4VHVvNG0yTWVDM3NEV2E4SGNkZDg0aUI1VVcyMTBY?=
- =?utf-8?B?VEFnZ1YxUW1GU3hBN210NmIzU01URGJlc2x5OTFlWXJaUURDSVRiTlU1dm4z?=
- =?utf-8?B?bldseFNVU1l0YkhrQW04RFJVRDdpWldEWjBuMklLaUd1TjBmelNDSjdwNjBp?=
- =?utf-8?B?dmVxS2w2VDRNT1FCTXV1V2Z5am9wZUdoZlEvSXFuWDR5UEFkc1dHTDR1RVhU?=
- =?utf-8?B?ZUhYVVAyWnlkOCtVZ1pyaWtDV1lFTVdnZUJZbW04ZGJaOVdwQVpxSXhJOExV?=
- =?utf-8?B?VGNyYVdoNzRFNjFnV1U1WHJlM2UzZGNveFQ0ZDFPcnE5c2lDbUg5bE5jai8x?=
- =?utf-8?B?L0R0Y2cwZU5lSjhaOFZRdXRweWF4Ry9MNlBTQTluQXVvWURmYXBaamN3dUdO?=
- =?utf-8?B?VUJTRlhTdW96QXBGQityNFB4VmNIRG5OZWRQRHhrYkVTazgvUkpUWUxWdVR2?=
- =?utf-8?B?SU4vWEFnSVhDNkcwZjd6ak5TeWtvK2NvQXQxeWtiMTl5UG5TUlhMZUJNLzFQ?=
- =?utf-8?B?QmVNK25VaWI1TXB5bVgvN1J2RVVnbFhiWFBnSGFPdXY4eFBsQ3A5QVg1V2E1?=
- =?utf-8?B?U2NzbVdIOW1DNktMWi9qRGNzemdjdFVielFQdyt0N3hweHMxTUZONWduUUNN?=
- =?utf-8?B?Nkh0c2d0SkR2Qjd4MHg3VG5Lb3AvVUxzOHhuWDU1czcyajEwKy9veS9BUlFy?=
- =?utf-8?B?VkxiclJtcFZJalVqWWxUMjU3MHM5TDhzTVdhWEFTQTYyamQ2YUhYYXl1Wnhh?=
- =?utf-8?B?QUtpMi8vZVM2MkVpQUFzQ2tNOWhkN0JPZWRVMXVOZ1MzRDZPWDdCazdobnkw?=
- =?utf-8?B?R083a0c3ekthSVVVemxhR0tBQ1dPejQ3UEorZGFDYTFlYVk2SXF3MXJQUU9H?=
- =?utf-8?B?WXRoTGwvcUp2T1hoZDh4SnR3QXVRZmg3SG1DR0k5YkJndjFDSEJWN0RlcGxU?=
- =?utf-8?B?aEV0Rncwd1ErYTdaOWEyRlVEOUQyVGprSFhaMUFBeFRYZzJNbnhKK2YyKzhX?=
- =?utf-8?Q?+te4Vzk61ZMp5tz4=3D?=
-X-Exchange-RoutingPolicyChecked: So7dIOoxhVfirmh05W3EV5AbK1326PNLRJ575TbTd9hqqY6GpKJsAglbm1/egjOmRLa2Duns4CfYCqGjLIKkH+uMB6WhKFudXPbuKwwABvW17ZHEkU6WdwHdBKSnbabAtfCEO4eoqTUgi2Vdq92+9J4riQ3YXOStIgnO7OMPAkVFvlhCwB94KoGy5G6GvSbhZbAs1K09OTLcz7HS2PTCmHJNt0gHDWxVOQ1cHWOq7MBiCMeTs1zwDM0MP+Rhr/rGSt9T7Fdr7lsS7syDWyHz6lPzfF0wW6R+A0ic/VkBkJLyUzYTDHW9psgWJ/MVqC6NJ0GJisLR4T5qoyvoGNkNHA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: e52fd74f-56e0-48ad-2f53-08df01c58932
-X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7198.namprd11.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?TW5FaFJnditmeEZ2OUZJdXNZR3ZiOHM4bVpCOG9BRzIwaUtBVWt4UUJQaVE1?=
+ =?utf-8?B?cUxPQ0UzRDlDMEprbnBIMitFU0ZNOTl5QlNXSkEyK2tra1h4OFEySW95UzdS?=
+ =?utf-8?B?TEx0c05Fa0h4NDBzTURFV2YwV3ZSUTdnUjFORWdtM1I5MC8wd3JxZTBHSHNj?=
+ =?utf-8?B?UHJOZ3EzaHRVdjlNQVFLaldRa3hreW8zMDFDNFBiQml2WWRXeVJ5R0t0dWw1?=
+ =?utf-8?B?OWFYeEtsYkZ2K01CcUo2cHV2SU5HaHY3K1J2L0IvcGFzOXJ6eTV5ZEhTalc2?=
+ =?utf-8?B?aGlGcnpQazlHUjc4NUJEZjhLRE4zVWk3ZW1wTWZEWTA3Vkl0R1ErTkl4ZHI4?=
+ =?utf-8?B?aFN3RXBzQWVBakEya08zNlN4R0poRmU0TlRvVXlZbmZHYnc2cHRweUFHTWdq?=
+ =?utf-8?B?Qjk3bE5peVY2NkNnNGkvdDRLYTY1Mm1wMWoxdkZhY3p5Uy9WNjVxUzUzVWNL?=
+ =?utf-8?B?NDhZVXZFVHczY0xiZDZ0bU9aeWhqNkVyVzhjenZCZXhwcUpMN3BQb3JFclZT?=
+ =?utf-8?B?UXErc3l2UWZTdWZrcUtNcUl3N2xsTWtqVEJiT2dEZjllTE90dFg0YUpxaEtN?=
+ =?utf-8?B?UUZzNnBGb0NKUWRJMi9Ld0lLMHVSQjAvWHA3ZlNJMVZ5VGpaN3pQdGVhSlcr?=
+ =?utf-8?B?K09jcmJTQUlZcE0yelJqY0VEQzB3bTA2OE1teE50a3RxUEYyZXlUT1BLcDBj?=
+ =?utf-8?B?SjN3VTJjUTdjdnZIeCtGY3lkMmVtd2I4VWhOZURNSkpFSDdOTExqeHQ5S25S?=
+ =?utf-8?B?WFNzbHllaURZRS9BZXVmeE9TL1NIOWEyZEN2R0M4Zzg5ZlRBbWJtcGtSNGUv?=
+ =?utf-8?B?K0RKeG1HR0x2K2FIWGtDUlRoa2Zjek94ci8zMjQ5RkV0SS9PbkRmTlZoZUMw?=
+ =?utf-8?B?MDZILzBscmNqWnNUbnlqYnN4M0pzbWxkSDZpeE4ySmt1VlUwczZVbnluZnlH?=
+ =?utf-8?B?M3UvNkhMdmM0aDVVTVFqdWhMTUdVa3M3eGl4TWhTcDFzOUxzS3dnZ2lNL3lE?=
+ =?utf-8?B?aUUralNyNjJTVFZ5QkxFeW43ZG02bnpUUCtwTVV1ejg2bDlIVW8zZEthZnYx?=
+ =?utf-8?B?VzlYWVlZSzdCaWc1Qkk0aG80Zzl6dkowU2JKWDhKYmZFSmdwZUdPQkdla3Nr?=
+ =?utf-8?B?empQd1Q5eUZWYWVKVUpsMkNCVW91YThRRFVQdWZURVYxZXh3MFpUcWxuMjAw?=
+ =?utf-8?B?dGtLQ004MlphNFpZODlvc0J2NFJ2NmtaY3FjWmdkRmRMQXpMQ0lGbjVlL0Fa?=
+ =?utf-8?B?NitFTWJtMXVnblJBQWRFRGt6WGcxdWZGclUvZ0N3cmVIcWRTVWxYVE9GbGtJ?=
+ =?utf-8?B?L2crWnNpN1NsQnFsV2pQTkFEN3JrVEFvM2ZSQUtBejA4K2Q5YmFxcU1rZ082?=
+ =?utf-8?B?UEdlaHMyTXhzUzUvVWdDd0xkU2dHM3RpaGFEbzBFSHBZTkpoUi9UV2cyRmQ4?=
+ =?utf-8?B?TldCdjdkUVlzb2M2Mk5OK3lXT25XZ243YjlsNFlCc1JUUGJaOWl2bUc4ekR3?=
+ =?utf-8?B?MlJ4YW8yRVFnRTZRT2RLZzA5cDliNWhXUWpMWFlVT1FXeU9zZTdXNzVIRzFj?=
+ =?utf-8?B?TlRBOW9Iak1DTG9FaEVNSGZZMXhNVExtZU9vWExxS1hZTWJoWFZtT21kUkxu?=
+ =?utf-8?B?SjV3RFFUcnZHV2dnOStrOUNyV2IrQUVYWElqMlhLTk5mWGxDT0U5Vk1HaE51?=
+ =?utf-8?B?OGVzbzlxRlR4TlpZRVB3ZUp2MFIyQXZ4VXN0bytwUmNtang0Y0xtTmJGWFRw?=
+ =?utf-8?B?TklqTjQzeU1uMXA5L1l2VkJYSjVhVjVQdWc1SmVxUUsxa0IrcVpKbjdVTkp5?=
+ =?utf-8?B?NmNsY3hXMjFqUHBFRlBHL1U4dWNFcXZKTDVaVFEvTjJtdEVFd0tPanJ4Uytn?=
+ =?utf-8?B?NnEvZHM1WmtxbGRYVDFQeVFCMmZ0RkRSMG9iclh1eUQrakRpT1YweFoxVHdw?=
+ =?utf-8?B?amZyWll5UHlWOC80VGtXMkhtOWhwV3FtTXE2WXp2ZkZRQnZDT0NORWZRK21i?=
+ =?utf-8?B?L3kvVzRMRzFvUTdweWsxSGFlcUhDNE93ZHZpRC8vcW5TbkI1TkNQQ2xHcFRJ?=
+ =?utf-8?B?KzJTM0dDV2JlVGNoZngzNWIyQlJycExDTG5XWU5Gb0tyWWZJZnVndXd0c1Jz?=
+ =?utf-8?B?SjZJd0phcGtpZnBQUnh0S0xwT2s0UitOdTMrUDJKUXhuaWRRRnpBaXRsOHlR?=
+ =?utf-8?B?UnM2QmdhS1ZYY2UzdllzdlJ4Qlo0Nkd1MDRyS2htZzk5cXNxVWZDclRyZXc0?=
+ =?utf-8?B?KytXQnZMb3ZwTXNtMHgrRmpMVXovTHRNTGphUTZvWityczlGVk95YjZ5eXhq?=
+ =?utf-8?Q?cZlaZUtEr6wg7ZIOKK?=
+X-OriginatorOrg: atomlin.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 75267987-d74d-4542-225b-08df01c6cfdd
+X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2026 09:53:23.4274
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2026 10:02:31.4467
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: x8R+J4LkEeGu0xSl9KzdV4CzlbZGhJaDLeLmwfXzcrdWGv5/vTEKG02bxlCWmWD0nXPc5yB6VUKb7ubLkaH42w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LVUPR11MB9859
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-UserPrincipalName: 5V6KLyFJXw8jmetKY7sltl4ksnYVsOIsJB9mZLs55QHVDD+MsYM7vBD6U2k8sSkks6zO7EyVv5kweEUU8VXh0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOAP123MB8927
 
-On 21/08/2026 12:50, James Clark wrote:
-> If there is a bug in decoding then Perf will exit early and you can't
-> investigate by using the raw dump mode. Make the --no-itrace option stop
-> Coresight decoding after printing the aux header so decode errors don't
-> stop the rest of the samples being printed.
+On Sat, Aug 22, 2026 at 09:51:23PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
 > 
-> pmu_type and evsel_is_auxtrace need to be set so that the
-> unleader_auxtrace() behavior is the same as without --no-itrace.
+> New issues:
+> - [Medium] Pointers to function pointers (and deeper pointer indirections) will be incorrectly symbolized as kernel functions due to greedy unwrapping in `btf_is_func_ptr()` and missing pointer checks in `trace__btf_scnprintf()`.
 > 
-> Signed-off-by: James Clark <james.clark@linaro.org>
-
-For auxtrace:
-
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  tools/perf/util/auxtrace.c |  2 +-
->  tools/perf/util/auxtrace.h |  1 +
->  tools/perf/util/cs-etm.c   | 66 +++++++++++++++++++++++++---------------------
->  3 files changed, 38 insertions(+), 31 deletions(-)
+> Pre-existing issues:
+> - [Medium] Incorrect error handling in `btf_struct_scnprintf` causes `arg->augmented.args` to be inappropriately advanced on failure, leading to an out-of-bounds read in fallback formatters.
+> --
 > 
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index e3c770b46e94..caa53056d349 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -123,7 +123,7 @@ static int evlist__regroup(struct evlist *evlist, struct evsel *leader, struct e
->  	return 0;
->  }
->  
-> -static bool auxtrace__dont_decode(struct perf_session *session)
-> +bool auxtrace__dont_decode(struct perf_session *session)
->  {
->  	return !session->itrace_synth_opts ||
->  	       session->itrace_synth_opts->dont_decode;
-> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-> index 971b817d3396..47fb97136836 100644
-> --- a/tools/perf/util/auxtrace.h
-> +++ b/tools/perf/util/auxtrace.h
-> @@ -651,6 +651,7 @@ void auxtrace__free(struct perf_session *session);
->  bool auxtrace__evsel_is_auxtrace(struct perf_session *session,
->  				 struct evsel *evsel);
->  u64 auxtrace_synth_id_range_start(struct evsel *evsel);
-> +bool auxtrace__dont_decode(struct perf_session *session);
->  
->  #define ITRACE_HELP \
->  "				i[period]:    		synthesize instructions events\n" \
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index dd15e91b7b38..22884c9fdff8 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -969,7 +969,7 @@ static int cs_etm__flush_events(struct perf_session *session,
->  	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
->  						   struct cs_etm_auxtrace,
->  						   auxtrace);
-> -	if (dump_trace)
-> +	if (dump_trace || auxtrace__dont_decode(session))
->  		return 0;
->  
->  	if (!tool->ordered_events)
-> @@ -3040,7 +3040,7 @@ static int cs_etm__process_event(struct perf_session *session,
->  						   struct cs_etm_auxtrace,
->  						   auxtrace);
->  
-> -	if (dump_trace)
-> +	if (dump_trace || auxtrace__dont_decode(session))
->  		return 0;
->  
->  	if (!tool->ordered_events) {
-> @@ -3603,27 +3603,49 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->  	int err = 0;
->  	int aux_hw_id_found;
->  	int i;
-> -	u64 *ptr = NULL;
-> +	u64 *ptr = (u64 *) auxtrace_info->priv;
->  	u64 **metadata = NULL;
->  
-> -	/* First the global part */
-> -	ptr = (u64 *) auxtrace_info->priv;
-> -	num_cpu = ptr[CS_PMU_TYPE_CPUS] & 0xffffffff;
-> +	etm = zalloc(sizeof(*etm));
-> +	if (!etm)
-> +		return -ENOMEM;
-> +
-> +	session->auxtrace = &etm->auxtrace;
-> +	etm->auxtrace.free = cs_etm__free;
-> +	etm->auxtrace.evsel_is_auxtrace = cs_etm__evsel_is_auxtrace;
-> +	etm->auxtrace.process_event = cs_etm__process_event;
-> +	etm->auxtrace.process_auxtrace_event = cs_etm__process_auxtrace_event;
-> +	etm->auxtrace.flush_events = cs_etm__flush_events;
-> +	etm->auxtrace.free_events = cs_etm__free_events;
-> +	etm->pmu_type = (unsigned int) ((ptr[CS_PMU_TYPE_CPUS] >> 32) & 0xffffffff);
-> +
-> +	/*
-> +	 * Don't go further than the minimum required to identify this event as
-> +	 * auxtrace with cs_etm__evsel_is_auxtrace() so unleader_auxtrace()
-> +	 * works.
-> +	 */
-> +	if (auxtrace__dont_decode(session))
-> +		return 0;
->  
->  	/*
->  	 * Bound num_cpu by the event size: the global header consumes
->  	 * CS_ETM_HEADER_SIZE bytes, and each CPU needs at least one u64
->  	 * metadata entry after that.
->  	 */
-> +	num_cpu = ptr[CS_PMU_TYPE_CPUS] & 0xffffffff;
->  	priv_size = total_size - event_header_size - INFO_HEADER_SIZE -
->  		    CS_ETM_HEADER_SIZE;
->  	if (num_cpu <= 0 || priv_size <= 0 ||
-> -	    num_cpu > priv_size / (int)sizeof(u64))
-> -		return -EINVAL;
-> +	    num_cpu > priv_size / (int)sizeof(u64)) {
-> +		err = -EINVAL;
-> +		goto err_free_etm;
-> +	}
->  
->  	metadata = zalloc(sizeof(*metadata) * num_cpu);
-> -	if (!metadata)
-> -		return -ENOMEM;
-> +	if (!metadata) {
-> +		err = -ENOMEM;
-> +		goto err_free_etm;
-> +	}
->  
->  	/* Start parsing after the common part of the header */
->  	i = CS_HEADER_VERSION_MAX;
-> @@ -3682,13 +3704,6 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->  		goto err_free_metadata;
->  	}
->  
-> -	etm = zalloc(sizeof(*etm));
-> -
-> -	if (!etm) {
-> -		err = -ENOMEM;
-> -		goto err_free_metadata;
-> -	}
-> -
->  	/*
->  	 * As all the ETMs run at the same exception level, the system should
->  	 * have the same PID format crossing CPUs.  So cache the PID format
-> @@ -3698,7 +3713,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->  
->  	err = auxtrace_queues__init_nr(&etm->queues, max_cpu + 1);
->  	if (err)
-> -		goto err_free_etm;
-> +		goto err_free_metadata;
->  
->  	for (unsigned int j = 0; j < etm->queues.nr_queues; ++j) {
->  		err = cs_etm__setup_queue(etm, &etm->queues.queue_array[j], j);
-> @@ -3736,7 +3751,6 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->  	etm->session = session;
->  
->  	etm->num_cpu = num_cpu;
-> -	etm->pmu_type = (unsigned int) ((ptr[CS_PMU_TYPE_CPUS] >> 32) & 0xffffffff);
->  	etm->snapshot_mode = (ptr[CS_ETM_SNAPSHOT] != 0);
->  	etm->metadata = metadata;
->  	etm->auxtrace_type = auxtrace_info->type;
-> @@ -3763,14 +3777,6 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->  			    "you can specify the itrace option 'T' for timestamp decoding\n"
->  			    "if the Coresight timestamp on the platform is same with the kernel time.\n\n");
->  
-> -	etm->auxtrace.process_event = cs_etm__process_event;
-> -	etm->auxtrace.process_auxtrace_event = cs_etm__process_auxtrace_event;
-> -	etm->auxtrace.flush_events = cs_etm__flush_events;
-> -	etm->auxtrace.free_events = cs_etm__free_events;
-> -	etm->auxtrace.free = cs_etm__free;
-> -	etm->auxtrace.evsel_is_auxtrace = cs_etm__evsel_is_auxtrace;
-> -	session->auxtrace = &etm->auxtrace;
-> -
->  	cs_etm__setup_timeless_decoding(etm);
->  
->  	etm->tc.time_shift = tc->time_shift;
-> @@ -3853,13 +3859,13 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->  
->  err_free_queues:
->  	cs_etm__free_queues(etm);
-> -	session->auxtrace = NULL;
-> -err_free_etm:
-> -	zfree(&etm);
->  err_free_metadata:
->  	/* No need to check @metadata[j], free(NULL) is supported */
->  	for (int j = 0; j < num_cpu; j++)
->  		zfree(&metadata[j]);
->  	zfree(&metadata);
-> +err_free_etm:
-> +	session->auxtrace = NULL;
-> +	zfree(&etm);
->  	return err;
->  }
+> --- Patch [3]: [PATCH perf-tools-next v5 3/4] perf trace: Enhance BTF type formatting to symbolise kernel function pointers ---
+> commit 544922c709767641e98cb8ac1eabf4bff305afea
+> Author: Aaron Tomlin <atomlin@atomlin.com>
+> 
+> perf trace: Enhance BTF type formatting to symbolise kernel function pointers
+> 
+> When BTF (BPF Type Format) metadata is loaded from vmlinux, 'perf trace'
+> can inspect the precise C types of tracepoint and system call parameters.
+> This patch introduces btf_is_func_ptr() to inspect BTF type hierarchies
+> to determine whether a parameter resolves to a function prototype.
+> 
+> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > index 10fbea7ed4dbf..4f8b4f2cf677e 100644
+> > --- a/tools/perf/builtin-trace.c
+> > +++ b/tools/perf/builtin-trace.c
+> 
+> [ ... ]
+> 
+> > @@ -979,21 +980,61 @@ static size_t syscall_arg__scnprintf_getrandom_flags(char *bf, size_t size,
+> >  #define SCA_GETRANDOM_FLAGS syscall_arg__scnprintf_getrandom_flags
+> >  
+> >  #ifdef HAVE_LIBBPF_SUPPORT
+> > -static void syscall_arg_fmt__cache_btf_enum(struct syscall_arg_fmt *arg_fmt, struct btf *btf, char *type)
+> > +static bool btf_is_func_ptr(const struct btf *btf, const struct btf_type *type)
+> >  {
+> > +	while (type) {
+> > +		if (btf_is_ptr(type) || btf_is_typedef(type) || btf_is_mod(type))
+> > +			type = btf__type_by_id(btf, type->type);
+> > +		else
+> > +			break;
+> > +	}
+> > +	return type && btf_is_func_proto(type);
+> > +}
+> 
+> [Severity: Medium]
+> Will this loop eagerly unwrap all pointer modifiers, failing to enforce a
+> strict single-pointer limit for function pointers?
+> 
+> If perf trace encounters a tracepoint or syscall argument whose type
+> string contains an asterisk but resolves to a function pointer typedef
+> (e.g. bpf_callback_t *), wouldn't this greedily unwrap all pointer
+> indirections, causing pointers to function pointers to be incorrectly
+> symbolized as kernel functions?
+
+At the time of writing, no tracepoint or syscall argument in the Linux
+kernel source tree that uses bpf_callback_t * (or any other function
+pointer typedef with an extra asterisk like work_func_t *).
+
+However, in the next iteration, function btf_is_func_ptr(), will track the
+pointer count and immediately exit if more than one pointer is encountered,
+avoiding any further BTF type lookups.
+
+> 
+> [ ... ]
+> 
+> > @@ -1095,8 +1142,10 @@ static size_t btf_struct_scnprintf(const struct btf_type *type, struct btf *btf,
+> >  		return 0;
+> >  
+> >  	/* pretty print the struct data here */
+> > -	if (btf_dump__dump_type_data(btf_dump, type_id, arg->augmented.args->value, type->size, &dump_data_opts) == 0)
+> > +	if (btf_dump__dump_type_data(btf_dump, type_id, augmented_arg->value, type->size, &dump_data_opts) == 0) {
+> > +		btf_dump__free(btf_dump);
+> >  		return 0;
+> > +	}
+> >  
+> >  	consumed = sizeof(*augmented_arg) + augmented_arg->size;
+> >  	arg->augmented.args = ((void *)arg->augmented.args) + consumed;
+> 
+> [Severity: Medium]
+> This is a pre-existing issue, but does this error handling correctly check
+> for negative error codes from btf_dump__dump_type_data()?
+> 
+> If btf_dump__dump_type_data() returns a negative error code (e.g., -EINVAL),
+> the equality check against 0 evaluates to false. The function incorrectly
+> proceeds to advance the arg->augmented.args pointer by the consumed struct
+> size and returns 0.
+> 
+> Then, in syscall__scnprintf_args():
+> 
+> tools/perf/builtin-trace.c:syscall__scnprintf_args() {
+>     ...
+> 			if (trace->force_btf || default_scnprintf == NULL ||
+> 			    default_scnprintf == SCA_PTR || default_scnprintf == SCA_KSYM) {
+> 				btf_printed = trace__btf_scnprintf(trace, &arg, bf + printed,
+> 								   size - printed, val, field->type);
+> 				if (btf_printed) {
+> 					printed += btf_printed;
+> 					continue;
+> 				}
+> 			}
+> 
+> 			printed += syscall_arg_fmt__scnprintf_val(&sc->arg_fmt[arg.idx],
+> 								  bf + printed, size - printed, &arg, val);
+>     ...
+> }
+> 
+> Because btf_printed is 0, it falls back to the default formatter
+> (syscall_arg_fmt__scnprintf_val). Does this fallback formatter then read from
+> the erroneously advanced arg->augmented.args pointer (now pointing to the
+> next argument or past the buffer end), leading to an out-of-bounds memory
+> access?
 > 
 
+
+Okay, then:
+
+    if (btf_dump__dump_type_data(btf_dump, type_id, augmented_arg->value,
+        type->size, &dump_data_opts) <= 0) {
+        btf_dump__free(btf_dump);
+        return 0;
+    }
+
+
+
+--
+Aaron Tomlin
