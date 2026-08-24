@@ -1,86 +1,85 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEC323AFB19;
-	Mon, 24 Aug 2026 10:02:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C6C3367F59;
+	Mon, 24 Aug 2026 10:10:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.20
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787565774; cv=fail; b=ZWbw85lKDPbylGRISdvfIa6jvoDLpMYE/5Dn9jgR5aGKbzba92au1FY00wN8BAVwGitZBlWOes5U110oQG3grAciptQoAW5YjibsHGbO1r86h7A7PXgNOd8gcTfOLU4oEI1K05Ccfo0OUrx68K6h+vkgmM/7kwUb4zQ/dvTEwKM=
+	t=1787566235; cv=fail; b=O5Wx0HZJlp75+NlgPvOun6VxfG6ccf3qoq5O1zGS6gNIvAkR4tg8ibzC5DU2A0H1Aa055hcaryy2CIrsWPzbO5Dz8jQXwv1yvzLOHMfbXTUqfcci429B1xnuaTjaXbQCPfjAwzEJOw7ynQ5bM1aW8q/XQDks6VCwUl7nwXX8OV0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787565774; c=relaxed/simple;
-	bh=VVKU1N2ZxiLGEWZ02StzfUWerurhSN02W4wzJfatS6k=;
+	s=arc-20240116; t=1787566235; c=relaxed/simple;
+	bh=DpurCEyDDvgUvpooP8pGIDbm+medW0s5MT27a9B3Z6U=;
 	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=T8D3tCIHyCSs1GpYHJaGz26y62QyD3bU9Zs42thtaKlvMKY3FQZ8QRP6jwHT7MpBywWD9cWSSyVFJp5JEXk4zFWdwIch7JT7qlYeCLMhDdEnS0eiCW5vaTgXO5jPdr8BUvQxiaiNFmgF+3XK6Z1bxDRKQ6JLmtkQNpFWWn7/HXo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PbC0Xa42; arc=fail smtp.client-ip=198.175.65.20
+	 Content-Type:MIME-Version; b=BP6NKQDymm/rjdKE8yEmAgxbuF6lQihLHG11Z9l2f6pGK2+J278L9rb0cjU04jjekdq9rOwLV8xawuLleFqMkwyvOWzl3ozrCAIbg3XTn8ANG8pQb1C1uNSCoc8As6gbicUQfKQUDdlMmm3Eg5h+FLkNhl5rSgLnuX5Iwne0tAc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GMfyGQm+; arc=fail smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PbC0Xa42"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GMfyGQm+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787565772; x=1819101772;
+  t=1787566233; x=1819102233;
   h=message-id:date:subject:to:cc:references:from:
    in-reply-to:content-transfer-encoding:mime-version;
-  bh=VVKU1N2ZxiLGEWZ02StzfUWerurhSN02W4wzJfatS6k=;
-  b=PbC0Xa42rIbfD4qdo46JDly5lm//J1LFnd2AWm0OjiK4w3Tk/tyLmuIo
-   BsZbXMVla6ElVOnO3ZQBuXk6TtAX8nTLfwWa7zFmqJu6ST2csswkfJy9C
-   rK48nskSBePIol6esBkaKPRU1IyY9KiA+UK0rQ76mfUvk1925HcuTxHhq
-   vJJ3GopAhX0sbTy/dGWUNwW876muVob46OBziObDR0MHxVUFNIyfYWC24
-   dPzIOqeKI6cMQiu2jzIJumvpKBuzXxOIphYSt4wO1xnJY8T+b66Lt3Pz7
-   9wVjCEa3FUtfJFnfsPPlNbpC+MrNfP1BqChnvPkyQn+JKE8QJJPsmG51t
+  bh=DpurCEyDDvgUvpooP8pGIDbm+medW0s5MT27a9B3Z6U=;
+  b=GMfyGQm+LYGmjAkzxv9o7wPqNbMLG3VMB/zZ+8yP0a91HV7vf1waJr4y
+   o9feIEt0A6nrqK6w22OLYtdZMpbi3og4bRN7QZpZ4KM1hj62/eS4a1xZ2
+   +o8KrzkM8BDQUSE8x7D7x87Qi/e4846KuoqE2g+HmCi/fwv2viZIG/wGS
+   u6pE2qDo61QO3NqcniLLCIr4HqewYkSCCrmohoPCxlapg4abR3TFNCO5q
+   HpBXggazJzCVy7PBIBZ+KGu9vkOl743zcKGv+y41+4SorJaXooMicrkHz
+   D2/SdpbZZXghNvOXcijilpoIjkm9UVvgStdEjq2cfFKJNxXOekRxVu6Gg
    Q==;
-X-CSE-ConnectionGUID: c9dekYmsT06wH1pmuBwFiw==
-X-CSE-MsgGUID: Xc8mFU0DSa+Jzw+nLR4GeA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11884"; a="87778409"
+X-CSE-ConnectionGUID: ron7cUZLT3uagHxrS6YGTg==
+X-CSE-MsgGUID: gqM5Ij8JQ7iEeisQ5trkZg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11884"; a="87779341"
 X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
-   d="scan'208";a="87778409"
+   d="scan'208";a="87779341"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 03:02:52 -0700
-X-CSE-ConnectionGUID: 1mzwLxpIR2ira1drCldvRQ==
-X-CSE-MsgGUID: hnfxSTvLSi6ahNdFe02d4Q==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 03:10:32 -0700
+X-CSE-ConnectionGUID: 4KeKS+ocRNS7U5gU3ywyIw==
+X-CSE-MsgGUID: PBahJZh1S7SuTBmMEru8GA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
-   d="scan'208";a="267005286"
+   d="scan'208";a="267007381"
 Received: from fmsmsx902.amr.corp.intel.com ([10.18.126.91])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 03:02:51 -0700
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 03:10:32 -0700
 Received: from FMSMSX901.amr.corp.intel.com (10.18.126.90) by
  fmsmsx902.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Mon, 24 Aug 2026 03:02:50 -0700
+ 15.2.2562.45; Mon, 24 Aug 2026 03:10:31 -0700
 Received: from fmsedg902.ED.cps.intel.com (10.1.192.144) by
  FMSMSX901.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45 via Frontend Transport; Mon, 24 Aug 2026 03:02:50 -0700
-Received: from BL0PR03CU003.outbound.protection.outlook.com (52.101.53.33) by
+ 15.2.2562.45 via Frontend Transport; Mon, 24 Aug 2026 03:10:31 -0700
+Received: from BN1PR04CU002.outbound.protection.outlook.com (52.101.56.48) by
  edgegateway.intel.com (192.55.55.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.2562.45; Mon, 24 Aug 2026 03:02:49 -0700
+ 15.2.2562.45; Mon, 24 Aug 2026 03:10:30 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=pDQn8XLQK38W+SjlGH3wows/Ftz2Ls9+r+G+Ys/JNk6+h2PhXjwCbPUAgVRHDETvBoc+eVGUr7rDw8SoRzeF7O6MPD9tDA9Aw2PqIGENz5muj8v+EQ9etDBhzSvvExaw+78NpaVRSZLdw5iCZsZ8MRZf3EOmJjGCfsb1lDSC8TraUUqFeFiEBriirOJ/ZC0XP97jpETRbbbe4iQ32CLLkXCUcGgwtFsDNLjZqFfliEMgiQZ+xDG8y3KbpEd8woLAr4C1XOKipJyfzynBBizQYBWEI9cCr59aKgrHrlyQIcbgdolQf/Ds4ML6SO2h1scKCOYOjy2++BRFbOUnpXEtBQ==
+ b=o07m4DXKJXvf9OswEVnNcabmqW2qXrQ9uMVOlEgD7G1D13fgfBjDDjGt3D4MHnZcdZ2rEQW1QEVmOCv58ky7LzZJK/9/io+ifJhJgFEJoPImUATrOVZEAe1xSDt4iS1aPRcGzO6Tg9FtEUZR+rtTuCWnGO08qz0zeh7pQB6+2v5YWPrhH9K83jvI0JZgDRewrsGUGXWAyOLGv49V0XFiS/ovASrJrdoOcvO57c2/IqfD4LCDSUgtBux+S3bB/6NGqfscgmx6YJ9Fg0uL6EMgYRAi8MNp90xSyWtFDLXFQgwX8yYNhOHGgHXI+LajB0UaKMnD54lM9SmfWHxhDQJ68A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fpq0xPjefQMrzLD3yw5kLszuFfSe0eJ7PSPXZPcYbnY=;
- b=qIgfgeU26XahPRWuwuUoFdWkbWql6ZOUgFkFeyxnKdbqUy4PY6xARd9Lf/5fAR+Z7eom6OqDZVU3fl+kTYCR1Ko1F93a4qC6y6JG5PSIvzjBzwu37EQTSs2huSt1fndl0KX2OJZtTCgFv88EbvclGMARRL+e41ClgpTiDLJesEZCQO0/jeOudasvDBCRAJT+3Ii7K2Voahv44eS36t5unDVoQzSXVUdeo0+me0ikygdbMCsVB0RicG76sE5Fi8m2eGAnGN48HShDI/paD84i73US4UgGVzkAJ0+nsA48ry5r/TVrHY/zqV1a773ZXwnI3gGPHoMsDA/cgFFGBnxXag==
+ bh=/G6JHHmUMXAZAuPErI9MI7O6LPyLxiR+Q+4e9xH84iE=;
+ b=w+dlOnIY5dcEwGZL/f3VOixruI4UHMz2K4DBhI0TCKN/3zE73nfpjvOtSfHPLe72ZEXEjoZMgkszMeD5ILbgVWnu7vdPPo+lBvbPryN+nbxvRS8fYbU1ePCU7eCpCsDC96Sh2ChqcekyPPBu2jGt+EGgsuxQgZIfnqFTEMN+V+UNFZVA3Wg7OWg9mBYMhhmbLWLGinsimIiGzpHaMDl3S+cXAWf3saRAjfdw7myPPK4xNs+QkH86RTdv6Od08CmHo9NN4V0EE5fPdhOzM1+L69l0mpokovpIfsSZGhM3ULJdzKH2xf+oASn9AKBM55E3E7W8q683D05Aal0nuACYrw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
- by LV3PR11MB8505.namprd11.prod.outlook.com (2603:10b6:408:1b7::21) with
+ by IA4PR11MB8889.namprd11.prod.outlook.com (2603:10b6:208:565::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.12; Mon, 24 Aug
- 2026 10:02:46 +0000
+ 2026 10:10:28 +0000
 Received: from IA1PR11MB7198.namprd11.prod.outlook.com
  ([fe80::2c4e:e92a:4fa:a456]) by IA1PR11MB7198.namprd11.prod.outlook.com
  ([fe80::2c4e:e92a:4fa:a456%3]) with mapi id 15.21.0339.012; Mon, 24 Aug 2026
- 10:02:46 +0000
-Message-ID: <00f023a5-37da-4884-a92a-f4b35b4be1cb@intel.com>
-Date: Mon, 24 Aug 2026 13:02:38 +0300
+ 10:10:27 +0000
+Message-ID: <823e897f-13c0-4b07-8833-3bbfe37059ca@intel.com>
+Date: Mon, 24 Aug 2026 13:10:20 +0300
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/5] perf cs-etm: Add branch history to existing
- samples
+Subject: Re: [PATCH v2 1/5] perf dlfilter: Add non-empty branch stack filter
 To: Amir Ayupov <aaupov@fb.com>, <linux-perf-users@vger.kernel.org>,
 	<coresight@lists.linaro.org>, <linux-arm-kernel@lists.infradead.org>, "Suzuki
  K Poulose" <suzuki.poulose@arm.com>, James Clark <james.clark@linaro.org>,
@@ -94,17 +93,17 @@ CC: <linux-doc@vger.kernel.org>, Mike Leach <mike.leach@arm.com>, "Jonathan
  Corbet" <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, "Swapnil
  Sapkal" <swapnil.sapkal@amd.com>
 References: <cover.1787005265.git.aaupov@fb.com>
- <454bc49f51eeef9f758fc2d2c7af75889d8aff46.1787005265.git.aaupov@fb.com>
+ <58f96797f94467859fec160320a7b9426be8cce7.1787005265.git.aaupov@fb.com>
 Content-Language: en-US
 From: Adrian Hunter <adrian.hunter@intel.com>
 Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
  6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
  4, Domiciled in Helsinki
-In-Reply-To: <454bc49f51eeef9f758fc2d2c7af75889d8aff46.1787005265.git.aaupov@fb.com>
+In-Reply-To: <58f96797f94467859fec160320a7b9426be8cce7.1787005265.git.aaupov@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DUZPR01CA0332.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:4b8::18) To IA1PR11MB7198.namprd11.prod.outlook.com
+X-ClientProxiedBy: DB9PR05CA0029.eurprd05.prod.outlook.com
+ (2603:10a6:10:1da::34) To IA1PR11MB7198.namprd11.prod.outlook.com
  (2603:10b6:208:419::15)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -113,466 +112,133 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|LV3PR11MB8505:EE_
-X-MS-Office365-Filtering-Correlation-Id: 048c8d2f-8a70-433c-d7a0-08df01c6d888
+X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|IA4PR11MB8889:EE_
+X-MS-Office365-Filtering-Correlation-Id: 38494c4f-6127-4b14-ac33-08df01c7eb9d
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|7416014|376014|23010399003|18002099003|22082099003|11063799006|5023799004|56012099006|3023799007|6133799003|4143699003|10067099003|921020;
-X-Microsoft-Antispam-Message-Info: R1T/7Aa5LUy9ZqlAdT3NIc0gj/gFX7wk5nYV5vg0cOm3EuM+RlheBGNrS6IjUE8X8FUfEShaHej74nQfb2DD402wrxGuzz3yV2cOQBm3PdOpAxUMtvPfJiKG9Xffdl0JAsQfN67Jp48a53SQtQq5c4zZjyrHUDq5fhUS1YTSLE5uX/wjLwOYXwSIn9x5HUoxTd+Tdw+5Z6xszCRlJ85Eq5xbHaM+eCKjU6MIYQ/aRL8i+gbex2O9nQVtNR0sT/QiOm7/0tT+fdiyyJHj87X11ddWG1LeYoWSjGrR9qaj4WuYbcqikQ9gk44HfVOnISAchnSbnQmNxiCh6Zb1NUUvfVEqrllm5fnCUUIwSz2Uvo6+kRenJ1fa7emVBsu0XINcuC86ACF3k+Nq+h9Q6p9BgLqf4GUVmkvx6X4J+LWw/RYoWK1VUnF2Tv1p1MsUJo2/jTSY1+RdSFHIJrjM8ECyT1eVFEpFtxu7mcYdw6dM6lMusJ4nj+nmpub8VBfNy4o8WiSKDD+I5V5sq1oPwKSDNE8HblksvlpEk/X8XeTpg75bHXbf4EmAHTlRes7qOh+YH6S7c9bc3IeV0YdfIU2qqvAQHtV6Z4LYKs1hwxg+DrYwW3DufUVEtjUzfPt+K2DUKqAfz4mvqCQvuj8gBZaZ/h/kZ9A3YD4r3QTtbCMihS9N9B64N4ZKHM2w2LkUVDKLUs/NkYtpNOfN1vu5GLrshQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(23010399003)(18002099003)(22082099003)(11063799006)(5023799004)(56012099006)(3023799007)(6133799003)(4143699003)(10067099003)(921020);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|23010399003|376014|1800799024|7416014|921020|6133799003|56012099006|11063799006|10067099003|4143699003|3023799007|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info: rd/w9oT3RhR4y3w1g4Fe4RjwDQMLIxL9ewIATDWD5R3/YbUyt787Gu+5wbLGXPCRPDu+Rbxp5Bdjgf68yTG8aDgcibI6I+2K6T9DyEmiQaXBo4/AmHdrDt70BEvPqUdYzaAztHX1DnJ6ZbUO0IgR/CwaoIlkTx326b4N4w9gIjG6/vN9tzJzWbwQbDGVp0oDA1kCzlsqMiijn794iAoua8VD9NtStnziTWdfDF8VvjWP4Sm58IzAJ6pDdsKKkYefN5ZHES6ajM+hi+uzbmAx1t1Y6AjmhunbFda4sInd4yEDjyqwtoBTJweHpFOIishexe9d+Ciz2jQ8MJbXS7r89FeKixDDt3GXqEMVZkPCc619mXILHwHvGrMWt0kXFEboHBfLzemAGy4WDDbUlDcxmjOjxzr5vCC0yyf4RroYaHpwnTl8NRzW0r4nLNe02H1TMPNO9am8T9MolHG//CVMlNKz4jQDMO43czRLWRaG/y5YpzfQnE6lezCuQ5NyglhSLjod5265N7brbu/XtLXRLiduaUrucQwGWLX0vAaAyX/6iCQtVj6lB3yXCOD5z4YnJxxUWuq+DiFnDrEYUXwUVCy5/P1Dqlx4LYgZMKT8icafBIoUaOktQHSJwirh2G6HN+1UcGl0iKYrTvrVM4qT0i6sNOEqhSqfwb5xe789eVsPPJG5KPxATjq9uEI2dyT9oBhW+vMdZ0siQSvboL5y4Q==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(23010399003)(376014)(1800799024)(7416014)(921020)(6133799003)(56012099006)(11063799006)(10067099003)(4143699003)(3023799007)(18002099003)(22082099003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Y202cHhKcmk0MUpwcnUvaW1jUlFKZ1VnUVFGS1Jzbmpud3NpRFJzb05WUU40?=
- =?utf-8?B?N0RzQnRXUVlKbDBhV280Z3ZJK2VMa1J0dmFBUThaMVo0MG5uWXpFeTM2ekg2?=
- =?utf-8?B?d1RvTTE5ODFid04rb3dTeHRaYUFiWlZWS09ZL25rNFBGc25vTFVQNGRIN1or?=
- =?utf-8?B?U0N0dXZlLzlmZVFUb3J1QzhtaFc1VWtTTDhUM3NnNDBoaDU3SjhpOFFkQmR5?=
- =?utf-8?B?aHcrY3Brc0FMcHc5clpNaDl6OVlGS1Rma2lYRnhXa3hqSTR3M0FXZmZNTllR?=
- =?utf-8?B?YS95VG9sUG1uWlNtUFZUNEZBbEVKVFpyRm41enA1Uys3SVpWYzRYM3I2SUdP?=
- =?utf-8?B?OGZOWFRWdGJUR3BhcHk3RjJmUjQ5MWVxZkxyU2NvYTFVRlBIeE1NcFY0Q1N3?=
- =?utf-8?B?K1Zya2x2VGlBbDBKYkpqM3BsS29aQUlBQjNYUVN2ZFdDWGQ1MzVwVklVS2l0?=
- =?utf-8?B?UlZNUWdrdjNnQ2JKTzRWSk1IeXJHMjErUkpCcXRVSFp1dnZtT3hQb25iaVRY?=
- =?utf-8?B?QW9uam5kY1NJK3daVWJ4Q3d6bWExcGFnSWRJb3ZTc2c0TUlZZ3hxZmxuVEpD?=
- =?utf-8?B?UlA3bWxSbU0rVFEybDlTWEJ4amhpdGNlS0ZHNGxSWlZzSjZOVHBWbmtaOWpF?=
- =?utf-8?B?ajczWWx2ZWkwR2Q1ZWpVU0xxZU50NHJHOWRzeGgwRWpKd0RsdG5tUWx0d2tG?=
- =?utf-8?B?WHN3cnBCQ3pLSEVqNlFlbWxjOGNhMCsySUhpbWY1NGp6QW04NHNBRVZ4b2NP?=
- =?utf-8?B?dlZKdU9adUwvYWJsNzN6VlVZdDY2UXdPOVQ2RHlnWXIrVTdXY3ZBbnIrcWEz?=
- =?utf-8?B?QTk2bHlYMjljSGJZN3c0eFRQVHNXeXEvZlZYWmgvY0hZSlJoa2NKL1dFQUVx?=
- =?utf-8?B?M0NNU1VnaHZyY2NrQzJQamNKVkptMTlxZFNzYzlmSnBCL1c3SXNLa3BYUU51?=
- =?utf-8?B?SVBsTXpxS0pDZjAxOUk3N254M0QyRG5aYk9DdU9nZXlqd1lQeEZSNU1ZY3pT?=
- =?utf-8?B?bGhTSU04aHZIWUNBVm1HVmpPeXJtY1R4M0s0RklRZkhuSlRBdFlwN2FwT1RQ?=
- =?utf-8?B?L0hTU1kzTUt6L3VTdUdmS21lUVBpVFNxSFllQ2JBUzZPcHRXZHlDRE1rMzdi?=
- =?utf-8?B?aEZQQWFKbk9oL1dUQktsT3JGQ1IzZHhSbDFnQzltZDZVZERXNFJacFBFWFVi?=
- =?utf-8?B?dlptWGhVWk01Ly9KMUFVSXBIb0JjM0dGRXVBWExsamVKamg0eDRKOVpaeUJs?=
- =?utf-8?B?TGI4Q1IvK3RRazl4ck9yOFRpa2pralpNbld1MkpjZCs0L1hqbFJVckp1eVha?=
- =?utf-8?B?TjNjaHIrN0s1Ykg1MTlZSi9PRkp3SDR0a0w3UE9CSEZkRnU0Y2F4cWp4am10?=
- =?utf-8?B?Q3libFlqOVJaY2t3ZFViL0FXVW8xZkFKTEcwbzdtSEg3bjRXTVNPUE45ZFRX?=
- =?utf-8?B?bVNJYWJZcmdLRlo2STNVMjJIS1JUenFUTjMxbG93ZnBVYWlVS3N6ZlRjaVVY?=
- =?utf-8?B?K1BySWROem51SGdoUWlhZy9lSWxWNmV2dk5RSjRWdytXeGRIQ1BzeEFxOW0y?=
- =?utf-8?B?NVlPUGx4bEFqNGl3VW1HTXZnRXQxOS9oNTFYOWh3MUE3aThaVjdPVnYxb1Jr?=
- =?utf-8?B?clNIbklYNWtIZnJUNks5K3VYcjZZTEtVZkNhWGorRzQ4eG1XMGtGNXBIZTFS?=
- =?utf-8?B?cUErNTdXYzQrVStZY1Rqd3NQZFl1STA5ZFNKOXBIb1E1K29qSXNJZ25OQzZO?=
- =?utf-8?B?WjhTZnZmMlRDZ3lGNko5ZlJOQ0FMUDVXMnJkZjhITmtrVnFrOGhqTmVvNlR6?=
- =?utf-8?B?SEE4S2t5TkxjT3JwZDZ4aFF6NDN3WFFFN292N0NkcXN2eUtwclhEUmxtWjJJ?=
- =?utf-8?B?ZUlZMHhDakVkN3VZVTZNbFlSTVFaUFJOL0I5OGIrMmJwaWYrZ1kzKzQwNGla?=
- =?utf-8?B?SzA1SjdoVTdRNW9iZ3dQc1U1WEFINlRuTGdhd0pOQUNBQlEvVWF1ZHBkWE1M?=
- =?utf-8?B?dHQrTFg0NU1XcmJsTXl5NjRoNnJDZW1LUmRJQ3ZWU3JYbnd3MHMwdkZoSGdo?=
- =?utf-8?B?ZVNHTkxVQ0QyOEQvd0dWei9TYkEya0VmZGJJY2lzQ1JtYmo2eEQ3Tmx3cFI2?=
- =?utf-8?B?YlZ2SFE0dUJEcndTY0NWNHZpemZJczRYZWY2NC9RWVg3WXhaU3dxc3FRNzZI?=
- =?utf-8?B?UlZDZFdQelk1bTU3c2xBVVJmRzBKOWl5cXAwSmdIK21KTndlMzJxODZRZjdG?=
- =?utf-8?B?N1NtbmNEUmM5NG1ja01hTk5Ea1BSOGhucXJWeG9acEJtQUIyMW4yWURsd3Zi?=
- =?utf-8?B?ZUZUUWR1WUJlcHV4VDd0N3NpS0g2djllc2M2RHRBTkNNdHRLOEZzNVJjVktL?=
- =?utf-8?Q?26nIAcuCmiWMEp5s=3D?=
-X-Exchange-RoutingPolicyChecked: LefbKPkq5sDLISCvaH1jSqWXSrDabX1cbKpAKDRlQgwRZ4y3NDHuS1G5TJbns88YazYH1urmilPwrvPuYQDoqY9AuGA2MEa8NYej8if53E4xgXSLLJrvEr8iWD/sqYIb5L4vGWE0E4dE3WZgWiQDkPoYWJArL3p6BLLFG13EGqJRp6CLnb+kX/cxh2dVFNH1r2pRc26HSJNs1YhSW8VpI1YsVQQuADw2jBPfrWMu8UxvQfVRPsjTVA8GplOkAP4VZDb82QrDsCv/9QvGfsljE41tcGx28uEbi6RCCm4a0u/Cs5XMgk3zHvnGrTH0QHJQIxIMpuVVE86+WitBv9ZqfQ==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 048c8d2f-8a70-433c-d7a0-08df01c6d888
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eDJHK09vVmxQN0R6cGlkbFJ1V0VzamVLNmZQMHBLQW0vc1ZqM2xxVkVHTTVx?=
+ =?utf-8?B?OUswaU1XWjlIUEF1L1ZUQjUvSzNyMFUwZ050b1VNUUVKVUU0Wndpek9mc2k5?=
+ =?utf-8?B?bjBQWmpCN1cwMnVsQUR6SVNoNVU2Q2RwRXZkOWUyZVJxSE5KSG15b0I0azg4?=
+ =?utf-8?B?Z3YxR0xzSDFxYU5oSlFOTXppMlBtS2RzQ0dtYVo1SVlvUFpBVS93TGZNZkc2?=
+ =?utf-8?B?dVBpemU4UUM0YXFNLy9jTCtCdllJUlUvRGZwSkZ5VHBHeU9nRmRjMTJpcmY4?=
+ =?utf-8?B?c0VSRnlUUUNzdTV1QVpRRGI1SDBYa1VLem1VZTZsV0U0M1dCVEplU0FRd2RK?=
+ =?utf-8?B?NVl5RXlOd05WbG81MjExUDhIcmtuWUxCYWpzdzVWMUNFSEJ6UHc1TTIxRG1X?=
+ =?utf-8?B?a1pYNzFSQnFndG9pZk9UOHhWUExNUVVsMjlycmZWVGJZbE11WFhPSzA0a0NP?=
+ =?utf-8?B?Ulo4ZkRDNW9IbkxoTWU1Um1McDJqWllkWEJLTnVSTVY1TWpaNFI3b3lxUWN1?=
+ =?utf-8?B?cFMrNWpWRlh1eXZBaTZiallHQXZJS0dYREozdER2akQ3VmJDUWlHQk1xU0ZX?=
+ =?utf-8?B?em5SSmM2RisySGRVeGRRQy8zSTJjbFhyQStOTnIvYzlVL25EbnRPMC8wNEJO?=
+ =?utf-8?B?K2VPeE5CN3VwZzdCdE1PSGhScXV5YitoV2pwclM1WnpTenVoR2I0V3YvOXNt?=
+ =?utf-8?B?bnNPNFVvNGhBMGY5NlJSK3MzdnptNHFyZ2tYN3Z0UXpaVHd2WHBVZmVKMjVa?=
+ =?utf-8?B?cGxmRTZFSXdCZUZHSzgyY3B3TTRLVGtXeUdJWTFZaEVkUm9FQmQ4V0dxWVlV?=
+ =?utf-8?B?T0xZMkRwTVBVUmpvQkRIMXFYbTNXU29jSENjRTN1MkZxR2pQSTlsL1VQNnpx?=
+ =?utf-8?B?elF2bUFwYllpdWdUN3BnWXBxZGVZL0poS2MzbUt1c1dqV3M5Q1FiR01mTnNP?=
+ =?utf-8?B?TjFZc3ZDUTk5Qk5OTGU1alMvczVsZUQyOTllWi9kZFN0amhXeVRDeVlWOVMx?=
+ =?utf-8?B?OHFnUTh6bm1odllrYlpzYTNUN2VmZlRBaGMyTnJLaHZuZTkwcGNlbURBa2lq?=
+ =?utf-8?B?TnpraU0ybUxnSUgrTEQxQlMwWE4wM1p6ZWsrVllzWDZROEhGRzcydlJHNlFP?=
+ =?utf-8?B?SkQwbzlHQTBXZHBEeGpqZUszd3ZKRE1yNFNmbVVDbXhUejBnODJtWTI2S0dB?=
+ =?utf-8?B?YkZHTURFS3B1N1FCMFd6Q1B4eFBaUDdBakVqelVudWRreGlkdnpmSmhTelNk?=
+ =?utf-8?B?NDFmYXN6Ui9VRXcxcnI1MElDYW9IUGthZ0JFcVVFVWFFVUNKUHZtOHM2RkY1?=
+ =?utf-8?B?NHoxczFlVjdoRHNEK0JQakVBTldkeTBEVktDdkpFcFFmNTRaZ2tBRVdpWm9x?=
+ =?utf-8?B?Ym5rRUhuSmVZSk02SXcxY0ErNUVDL3ZmTHRSR285bmVsTm51Tkk1ZzlTeFRv?=
+ =?utf-8?B?OUllV3BSazViT29pbklQMXkyWDFZRUFaWHQ1a2JkRHA1aGZRa0RBN2lHVGtW?=
+ =?utf-8?B?Q2U5Q1d3VE9RTk9hbndkU050T1pQbERkV1NDNGdlalFXeW8vbXhCV0ZQdHJR?=
+ =?utf-8?B?YzJORGdJNThvTkJzcmpoUnljZjYyRU4xZTVkQk5xc2FKN3Q1ZGZRaDVkdHpR?=
+ =?utf-8?B?SE9RYTdiaTRwMGdKZjhCMDF3ZXYyM0lFZ2YzS0ZQVEdiZngwVWNVZzA4VFky?=
+ =?utf-8?B?K1RmV01jajVpYWZSYWRFWm9ybHZBT1M4L1lEZTh5c0ZnNHhzQkZJYmZ1bERT?=
+ =?utf-8?B?TDU1K1VSaDVrYmc5dE9PNHM1djFzRVZ0RGJ2a0g3NG5kSDhDd0xmTzZYbUxV?=
+ =?utf-8?B?VzFDWU01empyNDVCV3Q2dkh3ZXl3WXZXUHZHb1dnZ3ZKUjc0R2M1akZTNWho?=
+ =?utf-8?B?QmZFdFpIejdzOWNxdkFQelBrNkRCM1BweFZocXpGc2lBdlRhNnppR3VwcUlm?=
+ =?utf-8?B?clhKZ2k1aUdFVDIxVjhzenZkNkI2ZldYNGdZMi9pUFEwS1N5bVhtVUhXYjhJ?=
+ =?utf-8?B?a1VSSy84NzVNdEI5bXpTejlKMmN6S1F5ckh0TU9PSTJwSFFnbkZoM2hlTHhP?=
+ =?utf-8?B?ZXJ5Z2psRzNsOG5TWW9HZ1Z5UmZoTUhPcDdHTE42aStublRBdWNEcng3NzZv?=
+ =?utf-8?B?SU5uQUtaOU5oQ1hFQUZBbzNBUXI0aEZVL0daOGU4eSt6bGQ2bDNWYjU4K0R0?=
+ =?utf-8?B?MVZhSUJBVXlUNyt5R0xyUFlmdUJKNDFEVEFPSlZGRm5sbmRORjdVVVVlemV4?=
+ =?utf-8?B?ajgvVDI0ckVYd1d4TGs0YjBESVBFRWZDRTZGcjJOVkMvUEJ2eHN5TExPeDc5?=
+ =?utf-8?B?anV3ZHQwWGRoVXZNMG0waFBCRHM0V1hCaFZCY2x2ZnVuckJGYzBpRVE4dFd2?=
+ =?utf-8?Q?x3KlYDOc7JISUkik=3D?=
+X-Exchange-RoutingPolicyChecked: L009SahB4cZTOH0pZeMw+atubmwb+eYM29N7v/Gt/yKX+Uy+Yg7ukkbep+WlGb+bHgk0iFCZsot27w28+O4kYER495CYJo12mE9UfRSUcVCcX82DfmJ39T+yQYzytMuQLbp4KVUoqzj+w142geEevUvVVqyn9u2LVqHwabhybYTmxsrOaHBzmJC/7sTAqTdX7wBSNl/yS5lIPsjTlWJz7VtGIjWFG4ERoM1rYcPZS6/X00GeYEf7n4WXEt2GEQS4124qFiO83tQh3s/KqiSWEh1/IEkaG/EjR83uIRdOA9NU43cdePLkev4NcsulyPh469BvttZ3doC3MnR5S9AoHw==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 38494c4f-6127-4b14-ac33-08df01c7eb9d
 X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7198.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2026 10:02:46.0254
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2026 10:10:27.7054
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: vBYZToREnMX45d1KzMqGX/AfGrh0VBm3ojicXZLEvU5bPGo88JYcvOA8KQqHt6hVixEKa6ty2WWgEr2e1j6aHg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8505
+X-MS-Exchange-CrossTenant-UserPrincipalName: mJ0/wCVjQdrRA6xCvgTaBCxFukqb1hAyjm3cD5JsRPHeNv1KMCsl3nwOOvmnAy8JDb35wlsLt8seWY8KsjRfcA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA4PR11MB8889
 X-OriginatorOrg: intel.com
 
 On 18/08/2026 01:22, Amir Ayupov wrote:
-> Implement --itrace=L for CoreSight ETM: decode timestamped trace up to
-> each existing PMU sample and attach the branch history that led to it.
-> The sample keeps its own ip, callchain and event identity, and a sample
-> that already carries a branch stack is left alone.
+> --itrace=L adds decoded branch history to existing samples, but a sample
+> that was recorded while the decoder had no trace for that thread keeps an
+> empty branch stack. Consumers of the resulting perf script output, such
+> as profile generators for context-sensitive PGO, have no use for those
+> samples.
 > 
-> Samples are correlated with the trace by time, so this requires virtual
-> ETM timestamps that are correlated to perf time; timeless decoding is
-> rejected. The decode loop, which the previous patch left on its own in
-> cs_etm__process_timestamped_queues(), grows a timestamp argument and
-> stops once the decode frontier reaches it, so on return the
-> thread stack holds the branches that executed before the sample and none
-> that executed after. Attaching then reduces to the same
-> thread_stack__br_sample_late() call intel-pt uses.
-> 
-> No explicit sample-to-queue matching is needed:
-> thread_stack__br_sample_late() keys on the thread, and the thread stack
-> is already emptied whenever the decoder reports a discontinuity. The one
-> case that was not covered is a queue whose trace runs out: flush the
-> thread stack there too, otherwise samples recorded after the last trace
-> would pick up stale history.
-> 
-> Take the branch history when attaching it rather than leaving it in the
-> thread stack. With AUX pause and resume, a pause sample ends a completed
-> trace window and that window belongs to the sample. Execution while AUX
-> is paused is not traced, so retaining the window would let a later sample
-> reuse branches from before the untraced gap. Consuming it ensures that a
-> sample with no newly decoded trace gets an empty branch stack instead.
-> 
-> As with intel-pt, the internal reconstruction ring is kept deeper than
-> the requested output depth to cover branches decoded between the sampled
-> ip and the point at which the sample time was recorded, so --itrace=L<n>
-> can actually return n entries. Kernel-inclusive trace gets the same
-> conservative 1024-entry headroom that intel-pt uses.
+> Add an opt-in dlfilter that drops samples whose parsed branch stack is
+> empty, so users can exclude them without changing default sample
+> semantics. Build and install it alongside perf's existing dlfilters.
 > 
 > Assisted-by: Devmate:GPT-5.6
 > Signed-off-by: Amir Ayupov <aaupov@fb.com>
+> Reviewed-by: James Clark <james.clark@linaro.org>
+
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+
 > ---
->  tools/perf/util/cs-etm.c       | 185 +++++++++++++++++++++++++++++++--
->  tools/perf/util/thread-stack.c |  17 +++
->  tools/perf/util/thread-stack.h |   1 +
->  3 files changed, 195 insertions(+), 8 deletions(-)
+>  tools/perf/Makefile.perf                      |  1 +
+>  .../dlfilters/dlfilter-nonempty-brstack.c     | 26 +++++++++++++++++++
+>  2 files changed, 27 insertions(+)
+>  create mode 100644 tools/perf/dlfilters/dlfilter-nonempty-brstack.c
 > 
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 4d895f11deb7f..00407a80933e1 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -72,6 +72,11 @@ struct cs_etm_auxtrace {
->  	bool use_callchain;
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index 29cfd44c427f3..750bd1cce1287 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -425,6 +425,7 @@ PROGRAMS += $(OUTPUT)$(LIBJVMTI)
+>  endif
 >  
->  	int num_cpu;
-> +	/* Output depth requested with --itrace=L<n> */
-> +	unsigned int br_stack_sz;
-> +	/* Internal reconstruction depth, see cs_etm__br_stack_init() */
-> +	unsigned int br_stack_sz_plus;
-> +	struct branch_stack *br_stack;
->  	u64 latest_kernel_timestamp;
->  	u32 auxtrace_type;
->  	u32 branches_filter;
-> @@ -91,6 +96,7 @@ struct cs_etm_traceid_queue {
->  	u64 kernel_start;
->  	union perf_event *event_buf;
->  	unsigned int br_stack_sz;
-> +	unsigned int br_stack_sz_plus;
->  	struct branch_stack *last_branch;
->  	struct ip_callchain *callchain;
->  	struct cs_etm_packet *prev_packet;
-> @@ -141,7 +147,8 @@ struct cs_etm_queue {
->  };
+>  DLFILTERS := dlfilter-test-api-v0.so dlfilter-test-api-v2.so dlfilter-show-cycles.so
+> +DLFILTERS += dlfilter-nonempty-brstack.so
+>  DLFILTERS := $(patsubst %,$(OUTPUT)dlfilters/%,$(DLFILTERS))
 >  
->  static int cs_etm__update_queues(struct cs_etm_auxtrace *etm);
-> -static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm);
-> +static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm,
-> +					      u64 timestamp);
->  static int cs_etm__flush_timestamped_queues(struct cs_etm_auxtrace *etm);
->  static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
->  					   pid_t tid);
-> @@ -165,6 +172,7 @@ static int cs_etm__metadata_set_trace_id(u8 trace_chan_id, u64 *cpu_metadata);
->  #define TO_QUEUE_NR(cs_queue_nr) (cs_queue_nr >> 16)
->  #define TO_TRACE_CHAN_ID(cs_queue_nr) (cs_queue_nr & 0x0000ffff)
->  #define SINK_UNSET ((u32) -1)
-> +#define MAX_TIMESTAMP (~0ULL)
->  
->  static u32 cs_etm__get_v7_protocol_version(u32 etmidr)
->  {
-> @@ -674,7 +682,8 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
->  		if (!tidq->last_branch)
->  			goto out_free;
->  
-> -		tidq->br_stack_sz = etm->synth_opts.last_branch_sz;
-> +		tidq->br_stack_sz = etm->br_stack_sz;
-> +		tidq->br_stack_sz_plus = etm->br_stack_sz_plus;
->  	}
->  
->  	if (etm->synth_opts.callchain) {
-> @@ -794,7 +803,7 @@ static void cs_etm__packet_swap(struct cs_etm_auxtrace *etm,
->  	struct cs_etm_packet *tmp;
->  
->  	if (etm->synth_opts.branches || etm->synth_opts.last_branch ||
-> -	    etm->synth_opts.instructions) {
-> +	    etm->synth_opts.add_last_branch || etm->synth_opts.instructions) {
->  		/*
->  		 * Swap PACKET with PREV_PACKET: PACKET becomes PREV_PACKET for
->  		 * the next incoming packet.
-> @@ -963,7 +972,7 @@ static int cs_etm__flush_events(struct perf_session *session,
->  	if (ret)
->  		return ret;
->  
-> -	ret = cs_etm__process_timestamped_queues(etm);
-> +	ret = cs_etm__process_timestamped_queues(etm, MAX_TIMESTAMP);
->  	if (ret)
->  		return ret;
->  
-> @@ -1060,6 +1069,7 @@ static void cs_etm__free(struct perf_session *session)
->  		zfree(&aux->metadata[i]);
->  
->  	zfree(&aux->metadata);
-> +	zfree(&aux->br_stack);
->  	zfree(&aux);
->  }
->  
-> @@ -1597,7 +1607,8 @@ static void cs_etm__add_stack_event(struct cs_etm_queue *etmq,
->  	u64 from, to;
->  	int size;
->  
-> -	if (!etm->synth_opts.branches && !etm->synth_opts.instructions)
-> +	if (!etm->synth_opts.branches && !etm->synth_opts.instructions &&
-> +	    !etm->synth_opts.add_last_branch)
->  		return;
->  
->  	if (!cs_etm__packet_has_taken_branch(tidq->prev_packet))
-> @@ -1614,7 +1625,7 @@ static void cs_etm__add_stack_event(struct cs_etm_queue *etmq,
->  				    tidq->prev_packet->flags, from, to, size,
->  				    etmq->buffer->buffer_nr + 1,
->  				    etmq->etm->use_callchain,
-> -				    tidq->br_stack_sz, 0);
-> +				    tidq->br_stack_sz_plus, 0);
->  	} else {
->  		thread_stack__set_trace_nr(tidq->frontend_thread,
->  					   tidq->prev_packet->cpu,
-> @@ -2817,7 +2828,8 @@ static int cs_etm__update_queues(struct cs_etm_auxtrace *etm)
->  	return ret;
->  }
->  
-> -static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
-> +static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm,
-> +					      u64 timestamp)
->  {
->  	int ret = 0;
->  	unsigned int cs_queue_nr, queue_nr;
-> @@ -2831,6 +2843,9 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
->  		if (!etm->heap.heap_cnt)
->  			break;
->  
-> +		if (etm->heap.heap_array[0].ordinal >= timestamp)
-> +			break;
-> +
->  		/* Take the entry at the top of the min heap */
->  		cs_queue_nr = etm->heap.heap_array[0].queue_nr;
->  		queue_nr = TO_QUEUE_NR(cs_queue_nr);
-> @@ -2878,8 +2893,25 @@ static int cs_etm__process_timestamped_queues(struct cs_etm_auxtrace *etm)
->  		 * No more auxtrace_buffers to process in this etmq, simply
->  		 * move on to another entry in the auxtrace_heap.
->  		 */
-> -		if (!ret)
-> +		if (!ret) {
-> +			/*
-> +			 * The trace for this physical queue is exhausted. Drop
-> +			 * branch history for every trace ID it carried so that
-> +			 * samples arriving later cannot pick up entries decoded
-> +			 * before the gap.
-> +			 */
-> +			if (etm->synth_opts.add_last_branch) {
-> +				struct int_node *inode;
-> +
-> +				intlist__for_each_entry(inode, etmq->traceid_queues_list) {
-> +					int idx = (int)(intptr_t)inode->priv;
-> +
-> +					tidq = etmq->traceid_queues[idx];
-> +					thread_stack__flush(tidq->frontend_thread);
-> +				}
-> +			}
->  			continue;
-> +		}
->  
->  		ret = cs_etm__decode_data_block(etmq);
->  		if (ret)
-> @@ -3011,6 +3043,116 @@ static int cs_etm__process_switch_cpu_wide(struct cs_etm_auxtrace *etm,
->  	return 0;
->  }
->  
-> +static bool cs_etm__tracing_kernel(struct cs_etm_auxtrace *etm,
-> +				   struct perf_session *session)
-> +{
-> +	struct evsel *evsel;
-> +
-> +	evlist__for_each_entry(session->evlist, evsel) {
-> +		if (evsel->core.attr.type == etm->pmu_type &&
-> +		    !evsel->core.attr.exclude_kernel)
-> +			return true;
-> +	}
-> +
-> +	return false;
-> +}
-> +
-> +static int cs_etm__br_stack_init(struct cs_etm_auxtrace *etm,
-> +				 struct perf_session *session)
-> +{
-> +	struct evsel *evsel;
-> +
-> +	evlist__for_each_entry(session->evlist, evsel) {
-> +		/*
-> +		 * Only timestamped events can be matched against the decoded
-> +		 * trace, so do not advertise a branch stack on any other.
-> +		 */
-> +		if (!(evsel->core.attr.sample_type & PERF_SAMPLE_TIME))
-> +			continue;
-> +		if (!(evsel->core.attr.sample_type & PERF_SAMPLE_BRANCH_STACK))
-> +			evsel->synth_sample_type |= PERF_SAMPLE_BRANCH_STACK;
-> +	}
-> +
-> +	/*
-> +	 * Additional branch stack depth to cater for the branches decoded
-> +	 * between the sampled ip and the point at which the sample time was
-> +	 * recorded. Those are trimmed by thread_stack__br_sample_late(), so
-> +	 * the extra depth keeps the requested output depth achievable. If
-> +	 * kernel space is not traced, only the branch into the kernel needs
-> +	 * to be accounted for.
-> +	 */
-> +	if (cs_etm__tracing_kernel(etm, session))
-> +		etm->br_stack_sz_plus += 1024;
-> +	else
-> +		etm->br_stack_sz_plus += 1;
-> +
-> +	etm->br_stack = zalloc(sizeof(struct branch_stack) +
-> +			       etm->br_stack_sz * sizeof(struct branch_entry));
-> +	if (!etm->br_stack)
-> +		return -ENOMEM;
-> +
-> +	return 0;
-> +}
-> +
+>  # what 'all' will build and 'install' will install, in perfexecdir
+> diff --git a/tools/perf/dlfilters/dlfilter-nonempty-brstack.c b/tools/perf/dlfilters/dlfilter-nonempty-brstack.c
+> new file mode 100644
+> index 0000000000000..9e66205b841d5
+> --- /dev/null
+> +++ b/tools/perf/dlfilters/dlfilter-nonempty-brstack.c
+> @@ -0,0 +1,26 @@
+> +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * Add decoded branch history to an existing sample. The sample keeps its own
-> + * ip, callchain and event identity; only an absent branch stack is filled in.
+> + * dlfilter-nonempty-brstack.c: Filter out samples with no branch stack
+> + * Copyright (c) 2026, Meta Platforms, Inc.
 > + */
-> +static int cs_etm__process_sample(struct cs_etm_auxtrace *etm,
-> +				  struct perf_session *session,
-> +				  struct perf_sample *sample)
+> +#include <stddef.h>
+> +
+> +#include <perf/perf_dlfilter.h>
+> +
+> +int filter_event(void *data, const struct perf_dlfilter_sample *sample, void *ctx)
 > +{
-> +	struct machine *machine = &session->machines.host;
-> +	struct thread *thread;
-> +	int err;
-> +
-> +	if (!etm->synth_opts.add_last_branch || sample->branch_stack ||
-> +	    !sample->ip || !sample->time || sample->time == (u64)-1)
-> +		return 0;
-> +
-> +	/* Adding branch history to existing samples supports the host only */
-> +	if (sample->cpumode == PERF_RECORD_MISC_GUEST_KERNEL ||
-> +	    sample->cpumode == PERF_RECORD_MISC_GUEST_USER)
-> +		return 0;
-> +
-> +	err = cs_etm__update_queues(etm);
-> +	if (err)
-> +		return err;
-> +
-> +	/*
-> +	 * Decode every queue up to this sample's time. Afterwards the thread
-> +	 * stack holds the branches that executed before the sample, and
-> +	 * nothing that executed after it.
-> +	 */
-> +	err = cs_etm__process_timestamped_queues(etm, sample->time);
-> +	if (err)
-> +		return err;
-> +
-> +	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
-> +	if (!thread)
-> +		return -ENOMEM;
-> +
-> +	/*
-> +	 * Take the branch history rather than copying it. The trace window
-> +	 * belongs to the sample that ends it, so once it has been attached a
-> +	 * later sample with nothing newly decoded finds an empty stack rather
-> +	 * than being given an earlier window's branches. That is the common
-> +	 * case whenever the trace is duty cycled, by AUX pause/resume or by
-> +	 * ETM strobing.
-> +	 */
-> +	thread_stack__br_sample_late(thread, sample->cpu, etm->br_stack,
-> +				     etm->br_stack_sz, sample->ip,
-> +				     machine__kernel_start(machine));
-> +	thread_stack__br_stack_consume(thread, sample->cpu);
-
-Did you consider using the existing thread_stack__set_trace_nr()?
-
-> +
-> +	if (etm->br_stack->nr)
-> +		sample->branch_stack = etm->br_stack;
-> +
-> +	thread__put(thread);
-> +
-> +	return 0;
+> +	/* Return 1 to filter out the sample, 0 to keep it */
+> +	return !sample->brstack_nr;
 > +}
 > +
->  static int cs_etm__process_event(struct perf_session *session,
->  				 union perf_event *event,
->  				 struct perf_sample *sample,
-> @@ -3049,6 +3191,9 @@ static int cs_etm__process_event(struct perf_session *session,
->  	case PERF_RECORD_SWITCH_CPU_WIDE:
->  		return cs_etm__process_switch_cpu_wide(etm, event);
->  
-> +	case PERF_RECORD_SAMPLE:
-> +		return cs_etm__process_sample(etm, session, sample);
-> +
->  	case PERF_RECORD_AUX:
->  		/*
->  		 * Record the latest kernel timestamp available in the header
-> @@ -3752,11 +3897,34 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->  
->  	etm->use_thread_stack = etm->synth_opts.thread_stack ||
->  				etm->synth_opts.last_branch ||
-> +				etm->synth_opts.add_last_branch ||
->  				etm->synth_opts.callchain;
->  
->  	etm->use_callchain = etm->synth_opts.thread_stack ||
->  			     etm->synth_opts.callchain;
->  
-> +	if (etm->synth_opts.last_branch || etm->synth_opts.add_last_branch) {
-> +		etm->br_stack_sz = etm->synth_opts.last_branch_sz;
-> +		etm->br_stack_sz_plus = etm->br_stack_sz;
-> +	}
-> +
-> +	if (etm->synth_opts.add_last_branch) {
-> +		/*
-> +		 * Existing samples are matched to decoded trace by time, so
-> +		 * the trace must carry timestamps that are correlated to perf
-> +		 * time and the queues must be decoded in time order.
-> +		 */
-> +		if (etm->timeless_decoding || !etm->has_virtual_ts) {
-> +			pr_err("CS ETM Trace: --itrace=L requires virtual timestamped trace\n");
-> +			err = -EINVAL;
-> +			goto err_free_queues;
-> +		}
-> +
-> +		err = cs_etm__br_stack_init(etm, session);
-> +		if (err)
-> +			goto err_free_queues;
-> +	}
-> +
->  	err = cs_etm__synth_events(etm, session);
->  	if (err)
->  		goto err_free_queues;
-> @@ -3812,6 +3980,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->  	auxtrace_queues__free(&etm->queues);
->  	session->auxtrace = NULL;
->  err_free_etm:
-> +	zfree(&etm->br_stack);
->  	zfree(&etm);
->  err_free_metadata:
->  	/* No need to check @metadata[j], free(NULL) is supported */
-> diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-> index 1360f44421ef8..2713a2ad70b69 100644
-> --- a/tools/perf/util/thread-stack.c
-> +++ b/tools/perf/util/thread-stack.c
-> @@ -614,6 +614,23 @@ void thread_stack__sample_late(struct thread *thread, int cpu,
->  	}
->  }
->  
-> +/*
-> + * Branch history belongs to the sample that ends the trace window, so a
-> + * decoder that attaches it to an existing sample should take it rather than
-> + * copy it. A later sample with no newly decoded trace then finds an empty
-> + * branch stack instead of the previous window's branches.
-> + */
-> +void thread_stack__br_stack_consume(struct thread *thread, int cpu)
+> +const char *filter_description(const char **long_description)
 > +{
-> +	struct thread_stack *ts = thread__stack(thread, cpu);
+> +	static char *long_desc =
+> +		"Instruction trace decoders can add branch history to existing "
+> +		"samples, but samples that were recorded while no trace was "
+> +		"being collected get an empty branch stack. Filter those out so "
+> +		"that only samples carrying branch history remain.";
 > +
-> +	if (!ts || !ts->br_stack_rb)
-> +		return;
-> +
-> +	ts->br_stack_pos = 0;
-> +	ts->br_stack_rb->nr = 0;
+> +	*long_description = long_desc;
+> +	return "Keep only samples with a non-empty branch stack";
 > +}
-> +
->  void thread_stack__br_sample(struct thread *thread, int cpu,
->  			     struct branch_stack *dst, unsigned int sz)
->  {
-> diff --git a/tools/perf/util/thread-stack.h b/tools/perf/util/thread-stack.h
-> index b3cd09beb62f0..2aec292bd1bcb 100644
-> --- a/tools/perf/util/thread-stack.h
-> +++ b/tools/perf/util/thread-stack.h
-> @@ -88,6 +88,7 @@ void thread_stack__sample(struct thread *thread, int cpu, struct ip_callchain *c
->  void thread_stack__sample_late(struct thread *thread, int cpu,
->  			       struct ip_callchain *chain, size_t sz, u64 ip,
->  			       u64 kernel_start);
-> +void thread_stack__br_stack_consume(struct thread *thread, int cpu);
->  void thread_stack__br_sample(struct thread *thread, int cpu,
->  			     struct branch_stack *dst, unsigned int sz);
->  void thread_stack__br_sample_late(struct thread *thread, int cpu,
 
