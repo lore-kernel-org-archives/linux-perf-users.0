@@ -1,115 +1,166 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D62303C8A;
-	Mon, 24 Aug 2026 02:56:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB2F373BF3
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 03:08:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787540189; cv=none; b=aOpW16h7QOGQ8dpFDoEiVOua2uXBPiFbhU+UNlxmS4hL7ay81j0AlAH/BTaFeQ2JeiR7sP+CnaOH/nyA4CUEEXKAXUtWIwW5PtZumzViK38RBLkF+BjocXWN/VkLR7PU17rQGLWfbspNXKUNco93xjMd14NppPjDspnUR5XQKfE=
+	t=1787540937; cv=none; b=dTPwuSUWYv5fty55nLfxX+2pRwXQGqM5aMw3CWxiMlBAWyt0+n2SuBOKWDKPRjCu+RkbLLIMRT7ezz7lFD36PKvHlRABXdHc2LjvjRf0c8Mb6O1B6x3f+uH8NRrFP3j3GwydVJnM17cgeBt/zGBA/ianzVLjb0pFTJdROt+ztAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787540189; c=relaxed/simple;
-	bh=ODVpY1t/Lvspb3t4vlIg3/vW4pKI02Q+9aD106P0bck=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IWWFFyRKovG5jATl8tocj7AWaW7TMK5imQ1TgZ6F91FRz3bFvAL52rl1BsvBnCyGgZ7YnLTXqkDQPxN6uw742esd2BDWP3di5zl1oZpetCmSNbUEw9CWEEH6WyUAmIT6By/yqVEkO1ciwadbA0q6PCEes6poS8Alyn8y+hHyVmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 61e113329f6711f19a56ed5b684f684d-20260824
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_MISS
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN, HR_FROM_NAME
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED, SA_EXISTED
-	SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
-	GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.19,REQID:a4e2b6ce-2aba-4d1e-90df-aa1e0979c5d8,IP:15,
-	URL:0,TC:0,Content:-25,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:15
-X-CID-INFO: VERSION:1.3.19,REQID:a4e2b6ce-2aba-4d1e-90df-aa1e0979c5d8,IP:15,UR
-	L:0,TC:0,Content:-25,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:15
-X-CID-META: VersionHash:7db8b62,CLOUDID:03e7d1b06b7a315e8ccc32469d7e6dd8,BulkI
-	D:260824104510Y6P6L3CK,BulkQuantity:1,SF:17|19|38|66|78|102|127|850|865|89
-	8,TC:nil,Content:0|15|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:40,QS:nil,
-	BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 2,SSN|SDN
-X-CID-BAS: 2,SSN|SDN,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 61e113329f6711f19a56ed5b684f684d-20260824
-X-User: wangyan01@kylinos.cn
-Received: from localhost.localdomain [(116.128.244.171)] by mailgw.kylinos.cn
-	(envelope-from <wangyan01@kylinos.cn>)
-	(Generic MTA)
-	with ESMTP id 854556809; Mon, 24 Aug 2026 10:56:19 +0800
-From: Wang Yan <wangyan01@kylinos.cn>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	atrajeev@linux.ibm.com,
-	wangyan01@kylinos.cn,
-	tanze@kylinos.cn,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: [PATCH] perf powerpc-vpadtl: Fix off-by-one in auxtrace_info minimum size check
-Date: Mon, 24 Aug 2026 10:55:53 +0800
-Message-Id: <20260824025553.363863-1-wangyan01@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1787540937; c=relaxed/simple;
+	bh=anuDsmfCU/H8ld0jJrnXNpTFRcOoqFzGkLFV4vfGDyc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=XfWP93AQuZHjZJQ99p2lrhH0AXqheMY5IA/jykVbDIpbBhox/U0eACv1sjFDODNmjYbAq0H2uVBJwIlDMhOCZpEEwDaBMCuAvTufKx5UMsGhoIkQ2yDu1X+C0TWOG+pHjpRVdwTOA1TOYpVi00ThlbJkwDsxGqse34UiGsGoezE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jPzoOCG+; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jPzoOCG+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 419351F000E9;
+	Mon, 24 Aug 2026 03:08:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787540936;
+	bh=R183Ec+leNIIR2e6RPsI1XkXZNS5qBEB+MFSLeESQ6Y=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=jPzoOCG+R2d/GThzE7v9eeBYk0yhxkVc0NIwhUAMSXK2aSRV/xuu2MZRwAXZy9JCL
+	 THknQ7G4jGtKudw/VL4iWPcVUXxqCiKCbip/6h1l0vhVmFnpTxKPa34qTezmOD+up/
+	 BAaJdghSAUStozSGnUEBCbENz+3Y6xpdDqERTU+4YSqxyhK3+mf7p2mpTQXghXhjn2
+	 pb/WX3HJwE/spunRKttA0W1kADU2YLjNk3ht8n7KOH942jsLGXjuWBEnf4pypTplc9
+	 TkUU9T1jLi3HTErxvI3fnPKnekXPVOElb4wkxPd1UemSqbWMw0fIW23x/c5R5o16Za
+	 +9hj3XoyEhmGg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf powerpc-vpadtl: Fix off-by-one in auxtrace_info
+ minimum size check
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Wang Yan" <wangyan01@kylinos.cn>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260824025553.363863-1-wangyan01@kylinos.cn>
+References: <20260824025553.363863-1-wangyan01@kylinos.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 24 Aug 2026 03:08:55 +0000
+Message-Id: <20260824030856.419351F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-min_sz is set to sizeof(u64) * POWERPC_VPADTL_TYPE, but the code reads
-auxtrace_info->priv[POWERPC_VPADTL_TYPE], which needs at least
-POWERPC_VPADTL_TYPE + 1 elements.  POWERPC_VPADTL_TYPE is the first
-enumerator of the priv index enum (0), so min_sz evaluates to 0 and the
-check validates only the perf_record_auxtrace_info header itself.  A
-PERF_RECORD_AUXTRACE_INFO event carrying a zero-length priv array then
-passes the size check, and the subsequent priv[POWERPC_VPADTL_TYPE]
-read runs one u64 past the validated region.
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
 
-This is the same off-by-one fixed for Intel PT by commit c4362d5e1a5e
-("perf intel-pt: Fix off-by-one in auxtrace_info minimum size check")
-and for Intel BTS by commit b9fb8225951c ("perf intel-bts: Fix off-by-one
-in auxtrace_info minimum size check").
+Pre-existing issues:
+- [High] Out-of-bounds memory read when indexing `preempt_reasons` and `dis=
+patch_reasons` string arrays with unvalidated payload data.
+- [High] Missing minimum size validation for auxtrace buffers before parsin=
+g `boottb_freq`.
+- [High] Invalid `sizeof(record)` usage truncates `sample.raw_size` to 8 by=
+tes instead of the full struct size, causing downstream out-of-bounds reads.
+--
 
-Use sizeof(u64) * (POWERPC_VPADTL_TYPE + 1) so the highest accessed
-priv index is covered by the minimum-size validation.
+--- Patch [1]: [PATCH] perf powerpc-vpadtl: Fix off-by-one in auxtrace_info=
+ minimum size check ---
+commit aa49174859e1464fdc810c66395f70e08682bd05
+Author: Wang Yan <wangyan01@kylinos.cn>
 
-Fixes: c4bbd4ec2e50 ("perf powerpc: Process auxtrace events and display in 'perf report -D'")
+perf powerpc-vpadtl: Fix off-by-one in auxtrace_info minimum size check
+   =20
+This commit fixes an off-by-one error in auxtrace_info minimum size validat=
+ion.
+It correctly sizes min_sz to include the highest accessed priv index,
+preventing an out-of-bounds read when validating the struct size.
+
 Cc: stable@vger.kernel.org
-Signed-off-by: Wang Yan <wangyan01@kylinos.cn>
----
- tools/perf/util/powerpc-vpadtl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/powerpc-vpadtl.c b/tools/perf/util/powerpc-vpadtl.c
-index 710f3093f3f9..c15636eef34b 100644
---- a/tools/perf/util/powerpc-vpadtl.c
-+++ b/tools/perf/util/powerpc-vpadtl.c
-@@ -683,7 +683,7 @@ int powerpc_vpadtl_process_auxtrace_info(union perf_event *event,
- 				  struct perf_session *session)
- {
- 	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
--	size_t min_sz = sizeof(u64) * POWERPC_VPADTL_TYPE;
-+	size_t min_sz = sizeof(u64) * (POWERPC_VPADTL_TYPE + 1);
- 	struct powerpc_vpadtl *vpa;
- 	int err;
- 
--- 
-2.25.1
+> diff --git a/tools/perf/util/powerpc-vpadtl.c b/tools/perf/util/powerpc-v=
+padtl.c
+> index 710f3093f3f90..c15636eef34b6 100644
+> --- a/tools/perf/util/powerpc-vpadtl.c
+> +++ b/tools/perf/util/powerpc-vpadtl.c
+> @@ -683,7 +683,7 @@ int powerpc_vpadtl_process_auxtrace_info(union perf_e=
+vent *event,
+>  				  struct perf_session *session)
+>  {
+>  	struct perf_record_auxtrace_info *auxtrace_info =3D &event->auxtrace_in=
+fo;
+> -	size_t min_sz =3D sizeof(u64) * POWERPC_VPADTL_TYPE;
+> +	size_t min_sz =3D sizeof(u64) * (POWERPC_VPADTL_TYPE + 1);
+>  	struct powerpc_vpadtl *vpa;
+>  	int err;
+> =20
 
+tools/perf/util/powerpc-vpadtl.c:powerpc_vpadtl_dump() {
+    ...
+		if (dtl->timebase !=3D 0) {
+			printf("dispatch_reason:%s, preempt_reason:%s, "
+					"enqueue_to_dispatch_time:%d, ready_to_enqueue_time:%d, "
+					"waiting_to_ready_time:%d\n",
+					dispatch_reasons[dtl->dispatch_reason],
+					preempt_reasons[dtl->preempt_reason],
+					be32_to_cpu(dtl->enqueue_to_dispatch_time),
+					be32_to_cpu(dtl->ready_to_enqueue_time),
+					be32_to_cpu(dtl->waiting_to_ready_time));
+		} else {
+    ...
+}
+
+[Severity: High]
+This isn't a bug introduced by this patch, but can we read out-of-bounds
+memory here?
+
+The dispatch_reasons and preempt_reasons arrays have sizes 11 and 10
+respectively. If the untrusted payload contains byte values that exceed the=
+se
+bounds, it looks like they are used as array indices without validation.
+
+
+tools/perf/util/powerpc-vpadtl.c:powerpc_vpadtl_decode() {
+    ...
+	ret =3D powerpc_vpadtl_get_buffer(vpaq);
+	if (ret <=3D 0)
+		return ret;
+
+	boottb =3D (struct boottb_freq *)vpaq->buffer->data;
+	if (boottb->timebase =3D=3D 0) {
+		vpaq->boot_tb =3D boottb->boot_tb;
+    ...
+}
+
+[Severity: High]
+This is a pre-existing issue, but is there a missing minimum size check her=
+e?
+
+The auxtrace buffer payload is accessed as a struct boottb_freq and
+boottb->timebase is checked. If the auxtrace buffer provides fewer bytes th=
+an
+the size of the structure, could this read past the end of the provided pay=
+load
+buffer?
+
+
+tools/perf/util/powerpc-vpadtl.c:powerpc_vpadtl_sample() {
+    ...
+static int powerpc_vpadtl_sample(struct powerpc_vpadtl_entry *record,
+		struct powerpc_vpadtl *vpa, u64 save, int cpu)
+{
+    ...
+	sample.time =3D save;
+	sample.raw_data =3D record;
+	sample.raw_size =3D sizeof(record);
+	event.sample.header.type =3D PERF_RECORD_SAMPLE;
+    ...
+}
+
+[Severity: High]
+This isn't a bug introduced by this patch, but does this sizeof() truncate =
+the
+sample raw size?
+
+Because record is a pointer to struct powerpc_vpadtl_entry, sizeof(record)
+evaluates to the size of a pointer (8 bytes) rather than the full struct si=
+ze
+(48 bytes). Could this cause downstream consumers to read out-of-bounds mem=
+ory
+when casting the raw data back to the structure?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260824025553.3638=
+63-1-wangyan01@kylinos.cn?part=3D1
