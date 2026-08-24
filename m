@@ -1,145 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2596A3EAC74
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 06:55:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787554557; cv=none; b=PyOJp+KZ+MwUpjnax3HPjntL6g/aJXEDZlgz/17Poe8i5y1HqPI2x0LLH+XqdUwC7rqMPSpPJEItSCB/XsAVreY+nvyiPlvX9O6/MRnXSh3BrOxHzxkVQ6vNH8LRjMFqYfOZ6PVPxHMzBqb07mEVjWP2GrXqhn7lglDlbIsO2a4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787554557; c=relaxed/simple;
-	bh=LdYh2FxK7oXBu3lcqN/VCnEShxkuFky1vUiks+mnCr8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=V8CtiS4/QNjdlkSuQcD3iMi1JjOlXwA6bvG1onI7g1ATokYU6k9l7pYRCphvKd9HGw4mVWZf60XneT7MPrNbrBye/a2vpjr1pBPyfzUdo/aOE1/D3H9DHoNGazoDTKzGUNG9bUfVNBED/BdaYCauuRm0jfU8jLPzdodcxq2lciY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P0/PG1P0; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2B539792B;
+	Mon, 24 Aug 2026 07:44:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.12
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787557447; cv=fail; b=GxSa7jA3dkye1tSsvL8NUHZ3UzdqTYw0+QLqvvFz5ym9NHq1BsAqLVgrDM20ZR4P8g6ZgvZROp1erUbpN+EEzGoXCezLy/5xBHpUiAcZ1A3oZQTq6+ThQ9bT7sYDbA2w3NhGbrXlI735rjZxIu95rC/oo3JPo0xXNCaqNTakTmA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787557447; c=relaxed/simple;
+	bh=VkhZ+K24Fmx8FVjboiBVmeBhzzruZolSYvk8W++/VHE=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=DctIdshvsv5bTR77o7lUrCLYMTsh6jdJUPZwr5m+MIAfmmvfQ7zgLRZvUqyPbKv4+DpHFCwskwQJOMYC4NppcXxosTmT7Kqx5XdgC6z6366hHtvuYAg0l8j/1QaCdw5uPDE7kr5zpMhFVRMVBz5M2pNo7UqEmoCvBFxQNdwahuI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FTU4ecSj; arc=fail smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P0/PG1P0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8F721F000E9;
-	Mon, 24 Aug 2026 06:55:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787554556;
-	bh=sEV6Gz6048ydraqy8+yW5HW6yvgwpPUsd0szfRU6xtc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=P0/PG1P0j9pF/mSa40qZndnRZx0wHMi9QJPg0I7fG8FHtf1sbHaEGqoIdGSccDExs
-	 UJpIiiwFeWfBUt3EQm0CxsBBcIqXQPyoZeMi8xIS+uqR3PfCW7zc4LbkG26Mp8ff7O
-	 MId07tW/A0wlf4s3KK4GP5XOO1xxbjVZbX2CKJZk1KaTyaQyCJcg1h1F1Qd2fVDAbH
-	 4fSe//v6uIM5Ie0YLxuESVJoM/GSFysP5aN8fr0NpgGgZke3K7jDoalbEKXINdiQww
-	 CbkqowRr7ZBYsltBD/ZZJZqeS9qXG9AzbCsVaYZ/nK7GUdg+1Gof2jqCXydB9fEr9q
-	 sXSwRWGSQOkPw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 7/7] perf test: Expand top tests for --hybrid-merge
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260824063744.1533837-8-irogers@google.com>
-References: <20260813132519.4099508-1-andi@firstfloor.org>
- <20260824063744.1533837-1-irogers@google.com>
- <20260824063744.1533837-8-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 24 Aug 2026 06:55:55 +0000
-Message-Id: <20260824065555.D8F721F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FTU4ecSj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787557446; x=1819093446;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=VkhZ+K24Fmx8FVjboiBVmeBhzzruZolSYvk8W++/VHE=;
+  b=FTU4ecSj5I80vaDd7uJA4qMPPGIMw2Nk34i9SDDVmvTrxHGTsROzMwh1
+   eI5xJuPiDt2yfMO0qqHioj8FWa1hdn2205p0dsFQb4wR0K6nbDEGkxpXr
+   MSnIRbaeFKul14BCfXMyvwbyYvBkRHaci0laDnlAdqu3U59lhNd6Ph+AO
+   Uhxe9tlM2vRuOXo6les2oGZVi9kl/V5ySNAEZBDgu+7Y48C1N5JFR31oM
+   C8NuBjIllDS/W4qLuc0TrrhzBK110raSlvjJdK30ejcT+sTuMIR3RzOD6
+   Swvlrje/1sHLZUl2/dwNDVTJb3RQzzpbhMA65k2KfWNE+2Ix6SGzRSmQw
+   g==;
+X-CSE-ConnectionGUID: 1jvk7jKwTSaD0+JF7yr31g==
+X-CSE-MsgGUID: xNgZX+aUT/aLrTlmjMhzPA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11884"; a="91813158"
+X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
+   d="scan'208";a="91813158"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 00:41:21 -0700
+X-CSE-ConnectionGUID: 96lyu/6LSRm8FSqVtfV1vg==
+X-CSE-MsgGUID: nB7N1AvySK+/Hfsg8XgLqg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
+   d="scan'208";a="296833316"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 00:41:09 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Mon, 24 Aug 2026 00:41:09 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45 via Frontend Transport; Mon, 24 Aug 2026 00:41:09 -0700
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (52.101.43.66) by
+ edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.45; Mon, 24 Aug 2026 00:37:10 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=w1D34n/Y8oeK5CW5CBhtGq1s0ZTod0b20OQPBzXaaXyN36VssWP76IiSXPPHoq9+vgAvzH4HVuCwFFiS262hwPjRt0q50cZ0CCQbeY+6iGbgty6eiHyrJzvSBU6foaDhOG+RY3bdgYRDkEBDrDmn4lpnIa9BEZc7HjkQe5gPxS/ZeoxOFjnPDV7Wl0luLuDwPctLWV+u0dVvaTW+gvk/dTYXCUe0b3KBavthHdg73xC5iqQpGoETHm3iDaSEqLf5Ub9J2RrtXxf4YAt/ogA75p7P4sCkBRWCnHgVAgkOKlTeHvKolHrDlb8PkFZFHMLnLhWCIen4QUcxkNxrfUgyRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1ekH8jiQgvHH2u/uu2C0IoOijgKRTeWEVGwBBKI/8so=;
+ b=sq1bOjio2DRKgbNTkUVmmz2VDEDA/sGhOzLrHrxADDtz35QpYf2jfMzluM1oKEHHL59um+WbZr1947a1gT17zxbfaa6P8X8ojWQO8faoIeWA1sghEbAbJhzqNea29w/6bbhIdUX6GrgVWbnx9sRw8imwInaIZCsOhwPTJ6v9avU0x5o1YN+U2d/CzUTWu67cFtvzfJGoRW0FCWQjk/UDbU/oSEoNEJW36Alje/ypPvIRGmPwvKKgE1buq/ZGe7adBR32miHBYu/PTr47YoA8waBUP9c7CEaYbKbmzwg1UR1TpajrQ07rBn6elCxoAAmOW5jvx3qNN+hbJWD1XjfVyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from IA1PR11MB7198.namprd11.prod.outlook.com (2603:10b6:208:419::15)
+ by MN0PR11MB6058.namprd11.prod.outlook.com (2603:10b6:208:376::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.339.8; Mon, 24 Aug
+ 2026 05:55:58 +0000
+Received: from IA1PR11MB7198.namprd11.prod.outlook.com
+ ([fe80::2c4e:e92a:4fa:a456]) by IA1PR11MB7198.namprd11.prod.outlook.com
+ ([fe80::2c4e:e92a:4fa:a456%3]) with mapi id 15.21.0339.012; Mon, 24 Aug 2026
+ 05:55:58 +0000
+Message-ID: <61dff746-7b62-404b-89b2-3c9d73419d71@intel.com>
+Date: Mon, 24 Aug 2026 08:55:52 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf powerpc-vpadtl: Fix off-by-one in auxtrace_info
+ minimum size check
+To: Wang Yan <wangyan01@kylinos.cn>, <peterz@infradead.org>,
+	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>
+CC: <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <james.clark@linaro.org>,
+	<atrajeev@linux.ibm.com>, <tanze@kylinos.cn>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<stable@vger.kernel.org>
+References: <20260824025553.363863-1-wangyan01@kylinos.cn>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
+ 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
+ 4, Domiciled in Helsinki
+In-Reply-To: <20260824025553.363863-1-wangyan01@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DU7P195CA0024.EURP195.PROD.OUTLOOK.COM
+ (2603:10a6:10:54d::21) To IA1PR11MB7198.namprd11.prod.outlook.com
+ (2603:10b6:208:419::15)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR11MB7198:EE_|MN0PR11MB6058:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8fd5d2e3-d8c7-4c03-6e18-08df01a45e50
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|23010399003|376014|1800799024|366016|6133799003|10067099003|11063799006|56012099006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info: GugH8IvhO7yX7JlMalDtf9pdlQO56skttClYxbTfnFVDCY59QoAXGTelM7vJR4p5iz4SSmoIdtvTi1L2x29jqIYqrhqnd6hfvdEShGRxFHUCn7rPncGUM8Jo0Xw8LkAkYY1RfGLNxdjb2dZFHctC9vF+Pm8iIJEdXtUUydsKBVZzYq2AFe8N+zyHV6RiOnMJ52kiuUlmWEqITm3n83Q4u7UoaDUPhXxd5P8FTeyylaCgtYSk/PsOnbA6oZ05fLQriy3dUEAEfaTwgbwV/Y1hqz+/Fq1Or/8uiX37dw/wEMplH6TH4mD8rPQ9KQRdqTCceQ6tmUfgwXNCvNL1s3wurB5vC5Cgp7nVvkijPrhuDGXXhJKxxC2APP8deADPt3xJF9yvI6ZY22TQjWdEYR0/ZZmNCojcC4vSlPBf/G4PNpvAkuaiHvGJ0rpUBEU4HVORO+ET1PKEC2VPiz1KRCi1jn/ituklkQM+VWz/Mg1cxdGtgt+LQcaCaNI8RwVvKhhMXvIjPTB30JX2eiAidkDU1S90xs/5egTFWnYnT5Kn+tdZJpcOddpXZ4/RLygCUmkuVLT+lLxhiw+gQoZNCVRdylCCfhcNTHuI71lZxlR1eVo/ye9kWbOXOR9LrnkNejB1XvQKZlGuofNw48y5FPbWMa4+61006NKMPYfzgL2Lgvk=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR11MB7198.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(23010399003)(376014)(1800799024)(366016)(6133799003)(10067099003)(11063799006)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SmlXcHJ0NFd6TE8waGxuYlFHdzZwdmxHTHlNMzhabythNVc1U1ErM05mYWlC?=
+ =?utf-8?B?eHZ1OGlEWlJmK1VZYXJ3ODFmblRTRDVvcm4vbzgwR1dXcVlNcVRZT2d3eE40?=
+ =?utf-8?B?YXExT1l0Wkx3WUtlWVlwalFGN3RabUJPVUlabUY4SGpyMHRwaklqOG8yT0Ns?=
+ =?utf-8?B?QkRYdkZkVGpvMjdvZm9Ca3N6akgzbW1Jci9uKzhvakRjb0cxMDlUTlFWR1d0?=
+ =?utf-8?B?WENYOWJ4S3RGTlozQ3hKdHFXYjRYTDdjMWxkMzQ3SjlKaVNlUEMzNHV3bEdn?=
+ =?utf-8?B?UEU0b0ZiVktKaTZ0ekNGQjI3ekloRS8vY3ViU1h4cmR5L0dkbE9IdEhmZU5l?=
+ =?utf-8?B?MlZuSy9qQXh4SnBkRnpXR3NUNG0zb0lUUEFsUk9aTTVWdnhYckdSRGpLeHFo?=
+ =?utf-8?B?b0lER2pZRWZnUGRhcExLR0hCYVp4WDZMaFl1QTRwS3ZZT3pZbnhYV0NPMDc0?=
+ =?utf-8?B?RjIvdWdTbHFSUkdRRTE2TFdlVml6dzhBZlNvNGxIRUttYkVZMTZ2TzNqdkZH?=
+ =?utf-8?B?WmdTdHhxNkEybklIMVV5WkR0bUExemxmcmRYQlpMRG52a2JqRU5VZkFlRXRl?=
+ =?utf-8?B?cmN0UlhDZEJFU291TVZoTmVWMDdsbW81bGlXRE9ZV0JtVXJ6bGpBVlVMM1ds?=
+ =?utf-8?B?MnhydU5HREE1aldnMkQ2VHlsTjVwUG52MlhBSzMrcjZMaXJHWUlNc3RtRGhX?=
+ =?utf-8?B?dFRpN0s4QkJjTXNMODRtN2VrcUwwdW9Ld0ZVS3IyQjVVUHNOUDVDdGJKRzk3?=
+ =?utf-8?B?aS92emxpbFRSUlNNRzRseTFKQWRCUldXaG1zVTkxNkFmaEJJeVlDbzRMWWxy?=
+ =?utf-8?B?QXVsZVRKQnZHZElDR3ZHWWNFdzFZNU9qOWV4QUcrTkN4eWpld0hqQ012RWhE?=
+ =?utf-8?B?M3N6M0I0Q3ZrR0J5dGRqVkpGdUhNaTlIcWlvV1llMkQweG5lbHFKd0V3RUs3?=
+ =?utf-8?B?QStYVEgwWFdwWlFQRGdDV1FvcXBNNlJ1eEdUSXc1TjNTbkszZkpiU2lQNHFh?=
+ =?utf-8?B?WmxrUXZBUGtCTkpYN2lKMnFvSWxzbzJRVDU0aEZFYkZ5Q2s0Y3RNMzFiR2x2?=
+ =?utf-8?B?VWRIT0NPWmkxdzhiYm9ISUZVZ0FDSXhLZTV4NGpvVWlRMnZvTXUwejkwdHMx?=
+ =?utf-8?B?d3UvTGZmL25ocFlrcFdqNEtpWk04R2p3QllzZGxTNFlSbjBReUlBMSs3b1lB?=
+ =?utf-8?B?TU9DeEZZNlVCdUNJd0doMjAraU1HTE51VmFnQXBwUU1aVGYxeUM2UEJrTDJD?=
+ =?utf-8?B?RE1HczlyckIzVW11NWNpbWhEL2w2VnFRSVpjZnlZNCs4Rndlck40UEdoQUIv?=
+ =?utf-8?B?MWw0b2pWUXBNanRxRXhKSHhKL0I2Vlhmbm8zU2ZHeTFqS0NEQThWY0N3Z1Z1?=
+ =?utf-8?B?Z2FDWVZZWlNtN2FQeXliSmVDakprT0NMR1BqVFcvalhCK09KS0RqVHlqWEVW?=
+ =?utf-8?B?UzR5QkM2QVpRVjBlODZVb2dpcXdjdFlmSjAwcWlMRkJlNnY0UHFzQmhObDdP?=
+ =?utf-8?B?SmJ1SVdSVWhSL1h1eUNhdXVvcXlaaGFaWUc3Zms5M1Jqa0lpZm5pZFhQcVpQ?=
+ =?utf-8?B?d1QyK1dqeEpwWG84aXU0a1dQZEdWaTdmSTF0a2RmZlVTSGttV1BmNnd0a2lV?=
+ =?utf-8?B?VkthcWptamdBWFU3bTlzcWFjbVpPQXBoeC9aYVF2MWZlbGd4QXd6S0V1Qzhk?=
+ =?utf-8?B?TFV1RnBhNVZOM0xnamttd1RJZ2hqRzhyUzZTdVAyL3pldXNRMmhpUitwdzFu?=
+ =?utf-8?B?WHRMSzRNNWs2TjdadW5xamZ6ODBwbGh2SHkyQ2JZMG01VS9mYVJqQW1vWGJT?=
+ =?utf-8?B?VHFVcUUxUHRMRjFZOURMMHU4bjk4RXFDZ09HNHNYSC9uYmxIb2JaU2xYQjFs?=
+ =?utf-8?B?UHVaVkRITlJTU0dIdjk3UEtwTU9CaEcvdlBaUEE2WGtnV29EVXFrNHVST1RE?=
+ =?utf-8?B?SnZBalcwV1hiU2ZXc0ErMDY3bWFBV3hhZlBXb0pNRGxKZUg2UDdoS3lEREk1?=
+ =?utf-8?B?TjQ3MlJHQmIza28raW91MEJMQnNEeHRqSFlrNTFsZ0VOV1RLS1gwbFhKdTMx?=
+ =?utf-8?B?c3hDLzNRdE5JUWU4a21NVlR0elE4VWFFaWJNUG1RaUo2MDMzN09aWmRWSE9B?=
+ =?utf-8?B?NzlYSFI2NzFraGJUTzRHTlJ6U1VoYisxZHQzQkR3dDRtV2hIdEdDWWpYQmV1?=
+ =?utf-8?B?aVByM3F3UDd5eW1MZ0IwNkVVR3NZSDVPTmJRZWFoYkNiTlJnb3RDNitSbm9E?=
+ =?utf-8?B?WHJxODB2WFFadHBiM0orWXphTkNVaXJPVjJOSkxCWk1nY0h6MU96K0MrR0hO?=
+ =?utf-8?B?VFp5cUNRbFlTZFkwMUVUYUJUZGZTanJrWEk0aWEvSVphdlUrOGEzVk40RjQr?=
+ =?utf-8?Q?hjZr8iQLE7p83VVo=3D?=
+X-Exchange-RoutingPolicyChecked: LhrIl/xNDKnIdUOLm0XyrKPnhHiJ3EvW62DgPOpy9Jn2l7GgowFHH1MF1b6uzxb1Y/hMBpofom76Z5mmLc2leNTjs5vgJeORFZpOAOJ8wlJcHjz76mgv/zLKHlo9o2czTf9f9o/QNP/WJYbH87b12Fs2dYQ95DFnFsaJqxPYaqxJfoZNcNJU/gJlzrjcLWm/i42VNj5JJY8/kvghoKDc0CyrY1EWqQT3HLNEcWTwxthuJ+EKZvhODt4GuZyyij7LsZGomX3JRKDUIRffE9yyy5cMKVppyjS5sixdHhDyzQa6k/Soj7/VKoWw2ZDvRRktSjkzVZus/VvwmDT7FClp5Q==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8fd5d2e3-d8c7-4c03-6e18-08df01a45e50
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR11MB7198.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Aug 2026 05:55:58.1592
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2eY/FIspoZlh6SuiT58Qy8cC4o+PzbcwG/NvTrRmU+vC2kiOsmCgJo1LWpVw+bozePlTzwQXJDwk2YCTg+NG0g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR11MB6058
+X-OriginatorOrg: intel.com
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [Medium] The hybrid merge test explicitly requests the `cpu-clock` event,=
- contradicting its design to test `--hybrid-merge` on hardware events.
-- [Medium] Unnecessary system-wide `sync` commands are used to wait for loc=
-al file data, causing potential CI performance degradation.
-- [Medium] The global `retval` variable is conditionally assigned but not i=
-nitialized before use, leaking state between consecutive tests.
---
+On 24/08/2026 05:55, Wang Yan wrote:
+> min_sz is set to sizeof(u64) * POWERPC_VPADTL_TYPE, but the code reads
+> auxtrace_info->priv[POWERPC_VPADTL_TYPE], which needs at least
+> POWERPC_VPADTL_TYPE + 1 elements.  POWERPC_VPADTL_TYPE is the first
+> enumerator of the priv index enum (0), so min_sz evaluates to 0 and the
+> check validates only the perf_record_auxtrace_info header itself.  A
+> PERF_RECORD_AUXTRACE_INFO event carrying a zero-length priv array then
+> passes the size check, and the subsequent priv[POWERPC_VPADTL_TYPE]
+> read runs one u64 past the validated region.
+> 
+> This is the same off-by-one fixed for Intel PT by commit c4362d5e1a5e
+> ("perf intel-pt: Fix off-by-one in auxtrace_info minimum size check")
+> and for Intel BTS by commit b9fb8225951c ("perf intel-bts: Fix off-by-one
+> in auxtrace_info minimum size check").
+> 
+> Use sizeof(u64) * (POWERPC_VPADTL_TYPE + 1) so the highest accessed
+> priv index is covered by the minimum-size validation.
+> 
+> Fixes: c4bbd4ec2e50 ("perf powerpc: Process auxtrace events and display in 'perf report -D'")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Wang Yan <wangyan01@kylinos.cn>
 
---- Patch [7]: [PATCH v1 7/7] perf test: Expand top tests for --hybrid-merg=
-e ---
-commit 83b4f9c7a4d40ea456ef8050c21d34919fb655e1
-Author: Ian Rogers <irogers@google.com>
-perf test: Expand top tests for --hybrid-merge
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-This commit adds shell test coverage for the top --hybrid-merge flag to
-verify correct behavior on topologies featuring hybrid events. It relies
-on fallback logic inside perf top.
+> ---
+>  tools/perf/util/powerpc-vpadtl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/powerpc-vpadtl.c b/tools/perf/util/powerpc-vpadtl.c
+> index 710f3093f3f9..c15636eef34b 100644
+> --- a/tools/perf/util/powerpc-vpadtl.c
+> +++ b/tools/perf/util/powerpc-vpadtl.c
+> @@ -683,7 +683,7 @@ int powerpc_vpadtl_process_auxtrace_info(union perf_event *event,
+>  				  struct perf_session *session)
+>  {
+>  	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
+> -	size_t min_sz = sizeof(u64) * POWERPC_VPADTL_TYPE;
+> +	size_t min_sz = sizeof(u64) * (POWERPC_VPADTL_TYPE + 1);
+>  	struct powerpc_vpadtl *vpa;
+>  	int err;
+>  
 
-> diff --git a/tools/perf/tests/shell/top.sh b/tools/perf/tests/shell/top.sh
-> index ad7fccd09025d..49820bb2d6b25 100755
-> --- a/tools/perf/tests/shell/top.sh
-> +++ b/tools/perf/tests/shell/top.sh
-[ ... ]
-> @@ -35,26 +35,27 @@ test_basic_perf_top() {
-[ ... ]
-> +	sleep 10 | timeout 5s perf top --stdio -d 1 -e cpu-clock \
-> +		-p $PID > "${log_file}" 2>&1 || retval=3D$?
-> +	if [ "${retval:-0}" -ne 124 ] && [ "${retval:-0}" -ne 0 ]; then
-
-[Severity: Medium]
-Is it possible for retval to leak state between consecutive tests?
-
-Since retval is conditionally assigned here but not initialized before use,=
- a
-successful command execution might leave retval with a value from a previous
-test. If test_basic_perf_top fails and leaves a non-zero retval, a subseque=
-nt
-success in test_hybrid_merge_perf_top could falsely inherit the non-zero
-value and incorrectly report a failure.
-
-[ ... ]
->  	kill $PID
->  	wait $PID 2>/dev/null || true
-> =20
-> +	sync
-> +
-
-[Severity: Medium]
-Does this sync command introduce an unnecessary system-wide delay?
-
-Once the process writes to a file descriptor and exits, the data is
-immediately available in the VFS page cache for grep. The sync command
-commits all dirty pages system-wide to physical storage rather than just
-flushing the process buffers.
-
-[ ... ]
-> +test_hybrid_merge_perf_top() {
-[ ... ]
-> +	# Run without explicitly requesting -e cycles so heavily virtualized
-> +	# environments can seamlessly fall back to cpu-clock while real
-> +	# hybrid hardware will naturally cover the merge logic.
-> +	sleep 10 | timeout 5s perf top -e cpu-clock \
-> +			--stdio --hybrid-merge -d 1 -p $PID > "${log_file}" 2>&1 || retval=3D=
-$?
-
-[Severity: Medium]
-Could the explicit -e cpu-clock argument here bypass the hybrid PMU logic
-that this function is intended to test?
-
-The inline comment suggests the test runs without requesting cycles to allow
-natural hardware merge logic to trigger, yet the command hardcodes cpu-cloc=
-k,
-which is a software event. Software events do not utilize hardware PMUs,
-meaning the --hybrid-merge code path for merging hybrid hardware events
-might never be exercised.
-
-[ ... ]
-> +	kill $PID
-> +	wait $PID 2>/dev/null || true
-> +
-> +	# Wait a tiny bit for the file system to catch up on the logs
-> +	sync
-> +
-
-[Severity: Medium]
-Is this sync command needed to wait for the file system to catch up?
-
-Similar to the basic test, the data written to the log file should already
-be available in the page cache once the process exits. Forcing a system-wide
-sync might stall the CI environment unnecessarily.
-
-[ ... ]
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260824063744.1533=
-837-1-irogers@google.com?part=3D7
