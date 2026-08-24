@@ -1,45 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4696C757EA
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 06:53:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED0B3E7BB0
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 06:53:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787554409; cv=none; b=b/ntu4frHXx2jWKBzII/gvk1lm9Yb4VfdR6dWoSMMW9NoNp8hjUkZcckQDXUrWotnLQvc3tRIMPmu56CRrYbua66UNuASIwqEgSGelNZC8qlTWmcFKHI+b5vOc9n2dt030Kh67hqPsA4Tu9T6sG5+xvpZW9Xl4EYxGYzs4WsPmM=
+	t=1787554420; cv=none; b=VSftTshJpCEhvnX+/T6XonOukc8EW2CHrzZ/DPC8RcjpMnzjOP3FdHYmwke1aYpVyzvyR3qVmTcZQUGW564cumbB34/6vkZ5ejZAl1iCpPaxXfSiUqxn0zPXbJRPmWW8m2xio2Rflzqj6nIWalcYNEru8hpSrE/75L8TjRO0L5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787554409; c=relaxed/simple;
-	bh=1EyHVrBmN1Ka0PtTaPLuA2jB4mqseA3DNts7FAbP+L8=;
+	s=arc-20240116; t=1787554420; c=relaxed/simple;
+	bh=0R/OPlxGbKOvKuISeim8Y+JtNeAAsk5zB/AflKXG5eU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=D+2y0EHJrkokC4IQN9dDASim/hIXykMb7qpkyZC2WK4ByfUIKADOaka2M5590Q6RwvcnqoGxMNkY4Inh79Y8xm76UEd3MJTHgpudZWRd2dXoj2u+8Wl9EsSKNcEKLztlOsTO3p3IZalq/aBelisTm1eJZHU7Aa0cOAdV8VbWdRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gBEgkaYn; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=F1D3NxSeKejl1xz2sJzc5wbZ9XmRPa0XI7kEUOTU5aeBWAd6pEZ4kgqHhUftpw39VjPWG5oZdE6xWeIP8B8jbm8gFHZkl54ByZr3HyiOOGtGnT9GBHIHlYSicgCdVIP7nqy6qdxMFnECnAskxrtubhyLi9snJWo98RAkAJHsWoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VQ4eY7rI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gBEgkaYn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED3FC1F000E9;
-	Mon, 24 Aug 2026 06:53:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VQ4eY7rI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 985AA1F00A3D;
+	Mon, 24 Aug 2026 06:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787554408;
-	bh=6vMt+eend/xPrHEdH7jt5di8huOn5E3l4vKoMKej6E4=;
+	s=k20260515; t=1787554418;
+	bh=qTcI3WTocTNtASwnjeX/o1Etzjrmol5SB78ukx3G13k=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gBEgkaYnRbtfEl5sZdaoSBkwXbswRGUlVSAFtY5n4DBbaI5pXENDMdcIgNYQpt5If
-	 f3f/w1+hwvK5DGFhpyGB2a7CYV2IXPzaNgSmM2X9j7YVKe93rcmeDjoTjN3rwOjsvX
-	 m89MjXiN1ojNaLw2co7/bt4vACWmXYJFzmKQuIxf+k5WDqcXjhH0t2lgsNUvcD5FPL
-	 n+efOjM7tjxSND8PVmEhpG8SEVQLUWgfe3EOJ9P7653YZ+vxnK4uUanuviGT3m+Q7n
-	 GJkexEl93idIz59fDOcIOCuFxy0jB8w8S/CmPTFjFE1lihtBRqANzactxTGpD3TFG3
-	 xAkvN10i1yMCQ==
+	b=VQ4eY7rI44Wq80hem5EbXN3Z9FDeBc+jarW/7PBJzG4MitaIR/cTsqR+Al4x9ltK1
+	 smreZlUNB8Mf8WTqnTmsXeRO+N9WzFseG5DsHNlCnxIYRp7BhqPVMs1oIPxp0dzKlf
+	 o0glXR5cNInS7chS8vmqlI/BrwmMzPP1UYSpuzs/W5xEZmHfhWC0fh4GOiRTLDagdf
+	 LfEcs4evFhVTVBriiBwGcD40RJtgiDUs4IS9c5cjxg67ormI+tKOG7QxLL5gkBATD0
+	 7eoBaf11k/n6bDjDQq69S4oYt6xM6P30AJ4qmI1OIi6dttvmGKRlF8a5U/tXMqS4S+
+	 2cYyCfV5v8BGg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 1/7] perf evlist: Implement evlist__can_merge_hybrid
- using first_wildcard_match
+Subject: Re: [PATCH v1 6/7] perf ui hist: Format group headers iteratively
+ based on proportional visual allocations
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Ian Rogers" <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260824063744.1533837-2-irogers@google.com>
+In-Reply-To: <20260824063744.1533837-7-irogers@google.com>
 References: <20260813132519.4099508-1-andi@firstfloor.org>
  <20260824063744.1533837-1-irogers@google.com>
- <20260824063744.1533837-2-irogers@google.com>
+ <20260824063744.1533837-7-irogers@google.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 24 Aug 2026 06:53:27 +0000
-Message-Id: <20260824065327.ED3FC1F000E9@smtp.kernel.org>
+Date: Mon, 24 Aug 2026 06:53:38 +0000
+Message-Id: <20260824065338.985AA1F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,103 +48,73 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] The `first_wildcard_match` field in `struct evsel` is assigned as =
-a raw pointer without incrementing the reference count of the target `evsel=
-`, risking a use-after-free if the target is freed.
+- [Medium] Truncation of the `buf` array causes severe visual misalignment =
+of columns when printing group event headers.
 --
 
---- Patch [1]: [PATCH v1 1/7] perf evlist: Implement evlist__can_merge_hybr=
-id using first_wildcard_match ---
-commit fefc17e1de9b340818e3dce0b74337b9595b7aa3
+--- Patch [6]: [PATCH v1 6/7] perf ui hist: Format group headers iterativel=
+y based on proportional visual allocations ---
+commit fb91b42310113a183352643a9b299c122e218ea8
 Author: Ian Rogers <irogers@google.com>
 
-perf evlist: Implement evlist__can_merge_hybrid using first_wildcard_match
+perf ui hist: Format group headers iteratively based on proportional visual=
+ allocations
 
-Add logic to dynamically identify mergeable events spawned from the same
-wildcard alias via first_wildcard_match, breaking reliance on hardcoded
-PMU metrics or type IDs.
+Forcefully calculate proportional visual allocations only natively for
+the 'Total' merge target header instead of uniformly ballooning array
+spacings. Unpack strings directly into the primary column width fn.
 
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index c3d7847278106..431759e05e260 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
+> diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
+> index 09f0baa808e0a..02c188100b098 100644
+> --- a/tools/perf/ui/hist.c
+> +++ b/tools/perf/ui/hist.c
+
 [ ... ]
-> @@ -125,12 +128,21 @@ struct evlist *evlist__new_default(const struct tar=
-get *target, bool sample_call
->  		if (err)
->  			goto out_err;
->  	} else {
-> +		struct evsel *leader =3D NULL;
->  		while ((pmu =3D perf_pmus__scan_core(pmu)) !=3D NULL) {
->  			snprintf(buf, sizeof(buf), "%s/cycles/%s", pmu->name,
->  				can_profile_kernel ? "P" : "Pu");
->  			err =3D parse_event(evlist, buf);
->  			if (err)
->  				goto out_err;
-> +			if (!leader)
-> +				leader =3D evlist__last(evlist);
-> +			else {
-> +				struct evsel *last =3D evlist__last(evlist);
+
+> @@ -421,8 +458,25 @@ static int hpp__header_fn(struct perf_hpp_fmt *fmt, =
+struct perf_hpp *hpp,
+>  	int len =3D hpp__width_fn(fmt, hpp, hists);
+>  	const char *hdr =3D "";
+> =20
+> -	if (line =3D=3D hists->hpp_list->nr_header_lines - 1)
+> +	if (line =3D=3D hists->hpp_list->nr_header_lines - 1) {
+>  		hdr =3D fmt->name;
+> +		if (hists->merge_entries && &fmt->list =3D=3D hists->hpp_list->fields.=
+next) {
+> +			char buf[1024];
+> +			int w =3D 0;
+> +			int f_len =3D fmt->user_len ?: fmt->len;
+> +			struct evsel *pos, *evsel =3D hists_to_evsel(hists);
 > +
-> +				if (last !=3D leader)
-> +					last->first_wildcard_match =3D leader;
-
-[Severity: High]
-Should we be taking a reference here with evsel__get()? Assigning the leader
-as a raw pointer without a reference count could lead to a use-after-free if
-the leader event is removed or freed before this member event.
-
+> +			w +=3D scnprintf(buf + w, sizeof(buf) - w, "%*.*s", f_len, f_len, fmt=
+->name);
+> +			for_each_group_evsel(pos, evsel) {
+> +				if (symbol_conf.skip_empty &&
+> +			    evsel__hists(pos)->stats.nr_samples =3D=3D 0)
+> +					continue;
+> +				w +=3D scnprintf(buf + w, sizeof(buf) - w, " %*.*s",
+> +					       f_len - 1, f_len - 1, evsel__name(pos));
 > +			}
->  		}
->  	}
-[ ... ]
-> @@ -148,6 +160,202 @@ struct evlist *evlist__new_default(const struct tar=
-get *target, bool sample_call
-[ ... ]
-> +				if (!evsel__is_hybrid(peer)) {
-> +					if (!is_pmu_core_len(peer_name, peer_match - peer_name) ||
-> +					    perf_pmus__num_core_pmus() <=3D 1)
-> +						continue;
-> +				}
-> +
-> +				if (!strcmp(pos_match, peer_match)) {
-> +					peer->first_wildcard_match =3D pos;
+> +			return scnprintf(hpp->buf, hpp->size, "%*s", len, buf);
 
-[Severity: High]
-Similar to above, could this raw pointer assignment leave a dangling pointer
-in peer->first_wildcard_match if the matching event (pos) is freed later?
-Using evsel__get() and evsel__put() might be needed for reference counting.
+[Severity: Medium]
+If the event group has many members (e.g., from a hybrid merge), can the
+concatenated header string exceed the 1024 byte limit of buf array?
 
-> +					has_wildcard =3D true;
-> +				}
-> +			}
+If the array truncates the string, but len is calculated from the total wid=
+th
+of all members, won't this cause the %*s specifier to right-justify the
+truncated string within the larger len field?
+
+Could this result in padding the string with leading spaces and cause severe
+visual misalignment of columns in the UI output?
+
 > +		}
 > +	}
-> +
-> +	return has_wildcard && (nr > 1);
-> +}
-[ ... ]
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index d4cb455f4a7d4..3f56a0e6f9d65 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -2052,6 +2052,8 @@ static void evsel__exit(struct evsel *evsel)
->  	evsel__free_config_terms(evsel);
->  	cgroup__put(evsel->cgrp);
->  	perf_evsel__exit(&evsel->core);
-> +	if (evsel->first_wildcard_match)
-> +		evsel->first_wildcard_match =3D NULL;
-
-[Severity: High]
-If first_wildcard_match is holding a reference, would we need evsel__put()
-here instead of just setting it to NULL? Also, this only clears its own
-pointer, but doesn't it leave dangling pointers in other events that might
-have this evsel set as their first_wildcard_match?
-
->  	zfree(&evsel->group_name);
->  	zfree(&evsel->name);
->  #ifdef HAVE_LIBTRACEEVENT
+> =20
+>  	return scnprintf(hpp->buf, hpp->size, "%*s", len, hdr);
+>  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260824063744.1533=
-837-1-irogers@google.com?part=3D1
+837-1-irogers@google.com?part=3D6
