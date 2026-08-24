@@ -1,56 +1,56 @@
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4C43E5A1F
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 06:38:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F76B3E7BA4
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 06:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787553484; cv=none; b=foSKx5eY6PK7DRawpaDnFaW9fl3ywKPUKE3ph2+jxTRpLzT1ROW1LS6pKPTerfECCqE1+hLepD1vTm0xXYDZfJUJLoc4eXOqBvAybVGBHY8lmh3bT0yH6GhVvCn1Uh7wd+69uxF/98uPICquyzwLmEsVpOTYVCEKqzMtHpDz53U=
+	t=1787553486; cv=none; b=j1jAVJQr0Fjg51U4MHNPsY0IahL/nLMRshTea493QsKWAc75wqiFfsoOJBDIeJSR3nVfqigBvGmPtC+aAXLhXHn+ams+UQ9BrpkctGvccHJG5sOv+ajBlAXjo83ehT1nRkR0o+nJl7Z5kCtQAKvxIfk9SaQfUo8g1squ36b8Ww4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787553484; c=relaxed/simple;
-	bh=NmUqxPumcCU/Ku7XFBQ2CbB8PZz9hr8FapMXvTDw1vo=;
+	s=arc-20240116; t=1787553486; c=relaxed/simple;
+	bh=NvY+xoTL9RCfZng+uIyyzwNl8M+hTe/uQUnKYTRtSmU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=jEMK+GbNP3tUkCWI0Gfk8JKuGXF/YkdsrECkkPtulnCc2kRzRTn7sjMm1U9TI9GmlU4AzDMtrFJ1GKv7S2filPADKWrEP/lZXxNcU9roiQ/3io5G3tISKg7R6y4Usd95rNT+h4iJmGSTlBd6ajCu8pPrEXRRgmoMHXEmh9ZjX+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FMPFemMs; arc=none smtp.client-ip=209.85.216.72
+	 To:Cc:Content-Type; b=I1tWbCmmut1qdEpWLNNswFJqPhayaPchSPOHTPRUEfy59SyOe/5T6juH26l6Y2gZtTwBszqezqzV6fpV7gVwxemb90ohQzBxGKDpBIpUxWL3Ri2Om+6L5dJU6xvPF1UE2Qyn/PdAcKOzX8djYGXYwNR9FDSxU9Qc+Bo4uL4cm7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Afj+dpxP; arc=none smtp.client-ip=209.85.216.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FMPFemMs"
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-3950b1371a7so4768831a91.2
-        for <linux-perf-users@vger.kernel.org>; Sun, 23 Aug 2026 23:38:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Afj+dpxP"
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-3954def0191so5434068a91.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 23 Aug 2026 23:38:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1787553481; x=1788158281; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1787553483; x=1788158283; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=/MF9jC0mP/Qm5YIccy+Ss2T7drb/vabI/FTHPUV5+zk=;
-        b=FMPFemMs+X1kkimmQ1DTHupL1N3lABJBlrGjyTR65G7W/uNijqrakvc9czmDtUZs8T
-         Ax6etzwBBfrxUkwky6gnRijPK5/3AkmVZDaaxjpSAh3pd4x+oj0X1VFW4044Qw1y0TMk
-         0G86dhaQHijGAtJ/jAYyPp6Wv6ef4JRQ2o7hC6sjzmEHoiQdBiOZMNWPEJdC7Kt17tfh
-         MgdjsykXZUYxfzT14flGDT88Ri10J0hGkBsMpuLIrD0VM1Puj6AcZ20dbr8/gffb7YVf
-         llVDRxlJUits94txx05Z+Vp6FkaR36TInzS2Rq/0FwwqHcXFx9IkpjuqkwSWIdhVAnlS
-         Mdlw==
+        bh=Ic3+QI3RZFUsEWI3cfknR+pmNVErREa+t7XS8Ahee/c=;
+        b=Afj+dpxPvF95MlMf+3mJBeKKM5mdsJMKMxd72k/GWTEr1saIK1fURS8+q05mrdvYmz
+         PeVlQrQBZumR5DnobCG171yez4F+gHP6mlDJxmEBaih5wf7/KkdJnMdRNed18GUcwk3N
+         orQsYEUmgjuH3+zCtNqtXL0LqMKq7EurEc2aPY3XeykXh/ScAk1CwuPKz2hix9dQ6+gF
+         9fiCzrPmAdCzPGf8cY6CbsIsqybXCZSCLJqpWyeVdNbeH8g5CY1q0eUeIEVzW01dA8WI
+         nmGWPPQkzFo2DkY5OSGNQ7BijtLo1H2ptbvis/O+YPGOascvpnEpPnC5oVVOvg0H72mE
+         C5Jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787553481; x=1788158281;
+        d=1e100.net; s=20251104; t=1787553483; x=1788158283;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=/MF9jC0mP/Qm5YIccy+Ss2T7drb/vabI/FTHPUV5+zk=;
-        b=oPlqB3zQly8WTzrNGKmv9AruU81dS0iF84YUWV4WBumm5wnPyaXzXWTN81ruy3hNj7
-         Y2mko8n4fUiuHC+OQWxeMwosBVtwYD3PB5GgPTgayhluZ70xuPEiwW7x7Rki4OqZYMm0
-         i3B18TF6wk0y9bHT9Aay0Dd7fcqusdsww0WyuGZryGHeuG93B/5mbkbinQiMJjTnd7k+
-         nxkj8WqQduZn1QlYTenggPbeG/x0rLmRJ+lnRr8UST10c3DFXjECnIpP5hXa+vhU3BqH
-         h6RVTu0ubq1TgIva51FIv1TODf6pn/49LM7K7suiNLd8zYf/6hmMzb8Vs/DFQQBUS7lv
-         6O6A==
-X-Forwarded-Encrypted: i=1; AHgh+RpHill8YUkwZPsDrZP/RCPcrLDHFDper/dGZvsGpC7FMmBK6/BRrJzFmb5RzfVEL24JXg7YPqO+UXRedSM7LBTg@vger.kernel.org
-X-Gm-Message-State: AFuF++loyGhENdJ48+TSFFgCqmyqNU2unHFmlJNFOIjOEqaSRpv+untu
-	OQLW8HMb5eJdXSIDcTZ7awgTUvgy5FeqaBvF40f12LuRtmelxBTKES/GEiS1JkantbcK5n3F2X/
-	zY5VqDQcJ9Q==
-X-Received: from dlbou15.prod.google.com ([2002:a05:7022:110f:b0:13b:9778:570])
+        bh=Ic3+QI3RZFUsEWI3cfknR+pmNVErREa+t7XS8Ahee/c=;
+        b=Ihbo2hCBptd16ZB2qBNIUc6Xeb9xmTs5BFBHUqQSp0eQ9pH1Oo2YPF5oxZ6Pw6ftaX
+         jnMecUG/CMenMz184M4R6ms+7D1AyjnbDiSOtARBg6D64WJT42/twPYu9Rmas4txj7hO
+         fQN43BA6L44xkEvHY3CccYfBb6fYJuR2h0Uyw+ZJCTLe6iiUT5sqjLG8pc+KABv8tqCM
+         2z57GV9bqnGZPQdtybjd95ff0DrHEoYEgBIg77XmG7shfULSHsAPukpKuYsDssj4kzFx
+         Yy0+NSbp+OiLpJXgrfow2WK1/V7j5s6JIQp9KFeSUjusOhg4GWs6Sqpn6ulya4kKZ0Lf
+         F54Q==
+X-Forwarded-Encrypted: i=1; AHgh+Rqp+HeFo4/Bl/1sWtJ5z+uuEirHyEjuuVo4ACNmuW+/peWLISTSwBndGZ7/OX6IJVTIpso4krTyqgwPqEUgfG7G@vger.kernel.org
+X-Gm-Message-State: AFuF++lPaTfsQHyi71ou5BSw9pZqjdz1c4eKhlwNtwIXjPuTFNn+q6fD
+	rvQ4bsWA2oh3mXiIl1kL/hiv5yQrup5O99JLQSoKTKNUC4O44t3ze0snNvj35tB4y903ytOasbC
+	2N4i+NRRxbQ==
+X-Received: from dlbvv18.prod.google.com ([2002:a05:7022:5f12:b0:140:f5a8:30ec])
  (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1c90:b0:393:19a3:4f1
- with SMTP id 98e67ed59e1d1-395c351d788mr41956359a91.6.1787553481245; Sun, 23
- Aug 2026 23:38:01 -0700 (PDT)
-Date: Sun, 23 Aug 2026 23:37:40 -0700
+ with SMTP id 98e67ed59e1d1-395c351d788mr41956665a91.6.1787553483075; Sun, 23
+ Aug 2026 23:38:03 -0700 (PDT)
+Date: Sun, 23 Aug 2026 23:37:41 -0700
 In-Reply-To: <20260824063744.1533837-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,9 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260813132519.4099508-1-andi@firstfloor.org> <20260824063744.1533837-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.766.g2966f0265a-goog
-Message-ID: <20260824063744.1533837-4-irogers@google.com>
-Subject: [PATCH v1 3/7] perf ui browsers: Implement interactive 'M' keystroke
- to toggle hybrid event merging
+Message-ID: <20260824063744.1533837-5-irogers@google.com>
+Subject: [PATCH v1 4/7] perf tools: Expose opt-in --hybrid-merge
 From: Ian Rogers <irogers@google.com>
 To: andi@firstfloor.org
 Cc: acme@kernel.org, ak@kernel.org, ak@linux.intel.com, 
@@ -70,167 +69,129 @@ Cc: acme@kernel.org, ak@kernel.org, ak@linux.intel.com,
 	Ian Rogers <irogers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Map the 'M' keystroke globally across the interface to toggle boolean state
-dynamically rebuilding hybrid core groups independently.
-This allows cleanly separating or aggregating hybrid core histograms.
+Add --hybrid-merge flag to explicitly trigger event merging
+non-interactively
+for both perf-top and perf-report.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Assisted-by: Antigravity:gemini-3.1-pro
 ---
- tools/perf/ui/browsers/hists.c | 48 +++++++++++++++++++++++++++++-----
- tools/perf/util/evsel.c        | 12 +++++++++
- tools/perf/util/evsel.h        |  2 ++
- 3 files changed, 56 insertions(+), 6 deletions(-)
+ tools/perf/Documentation/perf-report.txt | 5 +++++
+ tools/perf/Documentation/perf-top.txt    | 5 +++++
+ tools/perf/builtin-report.c              | 6 ++++++
+ tools/perf/builtin-top.c                 | 9 ++++++++-
+ tools/perf/util/symbol.c                 | 1 +
+ 5 files changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index c15874a491b4..07cb06834d0f 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -2840,10 +2840,10 @@ add_script_opt(struct hist_browser *browser,
- 			return n;
- 		j = sprintf(tstr, " in ");
- 		j += timestamp__scnprintf_usec(he->time, tstr + j,
--					       sizeof tstr - j);
-+						   sizeof(tstr) - j);
- 		j += sprintf(tstr + j, "-");
- 		timestamp__scnprintf_usec(he->time + symbol_conf.time_quantum,
--				          tstr + j, sizeof tstr - j);
-+					  tstr + j, sizeof(tstr) - j);
- 		ret = add_script_opt_2(time_act, time_optstr, thread, sym, tstr);
- 		if (ret > 0) {
- 			time_act->time = he->time;
-@@ -3580,8 +3580,11 @@ static int perf_evsel_menu__run(struct evsel_menu *menu,
- 	int delay_secs = hbt ? hbt->refresh : 0;
- 	int key;
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index 22f87eaa3279..b7775b9260b7 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -573,6 +573,11 @@ include::itrace.txt[]
+ 	When displaying traceevent output, do not use print fmt or plugins.
  
--	if (ui_browser__show(&menu->b, title,
--			     "ESC: exit, ENTER|->: Browse histograms") < 0)
-+	const char *help_msg = evlist__can_merge_hybrid(evlist) ?
-+			       "ESC: exit, ENTER|->: Browse histograms, M: Merge hybrid events" :
-+			       "ESC: exit, ENTER|->: Browse histograms";
+ -H::
++--hybrid-merge::
++	Merge matching events from all hybrid core PMUs into one
++	display. For example, if a wildcard expands to run on both p-cores and
++	e-cores, this aggregates them into a single view.
 +
-+	if (ui_browser__show(&menu->b, title, help_msg) < 0)
- 		return -1;
+ --hierarchy::
+ 	Enable hierarchical output.  In the hierarchy mode, each sort key groups
+ 	samples based on the criteria and then sub-divide it using the lower
+diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+index af3e4230c72f..05fe65cd77c5 100644
+--- a/tools/perf/Documentation/perf-top.txt
++++ b/tools/perf/Documentation/perf-top.txt
+@@ -43,6 +43,11 @@ Default is to monitor all CPUS.
+ 	encoding with the layout of the event control registers as described
+ 	by entries in /sys/bus/event_source/devices/cpu/format/*.
  
- 	while (1) {
-@@ -3636,6 +3639,16 @@ static int perf_evsel_menu__run(struct evsel_menu *menu,
- 				goto out;
- 			case K_ESC:
- 			default:
-+				if (key == 'M') {
-+					if (evlist__can_merge_hybrid(evlist)) {
-+						if (!symbol_conf.hybrid_merge)
-+							evlist__merge_hybrid(evlist, true);
-+						symbol_conf.hybrid_merge =
-+							!symbol_conf.hybrid_merge;
-+						ui_browser__hide(&menu->b);
-+						return K_RELOAD;
-+					}
-+				}
- 				continue;
- 			}
- 		case K_LEFT:
-@@ -3649,6 +3662,15 @@ static int perf_evsel_menu__run(struct evsel_menu *menu,
- 		case CTRL('c'):
- 			goto out;
- 		default:
-+			if (key == 'M') {
-+				if (evlist__can_merge_hybrid(evlist)) {
-+					if (!symbol_conf.hybrid_merge)
-+						evlist__merge_hybrid(evlist, true);
-+					symbol_conf.hybrid_merge = !symbol_conf.hybrid_merge;
-+					ui_browser__hide(&menu->b);
-+					return K_RELOAD;
-+				}
-+			}
- 			ui_browser__warn_unhandled_hotkey(&menu->b, key, delay_secs, NULL);
- 			continue;
- 		}
-@@ -3675,6 +3697,8 @@ static int __evlist__tui_browse_hists(struct evlist *evlist, int nr_entries, con
- 				      bool warn_lost_event)
- {
- 	struct evsel *pos;
-+	int ret;
++--hybrid-merge::
++	Merge matching events from all hybrid core PMUs into one
++	display. For example, if a wildcard expands to run on both p-cores and
++	e-cores, this aggregates them into a single view.
 +
- 	struct evsel_menu menu = {
- 		.b = {
- 			.entries    = &evlist__core(evlist)->entries,
-@@ -3699,8 +3723,11 @@ static int __evlist__tui_browse_hists(struct evlist *evlist, int nr_entries, con
- 			menu.b.width = line_len;
- 	}
+ --filter=<filter>::
+ 	Event filter.  This option should follow an event selector (-e). For
+ 	syntax see linkperf:perf-record[1].
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 60d1f166629e..2fc81f4517e9 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -1113,6 +1113,10 @@ static int __cmd_report(struct report *rep)
+ 	evlist__for_each_entry(session->evlist, pos)
+ 		rep->nr_entries += evsel__hists(pos)->nr_entries;
  
--	return perf_evsel_menu__run(&menu, nr_entries, help,
-+	ret = perf_evsel_menu__run(&menu, nr_entries, help,
- 				    hbt, warn_lost_event);
-+
-+
-+	return ret;
- }
- 
- static bool evlist__single_entry(struct evlist *evlist)
-@@ -3720,10 +3747,14 @@ static bool evlist__single_entry(struct evlist *evlist)
- 	return false;
- }
- 
-+
- int evlist__tui_browse_hists(struct evlist *evlist, const char *help, struct hist_browser_timer *hbt,
- 			     float min_pcnt, struct perf_env *env, bool warn_lost_event)
- {
- 	int nr_entries = evlist__nr_entries(evlist);
-+	int ret;
-+
-+retry:
- 
- 	if (evlist__single_entry(evlist)) {
- single_entry: {
-@@ -3747,8 +3778,13 @@ single_entry: {
- 			goto single_entry;
- 	}
- 
--	return __evlist__tui_browse_hists(evlist, nr_entries, help, hbt, min_pcnt, env,
-+	ret = __evlist__tui_browse_hists(evlist, nr_entries, help, hbt, min_pcnt, env,
- 					  warn_lost_event);
-+	if (ret == K_RELOAD) {
-+		nr_entries = evlist__nr_entries(evlist);
-+		goto retry;
++	if (symbol_conf.hybrid_merge && evlist__can_merge_hybrid(session->evlist)) {
++		evlist__merge_hybrid(session->evlist, false);
 +	}
-+	return ret;
- }
- 
- static int block_hists_browser__title(struct hist_browser *browser, char *bf,
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 3f56a0e6f9d6..a4760cfb7582 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -4758,3 +4758,15 @@ void evsel__warn_user_requested_cpus(struct evsel *evsel, struct perf_cpu_map *u
- 	perf_cpu_map__put(intersect);
- 	perf_cpu_map__put(online);
- }
 +
-+struct evsel *evsel__new_dummy(void)
-+{
-+	struct perf_event_attr attr = {
-+		.type	= PERF_TYPE_SOFTWARE,
-+		.config = PERF_COUNT_SW_DUMMY,
-+		.size	= sizeof(attr),
-+		.freq = 0,
-+		.sample_period = 1,
-+	};
-+	return evsel__new(&attr);
-+}
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index d9ecc6628217..6cf07120da9f 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -15,6 +15,8 @@
+ 	if (use_browser == 0) {
+ 		if (verbose > 3)
+ 			perf_session__fprintf(session, stdout);
+@@ -1446,6 +1450,8 @@ int cmd_report(int argc, const char **argv)
+ 		    parse_branch_mode),
+ 	OPT_BOOLEAN(0, "branch-history", &branch_call_mode,
+ 		    "add last branch records to call history"),
++	OPT_BOOLEAN(0, "hybrid-merge", &symbol_conf.hybrid_merge,
++		    "merge the same event across hybrid core PMUs"),
+ 	OPT_STRING(0, "objdump", &objdump_path, "path",
+ 		   "objdump binary to use for disassembly and annotations"),
+ 	OPT_STRING(0, "addr2line", &addr2line_path, "path",
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index 570410599f1b..cf7ac2712696 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -320,7 +320,7 @@ static void perf_top__resort_hists(struct perf_top *t)
  
- #include "symbol_conf.h"
+ static void perf_top__print_sym_table(struct perf_top *top)
+ {
+-	char bf[160];
++	char bf[512];
+ 	int printed = 0;
+ 	const int win_width = top->winsize.ws_col - 1;
+ 	struct evsel *evsel = top->sym_evsel;
+@@ -1321,6 +1321,9 @@ static int __cmd_top(struct perf_top *top)
+ 	if (ret)
+ 		return ret;
  
-+struct evsel *evsel__new_dummy(void);
++	if (symbol_conf.hybrid_merge && evlist__can_merge_hybrid(top->evlist))
++		evlist__merge_hybrid(top->evlist, false);
 +
- struct bperf_follower_bpf;
- struct bperf_leader_bpf;
- struct bpf_counter_ops;
+ 	top->session->evlist = top->evlist;
+ 	perf_session__set_id_hdr_size(top->session);
+ 
+@@ -1490,6 +1493,8 @@ int cmd_top(int argc, const char **argv)
+ 	OPT_CALLBACK('e', "event", &parse_events_option_args, "event",
+ 		     "event selector. use 'perf list' to list available events",
+ 		     parse_events_option),
++	OPT_BOOLEAN(0, "hybrid-merge", &symbol_conf.hybrid_merge,
++		    "merge the same event across hybrid core PMUs"),
+ 	OPT_CALLBACK(0, "filter", &top.evlist, "filter",
+ 		     "event filter", parse_filter),
+ 	OPT_U64('c', "count", &opts->user_interval, "event period to sample"),
+@@ -1724,6 +1729,8 @@ int cmd_top(int argc, const char **argv)
+ 		evlist__put(def_evlist);
+ 	}
+ 
++
++
+ 	status = evswitch__init(&top.evswitch, top.evlist, stderr);
+ 	if (status)
+ 		goto out_put_evlist;
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 94f9c8faedda..5cbb899e8fbd 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -73,6 +73,7 @@ struct symbol_conf symbol_conf = {
+ 	.symfs			= "",
+ 	.symfs_layout_flat	= false,
+ 	.event_group		= true,
++	.hybrid_merge		= false,
+ 	.inline_name		= true,
+ 	.res_sample		= 0,
+ 	.addr2line_timeout_ms	= 5 * 1000,
 -- 
 2.55.0.766.g2966f0265a-goog
 
