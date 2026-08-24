@@ -1,182 +1,108 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6972C2BD022
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 19:54:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.182
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787601262; cv=pass; b=uW17SInHX3I/9LpsrWbzFlMbpPgiWp4iDozT09WUMkHtkZ6dxHaJcnY/F+l6MtK897oi3hZvg/dWq4/fjkAS9Jk4fOVxIG80DIRNhZFcq3hr507tTAGdwYaciv0TtaSs3YqPmvCUnhFGebO8odzNddG2rTwirEScki9dm6hU62c=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787601262; c=relaxed/simple;
-	bh=7uEPvNkh0wPywyUSpf8tg+GQKzcygTjCuvJr9dww0+c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LP2NkTGwHjgY7Y3puss4PkBHk/A7SvhrlyVt8AQwimE9IhbF3aF4r1yzTR2fdGi9gGG4ox74uIQ1km4Jk+v7gqXHmUDKb+iN3KY6NdLYnwOLuoXh6Tj2hF6VdYIIttRks2Hb1wALs5AUrYPBYxZ3j128GVrTT5kpb3D42r/9BTk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GIxu89K5; arc=pass smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78A2331ED2
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 20:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787602682; cv=none; b=IMebiqAKVKmEZ1Dj/eMfSpYgvVgKwt3EtynkkEA++ofzVn9R6QxwbFkUr9mlUknSsCwJea/sGBYQ1LjCiy+VccX5qaErmFwfLdgDmTEhUWJABAzwF9uh/HL8l5ALc2zgyLp3HQvT6zhTpTxV5kPZSkUItkR/tbW12bhVijbxjCA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787602682; c=relaxed/simple;
+	bh=URsi7e4OR0JmX7pm3tlKz1+Fyzyx3DYb2+A8/wrbErk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nO2+3v8nW5A3PERJOtdp7WeTQgMhnuFhaI+sIrfMAQyXa/cCnPDzFW+e2rUb7jprzS9DJFjCuO/w0OVUsfbaCn6vFRmpyI0dTMarPMMKJuwqEpiDnuPss5PJEKqPid/EYxo2cWHSZnfcs5/P/+OzW0JfI8e1weUXrF378v0J1ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VejiYxAm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GIxu89K5"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-84867f07d63so4223972b3a.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 12:54:21 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787601261; cv=none;
-        d=google.com; s=arc-20260327;
-        b=ExfQCwYzxpyp1cnMDe1suUo0LYlq0Fk+qfvA/wQX9b4Jf2c85jOEk9eTjlfGcZIHlR
-         SsMw7EpV7uLqNRgVjGrn+L9Fp3Lkrmv+XDwCwB6wyNyhXVvi144V6tB4hFoDyNOh+mmR
-         eACgV9XpydzBr5wnE9+zx4wHoYdA4zm8a8YPsR3CG1R8+dNJOYiaVCPg16LUXqVaSP3V
-         Btdkr1Fsux9bemyN4jDeosJxoLQKXSZ5CzYmKcpGmeNIz9OvAyxr0x9VdUgBZf37/Oal
-         j+kElryOiM9q8rSo9dqV2AoFfYB4066A9c4CGzrMxBN3j0zA6/deDfvjJ5NooE8QshfA
-         idmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=b+Q50ekDC9b+VMm0CXhjeVN+dTm/g3kpzzvFfKOXcMA=;
-        fh=hEQicaorjazLhjRmDUr0lU9379A9kaiOO2z2hQU6omM=;
-        b=bYuMmx92XuZHB+wMXXEG2zFbtctm5ECP/OiRV7yeDH4BYwzMZKoO167R3x9WwTH3M9
-         5rlMTucA04FZ4aZ67XxnG++ez1dgCVMNhjvkIHHgf7+ZJ5P33E7N+gLtAGDlcXzcXI4x
-         BOQ/MEHgh40pxPXy0RjEduPlnLgw9iTxVKSaf7QfzxhNIcInvNqLjJeQXlGA9jT8MSvA
-         v5iE9LFkVZtx3ozJSJVNQXeyHEVzUBP+XuxqrAqcnqo11fbROLfVrzN0vCoyof+H0T8l
-         AX2F/udMJ3BIODhdlG1myBEmaHMvGhBfPy85nMhl8E3xYCMjVkDTXwIdkzQz7eo8CSvG
-         EypA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787601261; x=1788206061; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=b+Q50ekDC9b+VMm0CXhjeVN+dTm/g3kpzzvFfKOXcMA=;
-        b=GIxu89K5zRaFr4r/t0Qp6nlWfhp9Hq/iRzRLmUZmC8J9uJmB61qsHgQDMnrRdaTpb3
-         Nap4qzPZc9EffIhvGbHUkhUI2dvcA4mNpr20w2KvN/wCd2i9STVRzNBdbR221ZNcfbIP
-         +JsBjgnfaUwN+2Y4rj9D7iPJ7wPIpCI/yqfNle5GHGakyxbQJgzCucxJWIa4gBkpk+Bo
-         7LywM9aUxoNQonoENDeRRhZ8qo7R/0isETw/d30XdlOGemgdNoDzluSQCtRgwyUrs/Eu
-         MmKfbflmsckFgKBNSCdREpD6J9g1U/DbM+4rsJAEpzbRISMiOdighQt02yU8qRLqK+Gg
-         pT9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787601261; x=1788206061;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=b+Q50ekDC9b+VMm0CXhjeVN+dTm/g3kpzzvFfKOXcMA=;
-        b=SsmW8Q229XaFxokpupehhf8KmMzQWCoCwgd1rt5UDqGkdir3U94IBLF1TGHdMz3S6H
-         bqi43rhwLZSyyE4KxHiTNZgbSPo3ro5Id09yJZr12E9hcQY2nxjgbtAmZbHJd6suQboz
-         icvn7XD3rDlc0MUDBTzYiLUnrIAlkqZdCpbUNH4CRCpL/rbX7pZoZNAYgV0Q9XWYQ7SP
-         rUlJYbavNjNp6sNU+bwyU9FOqWt8XD+kcH8mwayu8EQ84du6lk8CvPMVr7p5IMBEEYDE
-         G9W/IfViuc+2vdW2OL7H2cL7MhtX5RjO0UtO7E/DWg6ob+XNZPRaDD7gVeguYlFpzP0x
-         7TyQ==
-X-Forwarded-Encrypted: i=1; AHgh+RoCn8r6vyCIER2hVzPgzDu27mwC9BbXLvTUG26TdkZgiMt8hI7lMEilzWrfIPfLjqDV5KdKBmOGhtkoCBByUXN4@vger.kernel.org
-X-Gm-Message-State: AFuF++ln09tqeJy4+llB/W5xkHcHxM7hINWwUWKiGM9wPgFYIPnfQqtM
-	Tx3lgiiO+EEbqri7j5cSyjxNouLq1VlY3mrITyXSDjEqgZAwTu4dXTh1bX7oN3rdr+C6NptUr7g
-	vaCXwxwGHlQfXmzZnQviBFUn3ciGOVjY=
-X-Gm-Gg: AR+sD12v1hPW9IXgyh5WXHv+4nMkwVu9uRPlsPnzbXl6DrDoeobJeUGN1HR7xH8Eson
-	wdTf9dr2xYCb8sVhUYHZDPCI8DyruaXTxcJIPyzTV5n31bwm51zWLJxXt7XBZthhz7abeaSDKiD
-	gY2B3eee52PY+JB0xPCZYEQTcQJf3hYoVAmXhkvhDGbH/uZAvIVfRxJLApxrK4dy/wYhlqglRxQ
-	48NGHyuwB4qqmEQ3dwakniPCs1xHziX1G94QZ4tXaaSSQz8XDPXaWhzkIPja7gd3c3Io59O3muV
-	gXrtSzPJFpv2WUa++7DSiMMq3vyB5H7siMNu/D9uNlEPJrShrX5YLNUov9NxRzlKTfuEabnmKAw
-	AM+Yt2SlkYv4hCvQ8sKWHIGGG3J0Kt+wGjbnBxLpOMQ==
-X-Received: by 2002:a05:6a00:f08:b0:84f:37c1:f887 with SMTP id
- d2e1a72fcca58-8520ba2ea2fmr38445574b3a.12.1787601260681; Mon, 24 Aug 2026
- 12:54:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VejiYxAm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5128E1F000E9;
+	Mon, 24 Aug 2026 20:18:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787602680;
+	bh=7DfdJ6xuOTaxcsu0S0gIuc2F531lao+Uit7lhn9aNs0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=VejiYxAm7CZFstsBusK0rHtlObcR1D+/t3B/4H0XKgve/vU2BjxaskaG472T7e+v9
+	 mzrLNQRemQ8Gu08ID3kufHLWtO8TnF3e23IYJOcomZK6hd73+T1GC2EdLAgAsmU2N6
+	 k6p6qKSnKEB4qhoovzWWqqf3egSsAegZXan35JdYUBHoIJUfWF5CZFiq0XPyQniDxc
+	 myvWV6HGScKKQCeO22D1KOu/R3NK2U3Y74F2pw45S5zaoNfbSY57MakgMlCZDwys5i
+	 uUEKclz79q6A471qWHGe/BCbW/oGKcGw/qWAs5SODHn2cGhp76PRS2ArTzQD2tk21A
+	 8avpR0o1JswMw==
+Date: Mon, 24 Aug 2026 13:17:58 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Todd Lipcon <tlipcon@google.com>, Stephane Eranian <eranian@google.com>,
+	"Mi, Dapeng1" <dapeng1.mi@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: perf script intel_pt decoding reading instructions from wrong
+ shared lib
+Message-ID: <aoym9nq77PimB3fz@google.com>
+References: <CAGH6UiG=RJLqBU3kLu9XJciPyPO1HZkbAPERguVUMRuWQgqf=A@mail.gmail.com>
+ <c45fea55-b03d-40ac-a89f-8882b057fe5b@intel.com>
+ <ajw8r2Y2shs6sBJW@google.com>
+ <3a317e20-da30-484f-a3e0-a2e12ba5bcf0@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260822054620.452262-1-ming.jvle@gmail.com> <aosT4H14zcowzU_7@redhat.com>
- <CABbwK50esft7xj6cPWXN7iHnqW6E30w1Cg5FMmE97gJ34SqtfA@mail.gmail.com>
- <aotM6tRUHI9Bo7gW@redhat.com> <CABbwK50istUW_xnFsjCA+MMgFCuBbY-Zs3QmJU=Fg7heqKdF6A@mail.gmail.com>
- <aoxp3Rcbp3fUuqS8@redhat.com>
-In-Reply-To: <aoxp3Rcbp3fUuqS8@redhat.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 24 Aug 2026 12:54:06 -0700
-X-Gm-Features: AcwNN1UPgMEuZCxen7PbKRMigTGKjiHrc98UZ0KYRuGhhLnIXTDbxzsARdQVrl4
-Message-ID: <CAEf4BzbUQWAB0JuEdXu32v4S_zMuv4de+kYv0mcY4tDPu8CA2Q@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: Free utask on dup_return_instance() failure
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Keke Ming <ming.jvle@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3a317e20-da30-484f-a3e0-a2e12ba5bcf0@intel.com>
 
-On Mon, Aug 24, 2026 at 8:57=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
-te:
->
-> On 08/24, Keke Ming wrote:
-> >
-> > On 08/24, Oleg Nesterov wrote:
-> >
-> > > Hmm. It is not that I think "it is not enough", I think this is point=
-less
-> > > whatever we do.
-> >
-> > Well, I didn't mean to insist on the cleanup, I also think it may
-> > be redundant. If the child is bound to exit, manually calling
-> > uprobe_free_utask(t) in dup_utask() is pointless, as the normal
-> > exit path will handle it.
->
-> Yes, but the same is true if the child is not bound to exit... IOW,
-> I still can't understand your motivation for this patch...
->
-> > > But this is only the first step to cleanup
-> > > this logic. I'll try to write another email tomorrow.
-> >
-> > Of course, I'm all ears.
->
-> You have already mentioned "Option B" below ;) that is what I meant.
->
-> > Here is my current understanding. One thing I am not sure about
-> > is the signal semantics. If the copied uprobe state is incomplete,
-> > the child should not return to user mode with that state.
->
-> Perhaps... But consider
->
->         func_which_can_be_ret_probed(void)
->         {
->                 if (!fork) {
->                         printf("CHILD\n");
->                         exit(0);
->                 }
->         }
->
-> > Option A:
-> ...
-> > ...
-> > kill_child:
-> >   // I was thinking about SIGKILL here because it cannot be ignored
-> >   // Of course, you can correct me
-> >   send_sig(SIGKILL, t, 1);
->
-> force_exit_sig(SIGILL) can't be ignored too. But I am fine either way.
+On Mon, Aug 24, 2026 at 08:26:37AM +0300, Adrian Hunter wrote:
+> On 24/06/2026 23:23, Namhyung Kim wrote:
+> > Hello,
+> > 
+> > On Tue, Jun 02, 2026 at 10:32:02PM +0300, Adrian Hunter wrote:
+> >> On 15/04/2025 00:59, Todd Lipcon wrote:
+> >>> Hi folks,
+> >>>
+> >>> It seems there may be a bug in perf-script when processing intel_pt.
+> >>> Specifically, in order to reconstruct the instructions, it maps
+> >>> instruction pointers back to DSO-relative addresses, and then reads
+> >>> from the associated ELF files to find the actual instructions that
+> >>> were traced.
+> >>>
+> >>> In the case that the ELF file has an associated separate-debug ELF
+> >>> file linked via `.gnu-debuglink` (common in some Linux distros), it
+> >>> appears to be reading the debuginfo file instead of the shared library
+> >>> that actually contains the code.
+> >>>
+> >>> I've posted a simple repro here:
+> >>> https://github.com/toddlipcon/perf-debuglink-bug/blob/main/repro.sh
+> >>>
+> >>> I haven't dug into the code yet enough to see where it's going wrong,
+> >>> but figured I would report to the users list first.
+> >>
+> >> Seems to be caused by commit 5363c306787c8 - see further below.
+> >> Reverting that makes the issue go away.
+> > 
+> > Sorry for the trouble.
+> > 
+> >>
+> >> With that commit, dso__load() sets the binary_type to the first symbol
+> >> source file type, which is DSO_BINARY_TYPE__DEBUGLINK in this case.
+> >> That causes dso__get_filename() to get the file name of the debug file,
+> >> not the file actually executed.
+> >>
+> >> Leaving the binary_type as DSO_BINARY_TYPE__NOT_FOUND will result in
+> >> try_to_open_dso() using either DSO_BINARY_TYPE__BUILD_ID_CACHE or
+> >> DSO_BINARY_TYPE__SYSTEM_PATH_DSO.
+> > 
+> > Ok, I feel like we should split the dso access for the binary file (for
+> > annotate or intel-pt) and debug symbols (symbol table or DWARF).
+> > Probably we can use the binary_type and symtab_type respectively.
+> > 
+> > I'll take a look.
+> 
+> Would it make sense to apply the workaround in the meantime?
 
-Current SIGILL sending is already pretty bad behavior that bites us
-periodically, instead of doubling down on killing the user space
-process because something about installing uprobe goes wrong, let's
-think about a bit less destructive way to do this. Mark uprobe for a
-particular process as defunct or "detaching it", or something along
-those lines. But not just kill innocent processes.
+Right, I couldn't find time for it so far. :(
 
->
-> So yes, perhaps this makes sense. Although IMO this all is not that
-> important; GFP_KERNEL shouldn't fail "in practice" and at least
-> uprobe_copy_process() warns in this case...
->
-> > Option B:
-> >
-> > > Note that uprobe_copy_process() warns but returns "void", too late
-> > > to abort copy_process().
-> >
-> > Looking at copy_process(), uprobe_copy_process() is currently called
-> > after the "No more failure paths" point and after the child has already
-> > been made visible through the task list and pid links.
-> >
-> > Would the longer term fix be to move the uprobe state copy earlier,
-> > before the "No more failure paths" point, and then add the needed
-> > bad_fork cleanup for  p->utask?
->
-> Agreed, pronably better than Option A. But in therory dup_xol_work()
-> can still fail after fork().
->
-> Oleg.
->
+Can you please send a formal patch?
+
+Thanks,
+Namhyung
+
