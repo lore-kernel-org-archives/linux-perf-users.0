@@ -1,86 +1,58 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from one.firstfloor.org (one.firstfloor.org [65.21.254.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8C393932EA
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 22:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 009BD31D375
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 22:40:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.254.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787609542; cv=none; b=Kblo/j5kKMlgEw8ER32dEsH+sSoVa+VscSB50Kcq/gsbECGN7rIdVGJK9QDAxc7S3doZEpgw5HDNm9hg7NcvFLQKswfNDm8AEVUY1luTrWCXQzZN4pYI8JpB3Sp5N67O8Nh1C7xYKxEnyt6fNNjXx8Io/G+sOZCP25Yq2EekjAI=
+	t=1787611247; cv=none; b=MFoPVgpDCQbqizJoqFydcefG5Q6LcqQz28WAO3Ej0wjJSWowzunQgPZNypeWFCwLeifPtTC9lIV7/8YjmeWsukxSgPV9tyz93Fjgzaf7GbXXjgC+WNCEMRJ8yiHy2DvWotxNa6eKoBGnkMWm3MEdnapkV6SVLX89Y0jyF5w53mU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787609542; c=relaxed/simple;
-	bh=qjw214U5/ORQfcpCagzS0jixNF4x4Wxq19G7s8NmSg0=;
+	s=arc-20240116; t=1787611247; c=relaxed/simple;
+	bh=IqYDSJi6Ei4kt/OmzV+hG9b+/e5gE/qZWebsD7dGQt0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lMp20qsS1stc/WvJ9YRbr/OWWVLeBycEAO/7IDv9IdMw7VxkGIu3RjI1h51Wxl2nqbxt1IO6S0FT91HBiQvvH2PkxPjdGyGUIAA1dqiEpkYuUlU4LsBwq2Z26Xb5JFebobtKLZ+LUYRqu4T+eqRM4k+l+2Tpe0Q/NN+iTKyj3h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YDngvxsQ; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=U7Kz67uZLvzbAZsCahOp+YrpAJ9axhv5He38y9Mm9Gzc1MoVWWob5XY2Q1CTGcbOLbHvxXLx24tgvCKYSbBijzvlXhgk6USlNLCS5ioK6MJm6xM+qdLajXcgnwQBEqDp9AMGMumioyO2SyGAUErhQT5ffYjqzkBldUPTFZ+c8f0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=firstfloor.org; spf=pass smtp.mailfrom=firstfloor.org; dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b=C7VpEuGK; arc=none smtp.client-ip=65.21.254.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=firstfloor.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=firstfloor.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YDngvxsQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2589F1F000E9;
-	Mon, 24 Aug 2026 22:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787609541;
-	bh=GJEmLvDQx8cZ0hA8rzQGeZxU0UwLm8M/IUT0Qzpy4WE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=YDngvxsQJfjqfXrMTVitHT29fHb3R8hVx9XLZui96/ipVLdZcsTqmGdwsATMS/oWg
-	 xFY5Glfv1GatZOmSPm3FraH8h6Ld1MgQ1/2lGWLLKdQ9l9bBbGyq5udnUheNbCCBlL
-	 4gkgUMuOChkDqpz5KECaXQ8eZgkjiJuWFY9DDIoIPTWqbtAc66LN9jVj8oDby9XO4+
-	 ZsKsgsLl20aAZ5rNe1ro2XzwUOUakjfiP28KdppEvCjoI9LkvDp/vt91c79X11UNJL
-	 5KHxV/pEYZ7zbWdjKW7RDtsnmaXqQ2XbxxUTVmveYpG9G1CSES3j6BpgtcmASj3QYt
-	 fcALjlBbbblwQ==
-Date: Mon, 24 Aug 2026 15:12:19 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Kohei Enju <kohei@enjuk.jp>
-Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>
-Subject: Re: [PATCH v1 0/2] perf annotate: Fix source option behavior and
-Message-ID: <aozBwyQ85OjoPlMi@google.com>
-References: <20260818144149.101248-1-kohei@enjuk.jp>
+	dkim=pass (1024-bit key) header.d=firstfloor.org header.i=@firstfloor.org header.b="C7VpEuGK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firstfloor.org;
+	s=mail; t=1787611236;
+	bh=IqYDSJi6Ei4kt/OmzV+hG9b+/e5gE/qZWebsD7dGQt0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=C7VpEuGKFq+fpgYeOCzq0TFbMpEkN1ZQ2KsIy4TwLzhSyEMBN3Jcp6cWuQgnVAEOp
+	 2ibimKhmwcaShMPALvIaFtw5GiLsLP1qdczc4aWqP6dO9EsMGy47qk0DV0IcGpphqB
+	 ppeVXqF5v39uffrAa7/2kTb8D/iKqPn8zS0aueRQ=
+Received: by one.firstfloor.org (Postfix, from userid 503)
+	id 576115EA52; Tue, 25 Aug 2026 00:40:36 +0200 (CEST)
+Date: Mon, 24 Aug 2026 15:40:36 -0700
+From: Andi Kleen <andi@firstfloor.org>
+To: Ian Rogers <irogers@google.com>
+Cc: acme@kernel.org, ak@kernel.org, ak@linux.intel.com,
+	linux-perf-users@vger.kernel.org, namhyung@kernel.org
+Subject: Re: [PATCH v1 4/7] perf tools: Expose opt-in --hybrid-merge
+Message-ID: <aozIZLYvv78jX-3u@firstfloor.org>
+References: <20260813132519.4099508-1-andi@firstfloor.org>
+ <20260824063744.1533837-1-irogers@google.com>
+ <20260824063744.1533837-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260818144149.101248-1-kohei@enjuk.jp>
+In-Reply-To: <20260824063744.1533837-5-irogers@google.com>
 
-Hello,
+On Sun, Aug 23, 2026 at 11:37:41PM -0700, Ian Rogers wrote:
+> Add --hybrid-merge flag to explicitly trigger event merging
+> non-interactively
+> for both perf-top and perf-report.
 
-On Tue, Aug 18, 2026 at 02:40:11PM +0000, Kohei Enju wrote:
-> Source annotation has been disabled by default since e201757f7a0a ("perf
-> annotate: Fix source code annotate with objdump"), but the documentation
-> still describes the old default. Also, an explicit --source does not
-> currently override annotate.hide_src_code.
-> 
-> Update the documentation and make explicit --source/--no-source take
-> precedence over the configuration.
-> 
-> Kohei Enju (2):
->   perf config: Fix annotate.hide_src_code documentation
->   perf annotate: Honor explicit --source option
+Well it should be default on.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+I don't want another option I have to always specify like
+--no-children.
 
-Thanks,
-Namhyung
-
-> 
->  tools/perf/Documentation/perf-annotate.txt  | 4 ++--
->  tools/perf/Documentation/perf-config.txt    | 6 +++---
->  tools/perf/Documentation/perf-report.txt    | 4 ++--
->  tools/perf/Documentation/perf-top.txt       | 4 ++--
->  tools/perf/Documentation/perfconfig.example | 2 +-
->  tools/perf/builtin-annotate.c               | 7 +++++--
->  tools/perf/builtin-report.c                 | 7 +++++--
->  tools/perf/builtin-top.c                    | 7 +++++--
->  8 files changed, 25 insertions(+), 16 deletions(-)
-> 
-> -- 
-> 2.53.0
-> 
+-Andi
