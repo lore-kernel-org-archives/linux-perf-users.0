@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39A13CF211;
-	Mon, 24 Aug 2026 08:34:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FC33CF211;
+	Mon, 24 Aug 2026 08:34:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787560483; cv=none; b=ow5a0AScGPkuZiiook8HOmlxCqn0JMGhrfoMRtn8fDzpUVx6tieAbQBdPythZc+MqgHkXibe30p/w1SA82NT2bbGkbnwvipLBd2vOR3UIPsmbNktS8pmWasEf/hMHiicI7pG6jdM2zxGi0lYs1ukgICMu4/nwgTDKfpE56DzMko=
+	t=1787560488; cv=none; b=kiRtfytAuVWO3ZjcXUN1rWxMeUKpC35CxBCIuVofE51LBXE9XdtPquAHMlI/tvpYeown829yJipJcI3rDqc1YA9/QK7xy3YfQ0tejz1YjuZurm6wkexZA88OK/XIVQsHdZM8Qu7/qQAtpw+7oBVEtCMmLWwgYTZfjSXZ5+siJBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787560483; c=relaxed/simple;
-	bh=VfW7PvtvPvI+U4KGhAdfHFi9quVPDdJyE9fvh0ueUnE=;
+	s=arc-20240116; t=1787560488; c=relaxed/simple;
+	bh=nC74cNfjP2+EsKrsD4m63iGzVE8gu+HzDH11FE4a1d8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ey/Wo8ETNQNCWnoENpf9pwSHryBrpT5je890mUADtkteTnj0VrY0kGpnNWBexmk+jQ8gSLQezBjADBd4Gdbe1ldPCGxM/U0HYN3b/M7nODNERpX5JzGM0OF8AnSZvjViDDElq1VSOn49NjhGVWgSBubV5IoHS1QLv3aB/J0ZAp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ir6QWuBw; arc=none smtp.client-ip=192.198.163.11
+	 MIME-Version; b=b1jY8a6GE82xO4B1FBKGWjbn4ik+WBBXyeDwlJRqLEdO068LqTaybjk55023Ar8s8E/HGlnTlLRnEnC4F+V2t21e3MrEFr7LmpkgATlEVARMDlfrN8VZBhquYW4itA9ZIH5SaN+xfoI3+zd3viQ502xrYGn4ZpTh1LX6Aw5o/Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X3AmFWd0; arc=none smtp.client-ip=192.198.163.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ir6QWuBw"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X3AmFWd0"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787560482; x=1819096482;
+  t=1787560486; x=1819096486;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=VfW7PvtvPvI+U4KGhAdfHFi9quVPDdJyE9fvh0ueUnE=;
-  b=ir6QWuBwuMVvfWx+vp1W/x6yk0Q3tKdrV6/6T1x4G93RCcdKqKY1/K+j
-   gaiSTim8taBXltX6EIkWdcz8Q+g/N3P7YlWKkKMf5STkWTsJBbppvMlCx
-   LIF/qdH0OUd1Jx8vkYGLU/urs//L29b6vLkAqesVw1q8rCY6OxGmXbEaJ
-   GxsV83Df8yCWdvn7k/tVH5DfWisN8S0RQXnizg/ncpaDD2a2saHTgUzVH
-   f7WmYx7uaVhFiyKRH1d3A9FzK5TfWBJTR21QIHPHMuWt19K8LQvJ20zDX
-   xHB1HEP9SCuMGDoU6ChQ2PKiixGFpUMCebnfErS0z0v5j0DjNjLSceRDH
-   w==;
-X-CSE-ConnectionGUID: igc3LiaKRu6QQyeZLZhvwA==
-X-CSE-MsgGUID: RgjC+2G6TECVCdadGgVShg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11884"; a="98598743"
+  bh=nC74cNfjP2+EsKrsD4m63iGzVE8gu+HzDH11FE4a1d8=;
+  b=X3AmFWd05SUOJd1ZCTRBcfIguBho8X8zJXAYiRwQCNqUQHeRctzin/UJ
+   TX0HnTHBdPAKzJRqS21HGirDAaTRCfZr9z/Y3qmNkeRqBDBwR6M56WxOQ
+   PX3KJ93fsGiv9kez88kCRFMZuxw7MxQtuIJJJR2lkPuMjaWzNGI5xlefI
+   mYQXEi48H5vR+4rJb4gOzYbD26SCtQNBSTcOshzlDOOLbWTyjfoxowEnq
+   bL7fF/2fX8agBlib/0GxpufJaoqW8HPSoxN0nLcY54+ryDx++g0VPRR4j
+   NzRJhXjaw69wAhZVFGhRTobGIlITjf9zrrsJXeihJEsfNIaj4FD5m8n2A
+   Q==;
+X-CSE-ConnectionGUID: fmr4nBjTRIaRGV0cyVoSbw==
+X-CSE-MsgGUID: XfMOXgt4RjCKixG6v/lWPg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11884"; a="98598758"
 X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
-   d="scan'208";a="98598743"
+   d="scan'208";a="98598758"
 Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 01:34:41 -0700
-X-CSE-ConnectionGUID: 8ouAjhAZTyCsXVbj5eACrA==
-X-CSE-MsgGUID: tXZb/JNCQ9isT+LyRqjdGw==
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 01:34:46 -0700
+X-CSE-ConnectionGUID: 0VMcyBvVQNmbAEh7jWIG/Q==
+X-CSE-MsgGUID: FxxcdYJlQAKAi1clHpCrRw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,240,1779174000"; 
-   d="scan'208";a="264326131"
+   d="scan'208";a="264326180"
 Received: from spr.sh.intel.com ([10.112.229.196])
-  by fmviesa008.fm.intel.com with ESMTP; 24 Aug 2026 01:34:36 -0700
+  by fmviesa008.fm.intel.com with ESMTP; 24 Aug 2026 01:34:41 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -65,11 +65,10 @@ Cc: Mark Rutland <mark.rutland@arm.com>,
 	Falcon Thomas <thomas.falcon@intel.com>,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Xudong Hao <xudong.hao@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [RESEND Patch v10 06/23] x86/fpu/xstate: Add xsaves_nmi() helper
-Date: Mon, 24 Aug 2026 16:27:14 +0800
-Message-Id: <20260824082731.1013973-7-dapeng1.mi@linux.intel.com>
+Subject: [RESEND Patch v10 07/23] x86/fpu: Add update_fpu_state_and_flag() helper
+Date: Mon, 24 Aug 2026 16:27:15 +0800
+Message-Id: <20260824082731.1013973-8-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260824082731.1013973-1-dapeng1.mi@linux.intel.com>
 References: <20260824082731.1013973-1-dapeng1.mi@linux.intel.com>
@@ -81,71 +80,118 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Kan Liang <kan.liang@linux.intel.com>
+Add update_fpu_state_and_flag() as suggested by Peter and Dave.
+The helper saves user FPU state and then sets TIF_NEED_FPU_LOAD,
+ensuring the task FPU state is saved whenever the flag is set.
 
-Add xsaves_nmi() to save supported xsave states in NMI handler.
+Subsequent patches will use this guarantee in NMI context by checking
+TIF_NEED_FPU_LOAD before retrieving user FPU state from the saved
+task FPU state.
 
-This function is similar to xsaves(), but should only be called within
-the NMI handler. This function returns the actual register contents at
-the moment the NMI occurs.
+Also add barrier() in the host/guest FPU state switch path and move
+clearing of fpu->__task_fpstate after switching back to host state. So
+fpu->__task_fpstate is always observed as host FPU state when non-NULL.
 
-Currently the perf subsystem is the sole user of this helper. It uses
-this function to snapshot SIMD (XMM/YMM/ZMM) and APX eGPRs registers
-which would be added in subsequent patches.
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Link: https://lore.kernel.org/all/20251204154721.GB2619703@noisy.programming.kicks-ass.net/
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- arch/x86/include/asm/fpu/xstate.h |  1 +
- arch/x86/kernel/fpu/xstate.c      | 23 +++++++++++++++++++++++
- 2 files changed, 24 insertions(+)
+ arch/x86/include/asm/fpu/sched.h |  5 +++--
+ arch/x86/kernel/fpu/core.c       | 33 ++++++++++++++++++++++++++------
+ 2 files changed, 30 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/include/asm/fpu/xstate.h b/arch/x86/include/asm/fpu/xstate.h
-index 7a7dc9d56027..38fa8ff26559 100644
---- a/arch/x86/include/asm/fpu/xstate.h
-+++ b/arch/x86/include/asm/fpu/xstate.h
-@@ -110,6 +110,7 @@ int xfeature_size(int xfeature_nr);
+diff --git a/arch/x86/include/asm/fpu/sched.h b/arch/x86/include/asm/fpu/sched.h
+index 89004f4ca208..dcb2fa5f06d6 100644
+--- a/arch/x86/include/asm/fpu/sched.h
++++ b/arch/x86/include/asm/fpu/sched.h
+@@ -10,6 +10,8 @@
+ #include <asm/trace/fpu.h>
  
- void xsaves(struct xregs_state *xsave, u64 mask);
- void xrstors(struct xregs_state *xsave, u64 mask);
-+void xsaves_nmi(struct xregs_state *xsave, u64 mask);
+ extern void save_fpregs_to_fpstate(struct fpu *fpu);
++extern void update_fpu_state_and_flag(struct fpu *fpu,
++				      struct task_struct *task);
+ extern void fpu__drop(struct task_struct *tsk);
+ extern int  fpu_clone(struct task_struct *dst, u64 clone_flags, bool minimal,
+ 		      unsigned long shstk_addr);
+@@ -36,8 +38,7 @@ static inline void switch_fpu(struct task_struct *old, int cpu)
+ 	    !(old->flags & (PF_KTHREAD | PF_USER_WORKER))) {
+ 		struct fpu *old_fpu = x86_task_fpu(old);
  
- int xfd_enable_feature(u64 xfd_err);
- 
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index a7b6524a9dea..d39c01546dee 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -1474,6 +1474,29 @@ void xrstors(struct xregs_state *xstate, u64 mask)
- 	WARN_ON_ONCE(err);
+-		set_tsk_thread_flag(old, TIF_NEED_FPU_LOAD);
+-		save_fpregs_to_fpstate(old_fpu);
++		update_fpu_state_and_flag(old_fpu, old);
+ 		/*
+ 		 * The save operation preserved register state, so the
+ 		 * fpu_fpregs_owner_ctx is still @old_fpu. Store the
+diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
+index 584fb9913be4..9e029b2f8937 100644
+--- a/arch/x86/kernel/fpu/core.c
++++ b/arch/x86/kernel/fpu/core.c
+@@ -213,6 +213,19 @@ void restore_fpregs_from_fpstate(struct fpstate *fpstate, u64 mask)
+ 	}
  }
  
-+/**
-+ * xsaves_nmi - Save selected components to a kernel xstate buffer in NMI
-+ * @xstate:	Pointer to the buffer
-+ * @mask:	Feature mask to select the components to save
++/*
++ * Save the FPU register state in fpu->fpstate->regs and set
++ * TIF_NEED_FPU_LOAD subsequently.
 + *
-+ * This function is similar to xsaves(), but should only be called within
-+ * the NMI handler. This function returns the actual register contents at
-+ * the moment the NMI occurs.
-+ *
-+ * Currently, the perf subsystem is the sole user of this helper. It uses
-+ * the function to snapshot SIMD (XMM/YMM/ZMM) and APX eGPRs registers.
++ * Must be called with fpregs_lock() held, ensuring flag
++ * TIF_NEED_FPU_LOAD is set last.
 + */
-+void xsaves_nmi(struct xregs_state *xstate, u64 mask)
++void update_fpu_state_and_flag(struct fpu *fpu, struct task_struct *task)
 +{
-+	int err;
-+
-+	if (!in_nmi())
-+		return;
-+
-+	XSTATE_OP(XSAVES, xstate, (u32)mask, (u32)(mask >> 32), err);
-+	WARN_ON_ONCE(err);
++	save_fpregs_to_fpstate(fpu);
++	set_tsk_thread_flag(task, TIF_NEED_FPU_LOAD);
 +}
 +
- #if IS_ENABLED(CONFIG_KVM)
- void fpstate_clear_xstate_component(struct fpstate *fpstate, unsigned int xfeature)
+ void fpu_reset_from_exception_fixup(void)
  {
+ 	restore_fpregs_from_fpstate(&init_fpstate, XFEATURE_MASK_FPSTATE);
+@@ -383,13 +396,13 @@ int fpu_swap_kvm_fpstate(struct fpu_guest *guest_fpu, bool enter_guest)
+ 
+ 	/* Swap fpstate */
+ 	if (enter_guest) {
+-		fpu->__task_fpstate = cur_fps;
++		WRITE_ONCE(fpu->__task_fpstate, cur_fps);
++		barrier();
+ 		fpu->fpstate = guest_fps;
+ 		guest_fps->in_use = true;
+ 	} else {
+ 		guest_fps->in_use = false;
+ 		fpu->fpstate = fpu->__task_fpstate;
+-		fpu->__task_fpstate = NULL;
+ 	}
+ 
+ 	cur_fps = fpu->fpstate;
+@@ -406,6 +419,16 @@ int fpu_swap_kvm_fpstate(struct fpu_guest *guest_fpu, bool enter_guest)
+ 		xfd_update_state(cur_fps);
+ 	}
+ 
++	/*
++	 * Clear fpu->__task_fpstate after switching back to host state.
++	 * A non-NULL __task_fpstate means guest state is still resident in
++	 * hardware; reset it only once host state has been restored.
++	 */
++	if (!enter_guest) {
++		barrier();
++		WRITE_ONCE(fpu->__task_fpstate, NULL);
++	}
++
+ 	fpregs_mark_activate();
+ 	fpregs_unlock();
+ 	return 0;
+@@ -481,10 +504,8 @@ void kernel_fpu_begin_mask(unsigned int kfpu_mask)
+ 	this_cpu_write(kernel_fpu_allowed, false);
+ 
+ 	if (!(current->flags & (PF_KTHREAD | PF_USER_WORKER)) &&
+-	    !test_thread_flag(TIF_NEED_FPU_LOAD)) {
+-		set_thread_flag(TIF_NEED_FPU_LOAD);
+-		save_fpregs_to_fpstate(x86_task_fpu(current));
+-	}
++	    !test_thread_flag(TIF_NEED_FPU_LOAD))
++		update_fpu_state_and_flag(x86_task_fpu(current), current);
+ 	__cpu_invalidate_fpregs_state();
+ 
+ 	/* Put sane initial values into the control registers. */
 -- 
 2.34.1
 
