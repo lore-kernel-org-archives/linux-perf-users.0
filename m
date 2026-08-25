@@ -1,144 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB913D6CA7
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Aug 2026 08:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B2451E5B68;
+	Tue, 25 Aug 2026 09:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787644861; cv=none; b=jJhCTDUzxEo/c1N2dn4gkNfSTr2OnLQ5iN32hd/dVMdF2m4QtgOnuiKJKeHtXgCwb0ZgiU3P9/dClUyTQiHSLDFxJn9PQZaIxgOHyuknRZvI5dWowGeHPoS5WBxQQS4Y7kBroYqjR7dJS3jCzHvqnTsECN5Xfmx54GQieBwuggw=
+	t=1787651289; cv=none; b=PGupD7OoJPHkdY3KDSBh9w+atJK8tzkHY04E128FQjN62fQs1pwAd1RcygNEnYEFXPrbZ2VxpI0+gbKg6ZOICS4wKm3dLwFwddT1oys6TZkgmLuBhYoTGBARcri+cz/DIlNorZmiop5mdVrXp2C0O6aLipMMpty9yJbwN0VDnZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787644861; c=relaxed/simple;
-	bh=Aq9IvkhOWE7EE9Hfa5soirbHNBPhBbUZt/s0TVsyJ8Y=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=mFqkocpOZgyBJq2Wo0DiVLiD7m17aU0bCsv2LlfENsCDfYBb1u23sVlwgqH2j2pOz4qENRfwW4mfmHr+8nGqzmAK81z2f4noBPGFe39MIr7KvFvQ6A0rEe4VW7QeD6x8+izjhWZ56WSJ9LDTBDmbOk1Bj1u2yEd4Pcv9psI256w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yj77MFCI; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yj77MFCI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F1431F00A3A;
-	Tue, 25 Aug 2026 08:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787644859;
-	bh=mc3TcDAKgAhNc6f0OCUB/zhdSxyI0VIFlOe+MniYuiY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Yj77MFCIRiAxMKuYJuHkP3bRiikk4Uv+DJRSkQ0onfeTC2qLhWtD4kwWXAp/RCUq3
-	 RK2iAAdjmU+JaICTfUUOyXPGWq1i/WeYVEzMy5UtjL1SQ5EeiGfbjxvXdD+cZfkVxA
-	 ihuqj0J2clxRRT+MJuzGlFxGh3cHcy8fFT6g0fkiWpP9QepZ0jTg2m7PIA61oOZtc+
-	 Fxm8H+pg0oiSrm5jb9w4ZcV4ZHLKXeboSxd4qF/9Ga66vxF5q0GK5BTTzk7jNSJbmw
-	 ijnVJ/f15/UcCXw/L12YdaLQqEURSpjYzNo82QtZu2KKjA20hvrKAGrP6y/ePzgrbh
-	 xGRJgOcbeoD6w==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf: riscv: Clear PMU pending interrupt through vendor
- helper
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Pengpeng Hou" <pengpeng@iscas.ac.cn>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260825151001.2-andes-pmu-clear-caplitmus-rv@iscas.ac.cn>
-References: <20260825151001.2-andes-pmu-clear-caplitmus-rv@iscas.ac.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 25 Aug 2026 08:00:58 +0000
-Message-Id: <20260825080059.5F1431F00A3A@smtp.kernel.org>
+	s=arc-20240116; t=1787651289; c=relaxed/simple;
+	bh=rbLlHdwPywiQYcMMeuEKrlt0zCR9S9FdyCafPbmXoGk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N8AhpoFHOjlQh6P9P20mGhVZL6n6zntN86KQ1Uq4qbYHw7wls/LtO3xaGCo3JPKv4Q4YiEeBSxou/i7TAd9B8scw7EIIzPYMjKmLEiVexxQU9kCDNv/Xl+N4RQ7Sn6W3uQa1HhprWeStDfKMD0JB+QrLB0aeRI3Vbd7BHrROiA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 0d729088a06a11f19a56ed5b684f684d-20260825
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
+	HR_FROM_NAME, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
+	SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS
+	DMARC_NOPASS, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS
+	GTI_RG_INFO, GTI_C_BU, AMN_GOOD, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.19,REQID:d6b01ddf-0fbf-483d-802c-104402143017,IP:15,
+	URL:0,TC:0,Content:-5,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:35
+X-CID-INFO: VERSION:1.3.19,REQID:d6b01ddf-0fbf-483d-802c-104402143017,IP:15,UR
+	L:0,TC:0,Content:-5,EDM:25,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:35
+X-CID-META: VersionHash:7db8b62,CLOUDID:08faf8d06a1a42dd955d54dcb5d7ccb1,BulkI
+	D:260825174801OEBNFIKJ,BulkQuantity:0,SF:17|19|38|66|78|102|127|850|865|89
+	8,TC:nil,Content:0|15|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil
+	,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 0d729088a06a11f19a56ed5b684f684d-20260825
+X-User: wangyan01@kylinos.cn
+Received: from localhost.localdomain [(116.128.244.171)] by mailgw.kylinos.cn
+	(envelope-from <wangyan01@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1297033819; Tue, 25 Aug 2026 17:47:57 +0800
+From: Wang Yan <wangyan01@kylinos.cn>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	james.clark@linaro.org,
+	atrajeev@linux.ibm.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Wang Yan <wangyan01@kylinos.cn>
+Subject: [PATCH] perf powerpc-vpadtl: Fix raw_size of DTL samples
+Date: Tue, 25 Aug 2026 17:47:33 +0800
+Message-Id: <20260825094733.1031566-1-wangyan01@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
+In powerpc_vpadtl_sample(), raw_data of the synthetic sample points to a
+struct powerpc_vpadtl_entry (48 bytes), but raw_size is set to
+sizeof(record).  record is a struct powerpc_vpadtl_entry pointer, so
+sizeof(record) is the size of the pointer (8 bytes on 64-bit) rather
+than the size of the record itself.
 
-Pre-existing issues:
-- [High] The global `riscv_pmu_irq_mask` is declared as a 32-bit `unsigned =
-int` but initialized with a 64-bit mask, causing dangerous truncation and s=
-ign-extension on RV64 systems.
-- [High] A spurious PMU interrupt triggers an early return that leaves the =
-hardware performance counters permanently stopped.
---
+As a result, consumers that bound their access to raw_data by raw_size
+only see or copy the first 8 bytes of each DTL entry instead of the full
+record.
 
---- Patch [1]: [PATCH] perf: riscv: Clear PMU pending interrupt through ven=
-dor helper ---
-commit 58e4c92109db4c76ba1174701bb0aa79f0e00c65
-Author: Pengpeng Hou <pengpeng@iscas.ac.cn>
+Use sizeof(*record) so that raw_size reflects the actual length of the
+raw data.
 
-perf: riscv: Clear PMU pending interrupt through vendor helper
+Fixes: 8644834a482a ("perf powerpc: Process the DTL entries in queue and deliver samples")
+Signed-off-by: Wang Yan <wangyan01@kylinos.cn>
+---
+ tools/perf/util/powerpc-vpadtl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-When no hardware counters are in use, the PMU overflow handler clears the
-pending interrupt directly in CSR_SIP. This patch modifies the early return
-to use ALT_SBI_PMU_OVF_CLEAR_PENDING instead to avoid an out-of-width
-shift and the wrong CSR on Andes PMU.
+diff --git a/tools/perf/util/powerpc-vpadtl.c b/tools/perf/util/powerpc-vpadtl.c
+index 710f3093f3f9..af6783cfdb53 100644
+--- a/tools/perf/util/powerpc-vpadtl.c
++++ b/tools/perf/util/powerpc-vpadtl.c
+@@ -196,7 +196,7 @@ static int powerpc_vpadtl_sample(struct powerpc_vpadtl_entry *record,
+ 	sample.cpumode = PERF_RECORD_MISC_KERNEL;
+ 	sample.time = save;
+ 	sample.raw_data = record;
+-	sample.raw_size = sizeof(record);
++	sample.raw_size = sizeof(*record);
+ 	event.sample.header.type = PERF_RECORD_SAMPLE;
+ 	event.sample.header.misc = sample.cpumode;
+ 	event.sample.header.size = sizeof(struct perf_event_header);
+-- 
+2.25.1
 
-> diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
-> index 50220f7b46d9b..ff95f5f136030 100644
-> --- a/drivers/perf/riscv_pmu_sbi.c
-> +++ b/drivers/perf/riscv_pmu_sbi.c
-> @@ -1058,7 +1058,7 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, voi=
-d *dev)
->  	/* Firmware counter don't support overflow yet */
->  	fidx =3D find_first_bit(cpu_hw_evt->used_hw_ctrs, RISCV_MAX_COUNTERS);
->  	if (fidx =3D=3D RISCV_MAX_COUNTERS) {
-> -		csr_clear(CSR_SIP, BIT(riscv_pmu_irq_num));
-> +		ALT_SBI_PMU_OVF_CLEAR_PENDING(riscv_pmu_irq_mask);
-
-[Severity: High]
-This is a pre-existing issue, but does using riscv_pmu_irq_mask here risk
-truncation or sign-extension on RV64 systems?
-
-The global riscv_pmu_irq_mask is declared as a 32-bit unsigned int:
-
-drivers/perf/riscv_pmu_sbi.c:
-    static unsigned int riscv_pmu_irq_mask;
-
-But it is initialized with a 64-bit mask in pmu_sbi_setup_irqs():
-
-    riscv_pmu_irq_mask =3D BIT(riscv_pmu_irq_num % BITS_PER_LONG);
-
-On RV64, if the PMU IRQ number results in (num % 64) >=3D 32, the assigned
-value is truncated to 0, which would cause ALT_SBI_PMU_OVF_CLEAR_PENDING to
-clear nothing and potentially lead to an unrecoverable interrupt storm.
-
-Additionally, if (num % 64) =3D=3D 31, the 32-bit value 0x80000000 could be
-sign-extended to 64-bits by the compiler when placed in a general-purpose
-register for the csrc inline assembly, unintentionally clearing bits 31-63
-of the interrupt pending CSR.
-
-Would it be better to change the type of riscv_pmu_irq_mask to unsigned
-long?
-
-[Severity: High]
-This isn't a bug introduced by this patch, but does the early return for
-spurious interrupts leave the hardware performance counters permanently
-stopped?
-
-Later in pmu_sbi_ovf_handler(), all active PMU hardware counters are
-stopped before reading the overflow status:
-
-drivers/perf/riscv_pmu_sbi.c:pmu_sbi_ovf_handler() {
-    ...
-    pmu =3D to_riscv_pmu(event->pmu);
-    pmu_sbi_stop_hw_ctrs(pmu);
-
-    if (sbi_pmu_snapshot_available())
-        overflow =3D sdata->ctr_overflow_mask;
-    else
-        ALT_SBI_PMU_OVERFLOW(overflow);
-    ...
-    /* No overflow bit is set */
-    if (!overflow)
-        return IRQ_NONE;
-    ...
-}
-
-If a spurious interrupt occurs or overflow evaluates to 0, this early exit
-returns IRQ_NONE and bypasses the call to pmu_sbi_start_overflow_mask()
-at the end of the function.
-
-Could this silently and permanently break performance sampling on that CPU
-until manually restarted by userspace?
-
->  		return IRQ_NONE;
->  	}
->
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260825151001.2-an=
-des-pmu-clear-caplitmus-rv@iscas.ac.cn?part=3D1
