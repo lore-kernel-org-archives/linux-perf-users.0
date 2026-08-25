@@ -1,122 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8125121257F
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Aug 2026 01:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787621955; cv=none; b=okgDJbHwxdwHtXWOKqZZ4wPwDv9C45zE4dXyW141mfdDfi2nns/SYid0HZbrxW5luXmUCFHpuKbDnW+1SL0T9xvJmb0EJws2qnzuEaXqyJGpR8auIkTG8yLTy/8a3KrNW0YMRUZ1Yib/ADpUWA4IBV1oYVS++O47t0JxwuqDbcM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787621955; c=relaxed/simple;
-	bh=HppttFZUnV05ZjcfDIysacaMYtZ4JAJRmsjJmcj4SPM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=luzI6Mf9o8w6KZaVplpJgYRVq8nnuVtwUhsXDnV5SYh1vk5xrDW1L3gB0SKk//sPWn6TqrZBAPUSItVRx5hdOQ17PHdy+i6mxVcbCmBe6ts37IeP+Nd2Lr7m3hpNfPjeV7NlWB0to9V48uTG2Y4zLQZOzjXF0swL63KmPNN0UVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jjaVSo6P; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C91949363A
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Aug 2026 03:33:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.160.180
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787628796; cv=pass; b=M+LhhGPJRO+72BCxviGAtrtB25IXgoqhZZkcaaY3qLiP/x+MPYIx+3fKk0S1PqLmYtsE3U5+Bt9AFe29JFhwbO6xirqPbiu6tGy0jK3xF6n6BRjNXSG2khRzyWuo1VSQOFbQfTct7GKvbhXeEPjTIbwlj8Q2xCSn1QpkWhL+lQQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787628796; c=relaxed/simple;
+	bh=w2pHCeTqaGuXfYVAm3ByqERScBeaHxgRUGJ/gNSHm8Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MWzfObgZoiLw7arGk9V393O8HROEoHAbmWYmNxpQc1M01KVwn2EKTOYC7bxHQhe3DJW2mPWRzAafsywoFa4gVlA2aWQjxJJZ/Cv7WHDhLOzKYyu1BIwKLD6h8cCHZmBWo1eTII2onfWQnesa42BQ2AnSMe1ysDXDq+rpSmvlQ60=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fZZL3BjU; arc=pass smtp.client-ip=209.85.160.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jjaVSo6P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787621951; x=1819157951;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=HppttFZUnV05ZjcfDIysacaMYtZ4JAJRmsjJmcj4SPM=;
-  b=jjaVSo6PpIW43ZmzSd1NEg61mxFKojfdV8Xz5n8M91YAPorHSF1/oJDn
-   pJWhQkkcmCBAyH4fG3g2jyvfbgUXIZnyr8QuN/QRhTQbmyM0Sa8SDdijW
-   DixKV4MIjHIgQgGpwid9INCY0yJ+0hub3W9monkFgOX6A/Q8W4CgSmNcv
-   LrSLBmIjmnZfi998oMGFKjEn9cepRXf9ZRexy2FBKsZ9MmZpL1sds26nj
-   WGmkbpF6G+Kk6+z4SVFm1kc6rwY4H6JLTn/Bj4DqhSuoiBJIrE0iiNSG6
-   qa6LF6KES3eKyJ6WAdYQPyVoen7SkuctZMDv2tV+KoIcVWUe30W6n5T+Z
-   w==;
-X-CSE-ConnectionGUID: aOS5MhjVTJSvOq9w3M6wUg==
-X-CSE-MsgGUID: kNlG9B80TLG8gluSbTaIig==
-X-IronPort-AV: E=McAfee;i="6800,10657,11885"; a="88099434"
-X-IronPort-AV: E=Sophos;i="6.25,241,1779174000"; 
-   d="scan'208";a="88099434"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 18:39:11 -0700
-X-CSE-ConnectionGUID: QKIjbG4cSjeDevp3O+PJXw==
-X-CSE-MsgGUID: aIctfTmCQ3q7Hy1E1rgWVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,241,1779174000"; 
-   d="scan'208";a="297064615"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 18:39:10 -0700
-Message-ID: <be04bda2-91d4-4af4-8d54-982480eea814@linux.intel.com>
-Date: Tue, 25 Aug 2026 09:39:08 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fZZL3BjU"
+Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-51c10ed63c0so95151cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 20:33:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1787628794; cv=none;
+        d=google.com; s=arc-20260327;
+        b=pW7jvQDJAnJl0NWZ0jMRxLsMS7Zo31UK6HP1ZUUHywqxd3HsocadHDgTswoPWfNrur
+         VmsSTbToVHqYyLjCUBaI3FtM0zNodvBMMwTpQYXwx+d3rlfqSmhFBPRVpOZxhpU37T2Q
+         Rfs8jDVkXWjvC8edgGgxV4mGEvAuzyB/SCqRY2qeU66V6z6q9WT7GxF6n68596FRxBOG
+         wDvIgRYjC7JS2YjD7KzXG5M+x8l/lGwT5fgV02hkGRfo+qCtQulLSgbr2H7xpPtUFrvF
+         d9In9BCGso5BAujoX9btvOMGrIJ9CKrgjR4f8gAIsVm2KIUbs7BIYus2cHx6crjOQeoJ
+         /P6w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=w2pHCeTqaGuXfYVAm3ByqERScBeaHxgRUGJ/gNSHm8Y=;
+        fh=7g4uZefkloFoGboAPLzehKJYqd0QdesIueTBkYN+Kdc=;
+        b=bT46YjbT386K1wmflnuHJMJSqlBDFntEgKiD39hNRyF1wEY9qlU3g27rzoDTOMEGmf
+         vPFQGUpGMkq5b1edo/HVsObrfOAxetlVqUklsj+mtf7H2CO5vkz6JvN54MWfg0h+c50n
+         cxdmXrGaRUp4SPHHKJV6O5ZVDW451OYMiSGM65ETc90vT5xJNTGs0rG/kL4Ai4wn0wHJ
+         HmgOkIuj3nSB5bnm75YIND9jh35s8wZi9Cy7Jy9LnnpAXv+x9d82wwfuIqHXUaWLMnOf
+         X2DTyDSOLSnAPRsB3tJNCFYKuB+cQMtu1MYvaDpZDq5Xm/Fokiezot027R4h8zibBgTw
+         8oSw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1787628794; x=1788233594; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=w2pHCeTqaGuXfYVAm3ByqERScBeaHxgRUGJ/gNSHm8Y=;
+        b=fZZL3BjUto0xc47HYDYiPEROPdWOlqt7Zbx6MFFY3UOUY5IGTHsE4s+qdBpMzoV1EY
+         PLbbrDbDnoN6g/MhPhV6RCQxnOT+XKZXkHLWyW/PmbJdMirkRce2Ebzk/ySFOOcSj+kw
+         VuFXIAtU6U0Vvn0ds7tMZe/iIMY+P/QtFbRCPWHLpczf2CSGYyDPKjlvbQGQEDNFoG8p
+         sHAzsGkTp6TU55WFI0JHFky7FZtWmPNrNpzezUqMA5Py8abGRNWb4hr9znq8wbwoMkhK
+         w9NfEL9WP/S5Ligzfs/h4nv3qwhwVhFosBrV2Ry+uuprEhsIv++sqnBtZpss/VfCRpK4
+         YYAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787628794; x=1788233594;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=w2pHCeTqaGuXfYVAm3ByqERScBeaHxgRUGJ/gNSHm8Y=;
+        b=sn5YQEN9MI1RWys7JdYQLOs5Z+eJfOr4/NC2/fz+UenrQUXv3qVQ3VTyXDhdkumJO/
+         Rzx6kHvPYRInKHhZmbDIbClaxz3TRdTACCzIOfVpNGstR4bFUkJiIgKwmwfijTcMtbXk
+         nD4FSW6qeTDZRLerNfzWRctwbDcbPFPCWEtD5bOSMVuoe9Jh24dQhrKO/bYxov6T7tPl
+         M44j05XQ13Wi90kBwZM5u2Da7q6lPFyd0Y1Uv55tNNkRMzaedUAbDUsH3VfV7OFgMB97
+         MMsE/3vOQw6ayzixf0kVZoNtjOfxiQOkphjsjoJ4fhhVg+9xE+Wv8npIgogrDhmtNrKM
+         6+tQ==
+X-Forwarded-Encrypted: i=1; AHgh+RqMSBUcVpUn5nKvBYwEAp/0CF3BdSFSjQ0XhZkDIJraqkzHMW+erTb8mkHH6B+QyPP0mz+p8tM/8rIPI+/jzqbg@vger.kernel.org
+X-Gm-Message-State: AFuF++kG/DGYW3WD9dKwl5xxXLMiSQ0PbBqP6hjcpeuxvHWlfmqteTJ/
+	YUwEmypHCCxngRWVctgkONjHGa99z1lyjNky+XGb2TCfwxLpxzvSZ4lCWUwwLeSwD5/x0yWrwX/
+	jVM+h/Xhy8M1OwwbuQf8uKsiTKNDZ8wNFVjziz6Qm
+X-Gm-Gg: AR+sD13EbjuKZ2RwfGVF9DiKnL3IA4Eezwpzp6tsh4ktDbBSh+CyoLJfSALxJ8oau6Z
+	rO2EnJj/L5H+Ag4AlskYhHBrH7enpHOnqEkpROgFtJwDbGpsQN4bHKrsxIUdI773rAGtZVr5xh2
+	x49EGvzOchEOxix4BQbayz2W6A1nTH6UTWcs8fW808DLMcQVab9vY5TrGc8fHNSstHAPL7JwQvu
+	7q+ex+9g9b/ALpdksgF2FP6udI3ZVr0S0uESZhsvMW7cEdtu0q8GBdw1cOHa3kCCYbNQMvWyzkL
+	y6C596mihR5IwKGtkf4wDWXnUhbfvFDagS6PINi6BBZnIw==
+X-Received: by 2002:a05:622a:1ccf:b0:52d:7a3c:8396 with SMTP id
+ d75a77b69052e-52e304f36ffmr6832601cf.2.1787628793760; Mon, 24 Aug 2026
+ 20:33:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND Patch v10 23/23] perf/x86/intel: Add sanity check for
- PEBS record/fragment size
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260824082731.1013973-1-dapeng1.mi@linux.intel.com>
- <20260824082731.1013973-24-dapeng1.mi@linux.intel.com>
- <20260824090815.AD6A41F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260824090815.AD6A41F000E9@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20260813132519.4099508-1-andi@firstfloor.org> <20260824063744.1533837-1-irogers@google.com>
+ <20260824063744.1533837-5-irogers@google.com> <aozIZLYvv78jX-3u@firstfloor.org>
+In-Reply-To: <aozIZLYvv78jX-3u@firstfloor.org>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 24 Aug 2026 20:33:02 -0700
+X-Gm-Features: AcwNN1VMBXrFwc14fddubko2V1ctoDYhLX9jCDO6stAdtQ0a1XjNvpj-pHgXdsI
+Message-ID: <CAP-5=fU25BLS9bpShaY=akjK1nURV0PXw54KNqefYhKUvi6DSg@mail.gmail.com>
+Subject: Re: [PATCH v1 4/7] perf tools: Expose opt-in --hybrid-merge
+To: Andi Kleen <andi@firstfloor.org>
+Cc: acme@kernel.org, ak@kernel.org, ak@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, namhyung@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Mon, Aug 24, 2026 at 3:40=E2=80=AFPM Andi Kleen <andi@firstfloor.org> wr=
+ote:
+>
+> On Sun, Aug 23, 2026 at 11:37:41PM -0700, Ian Rogers wrote:
+> > Add --hybrid-merge flag to explicitly trigger event merging
+> > non-interactively
+> > for both perf-top and perf-report.
+>
+> Well it should be default on.
+>
+> I don't want another option I have to always specify like
+> --no-children.
 
-On 8/24/2026 5:08 PM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
->
-> Pre-existing issues:
-> - [High] setup_arch_pebs_sample_data() parses PEBS fragment payloads based on the presence of bit flags without verifying that the implied payload size fits within header->size or the buffer boundary.
-> --
->
-> --- Patch [23]: [RESEND Patch v10 23/23] perf/x86/intel: Add sanity check for PEBS record/fragment size ---
-> commit 573a2a9becb54c34e2eef68662afc34b55c514f9
-> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
->
-> perf/x86/intel: Add sanity check for PEBS record/fragment size
->
-> This patch adds sanity checks for corrupted PEBS records or fragment
-> sizes to prevent potential infinite loops. If a corrupted fragment is
-> detected, the entire PEBS record and all subsequent records are dropped.
->
->> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
->> index 39028de75e4f6..4448144387158 100644
->> --- a/arch/x86/events/intel/ds.c
->> +++ b/arch/x86/events/intel/ds.c
->> @@ -2657,6 +2657,9 @@ static void setup_arch_pebs_sample_data(struct perf_event *event,
->>  
->>  again:
->>  	header = at;
->> +	if (!header->size)
->> +		return;
->> +
->>  	next_record = at + sizeof(struct arch_pebs_header);
->>  	if (header->basic) {
-> [Severity: High]
-> This is a pre-existing issue, but since this patch explicitly aims to safely
-> handle corrupted PEBS records, could a corrupted record have a small
-> header->size but multiple structural flags set?
->
-> In setup_arch_pebs_sample_data(), next_record is advanced based on the
-> presence of bit flags without checking against header->size or the buffer
-> boundary:
->
->     if (header->gpr) {
->         gprs = next_record;
->         next_record = gprs + 1;
->         __setup_pebs_gpr_group(event, regs, ...);
->
-> Would this lead to out-of-bounds memory reads if the hardware generates a
-> corrupted record where the implied payload exceeds header->size? While
-> intel_pmu_drain_arch_pebs() checks that header->size fits in the buffer,
-> it doesn't seem to verify if the payload itself fits within header->size.
+I agree we should be able to change defaults. Just over 2 years ago, I sent=
+ out:
+https://lore.kernel.org/linux-perf-users/20240516222159.3710131-1-irogers@g=
+oogle.com/
+That switches the histogram behavior in perf top to zero after every
+refresh rather than decaying the values. If you filter perf top by
+user, it can be common to get no samples. Note that around this time,
+we fixed this behavior to work really nicely by using BPF instead of
+horrible /proc scanning. In the default decay mode, a symbol that ran
+in the past will appear in perf top even if the process with that
+symbol has terminated. This happens frequently in user mode, resulting
+in many ghost symbols and lingering processes. The zero mode, which
+ironically matches top's behavior, isn't the default because it would
+be a noticeable change in the defaults.
 
-Yes, this concern could happen in theory. This patch mainly focus on the 0
-size issue, the issue could be addressed by another patch if necessary. Thanks.
+Anyway, this is a long winded way of saying that Namhyung and Arnaldo
+pick the defaults. I didn't choose to change the defaults in this
+series because I think if you test the changes, you'll see that
+hitting 'M' at startup really isn't that much of a chore and it gives
+a clear signal that you are doing something special. Perf top also
+hints at the 'M' key along the bottom of the screen when hybrid events
+are present. If this is too much to live with, I think we could make
+it a config file value. I think this matches the principle of least
+surprise, while the decay mode default, I'd argue, is the opposite.
 
+Thanks,
+Ian
 
->
+> -Andi
