@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F1CF1F427C
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Aug 2026 01:28:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FABA233946
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Aug 2026 01:30:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787621340; cv=none; b=oIvXIGMRgNt33CKexdWe6aglqoTcGncj/rVlEQjOYyeRlvyVXngtwSA2pjEaFgBn9nFwnVT10xNqTwHYxjmM6clw/y+N86OrZBRDDB3bByuZsZwx3itJOMgm/QzxfBo3QkLpEBGK7u9IOYrat71RQehsIWWdyydIFeLVcZldDns=
+	t=1787621427; cv=none; b=gikaj8MmG6557NruYtuvZoRwbwW6cJCKUqfN3RKn0WL+2O5nuvK+S474BzJrY4YmGljxOd93EPqpHA6DLq1d2UMgH+V9UAt+gZo7JsVqjmRXMiNoNBiz47LA5C8eM6OG8EB4lcm6SQtU3bvqhF1DPx4B6yQy2+eGJQX382jeebM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787621340; c=relaxed/simple;
-	bh=+SMmQop9CxUtOYwxrAy2cE+aq/w8qHq1Te6XX3LmqSo=;
+	s=arc-20240116; t=1787621427; c=relaxed/simple;
+	bh=xDnJuiEIKpZQaNrfUfvJ5gqcOD6H3VDivm+vcWwH3ps=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rRrROuUmOyMDmxolc5kSTessTwqXcGVLFmugWBy0ixheeUZxCtpL2bJKwO26MK098hJkPeAYOw7+LCfSrsVug3tru/3/kJnduEZJVzGgmo8BAvaJuMfe4en9Ta9Ri/mEa3B7PzcXaQhn1Y/XZrNqob1T380dx/Ltf4AFqa90/RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lIMp8iH+; arc=none smtp.client-ip=192.198.163.15
+	 In-Reply-To:Content-Type; b=Y70CSNw9Nf33fK8gCm4o6TYSA1E6Os2qW6cBBaz8hEE95onUhFyQl24QWHgNyMFSqjB8eAgeWRSwwhazQwjsnpxlUbUvMZzxxdr5zOYcaGlvFQ+zN2miqNDrMgzMnUGJ+D0RYEYgDcdgDwGZFWwzFSzM6Wfo6K7PsoAHgi0i140=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l/oWceac; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lIMp8iH+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l/oWceac"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1787621338; x=1819157338;
+  t=1787621426; x=1819157426;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=+SMmQop9CxUtOYwxrAy2cE+aq/w8qHq1Te6XX3LmqSo=;
-  b=lIMp8iH+zp93S2r2Y1dej0Ki1aNzE+QrY+VQ0FEcpNe+pDn13PDrpS2D
-   BA4utJyaLT8ar6dm69svM5nOkEymWi70QqJLDz/l+RkgmjEFxeH8ZSWn4
-   Y2cqpuxXSy9fTM95O3s5QDGJnDp+oo2qOwHALvXZxegZnQoM+oQAm04wN
-   D5AgfeexTPwYeqjQdogPmOL6k4qDDu0LT8H11PyjAP5BJmYyUaoSbq4xz
-   PZqFz13E52ioOvMVDFEb83MWmRLouakMvAgMljsyvi4w4LwCrPrfJBr98
-   AluIawVuZ0SpcFf5tLSdpNeszT+RrdCvhE4E/dvyWL+oDsIMuqZyDwZEX
-   A==;
-X-CSE-ConnectionGUID: iGdjb45XR2mz9nfa7ts7OQ==
-X-CSE-MsgGUID: d1UpN6OzSKSFwnZaze4WJw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11885"; a="88208959"
+  bh=xDnJuiEIKpZQaNrfUfvJ5gqcOD6H3VDivm+vcWwH3ps=;
+  b=l/oWceac0QuhtiEcsGPq+exnPvFPsSi5IOqwSBztP8vHxCilWvXdIGr2
+   a/fsWLJWaqNUoQ0PNrihRefhEXUgeZ2UamEQX10zLcfumyOrSC4TXUkIE
+   yeLUcF+kddQ9/D0vz3Zis43Myw/lQ5J8L9Bw3hxPVSolZaq5bklPsV+hx
+   O7AdpyBSh56I8IF2qwj0PW7hvJQQwYP8ZKhujOjNJV89gmy7ki09V4zOD
+   ft0xKcgaQ+PwEyr4By9LN2nB8KDoIniy5uA0tChGWYkilvR6Fz++ppJ07
+   EnlH7gzzIhdP0qzjHbk/coLq59Xm/V5OS79/2QkSaH9HqC/N5rs6WsroT
+   Q==;
+X-CSE-ConnectionGUID: z7NmHPzGTw+QNwbbT0wDIA==
+X-CSE-MsgGUID: GVDU94a5Q5Wxbb+d9zvlRg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11885"; a="99431975"
 X-IronPort-AV: E=Sophos;i="6.25,241,1779174000"; 
-   d="scan'208";a="88208959"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 18:28:57 -0700
-X-CSE-ConnectionGUID: 3cdbZiQkQd+FDjSSryON/g==
-X-CSE-MsgGUID: uUOK7XBuRc6n4XWoW6Jf0Q==
+   d="scan'208";a="99431975"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 18:30:25 -0700
+X-CSE-ConnectionGUID: /kXOXLxtRvCY7KvszNjomQ==
+X-CSE-MsgGUID: 94Y7HTIISWKr28AljOWcXQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,241,1779174000"; 
-   d="scan'208";a="265374969"
+   d="scan'208";a="266615851"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 18:28:57 -0700
-Message-ID: <1162586e-6a38-472c-be84-335200419837@linux.intel.com>
-Date: Tue, 25 Aug 2026 09:28:55 +0800
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 18:30:24 -0700
+Message-ID: <22b84e22-2f38-4ffb-a731-0ecf5b598f7c@linux.intel.com>
+Date: Tue, 25 Aug 2026 09:30:22 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,84 +52,93 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND Patch v10 13/23] perf/x86: Support XMM sampling using
+Subject: Re: [RESEND Patch v10 15/23] perf/x86: Support ZMM sampling using
  sample_simd_vec_reg_* fields
 To: sashiko-reviews@lists.linux.dev
 Cc: linux-perf-users@vger.kernel.org
 References: <20260824082731.1013973-1-dapeng1.mi@linux.intel.com>
- <20260824082731.1013973-14-dapeng1.mi@linux.intel.com>
- <20260824091225.514D71F000E9@smtp.kernel.org>
+ <20260824082731.1013973-16-dapeng1.mi@linux.intel.com>
+ <20260824085828.79B8B1F000E9@smtp.kernel.org>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260824091225.514D71F000E9@smtp.kernel.org>
+In-Reply-To: <20260824085828.79B8B1F000E9@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-On 8/24/2026 5:12 PM, sashiko-bot@kernel.org wrote:
+On 8/24/2026 4:58 PM, sashiko-bot@kernel.org wrote:
 > Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
->
-> Pre-existing issues:
-> - [High] Downcast of `struct pt_regs` to `struct x86_perf_regs` for software events leads to an out-of-bounds read and potential arbitrary memory read or local DoS.
+> - [Medium] Relaxed vector mask validation allows users to request sampling of XMM16-31 and YMM16-31 registers, but the kernel silently outputs zeroes for them.
 > --
 >
-> --- Patch [13]: [RESEND Patch v10 13/23] perf/x86: Support XMM sampling using sample_simd_vec_reg_* fields ---
-> commit 19bc56fc15fa41117febd46977ed2032c46e92f4
+> --- Patch [15]: [RESEND Patch v10 15/23] perf/x86: Support ZMM sampling using sample_simd_vec_reg_* fields ---
+> commit 88766819a94c672c41219599404eada3a0d0fa19
 > Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Subject: perf/x86: Support XMM sampling using sample_simd_vec_reg_* fields
 >
-> This commit supports sampling of XMM registers using the newly introduced
-> sample_simd_vec_reg_* fields. A new abi field is introduced in struct
-> x86_perf_regs to accommodate layout information for perf_reg_value.
+> perf/x86: Support ZMM sampling using sample_simd_vec_reg_* fields
 >
+> This patch adds support for sampling up to 32 ZMM registers via the
+> sample_simd_vec_reg_* fields. ZMM0-15 are assembled from XMM, YMMH,
+> and ZMMH components, while ZMM16-31 are extracted as a whole.
+>
+>> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+>> index 01de7799f907b..f59551200f18c 100644
+>> --- a/arch/x86/events/perf_event.h
+>> +++ b/arch/x86/events/perf_event.h
+> [ ... ]
+>> @@ -209,6 +209,60 @@ static inline bool event_needs_ymm(struct perf_event *event)
+> [ ... ]
+>> +static inline bool __event_needs_high16_zmm(struct perf_event *event,
+>> +					    u64 sample_type)
+>> +{
+>> +	if (!event->attr.sample_simd_regs_enabled)
+>> +		return false;
+>> +	if (event->attr.sample_simd_vec_reg_qwords < PERF_X86_ZMM_QWORDS)
+>> +		return false;
+> [Severity: Medium]
+> Will this abort collection of high-register state for XMM16-31 or YMM16-31
+> requests?
+>
+> When sample_simd_vec_reg_qwords is less than PERF_X86_ZMM_QWORDS (e.g., 2 for
+> XMM or 4 for YMM), this returns false. Consequently, the hardware state for
+> the high 16 registers is not extracted.
+>
+>> +
+>> +	if ((sample_type & PERF_SAMPLE_REGS_USER) &&
+> [ ... ]
 >> diff --git a/arch/x86/kernel/perf_regs.c b/arch/x86/kernel/perf_regs.c
->> index 81204cb7f7239..bccf0fc275116 100644
+>> index 0076974498eee..93370d4657860 100644
 >> --- a/arch/x86/kernel/perf_regs.c
 >> +++ b/arch/x86/kernel/perf_regs.c
->> @@ -63,6 +63,9 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
+> [ ... ]
+>> @@ -123,7 +136,8 @@ int perf_simd_reg_validate(u16 vec_qwords, u64 vec_mask,
 >>  
->>  	if (idx >= PERF_REG_X86_XMM0 && idx < PERF_REG_X86_XMM_MAX) {
->>  		perf_regs = container_of(regs, struct x86_perf_regs, regs);
->> +		/* SIMD registers are moved to dedicated sample_simd_vec_reg */
->> +		if (perf_regs->abi & PERF_SAMPLE_REGS_ABI_SIMD)
->> +			return 0;
->>  		if (!perf_regs->xmm_regs)
->>  			return 0;
-> [Severity: High]
-> This is a pre-existing issue, but does using container_of() here lead to an
-> out-of-bounds read for software events?
+>>  	if (vec_qwords) {
+>>  		if (vec_qwords != PERF_X86_XMM_QWORDS &&
+>> -		    vec_qwords != PERF_X86_YMM_QWORDS)
+>> +		    vec_qwords != PERF_X86_YMM_QWORDS &&
+>> +		    vec_qwords != PERF_X86_ZMM_QWORDS)
+>>  			return -EINVAL;
+>>  		if (vec_mask & ~PERF_X86_SIMD_VEC_MASK)
+>>  			return -EINVAL;
+> [Severity: Medium]
+> Does this validation allow users to request sampling of XMM16-31 and YMM16-31
+> registers?
 >
-> If a user creates a software event (e.g., PERF_TYPE_SOFTWARE) with
-> PERF_SAMPLE_REGS_USER and sets an XMM register bit in sample_regs_user,
-> perf_reg_validate() fails to reject bits >= 32. When the event triggers,
-> perf_output_sample_regs() calls perf_reg_value() with a raw pt_regs
-> pointer from task_pt_regs(current).
+> With PERF_X86_SIMD_VEC_MASK expanded to 32 bits, this check now allows bits
+> 16-31 to be set in the user mask for XMM and YMM requests.
 >
-> Because task_pt_regs is typically located at the very top of the kernel
-> stack page, downcasting it to struct x86_perf_regs and reading
-> perf_regs->abi or perf_regs->xmm_regs accesses memory past the end of
-> the pt_regs structure.
+> Because bitmap_full(&mask, PERF_X86_SIMD_XMM_REGS) only validates that the
+> first 16 bits are set and ignores the rest, it won't reject masks that include
+> the upper 16 registers.
 >
-> Can this cross into the adjacent vmap guard page and cause a kernel panic,
-> or leak adjacent memory if triggered via nested interrupts or kprobes
-> where the pt_regs is in the middle of the stack?
+> Combined with __event_needs_high16_zmm() returning false for non-ZMM requests,
+> does this mean the kernel will silently accept invalid UAPI configurations for
+> XMM16-31/YMM16-31 and return zeroes to userspace instead of actual data or an
+> error?
 
-This concern would never happen. Currently any event trying to sample SIMD
-and other extended registers would check if its PMU supports the
-PERF_PMU_CAP_SIMD_REGS or PERF_PMU_CAP_EXTENDED_REGS (XMM) capability. If
-not, the event creation would fail at the beginning. Thanks.
-
-    if (!(pmu->capabilities & PERF_PMU_CAP_SIMD_REGS) &&
-        event_has_simd_regs(event)) {
-        ret = -EOPNOTSUPP;
-        goto err_destroy;
-    }
-
-    if (!(pmu->capabilities & PERF_PMU_CAP_EXTENDED_REGS) &&
-        event_has_extended_regs(event)) {
-        ret = -EOPNOTSUPP;
-        goto err_destroy;
-    }
+Yeah, it's indeed a defect. Would submit a independent patch to enhance the
+check. Thanks.
 
 
 >
