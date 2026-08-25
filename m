@@ -1,174 +1,127 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF70F30E85D
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Aug 2026 18:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.210.171
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787682197; cv=pass; b=R1mFqjL4DsEhtAmf/1wGHjyoPo7Cakxr2rg58h70EHamcaUQKvNzh3ttNPvkdEA/eeVjhg4Rp447Il1yNNqIp9b2UogJWhgFZ5iZP+yJbRZjpzgZiKuu5bNsrzGbm3NgkOGH7Y78HaHUqA7oYOqTcHv6u+/7VGuJ/BzKl3r0Iu0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787682197; c=relaxed/simple;
-	bh=LHECQk2R2yAF+nk9WlWCgcipuNKlvtb34YmL2PVFd6s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qfU/ONRcIFpk5HRvr5yYDRold+oyuVWw6ExlrWoEtletKZ05qOpXFaw/1x1NnTB/PtjPEpDzkDChV89ddr7L4VWomMvVVk/PcNPmjVoXOSQqNrDWQ2Sx84PofxeqSLDCtsQ+OI6rtQyJt+KZxZ4P11GCWN1ZByMz2JKW1ecz/Ok=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b9s8mMdM; arc=pass smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1C63CA4B3;
+	Tue, 25 Aug 2026 22:19:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787696369; cv=none; b=WRL7DCqsfM+25EZiW71ix10muMXKJk9YxApAu5xML01n6N97QyCow9qpLZUptUFDOgUd1hoTwx3lsxvkj9GfN6dWHI1rSplrMK/jQnLPkGtGC+V+TqrOJZDwNEsfCLO4L/v5t0KPIZEazKXm/Fx7U4xQCi8vc7TidFyCFHRFuRY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787696369; c=relaxed/simple;
+	bh=BDdU3YAKSJ4wstkOzgeo3mNdSvSfY9q9W6gZDk+7RLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cLZdK+21DdOQ2weyReGUyl1BxnSog5+TCAOkhbJqRlq57D6RHE0iGY6mRzrcyDF4NLN8oB+Klwo2u4oNq/Z9ZPgbAKBF66x248DwCkIIrXmvyt8SIELJlnv9QdzS7IY0BLQ/H1hwAh+fimdETL7lJiqEBoIVeSRWZzXcIWWpCb0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HolGtccG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b9s8mMdM"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-8486672f03cso186423b3a.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Aug 2026 11:23:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787682195; cv=none;
-        d=google.com; s=arc-20260327;
-        b=Un8QpiW/SM9HywpRMcI5IwuUQA3Hu1APgFAlqGQSGfrIBRhUyxQuo1VSWgzREYL5ze
-         sJMZq0yBfi53jbmU/fsDMHn6HdB5rc7qpnZF51vJVkOrDjOl9ca3iNqmpKFxjZsbdxlC
-         W+I3cv1K25s/XBAN/FNl9EGmZbWbBS8XO6gal1/Ukuv++xJAlRykyLVEdw36F9S3O4ni
-         7OBmSAeuEbS2wbuFdAFsXF1XcP65nrUAOuwtDzeWLJRnfJj09F88jTMyUwiSeGnaL3jX
-         MRwzI5JkHfkLAOvyu5zm8Yv5qg8m2pF1ArggQp/zW11/Nwmpzdh+SKYun59bw9Q1eGwN
-         6WdA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=LHECQk2R2yAF+nk9WlWCgcipuNKlvtb34YmL2PVFd6s=;
-        fh=Ezy1olM5CRShzy5XgUVDwWIsdi9zp6vO4FQGc4SHTBg=;
-        b=F1+Tz6isbu4eWDaAnPY5f/suzI+Cjp9kgrRbs1X/EJdvBOj8Wt7FP8NGzZJEGoLy/q
-         bOOL8/Rq7dHtiz3gxd1rHdThNLItMXuNjZHhAyeFZpUZNyg/S0byZ67W4ok6ZX1qyz4a
-         IzFWVCl1X+j/inWsNVsfrZILiyncI9fV/pXAkYCrYH++/g6j9gYmobr7PFq3W7nPDpRf
-         YrjC7h7HoYM9vLTnJ/u3oqAK9ceAzCBn9n8+vbPoOvuRUHWOfephrIuwORIAu2h9M0Us
-         kVJnvEiALkMIv+2A0XdC0eURqy2ezRgTOHleJ76XcOM2FfABsVP6leytBm82TVBtU+bc
-         wZIQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787682195; x=1788286995; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=LHECQk2R2yAF+nk9WlWCgcipuNKlvtb34YmL2PVFd6s=;
-        b=b9s8mMdMb0VRVoqJznv08VeLt4PToGgletWyExMa1lP5IFAIeBmwqYNFV+hdPUdOXH
-         W0etCbBn8DeFqAJpe8ymMDHh9xcF6RJrVoVSY1JA3Db3XusICHolTCyM7FKnGeTNGRig
-         cDOuyxQ4xvPxtQa1x4qPY1mQxrF20YLKie2a4WGUr/AS9ee42wMNJ2wSB/ZhFK67fvZg
-         cONZybIxdTHjD2TPUrM+XvmhYcpd5YwRzudF9i6OlcusGeOUnWc5neikPqd/Y1JZHc10
-         iO5rtly9gSTwBI57RGNFQl10WXh46fIi6x02IuCM7YnwESOrZsqL2Su+mh+7Lt9+Q5ht
-         gB2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787682195; x=1788286995;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=LHECQk2R2yAF+nk9WlWCgcipuNKlvtb34YmL2PVFd6s=;
-        b=ijjFfsi8YeLmo+/sn+q1VYeFfIxvE7jjTPXpegrErunw24ZBv/yOCyJgs2EgD9mDth
-         8GxwBUdtc/V4/nWAtKlYrdQlAradLTVXn7AM+iOKofVc3iDRArjHIaoMF4IFtiqAb9by
-         4K7qOfPf1kePsFtDr97zN1l/q6OFGfuKmdf5IcOpfsEHiHNYYrUXfDJnM/n7VAlMYI/o
-         JjAIjbIybUg3Qkl88gLLmxgHSI8AmUmUMVi+Nmd+BmHkGbpq32AJPMjfJVGaWjxn4T0h
-         NL2ORfjKkxzi3X4H9S/gt+mbRjEcyFC+rye4MmxvDbPJyJwE+OmfD6oDX7YQYSK5CRT1
-         3PDg==
-X-Forwarded-Encrypted: i=1; AHgh+Rp/9lZtsjtQCXO7DIxkq2gWBeBIYyKUAIQF+n7wjB8k0FkXnEuXyxgvZ4dj8z1kAhrZdEPvWaUGYy+sGtwSMn8h@vger.kernel.org
-X-Gm-Message-State: AFuF++mUvixwLCRYgl0/7/ImcG2UyfVeGJ5J1lB3DeMujXujgh74ESxL
-	kTajZoWPt3L1sSwKBht418p0YLvdz6CNE851nuwAeG/1bOYTue/++fWKXX4eEik+geiNiW7i989
-	o8i5EMWkWMCzrKVjoOmiBDxj7w8URG54=
-X-Gm-Gg: AR+sD12zKkgs1o8uuD45ug+XCw82EiooGEm4eXMGmEPE6+InrStlgBujot3vWoau9Jv
-	umtd4cxH40wO8n506GALIf4o39+WEmDm93uTlDMJxUvD2y+j01ZPadNS/EtenPJkXNXQsCvn8vl
-	VhTHrwWTfH2jn8tQ4n1iu9K44kFZUPr3cgMQtTgY0hyOSyAGOkOMIWuQ2atlob9ypEGL5lKVVJ3
-	+HmIZtRN0nillxRyEvjANDfZrEzKJjnsK2nDQisGhN++0BMOv7qNoeHeYzBtYqz6pZlkBCqHaNS
-	gnzplXu/i1TdNX1FmVGKOAxkfHDrcvZdit+l79GrxEdbCb5K6e3gFaqUyrpGD+p4cNkKAUqh5vO
-	2dzCHj8VZ3j64Gy43rrcAWygrS4CtCgkLFzc8YiOBdA==
-X-Received: by 2002:a05:6a20:6f03:b0:3cd:9f0b:f788 with SMTP id
- adf61e73a8af0-3cf83d1ef40mr670754637.12.1787682195222; Tue, 25 Aug 2026
- 11:23:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HolGtccG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41D0B1F000E9;
+	Tue, 25 Aug 2026 22:19:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787696367;
+	bh=kJVDn5HVR8ujzWtuJSyYXo2h0wSfRbjpR1rpsc8daQY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=HolGtccGy8+h9FPBUOQYKcAzL3UdkSRNguzZQOfn2D5Yy/KZzsV6S9Smzq287bVUI
+	 aQVFusnLh8FIZhG7xjbU/t4dbXilpzL+iJRITZbPRy3EzXdFbK1ZzG1w9HaSre3Pvj
+	 Yi5Sekr+XtyGtuIUUPUdOk988RW9iAvhk6dGnv/xqk5aQN49xtENE8cNHH5an51TAB
+	 yBD7jdENRFg/sJ5AzxvyIvP6rvEcFiVqEHwxcsyRQ2UpcD4B9v/cYCRllMOgI2MBCt
+	 lEn4uLfeOgySaV1SemvP+vNgemqSlNzRPlk5OSdGKSr/M/NuvjOphKf6w0YMEfSef/
+	 yQjZI0DuJ/gMQ==
+Date: Tue, 25 Aug 2026 19:19:24 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Andi Kleen <andi@firstfloor.org>, ak@kernel.org, ak@linux.intel.com,
+	linux-perf-users@vger.kernel.org, namhyung@kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>
+Subject: Re: [PATCH v1 4/7] perf tools: Expose opt-in --hybrid-merge
+Message-ID: <ao4U7OX54mMRZoNa@x2>
+References: <20260813132519.4099508-1-andi@firstfloor.org>
+ <20260824063744.1533837-1-irogers@google.com>
+ <20260824063744.1533837-5-irogers@google.com>
+ <aozIZLYvv78jX-3u@firstfloor.org>
+ <CAP-5=fU25BLS9bpShaY=akjK1nURV0PXw54KNqefYhKUvi6DSg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260822054620.452262-1-ming.jvle@gmail.com> <aosT4H14zcowzU_7@redhat.com>
- <CABbwK50esft7xj6cPWXN7iHnqW6E30w1Cg5FMmE97gJ34SqtfA@mail.gmail.com>
- <aotM6tRUHI9Bo7gW@redhat.com> <CABbwK50istUW_xnFsjCA+MMgFCuBbY-Zs3QmJU=Fg7heqKdF6A@mail.gmail.com>
- <aoxp3Rcbp3fUuqS8@redhat.com> <CAEf4BzbUQWAB0JuEdXu32v4S_zMuv4de+kYv0mcY4tDPu8CA2Q@mail.gmail.com>
- <ao2KDQuBMNtONu0K@redhat.com> <CAEf4Bza0Hy_a4BpFBrsP2F5wvEDOyL6n2jK5FK8r-QyRFwvBPw@mail.gmail.com>
-In-Reply-To: <CAEf4Bza0Hy_a4BpFBrsP2F5wvEDOyL6n2jK5FK8r-QyRFwvBPw@mail.gmail.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 25 Aug 2026 11:23:00 -0700
-X-Gm-Features: AcwNN1Ukv0tOVPmP2iBOudSXuYwiMIHO7YcnLC1DX5MhYH6wLfCTEN94bKtfCOE
-Message-ID: <CAEf4BzZGQ50=B4S2NBZnqWN29YBgthMX8LsYGLq5rOsdGzpS3w@mail.gmail.com>
-Subject: SIGILL and uretprobes, WAS: [PATCH] uprobes: Free utask on
- dup_return_instance() failure
-To: Oleg Nesterov <oleg@redhat.com>
-Cc: Keke Ming <ming.jvle@gmail.com>, Andrii Nakryiko <andrii@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	open list <linux-kernel@vger.kernel.org>, 
-	Linux trace kernel <linux-trace-kernel@vger.kernel.org>, 
-	"linux-perf-use." <linux-perf-users@vger.kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fU25BLS9bpShaY=akjK1nURV0PXw54KNqefYhKUvi6DSg@mail.gmail.com>
 
-On Tue, Aug 25, 2026 at 9:38=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Tue, Aug 25, 2026 at 5:27=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> w=
-rote:
-> >
-> > On 08/24, Andrii Nakryiko wrote:
-> > >
-> > > On Mon, Aug 24, 2026 at 8:57=E2=80=AFAM Oleg Nesterov <oleg@redhat.co=
-m> wrote:
-> > > >
-> > > > force_exit_sig(SIGILL) can't be ignored too. But I am fine either w=
-ay.
-> > >
-> > > Current SIGILL sending is already pretty bad behavior that bites us
-> > > periodically, instead of doubling down on killing the user space
-> > > process because something about installing uprobe goes wrong, let's
-> > > think about a bit less destructive way to do this. Mark uprobe for a
-> > > particular process as defunct or "detaching it", or something along
-> > > those lines. But not just kill innocent processes.
-> >
-> > Well. Yes, SIGILL sending acts as BUG_ON(), this is not nice and
->
-> The problem is that this is actually not a bug but a very real and
-> expected behavior with user-space using fibers or coroutines. Any
-> suggestions how we can make this less violent, as it's actually quite
-> dangerous and kills production applications when someone (unknowingly)
-> tries to uretprobe trace them...
->
+On Mon, Aug 24, 2026 at 08:33:02PM -0700, Ian Rogers wrote:
+> On Mon, Aug 24, 2026 at 3:40 PM Andi Kleen <andi@firstfloor.org> wrote:
+> > On Sun, Aug 23, 2026 at 11:37:41PM -0700, Ian Rogers wrote:
+> > > Add --hybrid-merge flag to explicitly trigger event merging
+> > > non-interactively
+> > > for both perf-top and perf-report.
 
-IIUC, this SIGILL and coroutines/fibers issue is due to
-uprobe_handle_trampoline not finding utrask->return_instances, because
-a bit earlier we threw out pending uretprobes due to
-arch_uretprobe_is_alive() returned false due to that `regs->sp <=3D
-ret->stack` check (for x86-64).
+> > Well it should be default on.
 
-So the question I hope you can help reason about is a) should we just
-ignore utask->return_instances =3D=3D NULL case and count it as uretprobe
-miss and b) should we flip it around, and just not add a new pending
-uretprobe if current stack doesn't satisfy this invariant.
+> > I don't want another option I have to always specify like
+> > --no-children.
 
-In practice this would mean that with fibers we'll get some uretprobes
-matched, others dropped, but at least this will be discoverable due to
-misses and it won't be killing innocent applications.
+Picking defaults is difficult...
 
-And at any rate, we have a per-process limit on number of pending
-uretprobes, so there is no risk of having unbounded amount of memory
-taken by erratically behaving application breaking uretprobes.
+Linus doesn't like the buildid cache, so he can pick something different
+than the default of saving binaries that will be useful immediately
+after when doing annotation, etc.
 
-WDYT?
+I don't like having to specify --no-children either, but lots of people
+like it.
+ 
+> I agree we should be able to change defaults. Just over 2 years ago, I sent out:
+> https://lore.kernel.org/linux-perf-users/20240516222159.3710131-1-irogers@google.com/
+> That switches the histogram behavior in perf top to zero after every
+> refresh rather than decaying the values. If you filter perf top by
 
-> > probably we can improve the current code. And, just in case, as for
-> > uprobe_copy_process() in particular I agree that Option B (make fork()
-> > fail) is better.
-> >
-> > But what, say, uprobe_handle_trampoline() can do if ->return_instances
-> > is NULL? Either we have a kernel bug, or the probed task does something
-> > wrong. In both cases it is better to kill the task with pr_warn() and
-> > generate the core dump.
->
-> I don't remember all the code paths, but just shooting in the dark
-> there, we can always poison a pointer to distinguish or something? or
-> just assume kernel bugs do not happen and ignore NULL. Or something
-> along those lines.
->
-> >
-> > Oleg.
-> >
+See? Ian has his preferences, like Andi, how come?
+
+> user, it can be common to get no samples. Note that around this time,
+> we fixed this behavior to work really nicely by using BPF instead of
+> horrible /proc scanning. In the default decay mode, a symbol that ran
+> in the past will appear in perf top even if the process with that
+> symbol has terminated. This happens frequently in user mode, resulting
+> in many ghost symbols and lingering processes. The zero mode, which
+> ironically matches top's behavior, isn't the default because it would
+> be a noticeable change in the defaults.
+ 
+> Anyway, this is a long winded way of saying that Namhyung and Arnaldo
+> pick the defaults. I didn't choose to change the defaults in this
+
+I wish I could pick defaults wisely (or that the maintainer du jour do
+it), its a hard call, and when I _do_ pick some default eventually I end
+up very disappointed with myself when I find out that my thinking was
+flawed.
+
+> series because I think if you test the changes, you'll see that
+> hitting 'M' at startup really isn't that much of a chore and it gives
+> a clear signal that you are doing something special. Perf top also
+> hints at the 'M' key along the bottom of the screen when hybrid events
+> are present. If this is too much to live with, I think we could make
+
+I don't think this is too much to live with and I I like being able to
+have this switch, perhaps having a "do it permanently" after one thinks
+it is the right default, should be made available.
+
+> it a config file value. I think this matches the principle of least
+> surprise, while the decay mode default, I'd argue, is the opposite.
+
+This hybrid situation is one that is indeed a source of way too many
+problems with how to properly aggregate counters from different types of
+cores, having a way to go back and forth from aggregated (taking into
+account freqs and whatnot) and the current per event type, which is
+utterly sub-optimal for a system wide view seems to be an improvement.
+
+Doing it just for cycles seems a step in the right direction, doing it
+in a way that takes into account all types of events seems like a worthy
+goal, lets make some sort of progress here with, I think, Ian's attempt
+at taking into account all sorts of events while making the simple case
+Andi cares to work, can we go with that?
+
+- Arnaldo
