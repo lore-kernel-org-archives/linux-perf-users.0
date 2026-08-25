@@ -1,132 +1,122 @@
-Received: from mail-yx1-f46.google.com (mail-yx1-f46.google.com [74.125.224.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9E21301709
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Aug 2026 01:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.224.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787621919; cv=pass; b=hFw0Ove0vzpDoxI7JBy7vzJsrSSMchHt5EvyBHXWQZMfT9va3DS0lZPT5oYDa4PO4pmMnsQzOJXpQUlAVttECTg+uIKLuj+nIY0IJRrlaRNuFkVcZ0tbvSp5yMZQcO88wrsY6KUhHXXb5gX4i7x8aPY03Qho7aV7nek3exlMW+8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787621919; c=relaxed/simple;
-	bh=Dl1pNxz0/A2V30oF3MiIT/1xyFZzJWr2p2E5a2231MY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=byM5bqRbSauwhs01AtwJWFkYMg0ksg4yKQa+xhGlALsa2GQHeuaM/RrQyvlo5JZPABz0/5a5CE/kcKky3r1rH/58yst3FWZrOd3ake1fVF/lIS5tzVoqohqd5jkDbeogb7WyAzQteqXsEjTVdvmx6g9PGeYy2/zBBaQ97y5O3bw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RcpWmiK8; arc=pass smtp.client-ip=74.125.224.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8125121257F
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Aug 2026 01:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1787621955; cv=none; b=okgDJbHwxdwHtXWOKqZZ4wPwDv9C45zE4dXyW141mfdDfi2nns/SYid0HZbrxW5luXmUCFHpuKbDnW+1SL0T9xvJmb0EJws2qnzuEaXqyJGpR8auIkTG8yLTy/8a3KrNW0YMRUZ1Yib/ADpUWA4IBV1oYVS++O47t0JxwuqDbcM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1787621955; c=relaxed/simple;
+	bh=HppttFZUnV05ZjcfDIysacaMYtZ4JAJRmsjJmcj4SPM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=luzI6Mf9o8w6KZaVplpJgYRVq8nnuVtwUhsXDnV5SYh1vk5xrDW1L3gB0SKk//sPWn6TqrZBAPUSItVRx5hdOQ17PHdy+i6mxVcbCmBe6ts37IeP+Nd2Lr7m3hpNfPjeV7NlWB0to9V48uTG2Y4zLQZOzjXF0swL63KmPNN0UVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jjaVSo6P; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RcpWmiK8"
-Received: by mail-yx1-f46.google.com with SMTP id 956f58d0204a3-66bd7857841so3428841d50.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Aug 2026 18:38:37 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1787621917; cv=none;
-        d=google.com; s=arc-20260327;
-        b=oDSydGb8uGaUh8rZHIT7TXkesVoLSTca3HVEppGCBNd8nQgPmxAP1UhVs8FJhL2Rr8
-         mAN7UmXvCzhjI9nZngNLzeWfYMDBA17ARyjZP3CpM3ghncR/ejf0Ja4ce5+R8e21NzPB
-         MGVS1scQsq9Mo465jDbXCMtBsNO3eIzkSYX6XNdZor3MV44xM8TneYlcfSx9KXw5Xz46
-         VNOzEag/zJJoKgoKEYvZpRUlyjZYd8x2K29kuLEZqPwCUvDz6IaoA3U/EODUkUsVSFHg
-         fS5Ga7l7Di+KrTO8K7DIp6vAOncKtZn2vHRXAueM746ZizmS5dgYow0yCIVvhokSDnoU
-         yFdw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=Dl1pNxz0/A2V30oF3MiIT/1xyFZzJWr2p2E5a2231MY=;
-        fh=VV2E9CtC2D0orfkO8ZV0PqKEpxnE1ZBtfoABGAf4IOA=;
-        b=BNoZujsXimiZW3FILDKWrYb/UAK6JB4V09yREiaOUZMeJUO3qGPJEDNR7WsgFpMsLe
-         nIPxp3QQFKbjSee66/XWoUlzYuu94MVNHH0coKCEyNbPVvxJGkHi2uGBHFJMJ5U2kyb0
-         rhv70Kw0GUjG5j4Fsb0Creve4eQBmj6ft9NoDWUHo8ZSpxrVs06jlsad4TgfqlKEsBNf
-         9QnDo0UWUiFu7m1/7ywVhPI/djB5SEh2ztiy9iq7R3JM4k51MRUHYaK/qVm1mNbKCkmB
-         NkMRZBbA3wI+Pisngq+ZZ+7pdjXOK7wbS5ntHL5QNE+dAsHV6v2glsdNIMJN5WsLG4Wr
-         4scA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1787621917; x=1788226717; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=Dl1pNxz0/A2V30oF3MiIT/1xyFZzJWr2p2E5a2231MY=;
-        b=RcpWmiK8D6TXy8SeKasN3A0DZYwOfxBRVcB8htDEIll1rHrnI6lELCV5zqfa7hqRIU
-         rEtXhQwWzLhCxVjqmaqiPTZ5z0dJcxPhJuB+w/2g+ZIvxA9AA7wp1nCUmi/Lx3BT7V/D
-         ix6ekhi8ZBI5IfxzW0LEJW0lhdkZsJx2MxnwWBni2MPKVcGdd8ABIe0GT3XfKGApfkV5
-         94uglqgNOv4yjFi7HXESZnyitoC9C18fLhT4/Qfuilf4PgC3Dq1ZbPc5PRBpzoDcd/MI
-         IZqnD5RIjFJMBR6ogU+eumXbmPPa8+C4epLSIHNwNtfwpjDlK2p3AxRoHpFvQWAoEL3b
-         j4lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787621917; x=1788226717;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=Dl1pNxz0/A2V30oF3MiIT/1xyFZzJWr2p2E5a2231MY=;
-        b=gsvp2eCIVjn+ZGgLdY6znuXpSB/QouOVzUDlOF65kcd+vazBUQzwGYH4UN0E99r+BZ
-         pPm6MeWnW+F8NGpQbuN8Ljc+l3MJPGlotalwsDFQXXJJW2UG6nDJmCZUxcKw9Fv0AU3v
-         W45YHvezcDvPacRToGFGRuzoYWbQTJ+KFnCuVl6GFbL9ELWi1UTU64GvQRBlq6l3jb8u
-         dMxHtmDGQj7sjYEu5nbhnJan2UJeh2oFDg5hd8Md+p1lJosn6WML9jj/CpaA7i9Z9CQP
-         wApr2QldJ2y5gEBSg5iWP/aMg07/pQlVeDnMHx+xOK+D8X/r9XT8D8vu6eyedxmzW5ws
-         cACg==
-X-Forwarded-Encrypted: i=1; AHgh+RoKE0ZM63+Nea3/lNUIyc+ZVtvE9QkGFzK0Ec8da8tSlA1JyCyYMWBmGOJD2YUFRa4i8Q+iTI99nT9C4mrdj0j5@vger.kernel.org
-X-Gm-Message-State: AFuF++kJN66XfUT5Pkfs+qkyR810hCTmxODGUDu1zm6hh0Drrj+Mjo5m
-	uOF1gRO86x8ozZJhQ0W3xjhU3HlvgTNFeEAw2MzSkY9rD0h+UMowF9GUQkWKHesgbwR8bxlbam7
-	zFiOz5E5D/SuHmfiPOLfnk6UF+iZbTUk=
-X-Gm-Gg: AR+sD124VW371Jj1kKGAmAwZyj1JkLg3MwLCeQkRiZc1uurNzVgPS7kK5QcqSn+mrmT
-	y8zhIRDAQ8VuddyNi6LR3PD/8yun6RED+dSgm0S9GT537UqG0CBo1E13on0EOGAsSRfpEznnMrf
-	dJUWGQtQEyh2gS4qoQW09BIAhYAAAc1AGxYwB7mJqXxT1l2R+B57YCvGIrf4HZc96uR26GE6e07
-	gRFKJbNeXjE7J7R25BKUd4lzEMCm292NoKcwmhAu0mmP2o5Dl8wpkb3hmT+K1fmbJIJ7D8BglR3
-	KeZIJF+Jugq7Rr2WKVqtCqxe1N/BAssKwJ0Drs8VKSzMiShs1Zx3aCombsSSDcwOEzOuvBpjoPc
-	mS/2qsl4n8acjv3gXPCcAdYJXeDqkToMqkEk0oeqoniI=
-X-Received: by 2002:a53:a5d1:0:b0:66c:76e6:2d01 with SMTP id
- 956f58d0204a3-66d14a21801mr845428d50.9.1787621916851; Mon, 24 Aug 2026
- 18:38:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jjaVSo6P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787621951; x=1819157951;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=HppttFZUnV05ZjcfDIysacaMYtZ4JAJRmsjJmcj4SPM=;
+  b=jjaVSo6PpIW43ZmzSd1NEg61mxFKojfdV8Xz5n8M91YAPorHSF1/oJDn
+   pJWhQkkcmCBAyH4fG3g2jyvfbgUXIZnyr8QuN/QRhTQbmyM0Sa8SDdijW
+   DixKV4MIjHIgQgGpwid9INCY0yJ+0hub3W9monkFgOX6A/Q8W4CgSmNcv
+   LrSLBmIjmnZfi998oMGFKjEn9cepRXf9ZRexy2FBKsZ9MmZpL1sds26nj
+   WGmkbpF6G+Kk6+z4SVFm1kc6rwY4H6JLTn/Bj4DqhSuoiBJIrE0iiNSG6
+   qa6LF6KES3eKyJ6WAdYQPyVoen7SkuctZMDv2tV+KoIcVWUe30W6n5T+Z
+   w==;
+X-CSE-ConnectionGUID: aOS5MhjVTJSvOq9w3M6wUg==
+X-CSE-MsgGUID: kNlG9B80TLG8gluSbTaIig==
+X-IronPort-AV: E=McAfee;i="6800,10657,11885"; a="88099434"
+X-IronPort-AV: E=Sophos;i="6.25,241,1779174000"; 
+   d="scan'208";a="88099434"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 18:39:11 -0700
+X-CSE-ConnectionGUID: QKIjbG4cSjeDevp3O+PJXw==
+X-CSE-MsgGUID: aIctfTmCQ3q7Hy1E1rgWVQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,241,1779174000"; 
+   d="scan'208";a="297064615"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Aug 2026 18:39:10 -0700
+Message-ID: <be04bda2-91d4-4af4-8d54-982480eea814@linux.intel.com>
+Date: Tue, 25 Aug 2026 09:39:08 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260821014210.18681-1-kartikey406@gmail.com> <CAEf4BzazKkRiOCAAERt6YueeVYnnYeNEPmxH+EW3F4CR_YVjsQ@mail.gmail.com>
-In-Reply-To: <CAEf4BzazKkRiOCAAERt6YueeVYnnYeNEPmxH+EW3F4CR_YVjsQ@mail.gmail.com>
-From: Deepanshu Kartikey <kartikey406@gmail.com>
-Date: Tue, 25 Aug 2026 07:08:25 +0530
-X-Gm-Features: AcwNN1U0LHGolhM0a7k05nKFQh1Imv-RibXkGJMcsIUuJJbyEfcSMIuHp8mjcg0
-Message-ID: <CADhLXY7_Dpzwuqdq84scYObut=DTTqfZgG_U9f-fP6GFeRVT-Q@mail.gmail.com>
-Subject: Re: [PATCH] perf/bpf: Fix lockless access to parent_event->prog in perf_event_alloc()
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, olsajiri@gmail.com, irogers@google.com, 
-	adrian.hunter@intel.com, james.clark@linaro.org, kpsingh@kernel.org, 
-	matt@bobrowski.net, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, 
-	eddyz87@gmail.com, memxor@gmail.com, martin.lau@linux.dev, song@kernel.org, 
-	yonghong.song@linux.dev, emil@etsalapatis.com, ihor.solodrai@linux.dev, 
-	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RESEND Patch v10 23/23] perf/x86/intel: Add sanity check for
+ PEBS record/fragment size
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <20260824082731.1013973-1-dapeng1.mi@linux.intel.com>
+ <20260824082731.1013973-24-dapeng1.mi@linux.intel.com>
+ <20260824090815.AD6A41F000E9@smtp.kernel.org>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260824090815.AD6A41F000E9@smtp.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Aug 22, 2026 at 12:04=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
+
+On 8/24/2026 5:08 PM, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
 >
-
-> exposing this mutex like that is definitely a smell.
+> Pre-existing issues:
+> - [High] setup_arch_pebs_sample_data() parses PEBS fragment payloads based on the presence of bit flags without verifying that the implied payload size fits within header->size or the buffer boundary.
+> --
 >
-> AI tells me that this perf event inheritance case can happen for
-> non-tracing (i.e., BPF_PROG_TYPE_PERF_EVENT) events, which are
-> attached while holding perf_event_ctx_lock, not the bpf_event_mutex
-> (this one is held for tracepoint/kprobe/uprobe programs).
+> --- Patch [23]: [RESEND Patch v10 23/23] perf/x86/intel: Add sanity check for PEBS record/fragment size ---
+> commit 573a2a9becb54c34e2eef68662afc34b55c514f9
+> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
 >
-> Please validate and adjust the fix.
+> perf/x86/intel: Add sanity check for PEBS record/fragment size
 >
+> This patch adds sanity checks for corrupted PEBS records or fragment
+> sizes to prevent potential infinite loops. If a corrupted fragment is
+> detected, the entire PEBS record and all subsequent records are dropped.
+>
+>> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+>> index 39028de75e4f6..4448144387158 100644
+>> --- a/arch/x86/events/intel/ds.c
+>> +++ b/arch/x86/events/intel/ds.c
+>> @@ -2657,6 +2657,9 @@ static void setup_arch_pebs_sample_data(struct perf_event *event,
+>>  
+>>  again:
+>>  	header = at;
+>> +	if (!header->size)
+>> +		return;
+>> +
+>>  	next_record = at + sizeof(struct arch_pebs_header);
+>>  	if (header->basic) {
+> [Severity: High]
+> This is a pre-existing issue, but since this patch explicitly aims to safely
+> handle corrupted PEBS records, could a corrupted record have a small
+> header->size but multiple structural flags set?
+>
+> In setup_arch_pebs_sample_data(), next_record is advanced based on the
+> presence of bit flags without checking against header->size or the buffer
+> boundary:
+>
+>     if (header->gpr) {
+>         gprs = next_record;
+>         next_record = gprs + 1;
+>         __setup_pebs_gpr_group(event, regs, ...);
+>
+> Would this lead to out-of-bounds memory reads if the hardware generates a
+> corrupted record where the implied payload exceeds header->size? While
+> intel_pmu_drain_arch_pebs() checks that header->size fits in the buffer,
+> it doesn't seem to verify if the payload itself fits within header->size.
 
-Thank you! You are correct.
+Yes, this concern could happen in theory. This patch mainly focus on the 0
+size issue, the issue could be addressed by another patch if necessary. Thanks.
 
-perf_event_set_bpf_handler() is called
-via two paths:
-1. perf_event_set_bpf_prog() with ctx_lock
-2. _perf_ioctl() with no lock
 
-I will investigate the correct fix.
-
-Thanks
-
-Deepanshu
+>
