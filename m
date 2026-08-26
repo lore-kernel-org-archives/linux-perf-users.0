@@ -1,127 +1,288 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-2-26.ptr.blmpb.com (va-2-26.ptr.blmpb.com [209.127.231.26])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1C63CA4B3;
-	Tue, 25 Aug 2026 22:19:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A07F13B6C06
+	for <linux-perf-users@vger.kernel.org>; Wed, 26 Aug 2026 08:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787696369; cv=none; b=WRL7DCqsfM+25EZiW71ix10muMXKJk9YxApAu5xML01n6N97QyCow9qpLZUptUFDOgUd1hoTwx3lsxvkj9GfN6dWHI1rSplrMK/jQnLPkGtGC+V+TqrOJZDwNEsfCLO4L/v5t0KPIZEazKXm/Fx7U4xQCi8vc7TidFyCFHRFuRY=
+	t=1787732895; cv=none; b=nziUjBTZZYNPMJo2pXJUZtoThTHk56j7CAAaNouAkkZ8gSfgIshJ+enVYuEsF8C1DC3KjBr7mgHJlcatww8eDWC8pon+6ZyW2rc+SSiO8uVXgmDdGknMxezEHC9tYSj05PPM7Q3694TU+u0LcuUd4jQmyZOu0NU17UNR0WYNtP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787696369; c=relaxed/simple;
-	bh=BDdU3YAKSJ4wstkOzgeo3mNdSvSfY9q9W6gZDk+7RLQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cLZdK+21DdOQ2weyReGUyl1BxnSog5+TCAOkhbJqRlq57D6RHE0iGY6mRzrcyDF4NLN8oB+Klwo2u4oNq/Z9ZPgbAKBF66x248DwCkIIrXmvyt8SIELJlnv9QdzS7IY0BLQ/H1hwAh+fimdETL7lJiqEBoIVeSRWZzXcIWWpCb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HolGtccG; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787732895; c=relaxed/simple;
+	bh=ExPGEL3fKHrSXAac3Y/eauD+YfVC8H/QTdqjCB+sk8U=;
+	h=References:In-Reply-To:From:Date:To:Content-Type:Cc:Subject:
+	 Message-Id:Mime-Version; b=j7ZJy9LjjeDO0l6nZj6+JxBD9tCvyw0zpR2LGUwynulZ44wd4KJgy+8Xf5wAxPCwjalYDUq9fMjy+zGemJ2w3rSg+dOT5+b9lohFnUzVBD9P3Wvwwj95Uw97uL7lky7LFVMFvxsxP6l+zP0dsktECq1spJvQU0rOZ5WiT0iPxFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=picoheart.com; spf=pass smtp.mailfrom=picoheart.com; dkim=pass (2048-bit key) header.d=picoheart.com header.i=@picoheart.com header.b=EhtALBa0; arc=none smtp.client-ip=209.127.231.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=picoheart.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=picoheart.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HolGtccG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41D0B1F000E9;
-	Tue, 25 Aug 2026 22:19:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787696367;
-	bh=kJVDn5HVR8ujzWtuJSyYXo2h0wSfRbjpR1rpsc8daQY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=HolGtccGy8+h9FPBUOQYKcAzL3UdkSRNguzZQOfn2D5Yy/KZzsV6S9Smzq287bVUI
-	 aQVFusnLh8FIZhG7xjbU/t4dbXilpzL+iJRITZbPRy3EzXdFbK1ZzG1w9HaSre3Pvj
-	 Yi5Sekr+XtyGtuIUUPUdOk988RW9iAvhk6dGnv/xqk5aQN49xtENE8cNHH5an51TAB
-	 yBD7jdENRFg/sJ5AzxvyIvP6rvEcFiVqEHwxcsyRQ2UpcD4B9v/cYCRllMOgI2MBCt
-	 lEn4uLfeOgySaV1SemvP+vNgemqSlNzRPlk5OSdGKSr/M/NuvjOphKf6w0YMEfSef/
-	 yQjZI0DuJ/gMQ==
-Date: Tue, 25 Aug 2026 19:19:24 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Andi Kleen <andi@firstfloor.org>, ak@kernel.org, ak@linux.intel.com,
-	linux-perf-users@vger.kernel.org, namhyung@kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>
-Subject: Re: [PATCH v1 4/7] perf tools: Expose opt-in --hybrid-merge
-Message-ID: <ao4U7OX54mMRZoNa@x2>
-References: <20260813132519.4099508-1-andi@firstfloor.org>
- <20260824063744.1533837-1-irogers@google.com>
- <20260824063744.1533837-5-irogers@google.com>
- <aozIZLYvv78jX-3u@firstfloor.org>
- <CAP-5=fU25BLS9bpShaY=akjK1nURV0PXw54KNqefYhKUvi6DSg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=picoheart.com header.i=@picoheart.com header.b="EhtALBa0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=feishu2604151535; d=picoheart.com; t=1787732878; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=WO2BCPR/8KRc3BQ0bllOBFiz4a3Wu8hjsL+uVPJ43H0=;
+ b=EhtALBa0lisCCEGyRsVifyVF3gwVJ2q3zApxFKVoRU7sIrNKvyQG8AaBrawTxtwJ196hOQ
+ 9TE2rGzVhKfeJt5i27DcjL5VQLWtjedG3LpGzFTtssHndkCU2mlOHH65eOcH1yNgWZ7ofH
+ dXN+l+Q1HR3GdJmGKuLHQBPuijY/dQEXbAM/9xspX+bLM4d6uo5prWD+GKLkdDikFJNJC9
+ SpgeZYHHjx/6r6BkEueIjalrDphNkkYlmDW+L0ovpGLTbeMUO0rKjOZVzj3srEPtpj+kr6
+ tvGyyjbYyF43zgLGNbcEB6ut9Z/fsT7CXeRmZ19lFPgQrZpiA/1sAGmC/0lzlQ==
+X-Lms-Return-Path: <lba+26a8ea38c+2f2f63+vger.kernel.org+yang.yicong@picoheart.com>
+References: <20260824022034.3916570-1-zong.li@sifive.com> <20260824022034.3916570-2-zong.li@sifive.com>
+In-Reply-To: <20260824022034.3916570-2-zong.li@sifive.com>
+Content-Transfer-Encoding: 7bit
+From: "Yicong Yang" <yang.yicong@picoheart.com>
+Date: Wed, 26 Aug 2026 16:27:52 +0800
+X-Original-From: Yicong Yang <yang.yicong@picoheart.com>
+To: "Zong Li" <zong.li@sifive.com>
+Received: from [100.86.213.231] ([61.141.241.110]) by smtp.feishu.cn with ESMTPS; Wed, 26 Aug 2026 16:27:55 +0800
+Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Cc: <tomasz.jeznach@linux.dev>, <joro@8bytes.org>, <will@kernel.org>, 
+	<robin.murphy@arm.com>, <pjw@kernel.org>, <palmer@dabbelt.com>, 
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <mark.rutland@arm.com>, 
+	<andrew.jones@oss.qualcomm.com>, <guoren@kernel.org>, 
+	<david.laight.linux@gmail.com>, <zhangzhanpeng.jasper@bytedance.com>, 
+	<iommu@lists.linux.dev>, <linux-riscv@lists.infradead.org>, 
+	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, 
+	<yang.yicong@picoheart.com>, "Chen Pei" <cp0613@linux.alibaba.com>, 
+	"Fangyu Yu" <fangyu.yu@linux.alibaba.com>
+Subject: Re: [PATCH v6 1/2] drivers/perf: riscv-iommu: add risc-v iommu pmu driver
+Message-Id: <ab59c5b8-2915-4d59-8766-7a6297224494@picoheart.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU25BLS9bpShaY=akjK1nURV0PXw54KNqefYhKUvi6DSg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Language: en-US
 
-On Mon, Aug 24, 2026 at 08:33:02PM -0700, Ian Rogers wrote:
-> On Mon, Aug 24, 2026 at 3:40 PM Andi Kleen <andi@firstfloor.org> wrote:
-> > On Sun, Aug 23, 2026 at 11:37:41PM -0700, Ian Rogers wrote:
-> > > Add --hybrid-merge flag to explicitly trigger event merging
-> > > non-interactively
-> > > for both perf-top and perf-report.
+On 8/24/26 10:20 AM, Zong Li wrote:
+> Add a new driver to support the RISC-V IOMMU PMU. This is an auxiliary
+> device driver created by the parent RISC-V IOMMU driver.
+> 
+> The performance monitor provides counters with filtering support to
+> collect events for specific device ID/process ID, or GSCID/PSCID.
+> 
+> The RISC-V IOMMU PMU separates the cycle counter from the event counters.
+> The cycle counter is not associated with iohpmevt0, so a software-defined
+> cycle event is required for the perf subsystem.
+> 
+> The number and width of the counters are hardware-implemented and must
+> be detected at runtime.
+> 
+> Leave out all the dead cleanup code (i.e. .remove() operation) if the
+> PMU driver is tied to the IOMMU driver and can never realistically be
+> removed.
+> 
+> PMU-related definitions are moved into the perf driver, where they are
+> used exclusively.
+> 
+> According to RISC-V IOMMU specification Chapter 6:
+> Whether an 8 byte access to an IOMMU register is single-copy atomic is
+> UNSPECIFIED. Use two separate 4 byte accesses for hardware
+> compatibility.
+> 
+> Tested-by: Chen Pei <cp0613@linux.alibaba.com>
+> Tested-by: Fangyu Yu <fangyu.yu@linux.alibaba.com>
+> Reviewed-by: Guo Ren (Alibaba DAMO Academy) <guoren@kernel.org>
+> Suggested-by: David Laight <david.laight.linux@gmail.com>
+> Suggested-by: Guo Ren <guoren@kernel.org>
+> Link: https://lore.kernel.org/linux-riscv/20260618143634.7f3dd6c5@pumpkin/
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> ---
+>  drivers/iommu/riscv/iommu-bits.h |  61 ---
+>  drivers/perf/Kconfig             |  12 +
+>  drivers/perf/Makefile            |   1 +
+>  drivers/perf/riscv_iommu_pmu.c   | 813 +++++++++++++++++++++++++++++++
+>  4 files changed, 826 insertions(+), 61 deletions(-)
+>  create mode 100644 drivers/perf/riscv_iommu_pmu.c
+> 
 
-> > Well it should be default on.
+[...]
 
-> > I don't want another option I have to always specify like
-> > --no-children.
+> +
+> +/* cpumask */
+> +static ssize_t riscv_iommu_cpumask_show(struct device *dev,
+> +					struct device_attribute *attr,
+> +					char *buf)
+> +{
+> +	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(dev_get_drvdata(dev));
+> +
+> +	return cpumap_print_to_pagebuf(true, buf, cpumask_of(pmu->on_cpu));
 
-Picking defaults is difficult...
+needs to use sysfs_emit(), cpumap_print_to_pagebuf is removed in 7.3-rc
 
-Linus doesn't like the buildid cache, so he can pick something different
-than the default of saving binaries that will be useful immediately
-after when doing annotation, etc.
+https://lore.kernel.org/lkml/20260702154725.185376-1-ynorov@nvidia.com/
 
-I don't like having to specify --no-children either, but lots of people
-like it.
- 
-> I agree we should be able to change defaults. Just over 2 years ago, I sent out:
-> https://lore.kernel.org/linux-perf-users/20240516222159.3710131-1-irogers@google.com/
-> That switches the histogram behavior in perf top to zero after every
-> refresh rather than decaying the values. If you filter perf top by
+> +}
+> +
 
-See? Ian has his preferences, like Andi, how come?
+[...]
 
-> user, it can be common to get no samples. Note that around this time,
-> we fixed this behavior to work really nicely by using BPF instead of
-> horrible /proc scanning. In the default decay mode, a symbol that ran
-> in the past will appear in perf top even if the process with that
-> symbol has terminated. This happens frequently in user mode, resulting
-> in many ghost symbols and lingering processes. The zero mode, which
-> ironically matches top's behavior, isn't the default because it would
-> be a noticeable change in the defaults.
- 
-> Anyway, this is a long winded way of saying that Namhyung and Arnaldo
-> pick the defaults. I didn't choose to change the defaults in this
+> +
+> +static int riscv_iommu_pmu_probe(struct auxiliary_device *auxdev,
+> +				 const struct auxiliary_device_id *id)
+> +{
+> +	struct  riscv_iommu_device *iommu_dev = dev_get_platdata(&auxdev->dev);
+> +	struct riscv_iommu_pmu *iommu_pmu;
+> +	void __iomem *addr;
+> +	char *name;
+> +	int ret;
+> +
+> +	iommu_pmu = devm_kzalloc(&auxdev->dev, sizeof(*iommu_pmu), GFP_KERNEL);
+> +	if (!iommu_pmu)
+> +		return -ENOMEM;
+> +
+> +	iommu_pmu->reg = iommu_dev->reg;
+> +
+> +	/*
+> +	 * Counter number and width are hardware-implemented.
+> +	 * Detect them by write 1s. Counter should be consecutive.
+> +	 */
+> +	addr = iommu_pmu->reg + RISCV_IOMMU_REG_IOCOUNTINH;
+> +	writel(RISCV_IOMMU_IOCOUNTINH_HPM, addr);
+> +	iommu_pmu->num_counters = hweight32(readl(addr));
+> +
+> +	addr = iommu_pmu->reg + RISCV_IOMMU_REG_IOHPMCYCLES;
+> +	riscv_iommu_pmu_writeq(RISCV_IOMMU_IOHPMCYCLES_COUNTER, addr);
+> +	iommu_pmu->cycle_cntr_mask = riscv_iommu_pmu_readq(addr);
+> +
+> +	/* Assume the width of all event counters are the same */
+> +	addr = iommu_pmu->reg + RISCV_IOMMU_REG_IOHPMCTR_BASE;
+> +	riscv_iommu_pmu_writeq(RISCV_IOMMU_IOHPMCTR_COUNTER, addr);
+> +	iommu_pmu->event_cntr_mask = riscv_iommu_pmu_readq(addr);
+> +
+> +	iommu_pmu->pmu = (struct pmu) {
+> +		.module		= THIS_MODULE,
+> +		.parent		= &auxdev->dev,
+> +		.task_ctx_nr	= perf_invalid_context,
+> +		.event_init	= riscv_iommu_pmu_event_init,
+> +		.add		= riscv_iommu_pmu_add,
+> +		.del		= riscv_iommu_pmu_del,
+> +		.start		= riscv_iommu_pmu_start,
+> +		.stop		= riscv_iommu_pmu_stop,
+> +		.read		= riscv_iommu_pmu_read,
+> +		.attr_groups	= riscv_iommu_pmu_attr_grps,
+> +		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
+> +	};
+> +
+> +	auxiliary_set_drvdata(auxdev, iommu_pmu);
+> +
+> +	name = devm_kasprintf(&auxdev->dev, GFP_KERNEL,
+> +			      "riscv_iommu_pmu_%u", auxdev->id);
+> +	if (!name) {
+> +		dev_err(&auxdev->dev, "Failed to create name riscv_iommu_pmu%u\n",
+> +			auxdev->id);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	iommu_pmu->numa_node = dev_to_node(iommu_dev->dev);
+> +	iommu_pmu->irq = riscv_iommu_pmu_get_irq_num(iommu_dev);
+> +
+> +	ret = riscv_iommu_pmu_request_irq(auxdev, iommu_dev, iommu_pmu);
+> +	if (ret) {
+> +		dev_err(&auxdev->dev, "Failed to request irq %s: %d\n", name, ret);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * Bind all events to the same cpu context to avoid race enabling.
+> +	 * Pick a local CPU from the numa node of this iommu for the locality.
+> +	 *
+> +	 * Hold the hotplug lock until this instance is registered, otherwise
+> +	 * the CPU picked here could go offline in between. The teardown
+> +	 * callback does not run for an instance which is not registered yet,
+> +	 * so nothing would move the PMU off that CPU afterwards.
+> +	 */
+> +	cpus_read_lock();
+> +
+> +	iommu_pmu->on_cpu = cpumask_local_spread(0, iommu_pmu->numa_node);
+> +	ret = irq_set_affinity(iommu_pmu->irq, cpumask_of(iommu_pmu->on_cpu));
+> +	if (ret)
+> +		dev_dbg(&auxdev->dev, "failed to set irq %u affinity to cpu %u: %d\n",
+> +			iommu_pmu->irq, iommu_pmu->on_cpu, ret);
+> +
+> +	ret = cpuhp_state_add_instance_nocalls_cpuslocked(cpuhp_state,
+> +							 &iommu_pmu->node);
+> +
+> +	cpus_read_unlock();
 
-I wish I could pick defaults wisely (or that the maintainer du jour do
-it), its a hard call, and when I _do_ pick some default eventually I end
-up very disappointed with myself when I find out that my thinking was
-flawed.
+it could be simplified to init the ->on_cpu in the hotplug handler without
+holding the cpu hotplug lock like below:
 
-> series because I think if you test the changes, you'll see that
-> hitting 'M' at startup really isn't that much of a chore and it gives
-> a clear signal that you are doing something special. Perf top also
-> hints at the 'M' key along the bottom of the screen when hybrid events
-> are present. If this is too much to live with, I think we could make
+iommu_pmu->on_cpu = -1;
+ret = cpuhp_state_add_instance() /* init the ->on_cpu in the hotplug handler */
 
-I don't think this is too much to live with and I I like being able to
-have this switch, perhaps having a "do it permanently" after one thinks
-it is the right default, should be made available.
+otherwise looks good to me.
 
-> it a config file value. I think this matches the principle of least
-> surprise, while the decay mode default, I'd argue, is the opposite.
+Reviewed-by: Yicong Yang <yang.yicong@picoheart.com>
 
-This hybrid situation is one that is indeed a source of way too many
-problems with how to properly aggregate counters from different types of
-cores, having a way to go back and forth from aggregated (taking into
-account freqs and whatnot) and the current per event type, which is
-utterly sub-optimal for a system wide view seems to be an improvement.
-
-Doing it just for cycles seems a step in the right direction, doing it
-in a way that takes into account all types of events seems like a worthy
-goal, lets make some sort of progress here with, I think, Ian's attempt
-at taking into account all sorts of events while making the simple case
-Andi cares to work, can we go with that?
-
-- Arnaldo
+> +
+> +	if (ret) {
+> +		dev_err(&auxdev->dev, "Failed to register hotplug %s: %d\n", name, ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_add_action_or_reset(&auxdev->dev,
+> +				       riscv_iommu_pmu_remove_cpuhp_instance,
+> +				       iommu_pmu);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = perf_pmu_register(&iommu_pmu->pmu, name, -1);
+> +	if (ret) {
+> +		dev_err(&auxdev->dev, "Failed to registe %s: %d\n", name, ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_add_action_or_reset(&auxdev->dev,
+> +				       riscv_iommu_pmu_do_unregister,
+> +				       iommu_pmu);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/*
+> +	 * The PMU name only carries the aux dev id, not the iommu dev name, so
+> +	 * find the iommu dev name here to map this PMU back to its iommu dev.
+> +	 */
+> +	dev_info(&auxdev->dev, "%s: Registered with %d counters (iommu %s)\n",
+> +		 name, iommu_pmu->num_counters, dev_name(iommu_dev->dev));
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct auxiliary_device_id riscv_iommu_pmu_id_table[] = {
+> +	{ .name = "riscv-iommu.pmu" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(auxiliary, riscv_iommu_pmu_id_table);
+> +
+> +static struct auxiliary_driver iommu_pmu_driver = {
+> +	.driver = {
+> +		.suppress_bind_attrs = true,
+> +	},
+> +	.probe		= riscv_iommu_pmu_probe,
+> +	.id_table	= riscv_iommu_pmu_id_table,
+> +};
+> +
+> +static int __init riscv_iommu_pmu_init(void)
+> +{
+> +	int ret;
+> +
+> +	cpuhp_state = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
+> +					      "perf/riscv/iommu:online",
+> +					      riscv_iommu_pmu_online_cpu,
+> +					      riscv_iommu_pmu_offline_cpu);
+> +	if (cpuhp_state < 0)
+> +		return cpuhp_state;
+> +
+> +	ret = auxiliary_driver_register(&iommu_pmu_driver);
+> +	if (ret)
+> +		cpuhp_remove_multi_state(cpuhp_state);
+> +
+> +	return ret;
+> +}
+> +module_init(riscv_iommu_pmu_init);
+> +
+> +MODULE_DESCRIPTION("RISC-V IOMMU PMU");
+> +MODULE_LICENSE("GPL");
