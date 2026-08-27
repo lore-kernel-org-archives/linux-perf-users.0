@@ -1,132 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6387C31DDBF;
-	Wed, 26 Aug 2026 23:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD508347500
+	for <linux-perf-users@vger.kernel.org>; Thu, 27 Aug 2026 06:55:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787786402; cv=none; b=SZM2FLv2ufDEbcULABuCY5IqoWmWQ3ScenhAsW5Tzrmln6vXLIq6HblQVqK6+G/8sicakYsVXOQcM0cHj4rYg2TM6/9/Lh9T0f1+oL7MSH/lHH8gJHZj8LDhr2KdR72DZpgQAt1RG0gDv9YWHE4j9MxHuSWaLyMPuJw/3cbORgU=
+	t=1787813747; cv=none; b=d2VtQ5071LD1/hhRZWn0ElA18B7GL9BpBk6BnQkl1K0xEomiJoFc/PdkrSC03Tn7hvgqYe+iXaK7HkjBcCKNf/jScvt3RWc6+fFFbL4JJMiZkzpmHzwecK1foQ2PH0exP8SUMFSfa30R+PmC9BAK1i597Ko8qcukGMvONuYqRn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787786402; c=relaxed/simple;
-	bh=Gi+veHaIdJkcoJ2ky7AoluO6xEQmdmLdq2CNhla9eHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AZoSahCGAgYjx5N4fAC0NHLi+NZeOjG7laN7S73jigYlM6r3kZpiqUDgXJN9LxuRbxjl4WoCQhEbf4Cmey1yWMlP5Kx/GJ0spezGfXIjRqETh0iQpRsT8WqUV+KyS8pIbisRayfwHNDagZyTrIjli2Lhaepow2ZcH5MMv915FVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jI99VHBf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787813747; c=relaxed/simple;
+	bh=gOdxdAdgfT+lDwRxuvnqY6Qmt/W+UFC8uGlAIGjNFHc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lMnZyVUeWRDOYC1wbbf2QDy/7aXeI7JBKVpy1hHZwYjEF1GtwE88WQJwbyezMeOy/iAd4hK1e8wOf/268kMQl9oPTorLWKZa6tV2uAvyHVNb20Sxe+58aYSzYdnle7qOJNShUSCLc5x6wGrvPFDwL5tlPjCrb/fVQZXFCHRiJDM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=axG9gDAn; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jI99VHBf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C5AB1F000E9;
-	Wed, 26 Aug 2026 23:19:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787786401;
-	bh=sk1vPTGMkM7XXXwYGPRGhOvlPkcmKpLv375upyKHUvA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jI99VHBfWGV6Uh3hIKTpChCRqY/yhMfQ+qFYpwPXWB6frAjkVUGvmgIx9fpd7SAPl
-	 cf9iEL2DLIBOAK3gm/sW1zf73TEQHEpcSnB8UAhHj5xS46rFd4c2Xm1od8Te57Lqzg
-	 HDxcyNdvmfK3tF9i2adzHeYL0qy26OmGMvBB+6ZKJhhoL2tJSa2VSaMlQXJt66CkQU
-	 ABWrjygq8XIjGexdgCLKCkit3ZRgbI4s+eSDRfbpjppldy1lhG1t361Erleov9Sm8Q
-	 qI3SGjRIMNjOWBo7NL4XrIIG/TACwxKyt7q8L01lpOc6Ut9fYAtU1Kw1m4mR08+qQ5
-	 kgPZvoAqENRWw==
-Date: Wed, 26 Aug 2026 16:19:57 -0700
-From: Namhyung Kim <namhyung@kernel.org>
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="axG9gDAn"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2cf452def93so5013095ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Aug 2026 23:55:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1787813744; x=1788418544; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=j/98K6HfAltFoLz2cK1JewwCkCtJGw16wbBrVm8XK8Q=;
+        b=axG9gDAnFVygOqlS+tRc7W6FCha2PmPBG8AUYuvz/wN4sS/z4RbcCwnqq7mkw5UmF5
+         1tMQCa4eVoRoMx3/ZheG2lr0Wtj6hGzLHhaLqPo/7NhNDQPBE7ceHtNmsNdwfAVmJnZL
+         VhHuRPpeAMw8ToTHZS4yu3JU2saBwGRGDEaUA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1787813744; x=1788418544;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=j/98K6HfAltFoLz2cK1JewwCkCtJGw16wbBrVm8XK8Q=;
+        b=CEpddIywyZLvaMCYOy9DxrJ/xqtxX9qQyyoBlGnE8A3Ej0nPESUK42VYPcTAcB6pQe
+         QI10iDMfGZl9YEgkWyIP0VS+r552I15PidHjZalJ7vKbpnZSwSfn7MTzqUsouvFGf1G9
+         MuNhglSEXoHrExYLlGKlcbYv2O7RpIS5/4Endt/cPg0V39+wg3PVSxcKl1Hdugv7Sc0U
+         3DBrjjvymZb6EB8sm0AuEbwSYQxGMouAzu86wzMKTYmrs66i1tAv2JoqZTYOjPl7o5rg
+         XIFFNSjlxsAAS+WUj+RmEq8oRK49TeHNgy89zEyE+BOHtdpSptrr83box5OdzxzlXr4f
+         JV0Q==
+X-Forwarded-Encrypted: i=1; AHgh+RoV6Z7UEYCzB54F5YI3NfID6c+oZDNPxxQ8h+ogbyaxysKwdZsNSYmBxiJD2p7OGAht71SpQHeUopicZXzlSwE1@vger.kernel.org
+X-Gm-Message-State: AFuF++k9lRjcxF6gTKfF1UIgKmqjd2u0ZVnAlhTtGse2vkzliFafPs5I
+	2XwuwNq4dHpqAaG6EACIf+u7jc4SGkgiMIlqZCWCYbZwgmbLG2nvZPd6xbJ6Gs9iyA==
+X-Gm-Gg: AR+sD11eX6Y2h4qHW0Sne4aM65RDEKO0nOdVahuiGN7fKpvgiRkgQsoJ/qlExt33f6r
+	ETXkycw0eLJ81Q6xiTX/b9tB+/YXUHJvoXeFNFJI9RERztsEiW1shb6YLh0NIxv89/TGPDiwRs/
+	v3Hn1FLT8BcrWyHCMtRyPFQOmKG/Z4HSS/BsCgc+Ay1Lt7fE7U6D+pZV7901tyVSLeg++OoWIC4
+	63I43meDlDAxfpK8U+EFzRrtoCiZFxFuI8ZNEH/Gw6yOj0nahE56sEcJumf+zHpY2vl7j28kZQF
+	xuXS21jkHuisOZu8I9MyNZClGFHJLBwbAAFK8aOMR3otajk1dhx9RcISV60kMRpU48DxEU2+0LC
+	e1Lty2B+1dgHG3UYTKHeDE6IGb2pmNbdGnZI3LA51oQw7/ryK7FU+d5x6rqj5snj/uADt8U/tpz
+	zctfweheaZ29Nkg8tAmE5DERnvEcyg9cPKf8XfcXjiI8Z1JqIGqKmZ0YU3ABEOcN564qM1lgGT0
+	Qo7l7TOrImj9AaPq6IGYzU4Q/XIL/1VGEiM93irdSCNMyt063Y=
+X-Received: by 2002:a17:90b:2884:b0:38e:c232:9d2c with SMTP id 98e67ed59e1d1-3969ba558eamr5421490a91.2.1787813744520;
+        Wed, 26 Aug 2026 23:55:44 -0700 (PDT)
+Received: from tigeriii.tok.corp.google.com ([2a00:79e0:2031:6:ff0:ad84:24b0:9e52])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-396b0d81682sm1501920a91.7.2026.08.26.23.55.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Aug 2026 23:55:43 -0700 (PDT)
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
 To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ian Rogers <irogers@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Emil Tsalapatis <emil@etsalapatis.com>,
-	Ingo Molnar <mingo@redhat.com>,
+Cc: Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Swapnil Sapkal <swapnil.sapkal@amd.com>,
-	Thomas Falcon <thomas.falcon@intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Dmitrii Dolgov <9erthalion6@gmail.com>,
-	Eric Biggers <ebiggers@kernel.org>, Zecheng Li <zli94@ncsu.edu>,
-	Gabriel Marin <gmx@google.com>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Derek Foreman <derek.foreman@collabora.com>,
-	Tanushree Shah <tshah@linux.ibm.com>,
-	Ankur Arora <ankur.a.arora@oracle.com>,
-	Aaron Tomlin <atomlin@atomlin.com>, tanze <tanze@kylinos.cn>,
-	Rui Qi <qirui.001@bytedance.com>,
-	Howard Chu <howardchu95@gmail.com>, Chuck Lever <cel@kernel.org>,
-	Shimin Guo <shimin.guo@skydio.com>,
-	Alessio Podda <aleph.pi.gh@gmail.com>, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [RFC PATCH v1 0/8] perf/core, perf/tools: Add
- PERF_SAMPLE_BUILD_ID_OFFSET support
-Message-ID: <ao90ncOA2Ce8ezIc@google.com>
-References: <20260807071818.718751-1-irogers@google.com>
- <20260807111818.GN687043@noisy.programming.kicks-ass.net>
+	Namhyung Kim <namhyung@kernel.org>,
+	x86@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: [RFC PATCH] perf/x86/intel: downgrade alloc_bts_buffer() WARN() to pr_err()
+Date: Thu, 27 Aug 2026 15:55:10 +0900
+Message-ID: <20260827065529.3835720-1-senozhatsky@chromium.org>
+X-Mailer: git-send-email 2.55.0.897.gb25b4bd76c-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260807111818.GN687043@noisy.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
 
-Hello,
+We see alloc_bts_buffer() allocation failures under memory pressure,
+while those allocation failures are non-fatal the WARN_ONCE() triggers
+our fleet monitoring.  Given that alloc_bts_buffer() can be called from
+various paths (e.g. syscall() or kvm_emulate_wrmsr()) and fail multiple
+times, there seem to be little value in that one single backtrace (for
+first allocation failure only).
 
-On Fri, Aug 07, 2026 at 01:18:18PM +0200, Peter Zijlstra wrote:
-> On Fri, Aug 07, 2026 at 12:18:10AM -0700, Ian Rogers wrote:
-> > This patch series introduces PERF_SAMPLE_BUILD_ID_OFFSET to the
-> > perf_event UAPI and implements full support across both the kernel
-> > and perf tools.
-> > 
-> > Background & Motivation:
-> > 
-> > In order for perf to translate virtual addresses of samples into
-> > symbols a file and offset within the file are needed. During event
-> > synthesis perf will create mmap events to facilitate the translation
-> > of a virtual address to a file and offset by modelling the address
-> > space of a process. By directly recording in a sample the Build ID of
-> > a file and the offset within it, no synthesis is necessary. The Build
-> > ID and offset as a pair are much larger than a virtual address, so
-> > there is a trade-off between synthesis cost and extra size for
-> > samples. These changes just facilitate Build ID and offset as a choice
-> > for perf samples and the user can have the choice to use it when they
-> > believe it is advantageous.
-> > 
-> > In practice perf still needs to map a build ID to a file, so by
-> > default this change keeps synthesis to allow this. It is expected a
-> > user that knows their build IDs, say through debuginfod, will disable
-> > this option with say --synth=no.
-> > 
-> > The kernel support uses the existing build ID and offset support used
-> > by BPF stack traces.
-> 
-> That is still a giant stinking mess that needs to cleaned up.
+Downgrade WARN_ONCE() to pr_err_once().
 
-Then we can discuss how we want to handle that as well. :)
+Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+---
+ arch/x86/events/intel/ds.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I think this work would be useful on large systems with lots of tasks.
-I've got reports it took too long on synthesis and timed out.  Also it's
-racy and easy to miss new tasks..
-
-So I think it's a good option to explore and maybe we can make default
-once it turns out working great.  But I'm afraid it may need some kind
-of optimization to handle multiple addresses like in callchains/LBRs.
-
-Thanks,
-Namhyung
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 8940f0292229..29c24b2925a7 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -918,7 +918,7 @@ static int alloc_bts_buffer(int cpu)
+ 
+ 	buffer = dsalloc_pages(BTS_BUFFER_SIZE, GFP_KERNEL | __GFP_NOWARN, cpu);
+ 	if (unlikely(!buffer)) {
+-		WARN_ONCE(1, "%s: BTS buffer allocation failure\n", __func__);
++		pr_err_once(1, "%s: BTS buffer allocation failure\n", __func__);
+ 		return -ENOMEM;
+ 	}
+ 	hwev->ds_bts_vaddr = buffer;
+-- 
+2.55.0.897.gb25b4bd76c-goog
 
