@@ -1,32 +1,32 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42065384CED;
-	Thu, 27 Aug 2026 17:09:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5064380FF7;
+	Thu, 27 Aug 2026 17:15:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787850581; cv=none; b=djXirXBim9m7CcBr24Vr9OB13CP9iEri7szs25PbiSMDh2abKBLHf6pKfPxc3+Ufg9K0KvamWScKtfP7n2bfldMfv4VzUQrkaQH1MFDGydtnXWac89JwoU9c+7nti61pbjj3OTjLXvK5+JXiKeql1m8G7iMYQMenld9vT2PzKhE=
+	t=1787850935; cv=none; b=NSfB5kT5YOcGAQ54myvyNLzhdgjreVyZVQ9xQomrWgEo+9BCSUwKQHSOu9mBNGMMKjhWnAyr/wXEH8XgUXCw4ihze0bHCJ/8MoFYuFNwmphU9NbaOLZLdXSoTPFY3PMY8bt0+HX/ujDTgFn/Rjc8S1ahpZniPLlSvt9ndl1l4hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787850581; c=relaxed/simple;
-	bh=4kAGRHdSHxPiOWMZBYv/OUtAGNumoXB3lShsZOeAwc4=;
+	s=arc-20240116; t=1787850935; c=relaxed/simple;
+	bh=WpasPaJ9xcduX7UHA5UZyCSC91SDyBuKj0LkeZOtSOo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PpUZAhRYsf4T21oQmhSm48FfVKhEiVYnDEbEvrtvjODAO5cenmTD3aFSuSL371nZIBNVin0lTYzXGDeeloCPz/nVT2iUlzuxM82TrEMtDcYd6Dnina0Z7MHqIJUpxLhuJ08g9tfA9a0aE1aF6/FrRGH2tG4ZS4Ee4w9h2eeLkVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=DC3H611y; arc=none smtp.client-ip=217.140.110.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=hy9Mi2GEyhwVX9xWFJkBzLePGxcv0mpsTY/UeKms2Y9H6TMSJjNT4TKHtIMvI6gnxCvTzCGcv1uLabLYXK5YKcFOeM8y5XMRKxje/yCqGcW/7y60XFArf+VaXKqbe7OUBFcSBCG6LzJWa6gpAJfymjlraf2JfQw17zq03mfJCvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=LOTKxzn5; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="DC3H611y"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="LOTKxzn5"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91CB71688;
-	Thu, 27 Aug 2026 10:09:34 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D27D1596;
+	Thu, 27 Aug 2026 10:15:28 -0700 (PDT)
 Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0218B3F7D8;
-	Thu, 27 Aug 2026 10:09:38 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F25713F7D8;
+	Thu, 27 Aug 2026 10:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1787850578; bh=4kAGRHdSHxPiOWMZBYv/OUtAGNumoXB3lShsZOeAwc4=;
+	t=1787850932; bh=WpasPaJ9xcduX7UHA5UZyCSC91SDyBuKj0LkeZOtSOo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DC3H611yKNX0DjpwTHyf6vov6Eaz9SY/BvqGSCrwuCCoiadU6Yp0sdnhOagkBEtAK
-	 F3dmVu4Pg6tl9q6ZXOddebq6i4osd41kTf5gsNCkQ5m7Q2wjZT2Fy63vN2tQDYttv0
-	 MAQJhGJBtk95Oa0x/fN7g/rKIGZ+xXDLUnbNEyy8=
-Date: Thu, 27 Aug 2026 18:09:36 +0100
+	b=LOTKxzn5p/AkoQJ7PBJNwSjNBSp8gpcXK73cXC0GhcHQ6r7k7r0mc8F/jsyM0AKRY
+	 /QwQz5TQClQsVnglpZUdMghT+ZoX+cLrL1OJofm3+aP+ynWJxyVKYCzYRupw1mek1o
+	 U62qjMsG0smeawdJO85xjKR2OsachZzARvxRRaW4=
+Date: Thu, 27 Aug 2026 18:15:30 +0100
 From: Leo Yan <leo.yan@arm.com>
 To: James Clark <james.clark@linaro.org>
 Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
@@ -49,10 +49,11 @@ Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
 	linux-kernel@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 09/14] perf cs-etm: Queue partial AUX records
-Message-ID: <20260827170936.GO8904@e132581.arm.com>
+Subject: Re: [PATCH v2 10/14] perf cs-etm: Don't print missing buffers in
+ snapshot mode
+Message-ID: <20260827171530.GP8904@e132581.arm.com>
 References: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
- <20260821-james-cs-unformatted-per-thread-fix-v2-9-00c4fd0701b4@linaro.org>
+ <20260821-james-cs-unformatted-per-thread-fix-v2-10-00c4fd0701b4@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,19 +62,18 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260821-james-cs-unformatted-per-thread-fix-v2-9-00c4fd0701b4@linaro.org>
+In-Reply-To: <20260821-james-cs-unformatted-per-thread-fix-v2-10-00c4fd0701b4@linaro.org>
 
-On Fri, Aug 21, 2026 at 10:49:07AM +0100, James Clark wrote:
-> In snapshot mode AUX records may straddle the boundary of multiple trace
-> buffers. Currently we only queue AUX records whose range is contained
-> wholly within a single buffer.
-> 
-> Fix it by queuing any partial AUX range that overlaps any buffer.
+On Fri, Aug 21, 2026 at 10:49:08AM +0100, James Clark wrote:
+> The driver produces lots of AUX records for trace data that was never
+> captured in snapshot mode. Downgrade this to a pr_debug3 message as it's
+> only an error in normal mode.
 
-This issue has already existed before this series, so need a fix tag?
+This reminds why we should use circular mode instead of snapshot mode,
+so that redundant AUX records can be avoided directly in the driver.
 
 > Signed-off-by: James Clark <james.clark@linaro.org>
 
-Otherwise:
+For this patch itself:
 
 Reviewed-by: Leo Yan <leo.yan@arm.com>
