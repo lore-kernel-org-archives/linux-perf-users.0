@@ -1,117 +1,164 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9BA03FB052;
-	Thu, 27 Aug 2026 18:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA4CA37E5E2;
+	Thu, 27 Aug 2026 19:36:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787854915; cv=none; b=bPlydBIccSjLUOqFdM5+WaX7UIsTK8r5F4TOJ7k0aoAW7z8akYVoi9yqycEBM9lHUQwdtIOjAsBeW1g+mQtFpdY9a6kzA+2hbGqvBS87cw2GFEqA3QWPAmAbStMZjHPaXixqWTSNnU/rQsP9eOqFACJAlgEqhlY3XsHGdPBh3dk=
+	t=1787859421; cv=none; b=Ow4UNY7CHZeZc/25POtpNrqmQYAPpe7I7rCkriY/yYeaEeNGTRaFz3hYAfywC+pvPWfQOJhC2t7JoRwrsP3ZpZ95hHGG0+Kvh8rMHfDS+rGFuHClTGSQWGdwfw0rb/KINlAB2K6j7xgamWHnKWVFCO36SkQA93ZU93sFVKwRjuA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787854915; c=relaxed/simple;
-	bh=rUd7+J/8/iNJI3bKZQzX3i/RyNWMQTasR2RA1ttzPaI=;
+	s=arc-20240116; t=1787859421; c=relaxed/simple;
+	bh=+lW6Zq8/3+vy4xBdjLhVu5uVqUX2uzd2G6rWN4mYHNU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=giUuZUHomdXWSkzHMkge6mvT30KUsvoVv9DNHFtl675Mr6Zbdr0mWTX1NuXOWXof1wGk5XNJwM8sPGKOQUU5dfaRfykKz453Fc4ALLJpYQptbH9T6dClwvS+jKPjQfRoDEVi4oKVFIasJdAFI8UbMeHn21s2MWTRlIGq7FI2vpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Iob+HDAG; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q4w8Nb/vbAWppgvvlOAc3NaRhVYHzM0vAdgakGvdXWn4uDu7Bdz0/1ME2jv4JAFt/8HJFeFDrMSdG/QEKIrqzVQx2KI0P709csuQvT+9Uzi6pQPl+FWk/B6vM9MLHZDhHj8Ohly+hVOhY97lTaEbh4CISlxCG6HrQaLbUQQw2+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jRlmbtOp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Iob+HDAG"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B1681688;
-	Thu, 27 Aug 2026 11:21:48 -0700 (PDT)
-Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A39303F66F;
-	Thu, 27 Aug 2026 11:21:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1787854912; bh=rUd7+J/8/iNJI3bKZQzX3i/RyNWMQTasR2RA1ttzPaI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Iob+HDAGtrc0jBrbEfWc/4fcivNp0bnI9NUeUJhCK1UBLaNzPhwgKnUCsNLRrHoIX
-	 fuyU7Ggy4b7+Tlzg9spHJZunbmB7Zf6sRtQcJSywt9AAN+fEcachMrlOPH1IkJ8kpm
-	 VIlZVsnAUEeNLjMZACsqGm/mQoTIoiSH3glLfpUw=
-Date: Thu, 27 Aug 2026 19:21:49 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jRlmbtOp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48EEA1F000E9;
+	Thu, 27 Aug 2026 19:36:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1787859417;
+	bh=zZyTpBvqVHzPg3I76gJW8qgYPfmmyEiwyLXXZKzkTks=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=jRlmbtOpXGAV7ivFbuU/QYeRqdevyAi5j5O9iCnmmD4FTomG1dg+LGvV1op2A4fZg
+	 J6Erwcske23YkqW3DaxHQ2PjiaOHAw587S59es4KfuRBSApctPDLt/23VoJ8TlKxXr
+	 /h++DAOtvOxXLQXua++lavUip2Ff4xpL4zw4Wako11l721A+W3fTT95pYB2NiKVj5G
+	 yLpdFs1ehyQEutbFiVTU67cRHWxGy9AFE8SqCWQ7Mbb3JFJhHj1TRcSzoUhWybs/5v
+	 K3MwBox/KIrt/xBOy2U5h7wt6+oikpUSCdDltw1J1c/OZlcrgOSlYvUGXrp/YsjbYJ
+	 vbstVtCesiyZQ==
+Date: Thu, 27 Aug 2026 12:36:54 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>,
-	Leo Yan <leo.yan@linux.dev>, linux-arm-kernel@lists.infradead.org,
-	coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v2 11/14] perf auxtrace: cs-etm: Capture wrapped snapshots
-Message-ID: <20260827182149.GQ8904@e132581.arm.com>
-References: <20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org>
- <20260821-james-cs-unformatted-per-thread-fix-v2-11-00c4fd0701b4@linaro.org>
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	tlipcon@google.com, eranian@google.com
+Subject: Re: [PATCH] perf symbol: Do not use debug file as the binary type
+Message-ID: <apCR1kJMBbdDC8B3@google.com>
+References: <20260825062345.115073-1-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260821-james-cs-unformatted-per-thread-fix-v2-11-00c4fd0701b4@linaro.org>
+In-Reply-To: <20260825062345.115073-1-adrian.hunter@intel.com>
 
-On Fri, Aug 21, 2026 at 10:49:09AM +0100, James Clark wrote:
+Hello,
 
-[...]
+On Tue, Aug 25, 2026 at 09:23:45AM +0300, Adrian Hunter wrote:
+> dso__load() sets the binary type of a DSO to the type of the first symbol
+> source found. For a DSO with a separate debug file linked via
+> .gnu-debuglink, that is DSO_BINARY_TYPE__DEBUGLINK, which makes
+> dso__get_filename() return the name of the debug file instead of the file
+> that was actually executed.
+> 
+> Consumers that need to read instruction bytes, such as Intel PT decoding
+> in 'perf script', then read from the debug file and produce wrong
+> instructions.
+> 
+> Prefer DSO_BINARY_TYPE__BUILD_ID_CACHE, and otherwise
+> DSO_BINARY_TYPE__SYSTEM_PATH_DSO, over debug-only types, which restores
+> the behaviour of using a file that contains the executed instructions.
+> 
+> This is a workaround. Properly separating the binary file used for
+> instructions from the file used for debug symbols is left for later.
+> 
+> Example:
+> 
+>  Create a shared object with a separate .gnu_debuglink debug file. Note
+>  that 'objcopy --only-keep-debug' leaves .text as NOBITS, so instructions
+>  read from the debug file are zeros:
+> 
+>   # cat > foo.c << EOF
+>   unsigned long foo_work(unsigned long n)
+>   {
+>         unsigned long s = 0;
+> 
+>         for (unsigned long i = 0; i < n; i++)
+>                 s = s * 31 + i;
+>         return s;
+>   }
+>   EOF
+>   # cat > main.c << EOF
+>   #include <stdio.h>
+>   unsigned long foo_work(unsigned long n);
+>   int main(void)
+>   {
+>         printf("%lu\n", foo_work(1000));
+>         return 0;
+>   }
+>   EOF
+>   # gcc -g -O2 -shared -fPIC -o libfoo.so foo.c
+>   # gcc -g -O2 -o main main.c -L. -lfoo -Wl,-rpath,'$ORIGIN'
+>   # objcopy --only-keep-debug libfoo.so libfoo.so.debug
+>   # objcopy --strip-debug libfoo.so
+>   # objcopy --add-gnu-debuglink=libfoo.so.debug libfoo.so
+>   # perf record -e intel_pt//u ./main
+> 
+>  Note that branch samples must be requested, because it is the resolving
+>  of the branch target symbol that causes dso__load() to be called, and
+>  hence the binary type to be set, before the decoder walks the code.
+>  With '--itrace=e' alone, nothing loads symbols for libfoo.so, the binary
+>  type is left as DSO_BINARY_TYPE__NOT_FOUND, the correct file is read
+>  anyway, and no errors are reported either way.
+> 
+>  Before:
+> 
+>   # perf.before script --itrace=be 2>&1 | grep "instruction trace error"
+>    instruction trace error type 1 time 2350.467489498 cpu 9 pid 75634 tid 75634 ip 0x77d48480718f code 6: Trace doesn't match instruction
+>    instruction trace error type 1 time 2350.467489832 cpu 9 pid 75634 tid 75634 ip 0x77d484807341 code 6: Trace doesn't match instruction
+>    instruction trace error type 1 time 2350.467496412 cpu 9 pid 75634 tid 75634 ip 0x5b4de37a8074 code 6: Trace doesn't match instruction
+>    instruction trace error type 1 time 2350.467593393 cpu 9 pid 75634 tid 75634 ip 0x77d4848070d0 code 6: Trace doesn't match instruction
+>    instruction trace error type 1 time 2350.467593954 cpu 9 pid 75634 tid 75634 ip 0x77d4848075a8 code 6: Trace doesn't match instruction
+>    instruction trace error type 1 time 2350.467595728 cpu 9 pid 75634 tid 75634 ip 0x77d4848324de code 6: Trace doesn't match instruction
+>   6 instruction trace errors
+> 
+>  After:
+> 
+>   # perf script --itrace=be 2>&1 | grep "instruction trace error"
+>   #
+> 
+> Fixes: 5363c306787c8 ("perf symbol: Set binary_type of dso when loading")
+> Reported-by: Todd Lipcon <tlipcon@google.com>
+> Closes: https://lore.kernel.org/all/CAGH6UiG=RJLqBU3kLu9XJciPyPO1HZkbAPERguVUMRuWQgqf=A@mail.gmail.com/
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-> @@ -2061,10 +2061,20 @@ static int __auxtrace_mmap__read(struct mmap *map,
->  
->  	head = auxtrace_mmap__read_head(mm, kernel_is_64_bit);
->  
-> -	if (snapshot && itr->snapshot_has_wrapped) {
-> -		err = auxtrace_find_snapshot(itr, mm->idx, mm, data, &head, &old);
-> -		if (err)
-> -			return err;
-> +	if (snapshot) {
-> +		if (itr->snapshot_has_wrapped) {
-> +			err = auxtrace_find_snapshot(itr, mm->idx, mm, data, &head, &old);
-> +			if (err)
-> +				return err;
-> +		} else if (itr->monotonic_snapshot_head) {
-> +			size = head - old;
-> +			/* Force a full buffer read if a wrap has occurred */
-> +			if (size > mm->len) {
-> +				pr_debug3("%s: wrap detected, adjusting old from 0x%"PRIx64" to 0x%"PRIx64"\n",
-> +					  __func__, old, head - mm->len);
-> +				old = head - mm->len;
-> +			}
-> +		}
+Thanks for the patch and a test case.
 
-Wouldn't this be a bug fix, since CoreSight did not have a
-find_snapshot() callback before this series?
-
-I am wondering whether CoreSight could reuse the common callback
-introduced by this series. I expect this idea may be pushed back :),
-however, my concern is more about the overall code complexity.
-
-Reusing a common find_snapshot() mechanism could give us a couple of
-benefits:
-
- 1. Userspace could share the same snapshot/wrap handling, rather than
-    maintaining different mechanisms for different AUX trace.
-
- 2. It could also make it easier for the TRBE driver to use circular
-    mode for snapshot, which would avoid IRQ maintenance and many
-    redundant RECORD_AUX records (and avoid the mentioned trigger
-    counter for assistance in snapshot mode).
-
-The monotonic head pointer can simplify some calculations in userspace,
-but if the common find_snapshot() callback can be extended to handle both
-arbitrary and monotonic head, seems to me, this is a good chance to
-simplify the code.
+Arnaldo, I can take this to the perf-tools tree for v7.3.
 
 Thanks,
-Leo
+Namhyung
+
+> ---
+>  tools/perf/util/symbol.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index cd379ced19e5..1f714b47bbf4 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -1947,7 +1947,16 @@ int dso__load(struct dso *dso, struct map *map)
+>  		if (next_slot) {
+>  			ss_pos++;
+>  
+> -			if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND)
+> +			/*
+> +			 * The binary type is used to find the file containing
+> +			 * the executed instructions, so prefer the types that
+> +			 * refer to the actual object over debug-only files such
+> +			 * as DSO_BINARY_TYPE__DEBUGLINK.
+> +			 */
+> +			if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND ||
+> +			    symtab_type == DSO_BINARY_TYPE__BUILD_ID_CACHE ||
+> +			    (symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_DSO &&
+> +			     dso__binary_type(dso) != DSO_BINARY_TYPE__BUILD_ID_CACHE))
+>  				dso__set_binary_type(dso, symtab_type);
+>  
+>  			if (syms_ss && runtime_ss)
+> -- 
+> 2.53.0
+> 
