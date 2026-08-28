@@ -1,294 +1,292 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BDE3DC878
-	for <linux-perf-users@vger.kernel.org>; Fri, 28 Aug 2026 07:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7EB3DB320;
+	Fri, 28 Aug 2026 07:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787900875; cv=none; b=iyK4rz2p/teISNjsNEk2OcQjSnJGOgEHf4mo9CE4LEpSbAGjvk98NmKmt+AhWnXibTZhllchYfNMh/AlbBNnEj8ohaJ+NtS+S7B9/lYwos4uu1ByTgcQXmszhzBrrfuuVUZ+VtpmjEHJKDHq8y+qn3khWj0zVncQJ3g9GMq8DIU=
+	t=1787902900; cv=none; b=bsUIAgNRlKQYmIvN7wWu8BMjiS5bMa6LKAPiZ3WCx/8M2SIX9RpRBa1GjqNi5ieyehnwOUAObZKRrU3FhiZ/TQOArmHn0yfBBLJDg8vrXfodAJshGlnYAjmCTfL/t565luuBCLD8ltTvd3jfLrHeg80eSF2bp23otwYhr/+un1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787900875; c=relaxed/simple;
-	bh=lsBZYsAG+nr8THk4a+Io/3qdHObvPBkAo1nshLqp2i4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RU2bu0ShG8llh4diVcEyg8WDEIZxTcrklMk2pOOVc+VT0WgvHbxWbLaJ6zAYsVVJBRrEsFvuj7ywQ94VzYTZGtZphoBOplLSDiyGls54d5rPFED5s8Xm2yyfUlVLZFilwij0Kll9n3fV058R8huRJeYa4vqqjuSbQaKCTddCrQM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=JyBeBZu3; arc=none smtp.client-ip=209.85.215.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="JyBeBZu3"
-Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-cc1e1ff659bso656995a12.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 28 Aug 2026 00:07:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1787900873; x=1788505673; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=TRFIKfxO5tXI3eQnrJwwXHHecr77RgRWRC9iwHx3Doo=;
-        b=JyBeBZu3Q/Gyj3j11QVt2JAKWAVYS3nDVOUymsiMPp1gGJOR19Ojwl4kBBWV2/yrfF
-         tTHJv+RUGSSR2TI/MPWgLA4Y2anqJWjuPHOQdilb+c9zlnkAuo0dg0rEfYqIuvu7aWCw
-         DDwsD1s1FdpI4oR6U1qMg56ScGp6tuCl/k5hMwm+gQGevoFDLPVVVg/zST6sxKRJflAQ
-         L3RG3+u4kQhRSBegoimud2S5A72ELCNuZoet8e/B9XdmXapUTiIhaX5xZetQEsyEfRKy
-         bzJOruIGT91ccgYYSyjsvx2Ph/zxWo8JuyBl831yZJrrqBWDgPPnTTcJM8aRZ3/b3fkg
-         9Hnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1787900873; x=1788505673;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to:content-type;
-        bh=TRFIKfxO5tXI3eQnrJwwXHHecr77RgRWRC9iwHx3Doo=;
-        b=pTFMNnQVycTt4HlzJkCSZx7mZhBLQZ5nKO663sfYMPBIXilPUOkJIvtHgheQglr3hk
-         dHns6yjfpcS5Dg/U4+GEsXVGvajQPUuZNICqb24nBZ45iTC1LTULGyeI717Q4jHMayh9
-         P5lv75psy6tVdnGYNIzZsXSsLHNJ3up9AgA5tuJ3YO0IgJO+yKt0NVSued2cFPYvLCCM
-         lMuMd16upNt7RiC4TkiieEk4AhXDJ62oaGzGsk16TIoUWHLL/ng1mWW4yGCkTnMgKatF
-         zDtv5KrOE+EZpq9lh2heqAprn6bMObVJy0e50QBB2SNIv2vgVkPzcCZYh+bcOljl6axL
-         1kdw==
-X-Forwarded-Encrypted: i=1; AHgh+Rqyl0tDysAN3Pli7ak6Kq8q+KnjOpQbP+tOILzZXbPUH6iTYUbrZcicjGpZOL+oiS8eIZKIbrZYHTPYWf5gjMH+@vger.kernel.org
-X-Gm-Message-State: AFuF++nT4L6GCQqZEWHSHSNoLH+qw7ZMJ/SOgJEnaGgg0GEpesLHSsz5
-	WKxXWE6kzkYLO/5T0EDnb/QZiqVLQCRCdVZJolq4S9Cp6xIYd10Otj4p83d7fs4iSGQ=
-X-Gm-Gg: AR+sD10BPiZXxUuxUJvzvGClH3U7kVy8qFLYQPFPJxTHmht6w+QuCgF2QEnhTBMdInE
-	CdLQmbsF68XfpYSt6a+xyisr3ACax05gYM0Rty1CM1r8v82O6XdD8ba9BzavMznnAnBtG4mtqUK
-	0JOIBO6enUrF3pEPANR55TFuW4vTF2Z6xto0ATtN3mMY/nMudiCDzpSOLv+DX18CO6dVKoqMgtV
-	xJQMWVJeqOA1XF8EDLMTTIjCeSCJR7HZlQoQYlLfxq9VA7IDQEfNDI/ygafoIGt2V9Go2sMHrj1
-	vlAaITUjJUVYuDJ1PlvMuOlGA+0nYuBWrbtmntRoS4qHqzbLANY4s+DUwILeVwBnpdi4ZPMS4S+
-	bodBrvb77gpe1jqTe+88GYznqC4as4y2eKdgWTn387LrhKqzCGhzrveKlj1Yx0FBp6Jb7nwefwF
-	y48p+o2NDTQ3CSIEYa9EVQjflM1W8rXczUO6vhSpi15+Tslmml8LrVCoFPAvfVeFo+Qz4qYosu
-X-Received: by 2002:a17:90b:17c3:b0:38f:240d:b857 with SMTP id 98e67ed59e1d1-396d0ea9ce7mr7181024a91.2.1787900873239;
-        Fri, 28 Aug 2026 00:07:53 -0700 (PDT)
-Received: from sw04.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-142e0d1b38esm3156610c88.3.2026.08.28.00.07.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Aug 2026 00:07:52 -0700 (PDT)
-From: Zong Li <zong.li@sifive.com>
-To: tomasz.jeznach@linux.dev,
-	joro@8bytes.org,
-	will@kernel.org,
-	robin.murphy@arm.com,
-	pjw@kernel.org,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	alex@ghiti.fr,
-	mark.rutland@arm.com,
-	andrew.jones@oss.qualcomm.com,
-	guoren@kernel.org,
-	david.laight.linux@gmail.com,
-	zhangzhanpeng.jasper@bytedance.com,
-	yang.yicong@picoheart.com,
-	iommu@lists.linux.dev,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: Zong Li <zong.li@sifive.com>
-Subject: [PATCH v7 2/2] drivers/perf: riscv-iommu: protect shared state with a raw spinlock
-Date: Fri, 28 Aug 2026 00:07:47 -0700
-Message-ID: <20260828070747.4009519-3-zong.li@sifive.com>
-X-Mailer: git-send-email @GIT_VERSION@
-In-Reply-To: <20260828070747.4009519-1-zong.li@sifive.com>
-References: <20260828070747.4009519-1-zong.li@sifive.com>
+	s=arc-20240116; t=1787902900; c=relaxed/simple;
+	bh=GWwww3D6a51wjxzolgNq0EOLHOiBFoQ56yzw2+b35xQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UVJlXrGbsBEvogHvk34CWw/cUE+AGlEAxw0sF9nlZfzJrJ+6p3ZAsK9CfQgwIrts8AAoO3/9K4SBfA/nPpMXmCjWRT5nJFUs9lXxVm8PCSoJ61km6FO9wOSE4nw2s3ZoSxxSUupdGj3MNn7ulXVoc/aR4/nd31Y3A34hWzVusEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.170])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hWVg45SyBzKHMX2;
+	Fri, 28 Aug 2026 15:40:48 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.75])
+	by mail.maildlp.com (Postfix) with ESMTP id 4077B40583;
+	Fri, 28 Aug 2026 15:41:32 +0800 (CST)
+Received: from [10.67.110.36] (unknown [10.67.110.36])
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgBXwIeqO5FqWfrvDw--.119S2;
+	Fri, 28 Aug 2026 15:41:31 +0800 (CST)
+Message-ID: <fc22d702-9c53-415d-b3f2-8606daa2d656@huaweicloud.com>
+Date: Fri, 28 Aug 2026 15:41:30 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 20/23] perf annotate-arm64: Support 'add' instruction
+ tracking
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>, james.clark@linaro.org,
+ Li Huafei <lihuafei1@huawei.com>, Peter Zijlstra <peterz@infradead.org>,
+ leo.yan@linux.dev, Ian Rogers <irogers@google.com>,
+ Kim Phillips <kim.phillips@arm.com>, Mark Rutland <mark.rutland@arm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+ Bill Wendling <morbo@google.com>,
+ Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev
+References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
+ <20260808122400.2961238-21-wutengda@huaweicloud.com>
+ <89e66d40-5f9f-4147-beda-00623797cd04@linux.alibaba.com>
+ <b5e4ef0d-cb11-45de-987a-226340b576ed@huaweicloud.com>
+ <aoy-eAVaW_TsdymE@google.com>
+Content-Language: en-US
+From: Tengda Wu <wutengda@huaweicloud.com>
+In-Reply-To: <aoy-eAVaW_TsdymE@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:Syh0CgBXwIeqO5FqWfrvDw--.119S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3GF4rtrWUKFyUGw18GF4DArb_yoW3Kry5pr
+	4kGFWUGrW3JrnYqr1agw4UJF9akr1xJ3WUur1rX3WayFs2yr12gF1jqryq9F18Jr4rJr1U
+	Jr1jqrnxZr1UArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
+	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
+	s2-5UUUUU==
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-Events are bound to one CPU and the interrupt is affine to it, so the
-perf callbacks running with interrupts disabled would be enough to
-exclude the handler.
 
-PCI MSI/MSI-X on IMSIC breaks that: the irqchip sets
-IRQCHIP_MOVE_DEFERRED, so irq_set_affinity() reports success while only
-recording the request, and the move is applied in interrupt context upon
-the next device interrupt. Until then the interrupt is still routed to
-the CPU IMSIC picked initially, so the first overflow interrupt can run
-concurrently with the perf callbacks on the CPU the events are bound to.
 
-Take a raw spinlock, with interrupts disabled so that the handler can
-never interrupt a holder on the same CPU, rather than depending on that
-irqchip behaviour. It covers the state which is reachable from both
-sides:
+On 2026/8/25 5:58, Namhyung Kim wrote:
+> On Wed, Aug 19, 2026 at 11:04:36AM +0800, Tengda Wu wrote:
+>>
+>>
+>> On 2026/8/11 16:45, Shuai Xue wrote:
+>>>
+>>>
+>>> On 8/8/26 8:23 PM, Tengda Wu wrote:
+>>>> Extend update_insn_state() for arm64 to track 'add' instructions for
+>>>> structure member address calculation, which commonly appear as:
+>>>>
+>>>>    add  dreg, base, #offset
+>>>>    add  dreg, base, reg2     (reg2 holds a constant)
+>>>>
+>>>> Unlike x86, the arm64 'add' instruction has an extra base register among
+>>>> its source operands. Therefore, in terms of propagating the data type,
+>>>> it is essentially performing a 'mov', except that before the 'mov', it
+>>>> first needs to be updated by adding the offset or reg2.
+>>>>
+>>>> A real-world example is shown below:
+>>>>
+>>>>    ffff80008001c9a8 <flush_ptrace_hw_breakpoint>:
+>>>>    ffff80008001c9c4:  add  x19, x0, #0xeb8   // x0 (task_struct*) + 0xeb8 -> x19
+>>>> * ffff80008001c9d0:  ldr  x0, [x19]
+>>>>
+>>>> Before this commit, the type flow broke at the 'add' instruction,
+>>>> leaving the subsequent load with no type information:
+>>>>
+>>>>    chk [28] reg19 offset=0 ok=0 kind=0 cfa : no type information
+>>>>    final result: no type information
+>>>>
+>>>> After this commit, the tracker correctly follows the member address
+>>>> calculation:
+>>>>
+>>>>    var [0] reg0 offset 0 type='struct task_struct*'
+>>>>    add [1c] address of 0xeb8(reg0) -> reg19 type='struct task_struct*'
+>>>>    chk [28] reg19 offset=0 ok=1 kind=1 (struct task_struct*) : Good!
+>>>>    found by insn track: 0(reg19) type-offset=0xeb8
+>>>>    final result: type='struct task_struct'
+>>>>
+>>>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+>>>> ---
+>>>>   .../perf/util/annotate-arch/annotate-arm64.c  | 87 ++++++++++++++++++-
+>>>>   1 file changed, 85 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+>>>> index 7b780bad8c07..eaeb4433fc3a 100644
+>>>> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+>>>> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+>>>> @@ -688,6 +688,87 @@ static void update_mov_insn_state(struct type_state *state,
+>>>>       pr_debug_type_name(&tsr->type, tsr->kind);
+>>>>   }
+>>>>   +static void update_add_insn_state(struct type_state *state,
+>>>> +                  struct disasm_line *dl,
+>>>> +                  struct annotated_op_loc *src,
+>>>> +                  struct annotated_op_loc *dst)
+>>>> +{
+>>>> +    struct type_state_reg *tsr;
+>>>> +    struct type_state_reg src_tsr;
+>>>> +    u32 insn_offset = dl->al.offset;
+>>>> +    int sreg = src->reg1;
+>>>> +    int dreg = dst->reg1;
+>>>> +    u64 imm_value;
+>>>> +
+>>>> +    if (!has_reg_type(state, dreg))
+>>>> +        return;
+>>>> +
+>>>> +    tsr = &state->regs[dreg];
+>>>> +    tsr->copied_from = -1;
+>>>> +
+>>>> +retry:
+>>>> +    if (!has_reg_type(state, sreg) || !state->regs[sreg].ok) {
+>>>> +        invalidate_reg_state(tsr);
+>>>> +        return;
+>>>> +    }
+>>>> +
+>>>> +    src_tsr = state->regs[sreg];
+>>>> +
+>>>> +    /*
+>>>> +     * Handle 'add' instructions of the form:
+>>>> +     *   add  dreg, base, #offset     (immediate offset)
+>>>> +     *   add  dreg, base, reg2        (reg2 holds a constant)
+>>>> +     *
+>>>> +     * For case 2, retrieve the constant value from reg2
+>>>> +     * and use it as the offset.
+>>>> +     */
+>>>> +    imm_value = src->offset;
+>>>> +    if (src->multi_regs) {
+>>>> +        int reg2 = (sreg == src->reg1) ? src->reg2 : src->reg1;
+>>>> +
+>>>> +        if (!has_reg_type(state, reg2) || !state->regs[reg2].ok) {
+>>>> +            /* Unable to resolve type for dst, bail out */
+>>>> +            invalidate_reg_state(tsr);
+>>>> +            return;
+>>>> +        }
+>>>> +        if (state->regs[reg2].kind == TSR_KIND_CONST)
+>>>> +            imm_value = state->regs[reg2].imm_value;
+>>>
+>>> First, when reg2 is valid but not TSR_KIND_CONST - say a pointer
+>>> freshly loaded from memory - the addend is unknown at analysis time,
+>>> yet imm_value silently stays 0 and propagation continues, tracking
+>>> the destination as base + 0. Note the asymmetry: no state at all
+>>> invalidates, but state that doesn't yield a value pretends the
+>>> addend is zero. Unknown addend should invalidate as well:
+>>>
+>>>         if (state->regs[reg2].kind != TSR_KIND_CONST) {
+>>>             invalidate_reg_state(tsr);
+>>>             return;
+>>>         }
+>>>
+>>
+>> It might not be a direct invalidation, but rather swapping reg1/reg2 and
+>> then retrying.
+>>
+>>> Second, the shifted/extended forms still break even with a constant
+>>> reg2: extract_op_location_arm64() drops the "lsl #3" (or uxtw/sxtw)
+>>> modifier, so add x0, x1, x2, lsl #3 contributes the unshifted value
+>>> and maps later accesses to the wrong field. Maybe flag such operands
+>>> during extraction (or fail the reg2 extraction) so the handler can
+>>> skip them.
+>>>
+>>
+>> Okay, so it seems shifted/extended forms are unavoidable. We may need to
+>> introduce more fields into annotated_op_loc to record them, like this:
+>>
+>> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+>> index 138d9258281c..b00e0ad96023 100644
+>> --- a/tools/perf/util/annotate.h
+>> +++ b/tools/perf/util/annotate.h
+>> @@ -501,6 +501,8 @@ int arch__dwarf_regnum(const struct arch *arch, const char *str);
+>>   * @offset: Memory access offset in the operand
+>>   * @segment: Segment selector register
+>>   * @addr_mode: Addressing mode, only valid if @mem_ref is true
+>> + * @extend_type: ARM64 register extend specifier (enum annotated_ext_type)
+>> + * @shift: ARM64 shift amount (e.g., 0 to 4)
+>>   * @mem_ref: Whether the operand accesses memory
+>>   * @multi_regs: Whether the second register is used
+>>   * @imm: Whether the operand is an immediate value (in offset)
+>> @@ -511,6 +513,8 @@ struct annotated_op_loc {
+>>  	int offset;
+>>  	u8 segment;
+>>  	u8 addr_mode;
+>> +	u8 extend_type;
+>> +	u8 shift;
+>>  	bool mem_ref;
+>>  	bool multi_regs;
+>>  	bool imm;
+>> @@ -542,6 +546,19 @@ enum annotated_addr_mode {
+>>  	PERF_ADDR_MODE_POST_INDEX,
+>>  };
+>>  
+>> +enum annotated_ext_type {
+>> +	PERF_EXT_NONE = 0,
+>> +
+>> +	PERF_EXT_UXTB,
+>> +	PERF_EXT_SXTB,
+>> +	PERF_EXT_UXTH,
+>> +	PERF_EXT_SXTH,
+>> +	PERF_EXT_UXTW,
+>> +	PERF_EXT_SXTW,
+>> +	PERF_EXT_UXTX,  /* LSL is equivalent to UXTX */
 
- - IOCOUNTINH is read-modify-written by ->start()/->stop() and is saved
-   and restored around the whole handler.
- - pmu->events[] is written by ->del() and read by the handler.
- - hw_perf_event::prev_count is updated by both.
+This comment is inaccurate and will be removed.
 
-->add() and ->del() call the unlocked __riscv_iommu_pmu_start() and
-__riscv_iommu_pmu_stop() so the lock is taken once per callback.
+>> +	PERF_EXT_SXTX,
+>> +};
+>> +
+> 
+> Looks ok to me.  But more comments are needed for those who are not
+> familiar with the arm64 ISA.
+> 
+> Thanks,
+> Namhyung
+> 
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
----
- drivers/perf/riscv_iommu_pmu.c | 66 ++++++++++++++++++++++++++++++----
- 1 file changed, 60 insertions(+), 6 deletions(-)
+Got it. Will add more comments in v5.
 
-diff --git a/drivers/perf/riscv_iommu_pmu.c b/drivers/perf/riscv_iommu_pmu.c
-index f6acd56f2f61..ee2f6d1fbece 100644
---- a/drivers/perf/riscv_iommu_pmu.c
-+++ b/drivers/perf/riscv_iommu_pmu.c
-@@ -101,6 +101,7 @@ struct riscv_iommu_pmu {
- 	u64 event_cntr_mask;
- 	struct perf_event *events[RISCV_IOMMU_HPM_COUNTER_NUM];
- 	DECLARE_BITMAP(used_counters, RISCV_IOMMU_HPM_COUNTER_NUM);
-+	raw_spinlock_t lock;
- };
- 
- #define to_riscv_iommu_pmu(p) (container_of(p, struct riscv_iommu_pmu, pmu))
-@@ -485,7 +486,8 @@ static void riscv_iommu_pmu_update(struct perf_event *event)
- 	local64_add(delta, &event->count);
- }
- 
--static void riscv_iommu_pmu_start(struct perf_event *event, int flags)
-+/* Called with pmu->lock held */
-+static void __riscv_iommu_pmu_start(struct perf_event *event, int flags)
- {
- 	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
-@@ -500,11 +502,22 @@ static void riscv_iommu_pmu_start(struct perf_event *event, int flags)
- 	riscv_iommu_pmu_set_period(event);
- 	riscv_iommu_pmu_set_event(pmu, hwc->idx, hwc->config);
- 	riscv_iommu_pmu_enable_counter(pmu, hwc->idx);
-+}
-+
-+static void riscv_iommu_pmu_start(struct perf_event *event, int flags)
-+{
-+	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
-+	unsigned long irqflags;
-+
-+	raw_spin_lock_irqsave(&pmu->lock, irqflags);
-+	__riscv_iommu_pmu_start(event, flags);
-+	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
- 
- 	perf_event_update_userpage(event);
- }
- 
--static void riscv_iommu_pmu_stop(struct perf_event *event, int flags)
-+/* Called with pmu->lock held */
-+static void __riscv_iommu_pmu_stop(struct perf_event *event, int flags)
- {
- 	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
-@@ -521,13 +534,26 @@ static void riscv_iommu_pmu_stop(struct perf_event *event, int flags)
- 	hwc->state |= PERF_HES_STOPPED | PERF_HES_UPTODATE;
- }
- 
-+static void riscv_iommu_pmu_stop(struct perf_event *event, int flags)
-+{
-+	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
-+	unsigned long irqflags;
-+
-+	raw_spin_lock_irqsave(&pmu->lock, irqflags);
-+	__riscv_iommu_pmu_stop(event, flags);
-+	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
-+}
-+
- static int riscv_iommu_pmu_add(struct perf_event *event, int flags)
- {
- 	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
- 	unsigned int num_counters = pmu->num_counters;
-+	unsigned long irqflags;
- 	unsigned int idx;
- 
-+	raw_spin_lock_irqsave(&pmu->lock, irqflags);
-+
- 	/* Reserve index zero for iohpmcycles */
- 	if (is_cycle_event(event->attr.config))
- 		idx = RISCV_IOMMU_HPM_CYCLE_IDX;
-@@ -535,8 +561,10 @@ static int riscv_iommu_pmu_add(struct perf_event *event, int flags)
- 		idx = find_next_zero_bit(pmu->used_counters, num_counters, 1);
- 
- 	/* All event counters or cycle counter are in use */
--	if (idx == num_counters || pmu->events[idx])
-+	if (idx == num_counters || pmu->events[idx]) {
-+		raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
- 		return -EAGAIN;
-+	}
- 
- 	set_bit(idx, pmu->used_counters);
- 
-@@ -546,7 +574,9 @@ static int riscv_iommu_pmu_add(struct perf_event *event, int flags)
- 	local64_set(&hwc->prev_count, 0);
- 
- 	if (flags & PERF_EF_START)
--		riscv_iommu_pmu_start(event, flags);
-+		__riscv_iommu_pmu_start(event, flags);
-+
-+	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
- 
- 	/* Propagate changes to the userspace mapping. */
- 	perf_event_update_userpage(event);
-@@ -556,18 +586,26 @@ static int riscv_iommu_pmu_add(struct perf_event *event, int flags)
- 
- static void riscv_iommu_pmu_read(struct perf_event *event)
- {
-+	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
-+	unsigned long irqflags;
-+
-+	raw_spin_lock_irqsave(&pmu->lock, irqflags);
- 	riscv_iommu_pmu_update(event);
-+	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
- }
- 
- static void riscv_iommu_pmu_del(struct perf_event *event, int flags)
- {
- 	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
-+	unsigned long irqflags;
- 	int idx = hwc->idx;
- 
--	riscv_iommu_pmu_stop(event, PERF_EF_UPDATE);
-+	raw_spin_lock_irqsave(&pmu->lock, irqflags);
-+	__riscv_iommu_pmu_stop(event, PERF_EF_UPDATE);
- 	pmu->events[idx] = NULL;
- 	clear_bit(idx, pmu->used_counters);
-+	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
- 
- 	perf_event_update_userpage(event);
- }
-@@ -635,12 +673,24 @@ static irqreturn_t riscv_iommu_pmu_irq_handler(int irq, void *dev_id)
- {
- 	struct riscv_iommu_pmu *pmu = (struct riscv_iommu_pmu *)dev_id;
- 	DECLARE_BITMAP(ovf_bitmap, BITS_PER_TYPE(u64));
-+	unsigned long irqflags;
- 	u32 ovf, idx, inhibit;
- 
--	/* Check whether this interrupt is for PMU */
-+	/*
-+	 * Check whether this interrupt is for PMU. Done outside the lock so
-+	 * that a shared interrupt line is left alone as cheaply as possible.
-+	 */
- 	if (!(readl_relaxed(pmu->reg + RISCV_IOMMU_REG_IPSR) & RISCV_IOMMU_IPSR_PMIP))
- 		return IRQ_NONE;
- 
-+	/*
-+	 * Hold the lock across the whole sequence below. Stopping the
-+	 * counters, processing them and restoring the previous inhibit state
-+	 * has to be atomic against ->start()/->stop(), otherwise a counter
-+	 * enabled in between would be inhibited again by the restore.
-+	 */
-+	raw_spin_lock_irqsave(&pmu->lock, irqflags);
-+
- 	/* Process PMU IRQ */
- 	inhibit = riscv_iommu_pmu_stop_all(pmu);
- 
-@@ -672,6 +722,8 @@ static irqreturn_t riscv_iommu_pmu_irq_handler(int irq, void *dev_id)
- 
- 	riscv_iommu_pmu_start_all(pmu, inhibit);
- 
-+	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
-+
- 	return IRQ_HANDLED;
- }
- 
-@@ -735,6 +787,8 @@ static int riscv_iommu_pmu_probe(struct auxiliary_device *auxdev,
- 
- 	iommu_pmu->reg = iommu_dev->reg;
- 
-+	raw_spin_lock_init(&iommu_pmu->lock);
-+
- 	/*
- 	 * Counter number and width are hardware-implemented, detect them by
- 	 * writing 1s and reading back which bits stuck.
--- 
-2.43.7
+Thanks,
+Tengda
+
+> 
+>>  /**
+>>   * struct annotated_insn_loc - Location info of instruction
+>>   * @ops: Array of location info for source and target operands
+>>
+>>
+>>>> +    }
+>>>> +
+>>>> +    if (src_tsr.kind == TSR_KIND_CONST) {
+>>>> +        tsr->kind = src_tsr.kind;
+>>>> +        tsr->imm_value = src_tsr.imm_value + imm_value;
+>>>> +        tsr->offset = 0;
+>>>> +        tsr->ok = src_tsr.ok;
+>>>> +
+>>>> +        pr_debug_dtp("add [%x] imm %#"PRIx64"(reg%d) -> reg%d\n",
+>>>> +                 insn_offset, imm_value, sreg, dreg);
+>>>
+>>> And since add is commutative, this early return drops the pointer
+>>> side for add rd, const_reg, ptr_reg: sreg starts as reg1, hits the
+>>> CONST case and returns before the goto retry at the bottom ever gets
+>>> a chance to evaluate the pointer register. The result should be the
+>>> pointer with the constant applied as an offset, not a plain constant.
+>>> Maybe check the other register for a pointer type before falling into
+>>> the CONST case (or move the CONST handling after the retry).
+>>>
+>>
+>> Yeah, this issue is a side effect of the previous incomplete handling and
+>> will be fixed together.
+>>
+>> Thanks,
+>> Tengda
+>>
 
