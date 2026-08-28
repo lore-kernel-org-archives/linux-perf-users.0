@@ -1,30 +1,50 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F7EB3DB320;
-	Fri, 28 Aug 2026 07:41:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2373CA4B5;
+	Fri, 28 Aug 2026 08:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787902900; cv=none; b=bsUIAgNRlKQYmIvN7wWu8BMjiS5bMa6LKAPiZ3WCx/8M2SIX9RpRBa1GjqNi5ieyehnwOUAObZKRrU3FhiZ/TQOArmHn0yfBBLJDg8vrXfodAJshGlnYAjmCTfL/t565luuBCLD8ltTvd3jfLrHeg80eSF2bp23otwYhr/+un1c=
+	t=1787904706; cv=none; b=g0KDHpQXF1wYmkKCrirxw1UfL0XWaaQms9wb4VVtHD+e6G62VUltSbbWG9RSPsU9bIWbTBSV8w9A5lOywYR7ByLtFvWFpyZtinkUf0HeWSRjmLOoW45hqI5cxN4N2GBuvXTFNugam6Iiu096BujnPZOCWrbPbMwE2orZhJKk0zY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787902900; c=relaxed/simple;
-	bh=GWwww3D6a51wjxzolgNq0EOLHOiBFoQ56yzw2+b35xQ=;
+	s=arc-20240116; t=1787904706; c=relaxed/simple;
+	bh=/TNjmY6gIsbYZTaMZJVRiVulAyyQ0/zP0EK/2SAVwTY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UVJlXrGbsBEvogHvk34CWw/cUE+AGlEAxw0sF9nlZfzJrJ+6p3ZAsK9CfQgwIrts8AAoO3/9K4SBfA/nPpMXmCjWRT5nJFUs9lXxVm8PCSoJ61km6FO9wOSE4nw2s3ZoSxxSUupdGj3MNn7ulXVoc/aR4/nd31Y3A34hWzVusEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.170])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hWVg45SyBzKHMX2;
-	Fri, 28 Aug 2026 15:40:48 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 4077B40583;
-	Fri, 28 Aug 2026 15:41:32 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgBXwIeqO5FqWfrvDw--.119S2;
-	Fri, 28 Aug 2026 15:41:31 +0800 (CST)
-Message-ID: <fc22d702-9c53-415d-b3f2-8606daa2d656@huaweicloud.com>
-Date: Fri, 28 Aug 2026 15:41:30 +0800
+	 In-Reply-To:Content-Type; b=QYo0sjCql1yhk/yWbPYP9U1GKzUEVk0ywrOFJ8xov29v1xWLZcbucHO5BG7ICsiSKFJ7qC5wTE32iFlrEcEOlAbyfciMXDLhqu3fidjDDKagi4jbQF8Sp/+YYEbcQlvFIqgYfKCDn7GjNFwlRTkNyp6KnkDZ0t89K2hdzkH25fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UkCqCyRC; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UkCqCyRC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1787904705; x=1819440705;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/TNjmY6gIsbYZTaMZJVRiVulAyyQ0/zP0EK/2SAVwTY=;
+  b=UkCqCyRCl2xSDY2B7BWOcflQjSmPhthOAV3AbOGxyGWy1u6LAdJzdsDa
+   IlBqCLDywnPDu50XgXLFWcfJaPdJxUOA7Iy4Uzz/UdUPmEeFQa9uaiQMW
+   gZeJqXbzBfjSEdHNvTKZDLpYl7yJgt13uCOzMXTuSjTLR4/MftDrOo74g
+   E1OjWSlOkIOdmEx+Kofr56Cuzzoiysd6C3V/bUuLmvJjyAYJD/R6daDMj
+   DYC7H/HBcpzRuEbD23m6GSKLS6RJ309wvt96IW7GMCXvTzsz6kkXGqIV6
+   DmvkoRQo8b328K7ZyLEPrzN0Xx2zyK9yeO9SCZxly1zroDpaDigh1kyDh
+   A==;
+X-CSE-ConnectionGUID: Pif26tCAQBm5UTMyJGeI2A==
+X-CSE-MsgGUID: svyIRq7bTOOx9sL7u6AOPQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11888"; a="88334541"
+X-IronPort-AV: E=Sophos;i="6.25,248,1779174000"; 
+   d="scan'208";a="88334541"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2026 01:11:45 -0700
+X-CSE-ConnectionGUID: krGd7fMwQESVWlgHwP8hUw==
+X-CSE-MsgGUID: ZiNATS8lQ1iO7porRt2EEg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,248,1779174000"; 
+   d="scan'208";a="264843426"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Aug 2026 01:11:40 -0700
+Message-ID: <29d02905-14fd-4c2a-86d0-a605e9d41b10@linux.intel.com>
+Date: Fri, 28 Aug 2026 16:11:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -32,261 +52,107 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 20/23] perf annotate-arm64: Support 'add' instruction
- tracking
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Shuai Xue <xueshuai@linux.alibaba.com>, james.clark@linaro.org,
- Li Huafei <lihuafei1@huawei.com>, Peter Zijlstra <peterz@infradead.org>,
- leo.yan@linux.dev, Ian Rogers <irogers@google.com>,
- Kim Phillips <kim.phillips@arm.com>, Mark Rutland <mark.rutland@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Bill Wendling <morbo@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
+Subject: Re: [PATCH RESEND v7 1/2] perf pmu intel: Generalize SNC cpumask
+ adjustment for multiple platforms
+To: Ian Rogers <irogers@google.com>, Chun-Tse Shao <ctshao@google.com>,
+ Zide Chen <zide.chen@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Zecheng Li <zli94@ncsu.edu>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- llvm@lists.linux.dev
-References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-21-wutengda@huaweicloud.com>
- <89e66d40-5f9f-4147-beda-00623797cd04@linux.alibaba.com>
- <b5e4ef0d-cb11-45de-987a-226340b576ed@huaweicloud.com>
- <aoy-eAVaW_TsdymE@google.com>
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20260527221934.3830896-1-ctshao@google.com>
+ <20260528001117.3BBF11F00A3A@smtp.kernel.org>
+ <CAJpZYjUiNdN3a6y+8rs=YP2Mgtj6EQJnkiB9TN_suWd8fGkoEg@mail.gmail.com>
+ <CAJpZYjUhw8+ouKTS82G6ih457=pHn18AtvwMCAcaTL9csKmdTg@mail.gmail.com>
+ <CAP-5=fVAckZihxg4djQn7iTGbNNT1vFLXt2En8mm8+COSs3GcQ@mail.gmail.com>
 Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <aoy-eAVaW_TsdymE@google.com>
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAP-5=fVAckZihxg4djQn7iTGbNNT1vFLXt2En8mm8+COSs3GcQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgBXwIeqO5FqWfrvDw--.119S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3GF4rtrWUKFyUGw18GF4DArb_yoW3Kry5pr
-	4kGFWUGrW3JrnYqr1agw4UJF9akr1xJ3WUur1rX3WayFs2yr12gF1jqryq9F18Jr4rJr1U
-	Jr1jqrnxZr1UArJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWr
-	XwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0
-	s2-5UUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
+On 8/28/2026 1:28 PM, Ian Rogers wrote:
+> On Tue, Jun 9, 2026 at 11:44 AM Chun-Tse Shao <ctshao@google.com> wrote:
+>> Ping for attention.
+> I suspect Arnaldo and Namhyung are waiting for feedback from Intel on
+> these patches. If someone could check them it would be appreciated.
 
-On 2026/8/25 5:58, Namhyung Kim wrote:
-> On Wed, Aug 19, 2026 at 11:04:36AM +0800, Tengda Wu wrote:
->>
->>
->> On 2026/8/11 16:45, Shuai Xue wrote:
->>>
->>>
->>> On 8/8/26 8:23 PM, Tengda Wu wrote:
->>>> Extend update_insn_state() for arm64 to track 'add' instructions for
->>>> structure member address calculation, which commonly appear as:
->>>>
->>>>    add  dreg, base, #offset
->>>>    add  dreg, base, reg2     (reg2 holds a constant)
->>>>
->>>> Unlike x86, the arm64 'add' instruction has an extra base register among
->>>> its source operands. Therefore, in terms of propagating the data type,
->>>> it is essentially performing a 'mov', except that before the 'mov', it
->>>> first needs to be updated by adding the offset or reg2.
->>>>
->>>> A real-world example is shown below:
->>>>
->>>>    ffff80008001c9a8 <flush_ptrace_hw_breakpoint>:
->>>>    ffff80008001c9c4:  add  x19, x0, #0xeb8   // x0 (task_struct*) + 0xeb8 -> x19
->>>> * ffff80008001c9d0:  ldr  x0, [x19]
->>>>
->>>> Before this commit, the type flow broke at the 'add' instruction,
->>>> leaving the subsequent load with no type information:
->>>>
->>>>    chk [28] reg19 offset=0 ok=0 kind=0 cfa : no type information
->>>>    final result: no type information
->>>>
->>>> After this commit, the tracker correctly follows the member address
->>>> calculation:
->>>>
->>>>    var [0] reg0 offset 0 type='struct task_struct*'
->>>>    add [1c] address of 0xeb8(reg0) -> reg19 type='struct task_struct*'
->>>>    chk [28] reg19 offset=0 ok=1 kind=1 (struct task_struct*) : Good!
->>>>    found by insn track: 0(reg19) type-offset=0xeb8
->>>>    final result: type='struct task_struct'
->>>>
->>>> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
->>>> ---
->>>>   .../perf/util/annotate-arch/annotate-arm64.c  | 87 ++++++++++++++++++-
->>>>   1 file changed, 85 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
->>>> index 7b780bad8c07..eaeb4433fc3a 100644
->>>> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
->>>> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
->>>> @@ -688,6 +688,87 @@ static void update_mov_insn_state(struct type_state *state,
->>>>       pr_debug_type_name(&tsr->type, tsr->kind);
->>>>   }
->>>>   +static void update_add_insn_state(struct type_state *state,
->>>> +                  struct disasm_line *dl,
->>>> +                  struct annotated_op_loc *src,
->>>> +                  struct annotated_op_loc *dst)
->>>> +{
->>>> +    struct type_state_reg *tsr;
->>>> +    struct type_state_reg src_tsr;
->>>> +    u32 insn_offset = dl->al.offset;
->>>> +    int sreg = src->reg1;
->>>> +    int dreg = dst->reg1;
->>>> +    u64 imm_value;
->>>> +
->>>> +    if (!has_reg_type(state, dreg))
->>>> +        return;
->>>> +
->>>> +    tsr = &state->regs[dreg];
->>>> +    tsr->copied_from = -1;
->>>> +
->>>> +retry:
->>>> +    if (!has_reg_type(state, sreg) || !state->regs[sreg].ok) {
->>>> +        invalidate_reg_state(tsr);
->>>> +        return;
->>>> +    }
->>>> +
->>>> +    src_tsr = state->regs[sreg];
->>>> +
->>>> +    /*
->>>> +     * Handle 'add' instructions of the form:
->>>> +     *   add  dreg, base, #offset     (immediate offset)
->>>> +     *   add  dreg, base, reg2        (reg2 holds a constant)
->>>> +     *
->>>> +     * For case 2, retrieve the constant value from reg2
->>>> +     * and use it as the offset.
->>>> +     */
->>>> +    imm_value = src->offset;
->>>> +    if (src->multi_regs) {
->>>> +        int reg2 = (sreg == src->reg1) ? src->reg2 : src->reg1;
->>>> +
->>>> +        if (!has_reg_type(state, reg2) || !state->regs[reg2].ok) {
->>>> +            /* Unable to resolve type for dst, bail out */
->>>> +            invalidate_reg_state(tsr);
->>>> +            return;
->>>> +        }
->>>> +        if (state->regs[reg2].kind == TSR_KIND_CONST)
->>>> +            imm_value = state->regs[reg2].imm_value;
->>>
->>> First, when reg2 is valid but not TSR_KIND_CONST - say a pointer
->>> freshly loaded from memory - the addend is unknown at analysis time,
->>> yet imm_value silently stays 0 and propagation continues, tracking
->>> the destination as base + 0. Note the asymmetry: no state at all
->>> invalidates, but state that doesn't yield a value pretends the
->>> addend is zero. Unknown addend should invalidate as well:
->>>
->>>         if (state->regs[reg2].kind != TSR_KIND_CONST) {
->>>             invalidate_reg_state(tsr);
->>>             return;
->>>         }
->>>
->>
->> It might not be a direct invalidation, but rather swapping reg1/reg2 and
->> then retrying.
->>
->>> Second, the shifted/extended forms still break even with a constant
->>> reg2: extract_op_location_arm64() drops the "lsl #3" (or uxtw/sxtw)
->>> modifier, so add x0, x1, x2, lsl #3 contributes the unshifted value
->>> and maps later accesses to the wrong field. Maybe flag such operands
->>> during extraction (or fail the reg2 extraction) so the handler can
->>> skip them.
->>>
->>
->> Okay, so it seems shifted/extended forms are unavoidable. We may need to
->> introduce more fields into annotated_op_loc to record them, like this:
->>
->> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
->> index 138d9258281c..b00e0ad96023 100644
->> --- a/tools/perf/util/annotate.h
->> +++ b/tools/perf/util/annotate.h
->> @@ -501,6 +501,8 @@ int arch__dwarf_regnum(const struct arch *arch, const char *str);
->>   * @offset: Memory access offset in the operand
->>   * @segment: Segment selector register
->>   * @addr_mode: Addressing mode, only valid if @mem_ref is true
->> + * @extend_type: ARM64 register extend specifier (enum annotated_ext_type)
->> + * @shift: ARM64 shift amount (e.g., 0 to 4)
->>   * @mem_ref: Whether the operand accesses memory
->>   * @multi_regs: Whether the second register is used
->>   * @imm: Whether the operand is an immediate value (in offset)
->> @@ -511,6 +513,8 @@ struct annotated_op_loc {
->>  	int offset;
->>  	u8 segment;
->>  	u8 addr_mode;
->> +	u8 extend_type;
->> +	u8 shift;
->>  	bool mem_ref;
->>  	bool multi_regs;
->>  	bool imm;
->> @@ -542,6 +546,19 @@ enum annotated_addr_mode {
->>  	PERF_ADDR_MODE_POST_INDEX,
->>  };
->>  
->> +enum annotated_ext_type {
->> +	PERF_EXT_NONE = 0,
->> +
->> +	PERF_EXT_UXTB,
->> +	PERF_EXT_SXTB,
->> +	PERF_EXT_UXTH,
->> +	PERF_EXT_SXTH,
->> +	PERF_EXT_UXTW,
->> +	PERF_EXT_SXTW,
->> +	PERF_EXT_UXTX,  /* LSL is equivalent to UXTX */
+I suppose Zide has checked these patches and gave the "reviewed-by" tags. :)
 
-This comment is inaccurate and will be removed.
 
->> +	PERF_EXT_SXTX,
->> +};
->> +
-> 
-> Looks ok to me.  But more comments are needed for those who are not
-> familiar with the arm64 ISA.
-> 
+>
 > Thanks,
-> Namhyung
-> 
-
-Got it. Will add more comments in v5.
-
-Thanks,
-Tengda
-
-> 
->>  /**
->>   * struct annotated_insn_loc - Location info of instruction
->>   * @ops: Array of location info for source and target operands
->>
->>
->>>> +    }
->>>> +
->>>> +    if (src_tsr.kind == TSR_KIND_CONST) {
->>>> +        tsr->kind = src_tsr.kind;
->>>> +        tsr->imm_value = src_tsr.imm_value + imm_value;
->>>> +        tsr->offset = 0;
->>>> +        tsr->ok = src_tsr.ok;
->>>> +
->>>> +        pr_debug_dtp("add [%x] imm %#"PRIx64"(reg%d) -> reg%d\n",
->>>> +                 insn_offset, imm_value, sreg, dreg);
->>>
->>> And since add is commutative, this early return drops the pointer
->>> side for add rd, const_reg, ptr_reg: sreg starts as reg1, hits the
->>> CONST case and returns before the goto retry at the bottom ever gets
->>> a chance to evaluate the pointer register. The result should be the
->>> pointer with the constant applied as an offset, not a plain constant.
->>> Maybe check the other register for a pointer type before falling into
->>> the CONST case (or move the CONST handling after the retry).
->>>
->>
->> Yeah, this issue is a side effect of the previous incomplete handling and
->> will be fixed together.
->>
+> Ian
+>
 >> Thanks,
->> Tengda
+>> CT
 >>
-
+>> On Thu, May 28, 2026 at 2:31 PM Chun-Tse Shao <ctshao@google.com> wrote:
+>>> On Wed, May 27, 2026 at 5:11 PM <sashiko-bot@kernel.org> wrote:
+>>>> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+>>>>
+>>>> Pre-existing issues:
+>>>> - [Critical] An integer overflow in `uncore_cha_snc()` can result in a negative Sub-NUMA Clustering (SNC) node index. This bypasses the upper-bound check against `MAX_SNCS` and causes subsequent out-of-bounds array accesses.
+>>>> --
+>>>>
+>>>> commit be394e8b7ddbe730c3fc40fb608337fe19c7b33b
+>>>> Author: Chun-Tse Shao <ctshao@google.com>
+>>>>
+>>>> perf pmu intel: Generalize SNC cpumask adjustment for multiple platforms
+>>>>
+>>>> This commit generalizes the Sub-NUMA Clustering (SNC) logic previously
+>>>> specific to Granite Rapids to support multiple Intel platforms. It uses
+>>>> CPUID to determine SNC support and caches various PMU configurations
+>>>> to improve thread safety.
+>>>>
+>>>>> diff --git a/tools/perf/arch/x86/util/pmu.c b/tools/perf/arch/x86/util/pmu.c
+>>>>> index 7c9d238922a6c..9b00d5720fb7a 100644
+>>>>> --- a/tools/perf/arch/x86/util/pmu.c
+>>>>> +++ b/tools/perf/arch/x86/util/pmu.c
+>>>> [ ... ]
+>>>>
+>>>>> @@ -121,46 +142,73 @@ static int uncore_cha_snc(struct perf_pmu *pmu)
+>>>>>               return 0;
+>>>>>       }
+>>>>>       chas_per_node = num_cha / snc_nodes;
+>>>>> +     if (chas_per_node == 0) {
+>>>>> +             pr_warning("Unexpected: chas_per_node is 0 (num_cha=%d, snc_nodes=%d)\n",
+>>>>> +                        num_cha, snc_nodes);
+>>>>> +             return 0;
+>>>>> +     }
+>>>>>       cha_snc = cha_num / chas_per_node;
+>>>>>
+>>>>>       /* Range check cha_snc. for unexpected out of bounds. */
+>>>>>       return cha_snc >= MAX_SNCS ? 0 : cha_snc;
+>>>> [Severity: Critical]
+>>>> This is a pre-existing issue, but does this range check safely handle very
+>>>> large values for cha_num?
+>>>>
+>>>> Since cha_num is parsed as an unsigned int via sscanf() from the PMU name,
+>>>> and cha_snc is a signed int, a sufficiently large cha_num could cause the
+>>>> division result to overflow into a negative value.
+>>> I think it is very unlikely we would see cha_num > INT_MAX.
+>>> Since that is a pre-existing issue, I prefer to fix it separately.
+>>>
+>>> Thanks,
+>>> CT
+>>>
+>>>> If cha_snc becomes negative, the cha_snc >= MAX_SNCS check evaluates to
+>>>> false, allowing the function to return a negative index.
+>>>>
+>>>> Could this negative index then cause out-of-bounds array accesses when used
+>>>> later in uncore_cha_imc_compute_cpu_adjust()?
+>>>>
+>>>> uncore_cha_imc_compute_cpu_adjust() {
+>>>>     static bool checked_cpu_adjust[MAX_SNCS];
+>>>>     ...
+>>>>     if (checked_cpu_adjust[pmu_snc])
+>>>>     ...
+>>>> }
+>>>>
+>>>> --
+>>>> Sashiko AI review · https://sashiko.dev/#/patchset/20260527221934.3830896-1-ctshao@google.com?part=1
