@@ -1,41 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C0B359A68
-	for <linux-perf-users@vger.kernel.org>; Fri, 28 Aug 2026 16:58:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6ED5395AFA;
+	Fri, 28 Aug 2026 17:00:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787936332; cv=none; b=XTWZ75IofeuGBbWqqGwvJ7LecKxJOKS4vuSt3gGvbiZzqhFZbk+Kb9LKrdgzd6U4veXKVNaqd91wYA2ZiH52Z2SVfo58SKGeB1VRdyoP7zzZbg9ozywFkCr9byoNishLNXbe3HzmVvjB1sxUf/KJQ66rU1+sbyemXDnHd1psuvQ=
+	t=1787936404; cv=none; b=nQrfWO2TnTLEWTl/QpyMfqVHpC01SoLy+fy143dfxbg6O1rxn1Sb0y6SFgjMteTCcx4VMF76gBHuABnjTJbmSXrsA/vX7dB1iASY+MU1jI2EpSxgtcB6ehVRu7NRUb9FLtAFnFHBiLd22XTsW9SlTY9fAGi2qzaahY0LKBIJLVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787936332; c=relaxed/simple;
-	bh=LJR7EGLD5xxI6cgXnAVRPsXvMBsj4pll3N8x93MTuCE=;
+	s=arc-20240116; t=1787936404; c=relaxed/simple;
+	bh=suWv59rvKXQeQo8RaEzBuUekmM2zOJJjz72hfpTOsKI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rxdJWK/357VVEeaI96FXbF6S2H0Qe+q9malmzsCtgfAg5LqBWuGnevjNdIEPPmiF71IOf15KZWwnZaDkyDaB5f2a2UFVEfMGMf3fMuyp2we4Fv7QcTseZliMQNoaFzAGam1L41j9GkN1FJspGqqo1soJQlFfFLYnV52HNvyU0pM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F83bIdbU; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=cT8Y84kL6K56fFjhk/LTPuP3KeQw54SMhL5ogi6LfeAxbOdJabLT0V28AGBT5HMppNm6J7gxPPW1LTHjzL5vwrypy8sL1UD8G89zpQ46o+hPHM2nGdMbJ6W4SGY1tcTEsW5jpBcWw7biaKxwUSPY52uzgijHg/nzu4vUW7Sh2YM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X4kmCwSB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F83bIdbU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33E811F000E9;
-	Fri, 28 Aug 2026 16:58:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X4kmCwSB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FCAD1F000E9;
+	Fri, 28 Aug 2026 16:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787936329;
-	bh=nlAc6dBl0gjSAbn1tpd1k2E5jR7qNDQhtE6tuysjdlw=;
+	s=k20260515; t=1787936396;
+	bh=xvp3sRTDT3WERQY/AFWHdsCQL/yLtI9fiADG9eGBQDQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=F83bIdbUpzhPh4fPtlk1UN6Wu66rpfoC9+NJtjz3UtWLGhCsbGwnFH+quD4gMQHAk
-	 bJ4PYG4XuRGFpcIIBERffCaXgZJfcOuTR1MPsH8+8oJ5TqC7lkP1PiJq3kaFfqI3Dw
-	 ZQDLluQd0/fPJipxXfKKHkxvIopMW2QmOp4NKGjcWvVkkss4SbT+MBoHotmVp6ntWa
-	 DXLZaM4VC1LYNGTw/E7rpX7e5wlLvYdwkuxuGQM2Qf77FpQfhs452vJQ6ERxEHfBQA
-	 r/QGCfdgy+OnHLO1q3z0VfdrT83OnYbWfBWS/W5cZACfugC6tUngTrg0GaEXhoKnXK
-	 TcRxENCap9zcQ==
-Date: Fri, 28 Aug 2026 09:58:47 -0700
+	b=X4kmCwSB1HiGRZm6oZz78lDAGVJOiYf9pdhz8uPSSv5lNjalnqd+r0h2K5ApY5cBx
+	 voWXg1F/Ta8zAyd73myJp0wCo3IGdmbKURd6oObmnuXQHVhrTK9AYwjz53rrVSuPA/
+	 Fgze1lhujZxj25gAEZAfP4XaD+HISGZAlNOkUaHg8pZjs2UIIjyPR+NXNoxdawDo2D
+	 CWx79H3hUnlrC7CzdoiJ2AA/XQX1MbM4ZLhZGhulw+I5jjcd2Fd35QZdIGahX0S6z2
+	 fcrresKyka7idI5/u58Bu9GoN6h7a2lIOC44UTooA8bIfj5soobXO5Z6RvkJ0f16N+
+	 ZudD72ElCpBPg==
+Date: Fri, 28 Aug 2026 09:59:54 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Gennady Kupava <gennady.kupava@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [DISCUSSION] Three problems behind broken "perf --call-graph
- dwarf" on AMD: IP and stack dump mismatch, libdw fails on lld's layout, and
- the unwinder fallback never runs
-Message-ID: <apG-RzV0zyjoC-FY@google.com>
-References: <CAPu-DQqF0aF6=GS8Z6KKWeeX_V5LiXeKU_rJQZC+uGg8zuTPNw@mail.gmail.com>
- <apCyQ93c48Dy4H-S@google.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH] perf ftrace latency: Do not read trace files when BPF is
+ used
+Message-ID: <apG-ij-tYyK9cBSj@google.com>
+References: <20260826185815.280451-1-namhyung@kernel.org>
+ <CAP-5=fVfmWQaE45Y=pA1rE5JxQLKhfN82+yfRqQE7Hjrb8=aOQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,43 +51,67 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <apCyQ93c48Dy4H-S@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fVfmWQaE45Y=pA1rE5JxQLKhfN82+yfRqQE7Hjrb8=aOQ@mail.gmail.com>
 
-On Thu, Aug 27, 2026 at 02:55:15PM -0700, Namhyung Kim wrote:
-> Hello,
-> 
-> Thanks a lot for your detailed report!  It's good but let me jump into
-> the action items directly.
-> 
-> On Fri, Aug 21, 2026 at 10:49:59PM +0100, Gennady Kupava wrote:
-[SNIP]
-> > 2. perf: precise events and DWARF call graphs are mutually exclusive on this
-> >    hardware, so arguably perf should simply not let the two be combined.  I
-> >    would suggest two rules rather than one, because a blanket refusal would
-> >    make the common case worse:
-> > 
-> >    - for the default event, drop the P when --call-graph dwarf is requested,
-> >      silently and on PMUs where precision means IBS.  Otherwise a plain
-> >      "perf record -g --call-graph dwarf" starts failing outright on every AMD
-> >      box, which is worse than today.  The s390 case in evlist.c suggests this
-> >      kind of substitution is considered acceptable;
-> > 
-> >    - if the user asked for a precise event explicitly and also asked for
-> >      DWARF call chains, refuse with a message that says why and what to do,
-> >      instead of quietly producing a useless result.
-> > 
-> >    Note that this should be scoped to IBS.  On Intel, PEBS records the whole
-> >    register set, so precise events and DWARF unwinding work together there
-> >    and nothing needs restricting.  Frame-pointer call graphs are also fine
-> >    with precise events - only the leaf frame is off.
-> 
-> I think we can enable both precise IP and dwarf callchains by using
-> PERF_SAMPLE_REGS_INTR.  For unwinding, it should use PERF_REG_X86_IP
-> from the REGS_INTR instead of sample.ip
+Hi Ian,
 
-Ok, it seems we already do this in the perf tools but it looks like the
-kernel already overwrote the PERF_REG_X86_IP with the precise IP.  I
-feel like we should fix the kernel.
+On Wed, Aug 26, 2026 at 02:36:27PM -0700, Ian Rogers wrote:
+> On Wed, Aug 26, 2026 at 11:58 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > I've realized that it didn't set up the tracing files when BPF is used
+> > so poll() just returns immediately.  It ends up with calling poll()
+> > unnecessarily in a loop.
+> >
+> > BPF still needs the loop to wait for the target process exiting or a
+> > signal from users.  Let's sleep for 1 msec and check that.
+> >
+> > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/builtin-ftrace.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+> > index 4f881a40c311ae52..e61b9de11e1e41c7 100644
+> > --- a/tools/perf/builtin-ftrace.c
+> > +++ b/tools/perf/builtin-ftrace.c
+> > @@ -1146,6 +1146,11 @@ static int __cmd_latency(struct perf_ftrace *ftrace)
+> >
+> >         line[0] = '\0';
+> >         while (!done) {
+> > +               if (ftrace->target.use_bpf) {
+> > +                       usleep(1000);
+> > +                       continue;
+> > +               }
+> > +
+> 
+> To avoid the busy waiting could we:
+> ```
+> // Globaly:
+> sem_t sig_sem;
+> ...
+> // Prior to setting up the signal handler:
+> sem_init(&sig_sem, 0, 0);
+> ...
+> // Here:
+> if (ftrace->target.use_bpf) {
+>    sem_wait(&sig_sem);
+> } else {
+>    while (!done) {
+> ...
+> }
+> // In the signal handler:
+> if (ftrace->target.use_bpf) {
+>    sem_post(&sig_sem);
+> }
+> ...
+> // After removing the signal handler:
+> sem_destroy(&sig_sem);
+> ```
+
+Looks better, will check.
 
 Thanks,
 Namhyung
