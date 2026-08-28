@@ -1,117 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C423D27A47F
-	for <linux-perf-users@vger.kernel.org>; Fri, 28 Aug 2026 22:36:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A143A9852;
+	Fri, 28 Aug 2026 22:50:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787956595; cv=none; b=o/Ow71dYnMyImMZDt6sWcqDPq4KhoRS7HhiBUH/xQd+SFPEMNy62H9XfC7q5ZVHvVcrz4llC3gaxXxCSG9sheEPwl0Ab6Fji7qituX0R9r4DA8BBbGchmr4nfx4IgRdmbUh2W2JVg/3Pj1DO7StKvN/Y3ySYiJNYGg+P8FEbQDE=
+	t=1787957440; cv=none; b=mYhmUg6CHjKlmd//MBFz7qNlEGKC4VYnptopvN7TT++cMBKofsQ3LMAXCiaFx1sXcKBmI5rMrTMxT3V2SNmDWig9/AVvKFwn1hAWqAJo332WKUCHByVUPTluwcr2io17N0M8x9VFj7kthBDlmrk8Z7OrlYXTnBwPjKTJG+Whj4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787956595; c=relaxed/simple;
-	bh=RiNcM/GCz209XQxR+sNCz4p19uN3zPUZjVRHHcsYF0Y=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=brnsbLmNT+ybwXO16yB8fOI1EM91QMcydJimUF1PBpbe2+bJtIWz3x1FuY5RW9C+9Hj+KBj4/vSM5J+dACwAUwd0OEmRbpMV1N9TdHwTTxn/iqDK5N1CP/U9n2fmt1R+CgEaDjYFVWbDcfpVD1zQo9BsyMK/B5Fs7podxjI3Cag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a8Io428T; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1787957440; c=relaxed/simple;
+	bh=YzYbS/mUgTdW7TpPgxk34yQk8/yCr91EcgGd7JNd8X0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dCrj6hZzNZbxAzeeXJEHb3NvlMlG7j1DFB4Wf6IaVsqarwJQhzkmPSszoMj/9h6WgKUMLucXeghYeBoOiWXhSNxx01JMPJqW3gdLehBfY97eoTns5McGrMu6+vs2LuG2Ie+nqqHxwxa1Gktc5RyFknrBYKDrXk4+gwZJAh86puk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hSIBaFvy; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a8Io428T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5044D1F000E9;
-	Fri, 28 Aug 2026 22:36:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hSIBaFvy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F5221F000E9;
+	Fri, 28 Aug 2026 22:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787956594;
-	bh=IvZGQQYhn+co76YEyy7SwAGAI9in/JrISERh3xEBf+M=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=a8Io428T43MSiWVbHsHcCbBTTLz0efdY6/WWYbTlhnONvB6SpIkuXu9UoXU+nYPjA
-	 Taj1Zg1QrBzGguKSw0otrjCCoydmOJ5spBQonxrmi+HYm3YdbQx48ASI1sBBqBGMWQ
-	 0FPYyUbFA9l1bCgPDf6pZpl8Hu7eWCDSA0svFxadjSOg4nriC6sRu3IFLZQ8rq3DJp
-	 KXdLjdvYhXPUvRTYF/U8V0dX85iqwyN/5p/Nvfx4OPot+KWsz27ioWX8afgJYTfCgV
-	 lDecemPNmCi/BQ55tEzJQCVrQ4Ay5RCg6Tlmo2dQ7bUdGYLGPGGh6iP50SIsWRJCLc
-	 BRmEV3VeAkDgA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 1/2] perf tool: Remove util/cache.h
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260828222045.1314766-1-irogers@google.com>
-References: <20260828222045.1314766-1-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 28 Aug 2026 22:36:33 +0000
-Message-Id: <20260828223634.5044D1F000E9@smtp.kernel.org>
+	s=k20260515; t=1787957437;
+	bh=zmVmiMxAWKb570gh6PdWPY+Luuzb6Ouehc/PzemXyQE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=hSIBaFvy29YKnD5qBFTkHUkI8asPX4zxliFdaldDmWwiiSbaLQMmv/kxUwpx28Xnu
+	 Z9A8g+irkWBW07G1l3dy+s6Ge/dMs3RGaMo2Xq64SvJ5OKcufr5EhsgCSi0cdXjc9/
+	 KYnLc3seo/YEwTqWIJO07vNtCqgwEUOHav9FLCj+mR5r2C5h1SWv5UH1gV3owboxqq
+	 0KkD7WDCdpAB+DcSXvHL9+ZsKXEp0UY6Wlo11Izg+zNzQ6rRfeb4Ar8LnfYU67dPeu
+	 BY6IlOg2O/R1y7JkaG/Lwbm1WlCPoUEhvMwrApy0OASh2BZ8E0Omr5RRN0SJADf9Sx
+	 9KqPTxhOLFXUQ==
+Date: Fri, 28 Aug 2026 19:50:33 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>, Chun-Tse Shao <ctshao@google.com>,
+	Zide Chen <zide.chen@intel.com>, Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RESEND v7 1/2] perf pmu intel: Generalize SNC cpumask
+ adjustment for multiple platforms
+Message-ID: <apIQuQAPGaEhKesD@x2>
+References: <20260527221934.3830896-1-ctshao@google.com>
+ <20260528001117.3BBF11F00A3A@smtp.kernel.org>
+ <CAJpZYjUiNdN3a6y+8rs=YP2Mgtj6EQJnkiB9TN_suWd8fGkoEg@mail.gmail.com>
+ <CAJpZYjUhw8+ouKTS82G6ih457=pHn18AtvwMCAcaTL9csKmdTg@mail.gmail.com>
+ <CAP-5=fVAckZihxg4djQn7iTGbNNT1vFLXt2En8mm8+COSs3GcQ@mail.gmail.com>
+ <29d02905-14fd-4c2a-86d0-a605e9d41b10@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <29d02905-14fd-4c2a-86d0-a605e9d41b10@linux.intel.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Low] Removal of `util/cache.h` removes implicit inclusions of standard P=
-OSIX headers, causing musl compatibility violations due to missing explicit=
- includes.
---
+On Fri, Aug 28, 2026 at 04:11:38PM +0800, Mi, Dapeng wrote:
+> 
+> On 8/28/2026 1:28 PM, Ian Rogers wrote:
+> > On Tue, Jun 9, 2026 at 11:44 AM Chun-Tse Shao <ctshao@google.com> wrote:
+> >> Ping for attention.
+> > I suspect Arnaldo and Namhyung are waiting for feedback from Intel on
+> > these patches. If someone could check them it would be appreciated.
+> 
+> I suppose Zide has checked these patches and gave the "reviewed-by" tags. :)
 
-commit 6e76c8b7f671374f4e87596d7f1af0426551795a
-Author: Ian Rogers <irogers@google.com>
+yeah, looking at it now it seems to be pretty well reviewed, I'm about
+to start processing patches for the next merge window, will get it
+merged soon, thanks for the ping!
 
-perf tool: Remove util/cache.h
-
-Move definitions to places they are used, or path.h in the case of
-path.c's mkpath function. Remove unused definitions. Fix transitive
-include dependencies.
-
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -11,7 +11,6 @@
-> =20
->  #include "util/color.h"
->  #include <linux/list.h>
-> -#include "util/cache.h"
->  #include <linux/rbtree.h>
->  #include "util/symbol.h"
-
-[Severity: Low]
-Does the removal of util/cache.h drop implicit inclusions of standard POSIX
-headers? This file uses standard string and allocation functions, so it
-seems <string.h> and <stdlib.h> need to be explicitly included to avoid
-build failures on systems using musl libc.
-
-[ ... ]
-
-> diff --git a/tools/perf/util/path.c b/tools/perf/util/path.c
-> --- a/tools/perf/util/path.c
-> +++ b/tools/perf/util/path.c
-> @@ -1,6 +1,5 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include "path.h"
-> -#include "cache.h"
->  #include <linux/kernel.h>
->  #include <limits.h>
-
-[Severity: Low]
-With cache.h removed, does mkpath() now lack the required <stdarg.h> includ=
-e?
-Looking at mkpath() later in this file, it relies on va_start(args, fmt) wh=
-ich
-requires <stdarg.h>. Without the explicit include, this causes musl
-compatibility violations.
-
-[ ... ]
-
-> diff --git a/tools/perf/util/strbuf.c b/tools/perf/util/strbuf.c
-> --- a/tools/perf/util/strbuf.c
-> +++ b/tools/perf/util/strbuf.c
-> @@ -1,5 +1,4 @@
->  // SPDX-License-Identifier: GPL-2.0
-> -#include "cache.h"
->  #include "debug.h"
->  #include "strbuf.h"
-
-[Severity: Low]
-Should <string.h> be explicitly included here? Looking at strbuf_add(), it
-uses memcpy(), and relying on <linux/string.h> instead of the standard POSIX
-header can cause namespace pollution and musl compilation failures.
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260828222045.1314=
-766-1-irogers@google.com?part=3D1
+- Arnaldo
