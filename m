@@ -1,156 +1,146 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5B644A40A;
-	Fri, 28 Aug 2026 11:59:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7460E33C18B;
+	Fri, 28 Aug 2026 14:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787918387; cv=none; b=s5Zut7rXWbqifE9UocsPM0zUyeCoEv4Evj9JJPAQ08Xs3gt52ZV2HpAhu0k8bq4s2Xe6VJAyDjMkO2cltnPmg1Df0t6qcf5XOFeJDkhFJRCD7GNjPG34LNLGiI5+8JPQLyb07jSIHgL3dJkoOaZcMbTDh/MtaCp1xS4iEW5fj0Q=
+	t=1787926901; cv=none; b=I4G4CJPFhd4a/Pl5N5qadIDFD+yPWxvKkTrwHw7mnHiTC+mDYiwQIXOzEXNwZExattG/gYsArepfbE3eENDDBqmIK72L75m0JUFJjKY7a7bOy71kuaOIezoRiltP9Es6Tr4MvTWGy7/n//JbJN65ed7CfZY/XjMkaUnpWmKM+cM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787918387; c=relaxed/simple;
-	bh=7/FYmHTxFJFe0LbcTjqiwV17AgYCBMgEB6cNbf2DWv8=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=IRz+9CT2M1hSyEZw2qyRhqmGoclaGnx0XHL0KRgqHfsBoSPRXL3Co3cJHlC/MDtG2/LuzSIzWEqb/zUfTNK90qIg1ItDrsSECdCnJLL3fauZJVWraca10ZaeFEAUtjk3JdCoifQztVHLR/7Q6X9rvRQcNd/khpOgSiDD7Q4RA3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=F0bpCAt2; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="F0bpCAt2"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 67SAVfnq602751;
-	Fri, 28 Aug 2026 11:59:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=Taxb3J
-	bSUnHxLpAq+NwKO8fodpIhxdVmldoDuesMewo=; b=F0bpCAt2FUDhG0FtGnlwRe
-	C3quCKPHckHXRMZ26vd7+RvCIy6dnLJkL03aYVPQz4XePy+XNV3N9BHsiToaUZR1
-	sO2wb/EG37JI90LfN/mNSHVCPBezDx0cgV4yYE/6awpOAIg1mrvZzWhMpjfa4tSn
-	Bu/mC521+YG/ivvaenc6uGbAmAEiWncKxoo5Y/5BMlMeJAf66wLrzr/qquPFZUu7
-	6X2EaCUZSkJlYtpRotkKdnP+ChRHEuRl5FHHabMFPeh3ILv9VPRL7zvwAS7gyqjg
-	LK+aQPnV6NkU45SRuRSOitR75rwJkC20uBEIIEMYbAjsUeCunycmz16EpLp8wZ0w
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4g726f3sdr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Aug 2026 11:59:17 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.7/8.18.1.7) with ESMTP id 67SBuNrE027683;
-	Fri, 28 Aug 2026 11:59:17 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4g7qkhnw38-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Aug 2026 11:59:17 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 67SBxFlA35783132
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 28 Aug 2026 11:59:15 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0A42320040;
-	Fri, 28 Aug 2026 11:59:15 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3846920049;
-	Fri, 28 Aug 2026 11:59:12 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.124.217.118])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Fri, 28 Aug 2026 11:59:11 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1787926901; c=relaxed/simple;
+	bh=z++vUbY2MyH5iwR7w6wcJ/ofMQ5wB8AMRbGt2ZN62ik=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m2G/A376Rn/WTdikbMGy6rOqRZ5iFe9fZR5CP3CIlcOYkvI8Mpb+vNK7mYjUmsRTJVQwCJQ9530LVuah7OTPHBrGsD5UqjoAAxS8ZlB1yTObxO0PFx6k/3tbpyhllQ10KR5/g2DUK36RcjVcikF42xtTjzWCRwp6uNKJNzFbWjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [111.196.241.250])
+	by APP-01 (Coremail) with SMTP id qwCowAD3zfFhmZFqhFnABg--.44541S2;
+	Fri, 28 Aug 2026 22:21:22 +0800 (CST)
+From: Pengpeng Hou <pengpeng@iscas.ac.cn>
+To: Atish Patra <atish.patra@linux.dev>
+Cc: Pengpeng Hou <pengpeng@iscas.ac.cn>,
+	Anup Patel <anup@brainfault.org>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Andrew Jones <andrew.jones@oss.qualcomm.com>,
+	Conor Dooley <conor@kernel.org>,
+	linux-riscv@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] perf: riscv: fix PMU overflow counter restart state
+Date: Fri, 28 Aug 2026 22:21:18 +0800
+Message-ID: <20260828142120.12616-1-pengpeng@iscas.ac.cn>
+X-Mailer: git-send-email 2.50.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3864.300.41.1.7\))
-Subject: Re: [PATCH] perf powerpc-vpadtl: Fix raw_size of DTL samples
-From: Athira Rajeev <atrajeev@linux.ibm.com>
-In-Reply-To: <20260825094733.1031566-1-wangyan01@kylinos.cn>
-Date: Fri, 28 Aug 2026 17:29:00 +0530
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        namhyung@kernel.org, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-        irogers@google.com, adrian.hunter@intel.com, james.clark@linaro.org,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <85CF9B6A-8E46-4D5E-8AAD-A9B3B75DF6BF@linux.ibm.com>
-References: <20260825094733.1031566-1-wangyan01@kylinos.cn>
-To: Wang Yan <wangyan01@kylinos.cn>
-X-Mailer: Apple Mail (2.3864.300.41.1.7)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Reinject: loops=2 maxloops=12
-X-Authority-Analysis: v=2.4 cv=TfimcxQh c=1 sm=1 tr=0 ts=6a917816 cx=c_pps
- a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17
- a=IkcTkHD0fZMA:10 a=Sv0fKeRqtYgA:10 a=VkNPw1HP01LnGYTKEx00:22
- a=RnoormkPH1_aCDwRdu11:22 a=V8glGbnc2Ofi9Qvn3v5h:22 a=VnNF1IyMAAAA:8
- a=Vx405MAVRAb3j5YeDM0A:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Info: AW1haW4tMjYwODI4MDA5OSBTYWx0ZWRfX7BAzKchEOTys
- O8SdSJADNHNIae1cubyWzEF4HV7a/JRFr2BwTqQUHzhRGwPTE3d54NL4BZ9pAm68Jq5F0YC/3s8
- 3P8DYcT8uMKL5ANAHOILPLWbDqUMKyM=
-X-Proofpoint-GUID: IrGW-8fw8acYqpFLg_KVf6UEAxEH91qX
-X-Proofpoint-ORIG-GUID: QYkxM62rP70sNU17MCjVUXbfnGeuvVvG
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwODI4MDA5OSBTYWx0ZWRfX8ZEnRlM/EkCC
- CnGrbOHuSEje2Aj7MCofY5rJxoAu3uBl4RVL0UdtphXXyYnKQdUuO/pcOyrv3fgKEZPU8sDRzzm
- nq2Pr+wlP9OOkPPe9OGFMQiJ7uGN7dfvGpGiekA172CsjnJnBYkXzPNBxzgq19THj9uMdDv/o2q
- alk6Yr/Rs44F5SjTF6UESTBlGZNoMWWODLgBAm41Kuwr+hi2u1WC84n5McYpNHuZYklwiKS1oPd
- 4LZe/EDBaMmoMtqFURxlZWaTh5MtuoiMmILHEZvq26pz3GMNS/w8Or72LgGWVpebGMWZMKlp1aM
- /4h2Jm0AeA/fUDYPIUzm1aW6Z/AebaBMwoV3GI5Nnv67kFxBRTHYpy+sM0X8fSFJUhdVRcg6fD2
- HgyU0mCgyVd3ayBWtsKZA1dkZwVL5/RmmwmKjFs3YF6UHuuo0eaGMiTp15V/mR/WKzJIbgg1e+Y
- v42NZpxsvyAPU40R3WA==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1176,Hydra:6.1.134,FMLib:17.12.100.49
- definitions=2026-08-28_03,2026-08-27_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- suspectscore=0 spamscore=0 bulkscore=0 malwarescore=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1011 phishscore=0 impostorscore=0 adultscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2606150000 definitions=main-2608280099
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qwCowAD3zfFhmZFqhFnABg--.44541S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCFWDuF1fGw17XrWruFW8Crg_yoWrJr43pr
+	W0kFW5trs5Xw4Ivas5Ja1kGa45Gws3JFZxKF1qkr1vkFy3tF15X3WkKr1ftr15JrWrWryj
+	vF4Y9FWruF4jv37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9014x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s
+	0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xII
+	jxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr
+	1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxa
+	n2IY04v7MxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4
+	AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE
+	17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMI
+	IF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4l
+	IxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x0267AKxVW8Jr0_Cr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUqeHgUUUUU=
+X-CM-SenderInfo: pshqw1xhqjqxpvfd2hldfou0/
 
+The PMU overflow handler keeps a 64-bit mask for all logical counters,
+while SBI start calls consume an XLEN-sized mask relative to a counter
+base.
 
+On RV32, pmu_sbi_start_ovf_ctrs_sbi() applies the low overflow-mask word
+to every used-counter word. Counters 32 through 63 can therefore be
+classified using overflow bits 0 through 31.
 
-> On 25 Aug 2026, at 3:17=E2=80=AFPM, Wang Yan <wangyan01@kylinos.cn> =
-wrote:
->=20
-> In powerpc_vpadtl_sample(), raw_data of the synthetic sample points to =
-a
-> struct powerpc_vpadtl_entry (48 bytes), but raw_size is set to
-> sizeof(record).  record is a struct powerpc_vpadtl_entry pointer, so
-> sizeof(record) is the size of the pointer (8 bytes on 64-bit) rather
-> than the size of the record itself.
->=20
-> As a result, consumers that bound their access to raw_data by raw_size
-> only see or copy the first 8 bytes of each DTL entry instead of the =
-full
-> record.
->=20
-> Use sizeof(*record) so that raw_size reflects the actual length of the
-> raw data.
->=20
-> Fixes: 8644834a482a ("perf powerpc: Process the DTL entries in queue =
-and deliver samples")
-> Signed-off-by: Wang Yan <wangyan01@kylinos.cn>
-Reviewed-by: Athira Rajeev <atrajeev@linux.ibm.com>
+The snapshot path and overflow handler also test and construct 64-bit
+masks with XLEN-sized BIT(). In addition, snapshot restart uses the
+completed inner-loop index instead of the outer word index to form
+counter_idx_base. The latter selects an invalid counter base on both RV32
+and RV64: for_each_set_bit() finishes with idx equal to BITS_PER_LONG, so
+the current expression passes BITS_PER_LONG squared instead of the
+expected i times BITS_PER_LONG.
 
-Thanks
-Athira
-> ---
-> tools/perf/util/powerpc-vpadtl.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/tools/perf/util/powerpc-vpadtl.c =
-b/tools/perf/util/powerpc-vpadtl.c
-> index 710f3093f3f9..af6783cfdb53 100644
-> --- a/tools/perf/util/powerpc-vpadtl.c
-> +++ b/tools/perf/util/powerpc-vpadtl.c
-> @@ -196,7 +196,7 @@ static int powerpc_vpadtl_sample(struct =
-powerpc_vpadtl_entry *record,
-> sample.cpumode =3D PERF_RECORD_MISC_KERNEL;
-> sample.time =3D save;
-> sample.raw_data =3D record;
-> - sample.raw_size =3D sizeof(record);
-> + sample.raw_size =3D sizeof(*record);
-> event.sample.header.type =3D PERF_RECORD_SAMPLE;
-> event.sample.header.misc =3D sample.cpumode;
-> event.sample.header.size =3D sizeof(struct perf_event_header);
-> --=20
-> 2.25.1
->=20
+Select the overflow word matching each SBI mask, use 64-bit bit operations
+for global counter indices, and derive the snapshot start base from the
+outer word index.
+
+Fixes: b994cdfcdf7b ("drivers/perf: riscv: Fix counter mask iteration for RV32")
+Fixes: a8625217a054 ("drivers/perf: riscv: Implement SBI PMU snapshot function")
+Signed-off-by: Pengpeng Hou <pengpeng@iscas.ac.cn>
+---
+ drivers/perf/riscv_pmu_sbi.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/perf/riscv_pmu_sbi.c b/drivers/perf/riscv_pmu_sbi.c
+index 50220f7b46d9..6cfb1fc0ec6e 100644
+--- a/drivers/perf/riscv_pmu_sbi.c
++++ b/drivers/perf/riscv_pmu_sbi.c
+@@ -962,7 +962,9 @@ static inline void pmu_sbi_start_ovf_ctrs_sbi(struct cpu_hw_events *cpu_hw_evt,
+ 	u64 init_val = 0;
+ 
+ 	for (i = 0; i < BITS_TO_LONGS(RISCV_MAX_COUNTERS); i++) {
+-		ctr_start_mask = cpu_hw_evt->used_hw_ctrs[i] & ~ctr_ovf_mask;
++		unsigned long word_ovf_mask =
++			ctr_ovf_mask >> (i * BITS_PER_LONG);
++		ctr_start_mask = cpu_hw_evt->used_hw_ctrs[i] & ~word_ovf_mask;
+ 		/* Start all the counters that did not overflow in a single shot */
+ 		if (ctr_start_mask) {
+ 			sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, i * BITS_PER_LONG,
+@@ -1002,7 +1004,7 @@ static inline void pmu_sbi_start_ovf_ctrs_snapshot(struct cpu_hw_events *cpu_hw_
+ 	struct riscv_pmu_snapshot_data *sdata = cpu_hw_evt->snapshot_addr;
+ 
+ 	for_each_set_bit(idx, cpu_hw_evt->used_hw_ctrs, RISCV_MAX_COUNTERS) {
+-		if (ctr_ovf_mask & BIT(idx)) {
++		if (ctr_ovf_mask & BIT_ULL(idx)) {
+ 			event = cpu_hw_evt->events[idx];
+ 			hwc = &event->hw;
+ 			max_period = riscv_pmu_ctr_get_width_mask(event);
+@@ -1021,7 +1023,7 @@ static inline void pmu_sbi_start_ovf_ctrs_snapshot(struct cpu_hw_events *cpu_hw_
+ 			sdata->ctr_values[idx] =
+ 					cpu_hw_evt->snapshot_cval_shcopy[idx + i * BITS_PER_LONG];
+ 		/* Start all the counters in a single shot */
+-		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, idx * BITS_PER_LONG,
++		sbi_ecall(SBI_EXT_PMU, SBI_EXT_PMU_COUNTER_START, i * BITS_PER_LONG,
+ 			  cpu_hw_evt->used_hw_ctrs[i], flag, 0, 0, 0);
+ 	}
+ }
+@@ -1109,14 +1111,14 @@ static irqreturn_t pmu_sbi_ovf_handler(int irq, void *dev)
+ 			hidx = info->csr - CSR_CYCLE;
+ 
+ 		/* check if the corresponding bit is set in scountovf or overflow mask in shmem */
+-		if (!(overflow & BIT(hidx)))
++		if (!(overflow & BIT_ULL(hidx)))
+ 			continue;
+ 
+ 		/*
+ 		 * Keep a track of overflowed counters so that they can be started
+ 		 * with updated initial value.
+ 		 */
+-		overflowed_ctrs |= BIT(lidx);
++		overflowed_ctrs |= BIT_ULL(lidx);
+ 		hw_evt = &event->hw;
+ 		/* Update the event states here so that we know the state while reading */
+ 		hw_evt->state |= PERF_HES_STOPPED;
+
+base-commit: 1b78070aaef63512688aebfbc82365ef9d6660f1
+-- 
+2.43.0
 
