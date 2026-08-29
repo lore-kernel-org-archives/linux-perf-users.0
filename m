@@ -1,45 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D057F3812D1;
-	Sat, 29 Aug 2026 20:05:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E570D3F104C;
+	Sat, 29 Aug 2026 20:34:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788033914; cv=none; b=YrPEmgpHjNP6B83HgwIg2aXknNnUCtsiYDHQD9rmI9LnMJ7NXvi3FbkF2cDq0sIegYhRiVArFhyPUVNn6Uc+3uQ0ZyC5inm4+4NGIIJCS8Z3ZWrkoZ8rFC+F6Ab7NKRt/FAqfzN886WL+eZs44CX8/y/NDmEmUooYI9L/J6lmMc=
+	t=1788035659; cv=none; b=V84Q9OBacp7hK6b/FBEx93LBSwsDR+q3NoCPSv3RWWw8YBT4nyNacXnklSXYvoFG87N+IQXYEKdUwI2RI8OmevnmOouTEcP9ABvcCCjfpKeHUrZnMvUdnqHdQLb7vKYGkQIZF/mcu4Lzqe7QdltLRaYVtc56W+ldjEG0Tu3mXcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788033914; c=relaxed/simple;
-	bh=gY6FSJWgwoYVeJSPXpe+kK4hGkqcWed5jSj8uFrTtBM=;
+	s=arc-20240116; t=1788035659; c=relaxed/simple;
+	bh=7nNb1W/gzOXn4r900EntAUT4gdh1IoR4HdJRrHf4bUA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LA0k02p65CliUm7EAaE2oEWdNbYr8xVNBu3BjYpQxFIBYzFizzBebqZC6KyjviVconOGgopQeFQRPbAgTTLFukOZGkkrxfhMqVus3J5dvXD5DGUfCy2BF8sBYfF4U0rwLy7lBweMbqIwm7bQ971x5OjmtpqSl/gQ8p71ssRv+Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jv81zQ30; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=DjpKeJtXHcIcLGb8NseNzajp5rok6NOMAUwLeFgBSnw0rLVPkElR8veWJJGgov9lQp0nEWREhYmxCN2gNkSBgQa4ckDLH4ki07k/liIde6FzKABI5KYwxqUgZ5QqUHs1d/vPFImEetEmvtnmAxViXXjv0f3T/e4S5nh594ItYcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rz+0pl5b; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jv81zQ30"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9A231F000E9;
-	Sat, 29 Aug 2026 20:05:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rz+0pl5b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E718F1F000E9;
+	Sat, 29 Aug 2026 20:34:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788033912;
-	bh=+2Dt5/BbAVekxcUUIjKXOQEvmb4XXCWGEA7Zc0IQ9tw=;
+	s=k20260515; t=1788035657;
+	bh=6SKhFQrUG2nQhbKoIldu22kAJp5bo+fLccrttBHpvkI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Jv81zQ306+cAkPB/utYyGrgbdFKEL4L4yenho/60R1++l4hUj/CyOVIOPyY67/raS
-	 yCnGd/yclav90BGnZCFsXw8cCU5G41HditwlTZaCA0oTwbETxKHGxvcVe0xLdzeDqN
-	 6vwtJNE4dGPfbzJV0+aUKHcNUOyemvAcEnLSletJF1hy0XElVpyAK7QpkYoAkUz80Z
-	 J5v9RWMOkozWcRWgjPUHhXEKPp7tWAQYbK7t+PgETNESMXe7QPn2YkER/U8HAadVDb
-	 deYyV2FzlamS/zxaK9NJEzVqR5ODLs4PSFXvFidCF9qKl1x+ldlW07iR6DS7crcIRk
-	 CjQrQ9pnGqthw==
-Date: Sat, 29 Aug 2026 13:05:08 -0700
+	b=Rz+0pl5b/343mMA+vNINLWuBraSN2DIBZfDdJGndQXnO1e07Go1agpIipwHfg9bxJ
+	 F2OjFTccSZH6kLs83OML0D1dNjWIA88pB0vAqOz7LfdGcYwZThlXWRUk/GlM/sjdQ6
+	 T+dc1LwyC8gGQYYcOlY4iVmKKD4YOVmw5cElwa5XfO6ITtqOoSSX/pT6+eqH+kv147
+	 RpuV3M6eKs9jbQ2Eu1GXaOW6w+OxSuBztNt9nr8BGPUNgAA/aYMywaVoHwwFvlgmuh
+	 6OXHKnvAXRaZ9fGMdGvXtNFh7NPCKDCSe1Hufa4X/Cqla/8n+jzzqY6qOcwq4zq+yZ
+	 FpLInqp+JLVFQ==
+Date: Sat, 29 Aug 2026 13:34:15 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Jiebin Sun <jiebin.sun@intel.com>
-Cc: acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
-	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
-	irogers@google.com, james.clark@linaro.org, jolsa@kernel.org,
-	mark.rutland@arm.com, dapeng1.mi@linux.intel.com,
-	thomas.falcon@intel.com, tianyou.li@intel.com,
-	wangyang.guo@intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] perf c2c: Add function-view stdio support and
- coverage
-Message-ID: <apM7dIdexptTo-1M@google.com>
-References: <cover.1787283281.git.jiebin.sun@intel.com>
+To: Thomas Falcon <thomas.falcon@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v5 0/6] perf: Add support for memory region/range
+ reporting
+Message-ID: <apNCR_EvfWuIfhdg@google.com>
+References: <20260821001819.162277-1-thomas.falcon@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,66 +51,110 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cover.1787283281.git.jiebin.sun@intel.com>
+In-Reply-To: <20260821001819.162277-1-thomas.falcon@intel.com>
 
 Hello,
 
-On Fri, Aug 21, 2026 at 01:56:07PM +0800, Jiebin Sun wrote:
-> The recently merged function-view series added an interactive TUI for
-> examining the c2c data as:
+On Thu, Aug 20, 2026 at 07:18:13PM -0500, Thomas Falcon wrote:
+> Add support for two memory-related reporting features in the perf tool:
 > 
->   read-side function -> contending writer -> shared cacheline
+> 1. Memory region reporting in perf-c2c and perf-script subcommands.
+> 2. Memory range data in perf.data file header and perf-c2c subcommand.
 > 
-> This follow-up makes the same view available to builds without SLANG and
-> to pipes and scripts. `perf c2c report --function` now implies stdio and
-> prints the three-level hierarchy fully expanded. It requires `iaddr` in
-> the coalescing fields and is rejected together with `--stats`.
+> Memory region reporting was introduced as part of support for the
+> Off-module Response facility (OMR) [1], which provides a new data
+> source encoding supporting "up to 8 fine-grained memory regions in
+> addition to the cache region, offering more detailed insights into
+> memory access regions."
 > 
-> The first two patches fix adjacent pre-existing issues: the documented
-> default coalesce fields are stale, and a workload recording failure in
-> the existing c2c shell test is incorrectly reported as a pass. The third
-> patch adds the stdio function view, and the final patch adds automated
-> coverage using a separate contended futex workload. Systems that record
-> no contended samples report a skip for the hierarchy checks rather than a
-> spurious failure.
+> Memory Range support was introduced with the addition of the ACPI Memory
+> Range and Region Mapping (MRRM) [2] table. It provides a base address plus
+> a length value for each memory range, as well as NUMA node and local and
+> remote "region ID's" so that "platform firmware can indicate the type of
+> memory for each range."[3]
 > 
-> This series follows the function-view work merged from:
+> Include a change allowing PERF_MEM_LVLNUM_L0 to be printed in
+> perf-mem output as well.
 > 
->   https://lore.kernel.org/linux-perf-users/20260817094623.3288456-1-jiebin.sun@intel.com/
-> 
-> The series is based on perf-tools-next commit 9453bc6a69ef ("perf vendor
-> events arm64: Fix Tegra410 Olympus event 0x0197").
-> 
-> Tested with:
-> 
->   - SLANG and NO_SLANG=1 builds
->   - perf test c2c
->   - perf test 'import perf'
->   - checkpatch.pl --strict on each patch
->   - unresolved-symbol checks on the Python perf module
-> 
-> Jiebin Sun (4):
->   perf c2c: Fix documented default coalesce fields
->   perf tests c2c: Report skip when the workload fails
->   perf c2c: Add stdio support for the function view
->   perf tests c2c: Add function view stdio coverage
+> [1]: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
+> [2]: https://lore.kernel.org/lkml/20250505173819.419271-1-tony.luck@intel.com/
+> [3]: MRRM definition allow for future expansion for the OS to assign
+> these region IDs.
 
-Thanks for doing this!
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Thank you for doing this.  Unfortunately it conflicts with Jiebin's perf
+c2c function view support patchset.  As there's an update, can you please
+wait a little more and rebase onto the latest perf-tools-next?
 
 Thanks,
 Namhyung
 
 > 
->  tools/perf/Documentation/perf-c2c.txt |  14 +++-
->  tools/perf/builtin-c2c.c              |  85 +++++++++++++++++--
->  tools/perf/tests/shell/c2c.sh         | 114 ++++++++++++++++++++++++++
->  tools/perf/util/c2c-function.c        |   9 +-
->  tools/perf/util/c2c.h                 |   1 +
->  5 files changed, 205 insertions(+), 18 deletions(-)
+> v5:
+> -- perf-c2c: make the cacheline header span and ui_quirks() width
+>    fixup depend on memory-region availability (Namhyung Kim)
 > 
+> v4:
+> -- perf-script: gate the Region field on the HEADER_MEMORY_RANGES feature
+>    bit via perf_session instead of a global flag, with a pipe-mode fallback
+> -- perf-c2c: fix output_str allocation error handling
+> -- perf header: Fix typo in region id bounds checking which made region 255
+>    invalid
 > 
-> base-commit: 9453bc6a69ef43755f1c28d5688cacdd69fa16bd
+> v3:
+> -- included missing ff-size check in process_memory_ranges
+> -- make memory region reporting in perf c2c-and perf-script conditional
+>    on feature bit, requiring some patch reordering (Namhyung Kim)
+> -- used open/openat to read memory range sysfs files in memory_range__read()
+>    (Namhyung Kim)
+> -- Removed path name and file name buffers in memory_range__read(),
+>    instead pass path name from as a parameter from memory_range__parse()
+>    (Namhyung Kim)
+> -- use calloc instead of zalloc in memory_range__parse() and
+>    process_memory_ranges() (Namhyung Kim)
+> -- Removed redundant check for existance of memory range directory in
+>    memory_range__read() (Namhyung Kim)
+> -- Included output examples of memory ranges in perf header and perf-c2c
+>    in commit message (Namhyung Kim)
+> 
+> v2:
+> -- Added missing newline in WARN_ONCE message in c2c_he__set_mem_region()
+> -- increased buffers passed to perf_script__meminfo_scnprintf() from 150
+>    to 200 bytes to avoid silent truncation
+> -- Added check for NULL return of sysfs__mountpoint() when parsing
+>    memory ranges in sysfs
+> -- increased MAX_MEMORY_RANGES sanity check from 64 to 256 based on
+>    ACPI MRRM table implementation in Linux kernel
+> -- added comment for MAX_MEMORY_RANGES to clarify that it is a sanity check
+>    for malformed perf.data files
+> -- removed a line of code was removed from util/env.h but was added back in
+>    v1 due to bad rebase
+> 
+> Dapeng Mi (3):
+>   perf mem: Add support for printing PERF_MEM_LVLNUM_L0
+>   perf tools: Show memory region in perf-c2c subcommand
+>   perf tools: Show memory region in perf-script subcommand
+> 
+> Thomas Falcon (3):
+>   perf mem: Fix size tracking for mem_lvl's in
+>     perf_script__meminfo_scnprintf()
+>   perf header: Support memory ranges
+>   perf c2c: print memory region data with stdio output
+> 
+>  tools/perf/Documentation/perf-record.txt      |   2 +-
+>  .../Documentation/perf.data-file-format.txt   |  13 ++
+>  tools/perf/builtin-c2c.c                      | 125 ++++++++++-
+>  tools/perf/builtin-inject.c                   |   1 +
+>  tools/perf/builtin-script.c                   |  13 +-
+>  tools/perf/util/bpf-filter.l                  |   1 +
+>  tools/perf/util/env.c                         |   1 +
+>  tools/perf/util/env.h                         |  10 +
+>  tools/perf/util/header.c                      | 203 ++++++++++++++++++
+>  tools/perf/util/header.h                      |   1 +
+>  tools/perf/util/mem-events.c                  |  93 +++++++-
+>  tools/perf/util/mem-events.h                  |   5 +-
+>  .../scripting-engines/trace-event-python.c    |   5 +-
+>  13 files changed, 452 insertions(+), 21 deletions(-)
+> 
 > -- 
-> 2.52.0
+> 2.55.0
+> 
