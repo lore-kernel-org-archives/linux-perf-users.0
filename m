@@ -1,76 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-2-39.ptr.blmpb.com (va-2-39.ptr.blmpb.com [209.127.231.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51A143A9852;
-	Fri, 28 Aug 2026 22:50:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E8B33344A
+	for <linux-perf-users@vger.kernel.org>; Sat, 29 Aug 2026 17:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1787957440; cv=none; b=mYhmUg6CHjKlmd//MBFz7qNlEGKC4VYnptopvN7TT++cMBKofsQ3LMAXCiaFx1sXcKBmI5rMrTMxT3V2SNmDWig9/AVvKFwn1hAWqAJo332WKUCHByVUPTluwcr2io17N0M8x9VFj7kthBDlmrk8Z7OrlYXTnBwPjKTJG+Whj4A=
+	t=1788024954; cv=none; b=sKvQQ9oR6uO1Yiw6dfgxNj9xjE0XHW9yTzM8dW4AouGI0cbz9EB00xI7ZhJ7qBmhg3TK5xsZTqGXMEoao+XEEg57QNgXhnxAmprT+LttDf3DuUvUB7cCzIy99qMqnahyOU4csUqnkDuW+9IY/BMefIKIGsLEmrHqWdJdauCTdN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1787957440; c=relaxed/simple;
-	bh=YzYbS/mUgTdW7TpPgxk34yQk8/yCr91EcgGd7JNd8X0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dCrj6hZzNZbxAzeeXJEHb3NvlMlG7j1DFB4Wf6IaVsqarwJQhzkmPSszoMj/9h6WgKUMLucXeghYeBoOiWXhSNxx01JMPJqW3gdLehBfY97eoTns5McGrMu6+vs2LuG2Ie+nqqHxwxa1Gktc5RyFknrBYKDrXk4+gwZJAh86puk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hSIBaFvy; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788024954; c=relaxed/simple;
+	bh=WeTvT36hdL9T5wdUC3yaj6p60df+h2t3e9ntGmnYlpA=;
+	h=Date:Message-Id:To:Cc:Mime-Version:Subject:From:Content-Type; b=IKuYOWKrdA9zo+/5QQDeutEhTZnn4Zjx1l35N2QhoHuQN9HwOrBvcfFOqhTlUlemvhQi2vqSG5bwX8h9uj5b6mVa2vrzUKLq8A05Z4neR7Hntoh9TCLzAuAyKmjw26LKpnOZM7D3+uDWT7EMbgscdunNtIpM5lmqigyg7GSoeHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=moonshot.ai; spf=pass smtp.mailfrom=moonshot.ai; dkim=pass (2048-bit key) header.d=moonshot.ai header.i=@moonshot.ai header.b=fbFnPiph; arc=none smtp.client-ip=209.127.231.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=moonshot.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=moonshot.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hSIBaFvy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F5221F000E9;
-	Fri, 28 Aug 2026 22:50:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1787957437;
-	bh=zmVmiMxAWKb570gh6PdWPY+Luuzb6Ouehc/PzemXyQE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=hSIBaFvy29YKnD5qBFTkHUkI8asPX4zxliFdaldDmWwiiSbaLQMmv/kxUwpx28Xnu
-	 Z9A8g+irkWBW07G1l3dy+s6Ge/dMs3RGaMo2Xq64SvJ5OKcufr5EhsgCSi0cdXjc9/
-	 KYnLc3seo/YEwTqWIJO07vNtCqgwEUOHav9FLCj+mR5r2C5h1SWv5UH1gV3owboxqq
-	 0KkD7WDCdpAB+DcSXvHL9+ZsKXEp0UY6Wlo11Izg+zNzQ6rRfeb4Ar8LnfYU67dPeu
-	 BY6IlOg2O/R1y7JkaG/Lwbm1WlCPoUEhvMwrApy0OASh2BZ8E0Omr5RRN0SJADf9Sx
-	 9KqPTxhOLFXUQ==
-Date: Fri, 28 Aug 2026 19:50:33 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>, Chun-Tse Shao <ctshao@google.com>,
-	Zide Chen <zide.chen@intel.com>, Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RESEND v7 1/2] perf pmu intel: Generalize SNC cpumask
- adjustment for multiple platforms
-Message-ID: <apIQuQAPGaEhKesD@x2>
-References: <20260527221934.3830896-1-ctshao@google.com>
- <20260528001117.3BBF11F00A3A@smtp.kernel.org>
- <CAJpZYjUiNdN3a6y+8rs=YP2Mgtj6EQJnkiB9TN_suWd8fGkoEg@mail.gmail.com>
- <CAJpZYjUhw8+ouKTS82G6ih457=pHn18AtvwMCAcaTL9csKmdTg@mail.gmail.com>
- <CAP-5=fVAckZihxg4djQn7iTGbNNT1vFLXt2En8mm8+COSs3GcQ@mail.gmail.com>
- <29d02905-14fd-4c2a-86d0-a605e9d41b10@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=moonshot.ai header.i=@moonshot.ai header.b="fbFnPiph"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=feishu2510091218; d=moonshot.ai; t=1788024940; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=WeTvT36hdL9T5wdUC3yaj6p60df+h2t3e9ntGmnYlpA=;
+ b=fbFnPiphSLZ12/bz8tTkEczQP1ChL/lQsA6XApHy90c+K2RvMJhIV/BkRX1Qhc0PcFW5BB
+ A5miPIIPl9Iob72DpYdMHCU1IfkXlcMDpQiX2KVV42/hIzBuQP3lMTreTA4NoMDdHY6oao
+ uPrpcHYiX5TZKajUeA8Ph+xWMtPHvyoM6KshDJZ1YDudFFtD+FQrZvNKHJ4f+smQtPnQ6q
+ DS5UNEEFy74Bl9MPPtA/Wlxk30LCeVn35XdUfuzaJPs85kX0PfJr25rClC58UGoVDaowzJ
+ LDQEGbxySkpy2veLe6Xk+Lh/26wzjNbTPkqFq81CNYPhHYzfmXxgtxrJdryaPQ==
+Date: Sun, 30 Aug 2026 01:35:38 +0800
+Message-Id: <91825d0335d2f7cc017ee23886ffeef44c1cc633.d3b5acd2.2451.4a87.a396.716f586392a4@feishu.cn>
+To: "peterz@infradead.org" <peterz@infradead.org>, 
+	"mingo@redhat.com" <mingo@redhat.com>, 
+	"acme@kernel.org" <acme@kernel.org>, 
+	"namhyung@kernel.org" <namhyung@kernel.org>
+Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <29d02905-14fd-4c2a-86d0-a605e9d41b10@linux.intel.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH] perf: Fix use-after-free when perf mmap() revival races with the last munmap() 
+From: "Security Team" <bug-report@moonshot.ai>
+X-Lms-Return-Path: <lba+16a93186a+815a28+vger.kernel.org+bug-report@moonshot.ai>
+Content-Type: text/plain; charset=UTF-8
 
-On Fri, Aug 28, 2026 at 04:11:38PM +0800, Mi, Dapeng wrote:
-> 
-> On 8/28/2026 1:28 PM, Ian Rogers wrote:
-> > On Tue, Jun 9, 2026 at 11:44 AM Chun-Tse Shao <ctshao@google.com> wrote:
-> >> Ping for attention.
-> > I suspect Arnaldo and Namhyung are waiting for feedback from Intel on
-> > these patches. If someone could check them it would be appreciated.
-> 
-> I suppose Zide has checked these patches and gave the "reviewed-by" tags. :)
+perf_mmap_close() drops rb->mmap_count without holding
+event->mmap_mutex, and a concurrent perf_mmap_rb() can complete its
+revival path (detach old rb, rb_alloc, attach, refcount_set) inside
+that window. The revival's refcount_set(&event->mmap_count, 1) is an
+invisible 1->1 write, so the close side then decrements to 0, detaches
+and frees the ring buffer the other process just attached and still
+has mapped via remap_pfn_range(): a page-level use-after-free,
+triggerable by any unprivileged local user with the default
+kernel.perf_event_paranoid=3D2.
 
-yeah, looking at it now it seems to be pretty well reviewed, I'm about
-to start processing patches for the next merge window, will get it
-merged soon, thanks for the ping!
+Impact: any unprivileged local user can escalate to root on a
+correctly configured system. Introduced in v6.18-rc1 by 59741451b49c,
+present up to current mainline; v6.12 and earlier are not affected.
 
-- Arnaldo
+Serialize both counter updates of perf_mmap_close() under
+event->mmap_mutex, so a concurrent perf_mmap() always observes a
+consistent (rb, mmap_count) pair: it either aliases the live buffer,
+or finds event->rb =3D=3D NULL and allocates a fresh one.
+
+Fixes: 59741451b49c ("perf: Identify the 0->1 transition for event::mmap_co=
+unt")
+Signed-off-by: Kimi Security Team <bug-report@moonshot.ai>
+---
+=C2=A0kernel/events/core.c | 8 ++++++--
+=C2=A01 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index a6c8e38a3110..0d5b1f3c1cae 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7060,11 +7060,15 @@ static void perf_mmap_close(struct vm_area_struct *=
+vma)
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 mutex_unlock(=
+&rb->aux_mutex);
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 }
+=C2=A0
++ =C2=A0 =C2=A0 =C2=A0=C2=A0 mutex_lock(&event->mmap_mutex);
++
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (refcount_dec_and_test(&rb->mmap_count=
+))
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 detach_rest =
+=3D true;
+=C2=A0
+- =C2=A0 =C2=A0 =C2=A0=C2=A0 if (!refcount_dec_and_mutex_lock(&event->mmap_=
+count, &event->mmap_mutex))
++ =C2=A0 =C2=A0 =C2=A0=C2=A0 if (!refcount_dec_and_test(&event->mmap_count)=
+) {
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0 mutex_unlock(&even=
+t->mmap_mutex);
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto out_put;
++ =C2=A0 =C2=A0 =C2=A0=C2=A0 }
+=C2=A0
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 ring_buffer_attach(event, NULL);
+=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 mutex_unlock(&event->mmap_mutex);
+--=C2=A0
+2.43.0
