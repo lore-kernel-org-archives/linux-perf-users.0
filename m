@@ -1,102 +1,113 @@
-Received: from va-2-39.ptr.blmpb.com (va-2-39.ptr.blmpb.com [209.127.231.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E8B33344A
-	for <linux-perf-users@vger.kernel.org>; Sat, 29 Aug 2026 17:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D057F3812D1;
+	Sat, 29 Aug 2026 20:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788024954; cv=none; b=sKvQQ9oR6uO1Yiw6dfgxNj9xjE0XHW9yTzM8dW4AouGI0cbz9EB00xI7ZhJ7qBmhg3TK5xsZTqGXMEoao+XEEg57QNgXhnxAmprT+LttDf3DuUvUB7cCzIy99qMqnahyOU4csUqnkDuW+9IY/BMefIKIGsLEmrHqWdJdauCTdN4=
+	t=1788033914; cv=none; b=YrPEmgpHjNP6B83HgwIg2aXknNnUCtsiYDHQD9rmI9LnMJ7NXvi3FbkF2cDq0sIegYhRiVArFhyPUVNn6Uc+3uQ0ZyC5inm4+4NGIIJCS8Z3ZWrkoZ8rFC+F6Ab7NKRt/FAqfzN886WL+eZs44CX8/y/NDmEmUooYI9L/J6lmMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788024954; c=relaxed/simple;
-	bh=WeTvT36hdL9T5wdUC3yaj6p60df+h2t3e9ntGmnYlpA=;
-	h=Date:Message-Id:To:Cc:Mime-Version:Subject:From:Content-Type; b=IKuYOWKrdA9zo+/5QQDeutEhTZnn4Zjx1l35N2QhoHuQN9HwOrBvcfFOqhTlUlemvhQi2vqSG5bwX8h9uj5b6mVa2vrzUKLq8A05Z4neR7Hntoh9TCLzAuAyKmjw26LKpnOZM7D3+uDWT7EMbgscdunNtIpM5lmqigyg7GSoeHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=moonshot.ai; spf=pass smtp.mailfrom=moonshot.ai; dkim=pass (2048-bit key) header.d=moonshot.ai header.i=@moonshot.ai header.b=fbFnPiph; arc=none smtp.client-ip=209.127.231.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=moonshot.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=moonshot.ai
+	s=arc-20240116; t=1788033914; c=relaxed/simple;
+	bh=gY6FSJWgwoYVeJSPXpe+kK4hGkqcWed5jSj8uFrTtBM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LA0k02p65CliUm7EAaE2oEWdNbYr8xVNBu3BjYpQxFIBYzFizzBebqZC6KyjviVconOGgopQeFQRPbAgTTLFukOZGkkrxfhMqVus3J5dvXD5DGUfCy2BF8sBYfF4U0rwLy7lBweMbqIwm7bQ971x5OjmtpqSl/gQ8p71ssRv+Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jv81zQ30; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=moonshot.ai header.i=@moonshot.ai header.b="fbFnPiph"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=feishu2510091218; d=moonshot.ai; t=1788024940; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=WeTvT36hdL9T5wdUC3yaj6p60df+h2t3e9ntGmnYlpA=;
- b=fbFnPiphSLZ12/bz8tTkEczQP1ChL/lQsA6XApHy90c+K2RvMJhIV/BkRX1Qhc0PcFW5BB
- A5miPIIPl9Iob72DpYdMHCU1IfkXlcMDpQiX2KVV42/hIzBuQP3lMTreTA4NoMDdHY6oao
- uPrpcHYiX5TZKajUeA8Ph+xWMtPHvyoM6KshDJZ1YDudFFtD+FQrZvNKHJ4f+smQtPnQ6q
- DS5UNEEFy74Bl9MPPtA/Wlxk30LCeVn35XdUfuzaJPs85kX0PfJr25rClC58UGoVDaowzJ
- LDQEGbxySkpy2veLe6Xk+Lh/26wzjNbTPkqFq81CNYPhHYzfmXxgtxrJdryaPQ==
-Date: Sun, 30 Aug 2026 01:35:38 +0800
-Message-Id: <91825d0335d2f7cc017ee23886ffeef44c1cc633.d3b5acd2.2451.4a87.a396.716f586392a4@feishu.cn>
-To: "peterz@infradead.org" <peterz@infradead.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, 
-	"acme@kernel.org" <acme@kernel.org>, 
-	"namhyung@kernel.org" <namhyung@kernel.org>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jv81zQ30"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9A231F000E9;
+	Sat, 29 Aug 2026 20:05:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788033912;
+	bh=+2Dt5/BbAVekxcUUIjKXOQEvmb4XXCWGEA7Zc0IQ9tw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Jv81zQ306+cAkPB/utYyGrgbdFKEL4L4yenho/60R1++l4hUj/CyOVIOPyY67/raS
+	 yCnGd/yclav90BGnZCFsXw8cCU5G41HditwlTZaCA0oTwbETxKHGxvcVe0xLdzeDqN
+	 6vwtJNE4dGPfbzJV0+aUKHcNUOyemvAcEnLSletJF1hy0XElVpyAK7QpkYoAkUz80Z
+	 J5v9RWMOkozWcRWgjPUHhXEKPp7tWAQYbK7t+PgETNESMXe7QPn2YkER/U8HAadVDb
+	 deYyV2FzlamS/zxaK9NJEzVqR5ODLs4PSFXvFidCF9qKl1x+ldlW07iR6DS7crcIRk
+	 CjQrQ9pnGqthw==
+Date: Sat, 29 Aug 2026 13:05:08 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Jiebin Sun <jiebin.sun@intel.com>
+Cc: acme@kernel.org, mingo@redhat.com, peterz@infradead.org,
+	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com,
+	irogers@google.com, james.clark@linaro.org, jolsa@kernel.org,
+	mark.rutland@arm.com, dapeng1.mi@linux.intel.com,
+	thomas.falcon@intel.com, tianyou.li@intel.com,
+	wangyang.guo@intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] perf c2c: Add function-view stdio support and
+ coverage
+Message-ID: <apM7dIdexptTo-1M@google.com>
+References: <cover.1787283281.git.jiebin.sun@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Subject: [PATCH] perf: Fix use-after-free when perf mmap() revival races with the last munmap() 
-From: "Security Team" <bug-report@moonshot.ai>
-X-Lms-Return-Path: <lba+16a93186a+815a28+vger.kernel.org+bug-report@moonshot.ai>
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <cover.1787283281.git.jiebin.sun@intel.com>
 
-perf_mmap_close() drops rb->mmap_count without holding
-event->mmap_mutex, and a concurrent perf_mmap_rb() can complete its
-revival path (detach old rb, rb_alloc, attach, refcount_set) inside
-that window. The revival's refcount_set(&event->mmap_count, 1) is an
-invisible 1->1 write, so the close side then decrements to 0, detaches
-and frees the ring buffer the other process just attached and still
-has mapped via remap_pfn_range(): a page-level use-after-free,
-triggerable by any unprivileged local user with the default
-kernel.perf_event_paranoid=3D2.
+Hello,
 
-Impact: any unprivileged local user can escalate to root on a
-correctly configured system. Introduced in v6.18-rc1 by 59741451b49c,
-present up to current mainline; v6.12 and earlier are not affected.
+On Fri, Aug 21, 2026 at 01:56:07PM +0800, Jiebin Sun wrote:
+> The recently merged function-view series added an interactive TUI for
+> examining the c2c data as:
+> 
+>   read-side function -> contending writer -> shared cacheline
+> 
+> This follow-up makes the same view available to builds without SLANG and
+> to pipes and scripts. `perf c2c report --function` now implies stdio and
+> prints the three-level hierarchy fully expanded. It requires `iaddr` in
+> the coalescing fields and is rejected together with `--stats`.
+> 
+> The first two patches fix adjacent pre-existing issues: the documented
+> default coalesce fields are stale, and a workload recording failure in
+> the existing c2c shell test is incorrectly reported as a pass. The third
+> patch adds the stdio function view, and the final patch adds automated
+> coverage using a separate contended futex workload. Systems that record
+> no contended samples report a skip for the hierarchy checks rather than a
+> spurious failure.
+> 
+> This series follows the function-view work merged from:
+> 
+>   https://lore.kernel.org/linux-perf-users/20260817094623.3288456-1-jiebin.sun@intel.com/
+> 
+> The series is based on perf-tools-next commit 9453bc6a69ef ("perf vendor
+> events arm64: Fix Tegra410 Olympus event 0x0197").
+> 
+> Tested with:
+> 
+>   - SLANG and NO_SLANG=1 builds
+>   - perf test c2c
+>   - perf test 'import perf'
+>   - checkpatch.pl --strict on each patch
+>   - unresolved-symbol checks on the Python perf module
+> 
+> Jiebin Sun (4):
+>   perf c2c: Fix documented default coalesce fields
+>   perf tests c2c: Report skip when the workload fails
+>   perf c2c: Add stdio support for the function view
+>   perf tests c2c: Add function view stdio coverage
 
-Serialize both counter updates of perf_mmap_close() under
-event->mmap_mutex, so a concurrent perf_mmap() always observes a
-consistent (rb, mmap_count) pair: it either aliases the live buffer,
-or finds event->rb =3D=3D NULL and allocates a fresh one.
+Thanks for doing this!
 
-Fixes: 59741451b49c ("perf: Identify the 0->1 transition for event::mmap_co=
-unt")
-Signed-off-by: Kimi Security Team <bug-report@moonshot.ai>
----
-=C2=A0kernel/events/core.c | 8 ++++++--
-=C2=A01 file changed, 6 insertions(+), 2 deletions(-)
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index a6c8e38a3110..0d5b1f3c1cae 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7060,11 +7060,15 @@ static void perf_mmap_close(struct vm_area_struct *=
-vma)
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 mutex_unlock(=
-&rb->aux_mutex);
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 }
-=C2=A0
-+ =C2=A0 =C2=A0 =C2=A0=C2=A0 mutex_lock(&event->mmap_mutex);
-+
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (refcount_dec_and_test(&rb->mmap_count=
-))
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 detach_rest =
-=3D true;
-=C2=A0
-- =C2=A0 =C2=A0 =C2=A0=C2=A0 if (!refcount_dec_and_mutex_lock(&event->mmap_=
-count, &event->mmap_mutex))
-+ =C2=A0 =C2=A0 =C2=A0=C2=A0 if (!refcount_dec_and_test(&event->mmap_count)=
-) {
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0 mutex_unlock(&even=
-t->mmap_mutex);
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto out_put;
-+ =C2=A0 =C2=A0 =C2=A0=C2=A0 }
-=C2=A0
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 ring_buffer_attach(event, NULL);
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 mutex_unlock(&event->mmap_mutex);
---=C2=A0
-2.43.0
+Thanks,
+Namhyung
+
+> 
+>  tools/perf/Documentation/perf-c2c.txt |  14 +++-
+>  tools/perf/builtin-c2c.c              |  85 +++++++++++++++++--
+>  tools/perf/tests/shell/c2c.sh         | 114 ++++++++++++++++++++++++++
+>  tools/perf/util/c2c-function.c        |   9 +-
+>  tools/perf/util/c2c.h                 |   1 +
+>  5 files changed, 205 insertions(+), 18 deletions(-)
+> 
+> 
+> base-commit: 9453bc6a69ef43755f1c28d5688cacdd69fa16bd
+> -- 
+> 2.52.0
