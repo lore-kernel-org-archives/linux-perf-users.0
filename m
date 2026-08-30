@@ -1,125 +1,137 @@
-Received: from va-2-28.ptr.blmpb.com (va-2-28.ptr.blmpb.com [209.127.231.28])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8C4125C818
-	for <linux-perf-users@vger.kernel.org>; Sun, 30 Aug 2026 08:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E296838D41A;
+	Sun, 30 Aug 2026 13:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788077617; cv=none; b=eWG6XDUvqh14DHV5A6i6WSZsRcj80byZtwtjS2fAbRkWHhvkeLmjSSFfhyAsLMlFwBNKjhcMPNVBknCZr2rvXGfGPlNBHphAo9qp9WtYcUXarPxrvllY79VCiaTJd8ZCYhFaHGjYHwIX8ykpXcHNXN6BicHU2nHXwronovlzu30=
+	t=1788095450; cv=none; b=KmIfgEyAZtQ4AchpwGXYC6+VP82KPOedd3aZwpWmq6OYbfZYvaOxdjApF+6o22pXwFwCLNaqZdMkrEEPwwOhKHj2UfJFEH3RM7yZ2ySi44a8VvmT3eo2I9JvPJQTBTHJpuYZJtL5E/Oj1422wxk6iDiD2jDnJJrUSUwc3fK0Fg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788077617; c=relaxed/simple;
-	bh=ShQJEB8cv5Zrfc3UuBgw8Kin5pLXDEOo/ululN/tc+Q=;
-	h=To:Cc:Subject:Content-Type:Date:Message-Id:From:Mime-Version; b=Rj6osYJiZRD3fUWpq12BP00CR+rNcoBQsQBIYyAXLTx1Ng9v10G9OEIluh4wpnPJ4GBi7g7j3Fr7wNojqPCYl8yoJjBj4SJF3sPDDswFkaStNE6cQG3it9zdmv/GmQqSm0WHoaRp7FRwb+CtwRl9EpajS6e+3tFKVx2HZB67lxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=moonshot.ai; spf=pass smtp.mailfrom=moonshot.ai; dkim=pass (2048-bit key) header.d=moonshot.ai header.i=@moonshot.ai header.b=iCZBsWr7; arc=none smtp.client-ip=209.127.231.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=moonshot.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=moonshot.ai
+	s=arc-20240116; t=1788095450; c=relaxed/simple;
+	bh=RdktVl9rJSg1dc4gnDF4+2Olbs7dpFV3Gp/zOMfl7jU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LQAI/9MqXrVTK66vmdavVE/quLUMnLN/gds0cKRJftPHDzA860MY2FxAlcxznNg3Xbxipgww3lb1EdrBCGDwMZXPVVFBViTcF8WU0xarnUV3uOQ6I6l70+zJuSGBM4j03d5fybzzcS0Rlpf7PgUupcLoCBOu1zXHs2JjUg7LQzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VsIbgX3X; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=moonshot.ai header.i=@moonshot.ai header.b="iCZBsWr7"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=feishu2510091218; d=moonshot.ai; t=1788077603; h=from:subject:
- mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
- mime-version:in-reply-to:message-id;
- bh=ShQJEB8cv5Zrfc3UuBgw8Kin5pLXDEOo/ululN/tc+Q=;
- b=iCZBsWr7m/GiACZ9WW7QdiMSYx283dKkxwou/Nzejk/Nce4d5NlSNrHEMHijRwisyxA7NO
- o97ZRFxreqztuyZ5xOEAgr9fFEGvMmdI79fpnboe6abLynabKjIVn+6Hh/eYUTivBp5taJ
- hd3xIjcE1KXbDkiy3nWJ3P5KMuDxwr/j6VGvB83dALzzAU/pEo3CZ8QhdqTEmBkaDoOail
- RLzvbkCPwsKnvoyfV4BWKFe1uLbbAnw07ESpnZcO2Q+RqurM8yseElgwoGv6d5scT++na8
- Syu5DzTKchdPbEbcbuZI2OTaBs7zAIJkyBMykk1tuimtrdSAwucEdn3JzdIoFQ==
-To: "peterz@infradead.org" <peterz@infradead.org>, 
-	"mingo@redhat.com" <mingo@redhat.com>, 
-	"acme@kernel.org" <acme@kernel.org>, 
-	"namhyung@kernel.org" <namhyung@kernel.org>
-Cc: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: [PATCH v2] perf: Fix use-after-free when perf mmap() revival races with the last munmap() 
-X-Lms-Return-Path: <lba+16a93e621+778538+vger.kernel.org+bug-report@moonshot.ai>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 30 Aug 2026 16:13:21 +0800
-Message-Id: <91825d0335d2f7cc017ee23886ffeef44c1cc633.f061f277.0045.493a.937e.53242f19a7de@feishu.cn>
-From: "Security Team" <bug-report@moonshot.ai>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VsIbgX3X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3BFD1F000E9;
+	Sun, 30 Aug 2026 13:10:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788095448;
+	bh=kjIBYKqjca5AJtwNJFjuYlFco4j1jiJIOswjnyir5Ug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=VsIbgX3X2WaXH/SrvByDwvtIU7lhvKjUGtg89fgulyel8V48/lfZg8McK9C1XAuxK
+	 58wr290cNK8CfDnKq4x8WaUs40WIPNBflW8StXFg35IkIK9I94bniOAq10ak6drVzl
+	 p+ohUO3Y9epbrZw2/NdYHqeupalN+NTMSmqZjoC9HiXSMKaBtGx7jPfPX/sPhTgpXw
+	 bB+y747G3UZ1HLiLfV6i1uiAPI8+361oMC9719lgebqSzjdmiwMVfasmPHHnJ4enrA
+	 WI9btRB4o46ZLdeVpcZC6tZWO1wsTPtqDIeFCFsItVF6MXkN4/edrldzLfIGjxcvcR
+	 bQJMTaPDfHqxw==
+Date: Sun, 30 Aug 2026 10:10:45 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, tlipcon@google.com,
+	eranian@google.com
+Subject: Re: [PATCH] perf symbol: Do not use debug file as the binary type
+Message-ID: <apQr1UOHdI9f0IqU@x2>
+References: <20260825062345.115073-1-adrian.hunter@intel.com>
+ <apCR1kJMBbdDC8B3@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <apCR1kJMBbdDC8B3@google.com>
 
-perf_mmap_close() drops rb->mmap_count *without* holding
-event->mmap_mutex (the refcount_dec_and_test() right before the
-refcount_dec_and_mutex_lock() of event->mmap_count). A concurrent
-perf_mmap_rb() can slot its entire "revival" path into that window
-(perf_mmap holds event->mmap_mutex for its whole duration, including
-rb_alloc):
+On Thu, Aug 27, 2026 at 12:36:54PM -0700, Namhyung Kim wrote:
+> Hello,
+> 
+> On Tue, Aug 25, 2026 at 09:23:45AM +0300, Adrian Hunter wrote:
+> > dso__load() sets the binary type of a DSO to the type of the first symbol
+> > source found. For a DSO with a separate debug file linked via
+> > .gnu-debuglink, that is DSO_BINARY_TYPE__DEBUGLINK, which makes
+> > dso__get_filename() return the name of the debug file instead of the file
+> > that was actually executed.
+> > 
+> > Consumers that need to read instruction bytes, such as Intel PT decoding
+> > in 'perf script', then read from the debug file and produce wrong
+> > instructions.
+> > 
+> > Prefer DSO_BINARY_TYPE__BUILD_ID_CACHE, and otherwise
+> > DSO_BINARY_TYPE__SYSTEM_PATH_DSO, over debug-only types, which restores
+> > the behaviour of using a file that contains the executed instructions.
+> > 
+> > This is a workaround. Properly separating the binary file used for
+> > instructions from the file used for debug symbols is left for later.
+> > 
+> > Example:
+> > 
+> >  Create a shared object with a separate .gnu_debuglink debug file. Note
+> >  that 'objcopy --only-keep-debug' leaves .text as NOBITS, so instructions
+> >  read from the debug file are zeros:
+> > 
+> >   # cat > foo.c << EOF
+> >   unsigned long foo_work(unsigned long n)
+> >   {
+> >         unsigned long s = 0;
+> > 
+> >         for (unsigned long i = 0; i < n; i++)
+> >                 s = s * 31 + i;
+> >         return s;
+> >   }
+> >   EOF
+> >   # cat > main.c << EOF
+> >   #include <stdio.h>
+> >   unsigned long foo_work(unsigned long n);
+> >   int main(void)
+> >   {
+> >         printf("%lu\n", foo_work(1000));
+> >         return 0;
+> >   }
+> >   EOF
+> >   # gcc -g -O2 -shared -fPIC -o libfoo.so foo.c
+> >   # gcc -g -O2 -o main main.c -L. -lfoo -Wl,-rpath,'$ORIGIN'
+> >   # objcopy --only-keep-debug libfoo.so libfoo.so.debug
+> >   # objcopy --strip-debug libfoo.so
+> >   # objcopy --add-gnu-debuglink=libfoo.so.debug libfoo.so
+> >   # perf record -e intel_pt//u ./main
+> > 
+> >  Note that branch samples must be requested, because it is the resolving
+> >  of the branch target symbol that causes dso__load() to be called, and
+> >  hence the binary type to be set, before the decoder walks the code.
+> >  With '--itrace=e' alone, nothing loads symbols for libfoo.so, the binary
+> >  type is left as DSO_BINARY_TYPE__NOT_FOUND, the correct file is read
+> >  anyway, and no errors are reported either way.
+> > 
+> >  Before:
+> > 
+> >   # perf.before script --itrace=be 2>&1 | grep "instruction trace error"
+> >    instruction trace error type 1 time 2350.467489498 cpu 9 pid 75634 tid 75634 ip 0x77d48480718f code 6: Trace doesn't match instruction
+> >    instruction trace error type 1 time 2350.467489832 cpu 9 pid 75634 tid 75634 ip 0x77d484807341 code 6: Trace doesn't match instruction
+> >    instruction trace error type 1 time 2350.467496412 cpu 9 pid 75634 tid 75634 ip 0x5b4de37a8074 code 6: Trace doesn't match instruction
+> >    instruction trace error type 1 time 2350.467593393 cpu 9 pid 75634 tid 75634 ip 0x77d4848070d0 code 6: Trace doesn't match instruction
+> >    instruction trace error type 1 time 2350.467593954 cpu 9 pid 75634 tid 75634 ip 0x77d4848075a8 code 6: Trace doesn't match instruction
+> >    instruction trace error type 1 time 2350.467595728 cpu 9 pid 75634 tid 75634 ip 0x77d4848324de code 6: Trace doesn't match instruction
+> >   6 instruction trace errors
+> > 
+> >  After:
+> > 
+> >   # perf script --itrace=be 2>&1 | grep "instruction trace error"
+> >   #
+> > 
+> > Fixes: 5363c306787c8 ("perf symbol: Set binary_type of dso when loading")
+> > Reported-by: Todd Lipcon <tlipcon@google.com>
+> > Closes: https://lore.kernel.org/all/CAGH6UiG=RJLqBU3kLu9XJciPyPO1HZkbAPERguVUMRuWQgqf=A@mail.gmail.com/
+> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> 
+> Thanks for the patch and a test case.
+> 
+> Arnaldo, I can take this to the perf-tools tree for v7.3.
 
-=C2=A0 munmap side (perf_mmap_close) =C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0 mmap=
- side (perf_mmap_rb)
-=C2=A0 ----------------------------------- =C2=A0=C2=A0 -------------------=
--------------
-=C2=A0 rb->mmap_count 1 -> 0 =C2=A0 (no lock) =C2=A0 =C2=A0=C2=A0 (holds ev=
-ent->mmap_mutex)
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 inc_=
-not_zero(rb->mmap_count) fails
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ring=
-_buffer_attach(event, NULL)
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rb_a=
-lloc() + attach new rb
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 refc=
-ount_set(&event->mmap_count, 1)
-=C2=A0 lock; event->mmap_count 1 -> 0
-=C2=A0 ring_buffer_attach(event, NULL)
-=C2=A0 ring_buffer_put() -> frees the *new* rb
+Ok!
 
-The revival's refcount_set(&event->mmap_count, 1) is an invisible
-1 -> 1 write: the close frees the just-revived buffer although the
-other process still has it mapped -- a page-level use-after-free
-allowing local privilege escalation to root by any unprivileged user
-(default kernel.perf_event_paranoid=3D2).
-
-Serialize both counter updates of perf_mmap_close() under
-event->mmap_mutex, so a concurrent perf_mmap() always observes a
-consistent (rb, mmap_count) pair: it either aliases the live buffer,
-or finds event->rb =3D=3D NULL and allocates a fresh one.
-
-Fixes: 59741451b49c ("perf: Identify the 0->1 transition for event::mmap_co=
-unt")
-Cc: stable@vger.kernel.org # 6.18+
-Reported-by: Kimi Security Team <bug-report@moonshot.ai>
-Signed-off-by: Yilin Zhang <yilinzhang@moonshot.ai>
----
-=C2=A0kernel/events/core.c | 8 ++++++--
-=C2=A01 file changed, 6 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index a6c8e38a3110..0d5b1f3c1cae 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7060,11 +7060,15 @@ static void perf_mmap_close(struct vm_area_struct *=
-vma)
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 mutex_unlock(=
-&rb->aux_mutex);
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 }
-=C2=A0
-+ =C2=A0 =C2=A0 =C2=A0=C2=A0 mutex_lock(&event->mmap_mutex);
-+
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (refcount_dec_and_test(&rb->mmap_count=
-))
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 detach_rest =
-=3D true;
-=C2=A0
-- =C2=A0 =C2=A0 =C2=A0=C2=A0 if (!refcount_dec_and_mutex_lock(&event->mmap_=
-count, &event->mmap_mutex))
-+ =C2=A0 =C2=A0 =C2=A0=C2=A0 if (!refcount_dec_and_test(&event->mmap_count)=
-) {
-+ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=C2=A0 mutex_unlock(&even=
-t->mmap_mutex);
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto out_put;
-+ =C2=A0 =C2=A0 =C2=A0=C2=A0 }
-=C2=A0
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 ring_buffer_attach(event, NULL);
-=C2=A0=C2=A0 =C2=A0 =C2=A0 =C2=A0 mutex_unlock(&event->mmap_mutex);
---=C2=A0
-2.43.0
+- Arnaldo
