@@ -1,164 +1,169 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B352E5B29
-	for <linux-perf-users@vger.kernel.org>; Sun, 30 Aug 2026 14:55:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34013BBFA2
+	for <linux-perf-users@vger.kernel.org>; Sun, 30 Aug 2026 15:13:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788101749; cv=none; b=CYoLtoVlQ3UgoavJ+UNupIsgsHuCCTm8We1Fhn9Hpll7loHL5KJatPiGKuHKLNFblq12+8zH+xZcKVl+hkFw7eAFLUercUfm9Lye9W8/CRcdFw9bI+ylI4Jy7Ic39DUBx3JP5iTmSPMkOlPCPsZHA5e6AE8PLQRYGnMEWnXHVJ4=
+	t=1788102790; cv=none; b=J5ZOIRRvVXVYwmu8rxN7J4KL+Cdq+1MXn+kmIYJm0iP+uaoER4A8/aPEnpM6pXOoREXXKK20QjZSKmHCK+/AK3QRLhiydJR+3AhEYegZ20MT5LIJmt/L40QUNdAhoLX7eV1muLSp6Id6RA9hn28FImj4b5Fjkej70XSqvx4z4Kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788101749; c=relaxed/simple;
-	bh=QByGBxzU220ZERAIuEw8xUkWTZggFPrYCl7mjEOxDnw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Um4iT7UabMgxdk1wyp9oA0+ZZFZN+AjYpi5FTQrwiwnZ+wnKYlhCJ5lrVkO+BEx8AiTC3I8nmO9EoYaQG+q+tHtQ3xMaYUkdDNFEEU8vIURNTdrWCOrJWcEz0PyHSrMLKdLGXXhoIBjlW6T5EhwGvhouMbqcNTx2v3AsprqMpxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=egT1EcFJ; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788102790; c=relaxed/simple;
+	bh=zUlKjmZ2x2JF3ZehhWQR6ZE9QXKc3weoEEl5z/R0lTk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=PRH72GZjIYr4HdxHUVngyyxyoJJIzYsf15ReOsnBsTs9wNBoK4xpIU+7mkJK4kMyTT3wtTnOJzeUpKgEwA784ib7WbJbgnYP9X7slmZF0sTZ/JIzsuCr2ID8fIbKPcCysyLYd3UKJEdkpxTnbOQCK5F5CX1R7xFhRvNtdWb1c5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUqRV//z; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egT1EcFJ"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-38dc4553f62so3745199a91.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 30 Aug 2026 07:55:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788101747; x=1788706547; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=f8qfcfBi8NC02RZX5r4ch9EYMf8t0tHqhPistvQsuBk=;
-        b=egT1EcFJoJn0o0szhuxUYKyHx+xzAaVnjW5LPVVA1uTCd8xaXOfGmWXwZwC+rE196V
-         liTBvsQK0CsPBHFx68w/DiYrwtrhjYjQtUHp8utVcHI0ui9e/2bH55N23ZOsVMEOwuIk
-         i0oIqwKwV9RWsPtfqlMh/C/yyU37DKE00IH72DdpgZzAabf827ZeIt3Lql0k5KodyxLQ
-         i35HrEMMAISEGD0bU5y/7nEK5NJK7tIlPJWIZPFza1lSCnr40fUlqF+w5a0gDzRMNOrQ
-         ib8WT2GCqlxparv+k48OClMEQPEM24YqNagN9e29lsFlEgd7+ygJkJa25gGenlijhn/9
-         FGgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788101747; x=1788706547;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=f8qfcfBi8NC02RZX5r4ch9EYMf8t0tHqhPistvQsuBk=;
-        b=FQ1JUHGHC3Vj+VaZh6oVgwHLpjcbD7QDy02ursYD0C1wxFw/AZvG5NwTHWjkNqsdjR
-         k48dNwd9zRKohPOHO5yRmNf9Y0e97NIBkvbxJgSUapzZrE+5lT3Cz77gbuRyFNaLoD+x
-         pEKmQ+U3eACRq1uG7QeLc9FhriIPLRf3X44pCNTWeZPdazE0dqJLpDVsoRQjCdV3dBn7
-         sB1TpnMlUXc6cMwmEFDGdD7jP00xBKjwx0ZOi8iORvkvdHQ3dnvfjpK5Io5ZWwmdjHwy
-         Kib/tlucqHocWQz+A+ZiDYiqYZ6xEIes4qpFC7OsV1HnJdiewq6MB6249VMynDhXwhQp
-         T5zA==
-X-Forwarded-Encrypted: i=1; AKwUvBxZ/sif9crqiG5LNwm4/RCMFsnLvFWhR1quQu48JN10Y+YebGl84b/G3O+P5XXTm/OR64ATMm/ZGRhsmgotbvct@vger.kernel.org
-X-Gm-Message-State: AFuF++ksYGAFKhqZuHG8Ab8GwaGGfAayo9agNpXwxie4KSLH0Ewqdqja
-	pRglLbL440EjUgRP1NFO5+w15qszV+UCV+aCsAgZrkpfrsji+TvWDVfz
-X-Gm-Gg: AYBFou1g3TAkt+/ltnON8NviPg085qpEVNxZe0eehcG+TjOT9bVo/SVrQz7kzGO7AOQ
-	bwsinnV7bo2BcakeVkMS8B/6tKi+pXldcBRBjNg1kvE+FV4jYEP6aG1/E38SOQ2xyf/6F/qoWD8
-	/pIDHkXmN8BErsaqBPP1oxxnZXAGazqxkj13T0Kqj5HBVp9VbUuqgKMqrfgTDdmKwVMovaajTJ2
-	+0vj5lAzywUtF2MRdcR94wXlQX4PPqdH5krQsO5Q2+rU86h2buXuj5TM54+0N89Ku9agsvme6ku
-	P+EJmYWyc11DM8pbnZcr/+7CZBEveVacPq6eXZ+GvJeTuZalVkgGz/z5M1QcKzWhCirGmSZiRpL
-	i/hELEIsK39ZO4ABmGcVSlRirxhprmW3mhTJ4mQZTVcNEnLHSSQ4rO3bwHLMP57Fq1QBdOIWxNU
-	J768wzj4y6AEENd/wsTUYxCSUXuTEztGY7+dEB3h265sdGcHK3KCI/kIDU9mIWE7aZ8heWB6B/+
-	dY6+RcP8FNfc2UGB6bEynYSp1vr1+oEXdyer9s=
-X-Received: by 2002:a17:90b:2e4b:b0:393:19a3:4f1 with SMTP id 98e67ed59e1d1-396d0d7b9bdmr31281365a91.6.1788101747319;
-        Sun, 30 Aug 2026 07:55:47 -0700 (PDT)
-Received: from localhost.localdomain ([180.101.244.64])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-396dda7aaaasm11757472a91.6.2026.08.30.07.55.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2026 07:55:46 -0700 (PDT)
-From: Aohan Mei <ljp1205831794@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Aohan Mei <henrymei@tencent.com>,
-	TencentOS Corvus AI <corvus@tencent.com>,
-	stable@vger.kernel.org
-Subject: [PATCH] perf: Fix mmap_count accounting on the perf_mmap_close() race path
-Date: Sun, 30 Aug 2026 22:55:05 +0800
-Message-ID: <20260830145512.2583689-1-ljp1205831794@gmail.com>
-X-Mailer: git-send-email 2.43.7
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUqRV//z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D60201F00A3D;
+	Sun, 30 Aug 2026 15:13:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788102788;
+	bh=gTWkosTGZOokTI+R+HLZS8Z5fDlh7oIh7vvcBYDIrOw=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=RUqRV//z/cjhdbdWjkCrqnwDFeGGnJqVgOm69Yt6Gke5D6m70WJ+dLwHaY+DJQg0f
+	 buldAO6WotvT8voThY/uQy1/6nAeR0LsUM9Hrw9qg42fSo4SgfENhdmOA5lGNa/J6L
+	 50/Urrr3L+iNd4LneqbzJM4k7iD2EVA9ZPkOZE0o47EULuXy81BIHC4jdmPUbfqpfQ
+	 78ReJj7kAxJRs71U+e1LznJqOF7VMw3e82WUWI5kKiBmSJKilsQjKcc8jm8Jif1Xj7
+	 R+U0xUewTv+phKlPQ0CbUMs3ffFMpXgPbsaVdmuRyVLq9pjyo16/WNcGPE+qzpCcCG
+	 xlds+1nhYoBpg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf: Fix mmap_count accounting on the
+ perf_mmap_close() race path
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Aohan Mei" <ljp1205831794@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260830145512.2583689-1-ljp1205831794@gmail.com>
+References: <20260830145512.2583689-1-ljp1205831794@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 30 Aug 2026 15:13:07 +0000
+Message-Id: <20260830151307.D60201F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Aohan Mei <henrymei@tencent.com>
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+s) to consider:
 
-perf_mmap_rb()'s raced path (a concurrent perf_mmap_close() has dropped
-rb->mmap_count to 0 but is still blocked on event->mmap_mutex inside
-refcount_dec_and_mutex_lock()) installs a fresh ring buffer and then
-does refcount_set(&event->mmap_count, 1).
+New issues:
+- [Critical] Incrementing event->mmap_count on the raced path causes the co=
+ncurrent perf_mmap_close() to skip cleanup and unaccounting of the old ring=
+ buffer, permanently leaking memory charges and the old ring buffer itself,=
+ leading to a Use-After-Free.
 
-That is wrong: the blocked closer still holds a pending decrement and
-the count is 1 at this point. The refcount_set() leaves the count at 1,
-so once perf_mmap() drops the mutex the closer observes a 1->0
-transition, detaches the *new* buffer via ring_buffer_attach(event,
-NULL) and drops its last reference, freeing pages that the racing
-mmap() is about to map. A later munmap() of that mapping then finds
-event->rb == NULL and crashes the kernel in perf_mmap_close().
+Pre-existing issues:
+- [High] perf_mmap_aux() lacks protection against mmaping redirected events=
+, causing a refcount saturation WARN on event->mmap_count.
+- [High] Mmapping the same perf event multiple times permanently leaks lock=
+ed_vm and pinned_vm accounting charges.
+--
 
-Restore the pre-59741451b49c accounting on the raced path: the count is
-guaranteed non-zero there, because the closer's decrement of
-event->mmap_count only happens while holding mmap_mutex, which the
-mapper holds. Use refcount_inc(). Keep refcount_set(..., 1) for the
-genuine first mmap, where the 0->1 transition is required and
-refcount_inc() would WARN.
+commit 74767b5c0f42ab023d9f220cb4e3a861a837fda1
+Author: Aohan Mei <henrymei@tencent.com>
 
-Fixes: 59741451b49c ("perf: Identify the 0->1 transition for event::mmap_count")
-Reported-by: TencentOS Corvus AI <corvus@tencent.com>
-Cc: stable@vger.kernel.org
-Assisted-by: CodeBuddy:Kimi-K3
-Signed-off-by: Aohan Mei <henrymei@tencent.com>
----
- kernel/events/core.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+perf: Fix mmap_count accounting on the perf_mmap_close() race path
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 4638544205f2..adcc04ca05f8 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7273,6 +7273,7 @@ static int perf_mmap_rb(struct vm_area_struct *vma, struct perf_event *event,
- 	long extra = 0, user_extra = nr_pages;
- 	struct perf_buffer *rb;
- 	int rb_flags = 0;
-+	bool raced = false;
- 
- 	nr_pages -= 1;
- 
-@@ -7314,6 +7315,7 @@ static int perf_mmap_rb(struct vm_area_struct *vma, struct perf_event *event,
- 		 * event and continue as if !event->rb
- 		 */
- 		ring_buffer_attach(event, NULL);
-+		raced = true;
- 	}
- 
- 	if (!perf_mmap_calc_limits(vma, &user_extra, &extra))
-@@ -7338,7 +7340,21 @@ static int perf_mmap_rb(struct vm_area_struct *vma, struct perf_event *event,
- 	perf_event_update_userpage(event);
- 
- 	perf_mmap_account(vma, user_extra, extra);
--	refcount_set(&event->mmap_count, 1);
-+
-+	/*
-+	 * On the raced path above, a concurrent perf_mmap_close() can
-+	 * still have a pending decrement of event->mmap_count: it sits
-+	 * blocked inside refcount_dec_and_mutex_lock() on event->mmap_mutex
-+	 * (which we hold) with the count still at 1. Using
-+	 * refcount_set(..., 1) here would make that closer observe a 1->0
-+	 * transition once we drop the mutex, causing it to detach and free
-+	 * the buffer we just installed, while this mmap() still maps it.
-+	 * The count is guaranteed non-zero on the raced path, so increment.
-+	 */
-+	if (raced)
-+		refcount_inc(&event->mmap_count);
-+	else
-+		refcount_set(&event->mmap_count, 1);
- 
- 	return 0;
- }
--- 
-2.43.7
+This patch aims to fix an issue on the perf_mmap_rb() raced path where
+a concurrent perf_mmap_close() has dropped the ring buffer's mmap_count to
+zero. It restores the previous behavior of incrementing event->mmap_count
+instead of setting it to 1, to prevent the concurrent closer from observing
+a 1->0 transition and prematurely freeing the new buffer.
 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index a6c8e38a31104..7b55156bbc023 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -7281,6 +7281,7 @@ static int perf_mmap_rb(struct vm_area_struct *vma,=
+ struct perf_event *event,
+>  	long extra =3D 0, user_extra =3D nr_pages;
+>  	struct perf_buffer *rb;
+>  	int rb_flags =3D 0;
+> +	bool raced =3D false;
+> =20
+>  	nr_pages -=3D 1;
+
+[Severity: High]
+This is a pre-existing issue, but could mmapping the same perf event multip=
+le
+times permanently leak locked_vm and pinned_vm accounting charges?
+
+When perf_mmap_rb() handles overlapping alias mappings (just before the rac=
+ed
+path check), it calls perf_mmap_account() for each mapping.
+
+However, during teardown in perf_mmap_close(), perf_mmap_unaccount() is only
+called once when the final mapping is unmapped and detach_rest is true. For
+all prior munmap() calls, the unaccounting seems to be completely skipped
+because detach_rest is false.
+
+Could a user exhaust their RLIMIT_MEMLOCK quota by repeatedly mmapping and
+munmapping the same perf event?
+
+[ ... ]
+
+> @@ -7346,7 +7348,21 @@ static int perf_mmap_rb(struct vm_area_struct *vma=
+, struct perf_event *event,
+>  	perf_event_update_userpage(event);
+> =20
+>  	perf_mmap_account(vma, user_extra, extra);
+> -	refcount_set(&event->mmap_count, 1);
+> +
+> +	/*
+> +	 * On the raced path above, a concurrent perf_mmap_close() can
+> +	 * still have a pending decrement of event->mmap_count: it sits
+> +	 * blocked inside refcount_dec_and_mutex_lock() on event->mmap_mutex
+> +	 * (which we hold) with the count still at 1. Using
+> +	 * refcount_set(..., 1) here would make that closer observe a 1->0
+> +	 * transition once we drop the mutex, causing it to detach and free
+> +	 * the buffer we just installed, while this mmap() still maps it.
+> +	 * The count is guaranteed non-zero on the raced path, so increment.
+> +	 */
+> +	if (raced)
+> +		refcount_inc(&event->mmap_count);
+
+[Severity: Critical]
+Might incrementing event->mmap_count on the raced path inadvertently break =
+the
+teardown logic in the racing closer?
+
+By inflating the count from 1 to 2, the concurrent perf_mmap_close() for the
+old ring buffer might see refcount_dec_and_mutex_lock() return false. This
+would cause it to jump directly to the out_put label, completely skipping t=
+he
+detachment of other events from old_rb->event_list and skipping
+perf_mmap_unaccount().
+
+Would this cause the old_rb to be freed while other events are still attach=
+ed,
+leading to a use-after-free if those events attempt to write to the freed
+buffer? Does this also permanently leak memory charges since the unaccounti=
+ng
+is skipped?
+
+[Severity: High]
+This isn't a bug introduced by this patch, but it appears perf_mmap_aux()
+lacks protection against mmapping redirected events. Could this lead to a
+refcount saturation WARN?
+
+In perf_mmap_aux(), the code validates that an rb exists but seems to fail =
+to
+verify if the event actually owns the mmap count via a check like
+!refcount_read(&event->mmap_count). It unconditionally calls
+refcount_inc(&event->mmap_count).
+
+If a user redirects event B's output to event A via
+ioctl(PERF_EVENT_IOC_SET_OUTPUT), setting B->mmap_count to 0, and then calls
+mmap() on event B with a non-zero offset, will this cause a refcount
+saturation WARN?
+
+> +	else
+> +		refcount_set(&event->mmap_count, 1);
+> =20
+>  	return 0;
+>  }
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260830145512.2583=
+689-1-ljp1205831794@gmail.com?part=3D1
