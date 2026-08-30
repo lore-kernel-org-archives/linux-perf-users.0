@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C86E3BA253;
-	Sun, 30 Aug 2026 14:40:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD552931F4;
+	Sun, 30 Aug 2026 14:40:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788100809; cv=none; b=cSnwUeTqwYoePpGDhYdU8roVi05yF7hbSM+gDZDVDywd6QgWuQUZ0tMix418r8hnF50NXT7kNzgtHJ1RUCvSNnXMHe+uAfPP5ZcVIe2JzmuGihoVpkm4QMMG7jqgOUxBIWR075w0TW5Bk6gy0tee0xi6YsN6JYmYIgTYypl5PRE=
+	t=1788100859; cv=none; b=hGC87jLxIQLZjflFbfq4wY2t5mVpwqKeaGz6Yp12lrlxUVzCG1rbYRZO56zFDGp+6vjY4Bgok8WQ9/H3+ucZyAkJpBQ1SdEAb7hRscHyq7v5X55s/d3EPysFOD0+sZyd/Emoo8XXd1FhyAn11hH1QWVtrUePaNLHt9BNaFh01lY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788100809; c=relaxed/simple;
-	bh=JOiB/aoLS0sWm/4U7j8MfAIf+xyILqQChOkSfzOPqGw=;
+	s=arc-20240116; t=1788100859; c=relaxed/simple;
+	bh=iVju7wnWO6EiCXfbIXqdD7a+W7EEwhW6kOkpi3zEodo=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=WjSymm9VxFMPFGEMvZBAlX1HESA1jWQEzHc1d+8XjGllLFTLgrQjFPSns8LkX8kiVgQQNa5mrCc3DULX4L/JQaWLUlekI3cSmNJJozaMYrMT7sbm+yWUShaUwxwu5YY9AxWDa1gcbDS23Eqx8IElc9ETUyq57parSREM4v+kSxk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJUqO4Y1; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=MdGYTqz1EiCmqJ4aw3be9xKqkH0tSA+L8OZ5ek82ZKoAAIdptb1XE7+3OZdsZAheHl9iCp9CE1WItV6nnGdsSUAbGCCOw6XhJruDy6HajhiEhaMVvCBavCAIzFqLXPU8fTaWEDGOH6IlA7YkftDIUjyaMk15S0d8ExdC8b7f1Uo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AAGpib0v; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJUqO4Y1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C28ED1F000E9;
-	Sun, 30 Aug 2026 14:40:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AAGpib0v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB6391F000E9;
+	Sun, 30 Aug 2026 14:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788100806;
-	bh=I2kxi/RRnt8U0NVH5PSG9fQuAUjd3sOAcSoSyl4nGjo=;
+	s=k20260515; t=1788100857;
+	bh=clShHUCuHkddYxb4aEGzDGrBApei6IBQkXi3D/x0ZHc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AJUqO4Y1hXD2IGE6Nu8FFEVa4Q6HreIPIdWNeeoCyH53Z+eC4JgiUkItnEBe7HhTH
-	 A21Qze7JUdl5RQefH7mKM/AM4VMfp25y7JzFyrmCBqBuwv+kwQ+svBLIwGMU4Ydlah
-	 MJk3bG7mIpr0PbKnrCQYMdPg3VibG+RinRBQu87YOjeDUz5HhjA2/WNfcgnTLlrdU8
-	 9rIeceIC9F9G1xWZvNoG7j/cbinhZMLYqKfBcKMtSRIDtYSBPpLfWs08rNx2JCKk6M
-	 yxDk4JbIyLbi6jjDAGpvUKErrybyJyhdMOYTf11QaqtcegMuzme4IJG/7ul/iQHk2y
-	 8Gln3kIpqEEBg==
+	b=AAGpib0vrIn/FPxq3AK14bn4R1GO71AhGkFbeSF2uZc8g/E5f9ITo8DL3rh0a58M8
+	 zKvHuCFBx8mKTRw5hRR9tYRS/7p4kvTI483hbmQGlShMHwx99WlrqHbeFF8kvy4P61
+	 aN3fIA+VVbuuxyBdc1dnFpT1jQ9MHdPC339bRdylT+hRd08enUlkytlUEeWI4Jg6L0
+	 4fc9DdkhhrqDvmKsfm/fTngEGdI+nM0ViIgmL9ytKpcYuNaR3ClAgO4LHU+728IYDg
+	 j1W0pUSfIK6jJXBRV+Kdya0Ev6YAg4VdY1+HNYwZOlZNmI3V4YchUo7ynheRwLtsRr
+	 d6OxPKgnKscnQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v14 01/14] x86/mce: Fix hardware debug register
- corruption on task migration
+Subject: Re: [PATCH v14 06/14] HWBP: Add modify_local_hw_breakpoint_addr()
+ API
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <178810002334.64882.15357388305843450280.stgit@devnote2>
+Cc: linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <178810007699.64882.3789162690369937099.stgit@devnote2>
 References: <178810001186.64882.2161016469449127450.stgit@devnote2>
- <178810002334.64882.15357388305843450280.stgit@devnote2>
+ <178810007699.64882.3789162690369937099.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 30 Aug 2026 14:40:05 +0000
-Message-Id: <20260830144005.C28ED1F000E9@smtp.kernel.org>
+Date: Sun, 30 Aug 2026 14:40:56 +0000
+Message-Id: <20260830144056.EB6391F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,75 +47,71 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Moving local_db_save() inside exc_machine_check_kernel() exposes e=
-arly #MC entry code to hardware breakpoints, partially reverting commit cd8=
-40e424f27 and allowing nested #DB exceptions that can fatally corrupt the #=
-DB IST stack.
+- [Low] Lockless updates to `bp->attr.bp_addr` and `counter_arch_bp(bp)->ad=
+dress` lack `WRITE_ONCE()`, constituting a formal data race under the Linux=
+ Kernel Memory Model.
 --
 
-commit 22e84ef34bc3d02a04e2e3356bffad4d11749a7a
+commit 0c79300d09e43eac52a027f6cb480808e7f3902f
 Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-x86/mce: Fix hardware debug register corruption on task migration
+HWBP: Add modify_local_hw_breakpoint_addr() API
 
-In exc_machine_check_user(), local_db_save() and local_db_restore() are
-invoked in the outer entry stubs, surrounding exc_machine_check_user().
-However, exc_machine_check_user() handles pending thread work and may
-schedule(), causing the task to migrate to another CPU. This patch moves
-local_db_save() and local_db_restore() inside exc_machine_check_user()
-and exc_machine_check_kernel() to prevent hardware debug register corruptio=
-n.
+This commit adds the modify_local_hw_breakpoint_addr() API to update the
+watched address of an installed hardware breakpoint on the local CPU without
+releasing and reserving its hardware slot.
 
-> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/cor=
-e.c
-> index cfb74be19994d..61ade8b5c9d7b 100644
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -2108,6 +2108,7 @@ bool filter_mce(struct mce *m)
->  static __always_inline void exc_machine_check_kernel(struct pt_regs *reg=
-s)
->  {
->  	irqentry_state_t irq_state;
-> +	unsigned long dr7;
-> =20
->  	WARN_ON_ONCE(user_mode(regs));
-> =20
-> @@ -2118,18 +2119,24 @@ static __always_inline void exc_machine_check_ker=
-nel(struct pt_regs *regs)
->  	if (mca_cfg.initialized && mce_check_crashing_cpu())
->  		return;
-> =20
-> +	dr7 =3D local_db_save();
+Link: https://lore.kernel.org/all/f9c49dfa49bdc57ba8c0574bc9981c1e581acf92.=
+1785067572.git.wangjinchao600@gmail.com/
 
-[Severity: High]
-Does moving local_db_save() below the early checks in
-exc_machine_check_kernel() expose this early #MC entry code to hardware
-breakpoints?
-
-If a privileged user sets a hardware data breakpoint on a kernel variable
-accessed here, such as mca_cfg.initialized or variables inside
-mce_check_crashing_cpu(), a #DB exception could fire in kernel mode.
-
-If a Machine Check Exception (#MC) then occurs and preempts the #DB handler,
-it switches to the #MC IST stack. Because local_db_save() is not called
-until after these variable accesses, the code could trigger a nested #DB
-exception.
-
-Since x86 uses a fixed-size Interrupt Stack Table (IST) for #DB exceptions
-that unconditionally resets the stack pointer to the top of the #DB IST
-stack, wouldn't the nested #DB overwrite the active stack frame of the
-interrupted #DB handler, leading to a fatal crash when it attempts to
-return?
-
-Could local_db_save() be called at the very beginning of
-exc_machine_check_kernel() to prevent this IST stack corruption?
-
->  	irq_state =3D irqentry_nmi_enter(regs);
-> =20
->  	do_machine_check(regs);
-
+> diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+> index 789add0c185a0..124074c3d3bc2 100644
+> --- a/kernel/events/hw_breakpoint.c
+> +++ b/kernel/events/hw_breakpoint.c
 [ ... ]
+> +int modify_local_hw_breakpoint_addr(struct perf_event *bp,
+> +				    unsigned long addr)
+> +{
+> +	unsigned long old_addr;
+> +	int ret;
+> +
+> +	lockdep_assert_irqs_disabled();
+> +
+> +	old_addr =3D bp->attr.bp_addr;
+> +	counter_arch_bp(bp)->address =3D addr;
+> +	bp->attr.bp_addr =3D addr;
+
+[Severity: Low]
+The function intentionally updates bp->attr.bp_addr locklessly so NMI handl=
+ers
+can observe the new address during the transition. However, without WRITE_O=
+NCE()
+annotations, does this constitute a formal data race under the Linux Kernel
+Memory Model?=20
+
+While a torn store on 32-bit architectures might only overwrite the upper 32
+bits with zero (leaving the address functionally intact), could this still
+trigger KCSAN warnings when an NMI handler concurrently reads bp->attr.bp_a=
+ddr
+via perf_bp_event()?
+
+> +
+> +	ret =3D arch_modify_local_hw_breakpoint_addr(bp, addr);
+> +	if (ret) {
+> +		counter_arch_bp(bp)->address =3D old_addr;
+> +		bp->attr.bp_addr =3D old_addr;
+
+[Severity: Low]
+Similarly, should the rollback path also use WRITE_ONCE() to ensure concurr=
+ent
+accesses by NMI handlers avoid data race warnings from KCSAN?
+
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178810001186.64882.=
-2161016469449127450.stgit@devnote2?part=3D1
+2161016469449127450.stgit@devnote2?part=3D6
