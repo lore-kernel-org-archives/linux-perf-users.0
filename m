@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EEC3B4EA9;
-	Sun, 30 Aug 2026 14:39:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C86E3BA253;
+	Sun, 30 Aug 2026 14:40:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788100741; cv=none; b=VXBXP6XWSx4WGIuSSanljMYuqWbHa/spKQc+7i+N5CtKGqiIuKVYZl0i04OyXMCd0RNN4fqMeTEMnDCMc17VXUTyy6IhjPugW5DdEIv12x3BNsCZd3QjSpu/jbhAnmpG5li4A4N0Mw6bjVOXjHniZaiAb7T4SA34cqyCPMzVq/w=
+	t=1788100809; cv=none; b=cSnwUeTqwYoePpGDhYdU8roVi05yF7hbSM+gDZDVDywd6QgWuQUZ0tMix418r8hnF50NXT7kNzgtHJ1RUCvSNnXMHe+uAfPP5ZcVIe2JzmuGihoVpkm4QMMG7jqgOUxBIWR075w0TW5Bk6gy0tee0xi6YsN6JYmYIgTYypl5PRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788100741; c=relaxed/simple;
-	bh=27pj09OGZZXn+a3tCKx1zb3quhK9oD1BFPV7vd67Umk=;
+	s=arc-20240116; t=1788100809; c=relaxed/simple;
+	bh=JOiB/aoLS0sWm/4U7j8MfAIf+xyILqQChOkSfzOPqGw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Amf7wMQa2n30ZUpz4V/1iMZp+AG66aqFqs8S1VGS9N1ksId4vahZzmBbQa0O1RI5XHli6z+MRM51JMQ+Yskb8tMFwVejLTV3R0aHlreH2abi5jis29ImCpKUdHUUC0l0OMfv4BNyVg9ELVsLKUDnaqufvrbNdlp4A2N6pjmr/ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DpuZgbwY; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=WjSymm9VxFMPFGEMvZBAlX1HESA1jWQEzHc1d+8XjGllLFTLgrQjFPSns8LkX8kiVgQQNa5mrCc3DULX4L/JQaWLUlekI3cSmNJJozaMYrMT7sbm+yWUShaUwxwu5YY9AxWDa1gcbDS23Eqx8IElc9ETUyq57parSREM4v+kSxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJUqO4Y1; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DpuZgbwY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D56991F00A3D;
-	Sun, 30 Aug 2026 14:38:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJUqO4Y1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C28ED1F000E9;
+	Sun, 30 Aug 2026 14:40:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788100740;
-	bh=khfDKxc4FNw0kj4iUfwIE/RULQ1f5T07PbkJcRDOyA0=;
+	s=k20260515; t=1788100806;
+	bh=I2kxi/RRnt8U0NVH5PSG9fQuAUjd3sOAcSoSyl4nGjo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DpuZgbwY+Fz9CTbAQqsW4X8yhVc8NvlJ15Gg5fsA+ueqH+e5Hq8retxMQ59RuKWtZ
-	 EohRQDEqjfUxOnX5h+c0Hp6zXyNUBUWuz4ovQJRqTya62FhbtvJPReHofCYQmH1nYQ
-	 gKud1sszpZBzuGlMzrBM157TEcmrzed9498wRe+F/xhm5Jd3u9pfIyLEKdOtBZI9r7
-	 vrxPcQGhLH7iJwMA/o6C85CuHKVv6kT4eLEImGxUTyJUhQ1uvuT3AvjzGIhhYYsfux
-	 FuOC/xtGrjzHHiognkyc8cV8HaqdjU9Q9XxHmP9YmXvhMzt/WJGL24ZVznsyLUIhB/
-	 VBCBYGMO04ncw==
+	b=AJUqO4Y1hXD2IGE6Nu8FFEVa4Q6HreIPIdWNeeoCyH53Z+eC4JgiUkItnEBe7HhTH
+	 A21Qze7JUdl5RQefH7mKM/AM4VMfp25y7JzFyrmCBqBuwv+kwQ+svBLIwGMU4Ydlah
+	 MJk3bG7mIpr0PbKnrCQYMdPg3VibG+RinRBQu87YOjeDUz5HhjA2/WNfcgnTLlrdU8
+	 9rIeceIC9F9G1xWZvNoG7j/cbinhZMLYqKfBcKMtSRIDtYSBPpLfWs08rNx2JCKk6M
+	 yxDk4JbIyLbi6jjDAGpvUKErrybyJyhdMOYTf11QaqtcegMuzme4IJG/7ul/iQHk2y
+	 8Gln3kIpqEEBg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v14 02/14] tracing/probes: Fix BTF kflag check for
- anonymous struct member access
+Subject: Re: [PATCH v14 01/14] x86/mce: Fix hardware debug register
+ corruption on task migration
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <178810003326.64882.5820404025124695636.stgit@devnote2>
+In-Reply-To: <178810002334.64882.15357388305843450280.stgit@devnote2>
 References: <178810001186.64882.2161016469449127450.stgit@devnote2>
- <178810003326.64882.5820404025124695636.stgit@devnote2>
+ <178810002334.64882.15357388305843450280.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 30 Aug 2026 14:38:59 +0000
-Message-Id: <20260830143859.D56991F00A3D@smtp.kernel.org>
+Date: Sun, 30 Aug 2026 14:40:05 +0000
+Message-Id: <20260830144005.C28ED1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,70 +47,75 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Unnamed bitfields break nested anonymous struct resolution in btf_=
-find_struct_member().
+- [High] Moving local_db_save() inside exc_machine_check_kernel() exposes e=
+arly #MC entry code to hardware breakpoints, partially reverting commit cd8=
+40e424f27 and allowing nested #DB exceptions that can fatally corrupt the #=
+DB IST stack.
 --
 
-commit 20a606aa6d4e155be5a531c5d52d78c34205c0b4
+commit 22e84ef34bc3d02a04e2e3356bffad4d11749a7a
 Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-tracing/probes: Fix BTF kflag check for anonymous struct member access
+x86/mce: Fix hardware debug register corruption on task migration
 
-This commit fixes how BTF kflags are checked when traversing nested
-anonymous structures and unions in btf_find_struct_member() by using
-the actual containing type.
+In exc_machine_check_user(), local_db_save() and local_db_restore() are
+invoked in the outer entry stubs, surrounding exc_machine_check_user().
+However, exc_machine_check_user() handles pending thread work and may
+schedule(), causing the task to migrate to another CPU. This patch moves
+local_db_save() and local_db_restore() inside exc_machine_check_user()
+and exc_machine_check_kernel() to prevent hardware debug register corruptio=
+n.
 
-> diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
-> --- a/kernel/trace/trace_btf.c
-> +++ b/kernel/trace/trace_btf.c
+> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/cor=
+e.c
+> index cfb74be19994d..61ade8b5c9d7b 100644
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -2108,6 +2108,7 @@ bool filter_mce(struct mce *m)
+>  static __always_inline void exc_machine_check_kernel(struct pt_regs *reg=
+s)
+>  {
+>  	irqentry_state_t irq_state;
+> +	unsigned long dr7;
+> =20
+>  	WARN_ON_ONCE(user_mode(regs));
+> =20
+> @@ -2118,18 +2119,24 @@ static __always_inline void exc_machine_check_ker=
+nel(struct pt_regs *regs)
+>  	if (mca_cfg.initialized && mce_check_crashing_cpu())
+>  		return;
+> =20
+> +	dr7 =3D local_db_save();
+
+[Severity: High]
+Does moving local_db_save() below the early checks in
+exc_machine_check_kernel() expose this early #MC entry code to hardware
+breakpoints?
+
+If a privileged user sets a hardware data breakpoint on a kernel variable
+accessed here, such as mca_cfg.initialized or variables inside
+mce_check_crashing_cpu(), a #DB exception could fire in kernel mode.
+
+If a Machine Check Exception (#MC) then occurs and preempts the #DB handler,
+it switches to the #MC IST stack. Because local_db_save() is not called
+until after these variable accesses, the code could trigger a nested #DB
+exception.
+
+Since x86 uses a fixed-size Interrupt Stack Table (IST) for #DB exceptions
+that unconditionally resets the stack pointer to the top of the #DB IST
+stack, wouldn't the nested #DB overwrite the active stack frame of the
+interrupted #DB handler, leading to a fatal crash when it attempts to
+return?
+
+Could local_db_save() be called at the very beginning of
+exc_machine_check_kernel() to prevent this IST stack corruption?
+
+>  	irq_state =3D irqentry_nmi_enter(regs);
+> =20
+>  	do_machine_check(regs);
 
 [ ... ]
 
-> @@ -91,17 +92,23 @@ const struct btf_member *btf_find_struct_member(struc=
-t btf *btf,
->  	for_each_member(i, type, member) {
->  		if (!member->name_off) {
->  			/* Anonymous union/struct: push it for later use */
-> +			u32 m_off =3D btf_type_kflag(type) ?
-> +				BTF_MEMBER_BIT_OFFSET(member->offset) :
-> +				member->offset;
-> +
->  			if (btf_type_skip_modifiers(btf, member->type, &tid) &&
->  			    top < BTF_ANON_STACK_MAX) {
->  				anon_stack[top].tid =3D tid;
->  				anon_stack[top++].offset =3D
-> -					cur_offset + member->offset;
-> +					cur_offset + m_off;
->  			}
->  		} else {
-
-[Severity: High]
-This isn't a bug introduced by this patch, but is it possible for unnamed
-bitfields to break nested anonymous struct resolution here?
-
-Since unnamed bitfields (like int : 5) also have name_off =3D=3D 0, they get
-pushed onto anon_stack alongside actual anonymous structs.
-
-Because anon_stack is processed in LIFO order, an unnamed bitfield defined
-after an anonymous struct will be popped first. When it is popped at the top
-of btf_find_struct_member():
-
-retry:
-	if (!btf_type_is_struct(type)) {
-		member =3D ERR_PTR(-EINVAL);
-		goto out;
-	}
-
-Does this cause the scalar type check to fail and abort the entire search,
-preventing the earlier anonymous struct from ever being searched?
-
->  			name =3D btf_name_by_offset(btf, member->name_off);
->  			if (name && !strcmp(member_name, name)) {
->  				if (anon_offset)
->  					*anon_offset =3D cur_offset;
-
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178810001186.64882.=
-2161016469449127450.stgit@devnote2?part=3D2
+2161016469449127450.stgit@devnote2?part=3D1
