@@ -1,112 +1,164 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1CB3BA22C;
-	Sun, 30 Aug 2026 14:52:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B352E5B29
+	for <linux-perf-users@vger.kernel.org>; Sun, 30 Aug 2026 14:55:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788101574; cv=none; b=uHV5RLCgQ2DYYPbhbdBwf+sHlka15gSXer3ORpDyzT0/LrP1+TL/cPKk79B8xJaTxr/dIk4jtOVIKXcKL0Or1CuwK+VLZD1RNr+7Ru5haSEJ+bBfdlKbHniJAHrmtpE28lcw/XzM/gKuvaLfel8QXrDzsHUnMIT0YMo+U5C1GqQ=
+	t=1788101749; cv=none; b=CYoLtoVlQ3UgoavJ+UNupIsgsHuCCTm8We1Fhn9Hpll7loHL5KJatPiGKuHKLNFblq12+8zH+xZcKVl+hkFw7eAFLUercUfm9Lye9W8/CRcdFw9bI+ylI4Jy7Ic39DUBx3JP5iTmSPMkOlPCPsZHA5e6AE8PLQRYGnMEWnXHVJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788101574; c=relaxed/simple;
-	bh=uOHyFLRuc+2SE6QFYbozwto90vg1cSP5ANW0W5/C05U=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=uBZCnALTn9lYwnw3a2L8ZtS/Job4Hu7b1GWSRRr3KwH428CcTIiPaljkOfZK/BsguJ5MFctFUCfYqFKuJDse9aNzJQJpFf/72OO4JCuc+ds3kdkSbR+l9DYJE7exJj0MAnR+3Vdboko09oiEefPla8DP65YIC5cfYJjc9UVovmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2Xdzfhf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788101749; c=relaxed/simple;
+	bh=QByGBxzU220ZERAIuEw8xUkWTZggFPrYCl7mjEOxDnw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Um4iT7UabMgxdk1wyp9oA0+ZZFZN+AjYpi5FTQrwiwnZ+wnKYlhCJ5lrVkO+BEx8AiTC3I8nmO9EoYaQG+q+tHtQ3xMaYUkdDNFEEU8vIURNTdrWCOrJWcEz0PyHSrMLKdLGXXhoIBjlW6T5EhwGvhouMbqcNTx2v3AsprqMpxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=egT1EcFJ; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2Xdzfhf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA74A1F000E9;
-	Sun, 30 Aug 2026 14:52:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788101572;
-	bh=xl6NCJDud5NrLa33LNwHcrWZwaFTcKNOvQwTtBwHmqw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=G2XdzfhfllUpatS/H+JnSFUH7eB+U6F14dZt5aNBlvPuCQGQZJmrayUBCsvHDvHMR
-	 zIB7KQ4oIg4vqFP5WvZeiLSVcmLi9aD8EQKsVIJ+18XMEzua0inCVm4Zf3+VmlHj7/
-	 i+61ICxwe3QA42E9SWOG8q5F8+2uwe5dO7Nik4hmNoGzqgQ1Qw47s/6SMjKI7eSfSt
-	 moQX1jA+8xeLsoxWLfZhotQhCuBkGLSDUuTJ9dx1ms5GvJuVUHWoFxomq9gQXxMyN8
-	 txn+VV3nCEnMGtaueiDqMabGb1krD9a9d3LGqa4LOXVQkqzjtptzugA5ExAL4+z+xa
-	 8k7SOjqnngIsQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v14 11/14] tracing/wprobe: Add set_wprobe and
- clear_wprobe event triggers
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <178810013249.64882.3483637605217266271.stgit@devnote2>
-References: <178810001186.64882.2161016469449127450.stgit@devnote2>
- <178810013249.64882.3483637605217266271.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 30 Aug 2026 14:52:52 +0000
-Message-Id: <20260830145252.AA74A1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egT1EcFJ"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-38dc4553f62so3745199a91.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 30 Aug 2026 07:55:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788101747; x=1788706547; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=f8qfcfBi8NC02RZX5r4ch9EYMf8t0tHqhPistvQsuBk=;
+        b=egT1EcFJoJn0o0szhuxUYKyHx+xzAaVnjW5LPVVA1uTCd8xaXOfGmWXwZwC+rE196V
+         liTBvsQK0CsPBHFx68w/DiYrwtrhjYjQtUHp8utVcHI0ui9e/2bH55N23ZOsVMEOwuIk
+         i0oIqwKwV9RWsPtfqlMh/C/yyU37DKE00IH72DdpgZzAabf827ZeIt3Lql0k5KodyxLQ
+         i35HrEMMAISEGD0bU5y/7nEK5NJK7tIlPJWIZPFza1lSCnr40fUlqF+w5a0gDzRMNOrQ
+         ib8WT2GCqlxparv+k48OClMEQPEM24YqNagN9e29lsFlEgd7+ygJkJa25gGenlijhn/9
+         FGgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788101747; x=1788706547;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=f8qfcfBi8NC02RZX5r4ch9EYMf8t0tHqhPistvQsuBk=;
+        b=FQ1JUHGHC3Vj+VaZh6oVgwHLpjcbD7QDy02ursYD0C1wxFw/AZvG5NwTHWjkNqsdjR
+         k48dNwd9zRKohPOHO5yRmNf9Y0e97NIBkvbxJgSUapzZrE+5lT3Cz77gbuRyFNaLoD+x
+         pEKmQ+U3eACRq1uG7QeLc9FhriIPLRf3X44pCNTWeZPdazE0dqJLpDVsoRQjCdV3dBn7
+         sB1TpnMlUXc6cMwmEFDGdD7jP00xBKjwx0ZOi8iORvkvdHQ3dnvfjpK5Io5ZWwmdjHwy
+         Kib/tlucqHocWQz+A+ZiDYiqYZ6xEIes4qpFC7OsV1HnJdiewq6MB6249VMynDhXwhQp
+         T5zA==
+X-Forwarded-Encrypted: i=1; AKwUvBxZ/sif9crqiG5LNwm4/RCMFsnLvFWhR1quQu48JN10Y+YebGl84b/G3O+P5XXTm/OR64ATMm/ZGRhsmgotbvct@vger.kernel.org
+X-Gm-Message-State: AFuF++ksYGAFKhqZuHG8Ab8GwaGGfAayo9agNpXwxie4KSLH0Ewqdqja
+	pRglLbL440EjUgRP1NFO5+w15qszV+UCV+aCsAgZrkpfrsji+TvWDVfz
+X-Gm-Gg: AYBFou1g3TAkt+/ltnON8NviPg085qpEVNxZe0eehcG+TjOT9bVo/SVrQz7kzGO7AOQ
+	bwsinnV7bo2BcakeVkMS8B/6tKi+pXldcBRBjNg1kvE+FV4jYEP6aG1/E38SOQ2xyf/6F/qoWD8
+	/pIDHkXmN8BErsaqBPP1oxxnZXAGazqxkj13T0Kqj5HBVp9VbUuqgKMqrfgTDdmKwVMovaajTJ2
+	+0vj5lAzywUtF2MRdcR94wXlQX4PPqdH5krQsO5Q2+rU86h2buXuj5TM54+0N89Ku9agsvme6ku
+	P+EJmYWyc11DM8pbnZcr/+7CZBEveVacPq6eXZ+GvJeTuZalVkgGz/z5M1QcKzWhCirGmSZiRpL
+	i/hELEIsK39ZO4ABmGcVSlRirxhprmW3mhTJ4mQZTVcNEnLHSSQ4rO3bwHLMP57Fq1QBdOIWxNU
+	J768wzj4y6AEENd/wsTUYxCSUXuTEztGY7+dEB3h265sdGcHK3KCI/kIDU9mIWE7aZ8heWB6B/+
+	dY6+RcP8FNfc2UGB6bEynYSp1vr1+oEXdyer9s=
+X-Received: by 2002:a17:90b:2e4b:b0:393:19a3:4f1 with SMTP id 98e67ed59e1d1-396d0d7b9bdmr31281365a91.6.1788101747319;
+        Sun, 30 Aug 2026 07:55:47 -0700 (PDT)
+Received: from localhost.localdomain ([180.101.244.64])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-396dda7aaaasm11757472a91.6.2026.08.30.07.55.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Aug 2026 07:55:46 -0700 (PDT)
+From: Aohan Mei <ljp1205831794@gmail.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Aohan Mei <henrymei@tencent.com>,
+	TencentOS Corvus AI <corvus@tencent.com>,
+	stable@vger.kernel.org
+Subject: [PATCH] perf: Fix mmap_count accounting on the perf_mmap_close() race path
+Date: Sun, 30 Aug 2026 22:55:05 +0800
+Message-ID: <20260830145512.2583689-1-ljp1205831794@gmail.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Calling `cancel_work_sync()` on an uninitialized `work_struct` i=
-n the error path triggers a kernel warning (WARN_ON).
---
+From: Aohan Mei <henrymei@tencent.com>
 
-commit 5e74cd56c202daf7ad5f60c9e251b2bc86cf21d8
-Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Subject: tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
+perf_mmap_rb()'s raced path (a concurrent perf_mmap_close() has dropped
+rb->mmap_count to 0 but is still blocked on event->mmap_mutex inside
+refcount_dec_and_mutex_lock()) installs a fresh ring buffer and then
+does refcount_set(&event->mmap_count, 1).
 
-This commit adds set_wprobe and clear_wprobe event triggers to dynamically
-attach and detach hardware breakpoint address monitoring based on event fie=
-ld
-contents.
+That is wrong: the blocked closer still holds a pending decrement and
+the count is 1 at this point. The refcount_set() leaves the count at 1,
+so once perf_mmap() drops the mutex the closer observes a 1->0
+transition, detaches the *new* buffer via ring_buffer_attach(event,
+NULL) and drops its last reference, freeing pages that the racing
+mmap() is about to map. A later munmap() of that mapping then finds
+event->rb == NULL and crashes the kernel in perf_mmap_close().
 
-Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.=
-1785067572.git.wangjinchao600@gmail.com/
+Restore the pre-59741451b49c accounting on the raced path: the count is
+guaranteed non-zero there, because the closer's decrement of
+event->mmap_count only happens while holding mmap_mutex, which the
+mapper holds. Use refcount_inc(). Keep refcount_set(..., 1) for the
+genuine first mmap, where the 0->1 transition is required and
+refcount_inc() would WARN.
 
-> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-> index 6a11c55e75373..29eae708ae7bc 100644
-> --- a/kernel/trace/trace_wprobe.c
-> +++ b/kernel/trace/trace_wprobe.c
-[ ... ]
-> @@ -199,14 +217,62 @@ static int __register_trace_wprobe(struct trace_wpr=
-obe *tw)
-[ ... ]
->  static void free_trace_wprobe(struct trace_wprobe *tw)
->  {
->  	if (tw) {
-> +		irq_work_sync(&tw->irq_work);
-> +		cancel_work_sync(&tw->work);
+Fixes: 59741451b49c ("perf: Identify the 0->1 transition for event::mmap_count")
+Reported-by: TencentOS Corvus AI <corvus@tencent.com>
+Cc: stable@vger.kernel.org
+Assisted-by: CodeBuddy:Kimi-K3
+Signed-off-by: Aohan Mei <henrymei@tencent.com>
+---
+ kernel/events/core.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-[Severity: Medium]
-Will this trigger a kernel warning in __flush_work() if the work struct has
-not been initialized yet?
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 4638544205f2..adcc04ca05f8 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7273,6 +7273,7 @@ static int perf_mmap_rb(struct vm_area_struct *vma, struct perf_event *event,
+ 	long extra = 0, user_extra = nr_pages;
+ 	struct perf_buffer *rb;
+ 	int rb_flags = 0;
++	bool raced = false;
+ 
+ 	nr_pages -= 1;
+ 
+@@ -7314,6 +7315,7 @@ static int perf_mmap_rb(struct vm_area_struct *vma, struct perf_event *event,
+ 		 * event and continue as if !event->rb
+ 		 */
+ 		ring_buffer_attach(event, NULL);
++		raced = true;
+ 	}
+ 
+ 	if (!perf_mmap_calc_limits(vma, &user_extra, &extra))
+@@ -7338,7 +7340,21 @@ static int perf_mmap_rb(struct vm_area_struct *vma, struct perf_event *event,
+ 	perf_event_update_userpage(event);
+ 
+ 	perf_mmap_account(vma, user_extra, extra);
+-	refcount_set(&event->mmap_count, 1);
++
++	/*
++	 * On the raced path above, a concurrent perf_mmap_close() can
++	 * still have a pending decrement of event->mmap_count: it sits
++	 * blocked inside refcount_dec_and_mutex_lock() on event->mmap_mutex
++	 * (which we hold) with the count still at 1. Using
++	 * refcount_set(..., 1) here would make that closer observe a 1->0
++	 * transition once we drop the mutex, causing it to detach and free
++	 * the buffer we just installed, while this mmap() still maps it.
++	 * The count is guaranteed non-zero on the raced path, so increment.
++	 */
++	if (raced)
++		refcount_inc(&event->mmap_count);
++	else
++		refcount_set(&event->mmap_count, 1);
+ 
+ 	return 0;
+ }
+-- 
+2.43.7
 
-In alloc_trace_wprobe(), if the kstrdup() allocation for the symbol fails,
-the function returns early. Since the tw pointer is managed by the
-__free(free_trace_wprobe) guard, it will automatically invoke this cleanup
-function:
-
-alloc_trace_wprobe() {
-    ...
-    tw =3D kzalloc_flex(*tw, tp.args, nargs);
-    ...
-    if (symbol) {
-        tw->symbol =3D kstrdup(symbol, GFP_KERNEL);
-        if (!tw->symbol)
-            return ERR_PTR(-ENOMEM); /* triggers free_trace_wprobe(tw) */
-    }
-    ...
-    INIT_WORK(&tw->work, wprobe_work_func);
-}
-
-Because the early return happens before INIT_WORK() is called,
-cancel_work_sync() will operate on a zeroed work_struct, which can cause a
-WARN_ON(!work->func).
-
->  		trace_probe_cleanup(&tw->tp);
->  		kfree(tw->symbol);
->  		kfree(tw);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178810001186.64882.=
-2161016469449127450.stgit@devnote2?part=3D11
