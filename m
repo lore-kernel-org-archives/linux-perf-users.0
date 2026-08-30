@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDED39E6FC;
-	Sun, 30 Aug 2026 14:27:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DADD3ACA5B;
+	Sun, 30 Aug 2026 14:27:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788100029; cv=none; b=XHMyItethwuP0b6dnzCkNGhf98f8x4I1OVu5rY/DxAQ4NzZtOVQh8ePn2UECrep46cwWrZAX9GUO7eMmGFlXdIiAuhb2/rVOPvvy6YDBcllTogfkY3f7wGvRnT/nIUSae601FeEJL8jhFyED0/C9uPBLaqZ0StSg/Y9Jl7ZSQJk=
+	t=1788100039; cv=none; b=AbrbSMcN+p+0nKExuDhyHLy7FHWQ/nDYkZ4j4nO4VzCUnoxPbuZ/ANC78IvKNCb7TCxT0ZNV6yFkgCDZDRi5hFZ9lN9G+sUB4u62hWZ+2p5xJILBHJk/M2Nvg6eA7vHy/unaviFcrU5du3d2CLWFenoamioeh3cTfeCVzpKk6P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788100029; c=relaxed/simple;
-	bh=EuZr4900QNyWKnewwzCV1UFmlkplj1FX3SUkVolMhXk=;
+	s=arc-20240116; t=1788100039; c=relaxed/simple;
+	bh=ouE9AveMLlWzv7he3F5tT++ZlRtfK3KrkNhcLkulLB4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BrlxNn3spw8AqkkB5ARifh3/ZuhlFU7tICEuw0Afj0sn7vej8iXfrFCpbX0GTNLUwMHdi/niLNRSESgYaTuqyiTbXA8XvzXX2xSNbzDQzWPA5ZsCWgNEmOvjIsVL7JTliOl/+sPgq3XPWbY8uXKjOtO4zi9se4AJH31sZis3pJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cAgHAKc/; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=ij4UqL5B2DWbPR71emo1I6CTrcaUHiJ19PZLiNJGY71N3V7/bB7lXoiFV5Y5J1hFmvbWTA72KEIYKG92/SvYm61oq0yD27pOA3Z6ynBRy06g7O3DIra6NVCp79Wd5vdRsuQv38fFTwdZLx04E18+JBVDIVVkRMqnJMn9lwzw6Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DKlRxB8n; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cAgHAKc/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56FC61F000E9;
-	Sun, 30 Aug 2026 14:27:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DKlRxB8n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39F211F000E9;
+	Sun, 30 Aug 2026 14:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788100028;
-	bh=dVvkbL12qdBeZy/TOlqvj4SbZaMgEXfYq3x5+rZOW2E=;
+	s=k20260515; t=1788100038;
+	bh=6Uw1979BY0tVfocwE8FbKM68uB9O85yQuz7r3bgNDRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cAgHAKc/FylDjuvsicvTt3Gbm9tt3n16xLE4m7xmY7EIZBFy3lsY+l1+y9P3+TLbG
-	 19L+oJgtAAIpYHUqCMb70pP+Kh4PoTTReVsQ3iIqLPjBYpErFtkaxgRHHA6yTC4hpY
-	 E+YJesCL5QjUjXUjKQn/yp25S8ZTQw99mck9y5VP8KzUbOJ6HSiyD8jPG9yApcxeE1
-	 zqPKl6Tmn5RGXOIKhlB4Nm+MHC7NWEFp/oa5AsmRmNTaPDX7JI/e3WD6B9ubOH+m9C
-	 75hE1yicoD5kbvX6LoSXoIKsrk1VTnNy8NTZHgTTc+8/NicWUCCR9I7lhIV6DC8ajo
-	 UbNnotqRRlY4A==
+	b=DKlRxB8n6Csv46WinzO+GhzdeBTAVil0+axwrWfF0Xxb8oaKtmx9CAyHc2/ibFFn/
+	 sKTtV52jUFbEFaD9WU+5GyPLgAQpTFD9o1D/FqZDUO56fhuglrWqqQ7gT0/V//0lgG
+	 lXN9vE4sBtyTIjvcBH2c/oKzTFdbA9gr+OkR6KHkFiHoF1YEtAAUqPu0MCZf+Y9pLs
+	 U3QvV1ftwReGNEmFMI/bgrZ/oZ54dd1knd+I14uq/LfcTI6WCkImIb7bV9XS3OV4Wu
+	 ymnUON9gk2D0MjFTedlxusf5YzM9XyBgW94oF6/DMlCNE1J3oX3E7J1/+gxFcwXej3
+	 YKnqZVr5iD7Og==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -44,9 +44,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v14 01/14] x86/mce: Fix hardware debug register corruption on task migration
-Date: Sun, 30 Aug 2026 23:27:03 +0900
-Message-ID: <178810002334.64882.15357388305843450280.stgit@devnote2>
+Subject: [PATCH v14 02/14] tracing/probes: Fix BTF kflag check for anonymous struct member access
+Date: Sun, 30 Aug 2026 23:27:13 +0900
+Message-ID: <178810003326.64882.5820404025124695636.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178810001186.64882.2161016469449127450.stgit@devnote2>
 References: <178810001186.64882.2161016469449127450.stgit@devnote2>
@@ -62,120 +62,131 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In exc_machine_check_user(), local_db_save() and local_db_restore() are
-invoked in the outer entry stubs (DEFINE_IDTENTRY_MCE_USER,
-DEFINE_FREDENTRY_MCE, and DEFINE_IDTENTRY_RAW), surrounding
-exc_machine_check_user().
+btf_find_struct_member() traverses into nested anonymous structures and
+unions to find a struct member. However, get_bitoffset_of_field() in
+trace_probe.c checked btf_type_kflag(type) using the outer parent type
+instead of the actual anonymous structure/union that directly contains
+the found member.
 
-However, exc_machine_check_user() calls irqentry_exit_to_user_mode(),
-which handles pending thread work and may schedule() if TIF_NEED_RESCHED
-is set. If the task migrates to another CPU during schedule(),
-local_db_restore() runs on the new CPU with the dr7 state saved from the
-old CPU. This corrupts the new CPU's DR7 hardware debug register and
-leaves the old CPU's DR7 disabled.
-In short, local_db_save() and local_db_restore() pair must be run
-on the same CPU.
+If the parent structure and anonymous structure have mismatched kflags
+(e.g., the parent has kflag=0 while the anonymous structure has kflag=1
+because it contains bitfields), the bitfield size encoded in the upper
+8 bits of member->offset is erroneously treated as part of the byte/bit
+offset, corrupting the resolved offset and failing to set last_bitsize.
+Similarly, btf_find_struct_member() pushed anonymous member offsets
+onto anon_stack without masking BTF_MEMBER_BIT_OFFSET() when kflag is set.
 
-To fix this, move local_db_save() and local_db_restore() inside
-exc_machine_check_user() and exc_machine_check_kernel() so that DR7
-is saved and restored strictly around do_machine_check().
+To fix this problem, update btf_find_struct_member() to return actual
+containing structure/union type via member_type, and use it for
+btf_type_kflag() in get_bitoffset_of_field().
 
-Fixes: cd840e424f27 ("x86/entry, mce: Disallow #DB during #MC")
+Fixes: c440adfbe302 ("tracing/probes: Support BTF based data structure field access")
 Assisted-by: Antigravity:gemini-3.7-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
 Changes in v14:
  - Newly added.
 ---
- arch/x86/kernel/cpu/mce/core.c |   23 +++++++----------------
- 1 file changed, 7 insertions(+), 16 deletions(-)
+ kernel/trace/trace_btf.c   |   11 +++++++++--
+ kernel/trace/trace_btf.h   |    3 ++-
+ kernel/trace/trace_probe.c |   15 ++++++++-------
+ 3 files changed, 19 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index cfb74be19994..61ade8b5c9d7 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -2108,6 +2108,7 @@ bool filter_mce(struct mce *m)
- static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
+diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
+index 00172f301f25..7d93be2872ff 100644
+--- a/kernel/trace/trace_btf.c
++++ b/kernel/trace/trace_btf.c
+@@ -70,7 +70,8 @@ struct btf_anon_stack {
+ const struct btf_member *btf_find_struct_member(struct btf *btf,
+ 						const struct btf_type *type,
+ 						const char *member_name,
+-						u32 *anon_offset)
++						u32 *anon_offset,
++						const struct btf_type **member_type)
  {
- 	irqentry_state_t irq_state;
-+	unsigned long dr7;
- 
- 	WARN_ON_ONCE(user_mode(regs));
- 
-@@ -2118,18 +2119,24 @@ static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
- 	if (mca_cfg.initialized && mce_check_crashing_cpu())
- 		return;
- 
-+	dr7 = local_db_save();
- 	irq_state = irqentry_nmi_enter(regs);
- 
- 	do_machine_check(regs);
- 
- 	irqentry_nmi_exit(regs, irq_state);
-+	local_db_restore(dr7);
- }
- 
- static __always_inline void exc_machine_check_user(struct pt_regs *regs)
- {
-+	unsigned long dr7;
+ 	struct btf_anon_stack *anon_stack;
+ 	const struct btf_member *member;
+@@ -91,17 +92,23 @@ const struct btf_member *btf_find_struct_member(struct btf *btf,
+ 	for_each_member(i, type, member) {
+ 		if (!member->name_off) {
+ 			/* Anonymous union/struct: push it for later use */
++			u32 m_off = btf_type_kflag(type) ?
++				BTF_MEMBER_BIT_OFFSET(member->offset) :
++				member->offset;
 +
- 	irqentry_enter_from_user_mode(regs);
- 
-+	dr7 = local_db_save();
- 	do_machine_check(regs);
-+	local_db_restore(dr7);
- 
- 	irqentry_exit_to_user_mode(regs);
- }
-@@ -2138,21 +2145,13 @@ static __always_inline void exc_machine_check_user(struct pt_regs *regs)
- /* MCE hit kernel mode */
- DEFINE_IDTENTRY_MCE(exc_machine_check)
+ 			if (btf_type_skip_modifiers(btf, member->type, &tid) &&
+ 			    top < BTF_ANON_STACK_MAX) {
+ 				anon_stack[top].tid = tid;
+ 				anon_stack[top++].offset =
+-					cur_offset + member->offset;
++					cur_offset + m_off;
+ 			}
+ 		} else {
+ 			name = btf_name_by_offset(btf, member->name_off);
+ 			if (name && !strcmp(member_name, name)) {
+ 				if (anon_offset)
+ 					*anon_offset = cur_offset;
++				if (member_type)
++					*member_type = type;
+ 				goto out;
+ 			}
+ 		}
+diff --git a/kernel/trace/trace_btf.h b/kernel/trace/trace_btf.h
+index 4bc44bc261e6..4bd26bceae23 100644
+--- a/kernel/trace/trace_btf.h
++++ b/kernel/trace/trace_btf.h
+@@ -8,4 +8,5 @@ const struct btf_param *btf_get_func_param(const struct btf_type *func_proto,
+ const struct btf_member *btf_find_struct_member(struct btf *btf,
+ 						const struct btf_type *type,
+ 						const char *member_name,
+-						u32 *anon_offset);
++						u32 *anon_offset,
++						const struct btf_type **member_type);
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index c4163904ba74..908b4b6bc2df 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -625,6 +625,7 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
  {
--	unsigned long dr7;
--
--	dr7 = local_db_save();
- 	exc_machine_check_kernel(regs);
--	local_db_restore(dr7);
- }
+ 	const struct btf_type *type = *ptype;
+ 	const struct btf_member *field;
++	const struct btf_type *mtype;
+ 	struct btf *btf = ctx_btf(ctx);
+ 	char *fieldname = *pfieldname;
+ 	int bitoffs = 0;
+@@ -640,7 +641,7 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
  
- /* The user mode variant. */
- DEFINE_IDTENTRY_MCE_USER(exc_machine_check)
- {
--	unsigned long dr7;
--
--	dr7 = local_db_save();
- 	exc_machine_check_user(regs);
--	local_db_restore(dr7);
- }
+ 		anon_offs = 0;
+ 		field = btf_find_struct_member(btf, type, fieldname,
+-						&anon_offs);
++						&anon_offs, &mtype);
+ 		if (IS_ERR(field)) {
+ 			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+ 			return PTR_ERR(field);
+@@ -653,7 +654,7 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
+ 		bitoffs += anon_offs;
  
- #ifdef CONFIG_X86_FRED
-@@ -2169,28 +2168,20 @@ DEFINE_IDTENTRY_MCE_USER(exc_machine_check)
-  */
- DEFINE_FREDENTRY_MCE(exc_machine_check)
- {
--	unsigned long dr7;
--
--	dr7 = local_db_save();
- 	if (user_mode(regs))
- 		exc_machine_check_user(regs);
- 	else
- 		exc_machine_check_kernel(regs);
--	local_db_restore(dr7);
- }
- #endif
- #else
- /* 32bit unified entry point */
- DEFINE_IDTENTRY_RAW(exc_machine_check)
- {
--	unsigned long dr7;
--
--	dr7 = local_db_save();
- 	if (user_mode(regs))
- 		exc_machine_check_user(regs);
- 	else
- 		exc_machine_check_kernel(regs);
--	local_db_restore(dr7);
- }
- #endif
+ 		/* Accumulate the bit-offsets of the dot-connected fields */
+-		if (btf_type_kflag(type)) {
++		if (btf_type_kflag(mtype)) {
+ 			bitoffs += BTF_MEMBER_BIT_OFFSET(field->offset);
+ 			ctx->last_bitsize = BTF_MEMBER_BITFIELD_SIZE(field->offset);
+ 		} else {
+@@ -661,11 +662,11 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
+ 			ctx->last_bitsize = 0;
+ 		}
  
+-			type = btf_type_skip_modifiers(btf, field->type, NULL);
+-			if (!type) {
+-				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+-				return -EINVAL;
+-			}
++		type = btf_type_skip_modifiers(btf, field->type, NULL);
++		if (!type) {
++			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
++			return -EINVAL;
++		}
+ 
+ 		if (next)
+ 			ctx->offset += next - fieldname;
 
