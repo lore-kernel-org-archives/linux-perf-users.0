@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC643B9617;
-	Sun, 30 Aug 2026 14:38:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73EEC3B4EA9;
+	Sun, 30 Aug 2026 14:39:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788100731; cv=none; b=MsqVQDUcYO3GWS8KJbCLYEkmuCsi2gxKIio47JjYWmP8nZP69gk04atGZshIoks9i+UPNnggtpp4BEz9VFtDWuOiMxhAQGERsaIrc9Z3c35UyPxdCefIiCseugmgQH12oVFs87A8H7C2fNiKhwOdjU632ojEdqRfHi4qzoEGwxw=
+	t=1788100741; cv=none; b=VXBXP6XWSx4WGIuSSanljMYuqWbHa/spKQc+7i+N5CtKGqiIuKVYZl0i04OyXMCd0RNN4fqMeTEMnDCMc17VXUTyy6IhjPugW5DdEIv12x3BNsCZd3QjSpu/jbhAnmpG5li4A4N0Mw6bjVOXjHniZaiAb7T4SA34cqyCPMzVq/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788100731; c=relaxed/simple;
-	bh=nRc+1jUDcukuWBqaC5tmo+ADLAdFo2KMe7qHrhmhryk=;
+	s=arc-20240116; t=1788100741; c=relaxed/simple;
+	bh=27pj09OGZZXn+a3tCKx1zb3quhK9oD1BFPV7vd67Umk=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=DgwsuSbnvWekheJZe4Ys3iZv10Gu4W0hH7uTfCJCWyl3Wtv6fvfNJGNQuH4HUkkutNXzP28sGTqQQHVIFBgQBhWv/ckNEbuUQNuMqRTf+5b4jajiChrSPzqYr4t+bL8DCOX4vGxyl526HfEa98zA1Rj/c2sF9zeV+r50lWqf49I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M4kqYqvv; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Amf7wMQa2n30ZUpz4V/1iMZp+AG66aqFqs8S1VGS9N1ksId4vahZzmBbQa0O1RI5XHli6z+MRM51JMQ+Yskb8tMFwVejLTV3R0aHlreH2abi5jis29ImCpKUdHUUC0l0OMfv4BNyVg9ELVsLKUDnaqufvrbNdlp4A2N6pjmr/ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DpuZgbwY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M4kqYqvv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 070271F000E9;
-	Sun, 30 Aug 2026 14:38:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DpuZgbwY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D56991F00A3D;
+	Sun, 30 Aug 2026 14:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788100729;
-	bh=qrAL3AUON7sWCsPFVJ40jsqe6MqCEQSkoLvn2DXdrkI=;
+	s=k20260515; t=1788100740;
+	bh=khfDKxc4FNw0kj4iUfwIE/RULQ1f5T07PbkJcRDOyA0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=M4kqYqvv3mHwXY2+KiL0qVWyJIBYl9JbJlLUnz/Cgn4wMhFCi5oSqBnV2W7UhfVjk
-	 VOfqKURRKMnJ25CViDqG+pXRgDnTIvyX2fb9Xerup1u1SV9AlEqHEyZwApkB7jvLvP
-	 OPmXrYG2QfIwAVRSw6JC7xGpM5LFmc33EeYVhfBC+b12r8KwWd80UBVvP8ZK5EoZpK
-	 QissnAMAaOEzxeCH5ohy+fYf5IkIqPdXfLp7YRNUhYSKT/KAG3MdxyRYKvPJ0n2FD3
-	 5AiT6bo6DK2GwtB8EEfkI8H4szs10hWT51f2XyJp++2jXAPwncYu56iLEgtP0ZBqTb
-	 lNKF96cOF73nw==
+	b=DpuZgbwY+Fz9CTbAQqsW4X8yhVc8NvlJ15Gg5fsA+ueqH+e5Hq8retxMQ59RuKWtZ
+	 EohRQDEqjfUxOnX5h+c0Hp6zXyNUBUWuz4ovQJRqTya62FhbtvJPReHofCYQmH1nYQ
+	 gKud1sszpZBzuGlMzrBM157TEcmrzed9498wRe+F/xhm5Jd3u9pfIyLEKdOtBZI9r7
+	 vrxPcQGhLH7iJwMA/o6C85CuHKVv6kT4eLEImGxUTyJUhQ1uvuT3AvjzGIhhYYsfux
+	 FuOC/xtGrjzHHiognkyc8cV8HaqdjU9Q9XxHmP9YmXvhMzt/WJGL24ZVznsyLUIhB/
+	 VBCBYGMO04ncw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v14 05/14] x86/hw_breakpoints: Add
- arch_modify_local_hw_breakpoint_addr() API
+Subject: Re: [PATCH v14 02/14] tracing/probes: Fix BTF kflag check for
+ anonymous struct member access
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
 Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <178810006604.64882.2095793023976981357.stgit@devnote2>
+In-Reply-To: <178810003326.64882.5820404025124695636.stgit@devnote2>
 References: <178810001186.64882.2161016469449127450.stgit@devnote2>
- <178810006604.64882.2095793023976981357.stgit@devnote2>
+ <178810003326.64882.5820404025124695636.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 30 Aug 2026 14:38:48 +0000
-Message-Id: <20260830143849.070271F000E9@smtp.kernel.org>
+Date: Sun, 30 Aug 2026 14:38:59 +0000
+Message-Id: <20260830143859.D56991F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,66 +47,70 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [High] Modifying a debug address register without first disabling the cor=
-responding breakpoint in DR7 violates the x86 hardware architecture specifi=
-cation and causes unpredictable behavior.
+
+Pre-existing issues:
+- [High] Unnamed bitfields break nested anonymous struct resolution in btf_=
+find_struct_member().
 --
 
-commit 35b07811f48c348c13ac1d9de7fa44d25fc7f36a
-Author: Jinchao Wang <wangjinchao600@gmail.com>
+commit 20a606aa6d4e155be5a531c5d52d78c34205c0b4
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
+tracing/probes: Fix BTF kflag check for anonymous struct member access
 
-This commit adds an architecture backend to modify the address of an active
-per-CPU watchpoint without releasing its hardware slot. It validates the new
-address, finds the installed local slot, and updates the hardware debug
-register and per-CPU shadow state.
+This commit fixes how BTF kflags are checked when traversing nested
+anonymous structures and unions in btf_find_struct_member() by using
+the actual containing type.
 
-Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.=
-1785067572.git.wangjinchao600@gmail.com/
-
-> diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpo=
-int.c
-> index 3204e75dc4546..2227918b0163c 100644
-> --- a/arch/x86/kernel/hw_breakpoint.c
-> +++ b/arch/x86/kernel/hw_breakpoint.c
+> diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
+> --- a/kernel/trace/trace_btf.c
+> +++ b/kernel/trace/trace_btf.c
 
 [ ... ]
 
-> +int arch_modify_local_hw_breakpoint_addr(struct perf_event *bp,
-> +					 unsigned long addr)
-> +{
-
-[ ... ]
-
-> +	do {
-> +		seq =3D this_cpu_inc_return(cpu_dr7_seq);
-> +		this_cpu_write(cpu_debugreg[i], addr);
-> +		barrier();
-> +		set_debugreg(addr, i);
+> @@ -91,17 +92,23 @@ const struct btf_member *btf_find_struct_member(struc=
+t btf *btf,
+>  	for_each_member(i, type, member) {
+>  		if (!member->name_off) {
+>  			/* Anonymous union/struct: push it for later use */
+> +			u32 m_off =3D btf_type_kflag(type) ?
+> +				BTF_MEMBER_BIT_OFFSET(member->offset) :
+> +				member->offset;
+> +
+>  			if (btf_type_skip_modifiers(btf, member->type, &tid) &&
+>  			    top < BTF_ANON_STACK_MAX) {
+>  				anon_stack[top].tid =3D tid;
+>  				anon_stack[top++].offset =3D
+> -					cur_offset + member->offset;
+> +					cur_offset + m_off;
+>  			}
+>  		} else {
 
 [Severity: High]
-Does this code risk violating the x86 hardware architecture specification?
+This isn't a bug introduced by this patch, but is it possible for unnamed
+bitfields to break nested anonymous struct resolution here?
 
-Looking at arch_modify_local_hw_breakpoint_addr() in
-arch/x86/kernel/hw_breakpoint.c, set_debugreg() directly updates the debug
-address register (DR0-DR3) while its corresponding enable bit in DR7 might
-still be set.
+Since unnamed bitfields (like int : 5) also have name_off =3D=3D 0, they get
+pushed onto anon_stack alongside actual anonymous structs.
 
-According to hardware specs, modifying a debug address register without fir=
-st
-disabling the breakpoint in DR7 can lead to spurious debug exceptions or
-unpredictable processor behavior if an NMI occurs or if execution boundaries
-trigger a match on the transient state.
+Because anon_stack is processed in LIFO order, an unnamed bitfield defined
+after an anonymous struct will be popped first. When it is popped at the top
+of btf_find_struct_member():
 
-Should the DR7 enable bit be cleared before updating the debug register?
+retry:
+	if (!btf_type_is_struct(type)) {
+		member =3D ERR_PTR(-EINVAL);
+		goto out;
+	}
 
-> +		barrier();
-> +	} while (seq !=3D this_cpu_read(cpu_dr7_seq));
-> +
-> +	return 0;
-> +}
+Does this cause the scalar type check to fail and abort the entire search,
+preventing the earlier anonymous struct from ever being searched?
+
+>  			name =3D btf_name_by_offset(btf, member->name_off);
+>  			if (name && !strcmp(member_name, name)) {
+>  				if (anon_offset)
+>  					*anon_offset =3D cur_offset;
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178810001186.64882.=
-2161016469449127450.stgit@devnote2?part=3D5
+2161016469449127450.stgit@devnote2?part=3D2
