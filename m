@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 098D72931F4;
-	Sun, 30 Aug 2026 14:42:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EE9B1D89EF;
+	Sun, 30 Aug 2026 14:44:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788100969; cv=none; b=Ea8IyfXMtEjjnRkB+Pxt/y/cI6GguW7R5lBlAEOi8POng9sp/hMCnhrQbZvvLExga0tpHHmqn+PajpcYHQMShsE9LTT91Yox0BeRAzv7p3if8C35fPsmST/Dkx2WfkedCpSSeM0QkpCZ+LPCcPx7eoPKneMW+g1fMsn2FPjWRPE=
+	t=1788101080; cv=none; b=nM1cClBtA+zdjUDKTgvxskUHmuwhAlRsYVFpcAMXgu3Qf9nYiRhRB0Zgd+q5ba6IVnHAclbgIqWVHCOB8WOAynDYmnGoZYb38uCAzeSXI64UC1h1nwTLFQ71zu3JrcPA2p9grnBblZsktkWXRZJoYZXWKpcDfvJ/rpwon0vG3TY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788100969; c=relaxed/simple;
-	bh=Y5fgfvY81fbl6BUv4Z29CpM7ftpVUacyhXBZh2NW+mw=;
+	s=arc-20240116; t=1788101080; c=relaxed/simple;
+	bh=g0dbVWxDfbs3Lz0P0iKLvV7U4f9ohA2VrUsaQDOnN2Y=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=t1ghusv8sIflS2sjHTCqT+SnoTi+NTU94VXmgmie+oQwpZKGEz9cGSPpXx38byECIHLgyavdJXD3pLeE3pVhcenVKHtVCC+mlfv1oxZsxmhd1+WP88ySmOTRf7BM8ju18NOb6VSjyGLDRWDozJthieoWTBBTkxNx6EKbERTJwHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LmbK+hNH; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=asZ35iCZMiUCtS7fqzvfXZ7jh0bNvRMVBmpMrP3w2EgqskGhxrHkSif9onX3k5geFZYEwtHaYDxwMlZVB7J80roGOyfRM4EuL+CoQUt72s3HF4+hcuAq2btRYcMTSL5J/3sGImhs1/kAHT2DeS2iIpOAViUQIE+VMww2J1a1XNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P36wgRtY; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LmbK+hNH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B77111F000E9;
-	Sun, 30 Aug 2026 14:42:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P36wgRtY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 770101F000E9;
+	Sun, 30 Aug 2026 14:44:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788100967;
-	bh=Y5fgfvY81fbl6BUv4Z29CpM7ftpVUacyhXBZh2NW+mw=;
+	s=k20260515; t=1788101078;
+	bh=eQfpT3EDEeA3Mku4k8nlPhgXPckaRXPnsTQAqHQxkfk=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=LmbK+hNHYGc9BHD2m1uM5PpPpxO5Yy1qDhOgo4o+q7ITtMXdp6dU+cKv4NHOo1ONL
-	 GgEd/qDMioXZNMnli87pAwsVW6HViEIw9AswoewYYWVf0npL3OhlzxjVUoVK5lVX+k
-	 MI4lQnHrFQZH0x3NH7oHWECD1ZF71AD4uu/Ns2qoKzZzZDAxBc2QJMGDevLfkCTHcV
-	 G8TWI8rtp9C3lhh7D7TjnipRiEydgA8fz1kXcDgBlYziZGeV0vBoj6tnF/wlnbakVK
-	 D11idORicZY2xlR4SDmBpv/SuOiTflspu6NbiwzAYmlub1T39rkqT4yK4raLRfzc6p
-	 yXbKIW86KhNQw==
+	b=P36wgRtYpnF4Xhi0pzG4ueFJEfKCa5sd3IcbLV7cK22raFSM7aI1bQk9SScxX90cG
+	 cC82wjxa9OB7G5gvOqNn+n0FEy4BoNil4kfsSXK7Hd8eBnSFGW7h5tagR30yqvkyxO
+	 BXhMfv2rJ54lXxVDp2qDotxq59pgkLXm9hFT4CE3E/akyHrxIILZfuCCFhnVkVnkoS
+	 1AnXRXiyB53lSLlj+XWBeg+7dZSF7jBjMplSycGCnscwzcJJ578G1nVmEpI5bU9iR0
+	 ZRL0froNKuzwc/aI72bfwViQMYwH5PCQF/nvrxkmuWIDGxKYfp/ie5nBGuDw1L3BFW
+	 XdWS0oM7jmERg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v14 07/14] tracing/wprobe: Add wprobe (watchpoint probe)
- trace event support
+Subject: Re: [PATCH v14 13/14] tracing/wprobe: Support BTF typecast in
+ fetchargs
 Reply-To: sashiko-reviews@lists.linux.dev
 To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <178810008805.64882.16330647170622284314.stgit@devnote2>
+Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <178810015473.64882.1080115688388623008.stgit@devnote2>
 References: <178810001186.64882.2161016469449127450.stgit@devnote2>
- <178810008805.64882.16330647170622284314.stgit@devnote2>
+ <178810015473.64882.1080115688388623008.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 30 Aug 2026 14:42:47 +0000
-Message-Id: <20260830144247.B77111F000E9@smtp.kernel.org>
+Date: Sun, 30 Aug 2026 14:44:38 +0000
+Message-Id: <20260830144438.770101F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,18 +47,29 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 >=20
-> Add hardware-breakpoint-based dynamic trace event support (wprobe).
-> Wprobe creates a dynamic event on data read/write accesses using
-> hardware breakpoints and logs the access context and fetchargs.
+> Allow BTF typecast syntax (STRUCT)FETCHARG->MEMBER in wprobe event
+> fetchargs. Previously, handle_typecast() rejected any probe context
+> that was not a function entry/return or tracepoint event probe.
 >=20
-> Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c=
-2.1785067572.git.wangjinchao600@gmail.com/
+> Wprobe events use $addr (the accessed address) and $value (the value
+> at that address). By enabling BTF typecast, users can now cast these
+> to a concrete struct type and access its fields directly. For example:
 >=20
+>   echo 'w:watch rw@-1:8 dflag=3D(dentry)$addr->d_flags' >> dynamic_events
+>=20
+> With a set_wprobe trigger pointing the watchpoint at a dentry address,
+> the resulting trace shows d_flags being accessed at that location.
+>=20
+> Note that $addr and $value are restricted to kernel-space memory,
+> which is consistent with the existing TPARG_FL_KERNEL flag used when
+> parsing wprobe fetchargs.
+>=20
+> Assisted-by: Antigravity:gemini-3.5-flash
 > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178810001186.64882.=
-2161016469449127450.stgit@devnote2?part=3D7
+2161016469449127450.stgit@devnote2?part=3D13
 
