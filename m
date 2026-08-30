@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705DA39E6FC;
-	Sun, 30 Aug 2026 14:26:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDED39E6FC;
+	Sun, 30 Aug 2026 14:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788100019; cv=none; b=utXVI/qs2moeBJS9AKpBBvxLNGKPMPP/hGlSb2qXpGiwY8vqAqYLFmIO8TfWKWNG3aBwywyfOAMw7BPFY0y61dI640us3OlYo9lKT+yt3bB2xga4vTdOnad/dzbaNzVjms1gdq8qUPKUFpkj172n42ZDlFbBSKoRMS/EN4kq86E=
+	t=1788100029; cv=none; b=XHMyItethwuP0b6dnzCkNGhf98f8x4I1OVu5rY/DxAQ4NzZtOVQh8ePn2UECrep46cwWrZAX9GUO7eMmGFlXdIiAuhb2/rVOPvvy6YDBcllTogfkY3f7wGvRnT/nIUSae601FeEJL8jhFyED0/C9uPBLaqZ0StSg/Y9Jl7ZSQJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788100019; c=relaxed/simple;
-	bh=EfWhsJKanp6q05Zmv8pWZBuqUYWNaUeSYTGFVyL/2Uk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NyYxLHnm3abMDYMV+fzdHpXEB/VsMCiuBxLLUD9bTviBdUjxIwR+5JvL/08Gzb43XfYL0jZEA4cQ8iypxpMlWPOq4CYGOzF6TFz7odqE3HvtPlHcH/w2JtXHsE122ino28lhh+zoilmhLgI9f7/LfIAewToF6ZRwAqzCCfpbhPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PIfJBzbT; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788100029; c=relaxed/simple;
+	bh=EuZr4900QNyWKnewwzCV1UFmlkplj1FX3SUkVolMhXk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BrlxNn3spw8AqkkB5ARifh3/ZuhlFU7tICEuw0Afj0sn7vej8iXfrFCpbX0GTNLUwMHdi/niLNRSESgYaTuqyiTbXA8XvzXX2xSNbzDQzWPA5ZsCWgNEmOvjIsVL7JTliOl/+sPgq3XPWbY8uXKjOtO4zi9se4AJH31sZis3pJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cAgHAKc/; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PIfJBzbT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D81F81F000E9;
-	Sun, 30 Aug 2026 14:26:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cAgHAKc/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56FC61F000E9;
+	Sun, 30 Aug 2026 14:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788100018;
-	bh=s/migKpbNe3GG3NLiEeHKB0Or4UXa918+ZXxjDxnd34=;
-	h=From:To:Cc:Subject:Date;
-	b=PIfJBzbT5UyBBp+oonSgG5x98GMM4B/MWYP96MKwaQVMg6f1Enc8xDWVBPMOJ4uvl
-	 QD7oS2L6h+nrhgFqD4Lmb+5PgBXLGLHb43jDYwtTxxwWVB60/pKX4s16QG59RANBLQ
-	 1tOlZl097L45R29w9nc2szWoamu2C8OhrAtOiYmIzonr7zDLX8U2BLEPDfdeHxJu7W
-	 guG0wH2WZw3rx8x8wp1UAzFjrtVImSx6GNSsEPEeWItbf1DO76ckVPlPj2Z6w4i0R8
-	 I/UQEPmwDHsd1oNyj6mjhA0MT6DZAZoS2WiqDcwzGK+2uS2VJdOwne5tUBn48oEf5f
-	 CHKqHsCHOQD8Q==
+	s=k20260515; t=1788100028;
+	bh=dVvkbL12qdBeZy/TOlqvj4SbZaMgEXfYq3x5+rZOW2E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=cAgHAKc/FylDjuvsicvTt3Gbm9tt3n16xLE4m7xmY7EIZBFy3lsY+l1+y9P3+TLbG
+	 19L+oJgtAAIpYHUqCMb70pP+Kh4PoTTReVsQ3iIqLPjBYpErFtkaxgRHHA6yTC4hpY
+	 E+YJesCL5QjUjXUjKQn/yp25S8ZTQw99mck9y5VP8KzUbOJ6HSiyD8jPG9yApcxeE1
+	 zqPKl6Tmn5RGXOIKhlB4Nm+MHC7NWEFp/oa5AsmRmNTaPDX7JI/e3WD6B9ubOH+m9C
+	 75hE1yicoD5kbvX6LoSXoIKsrk1VTnNy8NTZHgTTc+8/NicWUCCR9I7lhIV6DC8ajo
+	 UbNnotqRRlY4A==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -43,10 +44,12 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v14 00/14] tracing: wprobe: x86: Add wprobe for watchpoint
-Date: Sun, 30 Aug 2026 23:26:52 +0900
-Message-ID: <178810001186.64882.2161016469449127450.stgit@devnote2>
+Subject: [PATCH v14 01/14] x86/mce: Fix hardware debug register corruption on task migration
+Date: Sun, 30 Aug 2026 23:27:03 +0900
+Message-ID: <178810002334.64882.15357388305843450280.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <178810001186.64882.2161016469449127450.stgit@devnote2>
+References: <178810001186.64882.2161016469449127450.stgit@devnote2>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -57,217 +60,122 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Here is the 14th version of the series for adding new wprobe (watch probe)
-which provides memory access tracing event. Moreover, this can be used
-via event trigger. Thus it can trace memory access on dynamically
-allocated objects too.
-The previous version is here:
+In exc_machine_check_user(), local_db_save() and local_db_restore() are
+invoked in the outer entry stubs (DEFINE_IDTENTRY_MCE_USER,
+DEFINE_FREDENTRY_MCE, and DEFINE_IDTENTRY_RAW), surrounding
+exc_machine_check_user().
 
-  https://lore.kernel.org/all/178739053919.1520941.17662338993878200834.stgit@devnote2/
+However, exc_machine_check_user() calls irqentry_exit_to_user_mode(),
+which handles pending thread work and may schedule() if TIF_NEED_RESCHED
+is set. If the task migrates to another CPU during schedule(),
+local_db_restore() runs on the new CPU with the dr7 state saved from the
+old CPU. This corrupts the new CPU's DR7 hardware debug register and
+leaves the old CPU's DR7 disabled.
+In short, local_db_save() and local_db_restore() pair must be run
+on the same CPU.
 
-This version includes independent bug fixes for x86 user-mode MCE debug
-register migration and BTF anonymous struct kflag resolution (these 2
-patches should be merged as bugfix), enforces valid kernel addresses
-(< TASK_SIZE check), allows '-1' dummy trigger addresses, fixes trigger
-count unregistration and error path leaks, and resolves race conditions
-in selftests. See below for more details.
+To fix this, move local_db_save() and local_db_restore() inside
+exc_machine_check_user() and exc_machine_check_kernel() so that DR7
+is saved and restored strictly around do_machine_check().
 
-Changes in v14:
- - x86/mce: Add standalone fix for hardware debug register corruption on
-   task migration during user MCE.
- - tracing/probes: Add standalone fix for BTF member offset resolution to
-   check the kflag of the actual containing structure/union type.
- - x86/hw_breakpoints: Return early in local_db_restore() when saved DR7
-   is 0 to avoid overwriting guest/cleared hardware DR7 on NMI.
- - tracing/wprobe: Disallow address 0 and user-space addresses
-   (< TASK_SIZE) in parse_address_spec().
- - tracing/wprobe: Format symbol and offset explicitly in
-   trace_wprobe_show() instead of %pS to ensure clean event restoration.
- - tracing/wprobe: Accept '-1' as a dummy address for trigger-only wprobes
-   and display as '-1' on show.
- - tracing/wprobe: Skip field parsing in clear_wprobe if parameter is a
-   count keyword to allow unregistering with '!clear_wprobe:...:count=N'.
- - tracing/wprobe: Set target address before soft-enabling events in
-   set_wprobe trigger and roll back on failure.
- - tracing/wprobe: Fix trigger_data/wprobe_data memory and refcount
-   leaks on trigger registration error paths.
- - selftests/ftrace: Add BTF argument dependency requirement in
-   trigger-wprobe.tc.
- - selftests/ftrace: Add delay before clear_trace in trigger-wprobe.tc to
-   prevent race with clear_wprobe execution.
- - selftests/ftrace: Update dummy wprobe event definitions across trigger
-   tests to use '-1' instead of '0'.
- - selftests/tracing: Fix error log comment to BAD_PROBE_ADDR and add
-   testcase for address 0 rejection.
-
-Public branch
--------------
-I will push this branch as topic/wprobe-v2 to my tree so that it
-can be easily tested.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git/log/?h=topic/wprobe-v2
-
-This is based on linux-trace tree's linux-trace/for-next.
-
-Usage
------
-
-The basic usage of this wprobe is similar to other probes;
-
-  w:[GRP/][EVENT] [r|w|rw]@<ADDRESS|SYMBOL[+|-OFFS]>[:LEN] [FETCHARGS]
-
-This defines a new wprobe event. For example, to trace jiffies update,
-you can do;
-
- echo 'w:my_jiffies w@jiffies:8 value=+0($addr)' >> dynamic_events
- echo 1 > events/wprobes/my_jiffies/enable
-
-Moreover, this can be combined with event trigger to trace the memory
-access on slab objects. The trigger syntax is;
-
-  set_wprobe:WPROBE_EVENT:FIELD[+|-OFFSET][:COUNT] [if FILTER]
-  clear_wprobe:WPROBE_EVENT[:FIELD[+|-OFFSET][:COUNT]] [if FILTER]
-
-set_wprobe sets WPROBE_EVENT's watch address on FIELD[+|-OFFSET].
-clear_wprobe clears WPROBE_EVENT's watch address if it is set to
-FIELD[+|-OFFSET]. If FIELD is omitted, forcibly clear the watch address
-when trigger event is hit.
-
-For example, trace the first 8 byte of the dentry data structure passed
-to do_truncate() until it is deleted by dentry_kill().
-(Note: all tracefs setup uses '>>' so that it does not kick do_truncate())
-
-  # echo 'w:watch rw@-1:8 address=$addr value=+0($addr)' > dynamic_events
-
-  # echo 'f:truncate do_truncate dentry=$arg2' >> dynamic_events
-  # echo 'set_wprobe:watch:dentry' >> events/fprobes/truncate/trigger
-
-  # echo 'f:dentry_kill dentry_kill dentry=$arg1' >> dynamic_events
-  # echo 'clear_wprobe:watch:dentry' >> events/fprobes/dentry_kill/trigger
-
-  # echo 1 >> events/fprobes/truncate/enable
-  # echo 1 >> events/fprobes/dentry_kill/enable
-
-  # echo aaa > /tmp/hoge
-  # echo bbb > /tmp/hoge
-  # echo ccc > /tmp/hoge
-  # rm /tmp/hoge
-
-Then, the trace data will show;
-
- # tracer: nop
- #
- # entries-in-buffer/entries-written: 32/32   #P:8
- #
- #                                _-----=> irqs-off/BH-disabled
- #                               / _----=> need-resched
- #                              | / _---=> hardirq/softirq
- #                              || / _--=> preempt-depth
- #                              ||| / _-=> migrate-disable
- #                              |||| /     delay
- #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
- #              | |         |   |||||     |         |
-               sh-107     [004] ...1.     9.990418: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
-               sh-107     [004] ...1.     9.990914: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b3de78
-               sh-107     [004] ...1.     9.993175: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049ddd40
-               sh-107     [004] .....     9.995198: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
-               sh-107     [004] ...1.     9.995389: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db998
-               sh-107     [004] ..Zff     9.997503: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] ..Zff     9.997509: watch: (path_openat+0x211/0xda0) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] ..Zff     9.997514: watch: (path_openat+0xa56/0xda0) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] ..Zff     9.997518: watch: (path_openat+0xae2/0xda0) address=0xffff8880048083a8 value=0x8200080
-               sh-107     [004] .....     9.997521: truncate: (do_truncate+0x4/0x120) dentry=0xffff8880048083a8
-               sh-107     [004] ...1.     9.997582: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004808270
-               sh-107     [004] ...1.     9.999365: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db728
-               sh-107     [004] ...1.     9.999388: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b1c000
-               rm-113     [005] ..Zff    10.000965: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.000971: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.000984: watch: (lookup_fast+0xaa/0x150) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.000988: watch: (path_lookupat+0x97/0x1e0) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001010: watch: (lookup_one_qstr_excl+0x28/0x140) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001014: watch: (lookup_one_qstr_excl+0xd1/0x140) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001018: watch: (may_delete_dentry+0x1c/0x200) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001021: watch: (may_delete_dentry+0x195/0x200) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] ..Zff    10.001031: watch: (vfs_unlink+0x5e/0x260) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] d.Z..    10.001067: watch: (d_make_discardable+0x1b/0x40) address=0xffff8880048083a8 value=0x8200080
-               rm-113     [005] d.Z..    10.001071: watch: (d_make_discardable+0x29/0x40) address=0xffff8880048083a8 value=0x200080
-               rm-113     [005] ...1.    10.001072: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
-               rm-113     [005] ...1.    10.001218: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880048083a8
-               sh-107     [004] ...1.    10.001416: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db110
-               sh-107     [004] ...1.    10.001444: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff8880049db248
-               sh-107     [004] ...1.    10.001500: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
-               sh-107     [004] ...1.    10.002067: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
-               sh-107     [004] ...1.    10.904920: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004b41e78
-               sh-107     [004] ...1.    10.905129: dentry_kill: (dentry_kill+0x0/0x2c0) dentry=0xffff888004ad6618
-
-
-Thank you,
-
+Fixes: cd840e424f27 ("x86/entry, mce: Disallow #DB during #MC")
+Assisted-by: Antigravity:gemini-3.7-flash
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-base-commit: 3df3ae98c30c249c4bbf3d74559cc6972898052c
+Changes in v14:
+ - Newly added.
+---
+ arch/x86/kernel/cpu/mce/core.c |   23 +++++++----------------
+ 1 file changed, 7 insertions(+), 16 deletions(-)
 
-Jinchao Wang (2):
-      x86/hw_breakpoints: Make DR7 updates NMI safe
-      x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index cfb74be19994..61ade8b5c9d7 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -2108,6 +2108,7 @@ bool filter_mce(struct mce *m)
+ static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
+ {
+ 	irqentry_state_t irq_state;
++	unsigned long dr7;
+ 
+ 	WARN_ON_ONCE(user_mode(regs));
+ 
+@@ -2118,18 +2119,24 @@ static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
+ 	if (mca_cfg.initialized && mce_check_crashing_cpu())
+ 		return;
+ 
++	dr7 = local_db_save();
+ 	irq_state = irqentry_nmi_enter(regs);
+ 
+ 	do_machine_check(regs);
+ 
+ 	irqentry_nmi_exit(regs, irq_state);
++	local_db_restore(dr7);
+ }
+ 
+ static __always_inline void exc_machine_check_user(struct pt_regs *regs)
+ {
++	unsigned long dr7;
++
+ 	irqentry_enter_from_user_mode(regs);
+ 
++	dr7 = local_db_save();
+ 	do_machine_check(regs);
++	local_db_restore(dr7);
+ 
+ 	irqentry_exit_to_user_mode(regs);
+ }
+@@ -2138,21 +2145,13 @@ static __always_inline void exc_machine_check_user(struct pt_regs *regs)
+ /* MCE hit kernel mode */
+ DEFINE_IDTENTRY_MCE(exc_machine_check)
+ {
+-	unsigned long dr7;
+-
+-	dr7 = local_db_save();
+ 	exc_machine_check_kernel(regs);
+-	local_db_restore(dr7);
+ }
+ 
+ /* The user mode variant. */
+ DEFINE_IDTENTRY_MCE_USER(exc_machine_check)
+ {
+-	unsigned long dr7;
+-
+-	dr7 = local_db_save();
+ 	exc_machine_check_user(regs);
+-	local_db_restore(dr7);
+ }
+ 
+ #ifdef CONFIG_X86_FRED
+@@ -2169,28 +2168,20 @@ DEFINE_IDTENTRY_MCE_USER(exc_machine_check)
+  */
+ DEFINE_FREDENTRY_MCE(exc_machine_check)
+ {
+-	unsigned long dr7;
+-
+-	dr7 = local_db_save();
+ 	if (user_mode(regs))
+ 		exc_machine_check_user(regs);
+ 	else
+ 		exc_machine_check_kernel(regs);
+-	local_db_restore(dr7);
+ }
+ #endif
+ #else
+ /* 32bit unified entry point */
+ DEFINE_IDTENTRY_RAW(exc_machine_check)
+ {
+-	unsigned long dr7;
+-
+-	dr7 = local_db_save();
+ 	if (user_mode(regs))
+ 		exc_machine_check_user(regs);
+ 	else
+ 		exc_machine_check_kernel(regs);
+-	local_db_restore(dr7);
+ }
+ #endif
+ 
 
-Masami Hiramatsu (Google) (12):
-      x86/mce: Fix hardware debug register corruption on task migration
-      tracing/probes: Fix BTF kflag check for anonymous struct member access
-      kprobes: Protect kprobe_blacklist with RCU
-      HWBP: Add modify_local_hw_breakpoint_addr() API
-      tracing/wprobe: Add wprobe (watchpoint probe) trace event support
-      x86: hw_breakpoint: Add a kconfig to clarify when a breakpoint fires
-      selftests: tracing: Add a basic testcase for wprobe
-      selftests: tracing: Add syntax testcase for wprobe
-      tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
-      selftests: ftrace: Add wprobe trigger testcase
-      tracing/wprobe: Support BTF typecast in fetchargs
-      tracing/wprobe: Support BTF struct offset resolution in set_wprobe trigger
-
-
- Documentation/trace/index.rst                      |    1 
- Documentation/trace/wprobetrace.rst                |  185 +++
- arch/Kconfig                                       |   18 
- arch/x86/Kconfig                                   |    2 
- arch/x86/include/asm/debugreg.h                    |   37 -
- arch/x86/include/asm/hw_breakpoint.h               |    2 
- arch/x86/kernel/cpu/mce/core.c                     |   25 
- arch/x86/kernel/hw_breakpoint.c                    |  139 +-
- arch/x86/kernel/nmi.c                              |    7 
- arch/x86/kernel/traps.c                            |   10 
- include/linux/hw_breakpoint.h                      |    6 
- include/linux/kprobes.h                            |    1 
- include/linux/trace_events.h                       |    3 
- kernel/events/hw_breakpoint.c                      |   48 +
- kernel/kprobes.c                                   |   14 
- kernel/trace/Kconfig                               |   24 
- kernel/trace/Makefile                              |    1 
- kernel/trace/trace.c                               |    9 
- kernel/trace/trace.h                               |    6 
- kernel/trace/trace_btf.c                           |   11 
- kernel/trace/trace_btf.h                           |    3 
- kernel/trace/trace_events_trigger.c                |    2 
- kernel/trace/trace_probe.c                         |   51 +
- kernel/trace/trace_probe.h                         |   22 
- kernel/trace/trace_wprobe.c                        | 1475 ++++++++++++++++++++
- tools/testing/selftests/ftrace/config              |    3 
- .../ftrace/test.d/dynevent/add_remove_wprobe.tc    |   63 +
- .../test.d/dynevent/wprobes_syntax_errors.tc       |   23 
- .../test.d/trigger/trigger-wprobe-btf-offset.tc    |   74 +
- .../test.d/trigger/trigger-wprobe-btf-typecast.tc  |   72 +
- .../test.d/trigger/trigger-wprobe-syntax-errors.tc |   37 +
- .../ftrace/test.d/trigger/trigger-wprobe.tc        |   90 +
- 32 files changed, 2364 insertions(+), 100 deletions(-)
- create mode 100644 Documentation/trace/wprobetrace.rst
- create mode 100644 kernel/trace/trace_wprobe.c
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_wprobe.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/wprobes_syntax_errors.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-offset.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-btf-typecast.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe-syntax-errors.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
-
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
