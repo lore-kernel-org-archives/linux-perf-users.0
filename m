@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002083F104C;
-	Sun, 30 Aug 2026 05:35:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED8902E285C;
+	Sun, 30 Aug 2026 05:36:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788068160; cv=none; b=kpaqV1bnqtiv0mfPpmxssa7LeruYDqT2QJb+He3ye0fH0sYwB9n7Ng4Diq6tXDliHF4iqyYIAdPnn4MTBKJqavEeapJtS1ACdddsIZKrwkmD07ahuDVWQS6jkQFWfAcuRrw2u+AKtPuJ6+EGuFLh2W3gy/nAf6Mhy0ILntmwM54=
+	t=1788068175; cv=none; b=tZ4xM/WEwNkZ2r95/gL3uad5OnFnXCClFquLl4TeyiDVxF6eZpLmwMjy7Fw0+OuL2ZssuPkLevKvOXrCU0+spJ/eaUHG+hvbBGrn1yENwBVj8D3MCakRx/UgBtp2X846hHLQmC1rPMm2TGtbrdnr1Uuly8x41mFt0q0r2JAFbRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788068160; c=relaxed/simple;
-	bh=KBYCAzTkDa/y8RhGGUhZ6FCO8BvSny9OqIgxThv0Qj4=;
+	s=arc-20240116; t=1788068175; c=relaxed/simple;
+	bh=aVN373zFP2TryjM++K+UXqkmiktR4Feeq0nORoRsZcs=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=OhqDbzNE/R+xP7lvYHQV27bTZOdUamxgv+FC4fVT9IBOxl618bZw4xp9lyFbWAzvNTuet5wqx5QJFKLxxJTXCeO6Fse9oaL2KnX+390SpoWlI4Tl+2rf+PaV05zoEcG/kDF36iKLX8sxZ+mO0HDUGc9+98hILXBSUIixi67/szM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YE7ImTEh; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=hlWXjyl4aQRdT5f9A3WsPm3PnV7TiJCJhAofbLN1SXVvKLnhBX8ZQOZDLlfQ5jBmB4PoH/v7pw95ww5LjTIwJcaGTiyqjp5CNWwlGX+a93AAhly/7mN6lFQkUnhxfU+vZ4HEBVdHIhlT+UrpfZ3HT/S8KM4C7FeS5VDFkOe1R3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ib5KkRCc; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YE7ImTEh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB3131F000E9;
-	Sun, 30 Aug 2026 05:35:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ib5KkRCc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 816511F00A3D;
+	Sun, 30 Aug 2026 05:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788068158;
-	bh=ZMcSzHMOGkTxjDQ/kms1UD4eXR3thAanYtFKKrLlkJA=;
+	s=k20260515; t=1788068173;
+	bh=aoXT84wu3b3M6cKIVAxNtWRGNfd+0EUmOjRbcPR1aMs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=YE7ImTEhZIJqIb2WKFgsRJuQ1+WCrRgHEQYXZ4aBNSgJJhsfB2BkQN9VVbpF8O7X+
-	 GpPVk8El+0p6kCNWDgDGDaaaGaFCoU2C5Kx7UIbFR/yRoeyCybGdpFulsYz23vVSKB
-	 PgDQ9IpjzOsxKXexSqcFuwpUrE8Y/PnQRUG5Xe8jGNnBz9qGhM4DmXiF/qtTSAqJg7
-	 fx+5lYxwPRLhPwtjTp/o0MMfSFlzEgZBThIiVQql7IcD1PulGMbpaJyvfp9nlETPv8
-	 qbZN0Eir/xH6oc3entCPitoBCuGGQE2YBuTy5XlGE6OlfED9O2CZvv79io+Rc5L6lp
-	 n39AyAYnU3skg==
-Date: Sun, 30 Aug 2026 14:35:56 +0900
+	b=ib5KkRCcBaqbEJv/LZYbQ/c9JF91mXR3LOXP/VgV2lreP6KvoJ4oaTOad6FUa/hz3
+	 RLBthlChAJxi/6qvJR/HjkXTU6us6DOAcjf0PYYRIb3jc4ET6iem5bHbGhNCa8gW/l
+	 ACMXboyo2+MIX4IIJR90h885Vp9D6vT+RS1WPw38CJ7EglCHssyfyNIkuB8vNJ9Td0
+	 CfdV3RpnzJ6KMGNN2MRPL69yb5bbhemXHC03CKdO/okvkMDXfrL/h0fs+UcVgtafFb
+	 OdJj8BZELRZaR9KPDd7w+hntcDWPzV7omkgpH+/dca0NdsNjljZESkC/Wu75x/2Zd7
+	 OBBuZVVl+VbNw==
+Date: Sun, 30 Aug 2026 14:36:09 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: sashiko-reviews@lists.linux.dev
 Cc: sashiko-bot@kernel.org, linux-trace-kernel@vger.kernel.org,
  linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v13 09/12] tracing/wprobe: Add set_wprobe and
- clear_wprobe event triggers
-Message-Id: <20260830143556.6faf869a7174b4fdded22f82@kernel.org>
-In-Reply-To: <20260822094218.0C4491F000E9@smtp.kernel.org>
+Subject: Re: [PATCH v13 10/12] selftests: ftrace: Add wprobe trigger
+ testcase
+Message-Id: <20260830143609.3668b929ee0dd7437cf0517d@kernel.org>
+In-Reply-To: <20260822093925.BA8481F000E9@smtp.kernel.org>
 References: <178739053919.1520941.17662338993878200834.stgit@devnote2>
-	<178739069325.1520941.16954545333706545613.stgit@devnote2>
-	<20260822094218.0C4491F000E9@smtp.kernel.org>
+	<178739070441.1520941.13438898193952389821.stgit@devnote2>
+	<20260822093925.BA8481F000E9@smtp.kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -48,143 +48,90 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Sat, 22 Aug 2026 09:42:17 +0000
+On Sat, 22 Aug 2026 09:39:24 +0000
 sashiko-bot@kernel.org wrote:
 
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
-> - [Medium] Leaked `trigger_data` and `wprobe_data` when trigger registration fails due to unbalanced reference counts.
-> - [Medium] Hardware breakpoints are inadvertently left monitoring the initial wprobe address (unparked) instead of the parked dummy address upon enablement.
-> - [Low] The `clear_wprobe` trigger cannot be removed by echoing its exact printed output if a trigger count is specified.
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [Medium] The `trigger-wprobe.tc` test has a race condition causing intermittent failures because the `clear_wprobe` trigger executes asynchronously and the test does not wait for it to fire before verifying the trace buffer.
+> - [Medium] The `trigger-wprobe.tc` test uses `timer=t` as a fetcharg without enforcing a BTF requirement, which will cause false-positive test failures on kernels without BTF support.
 > --
 > 
-> --- Patch [9]: [PATCH v13 09/12] tracing/wprobe: Add set_wprobe and clear_wprobe event triggers ---
-> commit e794ff7412c73348b335e9a50aceecbbd82d9a0c
+> --- Patch [10]: [PATCH v13 10/12] selftests: ftrace: Add wprobe trigger testcase ---
+> commit f8200da0c99be51814ee14df413b8fd81995a06f
 > Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
+> selftests: ftrace: Add wprobe trigger testcase
 > 
-> Add set_wprobe and clear_wprobe event triggers to dynamically attach
-> and detach hardware breakpoint address monitoring based on event field
-> contents.
+> This commit adds a testcase to verify wprobe triggers. It uses set_wprobe
+> and clear_wprobe triggers on fprobe and static trace events to monitor
+> memory accesses within the trace-events-sample kernel module, and tests
+> wprobe trigger syntax error logging.
 > 
 > Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
 > 
-> > diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
-> > index a8543766a245b..acb15fd018e80 100644
-> > --- a/kernel/trace/trace_wprobe.c
-> > +++ b/kernel/trace/trace_wprobe.c
-> 
+> > diff --git a/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
+> > new file mode 100644
+> > index 0000000000000..0565e2c421778
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/ftrace/test.d/trigger/trigger-wprobe.tc
 > [ ... ]
-> 
-> > @@ -756,3 +827,501 @@ static __init int init_wprobe_trace(void)
-> 
-> [ ... ]
-> 
-> > +static int wprobe_trigger_cmd_parse(struct event_command *cmd_ops,
-> > +				    struct trace_event_file *file,
-> > +				    char *glob, char *cmd,
-> > +				    char *param_and_filter)
-> > +{
-> 
-> [ ... ]
-> 
-> > +	} else if (param && (isalpha(param[0]) || param[0] == '_')) {
-> > +		char *offs;
+> > +:;: "Add a wprobe event used by trigger" ;:
+> > +echo 'w:watch rw@0:8 address=$addr value=$value' > dynamic_events
 > > +
-> > +		field_str = strsep(&param, ":");
-> 
-> [Severity: Low]
-> Does this code prevent removing the clear_wprobe trigger if it has a count
-> but no field?
-
-Ah, indeed. The trigger shows ":count=N" or ":unlimited" for counter
-instead of digit value.
-
-> 
-> If the user sets a count on a clear_wprobe trigger, wprobe_trigger_print()
-> outputs the trigger as ending with ":count=N". When attempting to remove it
-> by writing the exact string prepended with '!', this parser checks if the
-> parameter starts with a letter.
-> 
-> Since "count=N" starts with a letter ('c'), it treats it as an event field
-> name, and fails with -ENOENT in wprobe_trigger_field_parse(), preventing the
-> trigger from being unregistered.
-
-OK, let me fix it.
-
-> 
-> [ ... ]
-> 
-> > +	/* Soft-enable (register) wprobe event on WPROBE_DEFAULT_CLEAR_ADDRESS */
-> > +	if (!trace_event_try_get_ref(wprobe_file->event_call)) {
-> > +		ret = -ENODEV;
-> > +		goto out_free_trigger;
-> > +	}
-> > +
-> > +	ret = trace_event_enable_disable(wprobe_file, 1, 1);
-> > +	if (ret < 0)
-> > +		goto out_put;
-> > +
-> > +	if (!clear)
-> > +		WRITE_ONCE(tw->addr, WPROBE_DEFAULT_CLEAR_ADDRESS);
+> > +:;: "Add events for triggering wprobe" ;:
+> > +echo 'f:fprobes/testevent sample_timer_cb timer=t' >> dynamic_events
 > 
 > [Severity: Medium]
-> Should we update the target address before soft-enabling the event?
-
-Ah, indeed. We also need to roll it back if soft-enable fails.
-
+> Is it intentional to use a local variable t as a fetcharg here?
 > 
-> The documentation suggests initializing a new wprobe at address 0 and keeping
-> it disabled. When we call trace_event_enable_disable(wprobe_file, 1, 1) here,
-> it installs hardware breakpoints monitoring the current address (e.g., 0).
+> This relies on BTF debug info. On kernels without 
+> CONFIG_PROBE_EVENTS_BTF_ARGS=y or architectures lacking BTF support, 
+> the kernel's tracing subsystem cannot resolve the argument and the 
+> fprobe registration will fail.
 > 
-> The parked dummy address WPROBE_DEFAULT_CLEAR_ADDRESS is only assigned to
-> tw->addr afterwards, which means the hardware breakpoints are left actively
-> monitoring address 0 and could generate spurious debug exceptions.
+> Should this test either add a requirement for BTF arguments in the requires
+> directive, or use a register argument like $arg1 instead?
 > 
+> > +
+> > +:;: "Enable all events before setting triggers" ;:
+> > +echo 1 > tracing_on
+> > +echo 1 >> events/fprobes/testevent/enable
+> > +echo 1 >> events/sample-trace/foo_bar_with_fn/enable
 > [ ... ]
-> 
-> > +out_disable:
-> > +	trace_event_enable_disable(wprobe_file, 0, 1);
-> > +out_put:
-> > +	trace_event_put_ref(wprobe_file->event_call);
-> > +out_free_trigger:
-> > +	event_trigger_reset_filter(cmd_ops, trigger_data);
-> > +	event_trigger_free(trigger_data);
-> > +	return ret;
+> > +:;: "Set clear_wprobe trigger on foo_bar_with_fn" ;:
+> > +echo 'clear_wprobe:watch' >> events/sample-trace/foo_bar_with_fn/trigger
+> > +cat events/sample-trace/foo_bar_with_fn/trigger | grep ^clear_wprobe
+> > +
+> > +# Disable set_wprobe to prevent sample_timer_cb from re-arming the watchpoint
+> > +echo '!set_wprobe:watch:timer' >> events/fprobes/testevent/trigger
+> > +
+> > +# Clear trace and wait to ensure no new watchpoint events are generated
+> > +clear_trace
+> > +sleep 1
 > 
 > [Severity: Medium]
-> Can this leak trigger_data and wprobe_data on the error path?
+> Can this sequence cause a race condition resulting in intermittent test 
+> failures?
 > 
-> When wprobe_trigger_cmd_parse() executes, it increments the trigger_data
-> refcount to 1 via event_trigger_init().
+> If the test clears the trace buffer here without first waiting for
+> foo_bar_with_fn to execute and actually clear the watchpoint, there is a race
+> window.
 > 
-> It then calls event_trigger_register() which calls wprobe_register_trigger()
-> and increments the refcount to 2 via data->cmd_ops->init(data).
+> Since both foo_bar_with_fn and sample_timer_cb run periodically every 
+> second, could sample_timer_cb execute after clear_trace but before
+> foo_bar_with_fn has fired?
 > 
-> If trace_event_trigger_enable_disable() fails inside wprobe_register_trigger(),
-> it returns an error without balancing the reference count:
+> If so, it would access the still-armed watchpoint and log a watch event in the
+> newly cleared trace buffer, causing the final verification step 
+> (! grep -q watch trace) to fail.
 > 
-> kernel/trace/trace_wprobe.c:wprobe_register_trigger() {
-> 	...
-> 	ret = trace_event_trigger_enable_disable(file, 1);
-> 	if (ret < 0) {
-> 		list_del_rcu(&data->list);
-> 		update_cond_flag(file);
-> 	}
-> 	return ret;
-> }
-> 
-> The error path here then calls event_trigger_free(trigger_data), which only
-> decrements the refcount from 2 to 1 and skips freeing the objects.
-
-Ah, OK. It should call the data->cmd_ops->free() in failure path.
-
-Thanks,
-
+> > +
+> > +:;: "Ensure clear_wprobe trigger deactivated the watchpoint" ;:
+> > +! grep -q watch trace
+> > +
 > 
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/178739053919.1520941.17662338993878200834.stgit@devnote2?part=9
+> Sashiko AI review · https://sashiko.dev/#/patchset/178739053919.1520941.17662338993878200834.stgit@devnote2?part=10
 
 
 -- 
