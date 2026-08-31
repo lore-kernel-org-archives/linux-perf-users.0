@@ -1,108 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C0539FCD7
-	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 21:32:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323EC371899
+	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 21:35:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788211949; cv=none; b=pT7+CSZzkzFEXQybEabTN0Dt3wU5M/Qgb92WpRCSbc4xt6Uxy3a3E8TSPCjIkeU31CKKBRysUxrWqaM1yQslZQmHrYZQOC6UFxR8E5qokbHWh5ktGVGMm6awtfaPvUAzg9TdYYG0aqM/ifssUP9DBaDtdfzx6vj3svTWotVkdXs=
+	t=1788212130; cv=none; b=Elqm5fFUys1Gu4dyZL4Gbmo0N18pP9IqXHiOby65lzdoAeiieac3vlhqA4xZMTVOJtPNRdDpQTZ0p0FmAZ71oKbGEKMmd+qsuxoHBbYSc4M68PqUPnPXPxOI+Wg7K9l0W1lp/PGfkP8SsSdO1yE2zOWST1uq/9tg31hhZyGe06I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788211949; c=relaxed/simple;
-	bh=ya6YBHtZJ9p47xV2BxlhRegsn079nmHb4XMuK/PfKNI=;
+	s=arc-20240116; t=1788212130; c=relaxed/simple;
+	bh=XMT6O/0uHqSXF0X1GZP4ItDvSrgNNBjiUsDm/RIY5J0=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=LJij8YQ2eGoGsGaj9ZHHamn17QXoYM9RB/rutKa4RrH/otiZA7O1v19YVleKe2Ccms5PbsJVOTveEq5x7HWgdMaqTCvg2lz3DtFE8Bf31iK3JjSLZzlZ8dQDyXZkwFSjglBQeAu2Iz3xL51Mb06B22WsyyPssESw1ONddBA2dZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RYrX/uZB; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=JoBXGkrGiUzyQBcMfaFFR2VZEkAl/hEd5EGW3Z+tjqM+h76NwTldG4WAWfYHxvawuKyLcgPxNY5BmRKm+pS62TgmtLELbAc7z70dAiMVc6GK90cv/Xp+rGW9UGUDEx9Im1/vmgwxihQPiX4qOut/xRyPeW0oFM0s6+3IJIrY1e4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DF/Gckxx; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYrX/uZB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA86E1F00A3D;
-	Mon, 31 Aug 2026 21:32:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DF/Gckxx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1D0F1F000E9;
+	Mon, 31 Aug 2026 21:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788211948;
-	bh=HXFOgwP4Osswx+kaWgk2wVsPgZNnFHr9whhgegsSZjQ=;
+	s=k20260515; t=1788212128;
+	bh=XMT6O/0uHqSXF0X1GZP4ItDvSrgNNBjiUsDm/RIY5J0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=RYrX/uZBcYIdw5t76udiw6V7g5EHmo1MmDQmwaSiVF8inMYjxKuEEvh6ocG2N8jJ6
-	 d7fbqEWuGhWd9hU8uEfla6AjU9ux16vQBRw+bL4lLcUIPjl6QtjuiBPtOEXwgGI4KH
-	 +qrhNaZvQESm1Y006wnJEUDE8z5V/jz8k5X4iVA+/bkSpaaNRWIZFIES75sVDRKmBx
-	 /n0GhfwoEsdT3FWJXGqa1KR9JF7yCSHDAWQFlP5pO0HQdERIdeVfCfGMzCf6KMxtK/
-	 KpkpuVAx44UDxbaH5cYgsGS9x536g+b0m5p67dfsF7tkHUONOErcQ1pE1t9U0O9X96
-	 raJlA7IZFCTmg==
+	b=DF/GckxxkarxJC8xZ1yaKDWBT/IvdsOcM+j1woVIesdU6r2eYLDtKRhA2MPNMK8Xo
+	 86B2paQvVA383OooBL1mm3eENMgVH3OTaWZuUmfw955kATW7QnUc7hjOSf8XGJ6xY+
+	 oP8U8QcRdJArU2m94inmgir6JZgmXW8zHIMLhwxkbOK9juTXO3TJquFK7ho/O3ns7F
+	 B9klzOwVP97gfr18xe40QaWmgA8pgB5Yp1Qq6j0RwN9LoYB1jYPap2/vOvALVDOyUc
+	 4nvi5sXNGrUC3Z0tnmowvM/IwxJTkCB6IBiRHaQE24hM/WyDDG/Nk1r/6v6KJ+TB8I
+	 ykMfiiXaUqVDA==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC v1 17/19] ptwrite uprobes / perf tools probe: Add support
- of ptwrite probes
+Subject: Re: [PATCH v2 02/14] perf/ring_buffer: stop using PG_private as AUX
+ page high-order marker
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Andi Kleen" <ak@kernel.org>
+To: "Zi Yan" <ziy@nvidia.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260831150651.1134594-18-ak@kernel.org>
-References: <20260831150651.1134594-1-ak@kernel.org>
- <20260831150651.1134594-18-ak@kernel.org>
+In-Reply-To: <20260831-remove-pg_private-v2-2-3668159cd9e8@nvidia.com>
+References: <20260831-remove-pg_private-v2-0-3668159cd9e8@nvidia.com>
+ <20260831-remove-pg_private-v2-2-3668159cd9e8@nvidia.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 31 Aug 2026 21:32:27 +0000
-Message-Id: <20260831213227.CA86E1F00A3D@smtp.kernel.org>
+Date: Mon, 31 Aug 2026 21:35:28 +0000
+Message-Id: <20260831213528.B1D0F1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The error code from `strbuf_addf` is silently overwritten, hidin=
-g memory allocation or formatting failures.
---
+> A high-order AUX page sets PG_private on its first page and stores the
+> order in first_page->private. Stop using PG_private and check
+> first_page->private for AUX page order only in the ring buffer and its
+> users. This is fine because page->private is 0 for order-0 AUX pages,
+> matching the page order.
+>=20
+> It prepares for a future commit that remove PG_private.
+>=20
+> No functional change intended.
+>=20
+> Assisted-by: Claude:claude-opus-4-8
+> Assisted-by: Codex:gpt-5
+> To: Peter Zijlstra <peterz@infradead.org>
+> To: Ingo Molnar <mingo@redhat.com>
+> To: Arnaldo Carvalho de Melo <acme@kernel.org>
+> [ ... ]
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: linux-perf-users@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Acked-by: Usama Arif <usama.arif@linux.dev>
+> Signed-off-by: Zi Yan <ziy@nvidia.com>
 
-commit 1e80616b3ae889174ea132bb4a1470dd0a9429ba
-Author: Andi Kleen <ak@kernel.org>
-
-ptwrite uprobes / perf tools probe: Add support of ptwrite probes
-
-This commit adds a --ptwrite option to perf probe to enable trap-free ptwri=
-te
-uprobes. These probes write their values into the Intel PT trace stream
-instead of entering the kernel.
-
-> diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-> --- a/tools/perf/util/probe-event.c
-> +++ b/tools/perf/util/probe-event.c
-[ ... ]
-> @@ -2260,9 +2262,11 @@ char *synthesize_probe_trace_command(struct probe_=
-trace_event *tev)
->  	if (strbuf_init(&buf, 32) < 0)
->  		return NULL;
-> =20
-> -	if (strbuf_addf(&buf, "%c:%s/%s ", tp->retprobe ? 'r' : 'p',
-> -			tev->group, tev->event) < 0)
-> -		goto error;
-> +	if (tev->ptwrite)
-> +		err =3D strbuf_addf(&buf, "ptw:%s/%s ", tev->group, tev->event);
-> +	else
-> +		err =3D strbuf_addf(&buf, "%c:%s/%s ", tp->retprobe ? 'r' : 'p',
-> +				  tev->group, tev->event);
-> =20
->  	if (tev->uprobes)
->  		err =3D synthesize_uprobe_trace_def(tp, &buf);
-
-[Severity: Medium]
-Does this code silently overwrite the error code from strbuf_addf()?
-
-It appears that if memory allocation fails inside the first strbuf_addf(),
-the function continues without checking err. The negative error code is
-then overwritten by the return value of the subsequent
-synthesize_uprobe_trace_def() or synthesize_kprobe_trace_def() call.
-
-Could this lead to a truncated or malformed trace command being synthesized
-and sent to the kernel?
-
-> @@ -2274,7 +2278,6 @@ char *synthesize_probe_trace_command(struct probe_t=
-race_event *tev)
-> =20
->  	if (err >=3D 0)
->  		ret =3D strbuf_detach(&buf, NULL);
-> -error:
->  	strbuf_release(&buf);
->  	return ret;
->  }
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831150651.1134=
-594-1-ak@kernel.org?part=3D17
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831-remove-pg_=
+private-v2-0-3668159cd9e8@nvidia.com?part=3D2
+
