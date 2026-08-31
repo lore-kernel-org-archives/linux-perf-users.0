@@ -1,140 +1,174 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7569F30DD2F
-	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 13:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40A29332629;
+	Mon, 31 Aug 2026 13:11:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788181638; cv=none; b=MtRaqIEISNvgtQ5cvs4cnONnszc2FffQ+88bEJ4Yqtv7qPDN8OT31xLw1g4UwFtsQ/vc5IvGkxY7EBDPhEzKJ9TEFV+3M+Vxwhgg0eF+Zen9sIbQHGMjmDcCyhjqVbKPPLctlzyWA5xSRNMRWgW7fpZxIGWhgXHinALa6B7kOBg=
+	t=1788181885; cv=none; b=qWdA1f6NK5mrXqmdMUcIU0Ndub2/cEQYubHXiImhWSO+A9DY6J+kZeE1iwNa9YuFtnEbxmJtw/Gf8QbNs5quUnWpoe3FTZE4YvPRXctNcqJFrQz7RnEd44qDrvsmQS2AWLsQ/BuRBB3mGhFGKLpGwEGvFl0gmf0J428k76mDAa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788181638; c=relaxed/simple;
-	bh=ZPn8Y1cGxYriJLJHPvq8nupoqNdcrIK5QvTnEGmkvzg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r1egqp+Q/8pPVqCwjfVRFeaK6M4/F+wxyWYEbTcay0nomVRy+7/jk18sFn2GgOGbApCRl5lbwq3sw42ttkPlu71/1KiN2JJIdyvRJxMVO/lCncOAxx3YyW8wrdt/5LU3lV/TEtVKBwOyUEc7vIvjQATizhn8ZO7rDxGS9Rt1mMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hYTlZ2p2GzYQtqX
-	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 21:06:34 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.112])
-	by mail.maildlp.com (Postfix) with ESMTP id 2339F40539
-	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 21:07:12 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP1 (Coremail) with UTF8SMTPA id cCh0CgDXvwp+fJVqfc75AA--.63438S2;
-	Mon, 31 Aug 2026 21:07:12 +0800 (CST)
-Message-ID: <4acae7de-fdd7-4534-bb73-43502dc760a0@huaweicloud.com>
-Date: Mon, 31 Aug 2026 21:07:10 +0800
+	s=arc-20240116; t=1788181885; c=relaxed/simple;
+	bh=ucyM4onLXkPSEZvO5/C4dQElPwRmXuFtIA0SnpRRQP4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JGcoU4fJL3UbmvaVPCddFIGDX4J2mT8Qm/A5QQCWbZKdlGIaEB8t5W0VbpDt+jAS0pYNDUXLZDtyXnfzh9clSZlLI1lMxP3ZDPbG9FM61wJcfEhfZ7uRsElx9lwD1sJXZ+1EY58Kuo4Vsp3z1wHm+YRopPFAJAzgt23Hni1ujzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Twp/d0JX; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Twp/d0JX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D1901F000E9;
+	Mon, 31 Aug 2026 13:11:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788181883;
+	bh=2zMfPmkKorqPQ5aMdGvYIy7DLrVmOBzO79UdH0ZRRuA=;
+	h=From:To:Cc:Subject:Date;
+	b=Twp/d0JXQTWNcXIKf9mIzPTJlvHd/dKmI5P5xh9jy+porshFrMkHBkTF5jGtEheLZ
+	 OPmu06ZCztefHU1LS+/Ulw+m6epCsSDRWM9kX7kOVlQs684gKq3uZeFc4t/MOka3K3
+	 jULmgEj+qDl9s/6J+JlJADzsLj18j3VTtnOGPHYphnHXs6MLb76jNpJ9zB2NR360rP
+	 YL1DLohjDQ/LM2hz+wDyOwdANEzqTxv0wlqaiIFHQMAMhvjINlBZaNF8kgJHKmOZN1
+	 LJaUl7sZ/KLLu0pbTcSCnEH2jqaWZBVyqq2U0FHxQVNaBwW/SjpYrZvQh1VjGx5hLS
+	 WRX9QzhnBwOSg==
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Clark Williams <williams@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Stephane Eranian <eranian@google.com>,
+	Stefano Sanfilippo <ssanfilippo@chromium.org>
+Subject: [PATCHES v4 0/12] perf jitdump: Input validation hardening
+Date: Mon, 31 Aug 2026 10:10:56 -0300
+Message-ID: <20260831131110.4681-1-acme@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 22/23] perf annotate-arm64: Support per-cpu variable
- access tracking
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260808122400.2961238-1-wutengda@huaweicloud.com>
- <20260808122400.2961238-23-wutengda@huaweicloud.com>
- <20260808131848.43DEF1F000E9@smtp.kernel.org>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260808131848.43DEF1F000E9@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:cCh0CgDXvwp+fJVqfc75AA--.63438S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxuryDJw1UGw48GFyrAr4fZrb_yoW5WFy8pa
-	95CayrGr1rXr4FganrZw4rXFyS9ws7WrWF9Fyqkr4avr9avr97KF97tay5KFW7Gr95Aa12
-	qws8tr47Zw1093DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUgmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7
-	CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
-	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
-	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2
-	KfnxnUUI43ZEXa7IU1CPfJUUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+Content-Transfer-Encoding: 8bit
 
+Hi,
 
+	Please consider merging,
 
-On 2026/8/8 21:18, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] Incomplete offset calculation for multi-register memory operands causes inaccurate type resolution.
-> --
-> 
-> --- Patch [22]: [PATCH v4 22/23] perf annotate-arm64: Support per-cpu variable access tracking ---
-> commit d7e10ade80ba3983e6d311e1ab11f19b4af2d53e
-> Author: Tengda Wu <wutengda@huaweicloud.com>
-> Subject: perf annotate-arm64: Support per-cpu variable access tracking
-> 
-> This commit extends update_insn_state() for arm64 to handle per-cpu variable
-> addressing. It identifies per-cpu base initialization and propagates type
-> information to subsequent instructions. This allows the tracker to correctly
-> resolve the actual variable type in per-cpu flows.
-> 
->> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
->> index 7fe5b979563f7..8b0584486cce9 100644
->> --- a/tools/perf/util/annotate-data.c
->> +++ b/tools/perf/util/annotate-data.c
->> @@ -1253,11 +1253,33 @@ static enum type_match_result check_matching_type(struct type_state *state,
->>  	}
->>  
->>  	if (state->regs[reg].kind == TSR_KIND_PERCPU_BASE) {
->> -		u64 var_addr = dloc->op->offset;
->> +		u64 var_addr;
->>  		int var_offset;
-> 
-> [ ... ]
-> 
->> +		var_addr = dloc->op->offset;
->> +
->>  		if (dloc->op->multi_regs) {
->>  			int reg2 = dloc->op->reg2;
-> 
-> [Severity: Medium]
-> Does the TSR_KIND_GLOBAL_ADDR handling later in check_matching_type() need
-> similar logic for multi-register operands to ensure accurate type resolution?
-> 
-> Currently, for TSR_KIND_GLOBAL_ADDR, the logic does not consider multi-register
-> operands:
-> 
-> 	if (state->regs[reg].kind == TSR_KIND_GLOBAL_ADDR) {
-> 		u64 var_addr = state->regs[reg].imm_value + dloc->op->offset;
-> 		int var_offset;
-> 
-> This calculation omits adding state->regs[reg2].imm_value for multi-register
-> operands, unlike the TSR_KIND_PERCPU_BASE logic in the same function. The
-> omission also appears to apply to TSR_KIND_TYPE and TSR_KIND_POINTER.
-> 
-> Can this incomplete offset calculation cause incorrect type resolution in
-> tools/perf/util/annotate-data.c:check_matching_type() when perf processes a
-> memory instruction where op->multi_regs is true, the primary register is
-> TSR_KIND_GLOBAL_ADDR (or TYPE/POINTER), and the secondary register is
-> TSR_KIND_CONST?
-> 
+This series addresses twelve classes of input validation and resource
+handling bugs in the jitdump file format parser that could cause OOB
+memory access or memory leaks when processing maliciously crafted or
+corrupted jitdump files.
 
-Perhaps we need a helper function at the beginning of check_matching_type() to
-calculate the accurate offset value. I can see several cases:
+All issues were discovered by sashiko-bot during automated review of the
+jitdump code path.  The bugs affect both the native-endian and byte-swap
+code paths, with some checks previously only enforced during
+byte-swapping.
 
-1. single register addressing
-   [reg, #offset]
+Critical fix:
+  code_size validation was bypassable via int truncation.  A record with
+  code_size in [2^31, record_size - 56] passed the existing bounds check
+  in jit_repipe_code_load() but truncated to a negative int when sent to
+  jit_process_code_load(), so the code pointer landed ~2GiB past the
+  record buffer, defeating the memchr() NUL scan and corrupting the
+  injected ELF.
 
-2. post-index addressing
-   [reg], #offset
+  Before: code_size = 0x80000010 passes the range check, then truncates
+          to a negative offset
+  After:  code_size > INT_MAX is rejected up front; all subsequent code
+          size arithmetic stays within the record buffer
 
-3. SIB-like addressing
-   [base, index, lsl #3]
+- Arnaldo
 
-4. multi-reg addressing with constant register.
-   [base, reg2]  // reg2 is a const
+Changes since v3:
 
-Thanks,
-Tengda
+  - Address some issues about PATH_MAX
 
+Changes since v2 (fe3ab00d55aa56b4), series reordered:
+
+  - Reordered the series so that the leak plug for debug_data and
+    unwinding_data (now patch 2/12) comes before the code_size
+    validation patch that introduces the early-return path flagged by
+    sashiko-bot during review of v2.  With the fix in place first, the
+    early return no longer introduces a leak that would only have been
+    plugged later in the series.
+
+  - Otherwise the series is unchanged: the end result is byte-identical
+    to v2 (tree diff between the v2 and v3 tips is empty).
+
+  - The pre-existing issues reported by sashiko-bot that are outside the
+    scope of this series were recorded in a TODO list for the next
+    series (tools/perf/TODO.hardening), which is now in production.
+
+Changes since v1 (20260805133013.235016-1-acme@kernel.org):
+
+  - Rebased onto the current perf-tools-next head (fe3ab00d55aa56b4).
+
+  - All 12 patches now carry a Reviewed-by: Ian Rogers <irogers@google.com>.
+
+  - Applied the code-convention suggestions from Ian's review of v1:
+    - Patch "perf jitdump: Check snprintf return before computing header
+      size": the clamp now uses sizeof(event->mmap2.filename) instead of
+      PATH_MAX in both jit_repipe_code_load() and
+      jit_repipe_code_move(), tying the bound to the actual destination
+      buffer.
+    - Patch "perf jitdump: Use dirname() return value in jit_open()":
+      the strlcpy() bound uses sizeof(jd->dir) instead of PATH_MAX.
+    - A cosmetics-only remark about the include order of <limits.h> was
+      deliberately not applied.
+
+Issues fixed:
+
+  Validation and bounds checks:
+  - Validate code_size against both the record size and INT_MAX in
+    jit_repipe_code_load()
+  - Prevent integer underflow in the debug info size calculation
+  - Bounds-check the debug entry byte-swap loop
+  - Validate debug entries on the native (non-swap) path, matching the
+    existing byte-swap path checks
+  - Validate sym string NUL-termination in code load, bounding the
+    strlen() scan to the code blob
+  - Validate unwinding sizes against the record payload before allocating
+  - Check the snprintf() return before computing the header size, and
+    clamp against the actual buffer size
+
+  Stream and record handling:
+  - Fix the extended header read that always failed, causing records to
+    be misparsed
+  - Use dirname()'s return value in jit_open(), fixing ENOTDIR failures
+  - Fix funlockfile() being called on an unlocked stream in the jit_open()
+    error path
+
+  Resource management:
+  - Free the event in jit_repipe_code_move()
+  - Fix debug_data and unwinding_data leaks when records are overwritten
+
+Each patch includes a Fixes: tag pointing to the offending commit, dating
+back to jitdump mmap injection support (9b07e27f88b9cd78), source line
+info support (598b7c6919c7bbcc), and unwinding support
+(0284fecd13b6db3e), all from the original 2016 jitdump work.
+
+Testing: Built and tested on x86_64.  No existing tests cover jitdump
+parsing with malformed input; test suite expansion is left for future
+work.  The final series was re-reviewed after the fixes and the v1
+review (build-checked, Fixes: tags verified); no regressions found.
+
+Arnaldo Carvalho de Melo (12):
+  perf jitdump: Fix extended header read that always fails
+  perf jitdump: Fix debug_data and unwinding_data leaks
+  perf jitdump: Validate code_size against total_size in code load
+  perf jitdump: Prevent integer underflow in debug info size calculation
+  perf jitdump: Bounds-check debug entry byte-swap loop
+  perf jitdump: Check snprintf return before computing header size
+  perf jitdump: Fix funlockfile on unlocked stream in jit_open() error path
+  perf jitdump: Free event in jit_repipe_code_move()
+  perf jitdump: Use dirname() return value in jit_open()
+  perf jitdump: Validate debug entries on native (non-swap) path
+  perf jitdump: Validate sym string NUL-termination in code load
+  perf jitdump: Validate unwinding sizes against record payload
+
+ tools/perf/util/jitdump.c | 126 +++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 108 insertions(+), 18 deletions(-)
+
+base-commit: fe3ab00d55aa56b4d55cbc1150448f0aadd6732c
