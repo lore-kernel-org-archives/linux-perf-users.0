@@ -1,16 +1,16 @@
 Received: from one.firstfloor.org (one.firstfloor.org [65.21.254.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FE65521203;
-	Mon, 31 Aug 2026 15:07:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98B551FCDD;
+	Mon, 31 Aug 2026 15:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.254.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788188838; cv=none; b=h6koOpYj+GV53ZjmOhi+fpP5AFFYfeTPB4eJSymFP3A/D3yCmRWdb/4VjnFYcwopPyE+I7mWHILg2r9vr2GrYXm07LqO62dHlKTLegoXc1hNtjw2QbxWZO+UqxQPxEj9aqe24PoED8WO8wP9h3HWRCWpKweNho9FhY2D5qkHO7Q=
+	t=1788188839; cv=none; b=pKhcFqiycwTx9PyAgXRzqM/YOjLxMm+/crINGKX2dmSIJmKbGLnBLbdmSFPGaHU3fC6h+9toXYHnDHMmil/cKpJ269y01ZF1wA4rHxC4z/1PqaM9sGh5rbsC2JAnaCrRQtr5bHkz0SKcRqob1WTTFTKdxbicoEJ5lYp8tUyHasg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788188838; c=relaxed/simple;
-	bh=4sLw1UlxnQK6TFK1qI/BKqiOsQ2L7m/MoSzIdqNITg4=;
+	s=arc-20240116; t=1788188839; c=relaxed/simple;
+	bh=YAsUbMedo/cYlxB0fAU348GYw3PpXF0uKeUzTV2QlCM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hOPWfZq76HAnAVOT3NBhYC6gnE7udemHEbdNbJ8PF6YBhrvsOuiO+wIT7g+vXKbBdaevvVXSmlDt4u2Mj5xg4E9LJsbfxYKEQtxc64bWt9AdqOnhA2Djr4qqmJwo3cAFSKpLd5HuWLht4gwQWkd3R6lrSxDGqrhJteZEKpX5ncw=
+	 MIME-Version; b=cqu9ksOMxGZH3s4WCzeFCxWnKdACTi8sTCboTMr21DhClTD3VL3ieKGouUXatJwAHbLTXuS+R0I39YjgdDZoASBrKc1+mLJQl+92mABluv4G0BVvSlvAD0mQbyZ3NHGHsR7wUK97H0DQb9f/d2lOxKtUd5Lc83AKMG4eumpO7+I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=firstfloor.org; arc=none smtp.client-ip=65.21.254.221
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=firstfloor.org
@@ -18,10 +18,10 @@ Received: from firstfloor.org (c-73-11-123-161.hsd1.or.comcast.net [73.11.123.16
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by one.firstfloor.org (Postfix) with ESMTPSA id 2BD2563F9A;
+	by one.firstfloor.org (Postfix) with ESMTPSA id 1A18D63F98;
 	Mon, 31 Aug 2026 17:07:11 +0200 (CEST)
 Received: by firstfloor.org (Postfix, from userid 1000)
-	id 321E21622B9; Mon, 31 Aug 2026 08:07:03 -0700 (PDT)
+	id 282AB1622A2; Mon, 31 Aug 2026 08:07:03 -0700 (PDT)
 From: Andi Kleen <ak@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: mhiramat@kernel.org,
@@ -33,9 +33,9 @@ Cc: mhiramat@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	adrian.hunter@intel.com,
 	Andi Kleen <ak@kernel.org>
-Subject: [RFC v1 17/19] ptwrite uprobes / perf tools probe: Add support of ptwrite probes
-Date: Mon, 31 Aug 2026 08:04:53 -0700
-Message-ID: <20260831150651.1134594-18-ak@kernel.org>
+Subject: [RFC v1 15/19] ptwrite uprobes: Add a tutorial and overview documentation
+Date: Mon, 31 Aug 2026 08:04:51 -0700
+Message-ID: <20260831150651.1134594-16-ak@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260831150651.1134594-1-ak@kernel.org>
 References: <20260831150651.1134594-1-ak@kernel.org>
@@ -47,185 +47,424 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add a --ptwrite option to perf probe to enable ptwrite probes. It is mainly
-identical to the normal uprobes support, but knows about the new ptw:
-probe syntax.
+No code changes.
 
 Assisted-by: omp:gpt-5.6-luna
 Signed-off-by: Andi Kleen <ak@kernel.org>
 ---
- tools/perf/Documentation/perf-probe.txt |  6 ++++++
- tools/perf/builtin-probe.c              | 17 ++++++++++++++++-
- tools/perf/util/probe-event.c           | 18 +++++++++++++-----
- tools/perf/util/probe-event.h           |  2 ++
- 4 files changed, 37 insertions(+), 6 deletions(-)
+ Documentation/trace/index.rst           |   1 +
+ Documentation/trace/ptwrite-uprobes.rst | 390 ++++++++++++++++++++++++
+ 2 files changed, 391 insertions(+)
+ create mode 100644 Documentation/trace/ptwrite-uprobes.rst
 
-diff --git a/tools/perf/Documentation/perf-probe.txt b/tools/perf/Documentation/perf-probe.txt
-index 2e5790325430..859f7ec42422 100644
---- a/tools/perf/Documentation/perf-probe.txt
-+++ b/tools/perf/Documentation/perf-probe.txt
-@@ -136,6 +136,12 @@ OPTIONS
- --max-probes=NUM::
- 	Set the maximum number of probe points for an event. Default is 128.
+diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+index f4058e8e92e3..4ae7b158804b 100644
+--- a/Documentation/trace/index.rst
++++ b/Documentation/trace/index.rst
+@@ -90,6 +90,7 @@ interactions.
+ .. toctree::
+    :maxdepth: 1
  
-+--ptwrite::
-+	Create a ptwrite uprobe (with -x). The probe writes its values
-+	into the Intel PT trace stream instead of entering the kernel,
-+	which is faster. Requires an Intel PT/PTWRITE CPU and a kernel
-+	with ptwrite uprobe support.
++   ptwrite-uprobes
+    user_events
+    uprobetracer
+ 
+diff --git a/Documentation/trace/ptwrite-uprobes.rst b/Documentation/trace/ptwrite-uprobes.rst
+new file mode 100644
+index 000000000000..79ab35824b93
+--- /dev/null
++++ b/Documentation/trace/ptwrite-uprobes.rst
+@@ -0,0 +1,390 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- --target-ns=PID:
- 	Obtain mount namespace information from the target pid.  This is
- 	used when creating a uprobe for a process that resides in a
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index a67b565278ae..f6c90bf9cd0d 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -40,6 +40,7 @@ static struct {
- 	int command;	/* Command short_name */
- 	bool list_events;
- 	bool uprobes;
-+	bool ptwrite;
- 	bool target_used;
- 	int nevents;
- 	struct perf_probe_event events[MAX_PROBES];
-@@ -62,6 +63,7 @@ static int parse_probe_event(const char *str)
- 	}
- 
- 	pev->uprobes = params->uprobes;
-+	pev->ptwrite = params->ptwrite;
- 	if (params->target) {
- 		pev->target = strdup(params->target);
- 		if (!pev->target)
-@@ -73,9 +75,15 @@ static int parse_probe_event(const char *str)
- 
- 	/* Parse a perf-probe command into event */
- 	ret = parse_perf_probe_command(str, pev);
-+	if (ret < 0)
-+		return ret;
-+	if (pev->ptwrite && pev->point.retprobe) {
-+		pr_err("Error: ptwrite probes are entry-only (no %%return).\n");
-+		return -EINVAL;
-+	}
- 	pr_debug("%d arguments\n", pev->nargs);
- 
--	return ret;
-+	return 0;
- }
- 
- static int params_add_filter(const char *str)
-@@ -532,6 +540,8 @@ __cmd_probe(int argc, const char **argv)
- 		    "be more verbose (show parsed arguments, etc)"),
- 	OPT_BOOLEAN('q', "quiet", &quiet,
- 		    "be quiet (do not show any warnings or messages)"),
-+	OPT_BOOLEAN(0, "ptwrite", &params->ptwrite,
-+		    "create trap-free ptwrite uprobes (requires -x)"),
- 	OPT_CALLBACK_DEFAULT('l', "list", NULL, "[GROUP:]EVENT",
- 			     "list up probe events",
- 			     opt_set_filter_with_command, DEFAULT_LIST_FILTER),
-@@ -733,6 +743,11 @@ __cmd_probe(int argc, const char **argv)
- 			parse_options_usage(NULL, options, "x", true);
- 			return -EINVAL;
- 		}
-+		if (params->ptwrite && !params->uprobes) {
-+			pr_err("  Error: --ptwrite requires -x.\n");
-+			parse_options_usage(NULL, options, "x", true);
-+			return -EINVAL;
-+		}
- 
- 		ret = perf_add_probe_events(params->events, params->nevents);
- 		if (ret < 0) {
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 11ae4a09412c..0417fa5ccfbe 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -1930,6 +1930,7 @@ int parse_probe_trace_command(const char *cmd, struct probe_trace_event *tev)
- 		ret = -EINVAL;
- 		goto out;
- 	}
-+	tev->ptwrite = !strcmp(fmt1_str, "ptw");
- 	pr = fmt1_str[0];
- 	tev->group = strdup(fmt2_str);
- 	tev->event = strdup(fmt3_str);
-@@ -1937,7 +1938,8 @@ int parse_probe_trace_command(const char *cmd, struct probe_trace_event *tev)
- 		ret = -ENOMEM;
- 		goto out;
- 	}
--	pr_debug("Group:%s Event:%s probe:%c\n", tev->group, tev->event, pr);
-+	pr_debug("Group:%s Event:%s probe:%c%s\n", tev->group, tev->event, pr,
-+		 tev->ptwrite ? " (ptwrite)" : "");
- 
- 	tp->retprobe = (pr == 'r');
- 
-@@ -2260,9 +2262,11 @@ char *synthesize_probe_trace_command(struct probe_trace_event *tev)
- 	if (strbuf_init(&buf, 32) < 0)
- 		return NULL;
- 
--	if (strbuf_addf(&buf, "%c:%s/%s ", tp->retprobe ? 'r' : 'p',
--			tev->group, tev->event) < 0)
--		goto error;
-+	if (tev->ptwrite)
-+		err = strbuf_addf(&buf, "ptw:%s/%s ", tev->group, tev->event);
-+	else
-+		err = strbuf_addf(&buf, "%c:%s/%s ", tp->retprobe ? 'r' : 'p',
-+				  tev->group, tev->event);
- 
- 	if (tev->uprobes)
- 		err = synthesize_uprobe_trace_def(tp, &buf);
-@@ -2274,7 +2278,6 @@ char *synthesize_probe_trace_command(struct probe_trace_event *tev)
- 
- 	if (err >= 0)
- 		ret = strbuf_detach(&buf, NULL);
--error:
- 	strbuf_release(&buf);
- 	return ret;
- }
-@@ -2996,6 +2999,7 @@ static int __add_probe_trace_events(struct perf_probe_event *pev,
- 	ret = 0;
- 	for (i = 0; i < ntevs; i++) {
- 		tev = &tevs[i];
-+		tev->ptwrite = pev->ptwrite;
- 		up = tev->uprobes ? 1 : 0;
- 		if (fd[up] == -1) {	/* Open the kprobe/uprobe_events */
- 			fd[up] = __open_probe_file_and_namelist(up,
-@@ -3610,6 +3614,8 @@ int convert_perf_probe_events(struct perf_probe_event *pevs, int npevs)
- 
- 	/* Loop 1: convert all events */
- 	for (i = 0; i < npevs; i++) {
-+		int j;
++===============
++ptwrite uprobes
++===============
 +
- 		/* Init kprobe blacklist if needed */
- 		if (!pevs[i].uprobes)
- 			kprobe_blacklist__init();
-@@ -3618,6 +3624,8 @@ int convert_perf_probe_events(struct perf_probe_event *pevs, int npevs)
- 		if (ret < 0)
- 			return ret;
- 		pevs[i].ntevs = ret;
-+		for (j = 0; j < pevs[i].ntevs; j++)
-+			pevs[i].tevs[j].ptwrite = pevs[i].ptwrite;
- 	}
- 	/* This just release blacklist only if allocated */
- 	kprobe_blacklist__release();
-diff --git a/tools/perf/util/probe-event.h b/tools/perf/util/probe-event.h
-index 71905ede0207..5fbed6c6a78a 100644
---- a/tools/perf/util/probe-event.h
-+++ b/tools/perf/util/probe-event.h
-@@ -60,6 +60,7 @@ struct probe_trace_event {
- 	int				nargs;	/* Number of args */
- 	int				lang;	/* Dwarf language code */
- 	bool				uprobes;	/* uprobes only */
-+	bool				ptwrite;	/* ptwrite uprobe (trap-free) */
- 	struct probe_trace_arg		*args;	/* Arguments */
- };
- 
-@@ -99,6 +100,7 @@ struct perf_probe_event {
- 	int			nargs;	/* Number of arguments */
- 	bool			sdt;	/* SDT/cached event flag */
- 	bool			uprobes;	/* Uprobe event flag */
-+	bool			ptwrite;	/* ptwrite uprobe (trap-free) */
- 	char			*target;	/* Target binary */
- 	struct perf_probe_arg	*args;	/* Arguments */
- 	struct probe_trace_event *tevs;
++.. contents:: :local:
++
++Introduction
++============
++
++A classic uprobe enters the kernel for each probe. That causes overhead
++when the probe is executed frequently.
++
++ptwrite uprobes instead rely on hardware tracing that doesn't enter
++the kernel. It uses the ``PTWRITE`` instruction available on modern
++Intel CPUs to log data to the Processor Trace buffer. Processor
++Trace is configured and recorded by Linux perf.
++
++There are some limitations of the scheme (see below)
++but it is a lot faster than classic uprobes.
++
++Performance
++===========
++
++Measured on the development kernel in a KVM guest (2 vCPUs) running
++on a AlderLake laptop with a probe on a hot function called in a
++tight loop.
++
++    +---------------------------------------+----------------------+--------------------+------------------------+
++    | mode (2-arg probe)                    | PT off (% of classic)| full (% of classic)| snapshot (% of classic)|
++    +=======================================+======================+====================+========================+
++    | classic uprobe (tracefs)              | 100%                 | 100%               | 100%                   |
++    | classic uprobe (perf probe, trace r.) | 104%                 |                    |                        |
++    | classic uprobe (perf probe, perf ring)|                      | 156%               |                        |
++    | ptwrite %nopace                       | 2%                   | 2%                 | 8%                     |
++    | ptwrite default                       | 7%                   | 7%                 | 11%                    |
++    | perf probe ``--ptwrite``              | 7%                   | 7%                 | 12%                    |
++    +---------------------------------------+----------------------+--------------------+------------------------+
++
++The percentages are normalized to the classic tracefs uprobe in each
++recording mode; lower values represent lower cost per hit.
++
++A ``%nopace`` probe costs roughly **2%** as much as a classic uprobe
++with PT off (about 98% less). The default pacing (on unless ``%nopace``
++is given) costs roughly 7% as much (about 93% less) in the same mode.
++The default pacing slows down the probes to avoid data loss when they are
++too tightly spaced.
++
++``snapshot`` refers to ``perf record`` snapshot mode (``-S``) which doesn't
++save the PT ring buffer constantly.
++
++
++Requirements
++============
++
++- An Intel CPU with Intel PT and PTWRITE. When running as a guest Intel PT
++  needs to be exposed to the guest.
++  PT/PTWRITE are available when ``/sys/devices/intel_pt/format/ptw`` exists.
++- A kernel with ``CONFIG_UPROBE_EVENTS`` enabled.
++
++Quick start (tracefs)
++=====================
++
++Pick a probe site, register a probe at its file offset, enable it, run the
++program under PT, decode.
++
++Example 1: probe an existing instruction (punning)
++----------------------------------------------------
++
++Build a small program and probe the entry of ``main``::
++
++    $ cat > t.c <<'EOF'
++    #include <stdio.h>
++
++    __attribute__((noinline, noipa)) static unsigned long
++    target(unsigned long a, unsigned long b)
++    {
++        return a * 31 + b;
++    }
++
++    int main(void)
++    {
++        unsigned long i, acc = 0;
++        for (i = 0; i < 100; i++)
++            acc += target(i, i + 1);
++        printf("acc=%lu\n", acc);
++        return 0;
++    }
++    EOF
++    $ gcc -O2 -no-pie -fno-inline -o t t.c
++
++``objdump -F`` prints the file offset of every instruction::
++
++    $ objdump -d -F t | sed -n "/<main> (File Offset/,+1p"
++    0000000000401040 <main> (File Offset: 0x1040):
++      401040:	55			push   %rbp
++
++``1040`` is the file offset of ``main``'s first instruction, exactly
++what the probe line needs. Register the probe there, enable it, run
++the program under PT and decode::
++
++    # echo "ptw:e t:0x1040 %di %si" > /sys/kernel/tracing/uprobe_events
++    # echo 1 > /sys/kernel/tracing/events/uprobes/e/enable
++    # perf record -e intel_pt/ptw=1,fup_on_ptw=1/u -o perf.data ./t
++    # perf script --itrace=qwe -s uprobe-ptwrite-decode.py -i perf.data
++    record 1: event=uprobes/e id=0x6c2 args=[1, 140728356930600]
++    summary: records=1 dropped=0 stray=0 unknown=0 errors=0
++
++Since it isn't a nop the instruction is "punned": byte 0 is changed
++to a jump to a trampoline that logs the data and returns to the
++previous execution.
++
++Punning is a probabilistic method that depends on the existing
++instruction bytes and the placement of the executable in memory.
++It has a high chance of success on PIE/PIC binaries, but tends
++to work poorly on non PIE main executables.
++
++When punning is not possible the probe is rejected at install
++time. Options in this case:
++- Move the probe site to a different instruction which may work.
++- Rebuild with -fPIE if it's a main problem not using PIE.
++- Enable or disable /proc/sys/kernel/randomize_va_space. If the
++  randomization is enabled it may also just work on a rerun of
++  the program.
++- Fall back to a classic uprobes
++- Insert a 5 byte nop which is always supported (see below)
++
++Example 2: an explicit 5-byte NOP (inline assembly)
++---------------------------------------------------
++
++Add a 5-byte NOP at the probe point::
++
++    $ cat > t.c <<'EOF'
++    #include <stdio.h>
++
++    __attribute__((noinline)) static unsigned long
++    target(unsigned long a, unsigned long b)
++    {
++        asm volatile(".byte 0x0f, 0x1f, 0x44, 0x00, 0x00"); /* nopl */
++        return a * 31 + b;
++    }
++
++    int main(void)
++    {
++        unsigned long i, acc = 0;
++        for (i = 0; i < 100; i++)
++            acc += target(i, i + 1);
++        printf("acc=%lu\n", acc);
++        return 0;
++    }
++    EOF
++    $ gcc -O2 -no-pie -o t t.c
++
++    $ objdump -d -F t | sed -n "/<target> (File Offset/,+1p"
++    0000000000401170 <target> (File Offset: 0x1170):
++      401170:	0f 1f 44 00 00		nopl   0x0(%rax,%rax,1)
++
++Probe it exactly like example 1::
++
++    # echo "ptw:e t:0x1170 %di %si" > /sys/kernel/tracing/uprobe_events
++    # echo 1 > /sys/kernel/tracing/events/uprobes/e/enable
++    # perf record -e intel_pt/ptw=1,fup_on_ptw=1/u -o perf.data ./t
++    # perf script --itrace=qwe -s uprobe-ptwrite-decode.py -i perf.data
++    record 99: event=uprobes/e id=0x6c2 args=[98, 99]
++    record 100: event=uprobes/e id=0x6c2 args=[99, 100]
++    summary: records=100 dropped=0 stray=0 unknown=0 errors=0
++
++Configuring ptwrite uprobes
++===========================
++
++ptwrite uprobes is configured like normal uprobes by writing
++commands to ``/sys/kernel/tracing/uprobe_events``.
++
++  ptw[:[GRP/][EVENT]] PATH:OFFSET [FETCHARGS] : set a ptwrite probe
++  -:[GRP/][EVENT]                             : clear a probe
++
++  GRP      : group name. If omitted, "uprobes" is the default (the
++             event appears under events/uprobes/).
++  EVENT    : event name. If omitted, one is generated from PATH+OFFSET.
++  PATH     : path to an executable or a library.
++  OFFSET   : file offset of the probe site (0x-prefixed hex, see above).
++  FETCHARGS: probe arguments, up to 8 (see "Argument syntax" below).
++
++After creating the ptwrite uprobe it becomes available with its name
++in ``/sys/kernel/tracing/uprobe_events``. There it can be enabled
++by writing 1 to its enable field. However it only logs data
++when a Linux perf PT recording session with ptw=1 is active.
++
++perf probe
++----------
++
++``perf probe --ptwrite -x <file>`` creates ptwrite uprobes instead of
++the classic trap-based ones. The example below uses SDT probes.
++
++(this requires installing systemtap-devel or an equivalent package)
++
++    $ cat > t.c <<'EOF'
++    #include <stdio.h>
++    #include <sys/sdt.h>
++    __attribute__((noinline, noclone)) static unsigned long
++    target(unsigned long a, unsigned long b)
++    {
++        unsigned long local = a * 2;
++        STAP_PROBE1(test, rarg, a);
++        STAP_PROBE1(test, carg, 42);
++        STAP_PROBE2(test, marg, &local, b);
++        return a * 31 + b;
++    }
++    int main(void)
++    {
++        unsigned long i, acc = 0;
++        for (i = 0; i < 20; i++) {
++            acc += target(i, i + 1);
++            asm volatile("pause");
++        }
++        printf("acc=%lu\n", acc);
++        return 0;
++    }
++    EOF
++    $ gcc -O2 -no-pie -o t t.c
++
++The first probe point (``rarg``) is a nop 9 bytes into ``target``::
++
++    $ objdump -d t | sed -n "/<target>:/,+3p"
++    0000000000401180 <target>:
++      401180:	48 8d 04 3f		lea    (%rdi,%rdi,1),%rax
++      401184:	48 89 44 24 f8		mov    %rax,-0x8(%rsp)
++      401189:	90			nop
++
++Probe it with ``perf probe --ptwrite`` using the function+offset
++form, then enable, capture and delete it like any ptwrite probe::
++
++    $ perf probe --ptwrite -x ./t --add "target+9 %di %si"
++    Added new event:
++      probe_t:target      (on target+9 in ./t with %di %si)
++
++    # the tracefs line it wrote:
++    # ptw:probe_t/target ./t:0x1189 arg1=%di arg2=%si
++
++    # echo 1 > /sys/kernel/tracing/events/probe_t/target/enable
++    # perf record -e intel_pt/ptw=1,fup_on_ptw=1/u -o perf.data ./t
++    # perf script --itrace=qwe -s uprobe-ptwrite-decode.py -i perf.data
++    record 1: event=probe_t/target id=0x6a9 args=[0, 1]
++    record 20: event=probe_t/target id=0x6a9 args=[19, 20]
++    summary: records=20 dropped=0 stray=0 unknown=0 errors=0
++    # perf probe -d probe_t:target
++
++A ``nop`` instruction, as used by SDT probes, is not guaranteed to
++be ptwrite patchable. It needs a 5-byte NOP, but it can
++often be punned. If punning fails, the kernel reports
++``failed to install`` and the probe has to be moved to another site.
++
++GCC's ``-fpatchable-function-entry=5`` may emit five one-byte NOPs.
++To use that site, add ``%multinop`` to the tracefs probe offset::
++
++    # echo "ptw:e t:0x1170%multinop %di %si" > /sys/kernel/tracing/uprobe_events
++
++The five-byte run must start at an 8-byte-aligned address because it is
++patched with an atomic eight-byte store. An unaligned ``%multinop`` site is
++rejected; without ``%multinop``, the run is treated as a pun and may not
++always succeed.
++
++perf probe uses the standard argument syntax for the ptwrite subset
++(registers, ``$stack``/``$stackN``, ``+disp(%reg)`` memory reads, and
++``\0x2a``-style constants). Strings, arrays and typed suffixes are not
++supported by the ptwrite stub and are rejected by the kernel.
++``%return`` is refused (ptwrite probes are entry-only), and the mode
++requires ``-x``. The probes are enabled, captured and deleted like
++classic probes (``perf probe -l``, ``perf probe -d``).
++They carry the default (LFENCE) pacing. ``%nopace`` cannot be selected
++through perf probe. Write the tracefs line by hand for that.
++
++Argument syntax
++---------------
++
++ptwrite uprobes only support a limited number of argument types
++compared to classic uprobes.
++
++``ptw:<name> <path>:<offset> <arg> ... [options]`` where each ``<arg>`` is one
++of:
++
++- ``%di``, ``%si``, ``%ax`` ...: a live register.
++- ``\IMM``: a fixed constant (stored in the stub), e.g. ``\0x42``.
++- ``$stack``: the stack pointer value (never faults).
++- ``$stackN``: the Nth stack slot (``[%rsp + 8N]``). ``u64`` uses an
++  8-byte load on the fault-fixup path; ``u32``/``s32``/``x32`` use a 4-byte
++  load.
++- ``+<disp>(%reg)``: read memory at ``[reg + disp]``. ``u64`` uses an
++  8-byte load; ``u32``/``s32``/``x32`` use a 4-byte load (``ptwritel``).
++  A bad address writes ``0``.
++
++Options
++-------
++
++``%nopace`` disables artificial slowdown of the probes. This can cause
++data loss when they are tightly spaced or have many arguments, but
++speeds up the probes (see the benchmark section above)
++
++``%multinop`` lets users probe a 5-byte nop sequence that is not one
++instruction. A program could jump to a later nop, which would break when
++the probe rewrites the site.
++
++However there is a common case where gcc's -fpatchable-function-entry=5
++generates 5 nops for each function that are convenient points
++for patching, and nobody jumps into the middle of them.
++
++The 5-byte single nop sequence must be aligned to 8 bytes.
++
++
++The encoding format
++===================
++
++Each probe writes a header and the arguments to the PT stream.
++
++The header is a 64-bit word. Each argument is one PTWRITE payload exposed by
++perf as a ``u64`` value.
++
++    header word:      bits 63..48  event id (matches the tracefs id in sysfs)
++                      bits 47..40  number of argument words
++                      bits 39..0   fixed magic 0x5054525731 ("PTRW1")
++    arguments:        one PTWRITE payload per FETCHARG
++
++If the program itself also executes own ``PTWRITE``, those values mix with the
++uprobe output in the stream. The decoder uses the header magic to identify
++uprobe records. Other values are printed as ``manual ptwrite:`` lines (with
++their IP when ``fup_on_ptw`` is set) and counted in the summary's ``stray``
++field.
++
++To also print the decoded branch stream alongside the records, add
++``b`` to the itrace options and drop the ``q``
++
++    # ``perf script --itrace=web -s uprobe-ptwrite-decode.py -i perf.data``
++
++Each decoded branch prints as a ``branch:`` line (from => to, with
++symbols where resolvable), interleaved with the probe records and any
++manual ptwrites in delivery order.
++
++Other events in the recording, including classic uprobes, tracepoints,
++and sample events, are printed as ``event:`` lines unless disabled
++by the decoder.
++
++Unsupported instructions for probes
++===================================
++
++The following instructions are always refused for instrumentation::
++
++- Traps: ``int3``, ``int1``, ``int imm8``, ``into``, ``iret``
++  because they save the IP.
++- System instructions: ``syscall``, ``sysenter``, ``sysexit``
++  for similar reasons.
++- Far control flow: ``jmp far``, ``call far``, and the indirect far
++  forms (call-far, jmp-far).
++- Relative branches: ``jmp rel8/rel32``, ``jcc rel8/rel32``,
++  ``loop*``, ``jecxz/jrcxz`` (target-inside-window, see below), and
++  ``call rel32`` (its return address would point into the stub).
++- Indirect ``call``: the return-address problem applies
++  to the register/memory forms too.
++- Relative branches (``jmp``/``jcc``/``loop`` with a rel8/rel32
++  displacement, and ``call rel32``) are refused because the trampoline
++  may not be able to reach the target.
++- If the 5 byte area of the instruction crosses a page boundary it
++  currently cannot be probed (this applies to nop probes too).
++
++Other restrictions
++==================
++
++- Each probe needs 4K of process memory and roughly 1K extra in the kernel.
++- The probe pages are currently only freed on process exit.
++- Return probes (``%return``/``r:``): ptwrite probes are entry-only
++  and ``%return`` is refused.
++- The SDT reference counter (``(REF)``).
++- EBPF, perf actions, filters, event predicates, histograms, triggers,
++  profiling and similar advanced trace features are all not supported
++  since they would require a kernel entry. However some basic filtering
++  is possible at the perf recording level, for example limit the scope
++  to a CPU or to a process. PT also supports address filter ranges
++  that allow filtering by IP.
++- More than one probe at the same site
++- Only 4 and 8 byte memory references are supported.
++- Fetch argument variety: classic probes fetch strings
++  (``:string``/``:ustring``), arrays, bitfields, nested derefs,
++  ``$retval``, ``$comm`` and ``$argN``. Ptwrite probes only take live
++  registers, ``\IMM`` constants, ``$stack``/``$stackN`` and
++  ``+disp(%reg)`` memory reads. Memory reads are 8-byte words for ``u64``
++  and 4-byte words for ``u32``/``s32``/``x32``.
++  (some of this could be relaxed, but it would require a writable stack)
++- Like normal uprobes one byte of the instruction stream is overwritten
++  (or 5 bytes for the nop case). If the program reads its own code
++  it might see different values.
 -- 
 2.54.0
 
