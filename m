@@ -1,16 +1,16 @@
 Received: from one.firstfloor.org (one.firstfloor.org [65.21.254.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3086051E428;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D43951E434;
 	Mon, 31 Aug 2026 15:07:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.254.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788188834; cv=none; b=qP54DJCrytMNfw0hmpq3CSVhy704bBcMRbbb3t2tJDQ2kYg8rBe4tnnxVsiNR/Gj+3grd1cliVVIfN8CbFKfB1p67BsUGEjZP8EijPHvZ3OunfpbA2Xvodhrc8RF6od0fDs2rFByBk0uZVnv/DDrVfJAdZC8kR2f2yi2kqXPqDY=
+	t=1788188834; cv=none; b=bFObyd//tBKrxx4YyoPnLKR6yZgmP9geVZXTg8Gb1qT/Y/nsQ7wPdpVuU2IM2bo/F1lux2Sv0+crZRHCIWLLXxJIE081FfevBtXQ2USr2boiCV3UUJDpLNMrdMkNNnpW+Rf+3SiSg5J8UW4guEZnG/XqMIYMSVlNCjopnSUj6cY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1788188834; c=relaxed/simple;
-	bh=VYLjx6VyYm+XRPwrP0rI1+ddnJWbseuSLhMTigTsJSI=;
+	bh=3mC+caGRf+f/0b51Gt9CZ3eMuviqKDBVm8omEevmghY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gMk6QVwaBloCHTJKdpH5nirxNeYQIzYKXfKbcP1426vXcj3C+AKvlEgcHPaEiGmJvJKnTOP4xRbMOyRRW2KQoFd9OqDRs1F8Mo6X5OroWGT8qZOWr/kEppfPe14GFcWx3ij+3jjRzboUC5nmfThtqq0t1dzZRjq0/Nh2OKTbWQw=
+	 MIME-Version; b=ECYwAhzGp/pI0m44XP1x/l0rjFcd/g06LDYWv9Ddz0eJXIwd23jQVISzxdHrJWqmuC+n9T7ZUoaO0u2vP9/Cb79yOoWGOMA2tofakBjoz5xaZsefgNvRrNI9NfESeA0Jsgw+f8i1lFJ/xztTUAKxkVZv9T894nbn+bOBmMTp6yQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=firstfloor.org; arc=none smtp.client-ip=65.21.254.221
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=firstfloor.org
@@ -18,10 +18,10 @@ Received: from firstfloor.org (c-73-11-123-161.hsd1.or.comcast.net [73.11.123.16
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by one.firstfloor.org (Postfix) with ESMTPSA id 9A4E863F87;
+	by one.firstfloor.org (Postfix) with ESMTPSA id 7FFB663F86;
 	Mon, 31 Aug 2026 17:07:08 +0200 (CEST)
 Received: by firstfloor.org (Postfix, from userid 1000)
-	id 1C00D162297; Mon, 31 Aug 2026 08:07:03 -0700 (PDT)
+	id 0C65B162265; Mon, 31 Aug 2026 08:07:03 -0700 (PDT)
 From: Andi Kleen <ak@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: mhiramat@kernel.org,
@@ -33,9 +33,9 @@ Cc: mhiramat@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	adrian.hunter@intel.com,
 	Andi Kleen <ak@kernel.org>
-Subject: [RFC v1 12/19] ptwrite uprobes: Add pacing to the probes
-Date: Mon, 31 Aug 2026 08:04:48 -0700
-Message-ID: <20260831150651.1134594-13-ak@kernel.org>
+Subject: [RFC v1 06/19] ptwrite uprobes: Add a sample module to exercise interface
+Date: Mon, 31 Aug 2026 08:04:42 -0700
+Message-ID: <20260831150651.1134594-7-ak@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260831150651.1134594-1-ak@kernel.org>
 References: <20260831150651.1134594-1-ak@kernel.org>
@@ -47,258 +47,289 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When PTWRITEs are too tightly spaced they can lose data. While the decoder
-makes some effort to recover from this it can be still annoying for the
-user. This patch adds LFENCEs between the individual instructions to
-mimimize (mostly avoid) this problem. It can still happen with parallel
-branch collection or if a high frequency of timing packets are configured.
-The extend also depends on the core-type.
+Add a basic test module and a test program for uprobes ptwrite.
 
-It can be still disabled with %nopace. This is useful when the user knows
-the probes are not too tightly spaced. It is usually still needed
-with many arguments.
+The module allows to configure and register a ptwrite uprobe in a
+executable.
 
-This patch generates LFENCEs for the probes unless disabled.
-
-Compared with %nopace, default pacing increases probe cost by roughly 272%
-with PT off, 227% with full tracing, and 48% in snapshot mode on Alder Lake.
+This for testing and not intended as a production interface.
 
 Assisted-by: omp:gpt-5.6-luna
 Signed-off-by: Andi Kleen <ak@kernel.org>
 ---
- arch/x86/include/asm/uprobes.h | 21 ++++++++---
- arch/x86/kernel/uprobes.c      | 64 +++++++++++++++++++++++++++++-----
- include/linux/uprobes.h        |  1 +
- kernel/trace/trace_uprobe.c    | 22 ++++++++++++
- 4 files changed, 94 insertions(+), 14 deletions(-)
+ samples/Kconfig                              |  13 ++
+ samples/Makefile                             |   1 +
+ samples/uprobe-ptwrite/Makefile              |  13 ++
+ samples/uprobe-ptwrite/test_prog.c           |  35 ++++
+ samples/uprobe-ptwrite/uprobe_ptwrite_test.c | 163 +++++++++++++++++++
+ 5 files changed, 225 insertions(+)
+ create mode 100644 samples/uprobe-ptwrite/Makefile
+ create mode 100644 samples/uprobe-ptwrite/test_prog.c
+ create mode 100644 samples/uprobe-ptwrite/uprobe_ptwrite_test.c
 
-diff --git a/arch/x86/include/asm/uprobes.h b/arch/x86/include/asm/uprobes.h
-index 4fc98eafbd5a..2800372b2f5a 100644
---- a/arch/x86/include/asm/uprobes.h
-+++ b/arch/x86/include/asm/uprobes.h
-@@ -29,12 +29,23 @@ enum {
- struct uprobe_xol_ops;
+diff --git a/samples/Kconfig b/samples/Kconfig
+index a75e8e78330d..47bbef5d3e76 100644
+--- a/samples/Kconfig
++++ b/samples/Kconfig
+@@ -322,6 +322,19 @@ config SAMPLE_HUNG_TASK
+ 	  Reading these files with multiple processes triggers hung task
+ 	  detection by holding locks for a long time (256 seconds).
  
- /*
-- * Stub block array size. Worst case = 250 B (8 MEM args, rsp bases, fault
-- * table); 288 leaves 38 B slack. A file-scope static_assert in
-- * arch/x86/kernel/uprobes.c re-derives the worst case; prepare() also
-- * enforces it with -E2BIG at runtime.
-+ * Stub block size. Conservative worst case is 298 bytes: 9-byte header,
-+ * one lead fence, eight 21-byte memory forms with one 3-byte fence each,
-+ * a 16-byte original-instruction copy, a 5-byte return jump, alignment,
-+ * and 66 bytes of data/fault metadata. 384 leaves room. A static_assert in
-+ * arch/x86/kernel/uprobes.c checks the bound; prepare() also checks it with
-+ * -E2BIG.
-  */
--#define UPROBE_PTWRITE_STUB_SIZE	288
-+#define UPROBE_PTWRITE_STUB_SIZE	384
++config SAMPLE_UPROBE_PTWRITE
++	tristate "Build ptwrite uprobe test module -- loadable module only"
++	depends on UPROBES && X86_64 && m
++	help
++	  Builds the minimal ptwrite uprobe prototype driver. It replaces
++	  a 5-byte NOP at a user-specified file offset with a jmp to a per-mm
++	  user-mode stub that emits the requested live registers / immediates
++	  with the PTWRITE instruction into an externally configured Intel PT
++	  stream (no kernel entry, no syscall, no single-step at probe-hit
++	  time). The companion userspace target is test_prog.c in the same
++	  directory; the module params (path/offset/args/event_id) select the
++	  probe site and the emitted values.
 +
-+/* the out-of-line original-instruction copy slot (x86 max insn length) */
-+#define UPROBE_PTWRITE_COPY_SIZE	MAX_UINSN_BYTES
+ source "samples/rust/Kconfig"
+ 
+ source "samples/damon/Kconfig"
+diff --git a/samples/Makefile b/samples/Makefile
+index 07641e177bd8..0c970d46653e 100644
+--- a/samples/Makefile
++++ b/samples/Makefile
+@@ -44,4 +44,5 @@ obj-$(CONFIG_SAMPLE_DAMON_WSSE)		+= damon/
+ obj-$(CONFIG_SAMPLE_DAMON_PRCL)		+= damon/
+ obj-$(CONFIG_SAMPLE_DAMON_MTIER)	+= damon/
+ obj-$(CONFIG_SAMPLE_HUNG_TASK)		+= hung_task/
++obj-$(CONFIG_SAMPLE_UPROBE_PTWRITE)	+= uprobe-ptwrite/
+ obj-$(CONFIG_SAMPLE_TSM_MR)		+= tsm-mr/
+diff --git a/samples/uprobe-ptwrite/Makefile b/samples/uprobe-ptwrite/Makefile
+new file mode 100644
+index 000000000000..086d84be6ad2
+--- /dev/null
++++ b/samples/uprobe-ptwrite/Makefile
+@@ -0,0 +1,13 @@
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# ptwrite uprobe prototype sample.
++#
++# Module build (in-tree or via make M=samples/uprobe-ptwrite):
++#   obj-$(CONFIG_SAMPLE_UPROBE_PTWRITE) += uprobe_ptwrite_test.o
++#
++# The userspace test target (test_prog) is built by the out-of-tree test
++# harness (see /home/oc/uprobe-ptwrite-test); the harness computes the file
++# offset of target()'s 5-byte NOP and passes it to the module's offset
++# parameter.
 +
++obj-$(CONFIG_SAMPLE_UPROBE_PTWRITE) += uprobe_ptwrite_test.o
+diff --git a/samples/uprobe-ptwrite/test_prog.c b/samples/uprobe-ptwrite/test_prog.c
+new file mode 100644
+index 000000000000..813841ce5020
+--- /dev/null
++++ b/samples/uprobe-ptwrite/test_prog.c
+@@ -0,0 +1,35 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Word pacing: insert this many LFENCEs between emitted ptwrite words and
-+ * before the first word, unless UPROBE_PTWRITE_FL_NO_LEAD_PACE is requested.
++ * test_prog - userspace target for the ptwrite uprobe test.
++ *
++ * target() carries a 5-byte NOP (nopl 0(%rax,%rax,1) = 0f 1f 44 00 00) at
++ * its entry. A probe installed at that file offset emits rdi/rsi (a, b)
++ * via PTWRITE. In the test loop a == i and b == i + 1.
 + */
-+#define UPROBE_PTWRITE_SERIALIZE_LFENCES	1	/* LFENCEs per word gap */
- 
- /*
-  * ptwrite probe state. The stub template (code + data slots) is built
-diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index e17e0397eaae..20557423690f 100644
---- a/arch/x86/kernel/uprobes.c
-+++ b/arch/x86/kernel/uprobes.c
-@@ -1278,6 +1278,25 @@ static int ptwrite_emit_riprel32(u8 *p, s32 disp)
- 	return 8;
- }
- 
-+static int ptwrite_emit_lfence(u8 *p)
++#ifndef noinline
++#define noinline __attribute__((noinline))
++#endif
++
++#include <stdio.h>
++
++static noinline unsigned long
++target(unsigned long a, unsigned long b)
 +{
-+	*p++ = 0x0f;
-+	*p++ = 0xae;
-+	*p++ = 0xe8;	/* lfence */
-+	return 3;
++	/* 5-byte NOP: nopl 0(%rax,%rax,1) = 0f 1f 44 00 00.
++	 * Emitted as raw bytes: the assembler would otherwise shrink
++	 * "nopl (%rax,%rax,1)" to the 4-byte form (0f 1f 04 00), which
++	 * the probe site validation rejects (jmp rel32 needs 5 bytes).
++	 */
++	asm volatile(".byte 0x0f, 0x1f, 0x44, 0x00, 0x00");
++	return a * 31 + b;
 +}
 +
-+/* the default pacing: one or more fences per word gap. */
-+static int ptwrite_emit_lfences(u8 *p)
++int main(void)
 +{
-+	int i;
++	unsigned long i, acc = 0;
 +
-+	for (i = 0; i < UPROBE_PTWRITE_SERIALIZE_LFENCES; i++)
-+		p += ptwrite_emit_lfence(p);
-+	return UPROBE_PTWRITE_SERIALIZE_LFENCES * 3;
++	for (i = 0; i < 2000; i++)
++		acc += target(i, i + 1);
++	printf("acc=%lu\n", acc);
++	return 0;
++}
+diff --git a/samples/uprobe-ptwrite/uprobe_ptwrite_test.c b/samples/uprobe-ptwrite/uprobe_ptwrite_test.c
+new file mode 100644
+index 000000000000..c3b9dd6bec16
+--- /dev/null
++++ b/samples/uprobe-ptwrite/uprobe_ptwrite_test.c
+@@ -0,0 +1,163 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * uprobe_ptwrite_test - minimal ptwrite uprobe prototype driver.
++ *
++ * Registers a trap-free ptwrite uprobe at a user-specified file offset and
++ * emits the requested live registers / immediates into an externally
++ * configured Intel PT stream (no kernel entry at probe-hit time):
++ *
++ *   perf record -e intel_pt/ptw=1,fup_on_ptw=1//u -o perf.data ./test_prog
++ *
++ * Usage (module params):
++ *   path=/path/to/prog   file to probe
++ *   offset=0xADDR        file offset of the probe site
++ *   args="r0,r1,i0x42"             comma-separated;
++ *                        r<N> = x86-64 GPR index 0..15,
++ *                        i<hex> = immediate constant,
++ *   event_id=0x1234      identifier carried in the PTW header word
++ */
++#include <linux/module.h>
++#include <linux/uprobes.h>
++#include <linux/fs.h>
++#include <linux/shmem_fs.h>
++
++static char *path = "/nonexistent";
++module_param(path, charp, 0444);
++MODULE_PARM_DESC(path, "path of the binary to probe");
++
++static ulong offset;
++module_param(offset, ulong, 0444);
++MODULE_PARM_DESC(offset, "file offset of the 5-byte NOP to probe");
++
++static ushort event_id = 0x1234;
++module_param(event_id, ushort, 0444);
++MODULE_PARM_DESC(event_id, "event id carried in the PTW header word");
++
++static char *args = "r0";
++module_param(args, charp, 0444);
++MODULE_PARM_DESC(args, "comma-separated args: r<N> GPR, i<hex> immediate, m<N>[:disp][:4|8] memory");
++
++static struct file *probe_file;
++static struct uprobe *probe;
++static struct uprobe_consumer consumer;
++static struct uprobe_ptwrite_desc desc;
++
++/* Never invoked: ptwrite probes do not trap. Satisfies the core contract. */
++static int noop_handler(struct uprobe_consumer *self, struct pt_regs *regs,
++			__u64 *data)
++{
++	return 0;
 +}
 +
++static int parse_probe_args(void)
++{
++	char *s, *p, *tok;
++	unsigned int n = 0;
 +
- bool arch_uprobe_ptwrite_supported(void)
- {
- 	u32 eax, ebx, ecx, edx;
-@@ -1359,15 +1378,19 @@ int arch_uprobe_ptwrite_fetch(struct uprobe_ptwrite_arg *a,
- 
- 
- /*
-- * Worst-case stub block: header ptwriteq (9) + max args of the largest form
-- * (MEM: 5 opcode + SIB + 4 disp + 2 short jmp + 9 fixup = 21 B) + final jmp
-- * (5) -> code; data: header + fault-word slots (16); fault table
-- * [nft][{start,end,fixup} x nft] (2 + 6*nft). Must fit UPROBE_PTWRITE_STUB_SIZE;
-- * prepare() also enforces it with -E2BIG at runtime.
-+ * Conservative worst-case stub block: code is 9-byte header plus one lead
-+ * fence, eight 21-byte memory forms plus one fence per argument, the
-+ * 16-byte original-instruction copy, and a 5-byte return jump, rounded up;
-+ * data and metadata add 16 + 2 + 6 * 8 bytes. This is 298 bytes with the
-+ * current fence count and must remain below UPROBE_PTWRITE_STUB_SIZE.
-  */
--static_assert((((9 + UPROBE_PTWRITE_MAX_ARGS * 21 + 5 + 7) & ~7) +
--	       16 + 2 + 6 * UPROBE_PTWRITE_MAX_ARGS) <= UPROBE_PTWRITE_STUB_SIZE,
--	       "worst-case ptwrite stub block exceeds UPROBE_PTWRITE_STUB_SIZE");
-+static_assert((((9 + UPROBE_PTWRITE_SERIALIZE_LFENCES * 3 +
-+		UPROBE_PTWRITE_MAX_ARGS * (21 +
-+			UPROBE_PTWRITE_SERIALIZE_LFENCES * 3) +
-+		UPROBE_PTWRITE_COPY_SIZE + 5 + 7) & ~7) +
-+		16 + 2 + 6 * UPROBE_PTWRITE_MAX_ARGS) <=
-+		UPROBE_PTWRITE_STUB_SIZE,
-+		"worst-case ptwrite stub block exceeds UPROBE_PTWRITE_STUB_SIZE");
- 
- static bool ptwrite_has_room(const u8 *base, const u8 *p, size_t len)
- {
-@@ -1375,6 +1398,7 @@ static bool ptwrite_has_room(const u8 *base, const u8 *p, size_t len)
- 		       sizeof(((struct uprobe_ptwrite_arch *)0)->stub) - len;
- }
- 
++	s = kstrdup(args, GFP_KERNEL);
++	if (!s)
++		return -ENOMEM;
 +
- #define PTW_NEED(_len) do { \
- 		if (!ptwrite_has_room(code, p, (_len))) \
- 			return -E2BIG; \
-@@ -1394,6 +1418,7 @@ int arch_uprobe_ptwrite_prepare(struct arch_uprobe *auprobe,
- 	unsigned int data_off, flt_off, ft_off;
- 	unsigned int hdr_off = 0;
- 	unsigned int imm_idx = 0, n_imm = 0, mem_idx = 0, n_mem = 0;
-+	bool paced = false;
- 	u64 hdr;
- 	int i;
- 
-@@ -1441,9 +1466,26 @@ int arch_uprobe_ptwrite_prepare(struct arch_uprobe *auprobe,
- 		}
- 	}
- 
-+	/* Slow down the probes to avoid PT overflow. */
-+#define PTW_NEED(_len) do { \
-+		if (!ptwrite_has_room(code, p, (_len))) \
-+			return -E2BIG; \
-+	} while (0)
++	p = s;
++	while ((tok = strsep(&p, ",")) != NULL) {
++		struct uprobe_ptwrite_arg *a;
 +
-+	paced = !(desc->flags & UPROBE_PTWRITE_FL_NO_LEAD_PACE);
-+	if (paced) {
-+		PTW_NEED(UPROBE_PTWRITE_SERIALIZE_LFENCES * 3);
-+		p += ptwrite_emit_lfences(p);
-+	}
-+
- 	/* header word emission (disp32 patched below) */
- 	PTW_NEED(9);
-+	hdr_off = p - code;
- 	p += ptwrite_emit_riprel(p, 0);
-+	if (paced) {
-+		PTW_NEED(UPROBE_PTWRITE_SERIALIZE_LFENCES * 3);
-+		p += ptwrite_emit_lfences(p);
-+	}
- 
- 	for (i = 0; i < desc->nargs; i++) {
- 		switch (desc->args[i].src) {
-@@ -1498,9 +1540,13 @@ int arch_uprobe_ptwrite_prepare(struct arch_uprobe *auprobe,
- 			break;
- 		}
- 		}
-+		if (paced && i + 1 < desc->nargs) {
-+			PTW_NEED(UPROBE_PTWRITE_SERIALIZE_LFENCES * 3);
-+			p += ptwrite_emit_lfences(p);
++		if (n >= UPROBE_PTWRITE_MAX_ARGS) {
++			pr_err("uprobe_ptwrite_test: too many args\n");
++			goto err;
 +		}
- 	}
- 
--	/* final jmp back to probe+5; rel32 patched per-mm at install */
-+	/* final jmp back to probe+len; rel32 patched per-mm at install */
- 	PTW_NEED(5);
- 	*p++ = 0xe9;
- 	if (p - code > U8_MAX)
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index b93ab24173c7..b39abd1b057d 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -210,6 +210,7 @@ enum uprobe_ptwrite_src {
- 
- /* uprobe_ptwrite_desc.flags */
- #define UPROBE_PTWRITE_FL_ALLOW_MEM	BIT(0) /* SRC_MEM args enabled */
-+#define UPROBE_PTWRITE_FL_NO_LEAD_PACE	BIT(1) /* don't slow down probes */
- #define UPROBE_PTWRITE_FL_ALLOW_NOP_RUN	BIT(2) /* accept five 1-byte NOPs */
- 
- struct uprobe_ptwrite_arg {
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index b54cc2057329..7625ee8c7efc 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -645,6 +645,7 @@ static int __trace_uprobe_create(int argc, const char **argv)
- 	enum probe_print_type ptype;
- 	bool is_return = false;
- 	bool is_ptwrite = false;
-+	bool is_nopace = false;
- 	bool is_nop_run = false;
- 	int i, ret, arg_start = 2;
- 
-@@ -732,6 +733,11 @@ static int __trace_uprobe_create(int argc, const char **argv)
- 
- 	/* Check if there is %return suffix */
- 	tmp = strchr(arg, '%');
-+	if (tmp && is_ptwrite && !strcmp(tmp, "%nopace")) {
-+		*tmp = '\0';
-+		is_nopace = true;
-+		tmp = NULL;
-+	}
- 	if (tmp && is_ptwrite) {
- 		if (!strcmp(tmp, "%multinop")) {
- 			*tmp = '\0';
-@@ -756,11 +762,20 @@ static int __trace_uprobe_create(int argc, const char **argv)
- 		trace_probe_log_err(arg - filename, BAD_UPROBE_OFFS);
- 		return ret;
- 	}
-+	if (is_ptwrite && arg_start < argc &&
-+	    !strcmp(argv[arg_start], "%nopace")) {
-+		is_nopace = true;
-+		arg_start++;
-+	}
- 	if (is_ptwrite) {
- 		while (arg_start < argc && !strcmp(argv[arg_start], "%multinop")) {
- 			is_nop_run = true;
- 			arg_start++;
- 		}
-+		if (arg_start < argc && !strcmp(argv[arg_start], "%nopace")) {
-+			is_nopace = true;
-+			arg_start++;
++		a = &desc.args[n];
++
++		a->size = 8;
++		if (tok[0] == 'r') {
++			unsigned long reg;
++
++			if (kstrtoul(tok + 1, 10, &reg) || reg > 15) {
++				pr_err("uprobe_ptwrite_test: bad reg '%s'\n", tok);
++				goto err;
++			}
++			a->src = UPROBE_PTW_SRC_REG;
++			a->reg = reg;
++		} else if (tok[0] == 'i') {
++			unsigned long long v;
++
++			if (kstrtoull(tok + 1, 0, &v)) {
++				pr_err("uprobe_ptwrite_test: bad imm '%s'\n", tok);
++				goto err;
++			}
++			a->src = UPROBE_PTW_SRC_IMM;
++			a->val = v;
++		} else {
++			pr_err("uprobe_ptwrite_test: bad arg '%s'\n", tok);
++			goto err;
 +		}
- 	}
- 
- 	if (argc - arg_start > MAX_TRACE_ARGS ||
-@@ -844,6 +859,8 @@ static int __trace_uprobe_create(int argc, const char **argv)
- 		tu->ptwrite_desc.nargs = argc;
- 		tu->ptwrite_desc.flags = is_nop_run ?
- 			UPROBE_PTWRITE_FL_ALLOW_NOP_RUN : 0;
-+		if (is_nopace)
-+			tu->ptwrite_desc.flags |= UPROBE_PTWRITE_FL_NO_LEAD_PACE;
- 		for (i = 0; i < argc; i++) {
- 			ret = ptwrite_compile_arg(tu, i);
- 			if (ret) {
-@@ -902,6 +919,11 @@ static int trace_uprobe_show(struct seq_file *m, struct dyn_event *ev)
- 			   trace_probe_group_name(&tu->tp),
- 			   trace_probe_name(&tu->tp), tu->filename,
- 			   (int)(sizeof(void *) * 2), tu->offset);
-+		if (tu->ptwrite_desc.flags & UPROBE_PTWRITE_FL_NO_LEAD_PACE) {
-+			seq_puts(m, "%nopace");
-+			if (tu->ptwrite_desc.flags & UPROBE_PTWRITE_FL_ALLOW_NOP_RUN)
-+				seq_putc(m, ' ');
-+		}
- 		if (tu->ptwrite_desc.flags & UPROBE_PTWRITE_FL_ALLOW_NOP_RUN)
- 			seq_puts(m, "%multinop");
- 	} else
++		n++;
++	}
++	if (!n || n > UPROBE_PTWRITE_MAX_ARGS) {
++		pr_err("uprobe_ptwrite_test: need 1..%d args\n",
++		       UPROBE_PTWRITE_MAX_ARGS);
++		goto err;
++	}
++	desc.nargs = n;
++	kfree(s);
++	return 0;
++err:
++	kfree(s);
++	return -EINVAL;
++}
++
++static int __init uprobe_ptwrite_test_init(void)
++{
++	struct inode *inode;
++	int ret;
++
++	desc.event_id = event_id;
++	ret = parse_probe_args();
++	if (ret)
++		return ret;
++
++	probe_file = filp_open(path, O_RDONLY, 0);
++	if (IS_ERR(probe_file))
++		return PTR_ERR(probe_file);
++
++	inode = file_inode(probe_file);
++	if (!inode->i_mapping->a_ops->read_folio &&
++	    !shmem_mapping(inode->i_mapping)) {
++		pr_err("uprobe_ptwrite_test: unsupported mapping\n");
++		ret = -EIO;
++		goto out_file;
++	}
++
++	consumer.handler = noop_handler;
++	consumer.ret_handler = NULL;
++	consumer.filter = NULL;
++
++	probe = uprobe_register_ptwrite(inode, probe_file, offset, &consumer, &desc);
++	if (IS_ERR(probe)) {
++		ret = PTR_ERR(probe);
++		pr_err("uprobe_ptwrite_test: register failed: %d\n", ret);
++		goto out_file;
++	}
++
++	pr_info("uprobe_ptwrite_test: probe %s+0x%lx, %u args, event_id=0x%x\n",
++		path, offset, desc.nargs, desc.event_id);
++	return 0;
++
++out_file:
++	fput(probe_file);
++	return ret;
++}
++
++static void __exit uprobe_ptwrite_test_exit(void)
++{
++	uprobe_unregister_nosync(probe, &consumer);
++	uprobe_unregister_sync();
++	fput(probe_file);
++	pr_info("uprobe_ptwrite_test: unregistered\n");
++}
++
++module_init(uprobe_ptwrite_test_init);
++module_exit(uprobe_ptwrite_test_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("ptwrite uprobes testing driver");
 -- 
 2.54.0
 
