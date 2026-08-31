@@ -1,71 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from va-2-43.ptr.blmpb.com (va-2-43.ptr.blmpb.com [209.127.231.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 812B54334A5
-	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 13:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E54A41D225
+	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 13:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.231.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788183090; cv=none; b=D4a6TirQiVxLUkUtQJPRB01R4lCCDd5E+HxoddQl7+MD5X6oO8T0TdblsT/AONoimQrF7aNMI/yxDGWdYDuXJEZ09F2ZEydCo0/p0/FZh0/O1JaXTSUjMYnQBfXQD7/p+3Zh6t6tXo5eJKSF/i4ab+sTOKS4FJv/Xv3/ZvG2bbc=
+	t=1788183190; cv=none; b=FNUYmutEJSMI27IqRoxIqxj1VomFLRumbYhBfg2ggZz0fCvWCtnk28nnvLAZF6GKRyECLs2nFVK6Vv8siEz6tyW9Rxeerc/mGU6MTwStozAcR4xmPIPfiOrktFfiJwAJi9shQUv0RatKgA6uQh6kaDoy+tOC56vmw1KmNZYhkqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788183090; c=relaxed/simple;
-	bh=hgwMUcDNmIVbib+RwNpnua7krdi03Kvov0tTlZ/slRE=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=tAPuLsLOxa5ZMK2K0Q5Rfb3eHMwRzDQdvgeXKCbGu0vgtjhmCPDQf/4GL7iHk575rEdKchgZttR4kTVtHGx26DGqht33GWhHhELyg+IODRePoUupsBl18DERFfHpXZb4s3Fdw6BqQ0YyiVWUqjxoQk4IFoTDyUfqsV4rTwOpAP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c4nOy5BE; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788183190; c=relaxed/simple;
+	bh=plswYjsOWjbztznk1Vg0t8i0AffMK8C5DB+uxBq/4qg=;
+	h=Cc:To:Mime-Version:Content-Type:From:Subject:Date:Message-Id; b=aO4rdb3htZGERpYaH5v5n6jd8Akdh2pnapNqizeQX2JBCPWxKnSK1nOyKewY4fdqQ6SXMHEbWlkIq0g1uR+96XpWJv8YK/mjaXTwyrdb9Ni4zMkXSW8VtgDiLlcgEyv1H5hSrm1/RJYydCt83XYjzyA2zTogU2u4xCWeRa+JIjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=moonshot.ai; spf=pass smtp.mailfrom=moonshot.ai; dkim=pass (2048-bit key) header.d=moonshot.ai header.i=@moonshot.ai header.b=P+7HXOjq; arc=none smtp.client-ip=209.127.231.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=moonshot.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=moonshot.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c4nOy5BE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB4511F00ACA;
-	Mon, 31 Aug 2026 13:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788183087;
-	bh=hgwMUcDNmIVbib+RwNpnua7krdi03Kvov0tTlZ/slRE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=c4nOy5BEp1bweJi/srku2BY6m9zNy10o4FYW4Ac2AOC6t/bZOOeVqj6skrzQcmwkr
-	 7lYQMdzrhbAfvc8u3XJbeO9TPrUxS3b5uQKchbGl5WKg2gtNZziBobstrrXFRoGAB+
-	 FvpJHo2GoZmjrvUT5XMQOwLzurBMD76svdvLZVTzUihJDt1KJJK97CxgnQZ1Bf9Xq3
-	 HRvVmrQ8Wtpl5zhdCLOQ5e9XkAlwAuk6F2oZ8eTHdT9tbVzZXQOpvYjK+qdocXmmmZ
-	 lmP15bOHRXnDCSCkSD4lX+5+NNTatPjFXJdUbgi5G9tck9LtUJmp+aicYSiMxDYOhT
-	 xST0wDILxMEsw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 11/12] perf jitdump: Validate sym string NUL-termination
- in code load
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260831131110.4681-12-acme@kernel.org>
-References: <20260831131110.4681-1-acme@kernel.org>
- <20260831131110.4681-12-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 31 Aug 2026 13:31:27 +0000
-Message-Id: <20260831133127.AB4511F00ACA@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=moonshot.ai header.i=@moonshot.ai header.b="P+7HXOjq"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=feishu2510091218; d=moonshot.ai; t=1788183175; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=EbRchCsufk+S5bbT7cJOnYn1Fmv1FXBDWUxIFy3XOUI=;
+ b=P+7HXOjq5Vy97c0DhF9xgu08MVmJK4soLVu8W9nLyBsZ7kw0kUDBfkoNqVfxw+anT6wFAu
+ zdtqUUNUpw46lKvU+Z0NC5uJ3Jai13pQCrlUVpFhZArDPssrPmMVAlKXucujhXIGXWCaWA
+ Qfhv1A+X1ZYpXeKkXTFhcC06JW9KUvKj8XQcDzDekXb0KPzs5UxYwhMpQoIBve2eSfTPiF
+ gR6+zGeWZ4H+Zwo99WTeGzTCxJm8nJwM5yyQE+f3bOEDcXYaMS8zaNwpoDVM2n8LQsIoIg
+ Ah/CSkeHChQJf640ZDWEyzFRSHwq0+6zdvinMNZh4cTVmrs6GydftwPuHptsMw==
+Cc: "Yilin Zhang" <yilinzhang@moonshot.ai>, <mingo@redhat.com>, 
+	<acme@kernel.org>, <namhyung@kernel.org>, <kylebot@openai.com>, 
+	<david.lee@trailofbits.com>, <linux-perf-users@vger.kernel.org>, 
+	<stable@vger.kernel.org>, "Kimi Security Team" <bug-report@moonshot.ai>, 
+	"Weiming Shi" <shiweiming@moonshot.ai>
+Content-Transfer-Encoding: 7bit
+X-Lms-Return-Path: <lba+26a958285+705081+vger.kernel.org+yilinzhang@moonshot.ai>
+To: <peterz@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Original-From: Yilin Zhang <yilinzhang@moonshot.ai>
+Content-Type: text/plain; charset=UTF-8
+From: "Yilin Zhang" <yilinzhang@moonshot.ai>
+Subject: [PATCH v3] perf: Fix use-after-free when perf mmap() revival races with the last munmap()
+Date: Mon, 31 Aug 2026 21:31:52 +0800
+Message-Id: <20260831133152.1231045-1-yilinzhang@moonshot.ai>
+Received: from dev.msh-dev.svc.cluster.local ([117.157.206.135]) by smtp.feishu.cn with ESMTPS; Mon, 31 Aug 2026 21:32:52 +0800
+X-Mailer: git-send-email 2.34.1
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->=20
-> jit_repipe_code_load() computes sym =3D (void *)jr + sizeof(jr->load) and
-> passes it to jit_emit_elf() which calls strlen(sym) via jit_write_elf().
-> If code_size equals total_size - sizeof(jr->load), the sym pointer
-> aliases the code blob with no NUL terminator, and strlen() scans past
-> the buffer into adjacent heap memory.
->=20
-> Add a memchr() check to verify the symbol name is NUL-terminated within
-> the region between the load header and the code blob before use.
->=20
-> Fixes: 598b7c6919c7bbcc ("perf jit: add source line info support")
-> Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Cc: Stephane Eranian <eranian@google.com>
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+perf_mmap_close() drops rb->mmap_count *without* holding
+event->mmap_mutex (the refcount_dec_and_test() right before the
+refcount_dec_and_mutex_lock() of event->mmap_count). A concurrent
+perf_mmap_rb() can slot its entire "revival" path into that window
+(perf_mmap holds event->mmap_mutex for its whole duration, including
+rb_alloc):
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+  munmap side (perf_mmap_close)          mmap side (perf_mmap_rb)
+  -----------------------------------    --------------------------------
+  rb->mmap_count 1 -> 0   (no lock)      (holds event->mmap_mutex)
+                                         inc_not_zero(rb->mmap_count) fails
+                                         ring_buffer_attach(event, NULL)
+                                         rb_alloc() + attach new rb
+                                         refcount_set(&event->mmap_count, 1)
+  lock; event->mmap_count 1 -> 0
+  ring_buffer_attach(event, NULL)
+  ring_buffer_put() -> frees the *new* rb
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831131110.4681=
--1-acme@kernel.org?part=3D11
+The revival's refcount_set(&event->mmap_count, 1) is an invisible
+1 -> 1 write: the close frees the just-revived buffer although the
+other process still has it mapped -- a page-level use-after-free
+allowing local privilege escalation to root by any unprivileged user
+(default kernel.perf_event_paranoid=2).
 
+Swap the order of the two counter updates: event->mmap_count is
+dropped first via refcount_dec_and_mutex_lock(), so its 1 -> 0
+transition and the ring_buffer_attach() stay serialized with
+perf_mmap(). rb->mmap_count == 0 then implies every event using the
+buffer is detached already, so the result of the rb->mmap_count drop
+can gate the remaining teardown directly and detach_rest is no longer
+needed.
+
+An earlier fix for this race from Kyle Zeng and David Lee takes
+event->mmap_mutex around both counter updates [0]; here the not-last
+close stays lockless.
+
+Fixes: 59741451b49c ("perf: Identify the 0->1 transition for event::mmap_count")
+Link: https://lore.kernel.org/linux-perf-users/20260804060931.711308-1-david.lee@trailofbits.com/ [0]
+Cc: stable@vger.kernel.org # 6.18+
+Reported-by: Kimi Security Team <bug-report@moonshot.ai>
+Tested-by: Weiming Shi <shiweiming@moonshot.ai>
+Signed-off-by: Yilin Zhang <yilinzhang@moonshot.ai>
+---
+v2: https://lore.kernel.org/linux-perf-users/91825d0335d2f7cc017ee23886ffeef44c1cc633.f061f277.0045.493a.937e.53242f19a7de@feishu.cn/T/#u
+v3: swap the counter drop order instead of serializing both under
+    mmap_mutex; keeps the lockless fast path, drops detach_rest, and
+    references the earlier independent fix [0]
+
+ kernel/events/core.c | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index a6c8e38a3110..f56f9d9e4f01 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -7029,7 +7029,6 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+ 	mapped_f unmapped = get_mapped(event, event_unmapped);
+ 	struct perf_buffer *rb = ring_buffer_get(event);
+ 	struct user_struct *mmap_user = rb->mmap_user;
+-	bool detach_rest = false;
+ 
+ 	/* FIXIES vs perf_pmu_unregister() */
+ 	if (unmapped)
+@@ -7060,17 +7059,14 @@ static void perf_mmap_close(struct vm_area_struct *vma)
+ 		mutex_unlock(&rb->aux_mutex);
+ 	}
+ 
+-	if (refcount_dec_and_test(&rb->mmap_count))
+-		detach_rest = true;
+-
+-	if (!refcount_dec_and_mutex_lock(&event->mmap_count, &event->mmap_mutex))
+-		goto out_put;
+-
+-	ring_buffer_attach(event, NULL);
+-	mutex_unlock(&event->mmap_mutex);
++	if (refcount_dec_and_mutex_lock(&event->mmap_count,
++					&event->mmap_mutex)) {
++		ring_buffer_attach(event, NULL);
++		mutex_unlock(&event->mmap_mutex);
++	}
+ 
+ 	/* If there's still other mmap()s of this buffer, we're done. */
+-	if (!detach_rest)
++	if (!refcount_dec_and_test(&rb->mmap_count))
+ 		goto out_put;
+ 
+ 	/*
+-- 
+2.43.0
