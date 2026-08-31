@@ -1,77 +1,96 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323EA221F20
-	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 22:01:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BBA36F917;
+	Mon, 31 Aug 2026 22:11:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788213670; cv=none; b=YFxNol7FvAHrLl+sDcvjfDZvsL5pLW4+iTl/OLsJNPm08YubZ+cf6w+1bfB76VCh38unie8b6uJ4uIqcJ32uhDwhhQ9+vMXYpaSmc/jqVi5hXIAjaf8kSV/gNJJCtQbSQOxX8H8lBUb+phF8j1jS6cLa/Ue3GENnfuIM/TcqDng=
+	t=1788214310; cv=none; b=aS21KoQWpQYMSq8jfy3rHwnvwl+Vqmy4qdtuAXn2RnAe46RFJiXdxNa2YOk6NXbPJHlx/VDcnWLJaA6TSjYb93q99OSO+TeIdmDufK8l6nQ78sjsRssZHdMFJ4os3L3OdPrCL1X7Ypu3iY+WNMb+FaNSke1sqFPvubC3DGsdu8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788213670; c=relaxed/simple;
-	bh=/hGUVHLpIW59YpQewD7HP+TwdCI7LoemMveK0fXvSTo=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=dTRm2XSTIiI8FJw1PZScXmgbg+3p825LzIEiOJHoHNOsb2CADkVFnQPzxyWtgh9H6CB2YQ5f+b+koKhhA906/yK+0DqWfR0R5yiBiBaQ9RJ6WG5HrrYH2OJcdYj97jHZmB9x/cVq1gSko750o5U4mgExAkONT5TIA7XpC8rzsDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Entwik+9; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788214310; c=relaxed/simple;
+	bh=DVG+MNpzWKf+1XCRF11lgi+JI7uj2/QQObp9LBq220A=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=FrlN6v1dZjv+sTGoSN2hK2fbnWpZXg5Q116BmTp6wg0J8nFXdtR5Hlmb272AKCN0wPb/TCe/e5wgjpYKwXozZ6o9IkEdb/oxFbp3bgTLLnehZHIG/i6Tz5souAuYPmhCB39arTm/lN3K+JOhnIZ5NzuZMOzrOBdrTLoz7TgLOgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJGf/Evf; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Entwik+9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A99C81F000E9;
-	Mon, 31 Aug 2026 22:01:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJGf/Evf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 897A81F000E9;
+	Mon, 31 Aug 2026 22:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788213668;
-	bh=/hGUVHLpIW59YpQewD7HP+TwdCI7LoemMveK0fXvSTo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Entwik+9KSjvxRtZZBt4ui8AT5IbAuDTYfwfiRqiNt1SOVVPkGj4xNM7OtLgaEKiF
-	 zbKioK4C78OfmoD/8mnXW08jdCEaz4B9DCsfGyBUalcIul/ldDO+STWHwPvoFz7ytu
-	 rfFZJQTEb34T5MIGK9CqgptzA9rfPWBMPAmvPqoyuMSq7wY1sYyKhtQBWIyP/aTkPX
-	 fzADsx02Msy1Eu4p6cZRKQ/aO53IQVZqzxeFp0Mkp2gmiG2f2BM218GsBlfaGvfWrc
-	 ZjBwi3gOXvK13njKv54WY0BVihZtWIuFmJiAg+3kuy7nOnEkkkEWG5H/SiNlf5h8oY
-	 JeetIPoRU2vnQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 2/6] perf mem: Add support for printing
- PERF_MEM_LVLNUM_L0
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Thomas Falcon" <thomas.falcon@intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260831204613.2793526-3-thomas.falcon@intel.com>
-References: <20260831204613.2793526-1-thomas.falcon@intel.com>
- <20260831204613.2793526-3-thomas.falcon@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 31 Aug 2026 22:01:08 +0000
-Message-Id: <20260831220108.A99C81F000E9@smtp.kernel.org>
+	s=k20260515; t=1788214309;
+	bh=RS4glFFdY1gLGmE8+lSVip51TLlerbXRaRrB/4BAIgQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=ZJGf/EvfojHyDhwXYFae+AFZRYPW5j/Q01dFJb4IzmTRaXRz3UEwmocQ+/I6APThm
+	 qyPi6GhYG15KgtHn3W7OKu+coyTjdWHqkCCxrEt/Ro0gbaiwHiPKyAs3PsZiGechN7
+	 pkTDn4qVkWoX5DfyReCeHPUjoiO1L6B8/9nbv7JRvniqLKs1CkGg31Hc5UD/cnjuUP
+	 QY/l0zp0KsTauUegIM5AwrZIPwohJ1VnmHzblDAs0QfELba5Kq04mdxDLsduO1AzJS
+	 tFNiNUaEhTkpxMpUEFJKMNsB5DbFKmZAVDMzw3WZ/yrxxwqsqYILqWAQq60k5CeGxZ
+	 X0cu8mIHq0Dww==
+Date: Tue, 1 Sep 2026 07:11:42 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/2] tracing/probes: Fix anon_stack check for unnamed
+ bitfields in btf_find_struct_member
+Message-Id: <20260901071142.9fac09b9553bcf8eedca6404@kernel.org>
+In-Reply-To: <20260831130133.3018b81a@gandalf.local.home>
+References: <178818875393.104360.1469039168635349344.stgit@devnote2>
+	<178818876548.104360.13229872396750615226.stgit@devnote2>
+	<20260831130133.3018b81a@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
->=20
-> Add support for printing PERF_MEM_LVLNUM_L0 in perf mem report.
->=20
-> The L0 cache is newly added a small piece of cache which is
-> the closest, lowest-latency memory cache tied directly to the
-> execution pipeline.
->=20
-> The table "Table 9-4. Data Source Field Encodings for Panther
-> Cove and Coyote Cove Microarchitectures" in the ISE doc chapter
-> "9.2.1 Panther Cove and Coyote Cove Microarchitectures Memory
-> Auxiliary Field Layout"[1] indicates the code "01H" means the
-> "L0 Hit - Minimal latency core cache hit. This request was
-> satisfied by the L0 data cache."
->=20
-> [1]: https://www.intel.com/content/www/us/en/content-details/922690/intel=
--architecture-instruction-set-extensions-programming-reference.html
->=20
-> Assisted-by: Sashiko:gemini-3.1-pro-preview
-> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+On Mon, 31 Aug 2026 13:01:33 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+> On Tue,  1 Sep 2026 00:06:05 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > btf_find_struct_member() traverses into nested anonymous structures
+> > and unions by pushing members with !member->name_off onto anon_stack.
+> > However, it does not consider the unnamed bitfields (e.g. `int : 5`
+> > or `unsigned int : 0`) which also have member->name_off == 0.
+> > 
+> > If such an unnamed bitfield is pushed to anon_stack, the
+> > btf_find_struct_member() return an error even if there are other
+> > valid entries in anon_stack.
+> > 
+> > To fix this, only push unnamed struct/union members to anon_stack.
+> > Also move the btf_type_is_struct() check to the entry of this function
+> > because now it is sure only struct/union are pushed to anon_stack.
+> > 
+> 
+> Should we add Reported-by and a link to the Sashiko report?
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831204613.2793=
-526-1-thomas.falcon@intel.com?part=3D2
+Ah, good point! Let me add it (and I forgot Cc: stable)
 
+> 
+> > Fixes: 302db0f5b3d8 ("tracing/probes: Add a function to search a member of a struct/union")
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
+
+Thanks!
+
+> 
+> -- Steve
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
