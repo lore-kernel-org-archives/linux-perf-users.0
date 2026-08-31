@@ -1,113 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D80B36CDE8
-	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 19:45:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B6C37C0E6
+	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 19:59:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788205549; cv=none; b=EMOqSnmW548v5Fm3cimVMfr8ljjW+bw32XKpdheTy6UNG4VIpx8G14j/GXoJUSf1oETNvXSC2auwrMphi5PWfnmQ7hfEMDH61eIEOc7BsmcHPHi8BUGUHeJn/XbWe6F82Q6Ib78nDTSxUATx59HZUr2w37sVzZPwYjrhO542tQo=
+	t=1788206378; cv=none; b=Jb4+HL1zHox7mSH7d8ZQZQBdhs1fkyOO7rdltnpl/5QOK4tgUf4BLMpKi3ubzkXHZ35ocKxfEfXZj3Vj+FGoQaLl6N9Br7jFOYnDZhFqrjF49lC5FwmdNKyILUOAWnd6CAlic6W5uR9u2KmpL+z7tdyqp+BAM01CNUonoBIWvnQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788205549; c=relaxed/simple;
-	bh=e7L7o793o71wULfyesSoFX4cw8Tjqqpavaz8k2qF0G8=;
+	s=arc-20240116; t=1788206378; c=relaxed/simple;
+	bh=SDOT1TyHSe8fLxywSxutpeq0upy+Ko61a90gYzCaorQ=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=tHOnh6qsXBiuvBLTA7DNzbFsnTr06gnyNvCCIQTudFCJqD6T31Il1NVRH+DNdxSzQtaKkqIA2nUQVWyVhmAqSf4IW20jdOQUjiVzr2WI8DjBfb746rj65XdB4dx+c+d/ixswnzyYj+PNhINH9NMbGfQ/bWwZUlv8N57vMooHlHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cFBv9E9p; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=HNk1+JaeM5e8s4d05nNFNAP8mBFF5jMtxOPj+yaRGSj2fWKEZOXVfQykE575YTVV8f/ZArA/NSo811W3kmWNAYuSklCS39xa+iqOUGCq+n9omy5OkPj5hSDEb01eT5wBY8QsAAD7NATPXyfCkni9XoujRTsmwTL7vMP4JOE0MP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V14VgPec; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cFBv9E9p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 906771F000E9;
-	Mon, 31 Aug 2026 19:45:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V14VgPec"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 451161F000E9;
+	Mon, 31 Aug 2026 19:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788205547;
-	bh=mvF1Xkcva/0PE9dJjgXvJOhfWS/HQXlut81KZyP3Spc=;
+	s=k20260515; t=1788206376;
+	bh=F8E/IcVZQCrtK3NH/fJ6lcWpSdp8cHHpo+CcsZkIl8Y=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=cFBv9E9p6Dcqva7BbZ8+WBC9f3+W+e/KKYA0JywQA9gJYS/xLIIypO7YIyuJUZDWx
-	 2Zfi31o0O+gvP8hJWue/dm5DdcmVb/Jabdts0c7wa2jzJevgyuh4eHE+sqBW96J/Kz
-	 nbuKE+dlVsB0tKW85tf+0lq1SDl3AjH90auTJ4XcgU8jIzxHpxKzBBU3m0+WQTVhSt
-	 2tRwUhs8xJVnUZQconeY/kig9T9I894r+Gmfd/9Ie+1Dac8XDrJo4P/AkQeXhU8oyl
-	 YIbYZxLRWCFPkN1a+Ig49SGT1gzHjpmPjm0txQM0u6CYgljw1ofcEvggovwNqL6RNM
-	 DsWNHLPvpBpNg==
+	b=V14VgPecG8tMkIi4jYEWs52vG5+kqh4Fnw/DvnfVGuYydgIqnvIugpfkyCi2Q7BT9
+	 scsGV2nR9MMvW31I1bWzjLBADznHaobuZQlo2PNueEe5bYUyCSfVnWAWgCaxwWfUpF
+	 AMC+LEEikJNpFDu/ZvCIMJp1fnTCQqvKYbv29kQP/eu1PbLhcN5V76O4+08JMDXtGo
+	 KnrypO7ZuGq3fIV98p2BE8QraVwMt4lZTYSlQ/RcRVNq08F3BU6SVXcXfopslWt2jc
+	 4MwMxGE0Ubfp5RV7rhDJd+gq4MTt7HcpnXAUkgo3cWLk9wXIhGULx7jm3kT525XmGP
+	 jY454bTd8xd2Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [RFC v1 09/19] ptwrite uprobes: Factor file-backed instruction
- reads
+Subject: Re: [RFC v1 10/19] ptwrite uprobes: Minimal memory references and
+ fault handling
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Andi Kleen" <ak@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260831150651.1134594-10-ak@kernel.org>
+In-Reply-To: <20260831150651.1134594-11-ak@kernel.org>
 References: <20260831150651.1134594-1-ak@kernel.org>
- <20260831150651.1134594-10-ak@kernel.org>
+ <20260831150651.1134594-11-ak@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 31 Aug 2026 19:45:47 +0000
-Message-Id: <20260831194547.906771F000E9@smtp.kernel.org>
+Date: Mon, 31 Aug 2026 19:59:35 +0000
+Message-Id: <20260831195936.451161F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
 s) to consider:
-- [High] copy_insn() unconditionally returns -EIO for partial reads, breaki=
-ng uprobes placed near the end of an executable.
+- [Medium] Premature publication of `ptw->nblocks` without memory barriers =
+exposes uninitialized memory to concurrent page fault handlers.
+- [Medium] Rolling back `ptw->nblocks` on error allows in-place reuse of ar=
+ray slots without an RCU grace period, causing torn reads in concurrent fau=
+lt handlers.
 --
 
-commit 357913ae591e42b1fd264a2ff741868c174c2724
+commit 925690411c45029e0f0a323ac69035b5e1cc8c87
 Author: Andi Kleen <ak@kernel.org>
 
-ptwrite uprobes: Factor file-backed instruction reads
+ptwrite uprobes: Minimal memory references and fault handling
 
-This commit refactors copy_insn() into a more generic uprobe_copy_from_file=
-()
-function. The existing copy_insn() is updated to use this generic version,
-which is intended to be used by later patches.
+Add support for memory references. Currently this is only simple cases,
+no indirect memory references or strings. This requires fault handling
+using the fault notifier hook added earlier.
 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 23202df2b51ae..20fa16ed85198 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
+> diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
+> index df652c56414b5..90e702a4a8e99 100644
+> --- a/arch/x86/kernel/uprobes.c
+> +++ b/arch/x86/kernel/uprobes.c
 [ ... ]
-> +int uprobe_copy_from_file(struct inode *inode, struct file *file,
-> +			  loff_t offset, void *buf, int size)
->  {
-[ ... ]
-> +	while (copied < size) {
-> +		file_size =3D i_size_read(inode);
-> +		if (offset >=3D file_size)
->  			break;
->=20
-> -		len =3D min_t(int, size, PAGE_SIZE - (offs & ~PAGE_MASK));
-> -		err =3D __copy_insn(mapping, filp, insn, len, offs);
-> +		len =3D min_t(loff_t, size - copied, file_size - offset);
-[ ... ]
-> +static int copy_insn(struct uprobe *uprobe, struct file *filp)
-> +{
-> +	int ret;
+> @@ -1689,13 +1852,22 @@ int arch_uprobe_install_ptwrite(struct arch_uprob=
+e *auprobe,
+>  		return -ENOMEM;
+> =20
+>  	block_off =3D ptw->cursor;
+> -	if (block_off > PAGE_SIZE ||
+> -	    ptw_a->stub_len > PAGE_SIZE - block_off)
+> +	if (block_off > PAGE_SIZE || ptw_a->stub_len > PAGE_SIZE - block_off)
+> +		return -ENOMEM;
+> +	if (ptw->nblocks >=3D ARRAY_SIZE(ptw->index))
+>  		return -ENOMEM;
+>  	stub_addr =3D ptw->vaddr + block_off;
+>  	if (!ptwrite_rel32(stub_addr + ptw_a->jmp_off + 4,
+>  			   vaddr + 5, &rel))
+>  		return -ERANGE;
+> +	site_delta =3D (s64)vaddr - (s64)ptw->vaddr;
+> +	if (site_delta < INT_MIN || site_delta > INT_MAX)
+> +		return -ERANGE;
 > +
-> +	ret =3D uprobe_copy_from_file(uprobe->inode, filp, uprobe->offset,
-> +				   &uprobe->arch.insn,
-> +				   sizeof(uprobe->arch.insn));
-> +	return ret < 0 ? ret : ret =3D=3D sizeof(uprobe->arch.insn) ? 0 : -EIO;
+> +	ptw->index[ptw->nblocks].off =3D block_off;
+> +	ptw->index[ptw->nblocks].len =3D ptw_a->stub_len;
+> +	ptw->index[ptw->nblocks].ft_off =3D ptw_a->ft_off;
+> +	ptw->nblocks++;
+> =20
+>  	kaddr =3D kmap_local_page(ptw->page);
+>  	memcpy(kaddr + block_off, ptw_a->stub, ptw_a->stub_len);
 
-[Severity: High]
-Does this unconditionally return -EIO for partial reads near the end of the
-file?
+[Severity: Medium]
+Does this code expose uninitialized memory to concurrent page fault handler=
+s?
 
-When registering a uprobe on a target file where the instruction offset is
-close to the end of the file (where file_size - offset is smaller than
-sizeof(uprobe->arch.insn)), uprobe_copy_from_file() will stop at the file
-boundary and return a byte count strictly less than the requested size.
+Since ptw->nblocks is incremented before memcpy() initializes the stub
+block memory, a concurrent lockless reader in uprobe_ptwrite_handle_fault()
+might observe the incremented nblocks and read the uninitialized fault table
+while memcpy() is actively writing to it.
 
-The original copy_insn() loop stopped reading at EOF but still returned 0 as
-long as no explicit error occurred, allowing partial reads to succeed.
+> @@ -1704,9 +1876,13 @@ int arch_uprobe_install_ptwrite(struct arch_uprobe=
+ *auprobe,
+>  	kunmap_local(kaddr);
+> =20
+>  	ret =3D ptwrite_text_poke(auprobe, vma, vaddr, stub_addr);
+> -	if (!ret)
+> -		ptw->cursor =3D block_off + ptw_a->stub_len;
+> -	return ret;
+> +	if (ret)
+> +		/* Publish rollback before readers use the reduced block count. */
+> +		smp_store_release(&ptw->nblocks, ptw->nblocks - 1);
+> +		return ret;
+> +	}
 
-By enforcing a strict ret =3D=3D sizeof(...) check here, will this fail upr=
-obe
-registration for valid instructions that happen to reside near the end of s=
-mall
-binaries or scripts?
+[Severity: Medium]
+Can this rollback of ptw->nblocks cause use-after-free or torn reads for
+concurrent readers?
 
+If ptwrite_text_poke() fails, ptw->nblocks is rolled back. However, a
+lockless reader executing uprobe_ptwrite_handle_fault() under rcu_read_lock=
+()
+might have already read the old ptw->nblocks and be actively iterating over
+this slot. A subsequent probe installation could then immediately reuse this
+array slot and block_off memory without waiting for a synchronize_rcu()
+grace period, causing the lockless reader to observe torn data.
+
+> +	ptw->cursor =3D block_off + ptw_a->stub_len;
+> +	return 0;
 >  }
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831150651.1134=
-594-1-ak@kernel.org?part=3D9
+594-1-ak@kernel.org?part=3D10
