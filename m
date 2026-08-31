@@ -1,109 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0C37440658
-	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 18:32:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C4A361974
+	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 18:42:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788201140; cv=none; b=B9XCXCrULlSF25n570m8WEQs+cNHBbeYma9mdXb0cOtAxDWXAm1gcRkcZl4Qsm8vODhusjSXx6Ggnx7JAgt4AiN6JqgkzY6CxPl9MNOTvsyCGt+3QYsY5ZlZtW5uSOjiVFeKGAi0ZDwH7k6+uz0Bf/LddJ+Ib5aNSdlzQXJ5b+8=
+	t=1788201767; cv=none; b=NjzJu/cEht/znmrD7KMofQw0tqzhDkCpbCkoyZjRvagVc72ruTdfPzEIRebB5zJO64eP08aPrkbb+9EzMWJ/cnPi6R07J+/jA5Pc/rqbIGiUzJ+OorVv8+2Rnn3O7I4QTEArYDIYro21W6Plv8UOfc4cMIRqOwEa285LMZNWSdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788201140; c=relaxed/simple;
-	bh=PyI1G3T4D6VeQE6PkuVihP1gMvjVuAhGk2hxqN9VmLc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=azBZy62OsvNgCsNXd8FdSANkWF2qFppn/eBaqSO+Y4dwdib1DdIi79YaD/O6tOb0LUN5sA4neG3qyknjg765IKWOf2xX5NXxneZW5dMTeEtZyqGHvYMIazfGX5IOa+SrIjuGwcyoXg/6quFqgMs6xarPxmjWVc5EZH1Yt5NZIyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Kf0PTUlT; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1788201767; c=relaxed/simple;
+	bh=ID2gj108UpcLdNiBfJkQ13itDG2w4eaZYP8bq5rk6HM=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=hLl+vVQTUGAb1cMVM2TodiWeT32jRtrPWgUgxbM1yTtmCZgdzrWzxBFadMKmSPkXjxWqk4Gblkebpf8QdOGMg27wrwL/LnSHxC4/TYeEF7SwcneAdMyySfSrNhJU+4TElw+t32FVZgdFbOnIHFLMJS86ks6D3FZhJSihibL/ryo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O20EnJLB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Kf0PTUlT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788201139; x=1819737139;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PyI1G3T4D6VeQE6PkuVihP1gMvjVuAhGk2hxqN9VmLc=;
-  b=Kf0PTUlTgJ5+rer/dgUuH4bdv8bJcqkoN7JQowItQZRRkHNzw0gE3WbL
-   GqK9w+7/HjkkpcuP3Q0ojmxZJ4fofdAMG178W7mDWsaZQG3r76oJFb1v2
-   5zHhAYD5fXsjKPdtnhmEZLnnS7O+/8kT3BYDUsl5yj0eRWdsC76LGD2YP
-   +cbn6sD5DIUg+jPL/hXdZEuJtHjjOZGUAsSElP4ja3oBFTC0muzh4s0GU
-   wQp3mz+LPZNH3dJGc0i8ELZmoY9mg3+gZ0bCa7gdEVqyQCJND+dBFGvIj
-   BpRooPc42I+/tgcT8jvhUh4wN13f4I6IBcHb3GY0ZDJiCCeyhR4ZidViz
-   Q==;
-X-CSE-ConnectionGUID: oOjGQ2j8QUqoGjol88Y9Yg==
-X-CSE-MsgGUID: gRDrQq/VQAGrhy9bHK3EHQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11892"; a="99968233"
-X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
-   d="scan'208";a="99968233"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 11:32:18 -0700
-X-CSE-ConnectionGUID: 89TrJ4A0Rrai0xKKDMqn5w==
-X-CSE-MsgGUID: gV4CphbmRGm0AJF5F8LBAw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,254,1779174000"; 
-   d="scan'208";a="266285562"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2026 11:32:18 -0700
-Date: Mon, 31 Aug 2026 11:32:16 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: sashiko-reviews@lists.linux.dev
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O20EnJLB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EA1B1F00A3D;
+	Mon, 31 Aug 2026 18:42:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788201766;
+	bh=fi2oIATrXQ/Q5wUv9UZ9J856FUd0lsAojxXObm/T+I0=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=O20EnJLBgceQNSdH009CTWxK9CtUNpQNCCXrRUeVmU15mHuWVO0AQDgZcNDyUGSAS
+	 6EyfIEyzOlVLLd6J68lLFnth+cr+4hQEiaJBqhFp4jkimU5kJMFuDxAyXSi/9Bs4Wb
+	 FCv9hkrQI+Ahsn2ycOMeNwjuS4q4GmxB8mn3z9MpeS/hHZhIdSS10HkbzyHKYs8t/p
+	 GPV7+JYK9NHutp3bE6YfVIY7V/o5WDb14y5qq94fFBfFxOYWTt/otz7i7aUuNVPGJT
+	 Zitq0Vndq5s4flUDTpc4iIwuX7LW0LrngkRFIvRMStnB1K39XwRmx3Zr5YokdeHtBN
+	 up/eDv34wRm2A==
+From: sashiko-bot@kernel.org
+Subject: Re: [RFC v1 03/19] uprobes: Print warning for missing breakpoint
+ install
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Andi Kleen" <ak@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] perf tools: Add test for weight annotation
-Message-ID: <apXIsKodLYUnxzLk@tassilo>
-References: <20260830193459.2840519-1-ak@linux.intel.com>
- <20260830193459.2840519-5-ak@linux.intel.com>
- <20260830195633.BAAC31F000E9@smtp.kernel.org>
+In-Reply-To: <20260831150651.1134594-4-ak@kernel.org>
+References: <20260831150651.1134594-1-ak@kernel.org>
+ <20260831150651.1134594-4-ak@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 31 Aug 2026 18:42:45 +0000
+Message-Id: <20260831184246.1EA1B1F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260830195633.BAAC31F000E9@smtp.kernel.org>
 
-> > +# mem-loads:pu requests a precise user PEBS event whose sample weight should
-> > +# be populated by -W. Unsupported PEBS/weight PMUs are skipped below.
-> > +if ! perf record -W -e mem-loads:pu -o "${perfdata}" -- perf test -w thloop \
-> > +	> /dev/null 2> "${record_log}"; then
-> > +	echo "[SKIP] precise PEBS weight sampling is unavailable"
-> > +	exit 2
-> > +fi
-> 
-> [Severity: Medium]
-> If the inner workload (perf test -w thloop) crashes or otherwise fails to
-> execute, does this conditional block improperly catch the failure and report 
-> it as an unsupported hardware feature? 
-> 
-> It looks like any non-zero exit status from the child process will result 
-> in a skipped test, which might mask underlying environment or test suite bugs.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
+Pre-existing issues:
+- [High] Missing VMA write lock during uprobe registration exposes page tab=
+le modifications to races
+--
 
-There are other tests for this, so this is acceptable.
+commit c4ab2afca2dc57fb6a2f6789af30c2bec5a5064c
+Author: Andi Kleen <ak@kernel.org>
 
-> 
-> [ ... ]
-> > +	echo "[SKIP] PEBS weight sampling produced no nonzero weights"
-> > +	exit 2
-> > +fi
-> > +
-> > +perf annotate --stdio -i "${perfdata}" --symbol "${testsym}" \
-> > +	> "${annotate_out}" 2> "${record_log}"
-> > +
-> > +grep -q 'Percent Weight' "${annotate_out}"
-> 
-> [Severity: Medium]
-> Since set -e is enabled at the top of the script, will this isolated grep 
-> command cause an abrupt and silent exit if the 'Percent Weight' header is 
-> missing from the annotation output? 
-> 
-> If the string is missing, grep will exit with code 1, which might instantly 
-> abort the script without printing diagnostic output, making regressions harder 
-> to debug.
+uprobes: Print warning for missing breakpoint install
+   =20
+When a uprobe breakpoint installation fails, the error is currently silently
+ignored. This commit adds a rate-limited warning to log these failures and
+make debugging easier.
 
-it will exit with 1 which makes perf test fail I believe.
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 4287c4ff4c0fd..941b52c478585 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1630,7 +1630,13 @@ int uprobe_mmap(struct vm_area_struct *vma)
+>  		if (!fatal_signal_pending(current) &&
+>  		    filter_chain(uprobe, vma->vm_mm)) {
+>  			unsigned long vaddr =3D offset_to_vaddr(vma, uprobe->offset);
+> -			install_breakpoint(uprobe, vma, vaddr);
+> +			int err =3D install_breakpoint(uprobe, vma, vaddr);
+                        ^^^^
 
+[Severity: High]
+This isn't a bug introduced by this patch, but modifying install_breakpoint=
+()
+reminded me of a pre-existing issue where it is called from
+register_for_each_vma() without isolating the VMA.
 
+In register_for_each_vma(), the code acquires mmap_write_lock(mm) and
+dispatches install_breakpoint() or remove_breakpoint():
 
+kernel/events/uprobes.c:register_for_each_vma() {
+    ...
+		mmap_write_lock(mm);
+    ...
+		if (is_register) {
+			/* consult only the "caller", new consumer. */
+			if (consumer_filter(new, mm))
+				err =3D install_breakpoint(uprobe, vma, info->vaddr);
+		} else if (mm_flags_test(MMF_HAS_UPROBES, mm)) {
+			if (!filter_chain(uprobe, mm))
+				err |=3D remove_breakpoint(uprobe, vma, info->vaddr);
+		}
+    ...
+}
 
--Andi
+Both install_breakpoint() and remove_breakpoint() ultimately call
+uprobe_write() to clear PTEs and collapse PMDs via __uprobe_write() and
+collapse_pte_mapped_thp().
+
+However, as per VMA lock invariants, mmap_write_lock alone does not exclude
+concurrent per-VMA read lock holders (like page faults) that acquired the l=
+ock
+prior to the write lock.
+
+Should register_for_each_vma() call vma_start_write(vma) before dispatching
+these functions? Failing to drain per-VMA lock holders could allow readers =
+to
+concurrently walk the VMA's page tables while uprobe_write() clears them,
+potentially leading to use-after-free of PTE pages or stale PMD reads.
+
+> +
+> +			if (err)
+> +				pr_warn_ratelimited(
+> +					"uprobes: probe %pD+0x%llx failed to install (%d)\n",
+> +					vma->vm_file,
+> +					(unsigned long long)uprobe->offset, err);
+>  		}
+[ ... ]
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831150651.1134=
+594-1-ak@kernel.org?part=3D3
