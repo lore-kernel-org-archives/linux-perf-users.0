@@ -1,16 +1,16 @@
 Received: from one.firstfloor.org (one.firstfloor.org [65.21.254.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71EC051E43A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DAFC51E435;
 	Mon, 31 Aug 2026 15:07:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.21.254.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788188835; cv=none; b=i/mK9hKUolTCfNaH16MmdTAcmvTupNKu48TQHcgUTwZ1E/bn6T/zUTR+9AC3smh8THJWVRkNHIf6hlhQIy4JxUyNO04kklqh9sw77qJZLuUOrqHtHaJOAGe1TY8wb7kvVkKcoxu1ekN2Av0azavKMbpsMDqWlYjzWbEybCP1Q/M=
+	t=1788188835; cv=none; b=iaC0FswPV3sF+m2p6wTPy9yRJlTeiT2GuardMCAFPmt5Tl1j0lSW8HG+wfQ2tffWG8ZAQgLck5UblxnPQytPrrN/wDcqrczYoS8bZ0cuKkncrjF8d2efH14XL/JFIO4Y05TmBGB1ZRHIulkCJC2Izlx7OCgkcNuXWCJC97+dGNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1788188835; c=relaxed/simple;
-	bh=wtMd4vTaRd3xvEzJxItxztexDG2Qk3pG2knMAw/LS5Y=;
+	bh=+hEstpD23mqxH1IwXwOeAygJx+MwfLUm2lvFEMmsf5k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=R3oHATmDfzohBRlRyRbbJWM5D8bVGOaYuITchYoPOpteJHaA5yeGhCT6lS5fjZn4/Yu5wb1VfyjI3EboTNT40KD4OppQMvz2tPjzRRRvWcHcCo6BsPbqGlMJRJPG5HTnPamCuVbEz35ZIRk8sdKZ3a5+vIex4TkLtKQBMYvtK5U=
+	 MIME-Version; b=IsWJf+OeAgv5fjN5iQ8hXspM4i3ZV13/ZfBxBBrZGY0IiesHFX5sVzqsCFv1ifWlbjFRk8SYAMX4N++QrnTQdsS8ylUcn1LgZURuszOJdNsneOrWh7JEi0YLQaVrG4ITdezOpOH0WdH+RpijmcQG/njArzFQbkMiEq+DXZMlCN8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=firstfloor.org; arc=none smtp.client-ip=65.21.254.221
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=firstfloor.org
@@ -18,10 +18,10 @@ Received: from firstfloor.org (c-73-11-123-161.hsd1.or.comcast.net [73.11.123.16
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
 	(No client certificate requested)
-	by one.firstfloor.org (Postfix) with ESMTPSA id B884C63F8A;
+	by one.firstfloor.org (Postfix) with ESMTPSA id 70D7663F70;
 	Mon, 31 Aug 2026 17:07:08 +0200 (CEST)
 Received: by firstfloor.org (Postfix, from userid 1000)
-	id 17A3416228A; Mon, 31 Aug 2026 08:07:03 -0700 (PDT)
+	id 08576162262; Mon, 31 Aug 2026 08:07:03 -0700 (PDT)
 From: Andi Kleen <ak@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: mhiramat@kernel.org,
@@ -33,9 +33,9 @@ Cc: mhiramat@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	adrian.hunter@intel.com,
 	Andi Kleen <ak@kernel.org>
-Subject: [RFC v1 10/19] ptwrite uprobes: Minimal memory references and fault handling
-Date: Mon, 31 Aug 2026 08:04:46 -0700
-Message-ID: <20260831150651.1134594-11-ak@kernel.org>
+Subject: [RFC v1 05/19] ptwrite uprobes: Add minimal low level support for x86
+Date: Mon, 31 Aug 2026 08:04:41 -0700
+Message-ID: <20260831150651.1134594-6-ak@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260831150651.1134594-1-ak@kernel.org>
 References: <20260831150651.1134594-1-ak@kernel.org>
@@ -47,599 +47,758 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for memory references. Currently this is only
-simple cases, no indirect memory references or strings,
-that would require saving/restoring registers. Only 8 and 4 byte
-memory references are supported.
+Add more data structures and the x86 machinery to generate the PTWRITE
+instructions for a ptwrite uprobe. The probe executes PTWRITEs and then
+jumps back to the original code. In this variant only patching
+5 byte nops is supported.
 
-This requires fault handling using the fault notifier hook added
-earlier. When a fault happens inside a probe return to a specially
-generated tail that logs zeroes.
+The instructions are pre-generated to templates and then patched when
+setting up the final user page.
 
-It increases the in memory overhead of uprobe_ptwrite_page somewhat
-(to roughly a KB). I tried to find alternatives, but they all
-complicated the code, and 1KB should be still acceptable.
+The patching code uses 3 phase patching similar to int3_update.
+
+The ptwrite stub emits a header with a magic value and the number of
+arguments, and then the actual probed values.
+
+There is no separate config option for ptwrite uprobes, it is just tied
+to the main uprobes config.
+
+Some limitations in the current implementation:
+- The probed 5 byte area cannot cross a page.
+- The allocated stubs in the user program are only freed on exit.
 
 Assisted-by: omp:gpt-5.6-luna
 Signed-off-by: Andi Kleen <ak@kernel.org>
 ---
- arch/x86/include/asm/uprobes.h               |  14 +
- arch/x86/kernel/uprobes.c                    | 308 +++++++++++++++++--
- include/linux/uprobes.h                      |   4 +-
- samples/uprobe-ptwrite/uprobe_ptwrite_test.c |  41 ++-
- 4 files changed, 344 insertions(+), 23 deletions(-)
+ arch/x86/include/asm/uprobes.h |  24 ++
+ arch/x86/kernel/uprobes.c      | 623 +++++++++++++++++++++++++++++++++
+ 2 files changed, 647 insertions(+)
 
 diff --git a/arch/x86/include/asm/uprobes.h b/arch/x86/include/asm/uprobes.h
-index 5cc870e857a5..efffdc44f00a 100644
+index 362210c79998..05f8a7ea93a6 100644
 --- a/arch/x86/include/asm/uprobes.h
 +++ b/arch/x86/include/asm/uprobes.h
-@@ -48,6 +48,8 @@ struct uprobe_ptwrite_arch {
- 	u8	jmp_off;	/* offset of the final jmp's rel32 field */
- 	u8	ndata;		/* number of u64 data slots */
- 	u8	orig[MAX_UINSN_BYTES];	/* pristine file bytes, before generic analysis */
-+	u16	ft_off;	/* fault table offset within the block (0 if none) */
-+	u8	nft;		/* number of fault entries */
+@@ -23,10 +23,33 @@ typedef u8 uprobe_opcode_t;
+ enum {
+ 	ARCH_UPROBE_FLAG_CAN_OPTIMIZE   = 0,
+ 	ARCH_UPROBE_FLAG_OPTIMIZE_FAIL  = 1,
++	ARCH_UPROBE_FLAG_PTWRITE        = 2,
  };
  
- /* Per-mm page holding generated ptwrite stub blocks (mirrors trampolines). */
-@@ -56,6 +58,18 @@ struct uprobe_ptwrite_page {
- 	struct page		*page;		/* stub blocks written via kmap */
- 	unsigned long		vaddr;		/* mapping base */
- 	u16			cursor;		/* next free block offset */
-+	u16			nblocks;
-+	struct {
-+		u16 off;	/* block offset in the page */
-+		u16 len;	/* generated block length */
-+		u16 ft_off;	/* fault table offset within the block */
-+		u8  orig0;	/* original site byte 0 (pun restore) */
-+		u8  pun;	/* instruction-pun mechanism (single-byte poke) */
-+		u8  site_len;	/* original instruction length (pun identity) */
-+		s32 site_off;	/* probe site - page base (idempotent reinstall) */
-+		u8  site_insn[MAX_UINSN_BYTES];	/* original bytes (pun identity) */
-+	} index[PAGE_SIZE / 32];	/* exact: min block = 32 B (nargs >= 1), */
-+					/* so <= 128 blocks fit a page */
- };
+ struct uprobe_xol_ops;
  
++/*
++ * ptwrite probe state. The stub template (code + data slots) is built
++ * once at registration (mm-independent except the final jmp's rel32, patched
++ * per-mm at install). Block layout:
++ *   [ptwriteq hdr(%rip)] [arg emissions] [jmp probe+5] [u64 slots: header, imms]
++ */
++struct uprobe_ptwrite_arch {
++	u8	stub[256];
++	u8	stub_len;	/* code + data, whole block */
++	u8	jmp_off;	/* offset of the final jmp's rel32 field */
++	u8	ndata;		/* number of u64 data slots */
++	u8	orig[MAX_UINSN_BYTES];	/* pristine file bytes, before generic analysis */
++};
++
++/* Per-mm page holding generated ptwrite stub blocks (mirrors trampolines). */
++struct uprobe_ptwrite_page {
++	struct hlist_node	node;
++	struct page		*page;		/* stub blocks written via kmap */
++	unsigned long		vaddr;		/* mapping base */
++	u16			cursor;		/* next free block offset */
++};
++
  struct arch_uprobe {
+ 	union {
+ 		u8			insn[MAX_UINSN_BYTES];
+@@ -51,6 +74,7 @@ struct arch_uprobe {
+ 		}			push;
+ 	};
+ 
++	struct uprobe_ptwrite_arch	ptwrite;
+ 	unsigned long flags;
+ };
+ 
 diff --git a/arch/x86/kernel/uprobes.c b/arch/x86/kernel/uprobes.c
-index df652c56414b..90e702a4a8e9 100644
+index 65a2de82ecd2..df652c56414b 100644
 --- a/arch/x86/kernel/uprobes.c
 +++ b/arch/x86/kernel/uprobes.c
-@@ -24,6 +24,7 @@
+@@ -15,11 +15,15 @@
+ #include <linux/syscalls.h>
+ 
+ #include <linux/kdebug.h>
++#include <linux/highmem.h>
++#include <linux/mm.h>
+ #include <asm/processor.h>
+ #include <asm/insn.h>
+ #include <asm/insn-eval.h>
+ #include <asm/mmu_context.h>
  #include <asm/nops.h>
- #include <asm/cpufeature.h>
- #include <asm/cpuid/api.h>
-+#include <asm/traps.h>
++#include <asm/cpufeature.h>
++#include <asm/cpuid/api.h>
  
  /* Post-execution fixups. */
  
-@@ -727,6 +728,7 @@ static struct vm_area_struct *get_uprobe_trampoline(struct mm_struct *mm, unsign
- 
- void arch_uprobe_init_state(struct mm_struct *mm)
- {
+@@ -717,6 +721,68 @@ static struct vm_area_struct *get_uprobe_trampoline(struct mm_struct *mm, unsign
+ 	return _install_special_mapping(mm, vaddr, PAGE_SIZE,
+ 				VM_READ|VM_EXEC|VM_MAYEXEC|VM_MAYREAD|VM_IO,
+ 				&tramp_mapping);
 +
- 	INIT_HLIST_HEAD(&mm->uprobes_state.head_ptwrite);
++
++}
++
++void arch_uprobe_init_state(struct mm_struct *mm)
++{
++	INIT_HLIST_HEAD(&mm->uprobes_state.head_ptwrite);
++}
++
++void arch_uprobe_clear_state(struct mm_struct *mm)
++{
++	struct uprobes_state *state = &mm->uprobes_state;
++	struct uprobe_ptwrite_page *ptw;
++	struct hlist_node *n;
++
++	hlist_for_each_entry_safe(ptw, n, &state->head_ptwrite, node) {
++		hlist_del_rcu(&ptw->node);
++		synchronize_rcu();
++		__free_page(ptw->page);
++		kfree(ptw);
++	}
++}
++
++int arch_uprobe_dup_ptwrite(struct mm_struct *oldmm, struct mm_struct *newmm)
++{
++	struct uprobes_state *old_state = &oldmm->uprobes_state;
++	struct uprobes_state *new_state = &newmm->uprobes_state;
++	struct uprobe_ptwrite_page *ptw, *new;
++
++	mmap_assert_write_locked(oldmm);
++	mmap_assert_write_locked(newmm);
++	hlist_for_each_entry(ptw, &old_state->head_ptwrite, node) {
++		void *src, *dst;
++
++		new = kzalloc_obj(*new);
++		if (!new)
++			goto fail;
++		new->page = alloc_page(GFP_KERNEL | __GFP_ZERO);
++		if (!new->page) {
++			kfree(new);
++			goto fail;
++		}
++
++		src = kmap_local_page(ptw->page);
++		dst = kmap_local_page(new->page);
++		memcpy(dst, src, PAGE_SIZE);
++		kunmap_local(dst);
++		kunmap_local(src);
++		new->vaddr = ptw->vaddr;
++		new->cursor = ptw->cursor;
++		new->nblocks = ptw->nblocks;
++		memcpy(new->index, ptw->index, sizeof(new->index));
++		/* Publish the copied page fields before RCU readers can find it. */
++		smp_wmb();
++		hlist_add_head_rcu(&new->node, &new_state->head_ptwrite);
++	}
++
++	return 0;
++
++fail:
++	arch_uprobe_clear_state(newmm);
++	return -ENOMEM;
  }
  
-@@ -923,9 +925,12 @@ asm (
+ static bool __in_uprobe_trampoline(struct mm_struct *mm, unsigned long ip)
+@@ -869,11 +935,13 @@ enum {
+ 	EXPECT_SWBP,
+ 	EXPECT_OPTIMIZED,
+ 	EXPECT_SWBP_OPTIMIZED,
++	EXPECT_BYTE,
+ };
  
- extern u8 uprobe_trampoline_entry[];
+ struct write_opcode_ctx {
+ 	unsigned long base;
+ 	int expect;
++	u8 expect_byte;
+ };
  
-+static struct notifier_block uprobe_user_fault_nb;
-+
- static int __init arch_uprobes_init(void)
- {
- 	tramp_mapping_pages[0] = virt_to_page(uprobe_trampoline_entry);
-+	register_x86_user_fault_notifier(&uprobe_user_fault_nb);
+ /*
+@@ -901,6 +969,10 @@ static int verify_insn(struct page *page, unsigned long vaddr, uprobe_opcode_t *
+ 		if (is_swbp_opt_insns(&old_opcode[0]))
+ 			return 1;
+ 		break;
++	case EXPECT_BYTE:
++		if (old_opcode[0] == ctx->expect_byte)
++			return 1;
++		break;
+ 	}
+ 
+ 	return -1;
+@@ -1064,6 +1136,55 @@ static int int3_update_unoptimize(struct arch_uprobe *auprobe, struct vm_area_st
  	return 0;
  }
  
-@@ -1259,6 +1264,20 @@ static int ptwrite_emit_riprel(u8 *p, s32 disp)
- 	return 9;
++/*
++ * Modify a five-byte instruction by using INT3 breakpoints on SMP.
++ * The caller supplies the byte expected before the update and controls
++ * whether the anonymous page and reference counter are updated on the
++ * final write.
++ */
++static int text_poke_5byte(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
++				   unsigned long vaddr, u8 *new5, u8 expect_byte,
++				   bool skip_int3, bool is_register, bool final_is_register,
++				   bool do_update_ref_ctr, bool *first_phase_done)
++{
++	uprobe_opcode_t int3 = UPROBE_SWBP_INSN;
++	struct write_opcode_ctx ctx = {
++		.base = vaddr,
++		.expect = EXPECT_BYTE,
++		.expect_byte = expect_byte,
++	};
++	int err;
++
++	if (first_phase_done)
++		*first_phase_done = skip_int3;
++	if (!skip_int3) {
++		err = uprobe_write(auprobe, vma, vaddr, &int3, 1, verify_insn,
++				   is_register, false, &ctx);
++		if (err)
++			return err;
++		if (first_phase_done)
++			*first_phase_done = true;
++	}
++
++	smp_text_poke_sync_each_cpu();
++
++	ctx.expect = EXPECT_SWBP;
++	err = uprobe_write(auprobe, vma, vaddr + 1, new5 + 1, 4, verify_insn,
++			   is_register, false, &ctx);
++	if (err)
++		return err;
++
++	smp_text_poke_sync_each_cpu();
++
++	err = uprobe_write(auprobe, vma, vaddr, new5, 1, verify_insn,
++			   final_is_register, do_update_ref_ctr, &ctx);
++	if (err)
++		return err;
++
++	smp_text_poke_sync_each_cpu();
++	return 0;
++}
++
+ static int swbp_optimize(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+ 			 unsigned long vaddr, unsigned long tramp)
+ {
+@@ -1102,6 +1223,508 @@ static int copy_from_vaddr(struct mm_struct *mm, unsigned long vaddr, void *dst,
+ 	return 0;
  }
  
-+static int ptwrite_emit_riprel32(u8 *p, s32 disp)
++/*
++ * ptwrite uprobes: trap-free user-mode instrumentation.
++ *
++ * Block layout (mm-independent template, built at registration):
++ *   ptwriteq hdr(%rip)      ; header: event_id<<48 | nargs<<40 | magic
++ *   ptwriteq %reg / imm(%rip)   ; one per arg
++ *   jmp probe+5             ; rel32 patched per-mm at install
++ *   [u64 slots: header, imm values]
++ */
++
++static int ptwrite_emit_reg(u8 *p, u8 reg)
++{
++	/* ptwriteq %reg : F3 REX.W[.B] 0F AE /4, modrm = 11 100 rrr */
++	*p++ = 0xf3;
++	*p++ = (reg >= 8) ? 0x49 : 0x48;	/* REX.W, +REX.B for r8-r15 */
++	*p++ = 0x0f;
++	*p++ = 0xae;
++	*p++ = 0xe0 | (reg & 7);
++	return 5;
++}
++
++static int ptwrite_emit_riprel(u8 *p, s32 disp)
 +{
 +	/*
-+	 * ptwritel disp32(%rip) : F3 0F AE 25 <disp32> (8 bytes)
++	 * ptwriteq disp32(%rip) : F3 48 0F AE 25 <disp32> (9 bytes)
 +	 * modrm 0x25 = mod 00, reg 100 (/4, PTWRITE), rm 101 (RIP-relative).
 +	 */
 +	*p++ = 0xf3;
++	*p++ = 0x48;
 +	*p++ = 0x0f;
 +	*p++ = 0xae;
 +	*p++ = 0x25;
 +	memcpy(p, &disp, 4);
-+	return 8;
++	return 9;
 +}
 +
- bool arch_uprobe_ptwrite_supported(void)
- {
- 	u32 eax, ebx, ecx, edx;
-@@ -1293,7 +1312,11 @@ static const struct {
- 	{ offsetof(struct pt_regs, r14), 14 }, { offsetof(struct pt_regs, r15), 15 },
- };
- 
--/* Compile the register, stack-pointer, and immediate fetch forms. */
++bool arch_uprobe_ptwrite_supported(void)
++{
++	u32 eax, ebx, ecx, edx;
++
++	if (!boot_cpu_has(X86_FEATURE_INTEL_PT))
++		return false;
++	if (boot_cpu_data.cpuid_level < 0x14)
++		return false;
++
++	/* CPUID.(EAX=14H, ECX=0):EBX[4] = PTWRITE */
++	cpuid_count(0x14, 0, &eax, &ebx, &ecx, &edx);
++	return ebx & BIT(4);
++}
 +
 +/*
-+ * Compile one tracefs fetch arg (arch-neutral form, see
-+ * uprobe_ptwrite_fetch) into a ptwrite descriptor entry.
++ * x86-64 pt_regs member offset -> GPR index (0=rax..15=r15), matching
++ * the uprobe_ptwrite_arg.reg convention used by the stub generator.
++ * The offsets are what the generic trace-probe register parser
++ * (regs_query_register_offset) puts into FETCH_OP_REG.params.
 + */
- int arch_uprobe_ptwrite_fetch(struct uprobe_ptwrite_arg *a,
- 			      const struct uprobe_ptwrite_fetch *f)
- {
-@@ -1301,21 +1324,30 @@ int arch_uprobe_ptwrite_fetch(struct uprobe_ptwrite_arg *a,
- 
- 	switch (f->kind) {
- 	case UPROBE_PTW_FETCH_REG:
-+	case UPROBE_PTW_FETCH_MEMREG:
- 		for (j = 0; j < ARRAY_SIZE(ptwrite_reg_map); j++)
- 			if (ptwrite_reg_map[j].off == f->reg) {
- 				idx = ptwrite_reg_map[j].idx;
- 				break;
- 			}
- 		if (idx < 0)
--			return -EINVAL;
--		a->src = UPROBE_PTW_SRC_REG;
-+			return -EINVAL;	/* not an x86-64 GPR */
-+		a->src = f->kind == UPROBE_PTW_FETCH_REG ?
-+			 UPROBE_PTW_SRC_REG : UPROBE_PTW_SRC_MEM;
- 		a->reg = idx;
-+		if (f->kind == UPROBE_PTW_FETCH_MEMREG)
-+			a->val = (u64)(s32)f->imm;
- 		break;
--	case UPROBE_PTW_FETCH_STACKP:
-+	case UPROBE_PTW_FETCH_STACKP:	/* $stack: SP value, never faults */
- 		a->src = UPROBE_PTW_SRC_REG;
- 		a->reg = 4; /* rsp */
- 		break;
--	case UPROBE_PTW_FETCH_IMM:
-+	case UPROBE_PTW_FETCH_STACKN:	/* [rsp + imm] */
-+		a->src = UPROBE_PTW_SRC_MEM;
-+		a->reg = 4;	/* rsp */
++static const struct {
++	unsigned int off;
++	u8 idx;
++} ptwrite_reg_map[] = {
++	{ offsetof(struct pt_regs, ax), 0 }, { offsetof(struct pt_regs, cx), 1 },
++	{ offsetof(struct pt_regs, dx), 2 }, { offsetof(struct pt_regs, bx), 3 },
++	{ offsetof(struct pt_regs, sp), 4 }, { offsetof(struct pt_regs, bp), 5 },
++	{ offsetof(struct pt_regs, si), 6 }, { offsetof(struct pt_regs, di), 7 },
++	{ offsetof(struct pt_regs, r8), 8 }, { offsetof(struct pt_regs, r9), 9 },
++	{ offsetof(struct pt_regs, r10), 10 }, { offsetof(struct pt_regs, r11), 11 },
++	{ offsetof(struct pt_regs, r12), 12 }, { offsetof(struct pt_regs, r13), 13 },
++	{ offsetof(struct pt_regs, r14), 14 }, { offsetof(struct pt_regs, r15), 15 },
++};
++
++/* Compile the register, stack-pointer, and immediate fetch forms. */
++int arch_uprobe_ptwrite_fetch(struct uprobe_ptwrite_arg *a,
++			      const struct uprobe_ptwrite_fetch *f)
++{
++	int j, idx = -1;
++
++	switch (f->kind) {
++	case UPROBE_PTW_FETCH_REG:
++		for (j = 0; j < ARRAY_SIZE(ptwrite_reg_map); j++)
++			if (ptwrite_reg_map[j].off == f->reg) {
++				idx = ptwrite_reg_map[j].idx;
++				break;
++			}
++		if (idx < 0)
++			return -EINVAL;
++		a->src = UPROBE_PTW_SRC_REG;
++		a->reg = idx;
++		break;
++	case UPROBE_PTW_FETCH_STACKP:
++		a->src = UPROBE_PTW_SRC_REG;
++		a->reg = 4; /* rsp */
++		break;
++	case UPROBE_PTW_FETCH_IMM:
++		a->src = UPROBE_PTW_SRC_IMM;
 +		a->val = f->imm;
 +		break;
-+	case UPROBE_PTW_FETCH_IMM:	/* \IMM */
- 		a->src = UPROBE_PTW_SRC_IMM;
- 		a->val = f->imm;
- 		break;
-@@ -1325,15 +1357,43 @@ int arch_uprobe_ptwrite_fetch(struct uprobe_ptwrite_arg *a,
- 	return 0;
- }
- 
-+
-+/*
-+ * Worst-case stub block: header ptwriteq (9) + max args of the largest form
-+ * (MEM: 5 opcode + SIB + 4 disp + 2 short jmp + 9 fixup = 21 B) + final jmp
-+ * (5) -> code; data: header + fault-word slots (16); fault table
-+ * [nft][{start,end,fixup} x nft] (2 + 6*nft). Must fit UPROBE_PTWRITE_STUB_SIZE;
-+ * prepare() also enforces it with -E2BIG at runtime.
-+ */
-+static_assert((((9 + UPROBE_PTWRITE_MAX_ARGS * 21 + 5 + 7) & ~7) +
-+	       16 + 2 + 6 * UPROBE_PTWRITE_MAX_ARGS) <= UPROBE_PTWRITE_STUB_SIZE,
-+	       "worst-case ptwrite stub block exceeds UPROBE_PTWRITE_STUB_SIZE");
-+
-+static bool ptwrite_has_room(const u8 *base, const u8 *p, size_t len)
-+{
-+	return p >= base && (size_t)(p - base) <=
-+		       sizeof(((struct uprobe_ptwrite_arch *)0)->stub) - len;
++	default:
++		return -EINVAL;
++	}
++	return 0;
 +}
 +
-+#define PTW_NEED(_len) do { \
-+		if (!ptwrite_has_room(code, p, (_len))) \
-+			return -E2BIG; \
-+	} while (0)
++int arch_uprobe_ptwrite_prepare(struct arch_uprobe *auprobe,
++				const struct uprobe_ptwrite_desc *desc)
++{
++	struct uprobe_ptwrite_arch *ptw = &auprobe->ptwrite;
++	u8 *code = ptw->stub, *p = ptw->stub;
++	u16 imm_off[UPROBE_PTWRITE_MAX_ARGS];
++	unsigned int data_off;
++	unsigned int hdr_off = 0;
++	unsigned int imm_idx = 0, n_imm = 0;
++	u64 hdr;
++	int i;
 +
++	if (!desc || desc->nargs == 0)
++		return -EINVAL;
++	if (desc->nargs > UPROBE_PTWRITE_MAX_ARGS)
++		return -E2BIG;
++	if (desc->flags)
++		return -EINVAL;
 +
++	/* The generic registration path copied these bytes before this hook. */
++	memcpy(ptw->orig, auprobe->insn, sizeof(ptw->orig));
 +
- int arch_uprobe_ptwrite_prepare(struct arch_uprobe *auprobe,
- 				const struct uprobe_ptwrite_desc *desc)
- {
- 	struct uprobe_ptwrite_arch *ptw = &auprobe->ptwrite;
- 	u8 *code = ptw->stub, *p = ptw->stub;
- 	u16 imm_off[UPROBE_PTWRITE_MAX_ARGS];
--	unsigned int data_off;
-+	u8 fixup_len[UPROBE_PTWRITE_MAX_ARGS];
-+	struct { u16 start, end, fixup; } __packed mft[UPROBE_PTWRITE_MAX_ARGS];
-+	u16 mdisp[UPROBE_PTWRITE_MAX_ARGS];
-+	unsigned int data_off, flt_off, ft_off;
- 	unsigned int hdr_off = 0;
--	unsigned int imm_idx = 0, n_imm = 0;
-+	unsigned int imm_idx = 0, n_imm = 0, mem_idx = 0, n_mem = 0;
- 	u64 hdr;
- 	int i;
- 
-@@ -1341,7 +1401,7 @@ int arch_uprobe_ptwrite_prepare(struct arch_uprobe *auprobe,
- 		return -EINVAL;
- 	if (desc->nargs > UPROBE_PTWRITE_MAX_ARGS)
- 		return -E2BIG;
--	if (desc->flags)
-+	if (desc->flags & ~UPROBE_PTWRITE_FL_ALLOW_MEM)
- 		return -EINVAL;
- 
- 	/* The generic registration path copied these bytes before this hook. */
-@@ -1358,24 +1418,89 @@ int arch_uprobe_ptwrite_prepare(struct arch_uprobe *auprobe,
- 				return -E2BIG;
- 			n_imm++;
- 			break;
-+		case UPROBE_PTW_SRC_MEM:
-+			if (!(desc->flags & UPROBE_PTWRITE_FL_ALLOW_MEM))
-+				return -EINVAL;
-+			if (desc->args[i].reg > 15)
-+				return -EINVAL;
-+			/*
-+			 * u64 args use ptwriteq (8-byte load); u32/s32/x32
-+			 * args use ptwritel (4-byte load). Any other size
-+			 * would read the wrong width.
-+			 */
-+			if (desc->args[i].size != 4 &&
-+			    desc->args[i].size != 8)
-+				return -EINVAL;
-+			if (n_mem >= ARRAY_SIZE(mft))
-+				return -E2BIG;
-+			n_mem++;
-+			break;
- 		default:
- 			return -EINVAL;
- 		}
- 	}
- 
- 	/* header word emission (disp32 patched below) */
-+	PTW_NEED(9);
- 	p += ptwrite_emit_riprel(p, 0);
- 
- 	for (i = 0; i < desc->nargs; i++) {
--		if (desc->args[i].src == UPROBE_PTW_SRC_REG) {
++	for (i = 0; i < desc->nargs; i++) {
 +		switch (desc->args[i].src) {
 +		case UPROBE_PTW_SRC_REG:
-+			PTW_NEED(5);
- 			p += ptwrite_emit_reg(p, desc->args[i].reg);
--		} else {
++			if (desc->args[i].reg > 15)
++				return -EINVAL;
 +			break;
 +		case UPROBE_PTW_SRC_IMM:
-+			if (imm_idx >= ARRAY_SIZE(imm_off))
++			if (n_imm >= ARRAY_SIZE(imm_off))
 +				return -E2BIG;
-+			PTW_NEED(9);
- 			imm_off[imm_idx++] = p - code;
- 			p += ptwrite_emit_riprel(p, 0);
++			n_imm++;
 +			break;
-+		case UPROBE_PTW_SRC_MEM: {
-+			/*
-+			 * ptwrite[q|l] disp32(%reg), short jump, and fault
-+			 * fixup. The largest form is 21 bytes.
-+			 */
-+			u8 reg = desc->args[i].reg;
-+			bool wide = desc->args[i].size == 8;
-+			unsigned int arg_len = (wide ? 9 : 8) +
-+				((reg & 7) == 4) + 2 + (wide ? 9 : 8);
-+			int start;
-+
-+			if (mem_idx >= ARRAY_SIZE(mft))
-+				return -E2BIG;
-+			PTW_NEED(arg_len);
-+			start = p - code;
-+			*p++ = 0xf3;
-+			if (wide)
-+				*p++ = (reg & 8) ? 0x49 : 0x48; /* REX.W */
-+			else if (reg & 8)
-+				*p++ = 0x41; /* REX.B only (32-bit operand) */
-+			*p++ = 0x0f;
-+			*p++ = 0xae;
-+			*p++ = 0xa0 | (reg & 7); /* mod 10, reg /4, rm reg */
-+			if ((reg & 7) == 4) /* SIB escape: base rsp/esp/r12 */
-+				*p++ = 0x24;
-+			mft[mem_idx].start = start;
-+			mdisp[mem_idx] = p - code;
-+			p += 4;
-+			mft[mem_idx].end = p - code;
-+			*p++ = 0xeb;
-+			*p++ = wide ? 9 : 8;
-+			mft[mem_idx].fixup = p - code;
-+			fixup_len[mem_idx] = wide ?
-+				ptwrite_emit_riprel(p, 0) :
-+				ptwrite_emit_riprel32(p, 0);
-+			p += fixup_len[mem_idx];
-+			mem_idx++;
-+			break;
++		default:
++			return -EINVAL;
 +		}
- 		}
- 	}
- 
- 	/* final jmp back to probe+5; rel32 patched per-mm at install */
-+	PTW_NEED(5);
- 	*p++ = 0xe9;
- 	if (p - code > U8_MAX)
- 		return -E2BIG;
-@@ -1383,11 +1508,23 @@ int arch_uprobe_ptwrite_prepare(struct arch_uprobe *auprobe,
- 	p += 4;
- 
- 	data_off = (p - code + 7) & ~7UL;
--	if (data_off + 8 * (1 + n_imm) > sizeof(ptw->stub))
-+	/* data: header + imm slots + one shared fault-word slot (0) */
-+	if (data_off + 8 * (1 + n_imm + (n_mem ? 1 : 0)) > sizeof(ptw->stub))
- 		return -E2BIG;
-+	flt_off = data_off + 8 * (1 + n_imm);
- 
--	/* data slots: header, then imm values in emission order */
--	hdr = ((u64)desc->event_id << 48) | ((u64)desc->nargs << 40);
-+	/* fault table: [u16 nft][{start,end,fixup} x nft], block-relative */
-+	ft_off = (flt_off + 8 * (n_mem ? 1 : 0) + 7) & ~7UL;
-+	if (ft_off + 2 + 6 * n_mem > sizeof(ptw->stub))
-+		return -E2BIG;
-+	if (n_mem) {
-+		*(u16 *)(code + ft_off) = n_mem;
-+		memcpy(code + ft_off + 2, mft, 6 * n_mem);
 +	}
 +
-+	/* data slots: header, imm values in emission order, fault word */
-+	hdr = ((u64)desc->event_id << 48) | ((u64)desc->nargs << 40) |
-+	      UPROBE_PTW_HDR_MAGIC;
- 	*(u64 *)(code + data_off) = hdr;
- 
- 	/* patch the header's disp32: hdr slot - end of header insn */
-@@ -1403,8 +1540,33 @@ int arch_uprobe_ptwrite_prepare(struct arch_uprobe *auprobe,
- 		imm_idx++;
- 	}
- 
--	ptw->stub_len = data_off + 8 * (1 + n_imm);
--	ptw->ndata = 1 + n_imm;
-+	/* memory arg disp32s (absolute vs the base reg) + fixup disp32s */
-+	mem_idx = 0;
++	/* header word emission (disp32 patched below) */
++	p += ptwrite_emit_riprel(p, 0);
++
 +	for (i = 0; i < desc->nargs; i++) {
-+		s32 disp;
++		if (desc->args[i].src == UPROBE_PTW_SRC_REG) {
++			p += ptwrite_emit_reg(p, desc->args[i].reg);
++		} else {
++			imm_off[imm_idx++] = p - code;
++			p += ptwrite_emit_riprel(p, 0);
++		}
++	}
 +
-+		if (desc->args[i].src != UPROBE_PTW_SRC_MEM)
++	/* final jmp back to probe+5; rel32 patched per-mm at install */
++	*p++ = 0xe9;
++	if (p - code > U8_MAX)
++		return -E2BIG;
++	ptw->jmp_off = p - code;
++	p += 4;
++
++	data_off = (p - code + 7) & ~7UL;
++	if (data_off + 8 * (1 + n_imm) > sizeof(ptw->stub))
++		return -E2BIG;
++
++	/* data slots: header, then imm values in emission order */
++	hdr = ((u64)desc->event_id << 48) | ((u64)desc->nargs << 40);
++	*(u64 *)(code + data_off) = hdr;
++
++	/* patch the header's disp32: hdr slot - end of header insn */
++	*(s32 *)(code + hdr_off + 5) = (s32)(data_off - (hdr_off + 9));
++
++	imm_idx = 0;
++	for (i = 0; i < desc->nargs; i++) {
++		if (desc->args[i].src != UPROBE_PTW_SRC_IMM)
 +			continue;
-+		disp = (s32)desc->args[i].val;
-+		*(s32 *)(code + mdisp[mem_idx]) = disp;
-+		/*
-+		 * fixup's RIP-relative disp: flt slot - end of fixup insn.
-+		 * disp32 field starts at flen - 4 in both forms
-+		 */
-+		*(s32 *)(code + mft[mem_idx].fixup + fixup_len[mem_idx] - 4) =
-+			(s32)(flt_off - (mft[mem_idx].fixup +
-+					fixup_len[mem_idx]));
-+		mem_idx++;
++		*(s32 *)(code + imm_off[imm_idx] + 5) =
++			(s32)((data_off + 8 * (1 + imm_idx)) - (imm_off[imm_idx] + 9));
++		*(u64 *)(code + data_off + 8 * (1 + imm_idx)) = desc->args[i].val;
++		imm_idx++;
 +	}
 +
-+	/* the shared fault word: failed reads emit 0 */
-+	if (n_mem)
-+		*(u64 *)(code + flt_off) = 0;
-+
-+	ptw->stub_len = n_mem ? ft_off + 2 + 6 * n_mem : data_off + 8 * (1 + n_imm);
-+	ptw->ndata = 1 + n_imm + (n_mem ? 1 : 0);
-+	ptw->ft_off = n_mem ? ft_off : 0;
-+	ptw->nft = n_mem;
- 	return 0;
- }
- #undef PTW_NEED
-@@ -1664,6 +1826,7 @@ int arch_uprobe_install_ptwrite(struct arch_uprobe *auprobe,
- 	struct uprobe_ptwrite_arch *ptw_a = &auprobe->ptwrite;
- 	unsigned long block_off, stub_addr;
- 	u8 *kaddr, orig[5];
-+	s64 site_delta;
- 	s32 rel;
- 	int ret;
- 
-@@ -1689,13 +1852,22 @@ int arch_uprobe_install_ptwrite(struct arch_uprobe *auprobe,
- 		return -ENOMEM;
- 
- 	block_off = ptw->cursor;
--	if (block_off > PAGE_SIZE ||
--	    ptw_a->stub_len > PAGE_SIZE - block_off)
-+	if (block_off > PAGE_SIZE || ptw_a->stub_len > PAGE_SIZE - block_off)
-+		return -ENOMEM;
-+	if (ptw->nblocks >= ARRAY_SIZE(ptw->index))
- 		return -ENOMEM;
- 	stub_addr = ptw->vaddr + block_off;
- 	if (!ptwrite_rel32(stub_addr + ptw_a->jmp_off + 4,
- 			   vaddr + 5, &rel))
- 		return -ERANGE;
-+	site_delta = (s64)vaddr - (s64)ptw->vaddr;
-+	if (site_delta < INT_MIN || site_delta > INT_MAX)
-+		return -ERANGE;
-+
-+	ptw->index[ptw->nblocks].off = block_off;
-+	ptw->index[ptw->nblocks].len = ptw_a->stub_len;
-+	ptw->index[ptw->nblocks].ft_off = ptw_a->ft_off;
-+	ptw->nblocks++;
- 
- 	kaddr = kmap_local_page(ptw->page);
- 	memcpy(kaddr + block_off, ptw_a->stub, ptw_a->stub_len);
-@@ -1704,9 +1876,13 @@ int arch_uprobe_install_ptwrite(struct arch_uprobe *auprobe,
- 	kunmap_local(kaddr);
- 
- 	ret = ptwrite_text_poke(auprobe, vma, vaddr, stub_addr);
--	if (!ret)
--		ptw->cursor = block_off + ptw_a->stub_len;
--	return ret;
-+	if (ret)
-+		/* Publish rollback before readers use the reduced block count. */
-+		smp_store_release(&ptw->nblocks, ptw->nblocks - 1);
-+		return ret;
-+	}
-+	ptw->cursor = block_off + ptw_a->stub_len;
++	ptw->stub_len = data_off + 8 * (1 + n_imm);
++	ptw->ndata = 1 + n_imm;
 +	return 0;
- }
- 
- int arch_uprobe_uninstall_ptwrite(struct arch_uprobe *auprobe,
-@@ -1724,6 +1900,98 @@ int arch_uprobe_uninstall_ptwrite(struct arch_uprobe *auprobe,
- 			UPROBE_SWBP_INSN, false, false, false, false, NULL);
- }
- 
-+/*
-+ * Ptwrite memory faults are fixed up for fault classes routed through the
-+ * user-fault notifier. #AC is intentionally not handled: alignment checking
-+ * is normally disabled for user processes and is not a supported ptwrite mode.
-+ */
-+static bool uprobe_ptwrite_handle_fault(struct pt_regs *regs)
-+{
-+	struct mm_struct *mm = current->mm;
-+	struct uprobes_state *state;
-+	struct uprobe_ptwrite_page *ptw;
-+	unsigned long ip = instruction_pointer(regs);
-+	int b;
++}
++#undef PTW_NEED
 +
-+	if (!mm)
-+		return false;
-+	state = &mm->uprobes_state;
++static vm_fault_t ptwrite_fault(const struct vm_special_mapping *sm,
++				struct vm_area_struct *vma, struct vm_fault *vmf)
++{
++	struct uprobes_state *state = &vma->vm_mm->uprobes_state;
++	struct uprobe_ptwrite_page *ptw;
 +
 +	rcu_read_lock();
 +	hlist_for_each_entry_rcu(ptw, &state->head_ptwrite, node) {
-+		unsigned long boff;
-+		u16 nblocks;
-+
-+		if (ip < ptw->vaddr || ip >= ptw->vaddr + PAGE_SIZE)
-+			continue;
-+		boff = ip - ptw->vaddr;
-+		/* Acquire published metadata before scanning blocks in the fault path. */
-+		nblocks = smp_load_acquire(&ptw->nblocks);
-+		for (b = 0; b < nblocks; b++) {
-+			u16 off = ptw->index[b].off;
-+			u16 len = ptw->index[b].len;
-+			u16 fto = ptw->index[b].ft_off;
-+			u8 *kaddr;
-+			u16 nft, i;
-+
-+			/* no fault table, or IP outside this block: not ours */
-+			if (!fto || boff < off || boff >= off + len)
-+				continue;
-+			if (off >= PAGE_SIZE || len > PAGE_SIZE - off ||
-+			    len < sizeof(nft) ||
-+			    fto > len - sizeof(nft)) {
-+				rcu_read_unlock();
-+				return false;
-+			}
-+			kaddr = kmap_local_page(ptw->page);
-+			nft = *(u16 *)(kaddr + off + fto);
-+			if (nft > UPROBE_PTWRITE_MAX_ARGS ||
-+			    nft > (len - fto - sizeof(nft)) / 6) {
-+				kunmap_local(kaddr);
-+				rcu_read_unlock();
-+				return false;
-+			}
-+			for (i = 0; i < nft; i++) {
-+				u16 *e = (u16 *)(kaddr + off + fto +
-+						 sizeof(nft) + i * 6);
-+
-+				if (e[0] >= e[1] || e[1] > len || e[2] >= len) {
-+					kunmap_local(kaddr);
-+					rcu_read_unlock();
-+					return false;
-+				}
-+				if (boff >= off + e[0] && boff < off + e[1]) {
-+					regs->ip = ptw->vaddr + off + e[2];
-+					kunmap_local(kaddr);
-+					rcu_read_unlock();
-+					return true;
-+				}
-+			}
-+			kunmap_local(kaddr);
++		if (ptw->vaddr == vma->vm_start) {
++			vmf->page = ptw->page;
++			get_page(vmf->page);
 +			rcu_read_unlock();
-+			return false;
++			return 0;
 +		}
 +	}
 +	rcu_read_unlock();
-+	return false;
++	return VM_FAULT_SIGBUS;
 +}
 +
-+static int uprobe_user_fault_notify(struct notifier_block *self,
-+				    unsigned long val, void *data)
++static int ptwrite_mremap(const struct vm_special_mapping *sm,
++			  struct vm_area_struct *new_vma)
 +{
-+	struct x86_user_fault_args *args = data;
-+
-+	if (!args || !args->regs)
-+		return NOTIFY_DONE;
-+
-+	if (uprobe_ptwrite_handle_fault(args->regs))
-+		return NOTIFY_STOP;
-+	return NOTIFY_DONE;
++	return -EPERM;
 +}
 +
-+static struct notifier_block uprobe_user_fault_nb = {
-+	.notifier_call = uprobe_user_fault_notify,
++static const struct vm_special_mapping ptwrite_mapping = {
++	.name	= "[uprobes-ptwrite]",
++	.fault	= ptwrite_fault,
++	.mremap	= ptwrite_mremap,
 +};
- 
++
++static bool __in_uprobe_ptwrite(struct mm_struct *mm, unsigned long ip)
++{
++	struct vm_area_struct *vma = vma_lookup(mm, ip);
++
++	return vma && vma_is_special_mapping(vma, &ptwrite_mapping);
++}
++
++
++/*
++ * Find a free PAGE_SIZE area in @mm within +/-2GB of the probe (so the jmp
++ * rel32 at the probe can reach the stub). Caller holds mmap_write_lock(mm).
++ */
++static unsigned long find_ptwrite_page_area(struct mm_struct *mm,
++					    unsigned long vaddr)
++{
++	VMA_ITERATOR(vmi, mm, 0);
++	struct vm_area_struct *vma;
++	unsigned long low, high, prev, call_end;
++	const unsigned long call_range = (unsigned long)INT_MAX + 1;
++
++	mmap_assert_write_locked(mm);
++	if (check_add_overflow(vaddr, 5UL, &call_end))
++		return -ENOMEM;
++	if (call_end < call_range)
++		low = PAGE_SIZE;
++	else
++		low = call_end - call_range;
++	if (low < PAGE_SIZE)
++		low = PAGE_SIZE;
++	if (low > ULONG_MAX - (PAGE_SIZE - 1))
++		return -ENOMEM;
++	low = PAGE_ALIGN(low);
++
++	if (check_add_overflow(call_end, (unsigned long)INT_MAX, &high))
++		high = ULONG_MAX;
++	high = min(high, TASK_SIZE_MAX);
++	if (low >= high)
++		return -ENOMEM;
++
++	prev = low;
++	for_each_vma(vmi, vma) {
++		if (vma->vm_start >= high)
++			break;
++		if (vma->vm_end <= prev)
++			continue;
++		if (vma->vm_start > prev && vma->vm_start - prev >= PAGE_SIZE)
++			return prev;
++		if (vma->vm_end > prev) {
++			if (vma->vm_end > ULONG_MAX - (PAGE_SIZE - 1))
++				return -ENOMEM;
++			prev = PAGE_ALIGN(vma->vm_end);
++			if (prev >= high)
++				return -ENOMEM;
++		}
++	}
++	if (prev < high && high - prev >= PAGE_SIZE)
++		return prev;
++	return -ENOMEM;
++}
++
++static struct uprobe_ptwrite_page *
++create_uprobe_ptwrite_page(struct mm_struct *mm, unsigned long vaddr)
++{
++	struct uprobe_ptwrite_page *ptw;
++	struct vm_area_struct *vma;
++	unsigned long area;
++
++	area = find_ptwrite_page_area(mm, vaddr);
++	if (IS_ERR_VALUE(area))
++		return NULL;
++
++	mmap_assert_write_locked(mm);
++
++	ptw = kzalloc_obj(*ptw);
++	if (!ptw)
++		return NULL;
++
++	ptw->page = alloc_page(GFP_HIGHUSER | __GFP_ZERO);
++	if (!ptw->page) {
++		kfree(ptw);
++		return NULL;
++	}
++	ptw->vaddr = area;
++
++	vma = _install_special_mapping(mm, area, PAGE_SIZE,
++			VM_READ|VM_EXEC|VM_MAYEXEC|VM_MAYREAD|VM_IO,
++			&ptwrite_mapping);
++	if (IS_ERR(vma)) {
++		__free_page(ptw->page);
++		kfree(ptw);
++		return NULL;
++	}
++	return ptw;
++}
++static struct uprobe_ptwrite_page *
++get_uprobe_ptwrite_page(struct mm_struct *mm, unsigned long vaddr,
++			unsigned int len)
++{
++	struct uprobes_state *state = &mm->uprobes_state;
++	struct uprobe_ptwrite_page *ptw;
++	mmap_assert_write_locked(mm);
++
++	/* a block larger than a page can never be placed */
++	if (len > PAGE_SIZE)
++		return NULL;
++
++	hlist_for_each_entry(ptw, &state->head_ptwrite, node)
++		if (is_reachable_by_call(ptw->vaddr + ptw->cursor, vaddr) &&
++		    ptw->cursor + len <= PAGE_SIZE)
++			return ptw;
++
++	/* no reachable page with room: allocate a fresh one (cursor 0) */
++	ptw = create_uprobe_ptwrite_page(mm, vaddr);
++	if (!ptw)
++		return NULL;
++	/* Order page initialization before publishing the page on the RCU list. */
++	smp_wmb();
++
++	hlist_add_head_rcu(&ptw->node, &state->head_ptwrite);
++	return ptw;
++}
++
++/* Probe site must be a 5-byte NOP that does not cross a page boundary. */
++static int ptwrite_validate_site(const u8 *orig, unsigned long vaddr)
++{
++	struct insn insn;
++	int ret;
++	int off = 0;
++
++	/*
++	 * The 5 displaced bytes must be NOPs: either one 5-byte NOP
++	 * (nopl 0x0(%rax,%rax,1)) or a run of shorter NOPs summing to
++	 * exactly 5 (gcc -fpatchable-function-entry=5 emits 5 x 0x90 on
++	 * modern toolchains). Any non-NOP byte, or a NOP crossing the
++	 * 5-byte window, is rejected.
++	 */
++	while (off < 5) {
++		ret = insn_decode(&insn, orig + off, 5 - off, INSN_MODE_64);
++		if (ret < 0)
++			return -EINVAL;
++		if (insn.length < 1 || insn.length > 5 - off ||
++		    !insn_is_nop(&insn))
++			return -EINVAL;
++		off += insn.length;
++	}
++	if (off != 5)
++		return -EINVAL;
++	if (PAGE_SIZE - (vaddr & ~PAGE_MASK) < 5)
++		return -EINVAL;
++	return 0;
++}
++
++static bool ptwrite_rel32(unsigned long from, unsigned long to, s32 *rel)
++{
++	s64 delta = (s64)to - (s64)from;
++
++	if (delta < INT_MIN || delta > INT_MAX)
++		return false;
++	*rel = (s32)delta;
++	return true;
++}
++
++static bool ptwrite_is_installed(struct mm_struct *mm, unsigned long vaddr,
++				 const u8 *insn5)
++{
++	struct __packed __arch_relative_insn {
++		u8 op;
++		s32 raddr;
++	} *jmp = (struct __arch_relative_insn *)insn5;
++	s64 target;
++
++	if (jmp->op != 0xe9)
++		return false;
++	target = (s64)vaddr + 5 + (s64)jmp->raddr;
++	if (target < PAGE_SIZE || target >= TASK_SIZE_MAX)
++		return false;
++	return __in_uprobe_ptwrite(mm, (unsigned long)target);
++}
++
++/*
++ * Install a JMP rel32 at the probe site using the 3-phase SMP-safe poke.
++ * On failure, restores the original instruction so the site is never
++ * left half-poked.
++ */
++static int ptwrite_text_poke(struct arch_uprobe *auprobe,
++			     struct vm_area_struct *vma, unsigned long vaddr,
++			     unsigned long stub_addr)
++{
++	u8 jmp5[5] = { 0xe9, 0, 0, 0, 0 };
++	s32 rel;
++	int err;
++
++	if (!ptwrite_rel32(vaddr + 5, stub_addr, &rel))
++		return -ERANGE;
++	memcpy(jmp5 + 1, &rel, 4);
++
++	{
++		bool first_phase_done;
++
++		err = text_poke_5byte(auprobe, vma, vaddr, jmp5,
++				      auprobe->ptwrite.orig[0], false, true, true,
++				      false, &first_phase_done);
++		if (err && first_phase_done) {
++			int restore_err;
++
++			/* Restore only after INT3 was successfully installed. */
++			restore_err = text_poke_5byte(auprobe, vma, vaddr,
++					auprobe->ptwrite.orig, UPROBE_SWBP_INSN,
++					true, true, true, false, NULL);
++			if (restore_err)
++				return restore_err;
++		}
++	}
++	return err;
++}
++
++int arch_uprobe_install_ptwrite(struct arch_uprobe *auprobe,
++		struct vm_area_struct *vma, unsigned long vaddr)
++{
++	struct mm_struct *mm = vma->vm_mm;
++	struct uprobe_ptwrite_page *ptw;
++	struct uprobe_ptwrite_arch *ptw_a = &auprobe->ptwrite;
++	unsigned long block_off, stub_addr;
++	u8 *kaddr, orig[5];
++	s32 rel;
++	int ret;
++
++	if (!is_64bit_mm(mm))
++		return -EOPNOTSUPP;
++	/* A three-phase poke and this single-page read both require one page. */
++	if (PAGE_SIZE - (vaddr & ~PAGE_MASK) < 5)
++		return -EINVAL;
++	mmap_assert_write_locked(mm);
++
++	ret = copy_from_vaddr(mm, vaddr, orig, sizeof(orig));
++	if (ret)
++		return ret;
++	if (ptwrite_is_installed(mm, vaddr, orig))
++		return 0;
++
++	ret = ptwrite_validate_site(orig, vaddr);
++	if (ret)
++		return ret;
++
++	ptw = get_uprobe_ptwrite_page(mm, vaddr, ptw_a->stub_len);
++	if (!ptw)
++		return -ENOMEM;
++
++	block_off = ptw->cursor;
++	if (block_off > PAGE_SIZE ||
++	    ptw_a->stub_len > PAGE_SIZE - block_off)
++		return -ENOMEM;
++	stub_addr = ptw->vaddr + block_off;
++	if (!ptwrite_rel32(stub_addr + ptw_a->jmp_off + 4,
++			   vaddr + 5, &rel))
++		return -ERANGE;
++
++	kaddr = kmap_local_page(ptw->page);
++	memcpy(kaddr + block_off, ptw_a->stub, ptw_a->stub_len);
++	/* ptwrite_mapping rejects mremap, so this per-mm rel32 remains valid. */
++	memcpy(kaddr + block_off + ptw_a->jmp_off, &rel, sizeof(rel));
++	kunmap_local(kaddr);
++
++	ret = ptwrite_text_poke(auprobe, vma, vaddr, stub_addr);
++	if (!ret)
++		ptw->cursor = block_off + ptw_a->stub_len;
++	return ret;
++}
++
++int arch_uprobe_uninstall_ptwrite(struct arch_uprobe *auprobe,
++		struct vm_area_struct *vma, unsigned long vaddr)
++{
++	struct mm_struct *mm = vma->vm_mm;
++	u8 cur[5];
++
++	mmap_assert_write_locked(mm);
++	if (copy_from_vaddr(mm, vaddr, cur, sizeof(cur)) ||
++	    !ptwrite_is_installed(mm, vaddr, cur))
++		return;
++
++	text_poke_5byte(auprobe, vma, vaddr, auprobe->ptwrite.orig,
++			UPROBE_SWBP_INSN, false, false, false, false, NULL);
++}
++
++
  static bool __is_optimized(struct mm_struct *mm, uprobe_opcode_t *insn, unsigned long vaddr)
  {
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index c0d65ea5353e..c0d189bef8bd 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -213,10 +213,10 @@ enum uprobe_ptwrite_src {
- 
- struct uprobe_ptwrite_arg {
- 	u8	src;		/* enum uprobe_ptwrite_src */
--	u8	reg;		/* x86-64 GPR index (0=rax..15=r15) for SRC_REG */
-+	u8	reg;		/* x86-64 GPR index (0=rax..15=r15) for SRC_REG/SRC_MEM */
- 	u8	size;		/* declared type size 1/2/4/8 (decoder hint) */
- 	u8	reserved;
--	u64	val;		/* SRC_IMM: constant; SRC_REG: unused */
-+	u64	val;		/* SRC_IMM: constant, SRC_MEM: disp32 (low 32 bits) */
- };
- 
- struct uprobe_ptwrite_desc {
-diff --git a/samples/uprobe-ptwrite/uprobe_ptwrite_test.c b/samples/uprobe-ptwrite/uprobe_ptwrite_test.c
-index c3b9dd6bec16..5eafc26104ad 100644
---- a/samples/uprobe-ptwrite/uprobe_ptwrite_test.c
-+++ b/samples/uprobe-ptwrite/uprobe_ptwrite_test.c
-@@ -11,9 +11,11 @@
-  * Usage (module params):
-  *   path=/path/to/prog   file to probe
-  *   offset=0xADDR        file offset of the probe site
-- *   args="r0,r1,i0x42"             comma-separated;
-+ *   args="r0,r1,i0x42,m3,m2:0x8,m4:0x10:4"   comma-separated;
-  *                        r<N> = x86-64 GPR index 0..15,
-  *                        i<hex> = immediate constant,
-+ *                        m<N>[:<disp>][:<size>] = memory arg [reg + disp32],
-+ *                        size 4 (u32 load) or 8 (u64 load, default)
-  *   event_id=0x1234      identifier carried in the PTW header word
-  */
- #include <linux/module.h>
-@@ -87,6 +89,43 @@ static int parse_probe_args(void)
- 			}
- 			a->src = UPROBE_PTW_SRC_IMM;
- 			a->val = v;
-+		} else if (tok[0] == 'm') {
-+			/*
-+			 * m<R>[:<disp>][:<size>]: memory arg [reg + disp32],
-+			 * size 4 (u32 load) or 8 (u64 load, default)
-+			 */
-+			char *colon = strchr(tok, ':');
-+			char *szs = NULL;
-+			unsigned long reg;
-+			long long disp = 0;
-+			unsigned long size = 8;
-+
-+			if (colon) {
-+				*colon = '\0';
-+				szs = strchr(colon + 1, ':');
-+				if (szs)
-+					*szs++ = '\0';
-+			}
-+			if (kstrtoul(tok + 1, 10, &reg) || reg > 15) {
-+				pr_err("uprobe_ptwrite_test: bad mem reg '%s'\n", tok);
-+				goto err;
-+			}
-+			if (colon && kstrtoll(colon + 1, 0, &disp)) {
-+				pr_err("uprobe_ptwrite_test: bad mem disp '%s'\n",
-+				       colon + 1);
-+				goto err;
-+			}
-+			if (szs && (kstrtoul(szs, 10, &size) ||
-+				   (size != 4 && size != 8))) {
-+				pr_err("uprobe_ptwrite_test: bad mem size '%s'\n",
-+				       szs);
-+				goto err;
-+			}
-+			a->src = UPROBE_PTW_SRC_MEM;
-+			a->reg = reg;
-+			a->val = (u64)(s32)disp;
-+			a->size = size;
-+			desc.flags |= UPROBE_PTWRITE_FL_ALLOW_MEM;
- 		} else {
- 			pr_err("uprobe_ptwrite_test: bad arg '%s'\n", tok);
- 			goto err;
+ 	struct __packed __arch_relative_insn {
 -- 
 2.54.0
 
