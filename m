@@ -1,70 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D62E59B67A
-	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 13:51:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECDEC4248CE
+	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 15:04:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788184305; cv=none; b=j9OMDZ5IMMmXeWixwH31Mu931l2ay1vtoMXJqBVRjjgZJiCw+tqfcseoYKN+zlmhEBwY9KBkydHoQXXMHWxCD911rc4Br0O/1QNEMAFvYHIfDn4/EBOhGBAf1KYCTh7KSKqhkYWKvDAA+trSFLStx01jbaNdmbro/YauATwnriY=
+	t=1788188693; cv=none; b=fmXdVipH7aVuQrRNuiUCfioPajjf4cH1b+XS1CKQ7Ece7QCH8O9ynmK62mIG0/r9lOu9vRS9Nn2fFPt3JQPMm58eQpkC4STHuQCTR+h8R6JY2KdkdeaTFEelIojXPMg1ub3SS93/0BoG7lGkdJ1hoA1aXov+xHB0s9pvbrQlwIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788184305; c=relaxed/simple;
-	bh=+adHu6aYk/Eoo+/9sxhoS3RuB21c9ZfZp9yvmK4K9dI=;
+	s=arc-20240116; t=1788188693; c=relaxed/simple;
+	bh=Hmo1FIZO6ymb3jI/tOkC3c3N5vu7rO4M1vmySgThybA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=T9nurQcrdJ3Ofmxbm7ctNKNotxqWv3IPQInuRx5Kk39YC8T7Zn7y0LKmpQJLzjVk4sdzW1AVyL3FyzGrDBQgWzDsNYvOJGKebjryWLviErmv9EdYwPN8pdpeGtEilQu7sJUQ4XWcXvWG9utSHbVifakg9MWv1WUMfGN1MTs8r/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5KxVtVm; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=IQOOnL74Yniam45pGRZn3WZ52OwyJTQI9Sv0BPrmbkLaGkkFbvpLnlxnUVrju6oYpFzwgoPksp0OvblS6HjqywdQhmE5qJGtSKHJE21jDTAl3Dpbmc/RFSKRAhIuBTa5/zbxUOAtmXdvzBBi+m2lA+vJeqmNZXlThrmEW2s5TnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NDNh4pZ2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5KxVtVm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77BAA1F00ADB;
-	Mon, 31 Aug 2026 13:51:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NDNh4pZ2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DDB41F000E9;
+	Mon, 31 Aug 2026 15:04:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788184299;
-	bh=+adHu6aYk/Eoo+/9sxhoS3RuB21c9ZfZp9yvmK4K9dI=;
+	s=k20260515; t=1788188691;
+	bh=Hmo1FIZO6ymb3jI/tOkC3c3N5vu7rO4M1vmySgThybA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=E5KxVtVm+jiSR+Hb/z1wZmxvyieddn2LM1oXGTFCOajj9whRXaGZXfTzm9r7APYKI
-	 ErQntprxqZbPtV6VD6aKdG9C8JTX46IONQVJO8gzlDRjVK5ZALSZ7G/v9gQrVkqzX+
-	 g8pQc4WXwtkQbvfD9A/XlSdMfE6XfrsrBwy3TUfN//QwA8e/CTknAmoTeHXkYVUpnx
-	 vnlZJO18WVHZLL2Zcv6+EexjCU7QkQQHg96ybMrwshvy1ZrH1KFE+4yo7jkenxnKtR
-	 6vf23LYifVw1Nv2v0yq2LO8TZSZS8zRSA9fH4CsfHW1L/yyeEHzVMUa6gRuKOBEyP+
-	 60H/GBNWiMzGA==
+	b=NDNh4pZ2olEpejitVaR+wIO+MoB0D+53S7ZVX4LhQGcL4MKsnKUswniBYsWgsu3mi
+	 cS/KcDbHLpXmexGwVjc0ZbGBwLV4iL06qqTlltZkU3Bcb6zpz+f5RJW1KECTC49Tzf
+	 vf1ym3nPTFk8Gzydh6G+O7AuiTeRGuOTShzzbzOCCOvI+0yLRdj0uJ4GWZrXA/GGOK
+	 Kkhzb5oqDcghgsebFH6rtMKSjQ+a+XNcOszJXDaOHw5KHvx7j/RC0915QVLP7F4S5P
+	 sP6kcy1IfHSMsVlWzvYgu7Neq4OFd6RYrgi4Ys4FkySX/z8jBQrEmHW0DQUmbHyp3f
+	 hQlsde6vQ9ZGg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH AUTOSEL 6.18] perf/x86/intel/uncore: Guard against
- invalid box control address
+Subject: Re: [PATCH AUTOSEL 6.18-6.12] perf: Fix addr_filter_ranges lifetime
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Sasha Levin" <sashal@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260831133314.4125787-18-sashal@kernel.org>
+In-Reply-To: <20260831133314.4125787-227-sashal@kernel.org>
 References: <20260831133314.4125787-1-sashal@kernel.org>
- <20260831133314.4125787-18-sashal@kernel.org>
+ <20260831133314.4125787-227-sashal@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 31 Aug 2026 13:51:39 +0000
-Message-Id: <20260831135139.77BAA1F00ADB@smtp.kernel.org>
+Date: Mon, 31 Aug 2026 15:04:50 +0000
+Message-Id: <20260831150451.5DDB41F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> From: Zide Chen <zide.chen@intel.com>
+> From: Peter Zijlstra <peterz@infradead.org>
 >=20
-> [ Upstream commit 3c19ea24f02658c4b8ad364458fae4d77fdb3fae ]
+> [ Upstream commit e62d4192e593630f355094adc467058a05bdc935 ]
 >=20
-> Theoretically, intel_uncore_find_discovery_unit() could return NULL,
-> e.g., when a CPU die is offline during uncore enumeration and its PMU
-> units are not added to the discovery RB-tree.
+> Lee Jia Jie reported that since event::addr_filter_ranges is used
+> under RCU, it should be RCU freed.
 >=20
-> Guard against a NULL return value and the resulting invalid box control
-> address (0) before accessing hardware.
->=20
-> Signed-off-by: Zide Chen <zide.chen@intel.com>
+> Reported-by: Lee Jia Jie <jiajie.lee@starlabs.sg>
 > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Link: https://patch.msgid.link/20260602144908.263680-3-zide.chen@intel.com
 > Signed-off-by: Sasha Levin <sashal@kernel.org>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831133314.4125=
-787-18-sashal@kernel.org?part=3D1
+787-227-sashal@kernel.org?part=3D1
 
