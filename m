@@ -1,96 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9BBA36F917;
-	Mon, 31 Aug 2026 22:11:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A40C639DBDB
+	for <linux-perf-users@vger.kernel.org>; Mon, 31 Aug 2026 22:12:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788214310; cv=none; b=aS21KoQWpQYMSq8jfy3rHwnvwl+Vqmy4qdtuAXn2RnAe46RFJiXdxNa2YOk6NXbPJHlx/VDcnWLJaA6TSjYb93q99OSO+TeIdmDufK8l6nQ78sjsRssZHdMFJ4os3L3OdPrCL1X7Ypu3iY+WNMb+FaNSke1sqFPvubC3DGsdu8I=
+	t=1788214379; cv=none; b=KJFfCpNzJ+YCcz5goat7ct1hIYWy6AODsGJeTZ65KuDL7+PXfCrDREoOTMKyQET/CAqpKouo3V65TgFXyTsGTa4FNAKT+mmjuGcyeQT/UKi3J+AVUxmrZjzgA5a9m8rpmlcU5iA0EMBcIASFT+DGLHqlu/d2jM43atfL0pK9pfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788214310; c=relaxed/simple;
-	bh=DVG+MNpzWKf+1XCRF11lgi+JI7uj2/QQObp9LBq220A=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FrlN6v1dZjv+sTGoSN2hK2fbnWpZXg5Q116BmTp6wg0J8nFXdtR5Hlmb272AKCN0wPb/TCe/e5wgjpYKwXozZ6o9IkEdb/oxFbp3bgTLLnehZHIG/i6Tz5souAuYPmhCB39arTm/lN3K+JOhnIZ5NzuZMOzrOBdrTLoz7TgLOgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZJGf/Evf; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788214379; c=relaxed/simple;
+	bh=5z5ldiggagsYt+xbho3UFJeW5uQw2n2fvHSEG5SuzVQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=TAaLhMDbvVHgjTEU7DGiqYPyelfmth+1ChzVRe+jQveeydmLSYJBqNfEh7xSiFQ7CibbsBoJnXB5FFZWgYmUR2Lm0uhxXtANfTvyFCgnoWc6Ho9zF6g1y0h80RKETTUZlL5LvfMpwFR2d0rq7xY0aoTlOmOBIh1gGTjxQ65a80k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XFnOA+zm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZJGf/Evf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 897A81F000E9;
-	Mon, 31 Aug 2026 22:11:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XFnOA+zm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EE4D1F000E9;
+	Mon, 31 Aug 2026 22:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788214309;
-	bh=RS4glFFdY1gLGmE8+lSVip51TLlerbXRaRrB/4BAIgQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ZJGf/EvfojHyDhwXYFae+AFZRYPW5j/Q01dFJb4IzmTRaXRz3UEwmocQ+/I6APThm
-	 qyPi6GhYG15KgtHn3W7OKu+coyTjdWHqkCCxrEt/Ro0gbaiwHiPKyAs3PsZiGechN7
-	 pkTDn4qVkWoX5DfyReCeHPUjoiO1L6B8/9nbv7JRvniqLKs1CkGg31Hc5UD/cnjuUP
-	 QY/l0zp0KsTauUegIM5AwrZIPwohJ1VnmHzblDAs0QfELba5Kq04mdxDLsduO1AzJS
-	 tFNiNUaEhTkpxMpUEFJKMNsB5DbFKmZAVDMzw3WZ/yrxxwqsqYILqWAQq60k5CeGxZ
-	 X0cu8mIHq0Dww==
-Date: Tue, 1 Sep 2026 07:11:42 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, Jinchao Wang <wangjinchao600@gmail.com>, Mathieu Desnoyers
- <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- "H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/2] tracing/probes: Fix anon_stack check for unnamed
- bitfields in btf_find_struct_member
-Message-Id: <20260901071142.9fac09b9553bcf8eedca6404@kernel.org>
-In-Reply-To: <20260831130133.3018b81a@gandalf.local.home>
-References: <178818875393.104360.1469039168635349344.stgit@devnote2>
-	<178818876548.104360.13229872396750615226.stgit@devnote2>
-	<20260831130133.3018b81a@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20260515; t=1788214377;
+	bh=alNg9mrf0izzoFa0IPGxpsYfnMX9aFAbhb0s+ByOGlo=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=XFnOA+zmEdUXZgM9AELr6vRrdyh9jGFMcrg7TGtaY7ah6cEN7mPtMxtnM0na9PVJR
+	 mKJKY49MRCZBgsdRLEX1I49Ka2ig3fzBeXV+aV/J1Z4WOZk5V6JCwcA0o6tdF6TLKB
+	 V2vs1vDQ2LXVtVFgjOC7ei1cfqs78wL+Fgzu2m2hFKbvj3uczcIV1zeZz00KoEgyxs
+	 D7xDi8CzFEye7zjxQDQlLQm992jHUp6njtly2sQxLyYSnM44T/mL2i01B0/MmjxbJP
+	 kIBVfUhq7iSoJ6+w1+VlEz2851iLAWDKDJ1qtb25qtz7fYkdTJFvg6zR2Zm7GYnmBk
+	 urGJP+qZJTaoA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v6 3/6] perf header: Support memory ranges
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Thomas Falcon" <thomas.falcon@intel.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260831204613.2793526-4-thomas.falcon@intel.com>
+References: <20260831204613.2793526-1-thomas.falcon@intel.com>
+ <20260831204613.2793526-4-thomas.falcon@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 31 Aug 2026 22:12:57 +0000
+Message-Id: <20260831221257.9EE4D1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Mon, 31 Aug 2026 13:01:33 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Memory leak of `env->memory_ranges` when processing multiple HEA=
+DER_MEMORY_RANGES sections.
+--
 
-> On Tue,  1 Sep 2026 00:06:05 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > btf_find_struct_member() traverses into nested anonymous structures
-> > and unions by pushing members with !member->name_off onto anon_stack.
-> > However, it does not consider the unnamed bitfields (e.g. `int : 5`
-> > or `unsigned int : 0`) which also have member->name_off == 0.
-> > 
-> > If such an unnamed bitfield is pushed to anon_stack, the
-> > btf_find_struct_member() return an error even if there are other
-> > valid entries in anon_stack.
-> > 
-> > To fix this, only push unnamed struct/union members to anon_stack.
-> > Also move the btf_type_is_struct() check to the entry of this function
-> > because now it is sure only struct/union are pushed to anon_stack.
-> > 
-> 
-> Should we add Reported-by and a link to the Sashiko report?
+commit 0dcf161b1003085435ecec4dd99b1a0326a98d1b
+Author: Thomas Falcon <thomas.falcon@intel.com>
 
-Ah, good point! Let me add it (and I forgot Cc: stable)
+perf header: Support memory ranges
 
-> 
-> > Fixes: 302db0f5b3d8 ("tracing/probes: Add a function to search a member of a struct/union")
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
+This patch introduces support for parsing and storing memory ranges from
+the ACPI MRRM table in perf.data files. It adds a new feature bit,
+HEADER_MEMORY_RANGES, and exposes the data via the perf-report and
+perf-script tools. The data is read directly from sysfs and parsed
+during feature initialization.
 
-Thanks!
+Link: https://lore.kernel.org/lkml/20250505173819.419271-1-tony.luck@intel.=
+com/
 
-> 
-> -- Steve
+> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> index 7db7da090a1e0..83416ce395d7c 100644
+> --- a/tools/perf/util/header.c
+> +++ b/tools/perf/util/header.c
+[ ... ]
+> @@ -4202,6 +4346,64 @@ static int process_cpu_domain_info(struct feat_fd =
+*ff, void *data __maybe_unused
+>  	return ret;
+>  }
+> =20
+> +static int process_memory_ranges(struct feat_fd *ff, void *data __maybe_=
+unused)
+> +{
+> +	struct perf_env *env =3D &ff->ph->env;
+> +	struct memory_range *ranges, *r;
+> +	u32 nr_memory_ranges, i;
+> +
+> +	if (do_read_u32(ff, &nr_memory_ranges))
+> +		return -1;
+> +
+> +	if (!nr_memory_ranges) {
+> +		pr_debug("memory ranges not available\n");
+> +		return 0;
+> +	}
+> +
+[ ... ]
+> +	ranges =3D calloc(nr_memory_ranges, sizeof(*ranges));
+> +	if (!ranges)
+> +		return -1;
+> +
+> +	for (i =3D 0; i < nr_memory_ranges; i++) {
+> +		r =3D &ranges[i];
+> +
+> +		if (do_read_u64(ff, &r->base))
+> +			goto error;
+> +		if (do_read_u64(ff, &r->length))
+> +			goto error;
+> +		if (do_read_u32(ff, (u32 *) &r->node))
+> +			goto error;
+> +		if (__do_read(ff, &r->local_region_id, sizeof(u8)))
+> +			goto error;
+> +		if (__do_read(ff, &r->remote_region_id, sizeof(u8)))
+> +			goto error;
+> +	}
+> +
+> +	env->memory_ranges =3D ranges;
+> +	env->nr_memory_ranges =3D nr_memory_ranges;
+> +
+> +	return 0;
 
+[Severity: Medium]
+In pipe mode, a perf.data stream containing multiple HEADER_MEMORY_RANGES
+feature events can cause process_memory_ranges() to be executed multiple
+times.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+When this occurs, does this assignment leak the previously allocated
+env->memory_ranges array, since the newly allocated ranges array
+unconditionally overwrites it without first freeing the prior allocation?
+
+> +error:
+> +	zfree(&ranges);
+> +	return -1;
+> +}
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260831204613.2793=
+526-1-thomas.falcon@intel.com?part=3D3
