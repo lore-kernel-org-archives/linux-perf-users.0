@@ -1,57 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 566FC353A99
-	for <linux-perf-users@vger.kernel.org>; Tue,  1 Sep 2026 16:48:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1870748167E;
+	Tue,  1 Sep 2026 17:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788281287; cv=none; b=LxwY/zGQE8+mdrDUanftT1BfTjohGxlGBDvhp59KUGsuBer3okZtHxH8JEFP7O7STVCwjdbmqI1tNYGkI4z7AzlLKlNe6JOg71xUMnw3drInOJ4tj5YF2ehVvpU2vdtNUByJbx0IS+JnmqNujpaDcaOYMJjVaziqc83pInYHOH4=
+	t=1788282403; cv=none; b=JBo73mDMnWpR71pefgPiCKdMUnMVYNWiEv91JDgbnuJP+wEBmtQsa/99WjmDGV9DY2J+amlp2xhDGTfBP21Nqm+74SdmMk6c8u6Vw9IHaKBkJwfklvevL53KUObeRs4E8lUnPdTxjpxZ2GHFVfvumV0h5boXaeIf72cFrkJrR7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788281287; c=relaxed/simple;
-	bh=ZV257ltXk+h4F/MEtD40Vmnn9DLM7aep+XDOR5+M4Cs=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QVabBg3DQ8Oe0QB8POgULzrzEP08J7e0fW4PzWf6p4j9Puo4qBrcderQmkFlPNj52vS5zrng4mk7kD8hO4qr+0faXmlxbj3C5/IdvVu/KoB4hNS1W/LtCmHJ95Nd0+xASHTchgwVR4LJEoKAFnoGxT8QixxFxh4cWnIgXjMQqKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Up9G6EpC; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788282403; c=relaxed/simple;
+	bh=Lpma1BsFTfB984TFon8DGswojmIW60uY158QAd/sNt4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kEzz1/X8miZiFKcR65tjrZWxnqnyn7vEcpOFM/5oK5NF0xuJRCSyKp2YVTnjyf5wPq56fUVhDPR7GyXt7kjteShJO1BACKc4gZxn5snm3R1XeoGETItwC+0G7kfuFFlASWyOr7/dYpEbnEgtYcCmBt3e8PzkVN9hAMFj07i7kvQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=WSMmqxbv; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Up9G6EpC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5A7F1F000E9;
-	Tue,  1 Sep 2026 16:48:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788281286;
-	bh=ZV257ltXk+h4F/MEtD40Vmnn9DLM7aep+XDOR5+M4Cs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Up9G6EpC1lf8o1bZHW6CxTrCA0jaUQT8Jgt2EViEXx3mNuYTttOZEGvifYPv99tvK
-	 jllzYPmI/ajcJ68kmVdoSV1NbYRns7DFByZAd1K6LUyD1O71jOKYMDDcKTGL6mwR+D
-	 /4U/0gXjuQmcBC/GDrMRdoofEabO28SiahMRnQJ4ngPFno77ZHXCG3lnETVwK6kxO6
-	 i//bWf3TEiTAwskD1Bg/kZ04OQBtFgBrivFtOGQoPjNxBiY8yVxJffKn4r3+rEwrMO
-	 LUG8UqhI+HEPy79ibJXbH4zZyRwAYgtKioqnZhCko+G/kblB1m1A83WuAnI4/2iOR+
-	 /9lfAnMt4RnDQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/3] perf/core: Export perf_event_itrace_started()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Leo Yan" <leo.yan@arm.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260901-perf_suppress_itrace_start_records-v1-1-c4fbc6860859@arm.com>
-References: <20260901-perf_suppress_itrace_start_records-v1-0-c4fbc6860859@arm.com>
- <20260901-perf_suppress_itrace_start_records-v1-1-c4fbc6860859@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 01 Sep 2026 16:48:05 +0000
-Message-Id: <20260901164805.C5A7F1F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="WSMmqxbv"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 637CE1756;
+	Tue,  1 Sep 2026 10:06:36 -0700 (PDT)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B23E23F7D8;
+	Tue,  1 Sep 2026 10:06:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1788282400; bh=Lpma1BsFTfB984TFon8DGswojmIW60uY158QAd/sNt4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WSMmqxbv72Ix7wOT4SWzA7e04uqe1FtpdK7e0FSRluLERMDVrnKJhTJkC/6YIV2xD
+	 ClC+CklAMN76P/n5SZHCtHD2TRJgL/hfa/FD+LvdVafPhgJoKcrru1PKsj63AS1R8G
+	 u/TEJfg2nG5O4Gvkm41u52/PsMdgYOlBnXMlV+mY=
+Date: Tue, 1 Sep 2026 18:06:37 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Will Deacon <will@kernel.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Mike Leach <mike.leach@arm.com>,
+	Anshuman Khandual <anshuman.khandual@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Tamas Petz <tamas.petz@arm.com>,
+	Tamas Zsoldos <tamas.zsoldos@arm.com>,
+	Michiel van Tol <michiel.vantol@arm.com>,
+	Dev Jain <dev.jain@arm.com>, David Hildenbrand <david@kernel.org>,
+	Yabin Cui <yabinc@google.com>, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf: arm_spe: Prefer large AUX mappings
+Message-ID: <20260901170637.GS8904@e132581.arm.com>
+References: <20260810-perf_aux_trace_large_granule-v1-0-03306c9339e3@arm.com>
+ <20260810-perf_aux_trace_large_granule-v1-2-03306c9339e3@arm.com>
+ <annp-BdTviQoH6vy@willie-the-truck>
+ <20260810174159.GC15499@e132581.arm.com>
+ <8c8f6c2a-8fc2-4181-87fa-e64101dfce6f@linaro.org>
+ <20260811101742.GE15499@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260811101742.GE15499@e132581.arm.com>
 
-> Since Arm SPE and CoreSight drivers can be built as modules, export
-> perf_event_itrace_started() so that it can be used by these modules.
->=20
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
+Hi Will, Yabin,
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+On Tue, Aug 11, 2026 at 11:17:42AM +0100, Leo Yan wrote:
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260901-perf_suppr=
-ess_itrace_start_records-v1-0-c4fbc6860859@arm.com?part=3D1
+> > > The question is how "allocating contiguous AUX pages unnecessarily
+> > > exacerbates memory fragmentation." The relevant information I could find
+> > > is [1]:
+> > > 
+> > >   "On Android, we collect ETM data periodically on internal user devices
+> > >    for AutoFDO optimization (for both userspace libraries and the
+> > >    kernel). Allocating a large chunk of contiguous AUX pages (4M for each
+> > >    CPU) periodically is almost unbearable. The kernel may need to kill
+> > >    many processes to fulfill the request. It affects user experience even
+> > >    after using PMU."
 
+> > This sounds like it could be an attribute to perf_event_open. We can do
+> > PREFER_LARGE by default for performance and fewer discontinuities, but on
+> > Android or small systems users can enable an option to revert back to single
+> > pages.
+
+> > Or can this bit be determined at allocation time: "The kernel may need to
+> > kill many processes to fulfill the request"? If this memory pressure exists
+> > on allocation then do it one way, if not do it the other way.
+> 
+> Be careful with "The kernel may need to kill many processes ...".
+> 
+> The AUX allocator uses:
+> 
+>   #define PERF_AUX_GFP    (GFP_KERNEL | __GFP_ZERO | __GFP_NOWARN | __GFP_NORETRY) 
+> 
+> Documentation/core-api/memory-allocation.rst says that __GFP_NORETRY
+> causes the allocator to "fail early rather than cause disruptive
+> reclaim" and that "the OOM killer is not invoked".
+> 
+> Therefore, it is unlikely to me that AUX allocation itself would cause
+> the kernel OOM killer to kill processes in order to satisfy the request.
+> 
+> I am a bit suspect the original observation was related to Android's
+> lmkd [1], where allocating the AUX buffers increased overall memory
+> pressure and indirectly caused processes to be killed. If so, I think it
+> is important to understand what actually triggered those kills.
+
+I'd like to follow up on this, as I am not sure how we should proceed
+without more information about the original process-kill issue.
+
+If the original process-kill killer issue can be handled on the Android
+side (e.g., configure lmkd), we could consider preferring large AUX
+mappings by default. Otherwise, we may need to add an perf_event_open()
+attribute as James suggested, but that would add complexity to both the
+kernel and tools.
+
+Could you share what actually triggered the process kills? That would
+help us decide which direction to take.
+
+Thanks,
+Leo
