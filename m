@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D293374E41;
-	Tue,  1 Sep 2026 00:47:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C8A377007;
+	Tue,  1 Sep 2026 00:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788223633; cv=none; b=dv/g0YWoozk7WfRtMNed6SDkAyYh9TAE78n1X9I5mM3EY7SZDTcpVIGcSWLuFxuLC2I4G0jhJyYjDdgSATjjbkyCPZKr09vfxkyEqJ8GFTV7FEeotr+TtBdAAkU8DPKWkBELiv6Coz4DYT/3ZVbsUkaqq2K/9I6+Nx0CYk9aOhQ=
+	t=1788223645; cv=none; b=mTctInTCL+0JsCN3NcnZ/SAieHcdic104mn6ZnO9vZgKiieunIYtGgTdL48SJ/Iau3pKffYzAmwpfcRbTFVGIB0oiXQPUXqf2buK1YBg6xxI4CLzsjnjzfHh/DwtU4uvtLDzJKBpA8xyIkjBvgcqUWQwLfdmYcp+Jm+DivS2CuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788223633; c=relaxed/simple;
-	bh=0VJbYk95hqb2RJMnHeFsM0o8Xpi+Qg3RyKqte29gyRc=;
+	s=arc-20240116; t=1788223645; c=relaxed/simple;
+	bh=s2LMWBEZip8gduoYND5KpGiFQzzFEb6bKDK+je+iDUs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cxyOSSM09O4RFW/98SlgTgbquTnEXQqItJWfBf5OFOzFavARpUqlvTyycDAwFrKU7aNcPW5S8Wehpwc2Ay5IgOPX7QGIMGg2DeUlq/4zCK+44J8LZ6iIB/vppQePipvi3fm7i6P1u4L0jDv901i9tv/s/e0HCOdPV5bTW+7JYh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TnG5pWFb; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=CJvPyk7C8vKpppyfaYsyRRoKD4v8tUgIYyJpp6BQ+KxzMGUfnwDVdeMFIo7WZLe5de4wnZNbDeVCpNO9QbK5o6gnFBjnERkzPkHnQtuCU7GApN86jifxe1cwiBmVRbjbcMJ54dZy3LPYpwqCQRs69Z6G04fyZMk8y+kyV9ZJJnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DpxDHKcv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TnG5pWFb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07CAC1F000E9;
-	Tue,  1 Sep 2026 00:47:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DpxDHKcv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 787151F00A3D;
+	Tue,  1 Sep 2026 00:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788223631;
-	bh=nzdGXIZl7GaCZWCVfOEL58DKl2VbcTdF/XvyWbO/X5w=;
+	s=k20260515; t=1788223643;
+	bh=Cp/tqC4tjxHKQEio7tv7qIpvJfTjIZn9HnnNVC8LtTc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=TnG5pWFbzs9HzWErrtFXrtRuc54bTrvlIgTYwlKthes4y/0dP/VsAHvrUHmi/ur9C
-	 YLAKMW3PLsSzKscMOBye/f3hm9aj8uh/twDGA8KVIfQ1F87V89HIK/e0zPanVI23OT
-	 MqRi3Of/7MtrJw/+3q9E5KrAMVS91gHuuUyJICPtGlm80BsZ17O+se6LPLNmvA2iER
-	 T4muY8o+eL+kgnD6qt/nhfZ1sezwPeddi7A0MR5J8M5lrtWy+NiO6xoePN5Q39u/C4
-	 eagacR7uqLPNcjVOxXMcc1XwK8C0qjAzlriVkvt/E502d3lPBjObB+U/EHyPxmcOLD
-	 wHF7DdXdAEk3g==
+	b=DpxDHKcvGAHp1rR9+p/hV8Ql7k7HOBxQDbRrRxoUyEmFlRV4RfCRAyZGVb3Uu37Fs
+	 Aok2iQjkn87xr476f739srbMFG4PpkqsTWHl5PS2bPZQ2Iyo4wpH+hFIb7V+i43c5G
+	 3YW3dYJwvEtuVogmAXTN1/693DATS9BNI8rGBVBvF/bg3HZOHu5sbijvilXrBzviGm
+	 klCcW/1Gnh95LCTI9oh9m9vUhqfNsK++rLUixDYL9XFnSUAd1M4KVDYRDtv3rv8A91
+	 5op4dOVo+9704L6Ct1xWD7BqfSozwnQcSqDra9533vxjLOQsxAEoMr9028x+mpQOd4
+	 dWppEUnyaCapA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -44,9 +44,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 1/2] tracing/probes: Fix anon_stack check for unnamed bitfields in btf_find_struct_member
-Date: Tue,  1 Sep 2026 09:47:05 +0900
-Message-ID: <178822362571.115597.5746407820036730968.stgit@devnote2>
+Subject: [PATCH v2 2/2] tracing/probes: Fix BTF kflag check for anonymous struct member access
+Date: Tue,  1 Sep 2026 09:47:17 +0900
+Message-ID: <178822363712.115597.2744784023996949800.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178822361441.115597.11442662641658772793.stgit@devnote2>
 References: <178822361441.115597.11442662641658772793.stgit@devnote2>
@@ -62,65 +62,147 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-btf_find_struct_member() traverses into nested anonymous structures
-and unions by pushing members with !member->name_off onto anon_stack.
-However, it does not consider the unnamed bitfields (e.g. `int : 5`
-or `unsigned int : 0`) which also have member->name_off == 0.
+btf_find_struct_member() traverses into nested anonymous structures and
+unions to find a struct member. However, get_bitoffset_of_field() in
+trace_probe.c checked btf_type_kflag(type) using the outer parent type
+instead of the actual anonymous structure/union that directly contains
+the found member.
 
-If such an unnamed bitfield is pushed to anon_stack, the
-btf_find_struct_member() return an error even if there are other
-valid entries in anon_stack.
+If the parent structure and anonymous structure have mismatched kflags
+(e.g., the parent has kflag=0 while the anonymous structure has kflag=1
+because it contains bitfields), the bitfield size encoded in the upper
+8 bits of member->offset is erroneously treated as part of the byte/bit
+offset, corrupting the resolved offset and failing to set last_bitsize.
+Similarly, btf_find_struct_member() pushed anonymous member offsets
+onto anon_stack without masking BTF_MEMBER_BIT_OFFSET() when kflag is set.
 
-To fix this, only push unnamed struct/union members to anon_stack.
-Also move the btf_type_is_struct() check to the entry of this function
-because now it is sure only struct/union are pushed to anon_stack.
+To fix this problem, update btf_find_struct_member() to return actual
+containing structure/union type via member_type, use appropriate
+__btf_member_bit_offset() to get bit offset, and use member_type for
+btf_type_kflag() in get_bitoffset_of_field().
 
-Fixes: 302db0f5b3d8 ("tracing/probes: Add a function to search a member of a struct/union")
+Fixes: c440adfbe302 ("tracing/probes: Support BTF based data structure field access")
 Cc: stable@vger.kernel.org
 Reported-by: Sashiko <sashiko-bot@kernel.org>
-Closes: https://lore.kernel.org/all/20260830143859.D56991F00A3D@smtp.kernel.org/
+Closes: https://lore.kernel.org/all/20260822095110.0772E1F000E9@smtp.kernel.org/
+Assisted-by: Antigravity:gemini-3.7-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
 ---
  Changes in v2:
-  - added tags.
+  - remove unneeded NULL initializer for mtype, it should be set if
+    btf_find_struct_member() succeeds.
+  - Add reported-by from Sashiko.
+ This is separated from wprobe patch series v14.
+ - https://lore.kernel.org/all/178810003326.64882.5820404025124695636.stgit@devnote2/
 ---
- kernel/trace/trace_btf.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ kernel/trace/trace_btf.c   |   19 +++++++++++--------
+ kernel/trace/trace_btf.h   |    3 ++-
+ kernel/trace/trace_probe.c |   15 ++++++++-------
+ 3 files changed, 21 insertions(+), 16 deletions(-)
 
 diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
-index 00172f301f25..d3ba356d5503 100644
+index d3ba356d5503..ee7a04886bf6 100644
 --- a/kernel/trace/trace_btf.c
 +++ b/kernel/trace/trace_btf.c
-@@ -74,24 +74,24 @@ const struct btf_member *btf_find_struct_member(struct btf *btf,
+@@ -61,16 +61,17 @@ struct btf_anon_stack {
+ 
+ /*
+  * Find a member of data structure/union by name and return it.
+- * Return NULL if not found, or -EINVAL if parameter is invalid.
+- * If the member is an member of anonymous union/structure, the offset
+- * of that anonymous union/structure is stored into @anon_offset. Caller
+- * can calculate the correct offset from the root data structure by
+- * adding anon_offset to the member's offset.
++ * Return NULL if not found, or ERR_PTR(-EINVAL) if parameter is invalid.
++ * If the member is a member of an anonymous union/structure, the bit offset
++ * of that anonymous union/structure is stored into @anon_offset.
++ * If @member_type is non-NULL, the actual containing structure/union type
++ * of the found member is stored into @member_type.
+  */
+ const struct btf_member *btf_find_struct_member(struct btf *btf,
+ 						const struct btf_type *type,
+ 						const char *member_name,
+-						u32 *anon_offset)
++						u32 *anon_offset,
++						const struct btf_type **member_type)
  {
  	struct btf_anon_stack *anon_stack;
  	const struct btf_member *member;
-+	const struct btf_type *mtype;
- 	u32 tid, cur_offset = 0;
- 	const char *name;
- 	int i, top = 0;
- 
-+	if (!btf_type_is_struct(type))
-+		return ERR_PTR(-EINVAL);
-+
- 	anon_stack = kzalloc_objs(*anon_stack, BTF_ANON_STACK_MAX);
- 	if (!anon_stack)
- 		return ERR_PTR(-ENOMEM);
- 
- retry:
--	if (!btf_type_is_struct(type)) {
--		member = ERR_PTR(-EINVAL);
--		goto out;
--	}
--
- 	for_each_member(i, type, member) {
- 		if (!member->name_off) {
- 			/* Anonymous union/struct: push it for later use */
--			if (btf_type_skip_modifiers(btf, member->type, &tid) &&
-+			mtype = btf_type_skip_modifiers(btf, member->type, &tid);
-+			if (mtype && btf_type_is_struct(mtype) &&
+@@ -94,14 +95,16 @@ const struct btf_member *btf_find_struct_member(struct btf *btf,
+ 			if (mtype && btf_type_is_struct(mtype) &&
  			    top < BTF_ANON_STACK_MAX) {
  				anon_stack[top].tid = tid;
- 				anon_stack[top++].offset =
+-				anon_stack[top++].offset =
+-					cur_offset + member->offset;
++				anon_stack[top++].offset = cur_offset +
++					__btf_member_bit_offset(type, member);
+ 			}
+ 		} else {
+ 			name = btf_name_by_offset(btf, member->name_off);
+ 			if (name && !strcmp(member_name, name)) {
+ 				if (anon_offset)
+ 					*anon_offset = cur_offset;
++				if (member_type)
++					*member_type = type;
+ 				goto out;
+ 			}
+ 		}
+diff --git a/kernel/trace/trace_btf.h b/kernel/trace/trace_btf.h
+index 4bc44bc261e6..4bd26bceae23 100644
+--- a/kernel/trace/trace_btf.h
++++ b/kernel/trace/trace_btf.h
+@@ -8,4 +8,5 @@ const struct btf_param *btf_get_func_param(const struct btf_type *func_proto,
+ const struct btf_member *btf_find_struct_member(struct btf *btf,
+ 						const struct btf_type *type,
+ 						const char *member_name,
+-						u32 *anon_offset);
++						u32 *anon_offset,
++						const struct btf_type **member_type);
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index c4163904ba74..908b4b6bc2df 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -625,6 +625,7 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
+ {
+ 	const struct btf_type *type = *ptype;
+ 	const struct btf_member *field;
++	const struct btf_type *mtype;
+ 	struct btf *btf = ctx_btf(ctx);
+ 	char *fieldname = *pfieldname;
+ 	int bitoffs = 0;
+@@ -640,7 +641,7 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
+ 
+ 		anon_offs = 0;
+ 		field = btf_find_struct_member(btf, type, fieldname,
+-						&anon_offs);
++						&anon_offs, &mtype);
+ 		if (IS_ERR(field)) {
+ 			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+ 			return PTR_ERR(field);
+@@ -653,7 +654,7 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
+ 		bitoffs += anon_offs;
+ 
+ 		/* Accumulate the bit-offsets of the dot-connected fields */
+-		if (btf_type_kflag(type)) {
++		if (btf_type_kflag(mtype)) {
+ 			bitoffs += BTF_MEMBER_BIT_OFFSET(field->offset);
+ 			ctx->last_bitsize = BTF_MEMBER_BITFIELD_SIZE(field->offset);
+ 		} else {
+@@ -661,11 +662,11 @@ static int get_bitoffset_of_field(char **pfieldname, const struct btf_type **pty
+ 			ctx->last_bitsize = 0;
+ 		}
+ 
+-			type = btf_type_skip_modifiers(btf, field->type, NULL);
+-			if (!type) {
+-				trace_probe_log_err(ctx->offset, BAD_BTF_TID);
+-				return -EINVAL;
+-			}
++		type = btf_type_skip_modifiers(btf, field->type, NULL);
++		if (!type) {
++			trace_probe_log_err(ctx->offset, BAD_BTF_TID);
++			return -EINVAL;
++		}
+ 
+ 		if (next)
+ 			ctx->offset += next - fieldname;
 
