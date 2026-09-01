@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B216137107E;
-	Tue,  1 Sep 2026 00:47:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D293374E41;
+	Tue,  1 Sep 2026 00:47:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788223621; cv=none; b=sc6L0hS7/kpK5aD1vlaDC20sRwC6LsjUhL0SRqfHYjeKVHZQhC9+TjPfME7KaWf55uInlK9f9t+1fFoKmFi1mnmFVtjVHdRz9CELDnUYemWOIYTyb/6CwSrqp9k7LcZAhGldIfHS4bPkj3lPu7/TlgKwx2TQ+J/1aJtWVo9Wa9Q=
+	t=1788223633; cv=none; b=dv/g0YWoozk7WfRtMNed6SDkAyYh9TAE78n1X9I5mM3EY7SZDTcpVIGcSWLuFxuLC2I4G0jhJyYjDdgSATjjbkyCPZKr09vfxkyEqJ8GFTV7FEeotr+TtBdAAkU8DPKWkBELiv6Coz4DYT/3ZVbsUkaqq2K/9I6+Nx0CYk9aOhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788223621; c=relaxed/simple;
-	bh=Ir0E7pRDg9tseeOVUCLMUKkniJB2ZIIY6KAxs46dMmQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=edgmGars4z6OF5x11Id+42Miy0KWGbxkFHLj9+o3o1x/EIiIY3yeY0G6LRWuk55rhpPtV3KEIMLXpaWBErF1CFag56prvzJ3MTA/S8gAIgPp4ueHL39at5hHYDcKNh9vdWrOJkr07OO+cUOxJFM6zssy8VA7NnbbDzmBIwD7Dbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jlSTpCRL; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788223633; c=relaxed/simple;
+	bh=0VJbYk95hqb2RJMnHeFsM0o8Xpi+Qg3RyKqte29gyRc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=cxyOSSM09O4RFW/98SlgTgbquTnEXQqItJWfBf5OFOzFavARpUqlvTyycDAwFrKU7aNcPW5S8Wehpwc2Ay5IgOPX7QGIMGg2DeUlq/4zCK+44J8LZ6iIB/vppQePipvi3fm7i6P1u4L0jDv901i9tv/s/e0HCOdPV5bTW+7JYh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TnG5pWFb; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jlSTpCRL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7904E1F000E9;
-	Tue,  1 Sep 2026 00:46:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TnG5pWFb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07CAC1F000E9;
+	Tue,  1 Sep 2026 00:47:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788223620;
-	bh=fgX2ZQ0/L7xnGc9Gc+o0FHCjvceD3r2veUVXYujxj0c=;
-	h=From:To:Cc:Subject:Date;
-	b=jlSTpCRLUAirGrMy1NOxLFXtKwp5K/2TwH17UF13rm0lzFU9Chcdjrc2zu4U36yZi
-	 3ujcVcsDKDSGq+W6hv3mZMaTQgY2hGK6Ilb+fY+3aOAnX3OWnk/giodQipXq4IFsro
-	 JZTOSONYRxiIUSdqfcHyB2azx85PlhEsZ/tksN9Y4FIpsY5FhTbNtS5NwFn8Xj5XE9
-	 1lI4SsTA0UQGG+mOTof5Kj+hUUmqKsLb4cnPrcL8iCRl4Dba5LQ2b4nE+nSCnBBouX
-	 o4KLw25RLq0UMToCQWGOhqWtEcyGR/J9MdqaLYWKzdG5qOn8vc/jMYszdiJoTpK67S
-	 dF4UI7QtXvqIg==
+	s=k20260515; t=1788223631;
+	bh=nzdGXIZl7GaCZWCVfOEL58DKl2VbcTdF/XvyWbO/X5w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=TnG5pWFbzs9HzWErrtFXrtRuc54bTrvlIgTYwlKthes4y/0dP/VsAHvrUHmi/ur9C
+	 YLAKMW3PLsSzKscMOBye/f3hm9aj8uh/twDGA8KVIfQ1F87V89HIK/e0zPanVI23OT
+	 MqRi3Of/7MtrJw/+3q9E5KrAMVS91gHuuUyJICPtGlm80BsZ17O+se6LPLNmvA2iER
+	 T4muY8o+eL+kgnD6qt/nhfZ1sezwPeddi7A0MR5J8M5lrtWy+NiO6xoePN5Q39u/C4
+	 eagacR7uqLPNcjVOxXMcc1XwK8C0qjAzlriVkvt/E502d3lPBjObB+U/EHyPxmcOLD
+	 wHF7DdXdAEk3g==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -43,10 +44,12 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 0/2] tracing/probes: Fix BTF structure member finder
-Date: Tue,  1 Sep 2026 09:46:54 +0900
-Message-ID: <178822361441.115597.11442662641658772793.stgit@devnote2>
+Subject: [PATCH v2 1/2] tracing/probes: Fix anon_stack check for unnamed bitfields in btf_find_struct_member
+Date: Tue,  1 Sep 2026 09:47:05 +0900
+Message-ID: <178822362571.115597.5746407820036730968.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <178822361441.115597.11442662641658772793.stgit@devnote2>
+References: <178822361441.115597.11442662641658772793.stgit@devnote2>
 User-Agent: StGit/0.19
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -57,33 +60,67 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-This is the 2nd version of fixes for the BTF structure member finder in
-trace_btf.c. Sashiko found 2 problems in it during reviewing the wprobe 
-series.[1][2]
-[1] https://lore.kernel.org/all/20260822095110.0772E1F000E9@smtp.kernel.org/
-[2] https://lore.kernel.org/all/20260830143859.D56991F00A3D@smtp.kernel.org/
+btf_find_struct_member() traverses into nested anonymous structures
+and unions by pushing members with !member->name_off onto anon_stack.
+However, it does not consider the unnamed bitfields (e.g. `int : 5`
+or `unsigned int : 0`) which also have member->name_off == 0.
 
-Here is the previous thread:
-  https://lore.kernel.org/all/178818875393.104360.1469039168635349344.stgit@devnote2/
+If such an unnamed bitfield is pushed to anon_stack, the
+btf_find_struct_member() return an error even if there are other
+valid entries in anon_stack.
 
-This version added required tags and remove unneeded NULL initializer[2/2]
+To fix this, only push unnamed struct/union members to anon_stack.
+Also move the btf_type_is_struct() check to the entry of this function
+because now it is sure only struct/union are pushed to anon_stack.
 
-Thanks,
-
+Fixes: 302db0f5b3d8 ("tracing/probes: Add a function to search a member of a struct/union")
+Cc: stable@vger.kernel.org
+Reported-by: Sashiko <sashiko-bot@kernel.org>
+Closes: https://lore.kernel.org/all/20260830143859.D56991F00A3D@smtp.kernel.org/
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
 ---
-base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
+ Changes in v2:
+  - added tags.
+---
+ kernel/trace/trace_btf.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Masami Hiramatsu (Google) (2):
-      tracing/probes: Fix anon_stack check for unnamed bitfields in btf_find_struct_member
-      tracing/probes: Fix BTF kflag check for anonymous struct member access
+diff --git a/kernel/trace/trace_btf.c b/kernel/trace/trace_btf.c
+index 00172f301f25..d3ba356d5503 100644
+--- a/kernel/trace/trace_btf.c
++++ b/kernel/trace/trace_btf.c
+@@ -74,24 +74,24 @@ const struct btf_member *btf_find_struct_member(struct btf *btf,
+ {
+ 	struct btf_anon_stack *anon_stack;
+ 	const struct btf_member *member;
++	const struct btf_type *mtype;
+ 	u32 tid, cur_offset = 0;
+ 	const char *name;
+ 	int i, top = 0;
+ 
++	if (!btf_type_is_struct(type))
++		return ERR_PTR(-EINVAL);
++
+ 	anon_stack = kzalloc_objs(*anon_stack, BTF_ANON_STACK_MAX);
+ 	if (!anon_stack)
+ 		return ERR_PTR(-ENOMEM);
+ 
+ retry:
+-	if (!btf_type_is_struct(type)) {
+-		member = ERR_PTR(-EINVAL);
+-		goto out;
+-	}
+-
+ 	for_each_member(i, type, member) {
+ 		if (!member->name_off) {
+ 			/* Anonymous union/struct: push it for later use */
+-			if (btf_type_skip_modifiers(btf, member->type, &tid) &&
++			mtype = btf_type_skip_modifiers(btf, member->type, &tid);
++			if (mtype && btf_type_is_struct(mtype) &&
+ 			    top < BTF_ANON_STACK_MAX) {
+ 				anon_stack[top].tid = tid;
+ 				anon_stack[top++].offset =
 
-
- kernel/trace/trace_btf.c   |   31 +++++++++++++++++--------------
- kernel/trace/trace_btf.h   |    3 ++-
- kernel/trace/trace_probe.c |   15 ++++++++-------
- 3 files changed, 27 insertions(+), 22 deletions(-)
-
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
