@@ -1,100 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C80C83242D8;
-	Tue,  1 Sep 2026 00:49:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31E5E30E85B;
+	Tue,  1 Sep 2026 00:53:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788223801; cv=none; b=YcUL/WHN98MvF7wW8+7Cx5sAkwjHpKQxDukesLL7zcXGYJtS8PZUaRE6pk+xzo/uvBayokhaStOvpdhA5fp0Lxkb5NpYp065YKUOTsdcNc/xPxKiEKb+qxwjx4v2fl34SMB/AfZ43e/gnil9BBh4wquih63ngGm310cKVqAXeOk=
+	t=1788223982; cv=none; b=kYZ0QmdNZcZrsnJQNr07bn2iK0DSyi+1XWKNBYBYsSqhsfKb9A1TYo3IqF8HSDqlg/cPc+2Bg4zBRmrIsMJbLxYJiVP/r4lwKfGngq3TQYYHUNF79WDU5gVzfyKenuJh7MvO54IGKK0SKAOG8qAAoZ23ydqSZC6iF9WECzCe4II=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788223801; c=relaxed/simple;
-	bh=tWL3HvHco2HDuBsJag+unRfyL+Yd2xIq3e039GrmFxo=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=NCyoBOnONuH0mRrROJTXda1smjEHSHh7/l/h0CeB4ZHaGbUoBtr7ELhtG+fWq4QrbMkXhKm/dgECy/NtOHuu2h1SK+0jMQt0eXKHBQxslHs3ce4o6CPeSTSNKJR3FgiBQwgJG1UwZuye0DFgnHHTsrOsv6S20sgZaD1DkT/u9tE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5bvLsYN; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788223982; c=relaxed/simple;
+	bh=gHQd+xaEOQoz5G0XkN4wCLVfBbXXPqDSjKhYdAvUZhU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=QkdbUJODe4oeHs4ks2VfoHIMh2wLvEBct5zcyOUetu4pv/ANoF/ZfNLcMTb1jcnnwamciHTcCOttYkdbnDWw7Oe9CQ6rKCvkR39qvf7950rz6LmOPjX/ahuTcCZlyZHu7Xhkw7QOPvSWOQFkdGEC+/iearIGAtsAETEePLBGC9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IB50lWU2; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5bvLsYN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D5821F000E9;
-	Tue,  1 Sep 2026 00:49:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IB50lWU2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69D001F000E9;
+	Tue,  1 Sep 2026 00:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788223799;
-	bh=p+d0+QGpYQAr/aEJje/3/qNkkDjXqlWgLKSNJQd1hHg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=e5bvLsYNggbEpU5MyN8OB/rcrtPKvVCX8SUsNuKd03s0ySgctH+kvb1RB+QSzli2U
-	 P9JTyICbSI16oU7/KG4RKtOKyIdT+xgbMjuNkmAmb4JPU1Tv+2ZJKgpEa6uuv85AQW
-	 IUndJZsZPfIDZE+Jfbi+wGP420mnmbsswNFuTMVA+QLerw8ul7krrfuIRrTzz3tqAa
-	 H9viHdAdqtU4ezRFUZU//ybDhkrWTvekthxC4zYqukU8LIauARqcT1kX4fek3GN8wM
-	 7syeNx6n9YxXj2kT7vgCDipWWV32k3QEH51mu+PJPpE26DhnsSvZEA5m0x39AURgBn
-	 N/bWMYhfK5tFA==
-Date: Tue, 1 Sep 2026 09:49:55 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Andi Kleen <ak@kernel.org>
-Cc: linux-kernel@vger.kernel.org, mhiramat@kernel.org, oleg@redhat.com,
- peterz@infradead.org, tglx@kernel.org, x86@kernel.org, jolsa@kernel.org,
- linux-perf-users@vger.kernel.org, adrian.hunter@intel.com
-Subject: Re: [RFC v1 01/19] uprobes: guard trace cleanup against error
- pointers
-Message-Id: <20260901094955.eccd14a89176e3f09d93b731@kernel.org>
-In-Reply-To: <20260831150651.1134594-2-ak@kernel.org>
-References: <20260831150651.1134594-1-ak@kernel.org>
-	<20260831150651.1134594-2-ak@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20260515; t=1788223980;
+	bh=gHQd+xaEOQoz5G0XkN4wCLVfBbXXPqDSjKhYdAvUZhU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=IB50lWU2vwbrSvhDG6L7b8GooveX2JsMEU8TW8S2Es+RkobBnXHN2KPkhJ9at5+pc
+	 GDK2Y/lka5wOTDvIj6rBRSEscqdyAsNMcPi95tRovr5p9zEvK3g1AXWmvHIBdZ65Y1
+	 uCKcemB+1biYMFmnP6/mR3dTq1Mb2c33kj6606axfhltrpbozYadzM6q/r8eDTMg9g
+	 tiHb+K2BJh2RVdWY0aaGPdH+NbkJoSR8cpikeFbUvSMZDpstnvkjz+kADNfzGKWHPR
+	 yP7UHlDDZ1IpwF3auVHsH4SPv7Pr9JZEwiq25XSZha8TQnoqVZWwOpdjAWotekZyOP
+	 T8q/9/Tc1vLOw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 2/2] tracing/probes: Fix BTF kflag check for
+ anonymous struct member access
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+In-Reply-To: <178822363712.115597.2744784023996949800.stgit@devnote2>
+References: <178822361441.115597.11442662641658772793.stgit@devnote2>
+ <178822363712.115597.2744784023996949800.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 01 Sep 2026 00:52:59 +0000
+Message-Id: <20260901005300.69D001F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Mon, 31 Aug 2026 08:04:37 -0700
-Andi Kleen <ak@kernel.org> wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>=20
+> btf_find_struct_member() traverses into nested anonymous structures and
+> unions to find a struct member. However, get_bitoffset_of_field() in
+> trace_probe.c checked btf_type_kflag(type) using the outer parent type
+> instead of the actual anonymous structure/union that directly contains
+> the found member.
+>=20
+> If the parent structure and anonymous structure have mismatched kflags
+> (e.g., the parent has kflag=3D0 while the anonymous structure has kflag=
+=3D1
+> because it contains bitfields), the bitfield size encoded in the upper
+> 8 bits of member->offset is erroneously treated as part of the byte/bit
+> offset, corrupting the resolved offset and failing to set last_bitsize.
+> Similarly, btf_find_struct_member() pushed anonymous member offsets
+> onto anon_stack without masking BTF_MEMBER_BIT_OFFSET() when kflag is set.
+>=20
+> To fix this problem, update btf_find_struct_member() to return actual
+> containing structure/union type via member_type, use appropriate
+> __btf_member_bit_offset() to get bit offset, and use member_type for
+> btf_type_kflag() in get_bitoffset_of_field().
+>=20
+> Fixes: c440adfbe302 ("tracing/probes: Support BTF based data structure fi=
+eld access")
+> Cc: stable@vger.kernel.org
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
+> Closes: https://lore.kernel.org/all/20260822095110.0772E1F000E9@smtp.kern=
+el.org/
+> Assisted-by: Antigravity:gemini-3.7-flash
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> Sashiko pointed out the some of the scope cleanups for free_uprobe
-> could get an error pointer. Handle this case in free_uprobe
-> to prevent a crash.
-> 
-> On the other hand the macro doesn't need the guard because
-> free_uprobe itself already does the check.
-> 
-> Assisted-by: omp:gpt-5.6-luna sashiko
-> Signed-off-by: Andi Kleen <ak@kernel.org>
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-This looks good to me. Let me pick this to probes/fixes independently.
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178822361441.115597=
+.11442662641658772793.stgit@devnote2?part=3D2
 
-Thanks!
-
-> ---
->  kernel/trace/trace_uprobe.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-> index 861d857adadb..22cc3c8181b8 100644
-> --- a/kernel/trace/trace_uprobe.c
-> +++ b/kernel/trace/trace_uprobe.c
-> @@ -368,7 +368,7 @@ alloc_trace_uprobe(const char *group, const char *event, int nargs, bool is_ret)
->  
->  static void free_trace_uprobe(struct trace_uprobe *tu)
->  {
-> -	if (!tu)
-> +	if (IS_ERR_OR_NULL(tu))
->  		return;
->  
->  	path_put(&tu->path);
-> @@ -533,7 +533,7 @@ static int register_trace_uprobe(struct trace_uprobe *tu)
->  	return ret;
->  }
->  
-> -DEFINE_FREE(free_trace_uprobe, struct trace_uprobe *, if (_T) free_trace_uprobe(_T))
-> +DEFINE_FREE(free_trace_uprobe, struct trace_uprobe *, free_trace_uprobe(_T))
->  
->  /*
->   * Argument syntax:
-> -- 
-> 2.54.0
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
