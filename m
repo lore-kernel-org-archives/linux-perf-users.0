@@ -1,76 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D8C2371D15;
-	Tue,  1 Sep 2026 00:53:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE3139A4A0;
+	Tue,  1 Sep 2026 01:21:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788224039; cv=none; b=dFkVlDU2wp3e/f+dci+oUPjuNwldi3NBe1DdTDsrEUHa4R4rNU6lpQwSbSjWQzDvSa/eQgH296FcrTzB931jTXYflctTZiSyzG9O4LtGXENyARvUE6LN5cz4AiqQ6d7g9D8TPO0Xt14KfQxX+FniLzRMZ23NxQJo2L3UVPtWrjE=
+	t=1788225668; cv=none; b=u92w1gE9NH+uvXw4KWNPPR3dhcVpP9k5/pDW93o3jKRj3P63OX7tdnetrz8yNZGgmew/ee3KqhIgj/+bbm+0CUDrfA74PWKTrjdlIEbdco+iqOurB7pBTEDuGtxVZqEmyPGuZSuNmaX12nJoFYbbwYJ5HpZ+8EVgLOrY4fsWSwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788224039; c=relaxed/simple;
-	bh=oaX33diDON/Wv5K+mFQHfIf0GPdK1jKypxRBvcDDd3c=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=YRbo5viEWSTTBtbu+bejpwEEjRGxfX4HBmkbIlEBF7XCfaoVV9fcpDaOqCWdsf2iKMqw3n+x1wzHBWpHDxGcVruin3gZprAwlpiwQaKWxprONqDiH52HZNnjbTneZT0Jv88x/g4rQcMvx0iC83DfVtjyetF5P8JyDfhzyluAtQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EEx7cZU6; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788225668; c=relaxed/simple;
+	bh=znltqrM1P+9mvaURvC5a+K6iWkaN2azQYAMKVy8sYhU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=a/B5M1q0fBOjjuldKweaT+a/W3wLaAic7BumPG7hvulP/xOCsYE1ZRBLWK7Qxm0zfYc8BB/+jL8du5h2u2mKranwbJzxH3tHwije+AXx81F5wL/MJLMQxYK9jDiDm4AF7MIh0/fyoeoJa0ODlbjDciHgsHOkkRzqkhJnYkU90RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVudNs4E; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EEx7cZU6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86DD41F000E9;
-	Tue,  1 Sep 2026 00:53:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVudNs4E"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A87B1F000E9;
+	Tue,  1 Sep 2026 01:21:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788224037;
-	bh=oaX33diDON/Wv5K+mFQHfIf0GPdK1jKypxRBvcDDd3c=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=EEx7cZU6T+hSIvliShPE3kPsu6AzfDJeUpptFz5cP4KHyd1xj1T4GIyMBti+i2uXD
-	 hARFcS/+0evbaS7tMv6aCO8RakEG+NClFVSIscbhjkD/32NLEC0c+IvbX2uuOdF9af
-	 DLawb7A+7kAuyHYdyGNl+1L7B0iTuIXpehgUcZeW3O9V2EKIXxE2n1IZ2kShPykyK9
-	 9Mnqw8Tyfc3DDELKjp9TIc62ZqDbIicNxVi191bLUD68tq5AjJSRHhck+629/ZUs8V
-	 9k/pKUyufsPv7aoaYNuHn0wisa5JdYYoGbZf99emPEfvvPqcex2VKFG8qefW+OJndf
-	 FDBanPwKdSaPQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/2] tracing/probes: Fix anon_stack check for unnamed
- bitfields in btf_find_struct_member
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <178822362571.115597.5746407820036730968.stgit@devnote2>
-References: <178822361441.115597.11442662641658772793.stgit@devnote2>
- <178822362571.115597.5746407820036730968.stgit@devnote2>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 01 Sep 2026 00:53:57 +0000
-Message-Id: <20260901005357.86DD41F000E9@smtp.kernel.org>
+	s=k20260515; t=1788225666;
+	bh=8orNIjIzUT4JrVxYvCjtONO0FJhQ3qvHew8AnoJI+R8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=HVudNs4EneZDpRt4nbHAt/jkOVjS9ezphRcYSiPhrqHFYYnxKJs7SOV3Epz0fnlDD
+	 P5NgWH1ffh9t/jJySqSjNkAc/wGfAWJc36SQELSy6XU/6nHM2zeIWgIV6m9rxBTG7D
+	 aSWW0KVO4/LKx+MJizs0cx8XFHuaqkazvywwAfcbFzjQSTH5GqR+vB7pLkJKsEroJ6
+	 ZLg3/OpK+XoW1zoFVwCzcwOYUgYx2Xc+x0wylhPXJSQZpee+x77g4eQ3gyFGbls5Da
+	 Y88hpMuJT/YeeK6zDzrc/3ochgyYu1KA1JsLnZO4TlUa8XA/Qg+z+Iy+m/vsHK5cVC
+	 wMBLPZz2m2T/g==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 568783924A45;
+	Tue,  1 Sep 2026 01:20:10 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v2 2/2] perf: RISC-V: store available counter mask as
+ bitmap
+From: patchwork-bot+linux-riscv@kernel.org
+Message-Id: 
+ <178822560914.869454.14196508746211130249.git-patchwork-notify@kernel.org>
+Date: Tue, 01 Sep 2026 01:20:09 +0000
+References: <prpmask02cmap.v2.1786434000.git.liuxixin@kylinos.cn>
+In-Reply-To: <prpmask02cmap.v2.1786434000.git.liuxixin@kylinos.cn>
+To: Xixin Liu <liuxixin@kylinos.cn>
+Cc: linux-riscv@lists.infradead.org, atish.patra@linux.dev,
+ anup@brainfault.org, will@kernel.org, mark.rutland@arm.com, pjw@kernel.org,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->=20
-> btf_find_struct_member() traverses into nested anonymous structures
-> and unions by pushing members with !member->name_off onto anon_stack.
-> However, it does not consider the unnamed bitfields (e.g. `int : 5`
-> or `unsigned int : 0`) which also have member->name_off =3D=3D 0.
->=20
-> If such an unnamed bitfield is pushed to anon_stack, the
-> btf_find_struct_member() return an error even if there are other
-> valid entries in anon_stack.
->=20
-> To fix this, only push unnamed struct/union members to anon_stack.
-> Also move the btf_type_is_struct() check to the entry of this function
-> because now it is sure only struct/union are pushed to anon_stack.
->=20
-> Fixes: 302db0f5b3d8 ("tracing/probes: Add a function to search a member o=
-f a struct/union")
-> Cc: stable@vger.kernel.org
-> Reported-by: Sashiko <sashiko-bot@kernel.org>
-> Closes: https://lore.kernel.org/all/20260830143859.D56991F00A3D@smtp.kern=
-el.org/
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Hello:
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+This series was applied to riscv/linux.git (fixes)
+by Paul Walmsley <pjw@kernel.org>:
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178822361441.115597=
-.11442662641658772793.stgit@devnote2?part=3D1
+On Tue, 18 Aug 2026 17:10:00 +0800 you wrote:
+> The available-counter mask was a single unsigned long, but iteration
+> uses RISCV_MAX_COUNTERS, which is 64. On RV32 that reads past the object.
+> Filling with an unsigned-long bit at index 32 and above is also wrong.
+> 
+> Use DECLARE_BITMAP and set_bit/bitmap helpers. Walk each bitmap word
+> into CFG_MATCH when checking events, when allocating an index, and when
+> stopping all counters. Set the counter base to i times BITS_PER_LONG.
+> Share the CFG_MATCH ecall through a small helper so the 32-bit argument
+> split is not duplicated. On qemu-system-riscv32 the probe bitmap has bits
+> above XLEN set, so the first word alone is not enough.
+> 
+> [...]
+
+Here is the summary with links:
+  - [v2,2/2] perf: RISC-V: store available counter mask as bitmap
+    https://git.kernel.org/riscv/c/e7bdbf5131ff
+  - [v2,1/2] perf: RISC-V: use BIT_ULL for u64 overflow masks
+    (no matching commit)
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
