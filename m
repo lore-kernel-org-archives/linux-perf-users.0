@@ -1,126 +1,154 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B15440DB45
-	for <linux-perf-users@vger.kernel.org>; Wed,  2 Sep 2026 09:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E271E41F5F5
+	for <linux-perf-users@vger.kernel.org>; Wed,  2 Sep 2026 09:32:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788340507; cv=none; b=uHUT0MmFM36IXZnhJRVexZB6sDIfnCmJtmJZWeE29IbC9Kr3w5OEJS7+Y4aZDiO3i4fzhDFq5Pgn9exZeaTLg/KFSNvZb9498ZFh5H3emPEJT4FbrsJokcmksXwB5oPE+xotlUWPyw3e4tKFdMT+V54eU6mx1WZWOquKAzm+KII=
+	t=1788341536; cv=none; b=gF5iVEa9TdpakcjoOLv/smZ/IRJks50U5tBMPgXO/Gqzs2LaiRTvY1KRKKAZy2S+C8vC8MgDE4coBij6PHt4evlrSjKVMfQ0UEVMUMalEj/GD3D2Cxmr8vDU+L5NCLBBhtTYGicIWcqn+43Lx6t7fYhVwwhmc+Quey0gGVoZmdU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788340507; c=relaxed/simple;
-	bh=A1jiuhNYfiQcj3YIgy0A1EBHOGYkDiZ9boghA8l8uuY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=iJ3Z1b32kJuN13thyvHoxO0drGFq6XTiaWErzm1pBayqVILER7rj3JjAZnyn3MiUSPX/ppXbUXfR8hfJRrc1MqL0eGVD4l/C34a1qPinCHhqZV9A/fIBQOFQZ/Fxje8ZORBRC1eiIzf9YyMxVnrgeeZaTgQzSgv/mu+snoWDU2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=erIT6C0T; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788341536; c=relaxed/simple;
+	bh=3q+Racj061pHQzMirxpOck8ORqOP9kZiS847UMRPx/s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m0jmpfT4RO/GcsAlCrFkA3Bq9lY2rz4G7HnBsaj95oN5SiKf/i2+wy6Im7NLE87zIYLCHyfTelkFIx1x4g6THQlw1B5HyDlLz35uhT7kMEXEBCRNsocJL0APXf4ZFtnvVDd1sr3O/1lkMSq0TfjEjSiRSMN5b2A2hWhjIorgmug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=Jrc1RJtT; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="erIT6C0T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1B811F000E9;
-	Wed,  2 Sep 2026 09:15:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788340505;
-	bh=G8USjhkU74YrH0gH8Uk9vc4xP58hf+DSR6+yrnyaETs=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=erIT6C0TVQs3Hdp+1ok905ftpioT4viFQdd65WctIb6Y68GfxjkSbcpfGyvyZIzar
-	 WFhjgShmJSQ8yZtlw9pRLDR0vQZYNVx/ouWEFMX25C3b7lyJLXrV6XoW5Fz8lVhs4H
-	 Uwbu1lXwGY29WLPpZv+Q0nLEvPIPbfBG3AWof9sYQmNhJdUrmv4S0iXnPzIKGdKf5w
-	 rDGAuN7fxaW0NPEKRoUFgNZ2d37pRroSeRtFXmYdHsL39fdqcUh/eiuisVDuZKV9XU
-	 RZzdliyH89aDG/DjcQQEqT/YA4neYiiYFK2kRrVgtJUlvmwexSkuSFJTSq5Wubvx1c
-	 sxEmhsDwvUHCA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf/amd/ibs: add phy_addr_only software filter for
- ibs_op
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Huang Shijie" <huangsj@hygon.cn>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260902085251.4046240-1-huangsj@hygon.cn>
-References: <20260902085251.4046240-1-huangsj@hygon.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 02 Sep 2026 09:15:05 +0000
-Message-Id: <20260902091505.B1B811F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Jrc1RJtT"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-39647aa9d52so949525a91.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Sep 2026 02:32:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1788341534; x=1788946334; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=xiOd++yN59iYM002z+jiLpYNo4lUzruGc+dFpShCWO4=;
+        b=Jrc1RJtTtMZ+EPHcsKH6FGhYyWr04DBihR1rZ1FGUpuw+rQheessggHWfv9brU/B6h
+         Cs+TUYXK4QYx0k+M98k9PvhtmuEPC099x1Gi6Su3W43a8Lz87XrMgStL+YC3wi7gXaAg
+         iIcTb4jSPYSZSGP1owWXKPk/DhwQjtc5723xmMmD3C0Ol7tH3FnIQlEe7jCE1Aaf7Zdd
+         S4KmRdIFMwM80zphLgLhGsDcZdyAP+rQU07lgZultEPJqy8pEnozx3OCcZUf/joIoWtq
+         zEZ6Zx+q4jtBtb1yv7geJDFOlH6es+s7ndYiNsVMLHdxwkkrKSWliffAhudQNSTyc/5G
+         S9rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788341534; x=1788946334;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=xiOd++yN59iYM002z+jiLpYNo4lUzruGc+dFpShCWO4=;
+        b=IJ4kbTJmF5gol0VsI8KQ5+22X3/mO6gALWOi7jdO+8RTjVwIK4WiG40PLhcZRb6MBl
+         /qeE8Ufec0ZaFEuxxYzgo92lirsaJjbmdBNXacuNgCzea08J4KfMbMFpNLMfws5STlLt
+         Mb3LbJUDjvu5F3S56QIVaW651Jpa0W+xnwHmoCcnmntz/pWe5l+710zpKkekCaW0Ahdl
+         BRF4eVigJI779XYQrahXETvxJhkPmXvNSR3K7lVIRC6UMfLVTPwUsVy/RW41hN5ssr1V
+         UcnHTgBqnYZOs5T1z/RL1HeK3Licq18CBzrJ4TXHVZWdy8KMfSyK3BeIuqGrmYjgnShK
+         Cr4g==
+X-Forwarded-Encrypted: i=1; AKwUvBzCon5R8AMBL7KgdegEoNCJ6eOAnZrn5+StcnVm6+4XHJh6KnEQ87uy5rApiYB9xveG+o62qcLGWPrUYdltnsF3@vger.kernel.org
+X-Gm-Message-State: AFuF++kWMELlaSJXNc7li4hngvy8eo8UgjcrYI2awbHILQ62v2LnuUvE
+	YcFq5JWKud6V6w/Q6FhQESve7JJy1KbnqTZZMeLaX1RnKZE4S6tQP69in9YcrusYYpM=
+X-Gm-Gg: AYBFou0H00DwR4h4y3676I3FZiRT9cP7HrxbGJ1rvcyfOSEcv5or0Vjp59+3pWBUIEu
+	32wFI7ILpTczkIzl9nPxwLxZc/RlXSB5PqLeO8K0MHVkPvWytYB5wzIz6ZKGGK9SVz+CCxgOvJM
+	4FM6wYPNhs4IX64MkCTjtXPB+seMNvdxB5AOVB4CHUP6mYp/okBfIgvlts/1frk3uWdAYVJeG8Y
+	MmmtF5y8FAA9nK8SN2nKBnj/Yz0Q8kRrAfjzKfQjowH1cV3eCWhU5Fe+XB7YnvTV3BVIn9qqzRG
+	DvR1bveTSvldUVuh7YT68MBD+iVzcYhYfWZ202QPyp2k6qhsNQ84Ecvm6ZNW6Flc9p64bAmLczQ
+	rRo3TZ3J+yWW+r+AcFaGTM4YFPnBuvXq+Nb46jthQOZZjK4I9VMJL/io64Ai381lDYDHkWeLkGH
+	xvg2N7OlkSJ+lzNetKEZTBozsRqgr8r5moFcz/FXz6jO6T970GL7Txd/hjKqBFIWPhK9bla1YSH
+	Evr
+X-Received: by 2002:a17:90b:1806:b0:398:9beb:a2bc with SMTP id 98e67ed59e1d1-39af650d689mr1807389a91.30.1788341534076;
+        Wed, 02 Sep 2026 02:32:14 -0700 (PDT)
+Received: from sw07.internal.sifive.com ([4.53.31.132])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-32f07bdee2asm4525497eec.28.2026.09.02.02.32.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 02 Sep 2026 02:32:13 -0700 (PDT)
+From: Nylon Chen <nylon.chen@sifive.com>
+To: Namhyung Kim <namhyung@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Thomas Gleixner <tglx@kernel.org>,
+	=?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@igalia.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	linux-perf-users@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Nylon Chen <nylon.chen@sifive.com>
+Subject: [PATCH] perf bench futex: Define SYS_futex on 32-bit arches with 64-bit time_t
+Date: Wed,  2 Sep 2026 02:32:10 -0700
+Message-ID: <20260902093210.3571958-1-nylon.chen@sifive.com>
+X-Mailer: git-send-email 2.43.7
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+The kernel does not provide sys_futex() on 32-bit architectures that lack
+a 32-bit time representation, such as riscv32. Consequently glibc does not
+define SYS_futex there, only SYS_futex_time64, and perf bench's futex
+benchmarks fail to build:
 
-Pre-existing issues:
-- [High] Out-of-bounds stack write to ibs_data.regs in perf_ibs_handle_irq =
-when IBS_CAPS_OPDATA4 is present.
---
+  bench/futex.h: In function 'futex_syscall':
+  bench/futex.h:77:18: error: 'SYS_futex' undeclared (first use in this function)
 
-commit 5394e86487207a321dbcef29ca4cd958bfbe243c
-Author: Huang Shijie <huangsj@hygon.cn>
+Define SYS_futex as SYS_futex_time64 when only the latter is available.
+The guard and its comment are taken verbatim from
+tools/testing/selftests/futex/include/futextest.h, where they were added by
+commit 04850819c65c ("selftests/futex: Define SYS_futex on 32-bit
+architectures with 64-bit time_t"), keeping the two futex userspace headers
+in sync.
 
-perf/amd/ibs: add phy_addr_only software filter for ibs_op
+No timespec conversion helper is needed on top of this. glibc lays out
+struct timespec on 32-bit architectures with 64-bit time_t as
+{ int64 tv_sec; int32 tv_nsec; 32-bit pad }, which is compatible with
+struct __kernel_timespec, and every futex_wait()/futex_lock_pi()/
+futex_wait_requeue_pi() call site in perf bench passes a NULL timeout
+anyway, so no timespec ever crosses the syscall boundary here.
 
-This commit introduces an ibs_op/phy_addr_only filter to discard samples
-without a valid physical address directly in the interrupt handler. This
-avoids wasting CPU cycles and reduces noise when tracking a process's memory
-footprint using perf record.
+Note that an earlier and more ambitious attempt at this was
+commit c1ff12dac465 ("perf bench futex: Add support for 32-bit systems
+with 64-bit time_t"), reverted by
+commit ba4026b09d83 ("Revert "perf bench futex: Add support for 32-bit
+systems with 64-bit time_t"") because it included linux/time_types.h,
+which is unavailable on older distributions. This change deliberately
+avoids that dependency and adds only the one guard needed to fix
+compilation.
 
-> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> index 3531f9c23b8c9..754f6f10b1717 100644
-> --- a/arch/x86/events/amd/ibs.c
-> +++ b/arch/x86/events/amd/ibs.c
-[ ... ]
-> @@ -1479,6 +1490,16 @@ static int perf_ibs_handle_irq(struct perf_ibs *pe=
-rf_ibs, struct pt_regs *iregs)
->  		}
->  	}
-> =20
-> +	if (perf_ibs_phy_addr_only_event(perf_ibs, event)) {
-> +		union ibs_op_data3 op_data3;
-> +
-> +		op_data3.val =3D ibs_data.regs[ibs_op_msr_idx(MSR_AMD64_IBSOPDATA3)];
-> +		if (!op_data3.dc_phy_addr_valid) {
-> +			throttle =3D perf_event_account_interrupt(event);
-> +			goto out;
-> +		}
-> +	}
-> +
->  	if (perf_ibs_fetch_lat_event(perf_ibs, event)) {
->  		union ibs_fetch_ctl fetch_ctl;
-> =20
+Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
+---
+ tools/perf/bench/futex.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-[Severity: High]
-This isn't a bug introduced by this patch, but is there an out-of-bounds
-write to the ibs_data.regs[] array further down in perf_ibs_handle_irq()?
+diff --git a/tools/perf/bench/futex.h b/tools/perf/bench/futex.h
+index fcb72d682cf8..6df8837b365b 100644
+--- a/tools/perf/bench/futex.h
++++ b/tools/perf/bench/futex.h
+@@ -14,6 +14,17 @@
+ #include <sys/types.h>
+ #include <linux/futex.h>
+ 
++/*
++ * SYS_futex is expected from system C library, in glibc some 32-bit
++ * architectures (e.g. RV32) are using 64-bit time_t, therefore it doesn't have
++ * SYS_futex defined but just SYS_futex_time64. Define SYS_futex as
++ * SYS_futex_time64 in this situation to ensure the compilation and the
++ * compatibility.
++ */
++#if !defined(SYS_futex) && defined(SYS_futex_time64)
++#define SYS_futex SYS_futex_time64
++#endif
++
+ struct bench_futex_parameters {
+ 	bool silent;
+ 	bool fshared;
 
-The array is sized to MSR_AMD64_IBS_REG_COUNT_MAX, which is 8:
+base-commit: 66498c75b4f8017f62d720d9b59675bdf3abce91
+-- 
+2.43.7
 
-arch/x86/include/asm/msr-index.h:
-#define MSR_AMD64_IBS_REG_COUNT_MAX 8
-
-When reading MSRs, if the hardware supports both IBS_CAPS_BRNTRGT and
-IBS_CAPS_OPDATA4, the code reads up to 7 MSRs into the buffer in a loop
-and then continues:
-
-arch/x86/events/amd/ibs.c:perf_ibs_handle_irq() {
-    ...
-		if (perf_ibs =3D=3D &perf_ibs_op) {
-			if (ibs_caps & IBS_CAPS_BRNTRGT) {
-				rdmsrq(MSR_AMD64_IBSBRTARGET, *buf++);
-				br_target_idx =3D size;
-				size++;
-			}
-			if (ibs_caps & IBS_CAPS_OPDATA4) {
-				rdmsrq(MSR_AMD64_IBSOPDATA4, *buf++);
-				size++;
-			}
-    ...
-
-The rdmsrq() for IBS_CAPS_BRNTRGT writes into regs[7] and increments buf to
-regs[8]. The rdmsrq() for IBS_CAPS_OPDATA4 then writes into regs[8], which =
-is
-past the end of the array.
-
-Could this corrupt the kernel stack in NMI context when a user requests
-PERF_SAMPLE_RAW?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260902085251.4046=
-240-1-huangsj@hygon.cn?part=3D1
