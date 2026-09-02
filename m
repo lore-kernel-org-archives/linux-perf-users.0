@@ -1,54 +1,54 @@
-Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82A6B4503EF
-	for <linux-perf-users@vger.kernel.org>; Wed,  2 Sep 2026 15:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6F74A92CD
+	for <linux-perf-users@vger.kernel.org>; Wed,  2 Sep 2026 15:34:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788363104; cv=none; b=KkplaAlDxc/zCznZneSI7IOZCpmvilpqrCSlq7rpvrsyaro0P2+6/hf65qSj+tdwWd7h3zz8KiaSeMC5EfgCI9Y+S/JLPh1n5TI5eaF6SOg+lbTnhAF+dxrI8TziqsL1agrCMdC9iv4ynmSyFTcykmmygz5YEcK0JdatQb61bRo=
+	t=1788363271; cv=none; b=WP7a9LdUQK/6rOYlSnRcn39Gv/SIjvhslS/WJsKJnMOMc9GtRoJN0rU2pDHa0OVbdX7fE/lwlhce8HxHehmuyVy8VGN3dBc4yhmaL3Asps8AnWdxX+fUzEWyp+APr7BnJ9qJEedGeTDCd75Dlw+d2ZB9rvsww4b1mu4//eMS414=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788363104; c=relaxed/simple;
-	bh=BvFDCPax3yeDj9GiUo0hGRFjTWmgklSVoOfXHi3Mr9c=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=J1qagkI9w3wvKoxFlNONg2V6C+tV7um9QodSRiTug1CHjF+XbNRt+dDdcBUx3UkcKAkGxL6qLF3XQGLEF14FFDZ+dar80aIAXN3z0kJZ79pFodkyOD07w0+PAbkISIdInTtWWXbx72Yo52jewBCe+le9WzSUXDJsn4aRVZMeGPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d3Lz0hGY; arc=none smtp.client-ip=209.85.215.197
+	s=arc-20240116; t=1788363271; c=relaxed/simple;
+	bh=aMcZUshoBOiQaH1i02oZJ7ZYpAJh6r6fqQnmy6TPvdY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=T36ZdBGT533KSv/4xFdbOuPImJfG5DEZNlaqmzQZu6ovMEtxfcB7+OhwexJOIKZzLxU8E4rayNh3rl0GoCp9ZrL0aN6ynz+tR3PQyBbHN4IZjCp5oJbLzK2qhucXyFhBeq+Y0aVcXKWSe4EONXso4MKlsGEtE3TsedJhKfdEq0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YS11Cbke; arc=none smtp.client-ip=209.85.214.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d3Lz0hGY"
-Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-cc1cdfb337eso1770347a12.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 02 Sep 2026 08:31:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YS11Cbke"
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2ce7dfd33ffso17068825ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 02 Sep 2026 08:34:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788363102; x=1788967902; darn=vger.kernel.org;
-        h=content-type:to:from:subject:message-id:mime-version:date:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=JGry/fluIf0l8o3OiASIK8R7KuvirdME0/bitGdxAiw=;
-        b=d3Lz0hGYEgAVZsJpBGrou01W5H8/F3XW7T3UhZI4BBJtH88HMmLZXqXy9eRSs/+Xkr
-         3544sczWHysGWUOf6SR/DEyOjtfCw3bFIBBA6YLSaxzsZMp1X5RhyE5HYJFgbMQaE07/
-         Og9a1NIxiAbDLQjQF4yTwHSagh+h94bqqHBsNbt1mgFSubnaNGN1qxTFc5h3WQfyTxZc
-         b5uSm+B9yEStdu93M0eT/mXKnNG9ZpCAR9IAjToXLsLpohIAjyFHy+5zba/JNi7+qRiB
-         wniRJSgI1nF3u8FX6OaD3X8AB1uGu1RF1H27gM+y3urlKf0zd3m0QYoGVEzmLjmE8nvV
-         jkvQ==
+        d=google.com; s=20251104; t=1788363266; x=1788968066; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=DFDJw81pmZp3bkGxaweILlNzJoQ/yJsuk6x1thpaJ5k=;
+        b=YS11CbkeSyKzmSTTQVGHLsJ1WVb/7uVc8mPnGGP5X6gLCc12Pt5Geg+TMWifKdZtbh
+         7sTggrt2xgZ4+HfUJ6PTuDAeN/x2miJfRsWpTX4WbhJLalNqplR4yRG4eSTqyXydPCER
+         j5fEmeIwWQ6P0gaS3m6r5X7qEfT/i4Dk+cgqjI6wMTTb1NFHLqgi4tOribA+JPI5JBlw
+         9u7T3UfJhS77kIgLdcQZ3ywyJyRI+Db2ag05gj7tjrAeidFhlOZSa8rYRp9gAvhoI4RH
+         fMwkVgEgoDcFQ9ijqu2u7I2AfNPZo+n5/02F9VHfNLTcRKRqwhEYVTDkclqJlx1Bulpp
+         PL5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788363102; x=1788967902;
-        h=content-type:to:from:subject:message-id:mime-version:date
+        d=1e100.net; s=20251104; t=1788363266; x=1788968066;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=JGry/fluIf0l8o3OiASIK8R7KuvirdME0/bitGdxAiw=;
-        b=R/ZUkxrB86fbOEsos9KMz9d1+ohlZR35uzt24e8K7l2+3QeSlTodU1ntxGUJT6qt4o
-         RdYu1FWSq5TXN0D6wyfIDfMjrhtRcC7lHGIGx8LMKrPwkKrrKRtG8xUup8PArLi4Xvww
-         9q2b1RaNTL8L+vd0LgnletU/5nBySHyTIMTQm4vUcOJLJv1umDyHVGnvI+VvoirWVAOh
-         Yf8tgLDe1vJeMLRAJfBKaqsjSROG50goB2/XIGtlZlkg92Q5vik+MTZJLSSkin1/ViFX
-         fX2sJnoxQZtI+qYfo0A7WlTdnDGc+TydXOnpuHoplmnwkd4gV331e7CzqG04ehrP4hyW
-         Ozew==
-X-Forwarded-Encrypted: i=1; AKwUvBw8PntpeNWtdmdUKPkqyrVAvhokNWrThb5SlcKQeBdBigy/RtFPmK8t5XxlbND6Bk6YhN7rIZBPyTc+gm7jdJ0/@vger.kernel.org
-X-Gm-Message-State: AFuF++kdR8kolgxLuis9nJ/1JF1wlov++TrqyOB+mAF7hk9sCsdCeHTG
-	DEbQPVySAjPcVJJvlTbNjUyuGATM3NbFP4RYJK/UN2qpn9p8+CChKc+PmlnpKh1fldbyJOhBq3q
-	I2r8IrtZLIA==
-X-Received: from dlbec23.prod.google.com ([2002:a05:7022:d97:b0:141:4abc:f12d])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:3a83:b0:3d3:adad:f178
- with SMTP id adf61e73a8af0-3d9afd02e3emr7984151637.26.1788363101368; Wed, 02
- Sep 2026 08:31:41 -0700 (PDT)
-Date: Wed,  2 Sep 2026 08:31:35 -0700
+        bh=DFDJw81pmZp3bkGxaweILlNzJoQ/yJsuk6x1thpaJ5k=;
+        b=KdYkEkEpbZeDoblJf7T3HRhFv+RmX7qBKjU1jLgej5hkLfUrH6zAtaP/utwtk1FREm
+         OEE4kKlmvqAkfRVPEMKnUPN4HK9XYzLzJw3JWWG+yLNiDp0upCeUBTSDehLn0ckJo9K1
+         V1fgECK5nIEeGRq+Zw8RGEHON7IsVbqkMF6aU/kRM+lVp2pT5mkDeUGi/x1w72f32GCf
+         UU99M+S2sFoigb/43jGcpQi24W5k0Z8CeYNpv33ajjS3D9uzkdE6kh1Ip2YVCFwdXELi
+         DHjH3SXXhoDcmiePNbzaR8+x9zKepMnYG/9+YdSMHABQn9wuRSGXGcisWILALZtIHa3w
+         uKWg==
+X-Forwarded-Encrypted: i=1; AKwUvBzCdBmsNmH8fS15aXaZa4eZ8T51BQLm6iNNU5/DMS2cVXUOqie8oisz8uZ7SA5ZspDfwbVi2gDywZqgsg4d6SKS@vger.kernel.org
+X-Gm-Message-State: AFuF++mobGzihSd5e7f0iuo3IJzJ6SpfpiTmhWgYTDg+u4BEiMyh8xJ2
+	dLT1s2jXH6tKjz4WAepgb5Gmse5G1ML9apdIQ3SeIgkYNy6/bw8pOCkJoTIM9YlTj9Liti4zpkv
+	GpIAJ9dtR7w==
+X-Received: from dybdd18.prod.google.com ([2002:a05:7300:ae92:b0:328:6c15:25c1])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:524c:b0:390:8361:a532
+ with SMTP id 98e67ed59e1d1-39aedfb8ebcmr8789716a91.7.1788363264826; Wed, 02
+ Sep 2026 08:34:24 -0700 (PDT)
+Date: Wed,  2 Sep 2026 08:34:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,160 +56,36 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.55.0.966.g6673acef38-goog
-Message-ID: <20260902153135.2067365-1-irogers@google.com>
-Subject: [PATCH v1] perf tests: Improvements to build-test performance
+Message-ID: <20260902153420.2069344-1-irogers@google.com>
+Subject: [PATCH v1] perf tool: Align structs in arrays in .clang-format
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Leo Yan <leo.yan@arm.com>, 
-	Michael Jeanson <mjeanson@efficios.com>, linux-perf-users@vger.kernel.org, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
+Cc: Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-Replace hardcoded 'make' calls with '$(MAKE)' within tests/make
-to ensure GNU Make jobserver file descriptors are properly inherited
-by nested builds.
-
-Additionally, remove the notorious 'unexport MAKEFLAGS' from
-tools/perf/Makefile. This hack was originally added to prevent
-the wrapper's internal '-j$(JOBS)' override from crashing when parent jobserver
-tokens were present. Instead, use proper GNU Make conditionals to check
-for '-j' or 'jobserver' strings within MAKEFLAGS. If a jobserver is
-already orchestrating the build, gracefully back off and let GNU Make
-manage parallelism natively.
-
-Finally, optimize the 'out' target (which processes 'run_O' out-of-tree builds)
-by stripping sequential bottlenecks like $(call clean) from isolated tmp directories,
-and wrapping the target list in a parallel sub-make call.
-
-These combined changes enable 'build-test' out-of-tree targets to
-build completely concurrently without severing jobserver tokens.
-
-Unscientifically measured the change lowered the build-test from
-around 15 minutes to 10 minutes on a 28 threaded Alderlake CPU. Fixing
-the jobserver issues meant the machine remained somewhat usable while
-running the test.
+Configure clang-format to ensure structs within arrays maintain left
+alignment inside tools/perf/.clang-format. This prevents standard
+formatting runs from arbitrarily squashing tabbed initialization pillars.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 Assisted-by: Antigravity:gemini-3.1-pro
 ---
- tools/perf/Makefile   | 28 +++++++++++++++++-----------
- tools/perf/tests/make | 14 +++++++-------
- 2 files changed, 24 insertions(+), 18 deletions(-)
+ tools/perf/.clang-format | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/Makefile b/tools/perf/Makefile
-index 5b713837eede..45f641e24fb4 100644
---- a/tools/perf/Makefile
-+++ b/tools/perf/Makefile
-@@ -14,23 +14,29 @@
- .SUFFIXES:
- 
- #
--# We don't want to pass along options like -j:
-+# If no parallel build was requested, do a parallel build with multiple jobs,
-+# based on the number of CPUs online in this system: 'make -j8' on an 8-CPU
-+# system, etc.
- #
--unexport MAKEFLAGS
--
--#
--# Do a parallel build with multiple jobs, based on the number of CPUs online
--# in this system: 'make -j8' on a 8-CPU system, etc.
-+# If MAKEFLAGS contains '-j' or 'jobserver', JOBS is intentionally left
-+# uninitialized so the native GNU Make jobserver can seamlessly control the
-+# parallel bounds of the build.
- #
- # (To override it, run 'make JOBS=1' and similar.)
- #
--ifeq ($(JOBS),)
--  JOBS := $(shell (getconf _NPROCESSORS_ONLN || grep -E -c '^processor|^CPU[0-9]' /proc/cpuinfo) 2>/dev/null)
--  ifeq ($(JOBS),0)
--    JOBS := 1
-+ifeq ($(findstring -j,$(MAKEFLAGS)),)
-+  ifeq ($(findstring jobserver,$(MAKEFLAGS)),)
-+    ifeq ($(JOBS),)
-+      JOBS := $(shell (getconf _NPROCESSORS_ONLN || grep -E -c '^processor|^CPU[0-9]' /proc/cpuinfo) 2>/dev/null)
-+      ifeq ($(JOBS),0)
-+        JOBS := 1
-+      endif
-+    endif
-+    PARALLEL_OPT := -j$(JOBS)
-   endif
- endif
- 
-+
- #
- # Only pass canonical directory names as the output directory:
- #
-@@ -62,7 +68,7 @@ define print_msg
- endef
- 
- define make
--  @$(MAKE) -f Makefile.perf --no-print-directory -j$(JOBS) O=$(FULL_O) $(SET_DEBUG) $@
-+  @$(MAKE) -f Makefile.perf --no-print-directory $(PARALLEL_OPT) O=$(FULL_O) $(SET_DEBUG) $@
- endef
- 
- #
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index d2c2f526e1db..4f14c6b72416 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -339,7 +339,6 @@ make_static:
- 	rm -rf $@ $$TMP_DEST || (cat $@ ; false)
- 
- $(run_O):
--	$(call clean)
- 	@TMP_O=$$(mktemp -d); \
- 	TMP_DEST=$$(mktemp -d); \
- 	cmd="cd $(PERF) && $(MAKE_F) $($(patsubst %_O,%,$@)) $(PARALLEL_OPT) O=$$TMP_O DESTDIR=$$TMP_DEST"; \
-@@ -363,18 +362,18 @@ endif
- make_kernelsrc:
- 	@echo "- make -C <kernelsrc> $(PARALLEL_OPT) $(K_O_OPT) tools/perf"
- 	$(call clean); \
--	(make -C ../.. $(PARALLEL_OPT) $(K_O_OPT) tools/perf) > $@ 2>&1 && \
-+	($(MAKE) -C ../.. $(PARALLEL_OPT) $(K_O_OPT) tools/perf) > $@ 2>&1 && \
- 	test -x $(KERNEL_O)/tools/perf/perf && rm -f $@ || (cat $@ ; false)
- 
- make_kernelsrc_tools:
- 	@echo "- make -C <kernelsrc>/tools $(PARALLEL_OPT) $(K_O_OPT) perf"
- 	$(call clean); \
--	(make -C ../../tools $(PARALLEL_OPT) $(K_O_OPT) perf) > $@ 2>&1 && \
-+	($(MAKE) -C ../../tools $(PARALLEL_OPT) $(K_O_OPT) perf) > $@ 2>&1 && \
- 	test -x $(KERNEL_O)/tools/perf/perf && rm -f $@ || (cat $@ ; false)
- 
- make_libperf:
- 	@echo "- make -C lib";
--	make -C lib clean >$@ 2>&1; make -C lib >>$@ 2>&1 && rm $@
-+	$(MAKE) -C lib clean >$@ 2>&1; $(MAKE) -C lib >>$@ 2>&1 && rm $@
- 
- FEATURES_DUMP_FILE := $(FULL_O)/BUILD_TEST_FEATURE_DUMP
- FEATURES_DUMP_FILE_STATIC := $(FULL_O)/BUILD_TEST_FEATURE_DUMP_STATIC
-@@ -383,20 +382,21 @@ all: $(run) $(run_O) tarpkg make_kernelsrc make_kernelsrc_tools
- 	@echo OK
- 	@rm -f $(FEATURES_DUMP_FILE) $(FEATURES_DUMP_FILE_STATIC)
- 
--out: $(run_O)
-+out: $(FEATURES_DUMP_FILE) $(FEATURES_DUMP_FILE_STATIC)
-+	@$(MAKE) -f tests/make $(run_O) PARALLEL_OPT= -j$(cores)
- 	@echo OK
- 	@rm -f $(FEATURES_DUMP_FILE) $(FEATURES_DUMP_FILE_STATIC)
- 
- ifeq ($(REUSE_FEATURES_DUMP),1)
- $(FEATURES_DUMP_FILE):
- 	$(call clean)
--	@cmd="cd $(PERF) && make FEATURE_DUMP_COPY=$@ $(O_OPT) feature-dump"; \
-+	@cmd="cd $(PERF) && $(MAKE) FEATURE_DUMP_COPY=$@ $(O_OPT) feature-dump"; \
- 	echo "- $@: $$cmd" && echo $$cmd && \
- 	( eval $$cmd ) > /dev/null 2>&1
- 
- $(FEATURES_DUMP_FILE_STATIC):
- 	$(call clean)
--	@cmd="cd $(PERF) && make FEATURE_DUMP_COPY=$@ $(O_OPT) LDFLAGS='-static' feature-dump"; \
-+	@cmd="cd $(PERF) && $(MAKE) FEATURE_DUMP_COPY=$@ $(O_OPT) LDFLAGS='-static' feature-dump"; \
- 	echo "- $@: $$cmd" && echo $$cmd && \
- 	( eval $$cmd ) > /dev/null 2>&1
- 
+diff --git a/tools/perf/.clang-format b/tools/perf/.clang-format
+index e4cff363a603..7cc11f84da88 100644
+--- a/tools/perf/.clang-format
++++ b/tools/perf/.clang-format
+@@ -21,3 +21,4 @@ IncludeCategories:
+   # Your Project's Other Headers
+   - Regex:           '^".*"'
+     Priority:        4
++AlignArrayOfStructures: Left
 -- 
 2.55.0.966.g6673acef38-goog
 
