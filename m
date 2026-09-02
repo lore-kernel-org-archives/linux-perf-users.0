@@ -1,232 +1,270 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from lf-2-38.ptr.blmpb.com (lf-2-38.ptr.blmpb.com [101.36.218.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16D943D647E
-	for <linux-perf-users@vger.kernel.org>; Wed,  2 Sep 2026 07:37:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71F892F9DA1
+	for <linux-perf-users@vger.kernel.org>; Wed,  2 Sep 2026 08:08:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.36.218.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788334636; cv=none; b=CFApFm65nXm2uYHl52HbNSQ2RI8/40+RnSok6r5sCFFSNrNL8a4FHja57Nt6wIb8DIUJcrPtKjvFv3wkE/6E8xj42qRnltPuzL40IW7MfjAh8Vixmm6Wt0qj2rcgaPXfJ7jT6y432tD2qlKcP8UuiAYm00fzm+WxkUMqhB09Fyk=
+	t=1788336535; cv=none; b=ZR71VedochwVdJgWWK0kWwmJfxHdLhxCvxPwh2EJmZG6il4ElP0PnvkVFlBlCW4DgXUvg4xiMxz/eJIL9qgq7BhOXvimWS96u1FNeUSqunp9RHPDBF+gcg/9jKSawDu2JW/rNDnfxxg51bc418C6jtaES4jw29Q13eqO/Ll3r4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788334636; c=relaxed/simple;
-	bh=V5AJKEAF0dDh1yK0odJC/zyLqEn2ZouSb1O+9SWj8rc=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Z4QTMSPVlHr5eGs1O4ItaJtG8EKg04/Ea/IkeyE/4XMhGMgaTXxND6fNJmtQ8Pf3PIWqqlQdp8dPkMog+KAKWtYaXCGkSe4RKs9UFEwV5mOzuA0toB5xWmjqM5rI5QGDC/FdCvNjxEdcTGXVLayYDoBei332WS5C7WhhPSFKEr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HcGMEoi2; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788336535; c=relaxed/simple;
+	bh=Q83DtHeGnaSXKynOURw9BcEve26kEwOps/1w432YEXc=;
+	h=Content-Type:Cc:Date:Message-Id:To:Subject:Mime-Version:From:
+	 References:In-Reply-To; b=dCCKO26XPCVNNORlEEGapWrYm41/jDoEsCSPNdJF0SSYxI6xVhUSEh7SQkbYKVDR/RA21WmgyobswV6Sfh7pNQFpQ3k92DGMerbzNnOUkGC1CB1Kue+Zr1L4SV92sGdpOygX831gtm+UKW3pExrXL17W9dymkaovu2JY0L65eG4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=picoheart.com; spf=pass smtp.mailfrom=picoheart.com; dkim=pass (2048-bit key) header.d=picoheart.com header.i=@picoheart.com header.b=PZCbv27G; arc=none smtp.client-ip=101.36.218.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=picoheart.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=picoheart.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HcGMEoi2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C4D1F000E9;
-	Wed,  2 Sep 2026 07:37:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788334634;
-	bh=JCscU41muTJQAgH7zBf4NV8AX30A8t3tEVax0Hx7EOc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HcGMEoi2gMyEysiXkCGHt4TEXSk7tpfZ6Hw2PeppVmD9oeL0xwh7cDU/lP8leJF1T
-	 vY8l7gYdZv50HJWjUnfQIE06aDPJUvpjfq2mFxcgZL/xGTtU0sKfOcwed/Mf0I/5U9
-	 pnvQJ5bxuo3oM1E9zusqB+GTAM9xomXA7DZxjza7MzZbZPDYAXrHt3Hrb75IOPbHFx
-	 l/JFem9OsTHIsPPGGkjuoqQ4d5x8tiddwp/ufog2MalWLzCQ3iaZVy6yiM7LGcZKQj
-	 evGL8c1Q5XfZkK4c798xebn5PBOvmyX27/loH99OxEDdZPrBJjfyEgVM7W3EQokfUu
-	 hQO21ITDleMCg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf: xgene: initialize lock before requesting IRQ
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Runyu Xiao" <runyu.xiao@seu.edu.cn>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260902072241.3489222-1-runyu.xiao@seu.edu.cn>
-References: <20260902072241.3489222-1-runyu.xiao@seu.edu.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 02 Sep 2026 07:37:14 +0000
-Message-Id: <20260902073714.77C4D1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=picoheart.com header.i=@picoheart.com header.b="PZCbv27G"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=feishu2604151535; d=picoheart.com; t=1788336442; h=from:subject:
+ mime-version:from:date:message-id:subject:to:cc:reply-to:content-type:
+ mime-version:in-reply-to:message-id;
+ bh=JtUcpfCIQENx/RAqzn2XCRp4WPXE5eT3JQCOCuuv+HE=;
+ b=PZCbv27GGJClC4UJJrXdSQdMd3+b6n9EO7mhXltb2MM9F2JtM3mmS+kRbELDodn1uI6dgW
+ DfPj/ws1x23RssEXBcC+JEEx9a73vudtkkHQLXnXzsHGlSGaF9S5bn2oRPa2tpBUtHMXxo
+ 3NmVYQX+/ns8ZrKOKurlW/jvmW5p5a352eHacJOMGkjDapBUaoVrXySY7VV5Ret4rafa3N
+ GMktlVKpoZELn4SBuae84/o3rmAWBNBBRBNHQuS6Yz9DJ5NJ9EeJQGHwIzBEbNgXcRqaDw
+ GXDM9xiVB3d3+DXd8xRjFdTdSUQMC+tMlN6z1OYoW1WV/1jKFey1nU/NS7D9mA==
+Content-Type: text/plain; charset=UTF-8
+Cc: <tomasz.jeznach@linux.dev>, <joro@8bytes.org>, <will@kernel.org>, 
+	<robin.murphy@arm.com>, <pjw@kernel.org>, <palmer@dabbelt.com>, 
+	<aou@eecs.berkeley.edu>, <alex@ghiti.fr>, <mark.rutland@arm.com>, 
+	<andrew.jones@oss.qualcomm.com>, <guoren@kernel.org>, 
+	<david.laight.linux@gmail.com>, <zhangzhanpeng.jasper@bytedance.com>, 
+	<iommu@lists.linux.dev>, <linux-riscv@lists.infradead.org>, 
+	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>, 
+	<yang.yicong@picoheart.com>
+Date: Wed, 2 Sep 2026 16:07:16 +0800
+Message-Id: <8267ee7a-98b7-42a5-b479-648d2bec8ade@picoheart.com>
+Content-Language: en-US
+Received: from [100.86.218.63] ([61.141.241.110]) by smtp.feishu.cn with ESMTPS; Wed, 02 Sep 2026 16:07:19 +0800
+To: "Zong Li" <zong.li@sifive.com>
+Subject: Re: [PATCH RESEND v7 3/3] drivers/perf: riscv-iommu: protect shared state with a raw spinlock
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Lms-Return-Path: <lba+26a97d938+5a7553+vger.kernel.org+yang.yicong@picoheart.com>
+X-Original-From: Yicong Yang <yang.yicong@picoheart.com>
+From: "Yicong Yang" <yang.yicong@picoheart.com>
+References: <20260828085819.4076449-1-zong.li@sifive.com> <20260828085819.4076449-4-zong.li@sifive.com>
+Content-Transfer-Encoding: 7bit
+In-Reply-To: <20260828085819.4076449-4-zong.li@sifive.com>
+User-Agent: Mozilla Thunderbird
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
-
-Pre-existing issues:
-- [High] Concurrent traversal and lockless modification of PMU device lists=
- during initialization.
-- [High] If ACPI or FDT PMU device discovery fails, successfully registered=
- perf PMUs are not unregistered, leading to a Use-After-Free.
-- [High] Early interrupt delivery before PMU list population causes an unre=
-coverable interrupt storm.
-- [High] Registering a static CPU hotplug state globally without proper tea=
-rdown causes subsequent probes and driver rebinds to fail permanently.
---
-
-commit c30a076393fbb32657447ba93f8e3397354b3ffa
-Author: Runyu Xiao <runyu.xiao@seu.edu.cn>
-
-perf: xgene: initialize lock before requesting IRQ
-
-This commit fixes an issue in xgene_pmu_probe() where the PMU IRQ is reques=
-ted
-before the xgene_pmu->lock is initialized. By moving the raw_spin_lock_init=
-()
-call before devm_request_irq(), it ensures that xgene_pmu_isr() will always=
- see
-a valid lock if it runs immediately.
-
-> diff --git a/drivers/perf/xgene_pmu.c b/drivers/perf/xgene_pmu.c
-> index ab3623fab914c..0aa2b605fd53d 100644
-> --- a/drivers/perf/xgene_pmu.c
-> +++ b/drivers/perf/xgene_pmu.c
-> @@ -1873,6 +1873,8 @@ static int xgene_pmu_probe(struct platform_device *=
-pdev)
->  	if (irq < 0)
->  		return -EINVAL;
-> =20
-> +	raw_spin_lock_init(&xgene_pmu->lock);
+On 8/28/26 4:58 PM, Zong Li wrote:
+> Events are bound to one CPU and the interrupt is affine to it, so the
+> perf callbacks running with interrupts disabled would be enough to
+> exclude the handler.
+> 
+> PCI MSI/MSI-X on IMSIC breaks that: the irqchip sets
+> IRQCHIP_MOVE_DEFERRED, so irq_set_affinity() reports success while only
+> recording the request, and the move is applied in interrupt context upon
+> the next device interrupt. Until then the interrupt is still routed to
+> the CPU IMSIC picked initially, so the first overflow interrupt can run
+> concurrently with the perf callbacks on the CPU the events are bound to.
+> 
+> Take a raw spinlock, with interrupts disabled so that the handler can
+> never interrupt a holder on the same CPU, rather than depending on that
+> irqchip behaviour. It covers the state which is reachable from both
+> sides:
+> 
+>  - IOCOUNTINH is read-modify-written by ->start()/->stop() and is saved
+>    and restored around the whole handler.
+>  - pmu->events[] is written by ->del() and read by the handler.
+>  - hw_perf_event::prev_count is updated by both.
+> 
+> ->add() and ->del() call the unlocked __riscv_iommu_pmu_start() and
+> __riscv_iommu_pmu_stop() so the lock is taken once per callback.
+> 
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> ---
+>  drivers/perf/riscv_iommu_pmu.c | 66 ++++++++++++++++++++++++++++++----
+>  1 file changed, 60 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/perf/riscv_iommu_pmu.c b/drivers/perf/riscv_iommu_pmu.c
+> index f6acd56f2f61..ee2f6d1fbece 100644
+> --- a/drivers/perf/riscv_iommu_pmu.c
+> +++ b/drivers/perf/riscv_iommu_pmu.c
+> @@ -101,6 +101,7 @@ struct riscv_iommu_pmu {
+>  	u64 event_cntr_mask;
+>  	struct perf_event *events[RISCV_IOMMU_HPM_COUNTER_NUM];
+>  	DECLARE_BITMAP(used_counters, RISCV_IOMMU_HPM_COUNTER_NUM);
+> +	raw_spinlock_t lock;
+>  };
+>  
+>  #define to_riscv_iommu_pmu(p) (container_of(p, struct riscv_iommu_pmu, pmu))
+> @@ -485,7 +486,8 @@ static void riscv_iommu_pmu_update(struct perf_event *event)
+>  	local64_add(delta, &event->count);
+>  }
+>  
+> -static void riscv_iommu_pmu_start(struct perf_event *event, int flags)
+> +/* Called with pmu->lock held */
+> +static void __riscv_iommu_pmu_start(struct perf_event *event, int flags)
+>  {
+>  	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
+>  	struct hw_perf_event *hwc = &event->hw;
+> @@ -500,11 +502,22 @@ static void riscv_iommu_pmu_start(struct perf_event *event, int flags)
+>  	riscv_iommu_pmu_set_period(event);
+>  	riscv_iommu_pmu_set_event(pmu, hwc->idx, hwc->config);
+>  	riscv_iommu_pmu_enable_counter(pmu, hwc->idx);
+> +}
 > +
->  	rc =3D devm_request_irq(&pdev->dev, irq, xgene_pmu_isr,
->  				IRQF_NOBALANCING | IRQF_NO_THREAD,
->  				dev_name(&pdev->dev), xgene_pmu);
+> +static void riscv_iommu_pmu_start(struct perf_event *event, int flags)
+> +{
+> +	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
+> +	unsigned long irqflags;
+> +
+> +	raw_spin_lock_irqsave(&pmu->lock, irqflags);
+> +	__riscv_iommu_pmu_start(event, flags);
+> +	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
 
-[Severity: High]
-This is a pre-existing issue, but is there a data race when modifying PMU d=
-evice
-lists during initialization?
+could use guard(raw_spinlock_irqsave)() to help handle the lock release.
 
-The IRQ is requested and enabled here, and the CPU hotplug instance is
-registered shortly after, before the PMU lists are fully initialized:
+I'm considering if it'll better to use irq_work or function call to handle the
+counts update from the interrupt handler, e.g. in the irq handler first check
+if current cpu is the pmu->on_cpu, if so update the counts, otherwise queue
+the update work to pmu->on_cpu by irq work or smp_call_function_single_async.
+In this way we can use pmu's original synchronization mechanism without
+extra spin locks since the callbacks will always run and synchronized by
+the same cpu, and the shared interrupt doesn't matter at all.
 
-drivers/perf/xgene_pmu.c:fdt_pmu_probe_pmu_dev() {
-    ...
-    list_add(&ctx->next, &xgene_pmu->l3cpmus);
-    ...
-}
+any thoughts on this?
 
-If an interrupt fires immediately or a CPU offline event occurs, xgene_pmu_=
-isr()
-or xgene_pmu_offline_cpu() could traverse the lists concurrently without lo=
-cks:
+thanks.
 
-drivers/perf/xgene_pmu.c:xgene_pmu_isr() {
-    ...
-    list_for_each_entry(ctx, &xgene_pmu->mcpmus, next) {
-    ...
-}
-
-Can this lead to list pointer corruption and a kernel panic?
-
-[Severity: High]
-This is a pre-existing issue, but can early interrupt delivery before PMU l=
-ist
-population cause an unrecoverable interrupt storm?
-
-The IRQ is requested and enabled at the interrupt controller level here, be=
-fore
-child PMU devices are added to internal lists. Additionally, the PMU is exp=
-osed
-to userspace, allowing events to be scheduled before list population:
-
-drivers/perf/xgene_pmu.c:xgene_init_perf() {
-    ...
-    return perf_pmu_register(&pmu_dev->pmu, name, -1);
-    ...
-}
-
-Hardware interrupts are cleared in _xgene_pmu_isr(), but this is unreachabl=
-e if
-the internal lists are empty:
-
-drivers/perf/xgene_pmu.c:_xgene_pmu_isr() {
-    ...
-    writel(pmovsr, csr + PMU_PMOVSCLR);
-    ...
-}
-
-If an interrupt is pending or triggered early by userspace, xgene_pmu_isr()=
- will
-iterate over empty lists, fail to clear the hardware interrupt source, and
-unconditionally return IRQ_HANDLED:
-
-drivers/perf/xgene_pmu.c:xgene_pmu_isr() {
-    ...
-    return IRQ_HANDLED;
-}
-
-Does this bypass the core kernel spurious IRQ protection and cause a hard l=
-ockup?
-
->  	if (rc)
->  		return rc;
-> =20
->  	xgene_pmu->irq =3D irq;
-> =20
-> -	raw_spin_lock_init(&xgene_pmu->lock);
-> -
->  	/* Check for active MCBs and MCUs */
->  	rc =3D xgene_pmu_probe_active_mcb_mcu_l3c(xgene_pmu, pdev);
-
-[Severity: High]
-This is a pre-existing issue, but if ACPI or FDT PMU device discovery fails=
-, are
-successfully registered perf PMUs leaked, leading to a Use-After-Free?
-
-If acpi_pmu_probe_pmu_dev() returns an error after potentially registering
-several PMUs:
-
-drivers/perf/xgene_pmu.c:acpi_pmu_probe_pmu_dev() {
-    ...
-    if (ACPI_FAILURE(status)) {
-        dev_err(dev, "failed to probe PMU devices\n");
-        return -ENODEV;
-    }
-    ...
-}
-
-The error path fails to unregister the PMUs from the perf subsystem before =
-returning:
-
-drivers/perf/xgene_pmu.c:xgene_pmu_probe() {
-    ...
-out_unregister:
-    cpuhp_state_remove_instance(CPUHP_AP_PERF_ARM_APM_XGENE_ONLINE,
-                                &xgene_pmu->node);
-    return rc;
-}
-
-Since the device contexts are devm-allocated, will they be freed upon probe=
- failure
-while leaving dangling pointers in the perf core?
-
-[Severity: High]
-This is a pre-existing issue, but does registering a static CPU hotplug sta=
-te
-globally without proper teardown cause subsequent probes and driver rebinds=
- to
-fail permanently?
-
-xgene_pmu_probe() registers the static CPU hotplug state earlier during pro=
-be:
-
-drivers/perf/xgene_pmu.c:xgene_pmu_probe() {
-    ...
-    rc =3D cpuhp_setup_state_multi(CPUHP_AP_PERF_ARM_APM_XGENE_ONLINE,
-                                 "CPUHP_AP_PERF_ARM_APM_XGENE_ONLINE",
-    ...
-}
-
-However, xgene_pmu_remove() only calls cpuhp_state_remove_instance(), and d=
-oes not
-call cpuhp_remove_multi_state():
-
-drivers/perf/xgene_pmu.c:xgene_pmu_remove() {
-    ...
-    cpuhp_state_remove_instance(CPUHP_AP_PERF_ARM_APM_XGENE_ONLINE,
-                                &xgene_pmu->node);
-    ...
-}
-
-If the driver is unbound and rebound, will a subsequent probe attempt try to
-register the same static state and fail with -EBUSY permanently?
-
->  	if (rc) {
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260902072241.3489=
-222-1-runyu.xiao@seu.edu.cn?part=3D1
+>  
+>  	perf_event_update_userpage(event);
+>  }
+>  
+> -static void riscv_iommu_pmu_stop(struct perf_event *event, int flags)
+> +/* Called with pmu->lock held */
+> +static void __riscv_iommu_pmu_stop(struct perf_event *event, int flags)
+>  {
+>  	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
+>  	struct hw_perf_event *hwc = &event->hw;
+> @@ -521,13 +534,26 @@ static void riscv_iommu_pmu_stop(struct perf_event *event, int flags)
+>  	hwc->state |= PERF_HES_STOPPED | PERF_HES_UPTODATE;
+>  }
+>  
+> +static void riscv_iommu_pmu_stop(struct perf_event *event, int flags)
+> +{
+> +	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
+> +	unsigned long irqflags;
+> +
+> +	raw_spin_lock_irqsave(&pmu->lock, irqflags);
+> +	__riscv_iommu_pmu_stop(event, flags);
+> +	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
+> +}
+> +
+>  static int riscv_iommu_pmu_add(struct perf_event *event, int flags)
+>  {
+>  	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
+>  	struct hw_perf_event *hwc = &event->hw;
+>  	unsigned int num_counters = pmu->num_counters;
+> +	unsigned long irqflags;
+>  	unsigned int idx;
+>  
+> +	raw_spin_lock_irqsave(&pmu->lock, irqflags);
+> +
+>  	/* Reserve index zero for iohpmcycles */
+>  	if (is_cycle_event(event->attr.config))
+>  		idx = RISCV_IOMMU_HPM_CYCLE_IDX;
+> @@ -535,8 +561,10 @@ static int riscv_iommu_pmu_add(struct perf_event *event, int flags)
+>  		idx = find_next_zero_bit(pmu->used_counters, num_counters, 1);
+>  
+>  	/* All event counters or cycle counter are in use */
+> -	if (idx == num_counters || pmu->events[idx])
+> +	if (idx == num_counters || pmu->events[idx]) {
+> +		raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
+>  		return -EAGAIN;
+> +	}
+>  
+>  	set_bit(idx, pmu->used_counters);
+>  
+> @@ -546,7 +574,9 @@ static int riscv_iommu_pmu_add(struct perf_event *event, int flags)
+>  	local64_set(&hwc->prev_count, 0);
+>  
+>  	if (flags & PERF_EF_START)
+> -		riscv_iommu_pmu_start(event, flags);
+> +		__riscv_iommu_pmu_start(event, flags);
+> +
+> +	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
+>  
+>  	/* Propagate changes to the userspace mapping. */
+>  	perf_event_update_userpage(event);
+> @@ -556,18 +586,26 @@ static int riscv_iommu_pmu_add(struct perf_event *event, int flags)
+>  
+>  static void riscv_iommu_pmu_read(struct perf_event *event)
+>  {
+> +	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
+> +	unsigned long irqflags;
+> +
+> +	raw_spin_lock_irqsave(&pmu->lock, irqflags);
+>  	riscv_iommu_pmu_update(event);
+> +	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
+>  }
+>  
+>  static void riscv_iommu_pmu_del(struct perf_event *event, int flags)
+>  {
+>  	struct riscv_iommu_pmu *pmu = to_riscv_iommu_pmu(event->pmu);
+>  	struct hw_perf_event *hwc = &event->hw;
+> +	unsigned long irqflags;
+>  	int idx = hwc->idx;
+>  
+> -	riscv_iommu_pmu_stop(event, PERF_EF_UPDATE);
+> +	raw_spin_lock_irqsave(&pmu->lock, irqflags);
+> +	__riscv_iommu_pmu_stop(event, PERF_EF_UPDATE);
+>  	pmu->events[idx] = NULL;
+>  	clear_bit(idx, pmu->used_counters);
+> +	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
+>  
+>  	perf_event_update_userpage(event);
+>  }
+> @@ -635,12 +673,24 @@ static irqreturn_t riscv_iommu_pmu_irq_handler(int irq, void *dev_id)
+>  {
+>  	struct riscv_iommu_pmu *pmu = (struct riscv_iommu_pmu *)dev_id;
+>  	DECLARE_BITMAP(ovf_bitmap, BITS_PER_TYPE(u64));
+> +	unsigned long irqflags;
+>  	u32 ovf, idx, inhibit;
+>  
+> -	/* Check whether this interrupt is for PMU */
+> +	/*
+> +	 * Check whether this interrupt is for PMU. Done outside the lock so
+> +	 * that a shared interrupt line is left alone as cheaply as possible.
+> +	 */
+>  	if (!(readl_relaxed(pmu->reg + RISCV_IOMMU_REG_IPSR) & RISCV_IOMMU_IPSR_PMIP))
+>  		return IRQ_NONE;
+>  
+> +	/*
+> +	 * Hold the lock across the whole sequence below. Stopping the
+> +	 * counters, processing them and restoring the previous inhibit state
+> +	 * has to be atomic against ->start()/->stop(), otherwise a counter
+> +	 * enabled in between would be inhibited again by the restore.
+> +	 */
+> +	raw_spin_lock_irqsave(&pmu->lock, irqflags);
+> +
+>  	/* Process PMU IRQ */
+>  	inhibit = riscv_iommu_pmu_stop_all(pmu);
+>  
+> @@ -672,6 +722,8 @@ static irqreturn_t riscv_iommu_pmu_irq_handler(int irq, void *dev_id)
+>  
+>  	riscv_iommu_pmu_start_all(pmu, inhibit);
+>  
+> +	raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
+> +
+>  	return IRQ_HANDLED;
+>  }
+>  
+> @@ -735,6 +787,8 @@ static int riscv_iommu_pmu_probe(struct auxiliary_device *auxdev,
+>  
+>  	iommu_pmu->reg = iommu_dev->reg;
+>  
+> +	raw_spin_lock_init(&iommu_pmu->lock);
+> +
+>  	/*
+>  	 * Counter number and width are hardware-implemented, detect them by
+>  	 * writing 1s and reading back which bits stuck.
