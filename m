@@ -1,62 +1,92 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBCAF374E5B
-	for <linux-perf-users@vger.kernel.org>; Thu,  3 Sep 2026 08:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from cmccmta6.chinamobile.com (cmccmta6.chinamobile.com [111.22.67.139])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD7D638AC92;
+	Thu,  3 Sep 2026 08:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788423459; cv=none; b=ZqB9uCX8hOqOdyILy0ZhsEENEl7ky//AErrcTKWa6APMKLz63bRSm+m6j1rqNRurNO17pVBI0fr1uHuMe17sxS7jrBRLSvV1DgjGc1WNI74aDvJQrjlGauQXrpQKXUglzt3vtee7qyKLhiktwd0f0IJTmcn0ojUrmLXCcFXwS5o=
+	t=1788423709; cv=none; b=OEEfM4OL3CrpTWc/rQM4uFzpss6PFGNMf/5jx1iJFwaGF6GKaBqr036HXC8ETpdH47Gh8MVfsRyZ6EGJYsWeFjG7/Pl9I33S2fuUiAgWWQY2SQUK9eAm2QJEyOJp0YOMfiREGYb3ivcRajM6n/onHZFdpYgR/5VKmOKHy+QJlGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788423459; c=relaxed/simple;
-	bh=3xTkUkCeT0OZ26EBO1Nx1Qr/EOr0qTEEr0Ied6ZYJhY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=k+6kKXi8lBgLvdv52VyLlnJzSwV6ArnVFQjVq4sxb7yY7jyqJ5HLUdii/4d7Hs/33u/ZIcvpdemj3W2w8Olbxn+KktIzq0FXTt+//3jaMRoZezfyespzuekbrWQoMmcWDC6RmHLhoJpRWcgq1d64RwxKOoCaekinZZ5KA+uCaWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IHIcmTfA; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788423709; c=relaxed/simple;
+	bh=e0oENFL3RmVm8Mh1wwnj1nTSPK2J3d6zYfJYwhRRmEg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=jSFR/O08TkRoZRmJAWUqh13Eb8Ce1NiAJGjz5vHosp5zutkutnqsy8OSkrsN06zo/UiKKGWYG8+yVlrwbSuqaJAwheRVkiEFA9phjNC67nLeXzP/TogJHdlv3Lz16m7Jo6HNjJmNJcaJ7KO/NY2rewhuBdxE9rK6Q66njDWxO6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; dkim=pass (1024-bit key) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.b=GE/OIQEa; arc=none smtp.client-ip=111.22.67.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmss.chinamobile.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IHIcmTfA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ECB81F00A3A;
-	Thu,  3 Sep 2026 08:17:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788423458;
-	bh=3xTkUkCeT0OZ26EBO1Nx1Qr/EOr0qTEEr0Ied6ZYJhY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=IHIcmTfAvzOjayeigNmbLAgbfV1z/V8AEsesWKsejVjtoALpdqVBaCyVuvJ9RsJr6
-	 I8ESIDSUy1A6SBMe6nxNYsDZg0u/QpI0y43Hf+KSy3/sjdq+hVWTmQV+VmLDWb4jKJ
-	 hprYqoqpYOwt7ebzgSIDGzf0kbUmIvDByBhhyI5LSzWvnAFmoTmC87obgW81QwjGfc
-	 hpKsk0SlhiP4+d6vjdfDq9im45Oq/oFwROdwS0u3ylYL/ipqQAYqadCscUOtQQ+lWc
-	 1BjJPjTaWd5NjWmiU0Od0r4LQTVd06xy+cXLaViCYdJAHhr5ScTUpycK/eSE4jlDmJ
-	 XI/Z8/3j0Jekw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf python: Fix redundant self-assignment in
- get_argument_count()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: liujing <liujing@cmss.chinamobile.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260903081350.4676-1-liujing@cmss.chinamobile.com>
-References: <20260903081350.4676-1-liujing@cmss.chinamobile.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 03 Sep 2026 08:17:37 +0000
-Message-Id: <20260903081738.4ECB81F00A3A@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.b="GE/OIQEa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=cmss.chinamobile.com; s=default; l=0;
+	h=from:subject:message-id:to:cc:mime-version;
+	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+	b=GE/OIQEaCv+mkuM/7vHpgdiVjAg98umUT6fzxfiaXOIEQXygn/qtvj0ZvkXpY8bhQ0aGVQtaoSxrk
+	 KrxOw/9yfJqfluME5veKWUxycnLSxLANOCl6vlLBOrq1VrN2DkJd4mHMkZxO5NB+TAX50fzE8NrJot
+	 YWDmdHQUxTvfuEfM=
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
+	by rmmx-syy-dmz-app05-12005 (RichMail) with SMTP id 2ee56a992e110fe-a9c8b;
+	Thu, 03 Sep 2026 16:21:42 +0800 (CST)
+X-RM-TRANSID:2ee56a992e110fe-a9c8b
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG:00000000
+Received:from  (unknown[223.108.79.98])
+	by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea6a992e0abfe-1a024;
+	Thu, 03 Sep 2026 16:21:42 +0800 (CST)
+X-RM-TRANSID:2eea6a992e0abfe-1a024
+From: liujing <liujing@cmss.chinamobile.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Liu Jing <liujing@cmss.chinamobile.com>
+Subject: [PATCH] perf intel-pt: Fix undefined shift in intel_pt_bip()
+Date: Thu,  3 Sep 2026 16:21:26 +0800
+Message-Id: <20260903082128.4972-2-liujing@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20260903082128.4972-1-liujing@cmss.chinamobile.com>
+References: <20260903082128.4972-1-liujing@cmss.chinamobile.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-> From: Liu Jing <liujing@cmss.chinamobile.com>
->=20
-> In get_argument_count(), the variable code_obj is assigned to itself
-> before being assigned the result of PyObject_GetAttrString(). This is
-> a redundant self-assignment that appears to be a typo.
->=20
-> Fix it by removing the redundant self-assignment.
->=20
-> Signed-off-by: Liu Jing <liujing@cmss.chinamobile.com>
+From: Liu Jing <liujing@cmss.chinamobile.com>
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+In intel_pt_bip(), the expression `1 << id` performs a signed integer
+shift where id is a uint32_t. If id >= 32, this is undefined behavior.
+The bounds check `id >= INTEL_PT_BLK_ITEM_ID_CNT` occurs after the shift,
+so the UB has already happened.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260903081350.4676=
--1-liujing@cmss.chinamobile.com?part=3D1
+Fix it by moving the bounds check before the shift and using `1U << id`
+to perform an unsigned shift.
+
+Signed-off-by: Liu Jing <liujing@cmss.chinamobile.com>
+---
+--- a/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
++++ b/tools/perf/util/intel-pt-decoder/intel-pt-decoder.c
+@@ -2060,7 +2060,6 @@
+ static void intel_pt_bip(struct intel_pt_decoder *decoder)
+ {
+ 	uint32_t id = decoder->packet.count;
+-	uint32_t bit = 1 << id;
+ 	int pos = decoder->blk_type_pos;
+ 
+ 	if (pos < 0 || id >= INTEL_PT_BLK_ITEM_ID_CNT) {
+@@ -2068,6 +2067,7 @@
+ 			     id, decoder->blk_type);
+ 		return;
+ 	}
++	uint32_t bit = 1U << id;
+ 
+ 	if (decoder->state.items.mask[pos] & bit) {
+ 		intel_pt_log("WARNING: Duplicate block item %u type %d\n",
+
+
+
 
