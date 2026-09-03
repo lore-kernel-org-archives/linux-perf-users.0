@@ -1,115 +1,102 @@
-Received: from mailgw1.hygon.cn (unknown [101.204.27.37])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD63E217723;
-	Thu,  3 Sep 2026 05:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.204.27.37
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793DDEEB3
+	for <linux-perf-users@vger.kernel.org>; Thu,  3 Sep 2026 05:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788414351; cv=none; b=ovugZLBIdKGduokTxJpauC5xGZOZ/8GQV+jOuYyBv2RFx89mSbTsW/24n0DeLwA9g8ci/Pjxt/RVFtnz7oDjfOa1iWQLtcKcGPAUsOf3KyhrMddL18qPCOiUQrerjTHpx7Xh/2JlZIOliJ90FHrfEteZmwb++ql6KXPWSLsz5+k=
+	t=1788415110; cv=none; b=n/ooejYFGxSkWc9SCKbF/82MlSzmjMIhUcGQSVnRAONkVwqkLp5VIJCJrpT1Gg2VEo8HK9K/bP7VTS6hNnuagd24kT2bq7FXU+hh61hsjuO5jBCKHNMtshd8bv8DiV13LzOjltranS2fxCkqUcq/gJAX+W6TiH1gJ65K4S1CUjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788414351; c=relaxed/simple;
-	bh=IsAtmiTYiAaY4Tm3KtUGTtOS8lPmxBuQq4lGUbeYjK0=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Gsiw6h8RRq0PzuYhbwgHLR98PwB72QXp/risHDjOTMY6PAGp8GGyfa+T9kwHBCoO4E807Z3YHEBJo+dIKqOqgKy+wWYfyz7K6K5xLOZXxP8clw9LH/viVnDjsCsCzJB8jZ0Wy7zXz8jdBPkV0/C+sDSEZV0CaAXpqlBtcXzov04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=101.204.27.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
-Received: from maildlp2.hygon.cn (unknown [127.0.0.1])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4hb7qF1L0Bz1Mxjh;
-	Thu,  3 Sep 2026 13:45:29 +0800 (CST)
-Received: from maildlp2.hygon.cn (unknown [172.23.18.61])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id 4hb7qB41JCz1Mxjk;
-	Thu,  3 Sep 2026 13:45:26 +0800 (CST)
-Received: from cncheex04.Hygon.cn (unknown [172.23.18.114])
-	by maildlp2.hygon.cn (Postfix) with ESMTPS id 5254231D0309;
-	Thu,  3 Sep 2026 13:41:31 +0800 (CST)
-Received: from hsj-2U-Workstation.hygon.cn (172.19.24.226) by
- cncheex04.Hygon.cn (172.23.18.114) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Thu, 3 Sep 2026 13:45:24 +0800
-From: Huang Shijie <huangsj@hygon.cn>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>
-CC: <zhongyuan@hygon.cn>, <fangbaoshun@hygon.cn>, <yingzhiwei@hygon.cn>,
-	<mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
-	<james.clark@linaro.org>, <tglx@kernel.org>, <bp@alien8.de>,
-	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<liuqi@hygon.cn>, <lijing@hygon.cn>, <wujianyong@hygon.cn>,
-	<wangfengyu@hygon.cn>, Huang Shijie <huangsj@hygon.cn>, Ravi Bangoria
-	<ravi.bangoria@amd.com>
-Subject: [PATCH] perf/amd/ibs: Report physical address for IBS fetch samples
-Date: Thu, 3 Sep 2026 13:44:22 +0800
-Message-ID: <20260903054422.148739-1-huangsj@hygon.cn>
-X-Mailer: git-send-email 2.53.0
+	s=arc-20240116; t=1788415110; c=relaxed/simple;
+	bh=Ucji+TVzTnROrtv6VzMNog7CIF/yIUaKmitYByOZw0U=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=gYxhjeMP/IxORuoD3VxC5uxClWQpnFfUgNUSRlMDyIB1JfqiBw3OtLp77KoE4pdu+t5wxFmSoSY5EnLJ0mXlT7GKZ8d8bYp80G+I8rv21mhgmvcj2Tdi/aheuTQwmweatmEiU2ki/i+fJJKSFjlC0PHdFBf4zR3ZLMz2iRwD/zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EOJjKZdH; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EOJjKZdH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 388C21F00A3A;
+	Thu,  3 Sep 2026 05:58:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788415109;
+	bh=ciPbbhXA+e14PU8NeEkVd6HxEma/ZMC9rnlzaSyMhGU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=EOJjKZdHrww1OKZNyOztxdbeUfF6zDEwk+tGS1Itv+n3yiLxUdHIB0oxtw36W5O5E
+	 WYJX8tcNohdYtbPrUP4Z6/AQJCfXQv4AMlhizQx3xuGjcf3hLI/oT3AfIgZMUfS/mZ
+	 7jU0PasGU3FYq2h+PCE/eM32ZowULTX8btuAO0l0GwZe4iAUR685xTl9QtZGOGVQ0y
+	 7vspdlq2ELbPaPllGw1Yep/mIxTa8Sj6EL3SsbNGd6R6MwDwvoCPAjYUwuqwKd6xLd
+	 VJ1i4CCIi8xHclx/1pFM/BbFb8td3NkqiNg5KAQER9mqHDemTNC1cANrm7q7PQgF/y
+	 3pEXYdGUZGKrg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf/amd/ibs: Report physical address for IBS fetch
+ samples
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Huang Shijie" <huangsj@hygon.cn>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260903054422.148739-1-huangsj@hygon.cn>
+References: <20260903054422.148739-1-huangsj@hygon.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 03 Sep 2026 05:58:28 +0000
+Message-Id: <20260903055829.388C21F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: cncheex05.Hygon.cn (172.23.18.115) To cncheex04.Hygon.cn
- (172.23.18.114)
+
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+
+Pre-existing issues:
+- [High] Kernel stack buffer overflow when reading MSR_AMD64_IBSOPDATA4.
+--
+
+commit 7872bc1d9818cf858d57204bd43f4a048e54da52
+Author: Huang Shijie <huangsj@hygon.cn>
+
+perf/amd/ibs: Report physical address for IBS fetch samples
 
 The IBS Fetch sampling does not report the physical address of the
 fetched instruction even when PERF_SAMPLE_PHYS_ADDR is requested,
-while IBS Op sampling does.
+while IBS Op sampling does. This patch reports physical address for
+IBS fetch samples which can be used for profiling the running program.
 
-This patch reports physical address for IBS fetch samples which can be
-used for profiling the running program.
+> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
+> index 3531f9c23b8c9..e5376ad5b2ecd 100644
+> --- a/arch/x86/events/amd/ibs.c
+> +++ b/arch/x86/events/amd/ibs.c
+[ ... ]
+> @@ -1555,6 +1575,8 @@ static int perf_ibs_handle_irq(struct perf_ibs *per=
+f_ibs, struct pt_regs *iregs)
+> =20
+>  	if (perf_ibs =3D=3D &perf_ibs_op)
+>  		perf_ibs_parse_ld_st_data(event->attr.sample_type, &ibs_data, &data);
+> +	else
+> +		perf_ibs_parse_fetch_data(event->attr.sample_type, &ibs_data, &data);
 
-Reviewed-by: Ravi Bangoria <ravi.bangoria@amd.com>
-Signed-off-by: Huang Shijie <huangsj@hygon.cn>
----
- arch/x86/events/amd/ibs.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+[Severity: High]
+This is a pre-existing issue, but does reading MSR_AMD64_IBSOPDATA4 earlier
+in perf_ibs_handle_irq() overflow ibs_data.regs[] when both IBS_CAPS_BRNTRGT
+and IBS_CAPS_OPDATA4 are present?
 
-diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-index 3531f9c23b8c..e5376ad5b2ec 100644
---- a/arch/x86/events/amd/ibs.c
-+++ b/arch/x86/events/amd/ibs.c
-@@ -1318,11 +1318,31 @@ static void perf_ibs_parse_ld_st_data(__u64 sample_type,
- 	}
- }
- 
-+static void perf_ibs_parse_fetch_data(__u64 sample_type,
-+				      struct perf_ibs_data *ibs_data,
-+				      struct perf_sample_data *data)
-+{
-+	union ibs_fetch_ctl fetch_ctl;
-+
-+	if (!(sample_type & PERF_SAMPLE_PHYS_ADDR))
-+		return;
-+
-+	fetch_ctl.val = ibs_data->regs[ibs_fetch_msr_idx(MSR_AMD64_IBSFETCHCTL)];
-+	if (!fetch_ctl.phy_addr_valid)
-+		return;
-+
-+	data->phys_addr = ibs_data->regs[ibs_fetch_msr_idx(MSR_AMD64_IBSFETCHPHYSAD)];
-+	data->sample_flags |= PERF_SAMPLE_PHYS_ADDR;
-+}
-+
- static bool perf_ibs_is_mem_sample_type(struct perf_ibs *perf_ibs,
- 					struct perf_event *event)
- {
- 	u64 sample_type = event->attr.sample_type;
- 
-+	if (perf_ibs == &perf_ibs_fetch)
-+		return sample_type & PERF_SAMPLE_PHYS_ADDR;
-+
- 	return perf_ibs == &perf_ibs_op &&
- 	       sample_type & (PERF_SAMPLE_DATA_SRC |
- 			      PERF_SAMPLE_WEIGHT_TYPE |
-@@ -1555,6 +1575,8 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
- 
- 	if (perf_ibs == &perf_ibs_op)
- 		perf_ibs_parse_ld_st_data(event->attr.sample_type, &ibs_data, &data);
-+	else
-+		perf_ibs_parse_fetch_data(event->attr.sample_type, &ibs_data, &data);
- 
- 	/*
- 	 * rip recorded by IbsOpRip will not be consistent with rsp and rbp
--- 
-2.53.0
+The ibs_data.regs array has a fixed size of MSR_AMD64_IBS_REG_COUNT_MAX (8).
+If a user requests PERF_SAMPLE_RAW on a CPU supporting both features (like
+Zen 4), the interrupt handler reads 7 base registers, an 8th register for
+IBSBRTARGET, and a 9th for IBSOPDATA4.
 
+This writes the 9th MSR value into ibs_data.regs[8] on the kernel stack:
 
+    if (ibs_caps & IBS_CAPS_OPDATA4) {
+        rdmsrq(MSR_AMD64_IBSOPDATA4, *buf++);
+        size++;
+    }
+
+Can this corrupt adjacent stack memory when buf advances out of bounds?
+
+> =20
+>  	/*
+>  	 * rip recorded by IbsOpRip will not be consistent with rsp and rbp
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260903054422.1487=
+39-1-huangsj@hygon.cn?part=3D1
