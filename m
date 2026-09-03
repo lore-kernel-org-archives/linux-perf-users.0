@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27AC24AF678;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F1E94ADD8A;
 	Thu,  3 Sep 2026 13:23:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788441788; cv=none; b=rV4ObvRRXVAduvFpfiJoW5WQ83auPA2PoxDkx1pziqV7aRIkS0J+fSd3DgM2fd1atAK1+aRRwjUtqWGLBG6GfkVvUAFCJ27Vg/YjLRpiuoXkVS8GFeofqTAlK058DaR6pPMYhLoCvn15pnjdPc/sivCahZNlV+7SKdZ3CLoW858=
+	t=1788441792; cv=none; b=jlSBUXtLG2JA9kl8nyygTv/589vP58kXd6gMClxf0SzMJiSPOjsiADJxRfyfiRHou+CEdFsVGZXtgSM/HpxKmx/isqka6SnjIon4P9dd8XmOY8/EaB9X5dGG5ePrErOZ880yGnyEPtV0ptpg4s2WQDQ7IwEdKH/nHygvNotrGMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788441788; c=relaxed/simple;
-	bh=gIJtLhlgJM7KBSOKEfCfZkj2XHSVffgyEIAQwx1e0rM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ym7qLo7PhETmkuvgGsQBTc7PvEl113wASFkbFcfLc9UEK/H88FpuFzc9kFl4I5u2KaRrB8QrGGXc9mNm442WcFxux3mFXhGs3jPg8Y0gZPwKoca95g+Qi9azC6eu3JfaXL2iXOksp1iv8Xjeoso5r2sMxZKw5yaxqsjHCwR0pZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fHh+JE8k; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788441792; c=relaxed/simple;
+	bh=WU7m4HlKW3kdHtsYh/Q0n1wYe988EY4t+zrtpzwPc+Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=uFO3TyzVQ5V59FYuqkDVVc6G3iPEf3QmRPqsTKzUHex5sgdBLYsbnAkauFbY9hBm03U11G/5XXSSXa8WN776Q2dUTyzompEb4936Hd3Sk6Qnqm8+TzvPJiaKk8ALnRr2XLs1mnW7DhXjgS35HfDI8+CTB+Q4godDfrhj2pIGInE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rye1m5FQ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fHh+JE8k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CB141F00A3D;
-	Thu,  3 Sep 2026 13:22:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rye1m5FQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE4AE1F00A3E;
+	Thu,  3 Sep 2026 13:22:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788441777;
-	bh=Gsirv0Gl4YJr+LZNCGgx5Qz5H3FpTfl1/W3QJqauukE=;
-	h=From:To:Cc:Subject:Date;
-	b=fHh+JE8kQ+E0HI3NuD2I7DVPybjxCcZKUUUV4lkJ8zT8pzcY059Jk2+LMo/90z1MS
-	 5AQEWMbI/R2yp6IUJarAEvH4lGD7delJ4kHK73MPp+OVRBkdwheuV1Uz4i0l6BT1AK
-	 awx9ncXnuZoPqsY79hlOLqqhcPl6haHjWeCLkaEehrGgxoFIOvf2akp/otmL1yzrm7
-	 7FF+F/xfyUFa/OUgQQUgygovwy7KLmjuFaOoC8NLBQoUvGuXYhl0RdqtPkNHxBHQaP
-	 iZ+JT8EnKN//SZEWU4W0SN37OT0WrctpF+L0D+3cuKJOV1r2h/gYnyKws5UEBFC3Jc
-	 lKqX2m6Ah2Lfg==
+	s=k20260515; t=1788441780;
+	bh=EHKFKHJ3yJDXjG8mIdYl0n+9u/+CfaZfUFzjPOjHdgs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=Rye1m5FQZCLFWGFlFrvpqOnI5JnRuZmtqUcXSbYKkQbcAhUWWQvo18uVH3q9Gwcp8
+	 JYc1K25ZDqpIgE30u2bD25rJJJo0nyFe1xXVPORx3p2ycJkxD9UDTh0REJeZn/Vn9u
+	 tUCVB6kIPgbalfsL2epFaIkMX211AtHUdcr6tLIbmrgy9XfmlUyPZdVkIKeDiVeU3e
+	 g3eB/eHMUyvnYCKozebCVlhr5+kH4ZMN35VWwK8EZNIK1LXUqHAOJFt6B+E36a/t6q
+	 UtBYSUHmGAMaLBe0AAsfGYVvjGH40a1wFX3r6peYrBOm2o6xkU5sKu3YAaluFc88LT
+	 vbes8ReXZfIdg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -36,11 +37,15 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH v1 0/5] perf tools: Fix jitdump and dso handling
-Date: Thu,  3 Sep 2026 10:22:46 -0300
-Message-ID: <20260903132251.237029-1-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	sashiko-bot <sashiko-bot@kernel.org>,
+	Stephane Eranian <eranian@google.com>
+Subject: [PATCH 1/5] perf jitdump: Byte-swap debug entries via unaligned-safe accessors
+Date: Thu,  3 Sep 2026 10:22:47 -0300
+Message-ID: <20260903132251.237029-2-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260903132251.237029-1-acme@kernel.org>
+References: <20260903132251.237029-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,73 +54,56 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This series addresses five small fixes in the perf jitdump and dso
-code that were found by sashiko-bot during automated review.
+debug_entry records are packed with a variable-length name[] field, so
+entries after the first may start at addresses that are not naturally
+aligned for their u64 addr and int lineno/discrim fields.  On strict
+alignment architectures the byte-swap loop in jit_get_next_entry()
+performed misaligned 64-bit loads and stores through struct member
+access, which is undefined behavior.
 
-Patches 1 and 2 - unaligned-safe debug entries:
+Use get_unaligned()/put_unaligned() for the byte-swap of each field.
 
-  - 1/5 perf jitdump: Byte-swap debug entries via unaligned-safe accessors
-    The byte-swap loop in jit_get_next_entry() did 64-bit loads/stores
-    through struct member access.  This seems to be UB when entries are
-    unaligned after the first variable-length name[].  Use
-    get_unaligned()/put_unaligned() for each field, as was done in the
-    earlier bounds-check hardening.
+Reported-by: sashiko-bot <sashiko-bot@kernel.org>
+Cc: Stephane Eranian <eranian@google.com>
+Assisted-by: LLM
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/jitdump.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-  - 2/5 perf genelf: Use unaligned-safe accessors for debug entries
-    The same packing issue on the native path.  As far as I can tell,
-    jit_process_debug_info(), get_special_opcode() and
-    emit_lineno_info() all read u64 addr and int lineno through struct
-    access.  Convert them to unaligned-safe accessors, matching the
-    layout the jitdump writers (LLVM, JVM agents) emit.
-
-Patch 3 - stale unwinding state:
-
-  - 3/5 perf jitdump: Free unwinding data even when eh_frame_hdr_size is zero
-    jit_repipe_code_load() only cleared jd->unwinding_data when both
-    unwinding_data and eh_frame_hdr_size were set.  If a record carries
-    unwinding_data with eh_frame_hdr_size==0, so the answer would be that
-    the check fails and the state is applied to all subsequent records.
-    The record is validated upstream so eh_frame_hdr_size <= unwinding_size
-    always holds.  Free based on the data pointer alone.
-
-Patch 4 - event sizing:
-
-  - 4/5 perf jitdump: Size code_move event allocation with idr_size
-    jit_repipe_code_move() allocated event as sizeof(*event)+16 but
-    computed header.size with +idr_size.  When idr_size>16, I believe
-    header.size exceeds the allocation and perf_data__write() reads past
-    the heap, leaking adjacent heap into perf.data.  Size with idr_size
-    like jit_repipe_code_load() does.
-
-Patch 5 - open list deadlock/race:
-
-  - 5/5 perf dso: Defer dropping the open list reference until after the lock
-    The reference taken by dso__list_add() cannot be dropped while
-    holding dso__data_open_lock: dso__put() may call dso__data_close()
-    which takes the same lock, deadlocking.  This seems to be the cause
-    of the inconsistent list/counter state under REFCNT_CHECKING.  Fix by
-    transferring the reference to a deferred node drained by
-    dso__put_deferred() after every unlock.  Since the counter is now
-    decremented under the lock, do_open()'s close_first_dso() no longer
-    races with a stale count.
-
-Regards,
-
-- Arnaldo
-
-Arnaldo Carvalho de Melo (5):
-  perf jitdump: Byte-swap debug entries via unaligned-safe accessors
-  perf genelf: Use unaligned-safe accessors for debug entries
-  perf jitdump: Free unwinding data even when eh_frame_hdr_size is zero
-  perf jitdump: Size code_move event allocation with idr_size
-  perf dso: Defer dropping the open list reference until after the lock
-
- tools/perf/util/dso.c          | 75 ++++++++++++++++++++++++++++++++--
- tools/perf/util/genelf_debug.c | 30 ++++++++------
- tools/perf/util/jitdump.c      | 20 ++++++---
- 3 files changed, 103 insertions(+), 22 deletions(-)
-
+diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
+index d25a9fe9b020ce87..e0d5cc9a828189a2 100644
+--- a/tools/perf/util/jitdump.c
++++ b/tools/perf/util/jitdump.c
+@@ -14,6 +14,8 @@
+ #include <sys/stat.h>
+ #include <sys/mman.h>
+ #include <linux/stringify.h>
++#include <linux/kernel.h>
++#include <linux/unaligned.h>
+ 
+ #include "event.h"
+ #include "debug.h"
+@@ -343,9 +345,14 @@ jit_get_next_entry(struct jit_buf_desc *jd)
+ 				/* name must be NUL-terminated within the record */
+ 				if (!memchr(ent->name, '\0', (char *)end - ent->name))
+ 					break;
+-				ent->addr    = bswap_64(ent->addr);
+-				ent->lineno  = bswap_32(ent->lineno);
+-				ent->discrim = bswap_32(ent->discrim);
++				/*
++				 * debug entries are packed with a variable-length
++				 * name[], so entries after the first may be
++				 * unaligned: byte-swap via unaligned-safe accessors.
++				 */
++				put_unaligned(bswap_64(get_unaligned(&ent->addr)), &ent->addr);
++				put_unaligned(bswap_32(get_unaligned(&ent->lineno)), &ent->lineno);
++				put_unaligned(bswap_32(get_unaligned(&ent->discrim)), &ent->discrim);
+ 				ent = debug_entry_next(ent);
+ 			}
+ 			/* clamp so downstream consumers don't overrun */
 -- 
 2.55.0
+
