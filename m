@@ -1,107 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E50F4E8E03;
-	Thu,  3 Sep 2026 16:11:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 929AC4EBAD0;
+	Thu,  3 Sep 2026 16:11:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788451868; cv=none; b=K4W6WSS6FZjl5ezUNL//f67eN3Dk0lSS026kxjJy5APsVZLUVf7tY4PTm61HSHuJv2ApprT1BxebULfIxdvFITSdRUf4BSeVhSzIeTM1ogYipQqitVXFPXbDB4lnkJXj/jJr9g8UEFjt6puR7iDWWyJgnWmOtGW0WCbBbM8dC+o=
+	t=1788451904; cv=none; b=o17uyM5NcKfKhDIByqc+4dHORKJqAsXcGh6N0z6LAswfnAQlaZpZJ1KLKUje1+Y7J7A7NkWBu3/8QUcQTKSpL9RScrYjasxWdDo9q+qPoEeLLcfcmluKXAuTeuUMZveSQDKzyrPrzmoyXxUr5DkaTHHSy/2Qfo/CvVNU3mQp1cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788451868; c=relaxed/simple;
-	bh=l35oToW/fo74fXmscJTEC53dmZRIZLoLhJhrPRWkVDA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=cnIsHkH71IhJUamXq94MZxahwP7TBbDlO+b5Ye3nUWG2xGBccXc0LjOcPN+fkXOrY9HkEcewy4f5iTapokAjwcKRrOw8e+ZZQi0oB0nSKEXbSOfD9ASeukirXOiCSvv5bEG/jpJvaI0T02CIdE4PiTKbXg0TzghGHTsZk5/z2TA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cX5S97ua; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788451904; c=relaxed/simple;
+	bh=JPBzb+Eu+5h7idQxnV8cugdXmoUMgDNZ2DvvVYZ4FjA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=TeaQSw0keKQtunztqbhkz4LwPpIu8MGJRhDezookMVRCfem86FO0Y/RiJH2w9exvQ2/Z3GAQo7Rv2Sy00P3SedZhXRukKKMBViGTLaZmUR4/o7/N/gYk8kAaOXC/nYwrhkitWIMjF9dcD4BCQPmGzzjQsiCjGR1HVucpn0onhtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMZX7nEq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cX5S97ua"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 119AE1F00A3E;
-	Thu,  3 Sep 2026 16:11:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hMZX7nEq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41F351F000E9;
+	Thu,  3 Sep 2026 16:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788451866;
-	bh=wQC/B3FS4e5cPaDkFUi05H5/4Cpx4sxh25n+vGHWmYc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=cX5S97uavmnQ1oACZHN9HgQC0w4BW6l7gd3KhLLv7D3CEwvQqVkkISIabPe6cAz15
-	 lWkG+FcJx8T5bL8zvHYmPd7BTeb+q0xV22oPkTs+7zHVI76huUqtzlAazKHgiijpXC
-	 fPayLcChJfd8lQhKnDDxnDwCYBYoono4GRg6E8M/XmWnKu3w06nB/6JtY5EZEZ4JTc
-	 Ls6Rs/u56x5sozaE9TxltbKV3YH5hTFABAAIOg6efQ6qc4ZyXelz1bMHFgK7aaDnWZ
-	 9Y02WV5P78L1/Fs/n5/fmLT+8/kOHgOC2mjZC6o6yNFynXnGH6uYX4iYf9Gpt3FU4F
-	 Kd4tFkH7OtvQA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 9386938119CB;
-	Thu,  3 Sep 2026 16:10:08 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20260515; t=1788451903;
+	bh=JPBzb+Eu+5h7idQxnV8cugdXmoUMgDNZ2DvvVYZ4FjA=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=hMZX7nEqu0b6r576k/U1bUXtTfBnmYRh9PCSY6DVHIrQebI0RK0p/cKBDx/m8M3h2
+	 SlODRBbccVSyuDhQU/ipu5vMvBcdFVEnrUvKq23K8fjUE+KOt1MTgo3eJM9PI5QR4I
+	 oa1+PkuhDUo8rl3i+ZROn2bKIez4UyEiBtMh95Vq5H/NyiieP1JqhZ/R1NvoZEU9jR
+	 bSVcHsukW57uAejMa/iAn1+MgQi2N1gJvgShJaXWNUTrVNpCG5QddwXxc0C52Z7AhQ
+	 93poxPO6B8Zq9hdrxuPsGp6DhjYWkilsCtCp4Ahvzl8E7j/7xUDmPJLTR0Db13QI6f
+	 KLW5t8HRX57uw==
+From: sashiko-bot@kernel.org
+Subject: Re: [RFC PATCH v7 05/28] perf: arm_spe_pmu: Add PMBIDR_EL1 and
+ PMSIDR_EL1 to struct arm_spe_pmu
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Alexandru Elisei" <alexandru.elisei@arm.com>
+Cc: linux-perf-users@vger.kernel.org, "Marc Zyngier" <maz@kernel.org>, kvmarm@lists.linux.dev, "Oliver
+ Upton" <oupton@kernel.org>
+In-Reply-To: <20260903160623.315525-6-alexandru.elisei@arm.com>
+References: <20260903160623.315525-1-alexandru.elisei@arm.com>
+ <20260903160623.315525-6-alexandru.elisei@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 03 Sep 2026 16:11:42 +0000
+Message-Id: <20260903161143.41F351F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH v2 00/14] Remove PG_private by using
- page/folio->private checks instead
-From: patchwork-bot+f2fs@kernel.org
-Message-Id: 
- <178845180715.3423963.14220073137991024856.git-patchwork-notify@kernel.org>
-Date: Thu, 03 Sep 2026 16:10:07 +0000
-References: <20260831-remove-pg_private-v2-0-3668159cd9e8@nvidia.com>
-In-Reply-To: <20260831-remove-pg_private-v2-0-3668159cd9e8@nvidia.com>
-To: Zi Yan <ziy@nvidia.com>
-Cc: david@kernel.org, willy@infradead.org, akpm@linux-foundation.org,
- muchun.song@linux.dev, ljs@kernel.org, liam@infradead.org, vbabka@kernel.org,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com,
- baolin.wang@linux.alibaba.com, nico.pache@linux.dev, ryan.roberts@arm.com,
- dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
- usama.arif@linux.dev, gourry@gourry.net, ying.huang@linux.alibaba.com,
- apopple@nvidia.com, hannes@cmpxchg.org, qi.zheng@linux.dev,
- shakeel.butt@linux.dev, kasong@tencent.com, mark.rutland@arm.com,
- irogers@google.com, jack@suse.cz, linux-doc@vger.kernel.org,
- amarkuze@redhat.com, peterz@infradead.org, kexec@lists.infradead.org,
- dave.hansen@linux.intel.com, ruirui.yang@linux.dev, adrian.hunter@intel.com,
- linux-mm@kvack.org, hongbohbli@tencent.com, hpa@zytor.com,
- guochunhai@vivo.com, skhan@linuxfoundation.org, ceph-devel@vger.kernel.org,
- baoquan.he@linux.dev, matthew.brost@intel.com, anna@kernel.org,
- sstabellini@kernel.org, zbestahu@gmail.com, rakie.kim@sk.com,
- minchan@kernel.org, richard@nod.at, x86@kernel.org, ebiggers@kernel.org,
- alexander.shishkin@linux.intel.com, mingo@redhat.com, slava@dubeyko.com,
- weixugc@google.com, yukuai@fygo.io, xen-devel@lists.xenproject.org,
- xiang@kernel.org, magiclinan@didiglobal.com, mhiramat@kernel.org,
- joshua.hahnjy@gmail.com, xiao@kernel.org, byungchul@sk.com,
- james.clark@linaro.org, acme@kernel.org, linux-raid@vger.kernel.org,
- linux-fscrypt@vger.kernel.org, bp@alien8.de, rostedt@goodmis.org,
- linux-mtd@lists.infradead.org, axelrasmussen@google.com,
- jefflexu@linux.alibaba.com, namhyung@kernel.org, jaegeuk@kernel.org,
- yuanchu@google.com, idryomov@gmail.com, osalvador@suse.de, jgross@suse.com,
- pratyush@kernel.org, linux-nfs@vger.kernel.org, tytso@mit.edu,
- oleksandr_tyshchenko@epam.com, song@kernel.org, corbet@lwn.net,
- pasha.tatashin@soleen.com, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-perf-users@vger.kernel.org,
- senozhatsky@chromium.org, tglx@kernel.org, jolsa@kernel.org,
- linux-fsdevel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- trondmy@kernel.org
 
-Hello:
+> Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
 
-This patch was applied to jaegeuk/f2fs.git (dev)
-by Jaegeuk Kim <jaegeuk@kernel.org>:
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-On Mon, 31 Aug 2026 15:25:23 -0400 you wrote:
-> Hi all,
-> 
-> This patchset removes PG_private to make space for upcoming PG_folio
-> (reserved as __PG_folio) for identifying pages from a folio (more details
-> in Note below). Instead of checking PG_private, all code is changed to
-> check page/folio->private != NULL instead.
-> 
-> [...]
-
-Here is the summary with links:
-  - [f2fs-dev,v2,06/14] f2fs: stop using PG_private
-    https://git.kernel.org/jaegeuk/f2fs/c/5ad9409a9533
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260903160623.3155=
+25-1-alexandru.elisei@arm.com?part=3D5
 
