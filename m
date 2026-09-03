@@ -1,80 +1,80 @@
-Received: from cmccmta8.chinamobile.com (cmccmta8.chinamobile.com [111.22.67.151])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B7E143F8DB;
-	Thu,  3 Sep 2026 08:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.22.67.151
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26A6342E432;
+	Thu,  3 Sep 2026 08:15:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788423240; cv=none; b=UMsi+MexUz5DT3zzX7+oXg0cOoaQvl9ANHzK93owBgxXGvm7Qh60IDeecFGgKBYbcBpC0Q9FysqGnUResKWRilQWBVbURToDB4zWx2pOOryv30u5fj3ZpDH4YyYsPGBr19bLTBFCvJWwt+xfhAV2YjGU3qmJiTkSOCCSo8QbIjI=
+	t=1788423347; cv=none; b=JLgt2jl/dMD8rBgdgT08aZ8SyDOOQsopnUI7q8baST3xIOBUmVxNjv7wrowB/HwLWXPer+wD/ri9myGc4zhCk0p3LdUM5EHvPRaDTcV4AFvoWxAV6M0z+d6u4RgSm8p+dilW5SxgGiWrG72bkE8jSgoXPDwJSoLrGOlxAM52+a4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788423240; c=relaxed/simple;
-	bh=NICJ31aSM7j+n3iI6qdcmSuhPBo0RJZ+0ZHN7diOnCE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YE5oIDiyJskphG7m2hMyPyA0UwBz9ezwSkilCYpwxFYR/dLo0do3tW2PnDClYMXjz6wJjeMnfYsqaKGal7eNa9juMDudsoeG+QRgwjZ301pleHesmokQsBiSZMzMixNFAHfnNk9nwCNd9nA58h43xg6f3Dw8GqccvI7JFCu5TBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmss.chinamobile.com; spf=pass smtp.mailfrom=cmss.chinamobile.com; dkim=pass (1024-bit key) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.b=l0kLe5tk; arc=none smtp.client-ip=111.22.67.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmss.chinamobile.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmss.chinamobile.com
+	s=arc-20240116; t=1788423347; c=relaxed/simple;
+	bh=EDODARZVUlPkbXKCx4XTbWR1XeR1zBMSp2sAcbay/7M=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=DNpZePmbDp/Et7+p3cOqoEwY8S9K1Fr5JdaupCKu3YVZ2LCgLxKXgNRAADAZ/P/NIT7jsioKQCXY6eME8x+sXQiy6i3ml0RaCEqKGNt3kZsyJxJiKnm4oLouqWXvGm9/u3IZZ5qNlQa7YCMRkq/jr8bdlGMoWW8d3Djor+G0SvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HqSoacMF; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=cmss.chinamobile.com header.i=@cmss.chinamobile.com header.b="l0kLe5tk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=cmss.chinamobile.com; s=default; l=0;
-	h=from:subject:message-id:to:cc:mime-version;
-	bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
-	b=l0kLe5tkbdOOtkOf+AukR9/RTD7tgMT2JH4jLGLqTkW8hXJ15A5xvxLUr3c0pPcd/xgPKSLATtTVo
-	 zEpfkHVLzUY0DX12zTq4xd0Q5bTJoMP1kEszt65fqr0deCzSEkWJOXFIvj2WhACQlBh4Yy+tWeNJlP
-	 LG11nn1EBqLfYp2k=
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from spf.mail.chinamobile.com (unknown[10.188.0.87])
-	by rmmx-syy-dmz-app02-12002 (RichMail) with SMTP id 2ee26a992c402d4-e62b5;
-	Thu, 03 Sep 2026 16:13:53 +0800 (CST)
-X-RM-TRANSID:2ee26a992c402d4-e62b5
-X-RM-TagInfo: emlType=0                                       
-X-RM-SPAM-FLAG:00000000
-Received:from localhost.localdomain (unknown[223.108.79.98])
-	by rmsmtp-syy-appsvr02-12002 (RichMail) with SMTP id 2ee26a992c40dc8-1a1e1;
-	Thu, 03 Sep 2026 16:13:53 +0800 (CST)
-X-RM-TRANSID:2ee26a992c40dc8-1a1e1
-From: liujing <liujing@cmss.chinamobile.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Liu Jing <liujing@cmss.chinamobile.com>
-Subject: [PATCH] perf python: Fix redundant self-assignment in get_argument_count()
-Date: Thu,  3 Sep 2026 16:13:50 +0800
-Message-Id: <20260903081350.4676-1-liujing@cmss.chinamobile.com>
-X-Mailer: git-send-email 2.27.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HqSoacMF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81F891F000E9;
+	Thu,  3 Sep 2026 08:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788423345;
+	bh=EDODARZVUlPkbXKCx4XTbWR1XeR1zBMSp2sAcbay/7M=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=HqSoacMF0NNaag/jKnU6NQ7tQ4DDY0sB2KsKQcQuk7WV+ZvF5JcpNmcBbBK152hCA
+	 pmYDCI+uTHOFcw3cOh4EPVCbz4rlfLlIj9Oe84DHDlqRbt+c95xgSWTs5VKzjPY23z
+	 OxGi9HZgFsTXtSy25uMuIe0GBuAR/wvRjNK64UlLGNjwz0+IwIKXZ5EgvwY79F4WrY
+	 V6lpUiO3QoF6ojgzijTks7BdXXLUx8PXGg0fxa73MUSPFnR3ejZUnWlRnQR6uWht71
+	 B9cQXL1mTPeq7Gh1x8oqSBhbAy3ZBtDVAgmzGPp9ydDvvMOh4XRvAYmScnl80ptIzz
+	 RoYld+g56y8EQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v3 8/8] perf hisi-ptt: Pass pattern version to decoder
+ for compatibility
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Sizhe Liu" <liusizhe5@huawei.com>
+Cc: linux-perf-users@vger.kernel.org, linux-pci@vger.kernel.org
+In-Reply-To: <20260903075241.1445338-9-liusizhe5@huawei.com>
+References: <20260903075241.1445338-1-liusizhe5@huawei.com>
+ <20260903075241.1445338-9-liusizhe5@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 03 Sep 2026 08:15:45 +0000
+Message-Id: <20260903081545.81F891F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Liu Jing <liujing@cmss.chinamobile.com>
+> On the recording side, walk the evlist in hisi_ptt_info_fill() to find
+> the hisi_ptt event, read out the pattern bits from its config, and
+> forward the pattern version to the decoder through
+> auxtrace_info->priv[1] as HISI_PTT_PATTERN_LEGACY or HISI_PTT_PATTERN_V1.
+>=20
+> On the decoding side, store the pattern version in struct hisi_ptt and
+> propagate it to struct hisi_ptt_pkt_buf. The printers of Header DW2
+> and DW3 check the version: HISI_PTT_PATTERN_V1 keeps the field-level
+> parsing introduced by the previous patches, while HISI_PTT_PATTERN_LEGACY
+> falls back to printing only the raw "Header DW2/DW3" label so legacy
+> traces remain decodable with the new tool.
+>=20
+> The auxtrace priv size grows from one u64 to two. Use
+> HISI_PTT_AUXTRACE_PRIV_SIZE_LEGACY for the minimum header size check
+> and detect the actual priv_size at runtime to pick the pattern version.
+> For trace data recorded by an older tracer that does not support the
+> `pattern` parameter (no priv[1] in the header), the decoder defaults
+> to legacy mode (HISI_PTT_PATTERN_LEGACY) so the new tool keeps parsing
+> old traces correctly.
+>=20
+> The hisi_ptt_pkt_size array is moved out of the shared header into
+> static definitions in the two .c files that consume it to avoid
+> multiple definitions.
+>=20
+> Reviewed-by: Yushan Wang <wangyushan12@huawei.com>
+> Signed-off-by: Sizhe Liu <liusizhe5@huawei.com>
 
-In get_argument_count(), the variable code_obj is assigned to itself
-before being assigned the result of PyObject_GetAttrString(). This is
-a redundant self-assignment that appears to be a typo.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-Fix it by removing the redundant self-assignment.
-
-Signed-off-by: Liu Jing <liujing@cmss.chinamobile.com>
----
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -165,7 +165,7 @@
- {
- 	int arg_count = 0;
- 
--	PyObject *code_obj = code_obj = PyObject_GetAttrString(handler, "__code__");
-+	PyObject *code_obj = PyObject_GetAttrString(handler, "__code__");
- 	PyErr_Clear();
- 	if (code_obj) {
- 		PyObject *arg_count_obj = PyObject_GetAttrString(code_obj,
-
-
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260903075241.1445=
+338-1-liusizhe5@huawei.com?part=3D8
 
