@@ -1,114 +1,176 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9FF4F30C0;
-	Thu,  3 Sep 2026 16:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01C04A3F0D;
+	Thu,  3 Sep 2026 16:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788454058; cv=none; b=eWDu/X6sxdMdM2zOU7m0YSz+uUqZ1BJXR0WVwLJM37cGd5zQ/J3u1j1EYSNxP5Ck8RcduLEbBWtE9R06xKd9kYcMathMqA53ufQcv2iMHmUI+H+blrbjQ7tk/JPbJ5ptCYlHmMBF2PKugyVikTocz9KheCqJ8GmwkOBY54fFnu8=
+	t=1788454141; cv=none; b=VTVsFVInUahwbSFHW+JO550DJ2THrlM07DVupcCBaGXRc0x8OiRK49wxRBF/Fet8wHYkNKY9SRSF/by0RZfVXuE1HKhFsVJczWTgbRO8V8UG3AR31X8FPfet3d4hIbeWTG+VMW0CIsXStVInX+VZygu06AOkMnvpQu6CcxAuTuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788454058; c=relaxed/simple;
-	bh=3X4L33LAgSrzvQW+lHKTgGo36IrXujakkpx0ktUlGvg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eEltoon+7Px/acQGvpq7klUbGdrLEwMILtgnYeyLe1lIyjz1ZIsTw4cUTpAe85PtMXl2nAnJzd5pfRCrWJQIqByxz4fJak1K9W/8iTi/F6Co0/nKWbuZlQZ8Rhno3hipGb5Kj2JwIkkmPdQL0DOvk3G4Lb1vNTA2veUKNvmFK/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=I23Lcsn3; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1788454141; c=relaxed/simple;
+	bh=Z/Wm7259/ZiwtipWSc4z34MSksQQdsmekZtVDxpDQSo=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=FehZsRH2n82onmiRHCYGpkhtTAfLE6LUBp0wYYfCmePe/Pi9kuEgANNhWHzwL0tqxr538IOfmypxNL7xGi9GzTMMEwX7LeSnwXv7vLhLVn42ARlAun9i+z6WWXpBU0dJxfO7xX3dFfNx53N+Yi5cgR94bnglXfEyTnDX5s26Zc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k4ywP/wi; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="I23Lcsn3"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=PE4M5bZ8qa5ONlWyjoO6PT9YT/rm032gR13k1+hQA+s=; b=I23Lcsn3E+BTZqmu+d5CGfgHwK
-	3qS6wiCrS19b//RLzh7QxvWrqznkylmRe1kmkX2xuzrC1DhZrPi+XVYTpkPfwh+4CAAfHo+/iPG1g
-	X3wTaXN/QJ6sKW7EmH9x50yocWgsxMCxGEXX1+TQUR6JZZcSX6wGKgBaQFVQc3ZGNMOkOlRVU4bbC
-	oef/ChSoq+1JtplljCZYXw/S8hk1QUnR9AHu8CzVdiMaLPu61MKtQgZt+4faKdoy0dO91k0lnwfrx
-	eOOA+mxx+nnaHy7Lhg0GuOeZN9zcCmj+X+fZ09c3I5MPrQfLBT2df/qW+bDfqxrGafoaGcqBoOGhB
-	m9uNY41g==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:43748)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1x2Ab3-0000000013P-2RN0;
-	Thu, 03 Sep 2026 17:47:29 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.98.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1x2Aay-000000007Y3-2v7X;
-	Thu, 03 Sep 2026 17:47:24 +0100
-Date: Thu, 3 Sep 2026 17:47:24 +0100
-From: Russell King <linux@armlinux.org.uk>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
-	Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Waiman Long <longman@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>,
-	Clark Williams <clrkwllms@kernel.org>
-Subject: Re: [PATCH v2] ARM, ARM64, LONGARCH: Delay HW BP notification to
- task_work()
-Message-ID: <apmknG55qFAn8EPf@shell.armlinux.org.uk>
-References: <20260814085118.OPEA_Ssn@linutronix.de>
- <20260903160710.vVf4gEL2@linutronix.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k4ywP/wi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E55DC1F000E9;
+	Thu,  3 Sep 2026 16:48:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788454139;
+	bh=vzmcTJYNjPdYn12zhqDO5qR4Zxbk1TgjV9BMrV7uBqo=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=k4ywP/wipNESNcttJ6pZHELr0DCOr8TnYXefjaVWOEvT6Kqo2QJRuIASxO3tOGbr6
+	 nlNtcI+YpI7IyR7L71fMe0bKeM6mBoxG6kbkfdWc8ypEhrR05BNJ3xcvCsB0GXjVQd
+	 Be1ZMI6o7zUFrRd/VhKXWvbJya0dHgkzU6ck+B0krc/WmOyGZYLuxZOLWK535/OQ+8
+	 r0KX9hKyXLhZzSTbCGoVAmCAVg6d9HAthNukigvTyrNEi+FNiryB0CahLImU4OQ1wn
+	 ko0oNmSDEanxz3hI/CH58sNFgiLx0xBw0/EIjZ9PIsd2Z1KHHaf0ouTnyi5hdZZM4k
+	 l74CGroTaHufg==
+From: sashiko-bot@kernel.org
+Subject: Re: [RFC PATCH v7 20/28] KVM: arm64: Allow guest SPE physical
+ timestamps only if kernel allows it
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Alexandru Elisei" <alexandru.elisei@arm.com>
+Cc: kvmarm@lists.linux.dev, "Marc Zyngier" <maz@kernel.org>, linux-perf-users@vger.kernel.org, "Oliver
+ Upton" <oupton@kernel.org>
+In-Reply-To: <20260903160623.315525-21-alexandru.elisei@arm.com>
+References: <20260903160623.315525-1-alexandru.elisei@arm.com>
+ <20260903160623.315525-21-alexandru.elisei@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 03 Sep 2026 16:48:58 +0000
+Message-Id: <20260903164858.E55DC1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260903160710.vVf4gEL2@linutronix.de>
-Sender: "Russell King,,," <linux@armlinux.org.uk>
 
-On Thu, Sep 03, 2026 at 06:07:10PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2026-08-14 10:51:18 [+0200], To linux-arm-kernel@lists.infradead.org wrote:
-> > Waiman, Luis, Ada reported that HW breakpoints on ARM64 trigger
-> > "sleeping while atomic" warnings on PREEMPT_RT. The hardware event is
-> > delivered with disabled interrupts and perf intrastrucure expects
-> > disabled interrupts while the overflow callback is invoked.
-> > 
-> > The callback then sends a SIGTRAP signal for which it acquires
-> > sighand_struct::siglock, a spinlock_t which becomes a sleeping lock and
-> > must not be acquired in atomic context.
-> > 
-> > Delay the event callback until the return to userland.
-> > Add perf_arch_hwbp_notify(), a generic perf callback which delayes the
-> > actual callback invocation to task_work_add() callback. This callback
-> > invokes the architecture defines callback arch_hwbp_send_sig().
-> > This requires struct callback_head and the functions require
-> > ARCH_NEED_PERF_HW_NOTIF to be defined.
-> > 
-> > This was reported against ARM64. ARM and LongARCH follow the same
-> > pattern are also converted.
-> > 
-> > Reported-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
-> > Reported-by: Waiman Long <longman@redhat.com>
-> > Closes: https://lore.kernel.org/all/aho0eqjMESuHxECr@redhat.com/
-> > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> 
-> Did this get lost, should I repost it or is there something obviously
-> wrong with it and nobody wanted to hurt my feelings by telling me?
+Thank you for your contribution! Sashiko AI review found 4 potential issue(=
+s) to consider:
+- [High] Inverted logic for `perf_allow_kernel()` grants physical timestamp=
+s to unprivileged users and denies them to privileged users.
+- [High] Capability check `perf_allow_kernel()` is evaluated at `KVM_RUN` t=
+ime (TOCTOU) instead of VM/VCPU configuration time.
+- [Medium] Silently-on guest-visible feature (SPE physical timestamps) brea=
+ks live migration and violates subsystem guidelines.
+- [Medium] Concurrent first `KVM_RUN` invocations on multiple vCPUs cause a=
+ data race on the VM-wide `kvm_spe->guest_pmscr_el2`.
+--
 
-What do you expect to happen with this? Which arch maintainer should
-apply this patch that affects three different independently maintained
-architectures?
+commit 8640bfaf0b943972e8c97350b961b39b15830f1b
+Author: Alexandru Elisei <alexandru.elisei@arm.com>
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+KVM: arm64: Allow guest SPE physical timestamps only if kernel allows it
+
+The SPE driver allows userspace to use physical timestamps for records only
+if the kernel allows it, do the same for a virtual machine.
+
+[ ... ]
+
+> diff --git a/arch/arm64/kvm/hyp/vhe/spe-sr.c b/arch/arm64/kvm/hyp/vhe/spe=
+-sr.c
+> index 978620ad99fa5..3c32a1338cc8d 100644
+> --- a/arch/arm64/kvm/hyp/vhe/spe-sr.c
+> +++ b/arch/arm64/kvm/hyp/vhe/spe-sr.c
+
+[ ... ]
+
+> @@ -120,10 +121,10 @@ void __kvm_spe_restore_guest_state_vhe(struct kvm_v=
+cpu *vcpu, struct kvm_cpu_con
+>  		write_sysreg_s(pmbsr, SYS_PMBSR_EL1);
+>  	}
+> =20
+> -	__kvm_spe_restore_sampling_regs(vcpu->kvm, guest_ctxt);
+> +	__kvm_spe_restore_sampling_regs(kvm, guest_ctxt);
+> =20
+>  	write_sysreg_el1(ctxt_sys_reg(guest_ctxt, PMSCR_EL1), SYS_PMSCR);
+> -	write_sysreg_el2(0, SYS_PMSCR);
+> +	write_sysreg_el2(kvm->arch.kvm_spe.guest_pmscr_el2, SYS_PMSCR);
+
+[Severity: Medium]
+Can this read of kvm->arch.kvm_spe.guest_pmscr_el2 race with a concurrent
+write from another vCPU?
+
+If multiple vCPUs are starting their first KVM_RUN, one vCPU might complete
+kvm_arch_vcpu_run_pid_change(), proceed to enter the guest, and execute
+__kvm_spe_restore_guest_state_vhe(), reading guest_pmscr_el2.
+
+Because kvm_spe_vcpu_first_run_init() performs unlocked writes to this
+shared VM-wide variable, another vCPU could be modifying it at the same
+time. Should this use READ_ONCE() and WRITE_ONCE() to prevent LKMM
+violations and KCSAN data race splats?
+
+>  }
+>  NOKPROBE_SYMBOL(__kvm_spe_restore_guest_state_vhe);
+> =20
+> diff --git a/arch/arm64/kvm/spe.c b/arch/arm64/kvm/spe.c
+> index af1e19cb8e9ae..68b751bdb384b 100644
+> --- a/arch/arm64/kvm/spe.c
+> +++ b/arch/arm64/kvm/spe.c
+
+[ ... ]
+
+> @@ -97,6 +99,12 @@ int kvm_spe_vcpu_first_run_init(struct kvm_vcpu *vcpu)
+>  	if (!kvm_spe->pmblimitr_el1_res0_mask)
+>  		kvm_spe_compute_pmblimitr_el1_res0_mask(kvm);
+> =20
+> +	if (kvm_vm_has_ran_once(kvm))
+> +		return 0;
+> +
+> +	if (perf_allow_kernel())
+> +		kvm_spe->guest_pmscr_el2 =3D PMSCR_EL2_PCT_PHYS;
+
+[Severity: High]
+Does this logic invert the intended permission check?
+
+The perf_allow_kernel() function returns 0 on success (access granted) and
+a negative error code (like -EACCES) on failure. By evaluating to true when
+access is denied, it seems we might be granting physical timestamps to
+unprivileged users and incorrectly denying them to privileged users.
+
+[Severity: High]
+Is kvm_spe_vcpu_first_run_init() the right place to check these
+capabilities?
+
+Checking perf_allow_kernel() here means it is evaluated during the KVM_RUN
+ioctl, rather than during VM configuration. VMMs typically configure VMs
+with full privileges but drop privileges before executing KVM_RUN for
+sandboxing. Checking at KVM_RUN time will incorrectly deny physical
+timestamps to properly sandboxed VMMs.
+
+Furthermore, an unprivileged process could configure a VM and pass the vCPU
+file descriptor to a privileged process, improperly gaining access to
+physical timestamps using the privileged thread's capabilities.
+
+[Severity: Medium]
+Could silently enabling SPE physical timestamps based on the host kernel
+break live migration?
+
+If a VM is migrated from a host where perf_allow_kernel() grants access to
+one where it denies it, the guest would silently downgrade to virtual
+timestamps, causing data corruption in the profiling trace.
+
+The KVM guidelines require that new behavior the guest can observe must be
+off by default and explicitly enabled through standard capability
+negotiation (like a KVM_CAP_* or ID register flag). Should this require an
+explicit opt-in from userspace instead?
+
+[Severity: Medium]
+Can this write to kvm_spe->guest_pmscr_el2 happen concurrently across
+multiple vCPUs?
+
+The kvm_vm_has_ran_once(kvm) flag is not set until the end of
+kvm_arch_vcpu_run_pid_change(), which happens after
+kvm_spe_vcpu_first_run_init() completes. If multiple vCPUs start their
+first KVM_RUN concurrently, they will all see kvm_vm_has_ran_once(kvm) as
+false and write to this shared variable without synchronization.
+
+> +
+>  	return 0;
+>  }
+>
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260903160623.3155=
+25-1-alexandru.elisei@arm.com?part=3D20
