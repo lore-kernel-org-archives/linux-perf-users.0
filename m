@@ -1,149 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F7B45562E
-	for <linux-perf-users@vger.kernel.org>; Thu,  3 Sep 2026 08:39:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EE8C403EA1;
+	Thu,  3 Sep 2026 09:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788424775; cv=none; b=p+WR9no9gD2xIx8D0TiW7NzSAltjJbMv04VtJobVs/Uc5Fbp6Nh+gMwy3cXvWAm9ASp5ckmOOAxOcowx39bhLlUael2bCXrOhVkaWNhHvRMKqMH2/hkL00AZAeGMPar/AMKuRh1RyZjumIAvbmvc0hJQnvBiGo8Psky1EMUtHe4=
+	t=1788428134; cv=none; b=PO0OQgkBHRjQgMstDfdlyAJPsu7Mxkq6blSwDhrjYjONOJB5GBiiRNyns7tYeBhrbZsLoYIszoA31Lxvrhp1rUWgXIsEHpQnyclyRyv313C+T6G7kF9rjaNP+uMNN0ddku5ISpyvWJFWf4Clmn/uJ8TAefvwWv8/ukHUah9yGDE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788424775; c=relaxed/simple;
-	bh=LPpuxlWIT1z7uHXc6opXY8P9Wyk4YaW1Xuw4V99O8wI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kvOAha9JrlJ+zWCswnyJ0tDRClqwVeGyesXpuOwtyjkIl0qd/XI+XPeTt9B62pWPVU/XwZxp0jjQtjSV4WO5tHNrBLphZW+Ey+AsOcOKtNKCdZlDeApPuQiDyG3zg8cXuShV9uY0gX0Tm97TkxOKhfaNSk+OnMyQC3nrGGhsjVE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XVrDUO11; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1788428134; c=relaxed/simple;
+	bh=P/gApI/jTGDCX/7W6Htuiuu7577T7jl7mGMwxwH5xcM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Rn2aSTcSczOvHDrF/jBxFVAkQn4/mefmOGtwbZ80k1SzZWw/DKpYUf20+z7tjr3+kNm6C4Kkf+HzbdSh3uAtJRlyvbTqiD4QLBUdsLImbAcGuaHvbG3ws46B6HwUR/C01ECord5V4lBpUb89tB5wFuht32WwN8bLxHhyCzLW51k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=CWSreIME; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XVrDUO11"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788424773; x=1819960773;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=LPpuxlWIT1z7uHXc6opXY8P9Wyk4YaW1Xuw4V99O8wI=;
-  b=XVrDUO11cgtB/U5SM0nmf7UXUQ2ivw+J/KZVd6kTYsJkYgWu7TqMhBMn
-   Q2Qf4QuLhVpueJS1emBfUoJDiKXJTMHbybf4MC6BaI/T7svLb1wKNSWNm
-   WiqSpzNSyb1axHIrTVN7cxgeRjwhKP9zhpunqDT1lu5eaTMR1YwEUKOoH
-   hPmhsSSkF6yzNI7nAtvzCl9tpeEVBHlH+8G0R+PDXkxZb+vRxGGsNsSyV
-   W9HMSgbqTJujFiiPVD8ox2ZL4L9zSYs3WNG6NOeVyP80/p7EfrMsS0jf3
-   xEFEjpqMRZjtEVyzxPYD3hGlwqDNi09do+Zcomjj833EWCAkCuBLbgMHi
-   g==;
-X-CSE-ConnectionGUID: TuyeFkj8TVyVcSs42ED33A==
-X-CSE-MsgGUID: c1eGUKyrQxyoDrsqjloOHg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11894"; a="88824615"
-X-IronPort-AV: E=Sophos;i="6.25,258,1779174000"; 
-   d="scan'208";a="88824615"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 01:39:32 -0700
-X-CSE-ConnectionGUID: SxCGjFwzRKSyj5KngTndzQ==
-X-CSE-MsgGUID: L3/MX/UAR7y0dF7Vqcez/A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,258,1779174000"; 
-   d="scan'208";a="267896703"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2026 01:39:32 -0700
-Message-ID: <c38b254f-21e5-4a02-8934-7a4da61e4571@linux.intel.com>
-Date: Thu, 3 Sep 2026 16:39:29 +0800
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="CWSreIME"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 403A21596;
+	Thu,  3 Sep 2026 02:35:27 -0700 (PDT)
+Received: from e132581.arm.com (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 385E53F7D8;
+	Thu,  3 Sep 2026 02:35:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1788428131; bh=P/gApI/jTGDCX/7W6Htuiuu7577T7jl7mGMwxwH5xcM=;
+	h=From:Date:Subject:To:Cc:From;
+	b=CWSreIMEuFcfa6KgwoQQVDfM2rqzA3Nh7LUthlB3EX5gpnkxeOtdAcwmyYoLg8dSt
+	 2fUOOvFRcyO/sCsoq7blJRu88dRyDP8ZL7LANuEiIJAWIyPztrzAjEHMyx8Nw+eZth
+	 ClGbEgo7p+ujAWKvADMzUB/oW5iB/2HrsF7YzrYc=
+From: Leo Yan <leo.yan@arm.com>
+Date: Thu, 03 Sep 2026 10:35:12 +0100
+Subject: [PATCH] perf/core: Fix ITRACE start suppression for inherited
+ events
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [DISCUSSION] Three problems behind broken "perf --call-graph
- dwarf" on AMD: IP and stack dump mismatch, libdw fails on lld's layout, and
- the unwinder fallback never runs
-To: Namhyung Kim <namhyung@kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: Gennady Kupava <gennady.kupava@gmail.com>,
- linux-perf-users@vger.kernel.org
-References: <CAPu-DQqF0aF6=GS8Z6KKWeeX_V5LiXeKU_rJQZC+uGg8zuTPNw@mail.gmail.com>
- <apCyQ93c48Dy4H-S@google.com> <apG-RzV0zyjoC-FY@google.com>
- <27d79477-c469-413b-95bd-c6c1f8a40f55@amd.com> <apbs8gywyAfFVzqm@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <apbs8gywyAfFVzqm@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260903-perf_core_itrace_start_fix_inherit_event-v1-1-6bff7e675af5@arm.com>
+X-B4-Tracking: v=1; b=H4sIAE8/mWoC/x2N0QqDMAwAf0XyvEJXQc1+ZYxQapx5qZIGEcR/X
+ 9jjwXF3QWMVbvDqLlA+pMlWHZ6PDsqa65eDzM6QYhoixj7srAuVTZnENBemZlmNFjlJ6uoxIz6
+ 4WsgT9nEeMU2I4Lld2aX/6v257x8C9B6wegAAAA==
+X-Change-ID: 20260903-perf_core_itrace_start_fix_inherit_event-a8930d792899
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Sashiko AI <sashiko-bot@kernel.org>, 
+ Leo Yan <leo.yan@arm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1788428129; l=1944;
+ i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
+ bh=P/gApI/jTGDCX/7W6Htuiuu7577T7jl7mGMwxwH5xcM=;
+ b=7AToI7D2MoDKTHUcW/Lhn7qNF5k4sJ/nXZCHpXwQZrQNqrvnaxX0R3eTorRoSMLVuIqQBl1oe
+ 4Tk9aZEOiWTBUNOQEqvf7bB51kd3G5OWnFAaoVlQCbHsWnELWQv7v0q
+X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
+ pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
+PMU drivers call perf_event_itrace_started() for the event that has
+started tracing. This sets PERF_ATTACH_ITRACE in that event's
+attach_state.
 
-On 9/1/2026 11:19 PM, Namhyung Kim wrote:
-> Hello,
->
-> On Mon, Aug 31, 2026 at 10:35:06AM +0530, Ravi Bangoria wrote:
->>>>> 2. perf: precise events and DWARF call graphs are mutually exclusive on this
->>>>>    hardware, so arguably perf should simply not let the two be combined.  I
->>>>>    would suggest two rules rather than one, because a blanket refusal would
->>>>>    make the common case worse:
->>>>>
->>>>>    - for the default event, drop the P when --call-graph dwarf is requested,
->>>>>      silently and on PMUs where precision means IBS.  Otherwise a plain
->>>>>      "perf record -g --call-graph dwarf" starts failing outright on every AMD
->>>>>      box, which is worse than today.  The s390 case in evlist.c suggests this
->>>>>      kind of substitution is considered acceptable;
->>>>>
->>>>>    - if the user asked for a precise event explicitly and also asked for
->>>>>      DWARF call chains, refuse with a message that says why and what to do,
->>>>>      instead of quietly producing a useless result.
->>>>>
->>>>>    Note that this should be scoped to IBS.  On Intel, PEBS records the whole
->>>>>    register set, so precise events and DWARF unwinding work together there
->>>>>    and nothing needs restricting.  Frame-pointer call graphs are also fine
->>>>>    with precise events - only the leaf frame is off.
->>>> I think we can enable both precise IP and dwarf callchains by using
->>>> PERF_SAMPLE_REGS_INTR.  For unwinding, it should use PERF_REG_X86_IP
->>>> from the REGS_INTR instead of sample.ip
->>> Ok, it seems we already do this in the perf tools but it looks like the
->>> kernel already overwrote the PERF_REG_X86_IP with the precise IP.  I
->>> feel like we should fix the kernel.
->> This should resolve the DWARF unwinding issue with IBS PMUs:
->>
->> --- a/arch/x86/events/amd/ibs.c
->> +++ b/arch/x86/events/amd/ibs.c
->> @@ -1523,8 +1523,11 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
->>  			goto out;
->>  		}
->>  
->> -		set_linear_ip(&regs, ibs_data.regs[1]);
->> -		regs.flags |= PERF_EFLAGS_EXACT;
->> +		if (event->attr.sample_type & PERF_SAMPLE_IP) {
->> +			data.ip = ibs_data.regs[1];
->> +			data.sample_flags |= PERF_SAMPLE_IP;
+For inherited events, however, perf_log_itrace_start() replaces the
+child event with its parent before checking PERF_ATTACH_ITRACE. The
+setter and checker therefore operate on different events. If the
+parent's flag is clear, the child continues to emit ITRACE_START
+records on subsequent schedule-ins. If the parent has already started,
+its flag can instead suppress the child's initial record.
 
-We may not set PERF_SAMPLE_IP here, otherwise the kernel address leakage
-check in perf_instruction_pointer() could be bypassed.
+Remove the parent substitution so that perf_log_itrace_start() checks
+the same event that the PMU driver marks as started.
 
+This is safe for tool consumers. Intel PT uses the ITRACE_START record
+to set the current thread context. CoreSight ETM uses the record only
+to find or create the corresponding thread. Neither decoder depends on
+the parent event.
 
->> +			regs.flags |= PERF_EFLAGS_EXACT;
->> +		}
->>  	}
->>  
->>  	if (((ibs_caps & IBS_CAPS_BIT63_FILTER) ||
->> ---
-> Right, that's what I thought.  And I believe we should do similar on
-> Intel and not update other registers.
+Reported-by: Sashiko AI <sashiko-bot@kernel.org>
+Closes: https://lore.kernel.org/linux-perf-users/20260901164705.042781F000E9@smtp.kernel.org/
+Fixes: 9a6694cfa239 ("perf/x86/intel/pt: Do not force sync packets on every schedule-in")
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ kernel/events/core.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-For Intel PEBS, the call-chain would always use the interrupt regs instead
-of the PEBS regs, so there would be no issues for Intel PEBS.
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index a6c8e38a311042afab6b65814a84c67b87ba929b..991ae214d46ebe8b0d9de497255f25a4ad12397f 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10572,9 +10572,6 @@ static void perf_log_itrace_start(struct perf_event *event)
+ 	} rec;
+ 	int ret;
+ 
+-	if (event->parent)
+-		event = event->parent;
+-
+ 	if (!(event->pmu->capabilities & PERF_PMU_CAP_ITRACE) ||
+ 	    event->attach_state & PERF_ATTACH_ITRACE)
+ 		return;
 
-    /*
-     * We must however always use iregs for the unwinder to stay sane; the
-     * record BP,SP,IP can point into thin air when the record is from a
-     * previous PMI context or an (I)RET happened between the record and
-     * PMI.
-     */
-    perf_sample_save_callchain(data, event, iregs);
+---
+base-commit: 940de590b839f71d6dc846160534bf202401b8b7
+change-id: 20260903-perf_core_itrace_start_fix_inherit_event-a8930d792899
 
-Thanks.
+Best regards,
+-- 
+Leo Yan <leo.yan@arm.com>
 
-
->
->> However, there's no way to address the stack being out of sync with the
->> IBS RIP, since the IBS HW does not capture GPRs alongside the sample.
-> I think it's ok and we don't need to sync IP and stack.  The dwarf
-> unwind should start from stack and we can see the skid between IP and
-> the first entry of the callchain.
->
-> Thanks,
-> Namhyung
