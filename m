@@ -1,52 +1,35 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 361764D90C5
-	for <linux-perf-users@vger.kernel.org>; Thu,  3 Sep 2026 16:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD0D37FF53;
+	Thu,  3 Sep 2026 16:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788451655; cv=none; b=jLqeyjnVQlDUXXx8MBtxuMvCeEwvWCbZ4n/vPUpUZslctJ7vlDKU9oNc+UYS/UZysR4lS6dyAQEDfAbNT6u1sRJEpiFQBj9uad/MgmeLDpbpJnfNLCYV8pQbgXibZft1zbyUqQPr6RtP7Wv9Rh8zhPX0CirfT1JLL7MDT2X8S8c=
+	t=1788451866; cv=none; b=YJnZE4o/+nhg7hgl67cJliBGprlblhdpqzJhzh0rsiFdf7yf0jiPcD5Wg39hHA+aC5NXxJw0qwAphzoNp2HWPROBKm5mCy5Yke65PyvS5A0hpqmzILxT9Zom5HpBAVx4OBnN/+l9QL7ZQf3S/rnH1x6iDvbaVtAkdsT1XwvXXto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788451655; c=relaxed/simple;
-	bh=U+rws8ncwi/1wkVpb63POq0o8EKKy0KoxPOz8nkpieE=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jPU8ummx3mwLsb/jAqHzNhuhUDTCiSzstfkQNeneDDRJB2Dn7DCZazjv8XYHz07YlvWrmFx+XM/Z77/5alxTsS3LLFpaSKEg6CDBqEpuyiOZUP3gbCfB5fh5ILOC6YEtpHZH8V3t6P8EVSQrin5UTcjN2HyU/ta3iObk1tGxaug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Liev/w0I; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1788451866; c=relaxed/simple;
+	bh=EZkrPu4MIblzYuAARYgWy6bsvyK3BVJiKofRW0Irh5c=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=H2x2ZvJg9evdsSqyhV4088y7rZ/fasm5n9TeWwOZ2tzytkPpSoMoZrQPPtxnu1SyGN0rszNNxUS2YIWPTDsPmA5nM8LDIqHpfXw/vYm0bcnpjR+6dB0BIlsvb62ROrQA/PBh3Na9kZa64+rjMr3PA0II+NSDp5ZMpj8K5zcaET8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JxlK65jB; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Liev/w0I"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 278391F60;
-	Thu,  3 Sep 2026 09:07:30 -0700 (PDT)
-Received: from e140010.cambridge.arm.com (e140010.arm.com [10.2.213.25])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DD4F3F673;
-	Thu,  3 Sep 2026 09:07:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788451653; bh=U+rws8ncwi/1wkVpb63POq0o8EKKy0KoxPOz8nkpieE=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=Liev/w0Iu/6EmrygmtTnUunzJIhWUHrQ2R5os86hWdDuXxaUMjtKdfi/IPYqwTiOp
-	 agQw37H3yDq+Jzydau7AEG78scr7kUz5Rv94aLD3/+/rWZ1S5NTRM+w8UKsRfgJjnV
-	 zcJwwxxnHKgNAz2zAPLlUSwKSiUuOEBqPbs4lq1I=
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: maz@kernel.org,
-	oupton@kernel.org,
-	fuad.tabba@linux.dev,
-	joey.gouly@arm.com,
-	seiden@linux.ibm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	linux-perf-users@vger.kernel.org,
-	catalin.marinas@arm.com,
-	james.clark@linaro.org
-Subject: [RFC PATCH v7 28/28] KVM: arm64: Allow the creation of a SPE enabled VM
-Date: Thu,  3 Sep 2026 17:06:23 +0100
-Message-ID: <20260903160623.315525-29-alexandru.elisei@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260903160623.315525-1-alexandru.elisei@arm.com>
-References: <20260903160623.315525-1-alexandru.elisei@arm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JxlK65jB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 929241F00A3D;
+	Thu,  3 Sep 2026 16:11:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788451864;
+	bh=0GGJyshhlAlKfjOpgr7j97Mh0m1+5qav5ykVgFpFUIA=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc;
+	b=JxlK65jBcGgrsk9TAjqXxFnNxMSr2EUzOMWx942qjPBc2ybpTNX4WvsfPUiPxOaFl
+	 CvaTGDSQ1oizIiQKMXWYE2OVnwqIcGg5ydGC/+fP1+mqJ1GuK69hXukg6W16b7JT1r
+	 w2aaHejOOmNUZBUXMT7w7PrSbcyV2uNkwH9yBFLEDwdRzAceRy7X++SL5zY6FEYsfi
+	 FKkGMEhCG0T0FcIFQ+7naHWPwvlEPmk672vo9ZWS+QDqA+Td4EZLGZ+BJGrxKQ67ij
+	 TyZdI3BpB9bpqUcAWwS6PSI4Q7NaBwZ/Wa6AfOhrb223ZyOEtRQ2bZ96TF514AV+At
+	 BAPEfyocjj+3A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 1986738119CB;
+	Thu,  3 Sep 2026 16:10:07 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,45 +37,71 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [f2fs-dev] [PATCH RFC 00/14] Remove PG_private by using
+ page/folio->private checks instead
+From: patchwork-bot+f2fs@kernel.org
+Message-Id: 
+ <178845180590.3423963.571905514968785918.git-patchwork-notify@kernel.org>
+Date: Thu, 03 Sep 2026 16:10:05 +0000
+References: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
+In-Reply-To: <20260731-remove-pg_private-v1-0-142c97ba3562@nvidia.com>
+To: Zi Yan <ziy@nvidia.com>
+Cc: david@kernel.org, willy@infradead.org, akpm@linux-foundation.org,
+ muchun.song@linux.dev, ljs@kernel.org, liam@infradead.org, vbabka@kernel.org,
+ rppt@kernel.org, surenb@google.com, mhocko@suse.com,
+ baolin.wang@linux.alibaba.com, nico.pache@linux.dev, ryan.roberts@arm.com,
+ dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
+ usama.arif@linux.dev, gourry@gourry.net, ying.huang@linux.alibaba.com,
+ apopple@nvidia.com, hannes@cmpxchg.org, qi.zheng@linux.dev,
+ shakeel.butt@linux.dev, kasong@tencent.com, mark.rutland@arm.com,
+ irogers@google.com, jack@suse.cz, linux-doc@vger.kernel.org,
+ amarkuze@redhat.com, peterz@infradead.org, kexec@lists.infradead.org,
+ dave.hansen@linux.intel.com, ruirui.yang@linux.dev, adrian.hunter@intel.com,
+ linux-mm@kvack.org, hongbohbli@tencent.com, hpa@zytor.com,
+ guochunhai@vivo.com, skhan@linuxfoundation.org, ceph-devel@vger.kernel.org,
+ baoquan.he@linux.dev, matthew.brost@intel.com, anna@kernel.org,
+ sstabellini@kernel.org, zbestahu@gmail.com, rakie.kim@sk.com,
+ minchan@kernel.org, richard@nod.at, x86@kernel.org, ebiggers@kernel.org,
+ alexander.shishkin@linux.intel.com, mingo@redhat.com, slava@dubeyko.com,
+ weixugc@google.com, yukuai@fygo.io, xen-devel@lists.xenproject.org,
+ xiang@kernel.org, magiclinan@didiglobal.com, mhiramat@kernel.org,
+ joshua.hahnjy@gmail.com, xiao@kernel.org, byungchul@sk.com,
+ james.clark@linaro.org, acme@kernel.org, linux-raid@vger.kernel.org,
+ linux-fscrypt@vger.kernel.org, bp@alien8.de, rostedt@goodmis.org,
+ linux-mtd@lists.infradead.org, axelrasmussen@google.com,
+ jefflexu@linux.alibaba.com, namhyung@kernel.org, jaegeuk@kernel.org,
+ yuanchu@google.com, idryomov@gmail.com, osalvador@suse.de, jgross@suse.com,
+ pratyush@kernel.org, linux-nfs@vger.kernel.org, tytso@mit.edu,
+ oleksandr_tyshchenko@epam.com, song@kernel.org, corbet@lwn.net,
+ pasha.tatashin@soleen.com, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net, linux-perf-users@vger.kernel.org,
+ senozhatsky@chromium.org, tglx@kernel.org, jolsa@kernel.org,
+ linux-fsdevel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+ linux-trace-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+ trondmy@kernel.org
 
-Everything is in place, allow userspace to enable SPE for a virtual
-machine.
+Hello:
 
-Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
----
- arch/arm64/include/asm/kvm_host.h | 2 +-
- arch/arm64/kvm/Kconfig            | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+This patch was applied to jaegeuk/f2fs.git (dev)
+by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index ff77f6ac3adf..32b30ffdcf77 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -40,7 +40,7 @@
- 
- #define KVM_MAX_VCPUS VGIC_V3_MAX_CPUS
- 
--#define KVM_VCPU_MAX_FEATURES 10
-+#define KVM_VCPU_MAX_FEATURES 11
- #define KVM_VCPU_VALID_FEATURES	(BIT(KVM_VCPU_MAX_FEATURES) - 1)
- 
- #define KVM_REQ_SLEEP \
-diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-index 2bc8e34c538d..a285b18eb1cc 100644
---- a/arch/arm64/kvm/Kconfig
-+++ b/arch/arm64/kvm/Kconfig
-@@ -106,9 +106,9 @@ endif # NVHE_EL2_DEBUG
- 
- 
- config KVM_ARM_SPE
--	bool
-+	bool "Support SPE in guest"
- 	depends on KVM && ARM_SPE_PMU
--	default n
-+	default y
- 	help
- 	  Adds support for Statistical Profiling Extension (SPE) in virtual
- 	  machines.
+On Fri, 31 Jul 2026 22:13:23 -0400 you wrote:
+> Hi all,
+> 
+> This patchset removes PG_private to make space for upcoming PG_folio
+> (reserved as __PG_folio) for identifying pages from a folio (more details
+> in Note below). Instead of checking PG_private, all code is changed to
+> check page/folio->private != NULL instead.
+> 
+> [...]
+
+Here is the summary with links:
+  - [f2fs-dev,RFC,06/14] fs/f2fs: stop using PG_private
+    https://git.kernel.org/jaegeuk/f2fs/c/5ad9409a9533
+
+You are awesome, thank you!
 -- 
-2.43.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
