@@ -1,76 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD9D43BDC8;
-	Thu,  3 Sep 2026 07:38:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87331249EB;
+	Thu,  3 Sep 2026 07:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788421136; cv=none; b=ULHvOzAxgyRaDE1L17C03ZQjyCx3H8JGsUxh2Hs7RM+OHbIQ1o4qonkQtIPHyBC+uj9zlF20N2gecKo7SyFM9wtIWA3tbgAnHNBSy8kJBQQBqJC9xSrZFklcu92oK+93fdhfZ84vG+e2IlwVzcGC8a2xp/MDp8Fx/Z84s2YZvwU=
+	t=1788421973; cv=none; b=IOWs/07kkJvqDl2yJCJAhqmX97SHlDRdACNeYWeijV955gbf2oiWjIs5MEW8+BAPtpkTE38xFbTmlH6b6nps+46ZsoGLBBOs1VTDazLDgB9/CYuTCedRAfIqj0Mx8kezNWlr0swf7HNqKBHqlsH2ksmRZdKV/zBa0qyVMc5pDno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788421136; c=relaxed/simple;
-	bh=5Tps3Xo9A6ITXYjrQ6jCcfsBhSaD6gq3xi2rXZ2ajL8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=jfWSC+3ZAmh3kHnB3MGh2vcDc8plSVQEIokU9X5qE6lTj8COPl9CVfDu3LRqKvOfAnUA+W9pHMN7ZOfGFGAqyweSJMlKdpiu3Iy5cdxHZCkDrwyXwgpFjTB9bLHBmmVJRVxsKNKUWCu6ABWO2aQO9rVUPYFj3LuBhtTqJ5EEEpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nj6cB51K; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788421973; c=relaxed/simple;
+	bh=BQP2zBWnYCCsoTeDrnoFy2n7VeQl+onPIrEEDiTZRZ8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UtpnOrBUl1rklMSPD0fBbDuFrUt65X6K8+M+BP8vulWdw+IRQviZblSG3mbzuZuAs9EOrqCB15xs3sydwARXsy2C5xL60EVsCFoSwpzBV71y/9Cgyd4oiHEuLPpT15Lnk6gflvrKFKT0x+s6ZfqjRlBraacw8AECRFqMbQrTNwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=HKc/iROH; arc=none smtp.client-ip=113.46.200.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nj6cB51K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35D5F1F000E9;
-	Thu,  3 Sep 2026 07:38:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788421135;
-	bh=k8zKI6BLy+Yfs6FHOdNHufYvwQuFn9IxdcH9SYlPwjw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Nj6cB51K8OWQ/O7hLG+l0FQZeZXAUXrLa6yjldbSTOEJm6zNBDWmFqk9l/MQHa9uZ
-	 rDFHIDtENi+3H3+zWtWevbyvCoUbb3oroJFPizjbn08Xj1vrgrTeE91QtxEfp5sJY7
-	 ZtC5PGzHlfVz6CliUMcLIw5b/iZ1Z2uk2ns9wqy3PlvAIEhoh2WHBx4aHzF+PsfCA3
-	 bLnIPDs+CAH+F79uFN8vAkv6tqsiOG2+XPi14ceAqmVBbyBfXWDFKeLK1dwTxoNT4w
-	 zV/JIWbGme4aMbrjB+rzPg5ct9X2E8PAFlinJ2bWwHIa6PuV/GIpO2zGlG+lWKbJv3
-	 SD4gAKuAerrNQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf test: perf stat tests fails on s390
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Thomas Richter" <tmricht@linux.ibm.com>
-Cc: "Heiko Carstens" <hca@linux.ibm.com>, linux-perf-users@vger.kernel.org, linux-s390@vger.kernel.org, "Vasily
- Gorbik" <gor@linux.ibm.com>, "Alexander Gordeev" <agordeev@linux.ibm.com>, "Christian
- Borntraeger" <borntraeger@linux.ibm.com>
-In-Reply-To: <20260903073554.1300334-1-tmricht@linux.ibm.com>
-References: <20260903073554.1300334-1-tmricht@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 03 Sep 2026 07:38:54 +0000
-Message-Id: <20260903073855.35D5F1F000E9@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="HKc/iROH"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=RbPpVruGZHVlSY4PNTNDLhM5I+XecthtbwhAx301AmY=;
+	b=HKc/iROH0y5/f6LQosv4tNU/fJ+jsKBO1EQARta2VM3PI8fCj/pBkO89zhh8wdW4xMY2W8UI+
+	hhNpnJNW3pLIu4lWQdyXWTF5gwM853CAXY3/juJ1duHyrnzbZYhsSXIbLDbfZvX1yBJb/+gOZan
+	rji1hNX64W0nmbK1B+EJpUY=
+Received: from mail.maildlp.com (unknown [172.19.162.140])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4hbBPf00czzcbNp;
+	Thu,  3 Sep 2026 15:41:57 +0800 (CST)
+Received: from whupemo200004.china.huawei.com (unknown [7.152.184.18])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5E1BD202E6;
+	Thu,  3 Sep 2026 15:52:45 +0800 (CST)
+Received: from huawei.com (10.50.163.32) by whupemo200004.china.huawei.com
+ (7.152.184.18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Thu, 3 Sep
+ 2026 15:52:42 +0800
+From: Sizhe Liu <liusizhe5@huawei.com>
+To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <corbet@lwn.net>,
+	<skhan@linuxfoundation.org>, <bhelgaas@google.com>, <yangyccccc@gmail.com>,
+	<jic23@kernel.org>, <john.g.garry@oracle.com>, <will@kernel.org>,
+	<james.clark@linaro.org>, <mike.leach@arm.com>, <leo.yan@linux.dev>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <wangyushan12@huawei.com>,
+	<wuzongyu1@huawei.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-doc@vger.kernel.org>, <linuxarm@huawei.com>,
+	<prime.zeng@hisilicon.com>, <liusizhe5@huawei.com>
+Subject: [PATCH v3 0/8] Enhance TLP packet decoder with field-level parsing and versioning
+Date: Thu, 3 Sep 2026 15:52:33 +0800
+Message-ID: <20260903075241.1445338-1-liusizhe5@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ whupemo200004.china.huawei.com (7.152.184.18)
 
-> The test case 'perf stat tests' fails on s390 z/VM machines. The
-> root cause is the unsupported CPU measurement facility on z/VM.
-> Therefore the events cycles and instructions do not exist and
-> are unsupported. This cause the subtest
->   Hide zero events stat test
-> to fail.
->=20
-> Output before:
->  # perf test 116
->  116: perf stat tests  : FAILED!
->=20
->  =3D=3D=3D Test Summary =3D=3D=3D
->  Passed main tests : 0
->  Passed subtests   : 0
->  Skipped tests     : 0
-> [ ... ]
-> Fixes: 64724095a33f ("perf stat: Add --hide-zero-events option to suppres=
-s zero-count events")
-> Cc: Aaron Tomlin <atomlin@atomlin.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+The original hisi-ptt-decoder only prints raw hex values with generic field
+names for DW2/DW3, without classifying TLP types or decoding
+DW2/DW3 fields according to the hardware-defined packet format.
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+This series enhances the HiSilicon PTT (PCIe Trace and Tuning) packet
+decoder in perf tool to provide detailed field-level parsing of TLP headers
+based on message type, and adds a versioning mechanism for backward
+compatibility both in hisi_ptt driver and perf tool.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260903073554.1300=
-334-1-tmricht@linux.ibm.com?part=3D1
+---
+Changes in v3:
+- Add explicit inclusion of <stdbool.h> (Sashiko).
+- Make patch 07/08 apply cleanly to mainline (Yushan).
+- Pick up the reviewed-by tag (Yushan).
+- Link to v2: https://lore.kernel.org/linux-pci/20260827140442.2031128-1-liusizhe5@huawei.com/
+
+Changes in v2:
+- Split patch 01/10 and patch 02/10 from series v1 into independent patch
+  series for backporting (Bjorn).
+- Use bitwise operations instead of C bitfields for cross-platform cases
+  (Sashiko).
+- Add `pattern` parameter in hisi_ptt driver for layout compatibility.
+- Link to v1: https://lore.kernel.org/linux-pci/20260604075005.2219785-1-liusizhe5@huawei.com/
+
+---
+Sizhe Liu (8):
+  perf hisi-ptt: Abstract trace data buf and offset
+  perf hisi-ptt: Complete the field names for 4DW and 8DW packets
+  perf hisi-ptt: Extract the raw data printing part
+  perf hisi-ptt: Merge 4DW and 8DW HEAD0 printing
+  perf hisi-ptt: Add parsing of supported message types
+  perf hisi-ptt: Add field-level parsing for header DW2/DW3
+  hwtracing: hisi_ptt: Add pattern PMU config for trace format selection
+  perf hisi-ptt: Pass pattern version to decoder for compatibility
+
+ Documentation/trace/hisi-ptt.rst              |  25 +-
+ drivers/hwtracing/ptt/hisi_ptt.c              |  25 +-
+ drivers/hwtracing/ptt/hisi_ptt.h              |   4 +
+ tools/perf/arch/arm64/util/hisi-ptt.c         |  18 ++
+ .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   | 291 ++++++++++++++----
+ .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.h   |  69 ++++-
+ tools/perf/util/hisi-ptt.c                    |  51 +--
+ tools/perf/util/hisi-ptt.h                    |   9 +-
+ 8 files changed, 405 insertions(+), 87 deletions(-)
+
+-- 
+2.33.0
 
