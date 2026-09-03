@@ -1,129 +1,274 @@
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012007.outbound.protection.outlook.com [40.93.195.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAAAC33FE0A
-	for <linux-perf-users@vger.kernel.org>; Thu,  3 Sep 2026 16:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.7
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788451469; cv=fail; b=cUCrtoOLjsQkmsl01pwHSzZdt5KyiIp4mh8Mi0s2jI65UPc1tmmu1coclV2JYYH+3AVhTO3dc+dTdxzrwq4ABtXyvyzSw6SLJ9o8NtBbSDkDPNDtafBMJNwVECDWVl+w4vq6NnIptNh6n/BAStw1lmk0CZB+hsfTIBR2egiHgBM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788451469; c=relaxed/simple;
-	bh=i/C/wDveLwjpuMd8ALKfmp0Tqq5/gl9+fK5fSXLWYOM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ldA/Cx05euvPuNwYQleq1y7vc6HGPVkvOPzUzr3WOn/lHEmJBBw0Xcq0VCCj2tn6u8BnIDUbIyiOa8LRyv1nksyKy+slr+OzfQuRZTtfTaVaqY74x0UyMERxT/JPtxCS9GGDOdMB8J877N5ohYBgVXWI2VN1thy74nrLb4pZBxE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fIgYxP89; arc=fail smtp.client-ip=40.93.195.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 269B14BD0FB
+	for <linux-perf-users@vger.kernel.org>; Thu,  3 Sep 2026 16:06:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788451599; cv=none; b=Te2MUAUrlP3LE9i65Qp6DxHVhgwz+KBzo4LEY/j3xe8fKtfE9rOwIrTOUoUycNlIW+H64DSxOu86M3C/btu62l3NPBM8hKiCOLfYgNsmjRdD0uVhGlenxEJ+e9g8N/8CZdzJ3A70Q92LpaS6yTSVnac7wvLPVa7q0IJ83bUuaSA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788451599; c=relaxed/simple;
+	bh=HM37sRmR8ELFrusFfw+j9FkVS/6z+h0NmGPWHs3yAyI=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=fUf3JVXw8lKqDHp71MI9g4wWm0emRuMhs6X7RIedMqfc4VrJpHFRklDAp3mNK1rn7CWYCcR4Y6+/rkOvZ/rEFeDfaojAYGuoNNZte6y4K9mjGxfXlcgZJIEjUmudBJj4F9pTaeEPRRxjGRKlThDPUkfiXgrdF1Mg06C+fcHf/3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=n8/ehIsl; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fIgYxP89"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tLKP2U4wtd7kux/cS0MXu+j/1k7qpT/UQWxzgYA1NvBZDwW0oVx93H3O+wG1pSxmBxRPIH6wGg+Uj6lfbMyCmYTpAXfA53QdNBr7YxM2D3T2ISJnRSMEmuGzGiu+sBRve2Gv/w0oMczWduGaJlM6ARdzHV2WwE6F8H4i3oICVHOcfgefgdSqm1uRuZzeps7dB2Ggo4HxXnPE1NYnJR4l2KsSY2Xee55mTWXnYetqDT8KJOAuf6+k77ybIdhvi56Hb6ghYRyKc7MWMzu+9VfgyUzgk/LMlB+5kfIrjBpIAQDfXPUz1wMhGioZ0/dIma6oiJxUCSS7HmqBOUbeu682KA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yk//IWvAJca9X6w7Pwgk9VdK1sB536CCFf7FZGszr54=;
- b=CPGl0Hc+8OzV410QYuNWULUUN2P8fQtqmRLcZwxhwpBDO3ShY30fG94nOofinZtPY8uTnadtbY1WQi9XXZqtZQyg7vSk6X8n9ndsqUWU7PwDGB0jkvjvxeziu80kiMAQpOnyi8D0cHKspUu+9jP4TrxSIRcvXnPEhOZwkbxXH7YEuwnvoIN/EPbtPmAN67kulriXyGsDdMgNg3f7nc3dyl/5/x/8jOAj85ROMRb0DJtoRGKB3tcY6eGa5YzIh7i/8KrDMx++/s0lIR7yAI5L7MGLYTykB8M6JPrQq/BWA1vDDMRyjJQcTf7m7NIcKnYWDLSLucpRmerMTB9M79BmXA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yk//IWvAJca9X6w7Pwgk9VdK1sB536CCFf7FZGszr54=;
- b=fIgYxP89qHMrQ51qTrTf9X2Ft0F91Y3p0ZU3hJt1ZqwysdApNRvnTettBtHGuDd2SL3twqnibBN7azRrqd+Msw79SJ/YMkGrfll4m9ztGnsCHZ9LZX+ofQ0PMcxc8BefOhLs3T4qgYKgeUkf3/k+tyIdDtxouQlaDi7C35U7k70=
-Received: from MW4PR03CA0276.namprd03.prod.outlook.com (2603:10b6:303:b5::11)
- by IA1PR12MB8191.namprd12.prod.outlook.com (2603:10b6:208:3f3::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.360.13; Thu, 3 Sep
- 2026 16:02:58 +0000
-Received: from SJ5PEPF0000020A.namprd05.prod.outlook.com
- (2603:10b6:303:b5:cafe::2a) by MW4PR03CA0276.outlook.office365.com
- (2603:10b6:303:b5::11) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.382.12 via Frontend Transport; Thu, 3
- Sep 2026 16:02:57 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb07.amd.com; pr=C
-Received: from satlexmb07.amd.com (165.204.84.17) by
- SJ5PEPF0000020A.mail.protection.outlook.com (10.167.244.43) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.382.8 via Frontend Transport; Thu, 3 Sep 2026 16:02:57 +0000
-Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.46; Thu, 3 Sep
- 2026 11:02:57 -0500
-Received: from [192.168.0.101] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.46 via Frontend
- Transport; Thu, 3 Sep 2026 11:02:55 -0500
-Message-ID: <0e5e1fd0-0a46-4c1c-a391-5c245d903834@amd.com>
-Date: Thu, 3 Sep 2026 21:32:49 +0530
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="n8/ehIsl"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE9C61596;
+	Thu,  3 Sep 2026 09:06:31 -0700 (PDT)
+Received: from e140010.cambridge.arm.com (e140010.arm.com [10.2.213.25])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B246C3F673;
+	Thu,  3 Sep 2026 09:06:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1788451595; bh=HM37sRmR8ELFrusFfw+j9FkVS/6z+h0NmGPWHs3yAyI=;
+	h=From:To:Subject:Date:From;
+	b=n8/ehIsl3G9J8JsV39vR+cWUgjjRmdG/IIq4cfX+Ln/Z4mQz0BcYdsPI5ahp0TPVC
+	 gOyc7mJyohxf+/AQHOX6eBORFNFmuh1LpAS5dAeHrzqEVL+aAvGdlXG7xLlfjR96Ab
+	 OrxgU6qXg1r+rrjx3rzkwXzWy01TlGjSXNS99TQE=
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: maz@kernel.org,
+	oupton@kernel.org,
+	fuad.tabba@linux.dev,
+	joey.gouly@arm.com,
+	seiden@linux.ibm.com,
+	suzuki.poulose@arm.com,
+	yuzenghui@huawei.com,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	will@kernel.org,
+	mark.rutland@arm.com,
+	linux-perf-users@vger.kernel.org,
+	catalin.marinas@arm.com,
+	james.clark@linaro.org
+Subject: [RFC PATCH v7 00/28] KVM: arm64: Add Statistical Profiling Extension (SPE) support
+Date: Thu,  3 Sep 2026 17:05:55 +0100
+Message-ID: <20260903160623.315525-1-alexandru.elisei@arm.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [DISCUSSION] Three problems behind broken "perf --call-graph
- dwarf" on AMD: IP and stack dump mismatch, libdw fails on lld's layout, and
- the unwinder fallback never runs
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, Namhyung Kim
-	<namhyung@kernel.org>
-CC: Gennady Kupava <gennady.kupava@gmail.com>,
-	<linux-perf-users@vger.kernel.org>, Ravi Bangoria <ravi.bangoria@amd.com>
-References: <CAPu-DQqF0aF6=GS8Z6KKWeeX_V5LiXeKU_rJQZC+uGg8zuTPNw@mail.gmail.com>
- <apCyQ93c48Dy4H-S@google.com> <apG-RzV0zyjoC-FY@google.com>
- <27d79477-c469-413b-95bd-c6c1f8a40f55@amd.com> <apbs8gywyAfFVzqm@google.com>
- <c38b254f-21e5-4a02-8934-7a4da61e4571@linux.intel.com>
- <7b4cba95-dacc-4cf1-953f-c59e06e693d0@amd.com>
- <a5d3798c-7d62-43d0-88c6-eec26bd4f63d@linux.intel.com>
-Content-Language: en-US
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <a5d3798c-7d62-43d0-88c6-eec26bd4f63d@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF0000020A:EE_|IA1PR12MB8191:EE_
-X-MS-Office365-Filtering-Correlation-Id: a7d2d4f7-81e9-4269-f9dc-08df09d4d264
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
- BCL:0;ARA:13230040|36860700016|23010399003|82310400026|376014|1800799024|56012099006|10067099003|11063799006|4143699003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
- tIgQ9gxPpiQ/4F+CDkti/EWy/2bu3RdjZdZbuT0imvzRNAxhedYuE8Ml08K84eabIX2VGln8t8i+UjbPt6y1lHP56w6FC0xBeDwUwd5SBVCxtC+2OPg3kAW/eiRT9ge0IhIIINMCl8TUG0pLItqBmSSlNrXAcn8eCuavjfJ/nvPrXj7oDyTeNEkB7wJUxZczkCS1G11y0rEjycR1eO5EYGR/HrnskBaxDpKT6Gxc4BDBlQJrQmhA2mB424IvGTag7nLRTB62Yv/YqvWerwFOF68EEAi3FLrccdMQyZahu+FU6jexpBoStyXmpTdqmhBHTPQZSMXsJP+E2VUQj83H1422IFBC26PNXFIX94sXo8uwAnSKwnrZQasOvXpT67JmopfidZj0jK18QDTT6npWkTMa/VIaAH1QKTl9mbeiVQqthZDzRY9lYbQgvd5va0pfGVYWbtLzyXJd6ufrqJF7D7lV00Hh5zo9fqtygpdagju2M8stwZZpatIJAa1PSPlCNwWhkaw3nHbqHiG28g/XTLrSKXSeMtvaSaQzxGGcpSgGy01+fVSG0DYMbjOclDZDgk9KcCK5wViVi7BYoCDMIfq2872c+MkXc0lnDqPw1C5YFQ+66sXBrykl1DrKHwTIAKuEUpzgsdQAgL/eoPuwyEZNlCQOuyKs8SXTklgEK2WhXQt662drDz0tPsOTw7nj
-X-Forefront-Antispam-Report:
- CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb07.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700016)(23010399003)(82310400026)(376014)(1800799024)(56012099006)(10067099003)(11063799006)(4143699003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- nvTttgf9d3nB1ivY0egXlYiYPAm79i3M0g79DxPbRgxkPX4xek5Nq3REPYnVe+5GzodKcKf+bYebsd0Z10DLAHZDFJEbOOAxiHE4rqFy6RpRQ3O4+QSOqi5/3cE0fFgVucVGa0NXdt333kmzYLxMru3bXtwLD8T7oWUPp5SJRKk0I5l0wBpvKkmDCyjLCsxoitNoVJIld6pLQ/Ilu7oULqpMdeh5K8tSL1KJ9Q9rLqsAdNrNSr1y3oUaByXz6Pqz0wB4Y4Cmp4Hz7JLLcBlQcGyUwAbCt8N1QJaAOMZZVgU0X9/lKLbM23RcjSgZKT1FHBgMB3odHG9oWDxap9r3SkZR4KYy7i0yknkpi0xfxcLKq8Km0Uiza4Mn18z13GmAQo8gc1JWPErqeaetga6jcNMSPHfdqmjUrBOFXNBhaKMsj2nmwLnXedfqN1WcUI+y
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2026 16:02:57.6769
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a7d2d4f7-81e9-4269-f9dc-08df09d4d264
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb07.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
- SJ5PEPF0000020A.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8191
 
-> Suppose we need to follow below 2 rules to ensure the correct call-chain
-> unwinding and register snapshot consistency.
-> 
-> 1. All registers including IP should come from either PEBS or PMI, must not
-> be mixed. This ensures to get an consistent registers snapshot.
-> 
-> 2. Either SAMPLE_CALLCHAIN or SAMPLE_STACK_USER is required, the PMI
-> registers snapshot must be used. This proves the correct DWARF unwinding.
-> 
-> How's your idea?
+For a description of the problem, and why using gup doesn't work, see the
+previous iteration of the series, version v6 [1].
 
-Looks good. Mind sending the patch?
+This series is based on v7.3-rc1.
 
-Thanks,
-Ravi
+I've completely changed the approach yet again, but I've kept Reviewed-by tags
+for the some of the prerequisite patches. The highlights are:
+
+* The entire memory is effectively pinned at stage 2 before the first VCPU is
+run by having userspace use guest_memfd to back VM memory and then doing
+KVM_PRE_FAULT_MEMORY on that memory.
+
+This change alone simplifies the code immensly.
+
+* The maximum buffer size does not need to be virtualized since the entire VM
+memory is pinned, which means that PMBIDR_EL1 doesn't need to be trapped.
+SPE features cannot be completely hidden from the guest, as some of them (most
+of them?) add new fields to the records. The end result: PMBIDR_EL1 and
+PMSIDR_EL1 don't need to be trapped, so the dependency on FEAT_FGT is dropped.
+
+* It works with the SPE host driver built as a module; KVM requires that the
+module is loaded for SPE to be virtualized.
+
+The end result is that KVM support is mostly reduced to the userspace ABI to
+configure the feature and context switching the SPE state.
+
+
+Prerequisites
+=============
+
+There are several prerequisites:
+
+* The series depends on KVM_PRE_FAULT_MEMORY being implemented for arm64.
+There are two different implementations of that on the mailing list: [2], [3]. I
+have chosen to use the series from Jack Thomson [2] (rebased on top of v7.3-rc1
++ the SPE patches) for the simple reason that it doesn't change the way KVM
+handles stage 2 faults, and can be cherry-picked *after* the KVM SPE patches, to
+allow sashiko to review the SPE patches.
+
+* A patch to explicitely ignore MMU notifiers for guest_memfd-only memslots. The
+patch is on Sean's radar to be merged once he finishes fixing a bug in a related
+area [4].
+
+I believe that it is possible to have memory unmapped from stage 2 (it involves
+automatic NUMA balancing and userspace explicitly setting a mempolicy), but
+haven't tested that; the patch codifies that guest_memfd memory should never be
+unmapped without userspace requesting it (userspace can unmap the memory from
+stage 2 by closing the guest_memfd file descriptor or punching a hole in the
+descriptor).
+
+* Patches to add dirty page logging support to guest_memfd-only memslots
+(rebased on top of v7.3-rc1 + the SPE patches), as it's impossible today to
+change the flags for a guest_memfd-backed memslot. These patches were sent to
+the mailing list [5], and as far as I can tell the conclusion was that allowing
+dirty page logging is a goal to be pursued for guest_memfd memslots. If we do
+decide that dirty page logging for a VM with SPE is useful, I'm planning to
+revisit dirty page logging for guest_memfd.
+
+A branch with the prerequisites **after** the SPE series can be found at [6].
+The prequisites come after the SPE patches so I can send this series with an
+upstream base commit, which allows sashiko to review them.
+
+kvmtool patches are at [7], and kvm-unit-tests are at [8].
+
+
+How it works
+============
+
+1. Userspace sets the KVM_ARM_VCPU_SPE VCPU feature for all VCPUs, configures
+the SPE interrupt number (required), assigns a SPE PMU instance to the VM
+(required) and then calls KVM_ARM_VCPU_SPE_INIT to finalise configuration. All
+of this is done via KVM_SET_DEVICE_ATTR on each VCPU.
+
+Once the VCPU feature is set, KVM_ARM_VCPU_SPE_INIT must be executed before a
+VCPU can be run.
+
+2. Userspace uses guest_memfd-backed memslots to represent guest memory, and
+pre-maps that memory at stage 2 using KVM_PRE_FAULT_MEMORY.
+
+The order between steps 1 and 2 does not matter.
+
+3. Userspace runs the VCPU(s).
+
+For a VM with SPE, KVM will not check if memslots are backed by guest_memfd,
+because KVM cannot know which memslots the guest will use as RAM and which have
+a different use, even if they are not read-only. For example, pvtime.
+
+To create a VM with SPE enabled with kvmtool:
+
+# modprobe arm_spe_pmu # If not already loaded or built-in
+$ lkvm run --kernel <image> --spe --guest-memfd --name spe-test --params "kpti=off <other_params>"
+
+To test dirty page logging with kvmtool, use the debug interface:
+
+# Create a VM with the name spe-test, as above, then:
+$ lkvm debug --name spe-test --enable-dirty-track # to enable dirty page logging
+or
+$ lkvm debug --name spe-test --disable-dirty-track # to disable dirty page logging
+
+To run the tests from kvm-unit-tests:
+
+$ configure --arch=arm64 --cross-prefix=<cross_compile> --target=kvmtool
+$ make clean && make
+$ KVMTOOL=<path/to/kvmtool/binary> ./run_tests.sh -g spe
+
+
+Migration
+=========
+
+This is tricky (read: hacky). Relying on KVM fixing up stage 2 faults triggered
+SPE attempting to write to memory that is read-only doesn't really work, because
+a partial record might be written to the buffer (PMBSR_EL1.DL set). To recover
+from this, KVM, or better yet, the VMM, would need to learn to parse the buffer
+and rewind PMBPTR_EL1 to the first by after the last complete record.
+
+So what I did instead was to introduce a new hardware exit reason, and have
+VCPUs which have the buffer enabled exit to userspace when dirty page logging is
+enabled. A VCPU also exits to userspace if the buffer was disabled when dirty
+page logging was enabled, and the buffer later becomes enabled, before dirty page
+logging is disabled.
+
+When dirty page logging is disabled, the stage 2 permissions are relaxed to
+allow writes. The gory details are in patch #27 ("KVM: arm64: Handle dirty page
+logging when SPE feature is set").
+
+[1] https://lore.kernel.org/kvmarm/20251114160717.163230-1-alexandru.elisei@arm.com/
+[2] https://lore.kernel.org/kvmarm/20260612162354.73378-3-jackabt.amazon@gmail.com/
+[3] https://lore.kernel.org/kvmarm/20260825-kvm-arm-prefault-v1-0-befe8947702e@kernel.org/
+[4] https://lore.kernel.org/kvmarm/amPCdAswlk24Xilf@google.com/
+[5] https://lore.kernel.org/kvmarm/20260702142912.6395-1-alexandru.elisei@arm.com/
+[6] https://gitlab.arm.com/linux-arm/linux-ae/-/tree/kvm-spe-v7
+[7] https://gitlab.arm.com/linux-arm/kvmtool-ae/-/tree/kvm-spe-v7
+[8] https://gitlab.arm.com/linux-arm/kvm-unit-tests-ae/-/tree/kvm-spe-v7
+
+Alexandru Elisei (26):
+  arm64/sysreg: Add the nVM field to PMBLIMITR_EL1
+  arm64/sysreg: Define MDCR_EL2.E2PB values
+  KVM: arm64: Add CONFIG_KVM_ARM_SPE Kconfig option
+  perf: arm_spe_pmu: Move struct arm_spe_pmu to a separate header file
+  perf: arm_spe_pmu: Add PMBIDR_EL1 and PMSIDR_EL1 to struct arm_spe_pmu
+  KVM: arm64: Add KVM_CAP_ARM_SPE capability
+  KVM: arm64: Add KVM_ARM_VCPU_SPE VCPU feature
+  HACK! KVM: arm64: Disable SPE virtualization if protected KVM is
+    enabled
+  HACK! KVM: arm64: Enable SPE virtualization only in VHE mode
+  HACK! KVM: arm64: Disable SPE virtualization if nested virt is enabled
+  KVM: arm64: Add SPE VCPU device attribute to set the SPE device
+  KVM: arm64: Add SPE VCPU device attribute to initialize SPE
+  KVM: arm64: Use PMSVer from the assigned SPE instance
+  KVM: arm64: Add SPE system registers to VCPU context
+  KVM: arm64: Apply a RES0 mask to PMBLIMITR_EL1 writes
+  KVM: arm64: config: Use functions from spe.c to test
+    FEAT_SPE_{FnE,FDS}
+  KVM: arm64: VHE: Context switch SPE state
+  KVM: arm64: Allow guest SPE physical timestamps only if kernel allows
+    it
+  KVM: arm64: Handle SPE maintenance interrupts
+  arm64: errata: Disable SPE in KVM
+  KVM: arm64: Add kvm-arm.ignore_spe_errata kernel parameter
+  arm64: errata: Don't enable guest buffer if misprogrammed
+  KVM: arm64: at: Use callback for reading descriptor
+  KVM: arm64: Map memory on a SPE stage 2 fault
+  KVM: arm64: Handle dirty page logging when SPE feature is set
+  KVM: arm64: Allow the creation of a SPE enabled VM
+
+Sudeep Holla (2):
+  KVM: arm64: Add a new VCPU device control group for SPE
+  KVM: arm64: Add SPE VCPU device attribute to set the interrupt number
+
+ .../admin-guide/kernel-parameters.txt         |   3 +
+ Documentation/arch/arm64/silicon-errata.rst   |  37 +
+ Documentation/virt/kvm/api.rst                |  19 +-
+ Documentation/virt/kvm/devices/vcpu.rst       |  84 +++
+ arch/arm64/Kconfig                            |  55 ++
+ arch/arm64/include/asm/kvm_asm.h              |   1 +
+ arch/arm64/include/asm/kvm_host.h             |  48 +-
+ arch/arm64/include/asm/kvm_hyp.h              |  26 +-
+ arch/arm64/include/asm/kvm_mmu.h              |   1 +
+ arch/arm64/include/asm/kvm_nested.h           |   7 +
+ arch/arm64/include/asm/kvm_pgtable.h          |  19 +
+ arch/arm64/include/asm/kvm_pkvm.h             |   1 +
+ arch/arm64/include/asm/kvm_spe.h              | 150 ++++
+ arch/arm64/include/uapi/asm/kvm.h             |   6 +
+ arch/arm64/kernel/cpu_errata.c                |  51 ++
+ arch/arm64/kvm/Kconfig                        |  10 +
+ arch/arm64/kvm/Makefile                       |   1 +
+ arch/arm64/kvm/arm.c                          |  98 ++-
+ arch/arm64/kvm/at.c                           |  22 +-
+ arch/arm64/kvm/config.c                       |  30 +-
+ arch/arm64/kvm/guest.c                        |  12 +
+ arch/arm64/kvm/hyp/include/nvhe/mem_protect.h |   2 +-
+ arch/arm64/kvm/hyp/nvhe/hyp-main.c            |  34 +-
+ arch/arm64/kvm/hyp/nvhe/mem_protect.c         |   7 +-
+ arch/arm64/kvm/hyp/pgtable.c                  |   8 +
+ arch/arm64/kvm/hyp/vhe/Makefile               |   1 +
+ arch/arm64/kvm/hyp/vhe/debug-sr.c             |  18 +
+ arch/arm64/kvm/hyp/vhe/spe-sr.c               | 212 ++++++
+ arch/arm64/kvm/hyp/vhe/switch.c               |   9 +
+ arch/arm64/kvm/mmu.c                          |  72 ++
+ arch/arm64/kvm/nested.c                       |   7 +-
+ arch/arm64/kvm/pkvm.c                         |  27 +
+ arch/arm64/kvm/pmu-emul.c                     |  11 +-
+ arch/arm64/kvm/spe.c                          | 647 ++++++++++++++++++
+ arch/arm64/kvm/sys_regs.c                     | 103 ++-
+ arch/arm64/tools/cpucaps                      |   2 +
+ arch/arm64/tools/sysreg                       |  11 +-
+ drivers/perf/arm_spe_pmu.c                    |  46 +-
+ include/linux/perf/arm_spe_pmu.h              |  66 ++
+ include/uapi/linux/kvm.h                      |   1 +
+ 40 files changed, 1849 insertions(+), 116 deletions(-)
+ create mode 100644 arch/arm64/include/asm/kvm_spe.h
+ create mode 100644 arch/arm64/kvm/hyp/vhe/spe-sr.c
+ create mode 100644 arch/arm64/kvm/spe.c
+ create mode 100644 include/linux/perf/arm_spe_pmu.h
+
+
+base-commit: cee9395acd8043be0644b25c34bfa86623f2b935
+-- 
+2.43.0
+
