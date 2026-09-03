@@ -1,215 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FAA543713E;
-	Thu,  3 Sep 2026 11:05:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CEE42048D
+	for <linux-perf-users@vger.kernel.org>; Thu,  3 Sep 2026 11:20:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788433502; cv=none; b=ukhSeAHYBNl/uObcDu5JE7bFX1nzNHr1jd60/suuogeymFYvXCTxz3zJcg+ctuvXCz+jNGlogs4wGvBsddDy1Lw/2pRny8jCYSgV8CZ3GMVLdV9+4gfNiEsEG5Snh3gpoL96vnz1WjKF6Kq/RIWWwXj8YeT+7OwVJfwQ43LoMvQ=
+	t=1788434432; cv=none; b=BLpWVypF86fzJJaEd+K13B5mZsBG/ZUUfQayucZ4/62mJcuxKTomCgqXJqfTRrv1wDdbrR7Vk5FWEfsoJ7edCziExbrMUD/T+oSIu9mKDfjspu5ZyJxWxy6244l3Mk+gy3k/e/QTKNCzzVCLydwEsk2WncMJGCHqsl6gga5WR28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788433502; c=relaxed/simple;
-	bh=70biVnXZdTszpQN4ocqjee9GNCAdrxxcGK9CdJ0YKwk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fvUC7Ua9jRT313XmiBP0j6FaPTFJdSGTNsP3j6khOgDHhXIeDU79HkiLdaLOOs6Osks82j2R0BWZv2r0uiJSdkOWiv0h+OTvMzzXwXEeyNJqc1binkfx2qiyeenZ7lpENO4+UDAxtrwNCgYc7AcnhZdlBKHyZQSwn421sU3UUUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sPVwrY+Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1788434432; c=relaxed/simple;
+	bh=ZTAHRLQVZRIdhgYwC0t8P63V0/rGy9Ig/4wDS1reUJU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=MGHJYqckIjhl3PokVV0nSxA21k3nt57XSB6S2o1mQzfSWZlZ9yxX9H/vR12T7oBgFCM/HKhbrfsO8u29GQxYSTv79D59nMwxdbemRHVLR6pSpy5TbuFcU3UeqpBOfHMWENaUJr/LtXylCNvQaoXCDTtn0sU0xRFMS2JMvObpQ3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCljp02L; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sPVwrY+Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E874EC2BCFF;
-	Thu,  3 Sep 2026 11:05:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1788433502;
-	bh=70biVnXZdTszpQN4ocqjee9GNCAdrxxcGK9CdJ0YKwk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=sPVwrY+ZaDf5hyRwgVKkCbkv/bZ4RkiD5gjHzOfzXbdumwynH0CB3AvKQXI2cvTTx
-	 JF1Zpe9OsNa8N6ycLasFlO5a2YSS9yWjwAq6LwPaQr+2WAbaZ2xD433dqPOMljFQrN
-	 +O91AbNiKv5nqOmu5z5m+RiHMd0ZsqcOc4ZRPQg33yTA86craXmbZYrG0uU6bqj8GU
-	 QQ4SzCjw8dgPempsdz/2IUt4E7N3nVaZE4FMmplMgd3p1dcjf8TY9Utl3rTpfK15WW
-	 ooYYmid1etnGHjEfbb4SNa4Ijc49tSZat/eCO0mfRYHDTyZs2ZxP8iUfLmbK1mVVZy
-	 fqvgl7m0qufuQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C457EC624D7;
-	Thu,  3 Sep 2026 11:05:01 +0000 (UTC)
-From: Mark Amirkan via B4 Relay <devnull+markdamirkan.gmail.com@kernel.org>
-Date: Thu, 03 Sep 2026 04:04:21 -0700
-Subject: [PATCH v2 2/2] perf evsel: Validate RAW sample before byte
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCljp02L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF6A41F000E9;
+	Thu,  3 Sep 2026 11:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788434429;
+	bh=ojZ+jJk45y+Lh+1EYWcVWkGhSHKK9rLPOjOuwfr9ERQ=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=CCljp02LEfdSl3RDfSWDQdYv6zfpyxMfcZDni/GCieMicyxgkQD0ZnJFgCb5E3CMC
+	 p6EOp7HY4Y86cA0EWWCGXD0XOBbBovwgLc6kWjT7dzVby1CWjW2CUNP2BnLfN73aRd
+	 VXYM1nFhGNdCZ1pdO2qeoV3vHEmt4hwtkuE++kVTO6gZIQb/kfZb5xfJCjNThM3o7X
+	 0upcVEq5mQOV4zXY0k6qb3Ovi4/OlC+r5xD8RFl3jvZVcGsoEU/yzMZqN416DKUNyG
+	 n/mNTg4WoCy05UFNeM/MHmTD1r0rk/hvykdQtydU4aD/Ro0dFxTrRm3SgPUsFiNqI8
+	 d1w1gy1lEobCA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 1/2] perf evsel: Validate branch stack before byte
  swapping
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Mark Amirkan" <markdamirkan@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260903-sympwn-linux-002-final-v2-v2-1-0aee1fca1f95@gmail.com>
+References: <20260903-sympwn-linux-002-final-v2-v2-0-0aee1fca1f95@gmail.com>
+ <20260903-sympwn-linux-002-final-v2-v2-1-0aee1fca1f95@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 03 Sep 2026 11:20:28 +0000
+Message-Id: <20260903112028.EF6A41F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260903-sympwn-linux-002-final-v2-v2-2-0aee1fca1f95@gmail.com>
-References: <20260903-sympwn-linux-002-final-v2-v2-0-0aee1fca1f95@gmail.com>
-In-Reply-To: <20260903-sympwn-linux-002-final-v2-v2-0-0aee1fca1f95@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>
-Cc: Mark Amirkan <markdamirkan@gmail.com>, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-X-Mailer: b4 0.16.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1788433501; l=4545;
- i=markdamirkan@gmail.com; s=pscsi-20260818; h=from:subject:message-id;
- bh=UB7egJdlaxZNL6OHQ6khTPm+2pfri3frePTZlRlCqf8=;
- b=ie3cYz6bQEfs+7mvYXYFFEqddNBl59PMbYh/SgBtwFegU4qnuAC341JnrdPcbmwXJi6LUG27f
- t4WHIpSRyzdAH8mL50TibG20qKsbP6WTbEOtkxTRPvdcndh+7VO3akw
-X-Developer-Key: i=markdamirkan@gmail.com; a=ed25519;
- pk=/wb49ibt4gZFDncmhFQBYtjPvzT1tfJtvK4Mqt1P2Wc=
-X-Endpoint-Received: by B4 Relay for markdamirkan@gmail.com/pscsi-20260818
- with auth_id=961
-X-Original-From: Mark Amirkan <markdamirkan@gmail.com>
-Reply-To: markdamirkan@gmail.com
 
-From: Mark Amirkan <markdamirkan@gmail.com>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-For an opposite-endian RAW sample, __evsel__parse_sample() passes the
-input-controlled size to mem_bswap_64() before checking whether the
-payload fits in the event. A truncated record can therefore make the helper
-read and write past the event boundary.
+Pre-existing issues:
+- [High] Out-of-bounds read in `__evsel__parse_sample` when parsing truncat=
+ed `PERF_SAMPLE_CALLCHAIN` events.
+- [High] Out-of-bounds read in `__set_offcpu_sample` via unvalidated `data-=
+>callchain->nr`.
+--
 
-A crafted perf.data file makes perf report crash with SIGSEGV. ASan
-reports the out-of-bounds access. A regression test puts backed data past
-the declared end and shows that it is changed before the parser returns
--EFAULT.
+commit 49a6711ef34085909cadd51b1b19965d5f56040c
+Author: Mark Amirkan <markdamirkan@gmail.com>
 
-Move the bounds checks before mem_bswap_64(). Check the rounded length too,
-because the helper accesses complete 64-bit words. Complete records are
-handled as before.
+perf evsel: Validate branch stack before byte swapping
 
-Fixes: f9d8adb345d7 ("perf evsel: Fix swap for samples with raw data")
+When perf reads an opposite-endian branch stack, __evsel__parse_sample()
+swaps each entry before checking whether all entries fit in the event. A
+truncated sample can therefore make the swap loop read and write past the
+event boundary.
+
+Fixes: 63c12ae2f246 ("perf evsel: Add bitfield_swap() to handle branch_stac=
+k endian issue")
 Cc: stable@vger.kernel.org
 Assisted-by: Symbolic
 Signed-off-by: Mark Amirkan <markdamirkan@gmail.com>
----
- tools/perf/tests/sample-parsing.c | 61 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/evsel.c           | 17 ++++++-----
- 2 files changed, 70 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
-index 583951534937..bd30f6d4c31b 100644
---- a/tools/perf/tests/sample-parsing.c
-+++ b/tools/perf/tests/sample-parsing.c
-@@ -461,6 +461,55 @@ static int test_truncated_branch_stack(void)
- 	return 0;
- }
- 
-+static int test_truncated_swapped_raw(u16 event_size, u32 raw_size)
-+{
-+	struct perf_event_attr attr = {
-+		.sample_type = PERF_SAMPLE_RAW,
-+	};
-+	struct {
-+		struct perf_event_header header;
-+		union {
-+			u64 value;
-+			u32 words[2];
-+		} raw;
-+		u64 canary;
-+	} input = {
-+		.header = {
-+			.type = PERF_RECORD_SAMPLE,
-+			.size = event_size,
-+		},
-+		/* Parsing a pre-swapped word exchanges these two u32 values. */
-+		.raw.words = { 0x12345678, raw_size },
-+		.canary = 0x8877665544332211ULL,
-+	};
-+	struct perf_sample sample;
-+	struct evsel *evsel;
-+	u64 raw = input.raw.value;
-+	u64 canary = input.canary;
-+	int err;
-+
-+	evsel = evsel__new(&attr);
-+	if (!evsel)
-+		return -1;
-+
-+	evsel->sample_size = __evsel__sample_size(attr.sample_type);
-+	err = __evsel__parse_sample(evsel, (union perf_event *)&input,
-+				    &sample, /*needs_swap=*/true);
-+	perf_sample__exit(&sample);
-+	evsel__put(evsel);
-+
-+	if (err != -EFAULT) {
-+		pr_debug("truncated swapped RAW sample (size %u, raw %u) returned %d, expected -EFAULT\n",
-+			 event_size, raw_size, err);
-+		return -1;
-+	}
-+	if (input.raw.value != raw || input.canary != canary) {
-+		pr_debug("truncated swapped RAW sample modified data before validation\n");
-+		return -1;
-+	}
-+	return 0;
-+}
-+
- /**
-  * test__sample_parsing - test sample parsing.
-  *
-@@ -481,6 +530,18 @@ static int test__sample_parsing(struct test_suite *test __maybe_unused, int subt
- 	if (err)
- 		return err;
- 
-+	/* The declared RAW payload extends past an otherwise aligned event. */
-+	err = test_truncated_swapped_raw(sizeof(struct perf_event_header) +
-+					 sizeof(u64), 16);
-+	if (err)
-+		return err;
-+
-+	/* The final complete word touched by mem_bswap_64() extends past it. */
-+	err = test_truncated_swapped_raw(sizeof(struct perf_event_header) +
-+					 sizeof(u32) + 9, 9);
-+	if (err)
-+		return err;
-+
- 	/*
- 	 * Fail the test if it has not been updated when new sample format bits
- 	 * were added.  Please actually update the test rather than just change
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index cc0bc0857754..ce429eb247b6 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3584,7 +3584,10 @@ int __evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 	}
- 
- 	if (type & PERF_SAMPLE_RAW) {
-+		const __u64 *raw;
-+
- 		OVERFLOW_CHECK_u64(array);
-+		raw = array;
- 		u.val64 = *array;
- 
- 		/*
-@@ -3600,16 +3603,14 @@ int __evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 		}
- 		data->raw_size = u.val32[0];
- 
--		/*
--		 * The raw data is aligned on 64bits including the
--		 * u32 size, so it's safe to use mem_bswap_64.
--		 */
--		if (swapped)
--			mem_bswap_64((void *) array, data->raw_size);
--
- 		array = (void *)array + sizeof(u32);
--
- 		OVERFLOW_CHECK(array, data->raw_size, max_size);
-+		if (swapped) {
-+			/* mem_bswap_64() accesses complete 64-bit words. */
-+			sz = roundup((u64)data->raw_size, sizeof(u64));
-+			OVERFLOW_CHECK(raw, sz, max_size);
-+			mem_bswap_64((void *)raw, data->raw_size);
-+		}
- 		data->raw_data = (void *)array;
- 		array = (void *)array + data->raw_size;
- 	}
+[ ... ]
 
--- 
-Git-146)
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index d4cb455f4a7d4..cc0bc08577540 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -3639,6 +3639,8 @@ int __evsel__parse_sample(struct evsel *evsel, unio=
+n perf_event *event,
+>  			e =3D (struct branch_entry *)&data->branch_stack->hw_idx;
+>  		}
+> =20
+> +		OVERFLOW_CHECK(array, sz, max_size);
+> +
 
+[Severity: High]
+This isn't a bug introduced by this patch, but while we are looking at
+out-of-bounds reads and OVERFLOW_CHECK() in __evsel__parse_sample(), could
+we also fix a similar issue when parsing PERF_SAMPLE_CALLCHAIN events?
 
+tools/perf/util/evsel.c:__evsel__parse_sample() {
+...
+		if (evsel->core.attr.defer_callchain && callchain_nr >=3D 2 &&
+		    data->callchain->ips[callchain_nr - 2] =3D=3D PERF_CONTEXT_USER_DEFER=
+RED) {
+			data->deferred_cookie =3D data->callchain->ips[callchain_nr - 1];
+			data->deferred_callchain =3D true;
+		}
+		OVERFLOW_CHECK(array, sz, max_size);
+...
+}
+
+If a user processes a crafted perf.data file containing a
+PERF_SAMPLE_CALLCHAIN event with a large callchain_nr but a truncated
+payload size, doesn't this access data->callchain->ips[] before
+OVERFLOW_CHECK() validates the payload length?
+
+[Severity: High]
+This is a pre-existing issue as well, but there appears to be another
+out-of-bounds read in __set_offcpu_sample() via an unvalidated
+data->callchain->nr:
+
+tools/perf/util/evsel.c:__set_offcpu_sample() {
+...
+	OVERFLOW_CHECK(array, data->callchain->nr * sizeof(u64), max_size);
+	data->ip =3D data->callchain->ips[1];
+	array +=3D data->callchain->nr;
+...
+}
+
+If a crafted perf.data file contains an off-cpu event where
+data->callchain->nr is 0 or 1, and the payload is artificially small,
+doesn't this unconditionally access data->callchain->ips[1]?
+
+Since it doesn't verify that nr >=3D 2, wouldn't this read past the validat=
+ed
+nr * sizeof(u64) boundary?
+
+>  		if (swapped) {
+>  			/*
+>  			 * struct branch_flag does not have endian
+> @@ -3654,7 +3656,6 @@ int __evsel__parse_sample(struct evsel *evsel, unio=
+n perf_event *event,
+>  				e->flags.value =3D evsel__bitfield_swap_branch_flags(e->flags.value);
+>  		}
+> =20
+> -		OVERFLOW_CHECK(array, sz, max_size);
+>  		array =3D (void *)array + sz;
+> =20
+>  		if (evsel__has_branch_counters(evsel)) {
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260903-sympwn-lin=
+ux-002-final-v2-v2-0-0aee1fca1f95@gmail.com?part=3D1
