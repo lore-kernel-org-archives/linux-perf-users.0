@@ -1,217 +1,103 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89CEA4D2ED4
-	for <linux-perf-users@vger.kernel.org>; Thu,  3 Sep 2026 16:07:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128634D8DB8;
+	Thu,  3 Sep 2026 16:07:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788451635; cv=none; b=bnmjEYIx4W395G2L9f0bD6AXRUIKXze3WPdJnEPfBSjp/C508K0TZQnTQgiTjU8C61h6Zav0VgTdqeJPJmO09NJDwGG4uyccNlCzYtxOEIsIxqOgikPTh+9qg6kAUR5646lvs4RvInp9BKHKddq+SZx4KBeuc8f8tADLHB6NpBE=
+	t=1788451635; cv=none; b=BnCQ4Nt57QgPdYWLSvMzJLFvui/5YHPefVHl+PppPruxc315CvMkVgb1vBVDy/Gim5Ijz9tQzHtKu1E0rnfS+dQ5D5NEwwBoXTC7VvGiYQ+cOuqJVwyJgEYC1ZaMyV0BRTdXuz0Jg/2R9EqP4sMy3QUDW92ovVVL+wvE4AWfmlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1788451635; c=relaxed/simple;
-	bh=HykRoC+x7+WJpH6zqJw7sUTUkGOjuJltTihUTPx51TE=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Z6DdydZYAQQayocvn+Kc89UGYUZS6RJLd97haPCMwo7t6AOQECrlGKYsusua6tPKYpQI+/O3bg16KwX9DDDu4x0URH4b5wIshz5P80xpHj3Em9hjQc10P6TK9eIvnHdHbP68cv0NXaR2VArFQvF3100J4E0obRh7NxTqqMwxEyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=K90rYPg+; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	bh=NhSt2URDT+IepuxkSnn7wmrY/hgpQI5zr5eWhS5hcGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DpUibXbzUdNWhtN393WDWd+NpkTwrKFB9PBRF5/Rv3l++BX2sK+Umsai5I2l6LoKSa6cHqArqRw+Yc+RdkBqLy2/ewf8I61p04kw9TvHWvF6lxk8FVhGlh4gDYP+Sf2++m4bl6uWzyCqmbg1piEvufkhEJggNkzFtRQfz+G131Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xuZVTd+3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=T8kn4im/; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="K90rYPg+"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62D341D34;
-	Thu,  3 Sep 2026 09:07:09 -0700 (PDT)
-Received: from e140010.cambridge.arm.com (e140010.arm.com [10.2.213.25])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5985F3F673;
-	Thu,  3 Sep 2026 09:07:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788451633; bh=HykRoC+x7+WJpH6zqJw7sUTUkGOjuJltTihUTPx51TE=;
-	h=From:To:Subject:Date:In-Reply-To:References:From;
-	b=K90rYPg+6dENgxgZASly10im1bD4yhpBSzckl5iGbAhOxrXgBsWaaeA+m/+IuItRc
-	 7/XegLpS62FtNtKB2aahfavnxtJ9g/cSR699hYuocLwYT0ehk6aTNZEfZckBlOm2uW
-	 HofCD2iPrXWrivry32oeisiHIKqrdQOLdloZ/Mzk=
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: maz@kernel.org,
-	oupton@kernel.org,
-	fuad.tabba@linux.dev,
-	joey.gouly@arm.com,
-	seiden@linux.ibm.com,
-	suzuki.poulose@arm.com,
-	yuzenghui@huawei.com,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	linux-perf-users@vger.kernel.org,
-	catalin.marinas@arm.com,
-	james.clark@linaro.org
-Subject: [RFC PATCH v7 18/28] KVM: arm64: config: Use functions from spe.c to test FEAT_SPE_{FnE,FDS}
-Date: Thu,  3 Sep 2026 17:06:13 +0100
-Message-ID: <20260903160623.315525-19-alexandru.elisei@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260903160623.315525-1-alexandru.elisei@arm.com>
-References: <20260903160623.315525-1-alexandru.elisei@arm.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xuZVTd+3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T8kn4im/"
+Date: Thu, 3 Sep 2026 18:07:10 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1788451632;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/vbjCRdrjxVp6fckV1i3kt+QR+aoKiSt4PvLxtPMrkc=;
+	b=xuZVTd+3e+XOsFzlbevv8WgpKXG5gTsuBBMkBxlya3sozHHOlzgelbcrxTZ3dc2S2fKUZH
+	Eo2ofpB9QXz++1nNA+l2nW//I/NpSXT/vrPva2BUML6aRc3DqfHqlGlE1V2t3JJo/nIQwC
+	4hoXTVevZUC8QVTDO0/gyce7p2CXCRV/uUfesLEFjgZfm0uG4U8QpsjXpPq1tbDCSMX+mx
+	7gIEzaiL+A0P1bxr9Si/kf123/uOYqAAZha/i9aojgU1F18YicgLIuc7upSmZ7pQYX5oKR
+	1iFVmlocKFD2B1HAW245xFUSV6/LtXCqmDzblVKJLJ/iTvmhYNie9oQEQsHYVA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1788451632;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/vbjCRdrjxVp6fckV1i3kt+QR+aoKiSt4PvLxtPMrkc=;
+	b=T8kn4im/sQC5stFlPR2Bqz8b9qO4j+lZamw3HssQ6xL7wclpxMen7l/f/4CP0sh13GTOKy
+	vasVqJQNc7WAdJBA==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	loongarch@lists.linux.dev
+Cc: "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Waiman Long <longman@redhat.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ada Couprie Diaz <ada.coupriediaz@arm.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Russell King <linux@armlinux.org.uk>,
+	WANG Xuerui <kernel@xen0n.name>
+Subject: Re: [PATCH v2] ARM, ARM64, LONGARCH: Delay HW BP notification to
+ task_work()
+Message-ID: <20260903160710.vVf4gEL2@linutronix.de>
+References: <20260814085118.OPEA_Ssn@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260814085118.OPEA_Ssn@linutronix.de>
 
-KVM's FGU mechanism will trap the registers introduced by FEAT_SPE_FnE and
-FEAT_SPE_FDS if the feature is not present for the VM. Move the functions
-that check for the presence of these features out of config.c and into
-spe.c, since that's where the bulk of SPE virtualization lies.
+On 2026-08-14 10:51:18 [+0200], To linux-arm-kernel@lists.infradead.org wrote:
+> Waiman, Luis, Ada reported that HW breakpoints on ARM64 trigger
+> "sleeping while atomic" warnings on PREEMPT_RT. The hardware event is
+> delivered with disabled interrupts and perf intrastrucure expects
+> disabled interrupts while the overflow callback is invoked.
+> 
+> The callback then sends a SIGTRAP signal for which it acquires
+> sighand_struct::siglock, a spinlock_t which becomes a sleeping lock and
+> must not be acquired in atomic context.
+> 
+> Delay the event callback until the return to userland.
+> Add perf_arch_hwbp_notify(), a generic perf callback which delayes the
+> actual callback invocation to task_work_add() callback. This callback
+> invokes the architecture defines callback arch_hwbp_send_sig().
+> This requires struct callback_head and the functions require
+> ARCH_NEED_PERF_HW_NOTIF to be defined.
+> 
+> This was reported against ARM64. ARM and LongARCH follow the same
+> pattern are also converted.
+> 
+> Reported-by: Luis Claudio R. Goncalves <lgoncalv@redhat.com>
+> Reported-by: Waiman Long <longman@redhat.com>
+> Closes: https://lore.kernel.org/all/aho0eqjMESuHxECr@redhat.com/
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-Signed-off-by: Alexandru Elisei <alexandru.elisei@arm.com>
----
- arch/arm64/include/asm/kvm_spe.h | 11 +++++++++++
- arch/arm64/kvm/config.c          | 30 +++++-------------------------
- arch/arm64/kvm/spe.c             | 22 ++++++++++++++++++++++
- 3 files changed, 38 insertions(+), 25 deletions(-)
+Did this get lost, should I repost it or is there something obviously
+wrong with it and nobody wanted to hurt my feelings by telling me?
 
-diff --git a/arch/arm64/include/asm/kvm_spe.h b/arch/arm64/include/asm/kvm_spe.h
-index 3d8e9720daca..618051dcf59f 100644
---- a/arch/arm64/include/asm/kvm_spe.h
-+++ b/arch/arm64/include/asm/kvm_spe.h
-@@ -43,6 +43,9 @@ u8 kvm_spe_get_pmsver(struct kvm *kvm);
- 
- bool kvm_spe_write_sysreg(struct kvm_vcpu *vcpu, int reg, u64 val);
- u64 kvm_spe_read_sysreg(struct kvm_vcpu *vcpu, int reg);
-+
-+bool kvm_spe_has_feat_spe_fne(struct kvm *kvm);
-+bool kvm_spe_has_feat_spe_fds(struct kvm *kvm);
- #else
- struct kvm_spe {
- };
-@@ -99,6 +102,14 @@ static inline u64 kvm_spe_read_sysreg(struct kvm_vcpu *vcpu, int reg)
- {
- 	return 0;
- }
-+static inline bool kvm_spe_has_feat_spe_fne(struct kvm *kvm)
-+{
-+	return false;
-+}
-+static inline bool kvm_spe_has_feat_spe_fds(struct kvm *kvm)
-+{
-+	return false;
-+}
- #endif /* CONFIG_KVM_ARM_SPE */
- 
- #endif /* __ARM64_KVM_SPE_H__ */
-diff --git a/arch/arm64/kvm/config.c b/arch/arm64/kvm/config.c
-index 1053676551af..78e414ed736d 100644
---- a/arch/arm64/kvm/config.c
-+++ b/arch/arm64/kvm/config.c
-@@ -7,6 +7,7 @@
- #include <linux/kvm_host.h>
- #include <asm/kvm_emulate.h>
- #include <asm/kvm_nested.h>
-+#include <asm/kvm_spe.h>
- #include <asm/sysreg.h>
- 
- /*
-@@ -159,7 +160,6 @@ struct reg_feat_map_desc {
- #define FEAT_GICv3		ID_AA64PFR0_EL1, GIC, IMP
- #define FEAT_LOR		ID_AA64MMFR1_EL1, LO, IMP
- #define FEAT_SPEv1p2		ID_AA64DFR0_EL1, PMSVer, V1P2
--#define FEAT_SPEv1p4		ID_AA64DFR0_EL1, PMSVer, V1P4
- #define FEAT_SPEv1p5		ID_AA64DFR0_EL1, PMSVer, V1P5
- #define FEAT_ATS1A		ID_AA64ISAR2_EL1, ATS1A, IMP
- #define FEAT_SPECRES2		ID_AA64ISAR1_EL1, SPECRES, COSP_RCTX
-@@ -292,26 +292,6 @@ static bool feat_sme_smps(struct kvm *kvm)
- 		(read_sysreg_s(SYS_SMIDR_EL1) & SMIDR_EL1_SMPS));
- }
- 
--static bool feat_spe_fds(struct kvm *kvm)
--{
--	/*
--	 * Revisit this if KVM ever supports SPE -- this really should
--	 * look at the guest's view of PMSIDR_EL1.
--	 */
--	return (kvm_has_feat(kvm, FEAT_SPEv1p4) &&
--		(read_sysreg_s(SYS_PMSIDR_EL1) & PMSIDR_EL1_FDS));
--}
--
--static bool feat_spe_fne(struct kvm *kvm)
--{
--	/*
--	 * Revisit this if KVM ever supports SPE -- this really should
--	 * look at the guest's view of PMSIDR_EL1.
--	 */
--	return (kvm_has_feat(kvm, FEAT_SPEv1p2) &&
--		(read_sysreg_s(SYS_PMSIDR_EL1) & PMSIDR_EL1_FnE));
--}
--
- static bool feat_trbe_mpam(struct kvm *kvm)
- {
- 	/*
-@@ -547,7 +527,7 @@ static const struct reg_bits_to_feat_map hdfgrtr_feat_map[] = {
- 		   HDFGRTR_EL2_PMBPTR_EL1	|
- 		   HDFGRTR_EL2_PMBLIMITR_EL1,
- 		   FEAT_SPE),
--	NEEDS_FEAT(HDFGRTR_EL2_nPMSNEVFR_EL1, feat_spe_fne),
-+	NEEDS_FEAT(HDFGRTR_EL2_nPMSNEVFR_EL1, kvm_spe_has_feat_spe_fne),
- 	NEEDS_FEAT(HDFGRTR_EL2_nBRBDATA		|
- 		   HDFGRTR_EL2_nBRBCTL		|
- 		   HDFGRTR_EL2_nBRBIDR,
-@@ -615,7 +595,7 @@ static const struct reg_bits_to_feat_map hdfgwtr_feat_map[] = {
- 		   HDFGWTR_EL2_PMBPTR_EL1	|
- 		   HDFGWTR_EL2_PMBLIMITR_EL1,
- 		   FEAT_SPE),
--	NEEDS_FEAT(HDFGWTR_EL2_nPMSNEVFR_EL1, feat_spe_fne),
-+	NEEDS_FEAT(HDFGWTR_EL2_nPMSNEVFR_EL1, kvm_spe_has_feat_spe_fne),
- 	NEEDS_FEAT(HDFGWTR_EL2_nBRBDATA		|
- 		   HDFGWTR_EL2_nBRBCTL,
- 		   FEAT_BRBE),
-@@ -851,7 +831,7 @@ static const struct reg_bits_to_feat_map hdfgrtr2_feat_map[] = {
- 		   HDFGRTR2_EL2_nPMSSDATA,
- 		   FEAT_PMUv3_SS),
- 	NEEDS_FEAT(HDFGRTR2_EL2_nPMIAR_EL1, FEAT_SEBEP),
--	NEEDS_FEAT(HDFGRTR2_EL2_nPMSDSFR_EL1, feat_spe_fds),
-+	NEEDS_FEAT(HDFGRTR2_EL2_nPMSDSFR_EL1, kvm_spe_has_feat_spe_fds),
- 	NEEDS_FEAT(HDFGRTR2_EL2_nPMBMAR_EL1, FEAT_SPE_nVM),
- 	NEEDS_FEAT(HDFGRTR2_EL2_nSPMACCESSR_EL1	|
- 		   HDFGRTR2_EL2_nSPMCNTEN	|
-@@ -884,7 +864,7 @@ static const struct reg_bits_to_feat_map hdfgwtr2_feat_map[] = {
- 		   feat_pmuv3p9),
- 	NEEDS_FEAT(HDFGWTR2_EL2_nPMSSCR_EL1, FEAT_PMUv3_SS),
- 	NEEDS_FEAT(HDFGWTR2_EL2_nPMIAR_EL1, FEAT_SEBEP),
--	NEEDS_FEAT(HDFGWTR2_EL2_nPMSDSFR_EL1, feat_spe_fds),
-+	NEEDS_FEAT(HDFGWTR2_EL2_nPMSDSFR_EL1, kvm_spe_has_feat_spe_fds),
- 	NEEDS_FEAT(HDFGWTR2_EL2_nPMBMAR_EL1, FEAT_SPE_nVM),
- 	NEEDS_FEAT(HDFGWTR2_EL2_nSPMACCESSR_EL1	|
- 		   HDFGWTR2_EL2_nSPMCNTEN	|
-diff --git a/arch/arm64/kvm/spe.c b/arch/arm64/kvm/spe.c
-index 8c173a1f48bd..3b285b45332b 100644
---- a/arch/arm64/kvm/spe.c
-+++ b/arch/arm64/kvm/spe.c
-@@ -113,6 +113,28 @@ void kvm_spe_destroy_vm(struct kvm *kvm)
- 	module_put(spe_pmu->pmu.module);
- }
- 
-+bool kvm_spe_has_feat_spe_fds(struct kvm *kvm)
-+{
-+	struct arm_spe_pmu *spe_pmu = kvm->arch.kvm_spe.spe_pmu;
-+
-+	if (!spe_pmu)
-+		return false;
-+
-+	return kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMSVer, V1P4) &&
-+	       FIELD_GET(PMSIDR_EL1_FDS, spe_pmu->pmsidr_el1);
-+}
-+
-+bool kvm_spe_has_feat_spe_fne(struct kvm *kvm)
-+{
-+	struct arm_spe_pmu *spe_pmu = kvm->arch.kvm_spe.spe_pmu;
-+
-+	if (!spe_pmu)
-+		return false;
-+
-+	return kvm_has_feat(kvm, ID_AA64DFR0_EL1, PMSVer, V1P2) &&
-+	       FIELD_GET(PMSIDR_EL1_FnE, spe_pmu->pmsidr_el1);
-+}
-+
- bool kvm_spe_write_sysreg(struct kvm_vcpu *vcpu, int reg, u64 val)
- {
- 	struct kvm_spe *kvm_spe = &vcpu->kvm->arch.kvm_spe;
--- 
-2.43.0
-
+Sebastian
