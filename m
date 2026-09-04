@@ -1,108 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8F05221F2;
-	Fri,  4 Sep 2026 20:15:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D8B5517BD0
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 20:22:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788552955; cv=none; b=aimKFstpdKLqgqNQx39hQAdIKb1G6rKoPoUaMeq7dVLk2tNVv3/4RkHwblggRQEUmmzfZxI14xg0Ah6chKJ2WFea9/0dhyd9QcZ+bp28ltkH4qTFa1YdQrAfTI2SZYDHewXXuEX7pCwKF7DBcOXqrCf7Lwi6ZomzV+muzBT/Zp4=
+	t=1788553335; cv=none; b=XqIT4IAfWyRpWG1V2ZkmHB2hBW4tNdGgjXrmHfX3IfE8s30j1sduDNrBiKtRQyPZKRpSbxw4lOgkyb2AWcRnBrpuwdKu7XyrQDFJ21x70a35ZvVb1zmVCafqF5rs7Nltf/zea2L//cZzf7NkyLKOgLEUNP4KdnJZD+di1/aueW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788552955; c=relaxed/simple;
-	bh=+QaayzHzc/PTmRKobplaOyg9dzfWbNlR/9cZ0Ek7O1I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SZcmR5jWz3ZhUk22YhhPnXB1iYKjbC3QoexW1eUYpe2N1JU+CvBCpYni4JMFD+rDLMkM3B6jOqF16OE0WPAUumt+RLvx4VADipRapYcTn9OOE3A0/kwL6mmr/H4YLzMlfRODY5ozc/OU42hg8D3h2JZziodmDkx2RyFzYneiU1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SJk5UdS8; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788553335; c=relaxed/simple;
+	bh=M5Q+87Pua694xdC6k5mprJxnAfQq/7zH15Op/jGrVM4=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=QjNhy00Rpvzzay5ztwyb4HnvWBJdO7r1eixyjZshguRItO4Sodce471QAmyTQ+SWTlABOV8DVPuTq3zbXujZcl+D9pOYEKVufB6HkjkrqwzO333GkrA1SWAueZbfRTzcKN5W9b6ZrE8uqTs9rCmHFZKl42mSzjuPbrBKJPlnrMc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAT5eFd4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SJk5UdS8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 174851F00A3D;
-	Fri,  4 Sep 2026 20:15:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAT5eFd4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 817311F00A3D;
+	Fri,  4 Sep 2026 20:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788552951;
-	bh=mHan3VoGa8yJBYv7XhRR9dgHhrDeC1dnkOEoq8404Cc=;
-	h=From:To:Cc:Subject:Date;
-	b=SJk5UdS8cfjHsmdv9/rR78e0788ukGInV194iaw+y0g6bFl89KPdNHXEOiy5P0eht
-	 mEmRsm0RSlgxjEoYMrvivknbuMKyxs/JiDT4VFGou0MxCvB54UMHe2N+R/+5ruufsF
-	 DVCgdEaRW5RDGzfhde0/EuRHMLaM5O1Ew+k8mUrknHiN+eVf/qk4xHGuksYs41i2wq
-	 t/vTlsI+8B/MrC6uuzYH3kplWoYeM1ka3YcyVOQMtblD13LiWl4t7JG4uCn549lkJz
-	 LqvEHyaxvFlsKL5iN3aWSRc4OpA6ecnA+AfF8WULNsaHYYNMzy4EkOiYXM9wk3tL5H
-	 qAGhU28b85K7A==
-From: Thorsten Blum <blum@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Thomas Gleixner <tglx@kernel.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: Thorsten Blum <blum@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf/x86/core: Simplify hybrid PMU registration failure path
-Date: Fri,  4 Sep 2026 22:13:15 +0200
-Message-ID: <20260904201313.271421-3-blum@kernel.org>
-X-Mailer: git-send-email 2.55.0
+	s=k20260515; t=1788553327;
+	bh=M5Q+87Pua694xdC6k5mprJxnAfQq/7zH15Op/jGrVM4=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=mAT5eFd4LATopav0ezvi3Xe13Y7ehF+NoBSKtBmyZJ87Qsf8NKQAAve/TqYlQFlg5
+	 PEoCSsKeGlDdPz5DupojRMaMrNd+PcCtrRzwScI3dyqiMTA69lPcMl0S939ms8PKD2
+	 aKiNUWoiT2qAPvb5P0K77FkoXhxt8jfb3Kfz9/HrS2f5O61FgK7kUjx6OHZa8XXmfl
+	 0GWt4nFvHSj0Yl6HjxL09Yd8PfGGoScdvYVP7kKFdD0mYO4uc4MlXGXZPrUOP5O289
+	 EbSaX5IJ5RrS214Z0/jy/ZolneYfQSaDxDZ6eAcykovOIJqAc4sNibQOhSeHFsZmSQ
+	 5E+IuCjOjgYqA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf/x86/core: Simplify hybrid PMU registration failure
+ path
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Thorsten Blum" <blum@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260904201313.271421-3-blum@kernel.org>
+References: <20260904201313.271421-3-blum@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 04 Sep 2026 20:22:07 +0000
+Message-Id: <20260904202207.817311F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1516; i=blum@kernel.org; h=from:subject; bh=+QaayzHzc/PTmRKobplaOyg9dzfWbNlR/9cZ0Ek7O1I=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFmz1aKuWrPGvDt6WmTn8rlKuSqT7nT3eU3JZ+s6nRd08 926U34sHaUsDGJcDLJiiiwPZv2Y4VtaU7nJJGInzBxWJpAhDFycAjCRL6yMDId5ffTuPHv61qng yBGPPbM31nnP+Tj/Q3OhaYH2kwQ2r30Mf2WaC7ccOb9SwtZ+RZ3gB2EDLV3m6NVcLodnik1IWrl 9MTcA
-X-Developer-Key: i=blum@kernel.org; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
-Content-Transfer-Encoding: 8bit
 
-Handle perf_pmu_register() errors directly instead of breaking out of
-the registration loop and checking the index separately. Reuse the loop
-index i to unregister any previously registered PMUs in reverse order
-and drop the extra index j.
+> Handle perf_pmu_register() errors directly instead of breaking out of
+> the registration loop and checking the index separately. Reuse the loop
+> index i to unregister any previously registered PMUs in reverse order
+> and drop the extra index j.
+>=20
+> Also log the failing PMU's name and error code.
+>=20
+> Signed-off-by: Thorsten Blum <blum@kernel.org>
 
-Also log the failing PMU's name and error code.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-Signed-off-by: Thorsten Blum <blum@kernel.org>
----
- arch/x86/events/core.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904201313.2714=
+21-3-blum@kernel.org?part=3D1
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 8eb14add44c8..0a8fcfd52ad0 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2256,7 +2256,7 @@ static int __init init_hw_perf_events(void)
- 			goto out2;
- 	} else {
- 		struct x86_hybrid_pmu *hybrid_pmu;
--		int i, j;
-+		int i;
- 
- 		for (i = 0; i < x86_pmu.num_hybrid_pmus; i++) {
- 			hybrid_pmu = &x86_pmu.hybrid_pmu[i];
-@@ -2268,15 +2268,13 @@ static int __init init_hw_perf_events(void)
- 
- 			err = perf_pmu_register(&hybrid_pmu->pmu, hybrid_pmu->name,
- 						(hybrid_pmu->pmu_type == hybrid_big) ? PERF_TYPE_RAW : -1);
--			if (err)
--				break;
--		}
--
--		if (i < x86_pmu.num_hybrid_pmus) {
--			for (j = 0; j < i; j++)
--				perf_pmu_unregister(&x86_pmu.hybrid_pmu[j].pmu);
--			pr_warn("Failed to register hybrid PMUs\n");
--			goto out2;
-+			if (err) {
-+				while (i--)
-+					perf_pmu_unregister(&x86_pmu.hybrid_pmu[i].pmu);
-+				pr_warn("Failed to register hybrid PMU %s: %d\n",
-+					hybrid_pmu->name, err);
-+				goto out2;
-+			}
- 		}
- 	}
- 
