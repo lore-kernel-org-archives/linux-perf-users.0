@@ -1,113 +1,73 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B013BB68F;
-	Fri,  4 Sep 2026 15:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36C214F799D;
+	Fri,  4 Sep 2026 16:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788537252; cv=none; b=c9mR511N0Va81FUr2QFn9e1M/ZLEOarZTp0YlaBTe8z9n+X647z7anoqurOWO7lbk2JCVRyV+xXBx+W+c7p81v0EkuDDgx+26yUrRVA4X+94cTszZwwe/d4GSR/YKckjwOuWlfHHsZfEJq8kst1nvH7ViX+lr71BSpFYr2qZzPQ=
+	t=1788540194; cv=none; b=LY8kf6vWxLE13G9lKV5bjSiGsrHtTWW1JzxPqn/chW3uhFJVCRGrZtE9VFFywCZ0TURD99Ud9XaQIOqBZHyeANYLH7pHLCJaGWdVwDWEXHmXijAUtucyc/eMTefdsieJelJbxBTuWFdpl4zRJMGE747WIf7CfL6sxe4rIJpv5Rc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788537252; c=relaxed/simple;
-	bh=fcE0qjmbQqnYiiwIMHIZXUGkLQxdfs+4zYEUQ4kPtYc=;
+	s=arc-20240116; t=1788540194; c=relaxed/simple;
+	bh=NWFUWnZ6K0kaIQa0lax2jcCLiQ0kC63Ncs4dMPYXg+I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uPf3+Jljj7Ufkw2XWynM170GSr6sfPBEOcFfvUcf6WBQ1dNZI3M3/3Fc7wl3s1kH6rNtgO9sa9zrPBslVphwrkl43qGee6l9kJSLZJPK76jhuxGmrsgypHE3RIfblTlUAcaLAAqX8JwnxQB3WSvSF2Ba6YCUCSpRgxcVSwHsaKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NR7VB0Ss; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PRf96zVM; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=KLb6+LApWjXXTCbqY2JPnkfLmDNuKhqTdprevJMkIYuBRluefIW83iGqq8Wjx4KtjIreX+62XlYLrglqbSE9lCR+1bJxH7fK0owSQJLOioWQKEptM+vZuWMwx6L7TWSPXwM2+7wS8rd0f0gPPw1HOfZCqRlM3qtoiSWm42k1Slk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=VFflIllV; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NR7VB0Ss";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PRf96zVM"
-Date: Fri, 4 Sep 2026 17:54:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1788537246;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZPpOywhxUYpvbT8zIkFDQanZWuSbRMA9e7oK1b0gVM4=;
-	b=NR7VB0SshEkCn8ekHb2VuYQmahkOVmFj0T4HAtnof/y45LI4Ur9o8FVFNKcCHcBczLkVH4
-	5uW1CZ9m1/QixjwrJKM02hfNBizz/QbvR02e3Yg7l8uAhsegQw0p9vseu4uuah8MU3uIxB
-	btZemSlkgPWGzBNl8d94W0M13DPyXEekq7LG84YlkNTzD3Lb60j8oICOQJlYKi2AxFOCdA
-	QZH4JilKdFKek7TfoLvYfaY6gk0snmiDQAktXy/zZqnOuq/h6lSQJ6IT045UgRTEyKrqtd
-	r2xBzacRa3vQWnsizQlyKGwfZPXXnLklqoLoACulN5mb6Wrbv0pcmXMR3xhXRw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1788537246;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZPpOywhxUYpvbT8zIkFDQanZWuSbRMA9e7oK1b0gVM4=;
-	b=PRf96zVMAqAIN/FHuit61LZUjh9q3Y2QWtWZZfbGqwKuSYPGqdsu0syV75ICLNaKC1XXKf
-	KsR24XFsPNaLl5DQ==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Russell King <linux@armlinux.org.uk>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
-	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
-	Ian Rogers <irogers@google.com>,
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="VFflIllV"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 880DE152B;
+	Fri,  4 Sep 2026 09:43:08 -0700 (PDT)
+Received: from localhost (unknown [10.2.196.114])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF7133F673;
+	Fri,  4 Sep 2026 09:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1788540192; bh=NWFUWnZ6K0kaIQa0lax2jcCLiQ0kC63Ncs4dMPYXg+I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VFflIllVWWur8MgIIluCe6ArvirPpjzkKINBQNHG7JxWalWtZCuY9WZf8T0x5ByKB
+	 UEZnP63o6FocTm7tPHu+57zl0eT/Xudy2HWrhCOr3+/DBT+Z+zABlFvt5sgNffMQRH
+	 w5+V2CaAWMSEwlx1dY+1esEhTntE0+4r1P5Zg1qE=
+Date: Fri, 4 Sep 2026 17:43:09 +0100
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@linux.dev>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Waiman Long <longman@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
-	Will Deacon <will@kernel.org>,
-	Clark Williams <clrkwllms@kernel.org>
-Subject: Re: [PATCH v2] ARM, ARM64, LONGARCH: Delay HW BP notification to
- task_work()
-Message-ID: <20260904155404.ESPFg3zi@linutronix.de>
-References: <20260814085118.OPEA_Ssn@linutronix.de>
- <20260903160710.vVf4gEL2@linutronix.de>
- <apmknG55qFAn8EPf@shell.armlinux.org.uk>
- <20260903133146.07095885@gandalf.local.home>
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] perf: cs-etm: Don't add global v0 HW_IDs to
+ unformatted queues
+Message-ID: <20260904164309.GZ8904@e132581.arm.com>
+References: <20260821-james-cs-hw_id-output-failure-v1-0-9d532ddabcc3@linaro.org>
+ <20260821-james-cs-hw_id-output-failure-v1-1-9d532ddabcc3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260903133146.07095885@gandalf.local.home>
+In-Reply-To: <20260821-james-cs-hw_id-output-failure-v1-1-9d532ddabcc3@linaro.org>
 
-On 2026-09-03 13:31:46 [-0400], Steven Rostedt wrote:
-> On Thu, 3 Sep 2026 17:47:24 +0100
-> Russell King <linux@armlinux.org.uk> wrote:
-> 
-> > What do you expect to happen with this? Which arch maintainer should
-> > apply this patch that affects three different independently maintained
-> > architectures?
+On Fri, Aug 21, 2026 at 10:50:29AM +0100, James Clark wrote:
+> In the case of mixed formatted and unformatted trace with v0 HW_IDs, or
+> no HW_IDs at all resulting in the cs_etm__map_trace_ids_metadata()
+> fallback, formatted queues will write their HW_IDs to unformatted
+> queues.
 
-Well, if you as the ARM person are fine with ARM part, an ACK would be
-appreciated. If you have something to object, it would be nice to let me
-know so I can adjust accordingly.
+I understand a session can support multiple sinks, but I don't expect
+to mix up formatted and unformatted trace (see sinks_compatible()).
 
-> Looks like the patch should be broken up into a 4 part series.
-> 
-> One to add the ARCH_NEED_PERF_HW_NOTIF code to the generic code.
-> 
-> Then one for each architecture to add the code needed to set that.
-> 
-> Then the architecture maintainers could ack their patch and the perf
-> maintainer can pull it all in.
-
-We could first agree if this is the right way of fixing it (from both,
-perf side and ARCH side).
-Then we could either route this via perf with ARCH's acks or split it
-and route via individual trees if needed. Having it routed separately 
-needs to be coordinated since the ARCH bits can't be applied without
-having the perf bits first.
-Then there is also the question if this should get fixes tag on commit
-d8fccd9ca5f90 ("arm64: Allow to enable PREEMPT_RT.") (which would also
-cover loongarch and arm).
-
-As of today I have just Luis responding that it works for him. 
-
-> -- Steve
-
-Sebastian
+For the mentioned fallback, I am also struggling to establish a case.
+Even AUX_OUTPUT_HW_ID records are absent randomly, I don't think this
+impacts the queue's format initalization, no?
