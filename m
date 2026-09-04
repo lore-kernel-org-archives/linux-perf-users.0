@@ -1,42 +1,41 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC811470137
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 10:41:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B1EB47F2C8
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 11:35:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788518493; cv=none; b=AKncewGUKrRx4kxsOIBOsT6Wqjnzv/PhPVQPdvS38dyF/GAjgHe08RPTuMc/8hn/vaBwiqj1c2JWkAdJxRap/s0HolVVxzWqWD4CgBsPU6o9ULpp1Qh3l6B8vOEtabyj+BeFandr72hoIWauKmP2HQZA98Z5pCl2ICnsDm2t6cs=
+	t=1788521759; cv=none; b=ZjGQfjsN1tv5uTG8Lw8ueL8BSTJOGCwU/mROYJLtwuxmTPRWk/wTYCHBB4UW+xyXOel6RxFapSWLg0lf+t0+FpXO/ZURHEJuAbNGFpCCCrj2r95LqdOVj0Yg9icEpd99PIl/SExFs+rmJuNuFzfN7mPwXt9YURRgE93o1nM6CBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788518493; c=relaxed/simple;
-	bh=/agTbhJqKJoeVpsxtBUywSGRTbSYkb+ofav24E897pc=;
+	s=arc-20240116; t=1788521759; c=relaxed/simple;
+	bh=pVVX7wCHPnyKDDskx5BAkF5R6YRcS3QCTY4q1fSXlXw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lvsGCgHIwis4TdQ4fr5wfRLwer1J66a5MAhrhnZxKLA8t3daXkHynUu6YpQZ++hnRjblFY9Y85WVePYeiFNXiav03GROZ2+jZ3PDwrGc4X34zOnWk/KlWUqVMGuK6lJ9NRsaJF4E6LDKXQ2/kvNDH7xb5cjnk6+WrzyUF8mjxs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=t8Ft236k; arc=none smtp.client-ip=217.140.110.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=X9XExUeqJCW4RSLzuJyW18dFF6yg3W0S4v+TCdoarYiEI5rUcmQ1ApHEgT4RQVg+Rh3uBKgKx6EMaOse2VJsoWTT+aNjODFbf/VeEUcWWQrISlID5aNmxM5nhz3sXqHvSCw1wJSCrjFaAp5/vk5+gAIIfZEXINHG/AotcSu4FLE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=uYbJrDyu; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="t8Ft236k"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="uYbJrDyu"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12CA5153B;
-	Fri,  4 Sep 2026 03:41:25 -0700 (PDT)
-Received: from e140010.arm.com (unknown [10.1.34.66])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BB913F673;
-	Fri,  4 Sep 2026 03:41:27 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCA76153B;
+	Fri,  4 Sep 2026 04:35:51 -0700 (PDT)
+Received: from e140010.arm.com (e140010.arm.com [10.2.213.25])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B09AF3F7D8;
+	Fri,  4 Sep 2026 04:35:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788518488; bh=/agTbhJqKJoeVpsxtBUywSGRTbSYkb+ofav24E897pc=;
+	t=1788521755; bh=pVVX7wCHPnyKDDskx5BAkF5R6YRcS3QCTY4q1fSXlXw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=t8Ft236k8GicWv9qebL9dcEP/9N315sB6d5KdkQIzTm3qI1thhLD8II5iGmwC+5gm
-	 xxZvj/3zLeUrMc8xdW0lrMsWCcN1NmF5zfp6dfDWRHf4k2w/dGxMLKlK5kCA9Zpm52
-	 x5j/JlbqTbHmxMj1sgbDxHflASQfFwwtamyp5Kxw=
-Date: Fri, 4 Sep 2026 11:41:24 +0100
+	b=uYbJrDyuwqOsKENN9Bm4C94iVXgcC8ngtvbR64LRX+QpjdpjJhunnc4GdgdMBmnC8
+	 XlkP5MXGomILIgChkihCUrYruYXcveBjAcAMb0t+1CCgjA1U+aFSX3/Q69Io9WtdE4
+	 fZDy63pQadBhALJjsveBt+fVD2fDFXHhNdEJR4hI=
+Date: Fri, 4 Sep 2026 12:35:52 +0100
 From: Alexandru Elisei <alexandru.elisei@arm.com>
 To: sashiko-reviews@lists.linux.dev
-Cc: Oliver Upton <oupton@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v7 17/28] KVM: arm64: Apply a RES0 mask to
- PMBLIMITR_EL1 writes
-Message-ID: <apqgVBwelJtyuwBq@e140010.arm.com>
+Cc: kvmarm@lists.linux.dev, Marc Zyngier <maz@kernel.org>,
+	linux-perf-users@vger.kernel.org, Oliver Upton <oupton@kernel.org>
+Subject: Re: [RFC PATCH v7 19/28] KVM: arm64: VHE: Context switch SPE state
+Message-ID: <apqtGD4IArjJHFk8@e140010.arm.com>
 References: <20260903160623.315525-1-alexandru.elisei@arm.com>
- <20260903160623.315525-18-alexandru.elisei@arm.com>
- <20260903163758.22D8D1F000E9@smtp.kernel.org>
+ <20260903160623.315525-20-alexandru.elisei@arm.com>
+ <20260903164313.9716A1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,166 +45,123 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260903163758.22D8D1F000E9@smtp.kernel.org>
+In-Reply-To: <20260903164313.9716A1F000E9@smtp.kernel.org>
 
 Hi Sashiko,
 
-On Thu, Sep 03, 2026 at 04:37:57PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
-> - [Critical] get_user_spe_sysreg() and set_user_spe_sysreg() return -EBUSY before SPE initialization, violating the KVM_GET_REG_LIST contract.
-> - [High] Userspace can bypass the PMBLIMITR_EL1 RES0 mask by writing to the register before the first KVM_RUN.
-> - [Low] Missing READ_ONCE() when accessing pmblimitr_el1_res0_mask causes a data race.
+On Thu, Sep 03, 2026 at 04:43:13PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> - [High] Writing to PMBSR_EL1 after enabling the SPE profiling buffer via PMBLIMITR_EL1 is CONSTRAINED UNPREDICTABLE and can corrupt hardware events.
+> - [High] Host SPE sampling control registers (e.g., PMSNEVFR_EL1, PMSDSFR_EL1) can be permanently corrupted by a malicious guest.
 > --
 > 
-> commit 1270412c2611a30b1f16a0aa9858eb290c7f9768
+> commit 32125a6226fde42baaf9001e75434e4177067f24
 > Author: Alexandru Elisei <alexandru.elisei@arm.com>
 > 
-> KVM: arm64: Apply a RES0 mask to PMBLIMITR_EL1 writes
+> KVM: arm64: VHE: Context switch SPE state
 > 
-> This commit introduces a RES0 mask for PMBLIMITR_EL1 to hide unsupported
-> granule sizes from the guest. It computes this mask during the vCPU's
-> first run and applies it when userspace or the guest writes to the register.
+> Save and restore the SPE register state when a VCPU is run. The SPE
+> resources are shared between the guest and the host (the resources are not
+> partitioned) so KVM has to save the host state, change the owning
+> translation regime, and then restore the guest state before entering a
+> guest.
 > 
-> > diff --git a/arch/arm64/kvm/spe.c b/arch/arm64/kvm/spe.c
-> > index 6a00a44c73edf..8c173a1f48bd4 100644
-> > --- a/arch/arm64/kvm/spe.c
-> > +++ b/arch/arm64/kvm/spe.c
+> > diff --git a/arch/arm64/kvm/hyp/vhe/spe-sr.c b/arch/arm64/kvm/hyp/vhe/spe-sr.c
+> > new file mode 100644
+> > index 0000000000000..978620ad99fa5
+> > --- /dev/null
+> > +++ b/arch/arm64/kvm/hyp/vhe/spe-sr.c
+> > @@ -0,0 +1,209 @@
 > [ ... ]
-> > @@ -60,13 +60,43 @@ bool kvm_supports_spe(void)
-> [ ... ]
-> >  int kvm_spe_vcpu_first_run_init(struct kvm_vcpu *vcpu)
-> >  {
-> > +	struct kvm *kvm = vcpu->kvm;
-> > +	struct kvm_spe *kvm_spe = &kvm->arch.kvm_spe;
-> >  
-> > -	if (!vcpu_spe->initialized)
-> > +	if (!kvm_vcpu_spe_initialized(vcpu))
-> >  		return -EINVAL;
-> >  
-> > +	if (!kvm_spe->pmblimitr_el1_res0_mask)
-> 
-> [Severity: Low]
-> Does this plain read of pmblimitr_el1_res0_mask need a READ_ONCE() to
-> prevent compiler-induced load tearing?
-> 
-> The mask is updated locklessly using WRITE_ONCE() inside
-> kvm_spe_compute_pmblimitr_el1_res0_mask(). Without a READ_ONCE() here,
-> concurrent vCPU executions could trigger a data race.
-
-Ok.
-
-> 
-> > +		kvm_spe_compute_pmblimitr_el1_res0_mask(kvm);
-> >  
-> >  	return 0;
-> >  }
-> > @@ -85,8 +115,12 @@ void kvm_spe_destroy_vm(struct kvm *kvm)
-> >  
-> >  bool kvm_spe_write_sysreg(struct kvm_vcpu *vcpu, int reg, u64 val)
-> >  {
-> > +	struct kvm_spe *kvm_spe = &vcpu->kvm->arch.kvm_spe;
-> > +
-> >  	switch (reg) {
-> >  	case PMBLIMITR_EL1:
-> > +		val &= ~kvm_spe->pmblimitr_el1_res0_mask;
+> > +static void __kvm_spe_save_sampling_regs(struct kvm *kvm, struct kvm_cpu_context *ctxt)
+> > +{
+> > +	/*
+> > +	 * This is dependent on the VM features, and not the hardware features,
+> > +	 * even for the host, because (a) guest accesses to PMSNEVFR_EL1 and
+> > +	 * PMSDSFR_EL1 result in an undefined exception in the guest and (b)
+> > +	 * they don't affect the guest unless the guest explicitly enables them,
+> > +	 * and a well-behaved guest shouldn't enable them when the corresponding
+> > +	 * feature is not advertised.
+> > +	 */
+> > +	if (kvm_spe_has_feat_spe_fne(kvm))
+> > +		ctxt_sys_reg(ctxt, PMSNEVFR_EL1) = read_sysreg_s(SYS_PMSNEVFR_EL1);
 > 
 > [Severity: High]
-> Can userspace bypass this RES0 sanitization?
+> Does this check of the guest's advertised features (kvm_spe_has_feat_spe_fne)
+> leave the host's sampling control registers vulnerable to corruption?
 > 
-> If the VMM calls KVM_SET_ONE_REG for PMBLIMITR_EL1 before running the vCPU
-> for the first time, pmblimitr_el1_res0_mask will still be 0.
+> If the host physically supports FEAT_SPE_FNE but the KVM VM does not
+> advertise it, KVM will skip saving and restoring the host's PMSNEVFR_EL1
+> register. Because MDCR_EL2.TPMS = 0 is cleared on guest entry, these
+> registers will not trap to EL2.
 > 
-> Because the mask isn't computed until the first run, the bitwise NOT evaluates
-> to all 1s (val &= ~0), which leaves the user-provided value unmodified and
-> potentially exposes the host hardware to unsupported granule configurations.
+> A malicious guest could execute an msr instruction to PMSNEVFR_EL1 directly,
+> overwriting the hardware register. When the guest exits, KVM skips restoring
+> the host's value in __kvm_spe_restore_sampling_regs(), allowing the guest's
+> malicious configuration to persist in the host execution context.
+> 
+> Could this be checking the host's physical capabilities instead of the VM's
+> advertised features when saving and restoring host state?
 
-That's correct, I assumed here that userspace will be aware of the
-constraints on PMBLIMITR_EL1 due to missing architectural features and write the
-correct value.
+Yeah, that's a good point, this is a leftover from the previous iteration where
+SPE support in KVM was dependant on FEAT_FGT, which would trap accesses to those
+registers if FEAT_SPE_FnE and/or FEAT_SPE_FDS were not exposed to the VM.
 
-Is that placing a too high a burden on userspace? If it is, I can recompute
-PMBLIMITR_EL1 when the VCPU is first run.
+If FEAT_FGT is implemented, nothing changes. But if that's not present, I see
+two way to handle it:
+
+1. Save/restore the registers on each VM entry/exit and let the guest access
+them as it wishes. This would go against the architecture, which says that
+accesses are undefined if the corresponding feature is not implemented. In
+practice, this might not be a problem if all hardware that implements
+FEAT_SPE_FnE and FEAT_SPE_FDS also implements FEAT_FGT.
+
+2. Trap *all* buffer control registers with MDCR_EL2.TPMS and inject an undefined
+instruction exception.
+
+Thoughts?
 
 > 
-> [Severity: Low]
-> Does this mask read also need a READ_ONCE() to safely pair with the
-> WRITE_ONCE() update, similar to the check in kvm_spe_vcpu_first_run_init()?
-
-Ok.
-
-> 
-> > +		fallthrough;
-> >  	case PMBSR_EL1:
-> >  	case PMBPTR_EL1:
-> >  		__vcpu_assign_sys_reg(vcpu, reg, val);
-> 
-> > diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> > index 89b01b6ac7830..4c4bf88c9aa53 100644
-> > --- a/arch/arm64/kvm/sys_regs.c
-> > +++ b/arch/arm64/kvm/sys_regs.c
 > [ ... ]
-> > @@ -1563,6 +1563,38 @@ static unsigned int spe_visibility(const struct kvm_vcpu *vcpu,
-> >  	return REG_HIDDEN;
-> >  }
-> >  
-> > +static int set_user_spe_sysreg(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
-> > +			       u64 val)
+> > +void __kvm_spe_restore_guest_state_vhe(struct kvm_vcpu *vcpu, struct kvm_cpu_context *guest_ctxt)
 > > +{
-> > +	int reg = r->reg;
+> > +	u64 pmblimitr, pmbsr;
 > > +
-> > +	if (!kvm_vcpu_spe_initialized(vcpu))
-> > +		return -EBUSY;
+> > +	pmbsr = ctxt_sys_reg(guest_ctxt, PMBSR_EL1);
+> > +	pmblimitr = ctxt_sys_reg(guest_ctxt, PMBLIMITR_EL1);
+> > +	if (__kvm_spe_profiling_buffer_enabled(pmblimitr, pmbsr)) {
+> > +		write_sysreg_s(ctxt_sys_reg(guest_ctxt, PMBPTR_EL1), SYS_PMBPTR_EL1);
+> > +		isb();
+> > +		write_sysreg_s(pmblimitr, SYS_PMBLIMITR_EL1);
+> > +		isb();
+> > +		/* A buffer management event preserves fields in PMBSR_EL1 */
+> > +		write_sysreg_s(pmbsr, SYS_PMBSR_EL1);
 > 
-> [Severity: Critical]
-> Does returning -EBUSY here break the KVM_GET_REG_LIST ABI contract?
-> 
-> spe_visibility() currently exposes SPE registers based purely on
-> vcpu_has_spe(). Because of this, KVM_GET_REG_LIST will advertise the SPE
-> registers immediately after a vCPU is created with the SPE feature.
-> 
-> If a VMM queries the register list and then calls KVM_GET_ONE_REG or
-> KVM_SET_ONE_REG before KVM_ARM_VCPU_SPE_INIT is called, it will unexpectedly
-> hit this -EBUSY path and fail. The KVM API requires that any register
-> returned by KVM_GET_REG_LIST must be successfully readable via
-> KVM_GET_ONE_REG.
+> [Severity: High]
+> Is it safe to write to PMBSR_EL1 after enabling the SPE profiling buffer via
+> PMBLIMITR_EL1?
 
-I can't help but notice an inconsistency: here you say that any register
-returned by KVM_GET_REG_LIST must be successfully *readable*, yet above you're
-saying that a it is a *write* that breaks the KVM_GET_REG_LIST ABI contract.
+I haven't found any evidence to the contrary.
 
-Regardless, I think you're right. I only put the check there so I can update the
-interrupt level on a PMBSR_EL1 write (implemented later in the series). What I
-can do is try to update the interrupt level when the VCPU is first run,
-alongside applying the res0 mask to PMBLIMITR_EL1.
+> 
+> According to the ARM Architecture Reference Manual, when the profiling buffer
+> is enabled, a direct write to PMBSR_EL1 is constrained unpredictable. This
+> can corrupt hardware events or lead to unknown exceptions.
+
+I haven't found anything in the Arm ARM saying that, and I don't see why writing
+to PMBSR_EL1 would be a problem at all after the correct sequence for disabling
+the buffer has been followed in __kvm_spe_save_host_state_vhe().
+
+This is also how the SPE driver programs the buffer in the interrupt handler, if
+there is indeed an issue the SPE driver would also have to be fixed.
 
 Thanks,
 Alex
 
 > 
-> > +
-> > +	if (reg == PMBLIMITR_EL1 || reg == PMBPTR_EL1 || reg == PMBSR_EL1)
-> > +		kvm_spe_write_sysreg(vcpu, reg, val);
-> > +	else
-> > +		__vcpu_assign_sys_reg(vcpu, reg, val);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int get_user_spe_sysreg(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
-> > +			       u64 *val)
-> > +{
-> > +	int reg = r->reg;
-> > +
-> > +	if (!kvm_vcpu_spe_initialized(vcpu))
-> > +		return -EBUSY;
-> > +
-> > +	if (reg == PMBLIMITR_EL1 || reg == PMBPTR_EL1 || reg == PMBSR_EL1)
-> > +		*val = kvm_spe_read_sysreg(vcpu, reg);
-> > +	else
-> > +		*val = __vcpu_sys_reg(vcpu, reg);
-> > +
-> > +	return 0;
-> > +}
+> In __kvm_spe_restore_host_state_vhe(), the PMBSR_EL1 register is correctly
+> restored before PMBLIMITR_EL1. Should the guest restoration follow the same
+> sequence to avoid unpredictable behavior?
 > 
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260903160623.315525-1-alexandru.elisei@arm.com?part=17
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260903160623.315525-1-alexandru.elisei@arm.com?part=19
