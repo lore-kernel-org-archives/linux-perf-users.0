@@ -1,158 +1,208 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1ED1378D98
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 13:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE661481650
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 13:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788529508; cv=none; b=RTHpYc85AsGvr59Zri9s90+8b3oh2p2pfpPRJWPbqzKfC5lxNiqtdQ0Cotfkcbwh7m9XuZ0ajL0539Pfjwr0/mbCGn0bv2Ow3xI6+XOykkGZ4VEHGlxAmv5AZRUCXAtTx6gNzYOdY6WZ1CZ/LP+tpX5grPNrcmkCq/c5bHgqz7M=
+	t=1788529558; cv=none; b=grDcZVIIOiu119NiWWQ+aYjDzC+KJTM0iVsvH+O5juBdRE2gjVAMFHnf4VPr7qz3CnPsaGY0lnbYuIFH70pTGKtbDAQJ5gHRYu0uCiuPpSZSUlVbOyft4CpN4qlEltADUa/wSTHD+D7kjSPalkKjrOB6cefdR1jg489kB96Ypc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788529508; c=relaxed/simple;
-	bh=ZzB4cJjh2YZ15PoZXeoA3YUK98wnJnoSQhdUo5kZTQ8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=gy2njCPrU/YADjDenXUKHxrajfkTpseTEAlUnxH6eAueQOYYZ39ZFNC7TTnPRCp82rP7XDaajdxWY+Qrt3Dr6/JclcPXorW0AgM63v3lvCJYPJrZ7bROIG0CJWgB3gdkEqexqjPo4RfSNuzyZ95KCoOmUDW0TB5QA0lx3exrLRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=YGzC4HbQ; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1788529558; c=relaxed/simple;
+	bh=uBILfIAE4wAXjKxPSimgi2IVaLLcdAzi0ERSqo59Sy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uDd0i+NDZJDAoOZVs5C899rXhpcvMwEqjt98T6ofQQ824wura7PZCmaaBolsKaO71nxLjIfuz1UMlOaDicxvJnnplAOlAYXayUKVWkp9MIrtvac2nKwxmg/ysayfjNgKAwWqtu0ROR3zdVUyjPm1oD4bxbN64D9vqlP5Q7y8ums=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=mSHPHHSf; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="YGzC4HbQ"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2cf452def93so20089455ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 04 Sep 2026 06:45:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1788529506; x=1789134306; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to:content-type;
-        bh=AUtU0AVCxf0g+bF8SriUie/TsgOUIfxYtjr/CjWgxZQ=;
-        b=YGzC4HbQrjs86eyvSI3Yl9b4OkyvHapQ+Xysl3Hk54YpFyX511+X9dPULs8oSjI1iy
-         Ut3b6LbJnA7BRcgh5znc1ZHlhKJnBJ7TA+TzHx00t4PUNhPvHrI/6THrCXjhOHt6qjgE
-         KdBAg4N7Bu2jFWQSKeAmFpGq7J97mK4HirZmprIMlPODhJEr4j55JcmQT23hQtp6xRb/
-         3EWM9/bicm+Uiq++ZEh3wJ47WGRoEb5QBrqWAz9tMvc62IO0T2MtDL7CmhayHtkRUFdk
-         1pLsSNqfYL/GWNeVh7GsbWj3/aG3pXTlV7bUq2rF+wbbN3PBGWcmx8Gdy+MDVSoaOIdz
-         2OMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788529506; x=1789134306;
-        h=cc:to:message-id:content-transfer-encoding:content-type
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=AUtU0AVCxf0g+bF8SriUie/TsgOUIfxYtjr/CjWgxZQ=;
-        b=qwO5h0fT/belbSigaw4FhyrDE5SiyB72gaL81tS45TOKSvsWC0PYjDda1bmooeYkv8
-         pseNIsJbHvbKxpRCZoipPgew4DrsozW5y7rRhtzUpZAC+8WeLaofdNaIDjkOV9Tq2ARF
-         d+iqxbYzg9ZO9oaBOEvExh2WX4VyfNldHfcRopeqwflGAIwfV3QbA2ag0g/2U7rMR42j
-         aT9Sw1wRyULJdXzY717ayjldUw0SSXCpWGkZB80NopBCosuW6Xi3mrkVPi1YOtlP1hsf
-         J307Kg0cloS0Zp4sOSg2BNCE7Iek08nmnrqwRjKMy0GDQe1rEeH+00PIX71CxVDflkvR
-         Fctw==
-X-Forwarded-Encrypted: i=1; AKwUvBzM4P+yhGcDYZuqz5gwo12QklJ3W0d0zNRnionIlZAKK6vlfKotyc297xN5t1Gp4qRK5Zv7psRpz0pceS3NTU2D@vger.kernel.org
-X-Gm-Message-State: AFuF++nZpkXZ9xVpTxbgX6Lt4yBNBT0/ptaYpNOX5T7V++JAIOb65ZpN
-	xKHXKvkoSN0YbOVYZGVzelc0HVEUHy6v5iK/nitTUIy2RE1cN4hJQIRwGl2pVAbalvEBRDa3vGu
-	kIHcIoTI7PQ==
-X-Gm-Gg: AYBFou02VtpAyKyBmpeAJDoIap6ZzKsdvIDdzIe/Edql1r6wSBNQPi7BqcTYAeORnCz
-	mJyutDup7oz2/RBgtOb9GmXSUZsGjQvkvHKPMAqykqY7o6Yh/fif7YdtJi6FGE4UJCrBY2RAQ2b
-	kT+A5X1vVeP4X/oVRxXWpsQl9BsxU9vaAUD3wLiO1zy/QH39BZJpFm/YB8jvfEsI5J53wBeHwLX
-	O822KRCDpj1OCG5tZ3/Y8aevzvnyJ1jA1fnv+YM4yintjlwTh9yT5C90E23oiym9LMaRcJ2mmLw
-	05241H02nBz7eoqhnzI5qSOVVNvpv79QP8K840FH0kxlYzRHjnDi/QGFkGAzVyEXktY/gykwhtx
-	15fH13b3WfPXJNvngaBKa1LvAUoMo8JXw2vVBUDvqsEUAGL1mNGIUO4kBrRxfkzmQusDQjlMbPv
-	RNImghrPLC505fxBSNN/EucHTX7ssV2JUziEipMiBSmpKlofIgTJ85xJ7tuF4xdpsirtf3nBI=
-X-Received: by 2002:a17:90b:4c4e:b0:38e:a52e:a3c9 with SMTP id 98e67ed59e1d1-39b07fe9dd8mr14830129a91.8.1788529505989;
-        Fri, 04 Sep 2026 06:45:05 -0700 (PDT)
-Received: from sw08.internal.sifive.com ([4.53.31.132])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3339a534152sm6834306eec.10.2026.09.04.06.45.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Sep 2026 06:45:05 -0700 (PDT)
-From: Nia Su <nia.su@sifive.com>
-Date: Fri, 04 Sep 2026 06:45:03 -0700
-Subject: [PATCH] perf evlist: don't restrict uncore events to PMU CPUs
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="mSHPHHSf"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79556152B;
+	Fri,  4 Sep 2026 06:45:51 -0700 (PDT)
+Received: from e140010.arm.com (unknown [10.57.70.12])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78D3B3F7D8;
+	Fri,  4 Sep 2026 06:45:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1788529555; bh=uBILfIAE4wAXjKxPSimgi2IVaLLcdAzi0ERSqo59Sy4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mSHPHHSfAXofkS3WNmrj1OpVV/ph9/XvcUR9HtIwLk6cThoT0KQLRDbLYIsLQVDEZ
+	 fJPYKbd1sMNvwVJzLTu6lmvYT7jWwKma0XfkjK3V3/cjR1nMNPt3rLZFOCn9//k+VF
+	 uRmSh02XndknZBpr6voZ4hz9N3qJIUVXQ8kz7wxc=
+Date: Fri, 4 Sep 2026 14:45:49 +0100
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: kvmarm@lists.linux.dev, Marc Zyngier <maz@kernel.org>,
+	linux-perf-users@vger.kernel.org, Oliver Upton <oupton@kernel.org>
+Subject: Re: [RFC PATCH v7 20/28] KVM: arm64: Allow guest SPE physical
+ timestamps only if kernel allows it
+Message-ID: <aprLjUt5i4FD4GHz@e140010.arm.com>
+References: <20260903160623.315525-1-alexandru.elisei@arm.com>
+ <20260903160623.315525-21-alexandru.elisei@arm.com>
+ <20260903164858.E55DC1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260904-perf-evlist-uncore-cpu-b4-v1-1-604b55c025ee@sifive.com>
-X-B4-Tracking: v=1; b=H4sIAF/LmmoC/x3MQQqEMAxA0atI1gZSKU71KuLCqekYkFpSlQHp3
- afM8i3+fyCzCmcYmweUb8lyxArTNuC3JX4YZa2GjrqeBrKYWAPyvUs+8Yr+UEafLnxbtMYtgYJ
- 5eUdQ+6Qc5Pt/T3MpP7m8fe5rAAAA
-X-Change-ID: 20260904-perf-evlist-uncore-cpu-b4-418af0f17c80
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- James Clark <james.clark@linaro.org>, 
- Thomas Falcon <thomas.falcon@intel.com>, linux-perf-users@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Nia Su <nia.su@sifive.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2222; i=nia.su@sifive.com;
- h=from:subject:message-id; bh=ZzB4cJjh2YZ15PoZXeoA3YUK98wnJnoSQhdUo5kZTQ8=;
- b=owEBbQKS/ZANAwAIAYihNJa3+YfgAcsmYgBqmsthAKuYn2tcMo57yITZ9AHSBIITrVA8UueLM
- nh/mN37t86JAjMEAAEIAB0WIQThGl/T4FqBBU9NhIeIoTSWt/mH4AUCaprLYQAKCRCIoTSWt/mH
- 4NEXD/42GlCi/YxiAy6dR7WafgLocFvabPf8yzORrMalaNSXkKbWVDLqbhFnm2VLfue27aek8FP
- IvsXJHYaJO4vFd0OZQDhD5DdZyHO3bu0L65juIi6KvVE7u3h6tWwsBsZKJfkH0dc1DUbp0CBoYW
- gQF8BUo3QEQpj82kfO8+ZGGiAKw787qyngGy2XtHNyjWWhbZMXRC0NhLnthRXr6gqIKS3qZ+vaj
- +EbHpaes1zVSFKbMTMLwdBChRp64Cv0pvWFm8isi7AzdBFIlb8Z/1oytmKEoezTfBRqhZJ91YwH
- k+fBWIiXi00Q5HZ5yP6x3Qv9kamsT1koFTH+T4Xo5nsU+QnjnybZeusfBQIZZl5a13ggmCI3ATR
- hsMqcs1OyYmyIEL9a433sNzipFt1VYcEe6lXSV+r2xJQxuH7k2xqzojux0qJgeRitFdBcGkXezh
- N6GToeyroC4bQ6PIGDvermFqlwy7rFw/nDys4pwkqI7Y4CTdnJazcN+ctiOvjXXVmOZMhunk+jn
- J+1tc7w60Xpuf4Mq7cXTR1d0nFFxU06b/sUJnkiDp+j1deJqY1RWBsnlqHnieFJKTtclvrwNSYc
- FtBiiTg3FDuBX1FLRsSZdK+A+eoEXpBWa9X0caCe2Zc5jxEENHHmdTi3+KnJz7coZI2zg8TWQlf
- nMGuyt/gKiBfU3w==
-X-Developer-Key: i=nia.su@sifive.com; a=openpgp;
- fpr=55235C875092ACC578EFCE6CD1699E646B29B1AF
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260903164858.E55DC1F000E9@smtp.kernel.org>
 
-The PMU CPU map has different semantics for core and uncore PMUs.
+Hi Sashiko,
 
-For core PMUs, pmu_cpus contains the CPUs on which the event can be
-opened. Intersect the user-requested CPU map with the PMU CPU map to
-reject CPUs unsupported by the PMU.
+On Thu, Sep 03, 2026 at 04:48:58PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 4 potential issue(s) to consider:
+> - [High] Inverted logic for `perf_allow_kernel()` grants physical timestamps to unprivileged users and denies them to privileged users.
+> - [High] Capability check `perf_allow_kernel()` is evaluated at `KVM_RUN` time (TOCTOU) instead of VM/VCPU configuration time.
+> - [Medium] Silently-on guest-visible feature (SPE physical timestamps) breaks live migration and violates subsystem guidelines.
+> - [Medium] Concurrent first `KVM_RUN` invocations on multiple vCPUs cause a data race on the VM-wide `kvm_spe->guest_pmscr_el2`.
+> --
+> 
+> commit 8640bfaf0b943972e8c97350b961b39b15830f1b
+> Author: Alexandru Elisei <alexandru.elisei@arm.com>
+> 
+> KVM: arm64: Allow guest SPE physical timestamps only if kernel allows it
+> 
+> The SPE driver allows userspace to use physical timestamps for records only
+> if the kernel allows it, do the same for a virtual machine.
+> 
+> [ ... ]
+> 
+> > diff --git a/arch/arm64/kvm/hyp/vhe/spe-sr.c b/arch/arm64/kvm/hyp/vhe/spe-sr.c
+> > index 978620ad99fa5..3c32a1338cc8d 100644
+> > --- a/arch/arm64/kvm/hyp/vhe/spe-sr.c
+> > +++ b/arch/arm64/kvm/hyp/vhe/spe-sr.c
+> 
+> [ ... ]
+> 
+> > @@ -120,10 +121,10 @@ void __kvm_spe_restore_guest_state_vhe(struct kvm_vcpu *vcpu, struct kvm_cpu_con
+> >  		write_sysreg_s(pmbsr, SYS_PMBSR_EL1);
+> >  	}
+> >  
+> > -	__kvm_spe_restore_sampling_regs(vcpu->kvm, guest_ctxt);
+> > +	__kvm_spe_restore_sampling_regs(kvm, guest_ctxt);
+> >  
+> >  	write_sysreg_el1(ctxt_sys_reg(guest_ctxt, PMSCR_EL1), SYS_PMSCR);
+> > -	write_sysreg_el2(0, SYS_PMSCR);
+> > +	write_sysreg_el2(kvm->arch.kvm_spe.guest_pmscr_el2, SYS_PMSCR);
+> 
+> [Severity: Medium]
+> Can this read of kvm->arch.kvm_spe.guest_pmscr_el2 race with a concurrent
+> write from another vCPU?
 
-For uncore PMUs, pmu_cpus is just the default CPU to open the event on,
-not the set of CPUs it can only be opened on. The user-requested CPU may
-override the default and be used directly, and the driver can redirect
-the event to the appropriate control CPU.
+Yes, it can.
 
-Currently, __perf_evlist__propagate_maps() intersects the user-requested
-CPU map with pmu_cpus for all PMUs. If the user-requested CPU is not in
-pmu_cpus, the intersection becomes empty and the evsel is removed before
-perf_event_open() is called.
+> 
+> If multiple vCPUs are starting their first KVM_RUN, one vCPU might complete
+> kvm_arch_vcpu_run_pid_change(), proceed to enter the guest, and execute
+> __kvm_spe_restore_guest_state_vhe(), reading guest_pmscr_el2.
+> 
+> Because kvm_spe_vcpu_first_run_init() performs unlocked writes to this
+> shared VM-wide variable, another vCPU could be modifying it at the same
+> time. Should this use READ_ONCE() and WRITE_ONCE() to prevent LKMM
+> violations and KCSAN data race splats?
 
-Skip the intersection when evsel->requires_cpu is true, which is set for
-uncore PMUs. is_pmu_core is also false for other non-core PMUs, so
-gating on it would have loosened this check for them too. Core PMUs
-continue to be restricted to their PMU CPU map.
+See below.
 
-requires_cpu can also be set for BPF counters regardless of PMU type,
-but only when has_user_cpus is false, so this guard has no effect there
-today.
+> 
+> >  }
+> >  NOKPROBE_SYMBOL(__kvm_spe_restore_guest_state_vhe);
+> >  
+> > diff --git a/arch/arm64/kvm/spe.c b/arch/arm64/kvm/spe.c
+> > index af1e19cb8e9ae..68b751bdb384b 100644
+> > --- a/arch/arm64/kvm/spe.c
+> > +++ b/arch/arm64/kvm/spe.c
+> 
+> [ ... ]
+> 
+> > @@ -97,6 +99,12 @@ int kvm_spe_vcpu_first_run_init(struct kvm_vcpu *vcpu)
+> >  	if (!kvm_spe->pmblimitr_el1_res0_mask)
+> >  		kvm_spe_compute_pmblimitr_el1_res0_mask(kvm);
+> >  
+> > +	if (kvm_vm_has_ran_once(kvm))
+> > +		return 0;
+> > +
+> > +	if (perf_allow_kernel())
+> > +		kvm_spe->guest_pmscr_el2 = PMSCR_EL2_PCT_PHYS;
+> 
+> [Severity: High]
+> Does this logic invert the intended permission check?
+> 
+> The perf_allow_kernel() function returns 0 on success (access granted) and
+> a negative error code (like -EACCES) on failure. By evaluating to true when
+> access is denied, it seems we might be granting physical timestamps to
+> unprivileged users and incorrectly denying them to privileged users.
 
-Fixes: 811082e4b668 ("perf parse-events: Support user CPUs mixed with threads/processes")
+That's correct, I assumed from the name that perf_allow_kernel() simply performs
+a permission check and returns true if perf is allowed to profile the kernel.
 
-Assisted-by: Claude Sonnet 5
-Signed-off-by: Nia Su <nia.su@sifive.com>
----
- tools/lib/perf/evlist.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+I'll be changing it to:
 
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index 1f210dadd666ff818a23712ab95acaa659ccf8dc..a1064175f12ba655a9f7fe42e7c7e4c49ae60423 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -80,7 +80,8 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
- 	}
- 
- 	/* Ensure cpus only references valid PMU CPUs. */
--	if (!perf_cpu_map__has_any_cpu(evsel->cpus) &&
-+	if (!evsel->requires_cpu &&
-+	    !perf_cpu_map__has_any_cpu(evsel->cpus) &&
- 	    !perf_cpu_map__is_subset(evsel->pmu_cpus, evsel->cpus)) {
- 		struct perf_cpu_map *tmp = perf_cpu_map__intersect(evsel->pmu_cpus, evsel->cpus);
- 
+	if (!perf_allow_kernel())
+		kvm_spe->guest_pmscr_el2 = PMSCR_EL2_PCT_PHYS;
 
----
-base-commit: 73e3f0710014fe6d4ed98cfc02292f6121db7558
-change-id: 20260904-perf-evlist-uncore-cpu-b4-418af0f17c80
+(I remember fixing it locally, I guess I got confused about the name a second
+time).
 
---
+> 
+> [Severity: High]
+> Is kvm_spe_vcpu_first_run_init() the right place to check these
+> capabilities?
+> 
+> Checking perf_allow_kernel() here means it is evaluated during the KVM_RUN
+> ioctl, rather than during VM configuration. VMMs typically configure VMs
+> with full privileges but drop privileges before executing KVM_RUN for
+> sandboxing. Checking at KVM_RUN time will incorrectly deny physical
+> timestamps to properly sandboxed VMMs.
+> 
+> Furthermore, an unprivileged process could configure a VM and pass the vCPU
+> file descriptor to a privileged process, improperly gaining access to
+> physical timestamps using the privileged thread's capabilities.
 
+Sure, I can set the VM-wide PMSCR_EL2 value the first time the SPE PMU instance
+is assigned. Or maybe when KVM_ARM_VCPU_INIT is first called. I'll think about
+what is the best approach.
+
+> 
+> [Severity: Medium]
+> Could silently enabling SPE physical timestamps based on the host kernel
+> break live migration?
+> 
+> If a VM is migrated from a host where perf_allow_kernel() grants access to
+> one where it denies it, the guest would silently downgrade to virtual
+> timestamps, causing data corruption in the profiling trace.
+> 
+> The KVM guidelines require that new behavior the guest can observe must be
+> off by default and explicitly enabled through standard capability
+> negotiation (like a KVM_CAP_* or ID register flag). Should this require an
+> explicit opt-in from userspace instead?
+
+I think a better approach would be to update the documentation to let the
+system administrator know that the VM configuration depends on perf being
+allowed to profile the kernel, and it should be the same on the source and
+destination in the case of migration.
+
+> 
+> [Severity: Medium]
+> Can this write to kvm_spe->guest_pmscr_el2 happen concurrently across
+> multiple vCPUs?
+
+It can, should be fixed with the above approach.
+
+Thanks,
+Alex
+
+> 
+> The kvm_vm_has_ran_once(kvm) flag is not set until the end of
+> kvm_arch_vcpu_run_pid_change(), which happens after
+> kvm_spe_vcpu_first_run_init() completes. If multiple vCPUs start their
+> first KVM_RUN concurrently, they will all see kvm_vm_has_ran_once(kvm) as
+> false and write to this shared variable without synchronization.
+> 
+> > +
+> >  	return 0;
+> >  }
+> >
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260903160623.315525-1-alexandru.elisei@arm.com?part=20
