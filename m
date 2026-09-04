@@ -1,32 +1,32 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36C214F799D;
-	Fri,  4 Sep 2026 16:43:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72BBF4CA764;
+	Fri,  4 Sep 2026 17:12:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788540194; cv=none; b=LY8kf6vWxLE13G9lKV5bjSiGsrHtTWW1JzxPqn/chW3uhFJVCRGrZtE9VFFywCZ0TURD99Ud9XaQIOqBZHyeANYLH7pHLCJaGWdVwDWEXHmXijAUtucyc/eMTefdsieJelJbxBTuWFdpl4zRJMGE747WIf7CfL6sxe4rIJpv5Rc=
+	t=1788541939; cv=none; b=qSUvKoXFLy7vuKCY5HSeGebrE1Aabyy5NNfRzOqIil06wKQdDylPeUW5TlFMCxVemWq3zLC5MQqqLh7znMu1YGkdK68H2ab0eio84BJ5y0T7Nz9wYc1NtcPKK+509/3vBv69RBtVipvP9ffsVk0fFVWIq7cPKhD55vguWl1MRA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788540194; c=relaxed/simple;
-	bh=NWFUWnZ6K0kaIQa0lax2jcCLiQ0kC63Ncs4dMPYXg+I=;
+	s=arc-20240116; t=1788541939; c=relaxed/simple;
+	bh=2GiCH+5kI3vcsZvzncgnRg2QnDpJ16kkZKLnsW7SyNk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KLb6+LApWjXXTCbqY2JPnkfLmDNuKhqTdprevJMkIYuBRluefIW83iGqq8Wjx4KtjIreX+62XlYLrglqbSE9lCR+1bJxH7fK0owSQJLOioWQKEptM+vZuWMwx6L7TWSPXwM2+7wS8rd0f0gPPw1HOfZCqRlM3qtoiSWm42k1Slk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=VFflIllV; arc=none smtp.client-ip=217.140.110.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=SFpDI2uqBkRlspi1JsX7LYCtzC8BpqUPiQx4EmEOj7D3DreoQW9vGaNvAblhEhUxJy4uYfsMmhNVzSPdpsuwZuAAKtD54mOaYDsGTGN7FlUZHLBbm9aQyqqbH/P5P23ugVD9OiC37bfn2rxk5EO/tpbQ8mH6+vJ37q2foQ1VbRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=dqi3Qirw; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="VFflIllV"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="dqi3Qirw"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 880DE152B;
-	Fri,  4 Sep 2026 09:43:08 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E8D63152B;
+	Fri,  4 Sep 2026 10:12:12 -0700 (PDT)
 Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF7133F673;
-	Fri,  4 Sep 2026 09:43:11 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3B6B83F7D8;
+	Fri,  4 Sep 2026 10:12:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788540192; bh=NWFUWnZ6K0kaIQa0lax2jcCLiQ0kC63Ncs4dMPYXg+I=;
+	t=1788541936; bh=2GiCH+5kI3vcsZvzncgnRg2QnDpJ16kkZKLnsW7SyNk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VFflIllVWWur8MgIIluCe6ArvirPpjzkKINBQNHG7JxWalWtZCuY9WZf8T0x5ByKB
-	 UEZnP63o6FocTm7tPHu+57zl0eT/Xudy2HWrhCOr3+/DBT+Z+zABlFvt5sgNffMQRH
-	 w5+V2CaAWMSEwlx1dY+1esEhTntE0+4r1P5Zg1qE=
-Date: Fri, 4 Sep 2026 17:43:09 +0100
+	b=dqi3QirwqIFSzSWM29azV4XpRbautUGyrdE7FafaXx4nRtSo2zpVX9POUvWygQO49
+	 XRPYXrZeDYK30N5N9OcAafaM3yFTiABJ9NMYHBPVa6RpwjLNUp8qFkjFzuevGcYVZn
+	 zshZVX9SK40rnLnbDKDSpS+4+p57MuDohxyhjsU8=
+Date: Fri, 4 Sep 2026 18:12:14 +0100
 From: Leo Yan <leo.yan@arm.com>
 To: James Clark <james.clark@linaro.org>
 Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
@@ -44,11 +44,10 @@ Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] perf: cs-etm: Don't add global v0 HW_IDs to
- unformatted queues
-Message-ID: <20260904164309.GZ8904@e132581.arm.com>
+Subject: Re: [PATCH 2/6] perf cs-etm: Free partially created queues
+Message-ID: <20260904171214.GA8904@e132581.arm.com>
 References: <20260821-james-cs-hw_id-output-failure-v1-0-9d532ddabcc3@linaro.org>
- <20260821-james-cs-hw_id-output-failure-v1-1-9d532ddabcc3@linaro.org>
+ <20260821-james-cs-hw_id-output-failure-v1-2-9d532ddabcc3@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,17 +56,25 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260821-james-cs-hw_id-output-failure-v1-1-9d532ddabcc3@linaro.org>
+In-Reply-To: <20260821-james-cs-hw_id-output-failure-v1-2-9d532ddabcc3@linaro.org>
 
-On Fri, Aug 21, 2026 at 10:50:29AM +0100, James Clark wrote:
-> In the case of mixed formatted and unformatted trace with v0 HW_IDs, or
-> no HW_IDs at all resulting in the cs_etm__map_trace_ids_metadata()
-> fallback, formatted queues will write their HW_IDs to unformatted
-> queues.
+On Fri, Aug 21, 2026 at 10:50:30AM +0100, James Clark wrote:
+> cs_etm__create_decoders() can fail half way through and the
+> err_free_queues label won't free them. Call the full queue free function
+> here instead. If no decoders were created it's a nop.
 
-I understand a session can support multiple sinks, but I don't expect
-to mix up formatted and unformatted trace (see sinks_compatible()).
+[...]
 
-For the mentioned fallback, I am also struggling to establish a case.
-Even AUX_OUTPUT_HW_ID records are absent randomly, I don't think this
-impacts the queue's format initalization, no?
+> @@ -3520,6 +3527,7 @@ static int cs_etm__create_queue_decoders(struct cs_etm_queue *etmq)
+>  
+>  out_free_decoder:
+>  	cs_etm_decoder__free(etmq->decoder);
+> +	etmq->decoder = NULL;
+
+cs_etm__free_queue() also calls cs_etm_decoder__free() but does not
+clear etmq->decoder. Should we do the same there, or drop this
+unrelated change?
+
+Otherwise, for the queues free fix:
+
+Reviewed-by: Leo Yan <leo.yan@arm.com>
