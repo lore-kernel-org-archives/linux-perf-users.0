@@ -1,137 +1,113 @@
-Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C361F3B71A6
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 15:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788536865; cv=pass; b=Ssd1yjq4M6Gwd6TQMw2NK99+MLnPK2w2rHZPLnM90QxX3iyfYnqg6SR26DOBkCsbY/SjIzGV4xtCj477bdA56PYooALNacB2qbd2JS9nuMCrr7I+rh6eVHJVkjzxPshEZA7/gkQns+1Y4gq94hX5bJ8Nuof53UzMYPkWcJfw9gM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788536865; c=relaxed/simple;
-	bh=p+zh2bzF68CPu34Qj0MIgenIKNyb+Zlsh4hE21X56RA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UStR1MiCDFGBNXWSDVuXyAZwdV/lckWw2wiSzoANQMIK1IEUuyktvXb6jEMBvit4Q68CwMPSkkpfMFSdljlEYrretEwrFH2d6Zx7cq23ho/AaNF2IwHU5Fx5cN/wTbAeX3hoQBqU+edudo7yNrM53YMtpw2hPJkygxz7MopOZzA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eL+Jzm4L; arc=pass smtp.client-ip=74.125.230.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B013BB68F;
+	Fri,  4 Sep 2026 15:54:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788537252; cv=none; b=c9mR511N0Va81FUr2QFn9e1M/ZLEOarZTp0YlaBTe8z9n+X647z7anoqurOWO7lbk2JCVRyV+xXBx+W+c7p81v0EkuDDgx+26yUrRVA4X+94cTszZwwe/d4GSR/YKckjwOuWlfHHsZfEJq8kst1nvH7ViX+lr71BSpFYr2qZzPQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788537252; c=relaxed/simple;
+	bh=fcE0qjmbQqnYiiwIMHIZXUGkLQxdfs+4zYEUQ4kPtYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uPf3+Jljj7Ufkw2XWynM170GSr6sfPBEOcFfvUcf6WBQ1dNZI3M3/3Fc7wl3s1kH6rNtgO9sa9zrPBslVphwrkl43qGee6l9kJSLZJPK76jhuxGmrsgypHE3RIfblTlUAcaLAAqX8JwnxQB3WSvSF2Ba6YCUCSpRgxcVSwHsaKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NR7VB0Ss; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PRf96zVM; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eL+Jzm4L"
-Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-53012819c04so247061cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 04 Sep 2026 08:47:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788536863; cv=none;
-        d=google.com; s=arc-20260327;
-        b=KrHc58/sw/eytw5ijtt9sQMrMhN8/ypWORxFP8kh8mIFMdVRdX1N8OkuK2T2W1Cc5y
-         0rOmXbunLNdJL5PWFu688G0GCtqBiDxG/UeR0sqHgulPAJEFVo7My+SgZSivz3EUgOg9
-         XH12ivq8R7MrMbeFjzWWlLkiT5TO911Z0FP7raLIZ0X0T9mg5vYeTkBEupW2y4n8Xoe/
-         64YlhJnsZiWne2iE156ujc9EWLbfbADMS5Q/fpfsciw0Fo2PPH5x/89Ygt2Xl9DqyEEj
-         /ogD1V1O+Kd+pDZKtWW8ATa5UE7ZeTz8s5I4tvCf2zeInX/NDRjWAObjqyCF+KyGvSaJ
-         uoUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=IPT68QRfKVLmVSBV+Z0zwKsA2eXY2NxVNEpWEIXhKXk=;
-        fh=LuIiKaPdWTIXCK+lkOL9CWWwPDvTPBxGmFPl2+ytupE=;
-        b=SS/d+cHfrfCbRCypBAb1JEj/YBMc7Cz3H7gBvSAsjTsPdCtgp8l9m7GhunecvT9Wqr
-         6+rL4tn6cM0w9wTgifTIXWAHjsoLrRyS8zeOK+DgKdUD5VkhnhYLDzh5n/R4o+VQycog
-         qOd17AeiTJWO3ZeKQjf6Wm8ErubWQfu6YGYN4+e64ihuSbsfxRZhsAmvGJZePsyJV5Ou
-         5xnHRuBe6Bm8bGTlm51C0BfhlRiMBF8IOxGkCu0XKn3fbmdfAOJHqG3I5kLtOqVxKbT1
-         rtnfUTDgNsC7o0eXrabG1N6HdTOxTBUN3m6m0nG3mxXtzWAdbQZ5EZ8mcxjR5uVrSSmL
-         kxLw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788536863; x=1789141663; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=IPT68QRfKVLmVSBV+Z0zwKsA2eXY2NxVNEpWEIXhKXk=;
-        b=eL+Jzm4L80uAqJ/l+5uRrLZV1QZAXxrGuraxN5pVLCp4uCn7U8eXJYjb85Xd6joI6A
-         NXx/nbRuFggJA/gU2w7TA5lnRTww54JUSrzd1B29nAl/VUiv5IAKOxIPUr/DuKekwgTg
-         kfzhctwNpuT0uR7qx1SMYIYYuQPeM0PvKc3K3VTKgYO+Et/xMsIwea7VHzLrh+qlLwjl
-         +YE8jHGjShC+rZqcfudCfNdwa5twbTIzBB9cuBZMt/f6X3PEzdWdS7RVls1jX7rewBHb
-         r34eVKr3Z4w5L5MY+sm+DxalqxHY4GHa7sOVc6p5VwxL6ZTWZb/QUJkZCQgqgsQqnIHB
-         XCEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788536863; x=1789141663;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=IPT68QRfKVLmVSBV+Z0zwKsA2eXY2NxVNEpWEIXhKXk=;
-        b=hcZ/46fKCZCS3GRBygH6TqiUlXxxuQ9CcF/fQmBHrOGNagEf2AB4CZ9/B7g8USI9AZ
-         WMOBHEu4KEEzRqU6TyOqpjBJbn1/HJ0hhvs4twwt69Mx9K6RUaBUKpZ1Bc52OqacLgjL
-         Kck6fD8tQSUGuAu6mLd3EkD3f2AeNUwUMtb55Ike/QpBeqlHzQXzIcSYM5XlmDU9Ho43
-         Rd0hADBXBmUGmzycNGzjelDU/c1SQBc+NHm9UUpMS6VKMnFfdwFp0zLfVJ+67C2uaYRS
-         FENjThZF69+D4LBo51NTggjGqhaXM9jWYvrm4ByGTwjW4BIHOYpAsgMh956RLZ8HV9sX
-         NNCQ==
-X-Forwarded-Encrypted: i=1; AKwUvByTgbzGFIaoSEB5uO+NDlC1x4gMnf9ex4uSW1eInyqZ1+4iBC0cXIfLq5X76efO/dFkh51u/mjG5v7Q4Q8ozzQ4@vger.kernel.org
-X-Gm-Message-State: AFuF++k8eukQ0U9za99LW34qFe7+RoZMLTWIHz0Jn3ab9aH07sATbG+8
-	irNJayuygoWDH8GmD/bhJGRAzawnCyYpeeb4ncnI58OgRese9YbbmT9YY5b84jto+etRsEVZEmv
-	V7khRXg+OJ6bjKmDWPQhN2sCx1AkqyQqaESZl36at
-X-Gm-Gg: AYBFou3BbUl++zR4nkrGsn7dX4Y6epkvemtnNDeJApM0TEJNpAdWFNI7h/O8kgG/SAY
-	rMTUs3D5kpSYBewtBxF7STcMFXHnuWfq7cDHvurpei1f3raL9chNGf+zPqDtw94a0IXQAY8qu81
-	1NBKfabq6GlXyXJbreybYTlp8BG9aPw4DQL4Ui44gIDMG8ejQRWX0rh7MTemjDWHJz4OVoVQbg4
-	wKGrr4Bc2kvWxX5kZSR3D5m7tbz/D70KSGcD/FKl2HH9XeH+RJNBsDWgx7lWNKuc4JlxpB5KKxp
-	R30w8F+vHaBP1C4nryUq11SzUjqoVL5hihbxTtOWmDbmQVL1h+uz2bv9vKyjrYXzpGRiVSx+KjY
-	=
-X-Received: by 2002:ac8:5885:0:b0:517:5e32:2d14 with SMTP id
- d75a77b69052e-530559ca407mr14443271cf.10.1788536861883; Fri, 04 Sep 2026
- 08:47:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NR7VB0Ss";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PRf96zVM"
+Date: Fri, 4 Sep 2026 17:54:04 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1788537246;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZPpOywhxUYpvbT8zIkFDQanZWuSbRMA9e7oK1b0gVM4=;
+	b=NR7VB0SshEkCn8ekHb2VuYQmahkOVmFj0T4HAtnof/y45LI4Ur9o8FVFNKcCHcBczLkVH4
+	5uW1CZ9m1/QixjwrJKM02hfNBizz/QbvR02e3Yg7l8uAhsegQw0p9vseu4uuah8MU3uIxB
+	btZemSlkgPWGzBNl8d94W0M13DPyXEekq7LG84YlkNTzD3Lb60j8oICOQJlYKi2AxFOCdA
+	QZH4JilKdFKek7TfoLvYfaY6gk0snmiDQAktXy/zZqnOuq/h6lSQJ6IT045UgRTEyKrqtd
+	r2xBzacRa3vQWnsizQlyKGwfZPXXnLklqoLoACulN5mb6Wrbv0pcmXMR3xhXRw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1788537246;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZPpOywhxUYpvbT8zIkFDQanZWuSbRMA9e7oK1b0gVM4=;
+	b=PRf96zVMAqAIN/FHuit61LZUjh9q3Y2QWtWZZfbGqwKuSYPGqdsu0syV75ICLNaKC1XXKf
+	KsR24XFsPNaLl5DQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Russell King <linux@armlinux.org.uk>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
+	Ian Rogers <irogers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Waiman Long <longman@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
+	Will Deacon <will@kernel.org>,
+	Clark Williams <clrkwllms@kernel.org>
+Subject: Re: [PATCH v2] ARM, ARM64, LONGARCH: Delay HW BP notification to
+ task_work()
+Message-ID: <20260904155404.ESPFg3zi@linutronix.de>
+References: <20260814085118.OPEA_Ssn@linutronix.de>
+ <20260903160710.vVf4gEL2@linutronix.de>
+ <apmknG55qFAn8EPf@shell.armlinux.org.uk>
+ <20260903133146.07095885@gandalf.local.home>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260904141659.224248-2-blum@kernel.org>
-In-Reply-To: <20260904141659.224248-2-blum@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 4 Sep 2026 08:47:30 -0700
-X-Gm-Features: AcwNN1VSiKV_AEbMzp_nMXjvTTquw6BllzUYWamLFbu4C-WtIUHXX0dMd892YtI
-Message-ID: <CAP-5=fWj0YAUimSwGLrZpikH4dHkWSsupyE+esbNg6rM-m1sUg@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86/intel: Annotate x86_pmu::hybrid_pmu with __counted_by_ptr
-To: Thorsten Blum <blum@kernel.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <kees@kernel.org>, 
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20260903133146.07095885@gandalf.local.home>
 
-On Fri, Sep 4, 2026 at 7:17=E2=80=AFAM Thorsten Blum <blum@kernel.org> wrot=
-e:
->
-> Add __counted_by_ptr() to x86_pmu::hybrid_pmu to improve access bounds
-> checking via CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE.
->
-> Signed-off-by: Thorsten Blum <blum@kernel.org>
-> ---
->  arch/x86/events/perf_event.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index 71ed5b2acea2..b66691a4fc31 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -1050,7 +1050,7 @@ struct x86_pmu {
->          * unique capabilities.
->          */
->         int                             num_hybrid_pmus;
-> -       struct x86_hybrid_pmu           *hybrid_pmu;
-> +       struct x86_hybrid_pmu           *hybrid_pmu __counted_by_ptr(num_=
-hybrid_pmus);
+On 2026-09-03 13:31:46 [-0400], Steven Rostedt wrote:
+> On Thu, 3 Sep 2026 17:47:24 +0100
+> Russell King <linux@armlinux.org.uk> wrote:
+> 
+> > What do you expect to happen with this? Which arch maintainer should
+> > apply this patch that affects three different independently maintained
+> > architectures?
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Well, if you as the ARM person are fine with ARM part, an ACK would be
+appreciated. If you have something to object, it would be nice to let me
+know so I can adjust accordingly.
 
-Thanks,
-Ian
+> Looks like the patch should be broken up into a 4 part series.
+> 
+> One to add the ARCH_NEED_PERF_HW_NOTIF code to the generic code.
+> 
+> Then one for each architecture to add the code needed to set that.
+> 
+> Then the architecture maintainers could ack their patch and the perf
+> maintainer can pull it all in.
 
->         enum intel_cpu_type (*get_hybrid_cpu_type)      (void);
->  };
->
+We could first agree if this is the right way of fixing it (from both,
+perf side and ARCH side).
+Then we could either route this via perf with ARCH's acks or split it
+and route via individual trees if needed. Having it routed separately 
+needs to be coordinated since the ARCH bits can't be applied without
+having the perf bits first.
+Then there is also the question if this should get fixes tag on commit
+d8fccd9ca5f90 ("arm64: Allow to enable PREEMPT_RT.") (which would also
+cover loongarch and arm).
+
+As of today I have just Luis responding that it works for him. 
+
+> -- Steve
+
+Sebastian
