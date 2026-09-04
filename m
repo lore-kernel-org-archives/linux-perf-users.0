@@ -1,167 +1,186 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E53C53B05B3
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 09:32:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E50145A2BD
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 09:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788514378; cv=none; b=R8mnlmbvAb7c84CsO5snUA6/dusMU4eGveZOiBJHPsG3kj3d1OR2YWDw39LW/alIZcRHV+qlQxAZHnIY17L9RQrjoBBqIYgPtcynf7+5/eDXBIgl/F8dGklSFftj7LPK42wvU3nCJ23q1CHltZOf4AwWvV4n9IOLcKqiIwjPjjQ=
+	t=1788514508; cv=none; b=puR8FtlbTc0c7mV/0mUFk//mQVqZnotvP0+4I8CwVmTznCHl30jzUSnHiYq+/CH8NG/voP3houoeGpS2o0XDUbtOYY1kJjXQ4dZiiBbFC0Ek/Rk1kBO5bIjOw0fpKiEUGXj90u1VLIzQjbvAIThLVuaTdq0tee+ra88ImIZQ52w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788514378; c=relaxed/simple;
-	bh=8IqxKYFOiF9vA0czxvEUZT5ZfMbk4exAdOUP2ececsI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n+1PWMw+GKJD4vknDYbrtLQkPreeL4cy69frScxTS8Ht7BabljyuNIqrizIkxwGZsCisB/4WXGkQ2VGpDdjbaJhDEOilYN7r1GlG2UoAqk3quL1G7KxrmTNFKTmb6/Cu01tBKOkObtE89/RTSnQASBhJStN9qmMM/WXbu59WCpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=XQOcQTSp; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1788514508; c=relaxed/simple;
+	bh=0NrQqsJof9o0pf9lWtMm2VjP4xIBSPZst9ZSMxCFYIk=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=TIAHA5jyr7QnI3peJSRRRhbi8QD7oZ761NWBK39CTqC2W3hMjriOmlS2P9jJwv8gXOO5UdOf1gj3IJQX7rNr7StUJn0N/UKwLTTXc1iHTzjl6HX8y4m96EyJZenyiR0uZLPmCr2XPAgG4gAnxNpUIYmXQudfrL2+WYIs+bUuBVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmPqx+CZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="XQOcQTSp"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62B12153B;
-	Fri,  4 Sep 2026 02:32:51 -0700 (PDT)
-Received: from e140010.arm.com (e140010.arm.com [10.2.213.25])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3108B3F7D8;
-	Fri,  4 Sep 2026 02:32:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788514375; bh=8IqxKYFOiF9vA0czxvEUZT5ZfMbk4exAdOUP2ececsI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XQOcQTSpByGGFOw1cEh85r7Gdl9ONPqWTs9Ls1J0u95vtIFuXOAHtynso4fCM1DY/
-	 a7xrqPjQlc/OOuycz4BEtLsZaNLirLo5r6ahNkRUNmZRnKa+ndnxnUbpXVNvpmP49e
-	 xx08k8if7QCvDyUVnRQDlQFzWcuk8/RPN6Vn6ucM=
-Date: Fri, 4 Sep 2026 10:32:51 +0100
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>,
-	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [RFC PATCH v7 13/28] KVM: arm64: Add SPE VCPU device attribute
- to set the SPE device
-Message-ID: <apqQQ2RGo53lb--k@e140010.arm.com>
-References: <20260903160623.315525-1-alexandru.elisei@arm.com>
- <20260903160623.315525-14-alexandru.elisei@arm.com>
- <20260903163944.BCAEF1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmPqx+CZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D4D91F00A3D;
+	Fri,  4 Sep 2026 09:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788514506;
+	bh=nTUt68fKER5SoIC38AAJF5IDhr2MQF8of6nWX9MbYxc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=mmPqx+CZcURJNtQ5AOksU2IvyiYJrk8FcaPTZNnFx6CBlhB3zd+nL3EfxTKhXCPuj
+	 o3fHtqr7bt96WbknKtUachshxJ/Z+/i3ilvJP9rXXx+P/dj9m/1yQpAu5Pwdr7zJcN
+	 cARgjnKj5i69YngM36eBQBuXYn+02Eier/Thp0bgbz8vGxXVCysITFrOlPqyjdhES2
+	 CapPogk9LdPbwztkt2vQTU0Kf0TLx8dFVY/8Zdg4VMp1feUyacqHVpwFdBYr1YpN7t
+	 UZ1HcGQQ3Q+N5cS8P74GfvXzANg95DBfLEnQSjqM4gvSCVtQPbxrk4+Q77LYL10+53
+	 7rpeoaXp9WNfQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v8 1/2] drivers/perf: riscv-iommu: add risc-v iommu pmu
+ driver
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Zong Li" <zong.li@sifive.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260904092136.113321-2-zong.li@sifive.com>
+References: <20260904092136.113321-1-zong.li@sifive.com>
+ <20260904092136.113321-2-zong.li@sifive.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 04 Sep 2026 09:35:05 +0000
+Message-Id: <20260904093506.2D4D91F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260903163944.BCAEF1F000E9@smtp.kernel.org>
 
-Hi Sashiko,
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
+- [High] PMU interrupt handler returns IRQ_HANDLED on CPU mismatch without =
+clearing the device-level interrupt pending bit, leading to permanently los=
+t MSIs or IRQ storms.
+- [Medium] event_init() accepts event groups with multiple cycle events, wh=
+ich can never be scheduled.
+--
 
-On Thu, Sep 03, 2026 at 04:39:44PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [Critical] Incorrect declaration of `supported_cpus` causes stack corruption and NULL pointer dereferences when `CONFIG_CPUMASK_OFFSTACK=n`.
-> - [Medium] Changing the PMU identifier after SPE is configured incorrectly accumulates CPU mask restrictions, potentially rejecting valid reassignments.
-> --
-> 
-> commit b2f754414c4648e5b2996f0b8f1a6f27ec6f0cf7
-> Author: Alexandru Elisei <alexandru.elisei@arm.com>
-> 
-> KVM: arm64: Add SPE VCPU device attribute to set the SPE device
-> 
-> This commit introduces a new KVM device attribute to assign an SPE
-> instance to a virtual machine. It adds support for tracking physical
-> CPUs that share the assigned SPE and PMU instances, ensuring VCPUs
-> only run on appropriate hardware.
-> 
-> > diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> > index 763b102dc51fa..132df44c30887 100644
-> > --- a/arch/arm64/kvm/arm.c
-> > +++ b/arch/arm64/kvm/arm.c
-> 
-> [ ... ]
-> 
-> > @@ -612,6 +614,47 @@ void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu)
-> >  
-> >  }
-> >  
-> > +int kvm_update_supported_cpus(struct kvm *kvm, cpumask_t *pmu_cpus,
-> > +			      cpumask_t *spe_cpus)
-> > +{
-> > +	cpumask_t *supported_cpus;
-> > +	cpumask_t *cpus;
-> > +	int ret;
-> > +
-> > +	if (!zalloc_cpumask_var(&supported_cpus, GFP_KERNEL_ACCOUNT))
->         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> [Severity: Critical]
-> Does this cause stack memory corruption and a NULL pointer dereference
-> when CONFIG_CPUMASK_OFFSTACK=n?
-> 
-> In kvm_update_supported_cpus(), supported_cpus is declared as a simple pointer
-> rather than cpumask_var_t. When CONFIG_CPUMASK_OFFSTACK is disabled,
-> cpumask_var_t is defined as a 1-element array. Passing &supported_cpus to
-> zalloc_cpumask_var() will zero out NR_CPUS bits starting at the stack address
-> of the pointer itself, overwriting the pointer and potentially adjacent
-> stack variables.
-> 
-> The subsequent cpumask_copy() then dereferences a NULL pointer. Could we
-> use cpumask_var_t for the declaration here?
+commit 20eb6219411a8b8c6c0492ff1ba61f7e29cbb9b0
+Author: Zong Li <zong.li@sifive.com>
 
-This indeed look like a bug, I'll fix it, thanks for spotting it.
+    drivers/perf: riscv-iommu: add risc-v iommu pmu driver
 
-> 
-> > +		return -ENOMEM;
-> > +
-> > +	cpumask_copy(supported_cpus, kvm->arch.supported_cpus);
-> > +
-> > +	lockdep_assert_held(&kvm->arch.config_lock);
-> > +
-> > +	ret = -EINVAL;
-> > +	/* Cannot update for SPE and PMU at the same time. */
-> > +	if (WARN_ON_ONCE(pmu_cpus && spe_cpus))
-> > +		goto out;
-> > +
-> > +	if (pmu_cpus)
-> > +		cpus = pmu_cpus;
-> > +	else
-> > +		cpus = spe_cpus;
-> > +
-> > +	if ((spe_cpus && kvm->arch.arm_pmu) ||
-> > +	    (pmu_cpus && kvm_spe_pmu_set(kvm)))
-> > +		cpumask_and(supported_cpus, cpus, supported_cpus);
->                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> [Severity: Medium]
-> Could this incorrectly accumulate CPU mask restrictions and reject valid
-> reassignments?
-> 
-> If userspace configures a VM by first setting a PMU, then setting the SPE ID,
-> and later changes the PMU to a different instance (which is permitted before
-> the VM runs), this logic intersects the new PMU mask with the
-> already-intersected kvm->arch.supported_cpus mask.
-> 
-> Since the current mask already includes the first PMU's restrictions, the new
-> mask accumulates both PMUs' restrictions instead of replacing the old PMU's
-> mask. If the two PMUs have disjoint CPU masks, the intersection becomes empty
-> and the operation fails with -EINVAL. 
+This patch adds a new auxiliary device driver to support the RISC-V IOMMU
+Performance Monitor Unit (PMU). The driver manages PMU event counters,
+handles counter detection at runtime, and exposes standard perf interfaces
+for counting events like translated requests, TLB misses, and clock cycles.
 
-My mistake here, I was under the impression that you can assign a PMU *exactly*
-once to a VM, but looking at the code it turns out I was wrong and you can
-assign different PMUs (where each assignment overwrites the previous one), as
-long as you haven't set a filter. I'll fix it in the next iteration.
+Link: https://lore.kernel.org/linux-riscv/20260618143634.7f3dd6c5@pumpkin/
 
-This begs the question: should the same behaviour be allowed with SPE? Because
-right now trying to set a different SPE PMU is rejected by KVM.
+> diff --git a/drivers/perf/riscv_iommu_pmu.c b/drivers/perf/riscv_iommu_pm=
+u.c
+> new file mode 100644
+> index 0000000000000..0c30e26c1f0ce
+> --- /dev/null
+> +++ b/drivers/perf/riscv_iommu_pmu.c
+[ ... ]
+> +static int riscv_iommu_pmu_event_init(struct perf_event *event)
+> +{
+[ ... ]
+> +	/*
+> +	 * Account for this event itself first. It has to be done before the
+> +	 * check below, otherwise an event which is on its own would never be
+> +	 * matched against the number of counters the hardware implements.
+> +	 */
+> +	if (!is_cycle_event(event->attr.config))
+> +		if (++counters > total_event_counters)
+> +			return -EINVAL;
+> +
+> +	if (event->group_leader =3D=3D event)
+> +		return 0;
+> +
+> +	if (!is_software_event(event->group_leader)) {
+> +		if (event->group_leader->pmu !=3D event->pmu)
+> +			return -EINVAL;
+> +
+> +		if (!is_cycle_event(event->group_leader->attr.config))
+> +			if (++counters > total_event_counters)
+> +				return -EINVAL;
+> +	}
+> +
+> +	for_each_sibling_event(sibling, event->group_leader) {
+> +		if (is_software_event(sibling))
+> +			continue;
+> +
+> +		if (sibling->pmu !=3D event->pmu)
+> +			return -EINVAL;
+> +
+> +		if (is_cycle_event(sibling->attr.config))
+> +			continue;
 
-Thanks,
-Alex
+[Severity: Medium]
+Does this logic allow event groups to be created with multiple cycle events?
 
-> 
-> > +	else
-> > +		cpumask_copy(supported_cpus, cpus);
-> > +
-> > +	if (cpumask_empty(supported_cpus))
-> > +		goto out;
-> > +
-> > +	cpumask_copy(kvm->arch.supported_cpus, supported_cpus);
-> > +	ret = 0;
-> > +out:
-> > +	free_cpumask_var(supported_cpus);
-> > +
-> > +	return ret;
-> > +}
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260903160623.315525-1-alexandru.elisei@arm.com?part=13
+Because ++counters is explicitly skipped for cycle events, we don't verify =
+if
+more than one cycle event is present in the group. Since the hardware only
+has one cycle counter (index 0), a group with two cycle events will continu=
+ally
+fail with -EAGAIN in riscv_iommu_pmu_add() and can never be successfully
+scheduled.=20
+
+Should we track the total number of cycle events in the group to reject
+unsatisfiable groups at creation time here in riscv_iommu_pmu_event_init()?
+
+> +
+> +		if (++counters > total_event_counters)
+> +			return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+[ ... ]
+> +static irqreturn_t riscv_iommu_pmu_irq_handler(int irq, void *dev_id)
+> +{
+> +	struct riscv_iommu_pmu *pmu =3D (struct riscv_iommu_pmu *)dev_id;
+> +	DECLARE_BITMAP(ovf_bitmap, BITS_PER_TYPE(u64));
+> +	u32 ovf, idx, inhibit;
+> +
+> +	/*
+> +	 * PCI MSI/MSI-X on IMSIC will set IRQCHIP_MOVE_DEFERRED, so
+> +	 * irq_set_affinity() reports success while only recording the request,
+> +	 * and the move is applied in interrupt context upon the next device
+> +	 * interrupt. Until then the interrupt is still routed to the CPU IMSIC
+> +	 * picked initially, so the first overflow interrupt can run concurrent=
+ly
+> +	 * with the perf callbacks on the CPU the events are bound to
+> +	 *
+> +	 * A mismatch means the irqchip still had an affinity change pending for
+> +	 * this line. However, handle_edge_irq() has just completed it through
+> +	 * ->irq_ack(), so leave the overflow and PMIP bits alone and let the
+> +	 * interrupt be redelivered on the right CPU.
+> +	 *
+> +	 * IRQ_HANDLED rather than IRQ_NONE: the latter feeds the spurious
+> +	 * detector in note_interrupt(), which disables the whole line once
+> +	 * enough interrupts go unhandled, and this line may be shared with the
+> +	 * iommu command and fault queues.
+> +	 */
+> +	if (smp_processor_id() !=3D READ_ONCE(pmu->on_cpu))
+> +		return IRQ_HANDLED;
+
+[Severity: High]
+Will returning IRQ_HANDLED here without clearing the PMIP bit in the device
+leave the hardware interrupt permanently pending?
+
+If the PMU interrupt fires while smp_processor_id() !=3D pmu->on_cpu (which
+could happen during an IRQ affinity change or from a shared device), this
+early return bypasses the device-level interrupt clearing.=20
+
+For edge-triggered MSIs, the device might never send another interrupt beca=
+use
+the pending bit remains asserted, permanently killing the PMU. If
+level-triggered, it could cause an infinite IRQ storm on the wrong CPU.
+
+Should we check and clear the PMIP bit even when bouncing the interrupt?
+
+> +
+> +	/* Check whether this interrupt is for PMU */
+> +	if (!(readl_relaxed(pmu->reg + RISCV_IOMMU_REG_IPSR) & RISCV_IOMMU_IPSR=
+_PMIP))
+> +		return IRQ_NONE;
+> +
+> +	/* Process PMU IRQ */
+> +	inhibit =3D riscv_iommu_pmu_stop_all(pmu);
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904092136.1133=
+21-1-zong.li@sifive.com?part=3D1
