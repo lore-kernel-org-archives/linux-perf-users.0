@@ -1,208 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE661481650
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 13:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5613E3D88E0
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 13:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788529558; cv=none; b=grDcZVIIOiu119NiWWQ+aYjDzC+KJTM0iVsvH+O5juBdRE2gjVAMFHnf4VPr7qz3CnPsaGY0lnbYuIFH70pTGKtbDAQJ5gHRYu0uCiuPpSZSUlVbOyft4CpN4qlEltADUa/wSTHD+D7kjSPalkKjrOB6cefdR1jg489kB96Ypc8=
+	t=1788530385; cv=none; b=Sy0zGJWLsXdME2jQeTjTBbAR+ffPL1V5e/ZkBHvXk5OcziqUcu9laOq1Wq5ed7mz0o8EqQz6vVSvE0hgIsxCgpGrIlWyGWrnsCWRkn/3P3kwrhDmF5lPNyPJBAmEDK1ApZ+bGE8XnpXsFNrWSM+x4BeZ5BhFPoMxaDFGfVdRakg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788529558; c=relaxed/simple;
-	bh=uBILfIAE4wAXjKxPSimgi2IVaLLcdAzi0ERSqo59Sy4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uDd0i+NDZJDAoOZVs5C899rXhpcvMwEqjt98T6ofQQ824wura7PZCmaaBolsKaO71nxLjIfuz1UMlOaDicxvJnnplAOlAYXayUKVWkp9MIrtvac2nKwxmg/ysayfjNgKAwWqtu0ROR3zdVUyjPm1oD4bxbN64D9vqlP5Q7y8ums=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=mSHPHHSf; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1788530385; c=relaxed/simple;
+	bh=oKc1WHNgUfeAq0lFwVAjE5fq3rsFutg+SrluZ4sXpWc=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=IVxVoQdH3oMASMmtxbIjUg5T1alRqXA8vd22DluRGknN7SITJ0WrQ4D1B9JojV1MoGypcqIpYHHWUzXiMFuZSabn7W+OK5aj2ZDY4qsLmYJyljGXqK+V33Vs7kTgbyH40n246iL5eF5QrJdUH11QsxvcZ8DxvuRwdz0hxbzDH/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYKycGZn; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="mSHPHHSf"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79556152B;
-	Fri,  4 Sep 2026 06:45:51 -0700 (PDT)
-Received: from e140010.arm.com (unknown [10.57.70.12])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78D3B3F7D8;
-	Fri,  4 Sep 2026 06:45:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788529555; bh=uBILfIAE4wAXjKxPSimgi2IVaLLcdAzi0ERSqo59Sy4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mSHPHHSfAXofkS3WNmrj1OpVV/ph9/XvcUR9HtIwLk6cThoT0KQLRDbLYIsLQVDEZ
-	 fJPYKbd1sMNvwVJzLTu6lmvYT7jWwKma0XfkjK3V3/cjR1nMNPt3rLZFOCn9//k+VF
-	 uRmSh02XndknZBpr6voZ4hz9N3qJIUVXQ8kz7wxc=
-Date: Fri, 4 Sep 2026 14:45:49 +0100
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: kvmarm@lists.linux.dev, Marc Zyngier <maz@kernel.org>,
-	linux-perf-users@vger.kernel.org, Oliver Upton <oupton@kernel.org>
-Subject: Re: [RFC PATCH v7 20/28] KVM: arm64: Allow guest SPE physical
- timestamps only if kernel allows it
-Message-ID: <aprLjUt5i4FD4GHz@e140010.arm.com>
-References: <20260903160623.315525-1-alexandru.elisei@arm.com>
- <20260903160623.315525-21-alexandru.elisei@arm.com>
- <20260903164858.E55DC1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYKycGZn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD2EB1F0155A;
+	Fri,  4 Sep 2026 13:59:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788530384;
+	bh=oKc1WHNgUfeAq0lFwVAjE5fq3rsFutg+SrluZ4sXpWc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=gYKycGZnorg6hX4+i4KGmbeYdOfyDGSncqBmN6gGQ6BR0mTmrjv84ufBXoRAKn2Fp
+	 mLx8yFL1lAYfS3k0+3cSxl/tSlOkAx5HUlwfbtsKIu13ckIf0iDUu7yVHuHdMeQVHE
+	 x+9Pzt4nkxOH7vV3FNhL4iyyQ0vtldnDLl5MLGwnywW+CJ0Fsi3BcCL14bOCpFBVpf
+	 fCR06U4gv3Cj/1yAqxOCD4lGH/3wmmZTR7Ko9JWBDeeR6o9jk6jVt+2eGMekNxHO90
+	 DT68VxB/FLF1EY/WTbW0favrtfPlX30KBNrQlQUZRlLTthaaYPVpUX4yNtLDx9DzPS
+	 uQaowM8hyq9jg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH] perf evlist: don't restrict uncore events to PMU CPUs
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Nia Su" <nia.su@sifive.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260904-perf-evlist-uncore-cpu-b4-v1-1-604b55c025ee@sifive.com>
+References: <20260904-perf-evlist-uncore-cpu-b4-v1-1-604b55c025ee@sifive.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 04 Sep 2026 13:59:43 +0000
+Message-Id: <20260904135943.CD2EB1F0155A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260903164858.E55DC1F000E9@smtp.kernel.org>
 
-Hi Sashiko,
+> The PMU CPU map has different semantics for core and uncore PMUs.
+>=20
+> For core PMUs, pmu_cpus contains the CPUs on which the event can be
+> opened. Intersect the user-requested CPU map with the PMU CPU map to
+> reject CPUs unsupported by the PMU.
+>=20
+> For uncore PMUs, pmu_cpus is just the default CPU to open the event on,
+> not the set of CPUs it can only be opened on. The user-requested CPU may
+> override the default and be used directly, and the driver can redirect
+> the event to the appropriate control CPU.
+>=20
+> Currently, __perf_evlist__propagate_maps() intersects the user-requested
+> CPU map with pmu_cpus for all PMUs. If the user-requested CPU is not in
+> pmu_cpus, the intersection becomes empty and the evsel is removed before
+> perf_event_open() is called.
+>=20
+> Skip the intersection when evsel->requires_cpu is true, which is set for
+> uncore PMUs. is_pmu_core is also false for other non-core PMUs, so
+> gating on it would have loosened this check for them too. Core PMUs
+> continue to be restricted to their PMU CPU map.
+>=20
+> requires_cpu can also be set for BPF counters regardless of PMU type,
+> but only when has_user_cpus is false, so this guard has no effect there
+> today.
+>=20
+> Fixes: 811082e4b668 ("perf parse-events: Support user CPUs mixed with thr=
+eads/processes")
+>=20
+> Assisted-by: Claude Sonnet 5
+> Signed-off-by: Nia Su <nia.su@sifive.com>
 
-On Thu, Sep 03, 2026 at 04:48:58PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 4 potential issue(s) to consider:
-> - [High] Inverted logic for `perf_allow_kernel()` grants physical timestamps to unprivileged users and denies them to privileged users.
-> - [High] Capability check `perf_allow_kernel()` is evaluated at `KVM_RUN` time (TOCTOU) instead of VM/VCPU configuration time.
-> - [Medium] Silently-on guest-visible feature (SPE physical timestamps) breaks live migration and violates subsystem guidelines.
-> - [Medium] Concurrent first `KVM_RUN` invocations on multiple vCPUs cause a data race on the VM-wide `kvm_spe->guest_pmscr_el2`.
-> --
-> 
-> commit 8640bfaf0b943972e8c97350b961b39b15830f1b
-> Author: Alexandru Elisei <alexandru.elisei@arm.com>
-> 
-> KVM: arm64: Allow guest SPE physical timestamps only if kernel allows it
-> 
-> The SPE driver allows userspace to use physical timestamps for records only
-> if the kernel allows it, do the same for a virtual machine.
-> 
-> [ ... ]
-> 
-> > diff --git a/arch/arm64/kvm/hyp/vhe/spe-sr.c b/arch/arm64/kvm/hyp/vhe/spe-sr.c
-> > index 978620ad99fa5..3c32a1338cc8d 100644
-> > --- a/arch/arm64/kvm/hyp/vhe/spe-sr.c
-> > +++ b/arch/arm64/kvm/hyp/vhe/spe-sr.c
-> 
-> [ ... ]
-> 
-> > @@ -120,10 +121,10 @@ void __kvm_spe_restore_guest_state_vhe(struct kvm_vcpu *vcpu, struct kvm_cpu_con
-> >  		write_sysreg_s(pmbsr, SYS_PMBSR_EL1);
-> >  	}
-> >  
-> > -	__kvm_spe_restore_sampling_regs(vcpu->kvm, guest_ctxt);
-> > +	__kvm_spe_restore_sampling_regs(kvm, guest_ctxt);
-> >  
-> >  	write_sysreg_el1(ctxt_sys_reg(guest_ctxt, PMSCR_EL1), SYS_PMSCR);
-> > -	write_sysreg_el2(0, SYS_PMSCR);
-> > +	write_sysreg_el2(kvm->arch.kvm_spe.guest_pmscr_el2, SYS_PMSCR);
-> 
-> [Severity: Medium]
-> Can this read of kvm->arch.kvm_spe.guest_pmscr_el2 race with a concurrent
-> write from another vCPU?
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-Yes, it can.
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904-perf-evlis=
+t-uncore-cpu-b4-v1-1-604b55c025ee@sifive.com?part=3D1
 
-> 
-> If multiple vCPUs are starting their first KVM_RUN, one vCPU might complete
-> kvm_arch_vcpu_run_pid_change(), proceed to enter the guest, and execute
-> __kvm_spe_restore_guest_state_vhe(), reading guest_pmscr_el2.
-> 
-> Because kvm_spe_vcpu_first_run_init() performs unlocked writes to this
-> shared VM-wide variable, another vCPU could be modifying it at the same
-> time. Should this use READ_ONCE() and WRITE_ONCE() to prevent LKMM
-> violations and KCSAN data race splats?
-
-See below.
-
-> 
-> >  }
-> >  NOKPROBE_SYMBOL(__kvm_spe_restore_guest_state_vhe);
-> >  
-> > diff --git a/arch/arm64/kvm/spe.c b/arch/arm64/kvm/spe.c
-> > index af1e19cb8e9ae..68b751bdb384b 100644
-> > --- a/arch/arm64/kvm/spe.c
-> > +++ b/arch/arm64/kvm/spe.c
-> 
-> [ ... ]
-> 
-> > @@ -97,6 +99,12 @@ int kvm_spe_vcpu_first_run_init(struct kvm_vcpu *vcpu)
-> >  	if (!kvm_spe->pmblimitr_el1_res0_mask)
-> >  		kvm_spe_compute_pmblimitr_el1_res0_mask(kvm);
-> >  
-> > +	if (kvm_vm_has_ran_once(kvm))
-> > +		return 0;
-> > +
-> > +	if (perf_allow_kernel())
-> > +		kvm_spe->guest_pmscr_el2 = PMSCR_EL2_PCT_PHYS;
-> 
-> [Severity: High]
-> Does this logic invert the intended permission check?
-> 
-> The perf_allow_kernel() function returns 0 on success (access granted) and
-> a negative error code (like -EACCES) on failure. By evaluating to true when
-> access is denied, it seems we might be granting physical timestamps to
-> unprivileged users and incorrectly denying them to privileged users.
-
-That's correct, I assumed from the name that perf_allow_kernel() simply performs
-a permission check and returns true if perf is allowed to profile the kernel.
-
-I'll be changing it to:
-
-	if (!perf_allow_kernel())
-		kvm_spe->guest_pmscr_el2 = PMSCR_EL2_PCT_PHYS;
-
-(I remember fixing it locally, I guess I got confused about the name a second
-time).
-
-> 
-> [Severity: High]
-> Is kvm_spe_vcpu_first_run_init() the right place to check these
-> capabilities?
-> 
-> Checking perf_allow_kernel() here means it is evaluated during the KVM_RUN
-> ioctl, rather than during VM configuration. VMMs typically configure VMs
-> with full privileges but drop privileges before executing KVM_RUN for
-> sandboxing. Checking at KVM_RUN time will incorrectly deny physical
-> timestamps to properly sandboxed VMMs.
-> 
-> Furthermore, an unprivileged process could configure a VM and pass the vCPU
-> file descriptor to a privileged process, improperly gaining access to
-> physical timestamps using the privileged thread's capabilities.
-
-Sure, I can set the VM-wide PMSCR_EL2 value the first time the SPE PMU instance
-is assigned. Or maybe when KVM_ARM_VCPU_INIT is first called. I'll think about
-what is the best approach.
-
-> 
-> [Severity: Medium]
-> Could silently enabling SPE physical timestamps based on the host kernel
-> break live migration?
-> 
-> If a VM is migrated from a host where perf_allow_kernel() grants access to
-> one where it denies it, the guest would silently downgrade to virtual
-> timestamps, causing data corruption in the profiling trace.
-> 
-> The KVM guidelines require that new behavior the guest can observe must be
-> off by default and explicitly enabled through standard capability
-> negotiation (like a KVM_CAP_* or ID register flag). Should this require an
-> explicit opt-in from userspace instead?
-
-I think a better approach would be to update the documentation to let the
-system administrator know that the VM configuration depends on perf being
-allowed to profile the kernel, and it should be the same on the source and
-destination in the case of migration.
-
-> 
-> [Severity: Medium]
-> Can this write to kvm_spe->guest_pmscr_el2 happen concurrently across
-> multiple vCPUs?
-
-It can, should be fixed with the above approach.
-
-Thanks,
-Alex
-
-> 
-> The kvm_vm_has_ran_once(kvm) flag is not set until the end of
-> kvm_arch_vcpu_run_pid_change(), which happens after
-> kvm_spe_vcpu_first_run_init() completes. If multiple vCPUs start their
-> first KVM_RUN concurrently, they will all see kvm_vm_has_ran_once(kvm) as
-> false and write to this shared variable without synchronization.
-> 
-> > +
-> >  	return 0;
-> >  }
-> >
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260903160623.315525-1-alexandru.elisei@arm.com?part=20
