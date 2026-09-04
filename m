@@ -1,186 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E50145A2BD
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 09:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24F9943DA38
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 10:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788514508; cv=none; b=puR8FtlbTc0c7mV/0mUFk//mQVqZnotvP0+4I8CwVmTznCHl30jzUSnHiYq+/CH8NG/voP3houoeGpS2o0XDUbtOYY1kJjXQ4dZiiBbFC0Ek/Rk1kBO5bIjOw0fpKiEUGXj90u1VLIzQjbvAIThLVuaTdq0tee+ra88ImIZQ52w=
+	t=1788517617; cv=none; b=Op4c7VlCD5hnkwquSzBoSPgL4esf4P6MQdln+xqT9x1b0wq781MAUp6LXcXTrpDrQdynvhTjwEeyGE1+bMtNEIIhzjeo58lJJSU7z8gwwQBUUasuCshHuqBrjWijh76gpfJcw/3gjgbQxbMZXhAHeIKc6JY6zRSxKa+AfrRytEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788514508; c=relaxed/simple;
-	bh=0NrQqsJof9o0pf9lWtMm2VjP4xIBSPZst9ZSMxCFYIk=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=TIAHA5jyr7QnI3peJSRRRhbi8QD7oZ761NWBK39CTqC2W3hMjriOmlS2P9jJwv8gXOO5UdOf1gj3IJQX7rNr7StUJn0N/UKwLTTXc1iHTzjl6HX8y4m96EyJZenyiR0uZLPmCr2XPAgG4gAnxNpUIYmXQudfrL2+WYIs+bUuBVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmPqx+CZ; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788517617; c=relaxed/simple;
+	bh=bsq/X1tPzJw5gycBNx/2c4qs3itZggqCT5+NO3V1Ca8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lMhbpT0OUkiEI8cnUVaC8dNZ3A+2qxwSokHlOrJOQLvzFH+CO1xxfIgqxvONZ9cN3kKTLL0DA7fQxxRhagPLtgUbXLCpSbi06yY998DD/wBqmEqC7hUV0lCTLoPYWRxp9LdNGpxmq1hcVKFUOcY1nSP9J8d6LoLDY/R3u5WiLE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=VH4X8c1z; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmPqx+CZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D4D91F00A3D;
-	Fri,  4 Sep 2026 09:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788514506;
-	bh=nTUt68fKER5SoIC38AAJF5IDhr2MQF8of6nWX9MbYxc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mmPqx+CZcURJNtQ5AOksU2IvyiYJrk8FcaPTZNnFx6CBlhB3zd+nL3EfxTKhXCPuj
-	 o3fHtqr7bt96WbknKtUachshxJ/Z+/i3ilvJP9rXXx+P/dj9m/1yQpAu5Pwdr7zJcN
-	 cARgjnKj5i69YngM36eBQBuXYn+02Eier/Thp0bgbz8vGxXVCysITFrOlPqyjdhES2
-	 CapPogk9LdPbwztkt2vQTU0Kf0TLx8dFVY/8Zdg4VMp1feUyacqHVpwFdBYr1YpN7t
-	 UZ1HcGQQ3Q+N5cS8P74GfvXzANg95DBfLEnQSjqM4gvSCVtQPbxrk4+Q77LYL10+53
-	 7rpeoaXp9WNfQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 1/2] drivers/perf: riscv-iommu: add risc-v iommu pmu
- driver
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Zong Li" <zong.li@sifive.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260904092136.113321-2-zong.li@sifive.com>
-References: <20260904092136.113321-1-zong.li@sifive.com>
- <20260904092136.113321-2-zong.li@sifive.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Sep 2026 09:35:05 +0000
-Message-Id: <20260904093506.2D4D91F00A3D@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="VH4X8c1z"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6C1B153B;
+	Fri,  4 Sep 2026 03:26:49 -0700 (PDT)
+Received: from e140010.arm.com (unknown [10.1.34.66])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1412A3F673;
+	Fri,  4 Sep 2026 03:26:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1788517613; bh=bsq/X1tPzJw5gycBNx/2c4qs3itZggqCT5+NO3V1Ca8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VH4X8c1zVWQTONFWQEJ4tvh89tnDfWB9YlyWFTBFHaufTO/8AIjIWsXw7Kw6PvgyV
+	 9SBuIy5PtpVqWlVBTyHeWUwajamTqeRIHrr/Z6pnvLLleJiq5d27eRVVDclzlgweFo
+	 6xnjmU+29Mndy/wcAYXqxRcAEZkt8iycPhaDxI2w=
+Date: Fri, 4 Sep 2026 11:26:49 +0100
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	Marc Zyngier <maz@kernel.org>, Oliver Upton <oupton@kernel.org>
+Subject: Re: [RFC PATCH v7 15/28] KVM: arm64: Use PMSVer from the assigned
+ SPE instance
+Message-ID: <apqc6SJHgjymMdCc@e140010.arm.com>
+References: <20260903160623.315525-1-alexandru.elisei@arm.com>
+ <20260903160623.315525-16-alexandru.elisei@arm.com>
+ <20260903164127.497DB1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260903164127.497DB1F000E9@smtp.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 2 potential issue(=
-s) to consider:
-- [High] PMU interrupt handler returns IRQ_HANDLED on CPU mismatch without =
-clearing the device-level interrupt pending bit, leading to permanently los=
-t MSIs or IRQ storms.
-- [Medium] event_init() accepts event groups with multiple cycle events, wh=
-ich can never be scheduled.
---
+Hi Sashiko,
 
-commit 20eb6219411a8b8c6c0492ff1ba61f7e29cbb9b0
-Author: Zong Li <zong.li@sifive.com>
+On Thu, Sep 03, 2026 at 04:41:26PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+> - [High] kvm_spe_finalize_idregs() unconditionally overwrites the user-provided ID_AA64DFR0_EL1.PMSVer with the host's physical version on the first KVM_RUN, breaking live migration.
+> - [High] sanitise_id_aa64dfr0_el1() evaluates PMSVer dynamically based on the assigned SPE PMU, returning 0 if called before the PMU is assigned, which breaks KVM_SET_ONE_REG validation.
+> - [High] kvm_spe_finalize_idregs() is skipped if a vCPU without SPE runs first in a heterogeneous VM, permanently leaving PMSVer as 0 and hiding SPE from the guest.
+> --
+> 
+> commit 45e0320e2eaeb926a33b978420aa5a133c7a42c6
+> Author: Alexandru Elisei <alexandru.elisei@arm.com>
+> 
+> KVM: arm64: Use PMSVer from the assigned SPE instance
+> 
+> This commit updates KVM to initialize the VM's ID_AA64DFR0_EL1.PMSVer using
+> the SPE PMU instance assigned to the VM rather than the physical CPU executing
+> the vCPU init ioctl. This is intended to handle heterogeneous systems where
+> SPE instances may have different versions or be entirely absent on some CPUs.
+> 
+> > diff --git a/arch/arm64/kvm/spe.c b/arch/arm64/kvm/spe.c
+> > index fa87d224c8af8..4426d614a9e0b 100644
+> > --- a/arch/arm64/kvm/spe.c
+> > +++ b/arch/arm64/kvm/spe.c
+> [ ... ]
+> > @@ -87,6 +87,30 @@ bool kvm_spe_pmu_set(struct kvm *kvm)
+> >  	return !!kvm->arch.kvm_spe.spe_pmu;
+> >  }
+> >  
+> > +void kvm_spe_finalize_idregs(struct kvm *kvm)
+> > +{
+> > +	struct arm_spe_pmu *spe_pmu = kvm->arch.kvm_spe.spe_pmu;
+> > +	u64 reg;
+> > +
+> > +	if (!spe_pmu)
+> > +		return;
+> > +
+> > +	reg = kvm_read_vm_id_reg(kvm, SYS_ID_AA64DFR0_EL1);
+> > +	reg &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
+> > +	reg |= SYS_FIELD_PREP(ID_AA64DFR0_EL1, PMSVer, spe_pmu->pmsver);
+> > +	kvm_set_vm_id_reg(kvm, SYS_ID_AA64DFR0_EL1, reg);
+> > +}
+> 
+> [Severity: High]
+> Does this unconditionally overwrite the user-provided ID_AA64DFR0_EL1.PMSVer
+> value on the first KVM_RUN?
 
-    drivers/perf: riscv-iommu: add risc-v iommu pmu driver
+It doesn't look to me like ID_AA64DFR0_EL1.PMSVer is user writable:
 
-This patch adds a new auxiliary device driver to support the RISC-V IOMMU
-Performance Monitor Unit (PMU). The driver manages PMU event counters,
-handles counter detection at runtime, and exposes standard perf interfaces
-for counting events like translated requests, TLB misses, and clock cycles.
+static const struct sys_reg_desc sys_reg_descs[] = {
+[..]
+       ID_FILTERED(ID_AA64DFR0_EL1, id_aa64dfr0_el1,
+                    ID_AA64DFR0_EL1_DoubleLock_MASK |
+                    ID_AA64DFR0_EL1_WRPs_MASK |
+                    ID_AA64DFR0_EL1_PMUVer_MASK |
+                    ID_AA64DFR0_EL1_DebugVer_MASK),
 
-Link: https://lore.kernel.org/linux-riscv/20260618143634.7f3dd6c5@pumpkin/
+unless I'm badly misunderstanding what the masks in the ID_FILTERED() macro do.
 
-> diff --git a/drivers/perf/riscv_iommu_pmu.c b/drivers/perf/riscv_iommu_pm=
-u.c
-> new file mode 100644
-> index 0000000000000..0c30e26c1f0ce
-> --- /dev/null
-> +++ b/drivers/perf/riscv_iommu_pmu.c
-[ ... ]
-> +static int riscv_iommu_pmu_event_init(struct perf_event *event)
-> +{
-[ ... ]
-> +	/*
-> +	 * Account for this event itself first. It has to be done before the
-> +	 * check below, otherwise an event which is on its own would never be
-> +	 * matched against the number of counters the hardware implements.
-> +	 */
-> +	if (!is_cycle_event(event->attr.config))
-> +		if (++counters > total_event_counters)
-> +			return -EINVAL;
-> +
-> +	if (event->group_leader =3D=3D event)
-> +		return 0;
-> +
-> +	if (!is_software_event(event->group_leader)) {
-> +		if (event->group_leader->pmu !=3D event->pmu)
-> +			return -EINVAL;
-> +
-> +		if (!is_cycle_event(event->group_leader->attr.config))
-> +			if (++counters > total_event_counters)
-> +				return -EINVAL;
-> +	}
-> +
-> +	for_each_sibling_event(sibling, event->group_leader) {
-> +		if (is_software_event(sibling))
-> +			continue;
-> +
-> +		if (sibling->pmu !=3D event->pmu)
-> +			return -EINVAL;
-> +
-> +		if (is_cycle_event(sibling->attr.config))
-> +			continue;
+> 
+> If a VMM restores ID_AA64DFR0_EL1 during live migration (for example, when
+> migrating from an older host to a newer one), kvm_spe_finalize_idregs() will
+> silently clobber the userspace-configured value and force it back to the host
+> hardware's version. Could this violate the KVM ABI and break live migration
+> sequences?
+> 
+> [ ... ]
+> > diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> > index 44aae52c473d7..a6bb6884b965a 100644
+> > --- a/arch/arm64/kvm/sys_regs.c
+> > +++ b/arch/arm64/kvm/sys_regs.c
+> > @@ -2220,8 +2220,11 @@ static u64 sanitise_id_aa64dfr0_el1(const struct kvm_vcpu *vcpu, u64 val)
+> >  		val |= SYS_FIELD_PREP(ID_AA64DFR0_EL1, PMUVer,
+> >  				      kvm_arm_pmu_get_pmuver_limit());
+> >  
+> > -	/* Hide SPE from guests */
+> >  	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
+> > +	if (vcpu_has_spe(vcpu))
+> > +		val |= SYS_FIELD_PREP(ID_AA64DFR0_EL1, PMSVer,
+> > +				      kvm_spe_get_pmsver(vcpu->kvm));
+> 
+> [Severity: High]
+> Can this dynamic evaluation break KVM_SET_ONE_REG validation during VM setup?
 
-[Severity: Medium]
-Does this logic allow event groups to be created with multiple cycle events?
+What is "KVM_SET_ONE_REG validation"?
 
-Because ++counters is explicitly skipped for cycle events, we don't verify =
-if
-more than one cycle event is present in the group. Since the hardware only
-has one cycle counter (index 0), a group with two cycle events will continu=
-ally
-fail with -EAGAIN in riscv_iommu_pmu_add() and can never be successfully
-scheduled.=20
+> 
+> VMMs like QEMU typically restore VM ID registers via KVM_SET_ONE_REG
+> immediately after KVM_ARM_VCPU_INIT, before configuring device attributes.
+> Because sanitise_id_aa64dfr0_el1() evaluates PMSVer based on the assigned SPE
+> PMU, kvm_spe_get_pmsver() returns 0 until the SPE PMU is assigned.
+> 
+> This strict ordering dependency will cause KVM_SET_ONE_REG to reject valid,
+> non-zero userspace values with -EINVAL, which breaks standard live migration
+> sequences.
 
-Should we track the total number of cycle events in the group to reject
-unsatisfiable groups at creation time here in riscv_iommu_pmu_event_init()?
+I don't think ID_AA64DFR0_EL1.PMSVer is user-writable.
 
-> +
-> +		if (++counters > total_event_counters)
-> +			return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-[ ... ]
-> +static irqreturn_t riscv_iommu_pmu_irq_handler(int irq, void *dev_id)
-> +{
-> +	struct riscv_iommu_pmu *pmu =3D (struct riscv_iommu_pmu *)dev_id;
-> +	DECLARE_BITMAP(ovf_bitmap, BITS_PER_TYPE(u64));
-> +	u32 ovf, idx, inhibit;
-> +
-> +	/*
-> +	 * PCI MSI/MSI-X on IMSIC will set IRQCHIP_MOVE_DEFERRED, so
-> +	 * irq_set_affinity() reports success while only recording the request,
-> +	 * and the move is applied in interrupt context upon the next device
-> +	 * interrupt. Until then the interrupt is still routed to the CPU IMSIC
-> +	 * picked initially, so the first overflow interrupt can run concurrent=
-ly
-> +	 * with the perf callbacks on the CPU the events are bound to
-> +	 *
-> +	 * A mismatch means the irqchip still had an affinity change pending for
-> +	 * this line. However, handle_edge_irq() has just completed it through
-> +	 * ->irq_ack(), so leave the overflow and PMIP bits alone and let the
-> +	 * interrupt be redelivered on the right CPU.
-> +	 *
-> +	 * IRQ_HANDLED rather than IRQ_NONE: the latter feeds the spurious
-> +	 * detector in note_interrupt(), which disables the whole line once
-> +	 * enough interrupts go unhandled, and this line may be shared with the
-> +	 * iommu command and fault queues.
-> +	 */
-> +	if (smp_processor_id() !=3D READ_ONCE(pmu->on_cpu))
-> +		return IRQ_HANDLED;
+> 
+> [ ... ]
+> > @@ -5928,6 +5931,9 @@ int kvm_finalize_sys_regs(struct kvm_vcpu *vcpu)
+> >  		kvm_vgic_finalize_idregs(kvm);
+> >  	}
+> >  
+> > +	if (vcpu_has_spe(vcpu))
+> > +		kvm_spe_finalize_idregs(kvm);
+> > +
+> >  	return 0;
+> >  }
+> 
+> [Severity: High]
+> Can this leave PMSVer permanently set to 0 in a heterogeneous VM if a vCPU
+> without SPE runs first?
 
-[Severity: High]
-Will returning IRQ_HANDLED here without clearing the PMIP bit in the device
-leave the hardware interrupt permanently pending?
+Indeed. My understanding from how the PMU VCPU feature is handled is that even
+though KVM doesn't forbid running a VCPU without a PMU when other VCPUs do have
+one, this kind of setup is not supported in KVM. This is what I was trying to
+implement here.
 
-If the PMU interrupt fires while smp_processor_id() !=3D pmu->on_cpu (which
-could happen during an IRQ affinity change or from a shared device), this
-early return bypasses the device-level interrupt clearing.=20
+Should I tighten the check and explicitly forbid running a VCPU without a SPE
+PMU?
 
-For edge-triggered MSIs, the device might never send another interrupt beca=
-use
-the pending bit remains asserted, permanently killing the PMU. If
-level-triggered, it could cause an infinite IRQ storm on the wrong CPU.
+Thanks,
+Alex
 
-Should we check and clear the PMIP bit even when bouncing the interrupt?
-
-> +
-> +	/* Check whether this interrupt is for PMU */
-> +	if (!(readl_relaxed(pmu->reg + RISCV_IOMMU_REG_IPSR) & RISCV_IOMMU_IPSR=
-_PMIP))
-> +		return IRQ_NONE;
-> +
-> +	/* Process PMU IRQ */
-> +	inhibit =3D riscv_iommu_pmu_stop_all(pmu);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904092136.1133=
-21-1-zong.li@sifive.com?part=3D1
+> 
+> kvm_finalize_sys_regs() executes on the first KVM_RUN for a given VM. It uses
+> a per-vCPU feature check (vcpu_has_spe(vcpu)) to guard the VM-wide ID register
+> initialization in kvm_spe_finalize_idregs(kvm).
+> 
+> If the first scheduled vCPU happens to lack SPE, vcpu_has_spe(vcpu) evaluates
+> to false and kvm_spe_finalize_idregs(kvm) is skipped. The VM is then marked
+> with KVM_ARCH_FLAG_HAS_RAN_ONCE, meaning SPE initialization is skipped forever.
+> This would permanently hide SPE from all vCPUs in the VM.
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260903160623.315525-1-alexandru.elisei@arm.com?part=15
