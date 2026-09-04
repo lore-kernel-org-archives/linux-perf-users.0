@@ -1,94 +1,192 @@
-Received: from canpmsgout07.his.huawei.com (canpmsgout07.his.huawei.com [113.46.200.222])
+Received: from out198-12.us.a.mail.aliyun.com (out198-12.us.a.mail.aliyun.com [47.90.198.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456B63563EB;
-	Fri,  4 Sep 2026 02:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.222
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B01857080D;
+	Fri,  4 Sep 2026 03:12:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=47.90.198.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788489937; cv=none; b=Zx37Y2gv1eEO+OvQNDcSHyPZDssaKfpx05ErLYbEbRA2fEsgzl0B56DrEv6yc7RQaeMJxY8G3T914TjrNlYtsRb6hi0HhQ8W6y1YJdLsMhiCcj8KC4PE00uLBjLHHk1STwUIqTvHtlY2CmxyTdig2RHj3y3e7kNrFiLGLRNUzdc=
+	t=1788491566; cv=none; b=PFKtXf/ZT36iecNGPldn8iwzmBhjyliVJdAIR3qNQhcrRF2HGQ5KJr8XhsnTFoLXt7VHa4WgF1/o29VsJwqP6/K91p75mW49hKR98EL5DCR4k6fv81k8y0Wsq94yCjtK3MumWmr2nZMH11PvnN1zly8TDyTEJWpaUA5O4aDSzyQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788489937; c=relaxed/simple;
-	bh=svFL5GVsyMxjyZIfVZFUtOkSOeDAIlVTUrJgAyi3XSk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Xsxh4Im8jhHFIAISgVGvYH1z3bLElq1tVPBAUTV/VmhyGpvSBCrthmtjCXmh3+t/ljY1jzhSDmz7rIiYPMDdJ9lmspkVM7wa0we0e/9RbD+aKgsABFDvC3Dvoukglx3xe6Tv0VZLEgvolx3aP1TftANMOtLDFKrLPpr108Xi2zA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=cINy1kgF; arc=none smtp.client-ip=113.46.200.222
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="cINy1kgF"
-dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=From;
-	bh=svFL5GVsyMxjyZIfVZFUtOkSOeDAIlVTUrJgAyi3XSk=;
-	b=cINy1kgFclwLdhJA3KbeBlH1oUeCPoLQa8e/26fjaRkyyiDD2TOnlfdkf6We6uYk4b6fV6AC9
-	n6/JPCwwZa0Gxdh72Ayfj8EX49k2wnXcSM4NG5FbTbIh2awM3Rh598vgapeiOnJoEE4Vlr6ImR8
-	ajTzc6Un2pGtwVwidjVZTcQ=
-Received: from mail.maildlp.com (unknown [172.19.163.15])
-	by canpmsgout07.his.huawei.com (SkyGuard) with ESMTPS id 4hbgXS4jZgzLlXF;
-	Fri,  4 Sep 2026 10:34:32 +0800 (CST)
-Received: from kwepemo100012.china.huawei.com (unknown [7.202.195.139])
-	by mail.maildlp.com (Postfix) with ESMTPS id B080840578;
-	Fri,  4 Sep 2026 10:45:23 +0800 (CST)
-Received: from [10.67.120.222] (10.67.120.222) by
- kwepemo100012.china.huawei.com (7.202.195.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.36; Fri, 4 Sep 2026 10:45:22 +0800
-Message-ID: <4f755a7f-0a55-4292-892a-28346ed235a4@huawei.com>
-Date: Fri, 4 Sep 2026 10:45:22 +0800
+	s=arc-20240116; t=1788491566; c=relaxed/simple;
+	bh=7VDLthI2uZIfqh43XHAT4dnHqFIJAeZHKF+9HPx/EiU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=u6ZCl/lkgAqXYwYRQ2JDE6SpQu246QogmFgl8lehZzaTXBOTMK/mbwW+D5Kb2p+OIxI7mVbIl6jvnGxkQ8HBOe708WUeHmVOxdtyGv5F+x5SQfRKBJFx+GdFdKvH0178DqIwEE26EZ2oxpo+MmKYCuQzOpmJ/u36ZeAPr1cxFLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=open-hieco.net; spf=pass smtp.mailfrom=open-hieco.net; arc=none smtp.client-ip=47.90.198.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=open-hieco.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=open-hieco.net
+X-Alimail-AntiSpam:AC=CONTINUE;BC=0.07436402|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_alarm|0.00867014-0.000596182-0.990734;FP=5927377541413799312|1|1|2|0|-1|-1|-1;HT=maildocker-contentspam033037028158;MF=fuhao@open-hieco.net;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.j531Mf2_1788491537;
+Received: from higon..(mailfrom:fuhao@open-hieco.net fp:SMTPD_---.j531Mf2_1788491537 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Fri, 04 Sep 2026 11:12:25 +0800
+From: Fu Hao <fuhao@open-hieco.net>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	tglx@kernel.org,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	james.clark@linaro.org,
+	hpa@zytor.com
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tingyin.duan@gmail.com,
+	Fu Hao <fuhao@open-hieco.net>
+Subject: [PATCH v5 4/5] perf/x86/uncore: Add L3 PMU support for Hygon family 18h model 6h
+Date: Fri,  4 Sep 2026 11:12:12 +0800
+Message-Id: <d45936ac077e5a62dae6f40edcafa13644620ed5.1788404433.git.fuhao@open-hieco.net>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <cover.1788404433.git.fuhao@open-hieco.net>
+References: <cover.1788404433.git.fuhao@open-hieco.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 0/3] perf/core: sched_task() dispatch and branch entry
- fixes
-To: Puranjay Mohan <puranjay@kernel.org>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de
- Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James
- Clark <james.clark@linaro.org>, Usama Arif <usama.arif@linux.dev>, Will
- Deacon <will@kernel.org>, Anshuman Khandual <anshuman.khandual@arm.com>, Ravi
- Bangoria <ravi.bangoria@amd.com>, Thomas Gleixner <tglx@kernel.org>, Borislav
- Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter
- Anvin" <hpa@zytor.com>, <x86@kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <bpf@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20260810133540.1947118-1-puranjay@kernel.org>
-From: wuyifan <wuyifan50@huawei.com>
-In-Reply-To: <20260810133540.1947118-1-puranjay@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: kwepems100002.china.huawei.com (7.221.188.206) To
- kwepemo100012.china.huawei.com (7.202.195.139)
+Content-Transfer-Encoding: 8bit
 
-Hi Puranjay,
+Adjust the L3 PMU slicemask and threadmask for Hygon family 18h
+model 6h processor.
 
-On 8/10/2026 9:35 PM, Puranjay Mohan wrote:
-> These three fixes were found while adding BRBE support for
-> bpf_get_branch_snapshot() on arm64 and were carried in that series until
-> v6 [1]. They do not depend on it, so they go on their own; the version
-> number continues from that series to avoid two numbering schemes for the
-> same patches.
-perf record -C <cpu> -b [<command>] triggers a NULL pointer dereference
-in armv8pmu_sched_task().
+Signed-off-by: Fu Hao <fuhao@open-hieco.net>
+Tested-by: Tingyin Duan <tingyin.duan@gmail.com>
+---
+ arch/x86/events/amd/uncore.c      | 48 ++++++++++++++++++++++++++++++-
+ arch/x86/include/asm/perf_event.h |  8 ++++++
+ 2 files changed, 55 insertions(+), 1 deletion(-)
 
-Commit fa9d27773873 ("perf: arm_pmu: Kill last use of per-CPU cpu_armpmu
-pointer") changed armv8pmu_sched_task() from reading the per-CPU
-cpu_armpmu variable to dereferencing pmu_ctx->pmu via
-to_arm_pmu(pmu_ctx->pmu). Meanwhile, commit bd2756811766 ("perf:
-Rewrite core context handling") made __perf_pmu_sched_task() pass
-cpc->task_epc to pmu->sched_task(). cpc->task_epc is only non-NULL
-while a task context is scheduled in; CPU-bound events do not schedule a
-task context, so cpc->task_epc stays NULL. The NULL argument is dereferenced
-and crashes.
-
-With the patches applied, perf record -C <cpu> -b no longer crashes,
-and system-wide perf record -b -e <event> -a alongside a task-bound event
-on a different CPU runs without any WARN_ON.
-
-Tested-by: Yifan Wu <wuyifan50@huawei.com>
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index dbc00b6dd..fa7a1c70e 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -309,6 +309,14 @@ amd_f17h_uncore_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+ 	       attr->mode : 0;
+ }
+ 
++static umode_t
++hygon_f18h_m6h_uncore_is_visible(struct kobject *kobj, struct attribute *attr, int i)
++{
++	return boot_cpu_data.x86 == 0x18 &&
++	       boot_cpu_data.x86_model >= 0x6 && boot_cpu_data.x86_model <= 0xf	?
++	       attr->mode : 0;
++}
++
+ static umode_t
+ amd_f19h_uncore_is_visible(struct kobject *kobj, struct attribute *attr, int i)
+ {
+@@ -360,6 +368,8 @@ DEFINE_UNCORE_FORMAT_ATTR(enallslices,	enallslices,	"config:46");		   /* F19h L3
+ DEFINE_UNCORE_FORMAT_ATTR(enallcores,	enallcores,	"config:47");		   /* F19h L3 */
+ DEFINE_UNCORE_FORMAT_ATTR(sliceid,	sliceid,	"config:48-50");	   /* F19h L3 */
+ DEFINE_UNCORE_FORMAT_ATTR(rdwrmask,	rdwrmask,	"config:8-9");		   /* PerfMonV2 UMC */
++DEFINE_UNCORE_FORMAT_ATTR(slicemask4,	slicemask,	"config:28-31");	   /* F18h L3 */
++DEFINE_UNCORE_FORMAT_ATTR(threadmask32,	threadmask,	"config:32-63");	   /* F18h L3 */
+ 
+ /* Common DF and NB attributes */
+ static struct attribute *amd_uncore_df_format_attr[] = {
+@@ -389,6 +399,12 @@ static struct attribute *amd_f17h_uncore_l3_format_attr[] = {
+ 	NULL,
+ };
+ 
++/* F18h M06h unique L3 attributes */
++static struct attribute *hygon_f18h_m6h_uncore_l3_format_attr[] = {
++	&format_attr_slicemask4.attr,	/* slicemask */
++	NULL,
++};
++
+ /* F19h unique L3 attributes */
+ static struct attribute *amd_f19h_uncore_l3_format_attr[] = {
+ 	&format_attr_coreid.attr,	/* coreid */
+@@ -414,6 +430,12 @@ static struct attribute_group amd_f17h_uncore_l3_format_group = {
+ 	.is_visible = amd_f17h_uncore_is_visible,
+ };
+ 
++static struct attribute_group hygon_f18h_m6h_uncore_l3_format_group = {
++	.name = "format",
++	.attrs = hygon_f18h_m6h_uncore_l3_format_attr,
++	.is_visible = hygon_f18h_m6h_uncore_is_visible,
++};
++
+ static struct attribute_group amd_f19h_uncore_l3_format_group = {
+ 	.name = "format",
+ 	.attrs = amd_f19h_uncore_l3_format_attr,
+@@ -443,6 +465,11 @@ static const struct attribute_group *amd_uncore_l3_attr_update[] = {
+ 	NULL,
+ };
+ 
++static const struct attribute_group *hygon_uncore_l3_attr_update[] = {
++	&hygon_f18h_m6h_uncore_l3_format_group,
++	NULL,
++};
++
+ static const struct attribute_group *amd_uncore_umc_attr_groups[] = {
+ 	&amd_uncore_attr_group,
+ 	&amd_uncore_umc_format_group,
+@@ -821,6 +848,12 @@ static int amd_uncore_l3_event_init(struct perf_event *event)
+ 		mask = AMD64_L3_F19H_THREAD_MASK | AMD64_L3_EN_ALL_SLICES |
+ 		       AMD64_L3_EN_ALL_CORES;
+ 
++	if (boot_cpu_data.x86 == 0x18 &&
++	    boot_cpu_data.x86_model >= 0x6 &&
++	    boot_cpu_data.x86_model <= 0xf)
++		mask = ((config & HYGON_L3_SLICE_MASK) ? : HYGON_L3_SLICE_MASK) |
++		       ((config & HYGON_L3_THREAD_MASK) ? : HYGON_L3_THREAD_MASK);
++
+ 	hwc->config |= mask;
+ 
+ 	return 0;
+@@ -878,7 +911,8 @@ int amd_uncore_l3_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+ 	pmu->rdpmc_base = RDPMC_BASE_LLC;
+ 	pmu->group = amd_uncore_ctx_gid(uncore, cpu);
+ 
+-	if (boot_cpu_data.x86 >= 0x17) {
++	if (boot_cpu_data.x86_vendor == X86_VENDOR_AMD &&
++	    boot_cpu_data.x86 >= 0x17) {
+ 		*l3_attr++ = &format_attr_event8.attr;
+ 		*l3_attr++ = &format_attr_umask8.attr;
+ 		*l3_attr++ = boot_cpu_data.x86 >= 0x19 ?
+@@ -905,6 +939,18 @@ int amd_uncore_l3_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+ 		.module		= THIS_MODULE,
+ 	};
+ 
++	if (boot_cpu_data.x86_vendor == X86_VENDOR_HYGON &&
++	    boot_cpu_data.x86 == 0x18) {
++		*l3_attr++ = &format_attr_event8.attr;
++		*l3_attr++ = &format_attr_umask8.attr;
++		if (boot_cpu_data.x86_model >= 0x6 && boot_cpu_data.x86_model <= 0xf) {
++			*l3_attr++ = &format_attr_threadmask32.attr;
++			pmu->pmu.attr_update = hygon_uncore_l3_attr_update;
++		} else {
++			*l3_attr++ = &format_attr_threadmask8.attr;
++		}
++	}
++
+ 	if (perf_pmu_register(&pmu->pmu, pmu->pmu.name, -1)) {
+ 		free_percpu(pmu->ctx);
+ 		pmu->ctx = NULL;
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 1eb13673e..f448e93ec 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -91,6 +91,14 @@
+ #define AMD64_L3_COREID_MASK				\
+ 	(0x7ULL << AMD64_L3_COREID_SHIFT)
+ 
++#define HYGON_L3_SLICE_SHIFT				28
++#define HYGON_L3_SLICE_MASK				\
++	(0xFULL << HYGON_L3_SLICE_SHIFT)
++
++#define HYGON_L3_THREAD_SHIFT				32
++#define HYGON_L3_THREAD_MASK				\
++	(0xFFFFFFFFULL << HYGON_L3_THREAD_SHIFT)
++
+ #define X86_RAW_EVENT_MASK		\
+ 	(ARCH_PERFMON_EVENTSEL_EVENT |	\
+ 	 ARCH_PERFMON_EVENTSEL_UMASK |	\
+-- 
+2.34.1
 
