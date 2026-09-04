@@ -1,102 +1,133 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15698396565;
-	Fri,  4 Sep 2026 17:45:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EA550EC1A;
+	Fri,  4 Sep 2026 18:22:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788543909; cv=none; b=G9HBiQ2P3IYTO015cu1valwTjssdgv2jvtYcfE8DzjzAwVsUSVFcCXO9pSKIb2FYPRWSkPWpKh5alrimT6CZDSk1JL+7wjzSJM+i4QzCHsBIVpi3B+R0RWO3Kb0zqfrx11pTbxTiYN4rhVKcGMypuL/sDO59+wU+RGI9Gygp4ss=
+	t=1788546140; cv=none; b=CNY2LrivyF7S9zwK3nfbuBXTCler3b0ewUJ6wYtVVqa37DySFCi+2avsmIdCQZbw06RR7r2Xno2TzRJLp9EM44CFKl7Q+ogl++yzZzQjNparWghY5+z0hSUqKo2BK5Dckj4q3qbgDr+2li9VChJMF/DMpsmLaoNmAzEwyDLKM+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788543909; c=relaxed/simple;
-	bh=ZHXUHTgBsZEh26fOHvyKJbcpT9hW8hW0zSA/LhXujMg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oTdqoREvCtb6Bz6rkrzOTgSoR/YdqOzMxiB/qUL6I+UZdW8vcCmCW9ErZCsAmvo04DvIKpyVOHzhHefIs2rTVozi5IxGSl1awuWoYlJGVFMkoYij2LsgmIANFXCUhqG2xKmHebQnBG7+w99C/Nw7yemTZIceogN01GduVHmlzVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=ant9XImY; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1788546140; c=relaxed/simple;
+	bh=UBQi2GzBqSozDfM9rqM5kIfL6hNZIDnsxoMXtV2thKk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Laqy+GeXtTISwsBXcEFmo37BphepBWTldTP1MZzyoexepE+oxQjoPh6D4vFevBQ8fOVamnOUunHTwbYc5Tm7piEJ1UQdcztsh+Z8NrijdNNqi8P+KT1loqzt+fD0SgureHRaepAPdbyaGnkaKt7PtCR+TjegYeA1TU4UaLb7TBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jyEYJnbA; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="ant9XImY"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 756BD152B;
-	Fri,  4 Sep 2026 10:45:02 -0700 (PDT)
-Received: from localhost (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D10EE3F7D8;
-	Fri,  4 Sep 2026 10:45:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788543906; bh=ZHXUHTgBsZEh26fOHvyKJbcpT9hW8hW0zSA/LhXujMg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ant9XImYbJ1oD8BB/rZzmbivZPPVSpgcETqcOYR77mr9o02NdUMD5vBbh/6N7Rbhq
-	 KHanHAa47oO5iVgVq/N0Jhp5HMw14aZ4BSfjHBTfyqq/Ry2bGemuxyl5VXLtTNwvAj
-	 7FiFx6kWYhydHlfvYMrKHMPeX4kZHEs/Mxoid3iM=
-Date: Fri, 4 Sep 2026 18:45:03 +0100
-From: Leo Yan <leo.yan@arm.com>
-To: James Clark <james.clark@linaro.org>
-Cc: John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@linux.dev>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jyEYJnbA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788546138; x=1820082138;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=UBQi2GzBqSozDfM9rqM5kIfL6hNZIDnsxoMXtV2thKk=;
+  b=jyEYJnbAes84ek91RU2MHPyrzkBCHUMIK1nUlvgPN7Ihi+0aZAovnJqH
+   WrihKxzCmySYXqrvePjhQIpZbGf+IZZy5CfBIiSPmAjIBQGSOhtI6hyxW
+   cd5Zp1uVPn9dU/9/RwOlsVUpHuGT0IXxTkIr86+09V+qs0rTpzwYyVafj
+   E0q1UyUIQRLPJ9Don1xI+VeS46lwaKA8nSBr/64FERafkZxEU0qPqQpHS
+   uzh8ICLJ/xUHV++8XrJMX4NvXOQ1fOq1p+C8pesQovVorLZXgjED33JKa
+   Zop88Ejxjm8N1D4PFUlZa0D9mkcqTLv/wPgbmmQ8cfQhG04/Vdp+a/Ta8
+   w==;
+X-CSE-ConnectionGUID: q0GLhDmrTA+SM3ie+z11kg==
+X-CSE-MsgGUID: WxKfOf7dTliRSyATYXj6dQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11896"; a="99386512"
+X-IronPort-AV: E=Sophos;i="6.25,262,1779174000"; 
+   d="scan'208";a="99386512"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2026 11:22:18 -0700
+X-CSE-ConnectionGUID: 0K1quQIsSY2rsyDgCLw+Gg==
+X-CSE-MsgGUID: LyVmY9ZNQHKFrzHPdE5Fag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,262,1779174000"; 
+   d="scan'208";a="269581350"
+Received: from vbelgaum-ubuntu.fm.intel.com ([10.1.39.16])
+  by orviesa008.jf.intel.com with ESMTP; 04 Sep 2026 11:22:18 -0700
+From: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Suyash Mahar <smahar@meta.com>, Amir Ayupov <aaupov@fb.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] perf: cs-etm: Respect --no-itrace option
-Message-ID: <20260904174503.GC8904@e132581.arm.com>
-References: <20260821-james-cs-hw_id-output-failure-v1-0-9d532ddabcc3@linaro.org>
- <20260821-james-cs-hw_id-output-failure-v1-4-9d532ddabcc3@linaro.org>
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Vinay Belgaumkar <vinay.belgaumkar@intel.com>,
+	Alexander Kanevskiy <alexander.kanevskiy@intel.com>
+Subject: [PATCH 1/2] perf: Fix null pointer access in is_include_guest_event()
+Date: Fri,  4 Sep 2026 11:16:24 -0700
+Message-Id: <20260904181625.1394082-1-vinay.belgaumkar@intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260821-james-cs-hw_id-output-failure-v1-4-9d532ddabcc3@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Aug 21, 2026 at 10:50:32AM +0100, James Clark wrote:
+A typical module unload occurring event when there is an active perf
+connection leads to freeing of the pmu pointer. The call log is something
+like:
+ ..
+ __pmu_detach_event
+ pmu_detach_event
+ pmu_detach_events
+ perf_pmu_unregister
+ ..
 
-[...]
+__pmu_detach_event() sets event->pmu to null. When the perf connection
+finally is closed, the following stack trace is observed:
 
-> @@ -3603,27 +3603,49 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
->  	int err = 0;
->  	int aux_hw_id_found;
->  	int i;
-> -	u64 *ptr = NULL;
-> +	u64 *ptr = (u64 *) auxtrace_info->priv;
->  	u64 **metadata = NULL;
->  
-> -	/* First the global part */
-> -	ptr = (u64 *) auxtrace_info->priv;
-> -	num_cpu = ptr[CS_PMU_TYPE_CPUS] & 0xffffffff;
-> +	etm = zalloc(sizeof(*etm));
-> +	if (!etm)
-> +		return -ENOMEM;
-> +
-> +	session->auxtrace = &etm->auxtrace;
-> +	etm->auxtrace.free = cs_etm__free;
-> +	etm->auxtrace.evsel_is_auxtrace = cs_etm__evsel_is_auxtrace;
-> +	etm->auxtrace.process_event = cs_etm__process_event;
-> +	etm->auxtrace.process_auxtrace_event = cs_etm__process_auxtrace_event;
-> +	etm->auxtrace.flush_events = cs_etm__flush_events;
-> +	etm->auxtrace.free_events = cs_etm__free_events;
-> +	etm->pmu_type = (unsigned int) ((ptr[CS_PMU_TYPE_CPUS] >> 32) & 0xffffffff);
-> +
-> +	/*
-> +	 * Don't go further than the minimum required to identify this event as
-> +	 * auxtrace with cs_etm__evsel_is_auxtrace() so unleader_auxtrace()
-> +	 * works.
-> +	 */
-> +	if (auxtrace__dont_decode(session))
-> +		return 0;
+ Oops: general protection fault, kernel NULL pointer dereference
+ ...
+ RIP: 0010:_free_event+0x3e/0x370
+ ...
+ Call Trace:
+ ...
+ perf_event_release_kernel+0x260/0x2d0
+ perf_release+0x12/0x20
 
-TBH, I don't look in details, currently auxtrace__dont_decode() only
-exits in the common util/auxtrace.c, why other AUX trace can work well
-the option but cs-etm.c needs particular initialization?
+A call to mediated_pmu_unaccount_event() inside _free_event() is the root
+cause of this crash. Adding a check inside is_include_guest_event() ensures
+we don't accidentally access a null pmu ptr. In addition to this, we will
+now call mediated_pmu_unaccount_event() before clearing the pmu ptr so that
+nr_include_guest_events counts are maintained correctly.
 
-Seems to me, we even don't need to do any initialization in cs-etm.c
-if the no-itrace flag is set.
+Fixes: eff95e170275 ("perf: Add APIs to create/release mediated guest vPMUs")
+Cc: Alexander Kanevskiy <alexander.kanevskiy@intel.com>
+Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Assisted-by: Claude:Claude-Sonnet-5
+Signed-off-by: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
+---
+ kernel/events/core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index a6c8e38a3110..7777e82aad5e 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -6350,6 +6350,9 @@ static DEFINE_MUTEX(perf_mediated_pmu_mutex);
+ /* !exclude_guest event of PMU with PERF_PMU_CAP_MEDIATED_VPMU */
+ static inline bool is_include_guest_event(struct perf_event *event)
+ {
++	if (!event->pmu)
++		return false;
++
+ 	if ((event->pmu->capabilities & PERF_PMU_CAP_MEDIATED_VPMU) &&
+ 	    !event->attr.exclude_guest)
+ 		return true;
+@@ -13002,6 +13005,7 @@ static void __pmu_detach_event(struct pmu *pmu, struct perf_event *event,
+ 	exclusive_event_destroy(event);
+ 	module_put(pmu->module);
+ 
++	mediated_pmu_unaccount_event(event);
+ 	event->pmu = NULL; /* force fault instead of UAF */
+ }
+ 
+-- 
+2.38.1
+
