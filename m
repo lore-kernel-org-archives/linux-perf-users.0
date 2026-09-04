@@ -1,42 +1,42 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50AAC3A4F2C
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 10:28:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC811470137
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 10:41:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788517729; cv=none; b=qJkTj+pFE+1pNOPLpWvHNyfe5GdORjEPQclWUInw6yPodhM9qHAVvHYGv+Rbgpbkd0iIWKl5t8x40iXgUEyuqReZlAVX9ekwMjuCC8Dpm4F05iATIJQVc0aTZ1lzgsTb5Zt7Ix4dLrzAwVlHFeRoJbgtfFFBPc0Se3alvZPwGx0=
+	t=1788518493; cv=none; b=AKncewGUKrRx4kxsOIBOsT6Wqjnzv/PhPVQPdvS38dyF/GAjgHe08RPTuMc/8hn/vaBwiqj1c2JWkAdJxRap/s0HolVVxzWqWD4CgBsPU6o9ULpp1Qh3l6B8vOEtabyj+BeFandr72hoIWauKmP2HQZA98Z5pCl2ICnsDm2t6cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788517729; c=relaxed/simple;
-	bh=yWTFTbyCD2ZbTDtZtPVjYhpiVB5RoJTV6RTzQNDXhn4=;
+	s=arc-20240116; t=1788518493; c=relaxed/simple;
+	bh=/agTbhJqKJoeVpsxtBUywSGRTbSYkb+ofav24E897pc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NVVhe+pbXmcMpGxjgEd0+U7kQVHXD79A0W/pd7vZmsJu03YJ8gZ/V097tutcbQb+nOLpglG5gUOuXXl8aE9hB8ieI7vlQXAu6wLO9zGXkXiYcRiGcbZQIdOVmm5orG4Xy/AkOQmqdcm2BSaKMwXIOGthy+ebE2WG5S2ida+3hO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=KpIzOkyQ; arc=none smtp.client-ip=217.140.110.172
+	 Content-Type:Content-Disposition:In-Reply-To; b=lvsGCgHIwis4TdQ4fr5wfRLwer1J66a5MAhrhnZxKLA8t3daXkHynUu6YpQZ++hnRjblFY9Y85WVePYeiFNXiav03GROZ2+jZ3PDwrGc4X34zOnWk/KlWUqVMGuK6lJ9NRsaJF4E6LDKXQ2/kvNDH7xb5cjnk6+WrzyUF8mjxs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=t8Ft236k; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="KpIzOkyQ"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="t8Ft236k"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 082A0153B;
-	Fri,  4 Sep 2026 03:28:43 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12CA5153B;
+	Fri,  4 Sep 2026 03:41:25 -0700 (PDT)
 Received: from e140010.arm.com (unknown [10.1.34.66])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC5143F673;
-	Fri,  4 Sep 2026 03:28:44 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BB913F673;
+	Fri,  4 Sep 2026 03:41:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788517726; bh=yWTFTbyCD2ZbTDtZtPVjYhpiVB5RoJTV6RTzQNDXhn4=;
+	t=1788518488; bh=/agTbhJqKJoeVpsxtBUywSGRTbSYkb+ofav24E897pc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KpIzOkyQ+QnufWQpGim6KXXRX2l/4Az3H/34r5LLUJ4DIhaB4PM5+293HJQWL4Z6r
-	 3vmKplbwl+ywuVA7E0B4oQmK99EQIs+QFmVEFatAhLptOHGUVUFkSld8TJ9rsnXv6Q
-	 v580Ry3OeQsWod3Jvm1Moark6NIYtyD3De8+Qeoo=
-Date: Fri, 4 Sep 2026 11:28:41 +0100
+	b=t8Ft236k8GicWv9qebL9dcEP/9N315sB6d5KdkQIzTm3qI1thhLD8II5iGmwC+5gm
+	 xxZvj/3zLeUrMc8xdW0lrMsWCcN1NmF5zfp6dfDWRHf4k2w/dGxMLKlK5kCA9Zpm52
+	 x5j/JlbqTbHmxMj1sgbDxHflASQfFwwtamyp5Kxw=
+Date: Fri, 4 Sep 2026 11:41:24 +0100
 From: Alexandru Elisei <alexandru.elisei@arm.com>
 To: sashiko-reviews@lists.linux.dev
-Cc: Marc Zyngier <maz@kernel.org>, kvmarm@lists.linux.dev,
-	Oliver Upton <oupton@kernel.org>, linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v7 16/28] KVM: arm64: Add SPE system registers to
- VCPU context
-Message-ID: <apqdWR9Eyry6bBU7@e140010.arm.com>
+Cc: Oliver Upton <oupton@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	kvmarm@lists.linux.dev, linux-perf-users@vger.kernel.org
+Subject: Re: [RFC PATCH v7 17/28] KVM: arm64: Apply a RES0 mask to
+ PMBLIMITR_EL1 writes
+Message-ID: <apqgVBwelJtyuwBq@e140010.arm.com>
 References: <20260903160623.315525-1-alexandru.elisei@arm.com>
- <20260903160623.315525-17-alexandru.elisei@arm.com>
- <20260903163250.3F3531F00A3D@smtp.kernel.org>
+ <20260903160623.315525-18-alexandru.elisei@arm.com>
+ <20260903163758.22D8D1F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,88 +46,166 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260903163250.3F3531F00A3D@smtp.kernel.org>
+In-Reply-To: <20260903163758.22D8D1F000E9@smtp.kernel.org>
 
 Hi Sashiko,
 
-On Thu, Sep 03, 2026 at 04:32:49PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Low] WARN_ON_ONCE is incorrectly called with a string literal instead of a boolean condition.
+On Thu, Sep 03, 2026 at 04:37:57PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
+> - [Critical] get_user_spe_sysreg() and set_user_spe_sysreg() return -EBUSY before SPE initialization, violating the KVM_GET_REG_LIST contract.
+> - [High] Userspace can bypass the PMBLIMITR_EL1 RES0 mask by writing to the register before the first KVM_RUN.
+> - [Low] Missing READ_ONCE() when accessing pmblimitr_el1_res0_mask causes a data race.
 > --
 > 
-> commit aa1092f112d707ae630c6edfaa06e1cf58da7524
+> commit 1270412c2611a30b1f16a0aa9858eb290c7f9768
 > Author: Alexandru Elisei <alexandru.elisei@arm.com>
 > 
-> KVM: arm64: Add SPE system registers to VCPU context
+> KVM: arm64: Apply a RES0 mask to PMBLIMITR_EL1 writes
 > 
-> This commit adds SPE registers to the VCPU context. It only traps the buffer
-> registers, allowing KVM to track the buffer enabled state for dirty page
-> logging and to sanitise writes to PMBLIMITR_EL1 based on exposed VM features.
-> 
-> [ ... ]
+> This commit introduces a RES0 mask for PMBLIMITR_EL1 to hide unsupported
+> granule sizes from the guest. It computes this mask during the vCPU's
+> first run and applies it when userspace or the guest writes to the register.
 > 
 > > diff --git a/arch/arm64/kvm/spe.c b/arch/arm64/kvm/spe.c
-> > index 4426d614a9e0b..6a00a44c73edf 100644
+> > index 6a00a44c73edf..8c173a1f48bd4 100644
 > > --- a/arch/arm64/kvm/spe.c
 > > +++ b/arch/arm64/kvm/spe.c
-> 
 > [ ... ]
+> > @@ -60,13 +60,43 @@ bool kvm_supports_spe(void)
+> [ ... ]
+> >  int kvm_spe_vcpu_first_run_init(struct kvm_vcpu *vcpu)
+> >  {
+> > +	struct kvm *kvm = vcpu->kvm;
+> > +	struct kvm_spe *kvm_spe = &kvm->arch.kvm_spe;
+> >  
+> > -	if (!vcpu_spe->initialized)
+> > +	if (!kvm_vcpu_spe_initialized(vcpu))
+> >  		return -EINVAL;
+> >  
+> > +	if (!kvm_spe->pmblimitr_el1_res0_mask)
 > 
-> > @@ -82,6 +83,34 @@ void kvm_spe_destroy_vm(struct kvm *kvm)
-> >  	module_put(spe_pmu->pmu.module);
+> [Severity: Low]
+> Does this plain read of pmblimitr_el1_res0_mask need a READ_ONCE() to
+> prevent compiler-induced load tearing?
+> 
+> The mask is updated locklessly using WRITE_ONCE() inside
+> kvm_spe_compute_pmblimitr_el1_res0_mask(). Without a READ_ONCE() here,
+> concurrent vCPU executions could trigger a data race.
+
+Ok.
+
+> 
+> > +		kvm_spe_compute_pmblimitr_el1_res0_mask(kvm);
+> >  
+> >  	return 0;
+> >  }
+> > @@ -85,8 +115,12 @@ void kvm_spe_destroy_vm(struct kvm *kvm)
+> >  
+> >  bool kvm_spe_write_sysreg(struct kvm_vcpu *vcpu, int reg, u64 val)
+> >  {
+> > +	struct kvm_spe *kvm_spe = &vcpu->kvm->arch.kvm_spe;
+> > +
+> >  	switch (reg) {
+> >  	case PMBLIMITR_EL1:
+> > +		val &= ~kvm_spe->pmblimitr_el1_res0_mask;
+> 
+> [Severity: High]
+> Can userspace bypass this RES0 sanitization?
+> 
+> If the VMM calls KVM_SET_ONE_REG for PMBLIMITR_EL1 before running the vCPU
+> for the first time, pmblimitr_el1_res0_mask will still be 0.
+> 
+> Because the mask isn't computed until the first run, the bitwise NOT evaluates
+> to all 1s (val &= ~0), which leaves the user-provided value unmodified and
+> potentially exposes the host hardware to unsupported granule configurations.
+
+That's correct, I assumed here that userspace will be aware of the
+constraints on PMBLIMITR_EL1 due to missing architectural features and write the
+correct value.
+
+Is that placing a too high a burden on userspace? If it is, I can recompute
+PMBLIMITR_EL1 when the VCPU is first run.
+
+> 
+> [Severity: Low]
+> Does this mask read also need a READ_ONCE() to safely pair with the
+> WRITE_ONCE() update, similar to the check in kvm_spe_vcpu_first_run_init()?
+
+Ok.
+
+> 
+> > +		fallthrough;
+> >  	case PMBSR_EL1:
+> >  	case PMBPTR_EL1:
+> >  		__vcpu_assign_sys_reg(vcpu, reg, val);
+> 
+> > diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> > index 89b01b6ac7830..4c4bf88c9aa53 100644
+> > --- a/arch/arm64/kvm/sys_regs.c
+> > +++ b/arch/arm64/kvm/sys_regs.c
+> [ ... ]
+> > @@ -1563,6 +1563,38 @@ static unsigned int spe_visibility(const struct kvm_vcpu *vcpu,
+> >  	return REG_HIDDEN;
 > >  }
 > >  
-> > +bool kvm_spe_write_sysreg(struct kvm_vcpu *vcpu, int reg, u64 val)
+> > +static int set_user_spe_sysreg(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
+> > +			       u64 val)
 > > +{
-> > +	switch (reg) {
-> > +	case PMBLIMITR_EL1:
-> > +	case PMBSR_EL1:
-> > +	case PMBPTR_EL1:
-> > +		__vcpu_assign_sys_reg(vcpu, reg, val);
-> > +		break;
-> > +	default:
-> > +		WARN_ON_ONCE("unexpected trap");
-> 
-> [Severity: Low]
-> Does this macro call miss a boolean condition? The WARN_ON_ONCE macro
-> expects a boolean expression, but it is being passed a string literal here.
-> While this functionally evaluates to true because the string decays into a
-> non-null pointer, could this be considered an API misuse? Perhaps this
-> should use WARN_ONCE(1, "unexpected trap") or WARN_ON_ONCE(1) instead when
-> an unexpected trapped SPE register access falls through to the default case
-> in kvm_spe_write_sysreg().
-> 
-> > +	}
+> > +	int reg = r->reg;
 > > +
-> > +	return true;
-> > +}
-> > +
-> > +u64 kvm_spe_read_sysreg(struct kvm_vcpu *vcpu, int reg)
-> > +{
-> > +	switch (reg) {
-> > +	case PMBLIMITR_EL1:
-> > +	case PMBSR_EL1:
-> > +	case PMBPTR_EL1:
-> > +		return __vcpu_sys_reg(vcpu, reg);
-> > +	default:
-> > +		WARN_ON_ONCE("unexpected trap");
+> > +	if (!kvm_vcpu_spe_initialized(vcpu))
+> > +		return -EBUSY;
 > 
-> [Severity: Low]
-> Similarly, should this use WARN_ONCE(1, "unexpected trap") instead of
-> passing a string literal directly into WARN_ON_ONCE when an unexpected
-> trapped read falls through to the default case in kvm_spe_read_sysreg()?
+> [Severity: Critical]
+> Does returning -EBUSY here break the KVM_GET_REG_LIST ABI contract?
+> 
+> spe_visibility() currently exposes SPE registers based purely on
+> vcpu_has_spe(). Because of this, KVM_GET_REG_LIST will advertise the SPE
+> registers immediately after a vCPU is created with the SPE feature.
+> 
+> If a VMM queries the register list and then calls KVM_GET_ONE_REG or
+> KVM_SET_ONE_REG before KVM_ARM_VCPU_SPE_INIT is called, it will unexpectedly
+> hit this -EBUSY path and fail. The KVM API requires that any register
+> returned by KVM_GET_REG_LIST must be successfully readable via
+> KVM_GET_ONE_REG.
 
-Yeah, that's right, I'll fix both instances of the misuse of the macro.
+I can't help but notice an inconsistency: here you say that any register
+returned by KVM_GET_REG_LIST must be successfully *readable*, yet above you're
+saying that a it is a *write* that breaks the KVM_GET_REG_LIST ABI contract.
+
+Regardless, I think you're right. I only put the check there so I can update the
+interrupt level on a PMBSR_EL1 write (implemented later in the series). What I
+can do is try to update the interrupt level when the VCPU is first run,
+alongside applying the res0 mask to PMBLIMITR_EL1.
 
 Thanks,
 Alex
 
 > 
-> > +		return 0;
-> > +	}
+> > +
+> > +	if (reg == PMBLIMITR_EL1 || reg == PMBPTR_EL1 || reg == PMBSR_EL1)
+> > +		kvm_spe_write_sysreg(vcpu, reg, val);
+> > +	else
+> > +		__vcpu_assign_sys_reg(vcpu, reg, val);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int get_user_spe_sysreg(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
+> > +			       u64 *val)
+> > +{
+> > +	int reg = r->reg;
+> > +
+> > +	if (!kvm_vcpu_spe_initialized(vcpu))
+> > +		return -EBUSY;
+> > +
+> > +	if (reg == PMBLIMITR_EL1 || reg == PMBPTR_EL1 || reg == PMBSR_EL1)
+> > +		*val = kvm_spe_read_sysreg(vcpu, reg);
+> > +	else
+> > +		*val = __vcpu_sys_reg(vcpu, reg);
+> > +
+> > +	return 0;
 > > +}
 > 
-> [ ... ]
-> 
 > -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260903160623.315525-1-alexandru.elisei@arm.com?part=16
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260903160623.315525-1-alexandru.elisei@arm.com?part=17
