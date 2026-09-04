@@ -1,186 +1,137 @@
 Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E774F052E
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 15:34:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C361F3B71A6
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 15:47:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788536066; cv=pass; b=pcMT1oGFg4XvE2+/ecSHOMY11Q6QKtRj6FA5kSLBgfleMVgdidV94yExhomT7THvw1Wu9ktvifOgVu5uPHV8PbbX7hMZcOtrhe6N517oi9pC8StR8OOTMam6MR188OuviNHUeu6LBMTI5VwpMHqPUIexT/A/HHngFF68pFst1pA=
+	t=1788536865; cv=pass; b=Ssd1yjq4M6Gwd6TQMw2NK99+MLnPK2w2rHZPLnM90QxX3iyfYnqg6SR26DOBkCsbY/SjIzGV4xtCj477bdA56PYooALNacB2qbd2JS9nuMCrr7I+rh6eVHJVkjzxPshEZA7/gkQns+1Y4gq94hX5bJ8Nuof53UzMYPkWcJfw9gM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788536066; c=relaxed/simple;
-	bh=FzVf3j0DElpuxBm+UFR84uBp4/6OPZNVJ6LWKu6fr+Y=;
+	s=arc-20240116; t=1788536865; c=relaxed/simple;
+	bh=p+zh2bzF68CPu34Qj0MIgenIKNyb+Zlsh4hE21X56RA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QQhOH5cnPQlUJ8oFWd5Hrcktta+WTjErO6xpSVq93Btfc5QZmGD8+Qhs70OzPqUU+I8iq7FhZueqcPopVGNYOyoP2pdsUlCRliRdRSosB4MAmI9hJG5LhvOKDsZqOVxf5L5HDUzhnZmxUqFvEJRUvJAgQIJ6AZE26Usg30k10qc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xnc/zpZM; arc=pass smtp.client-ip=74.125.230.204
+	 To:Cc:Content-Type; b=UStR1MiCDFGBNXWSDVuXyAZwdV/lckWw2wiSzoANQMIK1IEUuyktvXb6jEMBvit4Q68CwMPSkkpfMFSdljlEYrretEwrFH2d6Zx7cq23ho/AaNF2IwHU5Fx5cN/wTbAeX3hoQBqU+edudo7yNrM53YMtpw2hPJkygxz7MopOZzA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eL+Jzm4L; arc=pass smtp.client-ip=74.125.230.204
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xnc/zpZM"
-Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-53012819c04so243081cf.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 04 Sep 2026 08:34:24 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788536064; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eL+Jzm4L"
+Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-53012819c04so247061cf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Sep 2026 08:47:43 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788536863; cv=none;
         d=google.com; s=arc-20260327;
-        b=jJCymu6x2f8K6imPuqtEK5DsnmaZScxkvd3zUjlqFk41KGz2sgyeZ3cyvpuXVaKU23
-         pwPWCanDpUfptN/qOz6h+RQig/SUVRrIFpt4jxAHKRq71t45R2yWjiu3VHawkPExHlVv
-         j+LPdxdCjt7H5O9C1KbKm6MVTcCFl4vwH+YHaycLyDp49GNyLPxShCBri7OkpK8R/sv6
-         ipzfX4esM+Zv0t6AqvJSwAp/92c8Snc8+djIIQanT0v+ZUYqanO2Ha5JETPtqfX3/7TQ
-         Fp21PHgxbBt8mS5KDTA9zBT/MSr3M8OBwJiNh0S3iqdWAq/7xw4AO+7I7M5xsIA3/+Tw
-         mg1w==
+        b=KrHc58/sw/eytw5ijtt9sQMrMhN8/ypWORxFP8kh8mIFMdVRdX1N8OkuK2T2W1Cc5y
+         0rOmXbunLNdJL5PWFu688G0GCtqBiDxG/UeR0sqHgulPAJEFVo7My+SgZSivz3EUgOg9
+         XH12ivq8R7MrMbeFjzWWlLkiT5TO911Z0FP7raLIZ0X0T9mg5vYeTkBEupW2y4n8Xoe/
+         64YlhJnsZiWne2iE156ujc9EWLbfbADMS5Q/fpfsciw0Fo2PPH5x/89Ygt2Xl9DqyEEj
+         /ogD1V1O+Kd+pDZKtWW8ATa5UE7ZeTz8s5I4tvCf2zeInX/NDRjWAObjqyCF+KyGvSaJ
+         uoUg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=lwu3BnDRwXYFAITY0rwPd5C8ikLKwVXNsQBsrH3pHvo=;
-        fh=/E+ca5PSWU79IGJ2K1iAjYBVddKol5bUddkeWN3volQ=;
-        b=HMwqFu+ZP93jR3A/o8T0LmtfhK0FtlElrKaKLNqGzptdRqMAgiC87AMnM+mkOm13gv
-         ejfxwtboaRXkGN8yXQQxU2wUmNMXSGZXQyOvz6DIAQiQ1UtZazWkx69ZawDWYJw3xF8P
-         +QE30ti0AAwXByIEN2Wp/uWzvE0i5Jpwa2vNnYd2aOFzJB0leFSURrYR6FBbRcli1N9N
-         IIClBSWM5miRQ+KQHh2a5DV4yuuHeNBDBp5xHCneuD7WURfFUxiqysNGTifC7m3LGeZ5
-         w5VOw0LHi7AGp0gR3BbKZAC4MqegGIzx3msE5NCv6sAJnN4aNG3ZZR36PdyH8T3Hfnb8
-         DO7Q==;
+        bh=IPT68QRfKVLmVSBV+Z0zwKsA2eXY2NxVNEpWEIXhKXk=;
+        fh=LuIiKaPdWTIXCK+lkOL9CWWwPDvTPBxGmFPl2+ytupE=;
+        b=SS/d+cHfrfCbRCypBAb1JEj/YBMc7Cz3H7gBvSAsjTsPdCtgp8l9m7GhunecvT9Wqr
+         6+rL4tn6cM0w9wTgifTIXWAHjsoLrRyS8zeOK+DgKdUD5VkhnhYLDzh5n/R4o+VQycog
+         qOd17AeiTJWO3ZeKQjf6Wm8ErubWQfu6YGYN4+e64ihuSbsfxRZhsAmvGJZePsyJV5Ou
+         5xnHRuBe6Bm8bGTlm51C0BfhlRiMBF8IOxGkCu0XKn3fbmdfAOJHqG3I5kLtOqVxKbT1
+         rtnfUTDgNsC7o0eXrabG1N6HdTOxTBUN3m6m0nG3mxXtzWAdbQZ5EZ8mcxjR5uVrSSmL
+         kxLw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788536064; x=1789140864; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1788536863; x=1789141663; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=lwu3BnDRwXYFAITY0rwPd5C8ikLKwVXNsQBsrH3pHvo=;
-        b=Xnc/zpZM1HzEoTQ3cI/tBYsqVVG2Ohizys7WP3pCQfQNwBzCRkyu3crgSw0USw+e//
-         f8gEpjew722TgDFigxVsCdvoSfJTwZno9746jXirMRFh4QoCDlIbCN7/sD3E+9T6XMuc
-         OF6RyQyyKDPTzGhcrlx2+aQmVZkvaFt2DtIDF3P/3qudcPC1zy7L4AmArBHz+iEemTGq
-         R1+h5Rxg1mfcx308w4YIjSfr725LevFGXuc2QXf6VGmP8zQki73z1CojNNco660KpTcL
-         sOmtpiJn2GvGVDfALeCFUHA1ArZKHSAoQU3cK3IoCgjPiyJTK6gyH6L+RYyTT/PTe0R8
-         ksLg==
+        bh=IPT68QRfKVLmVSBV+Z0zwKsA2eXY2NxVNEpWEIXhKXk=;
+        b=eL+Jzm4L80uAqJ/l+5uRrLZV1QZAXxrGuraxN5pVLCp4uCn7U8eXJYjb85Xd6joI6A
+         NXx/nbRuFggJA/gU2w7TA5lnRTww54JUSrzd1B29nAl/VUiv5IAKOxIPUr/DuKekwgTg
+         kfzhctwNpuT0uR7qx1SMYIYYuQPeM0PvKc3K3VTKgYO+Et/xMsIwea7VHzLrh+qlLwjl
+         +YE8jHGjShC+rZqcfudCfNdwa5twbTIzBB9cuBZMt/f6X3PEzdWdS7RVls1jX7rewBHb
+         r34eVKr3Z4w5L5MY+sm+DxalqxHY4GHa7sOVc6p5VwxL6ZTWZb/QUJkZCQgqgsQqnIHB
+         XCEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788536064; x=1789140864;
+        d=1e100.net; s=20251104; t=1788536863; x=1789141663;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=lwu3BnDRwXYFAITY0rwPd5C8ikLKwVXNsQBsrH3pHvo=;
-        b=ZXmVMLD9wyXifVlaenW8AMbYLzJYU5EUlqFTTtLW14sMG5EeVafOHeTVrcKxrT3Gko
-         MLniURK9gcvxUqBwv5KofY4+cDmW1aENuMJg5XuGVeNOfH2Dh8pRcqyT9fTCF9WkOigX
-         /sUEW5/772ctNwLEslOW/a0V/qfgGe3Y73FGmmZ6H66/QBc/dGH3anOYohftZrAT9cuN
-         vB36RO7+W7q3p/vvkM3foRlxhMBoyUswtJi2vryWAWGRUKLnZOtmWXWbPjmrnBqvPOYD
-         VUqK14CpFVZkB7IAd0/vEx0O1FqvEuo1q4Gog80doEtLfGBPU/wWJlyrVEV6Do7lDQXd
-         IbtQ==
-X-Forwarded-Encrypted: i=1; AKwUvByD6JS84qcjmQ5iCKnzA1ga8Wz96tCy5mDDWa36d+C6QWRfhStg1oaMUfMQWlzF+2Bi5uE93ZM4RJZjKGW/8g/e@vger.kernel.org
-X-Gm-Message-State: AFuF++kq/yxlv2657nKDNTsn7yZS2xIyG3jS0yThm3+t9JbPsdlNLI7r
-	Yxt7sr4reSNWSEGSRUm1brzWgI8os6Xv2TereSLrHNewMpdTGt/73TIQCkqCNgx7kjlygDA/wPc
-	oRbRR86heSMSz6BMt7fUyw8gS3zAkkq4ze/qHn7ia
-X-Gm-Gg: AYBFou2Lp5rP+z9MXY18MIcHy0s/ij+N6brJ0zZqh9JCr7V+4SiKq0AoFWtDmNuXx8l
-	QVxe5nB8e0A5Y7K3pH0qQ17LaDCuYM5BXRKji+xUwYd7A4W2KO8Qe9bnmfq+8pBhXP4WekPeB0z
-	jg1YxRsQ6k4145tEJAUzDFEnvjQX4qOYDVFfl967Az1l/d5J3aHW4r6qvl90f9nh5gQ9jlFpi+f
-	73Usiv8U5WS3SvCsyOZ71InKZyHdIX+nX0FanBuScj7HHPnNeL69Lc56X4/L4wCeRW70K0oY1oM
-	p9VGCzijMZiEtt2oIgy9d6D+aXF6WbcnRsNipbCZvfQfEW9Pbgja5WlG0lKPxi5M6f+7PPwIJ/c
+        bh=IPT68QRfKVLmVSBV+Z0zwKsA2eXY2NxVNEpWEIXhKXk=;
+        b=hcZ/46fKCZCS3GRBygH6TqiUlXxxuQ9CcF/fQmBHrOGNagEf2AB4CZ9/B7g8USI9AZ
+         WMOBHEu4KEEzRqU6TyOqpjBJbn1/HJ0hhvs4twwt69Mx9K6RUaBUKpZ1Bc52OqacLgjL
+         Kck6fD8tQSUGuAu6mLd3EkD3f2AeNUwUMtb55Ike/QpBeqlHzQXzIcSYM5XlmDU9Ho43
+         Rd0hADBXBmUGmzycNGzjelDU/c1SQBc+NHm9UUpMS6VKMnFfdwFp0zLfVJ+67C2uaYRS
+         FENjThZF69+D4LBo51NTggjGqhaXM9jWYvrm4ByGTwjW4BIHOYpAsgMh956RLZ8HV9sX
+         NNCQ==
+X-Forwarded-Encrypted: i=1; AKwUvByTgbzGFIaoSEB5uO+NDlC1x4gMnf9ex4uSW1eInyqZ1+4iBC0cXIfLq5X76efO/dFkh51u/mjG5v7Q4Q8ozzQ4@vger.kernel.org
+X-Gm-Message-State: AFuF++k8eukQ0U9za99LW34qFe7+RoZMLTWIHz0Jn3ab9aH07sATbG+8
+	irNJayuygoWDH8GmD/bhJGRAzawnCyYpeeb4ncnI58OgRese9YbbmT9YY5b84jto+etRsEVZEmv
+	V7khRXg+OJ6bjKmDWPQhN2sCx1AkqyQqaESZl36at
+X-Gm-Gg: AYBFou3BbUl++zR4nkrGsn7dX4Y6epkvemtnNDeJApM0TEJNpAdWFNI7h/O8kgG/SAY
+	rMTUs3D5kpSYBewtBxF7STcMFXHnuWfq7cDHvurpei1f3raL9chNGf+zPqDtw94a0IXQAY8qu81
+	1NBKfabq6GlXyXJbreybYTlp8BG9aPw4DQL4Ui44gIDMG8ejQRWX0rh7MTemjDWHJz4OVoVQbg4
+	wKGrr4Bc2kvWxX5kZSR3D5m7tbz/D70KSGcD/FKl2HH9XeH+RJNBsDWgx7lWNKuc4JlxpB5KKxp
+	R30w8F+vHaBP1C4nryUq11SzUjqoVL5hihbxTtOWmDbmQVL1h+uz2bv9vKyjrYXzpGRiVSx+KjY
 	=
-X-Received: by 2002:a05:622a:2307:b0:517:64f6:3365 with SMTP id
- d75a77b69052e-5305583dc85mr14566791cf.4.1788536063097; Fri, 04 Sep 2026
- 08:34:23 -0700 (PDT)
+X-Received: by 2002:ac8:5885:0:b0:517:5e32:2d14 with SMTP id
+ d75a77b69052e-530559ca407mr14443271cf.10.1788536861883; Fri, 04 Sep 2026
+ 08:47:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260904-perf-evlist-uncore-cpu-b4-v1-1-604b55c025ee@sifive.com>
-In-Reply-To: <20260904-perf-evlist-uncore-cpu-b4-v1-1-604b55c025ee@sifive.com>
+References: <20260904141659.224248-2-blum@kernel.org>
+In-Reply-To: <20260904141659.224248-2-blum@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 4 Sep 2026 08:34:11 -0700
-X-Gm-Features: AcwNN1X8l7vZteLsC6B1Tn-ATbiYvd-I2Xq0o5cYs2PrOkgmh6Tezl23AbEdnMI
-Message-ID: <CAP-5=fX1uKg8AncsP5BVFtchgns5TquOTB10-mR5ury2CaH0sg@mail.gmail.com>
-Subject: Re: [PATCH] perf evlist: don't restrict uncore events to PMU CPUs
-To: Nia Su <nia.su@sifive.com>
+Date: Fri, 4 Sep 2026 08:47:30 -0700
+X-Gm-Features: AcwNN1VSiKV_AEbMzp_nMXjvTTquw6BllzUYWamLFbu4C-WtIUHXX0dMd892YtI
+Message-ID: <CAP-5=fWj0YAUimSwGLrZpikH4dHkWSsupyE+esbNg6rM-m1sUg@mail.gmail.com>
+Subject: Re: [PATCH] perf/x86/intel: Annotate x86_pmu::hybrid_pmu with __counted_by_ptr
+To: Thorsten Blum <blum@kernel.org>, Dapeng Mi <dapeng1.mi@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Falcon <thomas.falcon@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, Kees Cook <kees@kernel.org>, 
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Sep 4, 2026 at 6:45=E2=80=AFAM Nia Su <nia.su@sifive.com> wrote:
+On Fri, Sep 4, 2026 at 7:17=E2=80=AFAM Thorsten Blum <blum@kernel.org> wrot=
+e:
 >
-> The PMU CPU map has different semantics for core and uncore PMUs.
+> Add __counted_by_ptr() to x86_pmu::hybrid_pmu to improve access bounds
+> checking via CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE.
 >
-> For core PMUs, pmu_cpus contains the CPUs on which the event can be
-> opened. Intersect the user-requested CPU map with the PMU CPU map to
-> reject CPUs unsupported by the PMU.
+> Signed-off-by: Thorsten Blum <blum@kernel.org>
+> ---
+>  arch/x86/events/perf_event.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> For uncore PMUs, pmu_cpus is just the default CPU to open the event on,
-> not the set of CPUs it can only be opened on.
+> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> index 71ed5b2acea2..b66691a4fc31 100644
+> --- a/arch/x86/events/perf_event.h
+> +++ b/arch/x86/events/perf_event.h
+> @@ -1050,7 +1050,7 @@ struct x86_pmu {
+>          * unique capabilities.
+>          */
+>         int                             num_hybrid_pmus;
+> -       struct x86_hybrid_pmu           *hybrid_pmu;
+> +       struct x86_hybrid_pmu           *hybrid_pmu __counted_by_ptr(num_=
+hybrid_pmus);
 
-This isn't quite true. On a dual socket Intel machine, `pmu_cpus` will
-contain a CPU to open the event on per-socket.
-
-> The user-requested CPU may
-> override the default and be used directly, and the driver can redirect
-> the event to the appropriate control CPU.
-
-Agreed.
-
-> Currently, __perf_evlist__propagate_maps() intersects the user-requested
-> CPU map with pmu_cpus for all PMUs. If the user-requested CPU is not in
-> pmu_cpus, the intersection becomes empty and the evsel is removed before
-> perf_event_open() is called.
-
-Could you give a command line example of the perf tool doing this? I
-ask because I'm surprised the uncore specifying a CPU behavior has
-been broken. As well as `perf record -C` there is also a somewhat
-newer cpu event qualifier.
-
-> Skip the intersection when evsel->requires_cpu is true, which is set for
-> uncore PMUs. is_pmu_core is also false for other non-core PMUs, so
-> gating on it would have loosened this check for them too. Core PMUs
-> continue to be restricted to their PMU CPU map.
->
-> requires_cpu can also be set for BPF counters regardless of PMU type,
-> but only when has_user_cpus is false, so this guard has no effect there
-> today.
-
-So the separation between libperf and perf is frustrating, and libperf
-lacks the necessary PMU abstraction. Using requires_cpu as a proxy for
-an uncore PMU test is okay, but it would be better if we had a boolean
-flag especially for this. Given this, a comment should be added saying
-that requires_cpu is used as a proxy for an uncore PMU. The real
-meaning of requires_cpu is that the event doesn't support
-perf_event_open with a thread.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> Fixes: 811082e4b668 ("perf parse-events: Support user CPUs mixed with thr=
-eads/processes")
->
-> Assisted-by: Claude Sonnet 5
-> Signed-off-by: Nia Su <nia.su@sifive.com>
-> ---
->  tools/lib/perf/evlist.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> index 1f210dadd666ff818a23712ab95acaa659ccf8dc..a1064175f12ba655a9f7fe42e=
-7c7e4c49ae60423 100644
-> --- a/tools/lib/perf/evlist.c
-> +++ b/tools/lib/perf/evlist.c
-> @@ -80,7 +80,8 @@ static void __perf_evlist__propagate_maps(struct perf_e=
-vlist *evlist,
->         }
->
->         /* Ensure cpus only references valid PMU CPUs. */
-> -       if (!perf_cpu_map__has_any_cpu(evsel->cpus) &&
-> +       if (!evsel->requires_cpu &&
-> +           !perf_cpu_map__has_any_cpu(evsel->cpus) &&
->             !perf_cpu_map__is_subset(evsel->pmu_cpus, evsel->cpus)) {
->                 struct perf_cpu_map *tmp =3D perf_cpu_map__intersect(evse=
-l->pmu_cpus, evsel->cpus);
->
->
-> ---
-> base-commit: 73e3f0710014fe6d4ed98cfc02292f6121db7558
-> change-id: 20260904-perf-evlist-uncore-cpu-b4-418af0f17c80
->
-> --
+>         enum intel_cpu_type (*get_hybrid_cpu_type)      (void);
+>  };
 >
