@@ -1,82 +1,167 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5613E3D88E0
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 13:59:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2F6B47DD54
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 14:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788530385; cv=none; b=Sy0zGJWLsXdME2jQeTjTBbAR+ffPL1V5e/ZkBHvXk5OcziqUcu9laOq1Wq5ed7mz0o8EqQz6vVSvE0hgIsxCgpGrIlWyGWrnsCWRkn/3P3kwrhDmF5lPNyPJBAmEDK1ApZ+bGE8XnpXsFNrWSM+x4BeZ5BhFPoMxaDFGfVdRakg=
+	t=1788530691; cv=none; b=dwRUHMasGDsZ86meSR4Z45cZG08BevZZzOxLIXMO6w183QkSxr6tjA322T93QoOrbwv6OcAvPMd1PL/2NEJgiMdhEqgEmUqzFVqE2NSgyL0XRv9LTG+EV0P4Z6+i73+cnlNtb4YIlyFwP+sobgMrTq4A88Alq0W3XMcBdrnm3QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788530385; c=relaxed/simple;
-	bh=oKc1WHNgUfeAq0lFwVAjE5fq3rsFutg+SrluZ4sXpWc=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=IVxVoQdH3oMASMmtxbIjUg5T1alRqXA8vd22DluRGknN7SITJ0WrQ4D1B9JojV1MoGypcqIpYHHWUzXiMFuZSabn7W+OK5aj2ZDY4qsLmYJyljGXqK+V33Vs7kTgbyH40n246iL5eF5QrJdUH11QsxvcZ8DxvuRwdz0hxbzDH/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gYKycGZn; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788530691; c=relaxed/simple;
+	bh=14fjPP4GCJW0tAtv0hp2brghx5+0DkHLSR9NffUtcRY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bj8QL98NNkPSx+pH4gQkrQfgkAmwS9RUFf4Zz9Tgz00D3Qmk3D879B75rt0z22fYIPWmp+OEIGXDYK65ihSNL77+gdtbh1F2uyumekAVSkgM/EHZALi51XZNi1j4PQlRem0XPcmPL7853BtItZxHVNLE990URmY46ZhoVLRnqHc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=iaboepro; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gYKycGZn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD2EB1F0155A;
-	Fri,  4 Sep 2026 13:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788530384;
-	bh=oKc1WHNgUfeAq0lFwVAjE5fq3rsFutg+SrluZ4sXpWc=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gYKycGZnorg6hX4+i4KGmbeYdOfyDGSncqBmN6gGQ6BR0mTmrjv84ufBXoRAKn2Fp
-	 mLx8yFL1lAYfS3k0+3cSxl/tSlOkAx5HUlwfbtsKIu13ckIf0iDUu7yVHuHdMeQVHE
-	 x+9Pzt4nkxOH7vV3FNhL4iyyQ0vtldnDLl5MLGwnywW+CJ0Fsi3BcCL14bOCpFBVpf
-	 fCR06U4gv3Cj/1yAqxOCD4lGH/3wmmZTR7Ko9JWBDeeR6o9jk6jVt+2eGMekNxHO90
-	 DT68VxB/FLF1EY/WTbW0favrtfPlX30KBNrQlQUZRlLTthaaYPVpUX4yNtLDx9DzPS
-	 uQaowM8hyq9jg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf evlist: don't restrict uncore events to PMU CPUs
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Nia Su" <nia.su@sifive.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260904-perf-evlist-uncore-cpu-b4-v1-1-604b55c025ee@sifive.com>
-References: <20260904-perf-evlist-uncore-cpu-b4-v1-1-604b55c025ee@sifive.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Sep 2026 13:59:43 +0000
-Message-Id: <20260904135943.CD2EB1F0155A@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="iaboepro"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 716CD152B;
+	Fri,  4 Sep 2026 07:04:45 -0700 (PDT)
+Received: from e140010.arm.com (unknown [10.57.70.12])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BCD283F673;
+	Fri,  4 Sep 2026 07:04:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1788530689; bh=14fjPP4GCJW0tAtv0hp2brghx5+0DkHLSR9NffUtcRY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iaboeproZVBKWaHdzcQECzQvsoHpKIdUYifeGeBeTGcFuXQyQKtf3XUaTJrU0JjXo
+	 m922SxCYA4XGzDJIusSOzO0gKVBS0i9E/CS/DVik3vkOoRxj3LSK6bneZ8IdaLnIy9
+	 CoZPqXZ5e2y52KRhCIzqj8ibdYD3fZzMCJO9AzjE=
+Date: Fri, 4 Sep 2026 15:04:43 +0100
+From: Alexandru Elisei <alexandru.elisei@arm.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: kvmarm@lists.linux.dev, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oupton@kernel.org>, linux-perf-users@vger.kernel.org
+Subject: Re: [RFC PATCH v7 21/28] KVM: arm64: Handle SPE maintenance
+ interrupts
+Message-ID: <aprP-yXKb06rlUeS@e140010.arm.com>
+References: <20260903160623.315525-1-alexandru.elisei@arm.com>
+ <20260903160623.315525-22-alexandru.elisei@arm.com>
+ <20260903165824.158A21F000E9@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20260903165824.158A21F000E9@smtp.kernel.org>
 
-> The PMU CPU map has different semantics for core and uncore PMUs.
->=20
-> For core PMUs, pmu_cpus contains the CPUs on which the event can be
-> opened. Intersect the user-requested CPU map with the PMU CPU map to
-> reject CPUs unsupported by the PMU.
->=20
-> For uncore PMUs, pmu_cpus is just the default CPU to open the event on,
-> not the set of CPUs it can only be opened on. The user-requested CPU may
-> override the default and be used directly, and the driver can redirect
-> the event to the appropriate control CPU.
->=20
-> Currently, __perf_evlist__propagate_maps() intersects the user-requested
-> CPU map with pmu_cpus for all PMUs. If the user-requested CPU is not in
-> pmu_cpus, the intersection becomes empty and the evsel is removed before
-> perf_event_open() is called.
->=20
-> Skip the intersection when evsel->requires_cpu is true, which is set for
-> uncore PMUs. is_pmu_core is also false for other non-core PMUs, so
-> gating on it would have loosened this check for them too. Core PMUs
-> continue to be restricted to their PMU CPU map.
->=20
-> requires_cpu can also be set for BPF counters regardless of PMU type,
-> but only when has_user_cpus is false, so this guard has no effect there
-> today.
->=20
-> Fixes: 811082e4b668 ("perf parse-events: Support user CPUs mixed with thr=
-eads/processes")
->=20
-> Assisted-by: Claude Sonnet 5
-> Signed-off-by: Nia Su <nia.su@sifive.com>
+Hi Sashiko,
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+On Thu, Sep 03, 2026 at 04:58:23PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
+> 
+> New issues:
+> - [Medium] SPE system registers are not cleared during VCPU reset, leaking stale state across warm resets.
+> 
+> Pre-existing issues:
+> - [High] Hardware profiling buffer is enabled before `PMBSR_EL1` is restored, creating a race condition that clobbers hardware events.
+> --
+> 
+> commit 0111e834cf6f2849f99044fcfd2c2f6ef3480c83
+> Author: Alexandru Elisei <alexandru.elisei@arm.com>
+> 
+> KVM: arm64: Handle SPE maintenance interrupts
+> 
+> This commit introduces handling for SPE maintenance interrupts in KVM. It
+> injects the interrupt when the guest sets the PMBSR_EL1.S bit and re-injects
+> hardware-raised maintenance interrupts.
+> 
+> > diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> > index 4c4bf88c9aa53..ebe1c933f8d55 100644
+> > --- a/arch/arm64/kvm/sys_regs.c
+> > +++ b/arch/arm64/kvm/sys_regs.c
+> > @@ -1595,6 +1595,11 @@ static int get_user_spe_sysreg(struct kvm_vcpu *vcpu, const struct sys_reg_desc
+> >  	return 0;
+> >  }
+> >  
+> > +static u64 reset_spe_sysreg(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r)
+> > +{
+> > +	return kvm_spe_reset_sysreg(vcpu, r->reg);
+> > +}
+> > +
+> 
+> [Severity: Medium]
+> Does this change leak stale SPE register state across warm resets?
+> 
+> Previously, SPE registers used reset_val as their reset callback, which
+> actively updated the vCPU sysreg array via __vcpu_assign_sys_reg().
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904-perf-evlis=
-t-uncore-cpu-b4-v1-1-604b55c025ee@sifive.com?part=3D1
+Most of them still do.
 
+> 
+> Here, the new reset_spe_sysreg() callback returns 0 but misses a call to
+> __vcpu_assign_sys_reg() to clear the VCPU's system register memory.
+> Because the KVM sysreg reset caller ignores the return value, the values in
+> vcpu->arch.ctxt.sys_regs remain untouched.
+> 
+> If a VM goes through a warm reset (e.g., via PSCI CPU_OFF / CPU_ON) while
+> profiling is active, the new OS environment inherits a stale profiling state.
+> Should kvm_spe_reset_sysreg() explicitly clear the register state?
+
+Yeah, somehow got confused by the fact that the ->reset callbacks both assign
+the value and return the assigned value and I incorrectly chose to return the
+value without assigning it first.
+
+> 
+> >  static bool access_spe_reg(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
+> >  			   const struct sys_reg_desc *r)
+> >  {
+> > @@ -1642,7 +1647,7 @@ static bool access_spe_reg(struct kvm_vcpu *vcpu, struct sys_reg_params *p,
+> >  
+> >  #define SPE_SYS_REG(name)						\
+> >  	SYS_DESC(SYS_##name), .reg = name, .access = access_spe_reg,	\
+> > -	.reset = reset_val, .val = 0, .visibility = spe_visibility,	\
+> > +	.reset = reset_spe_sysreg, .visibility = spe_visibility,	\
+> >  	.set_user = set_user_spe_sysreg, .get_user = get_user_spe_sysreg
+> 
+> [Severity: High]
+> This is a pre-existing issue, but does __kvm_spe_restore_guest_state_vhe()
+> clobber hardware events by enabling the profiling buffer before restoring
+> PMBSR_EL1?
+> 
+> In arch/arm64/kvm/hyp/vhe/spe-sr.c:__kvm_spe_restore_guest_state_vhe():
+> 
+> 	if (__kvm_spe_profiling_buffer_enabled(pmblimitr, pmbsr)) {
+> 		write_sysreg_s(ctxt_sys_reg(guest_ctxt, PMBPTR_EL1), SYS_PMBPTR_EL1);
+> 		isb();
+> 		write_sysreg_s(pmblimitr, SYS_PMBLIMITR_EL1);
+> 		isb();
+> 		/* A buffer management event preserves fields in PMBSR_EL1 */
+> 		write_sysreg_s(pmbsr, SYS_PMBSR_EL1);
+> 	}
+> 
+> Because PMBLIMITR_EL1 is restored (with the E bit set) and an ISB executed
+> before PMBSR_EL1 is restored, hardware can autonomously trigger a buffer
+> management event right after the ISB if the buffer is near full.
+
+I don't think so. Sampling at EL2 has been disabled when the host state was
+saved, and the buffer was drained immediately after. All of this was executed in
+__kvm_spe_save_host_state_vhe(). There are no records here to be written back to
+memory.
+
+> 
+> KVM's subsequent software write of the guest's PMBSR_EL1 (which has S = 0)
+> overwrites the hardware register, wiping the event and clearing the
+> interrupt.
+> 
+> This violates the ARM Architecture Reference Manual D10.1.5, which forbids
+
+Please also state the version of the architecture reference manual, because in
+M.c, D10.1.5 does not exist, and chapter D10 is about MTE, not SPE.
+
+> software from writing to PMBSR_EL1 while PMBLIMITR_EL1.E == 1.
+> Should PMBSR_EL1 be restored before PMBLIMITR_EL1 to prevent this race
+> condition?
+
+I believe there was a discussion about something like that, but that was never
+merged into the Arm ARM.
+
+Thanks,
+Alex
+
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/20260903160623.315525-1-alexandru.elisei@arm.com?part=21
