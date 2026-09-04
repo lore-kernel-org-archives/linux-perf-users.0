@@ -1,234 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B7E43DA5B3
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 15:07:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788534480; cv=none; b=PSCN/j+UDBKuKSUVYm6rOU7d/tFMxoP3ohulf+jUDhbbTuKnGKIyZtrBcMsVYkl56Dk5ChwIq8sGweC7kkWEqwgxgjV8/QjQVSHCkDjqjHMCQsD2rguVvfm8rdLB4jTQipSXmPaiaNPvj3COvSOdItrWkL4n4pnd+0PoX+9A+yo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788534480; c=relaxed/simple;
-	bh=fg0CS3v1uAvE6tnx4anzRrgR/YRoKiKIxHQ7ATwOdas=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=dRYtpNCKM+bkut+9C2/XIbqcU1ieZDukxyGPPiuRD7ehi23OHpAN+D2Km16QkU492T2G8fSpJjdXLEbUanGVXSRgzyhow1mP83pwv6tVNsCvMPi7pJR0S9823VHeQcicKjHBcskztnZg55QXIupTy8TXJuqsIhJwZEJZl9o3h78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fr0I8bHB; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E774F052E
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 15:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788536066; cv=pass; b=pcMT1oGFg4XvE2+/ecSHOMY11Q6QKtRj6FA5kSLBgfleMVgdidV94yExhomT7THvw1Wu9ktvifOgVu5uPHV8PbbX7hMZcOtrhe6N517oi9pC8StR8OOTMam6MR188OuviNHUeu6LBMTI5VwpMHqPUIexT/A/HHngFF68pFst1pA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788536066; c=relaxed/simple;
+	bh=FzVf3j0DElpuxBm+UFR84uBp4/6OPZNVJ6LWKu6fr+Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QQhOH5cnPQlUJ8oFWd5Hrcktta+WTjErO6xpSVq93Btfc5QZmGD8+Qhs70OzPqUU+I8iq7FhZueqcPopVGNYOyoP2pdsUlCRliRdRSosB4MAmI9hJG5LhvOKDsZqOVxf5L5HDUzhnZmxUqFvEJRUvJAgQIJ6AZE26Usg30k10qc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Xnc/zpZM; arc=pass smtp.client-ip=74.125.230.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fr0I8bHB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD6F11F00A3D;
-	Fri,  4 Sep 2026 15:07:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788534476;
-	bh=lnS3huVAfKrotAv8D6H/afQ3Js4TDfHck0BI+usDsIM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Fr0I8bHB/REfz9ALdRWZ+eLgD46tN44J0wWZgOCtANFfGHFBqv+QQ5UtANU3B7V1H
-	 JrtEmjzLQicXR6VFtO7j5UVRp7k4cCYC0bhffImFB2kFFb/KG6fZ3i0BzfEjfGJR30
-	 M/CXEPSQANPSaR5emKvsWJnyF8XqKHY9uqXzHNlaSxexeqtGdluuNYb1diaFLurKHo
-	 WjLv5eq+9CmLVAnVUGqLZpSvZ+PZp9P2gE8HGgc8RHCOxANrkik+RRkFWtF2LYETRh
-	 j4ww2TbK6Y1KbGBXyzCNujzntdzM5YI0v+x9gBlY59Wq5K41RfQjbzDTZmiNzwIfCJ
-	 /OZbTA0MIwd1Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/5] perf jitdump: Free unwinding data even when
- eh_frame_hdr_size is zero
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260904144058.3341-4-acme@kernel.org>
-References: <20260904144058.3341-1-acme@kernel.org>
- <20260904144058.3341-4-acme@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Sep 2026 15:07:55 +0000
-Message-Id: <20260904150755.DD6F11F00A3D@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xnc/zpZM"
+Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-53012819c04so243081cf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Sep 2026 08:34:24 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788536064; cv=none;
+        d=google.com; s=arc-20260327;
+        b=jJCymu6x2f8K6imPuqtEK5DsnmaZScxkvd3zUjlqFk41KGz2sgyeZ3cyvpuXVaKU23
+         pwPWCanDpUfptN/qOz6h+RQig/SUVRrIFpt4jxAHKRq71t45R2yWjiu3VHawkPExHlVv
+         j+LPdxdCjt7H5O9C1KbKm6MVTcCFl4vwH+YHaycLyDp49GNyLPxShCBri7OkpK8R/sv6
+         ipzfX4esM+Zv0t6AqvJSwAp/92c8Snc8+djIIQanT0v+ZUYqanO2Ha5JETPtqfX3/7TQ
+         Fp21PHgxbBt8mS5KDTA9zBT/MSr3M8OBwJiNh0S3iqdWAq/7xw4AO+7I7M5xsIA3/+Tw
+         mg1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=lwu3BnDRwXYFAITY0rwPd5C8ikLKwVXNsQBsrH3pHvo=;
+        fh=/E+ca5PSWU79IGJ2K1iAjYBVddKol5bUddkeWN3volQ=;
+        b=HMwqFu+ZP93jR3A/o8T0LmtfhK0FtlElrKaKLNqGzptdRqMAgiC87AMnM+mkOm13gv
+         ejfxwtboaRXkGN8yXQQxU2wUmNMXSGZXQyOvz6DIAQiQ1UtZazWkx69ZawDWYJw3xF8P
+         +QE30ti0AAwXByIEN2Wp/uWzvE0i5Jpwa2vNnYd2aOFzJB0leFSURrYR6FBbRcli1N9N
+         IIClBSWM5miRQ+KQHh2a5DV4yuuHeNBDBp5xHCneuD7WURfFUxiqysNGTifC7m3LGeZ5
+         w5VOw0LHi7AGp0gR3BbKZAC4MqegGIzx3msE5NCv6sAJnN4aNG3ZZR36PdyH8T3Hfnb8
+         DO7Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1788536064; x=1789140864; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=lwu3BnDRwXYFAITY0rwPd5C8ikLKwVXNsQBsrH3pHvo=;
+        b=Xnc/zpZM1HzEoTQ3cI/tBYsqVVG2Ohizys7WP3pCQfQNwBzCRkyu3crgSw0USw+e//
+         f8gEpjew722TgDFigxVsCdvoSfJTwZno9746jXirMRFh4QoCDlIbCN7/sD3E+9T6XMuc
+         OF6RyQyyKDPTzGhcrlx2+aQmVZkvaFt2DtIDF3P/3qudcPC1zy7L4AmArBHz+iEemTGq
+         R1+h5Rxg1mfcx308w4YIjSfr725LevFGXuc2QXf6VGmP8zQki73z1CojNNco660KpTcL
+         sOmtpiJn2GvGVDfALeCFUHA1ArZKHSAoQU3cK3IoCgjPiyJTK6gyH6L+RYyTT/PTe0R8
+         ksLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788536064; x=1789140864;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=lwu3BnDRwXYFAITY0rwPd5C8ikLKwVXNsQBsrH3pHvo=;
+        b=ZXmVMLD9wyXifVlaenW8AMbYLzJYU5EUlqFTTtLW14sMG5EeVafOHeTVrcKxrT3Gko
+         MLniURK9gcvxUqBwv5KofY4+cDmW1aENuMJg5XuGVeNOfH2Dh8pRcqyT9fTCF9WkOigX
+         /sUEW5/772ctNwLEslOW/a0V/qfgGe3Y73FGmmZ6H66/QBc/dGH3anOYohftZrAT9cuN
+         vB36RO7+W7q3p/vvkM3foRlxhMBoyUswtJi2vryWAWGRUKLnZOtmWXWbPjmrnBqvPOYD
+         VUqK14CpFVZkB7IAd0/vEx0O1FqvEuo1q4Gog80doEtLfGBPU/wWJlyrVEV6Do7lDQXd
+         IbtQ==
+X-Forwarded-Encrypted: i=1; AKwUvByD6JS84qcjmQ5iCKnzA1ga8Wz96tCy5mDDWa36d+C6QWRfhStg1oaMUfMQWlzF+2Bi5uE93ZM4RJZjKGW/8g/e@vger.kernel.org
+X-Gm-Message-State: AFuF++kq/yxlv2657nKDNTsn7yZS2xIyG3jS0yThm3+t9JbPsdlNLI7r
+	Yxt7sr4reSNWSEGSRUm1brzWgI8os6Xv2TereSLrHNewMpdTGt/73TIQCkqCNgx7kjlygDA/wPc
+	oRbRR86heSMSz6BMt7fUyw8gS3zAkkq4ze/qHn7ia
+X-Gm-Gg: AYBFou2Lp5rP+z9MXY18MIcHy0s/ij+N6brJ0zZqh9JCr7V+4SiKq0AoFWtDmNuXx8l
+	QVxe5nB8e0A5Y7K3pH0qQ17LaDCuYM5BXRKji+xUwYd7A4W2KO8Qe9bnmfq+8pBhXP4WekPeB0z
+	jg1YxRsQ6k4145tEJAUzDFEnvjQX4qOYDVFfl967Az1l/d5J3aHW4r6qvl90f9nh5gQ9jlFpi+f
+	73Usiv8U5WS3SvCsyOZ71InKZyHdIX+nX0FanBuScj7HHPnNeL69Lc56X4/L4wCeRW70K0oY1oM
+	p9VGCzijMZiEtt2oIgy9d6D+aXF6WbcnRsNipbCZvfQfEW9Pbgja5WlG0lKPxi5M6f+7PPwIJ/c
+	=
+X-Received: by 2002:a05:622a:2307:b0:517:64f6:3365 with SMTP id
+ d75a77b69052e-5305583dc85mr14566791cf.4.1788536063097; Fri, 04 Sep 2026
+ 08:34:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260904-perf-evlist-uncore-cpu-b4-v1-1-604b55c025ee@sifive.com>
+In-Reply-To: <20260904-perf-evlist-uncore-cpu-b4-v1-1-604b55c025ee@sifive.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 4 Sep 2026 08:34:11 -0700
+X-Gm-Features: AcwNN1X8l7vZteLsC6B1Tn-ATbiYvd-I2Xq0o5cYs2PrOkgmh6Tezl23AbEdnMI
+Message-ID: <CAP-5=fX1uKg8AncsP5BVFtchgns5TquOTB10-mR5ury2CaH0sg@mail.gmail.com>
+Subject: Re: [PATCH] perf evlist: don't restrict uncore events to PMU CPUs
+To: Nia Su <nia.su@sifive.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Thomas Falcon <thomas.falcon@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 5 potential issue(=
-s) to consider:
+On Fri, Sep 4, 2026 at 6:45=E2=80=AFAM Nia Su <nia.su@sifive.com> wrote:
+>
+> The PMU CPU map has different semantics for core and uncore PMUs.
+>
+> For core PMUs, pmu_cpus contains the CPUs on which the event can be
+> opened. Intersect the user-requested CPU map with the PMU CPU map to
+> reject CPUs unsupported by the PMU.
+>
+> For uncore PMUs, pmu_cpus is just the default CPU to open the event on,
+> not the set of CPUs it can only be opened on.
 
-Pre-existing issues:
-- [Critical] Arbitrary File Overwrite via Predictable JIT ELF Filename (Sym=
-link Attack).
-- [High] Unwinding and debug data leak to subsequent records on error paths.
-- [High] Silent suppression of parsing errors in jit_process_dump() loop.
-- [Medium] State leak and MMAP2 length truncation in jit_repipe_code_move().
-- [Medium] Ineffective use of flockfile() for inter-process synchronization.
---
+This isn't quite true. On a dual socket Intel machine, `pmu_cpus` will
+contain a CPU to open the event on per-socket.
 
-commit 9551fc5ddf55f406039867f081e66a51333a4aa8
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+> The user-requested CPU may
+> override the default and be used directly, and the driver can redirect
+> the event to the appropriate control CPU.
 
-perf jitdump: Free unwinding data even when eh_frame_hdr_size is zero
+Agreed.
 
-This patch fixes an issue in jit_repipe_code_load() where unwinding state
-was not properly cleared when eh_frame_hdr_size was zero. It updates the
-cleanup condition to rely solely on the presence of unwinding_data, ensuring
-it is freed correctly and not mistakenly applied to subsequent records.
+> Currently, __perf_evlist__propagate_maps() intersects the user-requested
+> CPU map with pmu_cpus for all PMUs. If the user-requested CPU is not in
+> pmu_cpus, the intersection becomes empty and the evsel is removed before
+> perf_event_open() is called.
 
-Looking at jit_emit_elf() in the same file:
+Could you give a command line example of the perf tool doing this? I
+ask because I'm surprised the uncore specifying a CPU behavior has
+been broken. As well as `perf record -C` there is also a somewhat
+newer cpu event qualifier.
 
-tools/perf/util/jitdump.c:jit_emit_elf() {
-...
-	nsinfo__mountns_enter(jd->nsi, &nsc);
-	fd =3D open(filename, O_CREAT|O_TRUNC|O_WRONLY, 0644);
-	saved_errno =3D errno;
-...
-}
+> Skip the intersection when evsel->requires_cpu is true, which is set for
+> uncore PMUs. is_pmu_core is also false for other non-core PMUs, so
+> gating on it would have loosened this check for them too. Core PMUs
+> continue to be restricted to their PMU CPU map.
+>
+> requires_cpu can also be set for BPF counters regardless of PMU type,
+> but only when has_user_cpus is false, so this guard has no effect there
+> today.
 
-[Severity: Critical]
-This is a pre-existing issue, but does this open() call enable a symlink
-attack?
+So the separation between libperf and perf is frustrating, and libperf
+lacks the necessary PMU abstraction. Using requires_cpu as a proxy for
+an uncore PMU test is okay, but it would be better if we had a boolean
+flag especially for this. Given this, a comment should be added saying
+that requires_cpu is used as a proxy for an uncore PMU. The real
+meaning of requires_cpu is that the event doesn't support
+perf_event_open with a thread.
 
-perf inject --jit reads perf.data to find JIT dump directories, which are
-specified by the monitored process and can be in world-writable locations
-(e.g., /tmp). It constructs a predictable filename jitted-<pid>-<index>.so
-in this directory.
+Thanks,
+Ian
 
-The open() is called with O_CREAT|O_TRUNC|O_WRONLY but without O_NOFOLLOW
-or O_EXCL.
-
-Can a local attacker create a symlink at this predictable path pointing to
-a critical system file (like /etc/shadow)? If perf inject is run by root
-or a privileged user on this untrusted perf.data, would the target file be
-truncated and overwritten with ELF data?
-
-
-Looking at jit_repipe_code_load():
-
-tools/perf/util/jitdump.c:jit_repipe_code_load() {
-...
-	/* sym string lives between the load header and the code blob */
-	if (!memchr(sym, '\0', code - (unsigned long)sym)) {
-		pr_warning("jitdump: unterminated symbol name in code_load record\n");
-		return -1;
-	}
-...
-}
-
-[Severity: High]
-This isn't a bug introduced by this patch, but do jd->unwinding_data and
-jd->debug_data leak if the function returns here?
-
-jd->unwinding_data and jd->debug_data are global state pointers holding
-dynamically allocated memory for the current JIT record.
-
-If jit_repipe_code_load() hits this error condition, it returns -1
-immediately. The allocated memory is not freed, and the size fields are not
-reset.
-
-Because jit_process_dump() ignores this error and continues parsing, will
-the leaked unwinding and debug data be erroneously applied to the next
-successful JIT_CODE_LOAD record, corrupting its ELF sections?
-
-
-Looking at jit_process_dump():
-
-tools/perf/util/jitdump.c:jit_process_dump() {
-...
-	while ((jr =3D jit_get_next_entry(jd))) {
-		switch(jr->prefix.id) {
-...
-		default:
-			ret =3D 0;
-			continue;
-		}
-	}
-	return ret;
-}
-
-[Severity: High]
-This is a pre-existing issue, but does this loop silently suppress parsing
-errors?
-
-The while loop iterates over records and assigns the result of processing
-functions to ret. There is no error-checking mechanism (e.g., if (ret)
-break;) to halt processing.
-
-If a subsequent record is successfully parsed, ret is overwritten with 0.
-If an unknown record type is encountered, the default switch case explicitly
-resets ret =3D 0.
-
-Does this cause critical memory allocation failures, invalid record sizes,
-or corrupted streams in the middle of a JIT dump to be completely ignored?
-
-
-> diff --git a/tools/perf/util/jitdump.c b/tools/perf/util/jitdump.c
-> index e0d5cc9a82818..efb40d93e33ae 100644
-> --- a/tools/perf/util/jitdump.c
-> +++ b/tools/perf/util/jitdump.c
-> @@ -530,7 +530,7 @@ static int jit_repipe_code_load(struct jit_buf_desc *=
-jd, union jr_entry *jr)
->  		jd->nr_debug_entries =3D 0;
->  	}
-> =20
-> -	if (jd->unwinding_data && jd->eh_frame_hdr_size) {
-> +	if (jd->unwinding_data) {
->  		zfree(&jd->unwinding_data);
->  		jd->eh_frame_hdr_size =3D 0;
->  		jd->unwinding_mapped_size =3D 0;
-
-[Severity: Medium]
-This is a pre-existing issue, but does modifying jit_repipe_code_load() to
-unconditionally clear jd->unwinding_mapped_size cause a state leak and
-MMAP2 length truncation in jit_repipe_code_move()?
-
-jit_repipe_code_move() computes the new mapping length by reading the global
-jd->unwinding_mapped_size into usize:
-
-tools/perf/util/jitdump.c:jit_repipe_code_move() {
-...
-	usize =3D jd->unwinding_mapped_size;
-...
-	event->mmap2.len   =3D usize ? ALIGN_8(jr->move.code_size) + usize
-				   : jr->move.code_size;
-...
-}
-
-Because of the unconditional clear in this patch, unless a JIT agent emits
-an out-of-sequence JIT_CODE_UNWINDING_INFO record immediately before the
-MOVE record, will usize always be 0?
-
-Does this cause the new MMAP2 record length to incorrectly truncate the
-memory mapping, failing to cover the .eh_frame section from the original
-JIT allocation?
-
-Furthermore, if an agent does emit an unwinding record before the move,
-jit_repipe_code_move() uses the size but fails to clear it. Does this leak
-the state to all subsequent MOVE records?
-
->  		jd->unwinding_size =3D 0;
->  	}
-
-
-Looking at jit_open():
-
-tools/perf/util/jitdump.c:jit_open() {
-...
-	/*
-	 * protect from writer modifying the file while we are reading it
-	 */
-	flockfile(jd->in);
-...
-}
-
-[Severity: Medium]
-This isn't a bug introduced by this patch, but is this use of flockfile()
-ineffective for inter-process synchronization?
-
-The comment states this is to protect from a writer modifying the file while
-reading it. However, the writer is the JVM or JIT agent executing in a
-different process.
-
-Since flockfile() is a POSIX thread-synchronization primitive that only
-locks the FILE * structure for thread-safe stdio operations within the
-same process, it does not acquire an OS-level file lock.
-
-Does this leave the reader vulnerable to data races and parsing corruption
-if the dump file is read concurrently while the JIT agent is appending to i=
-t?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260904144058.3341=
--1-acme@kernel.org?part=3D3
+> Fixes: 811082e4b668 ("perf parse-events: Support user CPUs mixed with thr=
+eads/processes")
+>
+> Assisted-by: Claude Sonnet 5
+> Signed-off-by: Nia Su <nia.su@sifive.com>
+> ---
+>  tools/lib/perf/evlist.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+> index 1f210dadd666ff818a23712ab95acaa659ccf8dc..a1064175f12ba655a9f7fe42e=
+7c7e4c49ae60423 100644
+> --- a/tools/lib/perf/evlist.c
+> +++ b/tools/lib/perf/evlist.c
+> @@ -80,7 +80,8 @@ static void __perf_evlist__propagate_maps(struct perf_e=
+vlist *evlist,
+>         }
+>
+>         /* Ensure cpus only references valid PMU CPUs. */
+> -       if (!perf_cpu_map__has_any_cpu(evsel->cpus) &&
+> +       if (!evsel->requires_cpu &&
+> +           !perf_cpu_map__has_any_cpu(evsel->cpus) &&
+>             !perf_cpu_map__is_subset(evsel->pmu_cpus, evsel->cpus)) {
+>                 struct perf_cpu_map *tmp =3D perf_cpu_map__intersect(evse=
+l->pmu_cpus, evsel->cpus);
+>
+>
+> ---
+> base-commit: 73e3f0710014fe6d4ed98cfc02292f6121db7558
+> change-id: 20260904-perf-evlist-uncore-cpu-b4-418af0f17c80
+>
+> --
+>
