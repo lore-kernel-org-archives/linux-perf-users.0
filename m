@@ -1,167 +1,109 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B1EB47F2C8
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 11:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-oo1-f42.google.com (mail-oo1-f42.google.com [209.85.161.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 114D8488763
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 12:35:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788521759; cv=none; b=ZjGQfjsN1tv5uTG8Lw8ueL8BSTJOGCwU/mROYJLtwuxmTPRWk/wTYCHBB4UW+xyXOel6RxFapSWLg0lf+t0+FpXO/ZURHEJuAbNGFpCCCrj2r95LqdOVj0Yg9icEpd99PIl/SExFs+rmJuNuFzfN7mPwXt9YURRgE93o1nM6CBk=
+	t=1788525354; cv=none; b=Pbhjh+JKkiNk2AyW6lxQjiIozPSNlbHe+L4s4OF7pvh0malH23wDGJLnufSjWfHikNRuOvZZ24y3bzLwNSSJ42Uf70/KcoX8r3CCV/1Bm7VTpPVzgK+qQbpuFYsyWpnq5hR8IWBiSrZsx5Akh07Yvnk2+5hI+zuHWsG82H+Li4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788521759; c=relaxed/simple;
-	bh=pVVX7wCHPnyKDDskx5BAkF5R6YRcS3QCTY4q1fSXlXw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X9XExUeqJCW4RSLzuJyW18dFF6yg3W0S4v+TCdoarYiEI5rUcmQ1ApHEgT4RQVg+Rh3uBKgKx6EMaOse2VJsoWTT+aNjODFbf/VeEUcWWQrISlID5aNmxM5nhz3sXqHvSCw1wJSCrjFaAp5/vk5+gAIIfZEXINHG/AotcSu4FLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=uYbJrDyu; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1788525354; c=relaxed/simple;
+	bh=DeS+VD1yPFqoI6SUo0CVGOrpqwFRMspgLs2melatTvk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BCZojtJhlWgDfF64g/2a3IwtZIMdNlQNv7Sq0YBJuKg6l5iXjkzIHdq9p9FL0AA+aZdRbHwKSTZNEh+gsnrzH+DPZKf+txqx5W7jYhoXuibMYAJOFztlTH8hsoDbVsQeNr+MqJb7co2AQ+Pbw8I8VBCC4p+0j/Yn4Hd2tWOdX1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kHadmkoL; arc=none smtp.client-ip=209.85.161.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="uYbJrDyu"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCA76153B;
-	Fri,  4 Sep 2026 04:35:51 -0700 (PDT)
-Received: from e140010.arm.com (e140010.arm.com [10.2.213.25])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B09AF3F7D8;
-	Fri,  4 Sep 2026 04:35:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788521755; bh=pVVX7wCHPnyKDDskx5BAkF5R6YRcS3QCTY4q1fSXlXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uYbJrDyuwqOsKENN9Bm4C94iVXgcC8ngtvbR64LRX+QpjdpjJhunnc4GdgdMBmnC8
-	 XlkP5MXGomILIgChkihCUrYruYXcveBjAcAMb0t+1CCgjA1U+aFSX3/Q69Io9WtdE4
-	 fZDy63pQadBhALJjsveBt+fVD2fDFXHhNdEJR4hI=
-Date: Fri, 4 Sep 2026 12:35:52 +0100
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: kvmarm@lists.linux.dev, Marc Zyngier <maz@kernel.org>,
-	linux-perf-users@vger.kernel.org, Oliver Upton <oupton@kernel.org>
-Subject: Re: [RFC PATCH v7 19/28] KVM: arm64: VHE: Context switch SPE state
-Message-ID: <apqtGD4IArjJHFk8@e140010.arm.com>
-References: <20260903160623.315525-1-alexandru.elisei@arm.com>
- <20260903160623.315525-20-alexandru.elisei@arm.com>
- <20260903164313.9716A1F000E9@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kHadmkoL"
+Received: by mail-oo1-f42.google.com with SMTP id 006d021491bc7-6b1b1cb72d0so478750eaf.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Sep 2026 05:35:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788525352; x=1789130152; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=ye8hj6N2qvNGA2gMQYOs4PavKXmbhFPMCLKjkjvEeRo=;
+        b=kHadmkoLcZclDbd0t7+3FYXKNZ1Q1ied4+gnv8JVO6zqaXvv0kwPj9mqWR6wHRmBC/
+         giwO2S0I9PzU2CFz7Jmdf/xJJQeT3PNc5KL8rjIUCpn1dVG9ovmiHe9UiEbu9zJj/IAd
+         TZ55jvbDKoRo+mWofB4omN2ZjtonWfNjpYf2XTTQi5CShlK1yx3LzC1h1C3CGBE9juv5
+         BgyLTQ+bY6rHfEg9Q+4ZxWd6AsER6Fots2ZK0MjHHOYMNzse2HEqk1nR/HbuRTh4LKvk
+         Mu0hheb8F1//nofzcaMgXj0K85Nw+kuS3YB1L+D2uX9UZKYkSha7YgU8TWGsAOmUBOWb
+         UG1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788525352; x=1789130152;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=ye8hj6N2qvNGA2gMQYOs4PavKXmbhFPMCLKjkjvEeRo=;
+        b=CIA3lq01ENcKVq6NkPNeGFOqiQtR5C/lR1LX9ql3fvyCz6IsMlwxaJUGH1HIg44D3Q
+         Pf+KQmR7Hvb/gdRvF1U2ijHNkgwJ4MU/+VGPOCyZly8P7h5ka1BgnhUlsWFzzftJsSLn
+         62MpO3o1hVEM2AmYVuKMSIweHqK9d19IgOwzJhugPNdFeGgdGKa/oOhcuunXpwvrpqwK
+         8pwX7ACmX0ooxCWWOqLeCGt9zV7mgkkVD+QLlgrG4cJ6Hh99d3sPcRcf0NkNbqNPzAfr
+         vCiFIvgDtsmBRrZgmx8qG6hCMVvAUHvrLKmdGsPRJ3cB1hMXCt5tedIKP3+SmK4aDVGy
+         Mu2Q==
+X-Forwarded-Encrypted: i=1; AKwUvBwMYRvZ/iKgHIiBtOL/ioaNHq17j2LBsTfZ1KpibKbRaDVqWQMitYcLKaESu+lmM8hUH31caJsWm7jIzvshg/kE@vger.kernel.org
+X-Gm-Message-State: AFuF++m32wqSW0DrdwGklEXV8l7odjPqJBzVn1zeBNJlmqqtFnf0z6sq
+	VI9ZrmSrC7QKYfQxsMfCWar6cZhYEFa1gT3URykuO3PxRy3HBT5Wn0qn
+X-Gm-Gg: AYBFou0jpVQuihPXtqJWtC1mOVHJjYJKu2WcB5AtfdWXMBYJVLTMsQfVXtBiBnhj5N+
+	zdEvRyaDGlUPVxABkzh/8fi143NbHZMkNZQm4BtameSz3FAIVPHHbrD1WRciG1QBxghc9NXT/cp
+	QiwZYsY4fEX9fxHPcngYaQ9jMEBOsMStif+3o0hqV3oCFbzNyDh4nx4Tt/lYvY96TFycR/aC0+E
+	WZdIll40zRclKZhTmBQX7GeIcClIvFyPbVhpy3lnYqV0Z6L789tGlUZUUzR41kwFOZSXGeUemdS
+	Cl4Co36nsN2yNZJW3Bfm8WUye3w4DqRaNuiHzZ4fkO1Kk+Z0WUYggSRoAFiGnvEAHzGA/LVKBvW
+	aiCfJ9Oo6EXSMrfdhCRojsJ7O0PAIYDZTiYxprk8OUauauSdMPRFTUfE1IW6MeeTilbRf/MRpWW
+	3kxBC7pwk45HfLCNQCM1cpSA20D5laDY/g85uGo46mNvL9fctrgKFw7DsSNmLqZ9b5DF9s3IXiy
+	gvOgh617sc2DBw=
+X-Received: by 2002:a05:6820:f00b:b0:6aa:f585:aabb with SMTP id 006d021491bc7-6b6fa7e38a4mr3826883eaf.1.1788525351811;
+        Fri, 04 Sep 2026 05:35:51 -0700 (PDT)
+Received: from volcano9f6e-hostos.amd.com ([165.204.217.251])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1432423f99fsm6229374c88.1.2026.09.04.05.35.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2026 05:35:51 -0700 (PDT)
+From: Hemanth Selam <hemanth.selam@gmail.com>
+To: Shuai Xue <xueshuai@linux.alibaba.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 2/2] perf: fix typo "binded" in comment
+Date: Fri,  4 Sep 2026 18:05:39 +0530
+Message-ID: <20260904123541.38602-3-hemanth.selam@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20260904123541.38602-1-hemanth.selam@gmail.com>
+References: <20260904123541.38602-1-hemanth.selam@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260903164313.9716A1F000E9@smtp.kernel.org>
 
-Hi Sashiko,
+Correct "binded" to "bound", reported by scripts/checkpatch.pl using the
+misspelling list in scripts/spelling.txt.  Only touches comments, no code
+changes.
 
-On Thu, Sep 03, 2026 at 04:43:13PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [High] Writing to PMBSR_EL1 after enabling the SPE profiling buffer via PMBLIMITR_EL1 is CONSTRAINED UNPREDICTABLE and can corrupt hardware events.
-> - [High] Host SPE sampling control registers (e.g., PMSNEVFR_EL1, PMSDSFR_EL1) can be permanently corrupted by a malicious guest.
-> --
-> 
-> commit 32125a6226fde42baaf9001e75434e4177067f24
-> Author: Alexandru Elisei <alexandru.elisei@arm.com>
-> 
-> KVM: arm64: VHE: Context switch SPE state
-> 
-> Save and restore the SPE register state when a VCPU is run. The SPE
-> resources are shared between the guest and the host (the resources are not
-> partitioned) so KVM has to save the host state, change the owning
-> translation regime, and then restore the guest state before entering a
-> guest.
-> 
-> > diff --git a/arch/arm64/kvm/hyp/vhe/spe-sr.c b/arch/arm64/kvm/hyp/vhe/spe-sr.c
-> > new file mode 100644
-> > index 0000000000000..978620ad99fa5
-> > --- /dev/null
-> > +++ b/arch/arm64/kvm/hyp/vhe/spe-sr.c
-> > @@ -0,0 +1,209 @@
-> [ ... ]
-> > +static void __kvm_spe_save_sampling_regs(struct kvm *kvm, struct kvm_cpu_context *ctxt)
-> > +{
-> > +	/*
-> > +	 * This is dependent on the VM features, and not the hardware features,
-> > +	 * even for the host, because (a) guest accesses to PMSNEVFR_EL1 and
-> > +	 * PMSDSFR_EL1 result in an undefined exception in the guest and (b)
-> > +	 * they don't affect the guest unless the guest explicitly enables them,
-> > +	 * and a well-behaved guest shouldn't enable them when the corresponding
-> > +	 * feature is not advertised.
-> > +	 */
-> > +	if (kvm_spe_has_feat_spe_fne(kvm))
-> > +		ctxt_sys_reg(ctxt, PMSNEVFR_EL1) = read_sysreg_s(SYS_PMSNEVFR_EL1);
-> 
-> [Severity: High]
-> Does this check of the guest's advertised features (kvm_spe_has_feat_spe_fne)
-> leave the host's sampling control registers vulnerable to corruption?
-> 
-> If the host physically supports FEAT_SPE_FNE but the KVM VM does not
-> advertise it, KVM will skip saving and restoring the host's PMSNEVFR_EL1
-> register. Because MDCR_EL2.TPMS = 0 is cleared on guest entry, these
-> registers will not trap to EL2.
-> 
-> A malicious guest could execute an msr instruction to PMSNEVFR_EL1 directly,
-> overwriting the hardware register. When the guest exits, KVM skips restoring
-> the host's value in __kvm_spe_restore_sampling_regs(), allowing the guest's
-> malicious configuration to persist in the host execution context.
-> 
-> Could this be checking the host's physical capabilities instead of the VM's
-> advertised features when saving and restoring host state?
+Assisted-by: Cursor:claude-opus-5
+Signed-off-by: Hemanth Selam <hemanth.selam@gmail.com>
+---
+ drivers/perf/dwc_pcie_pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yeah, that's a good point, this is a leftover from the previous iteration where
-SPE support in KVM was dependant on FEAT_FGT, which would trap accesses to those
-registers if FEAT_SPE_FnE and/or FEAT_SPE_FDS were not exposed to the VM.
+diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
+index 6b9ed59de26e..e2435ccc04ca 100644
+--- a/drivers/perf/dwc_pcie_pmu.c
++++ b/drivers/perf/dwc_pcie_pmu.c
+@@ -639,7 +639,7 @@ static void dwc_pcie_pmu_remove_cpuhp_instance(void *hotplug_node)
+ }
+ 
+ /*
+- * Find the binded DES capability device info of a PCI device.
++ * Find the bound DES capability device info of a PCI device.
+  * @pdev: The PCI device.
+  */
+ static struct dwc_pcie_dev_info *dwc_pcie_find_dev_info(struct pci_dev *pdev)
+-- 
+2.48.1
 
-If FEAT_FGT is implemented, nothing changes. But if that's not present, I see
-two way to handle it:
-
-1. Save/restore the registers on each VM entry/exit and let the guest access
-them as it wishes. This would go against the architecture, which says that
-accesses are undefined if the corresponding feature is not implemented. In
-practice, this might not be a problem if all hardware that implements
-FEAT_SPE_FnE and FEAT_SPE_FDS also implements FEAT_FGT.
-
-2. Trap *all* buffer control registers with MDCR_EL2.TPMS and inject an undefined
-instruction exception.
-
-Thoughts?
-
-> 
-> [ ... ]
-> > +void __kvm_spe_restore_guest_state_vhe(struct kvm_vcpu *vcpu, struct kvm_cpu_context *guest_ctxt)
-> > +{
-> > +	u64 pmblimitr, pmbsr;
-> > +
-> > +	pmbsr = ctxt_sys_reg(guest_ctxt, PMBSR_EL1);
-> > +	pmblimitr = ctxt_sys_reg(guest_ctxt, PMBLIMITR_EL1);
-> > +	if (__kvm_spe_profiling_buffer_enabled(pmblimitr, pmbsr)) {
-> > +		write_sysreg_s(ctxt_sys_reg(guest_ctxt, PMBPTR_EL1), SYS_PMBPTR_EL1);
-> > +		isb();
-> > +		write_sysreg_s(pmblimitr, SYS_PMBLIMITR_EL1);
-> > +		isb();
-> > +		/* A buffer management event preserves fields in PMBSR_EL1 */
-> > +		write_sysreg_s(pmbsr, SYS_PMBSR_EL1);
-> 
-> [Severity: High]
-> Is it safe to write to PMBSR_EL1 after enabling the SPE profiling buffer via
-> PMBLIMITR_EL1?
-
-I haven't found any evidence to the contrary.
-
-> 
-> According to the ARM Architecture Reference Manual, when the profiling buffer
-> is enabled, a direct write to PMBSR_EL1 is constrained unpredictable. This
-> can corrupt hardware events or lead to unknown exceptions.
-
-I haven't found anything in the Arm ARM saying that, and I don't see why writing
-to PMBSR_EL1 would be a problem at all after the correct sequence for disabling
-the buffer has been followed in __kvm_spe_save_host_state_vhe().
-
-This is also how the SPE driver programs the buffer in the interrupt handler, if
-there is indeed an issue the SPE driver would also have to be fixed.
-
-Thanks,
-Alex
-
-> 
-> In __kvm_spe_restore_host_state_vhe(), the PMBSR_EL1 register is correctly
-> restored before PMBLIMITR_EL1. Should the guest restoration follow the same
-> sequence to avoid unpredictable behavior?
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260903160623.315525-1-alexandru.elisei@arm.com?part=19
