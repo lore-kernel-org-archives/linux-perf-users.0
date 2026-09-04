@@ -1,108 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38D4B4A0EFE
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 14:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C50DC49EC45;
+	Fri,  4 Sep 2026 14:17:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788530985; cv=none; b=Q0IYov8iXJa6z+yjqHYXo7BoVyRrnWTtqSfwTyvK2d4LssERCXOJPYwY0I/a7HpgcL6qFQlYQTNVg4BmXPTyzApzyDchAVn60SwWmWd9thCI+5hntzhVMeTX1FAmqcMN4fETxSCNPj3PDkqoRPEXJrg1LHaK+pJtFSV3ufi7qEE=
+	t=1788531442; cv=none; b=kDVSz1azsA3+AsVrIVqZ2gUVboSjR3xKog7RV63veccl4tMdLvDIrRaGdwDHtmA3CFvtx5KGp7a5aflu0uXvnAAQ8fmsofnYu2vzWUth3TsmPNk4BywiznTWYF7Wa1P61SAE69VIczJFhFHwTiEtE/0J+NPoCdH474JoMH0rV28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788530985; c=relaxed/simple;
-	bh=xL4I0S3mL/X6beKCto/ctHnwnQCOKF64QzQVs0JG5Dw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X4kgGuEaO3z4MuPT2bQB8RvFU6qvtlwTmy6mTrLo36W/HkGYgB79PYEcgLuryq1oWabt2pYdF7WlNvh4rJnnDDa/HthYHJpNVIx/X97iBxZeKFJ8rQszDlXO2J4ZqO8bLi5sGpf6N/BKy5XC+4G1+Mss16jsRd2vxnjO7RABV6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=pKjysfkh; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1788531442; c=relaxed/simple;
+	bh=pT9sdg+CfMTYJSz0VcJtLaqEyqz4UIzLUnqcZ9zN/Ts=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BLNpEbE0JslOKJSa+aH9JAE3zbKtL4dGCxHn+JE7nyXEY+Rv0hIMzftPEEsIZdn3aZjKFp/jsl5FweeImURZUHvYuDupjdFeidttF7/x23n8HkZVL7oxnyL0l8pVQs05jWjFL2T1TZvulmRlpJE+PIGPkj7eRZ+xbBZoYv8IV2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hDCTJ43U; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="pKjysfkh"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4F0F152B;
-	Fri,  4 Sep 2026 07:09:37 -0700 (PDT)
-Received: from e140010.arm.com (unknown [10.57.70.12])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E69A3F673;
-	Fri,  4 Sep 2026 07:09:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1788530981; bh=xL4I0S3mL/X6beKCto/ctHnwnQCOKF64QzQVs0JG5Dw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pKjysfkhC6ANFjeYEGxYb3oG44S+dSlQumnNkOPGPMiZbv7xozn4rPFO79g4g+rp7
-	 P6uSQKp9hXpR7cG31M2Z8zbBnZy6BwtNzVbhKpzh59olOu0HWnSlPATHjboO9wtpwU
-	 e7WsoH0Uqbnnx1Z6izVseG/h2HVNHVn6tbiaZ6go=
-Date: Fri, 4 Sep 2026 15:09:28 +0100
-From: Alexandru Elisei <alexandru.elisei@arm.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: Oliver Upton <oupton@kernel.org>, kvmarm@lists.linux.dev,
-	Marc Zyngier <maz@kernel.org>, linux-perf-users@vger.kernel.org
-Subject: Re: [RFC PATCH v7 28/28] KVM: arm64: Allow the creation of a SPE
- enabled VM
-Message-ID: <aprRGLAtoDpAXWCk@e140010.arm.com>
-References: <20260903160623.315525-1-alexandru.elisei@arm.com>
- <20260903160623.315525-29-alexandru.elisei@arm.com>
- <20260903165930.234811F00A3D@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hDCTJ43U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 640B71F00A3D;
+	Fri,  4 Sep 2026 14:17:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788531441;
+	bh=Qy6d4nELX8J/khKPdYa1XVS0tZxs5YB/dlFsCmQO1/0=;
+	h=From:To:Cc:Subject:Date;
+	b=hDCTJ43Uz4E0nD/07uj4/5gp6XPWVuy9P8YWX5oy4FXEUCHLhMv5d2Y6aEiOdoq6g
+	 6Eq0U/U01hRpLPsa8ZMaMG+Lb+6FCMBggltrf9KwuLo8qbLNrt1EPhHin+YxjfyryN
+	 DkEyhjW6a8ft8Y1Bj0Qw4U+NBejedLdrD0a5R8ga47KX5OVnpIOkuWqyXhLYZvT/DD
+	 a2UV1NHwtNOExDmdORfXVXrqeOVKmo/JWokaSu/sWweTlFuE5aCX526PfHBSXMSkoJ
+	 Gm+2wOvoLNwdK0Cqb7qbCtO3USC2vck9gZ1Sbrhg85ySBfQP7t96Ko4aTgoIikm+aT
+	 p4Cb3Qxlo01Og==
+From: Thorsten Blum <blum@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Thorsten Blum <blum@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] perf/x86/intel: Annotate x86_pmu::hybrid_pmu with __counted_by_ptr
+Date: Fri,  4 Sep 2026 16:17:00 +0200
+Message-ID: <20260904141659.224248-2-blum@kernel.org>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=738; i=blum@kernel.org; h=from:subject; bh=pT9sdg+CfMTYJSz0VcJtLaqEyqz4UIzLUnqcZ9zN/Ts=; b=owGbwMvMwCUWt7pQ4caZUj3G02pJDFmzLt1OPvn2xc0f2Us6v9+KPPVzyhq9bdkPtxzOuJ004 Z5nTNVhz45SFgYxLgZZMUWWB7N+zPAtrancZBKxE2YOKxPIEAYuTgGYyJSLDP+rGi7FhXt7zbZe V+Tw2Ns9qWnry07/HWs6Q6auOvF5SzEvI8MePcObJ31e9hbveBL4VrjgZuN90Q+6By/afdzhsUq v9CQnAA==
+X-Developer-Key: i=blum@kernel.org; a=openpgp; fpr=1D60735E8AEF3BE473B69D84733678FD8DFEEAD4
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260903165930.234811F00A3D@smtp.kernel.org>
 
-Hi Sashiko,
+Add __counted_by_ptr() to x86_pmu::hybrid_pmu to improve access bounds
+checking via CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE.
 
-On Thu, Sep 03, 2026 at 04:59:29PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] The Kconfig dependency for `KVM_ARM_SPE` restricts it to 'n' when the `ARM_SPE_PMU` driver is built as a module, preventing users from enabling SPE virtualization.
-> --
-> 
-> commit 9bb804f4572dd230ad3b5db909bd2001b3ee3186
-> Author: Alexandru Elisei <alexandru.elisei@arm.com>
-> 
-> KVM: arm64: Allow the creation of a SPE enabled VM
-> 
-> This commit introduces the Kconfig option KVM_ARM_SPE to allow userspace
-> to enable the Statistical Profiling Extension (SPE) for virtual machines.
-> 
-> [ ... ]
-> 
-> > diff --git a/arch/arm64/kvm/Kconfig b/arch/arm64/kvm/Kconfig
-> > --- a/arch/arm64/kvm/Kconfig
-> > +++ b/arch/arm64/kvm/Kconfig
-> > @@ -106,9 +106,9 @@ endif # NVHE_EL2_DEBUG
-> >  
-> >  
-> >  config KVM_ARM_SPE
-> > -	bool
-> > +	bool "Support SPE in guest"
-> >  	depends on KVM && ARM_SPE_PMU
-> 
-> [Severity: Medium]
-> Does this Kconfig dependency unintentionally disable KVM_ARM_SPE when the
-> host driver ARM_SPE_PMU is built as a module?
+Signed-off-by: Thorsten Blum <blum@kernel.org>
+---
+ arch/x86/events/perf_event.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-That contradicts my experience. Setting CONFIG_ARM_SPE_PMU=m makes
-CONFIG_KVM_ARM_SPE selectable, and building Linux with CONFIG_ARM_SPE_PMU=m and
-CONFIG_KVM_ARM_SPE=y enables the SPE KVM capability when the SPE module is
-loaded, and disables the capability when the module is removed.
-
-Thanks,
-Alex
-
-> 
-> Because KVM_ARM_SPE is a boolean, if ARM_SPE_PMU is configured as a
-> loadable module (=m), the Kconfig dependency evaluates to m. For a boolean
-> config, this restricts its maximum value to n, effectively disabling the
-> feature in the build configuration.
-> 
-> Since the implementation in arch/arm64/kvm/spe.c supports being built
-> against a modular driver (using try_module_get()), should this dependency
-> be relaxed or handled differently so the feature can still be selected?
-> 
-> > -	default n
-> > +	default y
-> >  	help
-> >  	  Adds support for Statistical Profiling Extension (SPE) in virtual
-> >  	  machines.
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260903160623.315525-1-alexandru.elisei@arm.com?part=28
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 71ed5b2acea2..b66691a4fc31 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -1050,7 +1050,7 @@ struct x86_pmu {
+ 	 * unique capabilities.
+ 	 */
+ 	int				num_hybrid_pmus;
+-	struct x86_hybrid_pmu		*hybrid_pmu;
++	struct x86_hybrid_pmu		*hybrid_pmu __counted_by_ptr(num_hybrid_pmus);
+ 	enum intel_cpu_type (*get_hybrid_cpu_type)	(void);
+ };
+ 
