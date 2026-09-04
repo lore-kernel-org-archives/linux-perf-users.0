@@ -1,361 +1,183 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F733DDDCD
-	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 08:39:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788511153; cv=pass; b=bAiyOZFgXR/7H2PcxXV0FoWFjA6vBBcaTku2na3nPgIWTxadwQvcBUOa3Qs1Ckr/x+aqrf3hWiuiMAQPmrb44pPNDTiVjSPP45+MOYlZnMpa66eD41zT4uwmL02SU15yN4Se5b/o2JwgKG6ZLj801hoV6a/2JVwdZRYRywyaxGY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788511153; c=relaxed/simple;
-	bh=GQed7CqsS3QleH5pIiv9aPt0TZqyTnZ/ZD+IeeOLgiE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KXexwImc+2ngjecQQu68DRVW2f5I4eCs0iJpBc65bEGUwSECdOZ4zt1PHniIMga2CZE1GikzCkrdjri6Tu4ifZYr2Jwlck4YMtzIqC7X8yXxkykt8QRqxy7/jL8CbuyM/estoAJLoypsF5LEvhWiGwCQABsX/9IMWqU0W564R1A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=RmKf2yp3; arc=pass smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D3443801B
+	for <linux-perf-users@vger.kernel.org>; Fri,  4 Sep 2026 09:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788513707; cv=none; b=W/tmNsMo8TqsMAXeoZ79Pt0ApAhlN4oMlnjMiH/7Tcnp6haxKiG2Pe2T6M53M3IfBm50LvujlmGAMNdgYZE/OU1fGFpfme7C0uNsAZRxjXaMpDqptW5VhTPU8uUI7Dsp6mpUv6slCoBbH+muTamOqqVZz3fzxhuM8HH3XzDLQ88=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788513707; c=relaxed/simple;
+	bh=66UZqVClFVVA1O7tD4q6NQPzk7bNbkSIzh/ikTXNEQQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VLyaWcjNYsTjBcrBDNxyh4nNhkiLsdsX8wZAx6AYpMizjbGZ2WlNCv5uy4TUxz8ch+ItSyoqG+Ar1N9bS5zU3zJgzT+NCYqDsOQtmIZr2TrodZUgrcNh10MmdZANwQga+CvSPOH3woUYsZ6kodhLVy6AnaZ4QaIYrpDwpg7YVNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=QZYrtULI; arc=none smtp.client-ip=209.85.216.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="RmKf2yp3"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6a68aaf4840so1700823a12.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 04 Sep 2026 01:39:10 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788511149; cv=none;
-        d=google.com; s=arc-20260327;
-        b=AupeBppqvd2Pc3cRFq/zLyh8eUZBphc/uTICfAhwF72DowiIRMhXf8zvy7TpfeBunV
-         l5RbUSblIDOXDKNNkmWkNLEPY8RXDyWaosSabaIKj4P4n5Ztd6bqbh+1e+NN2FlnLHEb
-         wpTphSt6XHlRO9JXohbAdFzFGh17U/w21o5YECBdb2aGO8zCrQfP8ItYyHW14NjxzQO5
-         tLhvkkaHLUNvXtlsAZ7wa0tGc6g4CP8HGmK14xj5QMABgARgzqoeterLCmhq8ituAWlF
-         imLBYhLcQ7bNx+Pp0CHcfxB5pUnQ9s7ITd7KUWZu3/Ki7eiU7TScChq3dK3GBl7+rEBJ
-         zMVw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=EzvphpTn3Z6bxsTKUhE7ieqFjf3qSKtb7ZjdbCXHmpM=;
-        fh=eUAkFs4WT4DateJwGvifGzrFZBeU31wQWVPJ3s684pU=;
-        b=jr7YN+T/bgVcWoSJFlWkk9E92aEDOA7aPNiw0MqvEz5Iuid6RAx0WjzaExcfOT3E4e
-         QnhM1sSCrhmdO0cj1H8sQ/MulQq1u9Ti8RMJ+dU9RQiIKO9Dve+LghmENDLXcEfo5brs
-         5rMVA9CqBG6Apo6Tjw9um5npYyMHGGYRNy3tkZGX1oJYSOwVOnIY327dHDGhNIZ0Cr6R
-         EEHwk+l6zGNpytJx00ZxV0mnT9jWhGXbn3FHJmsjasStxnzqDFk93Gt70w4w2vwwBfTE
-         bF8q6mcH3uf+KtZZHhkiu76VIqXjbMPboqCxfEWtKW/vompCjYQcR1G7Y+F4y7XS2Kk4
-         Gygw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="QZYrtULI"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-398b3c37877so771453a91.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 04 Sep 2026 02:21:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1788511149; x=1789115949; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=EzvphpTn3Z6bxsTKUhE7ieqFjf3qSKtb7ZjdbCXHmpM=;
-        b=RmKf2yp3kM3TGCNL70B+CFoWSkLrZ/6bTQo6acZBWz7A/Y1Opa0fZaheUQYgKVoZW9
-         APqua+lscUkExQBSBnXffyVaHlExIX3cqQZuSOoetKattKeAVZXbeTOxOnKyBkFbBC9J
-         fAun3Y+XDWI7jGZjOw41GTdmUDxRHCNUmN2ianVfzhf7wXO6uR8vvEkVorbBtP6MU1cy
-         p9JCoUe8ZYIxe1ZKvEW92uDpFATNKelP8EE4uTKofgPJi95cf5jaZGvQqmOdlNRilT2p
-         AQliYyjsMLELaJP65ZZ/kEFXiP3b8hiABdebzSGgxLU9KwZquA+37OW33wSrit5cyy2L
-         HaUw==
+        d=sifive.com; s=google; t=1788513701; x=1789118501; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
+        bh=Q9+T08Ol1yj/MMF/M6cDqb87S/P26Yho6EBQQNhwINA=;
+        b=QZYrtULIwiGJ7Sn75GzcBZJr6Bcfn510HmNHWUDxf7q79Jym6PccIMWUsio9IwzzGy
+         VlJB3bmK2vaniGieLpBoq/Jbb+hlspnaf7gjxjdbuBANbLtxv6xA/GMF08/VZ2KOSc8m
+         edErPP4tSnHEr+pcF9i627KUduiHdDNbCabm22adsOd0usCR8LL1ptOmgNBckBGn2Ehq
+         RDDC0Rz8fPfbgVyq7G9ykzamK07idr57zlakM96MCS2DQ2RmoQ3SxVHAi7kzczp4f+ev
+         C4laosqXiaBKtELL79x0gZ4RDsk3y8jPghEzwIKfw8r5cJLeU1CY/6f6mkXVBT9usH5F
+         WvdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788511149; x=1789115949;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=EzvphpTn3Z6bxsTKUhE7ieqFjf3qSKtb7ZjdbCXHmpM=;
-        b=BSlKLcVGMMdu5kxzcgC0imHbWIGHtB4+pi0sGnjk7x2AbWG31VYrqPCsDAwEF6eB+n
-         LzIOvLq7iVJQW3HH3jy5xuT+MjGXQXE/z9ZSmgRJe1mDBfFCQOiX+E5nvqXRCxTCEXIX
-         6m0MmaV1N8+lPDgDQm5NHQgLS6WdxypriyyYdYiWcpsPgN9oABl9EDSBhlw4QrLlJMIQ
-         Wah/Omt9Bcqgr0IaShHCCQBYb7JFKIFt0n7WNoY97e9iIhoVRJ3xIkDo3zFx8CBgLG6+
-         su7ppFCQNLH9Y+SAkV/UBpU7y7Fc3o8GUamHotUhfgbvE1QWUWbRaDPMfUXhtPM1zavl
-         e/kg==
-X-Forwarded-Encrypted: i=1; AKwUvBw0kRv5d4UtfClPXgYgcErKsvH931Ubw7FjOgqGu9DJrXBoHPlbJ9MkWj52K4kdbNzWDmW/lUXFJxHS2UR1QgPA@vger.kernel.org
-X-Gm-Message-State: AFuF++kxXyXpYoYE7N250MsJMraTS6Nb16n5dnEMuOy8IBcgMAHDxZC0
-	/tXPBaRiKzjDHnH0gqWCgvkBUXDQQlJxMc6gU2O/tP3MKYz0BH31k7cPBWM4c5+Bh0w5AoPSO6L
-	+agc8lF2onpPkb4whwYwogwOTq1sSb/REmau0N/r+BQ==
-X-Gm-Gg: AYBFou1rGW/Jn14yPVqZgAD2hqmXsOlXZLCu3D55v854aSOlyhIEMN4uDpZhvLXXmaa
-	xGSF/nDDP1MZUvYxplB22DeAWwQpSfUIU2wdo2V1AxKNF6Q4XlW/osW4lFSaPNhAqEydoCrtZx3
-	cuj9iZ4m27L2Q/D63HfOjmDzVTCWLNy5TkkuwPzooyj5UArA12IawHlIx1n7MvAHwsgglvqqIqR
-	5wcMNG6tSt5+yFMFmBL1BfS1edmWDbip3bY6FYTnrmlQrtAkdZ8SPcEmTjJlwBRBBsWoIFMExpl
-	aRxeCSk5dN4eXU+E15/hzvfrz/gboLYi16QMDaqSJfZA/9g=
-X-Received: by 2002:a05:6402:424d:10b0:6a6:b9eb:e20 with SMTP id
- 4fb4d7f45d1cf-6a6b9eb0f5cmr2529416a12.2.1788511149397; Fri, 04 Sep 2026
- 01:39:09 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1788513701; x=1789118501;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=Q9+T08Ol1yj/MMF/M6cDqb87S/P26Yho6EBQQNhwINA=;
+        b=qGHZgtUjr32aOrc9vQbYzQPDGnTJW9lgUgunISZGmfDR08ecFq98IXcRTjX53zIgGN
+         mf+k0Vhnij0B+/cJNIut7Ugn1YHbdscSXcigdWDVxrlI8Qjrqk1lopN1+Pa92PQRqI7W
+         HISyA3Iq8tRoDW+4vjuJ7V1Y3bIRH9OZeF9RWiKSmlE15/Si0dVNjcFUf9yTFIKb9q87
+         yRrzxQ6a9CeoY15oI+EDtX7XPTDbl5wI5WhRdlKBPPbPRn1f1jrW4JE8/dmiQmfSJ7Gh
+         QQhQnmFKVq66jAgyqxCh4Pr205T1FVk0wl3BUrcQrT+ik5hiilNHa6tNDku7cRRL9pWs
+         aoVw==
+X-Forwarded-Encrypted: i=1; AKwUvBxBAVzU/psctG0eZw/rpaqS+kM5DBhwL+Ehz8bEUPykRziK3VUq5//LlC/C1oGNpMsPGik8l6lCwFxrReaQizEp@vger.kernel.org
+X-Gm-Message-State: AFuF++mBQJUwhqTUWfDmna84xSVCP8X7IBboT9GIsuPP7R9vnRJgn807
+	sPFjdkFmAb0wUdm8fKq4kjlBL5nXf7vO+ump3rP8S8/CUQAlwkO5NgwUb5QfHp+fIf15T5TrpKq
+	6Sl8E
+X-Gm-Gg: AYBFou1VZS+nos3z7zYph2BHRJkehRHG+/mt2QAZrT5aOzfRQRhM62w8WfCNsXJIguW
+	h/fjZTKDGh4cN0LNBgYgFnKUaUEq3026xsT3zauOekn1KyXHLx1C/ApgIWWCY4ysMalaWb45PRH
+	eQ9Lxqo1fgzHZDYUAJo4YCwkxM2KyG2Hvvwu+L3bPG+iWDm/m/ycfIxUYjNj+LjFY36zVfh7E9G
+	E6T9hlb1lEgh4fcu/pwCXiAx7YlpNvnhYhQ/hqjZ7Hbc0/PL8CSyoKR7lSZ0UVSIDcHbtxsg5Pj
+	UwZ+ZMjj9Hj2E/FzeNF6zplEWafzWJoZTQ8wmHOxwaTWYT5x1wqYGDeRRmb6VD3+kWpZJbmOFG9
+	cGxy3FpaHZGjn9W3nCvZRTImyzGol5kTjiNPrnnW0HryU8aSbLdQdr44RQcnPijzeLMBmnl66UE
+	RMHX2DuLourXFCpTLdB7X/2gDrmbESOgmI3Han9A5xY8uCa2iEsVaZlKiatNpQfYPPdKNPDyF62
+	CfAaCTVe6M=
+X-Received: by 2002:a17:90b:1dc3:b0:398:d6f4:c61a with SMTP id 98e67ed59e1d1-39b26207ee4mr7536728a91.17.1788513700711;
+        Fri, 04 Sep 2026 02:21:40 -0700 (PDT)
+Received: from sw04.internal.sifive.com ([4.53.31.132])
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1432438497csm5275575c88.8.2026.09.04.02.21.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2026 02:21:39 -0700 (PDT)
+From: Zong Li <zong.li@sifive.com>
+To: tomasz.jeznach@linux.dev,
+	joro@8bytes.org,
+	will@kernel.org,
+	robin.murphy@arm.com,
+	pjw@kernel.org,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	mark.rutland@arm.com,
+	andrew.jones@oss.qualcomm.com,
+	guoren@kernel.org,
+	david.laight.linux@gmail.com,
+	zhangzhanpeng.jasper@bytedance.com,
+	yang.yicong@picoheart.com,
+	iommu@lists.linux.dev,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Cc: Zong Li <zong.li@sifive.com>
+Subject: [PATCH v8 0/2] RISC-V IOMMU HPM support
+Date: Fri,  4 Sep 2026 02:21:31 -0700
+Message-ID: <20260904092136.113321-1-zong.li@sifive.com>
+X-Mailer: git-send-email @GIT_VERSION@
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260828085819.4076449-1-zong.li@sifive.com> <20260828085819.4076449-4-zong.li@sifive.com>
- <8267ee7a-98b7-42a5-b479-648d2bec8ade@picoheart.com>
-In-Reply-To: <8267ee7a-98b7-42a5-b479-648d2bec8ade@picoheart.com>
-From: Zong Li <zong.li@sifive.com>
-Date: Fri, 4 Sep 2026 16:38:58 +0800
-X-Gm-Features: AcwNN1WRMTwypdAaHYFPNb0pSuReY3IdEEBJ4QNibyPzSTaAHRt107IZJ6oSt6Y
-Message-ID: <CANXhq0ogpMSEdjycnz0HCO15q_gYA1hwFU98u09tYL0X8PMtoA@mail.gmail.com>
-Subject: Re: [PATCH RESEND v7 3/3] drivers/perf: riscv-iommu: protect shared
- state with a raw spinlock
-To: Yicong Yang <yang.yicong@picoheart.com>
-Cc: tomasz.jeznach@linux.dev, joro@8bytes.org, will@kernel.org, 
-	robin.murphy@arm.com, pjw@kernel.org, palmer@dabbelt.com, 
-	aou@eecs.berkeley.edu, alex@ghiti.fr, mark.rutland@arm.com, 
-	andrew.jones@oss.qualcomm.com, guoren@kernel.org, 
-	david.laight.linux@gmail.com, zhangzhanpeng.jasper@bytedance.com, 
-	iommu@lists.linux.dev, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Sep 2, 2026 at 4:07=E2=80=AFPM Yicong Yang <yang.yicong@picoheart.c=
-om> wrote:
->
-> On 8/28/26 4:58 PM, Zong Li wrote:
-> > Events are bound to one CPU and the interrupt is affine to it, so the
-> > perf callbacks running with interrupts disabled would be enough to
-> > exclude the handler.
-> >
-> > PCI MSI/MSI-X on IMSIC breaks that: the irqchip sets
-> > IRQCHIP_MOVE_DEFERRED, so irq_set_affinity() reports success while only
-> > recording the request, and the move is applied in interrupt context upo=
-n
-> > the next device interrupt. Until then the interrupt is still routed to
-> > the CPU IMSIC picked initially, so the first overflow interrupt can run
-> > concurrently with the perf callbacks on the CPU the events are bound to=
-.
-> >
-> > Take a raw spinlock, with interrupts disabled so that the handler can
-> > never interrupt a holder on the same CPU, rather than depending on that
-> > irqchip behaviour. It covers the state which is reachable from both
-> > sides:
-> >
-> >  - IOCOUNTINH is read-modify-written by ->start()/->stop() and is saved
-> >    and restored around the whole handler.
-> >  - pmu->events[] is written by ->del() and read by the handler.
-> >  - hw_perf_event::prev_count is updated by both.
-> >
-> > ->add() and ->del() call the unlocked __riscv_iommu_pmu_start() and
-> > __riscv_iommu_pmu_stop() so the lock is taken once per callback.
-> >
-> > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > ---
-> >  drivers/perf/riscv_iommu_pmu.c | 66 ++++++++++++++++++++++++++++++----
-> >  1 file changed, 60 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/perf/riscv_iommu_pmu.c b/drivers/perf/riscv_iommu_=
-pmu.c
-> > index f6acd56f2f61..ee2f6d1fbece 100644
-> > --- a/drivers/perf/riscv_iommu_pmu.c
-> > +++ b/drivers/perf/riscv_iommu_pmu.c
-> > @@ -101,6 +101,7 @@ struct riscv_iommu_pmu {
-> >       u64 event_cntr_mask;
-> >       struct perf_event *events[RISCV_IOMMU_HPM_COUNTER_NUM];
-> >       DECLARE_BITMAP(used_counters, RISCV_IOMMU_HPM_COUNTER_NUM);
-> > +     raw_spinlock_t lock;
-> >  };
-> >
-> >  #define to_riscv_iommu_pmu(p) (container_of(p, struct riscv_iommu_pmu,=
- pmu))
-> > @@ -485,7 +486,8 @@ static void riscv_iommu_pmu_update(struct perf_even=
-t *event)
-> >       local64_add(delta, &event->count);
-> >  }
-> >
-> > -static void riscv_iommu_pmu_start(struct perf_event *event, int flags)
-> > +/* Called with pmu->lock held */
-> > +static void __riscv_iommu_pmu_start(struct perf_event *event, int flag=
-s)
-> >  {
-> >       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
-> >       struct hw_perf_event *hwc =3D &event->hw;
-> > @@ -500,11 +502,22 @@ static void riscv_iommu_pmu_start(struct perf_eve=
-nt *event, int flags)
-> >       riscv_iommu_pmu_set_period(event);
-> >       riscv_iommu_pmu_set_event(pmu, hwc->idx, hwc->config);
-> >       riscv_iommu_pmu_enable_counter(pmu, hwc->idx);
-> > +}
-> > +
-> > +static void riscv_iommu_pmu_start(struct perf_event *event, int flags)
-> > +{
-> > +     struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
-> > +     unsigned long irqflags;
-> > +
-> > +     raw_spin_lock_irqsave(&pmu->lock, irqflags);
-> > +     __riscv_iommu_pmu_start(event, flags);
-> > +     raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
->
-> could use guard(raw_spinlock_irqsave)() to help handle the lock release.
->
-> I'm considering if it'll better to use irq_work or function call to handl=
-e the
-> counts update from the interrupt handler, e.g. in the irq handler first c=
-heck
-> if current cpu is the pmu->on_cpu, if so update the counts, otherwise que=
-ue
-> the update work to pmu->on_cpu by irq work or smp_call_function_single_as=
-ync.
-> In this way we can use pmu's original synchronization mechanism without
-> extra spin locks since the callbacks will always run and synchronized by
-> the same cpu, and the shared interrupt doesn't matter at all.
->
-> any thoughts on this?
->
+This series implements support for the RISC-V IOMMU hardware performance
+monitor.
 
-Thank you for your suggestion. It really helped me re-think the impact
-of IRQCHIP_MOVE_DEFERRED.
+The RISC-V IOMMU PMU driver is implemented as an auxiliary device driver
+created by the parent RISC-V IOMMU driver. Therefore, the child driver
+can obtain resources and information from the parent device, such as
+the MMIO base address and IRQ number.
 
-When an IRQ goes to the wrong CPU, handle_edge_irq() already changes
-the affinity to the correct CPU via irq_ack at this time. Because of
-this, we might only need a simple check at the beginning of the IRQ
-handler. We can just check if the current CPU is the correct one. If
-it is not, we can simply return and do nothing. Since PMIP is still
-asserted, the IRQ will trigger again and go to the correct CPU.
+Changed in v7:
+- Rebased onto the v7.3-rc1
+- Remove raw spinlock
+- Check CPU matching at the beginning of irq handler
+- Add PERF_HES_STOPPED check before overflow handling
 
-I will drop this patch and make a new, simpler fix.
+Changed in v6:
+- Rebased onto the latest v7.3-rc
+- Use sysfs_emit instead of cpumap_print_to_pagebuf
+- Set up on_cpu and irq affinity by cpuhp callbacks
+- Change type of on_cpu from unsigned int to int
+- Reject filter operands of cycle event in event_init
+- Check return value of counter number and  masks in probe
+- Add raw spinlock for race condition (third commit)
 
-Thanks again for your help!
+Changed in v5:
+- Pick up suggestions from sashiko-bot as follows
+- Fix event group validation for sw event
+- Bind IRQ to aux PMU dev instead of parent IOMMU dev
+- Clear OF bit when event is NULL
+- Improve hi-lo-hi patten
+- Add back IRQF_SHARED flag due to mismatch
+- Manage cpuhp and pmu register by devre
 
-> thanks.
->
-> >
-> >       perf_event_update_userpage(event);
-> >  }
-> >
-> > -static void riscv_iommu_pmu_stop(struct perf_event *event, int flags)
-> > +/* Called with pmu->lock held */
-> > +static void __riscv_iommu_pmu_stop(struct perf_event *event, int flags=
-)
-> >  {
-> >       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
-> >       struct hw_perf_event *hwc =3D &event->hw;
-> > @@ -521,13 +534,26 @@ static void riscv_iommu_pmu_stop(struct perf_even=
-t *event, int flags)
-> >       hwc->state |=3D PERF_HES_STOPPED | PERF_HES_UPTODATE;
-> >  }
-> >
-> > +static void riscv_iommu_pmu_stop(struct perf_event *event, int flags)
-> > +{
-> > +     struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
-> > +     unsigned long irqflags;
-> > +
-> > +     raw_spin_lock_irqsave(&pmu->lock, irqflags);
-> > +     __riscv_iommu_pmu_stop(event, flags);
-> > +     raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
-> > +}
-> > +
-> >  static int riscv_iommu_pmu_add(struct perf_event *event, int flags)
-> >  {
-> >       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
-> >       struct hw_perf_event *hwc =3D &event->hw;
-> >       unsigned int num_counters =3D pmu->num_counters;
-> > +     unsigned long irqflags;
-> >       unsigned int idx;
-> >
-> > +     raw_spin_lock_irqsave(&pmu->lock, irqflags);
-> > +
-> >       /* Reserve index zero for iohpmcycles */
-> >       if (is_cycle_event(event->attr.config))
-> >               idx =3D RISCV_IOMMU_HPM_CYCLE_IDX;
-> > @@ -535,8 +561,10 @@ static int riscv_iommu_pmu_add(struct perf_event *=
-event, int flags)
-> >               idx =3D find_next_zero_bit(pmu->used_counters, num_counte=
-rs, 1);
-> >
-> >       /* All event counters or cycle counter are in use */
-> > -     if (idx =3D=3D num_counters || pmu->events[idx])
-> > +     if (idx =3D=3D num_counters || pmu->events[idx]) {
-> > +             raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
-> >               return -EAGAIN;
-> > +     }
-> >
-> >       set_bit(idx, pmu->used_counters);
-> >
-> > @@ -546,7 +574,9 @@ static int riscv_iommu_pmu_add(struct perf_event *e=
-vent, int flags)
-> >       local64_set(&hwc->prev_count, 0);
-> >
-> >       if (flags & PERF_EF_START)
-> > -             riscv_iommu_pmu_start(event, flags);
-> > +             __riscv_iommu_pmu_start(event, flags);
-> > +
-> > +     raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
-> >
-> >       /* Propagate changes to the userspace mapping. */
-> >       perf_event_update_userpage(event);
-> > @@ -556,18 +586,26 @@ static int riscv_iommu_pmu_add(struct perf_event =
-*event, int flags)
-> >
-> >  static void riscv_iommu_pmu_read(struct perf_event *event)
-> >  {
-> > +     struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
-> > +     unsigned long irqflags;
-> > +
-> > +     raw_spin_lock_irqsave(&pmu->lock, irqflags);
-> >       riscv_iommu_pmu_update(event);
-> > +     raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
-> >  }
-> >
-> >  static void riscv_iommu_pmu_del(struct perf_event *event, int flags)
-> >  {
-> >       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
-> >       struct hw_perf_event *hwc =3D &event->hw;
-> > +     unsigned long irqflags;
-> >       int idx =3D hwc->idx;
-> >
-> > -     riscv_iommu_pmu_stop(event, PERF_EF_UPDATE);
-> > +     raw_spin_lock_irqsave(&pmu->lock, irqflags);
-> > +     __riscv_iommu_pmu_stop(event, PERF_EF_UPDATE);
-> >       pmu->events[idx] =3D NULL;
-> >       clear_bit(idx, pmu->used_counters);
-> > +     raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
-> >
-> >       perf_event_update_userpage(event);
-> >  }
-> > @@ -635,12 +673,24 @@ static irqreturn_t riscv_iommu_pmu_irq_handler(in=
-t irq, void *dev_id)
-> >  {
-> >       struct riscv_iommu_pmu *pmu =3D (struct riscv_iommu_pmu *)dev_id;
-> >       DECLARE_BITMAP(ovf_bitmap, BITS_PER_TYPE(u64));
-> > +     unsigned long irqflags;
-> >       u32 ovf, idx, inhibit;
-> >
-> > -     /* Check whether this interrupt is for PMU */
-> > +     /*
-> > +      * Check whether this interrupt is for PMU. Done outside the lock=
- so
-> > +      * that a shared interrupt line is left alone as cheaply as possi=
-ble.
-> > +      */
-> >       if (!(readl_relaxed(pmu->reg + RISCV_IOMMU_REG_IPSR) & RISCV_IOMM=
-U_IPSR_PMIP))
-> >               return IRQ_NONE;
-> >
-> > +     /*
-> > +      * Hold the lock across the whole sequence below. Stopping the
-> > +      * counters, processing them and restoring the previous inhibit s=
-tate
-> > +      * has to be atomic against ->start()/->stop(), otherwise a count=
-er
-> > +      * enabled in between would be inhibited again by the restore.
-> > +      */
-> > +     raw_spin_lock_irqsave(&pmu->lock, irqflags);
-> > +
-> >       /* Process PMU IRQ */
-> >       inhibit =3D riscv_iommu_pmu_stop_all(pmu);
-> >
-> > @@ -672,6 +722,8 @@ static irqreturn_t riscv_iommu_pmu_irq_handler(int =
-irq, void *dev_id)
-> >
-> >       riscv_iommu_pmu_start_all(pmu, inhibit);
-> >
-> > +     raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
-> > +
-> >       return IRQ_HANDLED;
-> >  }
-> >
-> > @@ -735,6 +787,8 @@ static int riscv_iommu_pmu_probe(struct auxiliary_d=
-evice *auxdev,
-> >
-> >       iommu_pmu->reg =3D iommu_dev->reg;
-> >
-> > +     raw_spin_lock_init(&iommu_pmu->lock);
-> > +
-> >       /*
-> >        * Counter number and width are hardware-implemented, detect them=
- by
-> >        * writing 1s and reading back which bits stuck.
+Changed in v4:
+- Rebased onto v7.3-rc
+- Use is_sampling_event() instead of accessing vairable directly
+- Rename the matching name from "iommu.pmu" to "riscv-iommu.pmu"
+- Change the naming of PMU device for avoid ":" in PCIe case
+- Add suppress_bind_attrs attribute
+- Remove IRQF_SHARED flag
+- Set irq affinity to local CPU of IOMMU
+- Allocate ID by IDA for auxiliary device
+- Pick up suggestions from sashiko-bot
+
+Changed in v3:
+- Rebased onto v7.2-rc3
+- Use hi_lo_writeq/readq to access register
+- Pick comments from sashiko-bot as follows
+- Set IRQ CPU affinity
+- Remove IRQF_ONESHOT flag when request irq
+- Adjust cycle event check by checking event_id field only
+- Fix bug for group events verificaiton
+- Fix KASAN issue about casting 32-bit variable to unsigned long pointer
+- Clear IPSR pending bit before starting counter
+- Clear OF bit in event selector register in irq handler
+- Release irq by devm instead of explicit free_irq
+
+Changed in v2:
+- Rebased onto v7.2-rc1
+- Use hi-lo-hi mechanism to read counter.
+  Suggested by Guo Ren and David Laight
+
+Changed in v1:
+- Rebased onto v6.19-rc8
+- Pick all suggestions and feedbacks from v1 series
+- Add cpu hotplug implementation to avoid race enablement
+- Move PMU-related definition from header to c file
+- Change PMU driver to auxiliary device driver
+
+Changed in RFC:
+- Rebase onto v6.13-rc7
+- Clear interrupt pending before handling interrupt
+- Fix the counter value issue caused by OF bit in the cycle counter.
+- Invoke riscv_iommu_hpm_disable() instead of riscv_iommu_pmu_uninit()
+  in riscv_iommu_remove()
+
+Zong Li (2):
+  drivers/perf: riscv-iommu: add risc-v iommu pmu driver
+  iommu/riscv: create a auxiliary device for HPM
+
+ drivers/iommu/riscv/Kconfig      |   1 +
+ drivers/iommu/riscv/iommu-bits.h |  61 --
+ drivers/iommu/riscv/iommu.c      |  37 ++
+ drivers/perf/Kconfig             |  12 +
+ drivers/perf/Makefile            |   1 +
+ drivers/perf/riscv_iommu_pmu.c   | 941 +++++++++++++++++++++++++++++++
+ 6 files changed, 992 insertions(+), 61 deletions(-)
+ create mode 100644 drivers/perf/riscv_iommu_pmu.c
+
+-- 
+2.43.7
+
