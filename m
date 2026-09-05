@@ -1,56 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6334D51D521;
-	Fri,  4 Sep 2026 22:23:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D2A123D28C;
+	Sat,  5 Sep 2026 00:32:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788560620; cv=none; b=phJJzU6rCf3Wt7C1jMlPVINRuW9Yq4cnrz7E6wYrKTly0imBhioqDzf4EMkJQGONkzaobj9SltADcKPpOHs0pB/5baIz6xrC95/xhWuXenFsJAaOFGqpGHkVgZeSYWc6C6fJ7NmYnJiayKVbgzeQnPgNlEl4zTfP7AIrddsbcIA=
+	t=1788568379; cv=none; b=W3D1fy9ovPlS0o3ny22zP94GnnqWLOyA63OMMaUuNF3WpIpLj/Hm9e94xf47LnfQFS1zmy8MD9tSsSEtvVRxC23R7PuFVxAn5w585g6cEtUcqUaCZWLN4Bns8kBKFi1vG5B9jU+EfguJDlk2bUaVYOsjVBQOqpnH2nKnEDtXafc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788560620; c=relaxed/simple;
-	bh=DbrmJphkU+FtkqCo6KuJQyvB/0cK3sFrs5dE/Hr0Tjk=;
+	s=arc-20240116; t=1788568379; c=relaxed/simple;
+	bh=O7na85LJzeeW9urrmTT+ZcC5YkqIgHTZo4aYjjs6JNg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NKMWpe6qceXuWBsabkKvCdku+D8YVTxP7X206gm8TLqI/mJfvLBJojFWIyBNcYJq1frTgVfSlMYcTpHcwD/smvFqnNJrbFo8PFEdN3i1mmsqGMAr+lXYwp5cd/1IEljnAcDR2Syo431q0cZIhOnWOdthrSy9azkzU2/u6bOWwKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okAzbGk+; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=OMd6ka1tzbNMHwd6nx1VB/JbZ3e+groMBbJu6Kc+iy+thTZl3h7pv6PQrSethsPOQJJ+Y7pQG0bFnC2Vi467FuJApfdTilSjrw5ha2AkS94DILPCQgipAbUnH+fY7Bi0HzOjVf9v8KQ5ucah1ZMZxTAPMnspnamv/ZFgtJrygAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LviXth5l; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okAzbGk+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E287C1F00A3D;
-	Fri,  4 Sep 2026 22:23:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LviXth5l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CB001F00A3D;
+	Sat,  5 Sep 2026 00:32:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788560610;
-	bh=uBesz34PkuRI+A3kmsnVg/F1BggqGShtqUwBLMMecxU=;
+	s=k20260515; t=1788568377;
+	bh=Q5oBfAwVgZGXYsPQcMyKaSyqzRQDV+E4ggbXvLfpz8M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=okAzbGk+TptytfnDjSkTRfZvR09QKWYg+fpd7yZ/700ec3wTsDADGqB6Qtum9bxxh
-	 um1Pe/KBim6/MIpyI6qmBer+EhjnQYZ+gSAKOlu4dGu3xbj9vL+hmywR7skHJb9O11
-	 cq43hYZnJ/y39P0L02z31xN+y/h7JKVkpEee+cD6HZ9Jn7Z0Q/gjptuTq7b6Q5+To5
-	 6pbounV8h1J0mkipKiZDDsFJuECpwXqAlttr+QvjYceyGl/ZRpHTo+Yxy/zUWYe7t9
-	 zkiDYH9r9gtGSfQGieCUU12TOq+5QxVp/F77EYOH1gUzgu7qUr+EqWL6sAgMNJ0Obb
-	 98H6iKcrMqK9Q==
-Date: Fri, 4 Sep 2026 19:23:27 -0300
+	b=LviXth5l1ro8TYsEj8bIErmuV36c+DsXqxY3I/u5WRXhbGGnIGpzjTFos9yRKs33H
+	 yZb/FfWlW+nLzEx9F7VpBYohgc2xwGuvok+JgAMWjmx1tF/y86IW9CO6l5GV5Ec65s
+	 9cvegQqK+dZ0OZpD0Ql8mGg/0D092dfkWREg+XAIw77yi7InzQRjceCvJYOhL97iPI
+	 KvP3UK5WN655fClRGCJCA6uK9OLWMMQfV7TBEp4k1682dLTnyD5kpVX5D6TtV/p9dr
+	 M6irV93RRdOWaBJajQ13S+1XVc5pQwLteoIsgvrVDny7/HOXoqFjjypwyBC5ezpJzh
+	 ukgNhUKn9g0Lw==
+Date: Fri, 4 Sep 2026 21:32:54 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Chun-Tse Shao <ctshao@google.com>,
-	"Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
-	Ian Rogers <irogers@google.com>, Zide Chen <zide.chen@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: markdamirkan@gmail.com, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH RESEND v7 1/2] perf pmu intel: Generalize SNC cpumask
- adjustment for multiple platforms
-Message-ID: <aptE3zO1DtInzbaP@x2>
-References: <20260527221934.3830896-1-ctshao@google.com>
- <20260528001117.3BBF11F00A3A@smtp.kernel.org>
- <CAJpZYjUiNdN3a6y+8rs=YP2Mgtj6EQJnkiB9TN_suWd8fGkoEg@mail.gmail.com>
- <CAJpZYjUhw8+ouKTS82G6ih457=pHn18AtvwMCAcaTL9csKmdTg@mail.gmail.com>
- <CAP-5=fVAckZihxg4djQn7iTGbNNT1vFLXt2En8mm8+COSs3GcQ@mail.gmail.com>
- <29d02905-14fd-4c2a-86d0-a605e9d41b10@linux.intel.com>
- <CAJpZYjVoxEjxmut5AL6dOpfTSBj9VZOs3qaawofDxWyTeaa8Ug@mail.gmail.com>
- <apHBv6hhZN6CPlWE@google.com>
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] perf evsel: Validate cross-endian samples before
+ byte swapping
+Message-ID: <aptjNjaz3RYTW-TF@x2>
+References: <20260903-sympwn-linux-002-final-v2-v2-0-0aee1fca1f95@gmail.com>
+ <CAP-5=fW5uHsW0wgffWgc8f5ibDf8ArF8qJW6sWzrorL44CqnNw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,38 +52,28 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <apHBv6hhZN6CPlWE@google.com>
+In-Reply-To: <CAP-5=fW5uHsW0wgffWgc8f5ibDf8ArF8qJW6sWzrorL44CqnNw@mail.gmail.com>
 
-On Fri, Aug 28, 2026 at 10:13:35AM -0700, Namhyung Kim wrote:
-> Hello,
+On Thu, Sep 03, 2026 at 01:19:07PM -0700, Ian Rogers wrote:
+> On Thu, Sep 3, 2026 at 4:05 AM Mark Amirkan via B4 Relay
+> <devnull+markdamirkan.gmail.com@kernel.org> wrote:
+> >
+> > Two paths in __evsel__parse_sample() use values from an
+> > opposite-endian perf.data record to modify the record before checking that
+> > the data fits within event->header.size.
+> >
+> > Patch 1 checks the complete branch stack before swapping entry flags.
+> > Patch 2 checks the RAW payload and the complete 64-bit words touched by
+> > mem_bswap_64() before swapping the data.
+> >
+> > The malformed branch-stack and RAW records reproduce as out-of-bounds
+> > reads and writes. Each patch adds a Sample parsing regression test that
+> > checks rejected records do not modify data past the declared event.
+> >
+> > Signed-off-by: Mark Amirkan <markdamirkan@gmail.com>
 > 
-> On Fri, Aug 28, 2026 at 09:56:24AM -0700, Chun-Tse Shao wrote:
-> > Thank you Ian for bringing this back. Zide gave a Reviewed-by tag on
-> > v6, and v7 mainly addresses the Sashiko review.
-> > 
-> > To Arnaldo and Namhyung, Is this patch ready to be merged?
-> 
-> Please don't top-post.
-> 
-> > 
-> > On Fri, Aug 28, 2026 at 1:11 AM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
-> > >
-> > >
-> > > On 8/28/2026 1:28 PM, Ian Rogers wrote:
-> > > > On Tue, Jun 9, 2026 at 11:44 AM Chun-Tse Shao <ctshao@google.com> wrote:
-> > > >> Ping for attention.
-> > > > I suspect Arnaldo and Namhyung are waiting for feedback from Intel on
-> > > > these patches. If someone could check them it would be appreciated.
-> > >
-> > > I suppose Zide has checked these patches and gave the "reviewed-by" tags. :)
-> 
-> Sorry for missing this.
-> 
-> Arnaldo, can you please pick this up?
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Merged, and I added an "Acked-by: Namhyung", taking this "please pick
-this up" as an ack.
-
-Thanks!
+Thanks, applied to perf-tools-next, for v7.4.
 
 - Arnaldo
