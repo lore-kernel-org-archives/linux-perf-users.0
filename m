@@ -1,68 +1,68 @@
-Received: from mail-yx1-f51.google.com (mail-yx1-f51.google.com [74.125.224.51])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781CB3A9D8B
-	for <linux-perf-users@vger.kernel.org>; Sun,  6 Sep 2026 20:13:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.224.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9543C279B
+	for <linux-perf-users@vger.kernel.org>; Sun,  6 Sep 2026 20:13:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788725596; cv=none; b=nW2xdb175V8veg6SsEt3N9tAXzq8v/3MCw0CDQ+YNOdY4BBnVcx6TL/lROOiHFQZ4JrMN1BQ9f1jL/pEg8PHiejbdoXja7pquBf6J51gKTPAu9dHeuRz1FCw9dt0f9Wy29dNk1B2YsTpkqqlb2+teB1RjG1OCfVLT/nRNELLg/Q=
+	t=1788725597; cv=none; b=gK98+esen+cZPS67EdGGa+dJgEil+gp1ei1cjBed3YVbCn2LQ3pv/pogovPZ7UjoIOh5DO5hedynXYANP/Glk6K5uVsZjRwuXZUhOwF6yiVR+KVVOV1qImhv7yR0Wl0aqZckvGkWc8XgdxF2r9jCEdUSPgkBCfDjvWGVFIv6jVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788725596; c=relaxed/simple;
-	bh=V13NjxcZ8Y+EH56zGxBFcHbqNp/dD0O+9buYDXRen/c=;
+	s=arc-20240116; t=1788725597; c=relaxed/simple;
+	bh=K6kuH+Dj0+XisIC13wTxUfbDdeE5RtZ218RXYIIuE2s=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YJtqxGwtQLh1qq54nIexouwwv+JF70mo1cMa9B7CncskP7g2FPCiTiD24jgSvNBKJ+9QFBryoB672dHG7gasS9BTJKX4FyaPj4SNa89C0HvzWdA74U8X+Y2ReoUAJ522pxM5FmbXL5H2G28MncdlisyNYBpKYO9IStff/VADT/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q+Oux/VC; arc=none smtp.client-ip=74.125.224.51
+	 In-Reply-To:To:Cc; b=t0Jo80TZ70AeieJzP3Hwt8129Uvv6lUnv8r/jxGFqCj4Sha2iPzg7+T2BwGdCQyiRHcqpuZaHbmrIZMCnhm8HZjLhKPECO6GnPu6IxfV2MhJfY62uFkv7YwNVxEOGy9Oz5BMCNIkuUsQgZmmTCWAIlncmX3zU0JIXou2HtInjUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gXke/h8o; arc=none smtp.client-ip=209.85.128.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+Oux/VC"
-Received: by mail-yx1-f51.google.com with SMTP id 956f58d0204a3-66fdf2a9aacso94690d50.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 06 Sep 2026 13:13:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXke/h8o"
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-855a66e5b5dso21615037b3.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 06 Sep 2026 13:13:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788725592; x=1789330392; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1788725595; x=1789330395; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=N8uHZ58VC3qmxtEe8gO2hHAyHIZcWIh7nanbyJ3N2VQ=;
-        b=Q+Oux/VCRLBiFjHSPD9zk+ODhXkVu3xlGUOzwPZSg8cyCnuKlc5Pi17CgCkJ0PhzYh
-         zNnrvnk5oZ4nIaQrn7kVJzMHS7LZCtTcBqbgKtphgdtAAAI2LhNksaMQsB+KI5Iv4yLU
-         xstVsOIX6ssloYUwn/vOFcDNQEz5hcri/aJpvqVVvvPRo6KcW14O7wYNAfv6PBK1t67F
-         UDlBjiNkCKWDCgLkjr7OasTTTnDTySgifVYzfOGFllBsCh/gCVO9MJy+Uro1tmv/3k4Z
-         Tda7WmHfthD/vv7JRrVzLYOkCFrKcLuOp9tPSaVfffuLCSKelch6CQIPx7Rj6qfhzddH
-         /DpQ==
+        bh=qzIpQApcA3/Eb7xwHfs/OS4Wgv+5Bf6h3+3Q0Q0xTMc=;
+        b=gXke/h8o3cFXFGl4Ei7eVDXedpnfRc7FYcE9RB2qETkz0LlKKE0J8NE7XDkDYYvnKp
+         RSEP5zjAlZV7zDCgh79J4lkLcpShSA0q+OEMJtCTfYuAq0EPBTFHDQ9NeSXPI3o50qBq
+         6/BYcnCEXwzIxPkzs8qCmcEko7IVlXstr3Hro616MLtSFFZnr0i+blnbwCTBZBwGWl2y
+         Du8Su1ENZ6UbUJ3CXAxnESI716Xt+m6FywR/spB8FGQPLnVx2hK6EzlrA4pI5VYVdcOR
+         6ofA23VZD5jfY3nZPhPt9e2YziBWtNybu/fK+mse/6QXCiaOgvSDKLFpW2qJ39VxWmuR
+         U1QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788725592; x=1789330392;
+        d=1e100.net; s=20251104; t=1788725595; x=1789330395;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :content-type:mime-version:subject:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=N8uHZ58VC3qmxtEe8gO2hHAyHIZcWIh7nanbyJ3N2VQ=;
-        b=W+RWjW0F+fyWD1dbBdZ6aMHbX/zIzJH3n/ab30QSPFaZ5okQt/NdH3XYD7MCaJLsmy
-         7N7uVzhccF3QCnb/Vn/OtBmABgCZCuagFhymvDQ+Vs3tG3xuUGPafUP9M+W0ezXyyZXH
-         J6vE9gVsyH1rnJuIsk1GSZpTxH2cRTA81x9I6XTTQMFfGM0Qu3kKv8RcPLvA/7UvWqj3
-         mG9k9MhWCfYauq6WTzNRh/gboLnSv3tMNHfwvzAuvwKXIXoayMkePoCXkOAVPQZsor8w
-         ruA7qw8gpRoV+eEyWhfgNoSAyt8UPZlou66GABr2evfQ/2/I1JFgponbp0pAGmEf6js6
-         Oghg==
-X-Forwarded-Encrypted: i=1; AKwUvBxbrSpjRgUGm2U9EDzp4TlKmE2I4eAshOUqIE0yifn2CQJt+WvmMgohth2DAfhS5FL45tZrThxTcR/V62IsSK7/@vger.kernel.org
-X-Gm-Message-State: AFuF++k5D7nMJzQx/yvWn8MnNivvnVlY3obNE2knE+qqrcWOv7kRTI/w
-	XE0Pt9Y6OhTyn6aRXESV85wT+L0QkvPtGcAjQrCIteR8HsmxJUrazY1n
-X-Gm-Gg: AYBFou1hbd0GWuP2VX+5YDkrIFM7yrWHKcmsryv/qINBfZvuNzs6GTqzb3djkuJjTje
-	X4kw6YNQKhYHihGB9S3tOa32mS7AKV1Sb9dfSm4O+Q2VaqlZKOBOCjbgG15jkZhBlL2gk9DP8d7
-	2XMKXzERW1EELKOi4HB5xXN82aty2u3beQcHTiT8XMFfKNZWHrYJJOecwAvh7BvBBjuVCBDiPWk
-	/EAAnaIV8xGqBadBeH1zpOly/cBV9lfq43zWl0B+6Wzy/y8KZ+hLG2LAM2A2GaQOz/n1uAs8ldp
-	mnbu0crGqEcbnFnImXVJ0cUWQd9lXULJDSNuiPu2I4Ul6Y0lC5fttPGjsiKyvAleK7EfSAVrmkL
-	HA7dbKOx4Nho3Xj3v9sIZIlki24MrNdFo7j2w5Ce/xzHhHx0AW6T1E4nsc5no20FvqK1uDgvigb
-	+hJpkjFCkRjFB4dyOJFVOpG0U4aNHrR1oBGZfiQh4XR9yMWcfL/GC0frMFB6NR
-X-Received: by 2002:a05:690c:31a:b0:80d:964f:88fd with SMTP id 00721157ae682-871221a70cbmr81582507b3.5.1788725592445;
-        Sun, 06 Sep 2026 13:13:12 -0700 (PDT)
+        bh=qzIpQApcA3/Eb7xwHfs/OS4Wgv+5Bf6h3+3Q0Q0xTMc=;
+        b=DEi6rDTavKfGyDbKf/PH4FETBrmmoHmHkwsvqd4Uy1VFeMxfaz5VribFja8/g3ZHbg
+         BKM+OXqfq440dVm7P6gxY7sH1xHFMntEIT2y3E/x3ZErYena8MYwoW0yPwmeVdq7mtm6
+         FcyxW4cy6yOLpIJ2iGPBFDlKV/xa9owGIMoJhMsZKXGUu3GYxEASShvT84NbTwgj2RnR
+         WCioa2YdWP7gE1oIWKOcB8hcFHckYZuHlmC9abIqw8U6HYqlP+gD792Txle8ZKckRI1N
+         FS2H+dVJvbbg4xygS9Pq8hMCfWCJfzHZuLy2U8DfkSA6xeQWKv5Af2ahAjTj4wORQogD
+         zcTA==
+X-Forwarded-Encrypted: i=1; AKwUvBxmUoG79NQm7rHZ/ICW4VzJAKBH4Ug+srKnBJ9AfvgCX6zZEAV0kIVx9Ni7Uk2RoOrG1NeIA/UTGEUVHcSU8H3K@vger.kernel.org
+X-Gm-Message-State: AFuF++nD9CpN6hRrJGU1rDFHEXVWS29JzofKkWlxkcPveG+NBmcRxMj6
+	3wgYOJUqbB8NwvUEjpNKiH7EJDrNFxm2D4Zt8a6inK7oQVFG4JP+NDGw
+X-Gm-Gg: AYBFou1L7oiS73zml+J2JimB3bz1Y8S1BIIIGT8LM+CyG2jIPDIrGplWZGiSmtPct6T
+	m2ASADozhp2GzIXWOC+7OoFPMJAOVCUq7ZUR+a8STE9vlNsOB0hcj1koWJSvTw6ykMCmSGQQuOB
+	U5obz9yJXRk7CZUxmFG2p1h1daGzdL0NW27YIAwa6Jwbh8xqQdhzQ1bgnYIVjskaS4suQ1wm1/n
+	KorLRb1MDQPbVd/mKN4U1xKJJyu6ljpfWRp0b0z9DXqbfvvCkeaHMQij1jFI9hAlYz9JYr7nVUr
+	vlC4ORBjva2YAqQCnX0lnodx1L88CUNiuf/nxEyttUIYXdXlx5ycXlwfDId7my+OMMtRZvNmFAf
+	szdlo8FcvSGrroQnjkJE2TUtFgVWECkoSrHB65y/SJ8x3u35AwFPVLlIVQD5x0GyhG9qzbqvejz
+	BgyQNmVvzpaumhiwwWRD5xuOQI+t9JKhryJ2JxLeydWleXWqfgJyymoS2rBGQN
+X-Received: by 2002:a05:690c:38d:b0:862:65f4:c8c2 with SMTP id 00721157ae682-8712938ccd8mr90053377b3.21.1788725594025;
+        Sun, 06 Sep 2026 13:13:14 -0700 (PDT)
 Received: from localhost ([2600:1702:7a90:6f9f:8bc4:8aec:108d:7a04])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-8714bb0efc1sm59661367b3.45.2026.09.06.13.13.11
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-871439c454esm60255047b3.7.2026.09.06.13.13.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2026 13:13:11 -0700 (PDT)
+        Sun, 06 Sep 2026 13:13:13 -0700 (PDT)
 From: Matt Turner <mattst88@gmail.com>
-Date: Sun, 06 Sep 2026 16:13:07 -0400
-Subject: [PATCH v7 2/3] perf tools: make the GTK4 report browser actually
- loadable at runtime
+Date: Sun, 06 Sep 2026 16:13:08 -0400
+Subject: [PATCH v7 3/3] perf tools gtk: fix two hierarchy-view stack buffer
+ overflows
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -71,7 +71,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260906-perf-gtk2-v7-2-1ece839fbca0@gmail.com>
+Message-Id: <20260906-perf-gtk2-v7-3-1ece839fbca0@gmail.com>
 References: <20260906-perf-gtk2-v7-0-1ece839fbca0@gmail.com>
 In-Reply-To: <20260906-perf-gtk2-v7-0-1ece839fbca0@gmail.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -84,109 +84,111 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
  bpf@vger.kernel.org, Matt Turner <mattst88@gmail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3810; i=mattst88@gmail.com;
- h=from:subject:message-id; bh=V13NjxcZ8Y+EH56zGxBFcHbqNp/dD0O+9buYDXRen/c=;
- b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLLmngx8+f+Q6Pa3DOZ1dxaeNJeWfrzzeVrdCS3jJ7XHV
- yl1r/Vn6PjIwiDGxTBTTJElbr0iy6y2HUt9Tkv/gpnDygQyRFqkgQEIWBj4chPzSo10jPRMtQ31
- DIEMHaN4iJweg0ZmcXFpapFuWkGRQ15+SWJJZn5esV5+QWpeQXqBXlpmWklGRn5RcSrQCL281BJ
- TV0c3I0MDE0tHCzMnC0dTE2dnJ0MnN0dHZ1cnI0tzEwNnS0cTV0tzBi5OAZhr5t5lZDi1Tf6edG
- HQv5T9jf+mBbBsNJ+4+cO0abknNycy+LZ/7PvB8E9xyqLPD+/vdrfYHeNxYynXJ85k28/X2EXf/
- Tq75+nb/ZWsAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3606; i=mattst88@gmail.com;
+ h=from:subject:message-id; bh=K6kuH+Dj0+XisIC13wTxUfbDdeE5RtZ218RXYIIuE2s=;
+ b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLLmngx8m1IRfd4v51mJ4Jvgrxn9sZztu6fU73z98Y6R9
+ 941OXFvOz6yMIhxMcwUU2SJW6/IMqttx1Kf09K/YOawMoEMkRZpYAACFga+3MS8UiMdIz1TbUM9
+ QyBDxygeIqfHoJFZXFyaWqSbVlDkkJdfkliSmZ9XrJdfkJpXkF6gl5aZVpKRkV9UnAo0Qi8vtcT
+ U1dHNyNDAxNLRwszJwtHUxNnZydDJzdHR2dXJyNLcxMDZ0tHE1dKcgYtTAOaaT/MZGXbd4l391/
+ tB5HKeiaqp2p5XN4Z92cq1g0Nj/opdzBfLSmQZGV5IPZz2bu3fiskqeaqbIrz/pl2KMAlXi97G5
+ P0ifb1xJScA
 X-Developer-Key: i=mattst88@gmail.com; a=openpgp;
  fpr=3BB639E56F861FA2E86505690FDD682D974CA72A
 
-perf report --gtk dlopen()s libperf-gtk.so, which expects to resolve
-symbols back against the running perf binary (callchain_param,
-symbol_conf, evsel__name, and friends live in perf, not the plugin).
-Two things broke that after the GTK 4 port:
+perf_gtk__show_hierarchy() builds a merged column header for the
+hierarchy view with unbounded strcat() calls into a 512-byte stack
+buffer. The pieces being appended come from tracepoint field names and
+sort-key headers in perf.data, so a file with enough dynamic sort keys
+or long enough field names overflows the buffer.
 
-perf never passed -rdynamic, so none of its symbols were in its
-dynamic symbol table for a dlopen()ed plugin to find. Add -rdynamic to
-LDFLAGS when GTK4 support is enabled.
+perf_gtk__add_hierarchy_entries() has a related bug in the loop that
+formats each entry's value columns. fmt->entry()/fmt->color() return
+via scnprintf(), so ret is clamped to at most hpp->size - 1, but
+advance_hpp(hpp, ret + 2) doesn't clamp: when ret hits that maximum,
+ret + 2 exceeds hpp->size by one, and hpp->size (size_t) underflows to
+roughly SIZE_MAX. The next iteration's fmt->entry() then writes into
+the caller's stack buffer using that bogus size, a second overflow.
 
-annotated_source__hist_entry() was a static inline in annotate.h, so
-ui/gtk/annotate.c calling it pulled hashmap__find()'s expansion,
-hashmap_find(), into libperf-gtk.so as an undefined symbol. The only
-hashmap_find perf links against normally is libbpf's internal one
-(tools/lib/bpf/hashmap.c), built with -fvisibility=hidden, so it can
-never be exported to a dlopen()ed plugin regardless of LDFLAGS. Move
-annotated_source__hist_entry() into annotate.c as an ordinary exported
-function, so the plugin depends on it the same way it already depends
-on evsel__group_desc() and friends.
+Fix the header builder by tracking the write offset and using
+scnprintf() for each append, same pattern already used elsewhere in
+this file. Fix the entry loop by clamping the amount passed to
+advance_hpp() to what's actually left in the buffer.
 
-With both fixes, a default 'make GTK4=1' build (libbpf statically
-linked) can dlopen() libperf-gtk.so and open the report browser without
-NO_LIBBPF=1 or manual LDFLAGS. Verified with perf report --gtk against
-real perf.data on a GTK4 desktop.
+Both bugs predate the perf GTK UI's move to GTK 4; neither function is
+touched by that port.
 
 Signed-off-by: Matt Turner <mattst88@gmail.com>
 ---
- tools/perf/Makefile.config |  5 +++++
- tools/perf/util/annotate.c | 11 +++++++++++
- tools/perf/util/annotate.h | 12 ++----------
- 3 files changed, 18 insertions(+), 10 deletions(-)
+ tools/perf/ui/gtk/hists.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 3e59e2b7eaec..4ee7393a39f9 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -785,6 +785,11 @@ ifdef GTK4
-     GTK_CFLAGS += $(shell $(PKG_CONFIG) --cflags gtk4 2>/dev/null)
-     GTK_LIBS := $(shell $(PKG_CONFIG) --libs gtk4 2>/dev/null)
-     EXTLIBS += -ldl
-+    # libperf-gtk.so is dlopen()ed at runtime and calls back into
-+    # symbols defined in the perf binary itself (callchain_param,
-+    # symbol_conf, evsel__name, ...): perf needs to export those
-+    # dynamically for the plugin to resolve them.
-+    LDFLAGS += -rdynamic
-   endif
- endif
+diff --git a/tools/perf/ui/gtk/hists.c b/tools/perf/ui/gtk/hists.c
+index 716dcf02bd0e..342d4c3fecb0 100644
+--- a/tools/perf/ui/gtk/hists.c
++++ b/tools/perf/ui/gtk/hists.c
+@@ -449,7 +449,7 @@ static void perf_gtk__add_hierarchy_entries(struct hists *hists,
+ 		bf = hpp->buf;
+ 		size = hpp->size;
+ 		perf_hpp_list__for_each_format(he->hpp_list, fmt) {
+-			int ret;
++			int ret, inc;
  
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index df70e95a8470..123b6d5fcea7 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -145,6 +145,17 @@ static int annotated_source__alloc_histograms(struct annotated_source *src,
- 	return src->histograms ? 0 : -1;
- }
+ 			if (fmt->color)
+ 				ret = fmt->color(fmt, hpp, he);
+@@ -457,7 +457,18 @@ static void perf_gtk__add_hierarchy_entries(struct hists *hists,
+ 				ret = fmt->entry(fmt, hpp, he);
  
-+struct sym_hist_entry *
-+annotated_source__hist_entry(struct annotated_source *src, const struct evsel *evsel, u64 offset)
-+{
-+	struct sym_hist_entry *entry;
-+	long key = offset << 16 | evsel->core.idx;
-+
-+	if (!hashmap__find(src->samples, key, &entry))
-+		return NULL;
-+	return entry;
-+}
-+
- void symbol__annotate_zero_histograms(struct symbol *sym)
- {
- 	struct annotation *notes = symbol__annotation(sym);
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index fa08d09b80f7..40038a3779d4 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -406,16 +406,8 @@ static inline struct sym_hist *annotation__histogram(struct annotation *notes,
- 	return annotated_source__histogram(notes->src, evsel);
- }
+ 			snprintf(hpp->buf + ret, hpp->size - ret, "  ");
+-			advance_hpp(hpp, ret + 2);
++			/*
++			 * ret can be as large as hpp->size - 1, so ret + 2
++			 * can exceed hpp->size. advance_hpp() doesn't clamp,
++			 * so passing that through would underflow the
++			 * size_t hpp->size and let a later fmt->entry() in
++			 * this loop write past the end of the caller's
++			 * stack buffer.
++			 */
++			inc = ret + 2;
++			if (inc > (int)hpp->size)
++				inc = hpp->size;
++			advance_hpp(hpp, inc);
+ 		}
  
--static inline struct sym_hist_entry *
--annotated_source__hist_entry(struct annotated_source *src, const struct evsel *evsel, u64 offset)
--{
--	struct sym_hist_entry *entry;
--	long key = offset << 16 | evsel->core.idx;
--
--	if (!hashmap__find(src->samples, key, &entry))
--		return NULL;
--	return entry;
--}
-+struct sym_hist_entry *
-+annotated_source__hist_entry(struct annotated_source *src, const struct evsel *evsel, u64 offset);
+ 		gtk_tree_store_set(store, &iter, col_idx, strim(bf), -1);
+@@ -505,6 +516,7 @@ static void perf_gtk__show_hierarchy(GtkWidget *window, struct hists *hists,
+ 	GtkWidget *view;
+ 	int col_idx;
+ 	int nr_cols = 0;
++	int ret;
+ 	char s[512];
+ 	char buf[512];
+ 	bool first_node, first_col;
+@@ -541,9 +553,10 @@ static void perf_gtk__show_hierarchy(GtkWidget *window, struct hists *hists,
+ 	/* construct merged column header since sort keys share single column */
+ 	buf[0] = '\0';
+ 	first_node = true;
++	ret = 0;
+ 	list_for_each_entry_continue(fmt_node, &hists->hpp_formats, list) {
+ 		if (!first_node)
+-			strcat(buf, " / ");
++			ret += scnprintf(buf + ret, sizeof(buf) - ret, " / ");
+ 		first_node = false;
  
- static inline struct annotation *symbol__annotation(struct symbol *sym)
- {
+ 		first_col = true;
+@@ -552,11 +565,11 @@ static void perf_gtk__show_hierarchy(GtkWidget *window, struct hists *hists,
+ 				continue;
+ 
+ 			if (!first_col)
+-				strcat(buf, "+");
++				ret += scnprintf(buf + ret, sizeof(buf) - ret, "+");
+ 			first_col = false;
+ 
+ 			fmt->header(fmt, &hpp, hists, 0, NULL);
+-			strcat(buf, strim(hpp.buf));
++			ret += scnprintf(buf + ret, sizeof(buf) - ret, "%s", strim(hpp.buf));
+ 		}
+ 	}
+ 
 
 -- 
 2.54.0
