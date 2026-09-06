@@ -1,43 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA145450F2;
-	Sun,  6 Sep 2026 15:42:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5849E3537FD;
+	Sun,  6 Sep 2026 15:43:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788709345; cv=none; b=J+6b99b1JKG5Z1ScCjigMjxrkSPE5khIE6OZb7PbKewVGbzm0vA7BEaRE5FVkqIV2b/USBYO3IotmHx77zrZjl/ks7kfRy1+puf5Hq7rxLE2V4HeWxp6lBvDX2a0+rjJXFmBO5GWdskngRcSR20Nfc8nEK0aTaL5FnruF4ZMjJU=
+	t=1788709406; cv=none; b=Gg+Dk7D8BrKH9EkU1zFDRJGBq709q8oJ0FhPCq/CtvnCj6PQcGbLrBLcT1Qs4/qZeqim6zeKG7pHzdzWvgwdfQoGLKhdEyF9taoysXOAP1syagN4q0i9jeAMXB6uYw9Lylfo2b2Kj0zK38zZEpSshS2Usq5hgJT9DCEG4fXFc7k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788709345; c=relaxed/simple;
-	bh=11nwYOqjS7WVavYxrg7Ld+NiROnkUQGKhy7RW/7i2FA=;
+	s=arc-20240116; t=1788709406; c=relaxed/simple;
+	bh=DYm0pav8hBYXXiKG7Shp3j+knBaUCszPeiWoYZ04vWE=;
 	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=q7t5eMp69KK49Vm6GHYtMWR1+O+2q29Dsp1dTu5WN9IuvssAXDh9YMHGQ0FTeyFW3iUZszNPc/5mMagfKX+rJPkG/fWHLQCNKaNps/bmwKFhFIqs5Fjc9Yekoa9XIabbu2MPagYufPlsXzEWrLjnzs3eaRIjEn4xiRtUt4yHbVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TgnZSgWq; arc=none smtp.client-ip=100.103.45.18
+	 Mime-Version:Content-Type; b=SNWnF+6KXx5AdvvQhnH18LYCYUnQgVhDYj6idJL6sjgIxumhQVylpDHhDC+LhpEN+zE7QV1E/okcxsijSqENTe+nLJ7vyZeprkLzf4lAhiui8vlyMUUgsD4EJz3ZhUJSpsNtTiyIa0e1hrZrSSlHpRUKRfoKjXA9C0IDe8a0+f4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWXqEb1F; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TgnZSgWq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ED031F00A3A;
-	Sun,  6 Sep 2026 15:42:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWXqEb1F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B113F1F00A3A;
+	Sun,  6 Sep 2026 15:43:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788709344;
-	bh=HqFbEB3BcoZW6oNfC9aLw0EaGak7+Jw0+tBf/ANKn+g=;
+	s=k20260515; t=1788709405;
+	bh=iOVQMX1Df4zzH9eFtmY3W2AAsO2R4v8sD453QkenLaE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=TgnZSgWq7V0snDWIfbeYFOHyLLmBVH8ywgWAymCaAJREDIZvTU7kOy1yhRXRMmxOv
-	 r/dsuEz/ONQzteOn7VgAVAF3d74N6fhrmgc7iUSaXmUTB0y05fcXh2cyr7z4cgtDRo
-	 qARSZuggRt3/Lo5/grVFFXyIak4hMjyVfNigvTZmOUHlSvfxQoIYKm2K2if16fnv9H
-	 hGlnVgqbuUVXg9JttijE06k+ze2YV5PKZw1pkO1Sc5jceXZ0zgArHtt/zx3dobqXxL
-	 00X6Y8yjH0a0dgrJdg+4DfZPa6h4S/bxx9SdvXdfFWP1Ma3te+J9ELOAbMJsPsZETf
-	 0j50sWEoCEIoA==
-Date: Mon, 7 Sep 2026 00:42:21 +0900
+	b=YWXqEb1Fp/9IBcq/g5fidA1VVirWfA8EeTuCNDWv8kbk+8b+K0uFwNwZq1YsQc4W0
+	 kZ2sysPfqq855NdiCbQk3iVrqyfNYmS9HmSpm91voK7keJ+Azfold/h1g78tohhhei
+	 EgGrr8VMbpF7Iug2fUkB9tsY8qUNtrX9Z2EjxttHjI/Cm5Z6GihBK4v0iw0uPyODLt
+	 bw6CSJZNA+Ub1XDOF3RBEwMo1WAafFGIqSSYa1uQ42BDIOjj1vBOoFmysCpeoSPg7l
+	 LQTz2hcBLnzFood8nsmrWZiUcXfEVNGVG1Y8S64frVE3HhrNWMSR6d9iq9ppxxoUnz
+	 IQjKJRIL+RBPw==
+Date: Mon, 7 Sep 2026 00:43:21 +0900
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To: sashiko-reviews@lists.linux.dev
-Cc: sashiko-bot@kernel.org, linux-trace-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v14 05/14] x86/hw_breakpoints: Add
- arch_modify_local_hw_breakpoint_addr() API
-Message-Id: <20260907004221.6977b7132e65a04002c21d8c@kernel.org>
-In-Reply-To: <20260830143849.070271F000E9@smtp.kernel.org>
+Cc: sashiko-bot@kernel.org, linux-perf-users@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v14 06/14] HWBP: Add modify_local_hw_breakpoint_addr()
+ API
+Message-Id: <20260907004321.0c38b17c5163f018053ca9a2@kernel.org>
+In-Reply-To: <20260830144056.EB6391F000E9@smtp.kernel.org>
 References: <178810001186.64882.2161016469449127450.stgit@devnote2>
-	<178810006604.64882.2095793023976981357.stgit@devnote2>
-	<20260830143849.070271F000E9@smtp.kernel.org>
+	<178810007699.64882.3789162690369937099.stgit@devnote2>
+	<20260830144056.EB6391F000E9@smtp.kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -48,44 +48,15 @@ Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Sun, 30 Aug 2026 14:38:48 +0000
+On Sun, 30 Aug 2026 14:40:56 +0000
 sashiko-bot@kernel.org wrote:
 
-> > +int arch_modify_local_hw_breakpoint_addr(struct perf_event *bp,
-> > +					 unsigned long addr)
-> > +{
-> 
-> [ ... ]
-> 
-> > +	do {
-> > +		seq = this_cpu_inc_return(cpu_dr7_seq);
-> > +		this_cpu_write(cpu_debugreg[i], addr);
-> > +		barrier();
-> > +		set_debugreg(addr, i);
-> 
-> [Severity: High]
-> Does this code risk violating the x86 hardware architecture specification?
-> 
-> Looking at arch_modify_local_hw_breakpoint_addr() in
-> arch/x86/kernel/hw_breakpoint.c, set_debugreg() directly updates the debug
-> address register (DR0-DR3) while its corresponding enable bit in DR7 might
-> still be set.
-> 
-> According to hardware specs, modifying a debug address register without first
-> disabling the breakpoint in DR7 can lead to spurious debug exceptions or
-> unpredictable processor behavior if an NMI occurs or if execution boundaries
-> trigger a match on the transient state.
-> 
-> Should the DR7 enable bit be cleared before updating the debug register?
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Low] Lockless updates to `bp->attr.bp_addr` and `counter_arch_bp(bp)->address` lack `WRITE_ONCE()`, constituting a formal data race under the Linux Kernel Memory Model.
 
-For the wprobe, the handler will check the spurious exception, but it is
-better to make it safer.
+Ah, good catch! Let me add WRITE_ONCE() there.
 
-I will update arch_modify_local_hw_breakpoint_addr() to temporarily clear the
-slot's enable bit in DR7 before writing the new address, and re-enable it
-afterward within the cpu_dr7_seq loop.
-
-Thank you!
+Thank you,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
