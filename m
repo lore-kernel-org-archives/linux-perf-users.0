@@ -1,100 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73DF2AD37
-	for <linux-perf-users@vger.kernel.org>; Sun,  6 Sep 2026 12:33:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A67731355B;
+	Sun,  6 Sep 2026 13:03:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788698017; cv=none; b=PBrgBFedl1PXc3QD/g1LP/+18rol9JMhLdw9QiR7T5Tjy+AZ7O8yGocerGzpIfTcZpOlUjC+Xoom4hmEuHnRKaAK74Fv8uGFEb//oAOCqKPu7qIZ9knExtgkbAcqKQdmcMzqaa6/2rc+h86dFYApKOK+WOyUU/F+5awNT9IIIXE=
+	t=1788699807; cv=none; b=DU2yRHAhv75hXAfhO/ppbczMHKxnamdAIzdha7MHiA1iOqolz2ctz8tC13VOIp2OatWwUBKULG+7AsFy1y4jS/iIWgH8atvwW5FWK8cPi9vTH1d/i3QzS2PLiXGdhbmHAvjubH36E41AvgqmreWJ2y4W0EiVCiNcxKB+hto7IYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788698017; c=relaxed/simple;
-	bh=vwHHbnV1p22QTJHuUmg875rg9+W7XGJf6P9Z2m51m1o=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=GKMYFdhLSqyQaf8TG6MefLEhcs/la+A4DVtcgRprm6W22bZTOtkFf2Tx92vWXM2zefrff6lQjdvM14iQaD5upDfu3utmlYyOdbqOQ4tEPoCdVoto3wj97DwZ3CXj9IzMYBpuKkwZ0PmLBf5IMf+lW3VXR9u80yzij5MqOs9A8Ng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bcioKvMk; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788699807; c=relaxed/simple;
+	bh=AOHshmq757rovW6nizQDM3mlfccaqdkN+Obm1sG9e9w=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=DhBbV3SRChu3p0tFmaF8GgyuVfl5Mcbsxiai36IlQP3Fq+DzgFD8/PzsswK4wkxH9PvJ8CJQrdfu1xixhgvygsiq3Zb4QMGbHTBnjDFBkwueQLk0C1ebCtITfeaAVbDzHUpDkoIS5Pvh5ZqanPHTreHRvg8BgRGoFZFHOFLWnXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M2PLDsdm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bcioKvMk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BC681F00A3A;
-	Sun,  6 Sep 2026 12:33:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M2PLDsdm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62B851F00A3A;
+	Sun,  6 Sep 2026 13:03:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788698016;
-	bh=EN+I5sn8iNpsXhh86NTXh7ET+vjXoako9R63BF04hPw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=bcioKvMk1NkiDR4puRIGYX8S+bK72W2baa1JVLk6CyJ5rZOlh4axDzkjf0aFVVVTz
-	 Tk3KJ+4U7uHvkqSoj6dhxWbWgGmUKjWIh9THeVJin81Z9oqkA36QpOH2Tp6HTEaw3b
-	 w5UCQHxa6IGAwhEatyOHBND0P4Pjq3eELjPTn8N7PWKLu+Q8c2H9DZH/tFS9AogNG/
-	 R0Z3Oc8szs/764Hz6eqQcLcy7dUHINk9RjaVnwP9V9arC+iLLiFzzU26+DIqW4GjBg
-	 L/5kOjLX9ujHs1ozrnCq80xse1xvJsp2OyHCR8sKiRclOoLLfkjakMjs4k6xoNA+RO
-	 VXOaoGNU16hRw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] perf/core: Strengthen userpage update ordering
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Thaumy Cheng" <thaumy.love@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260906122350.24305-1-thaumy.love@gmail.com>
-References: <20260906122350.24305-1-thaumy.love@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 06 Sep 2026 12:33:35 +0000
-Message-Id: <20260906123336.1BC681F00A3A@smtp.kernel.org>
+	s=k20260515; t=1788699805;
+	bh=lfwXdUEBhA4p7kgiuvjkzX+edkew4c2koaS4Cks8Mcg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=M2PLDsdmgNmMeLzinbvFuxNqAf24D3IDOy4soCcvSGceIMuo5vR6bhEAytlpCY65P
+	 VH/8NqESaRaSxCPH+9IQBHbRex7KF3o+gDslHnKMQKOh9cjXB0XrtQajQ27+C1S6we
+	 vbOi+plTRPwL6E3Eqq68DvkyVrfGPHug90X78fPxwBlLDlIoVgoPZCTWy8jGtta42P
+	 WbA2gFs9QsRUMAaWZBWSoQRfUoDhzDExFsj4MtMD9+uidSrJxqQhcFnDvcRP2Y/UVJ
+	 83sgBoL900OcwaVgMBb81RDabMEgdMt9pWfzJQsCLmnXwN28SC0W6mssGJDekJ+zWA
+	 fp9nuKLMRPHmA==
+Date: Sun, 6 Sep 2026 22:03:20 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: sashiko-bot@kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v14 01/14] x86/mce: Fix hardware debug register
+ corruption on task migration
+Message-Id: <20260906220320.9d19131a69f3227fdd07e026@kernel.org>
+In-Reply-To: <20260830144005.C28ED1F000E9@smtp.kernel.org>
+References: <178810001186.64882.2161016469449127450.stgit@devnote2>
+	<178810002334.64882.15357388305843450280.stgit@devnote2>
+	<20260830144005.C28ED1F000E9@smtp.kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+On Sun, 30 Aug 2026 14:40:05 +0000
+sashiko-bot@kernel.org wrote:
 
-Pre-existing issues:
-- [High] Preexisting seqlock writer re-entrancy bug in perf_event_update_us=
-erpage leading to corrupted data for userspace readers.
---
+> >  static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
+> >  {
+> >  	irqentry_state_t irq_state;
+> > +	unsigned long dr7;
+> >  
+> >  	WARN_ON_ONCE(user_mode(regs));
+> >  
+> > @@ -2118,18 +2119,24 @@ static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
+> >  	if (mca_cfg.initialized && mce_check_crashing_cpu())
+> >  		return;
+> >  
+> > +	dr7 = local_db_save();
+> 
+> [Severity: High]
+> Does moving local_db_save() below the early checks in
+> exc_machine_check_kernel() expose this early #MC entry code to hardware
+> breakpoints?
+> 
+> If a privileged user sets a hardware data breakpoint on a kernel variable
+> accessed here, such as mca_cfg.initialized or variables inside
+> mce_check_crashing_cpu(), a #DB exception could fire in kernel mode.
 
-commit 019372a4e61c18f0c5a22ddb487c7acef14ffc7e
-Author: Thaumy Cheng <thaumy.love@gmail.com>
+Ah, good catch! This can happen if we introduce wprobe.
 
-perf/core: Strengthen userpage update ordering
+> 
+> If a Machine Check Exception (#MC) then occurs and preempts the #DB handler,
+> it switches to the #MC IST stack. Because local_db_save() is not called
+> until after these variable accesses, the code could trigger a nested #DB
+> exception.
+> 
+> Since x86 uses a fixed-size Interrupt Stack Table (IST) for #DB exceptions
+> that unconditionally resets the stack pointer to the top of the #DB IST
+> stack, wouldn't the nested #DB overwrite the active stack frame of the
+> interrupted #DB handler, leading to a fatal crash when it attempts to
+> return?
+> 
+> Could local_db_save() be called at the very beginning of
+> exc_machine_check_kernel() to prevent this IST stack corruption?
 
-This commit replaces compiler barriers with smp_wmb() around the userpage
-payload update in perf_event_update_userpage(). It aims to strengthen the
-publication ordering for cross-CPU readers of time conversion fields on
-weakly ordered architectures.
+Yes, I will fix it.
 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index a6c8e38a31104..9c6dfb79fd77d 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -6858,7 +6858,8 @@ void perf_event_update_userpage(struct perf_event *=
-event)
->  	userpg =3D rb->user_page;
-> =20
->  	++userpg->lock;
-> -	barrier();
-> +	/* Publish the odd lock value before updating the payload. */
-> +	smp_wmb();
+Thanks!
 
-[Severity: High]
-This is a pre-existing issue, but does perf_event_update_userpage() have a
-seqlock writer re-entrancy bug here that defeats the synchronization?
-
-Since this function disables preemption (via preempt_disable() earlier in
-the function) but leaves hardware interrupts enabled when called from task
-context (such as from perf_mmap_rb()), what happens if a PMU hardware
-interrupt like an NMI triggers during this window?=20
-
-If the NMI handler also calls perf_event_update_userpage() for the same
-event, it would increment userpg->lock again, advancing it to an even value.
-A concurrent userspace reader on another CPU would then see an even lock
-value and could read actively-torn payload data (like time_mult, time_shift,
-or time_offset), leading to bogus timestamps.=20
-
-Should hardware interrupts be disabled before incrementing the seqlock to
-prevent this writer re-entrancy?
-
->  	userpg->index =3D perf_event_index(event);
->  	userpg->offset =3D perf_event_count(event, false);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260906122350.2430=
-5-1-thaumy.love@gmail.com?part=3D1
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
