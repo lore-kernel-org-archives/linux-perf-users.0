@@ -1,206 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A3743DA7D1
-	for <linux-perf-users@vger.kernel.org>; Sun,  6 Sep 2026 14:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61E1345EBF
+	for <linux-perf-users@vger.kernel.org>; Sun,  6 Sep 2026 15:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788704454; cv=none; b=NdBb97QgZMpW/Stj9QDXk008SMx2HKI9deJsqgZWf9x/84EBcrFhbdmWyXnvwZ0BD21c4OXm+h+t0rYELMrW1Q+DdzdQR+Bx6rP89WzUl4mRNWAG+gCSWvUhpeV3E4z0mI56Tndz9FsQvXdhVuB8/M3kLe8+4Mdcr5pWI7jj6os=
+	t=1788707001; cv=none; b=t/9YBfcNqb4BcAsavjircyNXfmPtScMD28NbCZv1h2L5eFeYjZ2d5dI9OzpiGZZ6+DkLqG0JhVxhJXiLj7oKLFysGzUXvfMA3Fh4dUexuum3HmQK+Ou9xNxFsdb1QASKMA1PzlOQqIu0m0BBXPt7uRmD8EbSMkaUX5yS6ixvH+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788704454; c=relaxed/simple;
-	bh=+/xZGjxc1kpQJEVVxWKyIr0YA1c3WZmKWzK1jbUe+dg=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=snSHB5S/bJCQ4HAfwU8nQL+yN8Gaiq3sCjUjDo+Bi6sGLJeJLc69cKvFUxVU8nTCIY11WXnNPvw5pZEWLbuV3zVPkMywvDlVAWOx5VDYn0g1FvO6LOyP/7lG5kkWEgMwDHgPBdgtVfRwilURbPPNVv425zVf5/UpxRkSYxkZ+eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BCPx3+r7; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788707001; c=relaxed/simple;
+	bh=yXoY/9Jdn2Bh1wjZWv3vhwPgti2rTbW9TXtgpdFB4+w=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Z16EiuFIxTgvSTw2+VnO2PTtu9fTC7zDjoa6kMi5E8F7/3IrhFtjPKFlxMnS5MB317KPQI2jJu5e1gBcWGFVBrKzYoOSYNUNjQab5cmBv1OgGYVEps6m7PgEgr8VypEO+IgHbn7fcU1vr3yX1mNs90S1u/zpI7TtIQy3oj06pOE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ls8Q3m2T; arc=none smtp.client-ip=209.85.128.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BCPx3+r7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E195B1F00A3A;
-	Sun,  6 Sep 2026 14:20:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788704451;
-	bh=5TAps9ju1fFuq3AbVXW1FSWBlI0Vshb3AIcIXm6ejFE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=BCPx3+r7VRRDpZmV/f8DX1CeudiheqPKDMeWMxhPEJiUDCBuEv3X0gzkHDrPScwFe
-	 Ca8/EIHrZPyIvTBx6v5gH77wVa2Z3s2Tp2M3BYBcnM6Wj24TiLPLAcqypICTpqvbQG
-	 nFOr0tb3nESZgaKUvy2DKek0kuX69Hgu/aI/CTmke753uHB69raKo9P+jPrSN9Fu/G
-	 CXSCMImDlKKAMzDsyvjf5aV5KjRSOBQFzR+qeH6juAfiDOI67b4zdYmuIvY+8KKpu9
-	 zBbmpzUPRDPgeC65eB8cngstBITnWl/5VCwdhdpVDfiSUAMjlEoXn3+YJDX5tKEiSc
-	 EjE+3xW/ba0yw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/2] tools: port perf ui from GTK 2 to GTK 4
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Matt Turner" <mattst88@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260906-perf-gtk2-v1-1-7564bf8523a9@gmail.com>
-References: <20260906-perf-gtk2-v1-0-7564bf8523a9@gmail.com>
- <20260906-perf-gtk2-v1-1-7564bf8523a9@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 06 Sep 2026 14:20:50 +0000
-Message-Id: <20260906142050.E195B1F00A3A@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ls8Q3m2T"
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-86b03b75fecso41446957b3.0
+        for <linux-perf-users@vger.kernel.org>; Sun, 06 Sep 2026 08:03:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788706998; x=1789311798; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=azMvLN7G+K5QCBJaIvwSGsEL+rjx+SGnVYrqi+oBp1U=;
+        b=Ls8Q3m2TG08JHds55ULEnAcLsEVTXM9Edq8WS2aAWCV08OKJTTs8oLvFA7W1B6PuZT
+         G3Lo0iliglZ5QTLOmq3qZyIyNz8EYqwvenO100U/m3rRLUEMokx/ZfbRA4u8rXaE87uo
+         okjeX8T03VxMYQOmKv9Y0KDW2icetEwccyOXCEe4j+6H8eFlD4sd4nDrlT+BLX6qodVm
+         96NrXsBFlvLSbutq7jPzS+kcHOvGs8+fY5Hnh9cBhmXM/Fi0n9zxu922SEDNbNGRjyNx
+         6NaXOxqYUuKvJ+vfdO+pjCdBJRaj6d19r7Y+hzQQcdXIIR1FTfgyoaFxtLMhYd2DUAWa
+         Hgpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788706998; x=1789311798;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=azMvLN7G+K5QCBJaIvwSGsEL+rjx+SGnVYrqi+oBp1U=;
+        b=YNk+ki7goD4jNJXUHGGgR4xK+6gtNkIOZFjNkdBnOwPquQpPQpTgQeTIQz0OAVjoCH
+         NpyQiRmdEYnSFC5DFyl2JoI0QzmJvTArabIMO8xDa+OUBAhfj6idGIh/FM5EAPdB/D8y
+         Ju8f0CFnZ5yGXdsE1agC8cCLR5fOswZ7dsVJX2i9BstuRGlHmIkvDkALMYZlXJze9cKZ
+         2Mtoe/jT3F3luIr2JtvFEBl2F1uOenCjbGl28GycB9CrDxaeUO8l9R8Eck4g1iTXKJSN
+         35QODjem9+6SrjZ2H88vhZG4LKMd9Q7ihvGryF/MyVZy6xGs58ZD5+t1b9nADqsynzLO
+         6+FA==
+X-Forwarded-Encrypted: i=1; AKwUvBxgdsQj7uduvpJqM/k0I0/zCT/tqP/4CDvbcr5luhOMbwESkVIVw5YR4lYNyNaYi6W8nOXfXbMZ46bVSPHWE3Jk@vger.kernel.org
+X-Gm-Message-State: AFuF++nGCSh7p+Vr5sjmB16+ZGsOGhvuf2vJLTJM/hZfu7YOjTn1FgMB
+	cUXbn5aiWotYJoVCGEz4XpbrCRDyVenBp3Jim5DsdDHZNplgk5R63C7O
+X-Gm-Gg: AYBFou1/S3reZpds284XfWZYWNuWLd8vBFbEMl1n5+rUAriOudycx0ho2Ja8pclwh2H
+	1u9BVsW8DzNuxL/Vl5kysG11wIMqHjcvkdG9dq34XNwE63DMPHQn8OVAbajInGrSbM7FOSbLyBO
+	KSRK/X986PmHSzpisR4N4hkRCYl2L8crnEmo43VY5usI66/gsQRj1i283anznoXvFUNQxllXwVM
+	E/244TuNKFk+bVzYBzcN3SqoIf4kSgu1FkwyuY17twFy1to04oKdXc1WmMeQlTpGpGm2smdTKbw
+	rrGr+cQBqrjk+Zqmc5MpaShH/xqizNZ6uqan1+7sEYRklVPGND7mTDpkcTVWYX8G4G8pVgNJq2J
+	AiMK90mO0X9iZO/OvCVBUg6p5WF34Wl82IrOwhS7t3nTmQ2lndj3EN6ORKct31rmPZDiMsxAK3J
+	KGQq0DRukvojMQJTSMxMhiJIwXQIayKmL6BcR3Ez6gjyCfVjvEuwK9eaL90YciYw==
+X-Received: by 2002:a05:690e:191b:b0:66f:dcfd:5530 with SMTP id 956f58d0204a3-66fdcfd55b7mr143035d50.86.1788706998442;
+        Sun, 06 Sep 2026 08:03:18 -0700 (PDT)
+Received: from localhost ([2600:1702:7a90:6f9f:8bc4:8aec:108d:7a04])
+        by smtp.gmail.com with ESMTPSA id 956f58d0204a3-66fb48f1646sm6520289d50.9.2026.09.06.08.03.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 06 Sep 2026 08:03:16 -0700 (PDT)
+From: Matt Turner <mattst88@gmail.com>
+Subject: [PATCH v2 0/2] perf tools: port UI from GTK2 to GTK4
+Date: Sun, 06 Sep 2026 11:03:14 -0400
+Message-Id: <20260906-perf-gtk2-v2-0-3eccff053cd1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/23MQQ7CIBCF4as0sxZDsYPWlfcwXQACnWhLAw3RN
+ Nxd7Nrl//LybZBsJJvg2mwQbaZEYa4hDg2YUc3eMnrUBsGF5D2XbLHRMb8+BUNEo3intUQB9b9
+ E6+i9W/eh9khpDfGz07n9rf+U3DLOzig77S4oTqq/+UnR62jCBEMp5QssWtO6ogAAAA==
+X-Change-ID: 20260906-perf-gtk2-555ca04bb652
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ bpf@vger.kernel.org, Matt Turner <mattst88@gmail.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2777; i=mattst88@gmail.com;
+ h=from:subject:message-id; bh=yXoY/9Jdn2Bh1wjZWv3vhwPgti2rTbW9TXtgpdFB4+w=;
+ b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLLmNmz+mNEd17pMwkA7br6Qf9lbSSvJ7Okrb1iYzehgb
+ L52uLKr4yMLgxgXw0wxRZa49Yoss9p2LPU5Lf0LZg4rE8gQaZEGBiBgYeDLTcwrNdIx0jPVNtQz
+ BDJ0jOIhcnoMGpnFxaWpRbppBUUOefkliSWZ+XnFevkFqXkF6QV6aZlpJRkZ+UXFqUAj9PJSS0x
+ dHd2MDA1MLB0tzJwsHE1NnJ2dDJ3cHB2dXZ2MLM1NDJwtHU1cLc0ZuDgFYK5Zx83IMM9p+6GFLw
+ QX6C080eotWndmrfDpFzOXvmItneD/x0so/S7DP20dJbY214WbFWbuzuZ1N3WN3jP/SpXIzyYDL
+ /cTN04GMgMA
+X-Developer-Key: i=mattst88@gmail.com; a=openpgp;
+ fpr=3BB639E56F861FA2E86505690FDD682D974CA72A
 
-Thank you for your contribution! Sashiko AI review found 4 potential issue(=
-s) to consider:
+GTK2 is long dead upstream and increasingly hard to keep building on
+current distros. This series ports perf's GTK-based report browser to
+GTK4 and fixes it up so it's actually loadable at runtime after the
+port.
 
-New issues:
-- [High] The custom nested GMainLoop in `perf_gtk__error()` will hang indef=
-initely if the parent window is closed or a process signal is received whil=
-e the error dialog is open.
-- [Low] The code uses GTK APIs that have been removed in GTK4, causing buil=
-d failures when GTK info bar support is enabled.
+Patch 1 does the mechanical port (build system, widget API changes).
+Patch 2 fixes a runtime issue found after the port that prevented the
+browser from loading.
 
-Pre-existing issues:
-- [High] User-triggered Use-After-Free in the progress dialog if closed man=
-ually.
-- [High] Reusing an exhausted `va_list` after `vasprintf` fails leads to Un=
-defined Behavior and arbitrary memory reads.
---
+Signed-off-by: Matt Turner <mattst88@gmail.com>
+---
+Changes in v2:
+- Fix error dialog's nested GMainLoop hanging if the parent window
+  closes or a signal arrives while the dialog is open (quit from
+  "destroy", not just "response")
+- Fix build with GTK_INFO_BAR_SUPPORT: gtk_info_bar_get_content_area()
+  is gone in GTK 4, use gtk_info_bar_add_child() instead
+- Fix use-after-free in the progress dialog on manual close
+- Fix reuse of an exhausted va_list in the vasprintf() failure path
+- Link to v1: https://lore.kernel.org/r/20260906-perf-gtk2-v1-0-7564bf8523a9@gmail.com
 
-commit b3b8000cd456db5d6741b6a000f3706d6fd6d929
-Author: Matt Turner <mattst88@gmail.com>
+---
+Matt Turner (2):
+      tools: port perf ui from GTK 2 to GTK 4
+      perf tools: make the GTK4 report browser actually loadable at runtime
 
-tools: port perf ui from GTK 2 to GTK 4
+ tools/build/Makefile.feature                       |  5 +-
+ tools/build/feature/Makefile                       | 12 ++---
+ .../{test-gtk2-infobar.c => test-gtk4-infobar.c}   |  4 +-
+ tools/build/feature/{test-gtk2.c => test-gtk4.c}   |  4 +-
+ tools/perf/Documentation/perf-report.txt           |  2 +-
+ tools/perf/Makefile                                |  2 +-
+ tools/perf/Makefile.config                         | 27 ++++++-----
+ tools/perf/Makefile.perf                           |  6 +--
+ tools/perf/builtin-annotate.c                      |  8 ++--
+ tools/perf/builtin-report.c                        |  8 ++--
+ tools/perf/scripts/install-build-deps.sh           |  4 +-
+ tools/perf/tests/make                              |  4 +-
+ tools/perf/ui/gtk/annotate.c                       | 28 +++++------
+ tools/perf/ui/gtk/browser.c                        | 54 +++++++++++++++++-----
+ tools/perf/ui/gtk/gtk.h                            |  3 ++
+ tools/perf/ui/gtk/hists.c                          | 32 +++++--------
+ tools/perf/ui/gtk/progress.c                       | 39 +++++++++++-----
+ tools/perf/ui/gtk/setup.c                          |  5 +-
+ tools/perf/ui/gtk/util.c                           | 52 +++++++++++++++++++--
+ tools/perf/ui/setup.c                              |  2 +-
+ tools/perf/util/annotate.c                         | 11 +++++
+ tools/perf/util/annotate.h                         | 12 +----
+ 22 files changed, 206 insertions(+), 118 deletions(-)
+---
+base-commit: 9f0346dcbea363787186c94ef94dd01aaa215afa
+change-id: 20260906-perf-gtk2-555ca04bb652
 
-Port straight to GTK 4 rather than the intermediate GTK 3, since GTK 4
-is where new development happens and GTK 3 is now old itself.
+Best regards,
+-- 
+Matt Turner <mattst88@gmail.com>
 
-GTK 4 removes several APIs perf's GTK UI relied on, rather than just
-renaming them, so this is a bigger change than a GTK 2 to GTK 3 port
-would have been.
-
-[ ... ]
-
-> diff --git a/tools/perf/ui/gtk/browser.c b/tools/perf/ui/gtk/browser.c
-> index d2dadf3873fbd..ee69e6a2bfbb0 100644
-> --- a/tools/perf/ui/gtk/browser.c
-> +++ b/tools/perf/ui/gtk/browser.c
-[ ... ]
-> @@ -50,15 +82,15 @@ GtkWidget *perf_gtk__setup_info_bar(void)
->  	GtkWidget *content_area;
-> =20
->  	info_bar =3D gtk_info_bar_new();
-> -	gtk_widget_set_no_show_all(info_bar, TRUE);
-> +	gtk_widget_set_visible(info_bar, FALSE);
-> =20
->  	label =3D gtk_label_new("");
->  	gtk_widget_show(label);
-> =20
->  	content_area =3D gtk_info_bar_get_content_area(GTK_INFO_BAR(info_bar));
-
-[Severity: Low]
-Does compiling with GTK4 enabled fail here? While test-gtk4-infobar.c still
-finds gtk_info_bar_new(), APIs like gtk_widget_show(),
-gtk_info_bar_get_content_area(), and gtk_widget_hide() were removed in GTK4
-and replaced, which might cause build failures.
-
-> -	gtk_container_add(GTK_CONTAINER(content_area), label);
-> +	gtk_box_append(GTK_BOX(content_area), label);
-> =20
-> -	gtk_info_bar_add_button(GTK_INFO_BAR(info_bar), GTK_STOCK_OK,
-> +	gtk_info_bar_add_button(GTK_INFO_BAR(info_bar), "_OK",
->  				GTK_RESPONSE_OK);
->  	g_signal_connect(info_bar, "response",
->  			 G_CALLBACK(gtk_widget_hide), NULL);
-
-> diff --git a/tools/perf/ui/gtk/progress.c b/tools/perf/ui/gtk/progress.c
-> index eea6fcde518a8..1a73a6ba259f0 100644
-> --- a/tools/perf/ui/gtk/progress.c
-> +++ b/tools/perf/ui/gtk/progress.c
-> @@ -13,37 +13,41 @@ static void gtk_ui_progress__update(struct ui_progres=
-s *p)
->  	char buf[1024];
-> =20
->  	if (dialog =3D=3D NULL) {
-> -		GtkWidget *vbox =3D gtk_vbox_new(TRUE, 5);
-> +		GtkWidget *vbox =3D gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
->  		GtkWidget *label =3D gtk_label_new(p->title);
-> =20
-> -		dialog =3D gtk_window_new(GTK_WINDOW_TOPLEVEL);
-> +		dialog =3D gtk_window_new();
->  		progress =3D gtk_progress_bar_new();
-> =20
-> -		gtk_box_pack_start(GTK_BOX(vbox), label, TRUE, FALSE, 3);
-> -		gtk_box_pack_start(GTK_BOX(vbox), progress, TRUE, TRUE, 3);
-> +		gtk_widget_set_vexpand(label, TRUE);
-> +		gtk_box_append(GTK_BOX(vbox), label);
-> +		gtk_widget_set_vexpand(progress, TRUE);
-> +		gtk_box_append(GTK_BOX(vbox), progress);
-> =20
-> -		gtk_container_add(GTK_CONTAINER(dialog), vbox);
-> +		gtk_window_set_child(GTK_WINDOW(dialog), vbox);
-> =20
->  		gtk_window_set_title(GTK_WINDOW(dialog), "perf");
-> -		gtk_window_resize(GTK_WINDOW(dialog), 300, 80);
-> -		gtk_window_set_position(GTK_WINDOW(dialog), GTK_WIN_POS_CENTER);
-> +		gtk_window_set_default_size(GTK_WINDOW(dialog), 300, 80);
-> =20
-> -		gtk_widget_show_all(dialog);
-> +		gtk_widget_set_visible(dialog, TRUE);
->  	}
-> =20
->  	gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(progress), fraction);
-
-[Severity: High]
-This isn't a bug introduced by this patch, but can this cause a
-use-after-free if the user manually closes the progress dialog?
-
-If the window manager destroys the dialog, the dialog and progress widget
-pointers aren't set to NULL. The next call to gtk_progress_bar_set_fraction=
-()
-might dereference a freed widget pointer.
-
-> diff --git a/tools/perf/ui/gtk/util.c b/tools/perf/ui/gtk/util.c
-> index c47f5c387838c..7df80cf6b2b5a 100644
-> --- a/tools/perf/ui/gtk/util.c
-> +++ b/tools/perf/ui/gtk/util.c
-[ ... ]
-> @@ -46,9 +58,15 @@ static int perf_gtk__error(const char *format, va_list=
- args)
-
-[Severity: High]
-This is a pre-existing issue, but could this lead to undefined behavior and
-out-of-bounds stack reads?
-
-In the early fallback paths of perf_gtk__error() and similar functions, if
-vasprintf() fails it returns a negative value after potentially exhausting
-args. The fallback error path immediately calls vfprintf(stderr, format, ar=
-gs)
-without resetting the va_list via va_copy(), which could cause vfprintf() to
-read past the end of the provided arguments.
-
->  					GTK_MESSAGE_ERROR,
->  					GTK_BUTTONS_CLOSE,
->  					"<b>Error</b>\n\n%s", msg);
-> -	gtk_dialog_run(GTK_DIALOG(dialog));
-> =20
-> -	gtk_widget_destroy(dialog);
-> +	loop =3D g_main_loop_new(NULL, FALSE);
-> +	g_signal_connect(dialog, "response",
-> +			 G_CALLBACK(perf_gtk__dialog_response), loop);
-> +
-> +	gtk_widget_set_visible(dialog, TRUE);
-> +	g_main_loop_run(loop);
-
-[Severity: High]
-If the parent window is closed or a signal is received while the error dial=
-og
-is open, will this nested main loop hang indefinitely?
-
-Since the dialog is created with GTK_DIALOG_DESTROY_WITH_PARENT, destroying
-the parent will programmatically destroy the dialog without emitting the
-'response' signal, leaving the loop blocked forever.
-
-> +	g_main_loop_unref(loop);
-> +
->  	free(msg);
->  	return 0;
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260906-perf-gtk2-=
-v1-0-7564bf8523a9@gmail.com?part=3D1
