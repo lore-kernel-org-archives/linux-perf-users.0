@@ -1,25 +1,25 @@
-Received: from CWXP265CU010.outbound.protection.outlook.com (mail-ukwestazon11022120.outbound.protection.outlook.com [52.101.101.120])
+Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020108.outbound.protection.outlook.com [52.101.196.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 487462D73B9;
-	Mon,  7 Sep 2026 01:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.101.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF05A2E2DDD;
+	Mon,  7 Sep 2026 01:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.108
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788745918; cv=fail; b=PBTMJAKBN58aWnkp9K11pZgfty301XQaKy/viTxQ3T/hpicmnMfi2eBGHwcn/hVM53lrt+RbdQxPdf8V5gTfyUMTPu63y12f5Wxj9zJ1e9vm9z47sBJVo7CeyuTB+Dvy271aOU+VLhSXoobHyJjHtZFC6JSR4CpYzQ0L3AE/oyA=
+	t=1788745923; cv=fail; b=ZNiLHuL/qP3ZWZGgbVj+MLhJGL0VqUPzriDPboXDt8+DEOfPTW3HIvV+SW5xdkTOZWvTucPq9JvlDykJBAy1ke2ZO8/eNiwkgVK7mrtinkuWD/jfQA9NjnUvO3g3RWFdKVMTxJQcgXNN6n1q9hG/huPc2R26/2fDeOnQEDMZ4Bc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788745918; c=relaxed/simple;
-	bh=RGFS2X/KQMHNJkgST3azAycYtBzyxPbtb74WYLTgxCc=;
+	s=arc-20240116; t=1788745923; c=relaxed/simple;
+	bh=PYQXaYnf9EGw1HJA3Jv6xzlFH3wFrGMegCEY5iT99V8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rGgpWdBX2VvaEwkbHafZ/90Q0po6JMaVXzdg8HUSsdQX0hZgVTR2oNfryoZPJ+ZGGoEPf42v5NtYMxe/TwFeJkD4JNmq9X0rk2t72iIc9rGhFMeuaS21SckVQ3e2u8PXmxIGMPd0TKPfaEnCsq/HfLrNQ7OMKIoTyRhbS7twvIs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.101.120
+	 Content-Type:MIME-Version; b=HhFQbufL7uhslUFLkC4bzDLOnnlx/gABQsgJJO+ZhGquFRBJhlnc8TS2FpaH7kYjg2RgyslvQ1+mhAXE8MBzOFmCgLWZKP2EyolPwcBgLIHSBZM8xDUuFdp7JvBq02ez9U31z6O+9s9XAChGVQTFZqD80RF44oJP6ibgR8blCKo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.196.108
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jmWxzRAlxo6d70TDPYmiFIHQd0PYAgJs/5ekAZAsqsNPcikDaKsVVSNRwkLFOp7xiOYsaD3ZZrUMEYfe4MYYHnhuIiveLe2UEY+88Qb0LLcpU5FhatY/cDny7pvcAFgJywqD5zLwWtDUEapJZlITK0KvX9nsSvWE8wLG/LEjBKq+uDEw8OBLUI3ocQidD7osSszve3GwYFZo1kJFW76/IgqTkGZZKF4C9SQfgD1PuY7E2TQfhkWZRHULcenJwVz/R2BD+DYVhPsqDG0XX32GMwv6sHlfdAt3/afF8oj1sSbNgS2aMXlOT3vC3G5cZpRIBTSZKU5xCIkaz/l1XuVx4w==
+ b=HhVlT9WZ+2OMjSPdXmbM27tj/5rrdwa6HTFlzyveA4FolPUd1xu4gpplB4Em+E+8KWlKNOqUk0gqlaJ6mMcLR7mFTbEsi2ZEgKkDES3rjMCkaGQxI3/zONXUj68GA3v+hJMF2l+MRhqEL0LjlLrcg40WdDOTss+AcwYqxSaso5SZjbT+54c8oi+Ygei+45N8t9SENSQvghtmfrKkTuz8qIL7P1JEqjfvaFppD/md5ucxot0mQcNAO6/ezIMQXH1IdVvGZnYQSHCPWSV7PsDLoFikB64VNhRhqkh5kGupFfDo+CIKa6lBq/RLdMRH1jHjEahnZ1wI+6ZrGYoEyuVP0g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=SwDfJ/hWHypatmSql7kw420SmWri7a4VENtP3/iMWIo=;
- b=tjWo+bb3WL4qnnYxSsXs+nM5tLsFQuwwVWCwztEYA3k9m9ja8kKtBqvcSiavZu8b25z55KXyf6LlU3BmuZterKQ52r8osdhdVnITMWjMaM+OSZG87zYSTbKVO5OJM2Wq6ZayCgqY/z7wbo5l59Gpba9OiPHY4/KEe6GD7Njp9cHH5VJy/kgZL9vcUB4ccicSwm4+ofhPoqEn6NRP7MKLAkcL9wV+5LZY2eipq+jwhgi8/EQ7+OFq0YyOfQhqgn6X1TvkejudTQle/UyqGiMlGs3syc4hlhT1sfklqkdMHqkFVZMVGE7hTzRnA6qRUZNR9DpfqyrEdhcm0HgYBdEycw==
+ bh=0fdEjtYpQ27Thv/rlJc92IsGjW0quzSwQCYFYMYBXrU=;
+ b=gi5t/UvVmtxgyVSeQWpYI6hN8CdyW5mSFQ2NpQ3jG1L7sw1U5I4x848PQUiRPYWcCifBqUioMsChDEthXdoEk01CTOVsaukpJlaFynt7I9KrelxxY0bTm1yyrFK0qXMAasOCqdawkWVIIw2hZ5oMHdcqXR6M2ykUUQP8ADvLPI14Wn7Q2w0KT4y/XUvmFP9EQQa0ugOQ8klID6939oNM8DZNR+by0q+2T6hRa784zaXNRk4ZYMPoAoNts9FwKp09+ZGPNm77u56KVyQVzT4//NiZ+SzeaxsiBdKUW9R0aqyI1YMhWcH0fe6f4uTkuNTN7Ef/B6MK5R7NoYjX1f/EeQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
@@ -29,11 +29,11 @@ Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
  by LO0P123MB7403.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:335::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.15; Mon, 7 Sep
- 2026 01:51:55 +0000
+ 2026 01:51:58 +0000
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0382.014; Mon, 7 Sep 2026
- 01:51:55 +0000
+ 01:51:58 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -54,16 +54,16 @@ Cc: mark.rutland@arm.com,
 	rishil1999@outlook.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 perf-tools-next 3/6] perf trace: Validate payload bounds in augmented buffer beautifier
-Date: Sun,  6 Sep 2026 21:51:37 -0400
-Message-ID: <20260907015140.363076-4-atomlin@atomlin.com>
+Subject: [PATCH v2 perf-tools-next 4/6] perf trace beauty: Validate payload size in augmented timespec beautifier
+Date: Sun,  6 Sep 2026 21:51:38 -0400
+Message-ID: <20260907015140.363076-5-atomlin@atomlin.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260907015140.363076-1-atomlin@atomlin.com>
 References: <20260907015140.363076-1-atomlin@atomlin.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BN0PR03CA0003.namprd03.prod.outlook.com
- (2603:10b6:408:e6::8) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-ClientProxiedBy: BN0PR02CA0057.namprd02.prod.outlook.com
+ (2603:10b6:408:e5::32) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -73,116 +73,116 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO0P123MB7403:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6f3594d7-85f4-4eec-6200-08df0c829820
+X-MS-Office365-Filtering-Correlation-Id: 3710a9c6-bec4-4b2b-7fb1-08df0c829a26
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|23010399003|7416014|366016|1800799024|376014|10067099003|6133799003|22082099003|18002099003|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	mYbiVN2k/xBucSSegpkGDZyLk/gzEmu78aEolQ0DGn7zlm5UUYLhmEdFL8aAtJNizh4EZbXm7B0YcY59jjzEI3vqwOhA5QkKh0AYgSp9AIF9l+AisX6q1BcC6NB+JOy01pNuZZzTTYhTJKuYhiE1ilAvvoY+FtFwfirDF7b3iPz9Q6mjO8thVwCaiRXPholnI/DPs96YDxk/MmCkAySrnyf+kSwyzoj/HUSzfG4WE3IolVp/fBvLMaLbkTXFY16DkYDgipQqBx1gkwa7mSBSFcdIFmVp8X4ScUEvXo0+LFQh/66uwF3a2ESTT20n5N4gry2OvWkud+ER8CfVyGkK9Qo6tuy+FCo9qdmRNn/yMgKYGFuffkVAXQoX9LlXM3FBQh274kprxbLFFWm3zbVBvuMZBPPwQC4ut1wr8i9vCphdQ2QjTZ0KxLN7IL2NENQ8PCCTiRnYR6ied2CbV+7+FOBjdR+ujvCE2EPCJZD0gRFK67e+MtDlUYIDEiMPrP/mt96ckFJLCieHsxR/8RdRo/DlKqSLj40+7uzJwaZwHqmeP+XMOrSyUEvFdJGfN3L2Lp3S+bpVS2n6iJzWsI4KwcOnl7WShRAh5qM2mAOZbg9cx+dff6+dbMAgDCp4Zj3IpiO/TAFhINWgN+TIf6ur2GWYtJF0SldmSBROGFa9AqA=
+	4sFr9Lr5f8gjQ5haYhbZCjqG3fwnG6M2Y5zUcqM2BHlYEMnWKC/MJoEZfHPRDm21JbB37wningtIHtIfNSklPJnDUkliGgDbD8U7/ET4mjRlUEO/ZXNd/1IlH9lAoNbEpCeLgKv+KcQKPjy5vtx8hYx+KoBrnXVwIBQV1vV4QH4m8PrXaFMEFwx+ou84KMSwg6e4opjKHrYb8HuHfd2OHzrqCQyNXSH7FOfO7jLJMSoM7DktbrP+kmRxNUmz4T2x3ZKMVsE59f/J4UOP7go1mS0MOtP+GHXFSO1qGzMnOSHnzRhtZ20asmmV4buEj0D9y7SHmx17JWGTfDcaULBg77+t37otNnUeLZhx5mqd/uDhAL36UYWswC8hZ1NflZ9RJBf+5RJeltTtqcNK6XKyfQFwV6/JUQ8/mK/XUSU174SQ6mNDNNftlJcZsvqHDAtHfM4+jeKYFOfxmZ00RoP7ae/c9NhuhWOi84f3PGfrXs4Wx29ZHHtk8NmHrBy25o1DHSj0zoj16jZgzKRAymqOBDGqblqd50yXek/k1CMxwFxxgDYUy5cbd+68HS8e5y5Qgf55iqgzv8cnZ63h29Yx2MKRP/7xQODYsst0dtbNiyJUXPflFpE8kdven4RWyweP4iT+3ENHMnlDpKnJKZSmZZ5zclhQRuZpjBPT9v7EhXQ=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(366016)(1800799024)(376014)(10067099003)(6133799003)(22082099003)(18002099003)(56012099006);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?/E46d6Zt7NwBMGYjyc8v4DzbBKlWx7IljbN6hDOqp5x+i2c+3EW+mbnJdVDO?=
- =?us-ascii?Q?CMmEPVKWRyoZB7BlJSISxopYMR5gnYp+iEN3rY4YX9nK1ms5QCjtYiDYmETa?=
- =?us-ascii?Q?ysN4xvNqsyWCkXkLCfVW2VTjPbENHtZ/l8hOu1kXPok5eDa7ACmVnaocdHhm?=
- =?us-ascii?Q?ZsJmvURC5NmM8o21NFmTQaOZFEWEFYzkZ3LZMjpRchIfAVdoCXD/GT+7d8nK?=
- =?us-ascii?Q?ejvtO7vILE8AAWtGrsxnK2hhijyTAqVUL+KjNlUZF0bgPMw4ugEJ7oKgclmP?=
- =?us-ascii?Q?/T1yiQ9AbZoMbmOOxXvTNMqzfUxTifT7c3BaNgJOR/jXnzWiOhjFWQAgxE1/?=
- =?us-ascii?Q?qYDp0D07qJHB+JDyDF7CYIQn96Lt6oIlhreoprlKVYyreV1LNta4yIX1tFeJ?=
- =?us-ascii?Q?vLrqcWB3a2XryvJ3RhqhcFKQ4WMfzD8ziUtxtHmX0jos3dbx1T9ggXI4s5Jx?=
- =?us-ascii?Q?wCVt2TEjyj6PuXgtTH1NWdG+o0dBVk2Ps3hlS7C6ghRjvVRFwUSwwIHaDhNe?=
- =?us-ascii?Q?FZo8Rq4qOMjFQdtt7gpzbL7IYqvYjosCkMwtXVxk89jMHrAxVh1ohqGkabeF?=
- =?us-ascii?Q?lPaVa6omz8sGQAWZMwtP5ER2sUT4KKQp43W4mTwy6qzpMrnV6n0WnvJObbMX?=
- =?us-ascii?Q?twlu/ZS9BzXgPgoxA0TnCkEm5OxoopY41AWD+XV3Qd+/QEEJD1MVT73SfMXU?=
- =?us-ascii?Q?xf81vvpC0WC9U62DLR50ZpYCBbtbDn1kaBCLVq4UAc3fe9rS2u+QklTOAIiF?=
- =?us-ascii?Q?/9QjMDfPRSA57MuQisCRVgn5WX7RFH1ctpb3LVosdkE1ZqVm+8sxnQd2rvr4?=
- =?us-ascii?Q?YGbkg7WuHppDHfLXtTCEea7ILn1Mz9Zzwegc1XlPkerewdJlYVBtnd9jTwOy?=
- =?us-ascii?Q?KcJsi6hC7zhmKkP8Z2tNSeSnk7uh6LBOl4X0QsxdHYZZGYq5UodEX4zaYSRh?=
- =?us-ascii?Q?S8nlQN5QFmgo/QFgwgKcACqBY8kQrUoOOsScjoqPRm2zAYmLpOOKh0bjylHJ?=
- =?us-ascii?Q?mc8UZ/6IV3MB8K0K3M6Ky7xstvGfl6kyNmRyYrOlR0gQ98gTxL6bqQFNMYbc?=
- =?us-ascii?Q?vyntQdhiAI6cuSKUxqOa0BWrMVkIbaqU/k/RrwO8FXTpxnqFi7LIsreqXkff?=
- =?us-ascii?Q?L1oukAncLes66n7rWitwtadllQpRkK32qrLRzw4uS4g4SZ4E5cLSZ0Tcad/1?=
- =?us-ascii?Q?hb0hx1ijOqzf/FJ/vIIxbnIxxMT0qwY47HLUcwYZOU+5/zGQXdmNHEQ6dJwo?=
- =?us-ascii?Q?b1DcfoXbg9wBKp7OmyChXn2xUpqnT1DnCovHMCt+0tIh80dI94TpCmQoJNzP?=
- =?us-ascii?Q?B5tjsexmZjp8DWOgvZG2TfFRR9lc7baS2ekDc+1Ok/DEFl+CxM2yugCe7RRu?=
- =?us-ascii?Q?HelkuI2qppswCrB+3kopB8J7pgFfCry+Xh9dJXQSJHBTfZgufIj5NVx9v/02?=
- =?us-ascii?Q?YQ8u9KMRbmjI/EoXSpuRuegNWIVOmhTlKR5C/VKLnWa+i+tYX34T5Re6Faha?=
- =?us-ascii?Q?tgyVJa+J/PKM+dzUsZMnUqWBIsQ9sFmPuGcAZu6eLOXYiUlC3UXlKiJ11O+X?=
- =?us-ascii?Q?snNxVx/uAAVDJGg+rY9VDLhiap4pJEYNnIouC9JKz338bm7LNt3O9qMcx/6X?=
- =?us-ascii?Q?fDawSdZY/XvlUzM0Q3egJSEd6cgFSOBvg8kO1DmdTyoWgC5f7OiStcsqt6YD?=
- =?us-ascii?Q?9Ui7GStQiSvPLH7HaUjicvIbLH2Nleye1PcdeaKR8P5qKksYipELP7MLjjGR?=
- =?us-ascii?Q?rnieePESSQ=3D=3D?=
+	=?us-ascii?Q?LKtd0iqKFOJHa2bQv3/E66phpyLDl8FsOmkMuMdl7B5F44B+H5xgjQCzP4Oe?=
+ =?us-ascii?Q?Sd2ESRK4CxE5d6jv6H0OMP5HX4mbx6NQ2vrP0anAtDb0ZlPEQ++EWDhxySU2?=
+ =?us-ascii?Q?YrrlfcBCyvlKfZINhWb6oZe7d1duP5HiZ1fqjNJcZjqbiqDZknoFOLZjPhD4?=
+ =?us-ascii?Q?prxMbgwZjJhuQ+W/eGhoys4i27eTlmGvgMXfz3Jce8dlas8dq/ys/SnHbudD?=
+ =?us-ascii?Q?EblOMGrv0NsuviTHgmC7V809SJq0kqs+6F41C5/EN9fhK8X7PfGWL0ZKMaTB?=
+ =?us-ascii?Q?9f1RM39tZ2zDa9fXZiM3db01l9qLJ73ocTgWXb2Byvf7aiUFkKuMdIIImc6x?=
+ =?us-ascii?Q?+rVlsEzCj+TS3oQETuhLuOHnmjVOy4Uv+8osW2saK80BVPau811Nq2Pqxm4E?=
+ =?us-ascii?Q?5da7Q+xdWfhnB5SFDUIHlkES5aSNoU5+hiM+pAS7Tw0uRFdjE+P5ezMPtPEx?=
+ =?us-ascii?Q?tGM7X5rh1yn7OCeac4wsBAxFyoMtyZzzKqxpV8d4fukdmA/GofKQFMq55CZ9?=
+ =?us-ascii?Q?AYoWhu6/x0PyeP+wLFfPzFNKmEfgaRpGJ1OLNNbP51GxrIsfZAQ1IONtmrFd?=
+ =?us-ascii?Q?TfYs79F9Sqy4lfUwvo+jJvRuXZ/6/VpMSXRUWcClxSXgfbtHxE3TDG1jv5tP?=
+ =?us-ascii?Q?Z8GrtmR8TBzcPp58rEhawM6owYxBIyDmTJWIG9drcoQOKkopfweazR6R26OD?=
+ =?us-ascii?Q?TPNawhDYzISAVCmUWqngtc1NnFeT4phz1ZS0JQdchHFd/2yZInATPcdt7IWW?=
+ =?us-ascii?Q?qV9o+IGHsugxmGcGCmd0CLu9Nwgk1eaDDuGDOupKsTuTGH7gxOfEyomtCiyD?=
+ =?us-ascii?Q?jkqknyHbA+I2n5IpfyIbkqV+qtyn8M3uUCvuOABaxCb15S+kc3UxLyt3t4fD?=
+ =?us-ascii?Q?aim2QgMW6ScUw8P5ihJk05Pg0UqBuHbSB0F0bpGCp4Uc3yESIhpbF0L6Dpsj?=
+ =?us-ascii?Q?KdNiBB6noX/Yta2hFgcVaC4ZpIiHq0ReurzkelT4mCalix1Gfp4OrHF3ki0t?=
+ =?us-ascii?Q?6Pe7z3iFn2qgO2Odk64ajftFZtKqlHrxMkguETuhCgSCKvI+XF6hU7RZdIHm?=
+ =?us-ascii?Q?yxK6Uo9gGfc43hIsvmOSjBDVHMl/uIX+AYQC/c8uQoismEHLqWsI492I1l8u?=
+ =?us-ascii?Q?qrz3gxjvJaqOogEagzoKjoYToKaJatKaOIXa6N9pfx1kRuSyYApaHHM/mPEw?=
+ =?us-ascii?Q?82/YqcxiiphsEDWufElHUwfCZrQMzf+721uwXKrU6HWXA9eTpKjL4XQD83/q?=
+ =?us-ascii?Q?VFAhV0gRDshA5OboUpUqm3QrULu4tuXRqRK43l0E6BCm1Jotd+gJ4ZG8p9aZ?=
+ =?us-ascii?Q?fVE3KWqBxVWFhI2Z+Otv25EwnjrKjreDlUWXWxA+dTE/1nsFlluaacoCIEm/?=
+ =?us-ascii?Q?FINGq+FwDwMifSNum+KWoWIKWlAwoU9yced7Nf9OP97/g1ACjs5w7oe3zPv4?=
+ =?us-ascii?Q?Cjbn3/dswYSM1+FLDcDf0gAS4IUp+UtG1umUNwZvJCCEKgsSiMykZfk0gIKH?=
+ =?us-ascii?Q?DPcwVPr80LQoEbS9ZMva1Ox3Ca+nh2j9kwMXJdrIiIocZoNHkes30dv4REjY?=
+ =?us-ascii?Q?UuRcoUM9+cPMVY/IxkwmR+XKSEx6l8yMiDRrdmvJ0kt0hcd0TP4vj+ORVOzX?=
+ =?us-ascii?Q?L4bKsHlP6/4T4ueJn6EW3pfvNkn4fFgeJGY8Ry/VpPRCXWpNVweMXGh1vHBp?=
+ =?us-ascii?Q?wvTOKxgOhBj8rkVqxwExIrXiG+sliURm7iNIIlhhn8LKAA8tN7fCc5Jcf6Yp?=
+ =?us-ascii?Q?7nOIx9dq/A=3D=3D?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f3594d7-85f4-4eec-6200-08df0c829820
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3710a9c6-bec4-4b2b-7fb1-08df0c829a26
 X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2026 01:51:54.8636
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2026 01:51:58.2291
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yT3ZaJTIrrIyL/DXqVChfrO1YhN9N4NAEvZuVxmdMyK5l6CnrCcK38P0rqPfo1oUge8oQVwb86GXxXh1FubZLQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: Dt6SodSsXNG1PPo4OABrnvw70/ZOA5wvMe19RpaM/wlqa7/VUPORmkL3YuExahLlbkEzD9bJ5pFaHE/4cEIrvg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P123MB7403
 
-When pretty-printing non-string augmented buffers via
-syscall_arg__scnprintf_buf(), augmented_arg->size is not validated
-against the remaining buffer size (arg->augmented.size).
+When pretty-printing augmented timespec arguments via
+syscall_arg__scnprintf_augmented_timespec(), arg->augmented.args->value
+is cast to struct timespec without verifying that the captured payload
+is large enough to hold the structure.
 
-If a malformed or truncated perf.data record provides an invalid or
-excessively large augmented_arg->size:
-    1.  If arg->augmented.size is smaller than sizeof(*augmented_arg),
-        dereferencing augmented_arg->size reads past the available
-        buffer.
+If a malformed or truncated perf.data record provides an augmented
+payload smaller than sizeof(struct timespec), accessing ts->tv_sec or
+ts->tv_nsec reads memory past the end of the available buffer.
 
-    2.  The loop reads up to augmented_arg->size bytes from
-        augmented_arg->value without verifying that they exist within
-        the buffer, leading to buffer over-reads.
+Validate that arg->augmented.size is at least sizeof(struct augmented_arg)
+and that augmented_arg->size is at least sizeof(struct timespec) while
+remaining within the available buffer. If validation fails, fall back to
+printing the raw pointer value.
 
-    3.  Calculating consumed = sizeof(*augmented_arg) +
-        augmented_arg->size can overflow signed integer bounds or cause
-        arg->augmented.size to underflow, advancing arg->augmented.args
-        out of bounds and corrupting the parsing state for subsequent
-        arguments in multi-argument syscalls.
-
-Validate that arg->augmented.size is large enough to hold
-sizeof(*augmented_arg) and that augmented_arg->size is within the bounds
-of the remaining buffer before iterating or calculating consumed bytes.
-If validation fails, fall back to printing the raw pointer value.
-
-Fixes: b257fac12f38 ("perf trace: Pretty print buffer data")
+Fixes: 6ac73820993c ("perf trace: Add augmenter for clock_gettime's rqtp timespec arg")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
 Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 ---
- tools/perf/builtin-trace.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ tools/perf/trace/beauty/timespec.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 91461ab927b6..4277de761a54 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1945,13 +1945,17 @@ static size_t syscall_arg__scnprintf_filename(char *bf, size_t size,
- static size_t syscall_arg__scnprintf_buf(char *bf, size_t size, struct syscall_arg *arg)
+diff --git a/tools/perf/trace/beauty/timespec.c b/tools/perf/trace/beauty/timespec.c
+index b14ab72a2738..fad503bd953a 100644
+--- a/tools/perf/trace/beauty/timespec.c
++++ b/tools/perf/trace/beauty/timespec.c
+@@ -7,15 +7,28 @@
+ 
+ static size_t syscall_arg__scnprintf_augmented_timespec(struct syscall_arg *arg, char *bf, size_t size)
  {
- 	struct augmented_arg *augmented_arg = arg->augmented.args;
--	unsigned char *orig = (unsigned char *)augmented_arg->value;
-+	unsigned char *orig;
- 	size_t printed = 0;
- 	int consumed;
+-	struct timespec *ts = (struct timespec *)arg->augmented.args->value;
++	struct augmented_arg *augmented_arg = arg->augmented.args;
++	struct timespec *ts;
  
--	if (augmented_arg == NULL)
--		return 0;
-+	if (augmented_arg == NULL || arg->augmented.size < (int)sizeof(*augmented_arg))
-+		return scnprintf(bf, size, "%#lx", arg->val);
++	if (arg->augmented.size < (int)sizeof(*augmented_arg))
++		return 0;
 +
-+	if (augmented_arg->size <= 0 || augmented_arg->size > arg->augmented.size - (int)sizeof(*augmented_arg))
-+		return scnprintf(bf, size, "%#lx", arg->val);
++	if (augmented_arg->size < (int)sizeof(*ts) ||
++	    augmented_arg->size > arg->augmented.size - (int)sizeof(*augmented_arg))
++		return 0;
++
++	ts = (struct timespec *)augmented_arg->value;
+ 	return scnprintf(bf, size, "{ .tv_sec: %" PRIu64 ", .tv_nsec: %" PRIu64 " }", ts->tv_sec, ts->tv_nsec);
+ }
  
-+	orig = (unsigned char *)augmented_arg->value;
- 	for (int j = 0; j < augmented_arg->size; ++j) {
- 		bool control_char = orig[j] <= MAX_CONTROL_CHAR || orig[j] >= MAX_ASCII;
- 		/* print control characters (0~31 and 127), and non-ascii characters in \(digits) */
+ size_t syscall_arg__scnprintf_timespec(char *bf, size_t size, struct syscall_arg *arg)
+ {
+-	if (arg->augmented.args)
+-		return syscall_arg__scnprintf_augmented_timespec(arg, bf, size);
++	if (arg->augmented.args) {
++		size_t printed = syscall_arg__scnprintf_augmented_timespec(arg, bf, size);
++
++		if (printed)
++			return printed;
++	}
+ 
+ 	return scnprintf(bf, size, "%#lx", arg->val);
+ }
 -- 
 2.55.0
 
