@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4F41394492
-	for <linux-perf-users@vger.kernel.org>; Mon,  7 Sep 2026 06:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E413A7193;
+	Mon,  7 Sep 2026 06:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788762207; cv=none; b=t25dmUcbThGzvhZHSEY4hOTtEqFUhKBUkJbVOLMKMaKRc34yJVlnaNmTBUg98NQUALHA+CxNk/SIex9jCm3W8j6PkBUycGuu9QAvU/CWZJ7Jxi/SuUTEzUXKt0tvGnG3obePb1F6MseFV9GcFsHYbf4LACZYcOtdEGfrtzjo9ME=
+	t=1788762302; cv=none; b=mtGpH8GVaCzhIWKayeyHF5j6AWKBPtpVzm/eeCftuU60yuKSxN/GAdqyrwEET+8bYG79cepF/lDWZW7K8inpaULCJk7+5MPtJSfQxaR9TfCZVpneu7AcOP3GQv2Jbwwqt42hFnf4W0yqMmKcI20olJv2COeFify6xJJ8ULV9yBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788762207; c=relaxed/simple;
-	bh=B4Xs1PGJZgKpxRPHccy7aSsE3uh+amUIJa+R8Lzis34=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=SwZw8eJ1eeB8bdHHM3RW/ktbeCEaRQtX4e+RfBKfV2j4ouGsIqFJp7lDT1Lp933WhGjY28oST86VAUqilNwT2CzxuX0y2Q/GPQ5ldHeH6CrIpL6zEHT1wdEqk38uksXJsud3mrV3hwYn03u/yot5WFM4XLscm1ZqVVUTsE6Kzbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PEGEKOq7; arc=none smtp.client-ip=198.175.65.9
+	s=arc-20240116; t=1788762302; c=relaxed/simple;
+	bh=CmxHwiGY44Ct/DwK/K2mbNhd/0rIQlcqBYb/wuafWwk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VCSADn8Rd1t6+TRQmpOrs1yi+1x1AKhKR8rgG2Lt6I2xo/9aINMSpH7X1ZERixe2LOOUyeLpYWOVQw49Cl3ytxk7UZLaknk0cxZ44On78mGdOPbXhWD2vwlJUizu/+QXWMu6JawEP8jK/rVyniCpGnGp+DiW2MUbi5SPNVN1yVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KNaYLp8s; arc=none smtp.client-ip=198.175.65.21
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PEGEKOq7"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KNaYLp8s"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788762201; x=1820298201;
-  h=message-id:date:mime-version:subject:from:to:cc:
-   references:in-reply-to:content-transfer-encoding;
-  bh=B4Xs1PGJZgKpxRPHccy7aSsE3uh+amUIJa+R8Lzis34=;
-  b=PEGEKOq7YMqb8hlpZGk/r4I9LTh3ohh15CDK8bklWI4dPTx/uzm7AoLA
-   /2s7woF+SBj7EtUsW3DOL0wgOJrBbhULC6E8RfuysbF8bewjQEmmzEy3I
-   xBMjHIbYkGzU74Ggxr8iseyf3tny2JmTsoRtlFx40ln3he1VEObb+y2KT
-   M2ZIfvTUgkZg6stxJUaIewppQcQAek55pbomq19FD0RRhD71wHiKY/cMz
-   I3yDydQknPabyYVU1u8DhNz91qSL51NPN1i0tR3TQvtXlocD9pF2hShzX
-   fynyFCp/oNAF67SdNLhCw40H3QQE9O2IEU2E01YazU1Jk5rTJrhNlgtmk
+  t=1788762297; x=1820298297;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=CmxHwiGY44Ct/DwK/K2mbNhd/0rIQlcqBYb/wuafWwk=;
+  b=KNaYLp8s1sfZ942pDkH9/UTxX4EM1eUBS7LN4IjSm7B4MpD3LqPvPiuv
+   UyQNrFWK8bpjLKTwDLxga7hPQV/bosQw+/7UXjjDc+qEDjhn22QG2x84F
+   lACzNYlL2jSCEY7h8bH6Z0Vl2EoVIyH35GiM5L1e7pwsQA1ANjWkiv0NU
+   vxNLp00YwT7qQEoxWM813yMDO0V5Bfe6z/E7/X2HHvLnDIxWwa+oBrMFa
+   07Jw3B3plIWZSyOrKyMk/aIDQmzSejUj2acbOJg3VULMAOuRkz9JalLPp
+   nfCAi2qZpPEhfqBUZNRI08JcOReLjaaRBQSgiLD9pfRbmn1x4kJCk9HTm
    w==;
-X-CSE-ConnectionGUID: PwwfmQolSaebcBMynCr5vA==
-X-CSE-MsgGUID: oE2Ub4W7S8CTX7rVBhhMEw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11898"; a="111935921"
+X-CSE-ConnectionGUID: 4DlhooHpTCeBdSelZ/QirA==
+X-CSE-MsgGUID: iz+msFfAQpCkrGmHqvQ/fg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11898"; a="89006516"
 X-IronPort-AV: E=Sophos;i="6.25,266,1779174000"; 
-   d="scan'208";a="111935921"
+   d="scan'208";a="89006516"
 Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2026 23:23:20 -0700
-X-CSE-ConnectionGUID: 0DceHAuRRwWhaUZri/RiPg==
-X-CSE-MsgGUID: TM1DdvmnTJGQJlIpLRGKMw==
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2026 23:24:54 -0700
+X-CSE-ConnectionGUID: bFKwFv7KTVO4D/oT8f7t0w==
+X-CSE-MsgGUID: UjEGOFZRTbGg5Q4Hjl2BkA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,266,1779174000"; 
-   d="scan'208";a="268884380"
+   d="scan'208";a="268885079"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2026 23:23:19 -0700
-Message-ID: <f1d6a335-b1d5-4793-b7c8-6bc9091d98ce@linux.intel.com>
-Date: Mon, 7 Sep 2026 14:23:16 +0800
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2026 23:24:51 -0700
+Message-ID: <cf756325-e7a3-4e8e-8bb8-6b2b820e584c@linux.intel.com>
+Date: Mon, 7 Sep 2026 14:24:49 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,92 +52,85 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [DISCUSSION] Three problems behind broken "perf --call-graph
- dwarf" on AMD: IP and stack dump mismatch, libdw fails on lld's layout, and
- the unwinder fallback never runs
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-To: Ravi Bangoria <ravi.bangoria@amd.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Gennady Kupava <gennady.kupava@gmail.com>,
- linux-perf-users@vger.kernel.org
-References: <CAPu-DQqF0aF6=GS8Z6KKWeeX_V5LiXeKU_rJQZC+uGg8zuTPNw@mail.gmail.com>
- <apCyQ93c48Dy4H-S@google.com> <apG-RzV0zyjoC-FY@google.com>
- <27d79477-c469-413b-95bd-c6c1f8a40f55@amd.com> <apbs8gywyAfFVzqm@google.com>
- <c38b254f-21e5-4a02-8934-7a4da61e4571@linux.intel.com>
- <7b4cba95-dacc-4cf1-953f-c59e06e693d0@amd.com>
- <a5d3798c-7d62-43d0-88c6-eec26bd4f63d@linux.intel.com>
+Subject: Re: [PATCH 1/2] perf: Fix null pointer access in
+ is_include_guest_event()
+To: Vinay Belgaumkar <vinay.belgaumkar@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Andi Kleen <ak@linux.intel.com>, Eranian Stephane <eranian@google.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Alexander Kanevskiy <alexander.kanevskiy@intel.com>
+References: <20260904181625.1394082-1-vinay.belgaumkar@intel.com>
 Content-Language: en-US
-In-Reply-To: <a5d3798c-7d62-43d0-88c6-eec26bd4f63d@linux.intel.com>
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260904181625.1394082-1-vinay.belgaumkar@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
+LGTM. Thanks.
 
-On 9/3/2026 7:59 PM, Mi, Dapeng wrote:
-> On 9/3/2026 7:36 PM, Ravi Bangoria wrote:
->>>>> This should resolve the DWARF unwinding issue with IBS PMUs:
->>>>>
->>>>> --- a/arch/x86/events/amd/ibs.c
->>>>> +++ b/arch/x86/events/amd/ibs.c
->>>>> @@ -1523,8 +1523,11 @@ static int perf_ibs_handle_irq(struct perf_ibs *perf_ibs, struct pt_regs *iregs)
->>>>>  			goto out;
->>>>>  		}
->>>>>  
->>>>> -		set_linear_ip(&regs, ibs_data.regs[1]);
->>>>> -		regs.flags |= PERF_EFLAGS_EXACT;
->>>>> +		if (event->attr.sample_type & PERF_SAMPLE_IP) {
->>>>> +			data.ip = ibs_data.regs[1];
->>>>> +			data.sample_flags |= PERF_SAMPLE_IP;
->>> We may not set PERF_SAMPLE_IP here, otherwise the kernel address leakage
->>> check in perf_instruction_pointer() could be bypassed.
->> Yes. I realized this wouldn't be straightforward, since the privilege
->> level might change between when the HW captures the sample and when the
->> NMI is delivered. So, any perf code that depends on user_mode() (e.g.
->> perf_exclude_event(), _REGS_USER, _REGS_INTR, header->misc, etc.) may
->> regress with the above change. In addition, guest entry/exit occurring
->> between sample capture and NMI delivery further complicates the problem.
->>
->>>> Right, that's what I thought.  And I believe we should do similar on
->>>> Intel and not update other registers.
->>> For Intel PEBS, the call-chain would always use the interrupt regs instead
->>> of the PEBS regs, so there would be no issues for Intel PEBS.
->>>
->>>     /*
->>>      * We must however always use iregs for the unwinder to stay sane; the
->>>      * record BP,SP,IP can point into thin air when the record is from a
->>>      * previous PMI context or an (I)RET happened between the record and
->>>      * PMI.
->>>      */
->>>     perf_sample_save_callchain(data, event, iregs);
->> This wouldn't take care of _STACK_USER, right?
-> Yes, I just realized this is not fully correct for Intel PEBS after sending
-> the comments.
->
-> On Intel platforms, for SAMPLE_STACK_USER, the IP/SP/BP is consistent and
-> they all comes from PEBS, so the DWARF unwinding has no issues. But for
-> SAMPLE_CALLCHAIN, it's not consistent, the IP is overwritten by PEBS while
-> the BP/SP are still gotten from PMI. So the kernel call-chain unwinding
-> could not work.
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-The statement about SAMPLE_CALLCHAIN is not correct. Just went though the
-code carefully, the kernel has already returned a IP chain to user space
-for SAMPLE_CALLCHAIN requirement, which doesn't need to current IP/SP/BP
-registers to reconstruct the call chain. So We only need to ensure the PMI
-context registers are reported for SAMPLE_STACK_USER requirement. Thanks.
-
-
+On 9/5/2026 2:16 AM, Vinay Belgaumkar wrote:
+> A typical module unload occurring event when there is an active perf
+> connection leads to freeing of the pmu pointer. The call log is something
+> like:
+>  ..
+>  __pmu_detach_event
+>  pmu_detach_event
+>  pmu_detach_events
+>  perf_pmu_unregister
+>  ..
 >
-> Suppose we need to follow below 2 rules to ensure the correct call-chain
-> unwinding and register snapshot consistency.
+> __pmu_detach_event() sets event->pmu to null. When the perf connection
+> finally is closed, the following stack trace is observed:
 >
-> 1. All registers including IP should come from either PEBS or PMI, must not
-> be mixed. This ensures to get an consistent registers snapshot.
+>  Oops: general protection fault, kernel NULL pointer dereference
+>  ...
+>  RIP: 0010:_free_event+0x3e/0x370
+>  ...
+>  Call Trace:
+>  ...
+>  perf_event_release_kernel+0x260/0x2d0
+>  perf_release+0x12/0x20
 >
-> 2. Either SAMPLE_CALLCHAIN or SAMPLE_STACK_USER is required, the PMI
-> registers snapshot must be used. This proves the correct DWARF unwinding.
+> A call to mediated_pmu_unaccount_event() inside _free_event() is the root
+> cause of this crash. Adding a check inside is_include_guest_event() ensures
+> we don't accidentally access a null pmu ptr. In addition to this, we will
+> now call mediated_pmu_unaccount_event() before clearing the pmu ptr so that
+> nr_include_guest_events counts are maintained correctly.
 >
-> How's your idea?
+> Fixes: eff95e170275 ("perf: Add APIs to create/release mediated guest vPMUs")
+> Cc: Alexander Kanevskiy <alexander.kanevskiy@intel.com>
+> Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Assisted-by: Claude:Claude-Sonnet-5
+> Signed-off-by: Vinay Belgaumkar <vinay.belgaumkar@intel.com>
+> ---
+>  kernel/events/core.c | 4 ++++
+>  1 file changed, 4 insertions(+)
 >
-> Thanks.
->
->
->> Thanks,
->> Ravi
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index a6c8e38a3110..7777e82aad5e 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -6350,6 +6350,9 @@ static DEFINE_MUTEX(perf_mediated_pmu_mutex);
+>  /* !exclude_guest event of PMU with PERF_PMU_CAP_MEDIATED_VPMU */
+>  static inline bool is_include_guest_event(struct perf_event *event)
+>  {
+> +	if (!event->pmu)
+> +		return false;
+> +
+>  	if ((event->pmu->capabilities & PERF_PMU_CAP_MEDIATED_VPMU) &&
+>  	    !event->attr.exclude_guest)
+>  		return true;
+> @@ -13002,6 +13005,7 @@ static void __pmu_detach_event(struct pmu *pmu, struct perf_event *event,
+>  	exclusive_event_destroy(event);
+>  	module_put(pmu->module);
+>  
+> +	mediated_pmu_unaccount_event(event);
+>  	event->pmu = NULL; /* force fault instead of UAF */
+>  }
+>  
