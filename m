@@ -1,61 +1,61 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EF138D3E5
-	for <linux-perf-users@vger.kernel.org>; Mon,  7 Sep 2026 06:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4D3407CCF
+	for <linux-perf-users@vger.kernel.org>; Mon,  7 Sep 2026 06:58:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788764122; cv=none; b=B8WGxLJto+Y3HgC0EvjfjYFw7FeZxW/tDzFO+X9NQIf+UgsF2dYatmSLeqLjPtmaZdmuhBztb41+0aSwsLK+6y2OhC8evyA5srgqeYE0FTak5yDTscOhEPoPXywA97IF+is4FwHU3XJhQCjWbEPoeMIg+rwCrHFIsYCHk2HWhGo=
+	t=1788764331; cv=none; b=Up0h6AXemlqbuI1Qj4ieZjWJzf+d+UJj5abOsgvNukzfTj8Bbs1eozdBdPOcu4AJwpB6VkZ7pQdKbyR14YckSXGwtWiaHavXG63vKn7bhaGQ303gDPkMHTxGGq7hk3QPJ5sctqR+z0mVVeSFafUjqQ318KQfaCihN/Po43STbRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788764122; c=relaxed/simple;
-	bh=Sq2RfRl2YhF0sjv9PVJ7qBhOhwXcgvpA41oWvqCwqiw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UZc/B3T//8n1JLzwhzLZGq4eV4pkZ2ZyKDVAMqlv+RGIdqBxpq+gLyXLQEj8DgkGG6XtT6swOlOo6JKyB4y6qHZFeTklSSZQxUQNXjTcfhBBiGIACPIavUX0k4bJQmyIGP4m5uFMz3X/hyKPa0v/A7DXezFUgriQewURM+ENdxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RZeMdx2N; arc=none smtp.client-ip=209.85.210.181
+	s=arc-20240116; t=1788764331; c=relaxed/simple;
+	bh=cQ7zS/QId7Bwmk26KveePTRypTp2hM0WZcmcs9cY60E=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RgiehY3wrbzkktC01BUQu10OuJKQP7ttPE+jmSyZeibRauFHPA2wWWvAWtu/wJds/x7XLlWgfSE7s8XMAwnv5Zf8lXEeD/mYhLAtLEvlWh/AHqsJ4gN6Z3PUmf2h8kxQ5vOvRpaO+l/+qIBypVAYyWwCBS7J1Uin1+MZDH0lhPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oBpgnLX7; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RZeMdx2N"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-8568e3ecfc3so2092848b3a.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 06 Sep 2026 23:55:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oBpgnLX7"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3966791a6eeso3858490a91.3
+        for <linux-perf-users@vger.kernel.org>; Sun, 06 Sep 2026 23:58:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788764121; x=1789368921; darn=vger.kernel.org;
+        d=gmail.com; s=20251104; t=1788764329; x=1789369129; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=244tKw7QKK+ShAsiiwM+wdP8Xia0RovTvrF6x83sei4=;
-        b=RZeMdx2NwZdUz3MycZIJ+jpAOaioEhRSbVilWYTnr1AGb4p+jmXuhDQYNnr4qiPfKT
-         cY5c1+jliqphQypLSxRH6IeX87JUNmQC27w+jytr3rBIcBQTkrL29ypXxRZRqbFMdJt4
-         b+01JVD1BMUZMHjHldCo1TB8/7PSzBkZRXAzKxplRmZdpd2SwZVnxqqByrkvIVTs+LoB
-         MKL3++26pY9BP+qXpjOVH0cy4oSU2AKs+vSbO01w0ZbCaSpwiq3SwHHb3UaBAciRgwm3
-         PQYySQjhACqI5rVK64nWhY15HWcBsR8GabDU4wUmR5Ue4ibKLq9pE/aMS/R/uAFZx4Tc
-         GQ2A==
+        bh=Q+N2cTdj7t2uPFMAcFvWCC70meDRlhm3qPL9Ts1rBkI=;
+        b=oBpgnLX7tdXGet2KfhRNYNloT3fTQoOWswrFvroIBsk0MkxJ/2sOxYakZmvZAGRDcE
+         /4S9DqFYxCnAmldiqh4n2z6QepE7BstUkN/nN/bqLhtnEEJWZ4fRNP0E0S1jGNFpfqIN
+         btDnV1sMO86uU2LDfrrXnJuuQph6gImh3F+Rtl1KEkQc2Q0F3U191AKqjqvwO4zEdQq7
+         7y/Uv4qg+HhI5RPNPOaIVePfl4U5w5/GfcVPkROpJBg7oyZbNIcWEhiydIVXr/jGTzm8
+         eKjDaHHVfnDZmSVPamB+3hDuSuzFF6orpWwr/uotu1GZoWbSZHTH/3rxYXxbzznGbVFw
+         CiJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788764121; x=1789368921;
+        d=1e100.net; s=20251104; t=1788764329; x=1789369129;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=244tKw7QKK+ShAsiiwM+wdP8Xia0RovTvrF6x83sei4=;
-        b=QYKtp4mMhwKU1J3bb4kVnilnFMLLq4TSka+6GEYs8biv3sqw0IO6zGIm0wgI2Ottz1
-         I81Uckwh3SCmUJJsCip8mvzI8Ncod3hoyenRckFDH3w6IiGpC061uoCAKdUTTlmhcm7s
-         SWbQ3rCEMjtiogWDmA5LgLCTZz00xhYFqgu7qbnNxxCHWRyw5PNnfVDcEOvgLnzuP/Vg
-         uVwlNCkydA66kx6czZw8y3GEoYvNazy/MoY21jHeYIpEtipnVsGcJy9cqn4qjSO5FBoC
-         W1+WMKkVzVw6Qim27crF3opZ0zLpIJwAs+OQ0Zey1y6YGVtnqoPI4u+hgZk6QATQZ218
-         Tasg==
-X-Gm-Message-State: AFuF++kdb0IP76n6F63ZXnZxT5TMbKAlLBQFpqOJF2njmNvdLBQtP/QY
-	zXNqJIIMUXZKuKdlyfE8uBy1Xz5GLfFojgcCEIQ8q272E880uQ0WDnkp
-X-Gm-Gg: AYBFou17IQ14+i7ffq8ZCRNd6MYst/yBrFpgvcD9WVBiXA6bLVOLvHI8tUP51/lVfGJ
-	kAMVC0lbwG0sI0+wJ6cIurUj2Wo8oh3ROLR8MmmAkjyTeeruaywC33w92yKR9gDzrIZu09VJ3mc
-	26aMk1YX5lRvzhkEquUsIJRScQIZkI3OiPrFzArcOfdayMv+NfgpPujdkt4yecYlf9bc7llzFwB
-	2uWuIxZgIboqkHE1ahalV6ISvxTQgJHqbRqQ3jLfUVvmiwuPiw9LEPAUfnAqSs5JBhkMvGEQde1
-	Mv7TbfL8W7IAcw46hOSCihLjQ/bG/tQTCvP4N3qnSQ54VHGRSdjhjxseNo6D8BDRzjawLXlZAN6
-	7v2FmAfgUUK9fz9P5P4Ntz95YT7+6jrrMlMZaEwuShU8RLo+GtwzaBtMctCJ0+s4aTYHFx4o7E8
-	qDJmDWwaxDVN6CKIe7cHfYWXzwUaOez7Ag/UGrpfVFCHEuJCK/Aw/rRYAX6wrWxcFldF5OhRN1c
-	8G/LBABtwrrbfo=
-X-Received: by 2002:a05:6a20:7f9f:b0:3d2:df:1854 with SMTP id adf61e73a8af0-3da39d1483fmr30493513637.6.1788764120927;
-        Sun, 06 Sep 2026 23:55:20 -0700 (PDT)
+        bh=Q+N2cTdj7t2uPFMAcFvWCC70meDRlhm3qPL9Ts1rBkI=;
+        b=sif1VynxFdKZFrZh2lzEFYjLpxmkUCVpHyRcwSsT/7z/hqO4eu91otvkbaJwQXDRqt
+         YeQ/aZcXMCiNdgmj5RS/g/ZZspXonsXSnWYO1yoATCG7PqypxJPr4dlsU0ExdHUfyFO9
+         lZAPDjwuksNsRFsVJi8LP+ysI59dDuaIE4t5sLOIvXKfQAhe3xtuzLJHAMEJ4cAzQvdE
+         i6bcFGa8ybZ0jcYyXMoOIgqNb/8dcVL7zSoWDTM1ivqG9DojnFgnhh7HEPnfd9wxGal+
+         u1lXkFxy8AAa8SZUcHPChuC/hOx/f0AHy66u52HM6loIUMjfJP6uH/vZ+HmbgozfcsXx
+         BUfQ==
+X-Gm-Message-State: AFuF++mCBbWF/Ah4/To/ZQh9YyFYH1FUNBaKBbS1DD6sTy8SlKknBRla
+	YbxanEo5ouwnuo5k+IRS19T7gsbEvLsAaE4HgXtKOhUAOjTPT5dkqnA/
+X-Gm-Gg: AYBFou3GOsmShT6hKiTzN12pAQixATGMXcK/JjTi1iV6tc2pj/q/LeNL6lQ6Fo8qoam
+	XAqsbq2MHG0BL/xKFcxSvNyUpFOZFNaP5Myv/hpDWyKjDyFsODXxUrOpXooIoKODzppQ6gmhoHA
+	TDXbo2B0IO4GUEfqj4UVpZdm9v/0+L8Hrqhom0Iv5WDnLViMsgh3dCH7JbLHYUfx0UcHFgPOvAe
+	NYLt9f0f0jvFlx6gwxCJlufzxVIO9rp/62FSSd2Epdl7e9Nn7uNP5d52LUUg5iNQFSvzdIfNgXj
+	wxqd3/3NFyUzo1Nw+EEdNZMzP1KAV0/xK92FXLozMreLhngSxTglLykt2CrbQ+2VWQIUQ5XPCHb
+	5nr5AsX1KevfWcmB90nXMLaVdU8+oTXt5Vx+SlSFz5AdG2UrdU3yv3FzTTP7scvOvtYw0ASdfLl
+	4IbQdRMrVOQnTs8DEiibEW41AQZvTr4cIEFxz23PteHq6gpgRfsTGpznveqYee5kjZZuvnIAlKw
+	mfZQ7//q8JkRg==
+X-Received: by 2002:a17:90b:1a8f:b0:398:d2a0:87ff with SMTP id 98e67ed59e1d1-39b26101029mr31707296a91.1.1788764329483;
+        Sun, 06 Sep 2026 23:58:49 -0700 (PDT)
 Received: from volcano9f6e-hostos.amd.com ([165.204.217.251])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3339a534152sm24222319eec.10.2026.09.06.23.55.17
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1432435ec2bsm21996689c88.3.2026.09.06.23.58.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2026 23:55:20 -0700 (PDT)
+        Sun, 06 Sep 2026 23:58:49 -0700 (PDT)
 From: Hemanth Selam <hemanth.selam@gmail.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -66,11 +66,10 @@ To: Peter Zijlstra <peterz@infradead.org>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Ian Rogers <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	sparclinux@vger.kernel.org
-Subject: [PATCH 06/14] sparc: kernel: fix typo "upto" in comment
-Date: Mon,  7 Sep 2026 12:25:14 +0530
-Message-ID: <20260907065514.23930-1-hemanth.selam@gmail.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 14/14] perf: fix repeated word in log message
+Date: Mon,  7 Sep 2026 12:28:43 +0530
+Message-ID: <20260907065843.34410-1-hemanth.selam@gmail.com>
 X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -80,26 +79,27 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Correct "upto" to "up to", reported by scripts/checkpatch.pl using the
-misspelling list in scripts/spelling.txt.  Only touches comments, no code
-changes.
+Drop the word written twice, reported by checkpatch.pl as a possible
+repeated word.
+
+Only the message text changes, no code changes.
 
 Assisted-by: Cursor:claude-opus-5
 Signed-off-by: Hemanth Selam <hemanth.selam@gmail.com>
 ---
- arch/sparc/kernel/perf_event.c | 2 +-
+ tools/perf/util/synthetic-events.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/sparc/kernel/perf_event.c b/arch/sparc/kernel/perf_event.c
-index 0ce4ae343531..f4b7a9dfc90a 100644
---- a/arch/sparc/kernel/perf_event.c
-+++ b/arch/sparc/kernel/perf_event.c
-@@ -36,7 +36,7 @@
-  * 32-bit counters which can generate overflow interrupts on the
-  * transition from 0xffffffff to 0.
-  *
-- * All chips upto and including SPARC-T3 have two performance
-+ * All chips up to and including SPARC-T3 have two performance
-  * counters.  The two 32-bit counters are accessed in one go using a
-  * single 64-bit register.
-  *
+diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+index 0c150193cca8..b9e5a5da5f6e 100644
+--- a/tools/perf/util/synthetic-events.c
++++ b/tools/perf/util/synthetic-events.c
+@@ -2266,7 +2266,7 @@ int perf_event__synthesize_extra_attr(const struct perf_tool *tool, struct evlis
+ 		if (has_scale(evsel)) {
+ 			err = perf_event__synthesize_event_update_scale(tool, evsel, process);
+ 			if (err < 0) {
+-				pr_err("Couldn't synthesize evsel evsel.\n");
++				pr_err("Couldn't synthesize evsel.\n");
+ 				return err;
+ 			}
+ 		}
