@@ -1,207 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136C13F1ADB;
-	Mon,  7 Sep 2026 04:00:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0941E3DDE
+	for <linux-perf-users@vger.kernel.org>; Mon,  7 Sep 2026 04:01:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788753622; cv=none; b=Hq//+SiP57ei5U4pm1BGUxOYlWlR1Y6Qc6DROiUockjCRrwYbrvc6Qs2mt8Xox5hNIUzS1BDvrK1AThM2aKDZjYejsY05JJ/XLrYkUvA7mNmEUenmTFpF7+bogMZW5nlq3MexVM9qfwO20Zi6Ns/aHwxhvyHKNvSUZRBHO/4pDk=
+	t=1788753694; cv=none; b=fploJCyYVB4OoLWefQ13H8YcJGj+PlrYs//1qm+gBL+QTTwcFnwri8Te89WHJzYd2LHYeJVPSYydMjzfr3VJxHx9uFjSkYC/ZjO3qgy5RdjzukaZyCZUGtn6vbvhyW6jE6VfjCqvguHyv9hCoc7trX6JGDknbEYGaSUuhKC6LPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788753622; c=relaxed/simple;
-	bh=YhpmS/7bz/P6CYSoOC0Bed/2tIV7391xkZHvSTkM68k=;
+	s=arc-20240116; t=1788753694; c=relaxed/simple;
+	bh=fzI1wmmB9+m+21jOWZqUDPd4V+/PYesntQqEgwWvGOE=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=JIwzC4PwOP0IspxUki45/kJOhs2D5hkB4SdgYG7njBUfmaBqXE5L3q/83RwcDDxVF1BywqS1WVuFW/aPmrLBPvjckwm3Yamd+8zNNgTISX35IEMW0T/C9e8nyVWFV2rRXfqrv68P5RjqWX9ILOTFdMwifqjMa/vwSHuZEwpO4aY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MwN6tvrf; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=USBi9I4giAhzPLMydvl/puYCyDL/NSVAqecK7rsKpG+PqTidwIojLvueGlzloknb8sp6POcGRmfeEbsTAgOWnA6Hy3ZBeC+JttuchSH6CxSnM0ikYT29ZvdgRVqX5lvT9lsZRH2euD/dE3OVZZOED11c8x14s04oMZJz106WDxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SyCGBVqS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MwN6tvrf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1983E1F00ACA;
-	Mon,  7 Sep 2026 04:00:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SyCGBVqS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6D241F00A3A;
+	Mon,  7 Sep 2026 04:01:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788753617;
-	bh=oiAY35I5G3HJ9N58qrm0EUMKcYa6WBa/e6m2nuqyM+k=;
+	s=k20260515; t=1788753693;
+	bh=mmsozPMXKg6koZJhraDelvGhcftoSal+meIg8gMQC0Y=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MwN6tvrfIpLzvnfu0Ej0i2UJLX0vgINLyBTnduZRr0o9ya3Gac6lIptjVind7I98s
-	 kWmiG7DstZHWjkqfdw3bKSFpYcBv1K6Z0zcfne+Ypsf/lzXUs/pENOX1UP/rOtu3Nb
-	 l2hEZeU9xFdvcROWBaS6lIXkm1wk5MaIyhhCBk2qMAaKhtZXOn2t1/PKPA3wnwvu5D
-	 HZY+6ENYkEIQQqWxpTy5TaoLOhE8MYFMdhukkLFVYuYoZ/c25O3Zhf7nNJgIB+VcBV
-	 leXIoApOp3Vx7MdCDkyLVnP7aNwYrPWdK+WyGR6MD4LqLwVTiVT31nnmimS4nse7wr
-	 0pYhbK7PkWzAA==
+	b=SyCGBVqSN4gjMWCKDNFuzA82gyEwA/DaLuuJGwKATU8AU95fSMyBYmhJVH5F894k9
+	 tL+GYrvyTaboIX9bEdldcYYVz/lSaMwRnQdsKceH6PdYS1/21yOEL5oMP1GsSjyTyI
+	 vrq2TTh0vKDln5WuPSgz9SIjdcOGJBvmE2QTaL3+H4mjyiNVzpwuX14VyDT3Yi+yCh
+	 qPm+Khi96K8nzxsVLsZJRgQyJo16jfzldemdQNTM+42FeRjcSy7+xTWPNGi6fWzRPk
+	 VPyn/w0rNmKZ4OeNcjKR5Z6H+wd6XaC1hyw9dKSBeVt1TrBTptQUwOKu8YCkOm4viQ
+	 UlTGRXJNrYY0Q==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v15 02/12] x86/hw_breakpoints: Make DR7 updates NMI safe
+Subject: Re: [PATCH 3/3] perf buildid-cache: skip caching non-ELF files and
+ treat unreadable build-id as mismatch
 Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-In-Reply-To: <178875280112.93794.5857698342827027053.stgit@devnote2>
-References: <178875277830.93794.14247844688761142429.stgit@devnote2>
- <178875280112.93794.5857698342827027053.stgit@devnote2>
+To: "Athira Rajeev" <atrajeev@linux.ibm.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260907034554.714-3-atrajeev@linux.ibm.com>
+References: <20260907034554.714-1-atrajeev@linux.ibm.com>
+ <20260907034554.714-3-atrajeev@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 07 Sep 2026 04:00:16 +0000
-Message-Id: <20260907040017.1983E1F00ACA@smtp.kernel.org>
+Date: Mon, 07 Sep 2026 04:01:32 +0000
+Message-Id: <20260907040132.E6D241F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
 s) to consider:
-
-New issues:
-- [High] local_db_restore() incorrectly uses dr7 =3D=3D 0 to discard NMI-in=
-stalled hardware breakpoints, permanently losing debug state and corrupting=
- KVM guest debug registers.
-- [High] local_db_save() destructively clears hardware DR7 inside its seque=
-nce retry loop, permanently corrupting the restored state if a retry occurs.
-
-Pre-existing issues:
-- [High] The early return in local_db_save() bypasses the sequence retry lo=
-op, leaving a race window where an NMI can leave hardware breakpoints enabl=
-ed during critical exception handlers.
+- [High] The `is_valid_elf()` check operates in the host mount namespace on=
+ a container-namespaced path, causing false rejections of valid container E=
+LFs.
+- [High] The strict ELF magic number check in `is_valid_elf()` incorrectly =
+rejects Portable Executable (PE) files, breaking symbol resolution for Wind=
+ows binaries.
+- [High] Returning an error (`-1`) when skipping a non-ELF file inadvertent=
+ly aborts the entire build-id cache population for all remaining DSOs.
+- [Medium] Path-based ELF validation is vulnerable to a TOCTOU race conditi=
+on, undermining the patch's intended fix.
+- [Low] Missing explicit POSIX header inclusions for standard libc function=
+s used in `is_valid_elf()`, causing musl compilation failures.
 --
 
-commit 48808d0a31b45134e9ef897c90c0f96bd987d9ce
-Author: Jinchao Wang <wangjinchao600@gmail.com>
+commit f4dea4bc65d83ac2422c7f8d5b38053c12d6437c
+Author: Athira Rajeev <atrajeev@linux.ibm.com>
 
-x86/hw_breakpoints: Make DR7 updates NMI safe
+perf buildid-cache: skip caching non-ELF files and treat unreadable build-i=
+d as mismatch
 
-This commit introduces atomic per-CPU operations and sequence numbers to
-make DR7 hardware breakpoint updates NMI safe. It updates local_db_save()
-and local_db_restore() to use retry loops that detect NMI interruptions,
-preventing state corruption.
+This patch hardens the build-id cache population by ensuring only valid ELF
+files are cached and treating unreadable files as mismatches.
 
-Link: https://lore.kernel.org/all/4ee0a2efc9e8387af83286b8495b7d490247e165.=
-1785067572.git.wangjinchao600@gmail.com/
-
-> diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debug=
-reg.h
-> index 854d82b88ff4e..3399e166d3044 100644
-> --- a/arch/x86/include/asm/debugreg.h
-> +++ b/arch/x86/include/asm/debugreg.h
-[ ... ]
-> @@ -125,40 +126,66 @@ static __always_inline bool hw_breakpoint_active(vo=
-id)
-> =20
->  extern void hw_breakpoint_restore(void);
-> =20
-> -static __always_inline unsigned long local_db_save(void)
-> +static __always_inline void local_db_save(unsigned long *dr7,
-> +					  unsigned int *dr7_seq)
->  {
-> -	unsigned long dr7;
-> +	do {
-> +		*dr7_seq =3D this_cpu_read(cpu_dr7_seq);
-> +		*dr7 =3D 0;
-> =20
-> -	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_activ=
-e())
-> -		return 0;
-> -
-> -	get_debugreg(dr7, 7);
-> +		if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) &&
-> +		    !hw_breakpoint_active())
-> +			return;
+> diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+> index 28b6b3f8d5d35..32ddbd5e61f65 100644
+> --- a/tools/perf/util/build-id.c
+> +++ b/tools/perf/util/build-id.c
+> @@ -684,6 +684,10 @@ build_id_cache__add(const char *sbuild_id, const cha=
+r *name, const char *realnam
+>  		if (is_kallsyms) {
+>  			if (copyfile("/proc/kallsyms", filename))
+>  				goto out_free;
+> +		} else if (!is_valid_elf(realname)) {
 
 [Severity: High]
-This isn't a bug introduced by this patch, but could this early return
-in local_db_save() bypass the sequence retry loop?
+Does is_valid_elf() operate in the host mount namespace on a
+container-namespaced path?
 
-If an NMI hits exactly before the return instruction and installs a
-breakpoint, the function exits immediately. This leaves the newly installed
-hardware breakpoint active during exception handlers like MCE, which could
-trigger a recursive #DB exception and lead to a kernel panic.
-
-> =20
-> +		get_debugreg(*dr7, 7);
-> =20
-> -	/* Architecturally set bit */
-> -	dr7 &=3D ~DR7_FIXED_1;
-> -	if (dr7)
-> -		set_debugreg(DR7_FIXED_1, 7);
-> +		/* Architecturally set bit */
-> +		*dr7 &=3D ~DR7_FIXED_1;
-> +		if (*dr7)
-> +			set_debugreg(DR7_FIXED_1, 7);
+When profiling a workload inside a container, nsinfo__realpath() returns an
+absolute path valid only within the container's mount namespace. Since
+is_valid_elf() attempts to open this path in the host's mount namespace, wo=
+n't
+this falsely reject valid container ELFs and break symbol resolution for th=
+em?
 
 [Severity: High]
-Can this destructively overwrite the hardware DR7 state inside the sequence
-retry loop?
+Does this strict ELF check reject valid Windows Portable Executable (PE) fi=
+les?
 
-If an NMI interrupts execution between reading and clearing DR7, installs a
-breakpoint, and increments cpu_dr7_seq, this set_debugreg() call will
-overwrite the NMI's new hardware state with 0x400.
+is_valid_elf() checks for the ELF magic:
 
-When the loop detects the sequence mismatch and retries, the next
-iteration's get_debugreg() will read this clobbered 0x400 value instead of
-the state installed by the NMI, permanently corrupting the restored state.
+    if (read(fd, magic, sizeof(magic)) =3D=3D (ssize_t)sizeof(magic))
+        valid =3D (memcmp(magic, ELFMAG, SELFMAG) =3D=3D 0);
 
-> =20
-> -	/*
-> -	 * Ensure the compiler doesn't lower the above statements into
-> -	 * the critical section; disabling breakpoints late would not
-> -	 * be good.
-> -	 */
-> -	barrier();
-> +		/*
-> +		 * Ensure the compiler doesn't lower the above statements into
-> +		 * the critical section; disabling breakpoints late would not
-> +		 * be good.
-> +		 */
-> +		barrier();
-> +	} while (unlikely(*dr7_seq !=3D this_cpu_read(cpu_dr7_seq)));
->  }
-[ ... ]
-> -static __always_inline void local_db_restore(unsigned long dr7)
-> +static __always_inline void local_db_restore(unsigned long dr7,
-> +					     unsigned int dr7_seq)
->  {
-> +	unsigned long val;
-> +	unsigned int seq;
-> +
->  	/*
->  	 * Ensure the compiler doesn't raise this statement into
->  	 * the critical section; enabling breakpoints early would
->  	 * not be good.
->  	 */
->  	barrier();
-> -	if (dr7)
-> -		set_debugreg(dr7, 7);
-> +
-> +	do {
-> +		seq =3D this_cpu_read(cpu_dr7_seq);
-> +		if (seq =3D=3D dr7_seq) {
-> +			if (!dr7)
-> +				return;
-> +			val =3D dr7;
-> +		} else {
-> +			/*
-> +			 * If an NMI modified breakpoints while DR7 was saved as 0
-> +			 * (e.g. KVM guest entry), arch_install_hw_breakpoint()
-> +			 * clobbered hardware DR7. Restore val =3D 0 (DR7_FIXED_1)
-> +			 * to clean up the NMI's write and preserve guest isolation.
-> +			 * Otherwise, load the latest cpu_dr7 state.
-> +			 */
-> +			val =3D dr7 ? this_cpu_read(cpu_dr7) : 0;
+If libbfd__read_build_id() successfully extracts a build ID from a PE file,
+this strict ELF magic check rejects it. Could this break profiling and symb=
+ol
+resolution for Windows binaries (e.g., via Wine) because valid PE files are
+rejected from the build-id cache?
+
+[Severity: Medium]
+Is this path-based ELF validation vulnerable to a TOCTOU race condition?
+
+The validation is performed statelessly by path in is_valid_elf(realname),
+completely separate from the subsequent copyfile_ns() or link() operations.
+
+If a test harness (like SPEC CPU) replaces the binary with a placeholder in
+the split-second window between is_valid_elf() closing its file descriptor
+and the copy/link reopening the path, could the build-id cache still end up
+containing a shell script placeholder instead of the genuine ELF binary?
+
+[Severity: Low]
+Does is_valid_elf() lack explicit POSIX header inclusions for standard libc
+functions?
+
+The is_valid_elf() helper uses libc calls like open(), read(), and close(),
+but the exact POSIX headers (<fcntl.h>, <unistd.h>) appear to be missing
+from the file. Could this cause build failures on musl libc systems due to
+implicit header reliance?
+
+> +			pr_warning("build-id cache: skipping non-ELF file: %s\n",
+> +				   realname);
+> +			goto out_free;
 
 [Severity: High]
-Does this logic permanently discard the hardware breakpoint installed by an
-NMI if dr7 was initially 0?
+Will this error path abort the entire build-id cache population for all
+remaining DSOs?
 
-If dr7 was saved as 0, which happens when no host breakpoints were active,
-and an NMI subsequently installs a breakpoint, this logic evaluates to 0
-and ignores the new cpu_dr7 state.
+When build_id_cache__add() starts, err is initialized to -1. By jumping to
+out_free here without clearing err, -1 is returned.
 
-It will then write 0x400 to hardware DR7, completely overriding the NMI
-update. Furthermore, if an NMI interrupts a KVM guest, the guest's DR7
-state is completely destroyed and replaced with 0x400.
-
-> +		}
-> +
-> +		set_debugreg(val | DR7_FIXED_1, 7);
-> +		barrier();
-> +	} while (unlikely(seq !=3D this_cpu_read(cpu_dr7_seq)));
->  }
+This propagates up to dso__cache_build_id(), causing the dsos__for_each_dso=
+()
+loop to immediately terminate. If a single non-ELF file (like a shell script
+placeholder) is encountered, are all subsequent valid DSOs in the session l=
+eft
+uncached?
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178875277830.93794.=
-14247844688761142429.stgit@devnote2?part=3D2
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260907034554.714-=
+1-atrajeev@linux.ibm.com?part=3D3
