@@ -1,63 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081603403EF;
-	Mon,  7 Sep 2026 17:43:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD09319D8AC;
+	Mon,  7 Sep 2026 22:24:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788803017; cv=none; b=skvyBE5PV3qEvET90oal9ZM49NT4XhiWTXLBHqPMsmElYw+g4OGqUZkl9vaYjd/gVUBzML9Fgt7dQv+wridy4L3wfolhRjqpNrxIiv78tP4JcMG7qU2AxRbPVdIx+TCxB5UEqgmlEw+qsvI3jZiZRijxVcy6PQtyo9p+xOh5be8=
+	t=1788819863; cv=none; b=Ma6IyTwpiFNikjaHiMaWqSIwOYMHrL5/ZqPR7uiPI3ErjqUklsILFa7ZqkLw3OIy3s+KorOUvN3xoCWA3Cgx9/hMR3rrz+8go+z0OcrduES3TcPIjvrqZUKEB4GtUeguF2jOlvfsA2UMrinwaaSCkx5nm+rvZIIlVbRo70f7Mqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788803017; c=relaxed/simple;
-	bh=c9wea5u61gvkufaCVarKmYlCo4MD5BWy0b4FTwdn5Mw=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=jmQfKzdYQqHJMLHIMyzE6jz5UksrM2Uwc1O4gjCYNvBnlQMJJabtNZxKoQenSetuzSc7jl3l1613zGkt5gdE+J/YSpgTKW5PpYcAi0/YXwsqH8jrZGTpC3GAOXbAD8eJOKaSiLABdMEi0fI5T8mB5Bx0/Yoj1JOuyKYld/SLrfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YdmK8uvC; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788819863; c=relaxed/simple;
+	bh=Ji4Kvu7LpQqhECYZ1pmgrD7b9aAuvcEK2ZryUdGXyQE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ws3v4V1/o6XCnUhPaBEq7d2KeTw5GkCLSIitkVv+jKN+2oEE79KuYKi4vcolMc82SDNCvowJpWXJiUvgOJUKp5PaN4Ib1yyf2NRuqS7yS6oBr95qX3fQFl7I1WCeOm97dQw8F5/qZZmanVvDRA3Pu5CLkUOTJPij9qwDSdYBqBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jWbFJ4K7; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YdmK8uvC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B94F51F00A3A;
-	Mon,  7 Sep 2026 17:43:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jWbFJ4K7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 315A11F00A3A;
+	Mon,  7 Sep 2026 22:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788803015;
-	bh=ZmgWGQU4/wfOiSxF6ur0Yu3gGAmZbocA2sIo0L/6oEg=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc;
-	b=YdmK8uvCWxaTSZwr/2/TG9cFjPpXZN0s7WOuZm9Qdhgq9vNWKQ8COhgAl0/+EXjhZ
-	 6Lgp7RA33zdMHYD4ZEOxMTtKEpVXOj7rwFw8EnvbZ8GqFJ7uz0gQ4IW+dQBG691NiU
-	 BOyXcyJySAAGippgzkk0IqBxnsdf7zQ9bZG0yIaKWdjpuypVl/s6ZbpLkwW5Fp84B5
-	 lWo+kHJAZgwRjaaCbVhtlx06dCxojhZ7V/nsooARx0aWyEn0hKtRE7w2+4Hn2+Ibtp
-	 ZjxgxyA+xnz3kaMABnALHI/e8JN0/Pm6WKQ9l/t7xSxBkz5cRFPmYBHtqfFsPXt7Pf
-	 XOfUzIjsCLzcw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 19B2939E8A46;
-	Mon,  7 Sep 2026 17:42:36 +0000 (UTC)
-Subject: Re: [GIT PULL] perf-tools fixes for v7.3-rc3
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20260907172557.3679541-1-namhyung@kernel.org>
-References: <20260907172557.3679541-1-namhyung@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20260907172557.3679541-1-namhyung@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v7.3-2026-09-07
-X-PR-Tracked-Commit-Id: aadea57f532882d8bab444646863c7ef8a778ff1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 28924df2a08f440c73991b83028032c901de2ae4
-Message-Id: <178880295459.3100560.6284398277670215220.pr-tracker-bot@kernel.org>
-Date: Mon, 07 Sep 2026 17:42:34 +0000
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, James Clark <james.clark@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+	s=k20260515; t=1788819861;
+	bh=Ji4Kvu7LpQqhECYZ1pmgrD7b9aAuvcEK2ZryUdGXyQE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=jWbFJ4K7m6sh97A0VyTs+bdWzlhd15mB1KnG6i9jInZw/uY1abiISWLt7fsSjdlR4
+	 c+hLE3XzZHRZID4X84TFLpkV6hoBCSPsapuzEJW5ZagNAs2Dr7mFdtRQPm1SKixdb2
+	 4/d8zwybENmG3Fg4vVcSI4F+qSXousnmwa5RmHnTona09JHTCsCUOlkYPuEq3mlkvk
+	 gsp9iCW2nRQZtFr0HEuwZu+WRugX/IsPhcOKwDnvfqWPkq4BSFFi4phfhGFUDiVIJC
+	 Kt85rAMfVomYOfvfvr+Sv8B4eeyxzNqHfpD8bO65uQD2CxjXhZD4kdaQgvRSVU6t2c
+	 FD7Wv0NCGu11w==
+Date: Mon, 7 Sep 2026 23:24:16 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <linux@weissschuh.net>
+Cc: Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@alien8.de>, Thomas
+ Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Dave Hansen
+ <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin"
+ <hpa@zytor.com>, Will Deacon <will@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Yushan Wang <wangyushan12@huawei.com>, Jijie Shao
+ <shaojijie@huawei.com>, Khuong Dinh <khuong@os.amperecomputing.com>,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman
+ <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, "Christophe
+ Leroy (CS GROUP)" <chleroy@kernel.org>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>, linux-edac@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ driver-core@lists.linux.dev
+Subject: Re: [PATCH v2 2/3] drivers: perf: Use __DEVICE_ATTR() macro to
+ initialize dev_ext_attribute
+Message-ID: <20260907232416.4b0fb386@jic23-huawei>
+In-Reply-To: <20260907-sysfs-const-attr-dev_ext_attr-v2-2-bf53afe57071@weissschuh.net>
+References: <20260907-sysfs-const-attr-dev_ext_attr-v2-0-bf53afe57071@weissschuh.net>
+	<20260907-sysfs-const-attr-dev_ext_attr-v2-2-bf53afe57071@weissschuh.net>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The pull request you sent on Mon,  7 Sep 2026 10:25:57 -0700:
+On Mon, 07 Sep 2026 07:45:02 +0200
+Thomas Wei=C3=9Fschuh <linux@weissschuh.net> wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v7.3-2026-09-07
+> The upcoming constification of the device_show_*() callback
+> signatures requires the users to handle the transition automatically.
+>=20
+> Switch to the __DEVICE_ATTR() macro which can do this.
+>=20
+> Signed-off-by: Thomas Wei=C3=9Fschuh <linux@weissschuh.net>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/28924df2a08f440c73991b83028032c901de2ae4
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Acked-by: Jonathan Cameron <jonathan.cameron@oss.qualcomm.com> #for cxl_pmu
