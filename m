@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26649345EAC;
-	Mon,  7 Sep 2026 03:46:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670F53EF67D;
+	Mon,  7 Sep 2026 03:46:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788752797; cv=none; b=JI2qVhptmtXtxz8qSpcnm4N64TaYeeYIT72pMIQ8jqHfi9z4CidNUs5ixW0VVZQLsMJn80jF2bpj2KhEyhPrUgfYv0ByWxMqp0FpBsuYiZsJIbE/qcsCtpbD+ouY3hjdV0ZWUCCGObHHxvoyrpycHvxmYdKQK86ym7SJg3mRhhU=
+	t=1788752809; cv=none; b=VnvZ8xr3T9HHxyZnNha/IL80H8k8cep9JVH06pLBA8B/0oheu5ktZ8vOOxgSJ8+JSzE+tkWqFTB+DUqZAHE9o+5gfCdWRN1jSbLHzyGF4IPUvgAk1hmTgzWxnzFKquxAxNygw2342hGnYq7pzKLQs0yQvjxkaboq5rWPUPxzARg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788752797; c=relaxed/simple;
-	bh=++emXcP9SPk1N6KlszECK+hTyKvu/kLTGVZdg7HV0Vo=;
+	s=arc-20240116; t=1788752809; c=relaxed/simple;
+	bh=5jwee3mxa2Gc9OlwQ8R82ruPedVY5V6k58lkYSyEREc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cgPB36CMOUcuIbDKBlLZOsybhPlWZIIxMn3X9f/BMpBW6lbcN2xzESTxCpTQYDhW6JcJULLBbhjnBV4W0i/cBFqdNnOLn1SHurSr5wEVLGZTvpXttOVjY+Jz+DH7qIIKTwPfIGsLcN7bWXI6rxrEQtRY+09052KwNMTgVGz5Hx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GyH4N0UD; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=Pw5H9G7KKC7moKh6QFCUW/mlejY5zuHphp/MGjdbNc29r+VJCcCPkici0ZO9bDWQ6sBIe5mzpzi9H6jMH0BF5IhA6HSJQudj3SlGDiCWC3ucIj+XRmY8WlUv7mgMJN6+dxfQZmr/cRGx66ireNh030/01xrDG3mQinIrSsAC9U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OucTLQV0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GyH4N0UD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42D291F00A3A;
-	Mon,  7 Sep 2026 03:46:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OucTLQV0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 510EF1F00A3A;
+	Mon,  7 Sep 2026 03:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788752795;
-	bh=ECQ2YrO3c6fTy3LNvcZ/qkWRkP34JaQc5nHEXsbIZYs=;
+	s=k20260515; t=1788752807;
+	bh=AfsQzl3BDQQf2gxeXS3jiDtJ8Hj30BTCWvv1cSe5GQc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=GyH4N0UDZVDoofssCO9BCQETKgJkXbuM/BBGZ99C4OaDrACL5z4GlsesMge794BV5
-	 82kDqbXwzJIYq65lRbzF0a5BzxdGpBre4Hf2YBNkxZqZt7r20i6hFB///vWIPLD6Ml
-	 +qZIf7N6MwhLKaQmRP0h6zF8ZOf8QhEmU1urfBhPEta7COD6DSFIABXd90RvHNLq8J
-	 krIV+RZX8O82czbkDWmUVlYaZqPV8hyFdf47xt7/VyZzHdrJp0QJz7lVH+XEMs6iew
-	 B0ykl5MnvLjlyZ82jzQlByY6qQwE0O2lV3Thl7J0IIKByDSCgDTdoRt33mSINzrR2B
-	 lw6Cx0YDTIHIg==
+	b=OucTLQV0yjGBulUzOFZtwXyMkHe93edhS9Z4L4XdaZAbtj4/hzNa8Xphw+/6pycbn
+	 EJ22xFwftLFVg6OE8rthbYc/fIX+agZczkQzIWy62b5Cp8Cz80vcTSJYoRpnD1MRn4
+	 5JyiHMXMOfHElmK6C6oCg9koAt28beOnYLA3nR9zDGPG4S1Kgh6uwSkYv9U7Oj7V/9
+	 nSN1FuwPLYJUzErTCdxXOGpP/FSd3iAGnZhvnDhVwFJm90mvq0ULigvFkh2Oi9tqaM
+	 jFsTe/G6OTlCFO/hqnIw4+D7Lvxe+KrhJ5tKI5Y2eT6dKh8KpmriiwG+7346ddqgS5
+	 som0YgSWjsfFA==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -44,9 +44,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	linux-trace-kernel@vger.kernel.org,
 	linux-doc@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v15 01/12] x86/mce: Fix hardware debug register corruption on task migration
-Date: Mon,  7 Sep 2026 12:46:30 +0900
-Message-ID: <178875279006.93794.3424002631388906633.stgit@devnote2>
+Subject: [PATCH v15 02/12] x86/hw_breakpoints: Make DR7 updates NMI safe
+Date: Mon,  7 Sep 2026 12:46:41 +0900
+Message-ID: <178875280112.93794.5857698342827027053.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178875277830.93794.14247844688761142429.stgit@devnote2>
 References: <178875277830.93794.14247844688761142429.stgit@devnote2>
@@ -60,135 +60,420 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+From: Jinchao Wang <wangjinchao600@gmail.com>
 
-In exc_machine_check_user(), local_db_save() and local_db_restore() are
-invoked in the outer entry stubs (DEFINE_IDTENTRY_MCE_USER,
-DEFINE_FREDENTRY_MCE, and DEFINE_IDTENTRY_RAW), surrounding
-exc_machine_check_user().
+Hardware breakpoint installation and removal run with IRQs disabled, but
+an NMI can still enter the same code through KGDB. The interrupted
+operation and the NMI can consequently claim the same slot or overwrite
+each other's DR7 state.
 
-However, exc_machine_check_user() calls irqentry_exit_to_user_mode(),
-which handles pending thread work and may schedule() if TIF_NEED_RESCHED
-is set. If the task migrates to another CPU during schedule(),
-local_db_restore() runs on the new CPU with the dr7 state saved from the
-old CPU. This corrupts the new CPU's DR7 hardware debug register and
-leaves the old CPU's DR7 disabled.
-In short, local_db_save() and local_db_restore() pair must be run
-on the same CPU.
+Claim and release per-CPU slots with cmpxchg. Update cpu_dr7 with
+single-instruction per-CPU operations, and preserve hardware-first
+disable and hardware-last enable ordering. Add a per-CPU sequence number
+so interrupted DR7 writers and restore paths detect an NMI update and
+retry from the latest shadow state.
 
-To fix this, move local_db_save() and local_db_restore() inside
-exc_machine_check_user() and exc_machine_check_kernel(). In
-exc_machine_check_user(), DR7 is saved and restored strictly around
-do_machine_check() to avoid schedule() during migration. In
-exc_machine_check_kernel(), local_db_save() is called at the entry point
-to prevent early memory accesses from triggering nested #DB exceptions,
-and restored on all exits.
+Link: https://lore.kernel.org/all/4ee0a2efc9e8387af83286b8495b7d490247e165.1785067572.git.wangjinchao600@gmail.com/
 
-Fixes: cd840e424f27 ("x86/entry, mce: Disallow #DB during #MC")
 Assisted-by: Antigravity:gemini-3.8-flash
+Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
 Changes in v15:
- - Move local_db_save() to the entry of exc_machine_check_kernel() and
-   restore it on early return from mce_check_crashing_cpu() to prevent
-   nested #DB on watched variables.
+ - Always preserve DR7_FIXED_1 in arch_install_hw_breakpoint(),
+   arch_uninstall_hw_breakpoint(), and hw_breakpoint_restore() to comply
+   with the x86 architectural specification.
+ - Wrap local_db_save() in a cpu_dr7_seq loop to detect NMI breakpoint
+   updates and ensure DR7 is disabled before entry.
+ - In local_db_restore(), if dr7 is 0 and an NMI modified breakpoints,
+   restore DR7_FIXED_1 to undo the NMI's overwrite and preserve KVM
+   guest isolation.
+ - Always write "val | DR7_FIXED_1" to hardware DR7 in local_db_restore()
+   to ensure architectural compliance.
+ - Avoid modifying the saved dr7 argument in-place across retry loops.
 Changes in v14:
- - Newly added.
+ - In local_db_restore(), return immediately if saved dr7 is 0 to avoid
+   overwriting intentionally cleared hardware DR7 state (e.g. KVM guest
+   entry) with cpu_dr7 when an NMI increments cpu_dr7_seq.
+Changes in v13:
+ - Add compiler barriers (barrier()) before checking cpu_dr7_seq to
+   prevent the compiler from hoisting the sequence check before debug
+   register updates or shadow state modifications.
+Changes in v12:
+ - Use stack variables dr7 and dr7_seq directly in exc_nmi() and remove
+   unnecessary per-CPU nmi_dr7 and nmi_dr7_seq variables.
 ---
- arch/x86/kernel/cpu/mce/core.c |   27 ++++++++++-----------------
- 1 file changed, 10 insertions(+), 17 deletions(-)
+ arch/x86/include/asm/debugreg.h |   67 ++++++++++++++++++--------
+ arch/x86/kernel/cpu/mce/core.c  |   10 ++--
+ arch/x86/kernel/hw_breakpoint.c |  101 ++++++++++++++++++++-------------------
+ arch/x86/kernel/nmi.c           |    7 ++-
+ arch/x86/kernel/traps.c         |   10 +++-
+ 5 files changed, 115 insertions(+), 80 deletions(-)
 
+diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
+index 854d82b88ff4..3399e166d304 100644
+--- a/arch/x86/include/asm/debugreg.h
++++ b/arch/x86/include/asm/debugreg.h
+@@ -18,6 +18,7 @@
+ #define DR7_FIXED_1	0x00000400
+ 
+ DECLARE_PER_CPU(unsigned long, cpu_dr7);
++DECLARE_PER_CPU(unsigned int, cpu_dr7_seq);
+ 
+ #ifndef CONFIG_PARAVIRT_XXL
+ /*
+@@ -125,40 +126,66 @@ static __always_inline bool hw_breakpoint_active(void)
+ 
+ extern void hw_breakpoint_restore(void);
+ 
+-static __always_inline unsigned long local_db_save(void)
++static __always_inline void local_db_save(unsigned long *dr7,
++					  unsigned int *dr7_seq)
+ {
+-	unsigned long dr7;
++	do {
++		*dr7_seq = this_cpu_read(cpu_dr7_seq);
++		*dr7 = 0;
+ 
+-	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
+-		return 0;
+-
+-	get_debugreg(dr7, 7);
++		if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) &&
++		    !hw_breakpoint_active())
++			return;
+ 
+-	/* Architecturally set bit */
+-	dr7 &= ~DR7_FIXED_1;
+-	if (dr7)
+-		set_debugreg(DR7_FIXED_1, 7);
++		get_debugreg(*dr7, 7);
+ 
+-	/*
+-	 * Ensure the compiler doesn't lower the above statements into
+-	 * the critical section; disabling breakpoints late would not
+-	 * be good.
+-	 */
+-	barrier();
++		/* Architecturally set bit */
++		*dr7 &= ~DR7_FIXED_1;
++		if (*dr7)
++			set_debugreg(DR7_FIXED_1, 7);
+ 
+-	return dr7;
++		/*
++		 * Ensure the compiler doesn't lower the above statements into
++		 * the critical section; disabling breakpoints late would not
++		 * be good.
++		 */
++		barrier();
++	} while (unlikely(*dr7_seq != this_cpu_read(cpu_dr7_seq)));
+ }
+ 
+-static __always_inline void local_db_restore(unsigned long dr7)
++static __always_inline void local_db_restore(unsigned long dr7,
++					     unsigned int dr7_seq)
+ {
++	unsigned long val;
++	unsigned int seq;
++
+ 	/*
+ 	 * Ensure the compiler doesn't raise this statement into
+ 	 * the critical section; enabling breakpoints early would
+ 	 * not be good.
+ 	 */
+ 	barrier();
+-	if (dr7)
+-		set_debugreg(dr7, 7);
++
++	do {
++		seq = this_cpu_read(cpu_dr7_seq);
++		if (seq == dr7_seq) {
++			if (!dr7)
++				return;
++			val = dr7;
++		} else {
++			/*
++			 * If an NMI modified breakpoints while DR7 was saved as 0
++			 * (e.g. KVM guest entry), arch_install_hw_breakpoint()
++			 * clobbered hardware DR7. Restore val = 0 (DR7_FIXED_1)
++			 * to clean up the NMI's write and preserve guest isolation.
++			 * Otherwise, load the latest cpu_dr7 state.
++			 */
++			val = dr7 ? this_cpu_read(cpu_dr7) : 0;
++		}
++
++		set_debugreg(val | DR7_FIXED_1, 7);
++		barrier();
++	} while (unlikely(seq != this_cpu_read(cpu_dr7_seq)));
+ }
+ 
+ #ifdef CONFIG_CPU_SUP_AMD
 diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index ab469605fc89..39f238952e14 100644
+index 39f238952e14..b3669d6f88d4 100644
 --- a/arch/x86/kernel/cpu/mce/core.c
 +++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -2108,6 +2108,9 @@ bool filter_mce(struct mce *m)
- static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
+@@ -2109,8 +2109,9 @@ static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
  {
  	irqentry_state_t irq_state;
-+	unsigned long dr7;
-+
-+	dr7 = local_db_save();
+ 	unsigned long dr7;
++	unsigned int dr7_seq;
+ 
+-	dr7 = local_db_save();
++	local_db_save(&dr7, &dr7_seq);
  
  	WARN_ON_ONCE(user_mode(regs));
  
-@@ -2116,20 +2119,26 @@ static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
- 	 * mce_check_crashing_cpu() for details.
- 	 */
- 	if (mca_cfg.initialized && mce_check_crashing_cpu())
--		return;
-+		goto out;
- 
- 	irq_state = irqentry_nmi_enter(regs);
- 
- 	do_machine_check(regs);
+@@ -2127,18 +2128,19 @@ static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
  
  	irqentry_nmi_exit(regs, irq_state);
-+out:
-+	local_db_restore(dr7);
+ out:
+-	local_db_restore(dr7);
++	local_db_restore(dr7, dr7_seq);
  }
  
  static __always_inline void exc_machine_check_user(struct pt_regs *regs)
  {
-+	unsigned long dr7;
-+
+ 	unsigned long dr7;
++	unsigned int dr7_seq;
+ 
  	irqentry_enter_from_user_mode(regs);
  
-+	dr7 = local_db_save();
+-	dr7 = local_db_save();
++	local_db_save(&dr7, &dr7_seq);
  	do_machine_check(regs);
-+	local_db_restore(dr7);
+-	local_db_restore(dr7);
++	local_db_restore(dr7, dr7_seq);
  
  	irqentry_exit_to_user_mode(regs);
  }
-@@ -2138,21 +2147,13 @@ static __always_inline void exc_machine_check_user(struct pt_regs *regs)
- /* MCE hit kernel mode */
- DEFINE_IDTENTRY_MCE(exc_machine_check)
+diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+index f846c15f21ca..312550be3ad2 100644
+--- a/arch/x86/kernel/hw_breakpoint.c
++++ b/arch/x86/kernel/hw_breakpoint.c
+@@ -40,6 +40,9 @@
+ DEFINE_PER_CPU(unsigned long, cpu_dr7);
+ EXPORT_PER_CPU_SYMBOL(cpu_dr7);
+ 
++/* Sequence number of the per-CPU DR7 state. */
++DEFINE_PER_CPU(unsigned int, cpu_dr7_seq);
++
+ /* Per cpu debug address registers values */
+ static DEFINE_PER_CPU(unsigned long, cpu_debugreg[HBP_NUM]);
+ 
+@@ -97,38 +100,31 @@ int decode_dr7(unsigned long dr7, int bpnum, unsigned *len, unsigned *type)
+ int arch_install_hw_breakpoint(struct perf_event *bp)
  {
--	unsigned long dr7;
+ 	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
+-	unsigned long *dr7;
++	unsigned int seq;
+ 	int i;
+ 
+ 	lockdep_assert_irqs_disabled();
+ 
+ 	for (i = 0; i < HBP_NUM; i++) {
+-		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
 -
--	dr7 = local_db_save();
- 	exc_machine_check_kernel(regs);
--	local_db_restore(dr7);
+-		if (!*slot) {
+-			*slot = bp;
++		if (!this_cpu_cmpxchg(bp_per_reg[i], NULL, bp))
+ 			break;
+-		}
+ 	}
+ 
+ 	if (WARN_ONCE(i == HBP_NUM, "Can't find any breakpoint slot"))
+ 		return -EBUSY;
+ 
+-	set_debugreg(info->address, i);
+-	__this_cpu_write(cpu_debugreg[i], info->address);
+-
+-	dr7 = this_cpu_ptr(&cpu_dr7);
+-	*dr7 |= encode_dr7(i, info->len, info->type);
+-
+-	/*
+-	 * Ensure we first write cpu_dr7 before we set the DR7 register.
+-	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
+-	 */
+-	barrier();
+-
+-	set_debugreg(*dr7, 7);
+-	if (info->mask)
+-		amd_set_dr_addr_mask(info->mask, i);
++	do {
++		seq = this_cpu_inc_return(cpu_dr7_seq);
++		this_cpu_write(cpu_debugreg[i], info->address);
++		barrier();
++		set_debugreg(info->address, i);
++		if (info->mask)
++			amd_set_dr_addr_mask(info->mask, i);
++		this_cpu_or(cpu_dr7, encode_dr7(i, info->len, info->type));
++		barrier();
++		set_debugreg(this_cpu_read(cpu_dr7) | DR7_FIXED_1, 7);
++		barrier();
++	} while (seq != this_cpu_read(cpu_dr7_seq));
+ 
+ 	return 0;
+ }
+@@ -146,36 +142,34 @@ void arch_uninstall_hw_breakpoint(struct perf_event *bp)
+ {
+ 	struct arch_hw_breakpoint *info = counter_arch_bp(bp);
+ 	unsigned long dr7;
++	unsigned int seq;
+ 	int i;
+ 
+ 	lockdep_assert_irqs_disabled();
+ 
+ 	for (i = 0; i < HBP_NUM; i++) {
+-		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
+-
+-		if (*slot == bp) {
+-			*slot = NULL;
++		if (this_cpu_read(bp_per_reg[i]) == bp)
+ 			break;
+-		}
+ 	}
+ 
+ 	if (WARN_ONCE(i == HBP_NUM, "Can't find any breakpoint slot"))
+ 		return;
+ 
+-	dr7 = this_cpu_read(cpu_dr7);
+-	dr7 &= ~__encode_dr7(i, info->len, info->type);
+-
+-	set_debugreg(dr7, 7);
+-	if (info->mask)
+-		amd_set_dr_addr_mask(0, i);
+-
+-	/*
+-	 * Ensure the write to cpu_dr7 is after we've set the DR7 register.
+-	 * This ensures an NMI never see cpu_dr7 0 when DR7 is not.
+-	 */
+-	barrier();
+-
+-	this_cpu_write(cpu_dr7, dr7);
++	do {
++		seq = this_cpu_inc_return(cpu_dr7_seq);
++		dr7 = this_cpu_read(cpu_dr7);
++		dr7 &= ~__encode_dr7(i, info->len, info->type);
++		set_debugreg(dr7 | DR7_FIXED_1, 7);
++		if (info->mask)
++			amd_set_dr_addr_mask(0, i);
++		barrier();
++		this_cpu_and(cpu_dr7,
++			     ~__encode_dr7(i, info->len, info->type));
++		barrier();
++	} while (seq != this_cpu_read(cpu_dr7_seq));
++
++	WARN_ONCE(this_cpu_cmpxchg(bp_per_reg[i], bp, NULL) != bp,
++		  "Can't release breakpoint slot");
  }
  
- /* The user mode variant. */
- DEFINE_IDTENTRY_MCE_USER(exc_machine_check)
+ static int arch_bp_generic_len(int x86_len)
+@@ -309,13 +303,14 @@ static inline bool within_cpu_entry(unsigned long addr, unsigned long end)
+ 				sizeof(struct tlb_state)))
+ 			return true;
+ 
+-		/*
+-		 * When in guest (X86_FEATURE_HYPERVISOR), local_db_save()
+-		 * will read per-cpu cpu_dr7 before clear dr7 register.
+-		 */
++		/* local_db_save() reads this state before clearing DR7. */
+ 		if (within_area(addr, end, (unsigned long)&per_cpu(cpu_dr7, cpu),
+ 				sizeof(cpu_dr7)))
+ 			return true;
++		if (within_area(addr, end,
++				(unsigned long)&per_cpu(cpu_dr7_seq, cpu),
++				sizeof(cpu_dr7_seq)))
++			return true;
+ 	}
+ 
+ 	return false;
+@@ -483,12 +478,18 @@ void flush_ptrace_hw_breakpoint(struct task_struct *tsk)
+ 
+ void hw_breakpoint_restore(void)
  {
--	unsigned long dr7;
--
--	dr7 = local_db_save();
- 	exc_machine_check_user(regs);
+-	set_debugreg(__this_cpu_read(cpu_debugreg[0]), 0);
+-	set_debugreg(__this_cpu_read(cpu_debugreg[1]), 1);
+-	set_debugreg(__this_cpu_read(cpu_debugreg[2]), 2);
+-	set_debugreg(__this_cpu_read(cpu_debugreg[3]), 3);
+-	set_debugreg(DR6_RESERVED, 6);
+-	set_debugreg(__this_cpu_read(cpu_dr7), 7);
++	unsigned int seq;
++
++	do {
++		seq = this_cpu_inc_return(cpu_dr7_seq);
++		set_debugreg(this_cpu_read(cpu_debugreg[0]), 0);
++		set_debugreg(this_cpu_read(cpu_debugreg[1]), 1);
++		set_debugreg(this_cpu_read(cpu_debugreg[2]), 2);
++		set_debugreg(this_cpu_read(cpu_debugreg[3]), 3);
++		set_debugreg(DR6_RESERVED, 6);
++		set_debugreg(this_cpu_read(cpu_dr7) | DR7_FIXED_1, 7);
++		barrier();
++	} while (seq != this_cpu_read(cpu_dr7_seq));
+ }
+ EXPORT_SYMBOL_FOR_KVM(hw_breakpoint_restore);
+ 
+diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+index 3c9f60d6ca5a..c3806f7bd3e8 100644
+--- a/arch/x86/kernel/nmi.c
++++ b/arch/x86/kernel/nmi.c
+@@ -531,11 +531,12 @@ enum nmi_states {
+ };
+ static DEFINE_PER_CPU(enum nmi_states, nmi_state);
+ static DEFINE_PER_CPU(unsigned long, nmi_cr2);
+-static DEFINE_PER_CPU(unsigned long, nmi_dr7);
+ 
+ DEFINE_IDTENTRY_RAW(exc_nmi)
+ {
+ 	irqentry_state_t irq_state;
++	unsigned long dr7;
++	unsigned int dr7_seq;
+ 	struct nmi_stats *nsp = this_cpu_ptr(&nmi_stats);
+ 
+ 	/*
+@@ -572,7 +573,7 @@ DEFINE_IDTENTRY_RAW(exc_nmi)
+ 	 */
+ 	sev_es_ist_enter(regs);
+ 
+-	this_cpu_write(nmi_dr7, local_db_save());
++	local_db_save(&dr7, &dr7_seq);
+ 
+ 	irq_state = irqentry_nmi_enter(regs);
+ 
+@@ -594,7 +595,7 @@ DEFINE_IDTENTRY_RAW(exc_nmi)
+ 
+ 	irqentry_nmi_exit(regs, irq_state);
+ 
+-	local_db_restore(this_cpu_read(nmi_dr7));
++	local_db_restore(dr7, dr7_seq);
+ 
+ 	sev_es_ist_exit();
+ 
+diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
+index 30aa8369957e..018abe736285 100644
+--- a/arch/x86/kernel/traps.c
++++ b/arch/x86/kernel/traps.c
+@@ -1231,8 +1231,12 @@ static noinstr void exc_debug_kernel(struct pt_regs *regs, unsigned long dr6)
+ 	 * it results in an endless recursion and stack overflow. Thus we stay
+ 	 * with the IDT approach, i.e., save DR7 and disable #DB.
+ 	 */
+-	unsigned long dr7 = local_db_save();
+-	irqentry_state_t irq_state = irqentry_nmi_enter(regs);
++	unsigned long dr7;
++	unsigned int dr7_seq;
++	irqentry_state_t irq_state;
++
++	local_db_save(&dr7, &dr7_seq);
++	irq_state = irqentry_nmi_enter(regs);
+ 	instrumentation_begin();
+ 
+ 	/*
+@@ -1289,7 +1293,7 @@ static noinstr void exc_debug_kernel(struct pt_regs *regs, unsigned long dr6)
+ 	instrumentation_end();
+ 	irqentry_nmi_exit(regs, irq_state);
+ 
 -	local_db_restore(dr7);
++	local_db_restore(dr7, dr7_seq);
  }
  
- #ifdef CONFIG_X86_FRED
-@@ -2169,28 +2170,20 @@ DEFINE_IDTENTRY_MCE_USER(exc_machine_check)
-  */
- DEFINE_FREDENTRY_MCE(exc_machine_check)
- {
--	unsigned long dr7;
--
--	dr7 = local_db_save();
- 	if (user_mode(regs))
- 		exc_machine_check_user(regs);
- 	else
- 		exc_machine_check_kernel(regs);
--	local_db_restore(dr7);
- }
- #endif
- #else
- /* 32bit unified entry point */
- DEFINE_IDTENTRY_RAW(exc_machine_check)
- {
--	unsigned long dr7;
--
--	dr7 = local_db_save();
- 	if (user_mode(regs))
- 		exc_machine_check_user(regs);
- 	else
- 		exc_machine_check_kernel(regs);
--	local_db_restore(dr7);
- }
- #endif
- 
+ static noinstr void exc_debug_user(struct pt_regs *regs, unsigned long dr6)
 
