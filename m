@@ -1,25 +1,25 @@
 Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020108.outbound.protection.outlook.com [52.101.196.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF05A2E2DDD;
-	Mon,  7 Sep 2026 01:52:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E282F3614;
+	Mon,  7 Sep 2026 01:52:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.108
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788745923; cv=fail; b=ZNiLHuL/qP3ZWZGgbVj+MLhJGL0VqUPzriDPboXDt8+DEOfPTW3HIvV+SW5xdkTOZWvTucPq9JvlDykJBAy1ke2ZO8/eNiwkgVK7mrtinkuWD/jfQA9NjnUvO3g3RWFdKVMTxJQcgXNN6n1q9hG/huPc2R26/2fDeOnQEDMZ4Bc=
+	t=1788745926; cv=fail; b=f8W07TlXDISnrzYH551nR6GFX8JAZyMAPIdgO9IfaCc8SuXXsKfbZKBARG4Ol9VlXkKYbl8RAynjmDbHhJ48kaiRUI5LD77vgRX1cLl8jp4I/uCEbrFkyeaS+GTyHjDz+rQRFHTd2FTqENKxeF94hf32TTi4aieTAhrR3Tn6stE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788745923; c=relaxed/simple;
-	bh=PYQXaYnf9EGw1HJA3Jv6xzlFH3wFrGMegCEY5iT99V8=;
+	s=arc-20240116; t=1788745926; c=relaxed/simple;
+	bh=U8KSIja2UBCU907zkdUIqXz6+I3bx+HWktLYtKi/+vs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HhFQbufL7uhslUFLkC4bzDLOnnlx/gABQsgJJO+ZhGquFRBJhlnc8TS2FpaH7kYjg2RgyslvQ1+mhAXE8MBzOFmCgLWZKP2EyolPwcBgLIHSBZM8xDUuFdp7JvBq02ez9U31z6O+9s9XAChGVQTFZqD80RF44oJP6ibgR8blCKo=
+	 Content-Type:MIME-Version; b=UNRQrb1E8GjlR1BqUsR3R7Jf2uRL4O0R/anYz4IJoNWlERr8vO8rj8VaBwsx2I7jCf4D/+CMrthKLu8FWnWhGuLhxyu7EymwQv68EWgFe8W296YnDeiM4HU02s8GQ7Zrkf/iyXTVlw76FqWfETyxfowvz4ZYBX1aj8CyFGqowf0=
 ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.196.108
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HhVlT9WZ+2OMjSPdXmbM27tj/5rrdwa6HTFlzyveA4FolPUd1xu4gpplB4Em+E+8KWlKNOqUk0gqlaJ6mMcLR7mFTbEsi2ZEgKkDES3rjMCkaGQxI3/zONXUj68GA3v+hJMF2l+MRhqEL0LjlLrcg40WdDOTss+AcwYqxSaso5SZjbT+54c8oi+Ygei+45N8t9SENSQvghtmfrKkTuz8qIL7P1JEqjfvaFppD/md5ucxot0mQcNAO6/ezIMQXH1IdVvGZnYQSHCPWSV7PsDLoFikB64VNhRhqkh5kGupFfDo+CIKa6lBq/RLdMRH1jHjEahnZ1wI+6ZrGYoEyuVP0g==
+ b=vxkT51Qwgok2tE5eREQ4L9KcVWqaJrBayYPHw/8MtaOZSeLm7aL11u+/QmZSXkk0nLOwV1deozGqk43+srMqn6SOqWJ8PMLzoAzlglh92MdHVXzIhZzInsr7mRMfOhVCAMYI3IRDJTvVx/Mrt0Yht5bnb6JUAS3GTEIai/asb3WwDlMi4yMdZeD9GIZpcO5DTaVDAQlF0G2r6VBA7Giit1nRtZ8487SyN6bZ3KgetnxMULuDsTciNoR/WOhRk6wtmiJw94pZ78mMuHmt1fphIQqtEwikH6pCNC2G+u/0dgSCxlzVwQxJAkwhGJ+8WeDeBfY9dxIq8yrFcSe8JXEFKw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=0fdEjtYpQ27Thv/rlJc92IsGjW0quzSwQCYFYMYBXrU=;
- b=gi5t/UvVmtxgyVSeQWpYI6hN8CdyW5mSFQ2NpQ3jG1L7sw1U5I4x848PQUiRPYWcCifBqUioMsChDEthXdoEk01CTOVsaukpJlaFynt7I9KrelxxY0bTm1yyrFK0qXMAasOCqdawkWVIIw2hZ5oMHdcqXR6M2ykUUQP8ADvLPI14Wn7Q2w0KT4y/XUvmFP9EQQa0ugOQ8klID6939oNM8DZNR+by0q+2T6hRa784zaXNRk4ZYMPoAoNts9FwKp09+ZGPNm77u56KVyQVzT4//NiZ+SzeaxsiBdKUW9R0aqyI1YMhWcH0fe6f4uTkuNTN7Ef/B6MK5R7NoYjX1f/EeQ==
+ bh=jcgkStY4dczj06TSKc8pO2Hev1gEEbX35EjxVf1fh4M=;
+ b=vd/TYM6H5swppASgJBUO4+AD1KmXgZ3OpJ5GZC8nAzMRrU2OQtX+qgM3R4BrANDZneSXjEWAE8kFZv4pBy5pEUssxDj+rPjGw2/u0LcPjqldn9feJWG0LRnWUguui4ZcBe1oqlQA/BUIvUUrmPk9SWPd/bv1SyoyUjeRiGUF4sthArTz3gO99Vf8HHVnQDFYKNZml7q1MAFGmdJyVOL+SdQuQeWAM823OLIUnjEcpxzuLmYAUgxorO5YRUhjcobEsHnaBl7vjDT/+HCotcEUNXTl6AaIeb8hAZiydWjS2/JmYZeewSMM+xMRigGIjosJiJXtXkMYUio3bQO2CdjlmQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
  dkim=pass header.d=atomlin.com; arc=none
@@ -29,11 +29,11 @@ Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
  by LO0P123MB7403.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:335::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.15; Mon, 7 Sep
- 2026 01:51:58 +0000
+ 2026 01:52:02 +0000
 Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0382.014; Mon, 7 Sep 2026
- 01:51:58 +0000
+ 01:52:02 +0000
 From: Aaron Tomlin <atomlin@atomlin.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -54,16 +54,16 @@ Cc: mark.rutland@arm.com,
 	rishil1999@outlook.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 perf-tools-next 4/6] perf trace beauty: Validate payload size in augmented timespec beautifier
-Date: Sun,  6 Sep 2026 21:51:38 -0400
-Message-ID: <20260907015140.363076-5-atomlin@atomlin.com>
+Subject: [PATCH v2 perf-tools-next 5/6] perf trace beauty: Validate payload size in augmented sockaddr beautifier
+Date: Sun,  6 Sep 2026 21:51:39 -0400
+Message-ID: <20260907015140.363076-6-atomlin@atomlin.com>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260907015140.363076-1-atomlin@atomlin.com>
 References: <20260907015140.363076-1-atomlin@atomlin.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: BN0PR02CA0057.namprd02.prod.outlook.com
- (2603:10b6:408:e5::32) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
+X-ClientProxiedBy: BN0PR02CA0037.namprd02.prod.outlook.com
+ (2603:10b6:408:e5::12) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:400:183::5)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -73,109 +73,134 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO0P123MB7403:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3710a9c6-bec4-4b2b-7fb1-08df0c829a26
+X-MS-Office365-Filtering-Correlation-Id: 93560f19-4ba8-4475-54b9-08df0c829c65
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|23010399003|7416014|366016|1800799024|376014|10067099003|6133799003|22082099003|18002099003|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	4sFr9Lr5f8gjQ5haYhbZCjqG3fwnG6M2Y5zUcqM2BHlYEMnWKC/MJoEZfHPRDm21JbB37wningtIHtIfNSklPJnDUkliGgDbD8U7/ET4mjRlUEO/ZXNd/1IlH9lAoNbEpCeLgKv+KcQKPjy5vtx8hYx+KoBrnXVwIBQV1vV4QH4m8PrXaFMEFwx+ou84KMSwg6e4opjKHrYb8HuHfd2OHzrqCQyNXSH7FOfO7jLJMSoM7DktbrP+kmRxNUmz4T2x3ZKMVsE59f/J4UOP7go1mS0MOtP+GHXFSO1qGzMnOSHnzRhtZ20asmmV4buEj0D9y7SHmx17JWGTfDcaULBg77+t37otNnUeLZhx5mqd/uDhAL36UYWswC8hZ1NflZ9RJBf+5RJeltTtqcNK6XKyfQFwV6/JUQ8/mK/XUSU174SQ6mNDNNftlJcZsvqHDAtHfM4+jeKYFOfxmZ00RoP7ae/c9NhuhWOi84f3PGfrXs4Wx29ZHHtk8NmHrBy25o1DHSj0zoj16jZgzKRAymqOBDGqblqd50yXek/k1CMxwFxxgDYUy5cbd+68HS8e5y5Qgf55iqgzv8cnZ63h29Yx2MKRP/7xQODYsst0dtbNiyJUXPflFpE8kdven4RWyweP4iT+3ENHMnlDpKnJKZSmZZ5zclhQRuZpjBPT9v7EhXQ=
+	qCut888iCbKQsVQweP6EQAW2tKy0GUU9dPo4af18hs8RX2Vh4ZEvbuoCnS7mF3tCwX/hX2FDQFS0e5GZepRN7GN7UHMcfSjArB1ojUh/iuxn1feNHGrdRbOFJe4y6Mu5VEZjUNqxu7jGROo52KIciZLJ11HKirvd2yUBb6xnu3eDPyEvya5MsSlABwccVZTXvZpuJ+ILeYNYPUZy0rVnDBYXgEWtZJzEO72FmGZs+OZh7WW0fyeYhfCcdB7THPs/+K6++GMQ9KJMixS8jERbZNgig5exJ4hVf2pkEAS9frNz78+LxA8ZCPnNqlcauovWT0sG+9AUjC0bl64QqBeYIsiUhz0jk8jxKcecOCwiL1nK/u7fCE6HMDI4IqiFY+LU6Q6a2AyAWnS/9EbnC1RA8aLTk04HGdFK+bGLxSTs51JLxBRuhSmCVEsFDs7EJFcevrsm865JHPbK061o35ZVl426MkKj0GCvTNII6woEdzkX4PhwoPxLRi7pZ5fxV80pLuPClFEDFNO636CSvV8eBcv5TqzGzVHMLpUT6g4GuOHtdTaKAJIsimBe1toE5kR/2fwTYpySPhqs9PyMKLkEKT0Lxwqgi2n1t/h1fuWjmceyNjPPvt/rlVD29Mo6nbNbKEaVSeg2zkNeyp8BbHQw03SEqDkHnxxNggdhlElBHbA=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(366016)(1800799024)(376014)(10067099003)(6133799003)(22082099003)(18002099003)(56012099006);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?LKtd0iqKFOJHa2bQv3/E66phpyLDl8FsOmkMuMdl7B5F44B+H5xgjQCzP4Oe?=
- =?us-ascii?Q?Sd2ESRK4CxE5d6jv6H0OMP5HX4mbx6NQ2vrP0anAtDb0ZlPEQ++EWDhxySU2?=
- =?us-ascii?Q?YrrlfcBCyvlKfZINhWb6oZe7d1duP5HiZ1fqjNJcZjqbiqDZknoFOLZjPhD4?=
- =?us-ascii?Q?prxMbgwZjJhuQ+W/eGhoys4i27eTlmGvgMXfz3Jce8dlas8dq/ys/SnHbudD?=
- =?us-ascii?Q?EblOMGrv0NsuviTHgmC7V809SJq0kqs+6F41C5/EN9fhK8X7PfGWL0ZKMaTB?=
- =?us-ascii?Q?9f1RM39tZ2zDa9fXZiM3db01l9qLJ73ocTgWXb2Byvf7aiUFkKuMdIIImc6x?=
- =?us-ascii?Q?+rVlsEzCj+TS3oQETuhLuOHnmjVOy4Uv+8osW2saK80BVPau811Nq2Pqxm4E?=
- =?us-ascii?Q?5da7Q+xdWfhnB5SFDUIHlkES5aSNoU5+hiM+pAS7Tw0uRFdjE+P5ezMPtPEx?=
- =?us-ascii?Q?tGM7X5rh1yn7OCeac4wsBAxFyoMtyZzzKqxpV8d4fukdmA/GofKQFMq55CZ9?=
- =?us-ascii?Q?AYoWhu6/x0PyeP+wLFfPzFNKmEfgaRpGJ1OLNNbP51GxrIsfZAQ1IONtmrFd?=
- =?us-ascii?Q?TfYs79F9Sqy4lfUwvo+jJvRuXZ/6/VpMSXRUWcClxSXgfbtHxE3TDG1jv5tP?=
- =?us-ascii?Q?Z8GrtmR8TBzcPp58rEhawM6owYxBIyDmTJWIG9drcoQOKkopfweazR6R26OD?=
- =?us-ascii?Q?TPNawhDYzISAVCmUWqngtc1NnFeT4phz1ZS0JQdchHFd/2yZInATPcdt7IWW?=
- =?us-ascii?Q?qV9o+IGHsugxmGcGCmd0CLu9Nwgk1eaDDuGDOupKsTuTGH7gxOfEyomtCiyD?=
- =?us-ascii?Q?jkqknyHbA+I2n5IpfyIbkqV+qtyn8M3uUCvuOABaxCb15S+kc3UxLyt3t4fD?=
- =?us-ascii?Q?aim2QgMW6ScUw8P5ihJk05Pg0UqBuHbSB0F0bpGCp4Uc3yESIhpbF0L6Dpsj?=
- =?us-ascii?Q?KdNiBB6noX/Yta2hFgcVaC4ZpIiHq0ReurzkelT4mCalix1Gfp4OrHF3ki0t?=
- =?us-ascii?Q?6Pe7z3iFn2qgO2Odk64ajftFZtKqlHrxMkguETuhCgSCKvI+XF6hU7RZdIHm?=
- =?us-ascii?Q?yxK6Uo9gGfc43hIsvmOSjBDVHMl/uIX+AYQC/c8uQoismEHLqWsI492I1l8u?=
- =?us-ascii?Q?qrz3gxjvJaqOogEagzoKjoYToKaJatKaOIXa6N9pfx1kRuSyYApaHHM/mPEw?=
- =?us-ascii?Q?82/YqcxiiphsEDWufElHUwfCZrQMzf+721uwXKrU6HWXA9eTpKjL4XQD83/q?=
- =?us-ascii?Q?VFAhV0gRDshA5OboUpUqm3QrULu4tuXRqRK43l0E6BCm1Jotd+gJ4ZG8p9aZ?=
- =?us-ascii?Q?fVE3KWqBxVWFhI2Z+Otv25EwnjrKjreDlUWXWxA+dTE/1nsFlluaacoCIEm/?=
- =?us-ascii?Q?FINGq+FwDwMifSNum+KWoWIKWlAwoU9yced7Nf9OP97/g1ACjs5w7oe3zPv4?=
- =?us-ascii?Q?Cjbn3/dswYSM1+FLDcDf0gAS4IUp+UtG1umUNwZvJCCEKgsSiMykZfk0gIKH?=
- =?us-ascii?Q?DPcwVPr80LQoEbS9ZMva1Ox3Ca+nh2j9kwMXJdrIiIocZoNHkes30dv4REjY?=
- =?us-ascii?Q?UuRcoUM9+cPMVY/IxkwmR+XKSEx6l8yMiDRrdmvJ0kt0hcd0TP4vj+ORVOzX?=
- =?us-ascii?Q?L4bKsHlP6/4T4ueJn6EW3pfvNkn4fFgeJGY8Ry/VpPRCXWpNVweMXGh1vHBp?=
- =?us-ascii?Q?wvTOKxgOhBj8rkVqxwExIrXiG+sliURm7iNIIlhhn8LKAA8tN7fCc5Jcf6Yp?=
- =?us-ascii?Q?7nOIx9dq/A=3D=3D?=
+	=?us-ascii?Q?9WJLQV18ir2eJdUGsPw4xIYhvRO/GGFaZvOGt6bhCw0xGPeLVcf7yE4DLLUs?=
+ =?us-ascii?Q?8vpGVWQPypbEaQHr9MZOJBr6liEEUbjhbXaIXrlSzhUDveVlVvhOaglJRzZy?=
+ =?us-ascii?Q?q+scKNkf3jDT8ZY3PXHs60gS95pamTrm5EiAN9R2+o5wL+uR3ZiSMeZ+PpVU?=
+ =?us-ascii?Q?F9+lRLFnMNBr2I10BxjrwzJEHFcu9xo0iRpdV8xmhlj++LEFvRe4CXDoCr6Y?=
+ =?us-ascii?Q?tKbtxehO5GVLWItjooafMdXp5Mf2TQTwaX2BNUIMricxB3kRMolAN0iyMMVa?=
+ =?us-ascii?Q?13NCUE4HLwHN6jfe4tSzbWsVLq7UasEaA8qnF56V4edc8hA35ouboqFqlH6n?=
+ =?us-ascii?Q?sQqS2tXJfASyAbZVtswVYKMfZwVGnnObqWQWxQnWHYTJrJEHTZ0QZfzonWrT?=
+ =?us-ascii?Q?dfGDRGCKndTiABn/IHZXn+hdImh0iiKDK10pwbz/Rsc0CR3ew/WzSry4QLob?=
+ =?us-ascii?Q?2ddEuMW0SClYyxjjktNttFubumDerAwdib+NKUpKFlY77UR4Ch/Ae+3tWhj2?=
+ =?us-ascii?Q?IxE164PpKwg4+enlCDQ9I+XxQmsVrU2ojBeVpNp1/kjgfmPBL8joVpCUKC5z?=
+ =?us-ascii?Q?PSuKnLL+Y17CnO+RB2cVcYRrXr4i+18gr/l304HcfJFARWXzI9Y3TAb34jne?=
+ =?us-ascii?Q?pnYAEuFI4yR68bsQX/ojMQxfalbBeFZo6236Q0i7ZBR+YnQ+O6YWkgd5DJUk?=
+ =?us-ascii?Q?BfKkjockbdueJV7kx5DYn9EPAnNyLzWeFh/1gXjBuniKdkdM0oKMXEyIbtXj?=
+ =?us-ascii?Q?19rtwS2OVPbjmQh19LGAeQh3YwcpJ5GLenu0O1ZEGSEtTOijYgZMoDOIfFOC?=
+ =?us-ascii?Q?qIg8gMOWHs5YS/AxB23z+7p8/953ERsilwLRJckxRDS72qjlaTEhy0yjyLqX?=
+ =?us-ascii?Q?lfg7cM7nndPDt+uezzYUwQMeKj17sAluL+8R+1yDkAKSvk49qfXYSiD2jGgq?=
+ =?us-ascii?Q?W/LLz8b119bN3rinVJvtSXtjQwFGZYU8wYi9JxOM+lUC7fUZ0OGHcVY5eG+8?=
+ =?us-ascii?Q?HqFYDP2KUH/mgwpnlmnFhoZn9wGmPvyy8jEIgMZfCHn+KXBzoRzoOT7l5HgI?=
+ =?us-ascii?Q?kXgAU3KDZYm0lRrQPrWkPKjUuAWI+d/CmbacEgt0ufiDDkZZi82bsmpn2M8P?=
+ =?us-ascii?Q?mAHIn9SyXbcKicc5HoXwPOS+WM7WCvivMnkpo0TcW5FuKQH8BVUxW3CPi+H2?=
+ =?us-ascii?Q?7tN+Lqx6AopUZ+7d0BSnXNnE/iDtEG4VVvaB+ABF1fnzmUrJCiNX6+vHpQ69?=
+ =?us-ascii?Q?tkrAf36GxhUdNRZ9gW8DLtSroxlMLEpQWpoANuLJSvPDTK68OznrB3tOPsly?=
+ =?us-ascii?Q?cie+sZ+2ZBUR6oVbGbVPPelkydXQTwKIaPLdp2YSNN9W2HMJX/UG9ymjQ4+f?=
+ =?us-ascii?Q?Tj0SnKyXbPlrrhi8AC4yXFwWPmR2ktzhWetnUYSkSIgHUiP/QcK/fPaolZ0V?=
+ =?us-ascii?Q?2P5QgvE8pxZRd+p6AyXJY9Z3JxvrI1Qqqa6a428AqOb2NIarVJwAS57PY7Sg?=
+ =?us-ascii?Q?19AfKNqOOfbl/s02lt3kNsdz8awW7HC47NFU9yjd90n4LdyGvgeYw1qs4OdA?=
+ =?us-ascii?Q?KJbImel8XNOX+mDTb3vSuBPjcIl8TkYnPK+lkIJLNgFv1HrbqpxteO/GKLeP?=
+ =?us-ascii?Q?AeAq6UXYuu6bfg1jx7kPoTGc/GMrFuiNc3kNy0KWw8Ur/vxYLTSMRSQ6TFAq?=
+ =?us-ascii?Q?3KLPekCRtV8J9JZXKGWr/Z5LDXAe7uamgx6tTg6ctyQB/fXdT8Two1xWbulc?=
+ =?us-ascii?Q?b76ZWFYQyg=3D=3D?=
 X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3710a9c6-bec4-4b2b-7fb1-08df0c829a26
+X-MS-Exchange-CrossTenant-Network-Message-Id: 93560f19-4ba8-4475-54b9-08df0c829c65
 X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2026 01:51:58.2291
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2026 01:52:02.0807
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Dt6SodSsXNG1PPo4OABrnvw70/ZOA5wvMe19RpaM/wlqa7/VUPORmkL3YuExahLlbkEzD9bJ5pFaHE/4cEIrvg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: L8W269Ymo3Gu8kYNTFVnMVftoLSURiIcaWwI911WvIH0Qkx663hv4Tuw1avVL48jhGD1dhsxotLVDTLw6uyxzA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P123MB7403
 
-When pretty-printing augmented timespec arguments via
-syscall_arg__scnprintf_augmented_timespec(), arg->augmented.args->value
-is cast to struct timespec without verifying that the captured payload
-is large enough to hold the structure.
+When pretty-printing augmented sockaddr arguments via
+syscall_arg__scnprintf_augmented_sockaddr(), &arg->augmented.args->value
+is cast to struct sockaddr without checking whether the captured payload
+is large enough to hold the socket address.
 
 If a malformed or truncated perf.data record provides an augmented
-payload smaller than sizeof(struct timespec), accessing ts->tv_sec or
-ts->tv_nsec reads memory past the end of the available buffer.
+payload smaller than sizeof(sa->sa_family), accessing sa->sa_family or
+dereferencing family-specific fields (e.g., struct sockaddr_in,
+sockaddr_in6, or sockaddr_un) reads memory past the available buffer.
 
 Validate that arg->augmented.size is at least sizeof(struct augmented_arg)
-and that augmented_arg->size is at least sizeof(struct timespec) while
-remaining within the available buffer. If validation fails, fall back to
-printing the raw pointer value.
+and that augmented_arg->size is at least sizeof(sa->sa_family) while
+remaining within the available buffer. Furthermore, ensure that the
+payload contains sufficient bytes for the given sa->sa_family before
+invoking the family-specific formatter. If validation fails, fall back
+to printing the raw pointer value.
 
-Fixes: 6ac73820993c ("perf trace: Add augmenter for clock_gettime's rqtp timespec arg")
+Fixes: d5a7e6613b00 ("perf trace augmented_syscalls: Augment connect's 'sockaddr' arg")
 Reported-by: sashiko-bot <sashiko-bot@kernel.org>
 Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
 ---
- tools/perf/trace/beauty/timespec.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
+ tools/perf/trace/beauty/sockaddr.c | 35 +++++++++++++++++++++++++-----
+ 1 file changed, 30 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/trace/beauty/timespec.c b/tools/perf/trace/beauty/timespec.c
-index b14ab72a2738..fad503bd953a 100644
---- a/tools/perf/trace/beauty/timespec.c
-+++ b/tools/perf/trace/beauty/timespec.c
-@@ -7,15 +7,28 @@
+diff --git a/tools/perf/trace/beauty/sockaddr.c b/tools/perf/trace/beauty/sockaddr.c
+index a17a27ac2a6f..00c702ff4465 100644
+--- a/tools/perf/trace/beauty/sockaddr.c
++++ b/tools/perf/trace/beauty/sockaddr.c
+@@ -47,23 +47,48 @@ static size_t (*af_scnprintfs[])(struct sockaddr *sa, char *bf, size_t size) = {
  
- static size_t syscall_arg__scnprintf_augmented_timespec(struct syscall_arg *arg, char *bf, size_t size)
+ static size_t syscall_arg__scnprintf_augmented_sockaddr(struct syscall_arg *arg, char *bf, size_t size)
  {
--	struct timespec *ts = (struct timespec *)arg->augmented.args->value;
+-	struct sockaddr *sa = (struct sockaddr *)&arg->augmented.args->value;
 +	struct augmented_arg *augmented_arg = arg->augmented.args;
-+	struct timespec *ts;
++	struct sockaddr *sa;
+ 	char family[32];
+ 	size_t printed;
  
 +	if (arg->augmented.size < (int)sizeof(*augmented_arg))
 +		return 0;
 +
-+	if (augmented_arg->size < (int)sizeof(*ts) ||
++	if (augmented_arg->size < (int)sizeof(sa->sa_family) ||
 +	    augmented_arg->size > arg->augmented.size - (int)sizeof(*augmented_arg))
 +		return 0;
 +
-+	ts = (struct timespec *)augmented_arg->value;
- 	return scnprintf(bf, size, "{ .tv_sec: %" PRIu64 ", .tv_nsec: %" PRIu64 " }", ts->tv_sec, ts->tv_nsec);
++	sa = (struct sockaddr *)&augmented_arg->value;
+ 	strarray__scnprintf(&strarray__socket_families, family, sizeof(family), "%d", arg->show_string_prefix, sa->sa_family);
+ 	printed = scnprintf(bf, size, "{ .family: %s", family);
+ 
+-	if (sa->sa_family < ARRAY_SIZE(af_scnprintfs) && af_scnprintfs[sa->sa_family])
+-		printed += af_scnprintfs[sa->sa_family](sa, bf + printed, size - printed);
++	if (sa->sa_family < ARRAY_SIZE(af_scnprintfs) && af_scnprintfs[sa->sa_family]) {
++		bool valid = false;
++
++		if (sa->sa_family == AF_INET && augmented_arg->size >= (int)sizeof(struct sockaddr_in))
++			valid = true;
++		else if (sa->sa_family == AF_INET6 && augmented_arg->size >= (int)sizeof(struct sockaddr_in6))
++			valid = true;
++		else if (sa->sa_family == AF_LOCAL &&
++			 augmented_arg->size > (int)offsetof(struct sockaddr_un, sun_path))
++			valid = true;
++
++		if (valid)
++			printed += af_scnprintfs[sa->sa_family](sa, bf + printed, size - printed);
++	}
+ 
+ 	return printed + scnprintf(bf + printed, size - printed, " }");
  }
  
- size_t syscall_arg__scnprintf_timespec(char *bf, size_t size, struct syscall_arg *arg)
+ size_t syscall_arg__scnprintf_sockaddr(char *bf, size_t size, struct syscall_arg *arg)
  {
 -	if (arg->augmented.args)
--		return syscall_arg__scnprintf_augmented_timespec(arg, bf, size);
+-		return syscall_arg__scnprintf_augmented_sockaddr(arg, bf, size);
 +	if (arg->augmented.args) {
-+		size_t printed = syscall_arg__scnprintf_augmented_timespec(arg, bf, size);
++		size_t printed = syscall_arg__scnprintf_augmented_sockaddr(arg, bf, size);
 +
 +		if (printed)
 +			return printed;
