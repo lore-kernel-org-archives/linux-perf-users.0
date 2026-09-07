@@ -1,193 +1,383 @@
-Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020108.outbound.protection.outlook.com [52.101.196.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A5582E7F3E;
-	Mon,  7 Sep 2026 01:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC282FB969
+	for <linux-perf-users@vger.kernel.org>; Mon,  7 Sep 2026 01:54:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.41
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788745929; cv=fail; b=m6/g34OZkkSJHXoMekSO/hVaca6wIKSJhV+lSBEoJCo8yQtU7icCN3xStOzrydEd4xIrnQWy9TXWgErBTUfcpTTmPgMdc5BxNRIKczOr55RicdUhoeYU6+6mFJMeLWzYc8BE7qMr0Ehjt6qrUaW9KMrkw/jVzBMDSwvyZY7UN0I=
+	t=1788746078; cv=pass; b=aCY4au/zl1WlXHF3hqk+vjaUtbZ7YCYexRYiG5JpnIeYxGyS40KpkVDaLriUCRahCxb/4BZmUk3Z2UBFlhR0bw2EPEVBZM3PnJixY8PLUxv2mEiHTKVNGC461RiEJyDyYZXNd5owAyQIkQVvCZCWn/Yt5qWZqsyA/JsaVfQBxHE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788745929; c=relaxed/simple;
-	bh=yjYdQ5rDmIE3BqdsC/KePQx6+Z6Y1b6mllvjpv2ifMU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EHLX5+1FthtSljqEJtsex/gnF3x5f6BW7OQkxx9X2LtC7yyT/PoFJOdccU9C8AXng0KZcBECkeGzYb5kryh/iJLH3bCovPwFj9LNvABIjIq2DwG6t056CbkWXV5Gk26QTPLBoDRxLD8KZ0ppRNB+lkQsEvVA/wacSsM1mfmGieY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com; spf=pass smtp.mailfrom=atomlin.com; arc=fail smtp.client-ip=52.101.196.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=atomlin.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=W6X2i41GnIFT1jxIsRGdHESj5IZaquVi0myXt/ZwgOwLYKqKVxgjWfSI7PufbgkofR50HxGgAaWQtq8IjjOIBr8Ax+hUHFETJc2WjBRX5LBHC5neLzw2+NA3l8F0NH66q8dCxogOw/5opBtus+wjxLdP8VVHaxjYghLN43Le3yJb+XM/ATGAivr89uYWSnaPPMCRwvI0rPoqlSSNpG53aamFrL/q6DZtKwquRdelXbRl1qibRV/lD++J0jcDQ48gcw0JHTmq/tvNvnt20YRM4c6v4WF/wrUAEwiMH9M60JYf8qplU6lBuiMpcvm03CtttvvY1qzKl0bhVEwB5ibRqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001; h=From:Date:Subject:Message-ID:MIME-Version;
- bh=GpsL4FQW0kQ1tbKtkBn0svhyHb/qQieD8Hoov1EGkMc=;
- b=eyUwD1qv7Avb2iRp7sfiNNMLcZucz5W7r/Q4xsDwKzc3i2xUOl+HlqEnidbnlLHmDMukT7v0YpFvlml0V1s2H8ScDRFQp6m54HN6JTOr1rhlQZzbSPrXn+4yC7Zf88L/aq0QiCUm02MDIf6d65xPIXacP830MxTtDmc+VKJv39ve223CZhx5CtYJubw47p5fK5fyHnbQfi2dmJ62ukIqMR3aOKvYf0AGP4kY8YpKRCygsqUtIfRK2h1+LMyzcAVZiZM/tKrX7XaN+DS/SfHb+Lg6n7yQ3SeZd051BWvWH7wVtf7NJi9qrxhli4ZXWrD2qncI6WtJbm28KufeJ/yw5Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=atomlin.com; dmarc=pass action=none header.from=atomlin.com;
- dkim=pass header.d=atomlin.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=atomlin.com;
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:183::5)
- by LO0P123MB7403.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:335::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.15; Mon, 7 Sep
- 2026 01:52:06 +0000
-Received: from CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230]) by CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- ([fe80::cec4:77ab:262e:d230%4]) with mapi id 15.21.0382.014; Mon, 7 Sep 2026
- 01:52:06 +0000
-From: Aaron Tomlin <atomlin@atomlin.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	james.clark@linaro.org,
-	howardchu95@gmail.com,
-	atomlin@atomlin.com,
-	neelx@suse.com,
-	chjohnst@mail.com,
-	sean@ashe.io,
-	steve@abita.co,
-	rishil1999@outlook.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 perf-tools-next 6/6] perf trace beauty: Validate payload size in augmented perf_event_open beautifier
-Date: Sun,  6 Sep 2026 21:51:40 -0400
-Message-ID: <20260907015140.363076-7-atomlin@atomlin.com>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260907015140.363076-1-atomlin@atomlin.com>
-References: <20260907015140.363076-1-atomlin@atomlin.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BN0PR02CA0042.namprd02.prod.outlook.com
- (2603:10b6:408:e5::17) To CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:400:183::5)
+	s=arc-20240116; t=1788746078; c=relaxed/simple;
+	bh=HsGjhU3uBTpHPuq4JphTd+S+S3oIGE294X2u5LK4rnc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TpCFX0V8FEfFXMJFPMlnGAtMhp03Jaggy/y4D4xP/4oGskl13a2KCF1h2r4ocUXc1vED8W8E6zE5SAqY3883ohngAnSSoNYH4VpCTBMwqY8/B/kP1EKsVoS5kjh7loKdKkXr5o6UrbtqwnmOBuSzijKw5vJRiIe8JcYeRiBwv+E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=TXWFr3Va; arc=pass smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="TXWFr3Va"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-6a668cacdadso4279937a12.2
+        for <linux-perf-users@vger.kernel.org>; Sun, 06 Sep 2026 18:54:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788746072; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Qfsa2Shv9jCZM3hrmstmGdtZaRgNPZa+gkg3La0ypmKz2zt4x3yqRt5xwoKTGIGxhI
+         i3WRAPOUIAgte8afeSQPjcoZd4Rz8Ld11uTh1bJxDpXH7euG1kS8X4exPNBYCgTU3Evh
+         V1wCl05XLkuWQ7Fr+vUSoa8R9r9iPW9I6ZdnF5pTSLw/EDEkWAzSw3c8XFN3bGJQcOF3
+         JJPLyBsgT4AO3w3RRkdJc51ZpO0ziDlCV1pFNcbkIa2eyg587o6Fv66SRhhtaYbJZLjk
+         B+GUgJ1ettJaOQUf7W9Jf9voUkPkMz6K6h+3lSsKcLEDe75gf5FhouNbvWJYCzZXY/43
+         2uzg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=deuBYUmBSWla/VSTwOIDmtGNAoeBNifbTvyqlKPlcA0=;
+        fh=08V51gQhd7vuan5tfFa6+hUJ8biWrZVlWIZFZyX/vD8=;
+        b=dG+edBg+ES+dlYNtSsBGzU8ChMNHz6BXgBJwjZlbVZA7IlCSqajpMRsxRPLN89Hrsn
+         XeQE4KeBz/+9/d3HS8msSgQb6TkFMcirO49NTVu/8PxEeR+D7sil1HizKYBQD2/AlS7r
+         OTClzvHo7ddXB7twtcY2dUDl7wLAmEUGDrYqziS8pMCcD7W7mK+od53eD768Nh4WaOyb
+         MvZr2WBoW4qcGR0Qa/5F1Nl0v7gyEBIUOtJkQ5djwXtogH8PQAXbgvIA/g7KlJhDr1vU
+         0rw9+ubCZtDmb78fXc7a/GRF2bG44fdKjY7eMTTdHdMrTe2j8VVV/cgPC3ZgM+wjtQxG
+         T7Wg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1788746072; x=1789350872; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=deuBYUmBSWla/VSTwOIDmtGNAoeBNifbTvyqlKPlcA0=;
+        b=TXWFr3VaUgZXPplnfCtqLkWPvV5u7MJO28UrUmN0patsFPjeKyNAgNM06S9Ky3dwSL
+         UYSZr3ANyb8kjxYsBatZJNzxox6jpAPB/K/3ZH1HUNHsw0pGygOjyZ43/Svx8K5grVvm
+         jK+xDwgBTMkcuKgpby7UF55WDrcAYNEJ6vm5ZX5yakd0uyIVfJWnVfIrUNK6MsdFhTNC
+         N0BRbhoAMWyBdJkkSBZOozEwxezOMdj3hHMJBvHc6cnvQB1BIT9Bh1v0PBTUk97HtT9t
+         ZIa/X4ekRrLU9arjbQ4FPXa+HCRqK+yi4RS/+BpCajWSnDw3tgcb4mGdQJZvhY2qLfdW
+         7qUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788746072; x=1789350872;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=deuBYUmBSWla/VSTwOIDmtGNAoeBNifbTvyqlKPlcA0=;
+        b=kCBc2+qllgxISUpsF7DJJ8gEhkcJpvQIVBt9GaZis93SxGxkSBYCVQ6XRa0FYfpoVq
+         hUJoTe4YWE8Fsewl5hrat6zp1rTuWE40x63BcSz0kQmqSnAWQlsh6Bx3M7dp1YZ8gedv
+         DV7zPdckqFzQQfmCThhCjBWvD5zSeLioE4tMnSAF2HH93JQM7HY/w/FuJexwTGfR0icP
+         goyTI777UlURYE+vm4P9s1IZqRGC6ICVmvuaVeJaZ6ksBWYPmy8FlBZFnN53P2uIImo5
+         sOjsW0Oo97hA0wAdE0swnHQX2BcaCKr0jHKv3gPDgV/q8TuR40v9eVWIOY8nl8ZaoYAO
+         5eWw==
+X-Forwarded-Encrypted: i=1; AKwUvBw6A+9fmVbDEBoxCGnLCRc79ZFg7oclkGeaSdk92D3LvQ6oxoczU/fGSbPQ7nmQSxizLVDJQhpBQ7PxgLwKMZsY@vger.kernel.org
+X-Gm-Message-State: AFuF++n3dRsN5O6iIIixAe2MU+AGmIzbLXL/cF0wLd/wcNMPeIHqHg5B
+	y7G91K6GcPbk4OhqVqQTe1n8gZKEn+JZSA/su8KuKjefSsmCwXRfFLJbO9n1KwSYyMLwkVSGNbn
+	HXTnYhTkSvsgq54POsC0TRnxn3jcjPA618K8O+Z1TnA==
+X-Gm-Gg: AYBFou3LeRAXbeDGpgeZKHukNdo9srTb6oT9PNPwg57q5BKqkagWNaLRh1C38oygyk4
+	GnQLhgUjjQ1NmGoJYCHif5eFkoX5D2GQXqWONCM2n/jg2EyblKz/Bbs5oLwGNmhc9yKmtjt/7iZ
+	j0UQI1+QgfKMjnvOmzrQwr8/uJ807TvMrKXIBRGOyktkrO0pjCHy4mQZJ8I795e1eBvULcXcwOv
+	PUkwuVndguRy1XFvRWlKD70d7XF+BLN0A3k3WvT7ZrXbdVfcLuRtMpD0N4lksva0o9uFS29yRg8
+	uprBEcPkp4RfSR1mbvnAkaG5/1gcxXWMn77samM5OVVRHyk=
+X-Received: by 2002:a05:6402:305c:10b0:6a7:ea54:399 with SMTP id
+ 4fb4d7f45d1cf-6a7ea5426d4mr4258443a12.42.1788746072194; Sun, 06 Sep 2026
+ 18:54:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CWLP123MB6607:EE_|LO0P123MB7403:EE_
-X-MS-Office365-Filtering-Correlation-Id: 96ed322a-e8d2-4073-6bc0-08df0c829ec8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|23010399003|7416014|366016|1800799024|376014|10067099003|6133799003|22082099003|18002099003|56012099006;
-X-Microsoft-Antispam-Message-Info:
-	MKvwZEFTO4HnAq0rNApI1ErU6Zi7ROmLYQj6jp5tIfdIltYmlxatAHPe1b+3tPKdytiV26OnxJ2VS9q452/kvrN/oo0k9zT4H+1JnXK5nXHckEET5yS8R25VFAgdn0FQ3JEDVlfnBz3XlMgXBlmChXTxTUZQmN4HjR5GYLNBYQ/I/qkcw75gneVBHkddUmWDofh2MdZ5yWmy4FKIpti+BO1PAcf7vDRDMyPw/lTFRMUpOojdhABRqTFkfYfaZVp0dwcWxNP0IEcifzpt4dONPU4vTgiIWd/Ea5il34mPQ//EkkzbeuE2XiazwCqPf6SfjFf21A4qIN8R9JrfTAGuWcRXrNyHlwBGvHxlP5L+lM6PSNScN50mEyKiIJtZAUlplC2qL8qnnzQKukFxngl+TnUPrBCUcRm0zihLffYvwVA8OXbvf/bpWxqlfln7x1u1Oar5YvRVPwYnbG6OWY5fIlD8F6AW4BTh9gFB/jGZRqhrm7l+1RtbPyrEtpnoAfMB8Y3DZM9evxgwnqMwlHH4fwgVOLQ6mwnQdeVtb3O2pPKPMKboK+tT9RODsFSzN5s3SzYtxrAauSe4MXFSoX2Z6NuXuZpcahVK97jOGU//DklKxyA5E7Z/dF1Dk7VkYHvOFPO8ULX/wvCYgXmxVbNdqh6hC6E71wcXGIRyJWlWumM=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(7416014)(366016)(1800799024)(376014)(10067099003)(6133799003)(22082099003)(18002099003)(56012099006);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?C8v7kLHO9abapHpgbQ3UcecJsJT4qhGt5AaXNm6lEQnQ4StQpY046bnpxDCS?=
- =?us-ascii?Q?anrZ1lq+09yQFMojgJZdZG9meqimpVinzR3vvMZKGOcFMyl7075Hf1A2VCJb?=
- =?us-ascii?Q?iBIjXh13dL0X5AvQ2LLu7DbbAvf251wt4RGiW/7hqy2cp2RUQL5jLTIIxQ3u?=
- =?us-ascii?Q?UyojCbXbDy7u6kAxJBzuL/0BagEwlVDmQCewhji9j7PYUzPlyhkmcMUx2z4l?=
- =?us-ascii?Q?bRF2VU+H7pzJ8zh8f5n5HS/N7sisLxigvMV4sDydk1jly9O8Jc4fmx8kJE3F?=
- =?us-ascii?Q?IGKBBOWw/LswD4LCkIxG+QW0BaDJq3ISQ7Xwv6cHOuJQR41ms2BvAHMFd+qd?=
- =?us-ascii?Q?MJY2csdfelGeXl+z/ItBkfjGG+X+p30mWU+ZwiSheuSXjFvlNXpYzlK71Ya3?=
- =?us-ascii?Q?rw1Cx+4XiEgIq+pmB9zwOzTHl8bAH11XONrbruqMnlODJNynBUrKCmkinVo9?=
- =?us-ascii?Q?uXuhHKZ5i/+Fm4pMa6EeINtM5t4doxgPCNF3gz2nvRWOmzrDE3GNO0xFkr5L?=
- =?us-ascii?Q?lmKIuUgvOS0j1w6qZiwEhczjVNTD9moi0CT2UUROg7EOy3FiaTmAX0iQjJsY?=
- =?us-ascii?Q?DBuXeXxtD8WyfMO7YfLpGpzVhJyYQ/eM8iyaQS6OJk+XVnaYyCKG/Sf87k5B?=
- =?us-ascii?Q?6aRMDvLm8F8JCrV5DQFrgy8gBHRw+Bk7b6sH9F56CIEPwuq1vIMC011BPm/e?=
- =?us-ascii?Q?XnK8IJYZ7GOdKfG8onxdnhhUUk1ZX/vJpTF11BTfoy1AERZatoCtdIWJzC/n?=
- =?us-ascii?Q?b6kIXkWMfnzVSa8RwtPboewUHZZegsMzQkNd9r/oziMFAgrUZlV8YhxCeuCX?=
- =?us-ascii?Q?g3raA1WSedYqyZHGdRFdNvmUjYO8WMjvsAjcEWHJIBROaCSpQlvlOaaROIVo?=
- =?us-ascii?Q?fvtZltfS2+97/38n+jd89He7POoXRoML+Pfx3Tpzye/QkxDU2guKdab0yF1K?=
- =?us-ascii?Q?mDIs+Uf0Qk1Fmn8qm3Ics4JWUlXmoOFwCqv8opygvHdomJ2IiMpMkxn9s0vm?=
- =?us-ascii?Q?YbVim6lCXVfbdhsNdkzvwtVqp2uUYSfJ1kq+OAXAr6+W0wQSGQhQo4iieuFR?=
- =?us-ascii?Q?LT2QmUoNGsETV8iu2q1EHJoikfYLbLxQQSW8pBKwB06yIBGm77MaJDrYlhTr?=
- =?us-ascii?Q?w798dlTioYljLW0uDRWaThMJFFQ29qAZpGFHGpHCLC9s3HHfUO0kg0Zz3ojN?=
- =?us-ascii?Q?J1UhU9/9gYxt9xAfKj9UC0NksFcmCDKARAmHV6ykhKngk7O+U1GBCZefHXkP?=
- =?us-ascii?Q?rdAdfJBCKsQUSzIDvmkkxzFKCkFpNGlfLoGXLBXUDzC48rnUkD4Pa5o/Irwz?=
- =?us-ascii?Q?JuCYnldaYon9zI8vs0wRND2By8cWnDEtybUB792vAYWoRlR/xRO/bR9bSKIY?=
- =?us-ascii?Q?69mNxqDtyP0krMFtShR+E5pplbMqLUA3k7vb+j0lb9syL/PrbA0aSsjPgyPU?=
- =?us-ascii?Q?Il+Yz4hvaFjqV2olxWvfUpo2ylzCixJPtv6qNUQh5IWqJnCxPcsA8zPLGZAk?=
- =?us-ascii?Q?ybbQH9B4Eq0rNxLOYmB7MqQKwiyBcZ+qci3kU4X2NybvDUn2eijyfKECcD9I?=
- =?us-ascii?Q?+0fzBmQO0HPoutgGZyrR8Hu5zqzkMFyguYb8d7xalfpZla3hQnfOtZOxuC1D?=
- =?us-ascii?Q?T+9jz3oRCixuO+SJEuwUx4prq/1Xkhjo3bn6SJrYqL/SGzP04+DsE7iJzbge?=
- =?us-ascii?Q?fqgR8TES7ig9vN9UZcBs4U0L655U2UIaWITYkPJh2btUjYr5sk0r1/o8GIzq?=
- =?us-ascii?Q?cucFSHFObA=3D=3D?=
-X-OriginatorOrg: atomlin.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96ed322a-e8d2-4073-6bc0-08df0c829ec8
-X-MS-Exchange-CrossTenant-AuthSource: CWLP123MB6607.GBRP123.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Sep 2026 01:52:05.9850
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: e6a32402-7d7b-4830-9a2b-76945bbbcb57
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SYO3eIQV63orqNfyD6SlwkN979joCICalRyLJfM0IQGPSF6ZT8sLcbNpuKtFkFO73nGYwGDzTErH76+f5z5bFQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P123MB7403
+References: <20260828085819.4076449-1-zong.li@sifive.com> <20260828085819.4076449-4-zong.li@sifive.com>
+ <8267ee7a-98b7-42a5-b479-648d2bec8ade@picoheart.com> <CANXhq0ogpMSEdjycnz0HCO15q_gYA1hwFU98u09tYL0X8PMtoA@mail.gmail.com>
+In-Reply-To: <CANXhq0ogpMSEdjycnz0HCO15q_gYA1hwFU98u09tYL0X8PMtoA@mail.gmail.com>
+From: Zong Li <zong.li@sifive.com>
+Date: Mon, 7 Sep 2026 09:54:19 +0800
+X-Gm-Features: AcwNN1UqYHffd6ZBPh96YDoJNjnRCCNlysDBXVVYQF3Pt6h68uGWSGmk51VjT04
+Message-ID: <CANXhq0oBHPFAmANKyt91mKn7_cm2bfZYpcMyO47==GA_WD6fQQ@mail.gmail.com>
+Subject: Re: [PATCH RESEND v7 3/3] drivers/perf: riscv-iommu: protect shared
+ state with a raw spinlock
+To: Yicong Yang <yang.yicong@picoheart.com>
+Cc: tomasz.jeznach@linux.dev, joro@8bytes.org, will@kernel.org, 
+	robin.murphy@arm.com, pjw@kernel.org, palmer@dabbelt.com, 
+	aou@eecs.berkeley.edu, alex@ghiti.fr, mark.rutland@arm.com, 
+	andrew.jones@oss.qualcomm.com, guoren@kernel.org, 
+	david.laight.linux@gmail.com, zhangzhanpeng.jasper@bytedance.com, 
+	iommu@lists.linux.dev, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When pretty-printing augmented perf_event_attr arguments via
-syscall_arg__scnprintf_augmented_perf_event_attr(),
-arg->augmented.args->value is cast to struct perf_event_attr and read
-without verifying that the captured payload is large enough to contain
-at least PERF_ATTR_SIZE_VER0 bytes.
+On Fri, Sep 4, 2026 at 4:38=E2=80=AFPM Zong Li <zong.li@sifive.com> wrote:
+>
+> On Wed, Sep 2, 2026 at 4:07=E2=80=AFPM Yicong Yang <yang.yicong@picoheart=
+.com> wrote:
+> >
+> > On 8/28/26 4:58 PM, Zong Li wrote:
+> > > Events are bound to one CPU and the interrupt is affine to it, so the
+> > > perf callbacks running with interrupts disabled would be enough to
+> > > exclude the handler.
+> > >
+> > > PCI MSI/MSI-X on IMSIC breaks that: the irqchip sets
+> > > IRQCHIP_MOVE_DEFERRED, so irq_set_affinity() reports success while on=
+ly
+> > > recording the request, and the move is applied in interrupt context u=
+pon
+> > > the next device interrupt. Until then the interrupt is still routed t=
+o
+> > > the CPU IMSIC picked initially, so the first overflow interrupt can r=
+un
+> > > concurrently with the perf callbacks on the CPU the events are bound =
+to.
+> > >
+> > > Take a raw spinlock, with interrupts disabled so that the handler can
+> > > never interrupt a holder on the same CPU, rather than depending on th=
+at
+> > > irqchip behaviour. It covers the state which is reachable from both
+> > > sides:
+> > >
+> > >  - IOCOUNTINH is read-modify-written by ->start()/->stop() and is sav=
+ed
+> > >    and restored around the whole handler.
+> > >  - pmu->events[] is written by ->del() and read by the handler.
+> > >  - hw_perf_event::prev_count is updated by both.
+> > >
+> > > ->add() and ->del() call the unlocked __riscv_iommu_pmu_start() and
+> > > __riscv_iommu_pmu_stop() so the lock is taken once per callback.
+> > >
+> > > Signed-off-by: Zong Li <zong.li@sifive.com>
+> > > ---
+> > >  drivers/perf/riscv_iommu_pmu.c | 66 ++++++++++++++++++++++++++++++--=
+--
+> > >  1 file changed, 60 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/perf/riscv_iommu_pmu.c b/drivers/perf/riscv_iomm=
+u_pmu.c
+> > > index f6acd56f2f61..ee2f6d1fbece 100644
+> > > --- a/drivers/perf/riscv_iommu_pmu.c
+> > > +++ b/drivers/perf/riscv_iommu_pmu.c
+> > > @@ -101,6 +101,7 @@ struct riscv_iommu_pmu {
+> > >       u64 event_cntr_mask;
+> > >       struct perf_event *events[RISCV_IOMMU_HPM_COUNTER_NUM];
+> > >       DECLARE_BITMAP(used_counters, RISCV_IOMMU_HPM_COUNTER_NUM);
+> > > +     raw_spinlock_t lock;
+> > >  };
+> > >
+> > >  #define to_riscv_iommu_pmu(p) (container_of(p, struct riscv_iommu_pm=
+u, pmu))
+> > > @@ -485,7 +486,8 @@ static void riscv_iommu_pmu_update(struct perf_ev=
+ent *event)
+> > >       local64_add(delta, &event->count);
+> > >  }
+> > >
+> > > -static void riscv_iommu_pmu_start(struct perf_event *event, int flag=
+s)
+> > > +/* Called with pmu->lock held */
+> > > +static void __riscv_iommu_pmu_start(struct perf_event *event, int fl=
+ags)
+> > >  {
+> > >       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
+> > >       struct hw_perf_event *hwc =3D &event->hw;
+> > > @@ -500,11 +502,22 @@ static void riscv_iommu_pmu_start(struct perf_e=
+vent *event, int flags)
+> > >       riscv_iommu_pmu_set_period(event);
+> > >       riscv_iommu_pmu_set_event(pmu, hwc->idx, hwc->config);
+> > >       riscv_iommu_pmu_enable_counter(pmu, hwc->idx);
+> > > +}
+> > > +
+> > > +static void riscv_iommu_pmu_start(struct perf_event *event, int flag=
+s)
+> > > +{
+> > > +     struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
+> > > +     unsigned long irqflags;
+> > > +
+> > > +     raw_spin_lock_irqsave(&pmu->lock, irqflags);
+> > > +     __riscv_iommu_pmu_start(event, flags);
+> > > +     raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
+> >
+> > could use guard(raw_spinlock_irqsave)() to help handle the lock release=
+.
+> >
+> > I'm considering if it'll better to use irq_work or function call to han=
+dle the
+> > counts update from the interrupt handler, e.g. in the irq handler first=
+ check
+> > if current cpu is the pmu->on_cpu, if so update the counts, otherwise q=
+ueue
+> > the update work to pmu->on_cpu by irq work or smp_call_function_single_=
+async.
+> > In this way we can use pmu's original synchronization mechanism without
+> > extra spin locks since the callbacks will always run and synchronized b=
+y
+> > the same cpu, and the shared interrupt doesn't matter at all.
+> >
+> > any thoughts on this?
+> >
+>
+> Thank you for your suggestion. It really helped me re-think the impact
+> of IRQCHIP_MOVE_DEFERRED.
+>
+> When an IRQ goes to the wrong CPU, handle_edge_irq() already changes
+> the affinity to the correct CPU via irq_ack at this time. Because of
+> this, we might only need a simple check at the beginning of the IRQ
+> handler. We can just check if the current CPU is the correct one. If
+> it is not, we can simply return and do nothing. Since PMIP is still
+> asserted, the IRQ will trigger again and go to the correct CPU.
 
-If a malformed or truncated perf.data record provides an augmented
-payload smaller than PERF_ATTR_SIZE_VER0, accessing attr->size or
-executing memcpy(&local_attr, attr, PERF_ATTR_SIZE_VER0) reads memory
-past the end of the available buffer.
+I apologize, I missed one detail. The interrupt won't re-trigger if
+the PMIP and OF bits are not cleared.
+I will follow your suggestion and use the irq_work mechanism. I will
+add this to the updated version.
+Thank you for your help
 
-Validate that arg->augmented.size is at least sizeof(struct augmented_arg)
-and that augmented_arg->size is at least PERF_ATTR_SIZE_VER0 while
-remaining within the available buffer. If validation fails, fall back to
-printing the raw pointer value.
-
-Fixes: a9cd6c676685 ("perf trace: Add BPF augmenter to perf_event_open()'s 'struct perf_event_attr' arg")
-Reported-by: sashiko-bot <sashiko-bot@kernel.org>
-Signed-off-by: Aaron Tomlin <atomlin@atomlin.com>
----
- tools/perf/trace/beauty/perf_event_open.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/trace/beauty/perf_event_open.c b/tools/perf/trace/beauty/perf_event_open.c
-index 6315b46bcdf0..846738225abd 100644
---- a/tools/perf/trace/beauty/perf_event_open.c
-+++ b/tools/perf/trace/beauty/perf_event_open.c
-@@ -81,9 +81,18 @@ static size_t perf_event_attr___scnprintf(struct perf_event_attr *attr, char *bf
- 
- static size_t syscall_arg__scnprintf_augmented_perf_event_attr(struct syscall_arg *arg, char *bf, size_t size)
- {
--	struct perf_event_attr *attr = (void *)arg->augmented.args->value;
-+	struct augmented_arg *augmented_arg = arg->augmented.args;
-+	struct perf_event_attr *attr;
- 	struct perf_event_attr local_attr;
- 
-+	if (arg->augmented.size < (int)sizeof(*augmented_arg))
-+		return 0;
-+
-+	if (augmented_arg->size < (int)PERF_ATTR_SIZE_VER0 ||
-+	    augmented_arg->size > arg->augmented.size - (int)sizeof(*augmented_arg))
-+		return 0;
-+
-+	attr = (void *)augmented_arg->value;
- 	/*
- 	 * augmented_raw_syscalls.bpf.c (shipped with perf) copies
- 	 * PERF_ATTR_SIZE_VER0 bytes when the tracee passes size=0,
-@@ -107,8 +116,12 @@ static size_t syscall_arg__scnprintf_augmented_perf_event_attr(struct syscall_ar
- 
- size_t syscall_arg__scnprintf_perf_event_attr(char *bf, size_t size, struct syscall_arg *arg)
- {
--	if (arg->augmented.args)
--		return syscall_arg__scnprintf_augmented_perf_event_attr(arg, bf, size);
-+	if (arg->augmented.args) {
-+		size_t printed = syscall_arg__scnprintf_augmented_perf_event_attr(arg, bf, size);
-+
-+		if (printed)
-+			return printed;
-+	}
- 
- 	return scnprintf(bf, size, "%#lx", arg->val);
- }
--- 
-2.55.0
-
+>
+> I will drop this patch and make a new, simpler fix.
+>
+> Thanks again for your help!
+>
+> > thanks.
+> >
+> > >
+> > >       perf_event_update_userpage(event);
+> > >  }
+> > >
+> > > -static void riscv_iommu_pmu_stop(struct perf_event *event, int flags=
+)
+> > > +/* Called with pmu->lock held */
+> > > +static void __riscv_iommu_pmu_stop(struct perf_event *event, int fla=
+gs)
+> > >  {
+> > >       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
+> > >       struct hw_perf_event *hwc =3D &event->hw;
+> > > @@ -521,13 +534,26 @@ static void riscv_iommu_pmu_stop(struct perf_ev=
+ent *event, int flags)
+> > >       hwc->state |=3D PERF_HES_STOPPED | PERF_HES_UPTODATE;
+> > >  }
+> > >
+> > > +static void riscv_iommu_pmu_stop(struct perf_event *event, int flags=
+)
+> > > +{
+> > > +     struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
+> > > +     unsigned long irqflags;
+> > > +
+> > > +     raw_spin_lock_irqsave(&pmu->lock, irqflags);
+> > > +     __riscv_iommu_pmu_stop(event, flags);
+> > > +     raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
+> > > +}
+> > > +
+> > >  static int riscv_iommu_pmu_add(struct perf_event *event, int flags)
+> > >  {
+> > >       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
+> > >       struct hw_perf_event *hwc =3D &event->hw;
+> > >       unsigned int num_counters =3D pmu->num_counters;
+> > > +     unsigned long irqflags;
+> > >       unsigned int idx;
+> > >
+> > > +     raw_spin_lock_irqsave(&pmu->lock, irqflags);
+> > > +
+> > >       /* Reserve index zero for iohpmcycles */
+> > >       if (is_cycle_event(event->attr.config))
+> > >               idx =3D RISCV_IOMMU_HPM_CYCLE_IDX;
+> > > @@ -535,8 +561,10 @@ static int riscv_iommu_pmu_add(struct perf_event=
+ *event, int flags)
+> > >               idx =3D find_next_zero_bit(pmu->used_counters, num_coun=
+ters, 1);
+> > >
+> > >       /* All event counters or cycle counter are in use */
+> > > -     if (idx =3D=3D num_counters || pmu->events[idx])
+> > > +     if (idx =3D=3D num_counters || pmu->events[idx]) {
+> > > +             raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
+> > >               return -EAGAIN;
+> > > +     }
+> > >
+> > >       set_bit(idx, pmu->used_counters);
+> > >
+> > > @@ -546,7 +574,9 @@ static int riscv_iommu_pmu_add(struct perf_event =
+*event, int flags)
+> > >       local64_set(&hwc->prev_count, 0);
+> > >
+> > >       if (flags & PERF_EF_START)
+> > > -             riscv_iommu_pmu_start(event, flags);
+> > > +             __riscv_iommu_pmu_start(event, flags);
+> > > +
+> > > +     raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
+> > >
+> > >       /* Propagate changes to the userspace mapping. */
+> > >       perf_event_update_userpage(event);
+> > > @@ -556,18 +586,26 @@ static int riscv_iommu_pmu_add(struct perf_even=
+t *event, int flags)
+> > >
+> > >  static void riscv_iommu_pmu_read(struct perf_event *event)
+> > >  {
+> > > +     struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
+> > > +     unsigned long irqflags;
+> > > +
+> > > +     raw_spin_lock_irqsave(&pmu->lock, irqflags);
+> > >       riscv_iommu_pmu_update(event);
+> > > +     raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
+> > >  }
+> > >
+> > >  static void riscv_iommu_pmu_del(struct perf_event *event, int flags)
+> > >  {
+> > >       struct riscv_iommu_pmu *pmu =3D to_riscv_iommu_pmu(event->pmu);
+> > >       struct hw_perf_event *hwc =3D &event->hw;
+> > > +     unsigned long irqflags;
+> > >       int idx =3D hwc->idx;
+> > >
+> > > -     riscv_iommu_pmu_stop(event, PERF_EF_UPDATE);
+> > > +     raw_spin_lock_irqsave(&pmu->lock, irqflags);
+> > > +     __riscv_iommu_pmu_stop(event, PERF_EF_UPDATE);
+> > >       pmu->events[idx] =3D NULL;
+> > >       clear_bit(idx, pmu->used_counters);
+> > > +     raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
+> > >
+> > >       perf_event_update_userpage(event);
+> > >  }
+> > > @@ -635,12 +673,24 @@ static irqreturn_t riscv_iommu_pmu_irq_handler(=
+int irq, void *dev_id)
+> > >  {
+> > >       struct riscv_iommu_pmu *pmu =3D (struct riscv_iommu_pmu *)dev_i=
+d;
+> > >       DECLARE_BITMAP(ovf_bitmap, BITS_PER_TYPE(u64));
+> > > +     unsigned long irqflags;
+> > >       u32 ovf, idx, inhibit;
+> > >
+> > > -     /* Check whether this interrupt is for PMU */
+> > > +     /*
+> > > +      * Check whether this interrupt is for PMU. Done outside the lo=
+ck so
+> > > +      * that a shared interrupt line is left alone as cheaply as pos=
+sible.
+> > > +      */
+> > >       if (!(readl_relaxed(pmu->reg + RISCV_IOMMU_REG_IPSR) & RISCV_IO=
+MMU_IPSR_PMIP))
+> > >               return IRQ_NONE;
+> > >
+> > > +     /*
+> > > +      * Hold the lock across the whole sequence below. Stopping the
+> > > +      * counters, processing them and restoring the previous inhibit=
+ state
+> > > +      * has to be atomic against ->start()/->stop(), otherwise a cou=
+nter
+> > > +      * enabled in between would be inhibited again by the restore.
+> > > +      */
+> > > +     raw_spin_lock_irqsave(&pmu->lock, irqflags);
+> > > +
+> > >       /* Process PMU IRQ */
+> > >       inhibit =3D riscv_iommu_pmu_stop_all(pmu);
+> > >
+> > > @@ -672,6 +722,8 @@ static irqreturn_t riscv_iommu_pmu_irq_handler(in=
+t irq, void *dev_id)
+> > >
+> > >       riscv_iommu_pmu_start_all(pmu, inhibit);
+> > >
+> > > +     raw_spin_unlock_irqrestore(&pmu->lock, irqflags);
+> > > +
+> > >       return IRQ_HANDLED;
+> > >  }
+> > >
+> > > @@ -735,6 +787,8 @@ static int riscv_iommu_pmu_probe(struct auxiliary=
+_device *auxdev,
+> > >
+> > >       iommu_pmu->reg =3D iommu_dev->reg;
+> > >
+> > > +     raw_spin_lock_init(&iommu_pmu->lock);
+> > > +
+> > >       /*
+> > >        * Counter number and width are hardware-implemented, detect th=
+em by
+> > >        * writing 1s and reading back which bits stuck.
