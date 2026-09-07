@@ -1,105 +1,108 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A4D3407CCF
-	for <linux-perf-users@vger.kernel.org>; Mon,  7 Sep 2026 06:58:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4CA93AE184;
+	Mon,  7 Sep 2026 06:59:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788764331; cv=none; b=Up0h6AXemlqbuI1Qj4ieZjWJzf+d+UJj5abOsgvNukzfTj8Bbs1eozdBdPOcu4AJwpB6VkZ7pQdKbyR14YckSXGwtWiaHavXG63vKn7bhaGQ303gDPkMHTxGGq7hk3QPJ5sctqR+z0mVVeSFafUjqQ318KQfaCihN/Po43STbRU=
+	t=1788764352; cv=none; b=rN6vVcpQmkISCpGPpNe8eKjKN4Vmv0hufJYbXnf/dPLM/buSMIyLL60PT9uRbFiWPfzKy0VMKFkgJw5mi/zlJvbFE39QdoYAIZTCPy63nDD6HKBOCu40TqHVb5a4EEw4IkaoVgVehtYXy27y7jCiCzLq/Al7sPtr19FPBpePdm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788764331; c=relaxed/simple;
-	bh=cQ7zS/QId7Bwmk26KveePTRypTp2hM0WZcmcs9cY60E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RgiehY3wrbzkktC01BUQu10OuJKQP7ttPE+jmSyZeibRauFHPA2wWWvAWtu/wJds/x7XLlWgfSE7s8XMAwnv5Zf8lXEeD/mYhLAtLEvlWh/AHqsJ4gN6Z3PUmf2h8kxQ5vOvRpaO+l/+qIBypVAYyWwCBS7J1Uin1+MZDH0lhPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=oBpgnLX7; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1788764352; c=relaxed/simple;
+	bh=aYg7IqzT4yNFRQ02whBuskucpE8cxisvtwrPlIGJKJA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=euJw23ZjqaXlbI0pHziW7ECX4Fedr3z7kTkTtj9/OFxe1JmTus264MgBqPL/BP9oLxP0Ob+VOCxrNCMW73+zHDCcHEB85vqhJrEv3kzYeIwEvr1OofzKq4LinC0Ejxq3IkKhuEgCIpmsFhWmeQMeGrg+3+2ybACLPWAJuqqXgIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=STDdpSLE; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oBpgnLX7"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-3966791a6eeso3858490a91.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 06 Sep 2026 23:58:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1788764329; x=1789369129; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=Q+N2cTdj7t2uPFMAcFvWCC70meDRlhm3qPL9Ts1rBkI=;
-        b=oBpgnLX7tdXGet2KfhRNYNloT3fTQoOWswrFvroIBsk0MkxJ/2sOxYakZmvZAGRDcE
-         /4S9DqFYxCnAmldiqh4n2z6QepE7BstUkN/nN/bqLhtnEEJWZ4fRNP0E0S1jGNFpfqIN
-         btDnV1sMO86uU2LDfrrXnJuuQph6gImh3F+Rtl1KEkQc2Q0F3U191AKqjqvwO4zEdQq7
-         7y/Uv4qg+HhI5RPNPOaIVePfl4U5w5/GfcVPkROpJBg7oyZbNIcWEhiydIVXr/jGTzm8
-         eKjDaHHVfnDZmSVPamB+3hDuSuzFF6orpWwr/uotu1GZoWbSZHTH/3rxYXxbzznGbVFw
-         CiJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788764329; x=1789369129;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=Q+N2cTdj7t2uPFMAcFvWCC70meDRlhm3qPL9Ts1rBkI=;
-        b=sif1VynxFdKZFrZh2lzEFYjLpxmkUCVpHyRcwSsT/7z/hqO4eu91otvkbaJwQXDRqt
-         YeQ/aZcXMCiNdgmj5RS/g/ZZspXonsXSnWYO1yoATCG7PqypxJPr4dlsU0ExdHUfyFO9
-         lZAPDjwuksNsRFsVJi8LP+ysI59dDuaIE4t5sLOIvXKfQAhe3xtuzLJHAMEJ4cAzQvdE
-         i6bcFGa8ybZ0jcYyXMoOIgqNb/8dcVL7zSoWDTM1ivqG9DojnFgnhh7HEPnfd9wxGal+
-         u1lXkFxy8AAa8SZUcHPChuC/hOx/f0AHy66u52HM6loIUMjfJP6uH/vZ+HmbgozfcsXx
-         BUfQ==
-X-Gm-Message-State: AFuF++mCBbWF/Ah4/To/ZQh9YyFYH1FUNBaKBbS1DD6sTy8SlKknBRla
-	YbxanEo5ouwnuo5k+IRS19T7gsbEvLsAaE4HgXtKOhUAOjTPT5dkqnA/
-X-Gm-Gg: AYBFou3GOsmShT6hKiTzN12pAQixATGMXcK/JjTi1iV6tc2pj/q/LeNL6lQ6Fo8qoam
-	XAqsbq2MHG0BL/xKFcxSvNyUpFOZFNaP5Myv/hpDWyKjDyFsODXxUrOpXooIoKODzppQ6gmhoHA
-	TDXbo2B0IO4GUEfqj4UVpZdm9v/0+L8Hrqhom0Iv5WDnLViMsgh3dCH7JbLHYUfx0UcHFgPOvAe
-	NYLt9f0f0jvFlx6gwxCJlufzxVIO9rp/62FSSd2Epdl7e9Nn7uNP5d52LUUg5iNQFSvzdIfNgXj
-	wxqd3/3NFyUzo1Nw+EEdNZMzP1KAV0/xK92FXLozMreLhngSxTglLykt2CrbQ+2VWQIUQ5XPCHb
-	5nr5AsX1KevfWcmB90nXMLaVdU8+oTXt5Vx+SlSFz5AdG2UrdU3yv3FzTTP7scvOvtYw0ASdfLl
-	4IbQdRMrVOQnTs8DEiibEW41AQZvTr4cIEFxz23PteHq6gpgRfsTGpznveqYee5kjZZuvnIAlKw
-	mfZQ7//q8JkRg==
-X-Received: by 2002:a17:90b:1a8f:b0:398:d2a0:87ff with SMTP id 98e67ed59e1d1-39b26101029mr31707296a91.1.1788764329483;
-        Sun, 06 Sep 2026 23:58:49 -0700 (PDT)
-Received: from volcano9f6e-hostos.amd.com ([165.204.217.251])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-1432435ec2bsm21996689c88.3.2026.09.06.23.58.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 06 Sep 2026 23:58:49 -0700 (PDT)
-From: Hemanth Selam <hemanth.selam@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 14/14] perf: fix repeated word in log message
-Date: Mon,  7 Sep 2026 12:28:43 +0530
-Message-ID: <20260907065843.34410-1-hemanth.selam@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="STDdpSLE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788764350; x=1820300350;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=aYg7IqzT4yNFRQ02whBuskucpE8cxisvtwrPlIGJKJA=;
+  b=STDdpSLEnmQVBgi+ojNAmLs8YbM/edXYDmxN/RZn5cfV1bO/RRaXxseD
+   wz2+obwzsh4u9cexk843xbOJRLVzoXWRTwImUTnM6V35AidPp+bz+YUjZ
+   AUkeSv4tgrRisKt4FDVzhgdz4Q7tB45VGGES/8ZB8yQhjqceeJ1+3HfvM
+   DzvQxF/EUe9GWIPyOj6RMeQefSseChPHvWzRTdyLzh9oQMviyzm/7xYx2
+   8HJUc7eYCjc6ec5NYFyL6Fn6TgZo2HRcqnRvN6A2UDC0zw0MCINFzz8kP
+   PrwNLa/S4K5O5pesUoOFCwqMtKBZxDm6wpcZgJaql575EOOfQYIC2OwKa
+   Q==;
+X-CSE-ConnectionGUID: 5YrkCqjUQoes3MB7qq49Sg==
+X-CSE-MsgGUID: AA1H4MWBT/GINyR/osXB9w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11898"; a="111938280"
+X-IronPort-AV: E=Sophos;i="6.25,266,1779174000"; 
+   d="scan'208";a="111938280"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2026 23:59:10 -0700
+X-CSE-ConnectionGUID: imVVpEEmSmyOaBfoyY4vjQ==
+X-CSE-MsgGUID: b5fm6a70TkuDFZQngDmxRA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,266,1779174000"; 
+   d="scan'208";a="268051901"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2026 23:59:05 -0700
+Message-ID: <3e7e23b1-4352-4dba-8b5a-b01119ff5db6@linux.intel.com>
+Date: Mon, 7 Sep 2026 14:59:02 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: Annotate x86_pmu::hybrid_pmu with
+ __counted_by_ptr
+To: Ian Rogers <irogers@google.com>, Thorsten Blum <blum@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Kees Cook
+ <kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org
+References: <20260904141659.224248-2-blum@kernel.org>
+ <CAP-5=fWj0YAUimSwGLrZpikH4dHkWSsupyE+esbNg6rM-m1sUg@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAP-5=fWj0YAUimSwGLrZpikH4dHkWSsupyE+esbNg6rM-m1sUg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Drop the word written twice, reported by checkpatch.pl as a possible
-repeated word.
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Only the message text changes, no code changes.
+Thanks.
 
-Assisted-by: Cursor:claude-opus-5
-Signed-off-by: Hemanth Selam <hemanth.selam@gmail.com>
----
- tools/perf/util/synthetic-events.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 0c150193cca8..b9e5a5da5f6e 100644
---- a/tools/perf/util/synthetic-events.c
-+++ b/tools/perf/util/synthetic-events.c
-@@ -2266,7 +2266,7 @@ int perf_event__synthesize_extra_attr(const struct perf_tool *tool, struct evlis
- 		if (has_scale(evsel)) {
- 			err = perf_event__synthesize_event_update_scale(tool, evsel, process);
- 			if (err < 0) {
--				pr_err("Couldn't synthesize evsel evsel.\n");
-+				pr_err("Couldn't synthesize evsel.\n");
- 				return err;
- 			}
- 		}
+On 9/4/2026 11:47 PM, Ian Rogers wrote:
+> On Fri, Sep 4, 2026 at 7:17 AM Thorsten Blum <blum@kernel.org> wrote:
+>> Add __counted_by_ptr() to x86_pmu::hybrid_pmu to improve access bounds
+>> checking via CONFIG_UBSAN_BOUNDS and CONFIG_FORTIFY_SOURCE.
+>>
+>> Signed-off-by: Thorsten Blum <blum@kernel.org>
+>> ---
+>>  arch/x86/events/perf_event.h | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+>> index 71ed5b2acea2..b66691a4fc31 100644
+>> --- a/arch/x86/events/perf_event.h
+>> +++ b/arch/x86/events/perf_event.h
+>> @@ -1050,7 +1050,7 @@ struct x86_pmu {
+>>          * unique capabilities.
+>>          */
+>>         int                             num_hybrid_pmus;
+>> -       struct x86_hybrid_pmu           *hybrid_pmu;
+>> +       struct x86_hybrid_pmu           *hybrid_pmu __counted_by_ptr(num_hybrid_pmus);
+> Reviewed-by: Ian Rogers <irogers@google.com>
+>
+> Thanks,
+> Ian
+>
+>>         enum intel_cpu_type (*get_hybrid_cpu_type)      (void);
+>>  };
+>>
