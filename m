@@ -1,108 +1,197 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D2C54EED1;
-	Tue,  8 Sep 2026 15:10:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DC9311C2D;
+	Tue,  8 Sep 2026 15:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788880254; cv=none; b=oV+ibeeFKTRzuedEuiAklwiQd8S6wrd4HhZGvUNzoD6DyrjNmweW1UShjWMYZtd8KByBSTQWAi7QmHis5fr2VRBIWGLUDPxHbLDD1OYskbLmXOAXFPz1p2c7+oNPY+osTUdHwJCtyAvHwQmq/bk5W7mbO5CBreXR55zade6FbGw=
+	t=1788880880; cv=none; b=M1a0SCIpBHZT2etUBkpRaxYKz/crb6nhceOskqLFTl3rn3ac0CaLD22wDYvqZZPb1+UP+B29K2RIjWUcY/XdNY6NyuKtKWwZYGd42WgVh1cNPKMCCWzaRRdG/SUfHYeprorbyjRAByC1T0BPxnZV/Eq2FPfXrjmrGohQEo935Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788880254; c=relaxed/simple;
-	bh=9QYQ9nMM/aKr2UyVmYnvFe7I9uWr76ewhQhCJOV1OVw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GKSl6CAYLGONTD7RSptOATxD/fxNvjvUmjyevGvJcabSF49cNSxhXxbXdI/hhtvw3+U//NT8S/1uIQBxL4oGCOhOS2K5ylgETsaxRCf779DylGIYIG6s5NtR6qJDeb2qENn1RDa+BYUt+js+ObN+rDiQrWSofflOMRXtj2zDgtg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ROTEQw1k; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1788880880; c=relaxed/simple;
+	bh=W4334SuzahnU1++N24thvZV9Vdj0KvisRMqA85OggxE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OJ8/bh1f+5mnHMyP/6xLvciwGSMalih5Cgof1jJySPtyhVcI3F462dNKTHJ7sXcdNc9j4vGkCjX8vzESnIlbc614YPb0f+bpFaFi9mt9h8DgVvBRxjgeSasGJFie/Dj2RxmbFpmqova0Q2mJ3WaTScyAJQvuip+uYXfKjl1FoJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=g1ENglvz; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ROTEQw1k"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="g1ENglvz"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788880251; x=1820416251;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9QYQ9nMM/aKr2UyVmYnvFe7I9uWr76ewhQhCJOV1OVw=;
-  b=ROTEQw1kXHEsWw/La6w8vP2gYjSi/wzCHWvW//tlQAZSdo/Ei/kFf0eO
-   wopb0f5iCOXr7wSTcuoXxn4w7LOhVUq43fDKIZOVr7yv8FcOgHwU0M132
-   e+jfZZEPMRgOs7tscIsK1WWPZ/WK//ggSEUb+AyRp4OW2KWJG+0FHKGaW
-   bT+vK7aFOGvemkgmIKva/hxaWHsER6k3wHQQNVh2M78v1FH4sDZzTVsVW
-   wE/egR/dySez/pxhL4IluFtcoOHTAqydhoBwYU90jUuvHJ5BIqAgiairv
-   IQeqZgZlH1D2uAxcBYnpgVTF2zpCBmXcQylkd8JWdkHb2nhz3QGZHy0kI
-   w==;
-X-CSE-ConnectionGUID: A1xXS2sKQSqHFcPxTLlDCA==
-X-CSE-MsgGUID: eIjtY2BQQNGBfieZ5pGzFQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11899"; a="93149851"
+  t=1788880868; x=1820416868;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=W4334SuzahnU1++N24thvZV9Vdj0KvisRMqA85OggxE=;
+  b=g1ENglvz5DmMNu6E478+vGJTmwaWbFsG26pIWhxDdhIydVup7yXCm+eq
+   X1CqoO3v8i+0tb7/HiJ7Z8WQcOx5wktSUCqBzb5rKslp/gZXz7hwp28q/
+   4UkQcGacBuRiY3kA9fz66berCy/n+30EoKXSP2gvp63o6ob888LOn8l96
+   VW8r9Fvl+zDE5AgAmUWSf0UzD0oNLzSSpu8q+PoGfNeDuT4+Rjl668zCb
+   MydNATFTid9WfDM74viKLMDLjnVpxJp/rIDjQrxtgr/Q7tM7Kf9WFMxG4
+   0q7u/NO/G8dRSGz1rPisA1emik1X5BDfnjSnVPT+0Bl1+SziclAWJJkLA
+   g==;
+X-CSE-ConnectionGUID: SazQIxk/TVO/kWNRgecyxw==
+X-CSE-MsgGUID: 2hMUjN8RRiydxRtiIhlDcQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11899"; a="106803261"
 X-IronPort-AV: E=Sophos;i="6.25,269,1779174000"; 
-   d="scan'208";a="93149851"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2026 08:10:48 -0700
-X-CSE-ConnectionGUID: Pk0RRqcaQY++2luieP1cAA==
-X-CSE-MsgGUID: KhrH9Xc2QWWldh3dxIAXrw==
+   d="scan'208";a="106803261"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2026 08:21:03 -0700
+X-CSE-ConnectionGUID: ftnRedlfQW+Y9nB8GonF3g==
+X-CSE-MsgGUID: YxKle19RRwOSwN/a6kGh8w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.25,269,1779174000"; 
-   d="scan'208";a="264828051"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2026 08:10:47 -0700
-Date: Tue, 8 Sep 2026 08:10:45 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Gennady Kupava <gennady.kupava@gmail.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [PATCH 2/2] perf/x86: Disable precise sampling for
- PERF_SAMPLE_STACK_USER
-Message-ID: <aqAlddsFPYJvRhFr@tassilo>
-References: <20260908075102.540715-1-dapeng1.mi@linux.intel.com>
- <20260908075102.540715-2-dapeng1.mi@linux.intel.com>
- <20260908084906.GO4121339@noisy.programming.kicks-ass.net>
- <1691a05c-49a6-4b16-8bad-cb3c004ed07c@linux.intel.com>
- <20260908101914.GQ4121339@noisy.programming.kicks-ass.net>
+   d="scan'208";a="294535638"
+Received: from smoticic-mobl1.ger.corp.intel.com (HELO ahunter6-desk) ([10.245.244.90])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2026 08:21:01 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf test: waiting.sh: Replace timestamp polling with sleep
+Date: Tue,  8 Sep 2026 18:20:53 +0300
+Message-ID: <20260908152053.192830-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260908101914.GQ4121339@noisy.programming.kicks-ass.net>
+Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 
-> That's what we already do, no? I have distinct memories of making the
-> stack unwind use the NMI regs rather then the PEBS regs.
-> 
-> > In my opinion, it could even make the thing worse. User
-> > requires to get precise samplings, but perf silently returns imprecise
-> > records, this would mislead user. 
-> 
-> Mostly just the unwind might be off a little, the rest is accurate. This
-> has been the case 'forever'. Performance analysis isn't for silly
-> people, if they can't deal with a little fuzz then perhaps they're in
-> the wrong business.
+The waiting helpers implement timeouts using:
 
-Is the main problem that the stack doesn't agree? Perhaps there
-could be a check for regs->rsp == pebs->user rsp (if in user space)
-to detect problematic samples.
+  date +%s%1N
 
-The question is how to report it and who should do the checking. 
+This relies on GNU coreutils date truncating %N to the specified width,
+so %1N yields tenths of a second.
 
-It may need new fields in the ABI either to communicate the extra PEBS RSP
-or a bit to indicate that there might be a mismatch.
+Rust coreutils (uutils) interprets the width differently and does not
+truncate the nanoseconds field.  Consequently "date +%1N" returns all
+nine nanosecond digits, causing the elapsed-time calculation to be done
+in nanoseconds while timeout values remain in tenths of a second.
 
-I guess checking in the kernel and reporting an error might be simpler
-and maybe cleaner, but it would likely limit more advanced recovery
-possibilities.
+As a result, timeout comparisons succeed immediately and the waiting
+helpers time out on their first iteration.  This causes
+test_intel_pt.sh to fail on systems using uutils "date".
 
-Are there other mismatches that break the unwinding? Perhaps the same
-for RBP?
+Avoid implementation-specific date formatting entirely.  Instead, wait
+for 100 ms on each iteration and count the timeout down.  Besides fixing
+the portability issue, this removes the busy-waiting behaviour in
+wait_for_perf_to_start(), which could otherwise consume CPU while
+waiting for perf record to start.
 
--Andi
+Since the timeout is now based on repeated sleeps, it is only
+approximate.  Update the comments accordingly.  Also make is_running()
+wait for exactly the documented number of tenths by changing its timeout
+test from -gt to the new logic, and quote tm_out in the modified code.
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ tools/perf/tests/shell/lib/waiting.sh | 34 +++++++++++++--------------
+ 1 file changed, 16 insertions(+), 18 deletions(-)
+
+diff --git a/tools/perf/tests/shell/lib/waiting.sh b/tools/perf/tests/shell/lib/waiting.sh
+index 3a152892e077..43f4322dbe9e 100644
+--- a/tools/perf/tests/shell/lib/waiting.sh
++++ b/tools/perf/tests/shell/lib/waiting.sh
+@@ -1,77 +1,75 @@
+ #!/bin/bash
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-tenths=date\ +%s%1N
+-
+ # Wait for PID $1 to have $2 number of threads started
+-# Time out after $3 tenths of a second or 5 seconds if $3 is ""
++# Time out after approx. $3 tenths of a second or 5 seconds if $3 is ""
+ wait_for_threads()
+ {
+ 	tm_out=$3 ; [ -n "${tm_out}" ] || tm_out=50
+-	start_time=$($tenths)
+ 	while [ -e "/proc/$1/task" ] ; do
+ 		th_cnt=$(find "/proc/$1/task" -mindepth 1 -maxdepth 1 -printf x | wc -c)
+ 		if [ "${th_cnt}" -ge "$2" ] ; then
+ 			return 0
+ 		fi
+-		# Wait at most tm_out tenths of a second
+-		if [ $(($($tenths) - start_time)) -ge $tm_out ] ; then
++		if [ "${tm_out}" -le 0 ] ; then
+ 			echo "PID $1 does not have $2 threads"
+ 			return 1
+ 		fi
++		sleep 0.1
++		tm_out=$((tm_out - 1))
+ 	done
+ 	return 1
+ }
+ 
+ # Wait for perf record -vvv 2>$2 with PID $1 to start by looking at file $2
+ # It depends on capturing perf record debug message "perf record has started"
+-# Time out after $3 tenths of a second or 5 seconds if $3 is ""
++# Time out after approx. $3 tenths of a second or 5 seconds if $3 is ""
+ wait_for_perf_to_start()
+ {
+ 	tm_out=$3 ; [ -n "${tm_out}" ] || tm_out=50
+ 	echo "Waiting for \"perf record has started\" message"
+-	start_time=$($tenths)
+ 	while [ -e "/proc/$1" ] ; do
+ 		if grep -q "perf record has started" "$2" ; then
+ 			echo OK
+ 			break
+ 		fi
+-		# Wait at most tm_out tenths of a second
+-		if [ $(($($tenths) - start_time)) -ge $tm_out ] ; then
++		if [ "${tm_out}" -le 0 ] ; then
+ 			echo "perf recording did not start"
+ 			return 1
+ 		fi
++		sleep 0.1
++		tm_out=$((tm_out - 1))
+ 	done
+ 	return 0
+ }
+ 
+ # Wait for process PID %1 to exit
+-# Time out after $2 tenths of a second or 5 seconds if $2 is ""
++# Time out after approx. $2 tenths of a second or 5 seconds if $2 is ""
+ wait_for_process_to_exit()
+ {
+ 	tm_out=$2 ; [ -n "${tm_out}" ] || tm_out=50
+-	start_time=$($tenths)
+ 	while [ -e "/proc/$1" ] ; do
+-		# Wait at most tm_out tenths of a second
+-		if [ $(($($tenths) - start_time)) -ge $tm_out ] ; then
++		if [ "${tm_out}" -le 0 ] ; then
+ 			echo "PID $1 did not exit as expected"
+ 			return 1
+ 		fi
++		sleep 0.1
++		tm_out=$((tm_out - 1))
+ 	done
+ 	return 0
+ }
+ 
+-# Check if PID $1 is still running after $2 tenths of a second
++# Check if PID $1 is still running after approx. $2 tenths of a second
+ # or 0.3 seconds if $2 is ""
+ is_running()
+ {
+ 	tm_out=$2 ; [ -n "${tm_out}" ] || tm_out=3
+-	start_time=$($tenths)
+ 	while [ -e "/proc/$1" ] ; do
+-		# Check for at least tm_out tenths of a second
+-		if [ $(($($tenths) - start_time)) -gt $tm_out ] ; then
++		if [ "${tm_out}" -le 0 ] ; then
+ 			return 0
+ 		fi
++		sleep 0.1
++		tm_out=$((tm_out - 1))
+ 	done
+ 	echo "PID $1 exited prematurely"
+ 	return 1
+-- 
+2.53.0
+
