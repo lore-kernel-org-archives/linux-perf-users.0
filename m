@@ -1,287 +1,232 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3F9E509EFF;
-	Tue,  8 Sep 2026 16:21:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788884499; cv=none; b=Y/EmkDulupa0bu5fmi/YXFAQJMzFHf4r/i26STAH9VTeEINUe9FbzrehG9rAh7GcSce/liesPCg8EDNy+mwfdd+fOrVIC40bUTx2J3mDcq970ISZxWQueIY7MexKxHLaqII/fCMbDz9SH/9k5+WYm+BB9pxxuPniho6nAQ5x20A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788884499; c=relaxed/simple;
-	bh=cbspiTySU5Xc95mjeQSCvVssdm/bSRaYCfNFTKfjdYU=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=NpO9hE4CTeEokQvFqqxEgtKu4zKRv5/DHlrq3Srd7nozqDVgcatewwUQpY0G4i6Rr8B50wQyVeKNYuKDf1mdyKXwP52jAO/RtQ9FknuXmric4fRf9HiWAClYg62IQXpHGHGhgI4Uguw+p0N49IZmwyWejLVkJ1kJYxe6s/jX5vw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FdUktEPx; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7305921E1
+	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 17:11:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788887505; cv=pass; b=hH8UVgdSaEYnUMCKhQ/Gk5MkSXCRuB6lKbrkHgHyIWMPjlzlt8iavcVTaIh8GNVGbo76PZQD16DhIsQ9qjDOXzRK2NNWmPUNB+VkJNxAi8xl6ePL/bjAeNF319DWFzOCaC/xU5OSk3+yfmlxDmkErDto+in7jW+raZUXwXcvIp0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788887505; c=relaxed/simple;
+	bh=EsSaRGvIxD63ugwBKEyi2i+Vt5mUM4Sz6FUce0h4zBY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NpYWpxgVymJZNlFX11B8bWS70WStosWA/SHijNZWToBuURMbegOmTDs4FUQoi7Eprwzola7kdCBvNu2BPxEvbCWWJ6/ZKfjZxHUVgvZNlLgNQdT0mYSWS6+xCSmhi6L+U2aZ40PNmwMOrZJSDqTQX4ZOLr8kKj4p8V/5IBwpJOE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lyzEzKRj; arc=pass smtp.client-ip=74.125.230.204
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FdUktEPx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F6D51F00A3A;
-	Tue,  8 Sep 2026 16:21:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788884497;
-	bh=2w7k6CxIZ0/f62QNJxuvis/V6V01ScAJQNFLe+Mfr10=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=FdUktEPxfq5YmrtjUnCxeGXDGOHegRgwQxBH/u8EdmZ0tzPGqvSdIKnjfYE7Z9LhT
-	 LUYsnzVU9KcIka//w8KqwcCcJXLaT+LMl6TiRDt9Vhp+FpUGGTPg/A4RyjaFMSO1ru
-	 E1fk67WKD+Ue1bJHqm1+AHx0Q+tnV5O+mHxJ7JAD1JpSZP53RwCnBgPtWGk5Iv10cl
-	 AuZ24rc5sfdFRAn0HfjpIXH7u+SOW6nU3Z/T1ecN6/jK5nG4xdNiyEKXHFVBgp3Pli
-	 yWEM6RJ8GPiqBxqtskFJ3hd1Hk9sXvaWPzkcQlM9Kof8A+p1ByqHApzQv1PVbiHALE
-	 ax71iAbrz5e+w==
-Content-Type: multipart/mixed; boundary="===============6594401824819144872=="
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lyzEzKRj"
+Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-5306706e89dso757541cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Sep 2026 10:11:43 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788887502; cv=none;
+        d=google.com; s=arc-20260327;
+        b=Fz5qpuHB6iCYDaSFx0yD6O6gZ57KfogibrZ0EM1dXHy9WNwk1vz8ycdaSMeYx+9Bvf
+         ZLbVUlxS9/alFKumUwpeaQD1ja5WwAQBKMZOd82EW45nP3wrzqXglQJ1ISGVKJdjxlaC
+         r1OoWwfrLlw8WLBZ50HS0IU3SOED9hBoumRBjeVXZFVMlhCSF7EipFYLQzE3kEwLypcd
+         fVSEpfJGaRqNt52McbSPql0OE3z2cTrpV1I9V9HudOIwyHtmzp4X+TN7IQ4enyaTiBYa
+         lZ9mg8OpHJMOXPiGqPf6gNsMsqpIMoiFxm5CRahyI7fN+fDrrkjBk7nOgC6WUobblylQ
+         onAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=zrmv8bXE0okXwbTlSHoQW+GmP7+eHityU98CjsAMjJQ=;
+        fh=COvGY4Xd5wdHcpmWtfjqm7O84AOROs4/xQ85kS33mlk=;
+        b=rBkPgJWm/C2GU5DtxnQuxIM03pM4w3BbhBc1qsUngXUuA4nYAD8t4NH1z3oUCB0LbC
+         OHwaH5xuLdPyEhXllxKxXYG2D+ktcb3YhV9b4QrL0KGKeJw6osjrygz7qZP0oE6sYA+a
+         iR7iclKzZRds+8FdYbaJIsKUNq1nqHpTQD/TBnBlvx/74hS3BqrC3vyDuaOA1Llmp9Tv
+         STD0lHPO0lDY9f6wlOUJS/OI7jU2cDpOQF+LEJ4RMaLNu3fYVhu2/KYwJQcfSmv0tJzK
+         WfoXBAveJQMFQ2FCEwKLekLsWUVOggHG9HosNrDPNL0JANnrgDc3vWDysddOPCC5Geut
+         R3Fg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1788887502; x=1789492302; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=zrmv8bXE0okXwbTlSHoQW+GmP7+eHityU98CjsAMjJQ=;
+        b=lyzEzKRjvSuAxWx7P7RutK/Jinicm/Iamy1bNZgyWe+Tv+J7JnKSG+zdZPs/iKHheZ
+         LXyIVoABQwwc/PFayG1XmBPicuCrUc7tmYJGykamo4/yZwl11/teV8GkNG39fMqFD56z
+         X9o+W6ljWVjaLUdgzZN78otkUXm3asFMbk2vqRWWv/XBsD/Q6DIUG7ej01Vy5dfURuvM
+         jfXi621lFujbZ1LjQ2NJoADA5fokGsJwo59uXHG5E5L+QOBX+TngtWS0cqRvJF4YWXD2
+         WP85jlmS8aIYv6FY8e/+DCigPQczPUSPhf9Lke135IHYGIUK9RvfQRTCQ9OxamvaxqNP
+         rzxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788887502; x=1789492302;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=zrmv8bXE0okXwbTlSHoQW+GmP7+eHityU98CjsAMjJQ=;
+        b=llenc/EIQqaQPwGdEDC6Qs8yXIgQbR7I51/6enxNSQ8OEHGWbIK8fTZQgW6HJr4cRL
+         P6S5mdm914JBvAIKGCeVVRsZOwarldzpKARFdno4XefFFRnb3/qE/74RT0sZq09pLuXP
+         PDXAc6kI9CWijBCSYr4ubjrqRhIhkyc2yQpAWfw3rup16bFZkMyCpDXHlbOnXC4tk+H+
+         29OEen+HDWQKXwOkhoialP50ieokiQAXz6T2g9kL/VEC4PtzEFs8T2Xjnt1RClxO/zH4
+         yJEhk6Vp1+SW+hB1BwyKGFvBNO4OTiLLKb0sfBhEFEBfco7Qm43yvNQq7uM8Led6anYJ
+         R6XA==
+X-Forwarded-Encrypted: i=1; AKwUvBzPRGQK6wDW+mT3ZaN8k8qlD3vsgMU1HEn+QTjLrii8JJCfpW3zw0d0rWdGhNvAbgiDC/aEOc1g8yaRnSOUBQN5@vger.kernel.org
+X-Gm-Message-State: AFuF++mXUNp+OJvirrceovxIvg6h21p7SCbPK6A7+Z6P25iDY+1jYhJE
+	QDoeAchcY1ZcjqxMhsFwHBGcnhfkfY3RHsvywy346tmUwSvzUW//pSz3e5fqehPG+qM8sQZr4+n
+	YICgLPI2y+sJxF5phGUk5xZAinM0oYJZt9bGiMmuv
+X-Gm-Gg: AYBFou0TQYRJ/lGHPZMYWxDGACCdVcF31jM8S63nXgXklAKrqO4RxupGtdrqvdgS03n
+	xR1H+zONlqsXK9cGRFYA7wKt9E3LdyPkvHSiEpXfTd0n0LBsLi7APwnIMQEGiS70h5ZcoSDAElO
+	fmYnd40cnWDDd+arj4RosgpmKXV0JCFHJLCwvKwvDkVUSNi5AGTNFZe1oGECO6pyb/d2QWafK00
+	cunRZvm93Meq5YAGefdXVqbhrrzskrQTfEG+WhI0ZuunkszQqsRvFT0XImcrjKCG8/NQndu7h/5
+	ezrDwTmXW//vdMckwyUCnEaBimS+QZcUvXT5IaXdAc8DmQZGvZ2tePZlcdDOtuQ7t9vEbwho4w=
+	=
+X-Received: by 2002:a05:622a:2589:b0:517:64f6:3365 with SMTP id
+ d75a77b69052e-53065d7943emr51763311cf.4.1788887501596; Tue, 08 Sep 2026
+ 10:11:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <cc417e4dba25ded6b33afcdfa4cd4a69de3e9c8ab7ca351c131ae92bc7430d86@mail.kernel.org>
-In-Reply-To: <20260908-bpftool_cyles_per_run-v3-3-60e86f325c35@meta.com>
-References: <20260908-bpftool_cyles_per_run-v3-3-60e86f325c35@meta.com>
-Subject: Re: [PATCH bpf-next v3 3/3] bpftool: Scale counters and report cycles per run
-From: bot+bpf-ci@kernel.org
-To: mykyta.yatsenko5@gmail.com,bpf@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,kernel-team@meta.com,eddyz87@gmail.com,memxor@gmail.com,qmo@kernel.org,linux-perf-users@vger.kernel.org,acme@kernel.org,namhyung@kernel.org
-Cc: yatsenko@meta.com,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
-Date: Tue,  8 Sep 2026 16:21:36 +0000 (UTC)
+References: <20260904-perf-evlist-uncore-cpu-b4-v1-1-604b55c025ee@sifive.com>
+ <CAP-5=fX1uKg8AncsP5BVFtchgns5TquOTB10-mR5ury2CaH0sg@mail.gmail.com> <CACpYXwATq8nU9mB2SuNO6kAUNrj8bH3UjQiHd5X6=9VX4YZJgA@mail.gmail.com>
+In-Reply-To: <CACpYXwATq8nU9mB2SuNO6kAUNrj8bH3UjQiHd5X6=9VX4YZJgA@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 8 Sep 2026 10:11:29 -0700
+X-Gm-Features: AcwNN1W_7TbKFmLSN9KMzfgyNcfZZaPeZ1089C38oYWYBJyJNhXAnE8ie59-N6k
+Message-ID: <CAP-5=fVw0+Xh6Xovj_Vt1XnTT8Y0fK-+wia=oxwFmPaT06MTBg@mail.gmail.com>
+Subject: Re: [PATCH] perf evlist: don't restrict uncore events to PMU CPUs
+To: Nia Su <nia.su@sifive.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Thomas Falcon <thomas.falcon@intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
---===============6594401824819144872==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-
-> diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-> index 8c2f9255b36d..9e126f3823ad 100644
-> --- a/tools/bpf/bpftool/prog.c
-> +++ b/tools/bpf/bpftool/prog.c
-
-[ ... ]
-
-> @@ -2182,9 +2199,39 @@ static int profile_parse_metrics(int argc, char **argv)
->  	return selected_cnt;
->  }
+On Mon, Sep 7, 2026 at 8:23=E2=80=AFPM Nia Su <nia.su@sifive.com> wrote:
 >
-> +/*
-> + * Filter out CPUs that have any selected metric not scheduled for them. This makes sure all
-> + * metrics are using the same CPU set, as a result ratio metrics are consistent.
-> + */
-> +static void profile_filter_cpus(__u32 num_cpu,
-> +				struct bpf_perf_event_value vals[MAX_NUM_PROFILE_METRICS][num_cpu],
-> +				__u64 *counts)
-> +{
-> +	__u32 m, cpu, key = 0;
-> +
-> +	for (m = 0; m < ARRAY_SIZE(metrics); m++) {
-> +		if (!metrics[m].selected)
-> +			continue;
-> +
-> +		for (cpu = 0; cpu < num_cpu; cpu++) {
-> +			/*
-> +			 * CPU has hits, but this metric never scheduled, set counts[cpu] to 0
-> +			 * so other metrics ignore this CPU too
-> +			 */
-> +			if (counts[cpu] && !vals[key][cpu].running) {
-> +				p_info("%s not scheduled on CPU %u; excluding %llu runs from all metrics",
-> +				       metrics[m].name, cpu, counts[cpu]);
-> +				counts[cpu] = 0;
-> +			}
-> +		}
-> +		key++;
-> +	}
-> +}
-
-[ ... ]
-
-> @@ -2194,38 +2241,61 @@ static void profile_read_values(struct profiler_bpf *obj)
->  	count_map_fd = bpf_map__fd(obj->maps.counts);
->  	if (reading_map_fd < 0 || count_map_fd < 0) {
->  		p_err("failed to get fd for map");
-> -		return;
-> +		return min(reading_map_fd, count_map_fd);
->  	}
+> On Fri, Sep 4, 2026 at 11:34=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > On Fri, Sep 4, 2026 at 6:45=E2=80=AFAM Nia Su <nia.su@sifive.com> wrote=
+:
+> > >
+> > > The PMU CPU map has different semantics for core and uncore PMUs.
+> > >
+> > > For core PMUs, pmu_cpus contains the CPUs on which the event can be
+> > > opened. Intersect the user-requested CPU map with the PMU CPU map to
+> > > reject CPUs unsupported by the PMU.
+> > >
+> > > For uncore PMUs, pmu_cpus is just the default CPU to open the event o=
+n,
+> > > not the set of CPUs it can only be opened on.
+> >
+> > This isn't quite true. On a dual socket Intel machine, `pmu_cpus` will
+> > contain a CPU to open the event on per-socket.
 >
->  	err = bpf_map_lookup_elem(count_map_fd, &key, counts);
->  	if (err) {
->  		p_err("failed to read count_map: %s", strerror(errno));
-> -		return;
-> +		return err;
-> +	}
-> +
-> +	for (m = 0; m < ARRAY_SIZE(metrics); m++) {
-> +		if (!metrics[m].selected)
-> +			continue;
-> +
-> +		err = bpf_map_lookup_elem(reading_map_fd, &key, values[key]);
-> +		if (err) {
-> +			p_err("failed to read reading_map: %s", strerror(errno));
-> +			return err;
-> +		}
-> +		key++;
->  	}
+> Yes, I agree. My description was not precise enough. What I wanted to say
+> was that pmu_cpus provides the default CPU(s) used to open an event. It
+> is not necessarily an allowlist. A user may specify another valid CPU,
+> which the PMU driver can resolve to the appropriate control CPU.
 >
->  	profile_total_count = 0;
->  	for (cpu = 0; cpu < num_cpu; cpu++)
->  		profile_total_count += counts[cpu];
+> > > The user-requested CPU may
+> > > override the default and be used directly, and the driver can redirec=
+t
+> > > the event to the appropriate control CPU.
+> >
+> > Agreed.
+> >
+> > > Currently, __perf_evlist__propagate_maps() intersects the user-reques=
+ted
+> > > CPU map with pmu_cpus for all PMUs. If the user-requested CPU is not =
+in
+> > > pmu_cpus, the intersection becomes empty and the evsel is removed bef=
+ore
+> > > perf_event_open() is called.
+> >
+> > Could you give a command line example of the perf tool doing this? I
+> > ask because I'm surprised the uncore specifying a CPU behavior has
+> > been broken. As well as `perf record -C` there is also a somewhat
+> > newer cpu event qualifier.
 >
-> +	profile_filter_cpus(num_cpu, values, counts);
-> +
-> +	profile_valid_count = 0;
-> +	for (cpu = 0; cpu < num_cpu; cpu++)
-> +		profile_valid_count += counts[cpu];
-> +
-> +	key = 0;
->  	for (m = 0; m < ARRAY_SIZE(metrics); m++) {
-> -		struct bpf_perf_event_value values[num_cpu];
-> +		double scale;
+> I tested both approaches, but they still fail whenever a perf event is
+> assigned to a CPU outside the uncore PMU's sysfs cpumask. for example,
+> assigning the event to CPU 1 fails when the cpumask is 0:
 >
->  		if (!metrics[m].selected)
->  			continue;
+> perf stat -C 1 -e <uncore event> -- <program>
 >
-> -		err = bpf_map_lookup_elem(reading_map_fd, &key, values);
-> -		if (err) {
-> -			p_err("failed to read reading_map: %s",
-> -			      strerror(errno));
-> -			return;
-> -		}
->  		for (cpu = 0; cpu < num_cpu; cpu++) {
-> -			metrics[m].val.counter += values[cpu].counter;
-> -			metrics[m].val.enabled += values[cpu].enabled;
-> -			metrics[m].val.running += values[cpu].running;
-> +			/* Skip CPUs with no runs or with an unscheduled metric. */
-> +			if (!counts[cpu])
-> +				continue;
-> +
-> +			val = &values[key][cpu];
-> +
-> +			metrics[m].val.enabled += val->enabled;
-> +			metrics[m].val.running += val->running;
-> +			metrics[m].val.counter += val->counter;
-> +			/* Scale counter values to account for perf event multiplexing. */
-> +			scale = (double)val->enabled / val->running;
-> +			metrics[m].scaled_val += val->counter * scale;
->  		}
->  		key++;
->  	}
-> +	return 0;
->  }
-
-Does this correctly handle the case where one metric is never scheduled
-on any CPU?
-
-The CPU-set filter in profile_filter_cpus() zeroes counts[cpu] for every
-CPU where any selected metric has running == 0:
-
-    if (counts[cpu] && !vals[key][cpu].running) {
-        p_info("%s not scheduled on CPU %u; ...");
-        counts[cpu] = 0;
-    }
-
-The aggregation loop then skips those CPUs for all metrics:
-
-    for (cpu = 0; cpu < num_cpu; cpu++) {
-        if (!counts[cpu])
-            continue;
-        ...
-        metrics[m].val.counter += val->counter;
-        ...
-        metrics[m].scaled_val += val->counter * scale;
-    }
-
-If a selected metric is never scheduled on any CPU (the scenario this
-series targets - commit 44f919dd1fbc describes profiling iTLB misses on
-a long-running program with a full PMU), then every CPU with counts[cpu]
-!= 0 gets zeroed.
-
-For example, `bpftool prog profile <prog> cycles itlb_misses`:
-
-  * profile_valid_count becomes 0
-  * cycles' val.counter and scaled_val stay 0 even though the cycles
-    event was measured correctly on every CPU
-  * plain output prints "run_cnt 51397" followed by "0 cycles" and
-    "0 itlb_misses" with no ratio column
-
-Before this patch the same run reported the real cycles count and 0 for
-itlb_misses, so the healthy metric's data is lost.
-
-In JSON mode there is no diagnostic at all. The p_info() call in
-profile_filter_cpus() returns immediately when json_output is set, so
-a consumer sees run_cnt=51397 with value=0, value_scaled=0, enabled=0,
-running=0, and only run_cnt_valid=0 as a hint.
-
-The commit message scopes the change to ratios ("Use the same CPU set
-for derived ratios"), and the .rst says "all metric values exclude that
-CPU so that ratios use a consistent CPU set" but neither documents that
-a single unscheduled metric collapses the whole report to zeros, and
-JSON gives no warning.
-
-Would it make sense to exclude only the affected metric, or keep the raw
-per-metric aggregation intact and restrict only the ratio denominators?
-
-> @@ -2250,24 +2322,34 @@ static void profile_print_readings_json(void)
+> Here, for an uncore PMU, pmu_cpumask() reads the sysfs cpumask into
+> pmu->cpus. When the event is created, perf copies pmu->cpus to the
+> local pmu_cpus variable and then stores it in evsel->core.pmu_cpus.
+> In this case, evsel->core.pmu_cpus is {0}. The CPU specified with
+> "-C 1" is stored in evsel->core.cpus as {1}. Then, in this function,
+> __perf_evlist__propagate_maps() then intersects the two maps, resulting
+> in an empty map, so the event is removed before reaching the PMU driver.
 >
->  static void profile_print_readings_plain(void)
->  {
-> -	__u32 m;
-> +	__u32 i;
+> > > Skip the intersection when evsel->requires_cpu is true, which is set =
+for
+> > > uncore PMUs. is_pmu_core is also false for other non-core PMUs, so
+> > > gating on it would have loosened this check for them too. Core PMUs
+> > > continue to be restricted to their PMU CPU map.
+> > >
+> > > requires_cpu can also be set for BPF counters regardless of PMU type,
+> > > but only when has_user_cpus is false, so this guard has no effect the=
+re
+> > > today.
+> >
+> > So the separation between libperf and perf is frustrating, and libperf
+> > lacks the necessary PMU abstraction. Using requires_cpu as a proxy for
+> > an uncore PMU test is okay, but it would be better if we had a boolean
+> > flag especially for this. Given this, a comment should be added saying
+> > that requires_cpu is used as a proxy for an uncore PMU. The real
+> > meaning of requires_cpu is that the event doesn't support
+> > perf_event_open with a thread.
+> >
+> > Thanks,
+> > Ian
 >
->  	printf("\n%18llu %-20s\n", profile_total_count, "run_cnt");
-> -	for (m = 0; m < ARRAY_SIZE(metrics); m++) {
-> -		struct bpf_perf_event_value *val = &metrics[m].val;
-> +	for (i = 0; i < ARRAY_SIZE(metrics); i++) {
-> +		struct profile_metric *m = &metrics[i];
-> +		struct bpf_perf_event_value *val = &m->val;
->  		int r;
-> +		__u64 ratio;
+> That makes sense. I=E2=80=99ll add a comment clarifying that requires_cpu=
+ is used
+> as a proxy for uncore PMUs and keep the current approach for now.
+
+So I think the flag we can use is `evsel->is_pmu_core` which captures
+the !uncore behavior. I validated the fixes tag is correct.
+
+Thanks,
+Ian
+
+> Thanks,
+> Nia
 >
-> -		if (!metrics[m].selected)
-> +		if (!m->selected)
->  			continue;
-> -		printf("%18llu %-20s", val->counter, metrics[m].name);
-> +		printf("%18llu %-20s", m->scaled_val, m->name);
->
-> -		r = metrics[m].ratio_metric - 1;
-> -		if (r >= 0 && metrics[r].selected &&
-> -		    metrics[r].val.counter > 0) {
-> +		r = m->ratio_metric;
-> +		switch (r) {
-> +		case METRIC_RUN_CNT:
-> +			ratio = profile_valid_count;
-> +			break;
-> +		case METRIC_NONE:
-> +			ratio = 0;
-> +			break;
-> +		default:
-> +			ratio = metrics[r].scaled_val;
-> +		}
-> +		if (ratio) {
->  			printf("# %8.2f %-30s",
-> -			       val->counter * metrics[m].ratio_mul /
-> -			       metrics[r].val.counter,
-> -			       metrics[m].ratio_desc);
-> +			       m->scaled_val * m->ratio_mul / ratio,
-> +			       m->ratio_desc);
->  		} else {
->  			printf("%-41s", "");
->  		}
-
-Plain output prints profile_total_count as "run_cnt" but the new "cycles
-per run" column divides by profile_valid_count, and profile_valid_count
-is never printed in plain mode (it is only exposed as the JSON
-run_cnt_valid field).
-
-Whenever profile_filter_cpus() excludes at least one CPU the two differ,
-so the displayed numbers cannot be reconciled. The user sees run_cnt and
-a scaled cycles value, and "# <x> cycles per run" where
-x != cycles/run_cnt, with no way to see the denominator that was
-actually used.
-
-The only signal is the p_info() lines on stderr, which are easy to miss
-when stdout is redirected and are suppressed entirely under --json.
-
-Would it make sense to print the valid run count in plain mode (as JSON
-now does) or label the ratio with the CPU set it was computed over?
-
-
----
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
-
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/34246064212
---===============6594401824819144872==--
+> > > Fixes: 811082e4b668 ("perf parse-events: Support user CPUs mixed with=
+ threads/processes")
+> > >
+> > > Assisted-by: Claude Sonnet 5
+> > > Signed-off-by: Nia Su <nia.su@sifive.com>
+> > > ---
+> > >  tools/lib/perf/evlist.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+> > > index 1f210dadd666ff818a23712ab95acaa659ccf8dc..a1064175f12ba655a9f7f=
+e42e7c7e4c49ae60423 100644
+> > > --- a/tools/lib/perf/evlist.c
+> > > +++ b/tools/lib/perf/evlist.c
+> > > @@ -80,7 +80,8 @@ static void __perf_evlist__propagate_maps(struct pe=
+rf_evlist *evlist,
+> > >         }
+> > >
+> > >         /* Ensure cpus only references valid PMU CPUs. */
+> > > -       if (!perf_cpu_map__has_any_cpu(evsel->cpus) &&
+> > > +       if (!evsel->requires_cpu &&
+> > > +           !perf_cpu_map__has_any_cpu(evsel->cpus) &&
+> > >             !perf_cpu_map__is_subset(evsel->pmu_cpus, evsel->cpus)) {
+> > >                 struct perf_cpu_map *tmp =3D perf_cpu_map__intersect(=
+evsel->pmu_cpus, evsel->cpus);
+> > >
+> > >
+> > > ---
+> > > base-commit: 73e3f0710014fe6d4ed98cfc02292f6121db7558
+> > > change-id: 20260904-perf-evlist-uncore-cpu-b4-418af0f17c80
+> > >
+> > > --
+> > >
