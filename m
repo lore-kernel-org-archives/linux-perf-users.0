@@ -1,47 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64353D1A98;
-	Tue,  8 Sep 2026 21:04:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7ED3EDAC9;
+	Tue,  8 Sep 2026 21:06:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788901499; cv=none; b=EDhAwrVZx8kEKwDADqvVsuyOJoBBkDZBwusvaByVrF3yKso4mHFKIKhHjWirmVTBsx4JWJxzs2P2ecbBRiPQdPOdxBTBpoxBb3d5EEucRR4DPsrGQBFsZmoNonsBII+OJiAOtNt3j/rsMwLyn1ZdU9FnH7VJup2aAna3hr0AH40=
+	t=1788901615; cv=none; b=bg1mSI30ubhZbM/HxUpUhAdm6tKFdg9bIKjHh/GfT+lJkv1I1VpXfb3oBJZUNmQUcB7XxxMUN1cNqGBQbiDmV9AreQxuitkmNbirwsHVnkHX5WQCsLspdJ0ZFUTqkLJqcC+1a7fJfYM+xIIKTSyyxXxxh2+A56ac+QXKtoYwwLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788901499; c=relaxed/simple;
-	bh=y/LjqKGmSNqzBKZ4qFyaNYNfyZ0qHuEYWa7lN/MKmGA=;
+	s=arc-20240116; t=1788901615; c=relaxed/simple;
+	bh=zZ6Z/qUM0TgpIAkIeVLBr/1QnUqVrTGy+JyOD2P5Xz8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V4likuoU7+MhMg0Vob4V836qinEgauvIMMDrbBkVlcta4C5byyJCz5C8wwI1xVwpchpcZLx6t+5V2y/H5JyQWWKxdB+u9O/wAAy8DSUScBl1eiDugg07B/jqg3eE9ESGK4Bl12NtWwZdvG207tLRJYzw51ntliGHeszXkLKjz5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bP4iqthk; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=IHWgcttWVk1gtfqb7M5OYcMSUt608CZUZYPIjkadHdKawU0oTUS0jww0dJO3hJShlBMeU9urCRHfK+6FjDjZ6pD85LpRwUYULo8K74x+zGuno0G1aBDOGnrfPLQkJpznUnoKELCrcZJzqLgVe068NoYazmGgNtIIIHZobgE3IJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g4bwNbrv; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bP4iqthk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE24D1F00A3A;
-	Tue,  8 Sep 2026 21:04:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g4bwNbrv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D32EF1F00A3A;
+	Tue,  8 Sep 2026 21:06:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788901498;
-	bh=eV5kLH6JFDoWWo+RIYDDNgLSh6DqgwmBSKFgw3+5Z3Y=;
+	s=k20260515; t=1788901613;
+	bh=bhyPABa8tAbMOzWfBEgk9TWMIlxGTmRbRFs/D7JU2zY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bP4iqthkMAGumBWcKd8/VWv4gHz+aS1Cwy+y+UCa5cnfPIvWQ7JttsxpKYHSbMdv/
-	 91RRSP0CqybOQ4qkL5HtEX1pZv8BEQXrd3bu0uroz7CJmNZJO/Jj9PFHC6FUz090af
-	 6DJtnk2rgvwS0CwYJEdZgsPXgolfjAGgHKyPJlG8sZEWRY+XU+p6YpaFbIFoSGMrOW
-	 f+BLml9uSIn2fCDnR6oTajaf3SVr8uhRN6qCNMA73vq8+SNyCg56g25U0C3WvdUUA0
-	 9RlU+9nYOJV18IHa1wF8F94KxwbcoxfQ278Pk+uAt5UxIPkcFIzBu1TULWHJSTrVBS
-	 /EQg59O+9MD4w==
-Date: Tue, 8 Sep 2026 18:04:55 -0300
+	b=g4bwNbrvVuO7I6q6mYEVJaki4p+trGVbWiX2EVbdRKfeq11CcugGenGXbKu8XJwtO
+	 Gm+3NF57GL9DBVDPRJQBp680Mq9oJ4HamMVq0IhW4VGPoE+T2CkpwLRRlNsldQjb/e
+	 VqyH+sFvDQTSiOaoaVDgR0esvcLuqDDHAhFxFEGli+XK12+abL7a0ptnLiK+CeDEH5
+	 gvSHO+wrhbfSwSicZgCmqtne5cPqt28x21nfyZBXVBYH5/EM5r2EZdIchZeCv38nHn
+	 VvXSwgTbR6c+Be9A+t++Dmj0+IT6CrDH75kvR5OapJUMT663Jr4AQh7sgGDHnDTXx+
+	 48vb+GozGNMCg==
+Date: Tue, 8 Sep 2026 18:06:50 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v2] perf ftrace latency: Do not read trace files when BPF
- is used
-Message-ID: <aqB4d6H-qnPHKlSA@x2>
-References: <20260831063938.756610-1-namhyung@kernel.org>
- <CAP-5=fWenUPGqNjy6CdzEnti8czpJTg14w=FTbDrTrHb9APRAw@mail.gmail.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] perf test: waiting.sh: Replace timestamp polling with
+ sleep
+Message-ID: <aqB46q7p5I_3G3DO@x2>
+References: <20260908152053.192830-1-adrian.hunter@intel.com>
+ <CAP-5=fUY9H-26_CAE6yLXr9ci6F4Wia3BsFJjeDqbPo1qcO7Eg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,22 +46,39 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWenUPGqNjy6CdzEnti8czpJTg14w=FTbDrTrHb9APRAw@mail.gmail.com>
+In-Reply-To: <CAP-5=fUY9H-26_CAE6yLXr9ci6F4Wia3BsFJjeDqbPo1qcO7Eg@mail.gmail.com>
 
-On Fri, Sep 04, 2026 at 10:36:08AM -0700, Ian Rogers wrote:
-> On Sun, Aug 30, 2026 at 11:39 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On Tue, Sep 08, 2026 at 10:14:29AM -0700, Ian Rogers wrote:
+> On Tue, Sep 8, 2026 at 8:21 AM Adrian Hunter <adrian.hunter@intel.com> wrote:
 > >
-> > I've realized that it didn't set up the tracing files when BPF is used
-> > so poll() just returns immediately.  It ends up with calling poll()
-> > unnecessarily in a loop.
+> > The waiting helpers implement timeouts using:
 > >
-> > BPF still needs the loop to wait for the target process exiting or a
-> > signal from users.  Let's use a semaphore instead.
+> >   date +%s%1N
 > >
-> > Suggested-by: Ian Rogers <irogers@google.com>
-> > Cc: Steven Rostedt <rostedt@goodmis.org>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > This relies on GNU coreutils date truncating %N to the specified width,
+> > so %1N yields tenths of a second.
+> >
+> > Rust coreutils (uutils) interprets the width differently and does not
+> > truncate the nanoseconds field.  Consequently "date +%1N" returns all
+> > nine nanosecond digits, causing the elapsed-time calculation to be done
+> > in nanoseconds while timeout values remain in tenths of a second.
+> >
+> > As a result, timeout comparisons succeed immediately and the waiting
+> > helpers time out on their first iteration.  This causes
+> > test_intel_pt.sh to fail on systems using uutils "date".
+> >
+> > Avoid implementation-specific date formatting entirely.  Instead, wait
+> > for 100 ms on each iteration and count the timeout down.  Besides fixing
+> > the portability issue, this removes the busy-waiting behaviour in
+> > wait_for_perf_to_start(), which could otherwise consume CPU while
+> > waiting for perf record to start.
+> >
+> > Since the timeout is now based on repeated sleeps, it is only
+> > approximate.  Update the comments accordingly.  Also make is_running()
+> > wait for exactly the documented number of tenths by changing its timeout
+> > test from -gt to the new logic, and quote tm_out in the modified code.
+> >
+> > Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 > 
 > Reviewed-by: Ian Rogers <irogers@google.com>
 
