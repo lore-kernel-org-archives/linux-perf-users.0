@@ -1,27 +1,27 @@
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44364545DA5;
-	Tue,  8 Sep 2026 13:01:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6832B548540;
+	Tue,  8 Sep 2026 13:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788872524; cv=none; b=s5fCpZqJiEeaDhq/9uSL32hUZZEH/1guATbBZw4CY51JNJlnkRW5cOGksGZ5i+DXdGluZ5e/LJHRb1urAV580hF93AABMeULcnymYC/0bCIAHjNkSbLkPcjwLH+nJvtNPz6Os7Hk47np33oguDM0cLlkF2j2S90uG4ikKOdneZY=
+	t=1788872523; cv=none; b=Jg+DLSCVXMU/YirYASZtQifCSC9THzhlFIoa8UWFd3TRnsSuDAggLE+w62UFhML/lbXJKqpt4tFAb2o67OcGlrjOdoU9N03IDBB0jtxA9Wmr3ZvW0ZSlLbAR9pn+s9lGiLta25R8MKkIA6Zdz6OiUGexSBPsYBSGiSpkBlsRqLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788872524; c=relaxed/simple;
-	bh=V1/lLQAcdtn+hDCtPPbyRi2VQXlV/Q7PaQaL7rKvNq8=;
+	s=arc-20240116; t=1788872523; c=relaxed/simple;
+	bh=hFcovPbpIMEDyB5q02fyXL/9S359lyav1KWVv5tT4/Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LjS9nUuARwtE6m85QYP2U3m/e+79wKmZN5sDmHYaqpY5TjzGEGzvZJHSGlEHiBSuJSmRxA2Ve1nT6j22yKx/zFJAXS/pErRT17kY3iBe5xWv6ZDWacFwxpsNZaMLk/XNdZb000xTWTTbnOweIw6+5zjwplwlUA/OITMIBeUVz8Q=
+	 MIME-Version; b=j5WIo7yJXJ5VLdVUh3NYLJVlxVwr1SPxJWTWxamXvajOKQI1lOwdKC9FgFKt9q5EgXzs7fV+gfVse8QV5aQZeW/eT8aTh318+hWmuMlbF3V55Hz93hUMeEGa4JKaNr4K2rsBlRy8NMFpyxcdRATCVSdab+Z9PDfwnW+34Pr1864=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.170])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hfPGS3bqSzKHN5B;
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hfPGS0cDbzKHN43;
 	Tue,  8 Sep 2026 21:01:52 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id D013C4056E;
+	by mail.maildlp.com (Postfix) with ESMTP id 6900C4056B;
 	Tue,  8 Sep 2026 21:01:53 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAni5gpB6BqC9rlBA--.34632S9;
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAni5gpB6BqC9rlBA--.34632S5;
 	Tue, 08 Sep 2026 21:01:53 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Namhyung Kim <namhyung@kernel.org>,
@@ -44,9 +44,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v5 07/26] perf dwarf-regs: Adapt get_dwarf_regnum() for arm64
-Date: Tue,  8 Sep 2026 13:01:03 +0000
-Message-Id: <20260908130122.633500-8-wutengda@huaweicloud.com>
+Subject: [PATCH v5 03/26] perf annotate-arm64: Generalize arm64_mov__parse to support more instructions
+Date: Tue,  8 Sep 2026 13:00:59 +0000
+Message-Id: <20260908130122.633500-4-wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260908130122.633500-1-wutengda@huaweicloud.com>
 References: <20260908130122.633500-1-wutengda@huaweicloud.com>
@@ -57,106 +57,255 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAni5gpB6BqC9rlBA--.34632S9
-X-Coremail-Antispam: 1UD129KBjvJXoWxAFyxGrW7tFy3Xw1UCry7trb_yoW5Cw48pF
-	srC347Jw4UW3WakwnxAF1fWF1rJw48Zr1FyrW0yw47CrsruF1UZw1fKr1j9F45X3yDJw10
-	kayDKr18Gr4rJF7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQm14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
-	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
-	z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F
-	4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq
-	3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7
-	IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4U
-	M4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2
-	kIc2xKxwCY1x0262kKe7AKxVW8ZVWrXwCY1x0264kExVAvwVAq07x20xyl42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4UJVWxJr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjTRGMKuUUUUU
+X-CM-TRANSID:gCh0CgAni5gpB6BqC9rlBA--.34632S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxtr1xurWfZFyfCw1kXw48Crg_yoWxJryDpa
+	n2kw1rtr48Wr1Fgws3Jrs2vrn3Ww4fK34a9a48tas3Awsa9ryrKan3KF1akF4rGryxurWU
+	tFnYvryrJr4DJaUanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUQa14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JrWl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
+	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
+	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
+	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
+	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
+	xKxwCY1x0262kKe7AKxVW8ZVWrXwCY1x0264kExVAvwVAq07x20xyl42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRO_-kUUUUU=
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-The current arm64 DWARF register lookup relies on 'aarch64_regstr_tbl',
-a static string table. While this works for kprobe-tracer where register
-names start with '%', it is insufficient for parsing register numbers
-directly from raw instructions (e.g., extracting '6' from 'x6' or 'w6')
-during annotation.
+As the default parser for arm64 instructions, arm64_mov__parse()
+currently only supports parsing instructions with the 'addr <symbol>'
+suffix. Other instructions are not supported, causing a lack of
+source and target information for most regular instructions.
 
-Since get_dwarf_regnum() is currently used only by 'perf annotate' and
-does not affect kprobe-tracer, replace the limited table-based lookup
-with a programmatic implementation in __get_dwarf_regnum_arm64(). This
-allows resolving arm64 register names (x0-x30, w0-w30, sp, etc.) directly
-into their corresponding DWARF register numbers.
+Generalize arm64_mov__parse to extend its parsing capabilities:
+1. Parse 'ops->target.raw' and 'ops->source.raw' by default.
+2. Utilize arm64__check_multi_regs() to identify if source and
+   target contain multiple registers.
+3. Maintain backward compatibility for instructions containing the
+   'addr <symbol>' suffix.
 
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- .../util/dwarf-regs-arch/dwarf-regs-arm64.c   | 22 +++++++++++++++++++
- tools/perf/util/dwarf-regs.c                  |  2 +-
- tools/perf/util/include/dwarf-regs.h          |  1 +
- 3 files changed, 24 insertions(+), 1 deletion(-)
+ .../perf/util/annotate-arch/annotate-arm64.c  | 166 ++++++++++++++----
+ 1 file changed, 134 insertions(+), 32 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
-index 593ca7d4fccc..720c863d1869 100644
---- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
-+++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
-@@ -1,5 +1,8 @@
- // SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+index 33080fdca125..151184210691 100644
+--- a/tools/perf/util/annotate-arch/annotate-arm64.c
++++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+@@ -3,6 +3,8 @@
  #include <errno.h>
-+#include <ctype.h>
-+#include <stdlib.h>
-+#include <string.h>
- #include <dwarf-regs.h>
- #include "../../../arch/arm64/include/uapi/asm/perf_regs.h"
+ #include <stdlib.h>
+ #include <string.h>
++#include <linux/ctype.h>
++#include <linux/string.h>
+ #include <linux/zalloc.h>
+ #include <regex.h>
+ #include "../annotate.h"
+@@ -14,59 +16,158 @@ struct arch_arm64 {
+ 	regex_t jump_insn;
+ };
  
-@@ -10,3 +13,22 @@ int __get_dwarf_regnum_for_perf_regnum_arm64(int perf_regnum)
- 
- 	return perf_regnum;
- }
-+
-+int __get_dwarf_regnum_arm64(const char *name)
+-static int arm64_mov__parse(const struct arch *arch __maybe_unused,
++static bool arm64__is_reg(const char *op)
 +{
-+	int reg;
++	if (!op || !*op)
++		return false;
 +
-+	if (!strcmp(name, "sp"))
-+		return 31;
++	/*
++	 * General-purpose registers: x0-x30, w0-w30.
++	 * Check for 'x' or 'w' prefix followed by a numeric index.
++	 */
++	if ((op[0] == 'x' || op[0] == 'w') && isdigit(op[1]))
++		return true;
 +
-+	if (*name != 'x' && *name != 'w')
-+		return -ENOENT;
++	/* Special-purpose registers: sp, wzr, xzr. */
++	if (!strncmp(op, "sp", 2) || !strncmp(op, "xzr", 3) ||
++	    !strncmp(op, "wzr", 3))
++		return true;
 +
-+	name++;
-+	if (!isdigit(*name))
-+		return -ENOENT;
-+
-+	reg = strtol(name, NULL, 10);
-+
-+	return reg >= 0 && reg <= 30 ? reg : -ENOENT;
++	/* TODO: Support more registers. */
++	return false;
 +}
-diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
-index 797f455eba0d..bacf5c13c3bc 100644
---- a/tools/perf/util/dwarf-regs.c
-+++ b/tools/perf/util/dwarf-regs.c
-@@ -114,7 +114,7 @@ int get_dwarf_regnum(const char *name, unsigned int machine, unsigned int flags)
- 		reg = _get_dwarf_regnum(arm_regstr_tbl, name);
- 		break;
- 	case EM_AARCH64:
--		reg = _get_dwarf_regnum(aarch64_regstr_tbl, name);
-+		reg = __get_dwarf_regnum_arm64(name);
- 		break;
- 	case EM_CSKY:
- 		reg = __get_csky_regnum(name, flags);
-diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/include/dwarf-regs.h
-index 46a764cf322f..a25f038bbff2 100644
---- a/tools/perf/util/include/dwarf-regs.h
-+++ b/tools/perf/util/include/dwarf-regs.h
-@@ -105,6 +105,7 @@ int __get_dwarf_regnum_x86_64(const char *name);
- int __get_dwarf_regnum_for_perf_regnum_i386(int perf_regnum);
- int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum);
++
++static bool arm64__check_multi_regs(const struct arch *arch, const char *op)
++{
++	const char *p = op;
++	int reg_count = 0;
++
++	while (p && *p) {
++		p = skip_spaces(p);
++		if (*p == arch->objdump.memory_ref_char)
++			p++;
++
++		if (arm64__is_reg(p))
++			reg_count++;
++
++		if (reg_count >= 2)
++			return true;
++
++		/* Move to next operand after comma */
++		p = strchr(p, ',');
++		if (p)
++			p++;
++	}
++
++	return false;
++}
++
++/*
++ * Duplicate @insn, stripping the comment and trailing whitespace.
++ * Returns a newly allocated string which the caller must free(),
++ * or NULL on allocation failure or if @insn is NULL.
++ */
++static char *rstrip_space_and_comment(const char *insn, char comment_char)
++{
++	const char *end, *comment;
++	size_t len;
++	char *result;
++
++	if (insn == NULL)
++		return NULL;
++
++	comment = strchr(insn, comment_char);
++	if (comment != NULL)
++		end = comment;
++	else
++		end = insn + strlen(insn);
++
++	while (end > insn && isspace(end[-1]))
++		--end;
++
++	len = end - insn;
++	result = malloc(len + 1);
++	if (result == NULL)
++		return NULL;
++
++	memcpy(result, insn, len);
++	result[len] = '\0';
++
++	return result;
++}
++
++static int arm64_mov__parse(const struct arch *arch,
+ 			    struct ins_operands *ops,
+ 			    struct map_symbol *ms __maybe_unused,
+ 			    struct disasm_line *dl __maybe_unused)
+ {
+-	char *s = strchr(ops->raw, ','), *target, *endptr;
++	char *s = strchr(ops->raw, ','), *source, *endptr;
  
-+int __get_dwarf_regnum_arm64(const char *name);
- int __get_dwarf_regnum_for_perf_regnum_arm(int perf_regnum);
- int __get_dwarf_regnum_for_perf_regnum_arm64(int perf_regnum);
+ 	if (s == NULL)
+ 		return -1;
  
++	/* Parse target */
+ 	*s = '\0';
+-	ops->source.raw = strdup(ops->raw);
++	ops->target.raw = strdup(ops->raw);
+ 	*s = ',';
+ 
+-	if (ops->source.raw == NULL)
+-		return -1;
+-
+-	target = ++s;
+-	ops->target.raw = strdup(target);
+ 	if (ops->target.raw == NULL)
+-		goto out_free_source;
++		return -1;
+ 
+-	ops->target.addr = strtoull(target, &endptr, 16);
+-	if (endptr == target)
+-		goto out_free_target;
++	ops->target.multi_regs = arm64__check_multi_regs(arch, ops->target.raw);
+ 
+-	s = strchr(endptr, '<');
+-	if (s == NULL)
+-		goto out_free_target;
+-	endptr = strchr(s + 1, '>');
+-	if (endptr == NULL)
+-		goto out_free_target;
+-
+-	*endptr = '\0';
+-	*s = ' ';
+-	ops->target.name = strdup(s);
+-	*s = '<';
+-	*endptr = '>';
+-	if (ops->target.name == NULL)
+-		goto out_free_target;
++	/* Parse source, stripping comment if present */
++	source = skip_spaces(++s);
++	ops->source.raw = rstrip_space_and_comment(source, arch->objdump.comment_char);
++	if (ops->source.raw == NULL) {
++		zfree(&ops->target.raw);
++		return -1;
++	}
++
++	ops->source.multi_regs = arm64__check_multi_regs(arch, ops->source.raw);
++
++	/*
++	 * Parse 'addr <symbol>' from source (if any).
++	 *
++	 * A raw hex string may be a scalar immediate, not an address.
++	 * Only validate 'source.addr' if accompanied by a '<symbol>' tag,
++	 * otherwise reset it to 0 to avoid false positive address tracking.
++	 */
++	ops->source.addr = strtoull(ops->source.raw, &endptr, 16);
++	if (endptr != ops->source.raw) {
++		s = strchr(endptr, '<');
++		if (s == NULL) {
++			ops->source.addr = 0;
++			return 0;
++		}
++		endptr = strrchr(s + 1, '>');
++		if (endptr == NULL) {
++			ops->source.addr = 0;
++			return 0;
++		}
++
++		*endptr = '\0';
++		ops->source.name = strdup(s + 1);
++		*endptr = '>';
++		if (ops->source.name == NULL) {
++			ops->source.addr = 0;
++			return 0;
++		}
++	}
+ 
+ 	return 0;
++}
+ 
+-out_free_target:
+-	zfree(&ops->target.raw);
+-out_free_source:
+-	zfree(&ops->source.raw);
+-	return -1;
++static int arm64_mov__scnprintf(const struct ins *ins, char *bf, size_t size,
++				struct ins_operands *ops, int max_ins_name)
++{
++	return scnprintf(bf, size, "%-*s %s, %s", max_ins_name, ins->name,
++			 ops->target.raw, ops->source.name ?: ops->source.raw);
+ }
+ 
+ static const struct ins_ops arm64_mov_ops = {
+ 	.parse	   = arm64_mov__parse,
+-	.scnprintf = mov__scnprintf,
++	.scnprintf = arm64_mov__scnprintf,
+ };
+ 
+ static const struct ins_ops *arm64__associate_instruction_ops(struct arch *arch, const char *name)
+@@ -103,6 +204,7 @@ const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *id,
+ 	arch->id = *id;
+ 	arch->objdump.comment_char	  = '/';
+ 	arch->objdump.skip_functions_char = '+';
++	arch->objdump.memory_ref_char	  = '[';
+ 	arch->associate_instruction_ops   = arm64__associate_instruction_ops;
+ 
+ 	/* bl, blr */
 -- 
 2.34.1
 
