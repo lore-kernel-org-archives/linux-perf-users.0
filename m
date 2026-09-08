@@ -1,72 +1,105 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E7B48F01C;
-	Tue,  8 Sep 2026 22:08:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3617583AD0
+	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 22:23:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788905305; cv=none; b=ZUvbR6UUDcCg+M34p+EizF9JPzADiHG5DliThBIzOv3Vqz1hIwUtsv/fMpmt+rqWNX+AdM0AuBZU9xpVP8+0nLHZCE/E3Ah6PEJw2P5HPwLVC55w49wvNmcz8QPf38wwpIxppqmvXHVeI5kpnTSbWxzfm05xRUp5LaJQ+13t8xs=
+	t=1788906215; cv=none; b=CwV+7SxhXiwToS5x8XoSjR+gWLgZVkx1d3WytEfJPjeI6XbzLk2O0jjkJaLNW5vsHBY0ews+tenKH5F6j5o+c6H3kJRpjeRe5x6C6WmFkZ2e7Ap79O/kYzCreZgVSRNZPXCBHHw+ohoZp93oVdwXvHkEYX03COkhUlP0Dv0Rtf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788905305; c=relaxed/simple;
-	bh=K7Sgj//k3LSpDDnnkUDYla2vUvLEHdOhl0+MPce5hp4=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=R8k797RU71bHZe5yuMu5WHd10ttyov6UPjAuGSkE9/U+StDhPgQifY+zZcQBWQaqBxj7xORjHFZF3elxy+IU+bex0nW1GiJlxDudnQaDwQOnu5RD0hMdySaXHy1nO7kfXnXKoK4Ces7jfG5D/S5STu/eB1DhYIcvyuYBWpxIRZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IUaKFQS9; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788906215; c=relaxed/simple;
+	bh=Rl8OMoJb5V7kJbKIcjfGmhFJeGeXHCJXaAw6pU3yuaQ=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=dr+cYiN2RXCkqOq+fTDpZgVPOjRnasHkmxwYPJQST/ZMPBvQ5lvQh019Ieflsb3pV5yGV2kjoIf/yyx1YURYGferi9jJ5CnUVxpgc9RIxihCI2w8WZJ6/AW1Y+wkXCEcZzpLcBKW3hxsHdPM6rriNd6Dg23XJ/GHNqpKqetTIb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R2hZlgTm; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IUaKFQS9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 315291F00A3A;
-	Tue,  8 Sep 2026 22:08:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R2hZlgTm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC4B51F00A3A;
+	Tue,  8 Sep 2026 22:23:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788905303;
-	bh=hClBpnqNRj3SJ7e9iMNGOxdDeCVPyI4ivqixfWlNz3w=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To;
-	b=IUaKFQS9pSbsIw3Tw4ZHjzkSPlkXdgSekB0QZADMLyC9l02rqPlx5HMsMZQNahhno
-	 CBsJEri9/8xHohyZAPxgf+/wh4uNIz4lwoFGdybGZ+/SQXy9Kk02Dw0ORRQ+aeOnAK
-	 pdzFKgaWX49gc/q5ThZZ3Ib0H+Ni4cVddbjVBBpAsmZiIXfNUuG/DmUWigN84twJ4I
-	 AIWEo3y5oQ39r4OzLJasw/H/kulelGZR9cDw73TIwbu1Fyw7/BKYiTGrX3D/Zycx9L
-	 Lum26mlvCLX7buptthf2yGvKxERq64bKiKMONvKtGZ3mnZyvFCpTiU/uCwbNKK4qmQ
-	 ncmAJjXauyYwg==
-Message-ID: <7942d2b1-8e0f-4707-8c1e-604b66d2ecf7@kernel.org>
-Date: Tue, 8 Sep 2026 23:08:20 +0100
+	s=k20260515; t=1788906214;
+	bh=7anlpBNE6c+I89c4HVpVZnVrQVxYN7ZXdMkCh0NCa8c=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=R2hZlgTmICZFwYX3m4c+EvObr6FMc8vcxjIBh7uULru2nstuJR6utg3x6xy6h+ZNo
+	 aRi8WTE6Y0q/GEwsZ+y7OUvgi6EcPxU6DwhK6OVwnCbjl/1sl6Z+hvtU6A2T+6wciq
+	 3fT6r2b5PWYo5s0yotheTrgdgfTGMfMI/tXejIPWB2Q8iH7hVm2VeiZdqRo45frma6
+	 ArgO5xLuMTwDCUa1gL7RND9ElC2BZYqtHsP1yzlHkeZQ9tdY2njjJtFjFKZEWRnHVG
+	 lPZJQwx8A8xahiYfAZNXJhSTlEZwMGisDASncX9njX5tiuNBz9wQodLFjI4y2KfxAU
+	 fxzKyI1nGUsMw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1] perf stat: Avoid uninitialized memory read on error
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260908220720.564614-1-irogers@google.com>
+References: <20260908220720.564614-1-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 08 Sep 2026 22:23:33 +0000
+Message-Id: <20260908222333.DC4B51F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Quentin Monnet <qmo@kernel.org>
-Subject: Re: [PATCH bpf-next v3 3/3] bpftool: Scale counters and report cycles
- per run
-To: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>, bpf@vger.kernel.org,
- ast@kernel.org, andrii@kernel.org, daniel@iogearbox.net,
- kernel-team@meta.com, eddyz87@gmail.com, memxor@gmail.com,
- linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
-Cc: Mykyta Yatsenko <yatsenko@meta.com>
-References: <20260908-bpftool_cyles_per_run-v3-0-60e86f325c35@meta.com>
- <20260908-bpftool_cyles_per_run-v3-3-60e86f325c35@meta.com>
-Content-Language: en-GB
-In-Reply-To: <20260908-bpftool_cyles_per_run-v3-3-60e86f325c35@meta.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-2026-09-08 07:27 UTC-0700 ~ Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
-> From: Mykyta Yatsenko <yatsenko@meta.com>
-> 
-> Perf counters can report too few events when the PMU multiplexes them.
-> Scale each per-CPU value before aggregation.
-> 
-> Use the same CPU set for derived ratios. Report cycles per included
-> program run, and preserve the total run count in JSON.
-> 
-> Fixes: 47c09d6a9f67 ("bpftool: Introduce "prog profile" command")
-> Signed-off-by: Mykyta Yatsenko <yatsenko@meta.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
 
-Thank you for this!
+Pre-existing issues:
+- [High] Atomic Conclusion: Unchecked ERR_PTR from hashmap__new() causes pr=
+edictable application crashes. The return value is incorrectly checked agai=
+nst NULL instead of IS_ERR().
+--
 
-Acked-by: Quentin Monnet <qmo@kernel.org>
+commit 525c560536a62c39331ec585b1ce897decf7179c
+Author: Ian Rogers <irogers@google.com>
 
-Apologies for missing the review (and your question) on the previous
-versions of the patchset.
+perf stat: Avoid uninitialized memory read on error
+   =20
+If has_supported_counters fails then msg was passed to ui__error
+regardless of whether an error was written into msg leading to reading
+uninitialized memory. Avoid this by always terminating msg at
+initialization.
 
-Quentin
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index c50cf230f16ed..37752d6bfef45 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+
+[ ... ]
+
+[Severity: High]
+This isn't a bug introduced by this patch, but I noticed that the return
+value of hashmap__new() is incorrectly checked against NULL instead of
+IS_ERR().
+
+Since hashmap__new() returns an ERR_PTR on failure, this will
+cause predictable crashes under memory pressure instead of graceful error
+handling.
+
+For example, in tools/perf/util/pmu.c:perf_pmu__init():
+
+        pmu->aliases =3D hashmap__new(aliases__hash, aliases__equal, /*ctx=
+=3D*/ NULL);
+        if (!pmu->aliases)
+                return -ENOMEM;
+
+And similarly in tools/perf/util/pmu.c:perf_pmu__create_placeholder_core_pm=
+u():
+
+        pmu->aliases =3D hashmap__new(aliases__hash, aliases__equal, /*ctx=
+=3D*/ NULL);
+        INIT_LIST_HEAD(&pmu->caps);
+
+Also in tools/perf/util/fncache.c:fncache__init():
+
+        fncache =3D hashmap__new(fncache__hash, fncache__equal, /*ctx=3D*/N=
+ULL);
+
+Should these locations be updated to use IS_ERR() when validating the result
+of hashmap__new()?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260908220720.5646=
+14-1-irogers@google.com?part=3D1
