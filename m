@@ -1,245 +1,161 @@
 Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DEB514775
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 17:14:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B259D582BB1
+	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 17:29:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788887685; cv=pass; b=Czv0nL1eIbI4+inIr+qmoXyW4cdGS/A1IPi5UCz+gWPHdhyc0sWS4rXI4EkKQCPT9zR2V6n5IPu3X1vkCzd7bnZ3oSqw7IgIu9+uI2GMHNM8m59EP4AAHRdjhzg8x4AlEeGGizWRZl8a0kqVCZkaOXbD5ib3VxJEY8mvFciWrfM=
+	t=1788888551; cv=pass; b=GYYKN06M9bMP/lqxcSd2QIHBJuAEjKmnrs31Ui+fAJgRfxxu9IeIyomiaM025DHSuhuxUBJQS64gWaHzrIQOMzlx2/Ne3wvnOW/IQ6JfO1UHbCS8kcZY4pxp85uD6S8sZ1hSJXE3oqgV6Ek+OcU3KTZL8EDboJaqpNDUiLD38Wg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788887685; c=relaxed/simple;
-	bh=XS2DOsAZdUoMv3cfbY4kaZFDPxLymXshnMS4j/7nPkI=;
+	s=arc-20240116; t=1788888551; c=relaxed/simple;
+	bh=TV5fg2vDNwOsjIsuoNOpfutnb5SXppBqOtK/HP2PzCs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=We/SjoUpEOribaEEfvwaPbAbPtddGrEQJu/DZl0tjLi525lhUnP9YxXE1EckVtk3DUn7natYYunLpTOk4wuDLtcxN+86XmK0eHaxeW83vLXbTuQbj/Gx5PfGtzzB977wdHOZk3UpCM2074X6ETc4OhtGLxLbDgD/SyalIGXKVdc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wjE/laDd; arc=pass smtp.client-ip=74.125.230.204
+	 To:Cc:Content-Type; b=JAmWIhnYjcdlh0YZLg8Le7/YJtm3L46L1sDBvy1J3Ws1fGrUOKSJFouyJy/QL6q+8NlIM73UzWzKf3ohN19bgi/X7MpkZMG9acI5l4Sv3iBk+5dwBbBjBmInRuBSt2NhNDxy+/XEjTon5ng8XaW0bnDxyAKuqofC7VMuyEt8oiw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ClyU+C3p; arc=pass smtp.client-ip=74.125.230.204
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wjE/laDd"
-Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-530411c7ee1so663561cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 08 Sep 2026 10:14:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788887682; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ClyU+C3p"
+Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-5307425f44bso618911cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Sep 2026 10:29:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788888549; cv=none;
         d=google.com; s=arc-20260327;
-        b=ReaZIA4tPcc/kKIUIA1iO5uP9cqN/50Li9NNYbG709+UsW1NknLW4ZGDHX8E8EYxuD
-         /VM/6nvYsEhWcij8BbpxdHQTVDJBJyjWxYFFnOpYDPqa6wAghibBHFX3sg/cXvnqH5eZ
-         oyftqEUTURnYjrPEZhRzsNINZDUahgFwJqCTcfwdjkDGmswuJ5VmMtQAXOHY5qZEP214
-         UpgbvWHdpkk++9S+cUPaxE5NtuMLS89E/sqNuaHxAyBewR0WRF4jJUvXyl6QbkgrrQ73
-         w5HpzWBaBRt1aQL6aDPRUeQxTR8GDSIh16FxQDHRzmHt+EoxnWNhFSPp1elcoLhD7S3u
-         b+2w==
+        b=pX+oaaL3wUi+N7onrgqs4CMUdp9f9hg9miLCItmMJPDkYyOriAnNNI5HjZQBkJyT/Q
+         CN5yUr+UOKqEUfPNbNxEGmNRmU2spuRoGOcYtnHmDGHQcAdZsy0rsLcHkIQC6B4kUzOz
+         em/tqDY+yGNo1v5nYw3mQAbpHobgPjTLIW33mGvifvz0j7xOm71jAn/kWWGrl+7QjREs
+         PI6DBKjnz2cRe2QWEh8ZLBavU9uzT/s/yWG2YwW7iO+0f3rknUzapYy1mJkZUKXy6t7P
+         2YadQ6Kso3Mk2CyxEvcZ9s8rpOa65ZZ2NuSpmk3oSrPCKR8LcK9jIYbC6ArzIzgTo/aq
+         BtMw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=CXI7gwxxGgVVUavBiXahE7l6pKPePlATykxGcqw8prc=;
-        fh=RU9VTTfBVOM35XncLFyhhZ8cpP6tzYUUmPeYMcKopFc=;
-        b=i6pFbs1ZcARANJPtDexnaa1xge/v7BtprCnPl+IU9zjg7fRX2JCrz9Cys5x6h/585C
-         UEizSvwvsHba6K5lfIlU3MoDDDkeYwqVtlaMmyGgZ4Tjd21uR7xjEsHM9Q7ZndsXDqvE
-         zG5XWlZOb5s9w7jOm0DUuZqsScQt/f0iwZbwthZ75o1Yzt/5G+nkbgy3wWlLghkG32MZ
-         tLO+M1Eu8QAIZPdV4vC9XBy9njPIZkNhHxfqz7EruQiAGGr1ILm1yZpMSYpeTLDbUr5K
-         1vf0sEt6i/siUGh/eWeLAIHqs+JNQpsYyYYD5d6/gOJrjYTomsV6EsN4kAQ4G0AXTqCg
-         aC2w==;
+        bh=TV5fg2vDNwOsjIsuoNOpfutnb5SXppBqOtK/HP2PzCs=;
+        fh=V/ZaiO3LoIbLNWqY5T8nKrzh/jUqxnxmnvQKFCa06So=;
+        b=n2UUVqNBeEJzLtPp+0JuDtIZ2aKxznd/lPnJEF9e3GZqvnnp1VMQxvjGwGlBKyld9/
+         +j1W+WIUyetYkWhV52rSn4QRqkxzXuuDCEe4WHE6fG58mCiGWCgb7jqmtKH5bePFnPlz
+         a88xWOBbKSkWcDw1k65oeY8RCfmIZrJTRxgyuIDJjB0hsaV3ucPKd6haL5/S7TcOGEDt
+         U1I68mWdGhzD6KNgRoBxIbveVZd35NqVkKVysHVmnhXGkvYD5wLuEv+asi+0KE0ecMvT
+         w4qcAhkhd1/w6fiWOZfJvqrLM7kOxc925pN5O8Pjskn35hZasohvCGReakkT0iovEtlU
+         K8Dw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788887682; x=1789492482; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1788888549; x=1789493349; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=CXI7gwxxGgVVUavBiXahE7l6pKPePlATykxGcqw8prc=;
-        b=wjE/laDdweUra2t9SxOM/VgEg0OYbN9xpc4amKwWLzkXugnnpH0p26dAoqzr2cSP0x
-         k3eOg0xwwStCN7JC5z1ph/6ADmthNSAGunPUnMJqDodpt++0lp08/dvxC0DxmD2ggCkk
-         cslwZPowfCGw4Z59cDn/wED71welEUW5UKIqY3yU6E020erqt8Bjry6MdqCYIoSYY3f/
-         4F73bPkjRZRuf4DrvDqQRgSGL3ebVTRdow9/HtSPqh+ryGrJFuR35jV0nW2x07chizFU
-         RRgB06h4H2TQ0+Jfqlscotd2CPFGduiyaqOmmfnSdbymXE+BsKx7dTZe5o34EvTG3WjD
-         PzeQ==
+        bh=TV5fg2vDNwOsjIsuoNOpfutnb5SXppBqOtK/HP2PzCs=;
+        b=ClyU+C3p+S4ZDuxesv2O5eDPSOFArEp3ahXwDrZowQBInwyV14Gw2ZkAr2kk47/4/k
+         xzdcLjU7r+CgWNrC59ORv00IbfZeaPV50bdcpMIGdU8IcYZu1Cy01EKeixOr62dIsOEn
+         sTIG7KwhpFHIAJf5dZ+aXt1z2ZZFBOz0YKNq7yHrYn723s//wGQCtqYfmHswPgUL/Ysn
+         z0ZTjeMC4O2JXb7t9f36uqSWwxM8sBZTnwd/LEw8V1yyO+d9p43X9lFN3BrimZ3oLWHe
+         MiAOU7+6UX69wOTYflNRj89MbegsNzFD3riTBkVAfxlqMef8vBysdIkRaR2lMGj/rCam
+         AZXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788887682; x=1789492482;
+        d=1e100.net; s=20251104; t=1788888549; x=1789493349;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=CXI7gwxxGgVVUavBiXahE7l6pKPePlATykxGcqw8prc=;
-        b=FjFB7B+xiGmpjgL5vm2BD7mtnsbW6S5U85zA6Fa+KssR6EKfNUyAsbOWMFD6tmqjyv
-         eudc23Iv6h3NR2yGcNKKGyMnPS7FPQ5C5VofuY4PuOtQk/Ow2Dd9czPmzsBs+zEEVWzN
-         TSyqjm0i6GqNsshJ2NJoFxmKfNkNXB1yZE8ngetpXkgfUO5uUTaSMFURN94vq9RGQqmI
-         0Zvf5Jth51prYcGe2Soe4ihNL+Kfn1AUPmH6dXqTv4rGlDJxQ6OltxVGqTc3GyaO/3J2
-         h5TpVHfceElZSc94VD4iftJX5jBL0NgObttUXp2ArA8evuAfY6uW69Ppw+u1HhGKgFAM
-         QsZg==
-X-Forwarded-Encrypted: i=1; AKwUvByW8Yxzdy3Jr70GlSK8yL+IJunRVB2UC3ZC4qtfH1iJRNagln6OJMs1nCk95MI6IIaLxyQxNk5DTouX4nXwJ/yU@vger.kernel.org
-X-Gm-Message-State: AFuF++mIJnGksJsYQfJcNKwLexj/vmLB7zbASi0a8Z8x95h8+aqKWxwP
-	+kUAsmtTQcJntBgWV36Jw4tsHlXVunZRnoTqtEcjHzj8QnRNbgt/UNvG6VaVnNYBuVFxaH7x5a0
-	XV/Kue+KtV38co5XTZt9J+u6ZdMjhXM944VIgw8Zl
-X-Gm-Gg: AYBFou2L808LdzD7iBihqc7buEOr/nsAxkZLKQQ1/bSveTGLXZVfHmocLH2Y57aUr+e
-	gRsT9F3wKmtEoZkZhtiF92iK1AIWjG7aD4QVE30DC734hFhyAwhBrST7AUwaZAUy9nzbu5muwsx
-	tmPNpxtoBtFTX7aPQgB8DEMJHFpZWTS+9+ZqaeY2+AAmNQeBRWHICuWJ/Y4JxN//AeYdYgpWkXd
-	CZXWMzLKPQF6uICvYRzV/b0E+uLjgtaYNGXYgGqTJE1Bm3ox/hYKn9podBY5Qhu+3Dq5DXGTpAB
-	d6xuj2g1KQIVeqvKan5atNFxeqi7hyWtNN2a3UMVXwwVvYBm3twPXItofIYGKXOu4mxCujOC7Pq
-	hjXFl7MgU
-X-Received: by 2002:a05:622a:248a:b0:530:4381:e745 with SMTP id
- d75a77b69052e-53065e09975mr57662611cf.10.1788887680279; Tue, 08 Sep 2026
- 10:14:40 -0700 (PDT)
+        bh=TV5fg2vDNwOsjIsuoNOpfutnb5SXppBqOtK/HP2PzCs=;
+        b=BcHumSn1JYUnjGk8WVrB5Vmj/TO8ZaNJe9s7yY0P2PMx5fLk9iEzYMOXznkmFBG7Ng
+         1Z2FlV5RB/A+ozVB1d7PPspd8f/jd2YxbGlOIWXz1bDWuwVpXu2+B3U0Dnraf3CjbhFQ
+         o3XYZK3WZ7ewnpLEGq21MtIRJQrqYpujZLaGtRt2iCVojjQmUlI4m22NWmZOoGagnGX8
+         xo/jxLAMW40Qptd0O2HSjPhcjuFiRkt/JlnQR8WnXKxD0z+GZvisKrTztQPNnBNdp03z
+         iyZWdFt2NAfdQq9MuOqxTgNH8x6oUFTOrRnDfb+WDwPIFyB9m+Zc6tKyV2Be0tna1wUq
+         uQSA==
+X-Forwarded-Encrypted: i=1; AKwUvBwrSUPCo5z/y9MqT3bucq9UWYQtv/uynldkw+gzHbRkvBn32rzj8q8ZEcGspyqWYa9IG2/0sxgom4+KHvsT9Mk7@vger.kernel.org
+X-Gm-Message-State: AFuF++kuE/d5/taUZDU3YXovklp5nvJSeXz4zJTdAFnKxCRXUD+C19rw
+	GtgnVWUu3/uePlnhm7cbQkCFgxyCsWut8r1zWVnRdId1icPCIYYEtwPQGDhveFH5YEC0qUJe6wF
+	dpu70xi7fAYhrQB6GZH0fMrdWA4qOT+IDhWdiavZ9
+X-Gm-Gg: AYBFou1hVswSYZdz3AFjYlnlsDoPSh2zvoHSwAQQaxKm1PkiFl15RjYlMP6efM7xPnu
+	B6QaQM7TVf6E1nUyfzpctn8XLVDOGQGb49SPlrkgY85IO9UrFn+ni92v25PDB3GElSBlMKEuJGi
+	oFzucfXrjIIp4DQlMGMam1Pyxidgx9tjzewYQ1uwfx6D01Hr44TKKYbvMqc2Uj3MG+RnOeKTRpi
+	72oJcFxZagG3cQ2TYB2EiZnskWUFxpDTsFEqph+k9y9N+Yiilzg60wDRpwgZ/Gbkzedj6lFHMr/
+	WofXSeqaBi1jWBJbCqJ8+OVPPnPXNzCFyv5dNLxbWHSbjPpQ/gHcZ5EvbHWPkw5paeSv8qfkYzY
+	=
+X-Received: by 2002:a05:622a:1b17:b0:519:b82d:fe62 with SMTP id
+ d75a77b69052e-530a3b7c7e8mr1827921cf.7.1788888547684; Tue, 08 Sep 2026
+ 10:29:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260908152053.192830-1-adrian.hunter@intel.com>
-In-Reply-To: <20260908152053.192830-1-adrian.hunter@intel.com>
+References: <20260906-perf-gtk2-v7-0-1ece839fbca0@gmail.com>
+ <CAADnVQLrga+tx0QCUkviGHqbk9Q6a7bmk3oAe51ZrLhQgRaw5Q@mail.gmail.com> <CAEdQ38EMGjp5RbvZn_RStu1=OOS3H+VT8xHFdnEaVC+dof7Thw@mail.gmail.com>
+In-Reply-To: <CAEdQ38EMGjp5RbvZn_RStu1=OOS3H+VT8xHFdnEaVC+dof7Thw@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 8 Sep 2026 10:14:29 -0700
-X-Gm-Features: AcwNN1XltQf19Ey6oq449cA6CXMDbtRn39Dr-pAV5hAwRRGJUgEcpH4Z84Ojdh0
-Message-ID: <CAP-5=fUY9H-26_CAE6yLXr9ci6F4Wia3BsFJjeDqbPo1qcO7Eg@mail.gmail.com>
-Subject: Re: [PATCH] perf test: waiting.sh: Replace timestamp polling with sleep
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+Date: Tue, 8 Sep 2026 10:28:56 -0700
+X-Gm-Features: AcwNN1U0pzsDB7Ni4zxKoMakrdxYWC_p3L8TNTCtZOf0qYoAAkhxK8NQXfMaReU
+Message-ID: <CAP-5=fWjxnoUxSHwrO3aQ=QPdz2zmjiE1kZZgj4o-eXYCx7Qdg@mail.gmail.com>
+Subject: Re: [PATCH v7 0/3] perf tools: port UI from GTK2 to GTK4
+To: Matt Turner <mattst88@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	LKML <linux-kernel@vger.kernel.org>, 
+	"linux-perf-use." <linux-perf-users@vger.kernel.org>, bpf <bpf@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 8, 2026 at 8:21=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.c=
-om> wrote:
+On Sun, Sep 6, 2026 at 2:05=E2=80=AFPM Matt Turner <mattst88@gmail.com> wro=
+te:
 >
-> The waiting helpers implement timeouts using:
+> On Sun, Sep 6, 2026 at 4:59=E2=80=AFPM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> >
+> > On Sun, Sep 6, 2026 at 1:13=E2=80=AFPM Matt Turner <mattst88@gmail.com>=
+ wrote:
+> > >
+> > > GTK2 is long dead upstream and increasingly hard to keep building on
+> > > current distros. This series ports perf's GTK-based report browser to
+> > > GTK4 and fixes it up so it's actually loadable at runtime after the
+> > > port.
+> > >
+> > > Patch 1 does the mechanical port (build system, widget API changes),
+> > > including the leftover-GTK2-call and signal-handling fixes that were =
+a
+> > > separate patch 3 in v4. Patch 2 fixes a runtime issue found after the
+> > > port that prevented the browser from loading. Patch 3 fixes two stack
+> > > buffer overflows in the hierarchy view that predate the port.
+> > >
+> > > Signed-off-by: Matt Turner <mattst88@gmail.com>
+> > > ---
+> > > Changes in v7:
+> >
+> > Matt, please stop the spam.
+> > Wait for humans to reply before respinning.
+> > 7 revisions in one day is way too much.
 >
->   date +%s%1N
+> My apologies. I figured it would actually save humans time if I went
+> ahead and addressed all the sashiko-generated feedback. Dunno.
 >
-> This relies on GNU coreutils date truncating %N to the specified width,
-> so %1N yields tenths of a second.
->
-> Rust coreutils (uutils) interprets the width differently and does not
-> truncate the nanoseconds field.  Consequently "date +%1N" returns all
-> nine nanosecond digits, causing the elapsed-time calculation to be done
-> in nanoseconds while timeout values remain in tenths of a second.
->
-> As a result, timeout comparisons succeed immediately and the waiting
-> helpers time out on their first iteration.  This causes
-> test_intel_pt.sh to fail on systems using uutils "date".
->
-> Avoid implementation-specific date formatting entirely.  Instead, wait
-> for 100 ms on each iteration and count the timeout down.  Besides fixing
-> the portability issue, this removes the busy-waiting behaviour in
-> wait_for_perf_to_start(), which could otherwise consume CPU while
-> waiting for perf record to start.
->
-> Since the timeout is now based on repeated sleeps, it is only
-> approximate.  Update the comments accordingly.  Also make is_running()
-> wait for exactly the documented number of tenths by changing its timeout
-> test from -gt to the new logic, and quote tm_out in the modified code.
->
-> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> Is there a way to get feedback from sashiko without mailing the public li=
+st?
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+TL;DR: drop bpf from the to/cc list when sending patches. This work is
+most interesting to linux-perf-users where multiple versions of a
+patch series within a short period of time are common.
 
-Thanks,
+I appreciate having the latest patches to review. If Sashiko provides
+feedback, the change goes on my 'to be reviewed later' pile, which
+hinders getting code/fixes landed.
+It is possible to configure Sashiko to 'embargo' its feedback for a
+set number of hours. Networking does this, and it can be frustrating
+when you must wait for a patch to receive review before landing it. It
+also slows down developers.
+
+Sashiko isn't adopted on all mailing lists, and while it is a widely
+praised, others don't want the email churn. In a year or so, when the
+models are better, I imagine the churn will decrease as:
+1) If AI is used to create the code then it should be better able to
+predict Sashiko-like issues,
+2) Sashiko itself can report all problems, suggest changes, etc.
+rather than its current drip drip of issues.
+
+Thanks for the contribution!
 Ian
-
-> ---
->  tools/perf/tests/shell/lib/waiting.sh | 34 +++++++++++++--------------
->  1 file changed, 16 insertions(+), 18 deletions(-)
->
-> diff --git a/tools/perf/tests/shell/lib/waiting.sh b/tools/perf/tests/she=
-ll/lib/waiting.sh
-> index 3a152892e077..43f4322dbe9e 100644
-> --- a/tools/perf/tests/shell/lib/waiting.sh
-> +++ b/tools/perf/tests/shell/lib/waiting.sh
-> @@ -1,77 +1,75 @@
->  #!/bin/bash
->  # SPDX-License-Identifier: GPL-2.0
->
-> -tenths=3Ddate\ +%s%1N
-> -
->  # Wait for PID $1 to have $2 number of threads started
-> -# Time out after $3 tenths of a second or 5 seconds if $3 is ""
-> +# Time out after approx. $3 tenths of a second or 5 seconds if $3 is ""
->  wait_for_threads()
->  {
->         tm_out=3D$3 ; [ -n "${tm_out}" ] || tm_out=3D50
-> -       start_time=3D$($tenths)
->         while [ -e "/proc/$1/task" ] ; do
->                 th_cnt=3D$(find "/proc/$1/task" -mindepth 1 -maxdepth 1 -=
-printf x | wc -c)
->                 if [ "${th_cnt}" -ge "$2" ] ; then
->                         return 0
->                 fi
-> -               # Wait at most tm_out tenths of a second
-> -               if [ $(($($tenths) - start_time)) -ge $tm_out ] ; then
-> +               if [ "${tm_out}" -le 0 ] ; then
->                         echo "PID $1 does not have $2 threads"
->                         return 1
->                 fi
-> +               sleep 0.1
-> +               tm_out=3D$((tm_out - 1))
->         done
->         return 1
->  }
->
->  # Wait for perf record -vvv 2>$2 with PID $1 to start by looking at file=
- $2
->  # It depends on capturing perf record debug message "perf record has sta=
-rted"
-> -# Time out after $3 tenths of a second or 5 seconds if $3 is ""
-> +# Time out after approx. $3 tenths of a second or 5 seconds if $3 is ""
->  wait_for_perf_to_start()
->  {
->         tm_out=3D$3 ; [ -n "${tm_out}" ] || tm_out=3D50
->         echo "Waiting for \"perf record has started\" message"
-> -       start_time=3D$($tenths)
->         while [ -e "/proc/$1" ] ; do
->                 if grep -q "perf record has started" "$2" ; then
->                         echo OK
->                         break
->                 fi
-> -               # Wait at most tm_out tenths of a second
-> -               if [ $(($($tenths) - start_time)) -ge $tm_out ] ; then
-> +               if [ "${tm_out}" -le 0 ] ; then
->                         echo "perf recording did not start"
->                         return 1
->                 fi
-> +               sleep 0.1
-> +               tm_out=3D$((tm_out - 1))
->         done
->         return 0
->  }
->
->  # Wait for process PID %1 to exit
-> -# Time out after $2 tenths of a second or 5 seconds if $2 is ""
-> +# Time out after approx. $2 tenths of a second or 5 seconds if $2 is ""
->  wait_for_process_to_exit()
->  {
->         tm_out=3D$2 ; [ -n "${tm_out}" ] || tm_out=3D50
-> -       start_time=3D$($tenths)
->         while [ -e "/proc/$1" ] ; do
-> -               # Wait at most tm_out tenths of a second
-> -               if [ $(($($tenths) - start_time)) -ge $tm_out ] ; then
-> +               if [ "${tm_out}" -le 0 ] ; then
->                         echo "PID $1 did not exit as expected"
->                         return 1
->                 fi
-> +               sleep 0.1
-> +               tm_out=3D$((tm_out - 1))
->         done
->         return 0
->  }
->
-> -# Check if PID $1 is still running after $2 tenths of a second
-> +# Check if PID $1 is still running after approx. $2 tenths of a second
->  # or 0.3 seconds if $2 is ""
->  is_running()
->  {
->         tm_out=3D$2 ; [ -n "${tm_out}" ] || tm_out=3D3
-> -       start_time=3D$($tenths)
->         while [ -e "/proc/$1" ] ; do
-> -               # Check for at least tm_out tenths of a second
-> -               if [ $(($($tenths) - start_time)) -gt $tm_out ] ; then
-> +               if [ "${tm_out}" -le 0 ] ; then
->                         return 0
->                 fi
-> +               sleep 0.1
-> +               tm_out=3D$((tm_out - 1))
->         done
->         echo "PID $1 exited prematurely"
->         return 1
-> --
-> 2.53.0
->
