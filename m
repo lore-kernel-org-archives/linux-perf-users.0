@@ -1,28 +1,28 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CCA854856C;
-	Tue,  8 Sep 2026 13:02:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEF0549389;
+	Tue,  8 Sep 2026 13:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788872543; cv=none; b=fcD0RwHClScLLwogECYl0ISjX8UDE3cziJrV2piKJAO7Nvlppr+EE3ih5JFJ9cNPD5L2k+inTK5qGHqbSZDC4/TWwUVAJ6Op7OWoD5h3z9qNVeHg8BWB71A1LmKAymlpPYe7ngF853CIEr2/YQnHrfbu4x+EJoBbErCXs+kfV0E=
+	t=1788872545; cv=none; b=A9+8xBxKisMHKy9ufjPqS5rLFErAOkAj/IoVbgXLAJRuwweEx2Oj1UOa4idVO9Q7qf/dBpY8VtyWQrHxsXEhbPuJoun7itCFEbw06gN5VfihOWMjy7MnhYVPOSVrp/glUOitv4mFX/lnnMwbP5g4KMSuBpm4R3fhGRvO561PaKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788872543; c=relaxed/simple;
-	bh=I8s3IRLIG6/0sh4VgQx4eFZKk5wCQhypjzz0IrTQSWc=;
+	s=arc-20240116; t=1788872545; c=relaxed/simple;
+	bh=sjRLf1ZvmsodHnm3CvP0VHigBoL+XRcVKM3dKO7fQ58=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LrRiZiTPc9GT2n8urKJ9y/iEpqwxBOAmKlIaQilPxiuEUgmqKZxl2EEej4zaguKO09AqZJt/U1E8Mn48mHPESXwZMHQHGjKFPI2XzkFYHexP/d82X/cbtpqBE8TTCci++el5h5e7ze9XaEKA2VXnctNTv7QMh1cC+tXWssa6FuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+	 MIME-Version; b=erDbI6PSEPuavSqGbhK7OmYAHJvKjwENn1Bd1ZymmpIAA2eZrFuN7JajcmE/3x3PDjylKOyMqbcpo4zX/pgrBr2aCfI37xLtk2DpPMVCVZ6t6DH1b4jEvj7vE4ZurU4tyAEg/qq6BrLodqJHysiaPrX8Vu9fskZScfAppPgm3fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.177])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hfPGS6X68zKHN6M;
-	Tue,  8 Sep 2026 21:01:52 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.198])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hfPFW0JyFzYQvTp;
+	Tue,  8 Sep 2026 21:01:03 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 399544058D;
+	by mail.maildlp.com (Postfix) with ESMTP id 8782640576;
 	Tue,  8 Sep 2026 21:01:54 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAni5gpB6BqC9rlBA--.34632S13;
-	Tue, 08 Sep 2026 21:01:53 +0800 (CST)
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAni5gpB6BqC9rlBA--.34632S16;
+	Tue, 08 Sep 2026 21:01:54 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Namhyung Kim <namhyung@kernel.org>,
 	james.clark@linaro.org,
@@ -44,9 +44,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v5 11/26] perf arm-spe: Set default synthesized event period to 1
-Date: Tue,  8 Sep 2026 13:01:07 +0000
-Message-Id: <20260908130122.633500-12-wutengda@huaweicloud.com>
+Subject: [PATCH v5 14/26] perf annotate-data: Add arch_get_reg_offset helper
+Date: Tue,  8 Sep 2026 13:01:10 +0000
+Message-Id: <20260908130122.633500-15-wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260908130122.633500-1-wutengda@huaweicloud.com>
 References: <20260908130122.633500-1-wutengda@huaweicloud.com>
@@ -57,10 +57,10 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAni5gpB6BqC9rlBA--.34632S13
-X-Coremail-Antispam: 1UD129KBjvJXoWxXFy7CFyxXFWkWw1kJryftFb_yoW5uw43pr
-	nFga4ftr1kJry8Kw17Ar4UuFy3tw4FvF1fGF1xGrWUAw1UKry8tr17try5Cr4UWr1Fyr12
-	qFyqgw1UGr1Utr7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgAni5gpB6BqC9rlBA--.34632S16
+X-Coremail-Antispam: 1UD129KBjvJXoW3AF1rZryUAryftry5tFyUtrb_yoW3XFyrpa
+	95GFyrGr43Xr43WrsrXrZ8Xr9Y9wsrGF9xCryq934ayryaqr18Ka1vyryYk3yUJrZYyr17
+	G3Z8tr47XwsrGaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUQm14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
 	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_JF0E3s1l82xGYI
 	kIc2x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2
@@ -77,93 +77,220 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxXFy7CFyxXFWkWw1kJryftFb_yoW5uw43pr
 	c7CjxVAFwI0_Gr1j6F4UJbIYCTnIWIevJa73UjIFyTuYvjTRGMKuUUUUU
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-When using --itrace=M for data type profiling on arm64, the 'Percent'
-values in perf annotate output are all zero:
+Add a helper to compute the effective offset from a base register
+for instruction operands. Currently handles arm64 addressing modes
+including post-indexed, single-register, SIB-style indexed with
+shift/extension, and constant-offset register pairs.
 
-Annotate type: 'struct mmu_gather_batch' in [kernel.kallsyms] (15 samples):
-============================================================================
- Percent     offset       size  field
-    0.00          0       0x10  struct mmu_gather_batch  {
-    0.00          0        0x8      struct mmu_gather_batch*    next;
-    0.00        0x8        0x4      unsigned int        nr;
-    0.00        0xc        0x4      unsigned int        max;
-    0.00       0x10          0      struct encoded_page*[]      encoded_pages;
-                                };
-
-However, adding the -n option (show-nr-samples) reveals non-zero sample counts:
-
-Annotate type: 'struct mmu_gather_batch' in [kernel.kallsyms] (15 samples):
-============================================================================
- Samples     offset       size  field
-      15          0       0x10  struct mmu_gather_batch  {
-      13          0        0x8      struct mmu_gather_batch*    next;
-       2        0x8        0x4      unsigned int        nr;
-       0        0xc        0x4      unsigned int        max;
-       0       0x10          0      struct encoded_page*[]      encoded_pages;
-                                };
-
-The root cause is that when --itrace is used with non-i/y options
-(e.g., --itrace=M), the period remains zero after parsing. During
-subsequent propagation, the final percentage calculation results
-in zero:
-
-   arm_spe_prep_sample()
-      sample->period = spe->synth_opts.period;
-
-   __hists__add_entry()
-      he.stat.period = sample->period;
-
-   annotated_data_type__update_samples()
-      h->period += period;
-      h->addr[offset].period += period;
-
-   print_annotated_data_value()
-      double percent = h->period ? (100.0 * period / h->period) : 0;
-
-Fix this by defaulting the period to 1 in the ARM SPE auxtrace info
-processing path if it is not explicitly specified. This ensures that
-downstream tool components can correctly accumulate periods and compute
-event percentages for all synthesized SPE events.
-
-With this fix applied, the result is as follows:
-
-Annotate type: 'struct mmu_gather_batch' in [kernel.kallsyms] (15 samples):
-============================================================================
- Percent     offset       size  field
-  100.00          0       0x10  struct mmu_gather_batch  {
-   86.67          0        0x8      struct mmu_gather_batch*    next;
-   13.33        0x8        0x4      unsigned int        nr;
-    0.00        0xc        0x4      unsigned int        max;
-    0.00       0x10          0      struct encoded_page*[]      encoded_pages;
-                                };
+Fallback to instruction's raw offset for other architectures.
 
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- tools/perf/util/arm-spe.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ tools/perf/util/annotate-data.c | 106 +++++++++++++++++++++++++++-----
+ tools/perf/util/annotate-data.h |   4 +-
+ 2 files changed, 94 insertions(+), 16 deletions(-)
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index ae7a5e9c3892..7805a1a98a89 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -2043,6 +2043,17 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 		err = -EINVAL;
- 		goto err_free_queues;
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index c51b20a7af9b..754c0efe2077 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -1118,6 +1118,74 @@ static void setup_stack_canary(struct data_loc_info *dloc)
  	}
+ }
+ 
++int arch_get_reg_offset(const struct arch *arch, struct annotated_op_loc *op_loc,
++			int breg, struct type_state *state, bool apply_index,
++			int *offset)
++{
++	if (arch__is_arm64(arch)) {
++		int reg2;
 +
-+	/*
-+	 * When --itrace is used with non-i/y options (e.g., --itrace=M),
-+	 * the period remains 0 because the parser does not apply a default
-+	 * for those paths. However, synthesized SPE events such as memory
-+	 * accesses, TLB walks, and cache misses still require a valid
-+	 * sample->period to correctly accumulate periods and compute event
-+	 * percentages. Set it to 1 to ensure proper accounting.
-+	 */
-+	spe->synth_opts.period = spe->synth_opts.period ?: 1;
++		/* Post-indexed addressing: offset is 0 when not applying index */
++		if (op_loc->addr_mode == PERF_AAM_POST_INDEX && !apply_index) {
++			*offset = 0;
++			return 0;
++		}
 +
- 	if (spe->synth_opts.period > 1)
- 		ui__warning("Arm SPE has a hardware-based sampling period.\n\n"
- 			    "--itrace periods > 1i downsample by an interval of n SPE samples rather than n instructions.\n");
++		/* Single-register addressing: return the stored offset directly */
++		if (!op_loc->multi_regs) {
++			*offset = op_loc->offset;
++			return 0;
++		}
++
++		/*
++		 * SIB (Scale-Index-Base) style indexed addressing, e.g.:
++		 *   Array element load:  ldr  dst, [base, index, lsl #3]
++		 *   Array element load:  ldr  dst, [base, index, uxtw #3]
++		 *   Array address calc:  add  dst, base, index lsl #3
++		 *
++		 * The index reg only computes element offset without modifying
++		 * the underlying data type; the dst type is inherited from base.
++		 * Therefore, the base reg offset can be treated as 0.
++		 */
++		if (op_loc->extend_type || op_loc->shift_type) {
++			/* Memory references use the breg as the address base. */
++			if (op_loc->mem_ref) {
++				*offset = 0;
++				return 0;
++			}
++			/*
++			 * Otherwise, require breg to be a known pointer type to
++			 * avoid treating integer operations as address calculations.
++			 */
++			if (has_reg_type(state, breg) && state->regs[breg].ok &&
++			    (state->regs[breg].kind == TSR_KIND_POINTER ||
++			     (state->regs[breg].kind == TSR_KIND_TYPE &&
++			      dwarf_tag(&state->regs[breg].type) == DW_TAG_pointer_type))) {
++				*offset = 0;
++				return 0;
++			}
++			return -1;
++		}
++
++		/*
++		 * For register-based addressing without shift/extension,
++		 * reg2 may be a constant offset. Use its value as the offset
++		 * from the base register.
++		 */
++		reg2 = op_loc->reg1 == breg ? op_loc->reg2 : op_loc->reg1;
++		if (has_reg_type(state, reg2) && state->regs[reg2].ok &&
++			state->regs[reg2].kind == TSR_KIND_CONST) {
++			*offset = (s64)state->regs[reg2].imm_value;
++			return 0;
++		}
++
++		return -1;
++	}
++
++	*offset = op_loc->offset;
++	return 0;
++}
++
+ /*
+  * It's at the target address, check if it has a matching type.
+  * It returns PERF_TMR_BAIL_OUT when it looks up per-cpu variables which
+@@ -1132,18 +1200,26 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 	Dwarf_Word size;
+ 	u32 insn_offset = dl->al.offset;
+ 	int reg = dloc->op->reg1;
+-	int offset = dloc->op->offset;
++	int offset;
+ 	const char *offset_sign = "";
+ 	bool retry = true;
+ 
+-	if (offset < 0) {
+-		offset = -offset;
+-		offset_sign = "-";
++again:
++	if (arch_get_reg_offset(dloc->arch, dloc->op, reg, state, false, &offset)) {
++		/*
++		 * Fall back to the instruction's offset. This prevents the
++		 * register type of the instruction from being completely lost.
++		 * Compared to dropping this type inference entirely, providing
++		 * a rough type hint is likely more useful.
++		 */
++		offset = dloc->op->offset;
+ 	}
+ 
+-again:
++	if (offset < 0)
++		offset_sign = "-";
++
+ 	pr_debug_dtp("chk [%x] reg%d offset=%s%#x ok=%d kind=%d ",
+-		     insn_offset, reg, offset_sign, offset,
++		     insn_offset, reg, offset_sign, abs(offset),
+ 		     state->regs[reg].ok, state->regs[reg].kind);
+ 
+ 	if (!state->regs[reg].ok)
+@@ -1166,7 +1242,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 		 */
+ 		ptr_type = die_get_pointer_type(&state->regs[reg].type, &ptr_die);
+ 		if (!ptr_type) {
+-			if (dloc->op->offset < 0 && reg != state->stack_reg)
++			if (offset < 0 && reg != state->stack_reg)
+ 				goto check_kernel;
+ 
+ 			return PERF_TMR_NO_POINTER;
+@@ -1176,7 +1252,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 		if (__die_get_real_type(ptr_type, type_die) == NULL)
+ 			return PERF_TMR_NO_POINTER;
+ 
+-		dloc->type_offset = dloc->op->offset + state->regs[reg].offset;
++		dloc->type_offset = offset + state->regs[reg].offset;
+ 
+ 		if (dwarf_tag(type_die) == DW_TAG_typedef)
+ 			die_get_real_type(type_die, &sized_type);
+@@ -1205,7 +1281,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 		 */
+ 		*type_die = state->regs[reg].type;
+ 
+-		dloc->type_offset = dloc->op->offset + state->regs[reg].offset;
++		dloc->type_offset = offset + state->regs[reg].offset;
+ 
+ 		/* Get the size of the actual type */
+ 		if (dwarf_aggregate_size(type_die, &size) < 0 ||
+@@ -1224,7 +1300,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 		 */
+ 		*type_die = state->regs[reg].type;
+ 
+-		dloc->type_offset = dloc->op->offset;
++		dloc->type_offset = offset;
+ 
+ 		/* Get the size of the actual type */
+ 		if (dwarf_aggregate_size(type_die, &size) < 0 ||
+@@ -1248,7 +1324,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 	}
+ 
+ 	if (state->regs[reg].kind == TSR_KIND_PERCPU_BASE) {
+-		u64 var_addr = dloc->op->offset;
++		u64 var_addr = (s64) offset;
+ 		int var_offset;
+ 
+ 		pr_debug_dtp("percpu var");
+@@ -1275,7 +1351,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 
+ 	if (state->regs[reg].kind == TSR_KIND_CONST &&
+ 	    dso__kernel(map__dso(dloc->ms->map))) {
+-		if (dloc->op->offset < 0 && reg != state->stack_reg && reg != dloc->fbreg)
++		if (offset < 0 && reg != state->stack_reg && reg != dloc->fbreg)
+ 			goto check_kernel;
+ 	}
+ check_non_register:
+@@ -1362,7 +1438,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 		    arch__is_x86(dloc->arch)) {
+ 			pr_debug_dtp("this-cpu var");
+ 
+-			addr = dloc->op->offset;
++			addr = (s64) offset;
+ 
+ 			if (get_global_var_type(cu_die, dloc, dloc->ip, addr,
+ 						&offset, type_die)) {
+@@ -1373,8 +1449,8 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 		}
+ 
+ 		/* Access to global variable like "-0x7dcf0500(,%rdx,8)" */
+-		if (dloc->op->offset < 0 && reg != state->stack_reg) {
+-			addr = (s64) dloc->op->offset;
++		if (offset < 0 && reg != state->stack_reg) {
++			addr = (s64) offset;
+ 
+ 			if (get_global_var_type(cu_die, dloc, dloc->ip, addr,
+ 						&offset, type_die)) {
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index 453e13bbe3e2..e6ca47e25e04 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -265,7 +265,9 @@ bool get_global_var_type(Dwarf_Die *cu_die, struct data_loc_info *dloc,
+ bool get_global_var_info(struct data_loc_info *dloc, u64 addr,
+ 				const char **var_name, int *var_offset);
+ void pr_debug_type_name(Dwarf_Die *die, enum type_state_kind kind);
+-
++int arch_get_reg_offset(const struct arch *arch, struct annotated_op_loc *op_loc,
++			int breg, struct type_state *state, bool apply_index,
++			int *offset);
+ #else /* HAVE_LIBDW_SUPPORT */
+ 
+ static inline struct annotated_data_type *
 -- 
 2.34.1
 
