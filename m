@@ -1,76 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28EB35581F2
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 13:12:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1D155D891
+	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 13:14:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788873172; cv=none; b=qHweHYIVFumU03QZJhX7y4cqcEcyQCdKzGawbqlBeHAvYnbPVHmhqx6KDXQZFfiQc/BGu4tzGUowdS9cTMa1xXk3g7e+xLJ6Dz3JaNni9j+UmXpDLrvBkTQ4uVrEtNaM/8HyxD/sw28ooQtuHpskfrU6F/2dq1jpqtoAw1Ht6as=
+	t=1788873295; cv=none; b=SDhGg+XenhDLK0VdFM2xDDz5GAxPBByejC43OJI/tumXw/FH8ytuSViQP+DYr/5CE1SP+FzZDKUiSAc+SPXzeih8Gz3Rkvc3/9bAgLdLmdMMDZGHVx5QPcX+5uaJXb4H87v8oNzKvHtaRoDSHh5T6jItZ4H58xJUqISg6fjWc0I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788873172; c=relaxed/simple;
-	bh=TQc0BKbISgdNRCtrWEGo1xFNRzwffvedrBJuuI4CicQ=;
+	s=arc-20240116; t=1788873295; c=relaxed/simple;
+	bh=t+3F84oH5O5RZtcJDWDlDauHtZKefl50wZ2TaXm0T/E=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=VryMe1pHJVCZPtb4AiMhFXwuScj3+tpV2dDuiCefQ/mFBJi0TrYFVN5vL5vqL1NB9tJqZkxMfaYQ7NMTsGxvvmhNmoxF49cF9T01DLU3W57oMXp3QsLtaeFcCCr5I/RUuqZkgS7wsLr9h907gk0Dc7KVu/XBNNHmpubCJmQnb7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QV56lUVI; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=WhUJQP5Py5GA16rDJtPMMzjvHS2RdhN0xEgDBSIF0MnTPnRMyo2gluQQ1V5kVw30GGm30I0/Lec8fsdAYU9xWZHu/5A9sdxmiWiZLri8JxeiWW2EK4veauTWRBDjCPWp5RU4JmHixzuPDtf/GIHkkl21nOtHfAAlfgS7oPwrU9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=inFZFgnH; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QV56lUVI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC4D1F00A3D;
-	Tue,  8 Sep 2026 13:12:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="inFZFgnH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4A1C1F00A3A;
+	Tue,  8 Sep 2026 13:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788873164;
-	bh=/jr8iufy9XLtrP2ssdl6WKvravJAa39nMwj/axYQClU=;
+	s=k20260515; t=1788873285;
+	bh=t+3F84oH5O5RZtcJDWDlDauHtZKefl50wZ2TaXm0T/E=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=QV56lUVIhpV304aQUVXjzH4wjbjbqiTyohfi0DoXRBfacZkeW1Q0/UZHBT8EV3hxF
-	 2E9KHkUtGJn32FWaoXmE/eKT1vZ3/7OaXzZocraQ2A8kFQ13foa/8vVPP97QzRaYOi
-	 ShrHxATDYvLI+6B6h5xJWlDvrRKeNfsxadvadF/uCAxB6Tfi8ZTem6rybk066og/tU
-	 jKAcehlu+eyNL/bP7ZY7py1kdpQa2h3cZIt7x8bMm6Bz7je/gLnnaiaZ3UEAtq7llQ
-	 Zt4ZrbIIgYWENijgWTiFezMfR3Eldf2EB6GXLByg90wwFWufgqSlKo68z8CwKOf/jX
-	 tXR5QVBtez5Eg==
+	b=inFZFgnHWmYP1qs8EIut44xQUARwS0EyzFEizSUVp18KzGrpwchOTxssaoLANk5PO
+	 2Vf+ULHkUkqyBp2B5xyvvHQOovKR1e3mDkzp8tORxJjNuaWp6JxyOEib/DVPRChH8v
+	 ktXKfD5rveJYnv2gVOXWlqVYgk/V8ahq3cYM57minYGdtUygg+JBku/Y5NZIl/afPi
+	 k2Jsplj7QWUjhIy1e0W4mcpBIuGwGNdEuAXadAz5vee08r/t/+ajWP+xqD58ULBW/y
+	 3fwIfLsjDyTIUoUN81Ci/bHOuOLLOuI/NS6IWsXzi97woBm1p4Re3IBED6wLMDxSMw
+	 3AdjYKWyxJPJA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 11/26] perf arm-spe: Set default synthesized event
- period to 1
+Subject: Re: [PATCH v5 15/26] perf annotate-arm64: Track return type after
+ call instructions
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <59d7bfeddd5ee06561e91876662d40fbf202ac6b.1788872630.git.wutengda@huaweicloud.com>
+In-Reply-To: <eb17eb9c66f5ef22f1256a8c8844234c2c139e1a.1788872630.git.wutengda@huaweicloud.com>
 References: <cover.1788872630.git.wutengda@huaweicloud.com>
- <59d7bfeddd5ee06561e91876662d40fbf202ac6b.1788872630.git.wutengda@huaweicloud.com>
+ <eb17eb9c66f5ef22f1256a8c8844234c2c139e1a.1788872630.git.wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 08 Sep 2026 13:12:43 +0000
-Message-Id: <20260908131243.CAC4D1F00A3D@smtp.kernel.org>
+Date: Tue, 08 Sep 2026 13:14:44 +0000
+Message-Id: <20260908131444.D4A1C1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> When using --itrace=3DM for data type profiling on arm64, the 'Percent'
-> values in perf annotate output are all zero:
->=20
-> Annotate type: 'struct mmu_gather_batch' in [kernel.kallsyms] (15 samples=
-):
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D
->  Percent     offset       size  field
->     0.00          0       0x10  struct mmu_gather_batch  {
->     0.00          0        0x8      struct mmu_gather_batch*    next;
->     0.00        0x8        0x4      unsigned int        nr;
->     0.00        0xc        0x4      unsigned int        max;
->     0.00       0x10          0      struct encoded_page*[]      encoded_p=
-ages;
->                                 };
->=20
-> However, adding the -n option (show-nr-samples) reveals non-zero sample c=
-ounts:
->=20
-> [ ... ]
->     0.00        0xc        0x4      unsigned int        max;
->     0.00       0x10          0      struct encoded_page*[]      encoded_p=
-ages;
->                                 };
+> Enable data type profiling to track function return values in arm64
+> annotations by looking up the DWARF return type of called functions.
 >=20
 > Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 
@@ -78,5 +54,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1788872630.gi=
-t.wutengda@huaweicloud.com?part=3D11
+t.wutengda@huaweicloud.com?part=3D15
 
