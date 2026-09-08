@@ -1,65 +1,67 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1052560AAD
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 13:15:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2879A56E048
+	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 13:15:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788873318; cv=none; b=a3DLddbKcE2Ln12GmHPQ0sWzYECqTslk+xeOlGfr53DCFFCSXoJ1lh4hSZIZXd/F/MzTHsVAer8df3EpxdJ2bovOKM9q9FGbn1VNKQB14zQ8vTJT8Zpxny1v1jyyFtoVqUIAqd+GbqA0zjlg54hnbA3EeKvz5wyqX+iNwwae3Tc=
+	t=1788873323; cv=none; b=kW2vYqf2bMTlAyc6ywsJUXA9cORV2q7Bx3PDhaT/bfiy5l2Up1gu48JE8XgGYhpURqWgHoL11V/xWqYM+1Kj/naFOqxWfYpx9nOiGpr7z94DebswgtiGb57PvuVgZWC9HrAWpgCGsZ6g1MV6S/IdOPbhEQFgV70fTvQOIOdl/Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788873318; c=relaxed/simple;
-	bh=Z5ZOdTiBa6J+bg/2o7tocJvhzVlf4bjoiMRIP/TecQ0=;
+	s=arc-20240116; t=1788873323; c=relaxed/simple;
+	bh=i3qs8qeRT+yElXv0OGFcHqRqGW5lDW+eerIzTYZVeGA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=mBVRODUlnsZk8/kzVK8orTSzxzjUEAclpi5VPvSZMz9GOZsjBDUrb77br5l5fPRYv65cAdReotDgGTjWD6rEUT/CYKwwLDBk6LR56PvqQvCb2DR2RSql8gNm4uGrGdX8Dns+HeIRLc7rk9m5Z24Xgk0x4hrUH125whD7jpihumc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AwbyTpB6; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Kfj9g9L61TBIrtM1QUaDYstk78radvOJQagDuiZGl0uOsrytcjS/ovf/UmwA2mrFzs6RcVWAXrg8z57M3vEGsTNurWtFLFXe2h4GqXLLME6xgqelMKs5teiB6hVtNps+vMQP9twf2NExo10LZE7+bJdn021xFQRsGeA+cZb4dpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q24kQgod; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AwbyTpB6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31C991F00A3A;
-	Tue,  8 Sep 2026 13:15:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q24kQgod"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC3BB1F00A3A;
+	Tue,  8 Sep 2026 13:15:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788873316;
-	bh=Z5ZOdTiBa6J+bg/2o7tocJvhzVlf4bjoiMRIP/TecQ0=;
+	s=k20260515; t=1788873321;
+	bh=CU9h0/HwcYlXLBmU/m3jR/wY21J3G4KXwpWUWZQcLD4=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=AwbyTpB6/+AAmWb/LXZz9PA2ihbESd7ma5uu5L7O66gnwEVrkjs2H8Wv7gdTtHxE1
-	 ge9Wj5zqBq0ESfYdgHY422ZGwY0BXf/9745ColvbIk5SrI9WAy9loqyF5alQHrrX0p
-	 DOEdmXISUxvz9Bb4PycYNfV4jXenCk6azd7avjMccusT/X27tA2MegFjk/M3SUBa1m
-	 XKG6aauTn8SvFPUll25liXU9h2uGttKesvf15/x7bQ8DLZUUIal0ZpUpJBiAn39V8h
-	 YzJuwVoeppRmJpkzunEZeht5DVAhoZhRCHNyJhy4PFFqxQoTJdwnwRA/Ha9ixLPm00
-	 GEYhGuXrPLDHg==
+	b=Q24kQgodmyTyPKkr6NitrkD5UNj1eUWVqjtGANdbN3Gycj0cHR6fdbb7rPH/fOIQc
+	 JgzyvuAq6A8FVN4lvhw4an7ZSELrP4a6OGXZ2hMIT5mcso0F1gA5tWO7ADFLoKIcf4
+	 cI3gMZrduAvvIGeSv8TKn5Tn2YELOlusOLG9/a0cShjKTZUF9+ZoKWl2FFEWqqpMp5
+	 bATf21zQb6brVFt7iOPHKVp0/v6XABTAGuXMGO6IdYlq/0DVB63Vcp8vNApr7BwsLD
+	 r/wRkkuWq/QTvMnRw2a1Jh3KBL0NAjCzv3f/S8uw4TcHc4QZvNn9pVp/lOC6TRdp0m
+	 g3p7jVMs2l6WQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 04/26] perf annotate-arm64: Handle load and store
- instructions
+Subject: Re: [PATCH v5 03/26] perf annotate-arm64: Generalize
+ arm64_mov__parse to support more instructions
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <37f13e322f75aa96f9cb8b71f401c9911523f8c5.1788872630.git.wutengda@huaweicloud.com>
+In-Reply-To: <872f51108191d20f65fc12f17c796863a36166da.1788872630.git.wutengda@huaweicloud.com>
 References: <cover.1788872630.git.wutengda@huaweicloud.com>
- <37f13e322f75aa96f9cb8b71f401c9911523f8c5.1788872630.git.wutengda@huaweicloud.com>
+ <872f51108191d20f65fc12f17c796863a36166da.1788872630.git.wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 08 Sep 2026 13:15:15 +0000
-Message-Id: <20260908131516.31C991F00A3A@smtp.kernel.org>
+Date: Tue, 08 Sep 2026 13:15:21 +0000
+Message-Id: <20260908131521.AC3BB1F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Add ldst_ops to handle load and store instructions in order to parse
-> the data types and offsets associated with PMU events for memory access
-> instructions. There are many variants of load and store instructions in
-> arm64, making it difficult to match all of these instruction names
-> completely. Therefore, only the instruction prefixes are matched. The
-> prefix 'ld|st' covers most of the memory access instructions, 'cas|swp'
-> matches atomic instructions, and 'prf' matches memory prefetch
-> instructions.
+> As the default parser for arm64 instructions, arm64_mov__parse()
+> currently only supports parsing instructions with the 'addr <symbol>'
+> suffix. Other instructions are not supported, causing a lack of
+> source and target information for most regular instructions.
 >=20
-> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+> Generalize arm64_mov__parse to extend its parsing capabilities:
+> 1. Parse 'ops->target.raw' and 'ops->source.raw' by default.
+> 2. Utilize arm64__check_multi_regs() to identify if source and
+>    target contain multiple registers.
+> 3. Maintain backward compatibility for instructions containing the
+>    'addr <symbol>' suffix.
+>=20
 > Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1788872630.gi=
-t.wutengda@huaweicloud.com?part=3D4
+t.wutengda@huaweicloud.com?part=3D3
 
