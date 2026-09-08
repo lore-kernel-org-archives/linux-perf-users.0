@@ -1,75 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E18655C1D5;
-	Tue,  8 Sep 2026 14:19:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B699354B1BC
+	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 14:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788877173; cv=none; b=XaGnCmSg/jirfDhQKsJHQqAkExMNA5NdmYxxI1A33CpuIXqB54iodK+0TtiYvHS+I1/gw5nZ6loJUHZamynvb7WFWp6JNDxWSB2/uFciLpOmETq7VykiTzP3CwYjbjWK3zSDcKh7DeDUB+SNpo0S04Png40p+hS4wnnSRg3ZyLc=
+	t=1788877662; cv=none; b=W3AZw2rZ5ooWzukLbu8JR4/C56KEsq9n3xCrT9NWwgLy3E1FJLkqvEeBBG0ictc56abD1x7KaslXA9ucF8TPS8QePhSjyVpUZG4jzVYtNoASAGoPkFcCx2dpUcBYmi8HK8CrogFyVVJn/PHPNXq/fNZnr/nsb5Ds0DlhZ5jMhFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788877173; c=relaxed/simple;
-	bh=n/C6TJNDN2oLBRgz2Rf7sAIIX2lC7vvyw5LhB9+khd4=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UH38yyNL6wKGKDsmbS5OQMKKaVqc5U8yhxladCgkLANuhMw2a/kzzkqgOYwgOL0FMD24so2mNQpZ+5HVmY+pBNorwl+HoH5acfLlEmzjayIeSlRyA28vsX71FxTmJ0QXf4sSkP+lZ8W2piO3fkiH6KRS0+Re5055Mm9ZGQNbzEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQrrlh76; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788877662; c=relaxed/simple;
+	bh=+TM+zYeX3ygRQvHGcTEUljLUIwOHDrWNq9lU7U+08kE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HR1ly2U84+IgbqGnQRW4pR0KtFZ11GLuv0uUvC43a2fgklFC2vhzk4IS97H2tqOoWr3CLgd1KoIMGhfAzjykbdmNJgh2SKIq/75VBAE0y5MdoO8kD+MXvVjQblLw/niUu3euIfPUFxcLnw8rMcVxSIstgiVDQ/NAb0s+MozqV/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W8qKOnm7; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQrrlh76"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA11D1F00A3A;
-	Tue,  8 Sep 2026 14:19:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788877168;
-	bh=MwiwDzVsxLO4GrpKFT2691e09KozX8zvbs1GIChQG8g=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=IQrrlh76ASCz/W4TKzrzYrQl/WPLrfM7XttZxX98q3uhHuSyF1qtlE7i92hEedc8C
-	 FEEqfNHBtPBpzyo7DdODaf1iG5wquPWe5h49R0DL8MMDcuQxVIDlZ3WBDfz5rVfBrK
-	 DdqRjwp+DywXhlpSx4YW1tIa04bE0OT2P/c+TdWDtmbxbDiT+7LDZ98uzI3Sk59SAw
-	 qcXfpW4tU6FhKBHpyF2WjDo6j90XA099Soif+cVyhyvsAAkqnnIsPGkxfGfnPywDdO
-	 IDHyLDhG1L7hKLDcm7PfoBOAi0q64hCX0T4OzCDxlC8fElLI+mCYiBVGIUzeVvfrFU
-	 RuvD06cteKvqQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 7/8] hwtracing: hisi_ptt: Add pattern PMU config for
- trace format selection
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Sizhe Liu" <liusizhe5@huawei.com>
-Cc: linux-perf-users@vger.kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20260908140509.2485649-8-liusizhe5@huawei.com>
-References: <20260908140509.2485649-1-liusizhe5@huawei.com>
- <20260908140509.2485649-8-liusizhe5@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 08 Sep 2026 14:19:27 +0000
-Message-Id: <20260908141927.DA11D1F00A3A@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W8qKOnm7"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-467f09c00c2so1302044fac.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Sep 2026 07:27:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788877652; x=1789482452; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=a5Kv6cT/AwOHxG8+33WPtCAWS/EjeBTh4gFEfyRtB4M=;
+        b=W8qKOnm75q05XMcH+6b5jjgBuRfBgSKR4a8qOcw/VqjP/ITIvk5k06HEYgtNEIeRul
+         jGHfjT56yGo/pW0YnpaeUQ6R3JFmY6K9Q9/INLt5D+M0ckXvCPH4EaE5/URN7NahqyDK
+         fLs/OlDH5F5joqHZ3mRufEBVMw/QJNsLnZw5TnwXdwCZIlFqCa+BsWBXB+9XEzpFd60A
+         BrzLcNsSnERLKFCWXpwsZ0mm7qj6XAJ6Tvr3kfwYnaTHi53tduclukfERe3qjqzVntbp
+         iltbuAMBzhduaMKYXfp3KzTTZWO3NBhC4k1IQvZo6GbZLjKCUj1Gk0B3YVlz68C/P/1U
+         QFYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788877652; x=1789482452;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=a5Kv6cT/AwOHxG8+33WPtCAWS/EjeBTh4gFEfyRtB4M=;
+        b=rW7yrkjGwue8rB4gxEBqqvvclvKRc6AOutNq4a5kPW8CmVyx7QuLpr+DUqeezYN+qC
+         CSb/+5nysD32894aug5IJ/MzfJcoPQBMc1cvs6TPNigI1i2qEEY2T9Q/BO9wedTGfAy8
+         tK/pViS1xwsrubssdUzybtD/VajG6/pAcGTCW9haDdR5IzkLzNoTrxJmgVy2HHAIxlBz
+         oMhq/x9YAJnkH/Qpxd0zTvpbZcU6McocFFE6dHIzgpDlsM2G1yaFq/VRwoD8TLtMpeq0
+         Hm4TAqqiMZpUPcEglC7eDsU5OB98mBNyJDIc0f07WLyesI4xEWhkkZJ1N+8b7aPay0Jc
+         pjmg==
+X-Forwarded-Encrypted: i=1; AKwUvBwo1KCF2oi6vOuPUaks3D4chGUOOjNpwa0I5ig7uVPUTJfwONR8gdnkU6umpWpjvv3yoPMMFw0jlk+9UEiA9KDn@vger.kernel.org
+X-Gm-Message-State: AFuF++ksmAB6QkWinYozZ/BaqC+LEehVFuKRWpZrl1F8mRO1nFxwUEvr
+	KFKDk9VqM8OgbqXjMCdurSLdm765WJdwgroDpIEx2IaihQzqwwzvS4JL
+X-Gm-Gg: AYBFou1atTXHw+/gGqzQd+8FfpYjIWCS+EP+eAuHMSqM9s2pGEO1BJuzQBukGjElnGa
+	cS8QVEeB77+/lKNrtDp2hLkT2NE2cVjNJZ6jU6xsSacLrddO36kJ8xTKxpBG6HSn0H/No7suR2H
+	IxrzimlD+NB8LOUstm3nFdIG/mrKrDy6LqoEC8YOvK0vZ+E1w3kftWjJzWL0C5iK/sQqf/b19ol
+	L4PoizZMWr4hUi0LlKPOJCTJ+eJDJYn6bD4/7dBAp4g/G1+5pS1zsz2i6mGlctzeP4cODkk0Fpv
+	dhPil12c+bt7f2xDdeYxl2bwV7zYRxI9uS77Si7pmAv9+Adj0npHNouX6VwJkJgQo4kfnS4EcoF
+	2tfLDAFkzqwdp+ifbPMlH42Hma1qpjf8khAKBOAz8aeOdwaZAbMMnYClJy5wmYghrmFGX2zMe1V
+	+paNXcDLXDmqiGwh9uycwtzIpwdmyBJWcOce63RjT4W1E45hSaGg==
+X-Received: by 2002:a05:6820:218:b0:6b7:46e9:9703 with SMTP id 006d021491bc7-6b746e9a293mr14206611eaf.51.1788877651736;
+        Tue, 08 Sep 2026 07:27:31 -0700 (PDT)
+Received: from localhost ([2a03:2880:30ff:7::])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-7fc68d5ae2bsm8456663a34.3.2026.09.08.07.27.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2026 07:27:31 -0700 (PDT)
+From: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
+Subject: [PATCH bpf-next v3 0/3] bpftool: Improve perf counter reporting
+Date: Tue, 08 Sep 2026 07:27:09 -0700
+Message-Id: <20260908-bpftool_cyles_per_run-v3-0-60e86f325c35@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD0boGoC/4XNSwqDMBRA0a2ENzYln2qqo+6jFDHxpQZsIokNi
+ rj3gpN2Ujq+cO4GCaPDBA3ZIGJ2yQUPDZEFATN0/oHU9dAQEExU7CIU1ZOdQxhbs46Y2gljG1+
+ e1pJXtTVaMq2gIDBFtG453BvoyVKPywz3gsDg0hziegwzP/ofO3PKqVK90tZIw6ry+sS5O5nwP
+ MAsPkjNxC9EUE61KXt+7npmsP5C9n1/A/CaQMAIAQAA
+X-Change-ID: 20260827-bpftool_cyles_per_run-93169fcb30b7
+To: bpf@vger.kernel.org, ast@kernel.org, andrii@kernel.org, 
+ daniel@iogearbox.net, kernel-team@meta.com, eddyz87@gmail.com, 
+ memxor@gmail.com, qmo@kernel.org, linux-perf-users@vger.kernel.org, 
+ acme@kernel.org, namhyung@kernel.org
+Cc: Mykyta Yatsenko <yatsenko@meta.com>
+X-Mailer: b4 0.16-dev
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1788877648; l=1346;
+ i=yatsenko@meta.com; s=20260324; h=from:subject:message-id;
+ bh=+TM+zYeX3ygRQvHGcTEUljLUIwOHDrWNq9lU7U+08kE=;
+ b=zxP6ytb5ElqNaFXIzMX7miGvIJ4epfwVee8pWS84746ePATW5qUF2/Ob0FFeehhmW/VtT108b
+ 2I9ZfcIpWPcC7jxcP3+ZqfEaAq38JkEgVhSSPhmU6LufvCFmUDGe0EN
+X-Developer-Key: i=yatsenko@meta.com; a=ed25519;
+ pk=1zCUBXUa66KmzfjNsG8YNlMj2ckPdqBPvFq2ww3/YaA=
 
-> Introduce a `pattern` PMU config field (config:36-39) that controls
-> which TLP header format the hardware traces. bit[3:1] are reserved for
-> future extension and only bit0 is used currently:
->=20
-> - pattern=3D0 (default, compatibility mode): the driver sets bit[8] of
->   HISI_PTT_TRACE_CTRL so the hardware traces the data in compatibility
->   mode.
-> - pattern=3D1: the driver clears bit[8] of HISI_PTT_TRACE_CTRL so the
->   hardware traces the data pattern including some bitfields of the TLP
->   header defined in PCIe r6.4 sec 2.2.1.2.
->=20
-> Note that bit[8] of HISI_PTT_TRACE_CTRL is inverted with respect to the
-> `pattern` value: bit[8]=3D1 selects the legacy format, bit[8]=3D0 selects
-> the new format. Bit[11:9] is still reserved, which is consistent with the
-> PMU config field. The driver validates the 4-bit value in
-> hisi_ptt_trace_valid_pattern() and applies it in hisi_ptt_trace_start().
->=20
-> Document the new parameter in Documentation/trace/hisi-ptt.rst.
->=20
-> Reviewed-by: Yushan Wang <wangyushan12@huawei.com>
-> Signed-off-by: Sizhe Liu <liusizhe5@huawei.com>
+Track valid snapshots that have a zero counter value. Scale each per-CPU
+counter before aggregation. Report cycles per included program run.
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Signed-off-by: Mykyta Yatsenko <yatsenko@meta.com>
+---
+Changes in v3:
+- Keep the JSON value field raw. Add value_scaled and run_cnt_valid.
+- Use the same CPU set for all metrics.
+- Move snapshot state tracking to a separate patch.
+- Link to v2: https://patch.msgid.link/20260902-bpftool_cyles_per_run-v2-1-bc5d14ad0ce9@meta.com
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260908140509.2485=
-649-1-liusizhe5@huawei.com?part=3D7
+Changes in v2:
+- Scale all counters.
+- Use an enum for metric indexes.
+- Link to v1: https://patch.msgid.link/20260827-bpftool_cyles_per_run-v1-1-77d7bfc3c065@meta.com
+
+---
+Mykyta Yatsenko (3):
+      bpftool: Track perf counter snapshot state
+      perf bpf_counter: Track valid BPF counter snapshots
+      bpftool: Scale counters and report cycles per run
+
+ tools/bpf/bpftool/Documentation/bpftool-prog.rst |  13 +-
+ tools/bpf/bpftool/prog.c                         | 159 +++++++++++++++++------
+ tools/bpf/bpftool/skeleton/profiler.bpf.c        |  25 ++--
+ tools/perf/util/bpf_skel/bpf_prog_profiler.bpf.c |  26 ++--
+ 4 files changed, 168 insertions(+), 55 deletions(-)
+---
+base-commit: 3fa3128887a4df6057c543aae7c5c7fd2ed41f12
+change-id: 20260827-bpftool_cyles_per_run-93169fcb30b7
+
+Best regards,
+--  
+Mykyta Yatsenko <yatsenko@meta.com>
 
