@@ -1,28 +1,28 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2D85505F8;
-	Tue,  8 Sep 2026 13:05:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42BC54CF7F;
+	Tue,  8 Sep 2026 13:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788872751; cv=none; b=r9alpJ5UAJbQoAKtYSFdcBqn11/ynjrejtplza3OTUChvoGKrFNKNJNesUgGA9axglpzT5Liy3/7WCx8zgA28YhsFSdYX+yrBcrtR4UhqehEr47s3trLtVltx+XIM4WcvPQdhV0cazsbu3QXwMPkMGtNQl2SYXyI51FGrdOz3wU=
+	t=1788872752; cv=none; b=qU7la0vjETfiAnF/4rUkYy4fGDsXGwMbX++SXRpxfiBDshVPMOEsUx5bo/56gszTF+DoZXa0FqIRGBH4UGMmzybH6EcTbFU3bk+LqMGI0psDsr7hMksy9WxAbFs0uplHxhOdJ4GRfcc44Dwe+HHJi+6+HfvlziNHlwVXC3g1hNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788872751; c=relaxed/simple;
-	bh=wd+DkufeoDIg/aUt79AXXStJz/ZyyMUYtSQv9wF8JXM=;
+	s=arc-20240116; t=1788872752; c=relaxed/simple;
+	bh=jWCyyfZ9I3VCtLkKmk044coxRXktwvjMCKi5KK2n5aI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Gd1idV6KaujK4sIQE10WSDA5TcyBt/47MzU6W90nC97IQJUiVV0kuvdtwVQHpGf6gARv7vXsuLCW7FnxDZUIHNnCaJ0f+1/hMGgqmEhXiALGW12e2PwMIrVVDsdc1YLpn92/rP0CbvOev7ZCkbtwyOPBhVHbm38adc3cydVK+G8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=ndjwC2o+47NRs+KDMSq0VqxhhCC20Zq3+GIbJXxKzzBOFTspLmjbQaQq5J83ZBmTgf2kqiuuDRv6dMAWAh/1gwVQIfmjxkXKZCMpE754LjjJEvpZMQTobshiMtSd5ASVlQa7EFx55lrP4QiIdQRjvrZAhx2lMx0KlaMshMF2Hsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hfPKv4rk5zYQw6L;
-	Tue,  8 Sep 2026 21:04:51 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hfPLr6sn0zKHN6G;
+	Tue,  8 Sep 2026 21:05:40 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 2DF2540578;
-	Tue,  8 Sep 2026 21:05:43 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 4B2854058D;
+	Tue,  8 Sep 2026 21:05:42 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgDHLUoeCKBqX3XjBA--.22748S12;
-	Tue, 08 Sep 2026 21:05:42 +0800 (CST)
+	by APP2 (Coremail) with UTF8SMTPA id Syh0CgDHLUoeCKBqX3XjBA--.22748S3;
+	Tue, 08 Sep 2026 21:05:41 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Namhyung Kim <namhyung@kernel.org>,
 	james.clark@linaro.org,
@@ -44,9 +44,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v5 10/26] perf annotate: Default to --itrace=i1i for data type profiling
-Date: Tue,  8 Sep 2026 13:05:13 +0000
-Message-Id: <a30bf174539765875129c06381932702934fd0c9.1788872630.git.wutengda@huaweicloud.com>
+Subject: [PATCH v5 01/26] perf capstone: Symbolize address operands to match objdump on arm64
+Date: Tue,  8 Sep 2026 13:05:04 +0000
+Message-Id: <eb2510f336aace385e4b4ffa99281d61c89c1ad2.1788872630.git.wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <cover.1788872630.git.wutengda@huaweicloud.com>
 References: <cover.1788872630.git.wutengda@huaweicloud.com>
@@ -57,210 +57,335 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgDHLUoeCKBqX3XjBA--.22748S12
-X-Coremail-Antispam: 1UD129KBjvJXoW3JFy5ZrykXF4kZw1kXr4Utwb_yoW3Zrykpr
-	nxCr9rKwnxXr4rKwnIyF4UZF1Yk34rXFyY9r1YkF4rA3yxur9rtFyxtr15tFW3Xw1DC3sI
-	vws09wn8Za1rZaDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUHCb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAV
-	Cq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0
-	rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267
-	AKxVWxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4
-	xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8
-	JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20V
-	AGYxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS14v26rWY6Fy7MxkF7I0Ew4C2
-	6cxK6c8Ij28IcwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c
-	02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_
-	WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7
-	CjxVAFwI0_Cr1j6rxdMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
-	xVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AKxVWxJr0_GcJvcSsGvfC2KfnxnUUI43ZEXa
-	7xRxnoUUUUUUU==
+X-CM-TRANSID:Syh0CgDHLUoeCKBqX3XjBA--.22748S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxtw15AF13JFWDKFW5Gr1rZwb_yoWfWFW7pa
+	1kC345Xrs5JF1fWws5Ja1kX343K393XF1Yk3y7C3ySkrnIgrn3JayxKFya9Fy5GrykGw47
+	tFs0yr45Wrs3Jr7anT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUHmb4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUGw
+	A2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	WxJr0_GcWl84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	GcCE3s1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64
+	kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm
+	72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYx
+	C7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS14v26rWY6Fy7MxkF7I0Ew4C26cxK
+	6c8Ij28IcwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F4
+	0E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_Wryl
+	IxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxV
+	AFwI0_Cr1j6rxdMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWx
+	JVW8Jr1lIxAIcVC2z280aVCY1x0267AKxVWxJr0_GcJvcSsGvfC2KfnxnUUI43ZEXa7sRm
+	tCOUUUUUU==
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-ARM SPE-based sampling can synthesize multiple events on a single
-instruction, as shown below. This would affect data type profiling
-statistics:
+Capstone currently outputs address-bearing instructions with a raw hex
+value prefixed by '#', without symbolic resolution. This differs from
+objdump output and leads to parse failures in jump__parse() and
+arm64_mov__parse() on arm64.
 
-  Available samples
-  0 arm_spe_0/ts_enable=1,pa_enable=1,load_filter=1,store_filter=1,min_latency=30/
-  0 dummy:u
-  84K l1d-miss
-  95K l1d-access
-  77K llc-miss
-  58K llc-access
-  9K tlb-miss
-  108K tlb-access
-  0 branch
-  13K remote-access
-  108K memory
-  108K instructions
+Example of the mismatch:
+  Current: b #0xffff8000800114c8
+  Objdump: b ffff8000800114c8 <el0t_64_sync+0x108>
 
-While 'perf report' provides an interactive menu for users to select a
-specific event to prevent duplicate counting, 'perf annotate' lacks such
-a mechanism. Consequently, it counts all instructions across these
-overlapping events, which inflates the profile and distorts the data
-type statistics.
+  Current: adrp x18, #0xffff800081f5f000
+  Objdump: adrp x18, ffff800081f5f000 <this_cpu_vector>
 
-Although using the '--itrace' option can work around this issue (e.g.:
-perf annotate --data-type --stdio --itrace=i1i), it is inconvenient for
-users to specify this explicitly every time.
-
-To address this, introduce itrace_synth_opts.default_single_event_per_ip.
-Set this field to true when data type profiling is enabled and the user
-has not explicitly specified an itrace option. In itrace_synth_opts__set_default(),
-use this flag to default to synthesizing at most one event per IP (equivalent
-to --itrace=i1i) to prevent duplicate sample counts.
+Fix this by extending symbol__disassemble_capstone() to:
+- Enable CS_OPT_DETAIL for arm64 to access instruction group info.
+- Detect instructions with address operands requiring symbolization
+  (jump/call/branch/adr/adrp) via opcode or Capstone group ID.
+- Resolve target addresses to symbols via resolve_symbol_from_addr().
+- Format output to match objdump's style (strip '#' prefix, add
+  symbol and offset).
 
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- tools/perf/builtin-annotate.c |  8 ++++++++
- tools/perf/util/arm-spe.c     |  5 ++++-
- tools/perf/util/auxtrace.c    | 12 ++++++++++--
- tools/perf/util/auxtrace.h    |  7 ++++++-
- tools/perf/util/cs-etm.c      |  2 +-
- tools/perf/util/intel-bts.c   |  2 +-
- tools/perf/util/intel-pt.c    |  3 ++-
- 7 files changed, 32 insertions(+), 7 deletions(-)
+ tools/perf/util/capstone.c | 185 +++++++++++++++++++++++++++++--------
+ tools/perf/util/disasm.c   |   5 +
+ tools/perf/util/disasm.h   |   1 +
+ 3 files changed, 153 insertions(+), 38 deletions(-)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 69cb72b2082a..d5b66893c47c 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -873,6 +873,14 @@ int cmd_annotate(int argc, const char **argv)
- 	annotate.session = perf_session__new(&data, &annotate.tool);
- 	if (IS_ERR(annotate.session))
- 		return PTR_ERR(annotate.session);
-+	/*
-+	 * Hardware tracing (e.g., ARM SPE) may synthesize multiple events per
-+	 * instruction. When data type profiling is enabled, default to synthesizing
-+	 * at most one event (equivalent to --itrace=i1i) to prevent skewed
-+	 * statistics.
-+	 */
-+	if (annotate.data_type && !itrace_synth_opts.set)
-+		itrace_synth_opts.default_single_event_per_ip = true;
+diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
+index 74213daf8786..7f82c33e3464 100644
+--- a/tools/perf/util/capstone.c
++++ b/tools/perf/util/capstone.c
+@@ -3,6 +3,7 @@
  
- 	annotate.session->itrace_synth_opts = &itrace_synth_opts;
+ #include <errno.h>
+ #include <inttypes.h>
++#include <stdlib.h>
+ #include <string.h>
  
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 401aab529309..ae7a5e9c3892 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -2029,7 +2029,10 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
- 	if (session->itrace_synth_opts && session->itrace_synth_opts->set) {
- 		spe->synth_opts = *session->itrace_synth_opts;
- 	} else {
--		itrace_synth_opts__set_default(&spe->synth_opts, false);
-+		struct itrace_synth_opts *opts = session->itrace_synth_opts;
-+		bool single_event_per_ip = opts ? opts->default_single_event_per_ip : false;
+ #include <dlfcn.h>
+@@ -31,6 +32,10 @@
+ #define CS_MODE_RISCVC   4
+ #endif
+ 
++#if CS_VERSION_MAJOR < 4
++#define ARM64_GRP_BRANCH_RELATIVE  7  /* = CS_GRP_BRANCH_RELATIVE */
++#endif
 +
-+		itrace_synth_opts__set_default(&spe->synth_opts, false, single_event_per_ip);
- 		/* Default nanoseconds period not supported */
- 		spe->synth_opts.period_type = PERF_ITRACE_PERIOD_INSTRUCTIONS;
- 		spe->synth_opts.period = 1;
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index aa749e1c3036..ed2113190785 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -1478,8 +1478,15 @@ s64 perf_event__process_auxtrace(const struct perf_tool *tool __maybe_unused,
- #define PERF_ITRACE_MAX_LAST_BRANCH_SZ		1024
- 
- void itrace_synth_opts__set_default(struct itrace_synth_opts *synth_opts,
--				    bool no_sample)
-+				    bool no_sample, bool single_event_per_ip)
+ #ifdef LIBCAPSTONE_DLOPEN
+ static void *perf_cs_dll_handle(void)
  {
-+	if (single_event_per_ip) {
-+		synth_opts->instructions = true;
-+		synth_opts->period_type = PERF_ITRACE_PERIOD_INSTRUCTIONS;
-+		synth_opts->period = 1;
-+		return;
+@@ -225,6 +230,12 @@ static int capstone_init(uint16_t e_machine, csh *cs_handle, bool is64, bool is_
+ 		 * on x86 by investigating instruction details.
+ 		 */
+ 		perf_cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
++	} else if (arch == CS_ARCH_ARM64) {
++		/*
++		 * Same as x86: arm64 needs instruction details to resolve
++		 * symbolic addresses.
++		 */
++		perf_cs_option(*cs_handle, CS_OPT_DETAIL, CS_OPT_ON);
+ 	}
+ 
+ 	return 0;
+@@ -292,16 +303,44 @@ ssize_t capstone__fprintf_insn_asm(struct machine *machine, struct thread *threa
+ 	return printed;
+ }
+ 
++static int resolve_symbol_from_addr(struct map *map, u64 addr,
++				    const char **sym_name, u64 *sym_offset)
++{
++	struct map *found_map = NULL;
++	struct symbol *sym;
++	u64 al_addr;
++	u64 ip = map__objdump_2mem(map, addr);
++
++	if (dso__kernel(map__dso(map))) {
++		/*
++		 * The kernel maps can be split into sections, let's
++		 * find the map first and then search the symbol.
++		 */
++		found_map = maps__find(map__kmaps(map), ip);
++		if (found_map == NULL)
++			return -1;
++		map = found_map;
 +	}
 +
- 	synth_opts->branches = true;
- 	synth_opts->transactions = true;
- 	synth_opts->ptwrites = true;
-@@ -1582,7 +1589,8 @@ int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
++	/* convert it to map-relative address for search */
++	al_addr = map__map_ip(map, ip);
++
++	sym = map__find_symbol(map, al_addr);
++	map__put(found_map);
++
++	if (sym == NULL)
++		return -1;
++
++	*sym_name = sym->name;
++	*sym_offset = al_addr - sym->start;
++	return 0;
++}
++
+ static void print_capstone_detail(struct cs_insn *insn, char *buf, size_t len,
+ 				  struct annotate_args *args, u64 addr)
+ {
+ 	int i;
+ 	struct map *map = args->ms->map;
+-	struct symbol *sym;
+-
+-	/* TODO: support more architectures */
+-	if (!arch__is_x86(args->arch))
+-		return;
  
- 	if (!str) {
- 		itrace_synth_opts__set_default(synth_opts,
--					       synth_opts->default_no_sample);
-+					       synth_opts->default_no_sample,
-+					       synth_opts->default_single_event_per_ip);
- 		return 0;
+ 	if (insn->detail == NULL)
+ 		return;
+@@ -309,7 +348,8 @@ static void print_capstone_detail(struct cs_insn *insn, char *buf, size_t len,
+ 	for (i = 0; i < insn->detail->x86.op_count; i++) {
+ 		struct cs_x86_op *op = &insn->detail->x86.operands[i];
+ 		u64 orig_addr;
+-		struct map *found_map = NULL;
++		const char *sym_name = NULL;
++		u64 sym_offset;
+ 
+ 		if (op->type != X86_OP_MEM)
+ 			continue;
+@@ -320,40 +360,114 @@ static void print_capstone_detail(struct cs_insn *insn, char *buf, size_t len,
+ 
+ 		/* get the target address */
+ 		orig_addr = addr + insn->size + op->mem.disp;
+-		addr = map__objdump_2mem(map, orig_addr);
+-
+-		if (dso__kernel(map__dso(map))) {
+-			/*
+-			 * The kernel maps can be split into sections, let's
+-			 * find the map first and then search the symbol.
+-			 */
+-			found_map = maps__find(map__kmaps(map), addr);
+-			if (found_map == NULL)
+-				continue;
+-			map = found_map;
+-		}
+-
+-		/* convert it to map-relative address for search */
+-		addr = map__map_ip(map, addr);
+-
+-		sym = map__find_symbol(map, addr);
+-		if (sym == NULL) {
+-			map__put(found_map);
++		if (resolve_symbol_from_addr(map, orig_addr, &sym_name, &sym_offset))
+ 			continue;
+-		}
+ 
+-		if (addr == sym->start) {
++		if (sym_offset == 0) {
+ 			scnprintf(buf, len, "\t# %"PRIx64" <%s>",
+-				  orig_addr, sym->name);
++				  orig_addr, sym_name);
+ 		} else {
+ 			scnprintf(buf, len, "\t# %"PRIx64" <%s+%#"PRIx64">",
+-				  orig_addr, sym->name, addr - sym->start);
++				  orig_addr, sym_name, sym_offset);
+ 		}
+-		map__put(found_map);
+ 		break;
  	}
+ }
  
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index 6947f3f284c0..5012bead1b92 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -65,6 +65,10 @@ enum itrace_period_type {
-  * struct itrace_synth_opts - AUX area tracing synthesis options.
-  * @set: indicates whether or not options have been set
-  * @default_no_sample: Default to no sampling.
-+ * @default_single_event_per_ip: Default to synthesizing at most 1 event per IP
-+ *                               (equivalent to --itrace=i1i). Used by commands
-+ *                               like 'perf annotate --data-type' to avoid duplicate
-+ *                               sample counts for a single instruction.
-  * @inject: indicates the event (not just the sample) must be fully synthesized
-  *          because 'perf inject' will write it out
-  * @instructions: whether to synthesize 'instructions' events
-@@ -117,6 +121,7 @@ enum itrace_period_type {
- struct itrace_synth_opts {
- 	bool			set;
- 	bool			default_no_sample;
-+	bool			default_single_event_per_ip;
- 	bool			inject;
- 	bool			instructions;
- 	bool			cycles;
-@@ -622,7 +627,7 @@ int itrace_do_parse_synth_opts(struct itrace_synth_opts *synth_opts,
- int itrace_parse_synth_opts(const struct option *opt, const char *str,
- 			    int unset);
- void itrace_synth_opts__set_default(struct itrace_synth_opts *synth_opts,
--				    bool no_sample);
-+				    bool no_sample, bool single_event_per_ip);
++static int print_default_format(struct cs_insn *insn, char *buf, size_t len)
++{
++	return scnprintf(buf, len, "       %-7s %s",
++			 insn->mnemonic, insn->op_str);
++}
++
++static void format_capstone_insn_x86(struct cs_insn *insn, char *buf,
++				     size_t len, struct annotate_args *args,
++				     u64 addr)
++{
++	int printed;
++
++	printed = print_default_format(insn, buf, len);
++	buf += printed;
++	len -= printed;
++
++	print_capstone_detail(insn, buf, len, args, addr);
++}
++
++static bool needs_symbolic_address(struct cs_insn *insn)
++{
++	int i;
++
++	if (insn->id == ARM64_INS_ADR || insn->id == ARM64_INS_ADRP)
++		return true;
++
++	if (insn->detail == NULL)
++		return false;
++
++	for (i = 0; i < insn->detail->groups_count; i++) {
++		if (insn->detail->groups[i] == ARM64_GRP_JUMP ||
++		    insn->detail->groups[i] == ARM64_GRP_CALL ||
++		    insn->detail->groups[i] == ARM64_GRP_BRANCH_RELATIVE)
++			return true;
++	}
++
++	return false;
++}
++
++static void format_capstone_insn_arm64(struct cs_insn *insn, char *buf,
++				       size_t len, struct annotate_args *args)
++{
++	struct map *map = args->ms->map;
++	char *last_imm, *endptr;
++	u64 addr;
++
++	print_default_format(insn, buf, len);
++	/*
++	 * Adjust instructions to keep the existing behavior with objdump.
++	 *
++	 * Example conversion:
++	 * From: b #0xffff8000800114c8
++	 * To:   b ffff8000800114c8 <el0t_64_sync+0x108>
++	 */
++	if (needs_symbolic_address(insn)) {
++		const char *sym_name = NULL;
++		u64 sym_offset;
++
++		/* Extract last immediate value as address */
++		last_imm = strrchr(buf, '#');
++		if (!last_imm)
++			return;
++
++		addr = strtoull(last_imm + 1, &endptr, 16);
++		if (endptr == last_imm + 1)
++			return;
++
++		if (resolve_symbol_from_addr(map, addr, &sym_name, &sym_offset))
++			return;
++
++		/* Symbolize the resolved address */
++		len = len - (last_imm - buf);
++		if (sym_offset == 0) {
++			scnprintf(last_imm, len, "%"PRIx64" <%s>",
++				  addr, sym_name);
++		} else {
++			scnprintf(last_imm, len, "%"PRIx64" <%s+%#"PRIx64">",
++				  addr, sym_name, sym_offset);
++		}
++	}
++}
++
++static void format_capstone_insn(struct cs_insn *insn, char *buf, size_t len,
++				 struct annotate_args *args, u64 addr)
++{
++	/* TODO: support more architectures */
++	if (arch__is_x86(args->arch))
++		format_capstone_insn_x86(insn, buf, len, args, addr);
++	else if (arch__is_arm64(args->arch))
++		format_capstone_insn_arm64(insn, buf, len, args);
++	else
++		print_default_format(insn, buf, len);
++}
++
+ struct find_file_offset_data {
+ 	u64 ip;
+ 	u64 offset;
+@@ -446,14 +560,9 @@ int symbol__disassemble_capstone(const char *filename, struct symbol *sym,
  
- size_t perf_event__fprintf_auxtrace_error(union perf_event *event, FILE *fp);
- void perf_session__auxtrace_error_inc(struct perf_session *session,
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 114b3cd2da49..2d1ab34f7b6b 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -3626,7 +3626,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
- 		etm->synth_opts = *session->itrace_synth_opts;
- 	} else {
- 		itrace_synth_opts__set_default(&etm->synth_opts,
--				session->itrace_synth_opts->default_no_sample);
-+				session->itrace_synth_opts->default_no_sample, false);
- 		etm->synth_opts.callchain = false;
- 		etm->synth_opts.thread_stack = session->itrace_synth_opts->thread_stack;
- 	}
-diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-index 02df3e460489..4c9cca3acb6c 100644
---- a/tools/perf/util/intel-bts.c
-+++ b/tools/perf/util/intel-bts.c
-@@ -877,7 +877,7 @@ int intel_bts_process_auxtrace_info(union perf_event *event,
- 		bts->synth_opts = *session->itrace_synth_opts;
- 	} else {
- 		itrace_synth_opts__set_default(&bts->synth_opts,
--				session->itrace_synth_opts->default_no_sample);
-+				session->itrace_synth_opts->default_no_sample, false);
- 		bts->synth_opts.thread_stack =
- 				session->itrace_synth_opts->thread_stack;
- 	}
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 9d6628169fd9..8c21c9f52d57 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -4463,7 +4463,8 @@ int intel_pt_process_auxtrace_info(union perf_event *event,
- 	} else {
- 		struct itrace_synth_opts *opts = session->itrace_synth_opts;
+ 	free_count = count = perf_cs_disasm(handle, buf, buf_len, start, buf_len, &insn);
+ 	for (i = 0, offset = 0; i < count; i++) {
+-		int printed;
+-
+-		printed = scnprintf(disasm_buf, sizeof(disasm_buf),
+-				    "       %-7s %s",
+-				    insn[i].mnemonic, insn[i].op_str);
+-		print_capstone_detail(&insn[i], disasm_buf + printed,
+-				      sizeof(disasm_buf) - printed, args,
+-				      start + offset);
++		format_capstone_insn(&insn[i], disasm_buf,
++				     sizeof(disasm_buf), args,
++				     start + offset);
  
--		itrace_synth_opts__set_default(&pt->synth_opts, opts->default_no_sample);
-+		itrace_synth_opts__set_default(&pt->synth_opts,
-+					opts->default_no_sample, false);
- 		if (!opts->default_no_sample && !opts->inject) {
- 			pt->synth_opts.branches = false;
- 			pt->synth_opts.callchain = true;
+ 		args->offset = offset;
+ 		args->line = disasm_buf;
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 6cfdbabbb8c7..0ba38f70fe1a 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -203,6 +203,11 @@ bool arch__is_powerpc(const struct arch *arch)
+ 	return arch->id.e_machine == EM_PPC || arch->id.e_machine == EM_PPC64;
+ }
+ 
++bool arch__is_arm64(const struct arch *arch)
++{
++	return arch->id.e_machine == EM_AARCH64;
++}
++
+ static void ins_ops__delete(struct ins_operands *ops)
+ {
+ 	if (ops == NULL)
+diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
+index 25756e3f47e4..06c664fd4fc2 100644
+--- a/tools/perf/util/disasm.h
++++ b/tools/perf/util/disasm.h
+@@ -111,6 +111,7 @@ struct annotate_args {
+ const struct arch *arch__find(uint16_t e_machine, uint32_t e_flags, const char *cpuid);
+ bool arch__is_x86(const struct arch *arch);
+ bool arch__is_powerpc(const struct arch *arch);
++bool arch__is_arm64(const struct arch *arch);
+ 
+ extern const struct ins_ops call_ops;
+ extern const struct ins_ops dec_ops;
 -- 
 2.34.1
 
