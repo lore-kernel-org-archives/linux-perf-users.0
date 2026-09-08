@@ -1,120 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C93843BBFDB;
-	Tue,  8 Sep 2026 20:42:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C94E4B489E;
+	Tue,  8 Sep 2026 20:42:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788900136; cv=none; b=VlZ5q2E29U1rMpFhIr9BMA4XioR0eaa2z0ijhvMyVamgdCfNsSacJ28unnLzVnpsLB5UBVtky+/7FoUbmYCKgYoEUuEYneL0CpWuNyLKLCNsjKcws7c0vCgAss0VD768YKKnYCqbik10ZSiKup39086QcOEqwbmKrbW5BNfk8Ls=
+	t=1788900158; cv=none; b=aV96WB8DvB0hHr/X+kG4gL8I0yd1tZYuypbAZwxdvvMELOjHHWxRc6pSMtwH8hpzladK4b5om428sHpdOM6OvrKzwacuoU6MEyHBirvYL0WN5IywLW85YAb8JxLXmZJyg6+hgdiOLFzdrq/D8kQE7CDd2hcIFd9TllWZu/OCEl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788900136; c=relaxed/simple;
-	bh=wFU7iBIGQrPCxNFp3DVhi1MPkRBX5eJ1aEEaj90/iKE=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=uZd1fwdQ/a1wo3+IaF4KrmjgSuRGgBMFmoM6zw3/y8TnLXO/0E8E2MsWaTjWFIGmziMyRivcbEGF7gTR/JOZgvs+uJVvZve4nnCqklMhb6Pu616x8swwVvEUGCyR25B0uhdeqUqG5nOe/LZ3TFXcWqFlsQDUIx1RxzmDobIf5bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=niXtcxlv; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788900158; c=relaxed/simple;
+	bh=oB7ddjmueOS9dIT+geS/vfuLILaUzI+Uh8quCQHB5Hg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PidfOEeA6HE9ddjsNdp6w5Y5ixy1pfFhn3WFkJdaDtVeYZXqh2s4h/9RdGP82yySiW1AMd1MKnBytj/0K1I0jirCGFI1AP1fMg1omtBdn3aU6KqhXktdT1yOdl8kxC4AummY6OxumeLJp6lr6B3/HSybOQ8WVByXVffNfsEqSl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=obyoNDZP; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="niXtcxlv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A4BC1F00A3D;
-	Tue,  8 Sep 2026 20:42:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="obyoNDZP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E3201F00AC4;
+	Tue,  8 Sep 2026 20:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788900133;
-	bh=hZJHLSYuWsPGHgMsZ6wDtKv+Nmu7iCoJKynKPiE+7QY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=niXtcxlvQiNTpo+iCoXferY/ogFz6WgWQTcJwN0FBdhNy5NdE8YpL2eiELkmgv5Xp
-	 Y8B1/4ajJgLvZ4q6UeTnWqPc5l8dCGWOcAlo+R5PQQr9uL6uxe4wRnmBa6GhEFvQXf
-	 nPd6S6Jm/Xt/OyG90lsCWrwwr3c1lamReaSg7AT+hqN8C4XUMoaDoblckBcChQj9do
-	 ht3Acrl0DKeg00F7ecI8wS3sSvnUDKcUrFklZBA0zTt2hcEdf/tRUAKQ/1mznL9Pay
-	 Lx7X7zqPRnZ8hdMAIy2oVJEaT9/wOmMI0l9KxO62fOSbkbhkLkNxjvKaNUfAOUEPP5
-	 yTFCsYXfO7bUQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 15/39] mm/vma: only allow mmap to clear VMA_MAYWRITE_BIT
- if kernel-owned
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
-Cc: kvm@vger.kernel.org, selinux@vger.kernel.org, "Vasily Gorbik" <gor@linux.ibm.com>, linux-trace-kernel@vger.kernel.org, kvmarm@lists.linux.dev, "Christian
- Borntraeger" <borntraeger@linux.ibm.com>, linux-perf-users@vger.kernel.org, "Alexander
- Gordeev" <agordeev@linux.ibm.com>, "Oliver Upton" <oupton@kernel.org>, "Marc
- Zyngier" <maz@kernel.org>, bpf@vger.kernel.org, linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-s390@vger.kernel.org, "Heiko
- Carstens" <hca@linux.ibm.com>
-In-Reply-To: <20260908-b4-mmap-prepare-vma-flag-sanify-v1-15-dacf19cce22b@kernel.org>
-References: <20260908-b4-mmap-prepare-vma-flag-sanify-v1-0-dacf19cce22b@kernel.org>
- <20260908-b4-mmap-prepare-vma-flag-sanify-v1-15-dacf19cce22b@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 08 Sep 2026 20:42:12 +0000
-Message-Id: <20260908204212.9A4BC1F00A3D@smtp.kernel.org>
+	s=k20260515; t=1788900156;
+	bh=j/etTlugt+t38bDZYesRkzHn2Pa7Crcl25ZwV4raeN8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=obyoNDZPWFRS0inJVT+06Ou3g2FPHMQnShYu1SWc0jcPAPtLt2RzdK5BPcyeWL5xq
+	 fcX2iiyLqkIJyVjUoSu9nY8AM8NVBGMKupZSl2TMC1qKhLdD41h9ulgRKiTk3VoPGY
+	 Xe3VNOFyuNqeXBmWCE2jmf3Q9DAdMqzB+vXTjVELMAAyEzukMcw3gqU0dzyx09YskK
+	 rWSpjqrjQRsQmrBqyksKss8DEgOsEwwcuDFdqzqjXIL6LsgAUXrbZvMqJcuhMoSSJc
+	 L8NKx5Fy9BSFSBldrmCijVHEeyBk3Mm901ExzSKeIZalp7V2rEY/kXJvoAqWWTIi23
+	 1/oABhfNaC36g==
+Date: Tue, 8 Sep 2026 17:42:33 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Wang Yan <wangyan01@kylinos.cn>, peterz@infradead.org, mingo@redhat.com,
+	namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, james.clark@linaro.org, atrajeev@linux.ibm.com,
+	tanze@kylinos.cn, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] perf powerpc-vpadtl: Fix off-by-one in auxtrace_info
+ minimum size check
+Message-ID: <aqBzOdmxHyTRoLcG@x2>
+References: <20260824025553.363863-1-wangyan01@kylinos.cn>
+ <61dff746-7b62-404b-89b2-3c9d73419d71@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <61dff746-7b62-404b-89b2-3c9d73419d71@intel.com>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
+On Mon, Aug 24, 2026 at 08:55:52AM +0300, Adrian Hunter wrote:
+> On 24/08/2026 05:55, Wang Yan wrote:
+> > min_sz is set to sizeof(u64) * POWERPC_VPADTL_TYPE, but the code reads
+> > auxtrace_info->priv[POWERPC_VPADTL_TYPE], which needs at least
+> > POWERPC_VPADTL_TYPE + 1 elements.  POWERPC_VPADTL_TYPE is the first
+> > enumerator of the priv index enum (0), so min_sz evaluates to 0 and the
+> > check validates only the perf_record_auxtrace_info header itself.  A
+> > PERF_RECORD_AUXTRACE_INFO event carrying a zero-length priv array then
+> > passes the size check, and the subsequent priv[POWERPC_VPADTL_TYPE]
+> > read runs one u64 past the validated region.
+> > 
+> > This is the same off-by-one fixed for Intel PT by commit c4362d5e1a5e
+> > ("perf intel-pt: Fix off-by-one in auxtrace_info minimum size check")
+> > and for Intel BTS by commit b9fb8225951c ("perf intel-bts: Fix off-by-one
+> > in auxtrace_info minimum size check").
+> > 
+> > Use sizeof(u64) * (POWERPC_VPADTL_TYPE + 1) so the highest accessed
+> > priv index is covered by the minimum-size validation.
+> > 
+> > Fixes: c4bbd4ec2e50 ("perf powerpc: Process auxtrace events and display in 'perf report -D'")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Wang Yan <wangyan01@kylinos.cn>
+> 
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Pre-existing issues:
-- [High] Leaked struct file reference when a driver replaces desc->vm_file =
-but mmap_prepare_validate() subsequently fails.
---
+Thanks, applied to perf-tools-next, for v7.4.
 
-commit bf1e56ed42b1d9fbc6eb9edeebea26ac54edd5c4
-Author: Lorenzo Stoakes (ARM) <ljs@kernel.org>
-
-mm/vma: only allow mmap to clear VMA_MAYWRITE_BIT if kernel-owned
-
-This commit restricts the ability to clear the VMA_MAYWRITE_BIT to
-kernel-owned mappings. It ensures that drivers which do not own the
-mapping's contents cannot violate file system semantics by altering file
-attributes. Any mmap hook attempting to do so without establishing a
-kernel-owned mapping will now fail validation.
-
-> diff --git a/mm/vma.c b/mm/vma.c
-> index 9e45fc83f74c6..5264287532182 100644
-> --- a/mm/vma.c
-> +++ b/mm/vma.c
-> @@ -2780,6 +2780,11 @@ static int mmap_validate(unsigned long prev_start,
->  	if (WARN_ON_ONCE(!was_maywrite && is_maywrite))
->  		return -EINVAL;
-> =20
-> +	/* Only kernel-owned mappings may clear VMA_MAYWRITE_BIT. */
-> +	if (!vma_flags_is_kernel_owned(curr_flags) &&
-> +	    WARN_ON_ONCE(was_maywrite && !is_maywrite))
-> +		return -EINVAL;
-> +
-
-[Severity: High]
-This isn't a bug introduced by this patch, but this new validation failure
-exposes a pre-existing resource leak. Does this code leak the struct file
-reference if the driver legitimately replaced desc->vm_file during the
-mmap_prepare hook?
-
-If a driver's f_op->mmap_prepare hook swaps desc->vm_file (acquiring a new
-file reference via split ownership) and then fails this new validation
-step (e.g., clearing VMA_MAYWRITE_BIT without being kernel-owned),
-call_mmap_prepare() will return early:
-
-mm/vma.c:call_mmap_prepare() {
-        ...
-        err =3D mmap_prepare_validate(&prev_desc, desc);
-        if (err)
-                return err;
-               =20
-        map->pgoff =3D desc->pgoff;
-        if (desc->vm_file !=3D map->file) {
-                map->file_doesnt_need_get =3D true;
-                map->file =3D desc->vm_file;
-        }
-        ...
-}
-
-Because the early return happens before map->file and
-map->file_doesnt_need_get are updated, the core cleanup path in
-__mmap_region() remains unaware of the new file and fails to fput() it,
-leaking the file reference and pinning the mount.
-
->  	return mmap_validate_vma_flags(curr_flags);
->  }
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260908-b4-mmap-pr=
-epare-vma-flag-sanify-v1-0-dacf19cce22b@kernel.org?part=3D15
+- Arnaldo
