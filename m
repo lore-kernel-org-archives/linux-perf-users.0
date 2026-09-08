@@ -1,54 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA4E449EC69;
-	Tue,  8 Sep 2026 14:12:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD955540B9;
+	Tue,  8 Sep 2026 14:16:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788876760; cv=none; b=AsgUUxC6DZ00V/6dl7GtemoZgh8x/+7h6OZjGYWWFAfsAhznawjtY7utCI5YvxYCvG6ltgFD3CEBz03wZsje1vnbEapy0XvHRJwl6PDqzNeyq6k1hNZJadMdk+yUNKqFamgENd3RUfiIkwoUN/w4ov3GSqFhl2+yjqou36bE7zU=
+	t=1788877017; cv=none; b=u6Y+7mLdQAitdRR7lBi1OLxBrv+uZT3Sp7fAoBam80TlxCxLq6d0rBfr8uPB13NmZP8ZCb/cR0UcIog40TnISfX2/nczXVn+L4xhnvHMK7KfYu7+Zu4z9AxakEg1ctZIPy1RAXlY5i12ZMBsquOWX6NJ/P4FXymJP8RvTrHMywQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788876760; c=relaxed/simple;
-	bh=WriDk3HFiYQfvtTkK6ixVRs4uva/F/qQG/gneTpxheg=;
+	s=arc-20240116; t=1788877017; c=relaxed/simple;
+	bh=oeWcf3DxUbbdwZiGXUGnM4pMNJuOWS920c+uCfSYaSM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=HSNHSRTebsVbxJknNOawoALF+FmXg03mH2tbkoTBUOlTTWAPXFgCYGWA9OuOe2Fxk9XdXEzb6r9Jk8hdvzGjctnakg1un1qU7PqW4uWUYZFqN3DDfgCzohm8Nsd+aq4W99EM2tR4OsvSa6tTiCAI7FRbX6xnEj9jErbHNUIcBso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mkShfHKk; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=nngt0ye/co9ckWkNQX+bXgz7GpdD/V/H+aVX6s2Lze1vny3xsObuuw5VQDpQT2/v0icNMUvQJe/iG7/EVdwVTA3fo+F3vkcM3V25GAlMN9SAUKm1fglT15AnbDZlG2jJycPr5Z8etNUm5sXAQ7GsaFF8mzilDqityOd3I38TgJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jr/33qF5; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mkShfHKk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A266E1F00A3D;
-	Tue,  8 Sep 2026 14:12:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jr/33qF5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87A4E1F00A3D;
+	Tue,  8 Sep 2026 14:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788876748;
-	bh=WriDk3HFiYQfvtTkK6ixVRs4uva/F/qQG/gneTpxheg=;
+	s=k20260515; t=1788877005;
+	bh=IrEhf5FSgYDb9LzSRS4d8b0I6BEc9gLPPdm8Ooj1h+o=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mkShfHKkk9nnO6KonAubmDIDXALkTyIPL2ZeeXsIK2wiqFOGj2pLuHs74V2XGvkU9
-	 QhEGSLvYHfnjuWStPrfTZiYVVVpNwhXGhhXTBYgky/jd34D9psEPtKoJC2FnWIH3a+
-	 Nj9EOBzdXbr7H+hlQ0U3dOp9X21QZoZMmxM+PR57zmjcO7eGcOkdXY2KxDhVbNu/wQ
-	 X2CDrJ7MrhSZHGL+NBk3xeZi+LrZjQfdy3GgStCwwxACkIqBAK9V2IpSjg14H+eeTV
-	 L6zTfPskzzRVgODRknLUFqhV5SxXUQDxcyMMjT3JOm4WCUD8dnaMDZAIHusg6Z2zY5
-	 dID7rRv50RamA==
+	b=jr/33qF5gVsdhHl2QtNI1Xkx0qTz0nVdBZiXEPgNnz3jkI1G86/IMEa28mJgkrVa0
+	 kwUwxT63eT3/09r/EAeNYVHTAEmRrOpoiufAi7BuMPX4psX8pabw3Y7uR9NCg4Bbl0
+	 G3ueM/L3hnc2pyGvcM+WixQzYhncYw72V3JUu665JGW42Qf+/eaTmMIRH4v53xDwKq
+	 yTioPZ+7iU4ORWwOeu5SFc3Je60OZ7Dx95VFzNQQ0uPnK6W+nm8voi2PWLwWGmPOZ1
+	 FZtguUTnaUIjKlAJ7GRAu6V2qcmI+UPECFtTDHIO8d2XezHC+FhH6lM3GB+Fg77DtT
+	 Fu/38gKGuYWhQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 2/8] perf hisi-ptt: Complete the field names for 4DW
- and 8DW packets
+Subject: Re: [PATCH v4 5/8] perf hisi-ptt: Add parsing of supported message
+ types and proto length
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Sizhe Liu" <liusizhe5@huawei.com>
-Cc: linux-perf-users@vger.kernel.org, linux-pci@vger.kernel.org
-In-Reply-To: <20260908140509.2485649-3-liusizhe5@huawei.com>
+Cc: linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org
+In-Reply-To: <20260908140509.2485649-6-liusizhe5@huawei.com>
 References: <20260908140509.2485649-1-liusizhe5@huawei.com>
- <20260908140509.2485649-3-liusizhe5@huawei.com>
+ <20260908140509.2485649-6-liusizhe5@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 08 Sep 2026 14:12:28 +0000
-Message-Id: <20260908141228.A266E1F00A3D@smtp.kernel.org>
+Date: Tue, 08 Sep 2026 14:16:45 +0000
+Message-Id: <20260908141645.87A4E1F00A3D@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Add the missing HISI_PTT_4DW_HEAD0 entry to the 4DW field name table
-> and add the HISI_PTT_8DW_CHK_AND_RSV0/HISI_PTT_8DW_RSV1 entries to
-> the 8DW field name table so that all DW indices have corresponding
-> names.
+> Classify TLP messages by Header DW0 Format field and Type field for
+> both 4DW and 8DW formats, according to PCIe r6.4 sec 2.2.1.1 & 2.2.1.2.
+>=20
+> Parsing packets into:
+> - MRd  (Non-posted Memory Read request)
+> - MWr  (Posted Memory Write request)
+> - DMWr (Posted Deferrable Memory write request)
+> - Msg  (Posted Message request)
+> - Atom (Non-Posted AtomicOP request)
+> - IO   (Non-Posted IO request)
+> - CFG  (Non-Posted Configuration request)
+> - CPL  (Completion request)
+>=20
+> The parsed message type is stored in pkt_buf->pkt_msg_type and will
+> be used by subsequent patches to select the correct field layout for
+> DW1, DW2 and DW3 printing.
+>=20
+> Classify protocol defined header length by Format field, according to PCIe
+> r6.4 sec 2.2.1.1.
 >=20
 > Reviewed-by: Yushan Wang <wangyushan12@huawei.com>
 > Signed-off-by: Sizhe Liu <liusizhe5@huawei.com>
@@ -57,5 +72,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260908140509.2485=
-649-1-liusizhe5@huawei.com?part=3D2
+649-1-liusizhe5@huawei.com?part=3D5
 
