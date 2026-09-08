@@ -1,80 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6072EC57C;
-	Tue,  8 Sep 2026 14:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE64C51A745;
+	Tue,  8 Sep 2026 14:35:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788877707; cv=none; b=QagvH4QqeBFInYZFkCTeurpOlh2uW/c/2IMA1D0ee5C5UXVOu3Xgu4yrqxgWgTenXw0kyiVEjc/++iO4V9qPX8daEvVVVQwcZDbqQ/DtoUyju9kuuvwqah2vQGcfhDIkAoRwydJ0Ox50v7VC83qD123aY3D3jRI5T2edQSDn5gs=
+	t=1788878159; cv=none; b=cAX1mg1wXDLc6Qhlosv3NrQzAtRc9ZwoIycBWDPGZCM5H6zi8nuzzGefQL3j7n+5rnMsEjdM2ap/MAPKkZkDHsXnf2TlUoYQQdKr0EjMog3dsdxcS8JgcnBB6uIjBNfkWhPqbZ/K6LjVecvOviQH/dMM6xBJnwGy5VayUc9ZZGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788877707; c=relaxed/simple;
-	bh=6CDTTqg62HfK65ROJSCRoSPnmxqDg/MfftcqO8XUrtc=;
+	s=arc-20240116; t=1788878159; c=relaxed/simple;
+	bh=cEsYdjpPDbyI7gZdeRN0jNUla0oV3utG3+gnbFND7UM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=kXUIeTDNi2PlR6HX67k/NwZDIzEK/XSVOpsjY8cERECTIyva5YcQ8dwcFBEbdnTIIMP5xHCsxRUNYyluglGBu4hIBMtONN7Z5koM2zAQD1mejM36cUglFqdAg9gohnnQzIfd9nhSDXswjvD+BX0KgsBtzsIoFviqBz3T58SDr94=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GQSgNSef; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=oYK3127lpwBC++VHxN5oaiDk6JHcnvN2kexIR4dPJH1g6QOpIRe5zLVys8tXsKE1TgdOhAFKgTrrHcws8XDu/bhOXCZq1kGvMA8pMUd0OC9bYsLRn3+fmIaGZEc59S3RL35/U1IzpltJHYVa3bq9i6i1IjE+Hs47ly+S86X/G3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L/JCtw0P; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQSgNSef"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 370DE1F00A3A;
-	Tue,  8 Sep 2026 14:28:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L/JCtw0P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C37851F00AC4;
+	Tue,  8 Sep 2026 14:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788877696;
-	bh=6CDTTqg62HfK65ROJSCRoSPnmxqDg/MfftcqO8XUrtc=;
+	s=k20260515; t=1788878146;
+	bh=cEsYdjpPDbyI7gZdeRN0jNUla0oV3utG3+gnbFND7UM=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GQSgNSefWyPtz5PWI9U5OKnVcWrNWGFX7BISZXFkyV2M6dupjkF440u/SVHo4lGcu
-	 a9S+9MY2GzRwJ8J6WfAMJ7GKUB95zk0K8gWJ9z4NfrWYWveyOcW7bPmkChyMVcCvuw
-	 fEPQdiCofSxkE7Q8vfltYcL14LpF6NWFu8gzxb1Ht+8QiB4cmaDZWrVuJcL4h9n5Af
-	 5C16SEaR3pWDlPtIZYy56FPI16b6HJAX8AA8CcANsaq8yksB37bREYT0Z9iCpfprsZ
-	 KhE9jjXjrZx/KqB9AbZ3dnO2PIwG2EIUZEBtlDAb6DhBOgCh9IkZbP1sjTXgvo9fuW
-	 0tF1gn8ZjrKbg==
+	b=L/JCtw0POKPVhHpvQHAsJCugRVDiA76hnZMYKl3WZvcgN+nIlJtuK46oUS7UaHe1h
+	 fNsty7ACKJ3ysUR5LNGmldG5SIuJ4z6eOB+b07vCmE/dl7qZ8J2wZl1CGfljVoBiXC
+	 YkxeVFbu4PKUxWfijIbM2geTsUTHbbXMH94XpAHF4gSs/5mx9If36WvQyZM2c4zxnG
+	 TbY9dLiUHvG3F/GxmmOynCj5zSnhOulNv4kjIoswsGe+B1WcOMkuyDO7rfh0m+tWSg
+	 rlTgflFJsXWxm/ylzqtDh1fvTKWMwnw7iTa1cCxrkc7dbhTxnFvnsp6kCDrhQTR9ul
+	 JPOpRqI4qrEOA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v4 8/8] perf hisi-ptt: Pass pattern version to decoder
- for compatibility
+Subject: Re: [PATCH bpf-next v3 1/3] bpftool: Track perf counter snapshot
+ state
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Sizhe Liu" <liusizhe5@huawei.com>
-Cc: linux-pci@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260908140509.2485649-9-liusizhe5@huawei.com>
-References: <20260908140509.2485649-1-liusizhe5@huawei.com>
- <20260908140509.2485649-9-liusizhe5@huawei.com>
+To: "Mykyta Yatsenko" <mykyta.yatsenko5@gmail.com>
+Cc: linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+In-Reply-To: <20260908-bpftool_cyles_per_run-v3-1-60e86f325c35@meta.com>
+References: <20260908-bpftool_cyles_per_run-v3-0-60e86f325c35@meta.com>
+ <20260908-bpftool_cyles_per_run-v3-1-60e86f325c35@meta.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 08 Sep 2026 14:28:15 +0000
-Message-Id: <20260908142816.370DE1F00A3A@smtp.kernel.org>
+Date: Tue, 08 Sep 2026 14:35:45 +0000
+Message-Id: <20260908143546.C37851F00AC4@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> On the recording side, walk the evlist in hisi_ptt_info_fill() to find
-> the hisi_ptt event, read out the pattern bits from its config, and
-> forward the pattern version to the decoder through
-> auxtrace_info->priv[1] as HISI_PTT_PATTERN_LEGACY or HISI_PTT_PATTERN_V1.
+> From: Mykyta Yatsenko <yatsenko@meta.com>
 >=20
-> On the decoding side, store the pattern version in struct hisi_ptt and
-> propagate it to struct hisi_ptt_pkt_buf. The printers of Header DW2
-> and DW3 check the version: HISI_PTT_PATTERN_V1 keeps the field-level
-> parsing introduced by the previous patches, while HISI_PTT_PATTERN_LEGACY
-> falls back to printing only the raw "Header DW2/DW3" label so legacy
-> traces remain decodable with the new tool.
+> A perf counter can be zero at fentry. PMU multiplexing can schedule the
+> event during the BPF program. The old counter check then drops a valid
+> sample.
 >=20
-> The auxtrace priv size grows from one u64 to two. Use
-> HISI_PTT_AUXTRACE_PRIV_SIZE_LEGACY for the minimum header size check
-> and detect the actual priv_size at runtime to pick the pattern version.
-> For trace data recorded by an older tracer that does not support the
-> `pattern` parameter (no priv[1] in the header), the decoder defaults
-> to legacy mode (HISI_PTT_PATTERN_LEGACY) so the new tool keeps parsing
-> old traces correctly.
+> Use an armed flag to track each successful fentry snapshot. Reset all
+> flags before new reads. The fexit path clears each flag when it consumes
+> the snapshot.
 >=20
-> The hisi_ptt_pkt_size array is moved out of the shared header into
-> static definitions in the two .c files that consume it to avoid
-> multiple definitions.
->=20
-> Reviewed-by: Yushan Wang <wangyushan12@huawei.com>
-> Signed-off-by: Sizhe Liu <liusizhe5@huawei.com>
+> Fixes: 47c09d6a9f67 ("bpftool: Introduce "prog profile" command")
+> Signed-off-by: Mykyta Yatsenko <yatsenko@meta.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260908140509.2485=
-649-1-liusizhe5@huawei.com?part=3D8
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260908-bpftool_cy=
+les_per_run-v3-0-60e86f325c35@meta.com?part=3D1
 
