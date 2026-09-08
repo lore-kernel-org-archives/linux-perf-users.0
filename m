@@ -1,157 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04B7E3B5E01
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 08:15:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA393F1061;
+	Tue,  8 Sep 2026 08:37:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788855303; cv=none; b=QTnB/WNDe2MDOzTFarlfqYRayLXbqIOPMVbaUng58ULjtdmDJGwWrqLobC3fnFRZItR6U4Qmvzo3DciW4IKSHRyi2GZVspHQKri3S8hI7j42F1rmqMsVBUkDh1+KanVob4z3mHOcuG2EDcu9U6hxWfdQiu2dq/dSGOr27OPnsW8=
+	t=1788856665; cv=none; b=XjrPzJoXlrZK84EnW6rslGPB+w4vvkkxQwD1dfSsQNnJMsVx+y2ylZjVBTOgVDQ6H/FIri9AxQVzOAZDaq0JybOTfY04eR1PUh4QoH1/lOfJrb65RHtCmQpOWvcHxvEFepCtNmfMXUqXEYvDtiBBNndyA18fLkvupPUW0RP5sTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788855303; c=relaxed/simple;
-	bh=25tcDRZkK+mFxNilVn1xQxgnSN+/VEfPACtFkilv0E8=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=MAJzKKoyoJ+8dRv78cDPCuyLkqV4/EwPiVDmxocLUmjChYuXFxKjRFbD5KyBcGWWmiVs2r9v6vJybI9gV/T1I0gzhcWR0mYA6GYrJkm+1ooU5tIZ28rXC+nJDqGykvEVOW581wjPNO7F3WTKIbDQQyqVDcVgvEQp6XpGwnybpS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R22rcYL0; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788856665; c=relaxed/simple;
+	bh=aObaONEn1dCMGzMPvftgcPm+gNgsyc+7Qqxx0yvjCRI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Kbpem4SR+aO42yq5wTDZMbO3yF9nwgOlUaWyz5z1rIW8MGIv8KCkBJGUfwiaNIxhy+CrPZjQlLUlZEqfNFuQT+4lqPE4XF2LG2cm0bmmtL6JDvQWo5sRAbGCoUGmoXPts7oSLt4Cb/0lq3reHe17ugDT/DQVJnZ+X47EYNRKeO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UBTGZ9Oj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RA/YQ67z; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R22rcYL0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8428A1F00A3A;
-	Tue,  8 Sep 2026 08:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788855301;
-	bh=5Fe6G7XTQrrt3NaCpnMF5irRG1Ls/+ZSxCCqt57cAjE=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=R22rcYL0rKC7DERVKsogzDWuoQ7NgGeNtxY6YO8opENnxNpI1tZUw9fIvKftk5t3r
-	 KRXVug3PjcIkwTbtOnVjME9F2FAiMQAs0x2jSFBT5CoHvyst6wRels9s3Y3kkQTADa
-	 jA/g1fV4KA4Y0qzPr8EPsfyokNKwK2BOogjZyv0MzJgX7NQcCd/b0EVxVYpDAli0xP
-	 wktJ0adGaF+8xbIfOHU+pmNNYByiumeax3+wQLn4iydP70FjSBSA4KiFBwa3KRl4sg
-	 Hh/VxqQmW8/amy3Mr5ne8c7sI0vPfJnFaNhUc3KC2eBYAqXoIaDJWmY0k3SQMmQHsG
-	 2p6xmJK40GYRA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/2] perf/x86: Disable precise sampling for
- PERF_SAMPLE_STACK_USER
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Dapeng Mi" <dapeng1.mi@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260908075102.540715-2-dapeng1.mi@linux.intel.com>
-References: <20260908075102.540715-1-dapeng1.mi@linux.intel.com>
- <20260908075102.540715-2-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 08 Sep 2026 08:15:01 +0000
-Message-Id: <20260908081501.8428A1F00A3A@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UBTGZ9Oj";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RA/YQ67z"
+Date: Tue, 8 Sep 2026 10:37:40 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1788856661;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dj54Xu5hF3u2o6xkgppAffXJqB2xjIBxWbPiD6z1G84=;
+	b=UBTGZ9OjVQpVqYvRdKAt1RHtHxAw+nECJyT1fIVZ4ltBrEJjWVEmW8/q/6h3dk8cRaLyjd
+	cKiStOOGgvTjJJsvcuS9zqnyTDnCDkMDrbmegBiQjHap3j0geQ0hkiQFpCaza+Qv6pn/IL
+	jVLfpU1MgZvrxGlhUfogeYAMogABmDghoILMkNQIGX5o8nucZ1S8XWcPBcRxha3pg/oMdR
+	EfPyBzy6PrWQQatjK9zQMbvvEw5AXqpoVLy8J/uSlgCPw40vi1gxgiiu9SWzWcFsF2Q/+k
+	QFyhaWPQD76bQQ33bKzHt3o9lyZHI2giOINmKraRgJNcPz7g6OgPGpghWG1s9g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1788856661;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dj54Xu5hF3u2o6xkgppAffXJqB2xjIBxWbPiD6z1G84=;
+	b=RA/YQ67z4ThvGbd+3ZVeDvPs8SzbDNBX0PMTP6wSHgp0XHD+MSmMJb5aPm2o0A8S3Cgj83
+	HwhOCJvA9thKAWCw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Russell King <linux@armlinux.org.uk>
+Cc: Steven Rostedt <rostedt@goodmis.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev, linux-perf-users@vger.kernel.org,
+	loongarch@lists.linux.dev, Mark Rutland <mark.rutland@arm.com>,
+	Ian Rogers <irogers@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	Huacai Chen <chenhuacai@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Waiman Long <longman@redhat.com>, WANG Xuerui <kernel@xen0n.name>,
+	Will Deacon <will@kernel.org>,
+	Clark Williams <clrkwllms@kernel.org>
+Subject: Re: [PATCH v2] ARM, ARM64, LONGARCH: Delay HW BP notification to
+ task_work()
+Message-ID: <20260908083740.0qERUBOE@linutronix.de>
+References: <20260814085118.OPEA_Ssn@linutronix.de>
+ <20260903160710.vVf4gEL2@linutronix.de>
+ <apmknG55qFAn8EPf@shell.armlinux.org.uk>
+ <20260903133146.07095885@gandalf.local.home>
+ <20260904155404.ESPFg3zi@linutronix.de>
+ <ap7OMYBVKUrQjX9O@shell.armlinux.org.uk>
+ <20260908075455.OffmMhrB@linutronix.de>
+ <ap_AhKXlAWecV3BI@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ap_AhKXlAWecV3BI@shell.armlinux.org.uk>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] ABI Breakage / Overly Broad Restriction on Precise Sampling with U=
-ser Stacks
---
+On 2026-09-08 09:00:04 [+0100], Russell King wrote:
+> On Tue, Sep 08, 2026 at 09:54:55AM +0200, Sebastian Andrzej Siewior wrote:
+> > On 2026-09-07 15:46:09 [+0100], Russell King wrote:
+> > > On Fri, Sep 04, 2026 at 05:54:04PM +0200, Sebastian Andrzej Siewior wrote:
+> > > > On 2026-09-03 13:31:46 [-0400], Steven Rostedt wrote:
+> > > > > On Thu, 3 Sep 2026 17:47:24 +0100
+> > > > > Russell King <linux@armlinux.org.uk> wrote:
+> > > > > 
+> > > > > > What do you expect to happen with this? Which arch maintainer should
+> > > > > > apply this patch that affects three different independently maintained
+> > > > > > architectures?
+> > > > 
+> > > > Well, if you as the ARM person are fine with ARM part, an ACK would be
+> > > > appreciated. If you have something to object, it would be nice to let me
+> > > > know so I can adjust accordingly.
+> > > 
+> > > First, I only just looked at the email - you may have noticed I'm not
+> > > very active with the kernel anymore, as I'm a full-time carer at the
+> > > moment.
+> > > 
+> > > Second, I'm not fine with the patch as-is, because it's not clear how
+> > > it could be merged in its current form. It would be inappropriate to
+> > > give an Ack, because an Ack means I'm fine with it. I'm not.
+> > > 
+> > > Third, I haven't actually reviewed the patch itself (see first point).
+> > > 
+> > > Looking deeper now, I see nothing in the linked report, nor in your
+> > > write-up that identifies what is responsible for the context being
+> > > inappropriate to deliver the SIGTRAP. See the first point - I'm not
+> > 
+> > The linked report shows a backtrace by "BUG: sleeping function"
+> > originating from el0_breakpt() -> perf_bp_event() following by sending a
+> > signal force_sig_fault() followed by rt_spin_lock() and
+> > __might_resched(). It also contains a reproducer.
+> > 
+> > The first sentence has the part
+> > | The hardware event is
+> > | delivered with disabled interrupts and perf intrastrucure expects
+> > | disabled interrupts while the overflow callback is invoked.
+> 
+> *Where* are interrupts disabled?
 
-commit 4f30379fa3ce88165bf1e61c1c825c26d5810b23
-Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
+On exception entry point, that would el0t_64_sync() for arm64 as in the
+report.
 
-perf/x86: Disable precise sampling for PERF_SAMPLE_STACK_USER
-
-This commit disables precise sampling (PEBS/IBS) when PERF_SAMPLE_STACK_USER
-is requested. It attempts to prevent DWARF unwinding failures caused by skid
-between the PEBS/IBS register snapshot and the user stack at PMI return.
-
-Closes: https://lore.kernel.org/all/CAPu-DQqF0aF6=3DGS8Z6KKWeeX_V5LiXeKU_rJ=
-QZC+uGg8zuTPNw@mail.gmail.com/
-Fixes: c5ebcedb566e ("perf: Add ability to attach user stack dump to sample=
-")
-
-> diff --git a/arch/x86/events/amd/ibs.c b/arch/x86/events/amd/ibs.c
-> index 3531f9c23b8c9..c67b659d64e2a 100644
-> --- a/arch/x86/events/amd/ibs.c
-> +++ b/arch/x86/events/amd/ibs.c
-> @@ -327,6 +327,9 @@ static int perf_ibs_init(struct perf_event *event)
->  	if (has_branch_stack(event))
->  		return -EOPNOTSUPP;
-> =20
-> +	if (!x86_pmu_allow_sample_user_stack(event, true))
-> +		return -EINVAL;
-
-[Severity: High]
-Does this change unconditionally reject AMD IBS events when user stacks are
-requested, since the second parameter is hardcoded to true?
-
-Returning -EINVAL to sys_perf_event_open for configurations that were
-previously valid breaks backward compatibility. Userspace applications
-relying on AMD IBS with PERF_SAMPLE_STACK_USER might now fail unexpectedly.
-
-> +
->  	/* handle exclude_{user,kernel} in the IRQ handler */
->  	if (event->attr.exclude_host || event->attr.exclude_guest ||
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index d1af33d96d0a3..a26ea8baea731 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -596,6 +596,9 @@ int x86_pmu_hw_config(struct perf_event *event)
->  		/* There's no sense in having PEBS for non sampling events: */
->  		if (!is_sampling_event(event))
->  			return -EINVAL;
-> +
-> +		if (!x86_pmu_allow_sample_user_stack(event, false))
-> +			return -EINVAL;
-
-[Severity: High]
-Can this break existing perf setups for Intel PEBS events?
-
-Tools issuing commands like perf record -e cycles:pp --call-graph dwarf
-rely on precise_ip and PERF_SAMPLE_STACK_USER. Rejecting this setup with
--EINVAL prevents previously accepted workflows from functioning.
-
->  	}
->  	/*
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index eae24bb35dc14..ca52597cc39a1 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-
-[ ... ]
-
-> @@ -1273,6 +1273,25 @@ static inline bool is_counter_pair(struct hw_perf_=
-event *hwc)
->  	return hwc->flags & PERF_X86_EVENT_PAIR;
->  }
-> =20
-> +static inline bool
-> +x86_pmu_allow_sample_user_stack(struct perf_event *event, bool ibs)
-> +{
-> +	if (!(event->attr.sample_type & PERF_SAMPLE_STACK_USER))
-> +		return true;
-> +
-> +	/*
-> +	 * PERF_SAMPLE_STACK_USER needs to return the user stack and
-> +	 * user registers to user space when the PMI exits. Since the skid
-> +	 * from the PEBS/IBS sample and PMI delivery, the PEBS/IBS register
-> +	 * snapshot (especially IP/SP/BP) can diverge from the user stack
-> +	 * at PMI return. That mismatch breaks DWARF unwinding.
-> +	 *
-> +	 * Therefore, disable precise sampling for PERF_SAMPLE_STACK_USER
-> +	 * and permit only PMI-based sampling for this case.
-> +	 */
-> +	return !(event->attr.precise_ip || ibs);
-
-[Severity: High]
-Is the assumption about skid accurate for kernel-space profiling?
-
-When profiling a syscall or with exclude_user=3D1, the user-space stack and
-registers are frozen upon kernel entry, meaning there is zero skid between
-them.=20
-
-By unconditionally banning precise sampling with user stacks, does this
-unintentionally prevent the valid use-case of precisely profiling kernel
-events while still capturing accurate user callgraphs?
-
-> +}
-> +
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260908075102.5407=
-15-1-dapeng1.mi@linux.intel.com?part=3D2
+Sebastian
