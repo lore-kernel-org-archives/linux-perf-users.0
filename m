@@ -1,130 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from canpmsgout02.his.huawei.com (canpmsgout02.his.huawei.com [113.46.200.217])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C56C5476C1
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 13:36:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C2EF55198A;
+	Tue,  8 Sep 2026 14:05:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=113.46.200.217
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788874600; cv=none; b=NX3rSnsZcQAyVC8CAep99yThcYXRQAleJlJythWwAqOxnEqHgWqnOg2VXWYVbppHTqRZijz0fkPS4Al0sKPJti8oOTBU4Ew6+lmhTOYmr6PUR+dCuyj/CgRtl31a9CRDYm9wDOYg9Cr0PChKSINZe7w/F54eNq8R0JtLwg8F3bM=
+	t=1788876335; cv=none; b=O/SRMcqDwG5I0MMqZkmqEMHJzpl2vih4yOL31NseaovDCHqcdufr3pZxyYp8/Cgtr4BA0xh2sEN9WqkPrZyuIUQhal0Hpx2ObG5xkxezrwi72/bz59VMvuUVzvY2ZSUwTTHYX54BEyapiednc/jKlYVYZ7YuEmvPlDzdUmgxUso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788874600; c=relaxed/simple;
-	bh=5uSyfX+ju8po771DAcqzDrlbdRg2v0eIn2Wf+QX+15M=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=iLroeQz6uWtgvdKv79aihHKO5lG2lL4IHMrYvpkvFHNqzynzabIWPsWp433wv5+mSqIE4ChEJYgXCsUAZcpA7s3mrCWguH+Gai1pbWiaMlKi83t6kBkLcvo10SGsySIReHvu91KB4RSdfZI8TgJNVquKM874MC/yQk3jr0bHypM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WMXeyKrg; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788876335; c=relaxed/simple;
+	bh=11TxVI+3RBj+EqHgRjR2LbaLhcvV0cslORERYKWeuco=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WfeisWPAjvmp/JUT5zuBmlZ7WAhgdQyomMFD/2V6zwR9JqmIcoMNHI32Rp3KMB33gQNU8+Ci6icgjcufVUUvUGyfioY4M2BSTHheomGpZAKhoK9tHYLvpURo/hcBtn2wWvbvmPfKbzRReHHOcPpcNVaPS0mMCa5H2dqhThT2+Dc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b=QPcdzo9L; arc=none smtp.client-ip=113.46.200.217
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WMXeyKrg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 666091F00A3A;
-	Tue,  8 Sep 2026 13:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788874593;
-	bh=prq1c4kup3qwTGN9vAgXugekpQQmk70X4jZw39y5kHo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=WMXeyKrg8KpeLzwjleuvPG4w4VuV2nLAL3mmYrvnBDUBMls+fFWnT2Jjfglys3iHO
-	 cnxvgrk3pmc5xW9NykOJa06gzkDgq7JF5VRuooO8kRKCZVlTFnpLy11QE3Vp0JPRDI
-	 u7DUmYOA/5xi0qmxSe5z1VSxNhqRmV+SDUVMq96R5eFzvvovoZFryeRtZJkBkckVNg
-	 sznhcyNvzSEKiknvVi44QfcTWrbpA7iXYtjYqm4fvcGpdVReorOR9EXOH9ST7MSt8E
-	 7zyyqW/NdSN5L+23Z0QkNySl4T2ryoAgA9jts7s8VaHzV10kWEg05fTmy/Uo4dgWkB
-	 E/0Bh3E4Mn8MQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 21/26] perf annotate-arm64: Support stack variable
- tracking
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Tengda Wu" <wutengda@huaweicloud.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <ddc32af9368f031ed716cf86b50a8bce79e87796.1788872630.git.wutengda@huaweicloud.com>
-References: <cover.1788872630.git.wutengda@huaweicloud.com>
- <ddc32af9368f031ed716cf86b50a8bce79e87796.1788872630.git.wutengda@huaweicloud.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 08 Sep 2026 13:36:27 +0000
-Message-Id: <20260908133633.666091F00A3A@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=huawei.com header.i=@huawei.com header.b="QPcdzo9L"
+dkim-signature: v=1; a=rsa-sha256; d=huawei.com; s=dkim;
+	c=relaxed/relaxed; q=dns/txt;
+	h=From;
+	bh=CaouMrHf0sBpiH7oiFC52Kf32tgj7gpdzB/pLuk6TXE=;
+	b=QPcdzo9LzezfooH0eCR+FqKx6wKR0nt7K5LkOl6xwr4WTy+eevZBB22JIctC741u6HVe9vl8P
+	0BKoN+OTu9GnhlXHE8vBlbMbctmmEt6UObCKvVNwve2k+xyHTL55d7A+FecuTUHTGE6yWC8JfOU
+	SKXE/X7TQMyQm0SsEeFfWAo=
+Received: from mail.maildlp.com (unknown [172.19.163.104])
+	by canpmsgout02.his.huawei.com (SkyGuard) with ESMTPS id 4hfQR244NMzcb49;
+	Tue,  8 Sep 2026 21:54:22 +0800 (CST)
+Received: from whupemo200004.china.huawei.com (unknown [7.152.184.18])
+	by mail.maildlp.com (Postfix) with ESMTPS id 988F24056E;
+	Tue,  8 Sep 2026 22:05:19 +0800 (CST)
+Received: from huawei.com (10.50.163.32) by whupemo200004.china.huawei.com
+ (7.152.184.18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.45; Tue, 8 Sep
+ 2026 22:05:17 +0800
+From: Sizhe Liu <liusizhe5@huawei.com>
+To: <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+	<mathieu.desnoyers@efficios.com>, <corbet@lwn.net>,
+	<skhan@linuxfoundation.org>, <bhelgaas@google.com>, <yangyccccc@gmail.com>,
+	<jic23@kernel.org>, <john.g.garry@oracle.com>, <will@kernel.org>,
+	<james.clark@linaro.org>, <mike.leach@arm.com>, <leo.yan@linux.dev>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <wangyushan12@huawei.com>,
+	<wuzongyu1@huawei.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-doc@vger.kernel.org>, <linuxarm@huawei.com>,
+	<prime.zeng@hisilicon.com>, <liusizhe5@huawei.com>
+Subject: [PATCH v4 3/8] perf hisi-ptt: Extract the raw data printing part
+Date: Tue, 8 Sep 2026 22:05:04 +0800
+Message-ID: <20260908140509.2485649-4-liusizhe5@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20260908140509.2485649-1-liusizhe5@huawei.com>
+References: <20260908140509.2485649-1-liusizhe5@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ whupemo200004.china.huawei.com (7.152.184.18)
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Invalid register comparison causes unparsed operands to be false=
-ly treated as stack variables.
---
+Extract the raw data printing part of the TLP header into
+hisi_ptt_print_raw_record() for reuse by subsequent patches that
+add field-level parsing of individual DW headers.
 
-commit 7ef0e34126bb69c05756eba7378c5775c6ea2fd3
-Author: Tengda Wu <wutengda@huaweicloud.com>
+Reviewed-by: Yushan Wang <wangyushan12@huawei.com>
+Signed-off-by: Sizhe Liu <liusizhe5@huawei.com>
+---
+ .../hisi-ptt-decoder/hisi-ptt-pkt-decoder.c   | 31 +++++++++----------
+ 1 file changed, 15 insertions(+), 16 deletions(-)
 
-perf annotate-arm64: Support stack variable tracking
+diff --git a/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
+index 766665414ad8..23ae99f33c9f 100644
+--- a/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
++++ b/tools/perf/util/hisi-ptt-decoder/hisi-ptt-pkt-decoder.c
+@@ -79,23 +79,31 @@ static const char * const hisi_ptt_4dw_pkt_field_name[] = {
+ 	[HISI_PTT_4DW_HEAD3]	= "Header DW3",
+ };
+ 
+-static void hisi_ptt_print_pkt(struct hisi_ptt_pkt_buf *pkt_buf,
+-			       const char *desc)
++static void hisi_ptt_print_raw_record(size_t offset, uint32_t value)
+ {
+ 	const char *color = PERF_COLOR_BLUE;
+ 	uint8_t byte;
+-	uint32_t dw;
+ 	int i;
+ 
+-	dw = get_unaligned_le32(pkt_buf->buf + pkt_buf->pos);
+ 	printf(".");
+-	color_fprintf(stdout, color, "  %08zx: ", pkt_buf->pos);
++	color_fprintf(stdout, color, "  %08zx: ", offset);
+ 	for (i = 0; i < HISI_PTT_FIELD_LENGTH; i++) {
+-		byte = (dw >> (24 - i * 8)) & 0xFF;
++		byte = (value >> (24 - i * 8)) & 0xFF;
+ 		color_fprintf(stdout, color, "%02x ", byte);
+ 	}
+ 	for (i = 0; i < HISI_PTT_MAX_SPACE_LEN; i++)
+ 		color_fprintf(stdout, color, "   ");
++}
++
++static void hisi_ptt_print_pkt(struct hisi_ptt_pkt_buf *pkt_buf,
++			       const char *desc)
++{
++	const char *color = PERF_COLOR_BLUE;
++	uint32_t value;
++
++	value = get_unaligned_le32(pkt_buf->buf + pkt_buf->pos);
++	hisi_ptt_print_raw_record(pkt_buf->pos, value);
++
+ 	color_fprintf(stdout, color, "  %s\n", desc);
+ 	pkt_buf->pos += HISI_PTT_FIELD_LENGTH;
+ }
+@@ -120,19 +128,10 @@ static int hisi_ptt_8dw_pkt_desc(struct hisi_ptt_pkt_buf *pkt_buf)
+ static void hisi_ptt_4dw_print_dw0(struct hisi_ptt_pkt_buf *pkt_buf)
+ {
+ 	const char *color = PERF_COLOR_BLUE;
+-	uint8_t byte;
+ 	uint32_t dw;
+-	int i;
+ 
+ 	dw = get_unaligned_le32(pkt_buf->buf + pkt_buf->pos);
+-	printf(".");
+-	color_fprintf(stdout, color, "  %08zx: ", pkt_buf->pos);
+-	for (i = 0; i < HISI_PTT_FIELD_LENGTH; i++) {
+-		byte = (dw >> (24 - i * 8)) & 0xFF;
+-		color_fprintf(stdout, color, "%02x ", byte);
+-	}
+-	for (i = 0; i < HISI_PTT_MAX_SPACE_LEN; i++)
+-		color_fprintf(stdout, color, "   ");
++	hisi_ptt_print_raw_record(pkt_buf->pos, dw);
+ 
+ 	color_fprintf(stdout, color,
+ 		      "  %s %x %s %x %s %x %s %x %s %x %s %x %s %x %s %x\n",
+-- 
+2.33.0
 
-This commit extends update_insn_state_arm64 to track data types stored on t=
-he
-stack. It handles stack loads and stores, introducing
-propagate_store_reg_state to follow data types between registers and memory.
-
-> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/=
-util/annotate-arch/annotate-arm64.c
-> index 9d43e2c2041cd..d520975c59363 100644
-> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
-> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-> @@ -542,12 +544,57 @@ static int propagate_load_reg_state(struct type_sta=
-te *state,
-
-[ ... ]
-
-> +	if (dloc->fb_cfa) {
-> +		u64 ip =3D dloc->ms->sym->start + dl->al.offset;
-> +		u64 pc =3D map__rip_2objdump(dloc->ms->map, ip);
-> +
-> +		if (die_get_cfa(dloc->di->dbg, pc, &fbreg, &fboff) < 0)
-> +			fbreg =3D -1;
-> +	}
-> +
->  retry:
->  	if (arch_get_reg_offset(dloc->arch, src, sreg, state, false, &reg_offse=
-t))
->  		return -1;
-> =20
->  	reg_offset +=3D mem_offset;
-> =20
-> +	/* Check stack variables with offset */
-> +	if (sreg =3D=3D fbreg || sreg =3D=3D state->stack_reg) {
-
-[Severity: Medium]
-When an unparsed or unsupported base register leaves sreg as -1, and fbreg =
-is
-also -1, does this condition evaluate to true? Could this cause unparsed
-source operands to be incorrectly treated as stack loads?
-
-[ ... ]
-
-> +static void propagate_store_reg_state(struct type_state *state,
-> +				      struct data_loc_info *dloc,
-> +				      struct disasm_line *dl, int sreg,
-> +				      struct annotated_op_loc *dst,
-> +				      int mem_offset)
-> +{
-
-[ ... ]
-
-> +	if (dloc->fb_cfa) {
-> +		u64 ip =3D dloc->ms->sym->start + dl->al.offset;
-> +		u64 pc =3D map__rip_2objdump(dloc->ms->map, ip);
-> +
-> +		if (die_get_cfa(dloc->di->dbg, pc, &fbreg, &fboff) < 0)
-> +			fbreg =3D -1;
-> +	}
-> +
-> +	/* Check stack variables with offset */
-> +	if (dreg =3D=3D fbreg || dreg =3D=3D state->stack_reg) {
-
-[Severity: Medium]
-Similarly to the load case, if the base register extraction leaves dreg as =
--1
-and fbreg is also -1, does this check evaluate to true? Will this erroneous=
-ly
-treat unparsed target operands as stack stores, potentially corrupting the
-stack type state tracking?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1788872630.gi=
-t.wutengda@huaweicloud.com?part=3D21
