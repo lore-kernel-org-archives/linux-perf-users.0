@@ -1,28 +1,28 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F145476FF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D6154854E;
 	Tue,  8 Sep 2026 13:01:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788872531; cv=none; b=auKCaNKaX/6oi4xKmZEvqg1vufVrwTr6z7TriqcHFy3c79iG/ImzJtTMy/qsraOIyaX+8hctLgppqGm0dcfsWgjH1tMvYb1SqjPFuQUpWb0i90OJxED3dE3XY+He40lnIAEo80ndpETo0YJMoC8BZX9phK9zwYqghFBSFV0n+5c=
+	t=1788872530; cv=none; b=ATHdPDl8cyBAoUQEN7N1IyRW15VyQ6jW+hp+OS8h5DAqD2682pvgEMaJDYN17rkbDp/kNDL8yQFQkluOMH+wruLUQDN9BwrnoAIIRivoQhbMcfOxJA//E+MiXoU41Ss62l5fd96p4ZAQRnhzoN3vp/XR99nf3yKySEaHGn95rpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788872531; c=relaxed/simple;
-	bh=fgbY3JZBvtsCnq90YEDKMOwFNCgu21d8iZAsVzQ8+oY=;
+	s=arc-20240116; t=1788872530; c=relaxed/simple;
+	bh=082KIMFqE+/uvlHTdBvoMV9qFKfen+dk73/eqLUYMKs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZPNij//jacirrfZvIkGdfPxe2dvhUEPCkhBcsiyPczbtrJH+wCdtNKSYRmJXk6uePbY2voSA+5lHiMzGmIqKMhyu3UA2jJ4ftbNwM3WuIZ2qWPGTt3QWXydpohAWq+OfG302jzVIVwruhisBNAKAzFjvqA6Y3LMW6DF0NhMAmK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=fail smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=fCD9uMzkjikKcYzojab7SJIovcSiXy3ulmNhVqsKZ5yQsFm9r0/P88NGiyKZyjip2EEnxaXKBcSvGMwlIHomTLvUJqWkA5o5rP/bwp2kWxF4elKCDSWaT65MRN7SOaY+RllsRO8eh+5/Txyl7cjzF+SzzfYzOjTatu92YP2xEkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hfPFT5mVmzYQvRD;
-	Tue,  8 Sep 2026 21:01:01 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hfPGS2CBpzKHN4d;
+	Tue,  8 Sep 2026 21:01:52 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 4FE7740574;
+	by mail.maildlp.com (Postfix) with ESMTP id 99A554058D;
 	Tue,  8 Sep 2026 21:01:53 +0800 (CST)
 Received: from huawei.com (unknown [10.67.174.45])
-	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAni5gpB6BqC9rlBA--.34632S4;
-	Tue, 08 Sep 2026 21:01:52 +0800 (CST)
+	by APP4 (Coremail) with UTF8SMTPA id gCh0CgAni5gpB6BqC9rlBA--.34632S7;
+	Tue, 08 Sep 2026 21:01:53 +0800 (CST)
 From: Tengda Wu <wutengda@huaweicloud.com>
 To: Namhyung Kim <namhyung@kernel.org>,
 	james.clark@linaro.org,
@@ -44,9 +44,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	linux-kernel@vger.kernel.org,
 	llvm@lists.linux.dev,
 	Tengda Wu <wutengda@huaweicloud.com>
-Subject: [PATCH v5 02/26] perf llvm: Fix arm64 adrp instruction disassembly mismatch with objdump
-Date: Tue,  8 Sep 2026 13:00:58 +0000
-Message-Id: <20260908130122.633500-3-wutengda@huaweicloud.com>
+Subject: [PATCH v5 05/26] perf annotate: Normalize arch__dwarf_regnum() error return values
+Date: Tue,  8 Sep 2026 13:01:01 +0000
+Message-Id: <20260908130122.633500-6-wutengda@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20260908130122.633500-1-wutengda@huaweicloud.com>
 References: <20260908130122.633500-1-wutengda@huaweicloud.com>
@@ -57,126 +57,52 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgAni5gpB6BqC9rlBA--.34632S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxWryxGryUCF1fAF43uF1fCrg_yoW5ur45pr
-	ZFkFZ5Xry5Ar1Sv39IkF47Wrn0yrZ2gF4Yg3y3ArWvkr4ftF97C3yxGFy29F1UXryvq3y5
-	CrZ0vFyUGF1kArJanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQI14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UM2
-	8EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
-	xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
-	vE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
-	r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2IY04
-	v7MxkF7I0En4kS14v26r4a6rW5MxkF7I0Ew4C26cxK6c8Ij28IcwCF04k20xvY0x0EwIxG
-	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4
-	vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IY
-	x2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_Gr1UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
-	14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7sR_yv3UUUUUU==
+X-CM-TRANSID:gCh0CgAni5gpB6BqC9rlBA--.34632S7
+X-Coremail-Antispam: 1UD129KBjvdXoWrKw1rAr1kKw4xtFWDCFWkXrb_yoWfuFg_u3
+	WxtF1Utr18JrZ7tasFkFyrCryxJFy5ZrWxGry7Ga47ZFyfGr17tFWqyrn5G3yrGayUtrnI
+	yw1kXrWxZr429jkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbQkFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2
+	IY020Ec7CjxVAFwI0_Xr0E3s1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28E
+	F7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr
+	1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0D
+	M2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjx
+	v20xvE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1l
+	F7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E8cxan2
+	IY04v7MxkF7I0En4kS14v26r4a6rW5MxkF7I0Ew4C26cxK6c8Ij28IcwCF04k20xvY0x0E
+	wIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E74
+	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0
+	I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwCI42IY6x
+	AIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY
+	1x0267AKxVW8Jr0_Cr1UYxBIdaVFxhVjvjDU0xZFpf9x0pRepBfUUUUU=
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-The operands of 'adrp' instructions parsed by libllvm are currently
-represented as raw immediates rather than the "address <symbol+offset>"
-format used by objdump. This inconsistency causes arm64_mov__parse()
-to fail when parsing these instructions during post-processing.
+arch__dwarf_regnum() returns inconsistent error values: early path
+returns -1 while the main lookup returns -ENOENT/-EINVAL from
+get_dwarf_regnum(). Callers only check for -1, so genuine failures
+can slip through.
 
-Example of the mismatch:
-  Current: adrp  x18, 8014
-  Objdump: adrp  x18, ffff800081f5f000 <this_cpu_vector>
+Normalize all failures to -1 to match the callers' expectation.
 
-Fix this by manually extracting the target address from the raw adrp
-instruction via symbol_lookup_callback(). The address is then converted
-to a specific symbol during symbol__disassemble_llvm() and formatted
-to match objdump's output, ensuring compatibility with existing
-parsers.
-
+Suggested-by: Shuai Xue <xueshuai@linux.alibaba.com>
 Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 ---
- tools/perf/util/llvm.c | 52 ++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 47 insertions(+), 5 deletions(-)
+ tools/perf/util/annotate.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
-index a0deb742a733..a78845689aa1 100644
---- a/tools/perf/util/llvm.c
-+++ b/tools/perf/util/llvm.c
-@@ -9,8 +9,10 @@
- #include "symbol.h"
- #include <errno.h>
- #include <fcntl.h>
-+#include <string.h>
- #include <unistd.h>
- #include <linux/zalloc.h>
-+#include <linux/bitops.h>
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index df70e95a8470..f3d17d153b67 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -2492,7 +2492,7 @@ static int arch__dwarf_regnum(const struct arch *arch, const char *str)
  
- #ifdef HAVE_LIBLLVM_SUPPORT
- #include "llvm-c-helpers.h"
-@@ -108,6 +110,16 @@ symbol_lookup_callback(void *disinfo, uint64_t value,
- 		storage->branch_addr = value;
- 	else if (*ref_type == LLVMDisassembler_ReferenceType_In_PCrel_Load)
- 		storage->pcrel_load_addr = value;
-+	else if (*ref_type == LLVMDisassembler_ReferenceType_In_ARM64_ADRP) {
-+		uint64_t adrp_imm;
-+
-+		/* immhi (bits 23:5) and immlo (bits 30:29) */
-+		adrp_imm = ((value & 0x00ffffe0) >> 3) | ((value >> 29) & 0x3);
-+		adrp_imm = sign_extend64(adrp_imm, 20);
-+
-+		/* Calculate the target page address */
-+		storage->pcrel_load_addr = (address & ~0xfffULL) + (adrp_imm << 12);
-+	}
- 	*ref_type = LLVMDisassembler_ReferenceType_InOut_None;
- 	return NULL;
+ 	reg = get_dwarf_regnum(regname, arch->id.e_machine, arch->id.e_flags);
+ 	free(regname);
+-	return reg;
++	return reg < 0 ? -1 : reg;
  }
-@@ -228,12 +240,42 @@ int symbol__disassemble_llvm(const char *filename, struct symbol *sym,
- 			}
- 		}
- 		if (storage.pcrel_load_addr != 0) {
--			char *name = llvm_name_for_data(dso, filename,
-+			char *name;
-+
-+			if (arch__is_arm64(args->arch)) {
-+				/*
-+				 * For arm64, replace the immediate operand with
-+				 * the resolved address to match objdump's output.
-+				 *
-+				 * Example conversion:
-+				 *   From: adrp  x18, 8014
-+				 *   To:   adrp  x18, ffff800081f5f000
-+				 */
-+				char *s = strchr(disasm_buf, ',');
-+
-+				if (s == NULL)
-+					goto err;
-+
-+				s++;
-+				*s = '\0';
-+				disasm_len = strlen(disasm_buf);
-+				disasm_len += scnprintf(disasm_buf + disasm_len,
-+							sizeof(disasm_buf) - disasm_len,
-+							" %"PRIx64,
- 							storage.pcrel_load_addr);
--			disasm_len += scnprintf(disasm_buf + disasm_len,
--						sizeof(disasm_buf) - disasm_len,
--						"  # %#"PRIx64,
--						storage.pcrel_load_addr);
-+			} else {
-+				/*
-+				 * For other archs, append the resolved address
-+				 * as an inline comment.
-+				 */
-+				disasm_len += scnprintf(disasm_buf + disasm_len,
-+							sizeof(disasm_buf) - disasm_len,
-+							"  # %#"PRIx64,
-+							storage.pcrel_load_addr);
-+			}
-+
-+			/* Append the resolved symbol name if available */
-+			name = llvm_name_for_data(dso, filename, storage.pcrel_load_addr);
- 			if (name) {
- 				disasm_len += scnprintf(disasm_buf + disasm_len,
- 							sizeof(disasm_buf) -
+ 
+ /*
 -- 
 2.34.1
 
