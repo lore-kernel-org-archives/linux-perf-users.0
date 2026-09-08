@@ -1,65 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9137354CF7E
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 13:21:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 641CD54A7C3
+	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 13:21:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788873662; cv=none; b=T1Acha+mff6xP7bu8Ek/7fyG944utc+9VsMD/TfV5iW7FGoUWZ57yMiIGNyFtu0CCRlmxZl0wuAy5TKwkHp7gLy6QKkWROvgvDwiJdstGPSFEkzOo5IY9S26uSwzdSJcHptOaP0nehLNmzEMTO3BjXV96AUU7etorRXOjpiBxtU=
+	t=1788873714; cv=none; b=WKW3ayh3LVMptXSu3jswUwVwAn/TctKKppnXd5ZKLKEyl85U6e/np3N1aiFv6w9vwmvqP/UdFRVBqTBBYI2/TejWsE83VE8wvSpZL66QE+rR2aks9IlgKaqrt1XB3Xaxp6L2BSE36uo3EZJSH/KrFCX7PPk0re8bbtXMqMPIIUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788873662; c=relaxed/simple;
-	bh=HvbXcBNLn1RNsaXqNg6KjmetDTHdVymR2LAm+N2zbjY=;
+	s=arc-20240116; t=1788873714; c=relaxed/simple;
+	bh=5D8xO3urJ64xhhjZkSgHLMIzNBPot4FgSpA3SerGt/k=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=Fne6tBQ+PaToYLpn31vga97vubHElLd2Yk8WQc4adoyvNCh2xlnoHv6RBSHt4/vlWDJbHG4QGmRZ47WK29D2nkA5PWwWtJjPvXlDREs2Qj5RPQPii5QAkHSlfHpVQAEcpXGMuxLKTa2I9Pi5eNQ4/TgkmuWjb8IEozjxWJvidOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HF/K+ZbM; arc=none smtp.client-ip=100.103.45.18
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HF/K+ZbM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB7281F00A3A;
-	Tue,  8 Sep 2026 13:21:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788873661;
-	bh=HvbXcBNLn1RNsaXqNg6KjmetDTHdVymR2LAm+N2zbjY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=HF/K+ZbMIBQ4cq5nzQuZKj4S6INDoiv/ROp7oP5kIiXjAEylXz0IJ8b//UoJyIhY8
-	 GIm8YvVqlalLZva+2LbhVmzddW+tiOqgoY7jR/I5dRD1pTPHRaOFAOMFhiQAajZxp/
-	 V0xcweZ6NHnmHzEL6fA8rHPWTcugkmseQxWpXG+6IHjnXcwY2pdjV8ofYmNQDX3XmA
-	 s77VnC24KzyxMgqTzxtLS0xAaF36QrV64djlUj9k/VxR8QIlrnihsI5yMD5Lfk9wJT
-	 hmd0Yy/utCQI2Qp+e62zfqLhTpHmlWkYPNqtUkLfwxO0r707VDnDAPSn0hTaqv6z8j
-	 r4eojf22evJug==
+	 Message-Id; b=Ih21w/Y5ZzkyCU4b0i6IqZSTBq2ZQXtebmKnohv3ZPqroZNkdqZEkKO0pB8OMbcNwTO/ttc0VlhJ2ghn6CGJlbjaNwx/DLZN/IPOE6YV+PLS/4Cdym0iak8nsZAvMtptDpuvdvH+wdJhVISoB2cSRE/GR1+Oaj4kLYVtB5G2DaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A131F00AC4;
+	Tue,  8 Sep 2026 13:21:51 +0000 (UTC)
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v5 06/26] perf annotate: Introduce extract_op_location
- callback for arch-specific parsing
+Subject: Re: [PATCH v5 07/26] perf dwarf-regs: Adapt get_dwarf_regnum() for
+ arm64
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <a9f1bafb17bc2e2c6152f6e3a0c63b9d72a0e657.1788872630.git.wutengda@huaweicloud.com>
+In-Reply-To: <61714d93cd55cd461d5c37146713ddb9e1d04743.1788872630.git.wutengda@huaweicloud.com>
 References: <cover.1788872630.git.wutengda@huaweicloud.com>
- <a9f1bafb17bc2e2c6152f6e3a0c63b9d72a0e657.1788872630.git.wutengda@huaweicloud.com>
+ <61714d93cd55cd461d5c37146713ddb9e1d04743.1788872630.git.wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 08 Sep 2026 13:20:58 +0000
-Message-Id: <20260908132100.EB7281F00A3A@smtp.kernel.org>
+Date: Tue, 08 Sep 2026 13:21:51 +0000
+Message-Id: <20260908132152.08A131F00AC4@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Assembly syntax for operands varies significantly across different
-> architectures, which prevents the operand location (op_loc) parsing
-> logic in annotate_get_insn_location() from being directly reused.
->=20
-> To simplify the core logic and improve maintainability, move the
-> operand parsing inside the for_each_insn_op_loc loop into arch-specific
-> extract_op_location callbacks. This refactoring is intended to be a
-> cleanup with no functional changes.
->=20
-> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
-> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Missing 'lr' (link register) support in arm64 DWARF register pro=
+grammatic lookup.
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+commit 5d023c42589d9bd9061d9468194dc470f5cdc273
+Author: Tengda Wu <wutengda@huaweicloud.com>
+
+perf dwarf-regs: Adapt get_dwarf_regnum() for arm64
+
+This commit replaces the static table lookup for arm64 DWARF registers with=
+ a
+programmatic parser in __get_dwarf_regnum_arm64(). This allows resolving
+arm64 register names directly into their corresponding DWARF register numbe=
+rs
+for perf annotate.
+
+> diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c b/tools/p=
+erf/util/dwarf-regs-arch/dwarf-regs-arm64.c
+> index 593ca7d4fccca..720c863d18696 100644
+> --- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
+> +++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
+
+[ ... ]
+
+> @@ -10,3 +13,22 @@ int __get_dwarf_regnum_for_perf_regnum_arm64(int perf_=
+regnum)
+> =20
+>  	return perf_regnum;
+>  }
+> +
+> +int __get_dwarf_regnum_arm64(const char *name)
+> +{
+> +	int reg;
+> +
+> +	if (!strcmp(name, "sp"))
+> +		return 31;
+> +
+> +	if (*name !=3D 'x' && *name !=3D 'w')
+> +		return -ENOENT;
+
+[Severity: Medium]
+Does this code inadvertently drop support for the link register ('lr')?
+
+If perf annotate processes an instruction containing 'lr' (e.g.,
+stp x29, lr, [sp, #-16]!), arch__dwarf_regnum() extracts "lr" and calls
+this programmatic logic. Since "lr" does not start with 'x' or 'w' and is n=
+ot
+"sp", it will return -ENOENT. This seems like it will prevent data type
+tracking for the link register, which was previously supported when mapping
+to DWARF register 30.
+
+> +
+> +	name++;
+> +	if (!isdigit(*name))
+> +		return -ENOENT;
+> +
+> +	reg =3D strtol(name, NULL, 10);
+> +
+> +	return reg >=3D 0 && reg <=3D 30 ? reg : -ENOENT;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1788872630.gi=
-t.wutengda@huaweicloud.com?part=3D6
-
+t.wutengda@huaweicloud.com?part=3D7
