@@ -1,482 +1,332 @@
-Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
+Received: from mail-wr2-f12.google.com (mail-wr2-f12.google.com [74.125.225.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157C7579817
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 17:36:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788888972; cv=pass; b=ATr9pqInY0pzzN/oabccWXTsRqHew6KCsNGScCGjexQst2Q/cX6hFzOnGpH7+atUK3r9c5BpW7MsU241VSLgSrmIlA1coi0lBg/rzLIYYlS2Qn6Tj9F89rYuGFZqpx52Vo/8oFweCo/FxMRnGI6ScBMp5C1XWP9Rzw5wwyCphgs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788888972; c=relaxed/simple;
-	bh=aRgyDVrTNKA5s9SDT3cNGh9fJRv8grp1sQkaqHABbGs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gx13yZW72y+ap9fmD2cPGxNn2XaHoReKvznpUtlwf5bg2WZ5GtIIftZoJiFHmq6Fw0oC/WfzOO/2UaF9qk1Ph6n6Jj2YLMzVIeHfgcbIJCf4BY34BcAkP3I6u4Ff2MJl29x/Lu4Qi+VzCNwYNNAAx8R9WTCs3IBbvRr1vwOPMBg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WkoCUCfc; arc=pass smtp.client-ip=74.125.230.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56B53576EA4
+	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 17:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.76
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788889049; cv=none; b=XJXQu+TRwew4I4xlOf9U1g+qL3J53VT5+U/HUNIKOPF8jd9vDN1OTf+D/s9MUihRvAbAvL+wmmQQ/ssrlYITs76KOqob+es+Mq59lZUYHiN9KeNrR6E2fgJXB6k5vWkbhK0ooUM4Vo6AgXwTUYq7uZYZO6qv8uIZX19tqCygD+E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788889049; c=relaxed/simple;
+	bh=20BKooH4sNQBea+Lfi0HqOLLu9aC0u3JnRN7Y6LiIjU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kU65jgp0dgqnOEd8aRNzLv64BM5yss7R/JIISwVMujnypjmdyM9I4Id2sGS8MLOuhJTwZMZK5GXjRVKErZbt/2KrLJgs73GcqTdjWxDhsXn6XlTkgVQ05yJu5h3AlBySGmfW6jCx7tsf0yv+dWy4wjVmPG2s4SwsY64qlUL+baU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TRo5uQoE; arc=none smtp.client-ip=74.125.225.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WkoCUCfc"
-Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-53012819c04so630681cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 08 Sep 2026 10:36:10 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788888970; cv=none;
-        d=google.com; s=arc-20260327;
-        b=dujqUQyKmR9W4Vt6XrPybCEE6TcbS9KjEl1gwwpuXWw0eNODWUi3dg02QUKnh0vOdy
-         JeIbGI8EzIKsD20R3wdcU9HF/3PY7gVeyNm4pmxNgfiDEQ8jimksGMXDMNh8b70QMmzE
-         EceoNaPpjNErMXlbp2vuz1HrPddbLXeaCx4L2hB9RB03OukLkEVJYsMD3IjVaU2SxQIF
-         AOkZBCwzakWYPIfRe5oZr2AyaajT+TI5ShuUcvU3+H8YNMVHo0inW1bzDnnFAAJPatUa
-         hSVVPRo5YiAT3MQ1X8UXH9HvQrf4eaxbD9f73r0kNGIwWVdnZ6sQI3mSdLAN1hblVc9h
-         +nkQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=wKi8eCYJaZKxsUOzajSEISHospqZ2tHXmAdOPIikG3s=;
-        fh=QC1Pf4GrGS1cwxadEuRxeflcvDT3YBQd+DV1ZdJtOOs=;
-        b=EjoapeuPmfbyE4skzrnEvGzTSjv8Jky/J8oM+xFdCySGicLDDbik8FczY/fftx0l8n
-         0LU885HFgjJr5ltXW2gK8a7iCY/n9evPswjQHYYbES5Tns9DdcRsNbiJflgsfxyEDLWI
-         mNxpxEePTDjbI61ibpt1jtSVA7Yiq0pZ/HjKWeFTdr3fgUhQjJzdc2UoayP8f1EX78xW
-         PKwmluxi16aHpvjqq4TfouWB0+Fq/UmoEFgW7vz55NdUXfMV0BHjFscdB3P/GNVWs6f+
-         RRZRZWhypZV5CZjJNkrD5v4rburxKcsutHAfZT8hAMVC3s7tpeeiOcD3zM0lhi9Im7Yf
-         X1Mw==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TRo5uQoE"
+Received: by mail-wr2-f12.google.com with SMTP id ffacd0b85a97d-482f62ccdb1so503203f8f.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Sep 2026 10:37:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788888970; x=1789493770; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=wKi8eCYJaZKxsUOzajSEISHospqZ2tHXmAdOPIikG3s=;
-        b=WkoCUCfcWMylCwjhsPV2a7IOcT/LFLAhHqDI2m7H09PbYa0DynrjcZa32/ApnkQKZe
-         bm/BQZBwglSEtwz5D0G/TyUqj73IxdN3XqjEbmmkodtsVPV9yjdsx8f2HfcZMX1rYF7P
-         iuQXbHWd9fEahAbTYjvw/bJ+CvCxwc+N/j87y+eQsvi31PnEIP3ugRr7xmo9Voq2H36g
-         lZf5UGHNHOV3wljuG41+/cJ59mVLY17CyUharL2vma7ITsk4LaOO5gKW6cw+Sw+ZFv+g
-         hUEoIE/ap4lFQ0rZ06FqxsyV+QNhFNxRKZox1ttWpFP0uQPj6I0pn1W4h9bmvR2fX3ta
-         ITeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788888970; x=1789493770;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+        d=gmail.com; s=20251104; t=1788889045; x=1789493845; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=wKi8eCYJaZKxsUOzajSEISHospqZ2tHXmAdOPIikG3s=;
-        b=Dyl55vJrCPulmq9+FvU3KgHXsW2vngz6drFgQQeqmEhokbz+29UnacvRhvb3l1WFeA
-         xgwN3AUwyddWxeMmbisO8sp4GEqeN1Oeto3g/3AnUorf+nDEKUCk8+VB9rafi2sI/WFj
-         UgDNtH1vXZ4YE1XYxxNVywKeufANkeVC4DQnjgYZUVTx5wunm8U5V2SBaZBtqwyZM6lf
-         uDHgJjDrMO6TrqUBX26Rw0YWEHhtZ/8eREfzFYjebC8kvr24MPc/0HjOToJFYRenLHnb
-         efGF5CFg2Qwm/2P638J46SOEEm6sMP+puJ1dju16q+KCk7y67wm+sx0PPYdXXfC1ijA0
-         7UVA==
-X-Forwarded-Encrypted: i=1; AKwUvBz92QqKi9DMFJAGZQu8vHzjKoVGbtLB2LqwvwB/CWvsYvfgQWy9pfgAH5c/HI1i8lJlMdqvcv2tEvT+3rGqWsMf@vger.kernel.org
-X-Gm-Message-State: AFuF++myoIlxusEh4VNDBY9DpTzHsWh7VWUG9+ehphilsXFdkE7jUpjt
-	poy1RixPuEnghd79PJlxswoP9C8qr1Q3l3tF6B9FTptB5sDXmHqrW4p1qNXrIG+4xZGs/L1y+zl
-	dRmYOhqRcGcM6C0WqYKouaHS5WjB2NavFOhWxWOhZ
-X-Gm-Gg: AYBFou0OEbHyYWT5+NRBwQ5ByMvRXRViriqlTDFexjBstoHN6I+vD5AwovLKjGltsE6
-	0Q6NqlnfOEK2ZHppz5dglY02NaP6CvOLHhUPUuIlFSIS6f2kT4N4/dKSBZiJoLR2JHhS70PiDhS
-	MpBnyos4NakLVvFOdpiLhxi2XgmcKiRjagunAURQOVXp6rGaWBYpqGPZmcJu26yI13YR2JsOMZz
-	YNokCRG2TemaUcegk4HlijXSqxedfpaBkXevubjMEbr+WRc60k5DaQau0dQXEXHV9ePDtvE4In3
-	5NKzbJkGrQx7Um8q9j6YEe1Tkey2sx9sxdzQQHLc89GWI0b5R9mHoQFehvoSlVuUuPV5YoQgOQ=
-	=
-X-Received: by 2002:a05:622a:1c15:b0:52f:9ed4:8d75 with SMTP id
- d75a77b69052e-530a3bb8079mr2069441cf.15.1788888969088; Tue, 08 Sep 2026
- 10:36:09 -0700 (PDT)
+        bh=dVPKXie00lKV45A1FT/qWsFJolUDuvV+3HtLDaaSE/Q=;
+        b=TRo5uQoEo+dZ2i/icFyO0tMI2Y799UnsIklY3yMjzdNZzOBx31+PAkHBpH14gaVjFK
+         yHueCKhBvyr8vBVbvX0Rp22ZYLwnVHcc+V7F9fnV0KFLR0hqEVOguZ6w1wbmrkBI2ydE
+         QtA2qNEgIMDOPToPj+SVNqu3wpbdKzmSbcaE0TEbaPtiZmUPrsXArnCPG0j8HKiKe9t+
+         Hqrgsldv9Irz31GTiFCrU/FsREuKC5v3xXmWbWRKBHVgrVdk+SvB9fAUGkGICLVTyB4n
+         xRTTzYmdCL0miwe6gSHoXa5m3JRm6d+9Sh+fpyZSih3u+Sid4WECFJF7YNuktFB47KO3
+         G/LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788889045; x=1789493845;
+        h=content-transfer-encoding:content-type:in-reply-to:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=dVPKXie00lKV45A1FT/qWsFJolUDuvV+3HtLDaaSE/Q=;
+        b=ScXjK4U1TnvxS1Qz14PkNctr30ybI9w72d2+mCDWlEmhXETPGpFL7F49FhHKZWMEL5
+         p5brUVxac5t56TDTp0NxZbrolvoH8tmYS6xN4ABE4wsxBpLkL+Bq1mBAI3jL9dTt66nI
+         OZayZ+C1dVVPWgGRs/PO63qjcaw8CGyTU/p3f/u15kf5FXbfYhfhTZqCytZ4w7XrXWKv
+         IR5WM/mRgbaVqbwmi9xqOP5pNuoDhqxhe/aY+PxgBtH7QTKTSPMfJVy71HYFTGA9Lcn1
+         V2kGhZV7vZzU+GV3bZ9JIBIHiXtF+BlygROrg+AGxDsoKW7E3/om0JavLi14xgBiOh7q
+         2GOw==
+X-Forwarded-Encrypted: i=1; AKwUvBwL/CrOYNAAd171qO/uoq7/5biHz4UBPpIcVl1rVuDA/lusqS/wlTWS5LcCjqZK2+y/BiAqlkBLI4euCwDkXzsz@vger.kernel.org
+X-Gm-Message-State: AFuF++ky4mNbx5ojdW9Fl8TNkP0w+W9KFOU7vsH0zyABLQIV3rK1Dl2p
+	HtuGmHrutAjIZnHzZgAqwoFKpEfiVKyzer84xnK0y3AjnSAUrJJsSe4x
+X-Gm-Gg: AYBFou1DOF2XJ+cUjPk3O/vYOXNMxtrxV7Dl35ymiB132yS9dPqT8qaK1PNvJ6Z9FRX
+	oQr3a+0UHRicspmRFrRD5m903D9lfqdWvhyuuk/pCmPMwqa8p/42aPhZVXEk4DtmsDqt29O3M9b
+	O+7JwPx+FcoZ/4JL7oSmIe9KhoXsnVcqM8ZBKHk59cXsdPN2FVMcxKZnYa3KzOwEsjQZuHrNa9g
+	MbmTvwbCEgObv8htBV3eQeK2WAVX1PoMnDuA67GjcRrGA5XXqlrmGLXrqgqRx5HM51TeVa2lKRm
+	ExptgezGbiBacj88yjitN9cRSxR7U8Giq+eSxC9qluOPs0L1pmcs4k/Y/3cHEfDs4WFmWQgew2p
+	QeAQU+gc3MLiVJnipcI458x2Idq0wiOtD+Aio3K5HjDdZxglM6XscVfBziC64OL6+UjIizhBC0Q
+	T9BhkA5FGWJHSZYTkm+3ibDfYCIVC80YpeBETaU2QwlNudVv9vL7CbS1WIscZQzmiLY3kVvTlX1
+	Ja4lBR4nbLgu7AupAdNMZKzF2DwExAZnfrWBdppPeXj
+X-Received: by 2002:a05:6000:24c7:b0:484:482d:dce4 with SMTP id ffacd0b85a97d-485a232c8c7mr9789969f8f.0.1788889045218;
+        Tue, 08 Sep 2026 10:37:25 -0700 (PDT)
+Received: from ?IPV6:2a02:8109:a307:d900:d30:32e5:e05c:2aae? ([2a02:8109:a307:d900:d30:32e5:e05c:2aae])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-48594172546sm29278996f8f.15.2026.09.08.10.37.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 08 Sep 2026 10:37:24 -0700 (PDT)
+Message-ID: <c0c8d167-80a1-4782-ad98-3cbbbd18e536@gmail.com>
+Date: Tue, 8 Sep 2026 18:37:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260905-perf-alpha-annotate-v1-0-97380433ccb6@gmail.com> <20260905-perf-alpha-annotate-v1-2-97380433ccb6@gmail.com>
-In-Reply-To: <20260905-perf-alpha-annotate-v1-2-97380433ccb6@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 8 Sep 2026 10:35:57 -0700
-X-Gm-Features: AcwNN1UxlkVN3Rw4UwGMGOQDSIApMZiAW899jxT8aH2F2OhWkp8yH2U2K2p44mY
-Message-ID: <CAP-5=fW8s5WndkCDEHFhxmBOqRV+3LCz8kKFoiU7ExJHviFFiQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] perf annotate: add Alpha instruction support
-To: Matt Turner <mattst88@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH bpf-next v3 3/3] bpftool: Scale counters and report cycles
+ per run
+To: bot+bpf-ci@kernel.org, bpf@vger.kernel.org, ast@kernel.org,
+ andrii@kernel.org, daniel@iogearbox.net, kernel-team@meta.com,
+ eddyz87@gmail.com, memxor@gmail.com, qmo@kernel.org,
+ linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org
+Cc: yatsenko@meta.com, martin.lau@kernel.org, yonghong.song@linux.dev,
+ mason@kernel.org, ihor.solodrai@linux.dev
+References: <20260908-bpftool_cyles_per_run-v3-3-60e86f325c35@meta.com>
+ <cc417e4dba25ded6b33afcdfa4cd4a69de3e9c8ab7ca351c131ae92bc7430d86@mail.kernel.org>
+Content-Language: en-US
+From: Mykyta Yatsenko <mykyta.yatsenko5@gmail.com>
+In-Reply-To: <cc417e4dba25ded6b33afcdfa4cd4a69de3e9c8ab7ca351c131ae92bc7430d86@mail.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Sat, Sep 5, 2026 at 3:54=E2=80=AFPM Matt Turner <mattst88@gmail.com> wro=
-te:
->
-> Teach perf annotate about the Alpha control-transfer instructions, so tha=
-t
-> an Alpha perf.data gets call and jump arrows and resolved call targets,
-> whether it is read on Alpha or on another host.
->
-> Add tools/perf/util/annotate-arch/annotate-alpha.c with arch__new_alpha()
-> and an associate_instruction_ops() that classifies:
->
->   call:   bsr, plus jsr and jcr as indirect calls
->   ret:    ret
->   jump:   br, the conditional branches beq/bne/blt/ble/bgt/bge/blbc/blbs
->           and fbeq/fbne/fblt/fble/fbgt/fbge, plus jmp as an indirect jump
->   mov:    mov, fmov (objdump pseudos)
->
-> That is every mnemonic binutils can print for the branch and JSR formats.
-> jcr rather than jsr_coroutine, because both name the same MBR(0x1a,3)
-> encoding and print_insn_alpha() takes the first match in the table, where
-> the jcr alias has come first since the sources were imported in 1999.
->
-> bsr needs an Alpha-specific parse routine.  The generic call__parse()
-> expects the operand string to begin with the target address, but a bsr
-> prints its return-address register first:
->
->   bsr     t0,fffffc0001031dc0 <cserve_ena>
->
-> strtoull() then stops on the leading register name, leaving the target
-> address as 0, which makes call__scnprintf() fall back to printing the raw
-> operands and leaves target.sym unresolved so the browser cannot follow th=
-e
-> call.  alpha_call__parse() takes the address from after the comma instead=
-,
-> as s390_call__parse() does for the same reason.  The PC-relative branches
-> need no such handling, as jump__parse() already skips up to two operands.
->
-> jsr and jmp get ins_ops that resolve no target at all.  They transfer
-> control to a register, and their trailing operand is only a branch
-> prediction hint:
->
->   jsr     ra,(t12),fffffc0001014ee8 <_printk>
->
-> binutils extracts that hint as a 14-bit signed field scaled by four and
-> prints it relative to the next instruction (extract_jhint() in alpha-opc.=
-c,
-> print_insn_alpha() in alpha-dis.c), so it can name the callee only when t=
-he
-> callee lies within the resulting +-32KB.  It also defaults to zero, which
-> prints as the next instruction.  Of the 213750 jsr in a vmlinux built fro=
-m
-> this tree, only 23093 hints land on a symbol; 157204 point into the middl=
-e
-> of an unrelated function and 33453 are that default.  Parsing the hint
-> would therefore invent a call target for the majority of calls, so these
-> keep their operands, as an indirect call does elsewhere.
->
-> EM_ALPHA is 0x9026, far too large to index the e_machine-keyed
-> arch_new_fn[] table in arch__find(), so select arch__new_alpha explicitly
-> before the table lookup.  Declare it in disasm.h and add the object to th=
-e
-> annotate-arch Build.
->
-> Disassembly itself comes from objdump/binutils, which already supports
-> Alpha; this provides perf's instruction-class metadata for annotation.
->
-> Tested on an EV7 Marvel, both natively and by annotating its perf.data on
-> an x86_64 host, over bsr to a local function, jsr through the PLT and
-> kernel-mode jsr; the two hosts produce identical output.
->
-> Signed-off-by: Matt Turner <mattst88@gmail.com>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks!
-Ian
+On 9/8/26 5:21 PM, bot+bpf-ci@kernel.org wrote:
+>> diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+>> index 8c2f9255b36d..9e126f3823ad 100644
+>> --- a/tools/bpf/bpftool/prog.c
+>> +++ b/tools/bpf/bpftool/prog.c
+> 
+> [ ... ]
+> 
+>> @@ -2182,9 +2199,39 @@ static int profile_parse_metrics(int argc, char **argv)
+>>  	return selected_cnt;
+>>  }
+>>
+>> +/*
+>> + * Filter out CPUs that have any selected metric not scheduled for them. This makes sure all
+>> + * metrics are using the same CPU set, as a result ratio metrics are consistent.
+>> + */
+>> +static void profile_filter_cpus(__u32 num_cpu,
+>> +				struct bpf_perf_event_value vals[MAX_NUM_PROFILE_METRICS][num_cpu],
+>> +				__u64 *counts)
+>> +{
+>> +	__u32 m, cpu, key = 0;
+>> +
+>> +	for (m = 0; m < ARRAY_SIZE(metrics); m++) {
+>> +		if (!metrics[m].selected)
+>> +			continue;
+>> +
+>> +		for (cpu = 0; cpu < num_cpu; cpu++) {
+>> +			/*
+>> +			 * CPU has hits, but this metric never scheduled, set counts[cpu] to 0
+>> +			 * so other metrics ignore this CPU too
+>> +			 */
+>> +			if (counts[cpu] && !vals[key][cpu].running) {
+>> +				p_info("%s not scheduled on CPU %u; excluding %llu runs from all metrics",
+>> +				       metrics[m].name, cpu, counts[cpu]);
+>> +				counts[cpu] = 0;
+>> +			}
+>> +		}
+>> +		key++;
+>> +	}
+>> +}
+> 
+> [ ... ]
+> 
+>> @@ -2194,38 +2241,61 @@ static void profile_read_values(struct profiler_bpf *obj)
+>>  	count_map_fd = bpf_map__fd(obj->maps.counts);
+>>  	if (reading_map_fd < 0 || count_map_fd < 0) {
+>>  		p_err("failed to get fd for map");
+>> -		return;
+>> +		return min(reading_map_fd, count_map_fd);
+>>  	}
+>>
+>>  	err = bpf_map_lookup_elem(count_map_fd, &key, counts);
+>>  	if (err) {
+>>  		p_err("failed to read count_map: %s", strerror(errno));
+>> -		return;
+>> +		return err;
+>> +	}
+>> +
+>> +	for (m = 0; m < ARRAY_SIZE(metrics); m++) {
+>> +		if (!metrics[m].selected)
+>> +			continue;
+>> +
+>> +		err = bpf_map_lookup_elem(reading_map_fd, &key, values[key]);
+>> +		if (err) {
+>> +			p_err("failed to read reading_map: %s", strerror(errno));
+>> +			return err;
+>> +		}
+>> +		key++;
+>>  	}
+>>
+>>  	profile_total_count = 0;
+>>  	for (cpu = 0; cpu < num_cpu; cpu++)
+>>  		profile_total_count += counts[cpu];
+>>
+>> +	profile_filter_cpus(num_cpu, values, counts);
+>> +
+>> +	profile_valid_count = 0;
+>> +	for (cpu = 0; cpu < num_cpu; cpu++)
+>> +		profile_valid_count += counts[cpu];
+>> +
+>> +	key = 0;
+>>  	for (m = 0; m < ARRAY_SIZE(metrics); m++) {
+>> -		struct bpf_perf_event_value values[num_cpu];
+>> +		double scale;
+>>
+>>  		if (!metrics[m].selected)
+>>  			continue;
+>>
+>> -		err = bpf_map_lookup_elem(reading_map_fd, &key, values);
+>> -		if (err) {
+>> -			p_err("failed to read reading_map: %s",
+>> -			      strerror(errno));
+>> -			return;
+>> -		}
+>>  		for (cpu = 0; cpu < num_cpu; cpu++) {
+>> -			metrics[m].val.counter += values[cpu].counter;
+>> -			metrics[m].val.enabled += values[cpu].enabled;
+>> -			metrics[m].val.running += values[cpu].running;
+>> +			/* Skip CPUs with no runs or with an unscheduled metric. */
+>> +			if (!counts[cpu])
+>> +				continue;
+>> +
+>> +			val = &values[key][cpu];
+>> +
+>> +			metrics[m].val.enabled += val->enabled;
+>> +			metrics[m].val.running += val->running;
+>> +			metrics[m].val.counter += val->counter;
+>> +			/* Scale counter values to account for perf event multiplexing. */
+>> +			scale = (double)val->enabled / val->running;
+>> +			metrics[m].scaled_val += val->counter * scale;
+>>  		}
+>>  		key++;
+>>  	}
+>> +	return 0;
+>>  }
+> 
+> Does this correctly handle the case where one metric is never scheduled
+> on any CPU?
+> 
+> The CPU-set filter in profile_filter_cpus() zeroes counts[cpu] for every
+> CPU where any selected metric has running == 0:
 
+This would be an unusual edge case, perf counter normally get 
+scheduled for some fraction of time, even when multiplexed.
+
+>     if (counts[cpu] && !vals[key][cpu].running) {
+>         p_info("%s not scheduled on CPU %u; ...");
+>         counts[cpu] = 0;
+>     }
+> 
+> The aggregation loop then skips those CPUs for all metrics:
+> 
+>     for (cpu = 0; cpu < num_cpu; cpu++) {
+>         if (!counts[cpu])
+>             continue;
+>         ...
+>         metrics[m].val.counter += val->counter;
+>         ...
+>         metrics[m].scaled_val += val->counter * scale;
+>     }
+> 
+> If a selected metric is never scheduled on any CPU (the scenario this
+> series targets - commit 44f919dd1fbc describes profiling iTLB misses on
+> a long-running program with a full PMU), then every CPU with counts[cpu]
+> != 0 gets zeroed.
+> 
+> For example, `bpftool prog profile <prog> cycles itlb_misses`:
+> 
+>   * profile_valid_count becomes 0
+>   * cycles' val.counter and scaled_val stay 0 even though the cycles
+>     event was measured correctly on every CPU
+>   * plain output prints "run_cnt 51397" followed by "0 cycles" and
+>     "0 itlb_misses" with no ratio column
+> 
+> Before this patch the same run reported the real cycles count and 0 for
+> itlb_misses, so the healthy metric's data is lost.
+> 
+> In JSON mode there is no diagnostic at all. The p_info() call in
+> profile_filter_cpus() returns immediately when json_output is set, so
+> a consumer sees run_cnt=51397 with value=0, value_scaled=0, enabled=0,
+> running=0, and only run_cnt_valid=0 as a hint.
+> 
+> The commit message scopes the change to ratios ("Use the same CPU set
+> for derived ratios"), and the .rst says "all metric values exclude that
+> CPU so that ratios use a consistent CPU set" but neither documents that
+> a single unscheduled metric collapses the whole report to zeros, and
+> JSON gives no warning.
+> 
+> Would it make sense to exclude only the affected metric, or keep the raw
+> per-metric aggregation intact and restrict only the ratio denominators?
+> 
+>> @@ -2250,24 +2322,34 @@ static void profile_print_readings_json(void)
+>>
+>>  static void profile_print_readings_plain(void)
+>>  {
+>> -	__u32 m;
+>> +	__u32 i;
+>>
+>>  	printf("\n%18llu %-20s\n", profile_total_count, "run_cnt");
+>> -	for (m = 0; m < ARRAY_SIZE(metrics); m++) {
+>> -		struct bpf_perf_event_value *val = &metrics[m].val;
+>> +	for (i = 0; i < ARRAY_SIZE(metrics); i++) {
+>> +		struct profile_metric *m = &metrics[i];
+>> +		struct bpf_perf_event_value *val = &m->val;
+>>  		int r;
+>> +		__u64 ratio;
+>>
+>> -		if (!metrics[m].selected)
+>> +		if (!m->selected)
+>>  			continue;
+>> -		printf("%18llu %-20s", val->counter, metrics[m].name);
+>> +		printf("%18llu %-20s", m->scaled_val, m->name);
+>>
+>> -		r = metrics[m].ratio_metric - 1;
+>> -		if (r >= 0 && metrics[r].selected &&
+>> -		    metrics[r].val.counter > 0) {
+>> +		r = m->ratio_metric;
+>> +		switch (r) {
+>> +		case METRIC_RUN_CNT:
+>> +			ratio = profile_valid_count;
+>> +			break;
+>> +		case METRIC_NONE:
+>> +			ratio = 0;
+>> +			break;
+>> +		default:
+>> +			ratio = metrics[r].scaled_val;
+>> +		}
+>> +		if (ratio) {
+>>  			printf("# %8.2f %-30s",
+>> -			       val->counter * metrics[m].ratio_mul /
+>> -			       metrics[r].val.counter,
+>> -			       metrics[m].ratio_desc);
+>> +			       m->scaled_val * m->ratio_mul / ratio,
+>> +			       m->ratio_desc);
+>>  		} else {
+>>  			printf("%-41s", "");
+>>  		}
+> 
+> Plain output prints profile_total_count as "run_cnt" but the new "cycles
+> per run" column divides by profile_valid_count, and profile_valid_count
+> is never printed in plain mode (it is only exposed as the JSON
+> run_cnt_valid field).
+> 
+> Whenever profile_filter_cpus() excludes at least one CPU the two differ,
+> so the displayed numbers cannot be reconciled. The user sees run_cnt and
+> a scaled cycles value, and "# <x> cycles per run" where
+> x != cycles/run_cnt, with no way to see the denominator that was
+> actually used.
+> 
+> The only signal is the p_info() lines on stderr, which are easy to miss
+> when stdout is redirected and are suppressed entirely under --json.
+> 
+> Would it make sense to print the valid run count in plain mode (as JSON
+> now does) or label the ratio with the CPU set it was computed over?
+> 
+> 
 > ---
->  tools/perf/util/annotate-arch/Build            |   1 +
->  tools/perf/util/annotate-arch/annotate-alpha.c | 185 +++++++++++++++++++=
-++++++
->  tools/perf/util/disasm.c                       |  15 +-
->  tools/perf/util/disasm.h                       |   1 +
->  4 files changed, 200 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/annotate-arch/Build b/tools/perf/util/annota=
-te-arch/Build
-> index 23316743fdc5..0a74e1a9f17b 100644
-> --- a/tools/perf/util/annotate-arch/Build
-> +++ b/tools/perf/util/annotate-arch/Build
-> @@ -1,3 +1,4 @@
-> +perf-util-y +=3D annotate-alpha.o
->  perf-util-y +=3D annotate-arc.o
->  perf-util-y +=3D annotate-arm.o
->  perf-util-y +=3D annotate-arm64.o
-> diff --git a/tools/perf/util/annotate-arch/annotate-alpha.c b/tools/perf/=
-util/annotate-arch/annotate-alpha.c
-> new file mode 100644
-> index 000000000000..ccb13e2338a2
-> --- /dev/null
-> +++ b/tools/perf/util/annotate-arch/annotate-alpha.c
-> @@ -0,0 +1,185 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <linux/compiler.h>
-> +#include <linux/kernel.h>
-> +#include <linux/zalloc.h>
-> +#include "../../util/disasm.h"
-> +#include "../../util/map.h"
-> +#include "../../util/maps.h"
-> +#include "../../util/symbol.h"
-> +#include "../../util/thread.h"
-> +
-> +/*
-> + * Alpha control-transfer instructions, as printed by objdump:
-> + *
-> + *   PC-relative (opcode group 0x30-0x3f), 21-bit displacement:
-> + *     br, bsr                             unconditional / to-subroutine
-> + *     beq bne blt ble bgt bge blbc blbs   integer conditional
-> + *     fbeq fbne fblt fble fbgt fbge       floating conditional
-> + *
-> + *   Register-indirect (JSR group, opcode 0x1a):
-> + *     jmp, jsr, ret, jcr
-> + *
-> + * bsr/jsr (and jcr, the coroutine form, which binutils prints in prefer=
-ence to
-> + * the jsr_coroutine spelling) save a return address, so they are calls;=
- ret
-> + * returns; everything else that transfers control is a jump.
-> + *
-> + * Alpha has no machine "mov"; objdump prints "mov"/"fmov" as pseudos fo=
-r
-> + * bis/cpys, so map them to mov_ops when present.  The no-ops are delibe=
-rately
-> + * left alone: nop_ops would let delete_last_nop() trim the padding gcc =
-leaves
-> + * at the end of a function, but its scnprintf() prints the literal "nop=
-", and
-> + * Alpha pads with unop (ldq_u $31) rather than nop.
-> + */
-> +
-> +/*
-> + * The generic call__parse() expects the target address to be the first =
-thing
-> + * in the operand string, but a bsr prints its return-address register f=
-irst:
-> + *
-> + *     bsr     t0,fffffc0001031dc0 <cserve_ena>
-> + *
-> + * so take the address from after the comma.  Without this the address c=
-omes
-> + * out as 0, and neither the callee symbol nor the annotation browser's
-> + * "go to target" work.
-> + */
-> +static int alpha_call__parse(const struct arch *arch, struct ins_operand=
-s *ops,
-> +                            struct map_symbol *ms,
-> +                            struct disasm_line *dl __maybe_unused)
-> +{
-> +       char *endptr, *tok, *name;
-> +       struct map *map =3D ms->map;
-> +       struct addr_map_symbol target;
-> +
-> +       tok =3D strchr(ops->raw, ',');
-> +       if (tok =3D=3D NULL)
-> +               return -1;
-> +
-> +       ops->target.addr =3D strtoull(tok + 1, &endptr, 16);
-> +       if (endptr =3D=3D tok + 1)
-> +               return -1;
-> +
-> +       /* A stripped object has no "<symbol>" to name the target with. *=
-/
-> +       name =3D strchr(endptr, '<');
-> +       if (name =3D=3D NULL)
-> +               goto find_target;
-> +
-> +       name++;
-> +
-> +       if (arch->objdump.skip_functions_char &&
-> +           strchr(name, arch->objdump.skip_functions_char))
-> +               return -1;
-> +
-> +       tok =3D strchr(name, '>');
-> +       if (tok =3D=3D NULL)
-> +               return -1;
-> +
-> +       *tok =3D '\0';
-> +       ops->target.name =3D strdup(name);
-> +       *tok =3D '>';
-> +
-> +       if (ops->target.name =3D=3D NULL)
-> +               return -1;
-> +
-> +find_target:
-> +       target =3D (struct addr_map_symbol) {
-> +               .ms =3D { .map =3D map__get(map), },
-> +               .addr =3D map__objdump_2mem(map, ops->target.addr),
-> +       };
-> +
-> +       if (maps__find_ams(thread__maps(ms->thread), &target) =3D=3D 0 &&
-> +           map__rip_2objdump(target.ms.map,
-> +                             map__map_ip(target.ms.map, target.addr)) =
-=3D=3D ops->target.addr)
-> +               ops->target.sym =3D target.ms.sym;
-> +
-> +       addr_map_symbol__exit(&target);
-> +       return 0;
-> +}
-> +
-> +static const struct ins_ops alpha_call_ops =3D {
-> +       .parse     =3D alpha_call__parse,
-> +       .scnprintf =3D call__scnprintf,
-> +       .is_call   =3D true,
-> +};
-> +
-> +/*
-> + * jsr and jmp transfer control to a register, and their trailing operan=
-d is
-> + * only a branch prediction hint:
-> + *
-> + *     jsr     ra,(t12),fffffc0001014ee8 <_printk>
-> + *
-> + * binutils extracts that hint as a 14-bit signed field scaled by four a=
-nd
-> + * prints it relative to the next instruction (extract_jhint() in alpha-=
-opc.c,
-> + * print_insn_alpha() in alpha-dis.c), so it can name the callee only wh=
-en the
-> + * callee lies within the resulting +-32KB.  It also defaults to zero, w=
-hich
-> + * prints as the next instruction.  Most hints are therefore not the cal=
-lee at
-> + * all, and parsing one would invent a call target, so these resolve no =
-target
-> + * and keep their operands, as an indirect call does elsewhere.  The hin=
-t on
-> + * jcr is not even an address.
-> + */
-> +static const struct ins_ops alpha_indirect_call_ops =3D {
-> +       .scnprintf =3D ins__raw_scnprintf,
-> +       .is_call   =3D true,
-> +};
-> +
-> +static const struct ins_ops alpha_indirect_jump_ops =3D {
-> +       .scnprintf =3D ins__raw_scnprintf,
-> +       .is_jump   =3D true,
-> +};
-> +
-> +static int is_alpha_cond_branch(const char *name)
-> +{
-> +       static const char *const branches[] =3D {
-> +               "beq", "bne", "blt", "ble", "bgt", "bge", "blbc", "blbs",
-> +               "fbeq", "fbne", "fblt", "fble", "fbgt", "fbge",
-> +       };
-> +       unsigned int i;
-> +
-> +       for (i =3D 0; i < ARRAY_SIZE(branches); i++) {
-> +               if (!strcmp(name, branches[i]))
-> +                       return 1;
-> +       }
-> +       return 0;
-> +}
-> +
-> +static const struct ins_ops *alpha__associate_instruction_ops(struct arc=
-h *arch, const char *name)
-> +{
-> +       const struct ins_ops *ops =3D NULL;
-> +
-> +       if (!strcmp(name, "bsr")) {
-> +               ops =3D &alpha_call_ops;
-> +       } else if (!strcmp(name, "jsr") ||
-> +                  !strcmp(name, "jcr")) {
-> +               ops =3D &alpha_indirect_call_ops;
-> +       } else if (!strcmp(name, "ret")) {
-> +               ops =3D &ret_ops;
-> +       } else if (!strcmp(name, "jmp")) {
-> +               ops =3D &alpha_indirect_jump_ops;
-> +       } else if (!strcmp(name, "br") ||
-> +                  is_alpha_cond_branch(name)) {
-> +               ops =3D &jump_ops;
-> +       } else if (!strcmp(name, "mov") ||
-> +                  !strcmp(name, "fmov")) {
-> +               ops =3D &mov_ops;
-> +       }
-> +
-> +       if (ops)
-> +               arch__associate_ins_ops(arch, name, ops);
-> +
-> +       return ops;
-> +}
-> +
-> +const struct arch *arch__new_alpha(const struct e_machine_and_e_flags *i=
-d,
-> +                                  const char *cpuid __maybe_unused)
-> +{
-> +       struct arch *arch =3D zalloc(sizeof(*arch));
-> +
-> +       if (!arch)
-> +               return NULL;
-> +
-> +       arch->name =3D "alpha";
-> +       arch->id =3D *id;
-> +       arch->associate_instruction_ops =3D alpha__associate_instruction_=
-ops;
-> +       /* objdump emits no comments for Alpha; '#' is what the assembler=
- uses. */
-> +       arch->objdump.comment_char =3D '#';
-> +       return arch;
-> +}
-> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> index 6cfdbabbb8c7..49c206a88eec 100644
-> --- a/tools/perf/util/disasm.c
-> +++ b/tools/perf/util/disasm.c
-> @@ -161,6 +161,8 @@ const struct arch *arch__find(uint16_t e_machine, uin=
-t32_t e_flags, const char *
->                 .e_flags =3D e_flags,
->         };
->         const struct arch *result =3D NULL, **tmp;
-> +       const struct arch *(*new_fn)(const struct e_machine_and_e_flags *=
-id,
-> +                                    const char *cpuid) =3D NULL;
->
->         if (num_archs > 0) {
->                 tmp =3D bsearch(&key, archs, num_archs, sizeof(*archs), a=
-rch__key_cmp);
-> @@ -171,7 +173,16 @@ const struct arch *arch__find(uint16_t e_machine, ui=
-nt32_t e_flags, const char *
->         if (result)
->                 return result;
->
-> -       if (e_machine >=3D ARRAY_SIZE(arch_new_fn) || arch_new_fn[e_machi=
-ne] =3D=3D NULL) {
-> +       /*
-> +        * EM_ALPHA (0x9026) is far too large to index arch_new_fn[], so =
-it is
-> +        * selected explicitly; everything else uses the e_machine-indexe=
-d table.
-> +        */
-> +       if (e_machine =3D=3D EM_ALPHA)
-> +               new_fn =3D arch__new_alpha;
-> +       else if (e_machine < ARRAY_SIZE(arch_new_fn))
-> +               new_fn =3D arch_new_fn[e_machine];
-> +
-> +       if (new_fn =3D=3D NULL) {
->                 errno =3D ENOTSUP;
->                 return NULL;
->         }
-> @@ -182,7 +193,7 @@ const struct arch *arch__find(uint16_t e_machine, uin=
-t32_t e_flags, const char *
->
->         archs =3D tmp;
->
-> -       result =3D arch_new_fn[e_machine](&key, cpuid);
-> +       result =3D new_fn(&key, cpuid);
->         if (!result) {
->                 pr_err("%s: failed to initialize %u arch priv area\n",
->                         __func__, e_machine);
-> diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-> index 25756e3f47e4..adbdbf8f1f35 100644
-> --- a/tools/perf/util/disasm.h
-> +++ b/tools/perf/util/disasm.h
-> @@ -122,6 +122,7 @@ extern const struct ins_ops ret_ops;
->
->  int arch__associate_ins_ops(struct arch *arch, const char *name, const s=
-truct ins_ops *ops);
->
-> +const struct arch *arch__new_alpha(const struct e_machine_and_e_flags *i=
-d, const char *cpuid);
->  const struct arch *arch__new_arc(const struct e_machine_and_e_flags *id,=
- const char *cpuid);
->  const struct arch *arch__new_arm(const struct e_machine_and_e_flags *id,=
- const char *cpuid);
->  const struct arch *arch__new_arm64(const struct e_machine_and_e_flags *i=
-d, const char *cpuid);
->
-> --
-> 2.54.0
->
+> AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
+> See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+> 
+> CI run summary: https://github.com/kernel-patches/bpf/actions/runs/34246064212
+
