@@ -1,232 +1,245 @@
 Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7305921E1
-	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 17:11:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81DEB514775
+	for <linux-perf-users@vger.kernel.org>; Tue,  8 Sep 2026 17:14:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788887505; cv=pass; b=hH8UVgdSaEYnUMCKhQ/Gk5MkSXCRuB6lKbrkHgHyIWMPjlzlt8iavcVTaIh8GNVGbo76PZQD16DhIsQ9qjDOXzRK2NNWmPUNB+VkJNxAi8xl6ePL/bjAeNF319DWFzOCaC/xU5OSk3+yfmlxDmkErDto+in7jW+raZUXwXcvIp0=
+	t=1788887685; cv=pass; b=Czv0nL1eIbI4+inIr+qmoXyW4cdGS/A1IPi5UCz+gWPHdhyc0sWS4rXI4EkKQCPT9zR2V6n5IPu3X1vkCzd7bnZ3oSqw7IgIu9+uI2GMHNM8m59EP4AAHRdjhzg8x4AlEeGGizWRZl8a0kqVCZkaOXbD5ib3VxJEY8mvFciWrfM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788887505; c=relaxed/simple;
-	bh=EsSaRGvIxD63ugwBKEyi2i+Vt5mUM4Sz6FUce0h4zBY=;
+	s=arc-20240116; t=1788887685; c=relaxed/simple;
+	bh=XS2DOsAZdUoMv3cfbY4kaZFDPxLymXshnMS4j/7nPkI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NpYWpxgVymJZNlFX11B8bWS70WStosWA/SHijNZWToBuURMbegOmTDs4FUQoi7Eprwzola7kdCBvNu2BPxEvbCWWJ6/ZKfjZxHUVgvZNlLgNQdT0mYSWS6+xCSmhi6L+U2aZ40PNmwMOrZJSDqTQX4ZOLr8kKj4p8V/5IBwpJOE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lyzEzKRj; arc=pass smtp.client-ip=74.125.230.204
+	 To:Cc:Content-Type; b=We/SjoUpEOribaEEfvwaPbAbPtddGrEQJu/DZl0tjLi525lhUnP9YxXE1EckVtk3DUn7natYYunLpTOk4wuDLtcxN+86XmK0eHaxeW83vLXbTuQbj/Gx5PfGtzzB977wdHOZk3UpCM2074X6ETc4OhtGLxLbDgD/SyalIGXKVdc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wjE/laDd; arc=pass smtp.client-ip=74.125.230.204
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lyzEzKRj"
-Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-5306706e89dso757541cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 08 Sep 2026 10:11:43 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788887502; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wjE/laDd"
+Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-530411c7ee1so663561cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Sep 2026 10:14:43 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1788887682; cv=none;
         d=google.com; s=arc-20260327;
-        b=Fz5qpuHB6iCYDaSFx0yD6O6gZ57KfogibrZ0EM1dXHy9WNwk1vz8ycdaSMeYx+9Bvf
-         ZLbVUlxS9/alFKumUwpeaQD1ja5WwAQBKMZOd82EW45nP3wrzqXglQJ1ISGVKJdjxlaC
-         r1OoWwfrLlw8WLBZ50HS0IU3SOED9hBoumRBjeVXZFVMlhCSF7EipFYLQzE3kEwLypcd
-         fVSEpfJGaRqNt52McbSPql0OE3z2cTrpV1I9V9HudOIwyHtmzp4X+TN7IQ4enyaTiBYa
-         lZ9mg8OpHJMOXPiGqPf6gNsMsqpIMoiFxm5CRahyI7fN+fDrrkjBk7nOgC6WUobblylQ
-         onAg==
+        b=ReaZIA4tPcc/kKIUIA1iO5uP9cqN/50Li9NNYbG709+UsW1NknLW4ZGDHX8E8EYxuD
+         /VM/6nvYsEhWcij8BbpxdHQTVDJBJyjWxYFFnOpYDPqa6wAghibBHFX3sg/cXvnqH5eZ
+         oyftqEUTURnYjrPEZhRzsNINZDUahgFwJqCTcfwdjkDGmswuJ5VmMtQAXOHY5qZEP214
+         UpgbvWHdpkk++9S+cUPaxE5NtuMLS89E/sqNuaHxAyBewR0WRF4jJUvXyl6QbkgrrQ73
+         w5HpzWBaBRt1aQL6aDPRUeQxTR8GDSIh16FxQDHRzmHt+EoxnWNhFSPp1elcoLhD7S3u
+         b+2w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=zrmv8bXE0okXwbTlSHoQW+GmP7+eHityU98CjsAMjJQ=;
-        fh=COvGY4Xd5wdHcpmWtfjqm7O84AOROs4/xQ85kS33mlk=;
-        b=rBkPgJWm/C2GU5DtxnQuxIM03pM4w3BbhBc1qsUngXUuA4nYAD8t4NH1z3oUCB0LbC
-         OHwaH5xuLdPyEhXllxKxXYG2D+ktcb3YhV9b4QrL0KGKeJw6osjrygz7qZP0oE6sYA+a
-         iR7iclKzZRds+8FdYbaJIsKUNq1nqHpTQD/TBnBlvx/74hS3BqrC3vyDuaOA1Llmp9Tv
-         STD0lHPO0lDY9f6wlOUJS/OI7jU2cDpOQF+LEJ4RMaLNu3fYVhu2/KYwJQcfSmv0tJzK
-         WfoXBAveJQMFQ2FCEwKLekLsWUVOggHG9HosNrDPNL0JANnrgDc3vWDysddOPCC5Geut
-         R3Fg==;
+        bh=CXI7gwxxGgVVUavBiXahE7l6pKPePlATykxGcqw8prc=;
+        fh=RU9VTTfBVOM35XncLFyhhZ8cpP6tzYUUmPeYMcKopFc=;
+        b=i6pFbs1ZcARANJPtDexnaa1xge/v7BtprCnPl+IU9zjg7fRX2JCrz9Cys5x6h/585C
+         UEizSvwvsHba6K5lfIlU3MoDDDkeYwqVtlaMmyGgZ4Tjd21uR7xjEsHM9Q7ZndsXDqvE
+         zG5XWlZOb5s9w7jOm0DUuZqsScQt/f0iwZbwthZ75o1Yzt/5G+nkbgy3wWlLghkG32MZ
+         tLO+M1Eu8QAIZPdV4vC9XBy9njPIZkNhHxfqz7EruQiAGGr1ILm1yZpMSYpeTLDbUr5K
+         1vf0sEt6i/siUGh/eWeLAIHqs+JNQpsYyYYD5d6/gOJrjYTomsV6EsN4kAQ4G0AXTqCg
+         aC2w==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788887502; x=1789492302; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1788887682; x=1789492482; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=zrmv8bXE0okXwbTlSHoQW+GmP7+eHityU98CjsAMjJQ=;
-        b=lyzEzKRjvSuAxWx7P7RutK/Jinicm/Iamy1bNZgyWe+Tv+J7JnKSG+zdZPs/iKHheZ
-         LXyIVoABQwwc/PFayG1XmBPicuCrUc7tmYJGykamo4/yZwl11/teV8GkNG39fMqFD56z
-         X9o+W6ljWVjaLUdgzZN78otkUXm3asFMbk2vqRWWv/XBsD/Q6DIUG7ej01Vy5dfURuvM
-         jfXi621lFujbZ1LjQ2NJoADA5fokGsJwo59uXHG5E5L+QOBX+TngtWS0cqRvJF4YWXD2
-         WP85jlmS8aIYv6FY8e/+DCigPQczPUSPhf9Lke135IHYGIUK9RvfQRTCQ9OxamvaxqNP
-         rzxg==
+        bh=CXI7gwxxGgVVUavBiXahE7l6pKPePlATykxGcqw8prc=;
+        b=wjE/laDdweUra2t9SxOM/VgEg0OYbN9xpc4amKwWLzkXugnnpH0p26dAoqzr2cSP0x
+         k3eOg0xwwStCN7JC5z1ph/6ADmthNSAGunPUnMJqDodpt++0lp08/dvxC0DxmD2ggCkk
+         cslwZPowfCGw4Z59cDn/wED71welEUW5UKIqY3yU6E020erqt8Bjry6MdqCYIoSYY3f/
+         4F73bPkjRZRuf4DrvDqQRgSGL3ebVTRdow9/HtSPqh+ryGrJFuR35jV0nW2x07chizFU
+         RRgB06h4H2TQ0+Jfqlscotd2CPFGduiyaqOmmfnSdbymXE+BsKx7dTZe5o34EvTG3WjD
+         PzeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788887502; x=1789492302;
+        d=1e100.net; s=20251104; t=1788887682; x=1789492482;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=zrmv8bXE0okXwbTlSHoQW+GmP7+eHityU98CjsAMjJQ=;
-        b=llenc/EIQqaQPwGdEDC6Qs8yXIgQbR7I51/6enxNSQ8OEHGWbIK8fTZQgW6HJr4cRL
-         P6S5mdm914JBvAIKGCeVVRsZOwarldzpKARFdno4XefFFRnb3/qE/74RT0sZq09pLuXP
-         PDXAc6kI9CWijBCSYr4ubjrqRhIhkyc2yQpAWfw3rup16bFZkMyCpDXHlbOnXC4tk+H+
-         29OEen+HDWQKXwOkhoialP50ieokiQAXz6T2g9kL/VEC4PtzEFs8T2Xjnt1RClxO/zH4
-         yJEhk6Vp1+SW+hB1BwyKGFvBNO4OTiLLKb0sfBhEFEBfco7Qm43yvNQq7uM8Led6anYJ
-         R6XA==
-X-Forwarded-Encrypted: i=1; AKwUvBzPRGQK6wDW+mT3ZaN8k8qlD3vsgMU1HEn+QTjLrii8JJCfpW3zw0d0rWdGhNvAbgiDC/aEOc1g8yaRnSOUBQN5@vger.kernel.org
-X-Gm-Message-State: AFuF++mXUNp+OJvirrceovxIvg6h21p7SCbPK6A7+Z6P25iDY+1jYhJE
-	QDoeAchcY1ZcjqxMhsFwHBGcnhfkfY3RHsvywy346tmUwSvzUW//pSz3e5fqehPG+qM8sQZr4+n
-	YICgLPI2y+sJxF5phGUk5xZAinM0oYJZt9bGiMmuv
-X-Gm-Gg: AYBFou0TQYRJ/lGHPZMYWxDGACCdVcF31jM8S63nXgXklAKrqO4RxupGtdrqvdgS03n
-	xR1H+zONlqsXK9cGRFYA7wKt9E3LdyPkvHSiEpXfTd0n0LBsLi7APwnIMQEGiS70h5ZcoSDAElO
-	fmYnd40cnWDDd+arj4RosgpmKXV0JCFHJLCwvKwvDkVUSNi5AGTNFZe1oGECO6pyb/d2QWafK00
-	cunRZvm93Meq5YAGefdXVqbhrrzskrQTfEG+WhI0ZuunkszQqsRvFT0XImcrjKCG8/NQndu7h/5
-	ezrDwTmXW//vdMckwyUCnEaBimS+QZcUvXT5IaXdAc8DmQZGvZ2tePZlcdDOtuQ7t9vEbwho4w=
-	=
-X-Received: by 2002:a05:622a:2589:b0:517:64f6:3365 with SMTP id
- d75a77b69052e-53065d7943emr51763311cf.4.1788887501596; Tue, 08 Sep 2026
- 10:11:41 -0700 (PDT)
+        bh=CXI7gwxxGgVVUavBiXahE7l6pKPePlATykxGcqw8prc=;
+        b=FjFB7B+xiGmpjgL5vm2BD7mtnsbW6S5U85zA6Fa+KssR6EKfNUyAsbOWMFD6tmqjyv
+         eudc23Iv6h3NR2yGcNKKGyMnPS7FPQ5C5VofuY4PuOtQk/Ow2Dd9czPmzsBs+zEEVWzN
+         TSyqjm0i6GqNsshJ2NJoFxmKfNkNXB1yZE8ngetpXkgfUO5uUTaSMFURN94vq9RGQqmI
+         0Zvf5Jth51prYcGe2Soe4ihNL+Kfn1AUPmH6dXqTv4rGlDJxQ6OltxVGqTc3GyaO/3J2
+         h5TpVHfceElZSc94VD4iftJX5jBL0NgObttUXp2ArA8evuAfY6uW69Ppw+u1HhGKgFAM
+         QsZg==
+X-Forwarded-Encrypted: i=1; AKwUvByW8Yxzdy3Jr70GlSK8yL+IJunRVB2UC3ZC4qtfH1iJRNagln6OJMs1nCk95MI6IIaLxyQxNk5DTouX4nXwJ/yU@vger.kernel.org
+X-Gm-Message-State: AFuF++mIJnGksJsYQfJcNKwLexj/vmLB7zbASi0a8Z8x95h8+aqKWxwP
+	+kUAsmtTQcJntBgWV36Jw4tsHlXVunZRnoTqtEcjHzj8QnRNbgt/UNvG6VaVnNYBuVFxaH7x5a0
+	XV/Kue+KtV38co5XTZt9J+u6ZdMjhXM944VIgw8Zl
+X-Gm-Gg: AYBFou2L808LdzD7iBihqc7buEOr/nsAxkZLKQQ1/bSveTGLXZVfHmocLH2Y57aUr+e
+	gRsT9F3wKmtEoZkZhtiF92iK1AIWjG7aD4QVE30DC734hFhyAwhBrST7AUwaZAUy9nzbu5muwsx
+	tmPNpxtoBtFTX7aPQgB8DEMJHFpZWTS+9+ZqaeY2+AAmNQeBRWHICuWJ/Y4JxN//AeYdYgpWkXd
+	CZXWMzLKPQF6uICvYRzV/b0E+uLjgtaYNGXYgGqTJE1Bm3ox/hYKn9podBY5Qhu+3Dq5DXGTpAB
+	d6xuj2g1KQIVeqvKan5atNFxeqi7hyWtNN2a3UMVXwwVvYBm3twPXItofIYGKXOu4mxCujOC7Pq
+	hjXFl7MgU
+X-Received: by 2002:a05:622a:248a:b0:530:4381:e745 with SMTP id
+ d75a77b69052e-53065e09975mr57662611cf.10.1788887680279; Tue, 08 Sep 2026
+ 10:14:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260904-perf-evlist-uncore-cpu-b4-v1-1-604b55c025ee@sifive.com>
- <CAP-5=fX1uKg8AncsP5BVFtchgns5TquOTB10-mR5ury2CaH0sg@mail.gmail.com> <CACpYXwATq8nU9mB2SuNO6kAUNrj8bH3UjQiHd5X6=9VX4YZJgA@mail.gmail.com>
-In-Reply-To: <CACpYXwATq8nU9mB2SuNO6kAUNrj8bH3UjQiHd5X6=9VX4YZJgA@mail.gmail.com>
+References: <20260908152053.192830-1-adrian.hunter@intel.com>
+In-Reply-To: <20260908152053.192830-1-adrian.hunter@intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 8 Sep 2026 10:11:29 -0700
-X-Gm-Features: AcwNN1W_7TbKFmLSN9KMzfgyNcfZZaPeZ1089C38oYWYBJyJNhXAnE8ie59-N6k
-Message-ID: <CAP-5=fVw0+Xh6Xovj_Vt1XnTT8Y0fK-+wia=oxwFmPaT06MTBg@mail.gmail.com>
-Subject: Re: [PATCH] perf evlist: don't restrict uncore events to PMU CPUs
-To: Nia Su <nia.su@sifive.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Falcon <thomas.falcon@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Tue, 8 Sep 2026 10:14:29 -0700
+X-Gm-Features: AcwNN1XltQf19Ey6oq449cA6CXMDbtRn39Dr-pAV5hAwRRGJUgEcpH4Z84Ojdh0
+Message-ID: <CAP-5=fUY9H-26_CAE6yLXr9ci6F4Wia3BsFJjeDqbPo1qcO7Eg@mail.gmail.com>
+Subject: Re: [PATCH] perf test: waiting.sh: Replace timestamp polling with sleep
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Sep 7, 2026 at 8:23=E2=80=AFPM Nia Su <nia.su@sifive.com> wrote:
+On Tue, Sep 8, 2026 at 8:21=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.c=
+om> wrote:
 >
-> On Fri, Sep 4, 2026 at 11:34=E2=80=AFPM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > On Fri, Sep 4, 2026 at 6:45=E2=80=AFAM Nia Su <nia.su@sifive.com> wrote=
-:
-> > >
-> > > The PMU CPU map has different semantics for core and uncore PMUs.
-> > >
-> > > For core PMUs, pmu_cpus contains the CPUs on which the event can be
-> > > opened. Intersect the user-requested CPU map with the PMU CPU map to
-> > > reject CPUs unsupported by the PMU.
-> > >
-> > > For uncore PMUs, pmu_cpus is just the default CPU to open the event o=
-n,
-> > > not the set of CPUs it can only be opened on.
-> >
-> > This isn't quite true. On a dual socket Intel machine, `pmu_cpus` will
-> > contain a CPU to open the event on per-socket.
+> The waiting helpers implement timeouts using:
 >
-> Yes, I agree. My description was not precise enough. What I wanted to say
-> was that pmu_cpus provides the default CPU(s) used to open an event. It
-> is not necessarily an allowlist. A user may specify another valid CPU,
-> which the PMU driver can resolve to the appropriate control CPU.
+>   date +%s%1N
 >
-> > > The user-requested CPU may
-> > > override the default and be used directly, and the driver can redirec=
-t
-> > > the event to the appropriate control CPU.
-> >
-> > Agreed.
-> >
-> > > Currently, __perf_evlist__propagate_maps() intersects the user-reques=
-ted
-> > > CPU map with pmu_cpus for all PMUs. If the user-requested CPU is not =
-in
-> > > pmu_cpus, the intersection becomes empty and the evsel is removed bef=
-ore
-> > > perf_event_open() is called.
-> >
-> > Could you give a command line example of the perf tool doing this? I
-> > ask because I'm surprised the uncore specifying a CPU behavior has
-> > been broken. As well as `perf record -C` there is also a somewhat
-> > newer cpu event qualifier.
+> This relies on GNU coreutils date truncating %N to the specified width,
+> so %1N yields tenths of a second.
 >
-> I tested both approaches, but they still fail whenever a perf event is
-> assigned to a CPU outside the uncore PMU's sysfs cpumask. for example,
-> assigning the event to CPU 1 fails when the cpumask is 0:
+> Rust coreutils (uutils) interprets the width differently and does not
+> truncate the nanoseconds field.  Consequently "date +%1N" returns all
+> nine nanosecond digits, causing the elapsed-time calculation to be done
+> in nanoseconds while timeout values remain in tenths of a second.
 >
-> perf stat -C 1 -e <uncore event> -- <program>
+> As a result, timeout comparisons succeed immediately and the waiting
+> helpers time out on their first iteration.  This causes
+> test_intel_pt.sh to fail on systems using uutils "date".
 >
-> Here, for an uncore PMU, pmu_cpumask() reads the sysfs cpumask into
-> pmu->cpus. When the event is created, perf copies pmu->cpus to the
-> local pmu_cpus variable and then stores it in evsel->core.pmu_cpus.
-> In this case, evsel->core.pmu_cpus is {0}. The CPU specified with
-> "-C 1" is stored in evsel->core.cpus as {1}. Then, in this function,
-> __perf_evlist__propagate_maps() then intersects the two maps, resulting
-> in an empty map, so the event is removed before reaching the PMU driver.
+> Avoid implementation-specific date formatting entirely.  Instead, wait
+> for 100 ms on each iteration and count the timeout down.  Besides fixing
+> the portability issue, this removes the busy-waiting behaviour in
+> wait_for_perf_to_start(), which could otherwise consume CPU while
+> waiting for perf record to start.
 >
-> > > Skip the intersection when evsel->requires_cpu is true, which is set =
-for
-> > > uncore PMUs. is_pmu_core is also false for other non-core PMUs, so
-> > > gating on it would have loosened this check for them too. Core PMUs
-> > > continue to be restricted to their PMU CPU map.
-> > >
-> > > requires_cpu can also be set for BPF counters regardless of PMU type,
-> > > but only when has_user_cpus is false, so this guard has no effect the=
-re
-> > > today.
-> >
-> > So the separation between libperf and perf is frustrating, and libperf
-> > lacks the necessary PMU abstraction. Using requires_cpu as a proxy for
-> > an uncore PMU test is okay, but it would be better if we had a boolean
-> > flag especially for this. Given this, a comment should be added saying
-> > that requires_cpu is used as a proxy for an uncore PMU. The real
-> > meaning of requires_cpu is that the event doesn't support
-> > perf_event_open with a thread.
-> >
-> > Thanks,
-> > Ian
+> Since the timeout is now based on repeated sleeps, it is only
+> approximate.  Update the comments accordingly.  Also make is_running()
+> wait for exactly the documented number of tenths by changing its timeout
+> test from -gt to the new logic, and quote tm_out in the modified code.
 >
-> That makes sense. I=E2=80=99ll add a comment clarifying that requires_cpu=
- is used
-> as a proxy for uncore PMUs and keep the current approach for now.
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 
-So I think the flag we can use is `evsel->is_pmu_core` which captures
-the !uncore behavior. I validated the fixes tag is correct.
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> Thanks,
-> Nia
+> ---
+>  tools/perf/tests/shell/lib/waiting.sh | 34 +++++++++++++--------------
+>  1 file changed, 16 insertions(+), 18 deletions(-)
 >
-> > > Fixes: 811082e4b668 ("perf parse-events: Support user CPUs mixed with=
- threads/processes")
-> > >
-> > > Assisted-by: Claude Sonnet 5
-> > > Signed-off-by: Nia Su <nia.su@sifive.com>
-> > > ---
-> > >  tools/lib/perf/evlist.c | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> > > index 1f210dadd666ff818a23712ab95acaa659ccf8dc..a1064175f12ba655a9f7f=
-e42e7c7e4c49ae60423 100644
-> > > --- a/tools/lib/perf/evlist.c
-> > > +++ b/tools/lib/perf/evlist.c
-> > > @@ -80,7 +80,8 @@ static void __perf_evlist__propagate_maps(struct pe=
-rf_evlist *evlist,
-> > >         }
-> > >
-> > >         /* Ensure cpus only references valid PMU CPUs. */
-> > > -       if (!perf_cpu_map__has_any_cpu(evsel->cpus) &&
-> > > +       if (!evsel->requires_cpu &&
-> > > +           !perf_cpu_map__has_any_cpu(evsel->cpus) &&
-> > >             !perf_cpu_map__is_subset(evsel->pmu_cpus, evsel->cpus)) {
-> > >                 struct perf_cpu_map *tmp =3D perf_cpu_map__intersect(=
-evsel->pmu_cpus, evsel->cpus);
-> > >
-> > >
-> > > ---
-> > > base-commit: 73e3f0710014fe6d4ed98cfc02292f6121db7558
-> > > change-id: 20260904-perf-evlist-uncore-cpu-b4-418af0f17c80
-> > >
-> > > --
-> > >
+> diff --git a/tools/perf/tests/shell/lib/waiting.sh b/tools/perf/tests/she=
+ll/lib/waiting.sh
+> index 3a152892e077..43f4322dbe9e 100644
+> --- a/tools/perf/tests/shell/lib/waiting.sh
+> +++ b/tools/perf/tests/shell/lib/waiting.sh
+> @@ -1,77 +1,75 @@
+>  #!/bin/bash
+>  # SPDX-License-Identifier: GPL-2.0
+>
+> -tenths=3Ddate\ +%s%1N
+> -
+>  # Wait for PID $1 to have $2 number of threads started
+> -# Time out after $3 tenths of a second or 5 seconds if $3 is ""
+> +# Time out after approx. $3 tenths of a second or 5 seconds if $3 is ""
+>  wait_for_threads()
+>  {
+>         tm_out=3D$3 ; [ -n "${tm_out}" ] || tm_out=3D50
+> -       start_time=3D$($tenths)
+>         while [ -e "/proc/$1/task" ] ; do
+>                 th_cnt=3D$(find "/proc/$1/task" -mindepth 1 -maxdepth 1 -=
+printf x | wc -c)
+>                 if [ "${th_cnt}" -ge "$2" ] ; then
+>                         return 0
+>                 fi
+> -               # Wait at most tm_out tenths of a second
+> -               if [ $(($($tenths) - start_time)) -ge $tm_out ] ; then
+> +               if [ "${tm_out}" -le 0 ] ; then
+>                         echo "PID $1 does not have $2 threads"
+>                         return 1
+>                 fi
+> +               sleep 0.1
+> +               tm_out=3D$((tm_out - 1))
+>         done
+>         return 1
+>  }
+>
+>  # Wait for perf record -vvv 2>$2 with PID $1 to start by looking at file=
+ $2
+>  # It depends on capturing perf record debug message "perf record has sta=
+rted"
+> -# Time out after $3 tenths of a second or 5 seconds if $3 is ""
+> +# Time out after approx. $3 tenths of a second or 5 seconds if $3 is ""
+>  wait_for_perf_to_start()
+>  {
+>         tm_out=3D$3 ; [ -n "${tm_out}" ] || tm_out=3D50
+>         echo "Waiting for \"perf record has started\" message"
+> -       start_time=3D$($tenths)
+>         while [ -e "/proc/$1" ] ; do
+>                 if grep -q "perf record has started" "$2" ; then
+>                         echo OK
+>                         break
+>                 fi
+> -               # Wait at most tm_out tenths of a second
+> -               if [ $(($($tenths) - start_time)) -ge $tm_out ] ; then
+> +               if [ "${tm_out}" -le 0 ] ; then
+>                         echo "perf recording did not start"
+>                         return 1
+>                 fi
+> +               sleep 0.1
+> +               tm_out=3D$((tm_out - 1))
+>         done
+>         return 0
+>  }
+>
+>  # Wait for process PID %1 to exit
+> -# Time out after $2 tenths of a second or 5 seconds if $2 is ""
+> +# Time out after approx. $2 tenths of a second or 5 seconds if $2 is ""
+>  wait_for_process_to_exit()
+>  {
+>         tm_out=3D$2 ; [ -n "${tm_out}" ] || tm_out=3D50
+> -       start_time=3D$($tenths)
+>         while [ -e "/proc/$1" ] ; do
+> -               # Wait at most tm_out tenths of a second
+> -               if [ $(($($tenths) - start_time)) -ge $tm_out ] ; then
+> +               if [ "${tm_out}" -le 0 ] ; then
+>                         echo "PID $1 did not exit as expected"
+>                         return 1
+>                 fi
+> +               sleep 0.1
+> +               tm_out=3D$((tm_out - 1))
+>         done
+>         return 0
+>  }
+>
+> -# Check if PID $1 is still running after $2 tenths of a second
+> +# Check if PID $1 is still running after approx. $2 tenths of a second
+>  # or 0.3 seconds if $2 is ""
+>  is_running()
+>  {
+>         tm_out=3D$2 ; [ -n "${tm_out}" ] || tm_out=3D3
+> -       start_time=3D$($tenths)
+>         while [ -e "/proc/$1" ] ; do
+> -               # Check for at least tm_out tenths of a second
+> -               if [ $(($($tenths) - start_time)) -gt $tm_out ] ; then
+> +               if [ "${tm_out}" -le 0 ] ; then
+>                         return 0
+>                 fi
+> +               sleep 0.1
+> +               tm_out=3D$((tm_out - 1))
+>         done
+>         echo "PID $1 exited prematurely"
+>         return 1
+> --
+> 2.53.0
+>
