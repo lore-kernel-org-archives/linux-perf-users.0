@@ -1,122 +1,197 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C6B57D221
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Sep 2026 16:21:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 967C63403F1
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Sep 2026 16:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788970881; cv=none; b=hg/HnQKTA2t6MjkuschjGoekkRbP0HJ+ku1AitOSP8HU4SSMx18wCK2iYhFmLZkppGuZeb/2sL0My53VExbfwgIileiFB1t54qu+kol4L39fLYwvSBTWmT6no0BN52ZqaUdJ+7aPilzwrBqT4B6k0WZZow/XSRcqosZzQAxD2UI=
+	t=1788970989; cv=none; b=NzbkVlDGeektg2f2FySxOYmQPIadD6KMRQp2UKs/Q/pUGCyCcL8flgJgP8ZCpTy6YXfpHXwTnDKXstWZqa7ALeHskOgs4xsbvR+flupNAQQ/WxVQDX8+wdvcHJpYuEh4e93IzvBuj5SlkgqCtbh8lB5DaybaQJexnBdORNMQpdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788970881; c=relaxed/simple;
-	bh=ILldpJYrRs4K2mC4XF1rbuhkBMW9NgxPdkWETsgo8IY=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ARS2TvOkXC+jDfzWh4BQhz+zHYPioJgEV7aENc590sDgwGaWJtffT8ZtRQ39S+jOX20x4Hd5kq4m6jc0U6z/6nA9Jw8ViPPCrVwhLyPAFQfVJbTwdQ6RQuM7riVq1I30eBAuply00F2tX9/kCaJDBWzIj1qLkNg7tyXfbfWeZ20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GTn92Sts; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788970989; c=relaxed/simple;
+	bh=Lu6PqQ98ZIcVokP8zCJPl+McNFYlpvai7wV1clZrQ6s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EzQ0y+YlyWV11GAxY9mRga5Z+/0dvQe8q72o6lnj8PeI9RiSJM0sK3H6hbG6RDWPkHt/+E6WHdSyczxPGTvOGbCHmflpHuEaKRG7Tppx4xGGxpIDhVhHQydyXWKiykgJGtdrvJCtgkQMQf3DKnEFqT1W2vqxQkC1WET/OYi/TX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=mvEyKiaI; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GTn92Sts"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C3B51F000FF;
-	Wed,  9 Sep 2026 16:21:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788970879;
-	bh=tbVjuZPybYzUsB6ieqwGSMuePNFunNxN+L2+PiS9SOY=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=GTn92StsyKOctbNP7R66eavYrMLgZzoXPjeYktSTF1kri/ayu9kIioEflhYlgwrry
-	 lDAzv0k3f8/7efRRnOGPJPQN467AD+kh6zeHb4nNJfRthU+iQkMTriY4Fa46EszJSs
-	 b4rXhuqdzpdkVwb//tSFVfhnn2HObMx6ZS1+hgZfquNzh0M+EhLGWmiqQZY9sZe7jr
-	 DHlbLrtYiR8tdVJp0lJnWDqCXA/Xl5SJLUJY7vB4FYZyOaFtVgZjtwZQAKBJe+4aTa
-	 29DGSSOkJxy5gq8cBExkzC+tQqOxz4OwejrmDLVLXNtnqSqy6ERryFunCd6Rz98fV/
-	 ElZNBGpZ3BhTg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v3] perf tests: Improvements to build-test performance
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260909161041.1745638-1-irogers@google.com>
-References: <20260903045603.3611902-1-irogers@google.com>
- <20260909161041.1745638-1-irogers@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 09 Sep 2026 16:21:18 +0000
-Message-Id: <20260909162119.3C3B51F000FF@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="mvEyKiaI"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5A441570;
+	Wed,  9 Sep 2026 09:23:01 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.2.212.23])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EA0613F7B4;
+	Wed,  9 Sep 2026 09:23:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1788970985; bh=Lu6PqQ98ZIcVokP8zCJPl+McNFYlpvai7wV1clZrQ6s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=mvEyKiaIe8AagPR0cTpqCEXuig/9ATEtebclddS/6kbds0a4oGrXryXVKG1vTsnuK
+	 hPQRM7Zd9IuH8+fWsHJziT3kfUOudFOQzHWxPMf13xsyjB1yPFkiCuPgRUPM9OT+My
+	 2z5zngyq1GMrxake/l4RyoJlTC2C9jE+7gyYU5/o=
+From: Robin Murphy <robin.murphy@arm.com>
+To: will@kernel.org
+Cc: mark.rutland@arm.com,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] perf/arm_cspmu: Add Arm system PMU
+Date: Wed,  9 Sep 2026 17:23:00 +0100
+Message-ID: <84a65061841c8870375ee6b0621dd3f61651763d.1788970980.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.54.0.dirty
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] The parallelization of the `out` target causes destructive races=
- between `FEATURES_DUMP_FILE` and `FEATURES_DUMP_FILE_STATIC` within the sh=
-ared source tree.
---
+Arm's latest Compute Subsystems and SoCs are using a common PMU block
+in various places which can mostly just be driven as a generic 64-bit
+CoreSight PMU, but does have an IMP-DEF register for additional
+filtering. The details of event and filter encodings depend on the
+particular PMU instance, so are left to the higher level Arm Telemetry
+Solution tooling.
 
-commit 8a5611d5732e412e746570eca199bea2894c319b
-Author: Ian Rogers <irogers@google.com>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/perf/arm_cspmu/Kconfig      |  7 +++
+ drivers/perf/arm_cspmu/Makefile     |  1 +
+ drivers/perf/arm_cspmu/arm_cspmu.c  |  7 +++
+ drivers/perf/arm_cspmu/arm_cspmu.h  |  1 +
+ drivers/perf/arm_cspmu/arm_syspmu.c | 67 +++++++++++++++++++++++++++++
+ 5 files changed, 83 insertions(+)
+ create mode 100644 drivers/perf/arm_cspmu/arm_syspmu.c
 
-perf tests: Improvements to build-test performance
+diff --git a/drivers/perf/arm_cspmu/Kconfig b/drivers/perf/arm_cspmu/Kconfig
+index 004c1c2ee2ad..d44916312c77 100644
+--- a/drivers/perf/arm_cspmu/Kconfig
++++ b/drivers/perf/arm_cspmu/Kconfig
+@@ -28,6 +28,13 @@ config AMPERE_CORESIGHT_PMU_ARCH_SYSTEM_PMU
+ 	  In the first phase, the driver enables support on MCU PMU used in
+ 	  AmpereOne SoC family.
+ 
++config ARM_SYSTEM_PMU
++	tristate "Arm System PMU"
++	depends on ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU
++	help
++	  Support additional event filtering attributes for the CoreSight-based
++	  PMU blocks found in various parts of Arm Compute Subsystems and SoCs.
++
+ config ARM_BMU
+ 	tristate "ARM Bus Monitor Unit"
+ 	depends on ARM64 || COMPILE_TEST
+diff --git a/drivers/perf/arm_cspmu/Makefile b/drivers/perf/arm_cspmu/Makefile
+index 0bb4d510fc49..c9c42227a3ad 100644
+--- a/drivers/perf/arm_cspmu/Makefile
++++ b/drivers/perf/arm_cspmu/Makefile
+@@ -8,6 +8,7 @@ arm_cspmu_module-y := arm_cspmu.o
+ 
+ obj-$(CONFIG_NVIDIA_CORESIGHT_PMU_ARCH_SYSTEM_PMU) += nvidia_cspmu.o
+ obj-$(CONFIG_AMPERE_CORESIGHT_PMU_ARCH_SYSTEM_PMU) += ampere_cspmu.o
++obj-$(CONFIG_ARM_SYSTEM_PMU) += arm_syspmu.o
+ 
+ obj-$(CONFIG_ARM_BMU) += arm-bmu.o
+ obj-$(CONFIG_ARM_DMC750) += arm-dmc750.o
+diff --git a/drivers/perf/arm_cspmu/arm_cspmu.c b/drivers/perf/arm_cspmu/arm_cspmu.c
+index 912f03ce3ef5..9f298ea1a974 100644
+--- a/drivers/perf/arm_cspmu/arm_cspmu.c
++++ b/drivers/perf/arm_cspmu/arm_cspmu.c
+@@ -358,6 +358,13 @@ static struct arm_cspmu_impl_match impl_match[] = {
+ 		.module		= NULL,
+ 		.impl_init_ops	= NULL,
+ 	},
++	{
++		.module_name	= "arm_syspmu",
++		.pmiidr_val	= ARM_CSPMU_IMPL_ID_ARM,
++		.pmiidr_mask	= PMIIDR_IMPLEMENTER,
++		.module		= NULL,
++		.impl_init_ops	= NULL,
++	},
+ 	{
+ 		.module_name	= "ampere_cspmu",
+ 		.pmiidr_val	= ARM_CSPMU_IMPL_ID_AMPERE,
+diff --git a/drivers/perf/arm_cspmu/arm_cspmu.h b/drivers/perf/arm_cspmu/arm_cspmu.h
+index c4058d602477..03e34692a965 100644
+--- a/drivers/perf/arm_cspmu/arm_cspmu.h
++++ b/drivers/perf/arm_cspmu/arm_cspmu.h
+@@ -149,6 +149,7 @@
+ 
+ /* JEDEC-assigned JEP106 identification code */
+ #define ARM_CSPMU_IMPL_ID_NVIDIA	0x36B
++#define ARM_CSPMU_IMPL_ID_ARM		0x43B
+ #define ARM_CSPMU_IMPL_ID_AMPERE	0xA16
+ 
+ /* PMDEVARCH */
+diff --git a/drivers/perf/arm_cspmu/arm_syspmu.c b/drivers/perf/arm_cspmu/arm_syspmu.c
+new file mode 100644
+index 000000000000..ac234768a2f8
+--- /dev/null
++++ b/drivers/perf/arm_cspmu/arm_syspmu.c
+@@ -0,0 +1,67 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/io.h>
++#include <linux/module.h>
++
++#include "arm_cspmu.h"
++
++#define PMEVFILT3R	0x200
++
++static struct attribute *arm_syspmu_format_attrs[] = {
++	ARM_CSPMU_FORMAT_EVENT_ATTR,
++	ARM_CSPMU_FORMAT_FILTER_ATTR,
++	ARM_CSPMU_FORMAT_FILTER2_ATTR,
++	ARM_CSPMU_FORMAT_ATTR(filter3, "config3:0-63"),
++	NULL,
++};
++
++static struct attribute **arm_syspmu_get_format_attrs(const struct arm_cspmu *cspmu)
++{
++	return devm_kmemdup(cspmu->dev, arm_syspmu_format_attrs,
++			    sizeof(arm_syspmu_format_attrs), GFP_KERNEL);
++}
++
++static void arm_syspmu_set_ev_filter(struct arm_cspmu *cspmu,
++				     const struct perf_event *event)
++{
++	u32 offset = 8 * event->hw.idx;
++
++	writeq(event->attr.config1, cspmu->base0 + PMEVFILTR + offset);
++	writeq(event->attr.config2, cspmu->base0 + PMEVFILT2R + offset);
++	writeq(event->attr.config3, cspmu->base0 + PMEVFILT3R + offset);
++}
++
++static int arm_syspmu_init_ops(struct arm_cspmu *cspmu)
++{
++	switch (FIELD_GET(PMIIDR_PRODUCTID, cspmu->impl.pmiidr)) {
++	case 0x9c3:
++		cspmu->impl.ops.set_ev_filter = arm_syspmu_set_ev_filter;
++		cspmu->impl.ops.get_format_attrs = arm_syspmu_get_format_attrs;
++		break;
++	default:
++		break;
++	}
++	return 0;
++}
++
++static const struct arm_cspmu_impl_match arm_syspmu_param = {
++	.pmiidr_val	= ARM_CSPMU_IMPL_ID_ARM,
++	.module		= THIS_MODULE,
++	.impl_init_ops	= arm_syspmu_init_ops
++};
++
++static int __init arm_syspmu_init(void)
++{
++	return arm_cspmu_impl_register(&arm_syspmu_param);
++}
++
++static void __exit arm_syspmu_exit(void)
++{
++	arm_cspmu_impl_unregister(&arm_syspmu_param);
++}
++
++module_init(arm_syspmu_init);
++module_exit(arm_syspmu_exit);
++
++MODULE_DESCRIPTION("Arm System PMU Driver");
++MODULE_LICENSE("GPL");
+-- 
+2.54.0.dirty
 
-This patch replaces hardcoded 'make' calls with '$(MAKE)' in the perf tests
-Makefile to ensure proper GNU Make jobserver file descriptor inheritance. It
-also removes 'unexport MAKEFLAGS' in favor of native GNU Make conditionals
-for parallelism. Finally, it optimizes the 'out' target by wrapping the tar=
-get
-list in a parallel sub-make call.
-
-> diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-> index d2c2f526e1db0..4a865e58f2bea 100644
-> --- a/tools/perf/tests/make
-> +++ b/tools/perf/tests/make
-[ ... ]
-> @@ -383,20 +391,22 @@ all: $(run) $(run_O) tarpkg make_kernelsrc make_ker=
-nelsrc_tools
->  	@echo OK
->  	@rm -f $(FEATURES_DUMP_FILE) $(FEATURES_DUMP_FILE_STATIC)
-> =20
-> -out: $(run_O)
-> +out:
-> +	$(call clean)
-> +	@$(MAKE) -f tests/make $(run_O) PARALLEL_OPT=3D O_CLEAN=3D0 $(if $(find=
-string jobserver,$(MAKEFLAGS))$(findstring -j,$(MAKEFLAGS)),,$(if $(cores),=
--j$(cores)))
-
-[Severity: Medium]
-When the out target invokes this parallel sub-make for all run_O targets, d=
-oes
-this expose the feature dump dependencies to concurrent evaluation?
-
->  	@echo OK
->  	@rm -f $(FEATURES_DUMP_FILE) $(FEATURES_DUMP_FILE_STATIC)
-> =20
->  ifeq ($(REUSE_FEATURES_DUMP),1)
->  $(FEATURES_DUMP_FILE):
->  	$(call clean)
-> -	@cmd=3D"cd $(PERF) && make FEATURE_DUMP_COPY=3D$@ $(O_OPT) feature-dump=
-"; \
-> +	@cmd=3D"cd $(PERF) && $(MAKE) FEATURE_DUMP_COPY=3D$@ $(O_OPT) feature-d=
-ump"; \
->  	echo "- $@: $$cmd" && echo $$cmd && \
->  	( eval $$cmd ) > /dev/null 2>&1
-> =20
->  $(FEATURES_DUMP_FILE_STATIC):
->  	$(call clean)
-> -	@cmd=3D"cd $(PERF) && make FEATURE_DUMP_COPY=3D$@ $(O_OPT) LDFLAGS=3D'-=
-static' feature-dump"; \
-> +	@cmd=3D"cd $(PERF) && $(MAKE) FEATURE_DUMP_COPY=3D$@ $(O_OPT) LDFLAGS=
-=3D'-static' feature-dump"; \
-
-[Severity: Medium]
-Will these feature dump recipes race destructively?
-
-Since some run_O targets like make_static_O depend on
-FEATURES_DUMP_FILE_STATIC while others depend on FEATURES_DUMP_FILE,
-evaluating them concurrently means both unconditionally invoke make clean a=
-nd
-make feature-dump inside the shared source tree.
-
-Could this cause them to wipe out each other's intermediate artifacts during
-make build-test out-of-tree builds?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260909161041.1745=
-638-1-irogers@google.com?part=3D1
