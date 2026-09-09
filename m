@@ -1,180 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE7D3002B9;
-	Wed,  9 Sep 2026 07:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 011DE4766BF;
+	Wed,  9 Sep 2026 08:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788939485; cv=none; b=LPpDvO14P9dvovPn8DBpbgZboEWgWseOh56r4Yl3HRsELiuo6wI5iGUvzvwyG7C2cybqA2tGiUKe2XyOvDNn17v21zvSMlnoP/DWtW19w+kjr4mq8hfcJYaeIMQkZuEmjQKtYsjAJRIVumrnWTQ1eFr4PDHQJUlqspWXIOWdwrs=
+	t=1788941483; cv=none; b=NP/PN5sGf/+8N2hi0bcxWZIjLLZ44rKK7a3EJERhVFnnK3rehwbYdMq5AqEBgLbOc+ZnYFD7UMXJ3u0Elzt3/TmsxE/vrh05Xju+8BctBrcNSh8uzohbdzZos+lf1/notkJXMkbbEQptyuJpj266xsSaSEZStJc1r/QeuoU4xqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788939485; c=relaxed/simple;
-	bh=nTAm35845aAqmOQtS6HyRYHkKn+bOdSMAV3QF5uJvY8=;
+	s=arc-20240116; t=1788941483; c=relaxed/simple;
+	bh=YF6FUyNL8hVQ+dIR8Zrr5vQjbpWebhdEiRG7jyN1SSc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZdQmzFnen4pGM4M62lN7CkOLWz1/1MCEJEt2hgKO7FlRi4xKC9STZLFtV+TYQNNzy6w4guOP7Nnf0JOeDgs+Fl7UJqdo2lV+8wa+WPR92q+n7cn+23HaVocVKLhTHI0KyyiHyqIHIp0yxOlO+SUikaYa/YdguoVldsNeaQK4tos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=fMvwOMtK; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=L5GncbdPH30AltOk8HRDvd7CmMzE8Ca9X6vOCVQV6psjbhIP0yL1hF1WtgHEQRrhtVKXDYUuFHQkpwpNlSFijszhWS6qIIY3FEf1iVMSu7bA1JLLS/ZXGmrvNT7RP511NW22rC7D7YEASglRYtFr11KGrScBLU2qLutoVjnp77w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=kQhywArT; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="fMvwOMtK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8484C1F00A3A;
-	Wed,  9 Sep 2026 07:38:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linuxfoundation.org;
-	s=korg; t=1788939483;
-	bh=z7WoiQ3kTHyw/Ii8U53W3jB43VLKD3M/+zE0Et0v4Dk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fMvwOMtKjnQJHWqbGOBFRkxLXNBsibipPgj2Q6P064WQJWMW7wfdq4gqVuVvBLOBi
-	 mw2LdSGq7nWqdIa6eYDVqIpvJUSLUA2zonOikKUX6K36rwbteoOJo/Gwa7LLNDfbhI
-	 EHt9w7bjV4yHdhIGfrHtCRftSsoS+o6rrCDY1usY=
-Date: Wed, 9 Sep 2026 09:37:54 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>,
-	David Hildenbrand <david@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>,
-	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
-	Paul Moore <paul@paul-moore.com>,
-	Stephen Smalley <stephen.smalley.work@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Nico Pache <nico.pache@linux.dev>,
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
-	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
-	Usama Arif <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>,
-	Doug Gilbert <dgilbert@interlog.com>,
-	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-	"Martin K. Petersen" <mkp@kernel.org>,
-	Jaya Kumar <jayalk@intworks.biz>, Simona Vetter <simona@ffwll.ch>,
-	Helge Deller <deller@gmx.de>, Sebastian Reichel <sre@kernel.org>,
-	John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kQhywArT"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=eHB0Nf1xfgtREpHnA9gnjy2hVoSWAV9y7zVXfbdUlQc=; b=kQhywArTNsTHVDFQQTi8u05Ckj
+	8dQXL929MmJce4OG/G9A+LiNgrF2Ix92v81HpGpARRoHuNifKJkMp88Pg/0nHk33m3jSWGhDPH4Q5
+	rw3OEV2/LAB112uzEXUXBlg+FAK3+eno49EY1eFthAThzTnfV9a53gqsM8tFo2O5C8wgJSu+zYOgv
+	Myz4EeLCn+WONbdcEG7nW0vgSt4mIDadfQBl6pvqF+pMpKFMqBA5GyQGxHUvMZfDI7S7spHCt0sEN
+	WH7HJWyDwF/SL9D7SQ7VGPcX31fPKXMaORizCA+Xq7PdsUc4ejiqULRcBOLRX73KnTJVS9EBAOv3e
+	adyVdObQ==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.99.2 #2 (Red Hat Linux))
+	id 1x4DOZ-00000000tIe-2xhe;
+	Wed, 09 Sep 2026 08:11:03 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C40CD30036F; Wed, 09 Sep 2026 10:11:01 +0200 (CEST)
+Date: Wed, 9 Sep 2026 10:11:01 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Andi Kleen <ak@linux.intel.com>,
+	"Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>,
-	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
-	Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
-	Muchun Song <muchun.song@linux.dev>,
-	Oscar Salvador <osalvador@suse.de>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	Jan Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oupton@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	Alexander Gordeev <agordeev@linux.ibm.com>,
-	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Andreas Larsson <andreas@gaisler.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Gregory Price <gourry@gourry.net>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>,
-	Kairui Song <kasong@tencent.com>,
-	Kemeng Shi <shikemeng@huaweicloud.com>,
-	Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>,
-	Youngjun Park <youngjun.park@lge.com>,
-	Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	Xu Xin <xu.xin16@zte.com.cn>,
-	Chengming Zhou <chengming.zhou@linux.dev>,
-	Michal Hocko <mhocko@kernel.org>,
-	Miklos Szeredi <miklos@szeredi.hu>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org,
-	selinux@vger.kernel.org, linux-sound@vger.kernel.org,
-	bpf@vger.kernel.org, linux-scsi@vger.kernel.org,
-	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
-	linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-	sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev
-Subject: Re: [PATCH 09/39] drivers/usb/mon: update to use mmap_prepare + map
- kernel pages
-Message-ID: <2026090947-daycare-gentleman-9796@gregkh>
-References: <20260908-b4-mmap-prepare-vma-flag-sanify-v1-0-dacf19cce22b@kernel.org>
- <20260908-b4-mmap-prepare-vma-flag-sanify-v1-9-dacf19cce22b@kernel.org>
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
+	Zide Chen <zide.chen@intel.com>,
+	Falcon Thomas <thomas.falcon@intel.com>,
+	Xudong Hao <xudong.hao@intel.com>,
+	Gennady Kupava <gennady.kupava@gmail.com>,
+	Ravi Bangoria <ravi.bangoria@amd.com>
+Subject: Re: [PATCH 2/2] perf/x86: Disable precise sampling for
+ PERF_SAMPLE_STACK_USER
+Message-ID: <20260909081101.GS4121339@noisy.programming.kicks-ass.net>
+References: <20260908075102.540715-1-dapeng1.mi@linux.intel.com>
+ <20260908075102.540715-2-dapeng1.mi@linux.intel.com>
+ <20260908084906.GO4121339@noisy.programming.kicks-ass.net>
+ <1691a05c-49a6-4b16-8bad-cb3c004ed07c@linux.intel.com>
+ <20260908101914.GQ4121339@noisy.programming.kicks-ass.net>
+ <aqAlddsFPYJvRhFr@tassilo>
+ <CAP-5=fWbSNYpt8p3e+pqjY+xhqs8WrzsBfPaKB1NLBm88mH8Yg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260908-b4-mmap-prepare-vma-flag-sanify-v1-9-dacf19cce22b@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWbSNYpt8p3e+pqjY+xhqs8WrzsBfPaKB1NLBm88mH8Yg@mail.gmail.com>
 
-On Tue, Sep 08, 2026 at 09:01:13PM +0100, Lorenzo Stoakes (ARM) wrote:
-> Replace the deprecated .mmap hook with its replacement .mmap_prepare. As
-> part of this change, additionally take the approach of mapping pages upon
-> mmap rather than providing a fault handler.
+On Tue, Sep 08, 2026 at 01:56:56PM -0700, Ian Rogers wrote:
+> On Tue, Sep 8, 2026 at 8:10 AM Andi Kleen <ak@linux.intel.com> wrote:
+> >
+> > > That's what we already do, no? I have distinct memories of making the
+> > > stack unwind use the NMI regs rather then the PEBS regs.
+> > >
+> > > > In my opinion, it could even make the thing worse. User
+> > > > requires to get precise samplings, but perf silently returns imprecise
+> > > > records, this would mislead user.
+> > >
+> > > Mostly just the unwind might be off a little, the rest is accurate. This
+> > > has been the case 'forever'. Performance analysis isn't for silly
+> > > people, if they can't deal with a little fuzz then perhaps they're in
+> > > the wrong business.
+> >
+> > Is the main problem that the stack doesn't agree? Perhaps there
+> > could be a check for regs->rsp == pebs->user rsp (if in user space)
+> > to detect problematic samples.
+> >
+> > The question is how to report it and who should do the checking.
+> >
+> > It may need new fields in the ABI either to communicate the extra PEBS RSP
+> > or a bit to indicate that there might be a mismatch.
+> >
+> > I guess checking in the kernel and reporting an error might be simpler
+> > and maybe cleaner, but it would likely limit more advanced recovery
+> > possibilities.
+> >
+> > Are there other mismatches that break the unwinding? Perhaps the same
+> > for RBP?
 > 
-> The page span cannot be mutated when an mmap mapping is in place, so this
-> is safe to do in advance (the MON_IOCT_RING_SIZE ioctl operation exits
-> -EBUSY if it's attempted, gated by the rp->mmap_active reference count).
+> For DWARF unwinding any register may be the source of a frame pointer
+> (e.g. the OpenSSL library would use R11 rather than RBP).
 > 
-> Utilise the newly introduced mmap_action_map_discontig_kernel_pages() to do
-> this, which allows for iteration over pages in mon_bin_discontig_get().
+> There is redundancy on x86 you can sample the PERF_REG_X86_IP register
+> in the user register and there is PERF_SAMPLE_IP in the sample event
+> itself.
 > 
-> mon_bin_discontig_init() increments the rp->mmap_active reference count to
-> stabilise page spans. Should an error arise the core unmaps the VMA and
-> mon_bin_vma_close() drops the reference again.
+> My understanding is that IBS can only sample IP and so for precise
+> samples we can use PERF_SAMPLE_IP as the precise location and the user
+> register PERF_REG_X86_IP as the interrupt IP - this would match the
+> other register values in the interrupt.
 > 
-> The vm_ops->close hook implemented in mon_bin_vma_close() will ensure
-> correct reference count arithmetic upon unmap (with mon_bin_vma_open()
-> accounting for splitting).
-> 
-> The existing semantics are all retained, including not mapping past the
-> range of available pages, with a SIGBUS being raised in a userland process
-> that attempts to access past this point.
-> 
-> Ultimately insert_page() is invoked to insert each page, which increments
-> the reference count on each mapped page. This mimics what was being done
-> previously, only we pre-map the entire range rather than doing so on
-> demand.
-> 
-> The existing fault handler did nothing that required demand paging, and was
-> presumably implemented this way due for historic reasons.
-> 
-> One behavioural difference: pages are no longer faulted in on demand, so a
-> page discarded with MADV_DONTNEED is not repopulated and a subsequent
-> access raises SIGBUS, as with other pre-populated kernel mappings.
-> 
-> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> In DWARF unwinding, we initialize the register state using the sampled
+> user registers:
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Oh, I had trouble reading yesterday :/ This is about USER_STACK, not
+CALLCHAIN.
+
+I think we should try very hard to not use USER_STACK, it is an
+abomination. Instead we really should improve CALLCHAIN to be more
+useful. There are a pile of patches for kernel based unwinders,
+including for .eh_frame (if only I had time to actually go look at
+them).
+
+And we should probably look at doing a shadow stack based unwinder as
+well.
+
+This USER_STACK is really the absolute worst possible option. And
+perhaps refusing PEBS+USER_STACK makes sense.
