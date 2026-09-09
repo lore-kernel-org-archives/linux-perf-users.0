@@ -1,83 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C3A33F58D
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Sep 2026 02:55:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA83345EA6
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Sep 2026 03:01:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788922506; cv=none; b=HnavJygM98ZP55s/c+js4E0TJL/FKmgNeTPVzWeWImYQ1+ZMEwZpMxxiXcu79nnzuh2Te352Tidc4cRMUH5r96Ae4PV4zHoV5WrkqW3Tn7u6zMWMQ94HqTjxTV/lZUkq+/t+3xulyRo0Xl3DBIR4s+HlfZEfciBi2qF7BdYkr3o=
+	t=1788922885; cv=none; b=WIqYd64hGHfAjB2TEI6X/cc2204IBTYcEB+mXVz9+5wejEmZzqlbWoMc56oi5hy5WvGdo5uLmt+uY35df45HCO1tzCn6ggbzgu+vOsiaKbQ1Nm1uaJ9GLFYxV+NOOIIS3M4/pxmB4ek/AGHhNjcAcYe3y04TGil9IzVg5X1JXbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788922506; c=relaxed/simple;
-	bh=ILlGEZWS4zWhWLicBHsWUrwrSlTUZxVI5xN7x10oX4g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fxcME9oTPP0jP9jOPqw+v4mQSci3eY19JKNNST/m9jbYRg6Sz7W0Vxfc5xHLjZYWcg71Az1eH1jxTlcnB+td5q5qjaNgzRGHSwzHvki6aV8ArGU1XOWIaA+srNU5k+E327gPM/QMPfbuXJTeqcLo67y3k5+PltCwpof2GAD3G6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eXMEf3La; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1788922885; c=relaxed/simple;
+	bh=WSWeQEUS4HdId/PVru1pckf+Sx9qq7G0WjKTsz2eR7E=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=lF6O8LAYUypxu3urZEcWtzmbcoqlIMQ3ZP3orXgtQ1F6dMx5w5a8GXPHnpOag8Y7AABpqeR5icN82UKCTYG8ZFxLu2cvX3QBuCjdqLsO5XaQqDZICJZbbpTswjjRAu3bIO6GYvzE64uvZG9w92J3uukKE/yF6P1CjO2xwsyLwGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XjNzYcpJ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eXMEf3La"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788922503; x=1820458503;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ILlGEZWS4zWhWLicBHsWUrwrSlTUZxVI5xN7x10oX4g=;
-  b=eXMEf3Lak3RNO7YQu6/JGVEDeHduXa2PlQWfKxEy8Hkzzg1H9NsomDPU
-   soGpaNI0aiVjb02RJjK4i1LJoJGLLRdswNsktEKgsmN9tBFBCGqqRfZ/A
-   Cg1WwJ0I2PpxkCTLTzfYSiUxDDuFUujUDzz1h27anKtvMcXcZ/KZVgglD
-   FhxwB+54Nzy/y5EVha+frkZHFWKsnZfYagg1Sj7Q1UXi6O0LQFt36y58M
-   nhKdUAClHO7r1SxVeY3zirTy3vD7l4g8kdTlx24eatUi641yYzR62bVLa
-   u4mU2s4kBPYV27tO5b88ulQcVYt+iX24+HAhtVqfoT9apc7dWUkClRZv4
-   A==;
-X-CSE-ConnectionGUID: aM6xzcG9QbuooU0RYCdgsg==
-X-CSE-MsgGUID: NTULsFKTQvqCHvxOCeyWcA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11900"; a="89369050"
-X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
-   d="scan'208";a="89369050"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2026 19:55:01 -0700
-X-CSE-ConnectionGUID: EgQXaGZrTJaDYzGs48x3cQ==
-X-CSE-MsgGUID: cVocuo3RTqCSeKui2fER+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
-   d="scan'208";a="275317418"
-Received: from linux-pnp-gnr-1.sh.intel.com ([10.239.83.186])
-  by orviesa005.jf.intel.com with ESMTP; 08 Sep 2026 19:54:59 -0700
-From: Jiebin Sun <jiebin.sun@intel.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiebin Sun <jiebin.sun@intel.com>,
-	sashiko-reviews@lists.linux.dev,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 4/4] perf tests c2c: Add function view stdio coverage
-Date: Wed,  9 Sep 2026 11:01:52 +0800
-Message-ID: <20260909030156.1771188-1-jiebin.sun@intel.com>
-X-Mailer: git-send-email 2.52.0
-In-Reply-To: <aqB8eNXwAvKoiMMR@x2>
-References: <cover.1787283281.git.jiebin.sun@intel.com> <9bd7a313c9c1d71058e857c320c6d5c30cf4cbfa.1787283281.git.jiebin.sun@intel.com> <20260821055803.74B191F00A3A@smtp.kernel.org> <aqB8eNXwAvKoiMMR@x2>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XjNzYcpJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 204B41F00A3A;
+	Wed,  9 Sep 2026 03:01:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788922882;
+	bh=WSWeQEUS4HdId/PVru1pckf+Sx9qq7G0WjKTsz2eR7E=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=XjNzYcpJ+by46r7UrePXt+ANkLUaqRSU1GofYk8W/WWO4OjehWiXaSbomjZ3fR0GF
+	 YaInkDc47tqMq/VibP0KbFBlun+stgjZyVafm/t1i7DXMLTnxWXFchExSCrN5/Eu11
+	 lHwTGJAdO9BaLQ8IETOClvUCi6cJHqKrki4uQjyxP+Yzk4rMrs/ofk+r6dAtzPDh4j
+	 xeb5TZ5VR0kAs6Bl0rofGjcmTGZtSvougVgvYSKwSpUEeI4IxySKdy2kdbzNULhInv
+	 Y3AU69Up2g1ooJ9ERm/8zlb7cf7BBlVZ32Rjzy8KkbT5oOHwIRQpqymGnWPOZfe2AO
+	 Y3BFuC3U4IxuA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v8 2/3] perf tools: make the GTK4 report browser
+ actually loadable at runtime
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Matt Turner" <mattst88@gmail.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260908-perf-gtk2-v8-2-e90d5d155f0d@gmail.com>
+References: <20260908-perf-gtk2-v8-0-e90d5d155f0d@gmail.com>
+ <20260908-perf-gtk2-v8-2-e90d5d155f0d@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 09 Sep 2026 03:01:21 +0000
+Message-Id: <20260909030122.204B41F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi Arnaldo,
+> perf report --gtk dlopen()s libperf-gtk.so, which expects to resolve
+> symbols back against the running perf binary (callchain_param,
+> symbol_conf, evsel__name, and friends live in perf, not the plugin).
+> Two things broke that after the GTK 4 port:
+>=20
+> perf never passed -rdynamic, so none of its symbols were in its
+> dynamic symbol table for a dlopen()ed plugin to find. Add -rdynamic to
+> LDFLAGS when GTK4 support is enabled.
+>=20
+> annotated_source__hist_entry() was a static inline in annotate.h, so
+> ui/gtk/annotate.c calling it pulled hashmap__find()'s expansion,
+> hashmap_find(), into libperf-gtk.so as an undefined symbol. The only
+> hashmap_find perf links against normally is libbpf's internal one
+> (tools/lib/bpf/hashmap.c), built with -fvisibility=3Dhidden, so it can
+> never be exported to a dlopen()ed plugin regardless of LDFLAGS. Move
+> annotated_source__hist_entry() into annotate.c as an ordinary exported
+> function, so the plugin depends on it the same way it already depends
+> on evsel__group_desc() and friends.
+>=20
+> With both fixes, a default 'make GTK4=3D1' build (libbpf statically
+> linked) can dlopen() libperf-gtk.so and open the report browser without
+> NO_LIBBPF=3D1 or manual LDFLAGS. Verified with perf report --gtk against
+> real perf.data on a GTK4 desktop.
+>=20
+> Signed-off-by: Matt Turner <mattst88@gmail.com>
 
-Thanks for checking this.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-Patch 2/4 covers this case:
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260908-perf-gtk2-=
+v8-0-e90d5d155f0d@gmail.com?part=3D2
 
-  perf tests c2c: Report skip when the workload fails
-
-It sets err=2 before returning when the workload fails, while patch 4 calls
-test_c2c_function_report() only when err remains 0.
-
-I also verified this by forcing the workload command to fail. The script
-printed the skip message, did not run the function test, and exited with
-status 2, which the perf test harness treats as a skip.
-
-So I don't think any change is needed here.
-
-Thanks,
-Jiebin
