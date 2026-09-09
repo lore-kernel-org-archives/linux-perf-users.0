@@ -1,110 +1,218 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38452E229F;
-	Wed,  9 Sep 2026 01:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 520DA2BD587
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Sep 2026 02:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788919188; cv=none; b=lUfj4k/mUCcO8hnQ482123fde+ZlxSPcXUbKBdKuDSSKkClqlcPiJa4e4to2kFXzhIBJsgtaH18zkNn5XGjWwfNIZ9K/ZBaozxB8GaiKSmTmLWX4NiT2LLj4HQ9cCYkIwwQ9y1+NvP7He1+83WWOiZDlwMZav3G7jlj6oHPXuJk=
+	t=1788922240; cv=none; b=BlkTOBUB9EYGsvklGRivnYCDKIiqeyu0D1RqfrBwnBUDPI9P8Wx9b574tBQwCQDTIE7MBdaWkbzHTLDIeasIpvsHKUlaNU1ZOHvkt6BVrYrHfNpBagmkab5+jcp64xC9Y6cLw0QboxsGL2v2D+4Y2Q5HnGO4mh9msQ/sOndSmyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788919188; c=relaxed/simple;
-	bh=W9PtNPhk47k1jc5bdY2AOA4kbm34kk4RFI/75Z/CdNs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W2VELzlJ05qrrMXfXMbazNMC/JLF52VzzQDWNZj8O0+Pxt+/F1irDVlYD3idmTX1naJE3LQ3ESdU1OZj9L6jQ/vvuul44+8TeY1Q10+JgE2cdh2VUMUt+QvOS4lmbWbJAVibjj50RQsz1uV4DrVpiu4oQkukkcvvP8xwtHxLS3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZQ5yUijL; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1788922240; c=relaxed/simple;
+	bh=ZpMWf0mmEjm42iJUxpfB3CY6H9148SV6nnAr/13zjOY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=j4WG3I927FaZ9gv8rsdWsyGzC9M/FMiDpjj1nXQzUMNlH0VbcKim+VqAiiZ+hWx69vOqoHSiyaXXOWJKcDBiCsRmmru//bcl7wsyTiVnX1E0eoGfoRquQa5Dma1Lu1jcvTtRGqDVd40Y7FR2fnpJGjQG74VtKk+FtDOwtqvonXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q+zuU2Ye; arc=none smtp.client-ip=209.85.128.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZQ5yUijL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1788919187; x=1820455187;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=W9PtNPhk47k1jc5bdY2AOA4kbm34kk4RFI/75Z/CdNs=;
-  b=ZQ5yUijL1L5DeH5BXnbRtHCXtDmX4KlpMwb3jlVts0heYWq9gzq3kG1t
-   Qi6u6A09csFK89RWpUoKFTU0QS1f10npuFS0APlKUR5xFzdC7KrtWhH8E
-   VpG3rjTwh2EWhr/pKaiIgSTiBFa/qeyg7UbgD9PZ85MPpEE8C6mGOrNXD
-   4ZU5+sWdlsd1wGJ3ilWx5pq6WnIpDo3gkinE3lTvwfzBmAZscfjX7LAXb
-   y4PnNDTllMdCeApWiu+bq7RuO2FHmAUkLYCSfCbGdTkr3Bn3JKdJgvfRt
-   //zV8NQeoF8Jg11QR127ExKMN7IiR7qYkUX3o+FyKZbF/wC2jJk30I7B+
-   w==;
-X-CSE-ConnectionGUID: rAjg3p5SQSSW3sUx0FG9nQ==
-X-CSE-MsgGUID: jXIHUwcoTz2Cv49xAjFJkA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11900"; a="99927353"
-X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
-   d="scan'208";a="99927353"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2026 18:59:46 -0700
-X-CSE-ConnectionGUID: pGfcIAxzQkO0EdJr298SpA==
-X-CSE-MsgGUID: 1FnNQQKgQIGQJxuUFM7X8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
-   d="scan'208";a="294682202"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2026 18:59:42 -0700
-Message-ID: <a851b2e0-fcc5-452c-8e9b-3becece14f7a@linux.intel.com>
-Date: Wed, 9 Sep 2026 09:59:39 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+zuU2Ye"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-87005a0e052so63508117b3.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 08 Sep 2026 19:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1788922236; x=1789527036; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=7KcmM3MS3Zo8oEvXtwDuI95pn1nsgMeCw5aYRzAM4f8=;
+        b=Q+zuU2Ye+kLo3qfdiFSfxCq2s8wRT1kD59uBQpQ2YeSB6RoaGROlZR7GbkmLl6wX7l
+         xCXl+H+4rnZSNmGgLPOb0pxrtqyX6XZaF69fb1gVbU/lskPZ2LhMEeCxfMfyYwWSUL61
+         h/k4jGvhfRhce5T9PtcSCo3V6cs2qb3ZAWJ8gzxeoHo5y9GrkaG01WdqdJtp1zWW8WlC
+         Znjdn+U0Z1vNb6GYhDlorkksmo1o7Uo8zHxuzy8Aj2h4c9j4MCJEsJTXR9uRLGamuh/u
+         OuqTYJ3iiR4wXhZBz1gCugYsNwvCxUvQWfEdmVyJorCwBCmy36ZW66pxj9ezrMsm3gtU
+         owNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788922236; x=1789527036;
+        h=cc:to:content-transfer-encoding:content-type:mime-version
+         :message-id:date:subject:from:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=7KcmM3MS3Zo8oEvXtwDuI95pn1nsgMeCw5aYRzAM4f8=;
+        b=sCtfWrW/iDEZmqfuUm0Qk8HywK/zwgFuj/DKAVFQl77kP5Y7Cob5vgCEtF2wwr2RC8
+         POaDlgKRqCDP7kiHPnWEuOmV/GEZl19j/5g7/yPygS84fWqPxUv4Wj74EuOP1Bk+uGRh
+         R9xxUOgJwvRirsPPUBPcyDZrUYm6GhuMjDmzmgjeNnaedQ9gyMBx5O6adpX51Fy9BaRS
+         sN1c3cu6/jzFyOS821NODUpN6mZMP5iW5sMieVpUrKWgHWPOwmtMzu+T3Q9O30y+/xCE
+         XN3fGNQESGUiPsv8oYjmz3IHyH80uNI+BW88qSU63PKTIt6/5f9thDEMtiuK3hh6Ug+A
+         WZgQ==
+X-Forwarded-Encrypted: i=1; AKwUvBzQhUVzFd+8ScuKJ+7Lfm0Lv3BqjfLFdEr/5+SfjnwuBX62p/nsyDwWAulrhuq7wC1F7H/ZtXZ6/XrLflu2ofNM@vger.kernel.org
+X-Gm-Message-State: AFuF++lSwgXTc1Cc0Cgc1L9cJwuLjTZSY27dzNiFqTUTZ+BcLlkA9DJ3
+	7I12/kdN4SmWX8bRd05qdmXDF0YfJ/bZBevN3Uqsw/q1lebt2BLTiXth
+X-Gm-Gg: AYBFou0r8Qc66j+BSW5iCpxz8eR5RpahoJepWizR//6RD4djgUMSw09BWp6kEbAkC9D
+	qQP1C1b2kHHVQapchn3rB1YMsv0X2WD8MF6fZLEvpCm4V7fBIdwJ2j3fPq2TSdgSpyNccnnoRGt
+	V6dqWyZw7wpegfe+IOap0B/4iVUskHcAb6HR5hfXxwqRlEiY6A93butShPN94lkwL6ZluMKMg15
+	FJo6Ze3iIcxJpxbcJi0QLJnHf3bIF2ocurwe2UDmhtFrz/c5obSa0oHtNqGLUGMmrJl04VRZsu3
+	fLreuklgV24raXDEsFuLdkwa4qdXpf3vuJLnuqhcJgisjEmV6kHcJIFZpL5dnR0ThpV6DZKryf0
+	Hlw/swbeygZwsw8NuPqEEoEwb41Xo4QCan7juHuJWJEPVNFYHA8KjKbLEkT+DEtfJqkb/C/2kQq
+	c44fhEm31hw181cIDsewdUuGG4rN1dlAJQQ4FpS3mjsrPK/3eqwl7TOQ5l9KIvxjjEw9cdVq4=
+X-Received: by 2002:a05:690c:d8f:b0:873:5c6b:a2fa with SMTP id 00721157ae682-8735c6ba696mr91380127b3.40.1788922235924;
+        Tue, 08 Sep 2026 19:50:35 -0700 (PDT)
+Received: from localhost ([2600:1702:7a90:6f9f:8bc4:8aec:108d:7a04])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-8714bef8930sm104346937b3.46.2026.09.08.19.50.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Sep 2026 19:50:34 -0700 (PDT)
+From: Matt Turner <mattst88@gmail.com>
+Subject: [PATCH v8 0/3] perf tools: port UI from GTK2 to GTK4
+Date: Tue, 08 Sep 2026 22:50:33 -0400
+Message-Id: <20260908-perf-gtk2-v8-0-e90d5d155f0d@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] perf/x86: Disable precise sampling for
- PERF_SAMPLE_STACK_USER
-To: Ravi Bangoria <ravi.bangoria@amd.com>, Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Andi Kleen <ak@linux.intel.com>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
- Zide Chen <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>,
- Xudong Hao <xudong.hao@intel.com>, Gennady Kupava <gennady.kupava@gmail.com>
-References: <20260908075102.540715-1-dapeng1.mi@linux.intel.com>
- <20260908075102.540715-2-dapeng1.mi@linux.intel.com>
- <20260908084906.GO4121339@noisy.programming.kicks-ass.net>
- <1691a05c-49a6-4b16-8bad-cb3c004ed07c@linux.intel.com>
- <20260908101914.GQ4121339@noisy.programming.kicks-ass.net>
- <aqAlddsFPYJvRhFr@tassilo>
- <CAP-5=fWbSNYpt8p3e+pqjY+xhqs8WrzsBfPaKB1NLBm88mH8Yg@mail.gmail.com>
- <ddd7d413-ed95-4c3f-9435-1a3e2c27cce2@linux.intel.com>
- <0c7c7902-e944-4c93-8188-6ca2f90b6795@amd.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <0c7c7902-e944-4c93-8188-6ca2f90b6795@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/3XPwW7DIAwG4FepOI8JDIbQ095j2oE4JkVbm4pU0
+ aYq7z7S29Jx/C1/v+W7mLlknsXxcBeFlzzn6VJD93IQdIqXkWUeahagwKmgnLxySXK8fYJERIr
+ K9r1DEHX/Wjjl70fX+0fNpzzfpvLzqF70Nv2vZdFSSY/O9qlDMDG8jeeYv15pOoutZYGmhCoNE
+ 6Wk0NCg99I0pamSdQLVOdA2qr20TWmrDJ4DMCtf7V5iU+J2s/PWR4cE9umma0pXpQs4aFI6xvj
+ 0p29KX6Vm4s6E1NPfP9d1/QURtNQ1/gEAAA==
+X-Change-ID: 20260906-perf-gtk2-555ca04bb652
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ Matt Turner <mattst88@gmail.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6343; i=mattst88@gmail.com;
+ h=from:subject:message-id; bh=ZpMWf0mmEjm42iJUxpfB3CY6H9148SV6nnAr/13zjOY=;
+ b=owGbwMvMwCW25rVmCc8sv+mMp9WSGLIWnKy8zvXJWsjzedy2ileP+aZvc5u7cc+Bxq4rjKruw
+ ipyJy/GdnxkYRDjYpgppsgSt16RZVbbjqU+p6V/wcxhZQIZIi3SwAAELAx8uYl5pUY6Rnqm2oZ6
+ hkCGjlE8RE6PQSOzuLg0tUg3raDIIS+/JLEkMz+vWC+/IDWvIL1ALy0zrSQjI7+oOBVohF5eaom
+ pq6ObkaGBiaWjhZmThaOpibOzk6GTm6Ojs6uTkaW5iYGzpaOJq6U5AxenAMw1xokMf7jupO489S
+ WulIOPd9pklzVGd+SrItZmOT/jvfX5GDPDqauMDM+jFqxZNp2zRuLK/UmO/3d9nPVFQMD9eW7/x
+ Fu/JLgOazACAA==
+X-Developer-Key: i=mattst88@gmail.com; a=openpgp;
+ fpr=3BB639E56F861FA2E86505690FDD682D974CA72A
 
+GTK2 is long dead upstream and increasingly hard to keep building on
+current distros. This series ports perf's GTK-based report browser to
+GTK4 and fixes it up so it's actually loadable at runtime after the
+port.
 
-On 9/9/2026 9:28 AM, Ravi Bangoria wrote:
->>> Having PERF_SAMPLE_IP be precise and the user registers from the
->>> interrupt I believe works for AMD IBS and ARM SPE, but for Intel PEBS
->>> there is the ability to use the PEBS register samples for other
->>> non-redundant registers. In the x86 driver could we disable PEBS
->>> sampling for these registers when doing user stack sampling, so that
->>> the sampled user registers match the stack sample? We can keep the
->>> PERF_SAMPLE_IP precise, and make all the registers precise when there
->>> is no stack sampling.
->> That sounds the best way to fix this issue by decoupling PERF_SAMPLE_IP
->> with PERF_REG_X86_IP. Then we can keep the precise SAMPLE_IP and the PMI
->> context user register snapshot simultaneously.
-> With this, PERF_SAMPLE_IP and PERF_REG_X86_IP might be from different
-> privileges. So, any perf code that depends on user_mode(regs) (e.g.
-> perf_exclude_event(), _REGS_USER, _REGS_INTR, header->misc, etc.) also
-> needs to be inspected/modified accordingly.
+Patch 1 does the mechanical port (build system, widget API changes),
+including the leftover-GTK2-call and signal-handling fixes that were a
+separate patch 3 in v4. Patch 2 fixes a runtime issue found after the
+port that prevented the browser from loading. Patch 3 fixes two stack
+buffer overflows in the hierarchy view that predate the port.
 
-Yeah, this introduces the inconsistency between PERF_SAMPLE_IP and the
-pt_regs, but I suppose it should be fine. I didn't look at the details yet,
-but all places which call user_mode(regs) should not be impacted in theory.
-As long as we ensure the PERF_SAMPLE_IP doesn't leak security information
-like kernel address, I suppose it should be fine. 
+Signed-off-by: Matt Turner <mattst88@gmail.com>
+---
+Changes in v8:
+- Fix perf_gtk__add_hierarchy_entries() to restore hpp->buf/hpp->size
+  unconditionally after formatting each entry, not just before
+  recursing into children: leaf entries left the buffer state
+  advanced, so the next sibling in the traversal inherited a
+  shrunk hpp->size and an already-advanced hpp->buf, eventually
+  running hpp->size to 0 and pointing bf past the end of the
+  stack buffer for the strim(bf) call (reported in v7 review)
+- Link to v7: https://lore.kernel.org/r/20260906-perf-gtk2-v7-0-1ece839fbca0@gmail.com
 
-Thanks.
+Changes in v7:
+- Add patch 3: fix two stack buffer overflows in the hierarchy view
+  (perf_gtk__show_hierarchy()'s unbounded strcat() into a 512-byte
+  buffer, and an advance_hpp() size_t underflow in
+  perf_gtk__add_hierarchy_entries()). Both predate the GTK4 port
+- Link to v6: https://lore.kernel.org/r/20260906-perf-gtk2-v6-0-695d1c01aaa1@gmail.com
 
+Changes in v6:
+- Explicitly include <string.h> in annotate.c (strcpy()) and
+  <stdarg.h>/<stdio.h> in hists.c (va_list, snprintf()) instead of
+  relying on transitive includes, which isn't guaranteed on musl
+- Link to v5: https://lore.kernel.org/r/20260906-perf-gtk2-v5-0-e8747a65c240@gmail.com
 
->
-> Thanks,
-> Ravi
+Changes in v5:
+- Fold v4's patch 3 into patch 1, since sigprocmask() only blocks
+  delivery to the calling thread: it did nothing to stop the signal
+  handler from running concurrently on another thread and doesn't make
+  the handler's GSList calls async-signal-safe either
+- Defer perf_gtk__exit() on SIGINT/SIGQUIT/SIGTERM to a GLib source via
+  g_unix_signal_add() instead of running it straight out of a real
+  signal handler, so it always runs on the main-loop thread, serialized
+  with perf_gtk__error()'s updates to perf_gtk__error_loops, instead of
+  racing them from arbitrary signal-handler context
+- Keep a real handler for SIGSEGV/SIGFPE, since those are synchronous
+  faults with no "later" to defer to, but pare it down to reporting and
+  reraising the default disposition: there's no safe way to run
+  GTK/GLib code from the faulting context itself
+- Link to v4: https://lore.kernel.org/r/20260906-perf-gtk2-v4-0-97e92ee07214@gmail.com
+
+Changes in v4:
+- Fix gtk_widget_show()/gtk_widget_hide() calls left over from the GTK2
+  port: both were removed in GTK 4. Replace with gtk_widget_set_visible(),
+  adding a small wrapper for the info-bar "response" signal callback
+- Block SIGSEGV/SIGFPE/SIGINT/SIGQUIT/SIGTERM around the
+  perf_gtk__error_loops list updates in perf_gtk__error(): the signal
+  handler (perf_gtk__signal() -> perf_gtk__exit() ->
+  perf_gtk__quit_error_dialog()) walks that same list and could fire
+  mid-update, corrupting it
+- Link to v3: https://lore.kernel.org/r/20260906-perf-gtk2-v3-0-e1f2086214a0@gmail.com
+
+Changes in v3:
+- Fix GMainLoop leak if perf_gtk__error() is called re-entrantly: track
+  active loops in a list instead of a single global pointer
+- Add explicit <stdarg.h>/<stdio.h> includes instead of relying on
+  transitive inclusion, which musl doesn't guarantee
+- Drop the gtk4-infobar feature check and HAVE_GTK_INFO_BAR_SUPPORT:
+  GtkInfoBar has been unconditionally available since well before GTK 4,
+  and the check was failing outright due to its deprecation warning
+- Link to v2: https://lore.kernel.org/r/20260906-perf-gtk2-v2-0-3eccff053cd1@gmail.com
+
+Changes in v2:
+- Fix error dialog's nested GMainLoop hanging if the parent window
+  closes or a signal arrives while the dialog is open (quit from
+  "destroy", not just "response")
+- Fix build with GTK_INFO_BAR_SUPPORT: gtk_info_bar_get_content_area()
+  is gone in GTK 4, use gtk_info_bar_add_child() instead
+- Fix use-after-free in the progress dialog on manual close
+- Fix reuse of an exhausted va_list in the vasprintf() failure path
+- Link to v1: https://lore.kernel.org/r/20260906-perf-gtk2-v1-0-7564bf8523a9@gmail.com
+
+---
+Matt Turner (3):
+      tools: port perf ui from GTK 2 to GTK 4
+      perf tools: make the GTK4 report browser actually loadable at runtime
+      perf tools gtk: fix two hierarchy-view stack buffer overflows
+
+ tools/build/Makefile.feature                     |  4 +-
+ tools/build/feature/Makefile                     | 10 +--
+ tools/build/feature/test-gtk2-infobar.c          | 12 ---
+ tools/build/feature/{test-gtk2.c => test-gtk4.c} |  4 +-
+ tools/perf/Documentation/perf-report.txt         |  2 +-
+ tools/perf/Makefile                              |  2 +-
+ tools/perf/Makefile.config                       | 27 +++----
+ tools/perf/Makefile.perf                         |  6 +-
+ tools/perf/builtin-annotate.c                    |  8 +-
+ tools/perf/builtin-report.c                      |  8 +-
+ tools/perf/scripts/install-build-deps.sh         |  4 +-
+ tools/perf/tests/make                            |  4 +-
+ tools/perf/ui/gtk/annotate.c                     | 36 ++++-----
+ tools/perf/ui/gtk/browser.c                      | 96 ++++++++++++++++++-----
+ tools/perf/ui/gtk/gtk.h                          | 16 ++--
+ tools/perf/ui/gtk/hists.c                        | 72 +++++++++---------
+ tools/perf/ui/gtk/progress.c                     | 40 +++++++---
+ tools/perf/ui/gtk/setup.c                        |  5 +-
+ tools/perf/ui/gtk/util.c                         | 97 ++++++++++++++----------
+ tools/perf/ui/setup.c                            |  2 +-
+ tools/perf/util/annotate.c                       | 11 +++
+ tools/perf/util/annotate.h                       | 12 +--
+ 22 files changed, 278 insertions(+), 200 deletions(-)
+---
+base-commit: 9f0346dcbea363787186c94ef94dd01aaa215afa
+change-id: 20260906-perf-gtk2-555ca04bb652
+
+Best regards,
+-- 
+Matt Turner <mattst88@gmail.com>
+
