@@ -1,65 +1,50 @@
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010029.outbound.protection.outlook.com [52.101.85.29])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B87E2D2381;
-	Wed,  9 Sep 2026 01:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.29
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788917308; cv=fail; b=YABiDpORgBocaiirSAu1Yg5aXhLfNY+5zRJYwgj35DnkZiXd/xcAYHls17gFI473HKdbHLXjzRVmcXK/IHJA0V6ra+mhXXfKI/3ZHGX8ApExraiHt8r+OqzNVF56m8WAJQTHwZp/g9Jp7ldah90BB/cRr7fxyXTrRne04ZW8jAo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788917308; c=relaxed/simple;
-	bh=Nghr9mk7LSYL+wjORNpse332UkJyZjUXNj2PyNT3NGA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=oFpB02bqiTHJevNn8eO+dWdOk+Xl9xXtY+WzU1FsVH94KgFpPc+mpAgaT+Hn9/8I6024M9oEYP4NqCsQDwfv4PRwRdLZH4FcZ9jOgrhcMgJBWj36jGDXMCrwVb56UaLyxcASHvb1mavj/X1OriMuJzcOfUJTg7zE0+BMQNT9gQg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=x2EgH8pj; arc=fail smtp.client-ip=52.101.85.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D29B29B200;
+	Wed,  9 Sep 2026 01:35:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788917756; cv=none; b=n1h9uj9T7AoVAyYVcp4lUL0LrZz3PV6u5vI/D6PTAOSOX4ZluTYnN27jOnTTwJsggz/gSCxHaqqcuZpPzYFdb0qaG3VJKPcyOEFmwGUXyctebpsCHoE2S8kQaxUKLUfM7JusdGEKItjIFmR+6cXtdAq0dYx623JJRFnq7YWM7GU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788917756; c=relaxed/simple;
+	bh=64HKkviFc6EbPKtDPnq2iEu3Q3iKzsnApLj8LGWy9PY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ab/rnjzRLdD5drCZVwdPDVeZjigk9qh6sWBlZLEPxlBD11mAjYVKGukEURzoX7Ms2/ptYX2Afxwc15lfra92UZn2KW+OoiKwJzfzCIoCXAEZE+axVt7uhlFSJKUQxSE9sz4c+viPALZWSzGqG0KY0NoGVhINLh8m5ibzSd1ba5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YcjBlS+H; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="x2EgH8pj"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=WaBnmhbV0vsvkfTRMQQD7lRqCWGJ2BZ28qeu4lx2ULVC1BolcagKlcO35Gcn0vqNP/3v6HCqF3738wh0CHYVNp9a7mN0/MbHVZM6v/5aHLTYnpDMilKsyvdqbVzXD0ReTVB9VT6CKeIPdshKANAhEgGBsDubvO2g8ufQn9REylYH3E7IyPC+6FOEEvuPGIBdjemx3+xWgINUbrO4bPPX/8iuA3piYMaoJSD9Ex+a0OZR6vUXLnpPuSj/BocWspkSomxUuUzcviNs/Rl2bAea+E+XML6Dx/OpZ6/PYw82JnyrDepk2TYiVfMKJ6HOXaKqFKQ7elWsoQwomH+OXqy1Zw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H/KVl3chbKsvwDpUM/EU1C+SmzHXLeumiUxlbUe5+EA=;
- b=EIGutt/xVlPXElZTbew3NiOIp7qx+EGdWnnudDAXk+TkPb4eNmxfzb2pFfFEQYgni5vcqvLNLZVaAH4qX5wEgzhLF6c6gApOqeUtkt+OOIIRkjRVPwcpJX/ymn+qrWX7liTsLeUYLsHWwhH3+wELXMPkjCUawsLR3HAMpIwnhREXjZlQ31ULkt5SMYPhFSNukOsWTji0npv7yWzjCmxSLSTG47i0+troRu4MAFS/y3ripFqOToA6KyBAecfuqAXwfUS3RbOllmgUCjIF/vEn1pQeQY56ifRYcgd3NaDOcBLi7Rzlb5zfqM1mZBfRg7TXp4HjHfj1Bedyw6qxk6+l/w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H/KVl3chbKsvwDpUM/EU1C+SmzHXLeumiUxlbUe5+EA=;
- b=x2EgH8pjWotbRCeO4O9E0+ftUfILroZWGNrt9o/4gzIxelqi2/faMECLJR0lzoty0vHOG6Ah7pRT2lqQ9LWu5pBKVp4enT+heE1CpEI3jKxWT07UfA2OOIMiXcnC1C0n2UGU6xFBoG4c2yWGiXHYHKS9O4wBepuf4vXNaMCMyMk=
-Received: from MW4PR04CA0277.namprd04.prod.outlook.com (2603:10b6:303:89::12)
- by MN2PR12MB4159.namprd12.prod.outlook.com (2603:10b6:208:1da::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.382.15; Wed, 9 Sep
- 2026 01:28:22 +0000
-Received: from MWH0EPF000A6732.namprd04.prod.outlook.com
- (2603:10b6:303:89:cafe::5d) by MW4PR04CA0277.outlook.office365.com
- (2603:10b6:303:89::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.21.382.15 via Frontend Transport; Wed, 9
- Sep 2026 01:28:21 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=satlexmb08.amd.com; pr=C
-Received: from satlexmb08.amd.com (165.204.84.17) by
- MWH0EPF000A6732.mail.protection.outlook.com (10.167.249.24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.21.406.5 via Frontend Transport; Wed, 9 Sep 2026 01:28:20 +0000
-Received: from satlexmb07.amd.com (10.181.42.216) by satlexmb08.amd.com
- (10.181.42.217) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.46; Tue, 8 Sep
- 2026 20:28:20 -0500
-Received: from [192.168.0.101] (10.180.168.240) by satlexmb07.amd.com
- (10.181.42.216) with Microsoft SMTP Server id 15.2.2562.46 via Frontend
- Transport; Tue, 8 Sep 2026 20:28:15 -0500
-Message-ID: <0c7c7902-e944-4c93-8188-6ca2f90b6795@amd.com>
-Date: Wed, 9 Sep 2026 06:58:14 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YcjBlS+H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1788917755; x=1820453755;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=64HKkviFc6EbPKtDPnq2iEu3Q3iKzsnApLj8LGWy9PY=;
+  b=YcjBlS+HtDtxthL2ZFUbrRXB/ShMqWTEJR/wJyDJEwF/9JLBrVCFY48s
+   9cAKUiUayWgh8yMYsPLX4oCBPMGDZ8P3oswTuvvm8wTNCCEO3gqCNItvh
+   HhUW5HiDjSuiUhxHq4cU1GR2Z62AWIHf5Xi1cjbp53ZdLflL1n/4NWgAu
+   gEUmp+st0jgenxFsaRs5qsilY/gM3e83DGIWyAWqnZk85H1LU3TcdXpua
+   iSmJimAWKJuHLuoEKIBBtQNvqWDG5TUoI+r3NZ2S6q88OoZHmJd7La0+F
+   1Eu0wpgwf51T+y2gx7SOzAoFnKY6TVrF3ZExaJN5mmiazRTkwaNqzmKbv
+   A==;
+X-CSE-ConnectionGUID: UxWJXgagSc2nt+VvKffD1g==
+X-CSE-MsgGUID: /UR7gqxoSVqhWuvCAqv6Ag==
+X-IronPort-AV: E=McAfee;i="6800,10657,11900"; a="89537992"
+X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
+   d="scan'208";a="89537992"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2026 18:35:54 -0700
+X-CSE-ConnectionGUID: DNikuua/Tc+e4h0024tXjw==
+X-CSE-MsgGUID: LXEk4ik5RD6Jip3AOS3IUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.25,270,1779174000"; 
+   d="scan'208";a="294678959"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2026 18:35:47 -0700
+Message-ID: <de698eb3-94ba-4545-bb4f-951014c98008@linux.intel.com>
+Date: Wed, 9 Sep 2026 09:35:44 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,75 +52,76 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] perf/x86: Disable precise sampling for
- PERF_SAMPLE_STACK_USER
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, Ian Rogers <irogers@google.com>
-CC: Peter Zijlstra <peterz@infradead.org>, Andi Kleen <ak@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Eranian Stephane
-	<eranian@google.com>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, Dapeng Mi <dapeng1.mi@intel.com>, "Zide
- Chen" <zide.chen@intel.com>, Falcon Thomas <thomas.falcon@intel.com>, "Xudong
- Hao" <xudong.hao@intel.com>, Gennady Kupava <gennady.kupava@gmail.com>, "Ravi
- Bangoria" <ravi.bangoria@amd.com>
-References: <20260908075102.540715-1-dapeng1.mi@linux.intel.com>
- <20260908075102.540715-2-dapeng1.mi@linux.intel.com>
- <20260908084906.GO4121339@noisy.programming.kicks-ass.net>
- <1691a05c-49a6-4b16-8bad-cb3c004ed07c@linux.intel.com>
- <20260908101914.GQ4121339@noisy.programming.kicks-ass.net>
- <aqAlddsFPYJvRhFr@tassilo>
- <CAP-5=fWbSNYpt8p3e+pqjY+xhqs8WrzsBfPaKB1NLBm88mH8Yg@mail.gmail.com>
- <ddd7d413-ed95-4c3f-9435-1a3e2c27cce2@linux.intel.com>
+Subject: Re: [PATCH] perf/x86/core: Simplify hybrid PMU registration failure
+ path
+To: Thorsten Blum <blum@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>, James Clark
+ <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20260904201313.271421-3-blum@kernel.org>
 Content-Language: en-US
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <ddd7d413-ed95-4c3f-9435-1a3e2c27cce2@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20260904201313.271421-3-blum@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MWH0EPF000A6732:EE_|MN2PR12MB4159:EE_
-X-MS-Office365-Filtering-Correlation-Id: b494c03b-d53d-41df-c583-08df0e11a24e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|7416014|36860700016|376014|23010399003|10067099003|4143699003|56012099006|11063799006|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	Ah0n3MplO48wE8okg6oC/GB8/DfYryvJ22UqI+cJ0TJJK6VRRYcCf8qhfz/8tZOKvy3iAatVsn+5KuPe/jx5TNQmLEhQ8R2+cTBMonmPpPoNFsk9MPH7/FDcSxExQToA7ZyFTO7FJasMruoqCfiKkrCyneNK3zJVuEIUn+HZ5VMCE+Y5ZYY+nL4VFmVP87RQAf+Zbx1FwlLj5pjTjK/Txg5ptUT/1JRwIdpRh7o6nuVPmfjXlw950WT59jurFv6hvLU9x6Q0LdkKby5v++2gx+RdFaSoOuNSKibvWkoUaoUp7Pym0wanea6HFs4++M5zmKvSQNXb2MQxt+2sCH9XoW6oleaCEsOp48n3h3+vMgbXzZEoQeYnm4mJINVbAnTInZg2h7Vi+D2Eg9eTGKTe+qC+dVGgpQuvl9nffvfDfz5VAZQxvJ81VbT3SmjjHpBpto9qJdnheyS9XRllMP08dbBuDGXtwhBvqOrPIWmr2KiypYd7A+Rqqzt994RJ5NOgyaPJ0+5ge29FrHamJmQbnP9A37UyCqK+cA2EzMcUZ1jKJ84cYGwqqb5G/julIrCRtJmfu5cSE/yDhNgLJbt0S0w7B/lepaJav0bTZUH0jP082o9vDx4YRW6jydDCOyt8cdsX0jwgJKCAtuIZ+b9NK4IVS+9hObQJybkInSw0ZM6YsFdPNCKKj+h7kOpgjvrXXQW3MoWlNxPjyAKzY6jEQA==
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:satlexmb08.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(7416014)(36860700016)(376014)(23010399003)(10067099003)(4143699003)(56012099006)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	QTI2s8/aTkPCjFgvw6NBNqpKvWnco8zd0G1VciEerj/2J5zx9ZQ9KLRWaDj7tgYVNssc1xhzZuH2HM1YhcBY7eqDAclxXozcS/3i6jdNaQvucy8kaqw5cgH2LFvgOTTM5VSvojqllWgshCK91EgaewVQ9WmwKaRQAmPE4BIvNuceJMi0v9V7phLQNsy/YHzl+UtHA+7WlugUt/3p7aIu1G7EtyOQ/LFmthrBPshj0z1HUmXCRv2D4G6v2xaP+/HKQkZXJsBJH7klZSPc4NNXgRvwq/7xdpKukqJIBigCLzFzyVkPT06piBV7tb/To+ELTDTMkhk6ywBQAkn0wHRZe6RQ9+Z0WkaWbb4hdMxegLsurcvVJYJ8SeHDLHhQ2ZHJrGzpKPs/m5aSioqZKXb8eelCgST05zDraXsbNCZrBHQ1zey3E/T1JHgOP0/k4SwJ
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2026 01:28:20.9367
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b494c03b-d53d-41df-c583-08df0e11a24e
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[satlexmb08.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MWH0EPF000A6732.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4159
 
->> Having PERF_SAMPLE_IP be precise and the user registers from the
->> interrupt I believe works for AMD IBS and ARM SPE, but for Intel PEBS
->> there is the ability to use the PEBS register samples for other
->> non-redundant registers. In the x86 driver could we disable PEBS
->> sampling for these registers when doing user stack sampling, so that
->> the sampled user registers match the stack sample? We can keep the
->> PERF_SAMPLE_IP precise, and make all the registers precise when there
->> is no stack sampling.
-> 
-> That sounds the best way to fix this issue by decoupling PERF_SAMPLE_IP
-> with PERF_REG_X86_IP. Then we can keep the precise SAMPLE_IP and the PMI
-> context user register snapshot simultaneously.
+LGTM. Thanks.
 
-With this, PERF_SAMPLE_IP and PERF_REG_X86_IP might be from different
-privileges. So, any perf code that depends on user_mode(regs) (e.g.
-perf_exclude_event(), _REGS_USER, _REGS_INTR, header->misc, etc.) also
-needs to be inspected/modified accordingly.
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-Thanks,
-Ravi
+
+On 9/5/2026 4:13 AM, Thorsten Blum wrote:
+> Handle perf_pmu_register() errors directly instead of breaking out of
+> the registration loop and checking the index separately. Reuse the loop
+> index i to unregister any previously registered PMUs in reverse order
+> and drop the extra index j.
+>
+> Also log the failing PMU's name and error code.
+>
+> Signed-off-by: Thorsten Blum <blum@kernel.org>
+> ---
+>  arch/x86/events/core.c | 18 ++++++++----------
+>  1 file changed, 8 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 8eb14add44c8..0a8fcfd52ad0 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -2256,7 +2256,7 @@ static int __init init_hw_perf_events(void)
+>  			goto out2;
+>  	} else {
+>  		struct x86_hybrid_pmu *hybrid_pmu;
+> -		int i, j;
+> +		int i;
+>  
+>  		for (i = 0; i < x86_pmu.num_hybrid_pmus; i++) {
+>  			hybrid_pmu = &x86_pmu.hybrid_pmu[i];
+> @@ -2268,15 +2268,13 @@ static int __init init_hw_perf_events(void)
+>  
+>  			err = perf_pmu_register(&hybrid_pmu->pmu, hybrid_pmu->name,
+>  						(hybrid_pmu->pmu_type == hybrid_big) ? PERF_TYPE_RAW : -1);
+> -			if (err)
+> -				break;
+> -		}
+> -
+> -		if (i < x86_pmu.num_hybrid_pmus) {
+> -			for (j = 0; j < i; j++)
+> -				perf_pmu_unregister(&x86_pmu.hybrid_pmu[j].pmu);
+> -			pr_warn("Failed to register hybrid PMUs\n");
+> -			goto out2;
+> +			if (err) {
+> +				while (i--)
+> +					perf_pmu_unregister(&x86_pmu.hybrid_pmu[i].pmu);
+> +				pr_warn("Failed to register hybrid PMU %s: %d\n",
+> +					hybrid_pmu->name, err);
+> +				goto out2;
+> +			}
+>  		}
+>  	}
+>  
