@@ -1,94 +1,56 @@
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B4CE422E34
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Sep 2026 22:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B333493D3D
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Sep 2026 22:29:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788992462; cv=none; b=ewRnYT5YWORS6YQ7O7xfCZoTqwHc12JxurnHQwangMk4g9iXcSmZndfCobyKsKTv0JUAIno46/6GgsOscuwm6RVeb9ZxHNg57pEDSE4NB2hQXZtGJoqsAug/td0s/9W+90iyRZok2moPjxm73NsTbzyia61iDj7MC3ax27ilJxw=
+	t=1788992995; cv=none; b=sh2fA5sEfpXGYeG0JVwCY1OLJP9IyZRKphkIe7LA83yq7wauxi7Bp7782I6e5nVi6vF+I4D/SVO4jwUihwOj7xbg3NZyBzGFrhPC8R8pDszavZj/WMDIK8quNgjM0RP13Rhg8VJNOns0jH/KUT0C4Riq//js5y5GhtM6wlV4V1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788992462; c=relaxed/simple;
-	bh=VZ+QrtQv7xI7B3IQVjbQxMe+h2xaBR/0SDyIoRVpkXI=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=gwi0j+9Ieen+KHQcTrZNI+VFAC1MiR0wp2Ldgq+kxOSIMfMPyieGfxW0vGGqkkVdDT5gTc4CIxpo+dhpgPqFr68C57WSmcTc7KVJFaK+A/Qu8pCQmg/F4/7uP5wzBpyA9T0ilGmRJXKwviOKoabjbUjj4kl5wnDBljXlcv6Usqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Duea4WIS; arc=none smtp.client-ip=209.85.216.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1788992995; c=relaxed/simple;
+	bh=5MRe6KGtL/LOfEPtPHOyrloM44EZgHinBf7rUXHkY2s=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=NijJVl/UQ2Lq99q4HVWqglo6aT7nKAlktdEzVDWuNrXMqgMMIxU0hdpQ6Xz90CN91DN/mf+AjRI9RseRIT7i2QZrX5e28rs4yUjnMgKYlZY9/+bTLgat22/B2ACl0gmn+Jhs5zvk7loRWIj5QVog9qnISu1pd07C7uM9A1fSwkw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X+qF6qxk; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Duea4WIS"
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-3968bb86fb7so7902353a91.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Sep 2026 15:21:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788992460; x=1789597260; darn=vger.kernel.org;
-        h=content-type:to:from:subject:message-id:mime-version:date:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=/mH/R/7XHDTfSxv2g6sI7/hAPq1nkMVsTHrzOC/yfi4=;
-        b=Duea4WISySCnIOFGZe4xAs47wZ07Pu3VhQGO1yxGKRK03wGHN16w1ZS0WjmLlVJcor
-         UvuYZXWEoL26locoZUpaGDtf5JpMZVI6XG1qkSr7RhdXf5lHafbQVMlXJOqkDaj1dCJZ
-         xvmHdF/0B9XXCU2uf21sUAp1V/bizc+wb7c/NbVbGXvM61kVSrBiChvVt8DQz///prVy
-         TDWPAxaglICUgzJO7qVjmKPwLdc/APMS/69YyaRgrY6BHZa1/PoVj4k6bwnVcV/5ybMs
-         0d/rtMrrQ7/LEizzuSV09nsCT0SdcInOq2gCXmVieKc7+ptoS1iofmVxQODNheHxTi6E
-         iuNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788992460; x=1789597260;
-        h=content-type:to:from:subject:message-id:mime-version:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=/mH/R/7XHDTfSxv2g6sI7/hAPq1nkMVsTHrzOC/yfi4=;
-        b=SNfnsn12GLZd6LJSidHOO2NAcAlGK4u7QWazzFMgRqQMMpqOin3epmM4WO6mBzajmG
-         vlvLHXvZKNHntOxA6n7MB/53YhP0QyR5jGDDJnm+Q8U/dNylGpDWYxzou4ZmhVXYdnK8
-         I5phO37aMk/Gr9cKegOy1uh7GFCsfvlStDPrAGUmocxWilAe+M5Aoy8nmD4KJCE1Hr8m
-         UMMpczTcrdplvhJMKTidH78TsuucxhZ3HIVlr1S8N1nNGfWflyF1SS1ARWBOXEm/Ec2E
-         2mzOLiAk4mGy8WxILZJlbAWMRSkdGZ+suH/QuZAfXAzfEo38McsJ2XI90vBXzh63i/Dx
-         Mp1A==
-X-Forwarded-Encrypted: i=1; AKwUvByAcX3jI6kOBcVf6qjtzrRFKhSORMq2P2H03NxZla8SGuurEQ673xyV5vS13NmpzQJ5oU6jLkzhcB7lRZ0k3n6e@vger.kernel.org
-X-Gm-Message-State: AFuF++l9yoEgbCrshTNIEsBOv6wrLPZbQ0CvC31oluX8Z9qcUnvLA8jd
-	NAoVuYN9JvWfpQcHJUNxhjxKX5bpDonqOdjGYRhofDcALtj3Eh+r+HpjdB+F6/8BRLaSqGvqL2i
-	WkRxA+B/6XQ==
-X-Received: from dlj39.prod.google.com ([2002:a05:7022:527:b0:143:355c:770e])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:264e:b0:398:9bd1:3215
- with SMTP id 98e67ed59e1d1-39b262e28cdmr59756112a91.22.1788992460252; Wed, 09
- Sep 2026 15:21:00 -0700 (PDT)
-Date: Wed,  9 Sep 2026 15:20:48 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X+qF6qxk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B78211F000FF;
+	Wed,  9 Sep 2026 22:29:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1788992983;
+	bh=5MRe6KGtL/LOfEPtPHOyrloM44EZgHinBf7rUXHkY2s=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=X+qF6qxk97vSLazA9n9lL3TNBZh1/CEcU2OcgSxfhA5zlsHRxj12mvLwGIIZsnCs7
+	 qluBrYzr+VnnQ4K5TTsYV6LFOEJ6u8qa1U+YYffqSgOrRvhlO1bE0K3mPge4/gGkB7
+	 TNxzpI9PzGD6zxkrpLrQQe/oh8g/st3ulXF8wQ0zNXd0MoY5hz6PZp6+ZKIA21iYVf
+	 UPnHkPJwFsdg7nBtPDwC4wV3iTRdzbLSazM3pOfQegyXzayOhA7HMXEkz4NM8N35xk
+	 CYLCUGFaYcjgz8TNGSV/TORh4oRIjM8h6RrWHuxpeopZwHdExdzT37aMmvKdzqvDUW
+	 TwRkHTdwSW3Nw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1] perf test x86: Fix missing __msan_unpoison
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260909222048.2138387-1-irogers@google.com>
+References: <20260909222048.2138387-1-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 09 Sep 2026 22:29:43 +0000
+Message-Id: <20260909222943.B78211F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.55.0.1003.g10538fe699-goog
-Message-ID: <20260909222048.2138387-1-irogers@google.com>
-Subject: [PATCH v1] perf test x86: Fix missing __msan_unpoison
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-__msan_unpoison may need the sanitizer header including for its
-definition.
+> __msan_unpoison may need the sanitizer header including for its
+> definition.
+>=20
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/arch/x86/tests/dwarf-unwind.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-diff --git a/tools/perf/arch/x86/tests/dwarf-unwind.c b/tools/perf/arch/x86/tests/dwarf-unwind.c
-index 99d2b7ed016f..3c66dadcab75 100644
---- a/tools/perf/arch/x86/tests/dwarf-unwind.c
-+++ b/tools/perf/arch/x86/tests/dwarf-unwind.c
-@@ -8,6 +8,10 @@
- #include "debug.h"
- #include "tests/tests.h"
- 
-+#if defined(MEMORY_SANITIZER) && !defined(__msan_unpoison)
-+# include <sanitizer/msan_interface.h>
-+#endif
-+
- #define STACK_SIZE 8192
- 
- static int sample_ustack(struct perf_sample *sample,
--- 
-2.55.0.1003.g10538fe699-goog
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260909222048.2138=
+387-1-irogers@google.com?part=3D1
 
