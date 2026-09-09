@@ -1,182 +1,176 @@
-Received: from mail-pj2-f12.google.com (mail-pj2-f12.google.com [74.125.227.140])
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8DE38A70C
-	for <linux-perf-users@vger.kernel.org>; Wed,  9 Sep 2026 17:39:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.140
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788975550; cv=pass; b=HK+CbIpxxrd6/tgGY7xHcBXaXSMmn/Qcn8R7MJ0xQiqSsKaow9okXbwsx8wvmGZ6Re13+OzpVnW9pMkltD2bs5RaogrdkQ2D43uRMkvly1Nq92TRbSB/JVx9GgxSQ04AA4qcvat+ricExSA19Hqb3wncZHnZzOF/tTRUw6I/dFM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788975550; c=relaxed/simple;
-	bh=A+l2uOZiE885Clf82D9m4D6h5QCktWdZ0NdknyEO3+0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=MRxUz0fzsP0q6ixpfbqo36hoUx6EaWr3yCO4E7LwLdS2HvjVlV5cmvJMvkUHtRXONtu4z1xUxFri3zTDqOYpgPYd4QqX9hLMD+2iyJ90qPeLyOK99hyTvutW8NEj+7XAAplp1FthFIQWvSbqAlgSgwesJYpj2ZkGr4Ei+rvIvzw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LbjWuaBO; arc=pass smtp.client-ip=74.125.227.140
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A3739795E
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Sep 2026 18:10:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.198
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1788977444; cv=none; b=hhh3tQX2+9JVnr0V/1vU8GDuVyjnqiVj9WNuO5YKbJ//0xE9iVVb+7ouuGVRfUBucU+sZcm9VGsrUpo7dHOt5ddXD4h+aV1puOC3izy+CdvvoeG88bHgBg7W7NyiT8f3oC0acpeKKIXA3HhEL8a2MIsZ+pKvcZdKe4dJe5JF/tE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1788977444; c=relaxed/simple;
+	bh=TRy9Gliv/FzTpN1SrKHqnFfZhY0XCIQdEdLMOrMQR1g=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Zi8A9Tt2fLJLEHperUWI7tJni7jLBZvwilW7TI1x5Sg46vN2yRIwShVN39s4GjERiKSEpkcSxgUpkO6x97+2oZ3dYY7JshXLgbOHdeke37Cl1tC/2cxTM+0pJAZxV+WTybozAoQnea35aa8FhlZ5al4N++Dw7qOt+4BPF4FN4jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DPvQ3rgH; arc=none smtp.client-ip=209.85.214.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LbjWuaBO"
-Received: by mail-pj2-f12.google.com with SMTP id d9443c01a7336-2d6ff390a6cso126665ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 09 Sep 2026 10:39:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1788975548; cv=none;
-        d=google.com; s=arc-20260327;
-        b=eG43tX9tPSLPF+1WXr7huXGlZ9T3Yb9ho5gHL6TP/I9padGYGf2kikVmLGrGvoahAF
-         UQc3rAPiSUUhI4AQ627Od9gJB+ikGjihHmrH2sOZIyiriAwCMyfU1luwO0z+sIVLZ0pb
-         2SpnB6SlYAlGSC7F8Dy/tg51XZIpoiwvxZMi0GlgvplidrlA+fQBQ3O9CFAMYdmYhDBD
-         bUqCp0+tPonaUmvG84cQZtg8RAjf/qWo0ynQZeH8kVn4LD5h7ud3wy86FBKM0etwc7IT
-         9V9eqesLmFnU+qBh5t+6y5vrT4BQWFAhvXM9M64Oj9bD15amP8AONM+OjllxW6ZTqvTV
-         O4Bw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=xqefN0TJHS4Mu2A0Sq3q9XaWe1ustzTMoTSehI/18YQ=;
-        fh=zfQAAW9xaZ+En18t+U0PNxi16P6fbhaUzqqNXwwF19A=;
-        b=hlOIbOSdYZwkgQQKXM88HQK7AHBd/jfa21JAXWIcGBBOztT//x7QrpZwVA0kKLeXTp
-         lLfX0QTUQLM8GuzL+CvsrzNyJihNZc2wfY4MrMkipEpbryDdSGo4X5fenWwh1hU6jgLz
-         oHMr5ibYJ3DmynFL6/vPNc8qIcHYbmL33G6blowKVzwlQfZaTNf5EQg0046TUfb/4dtR
-         6FGgRixdMVVljCbQY5Au1nXnIJt+Q2ILZiZTJzv8REyzMU/1HyZl8MuBVnHFanlay/zI
-         TJHUNXQ8Qj0XQIZvqpE+d6tRbcHEeD/tbuwOLxwiDkDeG9kicrpp62BMT88Kv08JO6vK
-         Lc+g==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DPvQ3rgH"
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2cf7dd9fd91so60196175ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Sep 2026 11:10:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1788975548; x=1789580348; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:to:subject:message-id:date
-         :from:in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=xqefN0TJHS4Mu2A0Sq3q9XaWe1ustzTMoTSehI/18YQ=;
-        b=LbjWuaBO7qtWjIKKI6L617vWI7gGb+EoEgwCeKm5H+EpUxqgLfTMhHebpQc2k0vg5T
-         TuPSjAunwNY80/9LrPRZ0k6lkRBHYH45KCJdfvt1p7Run0C2+t943BtcfgK0nBsb+tME
-         7MSds8ruk09H2TEfG3Si4skozoBJ7R7/mnRuhsv+AdubJQgppOrYIkACZRA5tC7sojnn
-         P8hVSTWnSOhdjLFR6ztQffyXyx3wGi1Ed8Pxuja4zeCrc6IklWtaaeL086kSHppsvLDE
-         Xu79zYPGTmveal6sJ1WIM6VWp1nouloaDMIdrxmnjphRg7uOpGeRZBWWpFASmIjQPGCo
-         AijQ==
+        d=google.com; s=20251104; t=1788977440; x=1789582240; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=jjnxEfr3Uzi7pXtCU8OB5Dtvf84yJ4YLU6mP71jvHvQ=;
+        b=DPvQ3rgHEitp4diGzRBZwQCYemUQsc4DZ/b3ZsSZxM5bXJUmTDbASs5UZOzeSGHj+b
+         SJmZA6rXjNH9WhG04AhW64C5KgSYjEXlFQ0aN5v4A3AUfqDK1Mlx8M5ZkipFQrW74q74
+         tbEr5aeLbEIKWL5YWtENPBFoYbmJENAH+pJK1RpodYPQlS/0GSJLloQrg54E1YqOixW8
+         kYbwl7pB6yPjpA1iR79rQMLhQNUXniF8WfCPAClnsrtCudDPq44sP7nmUf/u3w5+xopr
+         2a9oChPV4kKRli1BMcY9CWdCjwLW01Fkkgm0m8jzLVfbPkU0iCS4oPR/qmyjRhpkM5T8
+         Nm0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1788975548; x=1789580348;
-        h=content-transfer-encoding:content-type:to:subject:message-id:date
-         :from:in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to:content-type;
-        bh=xqefN0TJHS4Mu2A0Sq3q9XaWe1ustzTMoTSehI/18YQ=;
-        b=i0iZ6ROhClU/j0/14w0mmrF4YnPWRfJoV78WkkSgt+lZ00JQovih4plLfZ2JKe0FCJ
-         5A1qC3v4jKTssXLdcSoT8nc0UQo3DrUq5DghwGOz9gtQJcni7xQi+ahf5UHBq6hBu14N
-         VmkQAfBmlEGbgKEl+/UK2uIJc4jOcc4MROHO2g+/qNDdS1YbQweW3rVu6+iTSzo6Ac4W
-         Ec6LylRpaUJ9wRo0HI8vpdu8QwWPrWAmvD8TCHdAMbILDU7y0rl0Xm/M/lfy1J0jmwLd
-         8IynUi2ErBCzDR/TzHzz3ZBiOd+Fs1SJEyI1ws0U3iwQthnIK5CS+cVWDm9i4NGe/S3k
-         BVIw==
-X-Forwarded-Encrypted: i=1; AKwUvByxXED5wtrEunJm/AQtV9pVinFm1/QamCkmJ2M9FW7Jo7e9Gx15YG7Edd/0iAxghn8WX1SZO+IuQE40BcFLzPUG@vger.kernel.org
-X-Gm-Message-State: AFuF++k48M+JYnbKKQyA3X35p+eEvXZIX0wHDViQb3SDwaRdIARnFLDV
-	20s9LWq4nbVa8jkOIJmhQ+PD39QqZlattK/7JZGwFgKdsEE2dE0YEVlKvqmbf8HO3MZYOJ5FXqM
-	H3y2jO35TMDnBdEzkDfNjBfk8blORMpTK+496iIPp
-X-Gm-Gg: AYBFou0r1W/lPKsdLgwQMXOukc44LL6xask2KJQxFoBnqUXOyHBoLPQeqqoAM9N3uHJ
-	Ne0y64GxuaLgIfqcqlYkK8HIvWrsQFOfK8xG5GhgakC9GmT62IeRIxGr9Cs/ApnJfxpCPY9mNXt
-	9Ef/qbicoW6r9GxDf52MxuomvlRuMxdI+2jlpZCfIPdrcHkHCl26haUB2s+YarmmL3wM45m2XOr
-	dPmSU3yCjrrfC1fvOgtiFwp++8tIhMinz0Q75O2XNIqiINB3NcIInqesEMIOC5W0FTevFOhTKtf
-	EbjbY6d72ZAcqRE9MLVcyiOF+jTXkmlmsMnW6vqjKWl3u3NVFG57X7u4CMlDmxIFSqrGY9EyfZA
-	NT9CsP1JKyg==
-X-Received: by 2002:a17:903:1b70:b0:2c6:99be:9dd with SMTP id
- d9443c01a7336-2dbddbd688amr10170995ad.12.1788975547398; Wed, 09 Sep 2026
- 10:39:07 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1788977440; x=1789582240;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=jjnxEfr3Uzi7pXtCU8OB5Dtvf84yJ4YLU6mP71jvHvQ=;
+        b=n7KuHyjki2wA06Ygt0DJioAujq+nsoP143q6pj4TGyWnLxnjjkS+QmuAAIlvP8n4Er
+         O70xFSIM8i9DV5KDk9YFUtHl+VJy0TisMgx9nxMgxQ3vTaQT3h6mexIIu6GQrELhMkpJ
+         7gOm0DCpSahfCwMwvJPojPGwGj19ioWQVF3yMEfclr+Q6BaM3wW0M/hQg3p7lpsxTKl0
+         cPawn7Ix6MG+nGjjzl/kiEc0P2NrCKgBJJ4NjNh1Mzjl59dHhF8LiDzrKpAZEqiMNq09
+         GUaputoMui3W7WMalt8Py3obQyUbcLL6Hnd3su7Sr2UWRtLThoQiG17J5t2YcuMRvWI/
+         wPsw==
+X-Forwarded-Encrypted: i=1; AKwUvBw61JpAtl3Z3zyQZGIM1qmKASaueOP+kwNeUFsTBawCaW6qnR+LSbe6Kxazi+YBpXEphPa0G4qT8qUBCC/BD49v@vger.kernel.org
+X-Gm-Message-State: AFuF++miP0nj0xm0dA1KvesxhpNgu4ZLIupx+J/mIkUHDJrK2INaAVXt
+	MFL6OIc0R8nuaZy2uPqMrxgtnieKdgkOKg4s4wnr7TlBh3gCN/duOhfzebn9nEpi1Vz/sGLISZ5
+	pQLq8tRqtEQ==
+X-Received: from dlbrj9.prod.google.com ([2002:a05:7022:f409:b0:140:f3bd:b2fa])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2f87:b0:38e:250b:122f
+ with SMTP id 98e67ed59e1d1-39b261e75femr54573828a91.16.1788977439844; Wed, 09
+ Sep 2026 11:10:39 -0700 (PDT)
+Date: Wed,  9 Sep 2026 11:10:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260903045603.3611902-1-irogers@google.com> <20260909161041.1745638-1-irogers@google.com>
- <20260909162119.3C3B51F000FF@smtp.kernel.org>
-In-Reply-To: <20260909162119.3C3B51F000FF@smtp.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.1003.g10538fe699-goog
+Message-ID: <20260909181030.1870496-1-irogers@google.com>
+Subject: [PATCH v1] tools build: Add explicitly sequenced -lzstd to libbfd
+ feature fallback
 From: Ian Rogers <irogers@google.com>
-Date: Wed, 9 Sep 2026 10:38:54 -0700
-X-Gm-Features: AcwNN1VtpUq2iwGbfwZhfTfb7fEQ3-fUN2GBSLGLAPrq-5DAFa1B67Ny4mHwpMU
-Message-ID: <CAP-5=fXUU266PHEhYJDXRJZv_XkGiRvGTR94fR+QEzFVKs=neg@mail.gmail.com>
-Subject: Re: [PATCH v3] perf tests: Improvements to build-test performance
-To: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Nick Terrell <terrelln@fb.com>, David Sterba <dsterba@suse.com>, Tomas Glozar <tglozar@redhat.com>, 
+	Michael Jeanson <mjeanson@efficios.com>, Dmitrii Dolgov <9erthalion6@gmail.com>, 
+	Costa Shulyupin <costa.shul@redhat.com>, Alexandre Chartre <alexandre.chartre@oracle.com>, 
+	Leo Yan <leo.yan@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 9, 2026 at 9:21=E2=80=AFAM <sashiko-bot@kernel.org> wrote:
->
-> Thank you for your contribution! Sashiko AI review found 1 potential issu=
-e(s) to consider:
-> - [Medium] The parallelization of the `out` target causes destructive rac=
-es between `FEATURES_DUMP_FILE` and `FEATURES_DUMP_FILE_STATIC` within the =
-shared source tree.
-> --
->
-> commit 8a5611d5732e412e746570eca199bea2894c319b
-> Author: Ian Rogers <irogers@google.com>
->
-> perf tests: Improvements to build-test performance
->
-> This patch replaces hardcoded 'make' calls with '$(MAKE)' in the perf tes=
-ts
-> Makefile to ensure proper GNU Make jobserver file descriptor inheritance.=
- It
-> also removes 'unexport MAKEFLAGS' in favor of native GNU Make conditional=
-s
-> for parallelism. Finally, it optimizes the 'out' target by wrapping the t=
-arget
-> list in a parallel sub-make call.
->
-> > diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-> > index d2c2f526e1db0..4a865e58f2bea 100644
-> > --- a/tools/perf/tests/make
-> > +++ b/tools/perf/tests/make
-> [ ... ]
-> > @@ -383,20 +391,22 @@ all: $(run) $(run_O) tarpkg make_kernelsrc make_k=
-ernelsrc_tools
-> >       @echo OK
-> >       @rm -f $(FEATURES_DUMP_FILE) $(FEATURES_DUMP_FILE_STATIC)
-> >
-> > -out: $(run_O)
-> > +out:
-> > +     $(call clean)
-> > +     @$(MAKE) -f tests/make $(run_O) PARALLEL_OPT=3D O_CLEAN=3D0 $(if =
-$(findstring jobserver,$(MAKEFLAGS))$(findstring -j,$(MAKEFLAGS)),,$(if $(c=
-ores),-j$(cores)))
->
-> [Severity: Medium]
-> When the out target invokes this parallel sub-make for all run_O targets,=
- does
-> this expose the feature dump dependencies to concurrent evaluation?
->
-> >       @echo OK
-> >       @rm -f $(FEATURES_DUMP_FILE) $(FEATURES_DUMP_FILE_STATIC)
-> >
-> >  ifeq ($(REUSE_FEATURES_DUMP),1)
-> >  $(FEATURES_DUMP_FILE):
-> >       $(call clean)
-> > -     @cmd=3D"cd $(PERF) && make FEATURE_DUMP_COPY=3D$@ $(O_OPT) featur=
-e-dump"; \
-> > +     @cmd=3D"cd $(PERF) && $(MAKE) FEATURE_DUMP_COPY=3D$@ $(O_OPT) fea=
-ture-dump"; \
-> >       echo "- $@: $$cmd" && echo $$cmd && \
-> >       ( eval $$cmd ) > /dev/null 2>&1
-> >
-> >  $(FEATURES_DUMP_FILE_STATIC):
-> >       $(call clean)
-> > -     @cmd=3D"cd $(PERF) && make FEATURE_DUMP_COPY=3D$@ $(O_OPT) LDFLAG=
-S=3D'-static' feature-dump"; \
-> > +     @cmd=3D"cd $(PERF) && $(MAKE) FEATURE_DUMP_COPY=3D$@ $(O_OPT) LDF=
-LAGS=3D'-static' feature-dump"; \
->
-> [Severity: Medium]
-> Will these feature dump recipes race destructively?
->
-> Since some run_O targets like make_static_O depend on
-> FEATURES_DUMP_FILE_STATIC while others depend on FEATURES_DUMP_FILE,
-> evaluating them concurrently means both unconditionally invoke make clean=
- and
-> make feature-dump inside the shared source tree.
->
-> Could this cause them to wipe out each other's intermediate artifacts dur=
-ing
-> make build-test out-of-tree builds?
+Distributions like Fedora currently ship a statically compiled binutils
+libbfd that natively depends on zstd to decompress sections (e.g.
+undefined reference to 'ZSTD_decompress').
 
-As make_static isn't part of the "run" variable set of tests it won't
-be part of run_O created by the foreach loop. make_static is only ever
-run sequentially and so there can't be concurrent evaluation of
-FEATURES_DUMP_FILE_STATIC.
+Since libbfd generally does not reliably distribute a .pc file for
+pkg-config (e.g. 'binutils-dev' evaluates missing on standard PKG_CONFIG_PATH
+checks), perf historically supplements manual linker flags in fallback
+chains (-lbfd -ldl -liberty -lz).
 
-Thanks,
-Ian
+Extend the testing cascade in tools/build/feature/Makefile and
+tools/perf/Makefile.config to probe for '-lz -lzstd' when the basic
+fallback variants fail, natively supporting statically compiled binutils on
+recent distributions.
+
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Ian Rogers <irogers@google.com>
+Assisted-by: Antigravity:gemini-3.1-pro
+---
+ tools/build/Makefile.feature |  3 ++-
+ tools/build/feature/Makefile | 12 +++++++++---
+ tools/perf/Makefile.config   |  2 ++
+ 3 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+index 99eb0ea09537..1268ac6f130e 100644
+--- a/tools/build/Makefile.feature
++++ b/tools/build/Makefile.feature
+@@ -121,6 +121,7 @@ FEATURE_TESTS_EXTRA :=                  \
+          libcheck                       \
+          libbfd-liberty                 \
+          libbfd-liberty-z               \
++         libbfd-liberty-z-zstd          \
+          libopencsd                     \
+          libperl                        \
+          llvm                           \
+@@ -161,7 +162,7 @@ FEATURE_DISPLAY ?=              \
+ # Declare group members of a feature to display the logical OR of the detection
+ # result instead of each member result.
+ #
+-FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z
++FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z libbfd-liberty-z-zstd
+ 
+ #
+ # Declare list of feature dependency packages that provide pkg-config files.
+diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+index 7d165018116a..410987df3a48 100644
+--- a/tools/build/feature/Makefile
++++ b/tools/build/feature/Makefile
+@@ -21,6 +21,7 @@ FILES=                                          \
+          test-reallocarray.bin			\
+          test-libbfd-liberty.bin                \
+          test-libbfd-liberty-z.bin              \
++         test-libbfd-liberty-z-zstd.bin         \
+          test-cplus-demangle.bin                \
+          test-cxa-demangle.bin                  \
+          test-libcap.bin			\
+@@ -272,15 +273,17 @@ $(OUTPUT)test-libbfd.bin:
+ 	$(BUILD_BFD)
+ 
+ $(OUTPUT)test-libbfd-threadsafe.bin:
+-	$(BUILD_BFD) || $(BUILD_BFD) -liberty || $(BUILD_BFD) -liberty -lz
++	$(BUILD_BFD) || $(BUILD_BFD) -liberty || $(BUILD_BFD) -liberty -lz || $(BUILD_BFD) -liberty -lz -lzstd
+ 
+ $(OUTPUT)test-disassembler-four-args.bin:
+ 	$(BUILD_BFD) -lopcodes || $(BUILD_BFD) -lopcodes -liberty || \
+-	$(BUILD_BFD) -lopcodes -liberty -lz
++	$(BUILD_BFD) -lopcodes -liberty -lz || \
++	$(BUILD_BFD) -lopcodes -liberty -lz -lzstd
+ 
+ $(OUTPUT)test-disassembler-init-styled.bin:
+ 	$(BUILD_BFD) -lopcodes || $(BUILD_BFD) -lopcodes -liberty || \
+-	$(BUILD_BFD) -lopcodes -liberty -lz
++	$(BUILD_BFD) -lopcodes -liberty -lz || \
++	$(BUILD_BFD) -lopcodes -liberty -lz -lzstd
+ 
+ $(OUTPUT)test-reallocarray.bin:
+ 	$(BUILD)
+@@ -291,6 +294,9 @@ $(OUTPUT)test-libbfd-liberty.bin:
+ $(OUTPUT)test-libbfd-liberty-z.bin:
+ 	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c -DPACKAGE='"perf"' $(LDFLAGS) -lbfd -ldl -liberty -lz
+ 
++$(OUTPUT)test-libbfd-liberty-z-zstd.bin:
++	$(CC) $(CFLAGS) -Wall -Werror -o $@ test-libbfd.c -DPACKAGE='"perf"' $(LDFLAGS) -lbfd -ldl -liberty -lz -lzstd
++
+ $(OUTPUT)test-cplus-demangle.bin:
+ 	$(BUILD) -liberty
+ 
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 4d5993da9f94..24a99545c9bc 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -906,6 +906,8 @@ ifdef BUILD_NONDISTRO
+     EXTLIBS += -lbfd -lopcodes -liberty
+   else ifeq ($(feature-libbfd-liberty-z), 1)
+     EXTLIBS += -lbfd -lopcodes -liberty -lz
++  else ifeq ($(feature-libbfd-liberty-z-zstd), 1)
++    EXTLIBS += -lbfd -lopcodes -liberty -lz -lzstd
+   endif
+ 
+   CFLAGS += -DHAVE_LIBBFD_SUPPORT
+-- 
+2.55.0.1003.g10538fe699-goog
+
