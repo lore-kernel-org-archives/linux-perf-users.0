@@ -1,57 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB9D577E4E;
-	Wed,  9 Sep 2026 14:15:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C0A312819;
+	Wed,  9 Sep 2026 14:49:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788963303; cv=none; b=OZHywotCy+ctNIEYIwDNAhNbvy1a7pTLKDflzbp6fZFzdruDpyM4GSiq52C73kK25izT5KyKVoAxnKphZxJQPG5/MgmNvan6XoGdu/yGhvLrqykhkShypSJZFO7Nz24bQpT+HMrJ8Wa37/oUX5ayfKRK3pTPGB00zy9WQMpi6P8=
+	t=1788965348; cv=none; b=bMrlBecKoQMKmdKXtPFYPPEZMxO+gqvRX51dSlICsd6Lbt/o5h0Qdxg/LUgekV52fHyeuxPGVH9yYdGy2zyIdnQmvbJ45r2erg1SN12K1mRP7z3votHpchCaAuKDmBFmoGqPQ0i409jq5bRCVJRKv/e7TdVHAtEWmLDJ7sd2yEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788963303; c=relaxed/simple;
-	bh=XRII96xTVW3zFT9oYMBI25SY9w8xHd6efZetmEu2H1o=;
+	s=arc-20240116; t=1788965348; c=relaxed/simple;
+	bh=54PdNHjZmvC+ydENa3G1J+G4G1FJGs39VSzshVYd64w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jgCjmnnJKaVfBYjr+HVr5rZv7kvMrsJzogtU+OHE8hCBX4KYwetIhrJT9ikbnUo+ZWbtbOoXgPYYLaL7InYp9K4eKsGH/YT4IKcHeMW30JpS4gwTCGOD+TGOrR6o36hRdkLMN+IQO//Ul3rGaTco/va2c3wtP3UavUiSV3Q0u2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VvletEha; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=ER7mJp9tLUGZg8BI+eYpAQxjTuSsTpNVq+aMroQEcfz4AHt1VNDPyEGYqvOiwrweZYphB7O3ZvZqQVTC/ij47E1lGzQe1dm4dVMZF9YmWogljGoH+9tYVRGf2+Vf0uI6/kizpzdGI0ucG6CQ8of1HnA4K13prgRvV5MYtNhjOb4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFu0w4bM; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VvletEha"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 792551F00A3A;
-	Wed,  9 Sep 2026 14:15:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nFu0w4bM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 646F61F00A3A;
+	Wed,  9 Sep 2026 14:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788963301;
-	bh=/OniCvkCuZhep7Dm5VZzuIT7ePpQGUA0n6SAlx9Bc8w=;
+	s=k20260515; t=1788965346;
+	bh=+NZaXpk+a7B276g1IyxQfYtoysLHIBQonmOQeX7VOK0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=VvletEhaFCak6ywKLnRFrGMJ7b8MMyP8MmrTP4XG8MKFdtZi82kxWxr/syaGLcGE7
-	 Ql5FfgHegVuBGGKhOP5b6L6AskrJRO2K2AuWZSbk0lkozm4lzUb7oWpvLuTsFL0xa4
-	 ra+RKJkTgdCsur0k6gzEzy8RGza5rjBUzRTfXlyeHdyPXoke3FYxrY5X1i9t0Qk1W4
-	 vD+rKZve6yVmCZa0yHLbxffb/gh/twU5dfvJ9QKOAgPzTRsVofwgKI2OEV+dx+tVDg
-	 bt7nwM8agbFn8F8iQHr+ubcbZzrmzKw/G+ZpXNsGvBtYUEmkBpOl1Sy8F1k9pT5RDg
-	 OPObMoM97btcQ==
-Date: Wed, 9 Sep 2026 10:14:58 -0400
+	b=nFu0w4bMRqRIEgNxIdOTrqA+ZjSQmkgpnAcFtV2WbjoaJyRn6nKRQyP2OprCt2nZZ
+	 uYlyPrcT9CzOLcID/Ku8Wlg2eHB/vlnHkgPdKK82Rx7JOT/9FDFXbg9Y9zf+Dj1P27
+	 qUG19a81Cs5d9ji95iKcIgZUHwM5BmQSwTtiqMy9zrz+E+dpqpGRAoGlvJuYPy3/+z
+	 IsyGPYWIhkZ+xxYT0JTXVHVxjlCSonvzwz0ajoQanLAdqZeruj6Ly3G66Aufhl4To7
+	 EYON7QdNI8il6aYDkGzWLuYpCvttTU1yz25bCYVmqJqBggmpTnuAUMf4YcXkdExWe+
+	 mUcpitTaBgmgg==
+Date: Wed, 9 Sep 2026 10:49:04 -0400
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Andi Kleen <ak@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>,
-	"Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Gennady Kupava <gennady.kupava@gmail.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [PATCH 2/2] perf/x86: Disable precise sampling for
- PERF_SAMPLE_STACK_USER
-Message-ID: <aqFp4oa7o2JxZAMi@google.com>
-References: <20260908075102.540715-1-dapeng1.mi@linux.intel.com>
- <20260908075102.540715-2-dapeng1.mi@linux.intel.com>
- <20260908084906.GO4121339@noisy.programming.kicks-ass.net>
- <1691a05c-49a6-4b16-8bad-cb3c004ed07c@linux.intel.com>
- <20260908101914.GQ4121339@noisy.programming.kicks-ass.net>
- <aqAlddsFPYJvRhFr@tassilo>
- <CAP-5=fWbSNYpt8p3e+pqjY+xhqs8WrzsBfPaKB1NLBm88mH8Yg@mail.gmail.com>
+To: sashiko-reviews@lists.linux.dev
+Cc: Tengda Wu <wutengda@huaweicloud.com>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v5 01/26] perf capstone: Symbolize address operands to
+ match objdump on arm64
+Message-ID: <aqFx4Fia3SWTrVZu@google.com>
+References: <cover.1788872630.git.wutengda@huaweicloud.com>
+ <eb2510f336aace385e4b4ffa99281d61c89c1ad2.1788872630.git.wutengda@huaweicloud.com>
+ <20260908131804.76F941F00A3A@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,74 +45,174 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fWbSNYpt8p3e+pqjY+xhqs8WrzsBfPaKB1NLBm88mH8Yg@mail.gmail.com>
+In-Reply-To: <20260908131804.76F941F00A3A@smtp.kernel.org>
 
 Hello,
 
-On Tue, Sep 08, 2026 at 01:56:56PM -0700, Ian Rogers wrote:
-> On Tue, Sep 8, 2026 at 8:10 AM Andi Kleen <ak@linux.intel.com> wrote:
-> >
-> > > That's what we already do, no? I have distinct memories of making the
-> > > stack unwind use the NMI regs rather then the PEBS regs.
-> > >
-> > > > In my opinion, it could even make the thing worse. User
-> > > > requires to get precise samplings, but perf silently returns imprecise
-> > > > records, this would mislead user.
-> > >
-> > > Mostly just the unwind might be off a little, the rest is accurate. This
-> > > has been the case 'forever'. Performance analysis isn't for silly
-> > > people, if they can't deal with a little fuzz then perhaps they're in
-> > > the wrong business.
-> >
-> > Is the main problem that the stack doesn't agree? Perhaps there
-> > could be a check for regs->rsp == pebs->user rsp (if in user space)
-> > to detect problematic samples.
-> >
-> > The question is how to report it and who should do the checking.
-> >
-> > It may need new fields in the ABI either to communicate the extra PEBS RSP
-> > or a bit to indicate that there might be a mismatch.
-> >
-> > I guess checking in the kernel and reporting an error might be simpler
-> > and maybe cleaner, but it would likely limit more advanced recovery
-> > possibilities.
-> >
-> > Are there other mismatches that break the unwinding? Perhaps the same
-> > for RBP?
+On Tue, Sep 08, 2026 at 01:18:03PM +0000, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] Premature `map__put()` of `found_map` before the caller consumes `sym_name` creates a Use-After-Free vulnerability.
+> --
 > 
-> For DWARF unwinding any register may be the source of a frame pointer
-> (e.g. the OpenSSL library would use R11 rather than RBP).
+> commit ff403b9f1717375044e9b6fbb3f09210431e386b
+> Author: Tengda Wu <wutengda@huaweicloud.com>
+> perf capstone: Symbolize address operands to match objdump on arm64
 > 
-> There is redundancy on x86 you can sample the PERF_REG_X86_IP register
-> in the user register and there is PERF_SAMPLE_IP in the sample event
-> itself.
+> This commit extends Capstone disassembly support on arm64 to resolve target
+> addresses to symbols. It detects instructions with address operands, maps
+> them to symbols, and formats the output to match objdump's style.
 > 
-> My understanding is that IBS can only sample IP and so for precise
-> samples we can use PERF_SAMPLE_IP as the precise location and the user
-> register PERF_REG_X86_IP as the interrupt IP - this would match the
-> other register values in the interrupt.
+> > diff --git a/tools/perf/util/capstone.c b/tools/perf/util/capstone.c
+> > index 74213daf87862..7f82c33e3464a 100644
+> > --- a/tools/perf/util/capstone.c
+> > +++ b/tools/perf/util/capstone.c
+> [ ... ]
+> > @@ -292,16 +303,44 @@ ssize_t capstone__fprintf_insn_asm(struct machine *machine, struct thread *threa
+> >  	return printed;
+> >  }
+> >  
+> > +static int resolve_symbol_from_addr(struct map *map, u64 addr,
+> > +				    const char **sym_name, u64 *sym_offset)
+> > +{
+> > +	struct map *found_map = NULL;
+> > +	struct symbol *sym;
+> > +	u64 al_addr;
+> > +	u64 ip = map__objdump_2mem(map, addr);
+> > +
+> > +	if (dso__kernel(map__dso(map))) {
+> > +		/*
+> > +		 * The kernel maps can be split into sections, let's
+> > +		 * find the map first and then search the symbol.
+> > +		 */
+> > +		found_map = maps__find(map__kmaps(map), ip);
+> > +		if (found_map == NULL)
+> > +			return -1;
+> > +		map = found_map;
+> > +	}
+> > +
+> > +	/* convert it to map-relative address for search */
+> > +	al_addr = map__map_ip(map, ip);
+> > +
+> > +	sym = map__find_symbol(map, al_addr);
+> > +	map__put(found_map);
+> > +
+> > +	if (sym == NULL)
+> > +		return -1;
+> > +
+> > +	*sym_name = sym->name;
+> > +	*sym_offset = al_addr - sym->start;
+> > +	return 0;
+> > +}
 > 
-> In DWARF unwinding, we initialize the register state using the sampled
-> user registers:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/unwind-libdw.c?h=perf-tools-next#n270
-> and on x86 we sample all registers for DWARF unwinding:
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/arch/x86/include/perf_regs.h?h=perf-tools-next#n20
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/perf-regs-arch/perf_regs_x86.c?h=perf-tools-next#n238
-> 
-> Having PERF_SAMPLE_IP be precise and the user registers from the
-> interrupt I believe works for AMD IBS and ARM SPE, but for Intel PEBS
-> there is the ability to use the PEBS register samples for other
-> non-redundant registers. In the x86 driver could we disable PEBS
-> sampling for these registers when doing user stack sampling, so that
-> the sampled user registers match the stack sample? We can keep the
-> PERF_SAMPLE_IP precise, and make all the registers precise when there
-> is no stack sampling.
+> [Severity: Medium]
+> Is map__put(found_map) called prematurely here? If the map is concurrently
+> removed and the refcount drops to zero, the map and its symbols could be
+> freed. Does this leave sym->name pointing to freed memory when it is assigned
+> to *sym_name and returned to the caller?
 
-+1.
-
-I think it's better to keep PERF_SAMPLE_IP precise as requested and pick
-appropriate registers based on PERF_SAMPLE_USER_STACK.
+Right, probably better to return a pointer to symbol instead and make
+the found_map as an out parameter.
 
 Thanks,
 Namhyung
 
+> 
+> > +
+> >  static void print_capstone_detail(struct cs_insn *insn, char *buf, size_t len,
+> >  				  struct annotate_args *args, u64 addr)
+> >  {
+> [ ... ]
+> > @@ -320,40 +360,114 @@ static void print_capstone_detail(struct cs_insn *insn, char *buf, size_t len,
+> >  
+> >  		/* get the target address */
+> >  		orig_addr = addr + insn->size + op->mem.disp;
+> > -		addr = map__objdump_2mem(map, orig_addr);
+> > -
+> > -		if (dso__kernel(map__dso(map))) {
+> > -			/*
+> > -			 * The kernel maps can be split into sections, let's
+> > -			 * find the map first and then search the symbol.
+> > -			 */
+> > -			found_map = maps__find(map__kmaps(map), addr);
+> > -			if (found_map == NULL)
+> > -				continue;
+> > -			map = found_map;
+> > -		}
+> > -
+> > -		/* convert it to map-relative address for search */
+> > -		addr = map__map_ip(map, addr);
+> > -
+> > -		sym = map__find_symbol(map, addr);
+> > -		if (sym == NULL) {
+> > -			map__put(found_map);
+> > +		if (resolve_symbol_from_addr(map, orig_addr, &sym_name, &sym_offset))
+> >  			continue;
+> > -		}
+> >  
+> > -		if (addr == sym->start) {
+> > +		if (sym_offset == 0) {
+> >  			scnprintf(buf, len, "\t# %"PRIx64" <%s>",
+> > -				  orig_addr, sym->name);
+> > +				  orig_addr, sym_name);
+> 
+> [Severity: Medium]
+> Can this result in a Use-After-Free? If resolve_symbol_from_addr() drops the
+> map reference too early, sym_name might point to freed memory by the time it
+> is dereferenced here in scnprintf().
+> 
+> >  		} else {
+> >  			scnprintf(buf, len, "\t# %"PRIx64" <%s+%#"PRIx64">",
+> > -				  orig_addr, sym->name, addr - sym->start);
+> > +				  orig_addr, sym_name, sym_offset);
+> >  		}
+> [ ... ]
+> > +static void format_capstone_insn_arm64(struct cs_insn *insn, char *buf,
+> > +				       size_t len, struct annotate_args *args)
+> > +{
+> > +	struct map *map = args->ms->map;
+> > +	char *last_imm, *endptr;
+> > +	u64 addr;
+> > +
+> > +	print_default_format(insn, buf, len);
+> > +	/*
+> > +	 * Adjust instructions to keep the existing behavior with objdump.
+> > +	 *
+> > +	 * Example conversion:
+> > +	 * From: b #0xffff8000800114c8
+> > +	 * To:   b ffff8000800114c8 <el0t_64_sync+0x108>
+> > +	 */
+> > +	if (needs_symbolic_address(insn)) {
+> > +		const char *sym_name = NULL;
+> > +		u64 sym_offset;
+> > +
+> > +		/* Extract last immediate value as address */
+> > +		last_imm = strrchr(buf, '#');
+> > +		if (!last_imm)
+> > +			return;
+> > +
+> > +		addr = strtoull(last_imm + 1, &endptr, 16);
+> > +		if (endptr == last_imm + 1)
+> > +			return;
+> > +
+> > +		if (resolve_symbol_from_addr(map, addr, &sym_name, &sym_offset))
+> > +			return;
+> > +
+> > +		/* Symbolize the resolved address */
+> > +		len = len - (last_imm - buf);
+> > +		if (sym_offset == 0) {
+> > +			scnprintf(last_imm, len, "%"PRIx64" <%s>",
+> > +				  addr, sym_name);
+> 
+> [Severity: Medium]
+> Does this also dereference the potentially dangling sym_name pointer if the
+> underlying map was freed in resolve_symbol_from_addr()?
+> 
+> > +		} else {
+> > +			scnprintf(last_imm, len, "%"PRIx64" <%s+%#"PRIx64">",
+> > +				  addr, sym_name, sym_offset);
+> > +		}
+> > +	}
+> > +}
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/cover.1788872630.git.wutengda@huaweicloud.com?part=1
