@@ -1,95 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 797063B7742;
-	Wed,  9 Sep 2026 20:30:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444A758E2AC
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Sep 2026 20:41:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788985836; cv=none; b=R08Q9FOuj6FiwqEmg15/kvv2DUWVxU6SWUytdf8OK6c4fLXOqX9RuxsJ115sC5BuVW0w3emcpOVy6DlhYa5Uus0WHwbhxL/+E82HcroUSpZgijsLgQKk7kUD6edwPsL/azQQzZgn++JaLXI1g0cFcCdZyKmp8JT0DX4XGqNMe6U=
+	t=1788986507; cv=none; b=GFkyEflhp0TYT5tP/mWoc3tYMY6IQOTU6SZwCqSiTAXybamzS7IiYKb5cEOtJSdxfQtp2EQOU7AbzS7WZFsHAlBcGCYWyQpuj9Zmt+x+rcTucm86FtwZvv3Afy3OPj09sgaMwi7Ap5Jv2WiyJ02MqeO3Rm7K0soB6hz1Ucwsc4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788985836; c=relaxed/simple;
-	bh=GDa9doJb5HpYth1oZ4d0wJYLaV5uvEqg1wVw46zNJMU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pE8VpZ03cY75U/njkTh3p3UqVU1e62+2oECSo1CX7d4cTBvQMeCtb28JK3tzOhQ1Aj+/JHfl8B5AppfjBLhxh4IcjYiwbqGBoHHm9qtkktJNpatSlA96X0z2rKimqtSjHf4aswom8S5HpaOKmYTrSgfLoeEDhTs6ozyS4vRQSLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jj4fjrEj; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788986507; c=relaxed/simple;
+	bh=lzGikIwP3jt+gebSI9ASbBMxYIDTjcvzLhu0dadRD3g=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=L+hOfJHeJlo8j7M8ywjM9aTx3ANkiKxLQStV9V5hF8o1TQzmlwL+a3QKBtlGZeO3OIcG3DdlQsFmIC8rlm7jjiM0Fov9OMtw0V5hnqX2BmxUBf3pC0SEXXdTDA0vcTo2ORZyd3StUdnmAyzGkt8X0M3376b3i/1w9a05b85f6Cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VDFHeMev; arc=none smtp.client-ip=209.85.214.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jj4fjrEj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3791E1F000FF;
-	Wed,  9 Sep 2026 20:30:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788985831;
-	bh=Zm6OYF7UGpRoKIJEPn08vsmxH3kEkHKLnqQecML+z9Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=jj4fjrEjUHS0z/G6x7A/HojE9rKD5+CTpyAxnbQiU8t0xVC9Mi8twt57g5064GLYX
-	 ngDTY60fS2cbLp1kwO8H0xel5Xgg3e9eSfFMsP11cjP7pVkp82CXnYA96ZsbFKAokF
-	 Sr7Dk13mK2jaxWCsBFfYr/YFxa+3OYngB/ducbRujIZg0owYYuPBTXdLKTDy6qLRfc
-	 xlFks/JxckiqCwtFr0EjvS0CrhmPIFsBELrLID9/ULzsegBUwOeh+8F89ESxBvm3Eo
-	 3vVJXFqu4Qeptam3W4UrzY1AYnERMKVtJNCYD1qGB3bdL4HDng9074KEpqH/lXsOfX
-	 0xAXfy+EdNHxg==
-Date: Wed, 9 Sep 2026 17:30:28 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: alice.mei.rogers@gmail.com, namhyung@kernel.org,
-	adrian.hunter@intel.com, jolsa@kernel.org, laixintaoo@gmail.com,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mingo@redhat.com, peterz@infradead.org
-Subject: Re: [PATCH v4 0/2] perf python TUI report and flamegraph
-Message-ID: <aqHB5PahbbxmXBO-@x2>
-References: <20260809041638.2402705-1-irogers@google.com>
- <20260809051820.2436530-1-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VDFHeMev"
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-2db0a41434bso115232495ad.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Sep 2026 13:41:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1788986492; x=1789591292; darn=vger.kernel.org;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=eQnCep2rVFC6ERkLpw82m7uGzTr5iSCdTDgfzxN2350=;
+        b=VDFHeMev5pnXQuqWlK5DscSbU6oztU5Foif6XfZIkbz/x5Wn/+OKKITJdtIzbf+mVz
+         2yWVMR17CirnHLdUAAtq48kIkX+T2TnwDiqWzSHMVcwhqY5aKSY/EoLcCmBPgtgfzp8u
+         5OHM9Wyb2te5MxAb8KmTVSU1LFRFej36kqENFMYPxgpibEo/LQqlOozSrUwFU9LA3s2w
+         M5XXfZ2fP65weowTLfN7y8Pdq59y08dlQFeZ493GThXTiM8eZUAZZy9w4Q4VA89TMqhq
+         b2CKvuIwp73xXsJsYLk7SqoWNl/k2DSVu2CswSm4nAPE5L2Xs5GC+qwjEAFfcJQcnLNH
+         ud2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788986492; x=1789591292;
+        h=content-type:cc:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=eQnCep2rVFC6ERkLpw82m7uGzTr5iSCdTDgfzxN2350=;
+        b=cs946j3Accs4ElNIeD0Re9jcFXvOdSTj083cz5JN/5Ec2T8d7qme5qG3ouq4nA+Grw
+         +IWD51lQBb7BCIMYUrHwjD78nity1FcpmpjisRDdfZsqc1lkY8CrAzptr2zkbjsWF/cK
+         RdSZf8VmpHDeUqyShit/W6Xl0b9S2RrgMvvQ9XCmvBNVBGmXEQ7f987dL36ptlM9Za6/
+         55CXkW0/YRgoOKdbmZrNzMo752cUJ2c4hXuz1xk1ckUq9oJ523B8AsQHL5ScsCxGOAnK
+         Lbqj0jj5kMoHpmaSn6jEwjj6pElhAFSqROq04kEJDyPrj8fLKXkaH4Pg/y8YFDI3+5Lt
+         HVPQ==
+X-Forwarded-Encrypted: i=1; AKwUvBw1MrmgQB5YcfgWQ5nNMaSqPo/+bksQg3c9yn8UZfmx3HVyIsS205zj7lZaZppVgDt2QIx1eWX0BjBzraPtaZH/@vger.kernel.org
+X-Gm-Message-State: AFuF++lEgCMv+rOvJEpv+czbxYzDbY0wXMK2sqIXQ/jtMm34XD6eA4cu
+	ZFMorZb4KDUjJ/e0P19oDnU87YBZW1lU/ByJL8urKp2yoYor3H0r27VeA3sfLMSwUy9OoFGIEOe
+	NiVOfgqB7aw==
+X-Received: from dlzz35.prod.google.com ([2002:a05:7022:4a3:b0:143:56d8:251])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:380a:b0:398:d2a0:87ff
+ with SMTP id 98e67ed59e1d1-39d7098094bmr3884030a91.1.1788986491408; Wed, 09
+ Sep 2026 13:41:31 -0700 (PDT)
+Date: Wed,  9 Sep 2026 13:41:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260809051820.2436530-1-irogers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.1003.g10538fe699-goog
+Message-ID: <20260909204122.1993010-1-irogers@google.com>
+Subject: [PATCH v2 0/4] tools build: Fixes for libbfd -lzstd dependency
+From: Ian Rogers <irogers@google.com>
+To: Quentin Monnet <qmo@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>, 
+	Emil Tsalapatis <emil@etsalapatis.com>, Ihor Solodrai <ihor.solodrai@linux.dev>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Nick Terrell <terrelln@fb.com>, 
+	David Sterba <dsterba@suse.com>, Tomas Glozar <tglozar@redhat.com>, 
+	Costa Shulyupin <costa.shul@redhat.com>, Michael Jeanson <mjeanson@efficios.com>, 
+	Dmitrii Dolgov <9erthalion6@gmail.com>, Leo Yan <leo.yan@arm.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Cc: bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Aug 08, 2026 at 10:18:17PM -0700, Ian Rogers wrote:
-> Implement a perf TUI using the python textual module. Using the
-> textual framework means that in most modern terminals the mouse is
-> supported, the color scheme can be configured, and screenshots made.
-> 
-> The work is dependent on the extensions to the perf python module
-> merged into perf-tools-next such as commit 88439191ad5e ("perf python:
-> Add callchain support"). It is also dependent on the python textual
-> module for TUI support.
+This is a fuller set of patches from v1 addressing build problems
+linking with libbfd when zstd is a dependency. The original issue was
+exposed on Fedora with perf's build-test. This series separates the
+build from the perf changes and adds in bpftool and objtool fixes
+caught by Sashiko. The changes follow the pattern used by the zlib -lz
+dependency and so appear correct but are untested.
 
-Cool stuff, just tested it :-)
+v1: https://lore.kernel.org/linux-perf-users/20260909181030.1870496-1-irogers@google.com/
 
-Thanks, applied to perf-tools-next, for v7.4.
+Ian Rogers (4):
+  tools build: Add explicitly sequenced -lzstd to libbfd feature
+    fallback
+  perf build: Add explicitly sequenced -lzstd to libbfd feature fallback
+  bpftool: Add explicitly sequenced -lzstd to libbfd feature fallback
+  objtool: Add explicitly sequenced -lzstd to libopcodes fallback
 
-- Arnaldo
- 
-> v4: Fix typo of profle to profile and tweak argparse command
->     description to only mention flamegraph after that support is added
->     (Sashiko). Sashiko notes a high severity issue because the script
->     depends on perf Python module extensions that are already
->     merged. This is because Sashiko is testing the changes against the
->     perf-tools rather than perf-tools-next. Verified
->     rich.errors.MarkupError don't occur for kernel DSOs, primarily as
->     there is always a space after the square brackets.
-> 
-> v3: Tweaks to commit messages (Sashiko).
-> https://lore.kernel.org/linux-perf-users/20260809041638.2402705-1-irogers@google.com/
-> 
-> v2: Migrate from inbuilt perf python interpreter to perf python
->     module. Improve the flamegraph performance. Use the textual's
->     color scheme rather than red and white.
-> https://lore.kernel.org/linux-perf-users/20260808065743.2328212-1-irogers@google.com/
-> 
-> v1:
-> https://lore.kernel.org/linux-perf-users/20250725082425.20999-1-irogers@google.com/
-> 
-> Alice Rogers (2):
->   perf python: New treport script
->   perf python: treport add flamegraph support
-> 
->  tools/perf/python/treport.py | 561 +++++++++++++++++++++++++++++++++++
->  1 file changed, 561 insertions(+)
->  create mode 100755 tools/perf/python/treport.py
-> 
-> -- 
-> 2.55.0.654.g21b8a5bc05-goog
+ tools/bpf/bpftool/Makefile   |  4 ++++
+ tools/build/Makefile.feature |  3 ++-
+ tools/build/feature/Makefile | 12 +++++++++---
+ tools/objtool/Makefile       |  3 ++-
+ tools/perf/Makefile.config   |  3 +++
+ 5 files changed, 20 insertions(+), 5 deletions(-)
+
+-- 
+2.55.0.1003.g10538fe699-goog
+
