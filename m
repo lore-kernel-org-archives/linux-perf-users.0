@@ -1,58 +1,51 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAA0348C4C;
-	Wed,  9 Sep 2026 19:30:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D5E3BB9ED;
+	Wed,  9 Sep 2026 20:03:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788982260; cv=none; b=WqKBOPJV0P88Im4VATCMyk9Q3B0G8RINfqpd/Sw4LpsL83bHMqJtMxWIpGY8/Ewoth+pC67Yhv1Kw1BtCZwnOwoRkcd6S9lpv9gPnlx2pJbaY7scy4ZSD+2iFsbEgkChL7j21s6PjGVp0ZT2Zbf8UDlJvlGGtnCto2b6epGWpME=
+	t=1788984184; cv=none; b=GgbRQLuB+m0TPEtmIsktnQR/frmfOVxAJ+boZCpSqwNV70mqvct4cGhX2H92z9NwyRQvcI9tZAQeGvvwc3sCPX88H/6+NAR3u5Wv98jMwRYw0RRipDo7tEZAvsI7vB4Yfih1o7SSBauiLCpk2yhXZmA2Qt7ElUfMjvgEPQgofTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788982260; c=relaxed/simple;
-	bh=Ev3df10mxNmGPEkApvaW5+98Bhm5asRrNwNxP3EKuO4=;
+	s=arc-20240116; t=1788984184; c=relaxed/simple;
+	bh=gUzyQMmrz8MX1axytfdlZw5lmeTUBYH++VJHD63tCFo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SJgLJcH6LBHCwKJFbbHBMG6DJE3ymIVnVmJHJDjVpy0da+6AyZGtm8kelAMcHzSGnZZe7aSMNPJHiqdWF/X+sBkezx8aQPOmkP2AvWy1cnrdmWeTugW3hF1Knm0lVv8IyhXmb6VBcla+zMzcX4KTKewlVXzdPStANsoOA8U4jAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fU4Hvas7; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=IUTy1D0pVBbsU3d1a87HhRhhfjxefmuLSc8FMyZC+cYLeLbo+QMt7nj/5tt4GuMTTa2ijSgpq69ywZLKnw2pT2h6Y9Pfy2weSsr+7ciQFkErn7zjXbOIpljv+sZ7dpRyPPbnjjVqfx/BfSKyqnHf8qL3bJeYo0pJbM28KH2jS/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czurnMUr; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fU4Hvas7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 279A81F000FF;
-	Wed,  9 Sep 2026 19:30:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czurnMUr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0488D1F000FF;
+	Wed,  9 Sep 2026 20:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788982258;
-	bh=h0KtUzQENRX3k+Qj7Puxd8aLhSB7ZM+KtB0tKaGla1c=;
+	s=k20260515; t=1788984182;
+	bh=VVudfO1LfG/tIUM8pjA+57c3uLYPzlgjVl4h9kE11Ik=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=fU4Hvas7aGnAa5dJsVNL8C1FJdMChTrp0kGAH9Wu4G0YznEME05BTWcV8MGyR3+Oy
-	 PHkr7LQhNEysr1eI8z+6eFN4pSQTEXtBeNt0iby1xH+RmaUWtVZ0nqVzp6W2F2YVWS
-	 IxF8oUqykYV7qZj4DOZKM847niUNM7M5yOP0O+f/cQhDeHuG6XOPH9uz1VeMEi+VQj
-	 aAIHT0AHaePlxGuV5tKbYYpVVnEwCJZDoU6gfmqJr43NdIlI+HWXNW/403V9BRuxLD
-	 i46ptSWtnODqtbIFZnUYU+VZqpYYoZUpLxIJm+ciiS0N6iKqQkfp95FmYeP8DbdHA5
-	 1m/kzzQ+vMOIg==
-Date: Wed, 9 Sep 2026 15:30:55 -0400
-From: Namhyung Kim <namhyung@kernel.org>
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ian Rogers <irogers@google.com>,
-	Andi Kleen <ak@linux.intel.com>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	b=czurnMUrvfPxRjg729VF+A9M6BQhgi6pMUfvrQrc2cHaDtwYu4lBdulJteczSWQE1
+	 BLHftNTVvtN51bj/GubheNF5oUtp1ns6rcCntBWFp1+c43cuCEHGhrWXe4V//OYc4Y
+	 ohF7hqwFs1YQKirqhF/0MmC639X6nV3ftG5R3uzIz+lHh7ciTRbYzJysa9DGfwdkPV
+	 1pBZOYj+Sq87B6GUWkn6d8K+B0IoFC6k+8bBToDCXNt2OzO/cKBhsXhIwgJ+mTbdIa
+	 afkBAcQSn6QLEiSp+kf1XGv0R5A72fpUvfQ5YYmA77KmFE7amG/v9f5jW4ObFosnvJ
+	 rklLPjAUHy+4Q==
+Date: Wed, 9 Sep 2026 17:02:59 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Matt Turner <mattst88@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Eranian Stephane <eranian@google.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, Dapeng Mi <dapeng1.mi@intel.com>,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Gennady Kupava <gennady.kupava@gmail.com>,
-	Ravi Bangoria <ravi.bangoria@amd.com>
-Subject: Re: [PATCH 2/2] perf/x86: Disable precise sampling for
- PERF_SAMPLE_STACK_USER
-Message-ID: <aqGz7324WTIwJ_8U@google.com>
-References: <20260908075102.540715-1-dapeng1.mi@linux.intel.com>
- <20260908075102.540715-2-dapeng1.mi@linux.intel.com>
- <20260908084906.GO4121339@noisy.programming.kicks-ass.net>
- <1691a05c-49a6-4b16-8bad-cb3c004ed07c@linux.intel.com>
- <20260908101914.GQ4121339@noisy.programming.kicks-ass.net>
- <aqAlddsFPYJvRhFr@tassilo>
- <CAP-5=fWbSNYpt8p3e+pqjY+xhqs8WrzsBfPaKB1NLBm88mH8Yg@mail.gmail.com>
- <20260909081101.GS4121339@noisy.programming.kicks-ass.net>
- <19a610df-530a-4397-9fb6-a1e12251c987@linux.intel.com>
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v8 0/3] perf tools: port UI from GTK2 to GTK4
+Message-ID: <aqG7c7RkOoaxMo1w@x2>
+References: <20260908-perf-gtk2-v8-0-e90d5d155f0d@gmail.com>
+ <aqE_QOp-x1aOQsCX@x2>
+ <aqFCMfb94Cdumemm@x2>
+ <aqFDLQ5Yu7yg6Y2Z@x2>
+ <aqFEdSZ40HkvipUr@x2>
+ <aqFGVejYb-kZ8o_I@x2>
+ <aqFIkFzVvCQqnzpy@x2>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -62,105 +55,124 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <19a610df-530a-4397-9fb6-a1e12251c987@linux.intel.com>
+In-Reply-To: <aqFIkFzVvCQqnzpy@x2>
 
-Hello,
+On Wed, Sep 09, 2026 at 08:52:48AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Sep 09, 2026 at 08:43:20AM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Wed, Sep 09, 2026 at 08:35:20AM -0300, Arnaldo Carvalho de Melo wrote:
+> > Now, with GTK4=1 and trying to build the first patch after installing
+> > gtk4-devel on fedora 43 it fails to detect gtk4 support:
+> > 
+> > ⬢ [acme@toolbx perf-tools-next]$ m
+> > make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
+> >   BUILD:   Doing 'make -j32' parallel build
+> > 
+> > Auto-detecting system features:
+> > ...                                   libdw: [ on  ]
+> > ...                                   glibc: [ on  ]
+> > ...                                    gtk4: [ OFF ]
 
-I missed this thread before sending my previous reply.
 
-On Wed, Sep 09, 2026 at 05:36:45PM +0800, Mi, Dapeng wrote:
-> 
-> On 9/9/2026 4:11 PM, Peter Zijlstra wrote:
-> > On Tue, Sep 08, 2026 at 01:56:56PM -0700, Ian Rogers wrote:
-> >> On Tue, Sep 8, 2026 at 8:10 AM Andi Kleen <ak@linux.intel.com> wrote:
-> >>>> That's what we already do, no? I have distinct memories of making the
-> >>>> stack unwind use the NMI regs rather then the PEBS regs.
-> >>>>
-> >>>>> In my opinion, it could even make the thing worse. User
-> >>>>> requires to get precise samplings, but perf silently returns imprecise
-> >>>>> records, this would mislead user.
-> >>>> Mostly just the unwind might be off a little, the rest is accurate. This
-> >>>> has been the case 'forever'. Performance analysis isn't for silly
-> >>>> people, if they can't deal with a little fuzz then perhaps they're in
-> >>>> the wrong business.
-> >>> Is the main problem that the stack doesn't agree? Perhaps there
-> >>> could be a check for regs->rsp == pebs->user rsp (if in user space)
-> >>> to detect problematic samples.
-> >>>
-> >>> The question is how to report it and who should do the checking.
-> >>>
-> >>> It may need new fields in the ABI either to communicate the extra PEBS RSP
-> >>> or a bit to indicate that there might be a mismatch.
-> >>>
-> >>> I guess checking in the kernel and reporting an error might be simpler
-> >>> and maybe cleaner, but it would likely limit more advanced recovery
-> >>> possibilities.
-> >>>
-> >>> Are there other mismatches that break the unwinding? Perhaps the same
-> >>> for RBP?
-> >> For DWARF unwinding any register may be the source of a frame pointer
-> >> (e.g. the OpenSSL library would use R11 rather than RBP).
-> >>
-> >> There is redundancy on x86 you can sample the PERF_REG_X86_IP register
-> >> in the user register and there is PERF_SAMPLE_IP in the sample event
-> >> itself.
-> >>
-> >> My understanding is that IBS can only sample IP and so for precise
-> >> samples we can use PERF_SAMPLE_IP as the precise location and the user
-> >> register PERF_REG_X86_IP as the interrupt IP - this would match the
-> >> other register values in the interrupt.
-> >>
-> >> In DWARF unwinding, we initialize the register state using the sampled
-> >> user registers:
-> > Oh, I had trouble reading yesterday :/ This is about USER_STACK, not
-> > CALLCHAIN.
-> 
-> Yes, this is about USR_STACK. The CALLCHAIN doesn't suffer this issue since
-> perf already returns an IP chain and user space can directly map them to
-> the symbols without depending on any register or stack snapshots. :)
-> 
-> 
-> >
-> > I think we should try very hard to not use USER_STACK, it is an
-> > abomination. Instead we really should improve CALLCHAIN to be more
-> > useful. There are a pile of patches for kernel based unwinders,
-> > including for .eh_frame (if only I had time to actually go look at
-> > them).
+I removed gtk4 from FEATURES_DISPLAY, as it is opt-in, no point in
+telling most of the time it is OFF, when developing one can use 'make
+VF=1' to see if it was detected:
 
-That would be great!
+⬢ [acme@toolbx perf-tools-next]$ alias m='rm -rf ~/libexec/perf-core/ ; make VF=1 CORESIGHT=1 -k O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin && perf test import && cat /tmp/build/$(basename $PWD)/feature/test-all.make.output' ; export PYTHONPATH=/tmp/build/$(basename $PWD)/python
+⬢ [acme@toolbx perf-tools-next]$ m
+make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
+  BUILD:   Doing 'make -j32' parallel build
 
-> >
-> > And we should probably look at doing a shadow stack based unwinder as
-> > well.
+Auto-detecting system features:
+...                                   libdw: [ on  ]
+...                                   glibc: [ on  ]
+...                                  libelf: [ on  ]
+...                                 libnuma: [ on  ]
+...                  numa_num_possible_cpus: [ on  ]
+...                               libpython: [ on  ]
+...                             libcapstone: [ on  ]
+...                               llvm-perf: [ on  ]
+...                                    zlib: [ on  ]
+...                                    lzma: [ on  ]
+...                                     bpf: [ on  ]
+...                                  libaio: [ on  ]
+...                                 libzstd: [ on  ]
+...                              libopenssl: [ on  ]
+...                                    rust: [ on  ]
+...                               backtrace: [ on  ]
+...                                 eventfd: [ on  ]
+...                          fortify-source: [ on  ]
+...                                  gettid: [ on  ]
+...                                  libbfd: [ on  ]
+...                       libbfd-threadsafe: [ on  ]
+...                       libelf-getphdrnum: [ on  ]
+...                     libelf-gelf_getnote: [ on  ]
+...                    libelf-getshdrstrndx: [ on  ]
+...                             libelf-zstd: [ on  ]
+...                                libslang: [ on  ]
+...                           libtraceevent: [ on  ]
+...                             libcpupower: [ on  ]
+...             pthread-attr-setaffinity-np: [ on  ]
+...                         pthread-barrier: [ on  ]
+...                            reallocarray: [ on  ]
+...                      stackprotector-all: [ on  ]
+...                                 timerfd: [ on  ]
+...                               scandirat: [ on  ]
+...                            sched_getcpu: [ on  ]
+...                                     sdt: [ on  ]
+...                                   setns: [ on  ]
+...                  disassembler-four-args: [ on  ]
+...                disassembler-init-styled: [ on  ]
+...                             file-handle: [ on  ]
+...                                  bionic: [ OFF ]
+...                              compile-32: [ OFF ]
+...                             compile-x32: [ OFF ]
+...                          cplus-demangle: [ OFF ]
+...                            cxa-demangle: [ on  ]
+...                                    gtk4: [ OFF ]
+...                                   hello: [ OFF ]
+...                  babeltrace2-ctf-writer: [ on  ]
+...                             libcapstone: [ on  ]
+...                                libcheck: [ OFF ]
+...                          libbfd-liberty: [ OFF ]
+...                        libbfd-liberty-z: [ OFF ]
+...                              libopencsd: [ on  ]
+...                                 libperl: [ OFF ]
+...                                    llvm: [ OFF ]
+...                                  libbpf: [ OFF ]
+...                                 libpfm4: [ on  ]
+...                           libdebuginfod: [ on  ]
+...                         clang-bpf-co-re: [ on  ]
+...                       bpftool-skeletons: [ OFF ]
+...                               libunwind: [ OFF ]
+...                   libunwind-debug-frame: [ OFF ]
+...                       libunwind-aarch64: [ OFF ]
+...           libunwind-debug-frame-aarch64: [ OFF ]
+...                           libunwind-arm: [ OFF ]
+...               libunwind-debug-frame-arm: [ OFF ]
+...                   libunwind-loongarch64: [ OFF ]
+...       libunwind-debug-frame-loongarch64: [ OFF ]
+...                          libunwind-mips: [ OFF ]
+...              libunwind-debug-frame-mips: [ OFF ]
+...                         libunwind-ppc32: [ OFF ]
+...             libunwind-debug-frame-ppc32: [ OFF ]
+...                         libunwind-ppc64: [ OFF ]
+...             libunwind-debug-frame-ppc64: [ OFF ]
+...                         libunwind-riscv: [ OFF ]
+...             libunwind-debug-frame-riscv: [ OFF ]
+...                         libunwind-s390x: [ OFF ]
+...             libunwind-debug-frame-s390x: [ OFF ]
+...                           libunwind-x86: [ OFF ]
+...               libunwind-debug-frame-x86: [ OFF ]
+...                        libunwind-x86_64: [ OFF ]
+...            libunwind-debug-frame-x86_64: [ OFF ]
+...                                  prefix: /home/acme
+...                                  bindir: /home/acme/bin
+...                                  libdir: /home/acme/lib64
+...                              sysconfdir: /home/acme/etc
+...                           LIBUNWIND_DIR:
+...                               LIBDW_DIR:
+...                                    JDIR: /usr/lib/jvm/java-latest-openjdk
+...               DWARF post unwind library: libdw
 
-Cool. It'd be nice to see that happen.
 
-> >
-> > This USER_STACK is really the absolute worst possible option. And
-> > perhaps refusing PEBS+USER_STACK makes sense.
-> 
-> If no others insist to implement the precise USER_STACK sampling (what Ian
-> suggested), I would give up for sending the drafted precise USER_STACK
-> sampling patches. Per my understanding, refusing precise USER_STACK
-> sampling what current version does is a cleaner and simpler way.
-> Supporting precise USER_STACK sampling inevitably complexes the PEBS/IBS
-> handling.
-
-I think precise is for IP and it's not clear if it applies to other REGS
-too.  But agree that it'd be simpler to reject.
-
-> 
-> BTW, currently perf tools already support the events creation fallback. As
-> long as user doesn't explicitly require precise USER_STACK sampling, the
-> USER_STACK sampling (--call-graph dwarf) would automatically fallback to
-> the PMI-based USER_STACK sampling after the initial precise USER_STACK
-> sampling try fails. So it won't really lead to the USER_STACK sampling fails. 
-
-That's true.  perf tools can fallback to auto-reduce the precise level
-unless it's requested manually.  If we go on this direction, I think we
-should mention this in the man page though.  Probably the condition is
-precise_ip + USER_REGS + USER_STACK.
-
-Thanks,
-Namhyung
-
+- Arnaldo
