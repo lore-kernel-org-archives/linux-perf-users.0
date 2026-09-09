@@ -1,87 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com [209.85.167.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E754759221B;
-	Wed,  9 Sep 2026 21:30:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE5A3B1013
+	for <linux-perf-users@vger.kernel.org>; Wed,  9 Sep 2026 22:04:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788989472; cv=none; b=HzmjFRnbVZNQidBEVAlM5mCDNg99syYqQA3OdHHMlMm8Y/7lbZR8EGcMtE9Jh4OpxPmYp2wiy9IQ+nSYOZBwpALQoWjCxugikbjUvBmDb5IPZinYUlNu9ZqFCyxhIdHqkd9vBx7VvQ00dXfvx0N0DcLFmK1FIwHaR/+Fs2u6ZKE=
+	t=1788991492; cv=none; b=A3CGWBKRrLcoGtphUK31PGUSULCBrjFW6bA3xQzH0IAc0fQpf8RiGrB6gXPBScx5ZZdHEymzlB/4u0HNBjnjuZwUt1Kl3+3lr8HWCuVE8L3a349bWTOCtMPxPW4Sew62z9fxaPaRt2eVTi7u6J3jXsZ8IMW0ZVmAf4NEjffKCyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788989472; c=relaxed/simple;
-	bh=lOT7XQPCszL0lE2kPQNtUpip88xXJX7ct1dtA5km34I=;
-	h=Content-Type:MIME-Version:Message-Id:In-Reply-To:References:
-	 Subject:From:To:Cc:Date; b=XvtlYb9MFEOZslOMmnwTGfHGD2ga+hsfUqK6SLGCqMZhl0OKOIN5EQgC8TGAgH6eA/XXoRZheOFp7NCYHLLUvALUm4KNoZKYqyJahHDHnHBH1Ibal1PxeBm3Z1AsdCdxM70+EKViOhpJ6PeT3FRYd1RRPpqwmnb8pqPzpSi0I7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xxt1L+Ba; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788991492; c=relaxed/simple;
+	bh=ad+bNZ4USmKgMq6SkQBi3gLPmyVi9iSEmIqF/cKXwos=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=UcqH4E070b2BZ/iNP0lsb0dPQhhZGRUW4E/Ubtp1so9hXDG3gKWqmK1/NTg2P/utkPD6rfLY9usL2/Z6GvdNnJdd7jlmswcvKgTjW4xSnCZV1hwbPPugznvyfmxwMb9ghy9q3xhKDQwUUlwaNhe1N1MOVQFbvzFFte1M/KsUiyA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GpDK6hxj; arc=none smtp.client-ip=209.85.167.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xxt1L+Ba"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48D491F00893;
-	Wed,  9 Sep 2026 21:30:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788989444;
-	bh=lOT7XQPCszL0lE2kPQNtUpip88xXJX7ct1dtA5km34I=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date;
-	b=Xxt1L+Bal8c2jHFjl7C3zF/rMZtO6cdkpDy7/if5eCZ0ZGtdyTL8Tz4H4o0NKhaPm
-	 k7pxP6dRetnfFZpOR2x0/rXox5AifeiSpeY9czIOKTXXAAOe+4l7ePzCRZd7toHqim
-	 9GH0Rf7fowLqnPPJSlr0/25+Javstw7xu/cq1pXIPY6ADTBUztZIpEv+o+txabmCfZ
-	 LG/5XtY/jmXOgtepJ15XcBpgJWWK9gZdfS18lHUXXNAI1d/toIxUNOGdk2rREkjZCA
-	 mW3jXc73DTTNHSerAF3FfRExDFbaFq/hudHwjsMpqGQM1Lb7eLEMhyq53MjOqe3JMM
-	 ShtftKTasShXQ==
-Content-Type: multipart/mixed; boundary="===============3620100518046819435=="
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GpDK6hxj"
+Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-4b388f7989fso4400083b6e.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Sep 2026 15:04:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1788991490; x=1789596290; darn=vger.kernel.org;
+        h=content-type:to:from:subject:message-id:mime-version:date:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=qma9gw1P9kNpAUOitunBhFwjdFWCVEpI1YruD7FlFBE=;
+        b=GpDK6hxjSDMQbQqCj0ztrii7RdGS6vHsuBVuGark4SJ7u4TF/fSZKGvD91gesXlLR9
+         UUbx5Wn2GnIWkTidxyU/a9UKgmrSQ6zf6uXsaurACW2/hlyMPG9+y2pwf9qhj9ghjzyw
+         ieS9eZN5+OomWNFUbyNus42S35CXEkXxqYiCd+e2PHnEbNg6RB3CBrrqYH+ajoGtdQzc
+         nxvCCC8bp56NYhb0+9a+CMX1ZKMnCPIsMhHJX4pJKiuG+Vhq+eVyY/j4I+6ai0KvdDsi
+         ELYY3oRanXkqwsEFzp04W9htx4qrcwTNrgeFaWhtY/2+8XkQD55XGUXat8xnlZQy5sIh
+         vlwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1788991490; x=1789596290;
+        h=content-type:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=qma9gw1P9kNpAUOitunBhFwjdFWCVEpI1YruD7FlFBE=;
+        b=FmEXQXadgfx3vam8ilVbJACi+Wjo71QYsQjXRhvpKH8tJtT+HNupnUxFo6Bc2umexQ
+         GMtH3IcIFdhJGJ50k6dC2ZQBp8K5C+psxtVfy2cGc7Z1zvRgk718oPFy3NKZNvrgD+xi
+         kE8jaALuyzpUTMdNLTYBoP4TzHQPmVm82IncX5L/LnrFLGsJ8H9GE37f8oK6rVOvqg39
+         bks9+sKXoMq69SBalgoyR6hwPKlvlWdpGSuh+hVXAiUGAMFbJFb80JLeYIPtNw+1VpVC
+         qnSdJzEKYLJnxdIkg1K1h2thsM6CWxkyvtv9u0AzPQQVAqwg5Wi2N/nuT6Ipa3q3siuT
+         Ra2w==
+X-Forwarded-Encrypted: i=1; AKwUvBy4XBk5TySBitLYB193Htx4OI5LgzSNxkr1+02VbEdZvbqw4a2ymWmvxtYA39zpOkkGaqmTNLxTLOOsibTAEfPf@vger.kernel.org
+X-Gm-Message-State: AFuF++lvhTVeAfG/iH7JGk/cxplU2GJdgt3Zlj2n4+0Ta+/VfEOHLlFJ
+	2o7U7hjTx4HNlyV0JOScZDB1/Ws5LZvg4gNfDjoSWTF9o68Te/bJSYEFjcs50pz/0a1Zh91Go14
+	AfokW9+i2TA==
+X-Received: from dlbbt1.prod.google.com ([2002:a05:7022:981:b0:143:4d12:3952])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6820:561c:b0:6b7:8396:f3e3
+ with SMTP id 006d021491bc7-6b78396f924mr12735908eaf.69.1788991489967; Wed, 09
+ Sep 2026 15:04:49 -0700 (PDT)
+Date: Wed,  9 Sep 2026 15:04:45 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-Id: <1d8002555202c2d344b450155c0620a80231a2e3e655c97dec959553984b9790@mail.kernel.org>
-In-Reply-To: <20260909204122.1993010-4-irogers@google.com>
-References: <20260909204122.1993010-4-irogers@google.com>
-Subject: Re: [PATCH v2 3/4] bpftool: Add explicitly sequenced -lzstd to libbfd feature fallback
-From: bot+bpf-ci@kernel.org
-To: irogers@google.com,qmo@kernel.org,daniel@iogearbox.net,andrii@kernel.org,eddyz87@gmail.com,memxor@gmail.com,martin.lau@linux.dev,song@kernel.org,yonghong.song@linux.dev,jolsa@kernel.org,emil@etsalapatis.com,ihor.solodrai@linux.dev,jpoimboe@kernel.org,peterz@infradead.org,mingo@redhat.com,acme@kernel.org,namhyung@kernel.org,irogers@google.com,adrian.hunter@intel.com,james.clark@linaro.org,terrelln@fb.com,dsterba@suse.com,tglozar@redhat.com,costa.shul@redhat.com,mjeanson@efficios.com,9erthalion6@gmail.com,leo.yan@arm.com,linux-kernel@vger.kernel.org,linux-perf-users@vger.kernel.org
-Cc: bpf@vger.kernel.org,ast@kernel.org,andrii@kernel.org,daniel@iogearbox.net,martin.lau@kernel.org,eddyz87@gmail.com,yonghong.song@linux.dev,mason@kernel.org,ihor.solodrai@linux.dev
-Date: Wed,  9 Sep 2026 21:30:43 +0000 (UTC)
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.55.0.1003.g10538fe699-goog
+Message-ID: <20260909220445.2117921-1-irogers@google.com>
+Subject: [PATCH v1] perf jevents: Add mesh bandwidth saturation for CWF, EMR,
+ GRR, SNR, SPR, SRF
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	James Clark <james.clark@linaro.org>, Chun-Tse Shao <ctshao@google.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
---===============3620100518046819435==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Extend the mesh bandwidth saturation's list of events to include
+events from clearwaterforest, emeraldrapids, grandridge,
+graniterapids, sapphirerapids and sierraforest. This makes the
+lpm_mem_sat metric available for those CPU models.
 
-> bpftool: Add explicitly sequenced -lzstd to libbfd feature fallback
->
-> Distributions like Fedora currently ship a statically compiled binutils
-> libbfd that natively depends on zstd to decompress sections (e.g.
-> undefined reference to 'ZSTD_decompress').
->
-> Extend the newly supplemented libbfd-liberty-z-zstd feature probe into
-> bpftool's Makefile so it can natively build against static binutils
-> distributions.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> Assisted-by: Antigravity:gemini-3.1-pro
-
-This isn't a bug, but the subject line uses the phrase "explicitly
-sequenced" which doesn't appear to describe what the patch does. Looking at
-the diff, the patch adds libbfd-liberty-z-zstd to FEATURE_TESTS and
-FEATURE_DISPLAY, then appends a new fallback branch with '-lz -lzstd' to
-the existing cascade.
-
-Similarly, "Extend the newly supplemented ... probe into bpftool's Makefile"
-is a bit indirect. The patch adds the probe to FEATURE_TESTS and appends the
-matching link flags to the fallback chain.
-
-Also, "natively" appears twice ("natively depends on zstd", "natively build
-against static binutils") but doesn't add meaning to either phrase.
-
-Would a more direct subject such as "bpftool: Use libbfd-liberty-z-zstd
-feature in the libbfd fallback chain" describe the change more clearly, and
-could the body state simply that the new probe is added to FEATURE_TESTS
-and a matching '-lz -lzstd' branch appended to the fallback?
-
-
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-AI reviewed your patch. Please fix the bug or email reply why it's not a bug.
-See: https://github.com/kernel-patches/vmtest/blob/master/ci/claude/README.md
+ tools/perf/pmu-events/intel_metrics.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-CI run summary: https://github.com/kernel-patches/bpf/actions/runs/34404437407
---===============3620100518046819435==--
+diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-events/intel_metrics.py
+index bc2b920d3a0d..9780bf978a41 100755
+--- a/tools/perf/pmu-events/intel_metrics.py
++++ b/tools/perf/pmu-events/intel_metrics.py
+@@ -1099,7 +1099,8 @@ def UncoreMemSat() -> Optional[Metric]:
+     try:
+         clocks = Event("UNC_CHA_CLOCKTICKS", "UNC_C_CLOCKTICKS")
+         sat = Event("UNC_CHA_DISTRESS_ASSERTED.VERT", "UNC_CHA_FAST_ASSERTED.VERT",
+-                    "UNC_C_FAST_ASSERTED")
++                    "UNC_C_FAST_ASSERTED", "UNC_CHA_DISTRESS_ASSERTED.DPT_ANY",
++                    "UNC_CHA_DISTRESS_ASSERTED.DPT_NONLOCAL")
+     except:
+         return None
+ 
+-- 
+2.55.0.1003.g10538fe699-goog
+
