@@ -1,348 +1,274 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A306A53ED1D;
-	Wed,  9 Sep 2026 11:52:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5B954DAC8;
+	Wed,  9 Sep 2026 12:08:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1788954773; cv=none; b=D0m1hw4N4eyMcwwKEd0b6pzKGJaZnO0m0POw7VfpQMz2NOJA1a2oxt1M9kqEAr0FIHW6JbQfJEnTV0Z/yN4rGq4KLQq0zAr4iuSPB9+7BvsrNLzthLXQxfxuLUxUBYTdQ9YQwDiN8NMpMLMjKSwwcj170Ei1nJccvUaHqU78Xzw=
+	t=1788955684; cv=none; b=lXvxLdXGAwNPj1jDOkJzFnjPrrEl5Vi8zu+PoiqV3G44M8a07fMIomu/sj5H3oOReKeu7/9GNEpshtEY1ynFgWicPIpIG2uP+8jVG6NbxXwxQ+opHQoIu7+B3f5VApEDjW2ZdSbkDtO9ZkpRFOaEp0wokXeEsV17bW2cd57V4kM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1788954773; c=relaxed/simple;
-	bh=PMlcPN1pGdd0les1zHqHbTaXrb5Fa97JWbU40R+JlUk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m9AMKUnkveGNEDDvV1M3OdCS4SV4+1m+49NYIhnfqjHLzVTrbRcT/t6IU/gC0asxbgBkNNsLv8hRogw7Wz4uqa208WC2keYOHXDmH9SV/s2s7EUsjIX+5CqOjbBT+vF7QHt63q8NFo2xIlz/Eyd7ARceUx8dDDtkERYqSvLVYfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RmbRqPrY; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1788955684; c=relaxed/simple;
+	bh=qhZzv3+w6u5VffgNW+o34f0K00FSNYAmal52FMUVvno=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CwDAawZmPhJmmgquBEl8FTuJ8q0VsdOLaDDudJYEwtNN+78wo7NeNESR8C/l76NNELwSF1PsvRdiLfokXlOlWMKXQzVokvZ5b/Bl/lIDYPBURsLTThG1IeJ9azTqdsi2lNVZEFa2dQhp26KcYg5BzfVimkMr966tWa54TniZGZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLY49pi+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RmbRqPrY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE7B41F00A3A;
-	Wed,  9 Sep 2026 11:52:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLY49pi+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59B041F00A3D;
+	Wed,  9 Sep 2026 12:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1788954771;
-	bh=HX/9u9ZOyn+A65il1ydMpPrAYGvAfJ881m9P59zMh/w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=RmbRqPrYgdNlWaUzBNmteLc0oXjw9N1SOHkFnHRXB29L8jvAU7loD2kN+qR/fOA22
-	 CrDq7ggGAFi/iU3KkFyqdwpZg3BLX0GiR+ETOZeNRLstrd+xsPLcGSS7l1m4nzPcOu
-	 9OkoYLGJfIU5QPj7eO5nRW4hnadhxjv0yGdQJTlO68Nc0ivG4Zm4wUJpTmgnCzwSVm
-	 qsNNnYCAZcTtZtshl8O6UH+pX4HkiGokxQwtJxeaq7DEIoWu7kj9kGDhZLPvwZuhXj
-	 gFxQyAfraGgEBec75hogWWocPeiDplxGjThD/n/C8wZLTb7HQAuGY8YLZevZrVHmx2
-	 hg6+ZkSQUbyfQ==
-Date: Wed, 9 Sep 2026 08:52:48 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Matt Turner <mattst88@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	s=k20260515; t=1788955682;
+	bh=s0XvwQqrYpxLMLTJmGlP3OBogX+H2vHo2hOLlq5lC/4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=TLY49pi+Cs7EEMaDTGcn4qy6Qpcb4tCLLQabsiuxRuieFcOduuhR0SXsNy/UqV053
+	 LTLJzRsrZobFM+u8KAWi/AxL9rak8lF/hB3ASc5j/P5gK6JsTYTLznyOIjtDTtDa+k
+	 ORmjuFe/YcEbLMRVg0hXrf/0pz4nkqGBIjyKjBGWoHBcNRUe90PkvSLs5HLrZYszHB
+	 EdQZy99ss9QvvDBlcj1jiu7Nbzz/FMu6uLgae9WC6VNYg9MrsiTw00X9RT6CKbWfK3
+	 uOoG3Ngxmo6HIBl33vl+TtXZPg1CPUWrOiI2FFoUv677uPNi2hHjh6Cry1F/dt0+F4
+	 wpDbNWMsR4n5Q==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <maz@kernel.org>)
+	id 1x4H5r-00000006fj0-1Co8;
+	Wed, 09 Sep 2026 12:07:59 +0000
+Date: Wed, 09 Sep 2026 13:07:57 +0100
+Message-ID: <86y0da39wi.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <liam@infradead.org>,
+	Vlastimil Babka <vbabka@kernel.org>,
+	Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	David Hildenbrand <david@kernel.org>,
+	Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+	Jason Gunthorpe <jgg@ziepe.ca>,
+	Leon Romanovsky <leon@kernel.org>,
+	Paul Moore <paul@paul-moore.com>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+	Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Nico Pache <nico.pache@linux.dev>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>,
+	Barry Song <baohua@kernel.org>,
+	Lance Yang <lance.yang@linux.dev>,
+	Usama Arif <usama.arif@linux.dev>,
+	Kiryl Shutsemau <kas@kernel.org>,
+	Doug Gilbert <dgilbert@interlog.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <mkp@kernel.org>,
+	Jaya Kumar <jayalk@intworks.biz>,
+	Simona Vetter <simona@ffwll.ch>,
+	Helge Deller <deller@gmx.de>,
+	Sebastian Reichel <sre@kernel.org>,
+	John Hubbard <jhubbard@nvidia.com>,
+	Peter Xu <peterx@redhat.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v8 0/3] perf tools: port UI from GTK2 to GTK4
-Message-ID: <aqFIkFzVvCQqnzpy@x2>
-References: <20260908-perf-gtk2-v8-0-e90d5d155f0d@gmail.com>
- <aqE_QOp-x1aOQsCX@x2>
- <aqFCMfb94Cdumemm@x2>
- <aqFDLQ5Yu7yg6Y2Z@x2>
- <aqFEdSZ40HkvipUr@x2>
- <aqFGVejYb-kZ8o_I@x2>
+	Rik van Riel <riel@surriel.com>,
+	Harry Yoo <harry@kernel.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Will Deacon <will@kernel.org>,
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>,
+	Nick Piggin <npiggin@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Muchun Song <muchun.song@linux.dev>,
+	Oscar Salvador <osalvador@suse.de>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	Jan Kara <jack@suse.cz>,
+	Oliver Upton <oupton@kernel.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Anup Patel <anup@brainfault.org>,
+	Paul Walmsley <pjw@kernel.org>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Janosch Frank <frankja@linux.ibm.com>,
+	Claudio Imbrenda <imbrenda@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Andreas Larsson <andreas@gaisler.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>,
+	Matthew Brost <matthew.brost@intel.com>,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	Rakie Kim <rakie.kim@sk.com>,
+	Byungchul Park <byungchul@sk.com>,
+	Gregory Price <gourry@gourry.net>,
+	Ying Huang <ying.huang@linux.alibaba.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Chris Li <chrisl@kernel.org>,
+	Kairui Song <kasong@tencent.com>,
+	Kemeng Shi <shikemeng@huaweicloud.com>,
+	Nhat Pham <nphamcs@gmail.com>,
+	Baoquan He <baoquan.he@linux.dev>,
+	Youngjun Park <youngjun.park@lge.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Qi Zheng <qi.zheng@linux.dev>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	Axel Rasmussen <axelrasmussen@google.com>,
+	Yuanchu Xie <yuanchu@google.com>,
+	Wei Xu <weixugc@google.com>,
+	Xu Xin <xu.xin16@zte.com.cn>,
+	Chengming Zhou <chengming.zhou@linux.dev>,
+	Michal Hocko <mhocko@kernel.org>,
+	Miklos Szeredi <miklos@szeredi.hu>,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	linux-rdma@vger.kernel.org,
+	selinux@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	bpf@vger.kernel.org,
+	linux-scsi@vger.kernel.org,
+	linux-fbdev@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-riscv@lists.infradead.org,
+	linux-s390@vger.kernel.org,
+	sparclinux@vger.kernel.org,
+	fuse-devel@lists.linux.dev
+Subject: Re: [PATCH 27/39] mm: rename is_vm_hugetlb_page() to vma_is_hugetlb()
+In-Reply-To: <20260908-b4-mmap-prepare-vma-flag-sanify-v1-27-dacf19cce22b@kernel.org>
+References: <20260908-b4-mmap-prepare-vma-flag-sanify-v1-0-dacf19cce22b@kernel.org>
+	<20260908-b4-mmap-prepare-vma-flag-sanify-v1-27-dacf19cce22b@kernel.org>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aqFGVejYb-kZ8o_I@x2>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: ljs@kernel.org, akpm@linux-foundation.org, liam@infradead.org, vbabka@kernel.org, jannh@google.com, pfalcato@suse.de, david@kernel.org, rppt@kernel.org, surenb@google.com, mhocko@suse.com, corbet@lwn.net, gregkh@linuxfoundation.org, dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca, leon@kernel.org, paul@paul-moore.com, stephen.smalley.work@gmail.com, perex@perex.cz, tiwai@suse.com, ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org, eddyz87@gmail.com, memxor@gmail.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com, nico.pache@linux.dev, ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev, usama.arif@linux.dev, kas@kernel.org, dgilbert@interlog.com, James.Bottomley@HansenPartnership.com, mkp@kernel.org, jayalk@intworks.biz, simona@ffwll.ch, deller@gmx.de, sre@kernel.org, jhubbard@nvidia.com, peterx@redhat.com, mhiramat@kernel.org, oleg@redhat.com, peterz@infradead.org, tglx@kernel.org, mingo@redhat.com, bp@alien8.de, dave.hansen
+ @linux.intel.com, x86@kernel.org, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, riel@surriel.com, harry@kernel.org, juri.lelli@redhat.com, vincent.guittot@linaro.org, maarten.lankhorst@linux.intel.com, mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com, will@kernel.org, aneesh.kumar@kernel.org, npiggin@gmail.com, arnd@arndb.de, muchun.song@linux.dev, osalvador@suse.de, willy@infradead.org, jack@suse.cz, oupton@kernel.org, catalin.marinas@arm.com, maddy@linux.ibm.com, anup@brainfault.org, pjw@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, borntraeger@linux.ibm.com, frankja@linux.ibm.com, imbrenda@linux.ibm.com, agordeev@linux.ibm.com, gerald.schaefer@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com, davem@davemloft.net, andreas@gaisler.com, viro@zeniv.linux.org.uk, brauner@kernel.org, matthew.brost@intel.com, joshua.hahnjy@gmail.com, rakie.kim@sk.com, byungchul@sk.com, gourry@gourry.net, ying.huang@linux.alibaba.com, apopple@nvidia.com, chrisl@kernel.
+ org, kasong@tencent.com, shikemeng@huaweicloud.com, nphamcs@gmail.com, baoquan.he@linux.dev, youngjun.park@lge.com, hannes@cmpxchg.org, qi.zheng@linux.dev, shakeel.butt@linux.dev, axelrasmussen@google.com, yuanchu@google.com, weixugc@google.com, xu.xin16@zte.com.cn, chengming.zhou@linux.dev, mhocko@kernel.org, miklos@szeredi.hu, linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-d
+ evel@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Sep 09, 2026 at 08:43:20AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Sep 09, 2026 at 08:35:20AM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Wed, Sep 09, 2026 at 08:29:52AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Wed, Sep 09, 2026 at 08:25:41AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > patching file tools/perf/ui/setup.c
-> > > > ⬢ [acme@toolbx perf-tools-next]$
-> > > > 
-> > > > I fixed it up quickly, now lets see the rest...
-> > > 
-> > > Trying to build with it with just the first patch in this series in it
-> > > correctly discovers that the gtk4 devel files are not available but then
-> > > proceed to try to include gtk code and thus fail, where it should just
-> > > do what the feature detection states: disable gtk support but build
-> > > successfully without it, I'm checking if this is a quick surgery.
-> > 
-> > This is a pre-existing condition, if I try without your series and
-> > without gtk2 devel files, I get the same problem, so I'll now try to
-> > build it with the required gtk4 devel files, we can fix this
-> > pre-existing problem afterwards, its not a regression introduced by your
-> > series.
+On Tue, 08 Sep 2026 21:01:31 +0100,
+"Lorenzo Stoakes (ARM)" <ljs@kernel.org> wrote:
 > 
-> Now, with GTK4=1 and trying to build the first patch after installing
-> gtk4-devel on fedora 43 it fails to detect gtk4 support:
+> The is_vm_hugetlb_page() predicate is badly named - the mapping can span
+> more than a page and it is inconsistent with other VMA predicates that
+> typically are prefixed by vma_.
 > 
-> ⬢ [acme@toolbx perf-tools-next]$ m
-> make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
->   BUILD:   Doing 'make -j32' parallel build
+> Rename to vma_is_hugetlb() for consistency, and while we're here update
+> some VM_BUG_ON_VMA() to VM_WARN_ON_ONCE_VMA() as to avoid unnecessary
+> oopses.
 > 
-> Auto-detecting system features:
-> ...                                   libdw: [ on  ]
-> ...                                   glibc: [ on  ]
-> ...                                    gtk4: [ OFF ]
-> ...                                  libelf: [ on  ]
-> ...                                 libnuma: [ on  ]
+> No functional change intended.
+> 
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+> ---
+>  arch/arm64/kvm/mmu.c                      |  4 ++--
+>  arch/powerpc/mm/book3s64/radix_tlb.c      |  6 +++---
+>  arch/powerpc/mm/nohash/e500_hugetlbpage.c |  2 +-
+>  arch/powerpc/mm/nohash/tlb.c              |  2 +-
+>  arch/riscv/kvm/mmu.c                      |  2 +-
+>  arch/riscv/mm/tlbflush.c                  |  2 +-
+>  arch/s390/mm/gmap_helpers.c               |  6 +++---
+>  arch/sparc/mm/init_64.c                   |  2 +-
+>  drivers/gpu/drm/drm_gpusvm.c              |  2 +-
+>  fs/coredump.c                             |  2 +-
+>  fs/hugetlbfs/inode.c                      |  2 +-
+>  fs/proc/task_mmu.c                        |  8 ++++----
+>  include/asm-generic/tlb.h                 |  2 +-
+>  include/linux/hugetlb.h                   |  4 ++--
+>  include/linux/mm.h                        | 19 ++++++++++++++++---
+>  include/linux/rmap.h                      |  2 +-
+>  kernel/events/core.c                      |  2 +-
+>  kernel/sched/fair.c                       |  2 +-
+>  mm/gup.c                                  |  4 ++--
+>  mm/huge_memory.c                          |  2 +-
+>  mm/hugetlb.c                              | 14 +++++++-------
+>  mm/internal.h                             |  2 +-
+>  mm/madvise.c                              |  4 ++--
+>  mm/memory.c                               | 12 ++++++------
+>  mm/mempolicy.c                            |  2 +-
+>  mm/migrate_device.c                       |  2 +-
+>  mm/mmap.c                                 |  2 +-
+>  mm/mmu_gather.c                           |  2 +-
+>  mm/mprotect.c                             |  2 +-
+>  mm/mremap.c                               |  6 +++---
+>  mm/page_vma_mapped.c                      |  4 ++--
+>  mm/pagewalk.c                             |  2 +-
+>  mm/swapfile.c                             |  2 +-
+>  mm/userfaultfd.c                          | 26 +++++++++++++-------------
+>  mm/vma.c                                  |  8 ++++----
+>  mm/vmscan.c                               |  2 +-
+>  tools/testing/vma/include/stubs.h         |  2 +-
+>  37 files changed, 92 insertions(+), 79 deletions(-)
+> 
+> diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+> index 9ba86450fe4a..a7968f8d24bf 100644
+> --- a/arch/arm64/kvm/mmu.c
+> +++ b/arch/arm64/kvm/mmu.c
+> @@ -1463,13 +1463,13 @@ static int get_vma_page_shift(struct vm_area_struct *vma, unsigned long hva)
+>  {
+>  	unsigned long pa;
+>  
+> -	if (is_vm_hugetlb_page(vma) && !(vma->vm_flags & VM_PFNMAP))
+> +	if (vma_is_hugetlb(vma) && !(vma->vm_flags & VM_PFNMAP))
+>  		return huge_page_shift(hstate_vma(vma));
+>  
+>  	if (!(vma->vm_flags & VM_PFNMAP))
+>  		return PAGE_SHIFT;
+>  
+> -	VM_BUG_ON(is_vm_hugetlb_page(vma));
+> +	VM_BUG_ON(vma_is_hugetlb(vma));
+>  
+>  	pa = (vma->vm_pgoff << PAGE_SHIFT) + (hva - vma->vm_start);
+>  
 
-I see, you do it with tools/perf being your cwd, I tried that and it
-works now:
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-⬢ [acme@toolbx perf-tools-next]$ cd tools/perf/
-⬢ [acme@toolbx perf]$ make GTK4=1
-  BUILD:   Doing 'make -j32' parallel build
+	M.
 
-Auto-detecting system features:
-...                                   libdw: [ on  ]
-...                                   glibc: [ on  ]
-...                                    gtk4: [ on  ]
-...                                  libelf: [ on  ]
-...                                 libnuma: [ on  ]
-...                  numa_num_possible_cpus: [ on  ]
-...                               libpython: [ on  ]
-...                             libcapstone: [ on  ]
-...                               llvm-perf: [ on  ]
-...                                    zlib: [ on  ]
-...                                    lzma: [ on  ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ on  ]
-...                              libopenssl: [ on  ]
-...                                    rust: [ on  ]
-
-  INSTALL libsubcmd_headers
-  INSTALL libapi_headers
-  PERF_VERSION = 7.3.rc2.g581f81a14c5c
-  INSTALL libsymbol_headers
-  GEN     perf-archive
-  INSTALL libperf_headers
-  GEN     perf-iostat
-  CC      /home/acme/git/perf-tools-next/tools/perf/libperf/core.o
-  CC      /home/acme/git/perf-tools-next/tools/perf/libperf/cpumap.o
-  CC      /home/acme/git/perf-tools-next/tools/perf/libperf/threadmap.o
-  CC      /home/acme/git/perf-tools-next/tools/perf/libperf/evsel.o
-  INSTALL libbpf_headers
-  CC      /home/acme/git/perf-tools-next/tools/perf/libperf/evlist.o
-  CC      /home/acme/git/perf-tools-next/tools/perf/libperf/mmap.o
-  CC      /home/acme/git/perf-tools-next/tools/perf/libperf/zalloc.o
-  CC      /home/acme/git/perf-tools-next/tools/perf/libperf/xyarray.o
-  CC      /home/acme/git/perf-tools-next/tools/perf/libperf/lib.o
-  LD      /home/acme/git/perf-tools-next/tools/perf/libperf/libperf-in.o
-  AR      /home/acme/git/perf-tools-next/tools/perf/libperf/libperf.a
-  CC      ui/gtk/browser.o
-  CC      jvmti/libjvmti.o
-  CC      ui/gtk/hists.o
-  CC      arch/common.o
-  CC      ui/gtk/setup.o
-  CC      trace/beauty/syscalltbl.o
-  CC      ui/gtk/util.o
-  CC      jvmti/jvmti_agent.o
-  CC      ui/gtk/helpline.o
-  CC      trace/beauty/arch_errno_names.o
-  CC      jvmti/libstring.o
-  CC      ui/gtk/progress.o
-  CC      jvmti/libctype.o
-  CC      ui/gtk/annotate.o
-<SNIP>
-  LD      perf-bench-in.o
-  AR      libperf-bench.a
-  LINK    perf
-  LINK    libperf-gtk.so
-⬢ [acme@toolbx perf]$
-
-I don't think this was present before, lemme try...
-
-My bad, I made a mistake and was trying to build with gtk4 while using
-GTK2=1 on the make command line, that I had switched to test building
-with gtk2 for that pre-existing problem and forgot to switch back to
-GTK4=1 when returning to test your patches...
-
-Now, with it it works as expected, using 'make GTK4=1 -C tools/perf',
-building the first patch:
-
-⬢ [acme@toolbx perf-tools-next]$ rm -rf /tmp/build/`basename $PWD` ; mkdir -p /tmp/build/`basename $PWD`
-⬢ [acme@toolbx perf-tools-next]$ alias m='rm -rf ~/libexec/perf-core/ ; make -k GTK4=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin && perf test import && cat /tmp/build/$(basename $PWD)/feature/test-all.make.output' ; export PYTHONPATH=/tmp/build/$(basename $PWD)/python
-⬢ [acme@toolbx perf-tools-next]$ m
-make: Entering directory '/home/acme/git/perf-tools-next/tools/perf'
-  BUILD:   Doing 'make -j32' parallel build
-
-Auto-detecting system features:
-...                                   libdw: [ on  ]
-...                                   glibc: [ on  ]
-...                                    gtk4: [ on  ]
-...                                  libelf: [ on  ]
-...                                 libnuma: [ on  ]
-...                  numa_num_possible_cpus: [ on  ]
-...                               libpython: [ on  ]
-...                             libcapstone: [ on  ]
-...                               llvm-perf: [ on  ]
-...                                    zlib: [ on  ]
-...                                    lzma: [ on  ]
-...                                     bpf: [ on  ]
-...                                  libaio: [ on  ]
-...                                 libzstd: [ on  ]
-...                              libopenssl: [ on  ]
-...                                    rust: [ on  ]
-
-  CC      /tmp/build/perf-tools-next/dlfilters/dlfilter-test-api-v0.o
-  CC      /tmp/build/perf-tools-next/dlfilters/dlfilter-test-api-v2.o
-  CC      /tmp/build/perf-tools-next/dlfilters/dlfilter-show-cycles.o
-  GEN     /tmp/build/perf-tools-next/arch/arm64/include/generated/asm/sysreg-defs.h
-<SNIP>
-  LINK    /tmp/build/perf-tools-next/perf
-  LINK    /tmp/build/perf-tools-next/libperf-gtk.so
-  GEN     /tmp/build/perf-tools-next/python/perf.cpython-314-x86_64-linux-gnu.so
-  INSTALL GTK UI
-  INSTALL binaries
-  INSTALL tests
-  INSTALL libperf-jvmti.so
-  INSTALL libexec
-  INSTALL perf-archive
-  INSTALL perf-iostat
-  INSTALL python-scripts
-install: omitting directory 'scripts/python/Perf-Trace-Util/lib/Perf/Trace/__pycache__'
-  INSTALL dlfilters
-  INSTALL perf_completion-script
-  INSTALL perf-tip
-make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
-104: 'import perf' in python                                                                                   : Ok
-
-=== Test Summary ===
-Passed main tests : 1
-Passed subtests   : 0
-Skipped tests     : 0
-Failed tests      : 0
-⬢ [acme@toolbx perf-tools-next]$ 
-
-And, which makes me recall why we made t his a plugin :-)
-
-⬢ [acme@toolbx perf-tools-next]$ ldd /tmp/build/perf-tools-next/libperf-gtk.so
-	linux-vdso.so.1 (0x00007f8588fb8000)
-	libgtk-4.so.1 => /lib64/libgtk-4.so.1 (0x00007f858854c000)
-	libpangocairo-1.0.so.0 => /lib64/libpangocairo-1.0.so.0 (0x00007f8588539000)
-	libpango-1.0.so.0 => /lib64/libpango-1.0.so.0 (0x00007f85884cd000)
-	libharfbuzz.so.0 => /lib64/libharfbuzz.so.0 (0x00007f8588399000)
-	libgdk_pixbuf-2.0.so.0 => /lib64/libgdk_pixbuf-2.0.so.0 (0x00007f858836b000)
-	libcairo-gobject.so.2 => /lib64/libcairo-gobject.so.2 (0x00007f8588362000)
-	libcairo.so.2 => /lib64/libcairo.so.2 (0x00007f8588222000)
-	libvulkan.so.1 => /lib64/libvulkan.so.1 (0x00007f858819a000)
-	libgraphene-1.0.so.0 => /lib64/libgraphene-1.0.so.0 (0x00007f858817d000)
-	libgio-2.0.so.0 => /lib64/libgio-2.0.so.0 (0x00007f8587faa000)
-	libgobject-2.0.so.0 => /lib64/libgobject-2.0.so.0 (0x00007f8587f4b000)
-	libglib-2.0.so.0 => /lib64/libglib-2.0.so.0 (0x00007f8587df4000)
-	libc.so.6 => /lib64/libc.so.6 (0x00007f8587c00000)
-	libgmodule-2.0.so.0 => /lib64/libgmodule-2.0.so.0 (0x00007f8587bfa000)
-	libharfbuzz-subset.so.0 => /lib64/libharfbuzz-subset.so.0 (0x00007f8587ac5000)
-	libfribidi.so.0 => /lib64/libfribidi.so.0 (0x00007f8587aa5000)
-	libfontconfig.so.1 => /lib64/libfontconfig.so.1 (0x00007f8587a55000)
-	libepoxy.so.0 => /lib64/libepoxy.so.0 (0x00007f8587949000)
-	libm.so.6 => /lib64/libm.so.6 (0x00007f8587852000)
-	libgstplay-1.0.so.0 => /lib64/libgstplay-1.0.so.0 (0x00007f858782e000)
-	libgstvideo-1.0.so.0 => /lib64/libgstvideo-1.0.so.0 (0x00007f8587759000)
-	libgstreamer-1.0.so.0 => /lib64/libgstreamer-1.0.so.0 (0x00007f8587600000)
-	libgstgl-1.0.so.0 => /lib64/libgstgl-1.0.so.0 (0x00007f858756d000)
-	libgstallocators-1.0.so.0 => /lib64/libgstallocators-1.0.so.0 (0x00007f8587564000)
-	librsvg-2.so.2 => /lib64/librsvg-2.so.2 (0x00007f85870a0000)
-	libXi.so.6 => /lib64/libXi.so.6 (0x00007f858708d000)
-	libX11.so.6 => /lib64/libX11.so.6 (0x00007f8586f48000)
-	libpangoft2-1.0.so.0 => /lib64/libpangoft2-1.0.so.0 (0x00007f8586f2c000)
-	libtinysparql-3.0.so.0 => /lib64/libtinysparql-3.0.so.0 (0x00007f8586e58000)
-	libpng16.so.16 => /lib64/libpng16.so.16 (0x00007f8586e1c000)
-	libtiff.so.6 => /lib64/libtiff.so.6 (0x00007f8586d83000)
-	libjpeg.so.62 => /lib64/libjpeg.so.62 (0x00007f8586ce1000)
-	libxkbcommon.so.0 => /lib64/libxkbcommon.so.0 (0x00007f8586c88000)
-	libwayland-client.so.0 => /lib64/libwayland-client.so.0 (0x00007f8586c78000)
-	libwayland-egl.so.1 => /lib64/libwayland-egl.so.1 (0x00007f8586c74000)
-	libXext.so.6 => /lib64/libXext.so.6 (0x00007f8586c60000)
-	libXcursor.so.1 => /lib64/libXcursor.so.1 (0x00007f8586c51000)
-	libXdamage.so.1 => /lib64/libXdamage.so.1 (0x00007f8586c4d000)
-	libXfixes.so.3 => /lib64/libXfixes.so.3 (0x00007f8586c46000)
-	libXrandr.so.2 => /lib64/libXrandr.so.2 (0x00007f8586c39000)
-	libXinerama.so.1 => /lib64/libXinerama.so.1 (0x00007f8586c35000)
-	libcairo-script-interpreter.so.2 => /lib64/libcairo-script-interpreter.so.2 (0x00007f8586c12000)
-	libcups.so.2 => /lib64/libcups.so.2 (0x00007f8586b7c000)
-	libcolord.so.2 => /lib64/libcolord.so.2 (0x00007f8586b21000)
-	libthai.so.0 => /lib64/libthai.so.0 (0x00007f8586b16000)
-	libfreetype.so.6 => /lib64/libfreetype.so.6 (0x00007f8586a4c000)
-	libgraphite2.so.3 => /lib64/libgraphite2.so.3 (0x00007f8586a2d000)
-	libglycin-2.so.0 => /lib64/libglycin-2.so.0 (0x00007f858660b000)
-	libz.so.1 => /lib64/libz.so.1 (0x00007f85865e3000)
-	libXrender.so.1 => /lib64/libXrender.so.1 (0x00007f85865d7000)
-	libxcb.so.1 => /lib64/libxcb.so.1 (0x00007f85865ad000)
-	libxcb-render.so.0 => /lib64/libxcb-render.so.0 (0x00007f858659e000)
-	libxcb-shm.so.0 => /lib64/libxcb-shm.so.0 (0x00007f858659a000)
-	libpixman-1.so.0 => /lib64/libpixman-1.so.0 (0x00007f85864e9000)
-	libmount.so.1 => /lib64/libmount.so.1 (0x00007f8586493000)
-	libselinux.so.1 => /lib64/libselinux.so.1 (0x00007f8586462000)
-	libffi.so.8 => /lib64/libffi.so.8 (0x00007f8586452000)
-	libpcre2-8.so.0 => /lib64/libpcre2-8.so.0 (0x00007f85863a5000)
-	/lib64/ld-linux-x86-64.so.2 (0x00007f8588fba000)
-	libxml2.so.2 => /lib64/libxml2.so.2 (0x00007f8586245000)
-	libgsttag-1.0.so.0 => /lib64/libgsttag-1.0.so.0 (0x00007f8586206000)
-	libgstpbutils-1.0.so.0 => /lib64/libgstpbutils-1.0.so.0 (0x00007f85861c1000)
-	libgstbase-1.0.so.0 => /lib64/libgstbase-1.0.so.0 (0x00007f858613d000)
-	liborc-0.4.so.0 => /lib64/liborc-0.4.so.0 (0x00007f8586099000)
-	libunwind.so.8 => /lib64/libunwind.so.8 (0x00007f858607c000)
-	libdw.so.1 => /lib64/libdw.so.1 (0x00007f8585fdf000)
-	libEGL.so.1 => /lib64/libEGL.so.1 (0x00007f8585fce000)
-	libGLX.so.0 => /lib64/libGLX.so.0 (0x00007f8585f9d000)
-	libwayland-cursor.so.0 => /lib64/libwayland-cursor.so.0 (0x00007f8585f93000)
-	libX11-xcb.so.1 => /lib64/libX11-xcb.so.1 (0x00007f8585f8f000)
-	libgudev-1.0.so.0 => /lib64/libgudev-1.0.so.0 (0x00007f8585f80000)
-	libdrm.so.2 => /lib64/libdrm.so.2 (0x00007f8585f69000)
-	libgbm.so.1 => /lib64/libgbm.so.1 (0x00007f8585f63000)
-	libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007f8585f37000)
-	libdav1d.so.7 => /lib64/libdav1d.so.7 (0x00007f8585d53000)
-	libjson-glib-1.0.so.0 => /lib64/libjson-glib-1.0.so.0 (0x00007f8585d26000)
-	libsqlite3.so.0 => /lib64/libsqlite3.so.0 (0x00007f8585bac000)
-	libwebp.so.7 => /lib64/libwebp.so.7 (0x00007f8585b26000)
-	libzstd.so.1 => /lib64/libzstd.so.1 (0x00007f8585a63000)
-	libLerc.so.4 => /lib64/libLerc.so.4 (0x00007f85859ce000)
-	libjbig.so.2.1 => /lib64/libjbig.so.2.1 (0x00007f85859c0000)
-	liblzo2.so.2 => /lib64/liblzo2.so.2 (0x00007f8585998000)
-	libgssapi_krb5.so.2 => /lib64/libgssapi_krb5.so.2 (0x00007f8585941000)
-	libavahi-common.so.3 => /lib64/libavahi-common.so.3 (0x00007f8585932000)
-	libavahi-client.so.3 => /lib64/libavahi-client.so.3 (0x00007f858591e000)
-	libgnutls.so.30 => /lib64/libgnutls.so.30 (0x00007f8585679000)
-	liblcms2.so.2 => /lib64/liblcms2.so.2 (0x00007f858560f000)
-	libudev.so.1 => /lib64/libudev.so.1 (0x00007f85855c5000)
-	libdatrie.so.1 => /lib64/libdatrie.so.1 (0x00007f85855bd000)
-	libbz2.so.1 => /lib64/libbz2.so.1 (0x00007f85855a9000)
-	libbrotlidec.so.1 => /lib64/libbrotlidec.so.1 (0x00007f858559b000)
-	libseccomp.so.2 => /lib64/libseccomp.so.2 (0x00007f858556f000)
-	libXau.so.6 => /lib64/libXau.so.6 (0x00007f858556a000)
-	libblkid.so.1 => /lib64/libblkid.so.1 (0x00007f8585530000)
-	liblzma.so.5 => /lib64/liblzma.so.5 (0x00007f85854fb000)
-	libgstaudio-1.0.so.0 => /lib64/libgstaudio-1.0.so.0 (0x00007f8585476000)
-	libelf.so.1 => /lib64/libelf.so.1 (0x00007f8585457000)
-	libGLdispatch.so.0 => /lib64/libGLdispatch.so.0 (0x00007f85853df000)
-	libexpat.so.1 => /lib64/libexpat.so.1 (0x00007f85853b4000)
-	libsharpyuv.so.0 => /lib64/libsharpyuv.so.0 (0x00007f85853ac000)
-	libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007f8585134000)
-	libkrb5.so.3 => /lib64/libkrb5.so.3 (0x00007f8585067000)
-	libk5crypto.so.3 => /lib64/libk5crypto.so.3 (0x00007f858504f000)
-	libcom_err.so.2 => /lib64/libcom_err.so.2 (0x00007f8585049000)
-	libkrb5support.so.0 => /lib64/libkrb5support.so.0 (0x00007f8585039000)
-	libkeyutils.so.1 => /lib64/libkeyutils.so.1 (0x00007f8585033000)
-	libcrypto.so.3 => /lib64/libcrypto.so.3 (0x00007f8584af1000)
-	libresolv.so.2 => /lib64/libresolv.so.2 (0x00007f8584adc000)
-	libdbus-1.so.3 => /lib64/libdbus-1.so.3 (0x00007f8584a88000)
-	libp11-kit.so.0 => /lib64/libp11-kit.so.0 (0x00007f85848fb000)
-	libidn2.so.0 => /lib64/libidn2.so.0 (0x00007f85848ab000)
-	libunistring.so.5 => /lib64/libunistring.so.5 (0x00007f85846fe000)
-	libtasn1.so.6 => /lib64/libtasn1.so.6 (0x00007f85846e6000)
-	libhogweed.so.6 => /lib64/libhogweed.so.6 (0x00007f85846a3000)
-	libnettle.so.8 => /lib64/libnettle.so.8 (0x00007f858464d000)
-	libgmp.so.10 => /lib64/libgmp.so.10 (0x00007f85845a6000)
-	libcap.so.2 => /lib64/libcap.so.2 (0x00007f858459a000)
-	libbrotlicommon.so.1 => /lib64/libbrotlicommon.so.1 (0x00007f8584577000)
-	libsystemd.so.0 => /lib64/libsystemd.so.0 (0x00007f858444d000)
-⬢ [acme@toolbx perf-tools-next]$
-
-
+-- 
+Without deviation from the norm, progress is not possible.
