@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E963414437
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 19:58:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39BF137A498
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 19:59:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789070335; cv=none; b=bkVaGhs38q5fROKBYSVDWNuYSfWcNrVbxiOTKWIR+LH5zsSmWKKXN17gnRFE1da3zwa/yEXY6/ZPMJ2cFzg9OQW0h5i8hu/sVCF0PB7CMRatxUQ3U+eHegMf8FLPvhaBDBK/EOUoGzZw7IKocjJuip+slLgIV6HabO35Ui0sg+o=
+	t=1789070366; cv=none; b=imUHq5XXjmUUxvPMknn/NnhpM3PWvepE+2BOm46CcitaOHTzTpJKc1FA8UTVI+r77xDSf8qo38ukSlQruwL/MxC1KxZcPM6Tmw3MehvU7t9EWh1Jy3HEkotkWlWMpwGfyO2/Ono9QyNVyGLoGSXuznYOIDb3dwdHYqeZoGWHkNg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789070335; c=relaxed/simple;
-	bh=UjY0TIWEBfIOaXlx8WAuqFkBaZWjQhWjGcRFRUH5Txo=;
+	s=arc-20240116; t=1789070366; c=relaxed/simple;
+	bh=CEsm0Nz/YepT2d3NjC77mtt/5pySzan8ma/j8t5WgnM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=se3SvNooDOtq36O6zLEDMwIynLGk+Yj4VNvYrfVdxVvYVRyFsJiw3L1ImbO48iWdx+Qhi/u6Oup2YEgnW8heK7ilsHFHBOi0tFJ0lKEioCaRTkgY8r3GP912ZlsbkbCHCFzeN0hA3i9qJvHK7DWsgay1qVzldrrLNv0Kfkhae6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mVObjUMm; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=acUrpQWy5Ll8jgR1Fkz3zF/zmoMSNqopWhDrRRdQNiokuNMfgUUCLCu3cqqXrZvCk5M6hp++gy9aLcUKcMJW4JyV7UvyxuerAmRnjVhlfCVJiN7tsJKNSB8XoFMC+W76v5+Pyrl3CCZ4LRwH766dzgyogCyQ+hiEaWUBQZN6HvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LqaGZ2M0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mVObjUMm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A7BB1F000FF;
-	Thu, 10 Sep 2026 19:58:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LqaGZ2M0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B29D61F000FF;
+	Thu, 10 Sep 2026 19:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789070334;
-	bh=tOy5SBkvgCg1e0pTcFPaSrYC5crOPpT+eZzvz+VRcPs=;
+	s=k20260515; t=1789070364;
+	bh=AoSAw8OX6lwAC/FQ+1ZzVIjGczyQM3eDHUdXxLqITqA=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=mVObjUMmIj4EzpgBmq+IP/9L4XhmtCyaLG8cFu1tubxH3B7+KXZZT+mpKX7FR3yfJ
-	 Rx+41Fme/AQjdixqLG2Ibq3hYvmYS/C0itdBdvUmtbjNnpDgjOBe2EuPgpYEQFfUJ5
-	 qeEA/xtDex7Sd1e7F8wbNqKVqtYobd26fdcyl2gBSlCaibmNQYLRyI5sbLEb+4lyWc
-	 XX4LI7xTP2egGFHYxBkU1fMStiw2h1wnGOZStQBg73G1cwZ1Rv/kdt8MQYpOq7qsFE
-	 bfh8pIZ2wQp+WIrY1hsfRLtZF08oLH7pJuM+Ts++zlHugl+GUr8Fey2qZvkejB6lUR
-	 YoAlLXx1Dqrlg==
+	b=LqaGZ2M0dD+bNRNOTwWSroX26eholeTuBnIFOvT+EEea3feCwMybR/sW85M8FOcVn
+	 bdqso9LlT8i3SdgPREG/wDK8021c4GzVBeIFOgEEAJavdD15oLYBquH1EsBwXWwZkJ
+	 YUuEvyrLAEha/B5j+z25ByaW7bSX6lB6cO5btFRVPavP24VIK1fxE5+/FYsKAqQuUr
+	 0GzRPjVHa1v58Bivtsr9AmkHKKJjQRomdUP3i1yo1BjQoDXdxoRJsAlKOWwXXlTCof
+	 vGfa8IfTlHdH4L+YBnT3vpCL6M7A9jeUMuhU4RBYbzy2fFy18VehrvlVer3llWleSp
+	 3yTCaYS4Dcn9g==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v8 3/6] perf header: Support memory ranges
+Subject: Re: [PATCH v8 6/6] perf c2c: print memory region data with stdio
+ output
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Thomas Falcon" <thomas.falcon@intel.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260910194324.98002-4-thomas.falcon@intel.com>
+In-Reply-To: <20260910194324.98002-7-thomas.falcon@intel.com>
 References: <20260910194324.98002-1-thomas.falcon@intel.com>
- <20260910194324.98002-4-thomas.falcon@intel.com>
+ <20260910194324.98002-7-thomas.falcon@intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Thu, 10 Sep 2026 19:58:53 +0000
-Message-Id: <20260910195854.0A7BB1F000FF@smtp.kernel.org>
+Date: Thu, 10 Sep 2026 19:59:24 +0000
+Message-Id: <20260910195924.B29D61F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,51 +47,47 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] Missing explicit POSIX header inclusion `<fcntl.h>` for file contro=
-l APIs.
+- [Low] Unsafe end address calculation for zero-length memory ranges, causi=
+ng integer underflow.
 --
 
-commit ae98e94438c4a105c55741f3c0be511c630d7250
+commit 353c7e26bf2f698e86dedab128c94a9970b19c51
 Author: Thomas Falcon <thomas.falcon@intel.com>
 
-perf header: Support memory ranges
+perf c2c: print memory region data with stdio output
 
-This commit introduces support for tracking memory ranges to monitor
-performance and resource control for different memory types. It parses
-data from ACPI MRRM tables exposed in sysfs and saves it in the perf
-data file header under HEADER_MEMORY_RANGES.
+Print memory range data in perf-c2c subcommand. Only available in stdio
+mode currently. If memory ranges are not supported or present, print
+nothing.
 
-Link: https://lore.kernel.org/lkml/20250505173819.419271-1-tony.luck@intel.=
-com/
-
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-
+> diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
+> index e37c1a3a4ca5e..9d0182a7d4d5a 100644
+> --- a/tools/perf/builtin-c2c.c
+> +++ b/tools/perf/builtin-c2c.c
 [ ... ]
-
-> @@ -1892,6 +1893,132 @@ static int write_cpu_domain_info(struct feat_fd *=
-ff,
->  	return ret;
->  }
-> =20
-> +static int memory_range__read(struct memory_range *range, const char *pa=
-th)
-> +{
-> +	char buf[32];
-> +	ssize_t n;
-> +	int dfd, fd, tmp, ret =3D -1;
+> +	for (int i =3D 0; i < nr_ranges; i++) {
+> +		struct memory_range *r =3D &env->memory_ranges[i];
 > +
-> +	dfd =3D open(path, O_RDONLY | O_DIRECTORY);
+> +		fprintf(out, "Range %d: [0x%016" PRIx64 "-0x%016" PRIx64 "] Node %d, l=
+ocal region id %u, remote region id %u\n",
+> +			i, r->base, r->base + r->length - 1, r->node,
 
 [Severity: Low]
-Does this missing explicit inclusion of <fcntl.h> for file control APIs
-(open, openat, O_RDONLY, O_DIRECTORY) cause build failures on musl libc
-systems?
+Does this code risk an integer underflow if a memory range has a length of =
+0?
 
-Without the explicit POSIX header inclusion, this might fail to compile on
-environments where <fcntl.h> isn't implicitly pulled in by other headers.
+If r->length is 0, the end address calculation underflows, which can lead to
+an incorrect address being printed (for example, wrapping around to
+0xffffffffffffffff if the base address is 0).
+
+Since the parsing function process_memory_ranges() can allow 0-length
+ranges, should this calculation check for r->length =3D=3D 0 before
+subtracting 1?
+
+> +			r->local_region_id, r->remote_region_id);
+> +	}
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260910194324.9800=
-2-1-thomas.falcon@intel.com?part=3D3
+2-1-thomas.falcon@intel.com?part=3D6
