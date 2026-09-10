@@ -1,56 +1,56 @@
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5615D42900A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957C7431A56
 	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 21:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789074773; cv=none; b=TqPmR0EGn3kTNMWtzBuhrAiIDLuhNLQ/ocYPKrnGXxlgAcGw26mAhrPJ5yjGjJ2FjnB8l4U28GkFy6itEjpfXqBsjwLayq+9ojQtNEtfTSno+iKKnSBDdfPtBh/8PF20vjzZi9mfvfLg4qBnRX9tatgy1eS8hD2f2DnPYtihxt8=
+	t=1789074773; cv=none; b=CJRmNlkTW89Ea1MW8wkyFyMEYvrYFYTjkPb8LU1zKQxnAR2QaxG0pqeVSUbVTdaOfc7IL+BcvYRau9r9mB4F8gzWIFk03EjYGiav+fVv47Ha5ARNnL2ds8rNL+G4QROdb8zVcW+qtW4YBW8vOceY75FROeWYoExRt+gWy1ciQRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789074773; c=relaxed/simple;
-	bh=fJ+aO3P5RIRWxVwd58geKjoPWlLgqh9u4SLJ00UGSTc=;
+	bh=GFno87KOND++0pTkbVyfXGfOMrlcWDgKnNEmxfOzH3o=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Yn4oTsOE+W21QAalT1LRXI2aUHAsxbunS6zsumC7Mo0P80cU0dpVfspm+8NQ5eZDXqzbO5IVbhw/X5Z3E4pAt2SXzGfteMLKsu6qHUsVDivvDjEoDaW0+2hqWuDB58N0fUfqeaa+9lnle5c7zzTtsOkvVS2JChD9zI/m/8mlVXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jtl5+xMO; arc=none smtp.client-ip=209.85.216.72
+	 To:Content-Type; b=BMHwHKADR6ZMvOwbAEK31/nUODd99C4qaelmz2oNP6990t33kBIqZ07kWbs8YdBlndtGUtUTn43kePG8IsGqtplpPNKD9i/9d4nt0S0hCIQOLbQsdvz7TKLupcrgFOCUzo2cTiy00TOu5FbjTgaVJdsEWPCulbb/cDLmiYKPq0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H4Te1NjI; arc=none smtp.client-ip=209.85.216.69
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jtl5+xMO"
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-39af92138f9so413045a91.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 14:12:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H4Te1NjI"
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-3968dfff779so286723a91.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 14:12:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789074759; x=1789679559; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789074757; x=1789679557; darn=vger.kernel.org;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=eu4tcgV+KEQyHj+vflBVWyTo2dzh8uAlVTzpcsVpWHo=;
-        b=Jtl5+xMOAJYUwq+0arPrRc/927pVR5r10tuKmd3e7qVi4awbE0GSuSepw9knweHJwR
-         pi+IHTd6rUdbW0zZfT/bb7oxOwwCNWoQ/Jf//U17oCVCRIRXnXtdA7oO7nzjQGBkxR+n
-         jmrjP7Et5jrkyGJTKC4FRZF6Rhc6IkrNxTMU9PTJxcOr49LJkYUwRK3rhjJNIIeG8HZ/
-         TcajIpYZShZBplNt690W7jlSBey+/rtlUQ5YXY/DiWJIwKXxUJHxUp1QCFOz4S/dve6E
-         L2kHUZGTbNzC7lfmZU1fOkhhsOozbUHBV10ocOsmugrLeR9Lp0wmTJoTdxNESQUBG5Wg
-         d6VQ==
+        bh=du1Euo+bpbmMcY488P/S5lzZFDL0wvPLdizijcyISy0=;
+        b=H4Te1NjIL8t6eG7j6ZmD6cdg5yhw32YD40I420G1lkP6QRs/hl45RfYSd5kvAjADpx
+         oXe9aBW/P3ewpbeSLNMQhB52VzaCF5P01G189xZpYez0EnmaYBpJps7660HqeXchrOeW
+         Q7BJiJPybnN1xW65ZFPjF6SvcHASYQznEtZ/WeDjLSBkUCxlVc18qlBP0lAKDpc5beOp
+         vc1SiKQ+zKbE4iY1ZP+HRP5c7f/m66FUSQmkB/OYdgwi3MZeOSlbiXRZM9ffu4WA2Nt7
+         Xbf9KvHHi3zlJ5R6B6ClPhoPp7GSp2ldwXBOePHsCz6HycJH5xBI6sc0Ou/HwCKQcFhp
+         zddQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789074759; x=1789679559;
+        d=1e100.net; s=20251104; t=1789074757; x=1789679557;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=eu4tcgV+KEQyHj+vflBVWyTo2dzh8uAlVTzpcsVpWHo=;
-        b=acFc5Sz+E/AIRWcmik0p3X0JRIKFl5IQ4vneTojHGHvZxSGJfvrm4wYiB0HDubZI8c
-         z1wPRhA82S8jyz6Vb2HtQYtA1zOH+ouj9lXW3SEgiOALc0M2RqQmmcN2YoBBDYeLqY5F
-         5h4vwLAkcODtuWVLtTpIDkHSZfWLU0WKSJcjfiPsalt8CKp1UEkdWYm7hUtGRrFtPmGP
-         DJxzmnAu/NZDNT3x6Jikw8fp28DNCToEvpJ/7azgCCBxeyhsDirkqQ5+C2cP70AbKZEw
-         cW/xHgFBQrOEaCXASAyP6G/sgoNgikybfY1lcN64j97dlxicR7WvnYY54neQ8am6xnfe
-         NpPA==
-X-Forwarded-Encrypted: i=1; AKwUvByoR6jNz/oyauFw4posiHoBmN2zEJ1xfjBp2pCQSc4dNnjdaP4vjBKgJz+qVlZeOshpU1O6XSfl5+koAYXMHC5h@vger.kernel.org
-X-Gm-Message-State: AFuF++ldHXquAXniU9vjStfoxnXyMTy4t6f0bwqXZBsitXyH6VgPS3+3
-	9q0fzyoamb68dXPKQyo6m7a9wXars9FEVyB+ysJzBwm4EHPu8xdGVmAyYgTIOc6u4aS4uCkRIBc
-	YGqSZ0wBxig==
-X-Received: from dlbuy19.prod.google.com ([2002:a05:7022:1e13:b0:142:d9a6:93e3])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4d0d:b0:38e:6d55:b1a6
- with SMTP id 98e67ed59e1d1-39d97ea0248mr1131117a91.3.1789074759098; Thu, 10
- Sep 2026 14:12:39 -0700 (PDT)
-Date: Thu, 10 Sep 2026 14:12:19 -0700
+        bh=du1Euo+bpbmMcY488P/S5lzZFDL0wvPLdizijcyISy0=;
+        b=kn4OWe/Fmmvi1SBoGUqUafRx2j+/KFnlMF6TmKYOVvaaveuMnQihWoYbAWlMZdCVgX
+         e3/9b01tJL6iQh0iyOilRYueCo1HieuwLlmsSv6/kw7LoC8d+BCXd2x97hNe44l33mFt
+         y7esqJYHJ+cjwWOS47TiD/4ExKx3NhPn88nMcaYQt3pYZFIbBNygPfiEmtBIibbiCglw
+         qJlNXSe6lBcM+VaxUuC72+23soPfLxnxDzNb/FrIq/+vuax9Td3KyGxfc7MC6gJElERe
+         dU8dIDyzwmXbXZRHx72D9ZW41DWKj1QYj/flpIABoN9UmQoKIXiFCuj3GXdKY1Kx1RAP
+         maLQ==
+X-Forwarded-Encrypted: i=1; AKwUvByFG3/mlCM6TA/+vRb+hhkAHPX5Ipm/7BNC1ZM19/N7htj3NjzRpFWqYXGErCPiCP+9ivSWWQz5yX9hsJ/S+lnV@vger.kernel.org
+X-Gm-Message-State: AFuF++m+hDu5FRIeouhMnV4MrhJadtgYpEyO8THNywJI0XxOq0sNVYSi
+	LPRLwTCoEKCUYVSTD/bwAaHxQtbqi1tPeNp8pkEUlayzKfoOsbstZKMXGAaHAd90UKN/FxTWFk8
+	IqAg9+PFuAw==
+X-Received: from dlbay9.prod.google.com ([2002:a05:7022:6609:b0:143:5969:748])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4b11:b0:36b:b903:994
+ with SMTP id 98e67ed59e1d1-39d77916d33mr8158316a91.4.1789074756839; Thu, 10
+ Sep 2026 14:12:36 -0700 (PDT)
+Date: Thu, 10 Sep 2026 14:12:18 -0700
 In-Reply-To: <20260910211221.3154261-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260910175634.3014018-1-irogers@google.com> <20260910211221.3154261-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1007.g17ff1f9808-goog
-Message-ID: <20260910211221.3154261-3-irogers@google.com>
-Subject: [PATCH v3 2/3] perf header: Fix potential memory corruption in cpu_cache_level__read
+Message-ID: <20260910211221.3154261-2-irogers@google.com>
+Subject: [PATCH v3 1/3] perf header: Fix HEADER_COMPRESSED validation for comp_mmap_len
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -70,62 +70,139 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-strim may advance the pointer assigned to cache->size which causes
-later frees to crash. Fix by performing the strim and then memmove-ing
-the potentially shifted string back over the original string. The bug
-was introduced by the transition from rtrim to strim, as rtrim
-wouldn't move on the left.
+This commit updates process_compressed() to ignore comp_mmap_len == 0
+when validating the compressed header. A zero size is valid and may
+occur during testing.
 
-Fixes: 13c230ab6e56 ("perf tools: Ditch rtrim(), use strim() from tools/lib")
+Sashiko review flagged string.h was missing (preexisting problem) and
+so I opportunistically fixed this and sorted the header files.
+
 Signed-off-by: Ian Rogers <irogers@google.com>
 Assisted-by: Antigravity:gemini-3.1-pro
 ---
- tools/perf/util/header.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
+ tools/perf/util/header.c | 79 +++++++++++++++++++++-------------------
+ 1 file changed, 42 insertions(+), 37 deletions(-)
 
 diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 974ce1c926cd..0a4236fc0293 100644
+index 7db7da090a1e..974ce1c926cd 100644
 --- a/tools/perf/util/header.c
 +++ b/tools/perf/util/header.c
-@@ -1268,7 +1268,11 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
+@@ -1,65 +1,69 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include "header.h"
++
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <limits.h>
+-#include "string2.h"
+-#include <sys/param.h>
+-#include <sys/types.h>
+-#include <byteswap.h>
+-#include <unistd.h>
+-#include <regex.h>
+ #include <stdio.h>
+ #include <stdlib.h>
++#include <string.h>
++
++#include <asm/bug.h>
++#include <byteswap.h>
++#include <dirent.h>
++#include <linux/bitops.h>
+ #include <linux/compiler.h>
+-#include <linux/list.h>
++#include <linux/ctype.h>
+ #include <linux/kernel.h>
+-#include <linux/bitops.h>
++#include <linux/list.h>
+ #include <linux/string.h>
+ #include <linux/stringify.h>
++#include <linux/time64.h>
+ #include <linux/zalloc.h>
++#include <regex.h>
++#include <sys/param.h>
+ #include <sys/stat.h>
++#include <sys/types.h>
+ #include <sys/utsname.h>
+-#include <linux/time64.h>
+-#include <dirent.h>
+-#ifdef HAVE_LIBBPF_SUPPORT
+-#include <bpf/libbpf.h>
+-#endif
++#include <unistd.h>
++
++#include <api/fs/fs.h>
++#include <api/io_dir.h>
++#include <internal/lib.h>
+ #include <perf/cpumap.h>
+ #include <tools/libc_compat.h> // reallocarray
+ 
++#include "../perf.h"
++#include "bpf-event.h"
++#include "bpf-utils.h"
++#include "build-id.h"
++#include "cacheline.h"
++#include "clockid.h"
++#include "cpumap.h"
++#include "cputopo.h"
++#include "data.h"
++#include "debug.h"
+ #include "dso.h"
+ #include "evlist.h"
+ #include "evsel.h"
+-#include "util/evsel_fprintf.h"
+-#include "header.h"
++#include "evsel_fprintf.h"
+ #include "memswap.h"
+-#include "trace-event.h"
+-#include "session.h"
+-#include "symbol.h"
+-#include "debug.h"
+-#include "cpumap.h"
+ #include "pmu.h"
+ #include "pmus.h"
+-#include "vdso.h"
++#include "session.h"
+ #include "strbuf.h"
+-#include "build-id.h"
+-#include "data.h"
+-#include <api/fs/fs.h>
+-#include <api/io_dir.h>
+-#include "asm/bug.h"
+-#include "tool.h"
+-#include "../perf.h"
++#include "string2.h"
++#include "symbol.h"
+ #include "time-utils.h"
++#include "tool.h"
++#include "trace-event.h"
+ #include "units.h"
+-#include "util/util.h" // perf_exe()
+-#include "cputopo.h"
+-#include "bpf-event.h"
+-#include "bpf-utils.h"
+-#include "clockid.h"
+-#include "cacheline.h"
++#include "util.h" // perf_exe()
++#include "vdso.h"
+ 
+-#include <linux/ctype.h>
+-#include <internal/lib.h>
++#ifdef HAVE_LIBBPF_SUPPORT
++#include <bpf/libbpf.h>
++#endif
+ 
+ #ifdef HAVE_LIBTRACEEVENT
+ #include <event-parse.h>
+@@ -3903,7 +3907,8 @@ static int process_compressed(struct feat_fd *ff,
+ 	 * checks decomp_len + sizeof(struct decomp) against SIZE_MAX
+ 	 * before allocating, which handles 32-bit safety.
+ 	 */
+-	if (env->comp_mmap_len < 4096 || env->comp_mmap_len % 4096) {
++	if (env->comp_mmap_len &&
++	    (env->comp_mmap_len < 4096 || env->comp_mmap_len % 4096)) {
+ 		pr_err("Invalid HEADER_COMPRESSED: comp_mmap_len (%u) must be a 4K-aligned value >= 4096\n",
+ 		       env->comp_mmap_len);
  		return -1;
- 
- 	cache->type[len] = 0;
--	cache->type = strim(cache->type);
-+	{
-+		char *trimmed = strim(cache->type);
-+
-+		memmove(cache->type, trimmed, strlen(trimmed) + 1);
-+	}
- 
- 	scnprintf(file, PATH_MAX, "%s/size", path);
- 	if (sysfs__read_str(file, &cache->size, &len)) {
-@@ -1277,7 +1281,11 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
- 	}
- 
- 	cache->size[len] = 0;
--	cache->size = strim(cache->size);
-+	{
-+		char *trimmed = strim(cache->size);
-+
-+		memmove(cache->size, trimmed, strlen(trimmed) + 1);
-+	}
- 
- 	scnprintf(file, PATH_MAX, "%s/shared_cpu_list", path);
- 	if (sysfs__read_str(file, &cache->map, &len)) {
-@@ -1287,7 +1295,11 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
- 	}
- 
- 	cache->map[len] = 0;
--	cache->map = strim(cache->map);
-+	{
-+		char *trimmed = strim(cache->map);
-+
-+		memmove(cache->map, trimmed, strlen(trimmed) + 1);
-+	}
- 	return 0;
- }
- 
 -- 
 2.55.0.1007.g17ff1f9808-goog
 
