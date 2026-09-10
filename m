@@ -1,110 +1,64 @@
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CA0545DB5
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 17:56:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F20E2853E0
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 18:08:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789063007; cv=none; b=iZfX9pCl49OnX5l5KL3o5lM40Z8Pnn/v7PbLoYPk5LkDDDBsrRMqoT9sOgS9PJR2scZNF0mDV3H3Y7uYRj/u6mEElenQoYdp+ZJneWnswYpiK7jTxlyX54mBCbIfHAnmQjM8Qh5Er2QkcXxTDT0Zh039aY37TsYaVbbzj4WBT5A=
+	t=1789063697; cv=none; b=mNfudr4wSowQy48AdWgDRuTWTETRk6TGBGGbmlME76I8CWlYt86Krmap8V8vfO087wlDbyvT+LXfSOAT6dHor9K5vtAN2KFzVB6JNgK2Q1AzhIfvwF4w9p7rhqsF00hiTqi6Fc+GuvP/g0P8tqogr+hR144hBEtiu/4UY6nCplA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789063007; c=relaxed/simple;
-	bh=xLDdELpaZ92ME6nkeZN2fNUTDVi3mQx5ZlLrH57VYP0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=h/c4OlyVycOxPv10S/0e9ZrQ9PM8rfNXeuF5Fvh1Ol033XQ9MYmEFqdtOiPhypVdHzFtGCIYujlYQTKebb1RUWTeTxw4cT2OYRG6zDnnIM0AADLBIcaRzT32///x9dzeyPlK+On6m5cyHSCHD9wO+8gZbarJuj4ZQf/q1/pJ8vY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tea7fuoo; arc=none smtp.client-ip=209.85.215.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1789063697; c=relaxed/simple;
+	bh=lliYTDcDWFXIOovXV/GnzYLKDNgyZq3aHEx64HFQIkU=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=W81NEaOtvqIbiOUZ+bwosUx0mOU9AjzEJL+cP4pSfyWiaU3fXj5Y0icw1Ujel18YIYoApu+kfmyqXshCbiryPB42i+IUG4HI/BzvGOOo09SU0qTykGw1qADRiYhiHSEpf/FFMQDL6hr/MXqA+UUInDcO1/ka5NjxyMU/gR8oa8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ix+YDVBS; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tea7fuoo"
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-cb835525b10so102231a12.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 10:56:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789063005; x=1789667805; darn=vger.kernel.org;
-        h=content-type:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=X3fQxh9g5ajoX8Y1OGK5G6oHwPA/wuRadJNv+BCxKRo=;
-        b=tea7fuooeBGrrANqJxhyTk9V3lHc70XXj09YsyU6fy0rAV6AinDB/L2b6L5FId48dO
-         mbw0X5bljgCDfu157xeETUhzZ992dQ6Oj3aXjIFeh61XLsIYn6iSbeuPe0f7Fctau1VE
-         kdFaLlgHROL9Q4zOGxPPAdSeFPFrZmGHWWkv7hS6BnOavsvGhT8kAPDrzQMACo56nUbh
-         vhRm87T2jwvhnAg2AZPt3eedPAANW5ZgaBeR0lL1mWjlNhG+6zA6AHVWXJtuLv4nL1R4
-         YxTWUNtAWY5XVkoWKoB+qB7Q2Hjc2wETGtFKN3zbIcoDrARbXVnrW2spoYGM6Rv4C+53
-         g0Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789063005; x=1789667805;
-        h=content-type:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=X3fQxh9g5ajoX8Y1OGK5G6oHwPA/wuRadJNv+BCxKRo=;
-        b=f2Ac0S1JpFcWe0e62g8XNfOS4JyIGfENftRZPXf8dhXjs3GG+pu6MmYgPykFHSgD48
-         EhNgHs5IJmRsVrwWdjaJ/BXNejPCY8BmOwOOg+OTnNjlBFH08+OuSVBlbBBmHGkAqQvU
-         Fg2l9JO4tYWXk12SEV6jGwGgZdQomjbS3VCS78h7Amig04K3MfX1X781LbfQNLV1eH0U
-         dh8H7LJNscWvuunre2IpNmLhkYK4UYFoffoWDgyyGfGpbRmGxApqJiPFp0icfLNFicMq
-         x1U3pnIng1BKY5lFYdBwwEg8RwA8GrrFnTgO+tlNO5K6q2gFTIFFNPIOTEX2u9TLmQAw
-         jZhg==
-X-Forwarded-Encrypted: i=1; AKwUvBwlcKoA2k8d6VLdCm8dgYL9/wvnJXcRwJahGYFxl7InoEu6Xh/Bu4k8wKUXJ6xPaYUUPewfRXnGh+3WnJ09gemr@vger.kernel.org
-X-Gm-Message-State: AFuF++kHZCRR1iMHiRbi/xiRZ1kHWa+KVonScmtB+ZdxOcgODeDO3dvc
-	md3rXypYwnMq3RbHUb200+ZQYa0zFvUWspwFHD5YZxcNZSoHlvud+WOcqNpDYK/RuA0P3j76auO
-	dPWPnTg==
-X-Received: from pgmm13.prod.google.com ([2002:a05:6a02:550d:b0:cc4:a477:43cc])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:bea6:b0:3cd:9bb1:c6f5
- with SMTP id adf61e73a8af0-3daed1fa6f1mr77071637.10.1789063004860; Thu, 10
- Sep 2026 10:56:44 -0700 (PDT)
-Date: Thu, 10 Sep 2026 10:56:44 -0700
-In-Reply-To: <anTB6ksbUs18FEf1@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ix+YDVBS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87F041F00893;
+	Thu, 10 Sep 2026 18:08:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789063695;
+	bh=lliYTDcDWFXIOovXV/GnzYLKDNgyZq3aHEx64HFQIkU=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=ix+YDVBSkQf+r91Oz/ehXi80ggefF801WXUd60lWcPGy+059n3ELKqPmoaUqXKqPm
+	 AOmPQh0ESDAX9XgEnffJ1+XrUZK3e2+S/a7jsWgLn5ijkO40NAg5DWOXTEU1sHjMhX
+	 FTCM7d5nD/WQbPXuGfoFAnx1v0UxbyIe4rFzrSUBN1mF/z68jx2ML/tMeEv3vtTp0E
+	 nS5OSZpFre2EJd6lsWACt9duI5K8ocj4Jb8G8l2dBLaRq2yj7kXtFnpcIXg5+W3c/O
+	 MYu8mMQBMbIKmizeAw6L9pasXaBpXSgnKvJ2dD4H9k7V7sVxFlMbpmWaKGTBWb6dWN
+	 CoOAP8f61QiSQ==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 3/3] perf header: Fix potential memory corruption in
+ cpu_cache_level__read
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Ian Rogers" <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260910175634.3014018-3-irogers@google.com>
+References: <20260910173715.2996571-1-irogers@google.com>
+ <20260910175634.3014018-1-irogers@google.com>
+ <20260910175634.3014018-3-irogers@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 10 Sep 2026 18:08:15 +0000
+Message-Id: <20260910180815.87F041F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260508231353.406465-1-seanjc@google.com> <anTB6ksbUs18FEf1@google.com>
-Message-ID: <aqLvXM5SPPlQePXs@google.com>
-Subject: Re: [PATCH v3 0/9] perf/x86: Don't write PEBS_ENABLED on KVM transitions
-From: Sean Christopherson <seanjc@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Jim Mattson <jmattson@google.com>, Mingwei Zhang <mizhang@google.com>, 
-	Stephane Eranian <eranian@google.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
 
-On Thu, Aug 06, 2026, Sean Christopherson wrote:
-> On Fri, May 08, 2026, Sean Christopherson wrote:
-> > Sean Christopherson (9):
-> >   perf/x86/intel: Ensure guest PEBS path doesn't set unwanted
-> >     PERF_GLOBAL_CTRL bits
-> >   perf/x86/intel: Don't write PEBS_ENABLED on host<=>guest xfers if CPU
-> >     has isolation
-> >   perf/x86/intel: Don't context switch DS_AREA (and PEBS config) if PEBS
-> >     is unused
-> >   perf/x86/intel: Make @data a mandatory param for
-> >     intel_guest_get_msrs()
-> >   perf/x86/intel: Invert names of intel_ctrl_{guest,host}_mask
-> >   perf/x86: KVM: Have perf define a dedicated struct for getting guest
-> >     PEBS data
-> >   perf/x86/intel: KVM: Handle cross-mapped PEBS PMCs entirely within KVM
-> >   KVM: VMX: Drop a redundant pmu->global_ctrl check when processing
-> >     pebs_enable
-> >   KVM: VMX: Only tell perf to enable PEBS counters for fully enabled
-> >     PMCs
-> > 
-> >  arch/x86/events/core.c            |  5 +-
-> >  arch/x86/events/intel/core.c      | 92 +++++++++++++++++++------------
-> >  arch/x86/events/intel/lbr.c       |  2 +-
-> >  arch/x86/events/perf_event.h      |  7 ++-
-> >  arch/x86/include/asm/kvm_host.h   |  9 ---
-> >  arch/x86/include/asm/perf_event.h | 11 +++-
-> >  arch/x86/kvm/vmx/pmu_intel.c      | 28 +++++++---
-> >  arch/x86/kvm/vmx/vmx.c            | 10 ++--
-> >  arch/x86/kvm/vmx/vmx.h            | 15 ++++-
-> >  9 files changed, 114 insertions(+), 65 deletions(-)
-> 
-> Ping.  This still applies on Linus' tree and against tip/master.
+> strim may advance the pointer assigned to cache->size which causes
+> later frees to crash. Fix by performing the strim and then memmove-ing
+> the potentially shifted string back over the original string. The bug
+> was introduced by the transition from rtrim to strim, as rtrim
+> wouldn't move on the left.
+>=20
+> Fixes: 13c230ab6e56 ("perf tools: Ditch rtrim(), use strim() from tools/l=
+ib")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-Ping again.  This fixes a real issue and IMO provides much-needed improvements
-for the KVM<=>perf APIs.
+Sashiko has reviewed this patch and found no issues. It looks great!
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260910175634.3014=
+018-1-irogers@google.com?part=3D3
+
