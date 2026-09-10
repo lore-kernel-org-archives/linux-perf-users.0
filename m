@@ -1,170 +1,236 @@
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40C6D569F11
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 17:37:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5955678EB
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 17:44:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789061861; cv=none; b=NjaYnZIC/zF4dzYssh6mfXdmJT8JqlJZXQ+8cMMuaFlzMETpKadMTut00hOqzxCrfSufk0v5mnAnvEKK9yuS1facUM3KtNnSqYuwYqm45r3zpMp5AQGNt6R2JUo33pgrBCf75Wh3xo0gtu9dq6ReHij11rx1AcYlPGgnOPBHPv4=
+	t=1789062288; cv=none; b=pNYppuNRT6KT8hEQQYed/I+TdorjGt1zOTgK4R81KxeyJJSwh+mWvEobrDX053Z+IIa6Mm3DVVk1U9b8k87kgpRO9ZrmqHVBSv0Zku+gbZpIVfftRKXUZEjY1e5/Sot1eV7JBJynb8cLEzyY7BZTxbjCw4RiW9ZWHdEBgvyfnuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789061861; c=relaxed/simple;
-	bh=bsg/VePzOz1lxM8CfGsZ2ouP6WK2qYLF+kdJw+NDm1w=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=Y7XJlSpWfDtP394G+bcq/4wILyvTo+Sr9cRd2d82F4F/mrnGnB2YQyCQRrwUYHkDSMIr8wZDEybZFcbOcI6vP5nyOBPc2bKRWxVzPaVWSi0HWuE7l9tOf2IftqUBH4bs9tgtDe+2/y//fhvDjjRwOOEw433k1whQeRpGkYSX0Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=THlZYpmz; arc=none smtp.client-ip=209.85.216.72
+	s=arc-20240116; t=1789062288; c=relaxed/simple;
+	bh=Kp1fVntnUgpr5dPhYFwdUa7mOtBV/Q8lqDeqvvAUmb8=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=NZg7e1skLHQeV96MwFeCULDl7FgnjsXOjTw4IqLGRqLAnBTe+J57K6J4aOxn8wGg+9iauZOH7aBrbirXHw01K8QH49j/+cji+wqGacO+8KhH5JP6cXuYZ73YvOaFrLj5XnroPAIRrNxzksaVJj5Kyc92fwSxMVO/9HzaDLFt1bU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=REyomxt3; arc=none smtp.client-ip=209.85.215.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="THlZYpmz"
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-3823dcc1647so9164839a91.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 10:37:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="REyomxt3"
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-cc1bbd7d6e6so70768a12.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 10:44:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789061851; x=1789666651; darn=vger.kernel.org;
-        h=content-type:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=alJIg6NFHmOIfLpqOpn9VCme24M02xLRvisdX8Uz++w=;
-        b=THlZYpmzrsI3zg4fJHyHsc/tYIuSLGqVKRy8iDB0tU1fOzZ8DZxCZmxOGm2KpjOnPA
-         XR4ROhEt9dKvrim7HWwB6StnreDSXkwS6ygpf1SaMSfFxyQlZ+dGI6RvALvbm81rDfYO
-         UWr/O/cuOJN//oWlC0aMc0mWvkNfrRIT193X/P1BigocE2uQvCDaYibgtL5mNiqpwRLv
-         TzIOjWl+mEA2O69whxKc2v7bQvaJT+3HtDWCPtJxwYv6f+LH+lKWMLxceuv9hj1V8A2C
-         4jo97AFLZwiJc0c1yM6CODOjwBIJ6ro9roJVoi7s3VZvewU+j/5ytSCWqiybX1vQHzNX
-         FOSw==
+        d=google.com; s=20251104; t=1789062267; x=1789667067; darn=vger.kernel.org;
+        h=content-type:to:from:subject:message-id:mime-version:date:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=+sBL53TWpOY5F37MHtUIstN8/huNjNwzJ60aXWk3Bq4=;
+        b=REyomxt347b3jaYBWkXjwJMzs1Nptet9BNnn7ReTcM6l8ou3N/d/OCOHt5AFNYQsfK
+         beVxlUCqx2IqkEbbnTE3hAnBx/e/9lXxmgzoiXP0h8znfPIAFKyjklsPwBP0jcxuMoTo
+         8OZj6MkQIUb7we9BkXX7vGJNkfnZuu86FfQQ6pvlcxIDpKjpLNVsKH+1Vgm821UUoMBc
+         wEpu/Cfqq9xIZlSPipwLNj4m6hI2HlZkEf3ygGZ+k41TNKWb1HFiBTU4VbDd86cVcwlB
+         l5GKb9b2VXmMbwI3F5wGm/TwmAz9k9D6v0o6URarZacX9G90/HWM9+3Nrol6JES22pyP
+         n0gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789061851; x=1789666651;
-        h=content-type:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=alJIg6NFHmOIfLpqOpn9VCme24M02xLRvisdX8Uz++w=;
-        b=g4Wrg64HCJiZW5vfsipHhVtIkg1v+tgPyO+ia+8t2JYk7UE/VDP5EpyxB5Ymixd8ER
-         NadrNkcJNTSneuPw3UsvRH9rb5PfqRBzThMz1zM+BHcPYf9Kbt9A7AJrqgfptx7tJdk6
-         Jd5Huz32Rdj+mnT42RQv1bo46aQQR6w2MMq6X72bU7SRxMGrtPs6Q0KPvVqjSCuQrX/6
-         VGN1I6Q67gKzl8pKPNDXKVCJIOvDUEyR7Ql9UwRJw3NxN+GNYgjXHVz7u4X/ZaVlahjB
-         D19iTLbSwB1FdRfhmRVUGOy7Z70oumymUWoNPgBowxHXqmqOc8Z6qcDWTLkxn4iX6eIM
-         M37w==
-X-Forwarded-Encrypted: i=1; AKwUvByFSW6T3hl3ysyppH4kuPTqrHcsQsXcozdGR6cdUZiZrP0DqujxTjd7GoURD0XTQKQ6zuzKfTGE/A5PIfxnteha@vger.kernel.org
-X-Gm-Message-State: AFuF++mwuldsceZ5hV95sZ/Ir0PJZVRx+Lgyym9fSDKfG4SA0m8qraRQ
-	rYh8bQpqitrFBGK9S48yk5dQQlN0mF9IJFoeoS0D0osTctsjXSMQxopl9vrGqPXhXCBeUHNlTLy
-	ZACmBxP4EgA==
-X-Received: from dlee1.prod.google.com ([2002:a05:7022:6281:b0:141:5987:7f07])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d44b:b0:398:bee5:61d6
- with SMTP id 98e67ed59e1d1-39b26252edamr68840957a91.24.1789061850497; Thu, 10
- Sep 2026 10:37:30 -0700 (PDT)
-Date: Thu, 10 Sep 2026 10:37:15 -0700
-In-Reply-To: <20260910173715.2996571-1-irogers@google.com>
+        d=1e100.net; s=20251104; t=1789062267; x=1789667067;
+        h=content-type:to:from:subject:message-id:mime-version:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=+sBL53TWpOY5F37MHtUIstN8/huNjNwzJ60aXWk3Bq4=;
+        b=gvxyqXrE3PZ2oFIzoBhCOwG9lQrOXExusqLiOdaQgXw1VS/b77CmbMzXWbCICtky6r
+         /aloadBDWJK/aZ67BC8U3E1kLjv2zDwjOzdBEdDxakYXB9HvwASAEB4z3VHhSdyjCafa
+         p5J0imUj3KGMLJaoZBfSt/RREsjwf2y5MiR+x4BEocaYD3n722H6tQDkxMBs2lRvUOe4
+         PC8n26wdY56sMTtQUWxhVwohU4ll/e+EiSH/8Am7eGU19pG/w3KtbPj2HkMPVkA5OKed
+         +8/erh6k016QaD+/DY8hB5Vt/7k3Yox9Td0e+0qPbTn5djoJDE7dvafJw8/aO0Y6wYZA
+         E4dA==
+X-Forwarded-Encrypted: i=1; AKwUvBxPq4CNQ8XoCXTLri7FpfMxUqA5F5G9k3WM88zJQ/Xi2Kpo578ok03K4/OvmZv5Tm7q0EXUfB8EGYZUCnv7BbgH@vger.kernel.org
+X-Gm-Message-State: AFuF++lqOqByT/SJkBrX4fVazBAV3FFXgi/bRVd0Rd8dAzs0n8DlVHy8
+	kI7tBZKMjfmRa2K8siR5jBk8ZWiUmriTbZi/zrFpCvShI9tafRGpoJxAc0kZsLhGHMHCBgp99sO
+	3y3YScFcV8A==
+X-Received: from dlbrd11.prod.google.com ([2002:a05:7022:f10b:b0:13d:1c4d:901f])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a21:458f:b0:3c3:a20f:f729
+ with SMTP id adf61e73a8af0-3da39beaa21mr67910330637.7.1789062267123; Thu, 10
+ Sep 2026 10:44:27 -0700 (PDT)
+Date: Thu, 10 Sep 2026 10:44:20 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260910173715.2996571-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1007.g17ff1f9808-goog
-Message-ID: <20260910173715.2996571-3-irogers@google.com>
-Subject: [PATCH v1 3/3] perf header: Transition WARN macros to debug.h equivalents
+Message-ID: <20260910174420.3002597-1-irogers@google.com>
+Subject: [PATCH v1] perf python: Fix ilist TreeNode string type drift
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Avoid a checkpatch.pl warning on the use of asm/bug.h by switching the
-use of WARN macros to explicit tests and then using pr_warning from
-debug.h.
+Updates Tree type hints to correctly use TreeNode[TreeValue]
+across all assignments preventing mypy strictness mismatches.
 
+Address some other minor stylistic issues reported by mypy, pylint and
+Sashiko.
+
+Assisted-by: Antigravity:gemini-3.1-pro
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/header.c | 27 ++++++++++++++++++---------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+ tools/perf/python/ilist.py | 70 ++++++++++++++++++++------------------
+ 1 file changed, 37 insertions(+), 33 deletions(-)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 78b16a098148..a3e6c334a289 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -8,7 +8,6 @@
- #include <stdlib.h>
- #include <string.h>
+diff --git a/tools/perf/python/ilist.py b/tools/perf/python/ilist.py
+index 0d757ddb4795..4797818ef42e 100755
+--- a/tools/perf/python/ilist.py
++++ b/tools/perf/python/ilist.py
+@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
+ import argparse
+ from dataclasses import dataclass
+ import math
+-from typing import Any, Dict, Optional, Tuple
++from typing import Any, Dict, List, Optional, Set, Tuple
+ import perf
+ from textual import on
+ from textual.app import App, ComposeResult
+@@ -19,7 +19,7 @@ from textual.widgets import Button, Footer, Header, Input, Label, Sparkline, Sta
+ from textual.widgets.tree import TreeNode
  
--#include <asm/bug.h>
- #include <byteswap.h>
- #include <dirent.h>
- #include <linux/bitops.h>
-@@ -384,8 +383,10 @@ static int do_read_bitmap(struct feat_fd *ff, unsigned long **pset, u64 *psize)
- static int write_tracing_data(struct feat_fd *ff,
- 			      struct evlist *evlist __maybe_unused)
- {
--	if (WARN(ff->buf, "Error: calling %s in pipe-mode.\n", __func__))
-+	if (ff->buf) {
-+		pr_warning("Error: calling %s in pipe-mode.\n", __func__);
- 		return -1;
-+	}
  
- #ifdef HAVE_LIBTRACEEVENT
- 	return read_tracing_data(ff->fd, &evlist__core(evlist)->entries);
-@@ -406,8 +407,10 @@ static int write_build_id(struct feat_fd *ff,
- 	if (!perf_session__read_build_ids(session, true))
- 		return -1;
+-def get_info(info: Dict[str, str], key: str):
++def get_info(info: Dict[str, Any], key: str):
+     return (info[key] + "\n") if key in info else ""
  
--	if (WARN(ff->buf, "Error: calling %s in pipe-mode.\n", __func__))
-+	if (ff->buf) {
-+		pr_warning("Error: calling %s in pipe-mode.\n", __func__);
- 		return -1;
-+	}
  
- 	err = perf_session__write_buildid_table(session, ff);
- 	if (err < 0) {
-@@ -1013,8 +1016,10 @@ static int write_auxtrace(struct feat_fd *ff,
- 	struct perf_session *session;
- 	int err;
+@@ -234,7 +234,7 @@ class IListApp(App):
  
--	if (WARN(ff->buf, "Error: calling %s in pipe-mode.\n", __func__))
-+	if (ff->buf) {
-+		pr_warning("Error: calling %s in pipe-mode.\n", __func__);
- 		return -1;
-+	}
+     def __init__(self, interval: float) -> None:
+         self.interval = interval
+-        self.evlist = None
++        self.evlist: Optional[perf.evlist] = None
+         self.selected: Optional[TreeValue] = None
+         self.search_results: list[TreeNode[TreeValue]] = []
+         self.cur_search_result: TreeNode[TreeValue] | None = None
+@@ -290,12 +290,12 @@ class IListApp(App):
+             event = event.lower()
+             search_label.update(f'Searching for events matching "{event}"')
  
- 	session = container_of(ff->ph, struct perf_session, header);
+-            tree: Tree[str] = self.query_one("#root", Tree)
++            tree: Tree[TreeValue] = self.query_one("#root", Tree)
  
-@@ -1108,9 +1113,10 @@ static int write_dir_format(struct feat_fd *ff,
- 	session = container_of(ff->ph, struct perf_session, header);
- 	data = session->data;
+-            def find_search_results(event: str, node: TreeNode[str],
++            def find_search_results(event: str, node: TreeNode[TreeValue],
+                                     cursor_seen: bool = False,
+-                                    match_after_cursor: Optional[TreeNode[str]] = None
+-                                    ) -> Tuple[bool, Optional[TreeNode[str]]]:
++                                    match_after_cursor: Optional[TreeNode[TreeValue]] = None
++                                    ) -> Tuple[bool, Optional[TreeNode[TreeValue]]]:
+                 """Find nodes that match the search remembering the one after the cursor."""
+                 if not cursor_seen and node == tree.cursor_node:
+                     cursor_seen = True
+@@ -332,7 +332,7 @@ class IListApp(App):
  
--	if (WARN_ON(!perf_data__is_dir(data)))
-+	if (!perf_data__is_dir(data)) {
-+		pr_warning("Expected data to be a directory");
- 		return -1;
--
-+	}
- 	return do_write(ff, &data->dir.version, sizeof(data->dir.version));
- }
+     def action_collapse(self) -> None:
+         """Collapse the part of the tree currently on."""
+-        tree: Tree[str] = self.query_one("#root", Tree)
++        tree: Tree[TreeValue] = self.query_one("#root", Tree)
+         node = tree.cursor_node
+         if node and node.parent:
+             node.parent.collapse_all()
+@@ -343,31 +343,34 @@ class IListApp(App):
+         if not self.selected or not self.evlist:
+             return
  
-@@ -3714,9 +3720,10 @@ static int process_dir_format(struct feat_fd *ff,
- 	session = container_of(ff->ph, struct perf_session, header);
- 	data = session->data;
+-        def update_count(cpu: int, count: int):
++        def update_count(cpu: int, count: int | float):
+             # Update the raw count display.
+-            counter: Label = self.query(f"#counter_cpu{cpu}" if cpu >= 0 else "#counter_total")
+-            if not counter:
++            counter_query = self.query(f"#counter_cpu{cpu}" if cpu >= 0 else "#counter_total")
++            if not counter_query:
+                 return
+-            counter = counter.first(Label)
++            counter: Label = counter_query.first(Label)
+             counter.update(str(count))
  
--	if (WARN_ON(!perf_data__is_dir(data)))
-+	if (!perf_data__is_dir(data)) {
-+		pr_warning("Expected data to be a directory");
- 		return -1;
--
-+	}
- 	return do_read_u64(ff, &data->dir.version);
- }
+             # Update the sparkline.
+-            line: Sparkline = self.query(f"#sparkline_cpu{cpu}" if cpu >= 0 else "#sparkline_total")
+-            if not line:
++            line_query = self.query(f"#sparkline_cpu{cpu}" if cpu >= 0 else "#sparkline_total")
++            if not line_query:
+                 return
+-            line = line.first(Sparkline)
++            line: Sparkline = line_query.first(Sparkline)
+             # If there are more events than the width, remove the front event.
+-            if len(line.data) > line.size.width:
+-                line.data.pop(0)
+-            line.data.append(count)
+-            line.mutate_reactive(Sparkline.data)
++            if line.data is not None:
++                if len(line.data) > line.size.width:
++                    line.data = line.data[1:]
++                line.data = list(line.data) + [float(count)]
++            else:
++                line.data = [float(count)]
++            line.refresh()
  
-@@ -4394,8 +4401,10 @@ static int do_write_feat(struct feat_fd *ff, int type,
- 		if (!feat_ops[type].write)
- 			return -1;
+         # Update the total and each CPU counts, assume there's just 1 evsel.
+-        total = 0
++        total: float = 0.0
+         self.evlist.disable()
+         for evsel in self.evlist:
+             for cpu in evsel.cpus():
+-                aggr = 0
++                aggr: float = 0.0
+                 for thread in evsel.threads():
+                     aggr += self.selected.value(self.evlist, evsel, cpu, thread)
+                 update_count(cpu, aggr)
+@@ -424,16 +427,16 @@ class IListApp(App):
+         # Add spark lines for all the CPUs. Note, must be done after
+         # open so that the evlist CPUs have been computed by propagate
+         # maps.
+-        line = CounterSparkline(cpu=-1)
+-        lines.mount(line)
++        line_sp = CounterSparkline(cpu=-1)
++        lines.mount(line_sp)
+         for cpu in self.evlist.all_cpus():
+-            line = CounterSparkline(cpu)
+-            lines.mount(line)
+-        line = Counter(cpu=-1)
+-        lines.mount(line)
++            c_sp = CounterSparkline(cpu)
++            lines.mount(c_sp)
++        c_val = Counter(cpu=-1)
++        lines.mount(c_val)
+         for cpu in self.evlist.all_cpus():
+-            line = Counter(cpu)
+-            lines.mount(line)
++            c_val2 = Counter(cpu)
++            lines.mount(c_val2)
  
--		if (WARN(ff->buf, "Error: calling %s in pipe-mode.\n", __func__))
-+		if (ff->buf) {
-+			pr_warning("Error: calling %s in pipe-mode.\n", __func__);
- 			return -1;
-+		}
+     def compose(self) -> ComposeResult:
+         """Draws the app."""
+@@ -459,17 +462,18 @@ class IListApp(App):
+                     # Reading events may fail with EPERM, ignore.
+                     pass
+             metrics = tree.root.add("Metrics")
+-            groups = set()
++            groups: Set[str] = set()
+             for metric in perf.metrics():
+                 groups.update(metric["MetricGroup"])
  
- 		(*p)->offset = lseek(ff->fd, 0, SEEK_CUR);
- 
+-            def add_metrics_to_tree(node: TreeNode[TreeValue], parent: str, pmu: str = None):
++            def add_metrics_to_tree(node: TreeNode[TreeValue], parent: str, pmu: Optional[str] = None):
+                 for metric in sorted(perf.metrics(), key=lambda x: x["MetricName"]):
+-                    metric_pmu = metric.get('PMU')
++                    metric_pmu_raw = metric.get('PMU')
++                    metric_pmu = str(metric_pmu_raw) if metric_pmu_raw else ''
+                     if pmu and metric_pmu and metric_pmu != pmu:
+                         continue
+                     if parent in metric["MetricGroup"]:
+-                        name = metric["MetricName"]
++                        name = str(metric["MetricName"])
+                         display_name = name
+                         if metric_pmu:
+                             display_name += f" ({metric_pmu})"
 -- 
 2.55.0.1007.g17ff1f9808-goog
 
