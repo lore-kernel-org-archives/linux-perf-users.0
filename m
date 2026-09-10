@@ -1,315 +1,202 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f12.google.com (mail-pj2-f12.google.com [74.125.227.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A995433557D;
-	Thu, 10 Sep 2026 02:22:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C44735F182
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 02:31:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.227.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789006980; cv=none; b=IJJPLDuPmhSqqTJsU9NfU06bhWzgMSNLrYZ2dBuykCEbx+Yl1CLNpYr+QdUQgKIa2cDnDZ+vrtu/31g/FmvphKvlN9aol8ZTN0a/TPl/qecQ8lKHMZCMCx88x+TWqK4XZKEGn5+kTKg6o0gQ8MTDBt/8pSzebBqiq+ogBUSxZeA=
+	t=1789007520; cv=none; b=ESfEt+eUjvMNPPEaJOhsIjc7jdg2B5ghYZT16L7y89UlDgKqfkYUvhx0jnqXqEh843ID7swLkO5G7SXojGaWaBrHkqz60Jda6YxxcZ3LtRWWxC+4fsooOKRcg5O1zadc1i29HeU0jtKPSfwOE3Ug742Rc56XCRsyTew4VcNTK38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789006980; c=relaxed/simple;
-	bh=8ERJE0jevKkO2RVEhRtlrtgxqA80hCw0UIp+ZVJwqyE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wi+xbcve6EmxN8vr9n5of393yTRyTUco8kvxvZ4w+ag1L72258Ecy1D83C+fyrHvktr9V/f1cRn/uJOpq7icIwCH9s30yWTzLTGbrI9rlDJh/GU2ElkWh3FlXIym4r4gFqIXWJ2Udou8YndbsudDdkxzJ4aTvO+psNUDJ35cpKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RzSzWMoj; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1789007520; c=relaxed/simple;
+	bh=AkUhW63lsYMS1kn2/ZT+v+cv8lVWg8USKa64IK7rGuY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=LuS4gKhYghYXgRVfnD+UPWGvHiY3bhjRm9JWGi3Ff4begJd6kdwWV9HfCwj4uCj29GPAf0nrzCeIur7ju5t4OrYW/+zHSzIwIurr1jxslvuHikBvxFhJkqKIxYp2GFsId/yhtlmLkFv7sQ+nEwSt/0K5ZpxRGwR4+ZSgmt2bTRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=lPAUUM40; arc=none smtp.client-ip=74.125.227.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RzSzWMoj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789006979; x=1820542979;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8ERJE0jevKkO2RVEhRtlrtgxqA80hCw0UIp+ZVJwqyE=;
-  b=RzSzWMojpEMp2/Y0rT5bpidVsKNWq6UkMJijYGzp4VDfvD6uFO5MLo1m
-   sDuCmjL44wNPcFn3CTVCopO///FIg8spx+XOpq74soeXmT4u2tMRYPLBN
-   Aow6Js+Cp7/UC/fbYinNfO1TzNrRrIzUBT8Dl/reGWwK1b9oPlltlgRvL
-   4ZjTI9Z2n6oomQzJNs26qnOKvFxYNycm9Rj20xijBjVrDAXkKzabYUrmZ
-   JXVSU9RHsCZf9Hh8KOoktjL9RJp7swx+xXsMBOF4FqoZoVqdEARYeoYEU
-   NceRDWvLJDp0bSTgxfOKj9ln+FrhHanqK1TPlGBRDkAI8+X0eRukcdo5m
-   A==;
-X-CSE-ConnectionGUID: YWdiiD+oTKW8Je+ouYhTNQ==
-X-CSE-MsgGUID: 4Y0VHlblQY6K6yoPmZtkCw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11900"; a="89292511"
-X-IronPort-AV: E=Sophos;i="6.25,271,1779174000"; 
-   d="scan'208";a="89292511"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2026 19:22:58 -0700
-X-CSE-ConnectionGUID: FobBjntTR3WYogbgGVyLqw==
-X-CSE-MsgGUID: z0VEw9YpShOwf1cIcb7b/Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.25,271,1779174000"; 
-   d="scan'208";a="275256919"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2026 19:22:55 -0700
-Message-ID: <c867ffcd-d2de-49a5-977c-5579b1029ca9@linux.intel.com>
-Date: Thu, 10 Sep 2026 10:22:53 +0800
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lPAUUM40"
+Received: by mail-pj2-f12.google.com with SMTP id 98e67ed59e1d1-398c066106cso758732a91.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 09 Sep 2026 19:31:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1789007518; x=1789612318; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=4l9pfCxAqROy9dMetwLy4Hi2HOjTkAgX0HE8E8onqqo=;
+        b=lPAUUM40tBowkc0dJC3FwPOWUR864caRMX8e+kf8xlnbEfvOKxYkTC/ZOubXnlXKQq
+         R2RnuSeMeI/+NpH38F9fIhV0KyWZ67cW8CSwGez90XZFe+14FxTR/NANOewMdbvIUkZd
+         dtzMGOtn8WPaT2foetioBLV1aKp4T+IGFp8gttJUCED21q3gMTdVx9qkPp5ivIdHJDir
+         DV4xvyIJCH3+b/0fYzuWxIiadqKGzICGNrtMg8NksV07dkwkRuL6mR+z6HZ2+8Y6HRXV
+         UmVPAHjbu44RUmUvkDFQuzU2IglU5RUoTHB3vsZ/Ac8ICRiQ9H3wahGFuesMJoAYt1om
+         nhzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789007518; x=1789612318;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=4l9pfCxAqROy9dMetwLy4Hi2HOjTkAgX0HE8E8onqqo=;
+        b=g6A2ICJrtPl++10ULRoATHAKTrZQ4gVtZGZ+06gkKR0/7dg621ZcVuGCBcsfGJXrzM
+         UxYUdIyArbmATnGH2TIIxxaqfTciGYV5/KFiOwNjwqNAs3NTkugWrIg4vt5Xshev81PP
+         d8w10GvG/VA2sZGnmDcy787I9EjiGyOjDSSN+ToKIy7k5ItEDTqTLbBAWHOZr4PnmuJO
+         gMWdT87wfrhlfNlOTwfZMcyYopCfXADPrQ8pmZMgI2zvMiW91dlsJUURgfpB7+qWmjLv
+         pmo6wyd2Y6DD7LZst5yHNraZTEn1bORFqEUj4hTetwxQgHCf0xHP3610jDxqMMN6UvGo
+         y6Dw==
+X-Forwarded-Encrypted: i=1; AKwUvBw6x657rW5nWsR1Mre94ZzJBEcdnDptb7vdJmODkq8IcNUc6uQJpKKBkK9nN0eg2kCllglabDHhkTDaubiqmB1h@vger.kernel.org
+X-Gm-Message-State: AFuF++mmAC6oXf4L4zIcgli9a4ZYkr3UYFtgb06WzE8duhZ+yIf4zmMk
+	L06Gu9plrTMCWQA8HOuEx97aqntDFhNY4kG9hK7ZjH61Y2sNm17264nNqGq4VgR2eQs=
+X-Gm-Gg: AYBFou2zIdfcI4HIHZi7yvHwWxhcHCxkiFVI4FOTdsO2kh3cD/HHlHxal5Co64oBU8+
+	niOEspyeYGOy8XA1pswCkjdFOuzzhN/OUaRgmvX7PtgXsvwnwPBJrx4X7WO15lsO1hTQ9VEQJ0u
+	uQMjj2mZegQRegPKHlQl7Jp9RGCNcxxBHShAhdIIXfmM9LVq8zAPu6J5Lo+X0Z8YwlI2yLAW7pm
+	3jjOIlROpE0meMKiUNd66XCjM85f6MLJX78R1t8r6++bfw3BCRow0PASZJ/bqzjJvlHOuLLKyU8
+	YEjaGpHUlgi9hCEV32HbERIA5IZzDmEngBrTmLJ1Mpc9rbwsp803su1HFMqn09WdvCAubTJ8MO5
+	WZQ8gQ0VYaNAZOEJc8BSzSLotwSY2PWL0NS7No4fEp01qRgvjMAgWx1zl8PkKourivtW7Wv/dD9
+	6YxoGhtouFsKS5oHlPaGl2VutJZVvb1T4aQd4FObJEmXHnPXIF65RcNRP9hsGfNJV5kTA7HzGvy
+	mL9Dp082w==
+X-Received: by 2002:a17:90b:50c6:b0:398:9be6:f997 with SMTP id 98e67ed59e1d1-39d70c0a87bmr7025034a91.22.1789007518413;
+        Wed, 09 Sep 2026 19:31:58 -0700 (PDT)
+Received: from sw08.internal.sifive.com ([4.53.31.132])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-3339befe870sm53182833eec.30.2026.09.09.19.31.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Sep 2026 19:31:58 -0700 (PDT)
+From: Nia Su <nia.su@sifive.com>
+Date: Wed, 09 Sep 2026 19:31:52 -0700
+Subject: [PATCH v2] perf evlist: Don't restrict uncore events to PMU CPUs
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 5/6] perf tools: Show memory region in perf-script
- subcommand
-To: Thomas Falcon <thomas.falcon@intel.com>,
- Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
-References: <20260909160218.174928-1-thomas.falcon@intel.com>
- <20260909160218.174928-6-thomas.falcon@intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260909160218.174928-6-thomas.falcon@intel.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20260909-perf-evlist-uncore-cpu-b4-v2-1-dc673a1f4592@sifive.com>
+X-B4-Tracking: v=1; b=H4sIAJcWomoC/42NQQ6CMBBFr0Jm7ZhpUxBdcQ/DAupUJlHatNJoC
+ He3cgKX7yfv/RUSR+EEl2qFyFmS+LmAPlRgp2G+M8qtMGjSDZ3JYODokPND0guX2frIaMOCo0G
+ j2sGRUyfbEhQ/RHby3tvXvvBUFB8/+1VWv/WfalaosCEz1rUlXTN3SZxkPlr/hH7bti8/SmLyw
+ wAAAA==
+X-Change-ID: 20260904-perf-evlist-uncore-cpu-b4-418af0f17c80
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>, 
+ Thomas Falcon <thomas.falcon@intel.com>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Nia Su <nia.su@sifive.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4530; i=nia.su@sifive.com;
+ h=from:subject:message-id; bh=AkUhW63lsYMS1kn2/ZT+v+cv8lVWg8USKa64IK7rGuY=;
+ b=owEBbQKS/ZANAwAIAYihNJa3+YfgAcsmYgBqohadwtzTzZ7VX3HqvgjOBc8pQ/pv0eCJZeMrN
+ 6YAgCXo0e6JAjMEAAEIAB0WIQThGl/T4FqBBU9NhIeIoTSWt/mH4AUCaqIWnQAKCRCIoTSWt/mH
+ 4O9ZD/9zg4a2XdARP7Iv7FT/IBnjSLxzaLbby9d7blxD3sC7HSTyz9Q4fs4TjTR8lveZTvoxTDg
+ L36+YuIYGF3W9xQ0h3hM1iZhkiBOxx5cWHapm5Jnnb6tfKfF+C6ettompYCUfux00u7a7Hc4GbO
+ uJcglld0UohZXLALHbzTqaQ31kPJS61vmbdY8QoMvp1G1fEgwzaY2wu/rIwX5zLG5hFBuonwoNt
+ rOovOhawe0IyEB/o6Yr/AyDEpm5OeJkXR44P6Yzy4lz9cixSEksfNbSEOGMh3jADoHRPSk4NkjM
+ j2utwN3PpXbWKQhGRyihgaoEslt/Atzgnxmd9clozf18xYD6hefTvZA9C5kil78P+1nEHyfVjc3
+ taZVw+82LEjEHwsv5seIeMpPEuH2DKjipX1wZx8VQdqvhown5g0sNZrSq8R1cK2L+w5s7yrqNP7
+ yyOGVe9WUoaytljgRneklknjiIgxDlf6dhexJnS1lqCIkdKlRHtwE+k4BXdhxzzoXjFVDyDZrIF
+ FC9AaJ7J5gjPZ7EDuIuXLe9uiM9zNj3U1WrvSBjx8C0hCjdvZlNlbpWINlRkXu6ar2e1APFaCri
+ WQq9HVVxhB6VyZOFbygoo7iTNjbMjlQ/ZjXdQz2EL0Fq8rLNLhFt+PBoXdOYMjfk21u79Q9NFXi
+ ELneAByZ+sH1bag==
+X-Developer-Key: i=nia.su@sifive.com; a=openpgp;
+ fpr=55235C875092ACC578EFCE6CD1699E646B29B1AF
 
+The PMU CPU map has different semantics for core and uncore PMUs.
 
-On 9/10/2026 12:02 AM, Thomas Falcon wrote:
-> From: Dapeng Mi <dapeng1.mi@linux.intel.com>
->
-> Show the memory region in perf-script subcommand. Memory region is found
-> in the mem_region field of the memory information data source. This
-> field was included with the introduction of support for the Off-module
-> Response facility (OMR) [1] in Intel's Diamond Rapids and Nova Lake
-> Architectures.
->
-> An example of perf-script output with the new memory region field is shown
-> below:
->
-> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2ec
-> random    2411a68201042 |OP LOAD|LVL RAM hit|SNP Hit|TLB L1 or L2 hit|LCK No|BLK  N/A|Region  Mem-1                          561de7f8910a
-> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
-> random      20e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  Data|Region  N/A                          7f32ae64a2d0
-> random      20e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  Data|Region  N/A                          7f32ae64a2d0
-> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2ec
-> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
-> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
-> random    2411a68201042 |OP LOAD|LVL RAM hit|SNP Hit|TLB L1 or L2 hit|LCK No|BLK  N/A|Region  Mem-1                          561de7f8910a
-> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2ec
-> random      10e6a100042 |OP LOAD|LVL L0 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A|Region  N/A                           7f32ae64a2d0
->
-> [1]: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
->
-> Assisted-by: Sashiko:gemini-3.1-pro-preview
-> Assisted-by: GitHub-Copilot:claude-opus-4-8
-> Reviewed-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+For core PMUs, pmu_cpus contains the CPUs on which the event can be
+opened. Intersect the user-requested CPU map with the PMU CPU map to
+reject CPUs unsupported by the PMU.
 
-Add your "Co-developed-by" tag here. Thanks.
+For uncore PMUs, pmu_cpus is read from the PMU's cpumask sysfs attribute,
+which lists the default CPU to open the event on per socket/die, not the
+set of CPUs it can only be opened on. The user-requested CPU may override
+these defaults, and the driver can redirect the event to the appropriate
+control CPU.
 
+Currently, __perf_evlist__propagate_maps() intersects the user-requested
+CPU map with pmu_cpus for all PMUs. If the user-requested CPU is not in
+pmu_cpus, the intersection becomes empty and the evsel is removed before
+perf_event_open() is called.
 
-> Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
-> ---
-> v4: Drop the global show-region flag; pass perf_session to
->     perf_script__meminfo_scnprintf() and gate the Region field
->     on the feature bit, with a pipe-mode fallback
->
-> v3: make memory region reporting conditional on feature bit
-> ---
->  tools/perf/builtin-script.c                   | 13 +--
->  tools/perf/util/mem-events.c                  | 86 ++++++++++++++++++-
->  tools/perf/util/mem-events.h                  |  4 +-
->  .../scripting-engines/trace-event-python.c    |  5 +-
->  4 files changed, 98 insertions(+), 10 deletions(-)
->
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index ad8ca08ceb5f..c7454155038d 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -2078,11 +2078,12 @@ static int evlist__max_name_len(struct evlist *evlist)
->  	return max;
->  }
->  
-> -static int data_src__fprintf(u64 data_src, FILE *fp)
-> +static int data_src__fprintf(struct perf_session *session,
-> +			     u64 data_src, FILE *fp)
->  {
->  	struct mem_info *mi = mem_info__new();
-> -	char decode[100];
-> -	char out[100];
-> +	char decode[200];
-> +	char out[200];
->  	static int maxlen;
->  	int len;
->  
-> @@ -2090,10 +2091,10 @@ static int data_src__fprintf(u64 data_src, FILE *fp)
->  		return -ENOMEM;
->  
->  	mem_info__data_src(mi)->val = data_src;
-> -	perf_script__meminfo_scnprintf(decode, 100, mi);
-> +	perf_script__meminfo_scnprintf(decode, 200, mi, session);
->  	mem_info__put(mi);
->  
-> -	len = scnprintf(out, 100, "%16" PRIx64 " %s", data_src, decode);
-> +	len = scnprintf(out, 200, "%16" PRIx64 " %s", data_src, decode);
->  	if (maxlen < len)
->  		maxlen = len;
->  
-> @@ -2487,7 +2488,7 @@ static void process_event(struct perf_script *script,
->  		perf_sample__fprintf_addr(sample, thread, evsel, fp);
->  
->  	if (PRINT_FIELD(DATA_SRC))
-> -		data_src__fprintf(sample->data_src, fp);
-> +		data_src__fprintf(evsel__session(evsel), sample->data_src, fp);
->  
->  	if (PRINT_FIELD(WEIGHT))
->  		fprintf(fp, "%16" PRIu64, sample->weight);
-> diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
-> index 4fd48fd20055..8ce4996cad8d 100644
-> --- a/tools/perf/util/mem-events.c
-> +++ b/tools/perf/util/mem-events.c
-> @@ -604,8 +604,77 @@ int perf_mem__blk_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
->  	return l;
->  }
->  
-> -int perf_script__meminfo_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
-> +static int perf_mem__region_scnprintf(char *out, size_t sz, const struct mem_info *mem_info)
->  {
-> +	size_t l = 0;
-> +	u64 mem = PERF_MEM_REGION_NA;
-> +
-> +	sz -= 1; /* -1 for null termination */
-> +	out[0] = '\0';
-> +
-> +	if (mem_info)
-> +		mem = mem_info__const_data_src(mem_info)->mem_region;
-> +
-> +	switch (mem) {
-> +	case PERF_MEM_REGION_NA:
-> +	case PERF_MEM_REGION_RSVD:
-> +		l += scnprintf(out + l, sz - l, "N/A");
-> +		break;
-> +	case PERF_MEM_REGION_L_SHARE:
-> +		l += scnprintf(out + l, sz - l, "Local-shared-cache");
-> +		break;
-> +	case PERF_MEM_REGION_L_NON_SHARE:
-> +		l += scnprintf(out + l, sz - l, "Local-non-shared-cache");
-> +		break;
-> +	case PERF_MEM_REGION_O_IO:
-> +		l += scnprintf(out + l, sz - l, "Other-IO");
-> +		break;
-> +	case PERF_MEM_REGION_O_SHARE:
-> +		l += scnprintf(out + l, sz - l, "Other-shared-cache");
-> +		break;
-> +	case PERF_MEM_REGION_O_NON_SHARE:
-> +		l += scnprintf(out + l, sz - l, "Other-non-shared-cache");
-> +		break;
-> +	case PERF_MEM_REGION_MMIO:
-> +		l += scnprintf(out + l, sz - l, "MMIO");
-> +		break;
-> +	case PERF_MEM_REGION_MEM0:
-> +		l += scnprintf(out + l, sz - l, "Mem-0");
-> +		break;
-> +	case PERF_MEM_REGION_MEM1:
-> +		l += scnprintf(out + l, sz - l, "Mem-1");
-> +		break;
-> +	case PERF_MEM_REGION_MEM2:
-> +		l += scnprintf(out + l, sz - l, "Mem-2");
-> +		break;
-> +	case PERF_MEM_REGION_MEM3:
-> +		l += scnprintf(out + l, sz - l, "Mem-3");
-> +		break;
-> +	case PERF_MEM_REGION_MEM4:
-> +		l += scnprintf(out + l, sz - l, "Mem-4");
-> +		break;
-> +	case PERF_MEM_REGION_MEM5:
-> +		l += scnprintf(out + l, sz - l, "Mem-5");
-> +		break;
-> +	case PERF_MEM_REGION_MEM6:
-> +		l += scnprintf(out + l, sz - l, "Mem-6");
-> +		break;
-> +	case PERF_MEM_REGION_MEM7:
-> +		l += scnprintf(out + l, sz - l, "Mem-7");
-> +		break;
-> +	default:
-> +		l += scnprintf(out + l, sz - l, "N/A");
-> +		break;
-> +	}
-> +
-> +	return l;
-> +}
-> +
-> +int perf_script__meminfo_scnprintf(char *out, size_t sz,
-> +				   const struct mem_info *mem_info,
-> +				   struct perf_session *session)
-> +{
-> +	struct perf_env *env;
->  	int i = 0;
->  
->  	i += scnprintf(out, sz, "|OP ");
-> @@ -620,6 +689,21 @@ int perf_script__meminfo_scnprintf(char *out, size_t sz, const struct mem_info *
->  	i += perf_mem__lck_scnprintf(out + i, sz - i, mem_info);
->  	i += scnprintf(out + i, sz - i, "|BLK ");
->  	i += perf_mem__blk_scnprintf(out + i, sz - i, mem_info);
-> +	if (session) {
-> +		/*
-> +		 * In case the feature bits are not available, as in
-> +		 * pipe mode, fallback to checking for the existence of
-> +		 * memory ranges
-> +		 */
-> +		env = perf_session__env(session);
-> +		if ((env && session->data->is_pipe && env->nr_memory_ranges) ||
-> +		    perf_header__has_feat(&session->header,
-> +					  HEADER_MEMORY_RANGES)) {
-> +			i += scnprintf(out + i, sz - i, "|Region ");
-> +			i += perf_mem__region_scnprintf(out + i, sz - i,
-> +							mem_info);
-> +		}
-> +	}
->  
->  	return i;
->  }
-> diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
-> index daa22748f9fe..4ebb8109fc3c 100644
-> --- a/tools/perf/util/mem-events.h
-> +++ b/tools/perf/util/mem-events.h
-> @@ -4,6 +4,7 @@
->  
->  #include <stdbool.h>
->  #include <linux/types.h>
-> +#include "session.h"
->  
->  struct perf_mem_event {
->  	bool		supported;
-> @@ -47,7 +48,8 @@ int perf_mem__snp_scnprintf(char *out, size_t sz, const struct mem_info *mem_inf
->  int perf_mem__lck_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
->  int perf_mem__blk_scnprintf(char *out, size_t sz, const struct mem_info *mem_info);
->  
-> -int perf_script__meminfo_scnprintf(char *bf, size_t size, const struct mem_info *mem_info);
-> +int perf_script__meminfo_scnprintf(char *bf, size_t size, const struct mem_info *mem_info,
-> +				   struct perf_session *session);
->  
->  struct c2c_stats {
->  	u32	nr_entries;
-> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-> index 8f832ae316ca..e359fe529586 100644
-> --- a/tools/perf/util/scripting-engines/trace-event-python.c
-> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> @@ -694,8 +694,9 @@ static void set_sample_read_in_dict(PyObject *dict_sample, struct perf_sample *s
->  static void set_sample_datasrc_in_dict(PyObject *dict,
->  				      struct perf_sample *sample)
->  {
-> +	struct perf_session *session = evsel__session(sample->evsel);
->  	struct mem_info *mi = mem_info__new();
-> -	char decode[100];
-> +	char decode[200];
->  
->  	if (!mi)
->  		Py_FatalError("couldn't create mem-info");
-> @@ -704,7 +705,7 @@ static void set_sample_datasrc_in_dict(PyObject *dict,
->  			PyLong_FromUnsignedLongLong(sample->data_src));
->  
->  	mem_info__data_src(mi)->val = sample->data_src;
-> -	perf_script__meminfo_scnprintf(decode, 100, mi);
-> +	perf_script__meminfo_scnprintf(decode, 200, mi, session);
->  	mem_info__put(mi);
->  
->  	pydict_set_item_string_decref(dict, "datasrc_decode",
+Add evsel->is_pmu_uncore, set once from pmu->is_uncore at parse time,
+to skip the intersection for uncore PMUs. Core PMUs, and other
+non-core PMUs such as software events, breakpoints, or tracepoints,
+continue to be restricted to their PMU CPU map.
+
+Fixes: 811082e4b668 ("perf parse-events: Support user CPUs mixed with threads/processes")
+
+Assisted-by: Claude Sonnet 5
+Signed-off-by: Nia Su <nia.su@sifive.com>
+---
+Changes in v2:
+- Add a dedicated is_pmu_uncore flag instead of reusing requires_cpu,
+  since it more precisely represents whether the PMU is uncore.
+- Link to v1: https://lore.kernel.org/r/20260904-perf-evlist-uncore-cpu-b4-v1-1-604b55c025ee@sifive.com
+---
+ tools/lib/perf/evlist.c                 | 5 +++--
+ tools/lib/perf/include/internal/evsel.h | 2 ++
+ tools/perf/util/evsel.c                 | 1 +
+ tools/perf/util/parse-events.c          | 1 +
+ 4 files changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
+index 1f210dadd666ff818a23712ab95acaa659ccf8dc..c1c5b0684eedb7a6ab8f3df85f326fbd5ef809a2 100644
+--- a/tools/lib/perf/evlist.c
++++ b/tools/lib/perf/evlist.c
+@@ -79,8 +79,9 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
+ 		}
+ 	}
+ 
+-	/* Ensure cpus only references valid PMU CPUs. */
+-	if (!perf_cpu_map__has_any_cpu(evsel->cpus) &&
++	/* Ensure cpus only references valid PMU CPUs, except for uncore PMUs. */
++	if (!evsel->is_pmu_uncore &&
++	    !perf_cpu_map__has_any_cpu(evsel->cpus) &&
+ 	    !perf_cpu_map__is_subset(evsel->pmu_cpus, evsel->cpus)) {
+ 		struct perf_cpu_map *tmp = perf_cpu_map__intersect(evsel->pmu_cpus, evsel->cpus);
+ 
+diff --git a/tools/lib/perf/include/internal/evsel.h b/tools/lib/perf/include/internal/evsel.h
+index b988034f13710ec4d49d942d486c4b9afe21a1f0..35447bed0f9586b538dad40c223e70d50486c5f6 100644
+--- a/tools/lib/perf/include/internal/evsel.h
++++ b/tools/lib/perf/include/internal/evsel.h
+@@ -128,6 +128,8 @@ struct perf_evsel {
+ 	bool			 requires_cpu;
+ 	/** Is the PMU for the event a core one? Effects the handling of own_cpus. */
+ 	bool			 is_pmu_core;
++	/** Is the PMU for the event an uncore one? */
++	bool			 is_pmu_uncore;
+ 	/** Does the evsel on read on the first CPU index such as tool time events? */
+ 	bool			 reads_only_on_cpu_idx0;
+ 	int			 idx;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d4cb455f4a7d45ae2f9133709ff3248b54163ce0..5acec3f6345099ef9e46e81614b9df2595925b1c 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -551,6 +551,7 @@ struct evsel *evsel__clone(struct evsel *orig)
+ 	evsel->core.system_wide = orig->core.system_wide;
+ 	evsel->core.requires_cpu = orig->core.requires_cpu;
+ 	evsel->core.is_pmu_core = orig->core.is_pmu_core;
++	evsel->core.is_pmu_uncore = orig->core.is_pmu_uncore;
+ 
+ 	if (orig->name) {
+ 		evsel->name = strdup(orig->name);
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index cc7ad331a49f34536f66724370b8bb94ab65bacd..8302be207c1d6ecf8ae6fd67f54d66d08d50e01c 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -269,6 +269,7 @@ __add_event(struct list_head *list, int *idx,
+ 	evsel->core.pmu_cpus = pmu_cpus;
+ 	evsel->core.requires_cpu = pmu ? pmu->is_uncore : false;
+ 	evsel->core.is_pmu_core = is_pmu_core;
++	evsel->core.is_pmu_uncore = pmu ? pmu->is_uncore : false;
+ 	evsel->core.reads_only_on_cpu_idx0 = perf_pmu__reads_only_on_cpu_idx0(attr);
+ 	evsel->pmu = pmu;
+ 	evsel->alternate_hw_config = alternate_hw_config;
+
+---
+base-commit: 73e3f0710014fe6d4ed98cfc02292f6121db7558
+change-id: 20260904-perf-evlist-uncore-cpu-b4-418af0f17c80
+
+--
+
