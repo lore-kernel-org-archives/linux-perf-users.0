@@ -1,67 +1,67 @@
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4DF93C10B3
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 21:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5615D42900A
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 21:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789074770; cv=none; b=WKJpPsFT+YeryR4Xg+CxpmJjMMOFeXdfCdUoUM4Gm+Z/Kku4tOTJm3OvcnD0KvkIeDwQ0tGhsSGP7sawt8fhajC7xeynejsVWRiuNAL9Fgu7hpFOx5ccAISuMqro27J044kcaNf/AUOFACFoLYp0+h1ZVdTp4vlpXnADf7v5g5s=
+	t=1789074773; cv=none; b=TqPmR0EGn3kTNMWtzBuhrAiIDLuhNLQ/ocYPKrnGXxlgAcGw26mAhrPJ5yjGjJ2FjnB8l4U28GkFy6itEjpfXqBsjwLayq+9ojQtNEtfTSno+iKKnSBDdfPtBh/8PF20vjzZi9mfvfLg4qBnRX9tatgy1eS8hD2f2DnPYtihxt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789074770; c=relaxed/simple;
-	bh=/EzAoEUS2YE8bsBvoGE3Tm/8BjynJFrFkU9MDyxB9Zo=;
+	s=arc-20240116; t=1789074773; c=relaxed/simple;
+	bh=fJ+aO3P5RIRWxVwd58geKjoPWlLgqh9u4SLJ00UGSTc=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=WkwwVC6CBiWgD0gcU5ei4xbIPfx8dSI6CAN9xSID/dv3HVU2RSFdLzZZz/6rklbqPQ0lAP1ysl/6LaLxn4GDxGESHysWt1+PkbtwtkMmFbK5qELcC4NmA7WGpSadW2qdzBovTaqd7OQdMIhvFuIqlTzcQcKgs1phVZ7fHYbtcxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e4yspzZf; arc=none smtp.client-ip=209.85.216.69
+	 To:Content-Type; b=Yn4oTsOE+W21QAalT1LRXI2aUHAsxbunS6zsumC7Mo0P80cU0dpVfspm+8NQ5eZDXqzbO5IVbhw/X5Z3E4pAt2SXzGfteMLKsu6qHUsVDivvDjEoDaW0+2hqWuDB58N0fUfqeaa+9lnle5c7zzTtsOkvVS2JChD9zI/m/8mlVXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Jtl5+xMO; arc=none smtp.client-ip=209.85.216.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e4yspzZf"
-Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-39b6416441eso324985a91.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 14:12:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jtl5+xMO"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-39af92138f9so413045a91.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 14:12:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789074755; x=1789679555; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789074759; x=1789679559; darn=vger.kernel.org;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=Tr7m1319nZL5iERS06+kdvt+gsbg/YAeXusZ5Kgx2bw=;
-        b=e4yspzZfHIlNEPoOJtGJp+NTRzzz6b0aMqy3sSWTovQGomYSzyG1FV+WO0Nkstnb2o
-         4zgXUZT/PLqrCPvWQCMFVY94EqE9yrIQKh2AElnYhIPkPV0X05JDPq9adfrZLlnvx10N
-         J7keGd70FfUt7bMj0C9EYj6osJYywH5V7H8w/HCczKV8l/JWyehcf6xhDXNX7VlY7ykG
-         PxW6PAAHrUdNQ645hs+mGPUcKt0QnLXT3KQx0/3eq7nuJLtulfcQVeL7dhlatJWfmJbt
-         x7Np89RXdl1HV2verdDUUjdIV6Dt7ALbm80tllEp/WWfTieW+hCmhM4NXZ76zFdTxZhY
-         iICw==
+        bh=eu4tcgV+KEQyHj+vflBVWyTo2dzh8uAlVTzpcsVpWHo=;
+        b=Jtl5+xMOAJYUwq+0arPrRc/927pVR5r10tuKmd3e7qVi4awbE0GSuSepw9knweHJwR
+         pi+IHTd6rUdbW0zZfT/bb7oxOwwCNWoQ/Jf//U17oCVCRIRXnXtdA7oO7nzjQGBkxR+n
+         jmrjP7Et5jrkyGJTKC4FRZF6Rhc6IkrNxTMU9PTJxcOr49LJkYUwRK3rhjJNIIeG8HZ/
+         TcajIpYZShZBplNt690W7jlSBey+/rtlUQ5YXY/DiWJIwKXxUJHxUp1QCFOz4S/dve6E
+         L2kHUZGTbNzC7lfmZU1fOkhhsOozbUHBV10ocOsmugrLeR9Lp0wmTJoTdxNESQUBG5Wg
+         d6VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789074755; x=1789679555;
+        d=1e100.net; s=20251104; t=1789074759; x=1789679559;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=Tr7m1319nZL5iERS06+kdvt+gsbg/YAeXusZ5Kgx2bw=;
-        b=sQ/S7qtajHKVzKOO7voSALPt7BdBLACX7EO+b6m4VJivtRlUHyhUn4/k5J3Gx2Jn54
-         07DsX+vA+zboF0Dy0FTFqcJRia4UaQVWmsdK2yMWarOfbPEHbMS5WtbTe2wA7r87hGZj
-         /KPxK08NJU5+E5RjkyMZ8OI0emiEqTIgfiuFQtjEhYL2q72WkayWrrdTyhbucOjG2X0w
-         nDCjubvN4yVIf/LMcTGRX0IYXH2ehwvY49opPebVFZQwTzIeipjLbJeRcRWOo1DKJoLf
-         p1Tg7ISIVE5Iz/uCqqcDTlanxsinayJ82PBTX64/rrJI8Ft0bGsb8TBdbE4drGfv3IXx
-         R7oA==
-X-Forwarded-Encrypted: i=1; AKwUvBymZRTGbqpC/j96TiawLFL2KiEgy99nH4rctUbKmfP2g6AEfc3EfLicxSa5NqUR6sSejKqdPCTtXHxm997HxROp@vger.kernel.org
-X-Gm-Message-State: AFuF++lGCK0tuJrTxWt7ZtHV2ZZz69/7VmADAO9mJD5ql8uJkiEqOQew
-	xeKRdgAEEj91YnC3B+pCBvgh5og/O9CuLRrsG+fJXtu15elYEcD4lG1SS0wPxoAeHiiH0hgTf5n
-	SQV21L0bWNw==
-X-Received: from dld34.prod.google.com ([2002:a05:7022:322:b0:13b:2a9e:ffc])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2741:b0:393:19a3:4f1
- with SMTP id 98e67ed59e1d1-39d9bdbb0e4mr920398a91.6.1789074754460; Thu, 10
- Sep 2026 14:12:34 -0700 (PDT)
-Date: Thu, 10 Sep 2026 14:12:17 -0700
-In-Reply-To: <20260910175634.3014018-1-irogers@google.com>
+        bh=eu4tcgV+KEQyHj+vflBVWyTo2dzh8uAlVTzpcsVpWHo=;
+        b=acFc5Sz+E/AIRWcmik0p3X0JRIKFl5IQ4vneTojHGHvZxSGJfvrm4wYiB0HDubZI8c
+         z1wPRhA82S8jyz6Vb2HtQYtA1zOH+ouj9lXW3SEgiOALc0M2RqQmmcN2YoBBDYeLqY5F
+         5h4vwLAkcODtuWVLtTpIDkHSZfWLU0WKSJcjfiPsalt8CKp1UEkdWYm7hUtGRrFtPmGP
+         DJxzmnAu/NZDNT3x6Jikw8fp28DNCToEvpJ/7azgCCBxeyhsDirkqQ5+C2cP70AbKZEw
+         cW/xHgFBQrOEaCXASAyP6G/sgoNgikybfY1lcN64j97dlxicR7WvnYY54neQ8am6xnfe
+         NpPA==
+X-Forwarded-Encrypted: i=1; AKwUvByoR6jNz/oyauFw4posiHoBmN2zEJ1xfjBp2pCQSc4dNnjdaP4vjBKgJz+qVlZeOshpU1O6XSfl5+koAYXMHC5h@vger.kernel.org
+X-Gm-Message-State: AFuF++ldHXquAXniU9vjStfoxnXyMTy4t6f0bwqXZBsitXyH6VgPS3+3
+	9q0fzyoamb68dXPKQyo6m7a9wXars9FEVyB+ysJzBwm4EHPu8xdGVmAyYgTIOc6u4aS4uCkRIBc
+	YGqSZ0wBxig==
+X-Received: from dlbuy19.prod.google.com ([2002:a05:7022:1e13:b0:142:d9a6:93e3])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:4d0d:b0:38e:6d55:b1a6
+ with SMTP id 98e67ed59e1d1-39d97ea0248mr1131117a91.3.1789074759098; Thu, 10
+ Sep 2026 14:12:39 -0700 (PDT)
+Date: Thu, 10 Sep 2026 14:12:19 -0700
+In-Reply-To: <20260910211221.3154261-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260910175634.3014018-1-irogers@google.com>
+References: <20260910175634.3014018-1-irogers@google.com> <20260910211221.3154261-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1007.g17ff1f9808-goog
-Message-ID: <20260910211221.3154261-1-irogers@google.com>
-Subject: [PATCH v3 0/3] perf header: Fix memory corruption and unnecessary warning
+Message-ID: <20260910211221.3154261-3-irogers@google.com>
+Subject: [PATCH v3 2/3] perf header: Fix potential memory corruption in cpu_cache_level__read
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -70,22 +70,62 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Some minor fixes that have shown up during testing.
+strim may advance the pointer assigned to cache->size which causes
+later frees to crash. Fix by performing the strim and then memmove-ing
+the potentially shifted string back over the original string. The bug
+was introduced by the transition from rtrim to strim, as rtrim
+wouldn't move on the left.
 
-v3: Fix Sashiko include nit. Accidentally posted wrong 1st patch in v2 (sorry :-( )
-v2: Fix missing newling for pr_warning:
-https://lore.kernel.org/linux-perf-users/20260910175634.3014018-1-irogers@google.com/
-v1:
-https://lore.kernel.org/linux-perf-users/20260910173715.2996571-1-irogers@google.com/
+Fixes: 13c230ab6e56 ("perf tools: Ditch rtrim(), use strim() from tools/lib")
+Signed-off-by: Ian Rogers <irogers@google.com>
+Assisted-by: Antigravity:gemini-3.1-pro
+---
+ tools/perf/util/header.c | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
 
-Ian Rogers (3):
-  perf header: Fix HEADER_COMPRESSED validation for comp_mmap_len
-  perf header: Fix potential memory corruption in cpu_cache_level__read
-  perf header: Transition WARN macros to debug.h equivalents
-
- tools/perf/util/header.c | 122 ++++++++++++++++++++++++---------------
- 1 file changed, 74 insertions(+), 48 deletions(-)
-
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 974ce1c926cd..0a4236fc0293 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -1268,7 +1268,11 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
+ 		return -1;
+ 
+ 	cache->type[len] = 0;
+-	cache->type = strim(cache->type);
++	{
++		char *trimmed = strim(cache->type);
++
++		memmove(cache->type, trimmed, strlen(trimmed) + 1);
++	}
+ 
+ 	scnprintf(file, PATH_MAX, "%s/size", path);
+ 	if (sysfs__read_str(file, &cache->size, &len)) {
+@@ -1277,7 +1281,11 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
+ 	}
+ 
+ 	cache->size[len] = 0;
+-	cache->size = strim(cache->size);
++	{
++		char *trimmed = strim(cache->size);
++
++		memmove(cache->size, trimmed, strlen(trimmed) + 1);
++	}
+ 
+ 	scnprintf(file, PATH_MAX, "%s/shared_cpu_list", path);
+ 	if (sysfs__read_str(file, &cache->map, &len)) {
+@@ -1287,7 +1295,11 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
+ 	}
+ 
+ 	cache->map[len] = 0;
+-	cache->map = strim(cache->map);
++	{
++		char *trimmed = strim(cache->map);
++
++		memmove(cache->map, trimmed, strlen(trimmed) + 1);
++	}
+ 	return 0;
+ }
+ 
 -- 
 2.55.0.1007.g17ff1f9808-goog
 
