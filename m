@@ -1,30 +1,33 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE493DB324
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 09:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560423D647F;
+	Thu, 10 Sep 2026 09:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789032020; cv=none; b=gxYabNZ/YqBUSrRSdQ3Y6/vUEzsSRYQgft4x7OHZhbMli/xI5AcfaLAqgPibczo7MeMQUFauLR7AASyPiIdIhv7kSN3FGxEoPd6KnQ5ku5tN1IqLmBM5SflOcg0QGH0OeGjmoNbnPw+w0f+K1XezsRWWi5F0FaGTI2bOEW6UDGE=
+	t=1789032055; cv=none; b=a1XSeaq1hm/kGVAXpljuAiABQk+l32RWM4ImKjHr0i3zVqh5aXFBUEYS5j4WZBgXUZmszZG2PD0EibThPPaB1rL8BMLbf6IjI1pTxVXRHOmHSrKOxU3qdlQjuwaZEM5dlkfNHFzmzKTtdAE6Dqg5wNXqDul61Dyh7T/b+9LD74M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789032020; c=relaxed/simple;
-	bh=4SCZc+ws4E3aN280uV+2yBeaWm4QOP9aLcyCPUU+MxM=;
+	s=arc-20240116; t=1789032055; c=relaxed/simple;
+	bh=sxGSHFaMLv5929K2Bj8xxgL+zdaOHrO/8pFXWlpJNjk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fMPaItLtMW64NmY0g8/aWIqlRjoSp1ip25dzwQkPlO8Z+piYwpo6fFCo1lLDjTjQPLZ+/78FcpZHTaJwFo/poe1rzy6ks2FOMQ7iEcv6KJ0HSx9+0m7iAG1rp7kxfjNOQyE/SuPuna01et34lvIVsQV1CKW0ujcoM1S4cpwoIl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hgXDg4bJHzYQwm4
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 17:19:15 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 5309540574
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 17:20:10 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP3 (Coremail) with UTF8SMTPA id _Ch0CgCnGbdJdqJqtP+7BQ--.2389S2;
-	Thu, 10 Sep 2026 17:20:10 +0800 (CST)
-Message-ID: <75561a39-3335-48bc-baed-21b8f64308c4@huaweicloud.com>
-Date: Thu, 10 Sep 2026 17:20:09 +0800
+	 In-Reply-To:Content-Type; b=ChVxG4oiWxSLM1uvSpdQAn0z3ZFV0WC1s4KuE1UoL59/WMWrcNghEFys9Uy5/pEUNy2Mt7dQDTAq72091a8BDJgpdnDja3/M1qb2bPOgtW1iiQkQgrT7NKoYuq4C6c9tN1Ext6k7Gcix9C+JqTx9l2kA5JAn7OZjwoEHdGUANdA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KQrpunMh; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KQrpunMh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74C0C1F00893;
+	Thu, 10 Sep 2026 09:20:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789032051;
+	bh=cIGoZZbLsvzwNoMcLdGV92/uLFTkdg0Og9xuN7gX7Y4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=KQrpunMhg71zv91/iq8EhwRVmd4Wn/mXcWTkKWMXVJ3a8uBWkN+6y7UTW3ueWL0go
+	 W9KFt2yTgfok9A1utYOK2fcgq+d99Qx9OCbUCDw/+Qna/zSC3R15DYJBnuku+O0kcG
+	 HYmg3DM2T2T86H77KAIrKOc4wKyGkEebuJpzY4bWRPB3ejNPcD/9K+U6F+99Gv4i4V
+	 0Eu1aZwz4LUuJ7EqS+2zzeJ+OdMpBbpGT2GniGs7VkHM6VboDdRrXVT0FBMO9aOylg
+	 Wd5J+QGk2jdBVa4E/KCCk+ijg+3XHmAHxCkrsqGN7mFvcowjE6bJpvLEEUc8mngRl4
+	 EXMzBZjCkQZqw==
+Message-ID: <36a64b34-bb69-4352-9e84-c31d0793b6a4@kernel.org>
+Date: Thu, 10 Sep 2026 10:20:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -32,125 +35,84 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 13/26] perf annotate-arm64: Enable instruction tracking
- support
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <cover.1788872630.git.wutengda@huaweicloud.com>
- <8ff5cfde0aad3d585b34f177fd87e8ec57ba4fa1.1788872630.git.wutengda@huaweicloud.com>
- <20260908131825.2DD131F00A3D@smtp.kernel.org>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260908131825.2DD131F00A3D@smtp.kernel.org>
+Subject: Re: [PATCH v2 3/4] bpftool: Add explicitly sequenced -lzstd to libbfd
+ feature fallback
+To: Ian Rogers <irogers@google.com>, Daniel Borkmann <daniel@iogearbox.net>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ Emil Tsalapatis <emil@etsalapatis.com>,
+ Ihor Solodrai <ihor.solodrai@linux.dev>, Josh Poimboeuf
+ <jpoimboe@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>, Nick Terrell <terrelln@fb.com>,
+ David Sterba <dsterba@suse.com>, Tomas Glozar <tglozar@redhat.com>,
+ Costa Shulyupin <costa.shul@redhat.com>,
+ Michael Jeanson <mjeanson@efficios.com>,
+ Dmitrii Dolgov <9erthalion6@gmail.com>, Leo Yan <leo.yan@arm.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: bpf@vger.kernel.org
+References: <20260909204122.1993010-1-irogers@google.com>
+ <20260909204122.1993010-4-irogers@google.com>
+From: Quentin Monnet <qmo@kernel.org>
+Content-Language: en-GB
+In-Reply-To: <20260909204122.1993010-4-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgCnGbdJdqJqtP+7BQ--.2389S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxuryDtr4xAr1fCF1DZr4UCFg_yoWrXFWDpa
-	y7u3y3JF1UJr4jywnxXa18XFySgr13Xay3Crs8tr1SyFs29r93tF4DKFWYqay7Ar1kCw4U
-	Zw4qqFWDAws7C3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUgqb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
-	Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-	AY17CE14v26r1Y6r17MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAI
-	cVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
-	IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVj
-	vjDU0xZFpf9x07UE-erUUUUU=
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+
+On 09/09/2026 21:41, Ian Rogers wrote:
+> Distributions like Fedora currently ship a statically compiled binutils
+> libbfd that natively depends on zstd to decompress sections (e.g.
+> undefined reference to 'ZSTD_decompress').
+> 
+> Extend the newly supplemented libbfd-liberty-z-zstd feature probe into
+> bpftool's Makefile so it can natively build against static binutils
+> distributions.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Assisted-by: Antigravity:gemini-3.1-pro
+> ---
+>  tools/bpf/bpftool/Makefile | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/tools/bpf/bpftool/Makefile b/tools/bpf/bpftool/Makefile
+> index b0f7168e7943..1cac4508eb0c 100644
+> --- a/tools/bpf/bpftool/Makefile
+> +++ b/tools/bpf/bpftool/Makefile
+> @@ -125,6 +125,7 @@ FEATURE_TESTS += libcap
+>  FEATURE_TESTS += libbfd
+>  FEATURE_TESTS += libbfd-liberty
+>  FEATURE_TESTS += libbfd-liberty-z
+> +FEATURE_TESTS += libbfd-liberty-z-zstd
+>  FEATURE_TESTS += disassembler-four-args
+>  FEATURE_TESTS += disassembler-init-styled
+>  FEATURE_TESTS += libelf-zstd
+> @@ -135,6 +136,7 @@ FEATURE_DISPLAY += libcap
+>  FEATURE_DISPLAY += libbfd
+>  FEATURE_DISPLAY += libbfd-liberty
+>  FEATURE_DISPLAY += libbfd-liberty-z
+> +FEATURE_DISPLAY += libbfd-liberty-z-zstd
+>  endif
+>  
+>  check_feat := 1
+> @@ -201,6 +203,8 @@ else
+>      LIBS += -lbfd -ldl -lopcodes -liberty
+>    else ifeq ($(feature-libbfd-liberty-z),1)
+>      LIBS += -lbfd -ldl -lopcodes -liberty -lz
+> +  else ifeq ($(feature-libbfd-liberty-z-zstd),1)
+> +    LIBS += -lbfd -ldl -lopcodes -liberty -lz -lzstd
+>    endif
+>  
+>    # If one of the above feature combinations is set, we support libbfd
 
 
+Hi Ian, thanks for this!
 
-On 2026/9/8 21:18, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] Incomplete initialization of ARM64 caller-saved registers in init_type_state() misses x30 (Link Register) and x18. According to the ARM64 AAPCS64 ABI, x30 is intrinsically caller-saved (it is clobbered by function calls to store the return address), and x18 is also a temporary/caller-saved register (unless strictly reserved by a platform ABI). Because these registers are omitted during initialization, their `caller_saved` flags remain `false`. Consequently, their data type states are not invalidated across function calls, allowing stale type info to erroneously propagate.
-> --
-> 
-> commit 7f29650747bf4bd656328dd491ef0f827ab60d8c
-> Author: Tengda Wu <wutengda@huaweicloud.com>
-> 
-> perf annotate-arm64: Enable instruction tracking support
-> 
-> Enable basic instruction tracking for arm64 by implementing three
-> essential functions in the find_data_type_block() call path. This
-> allows arm64 to support basic variable type inference during
-> instruction tracking.
-> 
->> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
->> index d8a5904359b1a..8fda4d4d68887 100644
->> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
->> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-> [ ... ]
->> @@ -442,6 +446,77 @@ static void extract_op_location_arm64(const struct arch *arch,
-> [ ... ]
->> +	if (ins__is_call(&dl->ins)) {
->> +		struct symbol *func = dl->ops.target.sym;
->> +		const char *call_name;
->> +		u64 call_addr;
->> +
->> +		call_name = func ? func->name : dl->ops.target.name;
->> +		pr_debug_dtp("call [%x] %s\n", insn_offset, call_name ?: "<unknown>");
->> +
->> +		/* Invalidate caller-saved registers after call */
->> +		call_addr = map__rip_2objdump(dloc->ms->map,
->> +					      dloc->ms->sym->start + dl->al.offset);
->> +		for (unsigned int i = 0; i < ARRAY_SIZE(state->regs); i++) {
->> +			struct type_state_reg *reg = &state->regs[i];
->> +
->> +			if (!reg->caller_saved)
->> +				continue;
-> 
-> [Severity: Medium]
-> Because x30 and x18 are omitted from being marked as caller-saved during type
-> state initialization, their caller_saved flags will be false.
-> 
-> Are these registers unintentionally skipped here, preventing them from being
-> invalidated across function calls?
-> 
->> +			/* Keep register valid within DWARF location lifetime */
->> +			if (reg->lifetime_active && call_addr < reg->lifetime_end)
->> +				continue;
->> +			invalidate_reg_state(reg);
->> +		}
->> +		return;
->> +	}
-> [ ... ]
->> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
->> index 104b80d471f1b..c51b20a7af9b6 100644
->> --- a/tools/perf/util/annotate-data.c
->> +++ b/tools/perf/util/annotate-data.c
-> [ ... ]
->> @@ -178,6 +179,13 @@ static void init_type_state(struct type_state *state, const struct arch *arch)
->>  		state->regs[11].caller_saved = true;
->>  		state->ret_reg = 0;
->>  		state->stack_reg = X86_REG_SP;
->> +	} else if (arch__is_arm64(arch)) {
->> +		int i;
->> +
->> +		for (i = 0; i < 18; i++)
->> +			state->regs[i].caller_saved = true;
-> 
-> [Severity: Medium]
-> According to the ARM64 AAPCS64 ABI, x30 (Link Register) is intrinsically
-> caller-saved since it is clobbered by function calls to store the return
-> address.
-> 
-> x18 is also typically a temporary/caller-saved register unless strictly reserved
-> by a platform ABI.
-> 
-> This loop halts at 17, failing to set the caller_saved flag for x18 and x30.
-> 
-> Could this omission allow stale data type information for these registers to
-> erroneously propagate across function calls?
-> 
+Just checking: my understanding is that if libbfd depends on libzstd,
+then it always also depends on zlib, so we never need to check some
+variant such as "feature-libbfd-liberty-zstd" (without the "-z"), is
+this correct?
 
-x18 does need to be set as caller-saved, but x30 is not really necessary, because
-it generally serves as LR and is not used to carry data type information.
-So I'm going to add only x18.
-
-Thanks,
-Tengda
-
+Quentin
