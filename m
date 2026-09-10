@@ -1,120 +1,113 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78532475335;
-	Thu, 10 Sep 2026 12:37:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from cvsmtppost11.nm.naver.com (cvsmtppost11.nm.naver.com [114.111.35.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE28488D83
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 12:48:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.111.35.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789043854; cv=none; b=ntxV8Znpe48MI8tHlOkTVqOGyoZoGnuUUmBQoVb4yd+QH4Eicj3rw6/gpVxvFdmOVPppJUfQYJIQSm9emHsKYMGVMk305+LpIY0b5Avu/U5z0+j18CeZFX0Jzyh6gYhvi27qyB3eqXaAz1LTG6k558CyGAVhbqKYWQgPYH9SzmM=
+	t=1789044536; cv=none; b=fSY1xVC7imAv2zNznQ6JAn4UmbNetuto7XYkUcNyRhJqkBXRwkL5z9K6DHkFK6FqISHj2Ay5zz0p3lZx4vZjVAmFoNR4xzWPor0a2bkGoxjwX/fsT5ovulP8FPS+JludTkE0iQ9Z33rFIXaA10ZV1SRcLFEU/iOM6oTeyrYdSyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789043854; c=relaxed/simple;
-	bh=AZwDqHdBjqPCn/h9+VhDsgEtjNFCuMURPnIg3aiP66c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MCLi2FftkCtXi9SpO98jPWUDG0pYXtgNxhjbDn4yL58+mrHgKOdp7OMipO2WIaUAhsSc30IvuowMpF4UiuzS+JwC63B7C5WG2l5503lZB2OtvHNtAeNXC02096NpXWv8yPzj1ptMIccaeglUnu7LWnwtmkayY8DRr+hxLBRl5nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=glwg5KbI; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	s=arc-20240116; t=1789044536; c=relaxed/simple;
+	bh=ll8IJRv9xC+9BKu3dEi/5XmfutcNvkYSL2nndzITnTw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gxl4xPz4uW6z68+33dli1m2D9UjGS86VlJJXPpYB+qMeDw511uAZ3mS3CudZ2nxEtzlJDqlK4VkxWOhsPKfPGUfrkGJvOS4cUJwkXD/TMmhGhQWXGPSk/mfmegvBDp86uQ4+5eDf1ksyR+M6PXjkKw8TWJGJVgVmpZ4MHRUFsJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=naver.com; spf=pass smtp.mailfrom=naver.com; dkim=pass (2048-bit key) header.d=naver.com header.i=@naver.com header.b=rwkhesaN; arc=none smtp.client-ip=114.111.35.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=naver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=naver.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="glwg5KbI"
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4596F153B;
-	Thu, 10 Sep 2026 05:37:28 -0700 (PDT)
-Received: from [10.2.212.23] (e121345-lin.cambridge.arm.com [10.2.212.23])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 034B03F7B4;
-	Thu, 10 Sep 2026 05:37:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1789043851; bh=AZwDqHdBjqPCn/h9+VhDsgEtjNFCuMURPnIg3aiP66c=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=glwg5KbI4A+6EtBbJdGrMmvmGDTyxTKM5xkPl2GjCRh4g6oOCojo0tG6Nvp/BsP5W
-	 ppBt0z61poix3LIUOZVeyM697EZsNnDjwOJ4hujDmg4WZboVhhieMDl1ggKOj7h5At
-	 vee/0D7kRuE8CZtW0DhOab3JKWwY/k4PBXOl3d3o=
-Message-ID: <fca383e2-56bf-4c93-bd07-bc54a79235a3@arm.com>
-Date: Thu, 10 Sep 2026 13:37:29 +0100
+	dkim=pass (2048-bit key) header.d=naver.com header.i=@naver.com header.b="rwkhesaN"
+Received: from cvsendbo020.nm ([10.112.24.40])
+  by cvsmtppost11.nm.naver.com with ESMTP id 3ginMbKDQrmt0IsuHXy0BQ
+  for <linux-perf-users@vger.kernel.org>;
+  Thu, 10 Sep 2026 12:38:43 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=naver.com; s=s20171208;
+	t=1789043923; bh=ll8IJRv9xC+9BKu3dEi/5XmfutcNvkYSL2nndzITnTw=;
+	h=From:To:Subject:Date:Message-ID:From:Subject:Feedback-ID:
+	 X-Works-Security;
+	b=rwkhesaNWKTW2Q+zLikDi2u1Jdyo+pqqubFC4Oom1YH10j0CoOwDs/mkp+eCMypJl
+	 FwRqshAnJWjvQ2I/ZPfnkJTtxyTq24irit1e/jmKBEF3K2Pz3o+WjYiR2M2mHvsX0D
+	 0s2r9l72IfcTpVNdpXLZFg9p6jHPY7oN7LFIetkzO8YrvSP4SS8suFjvY60p1/9Eln
+	 J9E4eMoUuoF/+knVDN9vwOf1hq6b4l4t4NseLKJNz70XAG9nzfjk0xTVNMGqBo8zSa
+	 i7RnG6YBFOJ5WGLOaszQKvnNsI5Ct/PpduWHLLit2+Ai1ZMjyRpMWbO9o36TuUy1N5
+	 m14uIxdyDobog==
+X-Session-ID: MPm6t9lWTa2CC5tRcfY2pw
+X-Works-Send-Opt: TXRTb4kwjHwYKBwRMBiNFBmwFAudKoUwKAKXjJkaBd9YKBmm
+X-Works-Smtp-Source: PwnwKAv/FqJZ+HmZKoEw+6E=
+Received: from localhost.localdomain ([175.193.32.226])
+  by cvnsmtp010.nm.naver.com with ESMTP id MPm6t9lWTa2CC5tRcfY2pw
+  for <multiple recipients>
+  (version=TLSv1.3 cipher=TLS_CHACHA20_POLY1305_SHA256);
+  Thu, 10 Sep 2026 12:38:42 -0000
+From: Qerogram <qerogram@naver.com>
+To: acme@kernel.org,
+	namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	irogers@google.com,
+	Qerogram <qerogram@naver.com>
+Subject: [PATCH perf-tools-next] perf list: Avoid repeated strlen when escaping JSON strings
+Date: Thu, 10 Sep 2026 21:38:39 +0900
+Message-ID: <20260910123839.72285-1-qerogram@naver.com>
+X-Mailer: git-send-email 2.55.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf/arm-cmn: Fix wp_dev_sel2 setting for multi-DTM
- configurations
-To: Shouping Wang <allen.wang@hj-micro.com>, will@kernel.org
-Cc: mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- peter.du@hj-micro.com, andy.xu@hj-micro.com
-References: <2fb3bda7-cd64-4dc0-99f8-c0fda8d42cf9@arm.com>
- <20260910114601.165237-1-allen.wang@hj-micro.com>
-From: Robin Murphy <robin.murphy@arm.com>
-Content-Language: en-GB
-In-Reply-To: <20260910114601.165237-1-allen.wang@hj-micro.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 10/09/2026 12:46 pm, Shouping Wang wrote:
-> When MXP_MULTIPLE_DTM_EN is TRUE, each DTM will monitor at most
-> two device ports. In this case, {wp_dev_sel2, wp_dev_sel} will
-> only use values 2'b00 and 2'b01 per DTM.
+The %S conversion in fix_escape_fprintf() calls strlen(s) in the loop
+condition while escaping each character. GCC 14.2.0 retains this call
+inside the loop in a normal DEBUG=0 (-O3) perf build, repeatedly scanning
+the whole string.
 
-Poor documentation strikes again!
+Test the current character for NUL instead. This processes the same bytes
+without rescanning the string. Escaping and buffer growth are unchanged.
 
-> Previously the setting allowed values beyond the supported range
-> per DTM, which could cause each DTM to select invalid ports when
-> MXP_MULTIPLE_DTM_EN is TRUE.
-> 
-> Fix this by only setting CMN_DTM_WPn_CONFIG_WP_DEV_SEL2 when
-> !multi_dtm.
+Full-command wall-clock measurements on an Apple M5 Pro host running an
+aarch64 Linux container with GCC 14.2.0 and glibc 2.41 gave these medians:
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+  perf list --json metrics       Before (ms)  After (ms)
+  Default catalog                    0.5969      0.5855
+  PERF_CPUID=0x00000000410fd830        0.7818      0.7033
 
-Thanks for the fix!
-Robin.
+Each workload used 50 randomized before/after pairs. Each sample averages
+the time per invocation across five fresh processes, with stdout sent to
+/dev/null and no single-CPU pinning. PERF_CPUID selects the shipped V3
+catalog on the same host; these are not measurements on V3 hardware. The
+measurements include process startup and do not establish a gain on other
+machines or perf commands.
 
-> Fixes: 60d1504070c2 ("perf/arm-cmn: Support new IP features")
-> Signed-off-by: Shouping Wang <allen.wang@hj-micro.com>
-> ---
-> 
-> Changes in v2:
-> - Made the setting of CMN_DTM_WPn_CONFIG_WP_DEV_SEL2 conditional on
->    !multi_dtm, instead of clamping with dev %= 2.
-> - Refactored is_cmn600 to use cmn->part directly.
-> - Updated the commit message.
-> 
-> Link to v1: https://lore.kernel.org/lkml/20260819105443.668784-1-allen.wang@hj-micro.com/
-> 
->   drivers/perf/arm-cmn.c | 10 +++++++---
->   1 file changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
-> index 6e5cc4086a9e..7e7590381171 100644
-> --- a/drivers/perf/arm-cmn.c
-> +++ b/drivers/perf/arm-cmn.c
-> @@ -1393,13 +1393,14 @@ static void arm_cmn_claim_wp_idx(struct arm_cmn_dtm *dtm,
->   
->   static u32 arm_cmn_wp_config(struct perf_event *event, int wp_idx)
->   {
-> +	struct arm_cmn *cmn = to_cmn(event->pmu);
->   	u32 config;
->   	u32 dev = CMN_EVENT_WP_DEV_SEL(event);
->   	u32 chn = CMN_EVENT_WP_CHN_SEL(event);
->   	u32 grp = CMN_EVENT_WP_GRP(event);
->   	u32 exc = CMN_EVENT_WP_EXCLUSIVE(event);
->   	u32 combine = CMN_EVENT_WP_COMBINE(event);
-> -	bool is_cmn600 = to_cmn(event->pmu)->part == PART_CMN600;
-> +	bool is_cmn600 = cmn->part == PART_CMN600;
->   
->   	/* CMN-600 supports only primary and secondary matching groups */
->   	if (is_cmn600)
-> @@ -1407,8 +1408,11 @@ static u32 arm_cmn_wp_config(struct perf_event *event, int wp_idx)
->   
->   	config = FIELD_PREP(CMN_DTM_WPn_CONFIG_WP_DEV_SEL, dev) |
->   		 FIELD_PREP(CMN_DTM_WPn_CONFIG_WP_CHN_SEL, chn) |
-> -		 FIELD_PREP(CMN_DTM_WPn_CONFIG_WP_GRP, grp) |
-> -		 FIELD_PREP(CMN_DTM_WPn_CONFIG_WP_DEV_SEL2, dev >> 1);
-> +		 FIELD_PREP(CMN_DTM_WPn_CONFIG_WP_GRP, grp);
-> +
-> +	if (!cmn->multi_dtm)
-> +		config |= FIELD_PREP(CMN_DTM_WPn_CONFIG_WP_DEV_SEL2, dev >> 1);
-> +
->   	if (exc)
->   		config |= is_cmn600 ? CMN600_WPn_CONFIG_WP_EXCLUSIVE :
->   				      CMN_DTM_WPn_CONFIG_WP_EXCLUSIVE;
+These observations come from one short run. Relinking also changes code
+layout: .text grows from 2,013,172 to 2,017,236 bytes in this build. The
+timings do not isolate scan removal from the changed layout.
+
+The existing list shell test passes for both binaries. Source-extracted
+functions linked to perf's strbuf implementation pass 906 equivalence
+cases with ASan and UBSan. Full-command outputs are byte-identical.
+
+Codex assisted with identifying the redundant scan, preparing the change,
+and running the comparisons.
+
+Assisted-by: LLM
+Signed-off-by: Qerogram <qerogram@naver.com>
+---
+ tools/perf/builtin-list.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-list.c b/tools/perf/builtin-list.c
+index 50f69c2c0d51..4118424cb364 100644
+--- a/tools/perf/builtin-list.c
++++ b/tools/perf/builtin-list.c
+@@ -325,7 +325,7 @@ static void fix_escape_fprintf(FILE *fp, struct strbuf *buf, const char *fmt, ..
+ 			case 'S': {
+ 				const char *s = va_arg(args, const char*);
+ 
+-				for (size_t s_pos = 0; s_pos < strlen(s); s_pos++) {
++				for (size_t s_pos = 0; s[s_pos] != '\0'; s_pos++) {
+ 					switch (s[s_pos]) {
+ 					case '\n':
+ 						strbuf_addstr(buf, "\\n");
+-- 
+2.55.0
 
