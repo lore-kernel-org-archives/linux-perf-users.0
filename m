@@ -1,131 +1,110 @@
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com [209.85.216.71])
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E475563FA2
-	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 17:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CA0545DB5
+	for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 17:56:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789063003; cv=none; b=YDMIpTHl0SYzceaLytI9A4smKU4aNjM49Ezl6AjBBrm2Tp0h07O/TYG24n+bw0Wwhocht/xFYQah4oHH37pZh3Z8z30rn21AtaYXEcRrrP3MsWAcRt7d5RI4+RO2VGR+3bK495sS+lV5aQVcs36txS2H4dkq5WOn81H7ripkLOo=
+	t=1789063007; cv=none; b=iZfX9pCl49OnX5l5KL3o5lM40Z8Pnn/v7PbLoYPk5LkDDDBsrRMqoT9sOgS9PJR2scZNF0mDV3H3Y7uYRj/u6mEElenQoYdp+ZJneWnswYpiK7jTxlyX54mBCbIfHAnmQjM8Qh5Er2QkcXxTDT0Zh039aY37TsYaVbbzj4WBT5A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789063003; c=relaxed/simple;
-	bh=vaBOM7gJFJP/iDNYbksPS4xPwihltpK6FFy2L5l2j5c=;
+	s=arc-20240116; t=1789063007; c=relaxed/simple;
+	bh=xLDdELpaZ92ME6nkeZN2fNUTDVi3mQx5ZlLrH57VYP0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=LyJTM4ZZhCWcKJoMd8nWKc6c43wH2Ll9VxIKpiaH2P742t48Vl+VIgpCpiBlnY3qCsgjihcsiFEHjNogn8saNAFI2CmmV5giZReNBxHib+MRWEvzjZNMe9nhphcNKbaCILS+VnOJwO4Po8tpK5liX8zSB3gWoiJz+gexKQr79vk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WCYtnWaE; arc=none smtp.client-ip=209.85.216.71
+	 To:Content-Type; b=h/c4OlyVycOxPv10S/0e9ZrQ9PM8rfNXeuF5Fvh1Ol033XQ9MYmEFqdtOiPhypVdHzFtGCIYujlYQTKebb1RUWTeTxw4cT2OYRG6zDnnIM0AADLBIcaRzT32///x9dzeyPlK+On6m5cyHSCHD9wO+8gZbarJuj4ZQf/q1/pJ8vY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tea7fuoo; arc=none smtp.client-ip=209.85.215.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WCYtnWaE"
-Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-398fe469aa0so12283718a91.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 10:56:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tea7fuoo"
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-cb835525b10so102231a12.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 10 Sep 2026 10:56:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789063002; x=1789667802; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789063005; x=1789667805; darn=vger.kernel.org;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=fnzBeOHTZJ3ZGeQaPHN7X7+9Lkvg1S3DJgXkiyBoNCg=;
-        b=WCYtnWaE1kA5HTFfLxCC00A7wyHFRtLsUy1Z4xpd+aMfOPZO3DW7P6VUAHUtjNNhof
-         3FJjaVw3k9ciNiVYYaKVVNkpcCKpeDmJWZutNiChUTvi5qENuFDgu7XG1ANmcyJK4d+4
-         in8lUQ0+/a6FbVkYRwZK6rX4ZnMJJ8UOf3GD6DYCayWp0sBCCJdGyaF8D1nR/s2719us
-         8hUrLkOLBKs5YNhMPN3Sht7Dyswa2WXv13ccAmCvyvoGdfsQigcHu0ZEJKd3b5wbhYDp
-         XK9n4uMIFJc0IyoWEHV5RlwS8bp5j4ApD6msH/baPQfpbnb8nlFE/TqTzoU4QJEykrkj
-         d+ng==
+        bh=X3fQxh9g5ajoX8Y1OGK5G6oHwPA/wuRadJNv+BCxKRo=;
+        b=tea7fuooeBGrrANqJxhyTk9V3lHc70XXj09YsyU6fy0rAV6AinDB/L2b6L5FId48dO
+         mbw0X5bljgCDfu157xeETUhzZ992dQ6Oj3aXjIFeh61XLsIYn6iSbeuPe0f7Fctau1VE
+         kdFaLlgHROL9Q4zOGxPPAdSeFPFrZmGHWWkv7hS6BnOavsvGhT8kAPDrzQMACo56nUbh
+         vhRm87T2jwvhnAg2AZPt3eedPAANW5ZgaBeR0lL1mWjlNhG+6zA6AHVWXJtuLv4nL1R4
+         YxTWUNtAWY5XVkoWKoB+qB7Q2Hjc2wETGtFKN3zbIcoDrARbXVnrW2spoYGM6Rv4C+53
+         g0Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789063002; x=1789667802;
+        d=1e100.net; s=20251104; t=1789063005; x=1789667805;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=fnzBeOHTZJ3ZGeQaPHN7X7+9Lkvg1S3DJgXkiyBoNCg=;
-        b=p4jaRwUz1S6nKPJA/X/rMyH30cW0vxcVAXi/9vCAkcEAowxX27fVhbXclDBHO92W4b
-         tD3f2tA4RbBPjqON5pNXYtkQPEH5ExDbUq+1SgYLAZFP7r6bWtVvLrXT+DPggHEzkeOk
-         Wx/2nyTpLzkkxcjj0wfwPd4RMM7iNUyOfiGWi85AjoMi9+dHSiGLeIk94a101Eei/Cuf
-         oeLSC2DbBPW5brdZOQg6TrU3d4OEcQgJnXA9ZmX2qy04FCTI5gVB/jY+t14InxOWXcsP
-         nInMdxmavMHOKsZf9QvxmthiKy2ZOwxP60x+78fDRW/WtasSLembjanuvpqrnEQLrKbJ
-         fFLA==
-X-Forwarded-Encrypted: i=1; AKwUvBw1/hrhRW1KPRBcOQ6GuuFl3Z9ZhA8hThyhNOJg9uNyIyOhCRvp9onQbOMDzTBzF0e98TPxXBrVTczfGXvmc7GD@vger.kernel.org
-X-Gm-Message-State: AFuF++nXGHkA4SnQ89u22uc92wotrrgYfa4RqRtbzDAmUWQpPR1fHLoi
-	8TnOkqjJ/zYwjC8Yqf6tMr0LB0bCsBQVhF0X2G5aelSwPqX86ThKPcdw48f/svujBbnb+JG55iU
-	W9IFm2H+hfA==
-X-Received: from dybdb32.prod.google.com ([2002:a05:7300:b0a0:b0:33b:9d11:a879])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2d88:b0:39b:92bb:9ef0
- with SMTP id 98e67ed59e1d1-39d70b46171mr11858633a91.20.1789063001455; Thu, 10
- Sep 2026 10:56:41 -0700 (PDT)
-Date: Thu, 10 Sep 2026 10:56:34 -0700
-In-Reply-To: <20260910175634.3014018-1-irogers@google.com>
+        bh=X3fQxh9g5ajoX8Y1OGK5G6oHwPA/wuRadJNv+BCxKRo=;
+        b=f2Ac0S1JpFcWe0e62g8XNfOS4JyIGfENftRZPXf8dhXjs3GG+pu6MmYgPykFHSgD48
+         EhNgHs5IJmRsVrwWdjaJ/BXNejPCY8BmOwOOg+OTnNjlBFH08+OuSVBlbBBmHGkAqQvU
+         Fg2l9JO4tYWXk12SEV6jGwGgZdQomjbS3VCS78h7Amig04K3MfX1X781LbfQNLV1eH0U
+         dh8H7LJNscWvuunre2IpNmLhkYK4UYFoffoWDgyyGfGpbRmGxApqJiPFp0icfLNFicMq
+         x1U3pnIng1BKY5lFYdBwwEg8RwA8GrrFnTgO+tlNO5K6q2gFTIFFNPIOTEX2u9TLmQAw
+         jZhg==
+X-Forwarded-Encrypted: i=1; AKwUvBwlcKoA2k8d6VLdCm8dgYL9/wvnJXcRwJahGYFxl7InoEu6Xh/Bu4k8wKUXJ6xPaYUUPewfRXnGh+3WnJ09gemr@vger.kernel.org
+X-Gm-Message-State: AFuF++kHZCRR1iMHiRbi/xiRZ1kHWa+KVonScmtB+ZdxOcgODeDO3dvc
+	md3rXypYwnMq3RbHUb200+ZQYa0zFvUWspwFHD5YZxcNZSoHlvud+WOcqNpDYK/RuA0P3j76auO
+	dPWPnTg==
+X-Received: from pgmm13.prod.google.com ([2002:a05:6a02:550d:b0:cc4:a477:43cc])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:bea6:b0:3cd:9bb1:c6f5
+ with SMTP id adf61e73a8af0-3daed1fa6f1mr77071637.10.1789063004860; Thu, 10
+ Sep 2026 10:56:44 -0700 (PDT)
+Date: Thu, 10 Sep 2026 10:56:44 -0700
+In-Reply-To: <anTB6ksbUs18FEf1@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260910173715.2996571-1-irogers@google.com> <20260910175634.3014018-1-irogers@google.com>
-X-Mailer: git-send-email 2.55.0.1007.g17ff1f9808-goog
-Message-ID: <20260910175634.3014018-3-irogers@google.com>
-Subject: [PATCH v2 3/3] perf header: Fix potential memory corruption in cpu_cache_level__read
-From: Ian Rogers <irogers@google.com>
+References: <20260508231353.406465-1-seanjc@google.com> <anTB6ksbUs18FEf1@google.com>
+Message-ID: <aqLvXM5SPPlQePXs@google.com>
+Subject: Re: [PATCH v3 0/9] perf/x86: Don't write PEBS_ENABLED on KVM transitions
+From: Sean Christopherson <seanjc@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Paolo Bonzini <pbonzini@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Swapnil Sapkal <swapnil.sapkal@amd.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Jim Mattson <jmattson@google.com>, Mingwei Zhang <mizhang@google.com>, 
+	Stephane Eranian <eranian@google.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
 
-strim may advance the pointer assigned to cache->size which causes
-later frees to crash. Fix by performing the strim and then memmove-ing
-the potentially shifted string back over the original string. The bug
-was introduced by the transition from rtrim to strim, as rtrim
-wouldn't move on the left.
+On Thu, Aug 06, 2026, Sean Christopherson wrote:
+> On Fri, May 08, 2026, Sean Christopherson wrote:
+> > Sean Christopherson (9):
+> >   perf/x86/intel: Ensure guest PEBS path doesn't set unwanted
+> >     PERF_GLOBAL_CTRL bits
+> >   perf/x86/intel: Don't write PEBS_ENABLED on host<=>guest xfers if CPU
+> >     has isolation
+> >   perf/x86/intel: Don't context switch DS_AREA (and PEBS config) if PEBS
+> >     is unused
+> >   perf/x86/intel: Make @data a mandatory param for
+> >     intel_guest_get_msrs()
+> >   perf/x86/intel: Invert names of intel_ctrl_{guest,host}_mask
+> >   perf/x86: KVM: Have perf define a dedicated struct for getting guest
+> >     PEBS data
+> >   perf/x86/intel: KVM: Handle cross-mapped PEBS PMCs entirely within KVM
+> >   KVM: VMX: Drop a redundant pmu->global_ctrl check when processing
+> >     pebs_enable
+> >   KVM: VMX: Only tell perf to enable PEBS counters for fully enabled
+> >     PMCs
+> > 
+> >  arch/x86/events/core.c            |  5 +-
+> >  arch/x86/events/intel/core.c      | 92 +++++++++++++++++++------------
+> >  arch/x86/events/intel/lbr.c       |  2 +-
+> >  arch/x86/events/perf_event.h      |  7 ++-
+> >  arch/x86/include/asm/kvm_host.h   |  9 ---
+> >  arch/x86/include/asm/perf_event.h | 11 +++-
+> >  arch/x86/kvm/vmx/pmu_intel.c      | 28 +++++++---
+> >  arch/x86/kvm/vmx/vmx.c            | 10 ++--
+> >  arch/x86/kvm/vmx/vmx.h            | 15 ++++-
+> >  9 files changed, 114 insertions(+), 65 deletions(-)
+> 
+> Ping.  This still applies on Linus' tree and against tip/master.
 
-Fixes: 13c230ab6e56 ("perf tools: Ditch rtrim(), use strim() from tools/lib")
-Signed-off-by: Ian Rogers <irogers@google.com>
-Assisted-by: Antigravity:gemini-3.1-pro
----
- tools/perf/util/header.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index bdd79d7542ef..78b16a098148 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1267,7 +1267,11 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
- 		return -1;
- 
- 	cache->type[len] = 0;
--	cache->type = strim(cache->type);
-+	{
-+		char *trimmed = strim(cache->type);
-+
-+		memmove(cache->type, trimmed, strlen(trimmed) + 1);
-+	}
- 
- 	scnprintf(file, PATH_MAX, "%s/size", path);
- 	if (sysfs__read_str(file, &cache->size, &len)) {
-@@ -1276,7 +1280,11 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
- 	}
- 
- 	cache->size[len] = 0;
--	cache->size = strim(cache->size);
-+	{
-+		char *trimmed = strim(cache->size);
-+
-+		memmove(cache->size, trimmed, strlen(trimmed) + 1);
-+	}
- 
- 	scnprintf(file, PATH_MAX, "%s/shared_cpu_list", path);
- 	if (sysfs__read_str(file, &cache->map, &len)) {
-@@ -1286,7 +1294,11 @@ static int cpu_cache_level__read(struct cpu_cache_level *cache, u32 cpu, u16 lev
- 	}
- 
- 	cache->map[len] = 0;
--	cache->map = strim(cache->map);
-+	{
-+		char *trimmed = strim(cache->map);
-+
-+		memmove(cache->map, trimmed, strlen(trimmed) + 1);
-+	}
- 	return 0;
- }
- 
--- 
-2.55.0.1007.g17ff1f9808-goog
-
+Ping again.  This fixes a real issue and IMO provides much-needed improvements
+for the KVM<=>perf APIs.
