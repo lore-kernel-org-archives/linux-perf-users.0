@@ -1,142 +1,78 @@
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C2D489872
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 13:22:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F9E2DBF75;
+	Fri, 11 Sep 2026 13:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789132968; cv=none; b=JPexY3oLCz7Mct+RZmC25ekNDswK08/Vm6kCdo7grZeTZfhoeGsq/ae9ulQBWvkPUzW2NNUrfBs8FvNv6ebFZwmspw70UAP2JZGuEcckrfeHhrGAhyjb34syYVzOZGPYiCQna2oftv09i7CBVBZBYUxWjaj5RdIdllIB2DEp784=
+	t=1789134260; cv=none; b=PBKi6KRDsfOtM8rLWs22YiinCMWi/AqxjT3JffCDvusWRSVJXHRrG5RO4l785mas5NAhXATfN3oKN43VL/ILHt39RUK3l2NgbF158HR7424eLvPiUJ48JmeBJqQOLoANMUiSoG/CdWBnZaDROP03rrnA48vq1TqcKCZfABlybK8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789132968; c=relaxed/simple;
-	bh=T/e2vgzi/yX3haBVonSYMOMOZ1YJ8sxvxQcGMOKmPKs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=bjy/TQl7Inu4D+lkTvNVUi8CPrKK3kUBFnP/MPHlp/cFdmHFfz9+Ovz4zlnUgwy2QER1RBlxcOIj04DfeX7aU0j1J4ebJwFGTox1+lFHB7eq7Jh6vv0wDkc4M1YH7sZVP0s6+P/vKawxMiKI+Pk1yDiJIDAzXBzeJgwgU93EtRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RLwvSvK3; arc=none smtp.client-ip=209.85.216.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1789134260; c=relaxed/simple;
+	bh=/588s+rJpOsY25pnPcf+owaXgmcnRBqpg/KNxrJjmWk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=HCFkXg26ezESx1PaZfZWGVOb0hFtQOTLv+297YwsMwWCU5VnUQAtvl45sVA5KHjuLF9uPfr91Y6RZ83beIFTfIjJq2JwtZ8UWQj+tqJ6Dbe0976Nvpbvsfbh4bNiSzua64WgrqSDzsIcbm1Sr+DflqOOkLC7P9ltGAg9u8tIjQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gbNj34mI; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RLwvSvK3"
-Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-38e1118e4abso1633817a91.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 06:22:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789132963; x=1789737763; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=kqAHaS5fsv9ERkHKe2Kmet0fUHotC014bD2kFqqX4to=;
-        b=RLwvSvK31Nx6W5e5cWd1Zwn3GrqgUoi6AhS072W/uylcwVwZ3gpe+kx6GEa9rIFlk0
-         FYF4erl5BDuLlexOocQCSN41l6ccwOOPma6v34CdMIG5khIVZqkDirlCdqv964QjHzjX
-         wPzKEn407qRm3Embbs+yCBCiSEJTY3Js8tzzleFdo1mBTOxt2yTNnE2xosV20WkoMQvM
-         wIayUAwD/BVN9hgLYwfzEr+DeuhSbiV33KL8FX8Bmqy/2DX9ttcVZLG7uRr6EAwczGFk
-         ZiDQLDEUQiAQ8XVcZzOaCJECezVH/N/QfYRIjvdt+E3bJGSQdWRG09uKOPUwfNDqFGFJ
-         twjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789132963; x=1789737763;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=kqAHaS5fsv9ERkHKe2Kmet0fUHotC014bD2kFqqX4to=;
-        b=TjT/YAWAk/XAzUF1coxEfEb86Ict5BFn1x35kPCfaqUA29aLyY8b/tc5rUkwG9JXAh
-         ObJEWx02cM3c51yg1k+VJdO0DP/qW3V4JPVTPehavxb0FjgytzXH0siwnxLq7eUiG3qf
-         wUMDoV5x5DbwyDBdosxx52+ZERSU00PH6EpWIvOfVgyqH85DEnfI6qa1dtowHw3ZphkL
-         oCefhXYASyRiBA+yzof00NiA+KFphY6hlpzpD9V+7FDachpC0od6olHC9e0HbQ0UkOM1
-         LG41yozUkO6KLS8HjXDE0ArJ3xVhno+Htzu6B0DCdjVIz+JsIaeRFqVNFzo+1xIuv/Mo
-         FxMw==
-X-Forwarded-Encrypted: i=1; AKwUvByV6gcD/CK8q0DlU5iLBtI0pTTaRG/ULplbgVTzBOVEIxHyxAf0bU1PReFaUlQjuz60Wu+q5GDSgSCWRq0Avhnv@vger.kernel.org
-X-Gm-Message-State: AFuF++nNuW5FGFfJVRNkJQVAGMOa+GQFcjuKc7kLIe2fnGtOJyqrxvB5
-	7HkyDQisKUBWx0BDZKn+2lzP9V6bYzODA3j7PmSqRuKtS7NhIQ1BxebZElJ6gaUBYdK2JeF5wU5
-	CSei5mw==
-X-Received: from pjbmv13.prod.google.com ([2002:a17:90b:198d:b0:39d:8dae:7e6d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c89:b0:398:e46e:ade3
- with SMTP id 98e67ed59e1d1-39d9c39625dmr7169956a91.23.1789132962606; Fri, 11
- Sep 2026 06:22:42 -0700 (PDT)
-Date: Fri, 11 Sep 2026 06:22:41 -0700
-In-Reply-To: <20260911074530.3140830-13-jgross@suse.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gbNj34mI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A0BF1F000FF;
+	Fri, 11 Sep 2026 13:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789134259;
+	bh=n9WC43RiWACipaJVVputek92HstgNSaNHPvk7+Q6kjg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=gbNj34mIcxztxPJbOWUNJYdSbplYgK4TOEeBGAQ2dTOfuNB3piJzRpzmmEnRU/2iI
+	 aNqN6KCz11dEoEnchenQ02aCVf3pzWEndcS97bWSWagU4w67pdN5ow6rkEVa6LTVvO
+	 edYbUUbdJ5xfkOwADk2xEuabG6T3PKxVrXF3mQKX3qC8pEv4P/xhMPqkqiOhbGOHnm
+	 tVHpWzsCYAZrzP6k8AJpsWes/CuQtgiVp41bEKA3XSwPXAMZndEe223cL/NcZeMKSk
+	 Q7U/G4X7NKf9yRl/s+7ct7RBoB2qZNoUuxbui5To+DreHPC8w8hdeXXKZfFNe07gBg
+	 ftGOiGLJqN38A==
+From: Will Deacon <will@kernel.org>
+To: robin.murphy@arm.com,
+	Shouping Wang <allen.wang@hj-micro.com>
+Cc: catalin.marinas@arm.com,
+	mark.rutland@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	peter.du@hj-micro.com,
+	andy.xu@hj-micro.com
+Subject: Re: [PATCH v2] perf/arm-cmn: Fix wp_dev_sel2 setting for multi-DTM configurations
+Date: Fri, 11 Sep 2026 14:44:07 +0100
+Message-ID: <178912838524.2439009.7355093627260324589.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.47.3
+In-Reply-To: <20260910114601.165237-1-allen.wang@hj-micro.com>
+References: <2fb3bda7-cd64-4dc0-99f8-c0fda8d42cf9@arm.com> <20260910114601.165237-1-allen.wang@hj-micro.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20260911074530.3140830-1-jgross@suse.com> <20260911074530.3140830-13-jgross@suse.com>
-Message-ID: <aqQAodJCAEZyeQ1k@google.com>
-Subject: Re: [PATCH v3 12/13] treewide: convert rdmsrq() from a macro to an
- inline function
-From: Sean Christopherson <seanjc@google.com>
-To: Juergen Gross <jgross@suse.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	kvm@vger.kernel.org, virtualization@lists.linux.dev, 
-	linux-edac@vger.kernel.org, linux-pci@vger.kernel.org, 
-	linux-pm@vger.kernel.org, linux-coco@lists.linux.dev, 
-	linux-acpi@vger.kernel.org, linux-ide@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-crypto@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
-	linux-fbdev@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
-	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
-	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
-	Alexey Makhalov <alexey.makhalov@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
-	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
-	Pu Wen <puwen@hygon.cn>, Tony Luck <tony.luck@intel.com>, 
-	Reinette Chatre <reinette.chatre@intel.com>, Dave Martin <Dave.Martin@arm.com>, 
-	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>, 
-	Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
-	Andy Lutomirski <luto@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>, Kiryl Shutsemau <kas@kernel.org>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
-	Len Brown <lenb@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
-	David Airlie <airlied@redhat.com>, Olivia Mackall <olivia@selenic.com>, 
-	Herbert Xu <herbert@gondor.apana.org.au>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Huang Rui <ray.huang@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Perry Yuan <perry.yuan@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Yazen Ghannam <yazen.ghannam@amd.com>, 
-	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
-	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Artem Bityutskiy <dedekind1@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Ashok Raj <ashok.raj.linux@gmail.com>, 
-	Hans de Goede <hansg@kernel.org>, 
-	"Ilpo =?utf-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>, 
-	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, Xi Pardee <xi.pardee@linux.intel.com>, 
-	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
-	Lukasz Luba <lukasz.luba@arm.com>, Helge Deller <deller@gmx.de>, xen-devel@lists.xenproject.org, 
-	linux-geode@lists.infradead.org, Michael Kelley <mhklinux@outlook.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, Sep 11, 2026, Juergen Gross wrote:
-> Today rdmsrq() is a macro using its second parameter as the target for
-> storing the read MSR value.
+On Thu, 10 Sep 2026 19:46:01 +0800, Shouping Wang wrote:
+> When MXP_MULTIPLE_DTM_EN is TRUE, each DTM will monitor at most
+> two device ports. In this case, {wp_dev_sel2, wp_dev_sel} will
+> only use values 2'b00 and 2'b01 per DTM.
 > 
-> Convert rdmsrq() to an inline function returning the MSR value.
+> Previously the setting allowed values beyond the supported range
+> per DTM, which could cause each DTM to select invalid ports when
+> MXP_MULTIPLE_DTM_EN is TRUE.
 > 
-> The users have been converted using the following semantic patch:
-> 
->   // Options: --include-headers
-> 
->   virtual patch
->   virtual report
-> 
->   @@
->   expression msr, val;
->   @@
->   (
->   - rdmsrq(msr,val)
->   + val = rdmsrq(msr)
->   )
-> 
-> Signed-off-by: Juergen Gross <jgross@suse.com>
-> Acked-by: Damien Le Moal <dlemoal@kernel.org>      # ATA
-> Reviewed-by: Michael Kelley <mhklinux@outlook.com> # Hyper-V
-> ---
+> [...]
 
-Acked-by: Sean Christopherson <seanjc@google.com>
+Applied to arm64 (for-next/fixes), thanks!
+
+[1/1] perf/arm-cmn: Fix wp_dev_sel2 setting for multi-DTM configurations
+      https://git.kernel.org/arm64/c/49daa3d668b6
+
+Cheers,
+-- 
+Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
