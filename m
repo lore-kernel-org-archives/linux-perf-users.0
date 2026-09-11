@@ -1,172 +1,178 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67D7041B8C6
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 10:15:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A85273CF1F0;
+	Fri, 11 Sep 2026 10:16:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789121736; cv=none; b=g3ksOXyintwTxI5NOHKSo9mmRSYs4bbTb5xZ5RBuX2vTQ2LB4KOtVLE6mE3162SseQmDynE3jr54XXLx7ktNN0yGLG/tDOlivlC8nS3aAONfrjghn6oG6PUlzKyNYB2EwBfjszNbIphiK7MyH5OLvQH65lEXkEW0NM7khNfA+1c=
+	t=1789121807; cv=none; b=iB1NN+Xle04CzXtYZV7Yrz51R90PYU9RFFF5qUBsYrwHcwZWPnKStc3sHfnBk+oewk2JJAXoOSsj7tiwExazvUs0D0gdOkJL3C3HuCFB6c/Bf+j47tqMX8OpNavVIRYw1EtAzqNABeLVtIPTXm9ZJaJaGvs+5+coISO+tBa7WjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789121736; c=relaxed/simple;
-	bh=KzP/eeDfOqS2yjpWh+qwaya1FNL4hs0zQzK48YpH6bw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BLrhfCkqZ10lxs+gjXN4hfM9Y1z84UcGFV8cPmZsoJ966autVNyrvMmwlw4tUpsOhexnU3tj94yoqIs0y+UjsLOXOmVaanp2SqyTcilhRB/xwXkMyx+JkqJV5fQUXmCOz1eLDVko6/ZH8ifF++GHX5vl9T91ZUmdkkTLTE9rDfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.198])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTPS id 4hh9Pv6MtMzYQtGs
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 18:14:27 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 585F240573
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 18:15:24 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgDXPUq71KNqtWVMBg--.54653S2;
-	Fri, 11 Sep 2026 18:15:24 +0800 (CST)
-Message-ID: <05e0e407-c4d1-44e2-9d88-b170f57eb663@huaweicloud.com>
-Date: Fri, 11 Sep 2026 18:15:23 +0800
+	s=arc-20240116; t=1789121807; c=relaxed/simple;
+	bh=vTsPXaHi8RAzBaWbL447Y7Wml4ZSeJ0BE4+oGF83XiM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VfULfKtT0eEwotwelT327Y+zHp8Xx8rUQ9pIKLl4J/4EQygHBBSYlbgOrVnN363ru4tOxiaB1w0T8fcxepr8zf/Fb738AONethY+9NM/OO4aWTW+C3iPQbXMdJ/kgEJ6/b3jJMMAcyKtnlYX8v3sIEarQHXPAHFKmZIVMBV0gQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bAW41siy; arc=none smtp.client-ip=100.103.45.18
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bAW41siy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0B0E1F000FF;
+	Fri, 11 Sep 2026 10:16:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789121805;
+	bh=giLIDOVuGk3wU4sINvGbjDY5Co7tru0+JFiE0K9FPLI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=bAW41siy0jHTB1qfl3qn4gdNLwygOP92sxwRZ5j93bg2aVlvwhPZHWNQXCkbUnxC6
+	 9zk3b5mbI7ab2hw7oNcaGXVKHnNx1qFzqMm5NsCPo7iMQTWRRa4ga4/FYZMgemnHMR
+	 LUWR9RDzd1jBIAPZg7P5yYAnVdcGzlswz7uYblSZrI8mgcWzefXPuZrclq/aRa18mg
+	 UXHtcfHYeWzL2TMktPNfUxYpL9byrk5pz2SSOJ+Hi6IFxR8hMDvGKPZB2iRfKGLL8X
+	 ZmrHB9kpMAfbsIpyQlYJu0jR9aIkQQcmQfumaGM+wf3Q1dTyf8WnZzhQjhpzxy2VYs
+	 gbIALJ3tDM5qQ==
+Date: Fri, 11 Sep 2026 11:16:14 +0100
+From: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+To: Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka <vbabka@kernel.org>, 
+	Jann Horn <jannh@google.com>, Pedro Falcato <pfalcato@suse.de>, 
+	David Hildenbrand <david@kernel.org>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>, 
+	Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
+	Paul Moore <paul@paul-moore.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Kumar Kartikeya Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Lance Yang <lance.yang@linux.dev>, Usama Arif <usama.arif@linux.dev>, 
+	Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert <dgilbert@interlog.com>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, "Martin K. Petersen" <mkp@kernel.org>, 
+	Jaya Kumar <jayalk@intworks.biz>, Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, 
+	Sebastian Reichel <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, Peter Xu <peterx@redhat.com>, 
+	Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov <oleg@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Rik van Riel <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Will Deacon <will@kernel.org>, 
+	"Aneesh Kumar K.V" <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Muchun Song <muchun.song@linux.dev>, Oscar Salvador <osalvador@suse.de>, 
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, 
+	Oliver Upton <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul Walmsley <pjw@kernel.org>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
+	Claudio Imbrenda <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Matthew Brost <matthew.brost@intel.com>, 
+	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park <byungchul@sk.com>, 
+	Gregory Price <gourry@gourry.net>, Ying Huang <ying.huang@linux.alibaba.com>, 
+	Alistair Popple <apopple@nvidia.com>, Chris Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, 
+	Kemeng Shi <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He <baoquan.he@linux.dev>, 
+	Youngjun Park <youngjun.park@lge.com>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt <shakeel.butt@linux.dev>, 
+	Axel Rasmussen <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, 
+	Xu Xin <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, 
+	Michal Hocko <mhocko@kernel.org>, Miklos Szeredi <miklos@szeredi.hu>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, 
+	linux-rdma@vger.kernel.org, selinux@vger.kernel.org, linux-sound@vger.kernel.org, 
+	bpf@vger.kernel.org, linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, fuse-devel@lists.linux.dev
+Subject: Re: [PATCH 11/39] selinux: reject writable opens of policy file,
+ drop mmap shared/write check
+Message-ID: <aqPUqU3eZeFrykj3@gremlin>
+References: <20260908-b4-mmap-prepare-vma-flag-sanify-v1-0-dacf19cce22b@kernel.org>
+ <20260908-b4-mmap-prepare-vma-flag-sanify-v1-11-dacf19cce22b@kernel.org>
+ <CAEjxPJ7hXSi=oLtQPV+7GEvN+txfYwZ-u-v_EysNHM0gSGNrCw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 25/26] perf annotate-arm64: Support per-cpu variable
- access tracking
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <cover.1788872630.git.wutengda@huaweicloud.com>
- <4cebb0f4d2db4d66c4ec19c4c007d6761e5aad8e.1788872630.git.wutengda@huaweicloud.com>
- <20260908133059.E85591F00AC4@smtp.kernel.org>
-Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <20260908133059.E85591F00AC4@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:Syh0CgDXPUq71KNqtWVMBg--.54653S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxuryDuw4xAw4fAFyxXr1rXrb_yoWrXF1rpr
-	9akFyrKr1jvrsYqanavr4rXF1ruw47tr4Y9ryrta1xArnIyw1rGa93KrWUGF48Gr9xCr17
-	AwsYqa9xZa1kCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUglb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7
-	CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
-	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
-	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
-	xhVjvjDU0xZFpf9x07UE-erUUUUU=
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEjxPJ7hXSi=oLtQPV+7GEvN+txfYwZ-u-v_EysNHM0gSGNrCw@mail.gmail.com>
 
+On Thu, Sep 10, 2026 at 02:11:18PM -0400, Stephen Smalley wrote:
+> On Tue, Sep 8, 2026 at 4:07 PM Lorenzo Stoakes (ARM) <ljs@kernel.org> wrote:
+> >
+> > The policy file has no write method and is exposed read-only (S_IRUGO in
+> > selinux_files[]), yet sel_open_policy() performs no open mode check, so a
+> > CAP_DAC_OVERRIDE caller can open it O_RDWR. Reject FMODE_WRITE at open, as
+> > kernfs does.
+> >
+> > The file can then never be mapped with FMODE_WRITE, so do_mmap() always
+> > clears VM_MAYWRITE and VM_SHARED for MAP_SHARED mappings and the VM_SHARED
+> > check in sel_mmap_policy() cannot be reached. Remove it.
+> >
+> > This also stops sel_mmap_policy() clearing VM_MAYWRITE on a mapping that is
+> > neither a PFN map nor a mixed map, ahead of the core enforcing that only
+> > such mappings may do so.
+> >
+> > Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+>
+> We should likely do something similar for the other sel_open_*() and
+> sel_mmap_*() functions too.
+> In particular, truncation of the status file can bring down systemd
+> since it is mapped by libselinux.
 
+Yeah I think there's definitely more that can be done there.
 
-On 2026/9/8 21:30, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
-> - [Medium] The newly added logic to track per-cpu base registers in 'add' and 'ldr' instructions is entirely unreachable dead code because `arch_get_reg_offset` prematurely aborts the tracking state.
-> --
-> 
-> commit e3331fba4432f08f3db300129b5060bba477930c
-> Author: Tengda Wu <wutengda@huaweicloud.com>
-> 
-> perf annotate-arm64: Support per-cpu variable access tracking
-> 
-> This commit extends update_insn_state_arm64() to handle per-cpu variable
-> addressing. It detects 'adrp + ldr' pairs that resolve to the
-> '__per_cpu_offset' symbol, and attempts to propagate this type information
-> through subsequent 'ldr' and 'add' instructions. However, the newly added
-> logic is entirely unreachable dead code because arch_get_reg_offset()
-> prematurely aborts the tracking state.
-> 
->> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
->> index 9daf959055457..33fef3d153786 100644
->> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
->> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
-> 
-> [ ... ]
-> 
->> @@ -649,6 +660,12 @@ static int propagate_load_reg_state(struct type_state *state,
->>  		return 0;
->>  	}
->>  
->> +	/*
->> +	 * If src_tsr->kind is TSR_KIND_PERCPU_BASE, treat it as an array.
->> +	 * No special handling is needed here; just fall through to retry
->> +	 * and resolve the type from the second register.
->> +	 */
->> +
-> 
-> [Severity: Medium]
-> Is this fall-through logic in propagate_load_reg_state() for intermediate
-> Pattern A ('ldr') instructions actually reachable?
-> 
-> Earlier in propagate_load_reg_state(), arch_get_reg_offset() forces an early
-> exit by returning -1 when evaluating a multi-register load where the second
-> register isn't a constant. This happens before this new per-cpu fallback
-> logic can be reached, making this dead code.
-> 
+Though I think obviously that kind of stuff is better as a follow up as this
+patch is focused on eliminating a case where VMA_MAYWRITE_BIT is cleared
+incorrectly.
 
-Indeed. The return happens too early.
+>
+> Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
 
->>  	/* Or try another register if any */
->>  	if (src->multi_regs && src->reg1 != src->reg2 && sreg != src->reg2 &&
->>  	    !(src->extend_type || src->shift_type)) {
-> 
-> [ ... ]
-> 
->> @@ -949,6 +966,34 @@ static void update_add_insn_state(struct type_state *state,
->>  		return;
->>  	}
->>  
->> +	if (src_tsr.kind == TSR_KIND_PERCPU_BASE) {
->> +		int reg2;
->> +
->> +		if (!src->multi_regs) {
->> +			invalidate_reg_state(tsr);
->> +			return;
->> +		}
->> +
->> +		reg2 = (sreg == src->reg1) ? src->reg2 : src->reg1;
->> +
->> +		if (!has_reg_type(state, reg2) || !state->regs[reg2].ok) {
->> +			invalidate_reg_state(tsr);
->> +			return;
->> +		}
->> +
->> +		/* Treat percpu as array: inherit type from reg2 */
->> +		tsr->type = state->regs[reg2].type;
->> +		tsr->kind = state->regs[reg2].kind;
->> +		tsr->offset = state->regs[reg2].offset;
->> +		tsr->imm_value = state->regs[reg2].imm_value;
->> +		tsr->ok = state->regs[reg2].ok;
->> +
->> +		pr_debug_dtp("add [%x] percpu (reg%d, reg%d) -> reg%d",
->> +			     insn_offset, src->reg1, src->reg2, dreg);
->> +		pr_debug_type_name(&tsr->type, tsr->kind);
->> +		return;
->> +	}
->> +
-> 
-> [Severity: Medium]
-> Does this block ever execute when handling a per-cpu address calculation
-> (Pattern B like 'add x0, x6, x5') in update_add_insn_state()?
-> 
-> When arch_get_reg_offset() executes earlier in update_add_insn_state(), it
-> returns -1 for multi-register non-memory operations (like 'add') unless one
-> register is a TSR_KIND_CONST or the base is a known TSR_KIND_POINTER.
-> 
-> Since the registers here are PERCPU_BASE and GLOBAL_ADDR, it returns -1
-> and jumps to the try_other_reg label, permanently bypassing this new tracking
-> logic.
-> 
+Thanks!
+>
+> > ---
+> >  security/selinux/selinuxfs.c | 11 +++--------
+> >  1 file changed, 3 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/security/selinux/selinuxfs.c b/security/selinux/selinuxfs.c
+> > index c7d91476971c..545a6f89f9e7 100644
+> > --- a/security/selinux/selinuxfs.c
+> > +++ b/security/selinux/selinuxfs.c
+> > @@ -340,6 +340,9 @@ static int sel_open_policy(struct inode *inode, struct file *filp)
+> >         struct policy_load_memory *plm = NULL;
+> >         int rc;
+> >
+> > +       if (filp->f_mode & FMODE_WRITE)
+> > +               return -EACCES;
+> > +
+> >         rc = avc_has_perm(current_sid(), SECINITSID_SECURITY,
+> >                           SECCLASS_SECURITY, SECURITY__READ_POLICY, NULL);
+> >         if (rc)
+> > @@ -424,14 +427,6 @@ static const struct vm_operations_struct sel_mmap_policy_ops = {
+> >
+> >  static int sel_mmap_policy(struct file *filp, struct vm_area_struct *vma)
+> >  {
+> > -       if (vma->vm_flags & VM_SHARED) {
+> > -               /* do not allow mprotect to make mapping writable */
+> > -               vm_flags_clear(vma, VM_MAYWRITE);
+> > -
+> > -               if (vma->vm_flags & VM_WRITE)
+> > -                       return -EACCES;
+> > -       }
+> > -
+> >         vm_flags_set(vma, VM_DONTEXPAND | VM_DONTDUMP);
+> >         vma->vm_ops = &sel_mmap_policy_ops;
+> >
+> >
+> > --
+> > 2.55.0
+> >
 
-Agreed. This is the same issue as above. Will fix in v6.
-
->>  try_other_reg:
->>  	/* Try another register if any */
->>  	if (src->multi_regs && src->reg1 != src->reg2 && sreg != src->reg2 &&
-> 
-
+--
+Cheers, Lorenzo
