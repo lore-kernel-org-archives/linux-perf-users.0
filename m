@@ -1,30 +1,30 @@
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9CD1757EA;
-	Fri, 11 Sep 2026 01:48:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807AD2F531B
+	for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 02:22:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789091287; cv=none; b=MYwdD8ttqHftB0XTtGrAPYd15zhrjPWcn00lBc8No5BIIc/SEiOLrlm9FEmdVLzG8UJ1NHrFaa3Xsmr3zEP3vms3O4/1OqRMzZfCKbezPPkKB7lMBIS8sBTYSPj2WnmIHZBYgbsL/f8rvC9b5vkYdKlZUgFP1v0GBFZm8fOxtjw=
+	t=1789093359; cv=none; b=UJp9J9u799irXeo8w5oA3MsBtetHJI8r0Ac2G6jZ0Vepm7V6yp7qIOSl7l/pbKWvVRaF6zRF/tYH2UJ9hJWfd3U0PlllFAeDtbbul1l65j6y9BD29upQGcyPgt9qnuzKwbrKqpv5aHX1hSo7IoYvZZOS9Uk89uV4mM6eKyQluL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789091287; c=relaxed/simple;
-	bh=FuyTQKEtPmp5jrLLptMG5DhO0TqlDaiofz9cGAeYc30=;
+	s=arc-20240116; t=1789093359; c=relaxed/simple;
+	bh=ym+/uOVfiIXlVv2yUGhT8bcMrrxsC1nH7WHzaFgd+DA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q3T9zdBlNb1U86VcoUyIDYIFnQazIETvHrdi2pZW5gkYUH1LxC/vkAmAF6aTuAf9nyeDbZJQuA1DWrGFb84UPLE/gH1jyPY7qKeT+Y5t5qTU6gGNvI+Edyw3ckYW3C0VP8E1VFx90afFKgWvX2OYb/09MAqf4GFZ8cssr3Jah/w=
+	 In-Reply-To:Content-Type; b=UGb/ZkOIN0mq2KfLS4sUX22ll0XageRdW+wjhKQl43TNGFeo0wFrPDJpO5jyGWYoiUui4+UYneUzVjf2cuUDwy8gcypls+5BZAtaFhBY0121IVWCbDAvzAgIuIEHvzo4umGvWdl3D6o68BXEOQdgemO3UNy9rJzPvlQs3d2ICq8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.170])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hgy9P3ypMzKHMR9;
-	Fri, 11 Sep 2026 09:47:53 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.75])
-	by mail.maildlp.com (Postfix) with ESMTP id 09E574056B;
-	Fri, 11 Sep 2026 09:47:59 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.177])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTPS id 4hgyxB50PczKHLxw
+	for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 10:22:22 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 333644057D
+	for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 10:22:28 +0800 (CST)
 Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP2 (Coremail) with UTF8SMTPA id Syh0CgDnTEnOXaNqMeMgBg--.29875S2;
-	Fri, 11 Sep 2026 09:47:58 +0800 (CST)
-Message-ID: <0ef7dbfd-3bd6-40bb-b42a-a81edd2ba468@huaweicloud.com>
-Date: Fri, 11 Sep 2026 09:47:58 +0800
+	by APP1 (Coremail) with UTF8SMTPA id cCh0CgD3KwfiZaNqedIXBg--.6188S2;
+	Fri, 11 Sep 2026 10:22:28 +0800 (CST)
+Message-ID: <d4b23be7-1ad2-4be1-b789-053501908c4d@huaweicloud.com>
+Date: Fri, 11 Sep 2026 10:22:26 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -32,159 +32,133 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 07/26] perf dwarf-regs: Adapt get_dwarf_regnum() for
- arm64
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, james.clark@linaro.org,
- xueshuai@linux.alibaba.com, Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, leo.yan@linux.dev,
- Li Huafei <lihuafei1@huawei.com>, Kim Phillips <kim.phillips@arm.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ingo Molnar <mingo@redhat.com>,
- Bill Wendling <morbo@google.com>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Zecheng Li <zli94@ncsu.edu>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, llvm@lists.linux.dev
-References: <20260908130122.633500-1-wutengda@huaweicloud.com>
- <20260908130122.633500-8-wutengda@huaweicloud.com>
- <CAP-5=fUAtw6-waqmF4RJFGZ__J=DSzbNLNsOfWekj378_PnrdQ@mail.gmail.com>
+Subject: Re: [PATCH v5 22/26] perf annotate-arm64: Support 'mov' instruction
+ tracking
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+References: <cover.1788872630.git.wutengda@huaweicloud.com>
+ <6516a18b5618a169c2e180c296632e12c7f6697a.1788872630.git.wutengda@huaweicloud.com>
+ <20260908132707.00E341F00A3A@smtp.kernel.org>
 Content-Language: en-US
 From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <CAP-5=fUAtw6-waqmF4RJFGZ__J=DSzbNLNsOfWekj378_PnrdQ@mail.gmail.com>
+In-Reply-To: <20260908132707.00E341F00A3A@smtp.kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Syh0CgDnTEnOXaNqMeMgBg--.29875S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxXw1kJw1fuw4rJr43GFWkXrb_yoWrXF1DpF
-	srC3W7Jr4DGa4akwnxXF1fWFyfXw4rXr40yryjyw47CrsruF12qw4xKr1j9F48ZrWDJw10
-	kayjgr1rWrn5JFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:cCh0CgD3KwfiZaNqedIXBg--.6188S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxuryDWw48GFy7CF4xKrWfXwb_yoWrJFWrpa
+	n5Cw1rJr4jqr4kWFsxZr4UXF9a9r1fKFs8urn8ta9IvF4akrn5KFZrtFWYvF45Jrn3Cr1j
+	qw1vga15Za1UCaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUglb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6x
-	kF7I0E14v26F4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAq
-	x4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6x
-	CaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0E
-	n4kS14v26r4a6rW5MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
-	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8
-	ZVWrXwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
-	CY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
-	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
-	7IU0bAw3UUUUU==
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x
+	0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8C
+	rVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4
+	IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
+	bVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
+	IF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
+	xhVjvjDU0xZFpf9x07UE-erUUUUU=
 X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
 
 
-On 2026/9/9 2:08, Ian Rogers wrote:
-> On Tue, Sep 8, 2026 at 6:01 AM Tengda Wu <wutengda@huaweicloud.com> wrote:
->>
->> The current arm64 DWARF register lookup relies on 'aarch64_regstr_tbl',
->> a static string table. While this works for kprobe-tracer where register
->> names start with '%', it is insufficient for parsing register numbers
->> directly from raw instructions (e.g., extracting '6' from 'x6' or 'w6')
->> during annotation.
->>
->> Since get_dwarf_regnum() is currently used only by 'perf annotate' and
->> does not affect kprobe-tracer, replace the limited table-based lookup
->> with a programmatic implementation in __get_dwarf_regnum_arm64(). This
->> allows resolving arm64 register names (x0-x30, w0-w30, sp, etc.) directly
->> into their corresponding DWARF register numbers.
->>
->> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
->> ---
->>  .../util/dwarf-regs-arch/dwarf-regs-arm64.c   | 22 +++++++++++++++++++
->>  tools/perf/util/dwarf-regs.c                  |  2 +-
->>  tools/perf/util/include/dwarf-regs.h          |  1 +
->>  3 files changed, 24 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c b/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
->> index 593ca7d4fccc..720c863d1869 100644
->> --- a/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
->> +++ b/tools/perf/util/dwarf-regs-arch/dwarf-regs-arm64.c
->> @@ -1,5 +1,8 @@
->>  // SPDX-License-Identifier: GPL-2.0
->>  #include <errno.h>
->> +#include <ctype.h>
->> +#include <stdlib.h>
->> +#include <string.h>
->>  #include <dwarf-regs.h>
->>  #include "../../../arch/arm64/include/uapi/asm/perf_regs.h"
->>
->> @@ -10,3 +13,22 @@ int __get_dwarf_regnum_for_perf_regnum_arm64(int perf_regnum)
->>
->>         return perf_regnum;
+On 2026/9/8 21:27, sashiko-bot@kernel.org wrote:
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [Medium] Destination register's DWARF lifetime state is improperly preserved during register-to-register 'mov' instruction tracking.
+> --
+> 
+> commit e7b1d4e72b07c94aacdc6e7221ef41f56b7b017c
+> Author: Tengda Wu <wutengda@huaweicloud.com>
+> 
+> perf annotate-arm64: Support 'mov' instruction tracking
+> 
+> Extend update_insn_state_arm64() to support register-to-register and
+> immediate-to-register 'mov' instructions. For register-to-register 'mov',
+> it propagates data type information from the source to the destination.
+> 
+>> diff --git a/tools/perf/util/annotate-arch/annotate-arm64.c b/tools/perf/util/annotate-arch/annotate-arm64.c
+>> index d520975c59363..2f8bedf583c1a 100644
+>> --- a/tools/perf/util/annotate-arch/annotate-arm64.c
+>> +++ b/tools/perf/util/annotate-arch/annotate-arm64.c
+> 
+> [ ... ]
+> 
+>> @@ -810,6 +812,58 @@ static void update_store_insn_state(struct type_state *state,
+>>  	adjust_reg_index_state(state, dloc, dl, dst);
 >>  }
->> +
->> +int __get_dwarf_regnum_arm64(const char *name)
+>>  
+>> +static void update_mov_insn_state(struct type_state *state,
+>> +				  struct disasm_line *dl,
+>> +				  struct annotated_op_loc *src,
+>> +				  struct annotated_op_loc *dst)
 >> +{
->> +       int reg;
+>> +	struct type_state_reg *tsr;
+>> +	u32 insn_offset = dl->al.offset;
+>> +	int sreg = src->reg1;
+>> +	int dreg = dst->reg1;
 >> +
->> +       if (!strcmp(name, "sp"))
->> +               return 31;
+>> +	if (!has_reg_type(state, dreg))
+>> +		return;
 >> +
->> +       if (*name != 'x' && *name != 'w')
->> +               return -ENOENT;
->> +
->> +       name++;
->> +       if (!isdigit(*name))
->> +               return -ENOENT;
->> +
->> +       reg = strtol(name, NULL, 10);
+>> +	tsr = &state->regs[dreg];
+>> +	tsr->copied_from = -1;
 > 
-> Nit: perhaps this can be a little faster and ensure correct string termination?
-> ```
-> if (!isdigit(name[0])) {
->     return -ENOENT;
-> } else if (isdigit(name[1]) && name[2] == '\0') {
->      reg = (name[1] - ' 0') * 10 + name[2] - '0';
-> } else if (name[1] == '\0) {
->    reg = name[1] - '0';
-> } else {
->    return -ENOENT;
-> }
-> ```
-> Everything else looks good to me.
+> [ ... ]
 > 
-> Thanks,
-> Ian
+>> +	tsr->type = state->regs[sreg].type;
+>> +	tsr->kind = state->regs[sreg].kind;
+>> +	tsr->imm_value = state->regs[sreg].imm_value;
+>> +	tsr->offset = state->regs[sreg].offset;
+>> +	tsr->ok = state->regs[sreg].ok;
+>> +	/*
+>> +	 * lifetime_active and lifetime_end represent DWARF variable lifetime
+>> +	 * ranges tied to the source register. Copying them risks incorrectly
+>> +	 * invalidating the destination register after a call instruction,
+>> +	 * so intentionally omit them.
+>> +	 */
+> 
+> [Severity: Medium]
+> While avoiding copying the source's lifetime, does this leave the
+> destination register's existing lifetime values stale?
+> 
+> If the destination register (dreg) previously had an active DWARF lifetime
+> tracking state (lifetime_active = true), those fields are not cleared
+> here since invalidate_reg_state() isn't called for this valid register
+> transfer path.
+> 
+> Should lifetime_active be set to false and lifetime_end set to 0?
+> 
+> Otherwise, the destination register might falsely survive caller-saved
+> register invalidations during subsequent call instructions and corrupt
+> downstream type inference.
 > 
 
-Sure, Ian. Thanks for the review. I'll make the change in v6.
+It seems that the scenario I was originally worried about in my comment, where
+dreg is incorrectly invalidated, does not exist.
+
+Consider the following three consecutive instructions:
+
+  mov dreg, x0
+  call xxxx             // x0 lifetime end
+  ldr x1, [dreg, #16]
+
+1. If dreg is a callee-saved register, such as x20, then it is not affected
+   by the call instruction, and setting its lifetime to any value will not matter.
+2. If dreg is a caller-saved register, such as x1, then it is affected by
+   the call instruction, and its lifetime needs to be cleared.
+
+In practice, case 2 is very rare and looks more like undefined behavior, so
+only case 1 needs to be considered. In that case, staying consistent with x86
+may be the better choice:
+
+  tsr->lifetime_active = state->regs[src->reg1].lifetime_active;
+  tsr->lifetime_end = state->regs[src->reg1].lifetime_end;
+
+Given the above, I think we can safely copy the lifetime fields and drop the
+original concern.
 
 Thanks,
 Tengda
-
->> +
->> +       reg = strtol(name, NULL, 10);
->> +
->> +       return reg >= 0 && reg <= 30 ? reg : -ENOENT;
->> +}
->> diff --git a/tools/perf/util/dwarf-regs.c b/tools/perf/util/dwarf-regs.c
->> index 797f455eba0d..bacf5c13c3bc 100644
->> --- a/tools/perf/util/dwarf-regs.c
->> +++ b/tools/perf/util/dwarf-regs.c
->> @@ -114,7 +114,7 @@ int get_dwarf_regnum(const char *name, unsigned int machine, unsigned int flags)
->>                 reg = _get_dwarf_regnum(arm_regstr_tbl, name);
->>                 break;
->>         case EM_AARCH64:
->> -               reg = _get_dwarf_regnum(aarch64_regstr_tbl, name);
->> +               reg = __get_dwarf_regnum_arm64(name);
->>                 break;
->>         case EM_CSKY:
->>                 reg = __get_csky_regnum(name, flags);
->> diff --git a/tools/perf/util/include/dwarf-regs.h b/tools/perf/util/include/dwarf-regs.h
->> index 46a764cf322f..a25f038bbff2 100644
->> --- a/tools/perf/util/include/dwarf-regs.h
->> +++ b/tools/perf/util/include/dwarf-regs.h
->> @@ -105,6 +105,7 @@ int __get_dwarf_regnum_x86_64(const char *name);
->>  int __get_dwarf_regnum_for_perf_regnum_i386(int perf_regnum);
->>  int __get_dwarf_regnum_for_perf_regnum_x86_64(int perf_regnum);
->>
->> +int __get_dwarf_regnum_arm64(const char *name);
->>  int __get_dwarf_regnum_for_perf_regnum_arm(int perf_regnum);
->>  int __get_dwarf_regnum_for_perf_regnum_arm64(int perf_regnum);
->>
->> --
->> 2.34.1
->>
 
