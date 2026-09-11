@@ -1,66 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D59D3CD8CC
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 12:20:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF8C7470EA7
+	for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 12:28:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789129249; cv=none; b=CoQFTKgkN36hWm7FQe91R7PEDCo2Dr6mgIkaBwIx1URQ7cSgDevecN93Qwql+l34ccAPRc19R+fFWnklUhySeOROnNhBpvhzB97qFow/LxKDgDJwi+QumbMEqCtrCWlP44rTSvW3ZRGKSCpuezmURINUlH1qjumggNr6hgICVU8=
+	t=1789129715; cv=none; b=p05T3Fs8uS0joIdTGXhl7gLVWhB5RIk3btVgSAAJMrp6nVbK268QBXeetT1YHH+FiB5XpmVrbmpyWxGWgqB802qNqumkcoRA+IVyyV/lzIv76lpAE77l3vvpwhitAOeycYUqGJslu6yPTtSMF55/bnK28PTIYCxkFmgKfruaEIY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789129249; c=relaxed/simple;
-	bh=oKIZT85hkEtJfaVpZSvchm6YdJo9zWS1OG0NX8fKK4Q=;
+	s=arc-20240116; t=1789129715; c=relaxed/simple;
+	bh=Y22oAOYfO29bV4b/uBm+1Svom9ecfhlZLcx1ZOKDvZs=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ocUMtLIN0JrPpAYFOpIzymEHK37OmJL2qmLDxYDJIZSVaJRLFn1wzeL/LgNVkmVfxNtqI9EFaVQaQis+eyJEXtwUJeNqaCBohfWUsIQ8zejSah8aL+Ziho8CmbV/U2ZplJWiJsmHo63E1Zw2Bvm49A7BZrz9z/HQuob8pvVhseQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D2AWTefJ; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=WgIc1ivLweWcxsZPuKmW37ajsS08nrN9+5RiXPOk3WCBQK0/9pO3kmqyp6wQLA78JFol4dNjDjYOe96AO7arJeG0kcBgbp+5f2W1xlxkwpqSnjJL5qNMBVYPqcw9RCXZPV79d6+XLIL1EKorW8sR5Ud8MVrEvxHLgTg48xSwm84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NPIN0z2H; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D2AWTefJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BF941F000FF;
-	Fri, 11 Sep 2026 12:20:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NPIN0z2H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37A1C1F000FF;
+	Fri, 11 Sep 2026 12:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789129244;
-	bh=oKIZT85hkEtJfaVpZSvchm6YdJo9zWS1OG0NX8fKK4Q=;
+	s=k20260515; t=1789129714;
+	bh=UP676po0CuG7Diq2loxYvCUrWJ3ZYleNIf8atY6VASs=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=D2AWTefJkesAWAuOJG+vdX6k4YsVAFMU+dwRPb9u7br2UjzjqslVTebzrTtI50dJ5
-	 AblfeLYvWQrkI0vW4mHRK/duB3cvOOQX8sANwZmYhBwPHqKEwou40EA8OWtzWmNIs7
-	 XxI8zAOa2jzOuaHn5DsNuMQg9FFjM/gkxRSTCq3ICJYpaqSVXFoA0P3euFwb7SyD0T
-	 5cwTP3jSxdCjtutDx5krkwtUI2/bxtWsoClYjl3E9eVf2tCoZ1ZG6/tRdg6mPSenVW
-	 j823wgqBh+kj3oqByR12zEjm1mqyXECJp/KEJY5+QKHviOmET1HXIdTSLIO3qHn7+l
-	 E5+6U3VlS8/eQ==
+	b=NPIN0z2HuNVR3JDfEARUChvah7LIFH/+3Bvm/AE2qPbU1FhdhoQWv5Zrd0gak/meH
+	 X9gHZit/ZzjcrDcl/riFm6R/6khR+uRr3N1g2Z3tq3ZC4xfKq2oJFizOQ5OVnbiDu7
+	 yf4w+nAk05/FhMcjeHT2mjCKLiVWEAVr46AaTsW/JG84+lIzbMvN8SFwIpaXl9mwkI
+	 k1765dsIKK6YLaaSKbtoLraTm1ljwp5W/7CHVBM+820oAZloql+Dve3W+suBTT/Edp
+	 SyTA+LLXq4YknOR41r8PO4pWUupCk8y+E/nefz9QEVE56pHb9DSMAMVDBOAeHi3ER0
+	 ihh48dOHlfeuQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 1/9] riscv: add SBI SSE extension definitions
+Subject: Re: [PATCH v10 5/9] riscv: mm: avoid enabling interrupts for
+ nofault page faults
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Zhanpeng Zhang" <zhangzhanpeng.jasper@bytedance.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260911121456.33223-2-zhangzhanpeng.jasper@bytedance.com>
+In-Reply-To: <20260911121456.33223-6-zhangzhanpeng.jasper@bytedance.com>
 References: <20260911121456.33223-1-zhangzhanpeng.jasper@bytedance.com>
- <20260911121456.33223-2-zhangzhanpeng.jasper@bytedance.com>
+ <20260911121456.33223-6-zhangzhanpeng.jasper@bytedance.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 11 Sep 2026 12:20:43 +0000
-Message-Id: <20260911122044.6BF941F000FF@smtp.kernel.org>
+Date: Fri, 11 Sep 2026 12:28:33 +0000
+Message-Id: <20260911122834.37A1C1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> From: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
->=20
-> Add definitions for the SBI Supervisor Software Events extension [1].
-> This extension enables the SBI to inject events into supervisor software
-> much like ARM SDEI.
->=20
-> [1] https://lists.riscv.org/g/tech-prs/message/515
->=20
-> Signed-off-by: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
-> Co-developed-by: Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
-> Signed-off-by: Himanshu Chauhan <himanshu.chauhan@oss.qualcomm.com>
-> Co-developed-by: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
-> Signed-off-by: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [High] Premature exception fixup bypasses vmalloc_fault() on 32-bit RISC-=
+V, breaking nofault accesses to valid vmalloc addresses.
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+commit cb75a61df5b372879cfe9c956e1ab3e4a9d62e0b
+Author: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
+
+riscv: mm: avoid enabling interrupts for nofault page faults
+
+This commit modifies the page fault handler on RISC-V to handle nofault
+accesses and perform exception-table fixups before enabling interrupts or
+running tracepoints. This keeps interrupts disabled during nofault accesses
+from atomic contexts.
+
+> diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
+> index 04ed6f8acae4f..520495420462f 100644
+> --- a/arch/riscv/mm/fault.c
+> +++ b/arch/riscv/mm/fault.c
+> @@ -294,6 +294,13 @@ void handle_page_fault(struct pt_regs *regs)
+>  	if (kprobe_page_fault(regs, cause))
+>  		return;
+> =20
+> +	/*
+> +	 * Nofault accesses must be resolved through the exception table before
+> +	 * entering the generic fault path or enabling interrupts.
+> +	 */
+> +	if (unlikely(faulthandler_disabled()) && fixup_exception(regs))
+> +		return;
+> +
+
+[Severity: High]
+Does this early exception fixup bypass vmalloc fault synchronization on 32-=
+bit
+RISC-V?
+
+On 32-bit RISC-V, valid nofault kernel memory accesses to vmalloc addresses
+(such as those made by copy_from_kernel_nofault() via bpf_probe_read_kernel=
+()
+or /proc/kcore) rely on vmalloc_fault() to lazily synchronize the PGD.
+
+Because copy_from_kernel_nofault() executes with pagefault_disable(),
+faulthandler_disabled() evaluates to true. By intercepting this condition a=
+nd
+returning early, we completely bypass vmalloc_fault(), which is called slig=
+htly
+later in handle_page_fault():
+
+	if ((!IS_ENABLED(CONFIG_MMU) || !IS_ENABLED(CONFIG_64BIT)) &&
+	    unlikely(addr >=3D VMALLOC_START && addr < VMALLOC_END)) {
+		vmalloc_fault(regs, code, addr);
+		return;
+	}
+
+Could this cause legitimate nofault accesses to valid vmalloc addresses to
+spuriously fail with -EFAULT instead of completing successfully?
+
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260911121456.3322=
-3-1-zhangzhanpeng.jasper@bytedance.com?part=3D1
-
+3-1-zhangzhanpeng.jasper@bytedance.com?part=3D5
