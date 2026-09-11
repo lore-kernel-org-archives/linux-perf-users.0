@@ -1,129 +1,191 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD5E46AA91
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 12:34:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFD9476065
+	for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 12:35:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789130089; cv=none; b=WkR55Ug4y6cm9IhK+mnXx/opjc61fWlnBhaGZIUJhJ2kpGhP4ZnytzYKSaQiovP1bWYvm9LXdN3ZqRxTWvPI32Wgk2ybYVmNzZgJljCYHi9u/8c7sq9+6TrhGLNP/iffgyH9sQBmaXwnjN8a1IgKsqJpY4AV8fIaCnPxwIks7sY=
+	t=1789130110; cv=none; b=Qp2FotYZUbmx85aBXX8ODg7mOhrNyZyjcfVKIMJDAV3PYWyvqDbMWXqX54d3Iz5OVPL0oDQkP1DRGD37xT0/xop/Qa5A/OpOZ97Xp12veWu71l8hBkTWFv5kgQXmK2JOVFKzDNQV0Kk9BGGu2AXcvsA4/r4rVYoa64D0eAxFd7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789130089; c=relaxed/simple;
-	bh=VA3HuLvZijJizUaOY+5EP4okfPxoVRS+oDwycyWXCMo=;
+	s=arc-20240116; t=1789130110; c=relaxed/simple;
+	bh=qCeTDMNlOFdnV9gp6ZhHSuzYL6SvxIJcUIL4gz1szfs=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=QpwcyKhYnRJjEJffQ3svn7pteHnSBUWlwZX5jBHm4amoITDAIetiSHxKJIMaz/lksjTOFqwaHtkLk63jnvqSOZwXq/7JpohoxYdukv0kFrfBtztevEQ9qUKbZouniLSG5KfDc0aoexIkWjHt/rxgylaEga8BDNoQz1yuZ8hWeW4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K6u2lbWi; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=o76hV8qtawW9egV9QzjqarfRt1q/B5re7yvwEJqIuonr9K7jVuITopD9wv1aEtVpCHPVX1mhT3eer63NAOHCM7wUHp17PPmGJrgrmsLRIHD3jab8M9ArV7UVsM6lf110fqUHSWe0tb/2lQa7QZ1Qflx9RSVNgIfGeqhYC8uXQsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e2etB/6u; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K6u2lbWi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12E501F00893;
-	Fri, 11 Sep 2026 12:34:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e2etB/6u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABA301F00893;
+	Fri, 11 Sep 2026 12:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789130088;
-	bh=Y3HkA05iXR3vIs48oNqEnWSIizD8GJ1hJnfTUIGI1JY=;
+	s=k20260515; t=1789130108;
+	bh=1FmvR77tz+cXcmT1WA3hB6TRJU5zszkXUgNLtAY5TPw=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=K6u2lbWitMWpfdhtPLJQDfk+UUfGgz3c3qt36oHHhAo3pFqiusRZ9YAtBqqG76mWO
-	 If5fQTltQ+5dZ2smVHmRsdFcWHqlQXQwbx6SuNMBcFawOmmoptoyBzjgRi7q429kG5
-	 VgqcpkQgFcEK0Jfvbkd2Cnwvkp6sViZ+uhqDAnr785BU/edly7ugTZuEiwu3IZHUwp
-	 I8kbZ4LeaOmy8t1gV2yVvQGET97rHO7VFZgIAAIUsrA0xDaFJbe6LjxAdoiTXXkscK
-	 aKX+igHSgm5hT6ilimA7zaSg9zBVenE1xdpjsdD4KxPp8x4jrdGQBgBgZV2Twg3rm7
-	 5+NXYPx02LBFA==
+	b=e2etB/6uwNlsTl7sZ6HTTq76o/PUV/3lN8v49ihxvaDAc+zu/qvoGqMZKHRHff/XC
+	 WQ7yXt3X5bfYtTuZ7abykkG9kslykphJx44Qfx1cjWJVY29EvpRpw2jcFH5hshOAv+
+	 GO4za4DUap4xVpJphS4/ZXfM7p2hJjAEV5ILoBZ2ieqpLI2KHsTM8ICcakVtG5r12w
+	 dZwPakI4U/sS8Xvp+fWZ4vZofQZggQDL3iXFwbFL4IIUpxHyCM50FqHifLoZbeQlXz
+	 wToEoUPTbdXyTyb8SBV4sWPLpmCGnddIVEzLNmG7TzDnX1M1Mk8PY7JspmEUkLhqcw
+	 +rriy2fpHuuLA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v10 2/9] riscv: add support for SBI Supervisor Software
- Events extension
+Subject: Re: [PATCH v10 6/9] perf: RISC-V: support callchains with SSE
+ delivery
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Zhanpeng Zhang" <zhangzhanpeng.jasper@bytedance.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260911121456.33223-3-zhangzhanpeng.jasper@bytedance.com>
+In-Reply-To: <20260911121456.33223-7-zhangzhanpeng.jasper@bytedance.com>
 References: <20260911121456.33223-1-zhangzhanpeng.jasper@bytedance.com>
- <20260911121456.33223-3-zhangzhanpeng.jasper@bytedance.com>
+ <20260911121456.33223-7-zhangzhanpeng.jasper@bytedance.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Fri, 11 Sep 2026 12:34:47 +0000
-Message-Id: <20260911123448.12E501F00893@smtp.kernel.org>
+Date: Fri, 11 Sep 2026 12:35:08 +0000
+Message-Id: <20260911123508.ABA301F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+Thank you for your contribution! Sashiko AI review found 3 potential issue(=
 s) to consider:
-- [High] Physical address truncation on RV32 with 64-bit physical addresses=
- during SBI_SSE_EVENT_ATTR_READ/WRITE.
+
+New issues:
+- [High] Kernel callchains for SSE PMU events are incorrectly disabled when=
+ CONFIG_FRAME_POINTER is not set.
+- [High] arch_stack_walk_user still uses __copy_from_user_inatomic, trigger=
+ing exception-table handled hardware page faults from the SSE handler conte=
+xt.
+
+Pre-existing issues:
+- [High] Missing access_ok() check in the non-SSE fast path allows dumping =
+arbitrary kernel memory.
 --
 
-commit 009ca408c0e515d2b163c5c6737a07a0e84156e8
-Author: Cl=C3=A9ment L=C3=A9ger <cleger@rivosinc.com>
+commit 43924918205cbb887aeaebe13586db0a4ccfaa5d
+Author: Zhanpeng Zhang <zhangzhanpeng.jasper@bytedance.com>
 
-riscv: add support for SBI Supervisor Software Events extension
+perf: RISC-V: support callchains with SSE delivery
 
-This commit adds support for the SBI Supervisor Software Events (SSE)
-extension, allowing firmware to notify supervisor software of independent
-events. It provisions per-event stacks, saves and restores interrupted
-contexts, and handles nested exceptions safely.
+This commit adds support for perf callchains through the RISC-V SSE PMU
+overflow delivery. It attempts to provide a non-faulting user memory copy
+for DWARF stacks and restricts kernel stack walks when interrupted contexts
+are not safe.
 
-> diff --git a/arch/riscv/kernel/sbi_sse.c b/arch/riscv/kernel/sbi_sse.c
-> new file mode 100644
-> --- /dev/null
-> +++ b/arch/riscv/kernel/sbi_sse.c
-
+> diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_=
+callchain.c
+> index b465bc9eb870e..ec75689c7aecb 100644
+> --- a/arch/riscv/kernel/perf_callchain.c
+> +++ b/arch/riscv/kernel/perf_callchain.c
 [ ... ]
-
-> +void noinstr do_sse(struct sse_event_arch_data *arch_evt,
-> +		    struct pt_regs *regs, unsigned long hstatus)
+> +static bool sse_kernel_regs_safe(struct pt_regs *regs)
 > +{
-> +	struct riscv_sse_interrupted_context context =3D { regs, hstatus };
-> +	struct riscv_sse_interrupted_context *previous;
-> +	struct sbiret sret;
+> +	unsigned long fp =3D frame_pointer(regs);
+> +	unsigned long pc =3D instruction_pointer(regs);
+> +	unsigned long sp =3D user_stack_pointer(regs);
 > +
-> +	nmi_enter();
-> +	instrumentation_begin();
+> +	if (!__kernel_text_address(pc))
+> +		return false;
+> +	if (!sse_addr_on_task_stack(sp, sizeof(unsigned long)))
+> +		return false;
+> +	if (fp < sizeof(struct stackframe))
+> +		return false;
 > +
-> +	/* Retrieve missing GPRs from SBI */
-> +	sret =3D sbi_ecall(SBI_EXT_SSE, SBI_SSE_EVENT_ATTR_READ, arch_evt->evt_=
-id,
-> +			 SBI_SSE_ATTR_INTERRUPTED_A6,
-> +			 (SBI_SSE_ATTR_INTERRUPTED_A7 -
-> +			  SBI_SSE_ATTR_INTERRUPTED_A6) + 1,
-> +			 (unsigned long)arch_evt->interrupted_phys, 0, 0);
+> +	return sse_addr_on_task_stack(fp - sizeof(struct stackframe),
+> +				      sizeof(struct stackframe));
+> +}
 
 [Severity: High]
-Does casting arch_evt->interrupted_phys to unsigned long truncate the
-physical address on RV32 systems?
+Does this code silently break kernel callchains for kernels compiled without
+CONFIG_FRAME_POINTER?
 
-When CONFIG_PHYS_ADDR_T_64BIT is enabled on RV32, virt_to_phys() returns a
-64-bit physical address. By casting to unsigned long for the phys_lo
-argument and hardcoding 0 for the phys_hi argument, if the physical memory
-resides above the 4GB boundary, the firmware receives a truncated 32-bit
-address. Could this result in the firmware reading from unintended memory?
+When an SSE PMU overflow occurs, sse_kernel_regs_safe() unconditionally rea=
+ds
+frame_pointer(regs) and verifies it falls within the task's stack bounds. If
+CONFIG_FRAME_POINTER is disabled, s0 is a general-purpose register containi=
+ng
+arbitrary values, causing the bounds check to fail and the stack walk to be
+discarded.
 
-> +	if (sret.error) {
-> +		pr_warn("Failed to read interrupted registers for event %x: %ld\n",
-> +			arch_evt->evt_id, sret.error);
+The non-frame-pointer implementation of walk_stackframe() unwinds sequentia=
+lly
+using only sp and pc, so enforcing a valid fp seems unnecessary and breaks =
+the
+heuristic stack walker.
 
 [ ... ]
-
-> +	if (memcmp(&regs->a6, arch_evt->interrupted,
-> +		   sizeof(*arch_evt->interrupted))) {
-> +		memcpy(arch_evt->interrupted, &regs->a6,
-> +		       sizeof(*arch_evt->interrupted));
-> +		sret =3D sbi_ecall(SBI_EXT_SSE, SBI_SSE_EVENT_ATTR_WRITE,
-> +				 arch_evt->evt_id, SBI_SSE_ATTR_INTERRUPTED_A6,
-> +				 (SBI_SSE_ATTR_INTERRUPTED_A7 -
-> +				  SBI_SSE_ATTR_INTERRUPTED_A6) + 1,
-> +				 (unsigned long)arch_evt->interrupted_phys, 0, 0);
+> +unsigned long riscv_perf_out_copy_user(void *dst, const void *src,
+> +				       unsigned long n)
+> +{
+> +	unsigned long addr =3D (unsigned long)src;
+> +	unsigned long copied =3D 0;
+> +
+> +	/* Keep the generic fast path unchanged outside an SSE handler. */
+> +	if (!riscv_sse_get_interrupted_context()) {
+> +		unsigned long ret;
+> +
+> +		pagefault_disable();
+> +		ret =3D __copy_from_user_inatomic(dst, src, n);
+> +		pagefault_enable();
+> +		return ret;
+> +	}
 
 [Severity: High]
-Similarly, could this truncation cause memory corruption here?
+This is a pre-existing issue, but does this missing access_ok() check in the
+non-SSE fast path allow arbitrary kernel memory reads?
 
-If the firmware writes back the state using a truncated 32-bit physical
-address, it may corrupt unintended memory regions if the original address
-was above 4GB.
+If riscv_sse_get_interrupted_context() returns false, the function directly
+calls __copy_from_user_inatomic() without verifying access_ok(src, n). On
+RISC-V, this translates to raw_copy_from_user(), which executes loads in
+supervisor mode.
 
-> +		/*
-> +		 * If writeback fails, COMPLETE resumes with firmware's original
-> +		 * a6/a7 rather than treating the shared buffer as committed.
-> +		 */
+Since supervisor mode has inherent read access to kernel pages, the loads
+succeed regardless of the SUM bit. A malicious user could craft a perf event
+with PERF_SAMPLE_STACK_USER, spoof their regs->sp to a kernel address, and
+trigger a PMU interrupt to dump kernel memory into the perf ring buffer.
+
+[ ... ]
+>  void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
+>  			 struct pt_regs *regs)
+>  {
+> +#ifdef CONFIG_RISCV_SBI_SSE
+> +	const struct riscv_sse_interrupted_context *context;
+> +
+> +	context =3D riscv_sse_get_interrupted_context();
+> +	/* A guest stack cannot be walked using the host address space. */
+> +	if (sse_callchain_is_guest(context))
+> +		return;
+> +#endif
+> +
+>  	if (perf_guest_state()) {
+>  		/* TODO: We don't support guest os callchain now */
+>  		return;
+>  	}
+> =20
+>  	arch_stack_walk_user(fill_callchain, entry, regs);
+>  }
+
+[Severity: High]
+Is it safe to invoke arch_stack_walk_user() unconditionally from the SSE PMU
+overflow handler?
+
+The commit message states "User callchains continue through the existing
+nofault RISC-V user unwinder", but arch_stack_walk_user() is not completely
+fault-free. It calls unwind_user_frame(), which uses
+__copy_from_user_inatomic():
+
+arch/riscv/kernel/stacktrace.c:unwind_user_frame() {
+    ...
+    if (__copy_from_user_inatomic(&buftail, user_frame_tail,
+                                  sizeof(buftail)))
+        return 0;
+    ...
+}
+
+If the user stack page is not resident, this triggers an exception-table
+handled hardware page fault. While the exception table handles the fault
+gracefully, the CPU still takes a hardware trap through handle_exception(),
+which routes execution through the exact dangerous trap entry path this
+patch intends to avoid during an SSE PMU handler.
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260911121456.3322=
-3-1-zhangzhanpeng.jasper@bytedance.com?part=3D2
+3-1-zhangzhanpeng.jasper@bytedance.com?part=3D6
