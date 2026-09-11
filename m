@@ -1,95 +1,142 @@
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25752353A70
-	for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 13:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C2D489872
+	for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 13:22:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789132859; cv=none; b=iKSXw2B6lIDx590M3gljir3//5QPkULTl71Vyqm1XSNJQXwoHz9x3BAhhmKBRDc/qjkSuk3sxhoAgj9RC18jtJl1bIhpckwHxgqNNgCG+A46EPdjQ0YN5Gdf+XoBGMocJ4QRVEjrQEqBamtbswJoQsIuhkan8j9j/PqHHQMNbiU=
+	t=1789132968; cv=none; b=JPexY3oLCz7Mct+RZmC25ekNDswK08/Vm6kCdo7grZeTZfhoeGsq/ae9ulQBWvkPUzW2NNUrfBs8FvNv6ebFZwmspw70UAP2JZGuEcckrfeHhrGAhyjb34syYVzOZGPYiCQna2oftv09i7CBVBZBYUxWjaj5RdIdllIB2DEp784=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789132859; c=relaxed/simple;
-	bh=EolGcyXZdQB+WJQ/fbAT/ovCeKnyMlJRoovdxLhAScI=;
+	s=arc-20240116; t=1789132968; c=relaxed/simple;
+	bh=T/e2vgzi/yX3haBVonSYMOMOZ1YJ8sxvxQcGMOKmPKs=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=A1lgiVPDU719eYnqSMBSRQn9tXmIDRYoE6Aa6LZS4n3dcyty0y0gzctyv+MpRmkbVRNg8qN1MHLh/Lq9JZs2PZnjwWhlwa6UKeaIqb5BERdsdSbONRrj5gCuIDGKmYff+xyeGOFZvGAMZMXjSMIzLPikyonOSIaPI8EosiE8oLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JhWuBsjX; arc=none smtp.client-ip=209.85.210.199
+	 To:Cc:Content-Type; b=bjy/TQl7Inu4D+lkTvNVUi8CPrKK3kUBFnP/MPHlp/cFdmHFfz9+Ovz4zlnUgwy2QER1RBlxcOIj04DfeX7aU0j1J4ebJwFGTox1+lFHB7eq7Jh6vv0wDkc4M1YH7sZVP0s6+P/vKawxMiKI+Pk1yDiJIDAzXBzeJgwgU93EtRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RLwvSvK3; arc=none smtp.client-ip=209.85.216.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JhWuBsjX"
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-855315ccb64so906828b3a.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 06:20:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RLwvSvK3"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-38e1118e4abso1633817a91.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 11 Sep 2026 06:22:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789132857; x=1789737657; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789132963; x=1789737763; darn=vger.kernel.org;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=G6E03lEoHjRnSy/KkF9YUurNW1tkrhzCisRbnf6MQso=;
-        b=JhWuBsjXKa/j2xC4TWzqQDqGpN1vHZydGvEuR7ZlNNx+eE3dFNstaCQI8H8Vby0lc8
-         By2hVTiaeIiQ5+ng8Cw24ZqBl6meSDOJlF/pgf+vev7XiTla4WEez/EaD/JaZ2cPMZBr
-         Rak3KpMdOUFDf0qD8nBOpqHJSO7wTyn8KK3iRPvnicl8fHPeQhWXqRKr3CbKCRL6xJeW
-         t+iwL0VhWlzhHU/v7hrGqOxwY3Xacg1IkfPGhfYjCmOeGF4/MGMfPvhlsLWHnaAh5xPO
-         tAyT4YxpueHloR+rke5kFjTPSDy74AdyrXtcM6idmrzY/CAUZWw+p+IrOwH5iBpkDvx/
-         MWIw==
+        bh=kqAHaS5fsv9ERkHKe2Kmet0fUHotC014bD2kFqqX4to=;
+        b=RLwvSvK31Nx6W5e5cWd1Zwn3GrqgUoi6AhS072W/uylcwVwZ3gpe+kx6GEa9rIFlk0
+         FYF4erl5BDuLlexOocQCSN41l6ccwOOPma6v34CdMIG5khIVZqkDirlCdqv964QjHzjX
+         wPzKEn407qRm3Embbs+yCBCiSEJTY3Js8tzzleFdo1mBTOxt2yTNnE2xosV20WkoMQvM
+         wIayUAwD/BVN9hgLYwfzEr+DeuhSbiV33KL8FX8Bmqy/2DX9ttcVZLG7uRr6EAwczGFk
+         ZiDQLDEUQiAQ8XVcZzOaCJECezVH/N/QfYRIjvdt+E3bJGSQdWRG09uKOPUwfNDqFGFJ
+         twjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789132857; x=1789737657;
+        d=1e100.net; s=20251104; t=1789132963; x=1789737763;
         h=content-type:cc:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=G6E03lEoHjRnSy/KkF9YUurNW1tkrhzCisRbnf6MQso=;
-        b=NxPW2n8oEY0WKlzNAZ/F3mrWHTkoIyubxyCg/tkkUVwvqf9VqOj8b0p9gRxTNn0LT2
-         IeDf1HhuTtlDSAwm9XEfaqwo3RcxKIXqw2s6luVtpc1anvZbQ3XdBapKKpf/yRPSA4nG
-         tYmpw/peDGyKiDx1xY07t3j+EwCG63aOVTzWnpgEOHlm4jeh9odbxGPJ5udAzJrFQbmz
-         j47wIdcWAtARX2Xvq9DrVuPh1g04vwr+RTA3TFUKQwZLnJFBRxVQgGwLGR5tRnb0+WOD
-         P92myo+BeflObyCGCLpr+8r30+eR9Cs7L5O1TzphrsU2kzkWZv2lU/j1hv1ZwXzjMwAR
-         4J5g==
-X-Forwarded-Encrypted: i=1; AKwUvBwBOEvk2HvZLrzHj79D7838JntLFPV9FwT6Ddk+HP6karBpqJ3Y4hcS8Ej5viGdyWC9HI3hWPYtIAMjUEd+6JkW@vger.kernel.org
-X-Gm-Message-State: AFuF++lEKMyXSp+cWyO8OjgV4EPxBveMkdVWJjoVVvne5EHPNPBGgzCC
-	GwX/0iZIwZJllsC1XET7qI8tX/34AiY0A5dU1vZDAw6ecYaYj4dWsohk4vAGMOLU+H5V7u5oBsx
-	jCqLuDQ==
-X-Received: from pgfd7-n1.prod.google.com ([2002:a05:6a02:6547:10b0:cc4:56ea:7ae7])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:6a26:b0:3da:5eda:d167
- with SMTP id adf61e73a8af0-3daed1515e3mr7900074637.5.1789132857186; Fri, 11
- Sep 2026 06:20:57 -0700 (PDT)
-Date: Fri, 11 Sep 2026 06:20:55 -0700
-In-Reply-To: <20260911074530.3140830-14-jgross@suse.com>
+        bh=kqAHaS5fsv9ERkHKe2Kmet0fUHotC014bD2kFqqX4to=;
+        b=TjT/YAWAk/XAzUF1coxEfEb86Ict5BFn1x35kPCfaqUA29aLyY8b/tc5rUkwG9JXAh
+         ObJEWx02cM3c51yg1k+VJdO0DP/qW3V4JPVTPehavxb0FjgytzXH0siwnxLq7eUiG3qf
+         wUMDoV5x5DbwyDBdosxx52+ZERSU00PH6EpWIvOfVgyqH85DEnfI6qa1dtowHw3ZphkL
+         oCefhXYASyRiBA+yzof00NiA+KFphY6hlpzpD9V+7FDachpC0od6olHC9e0HbQ0UkOM1
+         LG41yozUkO6KLS8HjXDE0ArJ3xVhno+Htzu6B0DCdjVIz+JsIaeRFqVNFzo+1xIuv/Mo
+         FxMw==
+X-Forwarded-Encrypted: i=1; AKwUvByV6gcD/CK8q0DlU5iLBtI0pTTaRG/ULplbgVTzBOVEIxHyxAf0bU1PReFaUlQjuz60Wu+q5GDSgSCWRq0Avhnv@vger.kernel.org
+X-Gm-Message-State: AFuF++nNuW5FGFfJVRNkJQVAGMOa+GQFcjuKc7kLIe2fnGtOJyqrxvB5
+	7HkyDQisKUBWx0BDZKn+2lzP9V6bYzODA3j7PmSqRuKtS7NhIQ1BxebZElJ6gaUBYdK2JeF5wU5
+	CSei5mw==
+X-Received: from pjbmv13.prod.google.com ([2002:a17:90b:198d:b0:39d:8dae:7e6d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c89:b0:398:e46e:ade3
+ with SMTP id 98e67ed59e1d1-39d9c39625dmr7169956a91.23.1789132962606; Fri, 11
+ Sep 2026 06:22:42 -0700 (PDT)
+Date: Fri, 11 Sep 2026 06:22:41 -0700
+In-Reply-To: <20260911074530.3140830-13-jgross@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20260911074530.3140830-1-jgross@suse.com> <20260911074530.3140830-14-jgross@suse.com>
-Message-ID: <aqQAN6JbTe0fveKs@google.com>
-Subject: Re: [PATCH v3 13/13] x86/msr: Simplify some rdmsrq() use cases
+References: <20260911074530.3140830-1-jgross@suse.com> <20260911074530.3140830-13-jgross@suse.com>
+Message-ID: <aqQAodJCAEZyeQ1k@google.com>
+Subject: Re: [PATCH v3 12/13] treewide: convert rdmsrq() from a macro to an
+ inline function
 From: Sean Christopherson <seanjc@google.com>
 To: Juergen Gross <jgross@suse.com>
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org, 
 	linux-perf-users@vger.kernel.org, linux-hyperv@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-coco@lists.linux.dev, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
+	kvm@vger.kernel.org, virtualization@lists.linux.dev, 
+	linux-edac@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-pm@vger.kernel.org, linux-coco@lists.linux.dev, 
+	linux-acpi@vger.kernel.org, linux-ide@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-crypto@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-mtd@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
+	linux-fbdev@vger.kernel.org, Thomas Gleixner <tglx@kernel.org>, 
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	James Clark <james.clark@linaro.org>, Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	"K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
+	James Clark <james.clark@linaro.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, 
 	Dexuan Cui <decui@microsoft.com>, Long Li <longli@microsoft.com>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Kiryl Shutsemau <kas@kernel.org>, 
-	Rick Edgecombe <rick.p.edgecombe@intel.com>, Michael Kelley <mhklinux@outlook.com>
+	Paolo Bonzini <pbonzini@redhat.com>, Ajay Kaher <ajay.kaher@broadcom.com>, 
+	Alexey Makhalov <alexey.makhalov@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, 
+	Pu Wen <puwen@hygon.cn>, Tony Luck <tony.luck@intel.com>, 
+	Reinette Chatre <reinette.chatre@intel.com>, Dave Martin <Dave.Martin@arm.com>, 
+	James Morse <james.morse@arm.com>, Babu Moger <babu.moger@amd.com>, 
+	Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>, Vitaly Kuznetsov <vkuznets@redhat.com>, 
+	Andy Lutomirski <luto@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@kernel.org>, Kiryl Shutsemau <kas@kernel.org>, 
+	Rick Edgecombe <rick.p.edgecombe@intel.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, 
+	Len Brown <lenb@kernel.org>, Damien Le Moal <dlemoal@kernel.org>, Niklas Cassel <cassel@kernel.org>, 
+	David Airlie <airlied@redhat.com>, Olivia Mackall <olivia@selenic.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Huang Rui <ray.huang@amd.com>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Perry Yuan <perry.yuan@amd.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, Yazen Ghannam <yazen.ghannam@amd.com>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Artem Bityutskiy <dedekind1@gmail.com>, 
+	Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
+	Vignesh Raghavendra <vigneshr@ti.com>, Ashok Raj <ashok.raj.linux@gmail.com>, 
+	Hans de Goede <hansg@kernel.org>, 
+	"Ilpo =?utf-8?B?SsOkcnZpbmVu?=" <ilpo.jarvinen@linux.intel.com>, 
+	Rajneesh Bhardwaj <irenic.rajneesh@gmail.com>, Xi Pardee <xi.pardee@linux.intel.com>, 
+	Daniel Lezcano <daniel.lezcano@kernel.org>, Zhang Rui <rui.zhang@intel.com>, 
+	Lukasz Luba <lukasz.luba@arm.com>, Helge Deller <deller@gmx.de>, xen-devel@lists.xenproject.org, 
+	linux-geode@lists.infradead.org, Michael Kelley <mhklinux@outlook.com>
 Content-Type: text/plain; charset="us-ascii"
 
 On Fri, Sep 11, 2026, Juergen Gross wrote:
-> After the conversion of rdmsrq() to an inline function some use cases
-> can be simplified by dropping an intermediate variable or by
-> eliminating the inline function completely.
+> Today rdmsrq() is a macro using its second parameter as the target for
+> storing the read MSR value.
+> 
+> Convert rdmsrq() to an inline function returning the MSR value.
+> 
+> The users have been converted using the following semantic patch:
+> 
+>   // Options: --include-headers
+> 
+>   virtual patch
+>   virtual report
+> 
+>   @@
+>   expression msr, val;
+>   @@
+>   (
+>   - rdmsrq(msr,val)
+>   + val = rdmsrq(msr)
+>   )
 > 
 > Signed-off-by: Juergen Gross <jgross@suse.com>
+> Acked-by: Damien Le Moal <dlemoal@kernel.org>      # ATA
 > Reviewed-by: Michael Kelley <mhklinux@outlook.com> # Hyper-V
 > ---
-> V3:
-> - eliminate KVM's read_msr() (Sean Christopherson)
-
-Thank you!
 
 Acked-by: Sean Christopherson <seanjc@google.com>
