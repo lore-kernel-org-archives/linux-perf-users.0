@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AE343438A0;
-	Sat, 12 Sep 2026 05:47:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E874369D54;
+	Sat, 12 Sep 2026 05:47:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789192033; cv=none; b=RJ7zXrOF3aq65K8mzB/rHO+Twq7c6pqkcgoiitXiwrKLL4z9KKUd1s6IxLaMBtgNF6+RJiAiede+1SgGL6kFvKwvZX78qPuPpcap9stP5VPpQ3VgsTwoAEvVXAU9E6ujlqyZLALol4H2La8jd0cmv+zb8lig0YbqFZWkqRzoB0c=
+	t=1789192033; cv=none; b=loGpz8QnP+tA9n1dSklHsbyMU9Iecq2tMTPYWfPevPanTmXilppSsmMWyrCwfkeKag0cNWnctJL5jutOGJMG1BR4JamFT+0TAH4lJOgz1tuQgOtVg94y21IdvMBZEcibg+OddbqtPJifv5x9lypyFYQWiBmRhM5IUgWoQH47Gpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789192033; c=relaxed/simple;
-	bh=9rTPBRQNFbhkPpWu07uefnMLUJIgUw0iqFOmDICck7Q=;
+	bh=WNKbhKgqiUM7cYedLfYZJc322IJnvKwdL9zCUyBNm7k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EGMBE7BVNjZgFG4Uf+T9NiCcQMgMe1e7zoMTelMsfQqT8uWMTXWDoeol4p43WVpyReI5smiHfL5X69VBc4r3WEb+QPP3RCjRiZ4ABAaB3/D3BSScimUA3ZMC/f1Cm/3fv+lkHDwVXjcatLIRtTHDfih5nQZEjwI9gOEJUfbLYeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kExom4ei; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=D7gZswASimUjmsxHmhXocaTOCJKW1uyl3b54Gpgp6ptMzEW6Q2EL2rRyFor/KbGU++WDVy6xrmnTyEU/5s92XxXMNWE6dqVQHxTyFlhLq5sS3yobcBrM9w/ZBqxosFlAX2jVRERr0LH2pR657nUtEZhImgpvaER+XoR13Bgrpuc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BkyL/Isd; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kExom4ei"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA7511F0089D;
-	Sat, 12 Sep 2026 05:47:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BkyL/Isd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8358E1F00898;
+	Sat, 12 Sep 2026 05:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789192031;
-	bh=/lbcpL34xjVfLdT41e2SVefAYol68GxosbShhiJAp/s=;
+	s=k20260515; t=1789192032;
+	bh=JTsJ9/vKQrACbY3Fqgy68jekiTz8o+GkXh3fRunTm0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kExom4eiDy6NqWDOFMkx8p3L1m9z2e+hhx2452ObCDnAuAlCY8rL9ZSHm4lgya3PA
-	 gXxTFfjuCXjmWCUKfpJliLtd0+AY+jwjhVNIZA9q9JtNjJgSOKx99UR6RLRfWH2bIw
-	 hr5zLy8Dedm2epBtKbNI2Z77uHAv9O3fdurwZYMNYLQj2brLDuLWROD3pE2sksvrqz
-	 t4v9NdQqeeiI1dTDeoqi9ouoheRQqBJDyg+2CvvT8kvW+gGYny1O+1aJ6WDP/9264V
-	 2OABpyFJDGWVjShN0+IK0DtmFCM4DTdN/89ygfS9g/M+W6VkAY/gbR0zYGgvNMFkuP
-	 8RuWQjNVPfrrg==
+	b=BkyL/IsdCPmIX36A0TuBRbReN3Qh8QepQfh2Xy+tFcoNtEWl3pXZjRmE64dC8/yA6
+	 CBBmq0YG6L37+7Ofeake2SwJdXX4Wm7ojwb3V5dGQQPb3MUxzrQrlc2vzAPNshk/bO
+	 ZiShdVH7q6MvX4A4tKxbPXg5Gs/FWE7657dP+ZeOfGnxnBucY8TpPRb/1pzcjBTiWK
+	 KXBZU44kx5aBi6WWPHb3oWk8QNZeN1ZTZGCVs/sCFOgXtOYXu/N2aMDePmp4o+0K8w
+	 XlKNY+Ul5QeXtaZaRPw5TV7A3TuX9FVvXvdmYC50GWHw2wwT8R9OwcPgEU1goahn/5
+	 zMaDcZ4e99y6A==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -39,11 +39,10 @@ Cc: Ian Rogers <irogers@google.com>,
 	Zecheng Li <zli94@ncsu.edu>,
 	Yanbo Zhao <yzhao62@ncsu.edu>,
 	Tengda Wu <wutengda@huaweicloud.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH 2/4] perf dwarf-aux: Add die_has_flex_array() helper
-Date: Fri, 11 Sep 2026 22:47:04 -0700
-Message-ID: <20260912054706.1475583-3-namhyung@kernel.org>
+	Shuai Xue <xueshuai@linux.alibaba.com>
+Subject: [PATCH 3/4] perf annotate-date: Allow out-of-size access for flex-array types
+Date: Fri, 11 Sep 2026 22:47:05 -0700
+Message-ID: <20260912054706.1475583-4-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
 In-Reply-To: <20260912054706.1475583-1-namhyung@kernel.org>
 References: <20260912054706.1475583-1-namhyung@kernel.org>
@@ -55,93 +54,111 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The die_has_flex_array() returns true when the given type is a struct
-and contains an array at the end of the struct.
+Structs that have a flex array will have accesses beyond its original
+size as the array was declared as 0 sized.  For now, it just allow any
+offset bigger than the size.  It could be refined later.
 
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/dwarf-aux.c | 57 +++++++++++++++++++++++++++++++++++++
- tools/perf/util/dwarf-aux.h |  3 ++
- 2 files changed, 60 insertions(+)
+ tools/perf/util/annotate-data.c | 22 +++++++++++++++-------
+ tools/perf/util/annotate-data.h |  2 ++
+ 2 files changed, 17 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index d7160f87ac7d7ab3..98d018798fa750ae 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -2180,3 +2180,60 @@ Dwarf_Die *die_deref_ptr_type(Dwarf_Die *ptr_die, int offset,
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index aff60a630fd05b01..ad043403ced58d98 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -248,8 +248,15 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	else
+ 		die_mem = member_type;
  
- 	return die_get_member_type(&type_die, offset, die_mem);
- }
-+
-+static bool __die_find_last_member(Dwarf_Die *parent_die, Dwarf_Die *die_mem)
-+{
-+	Dwarf_Die tmp_die;
-+	bool found = false;
-+
-+	if (dwarf_child(parent_die, &tmp_die))
-+		return false;
-+
-+	do {
-+		if (dwarf_tag(&tmp_die) == DW_TAG_member) {
-+			memcpy(die_mem, &tmp_die, sizeof(tmp_die));
-+			found = true;
+-	if (dwarf_aggregate_size(&die_mem, &size) < 0)
+-		size = 0;
++	if (dwarf_aggregate_size(&die_mem, &size) < 0) {
++		if (dwarf_tag(&die_mem) == DW_TAG_array_type) { /* flex-array? */
++			__die_get_real_type(&die_mem, &die_mem);
++			if (dwarf_aggregate_size(&die_mem, &size) < 0)
++				size = 0;
++		} else {
++			size = 0;
 +		}
-+	} while (dwarf_siblingof(&tmp_die, &tmp_die) == 0);
-+
-+	return found;
-+}
-+
-+/**
-+ * die_has_flex_array - Check if the given type has a flex-array at the end
-+ * @parent_die: a pointer to type DIE
-+ *
-+ * This function returns %true iff @parent_die is a struct type and has an
-+ * array at the end.  Note that the flex-array has no element, it should have
-+ * no size and the parent size doesn't include the flex-array.  So it should
-+ * locate at the offset of the parent size.
-+ *
-+ * For simplicity, it assumes the parent size of aligned with the flex-array.
-+ */
-+bool die_has_flex_array(Dwarf_Die *parent_die)
-+{
-+	Dwarf_Die die_mem, type_die;
-+	Dwarf_Word size, loc;
-+
-+	if (dwarf_tag(parent_die) != DW_TAG_structure_type)
-+		return false;
-+
-+	if (dwarf_aggregate_size(parent_die, &size) < 0)
-+		return false;
-+
-+	/* get the member field at the end of the struct */
-+	if (!__die_find_last_member(parent_die, &die_mem))
-+		return false;
-+
-+	/* get the type of the member */
-+	if (die_get_real_type(&die_mem, &type_die) == NULL)
-+		return false;
-+
-+	if (dwarf_tag(&type_die) == DW_TAG_array_type)
-+		return die_get_data_member_location(&die_mem, &loc) == 0 && loc == size;
-+
-+	if (dwarf_tag(&type_die) == DW_TAG_structure_type)
-+		return die_has_flex_array(&type_die);
-+
-+	return false;
-+}
-diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index 161f0bf980b6ee6a..9b662db710220522 100644
---- a/tools/perf/util/dwarf-aux.h
-+++ b/tools/perf/util/dwarf-aux.h
-@@ -189,4 +189,7 @@ void die_collect_global_vars(Dwarf_Die *cu_die, struct die_var_type **var_types)
- /* Get the frame base information from CFA */
- int die_get_cfa(Dwarf *dwarf, u64 pc, int *preg, int *poffset);
++	}
  
-+/* Check whether given type has a flex array */
-+bool die_has_flex_array(Dwarf_Die *parent_die);
-+
- #endif /* _DWARF_AUX_H */
+ 	if (dwarf_attr_integrate(die, DW_AT_data_member_location, &attr)) {
+ 		if (dwarf_formudata(&attr, &loc) != 0) {
+@@ -399,6 +406,7 @@ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
+ 	result->self.type_name = type_name;
+ 	result->self.size = size;
+ 	INIT_LIST_HEAD(&result->self.children);
++	result->flex_array = die_has_flex_array(type_die);
+ 
+ 	if (symbol_conf.annotate_data_member)
+ 		add_member_types(result, type_die);
+@@ -559,7 +567,7 @@ static enum type_match_result check_variable(struct data_loc_info *dloc,
+ 		return PERF_TMR_NO_SIZE;
+ 
+ 	/* Minimal sanity check */
+-	if ((unsigned)offset >= size)
++	if ((unsigned)offset >= size && !die_has_flex_array(&sized_type))
+ 		return PERF_TMR_BAD_OFFSET;
+ 
+ 	return PERF_TMR_OK;
+@@ -1168,7 +1176,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 
+ 		/* Get the size of the actual type */
+ 		if (dwarf_aggregate_size(&sized_type, &size) < 0 ||
+-		    (unsigned)dloc->type_offset >= size)
++		    ((unsigned)dloc->type_offset >= size && !die_has_flex_array(&sized_type)))
+ 			return PERF_TMR_BAD_OFFSET;
+ 
+ 		return PERF_TMR_OK;
+@@ -1192,7 +1200,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 
+ 		/* Get the size of the actual type */
+ 		if (dwarf_aggregate_size(type_die, &size) < 0 ||
+-		    (unsigned)dloc->type_offset >= size)
++		    ((unsigned)dloc->type_offset >= size && !die_has_flex_array(type_die)))
+ 			return PERF_TMR_BAD_OFFSET;
+ 
+ 		return PERF_TMR_OK;
+@@ -1211,7 +1219,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 
+ 		/* Get the size of the actual type */
+ 		if (dwarf_aggregate_size(type_die, &size) < 0 ||
+-		    (unsigned)dloc->type_offset >= size)
++		    ((unsigned)dloc->type_offset >= size && !die_has_flex_array(type_die)))
+ 			return PERF_TMR_BAIL_OUT;
+ 
+ 		return PERF_TMR_OK;
+@@ -1839,7 +1847,7 @@ int annotated_data_type__update_samples(struct annotated_data_type *adt,
+ 			return -1;
+ 	}
+ 
+-	if (offset < 0 || offset >= adt->self.size)
++	if (offset < 0 || (offset >= adt->self.size && !adt->flex_array))
+ 		return -1;
+ 
+ 	h = &adt->histograms[evsel->core.idx];
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index ca2096a9ee62cbfe..27b7148b64f60350 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -85,6 +85,7 @@ struct type_hist {
+  * struct annotated_data_type - Data type to profile
+  * @node: RB-tree node for dso->type_tree
+  * @self: Actual type information
++ * @flex_array: Whethere it has a flex array
+  * @nr_histogram: Number of histogram entries
+  * @histograms: An array of histograms
+  *
+@@ -93,6 +94,7 @@ struct type_hist {
+ struct annotated_data_type {
+ 	struct rb_node node;
+ 	struct annotated_member self;
++	bool flex_array;
+ 	int nr_histograms;
+ 	struct type_hist *histograms;
+ };
 -- 
 2.55.0.1032.g73a4cd73de-goog
 
