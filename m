@@ -1,64 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8918537A498
-	for <linux-perf-users@vger.kernel.org>; Sat, 12 Sep 2026 08:08:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348CF455639;
+	Sat, 12 Sep 2026 13:37:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789200483; cv=none; b=RFVhWQUqRmaPutJn1MrvOy2xuxdgowlVbPpUl83HSJEnu+IZQ8I/1dYiGRfFhZvseq3pOMp0HTOsA6reSXdIACbUjyD2bYx/Jhd+pL0hpBh6iMS++ngYBhTkz/NqS82ce4B8E2bTWJ2RYY2USpZBim2kMc7C88cK3+wMTCRxhbs=
+	t=1789220225; cv=none; b=HHQTeYyRGLNcs2+hufXh11obPU9EnA3awpFic1OQRM3HPOpWc5op5EbpFDiEswXIhxhWpeOb3YSotZtr37j8OwgjMVj+k/y3jzO8sJdA1vG+CSC8Vv/MWljEk2w4drt13bOxeCkb/hT3qm0++oDWxtYuny92ya2qlI6BPvC904o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789200483; c=relaxed/simple;
-	bh=IthVDUVL2jSE2xPsfdGKoPpGQrNoGBu0dYMY8T0IA1M=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=hkIR4spEe7KOOH/u2638xERqbf+MzHJ0VrGVxTUYZaK/Y8OhKa4WQImCeq1a9mI3y/VWA/MkoIcxtb0lX1ibMbno9moTtmDGpOCZBknFAOjxqOFn8e970vBSOs99EguL2XVXFe8XWHRHGHAuePuvCPRhvOyOeuNRJk391YU4dwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PMRf75uF; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789220225; c=relaxed/simple;
+	bh=oNST79umTYOnUVPeaIvOX5gmne1rcIc1dIFSgwmJbY0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=WnhEcFP/fS5TuD8OuumS7tiUbD8K1qhEa0jd4TYHcilOqy/tWt5+wFUN5IuhmrDiIMrPbxD0qiQglUkuOL5fWuGfnzXWDwKX/VvldnwP+Xkj5qZNX3ZIt4Na6Q+Tj8lF8GgwDyJ6hr/YfsR7fg8DOtBr2kCxg/jFd1DbPZuj0Jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lg9J3tjW; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PMRf75uF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2985D1F000FF;
-	Sat, 12 Sep 2026 08:08:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lg9J3tjW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8BDC1F000FF;
+	Sat, 12 Sep 2026 13:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789200482;
-	bh=IthVDUVL2jSE2xPsfdGKoPpGQrNoGBu0dYMY8T0IA1M=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=PMRf75uFQbaYqczQtOVFX7djLa6mtLh4JxD9dNRb0rP5Sqd9b6qCCo5HVPMkcpfOI
-	 hjAdCusfYj3B0EBlFwNUmkWhLxbKW3gbz5GTjaqvFDC5Lk967AlIx9JX5osg/P1WW/
-	 ffEYbygKPrN1lru5wo+c88pwmAloIJxN30VCb/EvcL19ow2XyJHa22Q4/cmMjdOUbd
-	 d7EjWdu0O0LfBQfGbkw/X5GiEdhblSsRByQIylDMaUQFhfgp55+s2lmFfPv8qdXmn+
-	 6ETK9VfdtOkrJxeC/moyYlmx6nEK81+ihV0fVtzfltkVhXr0OhLw87YsiRV/VISRoV
-	 su+55anh+EHIA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH] drivers/perf: apple_m1: Add macOS 27 M2 Event
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Myria Sarvay" <myrialsarvay@gmail.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260912-m2-9f-pmu-name-v1-1-da682557453c@gmail.com>
-References: <20260912-m2-9f-pmu-name-v1-1-da682557453c@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 12 Sep 2026 08:08:01 +0000
-Message-Id: <20260912080802.2985D1F000FF@smtp.kernel.org>
+	s=k20260515; t=1789220224;
+	bh=jwd4Rk+LghulteCFZ22CToEe8Fypa34me6oLaUXnTn4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=Lg9J3tjWv8hrtyNST5+hW8b/otbqwiOm6OjnlTpt+7n+lCWW06FZZfpXKLEu/V9dg
+	 q0LFsRJKg0nW7JrKPw0BInBM1iBIKlex33UOc0XsJTGaeJi6BUTakRPQK6X7JHQBee
+	 EeKJTM/b5CzGiQ8OLKq5G2hDgoZ8Ar8hfhifOnWjeVQA+Wseyo4byuVFzcEEujmWv9
+	 +QiMTexATwKHLauFvivoKoarjHfOn1Q8u5hnaldxchV8rr1rKIb8DYVQbEF7wHLSZk
+	 /cRBK5Yp9JPM3tSzLuOfyxgHMtUakohY1o45O96Gl2Ul7Mmr9DDy9NBtZA4uWmMbSB
+	 lzRza60O8j68Q==
+Date: Sat, 12 Sep 2026 22:36:58 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jinchao Wang <wangjinchao600@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, x86@kernel.org,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, Dave Hansen
+ <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers
+ <irogers@google.com>, linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v15 00/12] tracing: wprobe: x86: Add wprobe for
+ watchpoint
+Message-Id: <20260912223658.c4495241023f72e3cf48bf0c@kernel.org>
+In-Reply-To: <307d6fd5-a8fa-4777-b513-9a8cce46f38a@gmail.com>
+References: <178875277830.93794.14247844688761142429.stgit@devnote2>
+	<307d6fd5-a8fa-4777-b513-9a8cce46f38a@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-> From: Myria Sarvay <myrialsarvay@gmail.com>
->=20
-> This patch adds another known PMU event that can be found under
-> /usr/share/kpep on macOS 27 for M2 macs. INST_SIMD_ALU_VEC purports to
-> count "Retired non-load/store vector Advanced SIMD instructions", and as
-> we already noted, can only be registered on counter 7. Though this event
-> only shows up on the M2 kpep records, it can be set on M1 CPUs, and
-> records something.
->=20
-> Link: https://github.com/0ax1/apmc/blob/9cff99a9df2ae055f1e3065c64f633e38=
-bb6beec/counters/m2.md
-> Signed-off-by: Myria Sarvay <myrialsarvay@gmail.com>
+On Fri, 11 Sep 2026 15:27:41 +0800
+Jinchao Wang <wangjinchao600@gmail.com> wrote:
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+> Hi Masami,
+> 
+> I see the watch address update currently goes irq_work -> workqueue ->
+> on_each_cpu().  I would like to discuss that path.
+> 
+> The race window wprobe may be used to watch can be very narrow --
+> sometimes it lives entirely inside a single function -- and the trigger
+> does not always run in in_task() context.  The current path defers the
+> update to a work item, so by the time the debug registers are updated the
+> window may already be gone.
+> 
+> Now that we have modify_local_hw_breakpoint_addr(), the trigger could arm
+> the local CPU directly and use smp_call_function_single_async() for the
+> remote ones.  That should improve the overlap between the watch and the window.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260912-m2-9f-pmu-=
-name-v1-1-da682557453c@gmail.com?part=3D1
+Hm, that is a good idea. Maybe we can check the current context and if
+possible call modify_local_hw_breakcpoint_addr() directly for current
+CPU core, and kick irq_work for other cores.
+Does this make sense for you?
 
+Thanks,
+
+> 
+> What do you think?
+> 
+> Thanks,
+> Jinchao
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
