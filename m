@@ -1,193 +1,103 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65B025776;
-	Sat, 12 Sep 2026 05:47:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70B304BEE5F
+	for <linux-perf-users@vger.kernel.org>; Sat, 12 Sep 2026 05:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789192033; cv=none; b=gscNLUltwr1ou/J61gRw14hHDsQklAtat4pel0J7hSPjedjnPFsZNg4ylePUXCJYLnuOYRWXN3323y+nEQWVMVaO7lap6i5QTsBw0ra+94NB9i9XCQHioVI8KYG3SSYlehAy51dgjT4BJN0HOxYdtwFj7gI9LH0kaqlpFaNkORs=
+	t=1789192607; cv=none; b=d6E9qQFxxTCn2pO79UhTmStMajg2rlMxloLVqSUQIJ4sSlEjoTg04fOpnavtDv3RQ8mxqDn6gsmwnSMCmacOWZZVZDH0sSH7SEwU4oiTcKyhsILfYpey59dzfTjO25fwJLXNr2oj8eEb71v0KEhyJ6irkFKpYgOyOdnnakqKSxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789192033; c=relaxed/simple;
-	bh=rxJHyYBFUF4d3+RIhzPWcaffFWFaNkaQyoI6io9Iq0A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=q7RuMO56i8fWl3/pj03WvZb4TGZxUZNr4wMpRa5WKl9A0IuAzvUo81gRJeezHYIWhrQbF/yaHsbSVWjCKjmmcamFQWc7Ha5bykX0DJcCHQrYtNcpAqgsWNeVpte0RPFN3Oq3/QNs3CzrDB74+D8e4gaIfDtGeEjGYgkaZW+RetM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g8FtxHkq; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789192607; c=relaxed/simple;
+	bh=qUspKEfoo20hCAE4JDf4cCHryC/BhpntvvLEMB/D0bs=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=jjD5D0Cexgxisp75zcH0pMrxxoGH+eN81v0ejeUcWY8rtOXS/+pQsw1KYn95cIiZJkA2JLCxFS/2sGIUF4jQqodNo/oNuAwV5xPb09tEsjIrZlPHApNHYLN/4mbvMU1RI3CSNbNBNIxKoSzDg/F8ZjwQA63uS/Tarfq9FvDKcUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ove6PnjU; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g8FtxHkq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EC421F0089C;
-	Sat, 12 Sep 2026 05:47:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ove6PnjU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 034D81F000FF;
+	Sat, 12 Sep 2026 05:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789192032;
-	bh=rruhuPrNVDhLgAmVl7i/uXVuPDrgS4PaGgLoND0pxEA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=g8FtxHkqmYMaUI12boMRp2k1bEbcUcKS1/fE8RrHrJSNj/Qezx4bkbzBmPbn2SKy3
-	 ZrRx2LBZUD1xqkKRpNHCNxfGW1eqNxyVeaum6TPGzpbcMRe+QjBZd/ixOyi3aJrWw6
-	 HWf4LL2BpkueQviQovgtk9K39IRPbI/gsfmDpTXq2d5zPk4c6ZDE+oN+/aYaJQvikE
-	 DuA7TBQmVZ8i5md7vFY9GIaDNhCEa49/DlIQAlHMwgTdsI29z32f6r4QIN5v7OJRy+
-	 NSWaTWem3Xm4Ki3yypQy2CtT78uMi6Et6HOUeQXQ4ryuI10CeS0zAWJvcNZz9YAk1z
-	 MmO1SQEKB0HYg==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Zecheng Li <zli94@ncsu.edu>,
-	Yanbo Zhao <yzhao62@ncsu.edu>,
-	Tengda Wu <wutengda@huaweicloud.com>,
-	Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: [PATCH 4/4] perf annotate-data: Adjust type offset for flex-array
-Date: Fri, 11 Sep 2026 22:47:06 -0700
-Message-ID: <20260912054706.1475583-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-In-Reply-To: <20260912054706.1475583-1-namhyung@kernel.org>
+	s=k20260515; t=1789192606;
+	bh=fS8BZAbyk1gyoqTdYRGwxa95y++Up7StcLkXoJAwwKc=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=Ove6PnjUIXoBDp1yvCUJHqNiUXLaoNEBvpHdxgKNZvynnRD0aAihNsDGPDoIPelQU
+	 2UZk+g8dSJykIYYaJiN1+2GAB+TTt2FTpD61nEtYvcnvparAmhwDr3ebinSvdQUeVu
+	 7IS0l/27LtjQGBFR80O+VjBQFlwymh9wJv4eb8fCU3ukCQUyR/mCJtWdkXRUp8fslT
+	 dLwEDAXfXRgkrq8PEH7b6Ehwy3GgzX2DwMrpulUf4KKWDNedMt1SO5mNn9SCnHdOUd
+	 W8GUZ/wuQCeuJiIxmK8r2tiZHjSkN3M4WnXhWEMNjOvU3BBbSB5af8qmqSnpAIDGVJ
+	 RSklZkdlAZ9gw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 1/4] perf annotate-data: Convert type histogram to
+ hashmap
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Namhyung Kim" <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260912054706.1475583-2-namhyung@kernel.org>
 References: <20260912054706.1475583-1-namhyung@kernel.org>
+ <20260912054706.1475583-2-namhyung@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 12 Sep 2026 05:56:45 +0000
+Message-Id: <20260912055646.034D81F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-The flex array members are located beyond the original type size.  Also
-it needs to adjust the offset in an array to find a corresponding
-element using module operation.  Note that we focus on access to type and
-field, so array index is not important.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] Missing index increment when hashmap lookup fails in `get_member=
+_overhead` causes histogram columns to be scrambled across events.
+--
 
-Make sure to find a field name for flex arrays.
+commit 4840a8fb0b1911e5130194633a0b05e4bf3e21fe
+Author: Namhyung Kim <namhyung@kernel.org>
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/annotate-data.c | 73 ++++++++++++++++++++++++++++++---
- 1 file changed, 67 insertions(+), 6 deletions(-)
+perf annotate-data: Convert type histogram to hashmap
+   =20
+This commit converts the type histogram from an array to a hashmap to
+reduce memory overhead. It replaces direct array accesses with hashmap
+lookups across the annotation components.
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index ad043403ced58d98..0789a8cbea7c0355 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -332,19 +332,40 @@ static void delete_members(struct annotated_member *member)
- }
- 
- static int fill_member_name(char *buf, size_t sz, struct annotated_member *m,
--			    int offset, bool first)
-+			    int offset, bool first, bool has_flex_array)
- {
- 	struct annotated_member *child;
-+	bool found = false;
-+	int len;
- 
- 	if (list_empty(&m->children))
- 		return 0;
- 
- 	list_for_each_entry(child, &m->children, node) {
--		int len;
--
- 		if (offset < child->offset || offset >= child->offset + child->size)
- 			continue;
- 
-+		found = true;
-+		break;
-+	}
-+
-+	if (!found && has_flex_array) {
-+		/*
-+		 * It may have an intermediate struct that has another struct that
-+		 * contains a flex array.  In that case, the outer struct itself is
-+		 * has no array and the size is less than the offset so the above
-+		 * logic won't find the outer struct at the offset.  Let's use the
-+		 * last struct if it couldn't find a member for the flex array.
-+		 */
-+		child = list_last_entry(&m->children, struct annotated_member, node);
-+
-+		if (!strstr(child->type_name, "struct "))
-+			return 0;
-+
-+		found = true;
-+	}
-+
-+	if (found) {
- 		/* It can have anonymous struct/union members */
- 		if (child->var_name) {
- 			len = scnprintf(buf, sz, "%s%s",
-@@ -354,15 +375,37 @@ static int fill_member_name(char *buf, size_t sz, struct annotated_member *m,
- 			len = 0;
- 		}
- 
--		return fill_member_name(buf + len, sz - len, child, offset, first) + len;
-+		return fill_member_name(buf + len, sz - len, child, offset, first,
-+					has_flex_array) + len;
- 	}
-+
- 	return 0;
- }
- 
- int annotated_data_type__get_member_name(struct annotated_data_type *adt,
- 					 char *buf, size_t sz, int member_offset)
- {
--	return fill_member_name(buf, sz, &adt->self, member_offset, /*first=*/true);
-+	return fill_member_name(buf, sz, &adt->self, member_offset, /*first=*/true,
-+				adt->flex_array);
-+}
-+
-+static struct annotated_member *find_flex_array(struct annotated_member *m, int offset)
-+{
-+	struct annotated_member *child;
-+
-+	if (list_empty(&m->children))
-+		return NULL;
-+
-+	child = list_last_entry(&m->children, struct annotated_member, node);
-+	if (offset == child->offset && strstr(child->type_name, "[]"))
-+		return child;
-+
-+	return find_flex_array(child, offset);
-+}
-+
-+static struct annotated_member *get_flex_array_member(struct annotated_data_type *adt)
-+{
-+	return find_flex_array(&adt->self, adt->self.size);
- }
- 
- static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
-@@ -1743,6 +1786,7 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
- {
- 	struct dso *dso = map__dso(dloc->ms->map);
- 	Dwarf_Die type_die;
-+	struct annotated_data_type *result;
- 
- 	/*
- 	 * The type offset is the same as instruction offset by default.
-@@ -1755,7 +1799,24 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
- 	if (find_data_type_die(dloc, &type_die) < 0)
- 		return NULL;
- 
--	return dso__findnew_data_type(dso, &type_die);
-+	result = dso__findnew_data_type(dso, &type_die);
-+	if (result == NULL)
-+		return NULL;
-+
-+	if (result->flex_array && dloc->type_offset > result->self.size) {
-+		struct annotated_member *flex_array = get_flex_array_member(result);
-+		if (flex_array) {
-+			int offset = dloc->type_offset;
-+
-+			/* adjust offset in the flex array */
-+			offset -= result->self.size;
-+			offset %= flex_array->size;
-+			offset += result->self.size;
-+
-+			dloc->type_offset = offset;
-+		}
-+	}
-+	return result;
- }
- 
- static size_t data_type_hash(long key, void *ctx __maybe_unused)
--- 
-2.55.0.1032.g73a4cd73de-goog
+> diff --git a/tools/perf/ui/browsers/annotate-data.c b/tools/perf/ui/brows=
+ers/annotate-data.c
+> index aa8c89fe2e82c..82667c6ae2e74 100644
+> --- a/tools/perf/ui/browsers/annotate-data.c
+> +++ b/tools/perf/ui/browsers/annotate-data.c
+> @@ -62,12 +62,17 @@ static int get_member_overhead(struct annotated_data_=
+type *adt,
+> =20
+>  		k =3D 0;
+>  		for_each_group_evsel(evsel, leader) {
+> +			struct type_hist_entry *hist;
+> +
+>  			if (symbol_conf.skip_empty &&
+>  			    evsel__hists(evsel)->stats.nr_samples =3D=3D 0)
+>  				continue;
+> =20
+> -			h =3D adt->histograms[evsel->core.idx];
+> -			update_hist_entry(&entry->hists[k++], &h->addr[offset]);
+> +			h =3D &adt->histograms[evsel->core.idx];
+> +			if (!hashmap__find(&h->samples, offset, &hist))
+> +				continue;
+> +
+> +			update_hist_entry(&entry->hists[k++], hist);
 
+[Severity: Medium]
+When hashmap__find() fails (indicating an event has no samples at this byte
+offset), the continue statement skips the k++ increment.
+
+Will this cause subsequent events in the group to write their stats into the
+skipped event's entry->hists[k] bucket?
+
+If k is not advanced for the skipped event, it appears the histogram columns
+for multi-event annotation data could shift and display in the wrong event
+columns in the UI.
+
+Could we ensure k is incremented even when the hashmap lookup fails to
+preserve the correct column alignment?
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260912054706.1475=
+583-1-namhyung@kernel.org?part=3D1
