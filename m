@@ -1,76 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596E51A3160
-	for <linux-perf-users@vger.kernel.org>; Sat, 12 Sep 2026 05:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C4326A0D5;
+	Sat, 12 Sep 2026 05:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789190772; cv=none; b=oSmeBk0fZZVSwvPGplcGeVh9elupKCH+KIOd9uoQsIGC4F0HFMpaCBWQDYma8zg8YIsfjtqmPYQsQSThlJp2ANGeEvpO4BVUJXilKa2Tgu1ZNpw9/1iaW5/Gtc9VsHhyaNvlaeY2OGZIpwmfoy3KoPzflgk3PVugaUwgfTOHhx8=
+	t=1789191432; cv=none; b=HcB1SHJHKGl5IgF1P7nhBMOEa8vESZIOdcrtSycnJTNt72XU3+GQcE8SGdTUVXY34dNaASfF2zlX8ppt8Y7P+EGE/kLymtalkJAZJRV4v8yb79B7ZNRB7IAvYohiknx3uoI9L4bmuYTuChrskQUZwFUvCDhw2qhkPYp3G/gdROA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789190772; c=relaxed/simple;
-	bh=EkjYCyNArVNqScJ3VSEVx6QwgPBUP1PwzsliMZroHNw=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=R+ofcTSxipxifOgk9TX47mtw0AKwKCHzti4yZIoaWHKOgDsu5k12qoDatjhwVXje4VSwJB+ZGUBHPI+2NOrBeM6YHJ1KXINKeIy4vVFdUJQWFrujaa3j61vQ+P9JQZLXAVZ2qhp65gE8wuGKvCdCThTi3uzCL0JcVAV4ttjLE4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhmzO9CK; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789191432; c=relaxed/simple;
+	bh=2uFdiYBDkzeiQCG8W7bpoCOI2easB6dg+gGltrThoWs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=b3RgKsewQknGYQJa32n8/Gat7QTEN84GQbkj7M4OPOkq6waUWUI0ZuAROkMCWVDlSR2ItpiW4X51zCIvPtqPD1IGzYPNAoc/WqT9CFHsiqDq0aK9JtWI/6Hg+PHiZMcHqwbVVhkrPSNV7aN69yeADMedqRYlT735kPU7tU3FFaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ej+92Dq8; arc=none smtp.client-ip=220.197.31.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhmzO9CK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFCB11F000FF;
-	Sat, 12 Sep 2026 05:26:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789190770;
-	bh=v3iS9ycJ6aRtiyxqNTO/gtwcbLgHBmbFkKS6SO+s5dw=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=JhmzO9CKvyUEL3WxUpBlXKBdRQQ6ThVyoEPf4EyRwozhGhCafq3aGUgL/GXgIltIP
-	 ba935bKE/Sz+pKkNP9i0zD2sf/g4LNQHgCH1Sm0eZiR8rYQ92QLFklAt/cDTfOvO+9
-	 uAKbJOGorXmJzrYSY/OPFmD0m2tL4yYAXwO1NlIHRtF+/tl2wHH3XHpuYyTR9eMjsi
-	 LZtnruCZfmr3RQuuCyGQoRyDo8BzWhhyQAI6UZLlybp5EzBTcSkJ8508Y01pkGKcs1
-	 5gH/6kNLoU9oZPIj851A/fXSF/SU9aZSkkO8KTJYCCsB8jKVeQu9m5PB24NW5WoXLU
-	 fCvleaVziIC8Q==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2] perf thread_map: Deduplicate numerically equivalent
- PID and TID strings
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Hui Su" <sh_def@163.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260912051747.2215776-1-sh_def@163.com>
-References: <20260912031112.1814574-2-sh_def@163.com>
- <20260912051747.2215776-1-sh_def@163.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 12 Sep 2026 05:26:09 +0000
-Message-Id: <20260912052610.AFCB11F000FF@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ej+92Dq8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:To:Subject:Date:Message-ID:MIME-Version; bh=P1
+	+b3+TE4uR/tlNMgI8Ii+7W7xKRJFb/bywQznYnCfk=; b=ej+92Dq86Td/1xtcaG
+	aIQLI6Hr3+34JhopFE8LQ4+oQlIzTEc0drIJsVoQ58ELO/hWtSYXu9WoDhP0p0Xw
+	SqwkbJMd7c/y8ooyxlA13eeqpxQAeEkwYXP0QBsqy1r5tsm0lLvjgZN5wfGHRbcz
+	Xibf7pLZcw0MlOz1ONYQ5QysI=
+Received: from localhost (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wD335Tk5KRqr5rKAA--.16369S2;
+	Sat, 12 Sep 2026 13:36:37 +0800 (CST)
+From: Hui Su <sh_def@163.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: sashiko-bot@kernel.org,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Hui Su <sh_def@163.com>
+Subject: Re: [PATCH] perf synthetic-events: Check schedstat domain allocation failure
+Date: Sat, 12 Sep 2026 14:36:36 +0900
+Message-ID: <20260912053636.2242958-1-sh_def@163.com>
+X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260912032114.A02C91F000FF@smtp.kernel.org>
+References: <20260912031112.1814574-3-sh_def@163.com> <20260912032114.A02C91F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wD335Tk5KRqr5rKAA--.16369S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7tr45Zw18JrWDKFyUtrW7CFg_yoW8CFyUpr
+	WrWwsYqFyvqa4jgwnxZrWUXFy0kw4xXrZ8GF45Jr13Zw15Gr1F9FyftFWUu34fCr4vva4j
+	v3yYyanIv3yDuaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0JUx-BtUUUUU=
+X-CM-SenderInfo: xvkbvvri6rljoofrz/xtbC6gU2lWqk5OWwQQAA3y
 
-> thread_map__new_by_pid_str() and thread_map__new_by_tid_str() attempt
-> to deduplicate adjacent PIDs/TIDs using prev_pid and prev_tid.
-> However, prev_pid and prev_tid were never updated inside the loop,
-> making the check "if (pid =3D=3D prev_pid)" dead code.
->=20
-> Furthermore, even if prev_pid/prev_tid were updated, strlist sorts
-> lexicographically (e.g. "010", "011", "10"), which means identical
-> numeric values with different string representations (e.g. leading
-> zeros) are not adjacent in the list and would never be deduplicated.
->=20
-> Before this fix, the new tests fail at the first duplicate TID case:
->=20
->   $ perf test -v 35
->   35: Thread map                                                      :
->   --- start ---
-> [ ... ]
->   ---- end ----
->   Thread map: Ok
->=20
-> Fixes: b52956c961be ("perf tools: Allow multiple threads or processes in =
-record, stat, top")
-> Signed-off-by: Hui Su <sh_def@163.com>
+On Sat, Sep 12, 2026 at 03:21:14AM +0000, sashiko-bot@kernel.org wrote:
+> [Severity: High]
+> This isn't a bug introduced by this patch, but there is a pre-existing issue
+> in the caller perf_event__synthesize_schedstat().
+> 
+> If the loop in perf_event__synthesize_schedstat() encounters a line starting
+> with a character other than 'c' or 'd' (such as an unhandled trailing
+> newline or a new record type from a newer kernel):
+[...]
+> Does this check incorrectly assume the event pointer is NULL if an unrecognized
+> line is parsed?
+> 
+> Because the event pointer is freed at the end of the previous iteration but not
+> reset to NULL, it retains a dangling pointer. The check if (!event) will pass,
+> leading the code to actively pass the stale pointer to the process() callback:
+[...]
+> Could this trigger a use-after-free and a subsequent double-free?
+> 
+> Would it be safer to initialize the event pointer to NULL at the start of
+> each loop iteration?
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Good catch. I confirmed that this is a valid pre-existing bug.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260912051747.2215=
-776-1-sh_def@163.com?part=3D1
+After a successful iteration, `event` is freed but not reset to NULL. If a
+subsequent iteration starts with an unrecognized schedstat record type, no new
+event is assigned. The stale pointer therefore passes the `if (!event)` check,
+may be passed to `process()`, and may then be freed again on that iteration.
+
+While checking the event lifetime in this loop, I also noticed another
+pre-existing issue: when `user_requested_cpus` filters out the synthesized
+event, the `continue` path skips `free(event)`, leaking the event.
+
+These issues were introduced in the same schedstat synthesis code, but they
+are independent of the missing allocation check fixed by this patch. I will
+keep this patch focused on the allocation failure and send a separate patch
+fixing the event lifetime in `perf_event__synthesize_schedstat()`.
+
+Thanks for catching this.
+
+Hui
 
