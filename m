@@ -1,175 +1,248 @@
-Received: from mail-pz2-f43.google.com (mail-pz2-f43.google.com [74.125.228.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9992361977
-	for <linux-perf-users@vger.kernel.org>; Sun, 13 Sep 2026 12:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.228.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF37D370D57;
+	Sun, 13 Sep 2026 21:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789301714; cv=none; b=lzOYVS5mM6f7bdmVAnarEzA7RWvs6OD7Y7GdF3bcH0FF6xyKJevXlcdPpAFLcRmHjtsW/H/RTIvbxwfwcW2ijBC+XDDVXYbFwxXTmsPlKxRqEQa408j+xxXL0KHNQYJIAM5PmgsSmCcgLDbRj8meQabaf1Jk28Tmh6PJz9JO9wk=
+	t=1789335620; cv=none; b=oU8cgY3Ty340ldDU6kQ3yXLIVsFxKNQfa/aQigeJnw3h/wMPjLmZu+gwAM/WH1uS4Cye2zZddYtuaKM8AHqu0MU9OB0ZmDRvkjrz+C2dewn/SyVvSCZiqpmnWMfcOduK6w3dAfwCh5bz9023x2XrjbKsjKnT0sK1OFIRMiDN4oY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789301714; c=relaxed/simple;
-	bh=hKysyXX2c97twHFT+qB2lQTPpAk3w8xncJ/PJIlGA4k=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=pi5jnnuZicrIuZa5mwaWe/3S5L5Ycg7em39HaXz/3qbn8iGElOgT+nulp6ZUU6YN0pce1+nsdOr3PNtQbLqWBBNhuhMq72DAFcbP56Pronu6HpfanKOu+i21AkFJ3ut2h34q8T/DRkWNhk4S4ihR+iVdBtwNF1N8StOEgxRX9Iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B1MIYtY9; arc=none smtp.client-ip=74.125.228.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1789335620; c=relaxed/simple;
+	bh=PF+LVKskK+pamCNUypr+ieRRZaaqa2r/q3lqQavMfuk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lB1UYfaT3XoVYVBFrHw9tfB+7MZfdqN+GaZYhfWstTpmXXu0XP0OY/pBOpRZRVZCYIpg+PDDeHmB+gmRSniat46bTzvSQuMefvzGfahg7Rsq2gsj6GCVu87loeZA/GXV4CMlDuMTHk/3spHGZGkuFudA1RguWPu0FLs/Oh2S2lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oFTE8hfg; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B1MIYtY9"
-Received: by mail-pz2-f43.google.com with SMTP id d2e1a72fcca58-85469b35611so467660b3a.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 13 Sep 2026 05:15:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1789301712; x=1789906512; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:mime-version:message-id
-         :references:in-reply-to:user-agent:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to:content-type;
-        bh=lSoM6I1aPz9Shou4iumBlkD4AmDilJosmX4TmWduFSQ=;
-        b=B1MIYtY9UMmDxDdS2UGGZqQ2xckz5y7Mk1tDwQsXB4RR/vTz/DuPA0i2hJn8vkCzPy
-         UJyiadjJVP5POqlab8Nf1jdCKxoGlD0Oa5hQ0q+pjm/+Stblr6qoeVYnGSXWzeeEsqGI
-         hUlX/4DKBs5D75OUU1db1ooCBFzU/KcCOIcJ83waYVlHUpueceNljezw2ZFxD+sbRUjd
-         bcQuHW2iQ3Nybe4S+8NEp2YgjzDcmGFZCj+913gBDqm7uj2e7agSfarfo+zO/kFS0cA1
-         sX6ho6pnY9GOtr+/fU+6Nl31RDl+R0z4ZkrTl1SZIBt1qnZYH0gBeRR3cOEydl+tZcno
-         cDtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789301712; x=1789906512;
-        h=content-transfer-encoding:content-type:mime-version:message-id
-         :references:in-reply-to:user-agent:subject:cc:to:from:date:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=lSoM6I1aPz9Shou4iumBlkD4AmDilJosmX4TmWduFSQ=;
-        b=OqI082WD24lzb5CTb/NAfsmc7V2pTp4rvlcpOxjUozZikSGEUpMwVHeFzLswEUb3sz
-         NIcM3nzmfkHtqCNvuGwHcfmORu1cTKHcq+z9NbrzteBPIeobG/J93uRUcob0OgrbrnVx
-         QJeZ2PI6Cg/zlOm8nOjuo1fOAKtZ0rBtTAYAGA01iXM/bTGzJhjKcN6rihA2ibrnB/bB
-         DqigdK7+hFfgkQvINvJ9QcXwGJOjM4VPzCHl4Pqx+/xJiEzAR42X7Ce1P5uTQROuN9e3
-         nIHDlQ63OkKfHCsLgZ/P4cJONbD3oLhm1sP0Jd94oIw3OzYULe+ylCZ33kBo2z3N362D
-         SvPg==
-X-Gm-Message-State: AFuF++l9UMvLszZeQ5NLvHAd+9IsTFuBGk082yfkl/GYpM39OqIsgJ6M
-	KMOc1h97k2WV6yoaZZedcoUUETLzBYU393wZGYIGB8parw6YPZYAGO0zyhS3G3BO
-X-Gm-Gg: AYBFou0ahJAru/yW6Nq6+oQnlMJKZXc6owwl0xmJIkDLYa3bYmWGS2ghfhKwA7yY+fx
-	SiM+LDQSYpBcsT9GtLXOW+QsniRR75NZ5Ca9Zl5Kx/cxfzttjXST6/0JLIgS0Xvpe9DKCgANdwR
-	hzWxtGGq4EqOshb7TJLQ0DtaRELl1kFB+4cK5mti0SvB3KeqkPuCPydjKcQgHpYauLXX21W+gMD
-	bwsuVaBo7xHyJiZkyBeFHbcuyCy8GTulqpyDY116Ssd6qHx2mMohyIqmKxdlK3ns0Ja+y8LBtc+
-	ShLBO0sEWZwXWTi2u9z41vg3qQA2Y7Rdw6S40ylrZwkLgVJsdD1m2a0tLQYE1hSQpTtrNx1ZMRi
-	0bgBUjmd6XJKao4ebhg5y3YkXyEE4eBaCyzM7p+AhPg8aCQOuMtcLQ1RgdWJCWnNdCGNJgtN1p4
-	ybrFKaZO4yp/JBUXWMOgcddG8mAAHFIgHcyggQIKxuTvVRmjlLM65JCKy+PCXNrKXO68rgqrdXP
-	P/YIclFK3tvoSxl
-X-Received: by 2002:a05:6300:670a:b0:3d1:af47:5f80 with SMTP id adf61e73a8af0-3db0e12bca1mr13678451637.11.1789301711879;
-        Sun, 13 Sep 2026 05:15:11 -0700 (PDT)
-Received: from ehlo.thunderbird.net ([2804:2bf0:60e7:ae00:fb55:7959:5b2b:8b1c])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-33ba4ed64fcsm21871662eec.16.2026.09.13.05.15.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 13 Sep 2026 05:15:10 -0700 (PDT)
-Date: Sun, 13 Sep 2026 09:15:06 -0300
-From: Arnaldo Melo <arnaldo.melo@gmail.com>
-To: sashiko-reviews@lists.linux.dev, sashiko-bot@kernel.org,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: linux-perf-users@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_2/8=5D_perf_debuginfo=3A_Fetch_d?=
- =?US-ASCII?Q?ebuginfo_keyed_by_build_ID_using_debuginfod?=
-User-Agent: Thunderbird for Android
-In-Reply-To: <20260913033651.5686D1F00893@smtp.kernel.org>
-References: <20260913032632.116277-1-acme@kernel.org> <20260913032632.116277-3-acme@kernel.org> <20260913033651.5686D1F00893@smtp.kernel.org>
-Message-ID: <F4EDF3EC-ABDE-43E8-A343-DE710D636211@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oFTE8hfg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98A011F000FF;
+	Sun, 13 Sep 2026 21:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789335618;
+	bh=RIVgQ+6LEjJa5Iu13ovL4TtskNFbnPXN6Qbq9MZXJHM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=oFTE8hfgUU+jJ6YgPno/UkMlktWe5C40oSi+F9ZtxXdy+nHEgjjLWMBoVPk83QYKB
+	 f1+KZNGWwqQqG7E0EnD+C8sAL/sZq2yKsGyfCB+N2FpCG8dTVh0Et6sX+3Dn9ZmaER
+	 Q1kJcgogfrlej3Tyvwx2nWh+rmda8+KKhtqbdudsx0gT2iK+qeuFT5xOQ2fsxXZBR3
+	 5uCoMsfo2FdW29EW9UAmFA7KjwnTpCxiNZP0N6E29hzA203JfbowtqnBoqfpj753uK
+	 C4eUd7sOynJstwv/Ln2e5CmYTQYYuygeZlahsTKrXlIktAwXqLWGiXc6WAkZiit6wC
+	 bg+a4ZXXbYF2A==
+Date: Sun, 13 Sep 2026 18:40:14 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf python: Fix ilist TreeNode string type drift
+Message-ID: <aqcYPoBOEKNk0WMc@x2>
+References: <20260910174420.3002597-1-irogers@google.com>
+ <20260910211539.3157204-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260910211539.3157204-1-irogers@google.com>
 
+On Thu, Sep 10, 2026 at 02:15:39PM -0700, Ian Rogers wrote:
+> Updates Tree type hints to correctly use TreeNode[TreeValue]
+> across all assignments preventing mypy strictness mismatches.
+> 
+> Address some other minor stylistic issues reported by mypy, pylint and
+> Sashiko.
 
-
-On September 13, 2026 12:36:50 AM GMT-03:00, sashiko-bot@kernel=2Eorg wrot=
-e:
->Thank you for your contribution! Sashiko AI review found 1 potential issu=
-e(s) to consider:
->- [Medium] Time-of-Check to Time-of-Use (TOCTOU) race condition in debugi=
-nfo__find_build_id() leading to redundant network fetches and memory leaks=
-=2E
-
-
-Ack, fixed in V3, will post later today=2E=20
+Thanks, applied to perf-tools-next, for v7.4.
 
 - Arnaldo
-
->--
->
->commit a2b8e0baf731e115b13a42e3b82a0348a1a8851a
->Author: Arnaldo Carvalho de Melo <acme@redhat=2Ecom>
->
->perf debuginfo: Fetch debuginfo keyed by build ID using debuginfod
->
->This commit introduces the ability to fetch debuginfo keyed by build ID
->using the debuginfod client when it is not found locally=2E It adds mecha=
-nisms
->for progress indication, user cancellation, and caching misses to prevent
->repeated network fetches=2E
->
->> diff --git a/tools/perf/util/debuginfo=2Ec b/tools/perf/util/debuginfo=
-=2Ec
->> index 84a78b30ceac1=2E=2E6f3023c96375c 100644
->> --- a/tools/perf/util/debuginfo=2Ec
->> +++ b/tools/perf/util/debuginfo=2Ec
->[ =2E=2E=2E ]
->> @@ -139,6 +149,443 @@ struct debuginfo *debuginfo__new(const char *path=
-)
->[ =2E=2E=2E ]
->> +int debuginfo__find_build_id(const struct build_id *bid, char **path)
->> +{
->> +	int err;
->> +
->> +	*path =3D NULL;
->> +
->> +	if (!build_id__is_defined(bid) || !symbol_conf=2Edebuginfod)
->> +		return -1;
->> +
->> +	if (debuginfod__cache_disabled()) {
->> +		pr_debug("Build-id cache disabled (buildid dir is '%s'), not using d=
-ebuginfod\n",
->> +			 buildid_dir);
->> +		return -1;
->> +	}
->> +
->> +	if (debuginfod__missed(bid)) {
->> +		char sbuild_id[SBUILD_ID_SIZE];
->> +
->> +		build_id__snprintf(bid, sbuild_id, sizeof(sbuild_id));
->> +		pr_debug("Not searching build ID %s in debuginfod again, it was a mi=
-ss earlier\n",
->> +			 sbuild_id);
->> +		return -1;
->> +	}
->> +
->> +	debuginfod__fetch_lock_init();
->> +	mutex_lock(&debuginfod__fetch_lock);
->> +	err =3D debuginfod__fetch(bid, path);
->> +	mutex_unlock(&debuginfod__fetch_lock);
->
->[Severity: Medium]
->Could this introduce a time-of-check to time-of-use (TOCTOU) race conditi=
-on?
->
->If two threads concurrently call debuginfo__find_build_id() for the same
->build ID, both could check debuginfod__missed(bid) and symbol_conf=2Edebu=
-ginfod
->outside of debuginfod__fetch_lock=2E=20
->
->After the first thread acquires the lock, completes the fetch, and record=
-s a
->miss (or processes a user cancellation), the second thread will acquire t=
-he
->lock and unconditionally perform the same fetch again without re-evaluati=
-ng
->the conditions=2E This could lead to redundant blocking network requests,
->ignored cancellation requests, and duplicate entries added to the
->debuginfod__misses list=2E
->
->> +
->> +	return err;
->> +}
->
-
-- Arnaldo 
+ 
+> Assisted-by: Antigravity:gemini-3.1-pro
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+> v2: Tweak the imports and type annotations for better 3.9
+>     compatibility and to be more pythonic.
+> ---
+>  tools/perf/python/ilist.py | 78 ++++++++++++++++++++------------------
+>  1 file changed, 42 insertions(+), 36 deletions(-)
+> 
+> diff --git a/tools/perf/python/ilist.py b/tools/perf/python/ilist.py
+> index 0d757ddb4795..ebff0a843b7a 100755
+> --- a/tools/perf/python/ilist.py
+> +++ b/tools/perf/python/ilist.py
+> @@ -2,11 +2,13 @@
+>  # SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+>  """Interactive perf list."""
+>  
+> -from abc import ABC, abstractmethod
+> +from __future__ import annotations
+> +
+>  import argparse
+> +from abc import ABC, abstractmethod
+>  from dataclasses import dataclass
+>  import math
+> -from typing import Any, Dict, Optional, Tuple
+> +from typing import Any, Optional
+>  import perf
+>  from textual import on
+>  from textual.app import App, ComposeResult
+> @@ -19,7 +21,7 @@ from textual.widgets import Button, Footer, Header, Input, Label, Sparkline, Sta
+>  from textual.widgets.tree import TreeNode
+>  
+>  
+> -def get_info(info: Dict[str, str], key: str):
+> +def get_info(info: dict[str, Any], key: str):
+>      return (info[key] + "\n") if key in info else ""
+>  
+>  
+> @@ -140,7 +142,7 @@ class ErrorScreen(ModalScreen[bool]):
+>      def compose(self) -> ComposeResult:
+>          yield Button(f"Error: {self.error}", variant="primary", id="error")
+>  
+> -    def on_button_pressed(self, event: Button.Pressed) -> None:
+> +    def on_button_pressed(self) -> None:
+>          self.dismiss(True)
+>  
+>  
+> @@ -234,7 +236,7 @@ class IListApp(App):
+>  
+>      def __init__(self, interval: float) -> None:
+>          self.interval = interval
+> -        self.evlist = None
+> +        self.evlist: Optional[perf.evlist] = None
+>          self.selected: Optional[TreeValue] = None
+>          self.search_results: list[TreeNode[TreeValue]] = []
+>          self.cur_search_result: TreeNode[TreeValue] | None = None
+> @@ -284,18 +286,18 @@ class IListApp(App):
+>              """Sets the focus after the SearchScreen is dismissed."""
+>  
+>              search_label = self.query_one("#active_search", Label)
+> -            search_label.display = True if event else False
+> +            search_label.display = bool(event)
+>              if not event:
+>                  return
+>              event = event.lower()
+>              search_label.update(f'Searching for events matching "{event}"')
+>  
+> -            tree: Tree[str] = self.query_one("#root", Tree)
+> +            tree: Tree[TreeValue] = self.query_one("#root", Tree)
+>  
+> -            def find_search_results(event: str, node: TreeNode[str],
+> +            def find_search_results(event: str, node: TreeNode[TreeValue],
+>                                      cursor_seen: bool = False,
+> -                                    match_after_cursor: Optional[TreeNode[str]] = None
+> -                                    ) -> Tuple[bool, Optional[TreeNode[str]]]:
+> +                                    match_after_cursor: Optional[TreeNode[TreeValue]] = None
+> +                                    ) -> tuple[bool, Optional[TreeNode[TreeValue]]]:
+>                  """Find nodes that match the search remembering the one after the cursor."""
+>                  if not cursor_seen and node == tree.cursor_node:
+>                      cursor_seen = True
+> @@ -332,7 +334,7 @@ class IListApp(App):
+>  
+>      def action_collapse(self) -> None:
+>          """Collapse the part of the tree currently on."""
+> -        tree: Tree[str] = self.query_one("#root", Tree)
+> +        tree: Tree[TreeValue] = self.query_one("#root", Tree)
+>          node = tree.cursor_node
+>          if node and node.parent:
+>              node.parent.collapse_all()
+> @@ -343,31 +345,34 @@ class IListApp(App):
+>          if not self.selected or not self.evlist:
+>              return
+>  
+> -        def update_count(cpu: int, count: int):
+> +        def update_count(cpu: int, count: int | float):
+>              # Update the raw count display.
+> -            counter: Label = self.query(f"#counter_cpu{cpu}" if cpu >= 0 else "#counter_total")
+> -            if not counter:
+> +            counter_query = self.query(f"#counter_cpu{cpu}" if cpu >= 0 else "#counter_total")
+> +            if not counter_query:
+>                  return
+> -            counter = counter.first(Label)
+> +            counter: Label = counter_query.first(Label)
+>              counter.update(str(count))
+>  
+>              # Update the sparkline.
+> -            line: Sparkline = self.query(f"#sparkline_cpu{cpu}" if cpu >= 0 else "#sparkline_total")
+> -            if not line:
+> +            line_query = self.query(f"#sparkline_cpu{cpu}" if cpu >= 0 else "#sparkline_total")
+> +            if not line_query:
+>                  return
+> -            line = line.first(Sparkline)
+> +            line: Sparkline = line_query.first(Sparkline)
+>              # If there are more events than the width, remove the front event.
+> -            if len(line.data) > line.size.width:
+> -                line.data.pop(0)
+> -            line.data.append(count)
+> -            line.mutate_reactive(Sparkline.data)
+> +            if line.data is not None:
+> +                if len(line.data) > line.size.width:
+> +                    line.data = line.data[1:]
+> +                line.data = list(line.data) + [float(count)]
+> +            else:
+> +                line.data = [float(count)]
+> +            line.refresh()
+>  
+>          # Update the total and each CPU counts, assume there's just 1 evsel.
+> -        total = 0
+> +        total: float = 0.0
+>          self.evlist.disable()
+>          for evsel in self.evlist:
+>              for cpu in evsel.cpus():
+> -                aggr = 0
+> +                aggr: float = 0.0
+>                  for thread in evsel.threads():
+>                      aggr += self.selected.value(self.evlist, evsel, cpu, thread)
+>                  update_count(cpu, aggr)
+> @@ -424,16 +429,16 @@ class IListApp(App):
+>          # Add spark lines for all the CPUs. Note, must be done after
+>          # open so that the evlist CPUs have been computed by propagate
+>          # maps.
+> -        line = CounterSparkline(cpu=-1)
+> -        lines.mount(line)
+> +        line_sp = CounterSparkline(cpu=-1)
+> +        lines.mount(line_sp)
+>          for cpu in self.evlist.all_cpus():
+> -            line = CounterSparkline(cpu)
+> -            lines.mount(line)
+> -        line = Counter(cpu=-1)
+> -        lines.mount(line)
+> +            c_sp = CounterSparkline(cpu)
+> +            lines.mount(c_sp)
+> +        c_val = Counter(cpu=-1)
+> +        lines.mount(c_val)
+>          for cpu in self.evlist.all_cpus():
+> -            line = Counter(cpu)
+> -            lines.mount(line)
+> +            c_val2 = Counter(cpu)
+> +            lines.mount(c_val2)
+>  
+>      def compose(self) -> ComposeResult:
+>          """Draws the app."""
+> @@ -459,17 +464,18 @@ class IListApp(App):
+>                      # Reading events may fail with EPERM, ignore.
+>                      pass
+>              metrics = tree.root.add("Metrics")
+> -            groups = set()
+> +            groups: set[str] = set()
+>              for metric in perf.metrics():
+>                  groups.update(metric["MetricGroup"])
+>  
+> -            def add_metrics_to_tree(node: TreeNode[TreeValue], parent: str, pmu: str = None):
+> +            def add_metrics_to_tree(node: TreeNode[TreeValue], parent: str, pmu: Optional[str] = None):
+>                  for metric in sorted(perf.metrics(), key=lambda x: x["MetricName"]):
+> -                    metric_pmu = metric.get('PMU')
+> +                    metric_pmu_raw = metric.get('PMU')
+> +                    metric_pmu = str(metric_pmu_raw) if metric_pmu_raw else ''
+>                      if pmu and metric_pmu and metric_pmu != pmu:
+>                          continue
+>                      if parent in metric["MetricGroup"]:
+> -                        name = metric["MetricName"]
+> +                        name = str(metric["MetricName"])
+>                          display_name = name
+>                          if metric_pmu:
+>                              display_name += f" ({metric_pmu})"
+> -- 
+> 2.55.0.1007.g17ff1f9808-goog
