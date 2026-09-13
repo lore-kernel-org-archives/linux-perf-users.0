@@ -1,131 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BC69369203
-	for <linux-perf-users@vger.kernel.org>; Sun, 13 Sep 2026 22:40:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4947A4A35
+	for <linux-perf-users@vger.kernel.org>; Sun, 13 Sep 2026 22:43:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789339235; cv=none; b=QSNljbB4q8+zT5geUgcNVTFYGiEQRrdurbX2zLls/kZVTmVshnyHTMoVndQTagchaNuf4WXOKKeKdC90rMhDTZ3hH0Qzrw67FADYVCp6BMlHC7Go17r4mbUA/rIMaI5P+T7NCy+xnk7JnVdHXBeWYz4jsfhLx8MxKtIODqHZjps=
+	t=1789339406; cv=none; b=Fl3yNqURw7zDCPwEjEFCqa++DgzSmiVyfaxtgGuI6bhfT2lReNmNPTjWIydRwPus2XepMWAFpbRYu4ct42aqwYh3dNZR5RId2lb5V8eUiViVwyO99Jk564wlB+OkKUiw8fBMSa8Yaw9zG2MhX9N+UIFH/DDeA1OjdgAi4i3b9to=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789339235; c=relaxed/simple;
-	bh=nerrtE1W4n9YqZmwrbKjryKnbdX01Pk+vLvGvDTqHj0=;
+	s=arc-20240116; t=1789339406; c=relaxed/simple;
+	bh=/xUEyiqnMV8gKxxBN9v9ptdKQh+toz1bJYdvxrqIw5o=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ZPIBSMeXd9Bj1lmfzCwPCUhF6FSO+KBeTRIw2hfirnPvNNi67BSXtBw7EWK1kKx0OPEU1Pi3o5K5hA9oKmFbAfqdCsQdR7FrrTNSee7y6mhRiVDBCaAOI8qTdq605PjbXFZYG1PjR+/tdpUoRK5nwtBvIOQZpUJj9yshLIf+WoM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DGy0vqmq; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=sennq0kunKgKyuawiTQfLkxnRTQVDhIlV9hJp12nRc+13Lfn3KlFz3tRLeme99BtFS1NXrW2KAgEhIiuVMi9kt9qlFK4p+GAG9gMVwWHOkHtcDo60OqAwMCH5PJME5RPtfw4A1GkWYQB+xzcDJPLH2HTSuC++uDzbt1vz4iylxw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SHBB0KTV; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DGy0vqmq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 034801F000FF;
-	Sun, 13 Sep 2026 22:40:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SHBB0KTV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEC141F000FF;
+	Sun, 13 Sep 2026 22:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789339234;
-	bh=ajn31g1wGGIiwoew/Bncvk9WMYpWLK37p1jncU2o7c8=;
+	s=k20260515; t=1789339404;
+	bh=/xUEyiqnMV8gKxxBN9v9ptdKQh+toz1bJYdvxrqIw5o=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DGy0vqmqp/N8W8KukOD++ek+i2Aeqna3HAZGiBRnoiU74QDyR6NhPHLFPd/YnpUzD
-	 emWzG6NQQnVt8V9jiYE1FkNAw5NHwrlyqBnvEZEw6kNKaZVndcKvcBwucMrvrJoy/8
-	 VXDXLZngcGNsNmaMIS3BMVneTO6ck/000HmoT9NDlUXP87liTrgdmhVvGrY6lbsTqa
-	 dsU02ynfdM/6qN2vUOzy+jf4sJDC6y2iMFWUKs1NOkXOvMtRXjnHvkPs1I2Ax5djuB
-	 K+/LYfoR9cCmeKjrtrFzFaQvDwgaCx23oq7tLGCuV6W9cSHqHAej06Ujv5j/uh+mrL
-	 EUn1auZRvAL+g==
+	b=SHBB0KTVYAJMQytEcHtsr5CpgotbxCFYxYPSJkuSfWhzmpYUVA1bSpptLkHObrBul
+	 U0R9G9GH+9XAQIr9lkNZPneJq/WoHldKggx5ZqgWsgIDkjVP/4akjLFmVYcGHREaqD
+	 v2qZH6NosB4GBYEfuBjvjQZIbxqcVMApKtdKu34ekVlU7Cg4vYEZ76VrXStIXI9gw2
+	 LSHgyfCfKD20vGcA787CObQnmk0nzr3H4uQA046bKTH5k8rtE16mSzylMghnLSse24
+	 yeVcEF2/yIHyWazJEOAXA8ponS9N8HNhucYJ/ydNyHzwr66cl107k3IbW7LGqVMe3B
+	 dR/BfVnDXLK/A==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/8] perf symbol: Fall back to fetching the vmlinux by
- build ID
+Subject: Re: [PATCH 8/8] perf mem record: Request PERF_SAMPLE_CPU by default
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260913222821.3353-4-acme@kernel.org>
+In-Reply-To: <20260913222821.3353-9-acme@kernel.org>
 References: <20260913222821.3353-1-acme@kernel.org>
- <20260913222821.3353-4-acme@kernel.org>
+ <20260913222821.3353-9-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 13 Sep 2026 22:40:33 +0000
-Message-Id: <20260913224034.034801F000FF@smtp.kernel.org>
+Date: Sun, 13 Sep 2026 22:43:24 +0000
+Message-Id: <20260913224324.BEC141F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] Race condition in debuginfod vmlinux fetch discards successful d=
-ownloads
---
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>=20
+> The data-type profiling per-sample stream keys cross-CPU contention on
+> sample->cpu: without PERF_SAMPLE_CPU the cpu field is the (u32)-1 "no
+> CPU info" sentinel, documented as such in perf_session__deliver_event(),
+> and same-instance reads and writes from different cores are
+> indistinguishable from same-CPU traffic, so pahole's false-sharing
+> detector cannot tell them apart.
+>=20
+> builtin-record.c already defines --sample-cpu and 'perf mem record'
+> forwards unknown options to the record parser, so passing it explicitly
+> works today; make it the default, next to the -d (addr) and -W (weight)
+> the command already requests, documenting it in perf-mem(1).
+>=20
+> Assisted-by: LLM
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-commit 808ca5b7ae0805113b62f51bed90e6469e600d15
-Author: Arnaldo Carvalho de Melo <acme@redhat.com>
-perf symbol: Fall back to fetching the vmlinux by build ID
-
-This commit adds a fallback mechanism to fetch the vmlinux by build ID using
-debuginfod when local kernel symbols cannot be found. This allows kernel
-samples to be correctly annotated even when the profile is processed on a
-machine with a different kernel or restricted kallsyms access.
-
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-[ ... ]
-> @@ -2257,7 +2280,50 @@ static int dso__load_kernel_sym(struct dso *dso, s=
-truct map *map)
-[ ... ]
-> +		/*
-> +		 * dso__load() holds dso->lock while it calls us, and the
-> +		 * fetch below can take a long time, blocked on the network
-> +		 * or on the terminal, waiting for the user: do it with the
-> +		 * lock dropped, as dso__debuginfo() does for the debuginfo
-> +		 * of a DSO, so that the threads that need this dso don't get
-> +		 * stuck behind a server round trip.  Nothing of the dso is
-> +		 * touched by the fetch, the symbols are loaded with the lock
-> +		 * held again, and only if the fetch brought a file back.
-> +		 */
-> +		mutex_unlock(dso__lock(dso));
-> +		err =3D dso__fetch_vmlinux_build_id(dso, &fetched_path);
-> +		mutex_lock(dso__lock(dso));
-> +
-> +		if (err) {
-> +			zfree(&fetched_path);
-> +		} else if (dso__loaded(dso)) {
-
-[Severity: Medium]
-Does this logic safely handle concurrent fetches where one thread fails?=20
-
-Because dso__load() unconditionally sets dso__loaded() even on failure, this
-could discard a successfully fetched vmlinux if a concurrent thread previou=
-sly
-failed.
-
-For example, if Thread A and Thread B concurrently attempt to load kernel=20
-symbols via dso__load():
-1. Both drop the lock to fetch via debuginfod.
-2. Thread A fails its fetch, reacquires the lock, returns an error, and its
-   caller (dso__load()) unconditionally sets dso__loaded(dso) =3D true befo=
-re
-   releasing the lock.
-3. Thread B succeeds in fetching, reacquires the lock, and checks
-   dso__loaded(dso).
-
-Seeing it is true, wouldn't Thread B incorrectly assume Thread A successful=
-ly
-loaded the symbols, discard its own fetched file, and return success?
-
-Would it be better to use dso__has_symbols(dso) instead of dso__loaded(dso)
-here to correctly detect a successful concurrent load?
-
-> +			/*
-> +			 * Somebody else got the symbols for this dso while
-> +			 * the lock was dropped for the fetch, use those
-> +			 * instead of loading the file that came back a
-> +			 * second time.
-> +			 */
-> +			pr_debug("%s was loaded while its vmlinux was being fetched, using it=
-\n",
-> +				 dso__name(dso));
-> +			zfree(&fetched_path);
-> +			err =3D 1;
-> +		} else {
-> +			/* Takes ownership of 'fetched_path' even when it fails */
-> +			err =3D dso__load_vmlinux(dso, map, fetched_path, true);
-> +		}
+Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260913222821.3353=
--1-acme@kernel.org?part=3D3
+-1-acme@kernel.org?part=3D8
+
