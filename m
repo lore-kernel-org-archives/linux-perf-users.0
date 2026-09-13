@@ -1,43 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC771D7E5C
-	for <linux-perf-users@vger.kernel.org>; Sun, 13 Sep 2026 02:42:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01291D7E5C
+	for <linux-perf-users@vger.kernel.org>; Sun, 13 Sep 2026 02:43:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789267353; cv=none; b=HDK46CSjZBLVcetRq3pYgLwsr9Mv+w+Izq+VGpO4VHjC1vuZf4QQ7W2hIx+vYFscp+Cbrf+TjVabKsA+e3OLtolNwAVGwLmmzyLJQMRd7hGNFrFEYCIYpPIXqUo5Wv4HSWv9OHrg4QEcRbKZqxNf/KE5xSlTaGpIpdKZMzZ2t3M=
+	t=1789267384; cv=none; b=SJdGoZ2aZTdsE8/pBvOrZBW+ZEtx+qTycbjM5bAZz1Ht54awzB4bN6a/mWvqGHt6zSpZuujwbwenO4JTqUTDEHOcOyVIyBvjO+tKp8Ig5qxn57WHKVHsWde+ogJEyYF+/mjYoD7/qzuxFYeg0qnkd4pHczqV0RClNSoCpDhvPXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789267353; c=relaxed/simple;
-	bh=MRCqpzP3jjzt6yktEYB/MXvgOYOYOsN65tLyRYxLUts=;
+	s=arc-20240116; t=1789267384; c=relaxed/simple;
+	bh=or6BroKKbyLf2rtvl4A0VcQ/4Hv43Fi1xsZedL3NYBU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=M5+blGuvVrK5Q/9PhpGUpu6mmxPvYi+y4TN9C6xpMlSGrwRGFNuz2t8Y9WLNGjB4LdC0srUL1wCAJ4zBYjtuYeSlXHivKEoTv6VIKD8ik81XhYFgBNf1L7CsVLBP93cNdtdasxTRtdZa2jUWX34m+94deMjHCfp6egHes114chs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SyoRbt9J; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=rfEPqo+AlN/87S7TCywzXfWYfTa3RO05KxgP2q2XOXqmEgGYbV4OCAoRlVdPfm2/xg7QDPuGFpPrIR2zr+6FnIPQzrRGsQtIlCT8YO8fB9W9vRRzbZDSPuElZYJlZTtDjTx0GkCVLV3bVb+lKnOQnlpjfYjrVP0CqWvxOALYV88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwg/ZCcG; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SyoRbt9J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8626B1F000FF;
-	Sun, 13 Sep 2026 02:42:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwg/ZCcG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 627251F000FF;
+	Sun, 13 Sep 2026 02:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789267351;
-	bh=mQtkzfjU8RBAVdiRD8gvjcnOko4ej92JgopfRl2L2fU=;
+	s=k20260515; t=1789267382;
+	bh=zUMC1XpIRzr/hqL3799DiaGDETWqko7jEenz1qCrzNY=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=SyoRbt9JAYv4wC/wJ3Tw9AWMfVbXB6HkHWAHFwm1RPzz0xk4eZPZmiBuOW04aHLvw
-	 DXBBiKYoKUaPMRZf/DewgViXcEIAplwNl+Kpe4o99KJSA17uGB65NQymREvfvM1MsK
-	 Cv75GpKPigt4G31k910iNd3cIAbxCKudiyRxvi/LE7Gr9xIdA83Lb8FxZ/rpVF1Ug5
-	 6zYz3XnD2eYNaE5dEx35Z06J4dZ9Fc7CBTsX2L0gkwBMX0FEc+DdrFhCgL5ZZwqaN5
-	 MeLkCbG6oiZF4859Qq+ewuPwNUUVcWSudtCFGsLQZNwrlQAZhLdK2lj0efYDym5Ij9
-	 x/2H97ZSQYeVg==
+	b=iwg/ZCcG55Xf3WSExLiIm9QzIwVA8QGuhUwRATCEb1W9l/1bv40GrVwL6ByHzkELd
+	 VTLXQjW8D+z1CnOTbJ//el8aPKWP8sjMhGRLQgxuQWHumiCv9b5mFO4ClRQjSH2Ss1
+	 Tums7+ARyuuNOPUf50RcmK9o0u/eG+bwya/WVwXtynEsLpw95F3exnA8gYHegHuvtx
+	 G3RZsP/MNNoJPW+djIFSyo/4ji0VOr+SkmgDWoPWb9/WNO8FO3SNtiAY236ON92Dkl
+	 jMXgM7Ne4EXQMDmA1lbhjqtcF64aeCpopNFQx+8VE7hVYOR8V88M2TqFQQevO3cbEp
+	 ijEw538AZ3IKw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 5/8] perf report: Add --progress option
+Subject: Re: [PATCH v1 3/8] perf symbol: Fall back to fetching the vmlinux
+ by build ID
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260913023459.112654-6-acme@kernel.org>
+In-Reply-To: <20260913023459.112654-4-acme@kernel.org>
 References: <20260913023459.112654-1-acme@kernel.org>
- <20260913023459.112654-6-acme@kernel.org>
+ <20260913023459.112654-4-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 13 Sep 2026 02:42:31 +0000
-Message-Id: <20260913024231.8626B1F000FF@smtp.kernel.org>
+Date: Sun, 13 Sep 2026 02:43:01 +0000
+Message-Id: <20260913024302.627251F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,23 +47,22 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> Processing a large data type profiling session, e.g. an AMD IBS one, can
-> take a long time and, when using the stdio output, 'perf report' gives no
-> feedback about which phase it is in nor about how far along it is: the
-> TUI has a progress bar for that, but in the stdio case the ui_progress
-> updates, that are already there, are dropped on the floor.
+> A profile recorded on a kernel that is no longer installed, be it
+> because the machine was rebooted into a new kernel or because the
+> profile is being processed on another machine, can't have its kernel
+> symbols resolved: /proc/kallsyms matches the running kernel, not the
+> one in the profile, and is refused when restricted, e.g. with
+> kernel.perf_event_paranoid > 1, while the build-id cache may carry
+> just a kallsyms copy with zeroed addresses.  With no kernel symbols
+> the kernel samples can't be annotated, so they all end up in the
+> '(unknown)' data type and the kernel is missing from the data type
+> profile JSON "dsos" entry.
 >=20
-> Add a --progress option that installs a stdio backend for ui_progress,
-> ui/stdio/progress.c, printing the phase title, the percentage done and
-> the current/total counts to stderr:
->=20
->   Processing events... [ 42.3%] 317M / 746M
->   Merging related events... [ 61.0%] 309026 / 506686
->   Sorting events for output... [ 98.2%] 14132 / 14387
+> As a last resort, when the kernel symbols can't be found locally and
+> the user didn't specify a kallsyms file, fetch the vmlinux keyed by
 > [ ... ]
->   88: Test that perf report handles truncated perf.data gracefully (no cr=
-ash, no segfault =E2=80=94 clean error exit).: Ok
->   =E2=AC=A2 [acme@toolbx perf-tools-next]$
+> struct tty_struct, struct qspinlock, etc, with the kernel DSO, keyed
+> by its build ID, appearing in the data type profile JSON.
 >=20
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
@@ -71,5 +71,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260913023459.1126=
-54-1-acme@kernel.org?part=3D5
+54-1-acme@kernel.org?part=3D3
 
