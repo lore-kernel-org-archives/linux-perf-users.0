@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E69523769EB;
-	Sun, 13 Sep 2026 02:35:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A9B377034;
+	Sun, 13 Sep 2026 02:35:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789266909; cv=none; b=IRMNRRUSM8NIFr2oXMNf292cEhEHuWCW8mQkVxD0kuVWIeUagxVaEqyGgMXzpqpfNA2sSPwwG6U/H+3tnhj4K2d/pxosm6DflfPGfVxJWG3fI5kwQIPBcUU9XkPy1NqBcpL/05uRJ7YIZvlQ/U+87no+GN5CSrgRk4dA/gnUddc=
+	t=1789266913; cv=none; b=L+7+eKxM/AGo5RP9F75E5VoMIVjd9JcXM5R0meJfYed9xdSUIc/SSbSxQylEmk3nm2pTVX2bjZDOx2wSf+6LShNQs9sPopo9RyGhlpVmE/D2GRGI6myaU2F5YEMG8tA8A5KvjEvCXSAy4ltiUwiltfGYebQXz1i+FS7y5kL6E0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789266909; c=relaxed/simple;
-	bh=O1aM3BWkaiUhfXkHZPWe6tF0aakG1I8ZC7KgPsZwzPI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dnDMXNgYI7T1O/2iO9Q230WBSFB0oCQ5nQMP5TFONgubx5ZNT95SGEE2wk0l80rdMndJGrcocXm5t/Ig1+uS4XQDv93xaqaMWQwheZBNmxEkiwbGF6ZPTGauwp+r3xxCqMu/w+2RF5D0ATaIAujEHb4z4y5yTOYIfwSbD47uAj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QQuSfeMn; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789266913; c=relaxed/simple;
+	bh=V56pcjVbjnrgiT4Lt3i6Nlu4CZC5Vrc81Cs1aDymu7k=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=adJyuvMVr+JvrZ8X6Tp6U2srniXHE7RIffaqJYaf067y82/4EySywmzuwTqOiKjqXHG3+tgQeB7zCpes9KMtz2Crttc9m7hL2RKDk9sXWHGvsebX+rI62bUh1BQoja0R/pJc5D3Z9WM7gP9n+PBuGRmQzTuaeLc49a5G8WjWZ0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cCsRJOSZ; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QQuSfeMn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73AFB1F000FF;
-	Sun, 13 Sep 2026 02:35:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cCsRJOSZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AAE21F00893;
+	Sun, 13 Sep 2026 02:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789266906;
-	bh=mPp/Bd35ZfLs8HKviYnCI5F9AuJWDKjg8s8Wu1BeuvQ=;
-	h=From:To:Cc:Subject:Date;
-	b=QQuSfeMntu4D5hAoIGjZ/4XMZabRIzKEr4CzbAdMZTz5CtYnNwdyCiiftwsHSUFdm
-	 DqQ7LO6MyACAM+DCJrVK3W3MNWds3kTQhRBZL9ncUyAVSQySUd/m8c8+di/2OBv2YT
-	 di+CQuhBcnLDfqhWWeolZH//JuWad66VszGeC48f8c+/4cdvBG9pKJfTGEwynMRSBp
-	 mf8VttWlI92xvoS5CSyc+9UrrQlDgs5DT9HniYTP3b1Xv4awG3+Nz4DJrTEkfxXFzb
-	 hOE/JhGY9DWRX/GN20GfuwrBnM2nBXJdIdesWsxDDa31HK0HgBMCccLNhEEr6cprEj
-	 uRyMCvNn7Yvwg==
+	s=k20260515; t=1789266909;
+	bh=40PpvyNz+FTvCz0PJ/eeZnY/X6I0+eLUGCvJDO1X3XQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=cCsRJOSZm4GI6feyOC0ZEGGxDHoXU48laBb0QhJtJk48iNsAKPbchyOjQtLritFZv
+	 TcdAYrP67+3WUlRH9FEHbg4Np0y9621OZhww3GBvjoyNxlPB4uYRCwq1oxGmhb25uS
+	 vaPLWTMb1tN5q0Idt+NZYwNO23Qm2+hyRbHvohDblCoV8FySP0iueNsPVV1JU7hXUu
+	 nkiEdbO468bArYFskNTgslKTsQ+Kl2I6ZGjKuce1ljnN+/2TE+XzGutbb934QL8mrK
+	 HcAmQcB3PulLD8dr6xW6PDCzEtFTW0KOp/V0cyzAv7YTkxricxxDIt6mWCVaib9pVR
+	 scvWxFX0SLvKQ==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -36,11 +37,13 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH v1 0/8] perf tools: Annotate fixes, stdio progress indication, debuginfo-client in more places
-Date: Sat, 12 Sep 2026 23:34:51 -0300
-Message-ID: <20260913023459.112654-1-acme@kernel.org>
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v1 1/8] perf test: Skip data_type_profiling when the PMU cannot record memory events
+Date: Sat, 12 Sep 2026 23:34:52 -0300
+Message-ID: <20260913023459.112654-2-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
+In-Reply-To: <20260913023459.112654-1-acme@kernel.org>
+References: <20260913023459.112654-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,117 +52,142 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This came out of work on data type profiling, but none of them depends on that
-work and nothing in this series needs anything from it, so sending them
-separately.
+The test records with 'perf mem record' in per-thread mode and its only
+guard matches one specific message:
 
-The fixes:
+  perf mem record -o /dev/null -- true 2>&1 | \
+        grep -q "failed: no PMU supports the memory events" && exit 2
 
-  - 'perf report -s type' spins forever, burning all of a CPU with no
-    output, on the dwz compressed debug info of zlib-ng (libz.so.1):
-    die_collect_vars() saves the dwarf_dieoffset() of the type DIE,
-    which is relative to the file that DIE lives in, the dwz common
-    file for the types shared by more than one CU, and resolving one of
-    those offsets in the main debug file does not fail, it parses
-    whatever is at that offset there, in this case a typedef whose
-    DW_AT_type refers to itself, which is what makes the "follow the
-    typedefs and qualifiers until a pointer or an array type" loop in
-    die_get_pointer_type() spin.  The offset is now resolved in the file
-    it was recorded as coming from, which the CU of the collected DIE
-    tells exactly rather than having to be inferred from what is at the
-    offset, and the type chases and the struct/union member nesting are
-    bounded, so a debug info file broken in some other way makes perf
-    give up on a type with a pr_debug instead of looking like it hung
-    (patch 7);
+A PMU that has memory events but refuses them per-thread falls through
+it, and AMD IBS does:
 
-  - the data type browser prints, in its samples view (-n,
-    annotate.show_nr_samples), a local variable initialized to zero and
-    never updated, so every member shows up as having no samples while
-    the period and percent columns for the same entry are filled in
-    (patch 4);
+  $ perf mem record -o /dev/null -- true
+  Error:
+  Failure to open event 'ibs_op/ldlat=0/u' on PMU 'ibs_op' which will be removed.
+  Invalid event (ibs_op/ldlat=0/u) in per-thread mode, enable system wide with '-a'.
+  Error:
+  Failure to open any events for recording.
 
-  - the 'perf data type profiling' shell test turns "this PMU cannot
-    record these events" into a test failure: the script runs under
-    'set -e', so the bare 'perf mem record' aborts it through the EXIT
-    trap, which reports a signal that never happened, instead of
-    reaching the code right below meant to report the failure (patch 1).
+What follows is not a skip either.  The script runs under 'set -e', so
+the bare 'perf mem record' in test_basic_annotate() aborts it through the
+EXIT trap, which reports a signal that never happened and exits 1:
 
-The features:
+  Basic Rust perf annotate test
+  Unexpected signal in test_basic_annotate
 
-  - 'perf report --progress' prints the phase it is in and how far
-    along it is to stderr: the TUI shows that with a progress bar, but
-    in the stdio case the ui_progress updates that are already there are
-    dropped on the floor.  It is what makes a slow run tell itself apart
-    from a stuck one (patch 5);
+so 'perf test' turns "this PMU cannot record these events" into a test
+failure:
 
-  - the debuginfo for a DSO, and the kernel symbols, can now be fetched
-    keyed by the build ID recorded in the perf.data file, using the
-    debuginfod client, for the cases where they are not available
-    locally under the name the DSO was opened with: a vmlinux for a
-    kernel that since got upgraded, or a profile recorded on another
-    machine.  Both are off with --no-debuginfod, with
-    core.debuginfod=false, and when the build-id cache is turned off
-    (patches 2 and 3);
+  $ perf test "data type profiling"
+   87: perf data type profiling tests             : FAILED!
 
-  - 'perf mem record' asks for PERF_SAMPLE_CPU by default, as without
-    it the cpu field is the (u32)-1 "no CPU info" sentinel and
-    per-sample analysis cannot tell accesses from different cores apart
-    from same-CPU traffic (patch 8).
+The 'if [ "x$?" != "x0" ]' right below the record was meant to report
+"[Failed: perf record]" and carry on with the other cases, but under
+'set -e' it is dead code: the shell is gone before it is reached.  The
+same goes for the 'perf annotate' call below it.
 
-Which file a saved type DIE offset belongs to is settled with
-dwarf_cu_getdwarf(), new in elfutils 0.160, so the libdw feature test
-now probes for it and the message in Makefile.config says 0.160 where it
-said 0.157: 0.157 to 0.159 is from 2014 and has no such symbol, and
-those versions now lose dwarf support with that message instead of
-failing to link util/dwarf-aux.c.
+Skip when a trivial per-thread 'perf mem record' fails, and put both
+commands in the condition of an 'if', where 'set -e' leaves them alone,
+so that the
+reporting works for the cases where only one workload cannot be recorded
+or annotated:
 
-Best regards,
+  $ perf test "data type profiling"
+   87: perf data type profiling tests             : Skip
 
-- Arnaldo
+and, with just the new skip guard disabled on the same box, every case
+reports its failure instead of the first one aborting the run:
 
-Arnaldo Carvalho de Melo (8):
-  perf test: Skip data_type_profiling when the PMU cannot record memory
-    events
-  perf debuginfo: Fetch debuginfo keyed by build ID using debuginfod
-  perf symbol: Fall back to fetching the vmlinux by build ID
-  perf annotate-data: Show the sample count in the data-type browser
-  perf report: Add --progress option
-  perf scripts: Add perf-stuck, to tell where a running perf is stuck
-  perf annotate-data: Resolve type DIEs in the debug file they came from
-  perf mem record: Request PERF_SAMPLE_CPU by default
+  Basic Rust perf annotate test
+  Basic annotate [Failed: perf record]
+  Pipe Rust perf annotate test
+  Pipe annotate [Failed: perf record]
+  Basic C perf annotate test
+  Basic annotate [Failed: perf record]
+  Pipe C perf annotate test
+  Pipe annotate [Failed: perf record]
 
- tools/build/feature/test-libdw.c              |  15 +-
- tools/perf/Documentation/perf-annotate.txt    |  10 +
- tools/perf/Documentation/perf-config.txt      |  19 +
- tools/perf/Documentation/perf-mem.txt         |   4 +
- tools/perf/Documentation/perf-report.txt      |  28 ++
- tools/perf/Documentation/perf-top.txt         |  14 +
- tools/perf/Makefile.config                    |   2 +-
- tools/perf/builtin-annotate.c                 |   2 +
- tools/perf/builtin-mem.c                      |   9 +
- tools/perf/builtin-report.c                   |  17 +
- tools/perf/builtin-top.c                      |   6 +
- tools/perf/scripts/perf-stuck.gdb             | 104 +++++
- tools/perf/scripts/perf-stuck.sh              | 165 ++++++++
- tools/perf/tests/shell/data_type_profiling.sh |  46 ++-
- tools/perf/ui/Build                           |   1 +
- tools/perf/ui/browsers/annotate-data.c        |   2 +-
- tools/perf/ui/progress.h                      |   2 +
- tools/perf/ui/stdio/progress.c                | 162 ++++++++
- tools/perf/util/annotate-data.c               |  55 ++-
- tools/perf/util/annotate-data.h               |   3 +
- tools/perf/util/config.c                      |   3 +
- tools/perf/util/debuginfo.c                   | 372 ++++++++++++++++++
- tools/perf/util/debuginfo.h                   |  36 ++
- tools/perf/util/dso.c                         |  19 +
- tools/perf/util/dwarf-aux.c                   | 161 +++++++-
- tools/perf/util/dwarf-aux.h                   |  33 ++
- tools/perf/util/ordered-events.c              |  17 +-
- tools/perf/util/session.c                     |  12 +-
- tools/perf/util/symbol.c                      |  40 +-
- tools/perf/util/symbol_conf.h                 |   1 +
- 30 files changed, 1307 insertions(+), 53 deletions(-)
+Assisted-by: LLM
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/tests/shell/data_type_profiling.sh | 46 +++++++++++++++----
+ 1 file changed, 36 insertions(+), 10 deletions(-)
 
-base-commit: aa18964dd64511305de0711fed912054da6f5d18
+diff --git a/tools/perf/tests/shell/data_type_profiling.sh b/tools/perf/tests/shell/data_type_profiling.sh
+index eca694600a0478d2..a916c410274aa888 100755
+--- a/tools/perf/tests/shell/data_type_profiling.sh
++++ b/tools/perf/tests/shell/data_type_profiling.sh
+@@ -19,6 +19,15 @@ perfout=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
+ perf mem record -o /dev/null -- true  2>&1 | \
+   		grep -q "failed: no PMU supports the memory events" && exit 2
+ 
++# Skip if per-thread mem record is not supported on this PMU (e.g. AMD IBS
++# needs system-wide '-a'): it is what the test records with below, and a
++# failing record must not be reported as a test failure.
++if ! perf mem record -o /dev/null -- true 2>/dev/null
++then
++  echo "Skip: cannot record memory events on this PMU"
++  exit 2
++fi
++
+ cleanup() {
+   rm -rf "${perfdata}" "${perfout}"
+   rm -rf "${perfdata}".old
+@@ -52,25 +61,42 @@ test_basic_annotate() {
+     index=1 ;;
+   esac
+ 
++  # Under 'set -e' a bare failing command aborts the script through the EXIT
++  # trap, so the commands that report a failure have to be the condition of
++  # an 'if' for that reporting to ever happen.
+   if [ "x${mode}" == "xBasic" ]
+   then
+-    perf mem record -o "${perfdata}" ${testprogs[$index]} 2> /dev/null
++    if ! perf mem record -o "${perfdata}" ${testprogs[$index]} 2> /dev/null
++    then
++      echo "${mode} annotate [Failed: perf record]"
++      err=1
++      return
++    fi
+   else
+-    perf mem record -o - ${testprogs[$index]} 2> /dev/null > "${perfdata}"
+-  fi
+-  if [ "x$?" != "x0" ]
+-  then
+-    echo "${mode} annotate [Failed: perf record]"
+-    err=1
+-    return
++    if ! perf mem record -o - ${testprogs[$index]} 2> /dev/null > "${perfdata}"
++    then
++      echo "${mode} annotate [Failed: perf record]"
++      err=1
++      return
++    fi
+   fi
+ 
+   # Generate the annotated output file
+   if [ "x${mode}" == "xBasic" ]
+   then
+-    perf annotate --code-with-type -i "${perfdata}" --stdio --percent-limit 1 2> /dev/null > "${perfout}"
++    if ! perf annotate --code-with-type -i "${perfdata}" --stdio --percent-limit 1 2> /dev/null > "${perfout}"
++    then
++      echo "${mode} annotate [Failed: perf annotate]"
++      err=1
++      return
++    fi
+   else
+-    perf annotate --code-with-type -i - --stdio 2> /dev/null --percent-limit 1 < "${perfdata}" > "${perfout}"
++    if ! perf annotate --code-with-type -i - --stdio 2> /dev/null --percent-limit 1 < "${perfdata}" > "${perfout}"
++    then
++      echo "${mode} annotate [Failed: perf annotate]"
++      err=1
++      return
++    fi
+   fi
+ 
+   # check if it has the target data type
+-- 
+2.55.0
+
