@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F4630F803
-	for <linux-perf-users@vger.kernel.org>; Sun, 13 Sep 2026 03:36:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC0C230BE9
+	for <linux-perf-users@vger.kernel.org>; Sun, 13 Sep 2026 03:37:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789270612; cv=none; b=h5MPyuow2tQP72ykeQnEbkkVe60bMvGz6M7ciVA0z6o/OuhMCZZXb2goci+I4PYygW3Iv4owPMBcRcIIjV3VFEF2xJrTKy+ZEidE27J+b9cwnwi7xRtn+KWnuicykXI/vpRNyvMqc5zhWs0G/swYMrv5eC1DK3L0GdpKum696F0=
+	t=1789270658; cv=none; b=D8/tlKn98aD7x+nDF0JRQYDSJtC8mesV91YMYaJHaaFxXt/oJ/CSr4gPba4BqniHb/YdC+piWc4w65BdOavNJH2sVhi9ToekYFrsWo4v2GuZhb1TsR8mfKlNvUC2+hV1CPa5nhHriv7qdMJv5fxQQKMcZdnkKwETPjh5oglyfa0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789270612; c=relaxed/simple;
-	bh=BE0Bwn9HWChdRESzSLfrSJc4s35DSYPcr6gGAdev0d8=;
+	s=arc-20240116; t=1789270658; c=relaxed/simple;
+	bh=DJgiJWPBERqh08t3NkePB8t5xhYZwNXMrZvjC3oYdNU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=IwkQs27X/iQtBG5+ngYz0TYOjgWsQagXSqd5yCOsqtmJjG8Q/4xgtf8jCjrySAQkf37flIHu6cMUOkNPeUtTbrywGLBP3QxCBWZPz//8VXrjAP1bz+CfYwao+lD/tJw0HtZQZtOh5u78ntVyTCFDAuOS3I0pdD214sibTfA8xWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E910ZfYD; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=c9PhhnIdBUDW30MFoSsdJC8m09MG9BvntEVxsq2PbCHsn1hbaY3kyYXqbedVHqgL/434Y/Ci43c/IqsZ3CK3QJYuF8INfvDRE+jTEVm+BtvvVRaZnGFYziWmI/fpElCb5jS5JPgoat+xuJy+iKGFZCZ95pm7/vFx2cTJ1okO/cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2MBaux4; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E910ZfYD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5686D1F00893;
-	Sun, 13 Sep 2026 03:36:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2MBaux4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03CCA1F000FF;
+	Sun, 13 Sep 2026 03:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789270611;
-	bh=Mn66cLb+Vizu0MxhA1Ess4N04LmNqAkshBfPX6FXYu0=;
+	s=k20260515; t=1789270657;
+	bh=qtN7AzkLBFbVUc6et8nDV/ch+HdoZsvkCHS/BHEW3g0=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=E910ZfYD/Q4OOedSdUcRmJItGaBkGQj16W0M2Js4lqIX2TAFildPYEZnxHnXq1mR7
-	 /kOjvzGULKE6GsFH6k2ibZnKOpJv3IS2bcUktrsmX8nrH25vCGVjo8IghwBU1RC8Nc
-	 sY43tbz/NZPrlujc2lBPn0oypembwJ8oeN2eJoi+CyzJrLwdlBSLbJh1wRtDy4PhOB
-	 aBFSsvjrjLTZRNlw1GjQRbH5LX1GjNU/2cDgz+OWruwPouYjBOXTP+JCeMTuZTXtiM
-	 0+JzKLIrjjQ8Hy8jW9WnGoth1hdPHe9Cj2HeLpgTIwHkCJvPbdLSE2OVuQ3nt5ihxC
-	 EUuZ8co1dTYag==
+	b=b2MBaux4bHnjMZy8hXZOi4rr4+4cETvTgEKplb3qimBqs1OU327WUwmVXkGta4WSK
+	 +0QhOWRSBb7lZcQhMVDnzpkUifeeIPDrC5YiZnSdVaIdNdm1yiK8L1s9UqWmWrkjj+
+	 0XMGetbgu5Tfmahpp5bA44pBm1AIfgcTmdBYS+hTQLuVO625/LorToV2/qn0oWIAY+
+	 o20vuHckeWJlQLzt6mAZttoM2lXA+rrkfadwqwjtcEUcZdAj+b4JUKzl4Mu9aur3JV
+	 FWf0mJzTfUoVDoFWbdmj7o6GyOU9IBKBa5EK0+2OF1hYjmB85c1X+xnLNYlRuSgOKF
+	 LNAyvDzdJoZpw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 2/8] perf debuginfo: Fetch debuginfo keyed by build
- ID using debuginfod
+Subject: Re: [PATCH v2 6/8] perf scripts: Add perf-stuck, to tell where a
+ running perf is stuck
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260913032632.116277-3-acme@kernel.org>
+In-Reply-To: <20260913032632.116277-7-acme@kernel.org>
 References: <20260913032632.116277-1-acme@kernel.org>
- <20260913032632.116277-3-acme@kernel.org>
+ <20260913032632.116277-7-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 13 Sep 2026 03:36:50 +0000
-Message-Id: <20260913033651.5686D1F00893@smtp.kernel.org>
+Date: Sun, 13 Sep 2026 03:37:36 +0000
+Message-Id: <20260913033737.03CCA1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,77 +47,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Medium] Time-of-Check to Time-of-Use (TOCTOU) race condition in debuginf=
-o__find_build_id() leading to redundant network fetches and memory leaks.
+- [Medium] The `perf-dso` GDB macro uses invalid C syntax to access fields =
+of the `ms` struct pointer, causing evaluation to fail.
 --
 
-commit a2b8e0baf731e115b13a42e3b82a0348a1a8851a
+commit 78fb763d9dbe173145a580fdc9c3bef811e7fc40
 Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-perf debuginfo: Fetch debuginfo keyed by build ID using debuginfod
+perf scripts: Add perf-stuck, to tell where a running perf is stuck
 
-This commit introduces the ability to fetch debuginfo keyed by build ID
-using the debuginfod client when it is not found locally. It adds mechanisms
-for progress indication, user cancellation, and caching misses to prevent
-repeated network fetches.
+This commit adds a script and a GDB command file to help identify where a
+running perf process is stuck. The script samples the process at fixed inte=
+rvals
+to detect unbound loops or recursion, and can optionally invoke GDB to prin=
+t the
+DIE chain when no progress is made.
 
-> diff --git a/tools/perf/util/debuginfo.c b/tools/perf/util/debuginfo.c
-> index 84a78b30ceac1..6f3023c96375c 100644
-> --- a/tools/perf/util/debuginfo.c
-> +++ b/tools/perf/util/debuginfo.c
+> diff --git a/tools/perf/scripts/perf-stuck.gdb b/tools/perf/scripts/perf-=
+stuck.gdb
+> new file mode 100644
+> index 0000000000000..12a3f2952a68c
+> --- /dev/null
+> +++ b/tools/perf/scripts/perf-stuck.gdb
 [ ... ]
-> @@ -139,6 +149,443 @@ struct debuginfo *debuginfo__new(const char *path)
+> @@ -0,0 +1,104 @@
 [ ... ]
-> +int debuginfo__find_build_id(const struct build_id *bid, char **path)
-> +{
-> +	int err;
-> +
-> +	*path =3D NULL;
-> +
-> +	if (!build_id__is_defined(bid) || !symbol_conf.debuginfod)
-> +		return -1;
-> +
-> +	if (debuginfod__cache_disabled()) {
-> +		pr_debug("Build-id cache disabled (buildid dir is '%s'), not using deb=
-uginfod\n",
-> +			 buildid_dir);
-> +		return -1;
-> +	}
-> +
-> +	if (debuginfod__missed(bid)) {
-> +		char sbuild_id[SBUILD_ID_SIZE];
-> +
-> +		build_id__snprintf(bid, sbuild_id, sizeof(sbuild_id));
-> +		pr_debug("Not searching build ID %s in debuginfod again, it was a miss=
- earlier\n",
-> +			 sbuild_id);
-> +		return -1;
-> +	}
-> +
-> +	debuginfod__fetch_lock_init();
-> +	mutex_lock(&debuginfod__fetch_lock);
-> +	err =3D debuginfod__fetch(bid, path);
-> +	mutex_unlock(&debuginfod__fetch_lock);
+> +define perf-dso
+> +  if $_any_caller_is("find_data_type", 20)
+> +    frame function find_data_type
+> +    printf "dso=3D%s ip=3D0x%lx sym=3D%s\n", dloc->ms.map->dso->name, dl=
+oc->ip, dloc->ms.sym->name
 
 [Severity: Medium]
-Could this introduce a time-of-check to time-of-use (TOCTOU) race condition?
+Will this macro fail with a GDB evaluation error when running
+perf-stuck.sh -g? If ms is a pointer to struct map_symbol, GDB's C evaluator
+requires the -> operator.
 
-If two threads concurrently call debuginfo__find_build_id() for the same
-build ID, both could check debuginfod__missed(bid) and symbol_conf.debuginf=
-od
-outside of debuginfod__fetch_lock.=20
+Should this be accessed as dloc->ms->map->dso->name and dloc->ms->sym->name
+instead?
 
-After the first thread acquires the lock, completes the fetch, and records a
-miss (or processes a user cancellation), the second thread will acquire the
-lock and unconditionally perform the same fetch again without re-evaluating
-the conditions. This could lead to redundant blocking network requests,
-ignored cancellation requests, and duplicate entries added to the
-debuginfod__misses list.
-
-> +
-> +	return err;
-> +}
+> +  else
+> +    printf "not in find_data_type()\n"
+> +  end
+> +end
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260913032632.1162=
-77-1-acme@kernel.org?part=3D2
+77-1-acme@kernel.org?part=3D6
