@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEB82F7EFC
-	for <linux-perf-users@vger.kernel.org>; Sun, 13 Sep 2026 03:31:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A232438236F
+	for <linux-perf-users@vger.kernel.org>; Sun, 13 Sep 2026 03:34:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789270273; cv=none; b=iB2X9tDPeLxy0Mh3BG6w4L7lArng4wP/93jL+D/oh42JASBizxxOLMFdT6d39yPbVTmNWnDmXOwG7aP1dYT0j7UPBdxikUThuSDof27TQiU8S80i3JFjUGXo1W7/QQU44Zx3tVT4viBs+kT3I4iZGhMP1cowxZEd1tGaOHh4n6k=
+	t=1789270455; cv=none; b=K42mRkUoF1PveS00AlJ7YEZAhxGnrSZCY2ATVr2E00pF94EEQP/f3W0ONOgZLU5XeK+z8D7D1o+kYY+0B7yZYzzA+THKUz+XGAEbKhH4MPgorL85g0T4ALLK4zvdlbhw60zSrmobxUVA4GHqFs0dtUg68UK3vqdBpdmT+zvgGqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789270273; c=relaxed/simple;
-	bh=yucFwyd/ZEn/TqkLVIUv2J+rbkTJCbc/s9AP8IyTpvA=;
+	s=arc-20240116; t=1789270455; c=relaxed/simple;
+	bh=hCzDxsJgH1kGbGCRNC+Y9fEzEqHofFIWIN6Ue1EW25U=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=afuQGx7qgVMFhWzoHApCzaYDa+M7Pi66Tez2CIbe2Pi9QoqAvtSv3sHnVN0yx7J9eyqF+ORIcLlmsiVNsFcGqkzNj/R4UdLNOBAEoIEDwR31E6UnrqdIov3hMYSihrIN0HfB0EwWqfb7hthaLpOrGTb7VvmZ2+JY/zqWgr1hlSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FzOJgBlo; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=CeOEBVUwC7Bc9pObiV3knk4Nr555dM94Vbczv1yW56wwuZCYpm43SpKEHr2VNJkmZkSH+1acb7mJwrXUu8k5kI5S1lbBMY8WmPkgk6N6Z45KRDbAdbO5dcPkrwDLJMhdDehwUQK/zhRRmlghqeyQhy6R1bDH7Y8HjFx09acJjdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m7r8eu5K; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FzOJgBlo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 677DE1F000FF;
-	Sun, 13 Sep 2026 03:31:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m7r8eu5K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 115481F000FF;
+	Sun, 13 Sep 2026 03:34:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789270272;
-	bh=E9vmVQz8iIyusf9vl1vlxRmsNQJIE6hFfqex8tb9Li0=;
+	s=k20260515; t=1789270454;
+	bh=hCzDxsJgH1kGbGCRNC+Y9fEzEqHofFIWIN6Ue1EW25U=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=FzOJgBloeMp9Kkb4uuCcDngb/FAvxpB8FbxktKL5cgYYyX1JNTXaAokIxBylSTdF+
-	 ohk6XUmzE2YU659weB6n0cB1xVm9K2TyhE88cIcBsLR1YcfQurqUXmW8WMmduKUf4L
-	 EgdZWh4yK2nrm3H9xrEF4wixBWiwAD2u81PwXCPawNOZBWJAxVXxUA05+5hsjvKhgy
-	 rCtX0M7KWEm/xvg/AdJjqlNQ7mknwj4xLCB8SbwFl8cNMFDydvjUizq64rmlRO0RAz
-	 iMUJKD9jTW5L0qPaxex5zKyaZMrf52Bl8HdqieymY1RNJapxuGwYRROeNtr91mB3wB
-	 EXzFbwEAURNUw==
+	b=m7r8eu5KijDzkJZMBsHD2YVu7StBkoovG9Qc3haOc3oofYpu6IxjHDNftTNVH5SQ2
+	 Ktx9fA/Ol+ZuqnqJp5dN5jM9isEHUnao24XBLrVIK+5MZxPP8qJOjgsL3bitO13zeV
+	 p3+lIKydATTnX3x6Q47JIy+prYXsvwqKsvVNp97lmSCOAFPWdsXqSvAoy07cxavtCj
+	 YSL+hTa/mh0P0ho/9WHyRDXxELb5ddL2Tpy2Dq13ss9D66T1keIGGhEoRlx2PbauOC
+	 rOlrGNRM82IvL7LCafTe5wYlTzaMQp9KcK/Rx1xXnXGs47ged3oxsr8q0t04a66TU3
+	 UjBu2W+h4AVvw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 1/8] perf test: Skip data_type_profiling when the PMU
- cannot record memory events
+Subject: Re: [PATCH v2 4/8] perf annotate-data: Show the sample count in the
+ data-type browser
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260913032632.116277-2-acme@kernel.org>
+In-Reply-To: <20260913032632.116277-5-acme@kernel.org>
 References: <20260913032632.116277-1-acme@kernel.org>
- <20260913032632.116277-2-acme@kernel.org>
+ <20260913032632.116277-5-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 13 Sep 2026 03:31:11 +0000
-Message-Id: <20260913033112.677DE1F000FF@smtp.kernel.org>
+Date: Sun, 13 Sep 2026 03:34:13 +0000
+Message-Id: <20260913033414.115481F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,25 +47,20 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> The test records with 'perf mem record' in per-thread mode and its only
-> guard matches one specific message:
+> The data-type browser has a samples view, selected with -n (or with
+> annotate.show_nr_samples), in which browser__write_overhead() prints a
+> local nr_samples variable that is initialized to zero and never
+> updated, so every member is listed as having no samples while the
+> period and percent columns for the same entry are filled in.
 >=20
->   perf mem record -o /dev/null -- true 2>&1 | \
->         grep -q "failed: no PMU supports the memory events" && exit 2
+> Print the histogram entry's own count instead.
 >=20
-> A PMU that has memory events but refuses them per-thread falls through
-> it, and AMD IBS does:
+> This predates the load/store counter split, so fix it ahead of that
+> patch: the split then only has to adapt a line that is already correct,
+> and this fix can be picked on its own.
 >=20
->   $ perf mem record -o /dev/null -- true
->   Error:
->   Failure to open event 'ibs_op/ldlat=3D0/u' on PMU 'ibs_op' which will b=
-e removed.
->   Invalid event (ibs_op/ldlat=3D0/u) in per-thread mode, enable system wi=
-de with '-a'.
-> [ ... ]
->   Pipe C perf annotate test
->   Pipe annotate [Failed: perf record]
->=20
+> Fixes: d001c7a7f4736743 ("perf annotate-data: Add hist_entry__annotate_da=
+ta_tui()")
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -73,5 +68,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260913032632.1162=
-77-1-acme@kernel.org?part=3D1
+77-1-acme@kernel.org?part=3D4
 
