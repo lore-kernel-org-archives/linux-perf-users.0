@@ -1,113 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E38973769FD;
-	Sun, 13 Sep 2026 02:35:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4213B31352D
+	for <linux-perf-users@vger.kernel.org>; Sun, 13 Sep 2026 02:40:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789266944; cv=none; b=LMB1OuSaARP837H4+JP2M4i/y4OsKNtH9E0UGijkF2bxDz1cWMWNQ8Nk+mQbgrrClZqJTQEfTGc5zgmUhGBNpTmMih/H1n8au2pIoloch4aWOpTnSi7EfPqUQbnaZjilnBHgq42HNXd8iqI7it1wAEhk4zIXkumMYgfUlsaCWUQ=
+	t=1789267216; cv=none; b=fIjE2oLv95X3I2v9IheIbh7iFTfe908xI39immsigGY0XTFQRNkY8wM7y3alKgaO3hdxqyJ1JnMwk5PYH9cWQlvERkvkzavgg0iERNjNB+68B0O7u3WP2kQOiOuqs52dpPSM6bomk8M3OpOEOEDZ7BSzsoVPAo5fjtbbY+B1+34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789266944; c=relaxed/simple;
-	bh=apH6VZyAnmLAyezMqL9Ah7ks15w3tPV5R2LG2bJnac0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OFw8ACq9QMKNtwr3tYvRN/n6XgrmZ/6jH6t4tC/7/AzU/hZgc+42SGqIiQ+sYvY0e4fqSAhuHq6LT5yI2LmBVTkCOs5bEOQoEKtlxMdJj31Ij1HTayyXOSZuMitsxRnVVicfj5Qtw9UVnyFDnY2fNqCP0iH6KNOcVxicXUVlJMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aikoE2nr; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789267216; c=relaxed/simple;
+	bh=qzA8seQkddxwE/d4I4GlB6OSEyiOYJQtXvKqk6x+R2U=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=DJQh+lVBe0cpu4v0SRW1bzfq/j272AKggaOVXDrkc9YaIHssaFNHKgfHUpeVr9AawjxVhee+989sJz3y9K0L09JRTHjjBW/lwvy83Q71MvDLx+t1YN1JbYE9nZTHt+z6ozJwgACG6zMkDi/s5Tn96NWBIwRID4ut0nlWGJPUHh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GjcSQUvA; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aikoE2nr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5069E1F000FF;
-	Sun, 13 Sep 2026 02:35:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GjcSQUvA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4B721F000FF;
+	Sun, 13 Sep 2026 02:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789266942;
-	bh=TqR2Opoff9JKJPpDA+/gIuMlr5T0eNpJWAK21U2cxek=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=aikoE2nrG+Bn8C/isHBg5WxU0wrlofxLL9xmLT/3fMsSRsGVmKPyXcffIKHiqaXnV
-	 h1MjdJDspRD92IrWzi0sU2QuVn4nzbeUsmT323k/YP3FRrC0aMyXfGxU6nOCpEZXd9
-	 aBYGwdJCIDcwqnCTR/4Kn6t173XTTRIBSplTvtTIRjgcvAY1+Oe/5GBNm9paG3QRiq
-	 cagklcmML8JfpGog3eIBhvVgcjU/3cd7Yatz2Np3Kv8Toi9ClBjEBXWTiLQ9rTCbXd
-	 WuLNGDHeaam65HZwHitZq0Z42dw+WO8AdtQDH0mQtHXQpvd270FfFRAcyIcss2WraY
-	 TfyWsw/R478Gw==
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v1 8/8] perf mem record: Request PERF_SAMPLE_CPU by default
-Date: Sat, 12 Sep 2026 23:34:59 -0300
-Message-ID: <20260913023459.112654-9-acme@kernel.org>
-X-Mailer: git-send-email 2.55.0
-In-Reply-To: <20260913023459.112654-1-acme@kernel.org>
+	s=k20260515; t=1789267215;
+	bh=zm8Fb/uXF5qmvhfDMooTi074UQKbUhhF+93W3zeb9gE=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=GjcSQUvARzsEOor9Q2GVKOTEyc2T2sraLgrJuHNKN0k/47Iwb2gzD3mv5QZ+P6NEV
+	 3ycau5Gf1VVrWxOzqz25BSDjxn38j0ZE3AAkZFPPygdkoK/QuYz8tFsWDrwSqTnVvx
+	 AI3+41L+J5Hd2LEPHPMPHDtg0+7dQIT+6+HubDt+cOhvb8+U7tUHMKDRT8x2YNiCTp
+	 uoDw9O17LoPKIzmZSMiYhF9FmJuARVfqRUcBINBgze35qjTXvrxb41a6TYbIlIesqp
+	 iuIt19b1S9F2BLnUw78t+nQImUk5iSjCRIAT9Kxe+LX9xky4yiEmfo7ri301soGvNX
+	 DM7jntQXuFNcw==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v1 1/8] perf test: Skip data_type_profiling when the PMU
+ cannot record memory events
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260913023459.112654-2-acme@kernel.org>
 References: <20260913023459.112654-1-acme@kernel.org>
+ <20260913023459.112654-2-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Sun, 13 Sep 2026 02:40:14 +0000
+Message-Id: <20260913024014.D4B721F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+>=20
+> The test records with 'perf mem record' in per-thread mode and its only
+> guard matches one specific message:
+>=20
+>   perf mem record -o /dev/null -- true 2>&1 | \
+>         grep -q "failed: no PMU supports the memory events" && exit 2
+>=20
+> A PMU that has memory events but refuses them per-thread falls through
+> it, and AMD IBS does:
+>=20
+>   $ perf mem record -o /dev/null -- true
+>   Error:
+>   Failure to open event 'ibs_op/ldlat=3D0/u' on PMU 'ibs_op' which will b=
+e removed.
+>   Invalid event (ibs_op/ldlat=3D0/u) in per-thread mode, enable system wi=
+de with '-a'.
+> [ ... ]
+>   Pipe C perf annotate test
+>   Pipe annotate [Failed: perf record]
+>=20
+> Assisted-by: LLM
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The data-type profiling per-sample stream keys cross-CPU contention on
-sample->cpu: without PERF_SAMPLE_CPU the cpu field is the (u32)-1 "no
-CPU info" sentinel, documented as such in perf_session__deliver_event(),
-and same-instance reads and writes from different cores are
-indistinguishable from same-CPU traffic, so pahole's false-sharing
-detector cannot tell them apart.
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-builtin-record.c already defines --sample-cpu and 'perf mem record'
-forwards unknown options to the record parser, so passing it explicitly
-works today; make it the default, next to the -d (addr) and -W (weight)
-the command already requests, documenting it in perf-mem(1).
-
-Assisted-by: LLM
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/Documentation/perf-mem.txt | 4 ++++
- tools/perf/builtin-mem.c              | 9 +++++++++
- 2 files changed, 13 insertions(+)
-
-diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
-index 4d164836d0943119..fe51c5e3333dc4a0 100644
---- a/tools/perf/Documentation/perf-mem.txt
-+++ b/tools/perf/Documentation/perf-mem.txt
-@@ -14,6 +14,10 @@ DESCRIPTION
- -----------
- "perf mem record" runs a command and gathers memory operation data
- from it, into perf.data. Perf record options are accepted and are passed through.
-+It also requests the address (-d), the weight (-W, where supported) and the
-+CPU id (--sample-cpu) of every sampled access by default; the CPU id is what
-+lets per-sample analysis tell reads and writes to the same data from
-+different cores apart from same-CPU traffic.
- 
- "perf mem report" displays the result. It invokes perf report with the
- right set of options to display a memory access profile. By default, loads
-diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-index 6101a26b3a781e69..a708e2549bae4ce7 100644
---- a/tools/perf/builtin-mem.c
-+++ b/tools/perf/builtin-mem.c
-@@ -135,6 +135,15 @@ static int __cmd_record(int argc, const char **argv, struct perf_mem *mem,
- 
- 	rec_argv[i++] = "-d";
- 
-+	/*
-+	 * The data-type profiling per-sample stream keys cross-CPU
-+	 * contention on sample->cpu (PERF_SAMPLE_CPU); without it the cpu
-+	 * field is the (u32)-1 'no CPU info' sentinel and same-instance
-+	 * reads and writes from different cores are indistinguishable
-+	 * from same-CPU traffic.
-+	 */
-+	rec_argv[i++] = "--sample-cpu";
-+
- 	if (mem->phys_addr)
- 		rec_argv[i++] = "--phys-data";
- 
--- 
-2.55.0
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260913023459.1126=
+54-1-acme@kernel.org?part=3D1
 
