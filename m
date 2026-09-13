@@ -1,75 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01291D7E5C
-	for <linux-perf-users@vger.kernel.org>; Sun, 13 Sep 2026 02:43:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68079374A1F
+	for <linux-perf-users@vger.kernel.org>; Sun, 13 Sep 2026 02:43:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789267384; cv=none; b=SJdGoZ2aZTdsE8/pBvOrZBW+ZEtx+qTycbjM5bAZz1Ht54awzB4bN6a/mWvqGHt6zSpZuujwbwenO4JTqUTDEHOcOyVIyBvjO+tKp8Ig5qxn57WHKVHsWde+ogJEyYF+/mjYoD7/qzuxFYeg0qnkd4pHczqV0RClNSoCpDhvPXk=
+	t=1789267414; cv=none; b=uUBg8bitzaNni1vedZbR1OpG1Q+z9mLooUVfdmWR2jcae5wV6JJNOyKDVF8Yhrg4QDyHjdToq5eVoag0ScKJ6uWxNIAn6F2tWB6SnUaL/OKpYmIGuTzZbrml44fLhN5/SJzUs2h+VZDROMif1GC8g1r9X3YtcqvV+hWdPjrFM3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789267384; c=relaxed/simple;
-	bh=or6BroKKbyLf2rtvl4A0VcQ/4Hv43Fi1xsZedL3NYBU=;
+	s=arc-20240116; t=1789267414; c=relaxed/simple;
+	bh=4awy3KwnBpXDYMkY0KU4H5uY1t8ZOyb/khCEpH3WreA=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=rfEPqo+AlN/87S7TCywzXfWYfTa3RO05KxgP2q2XOXqmEgGYbV4OCAoRlVdPfm2/xg7QDPuGFpPrIR2zr+6FnIPQzrRGsQtIlCT8YO8fB9W9vRRzbZDSPuElZYJlZTtDjTx0GkCVLV3bVb+lKnOQnlpjfYjrVP0CqWvxOALYV88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwg/ZCcG; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=trcK60eAUg5AdmxNFZZYEE/+QMuxV0KHDc1jVVrz/oc2KLKBHLGdaAUTK+6ht7i12CVIiQ6u19bhp2xyczc0XDvxcu1E450zUHbfE67DdqTcSzwqDvaC8jlUHexinZcI0M0NoHPcTWBuPuY0hXbXDTN46OKUxqc4IndNFsjrvxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O/NzGPk8; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwg/ZCcG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 627251F000FF;
-	Sun, 13 Sep 2026 02:43:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O/NzGPk8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17BB41F00893;
+	Sun, 13 Sep 2026 02:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789267382;
-	bh=zUMC1XpIRzr/hqL3799DiaGDETWqko7jEenz1qCrzNY=;
+	s=k20260515; t=1789267413;
+	bh=wt3rVKLzQVBIM8fBAifrw5wiIXBFPfxGwYgsRdRmzjE=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=iwg/ZCcG55Xf3WSExLiIm9QzIwVA8QGuhUwRATCEb1W9l/1bv40GrVwL6ByHzkELd
-	 VTLXQjW8D+z1CnOTbJ//el8aPKWP8sjMhGRLQgxuQWHumiCv9b5mFO4ClRQjSH2Ss1
-	 Tums7+ARyuuNOPUf50RcmK9o0u/eG+bwya/WVwXtynEsLpw95F3exnA8gYHegHuvtx
-	 G3RZsP/MNNoJPW+djIFSyo/4ji0VOr+SkmgDWoPWb9/WNO8FO3SNtiAY236ON92Dkl
-	 jMXgM7Ne4EXQMDmA1lbhjqtcF64aeCpopNFQx+8VE7hVYOR8V88M2TqFQQevO3cbEp
-	 ijEw538AZ3IKw==
+	b=O/NzGPk8lDK2Z8kJeN83c0VuPGMb1mX2JDC8cJy00C+jTbOMN38HSIXcrUFK64vrY
+	 CVKR7h3Lt6uh/l+dfmgHioMdDaJpBJDBAaOu4hFgpRmKWNwsbBKSjzRS++63e18ZLT
+	 8qFTNM5ZNoXwPFE/uJ7xsuEDZw4fY3dFFHOFyxGUcsi0MQz3iegelkbFh0/NUNc+wX
+	 C0X4AIduOBYlox1+Ds608WzKcOVrvVRp4OLyIziA3goHq6herCCcl2Gi0uJIxCB5yQ
+	 aMsK8aVGyXVvNGjZATTyMfO1njzKRZ8zeDNzIsS2npvpnvttkJc0k2R4NBLP3JoqSm
+	 zmdmyGyHFP2MA==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 3/8] perf symbol: Fall back to fetching the vmlinux
- by build ID
+Subject: Re: [PATCH v1 4/8] perf annotate-data: Show the sample count in the
+ data-type browser
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260913023459.112654-4-acme@kernel.org>
+In-Reply-To: <20260913023459.112654-5-acme@kernel.org>
 References: <20260913023459.112654-1-acme@kernel.org>
- <20260913023459.112654-4-acme@kernel.org>
+ <20260913023459.112654-5-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Sun, 13 Sep 2026 02:43:01 +0000
-Message-Id: <20260913024302.627251F000FF@smtp.kernel.org>
+Date: Sun, 13 Sep 2026 02:43:32 +0000
+Message-Id: <20260913024333.17BB41F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
->=20
-> A profile recorded on a kernel that is no longer installed, be it
-> because the machine was rebooted into a new kernel or because the
-> profile is being processed on another machine, can't have its kernel
-> symbols resolved: /proc/kallsyms matches the running kernel, not the
-> one in the profile, and is refused when restricted, e.g. with
-> kernel.perf_event_paranoid > 1, while the build-id cache may carry
-> just a kallsyms copy with zeroed addresses.  With no kernel symbols
-> the kernel samples can't be annotated, so they all end up in the
-> '(unknown)' data type and the kernel is missing from the data type
-> profile JSON "dsos" entry.
->=20
-> As a last resort, when the kernel symbols can't be found locally and
-> the user didn't specify a kallsyms file, fetch the vmlinux keyed by
-> [ ... ]
-> struct tty_struct, struct qspinlock, etc, with the kernel DSO, keyed
-> by its build ID, appearing in the data type profile JSON.
->=20
-> Assisted-by: LLM
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Thank you for your contribution! Sashiko AI review found 2 potential issue(=
+s) to consider:
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+Pre-existing issues:
+- [High] This problem wasn't introduced by this patch, but child nodes and =
+their 'hists' arrays are leaked during browser entries deletion.
+- [Medium] This problem wasn't introduced by this patch, but there are miss=
+ing POSIX libc header inclusions for `snprintf`, `calloc`, and `free`.
+--
+
+commit 5a4ac13ab552e8559bedbbcd49a2b0cf582b03bc
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+perf annotate-data: Show the sample count in the data-type browser
+
+The data-type browser has a samples view, selected with -n (or with
+annotate.show_nr_samples), in which browser__write_overhead() prints a
+local nr_samples variable that is initialized to zero and never
+updated, so every member is listed as having no samples while the
+period and percent columns for the same entry are filled in.
+
+Print the histogram entry's own count instead.
+
+This predates the load/store counter split, so fix it ahead of that
+patch: the split then only has to adapt a line that is already correct,
+and this fix can be picked on its own.
+
+Fixes: d001c7a7f4736743 ("perf annotate-data: Add hist_entry__annotate_data=
+_tui()")
+Assisted-by: LLM
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+> diff --git a/tools/perf/ui/browsers/annotate-data.c b/tools/perf/ui/brows=
+ers/annotate-data.c
+> index aa8c89fe2e82c..1080ed1a40d26 100644
+> --- a/tools/perf/ui/browsers/annotate-data.c
+> +++ b/tools/perf/ui/browsers/annotate-data.c
+
+[ ... ]
+
+[Severity: High]
+This isn't a bug introduced by this patch, but child nodes and their hists
+arrays are leaked when browser entries are deleted:
+
+tools/perf/ui/browsers/annotate-data.c:annotated_data_browser__delete_entri=
+es() {
+	list_for_each_entry_safe(pos, tmp, &browser->entries, node) {
+		list_del_init(&pos->node);
+		zfree(&pos->hists);
+		free(pos);
+	}
+}
+
+The loop exclusively iterates over the top-level nodes in the browser->entr=
+ies
+list. Does this leak the memory for all nested child nodes in pos->children=
+ and
+their associated hists arrays?
+
+If a user repeatedly opens and closes the data type annotation TUI, could t=
+his
+unbounded leak eventually exhaust system memory and crash the tool during a
+long-lived interactive session?
+
+
+[Severity: Medium]
+This is a pre-existing issue, but does this file fail to build under musl l=
+ibc?
+
+tools/perf/ui/browsers/annotate-data.c
+	#include <inttypes.h>
+	#include <string.h>
+	#include <linux/zalloc.h>
+	#include <sys/ttydefaults.h>
+
+The code uses functions from stdio.h (snprintf) and stdlib.h (calloc, free)
+without explicitly including these headers. Could we add these missing POSIX
+libc header inclusions to ensure musl compilation compatibility?
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260913023459.1126=
-54-1-acme@kernel.org?part=3D3
-
+54-1-acme@kernel.org?part=3D4
