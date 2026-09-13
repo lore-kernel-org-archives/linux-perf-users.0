@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C945383339;
-	Sun, 13 Sep 2026 03:27:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EA0347FFE;
+	Sun, 13 Sep 2026 03:27:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789270027; cv=none; b=NKPBReD9TYxRJ4lm9BXRoBhpDHqo9VHR6TVDzCIhR0eYo7jP6Pp3EExN0Y/g2jgMPjHkEEEDa1U2Zep9lrxklNiGaboSWNIRzC5p0+u8J00Ic5kZAlB0WCfFLp6C4yxqFORKj4x5h9HJQDTe5fH6TALkRQXqw/Uko64iohg+bUU=
+	t=1789270031; cv=none; b=rFW/9O9evmK6sN5hCOkXFDtn5bBdaAgFh0nGk4RNEX59clfxgNCEqvAiuOsIXocJ1xx7f2RS58DlwqjeuhBA8TVOzGrPnC8EQztSvmVJnJE+RrN97AlGAhMEp+FuZK1HoP9n5pmq5FDuWnTR0718VvgP2QiEGB1slc1FqyJpjnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789270027; c=relaxed/simple;
-	bh=hHKqDX15ha1edPflLQf0ChV0VAhvPLFHo2M24bkRqF8=;
+	s=arc-20240116; t=1789270031; c=relaxed/simple;
+	bh=frL+T2nrn6qFrLGdFLKrDNR8JizRgdjcLSYBQyIquM0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NpYyifR8YwLmurVCcnUTvhoZVm6rx1YJp4jor9t7ZcBzL+DTa4Ail6MhWBtkSTlXVSIEcmMzGgTAPszfuO+hO1+qz2sNL5E9OJDOFFE1Buq1fqv/o4VjERrVFno6yKNdaGbAf+LkeYbUKkXj7pg6nOv/9NXuWnLIC9tW+b9gLuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kUCaPKiZ; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=bGGvSpJ4aspTug1Z3LQfIEwiTmC8ZMP2zaOBqBUizOeoBNhSnUNuX3+Nx9oo/OYXC9HNlxEe6dC5OVoRz5IS70CBWbOOw/COVIQUR+yGCCnKASRuQuYG6Yvcr0Pb8LsGMwcAT/AMe9ZJjKWUCm9xmrJtCaVouJqn7Yne7RCTkKQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FWaJ/Dcw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kUCaPKiZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4807F1F00893;
-	Sun, 13 Sep 2026 03:27:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FWaJ/Dcw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7620A1F000FF;
+	Sun, 13 Sep 2026 03:27:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789270024;
-	bh=4qC3aoPPMABZF49CiFc3Z28XJKr/g0WGuUlY2e5KcfQ=;
+	s=k20260515; t=1789270029;
+	bh=vHqesurOBdZg8RbL31WvVS/JSrxBfXcFceuOc9HrzdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kUCaPKiZxSwyyySr5O2wMB8neyxZ4dDuv2AZRTFHW8fAJRrhFewBYGUau9M/pKBXv
-	 MwEZdYsEjaU5zouHZ4H/P4YcJy0LhrTSBbGoN6Vh0RR1hw/keE2Unn3hq+4zf6DAmn
-	 dpL9AW+RM4I2ECZUn1RlJ/2ZtLauDvgzGs+bmnsMIVG34JtySm/vnebNGg7rkUyTMo
-	 +xfy+BrQT25Ypw7Xj4i6wFiRCQeWFvUBh9I/bRbDKRBBcZY8JewBnfHl7lVqB0z5Ra
-	 SuVh9lwZOJ5fnEjOyLR2Ja5xOrKr2gQaF3cE+aWXDP3cotIhAnQMc73ruAUmN/Hhqt
-	 KSQQjjBg1hTIg==
+	b=FWaJ/Dcw2Gbs2ISkzJJw3viWcCFJZ87VQg6AnpoEayf+0d0IgJkjxqfMyiIOrJJZG
+	 PnYypT0hUpHHUK15UU4AU12m26sLqPLHcXow4L85Vpzm8kuNdFkvHeRC9cZ1d/i9Rs
+	 0I4BWTff4JHATbk8df0DL2KCDdwBD+QAQKC/2dnw2vN3TTYBBU9UOklewC4oOU5e+E
+	 6BIyPOm9OAjS4HDY2AnlXzCY68Dq7ypnY53CQoNxb/BN+zdXBtpv8dqsVaFRb7pyAJ
+	 oquEwDx9v9N4iogOS6654A3xAgPkEa2TRhZwjN4Swa6i1NXhePmu3RJxvQt1PdmWnA
+	 5PHMp92/dZLLg==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v2 5/8] perf report: Add --progress option
-Date: Sun, 13 Sep 2026 00:26:25 -0300
-Message-ID: <20260913032632.116277-6-acme@kernel.org>
+Subject: [PATCH v2 6/8] perf scripts: Add perf-stuck, to tell where a running perf is stuck
+Date: Sun, 13 Sep 2026 00:26:26 -0300
+Message-ID: <20260913032632.116277-7-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260913032632.116277-1-acme@kernel.org>
 References: <20260913032632.116277-1-acme@kernel.org>
@@ -55,454 +55,365 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Processing a large data type profiling session, e.g. an AMD IBS one, can
-take a long time and, when using the stdio output, 'perf report' gives no
-feedback about which phase it is in nor about how far along it is: the
-TUI has a progress bar for that, but in the stdio case the ui_progress
-updates, that are already there, are dropped on the floor.
+A perf that takes forever is hard to tell apart from one that is stuck
+in a loop, and when it is stuck there is no way to know where without
+attaching gdb to it and looking around, which is what this does, from
+the outside, sampling /proc/<pid> at a fixed interval:
 
-Add a --progress option that installs a stdio backend for ui_progress,
-ui/stdio/progress.c, printing the phase title, the percentage done and
-the current/total counts to stderr:
+  ⬢ [acme@toolbx perf-tools-next]$ tools/perf/scripts/perf-stuck.sh -i 15 -n 4 -l ibs.log $(pgrep -x perf)
+  watching 2297313 (perf report --progress -s type -i perf.data.ibs) every 15s
+  09:39:34 state=R cpu=+0 (0.00s) rss=664295kB stack=7ffc3ae31000-7ffc3ae52000 size=132kB  Merging related events... [ 39.0%] 197574 / 506686
+  09:39:49 state=R cpu=+1496 (14.96s) rss=665383kB stack=7ffc3ae31000-7ffc3ae52000 size=132kB stuck=1 Merging related events... [ 39.0%] 197574 / 506686
+  09:40:04 state=R cpu=+1497 (14.97s) rss=665383kB stack=7ffc3ae31000-7ffc3ae52000 size=132kB stuck=2 Merging related events... [ 39.0%] 197574 / 506686
+  09:40:19 state=R cpu=+1497 (14.97s) rss=502250kB stack=7ffc3ae31000-7ffc3ae52000 size=132kB stuck=0 Merging related events... [ 61.0%] 309026 / 506686
 
-  Processing events... [ 42.3%] 317M / 746M
-  Merging related events... [ 61.0%] 309026 / 506686
-  Sorting events for output... [ 98.2%] 14132 / 14387
+The CPU time used grows by a whole interval on every sample while the
+[stack] mapping, that would be moving down if this was recursion, stays
+put, so that one is spinning, and the last line of the progress log of
+'perf report --progress' tells in which phase.
 
-The first one is the perf.data file size based progress already kept
-while reading events, sized with the same unit_number__scnprintf() used
-by the TUI progress bar title; the other two are the hist entry based
-ones for the hist entry merging (collapse) and output sorting phases,
-that print raw counts.
+With -g it runs gdb when no progress is made for two consecutive
+samples, using the perf-stuck.gdb that sits next to it, which adds the
+perf-die-chain command used by the next patch, to print the DIE chain a
+DWARF type chasing loop is walking when the perf being watched is stuck
+in one of those.
 
-Steps are 1% of the phase total, the default (total / 16) is tuned for
-the character cell based TUI bar, and the last update normally stops
-short of the total, so finishing a phase prints it as complete.
+It is a prototype: this wants to become a first class 'perf stuck'
+command, sampling a running process from inside perf, instead of this
+shell script poking at /proc and shelling out to gdb.
 
-When stderr is a tty the line is updated in place, with each phase
-getting a line of its own, otherwise one line is printed per update, so
-that redirecting stderr to a file leaves a readable log of the phases.
+Example:
 
-Phases can be nested, e.g. the ordered events flushes that take place
-while the "Processing events..." phase is still in progress, so the
-backend keeps track of the ones started so far to be able to complete
-the right one when a phase finishes, as ui_progress__finish() gets no
-arguments.
-
-That bookkeeping requires ui_progress__init() and ui_progress__finish()
-to be paired, and a few callers had paths returning early without the
-finish: do_flush() in ordered-events.c on session_done() and on
-deliver() errors, and the ENOMEM paths right after the init in
-__perf_session__process_pipe_events() and __perf_session__process_dir_events().
-
-Fix those, with a backend that kept the stale entries it would print
-through dangling pointers to returned stack frames, and have the
-update() method ignore anything that doesn't match the innermost running
-phase, printing nothing is better than printing another phase's numbers
-or reading the stack array with index -1.
-
-Committer testing:
-
-  ⬢ [acme@toolbx perf-tools-next]$ perf record -o perf.data.small -- sleep 0.2
-  [ perf record: Woken up 2 times to write data ]
-  [ perf record: Captured and wrote 0.002 MB perf.data.small (7 samples) ]
-  ⬢ [acme@toolbx perf-tools-next]$ perf report --progress -i perf.data.small > /dev/null
-  Processing events... [  0.0%] 0B / 2K
-  Processing events... [ 99.6%] 2040B / 2K
-  Processing time ordered events... [100.0%] 13 / 13
-  Processing events... [100.0%] 2K / 2K
-  Sorting events for output... [100.0%] 5 / 5
-  ⬢ [acme@toolbx perf-tools-next]$
-
-Nothing goes to stderr without --progress:
-
-  ⬢ [acme@toolbx perf-tools-next]$ perf report --stdio -i perf.data.small > /dev/null 2> stderr.txt
-  ⬢ [acme@toolbx perf-tools-next]$ wc -c stderr.txt
-  0 stderr.txt
-  ⬢ [acme@toolbx perf-tools-next]$
-
-With a 321 MB perf.data (perf mem record, i7-14700K):
-
-  ⬢ [acme@toolbx perf-tools-next]$ perf report --progress -i perf.data.i7 > /dev/null
-  Processing events... [  0.0%] 0B / 306M
-  [...]
-  Sorting events for output... [100.0%] 29996 / 29996
-  ⬢ [acme@toolbx perf-tools-next]$
-
-Which is what prompted this: an AMD IBS data type profile session hangs
-in the DWARF type resolution done when merging hist entries, with
---progress it now is visible that it is not the event loading that is
-stuck, but the merging, at a specific hist entry:
-
-  ⬢ [acme@toolbx perf-tools-next]$ perf report --progress -s type -i perf.data.ibs > /dev/null
-  Processing events... [  0.0%] 0B / 746M
-  [...]
-  Processing events... [100.0%] 746M / 746M
-  Merging related events... [ 58.0%] 293828 / 506686
-  Merging related events... [ 59.0%] 298894 / 506686
-  Merging related events... [ 60.0%] 303960 / 506686
-  Merging related events... [ 61.0%] 309026 / 506686
-
-  ⬢ [acme@toolbx perf-tools-next]$ gdb -p $(pidof perf) -batch -ex 'bt 6' -ex detach
-  #0  0x0000000000773f31 in die_get_pointer_type ()
-  #1  0x000000000077b817 in find_data_type ()
-  #2  0x0000000000636f20 in __hist_entry__get_data_type ()
-  #3  0x0000000000639c65 in hist_entry__get_data_type ()
-  #4  0x00000000006e57a8 in sort__type_collapse ()
-  #5  0x00000000006ef0ee in hists__collapse_resort ()
-  ⬢ [acme@toolbx perf-tools-next]$
-
-The report related entries in 'perf test' pass:
-
-  ⬢ [acme@toolbx perf-tools-next]$ perf test 17 27 30 31 85 88
-  17: Match and link multiple hists                              : Ok
-  27: Filter hist entries                                        : Ok
-  30: Sort output of hist entries                                : Ok
-  31: Cumulate child hist entries                                : Ok
-  85: Test that perf report includes file offsets and event type names in diagnostic messages. : Skip
-  88: Test that perf report handles truncated perf.data gracefully (no crash, no segfault — clean error exit).: Ok
+  ⬢ [acme@toolbx perf-tools-next]$ tools/perf/scripts/perf-stuck.sh -i 1 -n 3 -g $(pgrep -x sleep)
+  watching 2342826 (sleep 45 ) every 1s
+  11:58:36 state=S cpu=+0 (0.00s) rss=492kB stack=7ffe21f89000-7ffe21faa000 size=132kB stuck=2 (no progress log)
+  ... gdb output of 2342826 in /tmp/perf-stuck-gdb.Uz9i5p
+  ⬢ [acme@toolbx perf-tools-next]$ tail -4 /tmp/perf-stuck-gdb.Uz9i5p
+  #3  0x0000555bc6ddc28f in main ()
+  not in a DWARF type chaser, try: bt
+  not in find_data_type()
+  [Inferior 1 (process 2342826) detached]
   ⬢ [acme@toolbx perf-tools-next]$
 
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-report.txt |  13 ++
- tools/perf/builtin-report.c              |  11 ++
- tools/perf/ui/Build                      |   1 +
- tools/perf/ui/progress.h                 |   2 +
- tools/perf/ui/stdio/progress.c           | 162 +++++++++++++++++++++++
- tools/perf/util/ordered-events.c         |  17 ++-
- tools/perf/util/session.c                |  12 +-
- 7 files changed, 211 insertions(+), 7 deletions(-)
- create mode 100644 tools/perf/ui/stdio/progress.c
+ tools/perf/scripts/perf-stuck.gdb | 104 ++++++++++++++++
+ tools/perf/scripts/perf-stuck.sh  | 194 ++++++++++++++++++++++++++++++
+ 2 files changed, 298 insertions(+)
+ create mode 100644 tools/perf/scripts/perf-stuck.gdb
+ create mode 100755 tools/perf/scripts/perf-stuck.sh
 
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index fed6af128ff07e4c..2db4b069546130f0 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -29,6 +29,19 @@ OPTIONS
- --quiet::
- 	Do not show any warnings or messages.  (Suppress -v)
- 
-+--progress::
-+	Show progress for each of the processing phases, printing the
-+	percentage done and the current/total counts: the first phase
-+	counts the bytes of the perf.data file processed so far, the
-+	merge and sort phases count hist entries, e.g.:
-+
-+	Processing events... [ 42.3%] 4G / 10G
-+	Merging related events... [  7.1%] 1024 / 14387
-+	Sorting events for output... [ 98.2%] 14132 / 14387
-+
-+	It is a no-op when using the TUI or GTK browsers, that already
-+	present progress information.
-+
- -n::
- --show-nr-samples::
- 	Show the number of samples for each symbol
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 4d3383d1daae2ed9..fe59a429b9d6eef9 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -87,6 +87,7 @@ struct report {
- 	bool			use_gtk;
- #endif
- 	bool			use_stdio;
-+	bool			progress;
- 	bool			show_full_info;
- 	bool			show_threads;
- 	bool			inverted_callchain;
-@@ -1373,6 +1374,8 @@ int cmd_report(int argc, const char **argv)
- 		    "Use the stdio interface"),
- 	OPT_BOOLEAN(0, "weights", &symbol_conf.annotate_weight,
- 			"Show or hide weight columns in annotation. Default show if non-zero."),
-+	OPT_BOOLEAN(0, "progress", &report.progress,
-+		    "Show progress while processing the perf.data file"),
- 	OPT_BOOLEAN(0, "header", &report.header, "Show data header."),
- 	OPT_BOOLEAN(0, "header-only", &report.header_only,
- 		    "Show only data header."),
-@@ -1765,6 +1768,14 @@ int cmd_report(int argc, const char **argv)
- 	else
- 		use_browser = 0;
- 
-+	/*
-+	 * The TUI/GTK browsers already show progress, this is for the stdio
-+	 * case, where we print the percentage of the perf.data file that was
-+	 * processed so far, for each of the processing phases.
-+	 */
-+	if (report.progress && use_browser == 0)
-+		stdio_progress__init();
-+
- 	if (report.data_type && use_browser == 1) {
- 		symbol_conf.annotate_data_member = true;
- 		symbol_conf.annotate_data_sample = true;
-diff --git a/tools/perf/ui/Build b/tools/perf/ui/Build
-index 6005f813c9e3990c..a7b1740d51c80f23 100644
---- a/tools/perf/ui/Build
-+++ b/tools/perf/ui/Build
-@@ -4,6 +4,7 @@ perf-ui-y += progress.o
- perf-ui-y += util.o
- perf-ui-y += hist.o
- perf-ui-y += stdio/hist.o
-+perf-ui-y += stdio/progress.o
- 
- CFLAGS_setup.o += -DLIBDIR="BUILD_STR($(LIBDIR))"
- 
-diff --git a/tools/perf/ui/progress.h b/tools/perf/ui/progress.h
-index 4f52c37b2f099a82..03f1a8bb260ba076 100644
---- a/tools/perf/ui/progress.h
-+++ b/tools/perf/ui/progress.h
-@@ -23,6 +23,8 @@ void __ui_progress__init(struct ui_progress *p, u64 total,
- 
- void ui_progress__update(struct ui_progress *p, u64 adv);
- 
-+void stdio_progress__init(void);
-+
- struct ui_progress_ops {
- 	void (*init)(struct ui_progress *p);
- 	void (*update)(struct ui_progress *p);
-diff --git a/tools/perf/ui/stdio/progress.c b/tools/perf/ui/stdio/progress.c
+diff --git a/tools/perf/scripts/perf-stuck.gdb b/tools/perf/scripts/perf-stuck.gdb
 new file mode 100644
-index 0000000000000000..1d1eddd192777f9d
+index 0000000000000000..12a3f2952a68c18a
 --- /dev/null
-+++ b/tools/perf/ui/stdio/progress.c
-@@ -0,0 +1,162 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Progress feedback for the stdio (non-TUI/GTK) case, enabled via
-+ * 'perf report --progress': the perf.data file size based progress for
-+ * the event processing phase, plus the hist entry based ones for the
-+ * merging and sorting phases.
-+ */
-+#include <inttypes.h>
-+#include <stdio.h>
-+#include <unistd.h>
-+#include <linux/kernel.h>
-+#include "../../util/debug.h"
-+#include "../../util/units.h"
-+#include "../progress.h"
++++ b/tools/perf/scripts/perf-stuck.gdb
+@@ -0,0 +1,104 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++# gdb commands for a perf that is stuck, used by perf-stuck.sh -g and usable
++# directly:
++#
++#   gdb -p $(pgrep -x perf) -batch -x perf-stuck.gdb -ex bt
++#
++# PROTOTYPE: part of the perf-stuck.sh stopgap, see the note at the start of
++# that script: this wants to move into a first class 'perf stuck' command,
++# which would print these DIE chains by itself, without gdb.
++#
++# The settings are the ones that keep a batch attach from stopping to ask
++# questions (debuginfod, pagination) and that make the output readable.
++#
++# The commands are for the DWARF type chasers in util/dwarf-aux.c, the
++# functions a data type profiling 'perf report -s type' spins in when a
++# debug info file has a type chain that got into a cycle:
++#
++#   perf-die-chain <function> <die variable> [iterations]
++#   perf-die-chain-all [iterations]
++#   perf-dso
++#
++# For each iteration of the chasing loop they print the DIE address, the
++# CU it came from, its offset in the debug file, its tag and its name: a
++# cycle shows up as the same handful of (addr, cu) pairs repeating, and a
++# CU that changes from one iteration to the next means the chase is
++# hopping between a debug file and its dwz common file.
 +
-+/*
-+ * Phases can be nested, e.g. the ordered events flushes that take place
-+ * while the "Processing events..." phase is still in progress, so keep
-+ * track of the ones started so far to be able to complete the right one
-+ * when a phase finishes, as ui_progress__finish() gets no arguments.  The
-+ * bookkeeping of what was last printed is per phase: when the nested one
-+ * finishes, the outer one must still know that its own last line was
-+ * already the complete one, else it would be printed again at finish time.
-+ */
-+#define STDIO_PROGRESS__MAX_DEPTH 8
++set pagination off
++set confirm off
++set debuginfod enabled off
++set print pretty on
++set height 0
++set width 0
 +
-+struct stdio_progress_phase {
-+	struct ui_progress	*p;
-+	u64			last_printed;
-+	size_t			last_len;
-+};
++define perf-die-chain
++  if $argc < 2
++    printf "usage: perf-die-chain <function> <die variable> [iterations]\n"
++  else
++    frame function $arg0
++    if $argc == 3
++      set $perf_die_chain_n = $arg2
++    else
++      set $perf_die_chain_n = 10
++    end
++    set $perf_die_chain_head = $pc
++    set $perf_die_chain_i = 0
++    while $perf_die_chain_i < $perf_die_chain_n
++      printf "chain[%d] die=%p addr=%p cu=%p off=0x%lx tag=%d name=%s\n", $perf_die_chain_i, $arg1, $arg1->addr, $arg1->cu, ((Dwarf_Off) dwarf_dieoffset($arg1)), ((int) dwarf_tag($arg1)), ((char *) dwarf_diename($arg1))
++      until *$perf_die_chain_head
++      set $perf_die_chain_i = $perf_die_chain_i + 1
++    end
++  end
++end
 +
-+static struct stdio_progress_phase stdio_progress__stack[STDIO_PROGRESS__MAX_DEPTH];
-+static int stdio_progress__depth;
-+static bool stdio_progress__is_tty;
++document perf-die-chain
++Print the DIE chain being walked by a DWARF type chasing loop.
++usage: perf-die-chain <function> <die variable> [iterations]
++  perf-die-chain die_get_pointer_type type_die
++  perf-die-chain __die_get_real_type vr_die
++  perf-die-chain die_get_real_type vr_die
++end
 +
-+static void stdio_progress__print_phase(struct stdio_progress_phase *phase,
-+					u64 curr)
-+{
-+	struct ui_progress *p = phase->p;
-+	char buf_cur[20], buf_tot[20], buf[128];
-+	double percent = p->total ? 100.0 * (double)curr / (double)p->total : 0.0;
-+	size_t len;
++define perf-die-chain-all
++  if $argc == 0
++    set $perf_die_chain_n = 10
++  else
++    set $perf_die_chain_n = $arg0
++  end
++  if $_any_caller_is("die_get_pointer_type", 20)
++    printf "stuck in die_get_pointer_type():\n"
++    perf-die-chain die_get_pointer_type type_die $perf_die_chain_n
++  else
++    if $_any_caller_is("__die_get_real_type", 20)
++      printf "stuck in __die_get_real_type():\n"
++      perf-die-chain __die_get_real_type vr_die $perf_die_chain_n
++    else
++      if $_any_caller_is("die_get_real_type", 20)
++        printf "stuck in die_get_real_type():\n"
++        perf-die-chain die_get_real_type vr_die $perf_die_chain_n
++      else
++        printf "not in a DWARF type chaser, try: bt\n"
++      end
++    end
++  end
++end
 +
-+	/*
-+	 * Only the completion line shows 100.0%: a 99.99% progress would
-+	 * round up to it in the display, making the line printed at finish
-+	 * time look like a duplicate.
-+	 */
-+	if (curr < p->total && percent > 99.9)
-+		percent = 99.9;
++document perf-die-chain-all
++Find which DWARF type chaser the process is in and print the DIE chain.
++usage: perf-die-chain-all [iterations]
++end
 +
-+	if (p->size) {
-+		unit_number__scnprintf(buf_cur, sizeof(buf_cur), curr);
-+		unit_number__scnprintf(buf_tot, sizeof(buf_tot), p->total);
-+		len = scnprintf(buf, sizeof(buf), "%s [%5.1f%%] %s / %s",
-+				p->title, percent, buf_cur, buf_tot);
-+	} else {
-+		len = scnprintf(buf, sizeof(buf), "%s [%5.1f%%] %" PRIu64 " / %" PRIu64,
-+				p->title, percent, curr, p->total);
-+	}
++define perf-dso
++  if $_any_caller_is("find_data_type", 20)
++    frame function find_data_type
++    printf "dso=%s ip=0x%lx sym=%s\n", dloc->ms.map->dso->name, dloc->ip, dloc->ms.sym->name
++  else
++    printf "not in find_data_type()\n"
++  end
++end
 +
-+	if (!stdio_progress__is_tty) {
-+		fprintf(stderr, "%s\n", buf);
-+		goto out;
-+	}
++document perf-dso
++Print the dso, ip and symbol of the data location being resolved.
++end
+diff --git a/tools/perf/scripts/perf-stuck.sh b/tools/perf/scripts/perf-stuck.sh
+new file mode 100755
+index 0000000000000000..70e59192b1d9658e
+--- /dev/null
++++ b/tools/perf/scripts/perf-stuck.sh
+@@ -0,0 +1,194 @@
++#!/bin/bash
++# SPDX-License-Identifier: GPL-2.0
++#
++# perf-stuck - tell a spinning perf apart from a blocked or recursing one
++#
++# Arnaldo Carvalho de Melo <acme@redhat.com>
++#
++# PROTOTYPE: this wants to become a first class 'perf stuck' command, that
++# samples a running perf, or any other process, from inside perf, with the
++# knowledge of the phases perf goes through and of the DWARF type chasing
++# loops built in, instead of this shell script poking at /proc and shelling
++# out to gdb.  It is here as a stopgap, to be able to tell where a perf is
++# stuck while looking at hangs such as the one 'perf report -s type' hits
++# on dwz compressed debug info.
++#
++# Samples /proc/<pid> at a fixed interval and prints, for each sample:
++#
++#   the CPU time used since the previous sample, so a process burning a
++#   full interval's worth of ticks is spinning, while one using none is
++#   blocked
++#
++#   the [stack] mapping start, which moves down as the stack grows, the
++#   giveaway for runaway recursion, together with its size
++#
++#   the last line of a progress log, when one is given, e.g. the stderr
++#   of 'perf report --progress', to see which phase is stuck
++#
++# A process that burns CPU with a constant stack and no progress is in an
++# unbounded loop, e.g. a die_get_pointer_type() chain that got into a
++# cycle, while one whose [stack] start keeps moving down is recursing.
++#
++# With -g it runs gdb, using the perf-stuck.gdb that sits next to this
++# script, when no progress is made for two consecutive samples, which for
++# a perf in a DWARF type chasing loop prints the DIE chain it is walking.
++#
++# usage: perf-stuck.sh [options] <pid|process-name>
 +
-+	/* Pad to the length of the previous line to erase its leftovers. */
-+	fprintf(stderr, "\r%s%*s", buf,
-+		(int)(len < phase->last_len ? phase->last_len - len : 0), "");
-+	phase->last_len = len;
-+out:
-+	phase->last_printed = curr;
-+	fflush(stderr);
++set -u
++
++usage() {
++	cat <<-EOF
++	usage: perf-stuck.sh [options] <pid|process-name>
++
++	  -i <secs>   sampling interval (default: 10)
++	  -n <count>  stop after this many samples (default: watch till it exits)
++	  -l <file>   progress log, its last line is printed with every sample
++	  -g          run gdb with perf-stuck.gdb when no progress is made for
++	              two consecutive samples, writing the output to a temp file
++	  -x <file>   use this gdb command file instead of perf-stuck.gdb
++	  -h          this help
++	EOF
++	exit "${1:-0}"
 +}
 +
-+static void stdio_progress__finish(void);
++interval=10
++count=0
++progress_log=
++use_gdb=
++gdb_cmds=
 +
-+static void __stdio_progress__init(struct ui_progress *p)
-+{
-+	/*
-+	 * The default step (total / 16) is meant for the TUI progress
-+	 * bar, for stdio, where a percentage is printed, use 1% steps.
-+	 */
-+	p->next = p->step = p->total / 100 ?: 1;
++while getopts "i:n:l:gx:h" opt; do
++	case "$opt" in
++	i) interval=$OPTARG ;;
++	n) count=$OPTARG ;;
++	l) progress_log=$OPTARG ;;
++	g) use_gdb=1 ;;
++	x) gdb_cmds=$OPTARG ;;
++	h) usage 0 ;;
++	*) usage 1 ;;
++	esac
++done
++shift $((OPTIND - 1))
 +
-+	if (stdio_progress__depth == STDIO_PROGRESS__MAX_DEPTH) {
-+		pr_warning("progress phases nested deeper than %d, completing %s\n",
-+			   STDIO_PROGRESS__MAX_DEPTH,
-+			   stdio_progress__stack[stdio_progress__depth - 1].p->title);
-+		stdio_progress__finish();
-+	}
++[ $# -eq 1 ] || usage 1
 +
-+	/* Start a nested phase in a line of its own. */
-+	if (stdio_progress__depth && stdio_progress__is_tty)
-+		fputc('\n', stderr);
++if [[ "$1" =~ ^[0-9]+$ ]]; then
++	pid=$1
++else
++	pid=$(pgrep -x "$1" | head -1)
++	[ -n "$pid" ] || { echo "no process named '$1'"; exit 1; }
++fi
 +
-+	stdio_progress__stack[stdio_progress__depth++] =
-+		(struct stdio_progress_phase) {
-+			.p = p,
-+			.last_printed = 0,
-+			.last_len = 0,
-+		};
++[ -d /proc/"$pid" ] || { echo "no process $pid"; exit 1; }
 +
-+	stdio_progress__print_phase(&stdio_progress__stack[stdio_progress__depth - 1],
-+				    p->curr);
-+}
++if [ -n "$use_gdb" ] && [ -z "$gdb_cmds" ]; then
++	gdb_cmds=$(dirname "$0")/perf-stuck.gdb
++	[ -r "$gdb_cmds" ] || { echo "cannot read $gdb_cmds"; exit 1; }
++fi
 +
-+static void stdio_progress__update(struct ui_progress *p)
-+{
-+	/*
-+	 * Phases are started/finished via init/finish, if we get an
-+	 * update that doesn't match the innermost running phase then
-+	 * something got out of sync, print nothing rather than some
-+	 * other phase's numbers, or, with no phases at all, reading
-+	 * stdio_progress__stack[-1].
-+	 */
-+	if (!stdio_progress__depth ||
-+	    stdio_progress__stack[stdio_progress__depth - 1].p != p)
-+		return;
++hz=$(getconf CLK_TCK)
++psz=$(getconf PAGESIZE)
++prev_cpu=
++prev_stack=
++prev_progress=
++stuck=0
++gdb_done=
++nsample=0
 +
-+	stdio_progress__print_phase(&stdio_progress__stack[stdio_progress__depth - 1],
-+				    p->curr);
-+}
++# The command line is whatever the process was started with, so drop the
++# control characters from it: a process started with escape sequences in
++# its arguments, e.g. one replaying a log line, would otherwise get them
++# replayed on the terminal of whoever runs this.
++cmdline=$(tr '\0' ' ' < /proc/"$pid"/cmdline | tr -d '[:cntrl:]')
 +
-+static void stdio_progress__finish(void)
-+{
-+	struct stdio_progress_phase *phase;
++echo "watching $pid ($cmdline) every ${interval}s"
 +
-+	if (!stdio_progress__depth)
-+		return;
++while :; do
++	if [ ! -d /proc/"$pid" ]; then
++		echo "$(date +%T) process gone"
++		break
++	fi
 +
-+	phase = &stdio_progress__stack[--stdio_progress__depth];
++	# Field 2, the command name, is in parentheses and can contain
++	# spaces, so drop it together with the pid before splitting: the
++	# fields after it then line up, with the state, the utime+stime
++	# pair and the RSS landing where they are read below.  Printing the
++	# CPU time with %d instead of relying on awk's default output format
++	# keeps it out of scientific notation, that bash arithmetic cannot
++	# parse, once it goes past six digits, i.e. some 16 minutes of CPU
++	# at 100 Hz.
++	if ! stat_line=$(awk '{ sub(/^[^ ]+ \(.*\) /, "");
++			       printf "%s %d %d\n", $1, $12 + $13, $22 }' \
++			 /proc/"$pid"/stat 2>/dev/null); then
++		echo "$(date +%T) process gone"
++		break
++	fi
 +
-+	/*
-+	 * As we print only at 1% steps, the last line printed may have
-+	 * stopped short of the total, so close this phase showing it as
-+	 * complete, unless that was what got printed already.
-+	 */
-+	if (phase->last_printed != phase->p->total)
-+		stdio_progress__print_phase(phase, phase->p->total);
++	# The process can be gone between the check above and this read, in
++	# which case there is nothing to report: 'set -u' would otherwise
++	# turn the unbound fields into an aborted script.
++	if [ -z "$stat_line" ]; then
++		echo "$(date +%T) process gone"
++		break
++	fi
 +
-+	phase->last_printed	= 0;
-+	phase->last_len		= 0;
++	stat=($stat_line)
++	state=${stat[0]}
++	cpu=${stat[1]}
++	# field 24 of /proc/<pid>/stat, the resident set size in pages
++	rss=$(( stat[2] * psz / 1024 ))
 +
-+	if (stdio_progress__is_tty)
-+		fputc('\n', stderr);
++	stack=$(awk '/\[stack\]/{print $1; exit}' /proc/"$pid"/maps 2>/dev/null)
++	if [ -n "$stack" ]; then
++		stack_start=0x${stack%-*}
++		stack_size=$(( 0x${stack#*-} - stack_start ))
++		stack_txt="$stack size=$((stack_size / 1024))kB"
++	else
++		stack_start=
++		stack_txt="-"
++	fi
 +
-+	fflush(stderr);
-+}
++	progress=
++	[ -n "$progress_log" ] && [ -s "$progress_log" ] && progress=$(tail -1 "$progress_log")
 +
-+static struct ui_progress_ops stdio_progress__ops = {
-+	.init	= __stdio_progress__init,
-+	.update	= stdio_progress__update,
-+	.finish	= stdio_progress__finish,
-+};
++	if [ -n "$prev_cpu" ]; then
++		cpu_delta=$(( cpu - prev_cpu ))
++		# With a progress log, count the samples that show no progress,
++		# without one there is no progress to look at, so count them all:
++		# -g then looks at where the process is after two intervals.
++		if [ -z "$progress_log" ] ||
++		   { [ -n "$progress" ] && [ "$progress" = "$prev_progress" ]; }; then
++			stuck=$((stuck + 1))
++		else
++			stuck=0
++		fi
++		stuck_txt="stuck=${stuck}"
++		[ "$stack_start" != "$prev_stack" ] && stuck_txt="$stuck_txt STACK"
++	else
++		cpu_delta=0
++		stuck_txt=""
++	fi
 +
-+void stdio_progress__init(void)
-+{
-+	stdio_progress__is_tty = isatty(STDERR_FILENO) == 1;
-+	ui_progress__ops = &stdio_progress__ops;
-+}
-diff --git a/tools/perf/util/ordered-events.c b/tools/perf/util/ordered-events.c
-index a5857f9f5af2d3de..4063403d4978b45e 100644
---- a/tools/perf/util/ordered-events.c
-+++ b/tools/perf/util/ordered-events.c
-@@ -237,14 +237,16 @@ static int do_flush(struct ordered_events *oe, bool show_progress)
- 		ui_progress__init(&prog, oe->nr_events, "Processing time ordered events...");
- 
- 	list_for_each_entry_safe(iter, tmp, head, list) {
--		if (session_done())
--			return 0;
-+		if (session_done()) {
-+			ret = 0;
-+			goto out_progress;
-+		}
- 
- 		if (iter->timestamp > limit)
- 			break;
- 		ret = oe->deliver(oe, iter);
- 		if (ret < 0)
--			return ret;
-+			goto out_progress;
- 
- 		ordered_events__delete(oe, iter);
- 		oe->last_flush = iter->timestamp;
-@@ -258,10 +260,17 @@ static int do_flush(struct ordered_events *oe, bool show_progress)
- 	else if (last_ts <= limit)
- 		oe->last = list_entry(head->prev, struct ordered_event, list);
- 
-+	ret = 0;
-+out_progress:
-+	/*
-+	 * Always pair ui_progress__init() with ui_progress__finish(), the
-+	 * stdio progress backend tracks phases on a stack and an early
-+	 * return that skipped the finish would leave the dead 'prog' on it.
-+	 */
- 	if (show_progress)
- 		ui_progress__finish();
- 
--	return 0;
-+	return ret;
- }
- 
- static int __ordered_events__flush(struct ordered_events *oe, enum oe_flush how,
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 3237870a1a34b62c..85166042e899aada 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -3146,8 +3146,12 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
- 	cur_size = sizeof(union perf_event);
- 
- 	buf = malloc(cur_size);
--	if (!buf)
--		return -errno;
-+	if (!buf) {
-+		err = -errno;
-+		if (update_prog)
-+			ui_progress__finish();
-+		return err;
-+	}
- 	ordered_events__set_copy_on_queue(oe, true);
- more:
- 	event = buf;
-@@ -3646,8 +3650,10 @@ static int __perf_session__process_dir_events(struct perf_session *session)
- 	}
- 
- 	rd = calloc(nr_readers, sizeof(struct reader));
--	if (!rd)
-+	if (!rd) {
-+		ui_progress__finish();
- 		return -ENOMEM;
-+	}
- 
- 	rd[0] = (struct reader) {
- 		.fd		 = perf_data__fd(session->data),
++	printf '%s state=%s cpu=+%d (%d.%02ds) rss=%dkB stack=%s %s %s\n' \
++	       "$(date +%T)" "$state" "$cpu_delta" \
++	       $(( cpu_delta / hz )) $(( (cpu_delta % hz) * 100 / hz )) \
++	       "$rss" "$stack_txt" "$stuck_txt" "${progress:-(no progress log)}"
++
++	if [ -n "$use_gdb" ] && [ -z "$gdb_done" ] && [ "$stuck" -ge 2 ]; then
++		gdb_log=$(mktemp /tmp/perf-stuck-gdb.XXXXXX)
++		gdb -p "$pid" -batch -x "$gdb_cmds" -ex bt \
++		    -ex 'perf-die-chain-all' -ex perf-dso -ex detach > "$gdb_log" 2>&1
++		gdb_done=1
++		echo "... gdb output of $pid in $gdb_log"
++	fi
++
++	prev_cpu=$cpu
++	prev_stack=$stack_start
++	prev_progress=$progress
++
++	nsample=$((nsample + 1))
++	[ "$count" -gt 0 ] && [ "$nsample" -ge "$count" ] && break
++
++	sleep "$interval"
++done
 -- 
 2.55.0
 
