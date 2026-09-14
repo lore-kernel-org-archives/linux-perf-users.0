@@ -1,241 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399622FE074;
-	Mon, 14 Sep 2026 01:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396A9282F21
+	for <linux-perf-users@vger.kernel.org>; Mon, 14 Sep 2026 01:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789350498; cv=none; b=iB2Lw9xdPrDBC3I90TcK/8DvkS0Uo2LHF+M9yddSpWcQUc5dQd031yWg5H2lfznBohIyuXEMyTWPYLM1ssYXrd2HnS6PTaM2ObGk0st0bJGTd0eJF8EDlhO1S99+mZG/NsHEOyYwjYJ6JFQFAG91YWqL0hyw4eOXv1+C1bMgR/g=
+	t=1789350632; cv=none; b=b1haPMBAUUJ7TAYISgPDEz2KT5PKlmTbKSyP8QewVAxT27ZUVVN2j9GVRHTGj1s4JmlBiW5b8zszbslwqjOlQyW3xcb5Zx6R5sdDb1Me9/UwGSM78P+QTyfjCX0mH/KnxP+57zOOmKaqAEhUbQwY5DF2MnSloNIEdAOSShB2PyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789350498; c=relaxed/simple;
-	bh=3kFg9Qpz7u59REwfaQSuPRHtJv7hZafpOxBAJnX5ADA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HlJtyr+A6XslTaSBWnCxo4IWC1pNJO8qbc+o70tytNmFxjbjdTCJa/p0cWvEIY2o0KifNhC3fCMSrwoqca2pRGuf0ys0SLMlgdJqB1cLb7kkQ402/FwI7Q+XbPzbSmYw0DVhvFH2mPaOx5kqUpd+eAvWNaRHy6wU5RVFEeOuUXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=V8lotReU; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1789350632; c=relaxed/simple;
+	bh=2js5g3Nov7LaiGm+R0OUaHhZrtKVLTUYUBRj0oAbvdA=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=B6jQSWLso16VZqDN31GjBb88drKWqDdCJN1yLrtUi07ZRugudrE/SD9fCkHnqWRFfsdsh50AqShD3JP5ZU4BS1pD52MEBeYpnUIkIMQku37BwitLJuql/ebPQ9OXC+KwKdyHqFmmoCcGv6gv7u2DD+wgZiw2IwlO1ZJ/IsZUoNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NGPp7/Fs; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="V8lotReU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789350497; x=1820886497;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3kFg9Qpz7u59REwfaQSuPRHtJv7hZafpOxBAJnX5ADA=;
-  b=V8lotReUdrWpdZKwV+OZAxPDsg/5v9cM6S7E6CPkDA33k/C5FQ3FgXMJ
-   nvWNfksGTiYPG2coV6q2ELaQE/2aZRK1xXlRH1MmQ7y3SoyIn2SZNZv/K
-   CL+gHb0oCVggzptnFJbNIdUmhM5plsoNOYBtLX+0j0kwM4YmbiDL2cKvt
-   mc70otuyd1OL9D2ILX8QqdLSmx9uqUch3F3tCCXIC0S8wVw7bEfa18Ms7
-   hqnx0mzoYjZ8AUnd4iauOsbWxNVDsrqNM0PQGcvurluE0BeH+1abhEMIL
-   ZZstA6cwQF27TTKty8Pzb5AcwWe46gmG53zSvWkRiUVzVj9QK6Fool/4o
-   w==;
-X-CSE-ConnectionGUID: uS7kDkVOS26H2kvgTrA2fQ==
-X-CSE-MsgGUID: c1DME0MdRZ2smMgSVBbOog==
-X-IronPort-AV: E=McAfee;i="6800,10657,11904"; a="93530688"
-X-IronPort-AV: E=Sophos;i="6.27,102,1787036400"; 
-   d="scan'208";a="93530688"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2026 18:48:17 -0700
-X-CSE-ConnectionGUID: iSt2LkgZTaeaazQyk1VSYQ==
-X-CSE-MsgGUID: PZ/rz66tRlqG+LzlZ1Y9aw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,102,1787036400"; 
-   d="scan'208";a="276664245"
-Received: from spr.sh.intel.com ([10.112.229.196])
-  by orviesa005.jf.intel.com with ESMTP; 13 Sep 2026 18:48:13 -0700
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Zide Chen <zide.chen@intel.com>,
-	Falcon Thomas <thomas.falcon@intel.com>,
-	Dapeng Mi <dapeng1.mi@intel.com>,
-	Xudong Hao <xudong.hao@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v11 10/10] perf tests: Add SIMD registers sampling test
-Date: Mon, 14 Sep 2026 09:40:49 +0800
-Message-Id: <20260914014049.2061519-11-dapeng1.mi@linux.intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20260914014049.2061519-1-dapeng1.mi@linux.intel.com>
-References: <20260914014049.2061519-1-dapeng1.mi@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NGPp7/Fs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 421C21F000FF;
+	Mon, 14 Sep 2026 01:50:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789350628;
+	bh=nMyUygovBwqtz70APCqKQbF2b0EdlAhEd2I3zXm2z9c=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=NGPp7/FsA9SOBuRgBicBovxAyhDZKRkTr5YH1/pFuEXnhkGkLCeJDdBaw2m16pJhe
+	 kSNljO5EOeYwQ+kxWIzavdrokiR81LmcmCTNvsI/B/dGz+hPFV+UUf1nkDfa7a+POM
+	 Z53tRyrVj337SCu9msPdPewblNBpqemiFMCyL651ouf/DHr5iFheihYoZ+C/Hfrj1D
+	 MOSL5Zeh7jXZe/HmL69WP1LtYh7LVjSMb15dGNjIO975ca6UfO7ikOrLxAO5u//ZUg
+	 D9zO2m9TEQpMn+cibwVCbgzYcy6IhqwL8x9UM6S8mMFoJPCD625NJxliv9Nox5d+ej
+	 tcRwZdhQgN9XA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH 2/8] perf debuginfo: Fetch debuginfo keyed by build ID
+ using debuginfod
+Reply-To: sashiko-reviews@lists.linux.dev
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260914013604.7702-3-acme@kernel.org>
+References: <20260914013604.7702-1-acme@kernel.org>
+ <20260914013604.7702-3-acme@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 14 Sep 2026 01:50:27 +0000
+Message-Id: <20260914015028.421C21F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Validate that SIMD registers (XMM/YMM/ZMM/OPMASK on x86) can be sampled
-correctly with hardware support.
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] debuginfod__setup_urls_env() becomes a silent no-op stub when co=
+mpiled with NO_LIBDW=3D1, breaking the intended debuginfod URL fallback mec=
+hanism.
+--
 
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
----
- tools/perf/tests/shell/record.sh | 138 +++++++++++++++++++++++++++++++
- 1 file changed, 138 insertions(+)
+commit e2a1e9e2802762d033ca68499fb299a119d39468
+Author: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index 770a546f8d45..4a4931cb5ba9 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -249,6 +249,143 @@ test_extd_register_capture() {
-   echo "Extended register capture test [Success]"
- }
- 
-+extract_x86_advertised_simd_classes() {
-+  local regs_output="$1"
-+
-+  echo "${regs_output}" \
-+    | grep -oE '(ZMM|YMM|XMM|OPMASK)[0-9]+-[0-9]+' \
-+    | sed -E 's/[0-9]+-[0-9]+$//' \
-+    | tr '[:upper:]' '[:lower:]' \
-+    | sort -u
-+}
-+
-+ordered_x86_simd_classes() {
-+  local advertised_classes="$1"
-+  local simd_classes=""
-+
-+  if echo "${advertised_classes}" | grep -qw zmm
-+  then
-+    simd_classes="${simd_classes} zmm"
-+  fi
-+  if echo "${advertised_classes}" | grep -qw ymm
-+  then
-+    simd_classes="${simd_classes} ymm"
-+  fi
-+  if echo "${advertised_classes}" | grep -qw xmm
-+  then
-+    simd_classes="${simd_classes} xmm"
-+  fi
-+  if echo "${advertised_classes}" | grep -qw opmask
-+  then
-+    simd_classes="${simd_classes} opmask"
-+  fi
-+
-+  echo "${simd_classes}" | xargs
-+}
-+
-+check_simd_reg_capture() {
-+  local script_field="$1"
-+  local simd_reg="$2"
-+
-+  perf script -F ip,sym,"${script_field}" -i "${perfdata}" 2>/dev/null | \
-+  grep -q -i "${simd_reg}\["
-+}
-+
-+validate_simd_regs_sampling() {
-+  local regs_opt="$1"
-+  local simd_classes="$2"
-+  local script_field="$3"
-+  local simd_class
-+  local ret=0
-+
-+  for simd_class in ${simd_classes}
-+  do
-+    perf_record_with_retry "${perfdata}" \
-+      "check_simd_reg_capture ${script_field} ${simd_class}" "perf test -w thloop" \
-+      -e br_inst_retired.near_call ${regs_opt}=${simd_class} -c 1000 \
-+      --per-thread || ret=$?
-+
-+    if [ $ret -ne 0 ]
-+    then
-+      echo "SIMD register capture test [Failed record ${regs_opt}=${simd_class}]"
-+      return 1
-+    fi
-+  done
-+
-+  return 0
-+}
-+
-+test_simd_register_capture() {
-+  local arch
-+  local intr_regs
-+  local user_regs
-+  local simd_classes
-+  local user_simd_classes
-+  local advertised_intr_classes
-+  local advertised_user_classes
-+  local tested=0
-+
-+  echo "SIMD register capture test"
-+  if ! perf list pmu | grep -q 'br_inst_retired.near_call'
-+  then
-+    echo "SIMD register capture test [Skipped missing event]"
-+    return
-+  fi
-+
-+  intr_regs=$(perf record --intr-regs=\? 2>&1 || true)
-+  user_regs=$(perf record --user-regs=\? 2>&1 || true)
-+
-+  simd_classes=""
-+  user_simd_classes=""
-+
-+  arch=$(uname -m)
-+  case ${arch} in
-+  x86_64|i386)
-+    advertised_intr_classes=$(extract_x86_advertised_simd_classes "${intr_regs}")
-+    advertised_user_classes=$(extract_x86_advertised_simd_classes "${user_regs}")
-+
-+    simd_classes=$(ordered_x86_simd_classes "${advertised_intr_classes}")
-+    user_simd_classes=$(ordered_x86_simd_classes "${advertised_user_classes}")
-+    ;;
-+  *)
-+    echo "SIMD register capture test [Skipped non-x86 platform]"
-+    return
-+    ;;
-+  esac
-+
-+  if [ -z "${simd_classes}" ]
-+  then
-+    echo "SIMD register capture test [Skipped missing intr SIMD registers]"
-+  elif ! validate_simd_regs_sampling "--intr-regs" "${simd_classes}" "iregs"
-+  then
-+    echo "SIMD register capture test [Failed intr SIMD register sampling]"
-+    err=1
-+    return
-+  else
-+    tested=1
-+  fi
-+
-+  if [ -z "${user_simd_classes}" ]
-+  then
-+    echo "SIMD register capture test [Skipped missing user SIMD registers]"
-+  elif ! validate_simd_regs_sampling "--user-regs" "${user_simd_classes}" "uregs"
-+  then
-+    echo "SIMD register capture test [Failed user SIMD register sampling]"
-+    err=1
-+    return
-+  else
-+    tested=1
-+  fi
-+
-+  if [ ${tested} -eq 0 ]
-+  then
-+    echo "SIMD register capture test [Skipped missing SIMD registers]"
-+    return
-+  fi
-+
-+  echo "SIMD register capture test [Success]"
-+}
-+
- test_system_wide() {
-   echo "Basic --system-wide mode test"
-   local ret=0
-@@ -610,6 +747,7 @@ fi
- test_per_thread
- test_register_capture
- test_extd_register_capture
-+test_simd_register_capture
- test_system_wide
- test_workload
- test_branch_counter
--- 
-2.34.1
+perf debuginfo: Fetch debuginfo keyed by build ID using debuginfod
 
+This commit adds the ability to fetch debuginfo files by build ID via the
+debuginfod client. It also introduces a fallback helper to set up server=20
+URLs from /etc/debuginfod when DEBUGINFOD_URLS isn't natively exported.
+
+[ ... ]
+
+> diff --git a/tools/perf/util/debuginfo.h b/tools/perf/util/debuginfo.h
+> index a52d69932815c..1b301a9cc75b6 100644
+> --- a/tools/perf/util/debuginfo.h
+> +++ b/tools/perf/util/debuginfo.h
+> @@ -54,13 +56,62 @@
+>  #ifdef HAVE_DEBUGINFOD_SUPPORT
+>  int get_source_from_debuginfod(const char *raw_path, const char *sbuild_=
+id,
+>  			       char **new_path);
+> +
+> +/*
+> + * Finding a debuginfo file keyed by build ID uses the debuginfod client,
+> + * but opening the DWARF in it needs libdw, i.e. these live in
+> + * debuginfo.o, which is only built with CONFIG_LIBDW.
+> + */
+> +#ifdef HAVE_LIBDW_SUPPORT
+> +/*
+> + * Populate DEBUGINFOD_URLS from the .urls files in /etc/debuginfod when=
+ it
+> + * isn't set, called from symbol__init(), i.e. before any thread that can
+> + * call getenv() exists: setenv() is not thread safe.
+> + */
+> +void debuginfod__setup_urls_env(void);
+> +
+> +int debuginfo__find_build_id(const struct build_id *bid, char **path);
+> +struct debuginfo *debuginfo__new_build_id(const struct build_id *bid);
+> +#else
+> +static inline void debuginfod__setup_urls_env(void)
+> +{
+> +}
+
+[Severity: Medium]
+Does this code silently break the debuginfod URL fallback when perf is=20
+compiled with NO_LIBDW=3D1 but with libdebuginfod support enabled?
+
+The commit message notes that the libdebuginfod feature check is independent
+of NO_LIBDW. However, because debuginfo.o is only built with CONFIG_LIBDW,
+the actual implementation of debuginfod__setup_urls_env() in debuginfo.c ge=
+ts
+omitted from the build when NO_LIBDW=3D1 is used.
+
+When this configuration occurs, this empty stub replaces the fallback logic.
+
+[ ... ]
+
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 3587ad2431590..1d70c43bb24ee 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -2534,6 +2536,16 @@ int symbol__init(struct perf_env *env)
+>  	if (symbol_conf.initialized)
+>  		return 0;
+> =20
+> +	/*
+> +	 * Have DEBUGINFOD_URLS set before the threads that can take the
+> +	 * debuginfod fetch path, and that getenv() it, e.g. in the every
+> +	 * debuginfod_begin() of the other debuginfod client users, are
+> +	 * started: set it up here, from the .urls files in /etc/debuginfod
+> +	 * when it isn't set, instead of doing it lazily from the fetch
+> +	 * path itself, setenv() not being thread safe.
+> +	 */
+> +	debuginfod__setup_urls_env();
+> +
+
+As a result of the missing implementation, this call in symbol__init() will
+silently succeed against the stub without setting DEBUGINFOD_URLS.=20
+
+This causes dependent debuginfod_begin() calls downstream in files like
+build-id.c or probe-event.c to fail to find the configured servers in
+environments like cron jobs or systemd services where the variable is not
+explicitly exported.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914013604.7702=
+-1-acme@kernel.org?part=3D2
