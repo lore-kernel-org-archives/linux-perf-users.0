@@ -1,47 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F6642D3A93;
-	Mon, 14 Sep 2026 01:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06CD2D94AF;
+	Mon, 14 Sep 2026 01:17:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789348385; cv=none; b=komOSxy1I+PP72lTSev918yQ24rERgb9rUSsKqYWxA6mgO2qpupXhc5bmbEI3Zc6P92ChP8ZsWf70LeaGVxQdAESaFbWZxRS09h3TPkkxcES1hde9FdsOpXFBuvDQ9IDh36kTOddYOCsEXfGH8qOZdkzNN4IAlESV4K2c1QhsFY=
+	t=1789348632; cv=none; b=NzyciDtbd9zeHctTbtYt19/QQIX71pjpZsZeXVUFlUTLYA6nP7GAAhcILVXMNavizbZKOeEInj3c7MMCcByJV+RDNcukGKVn6oeYzBYkbQg0rDQMwn0a3+vOYkhHSopfloQAHXyoLrApKl6evJbYZetnsZCAiQJ/WzQ+9RyLJ7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789348385; c=relaxed/simple;
-	bh=igCtFqliQnp/gR5uMJXNZJLWhekJJhWEy63N0y7KNr8=;
+	s=arc-20240116; t=1789348632; c=relaxed/simple;
+	bh=yaS7ARHyhCJQ5O/dVyDdhqWsOUNVVb3p0svU8JYNqME=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XpWFrMFBh3wfEFmaB3IPSmDKyXS/q7PvC1nUe6cgEFvjFLwET80/UTQK/GpVJ8HzXMajwzOH0jNGR7+EJyJmAmzW1KBSRDaEYYo4Z+ji+0qmLi90qyOqAm2/5t/AIt7CW1nLwAVtXr1Nqjjt8ASu87ljiWX5u6U0G0aBljFNKC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CyKgo6VB; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=YXW9oxPwJZ4t3jx29C+A3RGnd0MthTZHB/LHEUKPMPw+KLkk6HDiVRPesvOjExe8h9x02PoRFfyW1vgtPz49SCrOfgjMlojbiHfl7/dOuPf/znkTlA7hD9i/Gid0JzUCRFldFxMqfeIjWw+tKBcdLJXQ03HzBbIpA8K3dNgcw/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z71TbIzT; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CyKgo6VB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 243521F000FF;
-	Mon, 14 Sep 2026 01:13:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z71TbIzT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDAB21F000FF;
+	Mon, 14 Sep 2026 01:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789348383;
-	bh=S4ijoOjoBG1kX0MqJZWEgFLU5EKm1paRbUc8bRlvdk0=;
+	s=k20260515; t=1789348630;
+	bh=CxNE9VhML03EVnMjcv9cl9hUaRqHKkzyMHIH5zs2+Mw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=CyKgo6VB09D3y+VTVGYgbuzn6oAD8oIBE8S2KhK7S+mlSQiC1h8dfAZmE5DZBPMgK
-	 2IYgT2Bh/8gR5vNSIV/CF/1xQaa3owyUf3Q7LAKqWNWfyTOe2QMP925LKXNylPoCFA
-	 8wAG/ujqldPeDinyiJV/j93HnXEj6g/aHX0GxA8sa+UGsFB5kbCWdgqdhP0U9OwX1a
-	 70axJWpIo997MHmzPGsVXZ40nLcJajaaENbauYYCU3STkWHTR7mWjZAUdDcR8Ag9sx
-	 qFSMa/arZUv8Q+nPVV6f1KNjb3EDHdCl/QOzPHacxsxrG7ebaN+if2wC3q1o3Zj3Qr
-	 +3WIgOtXFPXgQ==
-Date: Sun, 13 Sep 2026 18:13:01 -0700
+	b=Z71TbIzTwvppbu9XQkljgc1auny1M6YBlOr8ZQahB5hMXjrrHO2mYPFIZYuxOrIy9
+	 XxkQOisIQNumk9Ro5npv0NGtW8aXqk4B2eXXuXxfAUPMgZl74sKS8VVL64hLKu4Dr4
+	 Diqb8X7DeEDXW/21AWvaH5TuUvCZ6hrBHiTXdJTga6po9K8jlN836zMryYMOPzqK7A
+	 Ced225RRVswQnkr1fG/XdKWBKwTj1GI+Yxlcv5mJhUkGmZrdBOW0Kaa5PcJTqVEDcI
+	 LhMx3Sh3fK7L0gvVJ7zmYqObflj1a3iKec9N6KdrbuKsvwiBq1ro4Tabo+SSnInoGK
+	 txFErcSl6Uk9Q==
+Date: Sun, 13 Sep 2026 18:17:08 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Thomas Falcon <thomas.falcon@intel.com>
+To: Hui Su <sh_def@163.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>
-Subject: Re: [PATCH v8 0/6] perf: Add support for memory region/range
- reporting
-Message-ID: <aqdKHTTfPHf8UjHA@google.com>
-References: <20260910194324.98002-1-thomas.falcon@intel.com>
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf evsel: Restrict incremental open error unwind
+Message-ID: <aqdLFApaxDgj1mtZ@google.com>
+References: <20260912031112.1814574-1-sh_def@163.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,123 +45,202 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260910194324.98002-1-thomas.falcon@intel.com>
+In-Reply-To: <20260912031112.1814574-1-sh_def@163.com>
 
-Hello,
+On Sat, Sep 12, 2026 at 12:11:10PM +0900, Hui Su wrote:
+> evsel__open_cpu(), evsel__tool_pmu_open() and
+> evsel__hwmon_pmu_open() support opening a subrange of a CPU map, bounded
+> by [start_cpu_map_idx, end_cpu_map_idx).
+> 
+> Their error paths, however, unwind using "while (--idx >= 0)" all the way
+> back to CPU index 0 regardless of start_cpu_map_idx. If lower CPU indices
+> were opened by an earlier invocation, a later incremental open failure
+> therefore closes those existing file descriptors and overwrites their
+> slots with -1.
+> 
+> Before this fix, running the new incremental open test demonstrates this
+> corruption:
+> 
+>   $ perf test -v "Tool PMU"
+>    12: Tool PMU:
+>    12.1: Tool PMU                                                      : Ok
+>    12.2: Tool PMU leader                                               : Ok
+>    12.3: Incremental open error unwind boundary:
+>      FAILED: CPU 0 FD overwritten: FD(evsel, 0, 0)=-1, expected 4
+>   FAILED!
+> 
+> Stop the unwind at start_cpu_map_idx so that only file descriptors
+> opened by the current invocation are rolled back.
+> 
+> After this fix:
+> 
+>   $ perf test -v "Tool PMU"
+>    12: Tool PMU:
+>    12.1: Tool PMU                                                      : Ok
+>    12.2: Tool PMU leader                                               : Ok
+>    12.3: Incremental open error unwind boundary                        : Ok
+> 
+> Fixes: 4804e0111662 ("perf stat: Use affinity for opening events")
+> Fixes: 240505b2d0ad ("perf tool_pmu: Factor tool events into their own PMU")
+> Fixes: 53cc0b351ec9 ("perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs")
 
-On Thu, Sep 10, 2026 at 02:43:18PM -0500, Thomas Falcon wrote:
-> Add support for two memory-related reporting features in the perf tool:
-> 
-> 1. Memory region reporting in perf-c2c and perf-script subcommands.
-> 2. Memory range data in perf.data file header and perf-c2c subcommand.
-> 
-> Memory region reporting was introduced as part of support for the
-> Off-module Response facility (OMR) [1], which provides a new data
-> source encoding supporting "up to 8 fine-grained memory regions in
-> addition to the cache region, offering more detailed insights into
-> memory access regions."
-> 
-> Memory Range support was introduced with the addition of the ACPI Memory
-> Range and Region Mapping (MRRM) [2] table. It provides a base address plus
-> a length value for each memory range, as well as NUMA node and local and
-> remote "region ID's" so that "platform firmware can indicate the type of
-> memory for each range."[3]
-> 
-> Include a change allowing PERF_MEM_LVLNUM_L0 to be printed in
-> perf-mem output as well.
+Maybe we just need to last one?
 
-Thanks for working on this.  I think we need v9 for the patch 4 update,
-but it mostly looks good to me.
-
-Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
+
+> Signed-off-by: Hui Su <sh_def@163.com>
+> ---
+>  tools/perf/tests/tool_pmu.c | 79 +++++++++++++++++++++++++++++++++++++
+>  tools/perf/util/evsel.c     |  2 +-
+>  tools/perf/util/hwmon_pmu.c |  2 +-
+>  tools/perf/util/tool_pmu.c  |  2 +-
+>  4 files changed, 82 insertions(+), 3 deletions(-)
 > 
-> [1]: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
-> [2]: https://lore.kernel.org/lkml/20250505173819.419271-1-tony.luck@intel.com/
-> [3]: MRRM definition allow for future expansion for the OS to assign
-> these region IDs.
-> 
-> v8:
-> -- Updated developer tags and commit messages with real example output
->    from perf script and perf c2c
-> 
-> v7:
-> -- perf-c2c: fix output_str allocation error handling that introduces a
->    memory leak (Sashiko)
-> 
-> v6: 
-> -- Rebase on 7.3-rc1
-> 
-> v5:
-> -- perf-c2c: make the cacheline header span and ui_quirks() width
->    fixup depend on memory-region availability (Namhyung Kim)
-> 
-> v4:
-> -- perf-script: gate the Region field on the HEADER_MEMORY_RANGES feature
->    bit via perf_session instead of a global flag, with a pipe-mode fallback
-> -- perf-c2c: fix output_str allocation error handling
-> -- perf header: Fix typo in region id bounds checking which made region 255
->    invalid
-> 
-> v3:
-> -- included missing ff-size check in process_memory_ranges
-> -- make memory region reporting in perf c2c-and perf-script conditional
->    on feature bit, requiring some patch reordering (Namhyung Kim)
-> -- used open/openat to read memory range sysfs files in memory_range__read()
->    (Namhyung Kim)
-> -- Removed path name and file name buffers in memory_range__read(),
->    instead pass path name from as a parameter from memory_range__parse()
->    (Namhyung Kim)
-> -- use calloc instead of zalloc in memory_range__parse() and
->    process_memory_ranges() (Namhyung Kim)
-> -- Removed redundant check for existance of memory range directory in
->    memory_range__read() (Namhyung Kim)
-> -- Included output examples of memory ranges in perf header and perf-c2c
->    in commit message (Namhyung Kim)
-> 
-> v2:
-> -- Added missing newline in WARN_ONCE message in c2c_he__set_mem_region()
-> -- increased buffers passed to perf_script__meminfo_scnprintf() from 150
->    to 200 bytes to avoid silent truncation
-> -- Added check for NULL return of sysfs__mountpoint() when parsing
->    memory ranges in sysfs
-> -- increased MAX_MEMORY_RANGES sanity check from 64 to 256 based on
->    ACPI MRRM table implementation in Linux kernel
-> -- added comment for MAX_MEMORY_RANGES to clarify that it is a sanity check
->    for malformed perf.data files
-> -- removed a line of code was removed from util/env.h but was added back in
->    v1 due to bad rebase
-> 
-> Dapeng Mi (3):
->   perf mem: Add support for printing PERF_MEM_LVLNUM_L0
->   perf tools: Show memory region in perf-c2c subcommand
->   perf tools: Show memory region in perf-script subcommand
-> 
-> Thomas Falcon (3):
->   perf mem: Fix size tracking for mem_lvl's in
->     perf_script__meminfo_scnprintf()
->   perf header: Support memory ranges
->   perf c2c: print memory region data with stdio output
-> 
->  tools/perf/Documentation/perf-record.txt      |   2 +-
->  .../Documentation/perf.data-file-format.txt   |  13 ++
->  tools/perf/builtin-c2c.c                      | 128 ++++++++++-
->  tools/perf/builtin-inject.c                   |   1 +
->  tools/perf/builtin-script.c                   |  13 +-
->  tools/perf/util/bpf-filter.l                  |   1 +
->  tools/perf/util/c2c.h                         |   1 +
->  tools/perf/util/env.c                         |   1 +
->  tools/perf/util/env.h                         |  10 +
->  tools/perf/util/header.c                      | 203 ++++++++++++++++++
->  tools/perf/util/header.h                      |   1 +
->  tools/perf/util/mem-events.c                  |  93 +++++++-
->  tools/perf/util/mem-events.h                  |   5 +-
->  .../scripting-engines/trace-event-python.c    |   5 +-
->  14 files changed, 454 insertions(+), 23 deletions(-)
-> 
+> diff --git a/tools/perf/tests/tool_pmu.c b/tools/perf/tests/tool_pmu.c
+> index c6c5ebf0e935..667160f9e2cd 100644
+> --- a/tools/perf/tests/tool_pmu.c
+> +++ b/tools/perf/tests/tool_pmu.c
+> @@ -1,8 +1,16 @@
+>  // SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <string.h>
+> +#include <unistd.h>
+> +#include <internal/xyarray.h>
+> +#include "cpumap.h"
+>  #include "debug.h"
+>  #include "evlist.h"
+> +#include "evsel.h"
+>  #include "parse-events.h"
+>  #include "tests.h"
+> +#include "thread_map.h"
+>  #include "tool_pmu.h"
+>  
+>  static int do_test(enum tool_pmu_event ev, bool with_pmu)
+> @@ -100,9 +108,80 @@ static int test__tool_pmu_with_pmu(struct test_suite *test __maybe_unused,
+>  	return TEST_OK;
+>  }
+>  
+> +static int test__tool_pmu_incremental_open_unwind(struct test_suite *test __maybe_unused,
+> +						  int subtest __maybe_unused)
+> +{
+> +	struct evlist *evlist = evlist__new();
+> +	struct parse_events_error err;
+> +	struct perf_cpu_map *cpus = NULL;
+> +	struct perf_thread_map *threads = NULL;
+> +	struct evsel *evsel;
+> +	int ret = TEST_FAIL, fd0 = -1;
+> +
+> +	if (!evlist)
+> +		return TEST_FAIL;
+> +
+> +	parse_events_error__init(&err);
+> +	if (parse_events(evlist, "tool/user_time/", &err)) {
+> +		parse_events_error__exit(&err);
+> +		evlist__put(evlist);
+> +		return TEST_FAIL;
+> +	}
+> +	parse_events_error__exit(&err);
+> +
+> +	evsel = evlist__first(evlist);
+> +	cpus = perf_cpu_map__new("0,1");
+> +	threads = thread_map__new_by_tid(getpid());
+> +	if (!cpus || !threads)
+> +		goto out;
+> +
+> +	/* Step 1: Open CPU index 0 successfully */
+> +	if (evsel__open_per_cpu_and_thread(evsel, cpus, 0, threads) < 0) {
+> +		pr_debug("Failed to open CPU index 0\n");
+> +		goto out;
+> +	}
+> +
+> +	fd0 = (*(int *)xyarray__entry(evsel->core.fd, 0, 0));
+> +	if (fd0 < 0 || fcntl(fd0, F_GETFD) < 0) {
+> +		pr_debug("CPU index 0 FD is invalid (%d)\n", fd0);
+> +		goto out;
+> +	}
+> +
+> +	/* Step 2: Intentionally trigger failure on CPU index 1 */
+> +	evsel->core.attr.sample_period = 1; /* Not supported for tool PMU -> -EINVAL */
+> +	if (evsel__open_per_cpu_and_thread(evsel, cpus, 1, threads) >= 0) {
+> +		pr_debug("Unexpected success opening CPU index 1 with sample_period=1\n");
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * Step 3: Check that CPU index 0's FD was NOT destroyed by CPU index 1's unwind.
+> +	 */
+> +	if ((*(int *)xyarray__entry(evsel->core.fd, 0, 0)) != fd0) {
+> +		pr_debug("FAILED: CPU 0 FD overwritten: FD(evsel, 0, 0)=%d, expected %d\n",
+> +			 (*(int *)xyarray__entry(evsel->core.fd, 0, 0)), fd0);
+> +		goto out;
+> +	}
+> +
+> +	if (fcntl(fd0, F_GETFD) < 0) {
+> +		pr_debug("FAILED: CPU 0 FD %d was closed by error unwind! errno=%d (%s)\n",
+> +			 fd0, errno, strerror(errno));
+> +		goto out;
+> +	}
+> +
+> +	ret = TEST_OK;
+> +out:
+> +	evsel__close(evsel);
+> +	perf_cpu_map__put(cpus);
+> +	perf_thread_map__put(threads);
+> +	evlist__put(evlist);
+> +	return ret;
+> +}
+> +
+>  static struct test_case tests__tool_pmu[] = {
+>  	TEST_CASE("Parsing without PMU name", tool_pmu_without_pmu),
+>  	TEST_CASE("Parsing with PMU name", tool_pmu_with_pmu),
+> +	TEST_CASE("Incremental open error unwind boundary", tool_pmu_incremental_open_unwind),
+>  	{	.name = NULL, }
+>  };
+>  
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index d4cb455f4a7d..eb429087ebfe 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -3127,7 +3127,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+>  			FD(evsel, idx, thread) = -1;
+>  		}
+>  		thread = nthreads;
+> -	} while (--idx >= 0);
+> +	} while (--idx >= start_cpu_map_idx);
+>  	errno = old_errno;
+>  out:
+>  	if (err)
+> diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
+> index ed544dca70c3..96aeb379e169 100644
+> --- a/tools/perf/util/hwmon_pmu.c
+> +++ b/tools/perf/util/hwmon_pmu.c
+> @@ -803,7 +803,7 @@ int evsel__hwmon_pmu_open(struct evsel *evsel,
+>  			FD(evsel, idx, thread) = -1;
+>  		}
+>  		thread = nthreads;
+> -	} while (--idx >= 0);
+> +	} while (--idx >= start_cpu_map_idx);
+>  	close(dir);
+>  	return err;
+>  }
+> diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
+> index 5c30854b4644..d2f7591747d9 100644
+> --- a/tools/perf/util/tool_pmu.c
+> +++ b/tools/perf/util/tool_pmu.c
+> @@ -349,7 +349,7 @@ int evsel__tool_pmu_open(struct evsel *evsel,
+>  			FD(evsel, idx, thread) = -1;
+>  		}
+>  		thread = nthreads;
+> -	} while (--idx >= 0);
+> +	} while (--idx >= start_cpu_map_idx);
+>  	errno = old_errno;
+>  	return err;
+>  }
 > -- 
-> 2.43.0
+> 2.55.0
 > 
