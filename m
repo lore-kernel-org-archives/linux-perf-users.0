@@ -1,30 +1,30 @@
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2F341DEC9;
-	Mon, 14 Sep 2026 09:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92B442E437;
+	Mon, 14 Sep 2026 09:27:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789378034; cv=none; b=e0nPosGGzRFbfYcxP42fxjWLhwCWJ/BdhDnnIrXxKQdBZgJcR+Cgb3SIb+R7iR+9ogzaOdTq8qjK1gkCtBYo0skm7IzEPH715/OFwMzRJMFOLqB57uxlS33XwzZSsZBt9csjAvNWqYtxOI1zwTh+likS8gJy6kN9IjBHu5a0G0c=
+	t=1789378040; cv=none; b=nZ+RElt61oHgaLmgFTU/pVGvgMxOotCoi13v/uR66lx9TVHDNmjeg7tP97o5Aor42zI1Cm1Nr+fyb8Bhf4a6ytBv4MKbhJDVL3U23hSc4GzxuF37VRRbEq0wJ0EyaxQbwYc2Bh0yIuUdMscphmd/e9ldZUqI36xTkxR2lJWJcMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789378034; c=relaxed/simple;
-	bh=/BKgtVOuQ2qgw22qpzAOkHztTTsjeX3prCxWtKLlTac=;
+	s=arc-20240116; t=1789378040; c=relaxed/simple;
+	bh=36lNwUWi8r8zm0WG6WwG/ADrpK9nPjx3a/smgDapwcY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=N/jzfalkXErtPM0tVi5Mtw68YOCZYO+2w6Z9yl+RK0n37L+VtIVO7ioLZ8RFnlKVJA45nITHThdPIA+HLh9N4NfHsxa+t35yjtVUlKTG95oF+35KjqjrTmm8P+rPII0HobgLe5c53XEdldR0Z8xHF7JiX0hqEalZVc32NupJyv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=i8r8UpHA; arc=none smtp.client-ip=115.124.30.131
+	 MIME-Version; b=sMQ98YIrfP9fl107tj/sK7YHAMJoe+QJaFZpovn5IYIhhMXELseC8OnhvjIshd9jRID4l9RMGOU5FPGF3QAmCu9ZujCvh8/cNpaVs2wE25eFFSECV+rIW/ijH2lUOOqtDQtmWafhGXrj+uBdGMktjaLK2/v0Wwo1AuIqex7zvjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=w0mlITW2; arc=none smtp.client-ip=115.124.30.97
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="i8r8UpHA"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="w0mlITW2"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1789378021; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=jYjFQWHS7zv+XprgIgV3x6FJiEuRmhHyfb5LEr80eCs=;
-	b=i8r8UpHA7n83OVKbEGQW69I7yiO3HbNaB53aua/mFu9SXmjZEEVo4DoHzvTomW+Tz6tW/irMUFLiaDCro+aKZVPhpHBa56Bm6WLXtPc1G51ffLoS83cWx81hVb+L6TForVLerHfCdN/jMytBzln1m7kTiP/NbQ6RjTIGGv0oHyM=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033032089153;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0XAuO-nk_1789378017;
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0XAuO-nk_1789378017 cluster:ay36)
+	t=1789378030; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=PEnkvP/MMeE/AyrREVwFeM/SBbfr0Ph1OGEBAs/dnV0=;
+	b=w0mlITW2M1K65cmqt+MBPGmvtuwHyx9T+mgAaBSChYXw06KLJ8IjyblTQtbWfFxcS5KdvCExGAivllJxSnKd9urZRKqLzauBlqTYXFBktW+26lLHqRBabBG9KPx6W+9NT0DLPFL1DkKPzBJ719gsV3stqjeBYu5VSiecpPPzWjc=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R961e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037033178;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=34;SR=0;TI=SMTPD_---0XAuO-qg_1789378027;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0XAuO-qg_1789378027 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Mon, 14 Sep 2026 17:26:58 +0800
+          Mon, 14 Sep 2026 17:27:08 +0800
 From: Shuai Xue <xueshuai@linux.alibaba.com>
 To: palmer@dabbelt.com,
 	pjw@kernel.org,
@@ -60,9 +60,9 @@ Cc: alex@ghiti.fr,
 	linux-perf-users@vger.kernel.org,
 	live-patching@vger.kernel.org,
 	linux-kselftest@vger.kernel.org
-Subject: [PATCH v6 3/7] riscv: ftrace: always preserve s0 in dynamic ftrace register frame
-Date: Mon, 14 Sep 2026 17:26:44 +0800
-Message-Id: <20260914092648.51254-4-xueshuai@linux.alibaba.com>
+Subject: [PATCH v6 7/7] selftests/livepatch: Add RISC-V syscall wrapper prefix
+Date: Mon, 14 Sep 2026 17:26:48 +0800
+Message-Id: <20260914092648.51254-8-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
 References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
@@ -76,60 +76,37 @@ Content-Transfer-Encoding: 8bit
 
 From: Wang Han <wanghan@linux.alibaba.com>
 
-struct __arch_ftrace_regs declares s0 unconditionally, and both
-ftrace_regs_get_frame_pointer() and ftrace_partial_regs() read it
-unconditionally. But the SAVE_ABI_REGS / RESTORE_ABI_REGS macros in
-mcount-dyn.S only stored s0 under HAVE_FUNCTION_GRAPH_FP_TEST
-(CONFIG_FUNCTION_GRAPH_TRACER && CONFIG_FRAME_POINTER). With
-CONFIG_FRAME_POINTER=n the slot held whatever was on the stack before,
-so any callback going through ftrace_partial_regs() saw a garbage
-regs->s0. RISC-V kernels default to FRAME_POINTER=y, which is why this
-has not bitten in practice.
+The syscall livepatch selftest resolves and patches a syscall wrapper
+symbol. To use that test for RISC-V livepatch validation, add the
+RISC-V FN_PREFIX definition for ARCH_HAS_SYSCALL_WRAPPER.
 
-Save and restore s0 unconditionally in the dynamic ftrace ABI register
-frame. This fixes the latent garbage-s0 case, brings the dynamic ftrace
-path in line with the static _mcount path (mcount.S SAVE_ABI_STATE
-already saves s0 unconditionally), and matches the frame layout already
-documented in the comment above SAVE_ABI_REGS. It is also a prerequisite
-for the upcoming reliable unwinder, which reads
-ftrace_regs_get_frame_pointer(fregs) directly.
+Without this macro, the syscall livepatch selftest cannot resolve the
+RISC-V target symbol, and the syscall-related livepatch test fails on
+RISC-V.
 
-The cost is one extra REG_S/REG_L pair per traced call, negligible
-compared to the overall ftrace cost; the existing FREGS_SIZE_ON_STACK
-already reserved the slot, so no extra stack space is used.
-
+Reviewed-by: Marcos Paulo de Souza <mpdesouza@suse.com>
 Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Acked-by: Miroslav Benes <mbenes@suse.cz>
 Assisted-by: Qoder:Qwen-3.8-MAX-Preview
 Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
 Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
 ---
- arch/riscv/kernel/mcount-dyn.S | 4 ----
- 1 file changed, 4 deletions(-)
+ .../testing/selftests/livepatch/test_modules/test_klp_syscall.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
-index 082fe0b0e3c08..26c55fba8fec7 100644
---- a/arch/riscv/kernel/mcount-dyn.S
-+++ b/arch/riscv/kernel/mcount-dyn.S
-@@ -85,9 +85,7 @@
- 	addi	sp, sp, -FREGS_SIZE_ON_STACK
- 	REG_S	t0,  FREGS_EPC(sp)
- 	REG_S	x1,  FREGS_RA(sp)
--#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
- 	REG_S	x8,  FREGS_S0(sp)
--#endif
- 	REG_S	x6,  FREGS_T1(sp)
- #ifdef CONFIG_CC_IS_CLANG
- 	REG_S	x7,  FREGS_T2(sp)
-@@ -113,9 +111,7 @@
- 	.macro RESTORE_ABI_REGS
- 	REG_L	t0, FREGS_EPC(sp)
- 	REG_L	x1, FREGS_RA(sp)
--#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
- 	REG_L	x8, FREGS_S0(sp)
--#endif
- 	REG_L	x6,  FREGS_T1(sp)
- #ifdef CONFIG_CC_IS_CLANG
- 	REG_L	x7,  FREGS_T2(sp)
+diff --git a/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c b/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
+index 08aacc0e14de9..9baa2a5f84c95 100644
+--- a/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
++++ b/tools/testing/selftests/livepatch/test_modules/test_klp_syscall.c
+@@ -24,6 +24,8 @@
+     #define FN_PREFIX __s390x_
+   #elif defined(__aarch64__)
+     #define FN_PREFIX __arm64_
++  #elif defined(__riscv)
++    #define FN_PREFIX __riscv_
+   #elif defined(__powerpc__)
+     #define FN_PREFIX
+   #else
 -- 
 2.39.3
 
