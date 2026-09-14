@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C9A147ECEB;
-	Mon, 14 Sep 2026 12:55:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8073347F3B9;
+	Mon, 14 Sep 2026 12:55:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789390529; cv=none; b=MC9IepL9cRbt1cfY+LviGKm/KuGIUQuYwrdQaS/8GLHGrUZtL48hK2itFIOxNzzJVLau2jXviazmar8yT2kxyUnrbr3dD6xEZvpu5NGY938JpudkuV1JvgwYfn6RcEKrdgPCnz+zBWrKy/bTY6wvd3MyM5QYdP1T+8bQ+hJotac=
+	t=1789390534; cv=none; b=AqM+extKji7zz9fxMYQjK6EB6q52j6DhUuly82uw1YUU9Vct6oRFxYgbO0bijI2lV+8ojcMcYhbJTepOJQynlY4BvjC3OjO466q+LrXu1Cf6XGAsJGJZe5T3d/6QorvOIqZsD3iz+ns481MXIV12KthHMroo+hD4581tB+OKP5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789390529; c=relaxed/simple;
-	bh=9+wPnsQJMbrirVslNhqiSN1/XdqOyE2BZomNn1FIXEk=;
+	s=arc-20240116; t=1789390534; c=relaxed/simple;
+	bh=Y7IFJqGx53hOSVotTlluBagoQjsaa+UTwzyRsKOkBj4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c0gi8WNrTlCOoifQZPTLnVv1cff/uhLRGUlZ/Eu5BjykShqr3z3JWLrGVSxdkFrs8thpZye/ov4AtzvTI7dGVGwrOjTgU+cTJceuGpXsrtfp7ZztzwcZW/+68EaBOwhPxZ0RKT61F3VrT87cl4RZv1RRRPjItOCWfjWYlGXgqsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hNAJHt9y; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=B025gVFGrjCSUnZVKyEd8GidO8jtKmRe4BiRlHlq+SJfhlnLXZwuqqCNsAgzlKQn29hti2Ey0cREBHxKW+iuTfcclhsecy533NbYG83d3wk0IzPrAKaanBG+z+eZP6fFKdkFnHoERyeqloHblkcSdn7v327dtnmR14S9zVqVqPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lgd+j3Yp; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hNAJHt9y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1A371F000FF;
-	Mon, 14 Sep 2026 12:55:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lgd+j3Yp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E06251F00893;
+	Mon, 14 Sep 2026 12:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789390527;
-	bh=I4S08TAzzMuUGRQnsbZGRdDQUKkArvGQW3lnyHogvDE=;
+	s=k20260515; t=1789390531;
+	bh=yEpxWBdjj6LX/E3yTLpKAFVrQDRmnU6Ll6cd60WS8kw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=hNAJHt9y/eodm/0Chh25hI9xAx8IvNKi/rnaByXFZRT8MWNJjv8Nt82DVv9aP9fBx
-	 qOpJrRsiKxNVt3qAEtBBhjFJGe3+V+q2yreFqi7zuruygOf4FhwCR5kBdqwjobQSs6
-	 7JNka/FyoiyhF2aQIdnT0qbBTxcdYvjjXXPZ+InnbqFwGzm4uUGZn39jWqRUr0OzN1
-	 IuNYYVRGkRuEerkpgiE7ljwKgqybLYoeFLSJWdL1PXo9v/Usx1MmIlS5NJueK3S/0D
-	 AhTXSijmlR+AzjD2IxxfwjftYky5lCvFV/d50EnHaoIeQ5vPP/fgCXHdx1+QWSRkS1
-	 Z6ekIL/+cHANg==
+	b=lgd+j3YpmdX/9GRxaROGgB9mOK6t6rv0KhAukuvzmjk3VoFgFz3BV9Vfv4VWLo1F2
+	 T08J7rbQxD8fKBK+mepoH7lE+fklcH7NHWd4rRNunXPpYKv4/tJVRr5CO2p2msWbGZ
+	 HSpsIw9yrqx5+Cpz7v5whfb5nP2kmuwK1p9ekDwstYGbiNt4HM+FrU4vXIndziPGr8
+	 O4mJQTtd8NxQ930iPHnr+onYdyGnvAuHMEqPk/bBYaFaNQHfmkq3+BCKShcFgtp6cl
+	 xDMPVLJypnvKmwr8hGiUnAXyGNUJ9VIehpnsMlvwltlar938pNI1zbhw4lLO3+od/f
+	 R7eEKa7y0fcmw==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 6/9] perf scripts: Add perf-stuck, to tell where a running perf is stuck
-Date: Mon, 14 Sep 2026 09:54:46 -0300
-Message-ID: <20260914125451.2045-7-acme@kernel.org>
+Subject: [PATCH 7/9] perf annotate-data: Resolve type DIEs in the debug file they came from
+Date: Mon, 14 Sep 2026 09:54:47 -0300
+Message-ID: <20260914125451.2045-8-acme@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260914125451.2045-1-acme@kernel.org>
 References: <20260914125451.2045-1-acme@kernel.org>
@@ -55,10 +55,20 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-A perf that takes forever is hard to tell apart from one that is stuck
-in a loop, and when it is stuck there is no way to know where without
-attaching gdb to it and looking around, which is what this does, from
-the outside, sampling /proc/<pid> at a fixed interval:
+A 'perf report -s type' on a 783 MB AMD IBS data type profiling session
+hangs, burning all of a CPU and producing no output:
+
+  ⬢ [acme@toolbx perf-tools-next]$ perf report --progress -s type -i perf.data.ibs > /dev/null
+  Processing events... [100.0%] 746M / 746M
+  Merging related events... [ 58.0%] 293828 / 506686
+  Merging related events... [ 59.0%] 298894 / 506686
+  Merging related events... [ 60.0%] 303960 / 506686
+  Merging related events... [ 61.0%] 309026 / 506686
+  [ ... nothing else, ever ... ]
+
+It is a spin and not a slow path: with perf-stuck the CPU time used
+grows by a whole interval on every sample, while the [stack] mapping,
+which would be moving down if this was recursion, stays put:
 
   ⬢ [acme@toolbx perf-tools-next]$ tools/perf/scripts/perf-stuck.sh -i 15 -n 4 -l ibs.log $(pgrep -x perf)
   watching 2297313 (perf report --progress -s type -i perf.data.ibs) every 15s
@@ -67,353 +77,679 @@ the outside, sampling /proc/<pid> at a fixed interval:
   09:40:04 state=R cpu=+1497 (14.97s) rss=665383kB stack=7ffc3ae31000-7ffc3ae52000 size=132kB stuck=2 Merging related events... [ 39.0%] 197574 / 506686
   09:40:19 state=R cpu=+1497 (14.97s) rss=502250kB stack=7ffc3ae31000-7ffc3ae52000 size=132kB stuck=0 Merging related events... [ 61.0%] 309026 / 506686
 
-The CPU time used grows by a whole interval on every sample while the
-[stack] mapping, that would be moving down if this was recursion, stays
-put, so that one is spinning, and the last line of the progress log of
-'perf report --progress' tells in which phase.
+Attaching gdb and stepping the loop, printing dwarf_dieoffset() and
+dwarf_tag() for the DIE being chased on each trip round it, shows the
+chase never moving, on a typedef that refers to itself:
 
-With -g it runs gdb when no progress is made for two consecutive
-samples, using the perf-stuck.gdb that sits next to it, which adds the
-perf-die-chain command used by the next patch, to print the DIE chain a
-DWARF type chasing loop is walking when the perf being watched is stuck
-in one of those.
+  ⬢ [acme@toolbx perf-tools-next]$ gdb -p $(pgrep -x perf) -batch -x tools/perf/scripts/perf-stuck.gdb -ex 'perf-die-chain die_get_pointer_type type_die 8' -ex perf-dso -ex detach
+  stuck in die_get_pointer_type():
+  #3  0x0000000000772421 in die_get_pointer_type (type_die=0x7ffc3ae4b710, type_die@entry=0x7ffc3ae4b6f0, die_mem=die_mem@entry=0x7ffc3ae4b710) at util/dwarf-aux.c:327
+  327			type_die = die_get_type(type_die, die_mem);
+  chain[0] die=0x7ffc3ae4b710 addr=0x7ff6811591ef cu=0x44ef0878 off=0x1f tag=22 name=(null)
+  chain[1] die=0x7ffc3ae4b710 addr=0x7ff6811591ef cu=0x44ef0878 off=0x1f tag=22 name=(null)
+  [ ... the very same DIE, forever ... ]
+  dso=/usr/lib64/libz.so.1.3.1.zlib-ng ip=0xe2e sym=build_tree
 
-It is a prototype: this wants to become a first class 'perf stuck'
-command, sampling a running process from inside perf, instead of this
-shell script poking at /proc and shelling out to gdb.
+The DIE is at offset 0x1f of the debug info of libz.so.1, which is
+zlib-ng, and is one of the dwz compressed ones: the type DIEs shared by
+more than one CU live in the common file, where 0x1f is a perfectly good
+DW_TAG_base_type:
 
-Example:
+  ⬢ [acme@toolbx perf-tools-next]$ readelf --debug-dump=info /usr/lib/debug/.dwz/zlib-ng-2.3.3-3.fc44.x86_64 | sed -n '/Compilation Unit @ offset 0:/,/Compilation Unit @ offset 0x5f:/p'
+    Compilation Unit @ offset 0:
+     Length:        0x5b (32-bit)
+     Version:       5
+     Unit Type:     DW_UT_partial (3)
+   <0><c>: Abbrev Number: 1 (DW_TAG_partial_unit)
+   [...]
+   <1><1f>: Abbrev Number: 62 (DW_TAG_base_type)
+      <20>   DW_AT_byte_size   : 4
+      <21>   DW_AT_encoding    : 5	(signed)
+      <22>   DW_AT_name        : int
 
-  ⬢ [acme@toolbx perf-tools-next]$ tools/perf/scripts/perf-stuck.sh -i 1 -n 3 -g $(pgrep -x sleep)
-  watching 2342826 (sleep 45 ) every 1s
-  11:58:36 state=S cpu=+0 (0.00s) rss=492kB stack=7ffe21f89000-7ffe21faa000 size=132kB stuck=2 (no progress log)
-  ... gdb output of 2342826 in /tmp/perf-stuck-gdb.Uz9i5p
-  ⬢ [acme@toolbx perf-tools-next]$ tail -4 /tmp/perf-stuck-gdb.Uz9i5p
-  #3  0x0000555bc6ddc28f in main ()
-  not in a DWARF type chaser, try: bt
-  not in find_data_type()
-  [Inferior 1 (process 2342826) detached]
+while in the main debug file that same offset is not a DIE at all, it is
+the start of another unit's header:
+
+  ⬢ [acme@toolbx perf-tools-next]$ readelf --debug-dump=info /usr/lib/debug/usr/lib64/libz.so.1.3.1.zlib-ng-2.3.3-3.fc44.x86_64.debug | grep 'Compilation Unit @' | head -2
+    Compilation Unit @ offset 0:
+    Compilation Unit @ offset 0x1f:
+
+die_collect_vars() saves the dwarf_dieoffset() of the type DIE, which is
+relative to the file that DIE lives in, and update_var_state() then hands
+that offset to dwarf_offdie() together with the main debug file, where
+dwarf_offdie() parses whatever is there as a DIE, in this case the one
+typedef that refers to itself, which is what makes the "follow the
+typedefs and qualifiers until a pointer or an array type" loop in
+die_get_pointer_type() spin.
+
+So record, next to the offset, whether the type DIE was in the file the
+variable DIE came from or in the dwz common one, and resolve the offset
+in the file it came from, which is what the new die_get_type_die() does.
+
+Which of the two that is does not have to be guessed from what is at the
+offset: dwz encodes the references into its common file as
+DW_FORM_GNU_ref_alt, so elfutils resolves them into the alt Dwarf and
+the CU of the resulting type DIE belongs to that other file, so
+comparing the Dwarf each of the two CUs belongs to, die_same_file(),
+settles it exactly, for any number of hops from the variable DIE.
+
+Then bound the chases themselves: no sane chain of typedefs and
+qualifiers is 32 DIEs long, no sane nesting for the struct and union
+members that __add_member_cb() follows recursively is 8 deep, and the
+same recursion bound covers the type names die_get_typename_from_type()
+builds by following pointers and arrays, so that a debug info file
+broken in some other way makes perf give up on a type, telling about it
+with pr_debug, visible with -v, instead of looking like it hung.  The
+member nesting bound is reported with pr_debug_dtp (visible with -vvv or
+-D type-profile).
+
+Cycles can't occur in member trees from valid DWARF, embedded members
+can't be recursive in C, so the nesting bound only ever bites legitimate
+depth and the member where the recursion was cut is marked 'truncated',
+which the JSON exporter added in a subsequent series reports to its
+consumers, so that they can tell a truncated tree from one that really
+ends there.
+
+die_get_type_die() then has no fallback to the other file: resolving an
+alt file offset in the main file is the misparse above, so it resolves
+in the file the offset was recorded as belonging to, and gives up on the
+type when the offset does not resolve there.  The tag the type DIE had is
+kept as a sanity check, a mismatch means the debug info changed under
+perf or is broken in yet another way, and the bounds on the type chasers
+remain the backstop: a debug info file broken in some other way still
+makes perf give up on a type with a pr_debug instead of hanging.
+
+Testing:
+
+Before, on the 783 MB AMD IBS session, killed after some 8 minutes stuck
+at 61%:
+
+  ⬢ [acme@toolbx perf-tools-next]$ perf report --progress -s type -i perf.data.ibs > /dev/null
+  Processing events... [100.0%] 746M / 746M
+  Merging related events... [ 61.0%] 309026 / 506686
   ⬢ [acme@toolbx perf-tools-next]$
 
+After, the whole session is processed, and the zlib-ng types, from the
+build_tree() hist entry that used to hang it, show up:
+
+  ⬢ [acme@toolbx perf-tools-next]$ perf report --progress -s type -i perf.data.ibs > ibs.out
+  Processing events... [100.0%] 746M / 746M
+  Merging related events... [100.0%] 506686 / 506686
+  Sorting events for output... [100.0%] 1428 / 1428
+  ⬢ [acme@toolbx perf-tools-next]$ grep -E "deflate_state|inflate_state|internal_state" ibs.out
+      0.00%  deflate_state
+      0.00%  deflate_state*
+      0.00%  struct inflate_state
+      0.00%  struct inflate_state*
+      0.00%  struct internal_state
+  ⬢ [acme@toolbx perf-tools-next]$ perf test 17 27 30 31 85 88
+  17: Match and link multiple hists                              : Ok
+  27: Filter hist entries                                        : Ok
+  30: Sort output of hist entries                                : Ok
+  31: Cumulate child hist entries                                : Ok
+  85: Test that perf report includes file offsets and event type names in diagnostic messages. : Ok
+  88: Test that perf report handles truncated perf.data gracefully (no crash, no segfault — clean error exit).: Skip
+  ⬢ [acme@toolbx perf-tools-next]$
+
+Requiring elfutils 0.160 for this: dwarf_cu_getdwarf(), the function
+that tells which Dwarf a CU belongs to, first appeared in 0.160 ("libdw:
+New functions dwarf_cu_getdwarf, dwarf_cu_die", elfutils NEWS), so the
+libdw feature test now probes for it, in tools/build/feature/test-libdw.c,
+and Makefile.config says 0.160 where it said 0.157.  The probe takes the
+address instead of calling it, as that is all that is needed to make a
+0.157-0.159 elfutils, from 2014 and without the symbol, disable dwarf
+support with the existing message rather than fail to link dwarf-aux.c.
+
+Fixes: 06b2ce75386df04b ("perf annotate-data: Maintain variable type info")
+Fixes: 55ee3d005d62279d ("perf annotate-data: Add a cache for global variable types")
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/scripts/perf-stuck.gdb | 104 ++++++++++++++++
- tools/perf/scripts/perf-stuck.sh  | 194 ++++++++++++++++++++++++++++++
- 2 files changed, 298 insertions(+)
- create mode 100644 tools/perf/scripts/perf-stuck.gdb
- create mode 100755 tools/perf/scripts/perf-stuck.sh
+ tools/build/feature/test-libdw.c |  15 ++-
+ tools/perf/Makefile.config       |   2 +-
+ tools/perf/util/annotate-data.c  |  59 ++++++++---
+ tools/perf/util/annotate-data.h  |   3 +
+ tools/perf/util/dwarf-aux.c      | 171 +++++++++++++++++++++++++++----
+ tools/perf/util/dwarf-aux.h      |  33 ++++++
+ 6 files changed, 247 insertions(+), 36 deletions(-)
 
-diff --git a/tools/perf/scripts/perf-stuck.gdb b/tools/perf/scripts/perf-stuck.gdb
-new file mode 100644
-index 0000000000000000..53e9019828b6ef62
---- /dev/null
-+++ b/tools/perf/scripts/perf-stuck.gdb
-@@ -0,0 +1,104 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# gdb commands for a perf that is stuck, used by perf-stuck.sh -g and usable
-+# directly:
-+#
-+#   gdb -p $(pgrep -x perf) -batch -x perf-stuck.gdb -ex bt
-+#
-+# PROTOTYPE: part of the perf-stuck.sh stopgap, see the note at the start of
-+# that script: this wants to move into a first class 'perf stuck' command,
-+# which would print these DIE chains by itself, without gdb.
-+#
-+# The settings are the ones that keep a batch attach from stopping to ask
-+# questions (debuginfod, pagination) and that make the output readable.
-+#
-+# The commands are for the DWARF type chasers in util/dwarf-aux.c, the
-+# functions a data type profiling 'perf report -s type' spins in when a
-+# debug info file has a type chain that got into a cycle:
-+#
-+#   perf-die-chain <function> <die variable> [iterations]
-+#   perf-die-chain-all [iterations]
-+#   perf-dso
-+#
-+# For each iteration of the chasing loop they print the DIE address, the
-+# CU it came from, its offset in the debug file, its tag and its name: a
-+# cycle shows up as the same handful of (addr, cu) pairs repeating, and a
-+# CU that changes from one iteration to the next means the chase is
-+# hopping between a debug file and its dwz common file.
+diff --git a/tools/build/feature/test-libdw.c b/tools/build/feature/test-libdw.c
+index aabd63ca76b4d7e6..23e1ba6ff3466b9f 100644
+--- a/tools/build/feature/test-libdw.c
++++ b/tools/build/feature/test-libdw.c
+@@ -49,8 +49,21 @@ int test_elfutils(void)
+ 	return 0;
+ }
+ 
++/*
++ * elfutils 0.160 and later: used to tell which debug file a DIE lives in,
++ * the dwz alt file or the main one, see die_same_file() in
++ * tools/perf/util/dwarf-aux.c.  Only the symbol is needed, so take its
++ * address instead of calling it.
++ */
++int test_libdw_cu_getdwarf(void)
++{
++	void *sym = (void *)dwarf_cu_getdwarf;
 +
-+set pagination off
-+set confirm off
-+set debuginfod enabled off
-+set print pretty on
-+set height 0
-+set width 0
-+
-+define perf-die-chain
-+  if $argc < 2
-+    printf "usage: perf-die-chain <function> <die variable> [iterations]\n"
-+  else
-+    frame function $arg0
-+    if $argc == 3
-+      set $perf_die_chain_n = $arg2
-+    else
-+      set $perf_die_chain_n = 10
-+    end
-+    set $perf_die_chain_head = $pc
-+    set $perf_die_chain_i = 0
-+    while $perf_die_chain_i < $perf_die_chain_n
-+      printf "chain[%d] die=%p addr=%p cu=%p off=0x%lx tag=%d name=%s\n", $perf_die_chain_i, $arg1, $arg1->addr, $arg1->cu, ((Dwarf_Off) dwarf_dieoffset($arg1)), ((int) dwarf_tag($arg1)), ((char *) dwarf_diename($arg1))
-+      until *$perf_die_chain_head
-+      set $perf_die_chain_i = $perf_die_chain_i + 1
-+    end
-+  end
-+end
-+
-+document perf-die-chain
-+Print the DIE chain being walked by a DWARF type chasing loop.
-+usage: perf-die-chain <function> <die variable> [iterations]
-+  perf-die-chain die_get_pointer_type type_die
-+  perf-die-chain __die_get_real_type vr_die
-+  perf-die-chain die_get_real_type vr_die
-+end
-+
-+define perf-die-chain-all
-+  if $argc == 0
-+    set $perf_die_chain_n = 10
-+  else
-+    set $perf_die_chain_n = $arg0
-+  end
-+  if $_any_caller_is("die_get_pointer_type", 20)
-+    printf "stuck in die_get_pointer_type():\n"
-+    perf-die-chain die_get_pointer_type type_die $perf_die_chain_n
-+  else
-+    if $_any_caller_is("__die_get_real_type", 20)
-+      printf "stuck in __die_get_real_type():\n"
-+      perf-die-chain __die_get_real_type vr_die $perf_die_chain_n
-+    else
-+      if $_any_caller_is("die_get_real_type", 20)
-+        printf "stuck in die_get_real_type():\n"
-+        perf-die-chain die_get_real_type vr_die $perf_die_chain_n
-+      else
-+        printf "not in a DWARF type chaser, try: bt\n"
-+      end
-+    end
-+  end
-+end
-+
-+document perf-die-chain-all
-+Find which DWARF type chaser the process is in and print the DIE chain.
-+usage: perf-die-chain-all [iterations]
-+end
-+
-+define perf-dso
-+  if $_any_caller_is("find_data_type", 20)
-+    frame function find_data_type
-+    printf "dso=%s ip=0x%lx sym=%s\n", dloc->ms->map->dso->name, dloc->ip, dloc->ms->sym->name
-+  else
-+    printf "not in find_data_type()\n"
-+  end
-+end
-+
-+document perf-dso
-+Print the dso, ip and symbol of the data location being resolved.
-+end
-diff --git a/tools/perf/scripts/perf-stuck.sh b/tools/perf/scripts/perf-stuck.sh
-new file mode 100755
-index 0000000000000000..70e59192b1d9658e
---- /dev/null
-+++ b/tools/perf/scripts/perf-stuck.sh
-@@ -0,0 +1,194 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# perf-stuck - tell a spinning perf apart from a blocked or recursing one
-+#
-+# Arnaldo Carvalho de Melo <acme@redhat.com>
-+#
-+# PROTOTYPE: this wants to become a first class 'perf stuck' command, that
-+# samples a running perf, or any other process, from inside perf, with the
-+# knowledge of the phases perf goes through and of the DWARF type chasing
-+# loops built in, instead of this shell script poking at /proc and shelling
-+# out to gdb.  It is here as a stopgap, to be able to tell where a perf is
-+# stuck while looking at hangs such as the one 'perf report -s type' hits
-+# on dwz compressed debug info.
-+#
-+# Samples /proc/<pid> at a fixed interval and prints, for each sample:
-+#
-+#   the CPU time used since the previous sample, so a process burning a
-+#   full interval's worth of ticks is spinning, while one using none is
-+#   blocked
-+#
-+#   the [stack] mapping start, which moves down as the stack grows, the
-+#   giveaway for runaway recursion, together with its size
-+#
-+#   the last line of a progress log, when one is given, e.g. the stderr
-+#   of 'perf report --progress', to see which phase is stuck
-+#
-+# A process that burns CPU with a constant stack and no progress is in an
-+# unbounded loop, e.g. a die_get_pointer_type() chain that got into a
-+# cycle, while one whose [stack] start keeps moving down is recursing.
-+#
-+# With -g it runs gdb, using the perf-stuck.gdb that sits next to this
-+# script, when no progress is made for two consecutive samples, which for
-+# a perf in a DWARF type chasing loop prints the DIE chain it is walking.
-+#
-+# usage: perf-stuck.sh [options] <pid|process-name>
-+
-+set -u
-+
-+usage() {
-+	cat <<-EOF
-+	usage: perf-stuck.sh [options] <pid|process-name>
-+
-+	  -i <secs>   sampling interval (default: 10)
-+	  -n <count>  stop after this many samples (default: watch till it exits)
-+	  -l <file>   progress log, its last line is printed with every sample
-+	  -g          run gdb with perf-stuck.gdb when no progress is made for
-+	              two consecutive samples, writing the output to a temp file
-+	  -x <file>   use this gdb command file instead of perf-stuck.gdb
-+	  -h          this help
-+	EOF
-+	exit "${1:-0}"
++	return sym == NULL;
 +}
 +
-+interval=10
-+count=0
-+progress_log=
-+use_gdb=
-+gdb_cmds=
+ int main(void)
+ {
+ 	return test_libdw() + test_libdw_unwind() + test_libdw_getlocations() +
+-	       test_libdw_getcfi() + test_elfutils();
++	       test_libdw_getcfi() + test_libdw_cu_getdwarf() + test_elfutils();
+ }
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 4d5993da9f94579f..fa78f50db60179f3 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -470,7 +470,7 @@ else
+   else
+     ifneq ($(feature-libdw), 1)
+       ifndef NO_LIBDW
+-        $(warning No libdw.h found or old libdw.h found or elfutils is older than 0.157, disables dwarf support. Please install new elfutils-devel/libdw-dev)
++        $(warning No libdw.h found or old libdw.h found or elfutils is older than 0.160, disables dwarf support. Please install new elfutils-devel/libdw-dev)
+         NO_LIBDW := 1
+       endif
+     endif # Dwarf support
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 4e4c587640823c81..06d27868887bdadf 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -221,6 +221,15 @@ static bool data_type_less(struct rb_node *node_a, const struct rb_node *node_b)
+ 	return strcmp(a->self.type_name, b->self.type_name) < 0;
+ }
+ 
++/*
++ * Members of struct/union members are added recursively, and the same DIE
++ * that is not what it looks like, the one that makes the type chasers in
++ * util/dwarf-aux.c spin, can make a member's type point back at one of its
++ * own ancestors, recursing until the stack is gone.  Nothing usable comes
++ * out of nesting members this deep anyway.
++ */
++#define MAX_MEMBER_DEPTH 8
 +
-+while getopts "i:n:l:gx:h" opt; do
-+	case "$opt" in
-+	i) interval=$OPTARG ;;
-+	n) count=$OPTARG ;;
-+	l) progress_log=$OPTARG ;;
-+	g) use_gdb=1 ;;
-+	x) gdb_cmds=$OPTARG ;;
-+	h) usage 0 ;;
-+	*) usage 1 ;;
-+	esac
-+done
-+shift $((OPTIND - 1))
+ /* Recursively add new members for struct/union */
+ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ {
+@@ -235,6 +244,16 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	if (dwarf_tag(die) != DW_TAG_member)
+ 		return DIE_FIND_CB_SIBLING;
+ 
++	if (__die_get_real_type(die, &member_type) == NULL)
++		return DIE_FIND_CB_SIBLING;
 +
-+[ $# -eq 1 ] || usage 1
++	if (dwarf_tag(&member_type) == DW_TAG_typedef) {
++		if (die_get_real_type(&member_type, &die_mem) == NULL)
++			return DIE_FIND_CB_SIBLING;
++	} else {
++		die_mem = member_type;
++	}
 +
-+if [[ "$1" =~ ^[0-9]+$ ]]; then
-+	pid=$1
-+else
-+	pid=$(pgrep -x "$1" | head -1)
-+	[ -n "$pid" ] || { echo "no process named '$1'"; exit 1; }
-+fi
+ 	member = zalloc(sizeof(*member));
+ 	if (member == NULL)
+ 		return DIE_FIND_CB_END;
+@@ -242,12 +261,6 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	strbuf_init(&sb, 32);
+ 	die_get_typename(die, &sb);
+ 
+-	__die_get_real_type(die, &member_type);
+-	if (dwarf_tag(&member_type) == DW_TAG_typedef)
+-		die_get_real_type(&member_type, &die_mem);
+-	else
+-		die_mem = member_type;
+-
+ 	if (dwarf_aggregate_size(&die_mem, &size) < 0)
+ 		size = 0;
+ 
+@@ -289,10 +302,23 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	}
+ 	member->size = size;
+ 	member->offset = loc + parent->offset;
++	member->depth = parent->depth + 1;
+ 	INIT_LIST_HEAD(&member->children);
+ 	list_add_tail(&member->node, &parent->children);
+ 
+ 	tag = dwarf_tag(&die_mem);
++	if (member->depth >= MAX_MEMBER_DEPTH) {
++		/*
++		 * The JSON exporter added in a later series reports
++		 * this to its consumers, so that they can tell a
++		 * truncated tree from one that really ends here.
++		 */
++		member->truncated = true;
++		pr_debug_dtp("member nesting limit reached at %s\n",
++			     member->type_name ?: "(unknown type)");
++		return DIE_FIND_CB_SIBLING;
++	}
 +
-+[ -d /proc/"$pid" ] || { echo "no process $pid"; exit 1; }
+ 	switch (tag) {
+ 	case DW_TAG_structure_type:
+ 	case DW_TAG_union_type:
+@@ -645,6 +671,8 @@ struct global_var_entry {
+ 	u64 start;
+ 	u64 end;
+ 	u64 die_offset;
++	int die_tag;
++	bool from_alt;	/* die_offset is relative to the alt (dwz) file */
+ };
+ 
+ static int global_var_cmp(const void *_key, const struct rb_node *node)
+@@ -682,7 +710,7 @@ static struct global_var_entry *global_var__find(struct data_loc_info *dloc, u64
+ }
+ 
+ static bool global_var__add(struct data_loc_info *dloc, u64 addr,
+-			    const char *name, Dwarf_Die *type_die)
++			    const char *name, Dwarf_Die *type_die, bool from_alt)
+ {
+ 	struct dso *dso = map__dso(dloc->ms->map);
+ 	struct global_var_entry *gvar;
+@@ -704,6 +732,8 @@ static bool global_var__add(struct data_loc_info *dloc, u64 addr,
+ 	gvar->start = addr;
+ 	gvar->end = addr + size;
+ 	gvar->die_offset = dwarf_dieoffset(type_die);
++	gvar->die_tag = dwarf_tag(type_die);
++	gvar->from_alt = from_alt;
+ 
+ 	rb_add(&gvar->node, dso__global_vars(dso), global_var_less);
+ 	return true;
+@@ -778,12 +808,14 @@ static void global_var__collect(struct data_loc_info *dloc)
+ 			if (pos->reg != -1)
+ 				continue;
+ 
+-			if (!dwarf_offdie(dwarf, pos->die_off, &type_die))
++			if (!die_get_type_die(dwarf, pos->die_off, pos->die_tag,
++					      pos->from_alt, &type_die))
+ 				continue;
+ 
+ 			get_global_var_info(dloc, pos->addr, &var_name, &var_offset);
+ 
+-			global_var__add(dloc, pos->addr, var_name, &type_die);
++			global_var__add(dloc, pos->addr, var_name, &type_die,
++					pos->from_alt);
+ 		}
+ 
+ 		delete_var_types(var_types);
+@@ -808,7 +840,8 @@ bool get_global_var_type(Dwarf_Die *cu_die, struct data_loc_info *dloc,
+ 
+ 	gvar = global_var__find(dloc, var_addr);
+ 	if (gvar) {
+-		if (!dwarf_offdie(dloc->di->dbg, gvar->die_offset, type_die))
++		if (!die_get_type_die(dloc->di->dbg, gvar->die_offset,
++				      gvar->die_tag, gvar->from_alt, type_die))
+ 			return false;
+ 
+ 		*var_offset = var_addr - gvar->start;
+@@ -838,7 +871,8 @@ bool get_global_var_type(Dwarf_Die *cu_die, struct data_loc_info *dloc,
+ 
+ ok:
+ 	/* The address should point to the start of the variable */
+-	global_var__add(dloc, var_addr - *var_offset, var_name, type_die);
++	global_var__add(dloc, var_addr - *var_offset, var_name, type_die,
++			!die_same_file(cu_die, type_die));
+ 	return true;
+ }
+ 
+@@ -893,7 +927,8 @@ static void update_var_state(struct type_state *state, struct data_loc_info *dlo
+ 				continue;
+ 		}
+ 		/* Get the type DIE using the offset */
+-		if (!dwarf_offdie(dloc->di->dbg, var->die_off, &mem_die))
++		if (!die_get_type_die(dloc->di->dbg, var->die_off,
++				      var->die_tag, var->from_alt, &mem_die))
+ 			continue;
+ 
+ 		if (var->reg == DWARF_REG_FB || var->reg == fbreg || var->reg == state->stack_reg) {
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index c26130744260955f..d85866e83fbda69a 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -57,6 +57,9 @@ struct annotated_member {
+ 	char *var_name;
+ 	int offset;
+ 	int size;
++	unsigned int depth;
++	/* Children not expanded because the nesting limit was reached */
++	bool truncated;
+ };
+ 
+ /**
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index d7160f87ac7d7ab3..7acb431fd34a8ecb 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -266,16 +266,35 @@ Dwarf_Die *die_get_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+ 		return NULL;
+ }
+ 
++/*
++ * The chases below cross typedefs and qualifiers to get to the type that
++ * is actually meant, and a DIE that is not what it looks like, e.g. one
++ * parsed at an offset that is not the start of a DIE in the file it was
++ * resolved in, can have a DW_AT_type that refers back to itself, which
++ * makes them spin forever: 'perf report -s type' did exactly that on the
++ * dwz compressed debug info of zlib-ng (libz.so.1), burning all of a CPU
++ * with no output while resolving a hist entry in build_tree().
++ *
++ * No sane chain is this long, so give up instead of hanging, telling about
++ * it so that the broken debug info can be looked at.
++ */
++#define MAX_TYPE_CHASE 32
 +
-+if [ -n "$use_gdb" ] && [ -z "$gdb_cmds" ]; then
-+	gdb_cmds=$(dirname "$0")/perf-stuck.gdb
-+	[ -r "$gdb_cmds" ] || { echo "cannot read $gdb_cmds"; exit 1; }
-+fi
+ /* Get a type die, but skip qualifiers */
+ Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+ {
+-	int tag;
++	int tag, chase = 0;
+ 
+ 	do {
+ 		vr_die = die_get_type(vr_die, die_mem);
+ 		if (!vr_die)
+-			break;
++			return NULL;
+ 		tag = dwarf_tag(vr_die);
++		if (++chase > MAX_TYPE_CHASE) {
++			pr_debug("DWARF: qualifier chase limit reached at DIE 0x%lx\n",
++				 (unsigned long)dwarf_dieoffset(vr_die));
++			return NULL;
++		}
+ 	} while (tag == DW_TAG_const_type ||
+ 		 tag == DW_TAG_restrict_type ||
+ 		 tag == DW_TAG_volatile_type ||
+@@ -296,8 +315,15 @@ Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+  */
+ Dwarf_Die *die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+ {
++	int chase = 0;
 +
-+hz=$(getconf CLK_TCK)
-+psz=$(getconf PAGESIZE)
-+prev_cpu=
-+prev_stack=
-+prev_progress=
-+stuck=0
-+gdb_done=
-+nsample=0
+ 	do {
+ 		vr_die = __die_get_real_type(vr_die, die_mem);
++		if (++chase > MAX_TYPE_CHASE) {
++			pr_debug("DWARF: typedef chase limit reached at DIE 0x%lx\n",
++				 vr_die ? (unsigned long)dwarf_dieoffset(vr_die) : 0);
++			return NULL;
++		}
+ 	} while (vr_die && dwarf_tag(vr_die) == DW_TAG_typedef);
+ 
+ 	return vr_die;
+@@ -314,7 +340,7 @@ Dwarf_Die *die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+  */
+ Dwarf_Die *die_get_pointer_type(Dwarf_Die *type_die, Dwarf_Die *die_mem)
+ {
+-	int tag;
++	int tag, chase = 0;
+ 
+ 	do {
+ 		tag = dwarf_tag(type_die);
+@@ -324,6 +350,11 @@ Dwarf_Die *die_get_pointer_type(Dwarf_Die *type_die, Dwarf_Die *die_mem)
+ 		    tag != DW_TAG_restrict_type && tag != DW_TAG_volatile_type &&
+ 		    tag != DW_TAG_shared_type)
+ 			return NULL;
++		if (++chase > MAX_TYPE_CHASE) {
++			pr_debug("DWARF: pointer type chase limit reached at DIE 0x%lx\n",
++				 (unsigned long)dwarf_dieoffset(type_die));
++			return NULL;
++		}
+ 		type_die = die_get_type(type_die, die_mem);
+ 	} while (type_die);
+ 
+@@ -1118,17 +1149,27 @@ Dwarf_Die *die_find_member(Dwarf_Die *st_die, const char *name,
+ 			      die_mem);
+ }
+ 
+-/**
+- * die_get_typename_from_type - Get the name of given type DIE
+- * @type_die: a type DIE
+- * @buf: a strbuf for result type name
+- *
+- * Get the name of @type_die and stores it to @buf. Return 0 if succeeded.
+- * and Return -ENOENT if failed to find type name.
+- * Note that the result will stores typedef name if possible, and stores
+- * "*(function_type)" if the type is a function pointer.
++/*
++ * The name of a pointer or array type is built from the name of the type
++ * it points to or holds, so the recursion below follows DW_AT_type; a
++ * garbage DIE whose DW_AT_type refers back to itself makes it recurse
++ * forever, just like the chases above, so it gets the same bound.
+  */
+-int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
++static int __die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf,
++					int depth);
 +
-+# The command line is whatever the process was started with, so drop the
-+# control characters from it: a process started with escape sequences in
-+# its arguments, e.g. one replaying a log line, would otherwise get them
-+# replayed on the terminal of whoever runs this.
-+cmdline=$(tr '\0' ' ' < /proc/"$pid"/cmdline | tr -d '[:cntrl:]')
++static int __die_get_typename(Dwarf_Die *vr_die, struct strbuf *buf, int depth)
++{
++	Dwarf_Die type;
 +
-+echo "watching $pid ($cmdline) every ${interval}s"
++	if (__die_get_real_type(vr_die, &type) == NULL)
++		return -ENOENT;
 +
-+while :; do
-+	if [ ! -d /proc/"$pid" ]; then
-+		echo "$(date +%T) process gone"
-+		break
-+	fi
++	return __die_get_typename_from_type(&type, buf, depth);
++}
 +
-+	# Field 2, the command name, is in parentheses and can contain
-+	# spaces, so drop it together with the pid before splitting: the
-+	# fields after it then line up, with the state, the utime+stime
-+	# pair and the RSS landing where they are read below.  Printing the
-+	# CPU time with %d instead of relying on awk's default output format
-+	# keeps it out of scientific notation, that bash arithmetic cannot
-+	# parse, once it goes past six digits, i.e. some 16 minutes of CPU
-+	# at 100 Hz.
-+	if ! stat_line=$(awk '{ sub(/^[^ ]+ \(.*\) /, "");
-+			       printf "%s %d %d\n", $1, $12 + $13, $22 }' \
-+			 /proc/"$pid"/stat 2>/dev/null); then
-+		echo "$(date +%T) process gone"
-+		break
-+	fi
++static int __die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf,
++					int depth)
+ {
+ 	int tag, ret;
+ 	const char *tmp = "";
+@@ -1155,7 +1196,12 @@ int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
+ 		/* Write a base name */
+ 		return strbuf_addf(buf, "%s%s", tmp, name ?: "");
+ 	}
+-	ret = die_get_typename(type_die, buf);
++	if (depth >= MAX_TYPE_CHASE) {
++		pr_debug("DWARF: type name recursion limit reached at DIE 0x%lx\n",
++			 (unsigned long)dwarf_dieoffset(type_die));
++		return -ENOENT;
++	}
++	ret = __die_get_typename(type_die, buf, depth + 1);
+ 	if (ret < 0) {
+ 		/* void pointer has no type attribute */
+ 		if (tag == DW_TAG_pointer_type && ret == -ENOENT)
+@@ -1166,6 +1212,21 @@ int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
+ 	return strbuf_addstr(buf, tmp);
+ }
+ 
++/**
++ * die_get_typename_from_type - Get the name of given type DIE
++ * @type_die: a type DIE
++ * @buf: a strbuf for result type name
++ *
++ * Get the name of @type_die and stores it to @buf. Return 0 if succeeded.
++ * and Return -ENOENT if failed to find type name.
++ * Note that the result will stores typedef name if possible, and stores
++ * "*(function_type)" if the type is a function pointer.
++ */
++int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
++{
++	return __die_get_typename_from_type(type_die, buf, 0);
++}
 +
-+	# The process can be gone between the check above and this read, in
-+	# which case there is nothing to report: 'set -u' would otherwise
-+	# turn the unbound fields into an aborted script.
-+	if [ -z "$stat_line" ]; then
-+		echo "$(date +%T) process gone"
-+		break
-+	fi
+ /**
+  * die_get_typename - Get the name of given variable DIE
+  * @vr_die: a variable DIE
+@@ -1178,12 +1239,7 @@ int die_get_typename_from_type(Dwarf_Die *type_die, struct strbuf *buf)
+  */
+ int die_get_typename(Dwarf_Die *vr_die, struct strbuf *buf)
+ {
+-	Dwarf_Die type;
+-
+-	if (__die_get_real_type(vr_die, &type) == NULL)
+-		return -ENOENT;
+-
+-	return die_get_typename_from_type(&type, buf);
++	return __die_get_typename(vr_die, buf, 0);
+ }
+ 
+ /**
+@@ -1632,6 +1688,22 @@ Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr addr,
+ 	return result;
+ }
+ 
++/*
++ * Whether two DIEs live in the same debug file.
++ *
++ * dwarf_dieoffset() is relative to the file the DIE is in, so this is what
++ * tells an offset that has to be resolved in the dwz alt file, where dwz
++ * moved the type, from one that belongs to the main file: dwz encodes the
++ * references into its common file as DW_FORM_GNU_ref_alt, elfutils resolves
++ * them into the alt Dwarf and the CU of the resulting DIE belongs to that
++ * other file, so comparing the Dwarf each CU belongs to settles it exactly,
++ * rather than inferring it from what happens to be at the offset.
++ */
++bool die_same_file(Dwarf_Die *die_a, Dwarf_Die *die_b)
++{
++	return dwarf_cu_getdwarf(die_a->cu) == dwarf_cu_getdwarf(die_b->cu);
++}
 +
-+	stat=($stat_line)
-+	state=${stat[0]}
-+	cpu=${stat[1]}
-+	# field 24 of /proc/<pid>/stat, the resident set size in pages
-+	rss=$(( stat[2] * psz / 1024 ))
+ static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
+ {
+ 	struct die_var_type **var_types = arg;
+@@ -1676,6 +1748,8 @@ static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
+ 			vt->is_reg_var_addr = true;
+ 
+ 		vt->die_off = dwarf_dieoffset(&type_die);
++		vt->die_tag = dwarf_tag(&type_die);
++		vt->from_alt = !die_same_file(die_mem, &type_die);
+ 		vt->addr = start;
+ 		vt->end = end;
+ 		vt->has_range = (end != 0 || start != 0);
+@@ -1695,7 +1769,8 @@ static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
+  *
+  * Save all variables and parameters in the @sc_die and save them to @var_types.
+  * The @var_types is a singly-linked list containing type and location info.
+- * Actual type can be retrieved using dwarf_offdie() with 'die_off' later.
++ * Actual type can be retrieved using die_get_type_die() with 'die_off',
++ * 'die_tag' and 'from_alt' later.
+  *
+  * Callers should free @var_types.
+  */
+@@ -1741,6 +1816,8 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
+ 		return DIE_FIND_CB_END;
+ 
+ 	vt->die_off = dwarf_dieoffset(&type_die);
++	vt->die_tag = dwarf_tag(&type_die);
++	vt->from_alt = !die_same_file(die_mem, &type_die);
+ 	vt->addr = ops->number;
+ 	vt->end = 0;
+ 	vt->has_range = false;
+@@ -1752,6 +1829,55 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
+ 	return DIE_FIND_CB_SIBLING;
+ }
+ 
++/**
++ * die_get_type_die - Get a type DIE saved by die_collect_vars()
++ * @dbg: the main debug info
++ * @die_off: offset of the type DIE, from dwarf_dieoffset()
++ * @die_tag: tag that DIE had when the offset was saved
++ * @from_alt: whether the type DIE is in the dwz alt file
++ * @die_mem: where to store the resulting DIE
++ *
++ * See the comment in util/dwarf-aux.h: the offset is only meaningful in the
++ * file the DIE was in, which can be the dwz common file, so resolve it in
++ * the file @from_alt says it was in, the main file or its alt file, and use
++ * the DIE only when it has the @die_tag it had when the offset was saved.
++ * There is deliberately no fallback to the other file: resolving an alt
++ * file offset in the main file does not fail, it parses whatever is there
++ * as a DIE, and that is what hung 'perf report -s type'.
++ */
++Dwarf_Die *die_get_type_die(Dwarf *dbg, u64 die_off, int die_tag, bool from_alt,
++			    Dwarf_Die *die_mem)
++{
++	Dwarf *target = dbg;
++	Dwarf_Die die;
 +
-+	stack=$(awk '/\[stack\]/{print $1; exit}' /proc/"$pid"/maps 2>/dev/null)
-+	if [ -n "$stack" ]; then
-+		stack_start=0x${stack%-*}
-+		stack_size=$(( 0x${stack#*-} - stack_start ))
-+		stack_txt="$stack size=$((stack_size / 1024))kB"
-+	else
-+		stack_start=
-+		stack_txt="-"
-+	fi
++	if (from_alt) {
++		/*
++		 * Deliberately no fallback to the main file when there is
++		 * no alt file, or when the offset does not resolve in it:
++		 * resolving an alt file offset in the main file does not
++		 * fail, it parses whatever is there as a DIE, and that is
++		 * what hung 'perf report -s type', see the comment in
++		 * util/dwarf-aux.h.
++		 */
++		target = dwarf_getalt(dbg);
++		if (target == NULL) {
++			pr_debug("DWARF: no alt (dwz) debug file to resolve the type DIE at offset 0x%lx in\n",
++				 (unsigned long)die_off);
++			return NULL;
++		}
++	}
 +
-+	progress=
-+	[ -n "$progress_log" ] && [ -s "$progress_log" ] && progress=$(tail -1 "$progress_log")
++	if (dwarf_offdie(target, die_off, &die) && dwarf_tag(&die) == die_tag) {
++		*die_mem = die;
++		return die_mem;
++	}
 +
-+	if [ -n "$prev_cpu" ]; then
-+		cpu_delta=$(( cpu - prev_cpu ))
-+		# With a progress log, count the samples that show no progress,
-+		# without one there is no progress to look at, so count them all:
-+		# -g then looks at where the process is after two intervals.
-+		if [ -z "$progress_log" ] ||
-+		   { [ -n "$progress" ] && [ "$progress" = "$prev_progress" ]; }; then
-+			stuck=$((stuck + 1))
-+		else
-+			stuck=0
-+		fi
-+		stuck_txt="stuck=${stuck}"
-+		[ "$stack_start" != "$prev_stack" ] && stuck_txt="$stuck_txt STACK"
-+	else
-+		cpu_delta=0
-+		stuck_txt=""
-+	fi
++	pr_debug("DWARF: no DIE with tag %d at offset 0x%lx in the %s debug file\n",
++		 die_tag, (unsigned long)die_off, from_alt ? "alt" : "main");
++	return NULL;
++}
 +
-+	printf '%s state=%s cpu=+%d (%d.%02ds) rss=%dkB stack=%s %s %s\n' \
-+	       "$(date +%T)" "$state" "$cpu_delta" \
-+	       $(( cpu_delta / hz )) $(( (cpu_delta % hz) * 100 / hz )) \
-+	       "$rss" "$stack_txt" "$stuck_txt" "${progress:-(no progress log)}"
+ /**
+  * die_collect_global_vars - Save all global variables
+  * @cu_die: a CU DIE
+@@ -1759,7 +1885,8 @@ static int __die_collect_global_vars_cb(Dwarf_Die *die_mem, void *arg)
+  *
+  * Save all global variables in the @cu_die and save them to @var_types.
+  * The @var_types is a singly-linked list containing type and location info.
+- * Actual type can be retrieved using dwarf_offdie() with 'die_off' later.
++ * Actual type can be retrieved using die_get_type_die() with 'die_off',
++ * 'die_tag' and 'from_alt' later.
+  *
+  * Callers should free @var_types.
+  */
+diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+index 161f0bf980b6ee6a..149e0cbf63ccc82a 100644
+--- a/tools/perf/util/dwarf-aux.h
++++ b/tools/perf/util/dwarf-aux.h
+@@ -152,6 +152,8 @@ int die_get_scopes(Dwarf_Die *cu_die, Dwarf_Addr pc, Dwarf_Die **scopes);
+ struct die_var_type {
+ 	struct die_var_type *next;
+ 	u64 die_off;
++	int die_tag;
++	bool from_alt;	/* die_off is relative to the alt (dwz) file */
+ 	u64 addr;
+ 	u64 end;        /* end address of location range */
+ 	int reg;
+@@ -183,6 +185,37 @@ Dwarf_Die *die_find_variable_by_addr(Dwarf_Die *sc_die, Dwarf_Addr addr,
+ /* Save all variables and parameters in this scope */
+ void die_collect_vars(Dwarf_Die *sc_die, struct die_var_type **var_types);
+ 
++/*
++ * Get the type DIE saved by die_collect_vars()/die_collect_global_vars().
++ *
++ * The offsets those save are the dwarf_dieoffset() of the type DIE, which is
++ * relative to the debug file that DIE lives in: the dwz common file, the alt
++ * file in libdw terms, for the types shared by more than one CU, the main
++ * file for the rest.  Resolving an alt file offset in the main file does not
++ * fail: dwarf_offdie() parses whatever is at that offset there, and an offset
++ * that is a CU header in the main file reads back as a typedef whose
++ * DW_AT_type refers to itself, which is what hung 'perf report -s type' on
++ * the dwz compressed debug info of zlib-ng (libz.so.1).
++ *
++ * So @from_alt, recorded when the offset was saved, says which of the two
++ * files to resolve it in.  It is not inferred from the DIE contents: dwz
++ * encodes references into the common file as DW_FORM_GNU_ref_alt, so
++ * elfutils resolves them into the alt Dwarf and the CU of the type DIE then
++ * belongs to that other file, which die_same_file() compares exactly.
++ *
++ * There is deliberately no fallback to the other file when the offset does
++ * not resolve: that fallback is the misparse above.
++ *
++ * @die_tag is then only a sanity check: the offset is of a DIE that had this
++ * tag when it was saved, so a mismatch means the debug info changed under us,
++ * or is broken, and giving up on the type is the right answer.
++ */
++Dwarf_Die *die_get_type_die(Dwarf *dbg, u64 die_off, int die_tag, bool from_alt,
++			    Dwarf_Die *die_mem);
 +
-+	if [ -n "$use_gdb" ] && [ -z "$gdb_done" ] && [ "$stuck" -ge 2 ]; then
-+		gdb_log=$(mktemp /tmp/perf-stuck-gdb.XXXXXX)
-+		gdb -p "$pid" -batch -x "$gdb_cmds" -ex bt \
-+		    -ex 'perf-die-chain-all' -ex perf-dso -ex detach > "$gdb_log" 2>&1
-+		gdb_done=1
-+		echo "... gdb output of $pid in $gdb_log"
-+	fi
++/* Whether two DIEs live in the same debug file */
++bool die_same_file(Dwarf_Die *die_a, Dwarf_Die *die_b);
 +
-+	prev_cpu=$cpu
-+	prev_stack=$stack_start
-+	prev_progress=$progress
-+
-+	nsample=$((nsample + 1))
-+	[ "$count" -gt 0 ] && [ "$nsample" -ge "$count" ] && break
-+
-+	sleep "$interval"
-+done
+ /* Save all global variables in this CU */
+ void die_collect_global_vars(Dwarf_Die *cu_die, struct die_var_type **var_types);
+ 
 -- 
 2.55.0
 
