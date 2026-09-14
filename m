@@ -1,129 +1,176 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC51033998;
-	Mon, 14 Sep 2026 01:20:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98D2A1D435F;
+	Mon, 14 Sep 2026 01:31:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789348837; cv=none; b=Po00GjIuN05jq/Sap93cgZnYsn6hWgqqLOkQtqILCxGRWxe57WQrQNJFN5Zfgb2l96SU2vuDqaDO1iclZXz9QLKYYhMKwqb63pHOhzBzG967qGB8bt22yT9VD7liiG93mod3/tEMTR6gpsTrJiJofY6W1lP89J4mSbDcHvtOjuM=
+	t=1789349471; cv=none; b=VR076DOkFCctc7xJj8EsIAOBQ3BiEFyEWaucTIpRtmB9h6Xua5ogKrUckoCCDtVd++WJkveJCreeyuQuwHp0jQqdBLwJzTRjvLgvYhwBB/l/it7gLfZEIDj11ZAGXB9M/dcGfeCS1k76f3S/EY2pznw/4eFDj2XUlXmTfS2gAV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789348837; c=relaxed/simple;
-	bh=3ca8p5g2xMf5iWc0hlpy7f7BLo6a5dixz41iJOhoJH0=;
+	s=arc-20240116; t=1789349471; c=relaxed/simple;
+	bh=gWVeFVlAKTKcweOwPOImfgNVQyZ1l+8DtB1SnjfHfmY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c7/8KN+YI55rkhwgaLw301TWCutvDrW2qpvY+6/eie/t6hU5EmNXNEYJdA5f2/uqlP7t0cHMDZcJZ0OzB+J3zEqYhYbI1Q+MxAkp6NhWuspKvuO2a0W12EqbFdWDlLVa+FSyVNjw2adApguAemHDBFyo+ENFecZZu/8fX9023Uo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kq24UEU3; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=MKqCW2Lyuogrk+RZFIxLW7+T97l8nDBPRfXv11OEs2qQQ2VtxkqrWE7sRHd+/Aj5z1bmzreFoIAGD1PjqnygpY2QNFxdFbiyDXCWPF4YuMn2ZYyt2i9UusLsOfLJvEqHAV0F5/yJg6P+cOmc9Hg3hNd3xj2NT0VEQHx1czyqvhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bf3WpViw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kq24UEU3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EF0F1F000FF;
-	Mon, 14 Sep 2026 01:20:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bf3WpViw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B479B1F000FF;
+	Mon, 14 Sep 2026 01:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789348835;
-	bh=cjQJOduHqAwj6o7DipSItmVFnQfPwlvihYn4mDcpUD0=;
+	s=k20260515; t=1789349470;
+	bh=Nc5c8UWQIlOUsS9yEKIrI3enYPLq2wcsLXxA3ky3j0s=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=kq24UEU3HqY8/TTUrb1EXUbWdo5ZauWVeW/Z5ll7ftQHqY4sVATatElsiAsoBMR6q
-	 D+d8stydFiSSF70rz4XefQXbO/yl93pWYgxUwmcVaIY7qkMn86/thfoU+Vdz8H3D9p
-	 /59xH3aSNtdc27ZV6rpmcEWnxftOSsxILMWWvfXL5tkRE3apKASq2hSI6iP9hjQUla
-	 FglS3eUuU8hbp/h41PmnY583lhfq8P3L9lapGAriHK4U+RmWUAD2zcigPP9bkIp5AT
-	 7RxBcSDSqSM6zvdg3OBqzg1ZBLcLhbHpCwpjPSh11u9fSqDLT6dveM0/K4Ln7FmtqZ
-	 DenlbWQmZFsjw==
-Date: Sun, 13 Sep 2026 22:20:31 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@arm.com>, Leo Yan <leo.yan@arm.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	b=Bf3WpViwi3Mgq/28u/ohKcwNiBgLVYqSRbCj0NoQ4Cp8QeImsm54TK2uPvt4wFhSu
+	 lDigTpR+rNL/4BKpv6AW8eMGEX90KQ4z+/UGlVSulzsX8jFc5wuF0EuBOzSMBbRzX+
+	 oCtXnaKCvHT8Bd3x2AIzhXHpMaQHZnMNaq/orokwoYczc1mroYbziPGcsqtOCqVTrU
+	 VLh9nMOSZW/cmbbI2z7hXPwNtoTm7R7cjFLzPDc6Z0QC4bgaU4bn4wck26TPup7Dji
+	 M6RE53llxQXUc22yBRXkL/xt1+/SUBpGFxYW4w66Sa+Nu8lYRyQQyqnK6KpNCOlHkH
+	 wEUIH9vLRUb7A==
+Date: Sun, 13 Sep 2026 18:31:08 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Shuah Khan <skhan@linuxfoundation.org>,
-	Suyash Mahar <smahar@meta.com>, Leo Yan <leo.yan@linux.dev>,
-	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH 00/14] perf cs-etm: Per-thread mode fixes and snapshot
- wrap support
-Message-ID: <aqdL33fw9AoxTrPq@x2>
-References: <20260811-james-cs-unformatted-per-thread-fix-v1-0-90565318f5f8@linaro.org>
+	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH 1/8] perf test: Skip data_type_profiling when the PMU
+ cannot record memory events
+Message-ID: <aqdOXOH6KaBTT_b_@google.com>
+References: <20260913222821.3353-1-acme@kernel.org>
+ <20260913222821.3353-2-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260811-james-cs-unformatted-per-thread-fix-v1-0-90565318f5f8@linaro.org>
+In-Reply-To: <20260913222821.3353-2-acme@kernel.org>
 
-On Tue, Aug 11, 2026 at 04:30:03PM +0100, James Clark wrote:
-> Fix a few issues with per-thread mode:
->   - With TRBE, thread migrations hit a queue without a decoder assert
->   - On nVHE, everything looks like guest trace instead of host
->   - Tracing multiple threads didn't really work
+On Sun, Sep 13, 2026 at 07:28:13PM -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> The test records with 'perf mem record' in per-thread mode and its only
+> guard matches one specific message:
+> 
+>   perf mem record -o /dev/null -- true 2>&1 | \
+>         grep -q "failed: no PMU supports the memory events" && exit 2
+> 
+> A PMU that has memory events but refuses them per-thread falls through
+> it, and AMD IBS does:
+> 
+>   $ perf mem record -o /dev/null -- true
+>   Error:
+>   Failure to open event 'ibs_op/ldlat=0/u' on PMU 'ibs_op' which will be removed.
+>   Invalid event (ibs_op/ldlat=0/u) in per-thread mode, enable system wide with '-a'.
+>   Error:
+>   Failure to open any events for recording.
 
-This series applies cleanly to perf-tools-next but has no Reviewed-by
-nor was processed by Sashiko.
+Maybe we need to add a fallback logic to add 'swfilt' term for ibs_op.
 
-Can somebody from the ARM camp take a look at it, please?
+> 
+> What follows is not a skip either.  The script runs under 'set -e', so
+> the bare 'perf mem record' in test_basic_annotate() aborts it through the
+> EXIT trap, which reports a signal that never happened and exits 1:
+> 
+>   Basic Rust perf annotate test
+>   Unexpected signal in test_basic_annotate
+> 
+> so 'perf test' turns "this PMU cannot record these events" into a test
+> failure:
+> 
+>   $ perf test "data type profiling"
+>    87: perf data type profiling tests             : FAILED!
+> 
+> Assisted-by: LLM
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
+Namhyung
 
-- Arnaldo
- 
-> After adding a tests for those, it turns out there were some snapshot
-> bugs not picked up by the other snapshot tests. That showed that the
-> different snapshot searches for Intel BTS and Arm SPE were inconsistent
-> and I think all tracers can benefit from using the same pointer fixup
-> logic, so that gets refactored into the common auxtrace.c. Then SPE can
-> just share the Intel BTS search as it was obviously copied from it
-> originally. IntelPT keeps the more advanced duplicate data search, but
-> in the future that could probably be made the common one and all tracers
-> would benefit from using it (except maybe BTS if it always has a very
-> small buffer, but I doubt the overhead of the duplicate search would be
-> an issue). For now this is more of a refactor rather than behavioral
-> change so don't do that yet.
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
 > ---
-> James Clark (14):
->       perf cs-etm: Fix nVHE per-thread decoding
->       perf cs-etm: Warn for invalid timestamp option
->       perf cs-etm: Turn on context packet timestamps in per-thread mode
->       perf cs-etm: Use per-CPU queues for per-thread mode
->       perf cs-etm: Increase default timestamp generation period
->       perf auxtrace: Turn Intel BTS snapshot search into a generic one
->       perf arm-spe: Use generic snapshot search
->       perf auxtrace: intel-pt: Use new snapshot_has_wrapped callback
->       perf cs-etm: Queue partial AUX records
->       perf cs-etm: Don't print missing buffers in snapshot mode
->       perf auxtrace: cs-etm: Capture wrapped snapshots
->       perf test: Allow infinite named_thread loops
->       perf test: Add test for per-thread mode
->       perf cs-etm: Test multiple per-thread threads
+>  tools/perf/tests/shell/data_type_profiling.sh | 46 +++++++++++++++----
+>  1 file changed, 36 insertions(+), 10 deletions(-)
 > 
->  Documentation/userspace-api/perf_ring_buffer.rst   |   6 +-
->  tools/perf/Documentation/perf-test.txt             |   2 +-
->  tools/perf/arch/arm/util/cs-etm.c                  |  30 ++++-
->  tools/perf/arch/arm64/util/arm-spe.c               | 147 +--------------------
->  tools/perf/arch/x86/util/intel-bts.c               | 115 +---------------
->  tools/perf/arch/x86/util/intel-pt.c                |  58 +++-----
->  .../perf/tests/shell/coresight/per-thread-multi.sh |  78 +++++++++++
->  tools/perf/tests/shell/coresight/per-thread.sh     |  48 +++++++
->  .../perf/tests/shell/coresight/raw_dump_stress.sh  |   5 -
->  tools/perf/tests/workloads/named_threads.c         |   7 +-
->  tools/perf/util/auxtrace.c                         | 136 +++++++++++++++++--
->  tools/perf/util/auxtrace.h                         |  20 ++-
->  tools/perf/util/cs-etm.c                           |  98 ++++++++++----
->  13 files changed, 382 insertions(+), 368 deletions(-)
-> ---
-> base-commit: bf10e6ee2ac3034c9068e03eed418fd16961984e
-> change-id: 20260605-james-cs-unformatted-per-thread-fix-50e723aa7f0e
+> diff --git a/tools/perf/tests/shell/data_type_profiling.sh b/tools/perf/tests/shell/data_type_profiling.sh
+> index eca694600a0478d2..a916c410274aa888 100755
+> --- a/tools/perf/tests/shell/data_type_profiling.sh
+> +++ b/tools/perf/tests/shell/data_type_profiling.sh
+> @@ -19,6 +19,15 @@ perfout=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
+>  perf mem record -o /dev/null -- true  2>&1 | \
+>    		grep -q "failed: no PMU supports the memory events" && exit 2
+>  
+> +# Skip if per-thread mem record is not supported on this PMU (e.g. AMD IBS
+> +# needs system-wide '-a'): it is what the test records with below, and a
+> +# failing record must not be reported as a test failure.
+> +if ! perf mem record -o /dev/null -- true 2>/dev/null
+> +then
+> +  echo "Skip: cannot record memory events on this PMU"
+> +  exit 2
+> +fi
+> +
+>  cleanup() {
+>    rm -rf "${perfdata}" "${perfout}"
+>    rm -rf "${perfdata}".old
+> @@ -52,25 +61,42 @@ test_basic_annotate() {
+>      index=1 ;;
+>    esac
+>  
+> +  # Under 'set -e' a bare failing command aborts the script through the EXIT
+> +  # trap, so the commands that report a failure have to be the condition of
+> +  # an 'if' for that reporting to ever happen.
+>    if [ "x${mode}" == "xBasic" ]
+>    then
+> -    perf mem record -o "${perfdata}" ${testprogs[$index]} 2> /dev/null
+> +    if ! perf mem record -o "${perfdata}" ${testprogs[$index]} 2> /dev/null
+> +    then
+> +      echo "${mode} annotate [Failed: perf record]"
+> +      err=1
+> +      return
+> +    fi
+>    else
+> -    perf mem record -o - ${testprogs[$index]} 2> /dev/null > "${perfdata}"
+> -  fi
+> -  if [ "x$?" != "x0" ]
+> -  then
+> -    echo "${mode} annotate [Failed: perf record]"
+> -    err=1
+> -    return
+> +    if ! perf mem record -o - ${testprogs[$index]} 2> /dev/null > "${perfdata}"
+> +    then
+> +      echo "${mode} annotate [Failed: perf record]"
+> +      err=1
+> +      return
+> +    fi
+>    fi
+>  
+>    # Generate the annotated output file
+>    if [ "x${mode}" == "xBasic" ]
+>    then
+> -    perf annotate --code-with-type -i "${perfdata}" --stdio --percent-limit 1 2> /dev/null > "${perfout}"
+> +    if ! perf annotate --code-with-type -i "${perfdata}" --stdio --percent-limit 1 2> /dev/null > "${perfout}"
+> +    then
+> +      echo "${mode} annotate [Failed: perf annotate]"
+> +      err=1
+> +      return
+> +    fi
+>    else
+> -    perf annotate --code-with-type -i - --stdio 2> /dev/null --percent-limit 1 < "${perfdata}" > "${perfout}"
+> +    if ! perf annotate --code-with-type -i - --stdio 2> /dev/null --percent-limit 1 < "${perfdata}" > "${perfout}"
+> +    then
+> +      echo "${mode} annotate [Failed: perf annotate]"
+> +      err=1
+> +      return
+> +    fi
+>    fi
+>  
+>    # check if it has the target data type
+> -- 
+> 2.55.0
 > 
-> Best regards,
-> --  
-> James Clark <james.clark@linaro.org>
