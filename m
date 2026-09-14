@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424C348D87E;
-	Mon, 14 Sep 2026 12:49:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E749D468C12;
+	Mon, 14 Sep 2026 12:50:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789390196; cv=none; b=GgkDHP0/5Uydr8hOVTHN+PuKzVikpDJo9VMhAmnbHGB38LLMrax5ZB91eirFMJCu16zMD/QaYRu+52d5vdRyFDNnpvF1k7zqunhNnhGo0gHdRGoVbjUJ2wcczYeqLrM/9nvtWey+pJ89JiwzgF+xaLOgExMUaL2q8DPw3iS4bMU=
+	t=1789390209; cv=none; b=P/CfFwKRGXaIEj+FS2xahgdyuJep9R07/Na1rUudcYyYLfMjE9JOVAE+Cmc+Kb+J38EMXVrxiYFfr1oNNormyw+9cnGLky5JgI/gpLvLX28DYnLpkB8eKqyN2eZJOUZP/zbzkxj2xgT0SUHK8I0+fQR3aInkNuCVJFk2sOsVNGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789390196; c=relaxed/simple;
-	bh=++emXcP9SPk1N6KlszECK+hTyKvu/kLTGVZdg7HV0Vo=;
+	s=arc-20240116; t=1789390209; c=relaxed/simple;
+	bh=J5+LWQZ2Pw7GZdx7OrTUfZuKENGPDom0WJ29M3Y/A08=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Tn+sLgarAOOrZUFg13eq5ML7qVgrJcxgMZM+v+qVJR/0+Kx12XBG7+u7BmZtf3zWYDy64Gp90+1e/9a////p0+t/Cl881YPC+2k6ksQcWeHsUftAAL6xkrQmGGa4GjjdAowZygCts7UK/qm7bllVU3QMxGgxMWAQVNqcJKvRr7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8WT901T; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version:Content-Type; b=HgGv7fm/ggQftjF0PwF48OGtMkpyy2xbDPW8rof6HvYfVQoiqCVJzFm+3s1NrovBXNf9R3zZhGk/cyB1XyqdnaHMPXanvGVaq0yP4MQBuyKYZxLXvnKvO+f/ZRYO5xODFVwLCiHnW7UgGFpt6guDJU/9XzfFakXJ4GKq5UCjycM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kzv3MTv9; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8WT901T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BBB11F000FF;
-	Mon, 14 Sep 2026 12:49:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kzv3MTv9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35D411F008A0;
+	Mon, 14 Sep 2026 12:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789390194;
-	bh=ECQ2YrO3c6fTy3LNvcZ/qkWRkP34JaQc5nHEXsbIZYs=;
+	s=k20260515; t=1789390206;
+	bh=M67P/7heE2Mo2dh13Rp/Xbz4pdwd47nfGB122TYaZO8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=J8WT901Tq8YA5cm1zVTaVHUWiJ6XAPkjQ+WU7XGETm2XUnH7md/3tLNcTtN4ueglS
-	 OxCSk5l8YkVAl6QsIQsDWELdpgYr5H8wFX38fhgos9k20DpPk4DcSKmlFEVO4813Ob
-	 izGGqIBwA+qcUOS7VPIS27NrJzUocfIG/50AoaWJCwhfaxkbKkDdiip04E4hh+fxko
-	 Dj/Ay/cbeBnBo1/Xi1st6d9dNYRKDPFH6USiWJwyc5cDWR9boSklZ89ObWb01JZYsH
-	 m5abdsWDsRf6Zm9Cvz3lT7Vv7M4aE9L8du/uvP1KgWtDXnN7/kA/vRFbZT4kYDVBuq
-	 iYbW5qVUEEx7g==
+	b=Kzv3MTv9G365yCOp7cZk3m1qFsw9IR5dpIVAnxfe4qVYWb14sEDkTI0ECSuAAWVQm
+	 CU61ag/pNTMR0KU5S81okPgXIdzr1bygNHPMmiE47jbqBgQhlngXu4C5C+mQrV2oix
+	 BWbfn2onei0y0BqdzrFo9hyQe/gx/L1EECESRD1wYB1mNkWZpAquM0OVmeqevF5d1F
+	 OBng9K8VTMPr814/qM5ZM+nLn0rxNk8XXjaGNiajfjhklt24WvW9fPSJ9SD5UwqFCN
+	 9sk4ZO1kMNy9EAYZjGMfAzxXOIAN9A4jfJZ+EUkpN7d4FfSdrb6TcrOXIO60uHMxnz
+	 7OomvAb31F3Zw==
 From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To: Steven Rostedt <rostedt@goodmis.org>,
 	Peter Zijlstra <peterz@infradead.org>,
@@ -47,9 +47,9 @@ Cc: Jinchao Wang <wangjinchao600@gmail.com>,
 	Sean Christopherson <seanjc@google.com>,
 	Paolo Bonzini <pbonzini@redhat.com>,
 	kvm@vger.kernel.org
-Subject: [PATCH v16 01/13] x86/mce: Fix hardware debug register corruption on task migration
-Date: Mon, 14 Sep 2026 21:49:48 +0900
-Message-ID: <178939018815.94750.4070965922818659136.stgit@devnote2>
+Subject: [PATCH v16 02/13] KVM: x86: Prevent host DR7 debug register leak into guest OS on NMI
+Date: Mon, 14 Sep 2026 21:49:59 +0900
+Message-ID: <178939019982.94750.4441254006258061798.stgit@devnote2>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <178939017565.94750.9431053336761330458.stgit@devnote2>
 References: <178939017565.94750.9431053336761330458.stgit@devnote2>
@@ -65,133 +65,125 @@ Content-Transfer-Encoding: 8bit
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In exc_machine_check_user(), local_db_save() and local_db_restore() are
-invoked in the outer entry stubs (DEFINE_IDTENTRY_MCE_USER,
-DEFINE_FREDENTRY_MCE, and DEFINE_IDTENTRY_RAW), surrounding
-exc_machine_check_user().
+When KVM enters a guest OS, host hardware breakpoints are disabled
+before running the guest. However, an NMI can occur during guest
+execution, where local_db_save() or arch_install_hw_breakpoint()
+can be invoked.
 
-However, exc_machine_check_user() calls irqentry_exit_to_user_mode(),
-which handles pending thread work and may schedule() if TIF_NEED_RESCHED
-is set. If the task migrates to another CPU during schedule(),
-local_db_restore() runs on the new CPU with the dr7 state saved from the
-old CPU. This corrupts the new CPU's DR7 hardware debug register and
-leaves the old CPU's DR7 disabled.
-In short, local_db_save() and local_db_restore() pair must be run
-on the same CPU.
+In particular, if local_db_save() or arch_install_hw_breakpoint()
+is executed from NMI, hardware DR7 can be modified or restored with
+host breakpoint settings, leaking host breakpoints into the guest OS
+or clobbering the guest's debug registers.
 
-To fix this, move local_db_save() and local_db_restore() inside
-exc_machine_check_user() and exc_machine_check_kernel(). In
-exc_machine_check_user(), DR7 is saved and restored strictly around
-do_machine_check() to avoid schedule() during migration. In
-exc_machine_check_kernel(), local_db_save() is called at the entry point
-to prevent early memory accesses from triggering nested #DB exceptions,
-and restored on all exits.
+Introduce a per-CPU flag, cpu_dr_in_guest, to indicate that the CPU
+is executing in guest mode. Set this flag in vcpu_enter_guest()
+during entering the guest with disabling host breakpoints.
+If this flag is set, local_db_save() and local_db_restore() return
+immediately, and arch_install_hw_breakpoint() returns an error.
+In addition, protect cpu_dr_in_guest in within_cpu_entry() to
+prevent recursive #DB exceptions.
 
-Fixes: cd840e424f27 ("x86/entry, mce: Disallow #DB during #MC")
+Fixes: f85d40160691 ("KVM: X86: Disable hardware breakpoints unconditionally before kvm_x86->run()")
 Assisted-by: Antigravity:gemini-3.8-flash
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-Changes in v15:
- - Move local_db_save() to the entry of exc_machine_check_kernel() and
-   restore it on early return from mce_check_crashing_cpu() to prevent
-   nested #DB on watched variables.
-Changes in v14:
+Changes in v16:
  - Newly added.
 ---
- arch/x86/kernel/cpu/mce/core.c |   27 ++++++++++-----------------
- 1 file changed, 10 insertions(+), 17 deletions(-)
+ arch/x86/include/asm/debugreg.h |    6 ++++++
+ arch/x86/kernel/hw_breakpoint.c |   10 ++++++++++
+ arch/x86/kvm/x86.c              |    7 +++++++
+ 3 files changed, 23 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index ab469605fc89..39f238952e14 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -2108,6 +2108,9 @@ bool filter_mce(struct mce *m)
- static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
+diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
+index 854d82b88ff4..50f830972698 100644
+--- a/arch/x86/include/asm/debugreg.h
++++ b/arch/x86/include/asm/debugreg.h
+@@ -18,6 +18,7 @@
+ #define DR7_FIXED_1	0x00000400
+ 
+ DECLARE_PER_CPU(unsigned long, cpu_dr7);
++DECLARE_PER_CPU(bool, cpu_dr_in_guest);
+ 
+ #ifndef CONFIG_PARAVIRT_XXL
+ /*
+@@ -129,6 +130,9 @@ static __always_inline unsigned long local_db_save(void)
  {
- 	irqentry_state_t irq_state;
-+	unsigned long dr7;
+ 	unsigned long dr7;
+ 
++	if (this_cpu_read(cpu_dr_in_guest))
++		return 0;
 +
-+	dr7 = local_db_save();
+ 	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
+ 		return 0;
  
- 	WARN_ON_ONCE(user_mode(regs));
- 
-@@ -2116,20 +2119,26 @@ static __always_inline void exc_machine_check_kernel(struct pt_regs *regs)
- 	 * mce_check_crashing_cpu() for details.
+@@ -157,6 +161,8 @@ static __always_inline void local_db_restore(unsigned long dr7)
+ 	 * not be good.
  	 */
- 	if (mca_cfg.initialized && mce_check_crashing_cpu())
--		return;
-+		goto out;
- 
- 	irq_state = irqentry_nmi_enter(regs);
- 
- 	do_machine_check(regs);
- 
- 	irqentry_nmi_exit(regs, irq_state);
-+out:
-+	local_db_restore(dr7);
+ 	barrier();
++	if (this_cpu_read(cpu_dr_in_guest))
++		return;
+ 	if (dr7)
+ 		set_debugreg(dr7, 7);
  }
+diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+index f846c15f21ca..68de7ed79d88 100644
+--- a/arch/x86/kernel/hw_breakpoint.c
++++ b/arch/x86/kernel/hw_breakpoint.c
+@@ -40,6 +40,9 @@
+ DEFINE_PER_CPU(unsigned long, cpu_dr7);
+ EXPORT_PER_CPU_SYMBOL(cpu_dr7);
  
- static __always_inline void exc_machine_check_user(struct pt_regs *regs)
- {
-+	unsigned long dr7;
++DEFINE_PER_CPU(bool, cpu_dr_in_guest);
++EXPORT_PER_CPU_SYMBOL_GPL(cpu_dr_in_guest);
 +
- 	irqentry_enter_from_user_mode(regs);
+ /* Per cpu debug address registers values */
+ static DEFINE_PER_CPU(unsigned long, cpu_debugreg[HBP_NUM]);
  
-+	dr7 = local_db_save();
- 	do_machine_check(regs);
-+	local_db_restore(dr7);
+@@ -102,6 +105,9 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
  
- 	irqentry_exit_to_user_mode(regs);
- }
-@@ -2138,21 +2147,13 @@ static __always_inline void exc_machine_check_user(struct pt_regs *regs)
- /* MCE hit kernel mode */
- DEFINE_IDTENTRY_MCE(exc_machine_check)
- {
--	unsigned long dr7;
--
--	dr7 = local_db_save();
- 	exc_machine_check_kernel(regs);
--	local_db_restore(dr7);
- }
+ 	lockdep_assert_irqs_disabled();
  
- /* The user mode variant. */
- DEFINE_IDTENTRY_MCE_USER(exc_machine_check)
- {
--	unsigned long dr7;
--
--	dr7 = local_db_save();
- 	exc_machine_check_user(regs);
--	local_db_restore(dr7);
- }
++	if (this_cpu_read(cpu_dr_in_guest))
++		return -EBUSY;
++
+ 	for (i = 0; i < HBP_NUM; i++) {
+ 		struct perf_event **slot = this_cpu_ptr(&bp_per_reg[i]);
  
- #ifdef CONFIG_X86_FRED
-@@ -2169,28 +2170,20 @@ DEFINE_IDTENTRY_MCE_USER(exc_machine_check)
-  */
- DEFINE_FREDENTRY_MCE(exc_machine_check)
- {
--	unsigned long dr7;
--
--	dr7 = local_db_save();
- 	if (user_mode(regs))
- 		exc_machine_check_user(regs);
- 	else
- 		exc_machine_check_kernel(regs);
--	local_db_restore(dr7);
- }
- #endif
- #else
- /* 32bit unified entry point */
- DEFINE_IDTENTRY_RAW(exc_machine_check)
- {
--	unsigned long dr7;
--
--	dr7 = local_db_save();
- 	if (user_mode(regs))
- 		exc_machine_check_user(regs);
- 	else
- 		exc_machine_check_kernel(regs);
--	local_db_restore(dr7);
- }
- #endif
+@@ -316,6 +322,10 @@ static inline bool within_cpu_entry(unsigned long addr, unsigned long end)
+ 		if (within_area(addr, end, (unsigned long)&per_cpu(cpu_dr7, cpu),
+ 				sizeof(cpu_dr7)))
+ 			return true;
++		if (within_area(addr, end,
++				(unsigned long)&per_cpu(cpu_dr_in_guest, cpu),
++				sizeof(cpu_dr_in_guest)))
++			return true;
+ 	}
  
+ 	return false;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 79468ddfe473..5e046924ab76 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8318,6 +8318,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 
+ 	kvm_load_xfeatures(vcpu, true);
+ 
++	this_cpu_write(cpu_dr_in_guest, true);
++	barrier();
++
+ 	if (unlikely(vcpu->arch.switch_db_regs &&
+ 		     !(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH))) {
+ 		set_debugreg(DR7_FIXED_1, 7);
+@@ -8400,6 +8403,10 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		kvm_update_dr7(vcpu);
+ 	}
+ 
++	barrier();
++	this_cpu_write(cpu_dr_in_guest, false);
++	barrier();
++
+ 	/*
+ 	 * If the guest has used debug registers, at least dr7
+ 	 * will be disabled while returning to the host.
 
