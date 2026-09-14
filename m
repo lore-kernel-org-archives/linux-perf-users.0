@@ -1,203 +1,130 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA7731ED93
-	for <linux-perf-users@vger.kernel.org>; Mon, 14 Sep 2026 03:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDDC435C19F;
+	Mon, 14 Sep 2026 03:40:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789356236; cv=none; b=BZBwz2teCYXOHT28CHuFvo3eJQ+O5tNO/MFg4zgZxlLE49a5flPwQAt0S7S75nl0xWlBXzeOuMf6Vc/KFTg7M45o8Fs8BdfaDEbvQ+rSbiW5/q+EHKvls7QSFIbwm3+WqTn7XEZ7TAfmVgsVtELX0nFV7JoPy8yyu2Ja1QF2cMY=
+	t=1789357204; cv=none; b=Bz1bbXd7g4NUI3TERWNuqN74MGxTnxFVv/D9qfJCGbjIX8y4dSddxUAnVMoTQIuvvk2/BeXDP4tQoGeCHS3hWoXy5e+9HCO4f4f3ab9myjIDqevIEHGYe4mLj2MGVr9PmIX4JoGEBfYl9t/v2xxBGZdS3JvdFhbEK1T6yDoyIp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789356236; c=relaxed/simple;
-	bh=PJWRpZ6R7Caez2tyA1fHosu6VMV3NMzU5S7qJ024Imw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LMGOvLoOR5ieBEpziav/UVsbCUZ6VKC0G+DkmYNMlJocn3DWymywNOLGZ8TvEBWv4WC0dEmSEIwHaqPOfoitJ0k/bzHGZTF/yG8kSMmd2Y3hjL2p3KmFuE2exTreipiIyQE787v+bfLa1E8+kc/jxkoz7ao3rn/NlUVTq7r02DA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dmn4KYI2; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1789357204; c=relaxed/simple;
+	bh=1A6s3fqev0839R6hce//sj+/jCLqDJTSBW2SC0bjfpA=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=YAIijsDBCk/O1l5y7L4q9Ort/+eTEJIG8ZLJxbEq+oY7rKz6bFNyRj9Uk57UkpPJq5pN4eizEHIJ6GE+Am3ubyyHbleMWkup/vT1EXfckm2ZsjQl9gIO10FbbWTE/3qXytcuLSj8wKwVcaGw4LgMoyauMnmGeuUqm/bVrKwe8EI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=pHy6fbef; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dmn4KYI2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789356229; x=1820892229;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PJWRpZ6R7Caez2tyA1fHosu6VMV3NMzU5S7qJ024Imw=;
-  b=Dmn4KYI2Z2vG5EzeDcFKe7n8nZ+w+3K7A1NhQAduaHx0vRRttJHjFkcE
-   dQ95pWkGNClGxwaN3HGOOo8ZCeanmWb52UzG/o0qmw2IDsRU71dTC31le
-   yA0+dxANSEgcEC4nphbehYF0J+GATP7Pf3APr9EjJwYJq/kDhJTQo8huS
-   BdbPKoal8QDTtstSDcUkFo4SJB9CMXUHI/ZU2ifufEUksFqKtbKhDKabb
-   xq+CCE6rInLXPJ8eRJt0cfHyZFTwwoVHUnpzEgbXPdPRTwG9GBsEjurQE
-   4hyKhzNo23i1BkDMJoDaDnScylRU9FYnqQje78BGyppesnI6/rNUhvDpJ
-   Q==;
-X-CSE-ConnectionGUID: gZOSgyM/Q3CPK9WkfD1IbA==
-X-CSE-MsgGUID: fvW980U9SXG27pxFRQfFWQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11904"; a="93579745"
-X-IronPort-AV: E=Sophos;i="6.27,102,1787036400"; 
-   d="scan'208";a="93579745"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2026 20:23:45 -0700
-X-CSE-ConnectionGUID: 0QlTuGIgQwWWu2rMeAXkhA==
-X-CSE-MsgGUID: tei1ZRo+Q6m6oz3OajZaeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.27,102,1787036400"; 
-   d="scan'208";a="297534191"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.241.239]) ([10.124.241.239])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2026 20:23:44 -0700
-Message-ID: <c16e173c-d3de-42e4-99e0-184eed096eac@linux.intel.com>
-Date: Mon, 14 Sep 2026 11:23:41 +0800
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="pHy6fbef"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92FF91F000FF;
+	Mon, 14 Sep 2026 03:39:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1789357202;
+	bh=x5zisV7HoQ8XMweM1XOT4E07P1NlnKsteMfQzVmO4Js=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=pHy6fbeflVTU8QtsqFS5eh8OvOR3ntwRr+lHZYMkoAT3ltm91/zKHpwN5XKZntEOS
+	 ILIVvwKavB+/VLgc77oFP5R90/PbqE2ALcouMF/TdFK9XZ9ovr5QioyLZB1yLh6r2e
+	 gdt1bOJXa+0zPlb1i7I7WNxSlmbqXRfHn0UsNCp4=
+Date: Sun, 13 Sep 2026 20:39:59 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Zi Yan <ziy@nvidia.com>
+Cc: David Hildenbrand <david@kernel.org>, "Matthew Wilcox (Oracle)"
+ <willy@infradead.org>, Muchun Song <muchun.song@linux.dev>, Lorenzo Stoakes
+ <ljs@kernel.org>, "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka
+ <vbabka@kernel.org>, Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan
+ <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, Ryan
+ Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
+ <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, Usama Arif
+ <usama.arif@linux.dev>, Gregory Price <gourry@gourry.net>, Ying Huang
+ <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
+ Shakeel Butt <shakeel.butt@linux.dev>, Kairui Song <kasong@tencent.com>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, Minchan Kim
+ <minchan@kernel.org>, Sergey Senozhatsky <senozhatsky@chromium.org>, Peter
+ Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, Dave
+ Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, Mark Rutland
+ <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, James
+ Clark <james.clark@linaro.org>, "H. Peter Anvin" <hpa@zytor.com>,
+ linux-perf-users@vger.kernel.org, Juergen Gross <jgross@suse.com>, Stefano
+ Stabellini <sstabellini@kernel.org>, Oleksandr Tyshchenko
+ <oleksandr_tyshchenko@epam.com>, xen-devel@lists.xenproject.org, Eric
+ Biggers <ebiggers@kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>, Jaegeuk
+ Kim <jaegeuk@kernel.org>, linux-fscrypt@vger.kernel.org, Oscar Salvador
+ <osalvador@suse.de>, Chao Yu <chao@kernel.org>,
+ linux-f2fs-devel@lists.sourceforge.net, Tal Zussman <tz2294@columbia.edu>,
+ Gao Xiang <xiang@kernel.org>, Jan Kara <jack@suse.cz>, Yue Hu
+ <zbestahu@gmail.com>, Jeffle Xu <jefflexu@linux.alibaba.com>, Sandeep
+ Dhavale <dhavale@google.com>, Hongbo Li <hongbohbli@tencent.com>, Chunhai
+ Guo <guochunhai@vivo.com>, linux-erofs@lists.ozlabs.org,
+ linux-fsdevel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Matthew Brost <matthew.brost@intel.com>,
+ Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
+ Byungchul Park <byungchul@sk.com>, Axel Rasmussen
+ <axelrasmussen@google.com>, Yuanchu Xie <yuanchu@google.com>, Wei Xu
+ <weixugc@google.com>, linux-trace-kernel@vger.kernel.org, Trond Myklebust
+ <trondmy@kernel.org>, Anna Schumaker <anna@kernel.org>,
+ linux-nfs@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>, Alex Markuze
+ <amarkuze@redhat.com>, Viacheslav Dubeyko <slava@dubeyko.com>,
+ ceph-devel@vger.kernel.org, Song Liu <song@kernel.org>, Yu Kuai
+ <yukuai@fygo.io>, Li Nan <magiclinan@didiglobal.com>, Xiao Ni
+ <xiao@kernel.org>, linux-raid@vger.kernel.org, Richard Weinberger
+ <richard@nod.at>, Zhihao Cheng <chengzhihao1@huawei.com>,
+ linux-mtd@lists.infradead.org, Baoquan He <baoquan.he@linux.dev>, Pasha
+ Tatashin <pasha.tatashin@soleen.com>, Pratyush Yadav <pratyush@kernel.org>,
+ Jonathan Corbet <corbet@lwn.net>, Dave Young <ruirui.yang@linux.dev>, Shuah
+ Khan <skhan@linuxfoundation.org>, kexec@lists.infradead.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH v4 00/16] Remove PG_private by using page/folio->private
+ checks instead
+Message-Id: <20260913203959.6b46b0b5a052aec818a7f267@linux-foundation.org>
+In-Reply-To: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
+References: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v11 04/10] perf headers: Sync perf_event.h/perf_regs.h
- with the kernel headers
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-References: <20260914014049.2061519-1-dapeng1.mi@linux.intel.com>
- <20260914014049.2061519-5-dapeng1.mi@linux.intel.com>
- <20260914020145.4DEE91F000FF@smtp.kernel.org>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20260914020145.4DEE91F000FF@smtp.kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Sun, 13 Sep 2026 22:23:58 -0400 Zi Yan <ziy@nvidia.com> wrote:
 
-On 9/14/2026 10:01 AM, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [High] Sample parser in ASLR tool fails to consume the new SIMD register payload when PERF_SAMPLE_REGS_ABI_SIMD is set, leading to stream desynchronization.
-> - [Low] perf_event_attr__fprintf() prints the newly added SIMD fields out of struct layout order.
-> --
->
-> commit 2a8ebff44960ffb0cedfa7b327d5de5cc826d750
-> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
->
-> perf headers: Sync perf_event.h/perf_regs.h with the kernel headers
->
-> Sync the UAPI header changes of supporting SIMD/eGPRs/SSP sampling into
-> corresponding tools UAPI headers. Additionally, support the newly introduced
-> perf_event_attr fields in the perf_event_attr__fprintf and
-> perf_event__attr_swap() helpers.
->
->> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
->> index fd10aa8d697f2..c49fc76292f79 100644
->> --- a/tools/include/uapi/linux/perf_event.h
->> +++ b/tools/include/uapi/linux/perf_event.h
-> [ ... ]
->
->> @@ -1020,7 +1045,15 @@ enum perf_event_type {
->>  	 *      } && PERF_SAMPLE_BRANCH_STACK
->>  	 *
->>  	 *	{ u64			abi; # enum perf_sample_regs_abi
->> -	 *	  u64			regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
->> +	 *	  u64			regs[weight(mask)];
->> +	 *	  struct {
->> +	 *		u64 nr_vectors;		# 0 ... weight(sample_simd_vec_reg_user)
->> +	 *		u64 vector_qwords;	# 0 ... sample_simd_vec_reg_qwords
->> +	 *		u64 nr_pred;		# 0 ... weight(sample_simd_pred_reg_user)
->> +	 *		u64 pred_qwords;	# 0 ... sample_simd_pred_reg_qwords
->> +	 *		u64 data[nr_vectors * vector_qwords + nr_pred * pred_qwords];
->> +	 *	  } && (abi & PERF_SAMPLE_REGS_ABI_SIMD)
->> +	 *	} && PERF_SAMPLE_REGS_USER
->>  	 *
-> [Severity: High]
-> Does this new ABI payload cause stream desynchronization in
-> tools/perf/util/aslr.c?
->
-> When PERF_SAMPLE_REGS_ABI_SIMD is set, aslr_tool__process_sample() fails to 
-> advance the payload pointer over the extended SIMD struct:
->
-> tools/perf/util/aslr.c:aslr_tool__process_sample() {
-> 	...
-> 	if (orig_sample_type & PERF_SAMPLE_REGS_USER) {
-> 		u64 abi;
->
-> 		if (CHECK_BOUNDS(1, 0)) {
-> 			ret = -EFAULT;
-> 			goto out_put;
-> 		}
-> 		abi = in_array[i++];
-> 		if (abi != PERF_SAMPLE_REGS_ABI_NONE) {
-> 			u64 nr = hweight64(orig_regs_user);
->
-> 			if (nr > max_i - i) {
-> 				ret = -EFAULT;
-> 				goto out_put;
-> 			}
-> 			i += nr;
-> 		}
-> 	}
-> 	...
-> }
->
-> It appears the function skips standard registers by adding
-> hweight64(orig_regs_user) to the parser index, but misses parsing or skipping
-> the dynamically sized SIMD payload that follows. Can this leave unparsed
-> SIMD data in the stream, potentially corrupting subsequent fields?
->
-> A similar regression is present in the PERF_SAMPLE_REGS_INTR handling within
-> the same function.
->
-> Note that while other parsers like evsel.c were fixed in subsequent patches,
-> aslr.c appears to remain broken at the end of the series.
+> This patchset removes PG_private to make space for upcoming PG_folio for
+> identifying pages from a folio (more details in Note below). Instead of
+> checking PG_private, all code is changed to check page/folio->private !=
+> NULL instead.
+> 
+> MM people are cc'd on all patches and subsystem people are cc'd on the
+> cover letter and corresponding patches.
+> 
+> Patch 6 is picked up separately in f2fs tree, but since mm-new does not
+> have it yet, it is sent for MM testing.
 
-oh, yes. Since this patch series is close to merge, I would submit an
-independent patch to fix the miss.
+AI review claims to have found a pre-existing critical level deadlock
+in f2fs:
+
+	https://sashiko.dev/#/patchset/20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com
+
+it also had a few things to say about this patchset and, as always,
+hugetlb.c.
 
 
->
-> [ ... ]
->
->> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
->> index cc817294ad3d6..2e8be9a357dce 100644
->> --- a/tools/perf/util/perf_event_attr_fprintf.c
->> +++ b/tools/perf/util/perf_event_attr_fprintf.c
->> @@ -407,8 +407,17 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
->>  	}
->>  	if (attr_size >= offsetof(struct perf_event_attr, config4))
->>  		PRINT_ATTRf(config3, p_hex);
->> -	if (attr_size > offsetof(struct perf_event_attr, config4))
->> +	if (attr_size >= offsetof(struct perf_event_attr, sample_simd_regs_enabled))
->>  		PRINT_ATTRf(config4, p_hex);
->> +	if (attr_size > offsetof(struct perf_event_attr, sample_simd_vec_reg_user)) {
->> +		PRINT_ATTRf(sample_simd_regs_enabled, p_unsigned);
->> +		PRINT_ATTRf(sample_simd_pred_reg_qwords, p_unsigned);
->> +		PRINT_ATTRf(sample_simd_pred_reg_intr, p_hex);
->> +		PRINT_ATTRf(sample_simd_pred_reg_user, p_hex);
->> +		PRINT_ATTRf(sample_simd_vec_reg_qwords, p_unsigned);
->> +		PRINT_ATTRf(sample_simd_vec_reg_intr, p_hex);
->> +		PRINT_ATTRf(sample_simd_vec_reg_user, p_hex);
->> +	}
-> [Severity: Low]
-> Does this print the newly added SIMD fields out of struct layout order?
->
-> The UAPI struct definition in tools/include/uapi/linux/perf_event.h places
-> sample_simd_vec_reg_qwords before sample_simd_pred_reg_intr:
->
-> tools/include/uapi/linux/perf_event.h:struct perf_event_attr {
-> 	...
-> 	__u16	sample_simd_regs_enabled;
-> 	__u16	sample_simd_pred_reg_qwords;
-> 	__u16	sample_simd_vec_reg_qwords;
-> 	__u16	__reserved_4;
->
-> 	__u32	sample_simd_pred_reg_intr;
-> 	__u32	sample_simd_pred_reg_user;
-> 	...
-> }
->
-> However, the fprintf code above prints sample_simd_vec_reg_qwords after both
-> sample_simd_pred_reg_intr and sample_simd_pred_reg_user. Could this cause
-> minor confusion when debugging raw perf_event_attr fields?
+Thanks, The MM bits appear adequately reviewed and review of the non-MM
+bits are, as usual:
 
-There is no strict requirement on the print order. The reason that adjusts
-the print order is to make the fields belonging same class printed close
-together and convenient for users reading.
+  Great to have but I won't permit lack of other-than-MM review to
+  block MM improvements.
 
-Thanks.
+So I'll queue it all up and shall push it into -next after a few days.
 
+Acks from non-MM maintainers are appreciated.
 
->
+If a non-MM patch appears in linux-next I'll autodrop the mm.git copy
+of that patch.
+
