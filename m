@@ -1,189 +1,237 @@
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E13047126B
-	for <linux-perf-users@vger.kernel.org>; Mon, 14 Sep 2026 14:35:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04FF30C632;
+	Mon, 14 Sep 2026 14:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789396551; cv=none; b=r9C2K6ElkmBJV3oS0mReZkqe++NBH6D912/K+yq5PCNFrt1hCc1zvVvueOvHFqoiR5EfWSGX80f39ZL1g911Uwnav3zN3iliUSfRM4utiQUJhF5+DrOVIALcjLQXOuU9dp4qiEJIbKbetauURa4mU87Egb4oi9qiqYqccdBuLOw=
+	t=1789397927; cv=none; b=nheoTB5owEQSAHOzC/OQd/hW8U+eloFqGNNd8rq5gD1Xmj8EKtOJ+Pkin5rloQMlg4vq1nu2UqGDzw5BdUOFUVODRt4eBz7MmXg0rDSr6ne9jm/3y6wWunqUub1A8YWJ4Xr5cJsHllhLUVTEmUi+2cmUKEiXrpu0fw4yzV+NHLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789396551; c=relaxed/simple;
-	bh=LglaGc1H0R+sxZA6wiKDg7CCL2SBWvqlpF/H4iHUw3I=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=IwFLBdGr1lmxRW7C07wLPgAv/qg0H1wa+y/YgvUaPUCyFrVY+eSDKG99A67+NrEYMeqD7mO1eWKmPttCzE8d5e3V88d2v2xIbQ+yCvT7s0RBA29fjZpmz2GSNIZJjW1BqFigVZyNILTIu59mw0MFGAd3PBHYOmLJimijjBYome8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LtvLjXah; arc=none smtp.client-ip=209.85.216.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1789397927; c=relaxed/simple;
+	bh=FbELH71esAO0fQJSHCq8pF01QMgtk57LcUPkKAPtk4U=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=Rk1/3FhMAF9mFcb1fLspSIipbFl2xuPl7/eJyVzTY8LBGQiP8iQXBtswovMPDLUpXK/OP9Vp77IuRwOJInlhpAEAzAUHTChdeEystetC8b7irEswu19SxqhwS8IwtIhNm9+tEjDWP6qQYL6S74iP9ph2IEKi1ocf+64Bfz2T2nE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpANku1s; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LtvLjXah"
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-39af92138f9so5913789a91.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 14 Sep 2026 07:35:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789396549; x=1790001349; darn=vger.kernel.org;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=LpPRVgi7aIALsRKspaYc+kGuwDrBnRXT3lk0rEcHOXU=;
-        b=LtvLjXahCCiUglmMqRe8i5nUW1Xi3A62sVdLhtjxNGcwPyiC/ckUMG5Elscgs2f+80
-         GFiBdV/Hip1iLa64dzcGQmt5ImwJ4kgL+Ixyl7QAKzqAQyXo5FyvwXrPCmPOXHe4mWWG
-         bzclg9uXHNG2F3Aeo6sLHUAzsgtmTFFu6iAs8oTSL7T7KBX0n8bFw1mXAiP5l/uCq8ci
-         MinbxRnX377igCzZJJfxkrG3NPHP6e+7UIpLGTrKPeqgKOjjh4ZhogGMtRjIk/YUb5tS
-         ahDQsj0uzrmx42f7VHS/un1H04zgHLUW9hwNbcWGKwf3chdQNa1XCOP0hQWflaoOqPJw
-         XhsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1789396549; x=1790001349;
-        h=content-type:cc:to:from:subject:message-id:references:mime-version
-         :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to:content-type;
-        bh=LpPRVgi7aIALsRKspaYc+kGuwDrBnRXT3lk0rEcHOXU=;
-        b=BLnSi2Qw8lxSvObsAONJosPHwGVRsN+/sFPlwImxOE6xpqahKgOSDogf7ShtfD/XVF
-         Xl2tXF5e01XyTwnxy0qw6ZPnRHZUnIQl6icvtlYaXC1vkur+F2rLmux2EkrGwSUqPQxB
-         BxYX4WQf4K/4kotBnBCEXyRs4xWauMRw2kz+Kxt08zumoMgXZLgEkPNkOWr4PBCKcEGX
-         kZ2k3oBShpQFFHHpqN0sIvOL5OfW3aBB1UOTQFBtnQshzXeZtwoXKHWDnozXJL2zjXlM
-         LEGz42gQXcLPbsmOYxNej83YbX2EAlFffXizH7J+yfQ4OkZ+KjATz7qSbujtyWuFOYzD
-         9MnQ==
-X-Forwarded-Encrypted: i=1; AKwUvBz+p4aKcLLZgnTJmp+UETcS2XFnC3jwC77pIrAVQCKTHJg/JEgThUFxgkvhzRRPIL5hGnr1lrHxy/9biAoJmjUp@vger.kernel.org
-X-Gm-Message-State: AFuF++mz27dRcl4IFS12PT9ABan4TUepqR7+umkHZEbdaTyXnLvtb7k2
-	Ghq/pLfhfr+SFcKqNcMoxvo9ONnQGKgfPOHoYOD2PNEysUtuW9StxxtPSF3WlZkn44ZlIbEvTew
-	wcoe7ow==
-X-Received: from pjbin5.prod.google.com ([2002:a17:90b:4385:b0:39d:8c01:3e57])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2790:b0:398:9beb:a2b7
- with SMTP id 98e67ed59e1d1-39dd56bdc08mr8132347a91.25.1789396549085; Mon, 14
- Sep 2026 07:35:49 -0700 (PDT)
-Date: Mon, 14 Sep 2026 07:35:48 -0700
-In-Reply-To: <178939019982.94750.4441254006258061798.stgit@devnote2>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpANku1s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D9D21F000FF;
+	Mon, 14 Sep 2026 14:58:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789397925;
+	bh=Dpe1tP2ZJwNqlNVNVv8SYgVA9M/PRiFAvZUXoVKVbBk=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=QpANku1sTrGa9fapooEe4zaHSAvVQMXFF2PVvMrPGps+jgwknvrXV/ksvBhp8xv4+
+	 a3v3YFYt0G9ChrbRYNepI4smkdRQ7TDPAqQHfmGBIlrqrPR3nzOw3Dkn248bVg8TZ5
+	 j/u1cKMtZqhbO7Pwl06M13uc+RN3ZNDK08j6BqVtxcb/b3hqhh/3BB7C1+NCe5Wdgt
+	 s1X/YiNgS1+zHlMhZNE6r79kYQaBg7TVzLNa9mIQvj7lnLcL7YzWwBJmMzt48HcSJW
+	 jmr3jsBED0oRWuE0F8wWibJFZdxaKwFrnoSKMS0mXrvLXgcjgSyWt0zJX0+5dRRTMd
+	 r/WqpvsvN62qA==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v16 10/13] tracing/wprobe: Add set_wprobe and
+ clear_wprobe event triggers
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, kvm@vger.kernel.org
+In-Reply-To: <178939029574.94750.11636803595861231046.stgit@devnote2>
+References: <178939017565.94750.9431053336761330458.stgit@devnote2>
+ <178939029574.94750.11636803595861231046.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 14 Sep 2026 14:58:44 +0000
+Message-Id: <20260914145845.1D9D21F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <178939017565.94750.9431053336761330458.stgit@devnote2> <178939019982.94750.4441254006258061798.stgit@devnote2>
-Message-ID: <aqgGRKOE138ePqmX@google.com>
-Subject: Re: [PATCH v16 02/13] KVM: x86: Prevent host DR7 debug register leak
- into guest OS on NMI
-From: Sean Christopherson <seanjc@google.com>
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@kernel.org>, x86@kernel.org, Jinchao Wang <wangjinchao600@gmail.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Thomas Gleixner <tglx@linutronix.de>, 
-	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	"H . Peter Anvin" <hpa@zytor.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Content-Type: text/plain; charset="us-ascii"
 
-On Mon, Sep 14, 2026, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> When KVM enters a guest OS, host hardware breakpoints are disabled
-> before running the guest. However, an NMI can occur during guest
-> execution, where local_db_save() or arch_install_hw_breakpoint()
-> can be invoked.
-> 
-> In particular, if local_db_save() or arch_install_hw_breakpoint()
-> is executed from NMI, hardware DR7 can be modified or restored with
-> host breakpoint settings, leaking host breakpoints into the guest OS
-> or clobbering the guest's debug registers.
+Thank you for your contribution! Sashiko AI review found 5 potential issue(=
+s) to consider:
+- [High] Missing RCU synchronization in the error path of wprobe trigger re=
+gistration leads to a Use-After-Free of hardware breakpoint perf_event stru=
+ctures.
+- [High] Hardware breakpoint addresses are not updated for offline CPUs, le=
+ading to stale addresses when CPUs come online.
+- [Medium] The 'count' parameter is decremented on trigger evaluation misse=
+s, causing the trigger to exhaust its count without actually modifying the =
+watchpoint.
+- [Medium] The wprobe event permanently leaks as enabled when the trigger i=
+s unregistered because `EVENT_FILE_FL_SOFT_DISABLED_BIT` is manually cleare=
+d.
+- [Low] A field named 'unlimited' is silently ignored by `clear_wprobe` if =
+no count keyword is provided.
+--
 
-Not for local_db_save(), at least not AFAICT.  On VM-Exit, both Intel and AMD
-purge DR7, i.e. load 0x400, so local_db_save() => local_db_restore() is more or
-less a nop.  Even if that weren't the case, actually saving/restoring DR7 would
-be the right thing to do, in any context.
+commit 146ca411781d7203b266aa3745d30641c87b97d2
+Author: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> Introduce a per-CPU flag, cpu_dr_in_guest, to indicate that the CPU
-> is executing in guest mode. Set this flag in vcpu_enter_guest()
-> during entering the guest with disabling host breakpoints.
-> If this flag is set, local_db_save() and local_db_restore() return
-> immediately, and arch_install_hw_breakpoint() returns an error.
-> In addition, protect cpu_dr_in_guest in within_cpu_entry() to
-> prevent recursive #DB exceptions.
-> 
-> Fixes: f85d40160691 ("KVM: X86: Disable hardware breakpoints unconditionally before kvm_x86->run()")
-> Assisted-by: Antigravity:gemini-3.8-flash
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
-> Changes in v16:
->  - Newly added.
-> ---
->  arch/x86/include/asm/debugreg.h |    6 ++++++
->  arch/x86/kernel/hw_breakpoint.c |   10 ++++++++++
->  arch/x86/kvm/x86.c              |    7 +++++++
->  3 files changed, 23 insertions(+)
-> 
-> diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
-> index 854d82b88ff4..50f830972698 100644
-> --- a/arch/x86/include/asm/debugreg.h
-> +++ b/arch/x86/include/asm/debugreg.h
-> @@ -18,6 +18,7 @@
->  #define DR7_FIXED_1	0x00000400
->  
->  DECLARE_PER_CPU(unsigned long, cpu_dr7);
-> +DECLARE_PER_CPU(bool, cpu_dr_in_guest);
->  
->  #ifndef CONFIG_PARAVIRT_XXL
->  /*
-> @@ -129,6 +130,9 @@ static __always_inline unsigned long local_db_save(void)
->  {
->  	unsigned long dr7;
->  
-> +	if (this_cpu_read(cpu_dr_in_guest))
-> +		return 0;
+tracing/wprobe: Add set_wprobe and clear_wprobe event triggers
 
-This is broken.  If an NMI hits between KVM writing cpu_dr_in_guest and clearing
-DR7, and there are active breakpoints, then local_db_save() won't disable breakpoints
-as it should, and the relevant code in exc_nmi() will run with breakpoints enabled.
+Add set_wprobe and clear_wprobe event triggers to dynamically attach
+and detach hardware breakpoint address monitoring based on event field
+contents.
 
-	kvm_load_xfeatures(vcpu, true);
+Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.=
+1785067572.git.wangjinchao600@gmail.com/
 
-	this_cpu_write(cpu_dr_in_guest, true);
-	barrier();
+> diff --git a/kernel/trace/trace_wprobe.c b/kernel/trace/trace_wprobe.c
+> index 9c6100b63e8d9..55a201504bb0b 100644
+> --- a/kernel/trace/trace_wprobe.c
+> +++ b/kernel/trace/trace_wprobe.c
 
-  <NMI here is problematic>
+[ ... ]
 
-	if (unlikely(vcpu->arch.switch_db_regs &&
-		     !(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH))) {
-		set_debugreg(DR7_FIXED_1, 7);
-		set_debugreg(vcpu->arch.eff_db[0], 0);
-
+> @@ -231,6 +303,12 @@ static struct trace_wprobe *alloc_trace_wprobe(const=
+ char *group,
+>=20
+> +static void wprobe_work_func(struct work_struct *work)
+> +{
+> +	struct trace_wprobe *tw =3D container_of(work, struct trace_wprobe, wor=
+k);
 > +
->  	if (cpu_feature_enabled(X86_FEATURE_HYPERVISOR) && !hw_breakpoint_active())
->  		return 0;
->  
-> @@ -157,6 +161,8 @@ static __always_inline void local_db_restore(unsigned long dr7)
->  	 * not be good.
->  	 */
->  	barrier();
-> +	if (this_cpu_read(cpu_dr_in_guest))
-> +		return;
->  	if (dr7)
->  		set_debugreg(dr7, 7);
->  }
-> diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
-> index f846c15f21ca..68de7ed79d88 100644
-> --- a/arch/x86/kernel/hw_breakpoint.c
-> +++ b/arch/x86/kernel/hw_breakpoint.c
-> @@ -40,6 +40,9 @@
->  DEFINE_PER_CPU(unsigned long, cpu_dr7);
->  EXPORT_PER_CPU_SYMBOL(cpu_dr7);
->  
-> +DEFINE_PER_CPU(bool, cpu_dr_in_guest);
-> +EXPORT_PER_CPU_SYMBOL_GPL(cpu_dr_in_guest);
+> +	on_each_cpu(wprobe_smp_update_func, tw, true);
+
+[Severity: High]
+Could this leave hardware breakpoints with stale addresses on offline CPUs?
+
+on_each_cpu() only broadcasts to currently online CPUs, so offline CPUs
+won't execute trace_wprobe_update_local(). When an offline CPU comes
+online, won't the perf event core reinstall the hardware breakpoint using
+the old, stale address since it wasn't updated here?
+
+[ ... ]
+
+> @@ -773,3 +866,538 @@ static __init int init_wprobe_trace(void)
+
+[ ... ]
+
+> +static void wprobe_trigger(struct event_trigger_data *data,
+> +			   struct trace_buffer *buffer,  void *rec,
+> +			   struct ring_buffer_event *event)
+> +{
+> +	struct wprobe_trigger_data *wprobe_data =3D data->private_data;
+> +	struct trace_wprobe *tw =3D wprobe_data->tw;
+> +	unsigned long addr =3D 0, flags;
+> +	bool changed =3D false;
+
+[ ... ]
+
+> +	raw_spin_lock_irqsave(&tw->lock, flags);
 > +
->  /* Per cpu debug address registers values */
->  static DEFINE_PER_CPU(unsigned long, cpu_debugreg[HBP_NUM]);
->  
-> @@ -102,6 +105,9 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
->  
->  	lockdep_assert_irqs_disabled();
->  
-> +	if (this_cpu_read(cpu_dr_in_guest))
-> +		return -EBUSY;
+> +	if (!wprobe_data->clear) {
+> +		if (!trace_wprobe_is_valid_addr(addr, tw->len)) {
+> +			atomic_inc(&tw->missed);
+> +			goto out;
+> +		}
+> +		if (tw->addr =3D=3D WPROBE_DEFAULT_CLEAR_ADDRESS) {
+> +			/* Skip if a previous work is still propagating the address */
+> +			if (atomic_read(&tw->work_pending)) {
+> +				atomic_inc(&tw->missed);
+> +				goto out;
+> +			}
+> +			WRITE_ONCE(tw->addr, addr);
+> +			changed =3D true;
+> +			clear_bit(EVENT_FILE_FL_SOFT_DISABLED_BIT, &wprobe_data->file->flags);
 
-If we decide this is how to fix arch_install_hw_breakpoint() clobbering DRs from
-NMI context, I would rather have more generic flag to tell perf that KVM is about
-to enter the guest, e.g. so that we don't have to separately solve the same problem
-for other perf events:
+[Severity: Medium]
+Does manually clearing EVENT_FILE_FL_SOFT_DISABLED_BIT cause the event to l=
+eak
+as enabled?
 
-https://lore.kernel.org/all/3585d823-00f3-46ae-a799-b62a95743e76@linux.intel.com
+When the trigger is unregistered, wprobe_trigger_free() calls
+trace_event_enable_disable(file, 0, 1). Because the soft-disabled bit was
+cleared here, won't the core event logic skip the unregister step, leaving
+the wprobe tracepoint permanently enabled in the kernel?
+
+[ ... ]
+
+> +static int wprobe_trigger_cmd_parse(struct event_command *cmd_ops,
+> +				    struct trace_event_file *file,
+> +				    char *glob, char *cmd,
+> +				    char *param_and_filter)
+> +{
+
+[ ... ]
+
+> +	} else if (param && (isalpha(param[0]) || param[0] =3D=3D '_')) {
+> +		if (strncmp(param, "count=3D", 6) !=3D 0 &&
+> +		    strcmp(param, "unlimited") !=3D 0) {
+
+[Severity: Low]
+Is this intended to skip fields named "unlimited"?
+
+If a user configures a clear_wprobe trigger on an event that happens to have
+a field named "unlimited", this parser matches the keyword and skips parsing
+it as a field, which defaults to an unconditional clear action.
+
+[ ... ]
+
+> +static int wprobe_register_trigger(char *glob,
+> +				   struct event_trigger_data *data,
+> +				   struct trace_event_file *file)
+> +{
+> +	int ret =3D 0;
+> +
+> +	lockdep_assert_held(&event_mutex);
+> +
+> +	/* The same wprobe is not accept on the same file (event) */
+> +	if (wprobe_trigger_find_same(data, file))
+> +		return -EEXIST;
+> +
+> +	if (data->cmd_ops->init) {
+> +		ret =3D data->cmd_ops->init(data);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	list_add_rcu(&data->list, &file->triggers);
+> +
+> +	update_cond_flag(file);
+> +	ret =3D trace_event_trigger_enable_disable(file, 1);
+> +	if (ret < 0) {
+> +		list_del_rcu(&data->list);
+> +		update_cond_flag(file);
+> +		if (data->cmd_ops->free)
+> +			data->cmd_ops->free(data);
+> +	}
+
+[Severity: High]
+Does this error path need RCU synchronization?
+
+If trace_event_trigger_enable_disable() fails, list_del_rcu() is called
+without a subsequent synchronize_rcu(). The cmd_ops->free callback
+(wprobe_trigger_free) will then synchronously disable the wprobe, which
+frees the tw->bp_event array.
+
+Could a concurrent tracepoint reader still observe the trigger data,
+execute wprobe_trigger(), and dereference the freed tw->bp_event via
+this_cpu_ptr() inside trace_wprobe_update_local()?
+
+[ ... ]
+
+> +static struct event_command trigger_wprobe_set_cmd =3D {
+> +	.name			=3D SET_WPROBE_STR,
+> +	.trigger_type		=3D ETT_EVENT_WPROBE,
+> +	/* This triggers after when the event is recorded. */
+> +	.flags			=3D EVENT_CMD_FL_NEEDS_REC,
+> +	.parse			=3D wprobe_trigger_cmd_parse,
+> +	.reg			=3D wprobe_register_trigger,
+> +	.unreg			=3D wprobe_unregister_trigger,
+> +	.set_filter		=3D set_trigger_filter,
+> +	.trigger		=3D wprobe_trigger,
+> +	.count_func		=3D event_trigger_count,
+
+[Severity: Medium]
+Will this unconditionally exhaust the trigger's count parameter even on mis=
+ses?
+
+Because .count_func is set to event_trigger_count, the count is decremented
+before wprobe_trigger() runs. If the trigger fails its implicit checks insi=
+de
+wprobe_trigger() (such as checking if the field matches the watched address=
+),
+the count has already been consumed.
+
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178939017565.94750.=
+9431053336761330458.stgit@devnote2?part=3D10
