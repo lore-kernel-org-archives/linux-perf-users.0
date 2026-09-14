@@ -1,74 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm2-f12.google.com (mail-wm2-f12.google.com [74.125.225.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC7FF41A919;
-	Mon, 14 Sep 2026 09:40:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF663B47D9
+	for <linux-perf-users@vger.kernel.org>; Mon, 14 Sep 2026 10:37:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.225.140
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789378857; cv=none; b=toA3W67i2wN1M060CAUhOZvE4Xeiw16hS6l8niOOlx3LVzOTEnskllfg/kK6Afi0z8RV8PTfWYz4trdRzUlG9+Dc7gdnzcGNJgIHC6y6F5U5y1bDRXqiodSwryYsV7jn94Z7c4BDPADgynVOTx4+7hw/b3Qlml4YfKZWMrnh3AI=
+	t=1789382247; cv=none; b=XqObDiwAy6ir2A+AJnb+0fGYJheLT9HNqdQe8IPdRNmK2VHqEOtHsmD20D0xudrwtqlPCv3dBVqnwkPiPQIqMdKGUpuBSUvof9GnNSOZWQ78ERVWYo2prHS6hU92s/ggg3cvfci6eZZ7+75sfRktH/7ObTu0F2NU662S2G4xdvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789378857; c=relaxed/simple;
-	bh=qMmFBaf2m5aYuaj9hBj/h+oviKtKkKHpwUm9Scn6cYA=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=jPQsq1Oq4+exoe0XZSkHtZF139aWs7PxQYkTv0lqAsNwmH78mZWQefULhsFk55HT0TV2O0uhpmyzAx9HLrpEriNio3DoveWRBecHwkmwyjf94iQ4GaZaeJRNCFlu2iZaAzJcuLh54IEPoj/rjxopIPihDJ8LeQfTuLODRcEGlkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DTZiS1ve; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789382247; c=relaxed/simple;
+	bh=VoFt/8d9bTF5R80NXayZqE/E40cAkxOPEWZbKvSt2C4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=jav/sWZ4lA/yiqHLL1x0Zf2pRP2ZRC1l5O04gVH1sb2m26KVQTLl7qsvCx/urYZ9utIxrsqzGGQUXjae1foUZlSZNQlz96GksEgyhVqb+VEfVuXrVuDRrgr6vsEh3ZGjJcZYNET1lVC8mAIdcEMmpHBRgQMWjsfxwP9WQLjYScQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r4M4677g; arc=none smtp.client-ip=74.125.225.140
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DTZiS1ve"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 837D71F00898;
-	Mon, 14 Sep 2026 09:40:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789378851;
-	bh=qMmFBaf2m5aYuaj9hBj/h+oviKtKkKHpwUm9Scn6cYA=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=DTZiS1veIG9tXc9+IwE9J0WEYI020XnG15ngZBYdah1rHvTJ0BSpILLfJlIWVSPD9
-	 eFCc4g7Mc8hP+2cmd2RyStlg4XrOdHpm1r2TYQYrvXVIy/g4lCXhIipWXfJZFqT+tZ
-	 HEuWkOhmE0ggj9gFW4gI3QOhbMpSLcHPoX0k2G5I8fANVVrC8zXtCXMMLPcExVwwYP
-	 H6gJ6p4XWwproWxAXXgKOyW9kz6vnaXMnKrx5kbz9nb1rfoSMJPudd5hknWZgKlcCf
-	 MwYEke4gjEKdmWq4MfZEG94V7Z1kxuRLeYKkWQcmD0zxE5s11ogR4PgU248BsRGpbc
-	 78/fOrM5wY6gA==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 1/7] riscv: stacktrace: Add frame record metadata
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Shuai Xue" <xueshuai@linux.alibaba.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <20260914092648.51254-2-xueshuai@linux.alibaba.com>
-References: <20260914092648.51254-1-xueshuai@linux.alibaba.com>
- <20260914092648.51254-2-xueshuai@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 14 Sep 2026 09:40:51 +0000
-Message-Id: <20260914094051.837D71F00898@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r4M4677g"
+Received: by mail-wm2-f12.google.com with SMTP id 5b1f17b1804b1-49cda5e048fso60205e9.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 14 Sep 2026 03:37:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789382244; x=1789987044; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to:content-type;
+        bh=Jk6L9cGG+NNPuRM+9aIldjw68vekE7ZQtL4c5PAcnDk=;
+        b=r4M4677gERtV/sEWy1Q/JB5qG+6dvk8Q3W/MPPffEVPybpEn3jnjO9u4KwGa5+swl/
+         Ix5/dLGepr+tAYx/UpRcFbb3SuirGgjENCxrcqxQnKrU/LW/2rtsYApp7FvAYpDnMnJo
+         RxHrhQPp9ypPqYbdq0d0BRDPvUUeM/tqQzI2xDZiWJbBNrSVlnh/YIi1+OZWCT51Gs60
+         aPvJjJKiPx+XN4CZvPlJZVsCybWW1RUn1ZvdXgyPuj8vWBk7O1AWUw9Q0ZFkutqxbvdA
+         AtZPr3PhEdWMfodlYMJUdHW0mgun3Eeme1VegosJW1Byg64XyV7eXelwXSQ0dwLkM+6i
+         4Zzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1789382244; x=1789987044;
+        h=cc:to:message-id:content-transfer-encoding:content-type
+         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to:content-type;
+        bh=Jk6L9cGG+NNPuRM+9aIldjw68vekE7ZQtL4c5PAcnDk=;
+        b=tSE/a3jv4DziZF5g2misZ4bzWAyV0dqDpS0YGuDKswn8fcHs426JM1HFdCqix4kvr/
+         ojRqk5Zm6oJ5YvtJvmU/g6N6nfwWd8tj43ZPS2rTDxOsezkTyYW9wwfpYYRweVvYy1sr
+         pprYGA5wPSUICHmaieLYTT4oKq+aWSgWp3NcG4a3cjib/3OkqZ1k7tw/MnECetMPccgw
+         JCMXOtEEsofW078hctUKen30cB9cins2qD5eF0w8tr3Tai8cTCwcRdBccs93EhEdI8Ku
+         WwDpQIYslqYJOTFuEwdThIa0MnQpDUZNTZET+FkynCgayVRmzh9vZwPoCdHTK8Fx7FAZ
+         Wurg==
+X-Forwarded-Encrypted: i=1; AKwUvBwHkENAc6dphPeG4YHFi5kxVg/uk08DYkd0TdCciWlJvHe3LvWsiKCaGak9QJugW6AfTGR7NZ+fiR6lFVO9j5OL@vger.kernel.org
+X-Gm-Message-State: AFuF++mBZkrs6beN3jJGk7ayqVvryMKA5fjsskzme474XHueWwtXZMZK
+	y9lEDssSgR8YJf3hdtmKi32J0q6rcRSmVVrcKBth17sv0qKwLNyKO9BONaFtjHfLBw==
+X-Gm-Gg: AYBFou2/hUgck53BSu10N24lkQttzLEIQ/blm+XkrakEGkhrx38E8Acpu0TY/gk76Vh
+	kh7Nq5MBjSKZR0FmolS6A0TP7py+I+iCNJtw+ztiE2CyjdqVgyYnP65SZq9MAfkuxj6Q/wW/HGI
+	qLhnVJxXf1MBTwfbQB0rnAJMgLWZF7weeUIFeVfvj3Ys4xt2HAr4aVxZGRDSJo/NJWAOV6fybMr
+	KmNEIgLuP8SY8y9Gg1aL8d3M1ZsudkGj8RuXZVw3+KHuP0izhH1CVBP85yqJE4WSZmS4bPbjc38
+	G0Q1jD/Jl4enDmVq7/3/D98G51Yly8WIjgkyqH8OuVCy33LT/SY0AYmefraE316/UIUhfIFj05X
+	jYrsnPRht9Ebu/UKz+obqUm6O2HrEyUguXSMLuPQvEjsDz5xsZvs1iEzG8mDtUY4Yjj9G95Ox/b
+	zucwZutzQptJRoKAuylHSmKrWajfQC6BlmmEgCCQPyjIfZ54Q+LalW6aryqXWd/9PwLw6kNcfHN
+	zIv2Nz6pYxqdYQlshcInDtlJlKmX4dqwBWKLG4yvSBvOCPOiEkIlL+Q+hSEVd8+kSOwJg==
+X-Received: by 2002:a7b:c847:0:b0:49e:7981:4294 with SMTP id 5b1f17b1804b1-49e7aabd00fmr241415e9.5.1789382243989;
+        Mon, 14 Sep 2026 03:37:23 -0700 (PDT)
+Received: from localhost ([2a00:79e0:288a:8:1f9e:b6a9:a1f1:7faa])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49e6a06cfb8sm233088375e9.5.2026.09.14.03.37.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Sep 2026 03:37:22 -0700 (PDT)
+From: Jann Horn <jannh@google.com>
+Date: Mon, 14 Sep 2026 12:37:17 +0200
+Subject: [PATCH] perf: Fix refcount leak on perf_cgroup_ensure_storage
+ error
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20260914-perf-cgroup-refleak-v1-1-eac12ba28be6@google.com>
+X-B4-Tracking: v=1; b=H4sIAFzOp2oC/yXMUQ6CMBCE4auQfXYTWhXEqxgfaB1g0UCzFUJCu
+ LsVHr9M5l8pQgWR7tlKilmijEOCOWXku3powfJKJpvbIq+M5QBt2Lc6ToEVzQf1m13lSlwvpix
+ uZ0rPkAZZ9urjeThOrof//lO0bT+IIYJ+dwAAAA==
+X-Change-ID: 20260912-perf-cgroup-refleak-b9b7e5417683
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ James Clark <james.clark@linaro.org>
+Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Jann Horn <jannh@google.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1789382239; l=1382;
+ i=jannh@google.com; s=20240730; h=from:subject:message-id;
+ bh=VoFt/8d9bTF5R80NXayZqE/E40cAkxOPEWZbKvSt2C4=;
+ b=VrzwHWCmiNCTd6jiBqZfsRO9CEkkx1IS5tVp10U8iuLoLM74ZChvxzVfAcPg5b7cBZEtyPTwK
+ qPXUrLzh+qUBkp0AFEPN5evtPJilUnddcl+5h6joAN7RNqY7x1kw8zi
+X-Developer-Key: i=jannh@google.com; a=ed25519;
+ pk=AljNtGOzXeF6khBXDJVVvwSEkVDGnnZZYqfWhP1V+C8=
 
-> From: Wang Han <wanghan@linux.alibaba.com>
->=20
-> Reliable frame-pointer unwinding needs an explicit way to identify
-> exception boundaries and the final entry frame. The existing unwinder
-> infers those boundaries from return addresses, which is too loose for a
-> future reliable unwinder.
->=20
-> Add a small metadata frame record to pt_regs and initialize it on
-> exception entry, kernel stack overflow, kernel thread fork, user fork,
-> and early idle task setup. The record uses a zero {fp, ra} sentinel plus
-> a type field so a later unwinder can distinguish a final user-to-kernel
-> boundary from a nested kernel pt_regs boundary.
->=20
-> This follows the arm64 metadata frame-record model, adapted to the
-> RISC-V {fp, ra} frame record convention.
-> [ ... ]
->=20
-> Reviewed-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> Assisted-by: Qoder:Qwen-3.8-MAX-Preview
-> Signed-off-by: Wang Han <wanghan@linux.alibaba.com>
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+If perf_cgroup_ensure_storage() fails, perf_cgroup_connect() has already
+acquired a reference on the cgroup_subsys_state.
+Drop that reference before returning.
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+This probably doesn't matter in practice - it only makes a difference if
+a kmalloc allocation fails, with allocation size depending on the cgroup
+nesting depth.
 
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914092648.5125=
-4-1-xueshuai@linux.alibaba.com?part=3D1
+Fixes: c2283c9368d4 ("perf/cgroup: Grow per perf_cpu_context heap storage")
+Signed-off-by: Jann Horn <jannh@google.com>
+---
+I've tested manually that forcing the failure path without this patch
+causes the refcount to go up and stay up, while after applying the
+patch, the refcount drops back to its original value.
+---
+ kernel/events/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 33210aff3ee6..557c950eae06 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1143,8 +1143,10 @@ static inline int perf_cgroup_connect(int fd, struct perf_event *event,
+ 		return PTR_ERR(css);
+ 
+ 	ret = perf_cgroup_ensure_storage(event, css);
+-	if (ret)
++	if (ret) {
++		css_put(css);
+ 		return ret;
++	}
+ 
+ 	cgrp = container_of(css, struct perf_cgroup, css);
+ 	event->cgrp = cgrp;
+
+---
+base-commit: 08df884136f1c1197bab2a27814404fd329d9aac
+change-id: 20260912-perf-cgroup-refleak-b9b7e5417683
+
+Best regards,
+--  
+Jann Horn <jannh@google.com>
 
