@@ -1,42 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C93E37A848
-	for <linux-perf-users@vger.kernel.org>; Mon, 14 Sep 2026 17:30:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D033F49551A;
+	Mon, 14 Sep 2026 17:39:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789407009; cv=none; b=YeX6vfxkcMiAMa7PPMcEgflyp83EMgEyGo83zprac2WSIKJGWAjdRNVitgwyZoO6fKNZwiVzBDNmvMoBzK69TmJ87KGFt1i6Z5TaOZXDidoCVMsZjX5bi93/6QjgbHwiiDw30j5LHs/wg5+VXyLPNWEaRLdEaHLSyqGbwPH41jk=
+	t=1789407591; cv=none; b=Ec4hohnVdfp9QMwhtOjfFOMOR5gpdX2E6kJ/Rl3Bvq9BH6vx+gt3vI8gLlfs5KHTmUszngEC57SpTPKjOrc+/NeVHyLZkeGDkIsUdqVMoJsP+DDEpK5EogjC4VQu3H5gXaBMgXXl7p2Lg//y/0kp842+4kw5uqpYpDOzjbErOP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789407009; c=relaxed/simple;
-	bh=e58amcfmuDXgOTGgGJ7Pl4MjuNxx67WMXAJ56gY6B+s=;
+	s=arc-20240116; t=1789407591; c=relaxed/simple;
+	bh=xowSs5X6y2jpvt1cr188yyhw9cv4PZ7/Udl8A89c+Ow=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=iwU1IJPTntiC4EUtDPJW3F8gpxqJUByFF/Fb9pCD8mRqVbu0hj37M1MSsVojuppzOho0m43P5duF3+wwaCktBd0fCZINlqTSl4zT4aY8H7qwwgakFRwLogwzatO7sbGrI7o4AYF5ZHvwm5Uw8u2Q324x3sAswnjDzo2YmAJFkEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hq8MKm+z; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=iYCCJfSkDTlZDWMDtLSYirWF3HhhjCzRqOGoLrUYr7nwQAU7JRjYBidvBzhgbzTs+kwG+yq6xeOtEeJxuN+JoCvqFYGfV/qihfE/+601E7Z2yss5QTXWItnOOotyjSASfXK9UgUItA/DqoTYsPcwWeZNN86xKZcZOf2vik3xE9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fq7P+Vba; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hq8MKm+z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DFD91F000FF;
-	Mon, 14 Sep 2026 17:30:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fq7P+Vba"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55DB21F000FF;
+	Mon, 14 Sep 2026 17:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789407007;
-	bh=zFo2B5psX36ftJToAPl2SIeEtfgzIgL7CKP0PFb4ZMQ=;
+	s=k20260515; t=1789407589;
+	bh=kGvsKbS+uUAsgVL9R+R9s8xtSlNDiXgGCZNSCC3UYxQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=hq8MKm+z5wLjixNauh7i491ipbr/A1evAkeeZA+CoSUR7soyGM0m8rBQHPCBqCRkA
-	 4ocZhfGjsrBAaB95k7RkdpKBXQHsIHWQGS+y397i0vNIQvyWtwzsqiOR47vBgHJbMW
-	 OLyz/gV3tn69x/0Sa6QozOGgx6gA2ksY0LGaDlZD4STUhrSP1wXaPyMqq730pLQYc1
-	 lsMBTN3RjFWOOIfmt/hcIhJuYve1XRB6Qcd+8hSOFsvhcxdX8Iv3Xza6Gi1HljqiHb
-	 8ojEvuKqR58fiwiVvLQD0WZIhqGvwUQ1kjLzQCe1SwTDTTutHWd7k1mJLgKZstR3Yi
-	 cvs4QRBtbA3XQ==
+	b=Fq7P+Vbaq+FUxkcYSDw+Br/lIyPdPsmBCkByCCCRnhL/a3rq2mASd5EWlFUDGvd4Q
+	 i4AxVMWt0Z9ROq260lRmw+9rttdDcGvg/9ktBTkIkX7tcu6/V6HXVOzYv3LsM9zV9c
+	 wMUcuABISg5aJZCsKF4T274WDnCg5coFpxq4D5pLD3hZ7WmDsVHQQ1EuTWfvzhCEdh
+	 hQyK8WhJ85Ryfxfa4VEJF3BDALbmafxqo2PLBzz+iyVXlgDbqhbwUr5fRA4AGfG5Iv
+	 b+/yhQXU1P8SQzW2s7gQ3BBJ7yNqApeASQPBgJWUs4pg8DhjgBdAJdxweGeXmvjUCZ
+	 vydiavCxwVxgQ==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v1 1/2] perf libdw: Fix Dwfl discovery with split files
+Subject: Re: [PATCH v2 11/40] infiniband: update hfi1 to use
+ remap_vmalloc_range()
 Reply-To: sashiko-reviews@lists.linux.dev
-To: "Ian Rogers" <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260914170759.1992947-1-irogers@google.com>
-References: <20260914170759.1992947-1-irogers@google.com>
+To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
+Cc: "Vasily Gorbik" <gor@linux.ibm.com>, dri-devel@lists.freedesktop.org, "Oliver
+ Upton" <oupton@kernel.org>, "Heiko Carstens" <hca@linux.ibm.com>, "Marc
+ Zyngier" <maz@kernel.org>, linux-s390@vger.kernel.org, kvm@vger.kernel.org, bpf@vger.kernel.org, "Christian
+ Borntraeger" <borntraeger@linux.ibm.com>, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, kvmarm@lists.linux.dev, linux-trace-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-perf-users@vger.kernel.org, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>
+In-Reply-To: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-11-7d9781ed5361@kernel.org>
+References: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org>
+ <20260914-b4-mmap-prepare-vma-flag-sanify-v2-11-7d9781ed5361@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 14 Sep 2026 17:30:07 +0000
-Message-Id: <20260914173007.9DFD91F000FF@smtp.kernel.org>
+Date: Mon, 14 Sep 2026 17:39:47 +0000
+Message-Id: <20260914173948.55DB21F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,65 +51,83 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-
-Pre-existing issues:
-- [High] Early error return in `cmd__addr2line` leaves the addr2line subpro=
-cess pipe in a dirty state, corrupting subsequent IPC queries.
+- [High] The patch breaks mmap for the EVENTS region for all dynamic contex=
+ts because remap_vmalloc_range() strictly requires the base address of the =
+vmalloc allocation, but the patch passes a pointer with an offset.
 --
 
-commit 15f52b88a78ae8721f4ec48695f230d6450c86f6
-Author: Ian Rogers <irogers@google.com>
+commit b52cc1703a348bc2ace5ff6752750d7fd8d2282e
+Author: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-perf libdw: Fix Dwfl discovery with split files
+infiniband: update hfi1 to use remap_vmalloc_range()
 
-This patch dynamically frees the cached Dwfl object and alternative a2l
-caches whenever a newly discovered split-debug file is assigned to a
-dso, and scopes accessors behind a mutex.
+This commit updates the hfi1 infiniband driver to use remap_vmalloc_range()
+for mapping chip memory from vmalloc'd ranges instead of using a custom
+fault handler. It aims to prevent exposing kernel virtual addresses and
+cleans up VM flags.
 
-> diff --git a/tools/perf/util/addr2line.c b/tools/perf/util/addr2line.c
-> index 4b0d349ed334b..7c7eea3cc8dd2 100644
-> --- a/tools/perf/util/addr2line.c
-> +++ b/tools/perf/util/addr2line.c
+> diff --git a/drivers/infiniband/hw/hfi1/file_ops.c b/drivers/infiniband/h=
+w/hfi1/file_ops.c
+> --- a/drivers/infiniband/hw/hfi1/file_ops.c
+> +++ b/drivers/infiniband/hw/hfi1/file_ops.c
+> @@ -476,15 +472,10 @@ static int hfi1_file_mmap(struct file *fp, struct v=
+m_area_struct *vma)
+>  		 * Use the page where this context's flags are. User level
+>  		 * knows where it's own bitmap is within the page.
+>  		 */
+> -		memaddr =3D (unsigned long)
+> -			(dd->events + uctxt_offset(uctxt)) & PAGE_MASK;
+> +		memvirt =3D dd->events + uctxt_offset(uctxt);
+> +		memvirt =3D (void *)(((uintptr_t)memvirt) & PAGE_MASK);
+>  		memlen =3D PAGE_SIZE;
+> -		/*
+> -		 * v3.7 removes VM_RESERVED but the effect is kept by
+> -		 * using VM_IO.
+> -		 */
+> -		flags |=3D VM_IO | VM_DONTEXPAND;
+> -		vmf =3D 1;
+> +		is_vmalloc =3D 1;
+>  		break;
+>  	case STATUS:
+
 [ ... ]
-> @@ -414,12 +426,21 @@ int cmd__addr2line(const char *dso_name, u64 addr,
+
+> @@ -559,12 +546,10 @@ static int hfi1_file_mmap(struct file *fp, struct v=
+m_area_struct *vma)
 >  	}
 > =20
->  out:
-> +	mutex_lock(dso__lock(dso));
->  	free(record_function);
->  	free(record_filename);
-> -	if (io.eof) {
-> -		dso__set_a2l(dso, NULL);
-> +
-> +	current_dso_name =3D dso__symsrc_filename(dso) ?: dso__long_name(dso);
-> +	if (!io.eof && dso__a2l(dso) =3D=3D NULL && current_dso_name &&
-> +	    !strcmp(current_dso_name, dso_name))
-> +		dso__set_a2l(dso, a2l);
+>  	vm_flags_reset(vma, flags);
+> -	mmap_cdbg(ctxt, subctxt, type, mapio, vmf, memaddr, memvirt, memdma,=20
+> +	mmap_cdbg(ctxt, subctxt, type, mapio, is_vmalloc, memaddr, memvirt, mem=
+dma,
+>  		  memlen, vma);
+> -	if (vmf) {
+> -		vma->vm_pgoff =3D PFN_DOWN(memaddr);
+> -		vma->vm_ops =3D &vm_ops;
+> -		ret =3D 0;
+> +	if (is_vmalloc) {
+> +		ret =3D remap_vmalloc_range(vma, memvirt, 0);
 
 [Severity: High]
-This is a pre-existing issue, but an early error return in cmd__addr2line()
-(such as a memory allocation failure when calling inline_list__append_recor=
-d()
-or a parsing failure in read_addr2line_record()) aborts the read loop and
-jumps here without consuming the rest of the IPC stream.
+Will this fail for secondary contexts where uctxt_offset(uctxt) > 0?
 
-Since EOF is not reached during an early abort, does this incorrectly
-restore the dirty subprocess pipe back into the cache? It appears this
-leaves unread output in the pipe, which could corrupt subsequent address
-resolutions for this DSO when other threads query it and read the
-leftover garbage data.
+When mapping the EVENTS region for any context > 0, memvirt is calculated as
+an offset from the vmalloc base address (dd->events). However,
+remap_vmalloc_range() strictly requires the exact base address of the
+vmalloc allocation.=20
 
-> +	else
->  		addr2line_subprocess_cleanup(a2l);
-> -	}
-> +	mutex_unlock(dso__lock(dso));
-> +	return ret;
-> +
-> +out_unlock:
-> +	mutex_unlock(dso__lock(dso));
->  	return ret;
->  }
+Because remap_vmalloc_range() expects the provided address to exactly match
+the area base address, won't it unconditionally return -EINVAL when passed
+this interior pointer?=20
+
+If so, does this mean userspace applications attempting to mmap the EVENTS
+page for any dynamic context will receive an unexpected -EINVAL error,
+breaking core functionality for secondary contexts?
+
+>  	} else if (memdma) {
+>  		ret =3D dma_mmap_coherent(&dd->pcidev->dev, vma,
+>  					memvirt, memdma, memlen);
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914170759.1992=
-947-1-irogers@google.com?part=3D1
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914-b4-mmap-pr=
+epare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org?part=3D11
