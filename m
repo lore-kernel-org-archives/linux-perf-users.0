@@ -1,47 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7342DC792;
-	Mon, 14 Sep 2026 22:47:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F4F73630AC;
+	Mon, 14 Sep 2026 22:47:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789426022; cv=none; b=tX5NEslV1NQavDqdaTJrheIp0cXuABaGYEStZCJ45+zy64fvtptK8D1N25MDWbmyRS4Xg7ZVafrpBZHdt7ialpI6Tc4HqVEZMgOqqU1jLf/pvaFFk1C2ORZ5rbFZPPR0qmy3KpygYOJbPNzAsY/LpH7qcDL22FxFFn8YvLugGxo=
+	t=1789426024; cv=none; b=tJXUXpZAhYTSwpUREwfpJ0d51XeMO+xXr7Y4SPlwm7gFW7letsz2rT8eIIFRt4U0W4gMPmfwPdFgWU5BV1r3k4l/aNSQSAE7hsiMfP8rnIfzoVPzBmqGZFPWsl5f/3xpQDDnaM2YE+0NhrUc6xYG4HlX6FO6/IcJN2yFJAUYa5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789426022; c=relaxed/simple;
-	bh=kh+QQ6ry8vOKWEyv/eS4sTqcIET1KjfY0N6gpysN7fw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tTw9IASoO68J34TDgK2b1xjSKWcS1rmeurXbVqxGFpFr8qNiKnWNsYhnVFPtvF4YlcMXhiJUxKmnRmvgdTe3qGpUIAgOV6e65wugrxgMX5kIEAX91d4xLQKljRsnpFwaZf2gbiexrjXfUc2fAeI+2oBNla2jNxnQ/oTKo7BVYzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bDMf7vVo; arc=none smtp.client-ip=198.175.65.15
+	s=arc-20240116; t=1789426024; c=relaxed/simple;
+	bh=yTOa3uyq03oDEB7rUBOaYUoZhV+lRryyQaR/6S5HJi4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TVf0M+3QTnHXA20xM23M8Mkv1ti2B6euiwFi1aaSsPDeW7wipQsAvZtazp2wQ7148EIkjXT7COWCFBcaqmIGEGRZ6o61+McrWxVhZ0M+C8L1aftUQYaxIGsaGBO6gpl+q+PIai2nCoz656CyNE2+UFKZoeC/SuufotCSNwFGzr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SUqaZ3Sb; arc=none smtp.client-ip=198.175.65.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bDMf7vVo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SUqaZ3Sb"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1789426021; x=1820962021;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kh+QQ6ry8vOKWEyv/eS4sTqcIET1KjfY0N6gpysN7fw=;
-  b=bDMf7vVonuo7ag6oUAx2kSP5u7pi6HwE9Y+BuRuCYViDEHQDWOSk/hbk
-   7r40Vk3yrueY7aUxhSX95VbxG28HwmACE0EPxK7cAdIhLQySUdgInYQO5
-   lnwpZ3Z3FcPQF7qVTrW8BC6Ifvc3s8pfJNMlWQLEgBPrHEiH2e1em2QMw
-   3fLkE+fMT+9lKRZjABs/8c64WZ9R8rsjIKVtHI5oAIqXXravLKzz7q/Fm
-   lntQgU1BSOaoYV2EWRN2fCNb3f0xJy+G3X8vVAHVWPrMyeqo2DlXju0Va
-   YsnJOn4abqZQFCdRrZ8xVRVM4Aa6PxwyWQXG7rV+P/MFcj8WgowfRaUcW
+  t=1789426022; x=1820962022;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=yTOa3uyq03oDEB7rUBOaYUoZhV+lRryyQaR/6S5HJi4=;
+  b=SUqaZ3Sb7x+P3tn3FWJ6rfm93o9AHDExU4gGRoQ5U7QuLPDXPdZno0Iw
+   Hf0SbH1wJxr3hZhyjun9Vx0HOMCVRe3KvT6H7EGGrwQol26xH+K5ubhwv
+   pwrffLOiMjRArnaPDSKIJjveTw2EgJU/AgWKgut699W62C/bQnG6JGmWs
+   uIaSm53puseAnU5mfukbxB7ExESdOmXpTLNp+yGn242NsHeEW2Vg/gABC
+   DDmcb5tosWkQdJKO4AHcQLa9pX//1B9/PTOqBhpb5voJC8hKJA/IGPtpm
+   FNW78vmMsR2rYunkv3muMHbNFj3ct+Tsb3Slh2upzH/KsNeM56EFkRmmu
    g==;
-X-CSE-ConnectionGUID: N1RMs8Y7R7yhbregWl+wyA==
-X-CSE-MsgGUID: RTe3B2PfSam7E5Lh5cUsWA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="93483206"
+X-CSE-ConnectionGUID: 5qcDf/m/REOvMMsEGN2BFg==
+X-CSE-MsgGUID: hpfuf4dDS/ere00ElShxmg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11905"; a="93483220"
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="93483206"
+   d="scan'208";a="93483220"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2026 15:47:00 -0700
-X-CSE-ConnectionGUID: oPk1XuhSTgW6RgtzZF4wBw==
-X-CSE-MsgGUID: Frnz3MZNQQGp9e3UTb3AfQ==
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2026 15:47:02 -0700
+X-CSE-ConnectionGUID: NuA3RJn7T+OBm4G8orW0Nw==
+X-CSE-MsgGUID: jqrWVrM2SSq3TJVK3ZX7hw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.27,103,1787036400"; 
-   d="scan'208";a="268480088"
+   d="scan'208";a="268480097"
 Received: from khuang2-desk.gar.corp.intel.com (HELO tfalcon-desk.attlocal.net) ([10.124.223.56])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2026 15:46:59 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Sep 2026 15:47:01 -0700
 From: Thomas Falcon <thomas.falcon@intel.com>
 To: Dapeng Mi <dapeng1.mi@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org,
@@ -56,10 +57,12 @@ Cc: linux-perf-users@vger.kernel.org,
 	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>
-Subject: [PATCH v9 0/6] perf: Add support for memory region/range reporting
-Date: Mon, 14 Sep 2026 17:46:44 -0500
-Message-ID: <20260914224650.52982-1-thomas.falcon@intel.com>
+Subject: [PATCH v9 2/6] perf mem: Add support for printing PERF_MEM_LVLNUM_L0
+Date: Mon, 14 Sep 2026 17:46:46 -0500
+Message-ID: <20260914224650.52982-3-thomas.falcon@intel.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20260914224650.52982-1-thomas.falcon@intel.com>
+References: <20260914224650.52982-1-thomas.falcon@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,113 +71,107 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for two memory-related reporting features in the perf tool:
+From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 
-1. Memory region reporting in perf-c2c and perf-script subcommands.
-2. Memory range data in perf.data file header and perf-c2c subcommand.
+Add support for printing PERF_MEM_LVLNUM_L0 in perf mem report.
 
-Memory region reporting was introduced as part of support for the
-Off-module Response facility (OMR) [1], which provides a new data
-source encoding supporting "up to 8 fine-grained memory regions in
-addition to the cache region, offering more detailed insights into
-memory access regions."
+The L0 cache is newly added a small piece of cache which is
+the closest, lowest-latency memory cache tied directly to the
+execution pipeline.
 
-Memory Range support was introduced with the addition of the ACPI Memory
-Range and Region Mapping (MRRM) [2] table. It provides a base address plus
-a length value for each memory range, as well as NUMA node and local and
-remote "region ID's" so that "platform firmware can indicate the type of
-memory for each range."[3]
+The table "Table 9-4. Data Source Field Encodings for Panther
+Cove and Coyote Cove Microarchitectures" in the ISE doc chapter
+"9.2.1 Panther Cove and Coyote Cove Microarchitectures Memory
+Auxiliary Field Layout"[1] indicates the code "01H" means the
+"L0 Hit - Minimal latency core cache hit. This request was
+satisfied by the L0 data cache."
 
-Include a change allowing PERF_MEM_LVLNUM_L0 to be printed in
-perf-mem output as well.
+[1]: https://www.intel.com/content/www/us/en/content-details/922690/intel-architecture-instruction-set-extensions-programming-reference.html
 
-[1]: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
-[2]: https://lore.kernel.org/lkml/20250505173819.419271-1-tony.luck@intel.com/
-[3]: MRRM definition allow for future expansion for the OS to assign
-these region IDs.
+Assisted-by: Sashiko:gemini-3.1-pro-preview
+Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Reviewed-by: Ian Rogers <irogers@google.com>
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Co-developed-by: Thomas Falcon <thomas.falcon@intel.com>
+Signed-off-by: Thomas Falcon <thomas.falcon@intel.com>
+---
+v8: Updated developer tags
+v3: Included more information about the L0 cache in the commit message.
+---
+ tools/perf/Documentation/perf-record.txt | 2 +-
+ tools/perf/util/bpf-filter.l             | 1 +
+ tools/perf/util/mem-events.c             | 5 +++++
+ tools/perf/util/mem-events.h             | 1 +
+ 4 files changed, 8 insertions(+), 1 deletion(-)
 
-v9:
--- Fixed incorrect developer tags and updated perf-c2c to include cache
-   region reporting (Dapeng Mi)
-
-v8:
--- Updated developer tags and commit messages with real example output
-   from perf script and perf c2c (Dapeng Mi)
-
-v7:
--- perf-c2c: fix output_str allocation error handling that introduces a
-   memory leak (Sashiko)
-
-v6: 
--- Rebase on 7.3-rc1
-
-v5:
--- perf-c2c: make the cacheline header span and ui_quirks() width
-   fixup depend on memory-region availability (Namhyung Kim)
-
-v4:
--- perf-script: gate the Region field on the HEADER_MEMORY_RANGES feature
-   bit via perf_session instead of a global flag, with a pipe-mode fallback
--- perf-c2c: fix output_str allocation error handling
--- perf header: Fix typo in region id bounds checking which made region 255
-   invalid
-
-v3:
--- included missing ff-size check in process_memory_ranges
--- make memory region reporting in perf c2c-and perf-script conditional
-   on feature bit, requiring some patch reordering (Namhyung Kim)
--- used open/openat to read memory range sysfs files in memory_range__read()
-   (Namhyung Kim)
--- Removed path name and file name buffers in memory_range__read(),
-   instead pass path name from as a parameter from memory_range__parse()
-   (Namhyung Kim)
--- use calloc instead of zalloc in memory_range__parse() and
-   process_memory_ranges() (Namhyung Kim)
--- Removed redundant check for existence of memory range directory in
-   memory_range__read() (Namhyung Kim)
--- Included output examples of memory ranges in perf header and perf-c2c
-   in commit message (Namhyung Kim)
-
-v2:
--- Added missing newline in WARN_ONCE message in c2c_he__set_mem_region()
--- increased buffers passed to perf_script__meminfo_scnprintf() from 150
-   to 200 bytes to avoid silent truncation
--- Added check for NULL return of sysfs__mountpoint() when parsing
-   memory ranges in sysfs
--- increased MAX_MEMORY_RANGES sanity check from 64 to 256 based on
-   ACPI MRRM table implementation in Linux kernel
--- added comment for MAX_MEMORY_RANGES to clarify that it is a sanity check
-   for malformed perf.data files
--- removed a line of code was removed from util/env.h but was added back in
-   v1 due to bad rebase
-
-Dapeng Mi (3):
-  perf mem: Add support for printing PERF_MEM_LVLNUM_L0
-  perf tools: Show memory region in perf-c2c subcommand
-  perf tools: Show memory region in perf-script subcommand
-
-Thomas Falcon (3):
-  perf mem: Fix size tracking for mem_lvl's in
-    perf_script__meminfo_scnprintf()
-  perf header: Support memory ranges
-  perf c2c: print memory region data with stdio output
-
- tools/perf/Documentation/perf-record.txt      |   2 +-
- .../Documentation/perf.data-file-format.txt   |  13 ++
- tools/perf/builtin-c2c.c                      | 156 +++++++++++++-
- tools/perf/builtin-inject.c                   |   1 +
- tools/perf/builtin-script.c                   |  13 +-
- tools/perf/util/bpf-filter.l                  |   1 +
- tools/perf/util/c2c.h                         |   1 +
- tools/perf/util/env.c                         |   1 +
- tools/perf/util/env.h                         |  10 +
- tools/perf/util/header.c                      | 203 ++++++++++++++++++
- tools/perf/util/header.h                      |   1 +
- tools/perf/util/mem-events.c                  |  93 +++++++-
- tools/perf/util/mem-events.h                  |   5 +-
- .../scripting-engines/trace-event-python.c    |   5 +-
- 14 files changed, 482 insertions(+), 23 deletions(-)
-
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 2c6510c5a87b..17030ecac577 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -212,7 +212,7 @@ OPTIONS
+ 	The <value> can be one of:
+ 	  <number> (for any term)
+ 	  na, load, store, pfetch, exec (for mem_op)
+-	  l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem (for mem_lvl)
++	  l0, l1, l2, l3, l4, cxl, io, any_cache, lfb, ram, pmem (for mem_lvl)
+ 	  na, none, hit, miss, hitm, fwd, peer (for mem_snoop)
+ 	  remote (for mem_remote)
+ 	  na, locked (for mem_locked)
+diff --git a/tools/perf/util/bpf-filter.l b/tools/perf/util/bpf-filter.l
+index 6aa65ade3385..1be9df6550fc 100644
+--- a/tools/perf/util/bpf-filter.l
++++ b/tools/perf/util/bpf-filter.l
+@@ -131,6 +131,7 @@ store		{ return constant(PERF_MEM_OP_STORE); }
+ pfetch		{ return constant(PERF_MEM_OP_PFETCH); }
+ exec		{ return constant(PERF_MEM_OP_EXEC); }
+ 
++l0		{ return constant(PERF_MEM_LVLNUM_L0); }
+ l1		{ return constant(PERF_MEM_LVLNUM_L1); }
+ l2		{ return constant(PERF_MEM_LVLNUM_L2); }
+ l3		{ return constant(PERF_MEM_LVLNUM_L3); }
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index 4e490f9cd348..4fd48fd20055 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -391,6 +391,7 @@ static const char * const mem_lvlnum[] = {
+ 	[PERF_MEM_LVLNUM_L4] = "L4",
+ 	[PERF_MEM_LVLNUM_L2_MHB] = "L2 MHB",
+ 	[PERF_MEM_LVLNUM_MSC] = "Memory-side Cache",
++	[PERF_MEM_LVLNUM_L0] = "L0",
+ 	[PERF_MEM_LVLNUM_UNC] = "Uncached",
+ 	[PERF_MEM_LVLNUM_CXL] = "CXL",
+ 	[PERF_MEM_LVLNUM_IO] = "I/O",
+@@ -831,6 +832,8 @@ int mem_stat_index(const enum mem_stat_type mst, const u64 val)
+ 		}
+ 	case PERF_MEM_STAT_CACHE:
+ 		switch (src.mem_lvl_num) {
++		case PERF_MEM_LVLNUM_L0:
++			return MEM_STAT_CACHE_L0;
+ 		case PERF_MEM_LVLNUM_L1:
+ 			return MEM_STAT_CACHE_L1;
+ 		case PERF_MEM_LVLNUM_L2:
+@@ -915,6 +918,8 @@ const char *mem_stat_name(const enum mem_stat_type mst, const int idx)
+ 		}
+ 	case PERF_MEM_STAT_CACHE:
+ 		switch (idx) {
++		case MEM_STAT_CACHE_L0:
++			return "L0";
+ 		case MEM_STAT_CACHE_L1:
+ 			return "L1";
+ 		case MEM_STAT_CACHE_L2:
+diff --git a/tools/perf/util/mem-events.h b/tools/perf/util/mem-events.h
+index 5b98076904b0..daa22748f9fe 100644
+--- a/tools/perf/util/mem-events.h
++++ b/tools/perf/util/mem-events.h
+@@ -109,6 +109,7 @@ enum mem_stat_op {
+ };
+ 
+ enum mem_stat_cache {
++	MEM_STAT_CACHE_L0,
+ 	MEM_STAT_CACHE_L1,
+ 	MEM_STAT_CACHE_L2,
+ 	MEM_STAT_CACHE_L3,
 -- 
 2.55.0
 
