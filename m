@@ -1,110 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E828749B1F0;
-	Mon, 14 Sep 2026 15:31:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B620047A88C;
+	Mon, 14 Sep 2026 15:40:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789399885; cv=none; b=MPtYa/vSBpUJu/b/H4bbVLjyCBuST7Meb59IGLSJuWm/A/rRpAA+XxdfoXowWtwXMWq+EmjUqXYfOTt1QB1YSRu6MwhIukoo+9PDnJE8c57nQhWixY5rnKIMZHTttlS+di5vN34uTaQkzO3x09zvQFIngeNI/I/eg2KZBsRft64=
+	t=1789400424; cv=none; b=idVTcattFc2KsW1VC/dSudjiPk7rX083dz2QEJofOW/ekzfXBhCF/wzcH81HIe1A/56vP36KsM8aeDsWyzuEisaYxGvZ15oMwL/TjK9S7VwpV+OpysOIPw+PFyAj6B/HDdUL0j1aJHzWgONUYdEoeeJRftN4BKNGB6+sPoLqXEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789399885; c=relaxed/simple;
-	bh=W+U/rCt6aUK3pukanrLOxptv8XEN9hA8AU/asIRljhY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=N3/2aRX56Z5onoaLhFB+7vlg+FgkmrKkbFKXrTrP5yFi/lt3ysX3iQNgNNGuhG1tjPDTq2JHDLGmt6g0Rr4caMK4WtzZ03Pi+g5a4JqVySjJ1Zm8Tv2EzpisBZ/sI0AZ7tTNNBWvPbVvmOlDaww2+3MgiSERrhIfpxyL8Rzyth8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RbCEKtn4; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789400424; c=relaxed/simple;
+	bh=mBF6+D5851OP0+RBXASeBH5sGFKcTHTWtmvG0ev37TI=;
+	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
+	 Message-Id; b=gl8kyDlP+lvdYvaxVhCbRcU0TtHQCR6v4ZAeCwsNPUSetNHXA/uJJAi6bs/iLFc9lotMH6/asiwC/Q4k0KNATggOMYP68oPQXfwLjJzsg3BIKxCqJTo3LtzVBp1Tu40yQJVb8yqepkA6GE6JrF0BTSN+bEpvl7C4Lv6+N33aHaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HfT6yU8H; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RbCEKtn4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73F361F0089A;
-	Mon, 14 Sep 2026 15:31:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HfT6yU8H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AAAD1F000FF;
+	Mon, 14 Sep 2026 15:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789399883;
-	bh=nR/vh4GvI0WOU5I3SDjzgrYVoTA8r4/N125W3zwVcoM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc;
-	b=RbCEKtn4AO+w1y1Nm4+9OPjd3F5HeNMHAg3uez+4FdxFCGDSSpv7EiKf+nOYlAqRD
-	 WpbEgLLqAW4/l8pXzRAprjeTjPg5iYhCGnBEarYYppZgnkrHtBmnFS9mupbuYxw5uF
-	 9IaiI70goJcN/QHzRT88UUSpAI4Re7c2DETfrByKeR3s4TjTlq6nG8lVpXAeCBJkvv
-	 0JK4xXezKzgYlQ+Oc3bwKs3QN943NILxYGwTYwEDkh+jk8qAJukkZVAb2U57/OORtM
-	 maeohl2NdOmJIEX01jxCO7utzNVfC1W0jyXsjrJ+AH6xFXa9Zfjke3MaE5gkTOu/bL
-	 U9AI6BB36tibg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id D092A3924A79;
-	Mon, 14 Sep 2026 15:30:19 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20260515; t=1789400422;
+	bh=mBF6+D5851OP0+RBXASeBH5sGFKcTHTWtmvG0ev37TI=;
+	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
+	b=HfT6yU8HaojhFMvk9XASK5imu2bqOTKnurQmiy6//QQT9JnJ7A2OWp3WVyisKXRPv
+	 IHWD6mzbSvvf+AZtpY1n/Ir2562C0cezM64uGVgOAPtNBERHDGaZAwIenkhxf9Lp8n
+	 Ia3qK0dObEeCJSlRyG6Wq9BCJ96GbY1TSwp7JqDL5pCFwFcw2r1xRHU9R7J3iLDydA
+	 5G3b/iDTN6aXJTbk1/tGhU4ZOH4IF6Glt83ooxLVwQwuyOOlFUZLs2gliARgvgUw1Z
+	 4lTGTf8aXMaClZgcw6dPg08zoHhS8l29ysC7+MTm0m/utmYsbdoL1MynkbAJYB5XLt
+	 +T/mXIrITmMhg==
+From: sashiko-bot@kernel.org
+Subject: Re: [PATCH v2 01/40] mm/vma: fix mmap_prepare file handling, remove
+ file_doesnt_need_get
+Reply-To: sashiko-reviews@lists.linux.dev
+To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
+Cc: "Christian Borntraeger" <borntraeger@linux.ibm.com>, linux-scsi@vger.kernel.org, "Heiko
+ Carstens" <hca@linux.ibm.com>, linux-rdma@vger.kernel.org, "Marc Zyngier" <maz@kernel.org>, linux-s390@vger.kernel.org, selinux@vger.kernel.org, bpf@vger.kernel.org, "Oliver
+ Upton" <oupton@kernel.org>, "Vasily Gorbik" <gor@linux.ibm.com>, linux-perf-users@vger.kernel.org, kvm@vger.kernel.org, linux-trace-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, "Alexander
+ Gordeev" <agordeev@linux.ibm.com>, kvmarm@lists.linux.dev
+In-Reply-To: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-1-7d9781ed5361@kernel.org>
+References: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org>
+ <20260914-b4-mmap-prepare-vma-flag-sanify-v2-1-7d9781ed5361@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 14 Sep 2026 15:40:21 +0000
+Message-Id: <20260914154021.7AAAD1F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH v4 00/16] Remove PG_private by using
- page/folio->private checks instead
-From: patchwork-bot+f2fs@kernel.org
-Message-Id: 
- <178939981839.647967.9641554131485178993.git-patchwork-notify@kernel.org>
-Date: Mon, 14 Sep 2026 15:30:18 +0000
-References: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
-In-Reply-To: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
-To: Zi Yan <ziy@nvidia.com>
-Cc: david@kernel.org, willy@infradead.org, akpm@linux-foundation.org,
- muchun.song@linux.dev, ljs@kernel.org, liam@infradead.org, vbabka@kernel.org,
- rppt@kernel.org, surenb@google.com, mhocko@suse.com,
- baolin.wang@linux.alibaba.com, nico.pache@linux.dev, ryan.roberts@arm.com,
- dev.jain@arm.com, baohua@kernel.org, lance.yang@linux.dev,
- usama.arif@linux.dev, gourry@gourry.net, ying.huang@linux.alibaba.com,
- apopple@nvidia.com, hannes@cmpxchg.org, qi.zheng@linux.dev,
- shakeel.butt@linux.dev, kasong@tencent.com, mark.rutland@arm.com,
- irogers@google.com, jack@suse.cz, linux-doc@vger.kernel.org,
- amarkuze@redhat.com, peterz@infradead.org, kexec@lists.infradead.org,
- dave.hansen@linux.intel.com, ruirui.yang@linux.dev, adrian.hunter@intel.com,
- linux-mm@kvack.org, hongbohbli@tencent.com, hpa@zytor.com,
- guochunhai@vivo.com, skhan@linuxfoundation.org, tz2294@columbia.edu,
- baoquan.he@linux.dev, matthew.brost@intel.com, anna@kernel.org,
- sstabellini@kernel.org, zbestahu@gmail.com, rakie.kim@sk.com,
- minchan@kernel.org, richard@nod.at, x86@kernel.org,
- ceph-devel@vger.kernel.org, ebiggers@kernel.org,
- alexander.shishkin@linux.intel.com, mingo@redhat.com, slava@dubeyko.com,
- weixugc@google.com, yukuai@fygo.io, xen-devel@lists.xenproject.org,
- xiang@kernel.org, magiclinan@didiglobal.com, mhiramat@kernel.org,
- joshua.hahnjy@gmail.com, xiao@kernel.org, byungchul@sk.com,
- james.clark@linaro.org, acme@kernel.org, linux-raid@vger.kernel.org,
- linux-fscrypt@vger.kernel.org, bp@alien8.de, rostedt@goodmis.org,
- linux-mtd@lists.infradead.org, axelrasmussen@google.com,
- jefflexu@linux.alibaba.com, namhyung@kernel.org, jaegeuk@kernel.org,
- yuanchu@google.com, idryomov@gmail.com, osalvador@suse.de, jgross@suse.com,
- pratyush@kernel.org, linux-nfs@vger.kernel.org, tytso@mit.edu,
- oleksandr_tyshchenko@epam.com, song@kernel.org, corbet@lwn.net,
- pasha.tatashin@soleen.com, linux-kernel@vger.kernel.org,
- linux-f2fs-devel@lists.sourceforge.net, linux-perf-users@vger.kernel.org,
- senozhatsky@chromium.org, tglx@kernel.org, jolsa@kernel.org,
- linux-fsdevel@vger.kernel.org, mathieu.desnoyers@efficios.com,
- linux-trace-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
- trondmy@kernel.org
 
-Hello:
+> The map->file_doesnt_need_get flag is confusing and the existing
+> implementation has holes.
+>=20
+> Drivers are permitted to change the owning file of a mapping. If they do
+> so, they are required to take a reference on that file.
+>=20
+> The mmap() operation which ultimately invokes __mmap_region() is guarante=
+ed
+> to drop the refcount for the original file the mapping was made under, but
+> this is not true for the replaced file.
+>=20
+> This has been addressed so far by tracking map->file_doesnt_need_get, whi=
+ch
+> is rather poorly named and unfortunately fails to correctly track whether
+> or not an additional put were needed in a number of cases.
+>=20
+> Make life easier by removing this flag, and instead drop the reference for
+> [ ... ]
+> No in-tree driver is impacted by the incorrect implementation of this
+> currently (no driver that does this is mergeable for one), so this does n=
+ot
+> need to be a fix.
+>=20
+> Signed-off-by: Lorenzo Stoakes (ARM) <ljs@kernel.org>
 
-This series was applied to jaegeuk/f2fs.git (dev)
-by Jaegeuk Kim <jaegeuk@kernel.org>:
+Sashiko has reviewed this patch and found no issues. It looks great!
 
-On Sun, 13 Sep 2026 22:23:58 -0400 you wrote:
-> Hi all,
-> 
-> This patchset removes PG_private to make space for upcoming PG_folio for
-> identifying pages from a folio (more details in Note below). Instead of
-> checking PG_private, all code is changed to check page/folio->private !=
-> NULL instead.
-> 
-> [...]
-
-Here is the summary with links:
-  - [f2fs-dev,v4,06/16] f2fs: stop using PG_private
-    https://git.kernel.org/jaegeuk/f2fs/c/60105162524e
-  - [f2fs-dev,v4,07/16] f2fs: convert the ->private flag helpers to folio-only
-    (no matching commit)
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+--=20
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914-b4-mmap-pr=
+epare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org?part=3D1
 
