@@ -1,127 +1,142 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADB33BB57;
-	Mon, 14 Sep 2026 04:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44200378838;
+	Mon, 14 Sep 2026 05:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789359701; cv=none; b=YoKTO25J78SgDdD0B8ynYQm7GTb0jIBxBpF12z6fQtxXJHtRv5d/B/zN+ivtEL4on80KNkuGOC2IlXgRHdsNNCTjVlHUmXOluZHvja40ftozplkkE1FgC/PfbZbEluCs6c09U5pDVTF+VnI/1qlTV1Fo4jds9oiamb3tV5pBM9c=
+	t=1789362803; cv=none; b=lYMAFpaDGHSbMJinDAw/rb+gCO39x9jT5Dmo0SUJvPeIhxYLNhf/J3ZbnOQ3uevgdshMLdZoU/U0cMMezOxIrKpnKPKB5ABsG4l+eP9xJSTY3LoDgFHIw76SIbC0S0vJiO7yD1UL9zyr5Y9gV8HjlWogdyNdWooqMuMK2vaY1v8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789359701; c=relaxed/simple;
-	bh=5yBImpPhXxVUThXrTXYsYs0uHEPA90uyj7jZucucxoA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IJpIFWEeEQBbGDfBYE8HItsPHn5Bc+nOAcgIJIKzTdCgW2KxhMIiA05mkKJcKxxe+gGUJvRwnuW04utsLpN6VxkYNfXdQ+RmNDcCDja81DeO7R3DSiQK0XYuGk4qnkT5ZkBAZqRWW4dNM2psZ8WCkFDWknLNXH81wOJ3l52Am/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org; spf=pass smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=VHq/c8Pp; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1789362803; c=relaxed/simple;
+	bh=ShlXuzxZadkMUnumu1QyerviMgXXNhLujivlqa0nfII=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=enxOt+Rk3PbX0RdkndO+311YFaLRq2HWR0aNrmTypG+gGoKpHifV/cLHjyzcU7qZDcclIppU53iKO0nMi/1dX6s1y7i9Xo2hwwkin/xBgpP6nLl3kEuCw9dHE6wYxTmqoJ2Q4hjRbCroo0X8w2+/+klhJYDoj+QiX+63G7iAKl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fZ9jmaGX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VHq/c8Pp"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=XIa/QTT2Vtv8NiYChAuw57Ae+l0UAwkEY31SNMwQavs=; b=VHq/c8Pp7UCdPy63XwI1Y7/evy
-	Zs6wNzMUH3y9lsWgsWNb5RSGYeSQu3+dwRZdgXhGjQadm2skLDAn/gsZQSr0RPAMMeECDGpa+etFJ
-	GZ9W0qUhgJ+QpqD56J7NZ5uRTrraPD2HDAatD107Dp3uDh0n+iOUAQepIYxNbT07CT1OivKUu4rqR
-	9T7pMp18HVSaFbknP5sOsW0VTb6JH/cNVnoDNqHZ/wAn8VlL9cIRO8bUeAaRAYVhxkupw1SgasBjf
-	4D0IoMEvGnWlzdIMpEsme0E/QLtp6CUPuirl9Z1VPsWGxuq6MgoCtKLvy6o4mAhIx6zXHL2D24MjY
-	lZwDMIbg==;
-Received: from willy by casper.infradead.org with local (Exim 4.99.1 #2 (Red Hat Linux))
-	id 1x5yBr-00000008huW-1WeH;
-	Mon, 14 Sep 2026 04:21:11 +0000
-Date: Mon, 14 Sep 2026 05:21:11 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Zi Yan <ziy@nvidia.com>
-Cc: David Hildenbrand <david@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>,
-	Lorenzo Stoakes <ljs@kernel.org>,
-	"Liam R. Howlett" <liam@infradead.org>,
-	Vlastimil Babka <vbabka@kernel.org>,
-	Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Nico Pache <nico.pache@linux.dev>,
-	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
-	Barry Song <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>,
-	Usama Arif <usama.arif@linux.dev>,
-	Gregory Price <gourry@gourry.net>,
-	Ying Huang <ying.huang@linux.alibaba.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>,
-	Shakeel Butt <shakeel.butt@linux.dev>,
-	Kairui Song <kasong@tencent.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
-	Sergey Senozhatsky <senozhatsky@chromium.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	"H. Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	xen-devel@lists.xenproject.org, Eric Biggers <ebiggers@kernel.org>,
-	"Theodore Y. Ts'o" <tytso@mit.edu>,
-	Jaegeuk Kim <jaegeuk@kernel.org>, linux-fscrypt@vger.kernel.org,
-	Oscar Salvador <osalvador@suse.de>, Chao Yu <chao@kernel.org>,
-	linux-f2fs-devel@lists.sourceforge.net,
-	Tal Zussman <tz2294@columbia.edu>, Gao Xiang <xiang@kernel.org>,
-	Jan Kara <jack@suse.cz>, Yue Hu <zbestahu@gmail.com>,
-	Jeffle Xu <jefflexu@linux.alibaba.com>,
-	Sandeep Dhavale <dhavale@google.com>,
-	Hongbo Li <hongbohbli@tencent.com>,
-	Chunhai Guo <guochunhai@vivo.com>, linux-erofs@lists.ozlabs.org,
-	linux-fsdevel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Joshua Hahn <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>,
-	Byungchul Park <byungchul@sk.com>,
-	Axel Rasmussen <axelrasmussen@google.com>,
-	Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>,
-	linux-trace-kernel@vger.kernel.org,
-	Trond Myklebust <trondmy@kernel.org>,
-	Anna Schumaker <anna@kernel.org>, linux-nfs@vger.kernel.org,
-	Ilya Dryomov <idryomov@gmail.com>,
-	Alex Markuze <amarkuze@redhat.com>,
-	Viacheslav Dubeyko <slava@dubeyko.com>, ceph-devel@vger.kernel.org,
-	Song Liu <song@kernel.org>, Yu Kuai <yukuai@fygo.io>,
-	Li Nan <magiclinan@didiglobal.com>, Xiao Ni <xiao@kernel.org>,
-	linux-raid@vger.kernel.org, Richard Weinberger <richard@nod.at>,
-	Zhihao Cheng <chengzhihao1@huawei.com>,
-	linux-mtd@lists.infradead.org, Baoquan He <baoquan.he@linux.dev>,
-	Pasha Tatashin <pasha.tatashin@soleen.com>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Dave Young <ruirui.yang@linux.dev>,
-	Shuah Khan <skhan@linuxfoundation.org>, kexec@lists.infradead.org,
-	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v4 00/16] Remove PG_private by using page/folio->private
- checks instead
-Message-ID: <aqd2N1J3ui1llWWG@casper.infradead.org>
-References: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fZ9jmaGX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB6D91F000FF;
+	Mon, 14 Sep 2026 05:13:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1789362801;
+	bh=n3wP1PcBp2+a+o/VLRpTfm9jZUMQauV7lmYuzs9dqlo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=fZ9jmaGXC6Fa8AdCItt5L/gUqwfke2JU82ubnyPzu7aUUbaR9Z1AaTjLwaECFOUU4
+	 GyH9FTHtOOmrIdqxuXgXM7KW/+5SSOXd56YX8Zd7xAhs++D7VVIPV8h4rp2XzRXFow
+	 5FbzzDXwZNkbk/3OkjpMIvZ4wbDCzJvJ87lWTtBBLSxGrm3VbaTzue7GlRqneur3RF
+	 jnJPgGT8v7XW1WEr5uSfPBoWzYp5XgPsQFIRjCniRem79V1nXXKxPLhn7r2MVeMfU+
+	 HkM3Cpf9w9wN/ixoj2xZfP0j3t2euVILeqx0iGwTxLXXJtUBVg2vVg7aDmeQl3VMXq
+	 1OYBrjv5sdNEQ==
+Date: Mon, 14 Sep 2026 14:13:18 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: sashiko-reviews@lists.linux.dev
+Cc: sashiko-bot@kernel.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v15 03/12] x86/hw_breakpoints: Add
+ arch_modify_local_hw_breakpoint_addr() API
+Message-Id: <20260914141318.0a8d12d9cceb3a50bb3d36f5@kernel.org>
+In-Reply-To: <20260907040203.BA2941F00A3A@smtp.kernel.org>
+References: <178875277830.93794.14247844688761142429.stgit@devnote2>
+	<178875281237.93794.4844650709915505895.stgit@devnote2>
+	<20260907040203.BA2941F00A3A@smtp.kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260913-remove-pg_private-v4-0-848550f7574e@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Sep 13, 2026 at 10:23:58PM -0400, Zi Yan wrote:
->       md/md-bitmap: replace PagePrivate() with page_private()
->       buffer: replace page_buffer() with page_private() and delete it
+On Mon, 07 Sep 2026 04:02:03 +0000
+sashiko-bot@kernel.org wrote:
 
-Sorry, looks like I screwed up git send-email usage.  I'm proposing
-replacing these two patches wth the three I sent.
+> Thank you for your contribution! Sashiko AI review found 1 potential issue(s) to consider:
+> - [High] Modifying a debug address register while the breakpoint is enabled in DR7 violates the Intel SDM. This can occur due to a race condition with an NMI because the `cpu_dr7` shadow state is not temporarily updated.
+> --
+> 
+> commit ca38cc4e9ed0533dfe16175c78dba60903420a8b
+> Author: Jinchao Wang <wangjinchao600@gmail.com>
+> 
+> x86/hw_breakpoints: Add arch_modify_local_hw_breakpoint_addr() API
+> 
+> Wprobe needs to move an active per-CPU watchpoint without releasing and
+> reserving its hardware slot.
+> 
+> Add arch_modify_local_hw_breakpoint_addr() as the architecture backend for
+> modify_local_hw_breakpoint_addr(). It validates the new address, finds the
+> installed local slot, and updates the hardware debug register and per-CPU
+> shadow register.
+> 
+> Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c2.1785067572.git.wangjinchao600@gmail.com/
+> 
+> > diff --git a/arch/x86/kernel/hw_breakpoint.c b/arch/x86/kernel/hw_breakpoint.c
+> > index 312550be3ad2b..99f0926298a85 100644
+> > --- a/arch/x86/kernel/hw_breakpoint.c
+> > +++ b/arch/x86/kernel/hw_breakpoint.c
+> [ ... ]
+> > @@ -129,6 +129,62 @@ int arch_install_hw_breakpoint(struct perf_event *bp)
+> [ ... ]
+> > +	do {
+> > +		seq = this_cpu_inc_return(cpu_dr7_seq);
+> > +
+> > +		/* Disable breakpoint in DR7 before updating address register */
+> > +		dr7 = this_cpu_read(cpu_dr7);
+> > +		set_debugreg((dr7 & ~__encode_dr7(i, info->len, info->type)) | DR7_FIXED_1, 7);
+> 
+> [Severity: High]
+> Does arch_modify_local_hw_breakpoint_addr() need to clear the breakpoint in
+> the shadow cpu_dr7 state as well?
+
+Ah, OK, let's update cpu_dr7 too.
+
+> 
+> Since the breakpoint isn't cleared in the cpu_dr7 shadow state, could an NMI
+> that interrupts execution here inadvertently re-enable the breakpoint
+> prematurely?
+> 
+> If an NMI handler (such as kgdb or perf) modifies breakpoints, it increments
+> cpu_dr7_seq and invokes local_db_save() and local_db_restore(). When the NMI
+> completes, local_db_restore() detects the sequence mismatch and restores
+> hardware DR7 using the cpu_dr7 shadow cache. Because cpu_dr7 still has this
+> breakpoint enabled, the target breakpoint gets re-enabled in hardware DR7
+> before the execution below resumes.
+> 
+> > +		barrier();
+> > +
+> > +		this_cpu_write(cpu_debugreg[i], addr);
+> > +		barrier();
+> > +		set_debugreg(addr, i);
+> 
+> [Severity: High]
+> If an NMI prematurely restored DR7 as described above, won't this modify the
+> debug address register while the breakpoint is enabled in DR7?
+
+This also needs to update cpu_dr7.
+
+Thank you,
+
+> 
+> Modifying a debug address register while its corresponding DR7 enable bit is
+> set violates the Intel SDM and causes spurious #DB exceptions.
+> 
+> While the sequence loop retry mechanism will catch the mismatch, it only does
+> so after this instruction has already executed, which is too late to prevent
+> the spurious exception.
+> 
+> > +		barrier();
+> > +
+> > +		/* Re-enable breakpoint in DR7 */
+> > +		set_debugreg(this_cpu_read(cpu_dr7) | DR7_FIXED_1, 7);
+> > +		barrier();
+> > +	} while (seq != this_cpu_read(cpu_dr7_seq));
+> > +
+> > +	return 0;
+> > +}
+> 
+> -- 
+> Sashiko AI review · https://sashiko.dev/#/patchset/178875277830.93794.14247844688761142429.stgit@devnote2?part=3
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
