@@ -1,41 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70359371067;
-	Mon, 14 Sep 2026 20:38:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2514A49F117;
+	Mon, 14 Sep 2026 20:39:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789418336; cv=none; b=TTnk7SiZufWMwf0z9zOb2XQJmiL95ttolGAlcZT936S3SzDSRMYefr3vR/nlz0iRdClLE1lRVPdn6t8063N8cDIfaf2N1s/gSGhDL8XoXpWRKugBz8QT4byHwn0BrHYxJNkL1Wp2WNohwcCeB3W6cQt7UEyKNoBO0Svk7IOzsvE=
+	t=1789418370; cv=none; b=U5m3PeS8FosT0JUW10jAMVtETbOOaMkwUknjClsjUaNmWviKxF9H2hLwCt8ScXKhs4IOgdRsFzCdnT2aNR6O5YgIjCoT5cbMUWsrr/wW0n0pGNsLJArTBS2Qlq+Pxvg9tZPx3wSKG/pdMkFPU7eeUUrZXb1D/n9s4FrmuQoGqo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789418336; c=relaxed/simple;
-	bh=yEHDj0OcrRVuSLu7zUTid1cIYCLNJ5VtZYE9ps7V+64=;
+	s=arc-20240116; t=1789418370; c=relaxed/simple;
+	bh=SZMm5JhQ3rtHkXCtk3Gm/t2hXaWp+vV6LZCMC/mAxg8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qGNFhLmK+nRrgjge3mXrOC8oSdJOS51m54zUFeK6WtEisvS5TAbSfMoerSTq3Vcrm6uk7hFenOzqf9bPXXEVi2qr285pXPrdDH3QLp7mVnJVs9beO9G2B27/eXZzx5sLPMWsIcBGiudzd5CCHxa2+GLgIdm0wUQGny+iv5iCLK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AMPRxE35; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=uS1+W5FGmi1L+pPQ/i+Q+8maJDuQalQz+6iy+/lH/8kFDWFPSXvPjUX5ZRHVqcF9iFXEV80w2FhMPPsLthPAObPuaQwLEK5+LSgD+mhQkdFr5+NiTwUN80bhdPVLpUXAgfpV9XmnS7P+hr+Mm746JixhLh57Ce49HWqRX+kamEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RIBhjAjC; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AMPRxE35"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1177A1F000FF;
-	Mon, 14 Sep 2026 20:38:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RIBhjAjC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C9B41F000FF;
+	Mon, 14 Sep 2026 20:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789418335;
-	bh=HtACgMY2jyiDkJhkmXqq3UKVjivKTsin/mOWkzWYv/E=;
+	s=k20260515; t=1789418368;
+	bh=F3aAjzg9LQumCCuRdvQcl6jJ04MArf3JAXzxMo6Hu0Q=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=AMPRxE35EpPIuLhQHI3mQxvupEGJugdmB5toFaxaLBjtyelLDSUD1nAJ99oeJasCj
-	 s2sOHli7cP717Op4H9AaBENYvMnE9yOsgu7n2lVnl4bZ//cXkKKRZmoMz9IFSue0ri
-	 go70e62w8bFWXdo6smJRGyDl2iViDYGkZ2ObWoKgk47CILfrUjAT0LXNH0U+Q33jVT
-	 Llix6LM+meyOzjDRVxJ5ynZ60JjC7FQlfhGGozp/BOJbevRDzEIsMp64BATPafnKr6
-	 6vNVicxpf7YIwOIpPm5wOIybGrnrSCWE5+rUE8AzD4G8ryLCxrNeMG17eRnBeg3m9p
-	 4apLsKGaziO8A==
-Date: Mon, 14 Sep 2026 13:38:53 -0700
+	b=RIBhjAjCgk+ZccEVJPUZghu1iYaNFl20qME8Fdl1JBY1PhiI5wc7h4LagA1abugcm
+	 4l2KOvgjwAh5v+ccbQrjmtiNBVTL0GGmTqZa9bWMxJb9z2q60k0k94QlIabfiSo9KG
+	 mIzCQwReSSS+URw9bWkfM02xMmMo5ooupNgI96IP5SEKoMsdcAVCoUIsRWiwDNthwX
+	 S6lZtRtY/ydqVm4gveFmHo85/jGAXBK5hS95Jzd24TFVlVfwkQKsjTotml8MiLFs2y
+	 wD/4N7WR10UW8Vw+1Vvbw1NL0L+QQhxhQ7mtkFCDx1AukHJWsb6nwO13tEo0Rc1oW3
+	 tMANTBH4VddHw==
+Date: Mon, 14 Sep 2026 13:39:26 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: sashiko-reviews@lists.linux.dev
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 4/4] perf annotate-data: Adjust type offset for
- flex-array
-Message-ID: <aqhbXa25oQYEWRTS@google.com>
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Zecheng Li <zli94@ncsu.edu>,
+	Yanbo Zhao <yzhao62@ncsu.edu>,
+	Shuai Xue <xueshuai@linux.alibaba.com>
+Subject: Re: [PATCH v2 3/4] perf annotate-date: Allow out-of-size access for
+ flex-array types
+Message-ID: <aqhbflQOLmWz3RMM@google.com>
 References: <20260914064535.1671939-1-namhyung@kernel.org>
- <20260914064535.1671939-5-namhyung@kernel.org>
- <20260914070105.209DC1F0089A@smtp.kernel.org>
+ <20260914064535.1671939-4-namhyung@kernel.org>
+ <5d51668c-3646-402f-83b4-7f6ee4a415e7@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,136 +52,179 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260914070105.209DC1F0089A@smtp.kernel.org>
+In-Reply-To: <5d51668c-3646-402f-83b4-7f6ee4a415e7@huaweicloud.com>
 
-On Mon, Sep 14, 2026 at 07:01:04AM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 3 potential issue(s) to consider:
-> - [Medium] Off-by-one error and tail padding overlap in flex-array offset adjustment causes accesses to be silently dropped and incorrectly attributed.
-> - [Medium] Calling `strstr()` on `child->type_name` without checking for NULL causes a segmentation fault if memory allocation failed during type name extraction.
-> - [Medium] The newly added `strstr(child->type_name, "[]")` call reads uninitialized heap memory, leading to out-of-bounds reads and potential crashes when analyzing malformed or unknown DWARF entries.
-> --
+On Mon, Sep 14, 2026 at 08:19:44PM +0800, Tengda Wu wrote:
 > 
-> commit 546415e2740f53443f133b3600542636f3d84f31
-> Author: Namhyung Kim <namhyung@kernel.org>
-> perf annotate-data: Adjust type offset for flex-array
 > 
-> This commit adjusts the type offset for flexible array members that are located
-> beyond the original type size. It ensures a field name is found for flex arrays
-> by adjusting the offset in an array to find a corresponding element.
-> 
+> On 2026/9/14 14:45, Namhyung Kim wrote:
+> > Structs that have a flex array will have accesses beyond its original
+> > size as the array was declared as 0 sized.  For now, it just allow any
+> > offset bigger than the size.  It could be refined later.
+> > 
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/annotate-data.c | 63 ++++++++++++++++++---------------
+> >  tools/perf/util/annotate-data.h |  2 ++
+> >  2 files changed, 36 insertions(+), 29 deletions(-)
+> > 
 > > diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> > index e8aff6a916c0a..a66b72feb6e2f 100644
+> > index aff60a630fd05b01..e8aff6a916c0afe0 100644
 > > --- a/tools/perf/util/annotate-data.c
 > > +++ b/tools/perf/util/annotate-data.c
-> 
-> [ ... ]
-> 
-> > @@ -355,15 +376,37 @@ static int fill_member_name(char *buf, size_t sz, struct annotated_member *m,
-> >  			len = 0;
-> >  		}
+> > @@ -7,6 +7,7 @@
+> >  #include <errno.h>
+> >  #include <stdio.h>
+> >  #include <stdlib.h>
+> > +#include <string.h>
+> >  #include <inttypes.h>
+> >  #include <linux/zalloc.h>
 > >  
-> > -		return fill_member_name(buf + len, sz - len, child, offset, first) + len;
-> > +		return fill_member_name(buf + len, sz - len, child, offset, first,
-> > +					has_flex_array) + len;
-> >  	}
-> > +
-> >  	return 0;
+> > @@ -248,8 +249,15 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+> >  	else
+> >  		die_mem = member_type;
+> >  
+> > -	if (dwarf_aggregate_size(&die_mem, &size) < 0)
+> > -		size = 0;
+> > +	if (dwarf_aggregate_size(&die_mem, &size) < 0) {
+> > +		if (dwarf_tag(&die_mem) == DW_TAG_array_type) { /* flex-array? */
+> > +			die_get_real_type(&die_mem, &die_mem);
+> > +			if (dwarf_aggregate_size(&die_mem, &size) < 0)
+> > +				size = 0;
+> > +		} else {
+> > +			size = 0;
+> > +		}
+> > +	}
+> >  
+> >  	if (dwarf_attr_integrate(die, DW_AT_data_member_location, &attr)) {
+> >  		if (dwarf_formudata(&attr, &loc) != 0) {
+> > @@ -399,6 +407,7 @@ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
+> >  	result->self.type_name = type_name;
+> >  	result->self.size = size;
+> >  	INIT_LIST_HEAD(&result->self.children);
+> > +	result->flex_array = die_has_flex_array(type_die);
+> >  
+> >  	if (symbol_conf.annotate_data_member)
+> >  		add_member_types(result, type_die);
+> > @@ -517,13 +526,30 @@ static bool is_better_type(Dwarf_Die *type_a, Dwarf_Die *type_b)
+> >  	return false;
 > >  }
 > >  
-> >  int annotated_data_type__get_member_name(struct annotated_data_type *adt,
-> >  					 char *buf, size_t sz, int member_offset)
-> >  {
-> > -	return fill_member_name(buf, sz, &adt->self, member_offset, /*first=*/true);
-> > +	return fill_member_name(buf, sz, &adt->self, member_offset, /*first=*/true,
-> > +				adt->flex_array);
-> > +}
-> > +
-> > +static struct annotated_member *find_flex_array(struct annotated_member *m)
+> > +static enum type_match_result check_type_offset(Dwarf_Die *type_die, int offset)
 > > +{
-> > +	struct annotated_member *child;
+> > +	Dwarf_Word size;
 > > +
-> > +	if (list_empty(&m->children))
-> > +		return NULL;
+> > +	/* Get the size of the actual type */
+> > +	if (dwarf_aggregate_size(type_die, &size) < 0)
+> > +		return PERF_TMR_NO_SIZE;
 > > +
-> > +	child = list_last_entry(&m->children, struct annotated_member, node);
-> > +	if (strstr(child->type_name, "[]"))
-> 
-> [Severity: Medium]
-> Could this call to strstr() safely handle scenarios where child->type_name is
-> NULL or uninitialized?
-> 
-> During DWARF parsing, for instance in __add_member_cb(), if die_get_typename()
-> fails due to a malformed DWARF entry or memory exhaustion, strbuf_detach()
-> might return an uninitialized heap buffer or NULL. If that happens, does this
-> scan risk triggering a segmentation fault or an out-of-bounds read when looking
-> for the "[]" string?
-
-Ok, will check.
-
-> 
-> > +		return child;
+> > +	/* Minimal sanity check */
+> > +	if (offset < 0)
+> > +		return PERF_TMR_BAD_OFFSET;
 > > +
-> > +	return find_flex_array(child);
+> > +	if ((unsigned)offset >= size && !die_has_flex_array(type_die))
+> > +		return PERF_TMR_BAD_OFFSET;
+> > +
+> > +	return PERF_TMR_OK;
 > > +}
-> 
-> [ ... ]
-> 
-> > @@ -1740,6 +1783,7 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
-> >  {
-> >  	struct dso *dso = map__dso(dloc->ms->map);
-> >  	Dwarf_Die type_die;
-> > +	struct annotated_data_type *result;
-> >  
-> >  	/*
-> >  	 * The type offset is the same as instruction offset by default.
-> > @@ -1752,7 +1796,25 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
-> >  	if (find_data_type_die(dloc, &type_die) < 0)
-> >  		return NULL;
-> >  
-> > -	return dso__findnew_data_type(dso, &type_die);
-> > +	result = dso__findnew_data_type(dso, &type_die);
-> > +	if (result == NULL)
-> > +		return NULL;
 > > +
-> > +	if (result->flex_array && dloc->type_offset > result->self.size) {
+> >  /* The type info will be saved in @type_die */
+> >  static enum type_match_result check_variable(struct data_loc_info *dloc,
+> >  					     Dwarf_Die *var_die,
+> >  					     Dwarf_Die *type_die, int reg,
+> >  					     int offset, bool is_fbreg)
+> >  {
+> > -	Dwarf_Word size;
+> >  	bool needs_pointer = true;
+> >  	Dwarf_Die sized_type;
+> >  
+> > @@ -554,15 +580,7 @@ static enum type_match_result check_variable(struct data_loc_info *dloc,
+> >  	else
+> >  		sized_type = *type_die;
+> >  
+> > -	/* Get the size of the actual type */
+> > -	if (dwarf_aggregate_size(&sized_type, &size) < 0)
+> > -		return PERF_TMR_NO_SIZE;
+> > -
+> > -	/* Minimal sanity check */
+> > -	if ((unsigned)offset >= size)
+> > -		return PERF_TMR_BAD_OFFSET;
+> > -
+> > -	return PERF_TMR_OK;
+> > +	return check_type_offset(type_die, offset);
+> >  }
+> >  
+> >  struct type_state_stack *find_stack_state(struct type_state *state,
+> > @@ -1112,7 +1130,6 @@ static enum type_match_result check_matching_type(struct type_state *state,
+> >  						  struct disasm_line *dl,
+> >  						  Dwarf_Die *type_die)
+> >  {
+> > -	Dwarf_Word size;
+> >  	u32 insn_offset = dl->al.offset;
+> >  	int reg = dloc->op->reg1;
+> >  	int offset = dloc->op->offset;
+> > @@ -1166,12 +1183,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+> >  		else
+> >  			sized_type = *type_die;
+> >  
+> > -		/* Get the size of the actual type */
+> > -		if (dwarf_aggregate_size(&sized_type, &size) < 0 ||
+> > -		    (unsigned)dloc->type_offset >= size)
+> > -			return PERF_TMR_BAD_OFFSET;
+> > -
+> > -		return PERF_TMR_OK;
+> > +		return check_type_offset(&sized_type, dloc->type_offset);
+> >  	}
+> >  
+> >  	if (state->regs[reg].kind == TSR_KIND_POINTER) {
+> > @@ -1190,12 +1202,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+> >  
+> >  		dloc->type_offset = dloc->op->offset + state->regs[reg].offset;
+> >  
+> > -		/* Get the size of the actual type */
+> > -		if (dwarf_aggregate_size(type_die, &size) < 0 ||
+> > -		    (unsigned)dloc->type_offset >= size)
+> > -			return PERF_TMR_BAD_OFFSET;
+> > -
+> > -		return PERF_TMR_OK;
+> > +		return check_type_offset(type_die, dloc->type_offset);
+> >  	}
+> >  
+> >  	if (state->regs[reg].kind == TSR_KIND_PERCPU_POINTER) {
+> > @@ -1209,9 +1216,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+> >  
+> >  		dloc->type_offset = dloc->op->offset;
+> >  
+> > -		/* Get the size of the actual type */
+> > -		if (dwarf_aggregate_size(type_die, &size) < 0 ||
+> > -		    (unsigned)dloc->type_offset >= size)
+> > +		if (check_type_offset(type_die, dloc->type_offset) != PERF_TMR_OK)
+> >  			return PERF_TMR_BAIL_OUT;
+> >  
+> >  		return PERF_TMR_OK;
+> > @@ -1839,7 +1844,7 @@ int annotated_data_type__update_samples(struct annotated_data_type *adt,
+> >  			return -1;
+> >  	}
+> >  
+> > -	if (offset < 0 || offset >= adt->self.size)
+> > +	if (offset < 0 || (offset >= adt->self.size && !adt->flex_array))
+> >  		return -1;
+> >  
+> >  	h = &adt->histograms[evsel->core.idx];
+> > diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+> > index ca2096a9ee62cbfe..27b7148b64f60350 100644
+> > --- a/tools/perf/util/annotate-data.h
+> > +++ b/tools/perf/util/annotate-data.h
+> > @@ -85,6 +85,7 @@ struct type_hist {
+> >   * struct annotated_data_type - Data type to profile
+> >   * @node: RB-tree node for dso->type_tree
+> >   * @self: Actual type information
+> > + * @flex_array: Whethere it has a flex array
 > 
-> [Severity: Medium]
-> Will this boundary check correctly catch accesses that fall exactly on the
-> boundary or within the struct's tail padding?
-> 
-> If an event samples a flexible array element whose offset is greater than 
-> flex_array->offset but less than or equal to result->self.size (the total
-> padded size of the struct), it appears this condition evaluates to false.
-> Could this cause the offset adjustment to be skipped, causing valid sample
-> counts to be silently dropped during data presentation?
+> Nit: typo in the comment -- Whethere should be Whether.
 
-I think it's ok.  If it's less than or equal to result->self.size, it'd
-have high chances to fall into the flex array element so I think they
-will be processed properly without adjusting the offset.
-
-Basically this adjustment is to improve visualization of the member
-name.  It won't to drop samples anyway.
+Will fix.
 
 Thanks,
 Namhyung
 
-> 
-> > +		struct annotated_member *flex_array = get_flex_array_member(result);
-> > +
-> > +		if (flex_array && flex_array->size > 0) {
-> > +			int offset = dloc->type_offset;
-> > +
-> > +			/* adjust offset in the flex array */
-> > +			offset -= flex_array->offset;
-> > +			offset %= flex_array->size;
-> > +			offset += flex_array->offset;
-> > +
-> > +			dloc->type_offset = offset;
-> > +		}
-> > +	}
-> > +	return result;
-> >  }
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260914064535.1671939-1-namhyung@kernel.org?part=4
