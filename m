@@ -1,75 +1,85 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECE83BADA9;
-	Mon, 14 Sep 2026 13:41:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15E53455600
+	for <linux-perf-users@vger.kernel.org>; Mon, 14 Sep 2026 13:44:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789393303; cv=none; b=fPYwmOlcCd7YJalELHvo8+H+KE1WSUw+DgBY66l0PtyNKsSJUv6NZwo8A61lGoizWWA4Wfgo5pO899VB8ls1ZHfn6otuFulUCKXnFfVC9/2JqvktGA1ti2KYSg4+MV4hI/dEsHWI+qZAtNn8aZ5I9qOBVZ9zBIg01ugVqyBDhY4=
+	t=1789393461; cv=none; b=ripzKI+6DWEltN1hR426fktdQZAOm8koOjinu51kIGr8uDs8Vpm11cpEn1V2sUKSLYL/Yd+ZO998tzMoqikbpLZwoMmLLhSP3wh23RmRnUXp/IvX/zf3epIyvzLpbT0vHG7M+8MYWCJW8019GhC6gA+BsP1NCYodhxd2OnjQ3P0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789393303; c=relaxed/simple;
-	bh=0GOrp49Egkj0ZMN22eZ5FmAEkpqNT0YAsdxhZ1/nEi4=;
+	s=arc-20240116; t=1789393461; c=relaxed/simple;
+	bh=2/qff+PEFmEv+nLRXydGpPGvVMvtfloKlfChga4M3Cw=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=iVskhD7xLi9+5qx6JYhEyG9lap/cRUP9g7VSSoz5npaS3CT2Tk4sv9336nzzUWffCvzl/pOHURPxWQ7rGu4C8JN1sTJ0rwkj/9eRXjw1AgZqwdewUjUcRkMeW5rJqeVVvG9OB058RXIDIKN538BsgCb0qn5bE6gCIfd6g8Y9NV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cx7v1ETy; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=KWKiZ6Xaxl7n4cIcYzfj/HSu8fZzhRhbE/ZUh7FhlEMpWFxWDFgDNzww6tQat2TZ7IgtvImTgYOPK3gQnf02i55q72KEdzQszLV0RbTipF35C3z7VEPWGpcrc72IOtFW7hDeZ0AL9+uAPQQ8zDLz689qpF7TLdUBTVJuKukX/tI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ocwX4NZX; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cx7v1ETy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABE271F00893;
-	Mon, 14 Sep 2026 13:41:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ocwX4NZX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA5231F000FF;
+	Mon, 14 Sep 2026 13:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789393301;
-	bh=0GOrp49Egkj0ZMN22eZ5FmAEkpqNT0YAsdxhZ1/nEi4=;
+	s=k20260515; t=1789393459;
+	bh=Iehh0JiTmFTNNJGFtbPaduPgRri1pgZ6ixXV36Vng3U=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Cx7v1ETyHixQOMwxuAxsPjc/bzNd0ZZQufw3Jjb988tK8zSaNY56sd+JJ1Y3/frmK
-	 oKiC48LGPdLmxXluc+UTLKPixJjOLnYJvdTMh6hpiR6AVdKM/ohKPTMBin7zWOOUf/
-	 rw7fGHw7sxFNj3Yo3fiQ8Lfi2pJd7CQO7+PqcisFKcdjZX9ZS28g8oSCJA9tT5/ZGC
-	 4+KUtImIgClplC7sQ7d3yc/WmdVejHXin4LiV29scH9I8GlglS56BLplhQnnWdm6De
-	 dgI6jWw45WWqUBWd0B0hLMDdqHlMbPGz/l2UpE3PqpPgcRyL9qhJ57+B6jFf4pCZQ9
-	 SrnpggoXC9m5g==
+	b=ocwX4NZXNMs6zqkEyP15mj3PCsdvSOyZo3x0o324JZyHaav3OIHodGdpwhqlRSRa6
+	 zzK05wjftt3H2OnGKKIm8H24ONaX38SHWW/QGP0nbnd+zBFCVWvZt9k20eUKazx9Z0
+	 Dw5nH+/3xhYojeoYA6SFKMoTE2KP7BzeWOKkt5ClHqc+SQBv0YY+byZo223CtMrZE1
+	 GMSDl6dNSHDssqIU+/rdVcogfu1Wq1zJxL34d1l9/lJusr67T8UCvOwcb84xnUKqPB
+	 pD2Q+1M2szvNG/8s/SBl7EohfcWMl6Ra3TNjs9YbKVCLrQroDPtS9mRPZM97yrXvx5
+	 fA/rlwmNMHGRw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v16 04/13] x86/hw_breakpoints: Add
- arch_modify_local_hw_breakpoint_addr() API
+Subject: Re: [PATCH 6/9] perf scripts: Add perf-stuck, to tell where a
+ running perf is stuck
 Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TWFzYW1pIEhpcmFtYXRzdSAoR29vZ2xlKQ==?= <mhiramat@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
-In-Reply-To: <178939022358.94750.10843461787759740658.stgit@devnote2>
-References: <178939017565.94750.9431053336761330458.stgit@devnote2>
- <178939022358.94750.10843461787759740658.stgit@devnote2>
+To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+In-Reply-To: <20260914125451.2045-7-acme@kernel.org>
+References: <20260914125451.2045-1-acme@kernel.org>
+ <20260914125451.2045-7-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Mon, 14 Sep 2026 13:41:41 +0000
-Message-Id: <20260914134141.ABE271F00893@smtp.kernel.org>
+Date: Mon, 14 Sep 2026 13:44:19 +0000
+Message-Id: <20260914134419.BA5231F000FF@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> From: Jinchao Wang <wangjinchao600@gmail.com>
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> Wprobe needs to move an active per-CPU watchpoint without releasing and
-> reserving its hardware slot.
+> A perf that takes forever is hard to tell apart from one that is stuck
+> in a loop, and when it is stuck there is no way to know where without
+> attaching gdb to it and looking around, which is what this does, from
+> the outside, sampling /proc/<pid> at a fixed interval:
 >=20
-> Add arch_modify_local_hw_breakpoint_addr() as the architecture backend for
-> modify_local_hw_breakpoint_addr(). It validates the new address, finds the
-> installed local slot, and updates the hardware debug register and per-CPU
-> shadow register. The core layer (modify_local_hw_breakpoint_addr()) handl=
-es
-> updating bp->attr.bp_addr and counter_arch_bp(bp)->address.
+>   =E2=AC=A2 [acme@toolbx perf-tools-next]$ tools/perf/scripts/perf-stuck.=
+sh -i 15 -n 4 -l ibs.log $(pgrep -x perf)
+>   watching 2297313 (perf report --progress -s type -i perf.data.ibs) ever=
+y 15s
+>   09:39:34 state=3DR cpu=3D+0 (0.00s) rss=3D664295kB stack=3D7ffc3ae31000=
+-7ffc3ae52000 size=3D132kB  Merging related events... [ 39.0%] 197574 / 506=
+686
+>   09:39:49 state=3DR cpu=3D+1496 (14.96s) rss=3D665383kB stack=3D7ffc3ae3=
+1000-7ffc3ae52000 size=3D132kB stuck=3D1 Merging related events... [ 39.0%]=
+ 197574 / 506686
+>   09:40:04 state=3DR cpu=3D+1497 (14.97s) rss=3D665383kB stack=3D7ffc3ae3=
+1000-7ffc3ae52000 size=3D132kB stuck=3D2 Merging related events... [ 39.0%]=
+ 197574 / 506686
+>   09:40:19 state=3DR cpu=3D+1497 (14.97s) rss=3D502250kB stack=3D7ffc3ae3=
+1000-7ffc3ae52000 size=3D132kB stuck=3D0 Merging related events... [ 61.0%]=
+ 309026 / 506686
 >=20
-> The caller must provide an installed local event and a valid address.
-> Slot ownership, breakpoint type, length, mask and DR7 remain unchanged.
+> The CPU time used grows by a whole interval on every sample while the
+> [ ... ]
+>   [Inferior 1 (process 2342826) detached]
+>   =E2=AC=A2 [acme@toolbx perf-tools-next]$
 >=20
-> Link: https://lore.kernel.org/all/59637b96946653393a7ad3c7de094094796b39c=
-2.1785067572.git.wangjinchao600@gmail.com/
->=20
-> Assisted-by: Antigravity:gemini-3.8-flash
-> Signed-off-by: Jinchao Wang <wangjinchao600@gmail.com>
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Assisted-by: LLM
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
 Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/178939017565.94750.=
-9431053336761330458.stgit@devnote2?part=3D4
+Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914125451.2045=
+-1-acme@kernel.org?part=3D6
 
