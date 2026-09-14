@@ -1,133 +1,179 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D033F49551A;
-	Mon, 14 Sep 2026 17:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89FDD3F9278
+	for <linux-perf-users@vger.kernel.org>; Mon, 14 Sep 2026 17:50:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789407591; cv=none; b=Ec4hohnVdfp9QMwhtOjfFOMOR5gpdX2E6kJ/Rl3Bvq9BH6vx+gt3vI8gLlfs5KHTmUszngEC57SpTPKjOrc+/NeVHyLZkeGDkIsUdqVMoJsP+DDEpK5EogjC4VQu3H5gXaBMgXXl7p2Lg//y/0kp842+4kw5uqpYpDOzjbErOP0=
+	t=1789408261; cv=none; b=N4MoCE15cu5MLv0ZeLMXyPvL/2/p1sJsKViF1TTVl7V86lVv5w3dePCVg7xSZYlnBCCq4kxysYVT7CDyRHrKVhRY1B5Mzot4zP6IJe4NueEt8cTFlCRXzbgIg7yZ61fqchE9dzSzT/dqqZ/fxwiH5vdTIvq7Gvwzmazf2oEEA/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789407591; c=relaxed/simple;
-	bh=xowSs5X6y2jpvt1cr188yyhw9cv4PZ7/Udl8A89c+Ow=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=iYCCJfSkDTlZDWMDtLSYirWF3HhhjCzRqOGoLrUYr7nwQAU7JRjYBidvBzhgbzTs+kwG+yq6xeOtEeJxuN+JoCvqFYGfV/qihfE/+601E7Z2yss5QTXWItnOOotyjSASfXK9UgUItA/DqoTYsPcwWeZNN86xKZcZOf2vik3xE9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fq7P+Vba; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789408261; c=relaxed/simple;
+	bh=zm/j76/97qiIdP6ShSYrPWyYaeSdqWYJP6/PCBkTMQo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eBlsVBaB/sD5XA2M8nCiTo0FdfRX4vrFceRxrRK1UcMt868/O0y3vfZ3Qpj2UrWmdh4xYjZdKpMt71k7HeX/QQLkMPqt4pfrRqWCPYl8NPFVHboLlEKmyJI9mSjX3Yx0SOyruOnP3/ivV2M0EBLQYCVAxpmsIEKyUIiy2z/YasU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=cGQ9sgAC; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fq7P+Vba"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55DB21F000FF;
-	Mon, 14 Sep 2026 17:39:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789407589;
-	bh=kGvsKbS+uUAsgVL9R+R9s8xtSlNDiXgGCZNSCC3UYxQ=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Fq7P+Vbaq+FUxkcYSDw+Br/lIyPdPsmBCkByCCCRnhL/a3rq2mASd5EWlFUDGvd4Q
-	 i4AxVMWt0Z9ROq260lRmw+9rttdDcGvg/9ktBTkIkX7tcu6/V6HXVOzYv3LsM9zV9c
-	 wMUcuABISg5aJZCsKF4T274WDnCg5coFpxq4D5pLD3hZ7WmDsVHQQ1EuTWfvzhCEdh
-	 hQyK8WhJ85Ryfxfa4VEJF3BDALbmafxqo2PLBzz+iyVXlgDbqhbwUr5fRA4AGfG5Iv
-	 b+/yhQXU1P8SQzW2s7gQ3BBJ7yNqApeASQPBgJWUs4pg8DhjgBdAJdxweGeXmvjUCZ
-	 vydiavCxwVxgQ==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v2 11/40] infiniband: update hfi1 to use
- remap_vmalloc_range()
-Reply-To: sashiko-reviews@lists.linux.dev
-To: =?utf-8?b?TG9yZW56byBTdG9ha2VzIChBUk0p?= <ljs@kernel.org>
-Cc: "Vasily Gorbik" <gor@linux.ibm.com>, dri-devel@lists.freedesktop.org, "Oliver
- Upton" <oupton@kernel.org>, "Heiko Carstens" <hca@linux.ibm.com>, "Marc
- Zyngier" <maz@kernel.org>, linux-s390@vger.kernel.org, kvm@vger.kernel.org, bpf@vger.kernel.org, "Christian
- Borntraeger" <borntraeger@linux.ibm.com>, linux-rdma@vger.kernel.org, selinux@vger.kernel.org, kvmarm@lists.linux.dev, linux-trace-kernel@vger.kernel.org, linux-scsi@vger.kernel.org, linux-perf-users@vger.kernel.org, "Alexander
- Gordeev" <agordeev@linux.ibm.com>
-In-Reply-To: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-11-7d9781ed5361@kernel.org>
-References: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org>
- <20260914-b4-mmap-prepare-vma-flag-sanify-v2-11-7d9781ed5361@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 14 Sep 2026 17:39:47 +0000
-Message-Id: <20260914173948.55DB21F000FF@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="cGQ9sgAC"
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BB78152B;
+	Mon, 14 Sep 2026 10:50:55 -0700 (PDT)
+Received: from e121345-lin.cambridge.arm.com (e121345-lin.cambridge.arm.com [10.2.212.23])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BB0AA3F882;
+	Mon, 14 Sep 2026 10:50:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1789408258; bh=zm/j76/97qiIdP6ShSYrPWyYaeSdqWYJP6/PCBkTMQo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cGQ9sgACYMNU212IVt1Wa8aURU2hDz0Ba6t4Y+8h2Tp/2/Bjfh5hWPPcCq2PS6FSj
+	 LEvI0ZJ6fsqohdFzc+QUCHgN5a6t8DqsrmCAh2uRkLCjPGzORrj+0zKdXXZdtuudHO
+	 Dm4yncToH9nozJaAgikj1mmEK4VyCyTXlCN39gNs=
+From: Robin Murphy <robin.murphy@arm.com>
+To: will@kernel.org
+Cc: mark.rutland@arm.com,
+	ilkka@os.amperecomputing.com,
+	leo.yan@arm.com,
+	linux-perf-users@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] perf/arm-cmn: Fix multi-filter encoding
+Date: Mon, 14 Sep 2026 18:50:53 +0100
+Message-ID: <03f15158e4c0a036f41cb4ab34c138a265c0730c.1789408253.git.robin.murphy@arm.com>
+X-Mailer: git-send-email 2.54.0.dirty
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [High] The patch breaks mmap for the EVENTS region for all dynamic contex=
-ts because remap_vmalloc_range() strictly requires the base address of the =
-vmalloc allocation, but the patch passes a pointer with an offset.
---
+The current special-case for EVICT_STATE_SEL filtering effectively
+assigns the "filter" and "filter2" controls in the opposite order from
+how the CMN S3 r2 TRM states "Filtering is programmed in pmu_hbt_lbt_sel
+and pmu_evict_state_sel". On reflection, not only does this seem
+unnecessarily non-obvious to users, but it's also likely to be a problem
+for scaling to a full multi-filter abstraction in future. There is a
+logical order to filters based on their bitfield positions in the
+pmu_event_sel register, which the TRM descriptions allude to, and the
+cmn_filter_select enum already (almost) follows, so let's fix the UABI
+to follow suit while it's still unreleased.
 
-commit b52cc1703a348bc2ace5ff6752750d7fd8d2282e
-Author: Lorenzo Stoakes (ARM) <ljs@kernel.org>
+Fixes: 09178f536bb9 ("perf/arm-cmn: Plumb in new filter types")
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ drivers/perf/arm-cmn.c | 54 ++++++++++++++++++++++++------------------
+ 1 file changed, 31 insertions(+), 23 deletions(-)
 
-infiniband: update hfi1 to use remap_vmalloc_range()
+diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+index b162de3d9d16..6464b815bd3b 100644
+--- a/drivers/perf/arm-cmn.c
++++ b/drivers/perf/arm-cmn.c
+@@ -305,9 +305,9 @@ enum cmn_filter_select {
+ 	SEL_NONE,
+ 	SEL_OCCUP1_ID,
+ 	SEL_CLASS_OCCUP_ID,
+-	SEL_CBUSY_SNTHROTTLE_SEL,
+ 	SEL_HBT_LBT_SEL,
+ 	SEL_SN_HOME_SEL,
++	SEL_CBUSY_SNTHROTTLE_SEL,
+ 	SEL_SNP_VC_SEL,
+ 	SEL_ENHANCED_HBT_LBT_SEL,
+ 	SEL_EVICT_STATE_SEL,
+@@ -978,10 +978,14 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
+ 	_CMN_EVENT_HNS(_model, _name##_all, _event, _sel, 0),		\
+ 	_CMN_EVENT_HNS(_model, _name##_hbt, _event, _sel, 1),		\
+ 	_CMN_EVENT_HNS(_model, _name##_lbt, _event, _sel, 2)
+-#define _CMN_EVENT_HNS_HBT2(_model, _name, _event, _fsel1, f1)		\
+-	_CMN_EVENT_HNS(_model, _name##_all, _event, _fsel1, f1, SEL_HBT_LBT_SEL, 0), \
+-	_CMN_EVENT_HNS(_model, _name##_hbt, _event, _fsel1, f1, SEL_HBT_LBT_SEL, 1), \
+-	_CMN_EVENT_HNS(_model, _name##_lbt, _event, _fsel1, f1, SEL_HBT_LBT_SEL, 2)
++#define _CMN_EVENT_HNS_EVICT(_model, _name, _event, _fsel1, f1)			\
++	_CMN_EVENT_HNS(_model, _name##_all, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 0), \
++	_CMN_EVENT_HNS(_model, _name##_eu, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 1), \
++	_CMN_EVENT_HNS(_model, _name##_en, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 2), \
++	_CMN_EVENT_HNS(_model, _name##_su, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 3), \
++	_CMN_EVENT_HNS(_model, _name##_sn, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 4), \
++	_CMN_EVENT_HNS(_model, _name##_mu, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 5), \
++	_CMN_EVENT_HNS(_model, _name##_mn, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 6)
+ 
+ #define CMN_EVENT_HNS_OCC(_model, _name, _event)			\
+ 	CMN_EVENT_HN_OCC(_model, hns_##_name, CMN_TYPE_HNS, _event),	\
+@@ -1014,13 +1018,9 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
+ 	_CMN_EVENT_HNS(CMNS3R2, _name##_ccglcn, _event, SEL_ENHANCED_HBT_LBT_SEL, 5), \
+ 	_CMN_EVENT_HNS(CMNS3R2, _name##_ccgrn, _event, SEL_ENHANCED_HBT_LBT_SEL, 6)
+ #define CMN_EVENT_HNS_EVICT(_model, _name, _event)			\
+-	_CMN_EVENT_HNS_HBT2(_model, _name##_all, _event, SEL_EVICT_STATE_SEL, 0), \
+-	_CMN_EVENT_HNS_HBT2(_model, _name##_eu, _event, SEL_EVICT_STATE_SEL, 1), \
+-	_CMN_EVENT_HNS_HBT2(_model, _name##_en, _event, SEL_EVICT_STATE_SEL, 2), \
+-	_CMN_EVENT_HNS_HBT2(_model, _name##_su, _event, SEL_EVICT_STATE_SEL, 3), \
+-	_CMN_EVENT_HNS_HBT2(_model, _name##_sn, _event, SEL_EVICT_STATE_SEL, 4), \
+-	_CMN_EVENT_HNS_HBT2(_model, _name##_mu, _event, SEL_EVICT_STATE_SEL, 5), \
+-	_CMN_EVENT_HNS_HBT2(_model, _name##_mn, _event, SEL_EVICT_STATE_SEL, 6)
++	_CMN_EVENT_HNS_EVICT(_model, _name##_all, _event, SEL_HBT_LBT_SEL, 0), \
++	_CMN_EVENT_HNS_EVICT(_model, _name##_hbt, _event, SEL_HBT_LBT_SEL, 1), \
++	_CMN_EVENT_HNS_EVICT(_model, _name##_lbt, _event, SEL_HBT_LBT_SEL, 2)
+ 
+ #define CMN_EVENT_HNSR0_HBT(_name, _event)				\
+ 	_CMN_EVENT_HNS_HBT(CMN700 | CMNS3R01, _name, _event, SEL_HBT_LBT_SEL)
+@@ -1856,10 +1856,12 @@ static void arm_cmn_val_add_event(struct arm_cmn *cmn, struct arm_cmn_val *val,
+ 
+ 		val->dtm_count[dtm]++;
+ 
++		if (sel == SEL_EVICT_STATE_SEL) {
++			val->filter[dtm][sel] = CMN_EVENT_FILTER2(event) + 1;
++			sel = SEL_HBT_LBT_SEL;
++		}
+ 		if (sel)
+ 			val->filter[dtm][sel] = CMN_EVENT_FILTER(event) + 1;
+-		if (sel == SEL_EVICT_STATE_SEL)
+-			val->filter[dtm][SEL_HBT_LBT_SEL] = CMN_EVENT_FILTER2(event) + 1;
+ 
+ 		if (type != CMN_TYPE_WP)
+ 			continue;
+@@ -1910,14 +1912,17 @@ static int arm_cmn_validate_group(struct arm_cmn *cmn, struct perf_event *event)
+ 		if (val->dtm_count[dtm] == CMN_DTM_NUM_COUNTERS)
+ 			goto done;
+ 
++		if (sel == SEL_EVICT_STATE_SEL) {
++			if (val->filter[dtm][sel] &&
++			    val->filter[dtm][sel] != CMN_EVENT_FILTER2(event) + 1)
++				goto done;
++			sel = SEL_HBT_LBT_SEL;
++		}
++
+ 		if (sel && val->filter[dtm][sel] &&
+ 		    val->filter[dtm][sel] != CMN_EVENT_FILTER(event) + 1)
+ 			goto done;
+ 
+-		if (sel == SEL_EVICT_STATE_SEL && val->filter[dtm][SEL_HBT_LBT_SEL] &&
+-		    val->filter[dtm][SEL_HBT_LBT_SEL] != CMN_EVENT_FILTER2(event) + 1)
+-			goto done;
+-
+ 		if (type != CMN_TYPE_WP)
+ 			continue;
+ 
+@@ -2077,16 +2082,19 @@ static void arm_cmn_event_clear(struct arm_cmn *cmn, struct perf_event *event,
+ static int arm_cmn_set_event_filter(struct arm_cmn_node *dn, struct perf_event *event)
+ {
+ 	enum cmn_filter_select fsel = to_cmn_hw(event)->filter_sel;
++	bool evict_state = fsel == SEL_EVICT_STATE_SEL;
+ 	int ret = 0;
+ 
++	if (evict_state) {
++		ret = arm_cmn_set_event_sel_hi(dn, fsel, CMN_EVENT_FILTER2(event));
++		fsel = SEL_HBT_LBT_SEL;
++	}
+ 	if (fsel)
+ 		ret = arm_cmn_set_event_sel_hi(dn, fsel, CMN_EVENT_FILTER(event));
+ 
+-	if (fsel == SEL_EVICT_STATE_SEL && !ret) {
+-		ret = arm_cmn_set_event_sel_hi(dn, SEL_HBT_LBT_SEL, CMN_EVENT_FILTER2(event));
+-		if (ret)
+-			dn->filter[fsel].count--;
+-	}
++	if (ret && evict_state)
++		dn->filter[SEL_EVICT_STATE_SEL].count--;
++
+ 	return ret;
+ }
+ 
+-- 
+2.54.0.dirty
 
-This commit updates the hfi1 infiniband driver to use remap_vmalloc_range()
-for mapping chip memory from vmalloc'd ranges instead of using a custom
-fault handler. It aims to prevent exposing kernel virtual addresses and
-cleans up VM flags.
-
-> diff --git a/drivers/infiniband/hw/hfi1/file_ops.c b/drivers/infiniband/h=
-w/hfi1/file_ops.c
-> --- a/drivers/infiniband/hw/hfi1/file_ops.c
-> +++ b/drivers/infiniband/hw/hfi1/file_ops.c
-> @@ -476,15 +472,10 @@ static int hfi1_file_mmap(struct file *fp, struct v=
-m_area_struct *vma)
->  		 * Use the page where this context's flags are. User level
->  		 * knows where it's own bitmap is within the page.
->  		 */
-> -		memaddr =3D (unsigned long)
-> -			(dd->events + uctxt_offset(uctxt)) & PAGE_MASK;
-> +		memvirt =3D dd->events + uctxt_offset(uctxt);
-> +		memvirt =3D (void *)(((uintptr_t)memvirt) & PAGE_MASK);
->  		memlen =3D PAGE_SIZE;
-> -		/*
-> -		 * v3.7 removes VM_RESERVED but the effect is kept by
-> -		 * using VM_IO.
-> -		 */
-> -		flags |=3D VM_IO | VM_DONTEXPAND;
-> -		vmf =3D 1;
-> +		is_vmalloc =3D 1;
->  		break;
->  	case STATUS:
-
-[ ... ]
-
-> @@ -559,12 +546,10 @@ static int hfi1_file_mmap(struct file *fp, struct v=
-m_area_struct *vma)
->  	}
-> =20
->  	vm_flags_reset(vma, flags);
-> -	mmap_cdbg(ctxt, subctxt, type, mapio, vmf, memaddr, memvirt, memdma,=20
-> +	mmap_cdbg(ctxt, subctxt, type, mapio, is_vmalloc, memaddr, memvirt, mem=
-dma,
->  		  memlen, vma);
-> -	if (vmf) {
-> -		vma->vm_pgoff =3D PFN_DOWN(memaddr);
-> -		vma->vm_ops =3D &vm_ops;
-> -		ret =3D 0;
-> +	if (is_vmalloc) {
-> +		ret =3D remap_vmalloc_range(vma, memvirt, 0);
-
-[Severity: High]
-Will this fail for secondary contexts where uctxt_offset(uctxt) > 0?
-
-When mapping the EVENTS region for any context > 0, memvirt is calculated as
-an offset from the vmalloc base address (dd->events). However,
-remap_vmalloc_range() strictly requires the exact base address of the
-vmalloc allocation.=20
-
-Because remap_vmalloc_range() expects the provided address to exactly match
-the area base address, won't it unconditionally return -EINVAL when passed
-this interior pointer?=20
-
-If so, does this mean userspace applications attempting to mmap the EVENTS
-page for any dynamic context will receive an unexpected -EINVAL error,
-breaking core functionality for secondary contexts?
-
->  	} else if (memdma) {
->  		ret =3D dma_mmap_coherent(&dd->pcidev->dev, vma,
->  					memvirt, memdma, memlen);
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260914-b4-mmap-pr=
-epare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org?part=3D11
