@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06CD2D94AF;
-	Mon, 14 Sep 2026 01:17:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A452633998;
+	Mon, 14 Sep 2026 01:19:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789348632; cv=none; b=NzyciDtbd9zeHctTbtYt19/QQIX71pjpZsZeXVUFlUTLYA6nP7GAAhcILVXMNavizbZKOeEInj3c7MMCcByJV+RDNcukGKVn6oeYzBYkbQg0rDQMwn0a3+vOYkhHSopfloQAHXyoLrApKl6evJbYZetnsZCAiQJ/WzQ+9RyLJ7A=
+	t=1789348800; cv=none; b=WZXW74ZpoSQUNjM6TtbqkqXG5/zZgzot6HfXBMfCewDJrEUn/HJkCHz/KZKveZBGMiKXLTDtuA5o6tUjdliMRapedrZj+OFRVhjC0Lijzim95emfbe7gRotS3+3EjqvecRdBCIBJIq5rWDWaEKaVOnrEW85w8FrZraosEbL03ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789348632; c=relaxed/simple;
-	bh=yaS7ARHyhCJQ5O/dVyDdhqWsOUNVVb3p0svU8JYNqME=;
+	s=arc-20240116; t=1789348800; c=relaxed/simple;
+	bh=h4HLfCBw39k1uGmhOKkOXmoE6EGjSt6l1D7LdjE/jQ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YXW9oxPwJZ4t3jx29C+A3RGnd0MthTZHB/LHEUKPMPw+KLkk6HDiVRPesvOjExe8h9x02PoRFfyW1vgtPz49SCrOfgjMlojbiHfl7/dOuPf/znkTlA7hD9i/Gid0JzUCRFldFxMqfeIjWw+tKBcdLJXQ03HzBbIpA8K3dNgcw/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z71TbIzT; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vn2wcbzATfSSksUeMMBgQr2IrgXlpEGbkyWcoZq5QMj9F59cHUtl8bumPthQHvYY7RBDAe9o4CDWoqc8zE2d7SiLuxwG2dTdb9PKS7Byn46K4CIiRyTn/fdmXnD0vrJCRWI98nL6fD8sbytNaTcnXFFs7H0MJKBaQk7891kYh18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S5xmT6Qq; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z71TbIzT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDAB21F000FF;
-	Mon, 14 Sep 2026 01:17:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S5xmT6Qq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 014D61F000FF;
+	Mon, 14 Sep 2026 01:19:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789348630;
-	bh=CxNE9VhML03EVnMjcv9cl9hUaRqHKkzyMHIH5zs2+Mw=;
+	s=k20260515; t=1789348799;
+	bh=3vwp8PKIBw+VorumMc9FZECvD/JGRt4vd/qp1AZfAVg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=Z71TbIzTwvppbu9XQkljgc1auny1M6YBlOr8ZQahB5hMXjrrHO2mYPFIZYuxOrIy9
-	 XxkQOisIQNumk9Ro5npv0NGtW8aXqk4B2eXXuXxfAUPMgZl74sKS8VVL64hLKu4Dr4
-	 Diqb8X7DeEDXW/21AWvaH5TuUvCZ6hrBHiTXdJTga6po9K8jlN836zMryYMOPzqK7A
-	 Ced225RRVswQnkr1fG/XdKWBKwTj1GI+Yxlcv5mJhUkGmZrdBOW0Kaa5PcJTqVEDcI
-	 LhMx3Sh3fK7L0gvVJ7zmYqObflj1a3iKec9N6KdrbuKsvwiBq1ro4Tabo+SSnInoGK
-	 txFErcSl6Uk9Q==
-Date: Sun, 13 Sep 2026 18:17:08 -0700
+	b=S5xmT6Qq/l9OwPCcUV5dIl1E4T0Mf/jo3XTyh0QLMInhoJyJZInVoujWJgGX5baiY
+	 uXOLd/mSHMbnhgVqcobC7K+RLNBdeOQgs4/cYutijk+erJp55bmgc9Zkp7C3wGve94
+	 9s0jm35xUhz68CvLKjvvjDZczWLbNx0DrrONJcCRKV7eCZO4l/BZ+kjhUrwWAjaSck
+	 JBSDpH+YMDQhgAaG7B/eLGnzitEV/WjWgfAzfJEqGJ3crtJBMy/0pE8U1Blvi6D4I7
+	 3Ji0YNrwT85aVy9d0dahqE4xCdQ4afQ8ZtBglhSUWxboBcOrZw1kyuvZQzDq4CUTPF
+	 E2z6mcxUusUrg==
+Date: Sun, 13 Sep 2026 18:19:57 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Hui Su <sh_def@163.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -34,9 +34,11 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf evsel: Restrict incremental open error unwind
-Message-ID: <aqdLFApaxDgj1mtZ@google.com>
-References: <20260912031112.1814574-1-sh_def@163.com>
+Subject: Re: [PATCH v2] perf thread_map: Deduplicate numerically equivalent
+ PID and TID strings
+Message-ID: <aqdLvZJykgu94WnV@google.com>
+References: <20260912031112.1814574-2-sh_def@163.com>
+ <20260912051747.2215776-1-sh_def@163.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,202 +47,210 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260912031112.1814574-1-sh_def@163.com>
+In-Reply-To: <20260912051747.2215776-1-sh_def@163.com>
 
-On Sat, Sep 12, 2026 at 12:11:10PM +0900, Hui Su wrote:
-> evsel__open_cpu(), evsel__tool_pmu_open() and
-> evsel__hwmon_pmu_open() support opening a subrange of a CPU map, bounded
-> by [start_cpu_map_idx, end_cpu_map_idx).
+On Sat, Sep 12, 2026 at 02:17:47PM +0900, Hui Su wrote:
+> thread_map__new_by_pid_str() and thread_map__new_by_tid_str() attempt
+> to deduplicate adjacent PIDs/TIDs using prev_pid and prev_tid.
+> However, prev_pid and prev_tid were never updated inside the loop,
+> making the check "if (pid == prev_pid)" dead code.
 > 
-> Their error paths, however, unwind using "while (--idx >= 0)" all the way
-> back to CPU index 0 regardless of start_cpu_map_idx. If lower CPU indices
-> were opened by an earlier invocation, a later incremental open failure
-> therefore closes those existing file descriptors and overwrites their
-> slots with -1.
+> Furthermore, even if prev_pid/prev_tid were updated, strlist sorts
+> lexicographically (e.g. "010", "011", "10"), which means identical
+> numeric values with different string representations (e.g. leading
+> zeros) are not adjacent in the list and would never be deduplicated.
 > 
-> Before this fix, running the new incremental open test demonstrates this
-> corruption:
+> Before this fix, the new tests fail at the first duplicate TID case:
 > 
->   $ perf test -v "Tool PMU"
->    12: Tool PMU:
->    12.1: Tool PMU                                                      : Ok
->    12.2: Tool PMU leader                                               : Ok
->    12.3: Incremental open error unwind boundary:
->      FAILED: CPU 0 FD overwritten: FD(evsel, 0, 0)=-1, expected 4
->   FAILED!
+>   $ perf test -v 35
+>   35: Thread map                                                      :
+>   --- start ---
+>   test child forked, pid 363297
+>   FAILED tests/thread-map.c:63 wrong nr for duplicate TIDs
+>     (nr=3, expected 1)
+>   test child finished with -1
+>   ---- end ----
+>   Thread map: FAILED!
 > 
-> Stop the unwind at start_cpu_map_idx so that only file descriptors
-> opened by the current invocation are rolled back.
+> Replace the ineffective prev_pid/prev_tid check with an intlist seen-set.
+> This ensures that any numeric duplicate PID or TID is properly
+> recognized and skipped, regardless of string formatting or order.
+> 
+> Add tests for numerically equivalent PID and TID strings.
 > 
 > After this fix:
 > 
->   $ perf test -v "Tool PMU"
->    12: Tool PMU:
->    12.1: Tool PMU                                                      : Ok
->    12.2: Tool PMU leader                                               : Ok
->    12.3: Incremental open error unwind boundary                        : Ok
+>   $ perf test -v 35
+>   35: Thread map                                                      :
+>   --- start ---
+>   test child forked, pid 363650
+>   test child finished with 0
+>   ---- end ----
+>   Thread map: Ok
 > 
-> Fixes: 4804e0111662 ("perf stat: Use affinity for opening events")
-> Fixes: 240505b2d0ad ("perf tool_pmu: Factor tool events into their own PMU")
-> Fixes: 53cc0b351ec9 ("perf hwmon_pmu: Add a tool PMU exposing events from hwmon in sysfs")
-
-Maybe we just need to last one?
+> Fixes: b52956c961be ("perf tools: Allow multiple threads or processes in record, stat, top")
+> Signed-off-by: Hui Su <sh_def@163.com>
 
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
-
-> Signed-off-by: Hui Su <sh_def@163.com>
 > ---
->  tools/perf/tests/tool_pmu.c | 79 +++++++++++++++++++++++++++++++++++++
->  tools/perf/util/evsel.c     |  2 +-
->  tools/perf/util/hwmon_pmu.c |  2 +-
->  tools/perf/util/tool_pmu.c  |  2 +-
->  4 files changed, 82 insertions(+), 3 deletions(-)
+> Differences in v2:
+>  - Explicitly include <stdio.h> in tools/perf/tests/thread-map.c for snprintf.
+>  - Link to v1: https://lore.kernel.org/r/20260912031112.1814574-2-sh_def@163.com/
 > 
-> diff --git a/tools/perf/tests/tool_pmu.c b/tools/perf/tests/tool_pmu.c
-> index c6c5ebf0e935..667160f9e2cd 100644
-> --- a/tools/perf/tests/tool_pmu.c
-> +++ b/tools/perf/tests/tool_pmu.c
-> @@ -1,8 +1,16 @@
->  // SPDX-License-Identifier: (LGPL-2.1 OR BSD-2-Clause)
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +#include <string.h>
-> +#include <unistd.h>
-> +#include <internal/xyarray.h>
-> +#include "cpumap.h"
->  #include "debug.h"
->  #include "evlist.h"
-> +#include "evsel.h"
->  #include "parse-events.h"
->  #include "tests.h"
-> +#include "thread_map.h"
->  #include "tool_pmu.h"
->  
->  static int do_test(enum tool_pmu_event ev, bool with_pmu)
-> @@ -100,9 +108,80 @@ static int test__tool_pmu_with_pmu(struct test_suite *test __maybe_unused,
->  	return TEST_OK;
+>  tools/perf/tests/thread-map.c | 34 ++++++++++++++++++++++++++++++++++
+>  tools/perf/util/thread_map.c  | 28 ++++++++++++++++++++--------
+>  2 files changed, 54 insertions(+), 8 deletions(-)
+> 
+> diff --git a/tools/perf/tests/thread-map.c b/tools/perf/tests/thread-map.c
+> index 877868107455..690ccae17c31 100644
+> --- a/tools/perf/tests/thread-map.c
+> +++ b/tools/perf/tests/thread-map.c
+> @@ -1,4 +1,5 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> +#include <stdio.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+>  #include <sys/types.h>
+> @@ -56,6 +57,39 @@ static int test__thread_map(struct test_suite *test __maybe_unused, int subtest
+>  	TEST_ASSERT_VAL("wrong refcnt",
+>  			refcount_read(&map->refcnt) == 1);
+>  	perf_thread_map__put(map);
+> +
+> +	/* test numeric deduplication of TIDs */
+> +	map = thread_map__new_by_tid_str("123,0123,00123");
+> +	TEST_ASSERT_VAL("failed to alloc map", map);
+> +	TEST_ASSERT_VAL("wrong nr for duplicate TIDs", map->nr == 1);
+> +	TEST_ASSERT_VAL("wrong pid", perf_thread_map__pid(map, 0) == 123);
+> +	perf_thread_map__put(map);
+> +
+> +	/* test non-adjacent numeric duplicates (strlist lexicographic: 010, 011, 10) */
+> +	map = thread_map__new_by_tid_str("010,011,10");
+> +	TEST_ASSERT_VAL("failed to alloc map", map);
+> +	TEST_ASSERT_VAL("wrong nr for non-adjacent duplicate TIDs", map->nr == 2);
+> +	perf_thread_map__put(map);
+> +
+> +	/* test numeric deduplication of PIDs */
+> +	{
+> +		struct perf_thread_map *base, *dup;
+> +		char pid_str[64];
+> +
+> +		base = thread_map__new_by_pid(getpid());
+> +		TEST_ASSERT_VAL("failed to alloc baseline map", base);
+> +
+> +		snprintf(pid_str, sizeof(pid_str), "%d,0%d", getpid(), getpid());
+> +
+> +		dup = thread_map__new_str(pid_str, NULL, false);
+> +		TEST_ASSERT_VAL("failed to alloc duplicate pid map", dup);
+> +		TEST_ASSERT_VAL("wrong nr for duplicate PIDs",
+> +				dup->nr == base->nr);
+> +
+> +		perf_thread_map__put(dup);
+> +		perf_thread_map__put(base);
+> +	}
+> +
+>  	return 0;
 >  }
 >  
-> +static int test__tool_pmu_incremental_open_unwind(struct test_suite *test __maybe_unused,
-> +						  int subtest __maybe_unused)
-> +{
-> +	struct evlist *evlist = evlist__new();
-> +	struct parse_events_error err;
-> +	struct perf_cpu_map *cpus = NULL;
-> +	struct perf_thread_map *threads = NULL;
-> +	struct evsel *evsel;
-> +	int ret = TEST_FAIL, fd0 = -1;
-> +
-> +	if (!evlist)
-> +		return TEST_FAIL;
-> +
-> +	parse_events_error__init(&err);
-> +	if (parse_events(evlist, "tool/user_time/", &err)) {
-> +		parse_events_error__exit(&err);
-> +		evlist__put(evlist);
-> +		return TEST_FAIL;
-> +	}
-> +	parse_events_error__exit(&err);
-> +
-> +	evsel = evlist__first(evlist);
-> +	cpus = perf_cpu_map__new("0,1");
-> +	threads = thread_map__new_by_tid(getpid());
-> +	if (!cpus || !threads)
-> +		goto out;
-> +
-> +	/* Step 1: Open CPU index 0 successfully */
-> +	if (evsel__open_per_cpu_and_thread(evsel, cpus, 0, threads) < 0) {
-> +		pr_debug("Failed to open CPU index 0\n");
-> +		goto out;
-> +	}
-> +
-> +	fd0 = (*(int *)xyarray__entry(evsel->core.fd, 0, 0));
-> +	if (fd0 < 0 || fcntl(fd0, F_GETFD) < 0) {
-> +		pr_debug("CPU index 0 FD is invalid (%d)\n", fd0);
-> +		goto out;
-> +	}
-> +
-> +	/* Step 2: Intentionally trigger failure on CPU index 1 */
-> +	evsel->core.attr.sample_period = 1; /* Not supported for tool PMU -> -EINVAL */
-> +	if (evsel__open_per_cpu_and_thread(evsel, cpus, 1, threads) >= 0) {
-> +		pr_debug("Unexpected success opening CPU index 1 with sample_period=1\n");
-> +		goto out;
-> +	}
-> +
-> +	/*
-> +	 * Step 3: Check that CPU index 0's FD was NOT destroyed by CPU index 1's unwind.
-> +	 */
-> +	if ((*(int *)xyarray__entry(evsel->core.fd, 0, 0)) != fd0) {
-> +		pr_debug("FAILED: CPU 0 FD overwritten: FD(evsel, 0, 0)=%d, expected %d\n",
-> +			 (*(int *)xyarray__entry(evsel->core.fd, 0, 0)), fd0);
-> +		goto out;
-> +	}
-> +
-> +	if (fcntl(fd0, F_GETFD) < 0) {
-> +		pr_debug("FAILED: CPU 0 FD %d was closed by error unwind! errno=%d (%s)\n",
-> +			 fd0, errno, strerror(errno));
-> +		goto out;
-> +	}
-> +
-> +	ret = TEST_OK;
-> +out:
-> +	evsel__close(evsel);
-> +	perf_cpu_map__put(cpus);
-> +	perf_thread_map__put(threads);
-> +	evlist__put(evlist);
-> +	return ret;
-> +}
-> +
->  static struct test_case tests__tool_pmu[] = {
->  	TEST_CASE("Parsing without PMU name", tool_pmu_without_pmu),
->  	TEST_CASE("Parsing with PMU name", tool_pmu_with_pmu),
-> +	TEST_CASE("Incremental open error unwind boundary", tool_pmu_incremental_open_unwind),
->  	{	.name = NULL, }
->  };
+> diff --git a/tools/perf/util/thread_map.c b/tools/perf/util/thread_map.c
+> index 48c70f149e92..7b59b3f7f2e4 100644
+> --- a/tools/perf/util/thread_map.c
+> +++ b/tools/perf/util/thread_map.c
+> @@ -10,6 +10,7 @@
+>  #include <unistd.h>
+>  #include "string2.h"
+>  #include "strlist.h"
+> +#include "intlist.h"
+>  #include <string.h>
+>  #include <api/fs/fs.h>
+>  #include <linux/string.h>
+> @@ -163,12 +164,13 @@ static struct perf_thread_map *thread_map__new_by_pid_str(const char *pid_str)
+>  	int items, total_tasks = 0;
+>  	struct dirent **namelist = NULL;
+>  	int i, j = 0;
+> -	pid_t pid, prev_pid = INT_MAX;
+> +	pid_t pid;
+>  	struct str_node *pos;
+>  	struct strlist *slist = strlist__new(pid_str, NULL);
+> +	struct intlist *seen = intlist__new(NULL);
 >  
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index d4cb455f4a7d..eb429087ebfe 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -3127,7 +3127,7 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
->  			FD(evsel, idx, thread) = -1;
->  		}
->  		thread = nthreads;
-> -	} while (--idx >= 0);
-> +	} while (--idx >= start_cpu_map_idx);
->  	errno = old_errno;
+> -	if (!slist)
+> -		return NULL;
+> +	if (!slist || !seen)
+> +		goto out;
+>  
+>  	strlist__for_each_entry(pos, slist) {
+>  		pid = strtol(pos->s, NULL, 10);
+> @@ -176,9 +178,12 @@ static struct perf_thread_map *thread_map__new_by_pid_str(const char *pid_str)
+>  		if (pid == INT_MIN || pid == INT_MAX)
+>  			goto out_free_threads;
+>  
+> -		if (pid == prev_pid)
+> +		if (intlist__has_entry(seen, (unsigned long)pid))
+>  			continue;
+>  
+> +		if (intlist__add(seen, (unsigned long)pid))
+> +			goto out_free_threads;
+> +
+>  		sprintf(name, "/proc/%d/task", pid);
+>  		items = scandir(name, &namelist, filter, NULL);
+>  		if (items <= 0)
+> @@ -200,6 +205,7 @@ static struct perf_thread_map *thread_map__new_by_pid_str(const char *pid_str)
+>  	}
+>  
 >  out:
->  	if (err)
-> diff --git a/tools/perf/util/hwmon_pmu.c b/tools/perf/util/hwmon_pmu.c
-> index ed544dca70c3..96aeb379e169 100644
-> --- a/tools/perf/util/hwmon_pmu.c
-> +++ b/tools/perf/util/hwmon_pmu.c
-> @@ -803,7 +803,7 @@ int evsel__hwmon_pmu_open(struct evsel *evsel,
->  			FD(evsel, idx, thread) = -1;
->  		}
->  		thread = nthreads;
-> -	} while (--idx >= 0);
-> +	} while (--idx >= start_cpu_map_idx);
->  	close(dir);
->  	return err;
->  }
-> diff --git a/tools/perf/util/tool_pmu.c b/tools/perf/util/tool_pmu.c
-> index 5c30854b4644..d2f7591747d9 100644
-> --- a/tools/perf/util/tool_pmu.c
-> +++ b/tools/perf/util/tool_pmu.c
-> @@ -349,7 +349,7 @@ int evsel__tool_pmu_open(struct evsel *evsel,
->  			FD(evsel, idx, thread) = -1;
->  		}
->  		thread = nthreads;
-> -	} while (--idx >= 0);
-> +	} while (--idx >= start_cpu_map_idx);
->  	errno = old_errno;
->  	return err;
->  }
+> +	intlist__delete(seen);
+>  	strlist__delete(slist);
+>  	if (threads)
+>  		refcount_set(&threads->refcnt, 1);
+> @@ -219,17 +225,19 @@ struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str)
+>  {
+>  	struct perf_thread_map *threads = NULL, *nt;
+>  	int ntasks = 0;
+> -	pid_t tid, prev_tid = INT_MAX;
+> +	pid_t tid;
+>  	struct str_node *pos;
+>  	struct strlist *slist;
+> +	struct intlist *seen;
+>  
+>  	/* perf-stat expects threads to be generated even if tid not given */
+>  	if (!tid_str)
+>  		return perf_thread_map__new_dummy();
+>  
+>  	slist = strlist__new(tid_str, NULL);
+> -	if (!slist)
+> -		return NULL;
+> +	seen = intlist__new(NULL);
+> +	if (!slist || !seen)
+> +		goto out;
+>  
+>  	strlist__for_each_entry(pos, slist) {
+>  		tid = strtol(pos->s, NULL, 10);
+> @@ -237,9 +245,12 @@ struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str)
+>  		if (tid == INT_MIN || tid == INT_MAX)
+>  			goto out_free_threads;
+>  
+> -		if (tid == prev_tid)
+> +		if (intlist__has_entry(seen, (unsigned long)tid))
+>  			continue;
+>  
+> +		if (intlist__add(seen, (unsigned long)tid))
+> +			goto out_free_threads;
+> +
+>  		ntasks++;
+>  		nt = perf_thread_map__realloc(threads, ntasks);
+>  
+> @@ -251,6 +262,7 @@ struct perf_thread_map *thread_map__new_by_tid_str(const char *tid_str)
+>  		threads->nr = ntasks;
+>  	}
+>  out:
+> +	intlist__delete(seen);
+>  	strlist__delete(slist);
+>  	if (threads)
+>  		refcount_set(&threads->refcnt, 1);
 > -- 
 > 2.55.0
 > 
