@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA40A42902E;
-	Tue, 15 Sep 2026 06:40:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B6B2F8E98;
+	Tue, 15 Sep 2026 06:40:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789454443; cv=none; b=X/exyE8tO8ZxiXJdHLZ0Xq+CUbuog7JFBUAB94hOgQBVB/tyv50kAqWtvxamGZxjf4nkMea6uJYla1WKei4PlOmcoj7mfxhsPBP+kjNiGcNK9gokEv0/y2cCs8hAeSCkJdjb5LSo8+BUAHqt7AYYWK3g7eeEjiIxGUv71eirADo=
+	t=1789454443; cv=none; b=C4Yqaxs6wXTaAOPAgijkbvbX7+EGPAMlGLzFow4DwiPFVh8KUlLaA5DlTZDS4qF48ANLUpypaHp066+undPVumDlU4VFWnPfKSTvHm4Wz3JDwDL3sIPNCeh5TAcg5HEJBGN4EFHe2X7TR/D4uLzYd7/853z8hdQqKaGK4xpyrJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789454443; c=relaxed/simple;
-	bh=RI6tZtIIzGIQFJ+xsVri2MLvcptS6c7Hi2l2YV+6MAQ=;
+	bh=E9Si2OLdLKJDCRlVA+K3/QMtHNdDsTAiYITsNFszYd8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BZaonzyt/y9P/a5lSr1KpLzZbh1hzDNP0FaxtOGC+R/++P8DWQg6POgqncsoctvLdMm7yElhJmyV5IQ5mOBJIufIV1Mim5HIZYs+nvortt9knqnj928bZh2JV3CU4yLybHlVCXIGv0E3+44jPpoi43yvYNDPdHHGgcakGBfAsqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R5IXkHxk; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=Uyd1Tyt08BBIoQB/tXTELfa3rh4QuBI5aGVZU92d0caaaSnXgn8OMI1goikIUtef2RmqGvnq+F3dSCv/4fQTe0kU2ubAydXxmFfAlFljFAs3O4V1BMma1F1kLV2g4pt0KJjlEB3TB0tx9WsRODevl8//D4uppJwxu9pKnydiGx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n5AJMUiw; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R5IXkHxk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 337EC1F00893;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n5AJMUiw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C76171F00898;
 	Tue, 15 Sep 2026 06:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789454441;
-	bh=lidfxj0j6v8CyF9hCR2LKoYiQPRjEweGxhqs/Ke+j60=;
+	s=k20260515; t=1789454442;
+	bh=UFXstwGzfVCmjcpWJEqcYHIuvCIqu0LCDSe4kkGOu+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=R5IXkHxkHLE2E0EbrHjnMj5AFgH63QlOf4TIU0/TU8bilVlDxMmjpNrZI2t37bZdb
-	 rHpTyf0wnz5isj+rBOS6pSVDIW5eeD5AjEUnlW8gIHLQFSP7OYH6Ug15kBoTWD/6Ze
-	 ORgRHHFbr532EFSce7UXAXRpBlQ5nbL2cbdKacfHor5us7LM7aSamfDy9S1/aWlmMY
-	 sf37qVmVCroDhWh4tQfHffqcrR7n8qYSvGodtOBS2IqCB6R43/B2ewCVqetlGQ5sn8
-	 H9iP11Iv4ejjkM5gEUHmjbYh4qy6QIqqvmJ4Dvjuw4VhEyhsGso3CDi7dWMOCpTvGD
-	 SmiXPFlgrLKFw==
+	b=n5AJMUiwYphJRPyVhT6ZVeShyPe2r96KJCQuuqRUg/Ne//Bm0riD0EmQpGMcA3EYT
+	 eCoqvdtKUIx9yYwt8GQ59bhavtMecz2Q1xGNwvs6EqbuE2qfEETGCRyjrs8Q2S9mDK
+	 vWJXBeP3WP2TufNvoawRBg7P1SWj0mEAEottVPxisPSHSWqAddM/Ft3TxP8X43QZBP
+	 NrzB0Vc3ZWP2Du43iHJJWcKKcgCVXoDYQN2Rnwi/szpluYDHAoKunZWcbTWLJ7Q0Ao
+	 WkJ1niBtE0iMuwHytHkRC1dnQekhrM/ZZ8q/5QZCvonjFoHdIAzKSncCJiE4bkDQPp
+	 rSUHiVd4850MQ==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -40,9 +40,9 @@ Cc: Ian Rogers <irogers@google.com>,
 	Yanbo Zhao <yzhao62@ncsu.edu>,
 	Tengda Wu <wutengda@huaweicloud.com>,
 	Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: [PATCH v3 2/3] perf annotate-date: Allow out-of-size access for flex-array types
-Date: Mon, 14 Sep 2026 23:40:34 -0700
-Message-ID: <20260915064035.1970175-3-namhyung@kernel.org>
+Subject: [PATCH v3 3/3] perf annotate-data: Adjust type offset for flex-array
+Date: Mon, 14 Sep 2026 23:40:35 -0700
+Message-ID: <20260915064035.1970175-4-namhyung@kernel.org>
 X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
 In-Reply-To: <20260915064035.1970175-1-namhyung@kernel.org>
 References: <20260915064035.1970175-1-namhyung@kernel.org>
@@ -54,179 +54,151 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Structs that have a flex array will have accesses beyond its original
-size as the array was declared as 0 sized.  For now, it just allow any
-offset bigger than the size.  It could be refined later.
+The flex array members are located beyond the original type size.  Also
+it needs to adjust the offset in an array to find a corresponding
+element using module operation.  Note that we focus on access to type and
+field, so array index is not important.
+
+Make sure to find a field name for flex arrays.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/annotate-data.c | 63 ++++++++++++++++++---------------
- tools/perf/util/annotate-data.h |  2 ++
- 2 files changed, 36 insertions(+), 29 deletions(-)
+ tools/perf/util/annotate-data.c | 77 ++++++++++++++++++++++++++++++---
+ 1 file changed, 70 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index aff60a630fd05b01..1ee2b74f99205567 100644
+index 1ee2b74f99205567..1c19b807c4f2179d 100644
 --- a/tools/perf/util/annotate-data.c
 +++ b/tools/perf/util/annotate-data.c
-@@ -7,6 +7,7 @@
- #include <errno.h>
- #include <stdio.h>
- #include <stdlib.h>
-+#include <string.h>
- #include <inttypes.h>
- #include <linux/zalloc.h>
+@@ -241,7 +241,8 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 		return DIE_FIND_CB_END;
  
-@@ -248,8 +249,15 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 	else
- 		die_mem = member_type;
+ 	strbuf_init(&sb, 32);
+-	die_get_typename(die, &sb);
++	if (die_get_typename(die, &sb) < 0)
++		strbuf_add(&sb, "(unknown type)", 14);
  
--	if (dwarf_aggregate_size(&die_mem, &size) < 0)
--		size = 0;
-+	if (dwarf_aggregate_size(&die_mem, &size) < 0) {
-+		if (dwarf_tag(&die_mem) == DW_TAG_array_type) { /* flex-array? */
-+			die_get_real_type(&die_mem, &die_mem);
-+			if (dwarf_aggregate_size(&die_mem, &size) < 0)
-+				size = 0;
-+		} else {
-+			size = 0;
-+		}
-+	}
- 
- 	if (dwarf_attr_integrate(die, DW_AT_data_member_location, &attr)) {
- 		if (dwarf_formudata(&attr, &loc) != 0) {
-@@ -399,6 +407,7 @@ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
- 	result->self.type_name = type_name;
- 	result->self.size = size;
- 	INIT_LIST_HEAD(&result->self.children);
-+	result->flex_array = die_has_flex_array(type_die);
- 
- 	if (symbol_conf.annotate_data_member)
- 		add_member_types(result, type_die);
-@@ -517,13 +526,30 @@ static bool is_better_type(Dwarf_Die *type_a, Dwarf_Die *type_b)
- 	return false;
+ 	__die_get_real_type(die, &member_type);
+ 	if (dwarf_tag(&member_type) == DW_TAG_typedef)
+@@ -333,19 +334,40 @@ static void delete_members(struct annotated_member *member)
  }
  
-+static enum type_match_result check_type_offset(Dwarf_Die *type_die, int offset)
-+{
-+	Dwarf_Word size;
+ static int fill_member_name(char *buf, size_t sz, struct annotated_member *m,
+-			    int offset, bool first)
++			    int offset, bool first, bool has_flex_array)
+ {
+ 	struct annotated_member *child;
++	bool found = false;
++	int len;
+ 
+ 	if (list_empty(&m->children))
+ 		return 0;
+ 
+ 	list_for_each_entry(child, &m->children, node) {
+-		int len;
+-
+ 		if (offset < child->offset || offset >= child->offset + child->size)
+ 			continue;
+ 
++		found = true;
++		break;
++	}
 +
-+	/* Get the size of the actual type */
-+	if (dwarf_aggregate_size(type_die, &size) < 0)
-+		return PERF_TMR_NO_SIZE;
++	if (!found && has_flex_array) {
++		/*
++		 * It may have an intermediate struct that has another struct that
++		 * contains a flex array.  In that case, the outer struct itself is
++		 * has no array and the size is less than the offset so the above
++		 * logic won't find the outer struct at the offset.  Let's use the
++		 * last struct if it couldn't find a member for the flex array.
++		 */
++		child = list_last_entry(&m->children, struct annotated_member, node);
 +
-+	/* Minimal sanity check */
-+	if (offset < 0)
-+		return PERF_TMR_BAD_OFFSET;
++		if (offset < child->offset)
++			return 0;
 +
-+	if ((unsigned)offset >= size && !die_has_flex_array(type_die))
-+		return PERF_TMR_BAD_OFFSET;
++		found = true;
++	}
 +
-+	return PERF_TMR_OK;
++	if (found) {
+ 		/* It can have anonymous struct/union members */
+ 		if (child->var_name) {
+ 			len = scnprintf(buf, sz, "%s%s",
+@@ -355,15 +377,37 @@ static int fill_member_name(char *buf, size_t sz, struct annotated_member *m,
+ 			len = 0;
+ 		}
+ 
+-		return fill_member_name(buf + len, sz - len, child, offset, first) + len;
++		return fill_member_name(buf + len, sz - len, child, offset, first,
++					has_flex_array) + len;
+ 	}
++
+ 	return 0;
+ }
+ 
+ int annotated_data_type__get_member_name(struct annotated_data_type *adt,
+ 					 char *buf, size_t sz, int member_offset)
+ {
+-	return fill_member_name(buf, sz, &adt->self, member_offset, /*first=*/true);
++	return fill_member_name(buf, sz, &adt->self, member_offset, /*first=*/true,
++				adt->flex_array);
 +}
 +
- /* The type info will be saved in @type_die */
- static enum type_match_result check_variable(struct data_loc_info *dloc,
- 					     Dwarf_Die *var_die,
- 					     Dwarf_Die *type_die, int reg,
- 					     int offset, bool is_fbreg)
- {
--	Dwarf_Word size;
- 	bool needs_pointer = true;
- 	Dwarf_Die sized_type;
- 
-@@ -554,15 +580,7 @@ static enum type_match_result check_variable(struct data_loc_info *dloc,
- 	else
- 		sized_type = *type_die;
- 
--	/* Get the size of the actual type */
--	if (dwarf_aggregate_size(&sized_type, &size) < 0)
--		return PERF_TMR_NO_SIZE;
--
--	/* Minimal sanity check */
--	if ((unsigned)offset >= size)
--		return PERF_TMR_BAD_OFFSET;
--
--	return PERF_TMR_OK;
-+	return check_type_offset(&sized_type, offset);
++static struct annotated_member *find_flex_array(struct annotated_member *m)
++{
++	struct annotated_member *child;
++
++	if (list_empty(&m->children))
++		return NULL;
++
++	child = list_last_entry(&m->children, struct annotated_member, node);
++	if (strstr(child->type_name, "[]"))
++		return child;
++
++	return find_flex_array(child);
++}
++
++static struct annotated_member *get_flex_array_member(struct annotated_data_type *adt)
++{
++	return find_flex_array(&adt->self);
  }
  
- struct type_state_stack *find_stack_state(struct type_state *state,
-@@ -1112,7 +1130,6 @@ static enum type_match_result check_matching_type(struct type_state *state,
- 						  struct disasm_line *dl,
- 						  Dwarf_Die *type_die)
+ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
+@@ -1740,6 +1784,7 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
  {
--	Dwarf_Word size;
- 	u32 insn_offset = dl->al.offset;
- 	int reg = dloc->op->reg1;
- 	int offset = dloc->op->offset;
-@@ -1166,12 +1183,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
- 		else
- 			sized_type = *type_die;
+ 	struct dso *dso = map__dso(dloc->ms->map);
+ 	Dwarf_Die type_die;
++	struct annotated_data_type *result;
  
--		/* Get the size of the actual type */
--		if (dwarf_aggregate_size(&sized_type, &size) < 0 ||
--		    (unsigned)dloc->type_offset >= size)
--			return PERF_TMR_BAD_OFFSET;
--
--		return PERF_TMR_OK;
-+		return check_type_offset(&sized_type, dloc->type_offset);
- 	}
+ 	/*
+ 	 * The type offset is the same as instruction offset by default.
+@@ -1752,7 +1797,25 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
+ 	if (find_data_type_die(dloc, &type_die) < 0)
+ 		return NULL;
  
- 	if (state->regs[reg].kind == TSR_KIND_POINTER) {
-@@ -1190,12 +1202,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
+-	return dso__findnew_data_type(dso, &type_die);
++	result = dso__findnew_data_type(dso, &type_die);
++	if (result == NULL)
++		return NULL;
++
++	if (result->flex_array && dloc->type_offset > result->self.size) {
++		struct annotated_member *flex_array = get_flex_array_member(result);
++
++		if (flex_array && flex_array->size > 0) {
++			int offset = dloc->type_offset;
++
++			/* adjust offset in the flex array */
++			offset -= flex_array->offset;
++			offset %= flex_array->size;
++			offset += flex_array->offset;
++
++			dloc->type_offset = offset;
++		}
++	}
++	return result;
+ }
  
- 		dloc->type_offset = dloc->op->offset + state->regs[reg].offset;
- 
--		/* Get the size of the actual type */
--		if (dwarf_aggregate_size(type_die, &size) < 0 ||
--		    (unsigned)dloc->type_offset >= size)
--			return PERF_TMR_BAD_OFFSET;
--
--		return PERF_TMR_OK;
-+		return check_type_offset(type_die, dloc->type_offset);
- 	}
- 
- 	if (state->regs[reg].kind == TSR_KIND_PERCPU_POINTER) {
-@@ -1209,9 +1216,7 @@ static enum type_match_result check_matching_type(struct type_state *state,
- 
- 		dloc->type_offset = dloc->op->offset;
- 
--		/* Get the size of the actual type */
--		if (dwarf_aggregate_size(type_die, &size) < 0 ||
--		    (unsigned)dloc->type_offset >= size)
-+		if (check_type_offset(type_die, dloc->type_offset) != PERF_TMR_OK)
- 			return PERF_TMR_BAIL_OUT;
- 
- 		return PERF_TMR_OK;
-@@ -1839,7 +1844,7 @@ int annotated_data_type__update_samples(struct annotated_data_type *adt,
- 			return -1;
- 	}
- 
--	if (offset < 0 || offset >= adt->self.size)
-+	if (offset < 0 || (offset >= adt->self.size && !adt->flex_array))
- 		return -1;
- 
- 	h = &adt->histograms[evsel->core.idx];
-diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index ca2096a9ee62cbfe..957726334907cc0e 100644
---- a/tools/perf/util/annotate-data.h
-+++ b/tools/perf/util/annotate-data.h
-@@ -85,6 +85,7 @@ struct type_hist {
-  * struct annotated_data_type - Data type to profile
-  * @node: RB-tree node for dso->type_tree
-  * @self: Actual type information
-+ * @flex_array: Whether it has a flex array
-  * @nr_histogram: Number of histogram entries
-  * @histograms: An array of histograms
-  *
-@@ -93,6 +94,7 @@ struct type_hist {
- struct annotated_data_type {
- 	struct rb_node node;
- 	struct annotated_member self;
-+	bool flex_array;
- 	int nr_histograms;
- 	struct type_hist *histograms;
- };
+ static size_t data_type_hash(long key, void *ctx __maybe_unused)
 -- 
 2.55.0.1082.g2b9226bbc0-goog
 
