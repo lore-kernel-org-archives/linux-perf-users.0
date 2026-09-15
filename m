@@ -1,159 +1,149 @@
-Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
+Received: from mail-qk2-f13.google.com (mail-qk2-f13.google.com [74.125.230.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC0A440A25
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 22:31:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B793BB119
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 22:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.205
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789511521; cv=pass; b=saOf286GCACNmFzgewJzA1T77adgp1MYmVVMH2hsq73iaw4JKIycCnF3PasqmhuT/X7eGZyfRxwnndTz3slCOAEYPFgCb7iTio+1fcvvyaMFDexwVZAXKkuTFTe1BoB0R78B7uhIPgLa1fg4dyPk7ZGl8nZU4D/dwr1OGz+7p8Y=
+	t=1789511958; cv=pass; b=IZdnsyDSI1/RYHKaeyCz/eSqXcUBn2J5lLXf+ThokbDhYoSgCGaH33cRvXEXsviyeCOOcUjMLvGqwN5tcf6F660vSlC7iz3n4Sb2ZfFLhxSe6RhttrAjwMSIauyabnr/rn0RYZpDBz/dWiOLR4Ya3hXrLhMTx1oPyRWxpqQd5VY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789511521; c=relaxed/simple;
-	bh=HwkUmEeMNJIDc9Gel3SUVMVZAqVSKw+L0prI4S18Yvk=;
+	s=arc-20240116; t=1789511958; c=relaxed/simple;
+	bh=vJsCws3FamyI5nwIu6NR9CwJlE0an5auOcy5PUi3Br4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KRYUOOw8r/trO2+g0gBeAyY0dEcFjkYMSmIDcrkZzejYcHmz1CC4GTzeu8QFdM4BmyjJXid2gxGlHzVWH1KlKvTFpgD3kILtetfr58YaG6oiL6cU1FyXd5gfQsrs0PCxM3g8FOe/hlTKRzg5ZYYNDXH07Foca2DPEe+xuFCE4pU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rmGLTiyT; arc=pass smtp.client-ip=74.125.230.204
+	 To:Cc:Content-Type; b=TyL+jH4gSdC/PzQRWKL+KCOTv+4mNGvgL+xdtiROtFeuNJZKnKintXTpoNFicjQnJSvaEsIfcJK88xNviU5JsUNtQIymSc8NwClItDy97ykpB3Pl3NO3oMGgbNNH0tSdFePtx1dUNpRz6D8Q8dhtUFKBdrId26W1waCBTsElSZc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rxyFWca/; arc=pass smtp.client-ip=74.125.230.205
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rmGLTiyT"
-Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-530d5fc2cd8so40681cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 15:31:59 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789511518; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rxyFWca/"
+Received: by mail-qk2-f13.google.com with SMTP id d75a77b69052e-5306706e89dso46411cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 15:39:16 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789511955; cv=none;
         d=google.com; s=arc-20260327;
-        b=QN0AUkGN68tl2um8x4LXHAxbUB/zEDSm59F7y4PoLBf3heBfEGJIJiPanq2ntMU2xH
-         KNCJLKLpWhrsnf4jcgrlHXxomPkiEbCBz6zFcEjrMvYFbHL14+E+gQUflilPfsfJJFsN
-         j+VguRFZRSPYErHuj2QoFUpqBzjnSbfrbP0uI7DQh/l+zqXACOM9Ma6aWIZTzVmXDah2
-         N8JLHRtghT5YjSFTdLBczHVBuYUp6hs7I1wfDOFQHjG/WO+qjXBIBsTfuCWXndr3rekz
-         0mm6PQ8Z3CyxjVe7CYFmZNfODFGajz7okokWyrl/Qa2Gbxl7Jz0ja37a7QaIHLBvcvPi
-         OgRA==
+        b=lvx/bvxnVKDJi1gBOybu/OEN4z3XaikfJ2Nu2o2bRIIEw4mrQe3HVdBUUrOWfCIpIR
+         eI6Mip+KzyilXDaZHuIIDlTO3b2k7aSbRuyBPvbx+Pw8EAMbsuBCS8KY3Hjzd+wigu7g
+         VEJmps78OAcb7etGOdXwdX4JI5tkxC6asJaoAXkr4YxuS2IJI+SCpYNE6oYB7n90hYoH
+         vZ7yE9bKVjJx4FZRv1nsgvjkhckh1fwaitUI4o7lMUpxyuxq1Di4MVcKFg2AO/kaaXDe
+         0hhFphA5gMsP/Ry1Ohb1VDrce+Atycs/zVQS/0KAMAGHR7AnATM1HYW2Q+mYhYm9bb1F
+         QqxA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=rF3d1NpRpJqESqzYc95bKbTV6mFlbMcr7RivfQo41c8=;
-        fh=uo1se5QM1ODP7kO/ILzsmwWHx+eJuR80l+cA29BYjY0=;
-        b=rjf4XOgTWMMeSJ2D57soSFy7vR07LfGwtZkK8LQCtlO1eeJhhDhDs6DPD3dHa27d9C
-         qMLKZRLf1YeFlbOcyQYZ202LyawqbwQocCLfE6aa1vB0wzz8P6Dnd/uUbBGke3BuWr4l
-         WsTb0hotPgs9iPxj9lAI/KR5pT9WwLJ/TjpuCj+z9lT2fMNIDWSUJV0436Mq3ZCnCClC
-         o1qen+To/MpUlkYFyqrl+XFXzwVdoTzaOqKGQoW9rJ1JEbOulGEtP+4u17Xjq8NzKNv7
-         Pp72cIHHwQLT5jVOtyxxTscTG2Hk7vgzBlq6UyikDHE+yLVyGJN2ZPwgXRFR2FXpMx87
-         Fk2A==;
+        bh=vJsCws3FamyI5nwIu6NR9CwJlE0an5auOcy5PUi3Br4=;
+        fh=WCOiNkKcbPFc5hVmuZyC+CtDgsKddGMW3P87HCroPhA=;
+        b=KFJshFaKtoEnvvHigQZzfnvhHYLacs8exwwYoe2auHpmjidb0SgfuEIhSs65aSSSfW
+         fPO/05e/NXJTBxQAsJZfu2KNvMTnNuvHW6gXUzkLuoKCNkp8pJZzg7Qo4kypLawTCaI2
+         pqX2/9FIjwx4eGBH9rgmQK4DFdN4ZkpJ0Igz2/CwGQDjKytjsR04RPVSPHi12ve44zjl
+         3h9JR01tTLVAW/6D4fVLw5MUs+xwfWR/dlEVI0uaip/xsJfvr45i4HFBSC1iKJVTo2Rr
+         YObfmrsNDRueO54CY27od8d6SF7xHWVu3XEwY7neHrQunMPIEHtQ0j4fudo/MBgotKs7
+         yGZQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789511518; x=1790116318; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789511955; x=1790116755; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=rF3d1NpRpJqESqzYc95bKbTV6mFlbMcr7RivfQo41c8=;
-        b=rmGLTiyT872aZ7Gv3kYRsdGVVc3aKjEAJwTRbugk1jh3QssVHVzdKVtNJFA3kjgZuf
-         mk2gZqUQVhzl9hYPCSX0qDi3UrG4zEZiFBu/L2x3zRgOSBcYzYiQwmyFtuZyG4aa+c0W
-         A79j1YeCp9cD5WIDD2D42uwnhmEOKCupj/R613kru1BsCQLyFUht2SfHdd+IPtXdeGRU
-         JgQkmSclhfXvYm0G2DChEyUWty0lh+SYNwdDV6pZiHzh2pelutzIDf0b0idIrDOgN/Xu
-         j2922DpwX/zgoIL3dEaQ+L5BYiSupjszabRyVJ+E59+ufLnyVEhnI7VEN10UxWIkGaIw
-         Qlsg==
+        bh=vJsCws3FamyI5nwIu6NR9CwJlE0an5auOcy5PUi3Br4=;
+        b=rxyFWca/nEoQjYXMPfAHyf9F1FN3x7rz6dtzEER14eDiw4UDqHIY7juAsfbLvmbPmJ
+         TkDG0O2fJ4T/8b/PM7X2oHanauKcsNZFL+/1C+IBusrmvZP5qtYyTRey1vhqFdIyIzGV
+         4dwM3FCfXXVPiqyqDkz92vVO5b169ErAe+Gf8uKsj7yOvBDnCxCqYnVbW+MzxwzddyhT
+         tH9xI6GNS3A/qwOPzIVt3mWJ/xizDXVAPsbfgAWkEBOjnu90Z0L5ShniO9r/F8wpLbxS
+         E2edOgTa27PKYtmnnDYuMkkuSzbwMlqwza1WkEL4Io3+palVNcRZgYe+WUkx9JeikXu/
+         wGdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789511518; x=1790116318;
+        d=1e100.net; s=20260707; t=1789511955; x=1790116755;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=rF3d1NpRpJqESqzYc95bKbTV6mFlbMcr7RivfQo41c8=;
-        b=v/6fv7DTLxS3SGIVWjWHBvshdz7aoCkzI2zWMBJEW3dlKD+j/odVAffMqixTD0NxAH
-         DwKjomaQFcnZrW94Z3fOgIUjeRd6rFWMvzh9PL9IwP6YRTcwoj+nRszg0GlegcvtgopM
-         fwlEoHYiPzsZ+nKNfzWljbrkvKzF0sBl11fW2oAjPg+7qYMaGCZMpljd8IlNJmI48n54
-         URS1vxzRFR0lCcMO/zqs/ZOA+ej3a3+4PateRWWpIJuP5/FEFQ1AS55YPIEfA9sP8r5M
-         7Zs8jlv8hSwlRYxC7+j65EYLEjqEY7mxN252O/OWgua6g/myTby0spEjzTJs/0Fida8y
-         3neg==
-X-Gm-Message-State: AFuF++nBgo92HR5Atu1Rn0qGe0ov86Ogz6OUUGaflak1C1gHSvJIFeiO
-	1uFekrrmFM+Q4h55EGjeiGFg77EUsdi825a0JfBUqG9g+jBHEhcAyiny9tD/f3FN0W6ktz+glJi
-	icteRpvs4A6l33KUC+0qWBjbKf98r3KTGvfUJez6H
-X-Gm-Gg: AYBFou357G4ksMXMxVRQ5G7jEhFS1d0DOCUyfV8CRxEbsYpV433n9Ur0M7Jh1pl9Fir
-	h4NilOp2okXVN5CB4ApXGpXTFXlN9isCakv1Nha3LXMfC0eGtYqPbyTXE9DfePB8WKAWjISgoTb
-	2VctJL+IngFPIWalqAe5T9Z8huovzeMLv8BtTqIJLnr/guxDU2yFArxoimiP2hVKFOvJMLMLoND
-	9C+OQkqGmHLVZ/Z60+ymH2SUk+emq5zDx36Y5ns4uLc0l81EcgfMuUr0+WGCL1OqibIlJfafbry
-	/uButJyM4NOdkaRMCIIRkAJHqDAH8ueoVZ5rkLwY9yDZ0EjGY0R7Wu3EiDKR7NU9HE3zReAJfn3
-	FtnFzV9BorA==
-X-Received: by 2002:a05:622a:260f:b0:51c:ca9:3d17 with SMTP id
- d75a77b69052e-5325087c7f5mr5483341cf.12.1789511517300; Tue, 15 Sep 2026
- 15:31:57 -0700 (PDT)
+        bh=vJsCws3FamyI5nwIu6NR9CwJlE0an5auOcy5PUi3Br4=;
+        b=cn2kEH+zdnD6aOx8q6DNs6vQRpFD61H4zhLJ8M1TCbzZbBXFgzjS/O9G81AMSSedQk
+         IFBUFzXSoSSknXm5AXGCTKw8dl9yFkb9Is5g0/EUXqDar4FH97Ilr6cvHFTKDKOB26Uk
+         HIG2V15+MyTH8vMtjnmUlCsDQtKuczxCj0LKoKrFQ88AcaCyg5Vh6dO9TDj0hyQgBXQR
+         K19hegsIzlzUf6nx2DDkZGZn8pU9WDaGVxy28OhAniIEcnLmNBKV/zrRjPlW5f4BmZsG
+         IJuC9n7I7BM93/dbR9KXKtea+O+g+Z6C+AcM6NkhSRTqi5wRjMiffNRbdQr1Jz0r5B10
+         16vA==
+X-Forwarded-Encrypted: i=1; AKwUvBza5zV3V2Tt7anCtlD0FXlEHlCdpp3H2Ap/syUrXDnuws/Z8ZWi1dj0vD9Yv73MIFpB9IYYmiQbhqlUa3oO1KIa@vger.kernel.org
+X-Gm-Message-State: AFuF++kZ49K6HDMI6bsw26Y14KhHvxW0yhahpsRZR+md947qbllgGEdW
+	PEONN19GDhbd0G7ujSdXzd0POh/mA4B6ltQuFBqbkKTZO9DowNfhLFd5sAuZLVf6t2FlG12YMdW
+	d0e/eXIkT7ZeYbo20M3zrti+kbqb2qTE/OejXBR5N
+X-Gm-Gg: AYBFou1DjVOnUh0ozhF3nkVal8YnEo8FUEYPdsymzzKQX397pNfgUXEmy77DJDWIouv
+	XXEasWoyWRDHGspKSfenMtzb4Y5ZcpYrTEHuUEAYCjQlsegqVGxH7Sjhrbt1UbUmRUxF6WArE7q
+	6fVkyWymXzr7x3iWkWtBC6iDbXyftTfrKtSZRjOntsJfWkWZspjaI0bTx4dffKzzYvpXud2wVq3
+	BCqz+YpTRrwKWTrgcsfmcl0G7PYzL+ywwZGRvKG/oFcT8M2SXVRvVAXCbQI0zRot+OxsWf3wpjx
+	yViECTP/GaDg4VjJ19u9fTxczMEYP46LjqebJomhMkdmds0sR6wLvoUgbCVtsgcFV0Ny6cvY/TC
+	5kMRgtWDH8JfNurXkzZDL
+X-Received: by 2002:a05:622a:4d8c:b0:531:34b9:2532 with SMTP id
+ d75a77b69052e-5327ed8004emr2058291cf.4.1789511954807; Tue, 15 Sep 2026
+ 15:39:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1786728929.git.sandipan.das@amd.com> <10376263-f9e7-4419-9042-074b3a36cfab@linux.intel.com>
-In-Reply-To: <10376263-f9e7-4419-9042-074b3a36cfab@linux.intel.com>
+References: <20260810133540.1947118-1-puranjay@kernel.org> <4f755a7f-0a55-4292-892a-28346ed235a4@huawei.com>
+In-Reply-To: <4f755a7f-0a55-4292-892a-28346ed235a4@huawei.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 15 Sep 2026 15:31:45 -0700
-X-Gm-Features: AcwNN1UnN_Tnwq8QQ1u5fl9Yt3ytKf6W3FXRQdA0drJuJRJdASR59wa4A4UogVw
-Message-ID: <CAP-5=fX5zYcb4=q_BqM+h+5g3ZnuSjEWg1=f5LrtfOfcgtHetA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] perf/x86: Fix perf_event_print_debug() on
- non-Intel PMUs
-To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+Date: Tue, 15 Sep 2026 15:39:03 -0700
+X-Gm-Features: AcwNN1VJtEici--U7gAI-B9LpTV32UhMFNQSbZNGUEhTbibENqFgMN18MX5xm4g
+Message-ID: <CAP-5=fUepMzyctDcUqYNJMG+xBOK0bdUF_cXPtQ43AxfFVL+Zw@mail.gmail.com>
+Subject: Re: [PATCH v7 0/3] perf/core: sched_task() dispatch and branch entry fixes
+To: wuyifan <wuyifan50@huawei.com>, Puranjay Mohan <puranjay@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	"H . Peter Anvin" <hpa@zytor.com>, Petr Tesarik <ptesarik@suse.com>, Zide Chen <zide.chen@intel.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Ananth Narayan <ananth.narayan@amd.com>
+	Usama Arif <usama.arif@linux.dev>, Will Deacon <will@kernel.org>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Thomas Gleixner <tglx@kernel.org>, 
+	Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Aug 16, 2026 at 6:12=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.intel.=
-com> wrote:
+On Thu, Sep 3, 2026 at 7:45=E2=80=AFPM wuyifan <wuyifan50@huawei.com> wrote=
+:
 >
-> The whole patch series looks good to me. Thanks.
+> Hi Puranjay,
 >
-> Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> On 8/10/2026 9:35 PM, Puranjay Mohan wrote:
+> > These three fixes were found while adding BRBE support for
+> > bpf_get_branch_snapshot() on arm64 and were carried in that series unti=
+l
+> > v6 [1]. They do not depend on it, so they go on their own; the version
+> > number continues from that series to avoid two numbering schemes for th=
+e
+> > same patches.
+> perf record -C <cpu> -b [<command>] triggers a NULL pointer dereference
+> in armv8pmu_sched_task().
+>
+> Commit fa9d27773873 ("perf: arm_pmu: Kill last use of per-CPU cpu_armpmu
+> pointer") changed armv8pmu_sched_task() from reading the per-CPU
+> cpu_armpmu variable to dereferencing pmu_ctx->pmu via
+> to_arm_pmu(pmu_ctx->pmu). Meanwhile, commit bd2756811766 ("perf:
+> Rewrite core context handling") made __perf_pmu_sched_task() pass
+> cpc->task_epc to pmu->sched_task(). cpc->task_epc is only non-NULL
+> while a task context is scheduled in; CPU-bound events do not schedule a
+> task context, so cpc->task_epc stays NULL. The NULL argument is dereferen=
+ced
+> and crashes.
+>
+> With the patches applied, perf record -C <cpu> -b no longer crashes,
+> and system-wide perf record -b -e <event> -a alongside a task-bound event
+> on a different CPU runs without any WARN_ON.
+>
+> Tested-by: Yifan Wu <wuyifan50@huawei.com>
 
-Ping.
+Hi,
+
+Is there anything that needs doing to land this series? Avoiding a
+perf crash seems worthwhile. I believe Peter and Ingo are best placed
+to review the changes to kernel/events/core.c.
 
 Thanks,
 Ian
-
-> On 8/15/2026 1:48 AM, Sandipan Das wrote:
-> > Petr Tesarik reported that reading MSR_ARCH_PERFMON_FIXED_CTR_CTRL
-> > raises a #GP on AMD processors that support PerfMonV2, and proposed
-> > skipping that register when no fixed counters are implemented [1].
-> >
-> > However, perf_event_print_debug() also dumps the global control and
-> > status registers whenever x86_pmu.version >=3D 2, and reads Intel
-> > Architectural PerfMon MSRs to do so. That condition used to be
-> > Intel-specific, but since commit 21d59e3e2c40 ("perf/x86/amd/core:
-> > Detect PerfMonV2 support"), x86_pmu.version is also set to 2 on AMD
-> > processors that support PerfMonV2, where none of those registers are
-> > available.
-> >
-> > The same reasoning therefore applies to the other registers read here,
-> > so rather than special-casing each one or reinstating a vendor check,
-> > this series makes the global register dump a vendor-specific operation.
-> >
-> > [1] https://lore.kernel.org/all/20260717150315.2868314-1-ptesarik@suse.=
-com/
-> >
-> > Previous versions can be found at
-> > v1: https://lore.kernel.org/all/cover.1786010408.git.sandipan.das@amd.c=
-om/
-> >
-> > Changes in v2:
-> >   * Address build issue reported by Sashiko.
-> >   * Use a static_call as suggested by Dapeng.
-> >   * Pick up Tested-by from Petr.
-> >
-> > Sandipan Das (3):
-> >   perf/x86: Add x86_pmu::print_debug
-> >   perf/x86: Move MSR_CORE_PERF_GLOBAL_* dump to vendor code
-> >   perf/x86/amd: Implement x86_pmu::print_debug
-> >
-> >  arch/x86/events/amd/core.c     | 20 ++++++++++++
-> >  arch/x86/events/core.c         | 60 ++++++++++++++++------------------
-> >  arch/x86/events/intel/core.c   | 32 ++++++++++++++++++
-> >  arch/x86/events/perf_event.h   |  4 +++
-> >  arch/x86/events/zhaoxin/core.c | 18 ++++++++++
-> >  5 files changed, 102 insertions(+), 32 deletions(-)
-> >
