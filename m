@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12284C67F0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0EBE4C67EF;
 	Tue, 15 Sep 2026 18:43:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789497807; cv=none; b=U4ZBbgM6jZ/pQctlui9nBe7GL/7qq7C1lwfR1Q13rDYGbJcGFBJ3nugOHinBRhGk5zFCI4dSoSSDwXzk5TPRM+WXZqQI30IpeWIXjSV4p78DThqjE3AZXJJklJsKUl0F44a3EZ7lfRufJRGunvcwIQFU+0XTRecg/ocaiqf65N0=
+	t=1789497807; cv=none; b=lm7VPDV+jQoVh988lGtn+rtxLtiQ74Yoq8sX7EtvTVb5S+rohzmmONlPCHW7TNrUyIqqHAVQBCuHDnePBR2PX+OqJ2OTC14nxhUWcU1iDlZX6AxZwNRGN6va2cXkRWNJV2FPG61UQf42q7c0BPZO5MNbx4Czdbwpbidl+YnKsqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1789497807; c=relaxed/simple;
-	bh=i2H74OGGigBmuYhmxMZk49EwD06ks5w+/N4nWC1cfPU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=t49aKkSouVcllYu89fEsF9DZV3GNE+ixx6AVf3/hkEGBrSsFp/9xVGuHmTRzJNXTsDtEgR8+mg5g6tg+qlFtYyZbAiuUTiqgKo4/HDKMqh+tGgX/VWtSxc+pF+PYSffZbKznvREbRQBukDVc16AOEWb+z5XfecrlpUgzF5nPSns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b5x6n1wl; arc=none smtp.client-ip=10.30.226.201
+	bh=Vm9IxCQNKUZeBnEWC4b4icLjW7nJhQlUJhzoBAoyx6U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=iUpOhjAGEPynepw8HXyCUkZYU7/5j9jN1vih4R6+BXkMBkObCgF39GyRPA3eLQgHdlx2Uwjv5P7y7uwlwD+pLdeFdeB66mNhbLVEnJ+djyssVurha9ZAynM9k2rxrM4Zc4ESHixJoIj6kYQbakKT9O4yyFs9sZFPAaoP/7sYf1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j9CQ4nXk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b5x6n1wl"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 5477AC2BCB8;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j9CQ4nXk"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6EDC0C2BCF5;
 	Tue, 15 Sep 2026 18:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1789497807;
-	bh=i2H74OGGigBmuYhmxMZk49EwD06ks5w+/N4nWC1cfPU=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=b5x6n1wlsl9QYzTM1OupU/asZgRTbq1h8jZR/zhzbZexFFwlOd1qTi2mNxn7R3cCM
-	 3HB3whpwJXA4qrS/JMKatb/RkVeSQloMo+C3Ga8qiR3jaLLa8jiMZrtNpI8opUzqWu
-	 nos2RsvR07Op3I2SmAs46h2aDBe8ZVIIqiRJDJV7kyaffLp4z8tEwI794P3EauZN8+
-	 /0VFT0f4vViB8qp8+sGJS4VrD99YgQ34FFauN3ggdp6DdJd+S4aH2GtEKOGnlsAl6D
-	 FI5+i+3+GgQPi0EH4L3BExGoxoGqe/ROG7dTsN4fhUq2VHS0gGtgSr+NumAzXSV8Jj
-	 1cc5Te1l84Omg==
+	bh=Vm9IxCQNKUZeBnEWC4b4icLjW7nJhQlUJhzoBAoyx6U=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=j9CQ4nXkQdY0XMevyPf72zx4ctqWxmlL+atr6LUYswZERzBEcrlS1J7T9c+7wfDYK
+	 GjKvskBgQxrhfbCZiF2ZvTK0eF8D7MDaha4nrNsiyx4y+2drQ3z1lXlymeFyXS6+PK
+	 3wHpJvavR7BQ7T1UE5FSDvQCnu7dPd+gAvw32UHqQj4vWuD8JI8+t2QOx5qAyP+cUp
+	 pvEkzrKVPRtK4Opf1FPDyCiHANukN8dSD2yyXw44EgZxES7xgBcHXG96ILFGrV/EV3
+	 5Aixczg3HXxsxKH/YnuDnxNlNITulaHwG376r/h1a16kUp+VIskmvnzTAjY6pGkTQk
+	 VTv4wGe8T3AEw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F836C88E77;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E306C88E7D;
 	Tue, 15 Sep 2026 18:43:27 +0000 (UTC)
 From: Alireza Haghdoost via B4 Relay <devnull+haghdoost.uber.com@kernel.org>
-Subject: [PATCH 0/4] perf script: Bounded and lazy symbol loading
-Date: Tue, 15 Sep 2026 11:42:42 -0700
-Message-Id: <20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com>
+Date: Tue, 15 Sep 2026 11:42:44 -0700
+Subject: [PATCH 2/4] perf script: Add --max-symbol-bytes to bound ELF
+ symbol memory
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -40,10 +41,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/yXMwQrCMAyA4VcZORtYJ1Pmq4iHLk01YtuRqGyMv
- btVj9/h/1cwVmGDU7OC8ltMSq5wuwbo5vOVUUI1dG13aAfX48Qa0ZY0lgcmTkUXNM4B+UiRvPO
- 0DwPUelKOMv/O58vf9hrvTM/vDrbtAz418Kl7AAAA
-X-Change-ID: 20260915-perf-symbol-memory-send-e7cfca1ac3d9
+Message-Id: <20260915-perf-symbol-memory-send-v1-2-1d3360e21f07@uber.com>
+References: <20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com>
+In-Reply-To: <20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
  Arnaldo Carvalho de Melo <acme@kernel.org>, 
  Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
@@ -55,21 +55,21 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Alireza Haghdoost <haghdoost@uber.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3069; i=haghdoost@uber.com;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7050; i=haghdoost@uber.com;
  h=from:subject:message-id;
- bh=i2H74OGGigBmuYhmxMZk49EwD06ks5w+/N4nWC1cfPU=;
- b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBqqZHFcDMfo4i4poKnBKXUWqae19aK7vTXIHbuN
- 3SbRNgXOoeJAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCaqmRxRsUgAAAAAAEAA5t
- YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAtgC0Q//bawrXizVdiCBgvq8GADczq9yOkYBhXO
- fVDn+FXYxHEkN4P76MquTjAw9QKMqsXwY4lr8ECEyWNeEzG4QMWWZUdkQZX/p8p7FLv1jfpzbVB
- zXwBg33Dd72xFdTJlhreN1lbeb0OtZqbHHgz4hLyuNe8Bx0HxOuI8HvmHFiyLHZywEWligweBfh
- 6H4qkrgbS6Dj7SFd//dgVtdvB8f54INWOeYx1ZaEDHCXI+gL2b37AvHyuOiwy34nXjAOeOhfY0n
- miUO4ng1xcwu+NZE5Qo4b3ckQTOQjUpamvKHjiHg/MrVAiwJRrRlah/RYucHkEQ2ZTYl2RoynQo
- ZaZz1Gexa6/goqZkvizs/s7m7WLfPrd8pKzlGY7bW5Wd6awTLRuhNJpTVXkXulDRIJdHnA3Q+Ja
- TuUAtXp0NApCqJvORUj8EfXvbg2zAyiiBFJHjosUrkMw8E2KcN+c5a79PvWqWURiExlZTb+aArf
- /TeeNxu6kRnRVp0mHuwXDVt/Ul3q6Xl9LToYICEghZo7Sj2tHsDRBsuUmCAQsaYeB8adZ7B17CE
- 2gqeaq3DWp2y2dNLumhg+b/x0c/W48nVkkKJzKOS95C8YVVjXMNpZsRaA35+KrPgMbEBIvGiKLQ
- abLix8zbTr4x8z1R6X2BiLRcmjQzSsSVP2KZ6CBj3VuMmeKVQT7M=
+ bh=ROWk7pABVt3iw22u/peSOyqFXvN2NxseymMNxuWT3tI=;
+ b=owEBiQJ2/ZANAwAIAVNlBDxl2ALYAcsmYgBqqZHNdWMtxhEN9pZYvvKe+/n1ivHsf4/ShMTJa
+ n4K/RQOvjGJAk8EAAEIADkWIQS5+sFL3gX/8PrA0S1TZQQ8ZdgC2AUCaqmRzRsUgAAAAAAEAA5t
+ YW51MiwyLjUrMS4xMiwwLDMACgkQU2UEPGXYAthPvg/+IpzFsdAxb8DYmCgISsUuFMJMTXyoMj5
+ n52tfl7YV4Q/RWnRo10Wnlj4gusYSHdxKc4iN1YD7R2zIhGP1y7xkRr+gWphVZPxeAthql8gG/9
+ W7FS7UkuHYHtcOBZ0aG6WLXQmVTrwMt63M3Ne2uIYyt6/Q9YOeWeJ9LLAFXou/D2zDQ3mMLAUUl
+ d+FhdI47Aux5QUiIeXDXUaR7p3wdLDBAMZ1W/j52h7gdQJSKoDvTSmi9OfWsPUSZBrSJwOttzNz
+ EptE8AV7ee0NtQnAEZoiiegwtajZ4m3Jh6DhO1jTpB5M+FDi9G+DpU+wvkeEmaPXlcpV1tUIw26
+ 4zO3KiAm0yF/xgUGhZoWG1BUrKYtWRZlwNHtSHWExfWMc9t7hK12FSa/IETNtsNXm3+iuFyx6Ud
+ +qvDFSjfSc+14Fxs+oVN6Fq2PRdHEIidEvsDPfkGwfpOGTiwSsznDaRHWzP4vaYBvTdannC/vRL
+ p6zDo8LvxNMIyfEygy+X3dBP+S4eX1eFf6yGblcNzwYjP/kYRULJSm5VSKVa592hLuZzvgWMkwE
+ Us1VI2dEkiwcfXSR91KuaCnK2LWLzR9cI+7HfhvtdJXCrQVRu71zRYtY9PdNOKD3SyHs1EghoTa
+ xY9VOkbg598Zxiw+p7fIntm6NoSeDZPiFJTwxQp4WFMzsrCC2I10=
 X-Developer-Key: i=haghdoost@uber.com; a=openpgp;
  fpr=B9FAC14BDE05FFF0FAC0D12D5365043C65D802D8
 X-Endpoint-Received: by B4 Relay for haghdoost@uber.com/default with
@@ -77,64 +77,203 @@ X-Endpoint-Received: by B4 Relay for haghdoost@uber.com/default with
 X-Original-From: Alireza Haghdoost <haghdoost@uber.com>
 Reply-To: haghdoost@uber.com
 
-perf script loads the entire ELF symbol table of every DSO that appears
-in a sample, allocating each symbol into an rb-tree held until process
-exit.  Therefore, a large enough profile turns symbol loading into an OOM kill.
-This is not scalable for profiling a large cgroup with a lot of large
-binaries on a production system with limited free memory.
+From: Alireza Haghdoost <haghdoost@uber.com>
 
-This series adds two independent, opt-in mechanisms and a leading
-regression fix they build on:
+perf script eagerly materializes every ELF symbol into an rb-tree kept
+until process exit. Large profiles can therefore consume substantial
+anonymous memory, causing perf script to be OOM-killed or forcing the
+kernel to reclaim memory from co-located workloads.
 
-  [1/4] Fix a broken "#ifdef ELF_C_READ_MMAP" guard so perf actually
-        mmaps ELF files instead of malloc'ing section data. This is a
-        standalone regression fix introduced by 22dd1ac91a77.
+This patch adds --max-symbol-bytes to bound struct symbol allocations.
+Once the budget is reached, the ELF loader stops loading symbols, warns
+once, and lets unresolved addresses appear as [unknown].
+This allows users to bound the memory footprint upfront and explicitly
+choose between complete symbolization and avoiding unbounded host memory
+pressure. perf record already provides a similar --max-size option to
+bound disk usage.
 
-  [2/4] --max-symbol-bytes <size>: a byte budget on struct symbol
-        allocations (and the lazy index) enforced at the ELF symbol
-        loader, degrading to [unknown] with a warning past the cap.
-        An unbounded profile doesn't just risk OOM-killing itself.  It
-        also forces memory pressure on the whole host, pushing the kernel
-        to reclaim from co-located latency-sensitive processes.  Capping
-        it lets the user bound that footprint up front and choose the
-        trade-off explicitly.
+The counter includes every symbol__new() allocation, but this patch
+enforces the limit only in the ELF loader, which is the source of the
+unbounded memory growth addressed here. In this path, reaching the limit
+can safely produce [unknown] symbols. Other loaders currently treat a
+failed symbol allocation as an error. Capping those paths would therefore
+require separate changes whose complexity may outweigh the potential
+memory savings.
 
-  [3/4] --lazy-load-symbols: build a compact per-DSO sorted index and
-        resolve only the sampled addresses, reading names via pread()
-        from the file's string table at lookup time. On the production fixture,
-        peak RssAnon drops from 265 MiB to 39 MiB (6.8x) and wall time
-        from 3.1 s to 1.85 s (1.7x). Memory optimizations usually cost
-        time; this one does not because lazy loading skips a lot of calloc and
-        demangle calls. The output is byte-identical to the default loader.
-
-  [4/4] Documentation and a shell test.
+Sizes require a B/K/M/G suffix. Zero, the default, means unlimited.
 
 Signed-off-by: Alireza Haghdoost <haghdoost@uber.com>
+Assisted-by: Kimi:K3
 ---
-Alireza Haghdoost (4):
-      perf symbols: Fix broken ELF_C_READ_MMAP fallback guard
-      perf script: Add --max-symbol-bytes to bound ELF symbol memory
-      perf script: Add --lazy-load-symbols for lazy symbol loading
-      perf script: Document and test --lazy-load-symbols and --max-symbol-bytes
+ tools/perf/builtin-script.c   | 31 +++++++++++++++++++++++++++++++
+ tools/perf/util/symbol-elf.c  |  7 +++++++
+ tools/perf/util/symbol.c      | 29 +++++++++++++++++++++++++++--
+ tools/perf/util/symbol.h      |  3 +++
+ tools/perf/util/symbol_conf.h |  1 +
+ 5 files changed, 69 insertions(+), 2 deletions(-)
 
- tools/perf/Documentation/perf-script.txt           |  24 +
- tools/perf/builtin-script.c                        |  33 ++
- tools/perf/tests/shell/script_lazy_load_symbols.sh | 120 +++++
- tools/perf/util/dso.c                              |  10 +
- tools/perf/util/dso.h                              |  29 ++
- tools/perf/util/map.c                              |   9 +-
- tools/perf/util/symbol-elf.c                       | 561 +++++++++++++++++++++
- tools/perf/util/symbol-minimal.c                   |  11 +
- tools/perf/util/symbol.c                           |  87 +++-
- tools/perf/util/symbol.h                           |  18 +-
- tools/perf/util/symbol_conf.h                      |   2 +
- 11 files changed, 875 insertions(+), 29 deletions(-)
----
-base-commit: aa18964dd64511305de0711fed912054da6f5d18
-change-id: 20260915-perf-symbol-memory-send-e7cfca1ac3d9
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index ad8ca08ceb5f..50fa6ca6455a 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -68,6 +68,7 @@
+ #include "util/thread.h"
+ #include "util/thread_map.h"
+ #include "util/time-utils.h"
++#include "util/units.h"
+ #include "util/tool.h"
+ #include "util/trace-event.h"
+ #include "util/unwind.h"
+@@ -4035,6 +4036,33 @@ static int parse_callret_trace(const struct option *opt __maybe_unused,
+ 	return 0;
+ }
+ 
++static int parse_max_symbol_bytes(const struct option *opt,
++				  const char *str, int unset)
++{
++	unsigned long *max_bytes = (unsigned long *)opt->value;
++	static struct parse_tag size_tags[] = {
++		{ .tag  = 'B', .mult = 1       },
++		{ .tag  = 'K', .mult = 1 << 10 },
++		{ .tag  = 'M', .mult = 1 << 20 },
++		{ .tag  = 'G', .mult = 1 << 30 },
++		{ .tag  = 0 },
++	};
++	unsigned long bytes;
++
++	if (unset) {
++		*max_bytes = 0;
++		return 0;
++	}
++
++	bytes = parse_tag_value(str, size_tags);
++	if (bytes != (unsigned long)-1) {
++		*max_bytes = bytes;
++		return 0;
++	}
++
++	return -1;
++}
++
+ int cmd_script(int argc, const char **argv)
+ {
+ 	bool show_full_info = false;
+@@ -4135,6 +4163,9 @@ int cmd_script(int argc, const char **argv)
+ 		     "Set the maximum stack depth when parsing the callchain, "
+ 		     "anything beyond the specified depth will be ignored. "
+ 		     "Default: kernel.perf_event_max_stack or " __stringify(PERF_MAX_STACK_DEPTH)),
++	OPT_CALLBACK(0, "max-symbol-bytes", &symbol_conf.max_symbol_bytes,
++		     "size", "Limit bytes for ELF struct symbol (e.g. 128M; 0=unlimited)",
++		     parse_max_symbol_bytes),
+ 	OPT_BOOLEAN(0, "reltime", &reltime, "Show time stamps relative to start"),
+ 	OPT_BOOLEAN(0, "deltatime", &deltatime, "Show time stamps relative to previous event"),
+ 	OPT_BOOLEAN('I', "show-info", &show_full_info,
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index e955c3feddcd..914e42d21f70 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -1634,6 +1634,13 @@ dso__load_sym_internal(struct dso *dso, struct map *map, struct symsrc *syms_ss,
+ 		int is_label = elf_sym__is_label(&sym);
+ 		const char *section_name;
+ 		bool used_opd = false;
++		if (symbol_conf.max_symbol_bytes &&
++		    symbol__bytes_used() >= symbol_conf.max_symbol_bytes) {
++			pr_warning_once("perf: symbol memory budget exceeded (%lu bytes), "
++					"remaining symbols will be [unknown]\n",
++					symbol_conf.max_symbol_bytes);
++			break;
++		}
+ 
+ 		if (!is_label && !elf_sym__filter(&sym))
+ 			continue;
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 3587ad243159..62a4f91c2f5d 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -310,14 +310,35 @@ void symbols__fixup_end(struct rb_root_cached *symbols, bool is_kallsyms)
+ 		curr->end = roundup(curr->start, 4096) + 4096;
+ }
+ 
++static size_t symbol_bytes_used;
++
++size_t symbol__bytes_used(void)
++{
++	return symbol_bytes_used;
++}
++
++void symbol__account_bytes(size_t bytes)
++{
++	symbol_bytes_used += bytes;
++}
++
++void symbol__unaccount_bytes(size_t bytes)
++{
++	symbol_bytes_used -= bytes;
++}
++
+ struct symbol *symbol__new(u64 start, u64 len, u8 binding, u8 type, const char *name)
+ {
+ 	size_t namelen = strlen(name) + 1;
+-	struct symbol *sym = calloc(1, (symbol_conf.priv_size +
+-					sizeof(*sym) + namelen));
++	size_t alloc_size = symbol_conf.priv_size + sizeof(struct symbol) + namelen;
++	struct symbol *sym;
++
++	sym = calloc(1, alloc_size);
+ 	if (sym == NULL)
+ 		return NULL;
+ 
++	symbol__account_bytes(alloc_size);
++
+ 	if (symbol_conf.priv_size) {
+ 		if (symbol_conf.init_annotation) {
+ 			struct annotation *notes = (void *)sym;
+@@ -341,6 +362,9 @@ struct symbol *symbol__new(u64 start, u64 len, u8 binding, u8 type, const char *
+ 
+ void symbol__delete(struct symbol *sym)
+ {
++	size_t alloc_size = symbol_conf.priv_size + sizeof(struct symbol) +
++			    sym->namelen + 1;
++
+ 	if (symbol_conf.priv_size) {
+ 		if (symbol_conf.init_annotation) {
+ 			struct annotation *notes = symbol__annotation(sym);
+@@ -348,6 +372,7 @@ void symbol__delete(struct symbol *sym)
+ 			annotation__exit(notes);
+ 		}
+ 	}
++	symbol__unaccount_bytes(alloc_size);
+ 	free(((void *)sym) - symbol_conf.priv_size);
+ }
+ 
+diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
+index e5cef16b240d..0d5d3792aac1 100644
+--- a/tools/perf/util/symbol.h
++++ b/tools/perf/util/symbol.h
+@@ -228,6 +228,9 @@ void symbol__elf_init(void);
+ int symbol__annotation_init(void);
+ 
+ struct symbol *symbol__new(u64 start, u64 len, u8 binding, u8 type, const char *name);
++size_t symbol__bytes_used(void);
++void symbol__account_bytes(size_t bytes);
++void symbol__unaccount_bytes(size_t bytes);
+ size_t __symbol__fprintf_symname_offs(const struct symbol *sym,
+ 				      const struct addr_location *al,
+ 				      bool unknown_as_addr,
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index 71f60081a85b..6a16c5badd5e 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -120,6 +120,7 @@ struct symbol_conf {
+ 	int		pad_output_len_dso;
+ 	int		group_sort_idx;
+ 	int		addr_range;
++	unsigned long	max_symbol_bytes;
+ 	DECLARE_BITMAP(parallelism_filter, MAX_NR_CPUS + 1);
+ };
+ 
 
-Best regards,
---  
-Alireza Haghdoost <haghdoost@uber.com>
+-- 
+Git-155)
 
 
