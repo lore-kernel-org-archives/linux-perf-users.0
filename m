@@ -1,210 +1,246 @@
 Received: from mail-qk2-f13.google.com (mail-qk2-f13.google.com [74.125.230.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E79342C514
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 20:35:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 721F434FF45
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 20:38:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.205
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789504532; cv=pass; b=eDCgIoCyHCw2BxZd2prO3DsV63ix2A4Bdr+J/JrTvXMrr9HhzJi1BF9rTFcVES2OMUw8U3rZhzb7skWMx1GiUkRbFgr909LZrM18CpAYLKx4R3BRd8Z78VvrHEUXglkpB6FX7gsXmoZTks7c/izOtRVurKhQi3SOpIwxLuG0uKg=
+	t=1789504718; cv=pass; b=CqPPl9PPFoOMdCoRN1LITy2LEbKTkGWR4cBKsVaE8GmxfAld+QiIoE7TVyQWhyS9cCFnVHnRW9B1e9e87r1LOTKN/dvMOrBkN/7yl/KlGb3Z8WWK3opVaG7sUHeeF4XNGIvvw0NHePhn5hftzQlB1a3HHU500qXYTiuEvX50zv4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789504532; c=relaxed/simple;
-	bh=5S7mpZP1AY3zyRlpCCbQBhFtYbQmh0B/XXBCpp2Lb20=;
+	s=arc-20240116; t=1789504718; c=relaxed/simple;
+	bh=q0uhT8XiQAbMWjxV732u9cL+aV/tNoUWOtyJHrk/A68=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ubbr5GxUEFqtmqJSTF67m3F9InUDlbuDaytBEm4n5iiZWQAexU2y2jqVXDSU8qNajFrxR29bqSXFzae6LqCQQNkkSXKjuIJMCKz4pGWcXpiAWqXuoGplsnaUfCaHOo0gvoAMAwQDPZXiMzRQQmq9j1IkdEArMNe01jOA3DV77Po=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zr3p2cAC; arc=pass smtp.client-ip=74.125.230.205
+	 To:Cc:Content-Type; b=VwS5Vs/Bx6sP1Ol+TLgaE0MBx+er3pgwHULYoOABFQhvdNpWf11YXaxkHqr2nxtVcR9rOWArbO8tEyfFg1G/aeUtUT7a/yXyvCWVa8rNWpDxjZ8E6/yc/N0pGjzKZ0APUVzjy+FcojRDhTW4U7vJ0XyEVobxvzxmQQhHRPC0354=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aIUdFJCZ; arc=pass smtp.client-ip=74.125.230.205
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zr3p2cAC"
-Received: by mail-qk2-f13.google.com with SMTP id d75a77b69052e-530d5fc2cd8so9871cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 13:35:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789504530; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aIUdFJCZ"
+Received: by mail-qk2-f13.google.com with SMTP id d75a77b69052e-530d5fc2cd8so10871cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 13:38:36 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789504715; cv=none;
         d=google.com; s=arc-20260327;
-        b=E4s7bzISAxEl0ltSO5cPh0fA/q94O9TP7B+/0hHKA2saVG2CGazD6IUYN8wwFaDQu/
-         8Vss2MNPSkqFvUzV7A1sHk1MNMqDL3RonLpXvlzXysnXWs9CQqQJJaKIk6fwHJ9cbJ3n
-         CnK98OqCcASNgsukwsReZKBC7u5u3hIVw5K0G3aH646bfW7muEsB42wKLGfzuRyzytDM
-         yVDZUvQyF0FbLIet3D7zYacaE0RQCB3TGIl9rYr1bHDfTyDAgQUNpnSZ9rQtDltOOcR5
-         R48yYaeHYYs7zrVnY+/2rrMMH//B8ORp8W7FUFD66NDHv4uclchpWRQHCRcwmKY7VfC7
-         Q2dg==
+        b=fGwVNp69wyciz6zpyKCqz963N80z1nQ0lS3LAZVeuW5qm/WKWTaSeFLNnXg5P13lq9
+         hTrvYFk5zlCcrKzV0jcf7xANkmMoJHiWPx8k5Gg/JqrhbaYjs48WwhiMFA8HC9nGohNH
+         TNAk/Ln3r1uJH7cUO347xSFFh/kDUTvYuh8rXobdvYiIEntCk8nXa8HjCziDWHh0wc7O
+         cJra2RZ7SLKt0O+wHeGR13DNKk1KpDijpkyqkL9GNJmlOXKi8qkm+W8BBNi6XoQZCRl1
+         REQhf+P5eeymXAPEYVLVJkIV8JFt9WDsWj5abDCebSRkLemZBgzPfd43q09uQ7U0sb0g
+         4TGw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=2aVaC40lcq/u8k1VkZQcJkdYTt7iyGlSRDBr2moFUHc=;
-        fh=TZ6YHXvhuy28y2VxjCIj97dxkVTpTQAHZ8DNn9ofa6s=;
-        b=H11lmuzH9s7/nlYw9hLmgYPlb+uCGf8KuwhICvTP9LaMC2N2hyt3HIWeDmAFHKoKtP
-         jMFbR9MG8ktLCn4CABSO9SwmH3357KKAi+5/EMbQOiJYQR7JaMSmy1Ld0N5gXkj4csm1
-         FUjDlxScAtg53MZI5p+k7lcxUXVsStp1lpW3TCwFWxfdiqzdQtGbaDpvy15TcdTqvFvi
-         p6eMCsuULRD/mVkt/a6Qo1U+C5kMdjJPs8oJarHF6TaauFIQoZmeMJNNBtvx/bAShk1y
-         Ny4BaF+iBML9lSf7JHIoyZkadbnyWLsU1eJAeRQR9eDneif9gorE3oogc/bU8XlmgCiE
-         H4dA==;
+        bh=Yi9YhsgJxg5RwheIV2uUP3vETgnxDCzaYZNW3S5FHwY=;
+        fh=DYu1yH00vl4eU3EFKTzl8aSaQIettTFz58zMED/v4uo=;
+        b=dZuGFNaTzdMElYZrv2zUsOH4a9Vv2vJJT4EzJf+zKyGzMuy88S5GQ6mrAlv+2dyHY/
+         JlpPBIJz5iBOyUh6WLIST0gLf3ds9gQkFPBZ17l4J+DHcmsY80KZs7Mg+GULE5VM6n0c
+         8AOr34Zudolk5oijkfBH1WXDh5Ks/47DAmUH482VbJmb2pKAMI1Itvv2X9FwHNbmHWqo
+         w02CYwe1OfSzxfyKpX2KqrSJL9/qAH4kYEhOu178pNeGLOSstddRF/stKmC/E5jQGs2J
+         JCYVwFRF3CU8sS64Ucd3sQoSfjQ72ZRE9W0uFo4CsIukGLryDyhb0j0/KcwjfBCz4DVy
+         LSCw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789504530; x=1790109330; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789504715; x=1790109515; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=2aVaC40lcq/u8k1VkZQcJkdYTt7iyGlSRDBr2moFUHc=;
-        b=Zr3p2cACVABhMP6P0B0R7ypkrxLGrjhcLCXsNSJRlH6L2/0EVQq24FH/MSsKXAnAUK
-         DpJ2iYYnCygY1W33R+ZgJ/XmfpH5averSOqbHqU1CBmbrzBFW2aZHKvrfxe47uun1d/V
-         kfiPuoSMktxkVU6qcQcwkEvFWv9NA9rPUI6CYMk60QytB6Gmu0HnOFaC9YyE8+C0lTZ8
-         YPhyy90g8jVyhuhCm6mUitOKt1pqQnWJNRQe7BLrxTRfd1L6Gs4j79kEKI4NLsJwahMB
-         fzIxp7r/rNs+2XqOeCxjNm7rPLvt8Bd/koEqurxmDu4Tt/SiT10HD5+EoDonszML++xt
-         tPsw==
+        bh=Yi9YhsgJxg5RwheIV2uUP3vETgnxDCzaYZNW3S5FHwY=;
+        b=aIUdFJCZHLXll/Q8tG6Ko9HzZqfspNX6GjUXKQ5LS8M3/+nHvcVYXbJxL3p47YG2jV
+         u3Q4QtCSp/PZG1r3ltIqSWmhCch+cjxGSTwJfMUxOQJhX3aITdaJWPJe86GquUan8vbH
+         IelokXPB6BSOH7FphVyKBO9dG+LOi9vn6oHr96La+XOXFxITKZPVQ8KfP6uWQzXcYK56
+         obNvUo2BGbbb4KstDbdd3bOheDoloqh9ExxanDj9KwK4PZ0lqyeiQ3xP0NvoZ7ILYmDX
+         9WdIpiARxWDiGp/V0ApU2lLUUNSrwd+vJwsLjphDyOskZzbBuPX/U5Pn1PT3MzpQyD7I
+         RQng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789504530; x=1790109330;
+        d=1e100.net; s=20260707; t=1789504715; x=1790109515;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=2aVaC40lcq/u8k1VkZQcJkdYTt7iyGlSRDBr2moFUHc=;
-        b=EE+VnW8bfZzyhbSlmsIyvMaj8M8pTi4Mr7z8jeBUzMCTfnRWym12NqfSieo/pglrlH
-         k7vdOsPjqVoiE3kX5T3JUg/YUHLkYVefQRIfojFxJN6X7dM2jlMESskvfN6tG/56eds9
-         gRr5JPdAM23JUDklPGlXm/Ny5TlE+l7//Ga2tAeSgp45r+RhSrdNTQ4jvJ/0Dg31HCm2
-         gKmPLlW/EEPtUH1DAP/crd5EH+3xGHH0mgfPuZsdUw871JPLtrllsHEFprxEuagX1t00
-         5T24+pqt+41DNz/HteZgH9llOTQyl4dQwdEOwLrx3WF1ovidbgdg4OsSyX1zRAPHRmZY
-         K+ew==
-X-Gm-Message-State: AFuF++n6RAYTY8gbZdDfiw9Xr2RMWWGERkJLkROT8l9+jUe3fF+5d24E
-	aX6vFfmBHI6HiUJzr8Mz4wJCa1m9FoPdvlBQ0xmwnja/3+kRl+kFlYJ3+Ap8LgY8Xvy3Bz8Q3KO
-	Gxxy3TflYG2SQzXsA8CHKicLNsevbwsMX39/8RDuk
-X-Gm-Gg: AYBFou18LF89xVNFprH2go6Egi4mX7in9JBFOdhkCTp2Yl0XR0sxHNTc8yZwsDjmZe2
-	2E8fw2JcO73i5L3uwZpDe68f0ZLOpETtJImBExvjh3fP92GUwGJ+r5di9yPBB4rqZi8gSSZObw6
-	1NkvtYA8c/s1yEmx2CLgKXLEGtfi4QOjSLNzePlCoS/WPBtfiVi5dC+7zJ4uNLyrtAHR7eOYSmu
-	o18RCgNvs2MW0Gp1PRdWOXK/04faGbFgfoi/fJo0rbjpWJ8mZDVTrxeh7fmoxr5riwnODuygmWB
-	1jz9pL1MBsNHdeN6IJ8WxxXiqZB+EzTjgSexDwJkIITpNZEW8u/V3mGYFC6HYeEi+ikBgz1ILJQ
-	jvgv7mjq5+g==
-X-Received: by 2002:ac8:598f:0:b0:530:e335:4ef with SMTP id
- d75a77b69052e-532504fd10amr4107081cf.2.1789504529299; Tue, 15 Sep 2026
- 13:35:29 -0700 (PDT)
+        bh=Yi9YhsgJxg5RwheIV2uUP3vETgnxDCzaYZNW3S5FHwY=;
+        b=r+bUySCa0USjyckYbNiWHN6fZIhD5uP1X2m0LSZm2tNmGYXylJmZpNbwx+fxrV5vSF
+         SO4YPw1h8UQ1/kIIX9H8il9JrZtDiwqQryfYkHCtU8s9wOxXabEwCHo8rlqvcI2sRsjy
+         FKIR10bKdRhmThHTmDq8iIojbBInRy1hz141xtMLxh1QLDufiDzoxHuN389h3usnVXgW
+         eDYhqGie4q/Mppejd7VJY8Cnf9F3PKrMYCkc/tTPaqT0Zc4lFt04B6oiPEFZzJM9pYV4
+         9mtZ8wqgyhv+J4s0BVuCa/ctMARFra1kMQJJZFw8w+DQ6pJ39LHUQiQdHI/nsRSNzsxC
+         wlWA==
+X-Forwarded-Encrypted: i=1; AKwUvBzfehB/QsroBRDQEemqh8dLX/bnyu7nGdffIKpzUse33IhT2s09wGqguYWMuzyU4NXy8Map+sGBs/MvfSwCGESG@vger.kernel.org
+X-Gm-Message-State: AFuF++k2ASmuCYirk0RXr2kHK4UIwUtb1RAn53owPHTkEfGfQSfhn8fp
+	Uat+WGOuN5a/3GXtEI7RHQNOMl+Kdi3bIPt4VVtdkazP//2SGWJ1vTwyTRj5C94wS8Vx7aoCwKs
+	WjmCKyTl0jlNecqh40eFxbuW6GzeHYOdPeA6kcIK5
+X-Gm-Gg: AYBFou3M9q4L18gLDNhcBQ0Ye8K6x2GIUffvj5hcXGVUBCPCZduYb/OTXKBS/j+Nkq6
+	GJ5Qoi2B1TwWxwQQpyGFEf5Vd4r/HKwrulhGdUMjuqVrCN/H4ok1niS6hNv2JpDlVEZ2/xyxgcS
+	Ac8aZG52HTP4mH6n3bVbtg2aTcrd8UMhswEnbzsIw3gMohMChuDqpCzmPk1HS1PVo1qGiVCH3qb
+	euiKCHnnMu1k4tQT96/hZTE7V+J09L4tWj6utJv3PIQvPUJQuR/RjvFoqM6D7kuBxpu0jM1t56Q
+	2jHJ+B3NmuTHDChhUBpAvYXT0CMbwU/jCpB3420nePbw+55JJ/sAzK9hvcZYCW66RmjszuNgCEq
+	ceHF0BZwjDg==
+X-Received: by 2002:a05:622a:260f:b0:51c:ca9:3d17 with SMTP id
+ d75a77b69052e-5325087c7f5mr3564871cf.12.1789504714348; Tue, 15 Sep 2026
+ 13:38:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260709183956.1545402-1-ctshao@google.com> <CAJpZYjVB2+gSAOQRyXhapkeJLHLRuYWV9FVDTWC5Q2r3HDmyKg@mail.gmail.com>
-In-Reply-To: <CAJpZYjVB2+gSAOQRyXhapkeJLHLRuYWV9FVDTWC5Q2r3HDmyKg@mail.gmail.com>
+References: <178003738371.62097.10360938456907564684@gmail.com>
+In-Reply-To: <178003738371.62097.10360938456907564684@gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 15 Sep 2026 13:35:17 -0700
-X-Gm-Features: AcwNN1W4gqyMNPoBiIR8TiCEp0MQHdibfJuLwrDHxW2S3LZJMj8Dnk6GlAiScOg
-Message-ID: <CAP-5=fWYgweCU59usaUoBjV5crj1zAD3sWOQgNBJhDfJmJCdqg@mail.gmail.com>
-Subject: Re: [PATCH] perf jevents: Add dynamic IIO PCIe bandwidth metrics for Intel
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	"Taylor, Perry" <perry.taylor@intel.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	james.clark@linaro.org
+Date: Tue, 15 Sep 2026 13:38:22 -0700
+X-Gm-Features: AcwNN1UXK9UtE6mV4KOXzn7kUifeCNY5PJcwT2rEeTndVdIHwQO0dV89bOJN7GA
+Message-ID: <CAP-5=fUbwmmuRj6p94+M4k869nHPXuNBXyvtizvgdjVG46w8MQ@mail.gmail.com>
+Subject: Re: [PATCH 0/6] perf: fix six memory-safety vulnerabilities in sched/header/subcmd
+To: Wang Haoran <haoranwangsec@gmail.com>
+Cc: acme@kernel.org, peterz@infradead.org, mingo@redhat.com, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 9, 2026 at 2:34=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> wr=
-ote:
+On Thu, May 28, 2026 at 11:52=E2=80=AFPM Wang Haoran <haoranwangsec@gmail.c=
+om> wrote:
 >
-> + Perry for reviewing the metric.
+> >From 9e71ffe9400fd54c4fc958b16229e5628271e4ad Mon Sep 17 00:00:00 2001
+> From: Wang Haoran <haoranwangsec@gmail.com>
+> Date: Thu, 28 May 2026 15:21:08 +0800
+> Subject: [PATCH 0/6] perf: fix six memory-safety vulnerabilities in sched=
+/header/subcmd
 >
+> Hi, I found several vulnerabilities in perf module.
 >
-> On Thu, Jul 9, 2026 at 11:39=E2=80=AFAM Chun-Tse Shao <ctshao@google.com>=
- wrote:
-> >
-> > Generate per-IIO-device PCIe read and write bandwidth metrics
-> > (iio_bandwidth_read_per_device_0, etc.) grouped under
-> > iio_bandwidth_per_device for Sapphire Rapids and newer architectures
-> > in intel_metrics.py.
-> >
-> > By using has_event() checks across up to 24 possible IIO stack indices,
-> > runtime perf automatically monitors only the IIO root complexes present
-> > on the system without failing on missing instances.
-> >
-> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > Assisted-by: Gemini:gemini-3.1-pro-preview
+> This series fixes six memory-safety bugs found in perf version 7.0.6,
+> in the perf sched stats subsystem and related infrastructure.  All six
+> were confirmed via AddressSanitizer + LeakSanitizer with crafted
+> perf.data files; the reproducer files are attached to the individual
+> patch emails.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Hi Wang,
+
+Thank you for the contribution! Since there have been similar fixes in
+perf-tools-next, could you rebase and resend this series. This should
+automatically trigger a Sashiko review, which is currently missing.
 
 Thanks,
 Ian
 
-> > ---
-> >  tools/perf/pmu-events/intel_metrics.py | 52 ++++++++++++++++++++++++++
-> >  1 file changed, 52 insertions(+)
-> >
-> > diff --git a/tools/perf/pmu-events/intel_metrics.py b/tools/perf/pmu-ev=
-ents/intel_metrics.py
-> > index bc2b920d3a0d..4f8a123a375d 100755
-> > --- a/tools/perf/pmu-events/intel_metrics.py
-> > +++ b/tools/perf/pmu-events/intel_metrics.py
-> > @@ -1132,6 +1132,57 @@ def UncoreUpiBw() -> Optional[MetricGroup]:
-> >      ], description=3D"UPI Bandwidth")
-> >
-> >
-> > +def UncoreIioBw() -> Optional[MetricGroup]:
-> > +    if _args.model not in [
-> > +        "sapphirerapids",
-> > +        "emeraldrapids",
-> > +        "graniterapids",
-> > +        "sierraforest",
-> > +        "clearwaterforest",
-> > +    ]:
-> > +      return None
-> > +
-> > +    # On multi-socket x86 servers, there can be multiple IIO stacks pe=
-r socket.
-> > +    # We generate metrics up to index 23 with has_event check so runti=
-me perf
-> > +    # only measures the IIO instances present on the system.
-> > +    max_iios =3D 24
-> > +    metrics =3D []
-> > +    scale =3D 4 / 1_000_000
-> > +    for i in range(max_iios):
-> > +      rd_event =3D Event(
-> > +          f"uncore_iio_{i}/UNC_IIO_DATA_REQ_OF_CPU.MEM_READ.ALL_PARTS/=
-"
-> > +      )
-> > +      wr_event =3D Event(
-> > +          f"uncore_iio_{i}/UNC_IIO_DATA_REQ_OF_CPU.MEM_WRITE.ALL_PARTS=
-/"
-> > +      )
-> > +      rd_bw =3D Select(d_ratio(rd_event, interval_sec), has_event(rd_e=
-vent), 0)
-> > +      wr_bw =3D Select(d_ratio(wr_event, interval_sec), has_event(wr_e=
-vent), 0)
-> > +      metrics.append(
-> > +          MetricGroup(
-> > +              f"iio_bandwidth_per_device_iio{i}",
-> > +              [
-> > +                  Metric(
-> > +                      f"iio_bandwidth_read_per_device_{i}",
-> > +                      f"IIO {i} read bandwidth",
-> > +                      rd_bw,
-> > +                      f"{scale}MB/s",
-> > +                  ),
-> > +                  Metric(
-> > +                      f"iio_bandwidth_write_per_device_{i}",
-> > +                      f"IIO {i} write bandwidth",
-> > +                      wr_bw,
-> > +                      f"{scale}MB/s",
-> > +                  ),
-> > +              ],
-> > +          )
-> > +      )
-> > +    return MetricGroup(
-> > +        "iio_bandwidth_per_device",
-> > +        metrics,
-> > +        description=3D"IIO Read/Write Bandwidth per root complex",
-> > +    )
-> > +
-> > +
-> >  def main() -> None:
-> >      global _args
-> >
-> > @@ -1179,6 +1230,7 @@ def main() -> None:
-> >          UncoreMemBw(),
-> >          UncoreMemSat(),
-> >          UncoreUpiBw(),
-> > +        UncoreIioBw(),
-> >      ])
-> >
-> >      if _args.metricgroups:
-> > --
-> > 2.55.0.795.g602f6c329a-goog
-> >
+> Privilege note
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> "perf sched stats record" requires root to capture
+> scheduler events from the kernel.  However, "perf sched stats report"
+> processes a perf.data file from disk and requires NO special privileges.
+> This means an unprivileged attacker can hand a crafted perf.data to any
+> user who runs "perf sched stats report" -- the attack surface is fully
+> reachable without administrator rights.
+>
+> Crash-to-fix mapping
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+>   crash_err234_iter50.data  -> patch 1 (memory leaks in schedstat)
+>   crash_sig6_iter840.data   -> patch 2 (heap overflow via bitmap_zalloc)
+>   crash_sig7_iter210.data   -> patch 3 (SIGBUS via out-of-bounds mmap)
+>   crash_sig11_iter2.data    -> patch 4 (array OOB in domain index)
+>   (no poc)                  -> patch 5 (list_first_entry on empty list)
+>   crash_err255_iter46.data  -> patch 6 (astrcat leak in parse_options)
+>
+> Vulnerability summary
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>
+> 1. Memory leaks in perf_sched__process_schedstat() / free_schedstat()
+>    (tools/perf/builtin-sched.c)
+>
+>    Three distinct leak paths:
+>    a) When zalloc() of the inner data pointer (cpu_data or domain_data)
+>       fails, the outer struct is returned without freeing the parent.
+>    b) In the after_workload_flag=3Dtrue branch the temporary struct and
+>       its embedded data pointer are used then discarded without being
+>       freed.
+>    c) free_schedstat() frees each cpu/domain node but not the
+>       cpu_data/domain_data pointers allocated inside each node.
+>
+>    ASAN/LSan reports 72-144 bytes leaked per crafted event processed.
+>
+> 2. Heap buffer overflow via u64->int truncation in do_read_bitmap()
+>    (tools/perf/util/header.c)
+>
+>    bitmap_zalloc() takes an int but do_read_bitmap() passes a raw u64
+>    read from the file.  If size > INT_MAX the int wraps to a small
+>    value, a tiny buffer is allocated, and the subsequent loop that
+>    reads BITS_TO_U64(size) u64 words from the file writes arbitrarily
+>    far past the end of the allocation (heap buffer overflow).
+>
+> 3. SIGBUS from data.offset beyond file size
+>    (tools/perf/util/header.c)
+>
+>    A crafted perf.data can set perf_file_header.data.offset to a value
+>    larger than the actual file size.  mmap() succeeds because the
+>    kernel accepts out-of-file offsets, but any access to the mapped
+>    region triggers SIGBUS.  Confirmed with data.offset=3D0xff68=3D65384
+>    against a 4760-byte file.
+>
+> 4. Array out-of-bounds write via unchecked domain index
+>    (tools/perf/util/header.c)
+>
+>    process_cpu_domain_info() reads a domain index from the file and
+>    uses it directly to index cd_map[cpu]->domains[], an array of
+>    max_sched_domains entries.  A domain value >=3D max_sched_domains
+>    causes an out-of-bounds write into adjacent heap memory.
+>
+> 5. list_first_entry() misuse on potentially-empty lists
+>    (tools/perf/builtin-sched.c)
+>
+>    get_all_cpu_stats() and show_schedstat_data() call
+>    list_first_entry() which, unlike list_first_entry_or_null(),
+>    never returns NULL -- it computes container_of() on the list head
+>    itself when the list is empty, producing a garbage pointer.  The
+>    NULL checks that follow are therefore dead code.  A crafted
+>    perf.data that causes an empty list makes these functions dereference
+>    the garbage pointer.  Replaced with list_first_entry_or_null() plus
+>    proper NULL guards.
+>
+> 6. Memory leak in parse_options_subcommand()
+>    (tools/lib/subcmd/parse-options.c)
+>
+>    When subcommands are present and no usage string has been supplied,
+>    parse_options_subcommand() builds a usage string with astrcat() and
+>    stores the pointer in usagestr[0].  The pointer is never freed,
+>    causing a 73-byte leak on every invocation.
+>
+> Testing
+> =3D=3D=3D=3D=3D=3D=3D
+>
+> Affected version: perf 7.0.6
+>
+> Each patch was verified with:
+>
+>   $ make -C tools/perf EXTRA_CFLAGS=3D"-fsanitize=3Daddress,leak \
+>       -fno-omit-frame-pointer -Wno-error=3Dstringop-truncation" \
+>       -j$(nproc)
+>
+>   $ ./perf sched stats report -i <crash-file>
+>
+> Before the patch the corresponding crash file produced the ASAN/LSan
+> report listed above.  After the patch the same file is either rejected
+> cleanly (patches 2-4) or processed without any error report (patches
+> 1, 5, 6).
+>
+> The reproducer files (crash_*.data) are attached to the individual
+> patch emails; each is a minimal crafted perf.data (~4 KB) that
+> isolates exactly one bug.
+>
+> Wang Haoran (6):
+>   perf/sched: fix memory leaks in schedstat processing
+>   perf/header: validate bitmap size before allocation in do_read_bitmap
+>   perf/header: reject data offset beyond file size
+>   perf/header: add bounds check for domain index in process_cpu_domain_in=
+fo
+>   perf/sched: replace list_first_entry with list_first_entry_or_null
+>   subcmd: fix memory leak in parse_options_subcommand
+>
+>  tools/lib/subcmd/parse-options.c |  3 ++-
+>  tools/perf/builtin-sched.c       | 32 +++++++++++++++++++++++++-------
+>  tools/perf/util/header.c         | 17 +++++++++++++++++
+>  3 files changed, 44 insertions(+), 8 deletions(-)
+>
+> --
+> 2.53.0
+>
