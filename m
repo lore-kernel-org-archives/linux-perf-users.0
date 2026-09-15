@@ -1,170 +1,106 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 765843A718D;
-	Tue, 15 Sep 2026 05:54:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23EC400E1A;
+	Tue, 15 Sep 2026 06:40:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789451663; cv=none; b=nx3R4olb4n+aMR92Lsxqiyi7G9Gng3+Q0Wiv7G8AeBRhbZU5OcuWQgzf+FhSSWFcUBHuEYawo0kD8SGV+b8pbIH5G3fgE5y0uNhWEgQsBHbdASjEcVvDK4VIACAt3YhavFV/1ZzFoxrgM55jAvJrIsmbf4eFRtvIeDAtHV0AKfc=
+	t=1789454441; cv=none; b=aPWmFj1Md/WO6FLy1KhkxQ9dhZB3UiPeARiZDLq2tNjp9zhLP//kNmWBChFK6PFvcBGyy9DzUFwxLhAvv5y0D1Vh+UiiwAr5crVTBmqrLhpRF0XGCyYs+HhcavtopHLZ34yfrwsHYBZ+FMpTIC9RRjPiCdhUcaXIMT8IulJYGK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789451663; c=relaxed/simple;
-	bh=32QncO42ogdd1YcS4VhT6UVHXxFKqtuucnpN95mFK0k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tdjLU6NLtS3wHizBw1Viqu4ibbZbPmZtRf/aFyZgLcHLtPnJ3mNwa19QQflb2Np1pj+LscOiaUbBoVAYGzlWL35JKNg0NQZsb0vWimtCjZiggqGo0cmx7XgW8y5LgLTLlkkforUsWIXgE7zsGm5p/J10xmEeirJcMSBghNOobBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+3XL9fa; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789454441; c=relaxed/simple;
+	bh=odMh36Hi3+sZidnwcQ/5vDdoVLrteY3kmjEOJkYEDvo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DBQJmsCxfyDK2YQizec1+CXHyqBvyRBS6ZcU/GPbRMIf6R4tYYdeAOr0WIWEe1LVEBt8J/E1OxWudzl57AggocW1V+pJxVwQZP1T10vtLht+PQW9CIbqgSNi0IULkq9LWYmvxXRhb00LtQvvvGmD6F8z4GMQaShKmDpYjD2lh1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o0czMT9j; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+3XL9fa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2EDC1F000FF;
-	Tue, 15 Sep 2026 05:54:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o0czMT9j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E81AD1F000FF;
+	Tue, 15 Sep 2026 06:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789451662;
-	bh=toHrB1IToMyqXz6Fr1e4cLPpy1QqZkTe818DjiZV8eg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=B+3XL9fagtXq2bxFrewB8rh6nzkOcHQNp3JIaevyReJSHFtHyQFCTgoZwLQwJbEsV
-	 gqkp1A4Br6Hl8iXDtyfnJcvRUB5Q7yuhOxINnPe8WVID1e5vy7PKsx0MY8XXSqDd92
-	 /iIMuseTcoODEE0fxcry8zPIcircvqc43OrBrO6KUcKZUozVy18oJm6IV7HLQfXcdq
-	 X3sIvQ+z/WO/S5vHsa5bm7fos0aXUvhmjiS5ahFw0tB5wox/T7fCVH37KaM5Fkk9i2
-	 QR2ubVpSLVMNF9Hb/m9cpeI5oL0gtKc4WzbacIDOX+pDYtXCY1MOs+zLdLjj3ky5yK
-	 gYXPdwdf1bVxA==
-Date: Mon, 14 Sep 2026 22:54:19 -0700
+	s=k20260515; t=1789454440;
+	bh=BqCt//Qzq6e2iRgC4WLtg6r0GuVGsoll3LXjbWa93CQ=;
+	h=From:To:Cc:Subject:Date;
+	b=o0czMT9jnMqnolrWTSv0AuffmkV3Syi+2ztblvv8qDhL3QHXJ7Jz2CPQnYSTKflsw
+	 dWYsGXl6MFeI6tuhwz1w6Y8YslNiiWHU5UthdCQzV4115/n5wUmgwl9P2O0rTVPnnd
+	 MGb8mDPoh0zm2t0wmxipjlaJArxkp+uScd5zN4FJEIypuWinBWqexxr6ksroqGi+YS
+	 s4n7ym7mwXQ8d11mlapym61hkiy1+RSVRAqSSytuntt3EWz30oylYt6X1iLMZKYt0L
+	 A3Rdj065TBAkHLGnjmHEDjMUmXrh1ZvNBlSYclANXLxcT61Pz6+Vsnev8jQhuJ93p2
+	 9nIV9bQuMgSrg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	James Clark <james.clark@linaro.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, Zecheng Li <zli94@ncsu.edu>,
-	Yanbo Zhao <yzhao62@ncsu.edu>, Tengda Wu <wutengda@huaweicloud.com>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Zecheng Li <zli94@ncsu.edu>,
+	Yanbo Zhao <yzhao62@ncsu.edu>,
+	Tengda Wu <wutengda@huaweicloud.com>,
 	Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: Re: [PATCH v2 2/4] perf dwarf-aux: Add die_has_flex_array() helper
-Message-ID: <aqjdixZz4RYQZgCJ@google.com>
-References: <20260914064535.1671939-1-namhyung@kernel.org>
- <20260914064535.1671939-3-namhyung@kernel.org>
- <20260915084048.5779ad90647c116806822df5@kernel.org>
+Subject: [PATCH v3 0/3] perf annotate-data: Support flexible array types
+Date: Mon, 14 Sep 2026 23:40:32 -0700
+Message-ID: <20260915064035.1970175-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.55.0.1082.g2b9226bbc0-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20260915084048.5779ad90647c116806822df5@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi Masami,
+Hello,
 
-On Tue, Sep 15, 2026 at 08:40:48AM +0900, Masami Hiramatsu wrote:
-> On Sun, 13 Sep 2026 23:45:33 -0700
-> Namhyung Kim <namhyung@kernel.org> wrote:
-> 
-> > The die_has_flex_array() returns true when the given type is a compound
-> > type and contains an array at the end.  To prevent an infinite recursion
-> > add a depth field to the internal function.
-> 
-> Hi, thanks for this nice extension!
-> BTW, I have a comment on this implementation.
+The flexible arrays are dynamically allocated with different size.  So checking
+with the original type size won't match and cannot find the type if the offset
+is bigger than the size.  This patch series detects those flex-arrays and allows
+accesses beyong the original size.
 
-Thanks for your review!
+I'm not sure what's the best way to add test codes for data type profiling as it
+seems we need to add a lot more workloads for different cases.  Probably we may
+want to split the workloads as separate binaries.
 
-> 
-> > 
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > ---
-> >  tools/perf/util/dwarf-aux.c | 77 +++++++++++++++++++++++++++++++++++++
-> >  tools/perf/util/dwarf-aux.h |  3 ++
-> >  2 files changed, 80 insertions(+)
-> > 
-> > diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> > index d7160f87ac7d7ab3..465824e6513eb0ac 100644
-> > --- a/tools/perf/util/dwarf-aux.c
-> > +++ b/tools/perf/util/dwarf-aux.c
-> > @@ -2180,3 +2180,80 @@ Dwarf_Die *die_deref_ptr_type(Dwarf_Die *ptr_die, int offset,
-> >  
-> >  	return die_get_member_type(&type_die, offset, die_mem);
-> >  }
-> > +
-> > +static bool is_flex_array_member(Dwarf_Die *mb_die)
-> > +{
-> > +	Dwarf_Die type_die;
-> > +	Dwarf_Word size;
-> > +
-> > +	/* get the type of the member */
-> > +	if (die_get_real_type(mb_die, &type_die) == NULL)
-> > +		return false;
-> > +
-> > +	if (dwarf_tag(&type_die) != DW_TAG_array_type)
-> > +		return false;
-> > +
-> > +	return dwarf_aggregate_size(&type_die, &size) < 0 || size == 0;
-> > +}
-> > +
-> > +#define MAX_FLEX_ARRAY_RECURSION  256  /* arbitrary */
-> > +
-> > +static bool die_has_flex_array_recurse(Dwarf_Die *parent_die, int depth)
-> > +{
-> > +	Dwarf_Die die_mem, last_mb;
-> > +	int tag = dwarf_tag(parent_die);
-> > +
-> > +	if (tag != DW_TAG_structure_type && tag != DW_TAG_union_type)
-> > +		return false;
-> 
-> What happen if the parent_die is "typedef struct {..." ?
-> I think you need to use die_get_real_type() here. ;)
+v3 changes)
 
-Currently I expect callers to do it before calling.  But probably I can
-add it to the outer function.
+ * patch 1 was merged!
+ * check if last member is found
+ * check member location when finding flex-array
+ * ensure member typename is initiailized
+ * fix a bug to pass a wrong type in check_variable()
+ * fix a typo in a comment
 
-> 
-> > +
-> > +	/* prevent infinite recursion */
-> > +	if (depth > MAX_FLEX_ARRAY_RECURSION)
-> > +		return false;
-> > +
-> > +	if (dwarf_child(parent_die, &die_mem))
-> > +		return false;
-> > +
-> > +	do {
-> > +		if (dwarf_tag(&die_mem) != DW_TAG_member)
-> > +			continue;
-> 
-> If the member is a "const" member, you may have to use
-> die_get_real_type() to get the actual type.
-> (in this case, you need a cursor DIE for dwarf_siblingof()) 
+v2: https://lore.kernel.org/r/20260914064535.1671939-1-namhyung@kernel.org
 
-Doesn't it belong to a type of the member?  In my simple test program,
-it shows the struct type only has children of members and their types
-including const are referenced from the member DIEs.
+ * fix missing index increment in the histogram
+ * support flex array in union types
+ * add recursion check in die_has_flex_array()
+ * check negative index arrays properly
+ * avoid divide-by-zero when the size is unknown
 
-Also I don't think flexible arrays will be const as they cannot be
-initialized.
-
-> 
-> > +
-> > +		if (tag == DW_TAG_union_type) {
-> > +			if (is_flex_array_member(&die_mem))
-> > +				return true;
-> > +
-> > +			if (die_get_real_type(&die_mem, &last_mb) &&
-> > +			    die_has_flex_array_recurse(&last_mb, depth + 1))
-> > +				return true;
-> > +		}
-> > +
-> > +		if (tag == DW_TAG_structure_type)
-> > +			memcpy(&last_mb, &die_mem, sizeof(last_mb));
-> 
-> To find the last member, I think you'd better check the
-> DW_AT_data_member_location and DW_AT_decl_line to ensure the
-> DIE is the last member.
-
-Good point.  I can add the member location check.  I'm afraid decl line
-may be incorrect if compiler randomized the layout.
-
-So far I haven't seen DWARF data having unsorted members (by location),
-but it'd be better to make sure it's sorted.
+v1: https://lore.kernel.org/r/20260912054706.1475583-1-namhyung@kernel.org
 
 Thanks,
 Namhyung
+
+
+Cc: Zecheng Li <zli94@ncsu.edu>
+Cc: Yanbo Zhao <yzhao62@ncsu.edu>
+Cc: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Shuai Xue <xueshuai@linux.alibaba.com>
+
+Namhyung Kim (3):
+  perf dwarf-aux: Add die_has_flex_array() helper
+  perf annotate-date: Allow out-of-size access for flex-array types
+  perf annotate-data: Adjust type offset for flex-array
+
+ tools/perf/util/annotate-data.c | 140 ++++++++++++++++++++++++--------
+ tools/perf/util/annotate-data.h |   2 +
+ tools/perf/util/dwarf-aux.c     |  97 ++++++++++++++++++++++
+ tools/perf/util/dwarf-aux.h     |   3 +
+ 4 files changed, 206 insertions(+), 36 deletions(-)
+
+-- 
+2.55.0.1082.g2b9226bbc0-goog
 
