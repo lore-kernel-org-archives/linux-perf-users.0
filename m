@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C29B4CA780
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 18:53:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689E44CC27D
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 18:54:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789498399; cv=none; b=mtS6aEZkC79x03QpOg2KroIa9C469PkPuZi1CwlV2JFbH7m/wxypQBY4NiJVQ8okz8tAdt15+XwIv34PWd5pL2sF7cNHWD9AOhZSmH7F/MehYG1UR686ty2kCAK1AY8l29YOzixANxdfVGi9vZr+FJe706vRXnrdUchtPMV8GDg=
+	t=1789498472; cv=none; b=tZtR9A5SKCewrZkY578sGeF6kNC+oIMMx3r6m/Vk9D9xOLeOKqfrp8fZ1RbOwj/VlMi4twjX8fYP6q8lEgLkWtS5BSxps/BAH0PAmUNUFTHRZalnwypSzBfihaaaFcd20cVcHvruCDwnum4YxTqzYfuMMBuP2an3x+DdT7jCSc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789498399; c=relaxed/simple;
-	bh=1oNXim9qkJ31rS8Z9hnMZcKukQ1pTE/vQzr9bwYAKug=;
+	s=arc-20240116; t=1789498472; c=relaxed/simple;
+	bh=RcDwoQWknRHHDILqel5R41s7oZBoUD+P5bFcjciISiM=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=K4FJAXBYAF95r9zVQBIxv7UTlktJQVq6zDUALLlT2LO8G3CZS4Uj6AZ3vE+wgbLE6tfet+A8CaIRQc7zM/WERm1w3LTR/tHlinTWxRqe8GQfcszI8QYDeg4GiBP0W+3io0PXc5j/F4AemoU9lG4SDlmpcvePhzz6O7JndjyRPZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fh6Fn89a; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=ViTguRqTnWjxUkT3cwVSGSezsFnsLHyaDQrzEmRdnW2LnJ3oRLW//8tWMZBxfHl/zvAMsK30xkN1fI90b57289cTCLXPh5qptM4Rz4TOvt01jqcc2o5b7Eg4hXW7JBmHHXy5bB0dKojDBv527tLMSUjF2chxsaZa7xdmD8Li6DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MT/EUSYl; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fh6Fn89a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0573C1F00893;
-	Tue, 15 Sep 2026 18:53:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MT/EUSYl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B345F1F00893;
+	Tue, 15 Sep 2026 18:54:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789498398;
-	bh=mMuspHuzZH5XDRaS8dzIGEmXWOQr6fwgMg6KG26r3ps=;
+	s=k20260515; t=1789498471;
+	bh=WMfC6Fu/vZySuer5i9PHffxitpDpY34HtZ0aBRdoNVo=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=Fh6Fn89aqCfWjx7OL9lCYp/wI+REVMYkAzywRyxPL75Xw0iNfT14YjhADd3LFhp0W
-	 RL9RV73Q4HSxQkCt/aQZyJX60j6K9/X+rGpV7Y9xcwIeRrIPaUy2ca0meBnxrvwz1U
-	 OSyfR2GFgQJZHlBRh/GYi3unNFlVAtqfmDx8oXgJ++IpYQo554/9tjwBsg5eWOQ5Rp
-	 V2w1kaM07vh3CXC59KpEnmLpexY/6evxlVqzPiFEdk6AERbOwugGepN/ug1PVboNee
-	 CkE2fiB7FPuLHLV+6QSee1Nbl7SaSW3IK4GdwA3xSZlGpPBBGXtWRBLwk5GN/47+sc
-	 7THPyroI3dKpQ==
+	b=MT/EUSYl5NnaFtTI/3GvsfP8akuof748rfy4I4nwstO2cssILsos0xqxRpEbuU1jZ
+	 fryXxdzRtTddIWjpW+BwVTiN0jGg8YTQwwT0vnlEfv+fqrwO5uUAG8h4xv6CQbpl3g
+	 tu4Rxz7a0zxMSeZSmoR/EjJRS5+g/k4ariQ709utDHwzgm472YBgXQRJIxKfF5vjbJ
+	 iWFeBF6vrVmmH91JMHexv17Lpd/WO4dkAkD/GvjVaR5qcx0JzbY5x6zD0pjGOMqssD
+	 Jz+HPUoOlFd0+BGL8H98mgweeiSZwRFUK+8NazaiOCKZpYFyuUUXVlsik/3bWZnnii
+	 7b3NqIwUYBLXg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 1/4] perf symbols: Fix broken ELF_C_READ_MMAP fallback
- guard
+Subject: Re: [PATCH 3/4] perf script: Add --lazy-load-symbols for lazy
+ symbol loading
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Alireza Haghdoost" <haghdoost@uber.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260915-perf-symbol-memory-send-v1-1-1d3360e21f07@uber.com>
+In-Reply-To: <20260915-perf-symbol-memory-send-v1-3-1d3360e21f07@uber.com>
 References: <20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com>
- <20260915-perf-symbol-memory-send-v1-1-1d3360e21f07@uber.com>
+ <20260915-perf-symbol-memory-send-v1-3-1d3360e21f07@uber.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 15 Sep 2026 18:53:16 +0000
-Message-Id: <20260915185318.0573C1F00893@smtp.kernel.org>
+Date: Tue, 15 Sep 2026 18:54:29 +0000
+Message-Id: <20260915185430.B345F1F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,62 +47,101 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 Thank you for your contribution! Sashiko AI review found 1 potential issue(=
 s) to consider:
-- [Low] perf: build failure on systems lacking ELF_C_READ_MMAP enum
+- [Medium] perf: memory exhaustion in ondemand_read_name() via truncated ELF
 --
 
-commit d38dd3de1c465f53af2cb4e7df04744c926b7ed6
+commit 9189c705674e1061e4de963daab5ec07bd55d920
 Author: Alireza Haghdoost <haghdoost@uber.com>
 
-perf symbols: Fix broken ELF_C_READ_MMAP fallback guard
+perf script: Add --lazy-load-symbols for lazy symbol loading
 
-This patch attempts to make perf mmap ELF files by unconditionally defining
-PERF_ELF_C_READ_MMAP to ELF_C_READ_MMAP. It removes the previous guard
-because ELF_C_READ_MMAP is an enum rather than a preprocessor macro.
+This commit introduces lazy symbol loading for userspace ELF DSOs in perf
+script. It builds a sorted in-memory index of symbols and resolves them via
+binary search, reading symbol names on-demand from the string table using
+pread() to reduce memory footprint.
 
-> diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-> --- a/tools/perf/util/symbol.h
-> +++ b/tools/perf/util/symbol.h
-> @@ -57,15 +57,8 @@ static inline bool is_livepatch_symbol(const char *str)
->  	return strstarts(str, KLP_SYM_PREFIX);
->  }
-> =20
-> -/*
-> - * libelf 0.8.x and earlier do not support ELF_C_READ_MMAP;
-> - * for newer versions we can use mmap to reduce memory usage:
-> - */
-> -#ifdef ELF_C_READ_MMAP
-> -# define PERF_ELF_C_READ_MMAP ELF_C_READ_MMAP
-> -#else
-> -# define PERF_ELF_C_READ_MMAP ELF_C_READ
-> -#endif
-> +/* libelf falls back to internal reads when mmap fails (e.g. non-seekabl=
-e fd). */
-> +#define PERF_ELF_C_READ_MMAP ELF_C_READ_MMAP
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 914e42d21f70f..e4d77e46e8830 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
 
-[Severity: Low]
-Will this cause compilation errors on systems where the libelf.h header lac=
-ks
-the ELF_C_READ_MMAP enum?
+[ ... ]
 
-By unconditionally assigning PERF_ELF_C_READ_MMAP to ELF_C_READ_MMAP in
-tools/perf/util/symbol.h, this bypasses build feature detection. On systems
-with libelf implementations that do not provide ELF_C_READ_MMAP, such as
-elftoolchain on FreeBSD and macOS, this triggers an undeclared identifier
-compilation error.
+> +static const char *ondemand_read_name(int fd, u64 strtab_offset,
+> +				      u64 strtab_size, u64 name_off,
+> +				      char *buf, size_t buflen,
+> +				      char **to_free)
+> +{
 
-The commit message notes that objtool uses an #ifndef guard which works fin=
-e,
-but since ELF_C_READ_MMAP is an enum in libelf, that #ifndef in objtool
-silently evaluates to true and incorrectly downgrades all mmap reads to
-standard reads instead of actually using mmap.
+[ ... ]
 
-Could we restore a proper feature detection mechanism here rather than
-relying on an unconditional definition?
+> +	/*
+> +	 * Slow path: the name is longer than buflen.  Grow a heap buffer
+> +	 * geometrically, doubling until the terminator appears, so a long
+> +	 * name costs O(name length), not O(remaining strtab size).
+> +	 */
+> +	cap =3D 4096;
+> +	for (;;) {
+> +		char *tmp;
+> +		size_t want =3D cap;
+> +
+> +		if (want > remain)
+> +			want =3D remain;
+> +		if (want =3D=3D 0)
+> +			break;
+> +
+> +		tmp =3D *to_free ? realloc(*to_free, want + 1) : malloc(want + 1);
+> +		if (!tmp) {
+> +			free(*to_free);
+> +			*to_free =3D NULL;
+> +			return NULL;
+> +		}
+> +		*to_free =3D tmp;
+> +
+> +		n =3D pread(fd, *to_free, want, file_off);
+> +		if (n <=3D 0) {
+> +			free(*to_free);
+> +			*to_free =3D NULL;
+> +			return NULL;
+> +		}
+> +		(*to_free)[n] =3D '\0';
+> +
+> +		if (memchr(*to_free, '\0', n))
+> +			return *to_free;
+> +
+> +		/*
+> +		 * Read the whole remaining strtab (or hit EOF) with no
+> +		 * terminator: corrupt file, bail instead of re-reading.
+> +		 */
+> +		if (want >=3D remain || (u64)n >=3D remain)
+> +			break;
 
-> =20
->  #ifdef HAVE_LIBELF_SUPPORT
->  Elf_Scn *elf_section_by_name(Elf *elf, GElf_Ehdr *ep,
+[Severity: Medium]
+Does this loop properly handle a short read (EOF) on a truncated ELF file?
+
+If pread() hits EOF before filling the requested want bytes, n will be smal=
+ler
+than want but greater than 0. The loop condition currently checks if
+want >=3D remain or (u64)n >=3D remain, but it appears to miss an explicit
+short-read/EOF check like (size_t)n < want.
+
+Because of this, if remain is very large (based on an unvalidated sh_size
+in the ELF header), the loop could continuously geometrically reallocate up
+to remain bytes while reading the exact same short bytes from the constant
+file_off. Could this cause memory exhaustion / an OOM allocation failure?
+
+> +
+> +		/* Avoid size_t overflow on absurdly large strtabs. */
+> +		if (cap > SIZE_MAX / 2)
+> +			break;
+> +		cap *=3D 2;
+> +	}
+> +
+> +	free(*to_free);
+> +	*to_free =3D NULL;
+> +	return NULL;
+> +}
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260915-perf-symbo=
-l-memory-send-v1-0-1d3360e21f07@uber.com?part=3D1
+l-memory-send-v1-0-1d3360e21f07@uber.com?part=3D3
