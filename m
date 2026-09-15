@@ -1,138 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B0E3B1BD;
-	Tue, 15 Sep 2026 00:07:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEA112F585;
+	Tue, 15 Sep 2026 00:12:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789430861; cv=none; b=aRul68skWMNYyK6ttVQ6qdS9GxCkd3tOdqrMd5djHnqHuFxQ3+Yll6PhRPUqFVELzKCBGx5BcYzHy34tjhDtZiB+CCnpyaXEDuw9fDSBQBBfsvIXlyLZSWhf+QB/1vGZacGV5EeW11iz5JuZMRpx6Qyhk71lgfIB705fZix1jI4=
+	t=1789431175; cv=none; b=Av59HAMwDpuM9+U9Hbp9bAY1CEyNboVL2muc8cj7kvePPpZdzg1Jkx4jC926eGNZuaYTIIAcFDjrla2usfSieowcgHNoQFeRNYnEEuFvczHYbyAjFqEygpT+Uc7ccp7K0Y3F12z76YLTi0cG6PWnEHxUHeg5JRJ9Mz7GnndVoZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789430861; c=relaxed/simple;
-	bh=zBon07gWSak2sgLsYggzuaDg8GFtURaDQBpE1qCRfEY=;
+	s=arc-20240116; t=1789431175; c=relaxed/simple;
+	bh=zhnx7AaXwqZQ0NgtYjvaGqDLnplmETcLfwMRC/yMguo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K51GLL0HydttMNoYhbOoQOTPfwsAkFtWNO8SFu7LNxIp0yjjAVkHY0lWAEKhcZ3CSdAfs7T8s1JcYL9tyqlKVwT/zu0WnCcqwJseslbraAjhyq+2wtV1qjo4kjAfSqk2PWPNP/oMqFMg4pnSOzC2zIDtl5VYPxf/XeNNgT15+aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SNa8LhcR; arc=none smtp.client-ip=100.103.45.18
+	 Content-Type:Content-Disposition:In-Reply-To; b=vAfNR+0CmBtKKIR4nDnYs1VcUH69oUscJ1a1Y5f8UORj7AKXUZv+eNEXo8eHxLXP2jT+dVALU1SZoF1LoJhBdbV+GD5WhxnvW9+mYVh/HK99soZ1r84GQFYAmQI6LtFmj5cRTC12fbkM66ssvPkgWjj14HJPRjlN6Batg3mVBn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CDT7ph1+; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SNa8LhcR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05FD91F000FF;
-	Tue, 15 Sep 2026 00:07:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CDT7ph1+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 395CC1F000FF;
+	Tue, 15 Sep 2026 00:12:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789430859;
-	bh=OAsVoZcbOHJ/l4xfgRdXYIlSlMX4ehglMo7gnuUvxRo=;
+	s=k20260515; t=1789431173;
+	bh=YvVrBgg+vONYjj2Z+vL3bZIO/5A/H3xh1/bkiLsmcaQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=SNa8LhcRzsw8HJpUZ4BPj20KIu+8eE5hn4W4XfJ15C8BSG7l8Vx/2AqkgNzxVDUmR
-	 0SNaHDGcDbPTqp866ABJcB0uvTyNbte7ENL3DoRw1IeCV3QAvRO/mFfz0AKmFJDDV7
-	 0b3eWgyr4xKoE7HTJrk3rM8IBC6IjQf0bVzEKQhOv8CRgCbk23R8t8ZpSQzXar5Ufi
-	 sq/lEul8/KIT1fR3c6nXaa8KsgQHSFRedOTNTHYAPWsHJuIWRy+70tFdJFBlFWX72x
-	 bSlg3GyJ+RzxCwK6ooHUCom8EDGp3ghVzcET+cRdLLhQKaDYIrdMcwNIZGgJoan6x8
-	 juua/LRPZZ+kA==
-Date: Mon, 14 Sep 2026 21:07:36 -0300
+	b=CDT7ph1+48JbmxfifrHwu7ho+8gWl2UZprSk6k8ihEBcybC8NLuEDTCilh5OmufL8
+	 G2mpzcvcIKWh8Umw7kAfnCj2LblLjc4B4VqtSB3MOY4rTkbRrd3yiG/z3mWMV7g5x5
+	 Qb300QSs3f5H/KTkHUCHqItsqcqIl/vkG1Iqrubw7dQNu72LozTSF3A0WYdu974aMN
+	 Sw5E00VbxJSxHSE50aHPipaq8dlJOQwEHAWybhmOSiqHKBPMhkzOo51MYkjXr+/xN0
+	 XBCTS2YPTujXEir5p0zR0BarialXzjxmfMl02/4FuMC+HA9J3/4AHAPIp8yAqkmiRN
+	 s7ljNFc0fr6bg==
+Date: Mon, 14 Sep 2026 21:12:50 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Thomas Falcon <thomas.falcon@intel.com>
-Cc: sashiko-reviews@lists.linux.dev, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v9 4/6] perf tools: Show memory region in perf-c2c
- subcommand
-Message-ID: <aqiMSGuBkJHjMYei@x2>
-References: <20260914224650.52982-1-thomas.falcon@intel.com>
- <20260914224650.52982-5-thomas.falcon@intel.com>
- <20260914225716.667A11F000FF@smtp.kernel.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@arm.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	Suyash Mahar <smahar@meta.com>, Leo Yan <leo.yan@linux.dev>,
+	linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH 00/14] perf cs-etm: Per-thread mode fixes and snapshot
+ wrap support
+Message-ID: <aqiNgmB8-C_TuGf9@x2>
+References: <20260811-james-cs-unformatted-per-thread-fix-v1-0-90565318f5f8@linaro.org>
+ <aqdL33fw9AoxTrPq@x2>
+ <20260914081343.GF200420@e132581.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260914225716.667A11F000FF@smtp.kernel.org>
+In-Reply-To: <20260914081343.GF200420@e132581.arm.com>
 
-On Mon, Sep 14, 2026 at 10:57:16PM +0000, sashiko-bot@kernel.org wrote:
-> Thank you for your contribution! Sashiko AI review found 2 potential issue(s) to consider:
-> - [Medium] perf c2c: valid memory region overwritten by N/A
+On Mon, Sep 14, 2026 at 09:13:43AM +0100, Leo Yan wrote:
+> Hi Arnaldo,
+> 
+> On Sun, Sep 13, 2026 at 10:20:31PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Tue, Aug 11, 2026 at 04:30:03PM +0100, James Clark wrote:
+> > > Fix a few issues with per-thread mode:
+> > >   - With TRBE, thread migrations hit a queue without a decoder assert
+> > >   - On nVHE, everything looks like guest trace instead of host
+> > >   - Tracing multiple threads didn't really work
+> > 
+> > This series applies cleanly to perf-tools-next but has no Reviewed-by
+> > nor was processed by Sashiko.
+> > 
+> > Can somebody from the ARM camp take a look at it, please?
+> 
+> James has sent v2 [1] and I gave some words on it. Adrian also has one
+> comment for snapshot callbacks refactoring.
+> 
+> Sashiko also sent out review on the series.
 
-All the other are minor stuff that I would fix up myself, but there this
-one, can you take a look at it, address the other minor ones and post
-v10?
-
-Thanks,
+Ok, so it is still in development with open issues, I'll wait.
 
 - Arnaldo
-
-> - [Low] perf c2c: missing stdio.h inclusion for asprintf
-> --
+ 
+> Thanks,
+> Leo
 > 
-> commit d7af7398254a585e98330957faf348c7603375be
-> Author: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> 
-> perf tools: Show memory region in perf-c2c subcommand
-> 
-> Add memory region field to the cacheline list view to help users
-> identify the memory region to which the cacheline belongs. The memory
-> region field was included with the introduction of support for the
-> Off-module Response facility (OMR) in Intel's Diamond Rapids and
-> Nova Lake architectures.
-> 
-> Link: https://lore.kernel.org/all/20260114011750.350569-1-dapeng1.mi@linux.intel.com/
-> 
-> > diff --git a/tools/perf/builtin-c2c.c b/tools/perf/builtin-c2c.c
-> > index 715b75d42f2a8..4272f5f22c01f 100644
-> > --- a/tools/perf/builtin-c2c.c
-> > +++ b/tools/perf/builtin-c2c.c
-> > @@ -247,6 +248,16 @@ static void c2c_he__set_node(struct c2c_hist_entry *c2c_he,
-> >  	}
-> >  }
-> >  
-> > +static void c2c_he__set_mem_region(struct c2c_hist_entry *c2c_he,
-> > +				   unsigned int mem_region)
-> > +{
-> > +	if (WARN_ONCE(mem_region > PERF_MEM_REGION_MEM7,
-> > +		      "WARNING: invalid memory region ID\n"))
-> > +		return;
-> > +
-> > +	c2c_he->mem_region = mem_region;
-> 
-> [Severity: Medium]
-> Does this code unconditionally overwrite a previously recorded valid memory
-> region with a new value?
-> 
-> In process_sample_event(), this is called for every sample grouped into the
-> cacheline hist_entry:
-> 
-> process_sample_event()
->   c2c_he__set_mem_region(c2c_he, mem_region);
-> 
-> If multiple samples hit the same cacheline, could an earlier sample that
-> provides valid OMR region data be overwritten by a later standard sample
-> (such as an L1 hit) lacking it? This could result in the cacheline's
-> memory region being incorrectly displayed as 'N/A' in the perf c2c output.
-> 
-> [ ... ]
-> 
-> > @@ -3271,9 +3353,16 @@ static int perf_c2c__report(int argc, const char **argv)
-> >  		goto out_mem2node;
-> >  	}
-> >  
-> > -	if (c2c.display != DISPLAY_SNP_PEER)
-> > -		output_str = "cl_idx,"
-> > +	c2c.show_mem_region = perf_header__has_feat(&session->header,
-> > +						HEADER_MEMORY_RANGES);
-> > +	if (c2c.show_mem_region)
-> > +		dim_dcacheline.header.line[0].span = 3;
-> > +
-> > +	if (c2c.display != DISPLAY_SNP_PEER) {
-> > +		if (asprintf(&output_str,
-> > +			     "cl_idx,"
-> 
-> [Severity: Low]
-> Does this file explicitly include <stdio.h> for asprintf?
-> 
-> Since musl libc enforces strict POSIX header separation and doesn't
-> implicitly include headers, omitting <stdio.h> here could lead to build
-> failures when compiling perf with a musl libc toolchain.
-> 
-> >  			     "dcacheline,"
-> > +			     "%s"
-> 
-> -- 
-> Sashiko AI review · https://sashiko.dev/#/patchset/20260914224650.52982-1-thomas.falcon@intel.com?part=4
+> [1] https://lore.kernel.org/linux-perf-users/20260821-james-cs-unformatted-per-thread-fix-v2-0-00c4fd0701b4@linaro.org/
