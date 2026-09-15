@@ -1,34 +1,35 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6C2E4AF9D5;
-	Tue, 15 Sep 2026 15:49:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80DA74AC158;
+	Tue, 15 Sep 2026 15:49:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789487360; cv=none; b=pgk2haf9csDdqo4ty+YZ9KWF8lz5hbrDa+U0anu2+uHSsr4BCLxbB2YryC4phJmRO9OS/c6YRBC1KgP7xRm7TiKTrdanTqshAxvRcqT5RW7P85IoAiKGx+fuAjdFS5tMAcQjs7q/IF8qPkewad+a3G7zf3cKEe8Ct1dXQECjTf8=
+	t=1789487363; cv=none; b=jGPPBXXwTqFs7cnvcK0Xi3D9DPmYD4jRuUFD668xwG/bcxxcI1vSlg92XJnbUh6NOIvi6IWK6FegSaW25qQIC7x3kRDJgla31/Re946fca6IOuFdBjinAlxihWDyKtEie42XuJGJd4f+Mwf6uUOOCi1liS7B5b+uf5+IgsglrEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789487360; c=relaxed/simple;
-	bh=rzWBLuFeZQZl5yGb8RvJIlMSZz68zKpAICaDgrSBzSA=;
+	s=arc-20240116; t=1789487363; c=relaxed/simple;
+	bh=7nL38er/+3j2hefe4RM396+0d0LyX5ets3LkSWVeuic=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nw+4PY7g44KykAu5ZmBpn0xJrSZJ4iF/TcoTed7x/PA1bkHdLZlMd1JDxTgLTS9bFJe79HWHDgERiKhmGZcok1UnNm98RL7cYI6OunHYMAClbbsvINyfLgSNEW11zEFvIHO3ksAsWu2949oBX8Fko0icFk83MaXUctjvolPq84Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=eKLnsicl; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=rDU5zpbkzVV9QnjoQ2lVjs63wuSrf9gC4CNr1PCLdTxOQ0V8itLcDvM3h6XU4BR+BJfX8NesYlWwVkTYFRnujP/o+xoREenSqURv+UIRokTZ702Bz04w0jPX/A99v/y0EW9F/l16FxSoM1GMi/9YuUK4b5/Au9BfLYkqbNJyW/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=UlXrf9bG; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="eKLnsicl"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="UlXrf9bG"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 491A81570;
-	Tue, 15 Sep 2026 08:49:13 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E93AA15A1;
+	Tue, 15 Sep 2026 08:49:15 -0700 (PDT)
 Received: from e132581.arm.com (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8044F3F882;
-	Tue, 15 Sep 2026 08:49:14 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2B6773F882;
+	Tue, 15 Sep 2026 08:49:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1789487356; bh=rzWBLuFeZQZl5yGb8RvJIlMSZz68zKpAICaDgrSBzSA=;
+	t=1789487359; bh=7nL38er/+3j2hefe4RM396+0d0LyX5ets3LkSWVeuic=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=eKLnsiclKicDCoZ/rB/R70y+EO9DbIexlf1O6Yb10Rv6CSilSlHAE9thwIc2HNElB
-	 GoQBWpcBrUfJI+2VVbWemVQF8CA1uJ0t/fcAlO20lzPIZmU0MOG61mgK2i5oHB7x+B
-	 hwntAJCW+bFowVKylN+sB+Rjd23zFqkGvfnHFDmM=
+	b=UlXrf9bG1nHvsbhlDq2E4hvdQ48e/xgGnPNTqQnkUU4iMAcdyjk5Mt6dgF/xRyREu
+	 feRnKvGE6IhJfCvhg0WoKaA+7s9dDK9us7GIGGAyACSnr2WuhftjKjZpH6b/c3Y8u6
+	 i5Th0XLO4bVHaTfCxF4xOxlC4PjanWLQ860IuneQ=
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 15 Sep 2026 16:48:51 +0100
-Subject: [PATCH 05/25] coresight: perf: Extract AUX buffer update helper
+Date: Tue, 15 Sep 2026 16:48:52 +0100
+Subject: [PATCH 06/25] coresight: perf: Simplify flow for CPUs without a
+ path
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -37,7 +38,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260915-arm_cs_support_aux_sample-v1-5-35cf6f297d20@arm.com>
+Message-Id: <20260915-arm_cs_support_aux_sample-v1-6-35cf6f297d20@arm.com>
 References: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
 In-Reply-To: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -54,158 +55,110 @@ Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1789487340; l=4787;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1789487340; l=3816;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=rzWBLuFeZQZl5yGb8RvJIlMSZz68zKpAICaDgrSBzSA=;
- b=4HBcAcKHFe4Z45oSwhpAFqSLMoJr0D0hTz0E5G75YK2+UArFHFbpBZA1FUqME1bRFZPloWGo9
- wkUxKZvL/XuBdi3wav+Q9KeF+huvfDnz/ePbY8xjDF62bWATD2CQMb0
+ bh=7nL38er/+3j2hefe4RM396+0d0LyX5ets3LkSWVeuic=;
+ b=8hME0Sh1ecVqfaF48gsV60DOyQlz651sF79Du8NnfVGtAoHKy6TX9oE3uLjzBJnEoXJECmOCH
+ AMvYvk+9zeZBU+1uYlbRdJ1DDFFJtH9TmAdvqCUhqWwnBwrNAlCeU0p
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-The pause and stop callbacks duplicate the sequence that updates a sink
-buffer and finishes the current AUX output transaction. Move the common
-sequence into etm_event_update_buffer() for a single implementation.
+etm_setup_aux() removes a CPU from the event mask when it cannot build a
+path from that CPU's ETM to the selected sink. The start nevertheless
+allocates buffer handle and keeps event data active until the
+corresponding stop callback.
 
-The helper first verifies that perf handle is active. It updates the
-buffer when PERF_EF_UPDATE is requested and otherwise ends the
-transaction without data. The pause callback can then start a new perf
-handle for resuming trace.
+End the newly acquired handle immediately when the current CPU is not in
+the mask, and do not publish event data in the per-CPU context. The
+event remains logically active so that a task event can trace after
+migrating to an eligible CPU. A stop on the unsupported CPU then has no
+CoreSight modules to disable or trace data to synchronize. Mark its
+hardware state stopped and up to date.
 
 Assisted-by: Codex:gpt-6
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-etm-perf.c | 89 ++++++++++--------------
- 1 file changed, 36 insertions(+), 53 deletions(-)
+ drivers/hwtracing/coresight/coresight-etm-perf.c | 38 +++++++++++-------------
+ 1 file changed, 17 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index a45f69f39f175f3044322b25fe5413fb97154496..13d865ca86f1161b2e21174f096473c4829afc8c 100644
+index 13d865ca86f1161b2e21174f096473c4829afc8c..afd22fd4a851e600ab69fd5b6883e6f8518b2cab 100644
 --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
 +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -637,6 +637,38 @@ static void etm_event_start(struct perf_event *event, int flags)
- 	return;
- }
- 
-+static void etm_event_update_buffer(struct perf_output_handle *handle,
-+				    struct etm_event_data *event_data,
-+				    struct coresight_device *sink,
-+				    int mode)
-+{
-+	unsigned long size;
-+
-+	/*
-+	 * Make sure the handle is still valid, as the sink may close it from
-+	 * the IRQ handler. E.g., the sink driver may fail to restart the
-+	 * handle during interrupt handling due to insufficient buffer space.
-+	 * The sink driver must serialize update_buffer() with IRQ handling,
-+	 * so this should return either a valid handle with a valid size
-+	 * (which may be 0), or no handle at all.
-+	 */
-+	if (!perf_get_aux(handle))
-+		return;
-+
-+	if (!sink_ops(sink)->update_buffer)
-+		goto out;
-+
-+	if (mode & PERF_EF_UPDATE) {
-+		size = sink_ops(sink)->update_buffer(sink, handle,
-+						     event_data->snk_config);
-+		perf_aux_output_end(handle, size);
+@@ -572,13 +572,15 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 	 * the sink was specified or hinted to the driver. For
+ 	 * now, simply don't record anything on this ETM.
+ 	 *
+-	 * As such we pretend that everything is fine, and let
+-	 * it continue without actually tracing. The event could
+-	 * continue tracing when it moves to a CPU where it is
+-	 * reachable to a sink.
++	 * In that case, leave the event logically active but stop AUX
++	 * output on this CPU. The event could continue tracing when
++	 * it moves to a CPU where it is reachable to a sink.
+ 	 */
+-	if (!cpumask_test_cpu(cpu, &event_data->mask))
+-		goto out;
++	if (!cpumask_test_cpu(cpu, &event_data->mask)) {
++		perf_aux_output_end(handle, 0);
++		event->hw.state = 0;
 +		return;
 +	}
-+
-+out:
-+	perf_aux_output_end(handle, 0);
-+}
-+
- static void etm_event_pause(struct coresight_path *path,
- 			    struct perf_event *event,
- 			    struct etm_ctxt *ctxt)
-@@ -644,7 +676,6 @@ static void etm_event_pause(struct coresight_path *path,
- 	struct perf_output_handle *handle = &ctxt->handle;
- 	struct coresight_device *source, *sink;
- 	struct etm_event_data *event_data;
--	unsigned long size;
  
- 	if (!path)
- 		return;
-@@ -669,27 +700,16 @@ static void etm_event_pause(struct coresight_path *path,
- 	if (WARN_ON_ONCE(handle->event != event))
- 		return;
+ 	path = etm_event_cpu_path(event_data, cpu);
+ 	path->handle = handle;
+@@ -613,7 +615,6 @@ static void etm_event_start(struct perf_event *event, int flags)
+ 		perf_report_aux_output_id(event, hw_id);
+ 	}
  
--	if (!sink_ops(sink)->update_buffer)
--		return;
--
- 	event_data = READ_ONCE(ctxt->event_data);
--	size = sink_ops(sink)->update_buffer(sink, handle,
--					     event_data->snk_config);
--	if (READ_ONCE(handle->event)) {
--		if (!size)
--			return;
-+	etm_event_update_buffer(handle, event_data, sink, PERF_EF_UPDATE);
- 
--		perf_aux_output_end(handle, size);
--		perf_aux_output_begin(handle, event);
--	} else {
--		WARN_ON_ONCE(size);
--	}
-+	/* Prepare the handle for resuming trace */
-+	perf_aux_output_begin(handle, event);
- }
+-out:
+ 	/* Tell the perf core the event is alive */
+ 	event->hw.state = 0;
+ 	/* Save the event_data for this ETM */
+@@ -709,7 +710,6 @@ static void etm_event_pause(struct coresight_path *path,
  
  static void etm_event_stop(struct perf_event *event, int mode)
  {
- 	int cpu = smp_processor_id();
--	unsigned long size;
+-	int cpu = smp_processor_id();
  	struct coresight_device *source, *sink;
  	struct etm_ctxt *ctxt = this_cpu_ptr(&etm_ctxt);
  	struct perf_output_handle *handle = &ctxt->handle;
-@@ -742,45 +762,8 @@ static void etm_event_stop(struct perf_event *event, int mode)
- 	/* tell the core */
- 	event->hw.state = PERF_HES_STOPPED;
+@@ -719,6 +719,15 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	if (mode & PERF_EF_PAUSE)
+ 		return etm_event_pause(path, event, ctxt);
+ 
++	/*
++	 * With no path enabled, there is no hardware to stop or trace data
++	 * to synchronize. Mark the event stopped and up to date.
++	 */
++	if (!path) {
++		event->hw.state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
++		return;
++	}
++
+ 	/*
+ 	 * If we still have access to the event_data via handle,
+ 	 * confirm that we haven't messed up the tracking.
+@@ -738,19 +747,6 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	if (WARN_ON(!event_data))
+ 		return;
  
 -	/*
--	 * If the handle is not bound to an event anymore
--	 * (e.g, the sink driver was unable to restart the
--	 * handle due to lack of buffer space), we don't
--	 * have to do anything here.
+-	 * Check if this ETM was allowed to trace, as decided at
+-	 * etm_setup_aux(). If it wasn't allowed to trace, then
+-	 * nothing needs to be torn down other than outputting a
+-	 * zero sized record.
 -	 */
--	if (!handle->event)
--		goto out;
--
--	if (mode & PERF_EF_UPDATE) {
--		if (WARN_ON_ONCE(handle->event != event))
--			goto out;
--
--		/* update trace information */
--		if (!sink_ops(sink)->update_buffer)
--			goto out;
-+	etm_event_update_buffer(handle, event_data, sink, mode);
- 
--		size = sink_ops(sink)->update_buffer(sink, handle,
--					      event_data->snk_config);
--		/*
--		 * Make sure the handle is still valid as the
--		 * sink could have closed it from an IRQ.
--		 * The sink driver must handle the race with
--		 * update_buffer() and IRQ. Thus either we
--		 * should get a valid handle and valid size
--		 * (which may be 0).
--		 *
--		 * But we should never get a non-zero size with
--		 * an invalid handle.
--		 */
--		if (READ_ONCE(handle->event))
--			perf_aux_output_end(handle, size);
--		else
--			WARN_ON(size);
--	} else {
+-	if (handle->event && (mode & PERF_EF_UPDATE) &&
+-	    !cpumask_test_cpu(cpu, &event_data->mask)) {
+-		event->hw.state = PERF_HES_STOPPED;
 -		perf_aux_output_end(handle, 0);
+-		return;
 -	}
 -
--out:
- 	/* Disabling the path make its elements available to other sessions */
- 	coresight_disable_path(path);
- }
+ 	source = coresight_get_source(path);
+ 	sink = coresight_get_sink(path);
+ 	if (!source || !sink)
 
 -- 
 2.34.1
