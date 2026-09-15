@@ -1,90 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 825242750F2;
-	Tue, 15 Sep 2026 00:19:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3CDA23909C;
+	Tue, 15 Sep 2026 01:08:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789431551; cv=none; b=oxHQ/yyYG3AP6n14aIHZN9FK0/o8nRkU5coYS8Qgq7t4HH7y9uJwv4Wt8SMbeXsYFgUL0pv7rgincPDnh2d58BWk5PIA9h480SW3KEo/5b+ziw9jpFe+zK+23ODQkxu2NNBxi5i6uW3KK/grsJl/VhRf1Iew74llU67yDIJVmms=
+	t=1789434498; cv=none; b=eAeXtVci/shNTXsJXqUOSi2SH8Re4gVFXeQd7Rmm3Gc7A1/m/QMbzE46bcO28hcVA2Ye/BZZpv/Wz7zVqjU63MMHs7ArCobcKQ4YgjEsl1dvDTHbZ9bkY3pa498g7+UvAc3tRB2xET9UNh0/VGlyDPgVc/0mmOsvtJy4npGKorA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789431551; c=relaxed/simple;
-	bh=hjmboASB7gfoy6fk7Sh/jntGPFpYeGIyDg8Omc6V9AY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AgmAzQ8ROI6TERHudVYjFg22CHL7kCSwfZjTZMgXmw2d5ti62K6KLIvJMiuesAN6n3TkBbIDY868556OcRs90GIeQZqIMkJIZdrLpNyUvwGkAkelPY3gfb0M4cUtP4fUbiTxakcxciFrgniPE2upqRhGs2xzryEbNyaHB9itK7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T9WI4Nu6; arc=none smtp.client-ip=100.103.45.18
+	s=arc-20240116; t=1789434498; c=relaxed/simple;
+	bh=mUsymsCuQS3SvFkPbdMe4P0yrNvNhFRlUiTaViL3wpk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=B+Hb5mZVOoyryXHDedn9vFejF6KS/VIgSsh5bFueoD3v3vHA0BWkO0DfTUdusxYSterbKN4JMClimR8dVXE8vM1fVZIvKomCfGyUaTFYscoYGQkDKraZCm3BNSwFN+55joc3xBQI8Upi0lX/SCDYjw+zKb2HU7qIFjgaO6DQVpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=JlZVB02S; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T9WI4Nu6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB19E1F00893;
-	Tue, 15 Sep 2026 00:19:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789431550;
-	bh=CtmjpGBsYzPeRXUbTravZfHooFXvO8YHWNaLYFRJmJI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=T9WI4Nu6kOROkuqZe3p2P7HD+n7YlpYyH2rQ70GNgv6SiOgjX20horwM17TlDGSPz
-	 Osaq860haVDRzFkQPdiaBQIyxBRUlcM25evfFKj5ZKR2QfiaYnicmi/k6pkOyDZN7h
-	 05nxCg13F11fPc0JRtN0Wk+vYLWY27JO0gJ5cBrzdV31HUVnFHHUIjM1vr0NCsmnUi
-	 sDzSUecZt7Wn6xRae4Vy3RLsrzn+LcOYOMZAb2S6D037lwQBnDqOSKjJuZ0qZc3lPG
-	 T1kXI4+ozpdkhbSkq3hzplOVzQsk8NWSPWnSZ/DHxQfZdFSLUa/8tzKcs7r7EAMzfo
-	 +8PQp0lKrVbLw==
-Date: Mon, 14 Sep 2026 21:19:06 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-	James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Clark Williams <williams@redhat.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH 2/8] perf debuginfo: Fetch debuginfo keyed by build ID
- using debuginfod
-Message-ID: <aqiO-i5WTJbNxQtu@x2>
-References: <20260913222821.3353-1-acme@kernel.org>
- <20260913222821.3353-3-acme@kernel.org>
- <aqdPNG6szS6YJjOi@google.com>
- <aqdTC_3In8ymE-RS@x2>
- <aqhYUQgaf-UHDnLK@google.com>
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="JlZVB02S"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 648761F000FF;
+	Tue, 15 Sep 2026 01:08:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux-foundation.org; s=korg; t=1789434496;
+	bh=1++7fS8iWKOMzhlKxfG6KZTpRByEnFekp/pb13YE7fg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=JlZVB02SRB8SlrjnhgKRH7erLp6/lF0bjE2LaEmvv4g/ygzNEN9Df4GzyzKOq1GRm
+	 MXZBeGQXDG+eEGW474o2elhJDXFweuH5LsbgShtKZ8tWHgw7BwYQ9PSDiWCSrWxS8a
+	 XDSL8c0/AB3jDnSpmNCqPc3psNggeGWzB7Ii5XXU=
+Date: Mon, 14 Sep 2026 18:08:11 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: "Lorenzo Stoakes (ARM)" <ljs@kernel.org>
+Cc: "Liam R. Howlett" <liam@infradead.org>, Vlastimil Babka
+ <vbabka@kernel.org>, Jann Horn <jannh@google.com>, Pedro Falcato
+ <pfalcato@suse.de>, David Hildenbrand <david@kernel.org>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+ <mhocko@suse.com>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>, Dennis Dalessandro
+ <dennis.dalessandro@cornelisnetworks.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Leon Romanovsky <leon@kernel.org>, Paul Moore <paul@paul-moore.com>,
+ Stephen Smalley <stephen.smalley.work@gmail.com>, Jaroslav Kysela
+ <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Alexei Starovoitov
+ <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko
+ <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Kumar Kartikeya
+ Dwivedi <memxor@gmail.com>, Zi Yan <ziy@nvidia.com>, Baolin Wang
+ <baolin.wang@linux.alibaba.com>, Nico Pache <nico.pache@linux.dev>, Ryan
+ Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song
+ <baohua@kernel.org>, Lance Yang <lance.yang@linux.dev>, Usama Arif
+ <usama.arif@linux.dev>, Kiryl Shutsemau <kas@kernel.org>, Doug Gilbert
+ <dgilbert@interlog.com>, "James E.J. Bottomley"
+ <James.Bottomley@HansenPartnership.com>, "Martin K. Petersen"
+ <mkp@kernel.org>, Jaya Kumar <jayalk@intworks.biz>, Simona Vetter
+ <simona@ffwll.ch>, Helge Deller <deller@gmx.de>, Sebastian Reichel
+ <sre@kernel.org>, John Hubbard <jhubbard@nvidia.com>, Peter Xu
+ <peterx@redhat.com>, Masami Hiramatsu <mhiramat@kernel.org>, Oleg Nesterov
+ <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner
+ <tglx@kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+ <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rik van Riel
+ <riel@surriel.com>, Harry Yoo <harry@kernel.org>, Juri Lelli
+ <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Will Deacon <will@kernel.org>, "Aneesh Kumar K.V"
+ <aneesh.kumar@kernel.org>, Nick Piggin <npiggin@gmail.com>, Arnd Bergmann
+ <arnd@arndb.de>, Muchun Song <muchun.song@linux.dev>, Oscar Salvador
+ <osalvador@suse.de>, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Jan
+ Kara <jack@suse.cz>, Marc Zyngier <maz@kernel.org>, Oliver Upton
+ <oupton@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Madhavan
+ Srinivasan <maddy@linux.ibm.com>, Anup Patel <anup@brainfault.org>, Paul
+ Walmsley <pjw@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
+ <aou@eecs.berkeley.edu>, Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda
+ <imbrenda@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>,
+ Gerald Schaefer <gerald.schaefer@linux.ibm.com>, Heiko Carstens
+ <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, "David S. Miller"
+ <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, Alexander
+ Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>,
+ Matthew Brost <matthew.brost@intel.com>, Joshua Hahn
+ <joshua.hahnjy@gmail.com>, Rakie Kim <rakie.kim@sk.com>, Byungchul Park
+ <byungchul@sk.com>, Gregory Price <gourry@gourry.net>, Ying Huang
+ <ying.huang@linux.alibaba.com>, Alistair Popple <apopple@nvidia.com>, Chris
+ Li <chrisl@kernel.org>, Kairui Song <kasong@tencent.com>, Kemeng Shi
+ <shikemeng@huaweicloud.com>, Nhat Pham <nphamcs@gmail.com>, Baoquan He
+ <baoquan.he@linux.dev>, Youngjun Park <youngjun.park@lge.com>, Johannes
+ Weiner <hannes@cmpxchg.org>, Qi Zheng <qi.zheng@linux.dev>, Shakeel Butt
+ <shakeel.butt@linux.dev>, Axel Rasmussen <axelrasmussen@google.com>,
+ Yuanchu Xie <yuanchu@google.com>, Wei Xu <weixugc@google.com>, Chengming
+ Zhou <chengming.zhou@linux.dev>, Michal Hocko <mhocko@kernel.org>, Miklos
+ Szeredi <miklos@szeredi.hu>, Xu Xin <xu.xin@linux.dev>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-usb@vger.kernel.org, linux-rdma@vger.kernel.org,
+ selinux@vger.kernel.org, linux-sound@vger.kernel.org, bpf@vger.kernel.org,
+ linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-trace-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-arch@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ kvmarm@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+ kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+ fuse-devel@lists.linux.dev, Takashi Iwai <tiwai@suse.de>
+Subject: Re: [PATCH v2 00/40] mm: make VMA flag semantics explicit,
+ eliminate VM_SPECIAL
+Message-Id: <20260914180811.057cba8fcc48d6e0b53a2683@linux-foundation.org>
+In-Reply-To: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org>
+References: <20260914-b4-mmap-prepare-vma-flag-sanify-v2-0-7d9781ed5361@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aqhYUQgaf-UHDnLK@google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Sep 14, 2026 at 01:25:53PM -0700, Namhyung Kim wrote:
-> On Sun, Sep 13, 2026 at 10:51:07PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Sun, Sep 13, 2026 at 06:34:44PM -0700, Namhyung Kim wrote:
-> > > On Sun, Sep 13, 2026 at 07:28:14PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > +++ b/tools/perf/builtin-annotate.c
-> > > > @@ -733,6 +733,8 @@ int cmd_annotate(int argc, const char **argv)
-> > > >  	OPT_BOOLEAN(0, "stdio2", &annotate.use_stdio2, "Use the stdio interface"),
-> > > >  	OPT_BOOLEAN(0, "ignore-vmlinux", &symbol_conf.ignore_vmlinux,
-> > > >                      "don't load vmlinux even if found"),
-> > > > +	OPT_BOOLEAN(0, "debuginfod", &symbol_conf.debuginfod,
-> > > > +                    "fetch debuginfo keyed by build ID from the debuginfod servers, on by default, use --no-debuginfod to turn off"),
+On Mon, 14 Sep 2026 15:57:20 +0100 "Lorenzo Stoakes (ARM)" <ljs@kernel.org> wrote:
 
-> > > I'm not sure what would be the good default.  But with this, it can slow
-> > > down the process especially when the binary is not in the debuginfod.
+> The VM_SPECIAL / VMA_SPECIAL_FLAGS mask conflates several unrelated
+> properties:
+> 
+> ...
+> 
+> It's all rather a mess.
+> 
+> This series brings some order to things by both limiting what drivers can
+> do with VMA flags and switching to using predicates that describe
+> behaviour, not arbitrary flags.
 
-> > That is why it allows the user to press 's' to skip it or 'd' to do a
-> > one-time only disablement of this feature.
+That's a lot of patches.
 
-> > This is similar to gdb, that at session start asks if the debuginfo
-> > files for the binary and its libraries should be downloaded, well, a bit
-> > better because it allows the user to completely disable this at first
-> > sight by pressing 'd'.
+Review is thin and I expect this won't improve a lot.  Lots of "no
+functional changes" changes.
 
-> > It also already honours configs that disable the ~/.debug cache.
+Perhaps it would be helpful if you were to identify those patches which
+you'd like to see reviewers focus on?
 
-> Oh.. I overlooked the details.  But then it'd be nice to separate the
-> logic for the user interaction from the debuginfo fetching.
+>  1153 insertions(+), 582 deletions(-)
 
-I will do that tomorrow, as well as have it not just in --stdio, but
-also in the TUI.
+It's funny how often cleanup patches do this.
 
-I need to be more concise and granular, sorry about that.
-
-- Arnaldo
+All queued up, thanks.
