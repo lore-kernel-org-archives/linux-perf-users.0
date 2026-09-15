@@ -1,35 +1,35 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E8524B127B;
-	Tue, 15 Sep 2026 15:49:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF8EE4BD7AB;
+	Tue, 15 Sep 2026 15:49:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789487387; cv=none; b=ILEcOIlId/PlEJ2Dd08N1w1tR95OMdgZmwp6TL611SvfsNcLSmB0O82+fcvhYdGXbwu3vb7FPq8RPPY4yBEYqhVU5lVPTaMvpOwDGB+d2dIX630kSrhCnUght0RtlEANO9RG2k1VuSnBMBrmHAxbtPmYLeDMHCr8LIO6KBUSUXI=
+	t=1789487389; cv=none; b=tV6WnIs3R6XFoooe1pMOh5LShcqfvwZoFtmM5SXJ1nqgb1KNhqtwL3pHeCJV1oNjcLitw1N2gLAbk5F6JE7AH2CNWZLmD+RSzHjLLUnHmuYdp9Z714dcnqdw3B9vDyrO69grudq8YAkXsgKS+H0RzWhjbmKjcCvHID3jVxhUmQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789487387; c=relaxed/simple;
-	bh=5dh0uFLLLCouP6+OkfA97GnOOv7HsvkRRHLYhRReAf8=;
+	s=arc-20240116; t=1789487389; c=relaxed/simple;
+	bh=ZKZYRDVVp0NsuoaDwzVZFXX6CxcoXZSRDbOKmH0PKD4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nWBTG4IwA+JItkWR2khrztqVQ7j0uJHeZc9bksf5AkK/BIRCFmiqMtv0c0cwgrhMdsQRNezaRAbWF2V0lnPHr2b2KRomJPiznli+Hm7cXA7FsoAoRvStAVdaCjGFIDs4ZDQe14TI1Nu2MLCE6/Pef4S5nom4qd+/8OYK2HMbB1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=NPKnQfww; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=Pb/1ubnkANDU3zPf2kwVRBD38YHJ4saPQzfRr1lCgCpzDuSgbiYx7vkFrOpUE7Jh5ojUKZjd3y7f4a80U44SrEmNP5HBwYo0IRedfn1TAoyM8dXi3w2oC5/UmhyTuucFA2A3L5RAuPIzwLhpV+Q+ULafNp2Yp6YbvSyDfyMwBgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=iwBQyhqt; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="NPKnQfww"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="iwBQyhqt"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D91EA15A1;
-	Tue, 15 Sep 2026 08:49:39 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A2B81570;
+	Tue, 15 Sep 2026 08:49:42 -0700 (PDT)
 Received: from e132581.arm.com (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 101303F882;
-	Tue, 15 Sep 2026 08:49:40 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF4093FA32;
+	Tue, 15 Sep 2026 08:49:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1789487383; bh=5dh0uFLLLCouP6+OkfA97GnOOv7HsvkRRHLYhRReAf8=;
+	t=1789487386; bh=ZKZYRDVVp0NsuoaDwzVZFXX6CxcoXZSRDbOKmH0PKD4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NPKnQfwwyvGRJkLdxdOuc4DOxZn0cS2zl3Sh37gf6CPZnWQVn7czhkpqTqTfXIIhU
-	 JB69zI4H+zsQf4n/MUf8QXe97FeYiUEKeIhccYslYxwQU7bNrv2YPlL6KVTqMJvFcz
-	 HZltalMaNQCuhZf4jlVtVXZe8eglNsAlvLmM/sKQ=
+	b=iwBQyhqt5/kaHNeFDyr/p/2HpdclR8fbc4oObfPiESfQeEC/DnyzeQhCYV1Sh0aDk
+	 1ElcwSDPcZENTgua5v4/Okcb2LNZbZEOTslOTBrQ3k0nUZIxcwXKMjjcnwKLnqiP75
+	 HKvxSWFh4evi26maAWKm305Pt7Cn9Hdtf8UL7JlU=
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 15 Sep 2026 16:49:01 +0100
-Subject: [PATCH 15/25] coresight: perf: Serialize AUX pause and resume with
- event stops
+Date: Tue, 15 Sep 2026 16:49:02 +0100
+Subject: [PATCH 16/25] coresight: perf: Support AUX sampling with per-CPU
+ sinks
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -38,7 +38,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260915-arm_cs_support_aux_sample-v1-15-35cf6f297d20@arm.com>
+Message-Id: <20260915-arm_cs_support_aux_sample-v1-16-35cf6f297d20@arm.com>
 References: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
 In-Reply-To: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -55,255 +55,202 @@ Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1789487340; l=7280;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1789487340; l=6175;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=5dh0uFLLLCouP6+OkfA97GnOOv7HsvkRRHLYhRReAf8=;
- b=J1K+IWYMMLhzPcADLZNzQcjitD4TM/hnwUjyZeGWvamWNJUNExstCLAeZGNbjXw+P25hWod0G
- tcZpp4WVbX/BxhjEK9GOI09oVf8Z0ykXyeXAaZvljMidgM4vmEkRub3
+ bh=ZKZYRDVVp0NsuoaDwzVZFXX6CxcoXZSRDbOKmH0PKD4=;
+ b=iltpZVgZYT6qQh4lQMWIjomzyc/itbmeHADGpKU7IqxBZK0WaS13MZ6fvnf+EzbjvRpzgHECk
+ eZ1aE9vgzu7DUjEKSmzoJmgvXW3faUT2Fp4iiGfiothiipmLAVeqNCL
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-A PMU NMI can throttle a group during an AUX pause or resume, stopping
-its CoreSight event before the callback finishes. The callback can then
-restart tracing or reopen an AUX output handle after teardown.
+Add snapshot_aux() for per-CPU sinks with overwrite buffers. Shared
+sinks can mix trace from multiple CPUs, making them unsuitable for
+context-based profiling.
 
-Use per-CPU atomic STOP and AUX bits to serialize these callbacks. Reject
-AUX operations while a stop is pending and defer stops until an active
-AUX operation finishes. Complete deferred stops through etm_event_stop()
-and set PERF_HES_STOPPED only after disabling the source and path.
+Pad missing trace with leading zeros, or zero-fill the requested AUX
+payload when a snapshot is unavailable. This ensures that the decoder
+can safely discard the zero-filled trace data.
+
+Reuse the AUX action guard to defer concurrent stops until the snapshot
+finishes. Skip snapshots during sink interrupt handling. On copy or
+restart failure, mark the AUX output truncated so perf core disables
+the event.
 
 Assisted-by: Codex:gpt-6
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-etm-perf.c | 104 ++++++++++++++++++-----
- 1 file changed, 84 insertions(+), 20 deletions(-)
+ drivers/hwtracing/coresight/coresight-etm-perf.c | 123 +++++++++++++++++++++++
+ drivers/hwtracing/coresight/coresight-etm-perf.h |   2 +
+ 2 files changed, 125 insertions(+)
 
 diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-index 8f803914e9abfb18e080ff68371ad8b32042f180..8020a4d8af18bb669441824cfdb687f4fa299eb4 100644
+index 8020a4d8af18bb669441824cfdb687f4fa299eb4..5e90ed49562c117879780f573072e6b522d9d048 100644
 --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
 +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-@@ -4,6 +4,7 @@
-  * Author: Mathieu Poirier <mathieu.poirier@linaro.org>
-  */
+@@ -456,6 +456,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
+ 	if (!event_data)
+ 		return NULL;
+ 	INIT_WORK(&event_data->work, free_event_data);
++	event_data->overwrite = overwrite;
  
-+#include <linux/atomic.h>
- #include <linux/bitfield.h>
- #include <linux/coresight.h>
- #include <linux/coresight-pmu.h>
-@@ -26,6 +27,9 @@
- #include "coresight-syscfg.h"
- #include "coresight-trace-id.h"
- 
-+#define ETM_PERF_ACT_STOP		BIT(0)
-+#define ETM_PERF_ACT_AUX		BIT(1)
-+
- static struct pmu etm_pmu;
- static bool etm_perf_up;
- 
-@@ -46,6 +50,7 @@ static bool etm_perf_up;
- struct etm_ctxt {
- 	struct perf_output_handle handle;
- 	struct etm_event_data *event_data;
-+	atomic_t action;
- };
- 
- static DEFINE_PER_CPU(struct etm_ctxt, etm_ctxt);
-@@ -531,33 +536,69 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
- 	goto out;
+ 	/* First get the selected sink from user space. */
+ 	sink_hash = ATTR_CFG_GET_FLD(&event->attr, sinkid);
+@@ -863,6 +864,127 @@ static void etm_event_del(struct perf_event *event, int mode)
+ 	etm_event_stop(event, PERF_EF_UPDATE);
  }
  
--static int etm_event_resume(struct etm_ctxt *ctxt)
-+static void etm_event_stop(struct perf_event *event, int mode);
-+
-+static bool etm_event_aux_begin(struct perf_event *event, struct etm_ctxt *ctxt)
++/* A zero trace size pads the sample without accessing the AUX handle. */
++static long etm_event_snapshot_aux_copy_data(struct perf_output_handle *aux_handle,
++					     struct perf_output_handle *handle,
++					     unsigned long trace_size,
++					     unsigned long size)
 +{
-+	int action;
++	unsigned long pad;
++	long ret;
 +
-+	/* Claim exclusive access for the AUX operation */
-+	action = atomic_fetch_or(ETM_PERF_ACT_AUX, &ctxt->action);
-+	if (action & ETM_PERF_ACT_AUX)
-+		return false;
++	trace_size = min(size, trace_size);
 +
-+	/* Leave an existing stop to finish its own work */
-+	if ((action & ETM_PERF_ACT_STOP) ||
-+	    (READ_ONCE(event->hw.state) & PERF_HES_STOPPED)) {
-+		atomic_fetch_andnot(ETM_PERF_ACT_AUX, &ctxt->action);
-+		return false;
++	/* Pad the front with zeros to keep the latest trace data at the end */
++	pad = size - trace_size;
++	while (pad) {
++		unsigned long chunk = min(pad, PAGE_SIZE);
++
++		if (perf_output_copy(handle, page_address(ZERO_PAGE(0)), chunk))
++			return -EFAULT;
++		pad -= chunk;
 +	}
 +
-+	return true;
++	/*
++	 * Skip an empty snapshot, as equal offsets would otherwise copy the
++	 * entire AUX ring.
++	 */
++	if (trace_size) {
++		unsigned long to = aux_handle->head;
++
++		ret = perf_output_copy_aux(aux_handle, handle, to - trace_size, to);
++		if (ret < 0)
++			return ret;
++	}
++
++	return size;
 +}
 +
-+static void etm_event_aux_end(struct perf_event *event, struct etm_ctxt *ctxt)
++static long etm_event_snapshot_aux(struct perf_event *event,
++				   struct perf_output_handle *handle,
++				   unsigned long size)
 +{
-+	int action;
-+
-+	/* Complete any stop deferred while the AUX operation was active */
-+	action = atomic_fetch_andnot(ETM_PERF_ACT_AUX, &ctxt->action);
-+	if (action & ETM_PERF_ACT_STOP)
-+		etm_event_stop(event, PERF_EF_UPDATE);
-+}
-+
-+static int etm_event_resume(struct perf_event *event, struct etm_ctxt *ctxt)
- {
- 	struct perf_output_handle *handle = &ctxt->handle;
--	struct perf_event *event = handle->event;
- 	struct coresight_device *source;
- 	struct coresight_path *path;
--	int ret;
-+	int ret = 0;
- 
--	if (!perf_get_aux(handle))
-+	if (!etm_event_aux_begin(event, ctxt))
- 		return 0;
- 
-+	if (!perf_get_aux(handle))
-+		goto out;
-+
- 	path = etm_event_get_ctxt_path(ctxt);
- 	if (!path)
--		return 0;
-+		goto out;
- 
- 	source = coresight_get_source(path);
- 	if (!source)
--		return 0;
-+		goto out;
- 
- 	ret = coresight_resume_source(source);
- 	if (ret < 0) {
- 		dev_err(&source->dev, "Failed to resume ETM event.\n");
--		return ret;
-+		goto out;
- 	}
- 
- 	etm_event_clear_hw_state(event, PERF_HES_UPTODATE);
--	return 0;
-+
-+out:
-+	etm_event_aux_end(event, ctxt);
-+	return ret;
- }
- 
- static void etm_event_start(struct perf_event *event, int flags)
-@@ -571,7 +612,7 @@ static void etm_event_start(struct perf_event *event, int flags)
- 	u64 hw_id;
- 
- 	if (flags & PERF_EF_RESUME) {
--		WARN_ON_ONCE(etm_event_resume(ctxt));
-+		WARN_ON_ONCE(etm_event_resume(event, ctxt));
- 		return;
- 	}
- 
-@@ -697,18 +738,22 @@ static void etm_event_update_buffer(struct perf_event *event,
- static void etm_event_pause(struct perf_event *event,
- 			    struct etm_ctxt *ctxt)
- {
--	struct coresight_path *path = etm_event_get_ctxt_path(ctxt);
++	struct etm_ctxt *ctxt = this_cpu_ptr(&etm_ctxt);
++	struct perf_output_handle *aux_handle = &ctxt->handle;
++	struct etm_event_data *event_data;
++	struct coresight_device *source, *sink;
 +	struct coresight_path *path;
- 	struct perf_output_handle *handle = &ctxt->handle;
- 	struct coresight_device *source, *sink;
- 	struct etm_event_data *event_data;
- 
--	if (!path)
++	unsigned long trace_size;
++	long ret = 0;
++
 +	if (!etm_event_aux_begin(event, ctxt))
- 		return;
- 
++		goto padding;
++
++	if (READ_ONCE(event->hw.aux_paused))
++		goto out;
++
++	event_data = perf_get_aux(aux_handle);
++	if (!event_data || !event_data->overwrite)
++		goto out;
++
 +	path = etm_event_get_ctxt_path(ctxt);
 +	if (!path)
 +		goto out;
 +
- 	source = coresight_get_source(path);
- 	sink = coresight_get_sink(path);
- 	if (WARN_ON_ONCE(!source || !sink))
--		return;
++	source = coresight_get_source(path);
++	sink = coresight_get_sink(path);
++	if (WARN_ON_ONCE(!source || !sink))
 +		goto out;
- 
- 	/* Stop tracer */
- 	coresight_pause_source(source);
-@@ -720,7 +765,7 @@ static void etm_event_pause(struct perf_event *event,
- 	 * disallows updating buffer for the per CPU sink case.
- 	 */
- 	if (coresight_is_percpu_sink(sink))
--		return;
++
++	if (!coresight_is_percpu_sink(sink)) {
++		dev_err_once(&sink->dev, "AUX sampling requires a per-CPU sink\n");
 +		goto out;
- 
- 	event_data = READ_ONCE(ctxt->event_data);
- 	etm_event_update_buffer(event, handle, event_data, sink,
-@@ -728,6 +773,9 @@ static void etm_event_pause(struct perf_event *event,
- 
- 	/* Prepare the handle for resuming trace */
- 	perf_aux_output_begin(handle, event);
++	}
++
++	/* Skip snapshots that preempt the sink's interrupt handler */
++	if (READ_ONCE(sink->in_interrupt))
++		goto out;
++
++	coresight_pause_source(source);
++	trace_size = sink_ops(sink)->update_buffer(sink, aux_handle,
++						   event_data->snk_config);
++	coresight_disable_path(path);
++
++	/*
++	 * If the AUX handle was closed or marked truncated, the sink is
++	 * expected to have notified perf core to disable the AUX event.
++	 */
++	if (!perf_get_aux(aux_handle) ||
++	    (aux_handle->aux_flags & PERF_AUX_FLAG_TRUNCATED))
++		goto fail;
++
++	ret = etm_event_snapshot_aux_copy_data(aux_handle, handle, trace_size, size);
++	if (ret < 0)
++		goto fail;
++
++	if (coresight_enable_path(path, CS_MODE_PERF))
++		goto fail;
++
++	if (coresight_resume_source(source)) {
++		coresight_disable_path(path);
++		goto fail;
++	}
++
++	goto out;
++
++fail:
++	/* Set the truncated AUX flag so perf core can disable the event */
++	if (perf_get_aux(aux_handle)) {
++		perf_aux_output_flag(aux_handle, PERF_AUX_FLAG_TRUNCATED);
++		perf_aux_output_end(aux_handle, 0);
++	}
 +
 +out:
 +	etm_event_aux_end(event, ctxt);
- }
- 
- static void etm_event_stop(struct perf_event *event, int mode)
-@@ -738,13 +786,28 @@ static void etm_event_stop(struct perf_event *event, int mode)
- 	struct coresight_path *path;
- 	struct hw_perf_event *hwc = &event->hw;
- 	struct etm_event_data *event_data;
-+	int action;
 +
-+	if (mode & PERF_EF_PAUSE) {
-+		etm_event_pause(event, ctxt);
-+		return;
-+	}
- 
- 	/* If we're already stopped, then nothing to do */
- 	if (READ_ONCE(hwc->state) & PERF_HES_STOPPED)
- 		return;
- 
--	if (mode & PERF_EF_PAUSE)
--		return etm_event_pause(event, ctxt);
-+	/* Leave STOP pending until the AUX operation releases its action bit */
-+	action = atomic_fetch_or(ETM_PERF_ACT_STOP, &ctxt->action);
-+	if (action & ETM_PERF_ACT_AUX)
-+		return;
++padding:
++	/* Pad the buffer with zeros on an early exit */
++	if (!ret)
++		ret = etm_event_snapshot_aux_copy_data(NULL, handle, 0, size);
 +
-+	/*
-+	 * A repeated throttling stop must not interrupt an active teardown.
-+	 * PERF_EF_UPDATE lets the AUX callback complete a deferred stop.
-+	 */
-+	if ((action & ETM_PERF_ACT_STOP) && !(mode & PERF_EF_UPDATE))
-+		return;
- 
- 	path = etm_event_get_ctxt_path(ctxt);
- 
-@@ -754,7 +817,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
- 	 */
- 	if (!path) {
- 		etm_event_set_hw_state(event, PERF_HES_STOPPED | PERF_HES_UPTODATE);
--		return;
-+		goto out;
- 	}
- 
- 	event_data = READ_ONCE(ctxt->event_data);
-@@ -764,18 +827,19 @@ static void etm_event_stop(struct perf_event *event, int mode)
- 	source = coresight_get_source(path);
- 	sink = coresight_get_sink(path);
- 	if (!source || !sink)
--		return;
-+		goto out;
- 
- 	/* stop tracer */
- 	coresight_disable_source(source, event);
- 
--	/* tell the core */
--	etm_event_set_hw_state(event, PERF_HES_STOPPED);
--
- 	etm_event_update_buffer(event, handle, event_data, sink, mode);
- 
- 	/* Disabling the path make its elements available to other sessions */
- 	coresight_disable_path(path);
-+	etm_event_set_hw_state(event, PERF_HES_STOPPED);
++	return ret;
++}
 +
-+out:
-+	atomic_fetch_andnot(ETM_PERF_ACT_STOP, &ctxt->action);
- }
+ static int etm_addr_filters_validate(struct list_head *filters)
+ {
+ 	bool range = false, address = false;
+@@ -1109,6 +1231,7 @@ int __init etm_perf_init(void)
+ 	etm_pmu.free_aux		= etm_free_aux;
+ 	etm_pmu.start			= etm_event_start;
+ 	etm_pmu.stop			= etm_event_stop;
++	etm_pmu.snapshot_aux		= etm_event_snapshot_aux;
+ 	etm_pmu.add			= etm_event_add;
+ 	etm_pmu.del			= etm_event_del;
+ 	etm_pmu.addr_filters_sync	= etm_addr_filters_sync;
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.h b/drivers/hwtracing/coresight/coresight-etm-perf.h
+index 24d929428633f56f24a114d5bb93b8ac4799ca11..a69eb04a597efcfe630342a410cbf8fea3c4501e 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.h
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.h
+@@ -89,6 +89,7 @@ struct etm_filters {
+  * @aux_hwid_done:	Whether a CPU has emitted the TraceID packet or not.
+  * @snk_config:		The sink configuration.
+  * @cfg_hash:		The hash id of any coresight config selected.
++ * @overwrite:		Whether the AUX buffer uses overwrite mode.
+  * @path:		An array of path, each slot for one CPU.
+  */
+ struct etm_event_data {
+@@ -97,6 +98,7 @@ struct etm_event_data {
+ 	cpumask_t aux_hwid_done;
+ 	void *snk_config;
+ 	u32 cfg_hash;
++	bool overwrite;
+ 	struct coresight_path * __percpu *path;
+ };
  
- static int etm_event_add(struct perf_event *event, int mode)
 
 -- 
 2.34.1
