@@ -1,184 +1,186 @@
-Received: from mail-pj2-f43.google.com (mail-pj2-f43.google.com [74.125.227.171])
+Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081E9430CE3
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 20:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7CA43DED3
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 20:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789505590; cv=pass; b=CnAfcFPEZ7ZOYwvivODsuBo4+XeHOkvMB7vZkGu0lJUH/yJddYQMZD9ygfUE0cceHPjCN1YXNtiIpzIhkyABe+hfT7mllUZJmue/Gsi0zPoWp+9CF9ARRVZYL0qBRD8ImGOWIwtNAEzPqOlSPetIXrwy4ItTE03AfHBHTquQbgk=
+	t=1789505910; cv=pass; b=biGJe1BR1hCXPpERElYKgYjbd8XdR4QkQVm3eEEEdyUhEKPfVnAy46U8XKhQ0RbtX+ildzCQn3RoRRwKW0zGDz75MKr+wzLVV+feVzS44JhBTy7i3CdUiuUBWVQ5evG6cGlmLvp1/N/z3SrYNCbXYWqdUTWUfazwMDDCkFXxRvg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789505590; c=relaxed/simple;
-	bh=Yu/GVSLVCFsCORBF+H7rzZHEtXbnIr1kuWpuj/0Q8iA=;
+	s=arc-20240116; t=1789505910; c=relaxed/simple;
+	bh=9CZZ1lSexM+A/bEG0bA93Zp2oQQtwi80WQ/8QFBXiY4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y3PMGiSDdBk7w/Q3kpd3boSDKK6K1vekwF8cHko5b/gChPzo3VoSVfpLG9Ur0Ry9ZrJDSOiKCkC4IpGYI92wJD19I4yoTRv47HxyJdnAPc4NDarQfB0h0vtFTwSC0kNYg+zLF6nvFFlYpUjQ6thU/LOr8RciDxIwpdeWCibuP4c=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ULFwqaSL; arc=pass smtp.client-ip=74.125.227.171
+	 To:Cc:Content-Type; b=nknvkHybAFd0PomHFaw6H0figvEykWRDlrWpAhC7YySGWv7I3Pu5UOo89/VOLLFkzykPOv2tSIJBHOrFutQ/Q0g8MMHcT99Fy+ivr8aA2iLjbokVlTo87KqYyKpuR8PchRQ8HbVKAZ1N1E2/na5zOu3ETpq9uSse6M9PP8K6wzc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CfTXO/fa; arc=pass smtp.client-ip=74.125.230.204
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ULFwqaSL"
-Received: by mail-pj2-f43.google.com with SMTP id 98e67ed59e1d1-398b3b189e0so156033a91.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 13:53:08 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789505588; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CfTXO/fa"
+Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-5306706e89dso19551cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 13:58:27 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789505907; cv=none;
         d=google.com; s=arc-20260327;
-        b=f6D6ZSVowp241jhvdrfyXj5VA6KMs8w4orGWeki1gafwkpJiEbryktTmD0VpxEuLjB
-         DhLR193TPQSbbAWckrep4OQ/2n4tfIEedqWFzTPOwjBSUk3ckKYHdX6H45tF6j4KzaIl
-         GYows77YMZXE5dxNlw8zKXk0//8D77QQhyvwdh5ukN/9e2z0CRkw7mlbdfwZpLS7ypVw
-         X07R7SEy2gp5GT5DbqnR5rXEo6K6hO8T9bf8CNm7mr8TuozWa4DPVJSZtlGxaWMJXG8N
-         a14CCCenNT5/WVj+vy6G7KBKY0kxVknwe6LuDOX09/p6YA1vHuqXxNkUAbw9c9laYvub
-         0HIQ==
+        b=jXBvKGoy4qPUfifaxBrKN8+kn+fSi4xPkpZCYyPGvl1SzMx94IzhyvCYPKpdgLoUcP
+         lLU58RTquAv3WVy/6YPhjsXpK2k3nI0r2FlrHEP/Qo2slgKfZWg01egw1V69GcHSY0MN
+         C6M48I7jTT5bL/KWN5jLfpOr8QbQ3vGBXzPRtKZW+GlZmeIWJd1xvzQgImgY31Q6X7Yy
+         2z1DMNiQcHBz+mwOLbY1KZA4puQslxFRQCrryZeJXOKyWUdymNLw4gf2JRtRHmDkgSXg
+         tqsNtS8woBLLFRHEKNr+GfoEmDxMMb4CXBa8Sk2kAzgiqpiDzhbg4SHfYC45MKknvBbb
+         r9vw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=6rMCIWAndgqGHUhmczP/JJpII4POFmLZaicBAR5dlJQ=;
-        fh=9NkN8Gh+AQkTW1m96djOZOcHV3md+37caOPGdqLFovQ=;
-        b=jSavllsnJF6NDMSDh8C+BFU1ubO9wLW4DfTitkhqQOjfjqQiVd6r8iXjNbDuVtV5/2
-         kwcFkkwZM3MjAQm57HU4x92FJRe7gfIGid+JuMNkmcbUoyaAbzHM++KsziI//4ElEnLI
-         rJTA43F1VW+iyH0RcW6ZHwqYvGCgcHZ8PdEPfpk87wpSGbXEfeRVKSK6jugEh1H9aGDZ
-         W3dZxJz8ZliTfwoU64kFGnDiFLTB3rBIfwsmDv5ogHrbBqIF70vrSTuDewR3UMiVvvwX
-         PSyFbPZYwFvh1dbTd5sKbCJta0fLR5/hgysucG9nIpjg6/M4PFdsg9Z2L27RDQYdKPku
-         EQYQ==;
+        bh=RD3YV+Ag/O3rxFgnrxZeCoIY4Orb7ZnIAVjQabSeajw=;
+        fh=0Vr6L2T++DkALx6DB7kQ8gQWMJa1vU7gtZf+CGTkiR4=;
+        b=oKU20cJ2cMqUPSGtuAae8X5TJfn/SDPCHHbLiECrSWlzqk69wvFekMSvVvW5jupNBu
+         P75DbKaztMSNuXfDyXZ+0MybqQfGfHRsVMO6Rw0nhZc+ymXVGi1oy1THWa5nFMnu4u/s
+         8XRTzRpgVDt1En7OBJUrEr4Osmg6vBc7HAwpNHLqCmOcNgwyUAnAlKYoqBG/RyIYB9cD
+         0xvr51PMILYBM8YGnsZWPdc1gvkNio3+TETN5/Fc2e8EfOOO3UUDdpoMf8klOI1p8m0Z
+         1wFHualH8m591+Q3NFRj/yiIddD28UL9CHd6BodHfMil1G7XCus/hyTEvMH2hv0URrLo
+         HsVA==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789505588; x=1790110388; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789505907; x=1790110707; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=6rMCIWAndgqGHUhmczP/JJpII4POFmLZaicBAR5dlJQ=;
-        b=ULFwqaSLFxwTExBrhE5Syum4lLGfOkBY1x30ndap4RJaD7RwUSOPowqDZ12AkAnYQh
-         SMTrRPzXrr+fx7d2/JTnewDqaUPY6dzW4UkY+q/t9bmKN6W2RXGloKGqyvOW5tFhXZ5S
-         vLBMsYn++yjgiX5BxzdFSzKKEbT0nJxoJGGhJNE/E0Fyl4oaC5cDvj3JFQpm67s0xR/l
-         RBkkcAJ+LwoPcgw4iUkM5YgFttGM6a9H4/VxI2wAaT3ryD9iDntbqSyVqnMtXunfoNwK
-         /dg6/MjLB528eZqR/fyusEv6cj8y7k3Uw0oCS0NikduSg0gWNWpIqpdZzoC0H/cvbiK9
-         it8w==
+        bh=RD3YV+Ag/O3rxFgnrxZeCoIY4Orb7ZnIAVjQabSeajw=;
+        b=CfTXO/faH0oHwhIGXFB6xr/Zuv+Lnjy/hyuNoxgWg6WSd6WBBV+DafpKc4bhIoKDiH
+         0+o28qtTdQ+V0nF6ow8sQD/YI0iQX3XFlr4yWrMF4BrWPe0FDcPh1hE/N/OvAF4SZ98Q
+         0CXWI/7cI276ML3WSoa1oQb7YKfEhqtvKxWKhOwhrbJyk6qKE34sQ3RMfadNqEGaAVAY
+         dW/Om/DhrL0sXncmycEsxAMejBMQz34OIsm9hreJLSbqb3vpg0gnRQhSN12S8Qm3R0Yg
+         BQoSX22GmnE9qrOjrSYXxkbNKKLDfzgQppCttEWH+TCJQbmvBXLICBN3lCT66cHFEobm
+         DtCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789505588; x=1790110388;
+        d=1e100.net; s=20260707; t=1789505907; x=1790110707;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=6rMCIWAndgqGHUhmczP/JJpII4POFmLZaicBAR5dlJQ=;
-        b=w7EGusIK4oVJ9oS3rDcPwqTTPXZ4khXlprb0KHOHs6CP8YVMEKqcSaGf10MOHGCcuV
-         G8hkVk1qELHSEKZb3ROb7KqpxbVpYmzT7axMgaEWBS4kG02SletUmEOvUV+9KCAZsvj7
-         7GBQZ0J16NGEfBzmN0b8ow/O9vYOPcN1osBAgGqwDU190CdB9XC5AOq4BW2JGtT93T1j
-         /QcaM2dkeLzL3EARWOStEIJfZk06d7ZBnVl7hlvabXPnXumIGPbAGLazTx23GDAsERBG
-         fI/n5EPKqYDM/3t1K2R0SNNvX5lOoV+x5qJCiV9tyBX862BitLymJbtWckxh2Uw9uFQi
-         vzMg==
-X-Forwarded-Encrypted: i=1; AKwUvByjGD7fx5U8udXRU2Eq+7xCg7Y31VAVxHNGQrFDTWKQex2U3kV5h9VmQtPsTZ6zxmnUCrQcdsyG92qNIZ3he8SK@vger.kernel.org
-X-Gm-Message-State: AFuF++mpq2EUko7zxcTzxMC4srBWvXBQvrY14tzMcNMXMBXNCFrNd2VC
-	iFlTlNQbbQ5mxVGJm5ER1RvmAb4kshFYQsKJJCjspWBZlwegvJ80kOJd9Qxj4+JBoJy5JfQHRum
-	R8aJ83+Ef22lVW3zZ2y9FXpLYHVMacqabaChbSXEi
-X-Gm-Gg: AYBFou1Qw2ECAaEkjSTaBgs1QUrgqPLr9MCVem43zGGiikIAAvc7Dx94RbKCGr1WCAK
-	tRf84pN8t7qWlX2vJkQKQWsVmzXtA0s6X9IKa7PUV1HTl0UHSbllM9G8fCHc3UIF3txJFFDKNo8
-	kCwf+YF0C02ZBA+6V7I1+R9yKwBYkmv9ItxmkyWr1WHFSRYg8JmlXS0EQlRTOmzrJK5sYyTl1CG
-	kIpAZMsi6CzvN5JirDaRkZCzNw/UWTnyfw67CNx0vyw4JpRBidb2fXJOTEuxlhRDPO8cdWaQekq
-	E1j+oFB99YbeHiXajO9BBvBZpkIuRS9mB3pkLKLPsvVXAfKgJRXZgA==
-X-Received: by 2002:a17:90b:4b83:b0:398:9bd5:490b with SMTP id
- 98e67ed59e1d1-39e1e4c4687mr170061a91.18.1789505587709; Tue, 15 Sep 2026
- 13:53:07 -0700 (PDT)
+        bh=RD3YV+Ag/O3rxFgnrxZeCoIY4Orb7ZnIAVjQabSeajw=;
+        b=d0bxIRq5wrNglJ3B5MIdvdhApYsoXQpfUErV1VN/iupJ7VDOae+AuCAWMlJrDif7kT
+         7SC3veGFHBx5NaMqoyvei+tZr7T+5v25A8lRX8ub2N9mNQ1gVyi/FcNYYq9M5vLjklTF
+         LEikus7LZk5oaeu6aErZPkmRyhHl12JHr8R4MwQgxhKrGYaC2Tz96cf2ZPlr70lbEbaI
+         OJwjuXKVBnDs1Nt1SrTHSE4yxKmOCGN5lTxhiq72oXMAxCIeVlgC+FrHppvrDfavXzIE
+         6vIyQsCzCb/+TmFhRMJDATzYV2Q5/9m8dtHXnaVWPDcG/yBTsTbyAMqjh+5aWg6vkpGt
+         VWcQ==
+X-Gm-Message-State: AFuF++m2n27zhptxxccTcaro9NVNiOKuzW6N4AWvm/zqhDRFqwQJySSe
+	r907J6TGA+NQkTtMMqX8h3/1pl2Eezh6P5U5/V8WGV1iZ2T41SNc3iRloJs0VAvzxKKge4Pa74t
+	ZGCXisDlMCkCh3ocsY6/Uz+F5IKcGW4iMAeAJebEQ
+X-Gm-Gg: AYBFou1XbpU8NFhE9y7nGjYz1FDws9rWSwxTmvxYXdQWX3upl23HBDOIGaQc/41ggdU
+	wi+uWoOhLwLqpisRehKAp5DM6/OEgGgDGOyNCKPl0cbatawbkdovqTiQMyD0nZ22z+YA4oNWoFh
+	TNH0lzrYjGjSdKfWA6vubAncO3kfeuFWro7N4ssq9e/h80BxSRk9kMNsJ6RzNaKd8WHLKo0pT3n
+	b4p+8eZhFmwDB3f2Mq/RvsY6ymDsuyTfzj2eNd0gfyMZoi1sRRoOSQPLmG9Z/iJW9TFGTgRi5VN
+	UCPCLGZHsUCIdrMSN/GEz9UQSwzc4j6jA3fM7uPTptNorqO5Y1qJDyMIa87iEN9kaU/ojtoTuhI
+	IpS6lTBH/PQ==
+X-Received: by 2002:a05:622a:107:b0:517:5e32:2d14 with SMTP id
+ d75a77b69052e-5327e9c6edamr627021cf.10.1789505906274; Tue, 15 Sep 2026
+ 13:58:26 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260602181349.3969429-1-ctshao@google.com> <20260602181349.3969429-2-ctshao@google.com>
- <CAP-5=fVwLO29i5SoLjOBhPqqUMTiy-z52Wm1mbeBF_941Jbx9Q@mail.gmail.com>
- <aihLa9ezNXXZm9mC@x1> <aqdRi7v_A03mY1tU@x2> <CAJpZYjXT5rrqQuUTePV6WS5XafgtW1Z4FxMoT93uKjYdKU1VWw@mail.gmail.com>
- <CAP-5=fWKaSgVF5M-m7fObPdt5=MFZpK0RcmAS_G5thTYSzLXPw@mail.gmail.com>
-In-Reply-To: <CAP-5=fWKaSgVF5M-m7fObPdt5=MFZpK0RcmAS_G5thTYSzLXPw@mail.gmail.com>
-From: Chun-Tse Shao <ctshao@google.com>
-Date: Tue, 15 Sep 2026 13:52:31 -0700
-X-Gm-Features: AcwNN1UGrosb77A4d6cnIyDQVozvJ3caWUDEAq9vyo7WccBECoRDfyB_X69n7fw
-Message-ID: <CAJpZYjVaD+axOaRLzbDe4343GNo2H3pZE7EOqNs49aubQTJuUw@mail.gmail.com>
-Subject: Re: [PATCH v8 2/2] perf evsel: Find process with busy PMUs for EBUSY
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+References: <20260523011904.101720-1-rosenp@gmail.com>
+In-Reply-To: <20260523011904.101720-1-rosenp@gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 15 Sep 2026 13:58:15 -0700
+X-Gm-Features: AcwNN1U-8WxywffkLLYvhkBcpUNKYAH3OsXKdOrHioO2fViCnDS6cwyFq2mKBN0
+Message-ID: <CAP-5=fXyyj6w1mR71B6e+j7sV9GA-Gs1ibfp5pCuY6T+W+xWjQ@mail.gmail.com>
+Subject: Re: [PATCH] perf/x86/amd/uncore: turn amd_uncore_ctx events into a
+ flexible array
+To: Rosen Penev <rosenp@gmail.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Falcon <thomas.falcon@intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+	Thomas Gleixner <tglx@kernel.org>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, 
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, 
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Sep 15, 2026 at 11:54=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
-ote:
+On Fri, May 22, 2026 at 6:19=E2=80=AFPM Rosen Penev <rosenp@gmail.com> wrot=
+e:
 >
-> On Mon, Sep 14, 2026 at 1:30=E2=80=AFPM Chun-Tse Shao <ctshao@google.com>=
- wrote:
-> >
-> > On Sun, Sep 13, 2026 at 6:44=E2=80=AFPM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Tue, Jun 09, 2026 at 02:20:43PM -0300, Arnaldo Carvalho de Melo wr=
-ote:
-> > > > On Tue, Jun 09, 2026 at 08:58:03AM -0700, Ian Rogers wrote:
-> > > > > On Tue, Jun 2, 2026 at 11:13=E2=80=AFAM Chun-Tse Shao <ctshao@goo=
-gle.com> wrote:
-> > > > > >
-> > > > > > It parses fdinfo with PMU type, comparing with the event which =
-failed to
-> > > > > > open, and report the processes causing EBUSY error.
-> > > > > >
-> > > > > > Testing cycles and intel_pt//
-> > > > > >
-> > > > > >   $ ./perf stat -e cycles &
-> > > > > >   [1] 55569
-> > > > > >   $ ./perf stat -e intel_pt// &
-> > > > > >   [2] 55683
-> > > > > >   $ ./perf stat -e intel_pt//
-> > > > > >   Error:
-> > > > > >   The PMU intel_pt counters are busy and in use by another proc=
-ess.
-> > > > > >   Possible processes:
-> > > > > >   55683 ./perf stat -e intel_pt//
-> > > > > >
-> > > > > > Only perf with intel_pt was reported.
-> > > > > >
-> > > > > > Reviewed-by: Ian Rogers <irogers@google.com>
-> > > > > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > > > > > Assisted-by: Gemini:gemini-3.1-pro-preview
-> > > > >
-> > > > > Arnaldo, as the kernel piece of this landed (thanks Peter!) could=
- we
-> > > > > land the tool part too?
-> > > >
-> > > > Thanks for pointing this out to me, I'll do some housekeeping and
-> > > > process this.
-> > >
-> > > I think this hasn't landed, I tried to find the userland part of v8 b=
-ut
-> > > didn't manage to, can you please point it to me?
-> > >
-> > > - Arnaldo
-> >
-> > Hi Arnaldo,
-> >
-> > Thanks for taking care this. The link to lkml for this userland part
-> > is: https://lore.kernel.org/all/20260602181349.3969429-2-ctshao@google.=
-com/
+> The events pointer was kzalloc_node()'d immediately after the parent
+> struct allocation, with the count (pmu->num_counters) trivially
+> available beforehand.  Move events to the struct tail as a flexible
+> array member and fold the two allocations into a single kzalloc_node()
+> with struct_size(), dropping the separate kfree(ctx->events) in the
+> free path.
 >
-> Hi CT,
+> Assisted-by: Claude:Opus-4.7
+> Signed-off-by: Rosen Penev <rosenp@gmail.com>
+> ---
+>  arch/x86/events/amd/uncore.c | 15 +++------------
+>  1 file changed, 3 insertions(+), 12 deletions(-)
 >
-> Would it be possible to rebase and resend the tool part as a v9? This
-> will also trigger the Sashiko review, which would be nice to have.
->
-> Thanks,
-> Ian
+> diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+> index 05cff39968ec..0e265fc1fef8 100644
+> --- a/arch/x86/events/amd/uncore.c
+> +++ b/arch/x86/events/amd/uncore.c
+> @@ -39,11 +39,11 @@ static int pmu_version;
+>  struct amd_uncore_ctx {
+>         int refcnt;
+>         int cpu;
+> -       struct perf_event **events;
+>         unsigned long active_mask[BITS_TO_LONGS(NUM_COUNTERS_MAX)];
+>         int nr_active;
+>         struct hrtimer hrtimer;
+>         u64 hrtimer_duration;
+> +       struct perf_event *events[];
 
-Thank you Ian, please check
-lore.kernel.org/20260915204951.2935261-2-ctshao@google.com for the
-rebased v9 patch.
+As the number of counters is fixed and events doesn't grow, this makes
+sense to me. Dapeng, what do you think?
 
+Thanks,
+Ian
 
--CT
-
+>  };
 >
-> > The kernel part
-> > (https://lore.kernel.org/all/20260602181349.3969429-1-ctshao@google.com=
-/)
-> > was merged by Peter Zijlstra and I can see a tip-bot replied on it.
-> >
-> > -CT
+>  struct amd_uncore_pmu {
+> @@ -488,10 +488,8 @@ static void amd_uncore_ctx_free(struct amd_uncore *u=
+ncore, unsigned int cpu)
+>                 if (cpu =3D=3D ctx->cpu)
+>                         cpumask_clear_cpu(cpu, &pmu->active_mask);
+>
+> -               if (!--ctx->refcnt) {
+> -                       kfree(ctx->events);
+> +               if (!--ctx->refcnt)
+>                         kfree(ctx);
+> -               }
+>
+>                 *per_cpu_ptr(pmu->ctx, cpu) =3D NULL;
+>         }
+> @@ -536,18 +534,11 @@ static int amd_uncore_ctx_init(struct amd_uncore *u=
+ncore, unsigned int cpu)
+>                 /* Allocate context if sibling does not exist */
+>                 if (!curr) {
+>                         node =3D cpu_to_node(cpu);
+> -                       curr =3D kzalloc_node(sizeof(*curr), GFP_KERNEL, =
+node);
+> +                       curr =3D kzalloc_node(struct_size(curr, events, p=
+mu->num_counters), GFP_KERNEL, node);
+>                         if (!curr)
+>                                 goto fail;
+>
+>                         curr->cpu =3D cpu;
+> -                       curr->events =3D kzalloc_node(sizeof(*curr->event=
+s) *
+> -                                                   pmu->num_counters,
+> -                                                   GFP_KERNEL, node);
+> -                       if (!curr->events) {
+> -                               kfree(curr);
+> -                               goto fail;
+> -                       }
+>
+>                         amd_uncore_init_hrtimer(curr);
+>                         curr->hrtimer_duration =3D (u64)update_interval *=
+ NSEC_PER_MSEC;
+> --
+> 2.54.0
+>
