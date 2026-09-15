@@ -1,164 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej2-f38.google.com (mail-ej2-f38.google.com [74.125.228.166])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0FAA4D0A1E
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 19:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789498910; cv=none; b=XPed6hXGMj6ZvbNIpJLJIF+VN4VlaqBbleS6fIzoIb4tQwnrsXbEdwFBj6xOpRFxIT6R5xMsnq5YgxDYzrRN6cjVZXXgZF6ElwSvGJqHnez+h+56ZUTDjh58YX9VAosVEcoUOj72JoFnWyMf3CX+HsbWTJkjjzRXFbOo539aJUA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789498910; c=relaxed/simple;
-	bh=Gu3FIa5FaUGQe6fiaQOQz/HK0J4VGSOGrIwQovGFUog=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=UdOwB9Sz6TbHN1vE90UaVZOzdPiplKmVzGeU5m89XJcbGUUkERUwSs3/fXWcBve4IH/vj6/PwqrEYIeaQUt+hXTyEhhp6mZh5J5AsR+fapVPqAnNPjqsJzku3ravBNXLslq1DA7+KigEs3HAwiOdRWdkjmDFVWrXpbTCtGK9cpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UHPeHJow; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03B8A4CE677
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 19:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.228.166
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789499090; cv=pass; b=RlYWqDzrxaY57VsGISfWdM7gfifHMptgAWJXY3XJLb2lxiGzqAulrJd3h/oe3qqmpDLzSD4+H+4/FN6eLdhRzUwR7iLY6NiW4zmKyZ0vwYujQqtd3yqwUR3EsRE8+RL1wub46yjnbA2eJZhhjVMZt2E0QNgYZZ6UD1B6ibbLakU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789499090; c=relaxed/simple;
+	bh=CG49oeYgRKGkXZIpez+UfckpNF7tbwFkBXsCCjJfd80=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gRP0ccZdb45dovSwQVNJGscjZWa5VeRDenXcIQiKfSIKKAFdclmMHHqPlZuHwNwqh4TH+QfeQp3AY/s/k7u4K0yqxSHty37NPJTOujRVONe08kwhwGVHVmET7BH39VCCtKeeo6Fd6sNSlmH608rCl5AIUzTC4x9hK71RS+02qwY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com; spf=fail smtp.mailfrom=uber.com; dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b=GHNSb7ls; arc=pass smtp.client-ip=74.125.228.166
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uber.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=uber.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UHPeHJow"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B2131F008A2;
-	Tue, 15 Sep 2026 19:01:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789498892;
-	bh=U9Hzo3nqpkmZZHZYIWmOHANmuEQfchbLG/cPsWU6iUM=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=UHPeHJow4T3ld8yw7yzyL6+yxhmIpelEbQ2TjiQvUKO8aBX5GtWStkk5UV3S6g9uB
-	 /UDmVG9Z/rjVLxnfEP+VLtCCFtG+FIZy8fZJhswtrb6Da3dnbfcwYrl5nXzNqwy19k
-	 17N4flaBhNmrTv0U5qGg94jjVGefezR4teHluEmyFX1/Aizd91t4ko6FP7uLfLgTo1
-	 6Rae2M4x6659u75mZS0Fs/kIXwQ84olccU/cjwBMnJM4lkEFddJUb+6WfIIdyYs7sH
-	 UwMZ2cn3hoWXV8/aFMV4VLfxP20S+81vioZfr7JOYvtwC/tLAhVRXz4BisLkwcnhAI
-	 G0I9ks/FJH5Yw==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 2/4] perf script: Add --max-symbol-bytes to bound ELF
- symbol memory
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Alireza Haghdoost" <haghdoost@uber.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260915-perf-symbol-memory-send-v1-2-1d3360e21f07@uber.com>
-References: <20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com>
- <20260915-perf-symbol-memory-send-v1-2-1d3360e21f07@uber.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 15 Sep 2026 19:01:31 +0000
-Message-Id: <20260915190132.9B2131F008A2@smtp.kernel.org>
+	dkim=pass (1024-bit key) header.d=uber.com header.i=@uber.com header.b="GHNSb7ls"
+Received: by mail-ej2-f38.google.com with SMTP id a640c23a62f3a-c254f560398so29234966b.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 12:04:48 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789499087; cv=none;
+        d=google.com; s=arc-20260327;
+        b=cYVd0tL++37HlB7sZOUJOZK2A/zIaVyqNu030HZojqDTjnAw4u/uaEaOULIaL39ban
+         xMJKyh9Y8RudDk2Q5x2XO6eidgxB0nYZ5q4ahS6s+kg8eIkWQuhHg2192KR9uJMtaNCG
+         3CT2r/EH4wMPjGs87pAtpQSx9GHzgTFP/avuzcG0IKdhIjW3qkrlxp6H8BXxeYaoAHCf
+         Bezeyg9n0So9AWFQSE3TutK7+tyErThvRErI6lT5TaTVbcQpSaPwNWxGQltkihI6ey9n
+         R0atW71MYyMqaGAKvTC3aBmri6Ev9nLzLkjaPf42TWAUag/gdMjvc876zXF90VIP3VdK
+         OGTA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=CG49oeYgRKGkXZIpez+UfckpNF7tbwFkBXsCCjJfd80=;
+        fh=0zVHGC//SC94CWFKHtFt4lnskmkXkJNNy7lE0FDd3Ck=;
+        b=HHyHbUYckNB3YP8iuHnr62GAgRoOfl+al47m5EtcrNAjMANqRTF2CqBOkgvT4TnqAX
+         3Cy1ORKML0EeV+/WzT5FeIYrobmDbL/pAiSQBPGL+cQEbfaHibUOMbc8FaB+3RuX3L60
+         Tj6RwU50W72e3CUKor+kV5ewGIN914kVE7l1Tk6wEZdE8+9gZGBbhUwzBqryRl1J0tmQ
+         T2rF1GBPnmp4w2tQ43vLzItV4QKODNNdBv4xKCWWP96QXgrOU0fex/7ExW/cV4QmMX8W
+         NtaSVrloqXOMelQJOdsYPW7yiCzesOHLZCSXILxHcsUyiw2JqausPjQQO3cZqcjqUq/C
+         dTGA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=uber.com; s=google; t=1789499087; x=1790103887; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=CG49oeYgRKGkXZIpez+UfckpNF7tbwFkBXsCCjJfd80=;
+        b=GHNSb7lsScEjPE27NgnKNaZWhKAA3vaYlWs2Ouay13k8BhrOL34qyojZwsGao/i+Io
+         O1NKqX80PwsEMTT9R20Hej+C3V9Is3wm6qXgL7bZc+VsZH7cqGqVFjYNlPMVIOiMlu1t
+         y/JlDCAw/zKS36utXSwGzc23Q8XtEZBMMPShA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789499087; x=1790103887;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=CG49oeYgRKGkXZIpez+UfckpNF7tbwFkBXsCCjJfd80=;
+        b=BITDSr+Qs3tI5wwU6oepjo2pzzT+J3P6c1rfrrsya4OPriEwmTKsAd+/iwAOcxBw7/
+         Ijf88uIXKHnVqKR74jtYEL+t7KP5KCdMBNIdS6dKmF77OiyNhn1Txx+Esybbr6x7FrZG
+         RsEzy2ElIfuBGVzaVFwgjTlxbnxdtC9aLNgLcb9QeOAYhRVVzKn3axIkD8xCXbzDx323
+         mcgj7AoMFtEwzg+VqwycdzLy5lFZTfHYN4zmjJE04wGqxV0ao1pqm1fmN6cYBwQH1G4e
+         LowSyb8lxvnmJFp7eXwwcdv1S2/89I/ijKFjrnWoNCkRgvusAv5mG8zJ3blDtKxQ0Qb6
+         8cTg==
+X-Gm-Message-State: AFuF++kX0/X4G4o500Gjf9DprZ+paP0C/+wlvDGUlNYwDoniTMgHgCWS
+	OMlUXdlqjDlb1/4+r5g8tNc584ohdO6I6ck3HMQoVSvqfz+pnpDuvyUyLD9iN9BRsXFq7DbF2b4
+	zicbgMLpTVjpwTs+Pag8aMhZKmJahGtinfKBMNVuANA==
+X-Gm-Gg: AYBFou3yfgdY3PuhJGoREX8y0sYHia9p/P9jP+OvbBZo9vE/WEolZXT1SGEq2yyAewZ
+	D7dJq0+Y8LweXtglnlxv25TreXu4fYRhYNSeyEvK0qakKmsWHOMY+2Rgi5CKH5lNXIP+EFBVS8t
+	bUCVU5s/WbohHEjSMpNbifkaotWrVKQo4ENOK2GIIS2dcZEZVZV6VVWUb/6w4pNJkdbLApZfc4F
+	q5HLaOl/RkwOyunnVyCHKOw3VSGEY5JRI0/or2mr8y8cqGGocGoFBwPFEpN7JphfZoPw2f0IL88
+	rnM+FJbIOsBdN/fOJwrfmLxnlskQZaSm23E3kumolTzZWsjjjGm6mZyy2RfI1bemkRTVQkgglHa
+	zj2MnXevwCeU=
+X-Received: by 2002:a17:907:1ca4:b0:c29:4204:8dbf with SMTP id
+ a640c23a62f3a-c29d7733739mr190073166b.7.1789499086483; Tue, 15 Sep 2026
+ 12:04:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com>
+ <20260915-perf-symbol-memory-send-v1-1-1d3360e21f07@uber.com> <20260915185318.0573C1F00893@smtp.kernel.org>
+In-Reply-To: <20260915185318.0573C1F00893@smtp.kernel.org>
+From: Alireza Haghdoost <haghdoost@uber.com>
+Date: Tue, 15 Sep 2026 12:04:27 -0700
+X-Gm-Features: AcwNN1XVfMPCTdeeQv6DV6pTbf4aLmDnQHyCC4-DGkKjtADM5TgV5RXmKioy6qQ
+Message-ID: <CA+w=M=Rpvn9QpbvC4UWex91wNZ39BNmjt2-PaACNS1Rsai3uGg@mail.gmail.com>
+Subject: Re: [PATCH 1/4] perf symbols: Fix broken ELF_C_READ_MMAP fallback guard
+To: sashiko-reviews@lists.linux.dev
+Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 3 potential issue(=
-s) to consider:
-- [High] perf: data race and underflow on global symbol_bytes_used counter
-- [High] perf: early abort of ELF symbol loading stretches symbols over add=
-ress gaps
-- [Medium] perf: u16 truncation in sym->namelen causes permanent memory bud=
-get leak
---
+> Could we restore a proper feature detection mechanism here rather than
+> relying on an unconditional definition?
 
-commit c9eea40a0a34f49638af63c080650086fd45e844
-Author: Alireza Haghdoost <haghdoost@uber.com>
-
-perf script: Add --max-symbol-bytes to bound ELF symbol memory
-
-This patch adds a --max-symbol-bytes option to bound the memory allocated
-for struct symbol when loading ELF symbols. Once the budget is reached,
-further loading is aborted to prevent OOM kills.
-
-> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-> index e955c3feddcd6..914e42d21f70f 100644
-> --- a/tools/perf/util/symbol-elf.c
-> +++ b/tools/perf/util/symbol-elf.c
-> @@ -1634,6 +1634,13 @@ dso__load_sym_internal(struct dso *dso, struct map=
- *map, struct symsrc *syms_ss,
->  		int is_label =3D elf_sym__is_label(&sym);
->  		const char *section_name;
->  		bool used_opd =3D false;
-> +		if (symbol_conf.max_symbol_bytes &&
-> +		    symbol__bytes_used() >=3D symbol_conf.max_symbol_bytes) {
-> +			pr_warning_once("perf: symbol memory budget exceeded (%lu bytes), "
-> +					"remaining symbols will be [unknown]\n",
-> +					symbol_conf.max_symbol_bytes);
-> +			break;
-
-[Severity: High]
-Since ELF symbol tables are generally not sorted by address (they are group=
-ed
-by binding), breaking out of the loop early creates random gaps in the
-address space. Following this, symbols__fixup_end() iterates the partially
-loaded rb-tree and stretches any zero-length symbols to the start address of
-the very next loaded symbol (prev->end =3D curr->start).
-
-Will this cause execution samples originating in the missing un-symbolized
-gaps to be incorrectly attributed to completely unrelated, stretched
-zero-length symbols instead of falling back to [unknown]?
-
-[ ... ]
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 3587ad2431590..62a4f91c2f5db 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-[ ... ]
-> +static size_t symbol_bytes_used;
-> +
-> +size_t symbol__bytes_used(void)
-> +{
-> +	return symbol_bytes_used;
-> +}
-> +
-> +void symbol__account_bytes(size_t bytes)
-> +{
-> +	symbol_bytes_used +=3D bytes;
-> +}
-> +
-> +void symbol__unaccount_bytes(size_t bytes)
-> +{
-> +	symbol_bytes_used -=3D bytes;
-> +}
-
-[Severity: High]
-The global symbol_bytes_used is updated without atomic operations. In
-multi-threaded tools like perf top where different DSOs are loaded
-concurrently by different threads, will concurrent updates cause lost
-increments?
-
-If subsequent decrements succeed, this could underflow symbol_bytes_used to
-SIZE_MAX, instantly exhausting the memory budget and breaking all further
-symbol resolution.
-
-> +
->  struct symbol *symbol__new(u64 start, u64 len, u8 binding, u8 type, cons=
-t char *name)
->  {
->  	size_t namelen =3D strlen(name) + 1;
-> -	struct symbol *sym =3D calloc(1, (symbol_conf.priv_size +
-> -					sizeof(*sym) + namelen));
-> +	size_t alloc_size =3D symbol_conf.priv_size + sizeof(struct symbol) + n=
-amelen;
-> +	struct symbol *sym;
-> +
-> +	sym =3D calloc(1, alloc_size);
->  	if (sym =3D=3D NULL)
->  		return NULL;
-> =20
-> +	symbol__account_bytes(alloc_size);
-> +
-[ ... ]
->  void symbol__delete(struct symbol *sym)
->  {
-> +	size_t alloc_size =3D symbol_conf.priv_size + sizeof(struct symbol) +
-> +			    sym->namelen + 1;
-
-[Severity: Medium]
-If a symbol name exceeds 65,535 bytes (which is possible with deeply mangled
-C++ or Rust templates), the u16 sym->namelen field silently wraps when it is
-assigned during allocation.
-
-When symbol__delete() recalculates the budget to subtract using this trunca=
-ted
-u16 value, will it result in a much smaller subtraction than the original
-addition, acting as a permanent memory budget leak that artificially exhaus=
-ts
-the limit?
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260915-perf-symbo=
-l-memory-send-v1-0-1d3360e21f07@uber.com?part=3D2
+Thanks, this is a valid concern. I=E2=80=99ll restore the compile-time
+feature-libelf-mmap probe removed by 22dd1ac91a77 and use it to select
+between ELF_C_READ_MMAP and ELF_C_READ in v2.
