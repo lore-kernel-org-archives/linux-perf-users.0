@@ -1,185 +1,262 @@
-Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SJ2PR03CU001.outbound.protection.outlook.com (mail-westusazon11022081.outbound.protection.outlook.com [52.101.43.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB83468C13
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 21:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37590389118
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 21:53:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.43.81
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789508578; cv=pass; b=V+UiqXj8015Dq3EbkugQoQGq2yMxurh6m/zq/j7vcqS2ctymlq5ha4246ZeoUo659m3XGYG9ATM2jNpyNdLdWdCrzhizNHTvz52dcaFsBJIG5PaCcAs5hd63/PakYMk+hm+UpBi+hLfAbSpDpB1u8dpPZxY7n2pkNLbfY4ntLI4=
+	t=1789509193; cv=fail; b=ZI/aVXOOwzWMnKEiXwzFe+nQCwCP2KdGOh8RFy4iS5c0o5nZB55PHWAck4lrex1c4oLYI0jPRxHT1jS8Syv+fH4e+LdIChjvJxE4yJapFbWc0Z1mrfZ+Ugnyv9FqkgqQ29Jdi7IUTiWrerujpSDKJnX7AKdO/h7cqebLAnQeir0=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789508578; c=relaxed/simple;
-	bh=7FPuBKqfc5+V+XudiWfGUwcGgOF3XEWZ0MgBewJ876s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rsFToTKc6XURWIQIgYLk+3W4of6I/pG5N4vYqJ8RGhHmkLaWIvTo2deInCeXj73Bk/QWnFgyAFo9cFJndJMmxSACY8GrvIlfj7llSOubnO8G/iTtvEF0h5xi1DyIM50jhuB7YLm+gP9aMCgBGmcNO4ZVnQM+hFXwbscdQKa2Aow=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=nvjLsVGg; arc=pass smtp.client-ip=74.125.230.204
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1789509193; c=relaxed/simple;
+	bh=PB4wkrmHuY5LrnXDTag9FLxcwNaZYTAnauI7oJnxBro=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 Content-Type:MIME-Version; b=RvpsgAu5JowpbdQnImCwb8LTmvWyeoIbhRuUZ5UIVaJzkyO/HBNRWIpeyo2AARS3ArxKJYqPJC6YpVJK/Rmi7uZdutl6uxaAjisSW6U5a2FcKZTEzBBJZwQh0sVei1uzld6V3X+ejeQdg8ln/5upDE73OkTLpubCGB/uMakvylQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=FiZRzkUc; arc=fail smtp.client-ip=52.101.43.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nvjLsVGg"
-Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-5306706e89dso32631cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 14:42:56 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789508576; cv=none;
-        d=google.com; s=arc-20260327;
-        b=ZbTpgsULuN8vWJjQsP5ysw64TFG5Y+gNZBEHiheLlpgBZruovTVhQdDKCYF0bkpReK
-         DZD4t9sIYBFKE/P4F+u86d6goTUubBzlJcrZNWwKjsX7M2DEdBSKu+tqmxZj7yOEGtqg
-         7z4JG3BjkOUZIcLRyan7f5gLvJ6pbhFWZykAg2qpNxj+vFIsYzOXjbnHUXYymIsiX5S0
-         53PauwEKe8Ffr9CFga1vFTZRG+xsq/A8+Zimr8B96e1SmQ/XxI+umNsiOl1ggjMgqcwa
-         n1FaE4AxqVGyWnsJZCQAYhmIak14w5QiWIui/jrzPPbfhDgu3LCl8j9w/zGdQ+vESKog
-         On5w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=aD5DtmrQU1XAAN2n47o7245dkYOoODedHBlENsGW6Jo=;
-        fh=QSUTEVSYuc6aitWMuRX2ZmRRY+r5hIqrHomew1Ln+Ac=;
-        b=GkS0hC0F5LJcyA0zIt5/2RXZGcCx7m4Rrhbg+NKZaMwe57rO8pS9+hSAZPem9UtRwm
-         bjm/R1La4/AOHkguFrP03YaS1Z82m8+Os8VOxTIZH07zI5B2lLlnxq3hNPS44VNYLLYu
-         9v66aUJ15u/chJn9FQ5ALoQfgbWfaUjuE20OXpNeHEMNwOvbHHuIBwsro6zMGLyuvEoZ
-         JOPWnf7MHh68RrHFP1uRSxM8NeQtqMjsiucOvK7JNjRKpCRWPw0lFmOT3YaZxnN/SjU+
-         X6qND3IvPeOrTI0DZ6he+pHAaGuREK7ls5fbGc0fPbEaLJCUrcc966qzx7bCL+59ehLs
-         s4ew==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="FiZRzkUc"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=heFwRz+k+iIjchJ0nRBZTBVyOBeAsaYAnMTu+8cfPyB+SYjajDj6lP52qVFdE/CTzYkzxY641EGqZweZyd+k/0URmE18hEhlVOacPzviLoc72Kf85Y9BqyhKrhA39eGAQN9OPNHp+nccZWBvSqeRGoRm5/SfIShjrNhRMYNni5mEtg3NvdYwLqSM2RFtGOxsWmMwAjFKuOCmxYbl6IYjk9B8gGGeMdxTNQgf0K+1rzEimXR38fwI/rfqHwJ4dnuJvzJO6DxetBv2qHTNSo3Hr7cFKnFbd9YCmr5MRU4MQ2AsThliNtJrnp/PbRzGXXIAs9a9ovKpivFncwm5DhUJEw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=66ubbzJl4c69XQqqRt/gtfVFfPDfN4J8QJ7sR4DjUog=;
+ b=vn9BZyHC7/mrBbuI+2sj26NL+FXiLIcmk+QBWy1h1mESZ+U3HDLu+mj1XD9C+bJ9PSQY94VcT088j6UXoXZ/LgVEXisDVeRY8sVRy3YmeUf+3B/ADRwISKmUku4rwN7bxE1Rfs1YWevwAkAJZox6/RTiN/GgcvKsuSq9PzhRSJQDtG1O49skWnSQCxFSusCx6K68/7aNsr0+ujMBUymE33w+WaxOns64NiAZC9vZyJ+Cl18+m/9qgz0fuqIquo0Ypn0F8TdUbNE0Wpmcyv2+wEmYHKMtKvjmppO/zTIc3zpXcv++OPtR17DojxaRiRtiImp3uQ1wxDIce7ljGEyNAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789508576; x=1790113376; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=aD5DtmrQU1XAAN2n47o7245dkYOoODedHBlENsGW6Jo=;
-        b=nvjLsVGgRj0yMKuH2ZW853ibeWabA+JxD/OqUDRpdbXU8+rvn6D4qQPVdjhzkouMbY
-         wsEIS306ZkSuh6KXf0XQHKsKByyJJfwQJvd8tshcsB9C+3E6+2y07HQvDfwAeu8liueV
-         pm251xUmcAfqM9DldAzZXxASE3N7GSOex7/cE4kXfqSr99Rm7ozyqzsqKFZsLPBNCziZ
-         x49WGmFvduSUAF0fHjYOZI6/RaxcbTJqfhcqtmH+Pjia03Xsr2Yo3IdpnywuyepAVlV8
-         myfW/wFz8QX+I61Q0D2fvcJcxCT3b5DO05GZWvAAbpFlIKesKvO+GBaRkJG+BDKKc51T
-         RBqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789508576; x=1790113376;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=aD5DtmrQU1XAAN2n47o7245dkYOoODedHBlENsGW6Jo=;
-        b=uR3LwxbFIPuwV4QgAsg2UJaDVujq+e0PoqGUaFWUSxrwwRSZE3DzqX4A4r/8f/i3Bb
-         YqefkfHSn6KWbo1CaRkcKEW9mGLcTvNS2f4wsmug1Rj6htL4fQPyxku5TzGjvkeMFeOq
-         F/ZfyKDhKMR7rqqtzem7x5RWL9WfcZ6MCPL89bQSy/N4n8yE28g+PyHHo629imkvt7qe
-         qFJxKJ2eYInyoOM//INsuj784nQ2vdw1hEEerZc8q0g8YAdFPolEgV6YPuBEJCECymSw
-         n3aLEaqovTG7kvxC0SQt7PdseSiwIo7qIrracPHKuH2qhLvoYpNmQ5TdeoF/bk/ndRlU
-         xRlQ==
-X-Forwarded-Encrypted: i=1; AKwUvBz6UhfDSbheRRtj8/aeK4z7MkN9PQ9QUM5+MUfBQT2/k2G0p469g3skPqZhBGpLE45NHlLEstrqMtNH/U/Tt5SY@vger.kernel.org
-X-Gm-Message-State: AFuF++ndZbFsEVrZ8pgqAKUAZy64cAvOVvE0xxOlhgxjmoJ6qcVS1Y6w
-	YuJgMspZEPi0uvB3QqH89EPM7S0xk9ntnlK5/RvFe0pPlIVuNCp5T4WIjLNQjzBpxgLh5Fvm6Kx
-	JZqBrDriB1yI+Z21MBOTM4bvo226QdTV+4nZ0FKs2
-X-Gm-Gg: AYBFou14IDnVq9qDI67RxQ4yH2tAz6s/R6zwDZJqQGXPB/y0C01ciFcIQTWKp+/ryqy
-	ODeOAGAXCXnrTTHFdcOFov9qbuRfIExCsTU7Y9FBhBjeNouyPZLnj3x2ih7xzgk+/Tw43UdbmGG
-	NG0v6bDC0efLdjDokEjsMfke29epVPAFwih6OOb6/D5RtYX6Jqm5MJ31G8sOXsQeuBxFDC7zco7
-	bpuPBW5r58nfh49V0H42C/xSquYW+Kj9ARc13sbEJJ+uoSoTEeTd6XPe7uBbc4jcPN0+Khavj5J
-	YR4tf3hhQp9lsSY7ysDaNvG/UeSKKn/of0oGqs4LH9oLGZKs1ibqFS3HjoJeV0Xxs4dbRDMr7W3
-	unc5ajlVhf1/AuVVnI/XU0w==
-X-Received: by 2002:a05:622a:4d8c:b0:531:34b9:2532 with SMTP id
- d75a77b69052e-5327ed8004emr1067291cf.4.1789508575206; Tue, 15 Sep 2026
- 14:42:55 -0700 (PDT)
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=66ubbzJl4c69XQqqRt/gtfVFfPDfN4J8QJ7sR4DjUog=;
+ b=FiZRzkUcm4kA1TrsSRRbPqz5k5qYnTatt7OAmGlRZrTGErqeetu9qDvdRaVCE/7DvrA27usy/qhUV95h5yYS9ZpI+POx/7/RkJ8q0Qv0hYjzY3AQH8D1VmRhi/Tf57o0xusw6btgTO7WNi9nZy/TKzDE/Mdr2i4d9OXITHdFuQU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from MN2PR01MB5615.prod.exchangelabs.com (2603:10b6:208:11c::29) by
+ CH3PR01MB8315.prod.exchangelabs.com (2603:10b6:610:173::10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.21.406.11; Tue, 15 Sep 2026 21:53:06 +0000
+Received: from MN2PR01MB5615.prod.exchangelabs.com
+ ([fe80::996f:e4f2:dbd8:120e]) by MN2PR01MB5615.prod.exchangelabs.com
+ ([fe80::996f:e4f2:dbd8:120e%6]) with mapi id 15.21.0428.008; Tue, 15 Sep 2026
+ 21:53:06 +0000
+Date: Tue, 15 Sep 2026 14:53:02 -0700 (PDT)
+From: Ilkka Koskinen <ilkka@os.amperecomputing.com>
+To: Robin Murphy <robin.murphy@arm.com>
+cc: will@kernel.org, mark.rutland@arm.com, ilkka@os.amperecomputing.com, 
+    leo.yan@arm.com, linux-perf-users@vger.kernel.org, 
+    linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] perf/arm-cmn: Fix multi-filter encoding
+In-Reply-To: <03f15158e4c0a036f41cb4ab34c138a265c0730c.1789408253.git.robin.murphy@arm.com>
+Message-ID: <8ff2b533-ed68-753e-170d-a49488484516@os.amperecomputing.com>
+References: <03f15158e4c0a036f41cb4ab34c138a265c0730c.1789408253.git.robin.murphy@arm.com>
+Content-Type: text/plain; format=flowed; charset=US-ASCII
+X-ClientProxiedBy: MW4PR03CA0087.namprd03.prod.outlook.com
+ (2603:10b6:303:b6::32) To MN2PR01MB5615.prod.exchangelabs.com
+ (2603:10b6:208:11c::29)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260224062531.96304-1-yunbolyu@smu.edu.sg>
-In-Reply-To: <20260224062531.96304-1-yunbolyu@smu.edu.sg>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 15 Sep 2026 14:42:43 -0700
-X-Gm-Features: AcwNN1UXqi6h2JzlCIpIEM2PA8kElM-vlezQ38Lvvbn2yCoDh4fdAvu3ovmKIo8
-Message-ID: <CAP-5=fWHGZteCwCga6x09hzAECmc8wMWxHbD27pq+vefVCeNgA@mail.gmail.com>
-Subject: Re: [PATCH] alpha/perf: Clean up stale comments referencing old
- hw_perf_* APIs
-To: Yunbo Lyu <yunbolv@gmail.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, richard.henderson@linaro.org, mattst88@gmail.com, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org, 
-	julia.lawall@inria.fr, ratnadiraw@smu.edu.sg, xutong.ma@inria.fr, 
-	kexinsun@smail.nju.edu.cn, Yunbo Lyu <yunbolyu@smu.edu.sg>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN2PR01MB5615:EE_|CH3PR01MB8315:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0c9287d3-e0b3-48af-e477-08df1373b925
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|23010399003|366016|376014|10067099003|18002099003|22082099003|55112099003|11063799006|56012099006;
+X-Microsoft-Antispam-Message-Info:
+	jBNglqFNLc4Grq1axvgTNsBdhwrPbnGjjgXfrkseMPpCVoav8BInUZmwDzN/J0+uZyHjkgke1Tj16HkMdHGPa9fBdW/LdS3VxKW2Nh1HzpsFOmcl91K0H4hBkwgwf4uk3qS2kCPPiJvzX5NN5FhHU6Ee1QeM23zYfjV0tbd6PVYYrrnCRFMt0/EBheaZ2sgBQVNtbXcLbTZGKYxCTVM0vlI2UfR6Mez9M1SPS+LBE6kdaJ29moVtZW84NJULz1FK05+2HaOXQaEX2pMhHJpf+d8KYcxF/IUWclPhKHzylG86lavKBceM+TAJ4JSRfpMrMf+mx0IOBEKmK5/mJKVH9ZQODZfvBi++RIivYtHz1aWRh6Qt7bXRZ5hjghvdZoCG6x31syoZeeANRX/BjdxPttqKiPaQTGe1nprcwclCtdecDW6pIEvJzPJcoxVpj5jQleLvQzK+CnRQUWMfG5Vuu8BMoDtRafSkdIQ0ulPC/G5nHPBEhrZNYo22zjJTfETu1VsoLBrnfDV8fyMBs7hVCQBHpLSc6a2bNFHMCYIRj88RKaL4a+494bPZzkPVZdvXrlQLV7C/A8EghDp1M4ZVE/YENUPKU8GUiZOXZLj3NnIIFRl0d32ievtff/h4ZhOQlKjOdxpCAhIRV04Wk9lL4PkmE+MhITChsFm6MiheA0M=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR01MB5615.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(366016)(376014)(10067099003)(18002099003)(22082099003)(55112099003)(11063799006)(56012099006);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ngQCKq+d5tMIGmkEhtcQahRrDdTbMll0YLDPKtLYngY3zteh/eQPnuPiXmn3?=
+ =?us-ascii?Q?L56YsZEVZ74/zjjU2N+jAO6+6KgoipTYGg0XmwLowy3TU+/Xfa5VS8d8tGC9?=
+ =?us-ascii?Q?pTU66eVZRG0o2tVef8CIz7mXt9b3qK/jzC2xea3UhGoJ3hzW708kJA68hu6V?=
+ =?us-ascii?Q?S2zZn1ltqm+zFNiKs3ITp8Ba23MGcHohU3XN2qNhfcZpz5IFWvtVxs5nhiVu?=
+ =?us-ascii?Q?3LZvt4OMEpyNR38vwBxLw43jJRdSULem3r8pxa9PZmK1GL/ejXoS17L/3w2X?=
+ =?us-ascii?Q?AItG2p89A9RbyLvgrewz13UheqEQwj/SXKOBbGp30/IXva10pRIRC5/je6sT?=
+ =?us-ascii?Q?ASZpSwjXXBGyCAdWZjBPwTNk9mKmc0TeWlPeqqTyWNeT2zNBifOadS7MD4NS?=
+ =?us-ascii?Q?/zu8k7OewcjfV6/e2AuPjBBU4n+G0nTMVFJL9QSjg9CQnil1g3oYapOeaKkl?=
+ =?us-ascii?Q?uuJ13n2y02HBsMu2LpwNhBD3FeapDr4Pp1KtIgI6vZH8bIwxM+imWeLAlHeI?=
+ =?us-ascii?Q?njCO75qeJJu74tnP4gn+kaaLvYdZXHPyds7wV/VOKw4f5XpJCqeUFlVCVff5?=
+ =?us-ascii?Q?lS2B4YqizOr50tckEEE1mx4MTMXp3rIAO7RnOcwDrBnl0YzwDoj5ibcaJ3og?=
+ =?us-ascii?Q?/tllL9rf9gSiFsFXvFEIvthltGSS4tECLAmqihzqXyKxbHGj7QmDDfcJtZe9?=
+ =?us-ascii?Q?4HICwYNtzAPfLiLPnVYdYlltjzY2NdIlJayKu/fEew5sTB2ex3H29JJffdQZ?=
+ =?us-ascii?Q?JoDTRh14ChKPdMOeaIr7AJ8Cn/NGXiHVAfwgl3aqTANS0Oq5dcGBxjcAE9/e?=
+ =?us-ascii?Q?hOCceLiKBLjuoN5ltbTop2CxQ9tV5YyOWz0WzO8pfm0cyBsmJd6FLiQ56GgS?=
+ =?us-ascii?Q?pkwX+ey5vMl4cTbTQqB5wD4tXf5SCpbuYjsJxb458SnnmbrCpqLKmHUNcBlM?=
+ =?us-ascii?Q?vg0DD9aLSUswSjcoQIrC5D6TECZaH2zL/nJqQaABF/0dVRZOqw2q3pgPrNtV?=
+ =?us-ascii?Q?Hq5SdRvLwMgBYkL6b9FBvm0knMAIfWy3j6n/kgO7IvTvdAqcNQ/1pifKjYBH?=
+ =?us-ascii?Q?8WOS8iL7emjpnvleE+0RQWkPy26NmA5P/ZKAp2/6jYc2MyWjIUxmsapTvxSU?=
+ =?us-ascii?Q?kkqQ3ZOFIz/Yu8/2hlO0Mo1YAWBUfw/o/112eGoo46ZTevXZdvzNXBL2hEGo?=
+ =?us-ascii?Q?rR9Xu+woYXRBg47IVBkNCoGm4Rkiy9S0s/+e7w7QdLANcortbh3tHiAdwZ5e?=
+ =?us-ascii?Q?W9/aupVvpGhFeE88VDU49T6aVgIcUVgiDsRa830FOs4vJBV0bfoIUXYB7E2d?=
+ =?us-ascii?Q?9CYbWzSR/cOT4+FIFEQcR8hh2BSfPxxe3wm62xoOCykQsa1K0ycx0VVhB702?=
+ =?us-ascii?Q?XaY1uN39DTFGECtxt+VIfGDrda5Fxp0mCpl2mrtvSM5tsjJSaC214MiknUsY?=
+ =?us-ascii?Q?SvAre9tISdEx0M15Qs9Pb17PCH0fxfS3CNIyApp9lTnwGbmhcTGyO91ZNniC?=
+ =?us-ascii?Q?SyXZTNPYRaQH7QQA6qINY+g3E5HkjSdXMErWFNcp6C8cuh+qSWanlUjQsZ/7?=
+ =?us-ascii?Q?ABrdTMNKLjBvcG09Y+Gr68R3eBdppKrANk4TwQmgmZ/EgfKJedQvbyNe0CGi?=
+ =?us-ascii?Q?yBWzqmD5C8BW33oavwCva18fq16Xz7MINp/MYs+XGXMDcq/U8ykLsEzNJyVC?=
+ =?us-ascii?Q?MkSD8msqR2GUlFzR/tSWvPCw3Q979iSHEv95TsKIumCddPGV9OiCfcWycmsR?=
+ =?us-ascii?Q?dKw1ean5rbosgNVKdNEr2BhN+AMcQ+g=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c9287d3-e0b3-48af-e477-08df1373b925
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR01MB5615.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Sep 2026 21:53:06.0742
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LNFQVZDWreO7AsF8Z2irVSyDNsSqWB2N8wu5tKuWvtDuFo+7ubAKPRPXEBuirvCmK7XjKtFJuzgGH/405QjhsuXCtyERHmnMbD4ZMNCmqg+4ck5q/yTIvTxqIYVXv4r4
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR01MB8315
 
-On Mon, Feb 23, 2026 at 10:25=E2=80=AFPM Yunbo Lyu <yunbolv@gmail.com> wrot=
-e:
->
-> Two outdated comments in arch/alpha/kernel/perf_event.c referred to
-> functions from the deprecated hw_perf_* APIs that were removed more
-> than a decade ago:
->
-> 1. hw_perf_disable():
->    This was superseded by per-PMU disable APIs such as
->    alpha_pmu_disable(), after commit 33696fc0d141 ("perf: Per PMU
->    disable"). The comment has been updated to reflect the correct
->    function name.
->
-> 2. hw_perf_group_sched_in():
->    This function was removed in commit a13c3afd9b62 ("perf, sparc:
->    Implement group scheduling transactional APIs"). The corresponding
->    comment mentioning it has been removed. The if (n_ev =3D=3D 0) check i=
-n
->    alpha_check_constraints() has also been removed, as this condition is
->    never true. The alpha_check_constraints() function is only called
->    from two places:
->
->    - alpha_pmu_add(), which calls alpha_check_constraints() with
->      n0 + 1, where n0 is the number of existing events (>=3D 0).
->    - __hw_perf_event_init(), which calls it with n + 1, where n is the
->      number of events in the group (>=3D 0).
->
->    In both cases, the n_ev argument is guaranteed to be at least 1.
->    Therefore, the check is redundant.
->
-> No functional changes; comments and dead code cleanup.
->
-> Fixes: 33696fc0d141 ("perf: Per PMU disable")
-> Fixes: a13c3afd9b62 ("perf, sparc: Implement group scheduling transaction=
-al APIs")
->
-> Signed-off-by: Yunbo Lyu <yunbolyu@smu.edu.sg>
 
-Thanks for the cleanup! A nit: the commit message mentions comments
-but there is also the dead code clean up. Someone bisecting may
-struggle to attribute this change if the commit message suggests it
-only impacts comments. Could we either do 2 patches (comments + dead
-code) or change the commit title to mention dead code?
 
-Thanks,
-Ian
+On Mon, 14 Sep 2026, Robin Murphy wrote:
+> The current special-case for EVICT_STATE_SEL filtering effectively
+> assigns the "filter" and "filter2" controls in the opposite order from
+> how the CMN S3 r2 TRM states "Filtering is programmed in pmu_hbt_lbt_sel
+> and pmu_evict_state_sel". On reflection, not only does this seem
+> unnecessarily non-obvious to users, but it's also likely to be a problem
+> for scaling to a full multi-filter abstraction in future. There is a
+> logical order to filters based on their bitfield positions in the
+> pmu_event_sel register, which the TRM descriptions allude to, and the
+> cmn_filter_select enum already (almost) follows, so let's fix the UABI
+> to follow suit while it's still unreleased.
+>
+> Fixes: 09178f536bb9 ("perf/arm-cmn: Plumb in new filter types")
+> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+
+Looks reasonable,
+
+Reviewed-by: Ilkka Koskinen <ilkka@os.amperecomputing.com>
 
 > ---
->  arch/alpha/kernel/perf_event.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
+> drivers/perf/arm-cmn.c | 54 ++++++++++++++++++++++++------------------
+> 1 file changed, 31 insertions(+), 23 deletions(-)
 >
-> diff --git a/arch/alpha/kernel/perf_event.c b/arch/alpha/kernel/perf_even=
-t.c
-> index a3eaab094ece..2f57626ffcfb 100644
-> --- a/arch/alpha/kernel/perf_event.c
-> +++ b/arch/alpha/kernel/perf_event.c
-> @@ -35,7 +35,7 @@ struct cpu_hw_events {
->         int                     enabled;
->         /* Number of events scheduled; also number entries valid in array=
-s below. */
->         int                     n_events;
-> -       /* Number events added since last hw_perf_disable(). */
-> +       /* Number of events added since last alpha_pmu_disable(). */
->         int                     n_added;
->         /* Events currently scheduled. */
->         struct perf_event       *event[MAX_HWEVENTS];
-> @@ -372,10 +372,6 @@ static int alpha_check_constraints(struct perf_event=
- **events,
->                                    unsigned long *evtypes, int n_ev)
->  {
+> diff --git a/drivers/perf/arm-cmn.c b/drivers/perf/arm-cmn.c
+> index b162de3d9d16..6464b815bd3b 100644
+> --- a/drivers/perf/arm-cmn.c
+> +++ b/drivers/perf/arm-cmn.c
+> @@ -305,9 +305,9 @@ enum cmn_filter_select {
+> 	SEL_NONE,
+> 	SEL_OCCUP1_ID,
+> 	SEL_CLASS_OCCUP_ID,
+> -	SEL_CBUSY_SNTHROTTLE_SEL,
+> 	SEL_HBT_LBT_SEL,
+> 	SEL_SN_HOME_SEL,
+> +	SEL_CBUSY_SNTHROTTLE_SEL,
+> 	SEL_SNP_VC_SEL,
+> 	SEL_ENHANCED_HBT_LBT_SEL,
+> 	SEL_EVICT_STATE_SEL,
+> @@ -978,10 +978,14 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
+> 	_CMN_EVENT_HNS(_model, _name##_all, _event, _sel, 0),		\
+> 	_CMN_EVENT_HNS(_model, _name##_hbt, _event, _sel, 1),		\
+> 	_CMN_EVENT_HNS(_model, _name##_lbt, _event, _sel, 2)
+> -#define _CMN_EVENT_HNS_HBT2(_model, _name, _event, _fsel1, f1)		\
+> -	_CMN_EVENT_HNS(_model, _name##_all, _event, _fsel1, f1, SEL_HBT_LBT_SEL, 0), \
+> -	_CMN_EVENT_HNS(_model, _name##_hbt, _event, _fsel1, f1, SEL_HBT_LBT_SEL, 1), \
+> -	_CMN_EVENT_HNS(_model, _name##_lbt, _event, _fsel1, f1, SEL_HBT_LBT_SEL, 2)
+> +#define _CMN_EVENT_HNS_EVICT(_model, _name, _event, _fsel1, f1)			\
+> +	_CMN_EVENT_HNS(_model, _name##_all, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 0), \
+> +	_CMN_EVENT_HNS(_model, _name##_eu, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 1), \
+> +	_CMN_EVENT_HNS(_model, _name##_en, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 2), \
+> +	_CMN_EVENT_HNS(_model, _name##_su, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 3), \
+> +	_CMN_EVENT_HNS(_model, _name##_sn, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 4), \
+> +	_CMN_EVENT_HNS(_model, _name##_mu, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 5), \
+> +	_CMN_EVENT_HNS(_model, _name##_mn, _event, _fsel1, f1, SEL_EVICT_STATE_SEL, 6)
 >
-> -       /* No HW events is possible from hw_perf_group_sched_in(). */
-> -       if (n_ev =3D=3D 0)
-> -               return 0;
+> #define CMN_EVENT_HNS_OCC(_model, _name, _event)			\
+> 	CMN_EVENT_HN_OCC(_model, hns_##_name, CMN_TYPE_HNS, _event),	\
+> @@ -1014,13 +1018,9 @@ static umode_t arm_cmn_event_attr_is_visible(struct kobject *kobj,
+> 	_CMN_EVENT_HNS(CMNS3R2, _name##_ccglcn, _event, SEL_ENHANCED_HBT_LBT_SEL, 5), \
+> 	_CMN_EVENT_HNS(CMNS3R2, _name##_ccgrn, _event, SEL_ENHANCED_HBT_LBT_SEL, 6)
+> #define CMN_EVENT_HNS_EVICT(_model, _name, _event)			\
+> -	_CMN_EVENT_HNS_HBT2(_model, _name##_all, _event, SEL_EVICT_STATE_SEL, 0), \
+> -	_CMN_EVENT_HNS_HBT2(_model, _name##_eu, _event, SEL_EVICT_STATE_SEL, 1), \
+> -	_CMN_EVENT_HNS_HBT2(_model, _name##_en, _event, SEL_EVICT_STATE_SEL, 2), \
+> -	_CMN_EVENT_HNS_HBT2(_model, _name##_su, _event, SEL_EVICT_STATE_SEL, 3), \
+> -	_CMN_EVENT_HNS_HBT2(_model, _name##_sn, _event, SEL_EVICT_STATE_SEL, 4), \
+> -	_CMN_EVENT_HNS_HBT2(_model, _name##_mu, _event, SEL_EVICT_STATE_SEL, 5), \
+> -	_CMN_EVENT_HNS_HBT2(_model, _name##_mn, _event, SEL_EVICT_STATE_SEL, 6)
+> +	_CMN_EVENT_HNS_EVICT(_model, _name##_all, _event, SEL_HBT_LBT_SEL, 0), \
+> +	_CMN_EVENT_HNS_EVICT(_model, _name##_hbt, _event, SEL_HBT_LBT_SEL, 1), \
+> +	_CMN_EVENT_HNS_EVICT(_model, _name##_lbt, _event, SEL_HBT_LBT_SEL, 2)
+>
+> #define CMN_EVENT_HNSR0_HBT(_name, _event)				\
+> 	_CMN_EVENT_HNS_HBT(CMN700 | CMNS3R01, _name, _event, SEL_HBT_LBT_SEL)
+> @@ -1856,10 +1856,12 @@ static void arm_cmn_val_add_event(struct arm_cmn *cmn, struct arm_cmn_val *val,
+>
+> 		val->dtm_count[dtm]++;
+>
+> +		if (sel == SEL_EVICT_STATE_SEL) {
+> +			val->filter[dtm][sel] = CMN_EVENT_FILTER2(event) + 1;
+> +			sel = SEL_HBT_LBT_SEL;
+> +		}
+> 		if (sel)
+> 			val->filter[dtm][sel] = CMN_EVENT_FILTER(event) + 1;
+> -		if (sel == SEL_EVICT_STATE_SEL)
+> -			val->filter[dtm][SEL_HBT_LBT_SEL] = CMN_EVENT_FILTER2(event) + 1;
+>
+> 		if (type != CMN_TYPE_WP)
+> 			continue;
+> @@ -1910,14 +1912,17 @@ static int arm_cmn_validate_group(struct arm_cmn *cmn, struct perf_event *event)
+> 		if (val->dtm_count[dtm] == CMN_DTM_NUM_COUNTERS)
+> 			goto done;
+>
+> +		if (sel == SEL_EVICT_STATE_SEL) {
+> +			if (val->filter[dtm][sel] &&
+> +			    val->filter[dtm][sel] != CMN_EVENT_FILTER2(event) + 1)
+> +				goto done;
+> +			sel = SEL_HBT_LBT_SEL;
+> +		}
+> +
+> 		if (sel && val->filter[dtm][sel] &&
+> 		    val->filter[dtm][sel] != CMN_EVENT_FILTER(event) + 1)
+> 			goto done;
+>
+> -		if (sel == SEL_EVICT_STATE_SEL && val->filter[dtm][SEL_HBT_LBT_SEL] &&
+> -		    val->filter[dtm][SEL_HBT_LBT_SEL] != CMN_EVENT_FILTER2(event) + 1)
+> -			goto done;
 > -
->         if (n_ev > alpha_pmu->num_pmcs)
->                 return -1;
+> 		if (type != CMN_TYPE_WP)
+> 			continue;
 >
-> --
-> 2.25.1
+> @@ -2077,16 +2082,19 @@ static void arm_cmn_event_clear(struct arm_cmn *cmn, struct perf_event *event,
+> static int arm_cmn_set_event_filter(struct arm_cmn_node *dn, struct perf_event *event)
+> {
+> 	enum cmn_filter_select fsel = to_cmn_hw(event)->filter_sel;
+> +	bool evict_state = fsel == SEL_EVICT_STATE_SEL;
+> 	int ret = 0;
+>
+> +	if (evict_state) {
+> +		ret = arm_cmn_set_event_sel_hi(dn, fsel, CMN_EVENT_FILTER2(event));
+> +		fsel = SEL_HBT_LBT_SEL;
+> +	}
+> 	if (fsel)
+> 		ret = arm_cmn_set_event_sel_hi(dn, fsel, CMN_EVENT_FILTER(event));
+>
+> -	if (fsel == SEL_EVICT_STATE_SEL && !ret) {
+> -		ret = arm_cmn_set_event_sel_hi(dn, SEL_HBT_LBT_SEL, CMN_EVENT_FILTER2(event));
+> -		if (ret)
+> -			dn->filter[fsel].count--;
+> -	}
+> +	if (ret && evict_state)
+> +		dn->filter[SEL_EVICT_STATE_SEL].count--;
+> +
+> 	return ret;
+> }
+>
+> -- 
+> 2.54.0.dirty
+>
 >
