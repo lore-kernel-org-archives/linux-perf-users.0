@@ -1,34 +1,35 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D74964BB5D4;
-	Tue, 15 Sep 2026 15:49:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 806FC4BD0FD;
+	Tue, 15 Sep 2026 15:49:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789487380; cv=none; b=NKbjpsFehdoTLvnfe6cEQUrl8xBYeycoISqVQXo+ACwBj2YdFLkvc5OO23UYLUFim2C5aTctzO5h0NKtPoxp+58yey+4IGPTAqm5ZhObfpjNUOWKBCJ1ubEST48ICTuQc22lMSTUVtQffZLFtslkxUzZ/ikVEhwjwnxUI0/+q94=
+	t=1789487383; cv=none; b=bZSQUPfCXpPnSugt6ox9R+wIesQOl7SW+D8PDEMEwRHYJazoE1nBqWlYskS68gx3AUFP9ufizJ+fvMojOXTEfGgmHNcp6tyjdAaGzhx0jSDn7/JxfZx5WcR3dmbUJ1XaodhfK1Xly5SjCTvwSwuV7YI00Y2OfWKB+SWvD0/KgNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789487380; c=relaxed/simple;
-	bh=goYiVNAh7k6LrTB80GAwHLKvpuHR7WeoPkl/mqvmd2I=;
+	s=arc-20240116; t=1789487383; c=relaxed/simple;
+	bh=ZLhP9+hk4aabaXSGT54lI6NuOvSPZUJCkdIwDLOtAu4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ew7IKT2nMjzI2sPQvx9grhlALat32f0CXo+sQt98/CapwjVt3fB9Bky5iExibQHlv7PaW1Sv9OBKpZ18IqaXyEHm5DNKsc+Ad0vYGob9nKh6r2DQR1XO/txmeDCjvpEpqRs2f5BdLcrZ0t2EDSX/NNKpHA3jXIXh/glvIKk7xeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=VDu+61na; arc=none smtp.client-ip=217.140.110.172
+	 In-Reply-To:To:Cc; b=d0hFTr+ahiZOtl5rkqpU7S6K+bzcfoQI7wRcBNiwid6/XFb+N1mtI5prulLBnPqiE3nDyyKYrzdbMKSraifrqqi32goCYmWoTciZ4u9/cMLYMMg5b3qbvBgHqfBhrX1pu1ImZxMZy+FStdXs41R5io9aNb1bR7Q8W0uLSYXxswQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=BdAXaQPh; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="VDu+61na"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="BdAXaQPh"
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 813841D70;
-	Tue, 15 Sep 2026 08:49:34 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2E9DF1570;
+	Tue, 15 Sep 2026 08:49:37 -0700 (PDT)
 Received: from e132581.arm.com (unknown [10.2.196.114])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B80203F882;
-	Tue, 15 Sep 2026 08:49:35 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 640363F882;
+	Tue, 15 Sep 2026 08:49:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
-	t=1789487378; bh=goYiVNAh7k6LrTB80GAwHLKvpuHR7WeoPkl/mqvmd2I=;
+	t=1789487380; bh=ZLhP9+hk4aabaXSGT54lI6NuOvSPZUJCkdIwDLOtAu4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=VDu+61nacaNq62c+Y4fyqJUKJh0gegijVuObVTnfmfQcF7eQGvM6tpV/52nb8UUpi
-	 ATAWZFQfTn4LYJlaohsrQzEzkAehS1YaKMmdKqv2fcQbPmUOKH18QuHjdAxZyBYknp
-	 s2GQ5gKXdM1YxWd/z3F5Yb3eKO2jJPNLuhPhaYug=
+	b=BdAXaQPhr83OQa7dCtrINo7V0Ik022DcCN3ePCCAPmH0rPYM2/ka84ZuMHgCI0Nj7
+	 79/IvJE6eiWpBtG7rAU3MfDfD2yRisiHh3S6xevjvez5+zw3oui0mqnqIhhWqQNkcs
+	 pzR8eFyE9xwoyT+/G2Kry12YSH7rPk0hUdw1k5mQ=
 From: Leo Yan <leo.yan@arm.com>
-Date: Tue, 15 Sep 2026 16:48:59 +0100
-Subject: [PATCH 13/25] coresight: trbe: Handle an already disabled sink
+Date: Tue, 15 Sep 2026 16:49:00 +0100
+Subject: [PATCH 14/25] coresight: perf: Look up the trace path in
+ etm_event_pause()
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -37,7 +38,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260915-arm_cs_support_aux_sample-v1-13-35cf6f297d20@arm.com>
+Message-Id: <20260915-arm_cs_support_aux_sample-v1-14-35cf6f297d20@arm.com>
 References: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
 In-Reply-To: <20260915-arm_cs_support_aux_sample-v1-0-35cf6f297d20@arm.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
@@ -54,50 +55,64 @@ Cc: Ingo Molnar <mingo@kernel.org>, linux-perf-users@vger.kernel.org,
  linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
  Leo Yan <leo.yan@arm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1789487340; l=1564;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1789487340; l=2117;
  i=leo.yan@arm.com; s=20250604; h=from:subject:message-id;
- bh=goYiVNAh7k6LrTB80GAwHLKvpuHR7WeoPkl/mqvmd2I=;
- b=1WIYqNYiThALBMj8kG5F4TrNuDDUl31UG37XqvGx0yGPWo0Z05JjSFFwCnQfQd+VJeYGU9hDV
- u623GE8RbunDL+u+YzcnNxXZyS96GY9YwNxS7cwu7g+Ga1JkzGy7oTB
+ bh=ZLhP9+hk4aabaXSGT54lI6NuOvSPZUJCkdIwDLOtAu4=;
+ b=xElk10YnXyUhppvLhUxoiFU+LW5Fv+8kQIwvgFAKzhUuLDJByQtapb0TsuCyCt6DtEpgYaPHC
+ SD9k9LTKFx+B2aE3gtHt8F8WAVaE/zrwGnWOwU4xe+wyxQRCPwyqehr
 X-Developer-Key: i=leo.yan@arm.com; a=ed25519;
  pk=k4BaDbvkCXzBFA7Nw184KHGP5thju8lKqJYIrOWxDhI=
 
-arm_trbe_disable() detaches the trace buffer and clears cpudata->buf. A
-subsequent disable dereferences this NULL pointer in the buffer consistency
-check before testing whether the sink is still in perf mode.
+Have etm_event_pause() retrieve the active path from the event context
+instead of passing the path from etm_event_stop(). Move the stop path
+lookup after the pause dispatch so each operation resolves its own path.
 
-Check the mode before accessing the buffer and return success when the
-sink is already disabled. This allows deferred event cleanup to revisit a
-path that an AUX snapshot has already disabled after a failure.
+This prepares etm_event_stop() to coordinate hardware access before
+looking up the active context.
 
 Assisted-by: Codex:gpt-6
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-trbe.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/hwtracing/coresight/coresight-etm-perf.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-trbe.c b/drivers/hwtracing/coresight/coresight-trbe.c
-index 8eb625d3fc99db57a18e35ef59ef814dacf20a09..6da89a890712d32e87a15f7c564ff4dc4d197bb1 100644
---- a/drivers/hwtracing/coresight/coresight-trbe.c
-+++ b/drivers/hwtracing/coresight/coresight-trbe.c
-@@ -1098,11 +1098,15 @@ static int arm_trbe_disable(struct coresight_device *csdev)
- 	struct trbe_cpudata *cpudata = dev_get_drvdata(&csdev->dev);
- 	struct trbe_buf *buf = cpudata->buf;
+diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+index f66c99b26e1862ab04105704276c901b21728207..8f803914e9abfb18e080ff68371ad8b32042f180 100644
+--- a/drivers/hwtracing/coresight/coresight-etm-perf.c
++++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+@@ -694,10 +694,10 @@ static void etm_event_update_buffer(struct perf_event *event,
+ 	perf_aux_output_end(handle, 0);
+ }
  
-+	/* A failed AUX snapshot may have already disabled the sink. */
-+	if (cpudata->mode == CS_MODE_DISABLED)
-+		return 0;
-+	if (cpudata->mode != CS_MODE_PERF)
-+		return -EINVAL;
+-static void etm_event_pause(struct coresight_path *path,
+-			    struct perf_event *event,
++static void etm_event_pause(struct perf_event *event,
+ 			    struct etm_ctxt *ctxt)
+ {
++	struct coresight_path *path = etm_event_get_ctxt_path(ctxt);
+ 	struct perf_output_handle *handle = &ctxt->handle;
+ 	struct coresight_device *source, *sink;
+ 	struct etm_event_data *event_data;
+@@ -735,7 +735,7 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 	struct coresight_device *source, *sink;
+ 	struct etm_ctxt *ctxt = this_cpu_ptr(&etm_ctxt);
+ 	struct perf_output_handle *handle = &ctxt->handle;
+-	struct coresight_path *path = etm_event_get_ctxt_path(ctxt);
++	struct coresight_path *path;
+ 	struct hw_perf_event *hwc = &event->hw;
+ 	struct etm_event_data *event_data;
+ 
+@@ -744,7 +744,9 @@ static void etm_event_stop(struct perf_event *event, int mode)
+ 		return;
+ 
+ 	if (mode & PERF_EF_PAUSE)
+-		return etm_event_pause(path, event, ctxt);
++		return etm_event_pause(event, ctxt);
 +
- 	WARN_ON(buf->cpudata != cpudata);
- 	WARN_ON(cpudata->cpu != smp_processor_id());
- 	WARN_ON(cpudata->drvdata != drvdata);
--	if (cpudata->mode != CS_MODE_PERF)
--		return -EINVAL;
++	path = etm_event_get_ctxt_path(ctxt);
  
- 	trbe_drain_and_disable_local(cpudata);
- 	buf->cpudata = NULL;
+ 	/*
+ 	 * With no path enabled, there is no hardware to stop or trace data
 
 -- 
 2.34.1
