@@ -1,333 +1,228 @@
 Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7596040F743
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 22:51:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969B238734A
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 23:08:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789512666; cv=pass; b=twhwC+RVeeRFufeAYsToL4ZGu/OQ2iwxgs6VnYjkbFcPCUGPk3PF/Uf5BFkUwoOWKKskK7cvWKWLJLu4eAU8qH3xKdL8OJ3O8Ay490a8JGNPUlwFNUTvdX+gT4ChFhqlSCbcI+u/2AdbAUJWbsa+VH2YAfhOGJl1i62/s/2ZVbg=
+	t=1789513726; cv=pass; b=h9jMDF3eLO68Qq6gIEW00GSGQhaZX4+nRoDqaRu+gU6NHruFTW7iuXuSi1Nmu32c1/RYKlmdy6wrFvPerJb/UUh8PIYhRhjYaxy3glWQLUwoKW5TEtLDYddsedAMIZaDBPkBbEJMqkJARvjjvVJD4qPxdpaSKgrLyMDFMeOVvq4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789512666; c=relaxed/simple;
-	bh=oXBcpB2X7Q1GQfRJ5rdxx61ExjvgSM7R70X1rmKwNzc=;
+	s=arc-20240116; t=1789513726; c=relaxed/simple;
+	bh=KOUhTSeaiK/3e6yS6I0ed3hBCbUzC9LUyLBATohlb9w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fBp0Rp53X+VGanngIiAQnAMy6qSAS7XZ9Hs3HBcqkou3mkJseeCuxIyDj2ih5yeuCVngXPc6kLOSc91IrjLom7WktMPDxplcCO0VNZW7e4pYduEfu5sIA6Lk39i2inBcD0xJr/oZX2i3n72NzdgdCD6H+06kIoKz9ILUROkw4X8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bU6TPEHV; arc=pass smtp.client-ip=74.125.230.204
+	 To:Cc:Content-Type; b=pIRCAbGdj0gklCsFgvQQS0r3iPBCjVmNdiNozzE08uxGipUPFklIUBJixW8/BP/NXSxL6n4wB0aAGu4rDSAbKKRixHTqRzZYwVqRhxe8J7EDsoBHoc5G8VcKiEHZPZucGU0zJqzQvXwuTSSDHvvadslxft8JNBdloC7XXoXqt6A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=A0s2XEK+; arc=pass smtp.client-ip=74.125.230.204
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bU6TPEHV"
-Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-530411c7ee1so52191cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 15:51:04 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789512663; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="A0s2XEK+"
+Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-53012819c04so54411cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 16:08:44 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789513723; cv=none;
         d=google.com; s=arc-20260327;
-        b=Z7+0GbqIaCLafsgt6XdT41U/g4m+6NOKnU/2JcPrcNFv1fQQO6bXZsIv3BM/MHlY+8
-         jyJ//AqBeQQNehTsXb6tjeCmoDyjgSoGzRrJtiglJhG/0PjoamCXYeKRwei/UEUXMlip
-         w2v4M1StIuo/MoxHGkAEH6cMobTwkRNY7I4Uh/RPl8tsfR0g0mGYPxU0o5Sd2AvXHGfM
-         Jx6T514uvc2EaU3RcWbLewZSXRKKBJYgK7CcWimGuKU8JdERFgOyNZj3OcVfVQyEaBVM
-         ha8OKN5RiLdlW4hriLdsvBHyJPto2CgVZmLmrgY36xXtWKWGtiqTWw04arCaWQZmuVhc
-         Djzw==
+        b=XDIiMt6RKsVqqgc1J0i8EW+CJmv9xuwefaVUMsj8UtNWCj5fGFksWj/zzIjhU82aoH
+         vT+gVr97oy9maPqsFeoL6tzWtvlHCTfdgUPllq/qBI30j64AykxEqcbtJRZOohGAEjN9
+         Y2LTJZJJfOAtF4AYk7IUsfCcZ6i129Eln40vubMdmfaJEuNgwQ+V07XkUlqoxhcr3eP7
+         oM2ZOPMCP2TKbZ1bL+rWOZ0FC0SpzAliMdqKEsi5/HJhzptI8JnReqeN6XMyoZIk1noq
+         NEjf08XGxObusLDFv+63NWAhImLHmExzNRT74LqwPL8EQeLXvbXb79VaTzQbIaRnc+Cz
+         W4pA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=ZKEkKJX+O5Pp8TO5M7RsAkjvIvMbh2UUfAikiOt0jdE=;
-        fh=0w/iZn2Ajb22IGMNhpuaFJMuwkFXhOaUMeD+l4Un230=;
-        b=lhs2yiQtLK0/HxStQKtySMy4QsAI3HaqHlVMzNry1xoFfkZNOR8JUxyKlLDJwqmLTI
-         pSHwACVHgB55FPXisjbXollCMYFInQtoruKBMXZxdhvJ/6xj3yTWfAoAA38KAQe6mkSR
-         nq2dd5/dQI3RHJuJD+oAgmSOwDIOOgjvBQlgblufke0bYMyF73tUd1cLgwBrsEh3lTFm
-         zL2Q1DnT6TRWPh1Owg+GamW9l0FIrAUiYwMHdpQ2Sti0eYqwg0L+htCSV8nNtAFZdQbi
-         m4SoOAidB+HSdrLMQIzVn2fEw15y2BlDImcMOgsfPNVk26qvbLm7hwvkxyDW8TgqMehp
-         efpg==;
+        bh=nXZV/vndv5wPvyFjhGHkBqgl7hDd9VEPk7jLPc3L5VU=;
+        fh=i9k2xsml9N7skd4fFS35KekNaRFrXofnIKwePsHWM3A=;
+        b=PzA4eAuXNsnNLb6WDYVEZHZPLC9OmXPSzKWDjSoommBUx3XKn+askjGAVG3GZ8+vvF
+         xI4iFXNuX9oYcuyYTogWgvQcUxeSUaLk1qJuZNuw/P53hAI+yI3utDCxhJzpoSrAlUqz
+         PpO2zwfTAAgFWHbwwawDJmPn+eeMcW5XnqiYNs4WffPUxlFJFtL8ZE33vlC9rihEobAr
+         zBsws0MpHtI59339K+KoIFVef3R3r/g1VOLj2vbmlOXk9F5M09mtiAWRLjRViTZKwt9L
+         ztKGyPuzrhFwIbZ9S9lo+QvWw0cacjfGYZzFjYcb/hZ/JLxtSFxRE1NLYjKD0pvN6PoI
+         e6GQ==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789512663; x=1790117463; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789513723; x=1790118523; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=ZKEkKJX+O5Pp8TO5M7RsAkjvIvMbh2UUfAikiOt0jdE=;
-        b=bU6TPEHVrgUdw4VzGDl+fR6H1CzL+0/Ymw4HFPlg4/Cr9Q0oCh2vmRQsq6NqvOlghy
-         1iYs9LxTyDX9XPlfkdGI6rfdonESWO5ZbZT7bh+X9lFkiCWJ2SneMetq7ZFgj3IwKUDe
-         GORCc9JLmRVBo6tUJyO27Zhkb54IN/fpjYmm7RghE3HXITPuJPBz8AMlp+1Y6UyP1F2C
-         oQWG2U5BfUcM04s6FUlOO9Zpkaf//wJbIIz0Z+x1YNsXlmllupJNONi8YBmRyZIxl6o/
-         cy+0hEmXg+UPfk+Wx1Ag0+P/Sm/sZhX0Nt42/caMIwPCHhKmDO4tnlrfzFxKQbIoAq1T
-         ITog==
+        bh=nXZV/vndv5wPvyFjhGHkBqgl7hDd9VEPk7jLPc3L5VU=;
+        b=A0s2XEK+7KdvH5wcbwooIEbSebOF0PeBe5dHI8wKa8yc7l6MV7GFRDy9KQsfAwtVm4
+         /XVSkEsNGBF9wTC/oq7MYAkdWSCfa8QvBJq0Wiz/lz3R8vbMArX2mp2Va2jYlOnm6y15
+         HhHiheRLhskEzroVyyyRO6Na6SERLaZpgScAOz/IK27qdrzO5M9O9tGvGvy2PjGQ4q6N
+         qc/RDCYNKrhmk7fzxWfo9vZT8R5MwenTpCO114olNdg3yiyllblxtMpeP4mCtX6zrxS1
+         N/Pk3887QDDO+SZoPWcMeRGmwG0KJozQNWAeeoAJ1LdSL5hIIgIg7HEATmpL9dSdxrpd
+         RfZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789512663; x=1790117463;
+        d=1e100.net; s=20260707; t=1789513723; x=1790118523;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=ZKEkKJX+O5Pp8TO5M7RsAkjvIvMbh2UUfAikiOt0jdE=;
-        b=asacnOKxsRXZCqHFgNys69imZVG7t2ai/OPB4zRVyRugERLsWeBLhgVXb8VfzKMvRC
-         iUA3WKHhBzOZ5QbGT3NTa4CqnSkeMF6V0w21Tl+A76YA2qFhrWLku2tS+EqHvu0K4TpP
-         Bplt7aH3LyDsjrzvzht7axqdVtyWomX4/c/Tvx4uhlYM6sJXj/vpMpFGNhsYX4uuO2vh
-         s0agChuZdSDipByUaDvuwgfPwzfnhp2/7nndT0LT0FZrVj/irYWcnbQD0C4RaBp36qJs
-         770t6TfHMicF1+0GDV2Y+GQMRd9oaMczXtvQ/fYtiEI3CDeM9OQLm5jiHTefjS+5VSXk
-         jyoQ==
-X-Forwarded-Encrypted: i=1; AKwUvBy/+3VB0y9lRqcAerGfSR6rmB3jU436M64nnLLtej1gr+9faGTRQAoeozY0UssUfdu0UOWoiom5we9fLdvdpxvB@vger.kernel.org
-X-Gm-Message-State: AFuF++njEZ+smjU6p1b8qb9R0+OgAJvL02awe+TNHAxQG/g9+LME+2au
-	3R5xoxWJtyuR6EYMVqg0xdSWdB4ldt+r2GkoZFhPO5ia6yKQte2oQx81Z5wv23P34qCbGGs0uGF
-	XSHQxT1JBTujGoQZoGE7wMO4n5Zg6YS1BEotT2fsz
-X-Gm-Gg: AYBFou1YqUOrvjaipgL450KOtongHV8FZjCDIrPhhzPYIZklTLfIVXdTE6WQtW28/AT
-	mKEbRrUN0dgjvPvvMp4ynbcAR82YuRSO5pqUp3lhVbQSIwV/ys/XiKET7Wv2Ovy5pJRqzWZtr+J
-	siZ+yWgk7Z44Y/fXogD2LGU+Pfw/FTJ8UNBMaJYn3r8RdcRQ7Oc/7JJSxGpsiUeNkk6bR58Ohoo
-	gr+wu/Rqc5+gtoXo01NOn4z5WmZLnWBtA8GmsRdoAoyk/wS6zKehLd+tBI0VG6DzfhXfJktOQCc
-	y1jJJ/P0zsPK6HTgluRPELZUuc7YG8q9LS1g0GA9+VJliTCcwiTmRXhsw5F0QsaMNGX5nMC4RbM
-	7I7246MJS6mukmH1hWMh4
-X-Received: by 2002:a05:622a:8c9:b0:531:475:4ce6 with SMTP id
- d75a77b69052e-5327e6ace28mr2653721cf.9.1789512662755; Tue, 15 Sep 2026
- 15:51:02 -0700 (PDT)
+        bh=nXZV/vndv5wPvyFjhGHkBqgl7hDd9VEPk7jLPc3L5VU=;
+        b=hNR3Nh1SDgoCMSm0jv+om8afXlFYU434JwPZuV4OgeQGIjIIljAVkUHby87nLg7h92
+         KBfWdTvbJV1sft0f+u6XMTkOsITxDDxPxvZnqyX5gynJEr8lzciBsr/dMn2BlJjXq4SP
+         YhVNAS8eUPK9n/TUJ8m/NYQNyu5j5JXzh+9+74ERdJl1Pwogg/VdJ+R6BQnFAV8zeSjo
+         vhYs3p2mwTyMnsw9VTAdcv0IxF3qWGJepUP9wcbFflryZT3wp52SYHhZe9riCBqc9rD4
+         66ngxNJDO8Cey0AQUK7ltY15xmk39VJB/IbYImw2odywYOIAjeM2Xd3M7BPeAaKhTJVk
+         +RHg==
+X-Forwarded-Encrypted: i=1; AKwUvBxWsQ9hjLa0L+eguL7o/zsuStKOPQ4QJFaqQgS9pR0yGf8qPxMKQ706U2Z09U1kfV0SwYyepffv0sUgmJfyudht@vger.kernel.org
+X-Gm-Message-State: AFuF++kYSxzl4yA+PDjvzoSVsuf8TxpqGDtnlQvHzJSBF4WD9DADVUL3
+	Au5wC/CHlljtHSoifMd78UHlew9ZsJHrAF7XQxFSf9qxqwq15flT7pOJs6IhcoTCm5Be6UfhSER
+	bez8f34C+HjO/ZlIuY/8YOBfuY/9l4lWokMLe2ukz
+X-Gm-Gg: AYBFou2AyEPk3iD6NFQTsgc3UhA4dWdRdZyC9umStSZ9orshNFna7Px7EzgKfl9rhdE
+	4I+uC9WE2ehcpCfTRJqQf9SOm+QKw1xCY3yyXOzgO3nYl99oEWjuzCZk2Sk6Xb7sUynFyZ9JsdC
+	rQfXUZGs80O/guckEfdjSMnHJ/janGnNDCaqwpsQgXxpXZWJknikzg1MNVVgsavu13iuRwe1eHM
+	q69FFDNYzWL0Rc8LS3F/UNG6rh8bU5sgP98tABBZSzJMm6EI7Fw9oKRmYwuf8SEPMtmyorpk4v2
+	S+BWDMgkeboSpgT4cfA9ijbzfjYEbKx86HI7hWSBxd3jlvJSYfmNQ/Y=
+X-Received: by 2002:ac8:7f09:0:b0:52b:806e:2633 with SMTP id
+ d75a77b69052e-5327f53205emr1735971cf.1.1789513722780; Tue, 15 Sep 2026
+ 16:08:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260422173545.73144-1-atrajeev@linux.ibm.com>
- <e6358476-d85a-441e-97e9-80abc9e1dee6@linaro.org> <E2E0C2AA-F6D5-427C-92DB-47777491C76D@linux.ibm.com>
-In-Reply-To: <E2E0C2AA-F6D5-427C-92DB-47777491C76D@linux.ibm.com>
+References: <ag8X7gcDw6jpJsLq@decadent.org.uk> <CAP-5=fUy-hwmD2WXpmzJAE4k3U4WNYEezy3Dh1cVSFw_LPGJzw@mail.gmail.com>
+In-Reply-To: <CAP-5=fUy-hwmD2WXpmzJAE4k3U4WNYEezy3Dh1cVSFw_LPGJzw@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 15 Sep 2026 15:50:50 -0700
-X-Gm-Features: AcwNN1XIZQl_Fcu5tzKsnk-K7Y_YYEuB6djG-D7hw48Py--fqNBKrneI5cYHQXs
-Message-ID: <CAP-5=fV+NMfCNFFLnsySOoKnrE6c3TCJhO+BhZkbKjHitRD8Ag@mail.gmail.com>
-Subject: Re: [PATCH] perf sched: Fix crash in sched stats diff due to
- uninitialized perf_data structure
-To: Venkat <venkat88@linux.ibm.com>
-Cc: James Clark <james.clark@linaro.org>, Athira Rajeev <atrajeev@linux.ibm.com>, 
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	hbathini@linux.vnet.ibm.com, Tejas.Manhas1@ibm.com, Tanushree.Shah@ibm.com, 
-	Shivani.Nittor@ibm.com, acme@kernel.org, jolsa@kernel.org, 
-	adrian.hunter@intel.com, mpetlan@redhat.com, tmricht@linux.ibm.com, 
-	maddy@linux.ibm.com, namhyung@kernel.org
+Date: Tue, 15 Sep 2026 16:08:31 -0700
+X-Gm-Features: AcwNN1Wtp8dOgchZJHXl0So7z-gIbgSPFpF-r8lmQRpUWSedho2akDrRnSm_CxI
+Message-ID: <CAP-5=fVJbFrR-uUWTSkx_CHqxagKWhbshWxQ2YD-_QANtUDdqw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Fix out-of-tree build of some tools
+To: Ben Hutchings <benh@debian.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Steven Rostedt <rostedt@goodmis.org>, Tomas Glozar <tglozar@redhat.com>, 
+	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 24, 2026 at 3:07=E2=80=AFAM Venkat <venkat88@linux.ibm.com> wro=
-te:
+On Thu, May 21, 2026 at 10:50=E2=80=AFAM Ian Rogers <irogers@google.com> wr=
+ote:
 >
->
->
-> > On 24 Apr 2026, at 2:57=E2=80=AFPM, James Clark <james.clark@linaro.org=
-> wrote:
+> On Thu, May 21, 2026 at 7:57=E2=80=AFAM Ben Hutchings <benh@debian.org> w=
+rote:
 > >
+> > perf and rtla currently don't fully support out-of-tree builds, as
+> > they may still create files in their source directory.  This series
+> > fixes all the instances of this problem that I have found.
 > >
-> >
-> > On 22/04/2026 18:35, Athira Rajeev wrote:
-> >> perf sched stats diff fails sometimes with below logs:
-> >>  # perf sched stats record ls
-> >>  # perf sched stats diff
-> >>   *** invalid open64 call: O_CREAT or O_TMPFILE without mode ***: term=
-inated
-> >>   Aborted (core dumped)
-> >> Also in some runs, perf sched stats tests fails
-> >>  ./perf test "perf sched stats tests"
-> >>  92: perf sched stats tests                                          :=
- FAILED!
-> >> =3D=3D172375=3D=3D Conditional jump or move depends on uninitialised v=
-alue(s)
-> >> =3D=3D172375=3D=3D    at 0x10393BD0: open_file_read (data.c:264)
-> >> =3D=3D172375=3D=3D    by 0x10393F63: open_file (data.c:317)
-> >> =3D=3D172375=3D=3D    by 0x10394067: open_file_dup (data.c:334)
-> >> =3D=3D172375=3D=3D    by 0x103942DF: perf_data__open (data.c:379)
-> >> =3D=3D172375=3D=3D    by 0x102F7CAF: __perf_session__new (session.c:16=
-9)
-> >> =3D=3D172375=3D=3D    by 0x100B5E63: perf_session__new (session.h:116)
-> >> =3D=3D172375=3D=3D    by 0x100D5D37: perf_sched__schedstat_diff (built=
-in-sched.c:4568)
-> >> =3D=3D172375=3D=3D    by 0x100D7D6F: cmd_sched (builtin-sched.c:5061)
-> >> =3D=3D172375=3D=3D    by 0x1010231F: run_builtin (perf.c:348)
-> >> =3D=3D172375=3D=3D    by 0x1010262F: handle_internal_command (perf.c:3=
-98)
-> >> =3D=3D172375=3D=3D    by 0x1010286F: run_argv (perf.c:442)
-> >> =3D=3D172375=3D=3D    by 0x10102C67: main (perf.c:549)
-> >> =3D=3D172375=3D=3D
-> >> =3D=3D172375=3D=3D Conditional jump or move depends on uninitialised v=
-alue(s)
-> >> =3D=3D172375=3D=3D    at 0x10393D20: open_file_read (data.c:282)
-> >> =3D=3D172375=3D=3D    by 0x10393F63: open_file (data.c:317)
-> >> =3D=3D172375=3D=3D    by 0x10394067: open_file_dup (data.c:334)
-> >> =3D=3D172375=3D=3D    by 0x103942DF: perf_data__open (data.c:379)
-> >> =3D=3D172375=3D=3D    by 0x102F7CAF: __perf_session__new (session.c:16=
-9)
-> >> =3D=3D172375=3D=3D    by 0x100B5E63: perf_session__new (session.h:116)
-> >> =3D=3D172375=3D=3D    by 0x100D5D37: perf_sched__schedstat_diff (built=
-in-sched.c:4568)
-> >> =3D=3D172375=3D=3D    by 0x100D7D6F: cmd_sched (builtin-sched.c:5061)
-> >> =3D=3D172375=3D=3D    by 0x1010231F: run_builtin (perf.c:348)
-> >> =3D=3D172375=3D=3D    by 0x1010262F: handle_internal_command (perf.c:3=
-98)
-> >> =3D=3D172375=3D=3D    by 0x1010286F: run_argv (perf.c:442)
-> >> =3D=3D172375=3D=3D    by 0x10102C67: main (perf.c:549)
-> >> The valgrind logs and error message from the logs points to
-> >> below snippet:
-> >>      static int open_file_read(struct perf_data *data)
-> >>      {
-> >>             int flags =3D data->in_place_update ? O_RDWR : O_RDONLY;
-> >>             struct stat st;
-> >>             int fd;
-> >>             fd =3D open(data->file.path, flags);
-> >> The "struct perf_data" is defined here :
-> >>     static int perf_sched__schedstat_diff(struct perf_sched *sched,
-> >>                                       int argc, const char **argv)
-> >>     {
-> >>         struct cpu_domain_map **cd_map0 =3D NULL, **cd_map1 =3D NULL;
-> >>         struct list_head cpu_head_ses0, cpu_head_ses1;
-> >>         struct perf_session *session[2];
-> >>         struct perf_data data[2];
-> >>         int ret =3D 0, err =3D 0;
-> >>         static const char *defaults[] =3D {
-> >>                 "perf.data.old",
-> >>                 "perf.data",
-> >>         };
-> >> Here due to uninitialized "struct perf_data", the arguments to "open"
-> >> is getting wrongly passed sometimes depending on value in stack.
-> >> When perf_data__open() function calls open_file_read(),the
-> >> "in_place_update" could contain garbage value.
-> >> After initializing "struct perf_data" in perf_sched__schedstat_diff() =
-function,
-> >> perf sched stats tests runs without issues in multiple attempts and al=
-so
-> >> "perf sched stats diff" ran individual without issues.
-> >> for i in {0..20}; do ./perf test "perf sched stats tests"; done
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >>  92: perf sched stats tests                                          :=
- Ok
-> >> Signed-off-by: Athira Rajeev <atrajeev@linux.ibm.com>
-> >> ---
-> >>  tools/perf/builtin-sched.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> >> index 555247568e7a..5d2740099eed 100644
-> >> --- a/tools/perf/builtin-sched.c
-> >> +++ b/tools/perf/builtin-sched.c
-> >> @@ -4538,7 +4538,7 @@ static int perf_sched__schedstat_diff(struct per=
-f_sched *sched,
-> >>   struct cpu_domain_map **cd_map0 =3D NULL, **cd_map1 =3D NULL;
-> >>   struct list_head cpu_head_ses0, cpu_head_ses1;
-> >>   struct perf_session *session[2];
-> >> - struct perf_data data[2];
-> >> + struct perf_data data[2] =3D { 0 };
-> >>   int ret =3D 0, err =3D 0;
-> >>   static const char *defaults[] =3D {
-> >>   "perf.data.old",
+> > Ben.
 >
-> Tested this patch by applying on top of linux mainline kernel and it fixe=
-s the issue.
->
-> WithOut this Patch:
->
-> # ./perf sched stats diff
-> *** invalid open64 call: O_CREAT or O_TMPFILE without mode ***: terminate=
-d
-> Aborted (core dumped)
->
-> # ./perf test -v "perf sched stats tests"
-> --- start ---
-> test child forked, pid 11151
-> Basic perf sched stats record test
-> Basic perf sched stats record test [Success]
-> Basic perf sched stats report test
-> [ perf sched stats: Wrote samples to /tmp/__perf_test_sched_stats.perf.da=
-ta.dysu3 ]
-> Basic perf sched stats report test [Success]
-> Basic perf sched stats live mode test
-> Basic perf sched stats live mode test [Success]
-> Basic perf sched stats diff test
-> [ perf sched stats: Wrote samples to /tmp/__perf_test_sched_stats.perf.da=
-ta.dysu3 ]
-> [ perf sched stats: Wrote samples to /tmp/__perf_test_sched_stats.perf.da=
-ta.p0lnk ]
-> *** invalid open64 call: O_CREAT or O_TMPFILE without mode ***: terminate=
-d
-> /linux/tools/perf/tests/shell/perf_sched_stats.sh: line 67: 11170 Aborted=
-                 (core dumped) perf sched stats diff "${perfdata}" "${perfd=
-ata2}" > /dev/null
-> Basic perf sched stats diff test [Failed]
-> ---- end(-1) ----
->  92: perf sched stats tests                                          : FA=
-ILED!
->
-> With This Patch:
->
-> #
-> for i in {1..20}; do
->     ./perf test "perf sched stats tests"
-> done
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->  92: perf sched stats tests                                          : Ok
->
-> Please add below tag.
->
-> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> Thanks for the cleanup! I ran Sashiko locally and it noted that we
+> should also fix the clean steps to remove these files (I'll copy the
+> full text below).
+> Reviewed-by: Ian Rogers <irogers@google.com>
 
-Acked-by: Ian Rogers <irogers@google.com>
+Hi Ben,
+
+Did you make any progress on this? Checking upstream I don't see the
+patches as landed and they look useful.
 
 Thanks,
 Ian
 
-> Regards,
-> Venkat.
-> >
-> > Reviewed-by: James Clark <james.clark@linaro.org>
-> >
-> > I had a quick look for other instances of the same thing and didn't see=
- any.
+
+> ```
+> commit cf212be834ce6b0df5cccdbc4ad977a917ff8e48
+>    Author: Ben Hutchings <benh@debian.org>
 >
+>    perf tools: Put Python egg info in output directory
 >
+>    Installing the Python extension currently creates an egg-info
+>    directory in the source tree, preventing a fully out-of-tree build.
+>
+>    Add the necessary runes to the setup.py comamnd line to relocate the
+>    egg-info directory in an out-of-tree build.
+>
+>    > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+>    > index fc92d6ceac5b..b9a9bdddb89a 100644
+>    > --- a/tools/perf/Makefile.perf
+>    > +++ b/tools/perf/Makefile.perf
+>    > @@ -905,7 +910,9 @@ install-bin: install-tools install-tests
+>    >  install: install-bin try-install-man
+>    >
+>    >  install-python_ext:
+>    > -       $(PYTHON_WORD) util/setup.py --quiet install
+> --root=3D'/$(DESTDIR_SQ)'
+>    > +       $(PYTHON_WORD) util/setup.py --quiet \
+>    > +               $(if $(OUTPUT),egg_info --egg-base $(OUTPUT)) \
+>    > +               install --root=3D'/$(DESTDIR_SQ)'
+>
+>    This relocates the egg-info directory to the output directory, which
+>    helps keep the source tree clean. However, does the `python-clean`
+>    target need to be updated to clean up this directory?
+>
+>    Currently, `python-clean` is defined as:
+>
+>    python-clean :=3D $(call QUIET_CLEAN, python) $(RM) -r
+> $(PYTHON_EXTBUILD) $(OUTPUT)python/perf*.so
+>
+>    Should we also clean `$(OUTPUT)/perf.egg-info` (or `perf.egg-info` for
+>    in-tree builds) to ensure `make clean` removes all generated python
+>    metadata? For example:
+>
+>    python-clean :=3D $(call QUIET_CLEAN, python) \
+>                    $(RM) -r $(PYTHON_EXTBUILD) $(OUTPUT)python/perf*.so \
+>                    $(OUTPUT)perf.egg-info perf.egg-info
+>
+>    commit dd754ea75966ec7ade41500afeb32d944f20a8f9
+>    Author: Ben Hutchings <benh@debian.org>
+>
+>    perf tools: Put Python bytecode in output directory
+>
+>    The PMU events are processed into C sources by Python scripts,
+> which
+>    normally results in writing bytecode for each module into the
+> source
+>    tree.  This prevents a fully out-of-tree build.
+>
+>    To fix this, set $PYTHONPYCACHEPREFIX to relocate the bytecode cache
+>    directory in an out-of-tree build.
+>
+>    > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+>    > index fc92d6ceac5b..b9a9bdddb89a 100644
+>    > --- a/tools/perf/Makefile.perf
+>    > +++ b/tools/perf/Makefile.perf
+>    > @@ -400,6 +400,11 @@ PYTHON_EXTBUILD_LIB :=3D
+> $(PYTHON_EXTBUILD)lib/
+>    >  PYTHON_EXTBUILD_TMP :=3D $(PYTHON_EXTBUILD)tmp/
+>    >  export PYTHON_EXTBUILD_LIB PYTHON_EXTBUILD_TMP
+>    >
+>    > +# Put Python bytecode in output directory
+>    > +ifdef OUTPUT
+>    > +export PYTHONPYCACHEPREFIX :=3D $(OUTPUT)/__pycache__
+>    > +endif
+>    > +
+>    >  python-clean :=3D $(call QUIET_CLEAN, python) $(RM) -r
+> $(PYTHON_EXTBUILD) $(OUTPUT)python/perf*.so
+>
+>    Similar to the egg-info relocation, does `python-clean` need to
+> clean up
+>    the relocated `__pycache__` directory under `$(OUTPUT)`?
+>
+>    If `PYTHONPYCACHEPREFIX` is exported to `$(OUTPUT)/__pycache__`, runni=
+ng
+>    `make clean` currently leaves this directory behind. Should we add it =
+to
+>    the `RM` list in `python-clean`? For example:
+>
+>    python-clean :=3D $(call QUIET_CLEAN, python) \
+>                    $(RM) -r $(PYTHON_EXTBUILD)
+> $(OUTPUT)python/perf*.so \
+>                    $(if $(OUTPUT),$(OUTPUT)/__pycache__)
+> ```
+>
+> Thanks,
+> Ian
+>
+> > Ben Hutchings (3):
+> >   rtla: Fix output files in source tree
+> >   perf tools: Put Python egg info in output directory
+> >   perf tools: Put Python bytecode in output directory
+> >
+> >  tools/perf/Makefile.perf            |  9 ++++++++-
+> >  tools/tracing/rtla/Makefile         | 31 ++++++++++++++++++-----------
+> >  tools/tracing/rtla/tests/timerlat.t |  4 ++--
+> >  3 files changed, 29 insertions(+), 15 deletions(-)
+> >
