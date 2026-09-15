@@ -1,279 +1,205 @@
-Received: from mail-qk2-f13.google.com (mail-qk2-f13.google.com [74.125.230.205])
+Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E14A47FAFF
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 22:41:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849583E5A29
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 22:44:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789512115; cv=pass; b=Rh4CFAph9dh1YS9WnQQIV29/N+ZSpXbj3iEEUNIcr6KSZ8pEBa8Pfz2T2mFMieHwxOn1fFtqiJbU79ZzPaPzK3NynUEqJ9A+g6Ko40Fo8IlfMSMtdeKbzoWjK3OlkLxAUTd6Q6En5gmhAvZGHCXpEcrJn1gAi21i2RDzsUxojRg=
+	t=1789512259; cv=pass; b=rL6R9o/KNqMW7dolF0Q7Vv6QE/DwlnVpuAJF4kzSMUsZqHsMn4Fnm46pN2ia0SJzVYgKWnZNS/TaYx0N2xzaR9iLTmLZfnERFGo/KC4yvCssbI/Aa7wCpT6+PxyWZJcCqesBzhjv/Gcrebw/a2tTibWgeVJyLhGV9h8G4NeDigk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789512115; c=relaxed/simple;
-	bh=ZqWDXepLUp8mVVJCQuZKOVz7QlFS0kjh5CBOZOFiWG0=;
+	s=arc-20240116; t=1789512259; c=relaxed/simple;
+	bh=hiN8gmMir/W9bNffZY+EIZwn0mCZcrb0qGVAzbZqNQk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dQsI6ObZQGPcbP6VliupvMVXu+0srXs4IFieVWnAicwSma/f2j42Cxh9uUD20t5XnLpL7GRcItS3LnZXQZn+DDUoW7ECrNrq2A6Xc7VDoYNnYWrcf2nXtWsNpI+YowaIKtMu+HpHFdteDpKxXOAf+Bv8Tt21GEkT4MhepvvCNik=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bWuGknFp; arc=pass smtp.client-ip=74.125.230.205
+	 To:Cc:Content-Type; b=YrHHP8LVlMz042COYjIHRevEQ6L7eNCJfvo3dl1plesGZGDnpT6HkI4M6KeZzpNDZfT25ewrcVqayO75iv/PjepdwX/mNj+vAOfM9MmTP7MVMMtZ0as3oZRq00/K9vMJfsQQNNmJMNAF4BUwEMOKno/ZqtaX3yGlX8rrYxmYk6c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bLOfJnkN; arc=pass smtp.client-ip=74.125.230.204
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bWuGknFp"
-Received: by mail-qk2-f13.google.com with SMTP id d75a77b69052e-5306706e89dso47181cf.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 15:41:52 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789512112; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bLOfJnkN"
+Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-530411c7ee1so50981cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 15:44:17 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789512256; cv=none;
         d=google.com; s=arc-20260327;
-        b=D25olt+0TximfSnwQQoQc+xLGxW1WnyIrNtm2vQzLB4YlNuXgJC6gCxUSQ12TqI2fa
-         P3G3TRw0u91ux/TYXRhltF9Pu0Ptfq90GPmaML9TiRaVTtFL2CkPoaj6lMv9V2o0nbQ7
-         9/WWec4QQO4kPYxMLm+NpyNFucymnu9dueN0zPa7OKTRKe9ooBrXNpUeQySUEr2WNTae
-         MpDaMKUnT9v4thEjBhDKlmqEcGOxO4o/2QLWqR+Ewm33h9uYV5d4gvDv5lLkkxRUil2G
-         qOSMOZ1VX6vr25KmlWe8duPmGhVZXriSuZbpv169nwBFld+xD7YoSfkbTprTIljGMSPJ
-         0YTw==
+        b=MNOKx96GSETs0qFv5Y2LoHSezomDDVzCldW/Ls9ylSytYT6jfc/lNAbSBO7fYcRaZV
+         /5ZfnHdT110Iq1YyMIWPAfd31GmaLcw+zKBT6TxkLWKBJ/5fIvymBgFC84HRDnGuGuBq
+         0tiG6/8JJh9lPugz6Mrq38tpeClHYaYxfA+LFaZDPXRLETTFKLfQClPAqhEsyktxUZrz
+         ORePtv+bcjGYewF1goZ/78JHXwrIDICad73cH/bAgdo/klmENWS3CDeCpuUYQfS98Hz7
+         WN+FqVcqPkXAAd43DnyZT+KUPcXAO2wikPrSZ0rgAaFCsGdvuJci2f2dvtClaN5armbQ
+         3gcA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=VQ1mEqm3bUbUEwwFFwsjHm7EwizoCsIVSDgF3ajrEas=;
-        fh=u2SrDaF3Ogr9921md5bZWyrUN8eR4JK3PfZfMzqfeW8=;
-        b=mb71nXddNbYVZ2q5icDM06tmO7+dJRRLgZOxICJqcd8cXxNdPDFpgTzPqAeL9p7Jb0
-         9q049wIjUQ6eNyAuxJSDKjIRuRGY2xgPf18HdUYt7SPHKfERL3eahGi98adcbRrlZ+o+
-         V8TIjlQ6JqJqUFOxAQ0MtCCIV6PRT6mSM/vfFRjeAL7RnqZCTJvFz4tGTHgt9mDbcvtp
-         rwGbAXYqzfjReWXch8uLKgGx+Kn0CSXYGkGMotdUTWeTJqstIeB05rc+p/UF+aon0AqW
-         D1Gu1lBHk5FcF/zbmRhvarVN/2mVETuAPzcyZnliQAFMkzszkmOFMBwm49zpEgLT1qes
-         lPEg==;
+        bh=EaIQehfbhcZxllYG58s/kgtKRpkkLc8kmZQmGY/AurE=;
+        fh=XLinBlypsS7RSfExIi1tmRwsJFZR9pdus6MQWpUZ6J8=;
+        b=r1KQt7J06fy4/Co9X/He5F91pSvxgu+ejVJcdalbRLK7FnvvyKbaiOw3l6YrMVijvt
+         W9Zs0oSWX2rqp6DOnQ5eJ17lG+GbwEdzRMGKDcr09pLS0x3uHM7LMmrwYAVGEaD/k4IC
+         Hgm06/m4+qiqz3eb06kz39KVamvf8PRCJbFccXBTwI+78QPhTB/VcDxrCJX+uCn1ainE
+         /YXebLlneLqMWHgODcitukGO+WHc6aVr0OYVrJthL32xLxXiObBlUXH7xEWxidfuctIf
+         tqM5fYumrXu40+jVbOZMIDCSfhDI9JMe0Y8M7QxK4n+IgIKmxM2MZrlcNj4/dKRHK/eU
+         5+qw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789512112; x=1790116912; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789512256; x=1790117056; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=VQ1mEqm3bUbUEwwFFwsjHm7EwizoCsIVSDgF3ajrEas=;
-        b=bWuGknFpHldokpfe6NUxfBPy61UCa7aWLDwjB80br1OAf/UrlWtehEqzyovzRSxgCg
-         heJuYizmG4PcVqVrO5x4CK9BE6lKtwUWBWrMtXxdG5UagiF6P998ANi9T46tiKjLIdRX
-         Rf9oYx+E8859uvGfL0Hbd2JLKad/sHT44duv77bhHnqN2Z2dNTEqpn7Yf4aDV2P74J8n
-         uTVs4Ya8Yu/ygETF9vQQu0twaAqbv429LkNjvITP/kK9fu19YDDyV4ikMzbV3jZCnUyI
-         R89+HEhE2TIL0ZwawIaYxAtnH0pdSZEJ/vAsaKGc1NxMhBG4COI6dWEvltUXntJ98Liq
-         g3pA==
+        bh=EaIQehfbhcZxllYG58s/kgtKRpkkLc8kmZQmGY/AurE=;
+        b=bLOfJnkNLSiKb/hBphoeOXi+A/0YaomF9rjPXFAO3IKOOhmG3BM1QR+IeZs7YkjNO5
+         45sf3hjh9neVRwT5nbNQ+i2jBBLODhPEhSY7CuO+UD47WflhCasBD/INolQcvhFefU73
+         7HlhZPLLI3e3grQnFlmNveEf68htuZnSAR6ao6km8DqOqQFzI0jJayAmGKLEzXf5CcN2
+         yKYvkOiYhueP9+PW2qLj2rLwUU84lU/4myrMlG+xTII/Z/epDNVZogDg0wgNkYJiiZqG
+         QZN6XLJ/SdTQRWHCh5EhQh9/S2M/LiqpM94dZQrFBnoJYOSkamgJ5QmqRatXLy7j1YB1
+         Clkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789512112; x=1790116912;
+        d=1e100.net; s=20260707; t=1789512256; x=1790117056;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=VQ1mEqm3bUbUEwwFFwsjHm7EwizoCsIVSDgF3ajrEas=;
-        b=mZ/dPj7Quz7QTaLs14ZtRTqw8nBWHaVp42/5/4Seq/rfMN6SF52fuPGwwuI9UH8Odp
-         ahs+BNA4Gp0V4gErKDcTNNN1I30UXBmcQcM9Rkwj3enQjVoE2LnY+7xh/KIo/zmHHxxU
-         JOvp2JMq2RYbEm7NGPRF/pjqHD8X2sOv7vhtrwCubhrZ2o4L0ulsYb11cm1b1iS0HG8e
-         oqe4K+FvzLJ6y8vZDFop8atml3s5cMDuGGjNiPv4/8U7Gx6dtLe7/J9u5k4n5pTqlSxi
-         rJRG3JWxKv750UvgtjDeG/+y/WOGxnqGUiAfnMw3q+qOd5sVQ63nfxxovpX7TSAZLPl0
-         fhKQ==
-X-Forwarded-Encrypted: i=1; AKwUvBz9vG4OvQ/vMXHQtJwsI55na3EgnkQZ1OvPoGeJCEQkJBWkzCTNAkvTNVfikjrj/oxdBR/dRZ0gksp3LqYuPxKE@vger.kernel.org
-X-Gm-Message-State: AFuF++kitdpYLQI9AoJqMOUH26ysvkP9WVIIcIK4EslB+y5r718/76CX
-	NNaAj+24jdQdIUw5Vw5JeDm4ueyKTWkI6KtisiOoGC5pGkDbv/D+np54lRbZ1ERmg8xWOlgTwqf
-	lfv9MzZ4PLFvX8pkJWmSWYFuqIWHtBinnqYFCTAf5
-X-Gm-Gg: AYBFou3rOmXYrv9W6kMdvtvZ/Sj+CJp97M339HLL1Vyi4YJ3wA5nxryhGgaVSFpjgH6
-	o6U3yGWk1dT5QApWFnEqjnElz2jAS1eYVkGkVzgR+oL4ETTIYvVSOMt/y0r78FZpC0PuNUF9KG5
-	jys0qAMbXDvGTfd+8f7GlxgH7YR54+UTapSMV/ZFwkU6WDMBvypgZ3fAuQvrM+8myEM6tOPXx3O
-	tuh3MeMWPtedw1LI8ZVuYyu0SV9RYATzE+QbSLMvS2auTd839l/cCCfmpwzFF+oYnWzSMVffc2T
-	a4tOUiMzvVL0ipr+spNfTuLXHZpH60tt12mzWBg5ApiLtUzJMYo3FeF8cPsIEnC6wii5lxzZadb
-	EYJ4nPLSZOw==
-X-Received: by 2002:a05:622a:580e:b0:52f:4a75:f840 with SMTP id
- d75a77b69052e-5327f5e8dedmr1378711cf.9.1789512106116; Tue, 15 Sep 2026
- 15:41:46 -0700 (PDT)
+        bh=EaIQehfbhcZxllYG58s/kgtKRpkkLc8kmZQmGY/AurE=;
+        b=K4vq1nX6dTBt3wUQcnwT4kki62bcsrVyzNYQtY/ooqfG2VWV0JN4oEYGynlwwjfdCP
+         fWFRSczimZrgStbLTVsQfd7NSRcep4P/8cOMTbj9r8DmlB0lr+oaf3HspnuRjoqjdu1D
+         JR8a9tOUu+9b/J0RxdDXDG0XxgzzUxhOayob9KI8oPFPieUpfxNNrroB0NjyJ1zhYdez
+         x4z6hWJoKdSPpj8TKoD3zSx4TISK7B8Ihv3ti1IfvpGEEOnB6UByPw0IaSf6l3wo4J2X
+         MB668ONOAvaq7yE5R40FWdgwD1HWREZPU5ZKQyhSRiWeL8rAk8i4HIOhLUtO5xSgmmQZ
+         LX0g==
+X-Forwarded-Encrypted: i=1; AKwUvBz0qu09EZ9JeK9QTZVFySrp/KYFC/C3w3a3tsFkKmyjvO9k77xZgiwa1chxdo5xwhfN13T9VxHTZz1ZuDqeP4Uo@vger.kernel.org
+X-Gm-Message-State: AFuF++mbn9qdZpLyW7tSbZGtsg/W6OBS5QEWREyvO+1sNL8YdOQk7wNj
+	1G67PrSCbWuz3xqccZfH7BPsPLzSxDvfHiOaLSmECg9+5/Q8AkudhAqNTguvizdjs+BdG52a4OR
+	20FLhaeNvHb8c3AyeQm5VL6Crc/4fKO1230frZoMQ
+X-Gm-Gg: AYBFou2m9xoFBEXko2/A/eVF1stYsv+wI7c3EIFavr3Mq5IXlGNRJeCcuqU1L/Algh8
+	3EtiZDBG2U4n/VCVTJjzSjuYrFIxz/vzpPX1auQP/mjUlDxVk47+oCtNdj6Kb/piA1MlKkwHx7a
+	DqbB3DxMzkKchCDYeKysBGNSca/GbjW8GbOQIFYVynOwHS7d1UcCfUWldy8FdP/7Ev7XztMynGq
+	9gVwzNvvt3h6OSofLzxbjPK0gL4RdToHfVn/CWPVLI4B5grmtj9yvZtZuH7APNji8dV/E+rmLs6
+	akCs8NdCX5yXtsbXOz9JY3+taIZgdJbysNQFwFQEcjvvEA5YrDHitVE1urs2EfOJHClUVdq1qSr
+	KiWvuhdtg611dhyPH8HUN
+X-Received: by 2002:ac8:610c:0:b0:531:129b:2dba with SMTP id
+ d75a77b69052e-5327e5ee122mr3172021cf.3.1789512250983; Tue, 15 Sep 2026
+ 15:44:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260807144135.2607-1-atrajeev@linux.ibm.com> <083A4990-6158-4C25-B29C-78A8AF9ADCF3@linux.ibm.com>
-In-Reply-To: <083A4990-6158-4C25-B29C-78A8AF9ADCF3@linux.ibm.com>
+References: <20260805155911.1304807-1-dave.jiang@intel.com>
+In-Reply-To: <20260805155911.1304807-1-dave.jiang@intel.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 15 Sep 2026 15:41:34 -0700
-X-Gm-Features: AcwNN1UEG7pVwjSnb00JbKXR74IHKWDgQf1sITA6eKr5Av6Gb5msdaS6bHv88Y4
-Message-ID: <CAP-5=fX-sUhf06gSoib1S5y-fFTg=dNmXkNXJ-LEtgj3fO4KbQ@mail.gmail.com>
-Subject: Re: [PATCH V5 0/6] tools/perf: Add powerpc HTM auxtrace support
-To: Athira Rajeev <atrajeev@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com, 
-	namhyung@kernel.org, linux-perf-users@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, hbathini@linux.vnet.ibm.com, 
-	tejas05@linux.ibm.com, tshah@linux.ibm.com, venkat88@linux.ibm.com, 
-	usha.r2@ibm.com, maddy@linux.ibm.com
+Date: Tue, 15 Sep 2026 15:43:59 -0700
+X-Gm-Features: AcwNN1WGAjRzYjZLg6n5XYokgIbJhj5NtoS_8u9irGMa66FsXE2_a3JLfQkEHLY
+Message-ID: <CAP-5=fXoVf5dGua_TJ5CMWFMRwtegiO3v2S96X28vRCfqO+N8Q@mail.gmail.com>
+Subject: Re: [RESEND PATCH v4 00/11] perf/cxlpmu: Misc sashiko raised issues fixes
+To: Dave Jiang <dave.jiang@intel.com>
+Cc: linux-cxl@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	jic23@kernel.org, will@kernel.org, mark.rutland@arm.com, dave@stgolabs.net, 
+	robin.murphy@arm.com, icheng@nvidia.com, 
+	Jonathan Cameron <jonathan.cameron@oss.qualcomm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 7, 2026 at 10:11=E2=80=AFPM Athira Rajeev <atrajeev@linux.ibm.c=
-om> wrote:
+On Wed, Aug 5, 2026 at 9:02=E2=80=AFAM Dave Jiang <dave.jiang@intel.com> wr=
+ote:
 >
+> [resend, mangled linux-cxl mailing addr]
 >
+> Teed off of Davidlohr's misc cxlpmu series [1]. I had Claude pick up all
+> the sashiko raised issues and then continued multiple internal review
+> iterations to pick up a number of fixes. I'm no CXL PMU or perf expert,
+> but the fixes look reasonable to me AFAICT.
 >
-> > On 7 Aug 2026, at 8:11=E2=80=AFPM, Athira Rajeev <atrajeev@linux.ibm.co=
-m> wrote:
-> >
-> > Overview:
-> > This series adds perf tool support for capturing and processing Hardwar=
+> Since v3:
+> - 4/11 and 5/11 swapped, so the one-line MSI vector 0 fix comes before th=
 e
-> > Trace Macro (HTM) trace data on POWER systems.  HTM exposes raw bus-tra=
-ce
-> > data via the H_HTM hypervisor call.  The kernel-side HTM PMU driver
-> > (submitted separately) streams this data into perf AUX buffers and emit=
-s
-> > memory configuration as PERF_SAMPLE_RAW records.
-> >
-> > This series wires up the record and report sides in the perf tool so th=
-at
-> > 'perf record' collects HTM data and 'perf report' writes the trace and
-> > memory configuration to files ready for post-processing with htmdecode.
-> >
+>   info->msi_vec rename and backports on its own (Robin).
+> - 6/11: new patch, add the PMUs after configuring events.
+> - 7/11: no code change; the commit message no longer overstates what
+>   dropping IRQF_SHARED costs a device that shares a vector.
+> - 8/11: quote the spec sentence that makes the freeze sticky, and correct
+>   the claim about what the migration window leaves enabled (Richard,
+>   sashiko-bot).
+> - 10/11: split the probe-time overflow clear out, so this is back to the
+>   single hunk Jonathan acked.
+> - 11/11: new patch. Clear a counter's stale overflow status when starting
+>   an event, which is where the reuse case bites; the probe clear moved
+>   here from 10/11 (Richard).
 >
-> Hi All,
+> Since v2:
+> - 1/11: check event_idx alongside counter_idx (Jonathan).
+> - 2/11: use FIELD_MODIFY() rather than mask-then-OR (Jonathan).
+> - 3/11: rewrite the rationale, no code change (Jonathan).
+> - 5/11: new patch, split the MSI vector out of info->irq (Robin, Jonathan=
+).
+> - 7/11: drop IRQF_SHARED as well as adding IRQF_NOBALANCING, and retitle
+>   (Jonathan, Robin).
+> - 8/11: don't unfreeze if the PMU has been disabled meanwhile (Robin,
+>   Jonathan).
+> - 10/11: retitle, and drop the cxl_pmu_offline_cpu() hunk since that
+>   dev_err() cannot be reached (Robin).
+> - Dropped the old 9/9 that guarded cpumask_show() against cpumask_of(-1).
+>   The init case was a false positive and neither reviewer liked the shape
+>   of it (Jonathan, Robin).
 >
-> I am currently working on addressing Sashiko's review comments for V5 of =
-the patch series.
-> Before I proceed with posting V6, requesting for any feedback or suggesti=
-ons that I should incorporate in V6, apart from Sashiko's comments.
+> Since v1:
+> - Updated 3/9 to address sashiko issue.
+> - No other changes as sashiko only raised issue with pre-existing.
+>
+> Three follow-ups this series does not attempt:
+>
+> cxl_pmu_read() relies on local64_t being same-CPU, which is the only reas=
+on
+> the interrupt has to be pinned at all. Moving prev_count and event->count
+> off local64_t would make the affinity question moot, and Robin may have a
+> view on whether that is worth doing.
+>
+> cxl_pmu_offline_cpu() still leaves on_cpu at -1 across a sleeping
+> perf_pmu_migrate_context(), and still has an unreachable no-target branch=
+.
+> Both want removing, possibly on top of the generic PMU hotplug rework
+> Jonathan pointed at [2].
+>
+> Firmware can leave a counter enabled with Global Freeze on Overflow but n=
+ot
+> Interrupt on Overflow, which stalls the whole CPMU with no interrupt to s=
+ay
+> so. Quiescing the block at probe needs two writes per counter to stay
+> within the spec's rule about changing an enabled counter, so it belongs i=
+n
+> its own patch.
+>
+> [1]: https://lore.kernel.org/linux-cxl/20260715191454.459673-1-dave@stgol=
+abs.net/
+> [2]: https://lore.kernel.org/linux-arm-kernel/cover.1784911757.git.robin.=
+murphy@arm.com/
 
-Hi Athira,
 
-Did you get what you needed for V6? I see Adrian's reviews.
+Thanks Dave, I notice that everything seems ready to land for this
+series. Is there anything pending? Sashiko mentioned pre-existing
+issues.
 
 Thanks,
 Ian
 
-> Thanks
-> Athira
+> Dave Jiang (11):
+>   perf/cxl: Program the requested event group on configurable counters
+>   perf/cxl: Clear stale event fields before reprogramming a counter
+>   perf/cxl: Fix the counter overflow delta fixup
+>   perf/cxl: Accept an overflow interrupt on MSI message number 0
+>   perf/cxl: Split the MSI vector out of info->irq
+>   cxl/pci: Add the PMUs after configuring events
+>   perf/cxl: Don't share the overflow interrupt, and keep it pinned
+>   perf/cxl: Unfreeze counters after handling an overflow interrupt
+>   perf/cxl: Validate the hardware-reported counter width
+>   perf/cxl: Don't log through pmu.dev in the overflow interrupt handler
+>   perf/cxl: Clear stale overflow status before using a counter
 >
-> > Patch overview:
-> > Patch 1 refactors the existing powerpc auxtrace dispatch.  All VPA-DTL
-> > recording logic is moved from arch/powerpc/util/auxtrace.c into its own
-> > file, arch/powerpc/util/vpa-dtl.c, leaving auxtrace_record__init() as a
-> > thin per-PMU dispatcher.  This is a prerequisite for adding the HTM
-> > recording path cleanly.
-> >
-> > Patch 2 adds the HTM recording path (arch/powerpc/util/htm.c and
-> > util/powerpc-htm.h).  htm_recording_init() sets up the auxtrace_record
-> > callbacks.  htm_info_fill() stores the PMU type and a (cpu, attr.config=
-)
-> > pair for each htm evsel into the PERF_RECORD_AUXTRACE_INFO priv[] area.
-> > The decode side reads these back to map each AUX buffer to its
-> > (node, chip, core) target using event->auxtrace.cpu.  PERF_SAMPLE_RAW i=
-s
-> > also enabled here so that memory configuration records are captured
-> > alongside the AUX stream.
-> >
-> > Patch 3 adds a generic weak arch_perf_record__need_read() hook in
-> > builtin-record.c.  When the hook returns non-zero, perf record performs
-> > an extra mmap-read pass before disabling events.  The drain loop runs
-> > until the hook returns 0 or no forward progress is made, then the event=
-s
-> > are disabled and closed normally.
-> >
-> > Patch 4 implements arch_perf_record__need_read() for powerpc.  It reads
-> > event->count for all open htm evsels via perf_evsel__read() and
-> > accumulates the values.  The kernel driver sets this count to the numbe=
-r
-> > of 128-byte HTM trace records written on a successful dump, 1 when the
-> > AUX buffer is temporarily full but the hypervisor stream is intact, and
-> > 0 once the stream is exhausted or a hard error occurs.  A non-zero tota=
-l
-> > causes the recording loop to perform another read pass.
-> >
-> > Patch 5 adds PERF_AUXTRACE_POWERPC_HTM to the auxtrace_type enum and
-> > wires the dispatch in perf_event__process_auxtrace_info().  It also
-> > amends htm_info_fill() to set auxtrace_info->type now that the constant
-> > is available.
-> >
-> > Patch 6 adds the full HTM decode path in util/powerpc-htm.c.
-> > powerpc_htm_process_auxtrace_info() reads the (cpu, config) pairs from
-> > priv[] and builds a cpu_configs[] lookup table.  As each
-> > PERF_RECORD_AUXTRACE event arrives, process_auxtrace_event() maps it to
-> > the correct target and writes the data to htm.bin.nX.pX.cX.tX immediate=
-ly.
-> > PERF_RECORD_SAMPLE RAW records are written to translation.nX.pX.cX.tX b=
-y
-> > process_event().  Per-run first-write tracking (htm_target_seen) ensure=
-s
-> > O_TRUNC on the first write and O_APPEND on subsequent writes.
-> >
-> > Patches not included in V2:
-> > Three patches present in V1 are intentionally dropped from this series
-> > and will be submitted as a follow-on once the core infrastructure gets
-> > integrated:
-> >
-> >  - htmdecode integration: V1 patch 6 invoked the external htmdecode
-> >    tool via fork/exec after writing htm.bin.* to decode the raw
-> >    bus-trace data in-process.  This is deferred because the interface
-> >    between perf and an external decode tool needs more discussion.
-> >
-> >  - Physical-to-logical address mapping: V1 patch 7 read the current
-> >    partition ID from /proc/powerpc/lparcfg, parsed the translation.*
-> >    memory map entries, and mapped physical addresses in the decoded
-> >    trace to logical addresses within the LPAR.
-> >
-> >  - Synthetic sample generation: V1 patches 8 and 9 created a
-> >    PERF_TYPE_SYNTH event named "htm", injected synthetic perf samples
-> >    with the translated logical addresses as sample IP, and wrote a
-> >    separate .out.l file with logical addresses alongside the decoded
-> >    trace.  The appropriate abstraction for synthetic HTM samples in the
-> >    perf tool requires further discussion.
-> >
-> > Usage example:
-> > Collect HTM trace data from a single chip target:
-> >
-> >  # perf record -C 9 -m,256 \
-> >      -e htm/nodalchipindex=3D2,nodeindex=3D0,htm_type=3D1/ sleep 3
-> >  [ perf record: Woken up 1 times to write data ]
-> >  [ perf record: Captured and wrote 256.277 MB perf.data ]
-> >
-> >  # perf report
-> >
-> > Output files written by perf report:
-> >
-> >  htm.bin.n0.p2.c0.t1       raw HTM bus-trace data
-> >  translation.n0.p2.c0.t1   memory configuration records
-> >
-> > Multiple targets can be collected simultaneously:
-> >
-> >  # perf record -m,256 \
-> >      -e htm/nodalchipindex=3D2,nodeindex=3D0,htm_type=3D1,cpu=3D8/ \
-> >      -e htm/nodalchipindex=3D1,nodeindex=3D0,htm_type=3D1,cpu=3D9/ \
-> >      -a sleep 10
-> >
-> > Testing:
-> > Tested on POWER11.  Both htm.bin.* and translation.* files are produced
-> > correctly for single and dual target collection.
-> >
-> > Note: Link to kernel patches:
-> > https://lore.kernel.org/linuxppc-dev/20260807143734.1224-1-atrajeev@lin=
-ux.ibm.com/T/#t
-> >
-> > Athira Rajeev (6):
-> >  tools/perf: Move powerpc VPA-DTL auxtrace init into a separate file
-> >  tools/perf: Add AUXTRACE recording support for powerpc HTM
-> >  tools/perf: Add arch hook to drain remaining data before event close
-> >  tools/perf: Add powerpc callback support for
-> >    arch_perf_record__need_read
-> >  tools/perf: Add powerpc HTM auxtrace event processing support
-> >  tools/perf: Add perf tool support for processing powerpc HTM AUXTRACE
-> >    records
-> >
-> > tools/perf/arch/powerpc/util/Build      |   2 +
-> > tools/perf/arch/powerpc/util/auxtrace.c |  98 ++----
-> > tools/perf/arch/powerpc/util/evsel.c    |  77 ++++
-> > tools/perf/arch/powerpc/util/htm.c      | 185 ++++++++++
-> > tools/perf/arch/powerpc/util/vpa-dtl.c  |  96 +++++
-> > tools/perf/builtin-record.c             |  65 ++++
-> > tools/perf/util/Build                   |   1 +
-> > tools/perf/util/auxtrace.c              |   4 +
-> > tools/perf/util/auxtrace.h              |   1 +
-> > tools/perf/util/powerpc-htm.c           | 447 ++++++++++++++++++++++++
-> > tools/perf/util/powerpc-htm.h           |  43 +++
-> > tools/perf/util/powerpc-vpadtl.h        |   3 +
-> > tools/perf/util/record.h                |   4 +
-> > 13 files changed, 954 insertions(+), 72 deletions(-)
-> > create mode 100644 tools/perf/arch/powerpc/util/htm.c
-> > create mode 100644 tools/perf/arch/powerpc/util/vpa-dtl.c
-> > create mode 100644 tools/perf/util/powerpc-htm.c
-> > create mode 100644 tools/perf/util/powerpc-htm.h
-> >
-> > --
-> > 2.53.0
-> >
+>  drivers/cxl/pci.c      |  11 +++--
+>  drivers/perf/cxl_pmu.c | 107 ++++++++++++++++++++++++++++++++---------
+>  2 files changed, 90 insertions(+), 28 deletions(-)
+>
+>
+> base-commit: f5098b6bae761e346ebcd9da7f95622c04733cff
+> --
+> 2.54.0
+>
 >
