@@ -1,223 +1,138 @@
-Received: from mail-qk2-f12.google.com (mail-qk2-f12.google.com [74.125.230.204])
+Received: from mail-qk2-f13.google.com (mail-qk2-f13.google.com [74.125.230.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45EA9449B3D
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 19:42:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.204
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E129543CEDD
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 19:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.230.205
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789501379; cv=pass; b=r2YG6oBBOtsvp6EFJQfJ8svezRh4EUxrDaIuiHKaEwjdFrMV4Hx9msyGYC61KYB5n/HGAwTb2rpcIz0lK0urPVrTpRV2Qepky5Cj0dPNYWwz8Qa0YD51Dni28gXVplnvkPlkv/mddoR9XwSnIYZSAdwhNwk1YXcFasSsdx622n0=
+	t=1789501455; cv=pass; b=lWBlVd8S0jwBSO4cOjyFPkNwcqCZQE8oYwsqYoz9se9dCDg6cDJbrKrbokIXQ+761ID0tmsogDfJynqvf+vdpIH9ZOQVNR3ya4gjEgnv+sRAUsiDPtirKYjcUBQkxZB+cq+g0rWdarFaHOcgnbIuufj3tu0L95uWtJfCNhe90AY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789501379; c=relaxed/simple;
-	bh=vO7okh2vQbhR08LoTBO4HBqEy5EyaQZuhnLsn63yUwg=;
+	s=arc-20240116; t=1789501455; c=relaxed/simple;
+	bh=H3qSjQGi76PgVHeND0Z40zDpqLslWmiK07Q51ZTkBWw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fg1ijw9IcaQBeEWt82DpftDIQwFk6MynZYu6rs+XQyn21aGRVRYpB6T902XlJajYfFtzg9V6aWUTRbm4RNSCFDFtu2PEvTaFFuFCfIum/5U35atjPbbM5HWOfgT4mNCR/VrUppyLkRglXyWsvVAy1nUWCEQgZ8p4hcUGRAciqvk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Qd65gPYe; arc=pass smtp.client-ip=74.125.230.204
+	 To:Cc:Content-Type; b=eEru8CIzCrPFvOc1+XZZTs9JhVvLZ8gGqRb0NSs2+gE0141ee5Gp+dzNastgszrZfczs7rCALgUOGFEFVHfyS5npmuXe45gPufciQ9Bw756oRuSEaWZ58qpRkVz5DHG4JB8dBheQmKRyOMhm/FEDaVrP9/49fF+xcn4l0A9lYsQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wjXPrTEB; arc=pass smtp.client-ip=74.125.230.205
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qd65gPYe"
-Received: by mail-qk2-f12.google.com with SMTP id d75a77b69052e-530411c7ee1so67521cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 12:42:57 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1789501376; cv=none;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wjXPrTEB"
+Received: by mail-qk2-f13.google.com with SMTP id d75a77b69052e-530d5fc2cd8so62061cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 12:44:13 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789501452; cv=none;
         d=google.com; s=arc-20260327;
-        b=A+iHdtnEIvxYL0UFucbTHwhcnH+mtYS1S58Wg8x5ImxWusNnfQ954Mlel57brfkdla
-         1SQxuit0ew7NTQxG7YAxfbrkN12JTbm+ecMsZcrkEUQPe2tZFpnVRWJ6Kr/wP84+D0D8
-         CuDZ1CuwLugNr7Z8aByy52KuQ+a7ZB+UPPQjVgBHsWMujuCE8Ireel5jp+cuAcq/ymIL
-         4fl2RvFaUJB/PNPdfY2ygKIHkRVFp2jy4wB/UrqAHPu9qVWPgFIgZSzFkHUPNBlu5dcR
-         QXMxlXTuP0UDIY6KqSFN+ogexW1LaDRNvhuDD55nEXng7vL5ch6xlE5nunYiuwEYCz3l
-         0wEw==
+        b=J7ZJURK5cejtTDbYvAmNbyrEmOrV6CzOxrs0xEF9OAD8lcJ9GL+f7e5WKzPN4aAQK5
+         l45tvHRVmUxT6myXEufllTpWwp9dQ1LViDvvzNXSHI19aj7sk3rrk8SF8UySziew0ung
+         iOajbj79zKTe+JmMK6wyjyo4K7dERRKJKbaNIzie+ZIRueegA0ThziGh85LuTwMGCHJy
+         TiYFlLnF/tQiepyFzQUfaQSYvUrK2nasEXSUxgAUNk9p3q0lhUv6eiGAeqkzamEsxN2E
+         fyM/9SfsqHsV/KPmMr8uyjHdqjHrfVO9r2YdlVlOGapjpHJZcH4HGoIr7J4wRjodxxyV
+         KRuw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:dkim-signature;
-        bh=0glIWluP5FGU2sO8Ta+IsEFm6YUeekCYft6+osOvJ5E=;
-        fh=H8pVQ/XfcGejhuFM83sIIlEDwI4NHwVCDWWp9olgrLY=;
-        b=scDNea7z44Ac0Dlz2OMaQ9tPZMTWAyGMKpXc/okEhAUjPrgtre2BjjqLb0sisNqA1w
-         +TyoAiULoprJTBfjQ+6g4aufPke4wxbCXvLLL6l2fMQ7xTU3T9ECYa0YnagqYVE54DA9
-         GRRp1ndo9rKaIg+lXp9E0GQvCwoG62Ujk+flw55EykMa82Kmw3jYgX7rmarKmu0S/W+a
-         9CAL1r7M2qiHyP03ltEVcbrWLNyoG8H0s0ygMKdQ9NI8Qv6wUljUs3NpEscrmUWi85GA
-         WCYwfqpOui6Eef8Sbdfkav7M8CeqbiEE7+KL0aAfrRhuwTvfgZ9xGxIKkFAizNHliHrM
-         kxEg==;
+        bh=STuNBH/M2NDqA51kDqdq9V/ip/zqwavA2GBjIvz0ZeA=;
+        fh=5sxN6tb02ZJGOMH3Wsb0iSnQ2ZrpHOA/1ekPu6qhCgQ=;
+        b=DgFOqpftibGZF55BCG37W67CyaKterrM4uVnnW+ksGo0w/+shb1MTEqgUsmUVDCuAU
+         JRlBCSsO7Z1X2JPxX0i5PhrJtkFLMyFAd9iiOTDfP9yScVpLkIokdFjBAm/Ghn8rd6YR
+         kUbPJt5Pa0slyPgyH9cLj7yGebc3R2K64FoxguaF8cUAOnuHrrpmCfk0a5YyjJ/IJVgh
+         W6rlB0zA8+8jnsY7z2ALOGzdSwlKiKUY89gh1zmorP4QuwD8Pk+2P5ihyaw2qE3pupse
+         EN1fhq+N1Sqba4ccHnERUqsftvLcRX/EmvOz/PAwhCTJQBwH9j/p6mimjSnRIT7/tvXe
+         HZVw==;
         darn=vger.kernel.org
 ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789501376; x=1790106176; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789501452; x=1790106252; darn=vger.kernel.org;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:from:to:cc:subject
          :date:message-id:reply-to:content-type;
-        bh=0glIWluP5FGU2sO8Ta+IsEFm6YUeekCYft6+osOvJ5E=;
-        b=Qd65gPYeoykvN8CP41ifSf04RLD092Hz5wbcaPEZMK5AYHshY/6nEFdIFyi8DsK2E6
-         60u64dof21vvokwONXF121lVYzymEhmy1+yFwguu8rSbVG41PWjYl4PdWWzbPPrr6Q8Q
-         nf60Ybd53CTb76R12ntQx2Bai1zs2WDqKO/oCe8+Qi3pJ+LiJZb7+Kj0SyT7POGAjIDI
-         SIAp5lE/rWodDBYpciUaKKlnCcD5RSvM0rfCEgTL0rQlbVQhuB+piRjyhTXr1VKNQQW/
-         sNA0d6a7h8MAwDvH/k8XsGfxtwphJV0Jy+0/6vCA0Yj7S1Q79T3/h5+WAfu3gz9eN9d3
-         Olqg==
+        bh=STuNBH/M2NDqA51kDqdq9V/ip/zqwavA2GBjIvz0ZeA=;
+        b=wjXPrTEB6e8TgdAvkehFkpV3Uv94wtI6EZsBw1D6wjLmWHh1exdTBibfkcB6fAOyek
+         mGqg6xmOYnrgbvQo3uy5afER+FpZRicgChgl8RcauSjLqax85j82KkMukSduGyxUCfpz
+         EhKq06535SHS+9/i7zwUhutHZ3pAMR9ao1scFFTHuVx5Goegij42QN6kQCSy0EbCuH79
+         XNC2U0bME0Eut6zVfYAtU6yc7hbEi6Y5GDBDBZF4axeaw8+Smxs9ju5sZaNzGLYAdV9G
+         biOySafuH4o6HFiATCTCpKm6PASY5APE+/g3P3UVYm99W18jfpTw6gjc+/62PRMncaN0
+         JxgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789501376; x=1790106176;
+        d=1e100.net; s=20260707; t=1789501452; x=1790106252;
         h=content-transfer-encoding:content-type:cc:to:subject:message-id
          :date:from:in-reply-to:references:mime-version:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=0glIWluP5FGU2sO8Ta+IsEFm6YUeekCYft6+osOvJ5E=;
-        b=WMNjn4ELJQ7MT679lyFhj8VLlvzHKwr0SC5fDeCEZRGDILoOkXGEl8xQIGlplHnK4z
-         JDUDd/9x3VUQHZKiJSE+b24lSYTZlK9+xLsNnZ3YEZTygHnpBsi2njIkJhLaurdd1R3O
-         M/sF6na4J+CQydJEIs5C9Ssgml3LnE1NmxjPFMpDtjZ2/GpzvRkoeowkKtgRQ3MlLP4+
-         XGuTW9BuWNHTTgQVqLSMYYNGmZOe+KjceRXQVVj75BAV6GUIlJKQ0AraUhVDKSO2cIAV
-         5ycZxt7BQvKpjb+wL2d3L9/03Y6UIeY/VFcADYf1dGo/tLoH+vpeVPAaI6zyO/4oV1bD
-         I+sw==
-X-Forwarded-Encrypted: i=1; AKwUvBzo6DAq0Ut5T+vNi6LQhUw2WwS7076hYwIIpVdLO3+SRKhboFKjNidsqFncmAGEKO80Pyt/c7XhonYaxaNJYTTT@vger.kernel.org
-X-Gm-Message-State: AFuF++lG2TbOhUz3f/CE4xCpTjO6zFB8e3P7rWjl8u31b9UofKT+gH3T
-	NZFMBTAzetUoU97+HAOEtsJOUpMHcx0pEf9Yo/2c1zjP+hqM6tPqC8ABxf93KIY+KiWLt0Bc9Y1
-	DZZN1oXRzPEVLknRFhPfUE100c6pXnbSb/tdOeDwV
-X-Gm-Gg: AYBFou1u7as03KLA4wgTSvqGkEybIX6brz/DGvqiiw8wR3h7m3QImIwLjinP47vDDRk
-	1oQB+FrICu4ZLTauuhzX5ukWDRbimHrH8EyUk44bnDUAFz0ysQ70B7b1l3NNQMZyUl3maJzj557
-	hz8sj0FHnPPLrZ5zh7sXWyHUzHJWbSfGtwD4pRrFYFmvCgMhdXOi4QmQ3OtH+UiHHNWhjJyiWC4
-	ehByj0l+mxax23xHS/HbGSSUSufG9cexMPS6xKZGY+cb4lq4WPB+Ym+nys5yO8+RsprymZca219
-	ZDldg1flXH31qG+q0M8Yd4SL0WJ4P248/e4ZnAD2Axse90TTzKeCJp2LHNiZLvKw8ZM08t2u39m
-	X7lvQZEgfHg==
-X-Received: by 2002:a05:622a:1486:b0:52f:8389:29e0 with SMTP id
- d75a77b69052e-5324676bdaemr3014131cf.0.1789501375250; Tue, 15 Sep 2026
- 12:42:55 -0700 (PDT)
+        bh=STuNBH/M2NDqA51kDqdq9V/ip/zqwavA2GBjIvz0ZeA=;
+        b=hRxQYLEilbgx2sEROoKjFgZBZPA9afTl3m7jsQ2S4cWX9FDONNKCRwaNj0xIxV8t1n
+         StixJ6TsjpWUC6s+LsYDsxCQwvQqCCPmDAzF2qrJ7VlXEd1G0ba7Y2I9vUDwhJhCXDvK
+         Iah/Nyhpg0isHrA7LjWeAC6KgMHIzbsb7H+6BKUy8+5okHgb/fCx6KZ2E1dB87oLJ1QC
+         GiFQ88d+KAuGWrp2ExKZSlLfkzthkuPvFtxjZ+P0cgz7fpdbMItvlm/19c6HC4dl0Lnd
+         IUuvBv079dDVRl4MLW8nw7vyUGXK8LeagMpO04kXZp/hlACx+L2U1E+jWsUlB26jHbmK
+         scXg==
+X-Gm-Message-State: AFuF++lbbyvvybWMW2J+kC0wqcmbmR5IPvYp/bAJpOv7jQ/gyrFMD4W+
+	mWHDj3jZEijwH2BBODdbOlsQD60BAFFgEEL4QiCZy2D9ELtljwnNvvsFbOk9+cvZAH6yp2/kVAx
+	wBnqUJ4eveU/eqGglpUiXoerE/b44APFDg+qEbrRz
+X-Gm-Gg: AYBFou1FuX7pOOF16pMcHj9CbShDFGHGnpA+LMwlh4zCMxb2RbRzTgxvRrh1711gP/o
+	HQ4BVFblDMy4BllwBiNYMAIXeicKumnHzR9I7Qkg3v5UlGmkDXcxfxSlKf0LYG4FjZCjFvXCnac
+	ubXsQqTmXlu5kdPG2AuInnRXcUDThcOdNTs52MxNUXxW7rIKVZDgaeDG1h78q66hwi4gLGAZCfd
+	iRPD68yzz9GeOhmdJbQF+sNSig0LK4zZS5fQoTjWiljsLik4eQ639hU+lqxqkgokTbVd69e2d4f
+	L7frwMlVe5M8KiWEHOoUPEKbONX8prmQxFpPp1lJfUv729Kt1hRRbC7nTrJo/PiQXhU8QtYjeo/
+	mu5/vkxLgTQ==
+X-Received: by 2002:ac8:5a4e:0:b0:531:282:6560 with SMTP id
+ d75a77b69052e-53259b49c10mr2158041cf.15.1789501451815; Tue, 15 Sep 2026
+ 12:44:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260909-perf-evlist-uncore-cpu-b4-v2-1-dc673a1f4592@sifive.com>
-In-Reply-To: <20260909-perf-evlist-uncore-cpu-b4-v2-1-dc673a1f4592@sifive.com>
+References: <20260903112835.1694260-1-nanshuaibo811@163.com>
+In-Reply-To: <20260903112835.1694260-1-nanshuaibo811@163.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 15 Sep 2026 12:42:43 -0700
-X-Gm-Features: AcwNN1UGZ6n_sZg-onyE6NMfT9OvN_z0Qh3xvwIs8LxoT2UpRZJByUaNFcVFDjA
-Message-ID: <CAP-5=fU2UOT8pZFLOifxHo7U4XsPv9YbYnAitjdvxsB=0AYuoQ@mail.gmail.com>
-Subject: Re: [PATCH v2] perf evlist: Don't restrict uncore events to PMU CPUs
-To: Nia Su <nia.su@sifive.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+Date: Tue, 15 Sep 2026 12:43:59 -0700
+X-Gm-Features: AcwNN1VVU0mXc4k_HpwEgXzGNEMH97BhLgpNu8B-eFOs4SAp8P0d4b-6zKavSUc
+Message-ID: <CAP-5=fVBi=VSnGQ_uNAb5+Y=mVi5mBz+Zazgw-kS173hR5vDrQ@mail.gmail.com>
+Subject: Re: [PATCH] perf sched: Make output_name variable static
+To: nanshuaibo <nanshuaibo811@163.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
-	Thomas Falcon <thomas.falcon@intel.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Sep 9, 2026 at 7:31=E2=80=AFPM Nia Su <nia.su@sifive.com> wrote:
+On Thu, Sep 3, 2026 at 4:28=E2=80=AFAM nanshuaibo <nanshuaibo811@163.com> w=
+rote:
 >
-> The PMU CPU map has different semantics for core and uncore PMUs.
+> The output_name variable is only used within builtin-sched.c for the
+> stats subcommand, so declare it static. This fixes a sparse warning:
 >
-> For core PMUs, pmu_cpus contains the CPUs on which the event can be
-> opened. Intersect the user-requested CPU map with the PMU CPU map to
-> reject CPUs unsupported by the PMU.
+>   builtin-sched.c:4140:12: warning: symbol 'output_name' was not
+>   declared. Should it be static?
 >
-> For uncore PMUs, pmu_cpus is read from the PMU's cpumask sysfs attribute,
-> which lists the default CPU to open the event on per socket/die, not the
-> set of CPUs it can only be opened on. The user-requested CPU may override
-> these defaults, and the driver can redirect the event to the appropriate
-> control CPU.
->
-> Currently, __perf_evlist__propagate_maps() intersects the user-requested
-> CPU map with pmu_cpus for all PMUs. If the user-requested CPU is not in
-> pmu_cpus, the intersection becomes empty and the evsel is removed before
-> perf_event_open() is called.
->
-> Add evsel->is_pmu_uncore, set once from pmu->is_uncore at parse time,
-> to skip the intersection for uncore PMUs. Core PMUs, and other
-> non-core PMUs such as software events, breakpoints, or tracepoints,
-> continue to be restricted to their PMU CPU map.
->
-> Fixes: 811082e4b668 ("perf parse-events: Support user CPUs mixed with thr=
-eads/processes")
->
-> Assisted-by: Claude Sonnet 5
-> Signed-off-by: Nia Su <nia.su@sifive.com>
+> Signed-off-by: nanshuaibo <nanshuaibo811@163.com>
 
 Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks,
+Thanks!
 Ian
 
 > ---
-> Changes in v2:
-> - Add a dedicated is_pmu_uncore flag instead of reusing requires_cpu,
->   since it more precisely represents whether the PMU is uncore.
-> - Link to v1: https://lore.kernel.org/r/20260904-perf-evlist-uncore-cpu-b=
-4-v1-1-604b55c025ee@sifive.com
-> ---
->  tools/lib/perf/evlist.c                 | 5 +++--
->  tools/lib/perf/include/internal/evsel.h | 2 ++
->  tools/perf/util/evsel.c                 | 1 +
->  tools/perf/util/parse-events.c          | 1 +
->  4 files changed, 7 insertions(+), 2 deletions(-)
+>  tools/perf/builtin-sched.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-> index 1f210dadd666ff818a23712ab95acaa659ccf8dc..c1c5b0684eedb7a6ab8f3df85=
-f326fbd5ef809a2 100644
-> --- a/tools/lib/perf/evlist.c
-> +++ b/tools/lib/perf/evlist.c
-> @@ -79,8 +79,9 @@ static void __perf_evlist__propagate_maps(struct perf_e=
-vlist *evlist,
->                 }
->         }
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index dd39a4fb..22486df2 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -4137,7 +4137,7 @@ static int disable_sched_schedstat(void)
+>  }
 >
-> -       /* Ensure cpus only references valid PMU CPUs. */
-> -       if (!perf_cpu_map__has_any_cpu(evsel->cpus) &&
-> +       /* Ensure cpus only references valid PMU CPUs, except for uncore =
-PMUs. */
-> +       if (!evsel->is_pmu_uncore &&
-> +           !perf_cpu_map__has_any_cpu(evsel->cpus) &&
->             !perf_cpu_map__is_subset(evsel->pmu_cpus, evsel->cpus)) {
->                 struct perf_cpu_map *tmp =3D perf_cpu_map__intersect(evse=
-l->pmu_cpus, evsel->cpus);
+>  /* perf.data or any other output file name used by stats subcommand (onl=
+y). */
+> -const char *output_name;
+> +static const char *output_name;
 >
-> diff --git a/tools/lib/perf/include/internal/evsel.h b/tools/lib/perf/inc=
-lude/internal/evsel.h
-> index b988034f13710ec4d49d942d486c4b9afe21a1f0..35447bed0f9586b538dad40c2=
-23e70d50486c5f6 100644
-> --- a/tools/lib/perf/include/internal/evsel.h
-> +++ b/tools/lib/perf/include/internal/evsel.h
-> @@ -128,6 +128,8 @@ struct perf_evsel {
->         bool                     requires_cpu;
->         /** Is the PMU for the event a core one? Effects the handling of =
-own_cpus. */
->         bool                     is_pmu_core;
-> +       /** Is the PMU for the event an uncore one? */
-> +       bool                     is_pmu_uncore;
->         /** Does the evsel on read on the first CPU index such as tool ti=
-me events? */
->         bool                     reads_only_on_cpu_idx0;
->         int                      idx;
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index d4cb455f4a7d45ae2f9133709ff3248b54163ce0..5acec3f6345099ef9e46e8161=
-4b9df2595925b1c 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -551,6 +551,7 @@ struct evsel *evsel__clone(struct evsel *orig)
->         evsel->core.system_wide =3D orig->core.system_wide;
->         evsel->core.requires_cpu =3D orig->core.requires_cpu;
->         evsel->core.is_pmu_core =3D orig->core.is_pmu_core;
-> +       evsel->core.is_pmu_uncore =3D orig->core.is_pmu_uncore;
->
->         if (orig->name) {
->                 evsel->name =3D strdup(orig->name);
-> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
-s.c
-> index cc7ad331a49f34536f66724370b8bb94ab65bacd..8302be207c1d6ecf8ae6fd67f=
-54d66d08d50e01c 100644
-> --- a/tools/perf/util/parse-events.c
-> +++ b/tools/perf/util/parse-events.c
-> @@ -269,6 +269,7 @@ __add_event(struct list_head *list, int *idx,
->         evsel->core.pmu_cpus =3D pmu_cpus;
->         evsel->core.requires_cpu =3D pmu ? pmu->is_uncore : false;
->         evsel->core.is_pmu_core =3D is_pmu_core;
-> +       evsel->core.is_pmu_uncore =3D pmu ? pmu->is_uncore : false;
->         evsel->core.reads_only_on_cpu_idx0 =3D perf_pmu__reads_only_on_cp=
-u_idx0(attr);
->         evsel->pmu =3D pmu;
->         evsel->alternate_hw_config =3D alternate_hw_config;
->
-> ---
-> base-commit: 73e3f0710014fe6d4ed98cfc02292f6121db7558
-> change-id: 20260904-perf-evlist-uncore-cpu-b4-418af0f17c80
->
+>  static int perf_sched__schedstat_record(struct perf_sched *sched,
+>                                         int argc, const char **argv)
 > --
+> 2.43.0
 >
