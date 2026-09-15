@@ -1,147 +1,171 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj2-f13.google.com (mail-pj2-f13.google.com [74.125.227.141])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 689E44CC27D
-	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 18:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789498472; cv=none; b=tZtR9A5SKCewrZkY578sGeF6kNC+oIMMx3r6m/Vk9D9xOLeOKqfrp8fZ1RbOwj/VlMi4twjX8fYP6q8lEgLkWtS5BSxps/BAH0PAmUNUFTHRZalnwypSzBfihaaaFcd20cVcHvruCDwnum4YxTqzYfuMMBuP2an3x+DdT7jCSc8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789498472; c=relaxed/simple;
-	bh=RcDwoQWknRHHDILqel5R41s7oZBoUD+P5bFcjciISiM=;
-	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=ViTguRqTnWjxUkT3cwVSGSezsFnsLHyaDQrzEmRdnW2LnJ3oRLW//8tWMZBxfHl/zvAMsK30xkN1fI90b57289cTCLXPh5qptM4Rz4TOvt01jqcc2o5b7Eg4hXW7JBmHHXy5bB0dKojDBv527tLMSUjF2chxsaZa7xdmD8Li6DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MT/EUSYl; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC5224CC27A
+	for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 18:54:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.227.141
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1789498481; cv=pass; b=W48rWHbrWAvNviDV179D72FKRGjFwywzy5bNfcffS81uBn1HGpT8Glndmz07lx3yGV7TMTgQtEaSiw1/PI2oqSZcHhMNOSRonAQAlmvwswHXp29udAknIHQLeJomfedqXdbnQ8PDSYEUnD9Ef/7WeIPZylEpn3jVDyV9MNMgQSI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1789498481; c=relaxed/simple;
+	bh=GFVmruL3cPBEfvtAGaHzMJQ7fSP1HiCWYM4XCZnhV+4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LmPvkGZlH+K68AQuG+nfxUvh+SNXHFqpL5Ck+QkNPPkAAxeIYtqgNl3caFb3AIkAn990+6QDl38hFLY/TfnT2E5IbOClYddo6frB8Seye517ZdiAi6Rq7RMyLSNLNaEqTVbgDn65ALLFrxLY8QQaUvkmtAJoE3NjDVNZ891ujcE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=GMLpY6ez; arc=pass smtp.client-ip=74.125.227.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MT/EUSYl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B345F1F00893;
-	Tue, 15 Sep 2026 18:54:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789498471;
-	bh=WMfC6Fu/vZySuer5i9PHffxitpDpY34HtZ0aBRdoNVo=;
-	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=MT/EUSYl5NnaFtTI/3GvsfP8akuof748rfy4I4nwstO2cssILsos0xqxRpEbuU1jZ
-	 fryXxdzRtTddIWjpW+BwVTiN0jGg8YTQwwT0vnlEfv+fqrwO5uUAG8h4xv6CQbpl3g
-	 tu4Rxz7a0zxMSeZSmoR/EjJRS5+g/k4ariQ709utDHwzgm472YBgXQRJIxKfF5vjbJ
-	 iWFeBF6vrVmmH91JMHexv17Lpd/WO4dkAkD/GvjVaR5qcx0JzbY5x6zD0pjGOMqssD
-	 Jz+HPUoOlFd0+BGL8H98mgweeiSZwRFUK+8NazaiOCKZpYFyuUUXVlsik/3bWZnnii
-	 7b3NqIwUYBLXg==
-From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 3/4] perf script: Add --lazy-load-symbols for lazy
- symbol loading
-Reply-To: sashiko-reviews@lists.linux.dev
-To: "Alireza Haghdoost" <haghdoost@uber.com>
-Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260915-perf-symbol-memory-send-v1-3-1d3360e21f07@uber.com>
-References: <20260915-perf-symbol-memory-send-v1-0-1d3360e21f07@uber.com>
- <20260915-perf-symbol-memory-send-v1-3-1d3360e21f07@uber.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 15 Sep 2026 18:54:29 +0000
-Message-Id: <20260915185430.B345F1F00893@smtp.kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GMLpY6ez"
+Received: by mail-pj2-f13.google.com with SMTP id d9443c01a7336-2dd4b917769so16865ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 11:54:37 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1789498477; cv=none;
+        d=google.com; s=arc-20260327;
+        b=D8D768vEACM9pUWGEM459YtOypyCxB/Izi58BVOnpS5o5uk6N6z2E8tQ9Be3YoyuGY
+         Sg1CTc1ah+JSNuCmqW0Xf/XupSkyWnPCU/dkdc17E9UrY02B4c0VHJ8Y0uet2zp35ALb
+         evlHWm5HX/nXF6d58hd+rGGTE5V+i1Wwk/QRfMQ2Eh/OrkDIopEGrpXSX6C4UD0OYiv3
+         HeoX8SR9LZq+ApB7Jl5Px222wcMTv3a5HudCMHAJ75dVVp0WJM2rvzUZMLEyW2Bl/J6F
+         YDmuWaRKdYrvbLhn1Xc7sDUhOVtBD5LRcAff5RbsYQhTMAtHlbfrH5kpUIYEjHtvq/hW
+         onXA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=arRFlThrQDHJouWNW7pmtVkTmqxo0HW/M/+9WZYjCjk=;
+        fh=4zd2YZ125J36P8gJu6szCagdUdruxx2ittokc/qqOFg=;
+        b=iQ2MaS+lywEKDT+c7o4vhK6FFEoE1fSIziynt/WBztIFix2iuen2DFjPbueffwNyac
+         VlIq2UBJNVz77ZBGzmGNf3u0Jmth7T85oDcRZUlNuyHc9fpTUQWs2rNCmoJz69WJcfC3
+         BunKcfs6UK6WKhoYVVL/JrltaaQ8ke5VWF/5zE07Eg8Dq2Y3aI9T8BeIXvWoRDf5uD2l
+         Y5UYNOs82ZbRM6MhXy0sAmzxLisx5msEGi9rUxj8cZzbnwEtSCKx82cC5ofz3qe2H/OV
+         30ENWq05PB/k85E4JUGuBfwfZBk84j+bGAIvScvj/CVORCkM3usWRTkyuq+qiO3HDPJ9
+         EeBA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20251104; t=1789498477; x=1790103277; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=arRFlThrQDHJouWNW7pmtVkTmqxo0HW/M/+9WZYjCjk=;
+        b=GMLpY6ezDXJkFcIPPWzCfgfdUr0zSkfoX6WUzI++JytBz5Rp0gpXyWl+j/0Z2X6sHz
+         p9TQJAjRCbURbHoLL632skc0ZqOkgP11nP2HIuZzuOghQGgRy6lbONgBeL9DTdd0TO2O
+         cUAFn0r36aeD5dvEJz7+tAyUFFhNgnz0G4vG4WmoSH+mDrRXU4hiqBly07YjPvCT+H4M
+         WGCgRHMboB9LAONt8PBc20Rsv+BVJ3yB9nb+KrisPrpI6dn1zWZqh/2UwwgN1NcyBINB
+         qjLuR4CebQtTWL38Ke992gNcRUVJOYv0hIJ5IPR5fXUYrYl5p0eMuymzGEB0il7s92Q7
+         8vZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20260707; t=1789498477; x=1790103277;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=arRFlThrQDHJouWNW7pmtVkTmqxo0HW/M/+9WZYjCjk=;
+        b=pTBtd0HI388Leiex18WihjiBCd3mi5G5Qpwx91gcFJuYCm3+sUGmXgDMiNg4Woli6M
+         qzhNkGRs41+5yyydtJN2z16CntFxJfZV3h5jGVfhZW86I5kS3q2iMc/751XctQymsRz3
+         8+/YdbkHa7W74vN6ivGsBqbreMox+8Fu5D9eR/z/H6oIAkJK66QObGIZSlt1m2sDNtmx
+         /s2o82ZxzkUN86d6LNtsWAepoYJL6qsiPnrdap+ty/Dc+6tZNlZsZZ0NxWDy/6xz3xBL
+         eVP69iKrutfQT4lNuWht6RK7PMWGuB4PfCtZNc+2DTy+mkp/axGxz9DJjja5B1eAL3t2
+         pxrw==
+X-Forwarded-Encrypted: i=1; AKwUvBzSuGxFD6QAD0ZYJUCA/mD6VgbmuvB0IjqlyFAPZP2lwE72uBx2KMZpW7pnAi7T7f5DBPf/4nmU+7JK1OWUZ11A@vger.kernel.org
+X-Gm-Message-State: AFuF++nkATlQSIJyyRB3zQ6PHzzDV9RgnkXTczBdvcmTj9Rq4AXQNC5H
+	HszsYi2/B/Cs5Bmd36Y5qrwdxwecTiBlHDvBXZpJ0af+ief+6JP5HcezdZiAih8Pi7aCnsuLWHa
+	L0U96rXCSIROlpwFTbsd3R9SOHeXfvqBgmCS1HJwY
+X-Gm-Gg: AYBFou2HZLjvTD1+FK+03RYKRMO9kdRPnizeithaixkgB4So/KsyFQZoXIQmKvRUhZM
+	MAIMFlv9polUEMfTIaQ7nXgrz5YhIr+Ws6lsX22CizyvLGmkdHeJHAamRNanznyMnfw0/AKpr+v
+	Tf4sZjHdlNg8djrdY7lyac40HYJTlIOfXMiuK5ifLlfSJH0VM82aR6/rDOLr2DAAU+OPbQ0gh6W
+	GhJggpdH84OnJJZnTRqcbfi6Zvg8jb5BXBl6N1d+tX8NeKfxkMGmGpqDZoRZfV5VaVZbJQi3sKZ
+	zEu2fNU2tWzEROmFflE8fHcLsY/TE34rgPxY3bZAG2zijrR+voHMrJLG3qrqnlG0ilJwTETAC/T
+	0U5nI/1qvOQ==
+X-Received: by 2002:a17:903:1965:b0:2d5:db3d:1a45 with SMTP id
+ d9443c01a7336-2dd89c53b5fmr918555ad.18.1789498476071; Tue, 15 Sep 2026
+ 11:54:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20260602181349.3969429-1-ctshao@google.com> <20260602181349.3969429-2-ctshao@google.com>
+ <CAP-5=fVwLO29i5SoLjOBhPqqUMTiy-z52Wm1mbeBF_941Jbx9Q@mail.gmail.com>
+ <aihLa9ezNXXZm9mC@x1> <aqdRi7v_A03mY1tU@x2> <CAJpZYjXT5rrqQuUTePV6WS5XafgtW1Z4FxMoT93uKjYdKU1VWw@mail.gmail.com>
+In-Reply-To: <CAJpZYjXT5rrqQuUTePV6WS5XafgtW1Z4FxMoT93uKjYdKU1VWw@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 15 Sep 2026 11:54:21 -0700
+X-Gm-Features: AcwNN1VVwoWvz_e9gxbcbMEzwLeLB1HYP1av5G-CVgrJRZd7px1Xy6Hu_Vz2LQM
+Message-ID: <CAP-5=fWKaSgVF5M-m7fObPdt5=MFZpK0RcmAS_G5thTYSzLXPw@mail.gmail.com>
+Subject: Re: [PATCH v8 2/2] perf evsel: Find process with busy PMUs for EBUSY
+To: Chun-Tse Shao <ctshao@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, James Clark <james.clark@linaro.org>, 
+	Thomas Falcon <thomas.falcon@intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for your contribution! Sashiko AI review found 1 potential issue(=
-s) to consider:
-- [Medium] perf: memory exhaustion in ondemand_read_name() via truncated ELF
---
+On Mon, Sep 14, 2026 at 1:30=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> w=
+rote:
+>
+> On Sun, Sep 13, 2026 at 6:44=E2=80=AFPM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > On Tue, Jun 09, 2026 at 02:20:43PM -0300, Arnaldo Carvalho de Melo wrot=
+e:
+> > > On Tue, Jun 09, 2026 at 08:58:03AM -0700, Ian Rogers wrote:
+> > > > On Tue, Jun 2, 2026 at 11:13=E2=80=AFAM Chun-Tse Shao <ctshao@googl=
+e.com> wrote:
+> > > > >
+> > > > > It parses fdinfo with PMU type, comparing with the event which fa=
+iled to
+> > > > > open, and report the processes causing EBUSY error.
+> > > > >
+> > > > > Testing cycles and intel_pt//
+> > > > >
+> > > > >   $ ./perf stat -e cycles &
+> > > > >   [1] 55569
+> > > > >   $ ./perf stat -e intel_pt// &
+> > > > >   [2] 55683
+> > > > >   $ ./perf stat -e intel_pt//
+> > > > >   Error:
+> > > > >   The PMU intel_pt counters are busy and in use by another proces=
+s.
+> > > > >   Possible processes:
+> > > > >   55683 ./perf stat -e intel_pt//
+> > > > >
+> > > > > Only perf with intel_pt was reported.
+> > > > >
+> > > > > Reviewed-by: Ian Rogers <irogers@google.com>
+> > > > > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
+> > > > > Assisted-by: Gemini:gemini-3.1-pro-preview
+> > > >
+> > > > Arnaldo, as the kernel piece of this landed (thanks Peter!) could w=
+e
+> > > > land the tool part too?
+> > >
+> > > Thanks for pointing this out to me, I'll do some housekeeping and
+> > > process this.
+> >
+> > I think this hasn't landed, I tried to find the userland part of v8 but
+> > didn't manage to, can you please point it to me?
+> >
+> > - Arnaldo
+>
+> Hi Arnaldo,
+>
+> Thanks for taking care this. The link to lkml for this userland part
+> is: https://lore.kernel.org/all/20260602181349.3969429-2-ctshao@google.co=
+m/
 
-commit 9189c705674e1061e4de963daab5ec07bd55d920
-Author: Alireza Haghdoost <haghdoost@uber.com>
+Hi CT,
 
-perf script: Add --lazy-load-symbols for lazy symbol loading
+Would it be possible to rebase and resend the tool part as a v9? This
+will also trigger the Sashiko review, which would be nice to have.
 
-This commit introduces lazy symbol loading for userspace ELF DSOs in perf
-script. It builds a sorted in-memory index of symbols and resolves them via
-binary search, reading symbol names on-demand from the string table using
-pread() to reduce memory footprint.
+Thanks,
+Ian
 
-diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
-index 914e42d21f70f..e4d77e46e8830 100644
---- a/tools/perf/util/symbol-elf.c
-+++ b/tools/perf/util/symbol-elf.c
-
-[ ... ]
-
-> +static const char *ondemand_read_name(int fd, u64 strtab_offset,
-> +				      u64 strtab_size, u64 name_off,
-> +				      char *buf, size_t buflen,
-> +				      char **to_free)
-> +{
-
-[ ... ]
-
-> +	/*
-> +	 * Slow path: the name is longer than buflen.  Grow a heap buffer
-> +	 * geometrically, doubling until the terminator appears, so a long
-> +	 * name costs O(name length), not O(remaining strtab size).
-> +	 */
-> +	cap =3D 4096;
-> +	for (;;) {
-> +		char *tmp;
-> +		size_t want =3D cap;
-> +
-> +		if (want > remain)
-> +			want =3D remain;
-> +		if (want =3D=3D 0)
-> +			break;
-> +
-> +		tmp =3D *to_free ? realloc(*to_free, want + 1) : malloc(want + 1);
-> +		if (!tmp) {
-> +			free(*to_free);
-> +			*to_free =3D NULL;
-> +			return NULL;
-> +		}
-> +		*to_free =3D tmp;
-> +
-> +		n =3D pread(fd, *to_free, want, file_off);
-> +		if (n <=3D 0) {
-> +			free(*to_free);
-> +			*to_free =3D NULL;
-> +			return NULL;
-> +		}
-> +		(*to_free)[n] =3D '\0';
-> +
-> +		if (memchr(*to_free, '\0', n))
-> +			return *to_free;
-> +
-> +		/*
-> +		 * Read the whole remaining strtab (or hit EOF) with no
-> +		 * terminator: corrupt file, bail instead of re-reading.
-> +		 */
-> +		if (want >=3D remain || (u64)n >=3D remain)
-> +			break;
-
-[Severity: Medium]
-Does this loop properly handle a short read (EOF) on a truncated ELF file?
-
-If pread() hits EOF before filling the requested want bytes, n will be smal=
-ler
-than want but greater than 0. The loop condition currently checks if
-want >=3D remain or (u64)n >=3D remain, but it appears to miss an explicit
-short-read/EOF check like (size_t)n < want.
-
-Because of this, if remain is very large (based on an unvalidated sh_size
-in the ELF header), the loop could continuously geometrically reallocate up
-to remain bytes while reading the exact same short bytes from the constant
-file_off. Could this cause memory exhaustion / an OOM allocation failure?
-
-> +
-> +		/* Avoid size_t overflow on absurdly large strtabs. */
-> +		if (cap > SIZE_MAX / 2)
-> +			break;
-> +		cap *=3D 2;
-> +	}
-> +
-> +	free(*to_free);
-> +	*to_free =3D NULL;
-> +	return NULL;
-> +}
-
---=20
-Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260915-perf-symbo=
-l-memory-send-v1-0-1d3360e21f07@uber.com?part=3D3
+> The kernel part
+> (https://lore.kernel.org/all/20260602181349.3969429-1-ctshao@google.com/)
+> was merged by Peter Zijlstra and I can see a tip-bot replied on it.
+>
+> -CT
