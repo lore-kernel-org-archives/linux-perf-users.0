@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72403563F6;
-	Wed, 16 Sep 2026 18:32:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA314AB3BC;
+	Wed, 16 Sep 2026 18:32:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789583565; cv=none; b=VLgg7opi0iELggbBqRyzWtZMjY0XegtMVjFqOEoeqBaBXqVGowRx8d9tdQ/+wCL8iLwh80+Nd9UXU8ygVZn72pA8Lbsdtk1PnD+ryhWZW08K/g0qGo/rZdrMzFxjMGycBFfrsDPZayHhzZ7gqud86MVPwxwVhKdoELmJck03xsc=
+	t=1789583571; cv=none; b=Z+GHJb+CnxaAABDEwvZ1NsaTVcZycDX/5Il/FjLG3oNVrsuOJ8DQYPAaCMg//lqfdc+Wo4y4Hss3Hop0cE1Mf/CJwOX4TkSUVJECnHixyYz3xLsxdULyku0uy/cCYJ1o4CMEZ5CrlP9+TXcoxbOKX/5/8yoenqjocVdFCHLCOUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789583565; c=relaxed/simple;
-	bh=bNuTZetmEV6ry61NT+2JIDLuHgMUB3mUmBcRtFqF+qE=;
+	s=arc-20240116; t=1789583571; c=relaxed/simple;
+	bh=9de30fpK+FjlEc6Zx0EYXPffeGgzKidhMDqQpeunEDs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mxef8pmU9T+16xDDnc4h09ztyNKKTqmqcqycxXdLAZEeM8z6M5/eDfbeifkMnqHlH8CxNtKds41RSmO9ANIJz+kRfZcdtYUnKbmvYX23p09hZh7WxDgiyTp+CktmSHnH/mGivlspk2mk9KGKRG081MxBWke+ahN375O60TO+TMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cw8UZJD8; arc=none smtp.client-ip=100.103.45.18
+	 MIME-Version; b=XwtC5Mketue26oCLpxW5Xf78SBFx1l1siMaTw5RdM9RykTZ6Rd9NJHaH71IedeDhK72trRs7mczAIS3wtocOyTT5n1N2/tkO86uLeIr0ABIQnbENTJAFp3wm9RVc1YmIcBSH4TwQFa9+DvLrBrZadj7EVp50wy7rX9bZf6eaWDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9012s0D; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cw8UZJD8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D8151F00893;
-	Wed, 16 Sep 2026 18:32:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9012s0D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 346441F00899;
+	Wed, 16 Sep 2026 18:32:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789583545;
-	bh=oCfBnNNGcuwfgMxdKdgXTr3goiFxLjnbunYKsD9z8nA=;
+	s=k20260515; t=1789583551;
+	bh=9lw9ppSljwe7tgQX6UghEIY0j7oCp66gCvuvqRaKXsk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=cw8UZJD839JI59JFsIz2+uX++kGf9nBxwRhs7Yx1y5sTWkuHUu0F6sex20C2X8TeN
-	 GIzEo1CamXHKEScNW4kGL+lVzIQ/pvwNpc8ss7Hs0YCH7Cg1QoH1Km3/8EOrOrC0k+
-	 q5f72Ou9mvtf8A/ctq7dOvKLg0hULklgZ52gvvEBaU1eMSHxESsNuuJ8dZZXGnseC8
-	 12b2+jH/gKSWJr/phBd87UkqBLheG3RP4nMGE6+xlak7GPe5qQ4qE1ppJCm0mLlwQY
-	 YW3W3aAsdBR1E16RRJJw8veVVoV/6/8mdrGoSA7lKfYhJkMXRBZHb19OT2byFd8zzZ
-	 60mv61Jruv9bg==
+	b=R9012s0DSGRMKC3VDg2u+4XAlLE1BkLkuWx3EJ6/5rYurK5wtFCbUgcxtdCPqXIdJ
+	 A8MiRqwwtnkXFObarajAcgxMQGx4sXqlwz6tH3jtHOkZ1lqdnLXKjZOnLWR9V5ds5r
+	 Z3dA5znvQgDs8mQ2Zyx/yFC5xRATH3XWBBfGb1pHD9dDvHqKOKRXQQwo1XL9a2wk25
+	 QSXi61UWSCK5eaayWW14ngwCe9cUfSEkOQx3Ps0P7DGKhXSzbR7DoGi7xWZulzWYQY
+	 pJoyk9Vi9GMUai9B2vV4w/LkdU79JZFwaxMys4bWyr6iOQqzzWil4dlBj9V3uN9w+F
+	 gkfqkBvVPqP/A==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -38,9 +38,9 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 01/12] perf test: Skip data_type_profiling when the PMU cannot record memory events
-Date: Wed, 16 Sep 2026 15:32:02 -0300
-Message-ID: <20260916183215.54305-2-acme@kernel.org>
+Subject: [PATCH 03/12] perf config: Move perf_config__set_variable() to util/config.c
+Date: Wed, 16 Sep 2026 15:32:04 -0300
+Message-ID: <20260916183215.54305-4-acme@kernel.org>
 X-Mailer: git-send-email 2.55.0
 In-Reply-To: <20260916183215.54305-1-acme@kernel.org>
 References: <20260916183215.54305-1-acme@kernel.org>
@@ -54,142 +54,214 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-The test records with 'perf mem record' in per-thread mode and its only
-guard matches one specific message:
+It is code from the 'perf config' builtin to set a variable in the
+configuration file perf is using, the user's ~/.perfconfig, or the file
+named by the PERF_CONFIG environment variable when it is set, rewriting
+that file from the config set, the same rewrite 'perf config' does,
+i.e. the comments in it are not preserved, as the config set carries
+just the key-value pairs.  It has to honour PERF_CONFIG, that makes perf
+read only that file: the config set is loaded from it, so writing
+~/.perfconfig would replace it with the exclusive file's entries.
 
-  perf mem record -o /dev/null -- true 2>&1 | \
-        grep -q "failed: no PMU supports the memory events" && exit 2
+The next patch wants to use it from util/debuginfo.c, so that when the
+user asks for a debuginfod fetch to be skipped, pressing 'd', the
+disable can also be made permanent, moving perf_config__set_variable()
+to util/config.c, together with the set_config() body it uses,
+parameterized as perf_config_set__write() with the system_config
+choice as an argument, since the builtin's static use_system_config
+and use_user_config option variables are not available outside it.
+'perf config' keeps its behavior via the set_config() wrapper.
 
-A PMU that has memory events but refuses them per-thread falls through
-it, and AMD IBS does:
-
-  $ perf mem record -o /dev/null -- true
-  Error:
-  Failure to open event 'ibs_op/ldlat=0/u' on PMU 'ibs_op' which will be removed.
-  Invalid event (ibs_op/ldlat=0/u) in per-thread mode, enable system wide with '-a'.
-  Error:
-  Failure to open any events for recording.
-
-What follows is not a skip either.  The script runs under 'set -e', so
-the bare 'perf mem record' in test_basic_annotate() aborts it through the
-EXIT trap, which reports a signal that never happened and exits 1:
-
-  Basic Rust perf annotate test
-  Unexpected signal in test_basic_annotate
-
-so 'perf test' turns "this PMU cannot record these events" into a test
-failure:
-
-  $ perf test "data type profiling"
-   87: perf data type profiling tests             : FAILED!
-
-The 'if [ "x$?" != "x0" ]' right below the record was meant to report
-"[Failed: perf record]" and carry on with the other cases, but under
-'set -e' it is dead code: the shell is gone before it is reached.  The
-same goes for the 'perf annotate' call below it.
-
-Skip when a trivial per-thread 'perf mem record' fails, and put both
-commands in the condition of an 'if', where 'set -e' leaves them alone,
-so that the
-reporting works for the cases where only one workload cannot be recorded
-or annotated:
-
-  $ perf test "data type profiling"
-   87: perf data type profiling tests             : Skip
-
-and, with just the new skip guard disabled on the same box, every case
-reports its failure instead of the first one aborting the run:
-
-  Basic Rust perf annotate test
-  Basic annotate [Failed: perf record]
-  Pipe Rust perf annotate test
-  Pipe annotate [Failed: perf record]
-  Basic C perf annotate test
-  Basic annotate [Failed: perf record]
-  Pipe C perf annotate test
-  Pipe annotate [Failed: perf record]
-
-Fixes: f60a5c22967b ("perf tests: Test annotate with data type profiling and rust")
-Acked-by: Namhyung Kim <namhyung@kernel.org>
 Assisted-by: LLM
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/data_type_profiling.sh | 46 +++++++++++++++----
- 1 file changed, 36 insertions(+), 10 deletions(-)
+ tools/perf/builtin-config.c | 70 +------------------------------------
+ tools/perf/util/config.c    | 70 +++++++++++++++++++++++++++++++++++++
+ tools/perf/util/config.h    |  2 ++
+ 3 files changed, 73 insertions(+), 69 deletions(-)
 
-diff --git a/tools/perf/tests/shell/data_type_profiling.sh b/tools/perf/tests/shell/data_type_profiling.sh
-index eca694600a0478d2..a916c410274aa888 100755
---- a/tools/perf/tests/shell/data_type_profiling.sh
-+++ b/tools/perf/tests/shell/data_type_profiling.sh
-@@ -19,6 +19,15 @@ perfout=$(mktemp /tmp/__perf_test.perf.out.XXXXX)
- perf mem record -o /dev/null -- true  2>&1 | \
-   		grep -q "failed: no PMU supports the memory events" && exit 2
+diff --git a/tools/perf/builtin-config.c b/tools/perf/builtin-config.c
+index cefd042e4f853466..3b074aca8d344539 100644
+--- a/tools/perf/builtin-config.c
++++ b/tools/perf/builtin-config.c
+@@ -41,37 +41,7 @@ static struct option config_options[] = {
  
-+# Skip if per-thread mem record is not supported on this PMU (e.g. AMD IBS
-+# needs system-wide '-a'): it is what the test records with below, and a
-+# failing record must not be reported as a test failure.
-+if ! perf mem record -o /dev/null -- true 2>/dev/null
-+then
-+  echo "Skip: cannot record memory events on this PMU"
-+  exit 2
-+fi
+ static int set_config(struct perf_config_set *set, const char *file_name)
+ {
+-	struct perf_config_section *section = NULL;
+-	struct perf_config_item *item = NULL;
+-	const char *first_line = "# this file is auto-generated.";
+-	FILE *fp;
+-
+-	if (set == NULL)
+-		return -1;
+-
+-	fp = fopen(file_name, "w");
+-	if (!fp)
+-		return -1;
+-
+-	fprintf(fp, "%s\n", first_line);
+-
+-	/* overwrite configvariables */
+-	perf_config_items__for_each_entry(&set->sections, section) {
+-		if (!use_system_config && section->from_system_config)
+-			continue;
+-		fprintf(fp, "[%s]\n", section->name);
+-
+-		perf_config_items__for_each_entry(&section->items, item) {
+-			if (!use_system_config && item->from_system_config)
+-				continue;
+-			if (item->value)
+-				fprintf(fp, "\t%s = %s\n",
+-					item->name, item->value);
+-		}
+-	}
+-	fclose(fp);
+-
+-	return 0;
++	return perf_config_set__write(set, file_name, use_system_config);
+ }
+ 
+ static int show_spec_config(struct perf_config_set *set, const char *var)
+@@ -158,44 +128,6 @@ static int parse_config_arg(char *arg, char **var, char **value)
+ 	return 0;
+ }
+ 
+-int perf_config__set_variable(const char *var, const char *value)
+-{
+-	char path[PATH_MAX];
+-	char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
+-	const char *config_filename;
+-	struct perf_config_set *set;
+-	int ret = -1;
+-
+-	if (use_system_config)
+-		config_exclusive_filename = perf_etc_perfconfig();
+-	else if (use_user_config)
+-		config_exclusive_filename = user_config;
+-
+-	if (!config_exclusive_filename)
+-		config_filename = user_config;
+-	else
+-		config_filename = config_exclusive_filename;
+-
+-	set = perf_config_set__new();
+-	if (!set)
+-		goto out_err;
+-
+-	if (perf_config_set__collect(set, config_filename, var, value) < 0) {
+-		pr_err("Failed to add '%s=%s'\n", var, value);
+-		goto out_err;
+-	}
+-
+-	if (set_config(set, config_filename) < 0) {
+-		pr_err("Failed to set the configs on %s\n", config_filename);
+-		goto out_err;
+-	}
+-
+-	ret = 0;
+-out_err:
+-	perf_config_set__delete(set);
+-	return ret;
+-}
+-
+ int cmd_config(int argc, const char **argv)
+ {
+ 	int i, ret = -1;
+diff --git a/tools/perf/util/config.c b/tools/perf/util/config.c
+index 31c6618d3b3daf22..3f9753b2a7bdfb76 100644
+--- a/tools/perf/util/config.c
++++ b/tools/perf/util/config.c
+@@ -876,6 +876,76 @@ void perf_config__exit(void)
+ 	config_set = NULL;
+ }
+ 
++int perf_config_set__write(struct perf_config_set *set,
++			   const char *file_name, bool system_config)
++{
++	struct perf_config_section *section = NULL;
++	struct perf_config_item *item = NULL;
++	FILE *fp;
 +
- cleanup() {
-   rm -rf "${perfdata}" "${perfout}"
-   rm -rf "${perfdata}".old
-@@ -52,25 +61,42 @@ test_basic_annotate() {
-     index=1 ;;
-   esac
- 
-+  # Under 'set -e' a bare failing command aborts the script through the EXIT
-+  # trap, so the commands that report a failure have to be the condition of
-+  # an 'if' for that reporting to ever happen.
-   if [ "x${mode}" == "xBasic" ]
-   then
--    perf mem record -o "${perfdata}" ${testprogs[$index]} 2> /dev/null
-+    if ! perf mem record -o "${perfdata}" ${testprogs[$index]} 2> /dev/null
-+    then
-+      echo "${mode} annotate [Failed: perf record]"
-+      err=1
-+      return
-+    fi
-   else
--    perf mem record -o - ${testprogs[$index]} 2> /dev/null > "${perfdata}"
--  fi
--  if [ "x$?" != "x0" ]
--  then
--    echo "${mode} annotate [Failed: perf record]"
--    err=1
--    return
-+    if ! perf mem record -o - ${testprogs[$index]} 2> /dev/null > "${perfdata}"
-+    then
-+      echo "${mode} annotate [Failed: perf record]"
-+      err=1
-+      return
-+    fi
-   fi
- 
-   # Generate the annotated output file
-   if [ "x${mode}" == "xBasic" ]
-   then
--    perf annotate --code-with-type -i "${perfdata}" --stdio --percent-limit 1 2> /dev/null > "${perfout}"
-+    if ! perf annotate --code-with-type -i "${perfdata}" --stdio --percent-limit 1 2> /dev/null > "${perfout}"
-+    then
-+      echo "${mode} annotate [Failed: perf annotate]"
-+      err=1
-+      return
-+    fi
-   else
--    perf annotate --code-with-type -i - --stdio 2> /dev/null --percent-limit 1 < "${perfdata}" > "${perfout}"
-+    if ! perf annotate --code-with-type -i - --stdio 2> /dev/null --percent-limit 1 < "${perfdata}" > "${perfout}"
-+    then
-+      echo "${mode} annotate [Failed: perf annotate]"
-+      err=1
-+      return
-+    fi
-   fi
- 
-   # check if it has the target data type
++	fp = fopen(file_name, "w");
++	if (!fp)
++		return -1;
++
++	fprintf(fp, "# this file is auto-generated.\n");
++
++	/* overwrite configvariables */
++	perf_config_sections__for_each_entry(&set->sections, section) {
++		if (!system_config && section->from_system_config)
++			continue;
++		fprintf(fp, "[%s]\n", section->name);
++
++		perf_config_items__for_each_entry(&section->items, item) {
++			if (!system_config && item->from_system_config)
++				continue;
++			if (item->value)
++				fprintf(fp, "\t%s = %s\n",
++					item->name, item->value);
++		}
++	}
++	fclose(fp);
++
++	return 0;
++}
++
++/*
++ * Set @var=@value in the configuration file perf is using: the user's
++ * ~/.perfconfig, or the file named by the PERF_CONFIG environment
++ * variable.  The latter has to be honoured as it makes perf read only
++ * that file, so the config set came from it and writing ~/.perfconfig
++ * would replace it with the exclusive file's entries.  Rewriting the
++ * file from the config set is the same rewrite 'perf config' does: the
++ * comments are not preserved, as the config set carries just the
++ * key-value pairs.
++ */
++int perf_config__set_variable(const char *var, const char *value)
++{
++	char path[PATH_MAX];
++	char *user_config = mkpath(path, sizeof(path), "%s/.perfconfig", getenv("HOME"));
++	const char *config_filename = config_exclusive_filename ?: user_config;
++	struct perf_config_set *set;
++	int ret = -1;
++
++	set = perf_config_set__new();
++	if (!set)
++		goto out_err;
++
++	if (perf_config_set__collect(set, config_filename, var, value) < 0) {
++		pr_err("Failed to add '%s=%s'\n", var, value);
++		goto out_err;
++	}
++
++	if (perf_config_set__write(set, config_filename, /*system_config=*/false) < 0) {
++		pr_err("Failed to set the configs on %s\n", config_filename);
++		goto out_err;
++	}
++
++	ret = 0;
++out_err:
++	perf_config_set__delete(set);
++	return ret;
++}
++
+ static void perf_config_item__delete(struct perf_config_item *item)
+ {
+ 	zfree(&item->name);
+diff --git a/tools/perf/util/config.h b/tools/perf/util/config.h
+index 987b47cf54c350ba..9098f8a045850c97 100644
+--- a/tools/perf/util/config.h
++++ b/tools/perf/util/config.h
+@@ -33,6 +33,8 @@ int perf_config_scan(const char *name, const char *fmt, ...) __scanf(2, 3);
+ const char *perf_config_get(const char *name);
+ int perf_config_set(struct perf_config_set *set,
+ 		    config_fn_t fn, void *data);
++int perf_config_set__write(struct perf_config_set *set,
++			   const char *file_name, bool system_config);
+ int perf_config_int(int *dest, const char *, const char *);
+ int perf_config_u8(u8 *dest, const char *name, const char *value);
+ int perf_config_u64(u64 *dest, const char *, const char *);
 -- 
 2.55.0
 
