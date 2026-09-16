@@ -1,77 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B19543ACF17
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 01:43:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78C6E3B7B97
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 01:43:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789522992; cv=none; b=aRu4dwvmehDCMxjmMp0Ls/wxRdq/SV164n1zY1VZSa3Olf7uZTo+x0oV+ftZtVZBfMlR7hwFyy6JS0fV/vuc8EDjCXGRwlGZDEh5R+DoWUMpvoDp9RW1eZ3To9fUpCjR+LwgJd1Fxs2jF89H3mqCAZ02sA0ZgYrOY9+jFROSEA0=
+	t=1789522997; cv=none; b=j8wd4JfCPxr7chaFm4aVhajWJenwSQLbvjVnR9eM8yeI+v3ru0svuW9Amej6Fi8gxd2VUHi/2fAbC05qNy9oFI+s0C0Nt9UnW6KrmcMuAHtqRs2/BStq/3sr4ImHgwB87xW6+tEfTalqCbPzm2rCJREaN/P5QvcPSDaAGk3pKYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789522992; c=relaxed/simple;
-	bh=/PIC5QDt504JnFJbW0u4Exw5b9NloliMKnLDSSXXE78=;
+	s=arc-20240116; t=1789522997; c=relaxed/simple;
+	bh=AfinkU3zC/cJ1iUhCFlcZ3fZUO8i8FIhit/qfucglnU=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=BzPU4J4oElh7PU3kcY4Ab10Mo5pAznMiVbBqOigfgdlAqzgTOuJrf6TQRzt08o3k1hJgkNrd0CqQsyV07Cre6DYP7SZkIbFpx+R+6q0jd919YSOVgvAGwVE9q1Bk+Z6IBMCrhFxNZa12FSbmeE61McQExRc87GaaAdbBLgxGW8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gCbVWzpx; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=Q0RCwfVoQuOcrlF/8sHPxL6ESidQLS2lPyD/gU57QfFqcEOdjUBF5JoDE273iAg31KiNOjnVnDSZRCbWnavUuN/2PWiYqJ0FBtyoa8kMLeIkGLD6h7KLGYKY2o4RGbL1fdNhJRZ32SukFyaeyK0aTchDoPRybNHT4tuOQ9RhXd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e269Emt0; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gCbVWzpx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 392051F00893;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e269Emt0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5A931F00898;
 	Wed, 16 Sep 2026 01:43:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789522983;
-	bh=zet4wCavDO7VUXVIq4gWMn90khjNYV1JyfpjV00KO3E=;
+	s=k20260515; t=1789522984;
+	bh=vjnr+rcJkr7ahTcahTmrpUPBDhJmauPT9ya3GTTImgc=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=gCbVWzpxwV8E17DrLXgILC8AtzBXo4AQBj0kk7QWBJgJM2Fs6PE6Wp3OYAMJfYQ9W
-	 rZiRAJNRduuAjZsUNFfltIgs3I3jD4/g6EPC8Bf715zHEiOFEsuOfNJVYn9MCGe/s9
-	 WHbuPb3Le5H3iNGEa0JK6qvGN0SibIji9ZqHRqGneOOKl2d3E+ROAlzJUpKF/fnZpg
-	 kxn43rodQ5/gOlEwLkJmOOhzuP3PrOIFm9A4P6RjfIFSAGRhdgmJJSbmZaARkdefGU
-	 +aPf+IAuzWo7XntE5AeOmxu75H1IRIHVOfCPlF0p3vEjWpde7efrZrE+xqZ2MMgyfz
-	 qG1Prop20aCLw==
+	b=e269Emt0DD8e1wwnps/+ntWrR1JuQ0zQsZUZaTbSuCBEWPv3Sk2BKfXfZS/yZHfzh
+	 TNL0gabbrsoPulbwb73U7Nlqkcnr3f1GTygfbpq0VZvWKIvWuPy7LUmLQB7nhrVqaB
+	 wcvTdgEBGKuJRAOrnN1gDcGGpS1bmSPnWcYwTBtPePyJem68bC9RZ6wSUgDHpfaext
+	 6oNDdUjV+z5IqD7+n+bcGaEdVoVFGLOUDJwUwuuleyR0UNU5MgeaW2zZrUpxOGlNnz
+	 CkiNkCAtXe/d3BxMfgDnNdAFvczCeuRQ8E9oD7W7ZN4B6qV38DNV+LtpzqNidNSlCs
+	 ndvGEu6TYIkTg==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH v6 08/26] perf annotate: Adapt arch__dwarf_regnum() for
- arm64
+Subject: Re: [PATCH v6 02/26] perf llvm: Fix arm64 adrp instruction
+ disassembly mismatch with objdump
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Tengda Wu" <wutengda@huaweicloud.com>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <1f03970d9efc5195283158362873d1e445b4afe5.1789521520.git.wutengda@huaweicloud.com>
+In-Reply-To: <63d15af66450065329b08f41794738c2e8c811ab.1789521520.git.wutengda@huaweicloud.com>
 References: <cover.1789521520.git.wutengda@huaweicloud.com>
- <1f03970d9efc5195283158362873d1e445b4afe5.1789521520.git.wutengda@huaweicloud.com>
+ <63d15af66450065329b08f41794738c2e8c811ab.1789521520.git.wutengda@huaweicloud.com>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Sep 2026 01:43:02 +0000
-Message-Id: <20260916014303.392051F00893@smtp.kernel.org>
+Date: Wed, 16 Sep 2026 01:43:03 +0000
+Message-Id: <20260916014303.D5A931F00898@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-> Currently, arch__dwarf_regnum() assumes that all architectures use a
-> register prefix character (e.g., '%' for x86) defined by
-> arch->objdump.register_char, and uses it to match register names in
-> objdump output. However, this assumption does not hold for arm64,
-> where assembly syntax uses bare register names like 'x0', 'w1'
-> without any prefix.
->=20
-> As a result, arm64 builds may fail to correctly recognize register
-> names from objdump disassembly, leading to incomplete or incorrect
-> annotation output.
->=20
-> To address this:
->=20
-> - Make the register prefix check optional, allowing architectures
->   without a prefix character to be parsed correctly.
->=20
-> - Extend the delimiter set in strpbrk() to include the closing square
->   bracket ']'. In arm64 assembly, memory operands often use bracketed
->   syntax such as '[x1, #16]' or '[x2]'. Adding ']' ensures clean
->   extraction of register names like 'x2' without trailing characters.
->=20
-> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
+Thank you for your contribution! Sashiko AI review found 1 potential issue(=
+s) to consider:
+- [Medium] perf: arm64 pcrel load formatting failure aborts disassembly
+--
 
-Sashiko has reviewed this patch and found no issues. It looks great!
+commit ad5ee451ad40bd108c85e2fea401d911d9304dee
+Author: Tengda Wu <wutengda@huaweicloud.com>
+
+perf llvm: Fix arm64 adrp instruction disassembly mismatch with objdump
+
+This commit fixes an inconsistency in how libllvm parses arm64 adrp
+instructions by manually extracting the target address via
+symbol_lookup_callback(). The extracted address is then converted to match
+objdump's format, ensuring compatibility with existing parsers.
+
+> diff --git a/tools/perf/util/llvm.c b/tools/perf/util/llvm.c
+> index a0deb742a7331..a78845689aa1c 100644
+> --- a/tools/perf/util/llvm.c
+> +++ b/tools/perf/util/llvm.c
+[ ... ]
+> @@ -228,12 +240,42 @@ int symbol__disassemble_llvm(const char *filename, =
+struct symbol *sym,
+[ ... ]
+>  		if (storage.pcrel_load_addr !=3D 0) {
+> -			char *name =3D llvm_name_for_data(dso, filename,
+> +			char *name;
+> +
+> +			if (arch__is_arm64(args->arch)) {
+> +				/*
+> +				 * For arm64, replace the immediate operand with
+> +				 * the resolved address to match objdump's output.
+> +				 *
+> +				 * Example conversion:
+> +				 *   From: adrp  x18, 8014
+> +				 *   To:   adrp  x18, ffff800081f5f000
+> +				 */
+> +				char *s =3D strchr(disasm_buf, ',');
+> +
+> +				if (s =3D=3D NULL)
+> +					goto err;
+
+[Severity: Medium]
+Could this error path escalate a minor string formatting mismatch into a
+complete failure of the disassembly operation?
+
+If an ARM64 instruction triggers a PC-relative load but its disassembled
+text lacks a comma (e.g., due to an unexpected mnemonic format from LLVM,
+or data incorrectly decoded as an instruction), strchr() returns NULL and
+triggers this abort.
+
+Because the error path in symbol__disassemble_llvm() fails to clean up
+partially populated lists, aborting the disassembly here discards the LLVM
+disassembly for the function. When the fallback disassembler takes over,
+this leaves interleaved, corrupted disassembly lines and causes a memory
+leak.
+
+> +
+> +				s++;
+> +				*s =3D '\0';
+> +				disasm_len =3D strlen(disasm_buf);
+> +				disasm_len +=3D scnprintf(disasm_buf + disasm_len,
+> +							sizeof(disasm_buf) - disasm_len,
+> +							" %"PRIx64,
+>  							storage.pcrel_load_addr);
+[ ... ]
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/cover.1789521520.gi=
-t.wutengda@huaweicloud.com?part=3D8
-
+t.wutengda@huaweicloud.com?part=3D2
