@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D119B3D9DBC
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 18:38:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C0F5AEC6C
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 18:38:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789583914; cv=none; b=aGTH2rcqqf3I6L56HZhUG71l9rEehKDWi+cSa1+eqk13odeTrTxNeXZNGDOw1Yeo6sx9rqATAYi0tX08Gwb3nbSTG/uVpJQoy5/aFK5J7iduZWhZ8DVJaZDoPztORcmxbG6b7K1P0rwenJ3RGmSd+vOqXOKwgOOC/Jk1i1xjBn0=
+	t=1789583928; cv=none; b=dxRxcNyqC0pd3bmxeC1/lGowjusiwW17+SsILU2nK0l38GcxrGYZsW5nQi5AErvVyDKt0bls4LuzEx9DD6Jude3jKl0CZHwzBIgK63CqiMjp6rb13lH4Ud10wjcDSagWl4YSwvUtLkladTc4bWlI7LSzIhoG0TEzhlIsd83vZXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789583914; c=relaxed/simple;
-	bh=lKCh1WBGCmmvzxcpZ45mKHAAPvBPWsmPMZDJhBisQZM=;
+	s=arc-20240116; t=1789583928; c=relaxed/simple;
+	bh=NHWeOBMHitjIGnRLH6L18A+8WqEprbgKrpAf/ciQDks=;
 	h=From:Subject:To:Cc:In-Reply-To:References:Content-Type:Date:
-	 Message-Id; b=MZcHGqw6btWXmgHqcZ6uJZ8wjDpCEutwLFnlpRcQIu0eP2VFBF4zpCs7pfkXCXlC5rcV6ozJZ22Db8PzDGDXz2pNhW/Ij8Gc3zUCK18DtXjCLjVF69yItjjbDGaQI9fvVwMkGTIDaxSnCWzmY/T0ZDfHB9el8H8BKdzFskT3unE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XoQk4pJL; arc=none smtp.client-ip=100.103.45.18
+	 Message-Id; b=UNMcsSVOkEGtE241LusYctGQfgERhrIQOBYEcMbou/HG7sJL53APEv4ffbqoIKmJdv9EAQEFZpzizkFdkzQn9Cx0oSDWm4J+yB3W6TQC0z0RAsWhAGcBgM7C2O69YlsNJP2Jb3fam5bqpHTIxTfwTi5LfmKqiTq4h900iqmv9S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m99QOx4k; arc=none smtp.client-ip=100.103.45.18
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XoQk4pJL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D6CB1F000FF;
-	Wed, 16 Sep 2026 18:38:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m99QOx4k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A8351F00893;
+	Wed, 16 Sep 2026 18:38:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1789583890;
-	bh=TcqBlKY6fdRiTAzgBH+OLix8Qu+KGLSiq7FL55XASDU=;
+	s=k20260515; t=1789583906;
+	bh=V6I2F7jsjiZD40TLRpjxp7fHajvAndefk/W1IdoJXrQ=;
 	h=From:Subject:Reply-To:To:Cc:In-Reply-To:References:Date;
-	b=XoQk4pJLbFmCL/ui5vdN9NGxniMWXCPD+g4oykyug9Uy9zF2oXStmn5nOFBJ9jcay
-	 wRaKWm7bjWDcbb357cubZ2T3lsSLdjq5l8reYig+FgRh6O/u8SBB3Qn4EtC1tHR/sh
-	 Ba81K8sbDtuVRazNeojgMxhxHC+AQMlKgIGZ+htATk8aP+Vgt5R4kK7/nqyQPoh/IC
-	 zQdXEtoGSJOml0tgYLs1aLtbHO3J7vEOZO1X5LZuGjdV5kbQ6StbtwfvIrCvcPYnO8
-	 7SPHWghsGchHMnMMb37qZyZskKtvkfeat2OnhB+N8tWEJEGublY181bWzfO9GSNtnj
-	 3RMoXLijCbA0g==
+	b=m99QOx4klXAPffLQV7kd+2lfndnc/EfLol1Dimps6QrW9orSUKNVbz6jbYEgTI0xa
+	 6k4lZ8Xzz2l63fMcM2AuQIq8lZDT6f0/+wH+OSmFKp8deokVyji2Xg+k3gdrm+a16e
+	 dsKoHFrT8cCSvZjb/HMQ9LAiQf9KiPMhUlmlKRZVmjuAFSW4VN9v3pD/ShEWrNzLim
+	 VFm0VJjPsNs7n8+TD/tU9IXk9fIB9muBBMWR/BRCoMyKYi+OwYrZhNCMqgKwHPkjoM
+	 ZA/Y6hnbFD6PbeMtV0i/QIMMu4BVGES9r3LXHY0zQC3lR+D12dICaBbVYWchVvyZfs
+	 jKVAd/Ng41rtw==
 From: sashiko-bot@kernel.org
-Subject: Re: [PATCH 09/12] perf scripts: Add perf-stuck, to tell where a
- running perf is stuck
+Subject: Re: [PATCH 01/12] perf test: Skip data_type_profiling when the PMU
+ cannot record memory events
 Reply-To: sashiko-reviews@lists.linux.dev
 To: "Arnaldo Carvalho de Melo" <acme@kernel.org>
 Cc: linux-perf-users@vger.kernel.org
-In-Reply-To: <20260916183215.54305-10-acme@kernel.org>
+In-Reply-To: <20260916183215.54305-2-acme@kernel.org>
 References: <20260916183215.54305-1-acme@kernel.org>
- <20260916183215.54305-10-acme@kernel.org>
+ <20260916183215.54305-2-acme@kernel.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Sep 2026 18:38:09 +0000
-Message-Id: <20260916183810.1D6CB1F000FF@smtp.kernel.org>
+Date: Wed, 16 Sep 2026 18:38:26 +0000
+Message-Id: <20260916183826.7A8351F00893@smtp.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,33 +47,26 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 > From: Arnaldo Carvalho de Melo <acme@redhat.com>
 >=20
-> A perf that takes forever is hard to tell apart from one that is stuck
-> in a loop, and when it is stuck there is no way to know where without
-> attaching gdb to it and looking around, which is what this does, from
-> the outside, sampling /proc/<pid> at a fixed interval:
+> The test records with 'perf mem record' in per-thread mode and its only
+> guard matches one specific message:
 >=20
->   =E2=AC=A2 [acme@toolbx perf-tools-next]$ tools/perf/scripts/perf-stuck.=
-sh -i 15 -n 4 -l ibs.log $(pgrep -x perf)
->   watching 2297313 (perf report --progress -s type -i perf.data.ibs) ever=
-y 15s
->   09:39:34 state=3DR cpu=3D+0 (0.00s) rss=3D664295kB stack=3D7ffc3ae31000=
--7ffc3ae52000 size=3D132kB  Merging related events... [ 39.0%] 197574 / 506=
-686
->   09:39:49 state=3DR cpu=3D+1496 (14.96s) rss=3D665383kB stack=3D7ffc3ae3=
-1000-7ffc3ae52000 size=3D132kB stuck=3D1 Merging related events... [ 39.0%]=
- 197574 / 506686
->   09:40:04 state=3DR cpu=3D+1497 (14.97s) rss=3D665383kB stack=3D7ffc3ae3=
-1000-7ffc3ae52000 size=3D132kB stuck=3D2 Merging related events... [ 39.0%]=
- 197574 / 506686
->   09:40:19 state=3DR cpu=3D+1497 (14.97s) rss=3D502250kB stack=3D7ffc3ae3=
-1000-7ffc3ae52000 size=3D132kB stuck=3D0 Merging related events... [ 61.0%]=
- 309026 / 506686
+>   perf mem record -o /dev/null -- true 2>&1 | \
+>         grep -q "failed: no PMU supports the memory events" && exit 2
 >=20
-> The CPU time used grows by a whole interval on every sample while the
+> A PMU that has memory events but refuses them per-thread falls through
+> it, and AMD IBS does:
+>=20
+>   $ perf mem record -o /dev/null -- true
+>   Error:
+>   Failure to open event 'ibs_op/ldlat=3D0/u' on PMU 'ibs_op' which will b=
+e removed.
+>   Invalid event (ibs_op/ldlat=3D0/u) in per-thread mode, enable system wi=
+de with '-a'.
 > [ ... ]
->   [Inferior 1 (process 2342826) detached]
->   =E2=AC=A2 [acme@toolbx perf-tools-next]$
 >=20
+> Fixes: f60a5c22967b ("perf tests: Test annotate with data type profiling =
+and rust")
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
 > Assisted-by: LLM
 > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
@@ -81,5 +74,5 @@ Sashiko has reviewed this patch and found no issues. It looks great!
 
 --=20
 Sashiko AI review =C2=B7 https://sashiko.dev/#/patchset/20260916183215.5430=
-5-1-acme@kernel.org?part=3D9
+5-1-acme@kernel.org?part=3D1
 
