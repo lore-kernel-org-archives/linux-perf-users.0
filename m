@@ -1,56 +1,56 @@
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com [209.85.216.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4437C3EAC8B
-	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 06:13:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.70
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20DBC3ED3CC
+	for <linux-perf-users@vger.kernel.org>; Wed, 16 Sep 2026 06:13:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1789539202; cv=none; b=ksSGC4vqD/5+MfltF9U3r7bSR3BUBCXCKyGf+gOTcha1McOIrK6hFfP6VYhpLSDIVfNgIAMK4K+2xBPsGuVauMMIvuHywmY5z7OZ0E4YmHd/2V3iaqyJBalAROPGWrR5Sng9eyI29SEo0pyOZVKW/vFjA0qEAKmH/llFynZBlto=
+	t=1789539204; cv=none; b=XT2y9Il89BrscrhuWz+saqBLlN9t9I5hlarvpPg8gfJUy+msd9kbbU+daihQXYyOJAaa4keLoPkw950rgZXsA9iz3KSglqvvEIGg5ThH5SboGgsHRmcGArIDn04yYX1CSyYtficiSRRv9IDG8VXBmW6qQcJamEVOyDKBQCp74A4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1789539202; c=relaxed/simple;
-	bh=468xVfbn+0XdK7xEFVTNW5kercEQE4h92XSg5yNP3F8=;
+	s=arc-20240116; t=1789539204; c=relaxed/simple;
+	bh=MTfU2kBykGvEc78KQu6zbFfBgjtLSKZO3O+KoOcIBeQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=lN/pVMOWTX5ykXL0ExFuTRc+7zk0u6EsEPq36V5oD4jkjYR6aXtkfFZsLBsrvMe37x1Q7q/sP9BKWa3KQk5gRPAW42FVG2PouTRkFnuUrWeetbt3PsX989PKtcWJsmSEBbgE5ivo/SHTN2bLmVrCM9Ea7ICPGr8WxzuLYr01x3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kxEUuyYO; arc=none smtp.client-ip=209.85.216.70
+	 To:Content-Type; b=GtQla/APHdq4QOxIkDucqxfv7I9+J263qnzCxjgVXikLeFUKvy1B+MBjpDq7G9NlC0tK2ibDb/NApbPnG5LmuXidDOJRnj4Y0yy5234ET55cEdouh0sW4zTwGs755HCG37p3I3a4YZ4fK7Xc6cUpm4Agoa/W+bOEUzTLs4OY8hM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zs3K26EY; arc=none smtp.client-ip=209.85.216.72
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kxEUuyYO"
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-396901263b6so10021513a91.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 23:13:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zs3K26EY"
+Received: by mail-pj1-f72.google.com with SMTP id 98e67ed59e1d1-38f283baf1fso6082357a91.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 15 Sep 2026 23:13:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20251104; t=1789539199; x=1790143999; darn=vger.kernel.org;
+        d=google.com; s=20251104; t=1789539201; x=1790144001; darn=vger.kernel.org;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:from:to:cc:subject:date:message-id:reply-to
          :content-type;
-        bh=vR5Z3qVkhKQF/LqVThiaZx4q5xKuQTz4oWFML5HFRTo=;
-        b=kxEUuyYOvn/+Y6n7q0Nz2BcJKLM54rn+mBsUYj4K0k6phwoV2BgGbxwRLBCXvicYzQ
-         T+kTVH3pdG93ff9PE3roaKHhOwcEpt9TtUcbbYPxlnp+tVz7qZ4MOFIF296gM0NItF7h
-         7vdHRYSm2C7A0ANlnjcduJ7G9GVlymPOZX9AaLYESZwHgcSSZ2RhaicacpbjukqFy0OG
-         bBCNpzpoO+pr+U39shCMpj6zimTvOgQWLKA+V5Igpcr6on9RM3/8g56dqKVH0WyLii/Y
-         aZnnniYtE/QTMRx13lJcqCqxokGBkxHAnshpnj0M5nJ+NPxrtCA7lobUPDgFW0FP+v8B
-         EqWA==
+        bh=upDmXP3yIXwPcisrFXwSlmDbZrrJ3hkk6zyR7leCdIo=;
+        b=Zs3K26EYYnHU8VNOL1UNiKx1Wg3Rvf5T5UAGqVCNI0CSRX8jxDfkB12Yq7WYsKugah
+         7qI9Ng1r/L8OxZyP8yaa+Eh+/xW7nuC746cWTy+Tn6j66BKN20Ze191cKItXQVACl+CS
+         KgDDR+w6jCw4fr38rt/TJ7v6tHu7XvXhhduQVIlPLDp9EcEAm9m/QGFQ0LVCQWVqXO1t
+         7ybgyIoMvkf1065zGMyKf8MPkqEpbMuPtZei/xtNGgD2BdRcmf/becLaCG7A37xzd6MZ
+         0eDZDmlGu9cVHVdCDkWxRB/T5FTk08x2D17hzXZfTBQd4Y/0l/HmlI/0kTUZzBlR94QY
+         vVwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20260707; t=1789539199; x=1790143999;
+        d=1e100.net; s=20260707; t=1789539201; x=1790144001;
         h=content-type:to:from:subject:message-id:references:mime-version
          :in-reply-to:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to:content-type;
-        bh=vR5Z3qVkhKQF/LqVThiaZx4q5xKuQTz4oWFML5HFRTo=;
-        b=D0TAeGmJRV3RQ+nmRkE0buuH2DTk1MEv8tnvl87nuoeymJwCi0hXI5NE/k4hm6hqJa
-         Puows8TxdgMi6EiFHSPgr7fatfDHNO4SXTMVCA0MscHRAtQc/YfOTAJdSaSJV9ubKpct
-         GjLpx2A4ykeJhd87iWgjuYR/8M66YW4bdauQAAZq2PJAC4n4uMKHnL4WDnrI0xZoHQBu
-         6lA79vsnPIVfPsJ5wh9CV7gRfy/9Os8WFVYvqT/mI4ic4NiqpHPcYx5o79gt7vWEsaoF
-         ziR5xgnT7KdMFzefKrG9V4g7NpeSVAgfOW5LT059sKuTepuRU1Pt3d4i4cRFQeYFlxuI
-         MFNA==
-X-Forwarded-Encrypted: i=1; AKwUvByK4ToEixyzuESWjrUN/9V/WJ+8pG+5KD2Dp5zVgxprAslStKPylVKT8NRV9PQlJAyLdhlecjXSc2YM54g9UrUx@vger.kernel.org
-X-Gm-Message-State: AFuF++nLlrcJ/ohP9UD/R6mOjRyyaca5ZjSu2up80czp+quBRDvXgWh8
-	iFxotSUlP1pACUUm9mR7bI7xXkKzABjGhVVVliMq8/1HRbiY/TwiGol7cAU/X3z8uhEI5uZMzih
-	tAoq/doPS3Q==
-X-Received: from dyay26.prod.google.com ([2002:a05:693c:62da:b0:339:7600:c341])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3c41:b0:39d:fe64:5733
- with SMTP id 98e67ed59e1d1-39e1e5612demr4059471a91.24.1789539199252; Tue, 15
- Sep 2026 23:13:19 -0700 (PDT)
-Date: Tue, 15 Sep 2026 23:12:13 -0700
+        bh=upDmXP3yIXwPcisrFXwSlmDbZrrJ3hkk6zyR7leCdIo=;
+        b=ndUKrl0hNomhHAb82p0mpmIk7H6qfWLlsw8wnnLoxYJ/d3SSB7XU2KCME9NDVhV4a0
+         10PNx4piSBRmzGN/SFkXr2WY/gBks41npknIYr0ARRa8shIzUBwJujBPJOP1wqKr1ay1
+         DNgyyWkNJsF/8XYRAuz1i+CzdP7OdbtK5gJEfTCW+15DaHnvlqcsrvRZtBQm+tzHzv0Y
+         3WLSe1E7CQA8TAwSLwaB9b1xq/gPhZeatHRO5LOQK+TJni33yTa6zKIw5dJo7ONBdyXr
+         N5O2CDWJpTzrBcazRSnsZuHs5lf6VW2J/J969mJPtrKOKZCQH5KbWNpkDTpoWAcGZA2l
+         ZiLA==
+X-Forwarded-Encrypted: i=1; AKwUvBz8tgLi7MeoTAQVoLe0/CKHjnDgVGbAlShZ5ekY2TMPdKuxDYjzjYhj9OJr1N9MJGijVF9sRs6EMTjTodoCSHoC@vger.kernel.org
+X-Gm-Message-State: AFuF++kYTpNIs6OS+gm8TLiJy/3pEcqVyHpIPXxsT0jNsaIPSDYzS8KV
+	Cj3Meg9jslEF8Cj36VjpIkkfVStDiJXZsv3ke3lnhSDAd1citP2XhMwJPfl8R1VBh8JuTLv1ooh
+	3dWPJ8xWG2A==
+X-Received: from dlep8-n2.prod.google.com ([2002:a05:701b:4588:20b0:143:6b62:db2])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:1845:b0:39d:f259:3363
+ with SMTP id 98e67ed59e1d1-39e1e491d27mr3698619a91.12.1789539201213; Tue, 15
+ Sep 2026 23:13:21 -0700 (PDT)
+Date: Tue, 15 Sep 2026 23:12:14 -0700
 In-Reply-To: <20260916061218.3061216-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -60,8 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260916061218.3061216-1-irogers@google.com>
 X-Mailer: git-send-email 2.55.0.1032.g73a4cd73de-goog
-Message-ID: <20260916061218.3061216-5-irogers@google.com>
-Subject: [PATCH 4/9] perf pmu: Include the headers that are used
+Message-ID: <20260916061218.3061216-6-irogers@google.com>
+Subject: [PATCH 5/9] perf build: Only pass clang flags to CXX when CXX is clang
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
@@ -72,48 +72,53 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, llvm@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 
-pmu.c uses errno, free() and the str*() functions but declares none of
-them directly. <string.h> arrives by way of <linux/string.h>, and
-<errno.h> and <stdlib.h> come from whatever the other headers happen to
-drag in, which is fragile and breaks on C libraries that don't nest
-their headers the same way.
+Building with "make CC=clang" appends clang's --target= and
+-fintegrated-as to CXX, but CXX is only set to clang++ by "make LLVM=1".
+With just CC=clang, CXX is still g++ and every C++ feature test dies:
 
-Include the three directly.
+  g++: error: unrecognized command-line option '--target=...'
+  g++: error: unrecognized command-line option '-fintegrated-as'
 
-<ctype.h> is deliberately not added. The isdigit(), tolower() and
-toupper() used here are the macros from <linux/ctype.h>, which is
-included on purpose and documents that it doesn't handle EOF the way the
-standard C library does, so pulling in <ctype.h> would change which
-implementation is used.
+The failures are silent, as feature tests are allowed to fail, so the
+build quietly loses libllvm and C++ demangling support:
 
-size_t is left alone too, as <stdio.h> is already included directly and
-declares it.
+  $ make CC=clang && grep LIBLLVM .config-detected
+  (nothing, whereas a gcc build reports CONFIG_LIBLLVM=y)
 
-No functional change.
+The block is entered when CC_NO_CLANG says CC is clang, which says
+nothing about CXX. Probe CXX the same way tools/scripts/Makefile.include
+probes CC, and only add the flags when CXX really is clang++.
 
+Mixing a clang-built C with a g++-built C++ is fine here, the C++ code
+is linked with -lstdc++ already.
+
+Fixes: 4772e66cb45e ("perf build: Support build with clang")
 Signed-off-by: Ian Rogers <irogers@google.com>
 Assisted-by: Antigravity:gemini-3.1-pro
 ---
- tools/perf/util/pmu.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/perf/Makefile.config | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 836e3b5615cd..744e253e851f 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -8,8 +8,11 @@
- #include <fcntl.h>
- #include <sys/stat.h>
- #include <unistd.h>
--#include <stdio.h>
-+#include <errno.h>
- #include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
- #include <dirent.h>
- #include <api/fs/fs.h>
- #include <api/io.h>
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 4ee7393a39f9..31e4cbe192b9 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -54,7 +54,14 @@ ifeq ($(CC_NO_CLANG), 0)
+   endif # CROSS_COMPILE
+ 
+   CC := $(CLANG) $(CLANG_FLAGS) -fintegrated-as
+-  CXX := $(CXX) $(CLANG_FLAGS) -fintegrated-as
++
++  # CC being clang says nothing about CXX: "make LLVM=1" overrides both, but
++  # "make CC=clang" leaves CXX as g++. Probe CXX the way Makefile.include
++  # probes CC rather than assuming the two match.
++  CXX_NO_CLANG := $(shell if command -v $(firstword $(CXX)) >/dev/null 2>&1; then $(CXX) -dM -E -x c++ /dev/null; fi | grep -Fq "__clang__"; echo $$?)
++  ifeq ($(CXX_NO_CLANG), 0)
++    CXX := $(CXX) $(CLANG_FLAGS) -fintegrated-as
++  endif
+ 
+   # Enabled Wthread-safety analysis for clang builds.
+   CFLAGS += -Wthread-safety
 -- 
 2.55.0.1032.g73a4cd73de-goog
 
